@@ -32,7 +32,7 @@ CInputPacketStream::read(void* buffer, UInt32 n)
 
 	// wait for entire message to be read.  return immediately if
 	// stream hungup.
-	if (getSizeNoLock() == 0) {
+	if (!waitForFullMessage()) {
 		return 0;
 	}
 
@@ -60,22 +60,48 @@ CInputPacketStream::getSize() const
 UInt32
 CInputPacketStream::getSizeNoLock() const
 {
-	while (!hasFullMessage()) {
+	while (!hasFullMessage() && getStream()->getSize() > 0) {
 		// read more data
-		char buffer[4096];
-		UInt32 n = getStream()->read(buffer, sizeof(buffer));
-
-		// return if stream hungup
-		if (n == 0) {
-			m_buffer.hangup();
-			return 0;
+		if (!getMoreMessage()) {
+			// stream hungup
+			return false;
 		}
-
-		// append to our buffer
-		m_buffer.write(buffer, n);
 	}
 
 	return m_size;
+}
+
+bool
+CInputPacketStream::waitForFullMessage() const
+{
+	while (!hasFullMessage()) {
+		// read more data
+		if (!getMoreMessage()) {
+			// stream hungup
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool
+CInputPacketStream::getMoreMessage() const
+{
+	// read more data
+	char buffer[4096];
+	UInt32 n = getStream()->read(buffer, sizeof(buffer));
+
+	// return if stream hungup
+	if (n == 0) {
+		m_buffer.hangup();
+		return false;
+	}
+
+	// append to our buffer
+	m_buffer.write(buffer, n);
+
+	return true;
 }
 
 bool

@@ -21,6 +21,8 @@ public:
 
 private:
 	UInt32				getSizeNoLock() const;
+	bool				waitForFullMessage() const;
+	bool				getMoreMessage() const;
 	bool				hasFullMessage() const;
 
 private:
