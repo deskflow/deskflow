@@ -265,6 +265,9 @@ CLog::output(int priority, char* msg) const
 		msg[g_maxPriorityLength + 1] = ' ';
 	}
 
+	// find end of message
+	char* end = msg + g_priorityPad + strlen(msg + g_priorityPad);
+
 	// write to each outputter
 	CArchMutexLock lock(m_mutex);
 	for (COutputterList::const_iterator index  = m_alwaysOutputters.begin();
@@ -274,7 +277,7 @@ CLog::output(int priority, char* msg) const
 		ILogOutputter* outputter = *index;
 		
 		// put an appropriate newline at the end
-		strcat(msg + g_priorityPad, outputter->getNewline());
+		strcpy(end, outputter->getNewline());
 
 		// open the outputter
 		outputter->open(kApplication);
@@ -289,7 +292,7 @@ CLog::output(int priority, char* msg) const
 		ILogOutputter* outputter = *index;
 		
 		// put an appropriate newline at the end
-		strcat(msg + g_priorityPad, outputter->getNewline());
+		strcpy(end, outputter->getNewline());
 
 		// open the outputter
 		outputter->open(kApplication);
