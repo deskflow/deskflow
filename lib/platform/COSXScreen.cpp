@@ -808,16 +808,15 @@ COSXScreen::onKey(EventRef event) const
 	UInt32 eventKind = GetEventKind(event);
 
 	// get the key
-	UInt32 keyCode;
+	UInt32 virtualKey;
 	GetEventParameter(event, kEventParamKeyCode, typeUInt32,
-							NULL, sizeof(keyCode), NULL, &keyCode);
-	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, keyCode));
-	KeyButton button = COSXKeyState::mapKeyCodeToKeyButton(keyCode);
+							NULL, sizeof(virtualKey), NULL, &virtualKey);
+	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, virtualKey));
 
-	// sadly, OS X doesn't report the keyCode for modifier keys.  keyCode
-	// will be zero for modifier keys.  since that's not good enough we'll
-	// have to figure out what the key was.
-	if (keyCode == 0 && eventKind == kEventRawKeyModifiersChanged) {
+	// sadly, OS X doesn't report the virtualKey for modifier keys.
+	// virtualKey will be zero for modifier keys.  since that's not good
+	// enough we'll have to figure out what the key was.
+	if (virtualKey == 0 && eventKind == kEventRawKeyModifiersChanged) {
 		// get old and new modifier state
 		KeyModifierMask oldMask = getActiveModifiers();
 		KeyModifierMask newMask = mapMacModifiersToSynergy(event);
@@ -825,22 +824,37 @@ COSXScreen::onKey(EventRef event) const
 		return true;
 	}
 
+	// decode event type
 	bool down	  = (eventKind == kEventRawKeyDown);
 	bool up		  = (eventKind == kEventRawKeyUp);
 	bool isRepeat = (eventKind == kEventRawKeyRepeat);
-	
+
+	// map event to keys
+	KeyModifierMask mask;
+	COSXKeyState::CKeyIDs keys;
+	KeyButton button = m_keyState->mapKeyFromEvent(keys, &mask, event);
+	if (button == 0) {
+		return false;
+	}
+
+	// update button state
 	if (down) {
 		m_keyState->setKeyDown(button, true);
 	}
 	else if (up) {
+		if (!isKeyDown(button)) {
+			// up event for a dead key.  throw it away.
+			return false;
+		}
 		m_keyState->setKeyDown(button, false);
 	}
 
-	KeyModifierMask mask;
-	KeyID key = m_keyState->mapKeyFromEvent(event, &mask);
-	
-	m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat,
-							key, mask, 1, button);
+	// send key events
+	for (COSXKeyState::CKeyIDs::const_iterator i = keys.begin();
+							i != keys.end(); ++i) {
+		m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat,
+							*i, mask, 1, button);
+	}
 
 	return true;
 }
