@@ -13,6 +13,9 @@ To build synergy from the sources you'll need the following:
   * gcc 2.95 (or up)
   * X11R4 or up headers and libraries
 
+  Mac OS X:
+  * XCode;  or gcc 2.95 (or up) and make
+
 In this document, "Unix" means any of the supported Unix or Unix-like
 (e.g. Linux) operating systems.
 
@@ -20,7 +23,8 @@ In this document, "Unix" means any of the supported Unix or Unix-like
 Configuring the build
 ---------------------
 
-This step is only necessary when building on Unix.
+This step is only necessary when building on Unix or Mac OS X if not
+using XCode.
 
 To configure the build for your platform use the configure script:
 
@@ -43,15 +47,19 @@ Building
 Windows:
   Start VC++ and open `synergy.dsw'.  Set the active configuration
   (Build | Set Active Configuration) to `All - Debug' or `All - Release'
-  then build.  Binaries are built into ./Debug or ./Release.
+  then build.  Binaries are built into ./debug or ./build.
 
-Unix:
+Unix or Mac OS X without XCode:
   Simply enter:
 
     make
 
   This will build the client and server and leave them in their
   respective source directories.
+
+Mac OS X with XCode:
+  Start XCode and open the synery.xcode project.  Build the 'all'
+  project using the Deployment flavor.
 
 
 Installing
@@ -72,11 +80,17 @@ Windows:
   * synergys.exe
   * synrgyhk.dll
 
-Unix:
+Unix or Mac OS X without XCode:
     make install
 
   will install the client and server into /usr/local/bin unless you
   specified a different directory when you ran configure.
+
+Mac OS X with XCode:
+  Copy the following files from ./build to a convenient location:
+
+  * synergyc
+  * synergys
 
 See `Starting Automatically on ...' below for details on how to have
 synergy start up automatically when the computer starts.
@@ -152,8 +166,8 @@ See `Starting Automatically on Windows' below for configuring synergy
 to start automatically when the computer starts.
 
 
-Configuring the Server on Unix
-------------------------------
+Configuring the Server on Unix or Mac OS X
+------------------------------------------
 
 The synergy server requires configuration.  The configuration file is a
 plain text file broken into sections.  Each section has the form:
@@ -164,7 +178,8 @@ plain text file broken into sections.  Each section has the form:
 
 Comments are introduced by `#' and continue to the end of the line.
 The file can have the following sections.  The `screens' section must
-appear before the `links' and `aliases' sections.
+appear before the `links' and `aliases' sections.  Use any text editor
+to create the configuration file.
 
   * screens
     <args> is a list of screen names, one name per line, each
@@ -348,8 +363,8 @@ file if the user doesn't specify a path using the `--config' command
 line option.  `synergys --help' reports those pathnames.
 
 
-Running the Server on Unix
---------------------------
+Running the Server on Unix or Mac OS X
+--------------------------------------
 
 Run the server on the computer that has the keyboard and mouse to
 be shared.  You must have prepared a configuration file before
@@ -374,8 +389,8 @@ See `Starting Automatically on Unix' below for running synergy
 automatically when the X server starts.
 
 
-Running the Client on Unix
---------------------------
+Running the Client on Unix or Mac OS X
+--------------------------------------
 
 Run the client on all computers that aren't the server using the
 following command line:
@@ -498,6 +513,12 @@ security reasons.  This prevents a synergy server from sharing
 the mouse and keyboard until the user logs in.  It doesn't
 prevent a synergy client from synthesizing mouse and keyboard
 input, though.
+
+
+Starting Automatically on Mac OS X
+----------------------------------
+
+TBD
 
 
 Network Security

@@ -1,3 +1,309 @@
+2004/05/26 19:23:32 crs
+//depot/project/synergy/lib/common/MacOSXPrecomp.h
+//depot/project/synergy/lib/common/common.h
+//depot/project/synergy/lib/platform/COSXClipboardTextConverter.cpp
+//depot/project/synergy/lib/platform/COSXClipboardTextConverter.h
+//depot/project/synergy/lib/platform/COSXEventQueueBuffer.cpp
+//depot/project/synergy/lib/platform/COSXKeyState.cpp
+//depot/project/synergy/lib/platform/COSXKeyState.h
+//depot/project/synergy/lib/platform/COSXScreen.cpp
+//depot/project/synergy/lib/platform/COSXScreen.h
+//depot/project/synergy/synergy.xcode/project.pbxproj
+
+Merged Bertrand's OS X changes.  Also added support for mouse wheel
+on OS X server.
+
+----------
+2004/05/18 20:32:13 crs
+//depot/project/synergy/lib/platform/CMSWindowsScreen.cpp
+
+If the server manages to detect ctrl+alt+del it will no longer send
+that to the client.  If it did then the user could see the effect of
+ctrl+alt+del on both the server and client which we never want.  The
+user can use ctrl+alt+pause to emulate ctrl+alt+del on the client.
+
+----------
+2004/05/18 20:26:48 crs
+//depot/project/synergy/lib/platform/CXWindowsEventQueueBuffer.cpp
+//depot/project/synergy/lib/platform/CXWindowsEventQueueBuffer.h
+
+Fixed bug that could allow multiple threads to simultaneously access
+the X11 display connection.  The only problematic method was
+CXWindowsEventQueueBuffer::addEvent given that the other event queue
+methods are only called from the main thread.
+
+----------
+2004/05/17 21:55:55 crs
+//depot/project/synergy/cmd/synergyc/synergyc.cpp
+
+Fixed logging of connection to server.  Was DEBUG now NOTE.
+
+----------
+2004/05/17 21:55:38 crs
+//depot/project/synergy/lib/platform/CMSWindowsKeyState.cpp
+
+Fixed ctrl+alt+del emulation on win32 server.  It was mapping
+VK_DELETE to the keypad delete key.  This key is not interpreted
+on the client as causing ctrl+alt+del.
+
+----------
+2004/05/16 18:04:36 crs
+//depot/project/synergy/lib/client/CServerProxy.cpp
+//depot/project/synergy/lib/server/CClientProxy1_0.cpp
+//depot/project/synergy/lib/synergy/ProtocolTypes.h
+
+Fixed handling of screen resolution changes.
+
+----------
+2004/05/16 18:03:36 crs
+//depot/project/synergy/cmd/launcher/CAutoStart.cpp
+
+Changed (win NT) service to depend on the 'Browser' service to
+ensure correct startup order.
+
+----------
+2004/05/16 18:02:49 crs
+//depot/project/synergy/all.dsp
+//depot/project/synergy/cmd/exec.dsp
+//depot/project/synergy/cmd/launcher/launcher.dsp
+//depot/project/synergy/cmd/synergyc/synergyc.dsp
+//depot/project/synergy/cmd/synergys/synergys.dsp
+//depot/project/synergy/dist/nullsoft/installer.dsp
+//depot/project/synergy/dist/nullsoft/synergy.nsi
+//depot/project/synergy/lib/arch/arch.dsp
+//depot/project/synergy/lib/base/base.dsp
+//depot/project/synergy/lib/client/client.dsp
+//depot/project/synergy/lib/common/common.dsp
+//depot/project/synergy/lib/io/io.dsp
+//depot/project/synergy/lib/mt/mt.dsp
+//depot/project/synergy/lib/net/net.dsp
+//depot/project/synergy/lib/platform/makehook.dsp
+//depot/project/synergy/lib/platform/platform.dsp
+//depot/project/synergy/lib/platform/synrgyhk.dsp
+//depot/project/synergy/lib/server/server.dsp
+//depot/project/synergy/lib/synergy/libsynergy.dsp
+
+Changed VC++ projects to put release targets in ./build, debug
+targets in ./debug, and intermediate files under ./gen.
+
+----------
+2004/05/15 19:44:05 crs
+//depot/project/synergy/configure.in
+//depot/project/synergy/lib/common/Version.h
+
+Changed version to 1.1.6.
+
+----------
+2004/05/15 19:43:33 crs
+//depot/project/synergy/lib/platform/CMSWindowsScreen.cpp
+
+Avoided duplicate logging of screen size on win32.
+
+----------
+2004/05/15 19:41:46 crs
+//depot/project/synergy/Makefile.am
+//depot/project/synergy/configure.in
+//depot/project/synergy/lib/common/common.h
+//depot/project/synergy/lib/platform/COSXClipboard.cpp
+//depot/project/synergy/lib/platform/COSXClipboard.h
+//depot/project/synergy/lib/platform/COSXClipboardAnyTextConverter.cpp
+//depot/project/synergy/lib/platform/COSXClipboardAnyTextConverter.h
+//depot/project/synergy/lib/platform/COSXClipboardTextConverter.cpp
+//depot/project/synergy/lib/platform/COSXClipboardTextConverter.h
+//depot/project/synergy/lib/platform/COSXClipboardUTF16Converter.cpp
+//depot/project/synergy/lib/platform/COSXClipboardUTF16Converter.h
+//depot/project/synergy/lib/platform/COSXEventQueueBuffer.cpp
+//depot/project/synergy/lib/platform/COSXEventQueueBuffer.h
+//depot/project/synergy/lib/platform/COSXScreen.cpp
+//depot/project/synergy/lib/platform/COSXScreen.h
+//depot/project/synergy/lib/platform/Makefile.am
+//depot/project/synergy/synergy.xcode/project.pbxproj
+
+Added bertrand landry hetu's mac OS X port to date.
+
+----------
+2004/05/12 20:28:00 crs
+//depot/project/synergy/lib/platform/CXWindowsScreen.cpp
+//depot/project/synergy/lib/platform/CXWindowsScreen.h
+
+Now restoring input focus when entering the screen to the window
+that had the focus when the screen was left.
+
+----------
+2004/05/12 19:50:58 crs
+//depot/project/synergy/lib/arch/CArchNetworkBSD.cpp
+//depot/project/synergy/lib/arch/CArchNetworkWinsock.cpp
+
+Fixed thread reference leak in network code.
+
+----------
+2004/05/12 19:12:28 crs
+//depot/project/synergy/configure.in
+
+Added configure option to enable debug builds.  If not enabled then
+asserts are disabled.
+
+----------
+2004/05/12 18:54:03 crs
+//depot/project/synergy/lib/platform/CXWindowsClipboardBMPConverter.cpp
+
+Fixed build error in gcc 3.3.
+
+----------
+audrey2% ./nodist/p4tolog -p //depot/project/synergy/ -m 15 | less
+audrey2% ./nodist/p4tolog -p //depot/project/synergy/ -m 15
+2004/05/26 19:23:32 crs
+lib/common/MacOSXPrecomp.h
+lib/common/common.h
+lib/platform/COSXClipboardTextConverter.cpp
+lib/platform/COSXClipboardTextConverter.h
+lib/platform/COSXEventQueueBuffer.cpp
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+lib/platform/COSXScreen.cpp
+lib/platform/COSXScreen.h
+synergy.xcode/project.pbxproj
+
+Merged Bertrand's OS X changes.  Also added support for mouse wheel
+on OS X server.
+
+----------
+2004/05/18 20:32:13 crs
+lib/platform/CMSWindowsScreen.cpp
+
+If the server manages to detect ctrl+alt+del it will no longer send
+that to the client.  If it did then the user could see the effect of
+ctrl+alt+del on both the server and client which we never want.  The
+user can use ctrl+alt+pause to emulate ctrl+alt+del on the client.
+
+----------
+2004/05/18 20:26:48 crs
+lib/platform/CXWindowsEventQueueBuffer.cpp
+lib/platform/CXWindowsEventQueueBuffer.h
+
+Fixed bug that could allow multiple threads to simultaneously access
+the X11 display connection.  The only problematic method was
+CXWindowsEventQueueBuffer::addEvent given that the other event queue
+methods are only called from the main thread.
+
+----------
+2004/05/17 21:55:55 crs
+cmd/synergyc/synergyc.cpp
+
+Fixed logging of connection to server.  Was DEBUG now NOTE.
+
+----------
+2004/05/17 21:55:38 crs
+lib/platform/CMSWindowsKeyState.cpp
+
+Fixed ctrl+alt+del emulation on win32 server.  It was mapping
+VK_DELETE to the keypad delete key.  This key is not interpreted
+on the client as causing ctrl+alt+del.
+
+----------
+2004/05/16 18:04:36 crs
+lib/client/CServerProxy.cpp
+lib/server/CClientProxy1_0.cpp
+lib/synergy/ProtocolTypes.h
+
+Fixed handling of screen resolution changes.
+
+----------
+2004/05/16 18:03:36 crs
+cmd/launcher/CAutoStart.cpp
+
+Changed (win NT) service to depend on the 'Browser' service to
+ensure correct startup order.
+
+----------
+2004/05/16 18:02:49 crs
+all.dsp
+cmd/exec.dsp
+cmd/launcher/launcher.dsp
+cmd/synergyc/synergyc.dsp
+cmd/synergys/synergys.dsp
+dist/nullsoft/installer.dsp
+dist/nullsoft/synergy.nsi
+lib/arch/arch.dsp
+lib/base/base.dsp
+lib/client/client.dsp
+lib/common/common.dsp
+lib/io/io.dsp
+lib/mt/mt.dsp
+lib/net/net.dsp
+lib/platform/makehook.dsp
+lib/platform/platform.dsp
+lib/platform/synrgyhk.dsp
+lib/server/server.dsp
+lib/synergy/libsynergy.dsp
+
+Changed VC++ projects to put release targets in ./build, debug
+targets in ./debug, and intermediate files under ./gen.
+
+----------
+2004/05/15 19:44:05 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.1.6.
+
+----------
+2004/05/15 19:43:33 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Avoided duplicate logging of screen size on win32.
+
+----------
+2004/05/15 19:41:46 crs
+Makefile.am
+configure.in
+lib/common/common.h
+lib/platform/COSXClipboard.cpp
+lib/platform/COSXClipboard.h
+lib/platform/COSXClipboardAnyTextConverter.cpp
+lib/platform/COSXClipboardAnyTextConverter.h
+lib/platform/COSXClipboardTextConverter.cpp
+lib/platform/COSXClipboardTextConverter.h
+lib/platform/COSXClipboardUTF16Converter.cpp
+lib/platform/COSXClipboardUTF16Converter.h
+lib/platform/COSXEventQueueBuffer.cpp
+lib/platform/COSXEventQueueBuffer.h
+lib/platform/COSXScreen.cpp
+lib/platform/COSXScreen.h
+lib/platform/Makefile.am
+synergy.xcode/project.pbxproj
+
+Added bertrand landry hetu's mac OS X port to date.
+
+----------
+2004/05/12 20:28:00 crs
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+
+Now restoring input focus when entering the screen to the window
+that had the focus when the screen was left.
+
+----------
+2004/05/12 19:50:58 crs
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkWinsock.cpp
+
+Fixed thread reference leak in network code.
+
+----------
+2004/05/12 19:12:28 crs
+configure.in
+
+Added configure option to enable debug builds.  If not enabled then
+asserts are disabled.
+
+----------
+2004/05/12 18:54:03 crs
+lib/platform/CXWindowsClipboardBMPConverter.cpp
+
+Fixed build error in gcc 3.3.
+
+----------
 2004/05/04 20:45:06 crs
 cmd/launcher/CGlobalOptions.cpp
 cmd/launcher/launcher.rc

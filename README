@@ -52,6 +52,8 @@ System Requirements
 
 * Microsoft Windows NT, Windows 2000, Windows XP (the Windows NT family);
 
+* Mac OS X 10.3 (10.2 may work);
+
 * Unix:
   X Windows version 11 revision 4 or up with the XTEST extension
     (use `xdpyinfo | grep XTEST' to check for XTEST).
@@ -61,6 +63,12 @@ Irix.  Synergy may compile and run on other Unix variants, too.  Patches
 for other platforms are welcome (including patches that package binaries);
 See the contact information available off of the synergy home page or use
 the patch page on sourceforge.
+
+The Mac OS X port is incomplete.  It does not synchronize the screen saver,
+only text clipboard data works (i.e. HTML and bitmap data do not work),
+non-US English keyboards are untested and probably don't work, and there
+may be problems with mouse pointer and mouse wheel acceleration.  Other
+problems should be filed as bugs (see BUGS).
 
 
 Installation
@@ -120,8 +128,8 @@ Third, you configure and start the server.
   read the log messages to determine the problem then correct it and try
   `Test' again.
 
-  Unix
-  ----
+  Unix or MacOS X
+  ---------------
   Create a text file named synergy.conf with the following:
 
 	section: screens
@@ -175,8 +183,8 @@ Finally, start the clients.
   about to quit;  read the log messages to determine the problem then
   correct it and try `Test' again.
 
-  Unix
-  ----
+  Unix or MacOS X
+  ---------------
 
   To start a client, enter the following:
 

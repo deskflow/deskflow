@@ -1,6 +1,23 @@
 Synergy News
 ============
 
+* May-26-2004 - Synergy 1.1.6 released
+
+  Made following changes:
+  * Added preliminary Mac OS X support (client and server)
+  * Fixed ctrl+alt+del emulation on win32
+  * Fixed ctrl+alt+del on win32 server acting on both client and server
+  * Fixed handling of screen resolution changes on win32
+  * Fixed 'unexpected async reply' on X11
+  * Added dependency to win32 service to avoid startup race condition
+  * Fixed reference count bug
+  * Keyboard input focus now restored on X11 (fixes loss of input in some games)
+
+  The OS X port does not yet support:
+  * HTML and bitmap clipboard data
+  * Screen saver synchronization
+  * Non-US English keyboards
+
 * May-05-2004 - Synergy 1.1.5 released
 
   Made following changes:

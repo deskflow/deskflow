@@ -18,9 +18,7 @@ Things to do to synergy, in no particular order:
 
 * Port to other platforms
 
-  Most desired is MacOS X.  Ryan Breen has a partial port to Mac OS X.
-  Only the client is ported and there is no clipboard or screen saver
-  support.  It's available from http://www.ryanbreen.com/synergy.
+  The MacOS X port is still incomplete but getting close.
 
 * Write man/html pages
 
