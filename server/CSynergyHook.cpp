@@ -45,6 +45,7 @@ static HANDLE			g_keyHookThread   = NULL;
 static DWORD			g_keyHookThreadID = 0;
 static HANDLE			g_keyHookEvent    = NULL;
 static HHOOK			g_keyboardLL      = NULL;
+static bool				g_screenSaver     = false;
 static bool				g_relay           = false;
 static SInt32			g_zoneSize        = 0;
 static UInt32			g_zoneSides       = 0;
@@ -247,6 +248,14 @@ LRESULT CALLBACK
 getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
+		if (g_screenSaver) {
+			MSG* msg = reinterpret_cast<MSG*>(lParam);
+			if (msg->message == WM_SYSCOMMAND && msg->wParam == SC_SCREENSAVE) {
+				// broadcast screen saver started message
+				PostThreadMessage(g_threadID,
+								SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
+			}
+		}
 		if (g_relay) {
 			MSG* msg = reinterpret_cast<MSG*>(lParam);
 			if (msg->message == g_wmMouseWheel) {
@@ -455,18 +464,45 @@ DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 extern "C" {
 
 int
-install(DWORD threadID)
+init(DWORD threadID)
 {
-	assert(g_threadID     == 0);
-	assert(g_hinstance    != NULL);
-	assert(g_keyboard     == NULL);
-	assert(g_mouse        == NULL);
-	assert(g_cbt          == NULL);
-	assert(g_wheelSupport != kWheelOld || g_getMessage == NULL);
+	assert(g_hinstance != NULL);
+
+	// see if already initialized
+	if (g_threadID != 0) {
+		return 0;
+	}
 
 	// save thread id.  we'll post messages to this thread's
 	// message queue.
 	g_threadID = threadID;
+
+	return 1;
+}
+
+int
+cleanup(void)
+{
+	assert(g_hinstance != NULL);
+
+	g_threadID = 0;
+
+	return 1;
+}
+
+int
+install()
+{
+	assert(g_hinstance  != NULL);
+	assert(g_keyboard   == NULL);
+	assert(g_mouse      == NULL);
+	assert(g_cbt        == NULL);
+	assert(g_getMessage == NULL || g_screenSaver);
+
+	// must be initialized
+	if (g_threadID == 0) {
+		return 0;
+	}
 
 	// set defaults
 	g_relay        = false;
@@ -520,8 +556,8 @@ install(DWORD threadID)
 		return 0;
 	}
 
-	// install GetMessage hook
-	if (g_wheelSupport == kWheelOld) {
+	// install GetMessage hook (unless already installed)
+	if (g_wheelSupport == kWheelOld && g_getMessage == NULL) {
 		g_getMessage = SetWindowsHookEx(WH_GETMESSAGE,
 								&getMessageHook,
 								g_hinstance,
@@ -563,9 +599,7 @@ install(DWORD threadID)
 int
 uninstall(void)
 {
-	assert(g_keyboard != NULL);
-	assert(g_mouse    != NULL);
-	assert(g_cbt      != NULL);
+	assert(g_hinstance != NULL);
 
 	// uninstall hooks
 	if (g_keyHookThread != NULL) {
@@ -577,20 +611,66 @@ uninstall(void)
 		g_keyHookThread   = NULL;
 		g_keyHookThreadID = 0;
 	}
-	UnhookWindowsHookEx(g_keyboard);
-	UnhookWindowsHookEx(g_mouse);
-	UnhookWindowsHookEx(g_cbt);
-	if (g_getMessage != NULL) {
+	if (g_keyboard != NULL) {
+		UnhookWindowsHookEx(g_keyboard);
+	}
+	if (g_mouse != NULL) {
+		UnhookWindowsHookEx(g_mouse);
+	}
+	if (g_cbt != NULL) {
+		UnhookWindowsHookEx(g_cbt);
+	}
+	if (g_getMessage != NULL && !g_screenSaver) {
 		UnhookWindowsHookEx(g_getMessage);
+		g_getMessage = NULL;
 	}
 	g_keyboard   = NULL;
 	g_mouse      = NULL;
 	g_cbt        = NULL;
-	g_getMessage = NULL;
-	g_threadID   = 0;
 
 	// show the cursor
 	restoreCursor();
+
+	return 1;
+}
+
+int
+installScreenSaver(void)
+{
+	assert(g_hinstance != NULL);
+
+	// must be initialized
+	if (g_threadID == 0) {
+		return 0;
+	}
+
+	// generate screen saver messages
+	g_screenSaver = true;
+
+	// install hook unless it's already installed
+	if (g_getMessage == NULL) {
+		g_getMessage = SetWindowsHookEx(WH_GETMESSAGE,
+								&getMessageHook,
+								g_hinstance,
+								0);
+	}
+
+	return (g_getMessage != NULL) ? 1 : 0;
+}
+
+int
+uninstallScreenSaver(void)
+{
+	assert(g_hinstance != NULL);
+
+	// uninstall hook unless the mouse wheel hook is installed
+	if (g_getMessage != NULL && g_threadID == 0) {
+		UnhookWindowsHookEx(g_getMessage);
+		g_getMessage = NULL;
+	}
+
+	// screen saver hook is no longer installed
+	g_screenSaver = false;
 
 	return 1;
 }

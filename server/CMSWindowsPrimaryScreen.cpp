@@ -1,6 +1,7 @@
 #include "CMSWindowsPrimaryScreen.h"
 #include "CServer.h"
 #include "CMSWindowsClipboard.h"
+#include "CMSWindowsScreenSaver.h"
 #include "CPlatform.h"
 #include "XScreen.h"
 #include "XSynergy.h"
@@ -34,13 +35,27 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen() :
 	m_setRelay  = (SetRelayFunc)GetProcAddress(m_hookLibrary, "setRelay");
 	m_install   = (InstallFunc)GetProcAddress(m_hookLibrary, "install");
 	m_uninstall = (UninstallFunc)GetProcAddress(m_hookLibrary, "uninstall");
+	m_init      = (InitFunc)GetProcAddress(m_hookLibrary, "init");
+	m_cleanup   = (CleanupFunc)GetProcAddress(m_hookLibrary, "cleanup");
 	if (m_setZone   == NULL ||
 		m_setRelay  == NULL ||
 		m_install   == NULL ||
-		m_uninstall == NULL) {
+		m_uninstall == NULL ||
+		m_init      == NULL ||
+		m_cleanup   == NULL) {
 		log((CLOG_ERR "invalid hook library"));
 		FreeLibrary(m_hookLibrary);
 		throw XScreenOpenFailure();
+	}
+
+	// get the screen saver functions
+	m_installScreenSaver   = (InstallScreenSaverFunc)GetProcAddress(
+								m_hookLibrary, "installScreenSaver");
+	m_uninstallScreenSaver = (UninstallScreenSaverFunc)GetProcAddress(
+								m_hookLibrary, "uninstallScreenSaver");
+	if (m_installScreenSaver == NULL || m_uninstallScreenSaver == NULL) {
+		// disable uninstall if install is unavailable
+		m_uninstallScreenSaver = NULL;
 	}
 
 	// detect operating system
@@ -55,6 +70,11 @@ CMSWindowsPrimaryScreen::~CMSWindowsPrimaryScreen()
 {
 	assert(m_hookLibrary != NULL);
 	assert(m_window      == NULL);
+
+	// uninstall screen saver hook
+	if (m_uninstallScreenSaver != NULL) {
+		m_uninstallScreenSaver();
+	}
 
 	// done with hook library
 	FreeLibrary(m_hookLibrary);
@@ -346,6 +366,12 @@ CMSWindowsPrimaryScreen::isLockedToScreen() const
 	return false;
 }
 
+bool
+CMSWindowsPrimaryScreen::isScreenSaverActive() const
+{
+	return getScreenSaver()->isActive();
+}
+
 void
 CMSWindowsPrimaryScreen::onOpenDisplay()
 {
@@ -354,6 +380,14 @@ CMSWindowsPrimaryScreen::onOpenDisplay()
 
 	// save thread id.  we'll need to pass this to the hook library.
 	m_threadID = GetCurrentThreadId();
+
+	// initialize hook library
+	m_init(m_threadID);
+
+	// install the screen saver hook
+	if (m_installScreenSaver != NULL) {
+		m_installScreenSaver();
+	}
 
 	// get the input desktop and switch to it
 	if (m_is95Family) {
@@ -378,6 +412,14 @@ CMSWindowsPrimaryScreen::onCloseDisplay()
 	else {
 		switchDesktop(NULL);
 	}
+
+	// uninstall the screen saver hook
+	if (m_uninstallScreenSaver != NULL) {
+		m_uninstallScreenSaver();
+	}
+
+	// cleanup hook library
+	m_cleanup();
 
 	// clear thread id
 	m_threadID = 0;
@@ -505,6 +547,17 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 	case SYNERGY_MSG_POST_WARP:
 		m_x = static_cast<SInt32>(msg->wParam);
 		m_y = static_cast<SInt32>(msg->lParam);
+		return true;
+
+	case SYNERGY_MSG_SCREEN_SAVER:
+		if (msg->wParam != 0) {
+			if (getScreenSaver()->checkStarted(msg->message, FALSE, 0)) {
+				m_server->onScreenSaver(true);
+			}
+		}
+		else {
+			m_server->onScreenSaver(false);
+		}
 		return true;
 
 	case WM_TIMER:
@@ -709,7 +762,7 @@ bool
 CMSWindowsPrimaryScreen::openDesktop()
 {
 	// install hooks
-	m_install(m_threadID);
+	m_install();
 
 	// note -- we use a fullscreen window to grab input.  it should
 	// be possible to use a 1x1 window but i've run into problems
@@ -819,7 +872,7 @@ CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 	}
 
 	// install hooks
-	m_install(m_threadID);
+	m_install();
 
 	// note -- we use a fullscreen window to grab input.  it should
 	// be possible to use a 1x1 window but i've run into problems

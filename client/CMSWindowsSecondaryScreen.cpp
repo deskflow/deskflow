@@ -2,6 +2,7 @@
 #include "CClient.h"
 #include "CClipboard.h"
 #include "CMSWindowsClipboard.h"
+#include "CMSWindowsScreenSaver.h"
 #include "CPlatform.h"
 #include "XScreen.h"
 #include "CLock.h"
@@ -97,6 +98,9 @@ CMSWindowsSecondaryScreen::open(CClient* client)
 		grabClipboard(id);
 	}
 
+	// disable the screen saver
+	getScreenSaver()->disable();
+
 	// hide the cursor
 	m_active = true;
 	leave();
@@ -106,6 +110,9 @@ void
 CMSWindowsSecondaryScreen::close()
 {
 	assert(m_client != NULL);
+
+	// restore the screen saver settings
+	getScreenSaver()->enable();
 
 	// close the display
 	closeDisplay();
@@ -379,6 +386,17 @@ CMSWindowsSecondaryScreen::grabClipboard(ClipboardID /*id*/)
 	CMSWindowsClipboard clipboard(m_window);
 	if (clipboard.open(0)) {
 		clipboard.close();
+	}
+}
+
+void
+CMSWindowsSecondaryScreen::screenSaver(bool activate)
+{
+	if (activate) {
+		getScreenSaver()->activate();
+	}
+	else {
+		getScreenSaver()->deactivate();
 	}
 }
 

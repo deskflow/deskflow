@@ -30,6 +30,7 @@ public:
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 	virtual KeyModifierMask	getToggleMask() const;
 	virtual bool		isLockedToScreen() const;
+	virtual bool		isScreenSaverActive() const;
 
 protected:
 	// CMSWindowsScreen overrides
@@ -106,10 +107,14 @@ private:
 
 	// hook library stuff
 	HINSTANCE			m_hookLibrary;
+	InitFunc			m_init;
+	CleanupFunc			m_cleanup;
 	InstallFunc			m_install;
 	UninstallFunc		m_uninstall;
 	SetZoneFunc			m_setZone;
 	SetRelayFunc		m_setRelay;
+	InstallScreenSaverFunc		m_installScreenSaver;
+	UninstallScreenSaverFunc	m_uninstallScreenSaver;
 
 	// stuff for restoring active window
 	HWND				m_lastForegroundWindow;

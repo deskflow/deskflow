@@ -7,6 +7,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+class CMSWindowsScreenSaver;
 class CThread;
 
 class CMSWindowsScreen {
@@ -61,6 +62,10 @@ protected:
 	// windows 95/98/me.
 	bool				isCurrentDesktop(HDESK desk) const;
 
+	// get the screen saver object
+	CMSWindowsScreenSaver*
+						getScreenSaver() const;
+
 	// wait for and get the next message.  cancellable.
 	void				getEvent(MSG*) const;
 
@@ -91,6 +96,7 @@ private:
 	SInt32				m_x, m_y;
 	SInt32				m_w, m_h;
 	DWORD				m_thread;
+	CMSWindowsScreenSaver*	m_screenSaver;
 	static CMSWindowsScreen*	s_screen;
 };
 

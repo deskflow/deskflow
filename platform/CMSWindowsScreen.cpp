@@ -1,4 +1,5 @@
 #include "CMSWindowsScreen.h"
+#include "CMSWindowsScreenSaver.h"
 #include "CThread.h"
 #include "CLock.h"
 #include "TMethodJob.h"
@@ -27,7 +28,8 @@ CMSWindowsScreen::CMSWindowsScreen() :
 	m_cursor(NULL),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
-	m_thread(0)
+	m_thread(0),
+	m_screenSaver(NULL)
 {
 	assert(s_screen == NULL);
 	s_screen = this;
@@ -114,13 +116,20 @@ CMSWindowsScreen::openDisplay()
 
 	// let subclass prep display
 	onOpenDisplay();
+
+	// initialize the screen saver
+	m_screenSaver = new CMSWindowsScreenSaver();
 }
 
 void
 CMSWindowsScreen::closeDisplay()
 {
-	assert(s_instance    != NULL);
-	assert(m_class       != 0);
+	assert(s_instance != NULL);
+	assert(m_class    != 0);
+
+	// done with screen saver
+	delete m_screenSaver;
+	m_screenSaver = NULL;
 
 	// let subclass close down display
 	onCloseDisplay();
@@ -201,6 +210,12 @@ CMSWindowsScreen::isCurrentDesktop(HDESK desk) const
 {
 	return CStringUtil::CaselessCmp::equal(getDesktopName(desk),
 								getCurrentDesktopName());
+}
+
+CMSWindowsScreenSaver*
+CMSWindowsScreen::getScreenSaver() const
+{
+	return m_screenSaver;
 }
 
 void

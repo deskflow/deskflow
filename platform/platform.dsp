@@ -95,6 +95,10 @@ SOURCE=.\CMSWindowsScreen.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CMSWindowsScreenSaver.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CPlatform.cpp
 # End Source File
 # End Group
@@ -108,6 +112,10 @@ SOURCE=.\CMSWindowsClipboard.h
 # Begin Source File
 
 SOURCE=.\CMSWindowsScreen.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsScreenSaver.h
 # End Source File
 # Begin Source File
 
