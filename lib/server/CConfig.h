@@ -27,6 +27,7 @@
 class CConfig;
 
 namespace std {
+template <>
 struct iterator_traits<CConfig> {
 	typedef CString						value_type;
 	typedef ptrdiff_t					difference_type;
