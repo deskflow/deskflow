@@ -6,7 +6,7 @@
 
 void					realMain(const CString& name,
 								const CString& hostname,
-								SInt32 port)
+								UInt16 port)
 {
 	CThread::init();
 	CNetwork::init();
