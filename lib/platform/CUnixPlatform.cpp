@@ -40,6 +40,7 @@ CUnixPlatform::uninstallDaemon(const char*)
 int
 CUnixPlatform::daemonize(const char* name, DaemonFunc func)
 {
+#if HAVE_WORKING_FORK
 	// fork so shell thinks we're done and so we're not a process
 	// group leader
 	switch (fork()) {
@@ -55,6 +56,7 @@ CUnixPlatform::daemonize(const char* name, DaemonFunc func)
 		// parent exits
 		exit(0);
 	}
+#endif
 
 	// become leader of a new session
 	setsid();

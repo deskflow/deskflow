@@ -1,14 +1,21 @@
 dnl Process this file with autoconf to produce a configure script.
 
+dnl initialize
 AC_INIT(lib/base/common.h)
-AM_CONFIG_HEADER(config.h)
 AC_CONFIG_AUX_DIR(config)
-AM_INIT_AUTOMAKE(synergy, 1.0.0)
+
+dnl current version
+MAJOR_VERSION=0
+MINOR_VERSION=9
+RELEASE_VERSION=8
+
+dnl initialize automake
+AM_INIT_AUTOMAKE(synergy, $MAJOR_VERSION.$MINOR_VERSION.$RELEASE_VERSION)
+AM_CONFIG_HEADER(config.h)
 
 dnl information on the package
 
 dnl checks for programs
-AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_RANLIB
 
@@ -20,7 +27,6 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([unistd.h sys/time.h])
 AC_CHECK_HEADERS([istream ostream])
 AC_CHECK_HEADERS([windows.h])
-AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 AC_PATH_X
 AC_PATH_XTRA
@@ -37,26 +43,27 @@ AC_CHECK_SIZEOF(char, 1)
 AC_CHECK_SIZEOF(short, 2)
 AC_CHECK_SIZEOF(int, 2)
 AC_CHECK_SIZEOF(long, 4)
-dnl should check for bool
-dnl should require template support
-dnl should require exception support
+dnl require bool support
+dnl require template support
+dnl require exception support
+dnl require C++ casting support
+dnl require mutable support
 
 dnl checks for library functions
 dnl AC_TYPE_SIGNAL
-dnl AC_FUNC_FORK
+AC_FUNC_FORK
 AC_FUNC_MEMCMP
 AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(gmtime_r)
 AC_CHECK_FUNCS(getpwuid_r)
+AC_CHECK_FUNCS(vsnprintf)
 dnl use AC_REPLACE_FUNCS() for stuff in string.h
 
 dnl checks for system services
 
 
 dnl adjust variables for X11 and pthreads
-CFLAGS="$CFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
 CXXFLAGS="$CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
-CC="$PTHREAD_CC"
 
 AC_OUTPUT([
 Makefile

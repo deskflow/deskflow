@@ -196,9 +196,6 @@ CStopwatch::getClock() const
 #		include <time.h>
 #	endif
 #endif
-#if HAVE_UNISTD_H
-#	include <unistd.h>
-#endif
 
 double
 CStopwatch::getClock() const
