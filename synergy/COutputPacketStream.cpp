@@ -29,7 +29,7 @@ UInt32					COutputPacketStream::write(
 	length[1] = (UInt8)((count >> 16) & 0xff);
 	length[2] = (UInt8)((count >>  8) & 0xff);
 	length[3] = (UInt8)( count        & 0xff);
-	UInt32 count2  = sizeof(length);
+	UInt32 count2        = sizeof(length);
 	const UInt8* cbuffer = length;
 	while (count2 > 0) {
 		UInt32 n = getStream()->write(cbuffer, count2);
