@@ -793,8 +793,7 @@ CXWindowsClipboard::motifGetSelection(const CMotifClipFormat* format,
 IClipboard::Time
 CXWindowsClipboard::motifGetTime() const
 {
-	// FIXME -- where does Motif report this?
-	return 0;
+	return icccmGetTime();
 }
 
 bool
@@ -955,18 +954,15 @@ CXWindowsClipboard::sendReply(CReply* reply)
 
 		// send using INCR if already sending incrementally or if reply
 		// is too large, otherwise just send it.
-		const UInt32 maxRequestSize = 50000;//XXX 4 * XMaxRequestSize(m_display);
+		const UInt32 maxRequestSize = 3 * XMaxRequestSize(m_display);
 		const bool useINCR = (reply->m_data.size() > maxRequestSize);
-log((CLOG_INFO "useINCR: %s", useINCR ? "true" : "false"));
 
 		// send INCR reply if incremental and we haven't replied yet
 		if (useINCR && !reply->m_replied) {
 			UInt32 size = reply->m_data.size();
-log((CLOG_INFO "send first INCR, size=%d", size));
 			if (!CXWindowsUtil::setWindowProperty(m_display,
 								reply->m_requestor, reply->m_property,
 								&size, 4, m_atomINCR, 32)) {
-log((CLOG_INFO "send first INCR failed"));
 				failed = true;
 			}
 		}
@@ -977,8 +973,6 @@ log((CLOG_INFO "send first INCR failed"));
 			UInt32 size = reply->m_data.size() - reply->m_ptr;
 			if (size > maxRequestSize)
 				size = maxRequestSize;
-if (useINCR)
-log((CLOG_INFO "more INCR, size=%d, ptr=%d", size, reply->m_ptr));
 
 			// send it
 			if (!CXWindowsUtil::setWindowProperty(m_display,
@@ -986,8 +980,6 @@ log((CLOG_INFO "more INCR, size=%d, ptr=%d", size, reply->m_ptr));
 								reply->m_data.data() + reply->m_ptr,
 								size,
 								reply->m_type, reply->m_format)) {
-if (useINCR)
-log((CLOG_INFO "more INCR failed"));
 				failed = true;
 			}
 			else {
@@ -996,8 +988,6 @@ log((CLOG_INFO "more INCR failed"));
 				// we've finished the reply if we just sent the zero
 				// size incremental chunk or if we're not incremental.
 				reply->m_done = (size == 0 || !useINCR);
-if (useINCR)
-log((CLOG_INFO "more INCR sent, done = %s", reply->m_done ? "true" : "false"));
 			}
 		}
 	}
@@ -1009,7 +999,6 @@ log((CLOG_INFO "more INCR sent, done = %s", reply->m_done ? "true" : "false"));
 	// the final zero-length property.
 	// FIXME -- how do you gracefully cancel an incremental transfer?
 	if (failed) {
-log((CLOG_INFO "clipboard: sending failure to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		log((CLOG_DEBUG1 "clipboard: sending failure to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		reply->m_done = true;
 		if (reply->m_property != None) {
@@ -1040,7 +1029,6 @@ log((CLOG_INFO "clipboard: sending failure to 0x%08x,%d,%d", reply->m_requestor,
 
 	// send notification if we haven't yet
 	if (!reply->m_replied) {
-log((CLOG_INFO "clipboard: sending notify to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		log((CLOG_DEBUG1 "clipboard: sending notify to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		reply->m_replied = true;
 
