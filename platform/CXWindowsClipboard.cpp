@@ -288,7 +288,6 @@ CXWindowsClipboard::open(Time time) const
 
 	// be sure to flush the cache later if it's dirty
 	m_checkCache = true;
-checkCache();
 
 	return true;
 }
@@ -1161,6 +1160,9 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	XConvertSelection(display, selection, target,
 								m_property, m_requestor, m_time);
 
+	// synchronize with server before we start following timeout countdown
+	XSync(display, False);
+
 	// Xlib inexplicably omits the ability to wait for an event with
 	// a timeout.  (it's inexplicable because there's no portable way
 	// to do it.)  we'll poll until we have what we're looking for or
@@ -1169,10 +1171,10 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	XEvent xevent;
 	SInt32 lastPending = 0;
 	CStopwatch timeout(true);
-	static const double s_timeout = 0.2;	// FIXME -- is this too short?
+	static const double s_timeout = 0.25;	// FIXME -- is this too short?
 	while (!m_done && !m_failed) {
 		// fail if timeout has expired
-		if (timeout.getTime() < s_timeout) {
+		if (timeout.getTime() >= s_timeout) {
 			m_failed = true;
 			break;
 		}
@@ -1183,9 +1185,12 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 		// process events if there are more otherwise sleep
 		if (pending > lastPending) {
 			lastPending = pending;
-			XCheckIfEvent(display, &xevent,
+			while (!m_done && !m_failed &&
+					XCheckIfEvent(display, &xevent,
 						&CXWindowsClipboard::CICCCMGetClipboard::eventPredicate,
-						reinterpret_cast<XPointer>(this));
+						reinterpret_cast<XPointer>(this))) {
+				lastPending = XPending(display);
+			}
 		}
 		else {
 			CThread::sleep(0.01);
