@@ -1,3 +1,387 @@
+2004/05/04 20:45:06 crs
+cmd/launcher/CGlobalOptions.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added GUI for relative mouse moves option on win32.
+
+----------
+2004/05/04 19:44:51 crs
+configure.in
+
+Configured default mac to build for X windows instead of the incomplete
+carbon implementation.
+
+----------
+2004/05/04 19:37:46 crs
+lib/net/CTCPSocket.cpp
+
+Fixed bug in TCP socket that caused a busy loop in the socket
+multiplexer.  That caused a lock up on windows when quitting
+the server with a client connected.
+
+----------
+2004/05/03 21:14:01 crs
+lib/platform/CXWindowsClipboardAnyBitmapConverter.cpp
+lib/platform/CXWindowsClipboardBMPConverter.cpp
+
+Fixed X11 BMP and other bitmap conversion.  Had data alignment
+problems.
+
+----------
+2004/05/02 21:31:19 crs
+lib/base/CUnicode.cpp
+lib/platform/CXWindowsClipboard.cpp
+lib/platform/CXWindowsClipboardAnyBitmapConverter.cpp
+lib/platform/CXWindowsClipboardAnyBitmapConverter.h
+lib/platform/CXWindowsClipboardBMPConverter.cpp
+lib/platform/CXWindowsClipboardBMPConverter.h
+lib/platform/CXWindowsClipboardHTMLConverter.cpp
+lib/platform/CXWindowsClipboardHTMLConverter.h
+lib/platform/Makefile.am
+lib/synergy/IClipboard.h
+
+Added image/bmp and text/html support to X11.
+
+----------
+2004/05/02 16:13:11 crs
+lib/platform/COSXScreen.cpp
+lib/platform/COSXScreen.h
+
+Relative mouse motion for OS X.
+
+----------
+2004/05/02 16:06:04 crs
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+
+Used MouseKeys accessibility function to show the mouse cursor
+on a secondary screen when there's no physical mouse attached to
+the system.  Kinda flaky when a mouse is attached or detached but
+seems to work well enough when the device is not attached to start
+with and not attached while running synergy.
+
+----------
+2004/05/02 16:01:59 crs
+cmd/launcher/CAutoStart.cpp
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchDaemonNone.cpp
+lib/arch/CArchDaemonNone.h
+lib/arch/CArchDaemonWindows.cpp
+lib/arch/CArchDaemonWindows.h
+lib/arch/IArchDaemon.h
+
+Added support for daemon startup dependencies.  Made synergy
+dependent on NetBT, which I hope is right.
+
+----------
+2004/05/02 16:00:45 crs
+lib/synergy/IClipboard.h
+
+Fixed comment about canonical bitmap clipboard format.
+
+----------
+2004/05/02 08:04:48 crs
+lib/platform/CMSWindowsClipboard.cpp
+lib/platform/CMSWindowsClipboardBitmapConverter.cpp
+lib/platform/CMSWindowsClipboardBitmapConverter.h
+lib/platform/CMSWindowsClipboardHTMLConverter.cpp
+lib/platform/CMSWindowsClipboardHTMLConverter.h
+lib/platform/platform.dsp
+lib/server/server.dsp
+lib/synergy/IClipboard.h
+
+Added win32 clipboard support for images and HTML.  Still need X11
+support.
+
+----------
+2004/05/02 08:04:15 crs
+lib/platform/CMSWindowsDesks.cpp
+lib/platform/CMSWindowsDesks.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+
+Added relative mouse move support to win32.
+
+----------
+2004/05/02 08:03:49 crs
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+
+Forgot to change the client to handle relative moves.
+
+----------
+2004/05/01 16:10:09 crs
+lib/platform/CXWindowsClipboard.cpp
+lib/platform/CXWindowsUtil.cpp
+lib/platform/CXWindowsUtil.h
+
+X11 clipboard logging now also prints atom names, not just numbers.
+
+----------
+2004/05/01 15:19:53 crs
+lib/server/CClientProxy1_2.cpp
+lib/server/CClientProxy1_2.h
+
+Added files forgotten in previous checkin.
+
+----------
+2004/05/01 15:18:59 crs
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CClientProxyUnknown.cpp
+lib/server/CConfig.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/Makefile.am
+lib/synergy/CPlatformScreen.h
+lib/synergy/CScreen.cpp
+lib/synergy/CScreen.h
+lib/synergy/IClient.h
+lib/synergy/IPlatformScreen.h
+lib/synergy/ISecondaryScreen.h
+lib/synergy/OptionTypes.h
+lib/synergy/ProtocolTypes.h
+
+Added support for a global relative mouse motion option.  When true
+and on a secondary screen and locked to the screen (via scroll lock)
+mouse motion is sent as motion deltas.  When true and scroll lock
+is toggled off the mouse is warped to the secondary screen's center
+so the server knows where it is.  This option is intended to support
+games and other programs that repeatedly warp the mouse to the center
+of the screen.  This change adds general and X11 support but not
+win32.  The option name is "relativeMouseMoves".
+
+----------
+2004/05/01 12:11:28 crs
+configure.in
+lib/arch/CArchNetworkBSD.cpp
+lib/common/common.h
+
+Better fixes for compiling on FreeBSD and OpenBSD.
+
+----------
+2004/05/01 11:01:40 crs
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+lib/common/common.h
+
+Fixes for FreeBSD.
+
+----------
+2004/05/01 10:12:06 crs
+acinclude.m4
+configure.in
+lib/arch/CArchNetworkBSD.cpp
+lib/platform/CXWindowsScreenSaver.cpp
+
+Fixes to compile on solaris 9 using g++.
+
+----------
+2004/05/01 08:56:24 crs
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+
+Fixed regression where cursor wasn't locked to screen when a mouse
+button is down on win32.
+
+----------
+2004/05/01 08:54:42 crs
+lib/arch/CMultibyte.cpp
+
+Fixed type cast warnings.
+
+----------
+2004/04/13 19:39:04 crs
+configure.in
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchStringUnix.cpp
+lib/arch/CArchStringUnix.h
+lib/arch/CArchStringWindows.cpp
+lib/arch/CArchStringWindows.h
+lib/arch/CMultibyte.cpp
+lib/arch/CMultibyteEmu.cpp
+lib/arch/CMultibyteOS.cpp
+lib/arch/IArchString.h
+lib/arch/Makefile.am
+lib/arch/arch.dsp
+lib/base/CUnicode.cpp
+
+Removed use of mbrtowc, wcrtomb, and mbsinit.  Many platforms
+didn't support them and the emulated versions were just as good
+except for a performance problem with excessive locking and
+unlocking of a mutex.  So this also changes IArchString to
+provide string rather than character conversion so we can lock
+the mutex once per string rather than once per character.
+
+----------
+2004/04/11 20:01:18 crs
+cmd/launcher/Makefile.am
+
+Oops, broke build in launcher on non-win32 platforms.
+
+----------
+2004/04/11 19:43:16 crs
+cmd/launcher/Makefile.am
+lib/platform/Makefile.am
+
+More changes for MSYS/MinGW builds.  Added makefile for launcher.
+Still need hook library and resource compiling.
+
+----------
+2004/04/11 19:15:09 crs
+cmd/launcher/launcher.rc
+cmd/synergyc/synergyc.rc
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.rc
+configure.in
+lib/arch/CArchDaemonWindows.cpp
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchNetworkWinsock.cpp
+lib/arch/CArchStringWindows.cpp
+lib/arch/CArchTaskBarWindows.cpp
+lib/arch/CMultibyte.cpp
+lib/arch/XArchWindows.cpp
+lib/arch/arch.dsp
+lib/common/common.h
+lib/platform/CMSWindowsDesks.cpp
+lib/platform/CMSWindowsKeyState.cpp
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CSynergyHook.cpp
+lib/synergy/CProtocolUtil.cpp
+
+Preliminary support for MSYS/MinGW builds.  Doesn't yet build
+CSynergyHook as a DLL and does not compile or link in the
+resources for the binaries.
+
+----------
+2004/04/11 14:58:08 crs
+PORTING
+cmd/synergyc/COSXClientTaskBarReceiver.cpp
+cmd/synergyc/COSXClientTaskBarReceiver.h
+cmd/synergyc/Makefile.am
+cmd/synergyc/synergyc.cpp
+cmd/synergys/COSXServerTaskBarReceiver.cpp
+cmd/synergys/COSXServerTaskBarReceiver.h
+cmd/synergys/Makefile.am
+cmd/synergys/synergys.cpp
+configure.in
+lib/arch/CArch.cpp
+lib/arch/CArchDaemonUnix.cpp
+lib/arch/CArchFileUnix.cpp
+lib/arch/CArchImpl.cpp
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CMultibyte.cpp
+lib/arch/CMultibyteOS.cpp
+lib/arch/Makefile.am
+lib/arch/vsnprintf.cpp
+lib/base/CPriorityQueue.h
+lib/common/BasicTypes.h
+lib/common/common.h
+lib/platform/COSXClipboard.cpp
+lib/platform/COSXClipboard.h
+lib/platform/COSXEventQueueBuffer.cpp
+lib/platform/COSXEventQueueBuffer.h
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+lib/platform/COSXScreen.cpp
+lib/platform/COSXScreen.h
+lib/platform/COSXScreenSaver.cpp
+lib/platform/COSXScreenSaver.h
+lib/platform/CSynergyHook.h
+lib/platform/CXWindowsEventQueueBuffer.cpp
+lib/platform/CXWindowsScreen.cpp
+lib/platform/Makefile.am
+
+Updates to support OS X.  This improves support for building on
+multiple systems with automake, with X Windows and Carbon window
+system APIs supported.  It's also a starting port for supporting
+win32 builds using mingw.  OS X support is incomplete;  the tree
+will compile and link but the binaries will not function.
+
+----------
+2004/04/06 22:09:38 crs
+lib/arch/CArchMultithreadPosix.cpp
+
+Added missing initialization of mutex attribute call.
+
+----------
+2004/04/05 21:23:44 crs
+lib/server/CServer.cpp
+
+Fixed bug in handling rejection of screen with name that's already
+in use.  The client was being correctly rejected but the already
+connected client was being forcefully disconnected too because the
+client to disconnect was found by looking up the client by name.
+We now instead look up the client by IClient*.
+
+----------
+2004/04/05 21:10:06 crs
+lib/platform/CSynergyHook.cpp
+lib/server/CServer.cpp
+lib/server/CServer.h
+
+Added workaround for win32 low-level mouse hook position weirdness.
+The low-level hook can report mouse positions outside the boundaries
+of the screen and bogus retrograde motion.  This messes up switch on
+double tap.  This change attempts to detect and suppress the bogus
+events.
+
+----------
+2004/04/05 21:08:49 crs
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+
+Made hook debug logging print at DEBUG1 rather than INFO level.
+
+----------
+2004/04/04 12:12:32 crs
+Makefile.am
+cmd/Makefile.am
+cmd/launcher/Makefile.am
+cmd/synergyc/Makefile.am
+cmd/synergys/Makefile.am
+dist/Makefile.am
+dist/nullsoft/Makefile.am
+dist/rpm/Makefile.am
+lib/Makefile.am
+lib/arch/Makefile.am
+lib/base/Makefile.am
+lib/client/Makefile.am
+lib/common/Makefile.am
+lib/io/Makefile.am
+lib/mt/Makefile.am
+lib/net/Makefile.am
+lib/platform/Makefile.am
+lib/server/Makefile.am
+lib/synergy/Makefile.am
+
+Removed DEPTH, VDEPTH, and VPATH from makefiles.
+
+----------
+2004/04/04 12:12:30 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.1.5.
+
+----------
+2004/03/31 22:30:49 crs
+dist/nullsoft/synergy.nsi
+
+Minor win32 installer tweaks.
+
+----------
 2004/03/31 22:15:13 crs
 lib/arch/CArchTaskBarWindows.cpp
 lib/arch/CArchTaskBarWindows.h

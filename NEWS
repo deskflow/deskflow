@@ -1,6 +1,23 @@
 Synergy News
 ============
 
+* May-05-2004 - Synergy 1.1.5 released
+
+  Made following changes:
+  * No longer switching screens when a mouse button is down
+  * Worked around win32 mouse hook bug, fixing switch on double tap
+  * Added support for HTML and bitmap (image/bmp) clipboard data
+  * Physical mouse no longer necessary on win32 secondary screens to see cursor
+  * Added experimental relative mouse moves on secondary screen option
+  * Fixed win32 lock up when closing server with clients still connected
+  * Fixed bug in handling duplicate connections
+  * Fixed pthread mutex initialization
+  * Made synergy dependent on NetBT on win32 (for service startup order)
+  * Automake fixes;  now mostly works on darwin and MinGW
+  * Fixed builds on Solaris 9, FreeBSD, and OpenBSD
+  * Partial support for MSYS/MinGW builds (NOT COMPLETE)
+  * Partial merge of OS X port (NOT COMPLETE)
+
 * Mar-31-2004 - Synergy 1.1.4 released
 
   Made following changes:

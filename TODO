@@ -26,13 +26,12 @@ Things to do to synergy, in no particular order:
 
 * Add more clipboard formats
 
-  Synergy currently supports only text on the clipboard.  It should
-  support more formats, such as images and sound.  For each format,
-  some canonical type must be chosen.  For text, that's UTF-8 with
-  \n for newlines.  For images, it might be BMP or PNG.  Whatever it
-  is it should losslessly support any type it might be converted to.
-  The type is converted to each platform's native type.  For example,
-  BMP for images on win32.
+  Synergy currently supports text, html and BMP bitmaps on the clipboard.
+  It should support more formats, such as other image types and sound.
+  For each format, some canonical type must be chosen.  For text, that's
+  UTF-8 with \n for newlines.  Whatever it is it should losslessly support
+  any type it might be converted to.  The type is converted to each
+  platform's native type.  For example, BMP for images on win32.
 
 Then there are major new features:
 

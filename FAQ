@@ -19,6 +19,8 @@ Questions
 14. The screen saver never starts.  Why not?
 15. I can't switch screens anymore for no apparent reason.  Why?
 16. I get the error 'Xlib: No protocol specified'.  Why?
+17. The cursor goes to secondary screen but won't come back.  Why?
+18. The cursor wraps from one edge of the screen to the opposite.  Why?
 
 Answers
 -------
@@ -181,3 +183,17 @@ Answers
     X display.  Typically the reason is running synergy as root when
     logged in as non-root.  Just run synergy as the same user that's
     logged in.
+
+17. The cursor goes to secondary screen but won't come back.  Why?
+
+    Your configuration is incorrect.  You must indicate the neighbors
+    of every screen.  Just because you've configured 'Apple' to be to
+    the left of 'Orange' does not mean that 'Orange' is to the right
+    of 'Apple'.  You must provide both in the configuration.
+
+18. The cursor wraps from one edge of the screen to the opposite.  Why?
+
+    Because you told it to.  If you list 'Orange' to be to the left of
+    'Orange' then moving the mouse off the left edge of 'Orange' will
+    make it jump to the right edge.  Remove the offending line from the
+    configuration if you don't want that behavior.

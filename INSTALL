@@ -331,6 +331,14 @@ appear before the `links' and `aliases' sections.
         saver won't start if there is input, even if that input
         is directed toward a client screen.
 
+      relativeMouseMoves = {true|false}
+        If set to true then secondary screens move the mouse
+        using relative rather than absolute mouse moves when
+        and only when Scroll Lock is toggled on (i.e. the cursor
+        is locked to the screen).  This is intended to make
+        synergy work better with certain games.  If set to
+        false or not set then all mouse moves are absolute.
+
     You can use both the switchDelay and switchDoubleTap options at
     the same time.  Synergy will switch when either requirement is
     satisfied.
