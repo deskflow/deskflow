@@ -10,20 +10,29 @@ query info			-->
 ---
 use automake
 
+order includes according to source directory
+fix function definitions
+  return type on first line
+  function name in 1st column on 2nd line
+  parameters at 1st tab stop starting 3rd line, one per line
+fix parameter indentation
+  in header file: 7th tab stop (not 8th)
+  in source file: 1st tab stop (not 8th)
+
 ---
 HTTP stuff
   no way to save config using HTTP
     should have a button or a page to force save of config
     or just save config every time it's changed
   should use authentication (at least basic)
+  provide way to kill/restart server via HTTP
+  provide way to query why locked to screen?
+    handy for debugging at least
 
 ---
-use hostname instead of "primary", "secondary"
-
----
-add aliases in config file
-  any alias of a screen name counts as that screen name
-  handy for mapping FQDN <-> hostname
+CThreadRep::threadSignalHandler not shutdown on assert
+  thread stays around and holds our resources (like sockets)
+  should ensure that it terminates correctly
 
 ---
 win32:
@@ -41,9 +50,6 @@ desktop switcher program failure when running synergy as service
   returns access denied from CreateDesktop()
   don't know why
 
-log window may prevent changing desktop
-  should start console in a thread just for that purpose
-
 client will need to be able to retry connecting to server
   in case server isn't ready yet, client can camp
 
@@ -53,6 +59,14 @@ bug with half-duplex keys
   grace converts to half-duplex so only synthesizes key down
   now grace starts server and is locked to screen
   grace should ignore half duplex keys when seeing if locked to screen
+
+---
+must send up key events when leaving screen for keys still down
+  some key combos get eaten and the key ups aren't sent
+  e.g. ctrl+alt+del on win2k to grace
+    mouse is forced back to to win2k
+    ctrl and alt up not sent to grace
+    grace thinks ctrl and alt are down 'til user physically press/releases them
 
 ---
 CClient and CServer:
@@ -106,11 +120,7 @@ unix:
     synergy cannot switch unless it can grab keyboard
     gdm doesn't appear to grab keyboard or mouse for duration
     affects server, only
-
-  get auto-restart into platform code
-    provide a `int(*)(void)' ptr to an auto-restart function
-    function just forks(), calls ptr, waits, repeats
-    may need something else on win32 or maybe just skip it
+  check if DISPLAY env var is unset.  use ":0.0" as default.
 
 ---
 bug in updating screens
@@ -245,15 +255,6 @@ test:
     check accessibility features work on secondary
 
 ---
-audrey->isabel
-  num-lock light on isabel doesn't respond to generated events.
-  seems to be linked to something lower-level.  however, keytest
-  does report num-lock keyboard state is being toggled.
-
-  other toggle lights don't always respond immediately
-    usually go on/off when active window changes though
-
----
 avoid fullscreen transparent window on win32
   using CBT hook to discard activation/focus messages
     but it's not being called when we lose keyboard input
@@ -295,14 +296,6 @@ adjust thread priorities on win32
       haven't tried real-time priority
   a very high priority on client fixes delay when typeing into console
   is it the output console causing the slowness?
-
----
-must send up key events when leaving screen for keys still down
-  some key combos get eaten and the key ups aren't sent
-  e.g. ctrl+alt+del on win2k to grace
-    mouse is forced back to to win2k
-    ctrl and alt up not sent to grace
-    grace thinks ctrl and alt are down 'til user physically press/releases them
 
 ---
 Accessibility Shortcuts
