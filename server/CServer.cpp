@@ -391,7 +391,7 @@ bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 {
-	log((CLOG_DEBUG1 "onMouseMoveSecondary %+d,%+d", dx, dy));
+	log((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
 
 	// mouse move on secondary (client's) screen
 	assert(m_active != NULL);
@@ -465,7 +465,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	if (newScreen == NULL || newScreen == m_active) {
 		// do nothing if mouse didn't move
 		if (m_x != xOld || m_y != yOld) {
-			log((CLOG_DEBUG1 "move on %s to %d,%d", m_active->m_name.c_str(), m_x, m_y));
+			log((CLOG_DEBUG2 "move on %s to %d,%d", m_active->m_name.c_str(), m_x, m_y));
 			m_active->m_protocol->sendMouseMove(m_x, m_y);
 		}
 	}

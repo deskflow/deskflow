@@ -334,7 +334,7 @@ void					CXWindowsPrimaryScreen::warpCursorNoLock(
 	// warp the mouse
 	XWarpPointer(display, None, getRoot(), 0, 0, 0, 0, x, y);
 	XSync(display, False);
-	log((CLOG_DEBUG1 "warped to %d,%d", x, y));
+	log((CLOG_DEBUG2 "warped to %d,%d", x, y));
 
 	// discard mouse events since we just added one we don't want
 	XEvent xevent;
@@ -386,7 +386,7 @@ KeyModifierMask			CXWindowsPrimaryScreen::getToggleMask() const
 		return 0;
 
 	// convert to KeyModifierMask
-	KeyModifierMask mask;
+	KeyModifierMask mask = 0;
 	if (state & m_numLockMask)
 		mask |= KeyModifierNumLock;
 	if (state & m_capsLockMask)
