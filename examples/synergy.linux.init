@@ -3,41 +3,73 @@
 # Startup script for synergy client
 #
 # chkconfig: 5 98 02
-# description: Starts/stops synergy client when X server is started/stopped
+# description: Starts/stops synergy client
 #
 # processname: synergy
+#
+### BEGIN INIT INFO
+# Provides:       synergy
+# Required-Start: $network $syslog
+# Required-Stop:  $network $syslog
+# Default-Start:  5
+# Default-Stop:   0 1 2 3 6
+# Description:    Start synergy client daemon.
+### END INIT INFO
+
+SYNERGY_BIN=/usr/sbin/synergy
+test -x $SYNERGY_BIN || exit 5
 
 # startup command line arguments
 ARGS=192.168.1.3
 
-# Source function library.
+# load function library
+if test -f /etc/rc.status; then
+. /etc/rc.status
+rc_reset
+else
 . /etc/rc.d/init.d/functions
+function startproc ()
+{
+	daemon $*
+}
+function checkproc ()
+{
+	status $*
+}
+function rc_status ()
+{
+	RETVAL=$?
+}
+function rc_exit ()
+{
+	exit $RETVAL
+}
+fi
 
 case "$1" in
-  start)
-        echo -n "Starting synergy client: "
-        daemon synergy $ARGS
-        RETVAL=$?
-        echo
-        ;;
-  stop)
-        echo -n "Stopping synergy client: "
-        killproc synergy
-        RETVAL=$?
-        echo
-        ;;
-  status)
-        status synergy
-        RETVAL=$?
-        ;;
-  restart)
-        $0 stop
-        $0 start
-        RETVAL=$?
-        ;;
-  *)
-        echo "Usage: synergy {start|stop|status|restart}"
-        exit 1
+	start)
+		echo -n "Starting synergy client: "
+		startproc $SYNERGY_BIN $ARGS
+		rc_status -v
+		;;
+	stop)
+		echo -n "Stopping synergy client: "
+		killproc -TERM $SYNERGY_BIN
+		rc_status -v
+		;;
+	restart)
+		$0 stop
+		$0 start
+		rc_status
+		;;
+	status)
+		echo -n "Checking for synergy client: "
+		checkproc $SYNERGY_BIN
+		rc_status -v
+		;;
+	*)
+		echo "Usage: synergy {start|stop|status|restart}"
+		exit 1
 esac
 
-exit $RETVAL
+rc_exit
