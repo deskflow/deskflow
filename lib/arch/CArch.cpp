@@ -23,6 +23,7 @@
 #undef ARCH_NETWORK
 #undef ARCH_SLEEP
 #undef ARCH_STRING
+#undef ARCH_SYSTEM
 #undef ARCH_TASKBAR
 #undef ARCH_TIME
 
@@ -37,6 +38,7 @@
 #	include "CArchNetworkWinsock.h"
 #	include "CArchSleepWindows.h"
 #	include "CArchStringWindows.h"
+#	include "CArchSystemWindows.h"
 #	include "CArchTaskBarWindows.h"
 #	include "CArchTimeWindows.h"
 #elif SYSAPI_UNIX
@@ -50,6 +52,7 @@
 #	include "CArchNetworkBSD.h"
 #	include "CArchSleepUnix.h"
 #	include "CArchStringUnix.h"
+#	include "CArchSystemUnix.h"
 #	include "CArchTaskBarXWindows.h"
 #	include "CArchTimeUnix.h"
 #endif
@@ -86,6 +89,10 @@
 #	error unsupported platform for string
 #endif
 
+#if !defined(ARCH_SYSTEM)
+#	error unsupported platform for system
+#endif
+
 #if !defined(ARCH_TASKBAR)
 #	error unsupported platform for taskbar
 #endif
@@ -108,6 +115,7 @@ CArch::CArch(ARCH_ARGS* args)
 
 	// create architecture implementation objects
 	m_mt      = new ARCH_MULTITHREAD;
+	m_system  = new ARCH_SYSTEM;
 	m_file    = new ARCH_FILE;
 	m_log     = new ARCH_LOG;
 	m_net     = new ARCH_NETWORK;
@@ -135,6 +143,7 @@ CArch::~CArch()
 	delete m_net;
 	delete m_log;
 	delete m_file;
+	delete m_system;
 	delete m_mt;
 
 	// no instance
@@ -579,6 +588,12 @@ IArchString::EWideCharEncoding
 CArch::getWideCharEncoding()
 {
 	return m_string->getWideCharEncoding();
+}
+
+std::string
+CArch::getOSName() const
+{
+	return m_system->getOSName();
 }
 
 void

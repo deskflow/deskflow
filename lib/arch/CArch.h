@@ -23,6 +23,7 @@
 #include "IArchNetwork.h"
 #include "IArchSleep.h"
 #include "IArchString.h"
+#include "IArchSystem.h"
 #include "IArchTaskBar.h"
 #include "IArchTime.h"
 
@@ -52,6 +53,7 @@ class CArch : public IArchConsole,
 				public IArchNetwork,
 				public IArchSleep,
 				public IArchString,
+				public IArchSystem,
 				public IArchTaskBar,
 				public IArchTime {
 public:
@@ -167,6 +169,9 @@ public:
 	virtual EWideCharEncoding
 						getWideCharEncoding();
 
+	// IArchSystem overrides
+	virtual std::string	getOSName() const;
+
 	// IArchTaskBar
 	virtual void		addReceiver(IArchTaskBarReceiver*);
 	virtual void		removeReceiver(IArchTaskBarReceiver*);
@@ -186,6 +191,7 @@ private:
 	IArchNetwork*		m_net;
 	IArchSleep*			m_sleep;
 	IArchString*		m_string;
+	IArchSystem*		m_system;
 	IArchTaskBar*		m_taskbar;
 	IArchTime*			m_time;
 };

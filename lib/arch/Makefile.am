@@ -27,6 +27,7 @@ COMMON_SOURCE_FILES =			\
 	IArchNetwork.h				\
 	IArchSleep.h				\
 	IArchString.h				\
+	IArchSystem.h				\
 	IArchTaskBar.h				\
 	IArchTaskBarReceiver.h		\
 	IArchTime.h					\
@@ -41,6 +42,7 @@ UNIX_SOURCE_FILES =				\
 	CArchNetworkBSD.cpp			\
 	CArchSleepUnix.cpp			\
 	CArchStringUnix.cpp			\
+	CArchSystemUnix.cpp			\
 	CArchTaskBarXWindows.cpp	\
 	CArchTimeUnix.cpp			\
 	XArchUnix.cpp				\
@@ -52,6 +54,7 @@ UNIX_SOURCE_FILES =				\
 	CArchNetworkBSD.h			\
 	CArchSleepUnix.h			\
 	CArchStringUnix.h			\
+	CArchSystemUnix.h			\
 	CArchTaskBarXWindows.h		\
 	CArchTimeUnix.h				\
 	XArchUnix.h					\
@@ -66,6 +69,7 @@ WIN32_SOURCE_FILES = 			\
 	CArchNetworkWinsock.cpp		\
 	CArchSleepWindows.cpp		\
 	CArchStringWindows.cpp		\
+	CArchSystemWindows.cpp		\
 	CArchTaskBarWindows.cpp		\
 	CArchTimeWindows.cpp		\
 	XArchWindows.cpp			\
@@ -78,6 +82,7 @@ WIN32_SOURCE_FILES = 			\
 	CArchNetworkWinsock.h		\
 	CArchSleepWindows.h			\
 	CArchStringWindows.h		\
+	CArchSystemWindows.h		\
 	CArchTaskBarWindows.h		\
 	CArchTimeWindows.h			\
 	XArchWindows.h				\

@@ -127,6 +127,10 @@ SOURCE=.\CArchStringWindows.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CArchSystemWindows.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CArchTaskBarWindows.cpp
 # End Source File
 # Begin Source File
@@ -197,6 +201,10 @@ SOURCE=.\CArchStringWindows.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CArchSystemWindows.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CArchTaskBarWindows.h
 # End Source File
 # Begin Source File
@@ -234,6 +242,10 @@ SOURCE=.\IArchSleep.h
 # Begin Source File
 
 SOURCE=.\IArchString.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IArchSystem.h
 # End Source File
 # Begin Source File
 

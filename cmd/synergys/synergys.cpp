@@ -144,17 +144,24 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 // platform independent main
 //
 
-static CServer*					s_server            = NULL;
-static CScreen*					s_serverScreen      = NULL;
-static CPrimaryClient*			s_primaryClient     = NULL;
-static CClientListener*			s_listener          = NULL;
-static CServerTaskBarReceiver*	s_taskBarReceiver   = NULL;
-static CEvent::Type				s_reloadConfigEvent = CEvent::kUnknown;
+static CServer*					s_server              = NULL;
+static CScreen*					s_serverScreen        = NULL;
+static CPrimaryClient*			s_primaryClient       = NULL;
+static CClientListener*			s_listener            = NULL;
+static CServerTaskBarReceiver*	s_taskBarReceiver     = NULL;
+static CEvent::Type				s_reloadConfigEvent   = CEvent::kUnknown;
+static CEvent::Type				s_forceReconnectEvent = CEvent::kUnknown;
 
 CEvent::Type
 getReloadConfigEvent()
 {
 	return CEvent::registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
+}
+
+CEvent::Type
+getForceReconnectEvent()
+{
+	return CEvent::registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
 }
 
 static
@@ -426,6 +433,15 @@ reloadConfig(const CEvent&, void*)
 }
 
 static
+void
+forceReconnect(const CEvent&, void*)
+{
+	if (s_server != NULL) {
+		s_server->disconnect();
+	}
+}
+
+static
 int
 mainLoop()
 {
@@ -472,6 +488,12 @@ mainLoop()
 							IEventQueue::getSystemTarget(),
 							new CFunctionEventJob(&reloadConfig));
 
+	// handle force reconnect event by disconnecting clients.  they'll
+	// reconnect automatically.
+	EVENTQUEUE->adoptHandler(getForceReconnectEvent(),
+							IEventQueue::getSystemTarget(),
+							new CFunctionEventJob(&forceReconnect));
+
 	// run event loop.  if startServer() failed we're supposed to retry
 	// later.  the timer installed by startServer() will take care of
 	// that.
@@ -487,6 +509,8 @@ mainLoop()
 
 	// close down
 	LOG((CLOG_DEBUG1 "stopping server"));
+	EVENTQUEUE->removeHandler(getForceReconnectEvent(),
+							IEventQueue::getSystemTarget());
 	EVENTQUEUE->removeHandler(getReloadConfigEvent(),
 							IEventQueue::getSystemTarget());
 	stopServer();
@@ -544,6 +568,9 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
 	s_taskBarReceiver = createTaskBarReceiver(&logBuffer);
+
+	// identify system
+	LOG((CLOG_INFO "Synergy server on %s", ARCH->getOSName().c_str()));
 
 	// run
 	int result = startup(argc, argv);

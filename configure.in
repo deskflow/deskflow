@@ -90,6 +90,7 @@ dnl checks for header files
 AC_HEADER_STDC
 AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h wchar.h alloca.h])
 AC_CHECK_HEADERS([sys/socket.h sys/select.h])
+AC_CHECK_HEADERS([sys/utsname.h])
 AC_CHECK_HEADERS([istream ostream sstream])
 AC_HEADER_TIME
 if test x"$acx_host_winapi" = xXWINDOWS; then
