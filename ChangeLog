@@ -1,3 +1,115 @@
+2003/02/17 12:44:37 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.3.
+
+----------
+2003/02/16 19:55:54 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+
+Changed win32 client side cursor warping to be all relative motion
+when not on the primary monitor.  This should eliminate the flicker
+between virtual display 0,0 and the correct position.  While this
+allows the user to confuse synergy by using the client's mouse,
+synergy recovers quickly and easily from any confusion.
+
+----------
+2003/02/16 19:53:56 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+
+Added hack to heuristically detect bogus mouse motion caused by
+a race condition where the synergy server updates the mouse
+position but the synergy hook later receives a mouse update from
+before the position change (i.e. out of order).
+
+----------
+2003/02/16 19:51:46 crs
+lib/platform/CSynergyHook.cpp
+
+Commented out an unnecessary hook and added a compile time
+switch to disable grabbing of keyboard on win32 to facilitate
+debugging.
+
+----------
+2003/02/16 19:50:36 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Changed heap to stack allocation in an oft-called function for
+data that's never used outside the function.
+
+----------
+2003/02/16 19:49:44 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/arch/CArchMultithreadWindows.cpp
+lib/base/CUnicode.cpp
+
+Fixed memory leaks.
+
+----------
+2003/02/12 20:59:25 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Fixed incorrect mouse button swapping on client screens.
+
+----------
+2003/02/12 20:59:08 crs
+lib/arch/CArchDaemonWindows.cpp
+
+Fixed error in debug build on win32.
+
+----------
+2003/02/12 19:50:22 crs
+lib/arch/vsnprintf.cpp
+
+Added a simple implementation of vsnprintf for unix platforms
+without it using /dev/null, vfprintf(), and vsprintf().
+
+----------
+2003/02/12 19:38:39 crs
+lib/arch/CArchMiscWindows.h
+lib/arch/XArch.h
+lib/base/CLog.h
+lib/base/CString.h
+lib/base/ILogOutputter.h
+lib/mt/CCondVar.h
+lib/mt/CLock.h
+lib/mt/CThread.h
+lib/mt/CTimerThread.h
+
+Made sure every file includes common.h directly or indirectly.
+Also made sure common.h is included before any system headers.
+
+----------
+2003/02/01 18:10:43 crs
+FAQ
+INSTALL
+README
+TODO
+
+Added info about using SSH for authentication and encryption.
+
+----------
+2003/01/29 22:16:40 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+To support keymaps with only upper (or lower) case keysyms we now
+use Xlib to convert an unmatched keysym to upper and lower case and
+use whichever, if any, is not the same as the original keysym.
+This supports case conversion in any language that Xlib supports
+it in.
+
+----------
+2003/01/29 19:32:25 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Applied patch from grmcdorman at users dot sourceforge dot net to
+support keymaps that have only uppercase letters, which is the case
+by default on the Sun X server (for US keyboards anyway).
+
+----------
 2003/01/25 13:39:26 crs
 NEWS
 configure.in

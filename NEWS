@@ -1,6 +1,18 @@
 Synergy News
 ============
 
+* Feb-18-2003 - Synergy 1.0.3 released
+
+  Made following changes:
+  * Support for X11 keymaps with only uppercase letters
+  * Fixed memory leaks
+  * Added documentation on using synergy with SSH
+  * Fixed unnecessary left-handed mouse button swapping
+  * Fixed debug build error on win32
+  * Reduced frequency of large cursor jumps when leaving win32 server
+  * Changed cursor motion on win32 multimon to relative moves only
+
+
 * Jan-25-2003 - Synergy 1.0.2 released
 
   Made following changes:
