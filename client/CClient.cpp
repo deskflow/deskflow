@@ -9,7 +9,16 @@
 #include "XSynergy.h"
 #include "TMethodJob.h"
 #include "CLog.h"
+#include <assert.h>
 #include <memory>
+
+// hack to work around operator=() bug in STL in g++ prior to v3
+#if defined(__GNUC__) && (__GNUC__ < 3)
+#define assign(_dst, _src, _type)	_dst.reset(_src)
+#else
+#define assign(_dst, _src, _type)	_dst = std::auto_ptr<_type >(_src)
+#endif
+
 
 //
 // CClient
@@ -31,13 +40,50 @@ CClient::~CClient()
 
 void					CClient::run(const CNetworkAddress& serverAddress)
 {
-	m_serverAddress = &serverAddress;
-	CThread thread(new TMethodJob<CClient>(this, &CClient::runSession));
-	thread.wait();
+	CThread* thread;
+	try {
+		log((CLOG_NOTE "starting client"));
+
+		// connect to secondary screen
+		openSecondaryScreen();
+
+		// start server interactions
+		m_serverAddress = &serverAddress;
+		thread = new CThread(new TMethodJob<CClient>(this, &CClient::runSession));
+
+		// handle events
+		log((CLOG_DEBUG "starting event handling"));
+		m_screen->run();
+
+		// clean up
+		log((CLOG_DEBUG "stopping client"));
+		thread->cancel();
+		thread->wait();
+		delete thread;
+		closeSecondaryScreen();
+	}
+	catch (XBase& e) {
+		log((CLOG_ERR "client error: %s\n", e.what()));
+
+		// clean up
+		thread->cancel();
+		thread->wait();
+		delete thread;
+		closeSecondaryScreen();
+	}
+	catch (...) {
+		log((CLOG_DEBUG "unknown client error"));
+
+		// clean up
+		thread->cancel();
+		thread->wait();
+		delete thread;
+		closeSecondaryScreen();
+		throw;
+	}
 }
 
-#include "CTCPSocket.h"
-#include "CXWindowsSecondaryScreen.h"
+#include "CTCPSocket.h" // FIXME
 void					CClient::runSession(void*)
 {
 	log((CLOG_DEBUG "starting client \"%s\"", m_name.c_str()));
@@ -51,7 +97,7 @@ void					CClient::runSession(void*)
 
 		// create socket and attempt to connect to server
 		log((CLOG_DEBUG "connecting to server"));
-		socket.reset(new CTCPSocket());	// FIXME -- use factory
+		assign(socket, new CTCPSocket(), ISocket);	// FIXME -- use factory
 		socket->connect(*m_serverAddress);
 		log((CLOG_INFO "connected to server"));
 
@@ -72,8 +118,8 @@ void					CClient::runSession(void*)
 */
 
 		// attach the packetizing filters
-		input.reset(new CInputPacketStream(srcInput, own));
-		output.reset(new COutputPacketStream(srcOutput, own));
+		assign(input, new CInputPacketStream(srcInput, own), IInputStream);
+		assign(output, new COutputPacketStream(srcOutput, own), IOutputStream);
 
 		// wait for hello from server
 		log((CLOG_DEBUG "wait for hello"));
@@ -99,26 +145,17 @@ void					CClient::runSession(void*)
 	}
 	catch (XIncompatibleClient& e) {
 		log((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
+		m_screen->stop();
 		return;
 	}
 	catch (XThread&) {
 		log((CLOG_ERR "connection timed out"));
+		m_screen->stop();
 		throw;
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "connection failed: %s", e.what()));
-		return;
-	}
-
-	// connect to screen
-	std::auto_ptr<CScreenCleaner> screenCleaner;
-	try {
-		log((CLOG_DEBUG "creating secondary screen"));
-		m_screen = new CXWindowsSecondaryScreen;
-		screenCleaner.reset(new CScreenCleaner(this, m_screen));
-	}
-	catch (XBase& e) {
-		log((CLOG_ERR "cannot open screen: %s", e.what()));
+		m_screen->stop();
 		return;
 	}
 
@@ -199,16 +236,56 @@ void					CClient::runSession(void*)
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "error: %s", e.what()));
+		m_screen->stop();
 		return;
 	}
-
-	// done with screen
-	log((CLOG_DEBUG "destroying secondary screen"));
-	screenCleaner.reset();
 
 	// done with socket
 	log((CLOG_DEBUG "disconnecting from server"));
 	socket->close();
+
+	// exit event loop
+	m_screen->stop();
+}
+
+// FIXME -- use factory to create screen
+#if defined(CONFIG_PLATFORM_WIN32)
+#include "CMSWindowsSecondaryScreen.h"
+#elif defined(CONFIG_PLATFORM_UNIX)
+#include "CXWindowsSecondaryScreen.h"
+#endif
+void					CClient::openSecondaryScreen()
+{
+	assert(m_screen == NULL);
+
+	// open screen
+	log((CLOG_DEBUG "creating secondary screen"));
+#if defined(CONFIG_PLATFORM_WIN32)
+	m_screen = new CMSWindowsSecondaryScreen;
+#elif defined(CONFIG_PLATFORM_UNIX)
+	m_screen = new CXWindowsSecondaryScreen;
+#endif
+	log((CLOG_DEBUG "opening secondary screen"));
+	m_screen->open(this);
+}
+
+void					CClient::closeSecondaryScreen()
+{
+	assert(m_screen != NULL);
+
+	// close the secondary screen
+	try {
+		log((CLOG_DEBUG "closing secondary screen"));
+		m_screen->close();
+	}
+	catch (...) {
+		// ignore
+	}
+
+	// clean up
+	log((CLOG_DEBUG "destroying secondary screen"));
+	delete m_screen;
+	m_screen = NULL;
 }
 
 void					CClient::onEnter()
@@ -305,29 +382,4 @@ void					CClient::onMouseWheel()
 	SInt32 delta;
 	CProtocolUtil::readf(m_input, kMsgDMouseWheel + 4, &delta);
 	m_screen->mouseWheel(delta);
-}
-
-
-//
-// CClient::CScreenCleaner
-//
-
-CClient::CScreenCleaner::CScreenCleaner(CClient* client,
-								ISecondaryScreen* screen) :
-								m_screen(screen)
-{
-	assert(m_screen != NULL);
-	try {
-		m_screen->open(client);
-	}
-	catch (...) {
-		delete m_screen;
-		throw;
-	}
-}
-
-CClient::CScreenCleaner::~CScreenCleaner()
-{
-	m_screen->close();
-	delete m_screen;
 }

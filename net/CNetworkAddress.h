@@ -2,8 +2,8 @@
 #define CNETWORKADDRESS_H
 
 #include "BasicTypes.h"
+#include "CNetwork.h"
 #include "XSocket.h"
-#include <sys/socket.h>
 
 class CString;
 
@@ -17,11 +17,11 @@ class CNetworkAddress {
 
 	// accessors
 
-	const struct sockaddr*	getAddress() const;
-	int					getAddressLength() const;
+	const CNetwork::Address*	getAddress() const;
+	CNetwork::AddressLength		getAddressLength() const;
 
   private:
-	struct sockaddr		m_address;
+	CNetwork::Address	m_address;
 };
 
 #endif

@@ -4,7 +4,7 @@ include $(DEPTH)/Makecommon
 #
 # target file
 #
-TARGET = server
+TARGETS = server
 
 #
 # source files
@@ -40,8 +40,8 @@ LLDLIBS  =				\
 	-lpthread			\
 	$(NULL)
 
-targets: $(TARGET)
+targets: $(TARGETS)
 
-$(TARGET): $(OBJECTS) $(DEPLIBS)
+$(TARGETS): $(OBJECTS) $(DEPLIBS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS) $(LDFLAGS)
 

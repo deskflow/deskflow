@@ -13,6 +13,15 @@ class ISecondaryScreen : public IInterface {
   public:
 	// manipulators
 
+	// enter the screen's message loop.  this returns when it detects
+	// the application should terminate or when stop() is called.
+	// the screen must be open()'d before run() and must not be
+	// close()'d until run() returns.
+	virtual void		run() = 0;
+
+	// cause run() to return
+	virtual void		stop() = 0;
+
 	// initialize the screen, hide the cursor, and disable the screen
 	// saver.  start reporting certain events to the client (clipboard
 	// stolen and screen size changed).

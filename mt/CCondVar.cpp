@@ -238,7 +238,7 @@ bool					CCondVarBase::wait(
 	}
 
 	// prepare to wait
-	CRefCountedPtr<CThreadRep> currentRep(CThreadRep::getCurrentThreadRep());
+	CThreadPtr currentRep = CThreadRep::getCurrentThreadRep();
 	const DWORD winTimeout = (timeout < 0.0) ? INFINITE :
 								static_cast<DWORD>(1000.0 * timeout);
 	HANDLE* events = reinterpret_cast<HANDLE*>(m_cond);

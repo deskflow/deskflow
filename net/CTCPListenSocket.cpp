@@ -2,11 +2,6 @@
 #include "CTCPSocket.h"
 #include "CNetworkAddress.h"
 #include "CThread.h"
-#include <unistd.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 
 //
 // CTCPListenSocket
@@ -14,8 +9,8 @@
 
 CTCPListenSocket::CTCPListenSocket()
 {
-	m_fd = socket(PF_INET, SOCK_STREAM, 0);
-	if (m_fd == -1) {
+	m_fd = CNetwork::socket(PF_INET, SOCK_STREAM, 0);
+	if (m_fd == CNetwork::Null) {
 		throw XSocketCreate();
 	}
 }
@@ -33,40 +28,44 @@ CTCPListenSocket::~CTCPListenSocket()
 void					CTCPListenSocket::bind(
 								const CNetworkAddress& addr)
 {
-	if (::bind(m_fd, addr.getAddress(), addr.getAddressLength()) == -1) {
-		if (errno == EADDRINUSE) {
+	if (CNetwork::bind(m_fd, addr.getAddress(),
+								addr.getAddressLength()) == CNetwork::Error) {
+		if (CNetwork::getsockerror() == CNetwork::kEADDRINUSE) {
 			throw XSocketAddressInUse();
 		}
 		throw XSocketBind();
 	}
-	if (listen(m_fd, 3) == -1) {
+	if (CNetwork::listen(m_fd, 3) == CNetwork::Error) {
 		throw XSocketBind();
 	}
 }
 
 ISocket*				CTCPListenSocket::accept()
 {
+	CNetwork::PollEntry pfds[1];
+	pfds[0].fd     = m_fd;
+	pfds[0].events = CNetwork::kPOLLIN;
 	for (;;) {
-		struct sockaddr addr;
-		socklen_t addrlen = sizeof(addr);
 		CThread::testCancel();
-		int fd = ::accept(m_fd, &addr, &addrlen);
-		if (fd == -1) {
-			CThread::testCancel();
-		}
-		else {
-			return new CTCPSocket(fd);
+		const int status = CNetwork::poll(pfds, 1, 50);
+		if (status > 0 && (pfds[0].revents & CNetwork::kPOLLIN) != 0) {
+			CNetwork::Address addr;
+			CNetwork::AddressLength addrlen = sizeof(addr);
+			int fd = CNetwork::accept(m_fd, &addr, &addrlen);
+			if (fd != CNetwork::Null) {
+				return new CTCPSocket(fd);
+			}
 		}
 	}
 }
 
 void					CTCPListenSocket::close()
 {
-	if (m_fd == -1) {
+	if (m_fd == CNetwork::Null) {
 		throw XIOClosed();
 	}
-	if (::close(m_fd) == -1) {
+	if (CNetwork::close(m_fd) == CNetwork::Error) {
 		throw XIOClose();
 	}
-	m_fd = -1;
+	m_fd = CNetwork::Null;
 }

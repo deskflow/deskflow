@@ -2,6 +2,7 @@
 #define CTCPLISTENSOCKET_H
 
 #include "IListenSocket.h"
+#include "CNetwork.h"
 
 class CTCPListenSocket : public IListenSocket {
   public:
@@ -18,7 +19,7 @@ class CTCPListenSocket : public IListenSocket {
 	virtual void		close();
 
   private:
-	int					m_fd;
+	CNetwork::Socket	m_fd;
 };
 
 #endif

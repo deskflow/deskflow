@@ -19,7 +19,124 @@ CXWindowsPrimaryScreen::CXWindowsPrimaryScreen() :
 
 CXWindowsPrimaryScreen::~CXWindowsPrimaryScreen()
 {
-	assert(m_window  == None);
+	assert(m_window == None);
+}
+
+void					CXWindowsPrimaryScreen::run()
+{
+	for (;;) {
+		// wait for and get the next event
+		XEvent xevent;
+		if (!getEvent(&xevent)) {
+			break;
+		}
+
+		// handle event
+		switch (xevent.type) {
+		  case CreateNotify: {
+			// select events on new window
+			CDisplayLock display(this);
+			selectEvents(display, xevent.xcreatewindow.window);
+			break;
+		  }
+
+		  case KeyPress: {
+			log((CLOG_DEBUG "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
+			const KeyID key = mapKey(xevent.xkey.keycode, mask);
+			if (key != kKeyNone) {
+				m_server->onKeyDown(key, mask);
+			}
+			break;
+		  }
+
+		  // FIXME -- simulate key repeat.  X sends press/release for
+		  // repeat.  must detect auto repeat and use kKeyRepeat.
+		  case KeyRelease: {
+			log((CLOG_DEBUG "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
+			const KeyID key = mapKey(xevent.xkey.keycode, mask);
+			if (key != kKeyNone) {
+				m_server->onKeyUp(key, mask);
+			}
+			break;
+		  }
+
+		  case ButtonPress: {
+			log((CLOG_DEBUG "event: ButtonPress button=%d", xevent.xbutton.button));
+			const ButtonID button = mapButton(xevent.xbutton.button);
+			if (button != kButtonNone) {
+				m_server->onMouseDown(button);
+			}
+			break;
+		  }
+
+		  case ButtonRelease: {
+			log((CLOG_DEBUG "event: ButtonRelease button=%d", xevent.xbutton.button));
+			const ButtonID button = mapButton(xevent.xbutton.button);
+			if (button != kButtonNone) {
+				m_server->onMouseUp(button);
+			}
+			break;
+		  }
+
+		  case MotionNotify: {
+			log((CLOG_DEBUG "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
+			SInt32 x, y;
+			if (!m_active) {
+				x = xevent.xmotion.x_root;
+				y = xevent.xmotion.y_root;
+				m_server->onMouseMovePrimary(x, y);
+			}
+			else {
+				// FIXME -- slurp up all remaining motion events?
+				// probably not since key strokes may go to wrong place.
+
+				// get mouse deltas
+				{
+					CDisplayLock display(this);
+					Window root, window;
+					int xRoot, yRoot, xWindow, yWindow;
+					unsigned int mask;
+					if (!XQueryPointer(display, m_window, &root, &window,
+								&xRoot, &yRoot, &xWindow, &yWindow, &mask))
+						break;
+
+					// compute position of center of window
+					SInt32 w, h;
+					getScreenSize(&w, &h);
+					x = xRoot - (w >> 1);
+					y = yRoot - (h >> 1);
+
+					// warp mouse back to center
+					warpCursorNoLock(display, w >> 1, h >> 1);
+				}
+
+				m_server->onMouseMoveSecondary(x, y);
+			}
+			break;
+		  }
+
+/*
+		  case SelectionClear:
+			target->XXX(xevent.xselectionclear.);
+			break;
+
+		  case SelectionNotify:
+			target->XXX(xevent.xselection.);
+			break;
+
+		  case SelectionRequest:
+			target->XXX(xevent.xselectionrequest.);
+			break;
+*/
+		}
+	}
+}
+
+void					CXWindowsPrimaryScreen::stop()
+{
+	doStop();
 }
 
 void					CXWindowsPrimaryScreen::open(CServer* server)
@@ -248,116 +365,6 @@ void					CXWindowsPrimaryScreen::selectEvents(
 		for (unsigned int i = 0; i < nc; ++i)
 			selectEvents(display, cw[i]);
 		XFree(cw);
-	}
-}
-
-void					CXWindowsPrimaryScreen::eventThread(void*)
-{
-	for (;;) {
-		// wait for and get the next event
-		XEvent xevent;
-		getEvent(&xevent);
-
-		// handle event
-		switch (xevent.type) {
-		  case CreateNotify: {
-			// select events on new window
-			CDisplayLock display(this);
-			selectEvents(display, xevent.xcreatewindow.window);
-			break;
-		  }
-
-		  case KeyPress: {
-			log((CLOG_DEBUG "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
-			const KeyID key = mapKey(xevent.xkey.keycode, mask);
-			if (key != kKeyNone) {
-				m_server->onKeyDown(key, mask);
-			}
-			break;
-		  }
-
-		  // FIXME -- simulate key repeat.  X sends press/release for
-		  // repeat.  must detect auto repeat and use kKeyRepeat.
-		  case KeyRelease: {
-			log((CLOG_DEBUG "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
-			const KeyID key = mapKey(xevent.xkey.keycode, mask);
-			if (key != kKeyNone) {
-				m_server->onKeyUp(key, mask);
-			}
-			break;
-		  }
-
-		  case ButtonPress: {
-			log((CLOG_DEBUG "event: ButtonPress button=%d", xevent.xbutton.button));
-			const ButtonID button = mapButton(xevent.xbutton.button);
-			if (button != kButtonNone) {
-				m_server->onMouseDown(button);
-			}
-			break;
-		  }
-
-		  case ButtonRelease: {
-			log((CLOG_DEBUG "event: ButtonRelease button=%d", xevent.xbutton.button));
-			const ButtonID button = mapButton(xevent.xbutton.button);
-			if (button != kButtonNone) {
-				m_server->onMouseUp(button);
-			}
-			break;
-		  }
-
-		  case MotionNotify: {
-			log((CLOG_DEBUG "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
-			SInt32 x, y;
-			if (!m_active) {
-				x = xevent.xmotion.x_root;
-				y = xevent.xmotion.y_root;
-				m_server->onMouseMovePrimary(x, y);
-			}
-			else {
-				// FIXME -- slurp up all remaining motion events?
-				// probably not since key strokes may go to wrong place.
-
-				// get mouse deltas
-				{
-					CDisplayLock display(this);
-					Window root, window;
-					int xRoot, yRoot, xWindow, yWindow;
-					unsigned int mask;
-					if (!XQueryPointer(display, m_window, &root, &window,
-								&xRoot, &yRoot, &xWindow, &yWindow, &mask))
-						break;
-
-					// compute position of center of window
-					SInt32 w, h;
-					getScreenSize(&w, &h);
-					x = xRoot - (w >> 1);
-					y = yRoot - (h >> 1);
-
-					// warp mouse back to center
-					warpCursorNoLock(display, w >> 1, h >> 1);
-				}
-
-				m_server->onMouseMoveSecondary(x, y);
-			}
-			break;
-		  }
-
-/*
-		  case SelectionClear:
-			target->XXX(xevent.xselectionclear.);
-			break;
-
-		  case SelectionNotify:
-			target->XXX(xevent.xselection.);
-			break;
-
-		  case SelectionRequest:
-			target->XXX(xevent.xselectionrequest.);
-			break;
-*/
-		}
 	}
 }
 

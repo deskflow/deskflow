@@ -8,12 +8,6 @@
 #include "CThread.h"
 #include "TMethodJob.h"
 #include "CStopwatch.h"
-#include <unistd.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/poll.h>
-#include <netinet/in.h>
 #include <assert.h>
 
 //
@@ -22,16 +16,16 @@
 
 CTCPSocket::CTCPSocket()
 {
-	m_fd = socket(PF_INET, SOCK_STREAM, 0);
-	if (m_fd == -1) {
+	m_fd = CNetwork::socket(PF_INET, SOCK_STREAM, 0);
+	if (m_fd == CNetwork::Null) {
 		throw XSocketCreate();
 	}
 	init();
 }
 
-CTCPSocket::CTCPSocket(int fd) : m_fd(fd)
+CTCPSocket::CTCPSocket(CNetwork::Socket fd) : m_fd(fd)
 {
-	assert(m_fd != -1);
+	assert(m_fd != CNetwork::Null);
 
 	init();
 
@@ -60,8 +54,9 @@ CTCPSocket::~CTCPSocket()
 
 void					CTCPSocket::bind(const CNetworkAddress& addr)
 {
-	if (::bind(m_fd, addr.getAddress(), addr.getAddressLength()) == -1) {
-		if (errno == EADDRINUSE) {
+	if (CNetwork::bind(m_fd, addr.getAddress(),
+								addr.getAddressLength()) == CNetwork::Error) {
+		if (errno == CNetwork::kEADDRINUSE) {
 			throw XSocketAddressInUse();
 		}
 		throw XSocketBind();
@@ -71,7 +66,8 @@ void					CTCPSocket::bind(const CNetworkAddress& addr)
 void					CTCPSocket::connect(const CNetworkAddress& addr)
 {
 	CThread::testCancel();
-	if (::connect(m_fd, addr.getAddress(), addr.getAddressLength()) == -1) {
+	if (CNetwork::connect(m_fd, addr.getAddress(),
+								addr.getAddressLength()) == CNetwork::Error) {
 		CThread::testCancel();
 		throw XSocketConnect();
 	}
@@ -103,11 +99,11 @@ void					CTCPSocket::close()
 	}
 
 	CLock lock(m_mutex);
-	if (m_fd != -1) {
-		if (::close(m_fd) == -1) {
+	if (m_fd != CNetwork::Null) {
+		if (CNetwork::close(m_fd) == CNetwork::Error) {
 			throw XIOClose();
 		}
-		m_fd = -1;
+		m_fd = CNetwork::Null;
 	}
 }
 
@@ -150,10 +146,10 @@ void					CTCPSocket::ioThread(void*)
 
 void					CTCPSocket::ioService()
 {
-	assert(m_fd != -1);
+	assert(m_fd != CNetwork::Null);
 
 	// now service the connection
-	struct pollfd pfds[1];
+	CNetwork::PollEntry pfds[1];
 	pfds[0].fd = m_fd;
 	for (;;) {
 		{
@@ -162,31 +158,32 @@ void					CTCPSocket::ioService()
 			pfds[0].events = 0;
 			if ((m_connected & kRead) != 0) {
 				// still open for reading
-				pfds[0].events |= POLLIN;
+				pfds[0].events |= CNetwork::kPOLLIN;
 			}
 			if ((m_connected & kWrite) != 0 && m_output->getSize() > 0) {
 				// data queued for writing
-				pfds[0].events |= POLLOUT;
+				pfds[0].events |= CNetwork::kPOLLOUT;
 			}
 		}
 
 		// check for status
 		CThread::testCancel();
-		const int status = poll(pfds, 1, 50);
+		const int status = CNetwork::poll(pfds, 1, 50);
 		CThread::testCancel();
 
 		// transfer data and handle errors
 		if (status == 1) {
-			if ((pfds[0].revents & (POLLERR | POLLNVAL)) != 0) {
+			if ((pfds[0].revents & (CNetwork::kPOLLERR |
+									CNetwork::kPOLLNVAL)) != 0) {
 				// stream is no good anymore so bail
 				m_input->hangup();
 				return;
 			}
 
 			// read some data
-			if (pfds[0].revents & POLLIN) {
+			if (pfds[0].revents & CNetwork::kPOLLIN) {
 				UInt8 buffer[4096];
-				ssize_t n = read(m_fd, buffer, sizeof(buffer));
+				ssize_t n = CNetwork::read(m_fd, buffer, sizeof(buffer));
 				if (n > 0) {
 					CLock lock(m_mutex);
 					m_input->write(buffer, n);
@@ -199,7 +196,7 @@ void					CTCPSocket::ioService()
 			}
 
 			// write some data
-			if (pfds[0].revents & POLLOUT) {
+			if (pfds[0].revents & CNetwork::kPOLLOUT) {
 				CLock lock(m_mutex);
 
 				// get amount of data to write
@@ -211,13 +208,13 @@ void					CTCPSocket::ioService()
 
 				// write data
 				const void* buffer = m_output->peek(n);
-				n = (UInt32)write(m_fd, buffer, n);
+				n = (UInt32)CNetwork::write(m_fd, buffer, n);
 
 				// discard written data
 				if (n > 0) {
 					m_output->pop(n);
 				}
-				else if (n == (UInt32)-1 && errno == EPIPE) {
+				else if (n == (UInt32)-1 && CNetwork::getsockerror() == EPIPE) {
 					return;
 				}
 			}
@@ -228,13 +225,13 @@ void					CTCPSocket::ioService()
 void					CTCPSocket::closeInput(void*)
 {
 	// note -- m_mutex should already be locked
-	shutdown(m_fd, 0);
+	CNetwork::shutdown(m_fd, 0);
 	m_connected &= ~kRead;
 }
 
 void					CTCPSocket::closeOutput(void*)
 {
 	// note -- m_mutex should already be locked
-	shutdown(m_fd, 1);
+	CNetwork::shutdown(m_fd, 1);
 	m_connected &= ~kWrite;
 }

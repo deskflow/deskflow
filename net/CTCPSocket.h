@@ -2,6 +2,7 @@
 #define CTCPSOCKET_H
 
 #include "ISocket.h"
+#include "CNetwork.h"
 #include "XThread.h"
 
 class CMutex;
@@ -14,7 +15,7 @@ class CBufferedOutputStream;
 class CTCPSocket : public ISocket {
   public:
 	CTCPSocket();
-	CTCPSocket(int fd);
+	CTCPSocket(CNetwork::Socket);
 	~CTCPSocket();
 
 	// manipulators
@@ -38,7 +39,7 @@ class CTCPSocket : public ISocket {
   private:
 	enum { kClosed = 0, kRead = 1, kWrite = 2, kReadWrite = 3 };
 
-	int						m_fd;
+	CNetwork::Socket		m_fd;
 	CBufferedInputStream*	m_input;
 	CBufferedOutputStream*	m_output;
 

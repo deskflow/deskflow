@@ -24,6 +24,10 @@ class CClient {
   private:
 	void				runSession(void*);
 
+	// open/close the primary screen
+	void				openSecondaryScreen();
+	void				closeSecondaryScreen();
+
 	// message handlers
 	void				onEnter();
 	void				onLeave();
@@ -39,16 +43,6 @@ class CClient {
 	void				onMouseUp();
 	void				onMouseMove();
 	void				onMouseWheel();
-
-  private:
-	class CScreenCleaner {
-	  public:
-		CScreenCleaner(CClient*, ISecondaryScreen*);
-		~CScreenCleaner();
-
-	  private:
-		ISecondaryScreen*	m_screen;
-	};
 
   private:
 	CString				m_name;

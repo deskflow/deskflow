@@ -17,4 +17,3 @@ class CXWindowsClipboard : public IClipboard {
 };
 
 #endif
-

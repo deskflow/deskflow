@@ -15,9 +15,13 @@
 #define CONFIG_TYPES_X11
 #define CONFIG_PTHREADS
 
-#elif defined(_WINDOWS) && defined(WIN32)
+#elif defined(_WIN32)
 
 #define CONFIG_PLATFORM_WIN32
+
+#if (_MSC_VER >= 1200)
+#pragma warning(disable: 4786) // identifier truncated in debug info
+#endif
 
 #else
 

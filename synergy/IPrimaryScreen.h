@@ -11,6 +11,15 @@ class IPrimaryScreen : public IInterface {
   public:
 	// manipulators
 
+	// enter the screen's message loop.  this returns when it detects
+	// the application should terminate or when stop() is called.
+	// the screen must be open()'d before run() and must not be
+	// close()'d until run() returns.
+	virtual void		run() = 0;
+
+	// cause run() to return
+	virtual void		stop() = 0;
+
 	// initialize the screen and start reporting events to the server.
 	// events should be reported no matter where on the screen they
 	// occur but do not interfere with normal event dispatch.  the
@@ -26,8 +35,9 @@ class IPrimaryScreen : public IInterface {
 
 	// called when the user navigates back to the primary screen.
 	// warp the cursor to the given coordinates, unhide it, and
-	// ungrab the input devices.  every call to method has a matching
-	// call to leave() which preceeds it.
+	// ungrab the input devices.  every call to enter has a matching
+	// call to leave() which preceeds it, however the screen can
+	// assume an implicit call to enter() in the call to open().
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
 
 	// called when the user navigates off the primary screen.  hide

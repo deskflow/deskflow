@@ -1,0 +1,215 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "all"=.\all.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name client
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name server
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "base"=.\base\base.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .\base
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "client"=.\client\client.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .\client
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name base
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name io
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name mt
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name net
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name synergy
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "io"=.\io\io.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .\io
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "makehook"=.\server\makehook.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name synrgyhk
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "mt"=.\mt\mt.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .\mt
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "net"=.\net\net.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .\net
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "server"=.\server\server.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .\server
+    end source code control
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name base
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name io
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name mt
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name net
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name synergy
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name makehook
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "synergy"=.\synergy\synergy.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .\synergy
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "synrgyhk"=.\server\synrgyhk.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    millpond
+    .\server
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

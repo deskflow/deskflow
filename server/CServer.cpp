@@ -20,6 +20,14 @@
 #include <assert.h>
 #include <memory>
 
+// hack to work around operator=() bug in STL in g++ prior to v3
+#if defined(__GNUC__) && (__GNUC__ < 3)
+#define assign(_dst, _src, _type)	_dst.reset(_src)
+#else
+#define assign(_dst, _src, _type)	_dst = std::auto_ptr<_type >(_src)
+#endif
+
+
 /* XXX
 #include <stdlib.h>
 #include <unistd.h>
@@ -33,8 +41,7 @@ else { wait(0); exit(1); }
 // CServer
 //
 
-CServer::CServer() : m_done(&m_mutex, false),
-								m_primary(NULL),
+CServer::CServer() : m_primary(NULL),
 								m_active(NULL),
 								m_primaryInfo(NULL)
 {
@@ -61,31 +68,28 @@ void					CServer::run()
 		// start listening for configuration connections
 		// FIXME
 
-		// wait until done
-		log((CLOG_DEBUG "waiting for quit"));
-		CLock lock(&m_mutex);
-		while (m_done == false) {
-			m_done.wait();
-		}
+		// handle events
+		log((CLOG_DEBUG "starting event handling"));
+		m_primary->run();
 
 		// clean up
 		log((CLOG_DEBUG "stopping server"));
-		closePrimaryScreen();
 		cleanupThreads();
+		closePrimaryScreen();
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "server error: %s\n", e.what()));
 
 		// clean up
-		closePrimaryScreen();
 		cleanupThreads();
+		closePrimaryScreen();
 	}
 	catch (...) {
-		log((CLOG_DEBUG "server shutdown"));
+		log((CLOG_DEBUG "unknown server error"));
 
 		// clean up
-		closePrimaryScreen();
 		cleanupThreads();
+		closePrimaryScreen();
 		throw;
 	}
 }
@@ -105,6 +109,21 @@ void					CServer::getScreenMap(CScreenMap* screenMap) const
 
 	CLock lock(&m_mutex);
 	*screenMap = m_screenMap;
+}
+
+UInt32					CServer::getActivePrimarySides() const
+{
+	UInt32 sides = 0;
+	CLock lock(&m_mutex);
+	if (!m_screenMap.getNeighbor("primary", CScreenMap::kLeft).empty())
+		sides |= CScreenMap::kLeftMask;
+	if (!m_screenMap.getNeighbor("primary", CScreenMap::kRight).empty())
+		sides |= CScreenMap::kRightMask;
+	if (!m_screenMap.getNeighbor("primary", CScreenMap::kTop).empty())
+		sides |= CScreenMap::kTopMask;
+	if (!m_screenMap.getNeighbor("primary", CScreenMap::kBottom).empty())
+		sides |= CScreenMap::kBottomMask;
+	return sides;
 }
 
 void					CServer::setInfo(const CString& client,
@@ -206,7 +225,7 @@ void					CServer::onMouseUp(ButtonID id)
 	}
 }
 
-void					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
+bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 {
 	log((CLOG_DEBUG "onMouseMovePrimary %d,%d", x, y));
 
@@ -216,7 +235,7 @@ void					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// ignore if mouse is locked to screen
 	if (isLockedToScreen()) {
-		return;
+		return false;
 	}
 
 	// see if we should change screens
@@ -243,7 +262,7 @@ void					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 	}
 	else {
 		// still on local screen
-		return;
+		return false;
 	}
 
 	// get jump destination
@@ -251,7 +270,7 @@ void					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// if no screen in jump direction then ignore the move
 	if (newScreen == NULL) {
-		return;
+		return false;
 	}
 
 	// remap position to account for resolution differences
@@ -259,6 +278,7 @@ void					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 	// switch screen
 	switchScreen(newScreen, x, y);
+	return true;
 }
 
 void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
@@ -365,7 +385,11 @@ bool					CServer::isLockedToScreen() const
 	return false;
 }
 
+#if defined(CONFIG_PLATFORM_WIN32)
+#include "CMSWindowsClipboard.h" // FIXME
+#elif defined(CONFIG_PLATFORM_UNIX)
 #include "CXWindowsClipboard.h" // FIXME
+#endif
 void					CServer::switchScreen(CScreenInfo* dst,
 								SInt32 x, SInt32 y)
 {
@@ -384,7 +408,11 @@ void					CServer::switchScreen(CScreenInfo* dst,
 			m_primary->leave();
 
 			// FIXME -- testing
+#if defined(CONFIG_PLATFORM_WIN32)
+			CMSWindowsClipboard clipboard;
+#elif defined(CONFIG_PLATFORM_UNIX)
 			CXWindowsClipboard clipboard;
+#endif
 			m_primary->getClipboard(&clipboard);
 		}
 		else {
@@ -610,8 +638,8 @@ void					CServer::acceptClients(void*)
 	std::auto_ptr<IListenSocket> listen;
 	try {
 		// create socket listener
-//		listen.reset(m_socketFactory->createListen());
-		listen.reset(new CTCPListenSocket);		// FIXME
+//		listen = std::auto_ptr<IListenSocket>(m_socketFactory->createListen());
+		assign(listen, new CTCPListenSocket, IListenSocket); // FIXME
 
 		// bind to the desired port.  keep retrying if we can't bind
 		// the address immediately.
@@ -689,8 +717,8 @@ void					CServer::handshakeClient(void* vsocket)
 		}
 
 		// attach the packetizing filters
-		input.reset(new CInputPacketStream(srcInput, own));
-		output.reset(new COutputPacketStream(srcOutput, own));
+		assign(input, new CInputPacketStream(srcInput, own), IInputStream);
+		assign(output, new COutputPacketStream(srcOutput, own), IOutputStream);
 
 		std::auto_ptr<IServerProtocol> protocol;
 		std::auto_ptr<CConnectionNote> connectedNote;
@@ -730,12 +758,13 @@ void					CServer::handshakeClient(void* vsocket)
 
 			// create a protocol interpreter for the version
 			log((CLOG_DEBUG "creating interpreter for client %s version %d.%d", name.c_str(), major, minor));
-			protocol.reset(CServerProtocol::create(major, minor,
-									this, name, input.get(), output.get()));
+			assign(protocol, CServerProtocol::create(major, minor,
+									this, name, input.get(), output.get()),
+									IServerProtocol);
 
 			// client is now pending
-			connectedNote.reset(new CConnectionNote(this,
-									name, protocol.get()));
+			assign(connectedNote, new CConnectionNote(this,
+									name, protocol.get()), CConnectionNote);
 
 			// ask and wait for the client's info
 			log((CLOG_DEBUG "waiting for info for client %s", name.c_str()));
@@ -766,20 +795,26 @@ void					CServer::handshakeClient(void* vsocket)
 
 void					CServer::quit()
 {
-	CLock lock(&m_mutex);
-	m_done = true;
-	m_done.broadcast();
+	m_primary->stop();
 }
 
 // FIXME -- use factory to create screen
+#if defined(CONFIG_PLATFORM_WIN32)
+#include "CMSWindowsPrimaryScreen.h"
+#elif defined(CONFIG_PLATFORM_UNIX)
 #include "CXWindowsPrimaryScreen.h"
+#endif
 void					CServer::openPrimaryScreen()
 {
 	assert(m_primary == NULL);
 
 	// open screen
 	log((CLOG_DEBUG "creating primary screen"));
+#if defined(CONFIG_PLATFORM_WIN32)
+	m_primary = new CMSWindowsPrimaryScreen;
+#elif defined(CONFIG_PLATFORM_UNIX)
 	m_primary = new CXWindowsPrimaryScreen;
+#endif
 	log((CLOG_DEBUG "opening primary screen"));
 	m_primary->open(this);
 
@@ -828,8 +863,9 @@ void					CServer::removeCleanupThread(const CThread& thread)
 	for (CThreadList::iterator index = m_cleanupList.begin();
 								index != m_cleanupList.end(); ++index) {
 		if (**index == thread) {
+			CThread* thread = *index;
 			m_cleanupList.erase(index);
-			delete *index;
+			delete thread;
 			return;
 		}
 	}
@@ -877,7 +913,7 @@ void					CServer::removeConnection(const CString& name)
 	assert(index != m_screens.end());
 
 	// if this is active screen then we have to jump off of it
-	if (m_active == index->second) {
+	if (m_active == index->second && m_active != m_primaryInfo) {
 		// record new position (center of primary screen)
 		m_x = m_primaryInfo->m_width >> 1;
 		m_y = m_primaryInfo->m_height >> 1;

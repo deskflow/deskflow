@@ -12,10 +12,17 @@
 #define SIGWAKEUP SIGUSR1
 #endif
 
+#if defined(CONFIG_PLATFORM_WIN32)
+# if !defined(_MT)
+#  error multithreading compile option is required
+# endif
+#include <process.h>
+#endif
+
 // FIXME -- temporary exception type
 class XThreadUnavailable { };
 
-#ifndef NDEBUG
+#if defined(CONFIG_PLATFORM_UNIX) && !defined(NDEBUG)
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -146,19 +153,19 @@ void					CThreadRep::initThreads()
 		act.sa_handler = &threadDebug;
 		sigaction(SIGSEGV, &act, NULL);
 # endif
-#endif
 
 		// set signal mask
 		sigset_t sigset;
 		sigemptyset(&sigset);
 		sigaddset(&sigset, SIGWAKEUP);
-#ifndef NDEBUG
+# ifndef NDEBUG
 		sigaddset(&sigset, SIGSEGV);
-#endif
+# endif
 		pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
 		sigemptyset(&sigset);
 		sigaddset(&sigset, SIGPIPE);
 		pthread_sigmask(SIG_BLOCK, &sigset, NULL);
+#endif
 	}
 }
 
@@ -255,7 +262,7 @@ void					CThreadRep::doThreadFunc()
 		m_job->run();
 	}
 
-	catch (XThreadCancel& e) {
+	catch (XThreadCancel&) {
 		// client called cancel()
 		log((CLOG_DEBUG "caught cancel on thread %p", this));
 	}
@@ -421,8 +428,6 @@ void					CThreadRep::threadCancel(int)
 
 #elif defined(CONFIG_PLATFORM_WIN32)
 
-#include <process.h>
-
 void					CThreadRep::init()
 {
 	m_result      = NULL;
@@ -485,7 +490,7 @@ bool					CThreadRep::wait(CThreadRep* target, double timeout)
 {
 	// get the current thread.  if it's the same as the target thread
 	// then the thread is waiting on itself.
-	CRefCountedPtr<CThreadRep> currentRep(CThreadRep::getCurrentThreadRep());
+	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	if (target == this)
 		return false;
 

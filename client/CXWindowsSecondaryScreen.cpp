@@ -22,6 +22,51 @@ CXWindowsSecondaryScreen::~CXWindowsSecondaryScreen()
 	assert(m_window  == None);
 }
 
+void					CXWindowsSecondaryScreen::run()
+{
+	assert(m_window != None);
+
+	for (;;) {
+		// wait for and get the next event
+		XEvent xevent;
+		if (!getEvent(&xevent)) {
+			break;
+		}
+
+		// handle event
+		switch (xevent.type) {
+		  case LeaveNotify: {
+			// mouse moved out of hider window somehow.  hide the window.
+			assert(m_window != None);
+			CDisplayLock display(this);
+			XUnmapWindow(display, m_window);
+			break;
+		  }
+
+/*
+		  // FIXME -- handle screen resolution changes
+
+		  case SelectionClear:
+			target->XXX(xevent.xselectionclear.);
+			break;
+
+		  case SelectionNotify:
+			target->XXX(xevent.xselection.);
+			break;
+
+		  case SelectionRequest:
+			target->XXX(xevent.xselectionrequest.);
+			break;
+*/
+		}
+	}
+}
+
+void					CXWindowsSecondaryScreen::stop()
+{
+	doStop();
+}
+
 void					CXWindowsSecondaryScreen::open(CClient* client)
 {
 	assert(m_client == NULL);
@@ -172,44 +217,6 @@ void					CXWindowsSecondaryScreen::onCloseDisplay()
 	// destroy window
 	XDestroyWindow(display, m_window);
 	m_window = None;
-}
-
-void					CXWindowsSecondaryScreen::eventThread(void*)
-{
-	assert(m_window != None);
-
-	for (;;) {
-		// wait for and get the next event
-		XEvent xevent;
-		getEvent(&xevent);
-
-		// handle event
-		switch (xevent.type) {
-		  case LeaveNotify: {
-			// mouse moved out of hider window somehow.  hide the window.
-			assert(m_window != None);
-			CDisplayLock display(this);
-			XUnmapWindow(display, m_window);
-			break;
-		  }
-
-/*
-		  // FIXME -- handle screen resolution changes
-
-		  case SelectionClear:
-			target->XXX(xevent.xselectionclear.);
-			break;
-
-		  case SelectionNotify:
-			target->XXX(xevent.xselection.);
-			break;
-
-		  case SelectionRequest:
-			target->XXX(xevent.xselectionrequest.);
-			break;
-*/
-		}
-	}
 }
 
 void					CXWindowsSecondaryScreen::leaveNoLock(Display* display)

@@ -78,3 +78,23 @@ server:
 		asynchronously handle primary screen events
 	comm
 		send/recv messages to/from clients
+
+---
+win32:
+  double click support
+  need to support window stations
+    login screen on NT is a separate window station
+  handle display changes
+
+---
+win32 key translation (client)
+  get character for key (with appropriate shift)
+  keypad enter -> VK_???
+  sys req -> VK_???
+  compose -> VK_???
+
+X11 key translation (server)
+  handle compose key?
+   * don't send compose, don't send dead keys, send composed key?
+   * send all keys, let client do compose
+

@@ -41,4 +41,3 @@ class IClipboard : public IInterface {
 };
 
 #endif
-

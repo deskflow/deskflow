@@ -4,7 +4,6 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "CScreenMap.h"
-#include "CCondVar.h"
 #include "CMutex.h"
 #include "CString.h"
 #include "XBase.h"
@@ -24,18 +23,23 @@ class CServer {
 
 	// manipulators
 
+	// start the server.  does not return until quit() is called.
 	void				run();
+
+	// tell server to exit gracefully
+	void				quit();
 
 	// update screen map
 	void				setScreenMap(const CScreenMap&);
 
-	// handle events on server's screen
+	// handle events on server's screen.  onMouseMovePrimary() returns
+	// true iff the mouse enters a jump zone and jumps.
 	void				onKeyDown(KeyID, KeyModifierMask);
 	void				onKeyUp(KeyID, KeyModifierMask);
 	void				onKeyRepeat(KeyID, KeyModifierMask);
 	void				onMouseDown(ButtonID);
 	void				onMouseUp(ButtonID);
-	void				onMouseMovePrimary(SInt32 x, SInt32 y);
+	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
 	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	void				onMouseWheel(SInt32 delta);
 
@@ -50,9 +54,11 @@ class CServer {
 	// get the current screen map
 	void				getScreenMap(CScreenMap*) const;
 
+	// get the sides of the primary screen that have neighbors
+	UInt32				getActivePrimarySides() const;
+
   protected:
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
-	void				quit();
 
   private:
 	class CCleanupNote {
@@ -137,7 +143,6 @@ class CServer {
 	typedef std::map<CString, CScreenInfo*> CScreenList;
 
 	CMutex				m_mutex;
-	CCondVar<bool>		m_done;
 
 	double				m_bindTimeout;
 

@@ -10,6 +10,8 @@ class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen
 	virtual ~CXWindowsSecondaryScreen();
 
 	// ISecondaryScreen overrides
+	virtual void		run();
+	virtual void		stop();
 	virtual void		open(CClient*);
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute);
@@ -28,7 +30,6 @@ class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen
 	// CXWindowsScreen overrides
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
-	virtual void		eventThread(void*);
 
   private:
 	void				leaveNoLock(Display*);

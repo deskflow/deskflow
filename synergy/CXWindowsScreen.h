@@ -7,7 +7,6 @@
 #include <X11/Xlib.h>
 
 class CString;
-class CThread;
 
 class CXWindowsScreen {
   public:
@@ -50,7 +49,10 @@ class CXWindowsScreen {
 	Cursor				createBlankCursor() const;
 
 	// wait for and get the next X event.  cancellable.
-	void				getEvent(XEvent*) const;
+	bool				getEvent(XEvent*) const;
+
+	// cause getEvent() to return false immediately and forever after
+	void				doStop();
 
 	// copy the clipboard contents to clipboard.  requestor must be a
 	// valid window;  it will be used to receive the transfer.  timestamp
@@ -63,9 +65,6 @@ class CXWindowsScreen {
 
 	// called by closeDisplay() to 
 	virtual void		onCloseDisplay() = 0;
-
-	// override to process X events
-	virtual void		eventThread(void*) = 0;
 
   private:
 	struct PropertyNotifyInfo {
@@ -87,11 +86,11 @@ class CXWindowsScreen {
 								XEvent* xevent, XPointer arg);
 
   private:
-	CThread*			m_eventThread;
 	Display*			m_display;
 	int					m_screen;
 	Window				m_root;
 	SInt32				m_w, m_h;
+	bool				m_stop;
 
 	// atoms we'll need
 	Atom				m_atomTargets;

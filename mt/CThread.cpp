@@ -6,26 +6,6 @@
 #include "CLog.h"
 
 //
-// CThreadPtr
-//
-
-class CThreadPtr {
-  public:
-	CThreadPtr(CThreadRep* rep) : m_rep(rep) { }
-	~CThreadPtr() { m_rep->unref(); }
-
-	CThreadRep*			operator->() const { return m_rep; }
-
-  private:
-	// not implemented
-	CThreadPtr(const CThreadPtr&);
-	CThreadPtr& operator=(const CThreadPtr&);
-
-  private:
-	CThreadRep*			m_rep;
-};
-
-//
 // CThread
 //
 

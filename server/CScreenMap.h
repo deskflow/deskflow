@@ -9,6 +9,8 @@ class CScreenMap {
   public:
 	enum EDirection { kLeft, kRight, kTop, kBottom,
 						kFirstDirection = kLeft, kLastDirection = kBottom };
+	enum EDirectionMask { kLeftMask = 1, kRightMask = 2,
+							kTopMask = 4, kBottomMask = 8 };
 
 	CScreenMap();
 	virtual ~CScreenMap();

@@ -17,7 +17,8 @@
 CXWindowsScreen::CXWindowsScreen() :
 								m_display(NULL),
 								m_root(None),
-								m_w(0), m_h(0)
+								m_w(0), m_h(0),
+								m_stop(false)
 {
 	// do nothing
 }
@@ -58,24 +59,11 @@ void					CXWindowsScreen::openDisplay()
 
 	// let subclass prep display
 	onOpenDisplay();
-
-	// start processing events
-	m_eventThread = new CThread(new TMethodJob<CXWindowsScreen>(
-								this, &CXWindowsScreen::eventThread));
 }
 
 void					CXWindowsScreen::closeDisplay()
 {
 	assert(m_display != NULL);
-	assert(m_eventThread != NULL);
-
-	// stop event thread
-	log((CLOG_DEBUG "stopping event thread"));
-	m_eventThread->cancel();
-	m_eventThread->wait();
-	delete m_eventThread;
-	m_eventThread = NULL;
-	log((CLOG_DEBUG "stopped event thread"));
 
 	// let subclass close down display
 	onCloseDisplay();
@@ -143,18 +131,31 @@ Cursor					CXWindowsScreen::createBlankCursor() const
 	return cursor;
 }
 
-void					CXWindowsScreen::getEvent(XEvent* xevent) const
+bool					CXWindowsScreen::getEvent(XEvent* xevent) const
 {
 	// wait for an event in a cancellable way and don't lock the
 	// display while we're waiting.
 	m_mutex.lock();
-	while (XPending(m_display) == 0) {
+	while (!m_stop && XPending(m_display) == 0) {
 		m_mutex.unlock();
 		CThread::sleep(0.05);
 		m_mutex.lock();
 	}
-	XNextEvent(m_display, xevent);
-	m_mutex.unlock();
+	if (m_stop) {
+		m_mutex.unlock();
+		return true;
+	}
+	else {
+		XNextEvent(m_display, xevent);
+		m_mutex.unlock();
+		return false;
+	}
+}
+
+void					CXWindowsScreen::doStop()
+{
+	CLock lock(&m_mutex);
+	m_stop = true;
 }
 
 void					CXWindowsScreen::getDisplayClipboard(

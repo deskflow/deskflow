@@ -2,7 +2,7 @@
 #include <errno.h>
 
 // win32 wants a const char* argument to std::exception c'tor
-#if CONFIG_PLATFORM_WIN32
+#if defined(CONFIG_PLATFORM_WIN32)
 #define STDEXCEPTARG ""
 #endif
 

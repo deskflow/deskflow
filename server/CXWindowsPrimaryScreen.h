@@ -12,6 +12,8 @@ class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 	virtual ~CXWindowsPrimaryScreen();
 
 	// IPrimaryScreen overrides
+	virtual void		run();
+	virtual void		stop();
 	virtual void		open(CServer*);
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute);
@@ -26,7 +28,6 @@ class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 	// CXWindowsScreen overrides
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
-	virtual void		eventThread(void*);
 
   private:
 	void				selectEvents(Display*, Window) const;

@@ -15,10 +15,11 @@ LCXXINCS =				\
 	-I$(DEPTH)/io	 		\
 	$(NULL)
 CXXFILES = 				\
-	XSocket.cpp			\
+	CNetwork.cpp			\
 	CNetworkAddress.cpp		\
 	CTCPSocket.cpp			\
 	CTCPListenSocket.cpp		\
+	XSocket.cpp			\
 	$(NULL)
 
 targets: $(LIBTARGET)
