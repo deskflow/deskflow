@@ -29,6 +29,10 @@ const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
 
 CServer::CServer(const CString& serverName) :
 	m_name(serverName),
+	m_bindTimeout(5.0 * 60.0),
+	m_socketFactory(NULL),
+	m_securityFactory(NULL),
+	m_acceptClientThread(NULL),
 	m_active(NULL),
 	m_primaryClient(NULL),
 	m_seqNum(0),
@@ -36,9 +40,7 @@ CServer::CServer(const CString& serverName) :
 	m_httpServer(NULL),
 	m_httpAvailable(&m_mutex, s_httpMaxSimultaneousRequests)
 {
-	m_socketFactory = NULL;
-	m_securityFactory = NULL;
-	m_bindTimeout = 5.0 * 60.0;
+	// do nothing
 }
 
 CServer::~CServer()
@@ -82,7 +84,9 @@ CServer::run()
 		log((CLOG_NOTE "starting server"));
 
 		// start listening for new clients
-		startThread(new TMethodJob<CServer>(this, &CServer::acceptClients));
+		m_acceptClientThread = new CThread(startThread(
+								new TMethodJob<CServer>(this,
+									&CServer::acceptClients)));
 
 		// start listening for HTTP requests
 		if (m_config.getHTTPAddress().isValid()) {
@@ -220,6 +224,7 @@ CServer::onError()
 	stopThreads(3.0);
 
 	// done with the HTTP server
+	CLock lock(&m_mutex);
 	delete m_httpServer;
 	m_httpServer = NULL;
 
@@ -1016,7 +1021,7 @@ CServer::closeClients(const CConfig& config)
 	reapThreads();
 }
 
-void
+CThread
 CServer::startThread(IJob* job)
 {
 	CLock lock(&m_mutex);
@@ -1025,14 +1030,30 @@ CServer::startThread(IJob* job)
 	doReapThreads(m_threads);
 
 	// add new thread to list.  use the job as user data for logging.
-	m_threads.push_back(CThread(job, job));
-	log((CLOG_DEBUG1 "started thread %p", m_threads.back().getUserData()));
+	CThread thread(job, job);
+	m_threads.push_back(thread);
+	log((CLOG_DEBUG1 "started thread %p", thread.getUserData()));
+	return thread;
 }
 
 void
 CServer::stopThreads(double timeout)
 {
 	log((CLOG_DEBUG1 "stopping threads"));
+
+	// cancel the accept client thread to prevent more clients from
+	// connecting while we're shutting down.
+	CThread* acceptClientThread;
+	{
+		CLock lock(&m_mutex);
+		acceptClientThread   = m_acceptClientThread;
+		m_acceptClientThread = NULL;
+	}
+	if (acceptClientThread != NULL) {
+		acceptClientThread->cancel();
+		acceptClientThread->wait(timeout);
+		delete acceptClientThread;
+	}
 
 	// close all clients (except the primary)
 	{

@@ -14,7 +14,6 @@
 class CClientProxy;
 class CHTTPServer;
 class CPrimaryClient;
-class CThread;
 class IClient;
 class IDataSocket;
 class IServerProtocol;
@@ -118,7 +117,7 @@ private:
 	void				closeClients(const CConfig& config);
 
 	// start a thread, adding it to the list of threads
-	void				startThread(IJob* adopted);
+	CThread				startThread(IJob* adopted);
 
 	// cancel running threads, waiting at most timeout seconds for
 	// them to finish.
@@ -171,6 +170,7 @@ private:
 
 	// running threads
 	CThreadList			m_threads;
+	CThread*			m_acceptClientThread;
 
 	// the screens
 	typedef std::map<CString, IClient*> CClientList;
