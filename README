@@ -169,9 +169,9 @@ recommended that you run it in the foreground until you've sorted
 out your configuration.
 
 on the Windows NT family you cannot run a service directly.
-instead you install the service then control it via the Services
-control panel.  on the Windows 95 family, you can use the
-`--daemon' command line option to start synergy in the background
+instead you install the service then run or stop it via the
+Services control panel.  on the Windows 95 family, you can use
+the `--daemon' command line option to start synergy as a service
 or you can install the service and restart your computer.
 
 in the text below, except where noted, synergy refers to the
@@ -201,7 +201,7 @@ windows:
   directory (e.g. C:\WINNT) and call it "synergy.sgc".  the
   server will automatically find this file.  however, you can
   also use the --config command line option and specify an
-  absolute path to the file.  remember that this file must be
+  *absolute* path to the file.  remember that this file must be
   accessible when the system starts up, before network shares
   are mapped.
 

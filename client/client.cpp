@@ -485,24 +485,10 @@ daemonStartup(IPlatform* iplatform, int argc, const char** argv)
 }
 
 static
-bool
-logDiscard(int, const char*)
+int
+daemonStartup95(IPlatform*, int, const char**)
 {
-	return true;
-}
-
-static bool				s_die = false;
-
-static
-void
-checkParse(int e)
-{
-	// anything over 1 means invalid args.  1 means missing args.
-	// 0 means graceful exit.  we plan to exit for anything but
-	// 1 (missing args);  the service control manager may supply
-	// the missing arguments so we don't exit in that case.
-	s_die = (e != 1);
-	throw s_die;
+	return restartableMain();
 }
 
 int WINAPI
@@ -519,42 +505,26 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// initialize network library
 	CNetwork::init();
 
-	// parse command line without reporting errors but recording if
-	// the app would've exited.  this is too avoid showing a dialog
-	// box if we're being started as a service because we shouldn't
-	// take too long to startup in that case.  this mostly works but
-	// will choke if the service control manager passes --install
-	// or --uninstall (but that's unlikely).
-	CLog::setOutputter(&logDiscard);
-	bye = &checkParse;
-	try {
-		parse(__argc, const_cast<const char**>(__argv));
-	}
-	catch (...) {
-		// ignore
-	}
-
 	// send PRINT and FATAL output to a message box
 	CLog::setOutputter(&logMessageBox);
 
-	// if we're not starting as an NT service then reparse the command
-	// line normally.
-	if (s_die || __argc > 1 || s_install || s_uninstall ||
-		CWin32Platform::isWindows95Family()) {
-
-		// exit on bye
-		bye = &exit;
-
-		// reparse
-		parse(__argc, const_cast<const char**>(__argv));
+	// windows NT family starts services using no command line options.
+	// since i'm not sure how to tell the difference between that and
+	// a user providing no options we'll assume that if there are no
+	// arguments and we're on NT then we're being invoked as a service.
+	// users on NT can use `--daemon' or `--no-daemon' to force us out
+	// of the service code path.
+	if (__argc <= 1 && !CWin32Platform::isWindows95Family()) {
+		int result = platform.daemonize(DAEMON_NAME, &daemonStartup);
+		if (result == -1) {
+			log((CLOG_CRIT "failed to start as a service" BYE, pname));
+			return 16;
+		}
+		return result;
 	}
 
-	// if no arguments were provided then we're hopefully starting as
-	// a service.  we'll parse the command line passed in when the
-	// service control manager calls us back.
-	else {
-		// do nothing
-	}
+	// parse command line
+	parse(__argc, const_cast<const char**>(__argv));
 
 	// install/uninstall
 	if (s_install) {
@@ -609,24 +579,25 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 	// daemonize if requested
 	int result;
-	if (__argc <= 1) {
+	if (s_daemon) {
+		// redirect log messages
+		platform.installDaemonLogger(DAEMON_NAME);
+
+		// start as a daemon
 		if (CWin32Platform::isWindows95Family()) {
-			result = -1;
+			result = platform.daemonize(DAEMON_NAME, &daemonStartup95);
+			if (result == -1) {
+				log((CLOG_CRIT "failed to start as a service" BYE, pname));
+				return 16;
+			}
 		}
 		else {
-			result = platform.daemonize(DAEMON_NAME, &daemonStartup);
-		}
-		if (result == -1) {
-			log((CLOG_CRIT "failed to start as a service" BYE, pname));
-			return 16;
+			// cannot start a service from the command line so just
+			// run normally (except with log messages redirected).
+			result = restartableMain();
 		}
 	}
 	else {
-		// if a daemon then redirect log
-		if (s_daemon) {
-			platform.installDaemonLogger(__argv[0]);
-		}
-
 		// run
 		result = restartableMain();
 	}
