@@ -95,18 +95,6 @@ SOURCE=.\CNetworkAddress.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CSocketInputStream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CSocketOutputStream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CSocketStreamBuffer.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\CTCPListenSocket.cpp
 # End Source File
 # Begin Source File
@@ -132,18 +120,6 @@ SOURCE=.\CNetwork.h
 # Begin Source File
 
 SOURCE=.\CNetworkAddress.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CSocketInputStream.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CSocketOutputStream.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CSocketStreamBuffer.h
 # End Source File
 # Begin Source File
 
