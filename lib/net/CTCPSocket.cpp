@@ -442,7 +442,7 @@ CTCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
 	// connection refused.  when that happens it at least doesn't
 	// report the socket as being writable so synergy is able to time
 	// out the attempt.)
-	if (true || error) {
+	if (error || true) {
 		try {
 			// connection may have failed or succeeded
 			ARCH->throwErrorOnSocket(m_socket);
