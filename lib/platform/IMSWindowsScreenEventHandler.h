@@ -37,6 +37,13 @@ public:
 	*/
 	virtual void		preDestroyWindow(HWND) = 0;
 
+	//! Notify of newly accessible desktop
+	/*!
+	This is called when the user switched from an inaccessible desktop
+	to an accessible desktop.
+	*/
+	virtual void		onAccessibleDesktop() = 0;
+
 	//@}
 
 	// IScreenEventHandler overrides

@@ -191,6 +191,13 @@ private:
 	CMSWindowsScreenSaver*		m_screensaver;
 	bool						m_screensaverNotify;
 
+	// true when the current desktop is inaccessible.  while
+	// the desktop is inaccessible we won't receive user input
+	// and we'll lose track of the keyboard state.  when the
+	// desktop becomes accessible again we'll notify the event
+	// handler of that.
+	bool				m_inaccessibleDesktop;
+
 	static CMSWindowsScreen*	s_screen;
 };
 

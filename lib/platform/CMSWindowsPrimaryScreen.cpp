@@ -319,7 +319,8 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 	m_threadID(0),
 	m_mark(0),
 	m_markReceived(0),
-	m_lowLevel(false)
+	m_lowLevel(false),
+	m_cursorThread(0)
 {
 	assert(m_receiver != NULL);
 
@@ -788,6 +789,13 @@ CMSWindowsPrimaryScreen::preDestroyWindow(HWND)
 }
 
 void
+CMSWindowsPrimaryScreen::onAccessibleDesktop()
+{
+	// get the current keyboard state
+	updateKeys();
+}
+
+void
 CMSWindowsPrimaryScreen::onPreMainLoop()
 {
 	// must call mainLoop() from same thread as open()
@@ -833,6 +841,18 @@ CMSWindowsPrimaryScreen::onPostClose()
 void
 CMSWindowsPrimaryScreen::onPreEnter()
 {
+	// show cursor if we hid it
+	if (m_cursorThread != 0) {
+		if (m_threadID != m_cursorThread) {
+			AttachThreadInput(m_threadID, m_cursorThread, TRUE);
+		}
+		ShowCursor(TRUE);
+		if (m_threadID != m_cursorThread) {
+			AttachThreadInput(m_threadID, m_cursorThread, FALSE);
+		}
+		m_cursorThread = 0;
+	}
+
 	// enable ctrl+alt+del, alt+tab, etc
 	if (m_is95Family) {
 		DWORD dummy = 0;
@@ -869,6 +889,19 @@ CMSWindowsPrimaryScreen::onPostLeave(bool success)
 			DWORD dummy = 0;
 			SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, TRUE, &dummy, 0);
 		}
+
+		// hide the cursor if using low level hooks
+		if (m_lowLevel) {
+			HWND hwnd      = GetForegroundWindow();
+			m_cursorThread = GetWindowThreadProcessId(hwnd, NULL);
+			if (m_threadID != m_cursorThread) {
+				AttachThreadInput(m_threadID, m_cursorThread, TRUE);
+			}
+			ShowCursor(FALSE);
+			if (m_threadID != m_cursorThread) {
+				AttachThreadInput(m_threadID, m_cursorThread, FALSE);
+			}
+		}
 	}
 }
 
@@ -876,10 +909,13 @@ void
 CMSWindowsPrimaryScreen::createWindow()
 {
 	// open the desktop and the window
-	HWND window = m_screen->openDesktop();
-	if (window == NULL) {
+	m_window = m_screen->openDesktop();
+	if (m_window == NULL) {
 		throw XScreenOpenFailure();
 	}
+
+	// we don't ever want our window to activate
+	EnableWindow(m_window, FALSE);
 }
 
 void
@@ -892,14 +928,25 @@ CMSWindowsPrimaryScreen::destroyWindow()
 bool
 CMSWindowsPrimaryScreen::showWindow()
 {
-	// do nothing.  we don't need to show a window to capture input.
+	// we don't need a window to capture input but we need a window
+	// to hide the cursor when using low-level hooks.  do not try to
+	// take the activation;  we want the currently active window to
+	// stay active.
+	if (m_lowLevel) {
+		SetWindowPos(m_window, HWND_TOPMOST, m_xCenter, m_yCenter, 1, 1,
+							SWP_NOACTIVATE);
+		ShowWindow(m_window, SW_SHOWNA);
+	}
 	return true;
 }
 
 void
 CMSWindowsPrimaryScreen::hideWindow()
 {
-	// do nothing.  we don't need to show a window to capture input.
+	// hide our window
+	if (m_lowLevel) {
+		ShowWindow(m_window, SW_HIDE);
+	}
 }
 
 void

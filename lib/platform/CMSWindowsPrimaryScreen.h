@@ -52,6 +52,7 @@ public:
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		postCreateWindow(HWND);
 	virtual void		preDestroyWindow(HWND);
+	virtual void		onAccessibleDesktop();
 
 protected:
 	// CPrimaryScreen overrides
@@ -101,6 +102,9 @@ private:
 	// the main loop's thread id
 	DWORD				m_threadID;
 
+	// my window
+	HWND				m_window;
+
 	// used to discard queued messages that are no longer needed
 	UInt32				m_mark;
 	UInt32				m_markReceived;
@@ -128,10 +132,8 @@ private:
 	SetRelayFunc		m_setRelay;
 	bool				m_lowLevel;
 
-	// stuff for restoring active window
-	HWND				m_lastForegroundWindow;
-	HWND				m_lastActiveWindow;
-	DWORD				m_lastActiveThread;
+	// stuff for hiding the cursor
+	DWORD				m_cursorThread;
 };
 
 #endif

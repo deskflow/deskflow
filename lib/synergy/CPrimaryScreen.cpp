@@ -172,11 +172,11 @@ CPrimaryScreen::leave()
 	// get keyboard state as we leave
 	updateKeys();
 
-	// subclass hook
-	onPostLeave(true);
-
 	// warp mouse to center
 	warpCursorToCenter();
+
+	// subclass hook
+	onPostLeave(true);
 
 	// local client now active
 	m_active = true;

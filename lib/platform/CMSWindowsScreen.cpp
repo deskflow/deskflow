@@ -68,7 +68,8 @@ CMSWindowsScreen::CMSWindowsScreen(IScreenReceiver* receiver,
 	m_installScreensaver(NULL),
 	m_uninstallScreensaver(NULL),
 	m_screensaver(NULL),
-	m_screensaverNotify(false)
+	m_screensaverNotify(false),
+	m_inaccessibleDesktop(false)
 {
 	assert(s_screen       == NULL);
 	assert(m_receiver     != NULL);
@@ -384,7 +385,7 @@ CMSWindowsScreen::syncDesktop()
 	// of sucking up more and more CPU each time it's called (even if
 	// the threads are already attached).  since we only expect one
 	// thread to call this more than once we can save just the last
-	// the attached thread.
+	// attached thread.
 	DWORD threadID = GetCurrentThreadId();
 	if (threadID != m_lastThreadID && threadID != m_threadID) {
 		m_lastThreadID = threadID;
@@ -493,16 +494,27 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 					if (isCurrentDesktop(desk)) {
 						CloseDesktop(desk);
 					}
-					else if (!m_screensaver->isActive()) {
+					else if (m_screensaver->isActive()) {
 						// don't switch desktops when the screensaver is
 						// active.  we'd most likely switch to the
 						// screensaver desktop which would have the side
 						// effect of forcing the screensaver to stop.
-						switchDesktop(desk);
-					}
-					else {
 						CloseDesktop(desk);
 					}
+					else {
+						switchDesktop(desk);
+					}
+
+					// if the desktop was inaccessible then notify the
+					// event handler of that.
+					if (m_inaccessibleDesktop) {
+						m_inaccessibleDesktop = false;
+						m_eventHandler->onAccessibleDesktop();
+					}
+				}
+				else if (!m_inaccessibleDesktop) {
+					// the desktop has become inaccessible
+					m_inaccessibleDesktop = true;
 				}
 			}
 

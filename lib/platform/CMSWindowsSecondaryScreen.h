@@ -59,6 +59,7 @@ public:
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		postCreateWindow(HWND);
 	virtual void		preDestroyWindow(HWND);
+	virtual void		onAccessibleDesktop();
 
 protected:
 	// CSecondaryScreen overrides

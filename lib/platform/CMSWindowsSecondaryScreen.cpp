@@ -418,6 +418,13 @@ CMSWindowsSecondaryScreen::preDestroyWindow(HWND)
 }
 
 void
+CMSWindowsSecondaryScreen::onAccessibleDesktop()
+{
+	// get the current keyboard state
+	updateKeys();
+}
+
+void
 CMSWindowsSecondaryScreen::onPreMainLoop()
 {
 	assert(m_window != NULL);

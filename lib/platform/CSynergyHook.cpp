@@ -111,10 +111,17 @@ void
 hideCursor(DWORD thread)
 {
 	// we should be running the context of the window who's cursor
-	// we want to hide so we shouldn't have to attach thread input.
-	g_cursor       = GetCursor();
+	// we want to hide so we shouldn't have to attach thread input
+	// but we'll check to make sure.
 	g_cursorThread = thread;
-	SetCursor(NULL);
+	if (g_cursorThread != 0) {
+		DWORD myThread = GetCurrentThreadId();
+		if (myThread != g_cursorThread)
+			AttachThreadInput(myThread, g_cursorThread, TRUE);
+		g_cursor = SetCursor(NULL);
+		if (myThread != g_cursorThread)
+			AttachThreadInput(myThread, g_cursorThread, FALSE);
+	}
 }
 
 static
