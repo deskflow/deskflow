@@ -365,6 +365,42 @@ prevent a synergy client from synthesizing mouse and keyboard
 input, though.
 
 
+Network Security
+----------------
+
+Synergy has no built-in support for encryption or authentication.
+The server accepts connections from any computer.  The server and
+clients send all data unencrypted which means the clipboard and
+mouse and keyboard events (e.g. typed passwords) are easily
+examined by anyone listening on the network.  Therefore, do not
+run synergy on untrusted networks except as follows.
+
+You can use SSH (secure shell) to provide strong authentication
+and encryption to synergy without modifying either SSH or synergy.
+On Linux and Unix a free implementation of SSH called OpenSSH is
+available at http://www.openssh.com/.  On Windows you can use the
+Cygwin version of OpenSSH.
+
+First, install the SSH server (sshd) on the computer running the
+synergy server.  Next, install the SSH client (ssh) on each
+synergy client computer.  Start the SSH and synergy servers
+normally. Then, for each client, start the SSH client with port
+forwarding:
+
+  ssh -f -N -L 24800:<server-hostname>:24800 <server-hostname>
+
+where <server-hostname> is the name or address of the SSH and
+synergy server host.  24800 is the default synergy port;  replace
+it with whichever port you use if you don't use the default.  Once
+ssh authenticates with the server, start the synergy client as
+usual except use `localhost' or `127.0.0.1' for the server
+address.  Synergy will then pass all communication through SSH
+which encrypts it, passes it over the network, decrypts it, and
+hands it back to synergy.  Authentication is provided by SSH's
+authentication.
+
+
+
 Common Command Line Options
 ---------------------------
   -d, --debug <level>   use debugging level <level>

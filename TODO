@@ -54,7 +54,8 @@ Then there are major new features:
 
 * Add encryption and authentication
 
-  Make synergy is safe to use on untrusted networks.
+  Make synergy is safe to use on untrusted networks.  Using synergy
+  through SSH can provide this until synergy has it built-in.
 
 * Support for limited drag and drop between systems
 

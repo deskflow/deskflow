@@ -240,6 +240,11 @@ Tips and Tricks
 * A client's keyboard and mouse are fully functional while synergy is
   running.  You can use them in case synergy locks up.
 
+* Strong authentication and encryption is available by using SSH.  See
+  the INSTALL file for more information.  Synergy does not otherwise
+  provide secure communications and it should not be used on or over
+  untrusted networks.
+
 
 Bug Reports
 -----------

@@ -57,11 +57,30 @@ Answers
 
 5.  What security/encryption does synergy provide?
 
-    None.  Synergy currently does no encryption or authentication.
+    Synergy provides no built-in encryption or authentication.
     Given that, synergy should not be used on or over any untrusted
     network, especially the Internet.  It's generally fine for home
-    networks.  Future versions will provide encryption and
+    networks.  Future versions may provide built-in encryption and
     authentication.
+
+    Strong encryption and authentication is available through SSH
+    (secure shell).  Run the SSH daemon (i.e. server) on the same
+    computer that you run the synergy server.  It requires no
+    special configuration to support synergy.  On each synergy
+    client system, run SSH with port forwarding:
+
+        ssh -f -N -L 24800:<server-hostname>:24800 <server-hostname>
+
+    where <server-hostname> is the name of the SSH/synergy server.
+    Once ssh authenticates itself, start the synergy client
+    normally except use `localhost' or `127.0.0.1' as the server's
+    address.  SSH will then encrypt all communication on behalf of
+    synergy.  Authentication is handled by the SSH authentication.
+
+    A free implementation of SSH for Linux and many Unix systems
+    called OpenSSH is available from http://www.openssh.com/.  For
+    Windows there's a port of OpenSSH using Cygwin
+    (http://www.cygwin.com/).
 
 6.  What should I call my screens in the configuration?
 
