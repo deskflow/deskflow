@@ -1,4 +1,5 @@
 #include "CLog.h"
+#include "CString.h"
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -82,8 +83,9 @@ CLog::print(const char* fmt, ...)
 	char stack[1024];
 	va_list args;
 	va_start(args, fmt);
-	char* buffer = vsprint(pad, stack,
-							sizeof(stack) / sizeof(stack[0]), fmt, args);
+	char* buffer = CStringUtil::vsprint(stack,
+								sizeof(stack) / sizeof(stack[0]),
+								pad, g_newlineLength, fmt, args);
 	va_end(args);
 
 	// output buffer
@@ -119,8 +121,9 @@ CLog::printt(const char* file, int line, const char* fmt, ...)
 	// print to buffer, leaving space for a newline at the end
 	va_list args;
 	va_start(args, fmt);
-	char* buffer = vsprint(pad, stack,
-								sizeof(stack) / sizeof(stack[0]), fmt, args);
+	char* buffer = CStringUtil::vsprint(stack,
+								sizeof(stack) / sizeof(stack[0]),
+								pad, g_newlineLength, fmt, args);
 	va_end(args);
 
 	// print the prefix to the buffer.  leave space for priority label.
@@ -227,8 +230,9 @@ CLog::output(int priority, char* msg)
 	int n = -g_prioritySuffixLength;
 	if (priority >= 0) {
 		n = strlen(g_priority[priority]);
-		sprintf(msg + g_maxPriorityLength - n,
-							"%s:", g_priority[priority]);
+		strcpy(msg + g_maxPriorityLength - n, g_priority[priority]);
+		msg[g_maxPriorityLength + 0] = ':';
+		msg[g_maxPriorityLength + 1] = ' ';
 		msg[g_maxPriorityLength + 1] = ' ';
 	}
 
@@ -244,31 +248,6 @@ CLog::output(int priority, char* msg)
 #endif
 		fprintf(stderr, "%s", msg + g_maxPriorityLength - n);
 	}
-}
-
-char*
-CLog::vsprint(int pad, char* buffer, int len, const char* fmt, va_list args)
-{
-	assert(len > 0);
-
-	// try writing to input buffer
-	int n;
-	if (len >= pad) {
-		n = vsnprintf(buffer + pad, len - pad, fmt, args);
-		if (n >= 0 && n <= len - pad + g_newlineLength)
-			return buffer;
-	}
-
-	// start allocating buffers until we write the whole string
-	buffer = NULL;
-	do {
-		delete[] buffer;
-		len *= 2;
-		buffer = new char[len + pad];
-		n = vsnprintf(buffer + pad, len - pad, fmt, args);
-	} while (n < 0 || n > len - pad + g_newlineLength);
-
-	return buffer;
 }
 
 #if WINDOWS_LIKE

@@ -65,8 +65,6 @@ private:
 	static void			dummyLock(bool);
 	static int			getMaxPriority();
 	static void			output(int priority, char* msg);
-	static char*		vsprint(int pad, char*, int len, const char*, va_list);
-	static int			nprint(const char*, va_list);
 #if WINDOWS_LIKE
 	static void			openConsole();
 #endif
