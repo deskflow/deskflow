@@ -2,7 +2,7 @@
 #include "CXWindowsUtil.h"
 #include "CThread.h"
 #include "CLog.h"
-#include "TMethodJob.h"
+#include "CStopwatch.h"
 #include <cstdio>
 #include <X11/Xatom.h>
 
@@ -79,7 +79,7 @@ CXWindowsClipboard::addRequest(Window owner, Window requestor,
 	// at the given time.
 	bool success = false;
 	if (owner == m_window) {
-		log((CLOG_DEBUG "request for clipboard %d, target %d by 0x%08x (property=%d)", m_selection, target, requestor, property));
+		log((CLOG_DEBUG1 "request for clipboard %d, target %d by 0x%08x (property=%d)", m_selection, target, requestor, property));
 		if (wasOwnedAtTime(time)) {
 			if (target == m_atomMultiple) {
 				// add a multiple request.  property may not be None
@@ -96,13 +96,13 @@ CXWindowsClipboard::addRequest(Window owner, Window requestor,
 			}
 		}
 		else {
-			log((CLOG_DEBUG "failed, not owned at time %d", time));
+			log((CLOG_DEBUG1 "failed, not owned at time %d", time));
 		}
 	}
 
 	if (!success) {
 		// send failure
-		log((CLOG_DEBUG "failed"));
+		log((CLOG_DEBUG1 "failed"));
 		insertReply(new CReply(requestor, target, time));
 	}
 
@@ -138,14 +138,14 @@ CXWindowsClipboard::addSimpleRequest(Window requestor,
 
 	if (type != None) {
 		// success
-		log((CLOG_DEBUG "success"));
+		log((CLOG_DEBUG1 "success"));
 		insertReply(new CReply(requestor, target, time,
 								property, data, type, format));
 		return true;
 	}
 	else {
 		// failure
-		log((CLOG_DEBUG "failed"));
+		log((CLOG_DEBUG1 "failed"));
 		insertReply(new CReply(requestor, target, time));
 		return false;
 	}
@@ -286,24 +286,9 @@ CXWindowsClipboard::open(Time time) const
 	m_open = true;
 	m_time = time;
 
-	// get the time the clipboard ownership was taken by the current
-	// owner.
-	if (m_motif) {
-		m_timeOwned = motifGetTime();
-	}
-	else {
-		m_timeOwned = icccmGetTime();
-	}
-
-	// if we can't get the time then use the time passed to us
-	if (m_timeOwned == 0) {
-		m_timeOwned = m_time;
-	}
-
-	// if the cache is dirty then flush it
-	if (m_timeOwned != m_cacheTime) {
-		clearCache();
-	}
+	// be sure to flush the cache later if it's dirty
+	m_checkCache = true;
+checkCache();
 
 	return true;
 }
@@ -327,6 +312,7 @@ CXWindowsClipboard::close() const
 IClipboard::Time
 CXWindowsClipboard::getTime() const
 {
+	checkCache();
 	return m_timeOwned;
 }
 
@@ -362,6 +348,34 @@ CXWindowsClipboard::getFormat(Atom src) const
 }
 
 void
+CXWindowsClipboard::checkCache() const
+{
+	if (!m_checkCache) {
+		return;
+	}
+	m_checkCache = false;
+
+	// get the time the clipboard ownership was taken by the current
+	// owner.
+	if (m_motif) {
+		m_timeOwned = motifGetTime();
+	}
+	else {
+		m_timeOwned = icccmGetTime();
+	}
+
+	// if we can't get the time then use the time passed to us
+	if (m_timeOwned == 0) {
+		m_timeOwned = m_time;
+	}
+
+	// if the cache is dirty then flush it
+	if (m_timeOwned != m_cacheTime) {
+		clearCache();
+	}
+}
+
+void
 CXWindowsClipboard::clearCache() const
 {
 	const_cast<CXWindowsClipboard*>(this)->doClearCache();
@@ -370,7 +384,8 @@ CXWindowsClipboard::clearCache() const
 void
 CXWindowsClipboard::doClearCache()
 {
-	m_cached = false;
+	m_checkCache = false;
+	m_cached     = false;
 	for (SInt32 index = 0; index < kNumFormats; ++index) {
 		m_data[index]  = "";
 		m_added[index] = false;
@@ -381,6 +396,7 @@ void
 CXWindowsClipboard::fillCache() const
 {
 	// get the selection data if not already cached
+	checkCache();
 	if (!m_cached) {
 		const_cast<CXWindowsClipboard*>(this)->doFillCache();
 	}
@@ -395,8 +411,9 @@ CXWindowsClipboard::doFillCache()
 	else {
 		icccmFillCache();
 	}
-	m_cached    = true;
-	m_cacheTime = m_timeOwned;
+	m_checkCache = false;
+	m_cached     = true;
+	m_cacheTime  = m_timeOwned;
 }
 
 void
@@ -1007,6 +1024,7 @@ bool
 CXWindowsClipboard::wasOwnedAtTime(::Time time) const
 {
 	// not owned if we've never owned the selection
+	checkCache();
 	if (m_timeOwned == 0) {
 		return false;
 	}
@@ -1066,6 +1084,7 @@ CXWindowsClipboard::getTimestampData(CString& data, int* format) const
 	assert(format != NULL);
 
 	assert(sizeof(m_timeOwned) == 4);
+	checkCache();
 	data.append(reinterpret_cast<const char*>(&m_timeOwned), 4);
 	*format = 32;
 	return m_atomTimestamp;
@@ -1129,9 +1148,6 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	*m_actualTarget = None;
 	*m_data         = "";
 
-	// get timeout atom
-	m_timeout = XInternAtom(display, "SYNERGY_TIMEOUT", False);
-
 	// delete target property
 	XDeleteProperty(display, m_requestor, m_property);
 
@@ -1145,21 +1161,36 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	XConvertSelection(display, selection, target,
 								m_property, m_requestor, m_time);
 
-	// process selection events.  have a separate thread send us an
-	// event after a timeout so we don't get locked up by badly
-	// behaved selection owners.
-	CThread timer(new TMethodJob<CXWindowsClipboard::CICCCMGetClipboard>(
-						this,
-						&CXWindowsClipboard::CICCCMGetClipboard::timeout,
-						display));
+	// Xlib inexplicably omits the ability to wait for an event with
+	// a timeout.  (it's inexplicable because there's no portable way
+	// to do it.)  we'll poll until we have what we're looking for or
+	// a timeout expires.  we use a timeout so we don't get locked up
+	// by badly behaved selection owners.
 	XEvent xevent;
+	SInt32 lastPending = 0;
+	CStopwatch timeout(true);
+	static const double s_timeout = 0.2;	// FIXME -- is this too short?
 	while (!m_done && !m_failed) {
-		// process events
-		XIfEvent(display, &xevent,
+		// fail if timeout has expired
+		if (timeout.getTime() < s_timeout) {
+			m_failed = true;
+			break;
+		}
+
+		// get how many events are pending now
+		SInt32 pending = XPending(display);
+
+		// process events if there are more otherwise sleep
+		if (pending > lastPending) {
+			lastPending = pending;
+			XCheckIfEvent(display, &xevent,
 						&CXWindowsClipboard::CICCCMGetClipboard::eventPredicate,
 						reinterpret_cast<XPointer>(this));
+		}
+		else {
+			CThread::sleep(0.01);
+		}
 	}
-	timer.cancel();
 
 	// restore mask
 	XSelectInput(display, m_requestor, attr.your_event_mask);
@@ -1211,17 +1242,6 @@ CXWindowsClipboard::CICCCMGetClipboard::doEventPredicate(
 				return false;
 			}
 			break;
-		}
-
-		// otherwise not interested
-		return false;
-
-	case ClientMessage:
-		// done if this is the timeout message
-		if (xevent->xclient.window       == m_requestor &&
-			xevent->xclient.message_type == m_timeout) {
-			m_failed = true;
-			return true;
 		}
 
 		// otherwise not interested
@@ -1312,24 +1332,6 @@ CXWindowsClipboard::CICCCMGetClipboard::eventPredicate(
 {
 	CICCCMGetClipboard* self = reinterpret_cast<CICCCMGetClipboard*>(arg);
 	return self->doEventPredicate(display, xevent) ? True : False;
-}
-
-void
-CXWindowsClipboard::CICCCMGetClipboard::timeout(void* vdisplay)
-{
-	// wait
-	CThread::sleep(0.2);	// FIXME -- is this too short?
-
-	// send wake up
-	Display* display = reinterpret_cast<Display*>(vdisplay);
-	XEvent event;
-	event.xclient.type         = ClientMessage;
-	event.xclient.display      = display;
-	event.xclient.window       = m_requestor;
-	event.xclient.message_type = m_timeout;
-	event.xclient.format       = 8;
-	CXWindowsUtil::CErrorLock lock;
-	XSendEvent(display, m_requestor, False, 0, &event);
 }
 
 

@@ -62,6 +62,10 @@ private:
 							Window requestor, Atom target,
 							::Time time, Atom property);
 
+	// if not already checked then see if the cache is stale and, if so,
+	// clear it.  this has the side effect of updating m_timeOwned.
+	void				checkCache() const;
+
 	// clear the cache, resetting the cached flag and the added flag for
 	// each format.
 	void				clearCache() const;
@@ -84,7 +88,6 @@ private:
 	bool				motifOwnsClipboard() const;
 	Time				motifGetTime() const;
 	void				motifFillCache();
-	// FIXME
 
 	//
 	// helper classes
@@ -109,7 +112,6 @@ private:
 		static Bool		eventPredicate(Display* display,
 							XEvent* event,
 							XPointer arg);
-		void			timeout(void*);
 
 	private:
 		Window			m_requestor;
@@ -128,9 +130,6 @@ private:
 		// the actual type of the data.  if this is None then the
 		// selection owner cannot convert to the requested type.
 		Atom*			m_actualTarget;
-
-		// property used in event to wake up event loop
-		Atom			m_timeout;
 
 	public:
 		// true iff the selection owner didn't follow ICCCM conventions
@@ -240,6 +239,7 @@ private:
 	mutable bool		m_motif;
 
 	// the added/cached clipboard data
+	mutable bool		m_checkCache;
 	bool				m_cached;
 	Time				m_cacheTime;
 	bool				m_added[kNumFormats];
