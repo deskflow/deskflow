@@ -51,9 +51,11 @@ private:
 		CString			m_neighbor[kLastDirection - kFirstDirection + 1];
 	};
 	typedef std::map<CString, CCell, CStringUtil::CaselessCmp> CCellMap;
+	typedef std::map<CString, CString, CStringUtil::CaselessCmp> CNameMap;
 
 public:
 	typedef CCellMap::const_iterator internal_const_iterator;
+	typedef CNameMap::const_iterator all_const_iterator;
 	class const_iterator : std::iterator_traits<CConfig> {
 	public:
 		explicit const_iterator() : m_i() { }
@@ -92,6 +94,14 @@ public:
 	alias with the given name exists then it fails.
 	*/
 	bool				addScreen(const CString& name);
+
+	//! Rename screen
+	/*!
+	Renames a screen.  All references to the name are updated.
+	Returns true iff successful.
+	*/
+	bool				renameScreen(const CString& oldName,
+							const CString& newName);
 
 	//! Remove screen
 	/*!
@@ -180,6 +190,11 @@ public:
 	//! Get ending (canonical) screen name iterator
 	const_iterator		end() const;
 
+	//! Get beginning screen name iterator
+	all_const_iterator	beginAll() const;
+	//! Get ending screen name iterator
+	all_const_iterator	endAll() const;
+
 	//! Test for screen name
 	/*!
 	Returns true iff \c name names a screen.
@@ -212,6 +227,11 @@ public:
 	//! Get the HTTP server address
 	const CNetworkAddress&	getHTTPAddress() const;
 
+	//! Compare configurations
+	bool				operator==(const CConfig&) const;
+	//! Compare configurations
+	bool				operator!=(const CConfig&) const;
+
 	//! Read configuration
 	/*!
 	Reads a configuration from a stream.  Throws XConfigRead on error.
@@ -241,8 +261,6 @@ private:
 	void				readSectionAliases(std::istream&);
 
 private:
-	typedef std::map<CString, CString, CStringUtil::CaselessCmp> CNameMap;
-
 	CCellMap			m_map;
 	CNameMap			m_nameToCanonicalName;
 	CNetworkAddress		m_synergyAddress;

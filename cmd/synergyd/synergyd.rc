@@ -57,8 +57,9 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Synergy"
 FONT 8, "MS Sans Serif"
 BEGIN
-    EDITTEXT        IDC_LOG,7,7,517,145,ES_MULTILINE | ES_AUTOHSCROLL | 
-                    ES_READONLY | WS_VSCROLL | WS_HSCROLL
+    LISTBOX         IDC_LOG,7,7,517,145,NOT LBS_NOTIFY | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
 END
 
 
@@ -79,6 +80,26 @@ BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_SYNERGY             ICON    DISCARDABLE     "synergy.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_FAILED              "Synergy is about to quit with an error.  Please check the log for error messages then click OK."
+END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////

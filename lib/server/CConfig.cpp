@@ -49,6 +49,57 @@ CConfig::addScreen(const CString& name)
 	return true;
 }
 
+bool
+CConfig::renameScreen(const CString& oldName,
+							const CString& newName)
+{
+	// get canonical name and find cell
+	CString oldCanonical = getCanonicalName(oldName);
+	CCellMap::iterator index = m_map.find(oldCanonical);
+	if (index == m_map.end()) {
+		return false;
+	}
+
+	// accept if names are equal but replace with new name to maintain
+	// case.  otherwise, the new name must not exist.
+	if (!CStringUtil::CaselessCmp::equal(oldName, newName) &&
+		m_nameToCanonicalName.find(newName) != m_nameToCanonicalName.end()) {
+		return false;
+	}
+
+	// update cell
+	CCell tmpCell = index->second;
+	m_map.erase(index);
+	m_map.insert(std::make_pair(newName, tmpCell));
+
+	// update name
+	m_nameToCanonicalName.erase(oldCanonical);
+	m_nameToCanonicalName.insert(std::make_pair(newName, newName));
+
+	// update connections
+	for (index = m_map.begin(); index != m_map.end(); ++index) {
+		for (UInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i) {
+			if (CStringUtil::CaselessCmp::equal(getCanonicalName(
+						index->second.m_neighbor[i]), oldCanonical)) {
+				index->second.m_neighbor[i] = newName;
+			}
+		}
+	}
+
+	// update alias targets
+	if (CStringUtil::CaselessCmp::equal(oldName, oldCanonical)) {
+		for (CNameMap::iterator index = m_nameToCanonicalName.begin();
+							index != m_nameToCanonicalName.end(); ++index) {
+			if (CStringUtil::CaselessCmp::equal(
+							index->second, oldCanonical)) {
+				index->second = newName;
+			}
+		}
+	}
+
+	return true;
+}
+
 void
 CConfig::removeScreen(const CString& name)
 {
@@ -65,10 +116,11 @@ CConfig::removeScreen(const CString& name)
 	// disconnect
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
 		CCell& cell = index->second;
-		for (SInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i)
+		for (UInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i) {
 			if (getCanonicalName(cell.m_neighbor[i]) == canonical) {
 				cell.m_neighbor[i].erase();
 			}
+		}
 	}
 
 	// remove aliases (and canonical name)
@@ -99,7 +151,7 @@ CConfig::addAlias(const CString& canonical, const CString& alias)
 	}
 
 	// canonical name must be known
-	if (m_nameToCanonicalName.find(canonical) == m_nameToCanonicalName.end()) {
+	if (m_map.find(canonical) == m_map.end()) {
 		return false;
 	}
 
@@ -245,6 +297,18 @@ CConfig::end() const
 	return const_iterator(m_map.end());
 }
 
+CConfig::all_const_iterator
+CConfig::beginAll() const
+{
+	return m_nameToCanonicalName.begin();
+}
+
+CConfig::all_const_iterator
+CConfig::endAll() const
+{
+	return m_nameToCanonicalName.end();
+}
+
 bool
 CConfig::isScreen(const CString& name) const
 {
@@ -293,6 +357,54 @@ const CNetworkAddress&
 CConfig::getHTTPAddress() const
 {
 	return m_httpAddress;
+}
+
+bool
+CConfig::operator==(const CConfig& x) const
+{
+/* FIXME -- no compare available for CNetworkAddress
+	if (m_synergyAddress != x.m_synergyAddress) {
+		return false;
+	}
+	if (m_httpAddress != x.m_httpAddress) {
+		return false;
+	}
+*/
+	if (m_map.size() != x.m_map.size()) {
+		return false;
+	}
+	if (m_nameToCanonicalName.size() != x.m_nameToCanonicalName.size()) {
+		return false;
+	}
+
+	for (CCellMap::const_iterator index1 = m_map.begin(),
+								index2 = x.m_map.begin();
+								index1 != m_map.end(); ++index1, ++index2) {
+		for (UInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i) {
+			if (!CStringUtil::CaselessCmp::equal(index1->second.m_neighbor[i],
+								index2->second.m_neighbor[i])) {
+				return false;
+			}
+		}
+	}
+
+	for (CNameMap::const_iterator index1 = m_nameToCanonicalName.begin(),
+								index2 = x.m_nameToCanonicalName.begin();
+								index1 != m_nameToCanonicalName.end();
+								++index1, ++index2) {
+		if (!CStringUtil::CaselessCmp::equal(index1->first,  index2->first) ||
+			!CStringUtil::CaselessCmp::equal(index1->second, index2->second)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool
+CConfig::operator!=(const CConfig& x) const
+{
+	return !operator==(x);
 }
 
 const char*
@@ -663,7 +775,9 @@ operator<<(std::ostream& s, const CConfig& config)
 	// aliases section (if there are any)
 	if (config.m_map.size() != config.m_nameToCanonicalName.size()) {
 		// map canonical to alias
-		CConfig::CNameMap aliases;
+		typedef std::multimap<CString, CString,
+								CStringUtil::CaselessCmp> CMNameMap;
+		CMNameMap aliases;
 		for (CConfig::CNameMap::const_iterator
 								index = config.m_nameToCanonicalName.begin();
 								index != config.m_nameToCanonicalName.end();
@@ -676,11 +790,11 @@ operator<<(std::ostream& s, const CConfig& config)
 		// dump it
 		CString screen;
 		s << "section: aliases" << std::endl;
-		for (CConfig::CNameMap::const_iterator index = aliases.begin();
+		for (CMNameMap::const_iterator index = aliases.begin();
 								index != aliases.end(); ++index) {
 			if (index->first != screen) {
 				screen = index->first;
-				s << "\t" << screen.c_str() << std::endl;
+				s << "\t" << screen.c_str() << ":" << std::endl;
 			}
 			s << "\t\t" << index->second.c_str() << std::endl;
 		}

@@ -16,9 +16,10 @@ DEPTH = ../..
 VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =				\
-	synergy.dsp				\
-	synergy.rc				\
 	resource.h				\
+	synergy.dsp				\
+	synergy.ico				\
+	synergy.rc				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =		\

@@ -33,6 +33,7 @@
 
 #if WINDOWS_LIKE
 #include "CMSWindowsSecondaryScreen.h"
+#include "resource.h"
 #elif UNIX_LIKE
 #include "CXWindowsSecondaryScreen.h"
 #endif
@@ -49,6 +50,7 @@
 //
 
 static const char*		pname         = NULL;
+static bool				s_backend     = false;
 static bool				s_restartable = true;
 static bool				s_daemon      = true;
 static bool				s_camp        = true;
@@ -117,103 +119,102 @@ realMain(CMutex* mutex)
 {
 	// caller should have mutex locked on entry
 
+	// initialize threading library
+	CThread::init();
+
+	// make logging thread safe
+	CMutex logMutex;
+	s_logMutex = &logMutex;
+	CLog::setLock(&logLock);
+
 	int result = kExitSuccess;
 	do {
+		bool opened = false;
+		bool locked = true;
 		try {
-			// initialize threading library
-			CThread::init();
+			// create client
+			s_client = new CClient(s_name);
+			s_client->camp(s_camp);
+			s_client->setAddress(s_serverAddress);
+			s_client->setScreenFactory(new CSecondaryScreenFactory);
+			s_client->setSocketFactory(new CTCPSocketFactory);
+			s_client->setStreamFilterFactory(NULL);
 
-			// make logging thread safe
-			CMutex logMutex;
-			s_logMutex = &logMutex;
-			CLog::setLock(&logLock);
-
-			bool opened = false;
-			bool locked = true;
+			// open client
 			try {
-				// create client
-				s_client = new CClient(s_name);
-				s_client->camp(s_camp);
-				s_client->setAddress(s_serverAddress);
-				s_client->setScreenFactory(new CSecondaryScreenFactory);
-				s_client->setSocketFactory(new CTCPSocketFactory);
-				s_client->setStreamFilterFactory(NULL);
+				s_client->open();
+				opened = true;
 
-				// open client
-				try {
-					s_client->open();
-					opened = true;
-
-					// run client
-					if (mutex != NULL) {
-						mutex->unlock();
-					}
-					locked = false;
-					s_client->mainLoop();
-					locked = true;
-					if (mutex != NULL) {
-						mutex->lock();
-					}
-
-					// clean up
-					s_client->close();
-
-					// get client status
-					if (s_client->wasRejected()) {
-						// try again later.  we don't want to bother
-						// the server very often if it doesn't want us.
-						throw XScreenUnavailable(60.0);
-					}
+				// run client
+				if (mutex != NULL) {
+					mutex->unlock();
 				}
-				catch (XScreenUnavailable& e) {
-					// wait a few seconds before retrying
-					if (s_restartable) {
-						CThread::sleep(e.getRetryTime());
-					}
-					else {
-						result = kExitFailed;
-					}
-				}
-				catch (...) {
-					// rethrow thread exceptions
-					RETHROW_XTHREAD
+				locked = false;
+				s_client->mainLoop();
+				locked = true;
 
-					// don't try to restart and fail
-					s_restartable = false;
-					result        = kExitFailed;
+				// get client status
+				if (s_client->wasRejected()) {
+					// try again later.  we don't want to bother
+					// the server very often if it doesn't want us.
+					throw XScreenUnavailable(60.0);
 				}
 
 				// clean up
-				delete s_client;
-				s_client = NULL;
-				CLog::setLock(NULL);
-				s_logMutex = NULL;
+#define FINALLY do {								\
+				if (!locked && mutex != NULL) {		\
+					mutex->lock();					\
+				}									\
+				if (s_client != NULL) {				\
+					if (opened) {					\
+						s_client->close();			\
+					}								\
+				}									\
+				delete s_client;					\
+				s_client = NULL;					\
+				} while (false)
+				FINALLY;
 			}
-			catch (...) {
-				// clean up
-				if (!locked && mutex != NULL) {
-					mutex->lock();
+			catch (XScreenUnavailable& e) {
+				// wait before retrying if we're going to retry
+				if (s_restartable) {
+					CThread::sleep(e.getRetryTime());
 				}
-				if (s_client != NULL) {
-					if (opened) {
-						s_client->close();
-					}
-					delete s_client;
-					s_client = NULL;
+				else {
+					result = kExitFailed;
 				}
-				CLog::setLock(NULL);
-				s_logMutex = NULL;
+				FINALLY;
+			}
+			catch (XThread&) {
+				FINALLY;
 				throw;
 			}
+			catch (...) {
+				// don't try to restart and fail
+				s_restartable = false;
+				result        = kExitFailed;
+				FINALLY;
+			}
+#undef FINALLY
 		}
 		catch (XBase& e) {
 			log((CLOG_CRIT "failed: %s", e.what()));
 		}
 		catch (XThread&) {
 			// terminated
-			return kExitTerminated;
+			s_restartable = false;
+			result        = kExitTerminated;
+		}
+		catch (...) {
+			CLog::setLock(NULL);
+			s_logMutex = NULL;
+			throw;
 		}
 	} while (s_restartable);
+
+	// clean up
+	CLog::setLock(NULL);
+	s_logMutex = NULL;
 
 	return result;
 }
@@ -382,6 +383,10 @@ parse(int argc, const char** argv)
 			s_restartable = true;
 		}
 
+		else if (isArg(i, argc, argv, "-z", NULL)) {
+			s_backend = true;
+		}
+
 		else if (isArg(i, argc, argv, "-h", "--help")) {
 			help();
 			bye(kExitSuccess);
@@ -463,7 +468,7 @@ parse(int argc, const char** argv)
 		catch (XSocketAddress& e) {
 			log((CLOG_PRINT "%s: %s" BYE,
 								pname, e.what(), pname));
-			bye(kExitArgs);
+			bye(kExitFailed);
 		}
 	}
 
@@ -500,10 +505,18 @@ parse(int argc, const char** argv)
 
 #include "CMSWindowsScreen.h"
 
+static bool				s_errors = false;
+
 static
 bool
 logMessageBox(int priority, const char* msg)
 {
+	if (priority <= CLog::kERROR) {
+		s_errors = true;
+	}
+	if (s_backend) {
+		return true;
+	}
 	if (priority <= CLog::kFATAL) {
 		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
 		return true;
@@ -639,7 +652,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 		case IPlatform::kAlready:
 			log((CLOG_CRIT "service isn't installed"));
-			return kExitFailed;
+			// return success since service is uninstalled
+			return kExitSuccess;
 		}
 	}
 
@@ -654,7 +668,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			result = platform.daemonize(DAEMON_NAME, &daemonStartup95);
 			if (result == -1) {
 				log((CLOG_CRIT "failed to start as a service" BYE, pname));
-				return kExitFailed;
+				result = kExitFailed;
 			}
 		}
 		else {
@@ -669,6 +683,15 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	}
 
 	CNetwork::cleanup();
+
+	// if running as a non-daemon backend and there was an error then
+	// wait for the user to click okay so he can see the error messages.
+	if (s_backend && !s_daemon && (result == kExitFailed || s_errors)) {
+		char msg[1024];
+		msg[0] = '\0';
+		LoadString(instance, IDS_FAILED, msg, sizeof(msg) / sizeof(msg[0]));
+		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
+	}
 
 	return result;
 }

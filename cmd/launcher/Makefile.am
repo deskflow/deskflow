@@ -12,16 +12,15 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ..
+DEPTH = ../..
 VDEPTH = ./$(VPATH)/$(DEPTH)
 
-SUBDIRS =					\
-	launcher				\
-	synergy					\
-	synergyd				\
-	$(NULL)
-
 EXTRA_DIST =				\
+	launcher.cpp			\
+	launcher.dsp			\
+	launcher.rc				\
+	resource.h				\
+	synergy.ico				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =		\

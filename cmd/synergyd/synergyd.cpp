@@ -32,6 +32,7 @@
 
 #if WINDOWS_LIKE
 #include "CMSWindowsPrimaryScreen.h"
+#include "resource.h"
 #elif UNIX_LIKE
 #include "CXWindowsPrimaryScreen.h"
 #endif
@@ -55,6 +56,7 @@
 //
 
 static const char*		pname         = NULL;
+static bool				s_backend     = false;
 static bool				s_restartable = true;
 static bool				s_daemon      = true;
 #if WINDOWS_LIKE
@@ -128,116 +130,115 @@ realMain(CMutex* mutex)
 {
 	// caller should have mutex locked on entry
 
+	// initialize threading library
+	CThread::init();
+
+	// make logging thread safe
+	CMutex logMutex;
+	s_logMutex = &logMutex;
+	CLog::setLock(&logLock);
+
 	int result = kExitSuccess;
 	do {
+		bool opened = false;
+		bool locked = true;
 		try {
-			// initialize threading library
-			CThread::init();
-
-			// make logging thread safe
-			CMutex logMutex;
-			s_logMutex = &logMutex;
-			CLog::setLock(&logLock);
-
-			bool opened = false;
-			bool locked = true;
-			try {
-				// if configuration has no screens then add this system
-				// as the default
-				if (s_config.begin() == s_config.end()) {
-					s_config.addScreen(s_name);
-				}
-
-				// set the contact address, if provided, in the config.
-				// otherwise, if the config doesn't have an address, use
-				// the default.
-				if (s_synergyAddress.isValid()) {
-					s_config.setSynergyAddress(s_synergyAddress);
-				}
-				else if (!s_config.getSynergyAddress().isValid()) {
-					s_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
-				}
-
-				// set HTTP address if provided
-				if (s_httpAddress.isValid()) {
-					s_config.setHTTPAddress(s_httpAddress);
-				}
-
-				// create server
-				s_server = new CServer(s_name);
-				s_server->setConfig(s_config);
-				s_server->setScreenFactory(new CPrimaryScreenFactory);
-				s_server->setSocketFactory(new CTCPSocketFactory);
-				s_server->setStreamFilterFactory(NULL);
-
-				// open server
-				try {
-					s_server->open();
-					opened = true;
-
-					// run server (unlocked)
-					if (mutex != NULL) {
-						mutex->unlock();
-					}
-					locked = false;
-					s_server->mainLoop();
-					locked = true;
-					if (mutex != NULL) {
-						mutex->lock();
-					}
-
-					// clean up
-					s_server->close();
-				}
-				catch (XScreenUnavailable& e) {
-					// wait before retrying if we're going to retry
-					if (s_restartable) {
-						CThread::sleep(e.getRetryTime());
-					}
-					else {
-						result = kExitFailed;
-					}
-				}
-				catch (...) {
-					// rethrow thread exceptions
-					RETHROW_XTHREAD
-
-					// don't try to restart and fail
-					s_restartable = false;
-					result        = kExitFailed;
-				}
-
-				// clean up
-				delete s_server;
-				s_server = NULL;
-				CLog::setLock(NULL);
-				s_logMutex = NULL;
+			// if configuration has no screens then add this system
+			// as the default
+			if (s_config.begin() == s_config.end()) {
+				s_config.addScreen(s_name);
 			}
-			catch (...) {
+
+			// set the contact address, if provided, in the config.
+			// otherwise, if the config doesn't have an address, use
+			// the default.
+			if (s_synergyAddress.isValid()) {
+				s_config.setSynergyAddress(s_synergyAddress);
+			}
+			else if (!s_config.getSynergyAddress().isValid()) {
+				s_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
+			}
+
+			// set HTTP address if provided
+			if (s_httpAddress.isValid()) {
+				s_config.setHTTPAddress(s_httpAddress);
+			}
+
+			// create server
+			s_server = new CServer(s_name);
+			s_server->setConfig(s_config);
+			s_server->setScreenFactory(new CPrimaryScreenFactory);
+			s_server->setSocketFactory(new CTCPSocketFactory);
+			s_server->setStreamFilterFactory(NULL);
+
+			// open server
+			try {
+				s_server->open();
+				opened = true;
+
+				// run server (unlocked)
+				if (mutex != NULL) {
+					mutex->unlock();
+				}
+				locked = false;
+				s_server->mainLoop();
+				locked = true;
+
 				// clean up
-				if (!locked && mutex != NULL) {
-					mutex->lock();
+#define FINALLY do {								\
+				if (!locked && mutex != NULL) {		\
+					mutex->lock();					\
+				}									\
+				if (s_server != NULL) {				\
+					if (opened) {					\
+						s_server->close();			\
+					}								\
+				}									\
+				delete s_server;					\
+				s_server = NULL;					\
+				} while (false)
+				FINALLY;
+			}
+			catch (XScreenUnavailable& e) {
+				// wait before retrying if we're going to retry
+				if (s_restartable) {
+					CThread::sleep(e.getRetryTime());
 				}
-				if (s_server != NULL) {
-					if (opened) {
-						s_server->close();
-					}
-					delete s_server;
-					s_server = NULL;
+				else {
+					result = kExitFailed;
 				}
-				CLog::setLock(NULL);
-				s_logMutex = NULL;
+				FINALLY;
+			}
+			catch (XThread&) {
+				FINALLY;
 				throw;
 			}
+			catch (...) {
+				// don't try to restart and fail
+				s_restartable = false;
+				result        = kExitFailed;
+				FINALLY;
+			}
+#undef FINALLY
 		}
 		catch (XBase& e) {
 			log((CLOG_CRIT "failed: %s", e.what()));
 		}
 		catch (XThread&) {
 			// terminated
-			return kExitTerminated;
+			s_restartable = false;
+			result        = kExitTerminated;
+		}
+		catch (...) {
+			CLog::setLock(NULL);
+			s_logMutex = NULL;
+			throw;
 		}
 	} while (s_restartable);
+
+	// clean up
+	CLog::setLock(NULL);
+	s_logMutex = NULL;
 
 	return result;
 }
@@ -448,6 +449,10 @@ parse(int argc, const char** argv)
 			s_restartable = true;
 		}
 
+		else if (isArg(i, argc, argv, "-z", NULL)) {
+			s_backend = true;
+		}
+
 		else if (isArg(i, argc, argv, "-h", "--help")) {
 			help();
 			bye(kExitSuccess);
@@ -605,10 +610,18 @@ loadConfig()
 
 #include "CMSWindowsScreen.h"
 
+static bool				s_errors = false;
+
 static
 bool
 logMessageBox(int priority, const char* msg)
 {
+	if (priority <= CLog::kERROR) {
+		s_errors = true;
+	}
+	if (s_backend) {
+		return true;
+	}
 	if (priority <= CLog::kFATAL) {
 		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
 		return true;
@@ -751,7 +764,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 		case IPlatform::kAlready:
 			log((CLOG_CRIT "service isn't installed"));
-			return kExitFailed;
+			// return success since service is uninstalled
+			return kExitSuccess;
 		}
 	}
 
@@ -769,7 +783,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			result = platform.daemonize(DAEMON_NAME, &daemonStartup95);
 			if (result == -1) {
 				log((CLOG_CRIT "failed to start as a service" BYE, pname));
-				return kExitFailed;
+				result = kExitFailed;
 			}
 		}
 		else {
@@ -784,6 +798,15 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	}
 
 	CNetwork::cleanup();
+
+	// if running as a non-daemon backend and there was an error then
+	// wait for the user to click okay so he can see the error messages.
+	if (s_backend && !s_daemon && (result == kExitFailed || s_errors)) {
+		char msg[1024];
+		msg[0] = '\0';
+		LoadString(instance, IDS_FAILED, msg, sizeof(msg) / sizeof(msg[0]));
+		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
+	}
 
 	return result;
 }

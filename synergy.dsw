@@ -17,6 +17,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name synergyd
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name launcher
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -58,6 +61,51 @@ Package=<4>
 ###############################################################################
 
 Project: "io"=.\lib\io\io.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "launcher"=.\cmd\launcher\launcher.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name base
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name http
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name io
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name mt
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name net
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name platform
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name server
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "libsynergy"=.\lib\synergy\libsynergy.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -200,18 +248,6 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name server
     End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "libsynergy"=.\lib\synergy\libsynergy.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
 }}}
 
 ###############################################################################

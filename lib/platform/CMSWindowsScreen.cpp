@@ -349,7 +349,7 @@ CMSWindowsScreen::syncDesktop()
 	// change calling thread's desktop
 	if (!m_is95Family) {
 		if (SetThreadDesktop(m_desk) == 0) {
-			log((CLOG_WARN "failed to set desktop: %d", GetLastError()));
+//			log((CLOG_WARN "failed to set desktop: %d", GetLastError()));
 		}
 	}
 

@@ -90,6 +90,7 @@ lib/platform/Makefile
 lib/client/Makefile
 lib/server/Makefile
 cmd/Makefile
+cmd/launcher/Makefile
 cmd/synergy/Makefile
 cmd/synergyd/Makefile
 dist/Makefile
@@ -97,4 +98,3 @@ dist/rpm/Makefile
 dist/rpm/synergy.spec
 doc/doxygen.cfg
 ])
-

@@ -195,6 +195,10 @@ SOURCE=.\TMethodJob.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Version.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\XBase.h
 # End Source File
 # End Group

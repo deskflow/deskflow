@@ -91,8 +91,9 @@ CStringUtil::vformat(const char* fmt, va_list args)
 	length.push_back(1);
 	for (int i = 0; i < maxIndex; ++i) {
 		const char* arg = va_arg(args, const char*);
+		size_t len = strlen(arg);
 		value.push_back(arg);
-		length.push_back(strlen(arg));
+		length.push_back(len);
 	}
 
 	// compute final length
