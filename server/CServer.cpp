@@ -73,7 +73,7 @@ void					CServer::run()
 		m_primary->run();
 
 		// clean up
-		log((CLOG_DEBUG "stopping server"));
+		log((CLOG_NOTE "stopping server"));
 		cleanupThreads();
 		closePrimaryScreen();
 	}
@@ -248,7 +248,7 @@ bool					CServer::onCommandKey(KeyID /*id*/,
 
 void					CServer::onKeyDown(KeyID id, KeyModifierMask mask)
 {
-	log((CLOG_DEBUG "onKeyDown id=%d mask=0x%04x", id, mask));
+	log((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x", id, mask));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -264,7 +264,7 @@ void					CServer::onKeyDown(KeyID id, KeyModifierMask mask)
 
 void					CServer::onKeyUp(KeyID id, KeyModifierMask mask)
 {
-	log((CLOG_DEBUG "onKeyUp id=%d mask=0x%04x", id, mask));
+	log((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x", id, mask));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -281,7 +281,7 @@ void					CServer::onKeyUp(KeyID id, KeyModifierMask mask)
 void					CServer::onKeyRepeat(
 								KeyID id, KeyModifierMask mask, SInt32 count)
 {
-	log((CLOG_DEBUG "onKeyRepeat id=%d mask=0x%04x count=%d", id, mask, count));
+	log((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d", id, mask, count));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -298,7 +298,7 @@ void					CServer::onKeyRepeat(
 
 void					CServer::onMouseDown(ButtonID id)
 {
-	log((CLOG_DEBUG "onMouseDown id=%d", id));
+	log((CLOG_DEBUG1 "onMouseDown id=%d", id));
 	assert(m_active != NULL);
 
 	// relay
@@ -309,7 +309,7 @@ void					CServer::onMouseDown(ButtonID id)
 
 void					CServer::onMouseUp(ButtonID id)
 {
-	log((CLOG_DEBUG "onMouseUp id=%d", id));
+	log((CLOG_DEBUG1 "onMouseUp id=%d", id));
 	assert(m_active != NULL);
 
 	// relay
@@ -320,7 +320,7 @@ void					CServer::onMouseUp(ButtonID id)
 
 bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 {
-//	log((CLOG_DEBUG "onMouseMovePrimary %d,%d", x, y));
+	log((CLOG_DEBUG2 "onMouseMovePrimary %d,%d", x, y));
 
 	// mouse move on primary (server's) screen
 	assert(m_active != NULL);
@@ -336,22 +336,22 @@ bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 	if (x < m_active->m_zoneSize) {
 		x  -= m_active->m_zoneSize;
 		dir = CScreenMap::kLeft;
-		log((CLOG_DEBUG "switch to left"));
+		log((CLOG_DEBUG1 "switch to left"));
 	}
 	else if (x >= m_active->m_width - m_active->m_zoneSize) {
 		x  += m_active->m_zoneSize;
 		dir = CScreenMap::kRight;
-		log((CLOG_DEBUG "switch to right"));
+		log((CLOG_DEBUG1 "switch to right"));
 	}
 	else if (y < m_active->m_zoneSize) {
 		y  -= m_active->m_zoneSize;
 		dir = CScreenMap::kTop;
-		log((CLOG_DEBUG "switch to top"));
+		log((CLOG_DEBUG1 "switch to top"));
 	}
 	else if (y >= m_active->m_height - m_active->m_zoneSize) {
 		y  += m_active->m_zoneSize;
 		dir = CScreenMap::kBottom;
-		log((CLOG_DEBUG "switch to bottom"));
+		log((CLOG_DEBUG1 "switch to bottom"));
 	}
 	else {
 		// still on local screen
@@ -376,7 +376,7 @@ bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 
 void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 {
-	log((CLOG_DEBUG "onMouseMoveSecondary %+d,%+d", dx, dy));
+	log((CLOG_DEBUG1 "onMouseMoveSecondary %+d,%+d", dx, dy));
 
 	// mouse move on secondary (client's) screen
 	assert(m_active != NULL);
@@ -409,7 +409,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 
 		// get neighbor if we should switch
 		if (newScreen == NULL) {
-			log((CLOG_DEBUG "leave \"%s\" on %s", m_active->m_name.c_str(), CScreenMap::dirName(dir)));
+			log((CLOG_DEBUG1 "leave \"%s\" on %s", m_active->m_name.c_str(), CScreenMap::dirName(dir)));
 
 			SInt32 x = m_x, y = m_y;
 			newScreen = getNeighbor(m_active, dir, x, y);
@@ -421,7 +421,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 				m_y = y;
 			}
 			else {
-				log((CLOG_DEBUG "no neighbor; clamping"));
+				log((CLOG_DEBUG1 "no neighbor; clamping"));
 				if (m_x < 0)
 					m_x = 0;
 				else if (m_x > m_active->m_width - 1)
@@ -435,7 +435,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	}
 	else {
 		// clamp to edge when locked
-		log((CLOG_DEBUG "clamp to \"%s\"", m_active->m_name.c_str()));
+		log((CLOG_DEBUG1 "clamp to \"%s\"", m_active->m_name.c_str()));
 		if (m_x < 0)
 			m_x = 0;
 		else if (m_x > m_active->m_width - 1)
@@ -450,7 +450,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	if (newScreen == NULL || newScreen == m_active) {
 		// do nothing if mouse didn't move
 		if (m_x != xOld || m_y != yOld) {
-			log((CLOG_DEBUG "move on %s to %d,%d", m_active->m_name.c_str(), m_x, m_y));
+			log((CLOG_DEBUG1 "move on %s to %d,%d", m_active->m_name.c_str(), m_x, m_y));
 			m_active->m_protocol->sendMouseMove(m_x, m_y);
 		}
 	}
@@ -463,7 +463,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 
 void					CServer::onMouseWheel(SInt32 delta)
 {
-	log((CLOG_DEBUG "onMouseWheel %+d", delta));
+	log((CLOG_DEBUG1 "onMouseWheel %+d", delta));
 	assert(m_active != NULL);
 
 	// relay
@@ -547,14 +547,14 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 
 	CString srcName = src->m_name;
 	assert(!srcName.empty());
-	log((CLOG_DEBUG "find neighbor on %s of \"%s\"", CScreenMap::dirName(dir), srcName.c_str()));
+	log((CLOG_DEBUG2 "find neighbor on %s of \"%s\"", CScreenMap::dirName(dir), srcName.c_str()));
 	for (;;) {
 		// look up name of neighbor
 		const CString dstName(m_screenMap.getNeighbor(srcName, dir));
 
 		// if nothing in that direction then return NULL
 		if (dstName.empty()) {
-			log((CLOG_DEBUG "no neighbor on %s of \"%s\"", CScreenMap::dirName(dir), srcName.c_str()));
+			log((CLOG_DEBUG2 "no neighbor on %s of \"%s\"", CScreenMap::dirName(dir), srcName.c_str()));
 			return NULL;
 		}
 
@@ -563,11 +563,11 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		// screen.
 		CScreenList::const_iterator index = m_screens.find(dstName);
 		if (index != m_screens.end()) {
-			log((CLOG_DEBUG "\"%s\" is on %s of \"%s\"", dstName.c_str(), CScreenMap::dirName(dir), srcName.c_str()));
+			log((CLOG_DEBUG2 "\"%s\" is on %s of \"%s\"", dstName.c_str(), CScreenMap::dirName(dir), srcName.c_str()));
 			return index->second;
 		}
 
-		log((CLOG_DEBUG "ignored \"%s\" on %s of \"%s\"", dstName.c_str(), CScreenMap::dirName(dir), srcName.c_str()));
+		log((CLOG_DEBUG2 "ignored \"%s\" on %s of \"%s\"", dstName.c_str(), CScreenMap::dirName(dir), srcName.c_str()));
 		srcName = dstName;
 	}
 }
@@ -596,7 +596,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 			if (x >= 0) {
 				break;
 			}
-			log((CLOG_DEBUG "skipping over screen %s", dst->m_name.c_str()));
+			log((CLOG_DEBUG2 "skipping over screen %s", dst->m_name.c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
 		break;
@@ -610,7 +610,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 			if (x < w) {
 				break;
 			}
-			log((CLOG_DEBUG "skipping over screen %s", dst->m_name.c_str()));
+			log((CLOG_DEBUG2 "skipping over screen %s", dst->m_name.c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
 		break;
@@ -624,7 +624,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 			if (y >= 0) {
 				break;
 			}
-			log((CLOG_DEBUG "skipping over screen %s", dst->m_name.c_str()));
+			log((CLOG_DEBUG2 "skipping over screen %s", dst->m_name.c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
 		break;
@@ -638,7 +638,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 			if (y < h) {
 				break;
 			}
-			log((CLOG_DEBUG "skipping over screen %s", dst->m_name.c_str()));
+			log((CLOG_DEBUG2 "skipping over screen %s", dst->m_name.c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
 		break;
@@ -725,7 +725,7 @@ void					CServer::mapPosition(CScreenInfo* src,
 #include "CTCPListenSocket.h"
 void					CServer::acceptClients(void*)
 {
-	log((CLOG_DEBUG "starting to wait for clients"));
+	log((CLOG_DEBUG1 "starting to wait for clients"));
 
 	// add this thread to the list of threads to cancel.  remove from
 	// list in d'tor.
@@ -743,25 +743,25 @@ void					CServer::acceptClients(void*)
 		CNetworkAddress addr(50001 /* FIXME -- m_port */);
 		for (;;) {
 			try {
-				log((CLOG_DEBUG "binding listen socket"));
+				log((CLOG_DEBUG1 "binding listen socket"));
 				listen->bind(addr);
 				break;
 			}
 			catch (XSocketAddressInUse&) {
 				// give up if we've waited too long
 				if (timer.getTime() >= m_bindTimeout) {
-					log((CLOG_DEBUG "waited too long to bind, giving up"));
+					log((CLOG_DEBUG1 "waited too long to bind, giving up"));
 					throw;
 				}
 
 				// wait a bit before retrying
-				log((CLOG_DEBUG "bind failed;  waiting to retry"));
+				log((CLOG_DEBUG1 "bind failed;  waiting to retry"));
 				CThread::sleep(5.0);
 			}
 		}
 
 		// accept connections and begin processing them
-		log((CLOG_DEBUG "waiting for client connections"));
+		log((CLOG_DEBUG1 "waiting for client connections"));
 		for (;;) {
 			// accept connection
 			CThread::testCancel();
@@ -782,7 +782,7 @@ void					CServer::acceptClients(void*)
 
 void					CServer::handshakeClient(void* vsocket)
 {
-	log((CLOG_DEBUG "negotiating with new client"));
+	log((CLOG_DEBUG1 "negotiating with new client"));
 
 	// get the socket pointer from the argument
 	assert(vsocket != NULL);
@@ -826,22 +826,22 @@ void					CServer::handshakeClient(void* vsocket)
 			static const UInt32 maxHelloLen = 1024;
 
 			// say hello
-			log((CLOG_DEBUG "saying hello"));
+			log((CLOG_DEBUG1 "saying hello"));
 			CProtocolUtil::writef(output.get(), "Synergy%2i%2i",
 										kMajorVersion, kMinorVersion);
 			output->flush();
 
 			// wait for the reply
-			log((CLOG_DEBUG "waiting for hello reply"));
+			log((CLOG_DEBUG1 "waiting for hello reply"));
 			UInt32 n = input->getSize();
 			if (n > maxHelloLen) {
 				throw XBadClient();
 			}
 
 			// get and parse the reply to hello
-			SInt32 major, minor;
+			SInt16 major, minor;
 			try {
-				log((CLOG_DEBUG "parsing hello reply"));
+				log((CLOG_DEBUG1 "parsing hello reply"));
 				CProtocolUtil::readf(input.get(), "Synergy%2i%2i%s",
 										&major, &minor, &name);
 			}
@@ -853,7 +853,7 @@ void					CServer::handshakeClient(void* vsocket)
 			}
 
 			// create a protocol interpreter for the version
-			log((CLOG_DEBUG "creating interpreter for client %s version %d.%d", name.c_str(), major, minor));
+			log((CLOG_DEBUG1 "creating interpreter for client %s version %d.%d", name.c_str(), major, minor));
 			assign(protocol, CServerProtocol::create(major, minor,
 									this, name, input.get(), output.get()),
 									IServerProtocol);
@@ -863,7 +863,7 @@ void					CServer::handshakeClient(void* vsocket)
 									name, protocol.get()), CConnectionNote);
 
 			// ask and wait for the client's info
-			log((CLOG_DEBUG "waiting for info for client %s", name.c_str()));
+			log((CLOG_DEBUG1 "waiting for info for client %s", name.c_str()));
 			protocol->queryInfo();
 		}
 
@@ -905,13 +905,13 @@ void					CServer::openPrimaryScreen()
 	assert(m_primary == NULL);
 
 	// open screen
-	log((CLOG_DEBUG "creating primary screen"));
+	log((CLOG_DEBUG1 "creating primary screen"));
 #if defined(CONFIG_PLATFORM_WIN32)
 	m_primary = new CMSWindowsPrimaryScreen;
 #elif defined(CONFIG_PLATFORM_UNIX)
 	m_primary = new CXWindowsPrimaryScreen;
 #endif
-	log((CLOG_DEBUG "opening primary screen"));
+	log((CLOG_DEBUG1 "opening primary screen"));
 	m_primary->open(this);
 
 	// add connection
@@ -944,7 +944,7 @@ void					CServer::closePrimaryScreen()
 
 	// close the primary screen
 	try {
-		log((CLOG_DEBUG "closing primary screen"));
+		log((CLOG_DEBUG1 "closing primary screen"));
 		m_primary->close();
 	}
 	catch (...) {
@@ -952,7 +952,7 @@ void					CServer::closePrimaryScreen()
 	}
 
 	// clean up
-	log((CLOG_DEBUG "destroying primary screen"));
+	log((CLOG_DEBUG1 "destroying primary screen"));
 	delete m_primary;
 	m_primary = NULL;
 }
@@ -979,7 +979,7 @@ void					CServer::removeCleanupThread(const CThread& thread)
 
 void					CServer::cleanupThreads()
 {
-	log((CLOG_DEBUG "cleaning up threads"));
+	log((CLOG_DEBUG1 "cleaning up threads"));
 	m_mutex.lock();
 	while (m_cleanupList.begin() != m_cleanupList.end()) {
 		// get the next thread and cancel it
@@ -995,7 +995,7 @@ void					CServer::cleanupThreads()
 
 	// FIXME -- delete remaining threads from list
 	m_mutex.unlock();
-	log((CLOG_DEBUG "cleaned up threads"));
+	log((CLOG_DEBUG1 "cleaned up threads"));
 }
 
 CServer::CScreenInfo*	CServer::addConnection(

@@ -40,5 +40,7 @@ class CLog {
 #define CLOG_NOTE		CLOG_TRACE "%z\063"
 #define CLOG_INFO		CLOG_TRACE "%z\064"
 #define CLOG_DEBUG		CLOG_TRACE "%z\065"
+#define CLOG_DEBUG1		CLOG_TRACE "%z\066"
+#define CLOG_DEBUG2		CLOG_TRACE "%z\067"
 
 #endif

@@ -274,11 +274,11 @@ void					CXWindowsScreen::getDisplayClipboard(
 		log((CLOG_INFO "getting selection with %d targets", numTargets));
 		for (SInt32 i = 0; i < numTargets; ++i) {
 			Atom format = targetAtoms[i];
-			log((CLOG_DEBUG " source target %d", format));
+			log((CLOG_DEBUG1 " source target %d", format));
 
 			// skip already handled targets
 			if (targets.count(format) > 0) {
-				log((CLOG_DEBUG "  skipping handled target %d", format));
+				log((CLOG_DEBUG1 "  skipping handled target %d", format));
 				continue;
 			}
 
@@ -291,29 +291,29 @@ void					CXWindowsScreen::getDisplayClipboard(
 			// if we can use the format and we haven't already retrieved
 			// it then get it
 			if (expectedFormat == IClipboard::kNumFormats) {
-				log((CLOG_DEBUG "  no format for target", format));
+				log((CLOG_DEBUG1 "  no format for target", format));
 				continue;
 			}
 			if (clipboardFormats.count(expectedFormat) > 0) {
-				log((CLOG_DEBUG "  skipping handled format %d", expectedFormat));
+				log((CLOG_DEBUG1 "  skipping handled format %d", expectedFormat));
 				continue;
 			}
 
 			CString data;
 			if (!getDisplayClipboard(selection, format,
 							requestor, timestamp, &format, &data)) {
-				log((CLOG_DEBUG "  no data for target", format));
+				log((CLOG_DEBUG1 "  no data for target", format));
 				continue;
 			}
 
 			// use the actual format, not the expected
 			IClipboard::EFormat actualFormat = getFormat(format);
 			if (actualFormat == IClipboard::kNumFormats) {
-				log((CLOG_DEBUG "  no format for target", format));
+				log((CLOG_DEBUG1 "  no format for target", format));
 				continue;
 			}
 			if (clipboardFormats.count(actualFormat) > 0) {
-				log((CLOG_DEBUG "  skipping handled format %d", actualFormat));
+				log((CLOG_DEBUG1 "  skipping handled format %d", actualFormat));
 				continue;
 			}
 
@@ -326,7 +326,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 	else {
 		// non-ICCCM conforming selection owner.  try TEXT format.
 		// FIXME
-		log((CLOG_DEBUG "selection doesn't support TARGETS, format is %d", format));
+		log((CLOG_DEBUG1 "selection doesn't support TARGETS, format is %d", format));
 	}
 
 	// done with clipboard
@@ -386,7 +386,7 @@ bool					CXWindowsScreen::getDisplayClipboard(
 	// handle INCR type specially.  it means we'll be receiving the data
 	// piecemeal so we just loop until we've collected all the data.
 	if (*outputType == m_atomINCR) {
-		log((CLOG_DEBUG "selection data for format %d is incremental", type));
+		log((CLOG_DEBUG1 "selection data for format %d is incremental", type));
 		// the data is a lower bound on the amount of data to be
 		// transferred.  use it as a hint to size our buffer.
 		UInt32 size;
@@ -726,7 +726,7 @@ bool					CXWindowsScreen::sendClipboardData(
 		}
 
 		if (data.size() > kMaxRequestSize) {
-			log((CLOG_DEBUG "handling clipboard request for %d as INCR", target));
+			log((CLOG_DEBUG1 "handling clipboard request for %d as INCR", target));
 
 			// get the appropriate list, creating it if necessary
 			CRequestList* list = m_clipboards[id].m_requests[requestor];
@@ -763,7 +763,7 @@ bool					CXWindowsScreen::sendClipboardData(
 								1);
 		}
 		else {
-			log((CLOG_DEBUG "handling clipboard request for %d", target));
+			log((CLOG_DEBUG1 "handling clipboard request for %d", target));
 
 			// FIXME -- handle Alloc errors (by returning false)
 			XChangeProperty(m_display, requestor, property,
@@ -783,7 +783,7 @@ bool					CXWindowsScreen::sendClipboardMultiple(
 								Window requestor,
 								Atom property, Time time)
 {
-	log((CLOG_DEBUG "handling clipboard request for MULTIPLE"));
+	log((CLOG_DEBUG1 "handling clipboard request for MULTIPLE"));
 
 	// get the list of requested formats
 	Atom type;
@@ -850,7 +850,7 @@ bool					CXWindowsScreen::sendClipboardTargets(
 								Window requestor,
 								Atom property, Time /*time*/)
 {
-	log((CLOG_DEBUG "handling request for TARGETS"));
+	log((CLOG_DEBUG1 "handling request for TARGETS"));
 
 	// count the number of targets, plus TARGETS and MULTIPLE
 	SInt32 numTargets = 2;
@@ -888,7 +888,7 @@ bool					CXWindowsScreen::sendClipboardTimestamp(
 								Window requestor,
 								Atom property, Time /*time*/)
 {
-	log((CLOG_DEBUG "handling clipboard request for TIMESTAMP"));
+	log((CLOG_DEBUG1 "handling clipboard request for TIMESTAMP"));
 
 	// FIXME -- handle Alloc errors (by returning false)
 	XChangeProperty(m_display, requestor, property,

@@ -46,7 +46,7 @@ void					CServerProtocol1_0::run()
 		}
 
 		// parse message
-		log((CLOG_DEBUG "msg from \"%s\": %c%c%c%c", getClient().c_str(), code[0], code[1], code[2], code[3]));
+		log((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getClient().c_str(), code[0], code[1], code[2], code[3]));
 		if (memcmp(code, kMsgDInfo, 4) == 0) {
 			recvInfo();
 		}
@@ -68,7 +68,7 @@ void					CServerProtocol1_0::run()
 
 void					CServerProtocol1_0::queryInfo()
 {
-	log((CLOG_INFO "querying client \"%s\" info", getClient().c_str()));
+	log((CLOG_DEBUG1 "querying client \"%s\" info", getClient().c_str()));
 
 	// send request
 	CProtocolUtil::writef(getOutputStream(), kMsgQInfo);
@@ -86,95 +86,95 @@ void					CServerProtocol1_0::queryInfo()
 
 void					CServerProtocol1_0::sendClose()
 {
-	log((CLOG_INFO "send close to \"%s\"", getClient().c_str()));
+	log((CLOG_DEBUG1 "send close to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClose);
 }
 
 void					CServerProtocol1_0::sendEnter(
 								SInt32 xAbs, SInt32 yAbs)
 {
-	log((CLOG_INFO "send enter to \"%s\", %d,%d", getClient().c_str(), xAbs, yAbs));
+	log((CLOG_DEBUG1 "send enter to \"%s\", %d,%d", getClient().c_str(), xAbs, yAbs));
 	CProtocolUtil::writef(getOutputStream(), kMsgCEnter, xAbs, yAbs);
 }
 
 void					CServerProtocol1_0::sendLeave()
 {
-	log((CLOG_INFO "send leave to \"%s\"", getClient().c_str()));
+	log((CLOG_DEBUG1 "send leave to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCLeave);
 }
 
 void					CServerProtocol1_0::sendClipboard(
 								ClipboardID id, const CString& data)
 {
-	log((CLOG_INFO "send clipboard %d to \"%s\" size=%d", id, getClient().c_str(), data.size()));
+	log((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getClient().c_str(), data.size()));
 	CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, id, 0, &data);
 }
 
 void					CServerProtocol1_0::sendGrabClipboard(ClipboardID id)
 {
-	log((CLOG_INFO "send grab clipboard %d to \"%s\"", id, getClient().c_str()));
+	log((CLOG_DEBUG "send grab clipboard %d to \"%s\"", id, getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id);
 }
 
 void					CServerProtocol1_0::sendQueryClipboard(
 								ClipboardID id, UInt32 seqNum)
 {
-	log((CLOG_INFO "query clipboard %d to \"%s\"", id, getClient().c_str()));
+	log((CLOG_DEBUG "query clipboard %d to \"%s\"", id, getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgQClipboard, id, seqNum);
 }
 
 void					CServerProtocol1_0::sendScreenSaver(bool on)
 {
-	log((CLOG_INFO "send screen saver to \"%s\"", getClient().c_str()));
+	log((CLOG_DEBUG1 "send screen saver to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
 
 void					CServerProtocol1_0::sendKeyDown(
 								KeyID key, KeyModifierMask mask)
 {
-	log((CLOG_INFO "send key down to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
+	log((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyDown, key, mask);
 }
 
 void					CServerProtocol1_0::sendKeyRepeat(
 								KeyID key, KeyModifierMask mask, SInt32 count)
 {
-	log((CLOG_INFO "send key repeat to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
+	log((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask, count);
 }
 
 void					CServerProtocol1_0::sendKeyUp(
 								KeyID key, KeyModifierMask mask)
 {
-	log((CLOG_INFO "send key up to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
+	log((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyUp, key, mask);
 }
 
 void					CServerProtocol1_0::sendMouseDown(
 								ButtonID button)
 {
-	log((CLOG_INFO "send mouse down to \"%s\" id=%d", getClient().c_str(), button));
+	log((CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getClient().c_str(), button));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseDown, button);
 }
 
 void					CServerProtocol1_0::sendMouseUp(
 								ButtonID button)
 {
-	log((CLOG_INFO "send mouse up to \"%s\" id=%d", getClient().c_str(), button));
+	log((CLOG_DEBUG1 "send mouse up to \"%s\" id=%d", getClient().c_str(), button));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseUp, button);
 }
 
 void					CServerProtocol1_0::sendMouseMove(
 								SInt32 xAbs, SInt32 yAbs)
 {
-	log((CLOG_INFO "send mouse move to \"%s\" %d,%d", getClient().c_str(), xAbs, yAbs));
+	log((CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getClient().c_str(), xAbs, yAbs));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseMove, xAbs, yAbs);
 }
 
 void					CServerProtocol1_0::sendMouseWheel(
 								SInt32 delta)
 {
-	log((CLOG_INFO "send mouse wheel to \"%s\" %+d", getClient().c_str(), delta));
+	log((CLOG_DEBUG1 "send mouse wheel to \"%s\" %+d", getClient().c_str(), delta));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseWheel, delta);
 }
 
@@ -183,7 +183,7 @@ void					CServerProtocol1_0::recvInfo()
 	// parse the message
 	SInt16 w, h, zoneInfo;
 	CProtocolUtil::readf(getInputStream(), kMsgDInfo + 4, &w, &h, &zoneInfo);
-	log((CLOG_INFO "received client \"%s\" info size=%dx%d, zone=%d", getClient().c_str(), w, h, zoneInfo));
+	log((CLOG_DEBUG "received client \"%s\" info size=%dx%d, zone=%d", getClient().c_str(), w, h, zoneInfo));
 
 	// validate
 	if (w == 0 || h == 0) {
@@ -200,7 +200,7 @@ void					CServerProtocol1_0::recvClipboard()
 	UInt32 seqNum;
 	CString data;
 	CProtocolUtil::readf(getInputStream(), kMsgDClipboard + 4, &id, &seqNum, &data);
-	log((CLOG_INFO "received client \"%s\" clipboard %d seqnum=%d, size=%d", getClient().c_str(), id, seqNum, data.size()));
+	log((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getClient().c_str(), id, seqNum, data.size()));
 	getServer()->setClipboard(id, seqNum, data);
 }
 
@@ -208,6 +208,6 @@ void					CServerProtocol1_0::recvGrabClipboard()
 {
 	ClipboardID id;
 	CProtocolUtil::readf(getInputStream(), kMsgCClipboard + 4, &id);
-	log((CLOG_INFO "received client \"%s\" grabbed clipboard %d", getClient().c_str(), id));
+	log((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d", getClient().c_str(), id));
 	getServer()->grabClipboard(id, getClient());
 }

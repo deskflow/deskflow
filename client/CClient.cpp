@@ -58,7 +58,7 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		m_screen->run();
 
 		// clean up
-		log((CLOG_DEBUG "stopping client"));
+		log((CLOG_NOTE "stopping client"));
 		thread->cancel();
 		thread->wait();
 		delete thread;
@@ -109,7 +109,7 @@ void					CClient::runSession(void*)
 		CTimerThread timer(30.0);		// FIXME -- timeout in member
 
 		// create socket and attempt to connect to server
-		log((CLOG_DEBUG "connecting to server"));
+		log((CLOG_DEBUG1 "connecting to server"));
 		assign(socket, new CTCPSocket(), ISocket);	// FIXME -- use factory
 		socket->connect(*m_serverAddress);
 		log((CLOG_INFO "connected to server"));
@@ -135,19 +135,19 @@ void					CClient::runSession(void*)
 		assign(output, new COutputPacketStream(srcOutput, own), IOutputStream);
 
 		// wait for hello from server
-		log((CLOG_DEBUG "wait for hello"));
-		SInt32 major, minor;
+		log((CLOG_DEBUG1 "wait for hello"));
+		SInt16 major, minor;
 		CProtocolUtil::readf(input.get(), "Synergy%2i%2i", &major, &minor);
 
 		// check versions
-		log((CLOG_DEBUG "got hello version %d.%d", major, minor));
+		log((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
 		if (major < kMajorVersion ||
 			(major == kMajorVersion && minor < kMinorVersion)) {
 			throw XIncompatibleClient(major, minor);
 		}
 
 		// say hello back
-		log((CLOG_DEBUG "say hello version %d.%d", kMajorVersion, kMinorVersion));
+		log((CLOG_DEBUG1 "say hello version %d.%d", kMajorVersion, kMinorVersion));
 		CProtocolUtil::writef(output.get(), "Synergy%2i%2i%s",
 								kMajorVersion, kMinorVersion, &m_name);
 
@@ -176,7 +176,7 @@ void					CClient::runSession(void*)
 		// handle messages from server
 		for (;;) {
 			// wait for reply
-			log((CLOG_DEBUG "waiting for message"));
+			log((CLOG_DEBUG1 "waiting for message"));
 			UInt8 code[4];
 			UInt32 n = input->read(code, 4);
 
@@ -193,7 +193,7 @@ void					CClient::runSession(void*)
 			}
 
 			// parse message
-			log((CLOG_DEBUG "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
+			log((CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
 			if (memcmp(code, kMsgDMouseMove, 4) == 0) {
 				onMouseMove();
 			}
@@ -272,13 +272,13 @@ void					CClient::openSecondaryScreen()
 	assert(m_screen == NULL);
 
 	// open screen
-	log((CLOG_DEBUG "creating secondary screen"));
+	log((CLOG_DEBUG1 "creating secondary screen"));
 #if defined(CONFIG_PLATFORM_WIN32)
 	m_screen = new CMSWindowsSecondaryScreen;
 #elif defined(CONFIG_PLATFORM_UNIX)
 	m_screen = new CXWindowsSecondaryScreen;
 #endif
-	log((CLOG_DEBUG "opening secondary screen"));
+	log((CLOG_DEBUG1 "opening secondary screen"));
 	m_screen->open(this);
 }
 
@@ -288,7 +288,7 @@ void					CClient::closeSecondaryScreen()
 
 	// close the secondary screen
 	try {
-		log((CLOG_DEBUG "closing secondary screen"));
+		log((CLOG_DEBUG1 "closing secondary screen"));
 		m_screen->close();
 	}
 	catch (...) {
@@ -296,7 +296,7 @@ void					CClient::closeSecondaryScreen()
 	}
 
 	// clean up
-	log((CLOG_DEBUG "destroying secondary screen"));
+	log((CLOG_DEBUG1 "destroying secondary screen"));
 	delete m_screen;
 	m_screen = NULL;
 }
@@ -342,7 +342,7 @@ void					CClient::onQueryInfo()
 	m_screen->getSize(&w, &h);
 	SInt32 zoneSize = m_screen->getJumpZoneSize();
 
-	log((CLOG_DEBUG "sending info size=%d,%d zone=%d", w, h, zoneSize));
+	log((CLOG_DEBUG1 "sending info size=%d,%d zone=%d", w, h, zoneSize));
 	CLock lock(&m_mutex);
 	CProtocolUtil::writef(m_output, kMsgDInfo, w, h, zoneSize);
 }

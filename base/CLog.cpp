@@ -18,6 +18,8 @@ static const char*		g_priority[] = {
 								"NOTE",
 								"INFO",
 								"DEBUG",
+								"DEBUG1",
+								"DEBUG2"
 							};
 static const int		g_numPriority = (int)(sizeof(g_priority) /
 											sizeof(g_priority[0]));
@@ -108,7 +110,11 @@ void					CLog::output(int priority, char* msg)
 	assert(msg != 0);
 
 	if (g_maxPriority == -1) {
-		g_maxPriority = g_numPriority - 1;
+#if defined(NDEBUG)
+		g_maxPriority = 4;
+#else
+		g_maxPriority = 5;
+#endif
 		const char* priEnv = getenv("SYN_LOG_PRI");
 		if (priEnv != NULL) {
 			for (int i = 0; i < g_numPriority; ++i)

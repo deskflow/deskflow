@@ -51,7 +51,7 @@ void					CXWindowsPrimaryScreen::run()
 		  }
 
 		  case KeyPress: {
-			log((CLOG_DEBUG "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+			log((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
@@ -65,7 +65,7 @@ void					CXWindowsPrimaryScreen::run()
 		  // FIXME -- simulate key repeat.  X sends press/release for
 		  // repeat.  must detect auto repeat and use kKeyRepeat.
 		  case KeyRelease: {
-			log((CLOG_DEBUG "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+			log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
@@ -77,7 +77,7 @@ void					CXWindowsPrimaryScreen::run()
 		  }
 
 		  case ButtonPress: {
-			log((CLOG_DEBUG "event: ButtonPress button=%d", xevent.xbutton.button));
+			log((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				m_server->onMouseDown(button);
@@ -86,7 +86,7 @@ void					CXWindowsPrimaryScreen::run()
 		  }
 
 		  case ButtonRelease: {
-			log((CLOG_DEBUG "event: ButtonRelease button=%d", xevent.xbutton.button));
+			log((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				m_server->onMouseUp(button);
@@ -95,7 +95,7 @@ void					CXWindowsPrimaryScreen::run()
 		  }
 
 		  case MotionNotify: {
-//			log((CLOG_DEBUG "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
+			log((CLOG_DEBUG2 "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
 			SInt32 x, y;
 			if (!m_active) {
 				x = xevent.xmotion.x_root;
@@ -270,11 +270,11 @@ void					CXWindowsPrimaryScreen::leave()
 								m_window, None, CurrentTime);
 			assert(result != GrabNotViewable);
 			if (result != GrabSuccess) {
-				log((CLOG_DEBUG "waiting to grab pointer"));
+				log((CLOG_DEBUG2 "waiting to grab pointer"));
 				CThread::sleep(0.1);
 			}
 		} while (result != GrabSuccess);
-		log((CLOG_DEBUG "grabbed pointer"));
+		log((CLOG_DEBUG2 "grabbed pointer"));
 
 		// now the keyboard
 		result = XGrabKeyboard(display, m_window, True,
@@ -283,11 +283,11 @@ void					CXWindowsPrimaryScreen::leave()
 		if (result != GrabSuccess) {
 			// back off to avoid grab deadlock
 			XUngrabPointer(display, CurrentTime);
-			log((CLOG_DEBUG "ungrabbed pointer, waiting to grab keyboard"));
+			log((CLOG_DEBUG2 "ungrabbed pointer, waiting to grab keyboard"));
 			CThread::sleep(0.1);
 		}
 	} while (result != GrabSuccess);
-	log((CLOG_DEBUG "grabbed keyboard"));
+	log((CLOG_DEBUG1 "grabbed pointer and keyboard"));
 
 	// move the mouse to the center of grab window
 	SInt32 w, h;
@@ -313,7 +313,7 @@ void					CXWindowsPrimaryScreen::warpCursorNoLock(
 	// warp the mouse
 	XWarpPointer(display, None, getRoot(), 0, 0, 0, 0, x, y);
 	XSync(display, False);
-	log((CLOG_DEBUG "warped to %d,%d", x, y));
+	log((CLOG_DEBUG1 "warped to %d,%d", x, y));
 
 	// discard mouse events since we just added one we don't want
 	XEvent xevent;

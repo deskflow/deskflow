@@ -15,7 +15,7 @@ void					CProtocolUtil::writef(IOutputStream* stream,
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
-	log((CLOG_DEBUG "writef(%s)", fmt));
+	log((CLOG_DEBUG2 "writef(%s)", fmt));
 
 	va_list args;
 
@@ -39,7 +39,7 @@ void					CProtocolUtil::writef(IOutputStream* stream,
 	UInt8* scan = buffer;
 	while (count > 0) {
 		const UInt32 n = stream->write(scan, count);
-		log((CLOG_DEBUG "wrote %d of %d bytes", n, count));
+		log((CLOG_DEBUG2 "wrote %d of %d bytes", n, count));
 		count -= n;
 		scan  += n;
 	}
@@ -52,7 +52,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
-	log((CLOG_DEBUG "readf(%s)", fmt));
+	log((CLOG_DEBUG2 "readf(%s)", fmt));
 
 	va_list args;
 	va_start(args, fmt);
@@ -78,7 +78,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 				  case 1:
 					// 1 byte integer
 					*reinterpret_cast<UInt8*>(v) = buffer[0];
-					log((CLOG_DEBUG "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt8*>(v), *reinterpret_cast<UInt8*>(v)));
+					log((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt8*>(v), *reinterpret_cast<UInt8*>(v)));
 					break;
 
 				  case 2:
@@ -86,7 +86,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 					*reinterpret_cast<UInt16*>(v) =
 						(static_cast<UInt16>(buffer[0]) << 8) |
 						 static_cast<UInt16>(buffer[1]);
-					log((CLOG_DEBUG "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt16*>(v), *reinterpret_cast<UInt16*>(v)));
+					log((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt16*>(v), *reinterpret_cast<UInt16*>(v)));
 					break;
 
 				  case 4:
@@ -96,7 +96,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 						(static_cast<UInt32>(buffer[1]) << 16) |
 						(static_cast<UInt32>(buffer[2]) <<  8) |
 						 static_cast<UInt32>(buffer[3]);
-					log((CLOG_DEBUG "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt32*>(v), *reinterpret_cast<UInt32*>(v)));
+					log((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt32*>(v), *reinterpret_cast<UInt32*>(v)));
 					break;
 				}
 				break;
@@ -135,7 +135,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 					}
 					throw;
 				}
-				log((CLOG_DEBUG "readf: read %d byte string: %.*s", len, len, sBuffer));
+				log((CLOG_DEBUG2 "readf: read %d byte string: %.*s", len, len, sBuffer));
 
 				// save the data
 				CString* dst = va_arg(args, CString*);
@@ -166,7 +166,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 
 			// verify match
 			if (buffer[0] != *fmt) {
-				log((CLOG_DEBUG "readf: format mismatch: %c vs %c", *fmt, buffer[0]));
+				log((CLOG_DEBUG2 "readf: format mismatch: %c vs %c", *fmt, buffer[0]));
 				throw XIOReadMismatch();
 			}
 
@@ -351,7 +351,7 @@ void					CProtocolUtil::read(IInputStream* stream,
 
 		// bail if stream has hungup
 		if (n == 0) {
-			log((CLOG_DEBUG "unexpected disconnect in readf(), %d bytes left", count));
+			log((CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left", count));
 			throw XIOEndOfStream();
 		}
 
