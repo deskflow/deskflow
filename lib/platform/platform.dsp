@@ -103,7 +103,7 @@ SOURCE=.\CMSWindowsClipboardUTF16Converter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsDesktop.cpp
+SOURCE=.\CMSWindowsDesks.cpp
 # End Source File
 # Begin Source File
 
@@ -111,7 +111,7 @@ SOURCE=.\CMSWindowsEventQueueBuffer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsKeyMapper.cpp
+SOURCE=.\CMSWindowsKeyState.cpp
 # End Source File
 # Begin Source File
 
@@ -147,7 +147,7 @@ SOURCE=.\CMSWindowsClipboardUTF16Converter.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsDesktop.h
+SOURCE=.\CMSWindowsDesks.h
 # End Source File
 # Begin Source File
 
@@ -155,7 +155,7 @@ SOURCE=.\CMSWindowsEventQueueBuffer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsKeyMapper.h
+SOURCE=.\CMSWindowsKeyState.h
 # End Source File
 # Begin Source File
 

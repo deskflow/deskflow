@@ -50,6 +50,7 @@ public:
 	//@}
 
 	// IKeyState overrides
+	virtual bool		fakeCtrlAltDel();
 	virtual const char*	getKeyName(KeyButton) const;
 
 protected:

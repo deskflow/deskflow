@@ -91,7 +91,15 @@ SOURCE=.\CClipboard.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CKeyState.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CPacketStreamFilter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CPlatformScreen.cpp
 # End Source File
 # Begin Source File
 
@@ -104,6 +112,10 @@ SOURCE=.\CScreen.cpp
 # Begin Source File
 
 SOURCE=.\IClipboard.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IKeyState.cpp
 # End Source File
 # Begin Source File
 
@@ -131,11 +143,19 @@ SOURCE=.\CClipboard.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CKeyState.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\ClipboardTypes.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\CPacketStreamFilter.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CPlatformScreen.h
 # End Source File
 # Begin Source File
 

@@ -39,14 +39,7 @@ void
 CKeyState::setKeyDown(KeyButton button, bool down)
 {
 	button &= kButtonMask;
-	if (button != 0) {
-		if (down) {
-			m_keys[button] |= kDown;
-		}
-		else {
-			m_keys[button] &= ~kDown;
-		}
-	}
+	updateKeyState(button, button, down);
 }
 
 void
@@ -144,7 +137,8 @@ CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
 	Keystrokes keys;
-	KeyButton localID = (mapKey(keys, id, mask, false) & kButtonMask);
+	KeyButton localID =
+		(KeyButton)(mapKey(keys, id, mask, false) & kButtonMask);
 	if (keys.empty()) {
 		// do nothing if there are no associated keys
 		LOG((CLOG_DEBUG2 "cannot map key 0x%08x", id));
@@ -155,7 +149,7 @@ CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 	fakeKeyEvents(keys, 1);
 
 	// note that key is down
-	updateKeyState(button & kButtonMask, localID, true);
+	updateKeyState((KeyButton)(button & kButtonMask), localID, true);
 }
 
 void
@@ -174,7 +168,7 @@ CKeyState::fakeKeyRepeat(
 	// get the sequence of keys to simulate key repeat and the final
 	// modifier state.
 	Keystrokes keys;
-	KeyButton localID = (mapKey(keys, id, mask, true) & kButtonMask);
+	KeyButton localID = (KeyButton)(mapKey(keys, id, mask, true) & kButtonMask);
 	if (localID == 0) {
 		LOG((CLOG_DEBUG2 "cannot map key 0x%08x", id));
 		return;
@@ -511,12 +505,16 @@ CKeyState::updateKeyState(KeyButton serverID, KeyButton localID, bool press)
 	KeyModifierMask mask = m_keyToMask[localID];
 	if (mask != 0) {
 		if (isToggle(mask)) {
-			m_keys[localID] ^= kToggled;
-			m_mask          ^= mask;
-
 			// never report half-duplex keys as down
 			if (isHalfDuplex(mask)) {
 				m_keys[localID] &= ~kDown;
+				press            = true;
+			}
+
+			// toggle on the press
+			if (press) {
+				m_keys[localID] ^= kToggled;
+				m_mask          ^= mask;
 			}
 		}
 		else {

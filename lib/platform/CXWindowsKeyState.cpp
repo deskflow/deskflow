@@ -174,6 +174,13 @@ CXWindowsKeyState::mapModifiersFromX(unsigned int state) const
 	return mask;
 }
 
+bool
+CXWindowsKeyState::fakeCtrlAltDel()
+{
+	// pass keys through unchanged
+	return false;
+}
+
 const char*
 CXWindowsKeyState::getKeyName(KeyButton keycode) const
 {
@@ -864,7 +871,7 @@ CXWindowsKeyState::findBestKeyIndex(KeySymIndex keyIndex,
 	// if the action is an auto-repeat then we don't call this
 	// method since we just need to synthesize a key repeat on the
 	// same keycode that we pressed.
-	// XXX -- do this right
+	// FIXME -- do this right
 	for (unsigned int i = 0; i < 4; ++i) {
 		if (keyIndex->second.m_keycode[i] != 0) {
 			return i;

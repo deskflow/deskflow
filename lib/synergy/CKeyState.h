@@ -33,9 +33,10 @@ public:
 
 	//! Mark key as being down
 	/*!
-	Sets the state of \p button to down or up.
+	Sets the state of \p button to down or up.  If this is overridden
+	it must forward to the superclass.
 	*/
-	void				setKeyDown(KeyButton button, bool down);
+	virtual void		setKeyDown(KeyButton button, bool down);
 
 	//! Mark modifier as being toggled on
 	/*!
@@ -47,9 +48,10 @@ public:
 	//! Post a key event
 	/*!
 	Posts a key event.  This may adjust the event or post additional
-	events in some circumstances.
+	events in some circumstances.  If this is overridden it must forward
+	to the superclass.
 	*/
-	void				sendKeyEvent(void* target,
+	virtual void		sendKeyEvent(void* target,
 							bool press, bool isAutoRepeat,
 							KeyID key, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
@@ -69,6 +71,7 @@ public:
 							SInt32 count, KeyButton button);
 	virtual void		fakeKeyUp(KeyButton button);
 	virtual void		fakeToggle(KeyModifierMask modifier);
+	virtual bool		fakeCtrlAltDel() = 0;
 	virtual bool		isKeyDown(KeyButton) const;
 	virtual KeyModifierMask
 						getActiveModifiers() const;

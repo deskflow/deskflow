@@ -43,7 +43,6 @@ public:
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 
 	// ISecondaryScreen overrides
-	virtual bool		fakeCtrlAltDel() const = 0;
 	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
 	virtual void		fakeMouseWheel(SInt32 delta) const = 0;
@@ -57,6 +56,7 @@ public:
 							SInt32 count, KeyButton button);
 	virtual void		fakeKeyUp(KeyButton button);
 	virtual void		fakeToggle(KeyModifierMask modifier);
+	virtual bool		fakeCtrlAltDel();
 	virtual bool		isKeyDown(KeyButton) const;
 	virtual KeyModifierMask
 						getActiveModifiers() const;

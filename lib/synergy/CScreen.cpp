@@ -98,13 +98,13 @@ CScreen::enter(KeyModifierMask toggleMask)
 	// now on screen
 	m_entered = true;
 
+	m_screen->enter();
 	if (m_isPrimary) {
 		enterPrimary();
 	}
 	else {
 		enterSecondary(toggleMask);
 	}
-	m_screen->enter();
 }
 
 bool
@@ -315,6 +315,16 @@ CScreen::isLockedToScreen() const
 		return true;
 	}
 
+// note -- we don't lock to the screen if a key is down.  key
+// reporting is simply not reliable enough to trust.  the effect
+// of switching screens with a key down is that the client will
+// receive key repeats and key releases for keys that it hasn't
+// see go down.  that's okay because CKeyState will ignore those
+// events.  the user might be surprised that any modifier keys
+// held while crossing to another screen don't apply on the
+// target screen.  if that ends up being a problem we can try
+// to synthesize a key press for those modifiers on entry.
+/*
 	// check for any pressed key
 	KeyButton key = isAnyKeyDown();
 	if (key != 0) {
@@ -332,6 +342,7 @@ CScreen::isLockedToScreen() const
 			LOG((CLOG_DEBUG "spuriously locked by %s", m_screen->getKeyName(key)));
 		}
 	}
+*/
 
 	// not locked
 	return false;
@@ -431,9 +442,6 @@ CScreen::enterPrimary()
 void
 CScreen::enterSecondary(KeyModifierMask toggleMask)
 {
-	// update our keyboard state to reflect the local state
-	m_screen->updateKeys();
-
 	// remember toggle key state.  we'll restore this when we leave.
 	m_toggleKeys = getActiveModifiers();
 

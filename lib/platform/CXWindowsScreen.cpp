@@ -241,9 +241,8 @@ CXWindowsScreen::enable()
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
 	}
-	else {
-		m_keyState->updateKeys();
-	}
+
+	updateKeys();
 }
 
 void
@@ -543,13 +542,6 @@ CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 {
 	x = m_xCenter;
 	y = m_yCenter;
-}
-
-bool
-CXWindowsScreen::fakeCtrlAltDel() const
-{
-	// pass keys through unchanged
-	return false;
 }
 
 void

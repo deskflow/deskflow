@@ -219,8 +219,8 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		// and ctrl+backspace to delete.  we don't want those translations
 		// so clear the control modifier state.  however, if we want to
 		// simulate AltGr (which is ctrl+alt) then we must not clear it.
-		BYTE control = keys[VK_CONTROL];
-		BYTE menu    = keys[VK_MENU];
+		UINT control = keys[VK_CONTROL] | keys[VK_LCONTROL] | keys[VK_RCONTROL];
+		UINT menu    = keys[VK_MENU] | keys[VK_LMENU] | keys[VK_RMENU];
 		if ((control & 0x80) == 0 || (menu & 0x80) == 0) {
 			keys[VK_LCONTROL] = 0;
 			keys[VK_RCONTROL] = 0;
@@ -228,8 +228,10 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		}
 		else {
 			keys[VK_LCONTROL] = 0x80;
+			keys[VK_RCONTROL] = 0x80;
 			keys[VK_CONTROL]  = 0x80;
 			keys[VK_LMENU]    = 0x80;
+			keys[VK_RMENU]    = 0x80;
 			keys[VK_MENU]     = 0x80;
 		}
 
@@ -237,7 +239,7 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		// we don't know and there doesn't appear to be any way to find
 		// out.  so we'll just assume a menu is active if the menu key
 		// is down.
-		// XXX -- figure out some way to check if a menu is active
+		// FIXME -- figure out some way to check if a menu is active
 		UINT flags = 0;
 		if ((menu & 0x80) != 0)
 			flags |= 1;

@@ -87,6 +87,13 @@ public:
 	*/
 	virtual void		fakeToggle(KeyModifierMask modifier) = 0;
 
+	//! Fake ctrl+alt+del
+	/*!
+	Synthesize a press of ctrl+alt+del.  Return true if processing is
+	complete and false if normal key processing should continue.
+	*/
+	virtual bool		fakeCtrlAltDel() = 0;
+
 	//@}
 	//! @name accessors
 	//@{

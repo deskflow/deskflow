@@ -294,7 +294,7 @@ UInt32
 CServer::getActivePrimarySides() const
 {
 	UInt32 sides = 0;
-	if (!isLockedToScreen()) {
+	if (!isLockedToScreenServer()) {
 		if (getNeighbor(m_primaryClient, kLeft) != NULL) {
 			sides |= kLeftMask;
 		}
@@ -312,11 +312,23 @@ CServer::getActivePrimarySides() const
 }
 
 bool
-CServer::isLockedToScreen() const
+CServer::isLockedToScreenServer() const
 {
 	// locked if scroll-lock is toggled on
 	if ((m_primaryClient->getToggleMask() & KeyModifierScrollLock) != 0) {
 		LOG((CLOG_DEBUG "locked by ScrollLock"));
+		return true;
+	}
+
+	// not locked
+	return false;
+}
+
+bool
+CServer::isLockedToScreen() const
+{
+	// locked if we say we're locked
+	if (isLockedToScreenServer()) {
 		return true;
 	}
 

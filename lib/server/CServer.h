@@ -120,6 +120,12 @@ private:
 	UInt32				getActivePrimarySides() const;
 
 	// returns true iff mouse should be locked to the current screen
+	// according to this object only, ignoring what the primary client
+	// says.
+	bool				isLockedToScreenServer() const;
+
+	// returns true iff mouse should be locked to the current screen
+	// according to this object or the primary client.
 	bool				isLockedToScreen() const;
 
 	// returns the jump zone of the client

@@ -53,7 +53,6 @@ public:
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 
 	// ISecondaryScreen overrides
-	virtual bool		fakeCtrlAltDel() const;
 	virtual void		fakeMouseButton(ButtonID id, bool press) const;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseWheel(SInt32 delta) const;

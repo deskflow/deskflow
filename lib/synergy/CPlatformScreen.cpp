@@ -64,6 +64,12 @@ CPlatformScreen::fakeToggle(KeyModifierMask modifier)
 }
 
 bool
+CPlatformScreen::fakeCtrlAltDel()
+{
+	return getKeyState()->fakeCtrlAltDel();
+}
+
+bool
 CPlatformScreen::isKeyDown(KeyButton button) const
 {
 	return getKeyState()->isKeyDown(button);

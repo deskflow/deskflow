@@ -15,8 +15,7 @@
 #ifndef CMSWINDOWSSCREEN_H
 #define CMSWINDOWSSCREEN_H
 
-#include "IPlatformScreen.h"
-#include "CMSWindowsKeyMapper.h"
+#include "CPlatformScreen.h"
 #include "CSynergyHook.h"
 #include "CCondVar.h"
 #include "CMutex.h"
@@ -24,13 +23,14 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-class CEventQueueTimer;
+class CMSWindowsDesks;
+class CMSWindowsKeyState;
 class CMSWindowsScreenSaver;
 class CThread;
 class IJob;
 
 //! Implementation of IPlatformScreen for Microsoft Windows
-class CMSWindowsScreen : public IPlatformScreen {
+class CMSWindowsScreen : public CPlatformScreen {
 public:
 	CMSWindowsScreen(bool isPrimary, IJob* suspend, IJob* resume);
 	virtual ~CMSWindowsScreen();
@@ -57,23 +57,6 @@ public:
 
 	//@}
 
-	// IPlatformScreen overrides
-	virtual void		setKeyState(IKeyState*);
-	virtual void		enable();
-	virtual void		disable();
-	virtual void		enter();
-	virtual bool		leave();
-	virtual bool		setClipboard(ClipboardID, const IClipboard*);
-	virtual void		checkClipboards();
-	virtual void		openScreensaver(bool notify);
-	virtual void		closeScreensaver();
-	virtual void		screensaver(bool activate);
-	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
-	virtual void		updateKeys();
-	virtual void		setSequenceNumber(UInt32);
-	virtual bool		isPrimary() const;
-
 	// IScreen overrides
 	virtual void*		getEventTarget() const;
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
@@ -86,34 +69,38 @@ public:
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
-	virtual KeyModifierMask	getActiveModifiers() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
-	virtual const char*	getKeyName(KeyButton) const;
 
 	// ISecondaryScreen overrides
-	virtual void		fakeKeyEvent(KeyButton id, bool press) const;
-	virtual bool		fakeCtrlAltDel() const;
 	virtual void		fakeMouseButton(ButtonID id, bool press) const;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseWheel(SInt32 delta) const;
-	virtual KeyButton	mapKey(IKeyState::Keystrokes&,
-							const IKeyState& keyState, KeyID id,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
+
+	// IKeyState overrides
+	virtual void		updateKeys();
+
+	// IPlatformScreen overrides
+	virtual void		enable();
+	virtual void		disable();
+	virtual void		enter();
+	virtual bool		leave();
+	virtual bool		setClipboard(ClipboardID, const IClipboard*);
+	virtual void		checkClipboards();
+	virtual void		openScreensaver(bool notify);
+	virtual void		closeScreensaver();
+	virtual void		screensaver(bool activate);
+	virtual void		resetOptions();
+	virtual void		setOptions(const COptionsList& options);
+	virtual void		setSequenceNumber(UInt32);
+	virtual bool		isPrimary() const;
+
+protected:
+	// IPlatformScreen overrides
+	virtual void		handleSystemEvent(const CEvent&, void*);
+	virtual void		updateButtons();
+	virtual IKeyState*	getKeyState() const;
 
 private:
-	class CDesk {
-	public:
-		CString			m_name;
-		CThread*		m_thread;
-		DWORD			m_threadID;
-		DWORD			m_targetID;
-		HDESK			m_desk;
-		HWND			m_window;
-		bool			m_lowLevel;
-	};
-	typedef std::map<CString, CDesk*> CDesks;
-
 	// initialization and shutdown operations
 	HINSTANCE			openHookLibrary(const char* name);
 	void				closeHookLibrary(HINSTANCE hookLibrary) const;
@@ -128,9 +115,6 @@ private:
 	// convenience function to send events
 	void				sendEvent(CEvent::Type type, void* = NULL);
 	void				sendClipboardEvent(CEvent::Type type, ClipboardID id);
-
-	// system event handler (does DispatchMessage)
-	void				handleSystemEvent(const CEvent& event, void*);
 
 	// handle message before it gets dispatched.  returns true iff
 	// the message should not be dispatched.
@@ -169,41 +153,14 @@ private:
 	// enable/disable special key combinations so we can catch/pass them
 	void				enableSpecialKeys(bool) const;
 
-	// send fake key up if shadow state says virtualKey is down but
-	// system says it isn't.
-	void				fixKey(UINT virtualKey);
-
-	// map a button ID and action to a mouse event
-	DWORD				mapButtonToEvent(ButtonID button,
-							bool press, DWORD* inData) const;
-
 	// map a button event to a button ID
 	ButtonID			mapButtonFromEvent(WPARAM msg, LPARAM button) const;
 
-	// return true iff the given virtual key is a modifier
-	bool				isModifier(UINT vkCode) const;
-
-	// send ctrl+alt+del hotkey event
-	static void			ctrlAltDelThread(void*);
+	// job to update the key state
+	void				updateKeysCB(void*);
 
 	// our window proc
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
-
-	// our desk window procs
-	static LRESULT CALLBACK primaryDeskProc(HWND, UINT, WPARAM, LPARAM);
-	static LRESULT CALLBACK secondaryDeskProc(HWND, UINT, WPARAM, LPARAM);
-
-	void				deskMouseMove(SInt32 x, SInt32 y) const;
-	void				deskEnter(CDesk* desk);
-	void				deskLeave(CDesk* desk, HKL keyLayout);
-	void				deskThread(void* vdesk);
-	CDesk*				addDesk(const CString& name, HDESK hdesk);
-	void				removeDesks();
-	void				checkDesk();
-	bool				isDeskAccessible(const CDesk* desk) const;
-	void				sendDeskMessage(UINT, WPARAM, LPARAM) const;
-	void				waitForDesk() const;
-	void				handleCheckDesk(const CEvent& event, void*);
 
 private:
 	static HINSTANCE	s_instance;
@@ -219,8 +176,6 @@ private:
 
 	// our resources
 	ATOM				m_class;
-	ATOM				m_deskClass;
-	HCURSOR				m_cursor;
 
 	// screen shape stuff
 	SInt32				m_x, m_y;
@@ -245,9 +200,6 @@ private:
 	// the keyboard layout to use when off primary screen
 	HKL					m_keyLayout;
 
-	// the timer used to check for desktop switching
-	CEventQueueTimer*	m_timer;
-
 	// screen saver stuff
 	CMSWindowsScreenSaver*	m_screensaver;
 	bool					m_screensaverNotify;
@@ -258,33 +210,22 @@ private:
 	HWND				m_nextClipboardWindow;
 	bool				m_ownClipboard;
 
-	// the current desk and it's name
-	CDesk*				m_activeDesk;
-	CString				m_activeDeskName;
-
 	// one desk per desktop and a cond var to communicate with it
-	CMutex				m_mutex;
-	CCondVar<bool>		m_deskReady;
-	CDesks				m_desks;
+	CMSWindowsDesks*	m_desks;
 
 	// hook library stuff
 	HINSTANCE			m_hookLibrary;
 	InitFunc			m_init;
 	CleanupFunc			m_cleanup;
-	InstallFunc			m_install;
-	UninstallFunc		m_uninstall;
 	SetSidesFunc		m_setSides;
 	SetZoneFunc			m_setZone;
 	SetModeFunc			m_setMode;
-	InstallScreenSaverFunc		m_installScreensaver;
-	UninstallScreenSaverFunc	m_uninstallScreensaver;
 
 	// keyboard stuff
-	IKeyState*			m_keyState;
-	CMSWindowsKeyMapper	m_keyMapper;
+	CMSWindowsKeyState*	m_keyState;
 
 	// map of button state
-	BYTE				m_buttons[1 + kButtonExtra0 + 1];
+	bool				m_buttons[1 + kButtonExtra0 + 1];
 
 	// suspend/resume callbacks
 	IJob*				m_suspend;
