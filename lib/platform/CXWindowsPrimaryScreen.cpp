@@ -242,7 +242,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 			KeyID key                  = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
 				// check for ctrl+alt+del emulation
-				if ((key == kKeyPause || key == kKeyCancel) &&
+				if ((key == kKeyPause || key == kKeyBreak) &&
 					(mask & (KeyModifierControl | KeyModifierAlt)) ==
 							(KeyModifierControl | KeyModifierAlt)) {
 					// pretend it's ctrl+alt+del
@@ -291,7 +291,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 				}
 
 				// check for ctrl+alt+del emulation
-				if ((key == kKeyPause || key == kKeyCancel) &&
+				if ((key == kKeyPause || key == kKeyBreak) &&
 					(mask & (KeyModifierControl | KeyModifierAlt)) ==
 							(KeyModifierControl | KeyModifierAlt)) {
 					// pretend it's ctrl+alt+del and ignore autorepeat
