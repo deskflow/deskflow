@@ -1,0 +1,103 @@
+#
+# empty define, used to terminate lists
+#
+NULL = 
+
+#
+# build tools
+#
+CXX       = /usr/bin/g++
+LD        = /usr/bin/ld
+MKDIR     = /bin/mkdir
+RM        = /bin/rm -f
+RMR       = /bin/rm -rf
+
+#
+# compiler options
+#
+CXXFLAGS  = $(LCXXFLAGS) $(GCXXFLAGS) $(CXXOPTIMIZER) $(MKDEPOPT)
+LCXXFLAGS = $(LCXXDEFS) $(LCXXINCS) $(LCXXOPTS)
+GCXXFLAGS = $(GCXXDEFS) $(GCXXINCS) $(GCXXOPTS)
+
+GCXXDEFS  = -D_POSIX_SOURCE
+GCXXINCS  = -I$(DEPTH)/include -I/usr/include -I/usr/X11R6/include
+GCXXOPTS  = -Wall -W -fexceptions -fno-rtti
+CXXOPTIMIZER = -g
+#CXXOPTIMIZER = -O2 -DNDEBUG
+
+#
+# linker options
+#
+LDFLAGS	  = $(LDOPTS) $(LDLIBS)
+LDOPTS	  = $(LLDOPTS) $(GLDOPTS)
+LDLIBS	  = $(LLDLIBS) $(GLDLIBS)
+
+GLDLIBS	  = -L/usr/X11R6/lib -lX11 -lXext -lXtst
+GLDOPTS	  =
+
+#
+# dependency generation stuff
+#
+MKDEP     = $(DEPTH)/tools/depconv
+MKDEPOPT  = -MD
+MKDEPPRE  =
+MKDEPPOST = $(MKDEP) -f $(MKDEPFILE) $*.d; $(RM) $*.d
+MKDEPFILE = Makedepend
+
+#
+# Convenience file list macros:
+#
+SOURCES   = $(CXXFILES)
+OBJECTS   = $(CXXFILES:.cpp=.o)
+
+#
+# stuff to clean
+#
+DIRT      = $(_FORCE) $(LDIRT) $(GDIRT)
+GDIRT     = *.[eoud] a.out core ar.tmp.* $(MKDEPFILE)
+
+#
+# always unsatisfied target
+#
+_FORCE    = $(COMMONPREF)_force
+
+#
+#
+# common rules
+#
+#
+
+#
+# default target.  makefiles must define a target named `targets'.
+#
+default: targets
+
+#
+# always unsatisfied target
+#
+$(_FORCE):
+
+#
+# cleaners
+#
+COMMONTARGETS = clean clobber
+$(COMMONPREF)clean: $(_FORCE)
+	$(RM) $(DIRT)
+
+$(COMMONPREF)clobber: clean $(_FORCE)
+	$(RM) $(TARGETS)
+
+#
+# implicit target rules
+#
+.SUFFIXES: .cpp .o
+
+.cpp.o:
+	$(MKDEPPRE)
+	$(CXX) $(CXXFLAGS) -c $<
+	$(MKDEPPOST)
+
+#
+# load dependencies
+#
+sinclude $(MKDEPFILE)
