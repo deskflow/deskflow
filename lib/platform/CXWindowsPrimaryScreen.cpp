@@ -40,7 +40,9 @@ CXWindowsPrimaryScreen::CXWindowsPrimaryScreen(
 				IPrimaryScreenReceiver* primaryReceiver) :
 	CPrimaryScreen(receiver),
 	m_receiver(primaryReceiver),
-	m_window(None)
+	m_window(None),
+	m_im(NULL),
+	m_ic(NULL)
 {
 	m_screen = new CXWindowsScreen(receiver, this);
 }
@@ -219,6 +221,11 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 {
 	assert(event != NULL);
 	XEvent& xevent = event->m_event;
+
+	// let input methods try to handle event first
+	if (m_ic != NULL && XFilterEvent(&xevent, None)) {
+		return true;
+	}
 
 	// handle event
 	switch (xevent.type) {
@@ -455,18 +462,88 @@ CXWindowsPrimaryScreen::onPostOpen()
 	// get cursor info
 	m_screen->getCursorPos(m_x, m_y);
 	m_screen->getCursorCenter(m_xCenter, m_yCenter);
+
+	// get the input method
+	CDisplayLock display(m_screen);
+	m_im = XOpenIM(display, NULL, NULL, NULL);
+	if (m_im == NULL) {
+		return;
+	}
+
+	// find the appropriate style.  synergy supports XIMPreeditNothing
+	// only at the moment.
+	XIMStyles* styles;
+	if (XGetIMValues(m_im, XNQueryInputStyle, &styles, NULL) != NULL ||
+		styles == NULL) {
+		LOG((CLOG_WARN "cannot get IM styles"));
+		return;
+	}
+	XIMStyle style = 0;
+	for (unsigned short i = 0; i < styles->count_styles; ++i) {
+		style = styles->supported_styles[i];
+		if ((style & XIMPreeditNothing) != 0) {
+			if ((style & (XIMStatusNothing | XIMStatusNone)) != 0) {
+				break;
+			}
+		}
+	}
+	XFree(styles);
+	if (style == 0) {
+		LOG((CLOG_WARN "no supported IM styles"));
+		return;
+	}
+
+	// create an input context for the style and tell it about our window
+	m_ic = XCreateIC(m_im, XNInputStyle, style, XNClientWindow, m_window, NULL);
+	if (m_ic == NULL) {
+		LOG((CLOG_WARN "cannot create IC"));
+		return;
+	}
+
+	// find out the events we must select for and do so
+	unsigned long mask;
+	if (XGetICValues(m_ic, XNFilterEvents, &mask, NULL) != NULL) {
+		LOG((CLOG_WARN "cannot get IC filter events"));
+		return;
+	}
+	XWindowAttributes attr;
+	XGetWindowAttributes(display, m_window, &attr);
+	XSelectInput(display, m_window, attr.your_event_mask | mask);
+}
+
+void
+CXWindowsPrimaryScreen::onPreClose()
+{
+	CDisplayLock display(m_screen);
+	if (m_ic != NULL) {
+		XDestroyIC(m_ic);
+		m_ic = NULL;
+	}
+	if (m_im != NULL) {
+		XCloseIM(m_im);
+		m_im = NULL;
+	}
 }
 
 void
 CXWindowsPrimaryScreen::onPreEnter()
 {
 	assert(m_window != None);
+
+	if (m_ic != NULL) {
+		XUnsetICFocus(m_ic);
+	}
 }
 
 void
 CXWindowsPrimaryScreen::onPreLeave()
 {
 	assert(m_window != None);
+
+	if (m_ic != NULL) {
+		XmbResetIC(m_ic);
+		XSetICFocus(m_ic);
+	}
 }
 
 void
@@ -765,10 +842,41 @@ CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 	CDisplayLock display(m_screen);
 
 	// convert to a keysym
-	// FIXME -- we're not properly handling unicode
 	KeySym keysym;
-	char dummy[1];
-	XLookupString(event, dummy, 0, &keysym, NULL);
+	if (event->type == KeyPress && m_ic != NULL) {
+		// do multibyte lookup.  can only call XmbLookupString with a
+		// key press event and a valid XIC so we checked those above.
+		char scratch[32];
+		int n        = sizeof(scratch) / sizeof(scratch[0]);
+		char* buffer = scratch;
+		int status;
+		n = XmbLookupString(m_ic, event, buffer, n, &keysym, &status);
+		if (status == XBufferOverflow) {
+			// not enough space.  grow buffer and try again.
+			buffer = new char[n];
+			n = XmbLookupString(m_ic, event, buffer, n, &keysym, &status);
+			delete[] buffer;
+		}
+
+		// see what we got.  since we don't care about the string
+		// we'll just look for a keysym.
+		switch (status) {
+		default:
+		case XLookupNone:
+		case XLookupChars:
+			keysym = 0;
+			break;
+
+		case XLookupKeySym:
+		case XLookupBoth:
+			break;
+		}
+	}
+	else {
+		// plain old lookup
+		char dummy[1];
+		XLookupString(event, dummy, 0, &keysym, NULL);
+	}
 
 	// convert key
 	switch (keysym & 0xffffff00) {

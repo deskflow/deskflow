@@ -57,6 +57,7 @@ protected:
 	virtual void		onPreMainLoop();
 	virtual void		onPreOpen();
 	virtual void		onPostOpen();
+	virtual void		onPreClose();
 	virtual void		onPreEnter();
 	virtual void		onPreLeave();
 	virtual void		onEnterScreenSaver();
@@ -115,6 +116,9 @@ private:
 
 	// position of center pixel of screen
 	SInt32				m_xCenter, m_yCenter;
+
+	XIM m_im;
+	XIC m_ic;
 };
 
 #endif
