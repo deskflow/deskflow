@@ -841,30 +841,44 @@ CServer::getNeighbor(IClient* src, EDirection dir) const
 
 	assert(src != NULL);
 
+	// get source screen name
 	CString srcName = src->getName();
 	assert(!srcName.empty());
 	LOG((CLOG_DEBUG2 "find neighbor on %s of \"%s\"", CConfig::dirName(dir), srcName.c_str()));
-	for (;;) {
-		// look up name of neighbor
-		const CString dstName(m_config.getNeighbor(srcName, dir));
 
-		// if nothing in that direction then return NULL
-		if (dstName.empty()) {
+	// get first neighbor.  if it's the source then the source jumps
+	// to itself and we return the source.
+	CString dstName(m_config.getNeighbor(srcName, dir));
+	if (dstName == srcName) {
+		LOG((CLOG_DEBUG2 "\"%s\" is on %s of \"%s\"", dstName.c_str(), CConfig::dirName(dir), srcName.c_str()));
+		return src;
+	}
+
+	// keep checking
+	for (;;) {
+		// if nothing in that direction then return NULL. if the
+		// destination is the source then we can make no more
+		// progress in this direction.  since we haven't found a
+		// connected neighbor we return NULL.
+		if (dstName.empty() || dstName == srcName) {
 			LOG((CLOG_DEBUG2 "no neighbor on %s of \"%s\"", CConfig::dirName(dir), srcName.c_str()));
 			return NULL;
 		}
 
 		// look up neighbor cell.  if the screen is connected and
-		// ready then we can stop.  otherwise we skip over an
-		// unconnected screen.
+		// ready then we can stop.
 		CClientList::const_iterator index = m_clients.find(dstName);
 		if (index != m_clients.end()) {
 			LOG((CLOG_DEBUG2 "\"%s\" is on %s of \"%s\"", dstName.c_str(), CConfig::dirName(dir), srcName.c_str()));
 			return index->second;
 		}
 
+		// skip over unconnected screen
 		LOG((CLOG_DEBUG2 "ignored \"%s\" on %s of \"%s\"", dstName.c_str(), CConfig::dirName(dir), srcName.c_str()));
 		srcName = dstName;
+
+		// look up name of neighbor of skipped screen
+		dstName = m_config.getNeighbor(srcName, dir);
 	}
 }
 
@@ -897,7 +911,7 @@ CServer::getNeighbor(IClient* src,
 	switch (srcSide) {
 	case kLeft:
 		x -= dx;
-		while (dst != NULL && dst != lastGoodScreen) {
+		while (dst != NULL) {
 			lastGoodScreen = dst;
 			lastGoodScreen->getShape(dx, dy, dw, dh);
 			x += dw;
