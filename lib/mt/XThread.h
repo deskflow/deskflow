@@ -27,6 +27,12 @@ must rethrow it if caught (by XThreadCancel, XThread, or ...).
 */
 class XThreadCancel : public XThread { };
 
+//! Thread creation exception
+/*!
+Thrown when a thread cannot be created.
+*/
+class XThreadUnavailable { };
+
 /*!
 \def RETHROW_XTHREAD
 Convenience macro to rethrow an XThread exception but ignore other

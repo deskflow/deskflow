@@ -24,9 +24,6 @@
 
 #endif
 
-// FIXME -- temporary exception type
-class XThreadUnavailable { };
-
 //
 // CThreadRep
 //
