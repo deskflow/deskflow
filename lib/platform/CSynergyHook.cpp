@@ -121,6 +121,16 @@ int _fltused=0;
 
 static
 void
+detachThread()
+{
+	if (g_attachedThread != 0 && g_hookThread != g_attachedThread) {
+		AttachThreadInput(g_hookThread, g_attachedThread, FALSE);
+		g_attachedThread = 0;
+	}
+}
+
+static
+bool
 attachThreadToForeground()
 {
 	// only attach threads if using low level hooks.  a low level hook
@@ -135,26 +145,17 @@ attachThreadToForeground()
 		// skip if no change
 		if (g_attachedThread != threadID) {
 			// detach from previous thread
-			if (g_attachedThread != 0 && g_attachedThread != g_hookThread) {
-				AttachThreadInput(g_hookThread, g_attachedThread, FALSE);
-			}
+			detachThread();
+
 			// attach to new thread
-			g_attachedThread = threadID;
-			if (g_attachedThread != 0 && g_attachedThread != g_hookThread) {
-				AttachThreadInput(g_hookThread, g_attachedThread, TRUE);
+			if (threadID != 0 && threadID != g_hookThread) {
+				AttachThreadInput(g_hookThread, threadID, TRUE);
+				g_attachedThread = threadID;
 			}
+			return true;
 		}
 	}
-}
-
-static
-void
-detachThread()
-{
-	if (g_attachedThread != 0) {
-		AttachThreadInput(g_hookThread, g_attachedThread, FALSE);
-		g_attachedThread = 0;
-	}
+	return false;
 }
 
 #if !NO_GRAB_KEYBOARD
@@ -420,9 +421,7 @@ bool
 keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
 	attachThreadToForeground();
-	bool result = doKeyboardHookHandler(wParam, lParam);
-	detachThread();
-	return result;
+	return doKeyboardHookHandler(wParam, lParam);
 }
 #endif
 
@@ -533,9 +532,7 @@ bool
 mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 {
 	attachThreadToForeground();
-	bool result = doMouseHookHandler(wParam, x, y, data);
-	detachThread();
-	return result;
+	return doMouseHookHandler(wParam, x, y, data);
 }
 
 #if !NO_GRAB_KEYBOARD
