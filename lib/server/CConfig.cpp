@@ -643,6 +643,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionScreenSaverSync) {
 		return "screenSaverSync";
 	}
+	if (id == kOptionXTestXineramaUnaware) {
+		return "xtestIsXineramaUnaware";
+	}
 	return NULL;
 }
 
@@ -651,7 +654,8 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 {
 	if (id == kOptionHalfDuplexCapsLock ||
 		id == kOptionHalfDuplexNumLock ||
-		id == kOptionScreenSaverSync) {
+		id == kOptionScreenSaverSync ||
+		id == kOptionXTestXineramaUnaware) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||
@@ -882,6 +886,10 @@ CConfig::readSectionScreens(std::istream& s)
 			else if (name == "super") {
 				addOption(screen, kOptionModifierMapForSuper,
 					parseModifierKey(value));
+			}
+			else if (name == "xtestIsXineramaUnaware") {
+				addOption(screen, kOptionXTestXineramaUnaware,
+					parseBoolean(value));
 			}
 			else {
 				// unknown argument

@@ -54,6 +54,7 @@ static const OptionID	kOptionHeartbeat             = OPTION_CODE("HART");
 static const OptionID	kOptionScreenSwitchDelay     = OPTION_CODE("SSWT");
 static const OptionID	kOptionScreenSwitchTwoTap    = OPTION_CODE("SSTT");
 static const OptionID	kOptionScreenSaverSync       = OPTION_CODE("SSVR");
+static const OptionID	kOptionXTestXineramaUnaware  = OPTION_CODE("XTXU");
 //@}
 
 #undef OPTION_CODE

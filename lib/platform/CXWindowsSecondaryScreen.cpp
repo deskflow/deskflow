@@ -34,6 +34,12 @@
 #	else
 #		error The XTest extension is required to build synergy
 #	endif
+#	if HAVE_X11_EXTENSIONS_XINERAMA_H
+		// Xinerama.h may lack extern "C" for inclusion by C++
+		extern "C" {
+#		include <X11/extensions/Xinerama.h>
+		}
+#	endif
 #	if defined(HAVE_X11_XF86KEYSYM_H)
 #		include <X11/XF86keysym.h>
 #	endif
@@ -92,7 +98,8 @@ unsigned int			assignBits(unsigned int src,
 
 CXWindowsSecondaryScreen::CXWindowsSecondaryScreen(IScreenReceiver* receiver) :
 	CSecondaryScreen(),
-	m_window(None)
+	m_window(None),
+	m_xtestIsXineramaUnaware(true)
 {
 	m_screen = new CXWindowsScreen(receiver, this);
 }
@@ -295,8 +302,9 @@ CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 void
 CXWindowsSecondaryScreen::resetOptions()
 {
-	m_numLockHalfDuplex  = false;
-	m_capsLockHalfDuplex = false;
+	m_numLockHalfDuplex      = false;
+	m_capsLockHalfDuplex     = false;
+	m_xtestIsXineramaUnaware = true;
 	CSecondaryScreen::resetOptions();
 }
 
@@ -311,6 +319,10 @@ CXWindowsSecondaryScreen::setOptions(const COptionsList& options)
 		else if (options[i] == kOptionHalfDuplexNumLock) {
 			m_numLockHalfDuplex = (options[i + 1] != 0);
 			LOG((CLOG_DEBUG1 "half-duplex num-lock %s", m_numLockHalfDuplex ? "on" : "off"));
+		}
+		else if (options[i] == kOptionXTestXineramaUnaware) {
+			m_xtestIsXineramaUnaware = (options[i + 1] != 0);
+			LOG((CLOG_DEBUG1 "XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false"));
 		}
 	}
 	CSecondaryScreen::setOptions(options);
@@ -388,6 +400,30 @@ CXWindowsSecondaryScreen::onPostOpen()
 	// get the keyboard control state
 	CDisplayLock display(m_screen);
 	XGetKeyboardControl(display, &m_keyControl);
+
+	// check if xinerama is enabled and, if so, get the first
+	// screen's dimensions.
+	m_xinerama = false;
+#if HAVE_X11_EXTENSIONS_XINERAMA_H
+	int eventBase, errorBase;
+	if (XineramaQueryExtension(display, &eventBase, &errorBase)) {
+		if (XineramaIsActive(display)) {
+			int numScreens;
+			XineramaScreenInfo* screens;
+			screens = XineramaQueryScreens(display, &numScreens);
+			if (screens != NULL) {
+				if (numScreens > 1) {
+					m_xinerama = true;
+					m_xXinerama = screens[0].x_org;
+					m_yXinerama = screens[0].y_org;
+					m_wXinerama = screens[0].width;
+					m_hXinerama = screens[0].height;
+				}
+				XFree(screens);
+			}
+		}
+	}
+#endif
 }
 
 void
@@ -542,7 +578,16 @@ CXWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
 	CDisplayLock display(m_screen);
 	Display* pDisplay = display;
-	XTestFakeMotionEvent(display, DefaultScreen(pDisplay), x, y, CurrentTime);
+
+	if (m_xinerama && m_xtestIsXineramaUnaware &&
+		(x < m_xXinerama || x >= m_xXinerama + m_wXinerama ||
+		 y < m_yXinerama || y >= m_yXinerama + m_hXinerama)) {
+		XWarpPointer(display, None, None, 0, 0, 0, 0, x, y);
+	}
+	else {
+		XTestFakeMotionEvent(display, DefaultScreen(pDisplay),
+							x - m_xXinerama, y - m_yXinerama, CurrentTime);
+	}
 	XSync(display, False);
 }
 

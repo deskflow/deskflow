@@ -175,6 +175,15 @@ private:
 
 	// the keyboard control state the last time this screen was entered
 	XKeyboardState		m_keyControl;
+
+	// stuff to workaround xtest being xinerama unaware.  attempting
+	// to fake a mouse motion outside the first xinerama screen will
+	// be silently clamped to that screen.  if xtest is buggy then
+	// use XWarpPointer instead.
+	bool				m_xtestIsXineramaUnaware;
+	bool				m_xinerama;
+	SInt32				m_xXinerama, m_yXinerama;
+	SInt32				m_wXinerama, m_hXinerama;
 };
 
 #endif
