@@ -85,21 +85,12 @@ public:
 	*/
 	static CEvent::Type	getClipboardGrabbedEvent();
 
-	//! Get clipboard changed event type
-	/*!
-	Returns the clipboard changed event type.  This is sent whenever the
-	contents of the clipboard has changed.  The data is a pointer to a
-	CClipboardInfo.
-	*/
-	static CEvent::Type	getClipboardChangedEvent();
-
 	//@}
 
 private:
 	static CEvent::Type	s_errorEvent;
 	static CEvent::Type	s_shapeChangedEvent;
 	static CEvent::Type	s_clipboardGrabbedEvent;
-	static CEvent::Type	s_clipboardChangedEvent;
 };
 
 #endif

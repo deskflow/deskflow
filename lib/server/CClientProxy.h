@@ -64,6 +64,14 @@ public:
 	*/
 	static CEvent::Type	getDisconnectedEvent();
 
+	//! Get clipboard changed event type
+	/*!
+	Returns the clipboard changed event type.  This is sent whenever the
+	contents of the clipboard has changed.  The data is a pointer to a
+	IScreen::CClipboardInfo.
+	*/
+	static CEvent::Type	getClipboardChangedEvent();
+
 	//@}
 
 	// IScreen
@@ -100,6 +108,7 @@ private:
 
 	static CEvent::Type	s_readyEvent;
 	static CEvent::Type	s_disconnectedEvent;
+	static CEvent::Type	s_clipboardChangedEvent;
 };
 
 #endif

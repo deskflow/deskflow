@@ -386,10 +386,6 @@ CClient::setupScreen()
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleClipboardGrabbed));
-	EVENTQUEUE->adoptHandler(IScreen::getClipboardChangedEvent(),
-							getEventTarget(),
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleClipboardChanged));
 	EVENTQUEUE->adoptHandler(CServerProxy::getHandshakeCompleteEvent(),
 							m_server,
 							new TMethodEventJob<CClient>(this,
@@ -452,8 +448,6 @@ CClient::cleanupScreen()
 		EVENTQUEUE->removeHandler(IScreen::getShapeChangedEvent(),
 							getEventTarget());
 		EVENTQUEUE->removeHandler(IScreen::getClipboardGrabbedEvent(),
-							getEventTarget());
-		EVENTQUEUE->removeHandler(IScreen::getClipboardChangedEvent(),
 							getEventTarget());
 		delete m_server;
 		m_server = NULL;
@@ -564,12 +558,6 @@ CClient::handleClipboardGrabbed(const CEvent& event, void*)
 	if (!m_active) {
 		sendClipboard(info->m_id);
 	}
-}
-
-void
-CClient::handleClipboardChanged(const CEvent&, void*)
-{
-	// ignore -- we'll check the clipboard when we leave
 }
 
 void

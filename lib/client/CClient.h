@@ -155,7 +155,6 @@ private:
 	void				handleHandshakeComplete(const CEvent&, void*);
 	void				handleShapeChanged(const CEvent&, void*);
 	void				handleClipboardGrabbed(const CEvent&, void*);
-	void				handleClipboardChanged(const CEvent&, void*);
 	void				handleHello(const CEvent&, void*);
 
 private:

@@ -21,7 +21,6 @@
 CEvent::Type			IScreen::s_errorEvent            = CEvent::kUnknown;
 CEvent::Type			IScreen::s_shapeChangedEvent     = CEvent::kUnknown;
 CEvent::Type			IScreen::s_clipboardGrabbedEvent = CEvent::kUnknown;
-CEvent::Type			IScreen::s_clipboardChangedEvent = CEvent::kUnknown;
 
 CEvent::Type
 IScreen::getErrorEvent()
@@ -42,11 +41,4 @@ IScreen::getClipboardGrabbedEvent()
 {
 	return CEvent::registerTypeOnce(s_clipboardGrabbedEvent,
 							"IScreen::clipboardGrabbed");
-}
-
-CEvent::Type
-IScreen::getClipboardChangedEvent()
-{
-	return CEvent::registerTypeOnce(s_clipboardChangedEvent,
-							"IScreen::clipboardChanged");
 }

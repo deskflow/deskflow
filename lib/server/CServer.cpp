@@ -1425,7 +1425,7 @@ CServer::addClient(IClient* client)
 							client->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleClipboardGrabbed, client));
-	EVENTQUEUE->adoptHandler(IScreen::getClipboardChangedEvent(),
+	EVENTQUEUE->adoptHandler(CClientProxy::getClipboardChangedEvent(),
 							client->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleClipboardChanged, client));
@@ -1454,7 +1454,7 @@ CServer::removeClient(IClient* client)
 							client->getEventTarget());
 	EVENTQUEUE->removeHandler(IScreen::getClipboardGrabbedEvent(),
 							client->getEventTarget());
-	EVENTQUEUE->removeHandler(IScreen::getClipboardChangedEvent(),
+	EVENTQUEUE->removeHandler(CClientProxy::getClipboardChangedEvent(),
 							client->getEventTarget());
 
 	// remove from list

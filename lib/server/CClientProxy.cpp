@@ -21,8 +21,9 @@
 // CClientProxy
 //
 
-CEvent::Type			CClientProxy::s_readyEvent        = CEvent::kUnknown;
-CEvent::Type			CClientProxy::s_disconnectedEvent = CEvent::kUnknown;
+CEvent::Type			CClientProxy::s_readyEvent           = CEvent::kUnknown;
+CEvent::Type			CClientProxy::s_disconnectedEvent    = CEvent::kUnknown;
+CEvent::Type			CClientProxy::s_clipboardChangedEvent= CEvent::kUnknown;
 
 CClientProxy::CClientProxy(const CString& name, IStream* stream) :
 	m_name(name),
@@ -70,6 +71,13 @@ CClientProxy::getDisconnectedEvent()
 {
 	return CEvent::registerTypeOnce(s_disconnectedEvent,
 							"CClientProxy::disconnected");
+}
+
+CEvent::Type
+CClientProxy::getClipboardChangedEvent()
+{
+	return CEvent::registerTypeOnce(s_clipboardChangedEvent,
+							"CClientProxy::clipboardChanged");
 }
 
 void*
