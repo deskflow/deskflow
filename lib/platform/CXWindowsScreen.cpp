@@ -590,7 +590,7 @@ CXWindowsScreen::updateScreenShape()
 	m_y = 0;
 	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
 	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
-	LOG((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
+	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
 
 	// get center of default screen
 	m_xCenter = m_x + (m_w >> 1);

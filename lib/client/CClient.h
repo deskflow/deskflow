@@ -54,15 +54,6 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Set camping state
-	/*!
-	Turns camping on or off.  When camping the client will keep
-	trying to connect to the server until it succeeds.  This
-	is useful if the client may start before the server.  Do
-	not call this while in mainLoop().
-	*/
-	void				camp(bool on);
-
 	//! Set server address
 	/*!
 	Sets the server's address that the client should connect to.
@@ -196,7 +187,6 @@ private:
 	CSecondaryScreen*	m_screen;
 	IScreenReceiver*	m_server;
 	CNetworkAddress		m_serverAddress;
-	bool				m_camp;
 	ISecondaryScreenFactory*	m_screenFactory;
 	ISocketFactory*				m_socketFactory;
 	IStreamFilterFactory*		m_streamFilterFactory;

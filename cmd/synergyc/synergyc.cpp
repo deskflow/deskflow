@@ -66,7 +66,6 @@ public:
 		m_backend(false),
 		m_restartable(true),
 		m_daemon(true),
-		m_camp(true),
 		m_logFilter(NULL)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
@@ -77,7 +76,6 @@ public:
 	bool				m_backend;
 	bool				m_restartable;
 	bool				m_daemon;
-	bool		 		m_camp;
 	const char* 		m_logFilter;
 	CString 			m_name;
 	CNetworkAddress 	m_serverAddress;
@@ -168,7 +166,6 @@ realMain(void)
 		try {
 			// create client
 			s_client = new CClient(ARG->m_name);
-			s_client->camp(ARG->m_camp);
 			s_client->setAddress(ARG->m_serverAddress);
 			s_client->setScreenFactory(new CSecondaryScreenFactory);
 			s_client->setSocketFactory(new CTCPSocketFactory);
@@ -212,6 +209,7 @@ realMain(void)
 			catch (XScreenUnavailable& e) {
 				// wait before retrying if we're going to retry
 				if (ARG->m_restartable) {
+					LOG((CLOG_DEBUG "waiting %.0f seconds to retry", e.getRetryTime()));
 					ARCH->sleep(e.getRetryTime());
 				}
 				else {
@@ -320,9 +318,6 @@ help()
 "\n"
 "Start the synergy mouse/keyboard sharing server.\n"
 "\n"
-"*     --camp               keep attempting to connect to the server until\n"
-"                           successful.\n"
-"      --no-camp            do not camp.\n"
 "  -d, --debug <level>      filter out log messages with priorty below level.\n"
 "                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
 "                           DEBUG, DEBUG1, DEBUG2.\n"
@@ -394,13 +389,11 @@ parse(int argc, const char* const* argv)
 		}
 
 		else if (isArg(i, argc, argv, NULL, "--camp")) {
-			// enable camping
-			ARG->m_camp = true;
+			// ignore -- included for backwards compatibility
 		}
 
 		else if (isArg(i, argc, argv, NULL, "--no-camp")) {
-			// disable camping
-			ARG->m_camp = false;
+			// ignore -- included for backwards compatibility
 		}
 
 		else if (isArg(i, argc, argv, "-f", "--no-daemon")) {

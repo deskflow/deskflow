@@ -441,7 +441,7 @@ CMSWindowsScreen::updateScreenShape()
 	m_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
 	m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
 	m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-	LOG((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
+	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
 
 	// check for multiple monitors
 	m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) ||
@@ -508,7 +508,7 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 					// if the desktop was inaccessible then notify the
 					// event handler of that.
 					if (m_inaccessibleDesktop) {
-						LOG((CLOG_INFO "desktop is now accessible"));
+						LOG((CLOG_DEBUG "desktop is now accessible"));
 						m_inaccessibleDesktop = false;
 						m_eventHandler->onAccessibleDesktop();
 					}
@@ -516,7 +516,7 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 				else if (!m_inaccessibleDesktop) {
 					// the desktop has become inaccessible
 					m_inaccessibleDesktop = true;
-					LOG((CLOG_INFO "desktop is now inaccessible"));
+					LOG((CLOG_DEBUG "desktop is now inaccessible"));
 				}
 			}
 
@@ -674,7 +674,7 @@ CMSWindowsScreen::switchDesktop(HDESK desk)
 
 	// if no new desktop then we're done
 	if (desk == NULL) {
-		LOG((CLOG_INFO "disconnecting desktop"));
+		LOG((CLOG_DEBUG "disconnecting desktop"));
 		return true;
 	}
 
@@ -730,7 +730,7 @@ CMSWindowsScreen::switchDesktop(HDESK desk)
 	// save new desktop
 	m_desk     = desk;
 	m_deskName = getDesktopName(m_desk);
-	LOG((CLOG_INFO "switched to desktop \"%s\"", m_deskName.c_str()));
+	LOG((CLOG_DEBUG "switched to desktop \"%s\"", m_deskName.c_str()));
 
 	// let client prepare the window
 	m_eventHandler->postCreateWindow(m_window);
