@@ -16,6 +16,7 @@ CXXFILES = 				\
 	CLog.cpp			\
 	CFunctionJob.cpp		\
 	CStopwatch.cpp			\
+	CString.cpp			\
 	$(NULL)
 
 targets: $(LIBTARGET)

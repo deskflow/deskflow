@@ -44,6 +44,20 @@ public:
 								_Myt(_f, _l CSTRING_ALLOC2) { }
 };
 
+class CStringUtil {
+public:
+	class CaselessCmp {
+	  public:
+		bool			operator()(const CString&, const CString&) const;
+		static bool		less(const CString&, const CString&);
+		static bool		equal(const CString&, const CString&);
+		static bool		cmpLess(const CString::value_type&,
+								const CString::value_type&);
+		static bool		cmpEqual(const CString::value_type&,
+								const CString::value_type&);
+	};
+};
+
 #if defined(_MSC_VER)
 #pragma warning(pop)
 #endif

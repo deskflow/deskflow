@@ -5,56 +5,9 @@
 #include "IOutputStream.h"
 #include "stdsstream.h"
 #include <assert.h>
-#include <ctype.h>
 #include <locale.h>
 #include <time.h>
 #include <algorithm>
-
-//
-// CHTTPUtil::CaselessCmp
-//
-
-inline
-bool					CHTTPUtil::CaselessCmp::cmpEqual(
-								const CString::value_type& a,
-								const CString::value_type& b)
-{
-	// FIXME -- use std::tolower
-	return tolower(a) == tolower(b);
-}
-
-inline
-bool					CHTTPUtil::CaselessCmp::cmpLess(
-								const CString::value_type& a,
-								const CString::value_type& b)
-{
-	// FIXME -- use std::tolower
-	return tolower(a) < tolower(b);
-}
-
-bool					CHTTPUtil::CaselessCmp::less(
-								const CString& a,
-								const CString& b)
-{
-	return std::lexicographical_compare(
-								a.begin(), a.end(),
-								b.begin(), b.end(),
-								&CHTTPUtil::CaselessCmp::cmpLess);
-}
-
-bool					CHTTPUtil::CaselessCmp::equal(
-								const CString& a,
-								const CString& b)
-{
-	return !(less(a, b) || less(b, a));
-}
-
-bool					CHTTPUtil::CaselessCmp::operator()(
-								const CString& a,
-								const CString& b) const
-{
-	return less(a, b);
-}
 
 //
 // CHTTPRequest
@@ -217,7 +170,7 @@ CHTTPRequest*		CHTTPProtocol::readRequest(
 		CString header;
 		if (!(header = request->getHeader("Transfer-Encoding")).empty()) {
 			// we only understand "chunked" encodings
-			if (!CHTTPUtil::CaselessCmp::equal(header, "chunked")) {
+			if (!CStringUtil::CaselessCmp::equal(header, "chunked")) {
 				log((CLOG_DEBUG1 "unsupported Transfer-Encoding %s", header.c_str()));
 				throw XHTTP(501);
 			}
@@ -295,9 +248,9 @@ void					CHTTPProtocol::reply(
 		const CString& header = index->first;
 
 		// remove certain headers
-		if (CHTTPUtil::CaselessCmp::equal(header, "Content-Length") ||
-			CHTTPUtil::CaselessCmp::equal(header, "Date") ||
-			CHTTPUtil::CaselessCmp::equal(header, "Transfer-Encoding")) {
+		if (CStringUtil::CaselessCmp::equal(header, "Content-Length") ||
+			CStringUtil::CaselessCmp::equal(header, "Date") ||
+			CStringUtil::CaselessCmp::equal(header, "Transfer-Encoding")) {
 			// FIXME -- Transfer-Encoding should be left as-is if
 			// not "chunked" and if the version is 1.1 or up.
 			index = reply.m_headers.erase(index);
@@ -376,7 +329,7 @@ bool					CHTTPProtocol::parseFormData(
 	CString::const_iterator index = std::search(
 								contentType.begin(), contentType.end(),
 								formData, formData + sizeof(formData) - 1,
-								CHTTPUtil::CaselessCmp::cmpEqual);
+								CStringUtil::CaselessCmp::cmpEqual);
 	if (index == contentType.end()) {
 		// not form-data
 		return false;
@@ -384,7 +337,7 @@ bool					CHTTPProtocol::parseFormData(
 	index += sizeof(formData) - 1;
 	index = std::search(index, contentType.end(),
 								boundary, boundary + sizeof(boundary) - 1,
-								CHTTPUtil::CaselessCmp::cmpEqual);
+								CStringUtil::CaselessCmp::cmpEqual);
 	if (index == contentType.end()) {
 		// no boundary
 		return false;
@@ -436,7 +389,7 @@ bool					CHTTPProtocol::parseFormData(
 								body.begin() + endOfHeaders,
 								disposition,
 								disposition + sizeof(disposition) - 1,
-								CHTTPUtil::CaselessCmp::cmpEqual);
+								CStringUtil::CaselessCmp::cmpEqual);
 		if (index == contentType.begin() + endOfHeaders) {
 			// bad part
 			return false;
@@ -451,7 +404,7 @@ bool					CHTTPProtocol::parseFormData(
 		}
 		index = std::search(index, body.begin() + endOfHeader,
 								nameAttr, nameAttr + sizeof(nameAttr) - 1,
-								CHTTPUtil::CaselessCmp::cmpEqual);
+								CStringUtil::CaselessCmp::cmpEqual);
 		if (index == body.begin() + endOfHeader) {
 			// no name
 			return false;
@@ -466,7 +419,7 @@ bool					CHTTPProtocol::parseFormData(
 			CString::size_type namePos = index - body.begin();
 			index = std::search(index, body.begin() + endOfHeader,
 								quote, quote + 1,
-								CHTTPUtil::CaselessCmp::cmpEqual);
+								CStringUtil::CaselessCmp::cmpEqual);
 			if (index == body.begin() + endOfHeader) {
 				// missing close quote
 				return false;

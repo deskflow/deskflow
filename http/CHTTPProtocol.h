@@ -10,25 +10,11 @@
 class IInputStream;
 class IOutputStream;
 
-class CHTTPUtil {
-public:
-	class CaselessCmp {
-	  public:
-		bool			operator()(const CString&, const CString&) const;
-		static bool		less(const CString&, const CString&);
-		static bool		equal(const CString&, const CString&);
-		static bool		cmpLess(const CString::value_type&,
-								const CString::value_type&);
-		static bool		cmpEqual(const CString::value_type&,
-								const CString::value_type&);
-	};
-};
-
 class CHTTPRequest {
 public:
 	typedef std::list<std::pair<CString, CString> > CHeaderList;
 	typedef std::map<CString, CHeaderList::iterator,
-								CHTTPUtil::CaselessCmp> CHeaderMap;
+								CStringUtil::CaselessCmp> CHeaderMap;
 	typedef CHeaderList::const_iterator const_iterator;
 
 	CHTTPRequest();

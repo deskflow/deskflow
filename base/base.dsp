@@ -99,6 +99,10 @@ SOURCE=.\CStopwatch.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CString.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\XBase.cpp
 # End Source File
 # End Group
