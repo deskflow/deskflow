@@ -365,7 +365,7 @@ bool					CXWindowsScreen::getDisplayClipboard(
 								&CXWindowsScreen::findSelectionNotify,
 								(XPointer)&requestor) != True) {
 		// return false if we've timed-out
-		if (timer.getTime() >= 1.0)
+		if (timer.getTime() >= 0.2)
 			return false;
 
 		// wait a bit
