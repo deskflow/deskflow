@@ -44,7 +44,6 @@ MSWINDOWS_SOURCE_FILES =					\
 	CMSWindowsScreen.cpp					\
 	CMSWindowsScreenSaver.cpp				\
 	CMSWindowsUtil.cpp						\
-	CSynergyHook.cpp						\
 	CMSWindowsClipboard.h					\
 	CMSWindowsClipboardAnyTextConverter.h	\
 	CMSWindowsClipboardTextConverter.h		\
@@ -55,6 +54,9 @@ MSWINDOWS_SOURCE_FILES =					\
 	CMSWindowsScreen.h						\
 	CMSWindowsScreenSaver.h					\
 	CMSWindowsUtil.h						\
+	$(NULL)
+MSWINDOWS_HOOK_SOURCE_FILES =				\
+	CSynergyHook.cpp						\
 	CSynergyHook.h							\
 	$(NULL)
 CARBON_SOURCE_FILES =						\
@@ -76,6 +78,7 @@ EXTRA_DIST =								\
 	synrgyhk.dsp							\
 	$(XWINDOWS_SOURCE_FILES)				\
 	$(MSWINDOWS_SOURCE_FILES)				\
+	$(MSWINDOWS_HOOK_SOURCE_FILES)			\
 	$(CARBON_SOURCE_FILES)					\
 	$(NULL)
 
