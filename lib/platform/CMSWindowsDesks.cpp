@@ -468,8 +468,10 @@ void
 CMSWindowsDesks::deskMouseMove(SInt32 x, SInt32 y) const
 {
 	// motion is simple (i.e. it's on the primary monitor) if there
-	// is only one monitor.
-	bool simple = !m_multimon;
+	// is only one monitor.  it's also simple if we're not on the
+	// windows 95 family since those platforms don't have a broken
+	// mouse_event() function (see the comment below).
+	bool simple = (!m_multimon || !m_is95Family);
 	if (!simple) {
 		// also simple if motion is within the primary monitor
 		simple = (x >= 0 && x < GetSystemMetrics(SM_CXSCREEN) &&
@@ -489,7 +491,7 @@ CMSWindowsDesks::deskMouseMove(SInt32 x, SInt32 y) const
 								0, 0);
 	}
 
-	// windows 98 (and Me?) is broken.  you cannot set the absolute
+	// windows 98 and Me are broken.  you cannot set the absolute
 	// position of the mouse except on the primary monitor but you
 	// can do relative moves onto any monitor.  this is, in microsoft's
 	// words, "by design."  apparently the designers of windows 2000
