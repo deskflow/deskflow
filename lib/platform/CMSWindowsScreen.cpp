@@ -128,6 +128,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
 	m_sequenceNumber(0),
 	m_mark(0),
 	m_markReceived(0),
+	m_keyLayout(NULL),
 	m_timer(NULL),
 	m_screensaver(NULL),
 	m_screensaverNotify(false),
@@ -290,7 +291,17 @@ CMSWindowsScreen::enter()
 bool
 CMSWindowsScreen::leave()
 {
-	sendDeskMessage(SYNERGY_MSG_LEAVE, 0, 0);
+	// get keyboard layout of foreground window.  we'll use this
+	// keyboard layout for translating keys sent to clients.
+	HWND window  = GetForegroundWindow();
+	DWORD thread = GetWindowThreadProcessId(window, NULL);
+	m_keyLayout  = GetKeyboardLayout(thread);
+
+	// tell the key mapper about the keyboard layout
+	m_keyMapper.setKeyLayout(m_keyLayout);
+
+	// tell desk that we're leaving and tell it the keyboard layout
+	sendDeskMessage(SYNERGY_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
 
 	if (m_isPrimary) {
 /* XXX
@@ -543,7 +554,7 @@ CMSWindowsScreen::fakeKeyEvent(KeyButton virtualKey, bool press) const
 	if (!press) {
 		flags |= KEYEVENTF_KEYUP;
 	}
-	const UINT code = m_keyMapper.keyToScanCode(&virtualKey);
+	UINT code = m_keyMapper.keyToScanCode(&virtualKey);
 	sendDeskMessage(SYNERGY_MSG_FAKE_KEY, flags,
 							MAKEWORD(static_cast<BYTE>(code),
 								static_cast<BYTE>(virtualKey & 0xffu)));
@@ -977,6 +988,9 @@ CMSWindowsScreen::onMark(UInt32 mark)
 bool
 CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 {
+	WPARAM charAndVirtKey = wParam;
+	wParam &= 0xffu;
+
 	// ignore message if posted prior to last mark change
 	if (!ignore()) {
 		// check for ctrl+alt+del emulation
@@ -992,8 +1006,8 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 		// process key normally
 		bool altgr;
 		KeyModifierMask mask;
-		const KeyID key = m_keyMapper.mapKeyFromEvent(wParam,
-													lParam, &mask, &altgr);
+		const KeyID key = m_keyMapper.mapKeyFromEvent(
+							charAndVirtKey, lParam, &mask, &altgr);
 		KeyButton button = static_cast<KeyButton>(
 							(lParam & 0x00ff0000u) >> 16);
 		if (key != kKeyNone && key != kKeyMultiKey) {
@@ -1654,8 +1668,8 @@ CMSWindowsScreen::deskMouseMove(SInt32 x, SInt32 y) const
 		SInt32 w = GetSystemMetrics(SM_CXSCREEN);
 		SInt32 h = GetSystemMetrics(SM_CYSCREEN);
 		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65536.0 * x) / w),
-								(DWORD)((65536.0 * y) / h),
+								(DWORD)((65535.0f * x) / (w - 1) + 0.5f),
+								(DWORD)((65535.0f * y) / (h - 1) + 0.5f),
 								0, 0);
 	}
 
@@ -1712,43 +1726,45 @@ CMSWindowsScreen::deskMouseMove(SInt32 x, SInt32 y) const
 }
 
 void
-CMSWindowsScreen::deskEnter(CDesk* desk, DWORD& cursorThreadID)
+CMSWindowsScreen::deskEnter(CDesk* desk)
 {
 	if (m_isPrimary) {
-		if (desk->m_lowLevel) {
-			if (cursorThreadID != 0) {
-				AttachThreadInput(desk->m_threadID, cursorThreadID, TRUE);
-				ShowCursor(TRUE);
-				AttachThreadInput(desk->m_threadID, cursorThreadID, FALSE);
-				cursorThreadID = 0;
-			}
-		}
+		ShowCursor(TRUE);
 	}
 	ShowWindow(desk->m_window, SW_HIDE);
 }
 
 void
-CMSWindowsScreen::deskLeave(CDesk* desk, DWORD& cursorThreadID)
+CMSWindowsScreen::deskLeave(CDesk* desk, HKL keyLayout)
 {
 	if (m_isPrimary) {
-		// we don't need a window to capture input but we need a window
-		// to hide the cursor when using low-level hooks.  also take the
-		// activation so we use our keyboard layout, not the layout of
-		// whatever window was active.
+		// map a window to hide the cursor and to use whatever keyboard
+		// layout we choose rather than the keyboard layout of the last
+		// active window.
+		int x, y, w, h;
 		if (desk->m_lowLevel) {
-			SetWindowPos(desk->m_window, HWND_TOPMOST,
-							m_xCenter, m_yCenter, 1, 1, SWP_NOACTIVATE);
-			ShowWindow(desk->m_window, SW_SHOW);
-			if (cursorThreadID == 0) {
-				HWND hwnd      = GetForegroundWindow();
-				cursorThreadID = GetWindowThreadProcessId(hwnd, NULL);
-				if (cursorThreadID != 0) {
-					AttachThreadInput(desk->m_threadID, cursorThreadID, TRUE);
-					ShowCursor(FALSE);
-					AttachThreadInput(desk->m_threadID, cursorThreadID, FALSE);
-				}
-			}
+			// with a low level hook the cursor will never budge so
+			// just a 1x1 window is sufficient.
+			x = m_xCenter;
+			y = m_yCenter;
+			w = 1;
+			h = 1;
 		}
+		else {
+			// with regular hooks the cursor will jitter as it's moved
+			// by the user then back to the center by us.  to be sure
+			// we never lose it, cover all the monitors with the window.
+			x = m_x;
+			y = m_y;
+			w = m_w;
+			h = m_h;
+		}
+		SetWindowPos(desk->m_window, HWND_TOPMOST, x, y, w, h, SWP_NOACTIVATE);
+		ShowWindow(desk->m_window, SW_SHOW);
+		ShowCursor(FALSE);
+
+		// switch to requested keyboard layout
+		ActivateKeyboardLayout(keyLayout, 0);
 	}
 	else {
 		// move hider window under the cursor center
@@ -1766,9 +1782,6 @@ void
 CMSWindowsScreen::deskThread(void* vdesk)
 {
 	MSG msg;
-
-	// id of thread that had cursor when we were last told to hide it
-	DWORD cursorThreadID = 0;
 
 	// use given desktop for this thread
 	CDesk* desk      = reinterpret_cast<CDesk*>(vdesk);
@@ -1833,11 +1846,11 @@ CMSWindowsScreen::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_ENTER:
-			deskEnter(desk, cursorThreadID);
+			deskEnter(desk);
 			break;
 
 		case SYNERGY_MSG_LEAVE:
-			deskLeave(desk, cursorThreadID);
+			deskLeave(desk, (HKL)msg.wParam);
 			break;
 
 		case SYNERGY_MSG_FAKE_KEY:
@@ -1969,7 +1982,7 @@ CMSWindowsScreen::checkDesk()
 
 		// hide cursor on new desk
 		if (!m_isOnScreen) {
-			sendDeskMessage(SYNERGY_MSG_LEAVE, 0, 0);
+			sendDeskMessage(SYNERGY_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
 		}
 	}
 }

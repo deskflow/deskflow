@@ -1153,7 +1153,6 @@ void
 CServer::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x button=0x%04x", id, mask, button));
-LOG((CLOG_INFO "onKeyDown: id=%d mask=0x%04x button=0x%04x", id, mask, button));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -1169,7 +1168,6 @@ void
 CServer::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button));
-LOG((CLOG_INFO "onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -1186,7 +1184,6 @@ CServer::onKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x", id, mask, count, button));
-LOG((CLOG_INFO "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x", id, mask, count, button));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -1225,7 +1222,10 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 	LOG((CLOG_DEBUG2 "onMouseMovePrimary %d,%d", x, y));
 
 	// mouse move on primary (server's) screen
-	assert(m_active == m_primaryClient);
+	if (m_active != m_primaryClient) {
+		// stale event -- we're actually on a secondary screen
+		return false;
+	}
 
 	// save position
 	m_x = x;
@@ -1282,13 +1282,7 @@ CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	// mouse move on secondary (client's) screen
 	assert(m_active != NULL);
 	if (m_active == m_primaryClient) {
-		// we're actually on the primary screen.  this can happen
-		// when the primary screen begins processing a mouse move
-		// for a secondary screen, then the active (secondary)
-		// screen disconnects causing us to jump to the primary
-		// screen, and finally the primary screen finishes
-		// processing the mouse move, still thinking it's for
-		// a secondary screen.  we just ignore the motion.
+		// stale event -- we're actually on the primary screen
 		return;
 	}
 

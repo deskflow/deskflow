@@ -186,8 +186,8 @@ private:
 	static LRESULT CALLBACK secondaryDeskProc(HWND, UINT, WPARAM, LPARAM);
 
 	void				deskMouseMove(SInt32 x, SInt32 y) const;
-	void				deskEnter(CDesk* desk, DWORD& cursorThreadID);
-	void				deskLeave(CDesk* desk, DWORD& cursorThreadID);
+	void				deskEnter(CDesk* desk);
+	void				deskLeave(CDesk* desk, HKL keyLayout);
 	void				deskThread(void* vdesk);
 	CDesk*				addDesk(const CString& name, HDESK hdesk);
 	void				removeDesks();
@@ -233,6 +233,9 @@ private:
 
 	// the main loop's thread id
 	DWORD				m_threadID;
+
+	// the keyboard layout to use when off primary screen
+	HKL					m_keyLayout;
 
 	// the timer used to check for desktop switching
 	CEventQueueTimer*	m_timer;

@@ -44,6 +44,13 @@ public:
 	*/
 	void				updateKey(KeyButton key, bool pressed);
 
+	//! Set the active keyboard layout
+	/*!
+	Uses \p keyLayout when finding scan codes via \c keyToScanCode()
+	and mapping keys in \c mapKeyFromEvent().
+	*/
+	void				setKeyLayout(HKL keyLayout);
+
 	//@}
 	//! @name accessors
 	//@{
@@ -67,7 +74,7 @@ public:
 	to a modifier mask.  If \c altgr is non-NULL it's set to true if
 	the key requires AltGr and false otherwise.
 	*/
-	KeyID				mapKeyFromEvent(WPARAM vkCode, LPARAM info,
+	KeyID				mapKeyFromEvent(WPARAM charAndVirtKey, LPARAM info,
 							KeyModifierMask* maskOut, bool* altgr) const;
 
 	//! Test shadow key state
@@ -127,19 +134,6 @@ private:
 	// return true iff \c c is a dead character
 	bool				isDeadChar(TCHAR c, HKL hkl, bool menu) const;
 
-	// put back dead key into ToAscii() internal buffer.  returns true
-	// iff the character was a dead key.
-	bool				putBackDeadChar(TCHAR c, HKL hkl, bool menu) const;
-
-	// get the dead key saved in the given keyboard layout, or 0 if none
-	TCHAR				getSavedDeadChar(HKL hkl) const;
-
-	// map the given virtual key, scan code, and keyboard state to a
-	// character, if possible.  this has the side effect of updating
-	// m_deadKey.
-	char				mapToCharacter(UINT vkCode, UINT scanCode,
-							BYTE* keys, bool press, bool isMenu, HKL hkl) const;
-
 private:
 	class CModifierKeys {
 	public:
@@ -150,6 +144,7 @@ private:
 
 	BYTE				m_keys[256];
 	mutable TCHAR		m_deadKey;
+	HKL					m_keyLayout;
 
 	static const CModifierKeys	s_modifiers[];
 	static const char*		s_vkToName[];

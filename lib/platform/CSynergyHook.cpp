@@ -25,6 +25,12 @@
 #define NO_GRAB_KEYBOARD 0
 
 //
+// debugging compile flag.  when not zero the server will not
+// install low level hooks.
+//
+#define NO_LOWLEVEL_HOOKS 0
+
+//
 // extra mouse wheel stuff
 //
 
@@ -86,8 +92,11 @@ static SInt32			g_xScreen         = 0;
 static SInt32			g_yScreen         = 0;
 static SInt32			g_wScreen         = 0;
 static SInt32			g_hScreen         = 0;
-static HCURSOR			g_cursor          = NULL;
-static DWORD			g_cursorThread    = 0;
+static WPARAM			g_deadVirtKey     = 0;
+static LPARAM			g_deadLParam      = 0;
+static BYTE				g_deadKeyState[256] = { 0 };
+static DWORD			g_hookThread      = 0;
+static DWORD			g_attachedThread  = 0;
 
 #pragma data_seg()
 
@@ -105,49 +114,217 @@ extern "C" int _fltused=0;
 
 static
 void
-hideCursor(DWORD thread)
+attachThreadToForeground()
 {
-	// we should be running the context of the window who's cursor
-	// we want to hide so we shouldn't have to attach thread input
-	// but we'll check to make sure.
-	g_cursorThread = thread;
-	if (g_cursorThread != 0) {
-		DWORD myThread = GetCurrentThreadId();
-		if (myThread != g_cursorThread)
-			AttachThreadInput(myThread, g_cursorThread, TRUE);
-		g_cursor = SetCursor(NULL);
-		if (myThread != g_cursorThread)
-			AttachThreadInput(myThread, g_cursorThread, FALSE);
+	// only attach threads if using low level hooks.  a low level hook
+	// runs in the thread that installed the hook but we have to make
+	// changes that require being attached to the target thread (which
+	// should be the foreground window).  a regular hook runs in the
+	// thread that just removed the event from its queue so we're
+	// already in the right thread.
+	if (g_hookThread != 0) {
+		HWND window    = GetForegroundWindow();
+		DWORD threadID = GetWindowThreadProcessId(window, NULL);
+		// skip if no change
+		if (g_attachedThread != threadID) {
+			// detach from previous thread
+			if (g_attachedThread != 0 && g_attachedThread != g_hookThread) {
+				AttachThreadInput(g_hookThread, g_attachedThread, FALSE);
+			}
+			// attach to new thread
+			g_attachedThread = threadID;
+			if (g_attachedThread != 0 && g_attachedThread != g_hookThread) {
+				AttachThreadInput(g_hookThread, g_attachedThread, TRUE);
+			}
+		}
 	}
 }
 
 static
 void
-restoreCursor()
+detachThread()
 {
-	// restore the show cursor in the window we hid it last
-	if (g_cursor != NULL && g_cursorThread != 0) {
-		DWORD myThread = GetCurrentThreadId();
-		if (myThread != g_cursorThread)
-			AttachThreadInput(myThread, g_cursorThread, TRUE);
-		SetCursor(g_cursor);
-		if (myThread != g_cursorThread)
-			AttachThreadInput(myThread, g_cursorThread, FALSE);
+	if (g_attachedThread != 0) {
+		AttachThreadInput(g_hookThread, g_attachedThread, FALSE);
+		g_attachedThread = 0;
 	}
-	g_cursor       = NULL;
-	g_cursorThread = 0;
 }
 
 #if !NO_GRAB_KEYBOARD
 static
+WPARAM
+makeKeyMsg(UINT virtKey, char c)
+{
+	return MAKEWPARAM(MAKEWORD(virtKey & 0xff, (BYTE)c), 0);
+}
+
+static
+void
+keyboardGetState(BYTE keys[256])
+{
+	if (g_hookThread != 0) {
+		GetKeyboardState(keys);
+	}
+	else {
+		SHORT key;
+		for (int i = 0; i < 256; ++i) {
+			key     = GetAsyncKeyState(i);
+			keys[i] = (BYTE)((key < 0) ? 0x80u : 0);
+		}
+		key = GetKeyState(VK_CAPITAL);
+		keys[VK_CAPITAL] = (BYTE)(((key < 0) ? 0x80 : 0) | (key & 1));
+	}
+}
+
+static
 bool
 keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
+	attachThreadToForeground();
+
+	// check for dead keys.  we don't forward those to our window.
+	// instead we'll leave the key in the keyboard layout (a buffer
+	// internal to the system) for translation when the next key is
+	// pressed.
+	UINT c = MapVirtualKey(wParam, 2);
+	if ((c & 0x80000000u) != 0) {
+		if ((lParam & 0x80000000u) == 0) {
+			if (g_deadVirtKey == 0) {
+				// dead key press, no dead key in the buffer
+				g_deadVirtKey = wParam;
+				g_deadLParam  = lParam;
+				keyboardGetState(g_deadKeyState);
+				return false;
+			}
+			// second dead key press in a row so let it pass
+		}
+		else {
+			// dead key release
+			return false;
+		}
+	}
+
+	// convert key to a character.  this combines a saved dead key,
+	// if any, with this key.  however, the dead key must remain in
+	// the keyboard layout for the application receiving this event
+	// so it can also convert the key to a character.  we only do
+	// this on a key press.
+	WPARAM charAndVirtKey = (wParam & 0xffu);
+	if (c != 0) {
+		// we need the keyboard state for ToAscii()
+		BYTE keys[256];
+		keyboardGetState(keys);
+
+		// ToAscii() maps ctrl+letter to the corresponding control code
+		// and ctrl+backspace to delete.  we don't want those translations
+		// so clear the control modifier state.  however, if we want to
+		// simulate AltGr (which is ctrl+alt) then we must not clear it.
+		BYTE control = keys[VK_CONTROL];
+		BYTE menu    = keys[VK_MENU];
+		if ((control & 0x80) == 0 || (menu & 0x80) == 0) {
+			keys[VK_LCONTROL] = 0;
+			keys[VK_RCONTROL] = 0;
+			keys[VK_CONTROL]  = 0;
+		}
+		else {
+			keys[VK_LCONTROL] = 0x80;
+			keys[VK_CONTROL]  = 0x80;
+			keys[VK_LMENU]    = 0x80;
+			keys[VK_MENU]     = 0x80;
+		}
+
+		// ToAscii() needs to know if a menu is active for some reason.
+		// we don't know and there doesn't appear to be any way to find
+		// out.  so we'll just assume a menu is active if the menu key
+		// is down.
+		// XXX -- figure out some way to check if a menu is active
+		UINT flags = 0;
+		if ((menu & 0x80) != 0)
+			flags |= 1;
+
+		// map the key event to a character.  this has the side
+		// effect of removing the dead key from the system's keyboard
+		// layout buffer.
+		WORD c        = 0;
+		UINT scanCode = ((lParam & 0x00ff0000u) >> 16);
+		int n         = ToAscii(wParam, scanCode, keys, &c, flags);
+
+		// if mapping failed and ctrl and alt are pressed then try again
+		// with both not pressed.  this handles the case where ctrl and
+		// alt are being used as individual modifiers rather than AltGr.
+		// we have to put the dead key back first, if there was one.
+		if (n == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
+			if (g_deadVirtKey != 0) {
+				ToAscii(g_deadVirtKey, (g_deadLParam & 0x00ff0000u) >> 16,
+							g_deadKeyState, &c, flags);
+			}
+			keys[VK_LCONTROL] = 0;
+			keys[VK_RCONTROL] = 0;
+			keys[VK_CONTROL]  = 0;
+			keys[VK_LMENU]    = 0;
+			keys[VK_RMENU]    = 0;
+			keys[VK_MENU]     = 0;
+			n = ToAscii(wParam, scanCode, keys, &c, flags);
+		}
+
+		switch (n) {
+		default:
+			// key is a dead key;  we're not expecting this since we
+			// bailed out above for any dead key.
+			g_deadVirtKey = wParam;
+			g_deadLParam  = lParam;
+			break;
+
+		case 0:
+			// key doesn't map to a character.  this can happen if
+			// non-character keys are pressed after a dead key.
+			break;
+
+		case 1:
+			// key maps to a character composed with dead key
+			charAndVirtKey = makeKeyMsg(wParam, (char)LOBYTE(c));
+			break;
+
+		case 2: {
+			// previous dead key not composed.  send a fake key press
+			// and release for the dead key to our window.
+			WPARAM deadCharAndVirtKey =
+							makeKeyMsg(g_deadVirtKey, (char)LOBYTE(c));
+			PostThreadMessage(g_threadID, SYNERGY_MSG_KEY,
+							deadCharAndVirtKey, g_deadLParam & 0x7fffffffu);
+			PostThreadMessage(g_threadID, SYNERGY_MSG_KEY,
+							deadCharAndVirtKey, g_deadLParam | 0x80000000u);
+
+			// use uncomposed character
+			charAndVirtKey = makeKeyMsg(wParam, (char)HIBYTE(c));
+			break;
+		}
+		}
+
+		// put back the dead key, if any, for the application to use
+		if (g_deadVirtKey != 0) {
+			ToAscii(g_deadVirtKey, (g_deadLParam & 0x00ff0000u) >> 16,
+							g_deadKeyState, &c, flags);
+		}
+
+		// clear out old dead key state
+		g_deadVirtKey = 0;
+		g_deadLParam  = 0;
+	}
+
 	// forward message to our window.  do this whether or not we're
 	// forwarding events to clients because this'll keep our thread's
 	// key state table up to date.  that's important for querying
 	// the scroll lock toggle state.
-	PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, wParam, lParam);
+	PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, charAndVirtKey, lParam);
+
+	// send fake key release if the user just pressed two dead keys
+	// in a row, otherwise we'll lose the release because we always
+	// return from the top of this function for all dead key releases.
+	if ((c & 0x80000000u) != 0) {
+		PostThreadMessage(g_threadID, SYNERGY_MSG_KEY,
+							charAndVirtKey, lParam | 0x80000000u);
+	}
 
 	if (g_mode == kHOOK_RELAY_EVENTS) {
 		// let certain keys pass through
@@ -160,8 +337,21 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 			// lights may not stay synchronized.
 			break;
 
+		case VK_SHIFT:
+		case VK_LSHIFT:
+		case VK_RSHIFT:
+		case VK_CONTROL:
+		case VK_LCONTROL:
+		case VK_RCONTROL:
+		case VK_MENU:
+		case VK_LMENU:
+		case VK_RMENU:
+		case VK_HANGUL:
+			// always pass the shift modifiers
+			break;
+
 		default:
-			// discard event
+			// discard
 			return true;
 		}
 	}
@@ -174,6 +364,8 @@ static
 bool
 mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 {
+	attachThreadToForeground();
+
 	switch (wParam) {
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
@@ -213,19 +405,6 @@ mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 	case WM_NCMOUSEMOVE:
 	case WM_MOUSEMOVE:
 		if (g_mode == kHOOK_RELAY_EVENTS) {
-			// we want the cursor to be hidden at all times so we
-			// hide the cursor on whatever window has it.  but then
-			// we have to show the cursor whenever we leave that
-			// window (or at some later time before we stop relaying).
-			// so check the window with the cursor.  if it's not the
-			// same window that had it before then show the cursor
-			// in the last window and hide it in this window.
-			DWORD thread = GetCurrentThreadId();
-			if (thread != g_cursorThread) {
-				restoreCursor();
-				hideCursor(thread);
-			}
-
 			// relay and eat event
 			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 			return true;
@@ -347,7 +526,7 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_getMessage, code, wParam, lParam);
 }
 
-#if (_WIN32_WINNT >= 0x0400)
+#if (_WIN32_WINNT >= 0x0400) && !NO_LOWLEVEL_HOOKS
 
 //
 // low-level keyboard hook -- this allows us to capture and handle
@@ -524,15 +703,13 @@ init(DWORD threadID)
 	g_threadID     = threadID;
 
 	// set defaults
-	g_mode         = kHOOK_DISABLE;
-	g_zoneSides    = 0;
-	g_zoneSize     = 0;
-	g_xScreen      = 0;
-	g_yScreen      = 0;
-	g_wScreen      = 0;
-	g_hScreen      = 0;
-	g_cursor       = NULL;
-	g_cursorThread = 0;
+	g_mode      = kHOOK_DISABLE;
+	g_zoneSides = 0;
+	g_zoneSize  = 0;
+	g_xScreen   = 0;
+	g_yScreen   = 0;
+	g_wScreen   = 0;
+	g_hScreen   = 0;
 
 	return 1;
 }
@@ -562,6 +739,10 @@ install()
 		return kHOOK_FAILED;
 	}
 
+	// discard old dead keys
+	g_deadVirtKey = 0;
+	g_deadLParam  = 0;
+
 	// check for mouse wheel support
 	g_wheelSupport = getWheelSupport();
 
@@ -573,32 +754,40 @@ install()
 								0);
 	}
 
-	// install keyboard hook
-#if !NO_GRAB_KEYBOARD
-#if (_WIN32_WINNT >= 0x0400)
-	g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL,
-								&keyboardLLHook,
-								g_hinstance,
-								0);
-#endif
-	if (g_keyboardLL == NULL) {
-		g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
-								&keyboardHook,
-								g_hinstance,
-								0);
-	}
-#endif
-
-	// install mouse hook
-#if (_WIN32_WINNT >= 0x0400)
+	// install low-level hooks.  we require that they both get installed.
+#if (_WIN32_WINNT >= 0x0400) && !NO_LOWLEVEL_HOOKS
 	g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
 								&mouseLLHook,
 								g_hinstance,
 								0);
+#if !NO_GRAB_KEYBOARD
+	g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL,
+								&keyboardLLHook,
+								g_hinstance,
+								0);
+	if (g_mouseLL == NULL || g_keyboardLL == NULL) {
+		if (g_keyboardLL != NULL) {
+			UnhookWindowsHookEx(g_keyboardLL);
+			g_keyboardLL = NULL;
+		}
+		if (g_mouseLL != NULL) {
+			UnhookWindowsHookEx(g_mouseLL);
+			g_mouseLL = NULL;
+		}
+	}
 #endif
+#endif
+
+	// install regular hooks
 	if (g_mouseLL == NULL) {
 		g_mouse = SetWindowsHookEx(WH_MOUSE,
 								&mouseHook,
+								g_hinstance,
+								0);
+	}
+	if (g_keyboardLL == NULL) {
+		g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
+								&keyboardHook,
 								g_hinstance,
 								0);
 	}
@@ -614,6 +803,7 @@ install()
 	}
 
 	if (g_keyboardLL != NULL || g_mouseLL != NULL) {
+		g_hookThread = GetCurrentThreadId();
 		return kHOOK_OKAY_LL;
 	}
 
@@ -624,6 +814,13 @@ int
 uninstall(void)
 {
 	assert(g_hinstance != NULL);
+
+	// discard old dead keys
+	g_deadVirtKey = 0;
+	g_deadLParam  = 0;
+
+	// detach from thread
+	detachThread();
 
 	// uninstall hooks
 	if (g_keyboardLL != NULL) {
@@ -647,9 +844,6 @@ uninstall(void)
 		g_getMessage = NULL;
 	}
 	g_wheelSupport = kWheelNone;
-
-	// show the cursor
-	restoreCursor();
 
 	return 1;
 }
@@ -719,9 +913,6 @@ setMode(EHookMode mode)
 		return;
 	}
 	g_mode = mode;
-	if (g_mode != kHOOK_RELAY_EVENTS) {
-		restoreCursor();
-	}
 }
 
 }
