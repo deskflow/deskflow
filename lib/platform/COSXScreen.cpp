@@ -34,7 +34,8 @@ COSXScreen::COSXScreen(bool isPrimary) :
 	m_keyState(NULL),
 	m_sequenceNumber(0),
 	m_screensaver(NULL),
-	m_screensaverNotify(false)
+	m_screensaverNotify(false),
+	m_ownClipboard(false)
 {
 	try {
 		m_displayID = CGMainDisplayID();
@@ -146,6 +147,30 @@ COSXScreen::getCursorCenter(SInt32& x, SInt32& y) const
 }
 
 void
+COSXScreen::postMouseEvent(const CGPoint & pos) const
+{
+	// synthesize event.  CGPostMouseEvent is a particularly good
+	// example of a bad API.  we have to shadow the mouse state to
+	// use this API and if we want to support more buttons we have
+	// to recompile.
+	//
+	// the order of buttons on the mac is:
+	// 1 - Left
+	// 2 - Right
+	// 3 - Middle
+	// Whatever the USB device defined.
+	// It is a bit weird that the behaviour of buttons over 3 are dependent
+	// on currently plugged in USB devices.
+	CGPostMouseEvent(pos, true, sizeof(m_buttons) / sizeof(m_buttons[0]),
+				m_buttons[0],
+				m_buttons[2],
+				m_buttons[1],
+				m_buttons[3],
+				m_buttons[4]);
+}
+
+
+void
 COSXScreen::fakeMouseButton(ButtonID id, bool press) const
 {
 	// get button index
@@ -157,10 +182,6 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press) const
 	// update state
 	m_buttons[index] = press;
 
-	// synthesize event.  CGPostMouseEvent is a particularly good
-	// example of a bad API.  we have to shadow the mouse state to
-	// use this API and if we want to support more buttons we have
-	// to recompile.
 	CGPoint pos;
 	if (!m_cursorPosValid) {
 		SInt32 x, y;
@@ -168,12 +189,7 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press) const
 	}
 	pos.x = m_xCursor;
 	pos.y = m_yCursor;
-	CGPostMouseEvent(pos, false, sizeof(m_buttons) / sizeof(m_buttons[0]),
-				m_buttons[0],
-				m_buttons[1],
-				m_buttons[2],
-				m_buttons[3],
-				m_buttons[4]);
+	postMouseEvent(pos);
 }
 
 void
@@ -183,8 +199,7 @@ COSXScreen::fakeMouseMove(SInt32 x, SInt32 y) const
 	CGPoint pos;
 	pos.x = x;
 	pos.y = y;
-	// FIXME -- is it okay to pass no buttons here?
-	CGPostMouseEvent(pos, true, 0, m_buttons[0]);
+	postMouseEvent(pos);
 
 	// save new cursor position
 	m_xCursor        = x;
@@ -208,8 +223,7 @@ COSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 	CGPoint pos;
 	pos.x = oldPos.h + dx;
 	pos.y = oldPos.v + dy;
-	// FIXME -- is it okay to pass no buttons here?
-	CGPostMouseEvent(pos, true, 0, m_buttons[0]);
+	postMouseEvent(pos);
 
 	// we now assume we don't know the current cursor position
 	m_cursorPosValid = false;
@@ -218,7 +232,32 @@ COSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 void
 COSXScreen::fakeMouseWheel(SInt32 delta) const
 {
-	CGPostScrollWheelEvent(1, delta / 120);
+	CFPropertyListRef pref = ::CFPreferencesCopyValue(
+							CFSTR("com.apple.scrollwheel.scaling"),
+							kCFPreferencesAnyApplication,
+							kCFPreferencesCurrentUser,
+							kCFPreferencesAnyHost);
+
+	int32_t wheelIncr = 10;
+
+	if (pref != NULL) {
+		CFTypeID id = CFGetTypeID(pref);
+		if (id == CFNumberGetTypeID()) {
+			CFNumberRef value = static_cast<CFNumberRef>(pref);
+
+			double scaling;
+			if (CFNumberGetValue(value, kCFNumberDoubleType, &scaling)) {
+				wheelIncr = (int32_t)(8 * scaling);
+			}
+		}
+		CFRelease(pref);
+	}
+
+	if (delta < 0) {
+		wheelIncr = -wheelIncr;
+	}
+
+	CGPostScrollWheelEvent(1, wheelIncr);
 }
 
 void
@@ -332,6 +371,7 @@ bool
 COSXScreen::setClipboard(ClipboardID, const IClipboard* src)
 {
 	COSXClipboard dst;
+	m_ownClipboard = true;
 	if (src != NULL) {
 		// save clipboard data
 		return CClipboard::copy(&dst, src);
@@ -350,7 +390,18 @@ COSXScreen::setClipboard(ClipboardID, const IClipboard* src)
 void
 COSXScreen::checkClipboards()
 {
-	// FIXME -- do nothing if we're always up to date
+	if (m_ownClipboard && !COSXClipboard::isOwnedBySynergy()) {
+		static ScrapRef sScrapbook = NULL;
+		ScrapRef currentScrap;
+		GetCurrentScrap(&currentScrap);
+
+		if (sScrapbook != currentScrap) {
+			m_ownClipboard = false;
+			sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardClipboard);
+			sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardSelection);
+			sScrapbook = currentScrap;
+		}
+	}
 }
 
 void
@@ -406,9 +457,64 @@ COSXScreen::isPrimary() const
 }
 
 void
-COSXScreen::handleSystemEvent(const CEvent&, void*)
+COSXScreen::sendEvent(CEvent::Type type, void* data)
 {
-	// FIXME
+	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), data));
+}
+
+void
+COSXScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id)
+{
+	CClipboardInfo* info   = (CClipboardInfo*)malloc(sizeof(CClipboardInfo));
+	info->m_id             = id;
+	info->m_sequenceNumber = m_sequenceNumber;
+	sendEvent(type, info);
+}
+
+
+void
+COSXScreen::handleSystemEvent(const CEvent& event, void*)
+{
+/*
+	EventRef * carbonEvent = reinterpret_cast<EventRef *>(event.getData());
+	assert(carbonEvent != NULL);
+
+	UInt32 eventClass = GetEventClass( *carbonEvent );
+	
+	switch( eventClass )  
+	{
+		case kEventClassMouse:
+		{
+			UInt32 eventKind = GetEventKind( *carbonEvent );
+			switch( eventKind )
+			{
+				case kEventMouseMoved:
+				{
+					HIPoint point;
+					GetEventParameter( *carbonEvent,
+						kEventParamMouseDelta,
+						typeHIPoint,
+						NULL,
+						sizeof(point),
+						NULL,
+						&point);
+						
+				} break;
+			}
+		}break;
+
+		case kEventClassKeyboard: 
+		{
+		
+		}
+
+		default: 
+		{
+		
+		} break;
+	
+	}
+*/
 }
 
 void
@@ -426,15 +532,49 @@ COSXScreen::getKeyState() const
 void
 COSXScreen::updateScreenShape()
 {
-	// FIXME -- handle multiple monitors
+	// get info for each display
+	CGDisplayCount displayCount = 0;
+
+	if (CGGetActiveDisplayList(0, NULL, &displayCount) != CGDisplayNoErr) {
+		return;
+	}
+	
+	if (displayCount == 0) {
+		return;
+	}
+
+	CGDirectDisplayID* displays = 
+		(CGDirectDisplayID*)malloc(displayCount * sizeof(CGDirectDisplayID));
+
+	if (displays == NULL) {
+		return;
+	}
+
+	if (CGGetActiveDisplayList(displayCount,
+							displays, &displayCount) != CGDisplayNoErr) {
+		free(displays);
+		return;
+	}
+
+	// get smallest rect enclosing all display rects
+	CGRect totalBounds = CGRectZero;
+	for (CGDisplayCount i = 0; i < displayCount; ++i) {
+		CGRect bounds = CGDisplayBounds(displays[i]);
+		totalBounds   = CGRectUnion(totalBounds, bounds);
+	}
 
 	// get shape of default screen
-	m_x = 0;
-	m_y = 0;
-	m_w = CGDisplayPixelsWide(m_displayID);
-	m_h = CGDisplayPixelsHigh(m_displayID);
+	m_x = (SInt32)totalBounds.origin.x;
+	m_y = (SInt32)totalBounds.origin.y;
+	m_w = (SInt32)totalBounds.size.width;
+	m_h = (SInt32)totalBounds.size.height;
 
 	// get center of default screen
+	// XXX -- this should compute the center of displays[0]
 	m_xCenter = m_x + (m_w >> 1);
 	m_yCenter = m_y + (m_h >> 1);
+
+	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount, (displayCount == 1) ? "display" : "displays"));
+
+	free(displays);
 }

@@ -76,7 +76,12 @@ protected:
 
 private:
 	void				updateScreenShape();
-
+	void				postMouseEvent(const CGPoint &) const;
+	
+	// convenience function to send events
+	void				sendEvent(CEvent::Type type, void* = NULL);
+	void				sendClipboardEvent(CEvent::Type type, ClipboardID id);
+	
 private:
 	// true if screen is being used as a primary screen, false otherwise
 	bool				m_isPrimary;
@@ -107,6 +112,9 @@ private:
 	// screen saver stuff
 	COSXScreenSaver*	m_screensaver;
 	bool				m_screensaverNotify;
+
+	// clipboard stuff
+	bool				m_ownClipboard;
 };
 
 #endif

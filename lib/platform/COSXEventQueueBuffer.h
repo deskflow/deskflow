@@ -33,8 +33,11 @@ public:
 						newTimer(double duration, bool oneShot) const;
 	virtual void		deleteTimer(CEventQueueTimer*) const;
 
+protected:
+	void				setOSXEvent(EventRef event);
+
 private:
-	// FIXME
+	EventRef			m_event;
 };
 
 #endif

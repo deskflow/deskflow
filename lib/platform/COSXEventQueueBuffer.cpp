@@ -13,19 +13,28 @@
  */
 
 #include "COSXEventQueueBuffer.h"
+#include "CEvent.h"
+#include "IEventQueue.h"
+
+//
+// CEventQueueTimer
+//
+
+class CEventQueueTimer { };
 
 //
 // COSXEventQueueBuffer
 //
 
-COSXEventQueueBuffer::COSXEventQueueBuffer()
+COSXEventQueueBuffer::COSXEventQueueBuffer() :
+	m_event(NULL)
 {
-	// FIXME
+	// do nothing
 }
 
 COSXEventQueueBuffer::~COSXEventQueueBuffer()
 {
-	// FIXME
+	setOSXEvent(NULL);
 }
 
 void
@@ -38,18 +47,51 @@ COSXEventQueueBuffer::waitForEvent(double timeout)
 IEventQueueBuffer::Type
 COSXEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 {
-	// FIXME
-	(void)event;
-	(void)dataID;
-	return kNone;
+	EventRef carbonEvent = NULL;
+	OSStatus error = ReceiveNextEvent(0, NULL, 0.0, true, &carbonEvent);
+	setOSXEvent(carbonEvent);
+
+	if (error == eventLoopQuitErr) {
+		event = CEvent(CEvent::kQuit);
+		return kSystem;
+	}
+	else if (error != noErr) {
+		return kNone;
+	}
+	else {
+		UInt32 eventClass = GetEventClass(m_event);
+		switch (eventClass) {
+		case 'Syne': 
+			dataID = GetEventKind(m_event);
+			return kUser;
+
+		default: 
+			event = CEvent(CEvent::kSystem,
+						IEventQueue::getSystemTarget(), &m_event);
+			return kNone;
+		}
+	}
 }
 
 bool
 COSXEventQueueBuffer::addEvent(UInt32 dataID)
 {
-	// FIXME
-	(void)dataID;
-	return false;
+	EventRef event;
+	OSStatus error = CreateEvent( 
+							kCFAllocatorDefault,
+							'Syne', 
+							dataID,
+							0,
+							kEventAttributeNone,
+							&event);
+
+	if (error == noErr) {
+		error = PostEventToQueue(GetMainEventQueue(), event, 
+							kEventPriorityStandard);
+		ReleaseEvent(event);
+	}
+	
+	return (error == noErr);
 }
 
 bool
@@ -57,20 +99,26 @@ COSXEventQueueBuffer::isEmpty() const
 {
 	EventRef event;
 	OSStatus status = ReceiveNextEvent(0, NULL, 0.0, false, &event);
-	return (status != eventLoopTimedOutErr);
+	return (status == eventLoopTimedOutErr);
 }
 
 CEventQueueTimer*
-COSXEventQueueBuffer::newTimer(double duration, bool oneShot) const
+COSXEventQueueBuffer::newTimer(double, bool) const
 {
-	// FIXME
-	(void)duration;
-	(void)oneShot;
-	return NULL;
+	return new CEventQueueTimer;
 }
 
 void
-COSXEventQueueBuffer::deleteTimer(CEventQueueTimer*) const
+COSXEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
 {
-	// FIXME
+	delete timer;
+}
+
+void 
+COSXEventQueueBuffer::setOSXEvent(EventRef event)
+{
+	if (m_event != NULL) {
+		ReleaseEvent(m_event);
+	}
+	m_event = RetainEvent(event);
 }

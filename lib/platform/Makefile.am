@@ -71,11 +71,17 @@ MSWINDOWS_HOOK_SOURCE_FILES =				\
 	$(NULL)
 CARBON_SOURCE_FILES =						\
 	COSXClipboard.cpp						\
+	COSXClipboardAnyTextConverter.cpp		\
+	COSXClipboardTextConverter.cpp			\
+	COSXClipboardUTF16Converter.cpp			\
 	COSXEventQueueBuffer.cpp				\
 	COSXKeyState.cpp						\
 	COSXScreen.cpp							\
 	COSXScreenSaver.cpp						\
 	COSXClipboard.h							\
+	COSXClipboardAnyTextConverter.h			\
+	COSXClipboardTextConverter.h			\
+	COSXClipboardUTF16Converter.h			\
 	COSXEventQueueBuffer.h					\
 	COSXKeyState.h							\
 	COSXScreen.h							\

@@ -38,8 +38,7 @@ case $host in
 	;;
 *-*-darwin*)
 	acx_host_arch="UNIX"
-	acx_host_winapi="XWINDOWS"
-#	acx_host_winapi="CARBON"
+	acx_host_winapi="CARBON"
 	;;
 *)
 	acx_host_arch="UNIX"
@@ -65,8 +64,7 @@ dnl our files end in .cpp not .C so tests should also end in .cpp
 ac_ext=cpp
 
 dnl enable debugging or disable asserts
-AC_ARG_ENABLE([debug],
-	AC_HELP_STRING([--enable-debug], [enable debugging]))
+AC_ARG_ENABLE([debug], [  --enable-debug          enable debugging])
 if test "x$enable_debug" != xno; then
 	CXXFLAGS="$CXXFLAGS -g"
 else
@@ -111,22 +109,29 @@ if test x"$acx_host_winapi" = xXWINDOWS; then
 	CPPFLAGS="$X_CFLAGS $CPPFLAGS"
 	AC_CHECK_LIB(Xtst,
 		XTestQueryExtension,
-		AC_CHECK_HEADERS([X11/extensions/XTest.h],
-			[X_LIBS="$X_LIBS -lXtst"],
-			AC_MSG_ERROR(Your must have the XTest headers to compile synergy)),
+		[X_LIBS="$X_LIBS -lXtst"],
 		AC_MSG_ERROR(You must have the XTest library to build synergy),
 		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+	AC_CHECK_HEADERS([X11/extensions/XTest.h],,
+		AC_MSG_ERROR(You must have the XTest headers to compile synergy))
 	AC_CHECK_LIB(Xinerama,
 		XineramaQueryExtension,
-		AC_CHECK_HEADERS([X11/extensions/Xinerama.h],
-			[X_LIBS="$X_LIBS -lXinerama"]),
-		,
+		[X_LIBS="$X_LIBS -lXinerama"],
+		[acx_xinerama_lib_ok=no],
 		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+	if test x"$acx_xinerama_lib_ok" != xno; then
+		AC_CHECK_HEADERS([X11/extensions/Xinerama.h],,,
+			[#include <X11/Xlib.h>])
+	fi
 	AC_CHECK_LIB(Xext,
 		DPMSQueryExtension,
-		AC_CHECK_HEADERS([X11/extensions/dpms.h]),
-		,
+		[acx_dpms_lib_ok=yes],
+		[acx_dpms_lib_ok=no],
 		[$X_LIBS -lX11 $X_EXTRA_LIBS])
+	if test x"$acx_dpms_lib_ok" = xyes; then
+		AC_CHECK_HEADERS([X11/extensions/dpms.h],,,
+			[#include <X11/Xlib.h>])
+	fi
 	CPPFLAGS="$save_CPPFLAGS"
 	ARCH_LIBS="$X_LIBS $X_PRE_LIBS -lXext -lX11 $X_EXTRA_LIBS $ARCH_LIBS"
 	ARCH_CFLAGS="$ARCH_CFLAGS $X_CFLAGS"

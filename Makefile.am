@@ -13,56 +13,57 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 
-SUBDIRS =					\
-	lib						\
-	cmd						\
-	dist					\
+SUBDIRS =							\
+	lib								\
+	cmd								\
+	dist							\
 	$(NULL)
 
-EXTRA_DIST =				\
-	BUGS					\
-	FAQ						\
-	HISTORY					\
-	PORTING					\
-	TODO					\
-	all.dsp					\
-	synergy.dsw				\
-	doc/doxygen.cfg.in		\
-	examples/synergy.conf	\
+EXTRA_DIST =						\
+	BUGS							\
+	FAQ								\
+	HISTORY							\
+	PORTING							\
+	TODO							\
+	all.dsp							\
+	synergy.dsw						\
+	synergy.xcode/project.pbxproj	\
+	doc/doxygen.cfg.in				\
+	examples/synergy.conf			\
 	$(NULL)
 
-MAINTAINERCLEANFILES =		\
-	Makefile.in				\
-	aclocal.m4				\
-	config.h				\
-	config.h.in				\
-	config.log				\
-	config.status			\
-	configure				\
-	stamp-h.in				\
-	stamp-h1				\
-	doc/doxygen.cfg			\
-	doc/doxygen/html/*		\
+MAINTAINERCLEANFILES =				\
+	Makefile.in						\
+	aclocal.m4						\
+	config.h						\
+	config.h.in						\
+	config.log						\
+	config.status					\
+	configure						\
+	stamp-h.in						\
+	stamp-h1						\
+	doc/doxygen.cfg					\
+	doc/doxygen/html/*				\
 	$(NULL)
 
-PKG_FILES =					\
-	AUTHORS					\
-	BUGS					\
-	COPYING					\
-	ChangeLog				\
-	FAQ						\
-	HISTORY					\
-	INSTALL					\
-	NEWS					\
-	README					\
-	TODO					\
-	cmd/synergyc/synergyc	\
-	cmd/synergys/synergys	\
-	examples/synergy.conf	\
+PKG_FILES =							\
+	AUTHORS							\
+	BUGS							\
+	COPYING							\
+	ChangeLog						\
+	FAQ								\
+	HISTORY							\
+	INSTALL							\
+	NEWS							\
+	README							\
+	TODO							\
+	cmd/synergyc/synergyc			\
+	cmd/synergys/synergys			\
+	examples/synergy.conf			\
 	$(NULL)
-PKG_PROG_FILES =			\
-	synergyc				\
-	synergys				\
+PKG_PROG_FILES =					\
+	synergyc						\
+	synergys						\
 	$(NULL)
 
 # build doxygen documentation
