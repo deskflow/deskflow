@@ -287,7 +287,7 @@ CXWindowsSecondaryScreen::grabClipboard(ClipboardID id)
 }
 
 void
-CXWindowsSecondaryScreen::getMousePos(SInt32* x, SInt32* y) const
+CXWindowsSecondaryScreen::getMousePos(SInt32& x, SInt32& y) const
 {
 	CDisplayLock display(this);
 	int xTmp, yTmp, dummy;
@@ -295,14 +295,15 @@ CXWindowsSecondaryScreen::getMousePos(SInt32* x, SInt32* y) const
 	Window dummyWindow;
 	XQueryPointer(display, getRoot(), &dummyWindow, &dummyWindow,
 								&xTmp, &yTmp, &dummy, &dummy, &dummyMask);
-	*x = xTmp;
-	*y = yTmp;
+	x = xTmp;
+	y = yTmp;
 }
 
 void
-CXWindowsSecondaryScreen::getSize(SInt32* width, SInt32* height) const
+CXWindowsSecondaryScreen::getShape(
+				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
-	getScreenSize(width, height);
+	getScreenShape(x, y, w, h);
 }
 
 SInt32

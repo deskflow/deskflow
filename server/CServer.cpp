@@ -260,24 +260,27 @@ CServer::getActivePrimarySides() const
 }
 
 void
-CServer::setInfo(SInt32 w, SInt32 h, SInt32 zoneSize, SInt32 x, SInt32 y)
+CServer::setInfo(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
+				SInt32 zoneSize, SInt32 mx, SInt32 my)
 {
 	CLock lock(&m_mutex);
 	assert(m_primaryInfo != NULL);
-	setInfoNoLock(m_primaryInfo->m_name, w, h, zoneSize, x, y);
+	setInfoNoLock(m_primaryInfo->m_name, x, y, w, h, zoneSize, mx, my);
 }
 
 void
 CServer::setInfo(const CString& client,
-				SInt32 w, SInt32 h, SInt32 zoneSize, SInt32 x, SInt32 y)
+				SInt32 x, SInt32 y, SInt32 w, SInt32 h,
+				SInt32 zoneSize, SInt32 mx, SInt32 my)
 {
 	CLock lock(&m_mutex);
-	setInfoNoLock(client, w, h, zoneSize, x, y);
+	setInfoNoLock(client, x, y, w, h, zoneSize, mx, my);
 }
 
 void
 CServer::setInfoNoLock(const CString& screen,
-				SInt32 w, SInt32 h, SInt32 zoneSize, SInt32 x, SInt32 y)
+				SInt32 x, SInt32 y, SInt32 w, SInt32 h,
+				SInt32 zoneSize, SInt32 mx, SInt32 my)
 {
 	assert(!screen.empty());
 	assert(w > 0);
@@ -297,13 +300,15 @@ CServer::setInfoNoLock(const CString& screen,
 	// update screen info
 	if (info == m_active) {
 		// update the remote mouse coordinates
-		m_x = x;
-		m_y = y;
+		m_x = mx;
+		m_y = my;
 	}
-	info->m_width    = w;
-	info->m_height   = h;
+	info->m_x        = x;
+	info->m_y        = y;
+	info->m_w        = w;
+	info->m_h        = h;
 	info->m_zoneSize = zoneSize;
-	log((CLOG_INFO "screen \"%s\" size=%dx%d zone=%d pos=%d,%d", screen.c_str(), w, h, zoneSize, x, y));
+	log((CLOG_INFO "screen \"%s\" shape=%d,%d %dx%d zone=%d pos=%d,%d", screen.c_str(), x, y, w, h, zoneSize, mx, my));
 
 	// send acknowledgement (if screen isn't the primary)
 	if (info->m_protocol != NULL) {
@@ -313,7 +318,7 @@ CServer::setInfoNoLock(const CString& screen,
 	// handle resolution change to primary screen
 	else {
 		if (info == m_active) {
-			onMouseMovePrimaryNoLock(x, y);
+			onMouseMovePrimaryNoLock(mx, my);
 		}
 		else {
 			onMouseMoveSecondaryNoLock(0, 0);
@@ -536,22 +541,22 @@ CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
 
 	// see if we should change screens
 	CConfig::EDirection dir;
-	if (x < m_active->m_zoneSize) {
+	if (x < m_active->m_x + m_active->m_zoneSize) {
 		x  -= m_active->m_zoneSize;
 		dir = CConfig::kLeft;
 		log((CLOG_DEBUG1 "switch to left"));
 	}
-	else if (x >= m_active->m_width - m_active->m_zoneSize) {
+	else if (x >= m_active->m_x + m_active->m_w - m_active->m_zoneSize) {
 		x  += m_active->m_zoneSize;
 		dir = CConfig::kRight;
 		log((CLOG_DEBUG1 "switch to right"));
 	}
-	else if (y < m_active->m_zoneSize) {
+	else if (y < m_active->m_y + m_active->m_zoneSize) {
 		y  -= m_active->m_zoneSize;
 		dir = CConfig::kTop;
 		log((CLOG_DEBUG1 "switch to top"));
 	}
-	else if (y >= m_active->m_height - m_active->m_zoneSize) {
+	else if (y >= m_active->m_y + m_active->m_h - m_active->m_zoneSize) {
 		y  += m_active->m_zoneSize;
 		dir = CConfig::kBottom;
 		log((CLOG_DEBUG1 "switch to bottom"));
@@ -561,16 +566,12 @@ CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
 		return false;
 	}
 
-	// get jump destination
+	// get jump destination and, if no screen in jump direction,
+	// then ignore the move.
 	CScreenInfo* newScreen = getNeighbor(m_active, dir, x, y);
-
-	// if no screen in jump direction then ignore the move
 	if (newScreen == NULL) {
 		return false;
 	}
-
-	// remap position to account for resolution differences
-	mapPosition(m_active, dir, newScreen, x, y);
 
 	// switch screen
 	switchScreen(newScreen, x, y);
@@ -615,16 +616,16 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 	if (!isLockedToScreenNoLock()) {
 		// find direction of neighbor
 		CConfig::EDirection dir;
-		if (m_x < 0) {
+		if (m_x < m_active->m_x) {
 			dir = CConfig::kLeft;
 		}
-		else if (m_x > m_active->m_width - 1) {
+		else if (m_x > m_active->m_x + m_active->m_w - 1) {
 			dir = CConfig::kRight;
 		}
-		else if (m_y < 0) {
+		else if (m_y < m_active->m_y) {
 			dir = CConfig::kTop;
 		}
-		else if (m_y > m_active->m_height - 1) {
+		else if (m_y > m_active->m_y + m_active->m_h - 1) {
 			dir = CConfig::kBottom;
 		}
 		else {
@@ -638,39 +639,32 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 		if (newScreen == NULL) {
 			log((CLOG_DEBUG1 "leave \"%s\" on %s", m_active->m_name.c_str(), CConfig::dirName(dir)));
 
-			SInt32 x = m_x, y = m_y;
-			newScreen = getNeighbor(m_active, dir, x, y);
-
-			// remap position to account for resolution differences
-			if (newScreen != NULL) {
-				mapPosition(m_active, dir, newScreen, x, y);
-				m_x = x;
-				m_y = y;
-			}
-			else {
+			// get new position or clamp to current screen
+			newScreen = getNeighbor(m_active, dir, m_x, m_y);
+			if (newScreen == NULL) {
 				log((CLOG_DEBUG1 "no neighbor; clamping"));
-				if (m_x < 0)
-					m_x = 0;
-				else if (m_x > m_active->m_width - 1)
-					m_x = m_active->m_width - 1;
-				if (m_y < 0)
-					m_y = 0;
-				else if (m_y > m_active->m_height - 1)
-					m_y = m_active->m_height - 1;
+				if (m_x < m_active->m_x)
+					m_x = m_active->m_x;
+				else if (m_x > m_active->m_x + m_active->m_w - 1)
+					m_x = m_active->m_x + m_active->m_w - 1;
+				if (m_y < m_active->m_y)
+					m_y = m_active->m_y;
+				else if (m_y > m_active->m_y + m_active->m_h - 1)
+					m_y = m_active->m_y + m_active->m_h - 1;
 			}
 		}
 	}
 	else {
 		// clamp to edge when locked
 		log((CLOG_DEBUG1 "clamp to \"%s\"", m_active->m_name.c_str()));
-		if (m_x < 0)
-			m_x = 0;
-		else if (m_x > m_active->m_width - 1)
-			m_x = m_active->m_width - 1;
-		if (m_y < 0)
-			m_y = 0;
-		else if (m_y > m_active->m_height - 1)
-			m_y = m_active->m_height - 1;
+		if (m_x < m_active->m_x)
+			m_x = m_active->m_x;
+		else if (m_x > m_active->m_x + m_active->m_w - 1)
+			m_x = m_active->m_x + m_active->m_w - 1;
+		if (m_y < m_active->m_y)
+			m_y = m_active->m_y;
+		else if (m_y > m_active->m_y + m_active->m_h - 1)
+			m_y = m_active->m_y + m_active->m_h - 1;
 	}
 
 	// warp cursor if on same screen
@@ -729,7 +723,8 @@ void
 CServer::switchScreen(CScreenInfo* dst, SInt32 x, SInt32 y)
 {
 	assert(dst != NULL);
-	assert(x >= 0 && y >= 0 && x < dst->m_width && y < dst->m_height);
+	assert(x >= dst->m_x && y >= dst->m_y);
+	assert(x < dst->m_x + dst->m_w && y < dst->m_y + dst->m_h);
 	assert(m_active != NULL);
 
 	log((CLOG_INFO "switch from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), dst->m_name.c_str(), x, y));
@@ -832,22 +827,27 @@ CServer::getNeighbor(CScreenInfo* src,
 	assert(src != NULL);
 
 	// get the first neighbor
-	CScreenInfo* lastGoodScreen = src;
 	CScreenInfo* dst = getNeighbor(src, srcSide);
 	if (dst == NULL) {
 		return NULL;
 	}
 
 	// get the source screen's size (needed for kRight and kBottom)
-	SInt32 w = src->m_width, h = src->m_height;
+	SInt32 w = src->m_w, h = src->m_h;
 
-	// find destination screen, adjusting x or y (but not both)
+	// find destination screen, adjusting x or y (but not both).  the
+	// searches are done in a sort of canonical screen space where
+	// the upper-left corner is 0,0 for each screen.  we adjust from
+	// actual to canonical position on entry to and from canonical to
+	// actual on exit from the search.
+	CScreenInfo* lastGoodScreen = src;
 	switch (srcSide) {
 	case CConfig::kLeft:
+		x -= src->m_x;
 		while (dst != NULL && dst != lastGoodScreen) {
 			lastGoodScreen = dst;
-			w = lastGoodScreen->m_width;
-			h = lastGoodScreen->m_height;
+			w = lastGoodScreen->m_w;
+			h = lastGoodScreen->m_h;
 			x += w;
 			if (x >= 0) {
 				break;
@@ -855,27 +855,33 @@ CServer::getNeighbor(CScreenInfo* src,
 			log((CLOG_DEBUG2 "skipping over screen %s", dst->m_name.c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
+		assert(lastGoodScreen != NULL);
+		x += lastGoodScreen->m_x;
 		break;
 
 	case CConfig::kRight:
+		x -= src->m_x;
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			x -= w;
-			w = lastGoodScreen->m_width;
-			h = lastGoodScreen->m_height;
+			w = lastGoodScreen->m_w;
+			h = lastGoodScreen->m_h;
 			if (x < w) {
 				break;
 			}
 			log((CLOG_DEBUG2 "skipping over screen %s", dst->m_name.c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
+		assert(lastGoodScreen != NULL);
+		x += lastGoodScreen->m_x;
 		break;
 
 	case CConfig::kTop:
+		y -= src->m_y;
 		while (dst != NULL) {
 			lastGoodScreen = dst;
-			w = lastGoodScreen->m_width;
-			h = lastGoodScreen->m_height;
+			w = lastGoodScreen->m_w;
+			h = lastGoodScreen->m_h;
 			y += h;
 			if (y >= 0) {
 				break;
@@ -883,106 +889,108 @@ CServer::getNeighbor(CScreenInfo* src,
 			log((CLOG_DEBUG2 "skipping over screen %s", dst->m_name.c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
+		assert(lastGoodScreen != NULL);
+		y += lastGoodScreen->m_y;
 		break;
 
 	case CConfig::kBottom:
+		y -= src->m_y;
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			y -= h;
-			w = lastGoodScreen->m_width;
-			h = lastGoodScreen->m_height;
+			w = lastGoodScreen->m_w;
+			h = lastGoodScreen->m_h;
 			if (y < h) {
 				break;
 			}
 			log((CLOG_DEBUG2 "skipping over screen %s", dst->m_name.c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
+		assert(lastGoodScreen != NULL);
+		y += lastGoodScreen->m_y;
 		break;
 	}
-	assert(lastGoodScreen != NULL);
 
-/* allow screen to be it's own neighbor to allow wrapping
-	// no neighbor if best neighbor is the source itself
-	if (lastGoodScreen == src)
-		return NULL;
-*/
+	// save destination screen
+	assert(lastGoodScreen != NULL);
+	dst = lastGoodScreen;
 
 	// if entering primary screen then be sure to move in far enough
 	// to avoid the jump zone.  if entering a side that doesn't have
 	// a neighbor (i.e. an asymmetrical side) then we don't need to
 	// move inwards because that side can't provoke a jump.
-	if (lastGoodScreen->m_protocol == NULL) {
-		const CString dstName(lastGoodScreen->m_name);
+	if (dst->m_protocol == NULL) {
+		const CString dstName(dst->m_name);
 		switch (srcSide) {
 		case CConfig::kLeft:
 			if (!m_config.getNeighbor(dstName, CConfig::kRight).empty() &&
-				x > w - 1 - lastGoodScreen->m_zoneSize)
-				x = w - 1 - lastGoodScreen->m_zoneSize;
+				x > dst->m_x + w - 1 - dst->m_zoneSize)
+				x = dst->m_x + w - 1 - dst->m_zoneSize;
 			break;
 
 		case CConfig::kRight:
 			if (!m_config.getNeighbor(dstName, CConfig::kLeft).empty() &&
-				x < lastGoodScreen->m_zoneSize)
-				x = lastGoodScreen->m_zoneSize;
+				x < dst->m_x + dst->m_zoneSize)
+				x = dst->m_x + dst->m_zoneSize;
 			break;
 
 		case CConfig::kTop:
 			if (!m_config.getNeighbor(dstName, CConfig::kBottom).empty() &&
-				y > h - 1 - lastGoodScreen->m_zoneSize)
-				y = h - 1 - lastGoodScreen->m_zoneSize;
+				y > dst->m_y + h - 1 - dst->m_zoneSize)
+				y = dst->m_y + h - 1 - dst->m_zoneSize;
 			break;
 
 		case CConfig::kBottom:
 			if (!m_config.getNeighbor(dstName, CConfig::kTop).empty() &&
-				y < lastGoodScreen->m_zoneSize)
-				y = lastGoodScreen->m_zoneSize;
+				y < dst->m_y + dst->m_zoneSize)
+				y = dst->m_y + dst->m_zoneSize;
 			break;
 		}
 	}
 
-	return lastGoodScreen;
-}
-
-void
-CServer::mapPosition(CScreenInfo* src, CConfig::EDirection srcSide,
-				CScreenInfo* dst, SInt32& x, SInt32& y) const
-{
-	assert(src != NULL);
-	assert(dst != NULL);
-	assert(srcSide >= CConfig::kFirstDirection &&
-		   srcSide <= CConfig::kLastDirection);
-
+	// adjust the coordinate orthogonal to srcSide to account for
+	// resolution differences.  for example, if y is 200 pixels from
+	// the top on a screen 1000 pixels high (20% from the top) when
+	// we cross the left edge onto a screen 600 pixels high then y
+	// should be set 120 pixels from the top (again 20% from the
+	// top).
 	switch (srcSide) {
 	case CConfig::kLeft:
 	case CConfig::kRight:
+		y -= src->m_y;
 		if (y < 0) {
 			y = 0;
 		}
-		else if (y >= src->m_height) {
-			y = dst->m_height - 1;
+		else if (y >= src->m_h) {
+			y = dst->m_h - 1;
 		}
 		else {
 			y = static_cast<SInt32>(0.5 + y *
-								static_cast<double>(dst->m_height - 1) /
-													(src->m_height - 1));
+								static_cast<double>(dst->m_h - 1) /
+													(src->m_h - 1));
 		}
+		y += dst->m_y;
 		break;
 
 	case CConfig::kTop:
 	case CConfig::kBottom:
+		x -= src->m_x;
 		if (x < 0) {
 			x = 0;
 		}
-		else if (x >= src->m_width) {
-			x = dst->m_width - 1;
+		else if (x >= src->m_w) {
+			x = dst->m_w - 1;
 		}
 		else {
 			x = static_cast<SInt32>(0.5 + x *
-								static_cast<double>(dst->m_width - 1) /
-													(src->m_width - 1));
+								static_cast<double>(dst->m_w - 1) /
+													(src->m_w - 1));
 		}
+		x += dst->m_x;
 		break;
 	}
+
+	return dst;
 }
 
 #include "CTCPListenSocket.h"
@@ -1536,8 +1544,8 @@ CServer::removeConnection(const CString& name)
 	// if this is active screen then we have to jump off of it
 	if (m_active == index->second && m_active != m_primaryInfo) {
 		// record new position (center of primary screen)
-		m_x = m_primaryInfo->m_width >> 1;
-		m_y = m_primaryInfo->m_height >> 1;
+		m_x = m_primaryInfo->m_x + (m_primaryInfo->m_w >> 1);
+		m_y = m_primaryInfo->m_y + (m_primaryInfo->m_h >> 1);
 
 		// don't notify active screen since it probably already disconnected
 		log((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), m_primaryInfo->m_name.c_str(), m_x, m_y));
@@ -1601,8 +1609,10 @@ CServer::CScreenInfo::CScreenInfo(const CString& name,
 	m_name(name),
 	m_protocol(protocol),
 	m_ready(false),
-	m_width(0),
-	m_height(0),
+	m_x(0),
+	m_y(0),
+	m_w(0),
+	m_h(0),
 	m_zoneSize(0)
 {
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id)

@@ -161,6 +161,7 @@ CXWindowsPrimaryScreen::run()
 					// FIXME -- slurp up all remaining motion events?
 					// probably not since keystrokes may go to wrong place.
 
+// XXX -- why call XQueryPointer?
 					// get mouse deltas
 					{
 						CDisplayLock display(this);
@@ -173,8 +174,8 @@ CXWindowsPrimaryScreen::run()
 						}
 
 						// compute position of center of window
-						SInt32 w, h;
-						getScreenSize(&w, &h);
+						SInt32 x0, y0, w, h;
+						getScreenShape(x0, y0, w, h);
 						x = xRoot - (w >> 1);
 						y = yRoot - (h >> 1);
 
@@ -216,11 +217,11 @@ CXWindowsPrimaryScreen::open(CServer* server)
 //	m_numLockHalfDuplex  = true;
 //	m_capsLockHalfDuplex = true;
 
-	// get screen size
-	SInt32 w, h;
-	getScreenSize(&w, &h);
+	// get screen shape
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
 
-	int x, y;
+	int mx, my;
 	{
 		CDisplayLock display(this);
 
@@ -232,14 +233,14 @@ CXWindowsPrimaryScreen::open(CServer* server)
 		int xWindow, yWindow;
 		unsigned int mask;
 		if (!XQueryPointer(display, m_window, &root, &window,
-								&x, &y, &xWindow, &yWindow, &mask)) {
-			x = w >> 1;
-			y = h >> 1;
+								&mx, &my, &xWindow, &yWindow, &mask)) {
+			mx = w >> 1;
+			my = h >> 1;
 		}
 	}
 
 	// send screen info
-	m_server->setInfo(w, h, getJumpZoneSize(), x, y);
+	m_server->setInfo(x, y, w, h, getJumpZoneSize(), mx, my);
 }
 
 void
@@ -340,8 +341,8 @@ CXWindowsPrimaryScreen::leave()
 	log((CLOG_DEBUG1 "grabbed pointer and keyboard"));
 
 	// move the mouse to the center of grab window
-	SInt32 w, h;
-	getScreenSize(&w, &h);
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
 	warpCursorNoLock(display, w >> 1, h >> 1);
 
 	// local client now active
@@ -396,9 +397,10 @@ CXWindowsPrimaryScreen::grabClipboard(ClipboardID id)
 }
 
 void
-CXWindowsPrimaryScreen::getSize(SInt32* width, SInt32* height) const
+CXWindowsPrimaryScreen::getShape(
+				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
-	getScreenSize(width, height);
+	getScreenShape(x, y, w, h);
 }
 
 SInt32
@@ -480,8 +482,8 @@ CXWindowsPrimaryScreen::onOpenDisplay(Display* display)
 	assert(m_window == None);
 
 	// get size of screen
-	SInt32 w, h;
-	getScreenSize(&w, &h);
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
 
 	// create the grab window.  this window is used to capture user
 	// input when the user is focussed on another client.  don't let
@@ -494,7 +496,7 @@ CXWindowsPrimaryScreen::onOpenDisplay(Display* display)
 	attr.do_not_propagate_mask = 0;
 	attr.override_redirect     = True;
 	attr.cursor                = createBlankCursor();
-	m_window = XCreateWindow(display, getRoot(), 0, 0, w, h, 0, 0,
+	m_window = XCreateWindow(display, getRoot(), x, y, w, h, 0, 0,
 								InputOnly, CopyFromParent,
 								CWDontPropagate | CWEventMask |
 								CWOverrideRedirect | CWCursor,

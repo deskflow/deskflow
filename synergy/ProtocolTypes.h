@@ -17,6 +17,10 @@ static const UInt16		kDefaultPort = 24800;
 //
 
 //
+// positions and sizes are signed 16 bit integers.
+//
+
+//
 // command codes
 //
 
@@ -101,9 +105,12 @@ static const char		kMsgDMouseWheel[]	= "DMWM%2i";
 static const char		kMsgDClipboard[]	= "DCLP%1i%4i%s";
 
 // client data:  secondary -> primary
-// $1 = seconary screen width in pixels, $2 = screen height, $3 =
-// size of warp zone.  $4 and $5 are the x,y position of the mouse
-// on the secondary screen.
+// $1 = coordinate of leftmost pixel on secondary screen,
+// $2 = coordinate of topmost pixel on secondary screen,
+// $3 = width of secondary screen in pixels,
+// $4 = height of secondary screen in pixels,
+// $5 = size of warp zone,
+// $6, $7 = the x,y position of the mouse on the secondary screen.
 //
 // the secondary screen must send this message in response to the
 // kMsgQInfo message.  it must also send this message when the
@@ -111,7 +118,7 @@ static const char		kMsgDClipboard[]	= "DCLP%1i%4i%s";
 // should ignore any kMsgDMouseMove messages until it receives a
 // kMsgCInfoAck in order to prevent attempts to move the mouse off
 // the new screen area.
-static const char		kMsgDInfo[]			= "DINF%2i%2i%2i%2i%2i";
+static const char		kMsgDInfo[]			= "DINF%2i%2i%2i%2i%2i%2i%2i";
 
 
 //

@@ -79,8 +79,9 @@ public:
 	virtual CString		getName() const = 0;
 */
 
-	// get the size of the screen
-	virtual void		getSize(SInt32* width, SInt32* height) const = 0;
+	// get the screen region
+	virtual void		getShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const = 0;
 
 	// get the size of jump zone
 	virtual SInt32		getJumpZoneSize() const = 0;

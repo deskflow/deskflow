@@ -557,13 +557,13 @@ CClient::onQueryInfo()
 void
 CClient::onQueryInfoNoLock()
 {
-	SInt32 x, y, w, h;
-	m_screen->getMousePos(&x, &y);
-	m_screen->getSize(&w, &h);
+	SInt32 mx, my, x, y, w, h;
+	m_screen->getMousePos(mx, my);
+	m_screen->getShape(x, y, w, h);
 	SInt32 zoneSize = m_screen->getJumpZoneSize();
 
-	log((CLOG_DEBUG1 "sending info size=%d,%d zone=%d pos=%d,%d", w, h, zoneSize, x, y));
-	CProtocolUtil::writef(m_output, kMsgDInfo, w, h, zoneSize, x, y);
+	log((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d zone=%d pos=%d,%d", x, y, w, h, zoneSize, mx, my));
+	CProtocolUtil::writef(m_output, kMsgDInfo, x, y, w, h, zoneSize, mx, my);
 }
 
 void

@@ -19,6 +19,7 @@ CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 CXWindowsScreen::CXWindowsScreen() :
 	m_display(NULL),
 	m_root(None),
+	m_x(0), m_y(0),
 	m_w(0), m_h(0),
 	m_stop(false)
 {
@@ -59,10 +60,12 @@ CXWindowsScreen::openDisplay()
 	m_screen       = DefaultScreen(m_display);
 	Screen* screen = ScreenOfDisplay(m_display, m_screen);
 
-	// get screen size
+	// get screen shape
+	m_x = 0;
+	m_y = 0;
 	m_w = WidthOfScreen(screen);
 	m_h = HeightOfScreen(screen);
-	log((CLOG_INFO "display size: %dx%d", m_w, m_h));
+	log((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
 
 	// get the root window
 	m_root = RootWindow(m_display, m_screen);
@@ -113,13 +116,15 @@ CXWindowsScreen::getRoot() const
 }
 
 void
-CXWindowsScreen::getScreenSize(SInt32* w, SInt32* h) const
+CXWindowsScreen::getScreenShape(
+				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
 	assert(m_display != NULL);
-	assert(w != NULL && h != NULL);
 
-	*w = m_w;
-	*h = m_h;
+	x = m_x;
+	y = m_y;
+	w = m_w;
+	h = m_h;
 }
 
 Cursor

@@ -55,12 +55,14 @@ public:
 	void				grabClipboard(ClipboardID);
 
 	// handle updates from primary
-	void				setInfo(SInt32 wScreen, SInt32 hScreen,
+	void				setInfo(SInt32 xScreen, SInt32 yScreen,
+							SInt32 wScreen, SInt32 hScreen,
 							SInt32 zoneSize,
 							SInt32 xMouse, SInt32 yMouse);
 
 	// handle messages from clients
 	void				setInfo(const CString& clientName,
+							SInt32 xScreen, SInt32 yScreen,
 							SInt32 wScreen, SInt32 hScreen,
 							SInt32 zoneSize,
 							SInt32 xMouse, SInt32 yMouse);
@@ -119,8 +121,12 @@ private:
 		CString			m_name;
 		IServerProtocol* m_protocol;
 		bool			m_ready;
-		SInt32			m_width, m_height;
+
+		// screen shape and jump zone size
+		SInt32			m_x, m_y;
+		SInt32			m_w, m_h;
 		SInt32			m_zoneSize;
+
 		bool			m_gotClipboard[kClipboardEnd];
 	};
 
@@ -130,6 +136,7 @@ private:
 
 	// update screen info
 	void				setInfoNoLock(const CString& screenName,
+							SInt32 xScreen, SInt32 yScreen,
 							SInt32 wScreen, SInt32 hScreen,
 							SInt32 zoneSize,
 							SInt32 xMouse, SInt32 yMouse);
@@ -150,17 +157,10 @@ private:
 	// lookup neighboring screen.  given a position relative to the
 	// source screen, find the screen we should move onto and where.
 	// if the position is sufficiently far from the source then we
-	// cross multiple screens.
+	// cross multiple screens.  if there is no suitable screen then
+	// return NULL and x,y are not modified.
 	CScreenInfo*		getNeighbor(CScreenInfo*,
 							CConfig::EDirection,
-							SInt32& x, SInt32& y) const;
-
-	// adjust coordinates to account for resolution differences.  the
-	// position is converted to a resolution independent form then
-	// converted back to screen coordinates on the destination screen.
-	void				mapPosition(CScreenInfo* src,
-							CConfig::EDirection srcSide,
-							CScreenInfo* dst,
 							SInt32& x, SInt32& y) const;
 
 	// open/close the primary screen

@@ -48,6 +48,8 @@ static HHOOK			g_keyboardLL      = NULL;
 static bool				g_relay           = false;
 static SInt32			g_zoneSize        = 0;
 static UInt32			g_zoneSides       = 0;
+static SInt32			g_xScreen         = 0;
+static SInt32			g_yScreen         = 0;
 static SInt32			g_wScreen         = 0;
 static SInt32			g_hScreen         = 0;
 static HCURSOR			g_cursor          = NULL;
@@ -196,16 +198,16 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			SInt32 x = (SInt32)info->pt.x;
 			SInt32 y = (SInt32)info->pt.y;
 			if (!inside && (g_zoneSides & CConfig::kLeftMask) != 0) {
-				inside = (x < g_zoneSize);
+				inside = (x < g_xScreen + g_zoneSize);
 			}
 			if (!inside && (g_zoneSides & CConfig::kRightMask) != 0) {
-				inside = (x >= g_wScreen - g_zoneSize);
+				inside = (x >= g_xScreen + g_wScreen - g_zoneSize);
 			}
 			if (!inside && (g_zoneSides & CConfig::kTopMask) != 0) {
-				inside = (y < g_zoneSize);
+				inside = (y < g_yScreen + g_zoneSize);
 			}
 			if (!inside && (g_zoneSides & CConfig::kBottomMask) != 0) {
-				inside = (y >= g_hScreen - g_zoneSize);
+				inside = (y >= g_yScreen + g_hScreen - g_zoneSize);
 			}
 
 			// if inside then eat event and notify our window
@@ -463,6 +465,8 @@ install(DWORD threadID)
 	g_relay        = false;
 	g_zoneSize     = 0;
 	g_zoneSides    = 0;
+	g_xScreen      = 0;
+	g_yScreen      = 0;
 	g_wScreen      = 0;
 	g_hScreen      = 0;
 	g_cursor       = NULL;
@@ -585,10 +589,14 @@ uninstall(void)
 }
 
 void
-setZone(UInt32 sides, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
+setZone(UInt32 sides,
+				SInt32 x, SInt32 y, SInt32 w, SInt32 h,
+				SInt32 jumpZoneSize)
 {
 	g_zoneSize  = jumpZoneSize;
 	g_zoneSides = sides;
+	g_xScreen   = x;
+	g_yScreen   = y;
 	g_wScreen   = w;
 	g_hScreen   = h;
 	g_relay     = false;
@@ -601,6 +609,8 @@ setRelay(void)
 	g_relay     = true;
 	g_zoneSize  = 0;
 	g_zoneSides = 0;
+	g_xScreen   = 0;
+	g_yScreen   = 0;
 	g_wScreen   = 0;
 	g_hScreen   = 0;
 }

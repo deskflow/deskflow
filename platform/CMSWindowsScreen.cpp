@@ -7,6 +7,15 @@
 #include <cstring>
 
 //
+// add backwards compatible multihead support (suppress bogus warning)
+//
+#pragma warning(push)
+#pragma warning(disable: 4706) // assignment within conditional
+#define COMPILE_MULTIMON_STUBS
+#include <multimon.h>
+#pragma warning(pop)
+
+//
 // CMSWindowsScreen
 //
 
@@ -16,6 +25,7 @@ CMSWindowsScreen*		CMSWindowsScreen::s_screen = NULL;
 CMSWindowsScreen::CMSWindowsScreen() :
 	m_class(0),
 	m_cursor(NULL),
+	m_x(0), m_y(0),
 	m_w(0), m_h(0),
 	m_thread(0)
 {
@@ -99,11 +109,8 @@ CMSWindowsScreen::openDisplay()
 	classInfo.hIconSm       = NULL;
 	m_class = RegisterClassEx(&classInfo);
 
-	// get screen size
-	// FIXME -- should handle multiple screens
-	m_w = GetSystemMetrics(SM_CXSCREEN);
-	m_h = GetSystemMetrics(SM_CYSCREEN);
-	log((CLOG_INFO "display size: %dx%d", m_w, m_h));
+	// get screen shape
+	updateScreenShape();
 
 	// let subclass prep display
 	onOpenDisplay();
@@ -142,21 +149,25 @@ CMSWindowsScreen::getClass() const
 }
 
 void
-CMSWindowsScreen::updateScreenSize()
+CMSWindowsScreen::updateScreenShape()
 {
-	m_w = GetSystemMetrics(SM_CXSCREEN);
-	m_h = GetSystemMetrics(SM_CYSCREEN);
-	log((CLOG_INFO "display resize: %dx%d", m_w, m_h));
+	m_x = GetSystemMetrics(SM_XVIRTUALSCREEN);
+	m_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
+	m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+	log((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
 }
 
 void
-CMSWindowsScreen::getScreenSize(SInt32* w, SInt32* h) const
+CMSWindowsScreen::getScreenShape(
+				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
 	assert(m_class != 0);
-	assert(w != NULL && h != NULL);
 
-	*w = m_w;
-	*h = m_h;
+	x = m_x;
+	y = m_y;
+	w = m_w;
+	h = m_h;
 }
 
 HDESK

@@ -41,12 +41,13 @@ protected:
 	// is closed.
 	void				closeDisplay();
 
-	// get the opened screen, its size, its root window.  to get the
+	// get the opened screen, its shape, its root window.  to get the
 	// display create a CDisplayLock object passing this.  while the
 	// object exists no other threads may access the display.  do not
 	// save the Display* beyond the lifetime of the CDisplayLock.
 	int					getScreen() const;
-	void				getScreenSize(SInt32* w, SInt32* h) const;
+	void				getScreenShape(
+							SInt32& x, SInt32& y, SInt32& w, SInt32& h) const;
 	Window				getRoot() const;
 
 	// create a cursor that is transparent everywhere
@@ -108,6 +109,7 @@ private:
 	Display*			m_display;
 	int					m_screen;
 	Window				m_root;
+	SInt32				m_x, m_y;
 	SInt32				m_w, m_h;
 	bool				m_stop;
 

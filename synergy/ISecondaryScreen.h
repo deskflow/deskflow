@@ -66,10 +66,11 @@ public:
 	// accessors
 
 	// get the position of the mouse on the screen
-	virtual void		getMousePos(SInt32* x, SInt32* y) const = 0;
+	virtual void		getMousePos(SInt32& x, SInt32& y) const = 0;
 
 	// get the size of the screen
-	virtual void		getSize(SInt32* width, SInt32* height) const = 0;
+	virtual void		getShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const = 0;
 
 	// get the size of jump zone
 	virtual SInt32		getJumpZoneSize() const = 0;

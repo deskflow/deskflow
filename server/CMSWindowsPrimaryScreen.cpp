@@ -111,15 +111,15 @@ CMSWindowsPrimaryScreen::open(CServer* server)
 	nextMark();
 
 	// send screen info
-	SInt32 w, h;
-	getScreenSize(&w, &h);
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
 	POINT pos;
 	GetCursorPos(&pos);
-	m_server->setInfo(w, h, getJumpZoneSize(), pos.x, pos.y);
+	m_server->setInfo(x, y, w, h, getJumpZoneSize(), pos.x, pos.y);
 
-	// compute center pixel of screen
-	m_xCenter = w >> 1;
-	m_yCenter = h >> 1;
+	// compute center pixel of primary screen
+	m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
+	m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
 
 	// get keyboard state
 	updateKeys();
@@ -228,10 +228,10 @@ void
 CMSWindowsPrimaryScreen::onConfigure()
 {
 	if ((m_is95Family || m_desk != NULL) && !m_active) {
-		SInt32 w, h;
-		getScreenSize(&w, &h);
+		SInt32 x, y, w, h;
+		getScreenShape(x, y, w, h);
 		m_setZone(m_server->getActivePrimarySides(),
-								w, h, getJumpZoneSize());
+								x, y, w, h, getJumpZoneSize());
 	}
 }
 
@@ -264,9 +264,10 @@ CMSWindowsPrimaryScreen::grabClipboard(ClipboardID /*id*/)
 }
 
 void
-CMSWindowsPrimaryScreen::getSize(SInt32* width, SInt32* height) const
+CMSWindowsPrimaryScreen::getShape(
+				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
-	getScreenSize(width, height);
+	getScreenShape(x, y, w, h);
 }
 
 SInt32
@@ -551,17 +552,17 @@ CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
 	case WM_DISPLAYCHANGE:
 		{
 			// screen resolution may have changed
-			SInt32 wOld, hOld;
-			getScreenSize(&wOld, &hOld);
-			SInt32 w, h;
-			updateScreenSize();
-			getScreenSize(&w, &h);
+			SInt32 xOld, yOld, wOld, hOld;
+			getScreenShape(xOld, yOld, wOld, hOld);
+			updateScreenShape();
+			SInt32 x, y, w, h;
+			getScreenShape(x, y, w, h);
 
 			// do nothing if resolution hasn't changed
-			if (w != wOld || h != hOld) {
-				// recompute center pixel of screen
-				m_xCenter = w >> 1;
-				m_yCenter = h >> 1;
+			if (x != xOld || y != yOld || w != wOld || h != hOld) {
+				// recompute center pixel of primary screen
+				m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
+				m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
 
 				// warp mouse to center if active
 				if (m_active) {
@@ -576,7 +577,7 @@ CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
 				// send new screen info
 				POINT pos;
 				GetCursorPos(&pos);
-				m_server->setInfo(w, h, getJumpZoneSize(), pos.x, pos.y);
+				m_server->setInfo(x, y, w, h, getJumpZoneSize(), pos.x, pos.y);
 			}
 
 			return 0;
@@ -682,8 +683,8 @@ CMSWindowsPrimaryScreen::openDesktop()
 	// with losing keyboard input (focus?) in that case.
 	// unfortunately, hiding the full screen window (when entering
 	// the scren causes all other windows to redraw).
-	SInt32 w, h;
-	getScreenSize(&w, &h);
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
 
 	// create the window
 	m_window = CreateWindowEx(WS_EX_TOPMOST |
@@ -692,7 +693,7 @@ CMSWindowsPrimaryScreen::openDesktop()
 								(LPCTSTR)getClass(),
 								"Synergy",
 								WS_POPUP,
-								0, 0, w, h, NULL, NULL,
+								x, y, w, h, NULL, NULL,
 								getInstance(),
 								NULL);
 	if (m_window == NULL) {
@@ -792,8 +793,8 @@ CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 	// with losing keyboard input (focus?) in that case.
 	// unfortunately, hiding the full screen window (when entering
 	// the scren causes all other windows to redraw).
-	SInt32 w, h;
-	getScreenSize(&w, &h);
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
 
 	// create the window
 	m_window = CreateWindowEx(WS_EX_TOPMOST |
@@ -802,7 +803,7 @@ CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 								(LPCTSTR)getClass(),
 								"Synergy",
 								WS_POPUP,
-								0, 0, w, h, NULL, NULL,
+								x, y, w, h, NULL, NULL,
 								getInstance(),
 								NULL);
 	if (m_window == NULL) {

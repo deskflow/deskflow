@@ -339,11 +339,11 @@ CMSWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 	assert(m_window != NULL);
 	syncDesktop();
 
-	SInt32 w, h;
-	getScreenSize(&w, &h);
+	SInt32 x0, y0, w, h;
+	getScreenShape(x0, y0, w, h);
 	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(SInt32)(65535.99 * x / (w - 1)),
-								(SInt32)(65535.99 * y / (h - 1)),
+								(SInt32)(65535.99 * x / (w - 1)) + x0,
+								(SInt32)(65535.99 * y / (h - 1)) + y0,
 								0, 0);
 }
 
@@ -381,30 +381,28 @@ CMSWindowsSecondaryScreen::grabClipboard(ClipboardID /*id*/)
 }
 
 void
-CMSWindowsSecondaryScreen::getMousePos(SInt32* x, SInt32* y) const
+CMSWindowsSecondaryScreen::getMousePos(SInt32& x, SInt32& y) const
 {
-	assert(x != NULL);
-	assert(y != NULL);
-
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
 	syncDesktop();
 
 	POINT pos;
 	if (GetCursorPos(&pos)) {
-		*x = pos.x;
-		*y = pos.y;
+		x = pos.x;
+		y = pos.y;
 	}
 	else {
-		*x = 0;
-		*y = 0;
+		x = 0;
+		y = 0;
 	}
 }
 
 void
-CMSWindowsSecondaryScreen::getSize(SInt32* width, SInt32* height) const
+CMSWindowsSecondaryScreen::getShape(
+				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
-	getScreenSize(width, height);
+	getScreenShape(x, y, w, h);
 }
 
 SInt32
@@ -547,7 +545,7 @@ CMSWindowsSecondaryScreen::onEvent(HWND hwnd, UINT msg,
 
 	case WM_DISPLAYCHANGE:
 		// screen resolution has changed
-		updateScreenSize();
+		updateScreenShape();
 		m_client->onResolutionChanged();
 		return 0;
 	}
@@ -559,11 +557,11 @@ void
 CMSWindowsSecondaryScreen::onEnter(SInt32 x, SInt32 y)
 {
 	// warp to requested location
-	SInt32 w, h;
-	getScreenSize(&w, &h);
+	SInt32 x0, y0, w, h;
+	getScreenShape(x0, y0, w, h);
 	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.99 * x) / (w - 1)),
-								(DWORD)((65535.99 * y) / (h - 1)),
+								(DWORD)((65535.99 * x) / (w - 1)) + x0,
+								(DWORD)((65535.99 * y) / (h - 1)) + y0,
 								0, 0);
 
 	// show cursor

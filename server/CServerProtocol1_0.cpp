@@ -199,21 +199,21 @@ void
 CServerProtocol1_0::recvInfo()
 {
 	// parse the message
-	SInt16 x, y, w, h, zoneInfo;
+	SInt16 x, y, w, h, zoneInfo, mx, my;
 	CProtocolUtil::readf(getInputStream(), kMsgDInfo + 4,
-								&w, &h, &zoneInfo, &x, &y);
-	log((CLOG_DEBUG "received client \"%s\" info size=%dx%d, zone=%d, pos=%d,%d", getClient().c_str(), w, h, zoneInfo, x, y));
+								&x, &y, &w, &h, &zoneInfo, &mx, &my);
+	log((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d, zone=%d, pos=%d,%d", getClient().c_str(), x, y, w, h, zoneInfo, mx, my));
 
 	// validate
 	if (w <= 0 || h <= 0 || zoneInfo < 0) {
 		throw XBadClient();
 	}
-	if (x < 0 || y < 0 || x >= w || y >= h) {
+	if (mx < x || my < y || mx >= x + w || my >= y + h) {
 		throw XBadClient();
 	}
 
 	// tell server of change
-	getServer()->setInfo(getClient(), w, h, zoneInfo, x, y);
+	getServer()->setInfo(getClient(), x, y, w, h, zoneInfo, mx, my);
 }
 
 void

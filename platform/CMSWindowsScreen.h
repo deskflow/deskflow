@@ -44,10 +44,11 @@ protected:
 	ATOM				getClass() const;
 
 	// update screen size cache
-	void				updateScreenSize();
+	void				updateScreenShape();
 
 	// get the size of the screen
-	void				getScreenSize(SInt32* w, SInt32* h) const;
+	void				getScreenShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const;
 
 	// get the input desktop.  caller must CloseDesktop() the result.
 	// do not call under windows 95/98/me.
@@ -87,6 +88,7 @@ private:
 	ATOM				m_class;
 	HICON				m_icon;
 	HCURSOR				m_cursor;
+	SInt32				m_x, m_y;
 	SInt32				m_w, m_h;
 	DWORD				m_thread;
 	static CMSWindowsScreen*	s_screen;
