@@ -142,9 +142,6 @@ public:
 	virtual void		closeMutex(CArchMutex) = 0;
 
 	//! Lock a mutex
-	/*!
-	(Cancellation point)
-	*/
 	virtual void		lockMutex(CArchMutex) = 0;
 
 	//! Unlock a mutex
@@ -205,6 +202,8 @@ public:
 	This method does nothing but is a cancellation point.  Clients
 	can make their own functions cancellation points by calling this
 	method at appropriate times.
+
+	(Cancellation point)
 	*/
 	virtual void		testCancelThread() = 0;
 
