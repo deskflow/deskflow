@@ -179,8 +179,8 @@ protected:
 	\code
 	EVENTQUEUE->adoptHandler(CEvent::kSystem,
 	 					 IEventQueue::getSystemTarget(),
-	 					 new TMethodEventJob<IPlatformScreen>(this,
-	 						 &IPlatformScreen::handleSystemEvent));
+	 					 new TMethodEventJob<CXXXPlatformScreen>(this,
+	 						 &CXXXPlatformScreen::handleSystemEvent));
 	\endcode
 	It should remove the handler in its d'tor.  Override the
 	\c handleSystemEvent() method to process system events.

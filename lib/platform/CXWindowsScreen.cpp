@@ -169,8 +169,8 @@ CXWindowsScreen::CXWindowsScreen(bool isPrimary) :
 
 	// install event handlers
 	EVENTQUEUE->adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
-							new TMethodEventJob<IPlatformScreen>(this,
-								&IPlatformScreen::handleSystemEvent));
+							new TMethodEventJob<CXWindowsScreen>(this,
+								&CXWindowsScreen::handleSystemEvent));
 
 	// install the platform event queue
 	EVENTQUEUE->adoptBuffer(new CXWindowsEventQueueBuffer(m_display, m_window));
