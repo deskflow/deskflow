@@ -1,11 +1,14 @@
 #include "CLog.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
 //
 // CLog
 //
+
+static int g_maxPriority = -1;
 
 void					CLog::print(const char* fmt, ...)
 {
@@ -76,12 +79,25 @@ void					CLog::output(int priority, const char* msg)
 								"INFO",
 								"DEBUG",
 							};
-
-	assert(priority >= 0 && priority < (int)(sizeof(s_priority) /
-												sizeof(s_priority[0])));
+	static const int s_numPriority = (int)(sizeof(s_priority) /
+											sizeof(s_priority[0]));
+	assert(priority >= 0 && priority < s_numPriority);
 	assert(msg != 0);
 
-	fprintf(stderr, "%s: %s\n", s_priority[priority], msg);
+	if (g_maxPriority == -1) {
+		g_maxPriority = s_numPriority - 1;
+		const char* priEnv = getenv("SYN_LOG_PRI");
+		if (priEnv != NULL) {
+			for (int i = 0; i < s_numPriority; ++i)
+				if (strcmp(priEnv, s_priority[i]) == 0) {
+					g_maxPriority = i;
+					break;
+				}
+		}
+	}
+
+	if (priority <= g_maxPriority)
+		fprintf(stderr, "%s: %s\n", s_priority[priority], msg);
 }
 
 char*					CLog::vsprint(int pad, char* buffer, int len,
