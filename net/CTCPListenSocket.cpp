@@ -47,7 +47,7 @@ ISocket*				CTCPListenSocket::accept()
 	pfds[0].events = CNetwork::kPOLLIN;
 	for (;;) {
 		CThread::testCancel();
-		const int status = CNetwork::poll(pfds, 1, 50);
+		const int status = CNetwork::poll(pfds, 1, 10);
 		if (status > 0 && (pfds[0].revents & CNetwork::kPOLLIN) != 0) {
 			CNetwork::Address addr;
 			CNetwork::AddressLength addrlen = sizeof(addr);
