@@ -20,10 +20,8 @@ MAINTAINERCLEANFILES =		\
 	aclocal.m4				\
 	config.h				\
 	config.h.in				\
-	config.guess			\
 	config.log				\
 	config.status			\
-	config.sub				\
 	configure				\
 	stamp-h.in				\
 	stamp-h1				\
