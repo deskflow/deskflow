@@ -122,7 +122,12 @@ CAutoStart::update()
 	// update messages
 	CString msg, label;
 	if (canInstallSystem) {
-		msg = getString(IDS_AUTOSTART_PERMISSION_SYSTEM);
+		if (canInstallUser) {
+			msg = getString(IDS_AUTOSTART_PERMISSION_ALL);
+		}
+		else {
+			msg = getString(IDS_AUTOSTART_PERMISSION_SYSTEM);
+		}
 	}
 	else if (canInstallUser) {
 		msg = getString(IDS_AUTOSTART_PERMISSION_USER);

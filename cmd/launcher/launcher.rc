@@ -319,7 +319,7 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_AUTOSTART_PERMISSION_SYSTEM 
-                            "You have sufficient access rights to install and uninstall Auto Start for all users or for just yourself."
+                            "You have sufficient access rights to install and uninstall Auto Start for all users."
     IDS_AUTOSTART_PERMISSION_USER 
                             "You have sufficient access rights to install and uninstall Auto Start for just yourself."
     IDS_AUTOSTART_PERMISSION_NONE 
@@ -335,8 +335,8 @@ BEGIN
     IDS_INSTALL_GENERIC_ERROR "Install failed: %{1}"
     IDS_UNINSTALL_GENERIC_ERROR "Uninstall failed: %{1}"
     IDS_INSTALL_TITLE       "Installed Auto-Start"
-    IDS_INSTALLED_SYSTEM    "Installed auto-start.  Synergy will now automatically start each time you start your computer."
-    IDS_INSTALLED_USER      "Installed auto-start.  Synergy will now automatically start each time you log in."
+    IDS_INSTALLED_SYSTEM    "Installed auto-start.  Synergy will automatically start each time you start your computer."
+    IDS_INSTALLED_USER      "Installed auto-start.  Synergy will automatically start each time you log in."
 END
 
 STRINGTABLE DISCARDABLE 
@@ -349,6 +349,8 @@ BEGIN
     IDS_ADD_SCREEN          "Add Screen"
     IDS_EDIT_SCREEN         "Edit Screen %{1}"
     IDS_ERROR_CODE          "Error code: %{1}"
+    IDS_AUTOSTART_PERMISSION_ALL 
+                            "You have sufficient access rights to install and uninstall Auto Start for all users or for just yourself."
 END
 
 #endif    // English (U.S.) resources

@@ -88,7 +88,7 @@ CArchDaemonWindows::installDaemon(const char* name,
 	// key.  if windows 95 family then use windows 95 services key.
 	if (!allUsers || CArchMiscWindows::isWindows95Family()) {
 		// open registry
-		HKEY key = CArchMiscWindows::isWindows95Family() ?
+		HKEY key = (allUsers && CArchMiscWindows::isWindows95Family()) ?
 							open95ServicesKey() : openUserStartupKey();
 		if (key == NULL) {
 			// can't open key
@@ -191,7 +191,7 @@ CArchDaemonWindows::uninstallDaemon(const char* name, bool allUsers)
 	// key.  if windows 95 family then use windows 95 services key.
 	if (!allUsers || CArchMiscWindows::isWindows95Family()) {
 		// open registry
-		HKEY key = CArchMiscWindows::isWindows95Family() ?
+		HKEY key = (allUsers && CArchMiscWindows::isWindows95Family()) ?
 							open95ServicesKey() : openUserStartupKey();
 		if (key == NULL) {
 			// can't open key.  daemon is probably not installed.
@@ -322,7 +322,7 @@ CArchDaemonWindows::canInstallDaemon(const char* name, bool allUsers)
 	// key.  if windows 95 family then use windows 95 services key.
 	if (!allUsers || CArchMiscWindows::isWindows95Family()) {
 		// check if we can open the registry key
-		HKEY key = CArchMiscWindows::isWindows95Family() ?
+		HKEY key = (allUsers && CArchMiscWindows::isWindows95Family()) ?
 							open95ServicesKey() : openUserStartupKey();
 		CArchMiscWindows::closeKey(key);
 		return (key != NULL);
@@ -354,7 +354,7 @@ CArchDaemonWindows::isDaemonInstalled(const char* name, bool allUsers)
 	// key.  if windows 95 family then use windows 95 services key.
 	if (!allUsers || CArchMiscWindows::isWindows95Family()) {
 		// check if we can open the registry key
-		HKEY key = CArchMiscWindows::isWindows95Family() ?
+		HKEY key = (allUsers && CArchMiscWindows::isWindows95Family()) ?
 							open95ServicesKey() : openUserStartupKey();
 		if (key == NULL) {
 			return false;

@@ -42,6 +42,7 @@
 #define IDS_EDIT_SCREEN                 38
 #define IDS_INVALID_TIME                39
 #define IDS_ERROR_CODE                  39
+#define IDS_AUTOSTART_PERMISSION_ALL    40
 #define IDD_MAIN                        101
 #define IDD_ADD                         102
 #define IDD_WAIT                        103
