@@ -15,6 +15,7 @@
 #include "CXWindowsUtil.h"
 #include "CThread.h"
 #include "CLog.h"
+#include "CStringUtil.h"
 #include <X11/Xatom.h>
 #define XK_XKB_KEYS
 #define XK_LATIN1
@@ -1242,6 +1243,32 @@ CXWindowsUtil::decomposeKeySym(KeySym keysym, KeySyms& decomposed)
 	}
 	decomposed = i->second;
 	return true;
+}
+
+CString
+CXWindowsUtil::atomToString(Display* display, Atom atom)
+{
+	char* name = XGetAtomName(display, atom);
+	CString msg = CStringUtil::print("%s (%d)", name, (int)atom);
+	XFree(name);
+	return msg;
+}
+
+CString
+CXWindowsUtil::atomsToString(Display* display, const Atom* atom, UInt32 num)
+{
+	char** names = new char*[num];
+	XGetAtomNames(display, const_cast<Atom*>(atom), (int)num, names);
+	CString msg;
+	for (UInt32 i = 0; i < num; ++i) {
+		msg += CStringUtil::print("%s (%d), ", names[i], (int)atom[i]);
+		XFree(names[i]);
+	}
+	delete[] names;
+	if (msg.size() > 2) {
+		msg.erase(msg.size() - 2);
+	}
+	return msg;
 }
 
 Bool

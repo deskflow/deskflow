@@ -81,6 +81,20 @@ public:
 	*/
 	static bool			decomposeKeySym(KeySym keysym, KeySyms& decomposed);
 
+	//! Convert Atom to its string
+	/*!
+	Converts \p atom to its string representation.
+	*/
+	static CString		atomToString(Display*, Atom atom);
+
+	//! Convert several Atoms to a string
+	/*!
+	Converts each atom in \p atoms to its string representation and
+	concatenates the results.
+	*/
+	static CString		atomsToString(Display* display,
+							const Atom* atom, UInt32 num);
+
 	//! X11 error handler
 	/*!
 	This class sets an X error handler in the c'tor and restores the
