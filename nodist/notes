@@ -1,47 +1,26 @@
-final preparation for release:
-  create files:
-    INSTALL -- configuration, build, and installation instructions
-    NEWS -- recent project news
-    COPYING -- pointer to LICENSE
-    AUTHORS -- list of contributors
-    ChangeLog
-    LICENSE -- license
-    MANIFEST -- list of files in distribution (?)
-    FAQ -- frequently asked questions for project
-    HISTORY -- project history
-
-add copyright to every file
-
-change README:
-  should have:
-    A brief description of the project.
-    A pointer to the project website (if it has one)
-    Notes on the developer's build environment and potential portability problems.
-    A roadmap describing important files and subdirectories.
-    Either build/installation instructions or a pointer to a file containing same (usually INSTALL).
-    Either a maintainers/credits list or a pointer to a file containing same (usually CREDITS).
-    Either recent project news or a pointer to a file containing same (usually NEWS).
+edit FIXME's in:
+  PORTING
 
 make man pages
   docbook?
   should have makefile target to build these
+  remove line from BUGS about missing man pages
 
-add make rules to install files
+---
+not removing all doxygen generated files in dist-clean or maintainer-clean
+  should remove them all in dist-clean
 
-custom make targets:
-  make doxygen documents
-  make binary and/or source rpm
-    should auto generate spec file, pulling in proper version number
-    source rpm should use BuildRoot to build in /tmp or /var/tmp
-  create tarball:
-	foobar-$(VERS).tar.gz:
-	  @ls $(SRC) | sed s:^:foobar-$(VERS)/: >MANIFEST
-	  @(cd ..; ln -s foobar foobar-$(VERS))
-	  (cd ..; tar -czvf foobar/foobar-$(VERS).tar.gz `cat foobar/MANIFEST`)
-	  @(cd ..; rm foobar-$(VERS))
-
-configure not caching results
-  is that normal or did we disable it unintentionally
+---
+check for cancellation points:
+  following functions may be interrupted (returning -1, errno=EINTR):
+    read(), write(), ioctl(), select(), poll(), pause(), connect(),
+    accept(), syslog(), TCP operations
+    creat(), close(), getmsg(), putmsg(), msgrcv(), msgsnd(),
+    recv(), send(), wait(), waitpid(), wait3(), sigpause()
+  should ensure that we handle EINTR anywhere these are called.  in
+  particular we must call testCancel() (should do that anyway) and
+  sometimes restart the call.
+  make sure unbounded time win32 calls do testCancel().
 
 ---
 not handling large motif selections
@@ -350,8 +329,8 @@ automake stuff
     * 'touch NEWS README AUTHORS ChangeLog'
     * 'touch stamp-h'
     * 'aclocal'     - creates aclocal.m4
-    * 'autoconf'    - creates configure from configure.in
     * 'autoheader'  - creates config.h.in
+    * 'autoconf'    - creates configure from configure.in
     * 'automake'    - Creates Makefile.in from Makefile.am
     * './configure' - creates Makefile from Makefile.in
     * 'make'
@@ -371,26 +350,47 @@ automake stuff
   use AC_CHECK_FUNC or AC_CHECK_FUNCS to detect missing functions
     use AC_CHECK_LIB first if function not in std C lib
 
-  maybe AC_CHECK_TYPE for size_t and ssize_t
+  AC_FUNC_MEMCMP -- adds memcmp.o to LIBOBJS if memcmp is broken
+  AC_FUNC_STRFTIME -- check for strftime(), define HAVE_STRFTIME
+  AC_FUNC_VPRINTF -- check for vprintf(), define HAVE_VPRINTF
+		also checks for _doprnt(), define HAVE_DOPRNT
 
-replace sys/time.h with:
-#if TIME_WITH_SYS_TIME
-#	include <sys/time.h>
-#	include <time.h>
-#else
-#	if HAVE_SYS_TIME_H
-#		include <sys/time.h>
-#	else
-#		include <time.h>
-#	endif
-#endif
+  #if STDC_HEADERS
+  # include <string.h>
+  #else
+  # if !HAVE_STRCHR
+  #  define strchr index
+  #  define strrchr rindex
+  # endif
+  char *strchr (), *strrchr ();
+  # if !HAVE_MEMCPY
+  #  define memcpy(d, s, n) bcopy ((s), (d), (n))
+  #  define memmove(d, s, n) bcopy ((s), (d), (n))
+  # endif
+  #endif
 
-  what does `make install' do?
-
-  check in derived files?
-    aclocal.m4
-    config.h.in
-    configure
+must provide fallbacks for stuff:
+  non-reentrant functions:
+    put (shared) lock around non-reentrant function
+    provide reentrant API
+	  gethostbyaddr
+	  gethostbyname
+	  getprotobyname
+	  getprotobynumber
+	  getservbyname
+	  getservbyport
+      gmtime
+      getpwuid
+      strerror
+  string/memory functions:
+	memcpy
+	memcmp
+	memmove
+	memset
+	strcat
+	strcmp
+	strcpy
+	strrchr
 
 used library functions:
 	accept
@@ -399,8 +399,11 @@ used library functions:
 	close
 	connect
 	dup
-	fork
+	exit
+	fcntl
+*	fork
 	fprintf
+*	free
 	getenv
 	gethostbyaddr
 	gethostbyname
@@ -408,16 +411,22 @@ used library functions:
 	getpeername
 	getprotobyname
 	getprotobynumber
+	getpwuid_r
 	getservbyname
 	getservbyport
 	getsockname
 	getsockopt
 	gettimeofday
+	getuid
 	inet_addr
 	inet_ntoa
 	ioctl
 	listen
+*	malloc
+	mbrtowc
+	mbsinit
 	memcpy
+!	memcmp
 	memmove
 	memset
 	nanosleep
@@ -435,15 +444,20 @@ used library functions:
 	sigaction
 	sigaddset
 	sigemptyset
+	sigwait
 	socket
 	sprintf
 	strcat
 	strcmp
+	strcpy
 	strerror
 	strrchr
+	strtol
+	sysconf
 	syslog
 	umask
 	vsnprintf
+	wcrtomb
 	write
 
 included files
