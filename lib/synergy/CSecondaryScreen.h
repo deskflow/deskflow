@@ -323,10 +323,10 @@ protected:
 	//! Show window
 	/*!
 	Called when the user navigates off this secondary screen.  It needn't
-	actually show the window created by createWindow() but it must hide
-	the cursor and clean up event synthesis.
+	actually show the window created by createWindow() but it must move
+	the cursor to x,y, hide it, and clean up event synthesis.
 	*/
-	virtual void		showWindow() = 0;
+	virtual void		showWindow(SInt32 x, SInt32 y) = 0;
 
 	//! Hide window
 	/*!

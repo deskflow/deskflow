@@ -173,8 +173,10 @@ CSecondaryScreen::leave()
 	// restore toggle key state
 	setToggleState(m_toggleKeys);
 
-	// hide mouse
-	showWindow();
+	// warp and hide mouse
+	SInt32 x, y;
+	getScreen()->getCursorCenter(x, y);
+	showWindow(x, y);
 
 	// subclass hook
 	onPostLeave();

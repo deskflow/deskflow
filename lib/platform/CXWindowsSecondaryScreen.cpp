@@ -488,18 +488,23 @@ CXWindowsSecondaryScreen::destroyWindow()
 }
 
 void
-CXWindowsSecondaryScreen::showWindow()
+CXWindowsSecondaryScreen::showWindow(SInt32 x, SInt32 y)
 {
-	// move hider window under the mouse (rather than moving the mouse
-	// somewhere else on the screen)
-	SInt32 x, y;
-	getCursorPos(x, y);
-	CDisplayLock display(m_screen);
-	XMoveWindow(display, m_window, x, y);
+	{
+		CDisplayLock display(m_screen);
 
-	// raise and show the hider window.  take activation.
-	// FIXME -- take focus?
-	XMapRaised(display, m_window);
+		// move hider window under the given position
+		XMoveWindow(display, m_window, x, y);
+
+		// raise and show the hider window.  take activation.
+		// FIXME -- take focus?
+		XMapRaised(display, m_window);
+	}
+
+	// now warp the mouse.  we warp after showing the window so we're
+	// guaranteed to get the mouse leave event and to prevent the
+	// keyboard focus from changing under point-to-focus policies.
+	warpCursor(x, y);
 }
 
 void

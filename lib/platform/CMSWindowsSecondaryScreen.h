@@ -68,7 +68,7 @@ protected:
 	virtual void		onPreLeave();
 	virtual void		createWindow();
 	virtual void		destroyWindow();
-	virtual void		showWindow();
+	virtual void		showWindow(SInt32 x, SInt32 y);
 	virtual void		hideWindow();
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual void		updateKeys();

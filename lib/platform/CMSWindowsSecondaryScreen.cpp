@@ -367,7 +367,9 @@ CMSWindowsSecondaryScreen::postCreateWindow(HWND window)
 
 	// hide cursor if this screen isn't active
 	if (!isActive()) {
-		showWindow();
+		SInt32 x, y;
+		getScreen()->getCursorCenter(x, y);
+		showWindow(x, y);
 	}
 }
 
@@ -423,16 +425,16 @@ CMSWindowsSecondaryScreen::destroyWindow()
 }
 
 void
-CMSWindowsSecondaryScreen::showWindow()
+CMSWindowsSecondaryScreen::showWindow(SInt32 x, SInt32 y)
 {
-	// move hider window under the mouse (rather than moving the mouse
-	// somewhere else on the screen)
-	SInt32 x, y;
-	getCursorPos(x, y);
+	// move hider window under the given position
 	MoveWindow(m_window, x, y, 1, 1, FALSE);
 
-	// raise and show the hider window.  take activation.
-	ShowWindow(m_window, SW_SHOWNORMAL);
+	// raise and show the hider window
+	ShowWindow(m_window, SW_SHOWNA);
+
+	// now warp the mouse
+	warpCursor(x, y);
 }
 
 void
