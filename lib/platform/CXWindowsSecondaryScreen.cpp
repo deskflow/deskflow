@@ -252,13 +252,19 @@ CXWindowsSecondaryScreen::keyUp(KeyID key,
 }
 
 void
+CXWindowsSecondaryScreen::flush(Display* display) const
+{
+	XFlush(display);
+}
+
+void
 CXWindowsSecondaryScreen::mouseDown(ButtonID button)
 {
 	const unsigned int xButton = mapButton(button);
 	if (xButton != 0) {
 		CDisplayLock display(m_screen);
 		XTestFakeButtonEvent(display, xButton, True, CurrentTime);
-		XSync(display, False);
+		flush(display);
 	}
 }
 
@@ -269,7 +275,7 @@ CXWindowsSecondaryScreen::mouseUp(ButtonID button)
 	if (xButton != 0) {
 		CDisplayLock display(m_screen);
 		XTestFakeButtonEvent(display, xButton, False, CurrentTime);
-		XSync(display, False);
+		flush(display);
 	}
 }
 
@@ -300,7 +306,7 @@ CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 		XTestFakeButtonEvent(display, xButton, True, CurrentTime);
 		XTestFakeButtonEvent(display, xButton, False, CurrentTime);
 	}
-	XSync(display, False);
+	flush(display);
 }
 
 void
@@ -526,7 +532,7 @@ CXWindowsSecondaryScreen::destroyWindow()
 			XTestGrabControl(display, False);
 
 			// update
-			XSync(display, False);
+			flush(display);
 		}
 	}
 
@@ -583,7 +589,7 @@ CXWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 		XTestFakeMotionEvent(display, DefaultScreen(pDisplay),
 							x, y, CurrentTime);
 	}
-	XSync(display, False);
+	flush(display);
 }
 
 void
@@ -1192,7 +1198,7 @@ CXWindowsSecondaryScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
 	}
 
 	// update
-	XSync(display, False);
+	flush(display);
 }
 
 CXWindowsSecondaryScreen::ModifierMask

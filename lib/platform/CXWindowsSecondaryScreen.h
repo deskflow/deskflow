@@ -113,6 +113,8 @@ private:
 	typedef std::map<KeySym, KeySyms> KeySymsMap;
 	typedef std::map<KeyButton, KeyCode> ServerKeyMap;
 
+	void				flush(Display*) const;
+
 	unsigned int		mapButton(ButtonID button) const;
 
 	ModifierMask		mapKey(Keystrokes&, KeyCode&, KeyID,
