@@ -1006,9 +1006,6 @@ void					CMSWindowsPrimaryScreen::updateKey(
 		case VK_SCROLL:
 			// toggle keys
 			m_keys[vkCode]     |= 0x80;
-			if ((m_keys[vkCode] & 0x01) == 0) {
-				m_keys[vkCode] |= 0x01;
-			}
 			break;
 		}
 	}
@@ -1052,9 +1049,7 @@ void					CMSWindowsPrimaryScreen::updateKey(
 		case VK_SCROLL:
 			// toggle keys
 			m_keys[vkCode] &= ~0x80;
-			if ((m_keys[vkCode] & 0x01) != 0) {
-				m_keys[vkCode] &= ~0x01;
-			}
+			m_keys[vkCode] ^=  0x01;
 			break;
 		}
 	}
