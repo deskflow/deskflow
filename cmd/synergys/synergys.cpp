@@ -815,14 +815,20 @@ loadConfig(const CString& pathname)
 		LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname.c_str()));
 		std::ifstream configStream(pathname.c_str());
 		if (!configStream.is_open()) {
-			throw XConfigRead("cannot open file");
+			// report failure to open configuration as a debug message
+			// since we try several paths and we expect some to be
+			// missing.
+			LOG((CLOG_DEBUG "cannot open configuration \"%s\"",
+								pathname.c_str()));
+			return false;
 		}
 		configStream >> *ARG->m_config;
 		LOG((CLOG_DEBUG "configuration read successfully"));
 		return true;
 	}
 	catch (XConfigRead& e) {
-		LOG((CLOG_DEBUG "cannot read configuration \"%s\": %s",
+		// report error in configuration file
+		LOG((CLOG_ERR "cannot read configuration \"%s\": %s",
 								pathname.c_str(), e.what()));
 	}
 	return false;
