@@ -301,7 +301,7 @@ static void				parse(int argc, const char** argv)
 
 		else if (isArg(i, argc, argv, NULL, "--install")) {
 #if !defined(CONFIG_PLATFORM_WIN32)
-			log((CLOG_PRINT "%s: `%s' not permitted on this platform" BYE,
+			log((CLOG_PRINT "%s: `%s' not supported on this platform" BYE,
 								pname, argv[i], pname));
 			bye(2);
 #endif
@@ -316,7 +316,7 @@ static void				parse(int argc, const char** argv)
 
 		else if (isArg(i, argc, argv, NULL, "--uninstall")) {
 #if !defined(CONFIG_PLATFORM_WIN32)
-			log((CLOG_PRINT "%s: `%s' not permitted on this platform" BYE,
+			log((CLOG_PRINT "%s: `%s' not supported on this platform" BYE,
 								pname, argv[i], pname));
 			bye(2);
 #endif
