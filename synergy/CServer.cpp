@@ -33,7 +33,10 @@ else { wait(0); exit(1); }
 // CServer
 //
 
-CServer::CServer() : m_done(&m_mutex, false)
+CServer::CServer() : m_done(&m_mutex, false),
+								m_primary(NULL),
+								m_active(NULL),
+								m_primaryInfo(NULL)
 {
 	m_socketFactory = NULL;
 	m_securityFactory = NULL;
@@ -566,16 +569,24 @@ void					CServer::mapPosition(CScreenInfo* src,
 	switch (srcSide) {
 	  case CScreenMap::kLeft:
 	  case CScreenMap::kRight:
-		assert(y >= 0 && y < src->m_height);
-		y = static_cast<SInt32>(0.5 + y *
+		if (y < 0)
+			y = 0;
+		else if (y >= src->m_height)
+			y = src->m_height - 1;
+		else
+			y = static_cast<SInt32>(0.5 + y *
 								static_cast<double>(dst->m_height - 1) /
 													(src->m_height - 1));
 		break;
 
 	  case CScreenMap::kTop:
 	  case CScreenMap::kBottom:
-		assert(x >= 0 && x < src->m_width);
-		x = static_cast<SInt32>(0.5 + x *
+		if (x < 0)
+			x = 0;
+		else if (x >= src->m_width)
+			x = src->m_width - 1;
+		else
+			x = static_cast<SInt32>(0.5 + x *
 								static_cast<double>(dst->m_width - 1) /
 													(src->m_width - 1));
 		break;
@@ -769,6 +780,7 @@ void					CServer::openPrimaryScreen()
 
 	// add connection
 	m_active = addConnection(CString("primary"/* FIXME */), NULL);
+	m_primaryInfo = m_active;
 
 	// update info
 	m_primary->getSize(&m_active->m_width, &m_active->m_height);
@@ -854,8 +866,28 @@ void					CServer::removeConnection(const CString& name)
 {
 	log((CLOG_DEBUG "removing connection \"%s\"", name.c_str()));
 	CLock lock(&m_mutex);
+
+	// find screen info
 	CScreenList::iterator index = m_screens.find(name);
 	assert(index != m_screens.end());
+
+	// if this is active screen then we have to jump off of it
+	if (m_active == index->second) {
+		// record new position (center of primary screen)
+		m_x = m_primaryInfo->m_width >> 1;
+		m_y = m_primaryInfo->m_height >> 1;
+
+		// don't notify active screen since it probably already disconnected
+		log((CLOG_NOTE "jump from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), m_primaryInfo->m_name.c_str(), m_x, m_y));
+
+		// cut over
+		m_active = m_primaryInfo;
+
+		// enter new screen
+		m_primary->enter(m_x, m_y);
+	}
+
+	// done with screen info
 	delete index->second;
 	m_screens.erase(index);
 }

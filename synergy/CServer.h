@@ -149,6 +149,7 @@ class CServer {
 	IPrimaryScreen*		m_primary;
 	CScreenList			m_screens;
 	CScreenInfo*		m_active;
+	CScreenInfo*		m_primaryInfo;
 
 	SInt32				m_x, m_y;
 
