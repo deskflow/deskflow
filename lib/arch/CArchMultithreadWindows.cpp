@@ -97,6 +97,15 @@ CArchMultithreadWindows::CArchMultithreadWindows()
 CArchMultithreadWindows::~CArchMultithreadWindows()
 {
 	s_instance = NULL;
+
+	// clean up thread list
+	for (CThreadList::iterator index  = m_threadList.begin();
+							   index != m_threadList.end(); ++index) {
+		delete *index;
+	}
+
+	// done with mutex
+	delete m_threadMutex;
 }
 
 HANDLE

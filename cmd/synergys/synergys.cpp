@@ -672,13 +672,15 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// users on NT can use `--daemon' or `--no-daemon' to force us out
 	// of the service code path.
 	if (__argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
+		int result = kExitFailed;
 		try {
-			return ARCH->daemonize(DAEMON_NAME, &daemonStartup);
+			result = ARCH->daemonize(DAEMON_NAME, &daemonStartup);
 		}
 		catch (XArchDaemon& e) {
 			LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
-			return kExitFailed;
 		}
+		delete CLOG;
+		return result;
 	}
 
 	// parse command line
@@ -721,6 +723,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		MessageBox(NULL, msg, ARG->m_pname, MB_OK | MB_ICONWARNING);
 	}
 
+	delete CLOG;
 	return result;
 }
 

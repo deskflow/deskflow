@@ -406,6 +406,7 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 
 	// clean up
 	delete[] wcs;
+	ARCH->closeMBState(state);
 
 	return utf8;
 }
