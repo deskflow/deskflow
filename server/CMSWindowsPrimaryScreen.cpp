@@ -141,7 +141,7 @@ log((CLOG_INFO "failed to release hot key: %d", GetLastError()));
 	nextMark();
 }
 
-void					CMSWindowsPrimaryScreen::leave()
+bool					CMSWindowsPrimaryScreen::leave()
 {
 	log((CLOG_INFO "leaving primary"));
 	assert(m_active == false);
@@ -232,6 +232,8 @@ log((CLOG_INFO "failed to get hot key: %d", GetLastError()));
 			// ignore
 		}
 	}
+
+	return true;
 }
 
 void					CMSWindowsPrimaryScreen::onConfigure()

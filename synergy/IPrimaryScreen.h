@@ -47,7 +47,8 @@ public:
 
 	// called when the user navigates off the primary screen.  hide
 	// the cursor and grab exclusive access to the input devices.
-	virtual void		leave() = 0;
+	// return true iff successful.
+	virtual bool		leave() = 0;
 
 	// called when the configuration has changed.  subclasses may need
 	// to adjust things (like the jump zones) after the configuration

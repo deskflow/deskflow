@@ -63,6 +63,7 @@ CServer::CServer() : m_cleanupSize(&m_mutex, 0),
 
 CServer::~CServer()
 {
+	// do nothing
 }
 
 void					CServer::run()
@@ -108,7 +109,9 @@ void					CServer::run()
 		cleanupThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
-		closePrimaryScreen();
+		if (m_primary != NULL) {
+			closePrimaryScreen();
+		}
 	}
 	catch (XThread&) {
 		// clean up
@@ -709,6 +712,10 @@ void					CServer::switchScreen(CScreenInfo* dst,
 	log((CLOG_NOTE "switch from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), dst->m_name.c_str(), x, y));
 	// FIXME -- we're not locked here but we probably should be
 
+	// record new position
+	m_x = x;
+	m_y = y;
+
 	// wrapping means leaving the active screen and entering it again.
 	// since that's a waste of time we skip that and just warp the
 	// mouse.
@@ -716,17 +723,18 @@ void					CServer::switchScreen(CScreenInfo* dst,
 		// note if we're leaving the primary screen
 		const bool leavingPrimary = (m_active->m_protocol == NULL);
 
-		// if leaving the primary screen then update the clipboards
-		// that it owns
+		// leave active screen
 		if (leavingPrimary) {
+			if (!m_primary->leave()) {
+				// cannot leave primary screen
+				log((CLOG_WARN "can't leave primary screen"));
+				return;
+			}
+
+			// update the clipboards that the primary screen owns
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 				updatePrimaryClipboard(id);
 			}
-		}
-
-		// leave active screen
-		if (leavingPrimary) {
-			m_primary->leave();
 		}
 		else {
 			m_active->m_protocol->sendLeave();
@@ -760,10 +768,6 @@ void					CServer::switchScreen(CScreenInfo* dst,
 			m_active->m_protocol->sendMouseMove(x, y);
 		}
 	}
-
-	// record new position
-	m_x = x;
-	m_y = y;
 }
 
 CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
@@ -1333,8 +1337,10 @@ void					CServer::openPrimaryScreen()
 		m_primary->open(this);
 	}
 	catch (...) {
-		delete m_primary;
-		removeConnection(CString("primary"/* FIXME */));
+		if (m_primary != NULL) {
+			removeConnection(CString("primary"/* FIXME */));
+			delete m_primary;
+		}
 		m_primary     = NULL;
 		m_primaryInfo = NULL;
 		m_active      = NULL;

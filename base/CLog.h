@@ -6,7 +6,18 @@
 
 class CLog {
 public:
-	typedef void		(*Outputter)(const char*);
+	enum {
+		kFATAL,
+		kERROR,
+		kWARNING,
+		kNOTE,
+		kINFO,
+		kDEBUG,
+		kDEBUG1,
+		kDEBUG2
+	};
+
+	typedef void		(*Outputter)(int priority, const char*);
 	typedef void		(*Lock)(bool lock);
 
 	// 

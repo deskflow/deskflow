@@ -2,6 +2,7 @@
 #include "CXWindowsClipboard.h"
 #include "CXWindowsUtil.h"
 #include "CServer.h"
+#include "CStopwatch.h"
 #include "CThread.h"
 #include "CLog.h"
 #include <assert.h>
@@ -253,7 +254,7 @@ void					CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 	m_active = false;
 }
 
-void					CXWindowsPrimaryScreen::leave()
+bool					CXWindowsPrimaryScreen::leave()
 {
 	log((CLOG_INFO "leaving primary"));
 	assert(m_active == false);
@@ -266,31 +267,43 @@ void					CXWindowsPrimaryScreen::leave()
 
 	// grab the mouse and keyboard.  keep trying until we get them.
 	// if we can't grab one after grabbing the other then ungrab
-	// and wait before retrying.
+	// and wait before retrying.  give up after s_timeout seconds.
+	static const double s_timeout = 1.0;
 	int result;
+	CStopwatch timer;
 	do {
-		// mouse first
+		// keyboard first
 		do {
-			result = XGrabPointer(display, m_window, True, 0,
-								GrabModeAsync, GrabModeAsync,
-								m_window, None, CurrentTime);
-			assert(result != GrabNotViewable);
-			if (result != GrabSuccess) {
-				log((CLOG_DEBUG2 "waiting to grab pointer"));
-				CThread::sleep(0.1);
-			}
-		} while (result != GrabSuccess);
-		log((CLOG_DEBUG2 "grabbed pointer"));
-
-		// now the keyboard
 		result = XGrabKeyboard(display, m_window, True,
 								GrabModeAsync, GrabModeAsync, CurrentTime);
+			assert(result != GrabNotViewable);
+			if (result != GrabSuccess) {
+				log((CLOG_DEBUG2 "waiting to grab keyboard"));
+				CThread::sleep(0.05);
+				if (timer.getTime() >= s_timeout) {
+					log((CLOG_DEBUG2 "grab keyboard timed out"));
+					XUnmapWindow(display, m_window);
+					return false;
+				}
+			}
+		} while (result != GrabSuccess);
+		log((CLOG_DEBUG2 "grabbed keyboard"));
+
+		// now the mouse
+		result = XGrabPointer(display, m_window, True, 0,
+								GrabModeAsync, GrabModeAsync,
+								m_window, None, CurrentTime);
 		assert(result != GrabNotViewable);
 		if (result != GrabSuccess) {
 			// back off to avoid grab deadlock
-			XUngrabPointer(display, CurrentTime);
-			log((CLOG_DEBUG2 "ungrabbed pointer, waiting to grab keyboard"));
-			CThread::sleep(0.1);
+			XUngrabKeyboard(display, CurrentTime);
+			log((CLOG_DEBUG2 "ungrabbed keyboard, waiting to grab pointer"));
+			CThread::sleep(0.05);
+			if (timer.getTime() >= s_timeout) {
+				log((CLOG_DEBUG2 "grab pointer timed out"));
+				XUnmapWindow(display, m_window);
+				return false;
+			}
 		}
 	} while (result != GrabSuccess);
 	log((CLOG_DEBUG1 "grabbed pointer and keyboard"));
@@ -302,6 +315,8 @@ void					CXWindowsPrimaryScreen::leave()
 
 	// local client now active
 	m_active = true;
+
+	return true;
 }
 
 void					CXWindowsPrimaryScreen::onConfigure()

@@ -30,7 +30,7 @@ private:
 	public:
 		CString			m_neighbor[kLastDirection - kFirstDirection + 1];
 	};
-	typedef std::map<CString, CCell> CCellMap;
+	typedef std::map<CString, CCell, CStringUtil::CaselessCmp> CCellMap;
 
 public:
 	typedef CCellMap::const_iterator internal_const_iterator;
@@ -65,8 +65,8 @@ public:
 
 	// manipulators
 
-	// note that case is preserved in screen names but has no effect
-	// FIXME -- make that true
+	// note that case is preserved in screen names but is ignored when
+	// comparing names.
 
 	// add/remove screens
 	void				addScreen(const CString& name);
