@@ -352,6 +352,7 @@ bool					CXWindowsScreen::getDisplayClipboard(
 	// events because X stupidly doesn't provide a mask for selection
 	// events, so we use a predicate to find our event.
 	XEvent xevent;
+// FIXME -- must limit the time we wait for bad clients
 	while (XCheckIfEvent(m_display, &xevent,
 								&CXWindowsScreen::findSelectionNotify,
 								(XPointer)&requestor) != True) {

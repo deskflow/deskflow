@@ -181,7 +181,7 @@ void					CServerProtocol1_0::sendMouseWheel(
 void					CServerProtocol1_0::recvInfo()
 {
 	// parse the message
-	SInt32 w, h, zoneInfo;
+	SInt16 w, h, zoneInfo;
 	CProtocolUtil::readf(getInputStream(), kMsgDInfo + 4, &w, &h, &zoneInfo);
 	log((CLOG_INFO "received client \"%s\" info size=%dx%d, zone=%d", getClient().c_str(), w, h, zoneInfo));
 

@@ -127,18 +127,24 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 	// open the display
 	openDisplay();
 
-	// verify the availability of the XTest extension
-	CDisplayLock display(this);
-	int majorOpcode, firstEvent, firstError;
-	if (!XQueryExtension(display, XTestExtensionName,
+	{
+		// verify the availability of the XTest extension
+		CDisplayLock display(this);
+		int majorOpcode, firstEvent, firstError;
+		if (!XQueryExtension(display, XTestExtensionName,
 								&majorOpcode, &firstEvent, &firstError))
-		throw int(6);	// FIXME -- make exception for this
+			throw int(6);	// FIXME -- make exception for this
 
-	// update key state
-	updateKeys(display);
-	updateKeycodeMap(display);
-	updateModifierMap(display);
-	updateModifiers(display);
+		// update key state
+		updateKeys(display);
+		updateKeycodeMap(display);
+		updateModifierMap(display);
+		updateModifiers(display);
+	}
+
+	// assume primary has all clipboards
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
+		grabClipboard(id);
 }
 
 void					CXWindowsSecondaryScreen::close()

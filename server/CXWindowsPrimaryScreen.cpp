@@ -95,7 +95,7 @@ void					CXWindowsPrimaryScreen::run()
 		  }
 
 		  case MotionNotify: {
-			log((CLOG_DEBUG "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
+//			log((CLOG_DEBUG "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
 			SInt32 x, y;
 			if (!m_active) {
 				x = xevent.xmotion.x_root;

@@ -73,28 +73,32 @@ void					CProtocolUtil::readf(IInputStream* stream,
 				read(stream, buffer, len);
 
 				// convert it
-				UInt32* v = va_arg(args, UInt32*);
+				void* v = va_arg(args, void*);
 				switch (len) {
 				  case 1:
 					// 1 byte integer
-					*v = static_cast<UInt32>(buffer[0]);
+					*reinterpret_cast<UInt8*>(v) = buffer[0];
+					log((CLOG_DEBUG "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt8*>(v), *reinterpret_cast<UInt8*>(v)));
 					break;
 
 				  case 2:
 					// 2 byte integer
-					*v = (static_cast<UInt32>(buffer[0]) << 8) |
-						  static_cast<UInt32>(buffer[1]);
+					*reinterpret_cast<UInt16*>(v) =
+						(static_cast<UInt16>(buffer[0]) << 8) |
+						 static_cast<UInt16>(buffer[1]);
+					log((CLOG_DEBUG "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt16*>(v), *reinterpret_cast<UInt16*>(v)));
 					break;
 
 				  case 4:
 					// 4 byte integer
-					*v = (static_cast<UInt32>(buffer[0]) << 24) |
-						 (static_cast<UInt32>(buffer[1]) << 16) |
-						 (static_cast<UInt32>(buffer[2]) <<  8) |
-						  static_cast<UInt32>(buffer[3]);
+					*reinterpret_cast<UInt32*>(v) =
+						(static_cast<UInt32>(buffer[0]) << 24) |
+						(static_cast<UInt32>(buffer[1]) << 16) |
+						(static_cast<UInt32>(buffer[2]) <<  8) |
+						 static_cast<UInt32>(buffer[3]);
+					log((CLOG_DEBUG "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt32*>(v), *reinterpret_cast<UInt32*>(v)));
 					break;
 				}
-				log((CLOG_DEBUG "readf: read %d byte integer: %d (0x%x)", len, *v, *v));
 				break;
 			  }
 

@@ -320,7 +320,7 @@ void					CServer::onMouseUp(ButtonID id)
 
 bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 {
-	log((CLOG_DEBUG "onMouseMovePrimary %d,%d", x, y));
+//	log((CLOG_DEBUG "onMouseMovePrimary %d,%d", x, y));
 
 	// mouse move on primary (server's) screen
 	assert(m_active != NULL);

@@ -303,7 +303,7 @@ void					CClient::closeSecondaryScreen()
 
 void					CClient::onEnter()
 {
-	SInt32 x, y;
+	SInt16 x, y;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgCEnter + 4, &x, &y);
@@ -328,7 +328,7 @@ void					CClient::onGrabClipboard()
 
 void					CClient::onScreenSaver()
 {
-	SInt32 on;
+	SInt8 on;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgCScreenSaver + 4, &on);
@@ -395,7 +395,7 @@ void					CClient::onSetClipboard()
 
 void					CClient::onKeyDown()
 {
-	SInt32 id, mask;
+	SInt16 id, mask;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDKeyDown + 4, &id, &mask);
@@ -406,7 +406,7 @@ void					CClient::onKeyDown()
 
 void					CClient::onKeyRepeat()
 {
-	SInt32 id, mask, count;
+	SInt16 id, mask, count;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDKeyRepeat + 4, &id, &mask, &count);
@@ -418,7 +418,7 @@ void					CClient::onKeyRepeat()
 
 void					CClient::onKeyUp()
 {
-	SInt32 id, mask;
+	SInt16 id, mask;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDKeyUp + 4, &id, &mask);
@@ -429,7 +429,7 @@ void					CClient::onKeyUp()
 
 void					CClient::onMouseDown()
 {
-	SInt32 id;
+	SInt8 id;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseDown + 4, &id);
@@ -439,7 +439,7 @@ void					CClient::onMouseDown()
 
 void					CClient::onMouseUp()
 {
-	SInt32 id;
+	SInt8 id;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseUp + 4, &id);
@@ -449,7 +449,7 @@ void					CClient::onMouseUp()
 
 void					CClient::onMouseMove()
 {
-	SInt32 x, y;
+	SInt16 x, y;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseMove + 4, &x, &y);
@@ -459,7 +459,7 @@ void					CClient::onMouseMove()
 
 void					CClient::onMouseWheel()
 {
-	SInt32 delta;
+	SInt16 delta;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseWheel + 4, &delta);

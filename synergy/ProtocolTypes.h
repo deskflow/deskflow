@@ -78,7 +78,7 @@ static const char		kMsgDMouseWheel[]	= "DMWM%2i";
 // that message.  $1 = clipboard identifier.
 static const char		kMsgDClipboard[]	= "DCLP%1i%4i%s";
 
-// client data:  seconary -> primary
+// client data:  secondary -> primary
 // $1 = seconary screen width in pixels, $2 = screen height, $3 =
 // size of warp zone.
 static const char		kMsgDInfo[]			= "DINF%2i%2i%2i";
