@@ -32,14 +32,14 @@
 //
 
 XBase::XBase() :
-	exception(STDEXCEPTARG),
+//	exception(STDEXCEPTARG),
 	m_what()
 {
 	// do nothing
 }
 
 XBase::XBase(const CString& msg) :
-	exception(STDEXCEPTARG),
+//	exception(STDEXCEPTARG),
 	m_what(msg)
 {
 	// do nothing
