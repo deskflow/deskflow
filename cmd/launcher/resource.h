@@ -100,6 +100,7 @@
 #define IDC_GLOBAL_HEARTBEAT_TIME       1046
 #define IDC_ADD_MOD_SUPER               1047
 #define IDC_GLOBAL_SCREENSAVER_SYNC     1047
+#define IDC_GLOBAL_RELATIVE_MOVES       1048
 #define IDC_ADVANCED_DEFAULTS           1049
 
 // Next default values for new objects
