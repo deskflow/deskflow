@@ -277,6 +277,15 @@ CServerProxy::parseMessage(const UInt8* code)
 		return kUnknown;
 	}
 
+	// send a reply.  this is intended to work around a delay when
+	// running a linux server and an OS X (any BSD?) client.  the
+	// client waits to send an ACK (if the system control flag
+	// net.inet.tcp.delayed_ack is 1) in hopes of piggybacking it
+	// on a data packet.  we provide that packet here.  i don't
+	// know why a delayed ACK should cause the server to wait since
+	// TCP_NODELAY is enabled.
+	CProtocolUtil::writef(m_stream, kMsgCNoop);
+
 	return kOkay;
 }
 
