@@ -814,7 +814,7 @@ loadConfig(const CString& pathname)
 		// load configuration
 		LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname.c_str()));
 		std::ifstream configStream(pathname.c_str());
-		if (!configStream) {
+		if (!configStream.is_open()) {
 			throw XConfigRead("cannot open file");
 		}
 		configStream >> *ARG->m_config;
