@@ -1,3 +1,64 @@
+2004/06/12 20:48:04 crs
+lib/platform/CMSWindowsDesks.cpp
+lib/platform/CMSWindowsDesks.h
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CMSWindowsScreenSaver.h
+
+(Maybe) fixed a problem detecting when win32 screen saver started.
+
+----------
+2004/06/12 20:46:35 crs
+lib/arch/CMultibyte.cpp
+
+Fixed bug in converting wide characters to multibyte.
+
+----------
+2004/06/10 21:25:09 crs
+lib/client/CClient.cpp
+
+Fixed assertion failure when client connection fails immediately.
+
+----------
+2004/06/10 19:56:35 crs
+lib/arch/CArchNetworkBSD.cpp
+
+Changed O_NDELAY to O_NONBLOCK.  On some versions of Unix, read
+return 0 when O_NDELAY is set and there is nothing to read.  We
+want the O_NONBLOCK behavior where read returns -1 and sets
+errno to EAGAIN when there is nothing to read.
+
+----------
+2004/06/10 19:42:01 crs
+lib/common/Makefile.am
+
+Added OS X precompiled header file for XCode compiles.
+
+----------
+2004/06/10 19:39:07 crs
+cmd/launcher/CAutoStart.cpp
+
+Removed dependency of service on Browser.  Browser isn't always
+available and, if it's not, synergy won't start.  Users may have
+to use an IP server address instead of a hostname since the
+service may start before the service that resolves hostnames.
+If I knew what that service was I'd depend on it instead.
+
+----------
+2004/06/10 19:32:40 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.1.7.
+
+----------
+2004/06/07 21:06:49 crs
+lib/platform/CXWindowsEventQueueBuffer.cpp
+
+Failed to reset flag in X11 event queue buffer and that could cause
+multiple threads to access the X display connection simultaneously
+which causes synergy to die.
+
+----------
 2004/05/26 19:23:32 crs
 //depot/project/synergy/lib/common/MacOSXPrecomp.h
 //depot/project/synergy/lib/common/common.h

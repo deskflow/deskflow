@@ -1,6 +1,17 @@
 Synergy News
 ============
 
+* Jun-13-2004 - Synergy 1.1.7 released
+
+  Made following changes:
+  * Added OS X precompiled header file forgotten in last build
+  * Fixed bug in fix for 'unexpected async reply' on X11
+  * Removed dependency on "browser" service on win32
+  * Fixed assertion failure when connection fails immediately
+  * Fixed failure to connect on AIX
+  * Fixed error in conversion from multibyte to wide characters
+  * Maybe fixed win32 screen saver detection
+
 * May-26-2004 - Synergy 1.1.6 released
 
   Made following changes:
