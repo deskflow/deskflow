@@ -29,6 +29,7 @@ CXWindowsClipboard::CXWindowsClipboard(Display* display,
 	m_atomTargets         = XInternAtom(m_display, "TARGETS", False);
 	m_atomMultiple        = XInternAtom(m_display, "MULTIPLE", False);
 	m_atomTimestamp       = XInternAtom(m_display, "TIMESTAMP", False);
+	m_atomInteger         = XInternAtom(m_display, "INTEGER", False);
 	m_atomAtomPair        = XInternAtom(m_display, "ATOM_PAIR", False);
 	m_atomData            = XInternAtom(m_display, "CLIP_TEMPORARY", False);
 	m_atomINCR            = XInternAtom(m_display, "INCR", False);
@@ -512,11 +513,7 @@ CXWindowsClipboard::icccmFillCache()
 		Atom actualTarget;
 		CString targetData;
 		if (!icccmGetSelection(target, &actualTarget, &targetData)) {
-			log((CLOG_DEBUG1 "  no data for target", target));
-			continue;
-		}
-		if (actualTarget != target) {
-			log((CLOG_DEBUG1 "  expeted (%d) and actual (%d) targets differ", target, actualTarget));
+			log((CLOG_DEBUG1 "  no data for target %d", target));
 			continue;
 		}
 
@@ -524,7 +521,7 @@ CXWindowsClipboard::icccmFillCache()
 		IClipboard::EFormat format = converter->getFormat();
 		m_data[format]  = converter->toIClipboard(targetData);
 		m_added[format] = true;
-		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
+		log((CLOG_DEBUG "  added format %d for target %d", format, target));
 	}
 }
 
@@ -556,7 +553,7 @@ CXWindowsClipboard::icccmGetTime() const
 	Atom actualTarget;
 	CString data;
 	if (icccmGetSelection(m_atomTimestamp, &actualTarget, &data) &&
-		actualTarget == m_atomTimestamp) {
+		actualTarget == m_atomInteger) {
 		Time time = *reinterpret_cast<const Time*>(data.data());
 		log((CLOG_DEBUG1 "got ICCCM time %d", time));
 		return time;
@@ -626,13 +623,10 @@ CXWindowsClipboard::motifOwnsClipboard() const
 	Atom target;
 	SInt32 format;
 	CString data;
-	Window root     = RootWindow(m_display, DefaultScreen(m_display));
+	Window root = RootWindow(m_display, DefaultScreen(m_display));
 	if (!CXWindowsUtil::getWindowProperty(m_display, root,
 								m_atomMotifClipHeader,
 								&data, &target, &format, False)) {
-		return false;
-	}
-	if (target != m_atomMotifClipHeader) {
 		return false;
 	}
 
@@ -664,9 +658,6 @@ CXWindowsClipboard::motifFillCache()
 								&data, &target, &format, False)) {
 		return;
 	}
-	if (target != m_atomMotifClipHeader) {
-		return;
-	}
 
 	// check that the header is okay
 	const CMotifClipHeader* header =
@@ -687,32 +678,32 @@ CXWindowsClipboard::motifFillCache()
 								&target, &format, False)) {
 		return;
 	}
-	if (target != atomItem) {
-		return;
-	}
 
 	// check that the item is okay
 	const CMotifClipItem* item =
 					reinterpret_cast<const CMotifClipItem*>(data.data());
 	if (data.size() < sizeof(CMotifClipItem) ||
 		item->m_id != kMotifClipItem ||
-		item->m_numFormats < 1) {
+		item->m_numFormats - item->m_numDeletedFormats < 1) {
 		return;
 	}
 
+	// format list is after static item structure elements
+	const SInt32 numFormats = item->m_numFormats - item->m_numDeletedFormats;
+	const SInt32* formats   = reinterpret_cast<const SInt32*>(item->m_size +
+								reinterpret_cast<const char*>(data.data()));
+
 	// get the available formats
-	std::vector<CMotifClipFormat> motifFormats;
-	for (SInt32 i = 0; i < item->m_numFormats; ++i) {
+	typedef std::map<Atom, CString> CMotifFormatMap;
+	CMotifFormatMap motifFormats;
+	for (SInt32 i = 0; i < numFormats; ++i) {
 		// get Motif format property from the root window
-		sprintf(name, "_MOTIF_CLIP_ITEM_%d", item->m_formats[i]);
+		sprintf(name, "_MOTIF_CLIP_ITEM_%d", formats[i]);
     	Atom atomFormat = XInternAtom(m_display, name, False);
 		CString data;
 		if (!CXWindowsUtil::getWindowProperty(m_display, root,
 									atomFormat, &data,
 									&target, &format, False)) {
-			continue;
-		}
-		if (target != atomFormat) {
 			continue;
 		}
 
@@ -722,21 +713,18 @@ CXWindowsClipboard::motifFillCache()
 		if (data.size() < sizeof(CMotifClipFormat) ||
 			motifFormat->m_id != kMotifClipFormat ||
 			motifFormat->m_length < 0 ||
-			motifFormat->m_type == None) {
+			motifFormat->m_type == None ||
+			motifFormat->m_deleted != 0) {
 			continue;
 		}
 
 		// save it
-		motifFormats.push_back(*motifFormat);
+		motifFormats.insert(std::make_pair(motifFormat->m_type, data));
 	}
 	const UInt32 numMotifFormats = motifFormats.size();
 
-
-
 	// try each converter in order (because they're in order of
 	// preference).
-	const Atom* targets = reinterpret_cast<const Atom*>(data.data());
-	const UInt32 numTargets = data.size() / sizeof(Atom);
 	for (ConverterList::const_iterator index = m_converters.begin();
 								index != m_converters.end(); ++index) {
 		IXWindowsClipboardConverter* converter = *index;
@@ -747,48 +735,63 @@ CXWindowsClipboard::motifFillCache()
 		}
 
 		// see if atom is in target list
-		UInt32 i;
-		Atom target = None;
-		for (i = 0; i < numMotifFormats; ++i) {
-			if (converter->getAtom() == motifFormats[i].m_type) {
-				target = motifFormats[i].m_type;
-				break;
-			}
-		}
-		if (target == None) {
+		CMotifFormatMap::const_iterator index =
+								motifFormats.find(converter->getAtom());
+		if (index == motifFormats.end()) {
 			continue;
 		}
+
+		// get format
+		const CMotifClipFormat* motifFormat =
+								reinterpret_cast<const CMotifClipFormat*>(
+									index->second.data());
+		const Atom target                   = motifFormat->m_type;
 
 		// get the data (finally)
-		SInt32 length = motifFormats[i].m_length;
-		sprintf(name, "_MOTIF_CLIP_ITEM_%d", motifFormats[i].m_data);
-    	Atom atomData = XInternAtom(m_display, name, False), atomTarget;
+		Atom actualTarget;
 		CString targetData;
-		if (!CXWindowsUtil::getWindowProperty(m_display, root,
-									atomData, &targetData,
-									&atomTarget, &format, False)) {
-			log((CLOG_DEBUG1 "  no data for target", target));
+		if (!motifGetSelection(motifFormat, &actualTarget, &targetData)) {
+			log((CLOG_DEBUG1 "  no data for target %d", target));
 			continue;
 		}
-		if (atomTarget != atomData) {
-			continue;
-		}
-
-		// truncate data to length specified in the format
-		targetData.erase(length);
 
 		// add to clipboard and note we've done it
 		IClipboard::EFormat format = converter->getFormat();
 		m_data[format]  = converter->toIClipboard(targetData);
 		m_added[format] = true;
-		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
+		log((CLOG_DEBUG "  added format %d for target %d", format, target));
 	}
+}
+
+bool
+CXWindowsClipboard::motifGetSelection(const CMotifClipFormat* format,
+							Atom* actualTarget, CString* data) const
+{
+	// if the current clipboard owner and the owner indicated by the
+	// motif clip header are the same then transfer via a property on
+	// the root window, otherwise transfer as a normal ICCCM client.
+	if (!motifOwnsClipboard()) {
+		return icccmGetSelection(format->m_type, actualTarget, data);
+	}
+
+	// use motif way
+	// FIXME -- this isn't right.  it'll only work if the data is
+	// already stored on the root window and only if it fits in a
+	// property.  motif has some scheme for transferring part by
+	// part that i don't know.
+	char name[18 + 20];
+	sprintf(name, "_MOTIF_CLIP_ITEM_%d", format->m_data);
+   	Atom target = XInternAtom(m_display, name, False);
+	Window root = RootWindow(m_display, DefaultScreen(m_display));
+	return CXWindowsUtil::getWindowProperty(m_display, root,
+								target, data,
+								actualTarget, NULL, False);
 }
 
 IClipboard::Time
 CXWindowsClipboard::motifGetTime() const
 {
-	// FIXME -- does Motif report this?
+	// FIXME -- where does Motif report this?
 	return 0;
 }
 
@@ -1165,7 +1168,7 @@ CXWindowsClipboard::getTimestampData(CString& data, int* format) const
 	checkCache();
 	data.append(reinterpret_cast<const char*>(&m_timeOwned), 4);
 	*format = 32;
-	return m_atomTimestamp;
+	return m_atomInteger;
 }
 
 

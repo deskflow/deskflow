@@ -89,20 +89,6 @@ private:
 	void				fillCache() const;
 	void				doFillCache();
 
-	// ICCCM interoperability methods
-	void				icccmFillCache();
-	bool				icccmGetSelection(Atom target,
-							Atom* actualTarget,
-							CString* data) const;
-	Time				icccmGetTime() const;
-
-	// motif interoperability methods
-	bool				motifLockClipboard() const;
-	void				motifUnlockClipboard() const;
-	bool				motifOwnsClipboard() const;
-	Time				motifGetTime() const;
-	void				motifFillCache();
-
 	//
 	// helper classes
 	//
@@ -160,17 +146,17 @@ private:
 		SInt32			m_pad3[3];
 		Window			m_selectionOwner;
 		SInt32			m_pad4[2];
-		SInt32			m_items[1];		// m_numItems items
 	};
 
 	// Motif clip item structure
 	class CMotifClipItem {
 	public:
 		SInt32			m_id;			// kMotifClipItem
-		SInt32			m_pad1[6];
+		SInt32			m_pad1[5];
+		SInt32			m_size;
 		SInt32			m_numFormats;
-		SInt32			m_pad2[7];
-		SInt32			m_formats[1];	// m_numFormats formats
+		SInt32			m_numDeletedFormats;
+		SInt32			m_pad2[6];
 	};
 
 	// Motif clip format structure
@@ -181,7 +167,9 @@ private:
 		SInt32			m_length;
 		SInt32			m_data;
 		Atom			m_type;
-		SInt32			m_pad2[6];
+		SInt32			m_pad2[1];
+		int				m_deleted;
+		SInt32			m_pad3[4];
 	};
 
 	// stores data needed to respond to a selection request
@@ -215,6 +203,21 @@ private:
 	typedef std::list<CReply*> CReplyList;
 	typedef std::map<Window, CReplyList> CReplyMap;
 	typedef std::map<Window, long> CReplyEventMask;
+
+	// ICCCM interoperability methods
+	void				icccmFillCache();
+	bool				icccmGetSelection(Atom target,
+							Atom* actualTarget, CString* data) const;
+	Time				icccmGetTime() const;
+
+	// motif interoperability methods
+	bool				motifLockClipboard() const;
+	void				motifUnlockClipboard() const;
+	bool				motifOwnsClipboard() const;
+	void				motifFillCache();
+	bool				motifGetSelection(const CMotifClipFormat*,
+							Atom* actualTarget, CString* data) const;
+	Time				motifGetTime() const;
 
 	// reply methods
 	bool				insertMultipleReply(Window, ::Time, Atom);
@@ -267,6 +270,7 @@ private:
 	Atom				m_atomTargets;
 	Atom				m_atomMultiple;
 	Atom				m_atomTimestamp;
+	Atom				m_atomInteger;
 	Atom				m_atomAtomPair;
 	Atom				m_atomData;
 	Atom				m_atomINCR;
