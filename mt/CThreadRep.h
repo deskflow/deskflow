@@ -85,6 +85,7 @@ private:
 #if defined(CONFIG_PTHREADS)
 	static void*		threadFunc(void* arg);
 	static void			threadCancel(int);
+	static void*		threadSignalHandler(void*);
 #elif defined(CONFIG_PLATFORM_WIN32)
 	static unsigned int __stdcall	threadFunc(void* arg);
 #endif
@@ -107,11 +108,13 @@ private:
 	void*				m_result;
 	bool				m_cancellable;
 	bool				m_cancelling;
+	UInt32				m_signals;
 
 #if defined(CONFIG_PTHREADS)
 	pthread_t			m_thread;
 	bool				m_exit;
 	bool				m_cancel;
+	static pthread_t	s_signalThread;
 #endif
 
 #if defined(CONFIG_PLATFORM_WIN32)

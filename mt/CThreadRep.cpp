@@ -40,6 +40,9 @@ static void threadDebug(int)
 
 CMutex*					CThreadRep::s_mutex = NULL;
 CThreadRep*				CThreadRep::s_head = NULL;
+#if defined(CONFIG_PTHREADS)
+pthread_t				CThreadRep::s_signalThread;
+#endif
 
 CThreadRep::CThreadRep() : m_prev(NULL),
 								m_next(NULL),
@@ -92,7 +95,14 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 
 	// start the thread.  throw if it doesn't start.
 #if defined(CONFIG_PTHREADS)
+	// mask some signals in all threads except the main thread
+	sigset_t sigset, oldsigset;
+	sigemptyset(&sigset);
+	sigaddset(&sigset, SIGINT);
+	sigaddset(&sigset, SIGTERM);
+	pthread_sigmask(SIG_BLOCK, &sigset, &oldsigset);
 	int status = pthread_create(&m_thread, NULL, threadFunc, (void*)this);
+	pthread_sigmask(SIG_SETMASK, &oldsigset, NULL);
 	if (status != 0)
 		throw XThreadUnavailable();
 #elif defined(CONFIG_PLATFORM_WIN32)
@@ -164,7 +174,22 @@ void					CThreadRep::initThreads()
 		pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
 		sigemptyset(&sigset);
 		sigaddset(&sigset, SIGPIPE);
+		sigaddset(&sigset, SIGINT);
+		sigaddset(&sigset, SIGTERM);
 		pthread_sigmask(SIG_BLOCK, &sigset, NULL);
+
+		// fire up the INT and TERM signal handler thread
+		int status = pthread_create(&s_signalThread, NULL,
+								&CThreadRep::threadSignalHandler,
+								getCurrentThreadRep());
+		if (status != 0) {
+			// can't create thread to wait for signal so don't block
+			// the signals.
+			sigemptyset(&sigset);
+			sigaddset(&sigset, SIGINT);
+			sigaddset(&sigset, SIGTERM);
+			pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
+		}
 #endif
 	}
 }
@@ -338,8 +363,9 @@ void					CThreadRep::cancel()
 void					CThreadRep::testCancel()
 {
 	{
-		// prevent further cancellation
 		CLock lock(s_mutex);
+
+		// done if not cancelled, not cancellable, or already cancelling
 		if (!m_cancel || !m_cancellable || m_cancelling)
 			return;
 
@@ -393,18 +419,6 @@ void*					CThreadRep::threadFunc(void* arg)
 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
 	pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
 
-	// set signal mask
-	sigset_t sigset;
-	sigemptyset(&sigset);
-	sigaddset(&sigset, SIGWAKEUP);
-#ifndef NDEBUG
-	sigaddset(&sigset, SIGSEGV);
-#endif
-	pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
-	sigemptyset(&sigset);
-	sigaddset(&sigset, SIGPIPE);
-	pthread_sigmask(SIG_BLOCK, &sigset, NULL);
-
 	// run thread
 	rep->doThreadFunc();
 
@@ -424,6 +438,27 @@ void*					CThreadRep::threadFunc(void* arg)
 void					CThreadRep::threadCancel(int)
 {
 	// do nothing
+}
+
+void*					CThreadRep::threadSignalHandler(void* vrep)
+{
+	CThreadRep* mainThreadRep = reinterpret_cast<CThreadRep*>(vrep);
+
+	// add signal to mask
+	sigset_t sigset;
+	sigemptyset(&sigset);
+	sigaddset(&sigset, SIGINT);
+	sigaddset(&sigset, SIGTERM);
+
+	// we exit the loop via thread cancellation in sigwait()
+	for (;;) {
+		// wait
+		int signal;
+		sigwait(&sigset, &signal);
+
+		// if we get here then the signal was raised.  cancel the thread.
+		mainThreadRep->cancel();
+	}
 }
 
 #elif defined(CONFIG_PLATFORM_WIN32)

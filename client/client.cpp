@@ -5,6 +5,7 @@
 #include "CNetwork.h"
 #include "CNetworkAddress.h"
 #include "CThread.h"
+#include "XThread.h"
 #include <assert.h>
 
 //
@@ -42,20 +43,24 @@ void					realMain(const CString& name,
 	s_logMutex = &logMutex;
 	CLog::setLock(&logLock);
 
-	// initialize network library
-	CNetwork::init();
-
 	CClient* client = NULL;
 	try {
+		// initialize network library
+		CNetwork::init();
+
+		// run client
 		CNetworkAddress addr(hostname, port);
 		client = new CClient(name);
 		client->run(addr);
+
+		// clean up
 		delete client;
 		CNetwork::cleanup();
 		CLog::setLock(NULL);
 		s_logMutex = NULL;
 	}
 	catch (...) {
+		// clean up
 		delete client;
 		CNetwork::cleanup();
 		CLog::setLock(NULL);
@@ -93,6 +98,10 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		MessageBox(NULL, msg.c_str(), "error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
+	catch (XThread&) {
+		// terminated
+		return 1;
+	}
 }
 
 #else
@@ -112,6 +121,10 @@ int main(int argc, char** argv)
 	}
 	catch (XBase& e) {
 		fprintf(stderr, "failed: %s\n", e.what());
+		return 1;
+	}
+	catch (XThread&) {
+		// terminated
 		return 1;
 	}
 }

@@ -1,7 +1,7 @@
 #ifndef CTHREAD_H
 #define CTHREAD_H
 
-#include "common.h"
+#include "BasicTypes.h"
 
 class IJob;
 class CThreadRep;

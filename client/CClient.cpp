@@ -6,11 +6,12 @@
 #include "ISecondaryScreen.h"
 #include "ProtocolTypes.h"
 #include "CLock.h"
+#include "CLog.h"
 #include "CThread.h"
 #include "CTimerThread.h"
-#include "XSynergy.h"
 #include "TMethodJob.h"
-#include "CLog.h"
+#include "XSynergy.h"
+#include "XThread.h"
 #include <assert.h>
 #include <memory>
 
@@ -71,6 +72,7 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		log((CLOG_ERR "client error: %s", e.what()));
 
 		// clean up
+		log((CLOG_NOTE "stopping client"));
 		if (thread != NULL) {
 			thread->cancel();
 			thread->wait();
@@ -78,10 +80,22 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		}
 		closeSecondaryScreen();
 	}
+	catch (XThread&) {
+		// clean up
+		log((CLOG_NOTE "stopping client"));
+		if (thread != NULL) {
+			thread->cancel();
+			thread->wait();
+			delete thread;
+		}
+		closeSecondaryScreen();
+		throw;
+	}
 	catch (...) {
 		log((CLOG_DEBUG "unknown client error"));
 
 		// clean up
+		log((CLOG_NOTE "stopping client"));
 		if (thread != NULL) {
 			thread->cancel();
 			thread->wait();

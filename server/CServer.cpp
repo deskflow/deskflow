@@ -7,18 +7,19 @@
 #include "IPrimaryScreen.h"
 #include "ISocketFactory.h"
 #include "ProtocolTypes.h"
-#include "XSynergy.h"
 #include "CNetworkAddress.h"
 #include "ISocket.h"
 #include "IListenSocket.h"
-#include "XSocket.h"
 #include "CLock.h"
+#include "CLog.h"
 #include "CThread.h"
 #include "CTimerThread.h"
 #include "CStopwatch.h"
 #include "CFunctionJob.h"
 #include "TMethodJob.h"
-#include "CLog.h"
+#include "XSocket.h"
+#include "XSynergy.h"
+#include "XThread.h"
 #include <assert.h>
 #include <memory>
 
@@ -92,15 +93,26 @@ void					CServer::run()
 		log((CLOG_ERR "server error: %s", e.what()));
 
 		// clean up
+		log((CLOG_NOTE "stopping server"));
 		delete m_httpServer;
 		m_httpServer = NULL;
 		cleanupThreads();
 		closePrimaryScreen();
 	}
+	catch (XThread&) {
+		// clean up
+		log((CLOG_NOTE "stopping server"));
+		delete m_httpServer;
+		m_httpServer = NULL;
+		cleanupThreads();
+		closePrimaryScreen();
+		throw;
+	}
 	catch (...) {
 		log((CLOG_DEBUG "unknown server error"));
 
 		// clean up
+		log((CLOG_NOTE "stopping server"));
 		delete m_httpServer;
 		m_httpServer = NULL;
 		cleanupThreads();

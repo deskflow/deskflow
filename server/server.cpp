@@ -4,6 +4,7 @@
 #include "CMutex.h"
 #include "CNetwork.h"
 #include "CThread.h"
+#include "XThread.h"
 #include "stdfstream.h"
 #include <assert.h>
 
@@ -47,11 +48,12 @@ void					realMain()
 	s_logMutex = &logMutex;
 	CLog::setLock(&logLock);
 
-	// initialize network library
-	CNetwork::init();
-
 	CServer* server = NULL;
 	try {
+		// initialize network library
+		CNetwork::init();
+
+		// load configuration
 		CConfig config;
 		{
 			log((CLOG_DEBUG "opening configuration"));
@@ -63,9 +65,12 @@ void					realMain()
 			log((CLOG_DEBUG "configuration read successfully"));
 		}
 
+		// run server
 		server = new CServer();
 		server->setConfig(config);
 		server->run();
+
+		// clean up
 		delete server;
 		CNetwork::cleanup();
 		CLog::setLock(NULL);
@@ -110,6 +115,10 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		MessageBox(NULL, msg.c_str(), "error", MB_OK | MB_ICONERROR);
 		return 1;
 	}
+	catch (XThread&) {
+		// terminated
+		return 1;
+	}
 }
 
 #else
@@ -130,6 +139,10 @@ int main(int argc, char** argv)
 	catch (XBase& e) {
 		log((CLOG_CRIT "failed: %s", e.what()));
 		fprintf(stderr, "failed: %s\n", e.what());
+		return 1;
+	}
+	catch (XThread&) {
+		// terminated
 		return 1;
 	}
 }
