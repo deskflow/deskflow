@@ -113,6 +113,10 @@ private:
 	// set entries indicate keys that are pressed.  indexed by keycode.
 	bool				m_keys[256];
 
+	// logical to physical button mapping.  m_buttons[i] gives the
+	// physical button for logical button i+1.
+	unsigned char		m_buttons[5];
+
 	// current active modifiers (X key masks)
 	unsigned int		m_mask;
 

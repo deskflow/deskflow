@@ -114,17 +114,23 @@ CXWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
 void
 CXWindowsSecondaryScreen::mouseDown(ButtonID button)
 {
-	CDisplayLock display(m_screen);
-	XTestFakeButtonEvent(display, mapButton(button), True, CurrentTime);
-	XSync(display, False);
+	const unsigned int xButton = mapButton(button);
+	if (xButton != 0) {
+		CDisplayLock display(m_screen);
+		XTestFakeButtonEvent(display, xButton, True, CurrentTime);
+		XSync(display, False);
+	}
 }
 
 void
 CXWindowsSecondaryScreen::mouseUp(ButtonID button)
 {
-	CDisplayLock display(m_screen);
-	XTestFakeButtonEvent(display, mapButton(button), False, CurrentTime);
-	XSync(display, False);
+	const unsigned int xButton = mapButton(button);
+	if (xButton != 0) {
+		CDisplayLock display(m_screen);
+		XTestFakeButtonEvent(display, xButton, False, CurrentTime);
+		XSync(display, False);
+	}
 }
 
 void
@@ -137,7 +143,10 @@ void
 CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 {
 	// choose button depending on rotation direction
-	const unsigned int button = (delta >= 0) ? 4 : 5;
+	const unsigned int xButton = mapButton((delta >= 0) ? 4 : 5);
+	if (xButton == 0) {
+		return;
+	}
 
 	// now use absolute value of delta
 	if (delta < 0) {
@@ -147,8 +156,8 @@ CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 	// send as many clicks as necessary
 	CDisplayLock display(m_screen);
 	for (; delta >= 120; delta -= 120) {
-		XTestFakeButtonEvent(display, button, True, CurrentTime);
-		XTestFakeButtonEvent(display, button, False, CurrentTime);
+		XTestFakeButtonEvent(display, xButton, True, CurrentTime);
+		XTestFakeButtonEvent(display, xButton, False, CurrentTime);
 	}
 	XSync(display, False);
 }
@@ -359,8 +368,17 @@ CXWindowsSecondaryScreen::setToggleState(KeyModifierMask mask)
 unsigned int
 CXWindowsSecondaryScreen::mapButton(ButtonID id) const
 {
-	// FIXME -- should use button mapping?
-	return static_cast<unsigned int>(id);
+	if (id < 1 || id > sizeof(m_buttons) / sizeof(m_buttons[0])) {
+		// out of range
+		return 0;
+	}
+	else if (m_buttons[id - 1] == 0) {
+		// button not mapped
+		return 0;
+	}
+	else {
+		return static_cast<unsigned int>(id);
+	}
 }
 
 KeyModifierMask
@@ -829,6 +847,17 @@ void
 CXWindowsSecondaryScreen::updateKeys()
 {
 	CDisplayLock display(m_screen);
+
+	// get pointer mapping
+	static const UInt32 maxButtons = sizeof(m_buttons) / sizeof(m_buttons[0]);
+	unsigned char tmpButtons[sizeof(m_buttons) / sizeof(m_buttons[0])];
+	UInt32 numButtons = XGetPointerMapping(display, tmpButtons, maxButtons);
+	for (UInt32 i = 0; i < maxButtons; ++i) {
+		m_buttons[i] = 0;
+	}
+	for (UInt32 i = 0; i < numButtons; ++i) {
+		m_buttons[tmpButtons[i] - 1] = i + 1;
+	}
 
 	// ask server which keys are pressed
 	char keys[32];
