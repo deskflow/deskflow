@@ -62,6 +62,31 @@ CArchMiscWindows::isWindows95Family()
 	return result;
 }
 
+bool
+CArchMiscWindows::isWindowsModern()
+{
+	static bool init   = false;
+	static bool result = false;
+
+	if (!init) {
+		OSVERSIONINFO version;
+		version.dwOSVersionInfoSize = sizeof(version);
+		if (GetVersionEx(&version) == 0) {
+			// cannot determine OS;  assume not modern
+			result = false;
+		}
+		else {
+			result = ((version.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS &&
+						version.dwMajorVersion == 4 &&
+						version.dwMinorVersion > 0) ||
+						(version.dwPlatformId == VER_PLATFORM_WIN32_NT &&
+						version.dwMajorVersion > 4));
+		}
+		init = true;
+	}
+	return result;
+}
+
 int
 CArchMiscWindows::runDaemon(RunFunc runFunc)
 {

@@ -94,6 +94,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary,
 	m_fixTimer(NULL),
 	m_screensaver(NULL),
 	m_screensaverNotify(false),
+	m_screensaverActive(false),
 	m_window(NULL),
 	m_nextClipboardWindow(NULL),
 	m_ownClipboard(false),
@@ -1133,7 +1134,9 @@ CMSWindowsScreen::onScreensaver(bool activated)
 	}
 
 	if (activated) {
-		if (m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
+		if (!m_screensaverActive &&
+			m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
+			m_screensaverActive = true;
 			sendEvent(getScreensaverActivatedEvent());
 
 			// enable display power down
@@ -1141,10 +1144,13 @@ CMSWindowsScreen::onScreensaver(bool activated)
 		}
 	}
 	else {
-		sendEvent(getScreensaverDeactivatedEvent());
+		if (m_screensaverActive) {
+			m_screensaverActive = false;
+			sendEvent(getScreensaverDeactivatedEvent());
 
-		// disable display power down
-		CArchMiscWindows::addBusyState(CArchMiscWindows::kDISPLAY);
+			// disable display power down
+			CArchMiscWindows::addBusyState(CArchMiscWindows::kDISPLAY);
+		}
 	}
 
 	return true;

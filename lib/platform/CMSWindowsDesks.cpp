@@ -33,6 +33,9 @@
 #if !defined(SPI_SETMOUSESPEED)
 #define SPI_SETMOUSESPEED 113
 #endif
+#if !defined(SPI_GETSCREENSAVERRUNNING)
+#define SPI_GETSCREENSAVERRUNNING 114
+#endif
 
 // X button stuff
 #if !defined(WM_XBUTTONDOWN)
@@ -84,6 +87,7 @@ CMSWindowsDesks::CMSWindowsDesks(
 				const IScreenSaver* screensaver, IJob* updateKeys) :
 	m_isPrimary(isPrimary),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
+	m_isModernFamily(CArchMiscWindows::isWindowsModern()),
 	m_isOnScreen(m_isPrimary),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
@@ -622,8 +626,22 @@ CMSWindowsDesks::deskLeave(CDesk* desk, HKL keyLayout)
 					strcmp(className, "ConsoleWindowClass") == 0) {
 					EnableWindow(desk->m_window, TRUE);
 					SetActiveWindow(desk->m_window);
+
+					// force our window to the foreground.  we can't
+					// simply call SetForegroundWindow() because that
+					// will only alert the user that the window wants
+					// to be the foreground as of windows 98/2000.  we
+					// have to attach to the thread of the current
+					// foreground window then call it on our window
+					// and finally detach the threads.
+					DWORD thisThread =
+						GetWindowThreadProcessId(desk->m_window, NULL);
+					DWORD thatThread =
+						GetWindowThreadProcessId(foreground, NULL);
+					AttachThreadInput(thatThread, thisThread, TRUE);
+					SetForegroundWindow(desk->m_window);
+					AttachThreadInput(thatThread, thisThread, FALSE);
 				}
-				LOG((CLOG_DEBUG1 "active window class: %s", className));
 			}
 		}
 
@@ -901,6 +919,14 @@ void
 CMSWindowsDesks::handleCheckDesk(const CEvent&, void*)
 {
 	checkDesk();
+
+	// also check if screen saver is running if on a modern OS and
+	// this is the primary screen.
+	if (m_isPrimary && m_isModernFamily) {
+		BOOL running;
+		SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, FALSE);
+		PostThreadMessage(m_threadID, SYNERGY_MSG_SCREEN_SAVER, running, 0);
+	}
 }
 
 HDESK

@@ -238,6 +238,7 @@ private:
 	// screen saver stuff
 	CMSWindowsScreenSaver*	m_screensaver;
 	bool					m_screensaverNotify;
+	bool					m_screensaverActive;
 
 	// clipboard stuff.  our window is used mainly as a clipboard
 	// owner and as a link in the clipboard viewer chain.

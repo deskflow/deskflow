@@ -214,6 +214,9 @@ private:
 	// true if windows 95/98/me
 	bool				m_is95Family;
 
+	// true if windows 98/2k or higher (i.e. not 95/nt)
+	bool				m_isModernFamily;
+
 	// true if mouse has entered the screen
 	bool				m_isOnScreen;
 
