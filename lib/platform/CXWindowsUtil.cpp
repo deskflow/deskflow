@@ -35,7 +35,7 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 	CXWindowsUtil::CErrorLock lock(display);
 
 	// read the property
-	int result = Success;
+	bool okay = true;
 	const long length = XMaxRequestSize(display);
 	long offset = 0;
 	unsigned long bytesLeft = 1;
@@ -43,12 +43,13 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 		// get more data
 		unsigned long numItems;
 		unsigned char* rawData;
-		result = XGetWindowProperty(display, window, property,
+		if (XGetWindowProperty(display, window, property,
 								offset, length, False, AnyPropertyType,
 								&actualType, &actualDatumSize,
-								&numItems, &bytesLeft, &rawData);
-		if (result != Success || actualType == None || actualDatumSize == 0) {
+								&numItems, &bytesLeft, &rawData) != Success ||
+			actualType == None || actualDatumSize == 0) {
 			// failed
+			okay = false;
 			break;
 		}
 
@@ -98,12 +99,12 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 		*format = static_cast<SInt32>(actualDatumSize);
 	}
 
-	if (result == Success) {
+	if (okay) {
 		LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
 		return true;
 	}
 	else {
-		LOG((CLOG_DEBUG1 "can't read property %d on window 0x%08x", property, window));
+		LOG((CLOG_DEBUG2 "can't read property %d on window 0x%08x", property, window));
 		return false;
 	}
 }
