@@ -955,15 +955,18 @@ CXWindowsClipboard::sendReply(CReply* reply)
 
 		// send using INCR if already sending incrementally or if reply
 		// is too large, otherwise just send it.
-		const UInt32 maxRequestSize = 4 * XMaxRequestSize(m_display);
+		const UInt32 maxRequestSize = 50000;//XXX 4 * XMaxRequestSize(m_display);
 		const bool useINCR = (reply->m_data.size() > maxRequestSize);
+log((CLOG_INFO "useINCR: %s", useINCR ? "true" : "false"));
 
 		// send INCR reply if incremental and we haven't replied yet
 		if (useINCR && !reply->m_replied) {
 			UInt32 size = reply->m_data.size();
+log((CLOG_INFO "send first INCR, size=%d", size));
 			if (!CXWindowsUtil::setWindowProperty(m_display,
 								reply->m_requestor, reply->m_property,
 								&size, 4, m_atomINCR, 32)) {
+log((CLOG_INFO "send first INCR failed"));
 				failed = true;
 			}
 		}
@@ -974,6 +977,8 @@ CXWindowsClipboard::sendReply(CReply* reply)
 			UInt32 size = reply->m_data.size() - reply->m_ptr;
 			if (size > maxRequestSize)
 				size = maxRequestSize;
+if (useINCR)
+log((CLOG_INFO "more INCR, size=%d, ptr=%d", size, reply->m_ptr));
 
 			// send it
 			if (!CXWindowsUtil::setWindowProperty(m_display,
@@ -981,6 +986,8 @@ CXWindowsClipboard::sendReply(CReply* reply)
 								reply->m_data.data() + reply->m_ptr,
 								size,
 								reply->m_type, reply->m_format)) {
+if (useINCR)
+log((CLOG_INFO "more INCR failed"));
 				failed = true;
 			}
 			else {
@@ -989,6 +996,8 @@ CXWindowsClipboard::sendReply(CReply* reply)
 				// we've finished the reply if we just sent the zero
 				// size incremental chunk or if we're not incremental.
 				reply->m_done = (size == 0 || !useINCR);
+if (useINCR)
+log((CLOG_INFO "more INCR sent, done = %s", reply->m_done ? "true" : "false"));
 			}
 		}
 	}
@@ -1000,6 +1009,7 @@ CXWindowsClipboard::sendReply(CReply* reply)
 	// the final zero-length property.
 	// FIXME -- how do you gracefully cancel an incremental transfer?
 	if (failed) {
+log((CLOG_INFO "clipboard: sending failure to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		log((CLOG_DEBUG1 "clipboard: sending failure to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		reply->m_done = true;
 		if (reply->m_property != None) {
@@ -1030,6 +1040,7 @@ CXWindowsClipboard::sendReply(CReply* reply)
 
 	// send notification if we haven't yet
 	if (!reply->m_replied) {
+log((CLOG_INFO "clipboard: sending notify to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		log((CLOG_DEBUG1 "clipboard: sending notify to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		reply->m_replied = true;
 
@@ -1241,6 +1252,7 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	std::vector<XEvent> events;
 	CStopwatch timeout(true);
 	static const double s_timeout = 0.25;	// FIXME -- is this too short?
+	bool noWait = false;
 	while (!m_done && !m_failed) {
 		// fail if timeout has expired
 		if (timeout.getTime() >= s_timeout) {
@@ -1249,12 +1261,22 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 		}
 
 		// process events if any otherwise sleep
-		if (XPending(display) > 0) {
-			while (!m_done && !m_failed && XPending(display) > 0) {
+		if (noWait || XPending(display) > 0) {
+			while (!m_done && !m_failed && (noWait || XPending(display) > 0)) {
 				XNextEvent(display, &xevent);
 				if (!processEvent(display, &xevent)) {
 					// not processed so save it
 					events.push_back(xevent);
+				}
+				else {
+					// reset timer since we've made some progress
+					timeout.reset();
+
+					// don't sleep anymore, just block waiting for events.
+					// we're assuming here that the clipboard owner will
+					// complete the protocol correctly.  if we continue to
+					// sleep we'll get very bad performance.
+					noWait = true;
 				}
 			}
 		}
@@ -1343,19 +1365,15 @@ CXWindowsClipboard::CICCCMGetClipboard::processEvent(
 	// selection owner is busted.  if the INCR property has no size
 	// then the selection owner is busted.
 	if (target == XInternAtom(display, "INCR", False)) {
-log((CLOG_INFO "  INCR"));	// FIXME
 		if (m_incr) {
-log((CLOG_INFO "  INCR repeat"));	// FIXME
 			m_failed = true;
 			m_error  = true;
 		}
 		else if (m_data->size() == oldSize) {
-log((CLOG_INFO "  INCR zero size"));	// FIXME
 			m_failed = true;
 			m_error  = true;
 		}
 		else {
-log((CLOG_INFO "  INCR start"));	// FIXME
 			m_incr   = true;
 
 			// discard INCR data
@@ -1373,7 +1391,6 @@ log((CLOG_INFO "  INCR start"));	// FIXME
 
 		// secondary chunks must have the same target
 		else {
-log((CLOG_INFO "  INCR secondary chunk"));	// FIXME
 			if (target != *m_actualTarget) {
 				log((CLOG_WARN "  INCR target mismatch"));
 				m_failed = true;
