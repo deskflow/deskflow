@@ -69,5 +69,6 @@ EXTRA_libplatform_a_SOURCES =				\
 INCLUDES =									\
 	-I$(VDEPTH)/lib/base 					\
 	-I$(VDEPTH)/lib/mt	 					\
+	-I$(VDEPTH)/lib/io	 					\
 	-I$(VDEPTH)/lib/synergy 				\
 	$(NULL)

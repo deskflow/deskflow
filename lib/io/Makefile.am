@@ -30,12 +30,14 @@ libio_a_SOURCES = 				\
 	CInputStreamFilter.cpp		\
 	COutputStreamFilter.cpp		\
 	CStreamBuffer.cpp			\
+	CUnicode.cpp				\
 	XIO.cpp						\
 	CBufferedInputStream.h		\
 	CBufferedOutputStream.h		\
 	CInputStreamFilter.h		\
 	COutputStreamFilter.h		\
 	CStreamBuffer.h				\
+	CUnicode.h					s\
 	IInputStream.h				\
 	IOutputStream.h				\
 	IStreamFilterFactory.h		\
