@@ -129,8 +129,9 @@ CTCPSocket::read(void* buffer, UInt32 n)
 	m_inputBuffer.pop(n);
 
 	// if no more data and we cannot read or write then send disconnected
-	if (n > 0 && !m_readable && !m_writable) {
+	if (n > 0 && m_inputBuffer.getSize() == 0 && !m_readable && !m_writable) {
 		sendSocketEvent(getDisconnectedEvent());
+		m_connected = false;
 	}
 
 	return n;
@@ -459,6 +460,7 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			sendStreamEvent(getOutputShutdownEvent());
 			if (!m_readable && m_inputBuffer.getSize() == 0) {
 				sendSocketEvent(getDisconnectedEvent());
+				m_connected = false;
 			}
 			needNewJob = true;
 		}
@@ -502,6 +504,7 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 				sendStreamEvent(getInputShutdownEvent());
 				if (!m_writable && m_inputBuffer.getSize() == 0) {
 					sendSocketEvent(getDisconnectedEvent());
+					m_connected = false;
 				}
 				m_readable = false;
 				needNewJob = true;
