@@ -1364,7 +1364,7 @@ CXWindowsUtil::decomposeKeySymWithCompose(KeySym keysym, KeySyms& decomposed)
 	// decomposing a keysym into its component keysyms.  we'll
 	// use a lookup table for certain character sets.
 	initKeyMaps();
-	CKeySymsMap::const_iterator i = i = s_composeDecomposedKeySyms.find(keysym);
+	CKeySymsMap::const_iterator i = s_composeDecomposedKeySyms.find(keysym);
 	if (i != s_composeDecomposedKeySyms.end()) {
 		decomposed = i->second;
 		return true;
