@@ -213,73 +213,43 @@ bool
 CArchMultithreadPosix::waitCondVar(CArchCond cond,
 							CArchMutex mutex, double timeout)
 {
+	// we can't wait on a condition variable and also wake it up for
+	// cancellation since we don't use posix cancellation.  so we
+	// must wake up periodically to check for cancellation.  we
+	// can't simply go back to waiting after the check since the
+	// condition may have changed and we'll have lost the signal.
+	// so we have to return to the caller.  since the caller will
+	// always check for spurious wakeups the only drawback here is
+	// performance:  we're waking up a lot more than desired.
+	static const double maxCancellationLatency = 0.1;
+	if (timeout < 0.0 || timeout > maxCancellationLatency) {
+		timeout = maxCancellationLatency;
+	}
+
+	// see if we should cancel this thread
+	testCancelThread();
+
 	// get final time
 	struct timeval now;
 	gettimeofday(&now, NULL);
 	struct timespec finalTime;
-	finalTime.tv_sec  = now.tv_sec;
-	finalTime.tv_nsec = now.tv_usec * 1000;
-	if (timeout >= 0.0) {
-		const long timeout_sec  = (long)timeout;
-		const long timeout_nsec = (long)(1.0e+9 * (timeout - timeout_sec));
-		finalTime.tv_sec  += timeout_sec;
-		finalTime.tv_nsec += timeout_nsec;
-		if (finalTime.tv_nsec >= 1000000000) {
-			finalTime.tv_nsec -= 1000000000;
-			finalTime.tv_sec  += 1;
-		}
+	finalTime.tv_sec   = now.tv_sec;
+	finalTime.tv_nsec  = now.tv_usec * 1000;
+	long timeout_sec   = (long)timeout;
+	long timeout_nsec  = (long)(1.0e+9 * (timeout - timeout_sec));
+	finalTime.tv_sec  += timeout_sec;
+	finalTime.tv_nsec += timeout_nsec;
+	if (finalTime.tv_nsec >= 1000000000) {
+		finalTime.tv_nsec -= 1000000000;
+		finalTime.tv_sec  += 1;
 	}
 
-	// repeat until we reach the final time
-	int status;
-	for (;;) {
-		// get current time
-		gettimeofday(&now, NULL);
-		struct timespec endTime;
-		endTime.tv_sec  = now.tv_sec;
-		endTime.tv_nsec = now.tv_usec * 1000;
+	// wait
+	int status = pthread_cond_timedwait(&cond->m_cond,
+							&mutex->m_mutex, &finalTime);
 
-		// done if past final timeout
-		if (timeout >= 0.0) {
-			if (endTime.tv_sec > finalTime.tv_sec ||
-				(endTime.tv_sec  == finalTime.tv_sec &&
-				 endTime.tv_nsec >= finalTime.tv_nsec)) {
-				status = ETIMEDOUT;
-				break;
-			}
-		}
-
-		// compute the next timeout
-		endTime.tv_nsec += 50000000;
-		if (endTime.tv_nsec >= 1000000000) {
-			endTime.tv_nsec -= 1000000000;
-			endTime.tv_sec  += 1;
-		}
-
-		// don't wait past final timeout
-		if (timeout >= 0.0) {
-			if (endTime.tv_sec > finalTime.tv_sec ||
-				(endTime.tv_sec  == finalTime.tv_sec &&
-				 endTime.tv_nsec >= finalTime.tv_nsec)) {
-				endTime = finalTime;
-			}
-		}
-
-		// see if we should cancel this thread
-		testCancelThread();
-
-		// wait
-		status = pthread_cond_timedwait(&cond->m_cond,
-							&mutex->m_mutex, &endTime);
-
-		// check for cancel again
-		testCancelThread();
-
-		// check wait status
-		if (status != ETIMEDOUT && status != EINTR) {
-			break;
-		}
-	}
+	// check for cancel again
+	testCancelThread();
 
 	switch (status) {
 	case 0:
