@@ -47,6 +47,26 @@ MAINTAINERCLEANFILES =		\
 	doc/doxygen/html/*		\
 	$(NULL)
 
+PKG_FILES =					\
+	AUTHORS					\
+	BUGS					\
+	COPYING					\
+	ChangeLog				\
+	FAQ						\
+	HISTORY					\
+	INSTALL					\
+	NEWS					\
+	README					\
+	TODO					\
+	cmd/synergyc/synergyc	\
+	cmd/synergys/synergys	\
+	examples/synergy.conf	\
+	$(NULL)
+PKG_PROG_FILES =			\
+	synergyc				\
+	synergys				\
+	$(NULL)
+
 # build doxygen documentation
 doxygen:
 	doxygen doc/doxygen.cfg
@@ -68,3 +88,20 @@ dist-rpm: dist
 dist-zip: distdir
 	zip -r $(distdir).zip $(distdir)
 	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
+
+# build binary package.  owner/group of packaged files will be
+# owner/group of user running make.
+PKGTOPDIR=/var/tmp/@PACKAGE@-@VERSION@
+dist-pkg: all
+	rm -rf $(PKGTOPDIR)
+	mkdir $(PKGTOPDIR)
+	mkdir $(PKGTOPDIR)/@PACKAGE@-@VERSION@
+	cp $(PKG_FILES) $(PKGTOPDIR)/@PACKAGE@-@VERSION@
+	(cd $(PKGTOPDIR)/@PACKAGE@-@VERSION@; \
+		chmod 644 *; \
+		chmod 755 $(PKG_PROG_FILES); \
+		strip $(PKG_PROG_FILES) )
+	type=`uname -s -m | tr '[A-Z] ' '[a-z].'`; \
+	(cd $(PKGTOPDIR); tar cf - @PACKAGE@-@VERSION@ | \
+		gzip - ) > @PACKAGE@-@VERSION@-1.$${type}.tar.gz && \
+	rm -rf $(PKGTOPDIR)
