@@ -105,7 +105,7 @@ CXWindowsClipboardBMPConverter::fromIClipboard(const CString& bmp) const
 	UInt8* dst = header;
 	toLE(dst, 'B');
 	toLE(dst, 'M');
-	toLE(dst, 14 + bmp.size());
+	toLE(dst, static_cast<UInt32>(14 + bmp.size()));
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt16>(0));
 	toLE(dst, static_cast<UInt32>(14 + 40));
