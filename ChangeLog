@@ -1,3 +1,88 @@
+2004/12/30 13:28:51 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+doc/authors.html
+lib/client/CClient.cpp
+lib/net/CNetworkAddress.cpp
+lib/net/CNetworkAddress.h
+lib/server/CConfig.cpp
+
+Adapted and applied patch by Brent Priddy for re-resolving the server
+hostname on each connection.  This allows the client to startup
+without being able to resolve the server's hostname.  It also lets
+it handle changes in the server's address, a typical scenario when
+the client is a laptop moving between networks.
+
+----------
+2004/12/30 12:10:47 crs
+lib/platform/CMSWindowsKeyState.cpp
+lib/synergy/KeyTypes.h
+
+Added Henkan key.  Patch from rniitani at sourceforge.net.
+
+----------
+2004/12/30 11:54:23 crs
+doc/authors.html
+lib/platform/CXWindowsScreen.cpp
+
+Applied patch from Tom Chadwick to synthesize PageUp/PageDown on
+X servers that don't support the mouse wheel.
+
+----------
+2004/12/29 21:12:05 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Now ignoring 4th and 5th mouse buttons if they don't exist.  Was
+previously querying their state, sometimes getting the wrong
+answer from the OS that they were down, which prevented switching
+screens.
+
+----------
+2004/12/29 21:10:49 crs
+lib/platform/CMSWindowsKeyState.cpp
+
+Fixed handling of number pad number and decimal point keys when
+NumLock is on on client on windows 95 family.  
+
+----------
+2004/12/29 17:53:44 crs
+lib/platform/CXWindowsScreen.cpp
+
+Added support for ISO_Level3_Shift on X windows server.  It's
+treated as if it were Mode_switch.
+
+----------
+2004/12/29 17:07:08 crs
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+
+Added support for unicode keyboard layouts on OS X.
+
+----------
+2004/12/29 17:06:49 crs
+lib/platform/COSXScreen.cpp
+
+Removed calls to show/hide mouse because they only work if we've
+taken exclusive access to the display and we don't do that.
+
+----------
+2004/12/29 17:06:00 crs
+lib/platform/COSXEventQueueBuffer.cpp
+lib/platform/COSXEventQueueBuffer.h
+
+Fixed leak of event objects on OS X.
+
+----------
+2004/12/29 17:00:17 crs
+//depot/project/synergy-web/Makefile
+//depot/project/synergy-web/autostart.htmls
+//depot/project/synergy-web/synergy.css
+doc/autostart.html
+doc/synergy.css
+
+Added Mac OS X autostart documentation from Tor Slettnes (tor@slett.net).
+
+----------
 2004/11/12 15:50:04 crs
 lib/platform/COSXKeyState.cpp
 lib/platform/COSXKeyState.h
