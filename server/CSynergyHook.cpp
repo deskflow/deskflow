@@ -1,5 +1,5 @@
 #include "CSynergyHook.h"
-#include "CScreenMap.h"
+#include "CConfig.h"
 #include <assert.h>
 #include <zmouse.h>
 

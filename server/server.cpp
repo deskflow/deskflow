@@ -1,5 +1,5 @@
 #include "CServer.h"
-#include "CScreenMap.h"
+#include "CConfig.h"
 #include "CLog.h"
 #include "CMutex.h"
 #include "CNetwork.h"

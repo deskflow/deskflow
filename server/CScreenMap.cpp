@@ -1,4 +1,4 @@
-#include "CScreenMap.h"
+#include "CConfig.h"
 #include <assert.h>
 
 //

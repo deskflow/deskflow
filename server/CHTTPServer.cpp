@@ -2,7 +2,7 @@
 #include "CHTTPProtocol.h"
 #include "XHTTP.h"
 #include "CServer.h"
-#include "CScreenMap.h"
+#include "CConfig.h"
 #include "CLog.h"
 #include "XThread.h"
 #include "ISocket.h"

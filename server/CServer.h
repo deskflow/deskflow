@@ -4,7 +4,7 @@
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
-#include "CScreenMap.h"
+#include "CConfig.h"
 #include "CClipboard.h"
 #include "CMutex.h"
 #include "CString.h"
