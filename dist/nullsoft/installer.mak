@@ -4,6 +4,7 @@ DEPTH=..\..
 NSIS="D:\Program Files\NSIS\makensis"
 
 DOCS =						\
+	COPYING					\
 	ChangeLog				\
 	$(NULL)
 
