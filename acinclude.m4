@@ -82,7 +82,7 @@ AC_DEFUN([ACX_CHECK_POLL], [
             	acx_poll_ok=yes, acx_poll_ok=no)
 	AC_MSG_RESULT($acx_poll_ok)
 	if test x"$acx_poll_ok" = xyes; then
-		ifelse([$1],,AC_DEFINE(HAVE_POLL,1,[Define if you have the `poll' function.]),[$1])
+		ifelse([$1],,AC_DEFINE(HAVE_POLL,1,[Define if you have the \`poll\' function.]),[$1])
 		:
 	else
 		acx_poll_ok=no
@@ -139,7 +139,7 @@ AC_DEFUN([ACX_CHECK_NANOSLEEP], [
 
 	# execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:
 	if test x"$acx_nanosleep_ok" = xyes; then
-        	ifelse([$1],,AC_DEFINE(HAVE_NANOSLEEP,1,[Define if you have the `nanosleep' function.]),[$1])
+        	ifelse([$1],,AC_DEFINE(HAVE_NANOSLEEP,1,[Define if you have the \`nanosleep\' function.]),[$1])
         	:
 	else
         	acx_nanosleep_ok=no
