@@ -19,7 +19,6 @@ synergyd_SOURCES = 					\
 	CPrimaryClient.h				\
 	CServer.h						\
 	CXWindowsPrimaryScreen.h		\
-	IPrimaryReceiver.h				\
 	IPrimaryScreen.h				\
 	$(NULL)
 synergyd_LDADD =					\

@@ -2,6 +2,7 @@
 #define CCLIENTPROXY1_0_H
 
 #include "CClientProxy.h"
+#include "ProtocolTypes.h"
 #include "CMutex.h"
 
 class CClientProxy1_0 : public CClientProxy {
@@ -42,10 +43,7 @@ private:
 
 private:
 	CMutex				m_mutex;
-	SInt16				m_x, m_y;
-	SInt16				m_w, m_h;
-	SInt16				m_zoneSize;
-	SInt16				m_cx, m_cy;
+	CClientInfo			m_info;
 	bool				m_clipboardDirty[kClipboardEnd];
 };
 

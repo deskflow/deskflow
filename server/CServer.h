@@ -4,10 +4,6 @@
 #include "IServer.h"
 #include "CConfig.h"
 #include "CClipboard.h"
-#include "ClipboardTypes.h"
-#include "KeyTypes.h"
-#include "MouseTypes.h"
-#include "CNetworkAddress.h"
 #include "CCondVar.h"
 #include "CMutex.h"
 #include "CThread.h"
@@ -59,11 +55,9 @@ public:
 
 	// IServer overrides
 	virtual void		onError();
-	virtual void		onInfoChanged(const CString& clientName);
-	virtual bool		onGrabClipboard(ClipboardID,
-							UInt32 seqNum, const CString& clientName);
-	virtual void		onClipboardChanged(ClipboardID,
-							UInt32 seqNum, const CString& data);
+	virtual void		onInfoChanged(const CString&, const CClientInfo&);
+	virtual bool		onGrabClipboard(const CString&, ClipboardID, UInt32);
+	virtual void		onClipboardChanged(ClipboardID, UInt32, const CString&);
 	virtual void		onKeyDown(KeyID, KeyModifierMask);
 	virtual void		onKeyUp(KeyID, KeyModifierMask);
 	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
@@ -72,7 +66,6 @@ public:
 	virtual bool		onMouseMovePrimary(SInt32 x, SInt32 y);
 	virtual void		onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	virtual void		onMouseWheel(SInt32 delta);
-	virtual void		onGrabClipboard(ClipboardID);
 	virtual void		onScreenSaver(bool activated);
 
 protected:
@@ -84,10 +77,6 @@ private:
 	// handle mouse motion
 	bool				onMouseMovePrimaryNoLock(SInt32 x, SInt32 y);
 	void				onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy);
-
-	// grab the clipboard
-	bool				grabClipboardNoLock(ClipboardID,
-							UInt32 seqNum, const CString& clientName);
 
 	// set the clipboard
 	void				onClipboardChangedNoLock(ClipboardID,

@@ -8,7 +8,7 @@
 #include "ProtocolTypes.h"
 #include "XScreen.h"
 #include "XSynergy.h"
-#include "CNetworkAddress.h"
+// XXX #include "CNetworkAddress.h"
 #include "IDataSocket.h"
 #include "IListenSocket.h"
 #include "ISocketFactory.h"
@@ -235,7 +235,7 @@ CServer::onError()
 }
 
 void
-CServer::onInfoChanged(const CString& name)
+CServer::onInfoChanged(const CString& name, const CClientInfo& info)
 {
 	CLock lock(&m_mutex);
 
@@ -249,17 +249,10 @@ CServer::onInfoChanged(const CString& name)
 
 	// update the remote mouse coordinates
 	if (client == m_active) {
-		client->getCenter(m_x, m_y);
+		m_x = info.m_mx;
+		m_y = info.m_my;
 	}
-
-#ifndef NDEBUG
-	{
-		SInt32 x, y, w, h, mx, my;
-		client->getShape(x, y, w, h);
-		client->getCenter(mx, my);
-		log((CLOG_INFO "screen \"%s\" shape=%d,%d %dx%d zone=%d pos=%d,%d", name.c_str(), x, y, w, h, client->getJumpZoneSize(), m_x, m_y));
-	}
-#endif
+	log((CLOG_INFO "screen \"%s\" shape=%d,%d %dx%d zone=%d pos=%d,%d", name.c_str(), info.m_x, info.m_y, info.m_w, info.m_h, info.m_zoneSize, info.m_mx, info.m_my));
 
 	// handle resolution change to primary screen
 	if (client == m_primaryClient) {
@@ -272,27 +265,10 @@ CServer::onInfoChanged(const CString& name)
 	}
 }
 
-void
-CServer::onGrabClipboard(ClipboardID id)
+bool
+CServer::onGrabClipboard(const CString& name, ClipboardID id, UInt32 seqNum)
 {
 	CLock lock(&m_mutex);
-	assert(m_primaryClient != NULL);
-	grabClipboardNoLock(id, 0, m_primaryClient->getName());
-}
-
-bool
-CServer::onGrabClipboard(ClipboardID id, UInt32 seqNum, const CString& client)
-{
-	CLock lock(&m_mutex);
-	return grabClipboardNoLock(id, seqNum, client);
-}
-
-bool
-CServer::grabClipboardNoLock(ClipboardID id,
-				UInt32 seqNum, const CString& name)
-{
-	// note -- must be locked on entry
-	CClipboardInfo& clipboard = m_clipboards[id];
 
 	// screen must be connected
 	CClientList::iterator grabber = m_clients.find(name);
@@ -302,6 +278,7 @@ CServer::grabClipboardNoLock(ClipboardID id,
 
 	// ignore grab if sequence number is old.  always allow primary
 	// screen to grab.
+	CClipboardInfo& clipboard = m_clipboards[id];
 	if (name != m_primaryClient->getName() &&
 		seqNum < clipboard.m_clipboardSeqNum) {
 		log((CLOG_INFO "ignored screen \"%s\" grab of clipboard %d", name.c_str(), id));
@@ -337,8 +314,7 @@ CServer::grabClipboardNoLock(ClipboardID id,
 }
 
 void
-CServer::onClipboardChanged(ClipboardID id,
-				UInt32 seqNum, const CString& data)
+CServer::onClipboardChanged(ClipboardID id, UInt32 seqNum, const CString& data)
 {
 	CLock lock(&m_mutex);
 	onClipboardChangedNoLock(id, seqNum, data);
@@ -760,7 +736,8 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool screenSaver)
 				if (clipboard.m_clipboardOwner == m_primaryClient->getName()) {
 					CString clipboardData;
 					m_primaryClient->getClipboard(id, clipboardData);
-					onClipboardChangedNoLock(id, m_seqNum, clipboardData);
+					onClipboardChangedNoLock(id,
+								clipboard.m_clipboardSeqNum, clipboardData);
 				}
 			}
 		}

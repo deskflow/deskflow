@@ -1,9 +1,10 @@
 #include "CXWindowsPrimaryScreen.h"
-#include "IPrimaryReceiver.h"
 #include "CXWindowsClipboard.h"
 #include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
 #include "CClipboard.h"
+#include "IServer.h"
+#include "ProtocolTypes.h"
 #include "CThread.h"
 #include "CLog.h"
 #include "CStopwatch.h"
@@ -20,8 +21,8 @@
 // CXWindowsPrimaryScreen
 //
 
-CXWindowsPrimaryScreen::CXWindowsPrimaryScreen(IPrimaryReceiver* receiver) :
-	m_receiver(receiver),
+CXWindowsPrimaryScreen::CXWindowsPrimaryScreen(IServer* server) :
+	m_server(server),
 	m_active(false),
 	m_window(None)
 {
@@ -66,7 +67,7 @@ CXWindowsPrimaryScreen::run()
 			if (xevent.xclient.message_type == m_atomScreenSaver ||
 				xevent.xclient.format       == 32) {
 				// screen saver activation/deactivation event
-				m_receiver->onScreenSaver(xevent.xclient.data.l[0] != 0);
+				m_server->onScreenSaver(xevent.xclient.data.l[0] != 0);
 			}
 			break;
 
@@ -76,12 +77,12 @@ CXWindowsPrimaryScreen::run()
 				const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 				const KeyID key = mapKey(&xevent.xkey);
 				if (key != kKeyNone) {
-					m_receiver->onKeyDown(key, mask);
+					m_server->onKeyDown(key, mask);
 					if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
-						m_receiver->onKeyUp(key, mask | KeyModifierCapsLock);
+						m_server->onKeyUp(key, mask | KeyModifierCapsLock);
 					}
 					else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
-						m_receiver->onKeyUp(key, mask | KeyModifierNumLock);
+						m_server->onKeyUp(key, mask | KeyModifierNumLock);
 					}
 				}
 			}
@@ -111,12 +112,12 @@ CXWindowsPrimaryScreen::run()
 						// no press event follows so it's a plain release
 						log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 						if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
-							m_receiver->onKeyDown(key, mask);
+							m_server->onKeyDown(key, mask);
 						}
 						else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
-							m_receiver->onKeyDown(key, mask);
+							m_server->onKeyDown(key, mask);
 						}
-						m_receiver->onKeyUp(key, mask);
+						m_server->onKeyUp(key, mask);
 					}
 					else {
 						// found a press event following so it's a repeat.
@@ -124,7 +125,7 @@ CXWindowsPrimaryScreen::run()
 						// repeats but we'll just send a repeat of 1.
 						// note that we discard the press event.
 						log((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-						m_receiver->onKeyRepeat(key, mask, 1);
+						m_server->onKeyRepeat(key, mask, 1);
 					}
 				}
 			}
@@ -135,7 +136,7 @@ CXWindowsPrimaryScreen::run()
 				log((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
 				const ButtonID button = mapButton(xevent.xbutton.button);
 				if (button != kButtonNone) {
-					m_receiver->onMouseDown(button);
+					m_server->onMouseDown(button);
 				}
 			}
 			break;
@@ -145,15 +146,15 @@ CXWindowsPrimaryScreen::run()
 				log((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
 				const ButtonID button = mapButton(xevent.xbutton.button);
 				if (button != kButtonNone) {
-					m_receiver->onMouseUp(button);
+					m_server->onMouseUp(button);
 				}
 				else if (xevent.xbutton.button == 4) {
 					// wheel forward (away from user)
-					m_receiver->onMouseWheel(120);
+					m_server->onMouseWheel(120);
 				}
 				else if (xevent.xbutton.button == 5) {
 					// wheel backward (toward user)
-					m_receiver->onMouseWheel(-120);
+					m_server->onMouseWheel(-120);
 				}
 			}
 			break;
@@ -184,7 +185,7 @@ CXWindowsPrimaryScreen::run()
 				}
 				else if (!m_active) {
 					// motion on primary screen
-					m_receiver->onMouseMovePrimary(m_x, m_y);
+					m_server->onMouseMovePrimary(m_x, m_y);
 				}
 				else {
 					// motion on secondary screen.  warp mouse back to
@@ -215,7 +216,7 @@ CXWindowsPrimaryScreen::run()
 					// warping to the primary screen's enter position,
 					// effectively overriding it.
 					if (x != 0 || y != 0) {
-						m_receiver->onMouseMoveSecondary(x, y);
+						m_server->onMouseMoveSecondary(x, y);
 					}
 				}
 			}
@@ -269,8 +270,8 @@ CXWindowsPrimaryScreen::open()
 		}
 
 		// save mouse position
-		m_x = x;
-		m_y = y;
+		m_x = mx;
+		m_y = my;
 	}
 
 	// save position of center of screen
@@ -278,7 +279,15 @@ CXWindowsPrimaryScreen::open()
 	m_yCenter = y + (h >> 1);
 
 	// send screen info
-	m_receiver->onInfoChanged(x, y, w, h, 1, m_x, m_y);
+	CClientInfo info;
+	info.m_x        = x;
+	info.m_y        = y;
+	info.m_w        = w;
+	info.m_h        = h;
+	info.m_zoneSize = 1;
+	info.m_mx       = m_x;
+	info.m_my       = m_y;
+	m_server->onInfoChanged("", info);
 }
 
 void
@@ -586,14 +595,14 @@ void
 CXWindowsPrimaryScreen::onUnexpectedClose()
 {
 	// tell server to shutdown
-	m_receiver->onError();
+	m_server->onError();
 }
 
 void
 CXWindowsPrimaryScreen::onLostClipboard(ClipboardID id)
 {
 	// tell server that the clipboard was grabbed locally
-	m_receiver->onGrabClipboard(id);
+	m_server->onGrabClipboard("", id, 0);
 }
 
 void

@@ -159,5 +159,23 @@ static const char		kMsgEUnknown[] = "EUNK";
 // primary should disconnect after sending this message.
 static const char		kMsgEBad[] = "EBAD";
 
+
+//
+// structures
+//
+
+class CClientInfo {
+public:
+	// the coordinates of the screen 
+	SInt32				m_x, m_y;
+	SInt32				m_w, m_h;
+
+	// the size of the jump zone
+	SInt32				m_zoneSize;
+
+	// mouse position
+	SInt32				m_mx, m_my;
+};
+
 #endif
 

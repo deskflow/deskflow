@@ -7,6 +7,8 @@
 #include "MouseTypes.h"
 #include "CString.h"
 
+class CClientInfo;
+
 class IServer : public IInterface {
 public:
 	// manipulators
@@ -15,13 +17,14 @@ public:
 	// shutdown.
 	virtual void		onError() = 0;
 
-	// notify of client info change (maybe IClient should be named IScreen)
-	virtual void		onInfoChanged(const CString& clientName) = 0;
+	// notify of client info change
+	virtual void		onInfoChanged(const CString& clientName,
+							const CClientInfo&) = 0;
 
 	// notify of clipboard grab.  returns true if the grab was honored,
 	// false otherwise.
-	virtual bool		onGrabClipboard(ClipboardID,
-							UInt32 seqNum, const CString& clientName) = 0;
+	virtual bool		onGrabClipboard(const CString& clientName,
+							ClipboardID, UInt32 seqNum) = 0;
 
 	// notify of new clipboard data
 	virtual void		onClipboardChanged(ClipboardID,

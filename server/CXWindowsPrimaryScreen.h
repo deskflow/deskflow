@@ -5,11 +5,11 @@
 #include "IPrimaryScreen.h"
 #include "MouseTypes.h"
 
-class IPrimaryReceiver;
+class IServer;
 
 class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 public:
-	CXWindowsPrimaryScreen(IPrimaryReceiver*);
+	CXWindowsPrimaryScreen(IServer*);
 	virtual ~CXWindowsPrimaryScreen();
 
 	// IPrimaryScreen overrides
@@ -60,7 +60,7 @@ private:
 	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
-	IPrimaryReceiver*	m_receiver;
+	IServer*			m_server;
 	bool				m_active;
 	Window				m_window;
 

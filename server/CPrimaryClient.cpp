@@ -75,27 +75,22 @@ CPrimaryClient::onError()
 }
 
 void
-CPrimaryClient::onInfoChanged(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
-							SInt32 zoneSize, SInt32 cx, SInt32 cy)
+CPrimaryClient::onInfoChanged(const CString&, const CClientInfo& info)
 {
-	m_x        = x;
-	m_y        = y;
-	m_w        = w;
-	m_h        = h;
-	m_zoneSize = zoneSize;
-	m_cx       = cx;
-	m_cy       = cy;
-	m_server->onInfoChanged(getName());
+	m_info = info;
+	m_server->onInfoChanged(getName(), m_info);
 }
 
 bool
-CPrimaryClient::onGrabClipboard(ClipboardID id)
+CPrimaryClient::onGrabClipboard(const CString&, ClipboardID id, UInt32)
 {
-	m_clipboardOwner[id] = m_server->onGrabClipboard(id, m_seqNum, getName());
+	bool result = m_server->onGrabClipboard(getName(), id, m_seqNum);
+	m_clipboardOwner[id] = result;
+	return result;
 }
 
-bool
-CPrimaryClient::onClipboardChanged(ClipboardID id, const CString& data)
+void
+CPrimaryClient::onClipboardChanged(ClipboardID id, UInt32, const CString& data)
 {
 	m_server->onClipboardChanged(id, m_seqNum, data);
 }
@@ -288,21 +283,21 @@ CPrimaryClient::getName() const
 void
 CPrimaryClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
-	x = m_x;
-	y = m_y;
-	w = m_w;
-	h = m_h;
+	x = m_info.m_x;
+	y = m_info.m_y;
+	w = m_info.m_w;
+	h = m_info.m_h;
 }
 
 void
 CPrimaryClient::getCenter(SInt32& x, SInt32& y) const
 {
-	x = m_cx;
-	y = m_cy;
+	x = m_info.m_mx;
+	y = m_info.m_my;
 }
 
 SInt32
 CPrimaryClient::getJumpZoneSize() const
 {
-	return m_zoneSize;
+	return m_info.m_zoneSize;
 }

@@ -2,7 +2,6 @@
 #include "CServer.h"
 #include "CClipboard.h"
 #include "CProtocolUtil.h"
-#include "ProtocolTypes.h"
 #include "XSynergy.h"
 #include "IInputStream.h"
 #include "IOutputStream.h"
@@ -245,25 +244,25 @@ void
 CClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
 	CLock lock(&m_mutex);
-	x = m_x;
-	y = m_y;
-	w = m_w;
-	h = m_h;
+	x = m_info.m_x;
+	y = m_info.m_y;
+	w = m_info.m_w;
+	h = m_info.m_h;
 }
 
 void
 CClientProxy1_0::getCenter(SInt32& x, SInt32& y) const
 {
 	CLock lock(&m_mutex);
-	x = m_cx;
-	y = m_cy;
+	x = m_info.m_mx;
+	y = m_info.m_my;
 }
 
 SInt32
 CClientProxy1_0::getJumpZoneSize() const
 {
 	CLock lock(&m_mutex);
-	return m_zoneSize;
+	return m_info.m_zoneSize;
 }
 
 void
@@ -273,23 +272,32 @@ CClientProxy1_0::recvInfo(bool notify)
 		CLock lock(&m_mutex);
 
 		// parse the message
+		SInt16 x, y, w, h, zoneSize, mx, my;
 		CProtocolUtil::readf(getInputStream(), kMsgDInfo + 4,
-								&m_x, &m_y, &m_w, &m_h,
-								&m_zoneSize, &m_cx, &m_cy);
-		log((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d, zone=%d, pos=%d,%d", getName().c_str(), m_x, m_y, m_w, m_h, m_zoneSize, m_cx, m_cy));
+								&x, &y, &w, &h, &zoneSize, &mx, &my);
+		log((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d, zone=%d, pos=%d,%d", getName().c_str(), x, y, w, h, zoneSize, mx, my));
 
 		// validate
-		if (m_w <= 0 || m_h <= 0 || m_zoneSize < 0) {
+		if (w <= 0 || h <= 0 || zoneSize < 0) {
 			throw XBadClient();
 		}
-		if (m_cx < m_x || m_cy < m_y || m_cx >= m_x + m_w || m_cy >= m_y + m_h) {
+		if (mx < x || my < y || mx >= x + w || my >= y + h) {
 			throw XBadClient();
 		}
+
+		// save
+		m_info.m_x        = x;
+		m_info.m_y        = y;
+		m_info.m_w        = w;
+		m_info.m_h        = h;
+		m_info.m_zoneSize = zoneSize;
+		m_info.m_mx       = mx;
+		m_info.m_my       = my;
 	}
 
 	// tell server of change
 	if (notify) {
-		getServer()->onInfoChanged(getName());
+		getServer()->onInfoChanged(getName(), m_info);
 	}
 
 	// acknowledge receipt
@@ -333,5 +341,5 @@ CClientProxy1_0::recvGrabClipboard()
 
 	// send update.  this calls us back to reset our clipboard dirty flag
 	// so don't hold a lock during the call.
-	getServer()->onGrabClipboard(id, seqNum, getName());
+	getServer()->onGrabClipboard(getName(), id, seqNum);
 }
