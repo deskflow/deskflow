@@ -391,6 +391,12 @@ void					CClient::onGrabClipboard()
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgCClipboard + 4, &id, &seqNum);
+		log((CLOG_DEBUG "received clipboard %d grab", id));
+
+		// validate
+		if (id >= kClipboardEnd) {
+			return;
+		}
 
 		// we no longer own the clipboard
 		m_ownClipboard[id] = false;
@@ -430,6 +436,11 @@ void					CClient::onSetClipboard()
 		CProtocolUtil::readf(m_input, kMsgDClipboard + 4, &id, &seqNum, &data);
 	}
 	log((CLOG_DEBUG "received clipboard %d size=%d", id, data.size()));
+
+	// validate
+	if (id >= kClipboardEnd) {
+		return;
+	}
 
 	// unmarshall
 	CClipboard clipboard;

@@ -179,7 +179,7 @@ void					CServerProtocol1_0::recvInfo()
 	log((CLOG_DEBUG "received client \"%s\" info size=%dx%d, zone=%d", getClient().c_str(), w, h, zoneInfo));
 
 	// validate
-	if (w == 0 || h == 0) {
+	if (w <= 0 || h <= 0 || zoneInfo < 0) {
 		throw XBadClient();
 	}
 
@@ -189,19 +189,35 @@ void					CServerProtocol1_0::recvInfo()
 
 void					CServerProtocol1_0::recvClipboard()
 {
+	// parse message
 	ClipboardID id;
 	UInt32 seqNum;
 	CString data;
 	CProtocolUtil::readf(getInputStream(), kMsgDClipboard + 4, &id, &seqNum, &data);
 	log((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getClient().c_str(), id, seqNum, data.size()));
+
+	// validate
+	if (id >= kClipboardEnd) {
+		throw XBadClient();
+	}
+
+	// send update
 	getServer()->setClipboard(id, seqNum, data);
 }
 
 void					CServerProtocol1_0::recvGrabClipboard()
 {
+	// parse message
 	ClipboardID id;
 	UInt32 seqNum;
 	CProtocolUtil::readf(getInputStream(), kMsgCClipboard + 4, &id, &seqNum);
 	log((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d", getClient().c_str(), id, seqNum));
+
+	// validate
+	if (id >= kClipboardEnd) {
+		throw XBadClient();
+	}
+
+	// send update
 	getServer()->grabClipboard(id, seqNum, getClient());
 }

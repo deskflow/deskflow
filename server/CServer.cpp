@@ -135,6 +135,11 @@ UInt32					CServer::getActivePrimarySides() const
 void					CServer::setInfo(const CString& client,
 								SInt32 w, SInt32 h, SInt32 zoneSize)
 {
+	assert(!client.empty());
+	assert(w > 0);
+	assert(h > 0);
+	assert(zoneSize >= 0);
+
 	CLock lock(&m_mutex);
 
 	// client must be connected
