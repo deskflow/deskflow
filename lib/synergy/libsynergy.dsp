@@ -1,4 +1,4 @@
-# Microsoft Developer Studio Project File - Name="synergy" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="libsynergy" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
@@ -8,17 +8,17 @@ CFG=synergy - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "synergy.mak".
+!MESSAGE NMAKE /f "libsynergy.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "synergy.mak" CFG="synergy - Win32 Debug"
+!MESSAGE NMAKE /f "libsynergy.mak" CFG="libsynergy - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "synergy - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "synergy - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "libsynergy - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "libsynergy - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=synergy - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "synergy - Win32 Release"
+!IF  "$(CFG)" == "libsynergy - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -52,7 +52,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
-!ELSEIF  "$(CFG)" == "synergy - Win32 Debug"
+!ELSEIF  "$(CFG)" == "libsynergy - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -80,8 +80,8 @@ LIB32=link.exe -lib
 
 # Begin Target
 
-# Name "synergy - Win32 Release"
-# Name "synergy - Win32 Debug"
+# Name "libsynergy - Win32 Release"
+# Name "libsynergy - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

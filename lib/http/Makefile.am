@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ..
+DEPTH = ../..
 
 noinst_LIBRARIES = libhttp.a
 libhttp_a_SOURCES = 		\
@@ -10,7 +10,7 @@ libhttp_a_SOURCES = 		\
 	XHTTP.h					\
 	$(NULL)
 INCLUDES =					\
-	-I$(DEPTH)/base 		\
-	-I$(DEPTH)/mt	 		\
-	-I$(DEPTH)/io	 		\
+	-I$(DEPTH)/lib/base 	\
+	-I$(DEPTH)/lib/mt	 	\
+	-I$(DEPTH)/lib/io	 	\
 	$(NULL)

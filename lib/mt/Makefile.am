@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ..
+DEPTH = ../..
 
 noinst_LIBRARIES = libmt.a
 libmt_a_SOURCES = 			\
@@ -19,5 +19,5 @@ libmt_a_SOURCES = 			\
 	XThread.h				\
 	$(NULL)
 INCLUDES =					\
-	-I$(DEPTH)/base 		\
+	-I$(DEPTH)/lib/base 	\
 	$(NULL)

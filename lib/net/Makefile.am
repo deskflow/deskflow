@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ..
+DEPTH = ../..
 
 noinst_LIBRARIES = libnet.a
 libnet_a_SOURCES = 			\
@@ -21,7 +21,7 @@ libnet_a_SOURCES = 			\
 	XSocket.h				\
 	$(NULL)
 INCLUDES =					\
-	-I$(DEPTH)/base 		\
-	-I$(DEPTH)/mt	 		\
-	-I$(DEPTH)/io	 		\
+	-I$(DEPTH)/lib/base 	\
+	-I$(DEPTH)/lib/mt	 	\
+	-I$(DEPTH)/lib/io	 	\
 	$(NULL)

@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="server" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="synergy" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=server - Win32 Debug
+CFG=synergy - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "server.mak".
+!MESSAGE NMAKE /f "synergy.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "server.mak" CFG="server - Win32 Debug"
+!MESSAGE NMAKE /f "synergy.mak" CFG="synergy - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "server - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "server - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "synergy - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "synergy - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "server - Win32 Release"
+!IF  "$(CFG)" == "synergy - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -38,12 +38,12 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "../Release"
+# PROP Output_Dir "../../Release"
 # PROP Intermediate_Dir "Release"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\base" /I "..\mt" /I "..\io" /I "..\http" /I "..\net" /I "..\synergy" /I "..\platform" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\base" /I "..\io" /I "..\mt" /I "..\net" /I "..\synergy" /I "..\platform" /I "..\..\lib\base" /I "..\..\lib\io" /I "..\..\lib\mt" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\client" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -54,9 +54,9 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"../Release/synergyd.exe"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
 
-!ELSEIF  "$(CFG)" == "server - Win32 Debug"
+!ELSEIF  "$(CFG)" == "synergy - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -65,12 +65,12 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "../Debug"
+# PROP Output_Dir "../../Debug"
 # PROP Intermediate_Dir "Debug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\base" /I "..\mt" /I "..\io" /I "..\http" /I "..\net" /I "..\synergy" /I "..\platform" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\..\lib\base" /I "..\..\lib\io" /I "..\..\lib\mt" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\client" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -81,93 +81,29 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /out:"../Debug/synergyd.exe" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 
 # Begin Target
 
-# Name "server - Win32 Release"
-# Name "server - Win32 Debug"
+# Name "synergy - Win32 Release"
+# Name "synergy - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\CClientProxy.cpp
+SOURCE=.\synergy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CClientProxy1_0.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CConfig.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CHTTPServer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMSWindowsPrimaryScreen.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CPrimaryClient.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CPrimaryScreen.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CServer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\server.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\server.rc
+SOURCE=.\synergy.rc
 # End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE=.\CClientProxy.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CClientProxy1_0.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CConfig.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CHTTPServer.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMSWindowsPrimaryScreen.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CPrimaryClient.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CPrimaryScreen.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CServer.h
-# End Source File
 # Begin Source File
 
 SOURCE=.\resource.h

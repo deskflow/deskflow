@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ..
+DEPTH = ../..
 
 noinst_LIBRARIES = libsynergy.a
 libsynergy_a_SOURCES = 		\
@@ -34,8 +34,8 @@ libsynergy_a_SOURCES = 		\
 	XSynergy.h				\
 	$(NULL)
 INCLUDES =					\
-	-I$(DEPTH)/base 		\
-	-I$(DEPTH)/mt	 		\
-	-I$(DEPTH)/io	 		\
-	-I$(DEPTH)/net	 		\
+	-I$(DEPTH)/lib/base 	\
+	-I$(DEPTH)/lib/mt	 	\
+	-I$(DEPTH)/lib/io	 	\
+	-I$(DEPTH)/lib/net	 	\
 	$(NULL)

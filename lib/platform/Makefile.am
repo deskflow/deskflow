@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ..
+DEPTH = ../..
 
 # FIXME -- add CUnixPlatform.cpp as an unbuilt source
 noinst_LIBRARIES = libplatform.a
@@ -25,7 +25,7 @@ libplatform_a_SOURCES = 					\
 	IPlatform.h								\
 	$(NULL)
 INCLUDES =									\
-	-I$(DEPTH)/base 						\
-	-I$(DEPTH)/mt	 						\
-	-I$(DEPTH)/synergy 						\
+	-I$(DEPTH)/lib/base 					\
+	-I$(DEPTH)/lib/mt	 					\
+	-I$(DEPTH)/lib/synergy 					\
 	$(NULL)

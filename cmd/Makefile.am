@@ -1,9 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = .
+DEPTH = ..
 
 EXTRA_DIST =
 SUBDIRS =					\
-	lib						\
-	cmd						\
+	synergy					\
+	synergyd				\
 	$(NULL)

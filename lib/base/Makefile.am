@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ..
+DEPTH = ../..
 
 noinst_LIBRARIES = libbase.a
 libbase_a_SOURCES =			\

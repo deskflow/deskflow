@@ -12,16 +12,16 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name client
+    Project_Dep_Name synergy
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name server
+    Project_Dep_Name synergyd
     End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "base"=.\base\base.dsp - Package Owner=<4>
+Project: "base"=.\lib\base\base.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -33,7 +33,106 @@ Package=<4>
 
 ###############################################################################
 
-Project: "client"=.\client\client.dsp - Package Owner=<4>
+Project: "client"=.\lib\client\client.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "http"=.\lib\HTTP\http.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "io"=.\lib\io\io.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "makehook"=.\lib\platform\makehook.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name synrgyhk
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "mt"=.\lib\mt\mt.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "net"=.\lib\net\net.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "platform"=.\lib\platform\platform.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "server"=.\lib\server\server.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "synergy"=.\cmd\synergy\synergy.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -54,91 +153,19 @@ Package=<4>
     Project_Dep_Name net
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name synergy
+    Project_Dep_Name libsynergy
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name platform
     End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "http"=.\HTTP\http.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "io"=.\io\io.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "makehook"=.\platform\makehook.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
     Begin Project Dependency
-    Project_Dep_Name synrgyhk
+    Project_Dep_Name client
     End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "mt"=.\mt\mt.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "net"=.\net\net.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "platform"=.\platform\platform.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "server"=.\server\server.dsp - Package Owner=<4>
+Project: "synergyd"=.\cmd\synergyd\synergyd.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -162,7 +189,7 @@ Package=<4>
     Project_Dep_Name net
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name synergy
+    Project_Dep_Name libsynergy
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name platform
@@ -170,11 +197,14 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name makehook
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name server
+    End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "synergy"=.\synergy\synergy.dsp - Package Owner=<4>
+Project: "libsynergy"=.\lib\synergy\libsynergy.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -186,7 +216,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "synrgyhk"=.\platform\synrgyhk.dsp - Package Owner=<4>
+Project: "synrgyhk"=.\lib\platform\synrgyhk.dsp - Package Owner=<4>
 
 Package=<5>
 {{{

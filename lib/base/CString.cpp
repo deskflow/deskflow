@@ -1,4 +1,5 @@
 #include "CString.h"
+#include "common.h"
 #include "stdvector.h"
 #include <cctype>
 #include <cstdio>
