@@ -1685,25 +1685,22 @@ LRESULT CALLBACK
 CMSWindowsScreen::secondaryDeskProc(
 				HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	// would like to detect any local user input and hide the hider
+	// window but for now we just detect mouse motion.
+	bool hide = false;
 	switch (msg) {
 	case WM_MOUSEMOVE:
-		// hide window
-		ShowWindow(hwnd, SW_HIDE);
-		break;
-
-	case WM_ACTIVATE:
-		// hide window
-		if (LOWORD(wParam) == WA_INACTIVE) {
-			ShowWindow(hwnd, SW_HIDE);
+		if (LOWORD(lParam) != 0 || HIWORD(lParam) != 0) {
+			hide = true;
 		}
 		break;
+	}
 
-	case WM_ACTIVATEAPP:
-		// hide window
-		if (!(BOOL)wParam) {
-			ShowWindow(hwnd, SW_HIDE);
-		}
-		break;
+	if (hide && IsWindowVisible(hwnd)) {
+		ReleaseCapture();
+		SetWindowPos(hwnd, HWND_BOTTOM, 0, 0, 0, 0,
+							SWP_NOMOVE | SWP_NOSIZE |
+							SWP_NOACTIVATE | SWP_HIDEWINDOW);
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -1789,15 +1786,19 @@ CMSWindowsScreen::deskMouseMove(SInt32 x, SInt32 y) const
 void
 CMSWindowsScreen::deskEnter(CDesk* desk)
 {
-	if (m_isPrimary) {
-		ShowCursor(TRUE);
+	if (!m_isPrimary) {
+		ReleaseCapture();
 	}
-	ShowWindow(desk->m_window, SW_HIDE);
+	ShowCursor(TRUE);
+	SetWindowPos(desk->m_window, HWND_BOTTOM, 0, 0, 0, 0,
+							SWP_NOMOVE | SWP_NOSIZE |
+							SWP_NOACTIVATE | SWP_HIDEWINDOW);
 }
 
 void
 CMSWindowsScreen::deskLeave(CDesk* desk, HKL keyLayout)
 {
+	ShowCursor(FALSE);
 	if (m_isPrimary) {
 		// map a window to hide the cursor and to use whatever keyboard
 		// layout we choose rather than the keyboard layout of the last
@@ -1820,19 +1821,23 @@ CMSWindowsScreen::deskLeave(CDesk* desk, HKL keyLayout)
 			w = m_w;
 			h = m_h;
 		}
-		SetWindowPos(desk->m_window, HWND_TOPMOST, x, y, w, h, SWP_NOACTIVATE);
-		ShowWindow(desk->m_window, SW_SHOW);
-		ShowCursor(FALSE);
+		SetWindowPos(desk->m_window, HWND_TOPMOST, x, y, w, h,
+							SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
 		// switch to requested keyboard layout
 		ActivateKeyboardLayout(keyLayout, 0);
 	}
 	else {
-		// move hider window under the cursor center
-		MoveWindow(desk->m_window, m_xCenter, m_yCenter, 1, 1, FALSE);
+		// move hider window under the cursor center, raise, and show it
+		SetWindowPos(desk->m_window, HWND_TOPMOST,
+							m_xCenter, m_yCenter, 1, 1,
+							SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
-		// raise and show the hider window
-		ShowWindow(desk->m_window, SW_SHOWNA);
+		// watch for mouse motion.  if we see any then we hide the
+		// hider window so the user can use the physically attached
+		// mouse if desired.  we'd rather not capture the mouse but
+		// we aren't notified when the mouse leaves our window.
+		SetCapture(desk->m_window);
 
 		// warp the mouse to the cursor center
 		deskMouseMove(m_xCenter, m_yCenter);
