@@ -908,7 +908,8 @@ bool					CXWindowsClipboard::sendReply(CReply* reply)
 		//   it has a _MOTIF_CLIP_LOCK_ACCESS_VALID property
 		//   it does not have a GDK_SELECTION property
 		CString dummy;
-		if (!CXWindowsUtil::getWindowProperty(m_display,
+		if (m_id != kClipboardClipboard ||
+			!CXWindowsUtil::getWindowProperty(m_display,
 								reply->m_requestor,
 								m_atomMotifClipAccess,
 								&dummy, NULL, NULL, False) ||
