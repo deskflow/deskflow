@@ -105,12 +105,6 @@ translate keys to keysyms
   alt/ctrl/meta are stored separately, also caps/num/scroll lock
   shift state also stored separately
 
-X to keysym:
-  keycode + shift -> keysym via XLookupString()
-X from keysym:
-  keysym -> XKeysymToKeycode() or XGetKeyboardMapping() and search for index
-  must synth shift key events to get correct index for key
-
 Win32 to keysym:
   VK code + shift -> keysym via table lookup
 Win32 from keysym:
@@ -120,3 +114,16 @@ Win32 from keysym:
 don't allow leaving screen when any key is down
   that includes shift keys
   caps lock, etc must not be down but can be on
+
+may need to handle "half-duplex" caps-lock on secondary screen
+
+---
+clipboard stuff:
+  PRIMARY -- the current selection, normally pastes with middle-mouse
+  CLIPBOARD -- set by cut/copy menu items, pasted via paste menu item
+synergy must track and transfer both.  however, only X clients need
+the PRIMARY sent to them.
+
+---
+remove space pairs
+  not a good thing for formatting
