@@ -1,3 +1,30 @@
+2003/01/25 13:39:26 crs
+NEWS
+configure.in
+lib/common/Version.h
+
+Changed version number to 1.0.2.
+
+----------
+2003/01/25 13:34:51 crs
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+
+Added ability to set screen options from the windows launch dialog.
+
+----------
+2003/01/25 13:34:17 crs
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkWinsock.cpp
+
+Added missing entry in a socket family table.  This was a serious
+bug and should've failed on all platforms but just happened to
+work on linux and windows.
+
+----------
 2003/01/22 08:37:32 crs
 NEWS
 configure.in
