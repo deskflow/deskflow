@@ -599,7 +599,7 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 		}
 		if (g_mode == kHOOK_RELAY_EVENTS) {
 			MSG* msg = reinterpret_cast<MSG*>(lParam);
-			if (msg->message == g_wmMouseWheel) {
+			if (g_wheelSupport == kWheelOld && msg->message == g_wmMouseWheel) {
 				// post message to our window
 				PostThreadMessage(g_threadID,
 								SYNERGY_MSG_MOUSE_WHEEL,
