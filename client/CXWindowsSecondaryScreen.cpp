@@ -221,30 +221,33 @@ void					CXWindowsSecondaryScreen::keyDown(
 	Keystrokes keys;
 	KeyCode keycode;
 
-	CDisplayLock display(this);
-
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
-	m_mask = mapKey(keys, keycode, key, mask, True);
+	m_mask = mapKey(keys, keycode, key, mask, kPress);
 	if (keys.empty())
 		return;
 
 	// generate key events
-	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ++k)
-		XTestFakeKeyEvent(display, k->first, k->second, CurrentTime);
+	doKeystrokes(keys, 1);
 
 	// note that key is now down
 	m_keys[keycode] = true;
-
-	// update
-	XSync(display, False);
 }
 
 void					CXWindowsSecondaryScreen::keyRepeat(
-								KeyID, KeyModifierMask, SInt32)
+								KeyID key, KeyModifierMask mask, SInt32 count)
 {
-	CDisplayLock display(this);
-	// FIXME
+	Keystrokes keys;
+	KeyCode keycode;
+
+	// get the sequence of keys to simulate key repeat and the final
+	// modifier state.
+	m_mask = mapKey(keys, keycode, key, mask, kRepeat);
+	if (keys.empty())
+		return;
+
+	// generate key events
+	doKeystrokes(keys, count);
 }
 
 void					CXWindowsSecondaryScreen::keyUp(
@@ -253,23 +256,17 @@ void					CXWindowsSecondaryScreen::keyUp(
 	Keystrokes keys;
 	KeyCode keycode;
 
-	CDisplayLock display(this);
-
 	// get the sequence of keys to simulate key release and the final
 	// modifier state.
-	m_mask = mapKey(keys, keycode, key, mask, False);
+	m_mask = mapKey(keys, keycode, key, mask, kRelease);
 	if (keys.empty())
 		return;
 
 	// generate key events
-	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ++k)
-		XTestFakeKeyEvent(display, k->first, k->second, CurrentTime);
+	doKeystrokes(keys, 1);
 
 	// note that key is now up
 	m_keys[keycode] = false;
-
-	// update
-	XSync(display, False);
 }
 
 void					CXWindowsSecondaryScreen::mouseDown(ButtonID button)
@@ -408,7 +405,7 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 								Keystrokes& keys,
 								KeyCode& keycode,
 								KeyID id, KeyModifierMask mask,
-								Bool press) const
+								EKeyAction action) const
 {
 	// note -- must have display locked on entry
 
@@ -425,8 +422,8 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 	// note if the key is the caps lock and it's "half-duplex"
 	const bool isHalfDuplex = (id == XK_Caps_Lock && m_capsLockHalfDuplex);
 
-	// ignore releases for half-duplex keys
-	if (isHalfDuplex && !press) {
+	// ignore releases and repeats for half-duplex keys
+	if (isHalfDuplex && action != kPress) {
 		return m_mask;
 	}
 
@@ -457,6 +454,7 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 	// a modifier key then skip this because modifiers should not
 	// modify modifiers.
 	Keystrokes undo;
+	Keystroke keystroke;
 	if (outMask != m_mask && !isModifier) {
 		for (unsigned int i = 0; i < 8; ++i) {
 			unsigned int bit = (1 << i);
@@ -472,20 +470,26 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 					// modifier is a toggle then toggle it on with a
 					// press/release, otherwise activate it with a
 					// press.  use the first keycode for the modifier.
-					const KeyCode modifierKey = modifierKeys[0];
-					keys.push_back(std::make_pair(modifierKey, True));
+					keystroke.m_keycode = modifierKeys[0];
+					keystroke.m_press   = True;
+					keystroke.m_repeat  = False;
+					keys.push_back(keystroke);
 					if ((bit & m_toggleModifierMask) != 0) {
 						if (bit != m_capsLockMask || !m_capsLockHalfDuplex) {
-							keys.push_back(std::make_pair(modifierKey, False));
-							undo.push_back(std::make_pair(modifierKey, False));
-							undo.push_back(std::make_pair(modifierKey, True));
+							keystroke.m_press = False;
+							keys.push_back(keystroke);
+							undo.push_back(keystroke);
+							keystroke.m_press = True;
+							undo.push_back(keystroke);
 						}
 						else {
-							undo.push_back(std::make_pair(modifierKey, False));
+							keystroke.m_press = False;
+							undo.push_back(keystroke);
 						}
 					}
 					else {
-						undo.push_back(std::make_pair(modifierKey, False));
+						keystroke.m_press = False;
+						undo.push_back(keystroke);
 					}
 				}
 
@@ -496,24 +500,34 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 					// release.  we must check each keycode for the
 					// modifier if not a toggle.
 					if ((bit & m_toggleModifierMask) != 0) {
-						const KeyCode modifierKey = modifierKeys[0];
+						keystroke.m_keycode = modifierKeys[0];
+						keystroke.m_repeat  = False;
 						if (bit != m_capsLockMask || !m_capsLockHalfDuplex) {
-							keys.push_back(std::make_pair(modifierKey, True));
-							keys.push_back(std::make_pair(modifierKey, False));
-							undo.push_back(std::make_pair(modifierKey, False));
-							undo.push_back(std::make_pair(modifierKey, True));
+							keystroke.m_press = True;
+							keys.push_back(keystroke);
+							keystroke.m_press = False;
+							keys.push_back(keystroke);
+							undo.push_back(keystroke);
+							keystroke.m_press = True;
+							undo.push_back(keystroke);
 						}
 						else {
-							keys.push_back(std::make_pair(modifierKey, False));
-							undo.push_back(std::make_pair(modifierKey, True));
+							keystroke.m_press = False;
+							keys.push_back(keystroke);
+							keystroke.m_press = True;
+							undo.push_back(keystroke);
 						}
 					}
 					else {
 						for (unsigned int j = 0; j < m_keysPerModifier; ++j) {
 							const KeyCode key = modifierKeys[j];
 							if (m_keys[key]) {
-								keys.push_back(std::make_pair(key, False));
-								undo.push_back(std::make_pair(key, True));
+								keystroke.m_keycode = key;
+								keystroke.m_press   = False;
+								keystroke.m_repeat  = False;
+								keys.push_back(keystroke);
+								keystroke.m_press   = True;
+								undo.push_back(keystroke);
 							}
 						}
 					}
@@ -524,11 +538,32 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 
 	// note if the press of a half-duplex key should be treated as a release
 	if (isHalfDuplex && (m_mask & (1 << index->second)) != 0) {
-		press = false;
+		action = kRelease;
 	}
 
 	// add the key event
-	keys.push_back(std::make_pair(keycode, press));
+	keystroke.m_keycode = keycode;
+	switch (action) {
+	case kPress:
+		keystroke.m_press  = True;
+		keystroke.m_repeat = False;
+		keys.push_back(keystroke);
+		break;
+
+	case kRelease:
+		keystroke.m_press  = False;
+		keystroke.m_repeat = False;
+		keys.push_back(keystroke);
+		break;
+
+	case kRepeat:
+		keystroke.m_press  = False;
+		keystroke.m_repeat = True;
+		keys.push_back(keystroke);
+		keystroke.m_press  = True;
+		keys.push_back(keystroke);
+		break;
+	}
 
 	// add key events to restore the modifier state.  apply events in
 	// the reverse order that they're stored in undo.
@@ -538,9 +573,9 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 	}
 
 	// if the key is a modifier key then compute the modifier map after
-	// this key is pressed.
+	// this key is pressed or released.  if repeating then ignore.
 	mask = m_mask;
-	if (isModifier) {
+	if (isModifier && action != kRepeat) {
 		// get modifier
 		const unsigned int modifierBit = (1 << index->second);
 
@@ -549,10 +584,10 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 		// and clear the bit on release.  if half-duplex then toggle
 		// each time we get here.
 		if ((modifierBit & m_toggleModifierMask) != 0) {
-			if (((mask & modifierBit) == 0) == press)
+			if (((mask & modifierBit) == 0) == (action == kPress))
 				mask ^= modifierBit;
 		}
-		else if (press) {
+		else if (action == kPress) {
 			mask |= modifierBit;
 		}
 		else {
@@ -640,7 +675,7 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 	}
 
 	// save the keycode
-	keycode = index->second.keycode;
+	keycode = index->second.m_keycode;
 
 	// compute output mask.  that's the set of modifiers that need to
 	// be enabled when the keycode event is encountered in order to
@@ -649,20 +684,66 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 	// it impossible to generate the keysym.  in that case we must
 	// override maskIn.  this is complicated by caps/shift-lock and
 	// num-lock.
-	maskOut = (maskIn & ~index->second.keyMaskMask);
+	maskOut = (maskIn & ~index->second.m_keyMaskMask);
 	if (IsKeypadKey(id) || IsPrivateKeypadKey(id)) {
-		maskOut |= index->second.keyMask;
+		maskOut |= index->second.m_keyMask;
 		maskOut &= ~m_numLockMask;
 	}
 	else {
-		unsigned int maskShift = (index->second.keyMask & ShiftMask);
-		if (index->second.keyMaskMask != 0 && (m_mask & m_capsLockMask) != 0)
+		unsigned int maskShift = (index->second.m_keyMask & ShiftMask);
+		if (index->second.m_keyMaskMask != 0 && (m_mask & m_capsLockMask) != 0)
 			maskShift ^= ShiftMask;
 		maskOut |= maskShift | (m_mask & m_capsLockMask);
-		maskOut |= (index->second.keyMask & ~(ShiftMask | LockMask));
+		maskOut |= (index->second.m_keyMask & ~(ShiftMask | LockMask));
 	}
 
 	return true;
+}
+
+void					CXWindowsSecondaryScreen::doKeystrokes(
+								const Keystrokes& keys, SInt32 count)
+{
+	// do nothing if no keys or no repeats
+	if (count < 1 || keys.empty())
+		return;
+
+	// lock display
+	CDisplayLock display(this);
+
+	// generate key events
+	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ) {
+		if (k->m_repeat) {
+			// repeat from here up to but not including the next key
+			// with m_repeat == false count times.
+			Keystrokes::const_iterator start = k;
+			for (; count > 0; --count) {
+				// we generally want repeating keys to use the exact
+				// same event time for each release/press pair so we
+				// don't want to use CurrentTime which can't ensure
+				// that.
+				Time time = getCurrentTime(m_window);
+
+				// send repeating events
+				for (k = start; k != keys.end() && k->m_repeat; ++k) {
+					XTestFakeKeyEvent(display,
+								k->m_keycode, k->m_press, time);
+				}
+			}
+
+			// note -- k is now on the first non-repeat key after the
+			// repeat keys, exactly where we'd like to continue from.
+		}
+		else {
+			// send event
+			XTestFakeKeyEvent(display, k->m_keycode, k->m_press, CurrentTime);
+
+			// next key
+			++k;
+		}
+	}
+
+	// update
+	XSync(display, False);
 }
 
 unsigned int			CXWindowsSecondaryScreen::maskToX(
@@ -764,12 +845,12 @@ void					CXWindowsSecondaryScreen::updateKeycodeMap(
 		}
 
 		// set the mask of modifiers that this keycode uses
-		entry.keyMaskMask = (n == 1) ? 0 : (ShiftMask | LockMask);
+		entry.m_keyMaskMask = (n == 1) ? 0 : (ShiftMask | LockMask);
 
 		// add entries for this keycode
-		entry.keycode = static_cast<KeyCode>(minKeycode + i);
+		entry.m_keycode = static_cast<KeyCode>(minKeycode + i);
 		for (int j = 0; j < numKeysyms; ++j) {
-			entry.keyMask = (j == 0) ? 0 : ShiftMask;
+			entry.m_keyMask = (j == 0) ? 0 : ShiftMask;
 			m_keycodeMap.insert(std::make_pair(keysyms[i *
 									keysymsPerKeycode + j], entry));
 		}
@@ -841,7 +922,7 @@ void					CXWindowsSecondaryScreen::toggleKey(
 	KeyCodeMap::const_iterator index = m_keycodeMap.find(keysym);
 	if (index == m_keycodeMap.end())
 		return;
-	KeyCode keycode = index->second.keycode;
+	KeyCode keycode = index->second.m_keycode;
 
 	// toggle the key
 	if (keysym == XK_Caps_Lock && m_capsLockHalfDuplex) {

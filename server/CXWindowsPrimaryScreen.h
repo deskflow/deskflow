@@ -43,6 +43,15 @@ private:
 
 	void				updateModifierMap(Display* display);
 
+	class CKeyEventInfo {
+	public:
+		int				m_event;
+		Window			m_window;
+		Time			m_time;
+		KeyCode			m_keycode;
+	};
+	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
+
 private:
 	CServer*			m_server;
 	bool				m_active;

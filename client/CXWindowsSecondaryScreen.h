@@ -38,13 +38,19 @@ protected:
 	virtual long		getEventMask(Window) const;
 
 private:
-	struct KeyCodeMask {
+	enum EKeyAction { kPress, kRelease, kRepeat };
+	class KeyCodeMask {
 	public:
-		KeyCode			keycode;
-		unsigned int	keyMask;
-		unsigned int	keyMaskMask;
+		KeyCode			m_keycode;
+		unsigned int	m_keyMask;
+		unsigned int	m_keyMaskMask;
 	};
-	typedef std::pair<KeyCode, Bool> Keystroke;
+	class Keystroke {
+	public:
+		KeyCode			m_keycode;
+		Bool			m_press;
+		bool			m_repeat;
+	};
 	typedef std::vector<Keystroke> Keystrokes;
 	typedef std::vector<KeyCode> KeyCodes;
 	typedef std::map<KeyID, KeyCodeMask> KeyCodeMap;
@@ -54,9 +60,10 @@ private:
 	unsigned int		mapButton(ButtonID button) const;
 
 	unsigned int		mapKey(Keystrokes&, KeyCode&, KeyID,
-								KeyModifierMask, Bool press) const;
+								KeyModifierMask, EKeyAction) const;
 	bool				findKeyCode(KeyCode&, unsigned int&,
 								KeyID id, unsigned int) const;
+	void				doKeystrokes(const Keystrokes&, SInt32 count);
 	unsigned int		maskToX(KeyModifierMask) const;
 
 	void				updateKeys(Display* display);

@@ -63,16 +63,40 @@ void					CXWindowsPrimaryScreen::run()
 			break;
 		}
 
-		// FIXME -- simulate key repeat.  X sends press/release for
-		// repeat.  must detect auto repeat and use kKeyRepeat.
 		case KeyRelease: {
-			log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
-				if (key == XK_Caps_Lock && m_capsLockHalfDuplex)
-					m_server->onKeyDown(key, mask);
-				m_server->onKeyUp(key, mask);
+				// check if this is a key repeat by getting the next
+				// KeyPress event that has the same key and time as
+				// this release event, if any.  first prepare the
+				// filter info.
+				CKeyEventInfo filter;
+				filter.m_event   = KeyPress;
+				filter.m_window  = xevent.xkey.window;
+				filter.m_time    = xevent.xkey.time;
+				filter.m_keycode = xevent.xkey.keycode;
+
+				// now check for event
+				XEvent xevent2;
+				CDisplayLock display(this);
+				if (XCheckIfEvent(display, &xevent2,
+								&CXWindowsPrimaryScreen::findKeyEvent,
+								(XPointer)&filter) != True) {
+					// no press event follows so it's a plain release
+					log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+					if (key == XK_Caps_Lock && m_capsLockHalfDuplex)
+						m_server->onKeyDown(key, mask);
+					m_server->onKeyUp(key, mask);
+				}
+				else {
+					// found a press event following so it's a repeat.
+					// we could attempt to count the already queued
+					// repeats but we'll just send a repeat of 1.
+					// note that we discard the press event.
+					log((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+					m_server->onKeyRepeat(key, mask, 1);
+				}
 			}
 			break;
 		}
@@ -549,4 +573,14 @@ void					CXWindowsPrimaryScreen::updateModifierMap(
 	}
 
 	XFreeModifiermap(keymap);
+}
+
+Bool					CXWindowsPrimaryScreen::findKeyEvent(
+								Display*, XEvent* xevent, XPointer arg)
+{
+	CKeyEventInfo* filter = reinterpret_cast<CKeyEventInfo*>(arg);
+	return (xevent->type         == filter->m_event &&
+			xevent->xkey.window  == filter->m_window &&
+			xevent->xkey.time    == filter->m_time &&
+			xevent->xkey.keycode == filter->m_keycode) ? True : False;
 }
