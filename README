@@ -52,9 +52,12 @@ System Requirements
 
 * Microsoft Windows NT, Windows 2000, Windows XP (the Windows NT family);
 
-* Linux:
+* Unix:
   X Windows version 11 revision 4 or up with the XTEST extension
     (use `xdpyinfo | grep XTEST' to check for XTEST).
+
+In this document, "Unix" means any of the following:  Linux, Solaris,
+Irix.
 
 
 Installation
@@ -74,7 +77,7 @@ The computer with that keyboard and mouse is called the "primary
 screen" and it runs the synergy server.  All of the other computers
 are "secondary screens" and run the synergy client.  The Windows NT
 family, starting with NT 4 with service pack 3, is the best choice
-for the primary screen but Linux is good too.  (This is based on the
+for the primary screen but Unix is good too.  (This is based on the
 known bugs;  see BUGS for more details.)
 
 Second, you install the software.  Choose the appropriate package
@@ -111,8 +114,8 @@ Third, you configure and start the server.
   read the log messages to determine the problem then correct it and try
   `Test' again.
 
-  Linux
-  -----
+  Unix
+  ----
   Create a text file named synergy.conf with the following:
 
 	section: screens
@@ -165,8 +168,8 @@ Finally, start the clients.
   about to quit;  read the log messages to determine the problem then
   correct it and try `Test' again.
 
-  Linux
-  -----
+  Unix
+  ----
 
   To start a client, enter the following:
 
@@ -221,13 +224,13 @@ Tips and Tricks
 
 * Synergy's screen saver synchronization works best with xscreensaver
   under X windows.  Synergy works better with xscreensaver if it is
-  using of the screen saver extensions.  Prior to xscreensaver 4.0
+  using one of the screen saver extensions.  Prior to xscreensaver 4.0
   you can use `-mit-extension', `-sgi-extension', or `-xidle-extension'
   command line options to enable an extension (assuming your server has
   the extension).  Starting with 4.0 you must enable the corresponding
   option in your .xscreensaver file.
 
-* Synergy automatically converts newlines in clipboard text (Linux
+* Synergy automatically converts newlines in clipboard text (Unix
   expects \n to end each line while Windows expects \r\n).
 
 * Clients can be started and stopped at any time.  When a screen is
@@ -235,7 +238,7 @@ Tips and Tricks
   had moved all the way across it and jumped to the next screen.
 
 * A client's keyboard and mouse are fully functional while synergy is
-  running.  You can use them in case synergy hangs.
+  running.  You can use them in case synergy locks up.
 
 
 Bug Reports
