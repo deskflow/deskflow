@@ -61,6 +61,7 @@ protected:
 	virtual void		onPreMainLoop();
 	virtual void		onPreOpen();
 	virtual void		onPostOpen();
+	virtual void		onPreClose();
 	virtual void		onPreEnter();
 	virtual void		onPostEnter();
 	virtual void		onPreLeave();

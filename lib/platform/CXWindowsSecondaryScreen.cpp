@@ -379,6 +379,15 @@ CXWindowsSecondaryScreen::onPostOpen()
 }
 
 void
+CXWindowsSecondaryScreen::onPreClose()
+{
+	if (m_keyControl.global_auto_repeat == AutoRepeatModeOn) {
+		CDisplayLock display(m_screen);
+		XAutoRepeatOn(display);
+	}
+}
+
+void
 CXWindowsSecondaryScreen::onPreEnter()
 {
 	assert(m_window != None);
