@@ -298,7 +298,7 @@ void					CServer::setInfoNoLock(const CString& screen,
 	info->m_width    = w;
 	info->m_height   = h;
 	info->m_zoneSize = zoneSize;
-	log((CLOG_NOTE "screen \"%s\" size=%dx%d zone=%d pos=%d,%d", screen.c_str(), w, h, zoneSize, x, y));
+	log((CLOG_INFO "screen \"%s\" size=%dx%d zone=%d pos=%d,%d", screen.c_str(), w, h, zoneSize, x, y));
 
 	// send acknowledgement (if screen isn't the primary)
 	if (info->m_protocol != NULL) {
@@ -353,7 +353,7 @@ void					CServer::grabClipboardNoLock(
 	}
 
 	// mark screen as owning clipboard
-	log((CLOG_NOTE "screen \"%s\" grabbed clipboard %d from \"%s\"", screen.c_str(), id, clipboard.m_clipboardOwner.c_str()));
+	log((CLOG_INFO "screen \"%s\" grabbed clipboard %d from \"%s\"", screen.c_str(), id, clipboard.m_clipboardOwner.c_str()));
 	clipboard.m_clipboardOwner  = screen;
 	clipboard.m_clipboardSeqNum = seqNum;
 
@@ -404,7 +404,7 @@ void					CServer::setClipboard(ClipboardID id,
 	}
 
 	// unmarshall into our clipboard buffer
-	log((CLOG_NOTE "screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
+	log((CLOG_INFO "screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
 	clipboard.m_clipboardReady = true;
 	clipboard.m_clipboardData  = data;
 	clipboard.m_clipboard.unmarshall(clipboard.m_clipboardData, 0);
@@ -603,16 +603,24 @@ void					CServer::onMouseMoveSecondaryNoLock(
 	if (!isLockedToScreenNoLock()) {
 		// find direction of neighbor
 		CConfig::EDirection dir;
-		if (m_x < 0)
+		if (m_x < 0) {
 			dir = CConfig::kLeft;
-		else if (m_x > m_active->m_width - 1)
+		}
+		else if (m_x > m_active->m_width - 1) {
 			dir = CConfig::kRight;
-		else if (m_y < 0)
+		}
+		else if (m_y < 0) {
 			dir = CConfig::kTop;
-		else if (m_y > m_active->m_height - 1)
+		}
+		else if (m_y > m_active->m_height - 1) {
 			dir = CConfig::kBottom;
-		else
+		}
+		else {
 			newScreen = m_active;
+
+			// keep compiler quiet about unset variable
+			dir = CConfig::kLeft;
+		}
 
 		// get neighbor if we should switch
 		if (newScreen == NULL) {
@@ -709,7 +717,7 @@ void					CServer::switchScreen(CScreenInfo* dst,
 	assert(x >= 0 && y >= 0 && x < dst->m_width && y < dst->m_height);
 	assert(m_active != NULL);
 
-	log((CLOG_NOTE "switch from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), dst->m_name.c_str(), x, y));
+	log((CLOG_INFO "switch from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), dst->m_name.c_str(), x, y));
 	// FIXME -- we're not locked here but we probably should be
 
 	// record new position
@@ -1485,7 +1493,7 @@ void					CServer::removeConnection(const CString& name)
 		m_y = m_primaryInfo->m_height >> 1;
 
 		// don't notify active screen since it probably already disconnected
-		log((CLOG_NOTE "jump from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), m_primaryInfo->m_name.c_str(), m_x, m_y));
+		log((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), m_primaryInfo->m_name.c_str(), m_x, m_y));
 
 		// cut over
 		m_active = m_primaryInfo;

@@ -18,6 +18,11 @@ public:
 
 	static void			init(HINSTANCE);
 
+	// accessors
+
+	// get the application instance handle
+	static HINSTANCE	getInstance();
+
 protected:
 	// runs an event loop and returns when WM_QUIT is received
 	void				doRun();
@@ -35,9 +40,7 @@ protected:
 	// is closed.
 	void				closeDisplay();
 
-	// get the application instance handle and the registered window
-	// class atom
-	static HINSTANCE	getInstance();
+	// get the registered window class atom
 	ATOM				getClass() const;
 
 	// update screen size cache
@@ -45,6 +48,17 @@ protected:
 
 	// get the size of the screen
 	void				getScreenSize(SInt32* w, SInt32* h) const;
+
+	// get the input desktop.  caller must CloseDesktop() the result.
+	// do not call under windows 95/98/me.
+	HDESK				openInputDesktop() const;
+
+	// get the desktop's name.  do not call under windows 95/98/me.
+	CString				getDesktopName(HDESK) const;
+
+	// returns true iff desk is the current desk.  do not call under
+	// windows 95/98/me.
+	bool				isCurrentDesktop(HDESK desk) const;
 
 	// wait for and get the next message.  cancellable.
 	void				getEvent(MSG*) const;
@@ -61,6 +75,9 @@ protected:
 
 	// called by closeDisplay() to 
 	virtual void		onCloseDisplay() = 0;
+
+	// called by isCurrentDesktop() to get the current desktop name
+	virtual CString		getCurrentDesktopName() const = 0;
 
 private:
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);

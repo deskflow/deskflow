@@ -201,10 +201,8 @@ void					CLog::output(int priority, char* msg)
 
 		// print it
 		CHoldLock lock(s_lock);
-		if (s_outputter) {
-			s_outputter(priority, msg + g_maxPriorityLength - n);
-		}
-		else {
+		if (s_outputter == NULL ||
+			!s_outputter(priority, msg + g_maxPriorityLength - n)) {
 #if defined(CONFIG_PLATFORM_WIN32)
 			openConsole();
 #endif

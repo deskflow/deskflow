@@ -23,8 +23,8 @@ CFG=all - Win32 Debug
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
-# PROP Scc_ProjName "millpond"
-# PROP Scc_LocalPath "."
+# PROP Scc_ProjName ""
+# PROP Scc_LocalPath ""
 MTL=midl.exe
 
 !IF  "$(CFG)" == "all - Win32 Release"

@@ -614,16 +614,8 @@ unsigned int __stdcall	CThreadRep::threadFunc(void* arg)
 {
 	CThreadRep* rep = (CThreadRep*)arg;
 
-	// initialize OLE
-	const HRESULT hr = OleInitialize(NULL);
-
 	// run thread
 	rep->doThreadFunc();
-
-	// close OLE
-	if (!FAILED(hr)) {
-		OleUninitialize();
-	}
 
 	// signal termination
 	SetEvent(rep->m_exit);

@@ -8,4 +8,5 @@
 #pragma warning(disable: 4284)
 #pragma warning(disable: 4146)		// unary minus on unsigned value
 #pragma warning(disable: 4127)		// conditional expression is constant
+#pragma warning(disable: 4701)		// variable possibly used uninitialized
 #endif

@@ -152,6 +152,38 @@ void					CMSWindowsScreen::getScreenSize(
 	*h = m_h;
 }
 
+HDESK					CMSWindowsScreen::openInputDesktop() const
+{
+	return OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, TRUE,
+								DESKTOP_CREATEWINDOW |
+									DESKTOP_HOOKCONTROL |
+									GENERIC_WRITE);
+}
+
+CString					CMSWindowsScreen::getDesktopName(
+								HDESK desk) const
+{
+	if (desk == NULL) {
+		return CString();
+	}
+	else {
+		DWORD size;
+		GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
+		TCHAR* name = new TCHAR[size / sizeof(TCHAR) + 1];
+		GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
+		CString result(name);
+		delete[] name;
+		return result;
+	}
+}
+
+bool					CMSWindowsScreen::isCurrentDesktop(
+								HDESK desk) const
+{
+	return CStringUtil::CaselessCmp::equal(getDesktopName(desk),
+								getCurrentDesktopName());
+}
+
 void					CMSWindowsScreen::getEvent(MSG* msg) const
 {
 	// wait for an event in a cancellable way

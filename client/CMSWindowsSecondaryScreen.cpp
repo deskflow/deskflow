@@ -1,9 +1,12 @@
 #include "CMSWindowsSecondaryScreen.h"
 #include "CMSWindowsClipboard.h"
 #include "CClient.h"
+#include "CPlatform.h"
 #include "CClipboard.h"
-#include "CThread.h"
+#include "CLock.h"
 #include "CLog.h"
+#include "CThread.h"
+#include "XScreen.h"
 #include <assert.h>
 #include <ctype.h>
 
@@ -13,10 +16,18 @@
 
 CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen() :
 								m_client(NULL),
+								m_threadID(0),
+								m_desk(NULL),
+								m_deskName(),
 								m_window(NULL),
+								m_active(false),
 								m_nextClipboardWindow(NULL)
 {
-	// do nothing
+	m_is95Family = CPlatform::isWindows95Family();
+
+	// make sure this thread has a message queue
+	MSG dummy;
+	PeekMessage(&dummy, NULL, WM_USER, WM_USER, PM_NOREMOVE);
 }
 
 CMSWindowsSecondaryScreen::~CMSWindowsSecondaryScreen()
@@ -26,21 +37,32 @@ CMSWindowsSecondaryScreen::~CMSWindowsSecondaryScreen()
 
 void					CMSWindowsSecondaryScreen::run()
 {
+	// must call run() from same thread as open()
+	assert(m_threadID == GetCurrentThreadId());
+
 	// change our priority
 	CThread::getCurrentThread().setPriority(-7);
 
-	// save thread id
-	m_threadID = GetCurrentThreadId();
+	// poll input desktop to see if it changes (onPreTranslate()
+	// handles WM_TIMER)
+	UINT timer = 0;
+	if (!m_is95Family) {
+		SetTimer(NULL, 0, 200, NULL);
+	}
 
 	// run event loop
 	log((CLOG_INFO "entering event loop"));
 	doRun();
 	log((CLOG_INFO "exiting event loop"));
+
+	// remove timer
+	if (!m_is95Family) {
+		KillTimer(NULL, timer);
+	}
 }
 
 void					CMSWindowsSecondaryScreen::stop()
 {
-	log((CLOG_INFO "requesting event loop stop"));
 	doStop();
 }
 
@@ -48,8 +70,6 @@ void					CMSWindowsSecondaryScreen::open(CClient* client)
 {
 	assert(m_client == NULL);
 	assert(client   != NULL);
-
-	log((CLOG_INFO "opening screen"));
 
 	// set the client
 	m_client = client;
@@ -64,13 +84,15 @@ void					CMSWindowsSecondaryScreen::open(CClient* client)
 	// assume primary has all clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
 		grabClipboard(id);
+
+	// hide the cursor
+	m_active = true;
+	leave();
 }
 
 void					CMSWindowsSecondaryScreen::close()
 {
 	assert(m_client != NULL);
-
-	log((CLOG_INFO "closing screen"));
 
 	// close the display
 	closeDisplay();
@@ -82,12 +104,16 @@ void					CMSWindowsSecondaryScreen::close()
 void					CMSWindowsSecondaryScreen::enter(
 								SInt32 x, SInt32 y, KeyModifierMask mask)
 {
+	CLock lock(&m_mutex);
 	assert(m_window != NULL);
+	assert(m_active == false);
 
 	log((CLOG_INFO "entering screen at %d,%d mask=%04x", x, y, mask));
 
-	// attach thread input queues
-	AttachThreadInput(GetCurrentThreadId(), m_threadID, TRUE);
+	syncDesktop();
+
+	// now active
+	m_active = true;
 
 	// update our keyboard state to reflect the local state
 	updateKeys();
@@ -104,34 +130,25 @@ void					CMSWindowsSecondaryScreen::enter(
 		toggleKey(VK_SCROLL, KeyModifierScrollLock);
 	}
 
-	// warp to requested location
-	SInt32 w, h;
-	getScreenSize(&w, &h);
-	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.99 * x) / (w - 1)),
-								(DWORD)((65535.99 * y) / (h - 1)),
-								0, 0);
-
-	// show cursor
-	log((CLOG_INFO "show cursor"));
-	ShowWindow(m_window, SW_HIDE);
+	// hide mouse
+	onEnter(x, y);
 }
 
 void					CMSWindowsSecondaryScreen::leave()
 {
+	CLock lock(&m_mutex);
 	assert(m_window != NULL);
+	assert(m_active == true);
 
 	log((CLOG_INFO "leaving screen"));
 
-	// move hider window under the mouse (rather than moving the mouse
-	// somewhere else on the screen)
-	POINT point;
-	GetCursorPos(&point);
-	MoveWindow(m_window, point.x, point.y, 1, 1, FALSE);
+	syncDesktop();
 
-	// raise and show the hider window.  take activation.
-	log((CLOG_INFO "hide cursor"));
-	ShowWindow(m_window, SW_SHOWNORMAL);
+	// hide mouse
+	onLeave();
+
+	// not active anymore
+	m_active = false;
 
 	// if we think we own the clipboard but we don't then somebody
 	// grabbed the clipboard on this screen without us knowing.
@@ -159,6 +176,10 @@ void					CMSWindowsSecondaryScreen::keyDown(
 {
 	Keystrokes keys;
 	UINT virtualKey;
+
+	CLock lock(&m_mutex);
+	assert(m_window != NULL);
+	syncDesktop();
 
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
@@ -195,6 +216,10 @@ void					CMSWindowsSecondaryScreen::keyRepeat(
 	Keystrokes keys;
 	UINT virtualKey;
 
+	CLock lock(&m_mutex);
+	assert(m_window != NULL);
+	syncDesktop();
+
 	// get the sequence of keys to simulate key repeat and the final
 	// modifier state.
 	m_mask = mapKey(keys, virtualKey, key, mask, kRepeat);
@@ -210,6 +235,10 @@ void					CMSWindowsSecondaryScreen::keyUp(
 {
 	Keystrokes keys;
 	UINT virtualKey;
+
+	CLock lock(&m_mutex);
+	assert(m_window != NULL);
+	syncDesktop();
 
 	// get the sequence of keys to simulate key release and the final
 	// modifier state.
@@ -263,6 +292,10 @@ void					CMSWindowsSecondaryScreen::keyUp(
 
 void					CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
 {
+	CLock lock(&m_mutex);
+	assert(m_window != NULL);
+	syncDesktop();
+
 	// map button id to button flag
 	DWORD flags = mapButton(button, true);
 
@@ -273,6 +306,10 @@ void					CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
 
 void					CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
 {
+	CLock lock(&m_mutex);
+	assert(m_window != NULL);
+	syncDesktop();
+
 	// map button id to button flag
 	DWORD flags = mapButton(button, false);
 
@@ -281,8 +318,13 @@ void					CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
 		mouse_event(flags, 0, 0, 0, 0);
 }
 
-void					CMSWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
+void					CMSWindowsSecondaryScreen::mouseMove(
+								SInt32 x, SInt32 y)
 {
+	CLock lock(&m_mutex);
+	assert(m_window != NULL);
+	syncDesktop();
+
 	SInt32 w, h;
 	getScreenSize(&w, &h);
 	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
@@ -293,20 +335,27 @@ void					CMSWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 
 void					CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 {
+	CLock lock(&m_mutex);
+	assert(m_window != NULL);
+	syncDesktop();
+
 	mouse_event(MOUSEEVENTF_WHEEL, 0, 0, delta, 0);
 }
 
 void					CMSWindowsSecondaryScreen::setClipboard(
-								ClipboardID id, const IClipboard* src)
+								ClipboardID /*id*/, const IClipboard* src)
 {
+	CLock lock(&m_mutex);
 	assert(m_window != NULL);
 
 	CMSWindowsClipboard dst(m_window);
 	CClipboard::copy(&dst, src);
 }
 
-void					CMSWindowsSecondaryScreen::grabClipboard(ClipboardID id)
+void					CMSWindowsSecondaryScreen::grabClipboard(
+								ClipboardID /*id*/)
 {
+	CLock lock(&m_mutex);
 	assert(m_window != NULL);
 
 	CMSWindowsClipboard clipboard(m_window);
@@ -320,6 +369,10 @@ void					CMSWindowsSecondaryScreen::getMousePos(
 {
 	assert(x != NULL);
 	assert(y != NULL);
+
+	CLock lock(&m_mutex);
+	assert(m_window != NULL);
+	syncDesktop();
 
 	POINT pos;
 	if (GetCursorPos(&pos)) {
@@ -344,8 +397,9 @@ SInt32					CMSWindowsSecondaryScreen::getJumpZoneSize() const
 }
 
 void					CMSWindowsSecondaryScreen::getClipboard(
-								ClipboardID id, IClipboard* dst) const
+								ClipboardID /*id*/, IClipboard* dst) const
 {
+	CLock lock(&m_mutex);
 	assert(m_window != NULL);
 
 	CMSWindowsClipboard src(m_window);
@@ -356,44 +410,59 @@ void					CMSWindowsSecondaryScreen::onOpenDisplay()
 {
 	assert(m_window == NULL);
 
-	// initialize clipboard owner to current owner.  we don't want
-	// to take ownership of the clipboard just by starting up.
-	m_clipboardOwner = GetClipboardOwner();
+	// save thread id.  we'll need to pass this to the hook library.
+	m_threadID = GetCurrentThreadId();
 
-	// create the cursor hiding window.  this window is used to hide the
-	// cursor when it's not on the screen.  the window is hidden as soon
-	// as the cursor enters the screen or the display's real cursor is
-	// moved.
-	m_window = CreateWindowEx(WS_EX_TOPMOST |
-								WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW,
-								(LPCTSTR)getClass(), "Synergy",
-								WS_POPUP,
-								0, 0, 1, 1, NULL, NULL,
-								getInstance(),
-								NULL);
-
-	// hide the cursor
-	leave();
-
-	// install our clipboard snooper
-	m_nextClipboardWindow = SetClipboardViewer(m_window);
+	// get the input desktop and switch to it
+	if (m_is95Family) {
+		if (!openDesktop()) {
+			throw XScreenOpenFailure();
+		}
+	}
+	else {
+		if (!switchDesktop(openInputDesktop())) {
+			throw XScreenOpenFailure();
+		}
+	}
 }
 
 void					CMSWindowsSecondaryScreen::onCloseDisplay()
 {
-	assert(m_window != NULL);
+	// disconnect from desktop
+	if (m_is95Family) {
+		closeDesktop();
+	}
+	else {
+		switchDesktop(NULL);
+	}
 
-	// remove clipboard snooper
-	ChangeClipboardChain(m_window, m_nextClipboardWindow);
-	m_nextClipboardWindow = NULL;
+	// clear thread id
+	m_threadID = 0;
 
-	// destroy window
-	DestroyWindow(m_window);
-	m_window = NULL;
+	assert(m_window == NULL);
+	assert(m_desk   == NULL);
 }
 
 bool					CMSWindowsSecondaryScreen::onPreTranslate(MSG* msg)
 {
+	// handle event
+	switch (msg->message) {
+	case WM_TIMER:
+		// if current desktop is not the input desktop then switch to it
+		if (!m_is95Family) {
+			HDESK desk = openInputDesktop();
+			if (desk != NULL) {
+				if (isCurrentDesktop(desk)) {
+					CloseDesktop(desk);
+				}
+				else {
+					switchDesktop(desk);
+				}
+			}
+		}
+		return true;
+	}
+
 	return false;
 }
 
@@ -402,7 +471,21 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 								WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
-	// FIXME -- handle display changes
+	case WM_QUERYENDSESSION:
+		if (m_is95Family) {
+			return TRUE;
+		}
+		break;
+
+	case WM_ENDSESSION:
+		if (m_is95Family) {
+			if (wParam == TRUE && lParam == 0) {
+				stop();
+			}
+			return 0;
+		}
+		break;
+
 	case WM_PAINT:
 		ValidateRect(hwnd, NULL);
 		return 0;
@@ -410,7 +493,6 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 	case WM_ACTIVATEAPP:
 		if (wParam == FALSE) {
 			// some other app activated.  hide the hider window.
-			log((CLOG_INFO "show cursor"));
 			ShowWindow(m_window, SW_HIDE);
 		}
 		break;
@@ -423,9 +505,11 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 
 		// now notify client that somebody changed the clipboard (unless
 		// we're now the owner, in which case it's because we took
-		// ownership).
+		// ownership, or now it's owned by nobody, which will happen if
+		// we owned it and switched desktops because we destroy our
+		// window to do that).
 		m_clipboardOwner = GetClipboardOwner();
-		if (m_clipboardOwner != m_window) {
+		if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
 			m_client->onClipboardChanged(kClipboardClipboard);
 			m_client->onClipboardChanged(kClipboardSelection);
 		}
@@ -446,6 +530,176 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);
+}
+
+void					CMSWindowsSecondaryScreen::onEnter(SInt32 x, SInt32 y)
+{
+	// warp to requested location
+	SInt32 w, h;
+	getScreenSize(&w, &h);
+	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+								(DWORD)((65535.99 * x) / (w - 1)),
+								(DWORD)((65535.99 * y) / (h - 1)),
+								0, 0);
+
+	// show cursor
+	ShowWindow(m_window, SW_HIDE);
+}
+
+void					CMSWindowsSecondaryScreen::onLeave()
+{
+	// move hider window under the mouse (rather than moving the mouse
+	// somewhere else on the screen)
+	POINT point;
+	GetCursorPos(&point);
+	MoveWindow(m_window, point.x, point.y, 1, 1, FALSE);
+
+	// raise and show the hider window.  take activation.
+	ShowWindow(m_window, SW_SHOWNORMAL);
+}
+
+bool					CMSWindowsSecondaryScreen::openDesktop()
+{
+	CLock lock(&m_mutex);
+
+	// initialize clipboard owner to current owner.  we don't want
+	// to take ownership of the clipboard just by starting up.
+	m_clipboardOwner = GetClipboardOwner();
+
+	// create the cursor hiding window.  this window is used to hide the
+	// cursor when it's not on the screen.  the window is hidden as soon
+	// as the cursor enters the screen or the display's real cursor is
+	// moved.
+	m_window = CreateWindowEx(WS_EX_TOPMOST |
+								WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW,
+								(LPCTSTR)getClass(), "Synergy",
+								WS_POPUP,
+								0, 0, 1, 1, NULL, NULL,
+								getInstance(),
+								NULL);
+
+	// install our clipboard snooper
+	m_nextClipboardWindow = SetClipboardViewer(m_window);
+
+	return true;
+}
+
+void					CMSWindowsSecondaryScreen::closeDesktop()
+{
+	CLock lock(&m_mutex);
+
+	if (m_window != NULL) {
+		// remove clipboard snooper
+		ChangeClipboardChain(m_window, m_nextClipboardWindow);
+		m_nextClipboardWindow = NULL;
+
+		// destroy window
+		DestroyWindow(m_window);
+		m_window = NULL;
+	}
+}
+
+bool					CMSWindowsSecondaryScreen::switchDesktop(HDESK desk)
+{
+	CLock lock(&m_mutex);
+
+	bool ownClipboard = false;
+	if (m_window != NULL) {
+		// note if we own the clipboard
+		ownClipboard = (m_clipboardOwner == m_window);
+
+		// remove clipboard snooper
+		ChangeClipboardChain(m_window, m_nextClipboardWindow);
+		m_nextClipboardWindow = NULL;
+
+		// destroy window
+		DestroyWindow(m_window);
+		m_window = NULL;
+	}
+
+	// done with desktop
+	if (m_desk != NULL) {
+		CloseDesktop(m_desk);
+		m_desk     = NULL;
+		m_deskName = "";
+	}
+
+	// if no new desktop then we're done
+	if (desk == NULL) {
+		log((CLOG_INFO "disconnecting desktop"));
+		return true;
+	}
+
+	// set the desktop.  can only do this when there are no windows
+	// and hooks on the current desktop owned by this thread.
+	if (SetThreadDesktop(desk) == 0) {
+		log((CLOG_ERR "failed to set desktop: %d", GetLastError()));
+		CloseDesktop(desk);
+		return false;
+	}
+
+	// initialize clipboard owner to current owner.  we don't want
+	// to take ownership of the clipboard just by starting up.
+	m_clipboardOwner = GetClipboardOwner();
+
+	// create the cursor hiding window.  this window is used to hide the
+	// cursor when it's not on the screen.  the window is hidden as soon
+	// as the cursor enters the screen or the display's real cursor is
+	// moved.
+	m_window = CreateWindowEx(WS_EX_TOPMOST |
+								WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW,
+								(LPCTSTR)getClass(), "Synergy",
+								WS_POPUP,
+								0, 0, 1, 1, NULL, NULL,
+								getInstance(),
+								NULL);
+	if (m_window == NULL) {
+		log((CLOG_ERR "failed to create window: %d", GetLastError()));
+		CloseDesktop(desk);
+		return false;
+	}
+
+	// install our clipboard snooper
+	m_nextClipboardWindow = SetClipboardViewer(m_window);
+
+	// if we owned the desktop then set the clipboard owner
+	if (ownClipboard) {
+		m_clipboardOwner = GetClipboardOwner();
+	}
+
+	// save new desktop
+	m_desk     = desk;
+	m_deskName = getDesktopName(m_desk);
+	log((CLOG_INFO "switched to desktop %s", m_deskName.c_str()));
+
+	// get desktop up to date
+	if (!m_active) {
+		onLeave();
+	}
+
+	return true;
+}
+
+void					CMSWindowsSecondaryScreen::syncDesktop() const
+{
+	// note -- mutex must be locked on entry
+
+	DWORD threadID = GetCurrentThreadId();
+	if (!m_is95Family) {
+		if (GetThreadDesktop(threadID) != m_desk) {
+			// FIXME -- this doesn't work.  if we set a desktop then
+			// sending events doesn't work.
+			if (SetThreadDesktop(m_desk) == 0) {
+				log((CLOG_ERR "failed to set desktop: %d", GetLastError()));
+			}
+		}
+	}
+	AttachThreadInput(threadID, m_threadID, TRUE);
+}
+
+CString					CMSWindowsSecondaryScreen::getCurrentDesktopName() const
+{
+	return m_deskName;
 }
 
 // these tables map KeyID (a X windows KeySym) to virtual key codes.

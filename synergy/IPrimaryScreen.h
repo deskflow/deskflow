@@ -3,6 +3,7 @@
 
 #include "IInterface.h"
 #include "BasicTypes.h"
+#include "KeyTypes.h"
 #include "ClipboardTypes.h"
 
 class CServer;

@@ -5,8 +5,10 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <fcntl.h>
 #include <syslog.h>
+
 
 //
 // CUnixPlatform
@@ -22,26 +24,31 @@ CUnixPlatform::~CUnixPlatform()
 	// do nothing
 }
 
-bool					CUnixPlatform::installDaemon(/* FIXME */)
+bool					CUnixPlatform::installDaemon(
+								const char*,
+								const char*,
+								const char*,
+								const char*)
 {
 	// daemons don't require special installation
 	return true;
 }
 
-bool					CUnixPlatform::uninstallDaemon(/* FIXME */)
+bool					CUnixPlatform::uninstallDaemon(const char*)
 {
 	// daemons don't require special installation
 	return true;
 }
 
-bool					CUnixPlatform::daemonize(const char* name)
+int						CUnixPlatform::daemonize(
+								const char* name, DaemonFunc func)
 {
 	// fork so shell thinks we're done and so we're not a process
 	// group leader
 	switch (fork()) {
 	case -1:
 		// failed
-		return false;
+		return -1;
 
 	case 0:
 		// child
@@ -75,7 +82,44 @@ bool					CUnixPlatform::daemonize(const char* name)
 	// hook up logger
 	setDaemonLogger(name);
 
-	return true;
+	// invoke function
+	return func(this, 1, &name);
+}
+
+int						CUnixPlatform::restart(
+								RestartFunc func, int minErrorCode)
+{
+	for (;;) {
+		switch (fork()) {
+		default: {
+			// parent process.  wait for child to exit.
+			int status;
+			if (wait(&status) == -1) {
+				// wait failed.  this is unexpected so bail.
+				log((CLOG_CRIT "wait() failed"));
+				return minErrorCode;
+			}
+
+			// what happened?  if the child exited normally with a
+			// status less than 16 then the child was deliberately
+			// terminated so we also terminate.  otherwise, we
+			// loop.
+			if (WIFEXITED(status) && WEXITSTATUS(status) < minErrorCode) {
+				return WEXITSTATUS(status);
+			}
+			break;
+		}
+
+		case -1:
+			// fork() failed.  log the error and proceed as a child
+			log((CLOG_WARN "fork() failed;  cannot automatically restart on error"));
+			// fall through
+
+		case 0:
+			// child process
+			return func();
+		}
+	}
 }
 
 const char*				CUnixPlatform::getBasename(const char* pathname) const
@@ -117,7 +161,9 @@ CString					CUnixPlatform::addPathComponent(
 	CString path;
 	path.reserve(prefix.size() + 1 + suffix.size());
 	path += prefix;
-	path += '/';
+	if (path.size() == 0 || path[path.size() - 1] != '/') {
+		path += '/';
+	}
 	path += suffix;
 	return path;
 }
@@ -128,7 +174,7 @@ void					CUnixPlatform::setDaemonLogger(const char* name)
 	CLog::setOutputter(&CUnixPlatform::deamonLogger);
 }
 
-void					CUnixPlatform::deamonLogger(
+bool					CUnixPlatform::deamonLogger(
 								int priority, const char* msg)
 {
 	// convert priority
@@ -157,4 +203,5 @@ void					CUnixPlatform::deamonLogger(
 
 	// log it
 	syslog(priority, "%s", msg);
+	return true;
 }

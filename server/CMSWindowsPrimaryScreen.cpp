@@ -1,10 +1,11 @@
 #include "CMSWindowsPrimaryScreen.h"
 #include "CMSWindowsClipboard.h"
 #include "CServer.h"
-#include "CSynergyHook.h"
+#include "CPlatform.h"
+#include "XScreen.h"
 #include "XSynergy.h"
-#include "CThread.h"
 #include "CLog.h"
+#include "CThread.h"
 #include <assert.h>
 #include <string.h>
 
@@ -14,38 +15,76 @@
 
 CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen() :
 								m_server(NULL),
-								m_active(false),
+								m_threadID(0),
+								m_desk(NULL),
+								m_deskName(),
 								m_window(NULL),
-								m_nextClipboardWindow(NULL),
-								m_clipboardOwner(NULL),
-								m_hookLibrary(NULL),
+								m_active(false),
 								m_mark(0),
-								m_markReceived(0)
+								m_markReceived(0),
+								m_nextClipboardWindow(NULL),
+								m_clipboardOwner(NULL)
 {
-	// detect operating system
-	OSVERSIONINFO version;
-	version.dwOSVersionInfoSize = sizeof(version);
-	if (GetVersionEx(&version) == 0) {
-		log((CLOG_WARN "cannot determine OS: %d", GetLastError()));
+	// load the hook library
+	m_hookLibrary = LoadLibrary("synrgyhk");
+	if (m_hookLibrary == NULL) {
+		log((CLOG_ERR "failed to load hook library"));
+		throw XScreenOpenFailure();
 	}
-	m_is95Family = (version.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
+	m_setZone   = (SetZoneFunc)GetProcAddress(m_hookLibrary, "setZone");
+	m_setRelay  = (SetRelayFunc)GetProcAddress(m_hookLibrary, "setRelay");
+	m_install   = (InstallFunc)GetProcAddress(m_hookLibrary, "install");
+	m_uninstall = (UninstallFunc)GetProcAddress(m_hookLibrary, "uninstall");
+	if (m_setZone   == NULL ||
+		m_setRelay  == NULL ||
+		m_install   == NULL ||
+		m_uninstall == NULL) {
+		log((CLOG_ERR "invalid hook library"));
+		FreeLibrary(m_hookLibrary);
+		throw XScreenOpenFailure();
+	}
+
+	// detect operating system
+	m_is95Family = CPlatform::isWindows95Family();
+
+	// make sure this thread has a message queue
+	MSG dummy;
+	PeekMessage(&dummy, NULL, WM_USER, WM_USER, PM_NOREMOVE);
 }
 
 CMSWindowsPrimaryScreen::~CMSWindowsPrimaryScreen()
 {
+	assert(m_hookLibrary != NULL);
 	assert(m_window      == NULL);
-	assert(m_hookLibrary == NULL);
+
+	// done with hook library
+	FreeLibrary(m_hookLibrary);
 }
 
 void					CMSWindowsPrimaryScreen::run()
 {
+	// must call run() from same thread as open()
+	assert(m_threadID == GetCurrentThreadId());
+
 	// change our priority
 	CThread::getCurrentThread().setPriority(-3);
+
+	// poll input desktop to see if it changes (preTranslateMessage()
+	// handles WM_TIMER)
+	UINT timer = 0;
+	if (!m_is95Family) {
+		SetTimer(NULL, 0, 200, NULL);
+	}
 
 	// run event loop
 	log((CLOG_INFO "entering event loop"));
 	doRun();
 	log((CLOG_INFO "exiting event loop"));
+
+	// remove timer
+	if (!m_is95Family) {
+		KillTimer(NULL, timer);
+	}
 }
 
 void					CMSWindowsPrimaryScreen::stop()
@@ -64,16 +103,25 @@ void					CMSWindowsPrimaryScreen::open(CServer* server)
 	// open the display
 	openDisplay();
 
-	// get keyboard state
-	updateKeys();
+	// initialize marks
+	m_mark         = 0;
+	m_markReceived = 0;
+	nextMark();
 
 	// send screen info
 	SInt32 w, h;
 	getScreenSize(&w, &h);
 	m_server->setInfo(w, h, getJumpZoneSize(), 0, 0);
 
+	// compute center pixel of screen
+	m_xCenter = w >> 1;
+	m_yCenter = h >> 1;
+
+	// get keyboard state
+	updateKeys();
+
 	// enter the screen
-	doEnter();
+	enterNoWarp();
 }
 
 void					CMSWindowsPrimaryScreen::close()
@@ -92,53 +140,11 @@ void					CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 	log((CLOG_INFO "entering primary at %d,%d", x, y));
 	assert(m_active == true);
 
-	doEnter();
+	// enter the screen
+	enterNoWarp();
 
 	// warp to requested location
 	warpCursor(x, y);
-}
-
-void					CMSWindowsPrimaryScreen::doEnter()
-{
-	// not active anymore
-	m_active = false;
-
-	// release keyboard/mouse and set the zones that should cause a jump
-/* FIXME
-if (UnregisterHotKey(m_window, 0x0001) != 0) {
-log((CLOG_INFO "released hot key"));
-}
-else {
-log((CLOG_INFO "failed to release hot key: %d", GetLastError()));
-}
-*/
-	if (m_is95Family) {
-		DWORD dummy = 0;
-		SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, FALSE, &dummy, 0);
-	}
-	SInt32 w, h;
-	getScreenSize(&w, &h);
-	SetZoneFunc setZone = (SetZoneFunc)GetProcAddress(
-											m_hookLibrary, "setZone");
-	setZone(m_server->getActivePrimarySides(), w, h, getJumpZoneSize());
-
-	// restore the active window and hide our window.  we can only set
-	// the active window for another thread if we first attach our input
-	// to that thread.
-	ReleaseCapture();
-	if (m_lastActiveWindow != NULL) {
-		DWORD myThread = GetCurrentThreadId();
-		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
-			// FIXME -- shouldn't raise window if X-Mouse is enabled
-			// but i have no idea how to do that or check if enabled.
-			SetActiveWindow(m_lastActiveWindow);
-			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
-		}
-	}
-	ShowWindow(m_window, SW_HIDE);
-
-	// all messages prior to now are invalid
-	nextMark();
 }
 
 bool					CMSWindowsPrimaryScreen::leave()
@@ -146,61 +152,36 @@ bool					CMSWindowsPrimaryScreen::leave()
 	log((CLOG_INFO "leaving primary"));
 	assert(m_active == false);
 
-	// do non-warp enter stuff
-	// get state of keys as we leave
-	updateKeys();
-
 	// all messages prior to now are invalid
 	nextMark();
 
-	// remember the active window before we leave.  GetActiveWindow()
-	// will only return the active window for the thread's queue (i.e.
-	// our app) but we need the globally active window.  get that by
-	// attaching input to the foreground window's thread then calling
-	// GetActiveWindow() and then detaching our input.
-	m_lastActiveWindow     = NULL;
-	m_lastForegroundWindow = GetForegroundWindow();
-	m_lastActiveThread     = GetWindowThreadProcessId(
-								m_lastForegroundWindow, NULL);
-	if (m_lastActiveThread != 0) {
-		DWORD myThread = GetCurrentThreadId();
-		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
-			m_lastActiveWindow = GetActiveWindow();
-			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
-		}
+	// save active window, show ours, and grab mouse/keyboard
+	if (!onLeave()) {
+		return false;
 	}
 
-	// show our window
-	ShowWindow(m_window, SW_SHOW);
-
 	// relay all mouse and keyboard events
-	SetRelayFunc setRelay = (SetRelayFunc)GetProcAddress(
-											m_hookLibrary, "setRelay");
-	setRelay();
+	m_setRelay();
+
+	// get state of keys as we leave
+	updateKeys();
+
+	// warp mouse to center of screen
+	warpCursor(m_xCenter, m_yCenter);
+
+	// ignore this many mouse motion events (not including the already
+	// queued events).  on (at least) the win2k login desktop, one
+	// motion event is reported using a position from before the above
+	// warpCursor().  i don't know why it does that and other desktops
+	// don't have the same problem.  anyway, simply ignoring that event
+	// works around it.
+	m_mouseMoveIgnore = 1;
+
+	// disable ctrl+alt+del, alt+tab, etc
 	if (m_is95Family) {
-		// disable ctrl+alt+del, alt+tab, ctrl+esc
 		DWORD dummy = 0;
 		SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, TRUE, &dummy, 0);
 	}
-/* FIXME
-if (RegisterHotKey(m_window, 0x0001, MOD_ALT, VK_TAB) != 0) {
-log((CLOG_INFO "got hot key"));
-}
-else {
-log((CLOG_INFO "failed to get hot key: %d", GetLastError()));
-}
-*/
-
-	// get keyboard input and capture mouse
-	SetActiveWindow(m_window);
-	SetFocus(m_window);
-	SetCapture(m_window);
-
-	// warp the mouse to the center of the screen
-	getScreenSize(&m_xCenter, &m_yCenter);
-	m_xCenter >>= 1;
-	m_yCenter >>= 1;
-	warpCursor(m_xCenter, m_yCenter);
 
 	// discard messages until after the warp
 	nextMark();
@@ -238,12 +219,11 @@ log((CLOG_INFO "failed to get hot key: %d", GetLastError()));
 
 void					CMSWindowsPrimaryScreen::onConfigure()
 {
-	if (!m_active) {
+	if ((m_is95Family || m_desk != NULL) && !m_active) {
 		SInt32 w, h;
 		getScreenSize(&w, &h);
-		SetZoneFunc setZone = (SetZoneFunc)GetProcAddress(
-											m_hookLibrary, "setZone");
-		setZone(m_server->getActivePrimarySides(), w, h, getJumpZoneSize());
+		m_setZone(m_server->getActivePrimarySides(),
+								w, h, getJumpZoneSize());
 	}
 }
 
@@ -254,7 +234,7 @@ void					CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 }
 
 void					CMSWindowsPrimaryScreen::setClipboard(
-								ClipboardID id, const IClipboard* src)
+								ClipboardID /*id*/, const IClipboard* src)
 {
 	assert(m_window != NULL);
 
@@ -262,7 +242,8 @@ void					CMSWindowsPrimaryScreen::setClipboard(
 	CClipboard::copy(&dst, src);
 }
 
-void					CMSWindowsPrimaryScreen::grabClipboard(ClipboardID id)
+void					CMSWindowsPrimaryScreen::grabClipboard(
+								ClipboardID /*id*/)
 {
 	assert(m_window != NULL);
 
@@ -284,7 +265,7 @@ SInt32					CMSWindowsPrimaryScreen::getJumpZoneSize() const
 }
 
 void					CMSWindowsPrimaryScreen::getClipboard(
-								ClipboardID id, IClipboard* dst) const
+								ClipboardID /*id*/, IClipboard* dst) const
 {
 	assert(m_window != NULL);
 
@@ -332,80 +313,37 @@ void					CMSWindowsPrimaryScreen::onOpenDisplay()
 	assert(m_window == NULL);
 	assert(m_server != NULL);
 
-	// initialize clipboard owner to current owner.  we don't want
-	// to take ownership of the clipboard just by starting up.
-	m_clipboardOwner = GetClipboardOwner();
+	// save thread id.  we'll need to pass this to the hook library.
+	m_threadID = GetCurrentThreadId();
 
-	// get screen size
-	// note -- we use a fullscreen window to grab input.  it should
-	// be possible to use a 1x1 window but i've run into problems
-	// with losing keyboard input (focus?) in that case.
-	// unfortunately, hiding the full screen window causes all other
-	// windows to redraw.
-	SInt32 w, h;
-	getScreenSize(&w, &h);
-
-	// create the window
-	m_window = CreateWindowEx(WS_EX_TOPMOST |
-								WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW,
-								(LPCTSTR)getClass(), "Synergy",
-								WS_POPUP,
-								0, 0, w, h, NULL, NULL,
-								getInstance(),
-								NULL);
-	assert(m_window != NULL);
-
-	// install our clipboard snooper
-	m_nextClipboardWindow = SetClipboardViewer(m_window);
-
-	// load the hook library
-	bool hooked = false;
-	m_hookLibrary = LoadLibrary("synrgyhk");
-	if (m_hookLibrary != NULL) {
-		// install input hooks
-		InstallFunc install = (InstallFunc)GetProcAddress(
-											m_hookLibrary, "install"); 
-		if (install != NULL) {
-			hooked = (install(m_window) != 0);
+	// get the input desktop and switch to it
+	if (m_is95Family) {
+		if (!openDesktop()) {
+			throw XScreenOpenFailure();
 		}
 	}
-	if (!hooked) {
-		log((CLOG_ERR "failed to install hooks"));
-		ChangeClipboardChain(m_window, m_nextClipboardWindow);
-		m_nextClipboardWindow = NULL;
-		DestroyWindow(m_window);
-		m_window = NULL;
-		// FIXME -- throw
+	else {
+		if (!switchDesktop(openInputDesktop())) {
+			throw XScreenOpenFailure();
+		}
 	}
-
-	// initialize marks
-	m_mark         = 0;
-	m_markReceived = 0;
-	nextMark();
 }
 
 void					CMSWindowsPrimaryScreen::onCloseDisplay()
 {
-	assert(m_window != NULL);
-
-	// uninstall input hooks
-	UninstallFunc uninstall = (UninstallFunc)GetProcAddress(
-											m_hookLibrary, "uninstall"); 
-	if (uninstall != NULL) {
-		uninstall();
+	// disconnect from desktop
+	if (m_is95Family) {
+		closeDesktop();
+	}
+	else {
+		switchDesktop(NULL);
 	}
 
-	// done with hook library
-	FreeLibrary(m_hookLibrary);
-	m_hookLibrary = NULL;
+	// clear thread id
+	m_threadID = 0;
 
-	// remove clipboard snooper
-	ChangeClipboardChain(m_window, m_nextClipboardWindow);
-	m_nextClipboardWindow = NULL;
-
-	// destroy window
-	DestroyWindow(m_window);
-	m_window = NULL;
+	assert(m_window == NULL);
+	assert(m_desk   == NULL);
 }
 
 bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
@@ -417,8 +355,8 @@ bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 		return true;
 
 	case SYNERGY_MSG_KEY:
-		// ignore if not at current mark
-		if (m_mark == m_markReceived) {
+		// ignore message if posted prior to last mark change
+		if (m_markReceived == m_mark) {
 			KeyModifierMask mask;
 			const KeyID key = mapKey(msg->wParam, msg->lParam, &mask);
 			if (key != kKeyNone) {
@@ -453,8 +391,8 @@ bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 		return true;
 
 	case SYNERGY_MSG_MOUSE_BUTTON:
-		// ignore if not at current mark
-		if (m_mark == m_markReceived) {
+		// ignore message if posted prior to last mark change
+		if (m_markReceived == m_mark) {
 			const ButtonID button = mapButton(msg->wParam);
 			switch (msg->wParam) {
 			case WM_LBUTTONDOWN:
@@ -479,20 +417,19 @@ bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 		return true;
 
 	case SYNERGY_MSG_MOUSE_WHEEL:
-		// ignore if not at current mark
-		if (m_mark == m_markReceived) {
+		// ignore message if posted prior to last mark change
+		if (m_markReceived == m_mark) {
 			log((CLOG_ERR "event: button wheel delta=%d %d", msg->wParam, msg->lParam));
 			m_server->onMouseWheel(msg->wParam);
 		}
 		return true;
 
 	case SYNERGY_MSG_MOUSE_MOVE:
-		// ignore if not at current mark
-		if (m_mark == m_markReceived) {
-			SInt32 x = (SInt32)msg->wParam;
-			SInt32 y = (SInt32)msg->lParam;
+		// ignore message if posted prior to last mark change
+		if (m_markReceived == m_mark) {
+			SInt32 x = static_cast<SInt32>(msg->wParam);
+			SInt32 y = static_cast<SInt32>(msg->lParam);
 			if (!m_active) {
-				log((CLOG_DEBUG2 "event: inactive move %d,%d", x, y));
 				m_server->onMouseMovePrimary(x, y);
 			}
 			else {
@@ -500,15 +437,35 @@ bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 				x -= m_xCenter;
 				y -= m_yCenter;
 
-				// ignore if the mouse didn't move
-				if (x != 0 && y != 0) {
-					log((CLOG_DEBUG2 "event: active move %d,%d", x, y));
+				// ignore if the mouse didn't move or we're ignoring
+				// motion.
+				if (m_mouseMoveIgnore == 0) {
+					if (x != 0 && y != 0) {
+						// warp mouse back to center
+						warpCursor(m_xCenter, m_yCenter);
 
-					// warp mouse back to center
-					warpCursor(m_xCenter, m_yCenter);
+						// send motion
+						m_server->onMouseMoveSecondary(x, y);
+					}
+				}
+				else {
+					// ignored one more motion event
+					--m_mouseMoveIgnore;
+				}
+			}
+		}
+		return true;
 
-					// send motion
-					m_server->onMouseMoveSecondary(x, y);
+	case WM_TIMER:
+		// if current desktop is not the input desktop then switch to it
+		if (!m_is95Family) {
+			HDESK desk = openInputDesktop();
+			if (desk != NULL) {
+				if (isCurrentDesktop(desk)) {
+					CloseDesktop(desk);
+				}
+				else {
+					switchDesktop(desk);
 				}
 			}
 		}
@@ -523,11 +480,20 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 								WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
-/*
-case WM_HOTKEY:
-log((CLOG_INFO "hot key: %d, %d, %s %s %s", wParam, HIWORD(lParam), (LOWORD(lParam) & MOD_ALT) ? "ALT" : "", (LOWORD(lParam) & MOD_CONTROL) ? "CTRL" : "", (LOWORD(lParam) & MOD_SHIFT) ? "SHIFT" : "", (LOWORD(lParam) & MOD_WIN) ? "WIN" : ""));
-return 0;
-*/
+	case WM_QUERYENDSESSION:
+		if (m_is95Family) {
+			return TRUE;
+		}
+		break;
+
+	case WM_ENDSESSION:
+		if (m_is95Family) {
+			if (wParam == TRUE && lParam == 0) {
+				stop();
+			}
+			return 0;
+		}
+		break;
 
 	case WM_PAINT:
 		ValidateRect(hwnd, NULL);
@@ -537,7 +503,9 @@ return 0;
 		log((CLOG_DEBUG "clipboard was taken"));
 
 		// first pass it on
-		SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+		if (m_nextClipboardWindow != NULL) {
+			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+		}
 
 		// now notify server that somebody changed the clipboard.
 		// skip that if we're the new owner.
@@ -555,51 +523,302 @@ return 0;
 		return 0;
 
 	case WM_CHANGECBCHAIN:
-		if (m_nextClipboardWindow == (HWND)wParam)
+		if (m_nextClipboardWindow == (HWND)wParam) {
 			m_nextClipboardWindow = (HWND)lParam;
-		else
+		}
+		else if (m_nextClipboardWindow != NULL) {
 			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+		}
 		return 0;
 
-	case WM_DISPLAYCHANGE: {
-		// screen resolution has changed
-		SInt32 w, h;
-		updateScreenSize();
-		getScreenSize(&w, &h);
+	case WM_DISPLAYCHANGE:
+		{
+			// screen resolution may have changed
+			SInt32 wOld, hOld;
+			getScreenSize(&wOld, &hOld);
+			SInt32 w, h;
+			updateScreenSize();
+			getScreenSize(&w, &h);
 
-		// recompute center pixel of screen
-		m_xCenter = w >> 1;
-		m_yCenter = h >> 1;
+			// do nothing if resolution hasn't changed
+			if (w != wOld || h != hOld) {
+				// recompute center pixel of screen
+				m_xCenter = w >> 1;
+				m_yCenter = h >> 1;
 
-		// warp mouse to center if active
-		if (m_active) {
-			warpCursor(m_xCenter, m_yCenter);
+				// warp mouse to center if active
+				if (m_active) {
+					warpCursor(m_xCenter, m_yCenter);
+				}
+
+				// tell hook about resize if not active
+				else {
+					onConfigure();
+				}
+
+				// send new screen info
+				POINT pos;
+				GetCursorPos(&pos);
+				m_server->setInfo(w, h, getJumpZoneSize(), pos.x, pos.y);
+			}
+
+			return 0;
 		}
-
-		// tell hook about resize if not active
-		else {
-			SetZoneFunc setZone = (SetZoneFunc)GetProcAddress(
-											m_hookLibrary, "setZone");
-			setZone(m_server->getActivePrimarySides(), w, h, getJumpZoneSize());
-		}
-
-		// send new screen info
-		POINT pos;
-		GetCursorPos(&pos);
-		m_server->setInfo(w, h, getJumpZoneSize(), pos.x, pos.y);
-
-		return 0;
-	}
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
+void					CMSWindowsPrimaryScreen::enterNoWarp()
+{
+	// not active anymore
+	m_active = false;
+
+	// reset motion ignore count
+	m_mouseMoveIgnore = 0;
+
+	// enable ctrl+alt+del, alt+tab, etc
+	if (m_is95Family) {
+		DWORD dummy = 0;
+		SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, FALSE, &dummy, 0);
+	}
+
+	// install jump zones
+	onConfigure();
+
+	// restore active window and hide our window
+	onEnter();
+
+	// all messages prior to now are invalid
+	nextMark();
+}
+
+void					CMSWindowsPrimaryScreen::onEnter()
+{
+	// restore the active window and hide our window.  we can only set
+	// the active window for another thread if we first attach our input
+	// to that thread.
+	ReleaseCapture();
+	if (m_lastActiveWindow != NULL) {
+		DWORD myThread = GetCurrentThreadId();
+		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
+			// FIXME -- shouldn't raise window if X-Mouse is enabled
+			// but i have no idea how to do that or check if enabled.
+			SetActiveWindow(m_lastActiveWindow);
+			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
+		}
+	}
+	ShowWindow(m_window, SW_HIDE);
+}
+
+bool					CMSWindowsPrimaryScreen::onLeave()
+{
+	// remember the active window before we leave.  GetActiveWindow()
+	// will only return the active window for the thread's queue (i.e.
+	// our app) but we need the globally active window.  get that by
+	// attaching input to the foreground window's thread then calling
+	// GetActiveWindow() and then detaching our input.
+	m_lastActiveWindow     = NULL;
+	m_lastForegroundWindow = GetForegroundWindow();
+	m_lastActiveThread     = GetWindowThreadProcessId(
+								m_lastForegroundWindow, NULL);
+	if (m_lastActiveThread != 0) {
+		DWORD myThread = GetCurrentThreadId();
+		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
+			m_lastActiveWindow = GetActiveWindow();
+			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
+		}
+	}
+
+	// show our window
+	ShowWindow(m_window, SW_SHOW);
+
+	// get keyboard input and capture mouse
+	SetActiveWindow(m_window);
+	SetFocus(m_window);
+	SetCapture(m_window);
+
+	return true;
+}
+
 void					CMSWindowsPrimaryScreen::nextMark()
 {
-	assert(m_window != NULL);
+	// next mark
+	++m_mark;
 
-	PostMessage(m_window, SYNERGY_MSG_MARK, ++m_mark, 0);
+	// mark point in message queue where the mark was changed
+	PostThreadMessage(m_threadID, SYNERGY_MSG_MARK, m_mark, 0);
+}
+
+bool					CMSWindowsPrimaryScreen::openDesktop()
+{
+	// install hooks
+	m_install(m_threadID);
+
+	// note -- we use a fullscreen window to grab input.  it should
+	// be possible to use a 1x1 window but i've run into problems
+	// with losing keyboard input (focus?) in that case.
+	// unfortunately, hiding the full screen window (when entering
+	// the scren causes all other windows to redraw).
+	SInt32 w, h;
+	getScreenSize(&w, &h);
+
+	// create the window
+	m_window = CreateWindowEx(WS_EX_TOPMOST |
+									WS_EX_TRANSPARENT |
+									WS_EX_TOOLWINDOW,
+								(LPCTSTR)getClass(),
+								"Synergy",
+								WS_POPUP,
+								0, 0, w, h, NULL, NULL,
+								getInstance(),
+								NULL);
+	if (m_window == NULL) {
+		log((CLOG_ERR "failed to create window: %d", GetLastError()));
+		m_uninstall();
+		return false;
+	}
+
+	// install our clipboard snooper
+	m_nextClipboardWindow = SetClipboardViewer(m_window);
+
+	return true;
+}
+
+void					CMSWindowsPrimaryScreen::closeDesktop()
+{
+	// destroy old window
+	if (m_window != NULL) {
+		// restore active window and hide ours
+		if (m_active) {
+			onEnter();
+		}
+
+		// first remove clipboard snooper
+		ChangeClipboardChain(m_window, m_nextClipboardWindow);
+		m_nextClipboardWindow = NULL;
+
+		// we no longer own the clipboard
+		if (m_clipboardOwner == m_window) {
+			m_clipboardOwner = NULL;
+		}
+
+		// now destroy window
+		DestroyWindow(m_window);
+		m_window = NULL;
+	}
+
+	// unhook
+	m_uninstall();
+}
+
+bool					CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
+{
+	// did we own the clipboard?
+	bool ownClipboard = (m_clipboardOwner == m_window);
+
+	// destroy old window
+	if (m_window != NULL) {
+		// restore active window and hide ours
+		if (m_active) {
+			onEnter();
+		}
+
+		// first remove clipboard snooper
+		ChangeClipboardChain(m_window, m_nextClipboardWindow);
+		m_nextClipboardWindow = NULL;
+
+		// we no longer own the clipboard
+		if (ownClipboard) {
+			m_clipboardOwner = NULL;
+		}
+
+		// now destroy window
+		DestroyWindow(m_window);
+		m_window = NULL;
+	}
+
+	// unhook
+	if (m_desk != NULL) {
+		m_uninstall();
+		CloseDesktop(m_desk);
+		m_desk     = NULL;
+		m_deskName = "";
+	}
+
+	// if no new desktop then we're done
+	if (desk == NULL) {
+		log((CLOG_INFO "disconnecting desktop"));
+		return true;
+	}
+
+	// set the desktop.  can only do this when there are no windows
+	// and hooks on the current desktop owned by this thread.
+	if (SetThreadDesktop(desk) == 0) {
+		log((CLOG_ERR "failed to set desktop: %d", GetLastError()));
+		CloseDesktop(desk);
+		return false;
+	}
+
+	// install hooks
+	m_install(m_threadID);
+
+	// note -- we use a fullscreen window to grab input.  it should
+	// be possible to use a 1x1 window but i've run into problems
+	// with losing keyboard input (focus?) in that case.
+	// unfortunately, hiding the full screen window (when entering
+	// the scren causes all other windows to redraw).
+	SInt32 w, h;
+	getScreenSize(&w, &h);
+
+	// create the window
+	m_window = CreateWindowEx(WS_EX_TOPMOST |
+									WS_EX_TRANSPARENT |
+									WS_EX_TOOLWINDOW,
+								(LPCTSTR)getClass(),
+								"Synergy",
+								WS_POPUP,
+								0, 0, w, h, NULL, NULL,
+								getInstance(),
+								NULL);
+	if (m_window == NULL) {
+		log((CLOG_ERR "failed to create window: %d", GetLastError()));
+		m_uninstall();
+		CloseDesktop(desk);
+		return false;
+	}
+
+	// install our clipboard snooper
+	m_nextClipboardWindow = SetClipboardViewer(m_window);
+
+	// reassert clipboard ownership
+	if (ownClipboard) {
+		// FIXME
+	}
+
+	// save new desktop
+	m_desk     = desk;
+	m_deskName = getDesktopName(m_desk);
+	log((CLOG_INFO "switched to desktop %s", m_deskName.c_str()));
+
+	// get active window and show ours
+	if (m_active) {
+		onLeave();
+	}
+	else {
+		// set jump zones
+		onConfigure();
+
+		// all messages prior to now are invalid
+		nextMark();
+	}
+
+	return true;
+}
+
+CString					CMSWindowsPrimaryScreen::getCurrentDesktopName() const
+{
+	return m_deskName;
 }
 
 static const KeyID		g_virtualKey[] =

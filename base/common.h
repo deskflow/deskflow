@@ -27,6 +27,9 @@
 #pragma warning(disable: 4786) // identifier truncated in debug info
 #pragma warning(disable: 4514) // unreferenced inline function removed
 
+// this one's a little too aggressive
+#pragma warning(disable: 4127) // conditional expression is constant
+
 #endif // (_MSC_VER >= 1200)
 
 #else

@@ -3,7 +3,8 @@
 
 #include "CMSWindowsScreen.h"
 #include "ISecondaryScreen.h"
-#include "stdmap.h"
+#include "CMutex.h"
+#include "CString.h"
 #include "stdvector.h"
 
 class CMSWindowsSecondaryScreen : public CMSWindowsScreen, public ISecondaryScreen {
@@ -39,6 +40,7 @@ protected:
 	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM);
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
+	virtual CString		getCurrentDesktopName() const;
 
 private:
 	enum EKeyAction { kPress, kRelease, kRepeat };
@@ -49,7 +51,21 @@ private:
 		bool			m_repeat;
 	};
 	typedef std::vector<Keystroke> Keystrokes;
-	
+
+	void				onEnter(SInt32 x, SInt32 y);
+	void				onLeave();
+
+	// open/close desktop (for windows 95/98/me)
+	bool				openDesktop();
+	void				closeDesktop();
+
+	// make desk the thread desktop (for windows NT/2000/XP)
+	bool				switchDesktop(HDESK desk);
+
+	// get calling thread to use the input desktop
+	void				syncDesktop() const;
+
+	// key and button queries and operations
 	DWORD				mapButton(ButtonID button, bool press) const;
 	KeyModifierMask		mapKey(Keystrokes&, UINT& virtualKey, KeyID,
 								KeyModifierMask, EKeyAction) const;
@@ -63,13 +79,28 @@ private:
 	void				sendKeyEvent(UINT virtualKey, bool press);
 
 private:
+	CMutex				m_mutex;
 	CClient*			m_client;
+
+	// true if windows 95/98/me
+	bool				m_is95Family;
+
+	// the main loop's thread id
+	DWORD				m_threadID;
+
+	// the current desk and it's name
+	HDESK				m_desk;
+	CString				m_deskName;
+
+	// our window (for getting clipboard changes)
 	HWND				m_window;
+
+	// m_active is true if this screen has been entered
+	bool				m_active;
+
+	// clipboard stuff
 	HWND				m_nextClipboardWindow;
 	HWND				m_clipboardOwner;
-
-	// thread id of the event loop thread
-	DWORD				m_threadID;
 
 	// virtual key states
 	BYTE				m_keys[256];

@@ -20,14 +20,14 @@
 #define SYNERGY_MSG_MOUSE_MOVE		WM_APP + 0x0014	// x; y
 #define SYNERGY_MSG_MOUSE_WHEEL		WM_APP + 0x0015	// delta; <unused>
 
-typedef int				(*InstallFunc)(HWND);
+extern "C" {
+
+typedef int				(*InstallFunc)(DWORD targetQueueThreadID);
 typedef int				(*UninstallFunc)(void);
 typedef void			(*SetZoneFunc)(UInt32, SInt32, SInt32, SInt32);
 typedef void			(*SetRelayFunc)(void);
 
-extern "C" {
-
-CSYNERGYHOOK_API int	install(HWND);
+CSYNERGYHOOK_API int	install(DWORD);
 CSYNERGYHOOK_API int	uninstall(void);
 CSYNERGYHOOK_API void	setZone(UInt32 sides,
 								SInt32 w, SInt32 h, SInt32 jumpZoneSize);

@@ -120,6 +120,11 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 	}
 }
 
+void					CClient::quit()
+{
+	m_screen->stop();
+}
+
 void					CClient::onClipboardChanged(ClipboardID id)
 {
 	log((CLOG_DEBUG "sending clipboard %d changed", id));

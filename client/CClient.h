@@ -19,7 +19,11 @@ public:
 
 	// manipulators
 
+	// start the client.  does not return until quit() is called.
 	void				run(const CNetworkAddress& serverAddress);
+
+	// tell client to exit gracefully
+	void				quit();
 
 	// handle events on client's screen
 	void				onClipboardChanged(ClipboardID);

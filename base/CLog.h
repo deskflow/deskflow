@@ -17,7 +17,11 @@ public:
 		kDEBUG2
 	};
 
-	typedef void		(*Outputter)(int priority, const char*);
+	// type of outputter function.  return false if CLog should use
+	// the default outputter, true otherwise.
+	typedef bool		(*Outputter)(int priority, const char*);
+
+	// type of lock/unlock function
 	typedef void		(*Lock)(bool lock);
 
 	// 

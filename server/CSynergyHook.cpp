@@ -33,28 +33,26 @@ typedef struct tagMOUSEHOOKSTRUCTWin2000 {
 #pragma data_seg("shared")
 // all data in this shared section *must* be initialized
 
-static HINSTANCE		g_hinstance = NULL;
-static DWORD			g_process = NULL;
-static EWheelSupport	g_wheelSupport = kWheelNone;
-static UINT				g_wmMouseWheel = 0;
-static HWND				g_hwnd = NULL;
-static HHOOK			g_keyboard = NULL;
-static HHOOK			g_mouse = NULL;
-static HHOOK			g_cbt = NULL;
-static HHOOK			g_getMessage = NULL;
-static HANDLE			g_keyHookThread = NULL;
+static HINSTANCE		g_hinstance       = NULL;
+static DWORD			g_process         = NULL;
+static EWheelSupport	g_wheelSupport    = kWheelNone;
+static UINT				g_wmMouseWheel    = 0;
+static DWORD			g_threadID        = 0;
+static HHOOK			g_keyboard        = NULL;
+static HHOOK			g_mouse           = NULL;
+static HHOOK			g_cbt             = NULL;
+static HHOOK			g_getMessage      = NULL;
+static HANDLE			g_keyHookThread   = NULL;
 static DWORD			g_keyHookThreadID = 0;
-static HANDLE			g_keyHookEvent = NULL;
-static HHOOK			g_keyboardLL = NULL;
-static bool				g_relay = false;
-static SInt32			g_zoneSize = 0;
-static UInt32			g_zoneSides = 0;
-static SInt32			g_wScreen = 0;
-static SInt32			g_hScreen = 0;
-static HCURSOR			g_cursor = NULL;
-static DWORD			g_cursorThread = 0;
-
-static int foo = 0;
+static HANDLE			g_keyHookEvent    = NULL;
+static HHOOK			g_keyboardLL      = NULL;
+static bool				g_relay           = false;
+static SInt32			g_zoneSize        = 0;
+static UInt32			g_zoneSides       = 0;
+static SInt32			g_wScreen         = 0;
+static SInt32			g_hScreen         = 0;
+static HCURSOR			g_cursor          = NULL;
+static DWORD			g_cursorThread    = 0;
 
 #pragma data_seg()
 
@@ -91,16 +89,7 @@ static LRESULT CALLBACK	keyboardHook(int code, WPARAM wParam, LPARAM lParam)
 	if (code >= 0) {
 		if (g_relay) {
 			// forward message to our window
-			PostMessage(g_hwnd, SYNERGY_MSG_KEY, wParam, lParam);
-
-/* XXX -- this doesn't seem to work/help with lost key events
-			// if the active window isn't our window then make it
-			// active.
-			const bool wrongFocus = (GetActiveWindow() != g_hwnd);
-			if (wrongFocus) {
-				SetForegroundWindow(g_hwnd);
-			}
-*/
+			PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, wParam, lParam);
 
 			// let certain keys pass through
 			switch (wParam) {
@@ -133,58 +122,64 @@ static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			case WM_LBUTTONUP:
 			case WM_MBUTTONUP:
 			case WM_RBUTTONUP:
-				PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_BUTTON, wParam, 0);
+				PostThreadMessage(g_threadID,
+								SYNERGY_MSG_MOUSE_BUTTON, wParam, 0);
 				return 1;
 
-			case WM_MOUSEWHEEL: {
-				// win2k and other systems supporting WM_MOUSEWHEEL in
-				// the mouse hook are gratuitously different (and poorly
-				// documented).
-				switch (g_wheelSupport) {
-				case kWheelModern: {
+			case WM_MOUSEWHEEL:
+				{
+					// win2k and other systems supporting WM_MOUSEWHEEL in
+					// the mouse hook are gratuitously different (and poorly
+					// documented).
+					switch (g_wheelSupport) {
+					case kWheelModern: {
+						const MOUSEHOOKSTRUCT* info =
+								(const MOUSEHOOKSTRUCT*)lParam;
+						PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL,
+								static_cast<short>(
+									LOWORD(info->dwExtraInfo)), 0);
+						break;
+					}
+
+					case kWheelWin2000: {
+						const MOUSEHOOKSTRUCTWin2000* info =
+								(const MOUSEHOOKSTRUCTWin2000*)lParam;
+						PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL,
+								static_cast<short>(
+									HIWORD(info->mouseData)), 0);
+						break;
+					}
+
+					default:
+						break;
+					}
+				}
+				return 1;
+
+			case WM_MOUSEMOVE:
+				{
 					const MOUSEHOOKSTRUCT* info =
 								(const MOUSEHOOKSTRUCT*)lParam;
-					PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_WHEEL,
-								static_cast<short>(LOWORD(info->dwExtraInfo)), 0);
-					break;
-				}
+					SInt32 x = (SInt32)info->pt.x;
+					SInt32 y = (SInt32)info->pt.y;
 
-				case kWheelWin2000: {
-					const MOUSEHOOKSTRUCTWin2000* info =
-								(const MOUSEHOOKSTRUCTWin2000*)lParam;
-					PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_WHEEL,
-								static_cast<short>(HIWORD(info->mouseData)), 0);
-					break;
-				}
+					// we want the cursor to be hidden at all times so we
+					// hide the cursor on whatever window has it.  but then
+					// we have to show the cursor whenever we leave that
+					// window (or at some later time before we stop relaying).
+					// so check the window with the cursor.  if it's not the
+					// same window that had it before then show the cursor
+					// in the last window and hide it in this window.
+					DWORD thread = GetWindowThreadProcessId(info->hwnd, NULL);
+					if (thread != g_cursorThread) {
+						restoreCursor();
+						hideCursor(thread);
+					}
 
-				default:
-					break;
+					// relay the motion
+					PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 				}
 				return 1;
-			}
-
-			case WM_MOUSEMOVE: {
-				const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
-				SInt32 x = (SInt32)info->pt.x;
-				SInt32 y = (SInt32)info->pt.y;
-
-				// we want the cursor to be hidden at all times so we
-				// hide the cursor on whatever window has it.  but then
-				// we have to show the cursor whenever we leave that
-				// window (or at some later time before we stop relaying).
-				// so check the window with the cursor.  if it's not the
-				// same window that had it before then show the cursor
-				// in the last window and hide it in this window.
-				DWORD thread = GetWindowThreadProcessId(info->hwnd, NULL);
-				if (thread != g_cursorThread) {
-					restoreCursor();
-					hideCursor(thread);
-				}
-
-				// relay the motion
-				PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_MOVE, x, y);
-				return 1;
-			}
 			}
 		}
 		else {
@@ -209,7 +204,7 @@ static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			// if inside then eat event and notify our window
 			if (inside) {
 				restoreCursor();
-				PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_MOVE, x, y);
+				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 				return 1;
 			}
 		}
@@ -222,15 +217,7 @@ static LRESULT CALLBACK	cbtHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
-			switch (code) {
-			case HCBT_ACTIVATE:
-			case HCBT_SETFOCUS:
-				// discard unless activating our window
-				if (reinterpret_cast<HWND>(wParam) != g_hwnd) {
-					return 1;
-				}
-				break;
-			}
+			// do nothing for now.  may add something later.
 		}
 	}
 
@@ -244,7 +231,8 @@ static LRESULT CALLBACK	getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 			MSG* msg = reinterpret_cast<MSG*>(lParam);
 			if (msg->message == g_wmMouseWheel) {
 				// post message to our window
-				PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_WHEEL, msg->wParam, 0);
+				PostThreadMessage(g_threadID,
+								SYNERGY_MSG_MOUSE_WHEEL, msg->wParam, 0);
 
 				// zero out the delta in the message so it's (hopefully)
 				// ignored
@@ -296,7 +284,8 @@ static LRESULT CALLBACK	keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 				// FIXME -- bit 30 should be set if key was already down
 
 				// forward message to our window
-				PostMessage(g_hwnd, SYNERGY_MSG_KEY, info->vkCode, lParam);
+				PostThreadMessage(g_threadID,
+								SYNERGY_MSG_KEY, info->vkCode, lParam);
 
 				// discard event
 				return 1;
@@ -436,16 +425,18 @@ BOOL WINAPI				DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 
 extern "C" {
 
-int						install(HWND hwnd)
+int						install(DWORD threadID)
 {
+	assert(g_threadID     == 0);
 	assert(g_hinstance    != NULL);
 	assert(g_keyboard     == NULL);
 	assert(g_mouse        == NULL);
 	assert(g_cbt          == NULL);
 	assert(g_wheelSupport != kWheelOld || g_getMessage == NULL);
 
-	// save window
-	g_hwnd = hwnd;
+	// save thread id.  we'll post messages to this thread's
+	// message queue.
+	g_threadID = threadID;
 
 	// set defaults
 	g_relay        = false;
@@ -465,7 +456,7 @@ int						install(HWND hwnd)
 								g_hinstance,
 								0);
 	if (g_keyboard == NULL) {
-		g_hwnd = NULL;
+		g_threadID = NULL;
 		return 0;
 	}
 
@@ -478,7 +469,7 @@ int						install(HWND hwnd)
 		// uninstall keyboard hook before failing
 		UnhookWindowsHookEx(g_keyboard);
 		g_keyboard = NULL;
-		g_hwnd     = NULL;
+		g_threadID = NULL;
 		return 0;
 	}
 
@@ -493,7 +484,7 @@ int						install(HWND hwnd)
 		UnhookWindowsHookEx(g_mouse);
 		g_keyboard = NULL;
 		g_mouse    = NULL;
-		g_hwnd     = NULL;
+		g_threadID = NULL;
 		return 0;
 	}
 
@@ -563,7 +554,7 @@ int						uninstall(void)
 	g_mouse      = NULL;
 	g_cbt        = NULL;
 	g_getMessage = NULL;
-	g_hwnd       = NULL;
+	g_threadID   = 0;
 
 	// show the cursor
 	restoreCursor();

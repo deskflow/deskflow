@@ -7,19 +7,48 @@
 
 class IPlatform : public IInterface {
 public:
+	typedef int			(*DaemonFunc)(IPlatform*, int argc, const char** argv);
+	typedef int			(*RestartFunc)();
+
 	// manipulators
 
-	// install/uninstall a daemon. 
+	// install/uninstall a daemon.  commandLine should *not*
+	// include the name of program as the first argument.
 	// FIXME -- throw on error?  will get better error messages that way.
-	virtual bool		installDaemon(/* FIXME */) = 0;
-	virtual bool		uninstallDaemon(/* FIXME */) = 0;
+	virtual bool		installDaemon(const char* name,
+								const char* description,
+								const char* pathname,
+								const char* commandLine) = 0;
+	virtual bool		uninstallDaemon(const char* name) = 0;
 
 	// daemonize.  this should have the side effect of sending log
 	// messages to a system message logger since messages can no
 	// longer go to the console.  returns true iff successful.
 	// the name is the name of the daemon.
-// FIXME -- win32 services will require a more complex interface
-	virtual bool		daemonize(const char* name) = 0;
+
+	// daemonize.  this should have the side effect of sending log
+	// messages to a system message logger since messages can no
+	// longer go to the console.  name is the name of the daemon.
+	// once daemonized, func is invoked and daemonize returns when
+	// and what func does.  daemonize() returns -1 on error.
+	//
+	// exactly what happens when daemonizing depends on the platform.
+	// unix:
+	//   detaches from terminal.  func gets one argument, the name
+	//   passed to daemonize().
+	// win32:
+	//   becomes a service.  argument 0 is the name of the service
+	//   and the rest are the arguments passed to StartService().
+	//   func is only called when the service is actually started.
+	//   func must behave like a proper ServiceMain() function;  in
+	//   particular, it must call RegisterServiceCtrlHandler() and
+	//   SetServiceStatus().
+	virtual int			daemonize(const char* name, DaemonFunc func) = 0;
+
+	// continually restart the given function in a separate process
+	// or thread until it exits normally with a code less than the
+	// given code then return the code.
+	virtual int			restart(RestartFunc, int minErrorCode) = 0;
 
 	// accessors
 
