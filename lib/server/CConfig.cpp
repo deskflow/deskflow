@@ -424,7 +424,7 @@ CConfig::readLine(std::istream& s, CString& line)
 		if (i != CString::npos) {
 			line.erase(i);
 		}
-		i = line.find_last_not_of(" \t");
+		i = line.find_last_not_of(" \r\t");
 		if (i != CString::npos) {
 			line.erase(i + 1);
 		}
