@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="net" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="client" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=net - Win32 Debug
+CFG=client - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "net.mak".
+!MESSAGE NMAKE /f "client.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "net.mak" CFG="net - Win32 Debug"
+!MESSAGE NMAKE /f "client.mak" CFG="client - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "net - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "net - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "client - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "client - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=net - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "net - Win32 Release"
+!IF  "$(CFG)" == "client - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\base" /I "..\io" /I "..\mt" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\base" /I "..\io" /I "..\mt" /I "..\net" /I "..\synergy" /I "..\platform" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -52,7 +52,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
-!ELSEIF  "$(CFG)" == "net - Win32 Debug"
+!ELSEIF  "$(CFG)" == "client - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\base" /I "..\io" /I "..\mt" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\base" /I "..\io" /I "..\mt" /I "..\net" /I "..\synergy" /I "..\platform" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -80,38 +80,26 @@ LIB32=link.exe -lib
 
 # Begin Target
 
-# Name "net - Win32 Release"
-# Name "net - Win32 Debug"
+# Name "client - Win32 Release"
+# Name "client - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\CNetwork.cpp
+SOURCE=.\CClient.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CNetworkAddress.cpp
+SOURCE=.\CMSWindowsSecondaryScreen.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CTCPListenSocket.cpp
+SOURCE=.\CSecondaryScreen.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CTCPSocket.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CTCPSocketFactory.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\XNetwork.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\XSocket.cpp
+SOURCE=.\CServerProxy.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -119,44 +107,28 @@ SOURCE=.\XSocket.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\CNetwork.h
+SOURCE=.\CClient.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CNetworkAddress.h
+SOURCE=.\CMSWindowsSecondaryScreen.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CTCPListenSocket.h
+SOURCE=.\CSecondaryScreen.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CTCPSocket.h
+SOURCE=.\CServerProxy.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CTCPSocketFactory.h
+SOURCE=.\ISecondaryScreenFactory.h
 # End Source File
-# Begin Source File
+# End Group
+# Begin Group "Resource Files"
 
-SOURCE=.\IListenSocket.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ISocket.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ISocketFactory.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\XNetwork.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\XSocket.h
-# End Source File
+# PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
 # End Target
 # End Project

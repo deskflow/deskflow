@@ -103,10 +103,6 @@ SOURCE=.\CProtocolUtil.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CTCPSocketFactory.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\XScreen.cpp
 # End Source File
 # Begin Source File
@@ -139,10 +135,6 @@ SOURCE=.\CProtocolUtil.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CTCPSocketFactory.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\IClient.h
 # End Source File
 # Begin Source File
@@ -172,10 +164,6 @@ SOURCE=.\IScreenSaver.h
 # Begin Source File
 
 SOURCE=.\IServer.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ISocketFactory.h
 # End Source File
 # Begin Source File
 

@@ -143,6 +143,10 @@ SOURCE=.\IOutputStream.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IStreamFilterFactory.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\XIO.h
 # End Source File
 # End Group
