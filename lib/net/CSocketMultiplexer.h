@@ -78,12 +78,28 @@ private:
 	CJobCursor			nextCursor(CJobCursor);
 	void				deleteCursor(CJobCursor);
 
+	// lock out locking the job list.  this blocks if another thread
+	// has already locked out locking.  once it returns, only the
+	// calling thread will be able to lock the job list after any
+	// current lock is released.
+	void				lockJobListLock();
+
+	// lock the job list.  this blocks if the job list is already
+	// locked.  the calling thread must have called requestJobLock.
+	void				lockJobList();
+
+	// unlock the job list and the lock out on locking.
+	void				unlockJobList();
+
 private:
 	CMutex*				m_mutex;
-	CCondVar<bool>*		m_pollable;
-	CCondVar<bool>*		m_polling;
 	CThread*			m_thread;
 	bool				m_update;
+	CCondVar<bool>*		m_jobsReady;
+	CCondVar<bool>*		m_jobListLock;
+	CCondVar<bool>*		m_jobListLockLocked;
+	CThread*			m_jobListLocker;
+	CThread*			m_jobListLockLocker;
 
 	CSocketJobs			m_socketJobs;
 	CSocketJobMap		m_socketJobMap;
