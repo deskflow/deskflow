@@ -160,12 +160,12 @@ public:
 	Get the variable's value.  The condition variable should be locked
 	before calling this method.
 	*/
-						operator const T&() const;
+						operator const volatile T&() const;
 
 	//@}
 
 private:
-	T					m_data;
+	volatile T			m_data;
 };
 
 template <class T>
@@ -199,8 +199,7 @@ CCondVar<T>::~CCondVar()
 template <class T>
 inline
 CCondVar<T>&
-CCondVar<T>::operator=(
-	const CCondVar<T>& cv)
+CCondVar<T>::operator=(const CCondVar<T>& cv)
 {
 	m_data = cv.m_data;
 	return *this;
@@ -209,8 +208,7 @@ CCondVar<T>::operator=(
 template <class T>
 inline
 CCondVar<T>&
-CCondVar<T>::operator=(
-	const T& data)
+CCondVar<T>::operator=(const T& data)
 {
 	m_data = data;
 	return *this;
@@ -218,7 +216,7 @@ CCondVar<T>::operator=(
 
 template <class T>
 inline
-CCondVar<T>::operator const T&() const
+CCondVar<T>::operator const volatile T&() const
 {
 	return m_data;
 }
