@@ -27,10 +27,15 @@ public:
 
 	// manipulators
 
+	// open the server's screen
+	bool				open();
+
 	// start the server.  does not return until quit() is called.
+	// this must be preceeded by a successful call to open().
 	void				run();
 
-	// tell server to exit gracefully
+	// tell server to exit gracefully.  this may only be called
+	// after a successful open().
 	void				quit();
 
 	// tell the server to shutdown.  this is called in an emergency

@@ -76,6 +76,7 @@ CXWindowsSecondaryScreen::run()
 void
 CXWindowsSecondaryScreen::stop()
 {
+	CDisplayLock display(this);
 	doStop();
 }
 

@@ -55,29 +55,40 @@ CServer::~CServer()
 	// do nothing
 }
 
+bool
+CServer::open()
+{
+	// open the screen
+	try {
+		log((CLOG_INFO "opening screen"));
+		openPrimaryScreen();
+		return true;
+	}
+	catch (XScreenOpenFailure&) {
+		// can't open screen yet.  wait a few seconds to retry.
+		CThread::sleep(3.0);
+		log((CLOG_INFO "failed to open screen"));
+		return false;
+	}
+	catch (XUnknownClient& e) {
+		// can't open screen yet.  wait a few seconds to retry.
+		CThread::sleep(3.0);
+		log((CLOG_CRIT "unknown screen name `%s'", e.getName().c_str()));
+		return false;
+	}
+}
+
 void
 CServer::run()
 {
+	// check preconditions
+	{
+		CLock lock(&m_mutex);
+		assert(m_primary != NULL);
+	}
+
 	try {
 		log((CLOG_NOTE "starting server"));
-
-		// connect to primary screen
-		while (m_primary == NULL) {
-			try {
-				openPrimaryScreen();
-			}
-			catch (XScreenOpenFailure&) {
-				// can't open screen yet.  wait a few seconds to retry.
-				log((CLOG_INFO "failed to open screen.  waiting to retry."));
-				CThread::sleep(3.0);
-			}
-			catch (XUnknownClient& e) {
-				// can't open screen yet.  wait a few seconds to retry.
-				log((CLOG_CRIT "unknown screen name `%s'", e.getName().c_str()));
-				log((CLOG_NOTE "stopping server"));
-				return;
-			}
-		}
 
 		// start listening for new clients
 		startThread(new TMethodJob<CServer>(this, &CServer::acceptClients));

@@ -24,13 +24,17 @@ public:
 	// not call this while in run().
 	void				camp(bool on);
 
+	// open the client's screen
+	bool				open();
+
 	// start the client.  does not return until quit() is called.
 	// returns true if the client ever connected to the server
 	// successfully.  may also throw exceptions after successfully
-	// connecting.
+	// connecting.  a successful open() must preceed this call.
 	bool				run(const CNetworkAddress& serverAddress);
 
-	// tell client to exit gracefully
+	// tell client to exit run() gracefully.  this must only be called
+	// after a successful open().
 	void				quit();
 
 	// handle events on client's screen

@@ -113,13 +113,18 @@ realMain(CMutex* mutex)
 
 			// create server
 			s_server = new CServer(s_name);
+			s_server->setConfig(s_config);
+			if (!s_server->open()) {
+				delete s_server;
+				s_server = NULL;
+				return 16;
+			}
 
 			// run server (unlocked)
 			if (mutex != NULL) {
 				mutex->unlock();
 			}
 			locked = false;
-			s_server->setConfig(s_config);
 			s_server->run();
 			locked = true;
 			if (mutex != NULL) {
@@ -129,7 +134,6 @@ realMain(CMutex* mutex)
 			// clean up
 			delete s_server;
 			s_server = NULL;
-			CNetwork::cleanup();
 			CLog::setLock(NULL);
 			s_logMutex = NULL;
 		}
@@ -140,7 +144,6 @@ realMain(CMutex* mutex)
 			}
 			delete s_server;
 			s_server = NULL;
-			CNetwork::cleanup();
 			CLog::setLock(NULL);
 			s_logMutex = NULL;
 			throw;
@@ -723,6 +726,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		result = restartableMain();
 	}
 
+	CNetwork::cleanup();
+
 	return result;
 }
 
@@ -764,6 +769,8 @@ main(int argc, char** argv)
 	else {
 		result = restartableMain();
 	}
+
+	CNetwork::cleanup();
 
 	return result;
 }

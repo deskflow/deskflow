@@ -81,6 +81,11 @@ realMain(CMutex* mutex)
 			// create client
 			s_client = new CClient(s_name);
 			s_client->camp(s_camp);
+			if (!s_client->open()) {
+				delete s_client;
+				s_client = NULL;
+				return 16;
+			}
 
 			// run client
 			if (mutex != NULL) {
@@ -96,7 +101,6 @@ realMain(CMutex* mutex)
 			// clean up
 			delete s_client;
 			s_client = NULL;
-			CNetwork::cleanup();
 			CLog::setLock(NULL);
 			s_logMutex = NULL;
 
@@ -109,7 +113,6 @@ realMain(CMutex* mutex)
 			}
 			delete s_client;
 			s_client = NULL;
-			CNetwork::cleanup();
 			CLog::setLock(NULL);
 			s_logMutex = NULL;
 			throw;
@@ -602,6 +605,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		result = restartableMain();
 	}
 
+	CNetwork::cleanup();
+
 	return result;
 }
 
@@ -640,6 +645,8 @@ main(int argc, char** argv)
 	else {
 		result = restartableMain();
 	}
+
+	CNetwork::cleanup();
 
 	return result;
 }

@@ -53,23 +53,34 @@ CClient::camp(bool on)
 }
 
 bool
+CClient::open()
+{
+	// open the screen
+	try {
+		log((CLOG_INFO "opening screen"));
+		openSecondaryScreen();
+		return true;
+	}
+	catch (XScreenOpenFailure&) {
+		// can't open screen yet.  wait a few seconds to retry.
+		CThread::sleep(3.0);
+		log((CLOG_INFO "failed to open screen"));
+		return false;
+	}
+}
+
+bool
 CClient::run(const CNetworkAddress& serverAddress)
 {
+	// check preconditions
+	{
+		CLock lock(&m_mutex);
+		assert(m_screen != NULL);
+	}
+
 	CThread* thread = NULL;
 	try {
 		log((CLOG_NOTE "starting client"));
-
-		// connect to secondary screen
-		while (m_screen == NULL) {
-			try {
-				openSecondaryScreen();
-			}
-			catch (XScreenOpenFailure&) {
-				// can't open screen yet.  wait a few seconds to retry.
-				log((CLOG_INFO "failed to open screen.  waiting to retry."));
-				CThread::sleep(3.0);
-			}
-		}
 
 		// start server interactions
 		m_serverAddress = &serverAddress;
@@ -108,9 +119,7 @@ CClient::run(const CNetworkAddress& serverAddress)
 			thread->wait();
 			delete thread;
 		}
-		if (m_screen != NULL) {
-			closeSecondaryScreen();
-		}
+		closeSecondaryScreen();
 		throw;
 	}
 	catch (...) {
@@ -123,9 +132,7 @@ CClient::run(const CNetworkAddress& serverAddress)
 			thread->wait();
 			delete thread;
 		}
-		if (m_screen != NULL) {
-			closeSecondaryScreen();
-		}
+		closeSecondaryScreen();
 		throw;
 	}
 }
