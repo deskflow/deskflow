@@ -468,17 +468,20 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 				// be at least one.
 				const KeyCode* modifierKeys =
 								&m_modifierToKeycode[i * m_keysPerModifier];
+				KeyCode modifierKey = modifierKeys[0];
+				if (modifierKey == 0)
+					modifierKey = modifierKeys[1];
 				assert(modifierKeys[0] != 0);
 
-				if ((outMask & bit) != 0) {
+				if (modifierKey != 0 && (outMask & bit) != 0) {
 					// modifier is not active but should be.  if the
 					// modifier is a toggle then toggle it on with a
 					// press/release, otherwise activate it with a
 					// press.  use the first keycode for the modifier.
 					log((CLOG_DEBUG2 "modifier 0x%04x is not active", bit));
-					keystroke.m_keycode = modifierKeys[0];
+					keystroke.m_keycode = modifierKey;
 					keystroke.m_press   = True;
-					keystroke.m_repeat  = False;
+					keystroke.m_repeat  = false;
 					keys.push_back(keystroke);
 					if ((bit & m_toggleModifierMask) != 0) {
 						log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
@@ -501,7 +504,7 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 					}
 				}
 
-				else {
+				else if ((outMask & bit) == 0) {
 					// modifier is active but should not be.  if the
 					// modifier is a toggle then toggle it off with a
 					// press/release, otherwise deactivate it with a
@@ -509,33 +512,37 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 					// modifier if not a toggle.
 					log((CLOG_DEBUG2 "modifier 0x%04x is active", bit));
 					if ((bit & m_toggleModifierMask) != 0) {
-						log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
-						keystroke.m_keycode = modifierKeys[0];
-						keystroke.m_repeat  = False;
-						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
-							(bit == m_numLockMask && m_numLockHalfDuplex)) {
-							keystroke.m_press = False;
-							keys.push_back(keystroke);
-							keystroke.m_press = True;
-							undo.push_back(keystroke);
-						}
-						else {
-							keystroke.m_press = True;
-							keys.push_back(keystroke);
-							keystroke.m_press = False;
-							keys.push_back(keystroke);
-							undo.push_back(keystroke);
-							keystroke.m_press = True;
-							undo.push_back(keystroke);
+						if (modifierKey != 0) {
+							log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
+							keystroke.m_keycode = modifierKey;
+							keystroke.m_repeat  = false;
+							if ((bit == m_capsLockMask &&
+									m_capsLockHalfDuplex) ||
+								(bit == m_numLockMask &&
+									m_numLockHalfDuplex)) {
+								keystroke.m_press = False;
+								keys.push_back(keystroke);
+								keystroke.m_press = True;
+								undo.push_back(keystroke);
+							}
+							else {
+								keystroke.m_press = True;
+								keys.push_back(keystroke);
+								keystroke.m_press = False;
+								keys.push_back(keystroke);
+								undo.push_back(keystroke);
+								keystroke.m_press = True;
+								undo.push_back(keystroke);
+							}
 						}
 					}
 					else {
 						for (unsigned int j = 0; j < m_keysPerModifier; ++j) {
 							const KeyCode key = modifierKeys[j];
-							if (m_keys[key]) {
+							if (key != 0 && m_keys[key]) {
 								keystroke.m_keycode = key;
 								keystroke.m_press   = False;
-								keystroke.m_repeat  = False;
+								keystroke.m_repeat  = false;
 								keys.push_back(keystroke);
 								keystroke.m_press   = True;
 								undo.push_back(keystroke);
@@ -557,19 +564,19 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 	switch (action) {
 	case kPress:
 		keystroke.m_press  = True;
-		keystroke.m_repeat = False;
+		keystroke.m_repeat = false;
 		keys.push_back(keystroke);
 		break;
 
 	case kRelease:
 		keystroke.m_press  = False;
-		keystroke.m_repeat = False;
+		keystroke.m_repeat = false;
 		keys.push_back(keystroke);
 		break;
 
 	case kRepeat:
 		keystroke.m_press  = False;
-		keystroke.m_repeat = True;
+		keystroke.m_repeat = true;
 		keys.push_back(keystroke);
 		keystroke.m_press  = True;
 		keys.push_back(keystroke);
@@ -608,7 +615,7 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 			const KeyCode* modifierKeys = &m_modifierToKeycode[
 											index->second * m_keysPerModifier];
 			for (unsigned int j = 0; !down && j < m_keysPerModifier; ++j) {
-				if (m_keys[modifierKeys[j]])
+				if (modifierKeys[j] != 0 && m_keys[modifierKeys[j]])
 					down = true;
 			}
 			if (!down)
