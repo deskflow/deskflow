@@ -1,23 +1,71 @@
+2003/01/11 21:06:21 crs
+acinclude.m4
+configure.in
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+lib/arch/CArchSleepUnix.cpp
+lib/arch/CMultibyteEmu.cpp
+lib/common/Makefile.am
+
+Fixes to support FreeBSD and Darwin.
+
+----------
+2003/01/11 15:16:41 crs
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsScreenSaver.h
+
+Synergy no longer tries to suppress the screen saver once it starts.
+It was doing that already if started through synergy but not if
+started by something outside of synergy.  In particular, if you
+use `xscreensaver-command --activate' synergy used to send fake
+mouse motion events every 5 seconds to deactivate it.  That's
+unlikely to be what the user wanted, especially if the locking is
+enabled since it would force the password dialog to appear.
+
+As before, it's recommended that client screens not use locking
+because xscreensaver will not deactivate without getting a
+password even if we make the request through a programmatic
+interface.  Presumably that's for security reasons but it makes
+life harder for synergy.
+
+----------
+2003/01/11 14:01:44 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.cpp
+
+Attempt to fix problems with multimon windows.  The mouse position
+reported by the synergy hook dll is in a space with 0,0 in the
+upper-left which is not necessarily the same as the virtual desktop
+space.  So the windows primary screen now accounts for that.  On
+the secondary screen, mouse_event() doesn't seem to accept negative
+coordinates even on the windows NT family, making monitors with
+negative coordinates inaccessible via absolute moves.  So if the
+move will be to negative coordinates, use the windows 95 family
+fallback of absolute moving to 0,0 then relative moving to the
+final position.
+
+----------
 2003/01/08 22:17:44 crs
-//depot/project/synergy/FAQ
-//depot/project/synergy/INSTALL
+FAQ
+INSTALL
 
 Added bit about configuring on Solaris, which requires some
 options to find the X11 includes and libraries.
 
 ----------
 2003/01/08 21:36:14 crs
-//depot/project/synergy/lib/arch/CArchMultithreadPosix.cpp
-//depot/project/synergy/lib/arch/CArchMultithreadPosix.h
-//depot/project/synergy/lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchNetworkBSD.cpp
 
 Portability fixes.  Now builds on Linux 2.2 and 2.4 and solaris.
 Also builds on i386, alpha, G3/G4, and sparc.
 
 ----------
 2003/01/08 21:36:13 crs
-//depot/project/synergy/lib/client/CClient.cpp
-//depot/project/synergy/lib/platform/CXWindowsUtil.cpp
+lib/client/CClient.cpp
+lib/platform/CXWindowsUtil.cpp
 
 Changed log level of two messages.  Now won't spew about reading
 window properties and will report connection failure at DEBUG
@@ -25,16 +73,16 @@ instead of DEBUG1.
 
 ----------
 2003/01/08 21:36:10 crs
-//depot/project/synergy/FAQ
+FAQ
 
 Added a FAQ entry for client being rejected.  User probably didn't
 start the server or told the client the wrong server host name.
 
 ----------
 2003/01/07 21:47:27 crs
-//depot/project/synergy/ChangeLog
-//depot/project/synergy/configure.in
-//depot/project/synergy/lib/common/Version.h
+ChangeLog
+configure.in
+lib/common/Version.h
 
 Changed version number to 0.9.15.  Added 0.9.15 log entries.
 
