@@ -1,6 +1,19 @@
 Synergy News
 ============
 
+* Mar-27-2003 - Synergy 1.0.6 released
+
+  Made following changes:
+  * Added tray icon on win32
+  * Fixed multi-monitor support on win32
+  * Fixed win32 screen saver detection on NT/2k/XP
+  * Added per-screen options to remap modifier keys
+  * Added global options for restricting screen jumping
+  * Added global option for detecting unresponsive clients
+  * Added more logging for why screen jump won't happen
+  * Fixed problem sending the CLIPBOARD to motif/lesstif apps
+  * Win32 launcher now remembers non-config-file state
+
 * Feb-18-2003 - Synergy 1.0.3 released
 
   Made following changes:

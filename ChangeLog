@@ -1,3 +1,322 @@
+2003/03/26 21:03:58 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.6.
+
+----------
+2003/03/25 21:31:39 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CSynergyHook.cpp
+
+This should fix multimon support on win32.
+
+----------
+2003/03/22 11:49:23 crs
+FAQ
+INSTALL
+PORTING
+README
+TODO
+
+Documentation updates.
+
+----------
+2003/03/22 11:49:13 crs
+cmd/launcher/CGlobalOptions.cpp
+cmd/launcher/CGlobalOptions.h
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added key modifier and heartbeat options to GUI.
+
+----------
+2003/03/21 19:34:08 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+
+Oops, included a windows only header in non-windows builds.
+
+----------
+2003/03/21 19:16:37 crs
+lib/platform/CMSWindowsScreenSaver.cpp
+
+Added check for the screen saver actually being active before
+entering the loop waiting for it to deactivate.  The failure
+to check was causing the screen saver code to kick in when
+the screen saver timeout occurred, even if the screen saver
+wasn't enabled (because Windows still sends the screen saver
+activating message for no good reason when the screen saver
+is disabled).
+
+----------
+2003/03/21 19:14:32 crs
+lib/arch/CArchMiscWindows.cpp
+
+Fixed errors in merge causing infinite loops.
+
+----------
+2003/03/21 19:14:10 crs
+cmd/synergyc/tb_idle.ico
+cmd/synergyc/tb_run.ico
+cmd/synergyc/tb_wait.ico
+cmd/synergys/tb_idle.ico
+cmd/synergys/tb_run.ico
+cmd/synergys/tb_wait.ico
+
+Fixed icons.
+
+----------
+2003/03/21 19:13:15 crs
+lib/platform/CXWindowsUtil.cpp
+
+Fixed getWindowProperty().  It wasn't catching all failure
+cases correctly.
+
+----------
+2003/03/17 22:32:10 crs
+cmd/launcher/CAdvancedOptions.cpp
+cmd/launcher/CAdvancedOptions.h
+cmd/launcher/LaunchUtil.cpp
+cmd/launcher/LaunchUtil.h
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+lib/arch/CArchDaemonWindows.cpp
+lib/arch/CArchDaemonWindows.h
+lib/arch/CArchMiscWindows.cpp
+lib/arch/CArchMiscWindows.h
+
+Added options and advanced options dialogs which should've been
+part of an earlier checkin.  Also now saving and restoring
+options that aren't in the configuration file to/from the
+registry.
+
+----------
+2003/03/17 22:32:01 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/server/CServer.cpp
+lib/synergy/CPrimaryScreen.h
+
+Added a log message why the user is locked to the screen.
+
+----------
+2003/03/17 22:31:59 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+
+Added type casts to avoid warning.
+
+----------
+2003/03/16 17:40:57 crs
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CMSWindowsScreenSaver.h
+
+Fixed detection of screen saver shutdown on windows nt.
+
+----------
+2003/03/16 17:40:56 crs
+lib/common/Makefile.am
+lib/common/common.dsp
+lib/common/stdbitset.h
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Made releaseKeys() only synthesize key releases for those keys
+that synergy synthesized a press for, not keys that the user
+is physically pressing.
+
+----------
+2003/03/16 17:40:47 crs
+lib/platform/CSynergyHook.cpp
+
+Minor hook fixes.
+
+----------
+2003/03/16 17:40:25 crs
+cmd/synergyc/synergyc.rc
+cmd/synergys/synergys.rc
+
+Added resources missing from previous checkin.
+
+----------
+2003/03/13 20:24:45 crs
+lib/platform/CXWindowsScreenSaver.cpp
+
+Moved comment to more relevant location.
+
+----------
+2003/03/13 19:20:55 crs
+lib/platform/CXWindowsScreen.cpp
+
+Fixed double locking of mutex.
+
+----------
+2003/03/12 22:34:07 crs
+cmd/launcher/CAdvancedOptions.cpp
+cmd/launcher/CAdvancedOptions.h
+cmd/launcher/CGlobalOptions.cpp
+cmd/launcher/CGlobalOptions.h
+cmd/launcher/LaunchUtil.cpp
+cmd/launcher/LaunchUtil.h
+cmd/launcher/Makefile.am
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.dsp
+cmd/launcher/resource.h
+cmd/synergyc/CClientTaskBarReceiver.cpp
+cmd/synergyc/CClientTaskBarReceiver.h
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.cpp
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.h
+cmd/synergyc/CXWindowsClientTaskBarReceiver.cpp
+cmd/synergyc/CXWindowsClientTaskBarReceiver.h
+cmd/synergyc/Makefile.am
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.dsp
+cmd/synergyc/tb_error.ico
+cmd/synergyc/tb_idle.ico
+cmd/synergyc/tb_run.ico
+cmd/synergyc/tb_wait.ico
+cmd/synergys/CMSWindowsServerTaskBarReceiver.cpp
+cmd/synergys/CMSWindowsServerTaskBarReceiver.h
+cmd/synergys/CServerTaskBarReceiver.cpp
+cmd/synergys/CServerTaskBarReceiver.h
+cmd/synergys/CXWindowsServerTaskBarReceiver.cpp
+cmd/synergys/CXWindowsServerTaskBarReceiver.h
+cmd/synergys/Makefile.am
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.dsp
+cmd/synergys/tb_error.ico
+cmd/synergys/tb_idle.ico
+cmd/synergys/tb_run.ico
+cmd/synergys/tb_wait.ico
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchConsoleWindows.cpp
+lib/arch/CArchConsoleWindows.h
+lib/arch/CArchImpl.cpp
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchMultithreadWindows.h
+lib/arch/CArchTaskBarWindows.cpp
+lib/arch/CArchTaskBarWindows.h
+lib/arch/CArchTaskBarXWindows.cpp
+lib/arch/CArchTaskBarXWindows.h
+lib/arch/IArchMultithread.h
+lib/arch/IArchTaskBar.h
+lib/arch/IArchTaskBarReceiver.h
+lib/arch/Makefile.am
+lib/arch/arch.dsp
+lib/base/CJobList.cpp
+lib/base/CJobList.h
+lib/base/LogOutputters.cpp
+lib/base/LogOutputters.h
+lib/base/Makefile.am
+lib/base/base.dsp
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CServerProxy.cpp
+lib/mt/CThread.cpp
+lib/mt/CThread.h
+lib/mt/CTimerThread.cpp
+lib/mt/CTimerThread.h
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/synergy/CSecondaryScreen.cpp
+lib/synergy/CSecondaryScreen.h
+
+Added switch delay and double-tap options to win32 and added a
+tray icon to the client and server that gives status feedback to
+the user and allows the user to kill the app.
+
+----------
+2003/02/23 19:29:08 crs
+lib/server/CConfig.cpp
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/synergy/OptionTypes.h
+lib/synergy/ProtocolTypes.h
+
+Added support for a user option to require hitting the edge of a
+screen twice within a specified amount of time in order to switch
+screens.  This can help prevent unintended switching.
+
+----------
+2003/02/22 21:53:25 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsPrimaryScreen.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/server/CConfig.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/synergy/CPrimaryScreen.h
+lib/synergy/IPrimaryScreenReceiver.h
+lib/synergy/IScreenEventHandler.h
+lib/synergy/OptionTypes.h
+
+Added support on X11 for a global option to delay switching screens
+when the mouse reaches a jump zone.
+
+----------
+2003/02/22 16:41:03 crs
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+
+Added global options to CConfig (needed for heartbeat option).
+
+----------
+2003/02/22 16:20:23 crs
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+lib/server/CClientProxy.cpp
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/server/CServer.cpp
+lib/synergy/OptionTypes.h
+lib/synergy/ProtocolTypes.h
+
+Added support for heartbeat global option.
+
+----------
+2003/02/22 15:04:09 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.5.
+
+----------
+2003/02/22 15:03:31 crs
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/synergy/KeyTypes.h
+lib/synergy/OptionTypes.h
+
+Changes to support remapping modifier keys on clients.
+
+----------
 2003/02/17 12:44:37 crs
 configure.in
 lib/common/Version.h
