@@ -21,14 +21,6 @@
 #include "CLog.h"
 #include "CStopwatch.h"
 #include "TMethodJob.h"
-#include <memory>
-
-// hack to work around operator=() bug in STL in g++ prior to v3
-#if defined(__GNUC__) && (__GNUC__ < 3)
-#define assign(_dst, _src, _type)	_dst.reset(_src)
-#else
-#define assign(_dst, _src, _type)	_dst = std::auto_ptr<_type >(_src)
-#endif
 
 //
 // CServer
@@ -1106,11 +1098,11 @@ CServer::acceptClients(void*)
 {
 	log((CLOG_DEBUG1 "starting to wait for clients"));
 
-	std::auto_ptr<IListenSocket> listen;
+	IListenSocket* listen = NULL;
 	try {
 		// create socket listener
 //		listen = std::auto_ptr<IListenSocket>(m_socketFactory->createListen());
-		assign(listen, new CTCPListenSocket, IListenSocket); // FIXME
+		listen = new CTCPListenSocket; // FIXME -- use factory
 
 		// bind to the desired port.  keep retrying if we can't bind
 		// the address immediately.
@@ -1147,10 +1139,18 @@ CServer::acceptClients(void*)
 			startThread(new TMethodJob<CServer>(
 								this, &CServer::runClient, socket));
 		}
+
+		// clean up
+		delete listen;
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "cannot listen for clients: %s", e.what()));
+		delete listen;
 		quit();
+	}
+	catch (...) {
+		delete listen;
+		throw;
 	}
 }
 
@@ -1159,12 +1159,20 @@ CServer::runClient(void* vsocket)
 {
 	// get the socket pointer from the argument
 	assert(vsocket != NULL);
-	std::auto_ptr<IDataSocket> socket(reinterpret_cast<IDataSocket*>(vsocket));
+	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
 
 	// create proxy
-	CClientProxy* proxy = handshakeClient(socket.get());
-	if (proxy == NULL) {
-		return;
+	CClientProxy* proxy = NULL;
+	try {
+		proxy = handshakeClient(socket);
+		if (proxy == NULL) {
+			delete socket;
+			return;
+		}
+	}
+	catch (...) {
+		delete socket;
+		throw;
 	}
 
 	// add the connection
@@ -1181,6 +1189,7 @@ CServer::runClient(void* vsocket)
 		log((CLOG_WARN "a client with name \"%s\" is already connected", e.getName().c_str()));
 		CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBusy);
 		delete proxy;
+		delete socket;
 		return;
 	}
 	catch (XUnknownClient& e) {
@@ -1188,10 +1197,12 @@ CServer::runClient(void* vsocket)
 		log((CLOG_WARN "a client with name \"%s\" is not in the map", e.getName().c_str()));
 		CProtocolUtil::writef(proxy->getOutputStream(), kMsgEUnknown);
 		delete proxy;
+		delete socket;
 		return;
 	}
 	catch (...) {
 		delete proxy;
+		delete socket;
 		throw;
 	}
 
@@ -1222,11 +1233,13 @@ CServer::runClient(void* vsocket)
 	catch (...) {
 		// run() was probably cancelled
 		removeConnection(proxy->getName());
+		delete socket;
 		throw;
 	}
 
-	// remove the connection
+	// clean up
 	removeConnection(proxy->getName());
+	delete socket;
 }
 
 CClientProxy*
@@ -1244,13 +1257,14 @@ CServer::handshakeClient(IDataSocket* socket)
 /* FIXME -- implement ISecurityFactory
 		input  = m_securityFactory->createInputFilter(input, own);
 		output = m_securityFactory->createOutputFilter(output, own);
-		own       = true;
+		own    = true;
 */
 	}
 
 	// attach the packetizing filters
 	input  = new CInputPacketStream(input, own);
 	output = new COutputPacketStream(output, own);
+	own    = true;
 
 	CClientProxy* proxy = NULL;
 	CString name("<unknown>");
@@ -1344,7 +1358,7 @@ CServer::handshakeClient(IDataSocket* socket)
 		if (proxy != NULL) {
 			delete proxy;
 		}
-		else {
+		else if (own) {
 			delete input;
 			delete output;
 		}
@@ -1355,7 +1369,7 @@ CServer::handshakeClient(IDataSocket* socket)
 	if (proxy != NULL) {
 		delete proxy;
 	}
-	else {
+	else if (own) {
 		delete input;
 		delete output;
 	}
@@ -1368,11 +1382,11 @@ CServer::acceptHTTPClients(void*)
 {
 	log((CLOG_DEBUG1 "starting to wait for HTTP clients"));
 
-	std::auto_ptr<IListenSocket> listen;
+	IListenSocket* listen = NULL;
 	try {
 		// create socket listener
 //		listen = std::auto_ptr<IListenSocket>(m_socketFactory->createListen());
-		assign(listen, new CTCPListenSocket, IListenSocket); // FIXME
+		listen = new CTCPListenSocket; // FIXME -- use factory
 
 		// bind to the desired port.  keep retrying if we can't bind
 		// the address immediately.
@@ -1419,11 +1433,19 @@ CServer::acceptHTTPClients(void*)
 			startThread(new TMethodJob<CServer>(
 								this, &CServer::processHTTPRequest, socket));
 		}
+
+		// clean up
+		delete listen;
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "cannot listen for HTTP clients: %s", e.what()));
+		delete listen;
 		// FIXME -- quit?
 		quit();
+	}
+	catch (...) {
+		delete listen;
+		throw;
 	}
 }
 

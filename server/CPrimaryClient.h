@@ -52,7 +52,7 @@ public:
 	virtual void		onScreenSaver(bool activated);
 
 	// IClient overrides
-	virtual void		open();
+	virtual bool		open();
 	virtual void		run();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
@@ -74,6 +74,7 @@ public:
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;
 	virtual void		getCenter(SInt32& x, SInt32& y) const;
+	virtual void		getMousePos(SInt32& x, SInt32& y) const;
 	virtual SInt32		getJumpZoneSize() const;
 
 private:

@@ -81,6 +81,7 @@ realMain(CMutex* mutex)
 			// create client
 			s_client = new CClient(s_name);
 			s_client->camp(s_camp);
+			s_client->setAddress(s_serverAddress);
 			if (!s_client->open()) {
 				delete s_client;
 				s_client = NULL;
@@ -92,13 +93,17 @@ realMain(CMutex* mutex)
 				mutex->unlock();
 			}
 			locked = false;
-			bool success = s_client->run(s_serverAddress);
+			s_client->run();
 			locked = true;
 			if (mutex != NULL) {
 				mutex->lock();
 			}
 
+			// get client status
+			bool success = !s_client->wasRejected();
+
 			// clean up
+			s_client->close();
 			delete s_client;
 			s_client = NULL;
 			CLog::setLock(NULL);
@@ -111,6 +116,7 @@ realMain(CMutex* mutex)
 			if (!locked && mutex != NULL) {
 				mutex->lock();
 			}
+			s_client->close();
 			delete s_client;
 			s_client = NULL;
 			CLog::setLock(NULL);

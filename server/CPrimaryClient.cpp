@@ -149,7 +149,7 @@ CPrimaryClient::onScreenSaver(bool activated)
 	m_server->onScreenSaver(activated);
 }
 
-void
+bool
 CPrimaryClient::open()
 {
 	// all clipboards are clean and owned by us
@@ -160,6 +160,8 @@ CPrimaryClient::open()
 
 	// now open the screen
 	m_screen->open();
+
+	return true;
 }
 
 void
@@ -294,6 +296,12 @@ CPrimaryClient::getCenter(SInt32& x, SInt32& y) const
 {
 	x = m_info.m_mx;
 	y = m_info.m_my;
+}
+
+void
+CPrimaryClient::getMousePos(SInt32&, SInt32&) const
+{
+	assert(0 && "shouldn't be called");
 }
 
 SInt32

@@ -1,9 +1,11 @@
 #include "CClient.h"
+#include "CServerProxy.h"
 #include "CClipboard.h"
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
 #include "CProtocolUtil.h"
 #include "ISecondaryScreen.h"
+#include "IServer.h"
 #include "ProtocolTypes.h"
 #include "XScreen.h"
 #include "XSynergy.h"
@@ -15,15 +17,6 @@
 #include "CLog.h"
 #include "CStopwatch.h"
 #include "TMethodJob.h"
-#include <memory>
-
-// hack to work around operator=() bug in STL in g++ prior to v3
-#if defined(__GNUC__) && (__GNUC__ < 3)
-#define assign(_dst, _src, _type)	_dst.reset(_src)
-#else
-#define assign(_dst, _src, _type)	_dst = std::auto_ptr<_type >(_src)
-#endif
-
 
 //
 // CClient
@@ -31,13 +24,12 @@
 
 CClient::CClient(const CString& clientName) :
 	m_name(clientName),
-	m_input(NULL),
-	m_output(NULL),
 	m_screen(NULL),
+	m_server(NULL),
 	m_camp(false),
 	m_active(false),
 	m_seqNum(0),
-	m_ignoreMove(false)
+	m_rejected(true)
 {
 	// do nothing
 }
@@ -50,7 +42,67 @@ CClient::~CClient()
 void
 CClient::camp(bool on)
 {
+	CLock lock(&m_mutex);
 	m_camp = on;
+}
+
+void
+CClient::setAddress(const CNetworkAddress& serverAddress)
+{
+	CLock lock(&m_mutex);
+	m_serverAddress = serverAddress;
+}
+
+void
+CClient::quit()
+{
+	m_screen->stop();
+}
+
+bool
+CClient::wasRejected() const
+{
+	return m_rejected;
+}
+
+void
+CClient::onClipboardChanged(ClipboardID id)
+{
+	CLock lock(&m_mutex);
+	if (m_server == NULL) {
+		// m_server can be NULL if the screen calls this method
+		// before we've gotten around to connecting to the server.
+		// we simply ignore the clipboard change in that case.
+		return;
+	}
+
+	// grab ownership
+	m_server->onGrabClipboard(m_name, id, m_seqNum);
+
+	// we now own the clipboard and it has not been sent to the server
+	m_ownClipboard[id]  = true;
+	m_timeClipboard[id] = 0;
+
+	// if we're not the active screen then send the clipboard now,
+	// otherwise we'll wait until we leave.
+	if (!m_active) {
+		sendClipboard(id);
+	}
+}
+
+void
+CClient::onResolutionChanged()
+{
+	log((CLOG_DEBUG "resolution changed"));
+
+	CLock lock(&m_mutex);
+	if (m_server != NULL) {
+		CClientInfo info;
+		m_screen->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
+		m_screen->getMousePos(info.m_mx, info.m_my);
+		info.m_zoneSize = m_screen->getJumpZoneSize();
+		m_server->onInfoChanged("", info);
+	}
 }
 
 bool
@@ -70,368 +122,205 @@ CClient::open()
 	}
 }
 
-bool
-CClient::run(const CNetworkAddress& serverAddress)
+void
+CClient::run()
 {
-	// check preconditions
 	{
 		CLock lock(&m_mutex);
+
+		// check preconditions
 		assert(m_screen != NULL);
+		assert(m_server == NULL);
+
+		// connection starts as unsuccessful
+		m_rejected = true;
 	}
 
 	CThread* thread = NULL;
 	try {
-		log((CLOG_NOTE "starting client"));
+		log((CLOG_NOTE "starting client \"%s\"", m_name.c_str()));
 
 		// start server interactions
-		m_serverAddress = &serverAddress;
-		thread = new CThread(new TMethodJob<CClient>(this, &CClient::runSession));
+		thread = new CThread(new TMethodJob<CClient>(
+								this, &CClient::runSession));
 
 		// handle events
 		log((CLOG_DEBUG "starting event handling"));
 		m_screen->run();
+		log((CLOG_DEBUG "stopped event handling"));
 
 		// clean up
-		log((CLOG_NOTE "stopping client"));
-		thread->cancel();
-		void* result = thread->getResult();
-		delete thread;
-		closeSecondaryScreen();
-		return (result != NULL);
+		deleteSession(thread);
+		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "client error: %s", e.what()));
 
 		// clean up
-		log((CLOG_NOTE "stopping client"));
-		if (thread != NULL) {
-			thread->cancel();
-			thread->wait();
-			delete thread;
-		}
-		closeSecondaryScreen();
-		return true;
+		log((CLOG_DEBUG "stopped event handling"));
+		deleteSession(thread);
+		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
+		CLock lock(&m_mutex);
+		m_rejected = false;
 	}
 	catch (XThread&) {
 		// clean up
-		log((CLOG_NOTE "stopping client"));
-		if (thread != NULL) {
-			thread->cancel();
-			thread->wait();
-			delete thread;
-		}
-		closeSecondaryScreen();
+		log((CLOG_DEBUG "stopped event handling"));
+		deleteSession(thread);
+		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		throw;
 	}
 	catch (...) {
 		log((CLOG_DEBUG "unknown client error"));
 
 		// clean up
-		log((CLOG_NOTE "stopping client"));
-		if (thread != NULL) {
-			thread->cancel();
-			thread->wait();
-			delete thread;
-		}
-		closeSecondaryScreen();
+		log((CLOG_DEBUG "stopped event handling"));
+		deleteSession(thread);
+		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		throw;
 	}
 }
 
 void
-CClient::quit()
+CClient::close()
 {
-	m_screen->stop();
+	closeSecondaryScreen();
 }
 
 void
-CClient::onClipboardChanged(ClipboardID id)
+CClient::enter(SInt32 xAbs, SInt32 yAbs,
+				UInt32 seqNum, KeyModifierMask mask, bool)
 {
-	log((CLOG_DEBUG "sending clipboard %d changed", id));
-	CLock lock(&m_mutex);
-	if (m_output != NULL) {
-		// m_output can be NULL if the screen calls this method
-		// before we've gotten around to connecting to the server.
-		CProtocolUtil::writef(m_output, kMsgCClipboard, id, m_seqNum);
-	}
-
-	// we now own the clipboard and it has not been sent to the server
-	m_ownClipboard[id]  = true;
-	m_timeClipboard[id] = 0;
-
-	// if we're not the active screen then send the clipboard now,
-	// otherwise we'll wait until we leave.
-	if (!m_active) {
-		// get clipboard
-		CClipboard clipboard;
-		m_screen->getClipboard(id, &clipboard);
-
-		// save new time
-		m_timeClipboard[id] = clipboard.getTime();
-
-		// marshall the data
-		CString data = clipboard.marshall();
-
-		// send data
-		log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
-		if (m_output != NULL) {
-// FIXME -- will we send the clipboard when we connect?
-			CProtocolUtil::writef(m_output, kMsgDClipboard, id, m_seqNum, &data);
-		}
-	}
-}
-
-void
-CClient::onResolutionChanged()
-{
-	log((CLOG_DEBUG "resolution changed"));
-
-	CLock lock(&m_mutex);
-
-	// start ignoring mouse movement until we get an acknowledgment
-	m_ignoreMove = true;
-
-	// send notification of resolution change
-	onQueryInfoNoLock();
-}
-
-#include "CTCPSocket.h" // FIXME
-void
-CClient::runSession(void*)
-{
-	log((CLOG_DEBUG "starting client \"%s\"", m_name.c_str()));
-
-	std::auto_ptr<IDataSocket> socket;
-	std::auto_ptr<IInputStream> input;
-	std::auto_ptr<IOutputStream> output;
-	try {
-		for (;;) {
-			try {
-				// allow connect this much time to succeed
-				// FIXME -- timeout in member
-				CTimerThread timer(m_camp ? -1.0 : 30.0);
-
-				// create socket and attempt to connect to server
-				log((CLOG_DEBUG1 "connecting to server"));
-				assign(socket, new CTCPSocket(), IDataSocket);	// FIXME -- use factory
-				socket->connect(*m_serverAddress);
-				log((CLOG_INFO "connected to server"));
-				break;
-			}
-			catch (XSocketConnect&) {
-				// failed to connect.  if not camping then rethrow.
-				if (!m_camp) {
-					throw;
-				}
-
-				// we're camping.  wait a bit before retrying
-				CThread::sleep(5.0);
-			}
-		}
-
-		// get the input and output streams
-		IInputStream*  srcInput  = socket->getInputStream();
-		IOutputStream* srcOutput = socket->getOutputStream();
-
-		// attach the encryption layer
-		bool own = false;
-/* FIXME -- implement ISecurityFactory
-		if (m_securityFactory != NULL) {
-			input.reset(m_securityFactory->createInputFilter(srcInput, own));
-			output.reset(m_securityFactory->createOutputFilter(srcOutput, own));
-			srcInput  = input.get();
-			srcOutput = output.get();
-			own       = true;
-		}
-*/
-
-		// give handshake some time
-		CTimerThread timer(30.0);
-
-		// attach the packetizing filters
-		assign(input, new CInputPacketStream(srcInput, own), IInputStream);
-		assign(output, new COutputPacketStream(srcOutput, own), IOutputStream);
-
-		// wait for hello from server
-		log((CLOG_DEBUG1 "wait for hello"));
-		SInt16 major, minor;
-		CProtocolUtil::readf(input.get(), "Synergy%2i%2i", &major, &minor);
-
-		// check versions
-		log((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
-		if (major < kProtocolMajorVersion ||
-			(major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
-			throw XIncompatibleClient(major, minor);
-		}
-
-		// say hello back
-		log((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
-		CProtocolUtil::writef(output.get(), "Synergy%2i%2i%s",
-								kProtocolMajorVersion,
-								kProtocolMinorVersion, &m_name);
-
-		// record streams in a more useful place
+	{
 		CLock lock(&m_mutex);
-		m_input  = input.get();
-		m_output = output.get();
-	}
-	catch (XIncompatibleClient& e) {
-		log((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
-		m_screen->stop();
-		CThread::exit(NULL);
-	}
-	catch (XThread&) {
-		log((CLOG_ERR "connection timed out"));
-		m_screen->stop();
-		throw;
-	}
-	catch (XBase& e) {
-		log((CLOG_ERR "connection failed: %s", e.what()));
-		m_screen->stop();
-		CThread::exit(NULL);
-	}
-	catch (...) {
-		log((CLOG_ERR "connection failed: <unknown error>"));
-		m_screen->stop();
-		CThread::exit(NULL);
+		m_active = true;
+		m_seqNum = seqNum;
 	}
 
-	bool fail = false;
-	try {
-		// no compressed mouse motion yet
-		m_compressMouse = false;
+	m_screen->enter(xAbs, yAbs, mask);
+}
 
-		// handle messages from server
-		CStopwatch heartbeat;
-		for (;;) {
-			// if no input is pending then flush compressed mouse motion
-			if (input->getSize() == 0) {
-				flushCompressedMouse();
-			}
+bool
+CClient::leave()
+{
+	m_screen->leave();
 
-			// wait for a message
-			log((CLOG_DEBUG2 "waiting for message"));
-			UInt8 code[4];
-			UInt32 n = input->read(code, 4, kHeartRate);
+	CLock lock(&m_mutex);
+	m_active = false;
 
-			// check if server hungup
-			if (n == 0) {
-				log((CLOG_NOTE "server disconnected"));
-				break;
-			}
-
-			// check for time out
-			if (n == (UInt32)-1 || heartbeat.getTime() > kHeartRate) {
-				// send heartbeat
-				CProtocolUtil::writef(m_output, kMsgCNoop);
-				heartbeat.reset();
-				if (n == (UInt32)-1) {
-					// no message to process
-					continue;
-				}
-			}
-
-			// verify we got an entire code
-			if (n != 4) {
-				// client sent an incomplete message
-				log((CLOG_ERR "incomplete message from server"));
-				break;
-			}
-
-			// parse message
-			log((CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
-			if (memcmp(code, kMsgDMouseMove, 4) == 0) {
-				onMouseMove();
-			}
-			else if (memcmp(code, kMsgDMouseWheel, 4) == 0) {
-				onMouseWheel();
-			}
-			else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
-				onKeyDown();
-			}
-			else if (memcmp(code, kMsgDKeyUp, 4) == 0) {
-				onKeyUp();
-			}
-			else if (memcmp(code, kMsgDMouseDown, 4) == 0) {
-				onMouseDown();
-			}
-			else if (memcmp(code, kMsgDMouseUp, 4) == 0) {
-				onMouseUp();
-			}
-			else if (memcmp(code, kMsgDKeyRepeat, 4) == 0) {
-				onKeyRepeat();
-			}
-			else if (memcmp(code, kMsgCNoop, 4) == 0) {
-				// accept and discard no-op
-				continue;
-			}
-			else if (memcmp(code, kMsgCEnter, 4) == 0) {
-				onEnter();
-			}
-			else if (memcmp(code, kMsgCLeave, 4) == 0) {
-				onLeave();
-			}
-			else if (memcmp(code, kMsgCClipboard, 4) == 0) {
-				onGrabClipboard();
-			}
-			else if (memcmp(code, kMsgCScreenSaver, 4) == 0) {
-				onScreenSaver();
-			}
-			else if (memcmp(code, kMsgQInfo, 4) == 0) {
-				onQueryInfo();
-			}
-			else if (memcmp(code, kMsgCInfoAck, 4) == 0) {
-				onInfoAcknowledgment();
-			}
-			else if (memcmp(code, kMsgDClipboard, 4) == 0) {
-				onSetClipboard();
-			}
-			else if (memcmp(code, kMsgCClose, 4) == 0) {
-				// server wants us to hangup
-				log((CLOG_DEBUG1 "recv close"));
-				break;
-			}
-			else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
-				onErrorIncompatible();
-				fail = true;
-				break;
-			}
-			else if (memcmp(code, kMsgEBusy, 4) == 0) {
-				onErrorBusy();
-				fail = true;
-				break;
-			}
-			else if (memcmp(code, kMsgEUnknown, 4) == 0) {
-				onErrorUnknown();
-				fail = true;
-				break;
-			}
-			else if (memcmp(code, kMsgEBad, 4) == 0) {
-				onErrorBad();
-				fail = true;
-				break;
-			}
-			else {
-				// unknown message
-				log((CLOG_ERR "unknown message from server"));
-				break;
-			}
+	// send clipboards that we own and that have changed
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		if (m_ownClipboard[id]) {
+			sendClipboard(id);
 		}
 	}
-	catch (XBase& e) {
-		log((CLOG_ERR "error: %s", e.what()));
-		m_screen->stop();
-		CThread::exit(reinterpret_cast<void*>(1));
+}
+
+void
+CClient::setClipboard(ClipboardID id, const CString& data)
+{
+ 	// unmarshall
+ 	CClipboard clipboard;
+ 	clipboard.unmarshall(data, 0);
+ 
+ 	// set screen's clipboard
+ 	m_screen->setClipboard(id, &clipboard);
+}
+
+void
+CClient::grabClipboard(ClipboardID id)
+{
+	// we no longer own the clipboard
+	{
+		CLock lock(&m_mutex);
+		m_ownClipboard[id] = false;
 	}
 
-	// done with socket
-	log((CLOG_DEBUG "disconnecting from server"));
-	socket->close();
+	m_screen->grabClipboard(id);
+}
 
-	// exit event loop
-	m_screen->stop();
+void
+CClient::setClipboardDirty(ClipboardID, bool)
+{
+	assert(0 && "shouldn't be called");
+}
 
-	CThread::exit(fail ? NULL : reinterpret_cast<void*>(1));
+void
+CClient::keyDown(KeyID id, KeyModifierMask mask)
+{
+ 	m_screen->keyDown(id, mask);
+}
+
+void
+CClient::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count)
+{
+ 	m_screen->keyRepeat(id, mask, count);
+}
+
+void
+CClient::keyUp(KeyID id, KeyModifierMask mask)
+{
+ 	m_screen->keyUp(id, mask);
+}
+
+void
+CClient::mouseDown(ButtonID id)
+{
+ 	m_screen->mouseDown(id);
+}
+
+void
+CClient::mouseUp(ButtonID id)
+{
+ 	m_screen->mouseUp(id);
+}
+
+void
+CClient::mouseMove(SInt32 x, SInt32 y)
+{
+	m_screen->mouseMove(x, y);
+}
+
+void
+CClient::mouseWheel(SInt32 delta)
+{
+	m_screen->mouseWheel(delta);
+}
+
+void
+CClient::screenSaver(bool activate)
+{
+ 	m_screen->screenSaver(activate);
+}
+
+CString
+CClient::getName() const
+{
+	return m_name;
+}
+
+void
+CClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+{
+	m_screen->getShape(x, y, w, h);
+}
+
+void
+CClient::getCenter(SInt32&, SInt32&) const
+{
+	assert(0 && "shouldn't be called");
+}
+
+void
+CClient::getMousePos(SInt32& x, SInt32& y) const
+{
+	m_screen->getMousePos(x, y);
+}
+
+SInt32
+CClient::getJumpZoneSize() const
+{
+	return m_screen->getJumpZoneSize();
 }
 
 // FIXME -- use factory to create screen
@@ -489,310 +378,228 @@ CClient::closeSecondaryScreen()
 }
 
 void
-CClient::flushCompressedMouse()
+CClient::sendClipboard(ClipboardID id)
 {
-	if (m_compressMouse) {
-		m_compressMouse = false;
-		m_screen->mouseMove(m_xMouse, m_yMouse);
+	// note -- m_mutex must be locked on entry
+	assert(m_screen != NULL);
+	assert(m_server != NULL);
+
+	// get clipboard data.  set the clipboard time to the last
+	// clipboard time before getting the data from the screen
+	// as the screen may detect an unchanged clipboard and
+	// avoid copying the data.
+	CClipboard clipboard;
+	if (clipboard.open(m_timeClipboard[id])) {
+		clipboard.close();
+	}
+	m_screen->getClipboard(id, &clipboard);
+
+	// check time
+	if (m_timeClipboard[id] == 0 ||
+		clipboard.getTime() != m_timeClipboard[id]) {
+		// save new time
+		m_timeClipboard[id] = clipboard.getTime();
+
+		// marshall the data
+		CString data = clipboard.marshall();
+
+		// save and send data if different
+		if (data != m_dataClipboard[id]) {
+			m_dataClipboard[id] = data;
+			m_server->onClipboardChanged(id, m_seqNum, data);
+		}
 	}
 }
 
 void
-CClient::onEnter()
+CClient::runSession(void*)
 {
-	SInt16 x, y;
-	UInt16 mask;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgCEnter + 4, &x, &y, &m_seqNum, &mask);
-		m_active = true;
+	try {
+		log((CLOG_DEBUG "starting server proxy"));
+		runServer();
+		m_screen->stop();
+		log((CLOG_DEBUG "stopping server proxy"));
 	}
-	log((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, m_seqNum, mask));
-
-	// discard old compressed mouse motion, if any
-	m_compressMouse = false;
-
-	// tell screen we're entering
-	m_screen->enter(x, y, static_cast<KeyModifierMask>(mask));
+	catch (...) {
+		m_screen->stop();
+		log((CLOG_DEBUG "stopping server proxy"));
+		throw;
+	}
 }
 
 void
-CClient::onLeave()
+CClient::deleteSession(CThread* thread)
 {
-	log((CLOG_DEBUG1 "recv leave"));
+	if (thread != NULL) {
+		thread->cancel();
+		thread->wait();
+		delete thread;
+	}
+}
 
-	// send last mouse motion
-	flushCompressedMouse();
+#include "CTCPSocket.h" // FIXME
+void
+CClient::runServer()
+{
+	IDataSocket* socket = NULL;
+	CServerProxy* proxy = NULL;
+	try {
+		for (;;) {
+			try {
+				// allow connect this much time to succeed
+				// FIXME -- timeout in member
+				CTimerThread timer(m_camp ? -1.0 : 30.0);
 
-	// tell screen we're leaving
-	m_screen->leave();
-
-	// no longer the active screen
-	CLock lock(&m_mutex);
-	m_active = false;
-
-	// send clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			// get clipboard data.  set the clipboard time to the last
-			// clipboard time before getting the data from the screen
-			// as the screen may detect an unchanged clipboard and
-			// avoid copying the data.
-			CClipboard clipboard;
-			if (clipboard.open(m_timeClipboard[id]))
-				clipboard.close();
-			m_screen->getClipboard(id, &clipboard);
-
-			// check time
-			if (m_timeClipboard[id] == 0 ||
-				clipboard.getTime() != m_timeClipboard[id]) {
-				// save new time
-				m_timeClipboard[id] = clipboard.getTime();
-
-				// marshall the data
-				CString data = clipboard.marshall();
-
-				// save and send data if different
-				if (data != m_dataClipboard[id]) {
-					log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
-					m_dataClipboard[id] = data;
-					CProtocolUtil::writef(m_output,
-								kMsgDClipboard, id, m_seqNum, &data);
+				// create socket and attempt to connect to server
+				log((CLOG_DEBUG1 "connecting to server"));
+				socket = new CTCPSocket; // FIXME -- use factory
+				socket->connect(m_serverAddress);
+				log((CLOG_INFO "connected to server"));
+				break;
+			}
+			catch (XSocketConnect&) {
+				// failed to connect.  if not camping then rethrow.
+				if (!m_camp) {
+					throw;
 				}
+
+				// we're camping.  wait a bit before retrying
+				CThread::sleep(5.0);
 			}
 		}
-	}
-}
 
-void
-CClient::onGrabClipboard()
-{
-	ClipboardID id;
-	UInt32 seqNum;
-	{
+		// create proxy
+		log((CLOG_DEBUG1 "negotiating with server"));
+		proxy = handshakeServer(socket);
 		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgCClipboard + 4, &id, &seqNum);
-		log((CLOG_DEBUG "recv grab clipboard %d", id));
-
-		// validate
-		if (id >= kClipboardEnd) {
-			return;
-		}
-
-		// we no longer own the clipboard
-		m_ownClipboard[id] = false;
+		m_server = proxy;
 	}
-	m_screen->grabClipboard(id);
-}
-
-void
-CClient::onScreenSaver()
-{
-	SInt8 on;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgCScreenSaver + 4, &on);
+	catch (XThread&) {
+		log((CLOG_ERR "connection timed out"));
+		delete socket;
+		throw;
 	}
-	log((CLOG_DEBUG1 "recv screen saver on=%d", on));
-	m_screen->screenSaver(on != 0);
-}
-
-void
-CClient::onQueryInfo()
-{
-	CLock lock(&m_mutex);
-	onQueryInfoNoLock();
-}
-
-void
-CClient::onQueryInfoNoLock()
-{
-	SInt32 mx, my, x, y, w, h;
-	m_screen->getMousePos(mx, my);
-	m_screen->getShape(x, y, w, h);
-	SInt32 zoneSize = m_screen->getJumpZoneSize();
-
-	log((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d zone=%d pos=%d,%d", x, y, w, h, zoneSize, mx, my));
-	CProtocolUtil::writef(m_output, kMsgDInfo, x, y, w, h, zoneSize, mx, my);
-}
-
-void
-CClient::onInfoAcknowledgment()
-{
-	log((CLOG_DEBUG1 "recv info acknowledgment"));
-	CLock lock(&m_mutex);
-	m_ignoreMove = false;
-}
-
-void
-CClient::onSetClipboard()
-{
-	ClipboardID id;
-	CString data;
-	{
-		// parse message
-		UInt32 seqNum;
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDClipboard + 4, &id, &seqNum, &data);
+	catch (XBase& e) {
+		log((CLOG_ERR "connection failed: %s", e.what()));
+		log((CLOG_DEBUG "disconnecting from server"));
+		delete socket;
+		return;
 	}
-	log((CLOG_DEBUG "recv clipboard %d size=%d", id, data.size()));
-
-	// validate
-	if (id >= kClipboardEnd) {
+	catch (...) {
+		log((CLOG_ERR "connection failed: <unknown error>"));
+		log((CLOG_DEBUG "disconnecting from server"));
+		delete socket;
 		return;
 	}
 
-	// unmarshall
-	CClipboard clipboard;
-	clipboard.unmarshall(data, 0);
-
-	// set screen's clipboard
-	m_screen->setClipboard(id, &clipboard);
-}
-
-void
-CClient::onKeyDown()
-{
-	// get mouse up to date
-	flushCompressedMouse();
-
-	UInt16 id, mask;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDKeyDown + 4, &id, &mask);
-	}
-	log((CLOG_DEBUG1 "recv key down id=%d, mask=0x%04x", id, mask));
-	m_screen->keyDown(static_cast<KeyID>(id),
-								static_cast<KeyModifierMask>(mask));
-}
-
-void
-CClient::onKeyRepeat()
-{
-	// get mouse up to date
-	flushCompressedMouse();
-
-	UInt16 id, mask, count;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDKeyRepeat + 4, &id, &mask, &count);
-	}
-	log((CLOG_DEBUG1 "recv key repeat id=%d, mask=0x%04x, count=%d", id, mask, count));
-	m_screen->keyRepeat(static_cast<KeyID>(id),
-								static_cast<KeyModifierMask>(mask),
-								count);
-}
-
-void
-CClient::onKeyUp()
-{
-	// get mouse up to date
-	flushCompressedMouse();
-
-	UInt16 id, mask;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDKeyUp + 4, &id, &mask);
-	}
-	log((CLOG_DEBUG1 "recv key up id=%d, mask=0x%04x", id, mask));
-	m_screen->keyUp(static_cast<KeyID>(id),
-								static_cast<KeyModifierMask>(mask));
-}
-
-void
-CClient::onMouseDown()
-{
-	// get mouse up to date
-	flushCompressedMouse();
-
-	SInt8 id;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDMouseDown + 4, &id);
-	}
-	log((CLOG_DEBUG1 "recv mouse down id=%d", id));
-	m_screen->mouseDown(static_cast<ButtonID>(id));
-}
-
-void
-CClient::onMouseUp()
-{
-	// get mouse up to date
-	flushCompressedMouse();
-
-	SInt8 id;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDMouseUp + 4, &id);
-	}
-	log((CLOG_DEBUG1 "recv mouse up id=%d", id));
-	m_screen->mouseUp(static_cast<ButtonID>(id));
-}
-
-void
-CClient::onMouseMove()
-{
-	bool ignore;
-	SInt16 x, y;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDMouseMove + 4, &x, &y);
-		ignore = m_ignoreMove;
-
-		// compress mouse motion events if more input follows
-		if (!ignore && !m_compressMouse && m_input->getSize() > 0) {
-			m_compressMouse = true;
+	try {
+		// process messages
+		bool rejected = true;
+		if (proxy != NULL) {
+			log((CLOG_DEBUG1 "communicating with server"));
+			rejected = !proxy->run();
 		}
-		if (m_compressMouse) {
-			ignore   = true;
-			m_xMouse = x;
-			m_yMouse = y;
-		}
-	}
-	log((CLOG_DEBUG2 "recv mouse move %d,%d", x, y));
-	if (!ignore) {
-		m_screen->mouseMove(x, y);
-	}
-}
 
-void
-CClient::onMouseWheel()
-{
-	// get mouse up to date
-	flushCompressedMouse();
-
-	SInt16 delta;
-	{
+		// clean up
 		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDMouseWheel + 4, &delta);
+		m_rejected = rejected;
+		m_server   = NULL;
+		delete proxy;
+		log((CLOG_DEBUG "disconnecting from server"));
+		socket->close();
+		delete socket;
 	}
-	log((CLOG_DEBUG2 "recv mouse wheel %+d", delta));
-	m_screen->mouseWheel(delta);
+	catch (...) {
+		CLock lock(&m_mutex);
+		m_rejected = false;
+		m_server   = NULL;
+		delete proxy;
+		log((CLOG_DEBUG "disconnecting from server"));
+		socket->close();
+		delete socket;
+		throw;
+	}
 }
 
-void
-CClient::onErrorIncompatible()
+CServerProxy*
+CClient::handshakeServer(IDataSocket* socket)
 {
-	SInt32 major, minor;
-	CLock lock(&m_mutex);
-	CProtocolUtil::readf(m_input, kMsgEIncompatible + 4, &major, &minor);
-	log((CLOG_ERR "server has incompatible version %d.%d", major, minor));
-}
+	// get the input and output streams
+	IInputStream*  input  = socket->getInputStream();
+	IOutputStream* output = socket->getOutputStream();
+	bool own              = false;
 
-void
-CClient::onErrorBusy()
-{
-	log((CLOG_ERR "server already has a connected client with name \"%s\"", m_name.c_str()));
-}
+	// attach the encryption layer
+/* FIXME -- implement ISecurityFactory
+	if (m_securityFactory != NULL) {
+		input  = m_securityFactory->createInputFilter(input, own);
+		output = m_securityFactory->createOutputFilter(output, own);
+		own    = true;
+	}
+*/
 
-void
-CClient::onErrorUnknown()
-{
-	log((CLOG_ERR "server refused client with name \"%s\"", m_name.c_str()));
-}
+	// attach the packetizing filters
+	input  = new CInputPacketStream(input, own);
+	output = new COutputPacketStream(output, own);
+	own    = true;
 
-void
-CClient::onErrorBad()
-{
-	log((CLOG_ERR "server disconnected due to a protocol error"));
+	CServerProxy* proxy = NULL;
+	try {
+		// give handshake some time
+		CTimerThread timer(30.0);
+
+		// wait for hello from server
+		log((CLOG_DEBUG1 "wait for hello"));
+		SInt16 major, minor;
+		CProtocolUtil::readf(input, "Synergy%2i%2i", &major, &minor);
+
+		// check versions
+		log((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
+		if (major < kProtocolMajorVersion ||
+			(major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
+			throw XIncompatibleClient(major, minor);
+		}
+
+		// say hello back
+		log((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
+		CProtocolUtil::writef(output, "Synergy%2i%2i%s",
+								kProtocolMajorVersion,
+								kProtocolMinorVersion, &m_name);
+
+		// create server proxy
+		proxy = new CServerProxy(this, input, output);
+
+		// negotiate
+		// FIXME
+
+		return proxy;
+	}
+	catch (XIncompatibleClient& e) {
+		log((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
+	}
+	catch (XBase& e) {
+		log((CLOG_WARN "error communicating with server: %s", e.what()));
+	}
+	catch (...) {
+		// probably timed out
+		if (proxy != NULL) {
+			delete proxy;
+		}
+		else if (own) {
+			delete input;
+			delete output;
+		}
+		throw;
+	}
+
+	// failed
+	if (proxy != NULL) {
+		delete proxy;
+	}
+	else if (own) {
+		delete input;
+		delete output;
+	}
+
+	return NULL;
 }

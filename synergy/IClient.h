@@ -11,8 +11,8 @@ class IClient : public IInterface {
 public:
 	// manipulators
 
-	// open client
-	virtual void		open() = 0;
+	// open client.  return true iff successful.
+	virtual bool		open() = 0;
 
 	// service client
 	virtual void		run() = 0;
@@ -67,6 +67,9 @@ public:
 
 	// get the center pixel
 	virtual void		getCenter(SInt32& x, SInt32& y) const = 0;
+
+	// get the mouse position
+	virtual void		getMousePos(SInt32& x, SInt32& y) const = 0;
 
 	// get the size of jump zone
 	virtual SInt32		getJumpZoneSize() const = 0;

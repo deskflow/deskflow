@@ -27,7 +27,7 @@ public:
 	IOutputStream*		getOutputStream() const;
 
 	// IClient overrides
-	virtual void		open() = 0;
+	virtual bool		open() = 0;
 	virtual void		run() = 0;
 	virtual void		close() = 0;
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
@@ -49,6 +49,7 @@ public:
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const = 0;
 	virtual void		getCenter(SInt32& x, SInt32& y) const = 0;
+	virtual void		getMousePos(SInt32& x, SInt32& y) const = 0;
 	virtual SInt32		getJumpZoneSize() const = 0;
 
 private:

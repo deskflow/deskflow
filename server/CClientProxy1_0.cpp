@@ -29,7 +29,7 @@ CClientProxy1_0::~CClientProxy1_0()
 	// do nothing
 }
 
-void
+bool
 CClientProxy1_0::open()
 {
 	// send request
@@ -55,6 +55,8 @@ CClientProxy1_0::open()
 
 	// handle reply
 	recvInfo(false);
+
+	return true;
 }
 
 void
@@ -256,6 +258,12 @@ CClientProxy1_0::getCenter(SInt32& x, SInt32& y) const
 	CLock lock(&m_mutex);
 	x = m_info.m_mx;
 	y = m_info.m_my;
+}
+
+void
+CClientProxy1_0::getMousePos(SInt32&, SInt32&) const
+{
+	assert(0 && "shouldn't be called");
 }
 
 SInt32
