@@ -97,7 +97,7 @@ CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 		event = CEvent(CEvent::kQuit);
 		return kSystem;
 	}
-	else if (m_event.message == m_daemonQuit) {
+	else if (m_daemonQuit != 0 && m_event.message == m_daemonQuit) {
 		event = CEvent(CEvent::kQuit);
 		return kSystem;
 	}
