@@ -84,6 +84,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "installer"=".\DIST\NULLSOFT\installer.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "io"=".\lib\io\io.dsp" - Package Owner=<4>
 
 Package=<5>

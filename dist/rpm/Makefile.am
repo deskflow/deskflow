@@ -16,6 +16,7 @@ DEPTH = ../..
 VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =				\
+	synergy.spec.in			\
 	$(NULL)
 
 MAINTAINERCLEANFILES =		\

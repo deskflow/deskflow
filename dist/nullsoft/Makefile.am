@@ -12,15 +12,14 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ..
+DEPTH = ../..
 VDEPTH = ./$(VPATH)/$(DEPTH)
 
-SUBDIRS =					\
-	rpm						\
-	nullsoft				\
-	$(NULL)
-
 EXTRA_DIST =				\
+	installer.dsp			\
+	installer.mak			\
+	synergy.nsi				\
+	dosify.c				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =		\
