@@ -15,12 +15,11 @@
 #ifndef CSCREEN_H
 #define CSCREEN_H
 
-#include "IKeyState.h"
 #include "IScreen.h"
 #include "ClipboardTypes.h"
+#include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "OptionTypes.h"
-#include "stdmap.h"
 
 class IClipboard;
 class IPlatformScreen;
@@ -30,7 +29,7 @@ class IPlatformScreen;
 This is a platform independent screen.  It can work as either a
 primary or secondary screen.
 */
-class CScreen : public IScreen, public IKeyState {
+class CScreen : public IScreen {
 public:
 	CScreen(IPlatformScreen* platformScreen);
 	virtual ~CScreen();
@@ -55,9 +54,10 @@ public:
 
 	//! Enter screen
 	/*!
-	Called when the user navigates to this screen.
+	Called when the user navigates to this screen.  \p toggleMask has the
+	toggle keys that should be turned on on the secondary screen.
 	*/
-	void				enter();
+	void				enter(KeyModifierMask toggleMask);
 
 	//! Leave screen
 	/*!
@@ -208,6 +208,12 @@ public:
 	*/
 	void				getCursorCenter(SInt32& x, SInt32& y) const;
 
+	//! Get the active modifiers
+	/*!
+	Returns the modifiers that are currently active.
+	*/
+	KeyModifierMask		getActiveModifiers() const;
+
 	//@}
 
 	// IScreen overrides
@@ -217,25 +223,6 @@ public:
 							SInt32& width, SInt32& height) const;
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
 
-	// IKeyState overrides
-	virtual void		updateKeys();
-	virtual void		releaseKeys();
-	virtual void		setKeyDown(KeyButton key, bool);
-	virtual void		setToggled(KeyModifierMask);
-	virtual void		addModifier(KeyModifierMask, KeyButtons&);
-	virtual void		setToggleState(KeyModifierMask);
-	virtual KeyButton	isAnyKeyDown() const;
-	virtual bool		isKeyDown(KeyButton) const;
-	virtual bool		isToggle(KeyModifierMask) const;
-	virtual bool		isHalfDuplex(KeyModifierMask) const;
-	virtual bool		isModifierActive(KeyModifierMask) const;
-	virtual KeyModifierMask
-						getActiveModifiers() const;
-	virtual bool		mapModifier(Keystrokes& keys, Keystrokes& undo,
-							KeyModifierMask mask, bool desireActive) const;
-	virtual KeyModifierMask
-						getMaskForKey(KeyButton) const;
-
 protected:
 	void				enablePrimary();
 	void				enableSecondary();
@@ -243,35 +230,16 @@ protected:
 	void				disableSecondary();
 
 	void				enterPrimary();
-	void				enterSecondary();
+	void				enterSecondary(KeyModifierMask toggleMask);
 	void				leavePrimary();
 	void				leaveSecondary();
 
 private:
-	// Get the modifier mask for the current key state
-	KeyModifierMask		getModifierMask() const;
-
-	// Send fake keystrokes
-	void				doKeystrokes(const Keystrokes&, SInt32 count);
-
-	// Send a fake key event
-	void				fakeKeyEvent(KeyButton, bool press, bool repeat) const;
-
-	// Update the shadow state for a key
-	void				updateKeyState(KeyButton button,
-							KeyButton key, bool press);
-
-	// Toggle a modifier
-	void				toggleKey(KeyModifierMask);
-
-	// Test if a modifier is toggled
-	bool				isKeyToggled(KeyButton) const;
+	void				releaseKeys();
+	void				setToggleState(KeyModifierMask);
+	KeyButton			isAnyKeyDown() const;
 
 private:
-	typedef std::map<KeyButton, KeyButton>			ServerKeyMap;
-	typedef std::map<KeyModifierMask, KeyButtons>	MaskToKeys;
-	typedef std::map<KeyButton, KeyModifierMask>	KeyToMask;
-
 	// our platform dependent screen
 	IPlatformScreen*	m_screen;
 
@@ -289,26 +257,7 @@ private:
 
 	// note toggle keys that toggles on up/down (false) or on
 	// transition (true)
-	bool				m_numLockHalfDuplex;
-	bool				m_capsLockHalfDuplex;
-
-	// keyboard state
-
-	// map server key buttons to local system keys
-	ServerKeyMap		m_serverKeyMap;
-
-	// system key states as set by us or the user
-	KeyState			m_keys[512];
-
-	// system key states as set by us
-	KeyState			m_fakeKeys[512];
-
-	// modifier info
-	MaskToKeys			m_maskToKeys;
-	KeyToMask			m_keyToMask;
-
-	// current active modifiers
-	KeyModifierMask		m_mask;
+	KeyModifierMask		m_halfDuplex;
 
 	// the toggle key state when this screen was last entered
 	KeyModifierMask		m_toggleKeys;

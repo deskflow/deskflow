@@ -181,8 +181,7 @@ CClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 {
 	m_active = true;
 	m_screen->mouseMove(xAbs, yAbs);
-	m_screen->enter();
-	m_screen->setToggleState(mask);
+	m_screen->enter(mask);
 }
 
 bool

@@ -18,9 +18,6 @@
 // IPrimaryScreen
 //
 
-CEvent::Type		IPrimaryScreen::s_keyDownEvent         = CEvent::kUnknown;
-CEvent::Type		IPrimaryScreen::s_keyUpEvent           = CEvent::kUnknown;
-CEvent::Type		IPrimaryScreen::s_keyRepeatEvent       = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_buttonDownEvent      = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_buttonUpEvent        = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_motionPrimaryEvent   = CEvent::kUnknown;
@@ -28,27 +25,6 @@ CEvent::Type		IPrimaryScreen::s_motionSecondaryEvent = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_wheelEvent           = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_ssActivatedEvent     = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_ssDeactivatedEvent   = CEvent::kUnknown;
-
-CEvent::Type
-IPrimaryScreen::getKeyDownEvent()
-{
-	return CEvent::registerTypeOnce(s_keyDownEvent,
-							"IPrimaryScreen::keyDown");
-}
-
-CEvent::Type
-IPrimaryScreen::getKeyUpEvent()
-{
-	return CEvent::registerTypeOnce(s_keyUpEvent,
-							"IPrimaryScreen::keyUp");
-}
-
-CEvent::Type
-IPrimaryScreen::getKeyRepeatEvent()
-{
-	return CEvent::registerTypeOnce(s_keyRepeatEvent,
-							"IPrimaryScreen::keyRepeat");
-}
 
 CEvent::Type
 IPrimaryScreen::getButtonDownEvent()
@@ -97,23 +73,6 @@ IPrimaryScreen::getScreensaverDeactivatedEvent()
 {
 	return CEvent::registerTypeOnce(s_ssDeactivatedEvent,
 							"IPrimaryScreen::screensaverDeactivated");
-}
-
-
-//
-// IPrimaryScreen::CKeyInfo
-//
-
-IPrimaryScreen::CKeyInfo*
-IPrimaryScreen::CKeyInfo::alloc(KeyID id,
-				KeyModifierMask mask, KeyButton button, SInt32 count)
-{
-	CKeyInfo* info = (CKeyInfo*)malloc(sizeof(CKeyInfo));
-	info->m_key    = id;
-	info->m_mask   = mask;
-	info->m_button = button;
-	info->m_count  = count;
-	return info;
 }
 
 

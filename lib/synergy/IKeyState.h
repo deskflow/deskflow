@@ -17,20 +17,30 @@
 
 #include "IInterface.h"
 #include "KeyTypes.h"
-#include "CString.h"
-#include "stdvector.h"
+#include "CEvent.h"
 
+//! Key state interface
+/*!
+This interface provides access to set and query the keyboard state and
+to synthesize key events.
+*/
 class IKeyState : public IInterface {
 public:
-	class Keystroke {
-	public:
-		KeyButton		m_key;
-		bool			m_press;
-		bool			m_repeat;
+	enum {
+		kNumButtons = 0x200
 	};
 
-	typedef std::vector<Keystroke> Keystrokes;
-	typedef std::vector<KeyButton> KeyButtons;
+	//! Key event data
+	class CKeyInfo {
+	public:
+		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
+
+	public:
+		KeyID			m_key;
+		KeyModifierMask	m_mask;
+		KeyButton		m_button;
+		SInt32			m_count;
+	};
 
 	//! @name manipulators
 	//@{
@@ -42,78 +52,51 @@ public:
 	*/
 	virtual void		updateKeys() = 0;
 
-	//! Release fake pressed keys
+	//! Set half-duplex mask
 	/*!
-	Send fake key events to release keys that aren't physically pressed
-	but are logically pressed.
+	Sets which modifier toggle keys are half-duplex.  A half-duplex
+	toggle key doesn't report a key release when toggled on and
+	doesn't report a key press when toggled off.
 	*/
-	virtual void		releaseKeys() = 0;
+	virtual void		setHalfDuplexMask(KeyModifierMask) = 0;
 
-	//! Mark key as being down
+	//! Fake a key press
 	/*!
-	Sets the state of \c key to down or up.
+	Synthesizes a key press event and updates the key state.
 	*/
-	virtual void		setKeyDown(KeyButton key, bool down) = 0;
+	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
+							KeyButton button) = 0;
 
-	//! Mark modifier as being toggled on
+	//! Fake a key repeat
 	/*!
-	Sets the state of the keys for the given (single) modifier to be
-	toggled on.
+	Synthesizes a key repeat event and updates the key state.
 	*/
-	virtual void		setToggled(KeyModifierMask) = 0;
+	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+							SInt32 count, KeyButton button) = 0;
 
-	//! Add keys for modifier
+	//! Fake a key release
 	/*!
-	Sets the keys that are mapped to the given (single) modifier.  For
-	example, if buttons 5 and 23 were mapped to KeyModifierShift (perhaps
-	as left and right shift keys) then the mask would be KeyModifierShift
-	and \c keys would contain 5 and 23.  A modifier with no keys is
-	ignored.  Keys that are zero are ignored.  \c keys may be modified
-	by the call.
+	Synthesizes a key release event and updates the key state.
 	*/
-	virtual void		addModifier(KeyModifierMask, KeyButtons& keys) = 0;
+	virtual void		fakeKeyUp(KeyButton button) = 0;
 
-	//! Set toggle key state
+	//! Fake a modifier toggle
 	/*!
-	Update the local toggle key state to match the given state.
+	Synthesizes key press/release events to toggle the given \p modifier
+	and updates the key state.
 	*/
-	virtual void		setToggleState(KeyModifierMask) = 0;
+	virtual void		fakeToggle(KeyModifierMask modifier) = 0;
 
 	//@}
 	//! @name accessors
 	//@{
 
-	//! Test if any key is down
-	/*!
-	If any key is down then returns one of those keys.  Otherwise returns 0.
-	*/
-	virtual KeyButton	isAnyKeyDown() const = 0;
-
 	//! Test if key is pressed
 	/*!
 	Returns true iff the given key is down.  Half-duplex toggles
-	should always return false.
+	always return false.
 	*/
 	virtual bool		isKeyDown(KeyButton) const = 0;
-
-	//! Test if modifier is a toggle
-	/*!
-	Returns true iff the given (single) modifier is a toggle.
-	*/
-	virtual bool		isToggle(KeyModifierMask) const = 0;
-
-	//! Test if modifier is half-duplex
-	/*!
-	Returns true iff the given (single) modifier is a half-duplex
-	toggle key.
-	*/
-	virtual bool		isHalfDuplex(KeyModifierMask) const = 0;
-
-	//! Test if modifier is active
-	/*!
-	Returns true iff the given (single) modifier is currently active.
-	*/
-	virtual bool		isModifierActive(KeyModifierMask) const = 0;
 
 	//! Get the active modifiers
 	/*!
@@ -122,35 +105,25 @@ public:
 	virtual KeyModifierMask
 						getActiveModifiers() const = 0;
 
-	//! Get key events to change modifier state
+	//! Get name of key
 	/*!
-	Retrieves the key events necessary to activate (\c desireActive is true)
-	or deactivate (\c desireActive is false) the modifier given by \c mask
-	by pushing them onto the back of \c keys.  \c mask must specify exactly
-	one modifier.  \c undo receives the key events necessary to restore the
-	modifier's previous state.  They're pushed onto \c undo in the reverse
-	order they should be executed.  Returns true if the modifier can be
-	adjusted, false otherwise.
+	Return a string describing the given key.
 	*/
-	virtual bool		mapModifier(Keystrokes& keys, Keystrokes& undo,
-							KeyModifierMask mask, bool desireActive) const = 0;
+	virtual const char*	getKeyName(KeyButton) const = 0;
 
-	//! Get modifier mask for key
-	/*!
-	Returns the modifier mask for \c key.  If \c key is not a modifier
-	key then returns 0.
-	*/
-	virtual KeyModifierMask
-						getMaskForKey(KeyButton) const = 0;
+	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
+	static CEvent::Type	getKeyDownEvent();
+	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
+	static CEvent::Type	getKeyUpEvent();
+	//! Get key repeat event type.  Event data is CKeyInfo*.
+	static CEvent::Type	getKeyRepeatEvent();
 
 	//@}
 
-protected:
-	typedef UInt8		KeyState;
-	enum EKeyState {
-		kDown = 0x01,		//!< Key is down
-		kToggled = 0x80		//!< Key is toggled on
-	};
+private:
+	static CEvent::Type	s_keyDownEvent;
+	static CEvent::Type	s_keyUpEvent;
+	static CEvent::Type	s_keyRepeatEvent;
 };
 
 #endif

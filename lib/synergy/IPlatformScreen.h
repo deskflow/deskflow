@@ -18,11 +18,11 @@
 #include "IScreen.h"
 #include "IPrimaryScreen.h"
 #include "ISecondaryScreen.h"
+#include "IKeyState.h"
 #include "ClipboardTypes.h"
 #include "OptionTypes.h"
 
 class IClipboard;
-class IKeyState;
 
 //! Screen interface
 /*!
@@ -31,17 +31,11 @@ screen implementations that are used by both primary and secondary
 screens.
 */
 class IPlatformScreen : public IScreen,
-				public IPrimaryScreen, public ISecondaryScreen {
+				public IPrimaryScreen, public ISecondaryScreen,
+				public IKeyState {
 public:
 	//! @name manipulators
 	//@{
-
-	//! Set the key state
-	/*!
-	Sets the key state object.  This object tracks keyboard state and
-	the screen is expected to keep it up to date.
-	*/
-	virtual void		setKeyState(IKeyState*) = 0;
 
 	//! Enable screen
 	/*!
@@ -124,13 +118,6 @@ public:
 	*/
 	virtual void		setOptions(const COptionsList& options) = 0;
 
-	//! Get keyboard state
-	/*!
-	Put the current keyboard state into the IKeyState passed to
-	\c setKeyState().
-	*/
-	virtual void		updateKeys() = 0;
-
 	//! Set clipboard sequence number
 	/*!
 	Sets the sequence number to use in subsequent clipboard events.
@@ -161,20 +148,27 @@ public:
 	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
 	virtual SInt32		getJumpZoneSize() const = 0;
 	virtual bool		isAnyMouseButtonDown() const = 0;
-	virtual KeyModifierMask	getActiveModifiers() const = 0;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
-	virtual const char*	getKeyName(KeyButton) const = 0;
 
 	// ISecondaryScreen overrides
-	virtual void		fakeKeyEvent(KeyButton id, bool press) const = 0;
 	virtual bool		fakeCtrlAltDel() const = 0;
 	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
 	virtual void		fakeMouseWheel(SInt32 delta) const = 0;
-	virtual KeyButton	mapKey(IKeyState::Keystrokes&,
-							const IKeyState& keyState, KeyID id,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const = 0;
+
+	// IKeyState overrides
+	virtual void		updateKeys() = 0;
+	virtual void		setHalfDuplexMask(KeyModifierMask) = 0;
+	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
+							KeyButton button) = 0;
+	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+							SInt32 count, KeyButton button) = 0;
+	virtual void		fakeKeyUp(KeyButton button) = 0;
+	virtual void		fakeToggle(KeyModifierMask modifier) = 0;
+	virtual bool		isKeyDown(KeyButton) const = 0;
+	virtual KeyModifierMask
+						getActiveModifiers() const = 0;
+	virtual const char*	getKeyName(KeyButton) const = 0;
 
 protected:
 	//! Handle system event
@@ -193,10 +187,10 @@ protected:
 
 	A primary screen has further responsibilities.  It should post
 	the events in \c IPrimaryScreen as appropriate.  It should also
-	call \c setKeyDown() on the \c IKeyState passed to \c setKeyState()
-	whenever a key is pressed or released (but not for key repeats).
-	And it should call \c updateKeys() on the \c IKeyState if necessary
-	when the keyboard mapping changes.
+	call \c setKeyDown() on its \c CKeyState whenever a key is pressed
+	or released (but not for key repeats).  And it should call
+	\c updateKeys() on its \c CKeyState if necessary when the keyboard
+	mapping changes.
 
 	The target of all events should be the value returned by
 	\c getEventTarget().

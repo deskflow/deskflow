@@ -26,16 +26,21 @@ MAINTAINERCLEANFILES =			\
 noinst_LIBRARIES = libsynergy.a
 libsynergy_a_SOURCES = 			\
 	CClipboard.cpp				\
+	CKeyState.cpp				\
 	CPacketStreamFilter.cpp		\
+	CPlatformScreen.cpp			\
 	CProtocolUtil.cpp			\
 	CScreen.cpp					\
 	IClipboard.cpp				\
+	IKeyState.cpp				\
 	IPrimaryScreen.cpp			\
 	IScreen.cpp					\
 	XScreen.cpp					\
 	XSynergy.cpp				\
 	CClipboard.h				\
+	CKeyState.h					\
 	CPacketStreamFilter.h		\
+	CPlatformScreen.h			\
 	CProtocolUtil.h				\
 	CScreen.h					\
 	ClipboardTypes.h			\

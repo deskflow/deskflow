@@ -15,8 +15,7 @@
 #ifndef CXWINDOWSSCREEN_H
 #define CXWINDOWSSCREEN_H
 
-#include "IPlatformScreen.h"
-#include "CXWindowsKeyMapper.h"
+#include "CPlatformScreen.h"
 #include "stdvector.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
@@ -25,10 +24,11 @@
 #endif
 
 class CXWindowsClipboard;
+class CXWindowsKeyState;
 class CXWindowsScreenSaver;
 
 //! Implementation of IPlatformScreen for X11
-class CXWindowsScreen : public IPlatformScreen {
+class CXWindowsScreen : public CPlatformScreen {
 public:
 	CXWindowsScreen(bool isPrimary);
 	virtual ~CXWindowsScreen();
@@ -37,23 +37,6 @@ public:
 	//@{
 
 	//@}
-
-	// IPlatformScreen overrides
-	virtual void		setKeyState(IKeyState*);
-	virtual void		enable();
-	virtual void		disable();
-	virtual void		enter();
-	virtual bool		leave();
-	virtual bool		setClipboard(ClipboardID, const IClipboard*);
-	virtual void		checkClipboards();
-	virtual void		openScreensaver(bool notify);
-	virtual void		closeScreensaver();
-	virtual void		screensaver(bool activate);
-	virtual void		resetOptions();
-	virtual void		setOptions(const COptionsList& options);
-	virtual void		updateKeys();
-	virtual void		setSequenceNumber(UInt32);
-	virtual bool		isPrimary() const;
 
 	// IScreen overrides
 	virtual void*		getEventTarget() const;
@@ -67,28 +50,39 @@ public:
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
-	virtual KeyModifierMask	getActiveModifiers() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
-	virtual const char*	getKeyName(KeyButton) const;
 
 	// ISecondaryScreen overrides
-	virtual void		fakeKeyEvent(KeyButton id, bool press) const;
 	virtual bool		fakeCtrlAltDel() const;
 	virtual void		fakeMouseButton(ButtonID id, bool press) const;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseWheel(SInt32 delta) const;
-	virtual KeyButton	mapKey(IKeyState::Keystrokes&,
-							const IKeyState& keyState, KeyID id,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
+
+	// IPlatformScreen overrides
+	virtual void		enable();
+	virtual void		disable();
+	virtual void		enter();
+	virtual bool		leave();
+	virtual bool		setClipboard(ClipboardID, const IClipboard*);
+	virtual void		checkClipboards();
+	virtual void		openScreensaver(bool notify);
+	virtual void		closeScreensaver();
+	virtual void		screensaver(bool activate);
+	virtual void		resetOptions();
+	virtual void		setOptions(const COptionsList& options);
+	virtual void		setSequenceNumber(UInt32);
+	virtual bool		isPrimary() const;
+
+protected:
+	// IPlatformScreen overrides
+	virtual void		handleSystemEvent(const CEvent&, void*);
+	virtual void		updateButtons();
+	virtual IKeyState*	getKeyState() const;
 
 private:
 	// event sending
 	void				sendEvent(CEvent::Type, void* = NULL);
 	void				sendClipboardEvent(CEvent::Type, ClipboardID);
-
-	// event handling
-	void				handleSystemEvent(const CEvent&, void*);
 
 	// create the transparent cursor
 	Cursor				createBlankCursor() const;
@@ -138,8 +132,6 @@ private:
 
 	void				warpCursorNoFlush(SInt32 x, SInt32 y);
 
-	void				updateButtons();
-
 	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
@@ -162,8 +154,7 @@ private:
 	SInt32				m_xCursor, m_yCursor;
 
 	// keyboard stuff
-	IKeyState*			m_keyState;
-	CXWindowsKeyMapper	m_keyMapper;
+	CXWindowsKeyState*	m_keyState;
 
 	// input method stuff
 	XIM					m_im;

@@ -12,61 +12,54 @@
  * GNU General Public License for more details.
  */
 
-#ifndef CXWINDOWSKEYMAPPER_H
-#define CXWINDOWSKEYMAPPER_H
+#ifndef CXWINDOWSKEYSTATE_H
+#define CXWINDOWSKEYSTATE_H
 
-#include "IKeyState.h"
+#include "CKeyState.h"
 #include "stdmap.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
+#	if defined(HAVE_X11_EXTENSIONS_XTEST_H)
+#		include <X11/extensions/XTest.h>
+#	else
+#		error The XTest extension is required to build synergy
+#	endif
 #endif
 
-//! X Windows key mapper
+//! X Windows key state
 /*!
-This class maps KeyIDs to keystrokes.
+A key state for X Windows.
 */
-class CXWindowsKeyMapper {
+class CXWindowsKeyState : public CKeyState {
 public:
-	CXWindowsKeyMapper();
-	~CXWindowsKeyMapper();
+	CXWindowsKeyState(Display*);
+	~CXWindowsKeyState();
 
-	//! @name manipulators
-	//@{
-
-	//! Update key mapper
-	/*!
-	Updates the key mapper's internal tables according to the display's
-	current keyboard mapping and updates \c keyState.
-	*/
-	void				update(Display*, IKeyState* keyState);
-
-	//@}
 	//! @name accessors
 	//@{
 
-	//! Map key press/repeat to keystrokes
-	/*!
-	Converts a press/repeat of key \c id with the modifiers as given
-	in \c desiredMask into the keystrokes necessary to synthesize
-	that key event.  Returns the platform specific code of the key
-	being pressed, or 0 if the key cannot be mapped or \c isAutoRepeat
-	is true and the key does not auto-repeat.
-	*/
-	KeyButton			mapKey(IKeyState::Keystrokes&,
-							const IKeyState& keyState, KeyID id,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
-
 	//! Convert X modifier mask to synergy mask
 	/*!
-	Returns the synergy modifier mask corresponding to the given X
-	modifier mask.
+	Returns the synergy modifier mask corresponding to the X modifier
+	mask in \p state.
 	*/
-	KeyModifierMask		mapModifier(unsigned int state) const;
+	KeyModifierMask		mapModifiersFromX(unsigned int state) const;
 
 	//@}
+
+	// IKeyState overrides
+	virtual const char*	getKeyName(KeyButton) const;
+
+protected:
+	// IKeyState overrides
+	virtual void		doUpdateKeys();
+	virtual void		doFakeKeyEvent(KeyButton button,
+							bool press, bool isAutoRepeat);
+	virtual KeyButton	mapKey(Keystrokes& keys, KeyID id,
+							KeyModifierMask desiredMask,
+							bool isAutoRepeat) const;
 
 private:
 	class KeyMapping {
@@ -90,9 +83,8 @@ private:
 	typedef std::map<KeySym, KeyMapping> KeySymMap;
 	typedef KeySymMap::const_iterator KeySymIndex;
 
-	// save the current keyboard mapping and note the currently
-	// pressed keys in \c keyState.
-	void				updateKeysymMap(Display* display, IKeyState* keyState);
+	// save the current keyboard mapping and note the modifiers
+	void				updateKeysymMap();
 
 	// note interesting modifier KeySyms
 	void				updateModifiers();
@@ -105,8 +97,7 @@ private:
 	KeySym				keyIDToKeySym(KeyID id, KeyModifierMask mask) const;
 
 	// map a KeySym into the keystrokes to produce it
-	KeyButton			mapToKeystrokes(IKeyState::Keystrokes& keys,
-							const IKeyState& keyState,
+	KeyButton			mapToKeystrokes(Keystrokes& keys,
 							KeySymIndex keyIndex,
 							bool isAutoRepeat) const;
 
@@ -120,9 +111,8 @@ private:
 
 	// returns the keystrokes to adjust the modifiers into the desired
 	// state the keystrokes to get back to the current state.
-	bool				adjustModifiers(IKeyState::Keystrokes& keys,
-							IKeyState::Keystrokes& undo,
-							const IKeyState& keyState,
+	bool				adjustModifiers(Keystrokes& keys,
+							Keystrokes& undo,
 							KeyModifierMask desiredMask) const;
 
 	// returns true if keysym is sensitive to the NumLock state
@@ -132,6 +122,8 @@ private:
 	bool				isCapsLockSensitive(KeySym keysym) const;
 
 private:
+	Display*			m_display;
+
 	// keysym to keycode mapping
 	KeySymMap			m_keysymMap;
 

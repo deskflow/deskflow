@@ -32,9 +32,6 @@ CScreen::CScreen(IPlatformScreen* platformScreen) :
 {
 	assert(m_screen != NULL);
 
-	// open screen
-	m_screen->setKeyState(this);
-
 	// reset options
 	resetOptions();
 
@@ -78,7 +75,7 @@ CScreen::disable()
 		leave();
 	}
 	else if (m_isPrimary && !m_entered) {
-		enter();
+		enter(0);
 	}
 	m_screen->disable();
 	if (m_isPrimary) {
@@ -93,7 +90,7 @@ CScreen::disable()
 }
 
 void
-CScreen::enter()
+CScreen::enter(KeyModifierMask toggleMask)
 {
 	assert(m_entered == false);
 	LOG((CLOG_INFO "entering screen"));
@@ -105,7 +102,7 @@ CScreen::enter()
 		enterPrimary();
 	}
 	else {
-		enterSecondary();
+		enterSecondary(toggleMask);
 	}
 	m_screen->enter();
 }
@@ -186,22 +183,7 @@ CScreen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 			return;
 		}
 	}
-
-	// get the sequence of keys to simulate key press and the final
-	// modifier state.
-	Keystrokes keys;
-	KeyButton key = m_screen->mapKey(keys, *this, id, mask, false);
-	if (keys.empty()) {
-		// do nothing if there are no associated keys
-		LOG((CLOG_DEBUG2 "cannot map key 0x%08x", id));
-		return;
-	}
-
-	// generate key events
-	doKeystrokes(keys, 1);
-
-	// note that key is down
-	updateKeyState(button, key, true);
+	m_screen->fakeKeyDown(id, mask, button);
 }
 
 void
@@ -209,86 +191,14 @@ CScreen::keyRepeat(KeyID id,
 				KeyModifierMask mask, SInt32 count, KeyButton button)
 {
 	assert(!m_isPrimary);
-
-	// if we haven't seen this button go down then ignore it
-	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
-	if (index == m_serverKeyMap.end()) {
-		return;
-	}
-
-	// get the sequence of keys to simulate key repeat and the final
-	// modifier state.
-	Keystrokes keys;
-	KeyButton key = m_screen->mapKey(keys, *this, id, mask, true);
-	if (key == 0) {
-		LOG((CLOG_DEBUG2 "cannot map key 0x%08x", id));
-		return;
-	}
-	if (keys.empty()) {
-		// do nothing if there are no associated keys
-		return;
-	}
-
-	// if the keycode for the auto-repeat is not the same as for the
-	// initial press then mark the initial key as released and the new
-	// key as pressed.  this can happen when we auto-repeat after a
-	// dead key.  for example, a dead accent followed by 'a' will
-	// generate an 'a with accent' followed by a repeating 'a'.  the
-	// keycodes for the two keysyms might be different.
-	key &= 0x1ffu;
-	if (key != index->second) {
-		// replace key up with previous key id but leave key down
-		// alone so it uses the new keycode and store that keycode
-		// in the server key map.
-		for (Keystrokes::iterator index2 = keys.begin();
-								index2 != keys.end(); ++index2) {
-			if ((index2->m_key & 0x1ffu) == key) {
-				index2->m_key = index->second;
-				break;
-			}
-		}
-
-		// note that old key is now up
-		m_keys[index->second]     &= ~kDown;
-		m_fakeKeys[index->second] &= ~kDown;
-
-		// map server key to new key
-		index->second              = key;
-
-		// note that new key is now down
-		m_keys[index->second]     |= kDown;
-		m_fakeKeys[index->second] |= kDown;
-	}
-
-	// generate key events
-	doKeystrokes(keys, count);
+	m_screen->fakeKeyRepeat(id, mask, count, button);
 }
 
 void
 CScreen::keyUp(KeyID, KeyModifierMask, KeyButton button)
 {
 	assert(!m_isPrimary);
-
-	// if we haven't seen this button go down then ignore it
-	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
-	if (index == m_serverKeyMap.end()) {
-		return;
-	}
-	KeyButton key = index->second;
-
-	// get the sequence of keys to simulate key release
-	Keystrokes keys;
-	Keystroke keystroke;
-	keystroke.m_key    = key;
-	keystroke.m_press  = false;
-	keystroke.m_repeat = false;
-	keys.push_back(keystroke);
-
-	// generate key events
-	doKeystrokes(keys, 1);
-
-	// note that key is now up
-	updateKeyState(button, key, false);
+	m_screen->fakeKeyUp(button);
 }
 
 void
@@ -323,8 +233,7 @@ void
 CScreen::resetOptions()
 {
 	// reset options
-	m_numLockHalfDuplex  = false;
-	m_capsLockHalfDuplex = false;
+	m_halfDuplex = 0;
 
 	// if screen saver synchronization was off then turn it on since
 	// that's the default option state.
@@ -350,12 +259,24 @@ CScreen::setOptions(const COptionsList& options)
 			LOG((CLOG_DEBUG1 "screen saver synchronization %s", m_screenSaverSync ? "on" : "off"));
 		}
 		else if (options[i] == kOptionHalfDuplexCapsLock) {
-			m_capsLockHalfDuplex = (options[i + 1] != 0);
-			LOG((CLOG_DEBUG1 "half-duplex caps-lock %s", m_capsLockHalfDuplex ? "on" : "off"));
+			if (options[i + 1] != 0) {
+				m_halfDuplex |=  KeyModifierCapsLock;
+			}
+			else {
+				m_halfDuplex &= ~KeyModifierCapsLock;
+			}
+			m_screen->setHalfDuplexMask(m_halfDuplex);
+			LOG((CLOG_DEBUG1 "half-duplex caps-lock %s", ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off"));
 		}
 		else if (options[i] == kOptionHalfDuplexNumLock) {
-			m_numLockHalfDuplex = (options[i + 1] != 0);
-			LOG((CLOG_DEBUG1 "half-duplex num-lock %s", m_numLockHalfDuplex ? "on" : "off"));
+			if (options[i + 1] != 0) {
+				m_halfDuplex |=  KeyModifierNumLock;
+			}
+			else {
+				m_halfDuplex &= ~KeyModifierNumLock;
+			}
+			m_screen->setHalfDuplexMask(m_halfDuplex);
+			LOG((CLOG_DEBUG1 "half-duplex num-lock %s", ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
 		}
 	}
 
@@ -401,7 +322,7 @@ CScreen::isLockedToScreen() const
 		// be necessary but we don't seem to get some key release
 		// events sometimes.  this is an emergency backup so the
 		// client doesn't get stuck on the screen.
-		const_cast<CScreen*>(this)->updateKeys();
+		m_screen->updateKeys();
 		KeyButton key2 = isAnyKeyDown();
 		if (key2 != 0) {
 			LOG((CLOG_DEBUG "locked by %s", m_screen->getKeyName(key2)));
@@ -433,6 +354,12 @@ CScreen::getCursorCenter(SInt32& x, SInt32& y) const
 	m_screen->getCursorCenter(x, y);
 }
 
+KeyModifierMask
+CScreen::getActiveModifiers() const
+{
+	return m_screen->getActiveModifiers();
+}
+
 void*
 CScreen::getEventTarget() const
 {
@@ -455,253 +382,6 @@ void
 CScreen::getCursorPos(SInt32& x, SInt32& y) const
 {
 	m_screen->getCursorPos(x, y);
-}
-
-void
-CScreen::updateKeys()
-{
-	// clear key state
-	memset(m_keys,     0, sizeof(m_keys));
-	memset(m_fakeKeys, 0, sizeof(m_fakeKeys));
-	m_maskToKeys.clear();
-	m_keyToMask.clear();
-
-	// let subclass set m_keys
-	m_screen->updateKeys();
-
-	// figure out active modifier mask
-	m_mask = getModifierMask();
-	LOG((CLOG_DEBUG2 "modifiers on update: 0x%04x", m_mask));
-}
-
-void
-CScreen::releaseKeys()
-{
-	// release keys that we've synthesized a press for and only those
-	// keys.  we don't want to synthesize a release on a key the user
-	// is still physically pressing.
-	for (KeyButton i = 1; i < sizeof(m_keys) / sizeof(m_keys[0]); ++i) {
-		if ((m_fakeKeys[i] & kDown) != 0) {
-			fakeKeyEvent(i, false, false);
-			m_keys[i]     &= ~kDown;
-			m_fakeKeys[i] &= ~kDown;
-		}
-	}
-}
-
-void
-CScreen::setKeyDown(KeyButton key, bool down)
-{
-	if (!isHalfDuplex(getMaskForKey(key))) {
-		if (down) {
-			m_keys[key & 0x1ffu] |= kDown;
-		}
-		else {
-			m_keys[key & 0x1ffu] &= ~kDown;
-		}
-	}
-}
-
-void
-CScreen::setToggled(KeyModifierMask mask)
-{
-	if (!isToggle(mask)) {
-		return;
-	}
-	MaskToKeys::const_iterator i = m_maskToKeys.find(mask);
-	if (i == m_maskToKeys.end()) {
-		return;
-	}
-	for (KeyButtons::const_iterator j = i->second.begin();
-							j != i->second.end(); ++j) {
-		m_keys[(*j) & 0x1ffu] |= kToggled;
-	}
-}
-
-void
-CScreen::addModifier(KeyModifierMask mask, KeyButtons& keys)
-{
-	// the modifier must have associated keys
-	if (keys.empty()) {
-		return;
-	}
-
-	// the mask must not be zero
-	assert(mask != 0);
-
-	// the mask must have exactly one high bit
-	assert((mask & (mask - 1)) == 0);
-
-	// index mask by keycodes
-	for (KeyButtons::iterator j = keys.begin(); j != keys.end(); ++j) {
-		// key must be valid
-		if (((*j) & 0x1ffu) != 0) {
-			m_keyToMask[static_cast<KeyButton>((*j) & 0x1ffu)] = mask;
-		}
-	}
-
-	// index keys by mask
-	m_maskToKeys[mask].swap(keys);
-}
-
-void
-CScreen::setToggleState(KeyModifierMask mask)
-{
-	// toggle modifiers that don't match the desired state
-	KeyModifierMask different = (m_mask ^ mask);
-	if ((different & KeyModifierCapsLock)   != 0) {
-		toggleKey(KeyModifierCapsLock);
-	}
-	if ((different & KeyModifierNumLock)    != 0) {
-		toggleKey(KeyModifierNumLock);
-	}
-	if ((different & KeyModifierScrollLock) != 0) {
-		toggleKey(KeyModifierScrollLock);
-	}
-}
-
-KeyButton
-CScreen::isAnyKeyDown() const
-{
-	for (UInt32 i = 1; i < sizeof(m_keys) / sizeof(m_keys[0]); ++i) {
-		if ((m_keys[i] & kDown) != 0) {
-			return static_cast<KeyButton>(i);
-		}
-	}
-	return 0;
-}
-
-bool
-CScreen::isKeyDown(KeyButton key) const
-{
-	key &= 0x1ffu;
-	return (key != 0 && ((m_keys[key] & kDown) != 0));
-}
-
-bool
-CScreen::isToggle(KeyModifierMask mask) const
-{
-	static const KeyModifierMask s_toggleMask =
-		KeyModifierCapsLock | KeyModifierNumLock | KeyModifierScrollLock;
-	return ((mask & s_toggleMask) != 0);
-}
-
-bool
-CScreen::isHalfDuplex(KeyModifierMask mask) const
-{
-	return ((mask == KeyModifierCapsLock && m_capsLockHalfDuplex) ||
-			(mask == KeyModifierNumLock  && m_numLockHalfDuplex));
-}
-
-bool
-CScreen::isModifierActive(KeyModifierMask mask) const
-{
-	MaskToKeys::const_iterator i = m_maskToKeys.find(mask);
-	if (i == m_maskToKeys.end()) {
-		return false;
-	}
-
-	KeyButtons::const_iterator j = i->second.begin();
-	if (isToggle(mask)) {
-		// modifier is a toggle
-		if (isKeyToggled(*j)) {
-			return true;
-		}
-	}
-	else {
-		// modifier is not a toggle
-		for (; j != i->second.end(); ++j) {
-			if (isKeyDown(*j)) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-KeyModifierMask
-CScreen::getActiveModifiers() const
-{
-	if (m_isPrimary) {
-		return m_screen->getActiveModifiers();
-	}
-	else {
-		return m_mask;
-	}
-}
-
-bool
-CScreen::mapModifier(Keystrokes& keys, Keystrokes& undo,
-				KeyModifierMask mask, bool desireActive) const
-{
-	// look up modifier
-	MaskToKeys::const_iterator i = m_maskToKeys.find(mask);
-	if (i == m_maskToKeys.end()) {
-		return false;
-	}
-
-	// ignore if already in desired state
-	if (isModifierActive(mask) == desireActive) {
-		return true;
-	}
-
-	// initialize keystroke
-	Keystroke keystroke;
-	keystroke.m_repeat = false;
-
-	// handle toggles
-	if (isToggle(mask)) {
-		keystroke.m_key   = i->second.front();
-		keystroke.m_press = true;
-		keys.push_back(keystroke);
-		keystroke.m_press = false;
-		keys.push_back(keystroke);
-		keystroke.m_press = false;
-		undo.push_back(keystroke);
-		keystroke.m_press = true;
-		undo.push_back(keystroke);
-	}
-
-	else if (desireActive) {
-		// press
-		keystroke.m_key   = i->second.front();
-		keystroke.m_press = true;
-		keys.push_back(keystroke);
-		keystroke.m_press = false;
-		undo.push_back(keystroke);
-	}
-
-	else {
-		// releasing a modifier is quite different from pressing one.
-		// when we release a modifier we have to release every keycode that
-		// is assigned to the modifier since the modifier is active if any
-		// one of them is down.  when we press a modifier we just have to
-		// press one of those keycodes.
-		for (KeyButtons::const_iterator j = i->second.begin();
-								j != i->second.end(); ++j) {
-			if (isKeyDown(*j)) {
-				keystroke.m_key   = *j;
-				keystroke.m_press = false;
-				keys.push_back(keystroke);
-				keystroke.m_press = true;
-				undo.push_back(keystroke);
-			}
-		}
-	}
-
-	return true;
-}
-
-KeyModifierMask
-CScreen::getMaskForKey(KeyButton key) const
-{
-	KeyToMask::const_iterator i = m_keyToMask.find(key);
-	if (i == m_keyToMask.end()) {
-		return 0;
-	}
-	else {
-		return i->second;
-	}
 }
 
 void
@@ -749,13 +429,16 @@ CScreen::enterPrimary()
 }
 
 void
-CScreen::enterSecondary()
+CScreen::enterSecondary(KeyModifierMask toggleMask)
 {
 	// update our keyboard state to reflect the local state
-	updateKeys();
+	m_screen->updateKeys();
 
 	// remember toggle key state.  we'll restore this when we leave.
-	m_toggleKeys = m_mask;
+	m_toggleKeys = getActiveModifiers();
+
+	// restore toggle key state
+	setToggleState(toggleMask);
 }
 
 void
@@ -774,170 +457,42 @@ CScreen::leaveSecondary()
 	setToggleState(m_toggleKeys);
 }
 
-KeyModifierMask
-CScreen::getModifierMask() const
-{
-	KeyModifierMask mask = 0;
-	if (isModifierActive(KeyModifierShift)) {
-		mask |= KeyModifierShift;
-	}
-	if (isModifierActive(KeyModifierControl)) {
-		mask |= KeyModifierControl;
-	}
-	if (isModifierActive(KeyModifierAlt)) {
-		mask |= KeyModifierAlt;
-	}
-	if (isModifierActive(KeyModifierMeta)) {
-		mask |= KeyModifierMeta;
-	}
-	if (isModifierActive(KeyModifierSuper)) {
-		mask |= KeyModifierSuper;
-	}
-	if (isModifierActive(KeyModifierModeSwitch)) {
-		mask |= KeyModifierModeSwitch;
-	}
-	if (isModifierActive(KeyModifierNumLock)) {
-		mask |= KeyModifierNumLock;
-	}
-	if (isModifierActive(KeyModifierCapsLock)) {
-		mask |= KeyModifierCapsLock;
-	}
-	if (isModifierActive(KeyModifierScrollLock)) {
-		mask |= KeyModifierScrollLock;
-	}
-	return mask;
-}
-
 void
-CScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
+CScreen::releaseKeys()
 {
-	// do nothing if no keys or no repeats
-	if (count < 1 || keys.empty()) {
-		return;
-	}
-
-	// generate key events
-	LOG((CLOG_DEBUG2 "keystrokes:"));
-	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ) {
-		if (k->m_repeat) {
-			// repeat from here up to but not including the next key
-			// with m_repeat == false count times.
-			Keystrokes::const_iterator start = k;
-			for (; count > 0; --count) {
-				// send repeating events
-				for (k = start; k != keys.end() && k->m_repeat; ++k) {
-					fakeKeyEvent(k->m_key, k->m_press, true);
-				}
-			}
-
-			// note -- k is now on the first non-repeat key after the
-			// repeat keys, exactly where we'd like to continue from.
-		}
-		else {
-			// send event
-			fakeKeyEvent(k->m_key, k->m_press, false);
-
-			// next key
-			++k;
+	// release keys that we've synthesized a press for and only those
+	// keys.  we don't want to synthesize a release on a key the user
+	// is still physically pressing.
+	for (KeyButton i = 1; i < IKeyState::kNumButtons; ++i) {
+		if (m_screen->isKeyDown(i)) {
+			m_screen->fakeKeyUp(i);
 		}
 	}
 }
 
 void
-CScreen::fakeKeyEvent(KeyButton key, bool press, bool repeat) const
+CScreen::setToggleState(KeyModifierMask mask)
 {
-	// half-duplex keys are special.  we ignore releases and convert
-	// a press when the toggle is active to a release.
-	KeyModifierMask mask = getMaskForKey(key);
-	if (isHalfDuplex(mask)) {
-		if (repeat || !press) {
-			return;
-		}
-		if (isModifierActive(mask)) {
-			press = false;
-		}
+	// toggle modifiers that don't match the desired state
+	KeyModifierMask different = (m_screen->getActiveModifiers() ^ mask);
+	if ((different & KeyModifierCapsLock)   != 0) {
+		m_screen->fakeToggle(KeyModifierCapsLock);
 	}
-
-	// send key event
-	LOG((CLOG_DEBUG2 "  %d %s%s", key, press ? "down" : "up", repeat ? " repeat" : ""));
-	m_screen->fakeKeyEvent(key, press);
-}
-
-void
-CScreen::updateKeyState(KeyButton button, KeyButton key, bool press)
-{
-	// ignore bogus keys
-	key &= 0x1ffu;
-	if (button == 0 || key == 0) {
-		return;
+	if ((different & KeyModifierNumLock)    != 0) {
+		m_screen->fakeToggle(KeyModifierNumLock);
 	}
-
-	// update shadow state.  shadow state doesn't change on auto-repeat.
-	if (press) {
-		// key is now down
-		m_serverKeyMap[button] = key;
-		m_keys[key]           |= kDown;
-		m_fakeKeys[key]       |= kDown;
-	}
-	else {
-		// key is now up
-		m_serverKeyMap.erase(button);
-		m_keys[key]     &= ~kDown;
-		m_fakeKeys[key] &= ~kDown;
-	}
-	KeyModifierMask mask = getMaskForKey(key);
-	if (mask != 0) {
-		// key is a modifier
-		if (isToggle(mask)) {
-			// key is a toggle modifier
-			if (press) {
-				m_keys[key] ^= kToggled;
-				m_mask      ^= mask;
-
-				// if key is half duplex then don't report it as down
-				if (isHalfDuplex(mask)) {
-					m_keys[key]     &= ~kDown;
-					m_fakeKeys[key] &= ~kDown;
-				}
-			}
-		}
-		else {
-			// key is a normal modifier
-			if (press) {
-				m_mask |= mask;
-			}
-			else if (!isModifierActive(mask)) {
-				// no key for modifier is down anymore
-				m_mask &= ~mask;
-			}
-		}
-		LOG((CLOG_DEBUG2 "new mask: 0x%04x", m_mask));
+	if ((different & KeyModifierScrollLock) != 0) {
+		m_screen->fakeToggle(KeyModifierScrollLock);
 	}
 }
 
-void
-CScreen::toggleKey(KeyModifierMask mask)
+KeyButton
+CScreen::isAnyKeyDown() const
 {
-	// get the system key ID for this toggle key ID
-	MaskToKeys::const_iterator i = m_maskToKeys.find(mask);
-	if (i == m_maskToKeys.end()) {
-		return;
+	for (KeyButton i = 1; i < IKeyState::kNumButtons; ++i) {
+		if (m_screen->isKeyDown(i)) {
+			return i;
+		}
 	}
-	KeyButton key = i->second.front();
-
-	// toggle the key
-	fakeKeyEvent(key, true, false);
-	fakeKeyEvent(key, false, false);
-
-	// toggle shadow state
-	m_mask      ^= mask;
-	key         &= 0x1ffu;
-	m_keys[key] ^= kToggled;
-}
-
-bool
-CScreen::isKeyToggled(KeyButton key) const
-{
-	key &= 0x1ffu;
-	return (key != 0 && ((m_keys[key] & kToggled) != 0));
+	return 0;
 }

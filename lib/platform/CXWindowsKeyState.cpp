@@ -12,9 +12,10 @@
  * GNU General Public License for more details.
  */
 
-#include "CXWindowsKeyMapper.h"
+#include "CXWindowsKeyState.h"
 #include "CXWindowsUtil.h"
 #include "CLog.h"
+#include "CStringUtil.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
@@ -137,73 +138,119 @@ static const KeySym		g_mapE000[] =
 };
 #endif
 
-CXWindowsKeyMapper::CXWindowsKeyMapper()
+CXWindowsKeyState::CXWindowsKeyState(Display* display) :
+	m_display(display)
 {
 	// do nothing
 }
 
-CXWindowsKeyMapper::~CXWindowsKeyMapper()
+CXWindowsKeyState::~CXWindowsKeyState()
 {
 	// do nothing
+}
+
+KeyModifierMask
+CXWindowsKeyState::mapModifiersFromX(unsigned int state) const
+{
+	KeyModifierMask mask = 0;
+	if (state & ShiftMask)
+		mask |= KeyModifierShift;
+	if (state & LockMask)
+		mask |= KeyModifierCapsLock;
+	if (state & ControlMask)
+		mask |= KeyModifierControl;
+	if (state & m_altMask)
+		mask |= KeyModifierAlt;
+	if (state & m_metaMask)
+		mask |= KeyModifierMeta;
+	if (state & m_superMask)
+		mask |= KeyModifierSuper;
+	if (state & m_modeSwitchMask)
+		mask |= KeyModifierModeSwitch;
+	if (state & m_numLockMask)
+		mask |= KeyModifierNumLock;
+	if (state & m_scrollLockMask)
+		mask |= KeyModifierScrollLock;
+	return mask;
+}
+
+const char*
+CXWindowsKeyState::getKeyName(KeyButton keycode) const
+{
+	KeySym keysym = XKeycodeToKeysym(m_display, keycode, 0);
+	char* name    = XKeysymToString(keysym);
+	if (name != NULL) {
+		return name;
+	}
+	else {
+		static char buffer[20];
+		return strcpy(buffer,
+					CStringUtil::print("keycode %d", keycode).c_str());
+	}
 }
 
 void
-CXWindowsKeyMapper::update(Display* display, IKeyState* keyState)
+CXWindowsKeyState::doUpdateKeys()
 {
 	// query which keys are pressed
 	char keys[32];
-	XQueryKeymap(display, keys);
+	XQueryKeymap(m_display, keys);
 
 	// save the auto-repeat mask
-	XGetKeyboardControl(display, &m_keyControl);
+	XGetKeyboardControl(m_display, &m_keyControl);
 
 	// query the pointer to get the keyboard state
-	Window root = DefaultRootWindow(display), window;
+	Window root = DefaultRootWindow(m_display), window;
 	int xRoot, yRoot, xWindow, yWindow;
 	unsigned int state;
-	if (!XQueryPointer(display, root, &root, &window,
+	if (!XQueryPointer(m_display, root, &root, &window,
 								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
 		state = 0;
 	}
 
 	// update mappings
-	updateKeysymMap(display, keyState);
+	updateKeysymMap();
 	updateModifiers();
 
 	// transfer to our state
 	for (UInt32 i = 0, j = 0; i < 32; j += 8, ++i) {
 		if ((keys[i] & 0x01) != 0)
-			keyState->setKeyDown(j + 0, true);
+			setKeyDown(j + 0, true);
 		if ((keys[i] & 0x02) != 0)
-			keyState->setKeyDown(j + 1, true);
+			setKeyDown(j + 1, true);
 		if ((keys[i] & 0x04) != 0)
-			keyState->setKeyDown(j + 2, true);
+			setKeyDown(j + 2, true);
 		if ((keys[i] & 0x08) != 0)
-			keyState->setKeyDown(j + 3, true);
+			setKeyDown(j + 3, true);
 		if ((keys[i] & 0x10) != 0)
-			keyState->setKeyDown(j + 4, true);
+			setKeyDown(j + 4, true);
 		if ((keys[i] & 0x20) != 0)
-			keyState->setKeyDown(j + 5, true);
+			setKeyDown(j + 5, true);
 		if ((keys[i] & 0x40) != 0)
-			keyState->setKeyDown(j + 6, true);
+			setKeyDown(j + 6, true);
 		if ((keys[i] & 0x80) != 0)
-			keyState->setKeyDown(j + 7, true);
+			setKeyDown(j + 7, true);
 	}
 
 	// set toggle modifier states
 	if ((state & LockMask) != 0)
-		keyState->setToggled(KeyModifierCapsLock);
+		setToggled(KeyModifierCapsLock);
 	if ((state & m_numLockMask) != 0)
-		keyState->setToggled(KeyModifierNumLock);
+		setToggled(KeyModifierNumLock);
 	if ((state & m_scrollLockMask) != 0)
-		keyState->setToggled(KeyModifierScrollLock);
+		setToggled(KeyModifierScrollLock);
+}
+
+void
+CXWindowsKeyState::doFakeKeyEvent(KeyButton keycode, bool press, bool)
+{
+	XTestFakeKeyEvent(m_display, keycode, press ? True : False, CurrentTime);
+	XFlush(m_display);
 }
 
 KeyButton
-CXWindowsKeyMapper::mapKey(IKeyState::Keystrokes& keys,
-				const IKeyState& keyState, KeyID id,
-				KeyModifierMask desiredMask,
-				bool isAutoRepeat) const
+CXWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
+				KeyModifierMask desiredMask, bool isAutoRepeat) const
 {
 	// the system translates key events into characters depending
 	// on the modifier key state at the time of the event.  to
@@ -243,7 +290,7 @@ CXWindowsKeyMapper::mapKey(IKeyState::Keystrokes& keys,
 	if (keyIndex != m_keysymMap.end()) {
 		// the keysym is mapped to some keycode.  create the keystrokes
 		// for this keysym.
-		return mapToKeystrokes(keys, keyState, keyIndex, isAutoRepeat);
+		return mapToKeystrokes(keys, keyIndex, isAutoRepeat);
 	}
 
 	// we can't find the keysym mapped to any keycode.  this doesn't
@@ -272,7 +319,7 @@ CXWindowsKeyMapper::mapKey(IKeyState::Keystrokes& keys,
 		}
 
 		// the keysym is mapped to some keycode
-		keycode = mapToKeystrokes(keys, keyState, keyIndex, isAutoRepeat);
+		keycode = mapToKeystrokes(keys, keyIndex, isAutoRepeat);
 		if (keycode == 0) {
 			return 0;
 		}
@@ -281,45 +328,20 @@ CXWindowsKeyMapper::mapKey(IKeyState::Keystrokes& keys,
 	return keycode;
 }
 
-KeyModifierMask
-CXWindowsKeyMapper::mapModifier(unsigned int state) const
-{
-	KeyModifierMask mask = 0;
-	if (state & ShiftMask)
-		mask |= KeyModifierShift;
-	if (state & LockMask)
-		mask |= KeyModifierCapsLock;
-	if (state & ControlMask)
-		mask |= KeyModifierControl;
-	if (state & m_altMask)
-		mask |= KeyModifierAlt;
-	if (state & m_metaMask)
-		mask |= KeyModifierMeta;
-	if (state & m_superMask)
-		mask |= KeyModifierSuper;
-	if (state & m_modeSwitchMask)
-		mask |= KeyModifierModeSwitch;
-	if (state & m_numLockMask)
-		mask |= KeyModifierNumLock;
-	if (state & m_scrollLockMask)
-		mask |= KeyModifierScrollLock;
-	return mask;
-}
-
 void
-CXWindowsKeyMapper::updateKeysymMap(Display* display, IKeyState* keyState)
+CXWindowsKeyState::updateKeysymMap()
 {
 	// there are up to 4 keysyms per keycode
 	static const unsigned int maxKeysyms = 4;
 
 	// get the number of keycodes
 	int minKeycode, maxKeycode;
-	XDisplayKeycodes(display, &minKeycode, &maxKeycode);
+	XDisplayKeycodes(m_display, &minKeycode, &maxKeycode);
 	const int numKeycodes = maxKeycode - minKeycode + 1;
 
 	// get the keyboard mapping for all keys
 	int keysymsPerKeycode;
-	KeySym* keysyms = XGetKeyboardMapping(display,
+	KeySym* keysyms = XGetKeyboardMapping(m_display,
 								minKeycode, numKeycodes,
 								&keysymsPerKeycode);
 
@@ -364,7 +386,7 @@ CXWindowsKeyMapper::updateKeysymMap(Display* display, IKeyState* keyState)
 	}
 
 	// get modifier map from server
-	XModifierKeymap* modifiers   = XGetModifierMapping(display);
+	XModifierKeymap* modifiers   = XGetModifierMapping(m_display);
 	unsigned int keysPerModifier = modifiers->max_keypermod;
 
 	// clear state
@@ -387,7 +409,7 @@ CXWindowsKeyMapper::updateKeysymMap(Display* display, IKeyState* keyState)
 	for (unsigned int i = 0; i < 8; ++i) {
 		// no keycodes for this modifier yet
 		KeyModifierMask mask = 0;
-		IKeyState::KeyButtons modifierKeys;
+		KeyButtons modifierKeys;
 
 		// add each keycode for modifier
 		for (unsigned int j = 0; j < keysPerModifier; ++j) {
@@ -429,9 +451,9 @@ CXWindowsKeyMapper::updateKeysymMap(Display* display, IKeyState* keyState)
 			mapping.m_numLockSensitive       = false;
 		}
 
-		// tell keyState about this modifier
-		if (mask != 0 && keyState != NULL) {
-			keyState->addModifier(mask, modifierKeys);
+		// note this modifier
+		if (mask != 0) {
+			addModifier(mask, modifierKeys);
 		}
 	}
 
@@ -485,7 +507,7 @@ CXWindowsKeyMapper::updateKeysymMap(Display* display, IKeyState* keyState)
 }
 
 KeyModifierMask
-CXWindowsKeyMapper::mapToModifierMask(unsigned int i, KeySym keysym)
+CXWindowsKeyState::mapToModifierMask(unsigned int i, KeySym keysym)
 {
 	// some modifier indices (0,1,2) are dedicated to particular uses,
 	// the rest depend on the keysyms bound.
@@ -546,16 +568,16 @@ CXWindowsKeyMapper::mapToModifierMask(unsigned int i, KeySym keysym)
 }
 
 void
-CXWindowsKeyMapper::updateModifiers()
+CXWindowsKeyState::updateModifiers()
 {
 	struct CModifierBitInfo {
 	public:
-		KeySym CXWindowsKeyMapper::*m_keysym;
+		KeySym CXWindowsKeyState::*m_keysym;
 		KeySym m_left;
 		KeySym m_right;
 	};
 	static const CModifierBitInfo s_modifierBitTable[] = {
-	{ &CXWindowsKeyMapper::m_modeSwitchKeysym, XK_Mode_switch, NoSymbol },
+	{ &CXWindowsKeyState::m_modeSwitchKeysym, XK_Mode_switch, NoSymbol },
 	};
 
 	// choose the keysym to use for some modifiers.  if a modifier has
@@ -603,7 +625,7 @@ CXWindowsKeyMapper::updateModifiers()
 }
 
 KeySym
-CXWindowsKeyMapper::keyIDToKeySym(KeyID id, KeyModifierMask mask) const
+CXWindowsKeyState::keyIDToKeySym(KeyID id, KeyModifierMask mask) const
 {
 	// convert id to keysym
 	KeySym keysym = NoSymbol;
@@ -718,15 +740,13 @@ CXWindowsKeyMapper::keyIDToKeySym(KeyID id, KeyModifierMask mask) const
 }
 
 KeyButton
-CXWindowsKeyMapper::mapToKeystrokes(IKeyState::Keystrokes& keys,
-				const IKeyState& keyState,
-				KeySymIndex keyIndex,
-				bool isAutoRepeat) const
+CXWindowsKeyState::mapToKeystrokes(Keystrokes& keys,
+				KeySymIndex keyIndex, bool isAutoRepeat) const
 {
 	// keyIndex must be valid
 	assert(keyIndex != m_keysymMap.end());
 
-	KeyModifierMask currentMask = keyState.getActiveModifiers();
+	KeyModifierMask currentMask = getActiveModifiers();
 
 	// get the keysym we're trying to generate and possible keycodes
 	const KeySym keysym       = keyIndex->first;
@@ -798,14 +818,14 @@ CXWindowsKeyMapper::mapToKeystrokes(IKeyState::Keystrokes& keys,
 	}
 
 	// adjust the modifiers to match the desired modifiers
-	IKeyState::Keystrokes undo;
-	if (!adjustModifiers(keys, undo, keyState, desiredMask)) {
+	Keystrokes undo;
+	if (!adjustModifiers(keys, undo, desiredMask)) {
 		LOG((CLOG_DEBUG2 "failed to adjust modifiers"));
 		return 0;
 	}
 
 	// add the key event
-	IKeyState::Keystroke keystroke;
+	Keystroke keystroke;
 	keystroke.m_key        = keycode;
 	if (!isAutoRepeat) {
 		keystroke.m_press  = true;
@@ -830,7 +850,7 @@ CXWindowsKeyMapper::mapToKeystrokes(IKeyState::Keystrokes& keys,
 }
 
 unsigned int
-CXWindowsKeyMapper::findBestKeyIndex(KeySymIndex keyIndex,
+CXWindowsKeyState::findBestKeyIndex(KeySymIndex keyIndex,
 				KeyModifierMask /*currentMask*/) const
 {
 	// there are up to 4 keycodes per keysym to choose from.  the
@@ -856,7 +876,7 @@ CXWindowsKeyMapper::findBestKeyIndex(KeySymIndex keyIndex,
 }
 
 bool
-CXWindowsKeyMapper::isShiftInverted(KeySymIndex keyIndex,
+CXWindowsKeyState::isShiftInverted(KeySymIndex keyIndex,
 				KeyModifierMask currentMask) const
 {
 	// each keycode has up to 4 keysym associated with it, one each for:
@@ -885,12 +905,11 @@ CXWindowsKeyMapper::isShiftInverted(KeySymIndex keyIndex,
 }
 
 bool
-CXWindowsKeyMapper::adjustModifiers(IKeyState::Keystrokes& keys,
-				IKeyState::Keystrokes& undo,
-				const IKeyState& keyState,
+CXWindowsKeyState::adjustModifiers(Keystrokes& keys,
+				Keystrokes& undo,
 				KeyModifierMask desiredMask) const
 {
-	KeyModifierMask currentMask = keyState.getActiveModifiers();
+	KeyModifierMask currentMask = getActiveModifiers();
 
 	// get mode switch set correctly.  do this before shift because
 	// mode switch may be sensitive to the shift modifier and will
@@ -909,8 +928,7 @@ CXWindowsKeyMapper::adjustModifiers(IKeyState::Keystrokes& keys,
 			if (wantShift != haveShift) {
 				// add shift keystrokes
 				LOG((CLOG_DEBUG2 "fix shift for mode switch"));
-				if (!keyState.mapModifier(keys, undo,
-									KeyModifierShift, wantShift)) {
+				if (!mapModifier(keys, undo, KeyModifierShift, wantShift)) {
 					return false;
 				}
 				currentMask ^= KeyModifierShift;
@@ -918,8 +936,7 @@ CXWindowsKeyMapper::adjustModifiers(IKeyState::Keystrokes& keys,
 		}
 
 		// add mode switch keystrokes
-		if (!keyState.mapModifier(keys, undo,
-									KeyModifierModeSwitch, wantModeSwitch)) {
+		if (!mapModifier(keys, undo, KeyModifierModeSwitch, wantModeSwitch)) {
 			return false;
 		}
 		currentMask ^= KeyModifierModeSwitch;
@@ -931,7 +948,7 @@ CXWindowsKeyMapper::adjustModifiers(IKeyState::Keystrokes& keys,
 	if (wantShift != haveShift) {
 		// add shift keystrokes
 		LOG((CLOG_DEBUG2 "fix shift"));
-		if (!keyState.mapModifier(keys, undo, KeyModifierShift, wantShift)) {
+		if (!mapModifier(keys, undo, KeyModifierShift, wantShift)) {
 			return false;
 		}
 		currentMask ^= KeyModifierShift;
@@ -941,13 +958,13 @@ CXWindowsKeyMapper::adjustModifiers(IKeyState::Keystrokes& keys,
 }
 
 bool
-CXWindowsKeyMapper::isNumLockSensitive(KeySym keysym) const
+CXWindowsKeyState::isNumLockSensitive(KeySym keysym) const
 {
 	return (IsKeypadKey(keysym) || IsPrivateKeypadKey(keysym));
 }
 
 bool
-CXWindowsKeyMapper::isCapsLockSensitive(KeySym keysym) const
+CXWindowsKeyState::isCapsLockSensitive(KeySym keysym) const
 {
 	KeySym lKey, uKey;
 	XConvertCase(keysym, &lKey, &uKey);
@@ -956,10 +973,10 @@ CXWindowsKeyMapper::isCapsLockSensitive(KeySym keysym) const
 
 
 //
-// CXWindowsKeyMapper::KeyMapping
+// CXWindowsKeyState::KeyMapping
 //
 
-CXWindowsKeyMapper::KeyMapping::KeyMapping()
+CXWindowsKeyState::KeyMapping::KeyMapping()
 {
 	m_keycode[0] = 0;
 	m_keycode[1] = 0;

@@ -105,13 +105,13 @@ CPrimaryClient::disable()
 
 void
 CPrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
-				UInt32 seqNum, KeyModifierMask, bool screensaver)
+				UInt32 seqNum, KeyModifierMask mask, bool screensaver)
 {
 	m_screen->setSequenceNumber(seqNum);
 	if (!screensaver) {
 		m_screen->warpCursor(xAbs, yAbs);
 	}
-	m_screen->enter();
+	m_screen->enter(mask);
 }
 
 bool

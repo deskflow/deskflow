@@ -16,9 +16,8 @@
 #define IPRIMARYSCREEN_H
 
 #include "IInterface.h"
-#include "IKeyState.h"
-#include "CEvent.h"
 #include "MouseTypes.h"
+#include "CEvent.h"
 
 //! Primary screen interface
 /*!
@@ -27,17 +26,6 @@ primary screen implementations.
 */
 class IPrimaryScreen : public IInterface {
 public:
-	//! Key event data
-	class CKeyInfo {
-	public:
-		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
-
-	public:
-		KeyID			m_key;
-		KeyModifierMask	m_mask;
-		KeyButton		m_button;
-		SInt32			m_count;
-	};
 	//! Button event data
 	class CButtonInfo {
 	public:
@@ -103,14 +91,6 @@ public:
 	*/
 	virtual bool		isAnyMouseButtonDown() const = 0;
 
-	//! Get current modifier key state
-	/*!
-	Returns the current modifier key state.  Ideally, "current" means
-	up to the lat processed event but it can mean the current physical
-	modifier key state.
-	*/
-	virtual KeyModifierMask	getActiveModifiers() const = 0;
-
 	//! Get cursor center position
 	/*!
 	Return the cursor center position which is where we park the
@@ -119,18 +99,6 @@ public:
 	*/
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 
-	//! Get name of key
-	/*!
-	Return a string describing the given key.
-	*/
-	virtual const char*	getKeyName(KeyButton) const = 0;
-
-	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
-	static CEvent::Type	getKeyDownEvent();
-	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
-	static CEvent::Type	getKeyUpEvent();
-	//! Get key repeat event type.  Event data is CKeyInfo*.
-	static CEvent::Type	getKeyRepeatEvent();
 	//! Get button down event type.  Event data is CButtonInfo*.
 	static CEvent::Type	getButtonDownEvent();
 	//! Get button up event type.  Event data is CButtonInfo*.
@@ -156,9 +124,6 @@ public:
 	//@}
 
 private:
-	static CEvent::Type	s_keyDownEvent;
-	static CEvent::Type	s_keyUpEvent;
-	static CEvent::Type	s_keyRepeatEvent;
 	static CEvent::Type	s_buttonDownEvent;
 	static CEvent::Type	s_buttonUpEvent;
 	static CEvent::Type	s_motionPrimaryEvent;

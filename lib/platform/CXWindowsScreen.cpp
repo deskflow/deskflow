@@ -15,6 +15,7 @@
 #include "CXWindowsScreen.h"
 #include "CXWindowsClipboard.h"
 #include "CXWindowsEventQueueBuffer.h"
+#include "CXWindowsKeyState.h"
 #include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
 #include "CClipboard.h"
@@ -131,7 +132,6 @@ CXWindowsScreen::CXWindowsScreen(bool isPrimary) :
 	m_xCenter(0), m_yCenter(0),
 	m_xCursor(0), m_yCursor(0),
 	m_keyState(NULL),
-	m_keyMapper(),
 	m_im(NULL),
 	m_ic(NULL),
 	m_lastKeycode(0),
@@ -154,6 +154,7 @@ CXWindowsScreen::CXWindowsScreen(bool isPrimary) :
 		m_window      = openWindow();
 		m_screensaver = new CXWindowsScreenSaver(m_display,
 								m_window, getEventTarget());
+		m_keyState    = new CXWindowsKeyState(m_display);
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
 		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 	}
@@ -201,7 +202,9 @@ CXWindowsScreen::~CXWindowsScreen()
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
 	}
+	delete m_keyState;
 	delete m_screensaver;
+	m_keyState    = NULL;
 	m_screensaver = NULL;
 	if (m_display != NULL) {
 		// FIXME -- is it safe to clean up the IC and IM without a display?
@@ -217,12 +220,6 @@ CXWindowsScreen::~CXWindowsScreen()
 	XSetIOErrorHandler(NULL);
 
 	s_screen = NULL;
-}
-
-void
-CXWindowsScreen::setKeyState(IKeyState* keyState)
-{
-	m_keyState = keyState;
 }
 
 void
@@ -319,7 +316,6 @@ CXWindowsScreen::leave()
 	}
 
 	// raise and show the window
-	// FIXME -- take focus?
 	XMapRaised(m_display, m_window);
 
 	// grab the mouse and keyboard, if primary and possible
@@ -327,6 +323,9 @@ CXWindowsScreen::leave()
 		XUnmapWindow(m_display, m_window);
 		return false;
 	}
+
+	// take focus
+	XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
 
 	// now warp the mouse.  we warp after showing the window so we're
 	// guaranteed to get the mouse leave event and to prevent the
@@ -426,14 +425,6 @@ CXWindowsScreen::setOptions(const COptionsList& options)
 			LOG((CLOG_DEBUG1 "XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false"));
 		}
 	}
-}
-
-void
-CXWindowsScreen::updateKeys()
-{
-	// update keyboard and mouse button mappings
-	m_keyMapper.update(m_display, m_keyState);
-	updateButtons();
 }
 
 void
@@ -547,48 +538,11 @@ CXWindowsScreen::isAnyMouseButtonDown() const
 	return false;
 }
 
-KeyModifierMask
-CXWindowsScreen::getActiveModifiers() const
-{
-	// query the pointer to get the modifier state
-	Window root, window;
-	int xRoot, yRoot, xWindow, yWindow;
-	unsigned int state;
-	if (XQueryPointer(m_display, m_root, &root, &window,
-								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
-		return m_keyMapper.mapModifier(state);
-	}
-
-	return 0;
-}
-
 void
 CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 {
 	x = m_xCenter;
 	y = m_yCenter;
-}
-
-const char*
-CXWindowsScreen::getKeyName(KeyButton keycode) const
-{
-	KeySym keysym = XKeycodeToKeysym(m_display, keycode, 0);
-	char* name    = XKeysymToString(keysym);
-	if (name != NULL) {
-		return name;
-	}
-	else {
-		static char buffer[20];
-		return strcpy(buffer,
-					CStringUtil::print("keycode %d", keycode).c_str());
-	}
-}
-
-void
-CXWindowsScreen::fakeKeyEvent(KeyButton keycode, bool press) const
-{
-	XTestFakeKeyEvent(m_display, keycode, press ? True : False, CurrentTime);
-	XFlush(m_display);
 }
 
 bool
@@ -643,15 +597,6 @@ CXWindowsScreen::fakeMouseWheel(SInt32 delta) const
 		XTestFakeButtonEvent(m_display, xButton, False, CurrentTime);
 	}
 	XFlush(m_display);
-}
-
-KeyButton
-CXWindowsScreen::mapKey(IKeyState::Keystrokes& keys,
-				const IKeyState& keyState, KeyID id,
-				KeyModifierMask desiredMask,
-				bool isAutoRepeat) const
-{
-	return m_keyMapper.mapKey(keys, keyState, id, desiredMask, isAutoRepeat);
 }
 
 Display*
@@ -788,6 +733,7 @@ CXWindowsScreen::openIM()
 	// open the input methods
 	XIM im = XOpenIM(m_display, NULL, NULL, NULL);
 	if (im == NULL) {
+		LOG((CLOG_INFO "no support for IM"));
 		return;
 	}
 
@@ -811,7 +757,7 @@ CXWindowsScreen::openIM()
 	}
 	XFree(styles);
 	if (style == 0) {
-		LOG((CLOG_WARN "no supported IM styles"));
+		LOG((CLOG_INFO "no supported IM styles"));
 		XCloseIM(im);
 		return;
 	}
@@ -857,6 +803,12 @@ CXWindowsScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id)
 	info->m_id             = id;
 	info->m_sequenceNumber = m_sequenceNumber;
 	sendEvent(type, info);
+}
+
+IKeyState*
+CXWindowsScreen::getKeyState() const
+{
+	return m_keyState;
 }
 
 Bool
@@ -1063,7 +1015,7 @@ void
 CXWindowsScreen::onKeyPress(XKeyEvent& xkey)
 {
 	LOG((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xkey.keycode, xkey.state));
-	const KeyModifierMask mask = m_keyMapper.mapModifier(xkey.state);
+	const KeyModifierMask mask = m_keyState->mapModifiersFromX(xkey.state);
 	KeyID key                  = mapKeyFromX(&xkey);
 	if (key != kKeyNone) {
 		// check for ctrl+alt+del emulation
@@ -1083,19 +1035,15 @@ CXWindowsScreen::onKeyPress(XKeyEvent& xkey)
 		}
 
 		// handle key
-		sendEvent(getKeyDownEvent(), CKeyInfo::alloc(key, mask, keycode, 1));
-		KeyModifierMask keyMask = m_keyState->getMaskForKey(keycode);
-		if (m_keyState->isHalfDuplex(keyMask)) {
-			sendEvent(getKeyUpEvent(),
-							CKeyInfo::alloc(key, mask | keyMask, keycode, 1));
-		}
+		m_keyState->sendKeyEvent(getEventTarget(),
+							true, false, key, mask, 1, keycode);
 	}
 }
 
 void
 CXWindowsScreen::onKeyRelease(XKeyEvent& xkey, bool isRepeat)
 {
-	const KeyModifierMask mask = m_keyMapper.mapModifier(xkey.state);
+	const KeyModifierMask mask = m_keyState->mapModifiersFromX(xkey.state);
 	KeyID key                  = mapKeyFromX(&xkey);
 	if (key != kKeyNone) {
 		// check for ctrl+alt+del emulation
@@ -1112,12 +1060,8 @@ CXWindowsScreen::onKeyRelease(XKeyEvent& xkey, bool isRepeat)
 		if (!isRepeat) {
 			// no press event follows so it's a plain release
 			LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", keycode, xkey.state));
-			KeyModifierMask keyMask = m_keyState->getMaskForKey(keycode);
-			if (m_keyState->isHalfDuplex(keyMask)) {
-				sendEvent(getKeyDownEvent(),
-							CKeyInfo::alloc(key, mask, keycode, 1));
-			}
-			sendEvent(getKeyUpEvent(), CKeyInfo::alloc(key, mask, keycode, 1));
+			m_keyState->sendKeyEvent(getEventTarget(),
+							false, false, key, mask, 1, keycode);
 		}
 		else {
 			// found a press event following so it's a repeat.
@@ -1125,8 +1069,8 @@ CXWindowsScreen::onKeyRelease(XKeyEvent& xkey, bool isRepeat)
 			// repeats but we'll just send a repeat of 1.
 			// note that we discard the press event.
 			LOG((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", keycode, xkey.state));
-			sendEvent(getKeyRepeatEvent(),
-							CKeyInfo::alloc(key, mask, keycode, 1));
+			m_keyState->sendKeyEvent(getEventTarget(),
+							false, true, key, mask, 1, keycode);
 		}
 	}
 }

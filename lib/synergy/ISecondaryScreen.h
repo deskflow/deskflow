@@ -16,7 +16,6 @@
 #define ISECONDARYSCREEN_H
 
 #include "IInterface.h"
-#include "IKeyState.h"
 #include "MouseTypes.h"
 
 //! Secondary screen interface
@@ -28,12 +27,6 @@ class ISecondaryScreen : public IInterface {
 public:
 	//! @name accessors
 	//@{
-
-	//! Fake key press/release
-	/*!
-	Synthesize a press or release of key \c id.
-	*/
-	virtual void		fakeKeyEvent(KeyButton id, bool press) const = 0;
 
 	//! Fake ctrl+alt+del
 	/*!
@@ -59,22 +52,6 @@ public:
 	Synthesize a mouse wheel event of amount \c delta.
 	*/
 	virtual void		fakeMouseWheel(SInt32 delta) const = 0;
-
-	//! Map key press/repeat to keystrokes
-	/*!
-	Convert a press/repeat of key \c id with the modifiers as given
-	in \c desiredMask into the keystrokes necessary to synthesize
-	that key event.  This may expand into multiple keys due to modifiers
-	that don't match the current modifier state from \c keyState, or to
-	needing to compose a character using dead key, or to other reasons.
-	Return the platform specific code of the key being pressed.  If \c id
-	cannot be mapped or if \c isAutoRepeat is true and the key does not
-	auto-repeat then return 0.
-	*/
-	virtual KeyButton	mapKey(IKeyState::Keystrokes&,
-							const IKeyState& keyState, KeyID id,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const = 0;
 
 	//@}
 };

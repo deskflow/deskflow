@@ -54,7 +54,7 @@ libplatform_a_SOURCES = 					\
 	CXWindowsClipboardUCS2Converter.cpp		\
 	CXWindowsClipboardUTF8Converter.cpp		\
 	CXWindowsEventQueueBuffer.cpp			\
-	CXWindowsKeyMapper.cpp					\
+	CXWindowsKeyState.cpp					\
 	CXWindowsScreen.cpp						\
 	CXWindowsScreenSaver.cpp				\
 	CXWindowsUtil.cpp						\
@@ -63,7 +63,7 @@ libplatform_a_SOURCES = 					\
 	CXWindowsClipboardUCS2Converter.h		\
 	CXWindowsClipboardUTF8Converter.h		\
 	CXWindowsEventQueueBuffer.h				\
-	CXWindowsKeyMapper.h					\
+	CXWindowsKeyState.h						\
 	CXWindowsScreen.h						\
 	CXWindowsScreenSaver.h					\
 	CXWindowsUtil.h							\
