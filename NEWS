@@ -1,6 +1,14 @@
 Synergy News
 ============
 
+* Aug-18-2002 - Synergy 0.9.9 released
+
+  Fixed three bugs:
+  * The PrintScrn button was not working correctly on windows
+  * The Win32 server could hang when a client disconnected
+  * Using the mouse wheel could hang the X server
+
+
 * Aug-11-2002 - Synergy 0.9.8 released
 
   Supports any number of clients under Linux or Windows 95 or NT4
