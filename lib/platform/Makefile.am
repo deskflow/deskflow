@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 DEPTH = ../..
+VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =								\
 	makehook.dsp							\
@@ -54,7 +55,7 @@ EXTRA_libplatform_a_SOURCES =				\
 	CUnixPlatform.cpp						\
 	$(NULL)
 INCLUDES =									\
-	-I$(DEPTH)/lib/base 					\
-	-I$(DEPTH)/lib/mt	 					\
-	-I$(DEPTH)/lib/synergy 					\
+	-I$(VDEPTH)/lib/base 					\
+	-I$(VDEPTH)/lib/mt	 					\
+	-I$(VDEPTH)/lib/synergy 				\
 	$(NULL)

@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 DEPTH = ../..
+VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =				\
 	synergyd.dsp			\
@@ -33,12 +34,12 @@ synergyd_LDADD =						\
 	$(X_EXTRA_LIBS)						\
 	$(NULL)
 INCLUDES =								\
-	-I$(DEPTH)/lib/base 				\
-	-I$(DEPTH)/lib/mt	 				\
-	-I$(DEPTH)/lib/io	 				\
-	-I$(DEPTH)/lib/http 				\
-	-I$(DEPTH)/lib/net	 				\
-	-I$(DEPTH)/lib/synergy				\
-	-I$(DEPTH)/lib/platform 			\
-	-I$(DEPTH)/lib/server	 			\
+	-I$(VDEPTH)/lib/base 				\
+	-I$(VDEPTH)/lib/mt	 				\
+	-I$(VDEPTH)/lib/io	 				\
+	-I$(VDEPTH)/lib/http 				\
+	-I$(VDEPTH)/lib/net	 				\
+	-I$(VDEPTH)/lib/synergy				\
+	-I$(VDEPTH)/lib/platform 			\
+	-I$(VDEPTH)/lib/server	 			\
 	$(NULL)

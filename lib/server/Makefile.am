@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 DEPTH = ../..
+VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =						\
 	server.dsp						\
@@ -33,11 +34,11 @@ libserver_a_SOURCES = 				\
 	IPrimaryScreenFactory.h			\
 	$(NULL)
 INCLUDES =							\
-	-I$(DEPTH)/lib/base 			\
-	-I$(DEPTH)/lib/mt	 			\
-	-I$(DEPTH)/lib/io	 			\
-	-I$(DEPTH)/lib/http 			\
-	-I$(DEPTH)/lib/net	 			\
-	-I$(DEPTH)/lib/synergy			\
-	-I$(DEPTH)/lib/platform 		\
+	-I$(VDEPTH)/lib/base 			\
+	-I$(VDEPTH)/lib/mt	 			\
+	-I$(VDEPTH)/lib/io	 			\
+	-I$(VDEPTH)/lib/http 			\
+	-I$(VDEPTH)/lib/net	 			\
+	-I$(VDEPTH)/lib/synergy			\
+	-I$(VDEPTH)/lib/platform 		\
 	$(NULL)

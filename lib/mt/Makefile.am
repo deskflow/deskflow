@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 DEPTH = ../..
+VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =				\
 	mt.dsp					\
@@ -27,5 +28,5 @@ libmt_a_SOURCES = 			\
 	XThread.h				\
 	$(NULL)
 INCLUDES =					\
-	-I$(DEPTH)/lib/base 	\
+	-I$(VDEPTH)/lib/base 	\
 	$(NULL)

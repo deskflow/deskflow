@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 DEPTH = ../..
+VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =						\
 	client.dsp						\
@@ -25,10 +26,10 @@ libclient_a_SOURCES = 				\
 	ISecondaryScreenFactory.h		\
 	$(NULL)
 INCLUDES =							\
-	-I$(DEPTH)/lib/base 			\
-	-I$(DEPTH)/lib/mt	 			\
-	-I$(DEPTH)/lib/io	 			\
-	-I$(DEPTH)/lib/net	 			\
-	-I$(DEPTH)/lib/synergy			\
-	-I$(DEPTH)/lib/platform 		\
+	-I$(VDEPTH)/lib/base 			\
+	-I$(VDEPTH)/lib/mt	 			\
+	-I$(VDEPTH)/lib/io	 			\
+	-I$(VDEPTH)/lib/net	 			\
+	-I$(VDEPTH)/lib/synergy			\
+	-I$(VDEPTH)/lib/platform 		\
 	$(NULL)

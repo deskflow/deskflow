@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 DEPTH = ../..
+VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =					\
 	libsynergy.dsp				\
@@ -38,8 +39,8 @@ libsynergy_a_SOURCES = 			\
 	XSynergy.h					\
 	$(NULL)
 INCLUDES =						\
-	-I$(DEPTH)/lib/base 		\
-	-I$(DEPTH)/lib/mt	 		\
-	-I$(DEPTH)/lib/io	 		\
-	-I$(DEPTH)/lib/net	 		\
+	-I$(VDEPTH)/lib/base 		\
+	-I$(VDEPTH)/lib/mt	 		\
+	-I$(VDEPTH)/lib/io	 		\
+	-I$(VDEPTH)/lib/net	 		\
 	$(NULL)
