@@ -317,6 +317,12 @@ CClientProxy1_0::mouseMove(SInt32 xAbs, SInt32 yAbs)
 }
 
 void
+CClientProxy1_0::mouseRelativeMove(SInt32, SInt32)
+{
+	// ignore -- not supported in protocol 1.0
+}
+
+void
 CClientProxy1_0::mouseWheel(SInt32 delta)
 {
 	LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), delta));

@@ -186,6 +186,12 @@ CPrimaryClient::mouseMove(SInt32 x, SInt32 y)
 }
 
 void
+CPrimaryClient::mouseRelativeMove(SInt32, SInt32)
+{
+	// ignore
+}
+
+void
 CPrimaryClient::mouseWheel(SInt32)
 {
 	// ignore

@@ -258,6 +258,12 @@ CClient::mouseMove(SInt32 x, SInt32 y)
 }
 
 void
+CClient::mouseRelativeMove(SInt32 dx, SInt32 dy)
+{
+	m_screen->mouseRelativeMove(dx, dy);
+}
+
+void
 CClient::mouseWheel(SInt32 delta)
 {
 	m_screen->mouseWheel(delta);

@@ -21,7 +21,7 @@
 // 1.0:  initial protocol
 // 1.1:  adds KeyCode to key press, release, and repeat
 static const SInt16		kProtocolMajorVersion = 1;
-static const SInt16		kProtocolMinorVersion = 1;
+static const SInt16		kProtocolMinorVersion = 2;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
@@ -179,6 +179,10 @@ static const char		kMsgDMouseUp[]		= "DMUP%1i";
 // mouse moved:  primary -> secondary
 // $1 = x, $2 = y.  x,y are absolute screen coordinates.
 static const char		kMsgDMouseMove[]	= "DMMV%2i%2i";
+
+// relative mouse move:  primary -> secondary
+// $1 = dx, $2 = dy.  dx,dy are motion deltas.
+static const char		kMsgDMouseRelMove[]	= "DMRM%2i%2i";
 
 // mouse button pressed:  primary -> secondary
 // $1 = delta.  the delta should be +120 for one tick forward (away

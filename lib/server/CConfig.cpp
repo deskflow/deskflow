@@ -629,6 +629,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionXTestXineramaUnaware) {
 		return "xtestIsXineramaUnaware";
 	}
+	if (id == kOptionRelativeMouseMoves) {
+		return "relativeMouseMoves";
+	}
 	return NULL;
 }
 
@@ -638,7 +641,8 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 	if (id == kOptionHalfDuplexCapsLock ||
 		id == kOptionHalfDuplexNumLock ||
 		id == kOptionScreenSaverSync ||
-		id == kOptionXTestXineramaUnaware) {
+		id == kOptionXTestXineramaUnaware ||
+		id == kOptionRelativeMouseMoves) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||
@@ -777,6 +781,9 @@ CConfig::readSectionOptions(std::istream& s)
 		}
 		else if (name == "screenSaverSync") {
 			addOption("", kOptionScreenSaverSync, parseBoolean(value));
+		}
+		else if (name == "relativeMouseMoves") {
+			addOption("", kOptionRelativeMouseMoves, parseBoolean(value));
 		}
 		else {
 			throw XConfigRead("unknown argument");

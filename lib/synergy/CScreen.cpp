@@ -223,6 +223,13 @@ CScreen::mouseMove(SInt32 x, SInt32 y)
 }
 
 void
+CScreen::mouseRelativeMove(SInt32 dx, SInt32 dy)
+{
+	assert(!m_isPrimary);
+	m_screen->fakeMouseRelativeMove(dx, dy);
+}
+
+void
 CScreen::mouseWheel(SInt32 delta)
 {
 	assert(!m_isPrimary);

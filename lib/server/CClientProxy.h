@@ -96,6 +96,7 @@ public:
 	virtual void		mouseDown(ButtonID) = 0;
 	virtual void		mouseUp(ButtonID) = 0;
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
+	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
 	virtual void		mouseWheel(SInt32 delta) = 0;
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;

@@ -120,6 +120,13 @@ public:
 	*/
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
 
+	//! Notify of mouse motion
+	/*!
+	Synthesize mouse events to generate mouse motion by the relative
+	amount \c xRel,yRel.
+	*/
+	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
+
 	//! Notify of mouse wheel motion
 	/*!
 	Synthesize mouse events to generate mouse wheel motion of \c delta.

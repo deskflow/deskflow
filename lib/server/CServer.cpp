@@ -53,7 +53,8 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	m_switchTwoTapDelay(0.0),
 	m_switchTwoTapEngaged(false),
 	m_switchTwoTapArmed(false),
-	m_switchTwoTapZone(3)
+	m_switchTwoTapZone(3),
+	m_relativeMoves(false)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
@@ -283,6 +284,9 @@ CServer::onCommandKey(KeyID id, KeyModifierMask /*mask*/, bool /*down*/)
 {
 	if (id == kKeyScrollLock) {
 		m_primaryClient->reconfigure(getActivePrimarySides());
+		if (!isLockedToScreenServer()) {
+			stopRelativeMoves();
+		}
 	}
 	return false;
 }
@@ -322,13 +326,7 @@ bool
 CServer::isLockedToScreenServer() const
 {
 	// locked if scroll-lock is toggled on
-	if ((m_primaryClient->getToggleMask() & KeyModifierScrollLock) != 0) {
-		LOG((CLOG_DEBUG "locked by ScrollLock"));
-		return true;
-	}
-
-	// not locked
-	return false;
+	return ((m_primaryClient->getToggleMask() & KeyModifierScrollLock) != 0);
 }
 
 bool
@@ -336,6 +334,7 @@ CServer::isLockedToScreen() const
 {
 	// locked if we say we're locked
 	if (isLockedToScreenServer()) {
+		LOG((CLOG_DEBUG "locked by ScrollLock"));
 		return true;
 	}
 
@@ -842,6 +841,24 @@ CServer::isSwitchWaitStarted() const
 }
 
 void
+CServer::stopRelativeMoves()
+{
+	if (m_relativeMoves && m_active != m_primaryClient) {
+		// warp to the center of the active client so we know where we are
+		SInt32 ax, ay, aw, ah;
+		m_active->getShape(ax, ay, aw, ah);
+		m_x       = ax + (aw >> 1);
+		m_y       = ay + (ah >> 1);
+		m_xDelta  = 0;
+		m_yDelta  = 0;
+		m_xDelta2 = 0;
+		m_yDelta2 = 0;
+		LOG((CLOG_DEBUG2 "synchronize move on %s by %d,%d", getName(m_active).c_str(), m_x, m_y));
+		m_active->mouseMove(m_x, m_y);
+	}
+}
+
+void
 CServer::sendOptions(IClient* client) const
 {
 	COptionsList optionsList;
@@ -883,6 +900,7 @@ CServer::processOptions()
 		return;
 	}
 
+	bool newRelativeMoves = m_relativeMoves;
 	for (CConfig::CScreenOptions::const_iterator index = options->begin();
 								index != options->end(); ++index) {
 		const OptionID id       = index->first;
@@ -901,7 +919,15 @@ CServer::processOptions()
 			}
 			stopSwitchTwoTap();
 		}
+		else if (id == kOptionRelativeMouseMoves) {
+			newRelativeMoves = (value != 0);
+		}
 	}
+
+	if (m_relativeMoves && !newRelativeMoves) {
+		stopRelativeMoves();
+	}
+	m_relativeMoves = newRelativeMoves;
 }
 
 void
@@ -1336,6 +1362,18 @@ CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	assert(m_active != NULL);
 	if (m_active == m_primaryClient) {
 		// stale event -- we're actually on the primary screen
+		return;
+	}
+
+	// if doing relative motion on secondary screens and we're locked
+	// to the screen (which activates relative moves) then send a
+	// relative mouse motion.  when we're doing this we pretend as if
+	// the mouse isn't actually moving because we're expecting some
+	// program on the secondary screen to warp the mouse on us, so we
+	// have no idea where it really is.
+	if (m_relativeMoves && isLockedToScreenServer()) {
+		LOG((CLOG_DEBUG2 "relative move on %s by %d,%d", getName(m_active).c_str(), dx, dy));
+		m_active->mouseRelativeMove(dx, dy);
 		return;
 	}
 

@@ -26,8 +26,6 @@
 #include "stdset.h"
 #include "stdvector.h"
 
-class CClientProxy;
-class CClientProxyUnknown;
 class CEventQueueTimer;
 class CPrimaryClient;
 class IClient;
@@ -183,6 +181,9 @@ private:
 	// returns true iff the delay switch timer is started
 	bool				isSwitchWaitStarted() const;
 
+	// stop relative mouse moves
+	void				stopRelativeMoves();
+
 	// send screen options to \c client
 	void				sendOptions(IClient* client) const;
 
@@ -311,6 +312,9 @@ private:
 	bool				m_switchTwoTapEngaged;
 	bool				m_switchTwoTapArmed;
 	SInt32				m_switchTwoTapZone;
+
+	// relative mouse move option
+	bool				m_relativeMoves;
 
 	static CEvent::Type	s_errorEvent;
 	static CEvent::Type	s_disconnectedEvent;

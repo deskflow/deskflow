@@ -55,6 +55,7 @@ static const OptionID	kOptionScreenSwitchDelay     = OPTION_CODE("SSWT");
 static const OptionID	kOptionScreenSwitchTwoTap    = OPTION_CODE("SSTT");
 static const OptionID	kOptionScreenSaverSync       = OPTION_CODE("SSVR");
 static const OptionID	kOptionXTestXineramaUnaware  = OPTION_CODE("XTXU");
+static const OptionID	kOptionRelativeMouseMoves    = OPTION_CODE("MDLT");
 //@}
 
 #undef OPTION_CODE

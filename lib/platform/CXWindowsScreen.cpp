@@ -551,6 +551,19 @@ CXWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y) const
 }
 
 void
+CXWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+{
+	// FIXME -- ignore xinerama for now
+	if (false && m_xinerama && m_xtestIsXineramaUnaware) {
+//		XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
+	}
+	else {
+		XTestFakeRelativeMotionEvent(m_display, dx, dy, CurrentTime);
+	}
+	XFlush(m_display);
+}
+
+void
 CXWindowsScreen::fakeMouseWheel(SInt32 delta) const
 {
 	// choose button depending on rotation direction

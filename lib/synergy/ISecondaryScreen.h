@@ -40,6 +40,12 @@ public:
 	*/
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
 
+	//! Fake mouse move
+	/*!
+	Synthesize a mouse move to the relative coordinates \c dx,dy.
+	*/
+	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
+
 	//! Fake mouse wheel
 	/*!
 	Synthesize a mouse wheel event of amount \c delta.

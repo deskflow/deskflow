@@ -27,6 +27,7 @@ libserver_a_SOURCES = 				\
 	CClientProxy.cpp				\
 	CClientProxy1_0.cpp				\
 	CClientProxy1_1.cpp				\
+	CClientProxy1_2.cpp				\
 	CClientProxyUnknown.cpp			\
 	CConfig.cpp						\
 	CPrimaryClient.cpp				\
@@ -35,6 +36,7 @@ libserver_a_SOURCES = 				\
 	CClientProxy.h					\
 	CClientProxy1_0.h				\
 	CClientProxy1_1.h				\
+	CClientProxy1_2.h				\
 	CClientProxyUnknown.h			\
 	CConfig.h						\
 	CPrimaryClient.h				\
