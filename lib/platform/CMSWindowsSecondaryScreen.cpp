@@ -383,11 +383,14 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 
 	// move the mouse directly to target position if motion is simple
 	if (simple) {
-		SInt32 x0, y0, w, h;
-		m_screen->getShape(x0, y0, w, h);
+		// when using absolute positioning with mouse_event(),
+		// the normalized device coordinates range over only
+		// the primary screen.
+		SInt32 w = GetSystemMetrics(SM_CXSCREEN);
+		SInt32 h = GetSystemMetrics(SM_CYSCREEN);
 		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.99 * (x - x0)) / (w - 1)),
-								(DWORD)((65535.99 * (y - y0)) / (h - 1)),
+								(DWORD)((65536.0 * x) / w),
+								(DWORD)((65536.0 * y) / h),
 								0, 0);
 	}
 
