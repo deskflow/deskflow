@@ -1,3 +1,70 @@
+2002/09/02 17:36:25 crs
+configure.in
+lib/base/Version.h
+
+Changed version number to 0.9.10.
+
+----------
+2002/09/02 17:30:04 crs
+BUGS
+INSTALL
+cmd/launcher/CAutoStart.cpp
+cmd/launcher/CAutoStart.h
+cmd/launcher/LaunchUtil.cpp
+cmd/launcher/LaunchUtil.h
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.dsp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.rc
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+lib/client/CClient.cpp
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/platform/CUnixPlatform.cpp
+lib/platform/CUnixPlatform.h
+lib/platform/CWin32Platform.cpp
+lib/platform/CWin32Platform.h
+lib/platform/IPlatform.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+Fixed win32 config saving, keyboard mapping, and AltGr bugs.
+Made extensive changes to the launcher to provide more control
+over setting up auto-start and it now saves configuration to
+the user's documents directory if auto-starting at login and
+saves to the system directory if auto-starting at boot.
+Replaced MapVirtualKey() with table lookup to work around that
+function's lack of support for extended keyboard scan codes.
+Added first cut at support for AltGr.
+
+----------
+2002/09/01 15:30:00 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/KeyTypes.h
+
+Added support for mode switch key to X11 screens.
+
+----------
+2002/09/01 10:31:10 crs
+acinclude.m4
+configure.in
+lib/base/stdsstream.h
+
+added more tests to autoconf.  also now handling missing sstream
+header in gcc 2.95 by including sstream header backported from v3.
+
+----------
+2002/09/01 09:28:54 crs
+lib/platform/CXWindowsUtil.cpp
+
+lowered severity of some debug messages.
+
+----------
 2002/08/18 17:45:59 crs
 configure.in
 lib/base/Version.h
