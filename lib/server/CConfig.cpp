@@ -318,7 +318,7 @@ bool
 CConfig::isValidScreenName(const CString& name) const
 {
 	// name is valid if matches validname
-	//  name      ::= [A-Za-z0-9] | [A-Za-z0-9][-A-Za-z0-9]*[A-Za-z0-9]
+	//  name      ::= [_A-Za-z0-9] | [_A-Za-z0-9][-_A-Za-z0-9]*[_A-Za-z0-9]
 	//  domain    ::= . name
 	//  validname ::= name domain*
 
@@ -337,13 +337,14 @@ CConfig::isValidScreenName(const CString& name) const
 		}
 
 		// check first and last characters
-		if (!isalnum(name[b]) || !isalnum(name[e - 1])) {
+		if (!(isalnum(name[b]) || name[b] == '_') ||
+			!(isalnum(name[e - 1]) || name[e - 1] == '_')) {
 			return false;
 		}
 
 		// check interior characters
 		for (CString::size_type i = b; i < e; ++i) {
-			if (!isalnum(name[i]) && name[i] != '-') {
+			if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-') {
 				return false;
 			}
 		}
