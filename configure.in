@@ -57,8 +57,8 @@ AC_PATH_XTRA
 save_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$X_CFLAGS $CPPFLAGS"
 AC_CHECK_HEADERS([X11/extensions/XTest.h])
-
 AC_CHECK_LIB(Xinerama, XineramaQueryExtension, AC_CHECK_HEADERS([X11/extensions/Xinerama.h]) [X_LIBS="$X_LIBS -lXinerama"], , [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+AC_CHECK_LIB(Xext, DPMSQueryExtension, AC_CHECK_HEADERS([X11/extensions/dpms.h]) [X_LIBS="$X_LIBS -lXext"], , [$X_LIBS -lX11 $X_EXTRA_LIBS])
 CPPFLAGS="$save_CPPFLAGS"
 
 dnl checks for types

@@ -25,6 +25,11 @@
 #else
 #	error The XTest extension is required to build synergy
 #endif
+#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+extern "C" {
+#	include <X11/extensions/dpms.h>
+}
+#endif
 
 //
 // CXWindowsScreenSaver
@@ -37,6 +42,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	m_eventTarget(eventTarget),
 	m_xscreensaver(None),
 	m_xscreensaverActive(false),
+	m_dpms(false),
 	m_disabled(false),
 	m_suppressDisable(false),
 	m_disableTimer(NULL)
@@ -50,6 +56,18 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 										"ACTIVATE", False);
 	m_atomScreenSaverDeactivate = XInternAtom(m_display,
 										"DEACTIVATE", False);
+
+	// check for DPMS extension.  this is an alternative screen saver
+	// that powers down the display.
+#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+	int eventBase, errorBase;
+	if (DPMSQueryExtension(m_display, &eventBase, &errorBase)) {
+		if (DPMSCapable(m_display)) {
+			// we have DPMS
+			m_dpms  = true;
+		}
+	}
+#endif
 
 	// watch top-level windows for changes
 	{
@@ -66,14 +84,17 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 		}
 	}
 
+	// get the built-in settings
+	XGetScreenSaver(m_display, &m_timeout, &m_interval,
+								&m_preferBlanking, &m_allowExposures);
+
+	// get the DPMS settings
+	m_dpmsEnabled = isDPMSEnabled();
+
 	// get the xscreensaver window, if any
 	if (!findXScreenSaver()) {
 		setXScreenSaver(None);
 	}
-
-	// get the built-in settings
-	XGetScreenSaver(m_display, &m_timeout, &m_interval,
-								&m_preferBlanking, &m_allowExposures);
 
 	// install disable timer event handler
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
@@ -90,6 +111,7 @@ CXWindowsScreenSaver::~CXWindowsScreenSaver()
 	EVENTQUEUE->removeHandler(CEvent::kTimer, this);
 
 	if (m_display != NULL) {
+		enableDPMS(m_dpmsEnabled);
 		XSetScreenSaver(m_display, m_timeout, m_interval,
 								m_preferBlanking, m_allowExposures);
 		clearWatchForXScreenSaver();
@@ -176,6 +198,9 @@ CXWindowsScreenSaver::enable()
 	// for built-in X screen saver
 	XSetScreenSaver(m_display, m_timeout, m_interval,
 								m_preferBlanking, m_allowExposures);
+
+	// for DPMS
+	enableDPMS(m_dpmsEnabled);
 }
 
 void
@@ -190,6 +215,11 @@ CXWindowsScreenSaver::disable()
 								&m_preferBlanking, &m_allowExposures);
 	XSetScreenSaver(m_display, 0, m_interval,
 								m_preferBlanking, m_allowExposures);
+
+	// for DPMS
+	m_dpmsEnabled = isDPMSEnabled();
+	enableDPMS(false);
+
 	// FIXME -- now deactivate?
 }
 
@@ -200,6 +230,9 @@ CXWindowsScreenSaver::activate()
 	m_suppressDisable = true;
 	updateDisableTimer();
 
+	// enable DPMS if it was enabled
+	enableDPMS(m_dpmsEnabled);
+
 	// try xscreensaver
 	findXScreenSaver();
 	if (m_xscreensaver != None) {
@@ -207,8 +240,13 @@ CXWindowsScreenSaver::activate()
 		return;
 	}
 
-	// use built-in X screen saver
-	XForceScreenSaver(m_display, ScreenSaverActive);
+	// try built-in X screen saver
+	if (m_timeout != 0) {
+		XForceScreenSaver(m_display, ScreenSaverActive);
+	}
+
+	// try DPMS
+	activateDPMS(true);
 }
 
 void
@@ -217,6 +255,14 @@ CXWindowsScreenSaver::deactivate()
 	// reinstall disable job timer
 	m_suppressDisable = false;
 	updateDisableTimer();
+
+	// try DPMS
+	activateDPMS(false);
+
+	// disable DPMS if screen saver is disabled
+	if (m_disabled) {
+		enableDPMS(false);
+	}
 
 	// try xscreensaver
 	findXScreenSaver();
@@ -235,6 +281,11 @@ CXWindowsScreenSaver::isActive() const
 	// check xscreensaver
 	if (m_xscreensaver != None) {
 		return m_xscreensaverActive;
+	}
+
+	// check DPMS
+	if (isDPMSActivated()) {
+		return true;
 	}
 
 	// can't check built-in X screen saver activity
@@ -282,6 +333,9 @@ CXWindowsScreenSaver::setXScreenSaver(Window window)
 		XWindowAttributes attr;
 		XGetWindowAttributes(m_display, m_xscreensaver, &attr);
 		setXScreenSaverActive(!error && attr.map_state != IsUnmapped);
+
+		// save current DPMS state;  xscreensaver may have changed it.
+		m_dpmsEnabled = isDPMSEnabled();
 	}
 	else {
 		// screen saver can't be active if it doesn't exist
@@ -449,4 +503,67 @@ CXWindowsScreenSaver::handleDisableTimer(const CEvent&, void*)
 		CXWindowsUtil::CErrorLock lock(m_display);
 		XSendEvent(m_display, m_xscreensaver, False, 0, &event);
 	}
+}
+
+void
+CXWindowsScreenSaver::activateDPMS(bool activate)
+{
+#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+	if (m_dpms) {
+		// DPMSForceLevel will generate a BadMatch if DPMS is disabled
+		CXWindowsUtil::CErrorLock lock(m_display);
+		DPMSForceLevel(m_display, activate ? DPMSModeStandby : DPMSModeOn);
+	}
+#endif
+}
+
+void
+CXWindowsScreenSaver::enableDPMS(bool enable)
+{
+#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+	if (m_dpms) {
+		if (enable) {
+			DPMSEnable(m_display);
+		}
+		else {
+			DPMSDisable(m_display);
+		}
+	}
+#endif
+}
+
+bool
+CXWindowsScreenSaver::isDPMSEnabled() const
+{
+#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+	if (m_dpms) {
+		CARD16 level;
+		BOOL state;
+		DPMSInfo(m_display, &level, &state);
+		return (state != False);
+	}
+	else {
+		return false;
+	}
+#else
+	return false;
+#endif
+}
+
+bool
+CXWindowsScreenSaver::isDPMSActivated() const
+{
+#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+	if (m_dpms) {
+		CARD16 level;
+		BOOL state;
+		DPMSInfo(m_display, &level, &state);
+		return (level != DPMSModeOn);
+	}
+	else {
+		return false;
+	}
+#else
+	return false;
+#endif
 }

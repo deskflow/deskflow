@@ -92,6 +92,18 @@ private:
 	// called periodically to prevent the screen saver from starting
 	void				handleDisableTimer(const CEvent&, void*);
 
+	// force DPMS to activate or deactivate
+	void				activateDPMS(bool activate);
+
+	// enable/disable DPMS screen saver
+	void				enableDPMS(bool);
+
+	// check if DPMS is enabled
+	bool				isDPMSEnabled() const;
+
+	// check if DPMS is activate
+	bool				isDPMSActivated() const;
+
 private:
 	typedef std::map<Window, long> CWatchList;
 
@@ -127,6 +139,10 @@ private:
 	int					m_interval;
 	int					m_preferBlanking;
 	int					m_allowExposures;
+
+	// DPMS screen saver settings
+	bool				m_dpms;
+	bool				m_dpmsEnabled;
 
 	// true iff the client wants the screen saver suppressed
 	bool				m_disabled;
