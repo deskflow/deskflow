@@ -264,24 +264,13 @@ COSXKeyState::mapKey(Keystrokes& keys, KeyID id,
 	// ensure we adjust the right modifiers for remaining dead keys
 	// and the final key.
 
-	// FIXME -- required modifier masks.  we should determine this for
-	// each key when parsing the layout resource.  for now we'll just
-	// force shift, option and caps-lock to always match exactly in
-	// addition to whatever other modifiers the key needs.
-// FIXME -- this doesn't work.  it forces modifiers when modifiers are
-// pressed (making having two modifiers at once impossible).
-	static const KeyModifierMask requiredMask =
-							KeyModifierShift |
-							KeyModifierSuper |
-							KeyModifierCapsLock;
-
 	// add dead keys
 	for (size_t i = 0; i < sequence.size() - 1; ++i) {
 		// simulate press
 		KeyButton keyButton =
-			addKeystrokes(keys, sequence[i].first,
-							sequence[i].second,
-							sequence[i].second | requiredMask, false);
+			addKeystrokes(keys, sequence[i].m_button,
+							sequence[i].m_requiredState,
+							sequence[i].m_requiredMask, false);
 
 		// simulate release
 		Keystroke keystroke;
@@ -292,9 +281,9 @@ COSXKeyState::mapKey(Keystrokes& keys, KeyID id,
 	}
 
 	// add final key
-	return addKeystrokes(keys, sequence.back().first,
-							sequence.back().second,
-							sequence.back().second | requiredMask,
+	return addKeystrokes(keys, sequence.back().m_button,
+							sequence.back().m_requiredState,
+							sequence.back().m_requiredMask,
 							isAutoRepeat);
 }
 
@@ -433,7 +422,7 @@ COSXKeyState::addKeyButton(KeyButtons& keys, KeyID id) const
 	if (keyIndex == m_keyMap.end()) {
 		return;
 	}
-	keys.push_back(keyIndex->second[0].first);
+	keys.push_back(keyIndex->second[0].m_button);
 }
 
 void
@@ -473,7 +462,7 @@ COSXKeyState::handleModifierKey(void* target, KeyID id, bool down)
 	if (keyIndex == m_keyMap.end()) {
 		return;
 	}
-	KeyButton button = keyIndex->second[0].first;
+	KeyButton button = keyIndex->second[0].m_button;
 	setKeyDown(button, down);
 	sendKeyEvent(target, down, false, id, getActiveModifiers(), 0, button);
 }
@@ -513,13 +502,16 @@ COSXKeyState::fillSpecialKeys(CKeyIDMap& keyMap,
 				CVirtualKeyMap& virtualKeyMap) const
 {
 	// FIXME -- would like to avoid hard coded tables
+	CKeyEventInfo info;
 	for (UInt32 i = 0; i < sizeof(s_controlKeys) /
 							sizeof(s_controlKeys[0]); ++i) {
 		const CKeyEntry& entry = s_controlKeys[i];
 		KeyID keyID            = entry.m_keyID;
-		KeyButton keyButton    = mapVirtualKeyToKeyButton(entry.m_virtualKey);
+		info.m_button          = mapVirtualKeyToKeyButton(entry.m_virtualKey);
+		info.m_requiredMask    = 0;
+		info.m_requiredState   = 0;
 		if (keyMap.count(keyID) == 0) {
-			keyMap[keyID].push_back(std::make_pair(keyButton, 0));
+			keyMap[keyID].push_back(info);
 		}
 		if (virtualKeyMap.count(entry.m_virtualKey) == 0) {
 			virtualKeyMap[entry.m_virtualKey] = entry.m_keyID;
@@ -535,7 +527,7 @@ COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap) const
 	CKCHRResource* r = m_KCHRResource;
 
 	// build non-composed keys to virtual keys mapping
-	std::map<UInt8, std::pair<KeyButton, KeyModifierMask> > vkMap;
+	std::map<UInt8, CKeyEventInfo> vkMap;
 	for (SInt32 i = 0; i < r->m_numTables; ++i) {
 		// determine the modifier keys for table i
 		KeyModifierMask mask =
@@ -546,9 +538,18 @@ COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap) const
 			// get character
 			UInt8 c = r->m_characterTables[i][j];
 
+			// save key info
+			// FIXME -- should set only those bits in m_requiredMask that
+			// correspond to modifiers that are truly necessary to
+			// generate the character.  this mostly works as-is, though.
+			CKeyEventInfo info;
+			info.m_button        = mapVirtualKeyToKeyButton(j);
+			info.m_requiredMask  = mask;
+			info.m_requiredState = mask;
+
 			// save character to virtual key mapping
 			if (keyMap.count(c) == 0) {
-				vkMap[c] = std::make_pair(mapVirtualKeyToKeyButton(j), mask);
+				vkMap[c] = info;
 			}
 
 			// skip non-glyph character
@@ -565,8 +566,7 @@ COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap) const
 			}
 
 			// save entry for character
-			keyMap[keyID].push_back(std::make_pair(
-							mapVirtualKeyToKeyButton(j), mask));
+			keyMap[keyID].push_back(info);
 		}
 	}
 
@@ -602,8 +602,18 @@ COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap) const
 			// to the uncomposed character.
 			if (vkMap.count(dkr->m_completion[j][0]) != 0) {
 				CKeySequence& sequence = keyMap[keyID];
-				sequence.push_back(std::make_pair(
-							mapVirtualKeyToKeyButton(dkr->m_virtualKey), mask));
+
+				// save key info
+				// FIXME -- should set only those bits in m_requiredMask that
+				// correspond to modifiers that are truly necessary to
+				// generate the character.  this mostly works as-is, though.
+				CKeyEventInfo info;
+				info.m_button        = mapVirtualKeyToKeyButton(
+											dkr->m_virtualKey);
+				info.m_requiredMask  = mask;
+				info.m_requiredState = mask;
+
+				sequence.push_back(info);
 				sequence.push_back(vkMap[dkr->m_completion[j][0]]);
 			}
 		}

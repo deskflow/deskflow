@@ -69,7 +69,13 @@ protected:
 							bool isAutoRepeat) const;
 
 private:
-	typedef std::vector<std::pair<KeyButton, KeyModifierMask> > CKeySequence;
+	struct CKeyEventInfo {
+	public:
+		KeyButton		m_button;
+		KeyModifierMask	m_requiredMask;
+		KeyModifierMask	m_requiredState;
+	};
+	typedef std::vector<CKeyEventInfo> CKeySequence;
 	typedef std::map<KeyID, CKeySequence> CKeyIDMap;
 	typedef std::map<UInt32, KeyID> CVirtualKeyMap;
 
