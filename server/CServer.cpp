@@ -890,6 +890,9 @@ CServer::getNeighbor(
 	// get the first neighbor
 	CScreenInfo* lastGoodScreen = src;
 	CScreenInfo* dst = getNeighbor(src, srcSide);
+	if (dst == NULL) {
+		return NULL;
+	}
 
 	// get the source screen's size (needed for kRight and kBottom)
 	SInt32 w = src->m_width, h = src->m_height;
@@ -897,7 +900,7 @@ CServer::getNeighbor(
 	// find destination screen, adjusting x or y (but not both)
 	switch (srcSide) {
 	case CConfig::kLeft:
-		while (dst != NULL) {
+		while (dst != NULL && dst != lastGoodScreen) {
 			lastGoodScreen = dst;
 			w = lastGoodScreen->m_width;
 			h = lastGoodScreen->m_height;
