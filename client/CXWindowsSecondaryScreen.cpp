@@ -522,61 +522,19 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 	// generate the id keysym and match maskIn.  it's possible that
 	// maskIn wants, say, a shift key to be down but that would make
 	// it impossible to generate the keysym.  in that case we must
-	// override maskIn.
-	//
-	// this is complicated by caps/shift-lock and num-lock.  for
-	// example, if id is a keypad keysym and maskIn indicates that
-	// shift is not active but keyMask indicates that shift is
-	// required then we can either activate shift and then send
-	// the keycode or we can activate num-lock and then send the
-	// keycode.  the latter is better because applications may
-	// treat, say, shift+Home differently than Home.
+	// override maskIn.  this is complicated by caps/shift-lock and
+	// num-lock.
 	maskOut = (maskIn & ~index->second.keyMaskMask);
 	if (IsKeypadKey(id) || IsPrivateKeypadKey(id)) {
-		// compare shift state of maskIn and keyMask
-		const bool agree = ((maskIn & ShiftMask) ==
-							(index->second.keyMask & ShiftMask));
-
-		// get num-lock state
-		const bool numLockActive = ((m_mask & m_numLockMask) != 0);
-
-		// if num-lock is active and the shift states agree or if
-		// num-lock is not active and the shift states do not agree
-		// then we should toggle num-lock.
-		if (numLockActive == agree) {
-			maskOut |= (maskIn & ShiftMask) |
-						(index->second.keyMask & ~ShiftMask);
-			if (numLockActive)
-				maskOut &= ~m_numLockMask;
-			else
-				maskOut |= m_numLockMask;
-		}
-		else {
-			maskOut |= index->second.keyMask;
-		}
+		maskOut |= index->second.keyMask;
+		maskOut &= ~m_numLockMask;
 	}
 	else {
-		// compare shift state of maskIn and keyMask
-		const bool agree = ((maskIn & ShiftMask) ==
-							(index->second.keyMask & ShiftMask));
-
-		// get caps-lock state
-		const bool capsLockActive = ((m_mask & m_capsLockMask) != 0);
-
-		// if caps-lock is active and the shift states agree or if
-		// caps-lock is not active and the shift states do not agree
-		// then we should toggle caps-lock.
-		if (capsLockActive == agree) {
-			maskOut |= (maskIn & ShiftMask) |
-						(index->second.keyMask & ~ShiftMask);
-			if (capsLockActive)
-				maskOut &= ~m_capsLockMask;
-			else
-				maskOut |= m_capsLockMask;
-		}
-		else {
-			maskOut |= index->second.keyMask;
-		}
+		unsigned int maskShift = (index->second.keyMask & ShiftMask);
+		if (index->second.keyMaskMask != 0 && (m_mask & m_capsLockMask) != 0)
+			maskShift ^= ShiftMask;
+		maskOut |= maskShift | (m_mask & m_capsLockMask);
+		maskOut |= (index->second.keyMask & ~(ShiftMask | LockMask));
 	}
 
 	return true;
