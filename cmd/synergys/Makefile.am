@@ -15,19 +15,29 @@ NULL =
 DEPTH = ../..
 VDEPTH = ./$(VPATH)/$(DEPTH)
 
-EXTRA_DIST =				\
-	resource.h				\
-	synergys.ico			\
-	synergys.dsp			\
-	synergys.rc				\
+EXTRA_DIST =							\
+	CMSWindowsServerTaskBarReceiver.cpp	\
+	CMSWindowsServerTaskBarReceiver.h	\
+	resource.h							\
+	synergys.ico						\
+	synergys.dsp						\
+	synergys.rc							\
+	tb_error.ico						\
+	tb_idle.ico							\
+	tb_run.ico							\
+	tb_wait.ico							\
 	$(NULL)
 
-MAINTAINERCLEANFILES =		\
-	Makefile.in				\
+MAINTAINERCLEANFILES =					\
+	Makefile.in							\
 	$(NULL)
 
 bin_PROGRAMS = synergys
 synergys_SOURCES = 						\
+	CServerTaskBarReceiver.cpp			\
+	CServerTaskBarReceiver.h			\
+	CXWindowsServerTaskBarReceiver.cpp	\
+	CXWindowsServerTaskBarReceiver.h	\
 	synergys.cpp						\
 	$(NULL)
 synergys_LDADD =						\

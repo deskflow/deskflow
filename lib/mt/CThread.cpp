@@ -97,10 +97,16 @@ CThread::wait(double timeout) const
 	return ARCH->wait(m_thread, timeout);
 }
 
-bool
-CThread::waitForEvent(double timeout)
+CThread::EWaitResult
+CThread::waitForEvent(double timeout) const
 {
-	return ARCH->waitForEvent(timeout);
+	// IArchMultithread EWaitResults map directly to our EWaitResults
+	static const EWaitResult s_map[] = {
+		kEvent,
+		kExit,
+		kTimeout
+	};
+	return s_map[ARCH->waitForEvent(m_thread, timeout)];
 }
 
 void*

@@ -112,6 +112,12 @@ CMSWindowsPrimaryScreen::setOptions(const COptionsList& /*options*/)
 	// no options
 }
 
+UInt32
+CMSWindowsPrimaryScreen::addOneShotTimer(double timeout)
+{
+	return m_screen->addOneShotTimer(timeout);
+}
+
 KeyModifierMask
 CMSWindowsPrimaryScreen::getToggleMask() const
 {
@@ -374,6 +380,12 @@ CMSWindowsPrimaryScreen::onEvent(CEvent* event)
 	}
 
 	return false;
+}
+
+void
+CMSWindowsPrimaryScreen::onOneShotTimerExpired(UInt32 id)
+{
+	m_receiver->onOneShotTimerExpired(id);
 }
 
 SInt32

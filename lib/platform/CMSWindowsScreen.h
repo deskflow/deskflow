@@ -64,6 +64,14 @@ public:
 	*/
 	void				closeDesktop();
 
+	//! Install a one-shot timer
+	/*!
+	Installs a one-shot timer for \c timeout seconds and returns the
+	id of the timer (which will be passed to the receiver's
+	\c onTimerExpired()).
+	*/
+	UInt32				addOneShotTimer(double timeout);
+
 	//@}
 	//! @name accessors
 	//@{
@@ -168,6 +176,9 @@ private:
 
 	// the timer used to check for desktop switching
 	UINT				m_timer;
+
+	// the one shot timer
+	UINT				m_oneShotTimer;
 
 	// the current desk and it's name
 	HDESK				m_desk;

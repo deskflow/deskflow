@@ -94,6 +94,14 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\CClientTaskBarReceiver.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClientTaskBarReceiver.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\synergyc.cpp
 # End Source File
 # Begin Source File
@@ -106,6 +114,14 @@ SOURCE=.\synergyc.rc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\CClientTaskBarReceiver.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClientTaskBarReceiver.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\resource.h
 # End Source File
 # End Group
@@ -115,6 +131,22 @@ SOURCE=.\resource.h
 # Begin Source File
 
 SOURCE=.\synergyc.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\tb_error.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\tb_idle.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\tb_run.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\tb_wait.ico
 # End Source File
 # End Group
 # End Target

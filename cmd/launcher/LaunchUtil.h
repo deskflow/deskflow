@@ -42,6 +42,9 @@ CString					getWindowText(HWND hwnd);
 HWND					getItem(HWND hwnd, int id);
 void					enableItem(HWND hwnd, int id, bool enabled);
 
+void					setItemChecked(HWND, bool);
+bool					isItemChecked(HWND);
+
 CString					getAppPath(const CString& appName);
 
 bool					loadConfig(CConfig& config);

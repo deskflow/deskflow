@@ -115,6 +115,10 @@ SOURCE=.\CArchDaemonWindows.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CArchFileWindows.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CArchImpl.h
 # End Source File
 # Begin Source File
@@ -143,11 +147,23 @@ SOURCE=.\CArchStringWindows.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CArchTaskBarWindows.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CArchTimeWindows.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\IArchConsole.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IArchDaemon.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IArchFile.h
 # End Source File
 # Begin Source File
 
@@ -168,6 +184,14 @@ SOURCE=.\IArchSleep.h
 # Begin Source File
 
 SOURCE=.\IArchString.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IArchTaskBar.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IArchTaskBarReceiver.h
 # End Source File
 # Begin Source File
 
@@ -228,6 +252,11 @@ SOURCE=.\CArchSleepWindows.cpp
 # Begin Source File
 
 SOURCE=.\CArchStringWindows.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchTaskBarWindows.cpp
 # PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File

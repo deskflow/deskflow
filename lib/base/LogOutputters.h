@@ -68,4 +68,22 @@ public:
 	virtual const char*	getNewline() const;
 };
 
+//! Write log to system log only
+/*!
+Creating an object of this type inserts a CStopLogOutputter followed
+by a CSystemLogOutputter into CLog.  The destructor removes those
+outputters.  Add one of these to any scope that needs to write to
+the system log (only) and restore the old outputters when exiting
+the scope.
+*/
+class CSystemLogger {
+public:
+	CSystemLogger(const char* title);
+	~CSystemLogger();
+
+private:
+	ILogOutputter*		m_syslog;
+	ILogOutputter*		m_stop;
+};
+
 #endif

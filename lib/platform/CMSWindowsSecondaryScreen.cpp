@@ -262,6 +262,12 @@ CMSWindowsSecondaryScreen::onEvent(CEvent* event)
 	return false;
 }
 
+void
+CMSWindowsSecondaryScreen::onOneShotTimerExpired(UInt32)
+{
+	// ignore
+}
+
 SInt32
 CMSWindowsSecondaryScreen::getJumpZoneSize() const
 {
@@ -272,6 +278,11 @@ void
 CMSWindowsSecondaryScreen::postCreateWindow(HWND window)
 {
 	m_window = window;
+
+	// update key state
+	updateKeys();
+
+	// hide cursor if this screen isn't active
 	if (!isActive()) {
 		showWindow();
 	}

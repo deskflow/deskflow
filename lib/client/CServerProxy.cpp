@@ -420,6 +420,7 @@ CServerProxy::translateModifierMask(KeyModifierMask mask) const
 	if ((mask & KeyModifierSuper) != 0) {
 		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDSuper]];
 	}
+	return newMask;
 }
 
 void

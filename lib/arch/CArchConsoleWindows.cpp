@@ -13,6 +13,7 @@
  */
 
 #include "CArchConsoleWindows.h"
+#include "IArchMultithread.h"
 #include "CArch.h"
 #include <cstdio>
 
@@ -20,12 +21,12 @@
 // CArchConsoleWindows
 //
 
-DWORD					CArchConsoleWindows::s_thread = 0;
+CArchThread				CArchConsoleWindows::s_thread = 0;
 
 CArchConsoleWindows::CArchConsoleWindows() :
 	m_output(NULL)
 {
-	s_thread = GetCurrentThreadId();
+	s_thread = ARCH->newCurrentThread();
 
 	m_mutex = ARCH->newMutex();
 }
@@ -33,6 +34,7 @@ CArchConsoleWindows::CArchConsoleWindows() :
 CArchConsoleWindows::~CArchConsoleWindows()
 {
 	ARCH->closeMutex(m_mutex);
+	ARCH->closeThread(s_thread);
 }
 
 void
@@ -101,7 +103,7 @@ CArchConsoleWindows::getNewlineForConsole()
 BOOL WINAPI
 CArchConsoleWindows::signalHandler(DWORD)
 {
-	// terminate cleanly and skip remaining handlers
-	PostThreadMessage(s_thread, WM_QUIT, 0, 0);
+	// terminate thread and skip remaining handlers
+	ARCH->cancelThread(s_thread);
 	return TRUE;
 }

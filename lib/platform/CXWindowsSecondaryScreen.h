@@ -67,6 +67,7 @@ protected:
 	virtual void		hideWindow();
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual void		updateKeys();
+	virtual void		releaseKeys();
 	virtual void		setToggleState(KeyModifierMask);
 	virtual KeyModifierMask	getToggleState() const;
 
@@ -97,14 +98,10 @@ private:
 
 	unsigned int		mapKey(Keystrokes&, KeyCode&, KeyID,
 							KeyModifierMask, EKeyAction) const;
-/*
-	bool				findKeyCode(KeyCode&, unsigned int&,
-							KeyID id, unsigned int) const;
-*/
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 	unsigned int		maskToX(KeyModifierMask) const;
 
-	void				releaseKeys(Display*);
+	void				doReleaseKeys(Display*);
 	void				updateKeycodeMap(Display* display);
 	void				updateModifiers(Display* display);
 	void				updateModifierMap(Display* display);

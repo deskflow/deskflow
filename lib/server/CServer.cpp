@@ -66,7 +66,8 @@ CServer::CServer(const CString& serverName) :
 	m_switchWaitEngaged(false),
 	m_switchTwoTapDelay(0.0),
 	m_switchTwoTapEngaged(false),
-	m_switchTwoTapArmed(false)
+	m_switchTwoTapArmed(false),
+	m_status(kNotRunning)
 {
 	// do nothing
 }
@@ -85,14 +86,17 @@ CServer::open()
 	try {
 		LOG((CLOG_INFO "opening screen"));
 		openPrimaryScreen();
+		setStatus(kNotRunning);
 	}
-	catch (XScreen&) {
+	catch (XScreen& e) {
 		// can't open screen
+		setStatus(kError, e.what());
 		LOG((CLOG_INFO "failed to open screen"));
 		throw;
 	}
 	catch (XUnknownClient& e) {
 		// can't open screen
+		setStatus(kServerNameUnknown);
 		LOG((CLOG_CRIT "unknown screen name `%s'", e.getName().c_str()));
 		throw;
 	}
@@ -108,6 +112,7 @@ CServer::mainLoop()
 	}
 
 	try {
+		setStatus(kNotRunning);
 		LOG((CLOG_NOTE "starting server"));
 
 		// start listening for new clients
@@ -138,11 +143,13 @@ CServer::mainLoop()
 		stopThreads();					\
 		delete m_httpServer;			\
 		m_httpServer = NULL;			\
+		runStatusJobs();				\
 		} while (false)
 		FINALLY;
 	}
 	catch (XMT& e) {
 		LOG((CLOG_ERR "server error: %s", e.what()));
+		setStatus(kError, e.what());
 
 		// clean up
 		LOG((CLOG_NOTE "stopping server"));
@@ -151,12 +158,15 @@ CServer::mainLoop()
 	}
 	catch (XBase& e) {
 		LOG((CLOG_ERR "server error: %s", e.what()));
+		setStatus(kError, e.what());
 
 		// clean up
 		LOG((CLOG_NOTE "stopping server"));
 		FINALLY;
 	}
 	catch (XThread&) {
+		setStatus(kNotRunning);
+
 		// clean up
 		LOG((CLOG_NOTE "stopping server"));
 		FINALLY;
@@ -164,6 +174,7 @@ CServer::mainLoop()
 	}
 	catch (...) {
 		LOG((CLOG_DEBUG "unknown server error"));
+		setStatus(kError);
 
 		// clean up
 		LOG((CLOG_NOTE "stopping server"));
@@ -260,6 +271,9 @@ CServer::setConfig(const CConfig& config)
 		sendOptions(client);
 	}
 
+	// notify of status
+	runStatusJobs();
+
 	return true;
 }
 
@@ -287,10 +301,50 @@ CServer::setStreamFilterFactory(IStreamFilterFactory* adopted)
 	m_streamFilterFactory = adopted;
 }
 
+void
+CServer::addStatusJob(IJob* job)
+{
+	m_statusJobs.addJob(job);
+}
+
+void
+CServer::removeStatusJob(IJob* job)
+{
+	m_statusJobs.removeJob(job);
+}
+
 CString
 CServer::getPrimaryScreenName() const
 {
 	return m_name;
+}
+
+UInt32
+CServer::getNumClients() const
+{
+	CLock lock(&m_mutex);
+	return m_clients.size();
+}
+
+void
+CServer::getClients(std::vector<CString>& list) const
+{
+	CLock lock(&m_mutex);
+	list.clear();
+	for (CClientList::const_iterator index = m_clients.begin();
+							index != m_clients.end(); ++index) {
+		list.push_back(index->first);
+	}
+}
+
+CServer::EStatus
+CServer::getStatus(CString* msg) const
+{
+	CLock lock(&m_mutex);
+	if (msg != NULL) {
+		*msg = m_statusMessage;
+	}
+	return m_status;
 }
 
 void
@@ -300,6 +354,28 @@ CServer::getConfig(CConfig* config) const
 
 	CLock lock(&m_mutex);
 	*config = m_config;
+}
+
+void
+CServer::runStatusJobs() const
+{
+	m_statusJobs.runJobs();
+}
+
+void
+CServer::setStatus(EStatus status, const char* msg)
+{
+	{
+		CLock lock(&m_mutex);
+		m_status = status;
+		if (m_status == kError) {
+			m_statusMessage = (msg == NULL) ? "Error" : msg;
+		}
+		else {
+			m_statusMessage = (msg == NULL) ? "" : msg;
+		}
+	}
+	runStatusJobs();
 }
 
 UInt32
@@ -325,6 +401,8 @@ CServer::getActivePrimarySides() const
 void
 CServer::onError()
 {
+	setStatus(kError);
+
 	// stop all running threads but don't wait too long since some
 	// threads may be unable to proceed until this thread returns.
 	stopThreads(3.0);
@@ -742,6 +820,10 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 
 				case kBottom:
 					clearWait = (m_y <= ay + ah - 1 + zoneSize);
+					break;
+
+				default:
+					clearWait = false;
 					break;
 				}
 				if (clearWait) {
@@ -1174,7 +1256,7 @@ CServer::isSwitchOkay(IClient* newScreen, EDirection dir, SInt32 x, SInt32 y)
 
 	// if waiting before a switch then prepare to switch later
 	if (!allowSwitch && m_switchWaitDelay > 0.0) {
-		if (isNewDirection) {
+		if (isNewDirection || !m_switchWaitEngaged) {
 			m_switchWaitEngaged = true;
 			m_switchWaitX       = x;
 			m_switchWaitY       = y;
@@ -1413,6 +1495,7 @@ CServer::acceptClients(void*)
 				break;
 			}
 			catch (XSocketAddressInUse& e) {
+				setStatus(kError, e.what());
 				LOG((CLOG_WARN "bind failed: %s", e.what()));
 
 				// give up if we've waited too long
@@ -1427,6 +1510,7 @@ CServer::acceptClients(void*)
 		}
 
 		// accept connections and begin processing them
+		setStatus(kRunning);
 		LOG((CLOG_DEBUG1 "waiting for client connections"));
 		for (;;) {
 			// accept connection
@@ -1439,16 +1523,15 @@ CServer::acceptClients(void*)
 			startThread(new TMethodJob<CServer>(
 								this, &CServer::runClient, socket));
 		}
-
-		// clean up
-		delete listen;
 	}
 	catch (XBase& e) {
+		setStatus(kError, e.what());
 		LOG((CLOG_ERR "cannot listen for clients: %s", e.what()));
 		delete listen;
 		exitMainLoopWithError();
 	}
 	catch (...) {
+		setStatus(kNotRunning);
 		delete listen;
 		throw;
 	}
@@ -1923,71 +2006,84 @@ CServer::addConnection(IClient* client)
 
 	LOG((CLOG_DEBUG "adding connection \"%s\"", client->getName().c_str()));
 
-	CLock lock(&m_mutex);
+	{
+		CLock lock(&m_mutex);
 
-	// name must be in our configuration
-	if (!m_config.isScreen(client->getName())) {
-		throw XUnknownClient(client->getName());
+		// name must be in our configuration
+		if (!m_config.isScreen(client->getName())) {
+			throw XUnknownClient(client->getName());
+		}
+
+		// can only have one screen with a given name at any given time
+		if (m_clients.count(client->getName()) != 0) {
+			throw XDuplicateClient(client->getName());
+		}
+
+		// save screen info
+		m_clients.insert(std::make_pair(client->getName(), client));
+		LOG((CLOG_DEBUG "added connection \"%s\"", client->getName().c_str()));
 	}
-
-	// can only have one screen with a given name at any given time
-	if (m_clients.count(client->getName()) != 0) {
-		throw XDuplicateClient(client->getName());
-	}
-
-	// save screen info
-	m_clients.insert(std::make_pair(client->getName(), client));
-	LOG((CLOG_DEBUG "added connection \"%s\"", client->getName().c_str()));
+	runStatusJobs();
 }
 
 void
 CServer::removeConnection(const CString& name)
 {
 	LOG((CLOG_DEBUG "removing connection \"%s\"", name.c_str()));
-	CLock lock(&m_mutex);
+	bool updateStatus;
+	{
+		CLock lock(&m_mutex);
 
-	// find client
-	CClientList::iterator index = m_clients.find(name);
-	assert(index != m_clients.end());
+		// find client
+		CClientList::iterator index = m_clients.find(name);
+		assert(index != m_clients.end());
 
-	// if this is active screen then we have to jump off of it
-	IClient* active = (m_activeSaver != NULL) ? m_activeSaver : m_active;
-	if (active == index->second && active != m_primaryClient) {
-		// record new position (center of primary screen)
-		m_primaryClient->getCursorCenter(m_x, m_y);
+		// if this is active screen then we have to jump off of it
+		IClient* active = (m_activeSaver != NULL) ? m_activeSaver : m_active;
+		if (active == index->second && active != m_primaryClient) {
+			// record new position (center of primary screen)
+			m_primaryClient->getCursorCenter(m_x, m_y);
 
-		// stop waiting to switch if we were
-		if (active == m_switchScreen) {
-			clearSwitchState();
+			// stop waiting to switch if we were
+			if (active == m_switchScreen) {
+				clearSwitchState();
+			}
+
+			// don't notify active screen since it probably already
+			// disconnected.
+			LOG((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", active->getName().c_str(), m_primaryClient->getName().c_str(), m_x, m_y));
+
+			// cut over
+			m_active = m_primaryClient;
+
+			// enter new screen (unless we already have because of the
+			// screen saver)
+			if (m_activeSaver == NULL) {
+				m_primaryClient->enter(m_x, m_y, m_seqNum,
+									m_primaryClient->getToggleMask(), false);
+			}
 		}
 
-		// don't notify active screen since it probably already disconnected
-		LOG((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", active->getName().c_str(), m_primaryClient->getName().c_str(), m_x, m_y));
-
-		// cut over
-		m_active = m_primaryClient;
-
-		// enter new screen (unless we already have because of the
-		// screen saver)
-		if (m_activeSaver == NULL) {
-			m_primaryClient->enter(m_x, m_y, m_seqNum,
-								m_primaryClient->getToggleMask(), false);
+		// if this screen had the cursor when the screen saver activated
+		// then we can't switch back to it when the screen saver
+		// deactivates.
+		if (m_activeSaver == index->second) {
+			m_activeSaver = NULL;
 		}
+
+		// done with client
+		delete index->second;
+		m_clients.erase(index);
+
+		// remove any thread for this client
+		m_clientThreads.erase(name);
+
+		updateStatus = (m_clients.size() <= 1);
 	}
 
-	// if this screen had the cursor when the screen saver activated
-	// then we can't switch back to it when the screen saver
-	// deactivates.
-	if (m_activeSaver == index->second) {
-		m_activeSaver = NULL;
+	if (updateStatus) {
+		runStatusJobs();
 	}
-
-	// done with client
-	delete index->second;
-	m_clients.erase(index);
-
-	// remove any thread for this client
-	m_clientThreads.erase(name);
 }
 
 

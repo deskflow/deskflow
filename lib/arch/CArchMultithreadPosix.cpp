@@ -517,11 +517,11 @@ CArchMultithreadPosix::wait(CArchThread target, double timeout)
 	}
 }
 
-bool
-CArchMultithreadPosix::waitForEvent(double /*timeout*/)
+IArchMultithread::EWaitResult
+CArchMultithreadPosix::waitForEvent(CArchThread, double /*timeout*/)
 {
 	// not implemented
-	return false;
+	return kTimeout;
 }
 
 bool

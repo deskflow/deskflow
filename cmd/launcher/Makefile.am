@@ -16,8 +16,12 @@ DEPTH = ../..
 VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =				\
+	CAdvancedOptions.cpp	\
+	CAdvancedOptions.h		\
 	CAutoStart.cpp			\
 	CAutoStart.h			\
+	CGlobalOptions.cpp		\
+	CGlobalOptions.h		\
 	LaunchUtil.cpp			\
 	LaunchUtil.h			\
 	launcher.cpp			\

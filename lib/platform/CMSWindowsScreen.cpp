@@ -122,6 +122,11 @@ CMSWindowsScreen::closeDesktop()
 	// remove timer
 	if (m_timer != 0) {
 		KillTimer(NULL, m_timer);
+		m_timer = 0;
+	}
+	if (m_oneShotTimer != 0) {
+		KillTimer(NULL, m_oneShotTimer);
+		m_oneShotTimer = 0;
 	}
 
 	// disconnect from desktop
@@ -132,6 +137,18 @@ CMSWindowsScreen::closeDesktop()
 
 	assert(m_window == NULL);
 	assert(m_desk   == NULL);
+}
+
+UInt32
+CMSWindowsScreen::addOneShotTimer(double timeout)
+{
+	// FIXME -- support multiple one-shot timers
+	if (m_oneShotTimer != 0) {
+		KillTimer(NULL, m_oneShotTimer);
+	}
+	m_oneShotTimer = SetTimer(NULL, 0,
+						static_cast<UINT>(1000.0 * timeout), NULL);
+	return 0;
 }
 
 bool
@@ -205,8 +222,12 @@ CMSWindowsScreen::mainLoop()
 	event.m_result = 0;
 	for (;;) {
 		// wait for an event in a cancellable way
-		CThread::waitForEvent();
-		GetMessage(&event.m_msg, NULL, 0, 0);
+		if (CThread::getCurrentThread().waitForEvent(-1.0) != CThread::kEvent) {
+			continue;
+		}
+		if (!PeekMessage(&event.m_msg, NULL, 0, 0, PM_REMOVE)) {
+			continue;
+		}
 
 		// handle quit message
 		if (event.m_msg.message == WM_QUIT) {
@@ -467,26 +488,34 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 		}
 
 	case WM_TIMER:
-		// if current desktop is not the input desktop then switch to it.
-		// windows 95 doesn't support multiple desktops so don't bother
-		// to check under it.
-		if (!m_is95Family) {
-			HDESK desk = openInputDesktop();
-			if (desk != NULL) {
-				if (isCurrentDesktop(desk)) {
-					CloseDesktop(desk);
-				}
-				else if (!m_screensaver->isActive()) {
-					// don't switch desktops when the screensaver is
-					// active.  we'd most likely switch to the
-					// screensaver desktop which would have the side
-					// effect of forcing the screensaver to stop.
-					switchDesktop(desk);
-				}
-				else {
-					CloseDesktop(desk);
+		if (msg->wParam == m_timer) {
+			// if current desktop is not the input desktop then switch to it.
+			// windows 95 doesn't support multiple desktops so don't bother
+			// to check under it.
+			if (!m_is95Family) {
+				HDESK desk = openInputDesktop();
+				if (desk != NULL) {
+					if (isCurrentDesktop(desk)) {
+						CloseDesktop(desk);
+					}
+					else if (!m_screensaver->isActive()) {
+						// don't switch desktops when the screensaver is
+						// active.  we'd most likely switch to the
+						// screensaver desktop which would have the side
+						// effect of forcing the screensaver to stop.
+						switchDesktop(desk);
+					}
+					else {
+						CloseDesktop(desk);
+					}
 				}
 			}
+		}
+		else if (msg->wParam == m_oneShotTimer) {
+			// one shot timer expired
+			KillTimer(NULL, m_oneShotTimer);
+			m_oneShotTimer = 0;
+			m_eventHandler->onOneShotTimerExpired(0);
 		}
 		return true;
 	}

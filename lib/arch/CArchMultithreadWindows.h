@@ -69,7 +69,7 @@ public:
 	virtual void		setPriorityOfThread(CArchThread, int n);
 	virtual void		testCancelThread();
 	virtual bool		wait(CArchThread, double timeout);
-	virtual bool		waitForEvent(double timeout);
+	virtual EWaitResult	waitForEvent(CArchThread, double timeout);
 	virtual bool		isSameThread(CArchThread, CArchThread);
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);

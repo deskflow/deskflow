@@ -356,7 +356,7 @@ CXWindowsSecondaryScreen::destroyWindow()
 		CDisplayLock display(m_screen);
 		if (display != NULL) {
 			// release keys that are still pressed
-			releaseKeys(display);
+			doReleaseKeys(display);
 
 			// no longer impervious to server grabs
 			XTestGrabControl(display, False);
@@ -901,7 +901,7 @@ CXWindowsSecondaryScreen::maskToX(KeyModifierMask inMask) const
 }
 
 void
-CXWindowsSecondaryScreen::releaseKeys(Display* display)
+CXWindowsSecondaryScreen::doReleaseKeys(Display* display)
 {
 	assert(display != NULL);
 
@@ -967,6 +967,15 @@ CXWindowsSecondaryScreen::updateKeys()
 	updateModifierMap(display);
 	updateKeycodeMap(display);
 	updateModifiers(display);
+}
+
+void
+CXWindowsSecondaryScreen::releaseKeys()
+{
+	CDisplayLock display(m_screen);
+	if (display != NULL) {
+		doReleaseKeys(display);
+	}
 }
 
 void

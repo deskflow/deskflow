@@ -40,11 +40,14 @@
 #define IDS_SERVER_IS_CLIENT            36
 #define IDS_ADD_SCREEN                  37
 #define IDS_EDIT_SCREEN                 38
+#define IDS_INVALID_TIME                39
 #define IDD_MAIN                        101
 #define IDD_ADD                         102
 #define IDD_WAIT                        103
 #define IDI_SYNERGY                     104
 #define IDD_AUTOSTART                   105
+#define IDD_ADVANCED_OPTIONS            106
+#define IDD_GLOBAL_OPTIONS              107
 #define IDC_MAIN_CLIENT_RADIO           1000
 #define IDC_MAIN_SERVER_RADIO           1001
 #define IDC_MAIN_CLIENT_SERVER_NAME_EDIT 1002
@@ -76,18 +79,31 @@
 #define IDC_AUTOSTART_INSTALL_USER      1033
 #define IDC_AUTOSTART_INSTALL_SYSTEM    1034
 #define IDC_MAIN_AUTOSTART              1035
-#define IDC_MAIN_DEBUG                  1036
+#define IDC_MAIN_OPTIONS                1036
 #define IDC_ADD_HD_CAPS_CHECK           1037
+#define IDC_MAIN_ADVANCED               1037
 #define IDC_ADD_HD_NUM_CHECK            1038
+#define IDC_ADVANCED_NAME_EDIT          1038
+#define IDC_ADVANCED_PORT_EDIT          1039
+#define IDC_MAIN_DEBUG                  1040
+#define IDC_GLOBAL_DELAY_CHECK          1041
+#define IDC_GLOBAL_DELAY_TIME           1042
+#define IDC_GLOBAL_TWO_TAP_CHECK        1043
+#define IDC_ADD_MOD_SHIFT               1043
+#define IDC_GLOBAL_TWO_TAP_TIME         1044
+#define IDC_ADD_MOD_CTRL                1044
+#define IDC_ADD_MOD_ALT                 1045
+#define IDC_ADD_MOD_META                1046
+#define IDC_ADD_MOD_SUPER               1047
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        106
+#define _APS_NEXT_RESOURCE_VALUE        108
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1038
+#define _APS_NEXT_CONTROL_VALUE         1044
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -39,6 +39,7 @@ public:
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
+	virtual UInt32		addOneShotTimer(double timeout);
 	virtual KeyModifierMask	getToggleMask() const;
 	virtual bool		isLockedToScreen() const;
 	virtual IScreen*	getScreen() const;
@@ -47,6 +48,7 @@ public:
 	virtual void		onScreensaver(bool activated);
 	virtual bool		onPreDispatch(const CEvent* event);
 	virtual bool		onEvent(CEvent* event);
+	virtual void		onOneShotTimerExpired(UInt32 id);
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		postCreateWindow(HWND);
 	virtual void		preDestroyWindow(HWND);

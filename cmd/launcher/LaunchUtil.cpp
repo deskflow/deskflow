@@ -103,6 +103,18 @@ enableItem(HWND hwnd, int id, bool enabled)
 	EnableWindow(GetDlgItem(hwnd, id), enabled);
 }
 
+void
+setItemChecked(HWND hwnd, bool checked)
+{
+	SendMessage(hwnd, BM_SETCHECK, checked ? BST_CHECKED : BST_UNCHECKED, 0);
+}
+
+bool
+isItemChecked(HWND hwnd)
+{
+	return (SendMessage(hwnd, BM_GETCHECK, 0, 0) == BST_CHECKED);
+}
+
 CString
 getAppPath(const CString& appName)
 {

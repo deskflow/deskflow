@@ -20,6 +20,7 @@
 #include "IClipboard.h"
 #include "CNetworkAddress.h"
 #include "CMutex.h"
+#include "CJobList.h"
 
 class CSecondaryScreen;
 class CServerProxy;
@@ -36,6 +37,13 @@ This class implements the top-level client algorithms for synergy.
 */
 class CClient : public IScreenReceiver, public IClient {
 public:
+	enum EStatus {
+		kNotRunning,
+		kRunning,
+		kError,
+		kMaxStatus
+	};
+
 	/*!
 	This client will attempt to connect the server using \c clientName
 	as its name.
@@ -93,6 +101,22 @@ public:
 	*/
 	void				exitMainLoop();
 
+	//! Add a job to notify of status changes
+	/*!
+	The added job is run whenever the server's status changes in
+	certain externally visible ways.  The client keeps ownership
+	of the job.
+	*/
+	void				addStatusJob(IJob*);
+
+	//! Remove a job to notify of status changes
+	/*!
+	Removes a previously added status notification job.  A job can
+	remove itself when called but must not remove any other jobs.
+	The client keeps ownership of the job.
+	*/
+	void				removeStatusJob(IJob*);
+
 	//@}
 	//! @name accessors
 	//@{
@@ -102,6 +126,12 @@ public:
 	Returns true if the server rejected our connection.
 	*/
 	bool 				wasRejected() const;
+
+	//! Get the status
+	/*!
+	Returns the current status and status message.
+	*/
+	EStatus				getStatus(CString* = NULL) const;
 
 	//@}
 
@@ -140,6 +170,12 @@ public:
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 
 private:
+	// notify status jobs of a change
+	void				runStatusJobs() const;
+
+	// set new status
+	void				setStatus(EStatus, const char* msg = NULL);
+
 	// open/close the secondary screen
 	void				openSecondaryScreen();
 	void				closeSecondaryScreen();
@@ -169,6 +205,11 @@ private:
 	bool				m_ownClipboard[kClipboardEnd];
 	IClipboard::Time	m_timeClipboard[kClipboardEnd];
 	CString				m_dataClipboard[kClipboardEnd];
+
+	// the status change jobs and status
+	CJobList			m_statusJobs;
+	EStatus				m_status;
+	CString				m_statusMessage;
 };
 
 #endif

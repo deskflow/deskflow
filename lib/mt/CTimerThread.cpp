@@ -22,8 +22,13 @@
 // CTimerThread
 //
 
-CTimerThread::CTimerThread(double timeout) : m_timeout(timeout)
+CTimerThread::CTimerThread(double timeout, bool* timedOut) :
+	m_timeout(timeout),
+	m_timedOut(timedOut)
 {
+	if (m_timedOut != NULL) {
+		*m_timedOut = false;
+	}
 	if (m_timeout >= 0.0) {
 		m_callingThread = new CThread(CThread::getCurrentThread());
 		m_timingThread  = new CThread(new TMethodJob<CTimerThread>(
@@ -53,5 +58,8 @@ CTimerThread::timer(void*)
 	LOG((CLOG_DEBUG1 "timeout in %f seconds", m_timeout));
 	ARCH->sleep(m_timeout);
 	LOG((CLOG_DEBUG1 "timeout"));
+	if (m_timedOut != NULL) {
+		*m_timedOut = true;
+	}
 	m_callingThread->cancel();
 }

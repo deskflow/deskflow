@@ -22,9 +22,11 @@
 #include "CCondVar.h"
 #include "CMutex.h"
 #include "CThread.h"
+#include "CJobList.h"
 #include "CStopwatch.h"
 #include "stdlist.h"
 #include "stdmap.h"
+#include "stdvector.h"
 
 class CClientProxy;
 class CHTTPServer;
@@ -42,6 +44,14 @@ This class implements the top-level server algorithms for synergy.
 */
 class CServer : public IServer, public IPrimaryScreenReceiver {
 public:
+	enum EStatus {
+		kNotRunning,
+		kRunning,
+		kServerNameUnknown,
+		kError,
+		kMaxStatus
+	};
+
 	/*!
 	The server will look itself up in the configuration using \c serverName
 	as its name.
@@ -116,6 +126,22 @@ public:
 	*/
 	void				setStreamFilterFactory(IStreamFilterFactory*);
 
+	//! Add a job to notify of status changes
+	/*!
+	The added job is run whenever the server's status changes in
+	certain externally visible ways.  The client keeps ownership
+	of the job.
+	*/
+	void				addStatusJob(IJob*);
+
+	//! Remove a job to notify of status changes
+	/*!
+	Removes a previously added status notification job.  A job can
+	remove itself when called but must not remove any other jobs.
+	The client keeps ownership of the job.
+	*/
+	void				removeStatusJob(IJob*);
+
 	//@}
 	//! @name accessors
 	//@{
@@ -131,6 +157,24 @@ public:
 	Returns the server's name passed to the c'tor
 	*/
 	CString				getPrimaryScreenName() const;
+
+	//! Get number of connected clients
+	/*!
+	Returns the number of connected clients, including the server itself.
+	*/
+	UInt32				getNumClients() const;
+
+	//! Get the list of connected clients
+	/*!
+	Set the \c list to the names of the currently connected clients.
+	*/
+	void				getClients(std::vector<CString>& list) const;
+
+	//! Get the status
+	/*!
+	Returns the current status and status message.
+	*/
+	EStatus				getStatus(CString* = NULL) const;
 
 	//@}
 
@@ -169,6 +213,12 @@ protected:
 
 private:
 	typedef std::list<CThread> CThreadList;
+
+	// notify status jobs of a change
+	void				runStatusJobs() const;
+
+	// set new status
+	void				setStatus(EStatus, const char* msg = NULL);
 
 	// get the sides of the primary screen that have neighbors
 	UInt32				getActivePrimarySides() const;
@@ -352,6 +402,11 @@ private:
 	CStopwatch			m_switchTwoTapTimer;
 	bool				m_switchTwoTapEngaged;
 	bool				m_switchTwoTapArmed;
+
+	// the status change jobs and status
+	CJobList			m_statusJobs;
+	EStatus				m_status;
+	CString				m_statusMessage;
 };
 
 #endif

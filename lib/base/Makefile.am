@@ -26,6 +26,7 @@ MAINTAINERCLEANFILES =		\
 noinst_LIBRARIES = libbase.a
 libbase_a_SOURCES =			\
 	CFunctionJob.cpp		\
+	CJobList.cpp			\
 	CLog.cpp				\
 	CStopwatch.cpp			\
 	CStringUtil.cpp			\
@@ -33,6 +34,7 @@ libbase_a_SOURCES =			\
 	LogOutputters.cpp		\
 	XBase.cpp				\
 	CFunctionJob.h			\
+	CJobList.h				\
 	CLog.h					\
 	CStopwatch.h			\
 	CString.h				\

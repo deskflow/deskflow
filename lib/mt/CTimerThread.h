@@ -30,9 +30,11 @@ public:
 	/*!
 	Cancels the calling thread after \c timeout seconds unless destroyed
 	before then.  If \c timeout is less than zero then it never times
-	out and this is a no-op.
+	out and this is a no-op.  If \c timedOutFlag is not NULL then it's
+	set to false in the c'tor and to true if the timeout exipires before
+	it's cancelled.
 	*/
-	CTimerThread(double timeout);
+	CTimerThread(double timeout, bool* timedOutFlag = NULL);
 	//! Cancel the timer thread
 	~CTimerThread();
 
@@ -45,6 +47,7 @@ private:
 
 private:
 	double				m_timeout;
+	bool*				m_timedOut;
 	CThread*			m_callingThread;
 	CThread*			m_timingThread;
 };

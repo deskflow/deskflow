@@ -260,6 +260,12 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 				return 1;
 			}
+			else {
+				x += g_xScreen;
+				y += g_yScreen;
+				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
+				return 0;
+			}
 		}
 	}
 

@@ -26,6 +26,7 @@ EXTRA_DIST =					\
 	CArchNetworkWinsock.cpp		\
 	CArchSleepWindows.cpp		\
 	CArchStringWindows.cpp		\
+	CArchTaskBarWindows.cpp		\
 	CArchTimeWindows.cpp		\
 	XArchWindows.cpp			\
 	CArchConsoleWindows.h		\
@@ -37,6 +38,7 @@ EXTRA_DIST =					\
 	CArchNetworkWinsock.h		\
 	CArchSleepWindows.h			\
 	CArchStringWindows.h		\
+	CArchTaskBarWindows.h		\
 	CArchTimeWindows.h			\
 	XArchWindows.h				\
 	$(NULL)
@@ -59,6 +61,8 @@ libarch_a_SOURCES =				\
 	IArchNetwork.h				\
 	IArchSleep.h				\
 	IArchString.h				\
+	IArchTaskBar.h				\
+	IArchTaskBarReceiver.h		\
 	IArchTime.h					\
 	XArch.h						\
 	$(NULL)
@@ -72,6 +76,7 @@ EXTRA_libarch_a_SOURCES =		\
 	CArchNetworkBSD.cpp			\
 	CArchSleepUnix.cpp			\
 	CArchStringUnix.cpp			\
+	CArchTaskBarXWindows.cpp	\
 	CArchTimeUnix.cpp			\
 	CMultibyte.cpp				\
 	CMultibyteOS.cpp			\
@@ -87,6 +92,7 @@ EXTRA_libarch_a_SOURCES =		\
 	CArchNetworkBSD.h			\
 	CArchSleepUnix.h			\
 	CArchStringUnix.h			\
+	CArchTaskBarXWindows.h		\
 	CArchTimeUnix.h				\
 	XArchUnix.h					\
 	$(NULL)

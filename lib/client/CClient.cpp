@@ -52,7 +52,8 @@ CClient::CClient(const CString& clientName) :
 	m_streamFilterFactory(NULL),
 	m_session(NULL),
 	m_active(false),
-	m_rejected(true)
+	m_rejected(true),
+	m_status(kNotRunning)
 {
 	// do nothing
 }
@@ -108,15 +109,61 @@ CClient::exitMainLoop()
 	m_screen->exitMainLoop();
 }
 
+void
+CClient::addStatusJob(IJob* job)
+{
+	m_statusJobs.addJob(job);
+}
+
+void
+CClient::removeStatusJob(IJob* job)
+{
+	m_statusJobs.removeJob(job);
+}
+
 bool
 CClient::wasRejected() const
 {
 	return m_rejected;
 }
 
+CClient::EStatus
+CClient::getStatus(CString* msg) const
+{
+	CLock lock(&m_mutex);
+	if (msg != NULL) {
+		*msg = m_statusMessage;
+	}
+	return m_status;
+}
+
+void
+CClient::runStatusJobs() const
+{
+	m_statusJobs.runJobs();
+}
+
+void
+CClient::setStatus(EStatus status, const char* msg)
+{
+	{
+		CLock lock(&m_mutex);
+		m_status = status;
+		if (m_status == kError) {
+			m_statusMessage = (msg == NULL) ? "Error" : msg;
+		}
+		else {
+			m_statusMessage = (msg == NULL) ? "" : msg;
+		}
+	}
+	runStatusJobs();
+}
+
 void
 CClient::onError()
 {
+	setStatus(kError);
+
 	// close down session but don't wait too long
 	deleteSession(3.0);
 }
@@ -172,9 +219,11 @@ CClient::open()
 	try {
 		LOG((CLOG_INFO "opening screen"));
 		openSecondaryScreen();
+		setStatus(kNotRunning);
 	}
-	catch (XScreenOpenFailure&) {
+	catch (XScreenOpenFailure& e) {
 		// can't open screen
+		setStatus(kError, e.what());
 		LOG((CLOG_INFO "failed to open screen"));
 		throw;
 	}
@@ -195,6 +244,7 @@ CClient::mainLoop()
 	}
 
 	try {
+		setStatus(kNotRunning);
 		LOG((CLOG_NOTE "starting client \"%s\"", m_name.c_str()));
 
 		// start server interactions
@@ -213,6 +263,7 @@ CClient::mainLoop()
 	}
 	catch (XMT& e) {
 		LOG((CLOG_ERR "client error: %s", e.what()));
+		setStatus(kError, e.what());
 
 		// clean up
 		deleteSession();
@@ -221,6 +272,7 @@ CClient::mainLoop()
 	}
 	catch (XBase& e) {
 		LOG((CLOG_ERR "client error: %s", e.what()));
+		setStatus(kError, e.what());
 
 		// clean up
 		deleteSession();
@@ -229,6 +281,8 @@ CClient::mainLoop()
 		m_rejected = false;
 	}
 	catch (XThread&) {
+		setStatus(kNotRunning);
+
 		// clean up
 		deleteSession();
 		LOG((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
@@ -236,6 +290,7 @@ CClient::mainLoop()
 	}
 	catch (...) {
 		LOG((CLOG_DEBUG "unknown client error"));
+		setStatus(kError);
 
 		// clean up
 		deleteSession();
@@ -529,11 +584,12 @@ CClient::runServer()
 {
 	IDataSocket* socket = NULL;
 	CServerProxy* proxy = NULL;
+	bool timedOut;
 	try {
 		for (;;) {
 			try {
 				// allow connect this much time to succeed
-				CTimerThread timer(15.0);
+				CTimerThread timer(15.0, &timedOut);
 
 				// create socket and attempt to connect to server
 				LOG((CLOG_DEBUG1 "connecting to server"));
@@ -546,6 +602,7 @@ CClient::runServer()
 				break;
 			}
 			catch (XSocketConnect& e) {
+				setStatus(kError, e.what());
 				LOG((CLOG_DEBUG "failed to connect to server: %s", e.what()));
 
 				// failed to connect.  if not camping then rethrow.
@@ -565,30 +622,46 @@ CClient::runServer()
 		m_server = proxy;
 	}
 	catch (XThread&) {
-		LOG((CLOG_ERR "connection timed out"));
+		if (timedOut) {
+			LOG((CLOG_ERR "connection timed out"));
+			setStatus(kError, "connection timed out");
+		}
+		else {
+			// cancelled by some thread other than the timer
+		}
 		delete socket;
 		throw;
 	}
 	catch (XBase& e) {
 		LOG((CLOG_ERR "connection failed: %s", e.what()));
+		setStatus(kError, e.what());
 		LOG((CLOG_DEBUG "disconnecting from server"));
 		delete socket;
 		return;
 	}
 	catch (...) {
 		LOG((CLOG_ERR "connection failed: <unknown error>"));
+		setStatus(kError);
 		LOG((CLOG_DEBUG "disconnecting from server"));
 		delete socket;
 		return;
 	}
 
 	try {
+		// prepare for remote control
+		m_screen->remoteControl();
+
 		// process messages
 		bool rejected = true;
 		if (proxy != NULL) {
 			LOG((CLOG_DEBUG1 "communicating with server"));
+			setStatus(kRunning);
 			rejected = !proxy->mainLoop();
+			setStatus(kNotRunning);
 		}
+
+		// prepare for local control
+		m_screen->localControl();
 
 		// clean up
 		CLock lock(&m_mutex);
@@ -600,6 +673,8 @@ CClient::runServer()
 		delete socket;
 	}
 	catch (...) {
+		setStatus(kNotRunning);
+		m_screen->localControl();
 		CLock lock(&m_mutex);
 		m_rejected = false;
 		m_server   = NULL;
@@ -664,9 +739,11 @@ CClient::handshakeServer(IDataSocket* socket)
 	}
 	catch (XIncompatibleClient& e) {
 		LOG((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
+		setStatus(kError, e.what());
 	}
 	catch (XBase& e) {
 		LOG((CLOG_WARN "error communicating with server: %s", e.what()));
+		setStatus(kError, e.what());
 	}
 	catch (...) {
 		// probably timed out

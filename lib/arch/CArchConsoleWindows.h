@@ -39,7 +39,7 @@ private:
 	static BOOL WINAPI	signalHandler(DWORD);
 
 private:
-	static DWORD		s_thread;
+	static CArchThread	s_thread;
 
 	CArchMutex			m_mutex;
 	HANDLE				m_output;

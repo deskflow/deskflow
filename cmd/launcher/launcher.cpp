@@ -13,6 +13,8 @@
  */
 
 #include "CConfig.h"
+#include "KeyTypes.h"
+#include "OptionTypes.h"
 #include "ProtocolTypes.h"
 #include "CLog.h"
 #include "CStringUtil.h"
@@ -24,6 +26,8 @@
 // these must come after the above because it includes windows.h
 #include "LaunchUtil.h"
 #include "CAutoStart.h"
+#include "CGlobalOptions.h"
+#include "CAdvancedOptions.h"
 
 #define CONFIG_NAME "synergy.sgc"
 #define CLIENT_APP "synergyc.exe"
@@ -47,10 +51,28 @@ public:
 	HANDLE				m_stop;
 };
 
-HINSTANCE s_instance = NULL;
+struct CModifierInfo {
+public:
+	int				m_ctrlID;
+	const char*		m_name;
+	KeyModifierID	m_modifierID;
+	OptionID		m_optionID;
+};
 
-static const TCHAR* s_mainClass   = TEXT("GoSynergy");
-static const TCHAR* s_layoutClass = TEXT("SynergyLayout");
+static const CModifierInfo s_modifiers[] = {
+	{ IDC_ADD_MOD_SHIFT, "Shift",
+		kKeyModifierIDShift,    kOptionModifierMapForShift   },
+	{ IDC_ADD_MOD_CTRL,  "Ctrl",
+		kKeyModifierIDControl,  kOptionModifierMapForControl },
+	{ IDC_ADD_MOD_ALT,   "Alt",
+		kKeyModifierIDAlt,      kOptionModifierMapForAlt     },
+	{ IDC_ADD_MOD_META,  "Meta",
+		kKeyModifierIDMeta,     kOptionModifierMapForMeta    },
+	{ IDC_ADD_MOD_SUPER, "Super",
+		kKeyModifierIDSuper,    kOptionModifierMapForSuper   }
+};
+
+static const KeyModifierID baseModifier = kKeyModifierIDShift;
 
 static const char* s_debugName[][2] = {
 	{ TEXT("Error"),   "ERROR" },
@@ -62,6 +84,14 @@ static const char* s_debugName[][2] = {
 	{ TEXT("Debug2"),  "DEBUG2" }
 };
 static const int s_defaultDebug = 3;	// INFO
+
+HINSTANCE s_instance = NULL;
+
+static CGlobalOptions*		s_globalOptions   = NULL;
+static CAdvancedOptions*	s_advancedOptions = NULL;
+
+static const TCHAR* s_mainClass   = TEXT("GoSynergy");
+static const TCHAR* s_layoutClass = TEXT("SynergyLayout");
 
 //
 // program arguments
@@ -127,7 +157,7 @@ bool
 isClientChecked(HWND hwnd)
 {
 	HWND child = getItem(hwnd, IDC_MAIN_CLIENT_RADIO);
-	return (SendMessage(child, BM_GETCHECK, 0, 0) == BST_CHECKED);
+	return isItemChecked(child);
 }
 
 static
@@ -476,58 +506,20 @@ static
 CString
 getCommandLine(HWND hwnd, bool testing)
 {
-	// decide if client or server
-	const bool isClient = isClientChecked(hwnd);
-
-	// get and verify screen name
-	HWND child = getItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
-	CString name = getWindowText(child);
-	if (!ARG->m_config.isValidScreenName(name)) {
-		showError(hwnd, CStringUtil::format(
-								getString(IDS_INVALID_SCREEN_NAME).c_str(),
-								name.c_str()));
-		SetFocus(child);
-		return CString();
-	}
-	if (!isClient && !ARG->m_config.isScreen(name)) {
-		showError(hwnd, CStringUtil::format(
-								getString(IDS_UNKNOWN_SCREEN_NAME).c_str(),
-								name.c_str()));
-		SetFocus(child);
-		return CString();
-	}
-
-	// get and verify port
-	child = getItem(hwnd, IDC_MAIN_ADVANCED_PORT_EDIT);
-	CString portString = getWindowText(child);
-	UInt32 port = (UInt32)atoi(portString.c_str());
-	if (port < 1 || port > 65535) {
-		CString defaultPortString = CStringUtil::print("%d", kDefaultPort);
-		showError(hwnd, CStringUtil::format(
-								getString(IDS_INVALID_PORT).c_str(),
-								portString.c_str(),
-								defaultPortString.c_str()));
-		SetFocus(child);
-		return CString();
-	}
-
-	// prepare command line
 	CString cmdLine;
-	if (testing) {
-		// constant testing args
-		cmdLine += " -z --no-restart --no-daemon";
 
-		// debug level testing arg
-		child = getItem(hwnd, IDC_MAIN_DEBUG);
-		cmdLine += " --debug ";
-		cmdLine += s_debugName[SendMessage(child, CB_GETCURSEL, 0, 0)][1];
+	// add constant testing args
+	if (testing) {
+		cmdLine += " -z --no-restart --no-daemon";
 	}
-	cmdLine += " --name ";
-	cmdLine += name;
+
+	// get the server name
+	CString server;
+	bool isClient = isClientChecked(hwnd);
 	if (isClient) {
 		// check server name
-		child = getItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_EDIT);
-		CString server = getWindowText(child);
+		HWND child = getItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_EDIT);
+		server = getWindowText(child);
 		if (!ARG->m_config.isValidScreenName(server)) {
 			showError(hwnd, CStringUtil::format(
 								getString(IDS_INVALID_SERVER_NAME).c_str(),
@@ -551,15 +543,18 @@ getCommandLine(HWND hwnd, bool testing)
 		if (testing) {
 			cmdLine += " --no-camp";
 		}
-		cmdLine += " ";
-		cmdLine += server;
-		cmdLine += ":";
-		cmdLine += portString;
 	}
-	else {
-		cmdLine += " --address :";
-		cmdLine += portString;
+
+	// debug level
+	if (testing) {
+		HWND child  = getItem(hwnd, IDC_MAIN_DEBUG);
+		DWORD debug = SendMessage(child, CB_GETCURSEL, 0, 0);
+		cmdLine    += " --debug ";
+		cmdLine    += s_debugName[debug][1];
 	}
+
+	// add advanced options
+	cmdLine += s_advancedOptions->getCommandLine(isClient, server);
 
 	return cmdLine;
 }
@@ -711,11 +706,9 @@ initMainWindow(HWND hwnd)
 	// choose client/server radio buttons
 	HWND child;
 	child = getItem(hwnd, IDC_MAIN_CLIENT_RADIO);
-	SendMessage(child, BM_SETCHECK, !configLoaded ?
-								BST_CHECKED : BST_UNCHECKED, 0);
+	setItemChecked(child, !configLoaded);
 	child = getItem(hwnd, IDC_MAIN_SERVER_RADIO);
-	SendMessage(child, BM_SETCHECK, configLoaded ?
-								BST_CHECKED : BST_UNCHECKED, 0);
+	setItemChecked(child, configLoaded);
 
 	// if config is loaded then initialize server controls
 	if (configLoaded) {
@@ -729,16 +722,7 @@ initMainWindow(HWND hwnd)
 		}
 	}
 
-	// initialize other controls
-	char buffer[256];
-	sprintf(buffer, "%d", kDefaultPort);
-	child = getItem(hwnd, IDC_MAIN_ADVANCED_PORT_EDIT);
-	SendMessage(child, WM_SETTEXT, 0, (LPARAM)buffer);
-
-	CString hostname = ARCH->getHostName();
-	child = getItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
-	SendMessage(child, WM_SETTEXT, 0, (LPARAM)hostname.c_str());
-
+	// debug level
 	child = getItem(hwnd, IDC_MAIN_DEBUG);
 	for (unsigned int i = 0; i < sizeof(s_debugName) /
 								sizeof(s_debugName[0]); ++i) {
@@ -794,19 +778,32 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		CConfig::CScreenOptions::const_iterator index;
 		child = getItem(hwnd, IDC_ADD_HD_CAPS_CHECK);
 		index = info->m_options.find(kOptionHalfDuplexCapsLock);
-		if (index != info->m_options.end() && index->second != 0) {
-			SendMessage(child, BM_SETCHECK, BST_CHECKED, 0);
-		}
-		else {
-			SendMessage(child, BM_SETCHECK, BST_UNCHECKED, 0);
-		}
+		setItemChecked(child, (index != info->m_options.end() &&
+											index->second != 0));
 		child = getItem(hwnd, IDC_ADD_HD_NUM_CHECK);
 		index = info->m_options.find(kOptionHalfDuplexNumLock);
-		if (index != info->m_options.end() && index->second != 0) {
-			SendMessage(child, BM_SETCHECK, BST_CHECKED, 0);
-		}
-		else {
-			SendMessage(child, BM_SETCHECK, BST_UNCHECKED, 0);
+		setItemChecked(child, (index != info->m_options.end() &&
+											index->second != 0));
+
+		// modifier options
+		for (UInt32 i = 0; i < sizeof(s_modifiers) /
+									sizeof(s_modifiers[0]); ++i) {
+			child = getItem(hwnd, s_modifiers[i].m_ctrlID);
+
+			// fill in options
+			for (UInt32 j = 0; j < sizeof(s_modifiers) /
+										sizeof(s_modifiers[0]); ++j) {
+				SendMessage(child, CB_ADDSTRING, 0,
+									(LPARAM)s_modifiers[j].m_name);
+			}
+
+			// choose current value
+			index            = info->m_options.find(s_modifiers[i].m_optionID);
+			KeyModifierID id = s_modifiers[i].m_modifierID;
+			if (index != info->m_options.end()) {
+				id = index->second;
+			}
+			SendMessage(child, CB_SETCURSEL, id - baseModifier, 0);
 		}
 
 		return TRUE;
@@ -883,18 +880,34 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			// save options
 			child = getItem(hwnd, IDC_ADD_HD_CAPS_CHECK);
-			if (SendMessage(child, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+			if (isItemChecked(child)) {
 				info->m_options[kOptionHalfDuplexCapsLock] = 1;
 			}
 			else {
 				info->m_options.erase(kOptionHalfDuplexCapsLock);
 			}
 			child = getItem(hwnd, IDC_ADD_HD_NUM_CHECK);
-			if (SendMessage(child, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+			if (isItemChecked(child)) {
 				info->m_options[kOptionHalfDuplexNumLock] = 1;
 			}
 			else {
 				info->m_options.erase(kOptionHalfDuplexNumLock);
+			}
+
+			// save modifier options
+			child = getItem(hwnd, IDC_ADD_HD_CAPS_CHECK);
+			for (UInt32 i = 0; i < sizeof(s_modifiers) /
+										sizeof(s_modifiers[0]); ++i) {
+				child            = getItem(hwnd, s_modifiers[i].m_ctrlID);
+				KeyModifierID id = static_cast<KeyModifierID>(
+									SendMessage(child, CB_GETCURSEL, 0, 0) +
+										baseModifier);
+				if (id != s_modifiers[i].m_modifierID) {
+					info->m_options[s_modifiers[i].m_optionID] = id;
+				}
+				else {
+					info->m_options.erase(s_modifiers[i].m_optionID);
+				}
 			}
 
 			// success
@@ -1065,6 +1078,16 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				return 0;
 			}
 			break;
+
+		case IDC_MAIN_OPTIONS:
+			s_globalOptions->doModal();
+			enableSaveControls(hwnd);
+			break;
+
+		case IDC_MAIN_ADVANCED:
+			s_advancedOptions->doModal(isClientChecked(hwnd));
+			enableSaveControls(hwnd);
+			break;
 		}
 
 	default:
@@ -1076,7 +1099,7 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int nCmdShow)
 {
-	CArch arch;
+	CArch arch(instance);
 	CLOG;
 	CArgs args;
 
@@ -1108,8 +1131,10 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int nCmdShow)
 	HWND m_mainWindow = CreateDialog(s_instance,
 							MAKEINTRESOURCE(IDD_MAIN), 0, NULL);
 
-	// prep window
+	// prep windows
 	initMainWindow(m_mainWindow);
+	s_globalOptions = new CGlobalOptions(m_mainWindow, &ARG->m_config);
+	s_advancedOptions = new CAdvancedOptions(m_mainWindow, &ARG->m_config);
 
 	// show window
 	ShowWindow(m_mainWindow, nCmdShow);

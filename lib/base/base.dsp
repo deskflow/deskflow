@@ -91,6 +91,10 @@ SOURCE=.\CFunctionJob.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CJobList.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CLog.cpp
 # End Source File
 # Begin Source File
@@ -120,6 +124,10 @@ SOURCE=.\XBase.cpp
 # Begin Source File
 
 SOURCE=.\CFunctionJob.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CJobList.h
 # End Source File
 # Begin Source File
 

@@ -453,6 +453,89 @@ CArchMultithreadWindows::wait(CArchThread target, double timeout)
 	}
 }
 
+IArchMultithread::EWaitResult
+CArchMultithreadWindows::waitForEvent(CArchThread target, double timeout)
+{
+	// find current thread.  ref the target so it can't go away while
+	// we're watching it.
+	lockMutex(m_threadMutex);
+	CArchThreadImpl* self = findNoRef(GetCurrentThreadId());
+	assert(self != NULL);
+	if (target != NULL) {
+		refThread(target);
+	}
+	unlockMutex(m_threadMutex);
+
+	// see if we've been cancelled before checking if any events
+	// are pending.
+	DWORD result = WaitForSingleObject(self->m_cancel, 0);
+	if (result == WAIT_OBJECT_0) {
+		if (target != NULL) {
+			closeThread(target);
+		}
+		testCancelThreadImpl(self);
+	}
+
+	// check if messages are available first.  if we don't do this then
+	// MsgWaitForMultipleObjects() will block even if the queue isn't
+	// empty if the messages in the queue were there before the last
+	// call to GetMessage()/PeekMessage().
+	if (HIWORD(GetQueueStatus(QS_ALLINPUT)) != 0) {
+		return kEvent;
+	}
+
+	// convert timeout
+	DWORD t;
+	if (timeout < 0.0) {
+		t = INFINITE;
+	}
+	else {
+		t = (DWORD)(1000.0 * timeout);
+	}
+
+	// wait for this thread to be cancelled or for the target thread to
+	// terminate.
+	DWORD n    = (target == NULL || target == self) ? 1 : 2;
+	HANDLE handles[2];
+	handles[0] = self->m_cancel;
+	handles[1] = (n == 2) ? target->m_exit : NULL;
+	result     = MsgWaitForMultipleObjects(n, handles, FALSE, t, QS_ALLINPUT);
+
+	// cancel takes priority
+	if (result != WAIT_OBJECT_0 + 0 &&
+		WaitForSingleObject(handles[0], 0) == WAIT_OBJECT_0) {
+		result = WAIT_OBJECT_0 + 0;
+	}
+
+	// release target
+	if (target != NULL) {
+		closeThread(target);
+	}
+
+	// handle result
+	switch (result) {
+	case WAIT_OBJECT_0 + 0:
+		// this thread was cancelled.  does not return.
+		testCancelThreadImpl(self);
+
+	case WAIT_OBJECT_0 + 1:
+		// target thread terminated
+		if (n == 2) {
+			return kExit;
+		}
+		// fall through
+
+	case WAIT_OBJECT_0 + 2:
+		// message is available
+		return kEvent;
+
+	default:
+		// timeout or error
+		return kTimeout;
+	}
+}
+
+/*
 bool
 CArchMultithreadWindows::waitForEvent(double timeout)
 {
@@ -499,6 +582,7 @@ CArchMultithreadWindows::waitForEvent(double timeout)
 		return false;
 	}
 }
+*/
 
 bool
 CArchMultithreadWindows::isSameThread(CArchThread thread1, CArchThread thread2)

@@ -25,6 +25,7 @@
 #include "CMutex.h"
 #include "CThread.h"
 #include "XThread.h"
+#include "CFunctionJob.h"
 #include "CLog.h"
 #include "LogOutputters.h"
 #include "CString.h"
@@ -34,12 +35,15 @@
 
 #define DAEMON_RUNNING(running_)
 #if WINDOWS_LIKE
+#include "CMSWindowsScreen.h"
 #include "CMSWindowsSecondaryScreen.h"
+#include "CMSWindowsClientTaskBarReceiver.h"
 #include "resource.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif UNIX_LIKE
 #include "CXWindowsSecondaryScreen.h"
+#include "CXWindowsClientTaskBarReceiver.h"
 #endif
 
 // platform dependent name of a daemon
@@ -112,11 +116,46 @@ CSecondaryScreenFactory::create(IScreenReceiver* receiver)
 }
 
 
+//! CQuitJob
+/*!
+A job that cancels a given thread.
+*/
+class CQuitJob : public IJob {
+public:
+	CQuitJob(const CThread& thread);
+	~CQuitJob();
+
+	// IJob overrides
+	virtual void		run();
+
+private:
+	CThread				m_thread;
+};
+
+CQuitJob::CQuitJob(const CThread& thread) :
+	m_thread(thread)
+{
+	// do nothing
+}
+
+CQuitJob::~CQuitJob()
+{
+	// do nothing
+}
+
+void
+CQuitJob::run()
+{
+	m_thread.cancel();
+}
+
+
 //
 // platform independent main
 //
 
-static CClient*			s_client = NULL;
+static CClient*					s_client = NULL;
+static CClientTaskBarReceiver*	s_taskBarReceiver = NULL;
 
 static
 int
@@ -137,6 +176,7 @@ realMain(void)
 
 			// open client
 			try {
+				s_taskBarReceiver->setClient(s_client);
 				s_client->open();
 				opened = true;
 
@@ -160,11 +200,10 @@ realMain(void)
 					DAEMON_RUNNING(false);			\
 					locked = true;					\
 				}									\
-				if (s_client != NULL) {				\
-					if (opened) {					\
-						s_client->close();			\
-					}								\
+				if (opened) {						\
+					s_client->close();				\
 				}									\
+				s_taskBarReceiver->setClient(NULL);	\
 				delete s_client;					\
 				s_client = NULL;					\
 				} while (false)
@@ -203,6 +242,43 @@ realMain(void)
 	} while (ARG->m_restartable);
 
 	return result;
+}
+
+static
+void
+realMainEntry(void*)
+{
+	CThread::exit(reinterpret_cast<void*>(realMain()));
+}
+
+static
+int
+runMainInThread(void)
+{
+	CThread appThread(new CFunctionJob(&realMainEntry));
+	try {
+#if WINDOWS_LIKE
+		MSG msg;
+		while (appThread.waitForEvent(-1.0) == CThread::kEvent) {
+			// check for a quit event
+			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+				if (msg.message == WM_QUIT) {
+					CThread::getCurrentThread().cancel();
+				}
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+		}
+#else
+		appThread.wait(-1.0);
+#endif
+		return reinterpret_cast<int>(appThread.getResult());
+	}
+	catch (XThread&) {
+		appThread.cancel();
+		appThread.wait(-1.0);
+		throw;
+	}
 }
 
 
@@ -273,7 +349,7 @@ help()
 
 static
 bool
-isArg(int argi, int argc, const char** argv,
+isArg(int argi, int argc, const char* const* argv,
 				const char* name1, const char* name2,
 				int minRequiredParameters = 0)
 {
@@ -294,7 +370,7 @@ isArg(int argi, int argc, const char** argv,
 
 static
 void
-parse(int argc, const char** argv)
+parse(int argc, const char* const* argv)
 {
 	assert(ARG->m_pname != NULL);
 	assert(argv         != NULL);
@@ -424,24 +500,12 @@ parse(int argc, const char** argv)
 	}
 }
 
-static
-void
-useSystemLog()
-{
-	// redirect log messages
-	ILogOutputter* logger = new CSystemLogOutputter;
-	logger->open(DAEMON_NAME);
-	CLOG->insert(new CStopLogOutputter);
-	CLOG->insert(logger);
-}
 
 //
 // platform dependent entry points
 //
 
 #if WINDOWS_LIKE
-
-#include "CMSWindowsScreen.h"
 
 static bool				s_hasImportantLogMessages = false;
 
@@ -494,7 +558,10 @@ static
 int
 daemonStartup(int argc, const char** argv)
 {
-	useSystemLog();
+	CSystemLogger sysLogger(DAEMON_NAME);
+
+	// have to cancel this thread to quit
+	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
 
 	// catch errors that would normally exit
 	bye = &byeThrow;
@@ -513,14 +580,62 @@ static
 int
 daemonStartup95(int, const char**)
 {
-	useSystemLog();
-	return realMain();
+	CSystemLogger sysLogger(DAEMON_NAME);
+	return runMainInThread();
+}
+
+static
+int
+run(int argc, char** argv)
+{
+	// windows NT family starts services using no command line options.
+	// since i'm not sure how to tell the difference between that and
+	// a user providing no options we'll assume that if there are no
+	// arguments and we're on NT then we're being invoked as a service.
+	// users on NT can use `--daemon' or `--no-daemon' to force us out
+	// of the service code path.
+	if (argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
+		try {
+			return ARCH->daemonize(DAEMON_NAME, &daemonStartup);
+		}
+		catch (XArchDaemon& e) {
+			LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
+		}
+		return kExitFailed;
+	}
+
+	// parse command line
+	parse(argc, argv);
+
+	// daemonize if requested
+	if (ARG->m_daemon) {
+		// start as a daemon
+		if (CArchMiscWindows::isWindows95Family()) {
+			try {
+				return ARCH->daemonize(DAEMON_NAME, &daemonStartup95);
+			}
+			catch (XArchDaemon& e) {
+				LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
+			}
+			return kExitFailed;
+		}
+		else {
+			// cannot start a service from the command line so just
+			// run normally (except with log messages redirected).
+			CSystemLogger sysLogger(DAEMON_NAME);
+			return runMainInThread();
+		}
+	}
+	else {
+		// run
+		return runMainInThread();
+	}
 }
 
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
-	CArch arch;
+	CArch arch(instance);
 	CLOG;
 	CArgs args;
 
@@ -533,51 +648,26 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// send PRINT and FATAL output to a message box
 	CLOG->insert(new CMessageBoxOutputter);
 
-	// windows NT family starts services using no command line options.
-	// since i'm not sure how to tell the difference between that and
-	// a user providing no options we'll assume that if there are no
-	// arguments and we're on NT then we're being invoked as a service.
-	// users on NT can use `--daemon' or `--no-daemon' to force us out
-	// of the service code path.
-	if (__argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
-		int result = kExitFailed;
-		try {
-			result = ARCH->daemonize(DAEMON_NAME, &daemonStartup);
-		}
-		catch (XArchDaemon& e) {
-			LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
-		}
-		delete CLOG;
-		return result;
-	}
+	// make the task bar receiver.  the user can control this app
+	// through the task bar.
+	s_taskBarReceiver = new CMSWindowsClientTaskBarReceiver(instance);
+	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
 
-	// parse command line
-	parse(__argc, const_cast<const char**>(__argv));
-
-	// daemonize if requested
 	int result;
-	if (ARG->m_daemon) {
-		// start as a daemon
-		if (CArchMiscWindows::isWindows95Family()) {
-			try {
-				result = ARCH->daemonize(DAEMON_NAME, &daemonStartup95);
-			}
-			catch (XArchDaemon& e) {
-				LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
-				result = kExitFailed;
-			}
-		}
-		else {
-			// cannot start a service from the command line so just
-			// run normally (except with log messages redirected).
-			useSystemLog();
-			result = realMain();
-		}
+	try {
+		// run in foreground or as a daemon
+		result = run(__argc, __argv);
 	}
-	else {
-		// run
-		result = realMain();
+	catch (...) {
+		// note that we don't rethrow thread cancellation.  we'll
+		// be exiting soon so it doesn't matter.  what we'd like
+		// is for everything after this try/catch to be in a
+		// finally block.
+		result = kExitFailed;
 	}
+
+	// done with task bar receiver
+	delete s_taskBarReceiver;
 
 	// let user examine any messages if we're running as a backend
 	// by putting up a dialog box before exiting.
@@ -598,7 +688,7 @@ static
 int
 daemonStartup(int, const char**)
 {
-	useSystemLog();
+	CSystemLogger sysLogger(DAEMON_NAME);
 	return realMain();
 }
 
@@ -612,8 +702,13 @@ main(int argc, char** argv)
 	// get program name
 	ARG->m_pname = ARCH->getBasename(argv[0]);
 
+	// make the task bar receiver.  the user can control this app
+	// through the task bar.
+	s_taskBarReceiver = new CXWindowsClientTaskBarReceiver;
+	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
+
 	// parse command line
-	parse(argc, const_cast<const char**>(argv));
+	parse(argc, argv);
 
 	// daemonize if requested
 	int result;
@@ -629,6 +724,9 @@ main(int argc, char** argv)
 	else {
 		result = realMain();
 	}
+
+	// done with task bar receiver
+	delete s_taskBarReceiver;
 
 	return result;
 }

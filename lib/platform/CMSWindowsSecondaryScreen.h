@@ -53,6 +53,7 @@ public:
 	virtual void		onScreensaver(bool activated);
 	virtual bool		onPreDispatch(const CEvent* event);
 	virtual bool		onEvent(CEvent* event);
+	virtual void		onOneShotTimerExpired(UInt32 id);
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		postCreateWindow(HWND);
 	virtual void		preDestroyWindow(HWND);
@@ -69,6 +70,7 @@ protected:
 	virtual void		hideWindow();
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual void		updateKeys();
+	virtual void		releaseKeys();
 	virtual void		setToggleState(KeyModifierMask);
 	virtual KeyModifierMask	getToggleState() const;
 
@@ -98,7 +100,6 @@ private:
 							KeyModifierMask, EKeyAction) const;
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 
-	void				releaseKeys();
 	void				toggleKey(UINT virtualKey, KeyModifierMask mask);
 	UINT				virtualKeyToScanCode(UINT& virtualKey) const;
 	bool				isExtendedKey(UINT virtualKey) const;

@@ -25,6 +25,7 @@
 #	include "CArchNetworkWinsock.cpp"
 #	include "CArchSleepWindows.cpp"
 #	include "CArchStringWindows.cpp"
+#	include "CArchTaskBarWindows.cpp"
 #	include "CArchTimeWindows.cpp"
 #	include "XArchWindows.cpp"
 #elif UNIX_LIKE
@@ -38,6 +39,7 @@
 #	include "CArchNetworkBSD.cpp"
 #	include "CArchSleepUnix.cpp"
 #	include "CArchStringUnix.cpp"
+#	include "CArchTaskBarXWindows.cpp"
 #	include "CArchTimeUnix.cpp"
 #	include "XArchUnix.cpp"
 #endif

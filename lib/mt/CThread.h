@@ -39,6 +39,13 @@ documentation.
 // note -- do not derive from this class
 class CThread {
 public:
+	//! Result of waitForEvent()
+	enum EWaitResult {
+		kEvent,				//!< An event is pending
+		kExit,				//!< Thread exited
+		kTimeout			//!< Wait timed out
+	};
+
 	//! Run \c adoptedJob in a new thread
 	/*!
 	Create and start a new thread executing the \c adoptedJob.  The
@@ -159,18 +166,19 @@ public:
 
 	//! Wait for an event (win32)
 	/*!
-	Wait for the message queue to contain a message for up to \c timeout
-	seconds.  This returns immediately if any message is available
-	(including messages that were already in the queue during the last
-	call to \c GetMessage() or \c PeekMessage() or waitForEvent().
-	Returns true iff a message is available.  This will wait forever
-	if \c timeout < 0.0.
+	Wait for the message queue to contain a message or for the thread
+	to exit for up to \c timeout seconds.  This returns immediately if
+	any message is available (including messages that were already in
+	the queue during the last call to \c GetMessage() or
+	\c PeekMessage() or waitForEvent().  Returns kEvent if a message
+	is available, kExit if the thread exited, and kTimeout otherwise.
+	This will wait forever if \c timeout < 0.0.
 
 	This method is available under win32 only.
 
 	(cancellation point)
 	*/
-	static bool			waitForEvent(double timeout = -1.0);
+	EWaitResult			waitForEvent(double timeout = -1.0) const;
 
 	//! Get the exit result
 	/*!

@@ -74,17 +74,6 @@ CSecondaryScreen::open()
 		// create and prepare our window
 		createWindow();
 
-		// assume primary has all clipboards
-		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			grabClipboard(id);
-		}
-
-		// update keyboard state
-		updateKeys();
-
-		// disable the screen saver
-		getScreen()->openScreensaver(false);
-
 		// subclass hook
 		onPostOpen();
 
@@ -95,6 +84,30 @@ CSecondaryScreen::open()
 		close();
 		throw;
 	}
+}
+
+void
+CSecondaryScreen::close()
+{
+	onPreClose();
+	destroyWindow();
+	getScreen()->close();
+	onPostClose();
+}
+
+void
+CSecondaryScreen::remoteControl()
+{
+	// assume primary has all clipboards
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		grabClipboard(id);
+	}
+
+	// update keyboard state
+	updateKeys();
+
+	// disable the screen saver
+	getScreen()->openScreensaver(false);
 
 	// hide the cursor
 	{
@@ -105,13 +118,9 @@ CSecondaryScreen::open()
 }
 
 void
-CSecondaryScreen::close()
+CSecondaryScreen::localControl()
 {
-	onPreClose();
 	getScreen()->closeScreensaver();
-	destroyWindow();
-	getScreen()->close();
-	onPostClose();
 }
 
 void

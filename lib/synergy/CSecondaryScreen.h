@@ -41,11 +41,10 @@ public:
 
 	//! Open screen
 	/*!
-	Opens the screen.  This includes initializing the screen,
-	hiding the cursor, and disabling the screen saver.  It also causes
-	events to the reported to an IScreenReceiver (which is set through
-	some other interface).  Calls close() before returning (rethrowing)
-	if it fails for any reason.
+	Opens the screen.  It also causes events to the reported to an
+	IScreenReceiver (which is set through some other interface).
+	Calls close() before returning (rethrowing) if it fails for any
+	reason.
 	*/
 	void				open();
 
@@ -64,12 +63,26 @@ public:
 	*/
 	void				exitMainLoop();
 
+	//! Prepare for remote control
+	/*!
+	Prepares the screen for remote control by the server.  In
+	particular, it disables the screen saver.
+	*/
+	void				remoteControl();
+
+	//! Release from remote control
+	/*!
+	Cleans up the screen from remote control by the server.  In
+	particular, it enables the screen saver. It also synthesizes
+	key up events for any keys that are logically down;  without
+	this the client will leave its keyboard in the wrong logical
+	state.
+	*/
+	void				localControl();
+
 	//! Close screen
 	/*!
-	Closes the screen.  This restores the screen saver, shows the cursor
-	and closes the screen.  It also synthesizes key up events for any
-	keys that are logically down;  without this the client will leave
-	its keyboard in the wrong logical state.
+	Closes the screen.
 	*/
 	void				close();
 
@@ -331,6 +344,13 @@ protected:
 	when synthesizing events.
 	*/
 	virtual void		updateKeys() = 0;
+
+	//! Release keys
+	/*!
+	Synthesizes key release event for any key that our key state
+	says is down.
+	*/
+	virtual void		releaseKeys() = 0;
 
 	//! Synchronize toggle key state
 	/*!

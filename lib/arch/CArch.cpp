@@ -23,6 +23,7 @@
 #undef ARCH_NETWORK
 #undef ARCH_SLEEP
 #undef ARCH_STRING
+#undef ARCH_TASKBAR
 #undef ARCH_TIME
 
 // include appropriate architecture implementation
@@ -35,6 +36,7 @@
 #	include "CArchNetworkWinsock.h"
 #	include "CArchSleepWindows.h"
 #	include "CArchStringWindows.h"
+#	include "CArchTaskBarWindows.h"
 #	include "CArchTimeWindows.h"
 #elif UNIX_LIKE
 #	include "CArchConsoleUnix.h"
@@ -47,6 +49,7 @@
 #	include "CArchNetworkBSD.h"
 #	include "CArchSleepUnix.h"
 #	include "CArchStringUnix.h"
+#	include "CArchTaskBarXWindows.h"
 #	include "CArchTimeUnix.h"
 #endif
 
@@ -82,6 +85,10 @@
 #	error unsupported platform for string
 #endif
 
+#if !defined(ARCH_TASKBAR)
+#	error unsupported platform for taskbar
+#endif
+
 #if !defined(ARCH_TIME)
 #	error unsupported platform for time
 #endif
@@ -92,7 +99,7 @@
 
 CArch*					CArch::s_instance = NULL;
 
-CArch::CArch(ARCH_ARGS)
+CArch::CArch(ARCH_ARGS* args)
 {
 	// only once instance of CArch
 	assert(s_instance == NULL);
@@ -108,11 +115,13 @@ CArch::CArch(ARCH_ARGS)
 	m_time    = new ARCH_TIME;
 	m_console = new ARCH_CONSOLE;
 	m_daemon  = new ARCH_DAEMON;
+	m_taskbar = new ARCH_TASKBAR(args);
 }
 
 CArch::~CArch()
 {
 	// clean up
+	delete m_taskbar;
 	delete m_daemon;
 	delete m_console;
 	delete m_time;
@@ -337,10 +346,10 @@ CArch::wait(CArchThread thread, double timeout)
 	return m_mt->wait(thread, timeout);
 }
 
-bool
-CArch::waitForEvent(double timeout)
+IArchMultithread::EWaitResult
+CArch::waitForEvent(CArchThread thread, double timeout)
 {
-	return m_mt->waitForEvent(timeout);
+	return m_mt->waitForEvent(thread, timeout);
 }
 
 bool
@@ -575,6 +584,24 @@ IArchString::EWideCharEncoding
 CArch::getWideCharEncoding()
 {
 	return m_string->getWideCharEncoding();
+}
+
+void
+CArch::addReceiver(IArchTaskBarReceiver* receiver)
+{
+	m_taskbar->addReceiver(receiver);
+}
+
+void
+CArch::removeReceiver(IArchTaskBarReceiver* receiver)
+{
+	m_taskbar->removeReceiver(receiver);
+}
+
+void
+CArch::updateReceiver(IArchTaskBarReceiver* receiver)
+{
+	m_taskbar->updateReceiver(receiver);
 }
 
 double

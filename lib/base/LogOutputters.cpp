@@ -156,3 +156,26 @@ CSystemLogOutputter::getNewline() const
 {
 	return "";
 }
+
+
+//
+// CSystemLogger
+//
+
+CSystemLogger::CSystemLogger(const char* title)
+{
+	// redirect log messages
+	m_syslog = new CSystemLogOutputter;
+	m_stop   = new CStopLogOutputter;
+	m_syslog->open(title);
+	CLOG->insert(m_stop);
+	CLOG->insert(m_syslog);
+}
+
+CSystemLogger::~CSystemLogger()
+{
+	CLOG->remove(m_syslog);
+	CLOG->remove(m_stop);
+	delete m_stop;
+	delete m_syslog;
+}

@@ -23,6 +23,7 @@
 #include "IArchNetwork.h"
 #include "IArchSleep.h"
 #include "IArchString.h"
+#include "IArchTaskBar.h"
 #include "IArchTime.h"
 
 /*!
@@ -31,7 +32,7 @@ This macro evaluates to the singleton CArch object.
 */
 #define ARCH	(CArch::getInstance())
 
-#define ARCH_ARGS
+#define ARCH_ARGS void
 
 //! Delegating mplementation of architecture dependent interfaces
 /*!
@@ -51,9 +52,10 @@ class CArch : public IArchConsole,
 				public IArchNetwork,
 				public IArchSleep,
 				public IArchString,
+				public IArchTaskBar,
 				public IArchTime {
 public:
-	CArch(ARCH_ARGS);
+	CArch(ARCH_ARGS* args = NULL);
 	~CArch();
 
 	//
@@ -114,7 +116,7 @@ public:
 	virtual void		setPriorityOfThread(CArchThread, int n);
 	virtual void		testCancelThread();
 	virtual bool		wait(CArchThread, double timeout);
-	virtual bool		waitForEvent(double timeout);
+	virtual EWaitResult	waitForEvent(CArchThread, double timeout);
 	virtual bool		isSameThread(CArchThread, CArchThread);
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);
@@ -164,6 +166,11 @@ public:
 	virtual EWideCharEncoding
 						getWideCharEncoding();
 
+	// IArchTaskBar
+	virtual void		addReceiver(IArchTaskBarReceiver*);
+	virtual void		removeReceiver(IArchTaskBarReceiver*);
+	virtual void		updateReceiver(IArchTaskBarReceiver*);
+
 	// IArchTime overrides
 	virtual double		time();
 
@@ -178,6 +185,7 @@ private:
 	IArchNetwork*		m_net;
 	IArchSleep*			m_sleep;
 	IArchString*		m_string;
+	IArchTaskBar*		m_taskbar;
 	IArchTime*			m_time;
 };
 
