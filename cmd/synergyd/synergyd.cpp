@@ -1,9 +1,11 @@
 #include "CServer.h"
 #include "CConfig.h"
+#include "IPrimaryScreenFactory.h"
 #include "CPlatform.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
 #include "CNetwork.h"
+#include "CTCPSocketFactory.h"
 #include "XSocket.h"
 #include "CLock.h"
 #include "CMutex.h"
@@ -12,6 +14,12 @@
 #include "CLog.h"
 #include "stdfstream.h"
 #include <cstring>
+
+#if WINDOWS_LIKE
+#include "CMSWindowsPrimaryScreen.h"
+#elif UNIX_LIKE
+#include "CXWindowsPrimaryScreen.h"
+#endif
 
 // platform dependent name of a daemon
 #if WINDOWS_LIKE
@@ -68,6 +76,32 @@ logLock(bool lock)
 
 
 //
+// platform dependent factories
+//
+
+class CPrimaryScreenFactory : public IPrimaryScreenFactory {
+public:
+	CPrimaryScreenFactory() { }
+	virtual ~CPrimaryScreenFactory() { }
+
+	// IPrimaryScreenFactory overrides
+	virtual CPrimaryScreen*
+						create(IScreenReceiver*, IPrimaryScreenReceiver*);
+};
+
+CPrimaryScreen*
+CPrimaryScreenFactory::create(IScreenReceiver* receiver,
+				IPrimaryScreenReceiver* primaryReceiver)
+{
+#if WINDOWS_LIKE
+	return new CMSWindowsPrimaryScreen(receiver, primaryReceiver);
+#elif UNIX_LIKE
+	return new CXWindowsPrimaryScreen(receiver, primaryReceiver);
+#endif
+}
+
+
+//
 // platform independent main
 //
 
@@ -117,6 +151,11 @@ realMain(CMutex* mutex)
 				// create server
 				s_server = new CServer(s_name);
 				s_server->setConfig(s_config);
+				s_server->setScreenFactory(new CPrimaryScreenFactory);
+				s_server->setSocketFactory(new CTCPSocketFactory);
+				s_server->setStreamFilterFactory(NULL);
+
+				// open server
 				if (s_server->open()) {
 					opened = true;
 

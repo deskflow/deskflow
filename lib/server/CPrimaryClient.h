@@ -7,6 +7,7 @@
 
 class IClipboard;
 class CPrimaryScreen;
+class IPrimaryScreenFactory;
 class IPrimaryScreenReceiver;
 class IServer;
 
@@ -19,9 +20,11 @@ treated as if it was on a client.
 class CPrimaryClient : public IScreenReceiver, public IClient {
 public:
 	/*!
-	\c name is the name of the server.
+	\c name is the name of the server.  the caller retains ownership of
+	\c factory.
 	*/
-	CPrimaryClient(IServer*, IPrimaryScreenReceiver*, const CString& name);
+	CPrimaryClient(IPrimaryScreenFactory* factory, IServer*,
+							IPrimaryScreenReceiver*, const CString& name);
 	~CPrimaryClient();
 
 	//! @name manipulators

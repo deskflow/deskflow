@@ -1,17 +1,19 @@
 #include "CServer.h"
 #include "CHTTPServer.h"
+#include "CPrimaryClient.h"
+#include "IPrimaryScreenFactory.h"
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
-#include "CPrimaryClient.h"
 #include "CProtocolUtil.h"
 #include "CClientProxy1_0.h"
 #include "ProtocolTypes.h"
 #include "XScreen.h"
 #include "XSynergy.h"
+#include "CTCPListenSocket.h"
 #include "IDataSocket.h"
-#include "IListenSocket.h"
 #include "ISocketFactory.h"
 #include "XSocket.h"
+#include "IStreamFilterFactory.h"
 #include "CLock.h"
 #include "CThread.h"
 #include "CTimerThread.h"
@@ -30,8 +32,9 @@ const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
 CServer::CServer(const CString& serverName) :
 	m_name(serverName),
 	m_bindTimeout(5.0 * 60.0),
+	m_screenFactory(NULL),
 	m_socketFactory(NULL),
-	m_securityFactory(NULL),
+	m_streamFilterFactory(NULL),
 	m_acceptClientThread(NULL),
 	m_active(NULL),
 	m_primaryClient(NULL),
@@ -45,7 +48,9 @@ CServer::CServer(const CString& serverName) :
 
 CServer::~CServer()
 {
-	// do nothing
+	delete m_screenFactory;
+	delete m_socketFactory;
+	delete m_streamFilterFactory;
 }
 
 bool
@@ -177,6 +182,30 @@ CServer::setConfig(const CConfig& config)
 	}
 
 	return true;
+}
+
+void
+CServer::setScreenFactory(IPrimaryScreenFactory* adopted)
+{
+	CLock lock(&m_mutex);
+	delete m_screenFactory;
+	m_screenFactory = adopted;
+}
+
+void
+CServer::setSocketFactory(ISocketFactory* adopted)
+{
+	CLock lock(&m_mutex);
+	delete m_socketFactory;
+	m_socketFactory = adopted;
+}
+
+void
+CServer::setStreamFilterFactory(IStreamFilterFactory* adopted)
+{
+	CLock lock(&m_mutex);
+	delete m_streamFilterFactory;
+	m_streamFilterFactory = adopted;
 }
 
 CString
@@ -695,6 +724,8 @@ CServer::isLockedToScreenNoLock() const
 void
 CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 {
+	// note -- must be locked on entry
+
 	assert(dst != NULL);
 #ifndef NDEBUG
 	{
@@ -706,7 +737,6 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 	assert(m_active != NULL);
 
 	log((CLOG_INFO "switch from \"%s\" to \"%s\" at %d,%d", m_active->getName().c_str(), dst->getName().c_str(), x, y));
-	// FIXME -- we're not locked here but we probably should be
 
 	// record new position
 	m_x = x;
@@ -1112,7 +1142,6 @@ CServer::doReapThreads(CThreadList& threads)
 	}
 }
 
-#include "CTCPListenSocket.h"
 void
 CServer::acceptClients(void*)
 {
@@ -1121,8 +1150,10 @@ CServer::acceptClients(void*)
 	IListenSocket* listen = NULL;
 	try {
 		// create socket listener
-//		listen = std::auto_ptr<IListenSocket>(m_socketFactory->createListen());
-		listen = new CTCPListenSocket; // FIXME -- use factory
+		if (m_socketFactory != NULL) {
+			listen = m_socketFactory->createListen();
+		}
+		assert(listen != NULL);
 
 		// bind to the desired port.  keep retrying if we can't bind
 		// the address immediately.
@@ -1242,14 +1273,12 @@ CServer::runClient(void* vsocket)
 	}
 	catch (XBadClient&) {
 		// client not behaving
-		// FIXME -- could print network address if socket had suitable method
 		log((CLOG_WARN "protocol error from client \"%s\"", proxy->getName().c_str()));
 		CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBad);
 	}
 	catch (XBase& e) {
 		// misc error
 		log((CLOG_WARN "error communicating with client \"%s\": %s", proxy->getName().c_str(), e.what()));
-		// FIXME -- could print network address if socket had suitable method
 	}
 	catch (...) {
 		// mainLoop() was probably cancelled
@@ -1273,13 +1302,11 @@ CServer::handshakeClient(IDataSocket* socket)
 	IOutputStream* output = socket->getOutputStream();
 	bool own              = false;
 
-	// attach the encryption layer
-	if (m_securityFactory != NULL) {
-/* FIXME -- implement ISecurityFactory
-		input  = m_securityFactory->createInputFilter(input, own);
-		output = m_securityFactory->createOutputFilter(output, own);
+	// attach filters
+	if (m_streamFilterFactory != NULL) {
+		input  = m_streamFilterFactory->createInput(input, own);
+		output = m_streamFilterFactory->createOutput(output, own);
 		own    = true;
-*/
 	}
 
 	// attach the packetizing filters
@@ -1293,13 +1320,9 @@ CServer::handshakeClient(IDataSocket* socket)
 		// give the client a limited time to complete the handshake
 		CTimerThread timer(30.0);
 
-		// limit the maximum length of the hello
-// FIXME -- should be in protocol types;  may become obsolete anyway
-		static const UInt32 maxHelloLen = 1024;
-
 		// say hello
 		log((CLOG_DEBUG1 "saying hello"));
-		CProtocolUtil::writef(output, "Synergy%2i%2i",
+		CProtocolUtil::writef(output, kMsgHello,
 										kProtocolMajorVersion,
 										kProtocolMinorVersion);
 		output->flush();
@@ -1307,7 +1330,9 @@ CServer::handshakeClient(IDataSocket* socket)
 		// wait for the reply
 		log((CLOG_DEBUG1 "waiting for hello reply"));
 		UInt32 n = input->getSize();
-		if (n > maxHelloLen) {
+
+		// limit the maximum length of the hello
+		if (n > kMaxHelloLength) {
 			throw XBadClient();
 		}
 
@@ -1315,7 +1340,7 @@ CServer::handshakeClient(IDataSocket* socket)
 		SInt16 major, minor;
 		try {
 			log((CLOG_DEBUG1 "parsing hello reply"));
-			CProtocolUtil::readf(input, "Synergy%2i%2i%s",
+			CProtocolUtil::readf(input, kMsgHelloBack,
 										&major, &minor, &name);
 		}
 		catch (XIO&) {
@@ -1358,21 +1383,18 @@ CServer::handshakeClient(IDataSocket* socket)
 	}
 	catch (XIncompatibleClient& e) {
 		// client is incompatible
-		// FIXME -- could print network address if socket had suitable method
 		log((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
 		CProtocolUtil::writef(output, kMsgEIncompatible,
 							kProtocolMajorVersion, kProtocolMinorVersion);
 	}
 	catch (XBadClient&) {
 		// client not behaving
-		// FIXME -- could print network address if socket had suitable method
 		log((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
 		CProtocolUtil::writef(output, kMsgEBad);
 	}
 	catch (XBase& e) {
 		// misc error
 		log((CLOG_WARN "error communicating with client \"%s\": %s", name.c_str(), e.what()));
-		// FIXME -- could print network address if socket had suitable method
 	}
 	catch (...) {
 		// probably timed out
@@ -1406,8 +1428,7 @@ CServer::acceptHTTPClients(void*)
 	IListenSocket* listen = NULL;
 	try {
 		// create socket listener
-//		listen = std::auto_ptr<IListenSocket>(m_socketFactory->createListen());
-		listen = new CTCPListenSocket; // FIXME -- use factory
+		listen = new CTCPListenSocket;
 
 		// bind to the desired port.  keep retrying if we can't bind
 		// the address immediately.
@@ -1462,7 +1483,6 @@ CServer::acceptHTTPClients(void*)
 	catch (XBase& e) {
 		log((CLOG_ERR "cannot listen for HTTP clients: %s", e.what()));
 		delete listen;
-		// FIXME -- quit?
 		exitMainLoop();
 	}
 	catch (...) {
@@ -1509,20 +1529,21 @@ void
 CServer::openPrimaryScreen()
 {
 	assert(m_primaryClient == NULL);
+	assert(m_screenFactory != NULL);
 
 	// reset sequence number
 	m_seqNum = 0;
 
 	// canonicalize the primary screen name
-	CString primary = m_config.getCanonicalName(getPrimaryScreenName());
-	if (primary.empty()) {
+	CString primaryName = m_config.getCanonicalName(getPrimaryScreenName());
+	if (primaryName.empty()) {
 		throw XUnknownClient(getPrimaryScreenName());
 	}
 
 	// clear clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		CClipboardInfo& clipboard   = m_clipboards[id];
-		clipboard.m_clipboardOwner  = primary;
+		clipboard.m_clipboardOwner  = primaryName;
 		clipboard.m_clipboardSeqNum = m_seqNum;
 		if (clipboard.m_clipboard.open(0)) {
 			clipboard.m_clipboard.empty();
@@ -1531,9 +1552,10 @@ CServer::openPrimaryScreen()
 		clipboard.m_clipboardData   = clipboard.m_clipboard.marshall();
 	}
 
-	// create the primary client and open it
 	try {
-		m_primaryClient = new CPrimaryClient(this, this, primary);
+		// create the primary client
+		m_primaryClient = new CPrimaryClient(m_screenFactory,
+								this, this, primaryName);
 
 		// add connection
 		addConnection(m_primaryClient);
@@ -1548,7 +1570,7 @@ CServer::openPrimaryScreen()
 	}
 	catch (...) {
 		if (m_active != NULL) {
-			removeConnection(primary);
+			removeConnection(primaryName);
 		}
 		else {
 			delete m_primaryClient;

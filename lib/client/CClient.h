@@ -12,6 +12,9 @@ class CServerProxy;
 class CThread;
 class IDataSocket;
 class IScreenReceiver;
+class ISecondaryScreenFactory;
+class ISocketFactory;
+class IStreamFilterFactory;
 
 //! Synergy client
 /*!
@@ -43,6 +46,30 @@ public:
 	Sets the server's address that the client should connect to.
 	*/
 	void				setAddress(const CNetworkAddress& serverAddress);
+
+	//! Set secondary screen factory
+	/*!
+	Sets the factory for creating secondary screens.  This must be
+	set before calling open().  This object takes ownership of the
+	factory.
+	*/
+	void				setScreenFactory(ISecondaryScreenFactory*);
+
+	//! Set socket factory
+	/*!
+	Sets the factory used to create a socket to connect to the server.
+	This must be set before calling mainLoop().  This object takes
+	ownership of the factory.
+	*/
+	void				setSocketFactory(ISocketFactory*);
+
+	//! Set stream filter factory
+	/*!
+	Sets the factory used to filter the socket streams used to
+	communicate with the server.  This object takes ownership
+	of the factory.
+	*/
+	void				setStreamFilterFactory(IStreamFilterFactory*);
 
 	//! Exit event loop
 	/*!
@@ -117,6 +144,9 @@ private:
 	IScreenReceiver*	m_server;
 	CNetworkAddress		m_serverAddress;
 	bool				m_camp;
+	ISecondaryScreenFactory*	m_screenFactory;
+	ISocketFactory*				m_socketFactory;
+	IStreamFilterFactory*		m_streamFilterFactory;
 	CThread*			m_session;
 	bool				m_active;
 	bool				m_rejected;

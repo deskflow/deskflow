@@ -16,9 +16,10 @@ class CHTTPServer;
 class CPrimaryClient;
 class IClient;
 class IDataSocket;
+class IPrimaryScreenFactory;
 class IServerProtocol;
 class ISocketFactory;
-class ISecurityFactory;
+class IStreamFilterFactory;
 
 //! Synergy server
 /*!
@@ -72,6 +73,30 @@ public:
 	This will disconnect any clients no longer in the configuration.
 	*/
 	bool				setConfig(const CConfig&);
+
+	//! Set primary screen factory
+	/*!
+	Sets the factory for creating primary screens.  This must be
+	set before calling open().  This object takes ownership of the
+	factory.
+	*/
+	void				setScreenFactory(IPrimaryScreenFactory*);
+
+	//! Set socket factory
+	/*!
+	Sets the factory used to create a socket to connect to the server.
+	This must be set before calling mainLoop().  This object takes
+	ownership of the factory.
+	*/
+	void				setSocketFactory(ISocketFactory*);
+
+	//! Set stream filter factory
+	/*!
+	Sets the factory used to filter the socket streams used to
+	communicate with the server.  This object takes ownership
+	of the factory.
+	*/
+	void				setStreamFilterFactory(IStreamFilterFactory*);
 
 	//@}
 	//! @name accessors
@@ -207,8 +232,10 @@ private:
 	// how long to wait to bind our socket until we give up
 	double				m_bindTimeout;
 
-	ISocketFactory*		m_socketFactory;
-	ISecurityFactory*	m_securityFactory;
+	// factories
+	IPrimaryScreenFactory*	m_screenFactory;
+	ISocketFactory*			m_socketFactory;
+	IStreamFilterFactory*	m_streamFilterFactory;
 
 	// running threads
 	CThreadList			m_threads;

@@ -10,6 +10,9 @@ static const SInt16		kProtocolMinorVersion = 7;
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
 
+// maximum total length for greeting returned by client
+static const UInt32		kMaxHelloLength = 1024;
+
 // time between heartbeats (in seconds)
 static const double		kHeartRate = 2.0;
 
@@ -36,12 +39,29 @@ enum EDirectionMask {
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
 // refers to the n'th argument (counting from one).  message codes are
-// always 4 bytes optionally followed by message specific parameters.
+// always 4 bytes optionally followed by message specific parameters
+// except those for the greeting handshake.
 //
 
 //
 // positions and sizes are signed 16 bit integers.
 //
+
+//
+// greeting handshake messages
+//
+
+// say hello to client;  primary -> secondary
+// $1 = protocol major version number supported by server.  $2 =
+// protocol minor version number supported by server.
+static const char		kMsgHello[]			= "Synergy%2i%2i";
+
+// respond to hello from server;  secondary -> primary
+// $1 = protocol major version number supported by client.  $2 =
+// protocol minor version number supported by client.  $3 = client
+// name.
+static const char		kMsgHelloBack[]		= "Synergy%2i%2i%s";
+
 
 //
 // command codes

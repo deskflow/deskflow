@@ -1,9 +1,11 @@
 #include "CClient.h"
+#include "ISecondaryScreenFactory.h"
 #include "CPlatform.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
 #include "CNetwork.h"
 #include "CNetworkAddress.h"
+#include "CTCPSocketFactory.h"
 #include "XSocket.h"
 #include "CCondVar.h"
 #include "CLock.h"
@@ -13,6 +15,12 @@
 #include "CLog.h"
 #include "CString.h"
 #include <cstring>
+
+#if WINDOWS_LIKE
+#include "CMSWindowsSecondaryScreen.h"
+#elif UNIX_LIKE
+#include "CXWindowsSecondaryScreen.h"
+#endif
 
 // platform dependent name of a daemon
 #if WINDOWS_LIKE
@@ -58,6 +66,31 @@ logLock(bool lock)
 
 
 //
+// platform dependent factories
+//
+
+class CSecondaryScreenFactory : public ISecondaryScreenFactory {
+public:
+	CSecondaryScreenFactory() { }
+	virtual ~CSecondaryScreenFactory() { }
+
+	// ISecondaryScreenFactory overrides
+	virtual CSecondaryScreen*
+						create(IScreenReceiver*);
+};
+
+CSecondaryScreen*
+CSecondaryScreenFactory::create(IScreenReceiver* receiver)
+{
+#if WINDOWS_LIKE
+	return new CMSWindowsSecondaryScreen(receiver);
+#elif UNIX_LIKE
+	return new CXWindowsSecondaryScreen(receiver);
+#endif
+}
+
+
+//
 // platform independent main
 //
 
@@ -87,6 +120,11 @@ realMain(CMutex* mutex)
 				s_client = new CClient(s_name);
 				s_client->camp(s_camp);
 				s_client->setAddress(s_serverAddress);
+				s_client->setScreenFactory(new CSecondaryScreenFactory);
+				s_client->setSocketFactory(new CTCPSocketFactory);
+				s_client->setStreamFilterFactory(NULL);
+
+				// open client
 				if (s_client->open()) {
 					opened = true;
 

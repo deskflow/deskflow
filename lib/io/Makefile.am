@@ -17,6 +17,7 @@ libio_a_SOURCES = 				\
 	CStreamBuffer.h				\
 	IInputStream.h				\
 	IOutputStream.h				\
+	IStreamFilterFactory.h		\
 	XIO.h						\
 	$(NULL)
 INCLUDES =						\

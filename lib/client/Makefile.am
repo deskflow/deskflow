@@ -12,6 +12,7 @@ libclient_a_SOURCES = 				\
 	CSecondaryScreen.h				\
 	CServerProxy.h					\
 	CXWindowsSecondaryScreen.h		\
+	ISecondaryScreenFactory.h		\
 	$(NULL)
 INCLUDES =							\
 	-I$(DEPTH)/lib/base 			\

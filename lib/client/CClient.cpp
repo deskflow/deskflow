@@ -1,5 +1,6 @@
 #include "CClient.h"
 #include "CServerProxy.h"
+#include "ISecondaryScreenFactory.h"
 #include "CClipboard.h"
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
@@ -9,7 +10,10 @@
 #include "ProtocolTypes.h"
 #include "XScreen.h"
 #include "XSynergy.h"
+#include "IDataSocket.h"
+#include "ISocketFactory.h"
 #include "XSocket.h"
+#include "IStreamFilterFactory.h"
 #include "CLock.h"
 #include "CThread.h"
 #include "CTimerThread.h"
@@ -27,6 +31,9 @@ CClient::CClient(const CString& clientName) :
 	m_screen(NULL),
 	m_server(NULL),
 	m_camp(false),
+	m_screenFactory(NULL),
+	m_socketFactory(NULL),
+	m_streamFilterFactory(NULL),
 	m_session(NULL),
 	m_active(false),
 	m_rejected(true)
@@ -36,7 +43,9 @@ CClient::CClient(const CString& clientName) :
 
 CClient::~CClient()
 {
-	// do nothing
+	delete m_screenFactory;
+	delete m_socketFactory;
+	delete m_streamFilterFactory;
 }
 
 void
@@ -51,6 +60,30 @@ CClient::setAddress(const CNetworkAddress& serverAddress)
 {
 	CLock lock(&m_mutex);
 	m_serverAddress = serverAddress;
+}
+
+void
+CClient::setScreenFactory(ISecondaryScreenFactory* adopted)
+{
+	CLock lock(&m_mutex);
+	delete m_screenFactory;
+	m_screenFactory = adopted;
+}
+
+void
+CClient::setSocketFactory(ISocketFactory* adopted)
+{
+	CLock lock(&m_mutex);
+	delete m_socketFactory;
+	m_socketFactory = adopted;
+}
+
+void
+CClient::setStreamFilterFactory(IStreamFilterFactory* adopted)
+{
+	CLock lock(&m_mutex);
+	delete m_streamFilterFactory;
+	m_streamFilterFactory = adopted;
 }
 
 void
@@ -331,16 +364,11 @@ CClient::getCursorCenter(SInt32&, SInt32&) const
 	assert(0 && "shouldn't be called");
 }
 
-// FIXME -- use factory to create screen
-#if WINDOWS_LIKE
-#include "CMSWindowsSecondaryScreen.h"
-#elif UNIX_LIKE
-#include "CXWindowsSecondaryScreen.h"
-#endif
 void
 CClient::openSecondaryScreen()
 {
 	assert(m_screen == NULL);
+	assert(m_screenFactory != NULL);
 
 	// not active
 	m_active = false;
@@ -351,15 +379,16 @@ CClient::openSecondaryScreen()
 		m_timeClipboard[id] = 0;
 	}
 
-	// open screen
+	// create screen
 	log((CLOG_DEBUG1 "creating secondary screen"));
-#if WINDOWS_LIKE
-	m_screen = new CMSWindowsSecondaryScreen(this);
-#elif UNIX_LIKE
-	m_screen = new CXWindowsSecondaryScreen(this);
-#endif
-	log((CLOG_DEBUG1 "opening secondary screen"));
+	m_screen = m_screenFactory->create(this);
+	if (m_screen == NULL) {
+		throw XScreenOpenFailure();
+	}
+
+	// open screen
 	try {
+		log((CLOG_DEBUG1 "opening secondary screen"));
 		m_screen->open();
 	}
 	catch (...) {
@@ -459,7 +488,6 @@ CClient::deleteSession(double timeout)
 	}
 }
 
-#include "CTCPSocket.h" // FIXME
 void
 CClient::runServer()
 {
@@ -469,12 +497,14 @@ CClient::runServer()
 		for (;;) {
 			try {
 				// allow connect this much time to succeed
-				// FIXME -- timeout in member
 				CTimerThread timer(m_camp ? -1.0 : 30.0);
 
 				// create socket and attempt to connect to server
 				log((CLOG_DEBUG1 "connecting to server"));
-				socket = new CTCPSocket; // FIXME -- use factory
+				if (m_socketFactory != NULL) {
+					socket = m_socketFactory->create();
+				}
+				assert(socket != NULL);
 				socket->connect(m_serverAddress);
 				log((CLOG_INFO "connected to server"));
 				break;
@@ -553,14 +583,12 @@ CClient::handshakeServer(IDataSocket* socket)
 	IOutputStream* output = socket->getOutputStream();
 	bool own              = false;
 
-	// attach the encryption layer
-/* FIXME -- implement ISecurityFactory
-	if (m_securityFactory != NULL) {
-		input  = m_securityFactory->createInputFilter(input, own);
-		output = m_securityFactory->createOutputFilter(output, own);
+	// attach filters
+	if (m_streamFilterFactory != NULL) {
+		input  = m_streamFilterFactory->createInput(input, own);
+		output = m_streamFilterFactory->createOutput(output, own);
 		own    = true;
 	}
-*/
 
 	// attach the packetizing filters
 	input  = new CInputPacketStream(input, own);
@@ -575,7 +603,7 @@ CClient::handshakeServer(IDataSocket* socket)
 		// wait for hello from server
 		log((CLOG_DEBUG1 "wait for hello"));
 		SInt16 major, minor;
-		CProtocolUtil::readf(input, "Synergy%2i%2i", &major, &minor);
+		CProtocolUtil::readf(input, kMsgHello, &major, &minor);
 
 		// check versions
 		log((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
@@ -586,7 +614,7 @@ CClient::handshakeServer(IDataSocket* socket)
 
 		// say hello back
 		log((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
-		CProtocolUtil::writef(output, "Synergy%2i%2i%s",
+		CProtocolUtil::writef(output, kMsgHelloBack,
 								kProtocolMajorVersion,
 								kProtocolMinorVersion, &m_name);
 

@@ -6,17 +6,20 @@ noinst_LIBRARIES = libnet.a
 libnet_a_SOURCES = 			\
 	CNetwork.cpp			\
 	CNetworkAddress.cpp		\
-	CTCPSocket.cpp			\
 	CTCPListenSocket.cpp	\
+	CTCPSocket.cpp			\
+	CTCPSocketFactory.cpp	\
 	XNetwork.cpp			\
 	XSocket.cpp				\
 	CNetwork.h				\
 	CNetworkAddress.h		\
 	CTCPListenSocket.h		\
 	CTCPSocket.h			\
+	CTCPSocketFactory.h		\
 	IDataSocket.h			\
 	IListenSocket.h			\
 	ISocket.h				\
+	ISocketFactory.h		\
 	XNetwork.h				\
 	XSocket.h				\
 	$(NULL)

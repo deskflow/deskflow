@@ -8,14 +8,12 @@ libsynergy_a_SOURCES = 		\
 	COutputPacketStream.cpp	\
 	CProtocolUtil.cpp		\
 	CClipboard.cpp			\
-	CTCPSocketFactory.cpp	\
 	XScreen.cpp				\
 	XSynergy.cpp			\
 	CClipboard.h			\
 	CInputPacketStream.h	\
 	COutputPacketStream.h	\
 	CProtocolUtil.h			\
-	CTCPSocketFactory.h		\
 	ClipboardTypes.h		\
 	IClient.h				\
 	IClipboard.h			\
@@ -25,7 +23,6 @@ libsynergy_a_SOURCES = 		\
 	IScreenReceiver.h		\
 	IScreenSaver.h			\
 	IServer.h				\
-	ISocketFactory.h		\
 	KeyTypes.h				\
 	MouseTypes.h			\
 	ProtocolTypes.h			\

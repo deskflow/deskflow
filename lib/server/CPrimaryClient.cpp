@@ -1,36 +1,29 @@
 #include "CPrimaryClient.h"
+#include "IPrimaryScreenFactory.h"
 #include "IServer.h"
 #include "XSynergy.h"
 #include "CPrimaryScreen.h"
 #include "CClipboard.h"
 #include "CLog.h"
 
-// FIXME -- use factory to create screen
-#if WINDOWS_LIKE
-#include "CMSWindowsPrimaryScreen.h"
-#elif UNIX_LIKE
-#include "CXWindowsPrimaryScreen.h"
-#endif
-
 //
 // CPrimaryClient
 //
 
-CPrimaryClient::CPrimaryClient(IServer* server,
-				IPrimaryScreenReceiver* receiver, const CString& name) :
+CPrimaryClient::CPrimaryClient(IPrimaryScreenFactory* screenFactory,
+				IServer* server,
+				IPrimaryScreenReceiver* receiver,
+				const CString& name) :
 	m_server(server),
 	m_name(name),
 	m_seqNum(0)
 {
 	assert(m_server != NULL);
+	assert(screenFactory != NULL);
 
 	// create screen
 	log((CLOG_DEBUG1 "creating primary screen"));
-#if WINDOWS_LIKE
-	m_screen = new CMSWindowsPrimaryScreen(this, receiver);
-#elif UNIX_LIKE
-	m_screen = new CXWindowsPrimaryScreen(this, receiver);
-#endif
+	m_screen = screenFactory->create(this, receiver);
 }
 
 CPrimaryClient::~CPrimaryClient()

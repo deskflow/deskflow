@@ -20,6 +20,7 @@ libserver_a_SOURCES = 				\
 	CPrimaryScreen.h				\
 	CServer.h						\
 	CXWindowsPrimaryScreen.h		\
+	IPrimaryScreenFactory.h			\
 	$(NULL)
 INCLUDES =							\
 	-I$(DEPTH)/lib/base 			\
