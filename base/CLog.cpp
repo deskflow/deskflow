@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #define vsnprintf _vsnprintf
@@ -41,6 +41,13 @@ static const int		g_prioritySuffixLength = 2;
 // amount of padded required to fill in the priority prefix
 static const int		g_priorityPad = g_maxPriorityLength +
 										g_prioritySuffixLength;
+
+// platform newline sequence
+#if WINDOWS_LIKE
+static const char*		g_newline = "\r\n";
+#else
+static const char*		g_newline = "\n";
+#endif
 
 // minimum length of a newline sequence
 static const int		g_newlineLength = 2;
@@ -226,17 +233,13 @@ CLog::output(int priority, char* msg)
 	}
 
 	// put a newline at the end
-#if defined(CONFIG_PLATFORM_WIN32)
-	strcat(msg + g_priorityPad, "\r\n");
-#else
-	strcat(msg + g_priorityPad, "\n");
-#endif
+	strcat(msg + g_priorityPad, g_newline);
 
 	// print it
 	CHoldLock lock(s_lock);
 	if (s_outputter == NULL ||
 		!s_outputter(priority, msg + g_maxPriorityLength - n)) {
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 		openConsole();
 #endif
 		fprintf(stderr, "%s", msg + g_maxPriorityLength - n);
@@ -268,7 +271,7 @@ CLog::vsprint(int pad, char* buffer, int len, const char* fmt, va_list args)
 	return buffer;
 }
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 static DWORD			s_thread = 0;
 

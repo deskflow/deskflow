@@ -3,7 +3,11 @@
 
 #include "CString.h"
 #include "BasicTypes.h"
-#include <X11/Xlib.h>
+#if defined(X_DISPLAY_MISSING)
+#	error X11 is required to build synergy
+#else
+#	include <X11/Xlib.h>
+#endif
 
 class CXWindowsUtil {
 public:

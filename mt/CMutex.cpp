@@ -26,7 +26,7 @@ CMutex::operator=(const CMutex&)
 	return *this;
 }
 
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 
 #include <pthread.h>
 #include <cerrno>
@@ -98,9 +98,9 @@ CMutex::unlock() const
 	}
 }
 
-#endif // CONFIG_PTHREADS
+#endif // HAVE_PTHREAD
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -133,4 +133,4 @@ CMutex::unlock() const
 	LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
 }
 
-#endif // CONFIG_PLATFORM_WIN32
+#endif // WINDOWS_LIKE

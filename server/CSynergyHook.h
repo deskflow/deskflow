@@ -2,17 +2,18 @@
 #define CSYNERGYHOOK_H
 
 #include "BasicTypes.h"
+
+#if WINDOWS_LIKE
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#else
+#error CSynergyHook is a win32 specific file
+#endif
 
-#if defined(CONFIG_PLATFORM_WIN32)
 #if defined(SYNRGYHK_EXPORTS)
 #define CSYNERGYHOOK_API __declspec(dllexport)
 #else
 #define CSYNERGYHOOK_API __declspec(dllimport)
-#endif
-#else
-#define CSYNERGYHOOK_API
 #endif
 
 #define SYNERGY_MSG_MARK			WM_APP + 0x0011	// mark id; <unused>

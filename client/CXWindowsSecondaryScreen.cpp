@@ -4,12 +4,20 @@
 #include "CXWindowsUtil.h"
 #include "CThread.h"
 #include "CLog.h"
-#include <X11/X.h>
-#include <X11/Xutil.h>
-#define XK_MISCELLANY
-#define XK_XKB_KEYS
-#include <X11/keysymdef.h>
-#include <X11/extensions/XTest.h>
+#if defined(X_DISPLAY_MISSING)
+#	error X11 is required to build synergy
+#else
+#	include <X11/X.h>
+#	include <X11/Xutil.h>
+#	define XK_MISCELLANY
+#	define XK_XKB_KEYS
+#	include <X11/keysymdef.h>
+#	if defined(HAVE_X11_EXTENSIONS_XTEST_H)
+#		include <X11/extensions/XTest.h>
+#	else
+#		error The XTest extension is required to build synergy
+#	endif
+#endif
 
 //
 // CXWindowsSecondaryScreen

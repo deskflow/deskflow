@@ -110,21 +110,7 @@ CStopwatch::operator double() const
 	return getTime();
 }
 
-#if defined(CONFIG_PLATFORM_UNIX)
-
-#include <sys/time.h>
-
-double
-CStopwatch::getClock() const
-{
-	struct timeval t;
-	gettimeofday(&t, NULL);
-	return (double)t.tv_sec + 1.0e-6 * (double)t.tv_usec;
-}
-
-#endif // CONFIG_PLATFORM_UNIX
-
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 // avoid getting a lot a crap from mmsystem.h that we don't need
 #define MMNODRV         // Installable driver support
@@ -198,4 +184,28 @@ CStopwatch::getClock() const
 	}
 }
 
-#endif // CONFIG_PLATFORM_WIN32
+#elif UNIX_LIKE
+
+#if TIME_WITH_SYS_TIME
+#	include <sys/time.h>
+#	include <time.h>
+#else
+#	if HAVE_SYS_TIME_H
+#		include <sys/time.h>
+#	else
+#		include <time.h>
+#	endif
+#endif
+#if HAVE_UNISTD_H
+#	include <unistd.h>
+#endif
+
+double
+CStopwatch::getClock() const
+{
+	struct timeval t;
+	gettimeofday(&t, NULL);
+	return (double)t.tv_sec + 1.0e-6 * (double)t.tv_usec;
+}
+
+#endif // UNIX_LIKE

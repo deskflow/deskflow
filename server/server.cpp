@@ -14,16 +14,16 @@
 #include <cstring>
 
 // platform dependent name of a daemon
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 #define DAEMON_NAME "Synergy Server"
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 #define DAEMON_NAME "synergyd"
 #endif
 
 // configuration file name
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 #define CONFIG_NAME "synergy.sgc"
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 #define CONFIG_NAME "synergy.conf"
 #endif
 
@@ -34,7 +34,7 @@
 static const char*		pname         = NULL;
 static bool				s_restartable = true;
 static bool				s_daemon      = true;
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 static bool				s_install     = false;
 static bool				s_uninstall   = false;
 #endif
@@ -209,7 +209,7 @@ static
 void
 help()
 {
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 #  define PLATFORM_ARGS												\
 " {--daemon|--no-daemon}"											\
@@ -398,7 +398,7 @@ parse(int argc, const char** argv)
 			bye(0);
 		}
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 		else if (isArg(i, argc, argv, NULL, "--install")) {
 			s_install = true;
 			if (s_uninstall) {
@@ -410,7 +410,7 @@ parse(int argc, const char** argv)
 		}
 #endif
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 		else if (isArg(i, argc, argv, NULL, "--uninstall")) {
 			s_uninstall = true;
 			if (s_install) {
@@ -450,7 +450,7 @@ parse(int argc, const char** argv)
 	// increase default filter level for daemon.  the user must
 	// explicitly request another level for a daemon.
 	if (s_daemon && s_logFilter == NULL) {
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 		if (CPlatform::isWindows95Family()) {
 			// windows 95 has no place for logging so avoid showing
 			// the log console window.
@@ -541,7 +541,7 @@ loadConfig()
 // platform dependent entry points
 //
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 #include "CMSWindowsScreen.h"
 
@@ -726,7 +726,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	return result;
 }
 
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 
 static
 int

@@ -1,14 +1,12 @@
 #include "stdpre.h"
-#if !defined(CONFIG_PLATFORM_LINUX)
+#if defined(HAVE_ISTREAM)
 #include <istream>
 #else
-// some versions of libstdc++ don't have <istream>
-// FIXME -- only include iostream for versions that don't have istream
 #include <iostream>
 #endif
 #include "stdpost.h"
 
-#if defined(CONFIG_PLATFORM_WIN32) && defined(_MSC_VER)
+#if defined(_MSC_VER)
 // istream has no overloads for __int* types
 inline
 std::istream& operator>>(std::istream& s, SInt8& i)

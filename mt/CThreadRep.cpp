@@ -6,32 +6,26 @@
 #include "CLog.h"
 #include "IJob.h"
 
-#if defined(CONFIG_PTHREADS)
-#include <signal.h>
-#define SIGWAKEUP SIGUSR1
-#endif
+#if HAVE_PTHREAD
 
-#if defined(CONFIG_PLATFORM_WIN32)
-# if !defined(_MT)
-#  error multithreading compile option is required
-# endif
-#include <process.h>
+#	include <signal.h>
+#	define SIGWAKEUP SIGUSR1
+
+#elif WINDOWS_LIKE
+
+#	if !defined(_MT)
+#		error multithreading compile option is required
+#	endif
+#	include <process.h>
+
+#else
+
+#error unsupported platform for multithreading
+
 #endif
 
 // FIXME -- temporary exception type
 class XThreadUnavailable { };
-
-#if defined(CONFIG_PLATFORM_UNIX) && !defined(NDEBUG)
-#include <cstdlib>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-static void threadDebug(int)
-{
-	if (fork() == 0) abort();
-	else { wait(0); exit(1); }
-}
-#endif
 
 //
 // CThreadRep
@@ -39,7 +33,7 @@ static void threadDebug(int)
 
 CMutex*					CThreadRep::s_mutex = NULL;
 CThreadRep*				CThreadRep::s_head = NULL;
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 pthread_t				CThreadRep::s_signalThread;
 #endif
 
@@ -55,10 +49,10 @@ CThreadRep::CThreadRep() :
 
 	// initialize stuff
 	init();
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 	// get main thread id
 	m_thread = pthread_self();
-#elif defined(CONFIG_PLATFORM_WIN32)
+#elif WINDOWS_LIKE
 	// get main thread id
 	m_thread = NULL;
 	m_id     = GetCurrentThreadId();
@@ -94,7 +88,7 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 	CLock lock(s_mutex);
 
 	// start the thread.  throw if it doesn't start.
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 	// mask some signals in all threads except the main thread
 	sigset_t sigset, oldsigset;
 	sigemptyset(&sigset);
@@ -106,7 +100,7 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 	if (status != 0) {
 		throw XThreadUnavailable();
 	}
-#elif defined(CONFIG_PLATFORM_WIN32)
+#elif WINDOWS_LIKE
 	unsigned int id;
 	m_thread = reinterpret_cast<HANDLE>(_beginthreadex(NULL, 0,
 								threadFunc, (void*)this, 0, &id));
@@ -151,7 +145,7 @@ CThreadRep::initThreads()
 	if (s_mutex == NULL) {
 		s_mutex = new CMutex;
 
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 		// install SIGWAKEUP handler
 		struct sigaction act;
 		sigemptyset(&act.sa_mask);
@@ -162,18 +156,11 @@ CThreadRep::initThreads()
 # endif
 		act.sa_handler = &threadCancel;
 		sigaction(SIGWAKEUP, &act, NULL);
-# ifndef NDEBUG
-		act.sa_handler = &threadDebug;
-		sigaction(SIGSEGV, &act, NULL);
-# endif
 
 		// set signal mask
 		sigset_t sigset;
 		sigemptyset(&sigset);
 		sigaddset(&sigset, SIGWAKEUP);
-# ifndef NDEBUG
-		sigaddset(&sigset, SIGSEGV);
-# endif
 		pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
 		sigemptyset(&sigset);
 		sigaddset(&sigset, SIGPIPE);
@@ -196,7 +183,7 @@ CThreadRep::initThreads()
 			sigaddset(&sigset, SIGTERM);
 			pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
 		}
-#endif
+#endif // HAVE_PTHREAD
 	}
 }
 
@@ -251,9 +238,9 @@ CThreadRep::getCurrentThreadRep()
 {
 	assert(s_mutex != NULL);
 
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 	const pthread_t thread = pthread_self();	
-#elif defined(CONFIG_PLATFORM_WIN32)
+#elif WINDOWS_LIKE
 	const DWORD id = GetCurrentThreadId();
 #endif
 
@@ -263,11 +250,11 @@ CThreadRep::getCurrentThreadRep()
 	// search
 	CThreadRep* scan = s_head;
 	while (scan != NULL) {
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 		if (scan->m_thread == thread) {
 			break;
 		}
-#elif defined(CONFIG_PLATFORM_WIN32)
+#elif WINDOWS_LIKE
 		if (scan->m_id == id) {
 			break;
 		}
@@ -326,10 +313,19 @@ CThreadRep::doThreadFunc()
 	m_result = result;
 }
 
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 
 #include "CStopwatch.h"
-#include <sys/time.h>
+#if TIME_WITH_SYS_TIME
+#	include <sys/time.h>
+#	include <time.h>
+#else
+#	if HAVE_SYS_TIME_H
+#		include <sys/time.h>
+#	else
+#		include <time.h>
+#	endif
+#endif
 
 void
 CThreadRep::init()
@@ -492,7 +488,9 @@ CThreadRep::threadSignalHandler(void* vrep)
 	}
 }
 
-#elif defined(CONFIG_PLATFORM_WIN32)
+#endif // HAVE_PTHREAD
+
+#if WINDOWS_LIKE
 
 void
 CThreadRep::init()
@@ -713,4 +711,4 @@ CThreadRep::threadFunc(void* arg)
 	return 0;
 }
 
-#endif
+#endif // WINDOWS_LIKE

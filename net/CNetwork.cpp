@@ -37,7 +37,7 @@ struct protoent FAR * (PASCAL FAR *CNetwork::getprotobyname)(const char FAR * na
 int (PASCAL FAR *CNetwork::getsockerror)(void);
 int (PASCAL FAR *CNetwork::gethosterror)(void);
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 int (PASCAL FAR *CNetwork::select)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);
 int (PASCAL FAR *CNetwork::WSACleanup)(void);
@@ -297,7 +297,7 @@ CNetwork::write2(Socket s, const void FAR* buf, size_t len)
 
 #endif
 
-#if defined(CONFIG_PLATFORM_UNIX)
+#if UNIX_LIKE
 
 #include <unistd.h>
 #include <sys/ioctl.h>

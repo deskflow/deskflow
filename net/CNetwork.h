@@ -3,21 +3,23 @@
 
 #include "BasicTypes.h"
 
-#if defined(CONFIG_PLATFORM_WIN32)
-// declare no functions in winsock2
-# define INCL_WINSOCK_API_PROTOTYPES 0
-# define INCL_WINSOCK_API_TYPEDEFS 0
-# include <winsock2.h>
+#if WINDOWS_LIKE
+	// declare no functions in winsock2
+#	define INCL_WINSOCK_API_PROTOTYPES 0
+#	define INCL_WINSOCK_API_TYPEDEFS 0
+#	include <winsock2.h>
 typedef int ssize_t;
-# if !defined(SOL_TCP)
-#  define SOL_TCP IPPROTO_TCP
-# endif
+#	if !defined(SOL_TCP)
+# 		define SOL_TCP IPPROTO_TCP
+#	endif
 #else
-# define FAR
-# define PASCAL
+#	undef FAR
+#	undef PASCAL
+#	define FAR
+#	define PASCAL
 #endif
 
-#if defined(CONFIG_PLATFORM_UNIX)
+#if UNIX_LIKE
 # include <sys/types.h>
 # include <sys/poll.h>
 # include <sys/socket.h>
@@ -31,7 +33,7 @@ typedef int ssize_t;
 
 class CNetwork {
 public:
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 	typedef SOCKET Socket;
 	typedef struct sockaddr Address;
 	typedef int AddressLength;
@@ -48,7 +50,7 @@ public:
 		kPOLLERR = 4,
 		kPOLLNVAL = 8
 	};
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 	typedef int Socket;
 	typedef struct sockaddr Address;
 	typedef socklen_t AddressLength;
@@ -80,9 +82,9 @@ public:
 
 	// getsockerror() constants
 	enum {
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 		kEADDRINUSE				= WSAEADDRINUSE,
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 		kEADDRINUSE				= EADDRINUSE,
 #endif
 		kNone = 0
@@ -90,12 +92,12 @@ public:
 
 	// gethosterror() constants
 	enum {
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 		kHOST_NOT_FOUND			= WSAHOST_NOT_FOUND,
 		kNO_DATA				= WSANO_DATA,
 		kNO_RECOVERY			= WSANO_RECOVERY,
 		kTRY_AGAIN				= WSATRY_AGAIN,
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 		kHOST_NOT_FOUND			= HOST_NOT_FOUND,
 		kNO_DATA				= NO_DATA,
 		kNO_RECOVERY			= NO_RECOVERY,
@@ -137,7 +139,7 @@ public:
 	static int (PASCAL FAR *getsockerror)(void);
 	static int (PASCAL FAR *gethosterror)(void);
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 private:
 	static void			init2(HMODULE);
 	static int PASCAL FAR poll2(PollEntry[], int nfds, int timeout);

@@ -1,8 +1,8 @@
 #ifndef CLOG_H
 #define CLOG_H
 
-#include "BasicTypes.h"
-#include <cstdarg>
+#include "common.h"
+#include <stdarg.h>
 
 class CLog {
 public:
@@ -67,7 +67,7 @@ private:
 	static void			output(int priority, char* msg);
 	static char*		vsprint(int pad, char*, int len, const char*, va_list);
 	static int			nprint(const char*, va_list);
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 	static void			openConsole();
 #endif
 

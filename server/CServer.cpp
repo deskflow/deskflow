@@ -1353,9 +1353,9 @@ CServer::updatePrimaryClipboard(ClipboardID id)
 }
 
 // FIXME -- use factory to create screen
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 #include "CMSWindowsPrimaryScreen.h"
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 #include "CXWindowsPrimaryScreen.h"
 #endif
 void
@@ -1377,9 +1377,9 @@ CServer::openPrimaryScreen()
 
 		// open screen
 		log((CLOG_DEBUG1 "creating primary screen"));
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 		m_primary = new CMSWindowsPrimaryScreen;
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 		m_primary = new CXWindowsPrimaryScreen;
 #endif
 		log((CLOG_DEBUG1 "opening primary screen"));

@@ -1,11 +1,15 @@
 #include "common.h"
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 #include "CWin32Platform.cpp"
 
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 
 #include "CUnixPlatform.cpp"
+
+#else
+
+#error Unsupported platform
 
 #endif

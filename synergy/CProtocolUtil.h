@@ -3,7 +3,7 @@
 
 #include "BasicTypes.h"
 #include "XIO.h"
-#include <cstdarg>
+#include <stdarg.h>
 
 class IInputStream;
 class IOutputStream;

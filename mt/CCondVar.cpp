@@ -7,7 +7,7 @@
 
 CCondVarBase::CCondVarBase(CMutex* mutex) : 
 	m_mutex(mutex)
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 	, m_waitCountMutex()
 #endif
 {
@@ -45,7 +45,7 @@ CCondVarBase::getMutex() const
 	return m_mutex;
 }
 
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 
 #include "CThread.h"
 #include <pthread.h>
@@ -169,9 +169,9 @@ CCondVarBase::wait(CStopwatch& timer, double timeout) const
 	}
 }
 
-#endif // CONFIG_PTHREADS
+#endif // HAVE_PTHREAD
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 #include "CLock.h"
 #include "CThreadRep.h"
@@ -312,4 +312,4 @@ CCondVarBase::wait(CStopwatch& timer, double timeout) const
 			result == WAIT_OBJECT_0 + 1);
 }
 
-#endif // CONFIG_PLATFORM_WIN32
+#endif // WINDOWS_LIKE

@@ -3,15 +3,19 @@
 
 #include "common.h"
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 
 #include "CWin32Platform.h"
 typedef CWin32Platform CPlatform;
 
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 
 #include "CUnixPlatform.h"
 typedef CUnixPlatform CPlatform;
+
+#else
+
+#error Unsupported platform
 
 #endif
 

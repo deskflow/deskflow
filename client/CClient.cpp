@@ -402,9 +402,9 @@ CClient::runSession(void*)
 }
 
 // FIXME -- use factory to create screen
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 #include "CMSWindowsSecondaryScreen.h"
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 #include "CXWindowsSecondaryScreen.h"
 #endif
 void
@@ -426,9 +426,9 @@ CClient::openSecondaryScreen()
 
 	// open screen
 	log((CLOG_DEBUG1 "creating secondary screen"));
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 	m_screen = new CMSWindowsSecondaryScreen;
-#elif defined(CONFIG_PLATFORM_UNIX)
+#elif UNIX_LIKE
 	m_screen = new CXWindowsSecondaryScreen;
 #endif
 	log((CLOG_DEBUG1 "opening secondary screen"));

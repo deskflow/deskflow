@@ -3,64 +3,70 @@
 
 #include "common.h"
 
-#if defined(CONFIG_PLATFORM_LINUX)
+//
+// pick types of particular sizes
+//
 
-#include <stdint.h>
-
-typedef int8_t			SInt8;
-typedef int16_t			SInt16;
-typedef int32_t			SInt32;
-typedef int64_t			SInt64;
-
-typedef uint8_t			UInt8;
-typedef uint16_t		UInt16;
-typedef uint32_t		UInt32;
-typedef uint64_t		UInt64;
-
-#endif // CONFIG_PLATFORM_LINUX
-
-#if defined(CONFIG_PLATFORM_SOLARIS)
-
-#include <inttypes.h>
-
-typedef int8_t			SInt8;
-typedef int16_t			SInt16;
-typedef int32_t			SInt32;
-typedef int64_t			SInt64;
-
-typedef uint8_t			UInt8;
-typedef uint16_t		UInt16;
-typedef uint32_t		UInt32;
-typedef uint64_t		UInt64;
-
-#endif // CONFIG_PLATFORM_SOLARIS
-
-#if defined(CONFIG_PLATFORM_WIN32)
-
-// use VC++ extensions if available
-#if defined(_MSC_VER)
-typedef signed __int8		SInt8;
-typedef signed __int16		SInt16;
-typedef signed __int32		SInt32;
-typedef signed __int64		SInt64;
-
-typedef unsigned __int8		UInt8;
-typedef unsigned __int16	UInt16;
-typedef unsigned __int32	UInt32;
-typedef unsigned __int64	UInt64;
-#else
-typedef signed char			SInt8;
-typedef short				SInt16;
-typedef int					SInt32;
-typedef long long			SInt64;
-
-typedef unsigned char		UInt8;
-typedef unsigned short		UInt16;
-typedef unsigned int		UInt32;
-typedef unsigned long long	UInt64;
+#if !defined(TYPE_OF_SIZE_1)
+#	if SIZEOF_CHAR == 1
+#		define TYPE_OF_SIZE_1 char
+#	endif
 #endif
 
-#endif // CONFIG_PLATFORM_WIN32
+#if !defined(TYPE_OF_SIZE_2)
+#	if SIZEOF_INT == 2
+#		define TYPE_OF_SIZE_2 int
+#	else
+#		define TYPE_OF_SIZE_2 short
+#	endif
+#endif
+
+#if !defined(TYPE_OF_SIZE_4)
+#	if SIZEOF_INT == 4
+#		define TYPE_OF_SIZE_4 int
+#	else
+#		define TYPE_OF_SIZE_4 long
+#	endif
+#endif
+
+//
+// verify existence of required types
+//
+
+#if !defined(TYPE_OF_SIZE_1)
+#	error No 1 byte integer type
+#endif
+#if !defined(TYPE_OF_SIZE_2)
+#	error No 2 byte integer type
+#endif
+#if !defined(TYPE_OF_SIZE_4)
+#	error No 4 byte integer type
+#endif
+
+
+//
+// make typedefs
+//
+// except for SInt8 and UInt8 these types are only guaranteed to be
+// at least as big as indicated (in bits).  that is, they may be
+// larger than indicated.
+//
+
+typedef signed TYPE_OF_SIZE_1	SInt8;
+typedef signed TYPE_OF_SIZE_2	SInt16;
+typedef signed TYPE_OF_SIZE_4	SInt32;
+
+typedef unsigned TYPE_OF_SIZE_1	UInt8;
+typedef unsigned TYPE_OF_SIZE_2	UInt16;
+typedef unsigned TYPE_OF_SIZE_4	UInt32;
+
+//
+// clean up
+//
+
+#undef TYPE_OF_SIZE_1
+#undef TYPE_OF_SIZE_2
+#undef TYPE_OF_SIZE_4
 
 #endif
 

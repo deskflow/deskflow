@@ -1,11 +1,11 @@
 #ifndef CTHREADREP_H
 #define CTHREADREP_H
 
-#include "BasicTypes.h"
+#include "common.h"
 
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 #include <pthread.h>
-#elif defined(CONFIG_PLATFORM_WIN32)
+#elif WINDOWS_LIKE
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
@@ -43,7 +43,7 @@ public:
 	// wait for thread to exit or for current thread to cancel
 	bool				wait(CThreadRep*, double timeout);
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 	// wait for a message on the queue
 	bool				waitForEvent(double timeout);
 #endif
@@ -62,9 +62,9 @@ public:
 	// get the current cancellable state
 	bool				isCancellable() const;
 
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 	bool				isExited() const;
-#elif defined(CONFIG_PLATFORM_WIN32)
+#elif WINDOWS_LIKE
 	HANDLE				getExitEvent() const;
 	HANDLE				getCancelEvent() const;
 #endif
@@ -88,11 +88,11 @@ private:
 	static CThreadRep*	find();
 
 	// thread functions
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 	static void*		threadFunc(void* arg);
 	static void			threadCancel(int);
 	static void*		threadSignalHandler(void*);
-#elif defined(CONFIG_PLATFORM_WIN32)
+#elif WINDOWS_LIKE
 	static unsigned int __stdcall	threadFunc(void* arg);
 #endif
 	void				doThreadFunc();
@@ -108,22 +108,21 @@ private:
 	CThreadRep*			m_prev;
 	CThreadRep*			m_next;
 
-	SInt32				m_refCount;
+	int					m_refCount;
 	IJob*				m_job;
 	void*				m_userData;
 	void*				m_result;
 	bool				m_cancellable;
 	bool				m_cancelling;
-	UInt32				m_signals;
 
-#if defined(CONFIG_PTHREADS)
+#if HAVE_PTHREAD
 	pthread_t			m_thread;
 	bool				m_exit;
 	bool				m_cancel;
 	static pthread_t	s_signalThread;
 #endif
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 	HANDLE				m_thread;
 	DWORD				m_id;
 	HANDLE				m_exit;

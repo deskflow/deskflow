@@ -1,9 +1,7 @@
 #include "stdpre.h"
-#if !defined(CONFIG_PLATFORM_LINUX)
+#if defined(HAVE_OSTREAM)
 #include <ostream>
 #else
-// some versions of libstdc++ don't have <ostream>
-// FIXME -- only include iostream for versions that don't have ostream
 #include <iostream>
 #endif
 #include "stdpost.h"

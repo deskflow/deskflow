@@ -105,7 +105,7 @@ public:
 	// (cancellation point)
 	bool				wait(double timeout = -1.0) const;
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 	// wait for a message in the queue.  returns true if a message
 	// is available.
 	// (cancellation point)

@@ -56,7 +56,7 @@ private:
 	CMutex*				m_mutex;
 	void*				m_cond;
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 	enum { kSignal, kBroadcast };
 	mutable UInt32		m_waitCount;
 	CMutex				m_waitCountMutex;

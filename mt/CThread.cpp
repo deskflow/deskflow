@@ -99,7 +99,7 @@ CThread::wait(double timeout) const
 	return currentRep->wait(m_rep, timeout);
 }
 
-#if defined(CONFIG_PLATFORM_WIN32)
+#if WINDOWS_LIKE
 bool
 CThread::waitForEvent(double timeout)
 {
