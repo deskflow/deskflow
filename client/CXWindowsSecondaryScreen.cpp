@@ -63,7 +63,8 @@ void					CXWindowsSecondaryScreen::run()
 			// selection owner.  report that to the server.
 			if (lostClipboard(xevent.xselectionclear.selection,
 								xevent.xselectionclear.time)) {
-				m_client->onClipboardChanged();
+				m_client->onClipboardChanged(getClipboardID(
+								xevent.xselectionclear.selection));
 			}
 			break;
 
@@ -260,16 +261,16 @@ void					CXWindowsSecondaryScreen::mouseWheel(SInt32)
 }
 
 void					CXWindowsSecondaryScreen::setClipboard(
-								const IClipboard* clipboard)
+								ClipboardID id, const IClipboard* clipboard)
 {
 	// FIXME -- don't use CurrentTime
-	setDisplayClipboard(clipboard, m_window, CurrentTime);
+	setDisplayClipboard(id, clipboard, m_window, CurrentTime);
 }
 
-void					CXWindowsSecondaryScreen::grabClipboard()
+void					CXWindowsSecondaryScreen::grabClipboard(ClipboardID id)
 {
 	// FIXME -- don't use CurrentTime
-	setDisplayClipboard(NULL, m_window, CurrentTime);
+	setDisplayClipboard(id, NULL, m_window, CurrentTime);
 }
 
 void					CXWindowsSecondaryScreen::getSize(
@@ -284,10 +285,10 @@ SInt32					CXWindowsSecondaryScreen::getJumpZoneSize() const
 }
 
 void					CXWindowsSecondaryScreen::getClipboard(
-								IClipboard* clipboard) const
+								ClipboardID id, IClipboard* clipboard) const
 {
 	// FIXME -- don't use CurrentTime
-	getDisplayClipboard(clipboard, m_window, CurrentTime);
+	getDisplayClipboard(id, clipboard, m_window, CurrentTime);
 }
 
 void					CXWindowsSecondaryScreen::onOpenDisplay()

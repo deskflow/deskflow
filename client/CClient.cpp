@@ -85,14 +85,14 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 	}
 }
 
-void					CClient::onClipboardChanged()
+void					CClient::onClipboardChanged(ClipboardID id)
 {
-	log((CLOG_DEBUG "sending clipboard changed"));
+	log((CLOG_DEBUG "sending clipboard %d changed", id));
 	CLock lock(&m_mutex);
 	if (m_output != NULL) {
 		// m_output can be NULL if the screen calls this method
 		// before we've gotten around to connecting to the server.
-		CProtocolUtil::writef(m_output, kMsgCClipboard);
+		CProtocolUtil::writef(m_output, kMsgCClipboard, id);
 	}
 }
 
@@ -318,7 +318,12 @@ void					CClient::onLeave()
 
 void					CClient::onGrabClipboard()
 {
-	m_screen->grabClipboard();
+	ClipboardID id;
+	{
+		CLock lock(&m_mutex);
+		CProtocolUtil::readf(m_input, kMsgCClipboard + 4, &id);
+	}
+	m_screen->grabClipboard(id);
 }
 
 void					CClient::onScreenSaver()
@@ -345,45 +350,47 @@ void					CClient::onQueryInfo()
 void					CClient::onQueryClipboard()
 {
 	// parse message
+	ClipboardID id;
 	UInt32 seqNum;
 	CClipboard clipboard;
 	{
 		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgQClipboard + 4, &seqNum);
+		CProtocolUtil::readf(m_input, kMsgQClipboard + 4, &id, &seqNum);
 	}
-	log((CLOG_DEBUG "received query clipboard seqnum=%d", seqNum));
+	log((CLOG_DEBUG "received query clipboard %d seqnum=%d", id, seqNum));
 
 	// get screen's clipboard data
-	m_screen->getClipboard(&clipboard);
+	m_screen->getClipboard(id, &clipboard);
 
 	// marshall the data
 	CString data = clipboard.marshall();
 
 	// send it
-	log((CLOG_DEBUG "sending clipboard seqnum=%d, size=%d", seqNum, data.size()));
+	log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, seqNum, data.size()));
 	{
 		CLock lock(&m_mutex);
-		CProtocolUtil::writef(m_output, kMsgDClipboard, seqNum, &data);
+		CProtocolUtil::writef(m_output, kMsgDClipboard, id, seqNum, &data);
 	}
 }
 
 void					CClient::onSetClipboard()
 {
+	ClipboardID id;
 	CString data;
 	{
 		// parse message
 		UInt32 seqNum;
 		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgDClipboard + 4, &seqNum, &data);
+		CProtocolUtil::readf(m_input, kMsgDClipboard + 4, &id, &seqNum, &data);
 	}
-	log((CLOG_DEBUG "received clipboard size=%d", data.size()));
+	log((CLOG_DEBUG "received clipboard %d size=%d", id, data.size()));
 
 	// unmarshall
 	CClipboard clipboard;
 	clipboard.unmarshall(data);
 
 	// set screen's clipboard
-	m_screen->setClipboard(&clipboard);
+	m_screen->setClipboard(id, &clipboard);
 }
 
 void					CClient::onKeyDown()

@@ -3,6 +3,7 @@
 
 #include "IInterface.h"
 #include "BasicTypes.h"
+#include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 
@@ -52,7 +53,7 @@ class ISecondaryScreen : public IInterface {
 
 	// set the screen's clipboard contents.  this is usually called
 	// soon after an enter().
-	virtual void		setClipboard(const IClipboard*) = 0;
+	virtual void		setClipboard(ClipboardID, const IClipboard*) = 0;
 
 /*
 	// show or hide the screen saver
@@ -60,7 +61,7 @@ class ISecondaryScreen : public IInterface {
 */
 
 	// take ownership of clipboard
-	virtual void		grabClipboard() = 0;
+	virtual void		grabClipboard(ClipboardID) = 0;
 
 	// accessors
 
@@ -71,7 +72,7 @@ class ISecondaryScreen : public IInterface {
 	virtual SInt32		getJumpZoneSize() const = 0;
 
 	// get the screen's clipboard contents
-	virtual void		getClipboard(IClipboard*) const = 0;
+	virtual void		getClipboard(ClipboardID, IClipboard*) const = 0;
 };
 
 #endif

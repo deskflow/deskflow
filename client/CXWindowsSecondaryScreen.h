@@ -24,11 +24,11 @@ class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		mouseWheel(SInt32 delta);
-	virtual void		setClipboard(const IClipboard*);
-	virtual void		grabClipboard();
+	virtual void		setClipboard(ClipboardID, const IClipboard*);
+	virtual void		grabClipboard(ClipboardID);
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
-	virtual void		getClipboard(IClipboard*) const;
+	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 
   protected:
 	// CXWindowsScreen overrides

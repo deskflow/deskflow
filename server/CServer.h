@@ -1,6 +1,7 @@
 #ifndef CSERVER_H
 #define CSERVER_H
 
+#include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "CScreenMap.h"
@@ -43,13 +44,14 @@ class CServer {
 	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
 	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	void				onMouseWheel(SInt32 delta);
-	void				grabClipboard();
+	void				grabClipboard(ClipboardID);
 
 	// handle messages from clients
 	void				setInfo(const CString& clientName,
 								SInt32 w, SInt32 h, SInt32 zoneSize);
-	void				grabClipboard(const CString& clientName);
-	void				setClipboard(UInt32 seqNum, const CString& data);
+	void				grabClipboard(ClipboardID, const CString& clientName);
+	void				setClipboard(ClipboardID,
+								UInt32 seqNum, const CString& data);
 
 	// accessors
 
@@ -95,7 +97,7 @@ class CServer {
 		IServerProtocol* m_protocol;
 		SInt32			m_width, m_height;
 		SInt32			m_zoneSize;
-		bool			m_gotClipboard;
+		bool			m_gotClipboard[kClipboardEnd];
 	};
 
 	// change the active screen
@@ -146,6 +148,17 @@ class CServer {
   private:
 	typedef std::list<CThread*> CThreadList;
 	typedef std::map<CString, CScreenInfo*> CScreenList;
+	class ClipboardInfo {
+	public:
+		ClipboardInfo();
+
+	public:
+		CClipboard		m_clipboard;
+		CString			m_clipboardData;
+		CString			m_clipboardOwner;
+		UInt32			m_clipboardSeqNum;
+		bool			m_clipboardReady;
+	};
 
 	CMutex				m_mutex;
 
@@ -165,11 +178,7 @@ class CServer {
 
 	CScreenMap			m_screenMap;
 
-	CClipboard			m_clipboard;
-	CString				m_clipboardData;
-	CString				m_clipboardOwner;
-	UInt32				m_clipboardSeqNum;
-	bool				m_clipboardReady;
+	ClipboardInfo		m_clipboards[kClipboardEnd];
 };
 
 #endif

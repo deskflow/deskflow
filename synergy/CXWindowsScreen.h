@@ -4,6 +4,7 @@
 #include "CClipboard.h"
 #include "CMutex.h"
 #include "BasicTypes.h"
+#include "ClipboardTypes.h"
 #include <X11/Xlib.h>
 #include <map>
 #include <list>
@@ -56,19 +57,25 @@ class CXWindowsScreen {
 	// cause getEvent() to return false immediately and forever after
 	void				doStop();
 
+	// determine the clipboard from the X selection.  returns
+	// kClipboardEnd if no such clipboard.
+	ClipboardID			getClipboardID(Atom selection);
+
 	// call when we lose the clipboard ownership (i.e. when we receive
 	// a SelectionClear event).  returns true iff we've actually lost
 	// a selection we care about.
 	bool				lostClipboard(Atom selection, Time timestamp);
 
 	// set the contents of the clipboard (i.e. primary selection)
-	bool				setDisplayClipboard(const IClipboard* clipboard,
+	bool				setDisplayClipboard(ClipboardID,
+								const IClipboard* clipboard,
 								Window requestor, Time timestamp);
 
 	// copy the clipboard contents to clipboard.  requestor must be a
 	// valid window;  it will be used to receive the transfer.  timestamp
 	// should be the timestamp of the provoking event and not CurrentTime.
-	void				getDisplayClipboard(IClipboard* clipboard,
+	void				getDisplayClipboard(ClipboardID,
+								IClipboard* clipboard,
 								Window requestor, Time timestamp) const;
 
 	// add a selection request to the request list
@@ -120,18 +127,31 @@ class CXWindowsScreen {
 	static Bool			findPropertyNotify(Display*,
 								XEvent* xevent, XPointer arg);
 
-	bool				sendClipboardData(Window requestor, Atom target,
+	bool				sendClipboardData(ClipboardID, Window requestor,
+								Atom target, Atom property, Time time);
+	bool				sendClipboardMultiple(ClipboardID, Window requestor,
 								Atom property, Time time);
-	bool				sendClipboardMultiple(Window requestor,
+	bool				sendClipboardTargets(ClipboardID, Window requestor,
 								Atom property, Time time);
-	bool				sendClipboardTargets(Window requestor,
+	bool				sendClipboardTimestamp(ClipboardID, Window requestor,
 								Atom property, Time time);
-	bool				sendClipboardTimestamp(Window requestor,
-								Atom property, Time time);
-	void				sendNotify(Window requestor, Atom target,
-								Atom property, Time time);
+	void				sendNotify(ClipboardID, Window requestor,
+								Atom target, Atom property, Time time);
 
   private:
+	class ClipboardInfo {
+	public:
+		// the contents of the clipboard
+		CClipboard		m_clipboard;
+
+		// when we got the clipboard and when we lost it
+		Time			m_gotClipboard;
+		Time			m_lostClipboard;
+
+		// the request queues
+		CRequestMap		m_requests;
+	};
+
 	Display*			m_display;
 	int					m_screen;
 	Window				m_root;
@@ -150,7 +170,11 @@ class CXWindowsScreen {
 	Atom				m_atomString;
 	Atom				m_atomText;
 	Atom				m_atomCompoundText;
+	Atom				m_atomClipboard[kClipboardEnd];
 
+	// clipboard info
+	ClipboardInfo		m_clipboards[kClipboardEnd];
+/*
 	// the contents of our selection
 	CClipboard			m_clipboard;
 
@@ -160,6 +184,7 @@ class CXWindowsScreen {
 
 	// the request queues
 	CRequestMap			m_requests;
+*/
 
 	// X is not thread safe
 	CMutex				m_mutex;

@@ -4,6 +4,7 @@
 #include "CMutex.h"
 #include "CString.h"
 #include "BasicTypes.h"
+#include "ClipboardTypes.h"
 
 class CNetworkAddress;
 class IInputStream;
@@ -20,7 +21,7 @@ class CClient {
 	void				run(const CNetworkAddress& serverAddress);
 
 	// handle events on client's screen
-	void				onClipboardChanged();
+	void				onClipboardChanged(ClipboardID);
 
 	// accessors
 

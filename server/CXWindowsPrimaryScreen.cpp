@@ -137,7 +137,8 @@ void					CXWindowsPrimaryScreen::run()
 			// selection owner.  report that to the server.
 			if (lostClipboard(xevent.xselectionclear.selection,
 								xevent.xselectionclear.time)) {
-				m_server->grabClipboard();
+				m_server->grabClipboard(getClipboardID(
+								xevent.xselectionclear.selection));
 			}
 			break;
 
@@ -270,7 +271,7 @@ void					CXWindowsPrimaryScreen::leave()
 			assert(result != GrabNotViewable);
 			if (result != GrabSuccess) {
 				log((CLOG_DEBUG "waiting to grab pointer"));
-				CThread::sleep(0.25);
+				CThread::sleep(0.1);
 			}
 		} while (result != GrabSuccess);
 		log((CLOG_DEBUG "grabbed pointer"));
@@ -283,7 +284,7 @@ void					CXWindowsPrimaryScreen::leave()
 			// back off to avoid grab deadlock
 			XUngrabPointer(display, CurrentTime);
 			log((CLOG_DEBUG "ungrabbed pointer, waiting to grab keyboard"));
-			CThread::sleep(0.25);
+			CThread::sleep(0.1);
 		}
 	} while (result != GrabSuccess);
 	log((CLOG_DEBUG "grabbed keyboard"));
@@ -323,16 +324,16 @@ void					CXWindowsPrimaryScreen::warpCursorNoLock(
 }
 
 void					CXWindowsPrimaryScreen::setClipboard(
-								const IClipboard* clipboard)
+								ClipboardID id, const IClipboard* clipboard)
 {
 	// FIXME -- don't use CurrentTime
-	setDisplayClipboard(clipboard, m_window, CurrentTime);
+	setDisplayClipboard(id, clipboard, m_window, CurrentTime);
 }
 
-void					CXWindowsPrimaryScreen::grabClipboard()
+void					CXWindowsPrimaryScreen::grabClipboard(ClipboardID id)
 {
 	// FIXME -- don't use CurrentTime
-	setDisplayClipboard(NULL, m_window, CurrentTime);
+	setDisplayClipboard(id, NULL, m_window, CurrentTime);
 }
 
 void					CXWindowsPrimaryScreen::getSize(
@@ -347,10 +348,10 @@ SInt32					CXWindowsPrimaryScreen::getJumpZoneSize() const
 }
 
 void					CXWindowsPrimaryScreen::getClipboard(
-								IClipboard* clipboard) const
+								ClipboardID id, IClipboard* clipboard) const
 {
 	// FIXME -- don't use CurrentTime
-	getDisplayClipboard(clipboard, m_window, CurrentTime);
+	getDisplayClipboard(id, clipboard, m_window, CurrentTime);
 }
 
 void					CXWindowsPrimaryScreen::onOpenDisplay()

@@ -103,22 +103,24 @@ void					CServerProtocol1_0::sendLeave()
 	CProtocolUtil::writef(getOutputStream(), kMsgCLeave);
 }
 
-void					CServerProtocol1_0::sendClipboard(const CString& data)
+void					CServerProtocol1_0::sendClipboard(
+								ClipboardID id, const CString& data)
 {
-	log((CLOG_INFO "send clipboard to \"%s\" size=%d", getClient().c_str(), data.size()));
-	CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, 0, &data);
+	log((CLOG_INFO "send clipboard %d to \"%s\" size=%d", id, getClient().c_str(), data.size()));
+	CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, id, 0, &data);
 }
 
-void					CServerProtocol1_0::sendGrabClipboard()
+void					CServerProtocol1_0::sendGrabClipboard(ClipboardID id)
 {
-	log((CLOG_INFO "send grab clipboard to \"%s\"", getClient().c_str()));
-	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard);
+	log((CLOG_INFO "send grab clipboard %d to \"%s\"", id, getClient().c_str()));
+	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id);
 }
 
-void					CServerProtocol1_0::sendQueryClipboard(UInt32 seqNum)
+void					CServerProtocol1_0::sendQueryClipboard(
+								ClipboardID id, UInt32 seqNum)
 {
-	log((CLOG_INFO "query clipboard to \"%s\"", getClient().c_str()));
-	CProtocolUtil::writef(getOutputStream(), kMsgQClipboard, seqNum);
+	log((CLOG_INFO "query clipboard %d to \"%s\"", id, getClient().c_str()));
+	CProtocolUtil::writef(getOutputStream(), kMsgQClipboard, id, seqNum);
 }
 
 void					CServerProtocol1_0::sendScreenSaver(bool on)
@@ -194,15 +196,18 @@ void					CServerProtocol1_0::recvInfo()
 
 void					CServerProtocol1_0::recvClipboard()
 {
+	ClipboardID id;
 	UInt32 seqNum;
 	CString data;
-	CProtocolUtil::readf(getInputStream(), kMsgDClipboard + 4, &seqNum, &data);
-	log((CLOG_INFO "received client \"%s\" clipboard seqnum=%d, size=%d", getClient().c_str(), seqNum, data.size()));
-	getServer()->setClipboard(seqNum, data);
+	CProtocolUtil::readf(getInputStream(), kMsgDClipboard + 4, &id, &seqNum, &data);
+	log((CLOG_INFO "received client \"%s\" clipboard %d seqnum=%d, size=%d", getClient().c_str(), id, seqNum, data.size()));
+	getServer()->setClipboard(id, seqNum, data);
 }
 
 void					CServerProtocol1_0::recvGrabClipboard()
 {
-	log((CLOG_INFO "received client \"%s\" grabbed clipboard", getClient().c_str()));
-	getServer()->grabClipboard(getClient());
+	ClipboardID id;
+	CProtocolUtil::readf(getInputStream(), kMsgCClipboard + 4, &id);
+	log((CLOG_INFO "received client \"%s\" grabbed clipboard %d", getClient().c_str(), id));
+	getServer()->grabClipboard(id, getClient());
 }

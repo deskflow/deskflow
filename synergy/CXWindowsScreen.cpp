@@ -14,7 +14,6 @@
 // CXWindowsScreen
 //
 
-static const Atom kClipboardSelection = XA_PRIMARY;
 static const UInt32 kMaxRequestSize = 4096;
 
 CXWindowsScreen::CXWindowsScreen() :
@@ -66,6 +65,11 @@ void					CXWindowsScreen::openDisplay()
 	m_atomText         = XInternAtom(m_display, "TEXT", False);
 	m_atomCompoundText = XInternAtom(m_display, "COMPOUND_TEXT", False);
 
+	// clipboard atoms
+	m_atomClipboard[kClipboardClipboard] =
+								XInternAtom(m_display, "CLIPBOARD", False);
+	m_atomClipboard[kClipboardSelection] = XA_PRIMARY;
+
 	// let subclass prep display
 	onOpenDisplay();
 }
@@ -78,16 +82,19 @@ void					CXWindowsScreen::closeDisplay()
 	onCloseDisplay();
 
 	// clear out the clipboard request lists
-	for (CRequestMap::iterator index = m_requests.begin();
-								index != m_requests.end(); ++index) {
-		CRequestList* list = index->second;
-		for (CRequestList::iterator index2 = list->begin();
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		ClipboardInfo& clipboard = m_clipboards[id];
+		for (CRequestMap::iterator index = clipboard.m_requests.begin();
+								index != clipboard.m_requests.end(); ++index) {
+			CRequestList* list = index->second;
+			for (CRequestList::iterator index2 = list->begin();
 								index2 != list->end(); ++index2) {
-			delete *index2;
+				delete *index2;
+			}
+			delete list;
 		}
-		delete list;
+		clipboard.m_requests.clear();
 	}
-	m_requests.clear();
 
 	// close the display
 	XCloseDisplay(m_display);
@@ -179,39 +186,50 @@ void					CXWindowsScreen::doStop()
 	m_stop = true;
 }
 
+ClipboardID				CXWindowsScreen::getClipboardID(Atom selection)
+{
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
+		if (selection == m_atomClipboard[id])
+			return id;
+	return kClipboardEnd;
+}
+
 bool					CXWindowsScreen::lostClipboard(
 								Atom selection, Time timestamp)
 {
-	if (selection == kClipboardSelection) {
-		// note the time
-		CLock lock(&m_mutex);
-		m_lostClipboard = timestamp;
-		log((CLOG_INFO "lost clipboard ownership at %d", timestamp));
-		return true;
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		if (selection == m_atomClipboard[id]) {
+			// note the time
+			CLock lock(&m_mutex);
+			m_clipboards[id].m_lostClipboard = timestamp;
+			log((CLOG_INFO "lost clipboard %d ownership at %d", id, timestamp));
+			return true;
+		}
 	}
 	return false;
 }
 
 bool					CXWindowsScreen::setDisplayClipboard(
+								ClipboardID id,
 								const IClipboard* clipboard,
 								Window requestor, Time timestamp)
 {
 	CLock lock(&m_mutex);
 
-	XSetSelectionOwner(m_display, kClipboardSelection, requestor, timestamp);
-	if (XGetSelectionOwner(m_display, kClipboardSelection) == requestor) {
+	XSetSelectionOwner(m_display, m_atomClipboard[id], requestor, timestamp);
+	if (XGetSelectionOwner(m_display, m_atomClipboard[id]) == requestor) {
 		// we got the selection
 		log((CLOG_INFO "grabbed clipboard at %d", timestamp));
-		m_gotClipboard = timestamp;
+		m_clipboards[id].m_gotClipboard = timestamp;
 
 		if (clipboard != NULL) {
 			// save clipboard to serve requests
-			CClipboard::copy(&m_clipboard, clipboard);
+			CClipboard::copy(&m_clipboards[id].m_clipboard, clipboard);
 		}
 		else {
 			// clear clipboard
-			if (m_clipboard.open()) {
-				m_clipboard.close();
+			if (m_clipboards[id].m_clipboard.open()) {
+				m_clipboards[id].m_clipboard.close();
 			}
 		}
 
@@ -222,6 +240,7 @@ bool					CXWindowsScreen::setDisplayClipboard(
 }
 
 void					CXWindowsScreen::getDisplayClipboard(
+								ClipboardID id,
 								IClipboard* clipboard,
 								Window requestor, Time timestamp) const
 {
@@ -236,7 +255,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 	// in particular, this prevents the event thread from stealing the
 	// selection notify event we're expecting.
 	CLock lock(&m_mutex);
-	Atom selection = kClipboardSelection;
+	Atom selection = m_atomClipboard[id];
 
 	// ask the selection for all the formats it has.  some owners return
 	// the TARGETS atom and some the ATOM atom when TARGETS is requested.
@@ -541,10 +560,13 @@ void					CXWindowsScreen::addClipboardRequest(
 								Atom selection, Atom target,
 								Atom property, Time time)
 {
-	// we can only own kClipboardSelection
-	if (selection != kClipboardSelection) {
+	// see if it's a selection we know about
+	ClipboardID id;
+	for (id = 0; id < kClipboardEnd; ++id)
+		if (selection == m_atomClipboard[id])
+			break;
+	if (id == kClipboardEnd)
 		return;
-	}
 
 	// mutex the display
 	CLock lock(&m_mutex);
@@ -554,16 +576,16 @@ void					CXWindowsScreen::addClipboardRequest(
 	if (target == m_atomMultiple) {
 		// add a multiple request
 		if (property != None) {
-			success = sendClipboardMultiple(requestor, property, time);
+			success = sendClipboardMultiple(id, requestor, property, time);
 		}
 	}
 	else {
 		// handle remaining request formats
-		success = sendClipboardData(requestor, target, property, time);
+		success = sendClipboardData(id, requestor, target, property, time);
 	}
 
 	// send success or failure
-	sendNotify(requestor, target, success ? property : None, time);
+	sendNotify(id, requestor, target, success ? property : None, time);
 }
 
 void					CXWindowsScreen::processClipboardRequest(
@@ -572,62 +594,71 @@ void					CXWindowsScreen::processClipboardRequest(
 {
 	CLock lock(&m_mutex);
 
-	// find the request list
-	CRequestMap::iterator index = m_requests.find(requestor);
-	if (index == m_requests.end()) {
-		return;
-	}
-	CRequestList* list = index->second;
-	assert(list != NULL);
+	// check every clipboard
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		ClipboardInfo& clipboard = m_clipboards[id];
 
-	// find the property in the list
-	CRequestList::iterator index2;
-	for (index2 = list->begin(); index2 != list->end(); ++index2) {
-		if ((*index2)->m_property == property) {
-			break;
+		// find the request list
+		CRequestMap::iterator index = clipboard.m_requests.find(requestor);
+		if (index == clipboard.m_requests.end()) {
+			// this clipboard isn't servicing this requestor window
+			continue;
 		}
-	}
-	if (index2 == list->end()) {
-		log((CLOG_WARN "received property event on unexpected property"));
-		return;
-	}
-	CClipboardRequest* request = *index2;
-	assert(request != NULL);
+		CRequestList* list = index->second;
+		assert(list != NULL);
 
-	// compute amount of data to send
-	assert(request->m_sent <= request->m_data.size());
-	UInt32 count = request->m_data.size() - request->m_sent;
-	if (count > kMaxRequestSize) {
-		// limit maximum chunk size
-		count = kMaxRequestSize;
+		// find the property in the list
+		CRequestList::iterator index2;
+		for (index2 = list->begin(); index2 != list->end(); ++index2) {
+			if ((*index2)->m_property == property) {
+				break;
+			}
+		}
+		if (index2 == list->end()) {
+			// this clipboard isn't waiting on this property
+			continue;
+		}
+		CClipboardRequest* request = *index2;
+		assert(request != NULL);
 
-		// make it a multiple of the size
-		count &= ~((request->m_size >> 3) - 1);
-	}
+		// compute amount of data to send
+		assert(request->m_sent <= request->m_data.size());
+		UInt32 count = request->m_data.size() - request->m_sent;
+		if (count > kMaxRequestSize) {
+			// limit maximum chunk size
+			count = kMaxRequestSize;
 
-	// send more data
-	// FIXME -- handle Alloc errors (by returning false)
-	XChangeProperty(m_display, request->m_requestor, request->m_property,
+			// make it a multiple of the size
+			count &= ~((request->m_size >> 3) - 1);
+		}
+
+		// send more data
+		// FIXME -- handle Alloc errors (by returning false)
+		XChangeProperty(m_display, request->m_requestor, request->m_property,
 								request->m_type, request->m_size,
 								PropModeReplace,
 								reinterpret_cast<const unsigned char*>(
 									request->m_data.data() + request->m_sent),
 								count / (request->m_size >> 3));
 
-	// account for sent data
-	request->m_sent += count;
+		// account for sent data
+		request->m_sent += count;
 
-	// if we sent zero bytes then we're done sending this data.  remove
-	// it from the list and, if the list is empty, the list from the
-	// map.  also stop watching the requestor for events.
-	if (count == 0) {
-		list->erase(index2);
-		delete request;
-		if (list->empty()) {
-			m_requests.erase(index);
-			delete list;
+		// if we sent zero bytes then we're done sending this data.  remove
+		// it from the list and, if the list is empty, the list from the
+		// map.  also stop watching the requestor for events.
+		if (count == 0) {
+			list->erase(index2);
+			delete request;
+			if (list->empty()) {
+				clipboard.m_requests.erase(index);
+				delete list;
+			}
+			XSelectInput(m_display, requestor, NoEventMask);
 		}
-		XSelectInput(m_display, requestor, NoEventMask);
+
+		// request has been serviced
+		break;
 	}
 }
 
@@ -636,37 +667,43 @@ void					CXWindowsScreen::destroyClipboardRequest(
 {
 	CLock lock(&m_mutex);
 
-	// find the request list
-	CRequestMap::iterator index = m_requests.find(requestor);
-	if (index == m_requests.end()) {
-		return;
-	}
-	CRequestList* list = index->second;
-	assert(list != NULL);
+	// check every clipboard
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		ClipboardInfo& clipboard = m_clipboards[id];
 
-	// destroy every request in the list
-	for (CRequestList::iterator index2 = list->begin();
+		// find the request list
+		CRequestMap::iterator index = clipboard.m_requests.find(requestor);
+		if (index == clipboard.m_requests.end()) {
+			continue;
+		}
+		CRequestList* list = index->second;
+		assert(list != NULL);
+
+		// destroy every request in the list
+		for (CRequestList::iterator index2 = list->begin();
 								index2 != list->end(); ++index2) {
-		delete *index2;
-	}
+			delete *index2;
+		}
 
-	// remove and destroy the list
-	m_requests.erase(index);
-	delete list;
+		// remove and destroy the list
+		clipboard.m_requests.erase(index);
+		delete list;
+	}
 
 	// note -- we don't stop watching the window for events because
 	// we're called in response to the window being destroyed.
 }
 
 bool					CXWindowsScreen::sendClipboardData(
+								ClipboardID id,
 								Window requestor, Atom target,
 								Atom property, Time time)
 {
 	if (target == m_atomTargets) {
-		return sendClipboardTargets(requestor, property, time);
+		return sendClipboardTargets(id, requestor, property, time);
 	}
 	else if (target == m_atomTimestamp) {
-		return sendClipboardTimestamp(requestor, property, time);
+		return sendClipboardTimestamp(id, requestor, property, time);
 	}
 	else {
 		// compute the type and size for the requested target and
@@ -675,10 +712,10 @@ bool					CXWindowsScreen::sendClipboardData(
 		int size = 0;
 		CString data;
 		if (target == m_atomText || target == m_atomString) {
-			if (m_clipboard.has(IClipboard::kText)) {
+			if (m_clipboards[id].m_clipboard.has(IClipboard::kText)) {
 				type = m_atomString;
 				size = 8;
-				data = m_clipboard.get(IClipboard::kText);
+				data = m_clipboards[id].m_clipboard.get(IClipboard::kText);
 			}
 		}
 
@@ -691,10 +728,10 @@ bool					CXWindowsScreen::sendClipboardData(
 			log((CLOG_DEBUG "handling clipboard request for %d as INCR", target));
 
 			// get the appropriate list, creating it if necessary
-			CRequestList* list = m_requests[requestor];
+			CRequestList* list = m_clipboards[id].m_requests[requestor];
 			if (list == NULL) {
 				list = new CRequestList;
-				m_requests[requestor] = list;
+				m_clipboards[id].m_requests[requestor] = list;
 			}
 
 			// create request object
@@ -718,7 +755,8 @@ bool					CXWindowsScreen::sendClipboardData(
 			// set property to INCR
 			const UInt32 zero = 0;
 			XChangeProperty(m_display, requestor, property,
-								m_atomINCR, 8 * sizeof(zero),
+								m_atomINCR,
+								8 * sizeof(zero),
 								PropModeReplace,
 								reinterpret_cast<const unsigned char*>(&zero),
 								1);
@@ -730,7 +768,8 @@ bool					CXWindowsScreen::sendClipboardData(
 			XChangeProperty(m_display, requestor, property,
 								type, size,
 								PropModeReplace,
-								reinterpret_cast<const unsigned char*>(data.data()),
+								reinterpret_cast<const unsigned char*>(
+									data.data()),
 								data.size() / (size >> 3));
 		}
 		return true;
@@ -739,6 +778,7 @@ bool					CXWindowsScreen::sendClipboardData(
 }
 
 bool					CXWindowsScreen::sendClipboardMultiple(
+								ClipboardID id,
 								Window requestor,
 								Atom property, Time time)
 {
@@ -768,7 +808,7 @@ bool					CXWindowsScreen::sendClipboardMultiple(
 
 		// handle target
 		if (property != None) {
-			if (!sendClipboardData(requestor, target, property, time)) {
+			if (!sendClipboardData(id, requestor, target, property, time)) {
 				// couldn't handle target.  change property to None.
 				const Atom none = None;
 				data.replace((2 * index + 1) * sizeof(Atom), sizeof(Atom),
@@ -786,15 +826,18 @@ bool					CXWindowsScreen::sendClipboardMultiple(
 	if (updated) {
 		// FIXME -- handle Alloc errors (by returning false)
 		XChangeProperty(m_display, requestor, property,
-								m_atomAtomPair, 8 * sizeof(Atom),
+								m_atomAtomPair,
+								8 * sizeof(Atom),
 								PropModeReplace,
-								reinterpret_cast<const unsigned char*>(data.data()),
+								reinterpret_cast<const unsigned char*>(
+									data.data()),
 								data.length());
 	}
 
 	// send notify if any format was successful
 	if (success) {
-		sendNotify(requestor, m_atomMultiple, success ? property : None, time);
+		sendNotify(id, requestor, m_atomMultiple,
+								success ? property : None, time);
 		return true;
 	}
 
@@ -802,6 +845,7 @@ bool					CXWindowsScreen::sendClipboardMultiple(
 }
 
 bool					CXWindowsScreen::sendClipboardTargets(
+								ClipboardID id,
 								Window requestor,
 								Atom property, Time /*time*/)
 {
@@ -809,7 +853,7 @@ bool					CXWindowsScreen::sendClipboardTargets(
 
 	// count the number of targets, plus TARGETS and MULTIPLE
 	SInt32 numTargets = 2;
-	if (m_clipboard.has(IClipboard::kText)) {
+	if (m_clipboards[id].m_clipboard.has(IClipboard::kText)) {
 		numTargets += 2;
 	}
 
@@ -818,7 +862,7 @@ bool					CXWindowsScreen::sendClipboardTargets(
 	SInt32 count = 0;
 	response[count++] = m_atomTargets;
 	response[count++] = m_atomMultiple;
-	if (m_clipboard.has(IClipboard::kText)) {
+	if (m_clipboards[id].m_clipboard.has(IClipboard::kText)) {
 		response[count++] = m_atomText;
 		response[count++] = m_atomString;
 	}
@@ -826,7 +870,8 @@ bool					CXWindowsScreen::sendClipboardTargets(
 	// send response (we assume we can transfer the entire list at once)
 	// FIXME -- handle Alloc errors (by returning false)
 	XChangeProperty(m_display, requestor, property,
-								m_atomAtom, 8 * sizeof(Atom),
+								m_atomAtom,
+								8 * sizeof(Atom),
 								PropModeReplace,
 								reinterpret_cast<unsigned char*>(response),
 								count);
@@ -838,6 +883,7 @@ bool					CXWindowsScreen::sendClipboardTargets(
 }
 
 bool					CXWindowsScreen::sendClipboardTimestamp(
+								ClipboardID id,
 								Window requestor,
 								Atom property, Time /*time*/)
 {
@@ -845,22 +891,24 @@ bool					CXWindowsScreen::sendClipboardTimestamp(
 
 	// FIXME -- handle Alloc errors (by returning false)
 	XChangeProperty(m_display, requestor, property,
-								m_atomInteger, 8 * sizeof(m_gotClipboard),
+								m_atomInteger,
+								8 * sizeof(m_clipboards[id].m_gotClipboard),
 								PropModeReplace,
-								reinterpret_cast<unsigned char*>(&m_gotClipboard),
+								reinterpret_cast<unsigned char*>(
+									&m_clipboards[id].m_gotClipboard),
 								1);
 	return true;
 }
 
 void					CXWindowsScreen::sendNotify(
-								Window requestor, Atom target,
-								Atom property, Time time)
+								ClipboardID id, Window requestor,
+								Atom target, Atom property, Time time)
 {
 	XEvent event;
 	event.xselection.type      = SelectionNotify;
 	event.xselection.display   = m_display;
 	event.xselection.requestor = requestor;
-	event.xselection.selection = kClipboardSelection;
+	event.xselection.selection = m_atomClipboard[id];
 	event.xselection.target    = target;
 	event.xselection.property  = property;
 	event.xselection.time      = time;

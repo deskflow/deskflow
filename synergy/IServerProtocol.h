@@ -1,6 +1,7 @@
 #ifndef ISERVERPROTOCOL_H
 #define ISERVERPROTOCOL_H
 
+#include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "IInterface.h"
@@ -25,9 +26,9 @@ class IServerProtocol : public IInterface {
 	virtual void		sendClose() = 0;
 	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs) = 0;
 	virtual void		sendLeave() = 0;
-	virtual void		sendClipboard(const CString&) = 0;
-	virtual void		sendGrabClipboard() = 0;
-	virtual void		sendQueryClipboard(UInt32 seqNum) = 0;
+	virtual void		sendClipboard(ClipboardID, const CString&) = 0;
+	virtual void		sendGrabClipboard(ClipboardID) = 0;
+	virtual void		sendQueryClipboard(ClipboardID, UInt32 seqNum) = 0;
 	virtual void		sendScreenSaver(bool on) = 0;
 	virtual void		sendKeyDown(KeyID, KeyModifierMask) = 0;
 	virtual void		sendKeyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;
