@@ -150,6 +150,21 @@ void					CXWindowsPrimaryScreen::warpCursorNoLock(
 	}
 }
 
+#include <X11/Xatom.h> // FIXME
+void					CXWindowsPrimaryScreen::setClipboard(
+								const IClipboard* /*clipboard*/)
+{
+	// FIXME -- put this in superclass?
+	// FIXME -- don't use CurrentTime
+	CDisplayLock display(this);
+	XSetSelectionOwner(display, XA_PRIMARY, m_window, CurrentTime);
+	if (XGetSelectionOwner(display, XA_PRIMARY) == m_window) {
+		// we got the selection
+		log((CLOG_DEBUG "grabbed clipboard"));
+	}
+	// FIXME -- need to copy or adopt the clipboard to serve future requests
+}
+
 void					CXWindowsPrimaryScreen::getSize(
 								SInt32* width, SInt32* height) const
 {
@@ -159,6 +174,14 @@ void					CXWindowsPrimaryScreen::getSize(
 SInt32					CXWindowsPrimaryScreen::getJumpZoneSize() const
 {
 	return 1;
+}
+
+void					CXWindowsPrimaryScreen::getClipboard(
+								IClipboard* clipboard) const
+{
+	// FIXME -- put this in superclass?
+	// FIXME -- don't use CurrentTime
+	getDisplayClipboard(clipboard, m_window, CurrentTime);
 }
 
 void					CXWindowsPrimaryScreen::onOpenDisplay()
@@ -215,7 +238,8 @@ void					CXWindowsPrimaryScreen::selectEvents(
 		return;
 
 	// select events of interest
-	XSelectInput(display, w, PointerMotionMask | SubstructureNotifyMask);
+	XSelectInput(display, w, PointerMotionMask | SubstructureNotifyMask |
+								PropertyChangeMask);
 
 	// recurse on child windows
 	Window rw, pw, *cw;

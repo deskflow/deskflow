@@ -365,6 +365,7 @@ bool					CServer::isLockedToScreen() const
 	return false;
 }
 
+#include "CXWindowsClipboard.h" // FIXME
 void					CServer::switchScreen(CScreenInfo* dst,
 								SInt32 x, SInt32 y)
 {
@@ -381,6 +382,10 @@ void					CServer::switchScreen(CScreenInfo* dst,
 		// leave active screen
 		if (m_active->m_protocol == NULL) {
 			m_primary->leave();
+
+			// FIXME -- testing
+			CXWindowsClipboard clipboard;
+			m_primary->getClipboard(&clipboard);
 		}
 		else {
 			m_active->m_protocol->sendLeave();

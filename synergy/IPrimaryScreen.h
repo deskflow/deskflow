@@ -5,7 +5,7 @@
 #include "BasicTypes.h"
 
 class CServer;
-//class IClipboard;
+class IClipboard;
 
 class IPrimaryScreen : public IInterface {
   public:
@@ -37,11 +37,11 @@ class IPrimaryScreen : public IInterface {
 	// warp the cursor to the given position
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
 
-/*
 	// set the screen's clipboard contents.  this is usually called
 	// soon after an enter().
 	virtual void		setClipboard(const IClipboard*) = 0;
 
+/*
 	// show or hide the screen saver
 	virtual void		onScreenSaver(bool show) = 0;
 
@@ -64,10 +64,8 @@ class IPrimaryScreen : public IInterface {
 	// get the size of jump zone
 	virtual SInt32		getJumpZoneSize() const = 0;
 
-/*
 	// get the screen's clipboard contents
 	virtual void		getClipboard(IClipboard*) const = 0;
-*/
 };
 
 #endif

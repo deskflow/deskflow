@@ -23,6 +23,7 @@ CXXFILES = 				\
 	CXWindowsScreen.cpp		\
 	CXWindowsPrimaryScreen.cpp	\
 	CXWindowsSecondaryScreen.cpp	\
+	CXWindowsClipboard.cpp		\
 	XSynergy.cpp			\
 	$(NULL)
 
