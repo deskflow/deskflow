@@ -99,6 +99,7 @@
 #define IDC_ADD_MOD_SUPER               1047
 #define IDC_GLOBAL_SCREENSAVER_SYNC     1047
 #define IDC_ADVANCED_DEFAULTS           1049
+#define IDC_ADD_IGNORE_NUM_LOCK         1052
 
 // Next default values for new objects
 // 
@@ -107,7 +108,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1052
+#define _APS_NEXT_CONTROL_VALUE         1053
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

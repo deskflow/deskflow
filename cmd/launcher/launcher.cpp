@@ -540,14 +540,10 @@ getCommandLine(HWND hwnd, bool testing)
 			SetFocus(child);
 			return CString();
 		}
-
-		if (testing) {
-			cmdLine += " --no-camp";
-		}
 	}
 
-	// debug level
-	if (testing) {
+	// debug level.  always include this.
+	if (true) {
 		HWND child  = getItem(hwnd, IDC_MAIN_DEBUG);
 		DWORD debug = SendMessage(child, CB_GETCURSEL, 0, 0);
 		cmdLine    += " --debug ";
@@ -830,6 +826,10 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		index = info->m_options.find(kOptionHalfDuplexNumLock);
 		setItemChecked(child, (index != info->m_options.end() &&
 											index->second != 0));
+		child = getItem(hwnd, IDC_ADD_IGNORE_NUM_LOCK);
+		index = info->m_options.find(kOptionIgnoreNumLock);
+		setItemChecked(child, (index != info->m_options.end() &&
+											index->second != 0));
 
 		// modifier options
 		for (UInt32 i = 0; i < sizeof(s_modifiers) /
@@ -938,6 +938,13 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			else {
 				info->m_options.erase(kOptionHalfDuplexNumLock);
+			}
+			child = getItem(hwnd, IDC_ADD_IGNORE_NUM_LOCK);
+			if (isItemChecked(child)) {
+				info->m_options[kOptionIgnoreNumLock] = 1;
+			}
+			else {
+				info->m_options.erase(kOptionIgnoreNumLock);
 			}
 
 			// save modifier options
