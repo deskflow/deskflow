@@ -150,6 +150,7 @@ CXWindowsPrimaryScreen::isLockedToScreen() const
 								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
 		if ((state & (Button1Mask | Button2Mask | Button3Mask |
 								Button4Mask | Button5Mask)) != 0) {
+			LOG((CLOG_DEBUG "locked by mouse button"));
 			return true;
 		}
 	}
@@ -162,32 +163,32 @@ CXWindowsPrimaryScreen::isLockedToScreen() const
 	// locked if any key is down
 	for (unsigned int i = 0; i < sizeof(keyMap); ++i) {
 		if (keyMap[i] != 0) {
-			// if any key is half-duplex then it'll be down when
-			// toggled on but shouldn't count as a reason to lock
-			// to the screen.
-			if (m_numLockHalfDuplex || m_capsLockHalfDuplex) {
-				for (unsigned int j = 0; j < 8; ++j) {
-					if ((keyMap[i] & (1 << j)) != 0) {
-						const KeyCode keycode = 8 * i + j;
-						const KeySym keysym   = XKeycodeToKeysym(display,
-																keycode, 0);
-						if (m_numLockHalfDuplex && keysym == XK_Num_Lock) {
-							continue;
-						}
-						if (m_capsLockHalfDuplex && keysym == XK_Caps_Lock) {
-							continue;
-						}
-
-						// non-half-duplex key down
-						return true;
+			for (unsigned int j = 0; j < 8; ++j) {
+				if ((keyMap[i] & (1 << j)) != 0) {
+					const KeyCode keycode = 8 * i + j;
+					const KeySym keysym   = XKeycodeToKeysym(display,
+															keycode, 0);
+					// if any key is half-duplex then it'll be down when
+					// toggled on but shouldn't count as a reason to lock
+					// to the screen.
+					if (m_numLockHalfDuplex && keysym == XK_Num_Lock) {
+						continue;
 					}
+					if (m_capsLockHalfDuplex && keysym == XK_Caps_Lock) {
+						continue;
+					}
+
+					// non-half-duplex key down
+					char* name = XKeysymToString(keysym);
+					if (name == NULL) {
+						LOG((CLOG_DEBUG "locked by keycode %d", keycode));
+					}
+					else {
+						LOG((CLOG_DEBUG "locked by \"%s\"", name));
+					}
+					return true;
 				}
-
-				// only half-duplex keys down
-				continue;
 			}
-
-			return true;
 		}
 	}
 

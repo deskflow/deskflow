@@ -897,13 +897,14 @@ CServer::onCommandKey(KeyID /*id*/, KeyModifierMask /*mask*/, bool /*down*/)
 bool
 CServer::isLockedToScreenNoLock() const
 {
-	// locked if primary says we're locked
-	if (m_primaryClient->isLockedToScreen()) {
+	// locked if scroll-lock is toggled on
+	if ((m_primaryClient->getToggleMask() & KeyModifierScrollLock) != 0) {
+		LOG((CLOG_DEBUG "locked by ScrollLock"));
 		return true;
 	}
 
-	// locked if scroll-lock is toggled on
-	if ((m_primaryClient->getToggleMask() & KeyModifierScrollLock) != 0) {
+	// locked if primary says we're locked
+	if (m_primaryClient->isLockedToScreen()) {
 		return true;
 	}
 

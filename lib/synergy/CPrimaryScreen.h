@@ -175,6 +175,8 @@ public:
 	any other reason that the user should not be allowed to switch
 	screens.  Active toggle keys (including the scroll lock key)
 	should not be counted as reasons to lock to the screen.
+	If this method returns true it should log a message on why at
+	the CLOG_DEBUG level.
 	*/
 	virtual bool		isLockedToScreen() const = 0;
 
