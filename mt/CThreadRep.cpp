@@ -9,6 +9,7 @@
 
 #if defined(CONFIG_PTHREADS)
 #include <signal.h>
+#define SIGWAKEUP SIGUSR1
 #endif
 
 // FIXME -- temporary exception type
@@ -35,17 +36,6 @@ CThreadRep::CThreadRep() : m_prev(NULL),
 #if defined(CONFIG_PTHREADS)
 	// get main thread id
 	m_thread = pthread_self();
-
-	// install SIGALRM handler
-	struct sigaction act;
-	act.sa_handler = &threadCancel;
-# if defined(SA_INTERRUPT)
-	act.sa_flags   = SA_INTERRUPT;
-# else
-	act.sa_flags   = 0;
-# endif
-	sigemptyset(&act.sa_mask);
-	sigaction(SIGALRM, &act, NULL);
 #elif defined(CONFIG_PLATFORM_WIN32)
 	// get main thread id
 	m_thread = NULL;
@@ -86,10 +76,6 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 	int status = pthread_create(&m_thread, NULL, threadFunc, (void*)this);
 	if (status != 0)
 		throw XThreadUnavailable();
-	sigset_t sigset;
-	sigemptyset(&sigset);
-	sigaddset(&sigset, SIGALRM);
-	pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
 #elif defined(CONFIG_PLATFORM_WIN32)
 	unsigned int id;
 	m_thread = reinterpret_cast<HANDLE>(_beginthreadex(NULL, 0,
@@ -132,6 +118,25 @@ void					CThreadRep::initThreads()
 {
 	if (s_mutex == NULL) {
 		s_mutex = new CMutex;
+
+#if defined(CONFIG_PTHREADS)
+		// install SIGWAKEUP handler
+		struct sigaction act;
+		act.sa_handler = &threadCancel;
+# if defined(SA_INTERRUPT)
+		act.sa_flags   = SA_INTERRUPT;
+# else
+		act.sa_flags   = 0;
+# endif
+		sigemptyset(&act.sa_mask);
+		sigaction(SIGWAKEUP, &act, NULL);
+#endif
+
+		// set signal mask
+		sigset_t sigset;
+		sigemptyset(&sigset);
+		sigaddset(&sigset, SIGWAKEUP);
+		pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
 	}
 }
 
@@ -228,7 +233,7 @@ void					CThreadRep::doThreadFunc()
 		m_job->run();
 	}
 
-	catch (XThreadCancel&) {
+	catch (XThreadCancel& e) {
 		// client called cancel()
 		log((CLOG_DEBUG "caught cancel on thread %p", this));
 	}
@@ -239,8 +244,9 @@ void					CThreadRep::doThreadFunc()
 		log((CLOG_DEBUG "caught exit on thread %p", this));
 	}
 	catch (...) {
-		log((CLOG_DEBUG "caught exit on thread %p", this));
+		log((CLOG_DEBUG "exception on thread %p", this));
 		// note -- don't catch (...) to avoid masking bugs
+		delete m_job;
 		throw;
 	}
 
@@ -290,11 +296,14 @@ void					CThreadRep::cancel()
 	CLock lock(s_mutex);
 	if (m_cancellable && !m_cancelling) {
 		m_cancel = true;
-
-		// break out of system calls
-		log((CLOG_DEBUG "cancel thread %p", this));
-		pthread_kill(m_thread, SIGALRM);
 	}
+	else {
+		return;
+	}
+
+	// break out of system calls
+	log((CLOG_DEBUG "cancel thread %p", this));
+	pthread_kill(m_thread, SIGWAKEUP);
 }
 
 void					CThreadRep::testCancel()
@@ -355,15 +364,23 @@ void*					CThreadRep::threadFunc(void* arg)
 	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
 	pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
 
+	// set signal mask
+	sigset_t sigset;
+	sigemptyset(&sigset);
+	sigaddset(&sigset, SIGWAKEUP);
+	pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
+
 	// run thread
 	rep->doThreadFunc();
 
+	{
+		// mark as terminated
+		CLock lock(s_mutex);
+		rep->m_exit = true;
+	}
+
 	// unref thread
 	rep->unref();
-
-	// mark as terminated
-	CLock lock(s_mutex);
-	rep->m_exit = true;
 
 	// terminate the thread
 	return NULL;
@@ -518,7 +535,7 @@ unsigned int __stdcall	CThreadRep::threadFunc(void* arg)
 	CThreadRep* rep = (CThreadRep*)arg;
 
 	// initialize OLE
-    const HRESULT hr = ::OleInitialize(NULL);
+	const HRESULT hr = ::OleInitialize(NULL);
 
 	// run thread
 	rep->doThreadFunc();

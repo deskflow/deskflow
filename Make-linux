@@ -15,7 +15,7 @@ RMR       = /bin/rm -rf
 #
 GCXXDEFS  = -D_XOPEN_SOURCE=500
 GCXXINCS  = -I$(DEPTH)/include -I/usr/X11R6/include
-GCXXOPTS  = -Wall -W -fexceptions -fno-rtti
+GCXXOPTS  = -Wall -W -fexceptions
 CXXOPTIMIZER = -g
 #CXXOPTIMIZER = -O2 -DNDEBUG
 
