@@ -573,9 +573,6 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 	// through the task bar.
 	s_taskBarReceiver = createTaskBarReceiver(&logBuffer);
 
-	// identify system
-	LOG((CLOG_INFO "Synergy server on %s", ARCH->getOSName().c_str()));
-
 	// run
 	int result = startup(argc, argv);
 
@@ -733,6 +730,9 @@ parse(int argc, const char* const* argv)
 
 	// set defaults
 	ARG->m_name = ARCH->getHostName();
+
+	// identify system
+	LOG((CLOG_INFO "Synergy server on %s", ARCH->getOSName().c_str()));
 
 	// parse options
 	int i = 1;
