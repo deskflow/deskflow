@@ -208,11 +208,7 @@ CMSWindowsScreen::mainLoop()
 void
 CMSWindowsScreen::exitMainLoop()
 {
-	// post an arbitrary message after the quit because
-	// MsgWaitForMultipleObjects() is broken and might not wake up if
-	// just WM_QUIT is in the queue.
 	PostThreadMessage(m_threadID, WM_QUIT, 0, 0);
-	PostThreadMessage(m_threadID, WM_APP + 1, 0, 0);
 }
 
 void
@@ -423,15 +419,33 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 	const MSG* msg = &event->m_msg;
 	switch (msg->message) {
 	case SYNERGY_MSG_SCREEN_SAVER:
-		if (msg->wParam != 0) {
-			if (m_screensaver->checkStarted(msg->message, FALSE, 0)) {
-				m_eventHandler->onScreensaver(true);
+		{
+			// activating or deactivating?
+			bool activate = (msg->wParam != 0);
+
+			// ignore this message if there are any other screen saver
+			// messages already in the queue.  this is important because
+			// our checkStarted() function has a deliberate delay, so it
+			// can't respond to events at full CPU speed and will fall
+			// behind if a lot of screen saver events are generated.
+			// that can easily happen because windows will continually
+			// send SC_SCREENSAVE until the screen saver starts, even if
+			// the screen saver is disabled!
+			MSG msg;
+			if (!PeekMessage(&msg, NULL, SYNERGY_MSG_SCREEN_SAVER,
+								SYNERGY_MSG_SCREEN_SAVER, PM_NOREMOVE)) {
+				if (activate) {
+					if (m_screensaver->checkStarted(
+									SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
+						m_eventHandler->onScreensaver(true);
+					}
+				}
+				else {
+					m_eventHandler->onScreensaver(false);
+				}
 			}
+			return true;
 		}
-		else {
-			m_eventHandler->onScreensaver(false);
-		}
-		return true;
 
 	case WM_TIMER:
 		// if current desktop is not the input desktop then switch to it.

@@ -628,6 +628,14 @@ CThreadRep::wait(CThreadRep* target, double timeout)
 bool
 CThreadRep::waitForEvent(double timeout)
 {
+	// check if messages are available first.  if we don't do this then
+	// MsgWaitForMultipleObjects() will block even if the queue isn't
+	// empty if the messages in the queue were there before the last
+	// call to GetMessage()/PeekMessage().
+	if (HIWORD(GetQueueStatus(QS_ALLINPUT)) != 0) {
+		return true;
+	}
+
 	// is cancellation enabled?
 	const DWORD n = (isCancellable() ? 1 : 0);
 
