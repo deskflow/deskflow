@@ -73,8 +73,18 @@ CSecondaryScreen::open()
 		// open the screen
 		getScreen()->open();
 
-		// create and prepare our window
+		// create and prepare our window.  pretend we're active so
+		// we don't try to show our window until later.
+		{
+			CLock lock(&m_mutex);
+			assert(m_active == false);
+			m_active = true;
+		}
 		createWindow();
+		{
+			CLock lock(&m_mutex);
+			m_active = false;
+		}
 
 		// subclass hook
 		onPostOpen();
