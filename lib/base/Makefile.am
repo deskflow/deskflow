@@ -35,6 +35,7 @@ libbase_a_SOURCES =			\
 	CStopwatch.cpp			\
 	CStringUtil.cpp			\
 	CUnicode.cpp			\
+	IEventQueue.cpp			\
 	LogOutputters.cpp		\
 	XBase.cpp				\
 	CEvent.h				\

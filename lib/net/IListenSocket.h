@@ -53,7 +53,7 @@ public:
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&) = 0;
 	virtual void		close() = 0;
-	virtual void		setEventTarget(void*) = 0;
+	virtual void*		getEventTarget() const = 0;
 
 private:
 	static CEvent::Type	s_connectingEvent;

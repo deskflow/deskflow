@@ -239,12 +239,6 @@ CConfig::setSynergyAddress(const CNetworkAddress& addr)
 	m_synergyAddress = addr;
 }
 
-void
-CConfig::setHTTPAddress(const CNetworkAddress& addr)
-{
-	m_httpAddress = addr;
-}
-
 bool
 CConfig::addOption(const CString& name, OptionID option, OptionValue value)
 {
@@ -430,12 +424,6 @@ CConfig::getSynergyAddress() const
 	return m_synergyAddress;
 }
 
-const CNetworkAddress&
-CConfig::getHTTPAddress() const
-{
-	return m_httpAddress;
-}
-
 const CConfig::CScreenOptions*
 CConfig::getOptions(const CString& name) const
 {
@@ -460,9 +448,6 @@ CConfig::operator==(const CConfig& x) const
 {
 /* FIXME -- no compare available for CNetworkAddress
 	if (m_synergyAddress != x.m_synergyAddress) {
-		return false;
-	}
-	if (m_httpAddress != x.m_httpAddress) {
 		return false;
 	}
 */
@@ -782,14 +767,6 @@ CConfig::readSectionOptions(std::istream& s)
 				throw XConfigRead("invalid address argument");
 			}
 		}
-		else if (name == "http") {
-			try {
-				m_httpAddress = CNetworkAddress(value, kDefaultPort + 1);
-			}
-			catch (XSocketAddress&) {
-				throw XConfigRead("invalid http argument");
-			}
-		}
 		else if (name == "heartbeat") {
 			addOption("", kOptionHeartbeat, parseInt(value));
 		}
@@ -1062,10 +1039,6 @@ operator<<(std::ostream& s, const CConfig& config)
 	if (config.m_synergyAddress.isValid()) {
 		s << "\taddress = " <<
 			config.m_synergyAddress.getHostname().c_str() << std::endl;
-	}
-	if (config.m_httpAddress.isValid()) {
-		s << "\thttp = " <<
-			config.m_httpAddress.getHostname().c_str() << std::endl;
 	}
 	s << "end" << std::endl;
 

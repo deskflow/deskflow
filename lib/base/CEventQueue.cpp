@@ -16,37 +16,31 @@
 #include "IEventJob.h"
 #include "CArch.h"
 
+// interrupt handler.  this just adds a quit event to the queue.
+static
+void
+interrupt(void*)
+{
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+
 //
 // CEventQueue
 //
 
-static int				g_systemTarget = 0;
-CEventQueue*			CEventQueue::s_instance = NULL;
-
 CEventQueue::CEventQueue()
 {
-	assert(s_instance == NULL);
-	s_instance = this;
-	m_mutex    = ARCH->newMutex();
+	setInstance(this);
+	m_mutex = ARCH->newMutex();
+	ARCH->setInterruptHandler(&interrupt, NULL);
 }
 
 CEventQueue::~CEventQueue()
 {
+	ARCH->setInterruptHandler(NULL, NULL);
 	ARCH->closeMutex(m_mutex);
-	s_instance = NULL;
-}
-
-void*
-CEventQueue::getSystemTarget()
-{
-	// any unique arbitrary pointer will do
-	return &g_systemTarget;
-}
-
-CEventQueue*
-CEventQueue::getInstance()
-{
-	return s_instance;
+	setInstance(NULL);
 }
 
 bool
@@ -83,7 +77,7 @@ bool
 CEventQueue::dispatchEvent(const CEvent& event)
 {
 	void* target   = event.getTarget();
-	IEventJob* job = getHandler(target);
+	IEventJob* job = getHandler(event.getType(), target);
 	if (job != NULL) {
 		job->run(event);
 		return true;
@@ -164,16 +158,56 @@ void
 CEventQueue::adoptHandler(void* target, IEventJob* handler)
 {
 	CArchMutexLock lock(m_mutex);
-	IEventJob*& job = m_handlers[target];
-	delete job;
-	job = handler;
+	doAdoptHandler(CEvent::kUnknown, target, handler);
+}
+
+void
+CEventQueue::adoptHandler(CEvent::Type type, void* target, IEventJob* handler)
+{
+	assert(type != CEvent::kUnknown);
+	CArchMutexLock lock(m_mutex);
+	doAdoptHandler(type, target, handler);
 }
 
 IEventJob*
 CEventQueue::orphanHandler(void* target)
 {
 	CArchMutexLock lock(m_mutex);
-	CHandlerTable::iterator index = m_handlers.find(target);
+	return doOrphanHandler(CEvent::kUnknown, target);
+}
+
+IEventJob*
+CEventQueue::orphanHandler(CEvent::Type type, void* target)
+{
+	assert(type != CEvent::kUnknown);
+	CArchMutexLock lock(m_mutex);
+	return doOrphanHandler(type, target);
+}
+
+void
+CEventQueue::removeHandler(void* target)
+{
+	delete orphanHandler(target);
+}
+
+void
+CEventQueue::removeHandler(CEvent::Type type, void* target)
+{
+	delete orphanHandler(type, target);
+}
+
+void
+CEventQueue::doAdoptHandler(CEvent::Type type, void* target, IEventJob* handler)
+{
+	IEventJob*& job = m_handlers[CTypeTarget(type, target)];
+	delete job;
+	job = handler;
+}
+
+IEventJob*
+CEventQueue::doOrphanHandler(CEvent::Type type, void* target)
+{
+	CHandlerTable::iterator index = m_handlers.find(CTypeTarget(type, target));
 	if (index != m_handlers.end()) {
 		IEventJob* handler = index->second;
 		m_handlers.erase(index);
@@ -191,16 +225,19 @@ CEventQueue::isEmpty() const
 }
 
 IEventJob*
-CEventQueue::getHandler(void* target) const
+CEventQueue::getHandler(CEvent::Type type, void* target) const
 {
 	CArchMutexLock lock(m_mutex);
-	CHandlerTable::const_iterator index = m_handlers.find(target);
+	CHandlerTable::const_iterator index =
+							m_handlers.find(CTypeTarget(type, target));
 	if (index != m_handlers.end()) {
 		return index->second;
 	}
-	else {
-		return NULL;
+	index = m_handlers.find(CTypeTarget(CEvent::kUnknown, target));
+	if (index != m_handlers.end()) {
+		return index->second;
 	}
+	return NULL;
 }
 
 UInt32
@@ -217,7 +254,7 @@ CEventQueue::saveEvent(const CEvent& event)
 	}
 	else {
 		// make a new id
-		id = static_cast<UInt32>(m_oldEventIDs.size());
+		id = static_cast<UInt32>(m_events.size());
 	}
 
 	// save data
@@ -309,7 +346,31 @@ CEventQueue::getNextTimerTimeout() const
 
 
 //
-// CXWindowsScreen::CTimer
+// CEventQueue::CTypeTarget
+//
+
+CEventQueue::CTypeTarget::CTypeTarget(CEvent::Type type, void* target) :
+	m_type(type),
+	m_target(target)
+{
+	// do nothing
+}
+
+CEventQueue::CTypeTarget::~CTypeTarget()
+{
+	// do nothing
+}
+
+bool
+CEventQueue::CTypeTarget::operator<(const CTypeTarget& tt) const
+{
+	return (m_type < tt.m_type ||
+			(m_type == tt.m_type && m_target < tt.m_target));
+}
+
+
+//
+// CEventQueue::CTimer
 //
 
 CEventQueue::CTimer::CTimer(CEventQueueTimer* timer,

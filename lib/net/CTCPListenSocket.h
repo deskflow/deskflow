@@ -33,7 +33,7 @@ public:
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&);
 	virtual void		close();
-	virtual void		setEventTarget(void*);
+	virtual void*		getEventTarget() const;
 
 	// IListenSocket overrides
 	virtual IDataSocket*	accept();
@@ -46,7 +46,6 @@ private:
 private:
 	CArchSocket			m_socket;
 	CMutex*				m_mutex;
-	void*				m_target;
 };
 
 #endif

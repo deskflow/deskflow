@@ -18,11 +18,8 @@
 // IDataSocket
 //
 
-CEvent::Type			IDataSocket::s_connectedEvent      = CEvent::kUnknown;
-CEvent::Type			IDataSocket::s_failedEvent         = CEvent::kUnknown;
-CEvent::Type			IDataSocket::s_inputEvent          = CEvent::kUnknown;
-CEvent::Type			IDataSocket::s_shutdownInputEvent  = CEvent::kUnknown;
-CEvent::Type			IDataSocket::s_shutdownOutputEvent = CEvent::kUnknown;
+CEvent::Type			IDataSocket::s_connectedEvent = CEvent::kUnknown;
+CEvent::Type			IDataSocket::s_failedEvent    = CEvent::kUnknown;
 
 CEvent::Type
 IDataSocket::getConnectedEvent()
@@ -34,22 +31,4 @@ CEvent::Type
 IDataSocket::getConnectionFailedEvent()
 {
 	return CEvent::registerTypeOnce(s_failedEvent);
-}
-
-CEvent::Type
-IDataSocket::getInputEvent()
-{
-	return CEvent::registerTypeOnce(s_inputEvent);
-}
-
-CEvent::Type
-IDataSocket::getShutdownInputEvent()
-{
-	return CEvent::registerTypeOnce(s_shutdownInputEvent);
-}
-
-CEvent::Type
-IDataSocket::getShutdownOutputEvent()
-{
-	return CEvent::registerTypeOnce(s_shutdownOutputEvent);
 }

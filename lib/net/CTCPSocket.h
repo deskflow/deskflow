@@ -16,14 +16,13 @@
 #define CTCPSOCKET_H
 
 #include "IDataSocket.h"
-#include "CEvent.h"
-#include "BasicTypes.h"
+#include "CStreamBuffer.h"
+#include "CCondVar.h"
+#include "CMutex.h"
 #include "IArchNetwork.h"
 
 class CMutex;
 class CThread;
-class CBufferedInputStream;
-class CBufferedOutputStream;
 class ISocketMultiplexerJob;
 
 //! TCP data socket
@@ -39,33 +38,34 @@ public:
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&);
 	virtual void		close();
-	virtual void		setEventTarget(void*);
+	virtual void*		getEventTarget() const;
+
+	// IStream overrides
+	virtual UInt32		read(void* buffer, UInt32 n);
+	virtual void		write(const void* buffer, UInt32 n);
+	virtual void		flush();
+	virtual void		shutdownInput();
+	virtual void		shutdownOutput();
+	virtual void		setEventFilter(IEventJob* filter);
+	virtual bool		isReady() const;
+	virtual UInt32		getSize() const;
+	virtual IEventJob*	getEventFilter() const;
 
 	// IDataSocket overrides
 	virtual void		connect(const CNetworkAddress&);
-	virtual IInputStream*	getInputStream();
-	virtual IOutputStream*	getOutputStream();
 
 private:
-	enum State {
-		kUnconnected,
-		kConnecting,
-		kReadWrite,
-		kReadOnly,
-		kWriteOnly,
-		kShutdown,
-		kClosed
-	};
-
 	void				init();
 
-	ISocketMultiplexerJob*
-						setState(State, bool setJob);
+	void				setJob(ISocketMultiplexerJob*);
+	ISocketMultiplexerJob*	newJob();
+	void				sendSocketEvent(CEvent::Type);
+	void				sendStreamEvent(CEvent::Type);
 
-	void				closeInput(void*);
-	void				closeOutput(void*);
-	void				emptyInput(void*);
-	void				fillOutput(void*);
+	void				onConnected();
+	void				onInputShutdown();
+	void				onOutputShutdown();
+	void				onDisconnected();
 
 	ISocketMultiplexerJob*
 						serviceConnecting(ISocketMultiplexerJob*,
@@ -74,25 +74,16 @@ private:
 						serviceConnected(ISocketMultiplexerJob*,
 							bool, bool, bool);
 
-	typedef ISocketMultiplexerJob* (CTCPSocket::*JobFunc)(
-							ISocketMultiplexerJob*,
-							bool, bool, bool);
-	ISocketMultiplexerJob*
-						newMultiplexerJob(JobFunc,
-							bool readable, bool writable);
-
-	void				sendEvent(CEvent::Type);
-
 private:
-	CArchSocket				m_socket;
-	CBufferedInputStream*	m_input;
-	CBufferedOutputStream*	m_output;
-
-	CMutex*				m_mutex;
-	State				m_state;
-	void*				m_target;
-
-	ISocketMultiplexerJob*	m_job;
+	CMutex				m_mutex;
+	CArchSocket			m_socket;
+	CStreamBuffer		m_inputBuffer;
+	CStreamBuffer		m_outputBuffer;
+	CCondVar<bool>		m_flushed;
+	bool				m_connected;
+	bool				m_readable;
+	bool				m_writable;
+	IEventJob*			m_eventFilter;
 };
 
 #endif

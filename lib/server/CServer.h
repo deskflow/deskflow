@@ -29,7 +29,6 @@
 #include "stdvector.h"
 
 class CClientProxy;
-class CHTTPServer;
 class CPrimaryClient;
 class IClient;
 class IDataSocket;
@@ -150,6 +149,12 @@ public:
 	Returns the current configuration.
 	*/
 	void				getConfig(CConfig*) const;
+
+	//! Get canonical screen name
+	/*!
+	Returns the canonical version of a screen name.
+	*/
+	CString				getCanonicalName(const CString& name) const;
 
 	//! Get name
 	/*!
@@ -295,12 +300,6 @@ private:
 	void				runClient(void*);
 	CClientProxy*		handshakeClient(IDataSocket*);
 
-	// thread method to accept incoming HTTP connections
-	void				acceptHTTPClients(void*);
-
-	// thread method to process HTTP requests
-	void				processHTTPRequest(void*);
-
 	// connection list maintenance
 	void				addConnection(IClient*);
 	void				removeConnection(const CString& name);
@@ -381,11 +380,6 @@ private:
 	IClient*			m_activeSaver;
 	SInt32				m_xSaver, m_ySaver;
 
-	// HTTP request processing stuff
-	CHTTPServer*		m_httpServer;
-	CCondVar<SInt32>	m_httpAvailable;
-	static const SInt32	s_httpMaxSimultaneousRequests;
-
 	// common state for screen switch tests.  all tests are always
 	// trying to reach the same screen in the same direction.
 	EDirection			m_switchDir;
@@ -408,6 +402,15 @@ private:
 	CJobList			m_statusJobs;
 	EStatus				m_status;
 	CString				m_statusMessage;
+
+//---
+/*
+	IListenSocket*		m_listen;
+
+	typedef std::map<CProvisionalClient*,
+							CEventQueueTimer*> CProvisionalClients;
+	CProvisionalClients	m_provisional;
+*/
 };
 
 #endif

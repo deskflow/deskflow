@@ -88,7 +88,6 @@ public:
 	const char* 		m_logFilter;
 	CString 			m_name;
 	CNetworkAddress 	m_synergyAddress;
-	CNetworkAddress 	m_httpAddress;
 	CConfig 			m_config;
 };
 
@@ -189,11 +188,6 @@ realMain(void)
 			}
 			else if (!ARG->m_config.getSynergyAddress().isValid()) {
 				ARG->m_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
-			}
-
-			// set HTTP address if provided
-			if (ARG->m_httpAddress.isValid()) {
-				ARG->m_config.setHTTPAddress(ARG->m_httpAddress);
 			}
 
 			// create server
@@ -445,20 +439,6 @@ parse(int argc, const char* const* argv)
 			try {
 				ARG->m_synergyAddress = CNetworkAddress(argv[i + 1],
 														kDefaultPort);
-			}
-			catch (XSocketAddress& e) {
-				LOG((CLOG_PRINT "%s: %s" BYE,
-								ARG->m_pname, e.what(), ARG->m_pname));
-				bye(kExitArgs);
-			}
-			++i;
-		}
-
-		else if (isArg(i, argc, argv, NULL, "--http", 1)) {
-			// save listen address
-			try {
-				ARG->m_httpAddress = CNetworkAddress(argv[i + 1],
-														kDefaultPort + 1);
 			}
 			catch (XSocketAddress& e) {
 				LOG((CLOG_PRINT "%s: %s" BYE,

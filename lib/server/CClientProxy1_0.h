@@ -18,12 +18,14 @@
 #include "CClientProxy.h"
 #include "ProtocolTypes.h"
 
+class CEvent;
+class CEventQueueTimer;
+
 //! Proxy for client implementing protocol version 1.0
 class CClientProxy1_0 : public CClientProxy {
 public:
 	CClientProxy1_0(IServer* server, const CString& name,
-							IInputStream* adoptedInput,
-							IOutputStream* adoptedOutput);
+							IStream* adoptedStream);
 	~CClientProxy1_0();
 
 	// IClient overrides
@@ -54,16 +56,29 @@ public:
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 
+protected:
+	virtual bool		parseMessage(const UInt8* code);
+
 private:
-	void				recvInfo(bool notify);
-	void				recvClipboard();
-	void				recvGrabClipboard();
+	void				disconnect();
+	void				removeHandlers();
+	void				addHeartbeatTimer();
+	void				removeHeartbeatTimer();
+
+	void				handleData(const CEvent&, void*);
+	void				handleDisconnect(const CEvent&, void*);
+	void				handleWriteError(const CEvent&, void*);
+	void				handleFlatline(const CEvent&, void*);
+
+	bool				recvInfo(bool notify);
+	bool				recvClipboard();
+	bool				recvGrabClipboard();
 
 private:
 	CClientInfo			m_info;
 	bool				m_clipboardDirty[kClipboardEnd];
-	double				m_heartRate;
-	double				m_heartDeath;
+	double				m_heartbeatAlarm;
+	CEventQueueTimer*	m_heartbeatTimer;
 };
 
 #endif

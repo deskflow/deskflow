@@ -16,9 +16,10 @@
 #define IEVENTQUEUE_H
 
 #include "IInterface.h"
-#include "BasicTypes.h"
+#include "CEvent.h"
 
-class CEvent;
+#define EVENTQUEUE IEventQueue::getInstance()
+
 class IEventJob;
 
 // Opaque type for timer info.  This is defined by subclasses of
@@ -107,8 +108,20 @@ public:
 	/*!
 	Registers an event handler for \p target.  The \p handler is
 	adopted.  Any existing handler for the target is deleted.
+	\c dispatchEvent() will invoke \p handler for any event for
+	\p target that doesn't have a type specific handler.
 	*/
 	virtual void		adoptHandler(void* target, IEventJob* handler) = 0;
+
+	//! Register an event handler for an event type
+	/*!
+	Registers an event handler for \p type and \p target.  The \p handler
+	is adopted.  Any existing handler for the type,target pair is deleted.
+	\c dispatchEvent() will invoke \p handler for any event for \p target
+	of type \p type.
+	*/
+	virtual void		adoptHandler(CEvent::Type type,
+							void* target, IEventJob* handler) = 0;
 
 	//! Unregister an event handler
 	/*!
@@ -117,6 +130,27 @@ public:
 	responsible for deleting the returned handler.
 	*/
 	virtual IEventJob*	orphanHandler(void* target) = 0;
+
+	//! Unregister an event handler for an event type
+	/*!
+	Unregisters an event handler for the \p type, \p target pair and
+	returns it.  Returns NULL if there was no such handler.  The
+	client becomes responsible for deleting the returned handler.
+	*/
+	virtual IEventJob*	orphanHandler(CEvent::Type type, void* target) = 0;
+
+	//! Unregister an event handler
+	/*!
+	Unregisters an event handler for \p target and deletes it.
+	*/
+	virtual void		removeHandler(void* target) = 0;
+
+	//! Unregister an event handler for an event type
+	/*!
+	Unregisters an event handler for the \p type, \p target pair and
+	deletes it.
+	*/
+	virtual void		removeHandler(CEvent::Type type, void* target) = 0;
 
 	//@}
 	//! @name accessors
@@ -131,12 +165,40 @@ public:
 
 	//! Get an event handler
 	/*!
-	Finds and returns the event handler for \p target, or NULL if
-	there is no such handler.
+	Finds and returns the event handler for the \p type, \p target pair.
+	If there is no such handler, returns the handler for \p target.  If
+	that doesn't exist, returns NULL.
 	*/
-	virtual IEventJob*	getHandler(void* target) const = 0;
+	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const = 0;
+
+	//! Get the system event type target
+	/*!
+	Returns the target to use for dispatching \c CEvent::kSystem events.
+	*/
+	static void*		getSystemTarget();
+
+	//! Get the singleton instance
+	/*!
+	Returns the singleton instance of the event queue
+	*/
+	static IEventQueue*	getInstance();
 
 	//@}
+
+protected:
+	//! @name manipulators
+	//@{
+
+	//! Set the singleton instance
+	/*!
+	Sets the singleton instance of the event queue
+	*/
+	static void			setInstance(IEventQueue*);
+
+	//@}
+
+private:
+	static IEventQueue*	s_instance;
 };
 
 #endif

@@ -21,8 +21,7 @@
 class CClientProxy1_1 : public CClientProxy1_0 {
 public:
 	CClientProxy1_1(IServer* server, const CString& name,
-							IInputStream* adoptedInput,
-							IOutputStream* adoptedOutput);
+							IStream* adoptedStream);
 	~CClientProxy1_1();
 
 	// IClient overrides

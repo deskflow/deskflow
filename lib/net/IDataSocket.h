@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,43 +16,26 @@
 #define IDATASOCKET_H
 
 #include "ISocket.h"
-
-class IInputStream;
-class IOutputStream;
+#include "IStream.h"
 
 //! Data stream socket interface
 /*!
 This interface defines the methods common to all network sockets that
 represent a full-duplex data stream.
 */
-class IDataSocket : public ISocket {
+class IDataSocket : public ISocket, public IStream {
 public:
 	//! @name manipulators
 	//@{
 
 	//! Connect socket
 	/*!
-	Attempt to connect to a remote endpoint.  This waits until the
-	connection is established or fails.  If it fails it throws an
-	XSocketConnect exception.
-
-	(cancellation point)
+	Attempt to connect to a remote endpoint.  This returns immediately
+	and sends a connected event when successful or a connection failed
+	event when it fails.  The stream acts as if shutdown for input and
+	output until the stream connects.
 	*/
 	virtual void		connect(const CNetworkAddress&) = 0;
-
-	//! Get input stream
-	/*!
-	Returns the input stream for reading from the socket.  Closing this
-	stream will shutdown the socket for reading.
-	*/
-	virtual IInputStream*	getInputStream() = 0;
-
-	//! Get output stream
-	/*!
-	Returns the output stream for writing to the socket.  Closing this
-	stream will shutdown the socket for writing.
-	*/
-	virtual IOutputStream*	getOutputStream() = 0;
 
 	//@}
 	//! @name accessors
@@ -72,42 +55,27 @@ public:
 	*/
 	static CEvent::Type	getConnectionFailedEvent();
 
-	//! Get input event type
-	/*!
-	Returns the socket input event type.  A socket sends this
-	event when data is available to read from the input stream.
-	*/
-	static CEvent::Type	getInputEvent();
-
-	//! Get shutdown input event type
-	/*!
-	Returns the socket shutdown input event type.  A socket sends this
-	event when the remote side of the connection has shutdown for
-	writing and there is no more data to read from the socket.
-	*/
-	static CEvent::Type	getShutdownInputEvent();
-
-	//! Get shutdown input event type
-	/*!
-	Returns the socket shutdown input event type.  A socket sends this
-	event when the remote side of the connection has shutdown for
-	writing and there is no more data to read from the socket.
-	*/
-	static CEvent::Type	getShutdownOutputEvent();
-
 	//@}
 
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&) = 0;
 	virtual void		close() = 0;
-	virtual void		setEventTarget(void*) = 0;
+	virtual void*		getEventTarget() const = 0;
+
+	// IStream overrides
+	virtual UInt32		read(void* buffer, UInt32 n) = 0;
+	virtual void		write(const void* buffer, UInt32 n) = 0;
+	virtual void		flush() = 0;
+	virtual void		shutdownInput() = 0;
+	virtual void		shutdownOutput() = 0;
+	virtual void		setEventFilter(IEventJob* filter) = 0;
+	virtual bool		isReady() const = 0;
+	virtual UInt32		getSize() const = 0;
+	virtual IEventJob*	getEventFilter() const = 0;
 
 private:
 	static CEvent::Type	s_connectedEvent;
 	static CEvent::Type	s_failedEvent;
-	static CEvent::Type	s_inputEvent;
-	static CEvent::Type	s_shutdownInputEvent;
-	static CEvent::Type	s_shutdownOutputEvent;
 };
 
 #endif

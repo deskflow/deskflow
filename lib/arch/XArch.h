@@ -89,7 +89,7 @@ library to indicate various errors.
 */
 XARCH_SUBCLASS(XArchNetwork, XArch);
 
-//! Network insufficient permission
+//! Operation would block
 XARCH_SUBCLASS(XArchNetworkWouldBlock, XArchNetwork);
 
 //! Network insufficient permission
@@ -115,6 +115,9 @@ XARCH_SUBCLASS(XArchNetworkNoRoute, XArchNetwork);
 
 //! Socket not connected
 XARCH_SUBCLASS(XArchNetworkNotConnected, XArchNetwork);
+
+//! Remote read end of socket has closed
+XARCH_SUBCLASS(XArchNetworkShutdown, XArchNetwork);
 
 //! Remote end of socket has disconnected
 XARCH_SUBCLASS(XArchNetworkDisconnected, XArchNetwork);

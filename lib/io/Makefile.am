@@ -25,19 +25,13 @@ MAINTAINERCLEANFILES =			\
 
 noinst_LIBRARIES = libio.a
 libio_a_SOURCES = 				\
-	CBufferedInputStream.cpp	\
-	CBufferedOutputStream.cpp	\
-	CInputStreamFilter.cpp		\
-	COutputStreamFilter.cpp		\
 	CStreamBuffer.cpp			\
+	CStreamFilter.cpp			\
+	IStream.cpp					\
 	XIO.cpp						\
-	CBufferedInputStream.h		\
-	CBufferedOutputStream.h		\
-	CInputStreamFilter.h		\
-	COutputStreamFilter.h		\
 	CStreamBuffer.h				\
-	IInputStream.h				\
-	IOutputStream.h				\
+	CStreamFilter.h				\
+	IStream.h					\
 	IStreamFilterFactory.h		\
 	XIO.h						\
 	$(NULL)

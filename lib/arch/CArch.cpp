@@ -387,6 +387,18 @@ CArch::getIDOfThread(CArchThread thread)
 	return m_mt->getIDOfThread(thread);
 }
 
+void
+CArch::setInterruptHandler(InterruptFunc func, void* userData)
+{
+	return m_mt->setInterruptHandler(func, userData);
+}
+
+void
+CArch::interrupt()
+{
+	return m_mt->interrupt();
+}
+
 CArchSocket
 CArch::newSocket(EAddressFamily family, ESocketType type)
 {

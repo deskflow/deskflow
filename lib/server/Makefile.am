@@ -29,15 +29,15 @@ libserver_a_SOURCES = 				\
 	CClientProxy1_0.cpp				\
 	CClientProxy1_1.cpp				\
 	CConfig.cpp						\
-	CHTTPServer.cpp					\
 	CPrimaryClient.cpp				\
+	CProvisionalClient.cpp			\
 	CServer.cpp						\
 	CClientProxy.h					\
 	CClientProxy1_0.h				\
 	CClientProxy1_1.h				\
 	CConfig.h						\
-	CHTTPServer.h					\
 	CPrimaryClient.h				\
+	CProvisionalClient.h			\
 	CServer.h						\
 	$(NULL)
 INCLUDES =							\
@@ -46,7 +46,6 @@ INCLUDES =							\
 	-I$(VDEPTH)/lib/base 			\
 	-I$(VDEPTH)/lib/mt	 			\
 	-I$(VDEPTH)/lib/io	 			\
-	-I$(VDEPTH)/lib/http 			\
 	-I$(VDEPTH)/lib/net	 			\
 	-I$(VDEPTH)/lib/synergy			\
 	-I$(VDEPTH)/lib/platform 		\

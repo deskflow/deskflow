@@ -1,0 +1,55 @@
+/*
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2004 Chris Schoeneman
+ * 
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file COPYING that should have accompanied this file.
+ * 
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+#include "IStream.h"
+
+//
+// IStream
+//
+
+CEvent::Type			IStream::s_inputReadyEvent     = CEvent::kUnknown;
+CEvent::Type			IStream::s_outputFlushedEvent  = CEvent::kUnknown;
+CEvent::Type			IStream::s_outputErrorEvent    = CEvent::kUnknown;
+CEvent::Type			IStream::s_inputShutdownEvent  = CEvent::kUnknown;
+CEvent::Type			IStream::s_outputShutdownEvent = CEvent::kUnknown;
+
+CEvent::Type
+IStream::getInputReadyEvent()
+{
+	return CEvent::registerTypeOnce(s_inputReadyEvent);
+}
+
+CEvent::Type
+IStream::getOutputFlushedEvent()
+{
+	return CEvent::registerTypeOnce(s_outputFlushedEvent);
+}
+
+CEvent::Type
+IStream::getOutputErrorEvent()
+{
+	return CEvent::registerTypeOnce(s_outputErrorEvent);
+}
+
+CEvent::Type
+IStream::getInputShutdownEvent()
+{
+	return CEvent::registerTypeOnce(s_inputShutdownEvent);
+}
+
+CEvent::Type
+IStream::getOutputShutdownEvent()
+{
+	return CEvent::registerTypeOnce(s_outputShutdownEvent);
+}

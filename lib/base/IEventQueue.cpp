@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,28 +12,32 @@
  * GNU General Public License for more details.
  */
 
-#include "CInputStreamFilter.h"
+#include "IEventQueue.h"
 
 //
-// CInputStreamFilter
+// IEventQueue
 //
 
-CInputStreamFilter::CInputStreamFilter(IInputStream* stream, bool adopted) :
-	m_stream(stream),
-	m_adopted(adopted)
+static int				g_systemTarget = 0;
+IEventQueue*			IEventQueue::s_instance = NULL;
+
+void*
+IEventQueue::getSystemTarget()
 {
-	assert(m_stream != NULL);
+	// any unique arbitrary pointer will do
+	return &g_systemTarget;
 }
 
-CInputStreamFilter::~CInputStreamFilter()
+IEventQueue*
+IEventQueue::getInstance()
 {
-	if (m_adopted) {
-		delete m_stream;
-	}
+	assert(s_instance != NULL);
+	return s_instance;
 }
 
-IInputStream*
-CInputStreamFilter::getStream() const
+void
+IEventQueue::setInstance(IEventQueue* instance)
 {
-	return m_stream;
+	assert(s_instance == NULL || instance == NULL);
+	s_instance = instance;
 }

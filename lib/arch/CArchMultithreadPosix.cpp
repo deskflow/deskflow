@@ -83,7 +83,9 @@ CArchMultithreadPosix*	CArchMultithreadPosix::s_instance = NULL;
 
 CArchMultithreadPosix::CArchMultithreadPosix() :
 	m_newThreadCalled(false),
-	m_nextID(0)
+	m_nextID(0),
+	m_signalFunc(NULL),
+	m_signalUserData(NULL)
 {
 	assert(s_instance == NULL);
 
@@ -559,6 +561,28 @@ CArchMultithreadPosix::getIDOfThread(CArchThread thread)
 }
 
 void
+CArchMultithreadPosix::setInterruptHandler(InterruptFunc func, void* userData)
+{
+	lockMutex(m_threadMutex);
+	m_signalFunc     = func;
+	m_signalUserData = userData;
+	unlockMutex(m_threadMutex);
+}
+
+void
+CArchMultithreadPosix::interrupt() 
+{
+	lockMutex(m_threadMutex);
+	if (m_signalFunc != NULL) {
+		m_signalFunc(m_signalUserData);
+	}
+	else {
+		ARCH->cancelThread(m_mainThread);
+	}
+	unlockMutex(m_threadMutex);
+}
+
+void
 CArchMultithreadPosix::startSignalHandler()
 {
 	// set signal mask.  the main thread blocks these signals and
@@ -578,7 +602,7 @@ CArchMultithreadPosix::startSignalHandler()
 	if (status == 0) {
 		status = pthread_create(&m_signalThread, &attr,
 							&CArchMultithreadPosix::threadSignalHandler,
-							m_mainThread);
+							NULL);
 		pthread_attr_destroy(&attr);
 	}
 	if (status != 0) {
@@ -735,10 +759,8 @@ CArchMultithreadPosix::threadCancel(int)
 }
 
 void*
-CArchMultithreadPosix::threadSignalHandler(void* vrep)
+CArchMultithreadPosix::threadSignalHandler(void*)
 {
-	CArchThreadImpl* mainThread = reinterpret_cast<CArchThreadImpl*>(vrep);
-
 	// detach
 	pthread_detach(pthread_self());
 
@@ -768,8 +790,7 @@ CArchMultithreadPosix::threadSignalHandler(void* vrep)
 		sigwait(&sigset);
 #endif
 
-		// if we get here then the signal was raised.  cancel the main
-		// thread so it can shut down cleanly.
-		ARCH->cancelThread(mainThread);
+		// if we get here then the signal was raised
+		ARCH->interrupt();
 	}
 }

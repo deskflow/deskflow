@@ -33,27 +33,6 @@ public:
 	CEventQueue();
 	virtual ~CEventQueue();
 
-	//! @name manipulators
-	//@{
-
-	//@}
-	//! @name accessors
-	//@{
-
-	//! Get the system event type target
-	/*!
-	Returns the target to use for dispatching \c CEvent::kSystem events.
-	*/
-	static void*		getSystemTarget();
-
-	//! Get the singleton instance
-	/*!
-	Returns the singleton instance of the event queue
-	*/
-	static CEventQueue*	getInstance();
-
-	//@}
-
 	// IEventQueue overrides
 	virtual bool		getEvent(CEvent& event, double timeout = -1.0);
 	virtual bool		dispatchEvent(const CEvent& event);
@@ -64,9 +43,14 @@ public:
 						newOneShotTimer(double duration, void* target = NULL);
 	virtual void		deleteTimer(CEventQueueTimer*);
 	virtual void		adoptHandler(void* target, IEventJob* dispatcher);
+	virtual void		adoptHandler(CEvent::Type type,
+							void* target, IEventJob* handler);
 	virtual IEventJob*	orphanHandler(void* target);
+	virtual IEventJob*	orphanHandler(CEvent::Type type, void* target);
+	virtual void		removeHandler(void* target);
+	virtual void		removeHandler(CEvent::Type type, void* target);
 	virtual bool		isEmpty() const;
-	virtual IEventJob*	getHandler(void* target) const;
+	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const;
 
 protected:
 	//! @name manipulators
@@ -137,11 +121,26 @@ protected:
 	//@}
 
 private:
+	void				doAdoptHandler(CEvent::Type type,
+							void* target, IEventJob* handler);
+	IEventJob*			doOrphanHandler(CEvent::Type type, void* target);
+
 	UInt32				saveEvent(const CEvent& event);
 	bool				hasTimerExpired(CEvent& event);
 	double				getNextTimerTimeout() const;
 
 private:
+	class CTypeTarget {
+	public:
+		CTypeTarget(CEvent::Type type, void* target);
+		~CTypeTarget();
+
+		bool			operator<(const CTypeTarget&) const;
+
+	private:
+		CEvent::Type	m_type;
+		void*			m_target;
+	};
 	class CTimer {
 	public:
 		CTimer(CEventQueueTimer*, double timeout, void* target, bool oneShot);
@@ -172,9 +171,7 @@ private:
 	typedef CPriorityQueue<CTimer> CTimerQueue;
 	typedef std::map<UInt32, CEvent> CEventTable;
 	typedef std::vector<UInt32> CEventIDList;
-	typedef std::map<void*, IEventJob*> CHandlerTable;
-
-	static CEventQueue*	s_instance;
+	typedef std::map<CTypeTarget, IEventJob*> CHandlerTable;
 
 	CArchMutex			m_mutex;
 

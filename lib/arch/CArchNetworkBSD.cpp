@@ -437,6 +437,10 @@ CArchNetworkBSD::readSocket(CArchSocket s, void* buf, size_t len)
 				ARCH->testCancelThread();
 				continue;
 			}
+			else if (errno == EAGAIN) {
+				n = 0;
+				break;
+			}
 			throwError(errno);
 		}
 	} while (false);
@@ -457,6 +461,11 @@ CArchNetworkBSD::writeSocket(CArchSocket s, const void* buf, size_t len)
 				// interrupted system call
 				ARCH->testCancelThread();
 				continue;
+			}
+			else if (errno == EAGAIN) {
+				// no buffer space
+				n = 0;
+				break;
 			}
 			throwError(errno);
 		}
@@ -794,6 +803,8 @@ CArchNetworkBSD::throwError(int err)
 		throw XArchNetworkNotConnected(new XArchEvalUnix(err));
 
 	case EPIPE:
+		throw XArchNetworkShutdown(new XArchEvalUnix(err));
+
 	case ECONNABORTED:
 	case ECONNRESET:
 		throw XArchNetworkDisconnected(new XArchEvalUnix(err));

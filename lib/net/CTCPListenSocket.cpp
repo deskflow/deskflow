@@ -30,8 +30,7 @@
 // CTCPListenSocket
 //
 
-CTCPListenSocket::CTCPListenSocket() :
-	m_target(NULL)
+CTCPListenSocket::CTCPListenSocket()
 {
 	m_mutex = new CMutex;
 	try {
@@ -76,21 +75,6 @@ CTCPListenSocket::bind(const CNetworkAddress& addr)
 	}
 }
 
-IDataSocket*
-CTCPListenSocket::accept()
-{
-	try {
-		CSocketMultiplexer::getInstance()->addSocket(this,
-							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
-								this, &CTCPListenSocket::serviceListening,
-								m_socket, true, false));
-		return new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
-	}
-	catch (XArchNetwork&) {
-		return NULL;
-	}
-}
-
 void
 CTCPListenSocket::close()
 {
@@ -108,11 +92,25 @@ CTCPListenSocket::close()
 	}
 }
 
-void
-CTCPListenSocket::setEventTarget(void* target)
+void*
+CTCPListenSocket::getEventTarget() const
 {
-	CLock lock(m_mutex);
-	m_target = target;
+	return const_cast<void*>(reinterpret_cast<const void*>(this));
+}
+
+IDataSocket*
+CTCPListenSocket::accept()
+{
+	try {
+		CSocketMultiplexer::getInstance()->addSocket(this,
+							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
+								this, &CTCPListenSocket::serviceListening,
+								m_socket, true, false));
+		return new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
+	}
+	catch (XArchNetwork&) {
+		return NULL;
+	}
 }
 
 ISocketMultiplexerJob*
@@ -125,7 +123,7 @@ CTCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
 	}
 	if (read) {
 		CEventQueue::getInstance()->addEvent(
-							CEvent(getConnectingEvent(), m_target, NULL));
+							CEvent(getConnectingEvent(), this, NULL));
 		// stop polling on this socket until the client accepts
 		return NULL;
 	}

@@ -19,8 +19,7 @@
 #include "CMutex.h"
 #include "CString.h"
 
-class IInputStream;
-class IOutputStream;
+class IStream;
 class IServer;
 
 //! Generic proxy for client
@@ -29,9 +28,7 @@ public:
 	/*!
 	\c name is the name of the client.
 	*/
-	CClientProxy(IServer* server, const CString& name,
-							IInputStream* adoptedInput,
-							IOutputStream* adoptedOutput);
+	CClientProxy(IServer* server, const CString& name, IStream* adoptedStream);
 	~CClientProxy();
 
 	//! @name accessors
@@ -43,17 +40,11 @@ public:
 	*/
 	IServer*			getServer() const;
 
-	//! Get input stream
+	//! Get stream
 	/*!
-	Returns the input stream passed to the c'tor.
+	Returns the stream passed to the c'tor.
 	*/
-	IInputStream*		getInputStream() const;
-
-	//! Get output stream
-	/*!
-	Returns the output stream passed to the c'tor.
-	*/
-	IOutputStream*		getOutputStream() const;
+	IStream*			getStream() const;
 
 	//@}
 
@@ -98,8 +89,7 @@ private:
 	CMutex				m_mutex;
 	IServer*			m_server;
 	CString				m_name;
-	IInputStream*		m_input;
-	IOutputStream*		m_output;
+	IStream*			m_stream;
 };
 
 #endif

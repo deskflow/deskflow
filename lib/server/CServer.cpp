@@ -13,7 +13,6 @@
  */
 
 #include "CServer.h"
-#include "CHTTPServer.h"
 #include "CPrimaryClient.h"
 #include "IScreenFactory.h"
 #include "CInputPacketStream.h"
@@ -45,8 +44,6 @@
 // CServer
 //
 
-const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
-
 CServer::CServer(const CString& serverName) :
 	m_name(serverName),
 	m_error(false),
@@ -59,8 +56,6 @@ CServer::CServer(const CString& serverName) :
 	m_primaryClient(NULL),
 	m_seqNum(0),
 	m_activeSaver(NULL),
-	m_httpServer(NULL),
-	m_httpAvailable(&m_mutex, s_httpMaxSimultaneousRequests),
 	m_switchDir(kNoDirection),
 	m_switchScreen(NULL),
 	m_switchWaitDelay(0.0),
@@ -118,17 +113,14 @@ CServer::mainLoop()
 		setStatus(kNotRunning);
 		LOG((CLOG_NOTE "starting server"));
 
+// FIXME -- started here
+		createClientListener();
+// FIXME -- finished here
+
 		// start listening for new clients
 		m_acceptClientThread = new CThread(startThread(
 								new TMethodJob<CServer>(this,
 									&CServer::acceptClients)));
-
-		// start listening for HTTP requests
-		if (m_config.getHTTPAddress().isValid()) {
-			m_httpServer = new CHTTPServer(this);
-			startThread(new TMethodJob<CServer>(this,
-								&CServer::acceptHTTPClients));
-		}
 
 		// handle events
 		m_primaryClient->mainLoop();
@@ -144,8 +136,6 @@ CServer::mainLoop()
 		// bucket.
 #define FINALLY do {					\
 		stopThreads();					\
-		delete m_httpServer;			\
-		m_httpServer = NULL;			\
 		runStatusJobs();				\
 		} while (false)
 		FINALLY;
@@ -360,6 +350,16 @@ CServer::getConfig(CConfig* config) const
 	*config = m_config;
 }
 
+CString
+CServer::getCanonicalName(const CString& name) const
+{
+	CLock lock(&m_mutex);
+	if (m_config.isScreen(name)) {
+		return m_config.getCanonicalName(name);
+	}
+	return name;
+}
+
 void
 CServer::runStatusJobs() const
 {
@@ -410,11 +410,6 @@ CServer::onError()
 	// stop all running threads but don't wait too long since some
 	// threads may be unable to proceed until this thread returns.
 	stopThreads(3.0);
-
-	// done with the HTTP server
-	CLock lock(&m_mutex);
-	delete m_httpServer;
-	m_httpServer = NULL;
 
 	// note -- we do not attempt to close down the primary screen
 }
@@ -1673,23 +1668,6 @@ CServer::handshakeClient(IDataSocket* socket)
 {
 	LOG((CLOG_DEBUG1 "negotiating with new client"));
 
-	// get the input and output streams
-	IInputStream*  input  = socket->getInputStream();
-	IOutputStream* output = socket->getOutputStream();
-	bool own              = false;
-
-	// attach filters
-	if (m_streamFilterFactory != NULL) {
-		input  = m_streamFilterFactory->createInput(input, own);
-		output = m_streamFilterFactory->createOutput(output, own);
-		own    = true;
-	}
-
-	// attach the packetizing filters
-	input  = new CInputPacketStream(input, own);
-	output = new COutputPacketStream(output, own);
-	own    = true;
-
 	CClientProxy* proxy = NULL;
 	CString name("<unknown>");
 	try {
@@ -1808,111 +1786,6 @@ CServer::handshakeClient(IDataSocket* socket)
 	}
 
 	return NULL;
-}
-
-void
-CServer::acceptHTTPClients(void*)
-{
-	LOG((CLOG_DEBUG1 "starting to wait for HTTP clients"));
-
-	IListenSocket* listen = NULL;
-	try {
-		// create socket listener
-		listen = new CTCPListenSocket;
-
-		// bind to the desired port.  keep retrying if we can't bind
-		// the address immediately.
-		CStopwatch timer;
-		for (;;) {
-			try {
-				LOG((CLOG_DEBUG1 "binding HTTP listen socket"));
-				listen->bind(m_config.getHTTPAddress());
-				break;
-			}
-			catch (XSocketBind& e) {
-				LOG((CLOG_DEBUG1 "bind HTTP failed: %s", e.what()));
-
-				// give up if we've waited too long
-				if (timer.getTime() >= m_bindTimeout) {
-					LOG((CLOG_DEBUG1 "waited too long to bind HTTP, giving up"));
-					throw;
-				}
-
-				// wait a bit before retrying
-				ARCH->sleep(5.0);
-			}
-		}
-
-		// accept connections and begin processing them
-		LOG((CLOG_DEBUG1 "waiting for HTTP connections"));
-		for (;;) {
-			// limit the number of HTTP requests being handled at once
-			{
-				CLock lock(&m_httpAvailable);
-				while (m_httpAvailable == 0) {
-					m_httpAvailable.wait();
-				}
-				assert(m_httpAvailable > 0);
-				m_httpAvailable = m_httpAvailable - 1;
-			}
-
-			// accept connection
-			CThread::testCancel();
-			IDataSocket* socket = listen->accept();
-			LOG((CLOG_NOTE "accepted HTTP connection"));
-			CThread::testCancel();
-
-			// handle HTTP request
-			startThread(new TMethodJob<CServer>(
-								this, &CServer::processHTTPRequest, socket));
-		}
-
-		// clean up
-		delete listen;
-	}
-	catch (XBase& e) {
-		LOG((CLOG_ERR "cannot listen for HTTP clients: %s", e.what()));
-		delete listen;
-		exitMainLoopWithError();
-	}
-	catch (...) {
-		delete listen;
-		throw;
-	}
-}
-
-void
-CServer::processHTTPRequest(void* vsocket)
-{
-	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
-	try {
-		// process the request and force delivery
-		m_httpServer->processRequest(socket);
-		socket->getOutputStream()->flush();
-
-		// wait a moment to give the client a chance to hangup first
-		ARCH->sleep(3.0);
-
-		// clean up
-		socket->close();
-		delete socket;
-
-		// increment available HTTP handlers
-		{
-			CLock lock(&m_httpAvailable);
-			m_httpAvailable = m_httpAvailable + 1;
-			m_httpAvailable.signal();
-		}
-	}
-	catch (...) {
-		delete socket;
-		{
-			CLock lock(&m_httpAvailable);
-			m_httpAvailable = m_httpAvailable + 1;
-			m_httpAvailable.signal();
-		}
-		throw;
-	}
 }
 
 void
@@ -2140,4 +2013,260 @@ CServer::CClipboardInfo::CClipboardInfo() :
 	m_clipboardSeqNum(0)
 {
 	// do nothing
+}
+
+// --- transitional ---
+
+
+void
+CServer::clientConnecting(const CEvent&, void*)
+{
+	// accept client connection
+	IDataSocket* socket = m_listen->accept();
+	if (socket == NULL) {
+		return;
+	}
+
+	LOG((CLOG_NOTE "accepted client connection"));
+
+	// filter socket's streams then wrap the result in a new socket
+	IInputStream*  input  = socket->getInputStream();
+	IOutputStream* output = socket->getOutputStream();
+	bool own              = false;
+	if (m_streamFilterFactory != NULL) {
+		input  = m_streamFilterFactory->createInput(input, own);
+		output = m_streamFilterFactory->createOutput(output, own);
+		own    = true;
+	}
+	input  = new CInputPacketStream(input, own);
+	output = new COutputPacketStream(output, own);
+	socket = new CDataSocket(socket,
+							new CInputOutputStream(input, output, true));
+
+// FIXME -- may want to move these event handlers (but not the
+// handshake timer?) and the handshake into a new proxy object.
+// we save this proxy as a provisional connection.  it calls
+// back to us (or maybe sends an event) to notify of failure or
+// success.  failure is socket failure or protocol error.
+// success returns a new proxy of the appropriate version.  we
+// need to verify the validity of the client's name then remove
+// the provisional connection and install a true connection.
+// if we keep the timer then when it expires we just remove and
+// delete the provisional connection.  if we install a true
+// connection then we remove the timer.
+	CProvisionalClient* client;
+	try {
+		client = new CProvisionalClient(this, socket);
+	}
+	catch (XBase&) {
+		delete socket;
+		// handle error
+		return;
+	}
+
+	// start timer for handshake
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(30.0, client);
+
+	// add client to client map
+	m_provisional.insert(client, timer);
+}
+
+void
+CServer::recvClientHello(const CEvent&, void* vsocket)
+{
+	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
+
+	LOG((CLOG_DEBUG1 "parsing hello reply"));
+
+	CClientProxy* proxy = NULL;
+	CString name("<unknown>");
+	try {
+		// limit the maximum length of the hello
+		UInt32 n = socket->getInputStream()->getSize();
+		if (n > kMaxHelloLength) {
+			LOG((CLOG_DEBUG1 "hello reply too long"));
+			throw XBadClient();
+		}
+
+		// parse the reply to hello
+		SInt16 major, minor;
+		CProtocolUtil::readf(socket->getInputStream(), kMsgHelloBack,
+									&major, &minor, &name);
+
+		// disallow invalid version numbers
+		if (major <= 0 || minor < 0) {
+			throw XIncompatibleClient(major, minor);
+		}
+
+		// convert name to canonical form (if any)
+// FIXME -- need lock?
+		if (m_config.isScreen(name)) {
+			name = m_config.getCanonicalName(name);
+		}
+
+		// create client proxy for highest version supported by the client
+		LOG((CLOG_DEBUG1 "creating proxy for client \"%s\" version %d.%d", name.c_str(), major, minor));
+		if (major == 1) {
+			switch (minor) {
+			case 0:
+// FIXME -- should pass socket, not input and output
+				proxy = new CClientProxy1_0(this, name, input, output);
+				break;
+
+			case 1:
+// FIXME -- should pass socket, not input and output
+				proxy = new CClientProxy1_1(this, name, input, output);
+				break;
+			}
+		}
+
+		// hangup (with error) if version isn't supported
+		if (proxy == NULL) {
+			throw XIncompatibleClient(major, minor);
+		}
+
+		// the proxy now owns the socket
+		socket = NULL;
+
+		// add provisional client connection.  this also checks if
+		// the client's name is okay (i.e. in the map and not in use).
+		addProvisionalClient(proxy);
+
+		// negotiate
+		// FIXME
+
+		// request the client's info and install a handler for it.  note
+		// that the handshake timer is still going.
+		EVENTQUEUE->adoptHandler(IInputStream::getInputReadyEvent(),
+							socket->getInputStream(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::recvClientInfo, socket));
+		LOG((CLOG_DEBUG1 "request info for client \"%s\"", name.c_str()));
+// FIXME -- maybe should send this request some other way.
+// could have the proxy itself handle the input.  that makes sense
+// but will have to check if that'll work.  for one thing, the proxy
+// will have to inform this object of any errors.  it takes this
+// object as a parameter so it probably can do that.
+/*
+		proxy->open();
+*/
+		return;
+	}
+	catch (XDuplicateClient& e) {
+		// client has duplicate name
+		LOG((CLOG_WARN "a client with name \"%s\" is already connected", e.getName().c_str()));
+		CProtocolUtil::writefNoError(proxy->getOutputStream(), kMsgEBusy);
+	}
+	catch (XUnknownClient& e) {
+		// client has unknown name
+		LOG((CLOG_WARN "a client with name \"%s\" is not in the map", e.getName().c_str()));
+		CProtocolUtil::writefNoError(proxy->getOutputStream(), kMsgEUnknown);
+	}
+	catch (XIncompatibleClient& e) {
+		// client is incompatible
+		LOG((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
+		CProtocolUtil::writefNoError(socket->getOutputStream(),
+							kMsgEIncompatible,
+							kProtocolMajorVersion, kProtocolMinorVersion);
+	}
+	catch (XBadClient&) {
+		// client not behaving
+		LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
+		CProtocolUtil::writefNoError(socket->getOutputStream(), kMsgEBad);
+	}
+	catch (XIO&) {
+		// client not behaving
+		LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
+		CProtocolUtil::writefNoError(socket->getOutputStream(), kMsgEBad);
+	}
+	catch (XBase& e) {
+		// misc error
+		LOG((CLOG_WARN "error communicating with client \"%s\": %s", name.c_str(), e.what()));
+	}
+
+// FIXME -- really clean up, including event handlers and timer.
+// should have a method for this.
+	delete proxy;
+	delete socket;
+}
+
+void
+CServer::recvClientInfo(const CEvent&, void* vsocket)
+{
+	// FIXME -- get client's info and proxy becomes first class citizen.
+	// adopt new input handler aimed at clientInput.  remove timer.
+}
+
+void
+CServer::clientTimeout(const CEvent&, void* vsocket)
+{
+	// FIXME -- client failed to connect fast enough.  if client is
+	// already first class then just ignore this (that should never
+	// happen though because timer events are synthesized in the
+	// getEvent() so there can't be a race, so don't fuss over
+	// checking).
+}
+
+void
+CServer::clientInput(const CEvent&, void* vsocket)
+{
+	// FIXME -- client has sent a message
+}
+
+void
+CServer::clientDisconnected(const CEvent&, void* vsocket)
+{
+	// FIXME -- handle disconnection of client
+}
+
+void
+CServer::createClientListener()
+{
+	LOG((CLOG_DEBUG1 "creating socket to listen for clients"));
+
+	assert(m_socketFactory != NULL);
+	IListenSocket* listen = NULL;
+	try {
+		// create socket
+		listen = m_socketFactory->createListen();
+
+		// setup event handler
+		EVENTQUEUE->adoptHandler(IListenSocket::getConnectingEvent(), listen,
+							new TMethodEventJob<CServer>(this,
+								&CServer::clientConnecting));
+
+		// bind listen address
+		LOG((CLOG_DEBUG1 "binding listen socket"));
+		listen->bind(m_config.getSynergyAddress());
+	}
+	catch (XSocketAddressInUse& e) {
+		if (listen != NULL) {
+			EVENTQUEUE->removeHandler(
+							IListenSocket::getConnectingEvent(), listen);
+			delete listen;
+		}
+		setStatus(kError, e.what());
+		LOG((CLOG_WARN "bind failed: %s", e.what()));
+		// FIXME -- throw retry in X seconds object.  the caller should
+		// catch this and optionally wait X seconds and try again.
+		// alternatively we could install a timer and retry automatically.
+		throw;
+	}
+	catch (...) {
+		if (listen != NULL) {
+			EVENTQUEUE->removeHandler(
+							IListenSocket::getConnectingEvent(), listen);
+			delete listen;
+		}
+/* FIXME -- set some status and log error
+		setStatus(kNotRunning);
+		setStatus(kError, e.what());
+		LOG((CLOG_ERR "cannot listen for clients: %s", e.what()));
+*/
+		throw;
+	}
+
+	m_listen = listen;
+	setStatus(kRunning);
+	LOG((CLOG_DEBUG1 "waiting for client connections"));
 }

@@ -268,6 +268,18 @@ public:
 	*/
 	virtual ThreadID	getIDOfThread(CArchThread thread) = 0;
 
+	//! Set the interrupt handler
+	/*!
+	Sets the function to call on receipt of an external interrupt.
+	By default and when \p func is NULL, the main thread is cancelled.
+	*/
+	typedef void		(*InterruptFunc)(void*);
+	virtual void		setInterruptHandler(InterruptFunc func,
+							void* userData) = 0;
+
+	//! Invoke the interrupt handler
+	virtual void		interrupt() = 0;
+
 	//@}
 };
 
