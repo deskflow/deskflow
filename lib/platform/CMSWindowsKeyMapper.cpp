@@ -1101,52 +1101,21 @@ CMSWindowsKeyMapper::mapKeyFromEvent(WPARAM vkCode, LPARAM info,
 			keys[VK_MENU]     = 0x80;
 		}
 
-		// get contents of keyboard layout buffer and clear out that
-		// buffer.  we don't want anything placed there by some other
-		// app interfering and we need to put anything there back in
-		// place when we're done.
-		TCHAR oldDeadKey = getSavedDeadChar(hkl);
-
-		// put our previous dead key, if any, in the layout buffer
-		putBackDeadChar(m_deadKey, hkl, false);
-		m_deadKey = 0;
-
-		// process key
-		WORD ascii;
+		// map to a character
 		bool isMenu = ((menu & 0x80) != 0);
-		int result  = ToAsciiEx(vkCode, scanCode, keys, &ascii,
-								isMenu ? 1 : 0, hkl);
+		c = mapToCharacter(vkCode, scanCode, keys, press, isMenu, hkl);
 
-		// if result is less than zero then it was a dead key
-		if (result < 0) {
-			// save dead key if a key press.  we catch the dead key
-			// release in the result == 2 case below.
-			if (press) {
-				m_deadKey = static_cast<TCHAR>(ascii & 0xffu);
-			}
-		}
-
-		// if result is 1 then the key was succesfully converted
-		else if (result == 1) {
-			c = static_cast<char>(ascii & 0xff);
-		}
-
-		// if result is 2 and the two characters are the same and this
-		// is a key release then a dead key was released.  save the
-		// dead key.  if the two characters are the same and this is
-		// not a release then a dead key was pressed twice.  send the
-		// dead key.
-		else if (result == 2) {
-			if (((ascii & 0xff00u) >> 8) == (ascii & 0x00ffu)) {
-				if (!press) {
-					m_deadKey = static_cast<TCHAR>(ascii & 0xffu);
-				}
-				else {
-					putBackDeadChar(oldDeadKey, hkl, false);
-					result = toAscii(' ', hkl, false, &ascii);
-					c = static_cast<char>((ascii >> 8) & 0xffu);
-				}
-			}
+		// if mapping failed and ctrl and alt are pressed then try again
+		// with both not pressed.  this handles the case where ctrl and
+		// alt are being used as individual modifiers rather than AltGr.
+		if (c == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
+			keys[VK_LCONTROL] = 0;
+			keys[VK_RCONTROL] = 0;
+			keys[VK_CONTROL]  = 0;
+			keys[VK_LMENU]    = 0;
+			keys[VK_RMENU]    = 0;
+			keys[VK_MENU]     = 0;
+			c = mapToCharacter(vkCode, scanCode, keys, press, isMenu, hkl);
 		}
 
 		// map character to key id
@@ -1170,15 +1139,6 @@ CMSWindowsKeyMapper::mapKeyFromEvent(WPARAM vkCode, LPARAM info,
 				id = static_cast<KeyID>(c) & 0xffu;
 			}
 		}
-
-		// clear keyboard layout buffer.  this removes any dead key we
-		// may have just put there.
-		toAscii(' ', hkl, false, NULL);
-
-		// restore keyboard layout buffer so a dead key inserted by
-		// another app doesn't disappear mysteriously (from its point
-		// of view).
-		putBackDeadChar(oldDeadKey, hkl, false);
 	}
 
 	// set mask
@@ -1593,4 +1553,68 @@ CMSWindowsKeyMapper::getSavedDeadChar(HKL hkl) const
 		}
 	}
 	return 0;
+}
+
+char
+CMSWindowsKeyMapper::mapToCharacter(UINT vkCode, UINT scanCode,
+				BYTE* keys, bool press, bool isMenu, HKL hkl) const
+{
+	// get contents of keyboard layout buffer and clear out that
+	// buffer.  we don't want anything placed there by some other
+	// app interfering and we need to put anything there back in
+	// place when we're done.
+	TCHAR oldDeadKey = getSavedDeadChar(hkl);
+
+	// put our previous dead key, if any, in the layout buffer
+	putBackDeadChar(m_deadKey, hkl, false);
+	m_deadKey = 0;
+
+	// process key
+	WORD ascii;
+	int result = ToAsciiEx(vkCode, scanCode, keys, &ascii,
+							isMenu ? 1 : 0, hkl);
+
+	// if result is less than zero then it was a dead key
+	char c = 0;
+	if (result < 0) {
+		// save dead key if a key press.  we catch the dead key
+		// release in the result == 2 case below.
+		if (press) {
+			m_deadKey = static_cast<TCHAR>(ascii & 0xffu);
+		}
+	}
+
+	// if result is 1 then the key was succesfully converted
+	else if (result == 1) {
+		c = static_cast<char>(ascii & 0xff);
+	}
+
+	// if result is 2 and the two characters are the same and this
+	// is a key release then a dead key was released.  save the
+	// dead key.  if the two characters are the same and this is
+	// not a release then a dead key was pressed twice.  send the
+	// dead key.
+	else if (result == 2) {
+		if (((ascii & 0xff00u) >> 8) == (ascii & 0x00ffu)) {
+			if (!press) {
+				m_deadKey = static_cast<TCHAR>(ascii & 0xffu);
+			}
+			else {
+				putBackDeadChar(oldDeadKey, hkl, false);
+				result = toAscii(' ', hkl, false, &ascii);
+				c = static_cast<char>((ascii >> 8) & 0xffu);
+			}
+		}
+	}
+
+	// clear keyboard layout buffer.  this removes any dead key we
+	// may have just put there.
+	toAscii(' ', hkl, false, NULL);
+
+	// restore keyboard layout buffer so a dead key inserted by
+	// another app doesn't disappear mysteriously (from its point
+	// of view).
+	putBackDeadChar(oldDeadKey, hkl, false);
+
+	return c;
 }

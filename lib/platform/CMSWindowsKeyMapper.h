@@ -134,6 +134,12 @@ private:
 	// get the dead key saved in the given keyboard layout, or 0 if none
 	TCHAR				getSavedDeadChar(HKL hkl) const;
 
+	// map the given virtual key, scan code, and keyboard state to a
+	// character, if possible.  this has the side effect of updating
+	// m_deadKey.
+	char				mapToCharacter(UINT vkCode, UINT scanCode,
+							BYTE* keys, bool press, bool isMenu, HKL hkl) const;
+
 private:
 	class CModifierKeys {
 	public:
