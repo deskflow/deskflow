@@ -30,7 +30,10 @@ public:
 	// priority is discarded.  the default priority is 4 (INFO)
 	// (unless built without NDEBUG in which case it's 5 (DEBUG)).
 	// the default can be overridden by setting the SYN_LOG_PRI env
-	// var to "CRIT", "ERR", etc.
+	// var to "FATAL", "ERROR", etc.  setFilter(const char*) returns
+	// true if the priority name was recognized;  if name == NULL
+	// then it simply returns true.
+	static bool			setFilter(const char* name);
 	static void			setFilter(int);
 	static int			getFilter();
 
@@ -73,6 +76,7 @@ private:
 #define CLOG_TRACE		__FILE__, __LINE__,
 #endif
 
+#define CLOG_PRINT		CLOG_TRACE "%z\057"
 #define CLOG_CRIT		CLOG_TRACE "%z\060"
 #define CLOG_ERR		CLOG_TRACE "%z\061"
 #define CLOG_WARN		CLOG_TRACE "%z\062"

@@ -96,6 +96,11 @@ void					CLog::printt(const char* file, int line,
 	sprintf(buffer + g_priorityPad, "%s,%d:", file, line);
 	buffer[pad - 1] = ' ';
 
+	// discard file and line if priority < 0
+	if (priority < 0) {
+		buffer += pad - g_priorityPad;
+	}
+
 	// output buffer
 	output(priority, buffer);
 
@@ -128,6 +133,20 @@ CLog::Lock				CLog::getLock()
 	return (s_lock == dummyLock) ? NULL : s_lock;
 }
 
+bool					CLog::setFilter(const char* maxPriority)
+{
+	if (maxPriority != NULL) {
+		for (int i = 0; i < g_numPriority; ++i) {
+			if (strcmp(maxPriority, g_priority[i]) == 0) {
+				setFilter(i);
+				return true;
+			}
+		}
+		return false;
+	}
+	return true;
+}
+
 void					CLog::setFilter(int maxPriority)
 {
 	CHoldLock lock(s_lock);
@@ -151,15 +170,7 @@ int						CLog::getMaxPriority()
 
 	if (s_maxPriority == -1) {
 		s_maxPriority = g_defaultMaxPriority;
-		const char* priEnv = getenv("SYN_LOG_PRI");
-		if (priEnv != NULL) {
-			for (int i = 0; i < g_numPriority; ++i) {
-				if (strcmp(priEnv, g_priority[i]) == 0) {
-					s_maxPriority = i;
-					break;
-				}
-			}
-		}
+		setFilter(getenv("SYN_LOG_PRI"));
 	}
 
 	return s_maxPriority;
@@ -167,14 +178,18 @@ int						CLog::getMaxPriority()
 
 void					CLog::output(int priority, char* msg)
 {
-	assert(priority >= 0 && priority < g_numPriority);
+	assert(priority >= -1 && priority < g_numPriority);
 	assert(msg != 0);
 
 	if (priority <= getMaxPriority()) {
 		// insert priority label
-		int n = strlen(g_priority[priority]);
-		sprintf(msg + g_maxPriorityLength - n, "%s:", g_priority[priority]);
-		msg[g_maxPriorityLength + 1] = ' ';
+		int n = -g_prioritySuffixLength;
+		if (priority >= 0) {
+			n = strlen(g_priority[priority]);
+			sprintf(msg + g_maxPriorityLength - n,
+								"%s:", g_priority[priority]);
+			msg[g_maxPriorityLength + 1] = ' ';
+		}
 
 		// put a newline at the end
 #if defined(CONFIG_PLATFORM_WIN32)
