@@ -255,6 +255,12 @@ KeyModifierMask			CMSWindowsPrimaryScreen::getToggleMask() const
 	return mask;
 }
 
+bool					CMSWindowsPrimaryScreen::isLockedToScreen() const
+{
+	// FIXME
+	return false;
+}
+
 void					CMSWindowsPrimaryScreen::onOpenDisplay()
 {
 	assert(m_window == NULL);

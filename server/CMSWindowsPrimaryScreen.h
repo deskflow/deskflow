@@ -27,6 +27,7 @@ public:
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 	virtual KeyModifierMask	getToggleMask() const;
+	virtual bool		isLockedToScreen() const;
 
 protected:
 	// CMSWindowsScreen overrides

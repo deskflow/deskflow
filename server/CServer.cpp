@@ -489,7 +489,17 @@ void					CServer::onMouseWheel(SInt32 delta)
 
 bool					CServer::isLockedToScreen() const
 {
-	// FIXME
+	// locked if primary says we're locked
+	if (m_primary->isLockedToScreen()) {
+		return true;
+	}
+
+	// locked if scroll-lock is toggled on
+	if ((m_primary->getToggleMask() & KeyModifierScrollLock) != 0) {
+		return true;
+	}
+
+	// not locked
 	return false;
 }
 

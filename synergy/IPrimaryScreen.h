@@ -84,6 +84,11 @@ public:
 	// the returned mask should have the corresponding bit set for
 	// each toggle key that is active.
 	virtual KeyModifierMask	getToggleMask() const = 0;
+
+	// return true if any key or button is being pressed or if there's
+	// any other reason that the user should not be allowed to switch
+	// screens.
+	virtual bool		isLockedToScreen() const = 0;
 };
 
 #endif

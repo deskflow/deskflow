@@ -424,8 +424,9 @@ KeyModifierMask			CXWindowsPrimaryScreen::getToggleMask() const
 	int xRoot, yRoot, xWindow, yWindow;
 	unsigned int state;
 	if (!XQueryPointer(display, m_window, &root, &window,
-								&xRoot, &yRoot, &xWindow, &yWindow, &state))
+								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
 		return 0;
+	}
 
 	// convert to KeyModifierMask
 	KeyModifierMask mask = 0;
@@ -437,6 +438,38 @@ KeyModifierMask			CXWindowsPrimaryScreen::getToggleMask() const
 		mask |= KeyModifierScrollLock;
 
 	return mask;
+}
+
+bool					CXWindowsPrimaryScreen::isLockedToScreen() const
+{
+	CDisplayLock display(this);
+
+	// query the pointer to get the button state
+	Window root, window;
+	int xRoot, yRoot, xWindow, yWindow;
+	unsigned int state;
+	if (XQueryPointer(display, m_window, &root, &window,
+								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
+		if ((state & (Button1Mask | Button2Mask | Button3Mask |
+								Button4Mask | Button5Mask)) != 0) {
+			return true;
+		}
+	}
+
+	// get logical keyboard state
+	char keyMap[32];
+	memset(keyMap, 0, sizeof(keyMap));
+	XQueryKeymap(display, keyMap);
+
+	// locked if any key is down
+	for (unsigned int i = 0; i < sizeof(keyMap); ++i) {
+		if (keyMap[i] != 0) {
+			return true;
+		}
+	}
+
+	// not locked
+	return false;
 }
 
 void					CXWindowsPrimaryScreen::onOpenDisplay()
