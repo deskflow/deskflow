@@ -425,7 +425,24 @@ CTCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
 {
 	CLock lock(&m_mutex);
 
-	if (error) {
+	// should only check for errors if error is true but checking a new
+	// socket (and a socket that's connecting should be new) for errors
+	// should be safe and Mac OS X appears to have a bug where a
+	// non-blocking stream socket that fails to connect immediately is
+	// reported by select as being writable (i.e. connected) even when
+	// the connection has failed.  this is easily demonstrated on OS X
+	// 10.3.4 by starting a synergy client and telling to connect to
+	// another system that's not running a synergy server.  it will
+	// claim to have connected then quickly disconnect (i guess because
+	// read returns 0 bytes).  unfortunately, synergy attempts to
+	// reconnect immediately, the process repeats and we end up
+	// spinning the CPU.  luckily, OS X does set SO_ERROR on the
+	// socket correctly when the connection has failed so checking for
+	// errors works.  (curiously, sometimes OS X doesn't report
+	// connection refused.  when that happens it at least doesn't
+	// report the socket as being writable so synergy is able to time
+	// out the attempt.)
+	if (true || error) {
 		try {
 			// connection may have failed or succeeded
 			ARCH->throwErrorOnSocket(m_socket);
