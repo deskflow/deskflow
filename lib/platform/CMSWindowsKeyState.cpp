@@ -47,6 +47,9 @@
 #define VK_LAUNCH_APP1			0xB6
 #define VK_LAUNCH_APP2			0xB7
 #endif
+#if !defined(VK_SLEEP)
+#define VK_SLEEP				0x5F
+#endif
 
 //
 // CMSWindowsKeyState
@@ -149,7 +152,7 @@ const char*				CMSWindowsKeyState::s_vkToName[] =
 	"VK_RWIN",
 	"VK_APPS",
 	"vk 0x5e",
-	"vk 0x5f",
+	"VK_SLEEP",
 	"VK_NUMPAD0",
 	"VK_NUMPAD1",
 	"VK_NUMPAD2",
@@ -410,7 +413,7 @@ const KeyID				CMSWindowsKeyState::s_virtualKey[][2] =
 	/* 0x5c */ { kKeyNone,			kKeySuper_R },	// VK_RWIN
 	/* 0x5d */ { kKeyMenu,			kKeyMenu },		// VK_APPS
 	/* 0x5e */ { kKeyNone,			kKeyNone },		// undefined
-	/* 0x5f */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x5f */ { kKeySleep,			kKeyNone },		// VK_SLEEP
 	/* 0x60 */ { kKeyKP_0,			kKeyNone },		// VK_NUMPAD0
 	/* 0x61 */ { kKeyKP_1,			kKeyNone },		// VK_NUMPAD1
 	/* 0x62 */ { kKeyKP_2,			kKeyNone },		// VK_NUMPAD2
@@ -588,7 +591,7 @@ const UINT				CMSWindowsKeyState::s_mapE000[] =
 	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, VK_SLEEP | 0x100u,
 	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
