@@ -620,6 +620,13 @@ CArchNetworkBSD::nameToAddr(const std::string& name)
 								sizeof(inaddr.sin_addr));
 			memcpy(&addr->m_addr, &inaddr, addr->m_len);
 		}
+		else {
+			ARCH->unlockMutex(m_mutex);
+			delete addr;
+			throw XArchNetworkNameUnsupported(
+					"The requested name is valid but "
+					"does not have a supported address family");
+		}
 
 		// done with static buffer
 		ARCH->unlockMutex(m_mutex);

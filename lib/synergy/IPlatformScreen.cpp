@@ -104,14 +104,16 @@ IPlatformScreen::getScreensaverDeactivatedEvent()
 // IPlatformScreen::CKeyInfo
 //
 
-IPlatformScreen::CKeyInfo::CKeyInfo(KeyID id,
-				KeyModifierMask mask, KeyButton button, SInt32 count) :
-	m_key(id),
-	m_mask(mask),
-	m_button(button),
-	m_count(count)
+IPlatformScreen::CKeyInfo*
+IPlatformScreen::CKeyInfo::alloc(KeyID id,
+				KeyModifierMask mask, KeyButton button, SInt32 count)
 {
-	// do nothing
+	CKeyInfo* info = (CKeyInfo*)malloc(sizeof(CKeyInfo));
+	info->m_key    = id;
+	info->m_mask   = mask;
+	info->m_button = button;
+	info->m_count  = count;
+	return info;
 }
 
 
@@ -119,10 +121,12 @@ IPlatformScreen::CKeyInfo::CKeyInfo(KeyID id,
 // IPlatformScreen::CButtonInfo
 //
 
-IPlatformScreen::CButtonInfo::CButtonInfo(ButtonID id) :
-	m_button(id)
+IPlatformScreen::CButtonInfo*
+IPlatformScreen::CButtonInfo::alloc(ButtonID id)
 {
-	// do nothing
+	CButtonInfo* info = (CButtonInfo*)malloc(sizeof(CButtonInfo));
+	info->m_button = id;
+	return info;
 }
 
 
@@ -130,11 +134,13 @@ IPlatformScreen::CButtonInfo::CButtonInfo(ButtonID id) :
 // IPlatformScreen::CMotionInfo
 //
 
-IPlatformScreen::CMotionInfo::CMotionInfo(SInt32 x, SInt32 y) :
-	m_x(x),
-	m_y(y)
+IPlatformScreen::CMotionInfo*
+IPlatformScreen::CMotionInfo::alloc(SInt32 x, SInt32 y)
 {
-	// do nothing
+	CMotionInfo* info = (CMotionInfo*)malloc(sizeof(CMotionInfo));
+	info->m_x = x;
+	info->m_y = y;
+	return info;
 }
 
 
@@ -142,8 +148,10 @@ IPlatformScreen::CMotionInfo::CMotionInfo(SInt32 x, SInt32 y) :
 // IPlatformScreen::CWheelInfo
 //
 
-IPlatformScreen::CWheelInfo::CWheelInfo(SInt32 wheel) :
-	m_wheel(wheel)
+IPlatformScreen::CWheelInfo*
+IPlatformScreen::CWheelInfo::alloc(SInt32 wheel)
 {
-	// do nothing
+	CWheelInfo* info = (CWheelInfo*)malloc(sizeof(CWheelInfo));
+	info->m_wheel = wheel;
+	return info;
 }

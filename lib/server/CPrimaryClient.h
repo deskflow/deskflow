@@ -47,6 +47,13 @@ public:
 	//! @name accessors
 	//@{
 
+	//! Get jump zone size
+	/*!
+	Return the jump zone size, the size of the regions on the edges of
+	the screen that cause the cursor to jump to another screen.
+	*/
+	SInt32				getJumpZoneSize() const;
+
 	//! Get cursor center position
 	/*!
 	Return the cursor center position which is where we park the
@@ -76,7 +83,6 @@ public:
 	// IScreen overrides
 	virtual void*		getEventTarget() const;
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
-	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
@@ -86,7 +92,7 @@ public:
 							UInt32 seqNum, KeyModifierMask mask,
 							bool forScreensaver);
 	virtual bool		leave();
-	virtual void		setClipboard(ClipboardID, const CString&);
+	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);
 	virtual void		setClipboardDirty(ClipboardID, bool);
 	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);

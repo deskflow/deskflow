@@ -18,11 +18,12 @@
 #include "TSocketMultiplexerMethodJob.h"
 #include "XSocket.h"
 #include "CLock.h"
-#include "CEventQueue.h"
 #include "CLog.h"
+#include "IEventQueue.h"
 #include "IEventJob.h"
 #include "CArch.h"
 #include "XArch.h"
+#include <string.h>
 
 //
 // CTCPSocket
@@ -84,6 +85,9 @@ CTCPSocket::bind(const CNetworkAddress& addr)
 void
 CTCPSocket::close()
 {
+	// remove ourself from the multiplexer
+	setJob(NULL);
+
 	CLock lock(&m_mutex);
 
 	// clear buffers and enter disconnected state
@@ -91,9 +95,6 @@ CTCPSocket::close()
 		sendSocketEvent(getDisconnectedEvent());
 	}
 	onDisconnected();
-
-	// remove ourself from the multiplexer
-	setJob(NULL);
 
 	// close the socket
 	if (m_socket != NULL) {
@@ -141,25 +142,28 @@ CTCPSocket::read(void* buffer, UInt32 n)
 void
 CTCPSocket::write(const void* buffer, UInt32 n)
 {
-	CLock lock(&m_mutex);
+	bool wasEmpty;
+	{
+		CLock lock(&m_mutex);
 
-	// must not have shutdown output
-	if (!m_writable) {
-		sendStreamEvent(getOutputErrorEvent());
-		return;
+		// must not have shutdown output
+		if (!m_writable) {
+			sendStreamEvent(getOutputErrorEvent());
+			return;
+		}
+
+		// ignore empty writes
+		if (n == 0) {
+			return;
+		}
+
+		// copy data to the output buffer
+		wasEmpty = (m_outputBuffer.getSize() == 0);
+		m_outputBuffer.write(buffer, n);
+
+		// there's data to write
+		m_flushed = false;
 	}
-
-	// ignore empty writes
-	if (n == 0) {
-		return;
-	}
-
-	// copy data to the output buffer
-	bool wasEmpty = (m_outputBuffer.getSize() == 0);
-	m_outputBuffer.write(buffer, n);
-
-	// there's data to write
-	m_flushed = false;
 
 	// make sure we're waiting to write
 	if (wasEmpty) {
@@ -179,20 +183,26 @@ CTCPSocket::flush()
 void
 CTCPSocket::shutdownInput()
 {
-	CLock lock(&m_mutex);
+	bool useNewJob = false;
+	{
+		CLock lock(&m_mutex);
 
-	// shutdown socket for reading
-	try {
-		ARCH->closeSocketForRead(m_socket);
-	}
-	catch (XArchNetwork&) {
-		// ignore
-	}
+		// shutdown socket for reading
+		try {
+			ARCH->closeSocketForRead(m_socket);
+		}
+		catch (XArchNetwork&) {
+			// ignore
+		}
 
-	// shutdown buffer for reading
-	if (m_readable) {
-		sendStreamEvent(getInputShutdownEvent());
-		onInputShutdown();
+		// shutdown buffer for reading
+		if (m_readable) {
+			sendStreamEvent(getInputShutdownEvent());
+			onInputShutdown();
+			useNewJob = true;
+		}
+	}
+	if (useNewJob) {
 		setJob(newJob());
 	}
 }
@@ -200,20 +210,26 @@ CTCPSocket::shutdownInput()
 void
 CTCPSocket::shutdownOutput()
 {
-	CLock lock(&m_mutex);
+	bool useNewJob = false;
+	{
+		CLock lock(&m_mutex);
 
-	// shutdown socket for writing
-	try {
-		ARCH->closeSocketForWrite(m_socket);
-	}
-	catch (XArchNetwork&) {
-		// ignore
-	}
+		// shutdown socket for writing
+		try {
+			ARCH->closeSocketForWrite(m_socket);
+		}
+		catch (XArchNetwork&) {
+			// ignore
+		}
 
-	// shutdown buffer for writing
-	if (m_writable) {
-		sendStreamEvent(getOutputShutdownEvent());
-		onOutputShutdown();
+		// shutdown buffer for writing
+		if (m_writable) {
+			sendStreamEvent(getOutputShutdownEvent());
+			onOutputShutdown();
+			useNewJob = true;
+		}
+	}
+	if (useNewJob) {
 		setJob(newJob());
 	}
 }
@@ -249,28 +265,29 @@ CTCPSocket::getEventFilter() const
 void
 CTCPSocket::connect(const CNetworkAddress& addr)
 {
-	CLock lock(&m_mutex);
+	{
+		CLock lock(&m_mutex);
 
-	// fail on attempts to reconnect
-	if (m_socket == NULL || m_connected) {
-		sendSocketEvent(getConnectionFailedEvent());
-		return;
-	}
+		// fail on attempts to reconnect
+		if (m_socket == NULL || m_connected) {
+			sendConnectionFailedEvent("busy");
+			return;
+		}
 
-	try {
-		ARCH->connectSocket(m_socket, addr.getAddress());
-		sendSocketEvent(getConnectedEvent());
-		onConnected();
-		setJob(newJob());
+		try {
+			ARCH->connectSocket(m_socket, addr.getAddress());
+			sendSocketEvent(getConnectedEvent());
+			onConnected();
+		}
+		catch (XArchNetworkConnecting&) {
+			// connection is in progress
+			m_writable = true;
+		}
+		catch (XArchNetwork& e) {
+			throw XSocketConnect(e.what());
+		}
 	}
-	catch (XArchNetworkConnecting&) {
-		// connection is in progress
-		m_writable = true;
-		setJob(newJob());
-	}
-	catch (XArchNetwork& e) {
-		throw XSocketConnect(e.what());
-	}
+	setJob(newJob());
 }
 
 void
@@ -339,17 +356,27 @@ CTCPSocket::newJob()
 void
 CTCPSocket::sendSocketEvent(CEvent::Type type)
 {
-	EVENTQUEUE->addEvent(CEvent(type, this, NULL));
+	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), NULL));
+}
+
+void
+CTCPSocket::sendConnectionFailedEvent(const char* msg)
+{
+	CConnectionFailedInfo* info = (CConnectionFailedInfo*)malloc(
+							sizeof(CConnectionFailedInfo) + strlen(msg));
+	strcpy(info->m_what, msg);
+	EVENTQUEUE->addEvent(CEvent(getConnectionFailedEvent(),
+							getEventTarget(), info));
 }
 
 void
 CTCPSocket::sendStreamEvent(CEvent::Type type)
 {
 	if (m_eventFilter != NULL) {
-		m_eventFilter->run(CEvent(type, this, NULL));
+		m_eventFilter->run(CEvent(type, getEventTarget(), NULL));
 	}
 	else {
-		EVENTQUEUE->addEvent(CEvent(type, this, NULL));
+		EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), NULL));
 	}
 }
 
@@ -394,20 +421,16 @@ CTCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
 {
 	CLock lock(&m_mutex);
 
-	if (write && !error) {
+	if (error) {
 		try {
 			// connection may have failed or succeeded
 			ARCH->throwErrorOnSocket(m_socket);
 		}
-		catch (XArchNetwork&) {
-			error = true;
+		catch (XArchNetwork& e) {
+			sendConnectionFailedEvent(e.what().c_str());
+			onDisconnected();
+			return newJob();
 		}
-	}
-
-	if (error) {
-		sendSocketEvent(getConnectionFailedEvent());
-		onDisconnected();
-		return newJob();
 	}
 
 	if (write) {

@@ -78,7 +78,7 @@ public:
 							UInt32 seqNum, KeyModifierMask mask,
 							bool forScreensaver) = 0;
 	virtual bool		leave() = 0;
-	virtual void		setClipboard(ClipboardID, const CString&) = 0;
+	virtual void		setClipboard(ClipboardID, const IClipboard*) = 0;
 	virtual void		grabClipboard(ClipboardID) = 0;
 	virtual void		setClipboardDirty(ClipboardID, bool) = 0;
 	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton) = 0;

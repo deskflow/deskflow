@@ -172,24 +172,34 @@ closeClientListener(CClientListener* listen)
 }
 
 static
+void
+handleScreenError(const CEvent&, void*)
+{
+	LOG((CLOG_CRIT "error on screen"));
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+static
 CScreen*
 openServerScreen()
 {
-	return createScreen();
+	CScreen* screen = createScreen();
+	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
+							screen->getEventTarget(),
+							new CFunctionEventJob(
+								&handleScreenError));
+	return screen;
 }
 
 static
 void
 closeServerScreen(CScreen* screen)
 {
-	delete screen;
-}
-
-static
-void
-handleScreenError(const CEvent&, void*)
-{
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	if (screen != NULL) {
+		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
+							screen->getEventTarget());
+		delete screen;
+	}
 }
 
 static
@@ -197,23 +207,14 @@ CPrimaryClient*
 openPrimaryClient(const CString& name, CScreen* screen)
 {
 	LOG((CLOG_DEBUG1 "creating primary screen"));
-	CPrimaryClient* primaryClient = new CPrimaryClient(name, screen);
-	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
-							primaryClient->getEventTarget(),
-							new CFunctionEventJob(
-								&handleScreenError));
-	return primaryClient;
+	return new CPrimaryClient(name, screen);
 }
 
 static
 void
 closePrimaryClient(CPrimaryClient* primaryClient)
 {
-	if (primaryClient != NULL) {
-		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
-							primaryClient->getEventTarget());
-		delete primaryClient;
-	}
+	delete primaryClient;
 }
 
 static
@@ -711,7 +712,7 @@ parse(int argc, const char* const* argv)
 
 static
 bool
-loadConfig(const char* pathname, bool require)
+loadConfig(const char* pathname)
 {
 	assert(pathname != NULL);
 
@@ -727,15 +728,8 @@ loadConfig(const char* pathname, bool require)
 		return true;
 	}
 	catch (XConfigRead& e) {
-		if (require) {
-			LOG((CLOG_PRINT "%s: cannot read configuration '%s': %s",
-								ARG->m_pname, pathname, e.what()));
-			bye(kExitConfig);
-		}
-		else {
-			LOG((CLOG_DEBUG "cannot read configuration \"%s\": %s",
+		LOG((CLOG_DEBUG "cannot read configuration \"%s\": %s",
 								pathname, e.what()));
-		}
 	}
 	return false;
 }
@@ -744,33 +738,37 @@ static
 void
 loadConfig()
 {
+	bool loaded = false;
+
 	// load the config file, if specified
 	if (ARG->m_configFile != NULL) {
-		// require the user specified file to load correctly
-		loadConfig(ARG->m_configFile, true);
+		loaded = loadConfig(ARG->m_configFile);
 	}
 
 	// load the default configuration if no explicit file given
 	else {
-		// get the user's home directory.  use the effective user id
-		// so a user can't get a setuid root program to load his file.
-		bool loaded = false;
+		// get the user's home directory
 		CString path = ARCH->getUserDirectory();
 		if (!path.empty()) {
 			// complete path
 			path = ARCH->concatPath(path, USR_CONFIG_NAME);
 
 			// now try loading the user's configuration
-			loaded = loadConfig(path.c_str(), false);
+			loaded = loadConfig(path.c_str());
 		}
 		if (!loaded) {
 			// try the system-wide config file
 			path = ARCH->getSystemDirectory();
 			if (!path.empty()) {
 				path = ARCH->concatPath(path, SYS_CONFIG_NAME);
-				loadConfig(path.c_str(), false);
+				loaded = loadConfig(path.c_str());
 			}
 		}
+	}
+
+	if (!loaded) {
+		LOG((CLOG_PRINT "%s: no configuration available", ARG->m_pname));
+		bye(kExitConfig);
 	}
 }
 

@@ -77,7 +77,7 @@ CStreamFilter::setEventFilter(IEventJob* filter)
 void*
 CStreamFilter::getEventTarget() const
 {
-	return const_cast<void*>(reinterpret_cast<const void*>(this));
+	return getStream()->getEventTarget();
 }
 
 bool

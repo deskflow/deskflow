@@ -108,7 +108,7 @@ private:
 	static int			ioErrorHandler(Display*);
 
 private:
-	class CKeyEventInfo {
+	class CKeyEventFilter {
 	public:
 		int				m_event;
 		Window			m_window;

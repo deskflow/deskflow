@@ -39,7 +39,7 @@ public:
 							UInt32 seqNum, KeyModifierMask mask,
 							bool forScreensaver);
 	virtual bool		leave();
-	virtual void		setClipboard(ClipboardID, const CString&);
+	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);
 	virtual void		setClipboardDirty(ClipboardID, bool);
 	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);

@@ -218,11 +218,9 @@ CClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-CClientProxy1_0::getCursorPos(SInt32& x, SInt32& y) const
+CClientProxy1_0::getCursorPos(SInt32&, SInt32&) const
 {
 	assert(0 && "shouldn't be called");
-	x = m_info.m_mx;
-	y = m_info.m_my;
 }
 
 void
@@ -245,13 +243,15 @@ CClientProxy1_0::leave()
 }
 
 void
-CClientProxy1_0::setClipboard(ClipboardID id, const CString& data)
+CClientProxy1_0::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
 	// ignore if this clipboard is already clean
 	if (m_clipboard[id].m_dirty) {
 		// this clipboard is now clean
 		m_clipboard[id].m_dirty = false;
+		CClipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
 
+		CString data = m_clipboard[id].m_clipboard.marshall();
 		LOG((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getName().c_str(), data.size()));
 		CProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, &data);
 	}
@@ -366,29 +366,23 @@ bool
 CClientProxy1_0::recvInfo()
 {
 	// parse the message
-	SInt16 x, y, w, h, zoneSize, mx, my;
+	SInt16 x, y, w, h, dummy1, dummy2, dummy3;
 	if (!CProtocolUtil::readf(getStream(), kMsgDInfo + 4,
-							&x, &y, &w, &h, &zoneSize, &mx, &my)) {
+							&x, &y, &w, &h, &dummy1, &dummy2, &dummy3)) {
 		return false;
 	}
-	LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d, zone=%d, pos=%d,%d", getName().c_str(), x, y, w, h, zoneSize, mx, my));
+	LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d", getName().c_str(), x, y, w, h));
 
 	// validate
-	if (w <= 0 || h <= 0 || zoneSize < 0) {
-		return false;
-	}
-	if (mx < x || my < y || mx >= x + w || my >= y + h) {
+	if (w <= 0 || h <= 0) {
 		return false;
 	}
 
 	// save
-	m_info.m_x        = x;
-	m_info.m_y        = y;
-	m_info.m_w        = w;
-	m_info.m_h        = h;
-	m_info.m_zoneSize = zoneSize;
-	m_info.m_mx       = mx;
-	m_info.m_my       = my;
+	m_info.m_x = x;
+	m_info.m_y = y;
+	m_info.m_w = w;
+	m_info.m_h = h;
 
 	// acknowledge receipt
 	LOG((CLOG_DEBUG1 "send info ack to \"%s\"", getName().c_str()));

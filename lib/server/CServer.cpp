@@ -16,7 +16,6 @@
 #include "CClientProxy.h"
 #include "CClientProxyUnknown.h"
 #include "CPrimaryClient.h"
-#include "CPacketStreamFilter.h"
 #include "IPlatformScreen.h"
 #include "OptionTypes.h"
 #include "ProtocolTypes.h"
@@ -205,6 +204,11 @@ CServer::adoptClient(IClient* client)
 {
 	assert(client != NULL);
 
+	// watch for client disconnection
+	EVENTQUEUE->adoptHandler(CClientProxy::getDisconnectedEvent(), client,
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleClientDisconnected, client));
+
 	// name must be in our configuration
 	if (!m_config.isScreen(client->getName())) {
 		LOG((CLOG_WARN "a client with name \"%s\" is not in the map", client->getName().c_str()));
@@ -220,11 +224,6 @@ CServer::adoptClient(IClient* client)
 		return;
 	}
 	LOG((CLOG_NOTE "client \"%s\" has connected", getName(client).c_str()));
-
-	// watch for client disconnection
-	EVENTQUEUE->adoptHandler(CClientProxy::getDisconnectedEvent(), client,
-							new TMethodEventJob<CServer>(this,
-								&CServer::handleClientDisconnected, client));
 
 	// send configuration options to client
 	sendOptions(client);
@@ -287,7 +286,11 @@ CServer::onCommandKey(KeyID /*id*/, KeyModifierMask /*mask*/, bool /*down*/)
 CString
 CServer::getName(const IClient* client) const
 {
-	return m_config.getCanonicalName(client->getName());
+	CString name = m_config.getCanonicalName(client->getName());
+	if (name.empty()) {
+		name = client->getName();
+	}
+	return name;
 }
 
 UInt32
@@ -397,7 +400,7 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 
 		// send the clipboard data to new active screen
 		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			m_active->setClipboard(id, m_clipboards[id].m_clipboardData);
+			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 		}
 	}
 	else {
@@ -1078,7 +1081,7 @@ CServer::onClipboardChanged(IClient* sender, ClipboardID id, UInt32 seqNum)
 	}
 
 	// send the new clipboard to the active screen
-	m_active->setClipboard(id, clipboard.m_clipboardData);
+	m_active->setClipboard(id, &clipboard.m_clipboard);
 }
 
 void

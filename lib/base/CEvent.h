@@ -38,9 +38,10 @@ public:
 	//! Create \c CEvent with data
 	/*!
 	The \p type must have been registered using \c registerType().
-	The \p data must be POD (plain old data) which means it cannot
-	have a destructor or be composed of any types that do.  \p target
-	is the intended recipient of the event.
+	The \p data must be POD (plain old data) allocated by malloc(),
+	which means it cannot have a constructor, destructor or be
+	composed of any types that do.  \p target is the intended
+	recipient of the event.
 	*/
 	CEvent(Type type, void* target = NULL, void* data = NULL);
 
@@ -70,7 +71,7 @@ public:
 
 	//! Release event data
 	/*!
-	Deletes event data for the given event.
+	Deletes event data for the given event (using free()).
 	*/
 	static void			deleteData(const CEvent&);
 

@@ -267,19 +267,11 @@ public:
 	*/
 	SInt32				m_w, m_h;
 
-	//! Jump zone size
-	/*!
-	This is the size of the jump zone.  The cursor jumps to the adjacent
-	screen when it comes within this many pixels of the edge of the screen.
-	*/
-	SInt32				m_zoneSize;
+	//! Obsolete (jump zone size)
+	SInt32				obsolete1;
 
-	//! Mouse position
-	/*!
-	The position of the cursor.  This is not kept up-to-date so it's
-	only meaningful when receiving an update.
-	*/
-	SInt32				m_mx, m_my;
+	//! Obsolete (mouse position)
+	SInt32				obsolete2, obsolete3;
 };
 
 #endif

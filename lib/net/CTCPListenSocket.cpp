@@ -19,10 +19,9 @@
 #include "TSocketMultiplexerMethodJob.h"
 #include "XSocket.h"
 #include "XIO.h"
-#include "CEvent.h"
-#include "CEventQueue.h"
 #include "CLock.h"
 #include "CMutex.h"
+#include "IEventQueue.h"
 #include "CArch.h"
 #include "XArch.h"
 
@@ -125,8 +124,7 @@ CTCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
 		return NULL;
 	}
 	if (read) {
-		CEventQueue::getInstance()->addEvent(
-							CEvent(getConnectingEvent(), this, NULL));
+		EVENTQUEUE->addEvent(CEvent(getConnectingEvent(), this, NULL));
 		// stop polling on this socket until the client accepts
 		return NULL;
 	}

@@ -14,8 +14,8 @@
 
 #include "CServerTaskBarReceiver.h"
 #include "CServer.h"
-#include "CEventQueue.h"
 #include "CLock.h"
+#include "IEventQueue.h"
 #include "CArch.h"
 
 //

@@ -835,7 +835,7 @@ CXWindowsScreen::sendEvent(CEvent::Type type, void* data)
 void
 CXWindowsScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id)
 {
-	CClipboardInfo* info   = new CClipboardInfo;
+	CClipboardInfo* info   = (CClipboardInfo*)malloc(sizeof(CClipboardInfo));
 	info->m_id             = id;
 	info->m_sequenceNumber = m_sequenceNumber;
 	sendEvent(type, info);
@@ -1028,11 +1028,11 @@ CXWindowsScreen::onKeyPress(XKeyEvent& xkey)
 		}
 
 		// handle key
-		sendEvent(getKeyDownEvent(), new CKeyInfo(key, mask, keycode, 1));
+		sendEvent(getKeyDownEvent(), CKeyInfo::alloc(key, mask, keycode, 1));
 		KeyModifierMask keyMask = m_keyState->getMaskForKey(keycode);
 		if (m_keyState->isHalfDuplex(keyMask)) {
 			sendEvent(getKeyUpEvent(),
-							new CKeyInfo(key, mask | keyMask, keycode, 1));
+							CKeyInfo::alloc(key, mask | keyMask, keycode, 1));
 		}
 	}
 }
@@ -1040,7 +1040,7 @@ CXWindowsScreen::onKeyPress(XKeyEvent& xkey)
 Bool
 CXWindowsScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
 {
-	CKeyEventInfo* filter = reinterpret_cast<CKeyEventInfo*>(arg);
+	CKeyEventFilter* filter = reinterpret_cast<CKeyEventFilter*>(arg);
 	return (xevent->type         == filter->m_event &&
 			xevent->xkey.window  == filter->m_window &&
 			xevent->xkey.time    == filter->m_time &&
@@ -1057,7 +1057,7 @@ CXWindowsScreen::onKeyRelease(XKeyEvent& xkey)
 		// KeyPress event that has the same key and time as
 		// this release event, if any.  first prepare the
 		// filter info.
-		CKeyEventInfo filter;
+		CKeyEventFilter filter;
 		filter.m_event   = KeyPress;
 		filter.m_window  = xkey.window;
 		filter.m_time    = xkey.time;
@@ -1089,9 +1089,9 @@ CXWindowsScreen::onKeyRelease(XKeyEvent& xkey)
 			KeyModifierMask keyMask = m_keyState->getMaskForKey(keycode);
 			if (m_keyState->isHalfDuplex(keyMask)) {
 				sendEvent(getKeyDownEvent(),
-							new CKeyInfo(key, mask, keycode, 1));
+							CKeyInfo::alloc(key, mask, keycode, 1));
 			}
-			sendEvent(getKeyUpEvent(), new CKeyInfo(key, mask, keycode, 1));
+			sendEvent(getKeyUpEvent(), CKeyInfo::alloc(key, mask, keycode, 1));
 		}
 		else {
 			// found a press event following so it's a repeat.
@@ -1099,7 +1099,8 @@ CXWindowsScreen::onKeyRelease(XKeyEvent& xkey)
 			// repeats but we'll just send a repeat of 1.
 			// note that we discard the press event.
 			LOG((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", keycode, xkey.state));
-			sendEvent(getKeyRepeatEvent(), new CKeyInfo(key, mask, keycode, 1));
+			sendEvent(getKeyRepeatEvent(),
+							CKeyInfo::alloc(key, mask, keycode, 1));
 		}
 	}
 }
@@ -1110,7 +1111,7 @@ CXWindowsScreen::onMousePress(const XButtonEvent& xbutton)
 	LOG((CLOG_DEBUG1 "event: ButtonPress button=%d", xbutton.button));
 	const ButtonID button = mapButtonFromX(&xbutton);
 	if (button != kButtonNone) {
-		sendEvent(getButtonDownEvent(), new CButtonInfo(button));
+		sendEvent(getButtonDownEvent(), CButtonInfo::alloc(button));
 	}
 }
 
@@ -1120,15 +1121,15 @@ CXWindowsScreen::onMouseRelease(const XButtonEvent& xbutton)
 	LOG((CLOG_DEBUG1 "event: ButtonRelease button=%d", xbutton.button));
 	const ButtonID button = mapButtonFromX(&xbutton);
 	if (button != kButtonNone) {
-		sendEvent(getButtonUpEvent(), new CButtonInfo(button));
+		sendEvent(getButtonUpEvent(), CButtonInfo::alloc(button));
 	}
 	else if (xbutton.button == 4) {
 		// wheel forward (away from user)
-		sendEvent(getWheelEvent(), new CWheelInfo(120));
+		sendEvent(getWheelEvent(), CWheelInfo::alloc(120));
 	}
 	else if (xbutton.button == 5) {
 		// wheel backward (toward user)
-		sendEvent(getWheelEvent(), new CWheelInfo(-120));
+		sendEvent(getWheelEvent(), CWheelInfo::alloc(-120));
 	}
 }
 
@@ -1160,7 +1161,7 @@ CXWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 	else if (m_isOnScreen) {
 		// motion on primary screen
 		sendEvent(getMotionOnPrimaryEvent(),
-							new CMotionInfo(m_xCursor, m_yCursor));
+							CMotionInfo::alloc(m_xCursor, m_yCursor));
 	}
 	else {
 		// motion on secondary screen.  warp mouse back to
@@ -1190,7 +1191,7 @@ CXWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 		// warping to the primary screen's enter position,
 		// effectively overriding it.
 		if (x != 0 || y != 0) {
-			sendEvent(getMotionOnSecondaryEvent(), new CMotionInfo(x, y));
+			sendEvent(getMotionOnSecondaryEvent(), CMotionInfo::alloc(x, y));
 		}
 	}
 }

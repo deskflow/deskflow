@@ -113,6 +113,9 @@ CNetworkAddress::CNetworkAddress(const CString& hostname_, int port) :
 		catch (XArchNetworkNameNoAddress&) {
 			throw XSocketAddress(XSocketAddress::kNoAddress, hostname, port);
 		}
+		catch (XArchNetworkNameUnsupported&) {
+			throw XSocketAddress(XSocketAddress::kUnsupported, hostname, port);
+		}
 		catch (XArchNetworkName&) {
 			throw XSocketAddress(XSocketAddress::kUnknown, hostname, port);
 		}

@@ -25,6 +25,12 @@ represent a full-duplex data stream.
 */
 class IDataSocket : public ISocket, public IStream {
 public:
+	class CConnectionFailedInfo {
+	public:
+		// pointer to a string describing the failure
+		char			m_what[1];
+	};
+
 	//! @name manipulators
 	//@{
 
@@ -52,6 +58,7 @@ public:
 	/*!
 	Returns the socket connection failed event type.  A socket sends
 	this event when an attempt to connect to a remote port has failed.
+	The data is a pointer to a CConnectionFailedInfo.
 	*/
 	static CEvent::Type	getConnectionFailedEvent();
 

@@ -13,23 +13,22 @@
  */
 
 #include "CClient.h"
-#include "IScreenFactory.h"
+#include "CScreen.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
 #include "XScreen.h"
 #include "CNetworkAddress.h"
+#include "CSocketMultiplexer.h"
 #include "CTCPSocketFactory.h"
 #include "XSocket.h"
-#include "CCondVar.h"
-#include "CLock.h"
-#include "CMutex.h"
 #include "CThread.h"
-#include "XThread.h"
-#include "CFunctionJob.h"
+#include "CEventQueue.h"
+#include "CFunctionEventJob.h"
 #include "CLog.h"
-#include "LogOutputters.h"
 #include "CString.h"
+#include "LogOutputters.h"
 #include "CArch.h"
+#include "XArch.h"
 #include <cstring>
 
 #define DAEMON_RUNNING(running_)
@@ -87,63 +86,15 @@ CArgs*					CArgs::s_instance = NULL;
 // platform dependent factories
 //
 
-//! Factory for creating screens
-/*!
-Objects of this type create screens appropriate for the platform.
-*/
-class CScreenFactory : public IScreenFactory {
-public:
-	CScreenFactory() { }
-	virtual ~CScreenFactory() { }
-
-	// IScreenFactory overrides
-	virtual IPlatformScreen*
-						create(IScreenReceiver*, IPrimaryScreenReceiver*);
-};
-
-IPlatformScreen*
-CScreenFactory::create(IScreenReceiver* receiver,
-				IPrimaryScreenReceiver* primaryReceiver)
+static
+CScreen*
+createScreen()
 {
 #if WINDOWS_LIKE
-	return new CMSWindowsScreen(receiver, primaryReceiver);
+	return new CScreen(new CMSWindowsScreen(false));
 #elif UNIX_LIKE
-	return new CXWindowsScreen(receiver, primaryReceiver);
+	return new CScreen(new CXWindowsScreen(false));
 #endif
-}
-
-
-//! CQuitJob
-/*!
-A job that cancels a given thread.
-*/
-class CQuitJob : public IJob {
-public:
-	CQuitJob(const CThread& thread);
-	~CQuitJob();
-
-	// IJob overrides
-	virtual void		run();
-
-private:
-	CThread				m_thread;
-};
-
-CQuitJob::CQuitJob(const CThread& thread) :
-	m_thread(thread)
-{
-	// do nothing
-}
-
-CQuitJob::~CQuitJob()
-{
-	// do nothing
-}
-
-void
-CQuitJob::run()
-{
-	m_thread.cancel();
 }
 
 
@@ -151,96 +102,274 @@ CQuitJob::run()
 // platform independent main
 //
 
-static CClient*					s_client = NULL;
+static CClient*					s_client          = NULL;
+static CScreen*					s_clientScreen    = NULL;
 static CClientTaskBarReceiver*	s_taskBarReceiver = NULL;
+static double					s_retryTime       = 0.0;
+
+static
+void
+updateStatus()
+{
+	s_taskBarReceiver->updateStatus(s_client, "");
+}
+
+static
+void
+updateStatus(const CString& msg)
+{
+	s_taskBarReceiver->updateStatus(s_client, msg);
+}
+
+static
+void
+resetRestartTimeout()
+{
+	s_retryTime = 0.0;
+}
+
+static
+double
+nextRestartTimeout()
+{
+	// choose next restart timeout.  we start with rapid retries
+	// then slow down.
+	if (s_retryTime < 1.0) {
+		s_retryTime = 1.0;
+	}
+	else if (s_retryTime < 3.0) {
+		s_retryTime = 3.0;
+	}
+	else if (s_retryTime < 5.0) {
+		s_retryTime = 5.0;
+	}
+	else if (s_retryTime < 15.0) {
+		s_retryTime = 15.0;
+	}
+	else if (s_retryTime < 30.0) {
+		s_retryTime = 30.0;
+	}
+	else {
+		s_retryTime = 60.0;
+	}
+	return s_retryTime;
+}
+
+static
+void
+handleScreenError(const CEvent&, void*)
+{
+	LOG((CLOG_CRIT "error on screen"));
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+static
+CScreen*
+openClientScreen()
+{
+	CScreen* screen = createScreen();
+	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
+							screen->getEventTarget(),
+							new CFunctionEventJob(
+								&handleScreenError));
+	return screen;
+}
+
+static
+void
+closeClientScreen(CScreen* screen)
+{
+	if (screen != NULL) {
+		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
+							screen->getEventTarget());
+		delete screen;
+	}
+}
+
+static
+void
+handleClientRestart(const CEvent&, void* vtimer)
+{
+	// discard old timer
+	CEventQueueTimer* timer = reinterpret_cast<CEventQueueTimer*>(vtimer);
+	EVENTQUEUE->deleteTimer(timer);
+	EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
+
+	// reconnect
+	s_client->connect();
+	updateStatus();
+}
+
+static
+void
+scheduleClientRestart(double retryTime)
+{
+	// install a timer and handler to retry later
+	LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+							new CFunctionEventJob(&handleClientRestart, timer));
+}
+
+static
+void
+handleClientConnected(const CEvent&, void*)
+{
+	LOG((CLOG_DEBUG "connected to server"));
+	resetRestartTimeout();
+	updateStatus();
+}
+
+static
+void
+handleClientFailed(const CEvent& e, void*)
+{
+	CClient::CFailInfo* info =
+		reinterpret_cast<CClient::CFailInfo*>(e.getData());
+
+	updateStatus(CString("Failed to connect to server: ") + info->m_what);
+	if (!ARG->m_restartable || !info->m_retry) {
+		LOG((CLOG_ERR "failed to connect to server: %s", info->m_what));
+	}
+	else {
+		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what));
+		scheduleClientRestart(nextRestartTimeout());
+	}
+}
+
+static
+void
+handleClientDisconnected(const CEvent&, void*)
+{
+	LOG((CLOG_NOTE "disconnected from server"));
+	if (!ARG->m_restartable) {
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	}
+	else {
+		s_client->connect();
+	}
+	updateStatus();
+}
+
+static
+CClient*
+openClient(const CString& name, const CNetworkAddress& address, CScreen* screen)
+{
+	CClient* client = new CClient(name, address,
+						new CTCPSocketFactory, NULL, screen);
+	EVENTQUEUE->adoptHandler(CClient::getConnectedEvent(),
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientConnected));
+	EVENTQUEUE->adoptHandler(CClient::getConnectionFailedEvent(),
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientFailed));
+	EVENTQUEUE->adoptHandler(CClient::getDisconnectedEvent(),
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientDisconnected));
+	return client;
+}
+
+static
+void
+closeClient(CClient* client)
+{
+	if (client == NULL) {
+		return;
+	}
+
+	EVENTQUEUE->removeHandler(CClient::getConnectedEvent(), client);
+	EVENTQUEUE->removeHandler(CClient::getConnectionFailedEvent(), client);
+	EVENTQUEUE->removeHandler(CClient::getDisconnectedEvent(), client);
+	delete client;
+}
+
+static
+bool
+startClient()
+{
+	double retryTime;
+	CScreen* clientScreen = NULL;
+	try {
+		clientScreen = openClientScreen();
+		s_client     = openClient(ARG->m_name,
+							ARG->m_serverAddress, clientScreen);
+		s_clientScreen  = clientScreen;
+		LOG((CLOG_NOTE "started client"));
+		s_client->connect();
+		updateStatus();
+		return true;
+	}
+	catch (XScreenUnavailable& e) {
+		LOG((CLOG_WARN "cannot open secondary screen: %s", e.what()));
+		closeClientScreen(clientScreen);
+		updateStatus(CString("Cannot open secondary screen: ") + e.what());
+		retryTime = e.getRetryTime();
+	}
+	catch (XScreenOpenFailure& e) {
+		LOG((CLOG_CRIT "cannot open secondary screen: %s", e.what()));
+		closeClientScreen(clientScreen);
+		return false;
+	}
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "failed to start client: %s", e.what()));
+		closeClientScreen(clientScreen);
+		return false;
+	}
+
+	if (ARG->m_restartable) {
+		scheduleClientRestart(retryTime);
+		return true;
+	}
+	else {
+		// don't try again
+		return false;
+	}
+}
+
+static
+void
+stopClient()
+{
+	closeClient(s_client);
+	closeClientScreen(s_clientScreen);
+	s_client       = NULL;
+	s_clientScreen = NULL;
+}
 
 static
 int
-realMain(void)
+realMain()
 {
-	int result = kExitSuccess;
-	do {
-		bool opened = false;
-		bool locked = true;
-		try {
-			// create client
-			s_client = new CClient(ARG->m_name);
-			s_client->setAddress(ARG->m_serverAddress);
-			s_client->setScreenFactory(new CScreenFactory);
-			s_client->setSocketFactory(new CTCPSocketFactory);
-			s_client->setStreamFilterFactory(NULL);
+	// start the client.  if this return false then we've failed and
+	// we shouldn't retry.
+	LOG((CLOG_DEBUG1 "starting client"));
+	if (!startClient()) {
+		return kExitFailed;
+	}
 
-			// open client
-			try {
-				s_taskBarReceiver->setClient(s_client);
-				s_client->open();
-				opened = true;
+	// run event loop.  if startClient() failed we're supposed to retry
+	// later.  the timer installed by startClient() will take care of
+	// that.
+	DAEMON_RUNNING(true);
+	CEvent event;
+	EVENTQUEUE->getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event);
+	}
+	DAEMON_RUNNING(false);
 
-				// run client
-				DAEMON_RUNNING(true);
-				locked = false;
-				s_client->mainLoop();
-				locked = true;
-				DAEMON_RUNNING(false);
+	// close down
+	LOG((CLOG_DEBUG1 "stopping client"));
+	stopClient();
+	updateStatus();
+	LOG((CLOG_NOTE "stopped client"));
 
-				// get client status
-				if (s_client->wasRejected()) {
-					// try again later.  we don't want to bother
-					// the server very often if it doesn't want us.
-					throw XScreenUnavailable(60.0);
-				}
-
-				// clean up
-#define FINALLY do {								\
-				if (!locked) {						\
-					DAEMON_RUNNING(false);			\
-					locked = true;					\
-				}									\
-				if (opened) {						\
-					s_client->close();				\
-				}									\
-				s_taskBarReceiver->setClient(NULL);	\
-				delete s_client;					\
-				s_client = NULL;					\
-				} while (false)
-				FINALLY;
-			}
-			catch (XScreenUnavailable& e) {
-				// wait before retrying if we're going to retry
-				if (ARG->m_restartable) {
-					LOG((CLOG_DEBUG "waiting %.0f seconds to retry", e.getRetryTime()));
-					ARCH->sleep(e.getRetryTime());
-				}
-				else {
-					result = kExitFailed;
-				}
-				FINALLY;
-			}
-			catch (XThread&) {
-				FINALLY;
-				throw;
-			}
-			catch (...) {
-				// don't try to restart and fail
-				ARG->m_restartable = false;
-				result             = kExitFailed;
-				FINALLY;
-			}
-#undef FINALLY
-		}
-		catch (XBase& e) {
-			LOG((CLOG_CRIT "failed: %s", e.what()));
-		}
-		catch (XThread&) {
-			// terminated
-			ARG->m_restartable = false;
-			result             = kExitTerminated;
-		}
-	} while (ARG->m_restartable);
-
-	return result;
+	return kExitSuccess;
 }
 
+/*
 static
 void
 realMainEntry(void* vresult)
@@ -278,6 +407,7 @@ runMainInThread(void)
 		throw;
 	}
 }
+*/
 
 
 //
@@ -292,14 +422,12 @@ static
 void
 version()
 {
-	LOG((CLOG_PRINT
-"%s %s, protocol version %d.%d\n"
-"%s",
-								ARG->m_pname,
-								kVersion,
-								kProtocolMajorVersion,
-								kProtocolMinorVersion,
-								kCopyright));
+	LOG((CLOG_PRINT "%s %s, protocol version %d.%d\n%s",
+							ARG->m_pname,
+							kVersion,
+							kProtocolMajorVersion,
+							kProtocolMinorVersion,
+							kCopyright));
 }
 
 static
@@ -697,15 +825,20 @@ main(int argc, char** argv)
 {
 	CArch arch;
 	CLOG;
-	CArgs args;
+
+	// go really fast
+	CThread::getCurrentThread().setPriority(-14);
+
+	CSocketMultiplexer multiplexer;
+	CEventQueue eventQueue;
 
 	// get program name
+	CArgs args;
 	ARG->m_pname = ARCH->getBasename(argv[0]);
 
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
 	s_taskBarReceiver = new CXWindowsClientTaskBarReceiver;
-	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
 
 	// parse command line
 	parse(argc, argv);

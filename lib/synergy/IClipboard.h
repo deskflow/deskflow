@@ -111,7 +111,45 @@ public:
 	*/
 	virtual CString		get(EFormat) const = 0;
 
+	//! Marshall clipboard data
+	/*!
+	Merge \p clipboard's data into a single buffer that can be later
+	unmarshalled to restore the clipboard and return the buffer.
+	*/
+	static CString		marshall(const IClipboard* clipboard);
+
+	//! Unmarshall clipboard data
+	/*!
+	Extract marshalled clipboard data and store it in \p clipboard.
+	Sets the clipboard time to \c time.
+	*/
+	static void			unmarshall(IClipboard* clipboard,
+							const CString& data, Time time);
+
+	//! Copy clipboard
+	/*!
+	Transfers all the data in one clipboard to another.  The
+	clipboards can be of any concrete clipboard type (and
+	they don't have to be the same type).  This also sets
+	the destination clipboard's timestamp to source clipboard's
+	timestamp.  Returns true iff the copy succeeded.
+	*/
+	static bool			copy(IClipboard* dst, const IClipboard* src);
+
+	//! Copy clipboard
+	/*!
+	Transfers all the data in one clipboard to another.  The
+	clipboards can be of any concrete clipboard type (and they
+	don't have to be the same type).  This also sets the
+	timestamp to \c time.  Returns true iff the copy succeeded.
+	*/
+	static bool			copy(IClipboard* dst, const IClipboard* src, Time);
+
 	//@}
+
+private:
+	static UInt32		readUInt32(const char*);
+	static void			writeUInt32(CString*, UInt32);
 };
 
 #endif

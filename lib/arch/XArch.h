@@ -64,7 +64,8 @@ class XArch {
 public:
 	XArch(XArchEval* adoptedEvaluator) : m_eval(adoptedEvaluator) { }
 	XArch(const std::string& msg) : m_eval(NULL), m_what(msg) { }
-	XArch(const XArch& e) : m_eval(e.m_eval->clone()), m_what(e.m_what) { }
+	XArch(const XArch& e) : m_eval(e.m_eval != NULL ? e.m_eval->clone() : NULL),
+							m_what(e.m_what) { }
 	~XArch() { delete m_eval; }
 
 	std::string			what() const throw();
@@ -137,7 +138,7 @@ XARCH_SUBCLASS(XArchNetworkName, XArchNetwork);
 //! The named host is unknown
 XARCH_SUBCLASS(XArchNetworkNameUnknown, XArchNetworkName);
 
-//! The named host is known but has to address
+//! The named host is known but has no address
 XARCH_SUBCLASS(XArchNetworkNameNoAddress, XArchNetworkName);
 
 //! Non-recoverable name server error
@@ -145,6 +146,9 @@ XARCH_SUBCLASS(XArchNetworkNameFailure, XArchNetworkName);
 
 //! Temporary name server error
 XARCH_SUBCLASS(XArchNetworkNameUnavailable, XArchNetworkName);
+
+//! The named host is known but no supported address
+XARCH_SUBCLASS(XArchNetworkNameUnsupported, XArchNetworkName);
 
 //! Generic daemon exception
 /*!

@@ -42,6 +42,12 @@ CPrimaryClient::reconfigure(UInt32 activeSides)
 	m_screen->reconfigure(activeSides);
 }
 
+SInt32
+CPrimaryClient::getJumpZoneSize() const
+{
+	return m_screen->getJumpZoneSize();
+}
+
 void
 CPrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
 {
@@ -70,12 +76,6 @@ bool
 CPrimaryClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
 	return m_screen->getClipboard(id, clipboard);
-}
-
-SInt32
-CPrimaryClient::getJumpZoneSize() const
-{
-	return m_screen->getJumpZoneSize();
 }
 
 void
@@ -121,19 +121,15 @@ CPrimaryClient::leave()
 }
 
 void
-CPrimaryClient::setClipboard(ClipboardID id, const CString& data)
+CPrimaryClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
 	// ignore if this clipboard is already clean
 	if (m_clipboardDirty[id]) {
 		// this clipboard is now clean
 		m_clipboardDirty[id] = false;
 
-		// unmarshall data
-		CClipboard clipboard;
-		clipboard.unmarshall(data, 0);
-
 		// set clipboard
-		m_screen->setClipboard(id, &clipboard);
+		m_screen->setClipboard(id, clipboard);
 	}
 }
 

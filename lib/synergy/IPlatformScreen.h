@@ -40,7 +40,7 @@ public:
 	//! Key event data
 	class CKeyInfo {
 	public:
-		CKeyInfo(KeyID, KeyModifierMask, KeyButton, SInt32 count);
+		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
 
 	public:
 		KeyID			m_key;
@@ -51,7 +51,7 @@ public:
 	//! Button event data
 	class CButtonInfo {
 	public:
-		CButtonInfo(ButtonID);
+		static CButtonInfo* alloc(ButtonID);
 
 	public:
 		ButtonID		m_button;
@@ -59,7 +59,7 @@ public:
 	//! Motion event data
 	class CMotionInfo {
 	public:
-		CMotionInfo(SInt32 x, SInt32 y);
+		static CMotionInfo* alloc(SInt32 x, SInt32 y);
 
 	public:
 		SInt32			m_x;
@@ -68,7 +68,7 @@ public:
 	//! Wheel motion event data
 	class CWheelInfo {
 	public:
-		CWheelInfo(SInt32);
+		static CWheelInfo* alloc(SInt32);
 
 	public:
 		SInt32			m_wheel;

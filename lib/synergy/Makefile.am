@@ -29,6 +29,7 @@ libsynergy_a_SOURCES = 			\
 	CPacketStreamFilter.cpp		\
 	CProtocolUtil.cpp			\
 	CScreen.cpp					\
+	IClipboard.cpp				\
 	IPlatformScreen.cpp			\
 	IScreen.cpp					\
 	XScreen.cpp					\

@@ -34,7 +34,9 @@ CPacketStreamFilter::CPacketStreamFilter(IStream* stream, bool adoptStream) :
 
 CPacketStreamFilter::~CPacketStreamFilter()
 {
-	delete getStream()->getEventFilter();
+	IEventJob* job = getStream()->getEventFilter();
+	getStream()->setEventFilter(NULL);
+	delete job;
 }
 
 void

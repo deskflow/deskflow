@@ -761,8 +761,9 @@ CConfig::readSectionOptions(std::istream& s)
 			try {
 				m_synergyAddress = CNetworkAddress(value, kDefaultPort);
 			}
-			catch (XSocketAddress&) {
-				throw XConfigRead("invalid address argument");
+			catch (XSocketAddress& e) {
+				throw XConfigRead(CString("invalid address argument:  ") +
+							e.what());
 			}
 		}
 		else if (name == "heartbeat") {

@@ -82,8 +82,7 @@ CEvent::deleteData(const CEvent& event)
 		break;
 
 	default:
-		// yes, really delete void*
-		delete event.getData();
+		free(event.getData());
 		break;
 	}
 }

@@ -60,6 +60,7 @@ private:
 	void				setJob(ISocketMultiplexerJob*);
 	ISocketMultiplexerJob*	newJob();
 	void				sendSocketEvent(CEvent::Type);
+	void				sendConnectionFailedEvent(const char*);
 	void				sendStreamEvent(CEvent::Type);
 
 	void				onConnected();

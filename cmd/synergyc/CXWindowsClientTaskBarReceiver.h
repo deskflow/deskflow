@@ -28,10 +28,6 @@ public:
 	virtual void		runMenu(int x, int y);
 	virtual void		primaryAction();
 	virtual const Icon	getIcon() const;
-
-protected:
-	// CClientTaskBarReceiver overrides
-	virtual void		onStatusChanged();
 };
 
 #endif
