@@ -147,7 +147,6 @@ CClient::run()
 		m_rejected = true;
 	}
 
-	CThread* thread = NULL;
 	try {
 		log((CLOG_NOTE "starting client \"%s\"", m_name.c_str()));
 
