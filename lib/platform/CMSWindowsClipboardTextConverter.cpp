@@ -45,10 +45,11 @@ CMSWindowsClipboardTextConverter::doFromIClipboard(const CString& data) const
 CString
 CMSWindowsClipboardTextConverter::doToIClipboard(const CString& data) const
 {
-	// convert and strip nul terminator
-	CString dst = CUnicode::textToUTF8(data);
-	if (dst.size() > 0 && dst[dst.size() - 1] == '\0') {
-		dst.erase(dst.size() - 1);
+	// convert and truncate at first nul terminator
+	CString dst          = CUnicode::textToUTF8(data);
+	CString::size_type n = dst.find('\0');
+	if (n != CString::npos) {
+		dst.erase(n);
 	}
 	return dst;
 }
