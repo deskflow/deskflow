@@ -55,10 +55,11 @@ static HHOOK			g_keyboard        = NULL;
 static HHOOK			g_mouse           = NULL;
 static HHOOK			g_cbt             = NULL;
 static HHOOK			g_getMessage      = NULL;
-static HANDLE			g_keyHookThread   = NULL;
-static DWORD			g_keyHookThreadID = 0;
-static HANDLE			g_keyHookEvent    = NULL;
+static HANDLE			g_hookThreadLL    = NULL;
+static DWORD			g_hookThreadIDLL  = 0;
+static HANDLE			g_hookEventLL     = NULL;
 static HHOOK			g_keyboardLL      = NULL;
+static HHOOK			g_mouseLL         = NULL;
 static bool				g_screenSaver     = false;
 static bool				g_relay           = false;
 static UInt32			g_zoneSides       = 0;
@@ -162,7 +163,9 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 				{
 					// win2k and other systems supporting WM_MOUSEWHEEL in
 					// the mouse hook are gratuitously different (and poorly
-					// documented).
+					// documented).  if a low-level mouse hook is in place
+					// it should capture these events so we'll never see
+					// them.
 					switch (g_wheelSupport) {
 					case kWheelModern: {
 						const MOUSEHOOKSTRUCT* info =
@@ -342,12 +345,55 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_keyboardLL, code, wParam, lParam);
 }
 
+//
+// low-level mouse hook -- this allows us to capture and handle mouse
+// wheel events on all windows NT platforms from NT SP3 and up.  this
+// is both simpler than using the mouse hook but also supports windows
+// windows NT which does not report mouse wheel events.  we need to
+// keep the mouse hook handling of mouse wheel events because the
+// windows 95 family doesn't support low-level hooks.
+//
+
+static
+LRESULT CALLBACK
+mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code >= 0) {
+		if (g_relay) {
+			MSLLHOOKSTRUCT* info = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
+
+			switch (wParam) {
+			case WM_MOUSEWHEEL:
+				// mouse wheel events are the same for entire NT family
+				// (>=SP3, prior versions have no low level hooks) for
+				// low-level mouse hook messages, unlike (regular) mouse
+				// hook messages which are gratuitously different on
+				// win2k and not sent at all for windows NT.
+
+				// forward message to our window
+				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL,
+									HIWORD(info->mouseData), 0);
+
+				// discard event
+				return 1;
+
+			default:
+				// all other events are passed through
+				break;
+			}
+		}
+	}
+
+	return CallNextHookEx(g_mouseLL, code, wParam, lParam);
+}
+
 static
 DWORD WINAPI
-getKeyboardLLProc(void*)
+getLowLevelProc(void*)
 {
-	// thread proc for low-level keyboard hook.  this does nothing but
-	// install the hook, process events, and uninstall the hook.
+	// thread proc for low-level keyboard/mouse hooks.  this does
+	// nothing but install the hook, process events, and uninstall
+	// the hook.
 
 	// force this thread to have a message queue
 	MSG msg;
@@ -360,13 +406,27 @@ getKeyboardLLProc(void*)
 								0);
 	if (g_keyboardLL == NULL) {
 		// indicate failure and exit
-		g_keyHookThreadID = 0;
-		SetEvent(g_keyHookEvent);
+		g_hookThreadIDLL = 0;
+		SetEvent(g_hookEventLL);
+		return 1;
+	}
+
+	// install low-level mouse hook
+	g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
+								&mouseLLHook,
+								g_hinstance,
+								0);
+	if (g_mouseLL == NULL) {
+		// indicate failure and exit
+		UnhookWindowsHookEx(g_keyboardLL);
+		g_keyboardLL     = NULL;
+		g_hookThreadIDLL = 0;
+		SetEvent(g_hookEventLL);
 		return 1;
 	}
 
 	// ready
-	SetEvent(g_keyHookEvent);
+	SetEvent(g_hookEventLL);
 
 	// message loop
 	bool done = false;
@@ -387,7 +447,9 @@ getKeyboardLLProc(void*)
 	}
 
 	// uninstall hook
+	UnhookWindowsHookEx(g_mouseLL);
 	UnhookWindowsHookEx(g_keyboardLL);
+	g_mouseLL    = NULL;
 	g_keyboardLL = NULL;
 
 	return 0;
@@ -397,10 +459,10 @@ getKeyboardLLProc(void*)
 
 static
 DWORD WINAPI
-getKeyboardLLProc(void*)
+getLowLevelProc(void*)
 {
-	g_keyHookThreadID = 0;
-	SetEvent(g_keyHookEvent);
+	g_hookThreadIDLL = 0;
+	SetEvent(g_hookEventLL);
 	return 1;
 }
 
@@ -506,10 +568,11 @@ init(DWORD threadID)
 		g_mouse           = NULL;
 		g_cbt             = NULL;
 		g_getMessage      = NULL;
-		g_keyHookThread   = NULL;
-		g_keyHookThreadID = 0;
-		g_keyHookEvent    = NULL;
+		g_hookThreadLL    = NULL;
+		g_hookThreadIDLL  = 0;
+		g_hookEventLL     = NULL;
 		g_keyboardLL      = NULL;
+		g_mouseLL         = NULL;
 		g_screenSaver     = false;
 	}
 
@@ -607,31 +670,31 @@ install()
 		// ignore failure;  we just won't get mouse wheel messages
 	}
 
-	// install low-level keyboard hook, if possible.  since this hook
-	// is called in the context of the installing thread and that
+	// install low-level keyboard/mouse hooks, if possible.  since these
+	// hook are called in the context of the installing thread and that
 	// thread must have a message loop but we don't want the caller's
 	// message loop to do the work, we'll fire up a separate thread
-	// just for the hook.  note that low-level keyboard hooks are only
-	// available on windows NT SP3 and above.
-	g_keyHookEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-	if (g_keyHookEvent != NULL) {
-		g_keyHookThread = CreateThread(NULL, 0, &getKeyboardLLProc, 0,
-								CREATE_SUSPENDED, &g_keyHookThreadID);
-		if (g_keyHookThread != NULL) {
+	// just for the hooks.  note that low-level hooks are only available
+	// on windows NT SP3 and above.
+	g_hookEventLL = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (g_hookEventLL != NULL) {
+		g_hookThreadLL = CreateThread(NULL, 0, &getLowLevelProc, 0,
+								CREATE_SUSPENDED, &g_hookThreadIDLL);
+		if (g_hookThreadLL != NULL) {
 			// start the thread and wait for it to initialize
-			ResumeThread(g_keyHookThread);
-			WaitForSingleObject(g_keyHookEvent, INFINITE);
-			ResetEvent(g_keyHookEvent);
+			ResumeThread(g_hookThreadLL);
+			WaitForSingleObject(g_hookEventLL, INFINITE);
+			ResetEvent(g_hookEventLL);
 
-			// the thread clears g_keyHookThreadID if it failed
-			if (g_keyHookThreadID == 0) {
-				CloseHandle(g_keyHookThread);
-				g_keyHookThread = NULL;
+			// the thread clears g_hookThreadIDLL if it failed
+			if (g_hookThreadIDLL == 0) {
+				CloseHandle(g_hookThreadLL);
+				g_hookThreadLL = NULL;
 			}
 		}
-		if (g_keyHookThread == NULL) {
-			CloseHandle(g_keyHookEvent);
-			g_keyHookEvent = NULL;
+		if (g_hookThreadLL == NULL) {
+			CloseHandle(g_hookEventLL);
+			g_hookEventLL = NULL;
 		}
 	}
 
@@ -644,14 +707,14 @@ uninstall(void)
 	assert(g_hinstance != NULL);
 
 	// uninstall hooks
-	if (g_keyHookThread != NULL) {
-		PostThreadMessage(g_keyHookThreadID, WM_QUIT, 0, 0);
-		WaitForSingleObject(g_keyHookThread, INFINITE);
-		CloseHandle(g_keyHookEvent);
-		CloseHandle(g_keyHookThread);
-		g_keyHookEvent    = NULL;
-		g_keyHookThread   = NULL;
-		g_keyHookThreadID = 0;
+	if (g_hookThreadLL != NULL) {
+		PostThreadMessage(g_hookThreadIDLL, WM_QUIT, 0, 0);
+		WaitForSingleObject(g_hookThreadLL, INFINITE);
+		CloseHandle(g_hookEventLL);
+		CloseHandle(g_hookThreadLL);
+		g_hookEventLL    = NULL;
+		g_hookThreadLL   = NULL;
+		g_hookThreadIDLL = 0;
 	}
 	if (g_keyboard != NULL) {
 		UnhookWindowsHookEx(g_keyboard);
