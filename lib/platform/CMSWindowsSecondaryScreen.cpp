@@ -350,35 +350,16 @@ CMSWindowsSecondaryScreen::hideWindow()
 void
 CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
-	typedef UINT (WINAPI *SendInput_t)(UINT, LPINPUT, int);
-	static bool gotSendInput     = false;
-	static SendInput_t SendInput = NULL;
-
 	// motion is simple (i.e. it's on the primary monitor) if there
 	// is only one monitor.
 	bool simple = !m_screen->isMultimon();
-/* disable attempts to use simple motion with multiple monitors for now
 	if (!simple) {
 		// also simple if motion is within the primary monitor
 		simple = (x >= 0 && x < GetSystemMetrics(SM_CXSCREEN) &&
 				  y >= 0 && y < GetSystemMetrics(SM_CYSCREEN));
-		if (!simple && !m_is95Family) {
-			// also simple if not on windows 95 family since the
-			// NT family mouse_event() allows absolute moves to
-			// any monitor.
-			//
-			// note -- this is possibly untrue if the primary
-			// monitor isn't upper-left most so limit it to that
-			// situation.
-			SInt32 x0, y0, w, h;
-			m_screen->getShape(x0, y0, w, h);
-			simple = (x0 == 0 && y0 == 0);
-		}
 	}
-*/
 
-	// move the mouse directly to target position on NT family or if
-	// not using multiple monitors.
+	// move the mouse directly to target position if motion is simple
 	if (simple) {
 		SInt32 x0, y0, w, h;
 		m_screen->getShape(x0, y0, w, h);
@@ -394,39 +375,29 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 	// words, "by design."  apparently the designers of windows 2000
 	// we're a little less lazy and did it right.
 	//
-	// we use the microsoft recommendation (Q193003): set the absolute
-	// position on the primary monitor, disable mouse acceleration,
-	// relative move the mouse to the final location, restore mouse
-	// acceleration.  to avoid one kind of race condition (the user
-	// clicking the mouse or pressing a key between the absolute and
-	// relative move) we'll use SendInput() which guarantees that the
-	// events are delivered uninterrupted.  we cannot prevent changes
-	// to the mouse acceleration at inopportune times, though.  if
-	// SendInput() is unavailable then use mouse_event();  SendInput()
-	// is not available on Windows 95 and NT 4.0 prior to SP3.
+	// microsoft recommends in Q193003 to absolute position the cursor
+	// somewhere on the primary monitor then relative move to the
+	// desired location.  this doesn't work for us because when the
+	// user drags a scrollbar, a window, etc. it causes the dragged
+	// item to jump back a forth between the position on the primary
+	// monitor and the desired position.  while it always ends up in
+	// the right place, the effect is disconcerting.
 	//
-	// point-to-activate (x-mouse) doesn't seem to be bothered by the
-	// absolute/relative combination.  a window over the absolute
-	// position (0,0) does *not* get activated (at least not on win2k)
-	// if the relative move puts the cursor elsewhere.  similarly, the
-	// app under the final mouse position does *not* get deactivated
-	// by the absolute move to 0,0.
+	// instead we'll get the cursor's current position and do just a
+	// relative move from there to the desired position.  relative
+	// moves are subject to cursor acceleration which we don't want.
+	// so we disable acceleration, do the relative move, then restore
+	// acceleration.  there's a slight chance we'll end up in the
+	// wrong place if the user moves the cursor using this system's
+	// mouse while simultaneously moving the mouse on the server
+	// system.  that defeats the purpose of synergy so we'll assume
+	// that won't happen.  even if it does, the next mouse move will
+	// correct the position.
 	else {
-		// lookup SendInput() function
-		if (!gotSendInput) {
-			gotSendInput = true;
-			HINSTANCE user32 = LoadLibrary("user32.dll");
-			if (user32 != NULL) {
-				SendInput = reinterpret_cast<SendInput_t>(
-								GetProcAddress(user32, "SendInput"));
-				FreeLibrary(user32);
-			}
-		}
-
 		// save mouse speed & acceleration
 		int oldSpeed[4];
 		bool accelChanged =
-					SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed,0) &&
+					SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed, 0) &&
 					SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
 
 		// use 1:1 motion
@@ -437,38 +408,12 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 					SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
 		}
 
-		// send events
-		INPUT events[2];
-		events[0].type           = INPUT_MOUSE;
-		events[0].mi.dx          = 0;
-		events[0].mi.dy          = 0;
-		events[0].mi.mouseData   = 0;
-		events[0].mi.dwFlags     = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-		events[0].mi.time        = GetTickCount();
-		events[0].mi.dwExtraInfo = 0;
-		events[1].type           = INPUT_MOUSE;
-		events[1].mi.dx          = x;
-		events[1].mi.dy          = y;
-		events[1].mi.mouseData   = 0;
-		events[1].mi.dwFlags     = MOUSEEVENTF_MOVE;
-		events[1].mi.time        = events[0].mi.time;
-		events[1].mi.dwExtraInfo = 0;
-		if (SendInput != NULL) {
-			SendInput(sizeof(events) / sizeof(events[0]),
-								events, sizeof(events[0]));
-		}
-		else {
-			mouse_event(events[0].mi.dwFlags,
-								events[0].mi.dx,
-								events[0].mi.dy,
-								events[0].mi.mouseData,
-								events[0].mi.dwExtraInfo);
-			mouse_event(events[1].mi.dwFlags,
-								events[1].mi.dx,
-								events[1].mi.dy,
-								events[1].mi.mouseData,
-								events[1].mi.dwExtraInfo);
-		}
+		// get current mouse position
+		POINT pos;
+		GetCursorPos(&pos);
+
+		// move relative to mouse position
+		mouse_event(MOUSEEVENTF_MOVE, x - pos.x, y - pos.y, 0, 0);
 
 		// restore mouse speed & acceleration
 		if (accelChanged) {
