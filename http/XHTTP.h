@@ -2,7 +2,6 @@
 #define XHTTP_H
 
 #include "BasicTypes.h"
-#include "CString.h"
 #include "XBase.h"
 
 class CHTTPReply;

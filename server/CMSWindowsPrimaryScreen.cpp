@@ -1,29 +1,28 @@
 #include "CMSWindowsPrimaryScreen.h"
-#include "CMSWindowsClipboard.h"
 #include "CServer.h"
+#include "CMSWindowsClipboard.h"
 #include "CPlatform.h"
 #include "XScreen.h"
 #include "XSynergy.h"
-#include "CLog.h"
 #include "CThread.h"
-#include <assert.h>
-#include <string.h>
+#include "CLog.h"
+#include <cstring>
 
 //
 // CMSWindowsPrimaryScreen
 //
 
 CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen() :
-								m_server(NULL),
-								m_threadID(0),
-								m_desk(NULL),
-								m_deskName(),
-								m_window(NULL),
-								m_active(false),
-								m_mark(0),
-								m_markReceived(0),
-								m_nextClipboardWindow(NULL),
-								m_clipboardOwner(NULL)
+	m_server(NULL),
+	m_threadID(0),
+	m_desk(NULL),
+	m_deskName(),
+	m_window(NULL),
+	m_active(false),
+	m_mark(0),
+	m_markReceived(0),
+	m_nextClipboardWindow(NULL),
+	m_clipboardOwner(NULL)
 {
 	// load the hook library
 	m_hookLibrary = LoadLibrary("synrgyhk");
@@ -61,7 +60,8 @@ CMSWindowsPrimaryScreen::~CMSWindowsPrimaryScreen()
 	FreeLibrary(m_hookLibrary);
 }
 
-void					CMSWindowsPrimaryScreen::run()
+void
+CMSWindowsPrimaryScreen::run()
 {
 	// must call run() from same thread as open()
 	assert(m_threadID == GetCurrentThreadId());
@@ -87,12 +87,15 @@ void					CMSWindowsPrimaryScreen::run()
 	}
 }
 
-void					CMSWindowsPrimaryScreen::stop()
+void
+CMSWindowsPrimaryScreen::stop()
 {
 	doStop();
 }
 
-void					CMSWindowsPrimaryScreen::open(CServer* server)
+void
+CMSWindowsPrimaryScreen::open(
+	CServer* server)
 {
 	assert(m_server == NULL);
 	assert(server   != NULL);
@@ -126,7 +129,8 @@ void					CMSWindowsPrimaryScreen::open(CServer* server)
 	enterNoWarp();
 }
 
-void					CMSWindowsPrimaryScreen::close()
+void
+CMSWindowsPrimaryScreen::close()
 {
 	assert(m_server != NULL);
 
@@ -137,7 +141,10 @@ void					CMSWindowsPrimaryScreen::close()
 	m_server = NULL;
 }
 
-void					CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
+void
+CMSWindowsPrimaryScreen::enter(
+	SInt32 x,
+	SInt32 y)
 {
 	log((CLOG_INFO "entering primary at %d,%d", x, y));
 	assert(m_active == true);
@@ -149,7 +156,8 @@ void					CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 	warpCursor(x, y);
 }
 
-bool					CMSWindowsPrimaryScreen::leave()
+bool
+CMSWindowsPrimaryScreen::leave()
 {
 	log((CLOG_INFO "leaving primary"));
 	assert(m_active == false);
@@ -219,7 +227,8 @@ bool					CMSWindowsPrimaryScreen::leave()
 	return true;
 }
 
-void					CMSWindowsPrimaryScreen::onConfigure()
+void
+CMSWindowsPrimaryScreen::onConfigure()
 {
 	if ((m_is95Family || m_desk != NULL) && !m_active) {
 		SInt32 w, h;
@@ -229,14 +238,19 @@ void					CMSWindowsPrimaryScreen::onConfigure()
 	}
 }
 
-void					CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
+void
+CMSWindowsPrimaryScreen::warpCursor(
+	SInt32 x,
+	SInt32 y)
 {
 	// set the cursor position without generating an event
 	SetCursorPos(x, y);
 }
 
-void					CMSWindowsPrimaryScreen::setClipboard(
-								ClipboardID /*id*/, const IClipboard* src)
+void
+CMSWindowsPrimaryScreen::setClipboard(
+	ClipboardID /*id*/,
+	const IClipboard* src)
 {
 	assert(m_window != NULL);
 
@@ -244,8 +258,9 @@ void					CMSWindowsPrimaryScreen::setClipboard(
 	CClipboard::copy(&dst, src);
 }
 
-void					CMSWindowsPrimaryScreen::grabClipboard(
-								ClipboardID /*id*/)
+void
+CMSWindowsPrimaryScreen::grabClipboard(
+	ClipboardID /*id*/)
 {
 	assert(m_window != NULL);
 
@@ -255,19 +270,24 @@ void					CMSWindowsPrimaryScreen::grabClipboard(
 	}
 }
 
-void					CMSWindowsPrimaryScreen::getSize(
-								SInt32* width, SInt32* height) const
+void
+CMSWindowsPrimaryScreen::getSize(
+	SInt32* width,
+	SInt32* height) const
 {
 	getScreenSize(width, height);
 }
 
-SInt32					CMSWindowsPrimaryScreen::getJumpZoneSize() const
+SInt32
+CMSWindowsPrimaryScreen::getJumpZoneSize() const
 {
 	return 1;
 }
 
-void					CMSWindowsPrimaryScreen::getClipboard(
-								ClipboardID /*id*/, IClipboard* dst) const
+void
+CMSWindowsPrimaryScreen::getClipboard(
+	ClipboardID /*id*/,
+	IClipboard* dst) const
 {
 	assert(m_window != NULL);
 
@@ -275,7 +295,8 @@ void					CMSWindowsPrimaryScreen::getClipboard(
 	CClipboard::copy(dst, &src);
 }
 
-KeyModifierMask			CMSWindowsPrimaryScreen::getToggleMask() const
+KeyModifierMask
+CMSWindowsPrimaryScreen::getToggleMask() const
 {
 	KeyModifierMask mask = 0;
 	if ((GetKeyState(VK_CAPITAL) & 0x01) != 0)
@@ -287,7 +308,8 @@ KeyModifierMask			CMSWindowsPrimaryScreen::getToggleMask() const
 	return mask;
 }
 
-bool					CMSWindowsPrimaryScreen::isLockedToScreen() const
+bool
+CMSWindowsPrimaryScreen::isLockedToScreen() const
 {
 	// check buttons
 	if (GetAsyncKeyState(VK_LBUTTON) < 0 ||
@@ -310,7 +332,8 @@ bool					CMSWindowsPrimaryScreen::isLockedToScreen() const
 	return false;
 }
 
-void					CMSWindowsPrimaryScreen::onOpenDisplay()
+void
+CMSWindowsPrimaryScreen::onOpenDisplay()
 {
 	assert(m_window == NULL);
 	assert(m_server != NULL);
@@ -331,7 +354,8 @@ void					CMSWindowsPrimaryScreen::onOpenDisplay()
 	}
 }
 
-void					CMSWindowsPrimaryScreen::onCloseDisplay()
+void
+CMSWindowsPrimaryScreen::onCloseDisplay()
 {
 	// disconnect from desktop
 	if (m_is95Family) {
@@ -348,7 +372,9 @@ void					CMSWindowsPrimaryScreen::onCloseDisplay()
 	assert(m_desk   == NULL);
 }
 
-bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
+bool
+CMSWindowsPrimaryScreen::onPreTranslate(
+	MSG* msg)
 {
 	// handle event
 	switch (msg->message) {
@@ -477,9 +503,12 @@ bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 	return false;
 }
 
-LRESULT					CMSWindowsPrimaryScreen::onEvent(
-								HWND hwnd, UINT msg,
-								WPARAM wParam, LPARAM lParam)
+LRESULT
+CMSWindowsPrimaryScreen::onEvent(
+	HWND hwnd,
+	UINT msg,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	switch (msg) {
 	case WM_QUERYENDSESSION:
@@ -571,7 +600,8 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-void					CMSWindowsPrimaryScreen::enterNoWarp()
+void
+CMSWindowsPrimaryScreen::enterNoWarp()
 {
 	// not active anymore
 	m_active = false;
@@ -595,7 +625,8 @@ void					CMSWindowsPrimaryScreen::enterNoWarp()
 	nextMark();
 }
 
-void					CMSWindowsPrimaryScreen::onEnter()
+void
+CMSWindowsPrimaryScreen::onEnter()
 {
 	// restore the active window and hide our window.  we can only set
 	// the active window for another thread if we first attach our input
@@ -613,7 +644,8 @@ void					CMSWindowsPrimaryScreen::onEnter()
 	ShowWindow(m_window, SW_HIDE);
 }
 
-bool					CMSWindowsPrimaryScreen::onLeave()
+bool
+CMSWindowsPrimaryScreen::onLeave()
 {
 	// remember the active window before we leave.  GetActiveWindow()
 	// will only return the active window for the thread's queue (i.e.
@@ -643,7 +675,8 @@ bool					CMSWindowsPrimaryScreen::onLeave()
 	return true;
 }
 
-void					CMSWindowsPrimaryScreen::nextMark()
+void
+CMSWindowsPrimaryScreen::nextMark()
 {
 	// next mark
 	++m_mark;
@@ -652,7 +685,8 @@ void					CMSWindowsPrimaryScreen::nextMark()
 	PostThreadMessage(m_threadID, SYNERGY_MSG_MARK, m_mark, 0);
 }
 
-bool					CMSWindowsPrimaryScreen::openDesktop()
+bool
+CMSWindowsPrimaryScreen::openDesktop()
 {
 	// install hooks
 	m_install(m_threadID);
@@ -687,7 +721,8 @@ bool					CMSWindowsPrimaryScreen::openDesktop()
 	return true;
 }
 
-void					CMSWindowsPrimaryScreen::closeDesktop()
+void
+CMSWindowsPrimaryScreen::closeDesktop()
 {
 	// destroy old window
 	if (m_window != NULL) {
@@ -714,7 +749,9 @@ void					CMSWindowsPrimaryScreen::closeDesktop()
 	m_uninstall();
 }
 
-bool					CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
+bool
+CMSWindowsPrimaryScreen::switchDesktop(
+	HDESK desk)
 {
 	// did we own the clipboard?
 	bool ownClipboard = (m_clipboardOwner == m_window);
@@ -818,7 +855,8 @@ bool					CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 	return true;
 }
 
-CString					CMSWindowsPrimaryScreen::getCurrentDesktopName() const
+CString
+CMSWindowsPrimaryScreen::getCurrentDesktopName() const
 {
 	return m_deskName;
 }
@@ -1083,9 +1121,11 @@ static const KeyID		g_virtualKey[] =
 	/* 0xff */ kKeyNone		// reserved
 };
 
-KeyID					CMSWindowsPrimaryScreen::mapKey(
-								WPARAM vkCode, LPARAM info,
-								KeyModifierMask* maskOut)
+KeyID
+CMSWindowsPrimaryScreen::mapKey(
+	WPARAM vkCode,
+	LPARAM info,
+	KeyModifierMask* maskOut)
 {
 	// note:  known microsoft bugs
 	//  Q72583 -- MapVirtualKey() maps keypad keys incorrectly
@@ -1101,25 +1141,32 @@ KeyID					CMSWindowsPrimaryScreen::mapKey(
 	KeyModifierMask mask = 0;
 	if (((m_keys[VK_LSHIFT] |
 		  m_keys[VK_RSHIFT] |
-		  m_keys[VK_SHIFT]) & 0x80) != 0)
+		  m_keys[VK_SHIFT]) & 0x80) != 0) {
 		mask |= KeyModifierShift;
+	}
 	if (((m_keys[VK_LCONTROL] |
 		  m_keys[VK_RCONTROL] |
-		  m_keys[VK_CONTROL]) & 0x80) != 0)
+		  m_keys[VK_CONTROL]) & 0x80) != 0) {
 		mask |= KeyModifierControl;
+	}
 	if (((m_keys[VK_LMENU] |
 		  m_keys[VK_RMENU] |
-		  m_keys[VK_MENU]) & 0x80) != 0)
+		  m_keys[VK_MENU]) & 0x80) != 0) {
 		mask |= KeyModifierAlt;
+	}
 	if (((m_keys[VK_LWIN] |
-		  m_keys[VK_RWIN]) & 0x80) != 0)
+		  m_keys[VK_RWIN]) & 0x80) != 0) {
 		mask |= KeyModifierMeta;
-	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
+	}
+	if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
 		mask |= KeyModifierCapsLock;
-	if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
+	}
+	if ((m_keys[VK_NUMLOCK] & 0x01) != 0) {
 		mask |= KeyModifierNumLock;
-	if ((m_keys[VK_SCROLL] & 0x01) != 0)
+	}
+	if ((m_keys[VK_SCROLL] & 0x01) != 0) {
 		mask |= KeyModifierScrollLock;
+	}
 	*maskOut = mask;
 	log((CLOG_DEBUG2 "key in vk=%d info=0x%08x mask=0x%04x", vkCode, info, mask));
 
@@ -1133,17 +1180,20 @@ KeyID					CMSWindowsPrimaryScreen::mapKey(
 	UINT vkCode2 = MapVirtualKey(scanCode, 3);
 
 	// work around bug Q72583 (bad num pad conversion in MapVirtualKey())
-	if (vkCode >= VK_NUMPAD0 && vkCode <= VK_DIVIDE)
+	if (vkCode >= VK_NUMPAD0 && vkCode <= VK_DIVIDE) {
 		vkCode2 = vkCode;
+	}
 
 	// MapVirtualKey() appears to map VK_LWIN, VK_RWIN, VK_APPS to
 	// some other meaningless virtual key.  work around that bug.
-	else if (vkCode >= VK_LWIN && vkCode <= VK_APPS)
+	else if (vkCode >= VK_LWIN && vkCode <= VK_APPS) {
 		vkCode2 = vkCode;
+	}
 
 	// if MapVirtualKey failed then use original virtual key
-	else if (vkCode2 == 0)
+	else if (vkCode2 == 0) {
 		vkCode2 = vkCode;
+	}
 
 	// sadly, win32 will not distinguish between the left and right
 	// control and alt keys using the above function.  however, we
@@ -1223,12 +1273,16 @@ KeyID					CMSWindowsPrimaryScreen::mapKey(
 		// set shift state required to generate key
 		BYTE keys[256];
 		memset(keys, 0, sizeof(keys));
-		if (vkCode & 0x0100)
+// FIXME -- surely these masks should be different in each if expression
+		if (vkCode & 0x0100) {
 			keys[VK_SHIFT] = 0x80;
-		if (vkCode & 0x0100)
+		}
+		if (vkCode & 0x0100) {
 			keys[VK_CONTROL] = 0x80;
-		if (vkCode & 0x0100)
+		}
+		if (vkCode & 0x0100) {
 			keys[VK_MENU] = 0x80;
+		}
 
 		// strip shift state off of virtual key code
 		vkCode &= 0x00ff;
@@ -1245,8 +1299,9 @@ KeyID					CMSWindowsPrimaryScreen::mapKey(
 	return kKeyNone;
 }
 
-ButtonID				CMSWindowsPrimaryScreen::mapButton(
-								WPARAM button) const
+ButtonID
+CMSWindowsPrimaryScreen::mapButton(
+	WPARAM button) const
 {
 	switch (button) {
 	case WM_LBUTTONDOWN:
@@ -1266,7 +1321,8 @@ ButtonID				CMSWindowsPrimaryScreen::mapButton(
 	}
 }
 
-void					CMSWindowsPrimaryScreen::updateKeys()
+void
+CMSWindowsPrimaryScreen::updateKeys()
 {
 	// not using GetKeyboardState() because that doesn't seem to give
 	// up-to-date results.  i don't know why that is or why GetKeyState()
@@ -1293,8 +1349,10 @@ void					CMSWindowsPrimaryScreen::updateKeys()
 	m_keys[VK_SCROLL]   = static_cast<BYTE>(GetKeyState(VK_SCROLL));
 }
 
-void					CMSWindowsPrimaryScreen::updateKey(
-								UINT vkCode, bool press)
+void
+CMSWindowsPrimaryScreen::updateKey(
+	UINT vkCode,
+	bool press)
 {
 	if (press) {
 		switch (vkCode) {

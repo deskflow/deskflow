@@ -21,7 +21,7 @@ protected:
 
 	// look up a message and format it
 	virtual CString		format(const char* id,
-								const char* defaultFormat, ...) const throw();
+							const char* defaultFormat, ...) const throw();
 
 private:
 	mutable CString		m_what;

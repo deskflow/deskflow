@@ -2,7 +2,6 @@
 #define ISECONDARYSCREEN_H
 
 #include "IInterface.h"
-#include "BasicTypes.h"
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
@@ -35,7 +34,7 @@ public:
 	// the cursor to the given coordinates and unhide it.  prepare to
 	// simulate input events.
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
-								KeyModifierMask mask) = 0;
+							KeyModifierMask mask) = 0;
 
 	// called when the user navigates off the secondary screen.  clean
 	// up input event simulation and hide the cursor.

@@ -2,14 +2,13 @@
 #include "CXWindowsClipboard.h"
 #include "CXWindowsUtil.h"
 #include "CClipboard.h"
+#include "XScreen.h"
 #include "CLock.h"
+#include "CThread.h"
 #include "CLog.h"
 #include "CString.h"
-#include "CThread.h"
-#include "XScreen.h"
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cstring>
 
 //
 // CXWindowsScreen
@@ -18,10 +17,10 @@
 CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 
 CXWindowsScreen::CXWindowsScreen() :
-								m_display(NULL),
-								m_root(None),
-								m_w(0), m_h(0),
-								m_stop(false)
+	m_display(NULL),
+	m_root(None),
+	m_w(0), m_h(0),
+	m_stop(false)
 {
 	assert(s_screen == NULL);
 	s_screen = this;
@@ -35,7 +34,8 @@ CXWindowsScreen::~CXWindowsScreen()
 	s_screen = NULL;
 }
 
-void					CXWindowsScreen::openDisplay()
+void
+CXWindowsScreen::openDisplay()
 {
 	assert(m_display == NULL);
 
@@ -51,11 +51,12 @@ void					CXWindowsScreen::openDisplay()
 	// open the display
 	log((CLOG_DEBUG "XOpenDisplay(\"%s\")", display));
 	m_display = XOpenDisplay(display);
-	if (m_display == NULL)
+	if (m_display == NULL) {
 		throw XScreenOpenFailure();
+	}
 
 	// get default screen
-	m_screen = DefaultScreen(m_display);
+	m_screen       = DefaultScreen(m_display);
 	Screen* screen = ScreenOfDisplay(m_display, m_screen);
 
 	// get screen size
@@ -75,7 +76,8 @@ void					CXWindowsScreen::openDisplay()
 	}
 }
 
-void					CXWindowsScreen::closeDisplay()
+void
+CXWindowsScreen::closeDisplay()
 {
 	CLock lock(&m_mutex);
 
@@ -96,20 +98,24 @@ void					CXWindowsScreen::closeDisplay()
 	XSetIOErrorHandler(NULL);
 }
 
-int						CXWindowsScreen::getScreen() const
+int
+CXWindowsScreen::getScreen() const
 {
 	assert(m_display != NULL);
 	return m_screen;
 }
 
-Window					CXWindowsScreen::getRoot() const
+Window
+CXWindowsScreen::getRoot() const
 {
 	assert(m_display != NULL);
 	return m_root;
 }
 
-void					CXWindowsScreen::getScreenSize(
-								SInt32* w, SInt32* h) const
+void
+CXWindowsScreen::getScreenSize(
+	SInt32* w,
+	SInt32* h) const
 {
 	assert(m_display != NULL);
 	assert(w != NULL && h != NULL);
@@ -118,7 +124,8 @@ void					CXWindowsScreen::getScreenSize(
 	*h = m_h;
 }
 
-Cursor					CXWindowsScreen::createBlankCursor() const
+Cursor
+CXWindowsScreen::createBlankCursor() const
 {
 	// this seems just a bit more complicated than really necessary
 
@@ -153,7 +160,9 @@ Cursor					CXWindowsScreen::createBlankCursor() const
 	return cursor;
 }
 
-bool					CXWindowsScreen::getEvent(XEvent* xevent) const
+bool
+CXWindowsScreen::getEvent(
+	XEvent* xevent) const
 {
 	// wait for an event in a cancellable way and don't lock the
 	// display while we're waiting.
@@ -182,13 +191,15 @@ bool					CXWindowsScreen::getEvent(XEvent* xevent) const
 	}
 }
 
-void					CXWindowsScreen::doStop()
+void
+CXWindowsScreen::doStop()
 {
 	// caller must have locked display
 	m_stop = true;
 }
 
-ClipboardID				CXWindowsScreen::getClipboardID(Atom selection) const
+ClipboardID
+CXWindowsScreen::getClipboardID(Atom selection) const
 {
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		if (m_clipboard[id] != NULL &&
@@ -199,27 +210,31 @@ ClipboardID				CXWindowsScreen::getClipboardID(Atom selection) const
 	return kClipboardEnd;
 }
 
-void					CXWindowsScreen::onUnexpectedClose()
+void
+CXWindowsScreen::onUnexpectedClose()
 {
 	// do nothing
 }
 
-bool					CXWindowsScreen::processEvent(XEvent* xevent)
+bool
+CXWindowsScreen::processEvent(
+	XEvent* xevent)
 {
 	switch (xevent->type) {
-	case SelectionClear: {
-		// we just lost the selection.  that means someone else
-		// grabbed the selection so this screen is now the
-		// selection owner.  report that to the subclass.
-		ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
-		if (id != kClipboardEnd) {
-			log((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
-			m_clipboard[id]->lost(xevent->xselectionclear.time);
-			onLostClipboard(id);
-			return true;
+	case SelectionClear:
+		{
+			// we just lost the selection.  that means someone else
+			// grabbed the selection so this screen is now the
+			// selection owner.  report that to the subclass.
+			ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
+			if (id != kClipboardEnd) {
+				log((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
+				m_clipboard[id]->lost(xevent->xselectionclear.time);
+				onLostClipboard(id);
+				return true;
+			}
 		}
 		break;
-	}
 
 	case SelectionNotify:
 		// notification of selection transferred.  we shouldn't
@@ -234,28 +249,30 @@ bool					CXWindowsScreen::processEvent(XEvent* xevent)
 		}
 		return true;
 
-	case SelectionRequest: {
-		// somebody is asking for clipboard data
-		ClipboardID id = getClipboardID(xevent->xselectionrequest.selection);
-		if (id != kClipboardEnd) {
-			CLock lock(&m_mutex);
-			m_clipboard[id]->addRequest(
+	case SelectionRequest:
+		{
+			// somebody is asking for clipboard data
+			ClipboardID id = getClipboardID(
+								xevent->xselectionrequest.selection);
+			if (id != kClipboardEnd) {
+				CLock lock(&m_mutex);
+				m_clipboard[id]->addRequest(
 								xevent->xselectionrequest.owner,
 								xevent->xselectionrequest.requestor,
 								xevent->xselectionrequest.target,
 								xevent->xselectionrequest.time,
 								xevent->xselectionrequest.property);
-			return true;
+				return true;
+			}
 		}
 		break;
-	}
 
 	case PropertyNotify:
 		// property delete may be part of a selection conversion
 		if (xevent->xproperty.state == PropertyDelete) {
 			processClipboardRequest(xevent->xproperty.window,
-							xevent->xproperty.time,
-							xevent->xproperty.atom);
+								xevent->xproperty.time,
+								xevent->xproperty.atom);
 			return true;
 		}
 		break;
@@ -270,9 +287,10 @@ bool					CXWindowsScreen::processEvent(XEvent* xevent)
 	return false;
 }
 
-bool					CXWindowsScreen::setDisplayClipboard(
-								ClipboardID id,
-								const IClipboard* clipboard)
+bool
+CXWindowsScreen::setDisplayClipboard(
+	ClipboardID id,
+	const IClipboard* clipboard)
 {
 	CLock lock(&m_mutex);
 
@@ -300,9 +318,10 @@ bool					CXWindowsScreen::setDisplayClipboard(
 	}
 }
 
-bool					CXWindowsScreen::getDisplayClipboard(
-								ClipboardID id,
-								IClipboard* clipboard) const
+bool
+CXWindowsScreen::getDisplayClipboard(
+	ClipboardID id,
+	IClipboard* clipboard) const
 {
 	assert(clipboard != NULL);
 
@@ -322,9 +341,11 @@ bool					CXWindowsScreen::getDisplayClipboard(
 	return CClipboard::copy(clipboard, m_clipboard[id], timestamp);
 }
 
-void					CXWindowsScreen::processClipboardRequest(
-								Window requestor,
-								Time time, Atom property)
+void
+CXWindowsScreen::processClipboardRequest(
+	Window requestor,
+	Time time,
+	Atom property)
 {
 	CLock lock(&m_mutex);
 
@@ -337,8 +358,9 @@ void					CXWindowsScreen::processClipboardRequest(
 	}
 }
 
-void					CXWindowsScreen::destroyClipboardRequest(
-								Window requestor)
+void
+CXWindowsScreen::destroyClipboardRequest(
+	Window requestor)
 {
 	CLock lock(&m_mutex);
 
@@ -351,7 +373,9 @@ void					CXWindowsScreen::destroyClipboardRequest(
 	}
 }
 
-int						CXWindowsScreen::ioErrorHandler(Display*)
+int
+CXWindowsScreen::ioErrorHandler(
+	Display*)
 {
 	// the display has disconnected, probably because X is shutting
 	// down.  X forces us to exit at this point.  that's arguably
@@ -371,9 +395,10 @@ int						CXWindowsScreen::ioErrorHandler(Display*)
 // CXWindowsScreen::CDisplayLock
 //
 
-CXWindowsScreen::CDisplayLock::CDisplayLock(const CXWindowsScreen* screen) :
-								m_mutex(&screen->m_mutex),
-								m_display(screen->m_display)
+CXWindowsScreen::CDisplayLock::CDisplayLock(
+	const CXWindowsScreen* screen) :
+	m_mutex(&screen->m_mutex),
+	m_display(screen->m_display)
 {
 	assert(m_display != NULL);
 

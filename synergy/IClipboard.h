@@ -2,9 +2,8 @@
 #define ICLIPBOARD_H
 
 #include "IInterface.h"
+#include "CString.h"
 #include "BasicTypes.h"
-
-class CString;
 
 class IClipboard : public IInterface {
 public:

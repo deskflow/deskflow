@@ -4,19 +4,20 @@
 #include "CThread.h"
 #include "IJob.h"
 #include "XIO.h"
-#include <string.h>
-#include <assert.h>
+#include <cstring>
 
 //
 // CBufferedInputStream
 //
 
-CBufferedInputStream::CBufferedInputStream(CMutex* mutex, IJob* closeCB) :
-								m_mutex(mutex),
-								m_empty(mutex, true),
-								m_closeCB(closeCB),
-								m_closed(false),
-								m_hungup(false)
+CBufferedInputStream::CBufferedInputStream(
+	CMutex* mutex,
+	IJob* closeCB) :
+	m_mutex(mutex),
+	m_empty(mutex, true),
+	m_closeCB(closeCB),
+	m_closed(false),
+	m_hungup(false)
 {
 	assert(m_mutex != NULL);
 }
@@ -26,8 +27,10 @@ CBufferedInputStream::~CBufferedInputStream()
 	delete m_closeCB;
 }
 
-void					CBufferedInputStream::write(
-								const void* data, UInt32 n)
+void
+CBufferedInputStream::write(
+	const void* data,
+	UInt32 n)
 {
 	if (!m_hungup && n > 0) {
 		m_buffer.write(data, n);
@@ -36,14 +39,17 @@ void					CBufferedInputStream::write(
 	}
 }
 
-void					CBufferedInputStream::hangup()
+void
+CBufferedInputStream::hangup()
 {
 	m_hungup = true;
 	m_empty.broadcast();
 }
 
-UInt32					CBufferedInputStream::readNoLock(
-								void* dst, UInt32 n)
+UInt32
+CBufferedInputStream::readNoLock(
+	void* dst,
+	UInt32 n)
 {
 	if (m_closed) {
 		throw XIOClosed();
@@ -74,12 +80,14 @@ UInt32					CBufferedInputStream::readNoLock(
 	return n;
 }
 
-UInt32					CBufferedInputStream::getSizeNoLock() const
+UInt32
+CBufferedInputStream::getSizeNoLock() const
 {
 	return m_buffer.getSize();
 }
 
-void					CBufferedInputStream::close()
+void
+CBufferedInputStream::close()
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
@@ -95,16 +103,18 @@ void					CBufferedInputStream::close()
 	}
 }
 
-UInt32					CBufferedInputStream::read(
-								void* dst, UInt32 n)
+UInt32
+CBufferedInputStream::read(
+	void* dst,
+	UInt32 n)
 {
 	CLock lock(m_mutex);
 	return readNoLock(dst, n);
 }
 
-UInt32					CBufferedInputStream::getSize() const
+UInt32
+CBufferedInputStream::getSize() const
 {
 	CLock lock(m_mutex);
 	return getSizeNoLock();
 }
-

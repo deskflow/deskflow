@@ -17,7 +17,7 @@ public:
 	virtual void		queryInfo();
 	virtual void		sendClose();
 	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs,
-								UInt32 seqNum, KeyModifierMask mask);
+							UInt32 seqNum, KeyModifierMask mask);
 	virtual void		sendLeave();
 	virtual void		sendClipboard(ClipboardID, const CString&);
 	virtual void		sendGrabClipboard(ClipboardID);

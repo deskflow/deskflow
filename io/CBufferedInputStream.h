@@ -1,9 +1,9 @@
 #ifndef CBUFFEREDINPUTSTREAM_H
 #define CBUFFEREDINPUTSTREAM_H
 
+#include "IInputStream.h"
 #include "CStreamBuffer.h"
 #include "CCondVar.h"
-#include "IInputStream.h"
 
 class CMutex;
 class IJob;

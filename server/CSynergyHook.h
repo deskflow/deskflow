@@ -31,7 +31,7 @@ typedef void			(*SetRelayFunc)(void);
 CSYNERGYHOOK_API int	install(DWORD);
 CSYNERGYHOOK_API int	uninstall(void);
 CSYNERGYHOOK_API void	setZone(UInt32 sides,
-								SInt32 w, SInt32 h, SInt32 jumpZoneSize);
+							SInt32 w, SInt32 h, SInt32 jumpZoneSize);
 CSYNERGYHOOK_API void	setRelay(void);
 
 }

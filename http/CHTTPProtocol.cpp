@@ -1,12 +1,11 @@
 #include "CHTTPProtocol.h"
-#include "CLog.h"
 #include "XHTTP.h"
 #include "IInputStream.h"
 #include "IOutputStream.h"
+#include "CLog.h"
 #include "stdsstream.h"
-#include <assert.h>
-#include <locale.h>
-#include <time.h>
+#include <clocale>
+#include <ctime>
 #include <algorithm>
 
 //
@@ -23,8 +22,10 @@ CHTTPRequest::~CHTTPRequest()
 	// do nothing
 }
 
-void				CHTTPRequest::insertHeader(
-							const CString& name, const CString& value)
+void
+CHTTPRequest::insertHeader(
+	const CString& name,
+	const CString& value)
 {
 	CHeaderMap::iterator index = m_headerByName.find(name);
 	if (index != m_headerByName.end()) {
@@ -37,8 +38,10 @@ void				CHTTPRequest::insertHeader(
 	}
 }
 
-void				CHTTPRequest::appendHeader(
-							const CString& name, const CString& value)
+void
+CHTTPRequest::appendHeader(
+	const CString& name,
+	const CString& value)
 {
 	CHeaderMap::iterator index = m_headerByName.find(name);
 	if (index != m_headerByName.end()) {
@@ -52,7 +55,9 @@ void				CHTTPRequest::appendHeader(
 	}
 }
 
-void				CHTTPRequest::eraseHeader(const CString& name)
+void
+CHTTPRequest::eraseHeader(
+	const CString& name)
 {
 	CHeaderMap::iterator index = m_headerByName.find(name);
 	if (index != m_headerByName.end()) {
@@ -60,12 +65,16 @@ void				CHTTPRequest::eraseHeader(const CString& name)
 	}
 }
 
-bool				CHTTPRequest::isHeader(const CString& name) const
+bool
+CHTTPRequest::isHeader(
+	const CString& name) const
 {
 	return (m_headerByName.find(name) != m_headerByName.end());
 }
 
-CString				CHTTPRequest::getHeader(const CString& name) const
+CString
+CHTTPRequest::getHeader(
+	const CString& name) const
 {
 	CHeaderMap::const_iterator index = m_headerByName.find(name);
 	if (index != m_headerByName.end()) {
@@ -81,8 +90,10 @@ CString				CHTTPRequest::getHeader(const CString& name) const
 // CHTTPProtocol
 //
 					
-CHTTPRequest*		CHTTPProtocol::readRequest(
-							IInputStream* stream, UInt32 maxSize)
+CHTTPRequest*
+CHTTPProtocol::readRequest(
+	IInputStream* stream,
+	UInt32 maxSize)
 {
 	CString scratch;
 
@@ -229,9 +240,10 @@ CHTTPRequest*		CHTTPProtocol::readRequest(
 	return request;
 }
 
-void					CHTTPProtocol::reply(
-								IOutputStream* stream,
-								CHTTPReply& reply)
+void
+CHTTPProtocol::reply(
+	IOutputStream* stream,
+	CHTTPReply& reply)
 {
 	// suppress body for certain replies
 	bool hasBody = true;
@@ -308,9 +320,10 @@ void					CHTTPProtocol::reply(
 	}
 }
 
-bool					CHTTPProtocol::parseFormData(
-								const CHTTPRequest& request,
-								CFormParts& parts)
+bool
+CHTTPProtocol::parseFormData(
+	const CHTTPRequest& request,
+	CFormParts& parts)
 {
 	static const char formData[]    = "multipart/form-data";
 	static const char boundary[]    = "boundary=";
@@ -444,9 +457,10 @@ bool					CHTTPProtocol::parseFormData(
 	return false;	
 }
 
-CString					CHTTPProtocol::readLine(
-								IInputStream* stream,
-								CString& tmpBuffer)
+CString
+CHTTPProtocol::readLine(
+	IInputStream* stream,
+	CString& tmpBuffer)
 {
 	// read up to and including a CRLF from stream, using whatever
 	// is in tmpBuffer as if it were at the head of the stream.
@@ -478,10 +492,11 @@ CString					CHTTPProtocol::readLine(
 	}
 }
 
-CString					CHTTPProtocol::readBlock(
-								IInputStream* stream,
-								UInt32 numBytes,
-								CString& tmpBuffer)
+CString
+CHTTPProtocol::readBlock(
+	IInputStream* stream,
+	UInt32 numBytes,
+	CString& tmpBuffer)
 {
 	CString data;
 
@@ -527,10 +542,11 @@ CString					CHTTPProtocol::readBlock(
 	return data;
 }
 
-CString					CHTTPProtocol::readChunk(
-								IInputStream* stream,
-								CString& tmpBuffer,
-								UInt32* maxSize)
+CString
+CHTTPProtocol::readChunk(
+	IInputStream* stream,
+	CString& tmpBuffer,
+	UInt32* maxSize)
 {
 	CString line;
 
@@ -577,12 +593,13 @@ CString					CHTTPProtocol::readChunk(
 	return data;
 }
 
-void					CHTTPProtocol::readHeaders(
-								IInputStream* stream,
-								CHTTPRequest* request,
-								bool isFooter,
-								CString& tmpBuffer,
-								UInt32* maxSize)
+void
+CHTTPProtocol::readHeaders(
+	IInputStream* stream,
+	CHTTPRequest* request,
+	bool isFooter,
+	CString& tmpBuffer,
+	UInt32* maxSize)
 {
 	// parse headers.  done with headers when we get a blank line.
 	CString name;
@@ -634,7 +651,9 @@ void					CHTTPProtocol::readHeaders(
 	}
 }
 
-bool					CHTTPProtocol::isValidToken(const CString& token)
+bool
+CHTTPProtocol::isValidToken(
+	const CString& token)
 {
 	return (token.find("()<>@,;:\\\"/[]?={} "
 					"\0\1\2\3\4\5\6\7"

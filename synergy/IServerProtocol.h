@@ -1,12 +1,11 @@
 #ifndef ISERVERPROTOCOL_H
 #define ISERVERPROTOCOL_H
 
+#include "IInterface.h"
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
-#include "IInterface.h"
-#include "XSynergy.h"
-#include "XIO.h"
+#include "CString.h"
 
 class IClipboard;
 
@@ -25,7 +24,7 @@ public:
 	// send various messages to client
 	virtual void		sendClose() = 0;
 	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs,
-								UInt32 seqNum, KeyModifierMask mask) = 0;
+							UInt32 seqNum, KeyModifierMask mask) = 0;
 	virtual void		sendLeave() = 0;
 	virtual void		sendClipboard(ClipboardID, const CString&) = 0;
 	virtual void		sendGrabClipboard(ClipboardID) = 0;

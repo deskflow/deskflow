@@ -42,4 +42,6 @@
 #define NULL 0
 #endif
 
+#include <cassert>
+
 #endif

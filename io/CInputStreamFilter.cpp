@@ -1,13 +1,14 @@
 #include "CInputStreamFilter.h"
-#include <assert.h>
 
 //
 // CInputStreamFilter
 //
 
-CInputStreamFilter::CInputStreamFilter(IInputStream* stream, bool adopted) :
-								m_stream(stream),
-								m_adopted(adopted)
+CInputStreamFilter::CInputStreamFilter(
+	IInputStream* stream,
+	bool adopted) :
+	m_stream(stream),
+	m_adopted(adopted)
 {
 	assert(m_stream != NULL);
 }
@@ -19,7 +20,8 @@ CInputStreamFilter::~CInputStreamFilter()
 	}
 }
 
-IInputStream*			CInputStreamFilter::getStream() const
+IInputStream*
+CInputStreamFilter::getStream() const
 {
 	return m_stream;
 }

@@ -6,7 +6,6 @@
 //
 
 #include "IClipboard.h"
-#include "CString.h"
 
 class CClipboard : public IClipboard {
 public:
@@ -23,6 +22,14 @@ public:
 	// marshall clipboard data
 	CString				marshall() const;
 
+	// transfer all the data in one clipboard to another.  the
+	// clipboards can be of any concrete clipboard type (and
+	// they don't have to be the same type).  this also sets
+	// the timestamp to time, if provided, or the time in src.
+	// returns true iff the copy succeeded.
+	static bool			copy(IClipboard* dst, const IClipboard* src);
+	static bool			copy(IClipboard* dst, const IClipboard* src, Time);
+
 	// IClipboard overrides
 	virtual bool		empty();
 	virtual void		add(EFormat, const CString& data);
@@ -31,16 +38,6 @@ public:
 	virtual Time		getTime() const;
 	virtual bool		has(EFormat) const;
 	virtual CString		get(EFormat) const;
-
-	// accessors
-
-	// transfer all the data in one clipboard to another.  the
-	// clipboards can be of any concrete clipboard type (and
-	// they don't have to be the same type).  this also sets
-	// the timestamp to time, if provided, or the time in src.
-	// returns true iff the copy succeeded.
-	static bool			copy(IClipboard* dst, const IClipboard* src);
-	static bool			copy(IClipboard* dst, const IClipboard* src, Time);
 
 private:
 	UInt32				readUInt32(const char*) const;

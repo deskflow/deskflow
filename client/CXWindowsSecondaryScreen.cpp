@@ -1,10 +1,9 @@
 #include "CXWindowsSecondaryScreen.h"
+#include "CClient.h"
 #include "CXWindowsClipboard.h"
 #include "CXWindowsUtil.h"
-#include "CClient.h"
 #include "CThread.h"
 #include "CLog.h"
-#include <assert.h>
 #include <X11/X.h>
 #include <X11/Xutil.h>
 #define XK_MISCELLANY
@@ -17,8 +16,8 @@
 //
 
 CXWindowsSecondaryScreen::CXWindowsSecondaryScreen() :
-								m_client(NULL),
-								m_window(None)
+	m_client(NULL),
+	m_window(None)
 {
 	// do nothing
 }
@@ -28,7 +27,8 @@ CXWindowsSecondaryScreen::~CXWindowsSecondaryScreen()
 	assert(m_window == None);
 }
 
-void					CXWindowsSecondaryScreen::run()
+void
+CXWindowsSecondaryScreen::run()
 {
 	assert(m_window != None);
 
@@ -41,34 +41,39 @@ void					CXWindowsSecondaryScreen::run()
 
 		// handle event
 		switch (xevent.type) {
-		case MappingNotify: {
-			// keyboard mapping changed
-			CDisplayLock display(this);
-			XRefreshKeyboardMapping(&xevent.xmapping);
-			updateKeys(display);
-			updateKeycodeMap(display);
-			updateModifierMap(display);
-			updateModifiers(display);
+		case MappingNotify:
+			{
+				// keyboard mapping changed
+				CDisplayLock display(this);
+				XRefreshKeyboardMapping(&xevent.xmapping);
+				updateKeys(display);
+				updateKeycodeMap(display);
+				updateModifierMap(display);
+				updateModifiers(display);
+			}
 			break;
-		}
 
-		case LeaveNotify: {
-			// mouse moved out of hider window somehow.  hide the window.
-			assert(m_window != None);
-			CDisplayLock display(this);
-			XUnmapWindow(display, m_window);
+		case LeaveNotify:
+			{
+				// mouse moved out of hider window somehow.  hide the window.
+				assert(m_window != None);
+				CDisplayLock display(this);
+				XUnmapWindow(display, m_window);
+			}
 			break;
-		}
 		}
 	}
 }
 
-void					CXWindowsSecondaryScreen::stop()
+void
+CXWindowsSecondaryScreen::stop()
 {
 	doStop();
 }
 
-void					CXWindowsSecondaryScreen::open(CClient* client)
+void
+CXWindowsSecondaryScreen::open(
+	CClient* client)
 {
 	assert(m_client == NULL);
 	assert(client   != NULL);
@@ -84,8 +89,9 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 		CDisplayLock display(this);
 		int majorOpcode, firstEvent, firstError;
 		if (!XQueryExtension(display, XTestExtensionName,
-								&majorOpcode, &firstEvent, &firstError))
+								&majorOpcode, &firstEvent, &firstError)) {
 			throw int(6);	// FIXME -- make exception for this
+		}
 
 		// update key state
 		updateKeys(display);
@@ -102,11 +108,13 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 	m_capsLockHalfDuplex = true;
 
 	// assume primary has all clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		grabClipboard(id);
+	}
 }
 
-void					CXWindowsSecondaryScreen::close()
+void
+CXWindowsSecondaryScreen::close()
 {
 	assert(m_client != NULL);
 
@@ -117,8 +125,11 @@ void					CXWindowsSecondaryScreen::close()
 	m_client = NULL;
 }
 
-void					CXWindowsSecondaryScreen::enter(
-								SInt32 x, SInt32 y, KeyModifierMask mask)
+void
+CXWindowsSecondaryScreen::enter(
+	SInt32 x,
+	SInt32 y,
+	KeyModifierMask mask)
 {
 	assert(m_window != None);
 
@@ -149,14 +160,17 @@ void					CXWindowsSecondaryScreen::enter(
 	XSync(display, False);
 }
 
-void					CXWindowsSecondaryScreen::leave()
+void
+CXWindowsSecondaryScreen::leave()
 {
 	CDisplayLock display(this);
 	leaveNoLock(display);
 }
 
-void					CXWindowsSecondaryScreen::keyDown(
-								KeyID key, KeyModifierMask mask)
+void
+CXWindowsSecondaryScreen::keyDown(
+	KeyID key,
+	KeyModifierMask mask)
 {
 	Keystrokes keys;
 	KeyCode keycode;
@@ -164,8 +178,9 @@ void					CXWindowsSecondaryScreen::keyDown(
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
 	m_mask = mapKey(keys, keycode, key, mask, kPress);
-	if (keys.empty())
+	if (keys.empty()) {
 		return;
+	}
 
 	// generate key events
 	doKeystrokes(keys, 1);
@@ -174,8 +189,11 @@ void					CXWindowsSecondaryScreen::keyDown(
 	m_keys[keycode] = true;
 }
 
-void					CXWindowsSecondaryScreen::keyRepeat(
-								KeyID key, KeyModifierMask mask, SInt32 count)
+void
+CXWindowsSecondaryScreen::keyRepeat(
+	KeyID key,
+	KeyModifierMask mask,
+	SInt32 count)
 {
 	Keystrokes keys;
 	KeyCode keycode;
@@ -183,15 +201,18 @@ void					CXWindowsSecondaryScreen::keyRepeat(
 	// get the sequence of keys to simulate key repeat and the final
 	// modifier state.
 	m_mask = mapKey(keys, keycode, key, mask, kRepeat);
-	if (keys.empty())
+	if (keys.empty()) {
 		return;
+	}
 
 	// generate key events
 	doKeystrokes(keys, count);
 }
 
-void					CXWindowsSecondaryScreen::keyUp(
-								KeyID key, KeyModifierMask mask)
+void
+CXWindowsSecondaryScreen::keyUp(
+	KeyID key,
+	KeyModifierMask mask)
 {
 	Keystrokes keys;
 	KeyCode keycode;
@@ -199,8 +220,9 @@ void					CXWindowsSecondaryScreen::keyUp(
 	// get the sequence of keys to simulate key release and the final
 	// modifier state.
 	m_mask = mapKey(keys, keycode, key, mask, kRelease);
-	if (keys.empty())
+	if (keys.empty()) {
 		return;
+	}
 
 	// generate key events
 	doKeystrokes(keys, 1);
@@ -209,28 +231,37 @@ void					CXWindowsSecondaryScreen::keyUp(
 	m_keys[keycode] = false;
 }
 
-void					CXWindowsSecondaryScreen::mouseDown(ButtonID button)
+void
+CXWindowsSecondaryScreen::mouseDown(
+	ButtonID button)
 {
 	CDisplayLock display(this);
 	XTestFakeButtonEvent(display, mapButton(button), True, CurrentTime);
 	XSync(display, False);
 }
 
-void					CXWindowsSecondaryScreen::mouseUp(ButtonID button)
+void
+CXWindowsSecondaryScreen::mouseUp(
+	ButtonID button)
 {
 	CDisplayLock display(this);
 	XTestFakeButtonEvent(display, mapButton(button), False, CurrentTime);
 	XSync(display, False);
 }
 
-void					CXWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
+void
+CXWindowsSecondaryScreen::mouseMove(
+	SInt32 x,
+	SInt32 y)
 {
 	CDisplayLock display(this);
 	XTestFakeMotionEvent(display, getScreen(), x, y, CurrentTime);
 	XSync(display, False);
 }
 
-void					CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
+void
+CXWindowsSecondaryScreen::mouseWheel(
+	SInt32 delta)
 {
 	// choose button depending on rotation direction
 	const unsigned int button = (delta >= 0) ? 4 : 5;
@@ -249,19 +280,25 @@ void					CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 	XSync(display, False);
 }
 
-void					CXWindowsSecondaryScreen::setClipboard(
-								ClipboardID id, const IClipboard* clipboard)
+void
+CXWindowsSecondaryScreen::setClipboard(
+	ClipboardID id,
+	const IClipboard* clipboard)
 {
 	setDisplayClipboard(id, clipboard);
 }
 
-void					CXWindowsSecondaryScreen::grabClipboard(ClipboardID id)
+void
+CXWindowsSecondaryScreen::grabClipboard(
+	ClipboardID id)
 {
 	setDisplayClipboard(id, NULL);
 }
 
-void					CXWindowsSecondaryScreen::getMousePos(
-								SInt32* x, SInt32* y) const
+void
+CXWindowsSecondaryScreen::getMousePos(
+	SInt32* x,
+	SInt32* y) const
 {
 	CDisplayLock display(this);
 	int xTmp, yTmp, dummy;
@@ -273,25 +310,31 @@ void					CXWindowsSecondaryScreen::getMousePos(
 	*y = yTmp;
 }
 
-void					CXWindowsSecondaryScreen::getSize(
-								SInt32* width, SInt32* height) const
+void
+CXWindowsSecondaryScreen::getSize(
+	SInt32* width,
+	SInt32* height) const
 {
 	getScreenSize(width, height);
 }
 
-SInt32					CXWindowsSecondaryScreen::getJumpZoneSize() const
+SInt32
+CXWindowsSecondaryScreen::getJumpZoneSize() const
 {
 	return 0;
 }
 
-void					CXWindowsSecondaryScreen::getClipboard(
-								ClipboardID id, IClipboard* clipboard) const
+void
+CXWindowsSecondaryScreen::getClipboard(
+	ClipboardID id,
+	IClipboard* clipboard) const
 {
 	getDisplayClipboard(id, clipboard);
 }
 
-void					CXWindowsSecondaryScreen::onOpenDisplay(
-								Display* display)
+void
+CXWindowsSecondaryScreen::onOpenDisplay(
+	Display* display)
 {
 	assert(m_window == None);
 
@@ -318,15 +361,17 @@ void					CXWindowsSecondaryScreen::onOpenDisplay(
 	leaveNoLock(display);
 }
 
-CXWindowsClipboard*		CXWindowsSecondaryScreen::createClipboard(
-								ClipboardID id)
+CXWindowsClipboard*
+CXWindowsSecondaryScreen::createClipboard(
+	ClipboardID id)
 {
 	CDisplayLock display(this);
 	return new CXWindowsClipboard(display, m_window, id);
 }
 
-void					CXWindowsSecondaryScreen::onCloseDisplay(
-								Display* display)
+void
+CXWindowsSecondaryScreen::onCloseDisplay(
+	Display* display)
 {
 	assert(m_window != None);
 
@@ -340,14 +385,17 @@ void					CXWindowsSecondaryScreen::onCloseDisplay(
 	m_window = None;
 }
 
-void					CXWindowsSecondaryScreen::onLostClipboard(
-								ClipboardID id)
+void
+CXWindowsSecondaryScreen::onLostClipboard(
+	ClipboardID id)
 {
 	// tell client that the clipboard was grabbed locally
 	m_client->onClipboardChanged(id);
 }
 
-void					CXWindowsSecondaryScreen::leaveNoLock(Display* display)
+void
+CXWindowsSecondaryScreen::leaveNoLock(
+	Display* display)
 {
 	assert(display  != NULL);
 	assert(m_window != None);
@@ -368,18 +416,21 @@ void					CXWindowsSecondaryScreen::leaveNoLock(Display* display)
 	XWarpPointer(display, None, m_window, 0, 0, 0, 0, 0, 0);
 }
 
-unsigned int			CXWindowsSecondaryScreen::mapButton(
-								ButtonID id) const
+unsigned int
+CXWindowsSecondaryScreen::mapButton(
+	ButtonID id) const
 {
 	// FIXME -- should use button mapping?
 	return static_cast<unsigned int>(id);
 }
 
-KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
-								Keystrokes& keys,
-								KeyCode& keycode,
-								KeyID id, KeyModifierMask mask,
-								EKeyAction action) const
+KeyModifierMask
+CXWindowsSecondaryScreen::mapKey(
+	Keystrokes& keys,
+	KeyCode& keycode,
+	KeyID id,
+	KeyModifierMask mask,
+	EKeyAction action) const
 {
 	// note -- must have display locked on entry
 
@@ -602,11 +653,12 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 	return mask;
 }
 
-bool					CXWindowsSecondaryScreen::findKeyCode(
-								KeyCode& keycode,
-								unsigned int& maskOut,
-								KeyID id,
-								unsigned int maskIn) const
+bool
+CXWindowsSecondaryScreen::findKeyCode(
+	KeyCode& keycode,
+	unsigned int& maskOut,
+	KeyID id,
+	unsigned int maskIn) const
 {
 	// if XK_Tab is requested with shift active then try XK_ISO_Left_Tab
 	// instead.  if that doesn't work, we'll fall back to XK_Tab with
@@ -734,12 +786,15 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 	return true;
 }
 
-void					CXWindowsSecondaryScreen::doKeystrokes(
-								const Keystrokes& keys, SInt32 count)
+void
+CXWindowsSecondaryScreen::doKeystrokes(
+	const Keystrokes& keys,
+	SInt32 count)
 {
 	// do nothing if no keys or no repeats
-	if (count < 1 || keys.empty())
+	if (count < 1 || keys.empty()) {
 		return;
+	}
 
 	// lock display
 	CDisplayLock display(this);
@@ -774,29 +829,39 @@ void					CXWindowsSecondaryScreen::doKeystrokes(
 	XSync(display, False);
 }
 
-unsigned int			CXWindowsSecondaryScreen::maskToX(
-								KeyModifierMask inMask) const
+unsigned int
+CXWindowsSecondaryScreen::maskToX(
+	KeyModifierMask inMask) const
 {
 	// FIXME -- should be configurable.  also not using Mod3Mask.
 	unsigned int outMask = 0;
-	if (inMask & KeyModifierShift)
+	if (inMask & KeyModifierShift) {
 		outMask |= ShiftMask;
-	if (inMask & KeyModifierControl)
+	}
+	if (inMask & KeyModifierControl) {
 		outMask |= ControlMask;
-	if (inMask & KeyModifierAlt)
+	}
+	if (inMask & KeyModifierAlt) {
 		outMask |= Mod1Mask;
-	if (inMask & KeyModifierMeta)
+	}
+	if (inMask & KeyModifierMeta) {
 		outMask |= Mod4Mask;
-	if (inMask & KeyModifierCapsLock)
+	}
+	if (inMask & KeyModifierCapsLock) {
 		outMask |= m_capsLockMask;
-	if (inMask & KeyModifierNumLock)
+	}
+	if (inMask & KeyModifierNumLock) {
 		outMask |= m_numLockMask;
-	if (inMask & KeyModifierScrollLock)
+	}
+	if (inMask & KeyModifierScrollLock) {
 		outMask |= m_scrollLockMask;
+	}
 	return outMask;
 }
 
-void					CXWindowsSecondaryScreen::updateKeys(Display* display)
+void
+CXWindowsSecondaryScreen::updateKeys(
+	Display* display)
 {
 	// ask server which keys are pressed
 	char keys[32];
@@ -815,8 +880,9 @@ void					CXWindowsSecondaryScreen::updateKeys(Display* display)
 	}
 }
 
-void					CXWindowsSecondaryScreen::updateModifiers(
-								Display* display)
+void
+CXWindowsSecondaryScreen::updateModifiers(
+	Display* display)
 {
 	// query the pointer to get the keyboard state
 	Window root, window;
@@ -844,8 +910,9 @@ void					CXWindowsSecondaryScreen::updateModifiers(
 	}
 }
 
-void					CXWindowsSecondaryScreen::updateKeycodeMap(
-								Display* display)
+void
+CXWindowsSecondaryScreen::updateKeycodeMap(
+	Display* display)
 {
 	// get the number of keycodes
 	int minKeycode, maxKeycode;
@@ -898,8 +965,9 @@ void					CXWindowsSecondaryScreen::updateKeycodeMap(
 	XFree(keysyms);
 }
 
-void					CXWindowsSecondaryScreen::updateModifierMap(
-								Display* display)
+void
+CXWindowsSecondaryScreen::updateModifierMap(
+	Display* display)
 {
 	// get modifier map from server
 	XModifierKeymap* keymap = XGetModifierMapping(display);
@@ -927,8 +995,9 @@ void					CXWindowsSecondaryScreen::updateModifierMap(
 			m_keycodeToModifier.insert(std::make_pair(keycode, i));
 
 			// modifier is enabled if keycode isn't 0
-			if (keycode != 0)
+			if (keycode != 0) {
 				m_modifierMask |= bit;
+			}
 
 			// modifier is a toggle if the keysym is a toggle modifier
 			const KeySym keysym = XKeycodeToKeysym(display, keycode, 0);
@@ -952,14 +1021,17 @@ void					CXWindowsSecondaryScreen::updateModifierMap(
 	XFreeModifiermap(keymap);
 }
 
-void					CXWindowsSecondaryScreen::toggleKey(
-								Display* display,
-								KeySym keysym, unsigned int mask)
+void
+CXWindowsSecondaryScreen::toggleKey(
+	Display* display,
+	KeySym keysym,
+	unsigned int mask)
 {
 	// lookup the keycode
 	KeyCodeMap::const_iterator index = m_keycodeMap.find(keysym);
-	if (index == m_keycodeMap.end())
+	if (index == m_keycodeMap.end()) {
 		return;
+	}
 	KeyCode keycode = index->second.m_keycode;
 
 	// toggle the key
@@ -978,7 +1050,9 @@ void					CXWindowsSecondaryScreen::toggleKey(
 	m_mask ^= mask;
 }
 
-bool					CXWindowsSecondaryScreen::isToggleKeysym(KeySym key)
+bool
+CXWindowsSecondaryScreen::isToggleKeysym(
+	KeySym key)
 {
 	switch (key) {
 	case XK_Caps_Lock:

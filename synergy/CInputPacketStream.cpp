@@ -1,16 +1,17 @@
 #include "CInputPacketStream.h"
 #include "CLock.h"
-#include <assert.h>
 
 //
 // CInputPacketStream
 //
 
-CInputPacketStream::CInputPacketStream(IInputStream* stream, bool adopt) :
-								CInputStreamFilter(stream, adopt),
-								m_mutex(),
-								m_size(0),
-								m_buffer(&m_mutex, NULL)
+CInputPacketStream::CInputPacketStream(
+	IInputStream* stream,
+	bool adopt) :
+	CInputStreamFilter(stream, adopt),
+	m_mutex(),
+	m_size(0),
+	m_buffer(&m_mutex, NULL)
 {
 	// do nothing
 }
@@ -20,13 +21,16 @@ CInputPacketStream::~CInputPacketStream()
 	// do nothing
 }
 
-void					CInputPacketStream::close()
+void
+CInputPacketStream::close()
 {
 	getStream()->close();
 }
 
-UInt32					CInputPacketStream::read(
-								void* buffer, UInt32 n)
+UInt32
+CInputPacketStream::read(
+	void* buffer,
+	UInt32 n)
 {
 	CLock lock(&m_mutex);
 
@@ -50,13 +54,15 @@ UInt32					CInputPacketStream::read(
 	return n;
 }
 
-UInt32					CInputPacketStream::getSize() const
+UInt32
+CInputPacketStream::getSize() const
 {
 	CLock lock(&m_mutex);
 	return getSizeNoLock();
 }
 
-UInt32					CInputPacketStream::getSizeNoLock() const
+UInt32
+CInputPacketStream::getSizeNoLock() const
 {
 	while (!hasFullMessage()) {
 		// read more data
@@ -76,7 +82,8 @@ UInt32					CInputPacketStream::getSizeNoLock() const
 	return m_size;
 }
 
-bool					CInputPacketStream::hasFullMessage() const
+bool
+CInputPacketStream::hasFullMessage() const
 {
 	// get payload length if we don't have it yet
 	if (m_size == 0) {
@@ -106,4 +113,3 @@ bool					CInputPacketStream::hasFullMessage() const
 	// the buffer
 	return (m_buffer.getSizeNoLock() >= m_size);
 }
-

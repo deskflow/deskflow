@@ -1,11 +1,10 @@
 #ifndef CCLIENT_H
 #define CCLIENT_H
 
-#include "CMutex.h"
-#include "CString.h"
-#include "BasicTypes.h"
 #include "ClipboardTypes.h"
 #include "IClipboard.h"
+#include "CMutex.h"
+#include "CString.h"
 
 class CNetworkAddress;
 class IInputStream;

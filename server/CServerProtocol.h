@@ -1,7 +1,6 @@
 #ifndef CSERVERPROTOCOL_H
 #define CSERVERPROTOCOL_H
 
-#include "CString.h"
 #include "IServerProtocol.h"
 
 class CServer;
@@ -11,7 +10,7 @@ class IOutputStream;
 class CServerProtocol : public IServerProtocol {
 public:
 	CServerProtocol(CServer*, const CString& clientName,
-								IInputStream*, IOutputStream*);
+							IInputStream*, IOutputStream*);
 	~CServerProtocol();
 
 	// manipulators
@@ -24,15 +23,15 @@ public:
 	virtual IOutputStream*	getOutputStream() const;
 
 	static IServerProtocol*	create(SInt32 major, SInt32 minor,
-								CServer*, const CString& clientName,
-								IInputStream*, IOutputStream*);
+							CServer*, const CString& clientName,
+							IInputStream*, IOutputStream*);
 
 	// IServerProtocol overrides
 	virtual void		run() = 0;
 	virtual void		queryInfo() = 0;
 	virtual void		sendClose() = 0;
 	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs,
-								UInt32 seqNum, KeyModifierMask mask) = 0;
+							UInt32 seqNum, KeyModifierMask mask) = 0;
 	virtual void		sendLeave() = 0;
 	virtual void		sendClipboard(ClipboardID, const CString&) = 0;
 	virtual void		sendGrabClipboard(ClipboardID) = 0;

@@ -3,10 +3,9 @@
 #include "CThread.h"
 #include "CLog.h"
 #include "stdvector.h"
-#include <string.h>
+#include <cstring>
 #include <shlobj.h>
 #include <tchar.h>
-#include <assert.h>
 
 //
 // CWin32Platform
@@ -25,7 +24,8 @@ CWin32Platform::~CWin32Platform()
 	// do nothing
 }
 
-bool					CWin32Platform::isWindows95Family()
+bool
+CWin32Platform::isWindows95Family()
 {
 	OSVERSIONINFO version;
 	version.dwOSVersionInfoSize = sizeof(version);
@@ -36,16 +36,20 @@ bool					CWin32Platform::isWindows95Family()
 	return (version.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
 }
 
-void					CWin32Platform::setStatus(
-								SERVICE_STATUS_HANDLE handle,
-								DWORD state)
+void
+CWin32Platform::setStatus(
+	SERVICE_STATUS_HANDLE handle,
+	DWORD state)
 {
 	setStatus(handle, state, 0, 0);
 }
 
-void					CWin32Platform::setStatus(
-								SERVICE_STATUS_HANDLE handle,
-								DWORD state, DWORD step, DWORD waitHint)
+void
+CWin32Platform::setStatus(
+	SERVICE_STATUS_HANDLE handle,
+	DWORD state,
+	DWORD step,
+	DWORD waitHint)
 {
 	SERVICE_STATUS status;
 	status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS |
@@ -61,9 +65,10 @@ void					CWin32Platform::setStatus(
 	SetServiceStatus(handle, &status);
 }
 
-void					CWin32Platform::setStatusError(
-								SERVICE_STATUS_HANDLE handle,
-								DWORD error)
+void
+CWin32Platform::setStatusError(
+	SERVICE_STATUS_HANDLE handle,
+	DWORD error)
 {
 	SERVICE_STATUS status;
 	status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS |
@@ -79,11 +84,12 @@ void					CWin32Platform::setStatusError(
 	SetServiceStatus(handle, &status);
 }
 
-bool					CWin32Platform::installDaemon(
-								const char* name,
-								const char* description,
-								const char* pathname,
-								const char* commandLine)
+bool
+CWin32Platform::installDaemon(
+	const char* name,
+	const char* description,
+	const char* pathname,
+	const char* commandLine)
 {
 	// windows 95 family services
 	if (isWindows95Family()) {
@@ -174,7 +180,9 @@ bool					CWin32Platform::installDaemon(
 	}
 }
 
-bool					CWin32Platform::uninstallDaemon(const char* name)
+bool
+CWin32Platform::uninstallDaemon(
+	const char* name)
 {
 	// windows 95 family services
 	if (isWindows95Family()) {
@@ -231,9 +239,10 @@ bool					CWin32Platform::uninstallDaemon(const char* name)
 	}
 }
 
-int						CWin32Platform::daemonize(
-								const char* name,
-								DaemonFunc func)
+int
+CWin32Platform::daemonize(
+	const char* name,
+	DaemonFunc func)
 {
 	assert(name != NULL);
 	assert(func != NULL);
@@ -294,8 +303,10 @@ int						CWin32Platform::daemonize(
 	}
 }
 
-int						CWin32Platform::restart(
-								RestartFunc func, int /*minErrorCode*/)
+int
+CWin32Platform::restart(
+	RestartFunc func,
+	int /*minErrorCode*/)
 {
 	// FIXME -- start in separate process or thread.  note that this
 	// isn't too critical as win32 doesn't force us to terminate for
@@ -303,7 +314,9 @@ int						CWin32Platform::restart(
 	return func();
 }
 
-const char*				CWin32Platform::getBasename(const char* pathname) const
+const char*
+CWin32Platform::getBasename(
+	const char* pathname) const
 {
 	if (pathname == NULL) {
 		return NULL;
@@ -327,7 +340,8 @@ const char*				CWin32Platform::getBasename(const char* pathname) const
 	return basename;
 }
 
-CString					CWin32Platform::getUserDirectory() const
+CString
+CWin32Platform::getUserDirectory() const
 {
 	// try %HOMEPATH%
 	TCHAR dir[MAX_PATH];
@@ -370,7 +384,8 @@ CString					CWin32Platform::getUserDirectory() const
 	return "C:";
 }
 
-CString					CWin32Platform::getSystemDirectory() const
+CString
+CWin32Platform::getSystemDirectory() const
 {
 	// get windows directory
 	char dir[MAX_PATH];
@@ -383,9 +398,10 @@ CString					CWin32Platform::getSystemDirectory() const
 	}
 }
 
-CString					CWin32Platform::addPathComponent(
-								const CString& prefix,
-								const CString& suffix) const
+CString
+CWin32Platform::addPathComponent(
+	const CString& prefix,
+	const CString& suffix) const
 {
 	CString path;
 	path.reserve(prefix.size() + 1 + suffix.size());
@@ -399,8 +415,10 @@ CString					CWin32Platform::addPathComponent(
 	return path;
 }
 
-HKEY					CWin32Platform::openKey(
-								HKEY key, const char* keyName)
+HKEY
+CWin32Platform::openKey(
+	HKEY key,
+	const char* keyName)
 {
 	// open next key
 	HKEY newKey;
@@ -422,8 +440,10 @@ HKEY					CWin32Platform::openKey(
 	return newKey;
 }
 
-HKEY					CWin32Platform::openKey(
-								HKEY key, const char** keyNames)
+HKEY
+CWin32Platform::openKey(
+	HKEY key,
+	const char** keyNames)
 {
 	for (UInt32 i = 0; key != NULL && keyNames[i] != NULL; ++i) {
 		// open next key
@@ -432,28 +452,39 @@ HKEY					CWin32Platform::openKey(
 	return key;
 }
 
-void					CWin32Platform::closeKey(HKEY key)
+void
+CWin32Platform::closeKey(
+	HKEY key)
 {
 	assert(key  != NULL);
 	RegCloseKey(key);
 }
 
-void					CWin32Platform::deleteKey(HKEY key, const char* name)
+void
+CWin32Platform::deleteKey(
+	HKEY key,
+	const char* name)
 {
 	assert(key  != NULL);
 	assert(name != NULL);
 	RegDeleteKey(key, name);
 }
 
-void					CWin32Platform::deleteValue(HKEY key, const char* name)
+void
+CWin32Platform::deleteValue(
+	HKEY key,
+	const char* name)
 {
 	assert(key  != NULL);
 	assert(name != NULL);
 	RegDeleteValue(key, name);
 }
 
-void					CWin32Platform::setValue(HKEY key,
-								const char* name, const CString& value)
+void
+CWin32Platform::setValue(
+	HKEY key,
+	const char* name,
+	const CString& value)
 {
 	assert(key  != NULL);
 	assert(name != NULL);
@@ -462,8 +493,10 @@ void					CWin32Platform::setValue(HKEY key,
 								value.size() + 1);
 }
 
-CString					CWin32Platform::readValueString(HKEY key,
-								const char* name)
+CString
+CWin32Platform::readValueString(
+	HKEY key,
+	const char* name)
 {
 	// get the size of the string
 	DWORD type;
@@ -490,7 +523,8 @@ CString					CWin32Platform::readValueString(HKEY key,
 	return value;
 }
 
-HKEY					CWin32Platform::openNTServicesKey()
+HKEY
+CWin32Platform::openNTServicesKey()
 {
 	static const char* s_keyNames[] = {
 		_T("SYSTEM"),
@@ -502,7 +536,8 @@ HKEY					CWin32Platform::openNTServicesKey()
 	return openKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
 
-HKEY					CWin32Platform::open95ServicesKey()
+HKEY
+CWin32Platform::open95ServicesKey()
 {
 	static const char* s_keyNames[] = {
 		_T("Software"),
@@ -516,7 +551,10 @@ HKEY					CWin32Platform::open95ServicesKey()
 	return openKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
 
-int						CWin32Platform::runDaemon(RunFunc run, StopFunc stop)
+int
+CWin32Platform::runDaemon(
+	RunFunc run,
+	StopFunc stop)
 {
 	// should only be called from DaemonFunc
 	assert(m_serviceMutex != NULL);
@@ -595,8 +633,10 @@ int						CWin32Platform::runDaemon(RunFunc run, StopFunc stop)
 	}
 }
 
-void					CWin32Platform::serviceMain(
-								DWORD argc, LPTSTR* argvIn)
+void
+CWin32Platform::serviceMain(
+	DWORD argc,
+	LPTSTR* argvIn)
 {
 	typedef std::vector<LPCTSTR> ArgList;
 	typedef std::vector<CString> Arguments;
@@ -718,13 +758,17 @@ void					CWin32Platform::serviceMain(
 	// FIXME -- close event log?
 }
 
-void WINAPI				CWin32Platform::serviceMainEntry(
-								DWORD argc, LPTSTR* argv)
+void WINAPI
+CWin32Platform::serviceMainEntry(
+	DWORD argc,
+	LPTSTR* argv)
 {
 	s_daemonPlatform->serviceMain(argc, argv);
 }
 
-void					CWin32Platform::serviceHandler(DWORD ctrl)
+void
+CWin32Platform::serviceHandler(
+	DWORD ctrl)
 {
 	assert(m_serviceMutex != NULL);
 	assert(m_serviceState != NULL);
@@ -796,13 +840,17 @@ void					CWin32Platform::serviceHandler(DWORD ctrl)
 	setStatus(m_statusHandle, *m_serviceState);
 }
 
-void WINAPI				CWin32Platform::serviceHandlerEntry(DWORD ctrl)
+void WINAPI
+CWin32Platform::serviceHandlerEntry(
+	DWORD ctrl)
 {
 	s_daemonPlatform->serviceHandler(ctrl);
 }
 
-bool					CWin32Platform::serviceLogger(
-								int priority, const char* msg)
+bool
+CWin32Platform::serviceLogger(
+	int priority,
+	const char* msg)
 {
 	if (s_eventLog == NULL) {
 		return false;

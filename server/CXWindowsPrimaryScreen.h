@@ -1,10 +1,9 @@
 #ifndef CXWINDOWSPRIMARYSCREEN_H
 #define CXWINDOWSPRIMARYSCREEN_H
 
-#include "KeyTypes.h"
-#include "MouseTypes.h"
 #include "CXWindowsScreen.h"
 #include "IPrimaryScreen.h"
+#include "MouseTypes.h"
 
 class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 public:
@@ -41,7 +40,7 @@ private:
 	void				selectEvents(Display*, Window) const;
 	void				doSelectEvents(Display*, Window) const;
 	void				warpCursorNoLock(Display*,
-								SInt32 xAbsolute, SInt32 yAbsolute);
+							SInt32 xAbsolute, SInt32 yAbsolute);
 
 	KeyModifierMask		mapModifier(unsigned int state) const;
 	KeyID				mapKey(XKeyEvent*) const;

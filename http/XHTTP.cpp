@@ -6,18 +6,21 @@
 // XHTTP
 //
 
-XHTTP::XHTTP(SInt32 statusCode) :
-								XBase(),
-								m_status(statusCode),
-								m_reason(getReason(statusCode))
+XHTTP::XHTTP(
+	SInt32 statusCode) :
+	XBase(),
+	m_status(statusCode),
+	m_reason(getReason(statusCode))
 {
 	// do nothing
 }
 
-XHTTP::XHTTP(SInt32 statusCode, const CString& reasonPhrase) :
-								XBase(),
-								m_status(statusCode),
-								m_reason(reasonPhrase)
+XHTTP::XHTTP(
+	SInt32 statusCode,
+	const CString& reasonPhrase) :
+	XBase(),
+	m_status(statusCode),
+	m_reason(reasonPhrase)
 {
 	// do nothing
 }
@@ -27,22 +30,27 @@ XHTTP::~XHTTP()
 	// do nothing
 }
 
-SInt32					XHTTP::getStatus() const
+SInt32
+XHTTP::getStatus() const
 {
 	return m_status;
 }
 
-CString					XHTTP::getReason() const
+CString
+XHTTP::getReason() const
 {
 	return m_reason;
 }
 
-void					XHTTP::addHeaders(CHTTPReply&) const
+void
+XHTTP::addHeaders(
+	CHTTPReply&) const
 {
 	// do nothing
 }
 
-CString					XHTTP::getWhat() const throw()
+CString
+XHTTP::getWhat() const throw()
 {
 	try {
 		std::ostringstream s;
@@ -60,7 +68,9 @@ CString					XHTTP::getWhat() const throw()
 	}
 }
 
-const char*				XHTTP::getReason(SInt32 status)
+const char*
+XHTTP::getReason(
+	SInt32 status)
 {
 	switch (status) {
 	case 300: return "Multiple Choices";
@@ -100,9 +110,10 @@ const char*				XHTTP::getReason(SInt32 status)
 // XHTTPAllow
 //
 
-XHTTPAllow::XHTTPAllow(const CString& allowed) :
-								XHTTP(405),
-								m_allowed(allowed)
+XHTTPAllow::XHTTPAllow(
+	const CString& allowed) :
+	XHTTP(405),
+	m_allowed(allowed)
 {
 	// do nothing
 }
@@ -112,7 +123,9 @@ XHTTPAllow::~XHTTPAllow()
 	// do nothing
 }
 
-void					XHTTPAllow::addHeaders(CHTTPReply& reply) const
+void
+XHTTPAllow::addHeaders(
+	CHTTPReply& reply) const
 {
 	reply.m_headers.push_back(std::make_pair(CString("Allow"), m_allowed));
 }

@@ -3,7 +3,6 @@
 
 #include "IInterface.h"
 #include "BasicTypes.h"
-#include "XIO.h"
 
 class IInputStream : public IInterface {
 public:

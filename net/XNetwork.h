@@ -1,9 +1,8 @@
 #ifndef XNETWORK_H
 #define XNETWORK_H
 
-#include "CString.h"
 #include "XBase.h"
-#include "BasicTypes.h"
+#include "CString.h"
 
 class XNetwork : public XBase { };
 

@@ -1,17 +1,18 @@
 #include "CClient.h"
-#include "CString.h"
-#include "CLog.h"
+#include "CPlatform.h"
+#include "ProtocolTypes.h"
+#include "Version.h"
+#include "CNetwork.h"
+#include "CNetworkAddress.h"
+#include "XSocket.h"
 #include "CCondVar.h"
 #include "CLock.h"
 #include "CMutex.h"
-#include "CNetwork.h"
-#include "CNetworkAddress.h"
-#include "CPlatform.h"
 #include "CThread.h"
 #include "XThread.h"
-#include "ProtocolTypes.h"
-#include "Version.h"
-#include <assert.h>
+#include "CLog.h"
+#include "CString.h"
+#include <cstring>
 
 // platform dependent name of a daemon
 #if defined(CONFIG_PLATFORM_WIN32)
@@ -43,7 +44,10 @@ static CNetworkAddress	s_serverAddress;
 
 static CMutex*			s_logMutex = NULL;
 
-static void				logLock(bool lock)
+static
+void
+logLock(
+	bool lock)
 {
 	assert(s_logMutex != NULL);
 
@@ -62,7 +66,10 @@ static void				logLock(bool lock)
 
 static CClient*			s_client = NULL;
 
-static int				realMain(CMutex* mutex)
+static
+int
+realMain(
+	CMutex* mutex)
 {
 	try {
 		// initialize threading library
@@ -124,14 +131,18 @@ static int				realMain(CMutex* mutex)
 	return 0;
 }
 
-static int				restartMain()
+static
+int
+restartMain()
 {
 	return realMain(NULL);
 }
 
 // invoke realMain and wait for it.  if s_restartable then keep
 // restarting realMain until it returns a terminate code.
-static int				restartableMain()
+static
+int
+restartableMain()
 {
 	if (s_restartable) {
 		CPlatform platform;
@@ -151,7 +162,9 @@ static int				restartableMain()
 
 static void				(*bye)(int) = &exit;
 
-static void				version()
+static
+void
+version()
 {
 	log((CLOG_PRINT
 "%s %d.%d.%d, protocol version %d.%d\n"
@@ -165,7 +178,9 @@ static void				version()
 								kCopyright));
 }
 
-static void				help()
+static
+void
+help()
 {
 	log((CLOG_PRINT
 "Usage: %s"
@@ -213,11 +228,14 @@ static void				help()
 
 }
 
-static bool				isArg(int argi,
-								int argc, const char** argv,
-								const char* name1,
-								const char* name2,
-								int minRequiredParameters = 0)
+static
+bool
+isArg(int argi,
+	int argc,
+	const char** argv,
+	const char* name1,
+	const char* name2,
+	int minRequiredParameters = 0)
 {
 	if ((name1 != NULL && strcmp(argv[argi], name1) == 0) ||
 		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
@@ -234,7 +252,11 @@ static bool				isArg(int argi,
 	return false;
 }
 
-static void				parse(int argc, const char** argv)
+static
+void
+parse(
+	int argc,
+	const char** argv)
 {
 	assert(pname != NULL);
 	assert(argv  != NULL);
@@ -413,7 +435,11 @@ static void				parse(int argc, const char** argv)
 
 #include "CMSWindowsScreen.h"
 
-static bool				logMessageBox(int priority, const char* msg)
+static
+bool
+logMessageBox(
+	int priority,
+	const char* msg)
 {
 	if (priority <= CLog::kFATAL) {
 		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
@@ -424,18 +450,26 @@ static bool				logMessageBox(int priority, const char* msg)
 	}
 }
 
-static void				byeThrow(int x)
+static
+void
+byeThrow(int x)
 {
 	throw CWin32Platform::CDaemonFailed(x);
 }
 
-static void				daemonStop(void)
+static
+void
+daemonStop(void)
 {
 	s_client->quit();
 }
 
-static int				daemonStartup(IPlatform* iplatform,
-								int argc, const char** argv)
+static
+int
+daemonStartup(
+	IPlatform* iplatform,
+	int argc,
+	const char** argv)
 {
 	// get platform pointer
 	CWin32Platform* platform = static_cast<CWin32Platform*>(iplatform);
@@ -456,19 +490,30 @@ static int				daemonStartup(IPlatform* iplatform,
 	return platform->runDaemon(realMain, daemonStop);
 }
 
-static int				daemonStartup95(IPlatform*, int, const char**)
+static
+int
+daemonStartup95(
+	IPlatform*,
+	int,
+	const char**)
 {
 	return realMain(NULL);
 }
 
-static bool				logDiscard(int, const char*)
+static
+bool
+logDiscard(
+	int,
+	const char*)
 {
 	return true;
 }
 
 static bool				s_die = false;
 
-static void				checkParse(int e)
+static
+void
+checkParse(int e)
 {
 	// anything over 1 means invalid args.  1 means missing args.
 	// 0 means graceful exit.  we plan to exit for anything but
@@ -478,7 +523,12 @@ static void				checkParse(int e)
 	throw s_die;
 }
 
-int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
+int WINAPI
+WinMain(
+	HINSTANCE instance,
+	HINSTANCE,
+	LPSTR,
+	int)
 {
 	CPlatform platform;
 
@@ -594,12 +644,20 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 #elif defined(CONFIG_PLATFORM_UNIX)
 
-static int				daemonStartup(IPlatform*, int, const char**)
+static
+int
+daemonStartup(
+	IPlatform*,
+	int,
+	const char**)
 {
 	return restartableMain();
 }
 
-int main(int argc, char** argv)
+int
+main(
+	int argc,
+	char** argv)
 {
 	CPlatform platform;
 

@@ -1,11 +1,10 @@
 #include "CXWindowsPrimaryScreen.h"
+#include "CServer.h"
 #include "CXWindowsClipboard.h"
 #include "CXWindowsUtil.h"
-#include "CServer.h"
-#include "CStopwatch.h"
 #include "CThread.h"
 #include "CLog.h"
-#include <assert.h>
+#include "CStopwatch.h"
 #include <X11/X.h>
 #include <X11/Xutil.h>
 #define XK_MISCELLANY
@@ -16,9 +15,9 @@
 //
 
 CXWindowsPrimaryScreen::CXWindowsPrimaryScreen() :
-								m_server(NULL),
-								m_active(false),
-								m_window(None)
+	m_server(NULL),
+	m_active(false),
+	m_window(None)
 {
 	// do nothing
 }
@@ -28,7 +27,8 @@ CXWindowsPrimaryScreen::~CXWindowsPrimaryScreen()
 	assert(m_window == None);
 }
 
-void					CXWindowsPrimaryScreen::run()
+void
+CXWindowsPrimaryScreen::run()
 {
 	for (;;) {
 		// wait for and get the next event
@@ -39,152 +39,163 @@ void					CXWindowsPrimaryScreen::run()
 
 		// handle event
 		switch (xevent.type) {
-		case CreateNotify: {
-			// select events on new window
-			CDisplayLock display(this);
-			selectEvents(display, xevent.xcreatewindow.window);
-			break;
-		}
-
-		case MappingNotify: {
-			// keyboard mapping changed
-			CDisplayLock display(this);
-			XRefreshKeyboardMapping(&xevent.xmapping);
-			updateModifierMap(display);
-			break;
-		}
-
-		case KeyPress: {
-			log((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
-			const KeyID key = mapKey(&xevent.xkey);
-			if (key != kKeyNone) {
-				m_server->onKeyDown(key, mask);
-				if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
-					m_server->onKeyUp(key, mask | KeyModifierCapsLock);
-				}
-				else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
-					m_server->onKeyUp(key, mask | KeyModifierNumLock);
-				}
+		case CreateNotify:
+			{
+				// select events on new window
+				CDisplayLock display(this);
+				selectEvents(display, xevent.xcreatewindow.window);
 			}
 			break;
-		}
 
-		case KeyRelease: {
-			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
-			const KeyID key = mapKey(&xevent.xkey);
-			if (key != kKeyNone) {
-				// check if this is a key repeat by getting the next
-				// KeyPress event that has the same key and time as
-				// this release event, if any.  first prepare the
-				// filter info.
-				CKeyEventInfo filter;
-				filter.m_event   = KeyPress;
-				filter.m_window  = xevent.xkey.window;
-				filter.m_time    = xevent.xkey.time;
-				filter.m_keycode = xevent.xkey.keycode;
-
-				// now check for event
-				XEvent xevent2;
+		case MappingNotify:
+			{
+				// keyboard mapping changed
 				CDisplayLock display(this);
-				if (XCheckIfEvent(display, &xevent2,
-								&CXWindowsPrimaryScreen::findKeyEvent,
-								(XPointer)&filter) != True) {
-					// no press event follows so it's a plain release
-					log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+				XRefreshKeyboardMapping(&xevent.xmapping);
+				updateModifierMap(display);
+			}
+			break;
+
+		case KeyPress:
+			{
+				log((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+				const KeyModifierMask mask = mapModifier(xevent.xkey.state);
+				const KeyID key = mapKey(&xevent.xkey);
+				if (key != kKeyNone) {
+					m_server->onKeyDown(key, mask);
 					if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
-						m_server->onKeyDown(key, mask);
+						m_server->onKeyUp(key, mask | KeyModifierCapsLock);
 					}
 					else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
-						m_server->onKeyDown(key, mask);
+						m_server->onKeyUp(key, mask | KeyModifierNumLock);
 					}
-					m_server->onKeyUp(key, mask);
+				}
+			}
+			break;
+
+		case KeyRelease:
+			{
+				const KeyModifierMask mask = mapModifier(xevent.xkey.state);
+				const KeyID key = mapKey(&xevent.xkey);
+				if (key != kKeyNone) {
+					// check if this is a key repeat by getting the next
+					// KeyPress event that has the same key and time as
+					// this release event, if any.  first prepare the
+					// filter info.
+					CKeyEventInfo filter;
+					filter.m_event   = KeyPress;
+					filter.m_window  = xevent.xkey.window;
+					filter.m_time    = xevent.xkey.time;
+					filter.m_keycode = xevent.xkey.keycode;
+
+					// now check for event
+					XEvent xevent2;
+					CDisplayLock display(this);
+					if (XCheckIfEvent(display, &xevent2,
+									&CXWindowsPrimaryScreen::findKeyEvent,
+									(XPointer)&filter) != True) {
+						// no press event follows so it's a plain release
+						log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+						if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
+							m_server->onKeyDown(key, mask);
+						}
+						else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
+							m_server->onKeyDown(key, mask);
+						}
+						m_server->onKeyUp(key, mask);
+					}
+					else {
+						// found a press event following so it's a repeat.
+						// we could attempt to count the already queued
+						// repeats but we'll just send a repeat of 1.
+						// note that we discard the press event.
+						log((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+						m_server->onKeyRepeat(key, mask, 1);
+					}
+				}
+			}
+			break;
+
+		case ButtonPress:
+			{
+				log((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
+				const ButtonID button = mapButton(xevent.xbutton.button);
+				if (button != kButtonNone) {
+					m_server->onMouseDown(button);
+				}
+			}
+			break;
+
+		case ButtonRelease:
+			{
+				log((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
+				const ButtonID button = mapButton(xevent.xbutton.button);
+				if (button != kButtonNone) {
+					m_server->onMouseUp(button);
+				}
+				else if (xevent.xbutton.button == 4) {
+					// wheel forward (away from user)
+					m_server->onMouseWheel(120);
+				}
+				else if (xevent.xbutton.button == 5) {
+					// wheel backward (toward user)
+					m_server->onMouseWheel(-120);
+				}
+			}
+			break;
+
+		case MotionNotify:
+			{
+				log((CLOG_DEBUG2 "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
+				SInt32 x, y;
+				if (!m_active) {
+					x = xevent.xmotion.x_root;
+					y = xevent.xmotion.y_root;
+					m_server->onMouseMovePrimary(x, y);
 				}
 				else {
-					// found a press event following so it's a repeat.
-					// we could attempt to count the already queued
-					// repeats but we'll just send a repeat of 1.
-					// note that we discard the press event.
-					log((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-					m_server->onKeyRepeat(key, mask, 1);
+					// FIXME -- slurp up all remaining motion events?
+					// probably not since keystrokes may go to wrong place.
+
+					// get mouse deltas
+					{
+						CDisplayLock display(this);
+						Window root, window;
+						int xRoot, yRoot, xWindow, yWindow;
+						unsigned int mask;
+						if (!XQueryPointer(display, m_window, &root, &window,
+								&xRoot, &yRoot, &xWindow, &yWindow, &mask)) {
+							break;
+						}
+
+						// compute position of center of window
+						SInt32 w, h;
+						getScreenSize(&w, &h);
+						x = xRoot - (w >> 1);
+						y = yRoot - (h >> 1);
+
+						// warp mouse back to center
+						warpCursorNoLock(display, w >> 1, h >> 1);
+					}
+
+					m_server->onMouseMoveSecondary(x, y);
 				}
 			}
 			break;
-		}
-
-		case ButtonPress: {
-			log((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
-			const ButtonID button = mapButton(xevent.xbutton.button);
-			if (button != kButtonNone) {
-				m_server->onMouseDown(button);
-			}
-			break;
-		}
-
-		case ButtonRelease: {
-			log((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
-			const ButtonID button = mapButton(xevent.xbutton.button);
-			if (button != kButtonNone) {
-				m_server->onMouseUp(button);
-			}
-			else if (xevent.xbutton.button == 4) {
-				// wheel forward (away from user)
-				m_server->onMouseWheel(120);
-			}
-			else if (xevent.xbutton.button == 5) {
-				// wheel backward (toward user)
-				m_server->onMouseWheel(-120);
-			}
-			break;
-		}
-
-		case MotionNotify: {
-			log((CLOG_DEBUG2 "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
-			SInt32 x, y;
-			if (!m_active) {
-				x = xevent.xmotion.x_root;
-				y = xevent.xmotion.y_root;
-				m_server->onMouseMovePrimary(x, y);
-			}
-			else {
-				// FIXME -- slurp up all remaining motion events?
-				// probably not since key strokes may go to wrong place.
-
-				// get mouse deltas
-				{
-					CDisplayLock display(this);
-					Window root, window;
-					int xRoot, yRoot, xWindow, yWindow;
-					unsigned int mask;
-					if (!XQueryPointer(display, m_window, &root, &window,
-								&xRoot, &yRoot, &xWindow, &yWindow, &mask))
-						break;
-
-					// compute position of center of window
-					SInt32 w, h;
-					getScreenSize(&w, &h);
-					x = xRoot - (w >> 1);
-					y = yRoot - (h >> 1);
-
-					// warp mouse back to center
-					warpCursorNoLock(display, w >> 1, h >> 1);
-				}
-
-				m_server->onMouseMoveSecondary(x, y);
-			}
-			break;
-		}
 		}
 	}
 }
 
-void					CXWindowsPrimaryScreen::stop()
+void
+CXWindowsPrimaryScreen::stop()
 {
 	CDisplayLock display(this);
 	doStop();
 }
 
-void					CXWindowsPrimaryScreen::open(CServer* server)
+void
+CXWindowsPrimaryScreen::open(
+	CServer* server)
 {
 	assert(m_server == NULL);
 	assert(server   != NULL);
@@ -228,7 +239,8 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 	m_server->setInfo(w, h, getJumpZoneSize(), x, y);
 }
 
-void					CXWindowsPrimaryScreen::close()
+void
+CXWindowsPrimaryScreen::close()
 {
 	assert(m_server != NULL);
 
@@ -239,7 +251,10 @@ void					CXWindowsPrimaryScreen::close()
 	m_server = NULL;
 }
 
-void					CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
+void
+CXWindowsPrimaryScreen::enter(
+	SInt32 x,
+	SInt32 y)
 {
 	log((CLOG_INFO "entering primary at %d,%d", x, y));
 	assert(m_active == true);
@@ -268,7 +283,8 @@ void					CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 	m_active = false;
 }
 
-bool					CXWindowsPrimaryScreen::leave()
+bool
+CXWindowsPrimaryScreen::leave()
 {
 	log((CLOG_INFO "leaving primary"));
 	assert(m_active == false);
@@ -333,19 +349,26 @@ bool					CXWindowsPrimaryScreen::leave()
 	return true;
 }
 
-void					CXWindowsPrimaryScreen::onConfigure()
+void
+CXWindowsPrimaryScreen::onConfigure()
 {
 	// do nothing
 }
 
-void					CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
+void
+CXWindowsPrimaryScreen::warpCursor(
+	SInt32 x,
+	SInt32 y)
 {
 	CDisplayLock display(this);
 	warpCursorNoLock(display, x, y);
 }
 
-void					CXWindowsPrimaryScreen::warpCursorNoLock(
-								Display* display, SInt32 x, SInt32 y)
+void
+CXWindowsPrimaryScreen::warpCursorNoLock(
+	Display* display,
+	SInt32 x,
+	SInt32 y)
 {
 	assert(display  != NULL);
 	assert(m_window != None);
@@ -363,35 +386,45 @@ void					CXWindowsPrimaryScreen::warpCursorNoLock(
 	}
 }
 
-void					CXWindowsPrimaryScreen::setClipboard(
-								ClipboardID id, const IClipboard* clipboard)
+void
+CXWindowsPrimaryScreen::setClipboard(
+	ClipboardID id,
+	const IClipboard* clipboard)
 {
 	setDisplayClipboard(id, clipboard);
 }
 
-void					CXWindowsPrimaryScreen::grabClipboard(ClipboardID id)
+void
+CXWindowsPrimaryScreen::grabClipboard(
+	ClipboardID id)
 {
 	setDisplayClipboard(id, NULL);
 }
 
-void					CXWindowsPrimaryScreen::getSize(
-								SInt32* width, SInt32* height) const
+void
+CXWindowsPrimaryScreen::getSize(
+	SInt32* width,
+	SInt32* height) const
 {
 	getScreenSize(width, height);
 }
 
-SInt32					CXWindowsPrimaryScreen::getJumpZoneSize() const
+SInt32
+CXWindowsPrimaryScreen::getJumpZoneSize() const
 {
 	return 1;
 }
 
-void					CXWindowsPrimaryScreen::getClipboard(
-								ClipboardID id, IClipboard* clipboard) const
+void
+CXWindowsPrimaryScreen::getClipboard(
+	ClipboardID id,
+	IClipboard* clipboard) const
 {
 	getDisplayClipboard(id, clipboard);
 }
 
-KeyModifierMask			CXWindowsPrimaryScreen::getToggleMask() const
+KeyModifierMask
+CXWindowsPrimaryScreen::getToggleMask() const
 {
 	CDisplayLock display(this);
 
@@ -417,7 +450,8 @@ KeyModifierMask			CXWindowsPrimaryScreen::getToggleMask() const
 	return mask;
 }
 
-bool					CXWindowsPrimaryScreen::isLockedToScreen() const
+bool
+CXWindowsPrimaryScreen::isLockedToScreen() const
 {
 	CDisplayLock display(this);
 
@@ -449,7 +483,9 @@ bool					CXWindowsPrimaryScreen::isLockedToScreen() const
 	return false;
 }
 
-void					CXWindowsPrimaryScreen::onOpenDisplay(Display* display)
+void
+CXWindowsPrimaryScreen::onOpenDisplay(
+	Display* display)
 {
 	assert(m_window == None);
 
@@ -479,14 +515,17 @@ void					CXWindowsPrimaryScreen::onOpenDisplay(Display* display)
 	selectEvents(display, getRoot());
 }
 
-CXWindowsClipboard*		CXWindowsPrimaryScreen::createClipboard(
-								ClipboardID id)
+CXWindowsClipboard*
+CXWindowsPrimaryScreen::createClipboard(
+	ClipboardID id)
 {
 	CDisplayLock display(this);
 	return new CXWindowsClipboard(display, m_window, id);
 }
 
-void					CXWindowsPrimaryScreen::onCloseDisplay(Display* display)
+void
+CXWindowsPrimaryScreen::onCloseDisplay(
+	Display* display)
 {
 	assert(m_window != None);
 
@@ -497,7 +536,8 @@ void					CXWindowsPrimaryScreen::onCloseDisplay(Display* display)
 	m_window = None;
 }
 
-void					CXWindowsPrimaryScreen::onUnexpectedClose()
+void
+CXWindowsPrimaryScreen::onUnexpectedClose()
 {
 	// tell server to shutdown
 	if (m_server != NULL) {
@@ -505,15 +545,18 @@ void					CXWindowsPrimaryScreen::onUnexpectedClose()
 	}
 }
 
-void					CXWindowsPrimaryScreen::onLostClipboard(
-								ClipboardID id)
+void
+CXWindowsPrimaryScreen::onLostClipboard(
+	ClipboardID id)
 {
 	// tell server that the clipboard was grabbed locally
 	m_server->grabClipboard(id);
 }
 
-void					CXWindowsPrimaryScreen::selectEvents(
-								Display* display, Window w) const
+void
+CXWindowsPrimaryScreen::selectEvents(
+	Display* display,
+	Window w) const
 {
 	// ignore errors while we adjust event masks
 	CXWindowsUtil::CErrorLock lock;
@@ -522,8 +565,10 @@ void					CXWindowsPrimaryScreen::selectEvents(
 	doSelectEvents(display, w);
 }
 
-void					CXWindowsPrimaryScreen::doSelectEvents(
-								Display* display, Window w) const
+void
+CXWindowsPrimaryScreen::doSelectEvents(
+	Display* display,
+	Window w) const
 {
 	// we want to track the mouse everywhere on the display.  to achieve
 	// that we select PointerMotionMask on every window.  we also select
@@ -531,8 +576,9 @@ void					CXWindowsPrimaryScreen::doSelectEvents(
 	// select events on new windows too.
 
 	// we don't want to adjust our grab window
-	if (w == m_window)
+	if (w == m_window) {
 		return;
+	}
 
 	// select events of interest
 	XSelectInput(display, w, PointerMotionMask | SubstructureNotifyMask);
@@ -541,14 +587,16 @@ void					CXWindowsPrimaryScreen::doSelectEvents(
 	Window rw, pw, *cw;
 	unsigned int nc;
 	if (XQueryTree(display, w, &rw, &pw, &cw, &nc)) {
-		for (unsigned int i = 0; i < nc; ++i)
+		for (unsigned int i = 0; i < nc; ++i) {
 			doSelectEvents(display, cw[i]);
+		}
 		XFree(cw);
 	}
 }
 
-KeyModifierMask			CXWindowsPrimaryScreen::mapModifier(
-								unsigned int state) const
+KeyModifierMask
+CXWindowsPrimaryScreen::mapModifier(
+	unsigned int state) const
 {
 	// FIXME -- should be configurable
 	KeyModifierMask mask = 0;
@@ -569,7 +617,9 @@ KeyModifierMask			CXWindowsPrimaryScreen::mapModifier(
 	return mask;
 }
 
-KeyID					CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
+KeyID
+CXWindowsPrimaryScreen::mapKey(
+	XKeyEvent* event) const
 {
 	KeySym keysym;
 	char dummy[1];
@@ -579,18 +629,22 @@ KeyID					CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 	return static_cast<KeyID>(keysym);
 }
 
-ButtonID				CXWindowsPrimaryScreen::mapButton(
-								unsigned int button) const
+ButtonID
+CXWindowsPrimaryScreen::mapButton(
+	unsigned int button) const
 {
 	// FIXME -- should use button mapping?
-	if (button >= 1 && button <= 3)
+	if (button >= 1 && button <= 3) {
 		return static_cast<ButtonID>(button);
-	else
+	}
+	else {
 		return kButtonNone;
+	}
 }
 
-void					CXWindowsPrimaryScreen::updateModifierMap(
-								Display* display)
+void
+CXWindowsPrimaryScreen::updateModifierMap(
+	Display* display)
 {
 	// get modifier map from server
 	XModifierKeymap* keymap = XGetModifierMapping(display);
@@ -624,8 +678,11 @@ void					CXWindowsPrimaryScreen::updateModifierMap(
 	XFreeModifiermap(keymap);
 }
 
-Bool					CXWindowsPrimaryScreen::findKeyEvent(
-								Display*, XEvent* xevent, XPointer arg)
+Bool
+CXWindowsPrimaryScreen::findKeyEvent(
+	Display*,
+	XEvent* xevent,
+	XPointer arg)
 {
 	CKeyEventInfo* filter = reinterpret_cast<CKeyEventInfo*>(arg);
 	return (xevent->type         == filter->m_event &&

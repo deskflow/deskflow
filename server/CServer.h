@@ -1,17 +1,15 @@
 #ifndef CSERVER_H
 #define CSERVER_H
 
+#include "CConfig.h"
+#include "CClipboard.h"
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
-#include "CConfig.h"
-#include "CClipboard.h"
 #include "CNetworkAddress.h"
 #include "CCondVar.h"
 #include "CMutex.h"
-#include "CString.h"
 #include "CThread.h"
-#include "XBase.h"
 #include "stdlist.h"
 #include "stdmap.h"
 
@@ -58,18 +56,18 @@ public:
 
 	// handle updates from primary
 	void				setInfo(SInt32 wScreen, SInt32 hScreen,
-								SInt32 zoneSize,
-								SInt32 xMouse, SInt32 yMouse);
+							SInt32 zoneSize,
+							SInt32 xMouse, SInt32 yMouse);
 
 	// handle messages from clients
 	void				setInfo(const CString& clientName,
-								SInt32 wScreen, SInt32 hScreen,
-								SInt32 zoneSize,
-								SInt32 xMouse, SInt32 yMouse);
+							SInt32 wScreen, SInt32 hScreen,
+							SInt32 zoneSize,
+							SInt32 xMouse, SInt32 yMouse);
 	void				grabClipboard(ClipboardID,
-								UInt32 seqNum, const CString& clientName);
+							UInt32 seqNum, const CString& clientName);
 	void				setClipboard(ClipboardID,
-								UInt32 seqNum, const CString& data);
+							UInt32 seqNum, const CString& data);
 
 	// accessors
 
@@ -132,13 +130,13 @@ private:
 
 	// update screen info
 	void				setInfoNoLock(const CString& screenName,
-								SInt32 wScreen, SInt32 hScreen,
-								SInt32 zoneSize,
-								SInt32 xMouse, SInt32 yMouse);
+							SInt32 wScreen, SInt32 hScreen,
+							SInt32 zoneSize,
+							SInt32 xMouse, SInt32 yMouse);
 
 	// grab the clipboard
 	void				grabClipboardNoLock(ClipboardID,
-								UInt32 seqNum, const CString& clientName);
+							UInt32 seqNum, const CString& clientName);
 
 	// returns true iff mouse should be locked to the current screen
 	bool				isLockedToScreenNoLock() const;
@@ -154,16 +152,16 @@ private:
 	// if the position is sufficiently far from the source then we
 	// cross multiple screens.
 	CScreenInfo*		getNeighbor(CScreenInfo*,
-								CConfig::EDirection,
-								SInt32& x, SInt32& y) const;
+							CConfig::EDirection,
+							SInt32& x, SInt32& y) const;
 
 	// adjust coordinates to account for resolution differences.  the
 	// position is converted to a resolution independent form then
 	// converted back to screen coordinates on the destination screen.
 	void				mapPosition(CScreenInfo* src,
-								CConfig::EDirection srcSide,
-								CScreenInfo* dst,
-								SInt32& x, SInt32& y) const;
+							CConfig::EDirection srcSide,
+							CScreenInfo* dst,
+							SInt32& x, SInt32& y) const;
 
 	// open/close the primary screen
 	void				openPrimaryScreen();

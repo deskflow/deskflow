@@ -1,8 +1,8 @@
 #ifndef XSOCKET_H
 #define XSOCKET_H
 
-#include "CString.h"
 #include "XBase.h"
+#include "CString.h"
 #include "BasicTypes.h"
 
 class XSocket : public XBase { };

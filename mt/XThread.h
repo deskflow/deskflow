@@ -1,8 +1,6 @@
 #ifndef XTHREAD_H
 #define XTHREAD_H
 
-#include "common.h"
-
 // generic thread exception
 class XThread { };
 

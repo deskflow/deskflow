@@ -2,9 +2,6 @@
 #define ISOCKET_H
 
 #include "IInterface.h"
-#include "BasicTypes.h"
-#include "XSocket.h"
-#include "XIO.h"
 
 class CNetworkAddress;
 class IInputStream;

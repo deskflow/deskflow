@@ -1,6 +1,5 @@
 #include "CSynergyHook.h"
 #include "CConfig.h"
-#include <assert.h>
 #include <zmouse.h>
 
 //
@@ -60,7 +59,9 @@ static DWORD			g_cursorThread    = 0;
 // internal functions
 //
 
-static void				hideCursor(DWORD thread)
+static
+void
+hideCursor(DWORD thread)
 {
 	// we should be running the context of the window who's cursor
 	// we want to hide so we shouldn't have to attach thread input.
@@ -69,7 +70,9 @@ static void				hideCursor(DWORD thread)
 	SetCursor(NULL);
 }
 
-static void				restoreCursor()
+static
+void
+restoreCursor()
 {
 	// restore the show cursor in the window we hid it last
 	if (g_cursor != NULL && g_cursorThread != 0) {
@@ -84,7 +87,12 @@ static void				restoreCursor()
 	g_cursorThread = 0;
 }
 
-static LRESULT CALLBACK	keyboardHook(int code, WPARAM wParam, LPARAM lParam)
+static
+LRESULT CALLBACK
+keyboardHook(
+	int code,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -111,7 +119,12 @@ static LRESULT CALLBACK	keyboardHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_keyboard, code, wParam, lParam);
 }
 
-static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
+static
+LRESULT CALLBACK
+mouseHook(
+	int code,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -213,7 +226,12 @@ static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_mouse, code, wParam, lParam);
 }
 
-static LRESULT CALLBACK	cbtHook(int code, WPARAM wParam, LPARAM lParam)
+static
+LRESULT CALLBACK
+cbtHook(
+	int code,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -224,7 +242,12 @@ static LRESULT CALLBACK	cbtHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_cbt, code, wParam, lParam);
 }
 
-static LRESULT CALLBACK	getMessageHook(int code, WPARAM wParam, LPARAM lParam)
+static
+LRESULT CALLBACK
+getMessageHook(
+	int code,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -252,7 +275,12 @@ static LRESULT CALLBACK	getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 // side, key repeats are not compressed for us.
 //
 
-static LRESULT CALLBACK	keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
+static
+LRESULT CALLBACK
+keyboardLLHook(
+	int code,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -296,7 +324,10 @@ static LRESULT CALLBACK	keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_keyboardLL, code, wParam, lParam);
 }
 
-static DWORD WINAPI		getKeyboardLLProc(void*)
+static
+DWORD WINAPI
+getKeyboardLLProc(
+	void*)
 {
 	// thread proc for low-level keyboard hook.  this does nothing but
 	// install the hook, process events, and uninstall the hook.
@@ -349,7 +380,10 @@ static DWORD WINAPI		getKeyboardLLProc(void*)
 
 #error foo
 
-static DWORD WINAPI		getKeyboardLLProc(void*)
+static
+DWORD WINAPI
+getKeyboardLLProc(
+	void*)
 {
 	g_keyHookThreadID = 0;
 	SetEvent(g_keyHookEvent);
@@ -358,7 +392,9 @@ static DWORD WINAPI		getKeyboardLLProc(void*)
 
 #endif
 
-static EWheelSupport	GetWheelSupport()
+static
+EWheelSupport
+getWheelSupport()
 {
 	// get operating system
 	OSVERSIONINFO info;
@@ -404,7 +440,11 @@ static EWheelSupport	GetWheelSupport()
 // external functions
 //
 
-BOOL WINAPI				DllMain(HINSTANCE instance, DWORD reason, LPVOID)
+BOOL WINAPI
+DllMain(
+	HINSTANCE instance,
+	DWORD reason,
+	LPVOID)
 {
 	if (reason == DLL_PROCESS_ATTACH) {
 		if (g_hinstance == NULL) {
@@ -425,7 +465,9 @@ BOOL WINAPI				DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 
 extern "C" {
 
-int						install(DWORD threadID)
+int
+install(
+	DWORD threadID)
 {
 	assert(g_threadID     == 0);
 	assert(g_hinstance    != NULL);
@@ -448,7 +490,7 @@ int						install(DWORD threadID)
 	g_cursorThread = 0;
 
 	// check for mouse wheel support
-	g_wheelSupport = GetWheelSupport();
+	g_wheelSupport = getWheelSupport();
 
 	// install keyboard hook
 	g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
@@ -528,7 +570,9 @@ int						install(DWORD threadID)
 	return 1;
 }
 
-int						uninstall(void)
+int
+uninstall(
+	void)
 {
 	assert(g_keyboard != NULL);
 	assert(g_mouse    != NULL);
@@ -562,8 +606,12 @@ int						uninstall(void)
 	return 1;
 }
 
-void					setZone(UInt32 sides,
-								SInt32 w, SInt32 h, SInt32 jumpZoneSize)
+void
+setZone(
+	UInt32 sides,
+	SInt32 w,
+	SInt32 h,
+	SInt32 jumpZoneSize)
 {
 	g_zoneSize  = jumpZoneSize;
 	g_zoneSides = sides;
@@ -573,7 +621,9 @@ void					setZone(UInt32 sides,
 	restoreCursor();
 }
 
-void					setRelay(void)
+void
+setRelay(
+	void)
 {
 	g_relay     = true;
 	g_zoneSize  = 0;

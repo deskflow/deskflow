@@ -6,7 +6,8 @@
 #include "stdmap.h"
 #include "stdvector.h"
 
-class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen {
+class CXWindowsSecondaryScreen : public CXWindowsScreen,
+							public ISecondaryScreen {
 public:
 	CXWindowsSecondaryScreen();
 	virtual ~CXWindowsSecondaryScreen();
@@ -17,7 +18,7 @@ public:
 	virtual void		open(CClient*);
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
-								KeyModifierMask mask);
+							KeyModifierMask mask);
 	virtual void		leave();
 	virtual void		keyDown(KeyID, KeyModifierMask);
 	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count);
@@ -64,9 +65,9 @@ private:
 	unsigned int		mapButton(ButtonID button) const;
 
 	unsigned int		mapKey(Keystrokes&, KeyCode&, KeyID,
-								KeyModifierMask, EKeyAction) const;
+							KeyModifierMask, EKeyAction) const;
 	bool				findKeyCode(KeyCode&, unsigned int&,
-								KeyID id, unsigned int) const;
+							KeyID id, unsigned int) const;
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 	unsigned int		maskToX(KeyModifierMask) const;
 

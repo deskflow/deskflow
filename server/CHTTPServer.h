@@ -1,8 +1,8 @@
 #ifndef CHTTPSERVER_H
 #define CHTTPSERVER_H
 
-#include "BasicTypes.h"
 #include "CString.h"
+#include "BasicTypes.h"
 #include "stdvector.h"
 
 class CServer;

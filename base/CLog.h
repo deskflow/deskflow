@@ -2,7 +2,7 @@
 #define CLOG_H
 
 #include "BasicTypes.h"
-#include <stdarg.h>
+#include <cstdarg>
 
 class CLog {
 public:
@@ -24,7 +24,7 @@ public:
 	// type of lock/unlock function
 	typedef void		(*Lock)(bool lock);
 
-	// 
+	// print a log message
 	static void			print(const char*, ...);
 	static void			printt(const char* file, int line, const char*, ...);
 

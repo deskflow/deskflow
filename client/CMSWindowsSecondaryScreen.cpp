@@ -1,27 +1,26 @@
 #include "CMSWindowsSecondaryScreen.h"
-#include "CMSWindowsClipboard.h"
 #include "CClient.h"
-#include "CPlatform.h"
 #include "CClipboard.h"
-#include "CLock.h"
-#include "CLog.h"
-#include "CThread.h"
+#include "CMSWindowsClipboard.h"
+#include "CPlatform.h"
 #include "XScreen.h"
-#include <assert.h>
-#include <ctype.h>
+#include "CLock.h"
+#include "CThread.h"
+#include "CLog.h"
+#include <cctype>
 
 //
 // CMSWindowsSecondaryScreen
 //
 
 CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen() :
-								m_client(NULL),
-								m_threadID(0),
-								m_desk(NULL),
-								m_deskName(),
-								m_window(NULL),
-								m_active(false),
-								m_nextClipboardWindow(NULL)
+	m_client(NULL),
+	m_threadID(0),
+	m_desk(NULL),
+	m_deskName(),
+	m_window(NULL),
+	m_active(false),
+	m_nextClipboardWindow(NULL)
 {
 	m_is95Family = CPlatform::isWindows95Family();
 
@@ -35,7 +34,8 @@ CMSWindowsSecondaryScreen::~CMSWindowsSecondaryScreen()
 	assert(m_window == NULL);
 }
 
-void					CMSWindowsSecondaryScreen::run()
+void
+CMSWindowsSecondaryScreen::run()
 {
 	// must call run() from same thread as open()
 	assert(m_threadID == GetCurrentThreadId());
@@ -61,12 +61,15 @@ void					CMSWindowsSecondaryScreen::run()
 	}
 }
 
-void					CMSWindowsSecondaryScreen::stop()
+void
+CMSWindowsSecondaryScreen::stop()
 {
 	doStop();
 }
 
-void					CMSWindowsSecondaryScreen::open(CClient* client)
+void
+CMSWindowsSecondaryScreen::open(
+	CClient* client)
 {
 	assert(m_client == NULL);
 	assert(client   != NULL);
@@ -82,15 +85,17 @@ void					CMSWindowsSecondaryScreen::open(CClient* client)
 	updateModifiers();
 
 	// assume primary has all clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		grabClipboard(id);
+	}
 
 	// hide the cursor
 	m_active = true;
 	leave();
 }
 
-void					CMSWindowsSecondaryScreen::close()
+void
+CMSWindowsSecondaryScreen::close()
 {
 	assert(m_client != NULL);
 
@@ -101,8 +106,11 @@ void					CMSWindowsSecondaryScreen::close()
 	m_client = NULL;
 }
 
-void					CMSWindowsSecondaryScreen::enter(
-								SInt32 x, SInt32 y, KeyModifierMask mask)
+void
+CMSWindowsSecondaryScreen::enter(
+	SInt32 x,
+	SInt32 y,
+	KeyModifierMask mask)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -134,7 +142,8 @@ void					CMSWindowsSecondaryScreen::enter(
 	onEnter(x, y);
 }
 
-void					CMSWindowsSecondaryScreen::leave()
+void
+CMSWindowsSecondaryScreen::leave()
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -171,8 +180,10 @@ void					CMSWindowsSecondaryScreen::leave()
 	}
 }
 
-void					CMSWindowsSecondaryScreen::keyDown(
-								KeyID key, KeyModifierMask mask)
+void
+CMSWindowsSecondaryScreen::keyDown(
+	KeyID key,
+	KeyModifierMask mask)
 {
 	Keystrokes keys;
 	UINT virtualKey;
@@ -184,8 +195,9 @@ void					CMSWindowsSecondaryScreen::keyDown(
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
 	m_mask = mapKey(keys, virtualKey, key, mask, kPress);
-	if (keys.empty())
+	if (keys.empty()) {
 		return;
+	}
 
 	// generate key events
 	doKeystrokes(keys, 1);
@@ -210,8 +222,11 @@ void					CMSWindowsSecondaryScreen::keyDown(
 	}
 }
 
-void					CMSWindowsSecondaryScreen::keyRepeat(
-								KeyID key, KeyModifierMask mask, SInt32 count)
+void
+CMSWindowsSecondaryScreen::keyRepeat(
+	KeyID key,
+	KeyModifierMask mask,
+	SInt32 count)
 {
 	Keystrokes keys;
 	UINT virtualKey;
@@ -223,15 +238,18 @@ void					CMSWindowsSecondaryScreen::keyRepeat(
 	// get the sequence of keys to simulate key repeat and the final
 	// modifier state.
 	m_mask = mapKey(keys, virtualKey, key, mask, kRepeat);
-	if (keys.empty())
+	if (keys.empty()) {
 		return;
+	}
 
 	// generate key events
 	doKeystrokes(keys, count);
 }
 
-void					CMSWindowsSecondaryScreen::keyUp(
-								KeyID key, KeyModifierMask mask)
+void
+CMSWindowsSecondaryScreen::keyUp(
+	KeyID key,
+	KeyModifierMask mask)
 {
 	Keystrokes keys;
 	UINT virtualKey;
@@ -243,8 +261,9 @@ void					CMSWindowsSecondaryScreen::keyUp(
 	// get the sequence of keys to simulate key release and the final
 	// modifier state.
 	m_mask = mapKey(keys, virtualKey, key, mask, kRelease);
-	if (keys.empty())
+	if (keys.empty()) {
 		return;
+	}
 
 	// generate key events
 	doKeystrokes(keys, 1);
@@ -290,7 +309,9 @@ void					CMSWindowsSecondaryScreen::keyUp(
 	}
 }
 
-void					CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
+void
+CMSWindowsSecondaryScreen::mouseDown(
+	ButtonID button)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -300,11 +321,14 @@ void					CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
 	DWORD flags = mapButton(button, true);
 
 	// send event
-	if (flags != 0)
+	if (flags != 0) {
 		mouse_event(flags, 0, 0, 0, 0);
+	}
 }
 
-void					CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
+void
+CMSWindowsSecondaryScreen::mouseUp(
+	ButtonID button)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -314,12 +338,15 @@ void					CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
 	DWORD flags = mapButton(button, false);
 
 	// send event
-	if (flags != 0)
+	if (flags != 0) {
 		mouse_event(flags, 0, 0, 0, 0);
+	}
 }
 
-void					CMSWindowsSecondaryScreen::mouseMove(
-								SInt32 x, SInt32 y)
+void
+CMSWindowsSecondaryScreen::mouseMove(
+	SInt32 x,
+	SInt32 y)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -333,7 +360,9 @@ void					CMSWindowsSecondaryScreen::mouseMove(
 								0, 0);
 }
 
-void					CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
+void
+CMSWindowsSecondaryScreen::mouseWheel(
+	SInt32 delta)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -342,8 +371,10 @@ void					CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 	mouse_event(MOUSEEVENTF_WHEEL, 0, 0, delta, 0);
 }
 
-void					CMSWindowsSecondaryScreen::setClipboard(
-								ClipboardID /*id*/, const IClipboard* src)
+void
+CMSWindowsSecondaryScreen::setClipboard(
+	ClipboardID /*id*/,
+	const IClipboard* src)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -352,8 +383,9 @@ void					CMSWindowsSecondaryScreen::setClipboard(
 	CClipboard::copy(&dst, src);
 }
 
-void					CMSWindowsSecondaryScreen::grabClipboard(
-								ClipboardID /*id*/)
+void
+CMSWindowsSecondaryScreen::grabClipboard(
+	ClipboardID /*id*/)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -364,8 +396,10 @@ void					CMSWindowsSecondaryScreen::grabClipboard(
 	}
 }
 
-void					CMSWindowsSecondaryScreen::getMousePos(
-								SInt32* x, SInt32* y) const
+void
+CMSWindowsSecondaryScreen::getMousePos(
+	SInt32* x,
+	SInt32* y) const
 {
 	assert(x != NULL);
 	assert(y != NULL);
@@ -385,19 +419,24 @@ void					CMSWindowsSecondaryScreen::getMousePos(
 	}
 }
 
-void					CMSWindowsSecondaryScreen::getSize(
-								SInt32* width, SInt32* height) const
+void
+CMSWindowsSecondaryScreen::getSize(
+	SInt32* width,
+	SInt32* height) const
 {
 	getScreenSize(width, height);
 }
 
-SInt32					CMSWindowsSecondaryScreen::getJumpZoneSize() const
+SInt32
+CMSWindowsSecondaryScreen::getJumpZoneSize() const
 {
 	return 0;
 }
 
-void					CMSWindowsSecondaryScreen::getClipboard(
-								ClipboardID /*id*/, IClipboard* dst) const
+void
+CMSWindowsSecondaryScreen::getClipboard(
+	ClipboardID /*id*/,
+	IClipboard* dst) const
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -406,7 +445,8 @@ void					CMSWindowsSecondaryScreen::getClipboard(
 	CClipboard::copy(dst, &src);
 }
 
-void					CMSWindowsSecondaryScreen::onOpenDisplay()
+void
+CMSWindowsSecondaryScreen::onOpenDisplay()
 {
 	assert(m_window == NULL);
 
@@ -426,7 +466,8 @@ void					CMSWindowsSecondaryScreen::onOpenDisplay()
 	}
 }
 
-void					CMSWindowsSecondaryScreen::onCloseDisplay()
+void
+CMSWindowsSecondaryScreen::onCloseDisplay()
 {
 	// disconnect from desktop
 	if (m_is95Family) {
@@ -443,7 +484,9 @@ void					CMSWindowsSecondaryScreen::onCloseDisplay()
 	assert(m_desk   == NULL);
 }
 
-bool					CMSWindowsSecondaryScreen::onPreTranslate(MSG* msg)
+bool
+CMSWindowsSecondaryScreen::onPreTranslate(
+	MSG* msg)
 {
 	// handle event
 	switch (msg->message) {
@@ -466,9 +509,12 @@ bool					CMSWindowsSecondaryScreen::onPreTranslate(MSG* msg)
 	return false;
 }
 
-LRESULT					CMSWindowsSecondaryScreen::onEvent(
-								HWND hwnd, UINT msg,
-								WPARAM wParam, LPARAM lParam)
+LRESULT
+CMSWindowsSecondaryScreen::onEvent(
+	HWND hwnd,
+	UINT msg,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	switch (msg) {
 	case WM_QUERYENDSESSION:
@@ -516,10 +562,12 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 		return 0;
 
 	case WM_CHANGECBCHAIN:
-		if (m_nextClipboardWindow == (HWND)wParam)
+		if (m_nextClipboardWindow == (HWND)wParam) {
 			m_nextClipboardWindow = (HWND)lParam;
-		else
+		}
+		else {
 			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+		}
 		return 0;
 
 	case WM_DISPLAYCHANGE:
@@ -532,7 +580,10 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-void					CMSWindowsSecondaryScreen::onEnter(SInt32 x, SInt32 y)
+void
+CMSWindowsSecondaryScreen::onEnter(
+	SInt32 x,
+	SInt32 y)
 {
 	// warp to requested location
 	SInt32 w, h;
@@ -546,7 +597,8 @@ void					CMSWindowsSecondaryScreen::onEnter(SInt32 x, SInt32 y)
 	ShowWindow(m_window, SW_HIDE);
 }
 
-void					CMSWindowsSecondaryScreen::onLeave()
+void
+CMSWindowsSecondaryScreen::onLeave()
 {
 	// move hider window under the mouse (rather than moving the mouse
 	// somewhere else on the screen)
@@ -558,7 +610,8 @@ void					CMSWindowsSecondaryScreen::onLeave()
 	ShowWindow(m_window, SW_SHOWNORMAL);
 }
 
-bool					CMSWindowsSecondaryScreen::openDesktop()
+bool
+CMSWindowsSecondaryScreen::openDesktop()
 {
 	CLock lock(&m_mutex);
 
@@ -584,7 +637,8 @@ bool					CMSWindowsSecondaryScreen::openDesktop()
 	return true;
 }
 
-void					CMSWindowsSecondaryScreen::closeDesktop()
+void
+CMSWindowsSecondaryScreen::closeDesktop()
 {
 	CLock lock(&m_mutex);
 
@@ -599,7 +653,9 @@ void					CMSWindowsSecondaryScreen::closeDesktop()
 	}
 }
 
-bool					CMSWindowsSecondaryScreen::switchDesktop(HDESK desk)
+bool
+CMSWindowsSecondaryScreen::switchDesktop(
+	HDESK desk)
 {
 	CLock lock(&m_mutex);
 
@@ -680,7 +736,8 @@ bool					CMSWindowsSecondaryScreen::switchDesktop(HDESK desk)
 	return true;
 }
 
-void					CMSWindowsSecondaryScreen::syncDesktop() const
+void
+CMSWindowsSecondaryScreen::syncDesktop() const
 {
 	// note -- mutex must be locked on entry
 
@@ -697,7 +754,8 @@ void					CMSWindowsSecondaryScreen::syncDesktop() const
 	AttachThreadInput(threadID, m_threadID, TRUE);
 }
 
-CString					CMSWindowsSecondaryScreen::getCurrentDesktopName() const
+CString
+CMSWindowsSecondaryScreen::getCurrentDesktopName() const
 {
 	return m_deskName;
 }
@@ -1189,8 +1247,10 @@ static const UINT*		g_mapTable[] =
 	/* 0xfc */ NULL, g_terminal, g_function, g_miscellany
 };
 
-DWORD					CMSWindowsSecondaryScreen::mapButton(
-								ButtonID button, bool press) const
+DWORD
+CMSWindowsSecondaryScreen::mapButton(
+	ButtonID button,
+	bool press) const
 {
 	// map button id to button flag
 	switch (button) {
@@ -1208,11 +1268,13 @@ DWORD					CMSWindowsSecondaryScreen::mapButton(
 	}
 }
 
-KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
-								Keystrokes& keys,
-								UINT& virtualKey,
-								KeyID id, KeyModifierMask mask,
-								EKeyAction action) const
+KeyModifierMask
+CMSWindowsSecondaryScreen::mapKey(
+	Keystrokes& keys,
+	UINT& virtualKey,
+	KeyID id,
+	KeyModifierMask mask,
+	EKeyAction action) const
 {
 	// lookup the key table
 	const UInt32 mapID = ((id >> 8) & 0xff);
@@ -1264,12 +1326,15 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 		outMask &= ~KeyModifierShift;
 
 		// convert system modifier mask to our mask
-		if (HIBYTE(vk) & 1)
+		if (HIBYTE(vk) & 1) {
 			outMask |= KeyModifierShift;
-		if (HIBYTE(vk) & 2)
+		}
+		if (HIBYTE(vk) & 2) {
 			outMask |= KeyModifierControl;
-		if (HIBYTE(vk) & 4)
+		}
+		if (HIBYTE(vk) & 4) {
 			outMask |= KeyModifierAlt;
+		}
 		log((CLOG_DEBUG2 "character %d to virtual key %d mask 0x%04x", code, LOBYTE(vk), outMask));
 
 		// handle combination of caps-lock and shift.  if caps-lock is
@@ -1457,8 +1522,9 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 
 	// add the key event
 	keystroke.m_virtualKey = virtualKey;
-	if (isExtended)
+	if (isExtended) {
 		keystroke.m_virtualKey |= 0x100;
+	}
 	switch (action) {
 	case kPress:
 		keystroke.m_press      = true;
@@ -1523,12 +1589,15 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 	return mask;
 }
 
-void					CMSWindowsSecondaryScreen::doKeystrokes(
-								const Keystrokes& keys, SInt32 count)
+void
+CMSWindowsSecondaryScreen::doKeystrokes(
+	const Keystrokes& keys,
+	SInt32 count)
 {
 	// do nothing if no keys or no repeats
-	if (count < 1 || keys.empty())
+	if (count < 1 || keys.empty()) {
 		return;
+	}
 
 	// generate key events
 	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ) {
@@ -1556,7 +1625,8 @@ void					CMSWindowsSecondaryScreen::doKeystrokes(
 	}
 }
 
-void					CMSWindowsSecondaryScreen::updateKeys()
+void
+CMSWindowsSecondaryScreen::updateKeys()
 {
 	// clear key state
 	memset(m_keys, 0, sizeof(m_keys));
@@ -1579,29 +1649,40 @@ void					CMSWindowsSecondaryScreen::updateKeys()
 	m_keys[VK_SCROLL]   = static_cast<BYTE>(GetKeyState(VK_SCROLL));
 }
 
-void					CMSWindowsSecondaryScreen::updateModifiers()
+void
+CMSWindowsSecondaryScreen::updateModifiers()
 {
 	// update active modifier mask
 	m_mask = 0;
-	if ((m_keys[VK_LSHIFT] & 0x80) != 0 || (m_keys[VK_RSHIFT] & 0x80) != 0)
+	if ((m_keys[VK_LSHIFT] & 0x80) != 0 || (m_keys[VK_RSHIFT] & 0x80) != 0) {
 		m_mask |= KeyModifierShift;
-	if ((m_keys[VK_LCONTROL] & 0x80) != 0 || (m_keys[VK_RCONTROL] & 0x80) != 0)
+	}
+	if ((m_keys[VK_LCONTROL] & 0x80) != 0 ||
+		(m_keys[VK_RCONTROL] & 0x80) != 0) {
 		m_mask |= KeyModifierControl;
-	if ((m_keys[VK_LMENU] & 0x80) != 0 || (m_keys[VK_RMENU] & 0x80) != 0)
+	}
+	if ((m_keys[VK_LMENU] & 0x80) != 0 || (m_keys[VK_RMENU] & 0x80) != 0) {
 		m_mask |= KeyModifierAlt;
-	if ((m_keys[VK_LWIN] & 0x80) != 0 || (m_keys[VK_RWIN] & 0x80) != 0)
+	}
+	if ((m_keys[VK_LWIN] & 0x80) != 0 || (m_keys[VK_RWIN] & 0x80) != 0) {
 		m_mask |= KeyModifierMeta;
-	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
+	}
+	if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
 		m_mask |= KeyModifierCapsLock;
-	if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
+	}
+	if ((m_keys[VK_NUMLOCK] & 0x01) != 0) {
 		m_mask |= KeyModifierNumLock;
-	if ((m_keys[VK_SCROLL] & 0x01) != 0)
+	}
+	if ((m_keys[VK_SCROLL] & 0x01) != 0) {
 		m_mask |= KeyModifierScrollLock;
+	}
 	log((CLOG_DEBUG2 "modifiers on update: 0x%04x", m_mask));
 }
 
-void					CMSWindowsSecondaryScreen::toggleKey(
-								UINT virtualKey, KeyModifierMask mask)
+void
+CMSWindowsSecondaryScreen::toggleKey(
+	UINT virtualKey,
+	KeyModifierMask mask)
 {
 	// send key events to simulate a press and release
 	sendKeyEvent(virtualKey, true);
@@ -1612,13 +1693,15 @@ void					CMSWindowsSecondaryScreen::toggleKey(
 	m_keys[virtualKey & 0xff] ^= 0x01;
 }
 
-UINT					CMSWindowsSecondaryScreen::virtualKeyToScanCode(
-								UINT& virtualKey)
+UINT
+CMSWindowsSecondaryScreen::virtualKeyToScanCode(
+	UINT& virtualKey)
 {
 	// try mapping given virtual key
 	UINT code = MapVirtualKey(virtualKey & 0xff, 0);
-	if (code != 0)
+	if (code != 0) {
 		return code;
+	}
 
 	// no dice.  if the virtual key distinguishes between left/right
 	// then try the one that doesn't distinguish sides.  windows (or
@@ -1663,12 +1746,14 @@ UINT					CMSWindowsSecondaryScreen::virtualKeyToScanCode(
 	}
 }
 
-bool					CMSWindowsSecondaryScreen::isExtendedKey(
-								UINT virtualKey)
+bool
+CMSWindowsSecondaryScreen::isExtendedKey(
+	UINT virtualKey)
 {
 	// see if we've already encoded the extended flag
-	if ((virtualKey & 0x100) != 0)
+	if ((virtualKey & 0x100) != 0) {
 		return true;
+	}
 
 	// check known virtual keys
 	switch (virtualKey & 0xff) {
@@ -1685,14 +1770,18 @@ bool					CMSWindowsSecondaryScreen::isExtendedKey(
 	}
 }
 
-void					CMSWindowsSecondaryScreen::sendKeyEvent(
-								UINT virtualKey, bool press)
+void
+CMSWindowsSecondaryScreen::sendKeyEvent(
+	UINT virtualKey,
+	bool press)
 {
 	DWORD flags = 0;
-	if (isExtendedKey(virtualKey))
+	if (isExtendedKey(virtualKey)) {
 		flags |= KEYEVENTF_EXTENDEDKEY;
-	if (!press)
+	}
+	if (!press) {
 		flags |= KEYEVENTF_KEYUP;
+	}
 	const UINT code = virtualKeyToScanCode(virtualKey);
 	keybd_event(static_cast<BYTE>(virtualKey & 0xff),
 								static_cast<BYTE>(code), flags, 0);

@@ -1,13 +1,11 @@
 #ifndef CCONFIG_H
 #define CCONFIG_H
 
-#include "BasicTypes.h"
-#include "CString.h"
 #include "CNetworkAddress.h"
 #include "XBase.h"
-#include <iosfwd>
 #include "stdmap.h"
 #include "stdset.h"
+#include <iosfwd>
 
 class CConfig;
 
@@ -85,17 +83,17 @@ public:
 	// or the canonical name is unknown.  removeAlias() fails if
 	// the alias is unknown or a canonical name.
 	bool				addAlias(const CString& canonical,
-								const CString& alias);
+							const CString& alias);
 	bool				removeAlias(const CString& alias);
 	void				removeAllAliases();
 
 	// connect/disconnect edges.  both return false if srcName is
 	// unknown.
 	bool				connect(const CString& srcName,
-								EDirection srcSide,
-								const CString& dstName);
+							EDirection srcSide,
+							const CString& dstName);
 	bool				disconnect(const CString& srcName,
-								EDirection srcSide);
+							EDirection srcSide);
 
 	// set the synergy and http listen addresses.  there are no
 	// default addresses.

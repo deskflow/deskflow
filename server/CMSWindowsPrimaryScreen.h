@@ -2,10 +2,10 @@
 #define CMSWINDOWSPRIMARYSCREEN_H
 
 #include "CMSWindowsScreen.h"
-#include "IPrimaryScreen.h"
-#include "MouseTypes.h"
-#include "CString.h"
 #include "CSynergyHook.h"
+#include "MouseTypes.h"
+#include "IPrimaryScreen.h"
+#include "CString.h"
 
 class CMSWindowsPrimaryScreen : public CMSWindowsScreen, public IPrimaryScreen {
 public:
@@ -56,7 +56,7 @@ private:
 
 	// key and button queries
 	KeyID				mapKey(WPARAM keycode, LPARAM info,
-								KeyModifierMask* maskOut);
+							KeyModifierMask* maskOut);
 	ButtonID			mapButton(WPARAM button) const;
 	void				updateKeys();
 	void				updateKey(UINT vkCode, bool press);

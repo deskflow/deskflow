@@ -1,8 +1,8 @@
 #include "CConfig.h"
 #include "ProtocolTypes.h"
+#include "XSocket.h"
 #include "stdistream.h"
 #include "stdostream.h"
-#include <assert.h>
 
 //
 // CConfig
@@ -18,7 +18,9 @@ CConfig::~CConfig()
 	// do nothing
 }
 
-bool					CConfig::addScreen(const CString& name)
+bool
+CConfig::addScreen(
+	const CString& name)
 {
 	// alias name must not exist
 	if (m_nameToCanonicalName.find(name) != m_nameToCanonicalName.end()) {
@@ -34,7 +36,9 @@ bool					CConfig::addScreen(const CString& name)
 	return true;
 }
 
-void					CConfig::removeScreen(const CString& name)
+void
+CConfig::removeScreen(
+	const CString& name)
 {
 	// get canonical name and find cell
 	CString canonical = getCanonicalName(name);
@@ -67,14 +71,17 @@ void					CConfig::removeScreen(const CString& name)
 	}
 }
 
-void					CConfig::removeAllScreens()
+void
+CConfig::removeAllScreens()
 {
 	m_map.clear();
 	m_nameToCanonicalName.clear();
 }
 
-bool					CConfig::addAlias(const CString& canonical,
-								const CString& alias)
+bool
+CConfig::addAlias(
+	const CString& canonical,
+	const CString& alias)
 {
 	// alias name must not exist
 	if (m_nameToCanonicalName.find(alias) != m_nameToCanonicalName.end()) {
@@ -92,7 +99,9 @@ bool					CConfig::addAlias(const CString& canonical,
 	return true;
 }
 
-bool					CConfig::removeAlias(const CString& alias)
+bool
+CConfig::removeAlias(
+	const CString& alias)
 {
 	// must not be a canonical name
 	if (m_map.find(alias) != m_map.end()) {
@@ -111,7 +120,8 @@ bool					CConfig::removeAlias(const CString& alias)
 	return true;
 }
 
-void					CConfig::removeAllAliases()
+void
+CConfig::removeAllAliases()
 {
 	// remove all names
 	m_nameToCanonicalName.clear();
@@ -124,9 +134,11 @@ void					CConfig::removeAllAliases()
 	}
 }
 
-bool					CConfig::connect(const CString& srcName,
-								EDirection srcSide,
-								const CString& dstName)
+bool
+CConfig::connect(
+	const CString& srcName,
+	EDirection srcSide,
+	const CString& dstName)
 {
 	// find source cell
 	CCellMap::iterator index = m_map.find(getCanonicalName(srcName));
@@ -142,8 +154,10 @@ bool					CConfig::connect(const CString& srcName,
 	return true;
 }
 
-bool					CConfig::disconnect(const CString& srcName,
-								EDirection srcSide)
+bool
+CConfig::disconnect(
+	const CString& srcName,
+	EDirection srcSide)
 {
 	// find source cell
 	CCellMap::iterator index = m_map.find(srcName);
@@ -157,17 +171,23 @@ bool					CConfig::disconnect(const CString& srcName,
 	return true;
 }
 
-void					CConfig::setSynergyAddress(const CNetworkAddress& addr)
+void
+CConfig::setSynergyAddress(
+	const CNetworkAddress& addr)
 {
 	m_synergyAddress = addr;
 }
 
-void					CConfig::setHTTPAddress(const CNetworkAddress& addr)
+void
+CConfig::setHTTPAddress(
+	const CNetworkAddress& addr)
 {
 	m_httpAddress = addr;
 }
 
-bool					CConfig::isValidScreenName(const CString& name) const
+bool
+CConfig::isValidScreenName(
+	const CString& name) const
 {
 	// name is valid if matches validname
 	//  name      ::= [A-Za-z0-9] | [A-Za-z0-9][-A-Za-z0-9]*[A-Za-z0-9]
@@ -211,27 +231,35 @@ bool					CConfig::isValidScreenName(const CString& name) const
 	return true;
 }
 
-CConfig::const_iterator	CConfig::begin() const
+CConfig::const_iterator
+CConfig::begin() const
 {
 	return const_iterator(m_map.begin());
 }
 
-CConfig::const_iterator	CConfig::end() const
+CConfig::const_iterator
+CConfig::end() const
 {
 	return const_iterator(m_map.end());
 }
 
-bool					CConfig::isScreen(const CString& name) const
+bool
+CConfig::isScreen(
+	const CString& name) const
 {
 	return (m_nameToCanonicalName.count(name) > 0);
 }
 
-bool					CConfig::isCanonicalName(const CString& name) const
+bool
+CConfig::isCanonicalName(
+	const CString& name) const
 {
 	return CStringUtil::CaselessCmp::equal(getCanonicalName(name), name);
 }
 
-CString					CConfig::getCanonicalName(const CString& name) const
+CString
+CConfig::getCanonicalName(
+	const CString& name) const
 {
 	CNameMap::const_iterator index = m_nameToCanonicalName.find(name);
 	if (index == m_nameToCanonicalName.end()) {
@@ -242,8 +270,10 @@ CString					CConfig::getCanonicalName(const CString& name) const
 	}
 }
 
-CString					CConfig::getNeighbor(const CString& srcName,
-								EDirection srcSide) const
+CString
+CConfig::getNeighbor(
+	const CString& srcName,
+	EDirection srcSide) const
 {
 	// find source cell
 	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
@@ -256,23 +286,30 @@ CString					CConfig::getNeighbor(const CString& srcName,
 								srcSide - kFirstDirection]);
 }
 
-const CNetworkAddress&	CConfig::getSynergyAddress() const
+const CNetworkAddress&
+CConfig::getSynergyAddress() const
 {
 	return m_synergyAddress;
 }
 
-const CNetworkAddress&	CConfig::getHTTPAddress() const
+const CNetworkAddress&
+CConfig::getHTTPAddress() const
 {
 	return m_httpAddress;
 }
 
-const char*				CConfig::dirName(EDirection dir)
+const char*
+CConfig::dirName(
+	EDirection dir)
 {
 	static const char* s_name[] = { "left", "right", "top", "bottom" };
 	return s_name[dir - kFirstDirection];
 }
 
-bool					CConfig::readLine(std::istream& s, CString& line)
+bool
+CConfig::readLine(
+	std::istream& s,
+	CString& line)
 {
 	s >> std::ws;
 	while (std::getline(s, line)) {
@@ -295,7 +332,9 @@ bool					CConfig::readLine(std::istream& s, CString& line)
 	return false;
 }
 
-void					CConfig::readSection(std::istream& s)
+void
+CConfig::readSection(
+	std::istream& s)
 {
 	static const char s_section[] = "section:";
 	static const char s_network[] = "network";
@@ -343,7 +382,9 @@ void					CConfig::readSection(std::istream& s)
 	}
 }
 
-void					CConfig::readSectionNetwork(std::istream& s)
+void
+CConfig::readSectionNetwork(
+	std::istream& s)
 {
 	CString line;
 	CString name;
@@ -398,7 +439,9 @@ void					CConfig::readSectionNetwork(std::istream& s)
 	throw XConfigRead("unexpected end of screens section");
 }
 
-void					CConfig::readSectionScreens(std::istream& s)
+void
+CConfig::readSectionScreens(
+	std::istream& s)
 {
 	CString line;
 	CString name;
@@ -433,7 +476,9 @@ void					CConfig::readSectionScreens(std::istream& s)
 	throw XConfigRead("unexpected end of screens section");
 }
 
-void					CConfig::readSectionLinks(std::istream& s)
+void
+CConfig::readSectionLinks(
+	std::istream& s)
 {
 	CString line;
 	CString screen;
@@ -513,7 +558,9 @@ void					CConfig::readSectionLinks(std::istream& s)
 	throw XConfigRead("unexpected end of links section");
 }
 
-void					CConfig::readSectionAliases(std::istream& s)
+void
+CConfig::readSectionAliases(
+	std::istream& s)
 {
 	CString line;
 	CString screen;
@@ -559,7 +606,10 @@ void					CConfig::readSectionAliases(std::istream& s)
 // CConfig I/O
 //
 
-std::istream&			operator>>(std::istream& s, CConfig& config)
+std::istream&
+operator>>(
+	std::istream& s,
+	CConfig& config)
 {
 	// FIXME -- should track line and column to improve error reporting
 
@@ -571,7 +621,10 @@ std::istream&			operator>>(std::istream& s, CConfig& config)
 	return s;
 }
 
-std::ostream&			operator<<(std::ostream& s, const CConfig& config)
+std::ostream&
+operator<<(
+	std::ostream& s,
+	const CConfig& config)
 {
 	// network section
 	s << "section: network" << std::endl;
@@ -657,7 +710,9 @@ std::ostream&			operator<<(std::ostream& s, const CConfig& config)
 // CConfig I/O exceptions
 //
 
-XConfigRead::XConfigRead(const CString& error) : m_error(error)
+XConfigRead::XConfigRead(
+	const CString& error) :
+	m_error(error)
 {
 	// do nothing
 }
@@ -667,7 +722,8 @@ XConfigRead::~XConfigRead()
 	// do nothing
 }
 
-CString					XConfigRead::getWhat() const throw()
+CString
+XConfigRead::getWhat() const throw()
 {
 	return m_error;
 }

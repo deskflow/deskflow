@@ -1,6 +1,6 @@
 #include "CUnixPlatform.h"
 #include "CLog.h"
-#include <string.h>
+#include <cstring>
 #include <unistd.h>
 #include <pwd.h>
 #include <sys/types.h>
@@ -8,7 +8,6 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <syslog.h>
-
 
 //
 // CUnixPlatform
@@ -24,24 +23,29 @@ CUnixPlatform::~CUnixPlatform()
 	// do nothing
 }
 
-bool					CUnixPlatform::installDaemon(
-								const char*,
-								const char*,
-								const char*,
-								const char*)
+bool
+CUnixPlatform::installDaemon(
+	const char*,
+	const char*,
+	const char*,
+	const char*)
 {
 	// daemons don't require special installation
 	return true;
 }
 
-bool					CUnixPlatform::uninstallDaemon(const char*)
+bool
+CUnixPlatform::uninstallDaemon(
+	const char*)
 {
 	// daemons don't require special installation
 	return true;
 }
 
-int						CUnixPlatform::daemonize(
-								const char* name, DaemonFunc func)
+int
+CUnixPlatform::daemonize(
+	const char* name,
+	DaemonFunc func)
 {
 	// fork so shell thinks we're done and so we're not a process
 	// group leader
@@ -86,43 +90,46 @@ int						CUnixPlatform::daemonize(
 	return func(this, 1, &name);
 }
 
-int						CUnixPlatform::restart(
-								RestartFunc func, int minErrorCode)
+int
+CUnixPlatform::restart(
+	RestartFunc func,
+	int minErrorCode)
 {
 	for (;;) {
 		switch (fork()) {
-		default: {
-			// parent process.  wait for child to exit.
-			int status;
-			if (wait(&status) == -1) {
-				// wait failed.  this is unexpected so bail.
-				log((CLOG_CRIT "wait() failed"));
-				return minErrorCode;
-			}
+		default:
+			{
+				// parent process.  wait for child to exit.
+				int status;
+				if (wait(&status) == -1) {
+					// wait failed.  this is unexpected so bail.
+					log((CLOG_CRIT "wait() failed"));
+					return minErrorCode;
+				}
 
-			// what happened?  if the child exited normally with a
-			// status less than 16 then the child was deliberately
-			// terminated so we also terminate.
-			if (WIFEXITED(status) && WEXITSTATUS(status) < minErrorCode) {
-				return WEXITSTATUS(status);
-			}
+				// what happened?  if the child exited normally with a
+				// status less than 16 then the child was deliberately
+				// terminated so we also terminate.
+				if (WIFEXITED(status) && WEXITSTATUS(status) < minErrorCode) {
+					return WEXITSTATUS(status);
+				}
 
-			// did child die horribly?
-			if (WIFSIGNALED(status)) {
-				switch (WTERMSIG(status)) {
-				case SIGHUP:
-				case SIGINT:
-				case SIGQUIT:
-				case SIGTERM:
-					break;
+				// did child die horribly?
+				if (WIFSIGNALED(status)) {
+					switch (WTERMSIG(status)) {
+					case SIGHUP:
+					case SIGINT:
+					case SIGQUIT:
+					case SIGTERM:
+						break;
 
-				default:
-					// uh oh.  bail out.
-					return 16;
+					default:
+						// uh oh.  bail out.
+						return 16;
+					}
 				}
 			}
 			break;
-		}
 
 		case -1:
 			// fork() failed.  log the error and proceed as a child
@@ -136,7 +143,9 @@ int						CUnixPlatform::restart(
 	}
 }
 
-const char*				CUnixPlatform::getBasename(const char* pathname) const
+const char*
+CUnixPlatform::getBasename(
+	const char* pathname) const
 {
 	if (pathname == NULL) {
 		return NULL;
@@ -151,7 +160,8 @@ const char*				CUnixPlatform::getBasename(const char* pathname) const
 	}
 }
 
-CString					CUnixPlatform::getUserDirectory() const
+CString
+CUnixPlatform::getUserDirectory() const
 {
 	// FIXME -- use geteuid?  shouldn't run this setuid anyway.
 	struct passwd* pwent = getpwuid(getuid());
@@ -163,14 +173,16 @@ CString					CUnixPlatform::getUserDirectory() const
 	}
 }
 
-CString					CUnixPlatform::getSystemDirectory() const
+CString
+CUnixPlatform::getSystemDirectory() const
 {
 	return "/etc";
 }
 
-CString					CUnixPlatform::addPathComponent(
-								const CString& prefix,
-								const CString& suffix) const
+CString
+CUnixPlatform::addPathComponent(
+	const CString& prefix,
+	const CString& suffix) const
 {
 	CString path;
 	path.reserve(prefix.size() + 1 + suffix.size());
@@ -182,14 +194,18 @@ CString					CUnixPlatform::addPathComponent(
 	return path;
 }
 
-void					CUnixPlatform::setDaemonLogger(const char* name)
+void
+CUnixPlatform::setDaemonLogger(
+	const char* name)
 {
 	openlog(name, 0, LOG_DAEMON);
 	CLog::setOutputter(&CUnixPlatform::deamonLogger);
 }
 
-bool					CUnixPlatform::deamonLogger(
-								int priority, const char* msg)
+bool
+CUnixPlatform::deamonLogger(
+	int priority,
+	const char* msg)
 {
 	// convert priority
 	switch (priority) {

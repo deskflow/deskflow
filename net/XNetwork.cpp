@@ -4,7 +4,8 @@
 // XNetworkUnavailable
 //
 
-CString					XNetworkUnavailable::getWhat() const throw()
+CString
+XNetworkUnavailable::getWhat() const throw()
 {
 	return format("XNetworkUnavailable", "network library is not available");
 }
@@ -14,7 +15,8 @@ CString					XNetworkUnavailable::getWhat() const throw()
 // XNetworkFailed
 //
 
-CString					XNetworkFailed::getWhat() const throw()
+CString
+XNetworkFailed::getWhat() const throw()
 {
 	return format("XNetworkFailed", "cannot initialize network library");
 }
@@ -24,24 +26,29 @@ CString					XNetworkFailed::getWhat() const throw()
 // XNetworkVersion
 //
 
-XNetworkVersion::XNetworkVersion(int major, int minor) throw() :
-								m_major(major),
-								m_minor(minor)
+XNetworkVersion::XNetworkVersion(
+	int major,
+	int minor) throw() :
+	m_major(major),
+	m_minor(minor)
 {
 	// do nothing
 }
 
-int						XNetworkVersion::getMajor() const throw()
+int
+XNetworkVersion::getMajor() const throw()
 {
 	return m_major;
 }
 
-int						XNetworkVersion::getMinor() const throw()
+int
+XNetworkVersion::getMinor() const throw()
 {
 	return m_minor;
 }
 
-CString					XNetworkVersion::getWhat() const throw()
+CString
+XNetworkVersion::getWhat() const throw()
 {
 	return format("XNetworkVersion",
 								"unsupported network version %d.%d",
@@ -54,7 +61,7 @@ CString					XNetworkVersion::getWhat() const throw()
 //
 
 XNetworkFunctionUnavailable::XNetworkFunctionUnavailable(
-								const char* name) throw()
+	const char* name) throw()
 {
 	try {
 		m_name = name;
@@ -64,7 +71,8 @@ XNetworkFunctionUnavailable::XNetworkFunctionUnavailable(
 	}
 }
 
-CString					XNetworkFunctionUnavailable::getWhat() const throw()
+CString
+XNetworkFunctionUnavailable::getWhat() const throw()
 {
 	return format("XNetworkFunctionUnavailable",
 								"missing network function %s",

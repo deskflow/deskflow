@@ -1,19 +1,19 @@
 #include "CClient.h"
+#include "CClipboard.h"
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
 #include "CProtocolUtil.h"
-#include "CClipboard.h"
 #include "ISecondaryScreen.h"
 #include "ProtocolTypes.h"
-#include "CLock.h"
-#include "CLog.h"
-#include "CThread.h"
-#include "CTimerThread.h"
-#include "TMethodJob.h"
 #include "XScreen.h"
 #include "XSynergy.h"
+#include "XSocket.h"
+#include "CLock.h"
+#include "CThread.h"
+#include "CTimerThread.h"
 #include "XThread.h"
-#include <assert.h>
+#include "CLog.h"
+#include "TMethodJob.h"
 #include <memory>
 
 // hack to work around operator=() bug in STL in g++ prior to v3
@@ -28,15 +28,16 @@
 // CClient
 //
 
-CClient::CClient(const CString& clientName) :
-								m_name(clientName),
-								m_input(NULL),
-								m_output(NULL),
-								m_screen(NULL),
-								m_camp(false),
-								m_active(false),
-								m_seqNum(0),
-								m_ignoreMove(false)
+CClient::CClient(
+	const CString& clientName) :
+	m_name(clientName),
+	m_input(NULL),
+	m_output(NULL),
+	m_screen(NULL),
+	m_camp(false),
+	m_active(false),
+	m_seqNum(0),
+	m_ignoreMove(false)
 {
 	// do nothing
 }
@@ -46,12 +47,16 @@ CClient::~CClient()
 	// do nothing
 }
 
-void					CClient::camp(bool on)
+void
+CClient::camp(
+	bool on)
 {
 	m_camp = on;
 }
 
-bool					CClient::run(const CNetworkAddress& serverAddress)
+bool
+CClient::run(
+	const CNetworkAddress& serverAddress)
 {
 	CThread* thread = NULL;
 	try {
@@ -128,12 +133,15 @@ bool					CClient::run(const CNetworkAddress& serverAddress)
 	}
 }
 
-void					CClient::quit()
+void
+CClient::quit()
 {
 	m_screen->stop();
 }
 
-void					CClient::onClipboardChanged(ClipboardID id)
+void
+CClient::onClipboardChanged(
+	ClipboardID id)
 {
 	log((CLOG_DEBUG "sending clipboard %d changed", id));
 	CLock lock(&m_mutex);
@@ -169,7 +177,8 @@ void					CClient::onClipboardChanged(ClipboardID id)
 	}
 }
 
-void					CClient::onResolutionChanged()
+void
+CClient::onResolutionChanged()
 {
 	log((CLOG_DEBUG "resolution changed"));
 
@@ -183,7 +192,8 @@ void					CClient::onResolutionChanged()
 }
 
 #include "CTCPSocket.h" // FIXME
-void					CClient::runSession(void*)
+void
+CClient::runSession(void*)
 {
 	log((CLOG_DEBUG "starting client \"%s\"", m_name.c_str()));
 
@@ -401,7 +411,8 @@ void					CClient::runSession(void*)
 #elif defined(CONFIG_PLATFORM_UNIX)
 #include "CXWindowsSecondaryScreen.h"
 #endif
-void					CClient::openSecondaryScreen()
+void
+CClient::openSecondaryScreen()
 {
 	assert(m_screen == NULL);
 
@@ -428,7 +439,8 @@ void					CClient::openSecondaryScreen()
 	m_screen->open(this);
 }
 
-void					CClient::closeSecondaryScreen()
+void
+CClient::closeSecondaryScreen()
 {
 	assert(m_screen != NULL);
 
@@ -447,7 +459,8 @@ void					CClient::closeSecondaryScreen()
 	m_screen = NULL;
 }
 
-void					CClient::onEnter()
+void
+CClient::onEnter()
 {
 	SInt16 x, y;
 	UInt16 mask;
@@ -460,7 +473,8 @@ void					CClient::onEnter()
 	m_screen->enter(x, y, static_cast<KeyModifierMask>(mask));
 }
 
-void					CClient::onLeave()
+void
+CClient::onLeave()
 {
 	log((CLOG_DEBUG1 "recv leave"));
 
@@ -504,7 +518,8 @@ void					CClient::onLeave()
 	}
 }
 
-void					CClient::onGrabClipboard()
+void
+CClient::onGrabClipboard()
 {
 	ClipboardID id;
 	UInt32 seqNum;
@@ -524,7 +539,8 @@ void					CClient::onGrabClipboard()
 	m_screen->grabClipboard(id);
 }
 
-void					CClient::onScreenSaver()
+void
+CClient::onScreenSaver()
 {
 	SInt8 on;
 	{
@@ -535,13 +551,15 @@ void					CClient::onScreenSaver()
 	// FIXME
 }
 
-void					CClient::onQueryInfo()
+void
+CClient::onQueryInfo()
 {
 	CLock lock(&m_mutex);
 	onQueryInfoNoLock();
 }
 
-void					CClient::onQueryInfoNoLock()
+void
+CClient::onQueryInfoNoLock()
 {
 	SInt32 x, y, w, h;
 	m_screen->getMousePos(&x, &y);
@@ -552,14 +570,16 @@ void					CClient::onQueryInfoNoLock()
 	CProtocolUtil::writef(m_output, kMsgDInfo, w, h, zoneSize, x, y);
 }
 
-void					CClient::onInfoAcknowledgment()
+void
+CClient::onInfoAcknowledgment()
 {
 	log((CLOG_DEBUG1 "recv info acknowledgment"));
 	CLock lock(&m_mutex);
 	m_ignoreMove = false;
 }
 
-void					CClient::onSetClipboard()
+void
+CClient::onSetClipboard()
 {
 	ClipboardID id;
 	CString data;
@@ -584,7 +604,8 @@ void					CClient::onSetClipboard()
 	m_screen->setClipboard(id, &clipboard);
 }
 
-void					CClient::onKeyDown()
+void
+CClient::onKeyDown()
 {
 	UInt16 id, mask;
 	{
@@ -596,7 +617,8 @@ void					CClient::onKeyDown()
 								static_cast<KeyModifierMask>(mask));
 }
 
-void					CClient::onKeyRepeat()
+void
+CClient::onKeyRepeat()
 {
 	UInt16 id, mask, count;
 	{
@@ -609,7 +631,8 @@ void					CClient::onKeyRepeat()
 								count);
 }
 
-void					CClient::onKeyUp()
+void
+CClient::onKeyUp()
 {
 	UInt16 id, mask;
 	{
@@ -621,7 +644,8 @@ void					CClient::onKeyUp()
 								static_cast<KeyModifierMask>(mask));
 }
 
-void					CClient::onMouseDown()
+void
+CClient::onMouseDown()
 {
 	SInt8 id;
 	{
@@ -632,7 +656,8 @@ void					CClient::onMouseDown()
 	m_screen->mouseDown(static_cast<ButtonID>(id));
 }
 
-void					CClient::onMouseUp()
+void
+CClient::onMouseUp()
 {
 	SInt8 id;
 	{
@@ -643,7 +668,8 @@ void					CClient::onMouseUp()
 	m_screen->mouseUp(static_cast<ButtonID>(id));
 }
 
-void					CClient::onMouseMove()
+void
+CClient::onMouseMove()
 {
 	bool ignore;
 	SInt16 x, y;
@@ -658,7 +684,8 @@ void					CClient::onMouseMove()
 	}
 }
 
-void					CClient::onMouseWheel()
+void
+CClient::onMouseWheel()
 {
 	SInt16 delta;
 	{
@@ -669,7 +696,8 @@ void					CClient::onMouseWheel()
 	m_screen->mouseWheel(delta);
 }
 
-void					CClient::onErrorIncompatible()
+void
+CClient::onErrorIncompatible()
 {
 	SInt32 major, minor;
 	CLock lock(&m_mutex);
@@ -677,17 +705,20 @@ void					CClient::onErrorIncompatible()
 	log((CLOG_ERR "server has incompatible version %d.%d", major, minor));
 }
 
-void					CClient::onErrorBusy()
+void
+CClient::onErrorBusy()
 {
 	log((CLOG_ERR "server already has a connected client with name \"%s\"", m_name.c_str()));
 }
 
-void					CClient::onErrorUnknown()
+void
+CClient::onErrorUnknown()
 {
 	log((CLOG_ERR "server refused client with name \"%s\"", m_name.c_str()));
 }
 
-void					CClient::onErrorBad()
+void
+CClient::onErrorBad()
 {
 	log((CLOG_ERR "server disconnected due to a protocol error"));
 }

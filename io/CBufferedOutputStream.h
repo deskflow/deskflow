@@ -1,8 +1,8 @@
 #ifndef CBUFFEREDOUTPUTSTREAM_H
 #define CBUFFEREDOUTPUTSTREAM_H
 
-#include "CStreamBuffer.h"
 #include "IOutputStream.h"
+#include "CStreamBuffer.h"
 #include "CCondVar.h"
 
 class CMutex;

@@ -1,6 +1,5 @@
 #include "CMutex.h"
 #include "CLog.h"
-#include <assert.h>
 
 //
 // CMutex
@@ -21,7 +20,9 @@ CMutex::~CMutex()
 	fini();
 }
 
-CMutex&					CMutex::operator=(const CMutex&)
+CMutex&
+CMutex::operator=(
+	const CMutex&)
 {
 	return *this;
 }
@@ -29,9 +30,10 @@ CMutex&					CMutex::operator=(const CMutex&)
 #if defined(CONFIG_PTHREADS)
 
 #include <pthread.h>
-#include <errno.h>
+#include <cerrno>
 
-void					CMutex::init()
+void
+CMutex::init()
 {
 	pthread_mutex_t* mutex = new pthread_mutex_t;
 	int status = pthread_mutex_init(mutex, NULL);
@@ -41,11 +43,8 @@ void					CMutex::init()
 	m_mutex = reinterpret_cast<void*>(mutex);
 }
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-void					CMutex::fini()
+void
+CMutex::fini()
 {
 	pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(m_mutex);
 	int status = pthread_mutex_destroy(mutex);
@@ -54,7 +53,8 @@ void					CMutex::fini()
 	delete mutex;
 }
 
-void					CMutex::lock() const
+void
+CMutex::lock() const
 {
 	pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(m_mutex);
 	int status = pthread_mutex_lock(mutex);
@@ -78,7 +78,8 @@ void					CMutex::lock() const
 	}
 }
 
-void					CMutex::unlock() const
+void
+CMutex::unlock() const
 {
 	pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(m_mutex);
 	int status = pthread_mutex_unlock(mutex);
@@ -105,26 +106,30 @@ void					CMutex::unlock() const
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-void					CMutex::init()
+void
+CMutex::init()
 {
 	CRITICAL_SECTION* mutex = new CRITICAL_SECTION;
 	InitializeCriticalSection(mutex);
 	m_mutex = reinterpret_cast<void*>(mutex);
 }
 
-void					CMutex::fini()
+void
+CMutex::fini()
 {
 	CRITICAL_SECTION* mutex = reinterpret_cast<CRITICAL_SECTION*>(m_mutex);
 	DeleteCriticalSection(mutex);
 	delete mutex;
 }
 
-void					CMutex::lock() const
+void
+CMutex::lock() const
 {
 	EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
 }
 
-void					CMutex::unlock() const
+void
+CMutex::unlock() const
 {
 	LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
 }

@@ -2,7 +2,6 @@
 #include "CThread.h"
 #include "TMethodJob.h"
 #include "CLog.h"
-#include <assert.h>
 
 //
 // CTimerThread
@@ -33,7 +32,9 @@ CTimerThread::~CTimerThread()
 	}
 }
 
-void					CTimerThread::timer(void*)
+void
+CTimerThread::timer(
+	void*)
 {
 	log((CLOG_DEBUG1 "timeout in %f seconds", m_timeout));
 	CThread::sleep(m_timeout);

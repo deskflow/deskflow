@@ -1,6 +1,8 @@
 #include "CTCPListenSocket.h"
 #include "CTCPSocket.h"
 #include "CNetworkAddress.h"
+#include "XIO.h"
+#include "XSocket.h"
 #include "CThread.h"
 
 //
@@ -25,8 +27,9 @@ CTCPListenSocket::~CTCPListenSocket()
 	}
 }
 
-void					CTCPListenSocket::bind(
-								const CNetworkAddress& addr)
+void
+CTCPListenSocket::bind(
+	const CNetworkAddress& addr)
 {
 	if (CNetwork::bind(m_fd, addr.getAddress(),
 								addr.getAddressLength()) == CNetwork::Error) {
@@ -40,7 +43,8 @@ void					CTCPListenSocket::bind(
 	}
 }
 
-ISocket*				CTCPListenSocket::accept()
+ISocket*
+CTCPListenSocket::accept()
 {
 	CNetwork::PollEntry pfds[1];
 	pfds[0].fd     = m_fd;
@@ -59,7 +63,8 @@ ISocket*				CTCPListenSocket::accept()
 	}
 }
 
-void					CTCPListenSocket::close()
+void
+CTCPListenSocket::close()
 {
 	if (m_fd == CNetwork::Null) {
 		throw XIOClosed();

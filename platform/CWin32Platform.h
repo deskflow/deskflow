@@ -21,7 +21,7 @@ public:
 	// utility for calling SetServiceStatus()
 	static void			setStatus(SERVICE_STATUS_HANDLE, DWORD state);
 	static void			setStatus(SERVICE_STATUS_HANDLE,
-								DWORD state, DWORD step, DWORD waitHint);
+							DWORD state, DWORD step, DWORD waitHint);
 	static void			setStatusError(SERVICE_STATUS_HANDLE, DWORD error);
 
 	// run a service.  the RunFunc should unlock the passed in mutex
@@ -43,9 +43,9 @@ public:
 
 	// IPlatform overrides
 	virtual bool		installDaemon(const char* name,
-								const char* description,
-								const char* pathname,
-								const char* commandLine);
+							const char* description,
+							const char* pathname,
+							const char* commandLine);
 	virtual bool		uninstallDaemon(const char* name);
 	virtual int			daemonize(const char* name, DaemonFunc);
 	virtual int			restart(RestartFunc, int minErrorCode);
@@ -53,8 +53,8 @@ public:
 	virtual CString		getUserDirectory() const;
 	virtual CString		getSystemDirectory() const;
 	virtual CString		addPathComponent(
-								const CString& prefix,
-								const CString& suffix) const;
+							const CString& prefix,
+							const CString& suffix) const;
 
 private:
 	static HKEY			openKey(HKEY parent, const char*);
@@ -63,7 +63,7 @@ private:
 	static void			deleteKey(HKEY, const char* name);
 	static void			deleteValue(HKEY, const char* name);
 	static void			setValue(HKEY, const char* name,
-								const CString& value);
+							const CString& value);
 	static CString		readValueString(HKEY, const char* name);
 	static HKEY			openNTServicesKey();
 	static HKEY			open95ServicesKey();

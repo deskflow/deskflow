@@ -2,7 +2,6 @@
 #define CNETWORKADDRESS_H
 
 #include "CNetwork.h"
-#include "XSocket.h"
 #include "CString.h"
 #include "BasicTypes.h"
 

@@ -4,31 +4,37 @@
 // XSocketAddress
 //
 
-XSocketAddress::XSocketAddress(Error error,
-								const CString& hostname, UInt16 port) throw() :
-								m_error(error),
-								m_hostname(hostname),
-								m_port(port)
+XSocketAddress::XSocketAddress(
+	Error error,
+	const CString& hostname,
+	UInt16 port) throw() :
+	m_error(error),
+	m_hostname(hostname),
+	m_port(port)
 {
 	// do nothing
 }
 
-XSocketAddress::Error	XSocketAddress::getError() const throw()
+XSocketAddress::Error
+XSocketAddress::getError() const throw()
 {
 	return m_error;
 }
 
-CString					XSocketAddress::getHostname() const throw()
+CString
+XSocketAddress::getHostname() const throw()
 {
 	return m_hostname;
 }
 
-UInt16					XSocketAddress::getPort() const throw()
+UInt16
+XSocketAddress::getPort() const throw()
 {
 	return m_port;
 }
 
-CString					XSocketAddress::getWhat() const throw()
+CString
+XSocketAddress::getWhat() const throw()
 {
 	return "no address";
 /*
@@ -43,12 +49,15 @@ CString					XSocketAddress::getWhat() const throw()
 // XSocketErrno
 //
 
-XSocketErrno::XSocketErrno() : MXErrno()
+XSocketErrno::XSocketErrno() :
+	MXErrno()
 {
 	// do nothing
 }
 
-XSocketErrno::XSocketErrno(int err) : MXErrno(err)
+XSocketErrno::XSocketErrno(
+	int err) :
+	MXErrno(err)
 {
 	// do nothing
 }
@@ -58,7 +67,8 @@ XSocketErrno::XSocketErrno(int err) : MXErrno(err)
 // XSocketBind
 //
 
-CString					XSocketBind::getWhat() const throw()
+CString
+XSocketBind::getWhat() const throw()
 {
 	return format("XSocketBind", "cannot bind address");
 }
@@ -68,7 +78,8 @@ CString					XSocketBind::getWhat() const throw()
 // XSocketConnect
 //
 
-CString					XSocketConnect::getWhat() const throw()
+CString
+XSocketConnect::getWhat() const throw()
 {
 	return format("XSocketConnect", "cannot connect socket");
 }
@@ -78,7 +89,8 @@ CString					XSocketConnect::getWhat() const throw()
 // XSocketCreate
 //
 
-CString					XSocketCreate::getWhat() const throw()
+CString
+XSocketCreate::getWhat() const throw()
 {
 	return format("XSocketCreate", "cannot create socket");
 }

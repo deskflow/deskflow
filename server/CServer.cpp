@@ -2,26 +2,25 @@
 #include "CHTTPServer.h"
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
-#include "CServerProtocol.h"
 #include "CProtocolUtil.h"
+#include "CServerProtocol.h"
 #include "IPrimaryScreen.h"
-#include "ISocketFactory.h"
 #include "ProtocolTypes.h"
+#include "XScreen.h"
+#include "XSynergy.h"
 #include "CNetworkAddress.h"
-#include "ISocket.h"
 #include "IListenSocket.h"
+#include "ISocket.h"
+#include "ISocketFactory.h"
+#include "XSocket.h"
 #include "CLock.h"
-#include "CLog.h"
 #include "CThread.h"
 #include "CTimerThread.h"
-#include "CStopwatch.h"
-#include "CFunctionJob.h"
-#include "TMethodJob.h"
-#include "XScreen.h"
-#include "XSocket.h"
-#include "XSynergy.h"
 #include "XThread.h"
-#include <assert.h>
+#include "CFunctionJob.h"
+#include "CLog.h"
+#include "CStopwatch.h"
+#include "TMethodJob.h"
 #include <memory>
 
 // hack to work around operator=() bug in STL in g++ prior to v3
@@ -31,32 +30,22 @@
 #define assign(_dst, _src, _type)	_dst = std::auto_ptr<_type >(_src)
 #endif
 
-
-/* XXX
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-if (fork() == 0) abort();
-else { wait(0); exit(1); }
-*/
-
 //
 // CServer
 //
 
 const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
 
-CServer::CServer(const CString& serverName) :
-								m_name(serverName),
-								m_cleanupSize(&m_mutex, 0),
-								m_primary(NULL),
-								m_active(NULL),
-								m_primaryInfo(NULL),
-								m_seqNum(0),
-								m_httpServer(NULL),
-								m_httpAvailable(&m_mutex,
-										s_httpMaxSimultaneousRequests)
+CServer::CServer(
+	const CString& serverName) :
+	m_name(serverName),
+	m_cleanupSize(&m_mutex, 0),
+	m_primary(NULL),
+	m_active(NULL),
+	m_primaryInfo(NULL),
+	m_seqNum(0),
+	m_httpServer(NULL),
+	m_httpAvailable(&m_mutex, s_httpMaxSimultaneousRequests)
 {
 	m_socketFactory = NULL;
 	m_securityFactory = NULL;
@@ -68,7 +57,8 @@ CServer::~CServer()
 	// do nothing
 }
 
-void					CServer::run()
+void
+CServer::run()
 {
 	try {
 		log((CLOG_NOTE "starting server"));
@@ -149,12 +139,14 @@ void					CServer::run()
 	}
 }
 
-void					CServer::quit()
+void
+CServer::quit()
 {
 	m_primary->stop();
 }
 
-void					CServer::shutdown()
+void
+CServer::shutdown()
 {
 	// stop all running threads but don't wait too long since some
 	// threads may be unable to proceed until this thread returns.
@@ -167,7 +159,9 @@ void					CServer::shutdown()
 	// note -- we do not attempt to close down the primary screen
 }
 
-bool					CServer::setConfig(const CConfig& config)
+bool
+CServer::setConfig(
+	const CConfig& config)
 {
 	typedef std::vector<CThread> CThreads;
 	CThreads threads;
@@ -228,12 +222,15 @@ bool					CServer::setConfig(const CConfig& config)
 	return true;
 }
 
-CString					CServer::getPrimaryScreenName() const
+CString
+CServer::getPrimaryScreenName() const
 {
 	return m_name;
 }
 
-void					CServer::getConfig(CConfig* config) const
+void
+CServer::getConfig(
+	CConfig* config) const
 {
 	assert(config != NULL);
 
@@ -241,7 +238,8 @@ void					CServer::getConfig(CConfig* config) const
 	*config = m_config;
 }
 
-UInt32					CServer::getActivePrimarySides() const
+UInt32
+CServer::getActivePrimarySides() const
 {
 	UInt32 sides = 0;
 	CLock lock(&m_mutex);
@@ -264,26 +262,40 @@ UInt32					CServer::getActivePrimarySides() const
 	return sides;
 }
 
-void					CServer::setInfo(
-								SInt32 w, SInt32 h, SInt32 zoneSize,
-								SInt32 x, SInt32 y)
+void
+CServer::setInfo(
+	SInt32 w,
+	SInt32 h,
+	SInt32 zoneSize,
+	SInt32 x,
+	SInt32 y)
 {
 	CLock lock(&m_mutex);
 	assert(m_primaryInfo != NULL);
 	setInfoNoLock(m_primaryInfo->m_name, w, h, zoneSize, x, y);
 }
 
-void					CServer::setInfo(const CString& client,
-								SInt32 w, SInt32 h, SInt32 zoneSize,
-								SInt32 x, SInt32 y)
+void
+CServer::setInfo(
+	const CString& client,
+	SInt32 w,
+	SInt32 h,
+	SInt32 zoneSize,
+	SInt32 x,
+	SInt32 y)
 {
 	CLock lock(&m_mutex);
 	setInfoNoLock(client, w, h, zoneSize, x, y);
 }
 
-void					CServer::setInfoNoLock(const CString& screen,
-								SInt32 w, SInt32 h, SInt32 zoneSize,
-								SInt32 x, SInt32 y)
+void
+CServer::setInfoNoLock(
+	const CString& screen,
+	SInt32 w,
+	SInt32 h,
+	SInt32 zoneSize,
+	SInt32 x,
+	SInt32 y)
 {
 	assert(!screen.empty());
 	assert(w > 0);
@@ -327,24 +339,30 @@ void					CServer::setInfoNoLock(const CString& screen,
 	}
 }
 
-void					CServer::grabClipboard(ClipboardID id)
+void
+CServer::grabClipboard(
+	ClipboardID id)
 {
 	CLock lock(&m_mutex);
 	assert(m_primaryInfo != NULL);
 	grabClipboardNoLock(id, 0, m_primaryInfo->m_name);
 }
 
-void					CServer::grabClipboard(
-								ClipboardID id, UInt32 seqNum,
-								const CString& client)
+void
+CServer::grabClipboard(
+	ClipboardID id,
+	UInt32 seqNum,
+	const CString& client)
 {
 	CLock lock(&m_mutex);
 	grabClipboardNoLock(id, seqNum, client);
 }
 
-void					CServer::grabClipboardNoLock(
-								ClipboardID id, UInt32 seqNum,
-								const CString& screen)
+void
+CServer::grabClipboardNoLock(
+	ClipboardID id,
+	UInt32 seqNum,
+	const CString& screen)
 {
 	// note -- must be locked on entry
 	CClipboardInfo& clipboard = m_clipboards[id];
@@ -402,8 +420,11 @@ void					CServer::grabClipboardNoLock(
 	}
 }
 
-void					CServer::setClipboard(ClipboardID id,
-								UInt32 seqNum, const CString& data)
+void
+CServer::setClipboard(
+	ClipboardID id,
+	UInt32 seqNum,
+	const CString& data)
 {
 	CLock lock(&m_mutex);
 	CClipboardInfo& clipboard = m_clipboards[id];
@@ -433,13 +454,19 @@ void					CServer::setClipboard(ClipboardID id,
 	sendClipboard(id);
 }
 
-bool					CServer::onCommandKey(KeyID /*id*/,
-								KeyModifierMask /*mask*/, bool /*down*/)
+bool
+CServer::onCommandKey(
+	KeyID /*id*/,
+	KeyModifierMask /*mask*/,
+	bool /*down*/)
 {
 	return false;
 }
 
-void					CServer::onKeyDown(KeyID id, KeyModifierMask mask)
+void
+CServer::onKeyDown(
+	KeyID id,
+	KeyModifierMask mask)
 {
 	log((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x", id, mask));
 	CLock lock(&m_mutex);
@@ -456,7 +483,10 @@ void					CServer::onKeyDown(KeyID id, KeyModifierMask mask)
 	}
 }
 
-void					CServer::onKeyUp(KeyID id, KeyModifierMask mask)
+void
+CServer::onKeyUp(
+	KeyID id,
+	KeyModifierMask mask)
 {
 	log((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x", id, mask));
 	CLock lock(&m_mutex);
@@ -473,8 +503,11 @@ void					CServer::onKeyUp(KeyID id, KeyModifierMask mask)
 	}
 }
 
-void					CServer::onKeyRepeat(
-								KeyID id, KeyModifierMask mask, SInt32 count)
+void
+CServer::onKeyRepeat(
+	KeyID id,
+	KeyModifierMask mask,
+	SInt32 count)
 {
 	log((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d", id, mask, count));
 	CLock lock(&m_mutex);
@@ -492,7 +525,9 @@ void					CServer::onKeyRepeat(
 	}
 }
 
-void					CServer::onMouseDown(ButtonID id)
+void
+CServer::onMouseDown(
+	ButtonID id)
 {
 	log((CLOG_DEBUG1 "onMouseDown id=%d", id));
 	CLock lock(&m_mutex);
@@ -504,7 +539,9 @@ void					CServer::onMouseDown(ButtonID id)
 	}
 }
 
-void					CServer::onMouseUp(ButtonID id)
+void
+CServer::onMouseUp(
+	ButtonID id)
 {
 	log((CLOG_DEBUG1 "onMouseUp id=%d", id));
 	CLock lock(&m_mutex);
@@ -516,14 +553,20 @@ void					CServer::onMouseUp(ButtonID id)
 	}
 }
 
-bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
+bool
+CServer::onMouseMovePrimary(
+	SInt32 x,
+	SInt32 y)
 {
 	log((CLOG_DEBUG2 "onMouseMovePrimary %d,%d", x, y));
 	CLock lock(&m_mutex);
 	return onMouseMovePrimaryNoLock(x, y);
 }
 
-bool					CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
+bool
+CServer::onMouseMovePrimaryNoLock(
+	SInt32 x,
+	SInt32 y)
 {
 	// mouse move on primary (server's) screen
 	assert(m_active != NULL);
@@ -577,15 +620,20 @@ bool					CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
 	return true;
 }
 
-void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
+void
+CServer::onMouseMoveSecondary(
+	SInt32 dx,
+	SInt32 dy)
 {
 	log((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
 	CLock lock(&m_mutex);
 	onMouseMoveSecondaryNoLock(dx, dy);
 }
 
-void					CServer::onMouseMoveSecondaryNoLock(
-								SInt32 dx, SInt32 dy)
+void
+CServer::onMouseMoveSecondaryNoLock(
+	SInt32 dx,
+	SInt32 dy)
 {
 	// mouse move on secondary (client's) screen
 	assert(m_active != NULL);
@@ -687,7 +735,9 @@ void					CServer::onMouseMoveSecondaryNoLock(
 	}
 }
 
-void					CServer::onMouseWheel(SInt32 delta)
+void
+CServer::onMouseWheel(
+	SInt32 delta)
 {
 	log((CLOG_DEBUG1 "onMouseWheel %+d", delta));
 	CLock lock(&m_mutex);
@@ -699,13 +749,15 @@ void					CServer::onMouseWheel(SInt32 delta)
 	}
 }
 
-bool					CServer::isLockedToScreen() const
+bool
+CServer::isLockedToScreen() const
 {
 	CLock lock(&m_mutex);
 	return isLockedToScreenNoLock();
 }
 
-bool					CServer::isLockedToScreenNoLock() const
+bool
+CServer::isLockedToScreenNoLock() const
 {
 	// locked if primary says we're locked
 	if (m_primary->isLockedToScreen()) {
@@ -721,8 +773,11 @@ bool					CServer::isLockedToScreenNoLock() const
 	return false;
 }
 
-void					CServer::switchScreen(CScreenInfo* dst,
-								SInt32 x, SInt32 y)
+void
+CServer::switchScreen(
+	CScreenInfo* dst,
+	SInt32 x,
+	SInt32 y)
 {
 	assert(dst != NULL);
 	assert(x >= 0 && y >= 0 && x < dst->m_width && y < dst->m_height);
@@ -789,8 +844,10 @@ void					CServer::switchScreen(CScreenInfo* dst,
 	}
 }
 
-CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
-								CConfig::EDirection dir) const
+CServer::CScreenInfo*
+CServer::getNeighbor(
+	CScreenInfo* src,
+	CConfig::EDirection dir) const
 {
 	assert(src != NULL);
 
@@ -821,9 +878,12 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 	}
 }
 
-CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
-								CConfig::EDirection srcSide,
-								SInt32& x, SInt32& y) const
+CServer::CScreenInfo*
+CServer::getNeighbor(
+	CScreenInfo* src,
+	CConfig::EDirection srcSide,
+	SInt32& x,
+	SInt32& y) const
 {
 	assert(src != NULL);
 
@@ -936,10 +996,13 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 	return lastGoodScreen;
 }
 
-void					CServer::mapPosition(CScreenInfo* src,
-								CConfig::EDirection srcSide,
-								CScreenInfo* dst,
-								SInt32& x, SInt32& y) const
+void
+CServer::mapPosition(
+	CScreenInfo* src,
+	CConfig::EDirection srcSide,
+	CScreenInfo* dst,
+	SInt32& x,
+	SInt32& y) const
 {
 	assert(src != NULL);
 	assert(dst != NULL);
@@ -949,32 +1012,39 @@ void					CServer::mapPosition(CScreenInfo* src,
 	switch (srcSide) {
 	case CConfig::kLeft:
 	case CConfig::kRight:
-		if (y < 0)
+		if (y < 0) {
 			y = 0;
-		else if (y >= src->m_height)
+		}
+		else if (y >= src->m_height) {
 			y = dst->m_height - 1;
-		else
+		}
+		else {
 			y = static_cast<SInt32>(0.5 + y *
 								static_cast<double>(dst->m_height - 1) /
 													(src->m_height - 1));
+		}
 		break;
 
 	case CConfig::kTop:
 	case CConfig::kBottom:
-		if (x < 0)
+		if (x < 0) {
 			x = 0;
-		else if (x >= src->m_width)
+		}
+		else if (x >= src->m_width) {
 			x = dst->m_width - 1;
-		else
+		}
+		else {
 			x = static_cast<SInt32>(0.5 + x *
 								static_cast<double>(dst->m_width - 1) /
 													(src->m_width - 1));
+		}
 		break;
 	}
 }
 
 #include "CTCPListenSocket.h"
-void					CServer::acceptClients(void*)
+void
+CServer::acceptClients(void*)
 {
 	log((CLOG_DEBUG1 "starting to wait for clients"));
 
@@ -1030,7 +1100,9 @@ void					CServer::acceptClients(void*)
 	}
 }
 
-void					CServer::handshakeClient(void* vsocket)
+void
+CServer::handshakeClient(
+	void* vsocket)
 {
 	log((CLOG_DEBUG1 "negotiating with new client"));
 
@@ -1162,7 +1234,8 @@ void					CServer::handshakeClient(void* vsocket)
 	}
 }
 
-void					CServer::acceptHTTPClients(void*)
+void
+CServer::acceptHTTPClients(void*)
 {
 	log((CLOG_DEBUG1 "starting to wait for HTTP clients"));
 
@@ -1229,7 +1302,9 @@ void					CServer::acceptHTTPClients(void*)
 	}
 }
 
-void					CServer::processHTTPRequest(void* vsocket)
+void
+CServer::processHTTPRequest(
+	void* vsocket)
 {
 	// add this thread to the list of threads to cancel.  remove from
 	// list in d'tor.
@@ -1266,7 +1341,9 @@ void					CServer::processHTTPRequest(void* vsocket)
 	}
 }
 
-void					CServer::clearGotClipboard(ClipboardID id)
+void
+CServer::clearGotClipboard(
+	ClipboardID id)
 {
 	for (CScreenList::const_iterator index = m_screens.begin();
 								index != m_screens.end(); ++index) {
@@ -1274,7 +1351,9 @@ void					CServer::clearGotClipboard(ClipboardID id)
 	}
 }
 
-void					CServer::sendClipboard(ClipboardID id)
+void
+CServer::sendClipboard(
+	ClipboardID id)
 {
 	// do nothing if clipboard was already sent
 	if (!m_active->m_gotClipboard[id]) {
@@ -1295,7 +1374,9 @@ void					CServer::sendClipboard(ClipboardID id)
 	}
 }
 
-void					CServer::updatePrimaryClipboard(ClipboardID id)
+void
+CServer::updatePrimaryClipboard(
+	ClipboardID id)
 {
 	CClipboardInfo& clipboard = m_clipboards[id];
 
@@ -1339,7 +1420,8 @@ void					CServer::updatePrimaryClipboard(ClipboardID id)
 #elif defined(CONFIG_PLATFORM_UNIX)
 #include "CXWindowsPrimaryScreen.h"
 #endif
-void					CServer::openPrimaryScreen()
+void
+CServer::openPrimaryScreen()
 {
 	assert(m_primary == NULL);
 
@@ -1387,7 +1469,8 @@ void					CServer::openPrimaryScreen()
 	}
 }
 
-void					CServer::closePrimaryScreen()
+void
+CServer::closePrimaryScreen()
 {
 	assert(m_primary != NULL);
 
@@ -1410,14 +1493,18 @@ void					CServer::closePrimaryScreen()
 	m_primary = NULL;
 }
 
-void					CServer::addCleanupThread(const CThread& thread)
+void
+CServer::addCleanupThread(
+	const CThread& thread)
 {
 	CLock lock(&m_mutex);
 	m_cleanupList.insert(m_cleanupList.begin(), new CThread(thread));
 	m_cleanupSize = m_cleanupSize + 1;
 }
 
-void					CServer::removeCleanupThread(const CThread& thread)
+void
+CServer::removeCleanupThread(
+	const CThread& thread)
 {
 	CLock lock(&m_mutex);
 	for (CThreadList::iterator index = m_cleanupList.begin();
@@ -1435,7 +1522,9 @@ void					CServer::removeCleanupThread(const CThread& thread)
 	}
 }
 
-void					CServer::cleanupThreads(double timeout)
+void
+CServer::cleanupThreads(
+	double timeout)
 {
 	log((CLOG_DEBUG1 "cleaning up threads"));
 
@@ -1474,8 +1563,10 @@ void					CServer::cleanupThreads(double timeout)
 	log((CLOG_DEBUG1 "cleaned up threads"));
 }
 
-CServer::CScreenInfo*	CServer::addConnection(
-								const CString& name, IServerProtocol* protocol)
+CServer::CScreenInfo*
+CServer::addConnection(
+	const CString& name,
+	IServerProtocol* protocol)
 {
 	log((CLOG_DEBUG "adding connection \"%s\"", name.c_str()));
 
@@ -1499,7 +1590,9 @@ CServer::CScreenInfo*	CServer::addConnection(
 	return newScreen;
 }
 
-void					CServer::removeConnection(const CString& name)
+void
+CServer::removeConnection(
+	const CString& name)
 {
 	log((CLOG_DEBUG "removing connection \"%s\"", name.c_str()));
 	CLock lock(&m_mutex);
@@ -1534,7 +1627,9 @@ void					CServer::removeConnection(const CString& name)
 // CServer::CCleanupNote
 //
 
-CServer::CCleanupNote::CCleanupNote(CServer* server) : m_server(server)
+CServer::CCleanupNote::CCleanupNote(
+	CServer* server) :
+	m_server(server)
 {
 	assert(m_server != NULL);
 	m_server->addCleanupThread(CThread::getCurrentThread());
@@ -1550,11 +1645,12 @@ CServer::CCleanupNote::~CCleanupNote()
 // CServer::CConnectionNote
 //
 
-CServer::CConnectionNote::CConnectionNote(CServer* server,
-								const CString& name,
-								IServerProtocol* protocol) :
-								m_server(server),
-								m_name(name)
+CServer::CConnectionNote::CConnectionNote(
+	CServer* server,
+	const CString& name,
+	IServerProtocol* protocol) :
+	m_server(server),
+	m_name(name)
 {
 	assert(m_server != NULL);
 	m_server->addConnection(m_name, protocol);
@@ -1570,14 +1666,16 @@ CServer::CConnectionNote::~CConnectionNote()
 // CServer::CScreenInfo
 //
 
-CServer::CScreenInfo::CScreenInfo(const CString& name,
-								IServerProtocol* protocol) :
-								m_thread(CThread::getCurrentThread()),
-								m_name(name),
-								m_protocol(protocol),
-								m_ready(false),
-								m_width(0), m_height(0),
-								m_zoneSize(0)
+CServer::CScreenInfo::CScreenInfo(
+	const CString& name,
+	IServerProtocol* protocol) :
+	m_thread(CThread::getCurrentThread()),
+	m_name(name),
+	m_protocol(protocol),
+	m_ready(false),
+	m_width(0),
+	m_height(0),
+	m_zoneSize(0)
 {
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
 		m_gotClipboard[id] = false;
@@ -1594,11 +1692,11 @@ CServer::CScreenInfo::~CScreenInfo()
 //
 
 CServer::CClipboardInfo::CClipboardInfo() :
-								m_clipboard(),
-								m_clipboardData(),
-								m_clipboardOwner(),
-								m_clipboardSeqNum(0),
-								m_clipboardReady(false)
+	m_clipboard(),
+	m_clipboardData(),
+	m_clipboardOwner(),
+	m_clipboardSeqNum(0),
+	m_clipboardReady(false)
 {
 	// do nothing
 }

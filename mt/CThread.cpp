@@ -1,9 +1,9 @@
 #include "CThread.h"
+#include "CLock.h"
 #include "CThreadRep.h"
 #include "XThread.h"
-#include "CLock.h"
-#include "CStopwatch.h"
 #include "CLog.h"
+#include "CStopwatch.h"
 
 //
 // CThread
@@ -14,12 +14,14 @@ CThread::CThread(IJob* job, void* userData)
 	m_rep = new CThreadRep(job, userData);
 }
 
-CThread::CThread(const CThread& thread) : m_rep(thread.m_rep)
+CThread::CThread(const CThread& thread) :
+	m_rep(thread.m_rep)
 {
 	m_rep->ref();
 }
 
-CThread::CThread(CThreadRep* rep) : m_rep(rep)
+CThread::CThread(CThreadRep* rep) :
+	m_rep(rep)
 {
 	// do nothing.  rep should have already been Ref()'d.
 }
@@ -29,7 +31,9 @@ CThread::~CThread()
 	m_rep->unref();
 }
 
-CThread&				CThread::operator=(const CThread& thread)
+CThread&
+CThread::operator=(
+	const CThread& thread)
 {
 	if (thread.m_rep != m_rep) {
 		m_rep->unref();
@@ -39,12 +43,15 @@ CThread&				CThread::operator=(const CThread& thread)
 	return *this;
 }
 
-void					CThread::init()
+void
+CThread::init()
 {
 	CThreadRep::initThreads();
 }
 
-void					CThread::sleep(double timeout)
+void
+CThread::sleep(
+	double timeout)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	if (timeout >= 0.0) {
@@ -54,47 +61,59 @@ void					CThread::sleep(double timeout)
 	currentRep->testCancel();
 }
 
-void					CThread::exit(void* result)
+void
+CThread::exit(
+	void* result)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	log((CLOG_DEBUG1 "throw exit on thread %p", currentRep.operator->()));
 	throw XThreadExit(result);
 }
 
-bool					CThread::enableCancel(bool enable)
+bool
+CThread::enableCancel(
+	bool enable)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	return currentRep->enableCancel(enable);
 }
 
-void					CThread::cancel()
+void
+CThread::cancel()
 {
 	m_rep->cancel();
 }
 
-void					CThread::setPriority(int n)
+void
+CThread::setPriority(
+	int n)
 {
 	m_rep->setPriority(n);
 }
 
-CThread					CThread::getCurrentThread()
+CThread
+CThread::getCurrentThread()
 {
 	return CThread(CThreadRep::getCurrentThreadRep());
 }
 
-bool					CThread::wait(double timeout) const
+bool
+CThread::wait(
+	double timeout) const
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	return currentRep->wait(m_rep, timeout);
 }
 
-void					CThread::testCancel()
+void
+CThread::testCancel()
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	currentRep->testCancel();
 }
 
-void*					CThread::getResult() const
+void*
+CThread::getResult() const
 {
 	if (wait())
 		return m_rep->getResult();
@@ -102,18 +121,23 @@ void*					CThread::getResult() const
 		return NULL;
 }
 
-void*					CThread::getUserData()
+void*
+CThread::getUserData()
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	return currentRep->getUserData();
 }
 
-bool					CThread::operator==(const CThread& thread) const
+bool
+CThread::operator==(
+	const CThread& thread) const
 {
 	return (m_rep == thread.m_rep);
 }
 
-bool					CThread::operator!=(const CThread& thread) const
+bool
+CThread::operator!=(
+	const CThread& thread) const
 {
 	return (m_rep != thread.m_rep);
 }
@@ -123,7 +147,8 @@ bool					CThread::operator!=(const CThread& thread) const
 // CThreadMaskCancel
 //
 
-CThreadMaskCancel::CThreadMaskCancel() : m_old(CThread::enableCancel(false))
+CThreadMaskCancel::CThreadMaskCancel() :
+	m_old(CThread::enableCancel(false))
 {
 	// do nothing
 }

@@ -1,11 +1,10 @@
 #include "CThreadRep.h"
-#include "CThread.h"
-#include "CMutex.h"
 #include "CLock.h"
+#include "CMutex.h"
+#include "CThread.h"
 #include "XThread.h"
 #include "CLog.h"
 #include "IJob.h"
-#include <assert.h>
 
 #if defined(CONFIG_PTHREADS)
 #include <signal.h>
@@ -23,7 +22,7 @@
 class XThreadUnavailable { };
 
 #if defined(CONFIG_PLATFORM_UNIX) && !defined(NDEBUG)
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -44,11 +43,12 @@ CThreadRep*				CThreadRep::s_head = NULL;
 pthread_t				CThreadRep::s_signalThread;
 #endif
 
-CThreadRep::CThreadRep() : m_prev(NULL),
-								m_next(NULL),
-								m_refCount(1),
-								m_job(NULL),
-								m_userData(NULL)
+CThreadRep::CThreadRep() :
+	m_prev(NULL),
+	m_next(NULL),
+	m_refCount(1),
+	m_job(NULL),
+	m_userData(NULL)
 {
 	// note -- s_mutex must be locked on entry
 	assert(s_mutex != NULL);
@@ -73,11 +73,11 @@ CThreadRep::CThreadRep() : m_prev(NULL),
 }
 
 CThreadRep::CThreadRep(IJob* job, void* userData) :
-								m_prev(NULL),
-								m_next(NULL),
-								m_refCount(2),	// 1 for us, 1 for thread
-								m_job(job),
-								m_userData(userData)
+	m_prev(NULL),
+	m_next(NULL),
+	m_refCount(2),	// 1 for us, 1 for thread
+	m_job(job),
+	m_userData(userData)
 {
 	assert(m_job != NULL);
 	assert(s_mutex != NULL);
@@ -103,15 +103,17 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 	pthread_sigmask(SIG_BLOCK, &sigset, &oldsigset);
 	int status = pthread_create(&m_thread, NULL, threadFunc, (void*)this);
 	pthread_sigmask(SIG_SETMASK, &oldsigset, NULL);
-	if (status != 0)
+	if (status != 0) {
 		throw XThreadUnavailable();
+	}
 #elif defined(CONFIG_PLATFORM_WIN32)
 	unsigned int id;
 	m_thread = reinterpret_cast<HANDLE>(_beginthreadex(NULL, 0,
 								threadFunc, (void*)this, 0, &id));
 	m_id     = static_cast<DWORD>(id);
-	if (m_thread == 0)
+	if (m_thread == 0) {
 		throw XThreadUnavailable();
+	}
 #endif
 
 	// insert ourself into linked list
@@ -143,7 +145,8 @@ CThreadRep::~CThreadRep()
 	fini();
 }
 
-void					CThreadRep::initThreads()
+void
+CThreadRep::initThreads()
 {
 	if (s_mutex == NULL) {
 		s_mutex = new CMutex;
@@ -197,13 +200,15 @@ void					CThreadRep::initThreads()
 	}
 }
 
-void					CThreadRep::ref()
+void
+CThreadRep::ref()
 {
 	CLock lock(s_mutex);
 	++m_refCount;
 }
 
-void					CThreadRep::unref()
+void
+CThreadRep::unref()
 {
 	CLock lock(s_mutex);
 	if (--m_refCount == 0) {
@@ -211,7 +216,8 @@ void					CThreadRep::unref()
 	}
 }
 
-bool					CThreadRep::enableCancel(bool enable)
+bool
+CThreadRep::enableCancel(bool enable)
 {
 	CLock lock(s_mutex);
 	const bool old = m_cancellable;
@@ -219,25 +225,29 @@ bool					CThreadRep::enableCancel(bool enable)
 	return old;
 }
 
-bool					CThreadRep::isCancellable() const
+bool
+CThreadRep::isCancellable() const
 {
 	CLock lock(s_mutex);
 	return (m_cancellable && !m_cancelling);
 }
 
-void*					CThreadRep::getResult() const
+void*
+CThreadRep::getResult() const
 {
 	// no lock necessary since thread isn't running
 	return m_result;
 }
 
-void*					CThreadRep::getUserData() const
+void*
+CThreadRep::getUserData() const
 {
 	// no lock necessary because the value never changes
 	return m_userData;
 }
 
-CThreadRep*				CThreadRep::getCurrentThreadRep()
+CThreadRep*
+CThreadRep::getCurrentThreadRep()
 {
 	assert(s_mutex != NULL);
 
@@ -276,7 +286,8 @@ CThreadRep*				CThreadRep::getCurrentThreadRep()
 	return scan;
 }
 
-void					CThreadRep::doThreadFunc()
+void
+CThreadRep::doThreadFunc()
 {
 	// default priority is slightly below normal
 	setPriority(1);
@@ -318,9 +329,10 @@ void					CThreadRep::doThreadFunc()
 #if defined(CONFIG_PTHREADS)
 
 #include "CStopwatch.h"
-#include <time.h>
+#include <sys/time.h>
 
-void					CThreadRep::init()
+void
+CThreadRep::init()
 {
 	m_result      = NULL;
 	m_cancellable = true;
@@ -329,7 +341,8 @@ void					CThreadRep::init()
 	m_exit        = false;
 }
 
-void					CThreadRep::fini()
+void
+CThreadRep::fini()
 {
 	// main thread has NULL job
 	if (m_job != NULL) {
@@ -337,10 +350,13 @@ void					CThreadRep::fini()
 	}
 }
 
-void					CThreadRep::sleep(double timeout)
+void
+CThreadRep::sleep(
+	double timeout)
 {
-	if (timeout < 0.0)
+	if (timeout < 0.0) {
 		return;
+	}
 	struct timespec t;
 	t.tv_sec  = (long)timeout;
 	t.tv_nsec = (long)(1000000000.0 * (timeout - (double)t.tv_sec));
@@ -348,7 +364,8 @@ void					CThreadRep::sleep(double timeout)
 		testCancel();
 }
 
-void					CThreadRep::cancel()
+void
+CThreadRep::cancel()
 {
 	CLock lock(s_mutex);
 	if (m_cancellable && !m_cancelling) {
@@ -363,14 +380,16 @@ void					CThreadRep::cancel()
 	pthread_kill(m_thread, SIGWAKEUP);
 }
 
-void					CThreadRep::testCancel()
+void
+CThreadRep::testCancel()
 {
 	{
 		CLock lock(s_mutex);
 
 		// done if not cancelled, not cancellable, or already cancelling
-		if (!m_cancel || !m_cancellable || m_cancelling)
+		if (!m_cancel || !m_cancellable || m_cancelling) {
 			return;
+		}
 
 		// update state for cancel
 		m_cancel     = false;
@@ -382,40 +401,50 @@ void					CThreadRep::testCancel()
 	throw XThreadCancel();
 }
 
-bool					CThreadRep::wait(CThreadRep* target, double timeout)
+bool
+CThreadRep::wait(
+	CThreadRep* target,
+	double timeout)
 {
-	if (target == this)
+	if (target == this) {
 		return false;
+	}
 
 	testCancel();
-	if (target->isExited())
+	if (target->isExited()) {
 		return true;
+	}
 
 	if (timeout != 0.0) {
 		CStopwatch timer;
 		do {
 			sleep(0.05);
 			testCancel();
-			if (target->isExited())
+			if (target->isExited()) {
 				return true;
+			}
 		} while (timeout < 0.0 || timer.getTime() <= timeout);
 	}
 
 	return false;
 }
 
-void					CThreadRep::setPriority(int)
+void
+CThreadRep::setPriority(
+	int)
 {
 	// FIXME
 }
 
-bool					CThreadRep::isExited() const
+bool
+CThreadRep::isExited() const
 {
 	CLock lock(s_mutex);
 	return m_exit;
 }
 
-void*					CThreadRep::threadFunc(void* arg)
+void*
+CThreadRep::threadFunc(void* arg)
 {
 	CThreadRep* rep = (CThreadRep*)arg;
 
@@ -438,12 +467,16 @@ void*					CThreadRep::threadFunc(void* arg)
 	return NULL;
 }
 
-void					CThreadRep::threadCancel(int)
+void
+CThreadRep::threadCancel(
+	int)
 {
 	// do nothing
 }
 
-void*					CThreadRep::threadSignalHandler(void* vrep)
+void*
+CThreadRep::threadSignalHandler(
+	void* vrep)
 {
 	CThreadRep* mainThreadRep = reinterpret_cast<CThreadRep*>(vrep);
 
@@ -466,7 +499,8 @@ void*					CThreadRep::threadSignalHandler(void* vrep)
 
 #elif defined(CONFIG_PLATFORM_WIN32)
 
-void					CThreadRep::init()
+void
+CThreadRep::init()
 {
 	m_result      = NULL;
 	m_cancellable = true;
@@ -475,7 +509,8 @@ void					CThreadRep::init()
 	m_cancel      = CreateEvent(NULL, TRUE, FALSE, NULL);
 }
 
-void					CThreadRep::fini()
+void
+CThreadRep::fini()
 {
 	// destroy the events
 	CloseHandle(m_cancel);
@@ -487,26 +522,33 @@ void					CThreadRep::fini()
 	}
 }
 
-void					CThreadRep::sleep(double timeout)
+void
+CThreadRep::sleep(
+	double timeout)
 {
-	if (isCancellable())
+	if (isCancellable()) {
 		WaitForSingleObject(m_cancel, (DWORD)(1000.0 * timeout));
-	else
+	}
+	else {
 		Sleep((DWORD)(1000.0 * timeout));
+	}
 }
 
-void					CThreadRep::cancel()
+void
+CThreadRep::cancel()
 {
 	log((CLOG_DEBUG1 "cancel thread %p", this));
 	SetEvent(m_cancel);
 }
 
-void					CThreadRep::testCancel()
+void
+CThreadRep::testCancel()
 {
 	// poll cancel event.  return if not set.
 	const DWORD result = WaitForSingleObject(getCancelEvent(), 0);
-	if (result != WAIT_OBJECT_0)
+	if (result != WAIT_OBJECT_0) {
 		return;
+	}
 
 	{
 		// ignore if disabled or already cancelling
@@ -524,23 +566,29 @@ void					CThreadRep::testCancel()
 	throw XThreadCancel();
 }
 
-bool					CThreadRep::wait(CThreadRep* target, double timeout)
+bool
+CThreadRep::wait(
+	CThreadRep* target,
+	double timeout)
 {
 	// get the current thread.  if it's the same as the target thread
 	// then the thread is waiting on itself.
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	if (target == this)
+	if (target == this) {
 		return false;
+	}
 
 	// is cancellation enabled?
 	const DWORD n = (isCancellable() ? 2 : 1);
 
 	// convert timeout
 	DWORD t;
-	if (timeout < 0.0)
+	if (timeout < 0.0) {
 		t = INFINITE;
-	else
+	}
+	else {
 		t = (DWORD)(1000.0 * timeout);
+	}
 
 	// wait for this thread to be cancelled or for the target thread to
 	// terminate.
@@ -551,8 +599,9 @@ bool					CThreadRep::wait(CThreadRep* target, double timeout)
 
 	// cancel takes priority
 	if (n == 2 && result != WAIT_OBJECT_0 + 1 &&
-					WaitForSingleObject(handles[1], 0) == WAIT_OBJECT_0)
+					WaitForSingleObject(handles[1], 0) == WAIT_OBJECT_0) {
 		result = WAIT_OBJECT_0 + 1;
+	}
 
 	// handle result
 	switch (result) {
@@ -570,7 +619,9 @@ bool					CThreadRep::wait(CThreadRep* target, double timeout)
 	}
 }
 
-void					CThreadRep::setPriority(int n)
+void
+CThreadRep::setPriority(
+	int n)
 {
 	DWORD pClass = NORMAL_PRIORITY_CLASS;
 	if (n < 0) {
@@ -601,19 +652,23 @@ void					CThreadRep::setPriority(int n)
 	SetThreadPriority(m_thread, n);
 }
 
-HANDLE					CThreadRep::getExitEvent() const
+HANDLE
+CThreadRep::getExitEvent() const
 {
 	// no lock necessary because the value never changes
 	return m_exit;
 }
 
-HANDLE					CThreadRep::getCancelEvent() const
+HANDLE
+CThreadRep::getCancelEvent() const
 {
 	// no lock necessary because the value never changes
 	return m_cancel;
 }
 
-unsigned int __stdcall	CThreadRep::threadFunc(void* arg)
+unsigned int __stdcall
+CThreadRep::threadFunc(
+	void* arg)
 {
 	CThreadRep* rep = (CThreadRep*)arg;
 

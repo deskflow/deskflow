@@ -2,13 +2,14 @@
 #include "CBufferedInputStream.h"
 #include "CBufferedOutputStream.h"
 #include "CNetworkAddress.h"
+#include "XIO.h"
+#include "XSocket.h"
+#include "CCondVar.h"
 #include "CLock.h"
 #include "CMutex.h"
-#include "CCondVar.h"
 #include "CThread.h"
-#include "TMethodJob.h"
 #include "CStopwatch.h"
-#include <assert.h>
+#include "TMethodJob.h"
 
 //
 // CTCPSocket
@@ -23,7 +24,8 @@ CTCPSocket::CTCPSocket()
 	init();
 }
 
-CTCPSocket::CTCPSocket(CNetwork::Socket fd) : m_fd(fd)
+CTCPSocket::CTCPSocket(CNetwork::Socket fd) :
+	m_fd(fd)
 {
 	assert(m_fd != CNetwork::Null);
 
@@ -52,7 +54,9 @@ CTCPSocket::~CTCPSocket()
 	delete m_mutex;
 }
 
-void					CTCPSocket::bind(const CNetworkAddress& addr)
+void
+CTCPSocket::bind(
+	const CNetworkAddress& addr)
 {
 	if (CNetwork::bind(m_fd, addr.getAddress(),
 								addr.getAddressLength()) == CNetwork::Error) {
@@ -63,7 +67,9 @@ void					CTCPSocket::bind(const CNetworkAddress& addr)
 	}
 }
 
-void					CTCPSocket::connect(const CNetworkAddress& addr)
+void
+CTCPSocket::connect(
+	const CNetworkAddress& addr)
 {
 	CThread::testCancel();
 	if (CNetwork::connect(m_fd, addr.getAddress(),
@@ -78,7 +84,8 @@ void					CTCPSocket::connect(const CNetworkAddress& addr)
 								this, &CTCPSocket::ioThread));
 }
 
-void					CTCPSocket::close()
+void
+CTCPSocket::close()
 {
 	// see if buffers should be flushed
 	bool doFlush = false;
@@ -117,17 +124,20 @@ void					CTCPSocket::close()
 	}
 }
 
-IInputStream*			CTCPSocket::getInputStream()
+IInputStream*
+CTCPSocket::getInputStream()
 {
 	return m_input;
 }
 
-IOutputStream*			CTCPSocket::getOutputStream()
+IOutputStream*
+CTCPSocket::getOutputStream()
 {
 	return m_output;
 }
 
-void					CTCPSocket::init()
+void
+CTCPSocket::init()
 {
 	m_mutex     = new CMutex;
 	m_thread    = NULL;
@@ -146,7 +156,8 @@ void					CTCPSocket::init()
 	CNetwork::setsockopt(m_fd, SOL_TCP, TCP_NODELAY, &flag, sizeof(flag));
 }
 
-void					CTCPSocket::ioThread(void*)
+void
+CTCPSocket::ioThread(void*)
 {
 	try {
 		ioService();
@@ -158,7 +169,8 @@ void					CTCPSocket::ioThread(void*)
 	}
 }
 
-void					CTCPSocket::ioCleanup()
+void
+CTCPSocket::ioCleanup()
 {
 	try {
 		m_input->close();
@@ -174,7 +186,8 @@ void					CTCPSocket::ioCleanup()
 	}
 }
 
-void					CTCPSocket::ioService()
+void
+CTCPSocket::ioService()
 {
 	assert(m_fd != CNetwork::Null);
 
@@ -249,14 +262,16 @@ void					CTCPSocket::ioService()
 	}
 }
 
-void					CTCPSocket::closeInput(void*)
+void
+CTCPSocket::closeInput(void*)
 {
 	// note -- m_mutex should already be locked
 	CNetwork::shutdown(m_fd, 0);
 	m_connected &= ~kRead;
 }
 
-void					CTCPSocket::closeOutput(void*)
+void
+CTCPSocket::closeOutput(void*)
 {
 	// note -- m_mutex should already be locked
 	CNetwork::shutdown(m_fd, 1);

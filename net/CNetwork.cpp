@@ -1,7 +1,6 @@
 #include "CNetwork.h"
 #include "XNetwork.h"
 #include "CLog.h"
-#include <assert.h>
 
 //
 // CNetwork
@@ -51,15 +50,21 @@ const CNetwork::Socket	CNetwork::Null = INVALID_SOCKET;
 
 static HMODULE			s_networkModule = NULL;
 
-static FARPROC			netGetProcAddress(HMODULE module, LPCSTR name)
+static
+FARPROC
+netGetProcAddress(
+	HMODULE module,
+	LPCSTR name)
 {
 	FARPROC func = ::GetProcAddress(module, name);
-	if (!func)
+	if (!func) {
 		throw XNetworkFunctionUnavailable(name);
+	}
 	return func;
 }
 
-void					CNetwork::init()
+void
+CNetwork::init()
 {
 	assert(WSACleanup      == NULL);
 	assert(s_networkModule == NULL);
@@ -98,7 +103,8 @@ void					CNetwork::init()
 	throw XNetworkUnavailable();
 }
 
-void					CNetwork::cleanup()
+void
+CNetwork::cleanup()
 {
 	if (s_networkModule != NULL) {
 		WSACleanup();
@@ -109,41 +115,55 @@ void					CNetwork::cleanup()
 	}
 }
 
-UInt32					CNetwork::swaphtonl(UInt32 v)
+UInt32
+CNetwork::swaphtonl(
+	UInt32 v)
 {
 	static const union { UInt16 s; UInt8 b[2]; } s_endian = { 0x1234 };
-	if (s_endian.b[0] == 0x34)
+	if (s_endian.b[0] == 0x34) {
 		return	((v & 0xff000000lu) >> 24) |
 				((v & 0x00ff0000lu) >>  8) |
 				((v & 0x0000ff00lu) <<  8) |
 				((v & 0x000000fflu) << 24);
-	else
+	}
+	else {
 		return v;
+	}
 }
 
-UInt16					CNetwork::swaphtons(UInt16 v)
+UInt16
+CNetwork::swaphtons(
+	UInt16 v)
 {
 	static const union { UInt16 s; UInt8 b[2]; } s_endian = { 0x1234 };
-	if (s_endian.b[0] == 0x34)
+	if (s_endian.b[0] == 0x34) {
 		return static_cast<UInt16>(	((v & 0xff00u) >> 8) |
 									((v & 0x00ffu) << 8));
-	else
+	}
+	else {
 		return v;
+	}
 }
 
-UInt32					CNetwork::swapntohl(UInt32 v)
+UInt32
+CNetwork::swapntohl(
+	UInt32 v)
 {
 	return swaphtonl(v);
 }
 
-UInt16					CNetwork::swapntohs(UInt16 v)
+UInt16
+CNetwork::swapntohs(
+	UInt16 v)
 {
 	return swaphtons(v);
 }
 
 #define setfunc(var, name, type) 	var = (type)netGetProcAddress(module, #name)
 
-void					CNetwork::init2(HMODULE module)
+void
+CNetwork::init2(
+	HMODULE module)
 {
 	assert(module != NULL);
 
@@ -155,10 +175,12 @@ void					CNetwork::init2(HMODULE module)
 	WORD version = MAKEWORD(1 /*major*/, 1 /*minor*/);
 	WSADATA data;
 	int err = startup(version, &data);
-	if (data.wVersion != version)
+	if (data.wVersion != version) {
 		throw XNetworkVersion(LOBYTE(data.wVersion), HIBYTE(data.wVersion));
-	if (err != 0)
+	}
+	if (err != 0) {
 		throw XNetworkFailed();
+	}
 
 	// get function addresses
 	setfunc(accept, accept, Socket (PASCAL FAR *)(Socket s, Address FAR *addr, AddressLength FAR *addrlen));
@@ -198,7 +220,11 @@ void					CNetwork::init2(HMODULE module)
 	s_networkModule = module;
 }
 
-int PASCAL FAR			CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
+int PASCAL FAR
+CNetwork::poll2(
+	PollEntry fd[],
+	int nfds,
+	int timeout)
 {
 	int i;
 
@@ -241,32 +267,45 @@ int PASCAL FAR			CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
 	int n = select(0, readSetP, writeSetP, errSetP, timeout2P);
 
 	// handle results
-	if (n == Error)
+	if (n == Error) {
 		return Error;
-	if (n == 0)
+	}
+	if (n == 0) {
 		return 0;
+	}
 	n = 0;
 	for (i = 0; i < nfds; ++i) {
 		fd[i].revents = 0;
-		if (FD_ISSET(fd[i].fd, &readSet))
+		if (FD_ISSET(fd[i].fd, &readSet)) {
 			fd[i].revents |= kPOLLIN;
-		if (FD_ISSET(fd[i].fd, &writeSet))
+		}
+		if (FD_ISSET(fd[i].fd, &writeSet)) {
 			fd[i].revents |= kPOLLOUT;
-		if (FD_ISSET(fd[i].fd, &errSet))
+		}
+		if (FD_ISSET(fd[i].fd, &errSet)) {
 			fd[i].revents |= kPOLLERR;
-		if (fd[i].revents != 0)
+		}
+		if (fd[i].revents != 0) {
 			++n;
+		}
 	}
 	return n;
 }
 
-ssize_t PASCAL FAR		CNetwork::read2(Socket s, void FAR * buf, size_t len)
+ssize_t PASCAL FAR
+CNetwork::read2(
+	Socket s,
+	void FAR* buf,
+	size_t len)
 {
 	return recv(s, buf, len, 0);
 }
 
-ssize_t PASCAL FAR		CNetwork::write2(Socket s,
-								const void FAR * buf, size_t len)
+ssize_t PASCAL FAR
+CNetwork::write2(
+	Socket s,
+	const void FAR* buf,
+	size_t len)
 {
 	return send(s, buf, len, 0);
 }
@@ -283,37 +322,53 @@ ssize_t PASCAL FAR		CNetwork::write2(Socket s,
 
 #define setfunc(var, name, type) 	var = (type)::name
 
-UInt32					CNetwork::swaphtonl(UInt32 v)
+UInt32
+CNetwork::swaphtonl(
+	UInt32 v)
 {
 	return htonl(v);
 }
 
-UInt16					CNetwork::swaphtons(UInt16 v)
+UInt16
+CNetwork::swaphtons(
+	UInt16 v)
 {
 	return htons(v);
 }
 
-UInt32					CNetwork::swapntohl(UInt32 v)
+UInt32
+CNetwork::swapntohl(
+	UInt32 v)
 {
 	return ntohl(v);
 }
 
-UInt16					CNetwork::swapntohs(UInt16 v)
+UInt16
+CNetwork::swapntohs(
+	UInt16 v)
 {
 	return ntohs(v);
 }
 
-static int				myerrno()
+static
+int
+myerrno()
 {
 	return errno;
 }
 
-static int				myherrno()
+static
+int
+myherrno()
 {
 	return h_errno;
 }
 
-static int				mygethostname(char* name, int namelen)
+static
+int
+mygethostname(
+	char* name,
+	int namelen)
 {
 	return gethostname(name, namelen);
 }
@@ -321,7 +376,8 @@ static int				mygethostname(char* name, int namelen)
 const int				CNetwork::Error = -1;
 const CNetwork::Socket	CNetwork::Null = -1;
 
-void					CNetwork::init()
+void
+CNetwork::init()
 {
 	setfunc(accept, accept, Socket (PASCAL FAR *)(Socket s, Address FAR *addr, AddressLength FAR *addrlen));
 	setfunc(bind, bind, int (PASCAL FAR *)(Socket s, const Address FAR *addr, AddressLength namelen));
@@ -355,7 +411,8 @@ void					CNetwork::init()
 	setfunc(gethosterror, myherrno, int (PASCAL FAR *)(void));
 }
 
-void					CNetwork::cleanup()
+void
+CNetwork::cleanup()
 {
 	// do nothing
 }

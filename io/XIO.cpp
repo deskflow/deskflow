@@ -4,12 +4,14 @@
 // XIOErrno
 //
 
-XIOErrno::XIOErrno() : MXErrno()
+XIOErrno::XIOErrno() :
+	MXErrno()
 {
 	// do nothing
 }
 
-XIOErrno::XIOErrno(int err) : MXErrno(err)
+XIOErrno::XIOErrno(int err) :
+	MXErrno(err)
 {
 	// do nothing
 }
@@ -19,7 +21,8 @@ XIOErrno::XIOErrno(int err) : MXErrno(err)
 // XIOClose
 //
 
-CString					XIOClose::getWhat() const throw()
+CString
+XIOClose::getWhat() const throw()
 {
 	return format("XIOClose", "close: %1", XIOErrno::getErrstr());
 }
@@ -29,7 +32,8 @@ CString					XIOClose::getWhat() const throw()
 // XIOClosed
 //
 
-CString					XIOClosed::getWhat() const throw()
+CString
+XIOClosed::getWhat() const throw()
 {
 	return format("XIOClosed", "already closed");
 }
@@ -39,8 +43,8 @@ CString					XIOClosed::getWhat() const throw()
 // XIOEndOfStream
 //
 
-CString					XIOEndOfStream::getWhat() const throw()
+CString
+XIOEndOfStream::getWhat() const throw()
 {
 	return format("XIOEndOfStream", "reached end of stream");
 }
-

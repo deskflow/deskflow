@@ -1,8 +1,8 @@
 #ifndef CHTTPPROTOCOL_H
 #define CHTTPPROTOCOL_H
 
-#include "BasicTypes.h"
 #include "CString.h"
+#include "BasicTypes.h"
 #include "stdlist.h"
 #include "stdmap.h"
 #include "stdvector.h"
@@ -14,7 +14,7 @@ class CHTTPRequest {
 public:
 	typedef std::list<std::pair<CString, CString> > CHeaderList;
 	typedef std::map<CString, CHeaderList::iterator,
-								CStringUtil::CaselessCmp> CHeaderMap;
+							CStringUtil::CaselessCmp> CHeaderMap;
 	typedef CHeaderList::const_iterator const_iterator;
 
 	CHTTPRequest();
@@ -93,18 +93,18 @@ public:
 	// FIXME -- name/value pairs insufficient to save part headers
 	typedef std::map<CString, CString> CFormParts;
 	static bool			parseFormData(const CHTTPRequest&,
-								CFormParts& parts);
+							CFormParts& parts);
 
 private:
 	static CString		readLine(IInputStream*, CString& tmpBuffer);
 	static CString		readBlock(IInputStream*,
-								UInt32 numBytes, CString& tmpBuffer);
+							UInt32 numBytes, CString& tmpBuffer);
 	static CString		readChunk(IInputStream*, CString& tmpBuffer,
-								UInt32* maxSize);
+							UInt32* maxSize);
 	static void			readHeaders(IInputStream*,
-								CHTTPRequest*, bool isFooter,
-								CString& tmpBuffer,
-								UInt32* maxSize);
+							CHTTPRequest*, bool isFooter,
+							CString& tmpBuffer,
+							UInt32* maxSize);
 
 	static bool			isValidToken(const CString&);
 };

@@ -1,14 +1,14 @@
 #include "CMSWindowsClipboard.h"
-#include "CString.h"
 #include "CLog.h"
 
 //
 // CMSWindowsClipboard
 //
 
-CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
-								m_window(window),
-								m_time(0)
+CMSWindowsClipboard::CMSWindowsClipboard(
+	HWND window) :
+	m_window(window),
+	m_time(0)
 {
 	// do nothing
 }
@@ -18,7 +18,8 @@ CMSWindowsClipboard::~CMSWindowsClipboard()
 	// do nothing
 }
 
-bool					CMSWindowsClipboard::empty()
+bool
+CMSWindowsClipboard::empty()
 {
 	log((CLOG_DEBUG "empty clipboard"));
 
@@ -30,8 +31,10 @@ bool					CMSWindowsClipboard::empty()
 	return true;
 }
 
-void					CMSWindowsClipboard::add(
-								EFormat format, const CString& data)
+void
+CMSWindowsClipboard::add(
+	EFormat format,
+	const CString& data)
 {
 	log((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
 
@@ -54,7 +57,9 @@ void					CMSWindowsClipboard::add(
 	}
 }
 
-bool					CMSWindowsClipboard::open(Time time) const
+bool
+CMSWindowsClipboard::open(
+	Time time) const
 {
 	log((CLOG_DEBUG "open clipboard"));
 
@@ -68,29 +73,36 @@ bool					CMSWindowsClipboard::open(Time time) const
 	return true;
 }
 
-void					CMSWindowsClipboard::close() const
+void
+CMSWindowsClipboard::close() const
 {
 	log((CLOG_DEBUG "close clipboard"));
 	CloseClipboard();
 }
 
-IClipboard::Time		CMSWindowsClipboard::getTime() const
+IClipboard::Time
+CMSWindowsClipboard::getTime() const
 {
 	return m_time;
 }
 
-bool					CMSWindowsClipboard::has(EFormat format) const
+bool
+CMSWindowsClipboard::has(
+	EFormat format) const
 {
 	const UINT win32Format = convertFormatToWin32(format);
 	return (win32Format != 0 && IsClipboardFormatAvailable(win32Format) != 0);
 }
 
-CString					CMSWindowsClipboard::get(EFormat format) const
+CString
+CMSWindowsClipboard::get(
+	EFormat format) const
 {
 	// get the win32 format.  return empty data if unknown format.
 	const UINT win32Format = convertFormatToWin32(format);
-	if (win32Format == 0)
+	if (win32Format == 0) {
 		return CString();
+	}
 
 	// get a handle to the clipboard data and convert it
 	HANDLE win32Data = GetClipboardData(win32Format);
@@ -106,8 +118,9 @@ CString					CMSWindowsClipboard::get(EFormat format) const
 	return data;
 }
 
-UINT					CMSWindowsClipboard::convertFormatToWin32(
-								EFormat format) const
+UINT
+CMSWindowsClipboard::convertFormatToWin32(
+	EFormat format) const
 {
 	switch (format) {
 	case kText:
@@ -118,8 +131,9 @@ UINT					CMSWindowsClipboard::convertFormatToWin32(
 	}
 }
 
-HANDLE					CMSWindowsClipboard::convertTextToWin32(
-								const CString& data) const
+HANDLE
+CMSWindowsClipboard::convertTextToWin32(
+	const CString& data) const
 {
 	// compute size of converted text
 	UInt32 dstSize = 1;
@@ -157,14 +171,16 @@ HANDLE					CMSWindowsClipboard::convertTextToWin32(
 	return gData;
 }
 
-CString					CMSWindowsClipboard::convertTextFromWin32(
-								HANDLE handle) const
+CString
+CMSWindowsClipboard::convertTextFromWin32(
+	HANDLE handle) const
 {
 	// get source data and it's size
 	const char* src = (const char*)GlobalLock(handle);
 	UInt32 srcSize = (SInt32)GlobalSize(handle);
-	if (src == NULL || srcSize <= 1)
+	if (src == NULL || srcSize <= 1) {
 		return CString();
+	}
 
 	// ignore trailing NUL
 	--srcSize;
@@ -175,8 +191,9 @@ CString					CMSWindowsClipboard::convertTextFromWin32(
 	for (index = 0; index < srcSize; ++index) {
 		if (src[index] == '\r') {
 			// skip \r
-			if (index + 1 < srcSize && src[index + 1] == '\n')
+			if (index + 1 < srcSize && src[index + 1] == '\n') {
 				++index;
+			}
 		}
 		++dstSize;
 	}
@@ -189,8 +206,9 @@ CString					CMSWindowsClipboard::convertTextFromWin32(
 	for (index = 0; index < srcSize; ++index) {
 		if (src[index] == '\r') {
 			// skip \r
-			if (index + 1 < srcSize && src[index + 1] == '\n')
+			if (index + 1 < srcSize && src[index + 1] == '\n') {
 				++index;
+			}
 		}
 		data += src[index];
 	}

@@ -2,7 +2,6 @@
 #define ISOCKETFACTORY_H
 
 #include "IInterface.h"
-#include "XSocket.h"
 
 class ISocket;
 class IListenSocket;

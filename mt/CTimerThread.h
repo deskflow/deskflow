@@ -1,8 +1,6 @@
 #ifndef CTIMERTHREAD_H
 #define CTIMERTHREAD_H
 
-#include "common.h"
-
 class CThread;
 
 class CTimerThread {

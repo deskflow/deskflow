@@ -4,7 +4,8 @@
 // XBadClient
 //
 
-CString					XBadClient::getWhat() const throw()
+CString
+XBadClient::getWhat() const throw()
 {
 	return "XBadClient";
 }
@@ -14,24 +15,29 @@ CString					XBadClient::getWhat() const throw()
 // XIncompatibleClient
 //
 
-XIncompatibleClient::XIncompatibleClient(int major, int minor) :
-								m_major(major),
-								m_minor(minor)
+XIncompatibleClient::XIncompatibleClient(
+	int major,
+	int minor) :
+	m_major(major),
+	m_minor(minor)
 {
 	// do nothing
 }
 
-int						XIncompatibleClient::getMajor() const throw()
+int
+XIncompatibleClient::getMajor() const throw()
 {
 	return m_major;
 }
 
-int						XIncompatibleClient::getMinor() const throw()
+int
+XIncompatibleClient::getMinor() const throw()
 {
 	return m_minor;
 }
 
-CString					XIncompatibleClient::getWhat() const throw()
+CString
+XIncompatibleClient::getWhat() const throw()
 {
 	return "XIncompatibleClient";
 }
@@ -41,17 +47,21 @@ CString					XIncompatibleClient::getWhat() const throw()
 // XDuplicateClient
 //
 
-XDuplicateClient::XDuplicateClient(const CString& name) : m_name(name)
+XDuplicateClient::XDuplicateClient(
+	const CString& name) :
+	m_name(name)
 {
 	// do nothing
 }
 
-const CString&			XDuplicateClient::getName() const throw()
+const CString&
+XDuplicateClient::getName() const throw()
 {
 	return m_name;
 }
 
-CString					XDuplicateClient::getWhat() const throw()
+CString
+XDuplicateClient::getWhat() const throw()
 {
 	return "XDuplicateClient";
 }
@@ -61,17 +71,21 @@ CString					XDuplicateClient::getWhat() const throw()
 // XUnknownClient
 //
 
-XUnknownClient::XUnknownClient(const CString& name) : m_name(name)
+XUnknownClient::XUnknownClient(
+	const CString& name) :
+	m_name(name)
 {
 	// do nothing
 }
 
-const CString&			XUnknownClient::getName() const throw()
+const CString&
+XUnknownClient::getName() const throw()
 {
 	return m_name;
 }
 
-CString					XUnknownClient::getWhat() const throw()
+CString
+XUnknownClient::getWhat() const throw()
 {
 	return "XUnknownClient";
 }

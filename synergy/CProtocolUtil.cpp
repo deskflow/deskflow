@@ -2,16 +2,18 @@
 #include "IInputStream.h"
 #include "IOutputStream.h"
 #include "CLog.h"
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 //
 // CProtocolUtil
 //
 
-void					CProtocolUtil::writef(IOutputStream* stream,
-								const char* fmt, ...)
+void
+CProtocolUtil::writef(
+	IOutputStream* stream,
+	const char* fmt,
+	...)
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
@@ -47,8 +49,11 @@ void					CProtocolUtil::writef(IOutputStream* stream,
 	delete[] buffer;
 }
 
-void					CProtocolUtil::readf(IInputStream* stream,
-								const char* fmt, ...)
+void
+CProtocolUtil::readf(
+	IInputStream* stream,
+	const char* fmt,
+	...)
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
@@ -179,8 +184,10 @@ void					CProtocolUtil::readf(IInputStream* stream,
 	va_end(args);
 }
 
-UInt32					CProtocolUtil::getLength(
-								const char* fmt, va_list args)
+UInt32
+CProtocolUtil::getLength(
+	const char* fmt,
+	va_list args)
 {
 	UInt32 n = 0;
 	while (*fmt) {
@@ -228,8 +235,11 @@ UInt32					CProtocolUtil::getLength(
 	return n;
 }
 
-void			 		CProtocolUtil::writef(void* buffer,
-								const char* fmt, va_list args)
+void
+CProtocolUtil::writef(
+	void* buffer,
+	const char* fmt,
+	va_list args)
 {
 	UInt8* dst = reinterpret_cast<UInt8*>(buffer);
 
@@ -315,7 +325,9 @@ void			 		CProtocolUtil::writef(void* buffer,
 	}
 }
 
-UInt32					CProtocolUtil::eatLength(const char** pfmt)
+UInt32
+CProtocolUtil::eatLength(
+	const char** pfmt)
 {
 	const char* fmt = *pfmt;
 	UInt32 n = 0;
@@ -339,8 +351,11 @@ UInt32					CProtocolUtil::eatLength(const char** pfmt)
 	}
 }
 
-void					CProtocolUtil::read(IInputStream* stream,
-								void* vbuffer, UInt32 count)
+void
+CProtocolUtil::read(
+	IInputStream* stream,
+	void* vbuffer,
+	UInt32 count)
 {
 	assert(stream != NULL);
 	assert(vbuffer != NULL);
@@ -367,7 +382,8 @@ void					CProtocolUtil::read(IInputStream* stream,
 // XIOReadMismatch
 //
 
-CString					XIOReadMismatch::getWhat() const throw()
+CString
+XIOReadMismatch::getWhat() const throw()
 {
 	return "CProtocolUtil::readf() mismatch";
 }

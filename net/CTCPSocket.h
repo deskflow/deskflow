@@ -3,7 +3,6 @@
 
 #include "ISocket.h"
 #include "CNetwork.h"
-#include "XThread.h"
 
 class CMutex;
 template <class T>

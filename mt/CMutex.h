@@ -1,8 +1,6 @@
 #ifndef CMUTEX_H
 #define CMUTEX_H
 
-#include "common.h"
-
 // recursive mutex class
 class CMutex {
 public:

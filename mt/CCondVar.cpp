@@ -1,15 +1,14 @@
 #include "CCondVar.h"
 #include "CStopwatch.h"
-#include <assert.h>
 
 //
 // CCondVarBase
 //
 
 CCondVarBase::CCondVarBase(CMutex* mutex) : 
-								m_mutex(mutex)
+	m_mutex(mutex)
 #if defined(CONFIG_PLATFORM_WIN32)
-								, m_waitCountMutex()
+	, m_waitCountMutex()
 #endif
 {
 	assert(m_mutex != NULL);
@@ -21,23 +20,27 @@ CCondVarBase::~CCondVarBase()
 	fini();
 }
 
-void					CCondVarBase::lock() const
+void
+CCondVarBase::lock() const
 {
 	m_mutex->lock();
 }
 
-void					CCondVarBase::unlock() const
+void
+CCondVarBase::unlock() const
 {
 	m_mutex->unlock();
 }
 
-bool					CCondVarBase::wait(double timeout) const
+bool
+CCondVarBase::wait(double timeout) const
 {
 	CStopwatch timer(true);
 	return wait(timer, timeout);
 }
 
-CMutex*					CCondVarBase::getMutex() const
+CMutex*
+CCondVarBase::getMutex() const
 {
 	return m_mutex;
 }
@@ -47,9 +50,10 @@ CMutex*					CCondVarBase::getMutex() const
 #include "CThread.h"
 #include <pthread.h>
 #include <sys/time.h>
-#include <errno.h>
+#include <cerrno>
 
-void					CCondVarBase::init()
+void
+CCondVarBase::init()
 {
 	pthread_cond_t* cond = new pthread_cond_t;
 	int status = pthread_cond_init(cond, NULL);
@@ -57,7 +61,8 @@ void					CCondVarBase::init()
 	m_cond = reinterpret_cast<pthread_cond_t*>(cond);
 }
 
-void					CCondVarBase::fini()
+void
+CCondVarBase::fini()
 {
 	pthread_cond_t* cond = reinterpret_cast<pthread_cond_t*>(m_cond);
 	int status = pthread_cond_destroy(cond);
@@ -65,22 +70,26 @@ void					CCondVarBase::fini()
 	delete cond;
 }
 
-void					CCondVarBase::signal()
+void
+CCondVarBase::signal()
 {
 	pthread_cond_t* cond = reinterpret_cast<pthread_cond_t*>(m_cond);
 	int status = pthread_cond_signal(cond);
 	assert(status == 0);
 }
 
-void					CCondVarBase::broadcast()
+void
+CCondVarBase::broadcast()
 {
 	pthread_cond_t* cond = reinterpret_cast<pthread_cond_t*>(m_cond);
 	int status = pthread_cond_broadcast(cond);
 	assert(status == 0);
 }
 
-bool					CCondVarBase::wait(
-								CStopwatch& timer, double timeout) const
+bool
+CCondVarBase::wait(
+	CStopwatch& timer,
+	double timeout) const
 {
 	// check timeout against timer
 	if (timeout >= 0.0) {
@@ -143,8 +152,9 @@ bool					CCondVarBase::wait(
 		CThread::testCancel();
 
 		// check wait status
-		if (status != ETIMEDOUT && status != EINTR)
+		if (status != ETIMEDOUT && status != EINTR) {
 			break;
+		}
 	}
 
 	switch (status) {
@@ -180,7 +190,8 @@ bool					CCondVarBase::wait(
 // can cause busy waiting.
 //
 
-void					CCondVarBase::init()
+void
+CCondVarBase::init()
 {
 	// prepare events
 	HANDLE* events     = new HANDLE[2];
@@ -192,7 +203,8 @@ void					CCondVarBase::init()
 	m_waitCount = 0;
 }
 
-void					CCondVarBase::fini()
+void
+CCondVarBase::fini()
 {
 	HANDLE* events = reinterpret_cast<HANDLE*>(m_cond);
 	CloseHandle(events[kSignal]);
@@ -200,7 +212,8 @@ void					CCondVarBase::fini()
 	delete[] events;
 }
 
-void					CCondVarBase::signal()
+void
+CCondVarBase::signal()
 {
 	// is anybody waiting?
 	bool hasWaiter;
@@ -210,11 +223,13 @@ void					CCondVarBase::signal()
 	}
 
 	// wake one thread if anybody is waiting
-	if (hasWaiter)
+	if (hasWaiter) {
 		SetEvent(reinterpret_cast<HANDLE*>(m_cond)[kSignal]);
+	}
 }
 
-void					CCondVarBase::broadcast()
+void
+CCondVarBase::broadcast()
 {
 	// is anybody waiting?
 	bool hasWaiter;
@@ -224,18 +239,22 @@ void					CCondVarBase::broadcast()
 	}
 
 	// wake all threads if anybody is waiting
-	if (hasWaiter)
+	if (hasWaiter) {
 		SetEvent(reinterpret_cast<HANDLE*>(m_cond)[kBroadcast]);
+	}
 }
 
-bool					CCondVarBase::wait(
-								CStopwatch& timer, double timeout) const
+bool
+CCondVarBase::wait(
+	CStopwatch& timer,
+	double timeout) const
 {
 	// check timeout against timer
 	if (timeout >= 0.0) {
 		timeout -= timer.getTime();
-		if (timeout < 0.0)
+		if (timeout < 0.0) {
 			return false;
+		}
 	}
 
 	// prepare to wait
@@ -267,8 +286,9 @@ bool					CCondVarBase::wait(
 
 	// cancel takes priority
 	if (n == 3 && result != WAIT_OBJECT_0 + 2 &&
-					WaitForSingleObject(handles[2], 0) == WAIT_OBJECT_0)
+					WaitForSingleObject(handles[2], 0) == WAIT_OBJECT_0) {
 		result = WAIT_OBJECT_0 + 2;
+	}
 
 	// update the waiter count and check if we're the last waiter
 	bool last;
@@ -279,15 +299,17 @@ bool					CCondVarBase::wait(
 	}
 
 	// reset the broadcast event if we're the last waiter
-	if (last)
+	if (last) {
 		ResetEvent(events[kBroadcast]);
+	}
 
 	// reacquire the mutex
 	m_mutex->lock();
 
 	// cancel thread if necessary
-	if (result == WAIT_OBJECT_0 + 2)
+	if (result == WAIT_OBJECT_0 + 2) {
 		currentRep->testCancel();
+	}
 
 	// return success or failure
 	return (result == WAIT_OBJECT_0 + 0 ||

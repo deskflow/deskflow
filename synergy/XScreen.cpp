@@ -4,7 +4,8 @@
 // XScreenOpenFailure
 //
 
-CString					XScreenOpenFailure::getWhat() const throw()
+CString
+XScreenOpenFailure::getWhat() const throw()
 {
 	return "XScreenOpenFailure";
 }

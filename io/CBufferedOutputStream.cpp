@@ -1,20 +1,21 @@
 #include "CBufferedOutputStream.h"
+#include "XIO.h"
 #include "CLock.h"
 #include "CMutex.h"
 #include "CThread.h"
 #include "IJob.h"
-#include "XIO.h"
-#include <assert.h>
 
 //
 // CBufferedOutputStream
 //
 
-CBufferedOutputStream::CBufferedOutputStream(CMutex* mutex, IJob* closeCB) :
-								m_mutex(mutex),
-								m_closeCB(closeCB),
-								m_empty(mutex, true),
-								m_closed(false)
+CBufferedOutputStream::CBufferedOutputStream(
+	CMutex* mutex,
+	IJob* closeCB) :
+	m_mutex(mutex),
+	m_closeCB(closeCB),
+	m_empty(mutex, true),
+	m_closed(false)
 {
 	assert(m_mutex != NULL);
 }
@@ -24,12 +25,16 @@ CBufferedOutputStream::~CBufferedOutputStream()
 	delete m_closeCB;
 }
 
-const void*				CBufferedOutputStream::peek(UInt32 n)
+const void*
+CBufferedOutputStream::peek(
+	UInt32 n)
 {
 	return m_buffer.peek(n);
 }
 
-void					CBufferedOutputStream::pop(UInt32 n)
+void
+CBufferedOutputStream::pop(
+	UInt32 n)
 {
 	m_buffer.pop(n);
 	if (m_buffer.getSize() == 0) {
@@ -37,12 +42,14 @@ void					CBufferedOutputStream::pop(UInt32 n)
 	}
 }
 
-UInt32					CBufferedOutputStream::getSize() const
+UInt32
+CBufferedOutputStream::getSize() const
 {
 	return m_buffer.getSize();
 }
 
-void					CBufferedOutputStream::close()
+void
+CBufferedOutputStream::close()
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
@@ -56,8 +63,10 @@ void					CBufferedOutputStream::close()
 	}
 }
 
-UInt32					CBufferedOutputStream::write(
-								const void* data, UInt32 n)
+UInt32
+CBufferedOutputStream::write(
+	const void* data,
+	UInt32 n)
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
@@ -68,7 +77,8 @@ UInt32					CBufferedOutputStream::write(
 	return n;
 }
 
-void					CBufferedOutputStream::flush()
+void
+CBufferedOutputStream::flush()
 {
 	// wait until all data is written
 	CLock lock(m_mutex);

@@ -1,9 +1,8 @@
 #ifndef IPLATFORM_H
 #define IPLATFORM_H
 
-#include "BasicTypes.h"
-#include "CString.h"
 #include "IInterface.h"
+#include "CString.h"
 
 class IPlatform : public IInterface {
 public:
@@ -16,9 +15,9 @@ public:
 	// include the name of program as the first argument.
 	// FIXME -- throw on error?  will get better error messages that way.
 	virtual bool		installDaemon(const char* name,
-								const char* description,
-								const char* pathname,
-								const char* commandLine) = 0;
+							const char* description,
+							const char* pathname,
+							const char* commandLine) = 0;
 	virtual bool		uninstallDaemon(const char* name) = 0;
 
 	// daemonize.  this should have the side effect of sending log
@@ -67,8 +66,8 @@ public:
 	// is longer than allowed by the system.  we'll rely on the
 	// system calls to tell us that.
 	virtual CString		addPathComponent(
-								const CString& prefix,
-								const CString& suffix) const = 0;
+							const CString& prefix,
+							const CString& suffix) const = 0;
 };
 
 #endif

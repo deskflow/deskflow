@@ -1,14 +1,13 @@
 #include "CHTTPServer.h"
-#include "CHTTPProtocol.h"
-#include "XHTTP.h"
-#include "CServer.h"
 #include "CConfig.h"
-#include "CLog.h"
-#include "XThread.h"
+#include "CHTTPProtocol.h"
+#include "CServer.h"
+#include "XHTTP.h"
 #include "ISocket.h"
+#include "XThread.h"
+#include "CLog.h"
 #include "stdset.h"
 #include "stdsstream.h"
-#include <assert.h>
 
 //
 // CHTTPServer
@@ -19,7 +18,9 @@
 // malicious client from causing us to use too much memory.
 const UInt32			CHTTPServer::s_maxRequestSize = 32768;
 
-CHTTPServer::CHTTPServer(CServer* server) : m_server(server)
+CHTTPServer::CHTTPServer(
+	CServer* server) :
+	m_server(server)
 {
 	// do nothing
 }
@@ -29,7 +30,9 @@ CHTTPServer::~CHTTPServer()
 	// do nothing
 }
 
-void					CHTTPServer::processRequest(ISocket* socket)
+void
+CHTTPServer::processRequest(
+	ISocket* socket)
 {
 	assert(socket != NULL);
 
@@ -88,9 +91,10 @@ void					CHTTPServer::processRequest(ISocket* socket)
 	}
 }
 
-void					CHTTPServer::doProcessRequest(
-								CHTTPRequest& request,
-								CHTTPReply& reply)
+void
+CHTTPServer::doProcessRequest(
+	CHTTPRequest& request,
+	CHTTPReply& reply)
 {
 	reply.m_majorVersion = request.m_majorVersion;
 	reply.m_minorVersion = request.m_minorVersion;
@@ -118,9 +122,10 @@ void					CHTTPServer::doProcessRequest(
 	}
 }
 
-void					CHTTPServer::doProcessGetEditMap(
-								CHTTPRequest& /*request*/,
-								CHTTPReply& reply)
+void
+CHTTPServer::doProcessGetEditMap(
+	CHTTPRequest& /*request*/,
+	CHTTPReply& reply)
 {
 	static const char* s_editMapProlog1 =
 	"<html>\r\n"
@@ -228,9 +233,10 @@ void					CHTTPServer::doProcessGetEditMap(
 	reply.m_body += s_editMapEpilog;
 }
 
-void					CHTTPServer::doProcessPostEditMap(
-								CHTTPRequest& request,
-								CHTTPReply& reply)
+void
+CHTTPServer::doProcessPostEditMap(
+	CHTTPRequest& request,
+	CHTTPReply& reply)
 {
 	typedef std::vector<CString> ScreenArray;
 	typedef std::set<CString> ScreenSet;
@@ -323,8 +329,11 @@ void					CHTTPServer::doProcessPostEditMap(
 	}
 }
 
-bool					CHTTPServer::parseXY(
-								const CString& xy, SInt32& x, SInt32& y)
+bool
+CHTTPServer::parseXY(
+	const CString& xy,
+	SInt32& x,
+	SInt32& y)
 {
 	std::istringstream s(xy);
 	char delimiter;
@@ -339,7 +348,9 @@ bool					CHTTPServer::parseXY(
 // CHTTPServer::CScreenArray
 //
 
-CHTTPServer::CScreenArray::CScreenArray() : m_w(0), m_h(0)
+CHTTPServer::CScreenArray::CScreenArray() :
+	m_w(0),
+	m_h(0)
 {
 	// do nothing
 }
@@ -349,7 +360,10 @@ CHTTPServer::CScreenArray::~CScreenArray()
 	// do nothing
 }
 
-void					CHTTPServer::CScreenArray::resize(SInt32 w, SInt32 h)
+void
+CHTTPServer::CScreenArray::resize(
+	SInt32 w,
+	SInt32 h)
 {
 	m_screens.clear();
 	m_screens.resize(w * h);
@@ -357,7 +371,9 @@ void					CHTTPServer::CScreenArray::resize(SInt32 w, SInt32 h)
 	m_h = h;
 }
 
-void					CHTTPServer::CScreenArray::insertRow(SInt32 i)
+void
+CHTTPServer::CScreenArray::insertRow(
+	SInt32 i)
 {
 	assert(i >= 0 && i <= m_h);
 
@@ -379,7 +395,9 @@ void					CHTTPServer::CScreenArray::insertRow(SInt32 i)
 	++m_h;
 }
 
-void					CHTTPServer::CScreenArray::insertColumn(SInt32 i)
+void
+CHTTPServer::CScreenArray::insertColumn(
+	SInt32 i)
 {
 	assert(i >= 0 && i <= m_w);
 
@@ -399,7 +417,9 @@ void					CHTTPServer::CScreenArray::insertColumn(SInt32 i)
 	++m_w;
 }
 
-void					CHTTPServer::CScreenArray::eraseRow(SInt32 i)
+void
+CHTTPServer::CScreenArray::eraseRow(
+	SInt32 i)
 {
 	assert(i >= 0 && i < m_h);
 
@@ -421,7 +441,9 @@ void					CHTTPServer::CScreenArray::eraseRow(SInt32 i)
 	--m_h;
 }
 
-void					CHTTPServer::CScreenArray::eraseColumn(SInt32 i)
+void
+CHTTPServer::CScreenArray::eraseColumn(
+	SInt32 i)
 {
 	assert(i >= 0 && i < m_w);
 
@@ -441,7 +463,9 @@ void					CHTTPServer::CScreenArray::eraseColumn(SInt32 i)
 	--m_w;
 }
 
-void					CHTTPServer::CScreenArray::rotateRows(SInt32 i)
+void
+CHTTPServer::CScreenArray::rotateRows(
+	SInt32 i)
 {
 	// nothing to do if no rows
 	if (m_h == 0) {
@@ -471,7 +495,9 @@ void					CHTTPServer::CScreenArray::rotateRows(SInt32 i)
 	}
 }
 
-void					CHTTPServer::CScreenArray::rotateColumns(SInt32 i)
+void
+CHTTPServer::CScreenArray::rotateColumns(
+	SInt32 i)
 {
 	// nothing to do if no columns
 	if (m_h == 0) {
@@ -501,13 +527,19 @@ void					CHTTPServer::CScreenArray::rotateColumns(SInt32 i)
 	}
 }
 
-void					CHTTPServer::CScreenArray::remove(SInt32 x, SInt32 y)
+void
+CHTTPServer::CScreenArray::remove(
+	SInt32 x,
+	SInt32 y)
 {
 	set(x, y, CString());
 }
 
-void					CHTTPServer::CScreenArray::set(
-								SInt32 x, SInt32 y, const CString& name)
+void
+CHTTPServer::CScreenArray::set(
+	SInt32 x,
+	SInt32 y,
+	const CString& name)
 {
 	assert(x >= 0 && x < m_w);
 	assert(y >= 0 && y < m_h);
@@ -515,8 +547,10 @@ void					CHTTPServer::CScreenArray::set(
 	m_screens[x + y * m_w] = name;
 }
 
-bool					CHTTPServer::CScreenArray::isAllowed(
-								SInt32 x, SInt32 y) const
+bool
+CHTTPServer::CScreenArray::isAllowed(
+	SInt32 x,
+	SInt32 y) const
 {
 	assert(x >= 0 && x < m_w);
 	assert(y >= 0 && y < m_h);
@@ -536,8 +570,10 @@ bool					CHTTPServer::CScreenArray::isAllowed(
 	return false;
 }
 
-bool					CHTTPServer::CScreenArray::isSet(
-								SInt32 x, SInt32 y) const
+bool
+CHTTPServer::CScreenArray::isSet(
+	SInt32 x,
+	SInt32 y) const
 {
 	assert(x >= 0 && x < m_w);
 	assert(y >= 0 && y < m_h);
@@ -545,8 +581,10 @@ bool					CHTTPServer::CScreenArray::isSet(
 	return !m_screens[x + y * m_w].empty();
 }
 
-CString					CHTTPServer::CScreenArray::get(
-								SInt32 x, SInt32 y) const
+CString
+CHTTPServer::CScreenArray::get(
+	SInt32 x,
+	SInt32 y) const
 {
 	assert(x >= 0 && x < m_w);
 	assert(y >= 0 && y < m_h);
@@ -554,9 +592,11 @@ CString					CHTTPServer::CScreenArray::get(
 	return m_screens[x + y * m_w];
 }
 
-bool					CHTTPServer::CScreenArray::find(
-								const CString& name,
-								SInt32& xOut, SInt32& yOut) const
+bool
+CHTTPServer::CScreenArray::find(
+	const CString& name,
+	SInt32& xOut,
+	SInt32& yOut) const
 {
 	for (SInt32 y = 0; y < m_h; ++y) {
 		for (SInt32 x = 0; x < m_w; ++x) {
@@ -570,7 +610,8 @@ bool					CHTTPServer::CScreenArray::find(
 	return false;
 }
 
-bool					CHTTPServer::CScreenArray::isValid() const
+bool
+CHTTPServer::CScreenArray::isValid() const
 {
 	SInt32 count = 0, isolated = 0;
 	for (SInt32 y = 0; y < m_h; ++y) {
@@ -586,8 +627,9 @@ bool					CHTTPServer::CScreenArray::isValid() const
 	return (count <= 1 || isolated == 0);
 }
 
-bool					CHTTPServer::CScreenArray::convertFrom(
-								const CConfig& config)
+bool
+CHTTPServer::CScreenArray::convertFrom(
+	const CConfig& config)
 {
 	typedef std::set<CString> ScreenSet;
 
@@ -717,8 +759,9 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 	return true;
 }
 
-void					CHTTPServer::CScreenArray::convertTo(
-								CConfig& config) const
+void
+CHTTPServer::CScreenArray::convertTo(
+	CConfig& config) const
 {
 	config.removeAllScreens();
 

@@ -10,9 +10,9 @@ public:
 
 	// IPlatform overrides
 	virtual bool		installDaemon(const char* name,
-								const char* description,
-								const char* pathname,
-								const char* commandLine);
+							const char* description,
+							const char* pathname,
+							const char* commandLine);
 	virtual bool		uninstallDaemon(const char* name);
 	virtual int			daemonize(const char* name, DaemonFunc);
 	virtual int			restart(RestartFunc, int minErrorCode);
@@ -20,8 +20,8 @@ public:
 	virtual CString		getUserDirectory() const;
 	virtual CString		getSystemDirectory() const;
 	virtual CString		addPathComponent(
-								const CString& prefix,
-								const CString& suffix) const;
+							const CString& prefix,
+							const CString& suffix) const;
 
 protected:
 	virtual void		setDaemonLogger(const char* name);

@@ -2,7 +2,6 @@
 #define IPRIMARYSCREEN_H
 
 #include "IInterface.h"
-#include "BasicTypes.h"
 #include "KeyTypes.h"
 #include "ClipboardTypes.h"
 

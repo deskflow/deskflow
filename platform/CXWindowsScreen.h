@@ -1,7 +1,6 @@
 #ifndef CXWINDOWSSCREEN_H
 #define CXWINDOWSSCREEN_H
 
-#include "BasicTypes.h"
 #include "ClipboardTypes.h"
 #include "CMutex.h"
 #include <X11/Xlib.h>
@@ -58,11 +57,11 @@ protected:
 
 	// set the contents of the clipboard (i.e. primary selection)
 	bool				setDisplayClipboard(ClipboardID,
-								const IClipboard* clipboard);
+							const IClipboard* clipboard);
 
 	// copy the clipboard contents to clipboard
 	bool				getDisplayClipboard(ClipboardID,
-								IClipboard* clipboard) const;
+							IClipboard* clipboard) const;
 
 	// called by openDisplay() to allow subclasses to prepare the display.
 	// the display is locked and passed to the subclass.
@@ -93,7 +92,7 @@ private:
 
 	// continue processing a selection request
 	void				processClipboardRequest(Window window,
-								Time time, Atom property);
+							Time time, Atom property);
 
 	// terminate a selection request
 	void				destroyClipboardRequest(Window window);

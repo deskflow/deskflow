@@ -2,7 +2,6 @@
 #define XIO_H
 
 #include "XBase.h"
-#include "BasicTypes.h"
 
 class XIO : public XBase { };
 

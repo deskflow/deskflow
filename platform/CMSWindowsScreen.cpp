@@ -4,8 +4,7 @@
 #include "TMethodJob.h"
 #include "CLog.h"
 #include "CString.h"
-#include <string.h>
-#include <assert.h>
+#include <cstring>
 
 //
 // CMSWindowsScreen
@@ -15,10 +14,10 @@ HINSTANCE				CMSWindowsScreen::s_instance = NULL;
 CMSWindowsScreen*		CMSWindowsScreen::s_screen = NULL;
 
 CMSWindowsScreen::CMSWindowsScreen() :
-								m_class(0),
-								m_cursor(NULL),
-								m_w(0), m_h(0),
-								m_thread(0)
+	m_class(0),
+	m_cursor(NULL),
+	m_w(0), m_h(0),
+	m_thread(0)
 {
 	assert(s_screen == NULL);
 	s_screen = this;
@@ -30,12 +29,15 @@ CMSWindowsScreen::~CMSWindowsScreen()
 	s_screen = NULL;
 }
 
-void					CMSWindowsScreen::init(HINSTANCE instance)
+void
+CMSWindowsScreen::init(
+	HINSTANCE instance)
 {
 	s_instance = instance;
 }
 
-void					CMSWindowsScreen::doRun()
+void
+CMSWindowsScreen::doRun()
 {
 	// save thread id for posting quit message
 	m_thread = GetCurrentThreadId();
@@ -59,12 +61,14 @@ void					CMSWindowsScreen::doRun()
 	}
 }
 
-void					CMSWindowsScreen::doStop()
+void
+CMSWindowsScreen::doStop()
 {
 	PostThreadMessage(m_thread, WM_QUIT, 0, 0);
 }
 
-void					CMSWindowsScreen::openDisplay()
+void
+CMSWindowsScreen::openDisplay()
 {
 	assert(s_instance != NULL);
 	assert(m_class    == 0);
@@ -106,7 +110,8 @@ void					CMSWindowsScreen::openDisplay()
 	onOpenDisplay();
 }
 
-void					CMSWindowsScreen::closeDisplay()
+void
+CMSWindowsScreen::closeDisplay()
 {
 	assert(s_instance    != NULL);
 	assert(m_class       != 0);
@@ -125,25 +130,30 @@ void					CMSWindowsScreen::closeDisplay()
 	log((CLOG_DEBUG "closed display"));
 }
 
-HINSTANCE				CMSWindowsScreen::getInstance()
+HINSTANCE
+CMSWindowsScreen::getInstance()
 {
 	return s_instance;
 }
 
-ATOM					CMSWindowsScreen::getClass() const
+ATOM
+CMSWindowsScreen::getClass() const
 {
 	return m_class;
 }
 
-void					CMSWindowsScreen::updateScreenSize()
+void
+CMSWindowsScreen::updateScreenSize()
 {
 	m_w = GetSystemMetrics(SM_CXSCREEN);
 	m_h = GetSystemMetrics(SM_CYSCREEN);
 	log((CLOG_INFO "display resize: %dx%d", m_w, m_h));
 }
 
-void					CMSWindowsScreen::getScreenSize(
-								SInt32* w, SInt32* h) const
+void
+CMSWindowsScreen::getScreenSize(
+	SInt32* w,
+	SInt32* h) const
 {
 	assert(m_class != 0);
 	assert(w != NULL && h != NULL);
@@ -152,7 +162,8 @@ void					CMSWindowsScreen::getScreenSize(
 	*h = m_h;
 }
 
-HDESK					CMSWindowsScreen::openInputDesktop() const
+HDESK
+CMSWindowsScreen::openInputDesktop() const
 {
 	return OpenInputDesktop(DF_ALLOWOTHERACCOUNTHOOK, TRUE,
 								DESKTOP_CREATEWINDOW |
@@ -160,8 +171,9 @@ HDESK					CMSWindowsScreen::openInputDesktop() const
 									GENERIC_WRITE);
 }
 
-CString					CMSWindowsScreen::getDesktopName(
-								HDESK desk) const
+CString
+CMSWindowsScreen::getDesktopName(
+	HDESK desk) const
 {
 	if (desk == NULL) {
 		return CString();
@@ -177,14 +189,17 @@ CString					CMSWindowsScreen::getDesktopName(
 	}
 }
 
-bool					CMSWindowsScreen::isCurrentDesktop(
-								HDESK desk) const
+bool
+CMSWindowsScreen::isCurrentDesktop(
+	HDESK desk) const
 {
 	return CStringUtil::CaselessCmp::equal(getDesktopName(desk),
 								getCurrentDesktopName());
 }
 
-void					CMSWindowsScreen::getEvent(MSG* msg) const
+void
+CMSWindowsScreen::getEvent(
+	MSG* msg) const
 {
 	// wait for an event in a cancellable way
 	while (HIWORD(GetQueueStatus(QS_ALLINPUT)) == 0) {
@@ -193,9 +208,12 @@ void					CMSWindowsScreen::getEvent(MSG* msg) const
 	GetMessage(msg, NULL, 0, 0);
 }
 
-LRESULT CALLBACK		CMSWindowsScreen::wndProc(
-								HWND hwnd, UINT msg,
-								WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK
+CMSWindowsScreen::wndProc(
+	HWND hwnd,
+	UINT msg,
+	WPARAM wParam,
+	LPARAM lParam)
 {
 	assert(s_screen != NULL);
 	return s_screen->onEvent(hwnd, msg, wParam, lParam);

@@ -90,17 +90,21 @@ private:
 
 template <class T>
 inline
-CCondVar<T>::CCondVar(CMutex* mutex, const T& data) :
-								CCondVarBase(mutex), m_data(data)
+CCondVar<T>::CCondVar(
+	CMutex* mutex,
+	const T& data) :
+	CCondVarBase(mutex),
+	m_data(data)
 {
 	// do nothing
 }
 
 template <class T>
 inline
-CCondVar<T>::CCondVar(const CCondVar& cv) :
-								CCondVarBase(cv.getMutex()),
-								m_data(cv.m_data)
+CCondVar<T>::CCondVar(
+	const CCondVar& cv) :
+	CCondVarBase(cv.getMutex()),
+	m_data(cv.m_data)
 {
 	// do nothing
 }
@@ -114,7 +118,9 @@ CCondVar<T>::~CCondVar()
 
 template <class T>
 inline
-CCondVar<T>&			CCondVar<T>::operator=(const CCondVar<T>& cv)
+CCondVar<T>&
+CCondVar<T>::operator=(
+	const CCondVar<T>& cv)
 {
 	m_data = cv.m_data;
 	return *this;
@@ -122,7 +128,9 @@ CCondVar<T>&			CCondVar<T>::operator=(const CCondVar<T>& cv)
 
 template <class T>
 inline
-CCondVar<T>&			CCondVar<T>::operator=(const T& data)
+CCondVar<T>&
+CCondVar<T>::operator=(
+	const T& data)
 {
 	m_data = data;
 	return *this;

@@ -1,18 +1,21 @@
 #include "CXWindowsUtil.h"
-#include "CLog.h"
 #include "CThread.h"
-#include <assert.h>
+#include "CLog.h"
 #include <X11/Xatom.h>
 
 //
 // CXWindowsUtil
 //
 
-bool					CXWindowsUtil::getWindowProperty(
-								Display* display,
-								Window window, Atom property,
-								CString* data, Atom* type,
-								int* format, bool deleteProperty)
+bool
+CXWindowsUtil::getWindowProperty(
+	Display* display,
+	Window window,
+	Atom property,
+	CString* data,
+	Atom* type,
+	int* format,
+	bool deleteProperty)
 {
 	assert(display != NULL);
 	assert(data != NULL);
@@ -84,11 +87,15 @@ bool					CXWindowsUtil::getWindowProperty(
 	return true;
 }
 
-bool					CXWindowsUtil::setWindowProperty(
-								Display* display,
-								Window window, Atom property,
-								const void* vdata, UInt32 size,
-								Atom type, SInt32 format)
+bool
+CXWindowsUtil::setWindowProperty(
+	Display* display,
+	Window window,
+	Atom property,
+	const void* vdata,
+	UInt32 size,
+	Atom type,
+	SInt32 format)
 {
 	const UInt32 length       = 4 * XMaxRequestSize(display);
 	const unsigned char* data = reinterpret_cast<const unsigned char*>(vdata);
@@ -100,8 +107,9 @@ bool					CXWindowsUtil::setWindowProperty(
 
 	// how much data to send in first chunk?
 	UInt32 chunkSize = size;
-	if (chunkSize > length)
+	if (chunkSize > length) {
 		chunkSize = length;
+	}
 
 	// send first chunk
 	XChangeProperty(display, window, property,
@@ -113,8 +121,9 @@ bool					CXWindowsUtil::setWindowProperty(
 	size -= chunkSize;
 	while (!error && size > 0) {
 		chunkSize = size;
-		if (chunkSize > length)
+		if (chunkSize > length) {
 			chunkSize = length;
+		}
 		XChangeProperty(display, window, property,
 								type, format, PropModeAppend,
 								data, chunkSize / datumSize);
@@ -125,8 +134,10 @@ bool					CXWindowsUtil::setWindowProperty(
 	return !error;
 }
 
-Time					CXWindowsUtil::getCurrentTime(
-								Display* display, Window window)
+Time
+CXWindowsUtil::getCurrentTime(
+	Display* display,
+	Window window)
 {
 	// select property events on window
 	XWindowAttributes attr;
@@ -162,8 +173,11 @@ Time					CXWindowsUtil::getCurrentTime(
 	return xevent.xproperty.time;
 }
 
-Bool					CXWindowsUtil::propertyNotifyPredicate(
-								Display*, XEvent* xevent, XPointer arg)
+Bool
+CXWindowsUtil::propertyNotifyPredicate(
+	Display*,
+	XEvent* xevent,
+	XPointer arg)
 {
 	CPropertyNotifyPredicateInfo* filter =
 						reinterpret_cast<CPropertyNotifyPredicateInfo*>(arg);
@@ -185,12 +199,15 @@ CXWindowsUtil::CErrorLock::CErrorLock()
 	install(&CXWindowsUtil::CErrorLock::ignoreHandler, NULL);
 }
 
-CXWindowsUtil::CErrorLock::CErrorLock(bool* flag)
+CXWindowsUtil::CErrorLock::CErrorLock(
+	bool* flag)
 {
 	install(&CXWindowsUtil::CErrorLock::saveHandler, flag);
 }
 
-CXWindowsUtil::CErrorLock::CErrorLock(ErrorHandler handler, void* data)
+CXWindowsUtil::CErrorLock::CErrorLock(
+	ErrorHandler handler,
+	void* data)
 {
 	install(handler, data);
 }
@@ -201,8 +218,10 @@ CXWindowsUtil::CErrorLock::~CErrorLock()
 	s_top = m_next;
 }
 
-void					CXWindowsUtil::CErrorLock::install(
-								ErrorHandler handler, void* data)
+void
+CXWindowsUtil::CErrorLock::install(
+	ErrorHandler handler,
+	void* data)
 {
 	m_handler     = handler;
 	m_userData    = data;
@@ -212,8 +231,10 @@ void					CXWindowsUtil::CErrorLock::install(
 	s_top         = this;
 }
 
-int						CXWindowsUtil::CErrorLock::internalHandler(
-								Display* display, XErrorEvent* event)
+int
+CXWindowsUtil::CErrorLock::internalHandler(
+	Display* display,
+	XErrorEvent* event)
 {
 	if (s_top != NULL && s_top->m_handler != NULL) {
 		s_top->m_handler(display, event, s_top->m_userData);
@@ -221,14 +242,20 @@ int						CXWindowsUtil::CErrorLock::internalHandler(
 	return 0;
 }
 
-void					CXWindowsUtil::CErrorLock::ignoreHandler(
-								Display*, XErrorEvent*, void*)
+void
+CXWindowsUtil::CErrorLock::ignoreHandler(
+	Display*,
+	XErrorEvent*,
+	void*)
 {
 	// do nothing
 }
 
-void					CXWindowsUtil::CErrorLock::saveHandler(
-								Display*, XErrorEvent*, void* flag)
+void
+CXWindowsUtil::CErrorLock::saveHandler(
+	Display*,
+	XErrorEvent*,
+	void* flag)
 {
 	*reinterpret_cast<bool*>(flag) = true;
 }

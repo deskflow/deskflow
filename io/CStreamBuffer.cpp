@@ -1,5 +1,4 @@
 #include "CStreamBuffer.h"
-#include <assert.h>
 
 //
 // CStreamBuffer
@@ -7,7 +6,8 @@
 
 const UInt32			CStreamBuffer::kChunkSize = 4096;
 
-CStreamBuffer::CStreamBuffer() : m_size(0)
+CStreamBuffer::CStreamBuffer() :
+	m_size(0)
 {
 	// do nothing
 }
@@ -17,7 +17,9 @@ CStreamBuffer::~CStreamBuffer()
 	// do nothing
 }
 
-const void*				CStreamBuffer::peek(UInt32 n)
+const void*
+CStreamBuffer::peek(
+	UInt32 n)
 {
 	assert(n <= m_size);
 
@@ -36,7 +38,9 @@ const void*				CStreamBuffer::peek(UInt32 n)
 	return reinterpret_cast<const void*>(head->begin());
 }
 
-void					CStreamBuffer::pop(UInt32 n)
+void
+CStreamBuffer::pop(
+	UInt32 n)
 {
 	// discard all chunks if n is greater than or equal to m_size
 	if (n >= m_size) {
@@ -63,8 +67,10 @@ void					CStreamBuffer::pop(UInt32 n)
 	}
 }
 
-void					CStreamBuffer::write(
-								const void* vdata, UInt32 n)
+void
+CStreamBuffer::write(
+	const void* vdata,
+	UInt32 n)
 {
 	assert(vdata != NULL);
 
@@ -81,8 +87,9 @@ void					CStreamBuffer::write(
 	ChunkList::iterator scan = m_chunks.end();
 	if (scan != m_chunks.begin()) {
 		--scan;
-		if (scan->size() >= kChunkSize)
+		if (scan->size() >= kChunkSize) {
 			++scan;
+		}
 	}
 	if (scan == m_chunks.end()) {
 		scan = m_chunks.insert(scan, Chunk());
@@ -109,7 +116,8 @@ void					CStreamBuffer::write(
 	}
 }
 
-UInt32					CStreamBuffer::getSize() const
+UInt32
+CStreamBuffer::getSize() const
 {
 	return m_size;
 }

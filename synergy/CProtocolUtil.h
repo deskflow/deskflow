@@ -3,7 +3,7 @@
 
 #include "BasicTypes.h"
 #include "XIO.h"
-#include <stdarg.h>
+#include <cstdarg>
 
 class IInputStream;
 class IOutputStream;
@@ -23,7 +23,7 @@ public:
 	//   %s   -- converts CString* to stream of bytes
 	//   %S   -- converts integer N and const UInt8* to stream of N bytes
 	static void			writef(IOutputStream*,
-								const char* fmt, ...);
+							const char* fmt, ...);
 
 	// read formatted binary data from a buffer.  this performs the
 	// reverse operation of writef().
@@ -35,7 +35,7 @@ public:
 	//   %4i  -- reads an NBO 4 byte integer;  arg is SInt32* or UInt32*
 	//   %s   -- reads bytes;  argument must be a CString*, *not* a char*
 	static void			readf(IInputStream*,
-								const char* fmt, ...);
+							const char* fmt, ...);
 
 private:
 	static UInt32		getLength(const char* fmt, va_list);

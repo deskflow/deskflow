@@ -1,12 +1,14 @@
 #include "CNetworkAddress.h"
-#include "CString.h"
-#include <stdlib.h>
+#include "XSocket.h"
+#include <cstdlib>
+#include <cstring>
 
 //
 // CNetworkAddress
 //
 
-CNetworkAddress::CNetworkAddress() : m_port(0)
+CNetworkAddress::CNetworkAddress() :
+	m_port(0)
 {
 	// note -- make no calls to CNetwork socket interface here;
 	// we're often called prior to CNetwork::init().
@@ -19,7 +21,9 @@ CNetworkAddress::CNetworkAddress() : m_port(0)
 	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 }
 
-CNetworkAddress::CNetworkAddress(UInt16 port) : m_port(port)
+CNetworkAddress::CNetworkAddress(
+	UInt16 port) :
+	m_port(port)
 {
 	if (port == 0) {
 		throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
@@ -33,9 +37,11 @@ CNetworkAddress::CNetworkAddress(UInt16 port) : m_port(port)
 	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 }
 
-CNetworkAddress::CNetworkAddress(const CString& hostname_, UInt16 port) :
-								m_hostname(hostname_),
-								m_port(port)
+CNetworkAddress::CNetworkAddress(
+	const CString& hostname_,
+	UInt16 port) :
+	m_hostname(hostname_),
+	m_port(port)
 {
 	CString hostname(m_hostname);
 
@@ -126,27 +132,32 @@ CNetworkAddress::~CNetworkAddress()
 	// do nothing
 }
 
-bool					CNetworkAddress::isValid() const
+bool
+CNetworkAddress::isValid() const
 {
 	return (m_port != 0);
 }
 
-const CNetwork::Address*	CNetworkAddress::getAddress() const
+const CNetwork::Address*
+CNetworkAddress::getAddress() const
 {
 	return &m_address;
 }
 					
-CNetwork::AddressLength		CNetworkAddress::getAddressLength() const
+CNetwork::AddressLength
+CNetworkAddress::getAddressLength() const
 {
 	return sizeof(m_address);
 }
 
-CString					CNetworkAddress::getHostname() const
+CString
+CNetworkAddress::getHostname() const
 {
 	return m_hostname;
 }
 
-UInt16					CNetworkAddress::getPort() const
+UInt16
+CNetworkAddress::getPort() const
 {
 	return m_port;
 }

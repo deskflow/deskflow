@@ -4,8 +4,10 @@
 // COuputPacketStream
 //
 
-COutputPacketStream::COutputPacketStream(IOutputStream* stream, bool adopt) :
-								COutputStreamFilter(stream, adopt)
+COutputPacketStream::COutputPacketStream(
+	IOutputStream* stream,
+	bool adopt) :
+	COutputStreamFilter(stream, adopt)
 {
 	// do nothing
 }
@@ -15,13 +17,16 @@ COutputPacketStream::~COutputPacketStream()
 	// do nothing
 }
 
-void					COutputPacketStream::close()
+void
+COutputPacketStream::close()
 {
 	getStream()->close();
 }
 
-UInt32					COutputPacketStream::write(
-								const void* buffer, UInt32 count)
+UInt32
+COutputPacketStream::write(
+	const void* buffer,
+	UInt32 count)
 {
 	// write the length of the payload
 	UInt8 length[4];
@@ -49,7 +54,8 @@ UInt32					COutputPacketStream::write(
 	return count;
 }
 
-void					COutputPacketStream::flush()
+void
+COutputPacketStream::flush()
 {
 	getStream()->flush();
 }

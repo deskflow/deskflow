@@ -19,6 +19,7 @@ CXXFILES = 				\
 	CNetworkAddress.cpp		\
 	CTCPSocket.cpp			\
 	CTCPListenSocket.cpp		\
+	XNetwork.cpp			\
 	XSocket.cpp			\
 	$(NULL)
 

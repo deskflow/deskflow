@@ -3,7 +3,6 @@
 
 #include "IClipboard.h"
 #include "ClipboardTypes.h"
-#include "CString.h"
 #include "stdmap.h"
 #include "stdlist.h"
 #include <X11/Xlib.h>
@@ -20,13 +19,13 @@ public:
 	// owner window isn't this clipboard's window then this simply
 	// sends a failure event to the requestor.
 	void				addRequest(Window owner,
-								Window requestor, Atom target,
-								::Time time, Atom property);
+							Window requestor, Atom target,
+							::Time time, Atom property);
 
 	// continue processing a selection request.  returns true if the
 	// request was handled, false if the request was unknown.
 	bool				processRequest(Window requestor,
-								::Time time, Atom property);
+							::Time time, Atom property);
 
 	// terminate a selection request.  returns true iff the request
 	// was known and handled.
@@ -56,8 +55,8 @@ private:
 	// could be performed, false otherwise.  in either case, the
 	// reply is inserted.
 	bool				addSimpleRequest(
-								Window requestor, Atom target,
-								::Time time, Atom property);
+							Window requestor, Atom target,
+							::Time time, Atom property);
 
 	// clear the cache, resetting the cached flag and the added flag for
 	// each format.
@@ -71,8 +70,8 @@ private:
 	// ICCCM interoperability methods
 	void				icccmFillCache();
 	bool				icccmGetSelection(Atom target,
-								Atom* actualTarget,
-								CString* data) const;
+							Atom* actualTarget,
+							CString* data) const;
 	Time				icccmGetTime() const;
 
 	// motif interoperability methods
@@ -97,15 +96,15 @@ private:
 		// true iff the conversion was successful or the conversion
 		// cannot be performed (in which case *actualTarget == None).
 		bool			readClipboard(Display* display,
-								Atom selection, Atom target,
-								Atom* actualTarget, CString* data);
+							Atom selection, Atom target,
+							Atom* actualTarget, CString* data);
 
 	private:
 		bool			doEventPredicate(Display* display,
-								XEvent* event);
+							XEvent* event);
 		static Bool		eventPredicate(Display* display,
-								XEvent* event,
-								XPointer arg);
+							XEvent* event,
+							XPointer arg);
 		void			timeout(void*);
 
 	private:
@@ -177,7 +176,7 @@ private:
 	public:
 		CReply(Window, Atom target, ::Time);
 		CReply(Window, Atom target, ::Time, Atom property,
-								const CString& data, Atom type, int format);
+							const CString& data, Atom type, int format);
 
 	public:
 		// information about the request
@@ -209,12 +208,12 @@ private:
 	void				insertReply(CReply*);
 	void				pushReplies();
 	void				pushReplies(CReplyMap::iterator,
-								CReplyList&, CReplyList::iterator);
+							CReplyList&, CReplyList::iterator);
 	bool				sendReply(CReply*);
 	void				clearReplies();
 	void				clearReplies(CReplyList&);
 	void				sendNotify(Window requestor, Atom selection,
-								Atom target, Atom property, Time time);
+							Atom target, Atom property, Time time);
 	bool				wasOwnedAtTime(::Time) const;
 
 	// data conversion methods

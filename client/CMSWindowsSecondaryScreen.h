@@ -7,7 +7,8 @@
 #include "CString.h"
 #include "stdvector.h"
 
-class CMSWindowsSecondaryScreen : public CMSWindowsScreen, public ISecondaryScreen {
+class CMSWindowsSecondaryScreen : public CMSWindowsScreen,
+							public ISecondaryScreen {
 public:
 	CMSWindowsSecondaryScreen();
 	virtual ~CMSWindowsSecondaryScreen();
@@ -18,7 +19,7 @@ public:
 	virtual void		open(CClient*);
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
-								KeyModifierMask mask);
+							KeyModifierMask mask);
 	virtual void		leave();
 	virtual void		keyDown(KeyID, KeyModifierMask);
 	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count);
@@ -68,7 +69,7 @@ private:
 	// key and button queries and operations
 	DWORD				mapButton(ButtonID button, bool press) const;
 	KeyModifierMask		mapKey(Keystrokes&, UINT& virtualKey, KeyID,
-								KeyModifierMask, EKeyAction) const;
+							KeyModifierMask, EKeyAction) const;
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 
 	void				updateKeys();

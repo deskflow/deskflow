@@ -2,8 +2,6 @@
 #define ILISTENSOCKET_H
 
 #include "IInterface.h"
-#include "XIO.h"
-#include "XSocket.h"
 
 class CNetworkAddress;
 class ISocket;
