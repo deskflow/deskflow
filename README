@@ -168,6 +168,12 @@ synergy can run in the foreground or as a daemon/service.  it's
 recommended that you run it in the foreground until you've sorted
 out your configuration.
 
+on the Windows NT family you cannot run a service directly.
+instead you install the service then control it via the Services
+control panel.  on the Windows 95 family, you can use the
+`--daemon' command line option to start synergy in the background
+or you can install the service and restart your computer.
+
 in the text below, except where noted, synergy refers to the
 client and/or the server.
 
@@ -233,7 +239,9 @@ linux, unix:
   finally, some display managers (xdm and kdm, but not gdm)
   grab the keyboard and do not release it until the user logs
   in, also for security reasons.  this prevents a synergy server
-  from sharing the mouse and keyboard until the user logs in.
+  from sharing the mouse and keyboard until the user logs in
+  but it doesn't prevent a synergy client from synthesizing
+  mouse and keyboard input.
 
   to install synergy as a daemon, you'll need to add the
   appropriate lines and/or files to start synergy at boot time
@@ -261,7 +269,7 @@ linux:
     # /bin/cp synergyd.linux.init /etc/init.d/synergyd
     # /bin/cp synergy.conf /etc/synergy.conf
     # /sbin/chkconfig --add synergyd
-  of course, the configuration should be edited your for systems.
+  of course, /etc/synergy.conf should be edited your for systems.
 
   to manually start or stop the client
     # /etc/init.d/synergy start
@@ -288,11 +296,8 @@ linux:
 common command line options
 ---------------------------
   -d, --debug <level>   use debugging level <level>
-      --daemon          run as a daemon (linux,unix)
-      --no-daemon       run in the foreground (linux,unix)
-      --service         run as a service (windows)
-      --no-service      run in the foreground (windows)
-  -f                    run in the foreground
+      --daemon          run as a daemon (linux,unix) or background (windows)
+  -f, --no-daemon       run in the foreground
   -n, --name <name>     use <name> instead of the hostname
       --restart         automatically restart on unexpected failures
   -1, --no-restart      do not restart on unexpected failure
