@@ -263,6 +263,7 @@ following these guidelines.
   * All files should include the copyright and license notice
   * Use tabs to indent
   * Tabs are 4 columns
+  * Lines should not extend past the 80th column
   * Open braces ({) go on same line as introducing statement
     `for (i = 0; i < 10; ++i) {' not
      for (i = 0; i < 10; ++i)
@@ -280,6 +281,9 @@ following these guidelines.
   * Other indentation should follow existing practice
   * Use Qt style comments for extraction by doxygen
   * Mark incomplete or buggy code with `FIXME'
+
+- Other
+  * calls to log() should always be all on one line (even past column 80)
 
 
 Class Relationships
