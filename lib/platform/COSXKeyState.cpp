@@ -432,11 +432,7 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		UInt32 modifiers;
 		GetEventParameter(event, kEventParamKeyModifiers, typeUInt32,
 							NULL, sizeof(modifiers), NULL, &modifiers);
-		modifiers &= ~(cmdKey | controlKey | rightControlKey);
-
-		// build keycode
-		UInt16 keycode =
-			static_cast<UInt16>((modifiers & 0xff00u) | (vkCode & 0x00ffu));
+		modifiers = (modifiers & ~(cmdKey | controlKey | rightControlKey)) >> 8;
 
 		// choose action
 		UInt16 action;
@@ -456,8 +452,10 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		// translate key
 		UniCharCount count;
 		UniChar chars[2];
-		OSStatus status = UCKeyTranslate(m_uchrResource, keycode, action,
-							modifiers, m_keyboardType, 0, &m_deadKeyState,
+		OSStatus status = UCKeyTranslate(m_uchrResource,
+							vkCode & 0xffu, action,
+							modifiers & 0xffu,
+							m_keyboardType, 0, &m_deadKeyState,
 							sizeof(chars) / sizeof(chars[0]), &count, chars);
 
 		// get the characters
