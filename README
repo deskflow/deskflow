@@ -35,6 +35,7 @@ manifest
   README              README              this file
   synergy             synergy.exe         the synergy client
   synergyd            synergyd.exe        the synergy server
+                      synrgyhk.dll        the synergy hook dll
   synergy.conf        synergy.conf        sample configuration file
   synergy.linux.init                      startup script for client
   synergyd.linux.init                     startup script for server
@@ -177,10 +178,17 @@ windows:
     synergyd --install [other command line options]
 
   the client/server is installed as a service and the command
-  line is saved and used when starting the service.  note that
-  when installing the client you must provide the server
-  hostname argument.  to change the arguments you must first
-  uninstall then reinstall.
+  line is saved and used when starting the service.  the system
+  will expect to find the program wherever it was when you used
+  the --install option so make sure it's not on a network share
+  from another system because the network share will not be
+  available at boot time.  synergyd will also try to load
+  synrgyhk.dll so that should be in the same directory as
+  synergyd.exe.
+
+  note that when installing the client you must provide the
+  server hostname argument.  to change the arguments you must
+  first uninstall then reinstall.
 
   you must also install the configuration file along with the
   server.  it's recommended that you put it in the windows
