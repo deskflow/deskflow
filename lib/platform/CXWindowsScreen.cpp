@@ -635,6 +635,19 @@ CXWindowsScreen::onPreDispatch(CEvent* event)
 
 	switch (xevent->type) {
 	case MappingNotify:
+		{
+			CLock lock(&m_mutex);
+			if (XPending(m_display) > 0) {
+				XEvent tmpEvent;
+				XPeekEvent(m_display, &tmpEvent);
+				if (tmpEvent.type == MappingNotify) {
+					// discard this MappingNotify since another follows.
+					// we tend to get a bunch of these in a row.
+					return true;
+				}
+			}
+		}
+
 		// keyboard mapping changed
 		XRefreshKeyboardMapping(&xevent->xmapping);
 
