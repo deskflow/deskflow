@@ -222,6 +222,11 @@ CArchMiscWindows::readBinaryOrString(HKEY key, const TCHAR* name, DWORD type)
 		return std::string();
 	}
 
+	// if zero size then return empty string
+	if (size == 0) {
+		return std::string();
+	}
+
 	// allocate space
 	char* buffer = new char[size];
 
@@ -234,6 +239,10 @@ CArchMiscWindows::readBinaryOrString(HKEY key, const TCHAR* name, DWORD type)
 	}
 
 	// clean up and return value
+	if (type == REG_SZ && buffer[size - 1] == '\0') {
+		// don't include terminating nul;  std::string will add one.
+		--size;
+	}
 	std::string value(buffer, size);
 	delete[] buffer;
 	return value;
