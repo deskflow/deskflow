@@ -25,8 +25,30 @@ A key state for OS X.
 */
 class COSXKeyState : public CKeyState {
 public:
+	// OS X uses a physical key if 0 for the 'A' key.  synergy reserves
+	// KeyButton 0 so we offset all OS X physical key ids by this much
+	// when used as a KeyButton and by minus this much to map a KeyButton
+	// to a physical button.
+	enum {
+		KeyButtonOffset = 1
+	};
+
 	COSXKeyState();
 	virtual ~COSXKeyState();
+
+	//! Map physical key id to a KeyButton id
+	/*!
+	Maps an OS X key code to a KeyButton.  This simply remaps the ids
+	so we don't use KeyButton 0.
+	*/
+	static KeyButton	mapKeyCodeToKeyButton(UInt32 keyCode);
+
+	//! Map KeyButton id to a physical key id
+	/*!
+	Maps a KeyButton to an OS X key code.  This is the inverse of
+	mapKeyCodeToKeyButton.
+	*/
+	static UInt32		mapKeyButtonToKeyCode(KeyButton keyButton);
 
 	//! Map key event to a key
 	/*!

@@ -18,7 +18,7 @@
 struct CKeyEntry {
 public:
 	KeyID				m_keyID;
-	KeyButton			m_button;
+	UInt32				m_keyCode;
 };
 static const CKeyEntry	s_keys[] = {
 	/* ASCII */
@@ -466,6 +466,19 @@ COSXKeyState::~COSXKeyState()
 	// do nothing
 }
 
+KeyButton
+COSXKeyState::mapKeyCodeToKeyButton(UInt32 keyCode)
+{
+	// 'A' maps to 0 so shift every id by +1
+	return static_cast<KeyButton>(keyCode + 1);
+}
+
+UInt32
+COSXKeyState::mapKeyButtonToKeyCode(KeyButton keyButton)
+{
+	return static_cast<UInt32>(keyButton - 1);
+}
+
 void
 COSXKeyState::sendKeyEvent(void* target,
 				bool press, bool isAutoRepeat,
@@ -524,10 +537,9 @@ COSXKeyState::doUpdateKeys()
 	// FIXME -- this probably needs to be more dynamic to support
 	// non-english keyboards.  also need to map modifiers needed
 	// for each KeyID.
-	// FIXME -- add one so we don't use KeyButton 0 (reserved to be no key)
 	for (UInt32 i = 0; i < sizeof(s_keys) / sizeof(s_keys[0]); ++i) {
 		m_keyMap.insert(std::make_pair(s_keys[i].m_keyID,
-							s_keys[i].m_button + 1));
+							mapKeyCodeToKeyButton(s_keys[i].m_keyCode)));
 	}
 
 	// add modifiers
@@ -558,8 +570,7 @@ COSXKeyState::doFakeKeyEvent(KeyButton button, bool press, bool isAutoRepeat)
 {
 	LOG((CLOG_DEBUG2 "doFakeKeyEvent button:%d, press:%d", button, press));
 	// let system figure out character for us
-	// FIXME -- subtracting one because we added one in doUpdateKeys.
-	CGPostKeyboardEvent(0, static_cast<CGKeyCode>(button) - 1, press);
+	CGPostKeyboardEvent(0, mapKeyButtonToKeyCode(button), press);
 }
 
 KeyButton
@@ -629,9 +640,20 @@ COSXKeyState::mapKeyFromEvent(EventRef event, KeyModifierMask* maskOut) const
 	KeyID id = s_virtualKey[vkCode];
 
 	// check if not in table;  map character to key id
+	KeyModifierMask activeMask = getActiveModifiers();
 	if (id == kKeyNone && c != 0) {
 		if ((c & 0x80u) == 0) {
-			// ASCII
+			// ASCII.  if it's a control code and the control key is
+			// pressed then map it back to the original character.
+			if ((activeMask & KeyModifierControl) != 0 && c >= 1 && c <= 31) {
+				c += 'A' - 1;
+
+				// if shift isn't pressed then map to lowercase
+				if ((activeMask & KeyModifierShift) == 0) {
+					c += 'a' - 'A';
+				}
+			}
+
 			id = static_cast<KeyID>(c) & 0xffu;
 		}
 		else {
@@ -642,11 +664,6 @@ COSXKeyState::mapKeyFromEvent(EventRef event, KeyModifierMask* maskOut) const
 			//FIXME
 			id = static_cast<KeyID>(c) & 0xffu;
 		}
-	}
-	
-	KeyModifierMask activeMask = getActiveModifiers();
-	if (id != kKeyNone && c != 0)  {
-		// FIXME
 	}
 
 	// map modifier key
@@ -665,8 +682,8 @@ COSXKeyState::addKeyButton(KeyButtons& keys, KeyID id) const
 	if (keyIndex == m_keyMap.end()) {
 		return;
 	}
-	// XXX -- subtract one because added one in doUpdateKeys
-	keys.push_back(keyIndex->second - 1);
+// YYY -1
+	keys.push_back(keyIndex->second);
 }
 
 void
@@ -706,8 +723,8 @@ COSXKeyState::handleModifierKey(void* target, KeyID id, bool down)
 	if (keyIndex == m_keyMap.end()) {
 		return;
 	}
-	// FIXME -- subtract one because we added one in doUpdateKeys
-	KeyButton button = keyIndex->second - 1;
+// YYY -1
+	KeyButton button = keyIndex->second;
 	setKeyDown(button, down);
 	sendKeyEvent(target, down, false, id, getActiveModifiers(), 0, button);
 }

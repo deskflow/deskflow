@@ -808,15 +808,16 @@ COSXScreen::onKey(EventRef event) const
 	UInt32 eventKind = GetEventKind(event);
 
 	// get the key
-	KeyButton button;
+	UInt32 keyCode;
 	GetEventParameter(event, kEventParamKeyCode, typeUInt32,
-							NULL, sizeof(button), NULL, &button);
-	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, button));
+							NULL, sizeof(keyCode), NULL, &keyCode);
+	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, keyCode));
+	KeyButton button = COSXKeyState::mapKeyCodeToKeyButton(keyCode);
 
-	// sadly, OS X doesn't report the button for modifier keys.  button will
-	// be zero for modifier keys.  since that's not good enough we'll have
-	// to figure out what the key was.
-	if (button == 0 && eventKind == kEventRawKeyModifiersChanged) {
+	// sadly, OS X doesn't report the keyCode for modifier keys.  keyCode
+	// will be zero for modifier keys.  since that's not good enough we'll
+	// have to figure out what the key was.
+	if (keyCode == 0 && eventKind == kEventRawKeyModifiersChanged) {
 		// get old and new modifier state
 		KeyModifierMask oldMask = getActiveModifiers();
 		KeyModifierMask newMask = mapMacModifiersToSynergy(event);
@@ -839,7 +840,7 @@ COSXScreen::onKey(EventRef event) const
 	KeyID key = m_keyState->mapKeyFromEvent(event, &mask);
 	
 	m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat,
-							key, mask, 0, button);
+							key, mask, 1, button);
 
 	return true;
 }
