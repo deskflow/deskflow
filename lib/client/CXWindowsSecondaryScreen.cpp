@@ -304,11 +304,6 @@ CXWindowsSecondaryScreen::showWindow()
 	// raise and show the hider window.  take activation.
 	// FIXME -- take focus?
 	XMapRaised(display, m_window);
-
-/* XXX -- this should have no effect
-	// hide cursor by moving it into the hider window
-	XWarpPointer(display, None, m_window, 0, 0, 0, 0, 0, 0);
-*/
 }
 
 void
