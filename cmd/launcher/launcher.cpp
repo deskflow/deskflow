@@ -514,6 +514,11 @@ getCommandLine(HWND hwnd, bool testing)
 		cmdLine += " -z --no-restart --no-daemon";
 	}
 
+	// can't start as service on NT
+	else if (!CArchMiscWindows::isWindows95Family()) {
+		cmdLine += " --no-daemon";
+	}
+
 	// get the server name
 	CString server;
 	bool isClient = isClientChecked(hwnd);
