@@ -294,7 +294,8 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 	if (code >= 0) {
 		if (g_screenSaver) {
 			MSG* msg = reinterpret_cast<MSG*>(lParam);
-			if (msg->message == WM_SYSCOMMAND && msg->wParam == SC_SCREENSAVE) {
+			if (msg->message == WM_SYSCOMMAND &&
+				msg->wParam  == SC_SCREENSAVE) {
 				// broadcast screen saver started message
 				PostThreadMessage(g_threadID,
 								SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
@@ -374,7 +375,7 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 //
 // low-level mouse hook -- this allows us to capture and handle mouse
 // wheel events on all windows NT platforms from NT SP3 and up.  this
-// is both simpler than using the mouse hook but also supports windows
+// is both simpler than using the mouse hook and also supports windows
 // windows NT which does not report mouse wheel events.  we need to
 // keep the mouse hook handling of mouse wheel events because the
 // windows 95 family doesn't support low-level hooks.
@@ -561,8 +562,11 @@ DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 	}
 	else if (reason == DLL_PROCESS_DETACH) {
 		if (g_processID == GetCurrentProcessId()) {
-			if (g_keyboard != NULL || g_mouse != NULL || g_cbt != NULL) {
+			if (g_keyboard   != NULL ||
+				g_mouse      != NULL ||
+				g_getMessage != NULL) {
 				uninstall();
+				uninstallScreenSaver();
 			}
 			g_processID = 0;
 			g_hinstance = NULL;
@@ -715,7 +719,7 @@ install()
 	}
 
 	// install low-level keyboard/mouse hooks, if possible.  since these
-	// hook are called in the context of the installing thread and that
+	// hooks are called in the context of the installing thread and that
 	// thread must have a message loop but we don't want the caller's
 	// message loop to do the work, we'll fire up a separate thread
 	// just for the hooks.  note that low-level hooks are only available
@@ -814,7 +818,7 @@ uninstallScreenSaver(void)
 	assert(g_hinstance != NULL);
 
 	// uninstall hook unless the mouse wheel hook is installed
-	if (g_getMessage != NULL && g_wheelSupport == kWheelNone) {
+	if (g_getMessage != NULL && g_wheelSupport != kWheelOld) {
 		UnhookWindowsHookEx(g_getMessage);
 		g_getMessage = NULL;
 	}
