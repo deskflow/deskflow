@@ -424,7 +424,7 @@ CXWindowsSecondaryScreen::getToggleState() const
 unsigned int
 CXWindowsSecondaryScreen::mapButton(ButtonID id) const
 {
-	if (id < 1 || id > sizeof(m_buttons) / sizeof(m_buttons[0])) {
+	if (id < 1 || id > m_buttons.size()) {
 		// out of range
 		return 0;
 	}
@@ -886,16 +886,33 @@ CXWindowsSecondaryScreen::updateKeys()
 {
 	CDisplayLock display(m_screen);
 
-	// get pointer mapping
-	static const UInt32 maxButtons = sizeof(m_buttons) / sizeof(m_buttons[0]);
-	unsigned char tmpButtons[sizeof(m_buttons) / sizeof(m_buttons[0])];
-	UInt32 numButtons = XGetPointerMapping(display, tmpButtons, maxButtons);
-	for (UInt32 i = 0; i < maxButtons; ++i) {
+	// query the button mapping
+	UInt32 numButtons = XGetPointerMapping(display, NULL, 0);
+	unsigned char* tmpButtons = new unsigned char[numButtons];
+	XGetPointerMapping(display, tmpButtons, numButtons);
+
+	// find the largest logical button id
+	unsigned char maxButton = 0;
+	for (UInt32 i = 0; i < numButtons; ++i) {
+		if (tmpButtons[i] > maxButton) {
+			maxButton = tmpButtons[i];
+		}
+	}
+
+	// allocate button array
+	m_buttons.resize(maxButton);
+
+	// fill in button array values.  m_buttons[i] is the physical
+	// button number for logical button i+1.
+	for (UInt32 i = 0; i < numButtons; ++i) {
 		m_buttons[i] = 0;
 	}
 	for (UInt32 i = 0; i < numButtons; ++i) {
 		m_buttons[tmpButtons[i] - 1] = i + 1;
 	}
+
+	// clean up
+	delete[] tmpButtons;
 
 	// ask server which keys are pressed
 	char keys[32];

@@ -130,7 +130,7 @@ private:
 
 	// logical to physical button mapping.  m_buttons[i] gives the
 	// physical button for logical button i+1.
-	unsigned char		m_buttons[5];
+	std::vector<unsigned char>	m_buttons;
 
 	// current active modifiers (X key masks)
 	unsigned int		m_mask;
