@@ -22,9 +22,13 @@ SUBDIRS =					\
 	$(NULL)
 
 EXTRA_DIST =				\
+	BUGS					\
+	FAQ						\
+	HISTORY					\
+	PORTING					\
 	all.dsp					\
 	synergy.dsw				\
-	doc/doxygen.cfg			\
+	doc/doxygen.cfg.in		\
 	examples/synergy.conf	\
 	$(NULL)
 

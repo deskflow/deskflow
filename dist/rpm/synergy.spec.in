@@ -24,9 +24,7 @@ CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
 make
 
 %install
-# FIXME -- install should install doc files
 make install DESTDIR=$RPM_BUILD_ROOT
-
 strip $RPM_BUILD_ROOT/usr/bin/synergy
 strip $RPM_BUILD_ROOT/usr/bin/synergyd
 
@@ -37,4 +35,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root)
 /usr/bin/synergy
 /usr/bin/synergyd
-# FIXME -- add doc files
+%doc AUTHORS BUGS COPYING ChangeLog FAQ INSTALL NEWS README
