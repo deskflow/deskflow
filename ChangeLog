@@ -1,3 +1,833 @@
+2004/03/28 14:53:01 crs
+lib/platform/CXWindowsKeyState.cpp
+
+Added ISO_Level3_Shift as a synonym for Mode_switch.  I've no idea
+if this will work as hoped but I've seen documentation that XFree
+4.3 uses ISO_Level3_Shift rather than Mode_switch.
+
+----------
+2004/03/28 14:07:58 crs
+lib/platform/CMSWindowsDesks.cpp
+lib/platform/CMSWindowsKeyState.cpp
+lib/platform/CMSWindowsKeyState.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CSynergyHook.h
+lib/synergy/CKeyState.h
+
+Fixed keyboard handling on windows 95 family.
+
+----------
+2004/03/28 14:07:37 crs
+lib/platform/Makefile.am
+
+Updated makefile to reflect renaming of platform files for win32.
+
+----------
+2004/03/28 14:06:40 crs
+lib/platform/CMSWindowsScreenSaver.cpp
+
+Fixed windows 95 family screen saver stuff.
+
+----------
+2004/03/28 14:05:52 crs
+lib/client/CServerProxy.cpp
+
+Changed debug logging of key IDs to use hex.
+
+----------
+2004/03/28 14:05:31 crs
+cmd/launcher/CAutoStart.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+lib/arch/CArchDaemonWindows.cpp
+
+Fixed bugs in installing per-user startup programs on windows 95
+family.
+
+----------
+2004/03/26 20:59:26 crs
+lib/platform/CMSWindowsDesks.cpp
+lib/platform/CMSWindowsDesks.h
+lib/platform/CMSWindowsDesktop.cpp
+lib/platform/CMSWindowsDesktop.h
+lib/platform/CMSWindowsKeyMapper.cpp
+lib/platform/CMSWindowsKeyMapper.h
+lib/platform/CMSWindowsKeyState.cpp
+lib/platform/CMSWindowsKeyState.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CXWindowsKeyState.cpp
+lib/platform/CXWindowsKeyState.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/platform/platform.dsp
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/synergy/CKeyState.cpp
+lib/synergy/CKeyState.h
+lib/synergy/CPlatformScreen.cpp
+lib/synergy/CPlatformScreen.h
+lib/synergy/CScreen.cpp
+lib/synergy/IKeyState.h
+lib/synergy/IPlatformScreen.h
+lib/synergy/ISecondaryScreen.h
+lib/synergy/libsynergy.dsp
+
+Converted win32 to new keyboard state tracking design.  Also
+changed locking to screen so that keys no longer count (only
+mouse buttons and scroll lock toggled on).  This is to deal
+with the unreliability of key event reporting which can leave
+us locked to a screen with no key physically pressed.  The
+result of this is that clients get key repeats and releases
+without the corresponding key press.  CKeyState handles this
+by discarding repeat/release events on keys it hasn't seen go
+down.  Also made a few other minor fixes to win32 keyboard
+handling.
+
+----------
+2004/03/26 20:59:21 crs
+lib/arch/CArchMiscWindows.cpp
+
+Fixed handling of reading strings from the registry.  This was
+broken when support for binary data was added.  The terminating
+NUL was included in the string as a character (that's in addition
+to the terminating NUL added by std::string).
+
+----------
+2004/03/21 20:01:41 crs
+lib/client/CClient.cpp
+lib/platform/CXWindowsKeyMapper.cpp
+lib/platform/CXWindowsKeyMapper.h
+lib/platform/CXWindowsKeyState.cpp
+lib/platform/CXWindowsKeyState.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/platform/Makefile.am
+lib/server/CPrimaryClient.cpp
+lib/synergy/CKeyState.cpp
+lib/synergy/CKeyState.h
+lib/synergy/CPlatformScreen.cpp
+lib/synergy/CPlatformScreen.h
+lib/synergy/CScreen.cpp
+lib/synergy/CScreen.h
+lib/synergy/IKeyState.cpp
+lib/synergy/IKeyState.h
+lib/synergy/IPlatformScreen.h
+lib/synergy/IPrimaryScreen.cpp
+lib/synergy/IPrimaryScreen.h
+lib/synergy/ISecondaryScreen.h
+lib/synergy/Makefile.am
+
+Checkpoint.  Converted X11 to new keyboard state tracking design.
+This new design is simpler.  For keyboard support, clients need only
+implement 4 virtual methods on a class derived from CKeyState and
+one trivial method in the class derived from CPlatformScreen, which
+is now the superclass of platform screens instead of IPlatformScreen.
+Keyboard methods have been removed from IPlatformScreen, IPrimaryScreen
+and ISecondaryScreen.  Also, all keyboard state tracking is now in
+exactly one place (the CKeyState subclass) rather than in CScreen,
+the platform screen, and the key mapper.  Still need to convert Win32.
+
+----------
+2004/03/17 20:59:25 crs
+lib/platform/CMSWindowsKeyMapper.cpp
+lib/platform/CMSWindowsKeyMapper.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/synergy/CScreen.cpp
+lib/synergy/CScreen.h
+lib/synergy/IKeyState.h
+lib/synergy/libsynergy.dsp
+
+Updated keyboard handling on win32.  Still needs some work to
+avoid shadowing key state in multiple places.  Also got locked
+to screen and reported key appeared to be wrong.
+
+----------
+2004/03/14 17:55:53 crs
+lib/platform/CXWindowsKeyMapper.cpp
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/synergy/CScreen.cpp
+lib/synergy/CScreen.h
+lib/synergy/IKeyState.h
+lib/synergy/IPlatformScreen.cpp
+lib/synergy/IPlatformScreen.h
+lib/synergy/IPrimaryScreen.cpp
+lib/synergy/IPrimaryScreen.h
+lib/synergy/Makefile.am
+
+Changed how key state is tracked on X11.  Now updating key state
+on every key press and release so we don't have to updateKeys()
+in isLockedToScreen().  However, if any key appears to be down
+we still call updateKeys() to double check that it's really down.
+If not we note the spurious lock and don't lock to the screen.
+
+----------
+2004/03/14 17:50:37 crs
+lib/io/IStream.h
+
+Fixed doxygen formatting error.
+
+----------
+2004/03/13 19:01:27 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Improved handling of active window on win32.  Synergy no longer
+takes activation so the previously active window doesn't pop to
+the top of the window stack when it regains activation.  One
+drawback of this is that the mouse cursor isn't shown when
+a window (other than synergy's) is activated.  However, synergy
+does detect mouse motion as before and shows the cursor when it
+sees any.
+
+----------
+2004/03/13 18:58:20 crs
+lib/platform/CMSWindowsScreen.h
+
+Fixed error in previous submit.
+
+----------
+2004/03/13 17:16:24 crs
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+
+Fixed handling of handshake complete.  Was posting an event for it
+but making direct calls for other messages from the server.  This
+could cause messages to be handled out of order.  Now making a
+direct call for handshake complete.
+
+----------
+2004/03/13 17:14:32 crs
+lib/platform/CMSWindowsEventQueueBuffer.cpp
+
+Fixed win32 taskbar icon event handling.  Wasn't responding to
+messages sent via SendMessage (rather than PostMessage).
+
+----------
+2004/03/13 17:13:55 crs
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/arch/CArchMiscWindows.cpp
+lib/arch/CArchMiscWindows.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CMSWindowsScreenSaver.h
+
+Added win32 support for power management.
+
+----------
+2004/03/10 22:03:01 crs
+configure.in
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsScreenSaver.h
+
+Added support for DPMS in X11 screen saver.  DPMS is the extension
+that allows you to power down the display.  Previously, synergy
+would not power on the display if DPMS was enabled and activated
+and xscreensaver was not running.  It also wouldn't disable DPMS
+so the display would power down normally on a synergy client if
+there was no input activity.
+
+----------
+2004/03/10 20:35:03 crs
+acinclude.m4
+lib/arch/CArchNetworkBSD.cpp
+
+Added check for inet_aton and a simple implementation for platforms
+that are missing it.
+
+----------
+2004/03/08 21:18:36 crs
+configure.in
+lib/platform/CXWindowsKeyMapper.cpp
+
+Removed dependency on X11/XF86keysym.h.  There are several versions
+of that file in existance, not all of which have all the symbols we
+require and none of which provide any convenient means of telling
+what groups of symbols they define.
+
+----------
+2004/03/08 20:53:32 crs
+lib/platform/CMSWindowsKeyMapper.cpp
+lib/platform/CMSWindowsKeyMapper.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CSynergyHook.cpp
+lib/server/CServer.cpp
+
+Win32 fixes.  Fixed slightly off cursor positioning when using
+absolute mouse_event().  Improved keyboard handling:  now using
+keyboard layout of last foreground window when leaving server
+so users can meaningfully choose the locale, moved dead key
+handling into hook library so there should be no more race
+conditions involving the keyboard dead key buffer, simplified
+keyboard and cursor handling by using a full screen transparent
+window when not using low level hooks, fixed error in restoring
+buffered dead key when checking for dead keys.  This hopefully
+fixes all known keyboard bugs on win32.
+
+----------
+2004/03/08 20:45:53 crs
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+
+Typecasting fix to compile on old solaris.
+
+----------
+2004/03/06 16:20:08 crs
+lib/platform/CXWindowsScreen.cpp
+lib/server/CServer.cpp
+
+Server now disables jump zones when scroll lock is active.
+
+----------
+2004/02/29 21:34:30 crs
+lib/platform/CMSWindowsEventQueueBuffer.cpp
+
+Fixed processing of events.  Was waking up on a sent (rather than
+posted) message but then blocking in GetMessage() which handles
+the sent message directly.  No longer blocking on sent messages.
+
+----------
+2004/02/29 21:33:20 crs
+lib/arch/CArchNetworkWinsock.cpp
+
+Fixed handling of winsock connect event.  Was always immediately
+indicating socket had connected.
+
+----------
+2004/02/29 21:32:00 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Fixed cursor hiding on win32.  Still fails occassionally.
+
+----------
+2004/02/29 21:31:24 crs
+cmd/synergys/CMSWindowsServerTaskBarReceiver.cpp
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.rc
+
+Added reload configuration menu item to win32 task bar.
+
+----------
+2004/02/29 17:36:32 crs
+lib/arch/IArchMultithread.h
+
+Fixed comment.
+
+----------
+2004/02/29 17:29:01 crs
+lib/arch/CArchMultithreadWindows.h
+
+Switched to doxygen comments.
+
+----------
+2004/02/29 17:28:51 crs
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/server/CClientProxy.cpp
+lib/server/CClientProxy.h
+lib/server/CServer.cpp
+lib/synergy/IScreen.cpp
+lib/synergy/IScreen.h
+
+Moved clipboard changed event to CClientProxy because only it
+and CServer use it.  CServerProxy instead makes a direct call
+to CClient, like it does for most other messages.
+
+----------
+2004/02/29 16:48:22 crs
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+
+Fixed BSD unblockPollSocket().  Was signaling to break out of
+poll() but there was a race condition where the thread trying
+to unblock poll() could send the signal before the polling
+thread had entered poll().  Now using a pipe and polling on
+that and the client's sockets, and just writing a byte into
+the pipe to unblock poll.  This persists until the next call
+to poll() so we might force poll() to return once unnecessarily
+but that's not a problem.  This change makes the BSD code
+similar to the winsock code, which uses a winsock event instead
+of a pipe.
+
+----------
+2004/02/29 16:11:17 crs
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+lib/arch/CArchNetworkWinsock.cpp
+lib/arch/CArchNetworkWinsock.h
+lib/arch/IArchNetwork.h
+lib/arch/XArch.h
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPSocket.cpp
+
+Made all arch sockets non-blocking.
+
+----------
+2004/02/28 17:51:55 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+
+Enabled running at high priority on windows.
+
+----------
+2004/02/28 17:49:29 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchConsoleWindows.cpp
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchMultithreadWindows.h
+lib/arch/IArchMultithread.h
+lib/base/CEventQueue.cpp
+
+Generalized signal handling.  Now handling SIGHUP in addition
+to SIGINT and SIGTERM.  Setup SIGHUP to reload the server's
+configuration.
+
+----------
+2004/02/28 16:06:00 crs
+lib/base/CLog.cpp
+
+Fixed incorrect accumulation of newlines in log.
+
+----------
+2004/02/28 16:00:54 crs
+lib/client/CServerProxy.cpp
+
+Now using first set options message as end of handshake.
+
+----------
+2004/02/28 12:30:52 crs
+lib/platform/CMSWindowsUtil.cpp
+lib/platform/CMSWindowsUtil.h
+
+Added missing files.
+
+----------
+2004/02/28 12:24:47 crs
+lib/common/Version.cpp
+
+Added missing file.
+
+----------
+2004/02/28 12:19:49 crs
+acinclude.m4
+cmd/launcher/LaunchUtil.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.cpp
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.h
+cmd/synergyc/CXWindowsClientTaskBarReceiver.cpp
+cmd/synergyc/CXWindowsClientTaskBarReceiver.h
+cmd/synergyc/Makefile.am
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.rc
+cmd/synergys/CMSWindowsServerTaskBarReceiver.cpp
+cmd/synergys/CMSWindowsServerTaskBarReceiver.h
+cmd/synergys/CXWindowsServerTaskBarReceiver.cpp
+cmd/synergys/CXWindowsServerTaskBarReceiver.h
+cmd/synergys/Makefile.am
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.rc
+configure.in
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchConsoleWindows.cpp
+lib/arch/CArchDaemonWindows.cpp
+lib/arch/CArchDaemonWindows.h
+lib/arch/CArchMiscWindows.cpp
+lib/arch/CArchMiscWindows.h
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchMultithreadWindows.h
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+lib/arch/CArchNetworkWinsock.cpp
+lib/arch/CArchNetworkWinsock.h
+lib/arch/CArchTaskBarWindows.cpp
+lib/arch/CArchTaskBarWindows.h
+lib/arch/IArchMultithread.h
+lib/arch/IArchNetwork.h
+lib/arch/arch.dsp
+lib/base/CEventQueue.cpp
+lib/base/CPriorityQueue.h
+lib/base/CSimpleEventQueueBuffer.cpp
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+lib/common/Makefile.am
+lib/common/Version.h
+lib/common/common.dsp
+lib/mt/CThread.cpp
+lib/mt/CThread.h
+lib/net/CSocketMultiplexer.cpp
+lib/net/IDataSocket.cpp
+lib/net/IDataSocket.h
+lib/platform/CMSWindowsDesktop.h
+lib/platform/CMSWindowsEventQueueBuffer.cpp
+lib/platform/CMSWindowsEventQueueBuffer.h
+lib/platform/CMSWindowsKeyMapper.cpp
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CSynergyHook.h
+lib/platform/CXWindowsClipboard.cpp
+lib/platform/CXWindowsEventQueueBuffer.cpp
+lib/platform/CXWindowsKeyMapper.cpp
+lib/platform/CXWindowsScreen.cpp
+lib/platform/Makefile.am
+lib/platform/platform.dsp
+lib/server/CClientListener.cpp
+lib/server/CServer.cpp
+lib/synergy/CProtocolUtil.cpp
+lib/synergy/CProtocolUtil.h
+lib/synergy/CScreen.cpp
+lib/synergy/IScreen.h
+
+Merged Win32 updates.  Added full warnings on g++.  Fixed bug in
+client when handling server rejection.
+
+----------
+2004/02/15 18:12:35 crs
+lib/base/CFunctionEventJob.cpp
+lib/base/CJobList.cpp
+lib/base/CJobList.h
+lib/base/Makefile.am
+lib/base/base.dsp
+lib/io/io.dsp
+lib/mt/CTimerThread.cpp
+lib/mt/CTimerThread.h
+lib/mt/Makefile.am
+lib/mt/mt.dsp
+lib/net/net.dsp
+lib/platform/CMSWindowsEventQueueBuffer.cpp
+lib/platform/CMSWindowsEventQueueBuffer.h
+lib/platform/Makefile.am
+lib/platform/platform.dsp
+lib/server/server.dsp
+lib/synergy/libsynergy.dsp
+
+Updated Makefiles and win32 projects and removed dead classes.
+
+----------
+2004/02/15 17:32:11 crs
+cmd/synergyc/CClientTaskBarReceiver.cpp
+cmd/synergyc/CClientTaskBarReceiver.h
+cmd/synergyc/CXWindowsClientTaskBarReceiver.cpp
+cmd/synergyc/CXWindowsClientTaskBarReceiver.h
+cmd/synergyc/synergyc.cpp
+cmd/synergys/CServerTaskBarReceiver.cpp
+cmd/synergys/synergys.cpp
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/XArch.h
+lib/base/CEvent.cpp
+lib/base/CEvent.h
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+lib/io/CStreamFilter.cpp
+lib/net/CNetworkAddress.cpp
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPSocket.cpp
+lib/net/CTCPSocket.h
+lib/net/IDataSocket.h
+lib/net/XSocket.cpp
+lib/net/XSocket.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CConfig.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/synergy/CClipboard.cpp
+lib/synergy/CClipboard.h
+lib/synergy/CPacketStreamFilter.cpp
+lib/synergy/IClient.h
+lib/synergy/IClipboard.cpp
+lib/synergy/IClipboard.h
+lib/synergy/IPlatformScreen.cpp
+lib/synergy/IPlatformScreen.h
+lib/synergy/Makefile.am
+lib/synergy/ProtocolTypes.h
+
+Checkpoint.  Conversion to event driven system complete for Unix.
+Still need to convert win32 platform specific files.
+
+----------
+2004/02/14 16:30:27 crs
+cmd/synergys/CServerTaskBarReceiver.cpp
+cmd/synergys/synergys.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+
+Minor cleanup.
+
+----------
+2004/02/14 14:04:36 crs
+cmd/synergys/CServerTaskBarReceiver.cpp
+cmd/synergys/CServerTaskBarReceiver.h
+cmd/synergys/CXWindowsServerTaskBarReceiver.cpp
+cmd/synergys/CXWindowsServerTaskBarReceiver.h
+cmd/synergys/Makefile.am
+cmd/synergys/synergys.cpp
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+lib/arch/IArchNetwork.h
+lib/arch/vsnprintf.cpp
+lib/base/CEvent.cpp
+lib/base/CEvent.h
+lib/base/CEventQueue.cpp
+lib/base/CEventQueue.h
+lib/base/CSimpleEventQueueBuffer.cpp
+lib/base/CSimpleEventQueueBuffer.h
+lib/base/CStringUtil.cpp
+lib/base/IEventQueue.h
+lib/base/IEventQueueBuffer.h
+lib/io/IStream.cpp
+lib/net/CNetworkAddress.cpp
+lib/net/CNetworkAddress.h
+lib/net/CSocketMultiplexer.cpp
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPSocket.cpp
+lib/net/IDataSocket.cpp
+lib/net/IListenSocket.cpp
+lib/net/ISocket.cpp
+lib/platform/CXWindowsEventQueue.cpp
+lib/platform/CXWindowsEventQueue.h
+lib/platform/CXWindowsEventQueueBuffer.cpp
+lib/platform/CXWindowsEventQueueBuffer.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsScreenSaver.h
+lib/platform/Makefile.am
+lib/server/CClientListener.cpp
+lib/server/CClientListener.h
+lib/server/CClientProxy.cpp
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CClientProxy1_1.cpp
+lib/server/CClientProxy1_1.h
+lib/server/CClientProxyUnknown.cpp
+lib/server/CClientProxyUnknown.h
+lib/server/CConfig.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/Makefile.am
+lib/synergy/CProtocolUtil.cpp
+lib/synergy/CScreen.cpp
+lib/synergy/CScreen.h
+lib/synergy/IClient.h
+lib/synergy/IPlatformScreen.cpp
+lib/synergy/IPlatformScreen.h
+lib/synergy/IPrimaryScreen.h
+lib/synergy/IPrimaryScreenReceiver.h
+lib/synergy/IScreen.cpp
+lib/synergy/IScreen.h
+lib/synergy/IScreenFactory.h
+lib/synergy/IScreenReceiver.h
+lib/synergy/IScreenSaver.h
+lib/synergy/IServer.h
+lib/synergy/Makefile.am
+
+Checkpoint.  synergys now works.  Still need to do lib/client and
+synergyc.
+
+----------
+2004/02/08 17:07:11 crs
+lib/base/CEventQueue.cpp
+lib/base/CEventQueue.h
+lib/base/CSimpleEventQueue.cpp
+lib/base/CSimpleEventQueue.h
+lib/base/IEventQueue.h
+lib/base/Makefile.am
+
+Refactored event queue.  The event queue is now separated from the
+buffer that holds the events and generates system events.  This
+allows us to switch in/out a platform specific event handler as
+necessary without losing our timers and handlers.
+
+----------
+2004/02/08 16:51:45 crs
+lib/net/CTCPSocket.cpp
+
+No longer sending incorrect disconnect events in read() and
+removed redundant sending of disconnect event in close().
+
+----------
+2004/02/01 21:09:22 crs
+cmd/synergys/synergys.cpp
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/IArchMultithread.h
+lib/arch/XArch.h
+lib/base/CEventQueue.cpp
+lib/base/CEventQueue.h
+lib/base/IEventQueue.cpp
+lib/base/IEventQueue.h
+lib/base/Makefile.am
+lib/io/CBufferedInputStream.cpp
+lib/io/CBufferedInputStream.h
+lib/io/CBufferedOutputStream.cpp
+lib/io/CBufferedOutputStream.h
+lib/io/CInputStreamFilter.cpp
+lib/io/CInputStreamFilter.h
+lib/io/COutputStreamFilter.cpp
+lib/io/COutputStreamFilter.h
+lib/io/CStreamFilter.cpp
+lib/io/CStreamFilter.h
+lib/io/IInputStream.h
+lib/io/IOutputStream.h
+lib/io/IStream.cpp
+lib/io/IStream.h
+lib/io/IStreamFilterFactory.h
+lib/io/Makefile.am
+lib/io/XIO.cpp
+lib/io/XIO.h
+lib/net/CSocketMultiplexer.cpp
+lib/net/CSocketMultiplexer.h
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPListenSocket.h
+lib/net/CTCPSocket.cpp
+lib/net/CTCPSocket.h
+lib/net/IDataSocket.cpp
+lib/net/IDataSocket.h
+lib/net/IListenSocket.h
+lib/net/ISocket.h
+lib/net/ISocketMultiplexerJob.h
+lib/net/Makefile.am
+lib/net/TSocketMultiplexerMethodJob.h
+lib/server/CClientProxy.cpp
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CClientProxy1_1.cpp
+lib/server/CClientProxy1_1.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/server/CHTTPServer.cpp
+lib/server/CHTTPServer.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/Makefile.am
+lib/synergy/CInputPacketStream.cpp
+lib/synergy/CInputPacketStream.h
+lib/synergy/COutputPacketStream.cpp
+lib/synergy/COutputPacketStream.h
+lib/synergy/CPacketStreamFilter.cpp
+lib/synergy/CPacketStreamFilter.h
+lib/synergy/CProtocolUtil.cpp
+lib/synergy/CProtocolUtil.h
+lib/synergy/Makefile.am
+
+Checkpoint.  Code does not run.  Still converting over to new
+event loop model.  Streams, stream filters, and sockets are
+converted.  Client proxies are almost converted.  CServer is
+in progress.  Removed all HTTP code.  Haven't converted the
+necessary win32 arch stuff.
+
+----------
+2004/02/01 20:56:52 crs
+cmd/launcher/launcher.dsp
+cmd/synergys/Makefile.am
+cmd/synergys/synergys.dsp
+configure.in
+lib/Makefile.am
+lib/http/CHTTPProtocol.cpp
+lib/http/CHTTPProtocol.h
+lib/http/Makefile.am
+lib/http/XHTTP.cpp
+lib/http/XHTTP.h
+lib/http/http.dsp
+lib/server/server.dsp
+synergy.dsw
+
+Removed most HTTP stuff.  It doesn't seem like the appropriate
+choice for server control.  May later provide some other means
+for controlling the synergy server remotely.
+
+----------
+2004/01/24 16:09:25 crs
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/IArchMultithread.h
+lib/base/CEvent.cpp
+lib/base/CEvent.h
+lib/base/CEventQueue.cpp
+lib/base/CEventQueue.h
+lib/base/CFunctionEventJob.cpp
+lib/base/CFunctionEventJob.h
+lib/base/CLog.cpp
+lib/base/CPriorityQueue.h
+lib/base/CSimpleEventQueue.cpp
+lib/base/CSimpleEventQueue.h
+lib/base/IEventJob.h
+lib/base/IEventQueue.h
+lib/base/Makefile.am
+lib/base/TMethodEventJob.h
+lib/io/CBufferedInputStream.cpp
+lib/io/CBufferedInputStream.h
+lib/io/CBufferedOutputStream.cpp
+lib/io/CBufferedOutputStream.h
+lib/mt/CThread.cpp
+lib/mt/CThread.h
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPListenSocket.h
+lib/net/CTCPSocket.cpp
+lib/net/CTCPSocket.h
+lib/net/IDataSocket.cpp
+lib/net/IDataSocket.h
+lib/net/IListenSocket.cpp
+lib/net/IListenSocket.h
+lib/net/ISocket.cpp
+lib/net/ISocket.h
+lib/net/Makefile.am
+lib/platform/CXWindowsEventQueue.cpp
+lib/platform/CXWindowsEventQueue.h
+lib/platform/Makefile.am
+
+Checkpointing centralized event queue stuff.  Currently have:
+an event queue and events, TCP sockets converted to use events,
+unix multithreading and network stuff converted, and an X Windows
+event queue subclass.
+
+----------
 2003/07/19 17:22:06 crs
 cmd/launcher/launcher.cpp
 cmd/launcher/launcher.rc

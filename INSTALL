@@ -58,10 +58,14 @@ Installing
 ----------
 
 Windows:
-  There is no support for creating an installer for synergy or installing
-  the files in a particular location.  Instead, just copy the following
-  files from the Debug or Release directory to a directory you choose
-  (perhaps under the Program Files directory):
+  You'll need NSIS, the Nullsoft Scriptable Install System, available
+  from http://nsis.sourceforge.net/.  Build `All - Release' then build
+  'Installer - Release'.  This creates SynergyInstaller.exe in the top
+  level directory.  Run this to install.
+
+  Alternatively, you can simply copy the following files from the Debug
+  or Release directory to a directory you choose (perhaps under the
+  Program Files directory):
 
   * synergy.exe
   * synergyc.exe
@@ -90,7 +94,7 @@ First configure the server.  Click the `Server' radio button
 
   * Click the `Server' radio button
   * Click `Add' to add the server to the `Screens' list
-    * Enter the name of server (the computer name is recommended)
+    * Enter the name of server (the computer's name is recommended)
     * Enter other names the server is known by
     * Click OK
   * Use `Add' to add your other computers
@@ -402,6 +406,12 @@ the problem.  Here are typical problems and possible solutions:
       the server cannot open the desired port, stop the
       program using that port (24800) and restart the
       server.
+
+If you get the error "Xlib: No protocol specified" you're probably
+running synergy as root while logged in as another user.  X11 may
+prevent this for security reasons.  Either run synergy as the same
+user that's logged in or (not recommended) use 'xhost +' to allow
+anyone to connect to the display.
 
 Once all the clients are running, try moving the mouse to each
 screen.  Be sure to check all the configured links. 

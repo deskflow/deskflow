@@ -15,6 +15,7 @@ cmd             -- program source code
   synergys      -- synergy server
 config          -- stuff for autoconf/automake
 dist            -- files for creating distributions
+  nullsoft      -- files for creating Nullsoft NSIS installer (Windows)
   rpm           -- files for creating RPMs
 doc             -- placeholder for documentation
 examples        -- example files
@@ -23,7 +24,6 @@ lib             -- library source code
   base          -- simple utilities
   client        -- synergy client library
   common        -- commonly needed header files
-  http          -- simple http tools
   io            -- I/O
   mt            -- multithreading
   net           -- networking
@@ -358,8 +358,8 @@ file and make calls directly, surrounded by a suitable #ifdef/#endif.
 Implementing lib/platform:
 
 Most of the remaining platform dependent code lives in lib/platform.
-The code there implements platform dependent window, clipboard, and
-screen saver handling.  If a platform is named XXX then the following
+The code there implements platform dependent window, clipboard, keyboard
+and screen saver handling.  If a platform is named XXX then the following
 classes should be derived and implemented:
 
   * CXXXClipboard : IClipboard
@@ -367,16 +367,16 @@ classes should be derived and implemented:
     have helper classes for converting between various clipboard
     data formats.
 
-  * CXXXScreen : IScreen
-    Provide screen operations common to the server and clients.
-    The CXXXPrimaryScreen and CXXXSecondaryScreen classes use a
-    CXXXScreen.
+  * CXXXEventQueueBuffer : IEventQueueBuffer
+    Provides operations for waiting for, posting and retrieving events.
+	Also provides operations for creating and deleting timers.
 
-  * CXXXPrimaryScreen : CPrimaryScreen, IScreenEventHandler
-    Provides server screen operations.
+  * CXXXKeyState : CKeyState
+    Provides operations for synthesizing key events and for mapping a
+	key ID to a sequence of events to generate that key.
 
-  * CXXXSecondaryScreen : CSecondaryScreen, IScreenEventHandler
-    Provides client screen operations.
+  * CXXXScreen : IScreen, IPrimaryScreen, ISecondaryScreen, IPlatformScreen
+    Provides screen operations.
 
   * CXXXScreenSaver : IScreenSaver
 	Provides screen saver operations.

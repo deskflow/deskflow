@@ -1,4 +1,6 @@
 Synergy Authors
 ===============
 
-Chris Schoeneman <crs23@bigfoot.com>
+Chris Schoeneman <crs23@bigfoot.com>    -- creator, maintainer, X11, Win32
+Ryan Breen <ryan@ryanbreen.com>         -- Mac OS X port
+Guido Poschta <moolder@gmx.net>         -- Windows installer

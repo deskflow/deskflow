@@ -18,15 +18,11 @@ Things to do to synergy, in no particular order:
 
 * Port to other platforms
 
-  Most desired is MacOS X.
+  Most desired is MacOS X.  Ryan Breen has a partial port to Mac OS X.
+  Only the client is ported and there is no clipboard or screen saver
+  support.  It's available from http://www.ryanbreen.com/synergy.
 
 * Write man/html pages
-
-* Provide a win32 installer/uninstaller
-
-  Synergy doesn't have any special needs so even just unzipping is
-  satisfactory, but a proper installer would be nice.  And, more
-  importantly, it should provide an uninstaller.
 
 * Add more clipboard formats
 

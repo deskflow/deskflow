@@ -1,6 +1,30 @@
 Synergy News
 ============
 
+* Mar-28-2004 - Synergy 1.1.3 released
+
+  Made following changes:
+  * Major code refactoring;  reduced use of threads, added event queue
+  * Removed unused HTTP support code
+  * No longer interfering with mouse when scroll lock is toggled on
+  * Fixed minor mispositioning of mouse on win32
+  * Unix portability fixes
+  * Added support for power management
+  * Improved keyboard handling and bug fixes
+  * Fixed dead key handling
+
+  Note:  the tray icon on windows is known to not work correctly when
+  running the synergy server on Windows 95/95/Me.
+
+* Aug-24-2003 - Synergy 1.0.14 released
+
+  Made following changes:
+  * Fixed bugs in setting win32 process/thread priority
+  * Fixed resource leak in opening win32 system log
+  * Fixed win32 launcher not getting non-default advanced options
+  * Synergy log copied to clipboard now transferred to other screens
+  * Hack to work around lesstif clipboard removed (fixes pasting on X)
+
 * Jul-20-2003 - Synergy 1.0.12 released
 
   This release finally completes support for non-ASCII characters,
