@@ -151,22 +151,14 @@ CXWindowsClipboard::addSimpleRequest(Window requestor,
 		type = getTimestampData(data, &format);
 	}
 	else {
-char* name = XGetAtomName(m_display, target);
-log((CLOG_INFO "request target: %d %s", target, name));
-XFree(name);
 		IXWindowsClipboardConverter* converter = getConverter(target);
 		if (converter != NULL) {
-log((CLOG_INFO "found converter"));
 			IClipboard::EFormat clipboardFormat = converter->getFormat();
-log((CLOG_INFO "clipboard format: %d", clipboardFormat));
 			if (m_added[clipboardFormat]) {
-log((CLOG_INFO "added"));
 				try {
 					data   = converter->fromIClipboard(m_data[clipboardFormat]);
 					format = converter->getDataSize();
 					type   = converter->getAtom();
-log((CLOG_INFO "  src: (%d) %s", m_data[clipboardFormat].size(), m_data[clipboardFormat].c_str()));
-log((CLOG_INFO "  dst: (%d) %s", data.size(), data.c_str()));
 				}
 				catch (...) {
 					// ignore -- cannot convert
@@ -535,16 +527,9 @@ CXWindowsClipboard::icccmFillCache()
 
 		// add to clipboard and note we've done it
 		IClipboard::EFormat format = converter->getFormat();
-		try {
-			m_data[format] = converter->toIClipboard(targetData);
-			if (!m_data[format].empty()) {
-				m_added[format] = true;
-				log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
-			}
-		}
-		catch (...) {
-			// ignore -- could not convert data
-		}
+		m_data[format]  = converter->toIClipboard(targetData);
+		m_added[format] = true;
+		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
 	}
 }
 
@@ -799,16 +784,9 @@ CXWindowsClipboard::motifFillCache()
 
 		// add to clipboard and note we've done it
 		IClipboard::EFormat format = converter->getFormat();
-		try {
-			m_data[format] = converter->toIClipboard(targetData);
-			if (!m_data[format].empty()) {
-				m_added[format] = true;
-				log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
-			}
-		}
-		catch (...) {
-			// ignore -- could not convert data
-		}
+		m_data[format]  = converter->toIClipboard(targetData);
+		m_added[format] = true;
+		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
 	}
 }
 

@@ -7,39 +7,50 @@
 
 class CUnicode {
 public:
-	static CString		UTF8ToUCS2(const CString&);
-	static CString		UTF8ToUCS4(const CString&);
-	static CString		UTF8ToUTF16(const CString&);
-	static CString		UTF8ToUTF32(const CString&);
+	// returns true iff the string contains a valid sequence of UTF-8
+	// encoded characters.
+	static bool			isUTF8(const CString&);
 
-	static CString		UCS2ToUTF8(const CString&);
-	static CString		UCS4ToUTF8(const CString&);
-	static CString		UTF16ToUTF8(const CString&);
-	static CString		UTF32ToUTF8(const CString&);
+	// convert from UTF-8 encoding to other encodings.  if errors is
+	// not NULL then it gets true if any characters could not be
+	// encoded in the target encoding and false otherwise.  note
+	// that decoding errors do not set errors to error.  UTF8ToText()
+	// converts to the current locale's (multibyte) encoding.
+	static CString		UTF8ToUCS2(const CString&, bool* errors = NULL);
+	static CString		UTF8ToUCS4(const CString&, bool* errors = NULL);
+	static CString		UTF8ToUTF16(const CString&, bool* errors = NULL);
+	static CString		UTF8ToUTF32(const CString&, bool* errors = NULL);
+	static CString		UTF8ToText(const CString&, bool* errors = NULL);
 
-	// convert UTF-8 to/from the current locale's encoding
-	static CString		UTF8ToText(const CString&);
-	static CString		textToUTF8(const CString&);
+	// convert from some encoding to UTF-8.  if errors is not NULL
+	// then it gets true if any characters could not be decoded and
+	// false otherwise.  textToUTF8() converts from the current
+	// locale's (multibyte) encoding.
+	static CString		UCS2ToUTF8(const CString&, bool* errors = NULL);
+	static CString		UCS4ToUTF8(const CString&, bool* errors = NULL);
+	static CString		UTF16ToUTF8(const CString&, bool* errors = NULL);
+	static CString		UTF32ToUTF8(const CString&, bool* errors = NULL);
+	static CString		textToUTF8(const CString&, bool* errors = NULL);
 
 private:
 	// convert UTF8 to nul terminated wchar_t string (using whatever
 	// encoding is native to the platform).  caller must delete[]
 	// the returned string.
-	static wchar_t*		UTF8ToWideChar(const CString&);
+	static wchar_t*		UTF8ToWideChar(const CString&, bool* errors);
 
 	// convert nul terminated wchar_t string (in platform's native
 	// encoding) to UTF8.
-	static CString		wideCharToUTF8(const wchar_t*);
+	static CString		wideCharToUTF8(const wchar_t*, bool* errors);
 
 	// internal conversion to UTF8
-	static CString		doUCS2ToUTF8(const UInt8* src, UInt32 n);
-	static CString		doUCS4ToUTF8(const UInt8* src, UInt32 n);
-	static CString		doUTF16ToUTF8(const UInt8* src, UInt32 n);
-	static CString		doUTF32ToUTF8(const UInt8* src, UInt32 n);
+	static CString		doUCS2ToUTF8(const UInt8* src, UInt32 n, bool* errors);
+	static CString		doUCS4ToUTF8(const UInt8* src, UInt32 n, bool* errors);
+	static CString		doUTF16ToUTF8(const UInt8* src, UInt32 n, bool* errors);
+	static CString		doUTF32ToUTF8(const UInt8* src, UInt32 n, bool* errors);
 
 	// convert characters to/from UTF8
 	static UInt32		fromUTF8(const UInt8*& src, UInt32& size);
-	static void			toUTF8(CString& dst, UInt32 c);
+	static void			toUTF8(CString& dst, UInt32 c, bool* errors);
 
 private:
 	static UInt32		s_invalid;
