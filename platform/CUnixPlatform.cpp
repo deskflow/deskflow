@@ -102,10 +102,24 @@ int						CUnixPlatform::restart(
 
 			// what happened?  if the child exited normally with a
 			// status less than 16 then the child was deliberately
-			// terminated so we also terminate.  otherwise, we
-			// loop.
+			// terminated so we also terminate.
 			if (WIFEXITED(status) && WEXITSTATUS(status) < minErrorCode) {
 				return WEXITSTATUS(status);
+			}
+
+			// did child die horribly?
+			if (WIFSIGNALED(status)) {
+				switch (WTERMSIG(status)) {
+				case SIGHUP:
+				case SIGINT:
+				case SIGQUIT:
+				case SIGTERM:
+					break;
+
+				default:
+					// uh oh.  bail out.
+					return 16;
+				}
 			}
 			break;
 		}
