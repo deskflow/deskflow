@@ -140,13 +140,27 @@ void					CTCPSocket::ioThread(void*)
 {
 	try {
 		ioService();
+		ioCleanup();
+	}
+	catch (...) {
+		ioCleanup();
+		throw;
+	}
+}
+
+void					CTCPSocket::ioCleanup()
+{
+	try {
 		m_input->close();
+	}
+	catch (...) {
+		// ignore
+	}
+	try {
 		m_output->close();
 	}
 	catch (...) {
-		m_input->close();
-		m_output->close();
-		throw;
+		// ignore
 	}
 }
 
@@ -162,6 +176,9 @@ void					CTCPSocket::ioService()
 			// choose events to poll for
 			CLock lock(m_mutex);
 			pfds[0].events = 0;
+			if (m_connected == 0) {
+				return;
+			}
 			if ((m_connected & kRead) != 0) {
 				// still open for reading
 				pfds[0].events |= CNetwork::kPOLLIN;
@@ -174,6 +191,11 @@ void					CTCPSocket::ioService()
 
 		// check for status
 		CThread::testCancel();
+		if (pfds[0].events == 0) {
+			CThread::sleep(0.05);
+			CThread::testCancel();
+			continue;
+		}
 		const int status = CNetwork::poll(pfds, 1, 50);
 		CThread::testCancel();
 
@@ -197,7 +219,7 @@ void					CTCPSocket::ioService()
 				else if (n == 0) {
 					// stream hungup
 					m_input->hangup();
-					return;
+					m_connected &= ~kRead;
 				}
 			}
 

@@ -32,6 +32,7 @@ public:
 private:
 	void				init();
 	void				ioThread(void*);
+	void				ioCleanup();
 	void				ioService();
 	void				closeInput(void*);
 	void				closeOutput(void*);
