@@ -10,7 +10,7 @@
 bool
 CXWindowsUtil::getWindowProperty(Display* display, Window window,
 				Atom property, CString* data, Atom* type,
-				int* format, bool deleteProperty)
+				SInt32* format, bool deleteProperty)
 {
 	assert(display != NULL);
 
