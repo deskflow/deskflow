@@ -109,11 +109,12 @@ void					CMSWindowsSecondaryScreen::close()
 	m_client = NULL;
 }
 
-void					CMSWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
+void					CMSWindowsSecondaryScreen::enter(
+								SInt32 x, SInt32 y, KeyModifierMask mask)
 {
 	assert(m_window != NULL);
 
-	log((CLOG_INFO "entering screen at %d,%d", x, y));
+	log((CLOG_INFO "entering screen at %d,%d mask=%04x", x, y, mask));
 
 	// warp to requested location
 	SInt32 w, h;
@@ -130,6 +131,17 @@ void					CMSWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 	// update our keyboard state to reflect the local state
 	updateKeys();
 	updateModifiers();
+
+	// toggle modifiers that don't match the desired state
+	if ((mask & KeyModifierCapsLock)   != (m_mask & KeyModifierCapsLock)) {
+		toggleKey(VK_CAPITAL, KeyModifierCapsLock);
+	}
+	if ((mask & KeyModifierNumLock)    != (m_mask & KeyModifierNumLock)) {
+		toggleKey(VK_NUMLOCK, KeyModifierNumLock);
+	}
+	if ((mask & KeyModifierScrollLock) != (m_mask & KeyModifierScrollLock)) {
+		toggleKey(VK_SCROLL, KeyModifierScrollLock);
+	}
 }
 
 void					CMSWindowsSecondaryScreen::leave()
@@ -1183,4 +1195,17 @@ void					CMSWindowsSecondaryScreen::updateModifiers()
 		m_mask |= KeyModifierNumLock;
 	if ((m_keys[VK_SCROLL] & 0x01) != 0)
 		m_mask |= KeyModifierScrollLock;
+}
+
+void					CMSWindowsSecondaryScreen::toggleKey(
+								UINT virtualKey, KeyModifierMask mask)
+{
+	// send key events to simulate a press and release
+	const UINT code = MapVirtualKey(virtualKey, 0);
+	keybd_event(virtualKey, code, 0, 0);
+	keybd_event(virtualKey, code, KEYEVENTF_KEYUP, 0);
+
+	// toggle shadow state
+	m_mask             ^= mask;
+	m_keys[virtualKey] ^= 0x01;
 }

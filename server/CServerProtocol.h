@@ -31,7 +31,8 @@ public:
 	virtual void		run() = 0;
 	virtual void		queryInfo() = 0;
 	virtual void		sendClose() = 0;
-	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum) = 0;
+	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs,
+								UInt32 seqNum, KeyModifierMask mask) = 0;
 	virtual void		sendLeave() = 0;
 	virtual void		sendClipboard(ClipboardID, const CString&) = 0;
 	virtual void		sendGrabClipboard(ClipboardID) = 0;

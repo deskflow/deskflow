@@ -34,7 +34,8 @@ public:
 	// called when the user navigates to the secondary screen.  warp
 	// the cursor to the given coordinates and unhide it.  prepare to
 	// simulate input events.
-	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
+	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
+								KeyModifierMask mask) = 0;
 
 	// called when the user navigates off the secondary screen.  clean
 	// up input event simulation and hide the cursor.

@@ -252,6 +252,18 @@ void					CMSWindowsPrimaryScreen::getClipboard(
 	CClipboard::copy(dst, &src);
 }
 
+KeyModifierMask			CXWindowsPrimaryScreen::getToggleMask() const
+{
+	KeyModifierMask mask;
+	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
+		mask |= KeyModifierCapsLock;
+	if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
+		mask |= KeyModifierNumLock;
+	if ((m_keys[VK_SCROLL] & 0x01) != 0)
+		mask |= KeyModifierScrollLock;
+	return mask;
+}
+
 #include "resource.h" // FIXME
 
 void					CMSWindowsPrimaryScreen::onOpenDisplay()

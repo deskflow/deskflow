@@ -26,6 +26,7 @@ public:
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
+	virtual KeyModifierMask	getToggleMask() const;
 
 protected:
 	// CMSWindowsScreen overrides

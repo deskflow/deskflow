@@ -91,10 +91,12 @@ void					CServerProtocol1_0::sendClose()
 }
 
 void					CServerProtocol1_0::sendEnter(
-								SInt32 xAbs, SInt32 yAbs, UInt32 seqNum)
+								SInt32 xAbs, SInt32 yAbs,
+								UInt32 seqNum, KeyModifierMask mask)
 {
-	log((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d", getClient().c_str(), xAbs, yAbs, seqNum));
-	CProtocolUtil::writef(getOutputStream(), kMsgCEnter, xAbs, yAbs, seqNum);
+	log((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getClient().c_str(), xAbs, yAbs, seqNum, mask));
+	CProtocolUtil::writef(getOutputStream(), kMsgCEnter,
+								xAbs, yAbs, seqNum, mask);
 }
 
 void					CServerProtocol1_0::sendLeave()

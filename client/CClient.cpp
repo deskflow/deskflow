@@ -341,13 +341,14 @@ void					CClient::closeSecondaryScreen()
 void					CClient::onEnter()
 {
 	SInt16 x, y;
+	UInt16 mask;
 	{
 		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgCEnter + 4, &x, &y, &m_seqNum);
+		CProtocolUtil::readf(m_input, kMsgCEnter + 4, &x, &y, &m_seqNum, &mask);
 		m_active = true;
 	}
-	log((CLOG_DEBUG1 "recv enter, %d,%d %d", x, y, m_seqNum));
-	m_screen->enter(x, y);
+	log((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, m_seqNum, mask));
+	m_screen->enter(x, y, static_cast<KeyModifierMask>(mask));
 }
 
 void					CClient::onLeave()

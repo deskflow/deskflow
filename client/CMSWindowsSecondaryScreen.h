@@ -16,7 +16,8 @@ public:
 	virtual void		stop();
 	virtual void		open(CClient*);
 	virtual void		close();
-	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute);
+	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
+								KeyModifierMask mask);
 	virtual void		leave();
 	virtual void		keyDown(KeyID, KeyModifierMask);
 	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count);
@@ -48,6 +49,7 @@ private:
 
 	void				updateKeys();
 	void				updateModifiers();
+	void				toggleKey(UINT virtualKey, KeyModifierMask mask);
 
 private:
 	CClient*			m_client;

@@ -177,7 +177,8 @@ void					CXWindowsSecondaryScreen::close()
 	m_client = NULL;
 }
 
-void					CXWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
+void					CXWindowsSecondaryScreen::enter(
+								SInt32 x, SInt32 y, KeyModifierMask mask)
 {
 	assert(m_window != None);
 
@@ -193,6 +194,19 @@ void					CXWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 	// update our keyboard state to reflect the local state
 	updateKeys(display);
 	updateModifiers(display);
+
+	// toggle modifiers that don't match the desired state
+	unsigned int xMask = maskToX(mask);
+	if ((xMask & m_capsLockMask)   != (m_mask & m_capsLockMask)) {
+		toggleKey(display, XK_Caps_Lock, m_capsLockMask);
+	}
+	if ((xMask & m_numLockMask)    != (m_mask & m_numLockMask)) {
+		toggleKey(display, XK_Num_Lock, m_numLockMask);
+	}
+	if ((xMask & m_scrollLockMask) != (m_mask & m_scrollLockMask)) {
+		toggleKey(display, XK_Scroll_Lock, m_scrollLockMask);
+	}
+	XSync(display, False);
 }
 
 void					CXWindowsSecondaryScreen::leave()
@@ -461,9 +475,14 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 					const KeyCode modifierKey = modifierKeys[0];
 					keys.push_back(std::make_pair(modifierKey, True));
 					if ((bit & m_toggleModifierMask) != 0) {
-						keys.push_back(std::make_pair(modifierKey, False));
-						undo.push_back(std::make_pair(modifierKey, False));
-						undo.push_back(std::make_pair(modifierKey, True));
+						if (bit != m_capsLockMask || !m_capsLockHalfDuplex) {
+							keys.push_back(std::make_pair(modifierKey, False));
+							undo.push_back(std::make_pair(modifierKey, False));
+							undo.push_back(std::make_pair(modifierKey, True));
+						}
+						else {
+							undo.push_back(std::make_pair(modifierKey, False));
+						}
 					}
 					else {
 						undo.push_back(std::make_pair(modifierKey, False));
@@ -476,12 +495,18 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 					// press/release, otherwise deactivate it with a
 					// release.  we must check each keycode for the
 					// modifier if not a toggle.
-					if (bit & m_toggleModifierMask) {
+					if ((bit & m_toggleModifierMask) != 0) {
 						const KeyCode modifierKey = modifierKeys[0];
-						keys.push_back(std::make_pair(modifierKey, True));
-						keys.push_back(std::make_pair(modifierKey, False));
-						undo.push_back(std::make_pair(modifierKey, False));
-						undo.push_back(std::make_pair(modifierKey, True));
+						if (bit != m_capsLockMask || !m_capsLockHalfDuplex) {
+							keys.push_back(std::make_pair(modifierKey, True));
+							keys.push_back(std::make_pair(modifierKey, False));
+							undo.push_back(std::make_pair(modifierKey, False));
+							undo.push_back(std::make_pair(modifierKey, True));
+						}
+						else {
+							keys.push_back(std::make_pair(modifierKey, False));
+							undo.push_back(std::make_pair(modifierKey, True));
+						}
 					}
 					else {
 						for (unsigned int j = 0; j < m_keysPerModifier; ++j) {
@@ -601,11 +626,11 @@ unsigned int			CXWindowsSecondaryScreen::maskToX(
 	if (inMask & KeyModifierMeta)
 		outMask |= Mod4Mask;
 	if (inMask & KeyModifierCapsLock)
-		outMask |= LockMask;
+		outMask |= m_capsLockMask;
 	if (inMask & KeyModifierNumLock)
-		outMask |= Mod2Mask;
+		outMask |= m_numLockMask;
 	if (inMask & KeyModifierScrollLock)
-		outMask |= Mod5Mask;
+		outMask |= m_scrollLockMask;
 	return outMask;
 }
 
@@ -712,6 +737,7 @@ void					CXWindowsSecondaryScreen::updateModifierMap(
 	m_toggleModifierMask = 0;
 	m_numLockMask        = 0;
 	m_capsLockMask       = 0;
+	m_scrollLockMask     = 0;
 	m_keysPerModifier    = keymap->max_keypermod;
 	m_modifierToKeycode.clear();
 	m_modifierToKeycode.resize(8 * m_keysPerModifier);
@@ -738,15 +764,45 @@ void					CXWindowsSecondaryScreen::updateModifierMap(
 				m_toggleModifierMask |= bit;
 
 				// note num/caps-lock
-				if (keysym == XK_Num_Lock)
+				if (keysym == XK_Num_Lock) {
 					m_numLockMask |= bit;
-				if (keysym == XK_Caps_Lock)
+				}
+				else if (keysym == XK_Caps_Lock) {
 					m_capsLockMask |= bit;
+				}
+				else if (keysym == XK_Scroll_Lock) {
+					m_scrollLockMask |= bit;
+				}
 			}
 		}
 	}
 
 	XFreeModifiermap(keymap);
+}
+
+void					CXWindowsSecondaryScreen::toggleKey(
+								Display* display,
+								KeySym keysym, unsigned int mask)
+{
+	// lookup the keycode
+	KeyCodeMap::const_iterator index = m_keycodeMap.find(keysym);
+	if (index == m_keycodeMap.end())
+		return;
+	KeyCode keycode = index->second.keycode;
+
+	// toggle the key
+	if (keysym == XK_Caps_Lock && m_capsLockHalfDuplex) {
+		// "half-duplex" toggle
+		XTestFakeKeyEvent(display, keycode, (m_mask & mask) == 0, CurrentTime);
+	}
+	else {
+		// normal toggle
+		XTestFakeKeyEvent(display, keycode, True,  CurrentTime);
+		XTestFakeKeyEvent(display, keycode, False, CurrentTime);
+	}
+
+	// toggle shadow state
+	m_mask ^= mask;
 }
 
 bool					CXWindowsSecondaryScreen::isToggleKeysym(KeySym key)

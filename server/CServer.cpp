@@ -537,7 +537,8 @@ void					CServer::switchScreen(CScreenInfo* dst,
 			m_primary->enter(x, y);
 		}
 		else {
-			m_active->m_protocol->sendEnter(x, y, m_seqNum);
+			m_active->m_protocol->sendEnter(x, y, m_seqNum,
+								m_primary->getToggleMask());
 		}
 
 		// send the clipboard data to new active screen

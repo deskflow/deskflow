@@ -47,6 +47,7 @@ void					CXWindowsPrimaryScreen::run()
 			// keyboard mapping changed
 			CDisplayLock display(this);
 			XRefreshKeyboardMapping(&xevent.xmapping);
+			updateModifierMap(display);
 			break;
 		}
 
@@ -219,6 +220,12 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 	// FIXME -- may have to get these from some database
 	m_capsLockHalfDuplex = false;
 //	m_capsLockHalfDuplex = true;
+
+	// update key state
+	{
+		CDisplayLock display(this);
+		updateModifierMap(display);
+	}
 }
 
 void					CXWindowsPrimaryScreen::close()
@@ -365,6 +372,31 @@ void					CXWindowsPrimaryScreen::getClipboard(
 	getDisplayClipboard(id, clipboard, m_window, getCurrentTime(m_window));
 }
 
+KeyModifierMask			CXWindowsPrimaryScreen::getToggleMask() const
+{
+	CDisplayLock display(this);
+
+	// query the pointer to get the keyboard state
+	// FIXME -- is there a better way to do this?
+	Window root, window;
+	int xRoot, yRoot, xWindow, yWindow;
+	unsigned int state;
+	if (!XQueryPointer(display, m_window, &root, &window,
+								&xRoot, &yRoot, &xWindow, &yWindow, &state))
+		return 0;
+
+	// convert to KeyModifierMask
+	KeyModifierMask mask;
+	if (state & m_numLockMask)
+		mask |= KeyModifierNumLock;
+	if (state & m_capsLockMask)
+		mask |= KeyModifierCapsLock;
+	if (state & m_scrollLockMask)
+		mask |= KeyModifierScrollLock;
+
+	return mask;
+}
+
 void					CXWindowsPrimaryScreen::onOpenDisplay()
 {
 	assert(m_window == None);
@@ -482,4 +514,39 @@ ButtonID				CXWindowsPrimaryScreen::mapButton(
 		return static_cast<ButtonID>(button);
 	else
 		return kButtonNone;
+}
+
+void					CXWindowsPrimaryScreen::updateModifierMap(
+								Display* display)
+{
+	// get modifier map from server
+	XModifierKeymap* keymap = XGetModifierMapping(display);
+
+	// initialize
+	m_numLockMask    = 0;
+	m_capsLockMask   = 0;
+	m_scrollLockMask = 0;
+
+	// set keycodes and masks
+	for (unsigned int i = 0; i < 8; ++i) {
+		const unsigned int bit = (1 << i);
+		for (int j = 0; j < keymap->max_keypermod; ++j) {
+			KeyCode keycode = keymap->modifiermap[i *
+								keymap->max_keypermod + j];
+
+			// note toggle modifier bits
+			const KeySym keysym = XKeycodeToKeysym(display, keycode, 0);
+			if (keysym == XK_Num_Lock) {
+				m_numLockMask |= bit;
+			}
+			else if (keysym == XK_Caps_Lock) {
+				m_capsLockMask |= bit;
+			}
+			else if (keysym == XK_Scroll_Lock) {
+				m_scrollLockMask |= bit;
+			}
+		}
+	}
+
+	XFreeModifiermap(keymap);
 }

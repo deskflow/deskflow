@@ -24,8 +24,11 @@ static const char		kMsgCClose[] 		= "CBYE";
 // entering screen at screen position $1 = x, $2 = y.  x,y are
 // absolute screen coordinates.  $3 = sequence number, which is
 // used to order messages between screens.  the secondary screen
-// must return this number with some messages.
-static const char		kMsgCEnter[] 		= "CINN%2i%2i%4i";
+// must return this number with some messages.  $4 = modifier key
+// mask.  this will have bits set for each toggle modifier key
+// that is activated on entry to the screen.  the secondary screen
+// should adjust its toggle modifiers to reflect that state.
+static const char		kMsgCEnter[] 		= "CINN%2i%2i%4i%2i";
 
 // leave screen:  primary -> secondary
 // leaving screen.  the secondary screen should send clipboard

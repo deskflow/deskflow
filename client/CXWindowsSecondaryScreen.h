@@ -15,7 +15,8 @@ public:
 	virtual void		stop();
 	virtual void		open(CClient*);
 	virtual void		close();
-	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute);
+	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
+								KeyModifierMask mask);
 	virtual void		leave();
 	virtual void		keyDown(KeyID, KeyModifierMask);
 	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count);
@@ -62,6 +63,7 @@ private:
 	void				updateKeycodeMap(Display* display);
 	void				updateModifiers(Display* display);
 	void				updateModifierMap(Display* display);
+	void				toggleKey(Display*, KeySym, unsigned int mask);
 	static bool			isToggleKeysym(KeySym);
 
 private:
@@ -88,9 +90,10 @@ private:
 	// set bits indicate modifiers that toggle (e.g. caps-lock)
 	unsigned int		m_toggleModifierMask;
 
-	// masks that indicate which modifier bits are num-lock and caps-lock
+	// masks that indicate which modifier bits are for toggle keys
 	unsigned int		m_numLockMask;
 	unsigned int		m_capsLockMask;
+	unsigned int		m_scrollLockMask;
 
 	// map X modifier key indices to the key codes bound to them
 	unsigned int		m_keysPerModifier;

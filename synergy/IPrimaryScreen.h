@@ -79,6 +79,11 @@ public:
 	// and should avoid setting the clipboard object if the screen's
 	// clipboard hasn't changed.
 	virtual void		getClipboard(ClipboardID, IClipboard*) const = 0;
+
+	// get the primary screen's current toggle modifier key state.
+	// the returned mask should have the corresponding bit set for
+	// each toggle key that is active.
+	virtual KeyModifierMask	getToggleMask() const = 0;
 };
 
 #endif

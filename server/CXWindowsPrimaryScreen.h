@@ -24,6 +24,7 @@ public:
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
+	virtual KeyModifierMask	getToggleMask() const;
 
 protected:
 	// CXWindowsScreen overrides
@@ -40,12 +41,21 @@ private:
 	KeyID				mapKey(XKeyEvent*) const;
 	ButtonID			mapButton(unsigned int button) const;
 
+	void				updateModifierMap(Display* display);
+
 private:
 	CServer*			m_server;
 	bool				m_active;
 	Window				m_window;
 
+	// note if caps lock key toggles on up/down (false) or on
+	// transition (true)
 	bool				m_capsLockHalfDuplex;
+
+	// masks that indicate which modifier bits are for toggle keys
+	unsigned int		m_numLockMask;
+	unsigned int		m_capsLockMask;
+	unsigned int		m_scrollLockMask;
 };
 
 #endif
