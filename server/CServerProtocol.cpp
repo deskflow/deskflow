@@ -50,18 +50,19 @@ IServerProtocol*		CServerProtocol::create(SInt32 major, SInt32 minor,
 								CServer* server, const CString& client,
 								IInputStream* input, IOutputStream* output)
 {
+	// disallow invalid version numbers
+	if (major < 0 || minor < 0) {
+		throw XIncompatibleClient(major, minor);
+	}
+
 	// disallow connection from test versions to release versions
 	if (major == 0 && kMajorVersion != 0) {
-		output->write(kMsgEIncompatible, sizeof(kMsgEIncompatible) - 1);
-		output->flush();
 		throw XIncompatibleClient(major, minor);
 	}
 
 	// hangup (with error) if version isn't supported
 	if (major > kMajorVersion ||
 		(major == kMajorVersion && minor > kMinorVersion)) {
-		output->write(kMsgEIncompatible, sizeof(kMsgEIncompatible) - 1);
-		output->flush();
 		throw XIncompatibleClient(major, minor);
 	}
 

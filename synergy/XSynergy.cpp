@@ -9,8 +9,9 @@ CString					XBadClient::getWhat() const throw()
 	return "XBadClient";
 }
 
+
 //
-//
+// XIncompatibleClient
 //
 
 XIncompatibleClient::XIncompatibleClient(int major, int minor) :
@@ -35,3 +36,22 @@ CString					XIncompatibleClient::getWhat() const throw()
 	return "XIncompatibleClient";
 }
 
+
+//
+// XDuplicateClient
+//
+
+XDuplicateClient::XDuplicateClient(const CString& name) : m_name(name)
+{
+	// do nothing
+}
+
+const CString&			XDuplicateClient::getName() const throw()
+{
+	return m_name;
+}
+
+CString					XDuplicateClient::getWhat() const throw()
+{
+	return "XDuplicateClient";
+}

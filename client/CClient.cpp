@@ -269,6 +269,18 @@ void					CClient::runSession(void*)
 				log((CLOG_DEBUG1 "recv close"));
 				break;
 			}
+			else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
+				onErrorIncompatible();
+				break;
+			}
+			else if (memcmp(code, kMsgEBusy, 4) == 0) {
+				onErrorBusy();
+				break;
+			}
+			else if (memcmp(code, kMsgEBad, 4) == 0) {
+				onErrorBad();
+				break;
+			}
 			else {
 				// unknown message
 				log((CLOG_ERR "unknown message from server"));
@@ -542,4 +554,22 @@ void					CClient::onMouseWheel()
 	}
 	log((CLOG_DEBUG2 "recv mouse wheel %+d", delta));
 	m_screen->mouseWheel(delta);
+}
+
+void					CClient::onErrorIncompatible()
+{
+	SInt32 major, minor;
+	CLock lock(&m_mutex);
+	CProtocolUtil::readf(m_input, kMsgEIncompatible + 4, &major, &minor);
+	log((CLOG_ERR "server has incompatible version %d.%d", major, minor));
+}
+
+void					CClient::onErrorBusy()
+{
+	log((CLOG_ERR "server already has a connected client with name \"%s\"", m_name.c_str()));
+}
+
+void					CClient::onErrorBad()
+{
+	log((CLOG_ERR "server disconnected due to a protocol error"));
 }

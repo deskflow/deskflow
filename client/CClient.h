@@ -48,6 +48,9 @@ private:
 	void				onMouseUp();
 	void				onMouseMove();
 	void				onMouseWheel();
+	void				onErrorIncompatible();
+	void				onErrorBusy();
+	void				onErrorBad();
 
 private:
 	CMutex				m_mutex;

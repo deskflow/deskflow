@@ -109,7 +109,16 @@ static const char		kMsgQInfo[]			= "QINF";
 // error codes
 //
 
-static const char		kMsgEIncompatible[]	= "EICV";
+// incompatible versions:  primary -> secondary
+// $1 = major version of primary, $2 = minor version of primary.
+static const char		kMsgEIncompatible[]	= "EICV%2i%2i";
+
+// name provided when connecting is already in use:  primary -> secondary
+static const char		kMsgEBusy[] = "EBSY";
+
+// protocol violation:  primary -> secondary
+// primary should disconnect after sending this message.
+static const char		kMsgEBad[] = "EBAD";
 
 #endif
 

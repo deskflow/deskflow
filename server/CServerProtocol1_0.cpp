@@ -58,7 +58,7 @@ void					CServerProtocol1_0::run()
 		}
 		// FIXME -- more message here
 		else {
-			log((CLOG_ERR "unknown message from client \"%s\"", getClient().c_str()));
+			log((CLOG_ERR "invalid message from client \"%s\"", getClient().c_str()));
 
 			// unknown message
 			throw XBadClient();

@@ -31,4 +31,23 @@ private:
 	int					m_minor;
 };
 
+// client has duplicate name (i.e. client with name is already connected)
+class XDuplicateClient : public XSynergy {
+public:
+	XDuplicateClient(const CString& name);
+
+	// manipulators
+
+	// accessors
+
+	virtual const CString&
+						getName() const throw();
+
+protected:
+	virtual CString		getWhat() const throw();
+
+private:
+	CString				m_name;
+};
+
 #endif

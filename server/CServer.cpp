@@ -838,69 +838,81 @@ void					CServer::handshakeClient(void* vsocket)
 
 		std::auto_ptr<IServerProtocol> protocol;
 		std::auto_ptr<CConnectionNote> connectedNote;
-		{
-			// give the client a limited time to complete the handshake
-			CTimerThread timer(30.0);
+		try {
+			{
+				// give the client a limited time to complete the handshake
+				CTimerThread timer(30.0);
 
-			// limit the maximum length of the hello
-			static const UInt32 maxHelloLen = 1024;
+				// limit the maximum length of the hello
+				static const UInt32 maxHelloLen = 1024;
 
-			// say hello
-			log((CLOG_DEBUG1 "saying hello"));
-			CProtocolUtil::writef(output.get(), "Synergy%2i%2i",
+				// say hello
+				log((CLOG_DEBUG1 "saying hello"));
+				CProtocolUtil::writef(output.get(), "Synergy%2i%2i",
 										kMajorVersion, kMinorVersion);
-			output->flush();
+				output->flush();
 
-			// wait for the reply
-			log((CLOG_DEBUG1 "waiting for hello reply"));
-			UInt32 n = input->getSize();
-			if (n > maxHelloLen) {
-				throw XBadClient();
-			}
+				// wait for the reply
+				log((CLOG_DEBUG1 "waiting for hello reply"));
+				UInt32 n = input->getSize();
+				if (n > maxHelloLen) {
+					throw XBadClient();
+				}
 
-			// get and parse the reply to hello
-			SInt16 major, minor;
-			try {
-				log((CLOG_DEBUG1 "parsing hello reply"));
-				CProtocolUtil::readf(input.get(), "Synergy%2i%2i%s",
+				// get and parse the reply to hello
+				SInt16 major, minor;
+				try {
+					log((CLOG_DEBUG1 "parsing hello reply"));
+					CProtocolUtil::readf(input.get(), "Synergy%2i%2i%s",
 										&major, &minor, &name);
-			}
-			catch (XIO&) {
-				throw XBadClient();
-			}
-			if (major < 0 || minor < 0) {
-				throw XBadClient();
-			}
+				}
+				catch (XIO&) {
+					throw XBadClient();
+				}
 
-			// create a protocol interpreter for the version
-			log((CLOG_DEBUG1 "creating interpreter for client %s version %d.%d", name.c_str(), major, minor));
-			assign(protocol, CServerProtocol::create(major, minor,
+				// create a protocol interpreter for the version
+				log((CLOG_DEBUG1 "creating interpreter for client \"%s\" version %d.%d", name.c_str(), major, minor));
+				assign(protocol, CServerProtocol::create(major, minor,
 									this, name, input.get(), output.get()),
 									IServerProtocol);
 
-			// client is now pending
-			assign(connectedNote, new CConnectionNote(this,
+				// client is now pending
+				assign(connectedNote, new CConnectionNote(this,
 									name, protocol.get()), CConnectionNote);
 
-			// ask and wait for the client's info
-			log((CLOG_DEBUG1 "waiting for info for client %s", name.c_str()));
-			protocol->queryInfo();
+				// ask and wait for the client's info
+				log((CLOG_DEBUG1 "waiting for info for client \"%s\"", name.c_str()));
+				protocol->queryInfo();
+
+				// now connected;  client no longer subject to timeout.
+			}
+
+			// handle messages from client.  returns when the client
+			// disconnects.
+			log((CLOG_NOTE "client \"%s\" has connected", name.c_str()));
+			protocol->run();
+		}
+		catch (XDuplicateClient& e) {
+			// client has duplicate name
+			log((CLOG_WARN "a client with name \"%s\" is already connected)", e.getName().c_str()));
+			CProtocolUtil::writef(output.get(), kMsgEBusy);
+		}
+		catch (XIncompatibleClient& e) {
+			// client is incompatible
+			// FIXME -- could print network address if socket had suitable method
+			log((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
+			CProtocolUtil::writef(output.get(), kMsgEIncompatible,
+								kMajorVersion, kMinorVersion);
+		}
+		catch (XBadClient&) {
+			// client not behaving
+			// FIXME -- could print network address if socket had suitable method
+			log((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
+			CProtocolUtil::writef(output.get(), kMsgEBad);
 		}
 
-		// handle messages from client.  returns when the client
-		// disconnects.
-		log((CLOG_NOTE "client %s is connected", name.c_str()));
-		protocol->run();
-	}
-	catch (XIncompatibleClient& e) {
-		// client is incompatible
-		log((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
-		// FIXME -- could print network address if socket had suitable method
-	}
-	catch (XBadClient&) {
-		// client not behaving
-		log((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
-		// FIXME -- could print network address if socket had suitable method
+		// flush any pending output
+		output.get()->flush();
 	}
 	catch (XBase& e) {
 		// misc error
@@ -1087,10 +1099,18 @@ CServer::CScreenInfo*	CServer::addConnection(
 								const CString& name, IServerProtocol* protocol)
 {
 	log((CLOG_DEBUG "adding connection \"%s\"", name.c_str()));
+
 	CLock lock(&m_mutex);
-	assert(m_screens.count(name) == 0);
+
+	// can only have one screen with a given name at any given time
+	if (m_screens.count(name) != 0) {
+		throw XDuplicateClient(name);
+	}
+
+	// save screen info
 	CScreenInfo* newScreen = new CScreenInfo(name, protocol);
 	m_screens.insert(std::make_pair(name, newScreen));
+
 	return newScreen;
 }
 
