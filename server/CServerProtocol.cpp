@@ -56,13 +56,13 @@ IServerProtocol*		CServerProtocol::create(SInt32 major, SInt32 minor,
 	}
 
 	// disallow connection from test versions to release versions
-	if (major == 0 && kMajorVersion != 0) {
+	if (major == 0 && kProtocolMajorVersion != 0) {
 		throw XIncompatibleClient(major, minor);
 	}
 
 	// hangup (with error) if version isn't supported
-	if (major > kMajorVersion ||
-		(major == kMajorVersion && minor > kMinorVersion)) {
+	if (major > kProtocolMajorVersion ||
+		(major == kProtocolMajorVersion && minor > kProtocolMinorVersion)) {
 		throw XIncompatibleClient(major, minor);
 	}
 

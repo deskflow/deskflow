@@ -4,8 +4,8 @@
 #include "BasicTypes.h"
 
 // version number
-static const SInt32		kMajorVersion = 0;
-static const SInt32		kMinorVersion = 1;
+static const SInt16		kProtocolMajorVersion = 0;
+static const SInt16		kProtocolMinorVersion = 1;
 
 //
 // message codes (trailing NUL is not part of code).  in comments, $n

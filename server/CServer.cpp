@@ -1059,7 +1059,8 @@ void					CServer::handshakeClient(void* vsocket)
 				// say hello
 				log((CLOG_DEBUG1 "saying hello"));
 				CProtocolUtil::writef(output.get(), "Synergy%2i%2i",
-										kMajorVersion, kMinorVersion);
+										kProtocolMajorVersion,
+										kProtocolMinorVersion);
 				output->flush();
 
 				// wait for the reply
@@ -1117,7 +1118,7 @@ void					CServer::handshakeClient(void* vsocket)
 			// FIXME -- could print network address if socket had suitable method
 			log((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
 			CProtocolUtil::writef(output.get(), kMsgEIncompatible,
-								kMajorVersion, kMinorVersion);
+								kProtocolMajorVersion, kProtocolMinorVersion);
 		}
 		catch (XBadClient&) {
 			// client not behaving

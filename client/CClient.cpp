@@ -214,15 +214,16 @@ void					CClient::runSession(void*)
 
 		// check versions
 		log((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
-		if (major < kMajorVersion ||
-			(major == kMajorVersion && minor < kMinorVersion)) {
+		if (major < kProtocolMajorVersion ||
+			(major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
 			throw XIncompatibleClient(major, minor);
 		}
 
 		// say hello back
-		log((CLOG_DEBUG1 "say hello version %d.%d", kMajorVersion, kMinorVersion));
+		log((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
 		CProtocolUtil::writef(output.get(), "Synergy%2i%2i%s",
-								kMajorVersion, kMinorVersion, &m_name);
+								kProtocolMajorVersion,
+								kProtocolMinorVersion, &m_name);
 
 		// record streams in a more useful place
 		CLock lock(&m_mutex);

@@ -6,13 +6,9 @@
 #include "CThread.h"
 #include "XThread.h"
 #include "ProtocolTypes.h"
+#include "Version.h"
 #include "stdfstream.h"
 #include <assert.h>
-
-static const char* s_copyright     = "Copyright (C) 2002 Chris Schoeneman";
-static const SInt32 s_majorVersion = 0;
-static const SInt32 s_minorVersion = 5;
-static const char s_releaseVersion = ' ';
 
 // configuration file name
 #if defined(CONFIG_PLATFORM_WIN32)
@@ -115,15 +111,15 @@ static void				bye()
 static void				version()
 {
 	log((CLOG_PRINT
-"%s %d.%d%c protocol version %d.%d\n"
+"%s %d.%d.%d, protocol version %d.%d\n"
 "%s",
 								pname,
-								s_majorVersion,
-								s_minorVersion,
-								s_releaseVersion,
 								kMajorVersion,
 								kMinorVersion,
-								s_copyright));
+								kReleaseVersion,
+								kProtocolMajorVersion,
+								kProtocolMinorVersion,
+								kCopyright));
 }
 
 static void				help()
@@ -335,6 +331,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 	// load the configuration file if we haven't already
 	if (s_configFile == NULL) {
+// FIXME
 	}
 
 // FIXME
@@ -531,7 +528,6 @@ int main(int argc, char** argv)
 			}
 			catch (XBase& e) {
 				log((CLOG_CRIT "failed: %s", e.what()));
-				fprintf(stderr, "failed: %s\n", e.what());
 				return 16;
 			}
 			catch (XThread&) {
