@@ -700,18 +700,21 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 	}
 	else {
 		// clamp to edge when locked
-		LOG((CLOG_DEBUG1 "clamp to \"%s\"", m_active->getName().c_str()));
 		if (m_x < ax) {
 			m_x = ax;
+			LOG((CLOG_DEBUG1 "clamp to left of \"%s\"", m_active->getName().c_str()));
 		}
 		else if (m_x > ax + aw - 1) {
 			m_x = ax + aw - 1;
+			LOG((CLOG_DEBUG1 "clamp to right of \"%s\"", m_active->getName().c_str()));
 		}
 		if (m_y < ay) {
 			m_y = ay;
+			LOG((CLOG_DEBUG1 "clamp to top of \"%s\"", m_active->getName().c_str()));
 		}
 		else if (m_y > ay + ah - 1) {
 			m_y = ay + ah - 1;
+			LOG((CLOG_DEBUG1 "clamp to bottom of \"%s\"", m_active->getName().c_str()));
 		}
 	}
 
