@@ -13,6 +13,7 @@
  */
 
 #include "CArchMiscWindows.h"
+#include "CArchDaemonWindows.h"
 
 //
 // CArchMiscWindows
@@ -33,19 +34,19 @@ CArchMiscWindows::isWindows95Family()
 int
 CArchMiscWindows::runDaemon(RunFunc runFunc)
 {
-	return CArchMiscWindows::runDaemon(runFunc);
+	return CArchDaemonWindows::runDaemon(runFunc);
 }
 
 void
 CArchMiscWindows::daemonRunning(bool running)
 {
-	CArchMiscWindows::daemonRunning(running);
+	CArchDaemonWindows::daemonRunning(running);
 }
 
 void
 CArchMiscWindows::daemonFailed(int result)
 {
-	CArchMiscWindows::daemonFailed(result);
+	CArchDaemonWindows::daemonFailed(result);
 }
 
 HKEY
