@@ -149,19 +149,18 @@ CClient::onClipboardChanged(ClipboardID, const CString&)
 	// ignore -- we'll check the clipboard when we leave
 }
 
-bool
+void
 CClient::open()
 {
 	// open the screen
 	try {
 		log((CLOG_INFO "opening screen"));
 		openSecondaryScreen();
-		return true;
 	}
 	catch (XScreenOpenFailure&) {
-		// can't open screen yet.  wait a few seconds to retry.
+		// can't open screen
 		log((CLOG_INFO "failed to open screen"));
-		return false;
+		throw;
 	}
 }
 
@@ -368,7 +367,6 @@ void
 CClient::openSecondaryScreen()
 {
 	assert(m_screen == NULL);
-	assert(m_screenFactory != NULL);
 
 	// not active
 	m_active = false;
@@ -381,7 +379,9 @@ CClient::openSecondaryScreen()
 
 	// create screen
 	log((CLOG_DEBUG1 "creating secondary screen"));
-	m_screen = m_screenFactory->create(this);
+	if (m_screenFactory != NULL) {
+		m_screen = m_screenFactory->create(this);
+	}
 	if (m_screen == NULL) {
 		throw XScreenOpenFailure();
 	}
@@ -402,12 +402,12 @@ CClient::openSecondaryScreen()
 void
 CClient::closeSecondaryScreen()
 {
-	assert(m_screen != NULL);
-
 	// close the secondary screen
 	try {
-		log((CLOG_DEBUG1 "closing secondary screen"));
-		m_screen->close();
+		if (m_screen != NULL) {
+			log((CLOG_DEBUG1 "closing secondary screen"));
+			m_screen->close();
+		}
 	}
 	catch (...) {
 		// ignore

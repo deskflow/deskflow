@@ -20,8 +20,9 @@ treated as if it was on a client.
 class CPrimaryClient : public IScreenReceiver, public IClient {
 public:
 	/*!
-	\c name is the name of the server.  the caller retains ownership of
-	\c factory.
+	\c name is the name of the server.  The caller retains ownership of
+	\c factory.  Throws XScreenOpenFailure or whatever the factory can
+	throw if the screen cannot be created.
 	*/
 	CPrimaryClient(IPrimaryScreenFactory* factory, IServer*,
 							IPrimaryScreenReceiver*, const CString& name);
@@ -75,7 +76,7 @@ public:
 	virtual void		onClipboardChanged(ClipboardID, const CString&);
 
 	// IClient overrides
-	virtual bool		open();
+	virtual void		open();
 	virtual void		mainLoop();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,

@@ -29,7 +29,7 @@ CClientProxy1_0::~CClientProxy1_0()
 	// do nothing
 }
 
-bool
+void
 CClientProxy1_0::open()
 {
 	// send request
@@ -55,8 +55,6 @@ CClientProxy1_0::open()
 
 	// handle reply
 	recvInfo(false);
-
-	return true;
 }
 
 void

@@ -19,9 +19,11 @@ public:
 
 	//! Open client
 	/*!
-	Open the client and return true iff successful.
+	Open the client.  Throw if the client cannot be opened.  If the
+	screen cannot be opened but retrying later may succeed then throw
+	XScreenUnavailable.
 	*/
-	virtual bool		open() = 0;
+	virtual void		open() = 0;
 
 	//! Client main loop
 	/*!

@@ -39,9 +39,12 @@ public:
 
 	//! Open server
 	/*!
-	Open the server and return true iff successful.
+	Open the server.  Throws XScreenUnavailable if the server's
+	screen cannot be opened but might be available after some time.
+	Otherwise throws some other exception if the server's screen or
+	the server cannot be opened and retrying won't help.
 	*/
-	bool				open();
+	void				open();
 
 	//! Server main loop
 	/*!

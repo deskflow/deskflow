@@ -229,7 +229,7 @@ CXWindowsSecondaryScreen::createWindow()
 		int majorOpcode, firstEvent, firstError;
 		if (!XQueryExtension(display, XTestExtensionName,
 								&majorOpcode, &firstEvent, &firstError)) {
-			// FIXME -- subclass exception for more info?
+			log((CLOG_ERR "XTEST extension not available"));
 			throw XScreenOpenFailure();
 		}
 

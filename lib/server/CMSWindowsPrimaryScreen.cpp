@@ -399,6 +399,7 @@ CMSWindowsPrimaryScreen::onPreOpen()
 	// initialize hook library
 	m_threadID = GetCurrentThreadId();
 	if (m_init(m_threadID) == 0) {
+		log((CLOG_ERR "cannot initialize hook library"));
 		throw XScreenOpenFailure();
 	}
 }

@@ -98,7 +98,7 @@ public:
 	virtual void		onClipboardChanged(ClipboardID, const CString&);
 
 	// IClient overrides
-	virtual bool		open();
+	virtual void		open();
 	virtual void		mainLoop();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,

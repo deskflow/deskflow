@@ -43,7 +43,7 @@ public:
 	//@}
 
 	// IClient overrides
-	virtual bool		open() = 0;
+	virtual void		open() = 0;
 	virtual void		mainLoop() = 0;
 	virtual void		close() = 0;
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,

@@ -19,7 +19,9 @@ public:
 
 	//! Open screen
 	/*!
-	Called to open and initialize the screen.
+	Called to open and initialize the screen.  Throw XScreenUnavailable
+	if the screen cannot be opened but retrying later may succeed.
+	Otherwise throw some other XScreenOpenFailure exception.
 	*/
 	virtual void		open() = 0;
 

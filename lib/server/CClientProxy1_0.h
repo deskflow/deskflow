@@ -14,7 +14,7 @@ public:
 	~CClientProxy1_0();
 
 	// IClient overrides
-	virtual bool		open();
+	virtual void		open();
 	virtual void		mainLoop();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,

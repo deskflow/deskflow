@@ -4,6 +4,7 @@
 #include "CPlatform.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
+#include "XScreen.h"
 #include "CNetwork.h"
 #include "CTCPSocketFactory.h"
 #include "XSocket.h"
@@ -156,7 +157,8 @@ realMain(CMutex* mutex)
 				s_server->setStreamFilterFactory(NULL);
 
 				// open server
-				if (s_server->open()) {
+				try {
+					s_server->open();
 					opened = true;
 
 					// run server (unlocked)
@@ -173,14 +175,22 @@ realMain(CMutex* mutex)
 					// clean up
 					s_server->close();
 				}
-				else {
-					// wait a few seconds before retrying
+				catch (XScreenUnavailable& e) {
+					// wait before retrying if we're going to retry
 					if (s_restartable) {
-						CThread::sleep(3.0);
+						CThread::sleep(e.getRetryTime());
 					}
 					else {
 						result = kExitFailed;
 					}
+				}
+				catch (...) {
+					// rethrow thread exceptions
+					RETHROW_XTHREAD
+
+					// don't try to restart and fail
+					s_restartable = false;
+					result        = kExitFailed;
 				}
 
 				// clean up

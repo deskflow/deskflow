@@ -53,24 +53,23 @@ CServer::~CServer()
 	delete m_streamFilterFactory;
 }
 
-bool
+void
 CServer::open()
 {
 	// open the screen
 	try {
 		log((CLOG_INFO "opening screen"));
 		openPrimaryScreen();
-		return true;
 	}
-	catch (XScreenOpenFailure&) {
-		// can't open screen yet.  wait a few seconds to retry.
+	catch (XScreen&) {
+		// can't open screen
 		log((CLOG_INFO "failed to open screen"));
-		return false;
+		throw;
 	}
 	catch (XUnknownClient& e) {
-		// can't open screen yet.  wait a few seconds to retry.
+		// can't open screen
 		log((CLOG_CRIT "unknown screen name `%s'", e.getName().c_str()));
-		return false;
+		throw;
 	}
 }
 
@@ -1529,7 +1528,6 @@ void
 CServer::openPrimaryScreen()
 {
 	assert(m_primaryClient == NULL);
-	assert(m_screenFactory != NULL);
 
 	// reset sequence number
 	m_seqNum = 0;

@@ -197,7 +197,7 @@ CXWindowsScreen::open()
 	log((CLOG_DEBUG "XOpenDisplay(\"%s\")", display));
 	m_display = XOpenDisplay(display);
 	if (m_display == NULL) {
-		throw XScreenOpenFailure();
+		throw XScreenUnavailable(60.0);
 	}
 
 	// get root window

@@ -1,6 +1,7 @@
 #include "CPrimaryClient.h"
 #include "IPrimaryScreenFactory.h"
 #include "IServer.h"
+#include "XScreen.h"
 #include "XSynergy.h"
 #include "CPrimaryScreen.h"
 #include "CClipboard.h"
@@ -19,11 +20,15 @@ CPrimaryClient::CPrimaryClient(IPrimaryScreenFactory* screenFactory,
 	m_seqNum(0)
 {
 	assert(m_server != NULL);
-	assert(screenFactory != NULL);
 
 	// create screen
 	log((CLOG_DEBUG1 "creating primary screen"));
-	m_screen = screenFactory->create(this, receiver);
+	if (screenFactory != NULL) {
+		m_screen = screenFactory->create(this, receiver);
+	}
+	if (m_screen == NULL) {
+		throw XScreenOpenFailure();
+	}
 }
 
 CPrimaryClient::~CPrimaryClient()
@@ -100,7 +105,7 @@ CPrimaryClient::onClipboardChanged(ClipboardID id, const CString& data)
 	m_server->onClipboardChanged(id, m_seqNum, data);
 }
 
-bool
+void
 CPrimaryClient::open()
 {
 	// all clipboards are clean
@@ -110,8 +115,6 @@ CPrimaryClient::open()
 
 	// now open the screen
 	m_screen->open();
-
-	return true;
 }
 
 void
