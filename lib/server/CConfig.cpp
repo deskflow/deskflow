@@ -599,6 +599,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionHalfDuplexNumLock) {
 		return "halfDuplexNumLock";
 	}
+	if (id == kOptionHalfDuplexScrollLock) {
+		return "halfDuplexScrollLock";
+	}
 	if (id == kOptionModifierMapForShift) {
 		return "shift";
 	}
@@ -640,6 +643,7 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 {
 	if (id == kOptionHalfDuplexCapsLock ||
 		id == kOptionHalfDuplexNumLock ||
+		id == kOptionHalfDuplexScrollLock ||
 		id == kOptionScreenSaverSync ||
 		id == kOptionXTestXineramaUnaware ||
 		id == kOptionRelativeMouseMoves) {
@@ -848,6 +852,10 @@ CConfig::readSectionScreens(std::istream& s)
 			}
 			else if (name == "halfDuplexNumLock") {
 				addOption(screen, kOptionHalfDuplexNumLock,
+					parseBoolean(value));
+			}
+			else if (name == "halfDuplexScrollLock") {
+				addOption(screen, kOptionHalfDuplexScrollLock,
 					parseBoolean(value));
 			}
 			else if (name == "shift") {

@@ -285,6 +285,16 @@ CScreen::setOptions(const COptionsList& options)
 			m_screen->setHalfDuplexMask(m_halfDuplex);
 			LOG((CLOG_DEBUG1 "half-duplex num-lock %s", ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
 		}
+		else if (options[i] == kOptionHalfDuplexScrollLock) {
+			if (options[i + 1] != 0) {
+				m_halfDuplex |=  KeyModifierScrollLock;
+			}
+			else {
+				m_halfDuplex &= ~KeyModifierScrollLock;
+			}
+			m_screen->setHalfDuplexMask(m_halfDuplex);
+			LOG((CLOG_DEBUG1 "half-duplex scroll-lock %s", ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off"));
+		}
 	}
 
 	// update screen saver synchronization

@@ -87,6 +87,7 @@
 #define IDC_ADD_HD_NUM_CHECK            1038
 #define IDC_ADVANCED_NAME_EDIT          1038
 #define IDC_ADVANCED_PORT_EDIT          1039
+#define IDC_ADD_HD_SCROLL_CHECK         1039
 #define IDC_MAIN_DEBUG                  1040
 #define IDC_GLOBAL_DELAY_CHECK          1041
 #define IDC_GLOBAL_DELAY_TIME           1042

@@ -15,7 +15,7 @@
 <li><a href="#faq4">What does "Cannot initialize hook library" mean?</a>
 <li><a href="#faq5">What security/encryption does synergy provide?</a>
 <li><a href="#faq6">What should I call my screens in the configuration?</a>
-<li><a href="#faq7">Why do my Caps-Lock and Num-Lock keys act funny?</a>
+<li><a href="#faq7">Why do my Caps-Lock, Num-Lock, Scroll-Lock keys act funny?</a>
 <li><a href="#faq8">Can synergy share the display in addition to the mouse and keyboard?</a>
 <li><a href="#faq9">Can synergy do drag and drop between computers?</a>
 <li><a href="#faq10">Do AltGr or Mode-Switch or ISO_Level3_Shift work?</a>
@@ -125,28 +125,29 @@
     then use <span class="code">xyz.local</span> as the screen name.
 </p>
 
-<li><a name="faq7"></a><span class="fakelink">Why do my Caps-Lock and Num-Lock keys act funny?</span>
+<li><a name="faq7"></a><span class="fakelink">Why do my Caps-Lock, Num-Lock, Scroll-Lock keys act funny?</span>
 <p>
-    Some systems treat the Caps-Lock and Num-Lock keys differently
-    than all the others.  Whereas most keys report going down when
-    physically pressed and going up when physically released, on
-    these systems the Caps-Lock and Num-Lock keys report going down
-    when being activated and going up when being deactivated.  That
-    is, when you press and release, say, Caps-Lock to activate it, it
-    only reports going down, and when you press and release to
-    deactivate it, it only reports going up.  This confuses synergy.
+    Some systems treat the Caps-Lock, Num-Lock, and Scroll-Lock keys
+	differently than all the others.  Whereas most keys report going down
+	when physically pressed and going up when physically released, on
+    these systems the keys report going down when being activated and
+	going up when being deactivated.  That is, when you press and release,
+	say, Caps-Lock to activate it, it only reports going down, and when
+	you press and release to deactivate it, it only reports going up.
+	This confuses synergy.
 </p>
 <p>
     You can solve the problem by changing your configuration file.
     In the screens section, following each screen that has the
-    problem, add either or both of these lines as appropriate:
+    problem, add any or all of these lines as appropriate:
 </p>
 <pre>
         halfDuplexCapsLock = true
         halfDuplexNumLock = true
+        halfDuplexScrollLock = true
 </pre>
 <p>
-    Then restart synergy on the server.
+    Then restart synergy on the server or reload the configuration.
 </p>
 
 <li><a name="faq8"></a><span class="fakelink">Can synergy share the display in addition to the mouse and keyboard?</span>
