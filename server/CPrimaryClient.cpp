@@ -25,9 +25,9 @@ CPrimaryClient::CPrimaryClient(IServer* server, const CString& name) :
 	// create screen
 	log((CLOG_DEBUG1 "creating primary screen"));
 #if WINDOWS_LIKE
-	m_screen = new CMSWindowsPrimaryScreen(this);
+	m_screen = new CMSWindowsPrimaryScreen(this, m_server);
 #elif UNIX_LIKE
-	m_screen = new CXWindowsPrimaryScreen(this);
+	m_screen = new CXWindowsPrimaryScreen(this, m_server);
 #endif
 }
 
@@ -69,20 +69,14 @@ CPrimaryClient::getToggleMask() const
 }
 
 void
-CPrimaryClient::onError()
-{
-	m_server->onError();
-}
-
-void
-CPrimaryClient::onInfoChanged(const CString&, const CClientInfo& info)
+CPrimaryClient::onInfoChanged(const CClientInfo& info)
 {
 	m_info = info;
 	m_server->onInfoChanged(getName(), m_info);
 }
 
 bool
-CPrimaryClient::onGrabClipboard(const CString&, ClipboardID id, UInt32)
+CPrimaryClient::onGrabClipboard(ClipboardID id)
 {
 	bool result = m_server->onGrabClipboard(getName(), id, m_seqNum);
 	m_clipboardOwner[id] = result;
@@ -90,63 +84,9 @@ CPrimaryClient::onGrabClipboard(const CString&, ClipboardID id, UInt32)
 }
 
 void
-CPrimaryClient::onClipboardChanged(ClipboardID id, UInt32, const CString& data)
+CPrimaryClient::onClipboardChanged(ClipboardID id, const CString& data)
 {
 	m_server->onClipboardChanged(id, m_seqNum, data);
-}
-
-void
-CPrimaryClient::onKeyDown(KeyID id, KeyModifierMask mask)
-{
-	m_server->onKeyDown(id, mask);
-}
-
-void
-CPrimaryClient::onKeyUp(KeyID id, KeyModifierMask mask)
-{
-	m_server->onKeyUp(id, mask);
-}
-
-void
-CPrimaryClient::onKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count)
-{
-	m_server->onKeyRepeat(id, mask, count);
-}
-
-void
-CPrimaryClient::onMouseDown(ButtonID id)
-{
-	m_server->onMouseDown(id);
-}
-
-void
-CPrimaryClient::onMouseUp(ButtonID id)
-{
-	m_server->onMouseUp(id);
-}
-
-bool
-CPrimaryClient::onMouseMovePrimary(SInt32 x, SInt32 y)
-{
-	return m_server->onMouseMovePrimary(x, y);
-}
-
-void
-CPrimaryClient::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
-{
-	m_server->onMouseMoveSecondary(dx, dy);
-}
-
-void
-CPrimaryClient::onMouseWheel(SInt32 delta)
-{
-	m_server->onMouseWheel(delta);
-}
-
-void
-CPrimaryClient::onScreenSaver(bool activated)
-{
-	m_server->onScreenSaver(activated);
 }
 
 bool

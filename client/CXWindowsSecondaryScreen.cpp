@@ -24,8 +24,8 @@
 // CXWindowsSecondaryScreen
 //
 
-CXWindowsSecondaryScreen::CXWindowsSecondaryScreen() :
-	m_client(NULL),
+CXWindowsSecondaryScreen::CXWindowsSecondaryScreen(IScreenReceiver* receiver) :
+	m_receiver(receiver),
 	m_window(None)
 {
 	// do nothing
@@ -82,13 +82,9 @@ CXWindowsSecondaryScreen::stop()
 }
 
 void
-CXWindowsSecondaryScreen::open(CClient* client)
+CXWindowsSecondaryScreen::open()
 {
-	assert(m_client == NULL);
-	assert(client   != NULL);
-
-	// set the client
-	m_client = client;
+	assert(m_receiver != NULL);
 
 	// open the display
 	openDisplay();
@@ -128,8 +124,6 @@ CXWindowsSecondaryScreen::open(CClient* client)
 void
 CXWindowsSecondaryScreen::close()
 {
-	assert(m_client != NULL);
-
 	// release keys that are logically pressed
 	releaseKeys();
 
@@ -138,9 +132,6 @@ CXWindowsSecondaryScreen::close()
 
 	// close the display
 	closeDisplay();
-
-	// done with client
-	m_client = NULL;
 }
 
 void
@@ -396,7 +387,7 @@ void
 CXWindowsSecondaryScreen::onLostClipboard(ClipboardID id)
 {
 	// tell client that the clipboard was grabbed locally
-	m_client->onClipboardChanged(id);
+	m_receiver->onGrabClipboard(id);
 }
 
 void

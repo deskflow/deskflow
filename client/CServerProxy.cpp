@@ -18,7 +18,8 @@ CServerProxy::CServerProxy(IClient* client,
 				IInputStream* input, IOutputStream* output) :
 	m_client(client),
 	m_input(input),
-	m_output(output)
+	m_output(output),
+	m_seqNum(0)
 {
 	assert(m_client != NULL);
 	assert(m_input  != NULL);
@@ -40,7 +41,10 @@ CServerProxy::run()
 		m_compressMouse = false;
 
 		// not ignoring mouse motions
-		m_ignoreMouse = false;
+		m_ignoreMouse   = false;
+
+		// reset sequence number
+		m_seqNum        = 0;
 
 		// handle messages from server
 		CStopwatch heartbeat;
@@ -218,13 +222,7 @@ CServerProxy::getOutputStream() const
 }
 
 void
-CServerProxy::onError()
-{
-	// ignore
-}
-
-void
-CServerProxy::onInfoChanged(const CString&, const CClientInfo& info)
+CServerProxy::onInfoChanged(const CClientInfo& info)
 {
 	// ignore mouse motion until we receive acknowledgment of our info
 	// change message.
@@ -236,74 +234,19 @@ CServerProxy::onInfoChanged(const CString&, const CClientInfo& info)
 }
 
 bool
-CServerProxy::onGrabClipboard(const CString&, ClipboardID id, UInt32 seqNum)
+CServerProxy::onGrabClipboard(ClipboardID id)
 {
 	log((CLOG_DEBUG1 "sending clipboard %d changed", id));
 	CLock lock(&m_mutex);
-	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id, seqNum);
+	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id, m_seqNum);
 }
 
 void
-CServerProxy::onClipboardChanged(ClipboardID id,
-				UInt32 seqNum, const CString& data)
+CServerProxy::onClipboardChanged(ClipboardID id, const CString& data)
 {
-	log((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, seqNum, data.size()));
 	CLock lock(&m_mutex);
-	CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, id, seqNum, &data);
-}
-
-void
-CServerProxy::onKeyDown(KeyID, KeyModifierMask)
-{
-	// ignore
-}
-
-void
-CServerProxy::onKeyUp(KeyID, KeyModifierMask)
-{
-	// ignore
-}
-
-void
-CServerProxy::onKeyRepeat(KeyID, KeyModifierMask, SInt32)
-{
-	// ignore
-}
-
-void
-CServerProxy::onMouseDown(ButtonID)
-{
-	// ignore
-}
-
-void
-CServerProxy::onMouseUp(ButtonID)
-{
-	// ignore
-}
-
-bool
-CServerProxy::onMouseMovePrimary(SInt32, SInt32)
-{
-	return false;
-}
-
-void
-CServerProxy::onMouseMoveSecondary(SInt32, SInt32)
-{
-	// ignore
-}
-
-void
-CServerProxy::onMouseWheel(SInt32)
-{
-	// ignore
-}
-
-void
-CServerProxy::onScreenSaver(bool)
-{
-	// ignore
+	log((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
+	CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, id, m_seqNum, &data);
 }
 
 void
@@ -353,6 +296,7 @@ CServerProxy::enter()
 	{
 		CLock lock(&m_mutex);
 		m_compressMouse = false;
+		m_seqNum        = seqNum;
 	}
 
 	// forward

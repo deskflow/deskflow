@@ -28,7 +28,6 @@ CClient::CClient(const CString& clientName) :
 	m_server(NULL),
 	m_camp(false),
 	m_active(false),
-	m_seqNum(0),
 	m_rejected(true)
 {
 	// do nothing
@@ -66,18 +65,29 @@ CClient::wasRejected() const
 }
 
 void
-CClient::onClipboardChanged(ClipboardID id)
+CClient::onInfoChanged(const CClientInfo& info)
+{
+	log((CLOG_DEBUG "resolution changed"));
+
+	CLock lock(&m_mutex);
+	if (m_server != NULL) {
+		m_server->onInfoChanged(info);
+	}
+}
+
+bool
+CClient::onGrabClipboard(ClipboardID id)
 {
 	CLock lock(&m_mutex);
 	if (m_server == NULL) {
 		// m_server can be NULL if the screen calls this method
 		// before we've gotten around to connecting to the server.
 		// we simply ignore the clipboard change in that case.
-		return;
+		return false;
 	}
 
 	// grab ownership
-	m_server->onGrabClipboard(m_name, id, m_seqNum);
+	m_server->onGrabClipboard(id);
 
 	// we now own the clipboard and it has not been sent to the server
 	m_ownClipboard[id]  = true;
@@ -88,21 +98,14 @@ CClient::onClipboardChanged(ClipboardID id)
 	if (!m_active) {
 		sendClipboard(id);
 	}
+
+	return true;
 }
 
 void
-CClient::onResolutionChanged()
+CClient::onClipboardChanged(ClipboardID, const CString&)
 {
-	log((CLOG_DEBUG "resolution changed"));
-
-	CLock lock(&m_mutex);
-	if (m_server != NULL) {
-		CClientInfo info;
-		m_screen->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
-		m_screen->getMousePos(info.m_mx, info.m_my);
-		info.m_zoneSize = m_screen->getJumpZoneSize();
-		m_server->onInfoChanged("", info);
-	}
+	// ignore -- we'll check the clipboard when we leave
 }
 
 bool
@@ -194,7 +197,6 @@ CClient::enter(SInt32 xAbs, SInt32 yAbs,
 	{
 		CLock lock(&m_mutex);
 		m_active = true;
-		m_seqNum = seqNum;
 	}
 
 	m_screen->enter(xAbs, yAbs, mask);
@@ -337,9 +339,6 @@ CClient::openSecondaryScreen()
 	// not active
 	m_active = false;
 
-	// reset last sequence number
-	m_seqNum = 0;
-
 	// reset clipboard state
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		m_ownClipboard[id]  = false;
@@ -349,12 +348,12 @@ CClient::openSecondaryScreen()
 	// open screen
 	log((CLOG_DEBUG1 "creating secondary screen"));
 #if WINDOWS_LIKE
-	m_screen = new CMSWindowsSecondaryScreen;
+	m_screen = new CMSWindowsSecondaryScreen(this);
 #elif UNIX_LIKE
-	m_screen = new CXWindowsSecondaryScreen;
+	m_screen = new CXWindowsSecondaryScreen(this);
 #endif
 	log((CLOG_DEBUG1 "opening secondary screen"));
-	m_screen->open(this);
+	m_screen->open();
 }
 
 void
@@ -406,7 +405,7 @@ CClient::sendClipboard(ClipboardID id)
 		// save and send data if different
 		if (data != m_dataClipboard[id]) {
 			m_dataClipboard[id] = data;
-			m_server->onClipboardChanged(id, m_seqNum, data);
+			m_server->onClipboardChanged(id, data);
 		}
 	}
 }

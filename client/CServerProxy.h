@@ -1,14 +1,14 @@
 #ifndef CSERVERPROXY_H
 #define CSERVERPROXY_H
 
-#include "IServer.h"
+#include "IScreenReceiver.h"
 #include "CMutex.h"
 
 class IClient;
 class IInputStream;
 class IOutputStream;
 
-class CServerProxy : public IServer {
+class CServerProxy : public IScreenReceiver {
 public:
 	CServerProxy(IClient* client,
 							IInputStream* adoptedInput,
@@ -33,23 +33,10 @@ public:
 	IInputStream*		getInputStream() const;
 	IOutputStream*		getOutputStream() const;
 
-	// IServer overrides
-	virtual void		onError();
-	virtual void		onInfoChanged(const CString& clientName,
-							const CClientInfo&);
-	virtual bool		onGrabClipboard(const CString& clientName,
-							ClipboardID, UInt32 seqNum);
-	virtual void		onClipboardChanged(ClipboardID,
-							UInt32 seqNum, const CString& data);
-	virtual void		onKeyDown(KeyID, KeyModifierMask);
-	virtual void		onKeyUp(KeyID, KeyModifierMask);
-	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
-	virtual void		onMouseDown(ButtonID);
-	virtual void		onMouseUp(ButtonID);
-	virtual bool		onMouseMovePrimary(SInt32 x, SInt32 y);
-	virtual void		onMouseMoveSecondary(SInt32 dx, SInt32 dy);
-	virtual void		onMouseWheel(SInt32 delta);
-	virtual void		onScreenSaver(bool activated);
+	// IScreenReceiver overrides
+	virtual void		onInfoChanged(const CClientInfo&);
+	virtual bool		onGrabClipboard(ClipboardID);
+	virtual void		onClipboardChanged(ClipboardID, const CString& data);
 
 private:
 	// if compressing mouse motion then send the last motion now
@@ -79,6 +66,8 @@ private:
 	IClient*			m_client;
 	IInputStream*		m_input;
 	IOutputStream*		m_output;
+
+	UInt32				m_seqNum;
 
 	bool				m_compressMouse;
 	SInt32				m_xMouse, m_yMouse;

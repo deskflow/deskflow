@@ -1,15 +1,15 @@
 #ifndef CPRIMARYCLIENT_H
 #define CPRIMARYCLIENT_H
 
-#include "IServer.h"
 #include "IClient.h"
+#include "IScreenReceiver.h"
 #include "ProtocolTypes.h"
 
 class IClipboard;
 class IPrimaryScreen;
 class IServer;
 
-class CPrimaryClient : public IServer, public IClient {
+class CPrimaryClient : public IScreenReceiver, public IClient {
 public:
 	CPrimaryClient(IServer*, const CString& name);
 	~CPrimaryClient();
@@ -33,23 +33,10 @@ public:
 	// returns the state of the toggle keys on the primary screen
 	KeyModifierMask		getToggleMask() const;
 
-	// IServer overrides
-	// onInfoChanged() ignores the client name.
-	// onGrabClipboard() ignores the client name and sequence number.
-	// onClipboardChanged() ignores the sequence number.
-	virtual void		onError();
-	virtual void		onInfoChanged(const CString&, const CClientInfo&);
-	virtual bool		onGrabClipboard(const CString&, ClipboardID, UInt32);
-	virtual void		onClipboardChanged(ClipboardID, UInt32, const CString&);
-	virtual void		onKeyDown(KeyID, KeyModifierMask);
-	virtual void		onKeyUp(KeyID, KeyModifierMask);
-	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
-	virtual void		onMouseDown(ButtonID);
-	virtual void		onMouseUp(ButtonID);
-	virtual bool		onMouseMovePrimary(SInt32 x, SInt32 y);
-	virtual void		onMouseMoveSecondary(SInt32 dx, SInt32 dy);
-	virtual void		onMouseWheel(SInt32 delta);
-	virtual void		onScreenSaver(bool activated);
+	// IScreenReceiver overrides
+	virtual void		onInfoChanged(const CClientInfo&);
+	virtual bool		onGrabClipboard(ClipboardID);
+	virtual void		onClipboardChanged(ClipboardID, const CString&);
 
 	// IClient overrides
 	virtual bool		open();

@@ -6,16 +6,18 @@
 #include "stdmap.h"
 #include "stdvector.h"
 
+class IScreenReceiver;
+
 class CXWindowsSecondaryScreen : public CXWindowsScreen,
 							public ISecondaryScreen {
 public:
-	CXWindowsSecondaryScreen();
+	CXWindowsSecondaryScreen(IScreenReceiver*);
 	virtual ~CXWindowsSecondaryScreen();
 
 	// ISecondaryScreen overrides
 	virtual void		run();
 	virtual void		stop();
-	virtual void		open(CClient*);
+	virtual void		open();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
 							KeyModifierMask mask);
@@ -81,7 +83,7 @@ private:
 	static bool			isToggleKeysym(KeySym);
 
 private:
-	CClient*			m_client;
+	IScreenReceiver*	m_receiver;
 	Window				m_window;
 
 	// note toggle keys that toggles on up/down (false) or on

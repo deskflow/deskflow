@@ -53,11 +53,8 @@ public:
 	// get the sides of the primary screen that have neighbors
 	UInt32				getActivePrimarySides() const;
 
-	// IServer overrides
+	// IPrimaryScreenReceiver overrides
 	virtual void		onError();
-	virtual void		onInfoChanged(const CString&, const CClientInfo&);
-	virtual bool		onGrabClipboard(const CString&, ClipboardID, UInt32);
-	virtual void		onClipboardChanged(ClipboardID, UInt32, const CString&);
 	virtual void		onKeyDown(KeyID, KeyModifierMask);
 	virtual void		onKeyUp(KeyID, KeyModifierMask);
 	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
@@ -67,6 +64,11 @@ public:
 	virtual void		onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	virtual void		onMouseWheel(SInt32 delta);
 	virtual void		onScreenSaver(bool activated);
+
+	// IServer overrides
+	virtual void		onInfoChanged(const CString&, const CClientInfo&);
+	virtual bool		onGrabClipboard(const CString&, ClipboardID, UInt32);
+	virtual void		onClipboardChanged(ClipboardID, UInt32, const CString&);
 
 protected:
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);

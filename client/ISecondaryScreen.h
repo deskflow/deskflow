@@ -6,7 +6,6 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 
-class CClient;
 class IClipboard;
 
 class ISecondaryScreen : public IInterface {
@@ -23,9 +22,9 @@ public:
 	virtual void		stop() = 0;
 
 	// initialize the screen, hide the cursor, and disable the screen
-	// saver.  start reporting certain events to the client (clipboard
-	// stolen and screen size changed).
-	virtual void		open(CClient*) = 0;
+	// saver.  start reporting events to the IScreenReceiver (which is
+	// set through some other interface).
+	virtual void		open() = 0;
 
 	// close the screen.  should restore the screen saver.  it should
 	// also simulate key up events for any keys that have simulate key

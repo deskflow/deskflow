@@ -1,6 +1,7 @@
 #ifndef CCLIENT_H
 #define CCLIENT_H
 
+#include "IScreenReceiver.h"
 #include "IClient.h"
 #include "IClipboard.h"
 #include "CNetworkAddress.h"
@@ -10,9 +11,9 @@ class CServerProxy;
 class CThread;
 class IDataSocket;
 class ISecondaryScreen;
-class IServer;
+class IScreenReceiver;
 
-class CClient : public IClient {
+class CClient : public IScreenReceiver, public IClient {
 public:
 	CClient(const CString& clientName);
 	~CClient();
@@ -32,31 +33,21 @@ public:
 	// after a successful open().
 	void				quit();
 
-	// handle events on client's screen
-// FIXME -- this should mimic methods on IServer
-// FIXME -- maybe create a IScreenReceiver with these methods and
-// have CPrimaryClient and CClient inherit from them.  IServer
-// still needs similar methods with extra parameters, though. so
-//   CServerProxy
-//   CPrimaryClient
-//   CClient
-// need IScreenReceiver.  these classes effective receive notifications
-// from screens.  note that there's another class of notifications that
-// only the server needs (key, mouyse, screensaver).  so maybe we have
-// IPrimaryScreenReceiver and ISecondaryScreenReceiver (the latter is
-// derived with no extra methods from IScreenReceiver).
-	void				onClipboardChanged(ClipboardID);
-	void				onResolutionChanged();
-
 	// accessors
 
 	// returns true if the server rejected us
 	bool 				wasRejected() const;
 
+	// IScreenReceiver overrides
+	virtual void		onInfoChanged(const CClientInfo&);
+	virtual bool		onGrabClipboard(ClipboardID);
+	virtual void		onClipboardChanged(ClipboardID, const CString&);
+
 	// IClient overrides
 	virtual bool		open();
 	virtual void		run();
 	virtual void		close();
+// FIXME -- can we avoid passing everything here?
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
 							bool screenSaver);
@@ -97,11 +88,10 @@ private:
 	CMutex				m_mutex;
 	CString				m_name;
 	ISecondaryScreen*	m_screen;
-	IServer*			m_server;
+	IScreenReceiver*	m_server;
 	CNetworkAddress		m_serverAddress;
 	bool				m_camp;
 	bool				m_active;
-	UInt32				m_seqNum;
 	bool				m_rejected;
 	bool				m_ownClipboard[kClipboardEnd];
 	IClipboard::Time	m_timeClipboard[kClipboardEnd];

@@ -1,21 +1,15 @@
 #ifndef ISERVER_H
 #define ISERVER_H
 
-#include "IInterface.h"
+#include "IPrimaryScreenReceiver.h"
 #include "ClipboardTypes.h"
-#include "KeyTypes.h"
-#include "MouseTypes.h"
 #include "CString.h"
 
 class CClientInfo;
 
-class IServer : public IInterface {
+class IServer : public IPrimaryScreenReceiver {
 public:
 	// manipulators
-
-	// notify of serious error.  this implies that the server should
-	// shutdown.
-	virtual void		onError() = 0;
 
 	// notify of client info change
 	virtual void		onInfoChanged(const CString& clientName,
@@ -30,8 +24,8 @@ public:
 	virtual void		onClipboardChanged(ClipboardID,
 							UInt32 seqNum, const CString& data) = 0;
 
-	// call to notify of events.  onMouseMovePrimary() returns
-	// true iff the mouse enters a jump zone and jumps.
+	// IPrimaryScreenReceiver overrides
+	virtual void		onError() = 0;
 	virtual void		onKeyDown(KeyID, KeyModifierMask) = 0;
 	virtual void		onKeyUp(KeyID, KeyModifierMask) = 0;
 	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;

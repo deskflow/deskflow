@@ -19,6 +19,8 @@ libsynergy_a_SOURCES = 		\
 	ClipboardTypes.h		\
 	IClient.h				\
 	IClipboard.h			\
+	IPrimaryScreenReceiver.h\
+	IScreenReceiver.h		\
 	IScreenSaver.h			\
 	IServer.h				\
 	ISocketFactory.h		\
