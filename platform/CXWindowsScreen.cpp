@@ -42,9 +42,15 @@ void					CXWindowsScreen::openDisplay()
 	// set the X I/O error handler so we catch the display disconnecting
 	XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
 
+	// get the DISPLAY
+	const char* display = getenv("DISPLAY");
+	if (display == NULL) {
+		display = ":0.0";
+	}
+
 	// open the display
-	log((CLOG_DEBUG "XOpenDisplay(%s)", "NULL"));
-	m_display = XOpenDisplay(NULL);	// FIXME -- allow non-default
+	log((CLOG_DEBUG "XOpenDisplay(\"%s\")", display));
+	m_display = XOpenDisplay(display);
 	if (m_display == NULL)
 		throw XScreenOpenFailure();
 
