@@ -111,7 +111,7 @@ private:
 	void				toggleKey(Display*, KeySym, unsigned int mask);
 	static bool			isToggleKeysym(KeySym);
 
-	KeyCodeIndex		findKey(KeyID keysym, KeyModifierMask& mask) const;
+	KeyCodeIndex		findKey(KeyID keysym, KeyModifierMask mask) const;
 	KeyCodeIndex		noKey() const;
 	bool				adjustForNumLock(KeySym) const;
 	bool				adjustForCapsLock(KeySym) const;

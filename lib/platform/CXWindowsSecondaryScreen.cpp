@@ -224,8 +224,10 @@ CXWindowsSecondaryScreen::keyUp(KeyID key,
 	m_mask = mapKey(keys, keycode, key, mask, kRelease);
 
 	// if there are no keys to generate then we should at least generate
-	// a key release for the key we pressed.
-	if (keys.empty()) {
+	// a key release for the key we pressed.  this does not apply to
+	// half-duplex modifiers.
+	if (keys.empty() &&!((key == kKeyCapsLock && m_capsLockHalfDuplex) ||
+						(key == kKeyNumLock && m_numLockHalfDuplex))) {
 		Keystroke keystroke;
 		keycode             = index->second;
 		keystroke.m_keycode = keycode;
@@ -686,9 +688,11 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 		return m_mask;
 	}
 
-	// convert the id to a keysym and adjust the mask if necessary
-	unsigned int outMask = m_mask;
-	KeyCodeIndex keyIndex = findKey(id, outMask);
+	// requested notes the modifiers requested by the server.
+	unsigned int requested = maskToX(mask);
+
+	// convert the id to a keysym
+	KeyCodeIndex keyIndex = findKey(id, requested);
 	if (keyIndex == noKey()) {
 		// cannot convert id to keysym
 		LOG((CLOG_DEBUG2 "no keysym for key"));
@@ -739,13 +743,11 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	// keysym is affected by num lock it is not affected by caps
 	// lock.  no other modifiers have any effect.
 	//
-	// requested notes the modifiers requested by the server and
 	// desired notes the modifier state we ultimately want to match.
 	// only the bits in desired indicated by sensitive are relevant.
 	// we assign the num lock and caps lock bits here if relevant.
 	// we'll assign shift and mode switch later.
 	unsigned int sensitive = ShiftMask | m_modeSwitchMask;
-	unsigned int requested = maskToX(mask);
 	unsigned int desired   = 0;
 	if (adjustForNumLock(keysym)) {
 		sensitive |= m_numLockMask;
@@ -1553,7 +1555,7 @@ static const KeySym		g_mapE000[] =
 #endif
 
 CXWindowsSecondaryScreen::KeyCodeIndex
-CXWindowsSecondaryScreen::findKey(KeyID id, KeyModifierMask& mask) const
+CXWindowsSecondaryScreen::findKey(KeyID id, KeyModifierMask mask) const
 {
 	// convert id to keysym
 	KeySym keysym = NoSymbol;
@@ -1600,7 +1602,6 @@ CXWindowsSecondaryScreen::findKey(KeyID id, KeyModifierMask& mask) const
 	// XK_ISO_Left_Tab sending events to secondary screens that do.
 	if (keysym == XK_Tab && (mask & ShiftMask) != 0) {
 		keysym = XK_ISO_Left_Tab;
-		mask  &= ~ShiftMask;
 	}
 
 	// find the keycodes that generate the keysym
@@ -1663,7 +1664,6 @@ CXWindowsSecondaryScreen::findKey(KeyID id, KeyModifierMask& mask) const
 
 		case XK_ISO_Left_Tab:
 			keysym = XK_Tab;
-			mask  |= ShiftMask;
 			break;
 
 		default:
