@@ -1404,9 +1404,14 @@ CMSWindowsKeyState::mapVirtKeyToButton(UINT virtualKey,
 			// doesn't make any sense since a button can't actually generate
 			// more than one virtual key.  to avoid this stupidity, we map the
 			// button back to a virtual key to see if it matches the starting
-			// point.
-			if (button == 0 || MapVirtualKey(button, 1) != virtualKey) {
-				return 0;
+			// point.  we don't do this for number pad keys since we expect
+			// each key to generate one of two virtual keys, depending on the
+			// state of NumLock, a state we can't pass to MapVirtualKey.
+			if ((virtualKey < VK_NUMPAD0 || virtualKey > VK_NUMPAD9) &&
+				virtualKey != VK_SEPARATOR && virtualKey != VK_DECIMAL) {
+				if (button == 0 || MapVirtualKey(button, 1) != virtualKey) {
+					return 0;
+				}
 			}
 			break;
 		}
