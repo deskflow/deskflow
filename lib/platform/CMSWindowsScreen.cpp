@@ -26,6 +26,8 @@
 #include "CStringUtil.h"
 #include "CArchMiscWindows.h"
 #include <cstring>
+#include <malloc.h>
+#include <tchar.h>
 
 //
 // add backwards compatible multihead support (and suppress bogus warning)
@@ -726,10 +728,9 @@ CMSWindowsScreen::getDesktopName(HDESK desk) const
 	else {
 		DWORD size;
 		GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
-		TCHAR* name = new TCHAR[size / sizeof(TCHAR) + 1];
+		TCHAR* name = (TCHAR*)alloca(size + sizeof(TCHAR));
 		GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
 		CString result(name);
-		delete[] name;
 		return result;
 	}
 }
@@ -737,7 +738,22 @@ CMSWindowsScreen::getDesktopName(HDESK desk) const
 bool
 CMSWindowsScreen::isCurrentDesktop(HDESK desk) const
 {
-	return CStringUtil::CaselessCmp::equal(getDesktopName(desk), m_deskName);
+	// don't allocate space for current desktop name on heap since
+	// we do this a lot and we never save the name.
+	TCHAR* name;
+	if (desk == NULL) {
+		name = _T("");
+	}
+	else if (m_is95Family) {
+		name = _T("desktop");
+	}
+	else {
+		DWORD size;
+		GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
+		name = (TCHAR*)alloca(size + sizeof(TCHAR));
+		GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
+	}
+	return (_tcsicmp(name, m_deskName.c_str()) == 0);
 }
 
 LRESULT CALLBACK
