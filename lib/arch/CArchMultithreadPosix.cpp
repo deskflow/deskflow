@@ -40,6 +40,7 @@ public:
 
 public:
 	int					m_refCount;
+	IArchMultithread::ThreadID		m_id;
 	pthread_t			m_thread;
 	IArchMultithread::ThreadFunc	m_func;
 	void*				m_userData;
@@ -51,6 +52,7 @@ public:
 
 CArchThreadImpl::CArchThreadImpl() :
 	m_refCount(1),
+	m_id(0),
 	m_func(NULL),
 	m_userData(NULL),
 	m_cancel(false),
@@ -69,7 +71,8 @@ CArchThreadImpl::CArchThreadImpl() :
 CArchMultithreadPosix*	CArchMultithreadPosix::s_instance = NULL;
 
 CArchMultithreadPosix::CArchMultithreadPosix() :
-	m_newThreadCalled(false)
+	m_newThreadCalled(false),
+	m_nextID(0)
 {
 	assert(s_instance == NULL);
 
@@ -505,6 +508,7 @@ bool
 CArchMultithreadPosix::waitForEvent(double /*timeout*/)
 {
 	// not implemented
+	return false;
 }
 
 bool
@@ -534,7 +538,7 @@ CArchMultithreadPosix::getResultOfThread(CArchThread thread)
 IArchMultithread::ThreadID
 CArchMultithreadPosix::getIDOfThread(CArchThread thread)
 {
-	return reinterpret_cast<ThreadID>(reinterpret_cast<void*>(thread));
+	return thread->m_id;
 }
 
 void
@@ -600,6 +604,12 @@ CArchMultithreadPosix::insert(CArchThreadImpl* thread)
 
 	// thread shouldn't already be on the list
 	assert(findNoRef(thread->m_thread) == NULL);
+
+	// set thread id.  note that we don't worry about m_nextID
+	// wrapping back to 0 and duplicating thread ID's since the
+	// likelihood of synergy running that long is vanishingly
+	// small.
+	thread->m_id = ++m_nextID;
 
 	// append to list
 	m_threadList.push_back(thread);

@@ -87,6 +87,7 @@ private:
 	CArchMutex			m_threadMutex;
 	CArchThread			m_mainThread;
 	CThreadList			m_threadList;
+	ThreadID			m_nextID;
 
 	pthread_t			m_signalThread;
 };

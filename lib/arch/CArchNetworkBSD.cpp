@@ -641,8 +641,9 @@ CArchNetworkBSD::addrToName(CArchNetAddress addr)
 
 	// mutexed name lookup (ugh)
 	ARCH->lockMutex(m_mutex);
-	struct hostent* info = gethostbyaddr(&addr->m_addr, addr->m_len,
-										addr->m_addr.sa_family);
+	struct hostent* info = gethostbyaddr(
+							reinterpret_cast<const char*>(&addr->m_addr),
+							addr->m_len, addr->m_addr.sa_family);
 	if (info == NULL) {
 		ARCH->unlockMutex(m_mutex);
 		throwNameError(h_errno);
