@@ -64,6 +64,15 @@ AC_LANG_CPLUSPLUS
 dnl our files end in .cpp not .C so tests should also end in .cpp
 ac_ext=cpp
 
+dnl enable debugging or disable asserts
+AC_ARG_ENABLE([debug],
+	AC_HELP_STRING([--enable-debug], [enable debugging]))
+if test "x$enable_debug" != xno; then
+	CXXFLAGS="$CXXFLAGS -g"
+else
+	CXXFLAGS="$CXXFLAGS -DNDEBUG"
+fi
+
 dnl check compiler
 ACX_CHECK_CXX
 
