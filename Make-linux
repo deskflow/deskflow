@@ -26,6 +26,11 @@ GLDLIBS	  = -L/usr/X11R6/lib -lX11 -lXext -lXtst
 GLDOPTS	  = -L$(LIBDIR)
 
 #
+# binary stuff
+#
+BINTARGET = $(BINDIR)/$(TARGET)
+
+#
 # library stuff
 #
 LIBTARGET = $(LIBDIR)/lib$(TARGET).a

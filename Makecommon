@@ -13,7 +13,7 @@ NULL =
 # target directories
 #
 LIBDIR    = $(DEPTH)/lib
-TARGETDIR = $(DEPTH)/bin
+BINDIR    = $(DEPTH)/bin
 
 #
 # compiler options

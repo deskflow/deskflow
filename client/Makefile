@@ -4,7 +4,7 @@ include $(DEPTH)/Makecommon
 #
 # target file
 #
-TARGETS = client
+TARGET = client
 
 #
 # source files
@@ -37,8 +37,9 @@ LLDLIBS  =				\
 	-lpthread			\
 	$(NULL)
 
-targets: $(TARGETS)
+targets: $(BINTARGET)
 
-$(TARGETS): $(OBJECTS) $(DEPLIBS)
+$(BINTARGET): $(OBJECTS) $(DEPLIBS)
+	if test ! -d $(BINDIR); then $(MKDIR) $(BINDIR); fi
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS) $(LDFLAGS)
 

@@ -27,6 +27,11 @@ GLDLIBS	  = -L$(LIBDIR) -lsocket -lnsl -lposix4
 GLDOPTS	  = -z muldefs
 
 #
+# binary stuff
+#
+BINTARGET = $(BINDIR)/$(TARGET)
+
+#
 # library stuff
 #
 LIBTARGET = $(LIBDIR)/lib$(TARGET).a
