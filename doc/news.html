@@ -7,6 +7,42 @@
 <body class="main">
 <h3>Synergy News</h3>
 
+<span class="date">Nov-07-2004</span> - Synergy 1.1.9 released
+
+<p>
+Made following changes:
+</p>
+<ul>
+<li>Fixed compiler error on gcc 3.4 and later
+<li>Worked around minor gcc -O3 compiler bug
+<li>Now logging system info at startup
+<li>Config file errors now logged as errors rather than debug warnings
+<li>Added half-duplex scroll lock option
+<li>Fixed tracking of half-duplex toggle key state
+<li>Now accepting screen names ending in dot (.) for OS X convenience
+<li>OS X key mapping now loaded from system resources rather than hard coded
+<li>Fixed multimonitor OS X pimary screen bug;  multimon OS X should now work
+<li>Added experimental workaround for laggy mouse when running linux -> OS X
+<li>Fixed bug in win32 installer packaging
+<li>Fixed unrequested continuous mouse wheel scrolling on win32
+<li>Added win32 GUI to set server address to listen on
+<li>Fixed resource leak on win32
+<li>Fixed screensaver detection on windows 2000 and XP
+<li>Fixed flickering mouse on multimon windows NT/2000/XP
+<li>Fixed quiting when powerdvd stops playing (may fix other situations, too)
+<li>Added tray icon menu item to force clients to reconnect
+<li>Fixed handling of number pad keys with num-lock off on win32
+<li>Fixed shift key not working when a console windows has focus on win32 server
+<li>Improved configure of Xinerama and DPMS
+<li>Improved portability (removed recursive mutexes and _*_SOURCE defines)
+<li>Now handling DPMS headers without prototypes
+<li>Fixed dead key and AltGr+shift handling on X11
+<li>Fixed use of freed memory on unix
+<li>Fixed AltGr mapping to Ctrl and not Ctrl+Alt on X11 without Alt_R mapped
+<li>Added -display option for X11
+<li>Added support for X11 compose key (Multi_key)
+</ul>
+
 <span class="date">Aug-05-2004</span> - Synergy 1.1.8 released
 
 <p>

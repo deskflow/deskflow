@@ -1,3 +1,383 @@
+2004/11/06 16:29:06 crs
+lib/client/CServerProxy.cpp
+
+Attempt to workaround laggy mouse on OS X with linux as server.
+
+----------
+2004/11/06 16:13:52 crs
+lib/arch/CArchMiscWindows.cpp
+lib/arch/CArchMiscWindows.h
+lib/platform/CMSWindowsDesks.cpp
+lib/platform/CMSWindowsDesks.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+
+Fixed screensaver detection on XP.
+
+----------
+2004/11/06 16:13:01 crs
+lib/platform/CMSWindowsKeyState.cpp
+lib/platform/CMSWindowsKeyState.h
+
+Fixed handling of number pad keys with num-lock off.  Was
+synthesizing events for the numbers even with num-lock off.  Now
+synthesizing the cursor movements.
+
+----------
+2004/11/06 16:11:39 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+
+Fixed console appearing when running synergy as a service.  This
+was introduced with the change to print system info to the start
+of the log.  This message was printed before the service installed
+the log handler that directs messages to the event log.
+
+----------
+2004/11/04 21:26:43 crs
+lib/platform/CXWindowsKeyState.cpp
+lib/platform/CXWindowsKeyState.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/platform/CXWindowsUtil.cpp
+lib/platform/CXWindowsUtil.h
+
+Added support for X11 compose key (Multi_key).  This change fixes
+the handling of compose key sequences.  The key presses were
+suppressed but not the corresponding releases, confusing the
+clients.  It also adds support for generating keysyms via the
+compose key if the necessary dead keys or Mode_switch are not
+available.
+
+----------
+2004/11/02 20:50:36 crs
+doc/running.html
+
+Added documentation for -display option.
+
+----------
+2004/11/02 20:43:55 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+
+Added -display option for X11 version.
+
+----------
+2004/11/01 22:26:52 crs
+lib/platform/CSynergyHook.cpp
+
+Reverted change to detach threads in hook DLL.  It was breaking
+double clicking.
+
+----------
+2004/11/01 22:26:02 crs
+cmd/synergys/CMSWindowsServerTaskBarReceiver.cpp
+cmd/synergys/resource.h
+cmd/synergys/synergys.rc
+
+Added tray menu item on win32 to force clients to reconnect.
+
+----------
+2004/11/01 22:25:39 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+configure.in
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchFileWindows.cpp
+lib/arch/CArchSystemWindows.cpp
+lib/arch/CArchSystemWindows.h
+lib/arch/IArchSystem.h
+lib/arch/Makefile.am
+lib/arch/arch.dsp
+
+Added operating system identification log message for debugging
+purposes.
+
+----------
+2004/11/01 22:10:34 crs
+lib/platform/CMSWindowsDesks.cpp
+
+Added debugging output to check window class of active window
+when leaving screen.  This may help determine how to avoid
+DOS command prompt windows being in the foreground when leaving
+the screen since they suppress handling of the shift key.
+
+----------
+2004/11/01 18:26:29 crs
+lib/platform/CMSWindowsEventQueueBuffer.cpp
+
+Fixed synergy quiting when powerdvd stops playing a DVD.  This may
+fix some other bugs that involve unexpectedly quiting.  The problem
+was that synergy would (cleanly) quit when receiving an event with
+a message id of 0 when not running as a service.
+
+----------
+2004/11/01 18:24:37 crs
+lib/platform/CMSWindowsDesks.cpp
+
+Fixed multimon support for win NT/2000/XP running as client.  Mouse
+would jump between two points.
+
+----------
+2004/11/01 18:22:45 crs
+lib/platform/CMSWindowsScreenSaver.cpp
+
+Fixed a resource leak.  Also fixed the detection of the screen saver
+closing on windows 2000 and XP.
+
+----------
+2004/11/01 18:21:00 crs
+cmd/launcher/CAdvancedOptions.cpp
+cmd/launcher/CAdvancedOptions.h
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added option to set the listen address via the win32 GUI.  This
+allows the user to specify one (and only one) network interface
+to listen on.
+
+----------
+2004/10/30 16:41:36 crs
+lib/platform/CXWindowsKeyState.cpp
+
+Changed X11 key mapping to fallback to the modifier keysym with
+the opposite handedness if the desired handedness is missing.
+For example, if Alt_R is unmapped as it often is on keyboards
+with Mode_switch, the client will use Alt_L if it is mapped
+when told to synthesize Alt_R.  This should fix handling of
+AltGr sent from a win32 server.  AltGr is literally just
+Control_L and Alt_R and, previously, an X11 client without
+Alt_R mapped would only simulate Control_L.  This does not
+address the fact that the user may really just want the Alt
+modifier;  there are already hueristics to attempt to figure
+that out.
+
+----------
+2004/10/30 16:16:32 crs
+configure.in
+lib/platform/CXWindowsScreenSaver.cpp
+
+Improved X extension detection in configure and added handling
+of dpms.h headers that don't have function prototypes.
+
+----------
+2004/10/28 21:40:56 crs
+configure.in
+lib/arch/CArchNetworkBSD.h
+lib/common/stdistream.h
+lib/common/stdostream.h
+lib/common/stdsstream.h
+lib/platform/CXWindowsClipboard.h
+lib/platform/CXWindowsEventQueueBuffer.h
+lib/platform/CXWindowsKeyState.cpp
+lib/platform/CXWindowsKeyState.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsScreenSaver.h
+lib/platform/CXWindowsUtil.h
+
+Fixed bugs in configuration.  Wasn't doing configuration for DPMS
+and Xinerama correctly.  Also was using '#if defined(...)' instead
+of '#if ...' for testing configure macros in some places.  This
+yields the wrong answer if the macro is set to 0, which means
+missing/disabled.
+
+----------
+2004/10/27 21:46:22 crs
+lib/arch/CArchFileUnix.cpp
+
+Fixed use of freed memory.
+
+----------
+2004/10/27 21:38:05 crs
+lib/platform/CSynergyHook.cpp
+
+Now detaching hook thread after event processing.  This may fix
+problems with the Alt key being synthetically down when using
+the back and forward bindings on a mouse with extra buttons.
+
+----------
+2004/10/27 21:29:19 crs
+lib/platform/CSynergyHook.cpp
+
+Fixed bug in mouse wheel handling.  Was reacting with mouse wheel
+events when receiving any event with message == 0 when the system
+doesn't use old style mouse wheel events.  Some programs (especially
+the flash plugin) would send events with message == 0 causing
+undesired wheel scrolling.
+
+----------
+2004/10/27 21:22:36 crs
+lib/platform/COSXScreen.cpp
+
+Fixed problem with multimonitor on OS X.  The bug was simply that
+the cursor wasn't being parked in the center of the main screen
+but instead at the center of the total display surface.  This could
+place it off or dangerously close to the edge of the transparent
+window that covers the main screen and prevent synergy from capturing
+mouse motion.
+
+----------
+2004/10/24 18:18:21 crs
+lib/platform/CXWindowsScreen.cpp
+
+Added eject key mapping.
+
+----------
+2004/10/24 18:18:11 crs
+lib/platform/CXWindowsUtil.cpp
+
+Fixed comment.
+
+----------
+2004/10/24 18:18:01 crs
+lib/platform/CXWindowsKeyState.cpp
+lib/synergy/CKeyState.cpp
+lib/synergy/CKeyState.h
+
+Fixed dead key and AltGr+shift handling on X windows.  Also fixed
+bug with decomposing characters that have no direct key mapping
+but do have a direct key mapping for the character with the opposite
+case.
+
+----------
+2004/10/24 18:15:33 crs
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+lib/platform/COSXScreen.cpp
+
+Made OS X key mapping dynamic based on current key layout.  It
+now includes full support for dead keys and non-ascii glyph keys.
+
+----------
+2004/10/24 18:14:18 crs
+lib/synergy/KeyTypes.h
+
+Added eject and sleep key IDs.
+
+----------
+2004/10/24 18:12:38 crs
+lib/platform/CMSWindowsKeyState.cpp
+
+Added VK_SLEEP.
+
+----------
+2004/10/23 19:43:37 crs
+lib/synergy/CKeyState.cpp
+lib/synergy/CKeyState.h
+lib/synergy/CScreen.cpp
+
+Previous half-duplex fix fixed secondary screens with half
+duplex keys but broke primary screens.  This fixes both and
+also ensures that the primary screen updates its shadow toggle
+modifier state when leaving so the secondary screens get the
+correct toggle modifier state.  Together these fix some strange
+inconsistencies in toggle state across screens.
+
+----------
+2004/10/23 18:40:31 crs
+lib/synergy/CKeyState.cpp
+
+Fixed bug in half-duplex keys.  Was updating their toggled state
+om every release as well as press.
+
+----------
+2004/10/13 20:39:22 crs
+doc/configuration.html
+
+Fixed typo in the documentation of configuration options.
+
+----------
+2004/09/29 21:59:26 crs
+cmd/synergyc/CClientTaskBarReceiver.cpp
+cmd/synergyc/CClientTaskBarReceiver.h
+cmd/synergys/CServerTaskBarReceiver.cpp
+cmd/synergys/CServerTaskBarReceiver.h
+configure.in
+lib/arch/CArchMultithreadPosix.cpp
+lib/base/CEventQueue.cpp
+lib/base/CEventQueue.h
+lib/base/IEventQueue.h
+lib/io/CStreamFilter.cpp
+lib/io/CStreamFilter.h
+lib/io/IStream.h
+lib/net/CTCPSocket.cpp
+lib/net/CTCPSocket.h
+lib/net/IDataSocket.h
+lib/server/CClientListener.cpp
+lib/synergy/CPacketStreamFilter.cpp
+lib/synergy/CPacketStreamFilter.h
+
+Removed recursive mutexes.  Simplified stream filters as a side
+effect.  Removed -D_BSD_SOURCE and -D_XOPEN_SOURCE=500 from
+compile since they're not longer necessary.
+
+----------
+2004/09/28 22:25:35 crs
+lib/server/CConfig.cpp
+
+Now accepting screen names that end in a dot since many OS X
+users have misconfigured their systems to have hostnames that
+end in a dot.
+
+----------
+2004/09/28 22:19:24 crs
+dist/nullsoft/installer.mak
+
+Fixed error in win32 installer packaging.
+
+----------
+2004/09/28 22:19:11 crs
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+doc/configuration.html
+doc/faq.html
+lib/server/CConfig.cpp
+lib/synergy/CScreen.cpp
+
+Added half-duplex option for scroll lock key.
+
+----------
+2004/09/27 21:54:49 crs
+lib/platform/CXWindowsScreen.cpp
+lib/synergy/IPlatformScreen.h
+
+Fixed compile on gcc 3.4 and later.  gcc started doing access checks
+for class visibility on pointers to member function 'using the
+qualifying scope of the name itself.'  what this means is if method
+'prot' is declared protected in class A and B inherits from A then
+a method in B cannot use &A::prot but can use &B::prot.  Synergy
+now does this in the one place it had not.
+
+----------
+2004/09/27 21:23:47 crs
+lib/arch/CArchMultithreadPosix.cpp
+
+Worked around minor gcc 3.3.2 -O3 compiler bug.
+
+----------
+2004/09/27 21:04:37 crs
+cmd/synergys/synergys.cpp
+
+Server now reports configuration file errors as ERROR level log
+messages rather than DEBUG level.  Missing files are still reported
+as DEBUG level messages since we expect some to be missing.
+
+----------
+2004/09/27 20:53:54 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.1.9.  Changed configure.in to get version
+number from lib/common/Version.h so it only has to be changed
+there.
+
+----------
 2004/08/05 20:42:51 crs
 dist/nullsoft/synergy.nsi
 
