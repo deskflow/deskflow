@@ -13,6 +13,7 @@ Questions
 8.  Can synergy share the display in addition to the mouse and keyboard?
 9.  Can synergy do drag and drop between computers?
 10. Do AltGr or Mode-Switch work?
+11. Why isn't synergy ported to platform X?
 
 
 Answers
@@ -115,5 +116,10 @@ Answers
     on Windows and are having trouble with Ctrl+Alt_L = AltGr, try using
     the right Alt key as AltGr instead.
 
+11. Why isn't synergy ported to platform X?
 
+    Probably because the developers don't have access to platform X
+    and/or are unfamiliar with development on X.  Also, synergy has
+    inherently non-portable aspects so there's a not insignificant
+    effort involved in porting.
 
