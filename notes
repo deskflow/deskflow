@@ -13,6 +13,9 @@ query info			-->
 					<--		info (size)
 
 ---
+use automake
+
+---
 need config file and parser
   remove hard coded debugging stuff (in server.cpp)
 
@@ -20,7 +23,6 @@ need config file and parser
 win32:
   need to support window stations
     login screen on NT is a separate window station
-  handle display changes
   provide taskbar icon
 
 win32 dll:
@@ -34,10 +36,9 @@ win32 dll:
 not handling international characters
 
 ---
-don't allow leaving screen when any key is down
-  that includes shift keys and mouse buttons
-  caps lock, etc must not be down but can be on
+not handling screen saver at all yet
 
+---
 not distinguishing between caps lock and shift lock
   In Caps Lock mode, the alphabetic keys send their uppercase (shifted) char-
   acter when pressed alone. For Caps Lock mode, pressing and releasing the
@@ -77,15 +78,10 @@ sometimes not sending correct clipboard
     switching back to owner screen then out gets correct clipboard
 
 ---
-screen resize should report new mouse position
-  client could change it to keep mouse on screen
-  server will need to know new position
-  may need to ignore mouse events sent after resize but before server
-    knows about the change.
-  not handling screen resizing yet
-
----
-not handling screen saver at all yet
+win32 not sending correct clipboard
+  got 43 bytes sent for a 3 byte selection
+  remaining bytes were 0
+  problem persisted;  also got 43 bytes for a 2 byte selection
 
 ---
 slow leaving primary screen on X
@@ -181,13 +177,13 @@ audrey->isabel
     usually go on/off when active window changes though
 
 ---
-avoid fullscreen transparent window
+avoid fullscreen transparent window on win32
   using CBT hook to discard activation/focus messages
     but it's not being called when we lose keyboard input
   also, we sometimes don't get the keyboard input to start with
 
 ---
-keyboard hook problems
+keyboard hook problems (win32)
   now passing keyboard events through in most cases
     this fixes problem on isabel where toggle lights don't toggle
     and num-lock behaved incorrectly (generated wrong keys).
@@ -215,10 +211,6 @@ blown assert:
     m_protocol is NULL because we're on primary screen
   must flush queued events when jumping to primary
     check for other things to do when jumping to primary
-
----
-sending same clipboard repeatedly from win32 server
-  can we detect no change?
 
 ---
 key events sent to console on win me (95/98?) are very slow
