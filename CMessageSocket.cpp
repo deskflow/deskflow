@@ -78,8 +78,8 @@ SInt32					CMessageSocket::read(void* buffer, SInt32 n)
 	// get next message size
 	if (m_size >= 2) {
 		m_msgSize = static_cast<SInt32>(
-								(static_cast<UInt32>(m_buffer[1]) << 8) +
-								(static_cast<UInt32>(m_buffer[2])     ));
+								(static_cast<UInt32>(m_buffer[0]) << 8) +
+								(static_cast<UInt32>(m_buffer[1])     ));
 		TRACE(("  next message size: %d", m_msgSize));
 	}
 
