@@ -15,6 +15,7 @@ static DWORD			g_process = NULL;
 static HWND				g_hwnd = NULL;
 static HHOOK			g_keyboard = NULL;
 static HHOOK			g_mouse = NULL;
+static HHOOK			g_cbt = NULL;
 static bool				g_relay = false;
 static SInt32			g_zoneSize = 0;
 static UInt32			g_zoneSides = 0;
@@ -57,8 +58,28 @@ static LRESULT CALLBACK	keyboardHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
-			PostMessage(g_hwnd, SYNERGY_MSG_KEY, wParam, lParam);
-			return 1;
+			if (code == HC_ACTION) {
+				// forward message to our window
+				PostMessage(g_hwnd, SYNERGY_MSG_KEY, wParam, lParam);
+
+				// if the active window isn't our window then make it
+				// active.
+				const bool wrongFocus = (GetActiveWindow() != g_hwnd);
+				if (wrongFocus) {
+					SetForegroundWindow(g_hwnd);
+				}
+
+				// let non-system keyboard messages through to our window.
+				// this allows DefWindowProc() to do normal processing.
+				// for most keys that means do nothing.  for toggle keys
+				// it means updating the thread's toggle state.  discard
+				// system messages (i.e. keys pressed when alt is down) to
+				// prevent unexpected or undesired processing.  also
+				// discard messages if not destined for our window
+				if (wrongFocus || (lParam & 0x20000000lu) != 0) {
+					return 1;
+				}
+			}
 		}
 	}
 
@@ -134,6 +155,25 @@ static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_mouse, code, wParam, lParam);
 }
 
+static LRESULT CALLBACK	cbtHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code >= 0) {
+		if (g_relay) {
+			switch (code) {
+			case HCBT_ACTIVATE:
+			case HCBT_SETFOCUS:
+				// discard unless activating our window
+				if (reinterpret_cast<HWND>(wParam) != g_hwnd) {
+					return 1;
+				}
+				break;
+			}
+		}
+	}
+
+	return CallNextHookEx(g_cbt, code, wParam, lParam);
+}
+
 
 //
 // external functions
@@ -149,7 +189,7 @@ BOOL WINAPI				DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 	}
 	else if (reason == DLL_PROCESS_DETACH) {
 		if (g_process == GetCurrentProcessId()) {
-			if (g_keyboard != NULL || g_mouse != NULL) {
+			if (g_keyboard != NULL || g_mouse != NULL || g_cbt != NULL) {
 				uninstall();
 			}
 			g_process = NULL;
@@ -165,6 +205,7 @@ int						install(HWND hwnd)
 	assert(g_hinstance != NULL);
 	assert(g_keyboard  == NULL);
 	assert(g_mouse     == NULL);
+	assert(g_cbt       == NULL);
 
 	// save window
 	g_hwnd = hwnd;
@@ -201,6 +242,21 @@ int						install(HWND hwnd)
 		return 0;
 	}
 
+	// install CBT hook
+	g_cbt = SetWindowsHookEx(WH_CBT,
+								&cbtHook,
+								g_hinstance,
+								0);
+	if (g_cbt == NULL) {
+		// uninstall keyboard and mouse hooks before failing
+		UnhookWindowsHookEx(g_keyboard);
+		UnhookWindowsHookEx(g_mouse);
+		g_keyboard = NULL;
+		g_mouse    = NULL;
+		g_hwnd     = NULL;
+		return 0;
+	}
+
 	return 1;
 }
 
@@ -208,12 +264,15 @@ int						uninstall(void)
 {
 	assert(g_keyboard != NULL);
 	assert(g_mouse    != NULL);
+	assert(g_cbt      != NULL);
 
 	// uninstall hooks
 	UnhookWindowsHookEx(g_keyboard);
 	UnhookWindowsHookEx(g_mouse);
+	UnhookWindowsHookEx(g_cbt);
 	g_keyboard = NULL;
 	g_mouse    = NULL;
+	g_cbt      = NULL;
 	g_hwnd     = NULL;
 
 	// show the cursor
