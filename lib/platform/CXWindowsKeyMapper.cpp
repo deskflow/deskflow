@@ -98,6 +98,9 @@ CXWindowsKeyMapper::update(Display* display, IKeyState* keyState)
 	char keys[32];
 	XQueryKeymap(display, keys);
 
+	// save the auto-repeat mask
+	XGetKeyboardControl(display, &m_keyControl);
+
 	// query the pointer to get the keyboard state
 	Window root = DefaultRootWindow(display), window;
 	int xRoot, yRoot, xWindow, yWindow;
