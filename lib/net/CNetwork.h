@@ -55,11 +55,13 @@ public:
 	typedef SOCKET Socket;
 	typedef struct sockaddr Address;
 	typedef int AddressLength;
+	typedef short AddressType;
 	typedef struct in_addr InternetAddress;
 #elif UNIX_LIKE
 	typedef int Socket;
 	typedef struct sockaddr Address;
 	typedef socklen_t AddressLength;
+	typedef int AddressType;
 	typedef struct in_addr InternetAddress;
 #endif
 
@@ -100,7 +102,7 @@ public:
 
 		CString			m_name;
 		AliasList		m_aliases;
-		int				m_addressType;
+		AddressType		m_addressType;
 		int				m_addressLength;
 		AddressList		m_addresses;
 

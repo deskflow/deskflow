@@ -48,6 +48,8 @@ int (PASCAL FAR *CNetwork::getsockerror)(void);
 int (PASCAL FAR *CNetwork::select)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);
 int (PASCAL FAR *CNetwork::WSACleanup)(void);
 int (PASCAL FAR *CNetwork::__WSAFDIsSet)(CNetwork::Socket, fd_set FAR *);
+char FAR * (PASCAL FAR *CNetwork::inet_ntoa_n)(struct in_addr in);
+unsigned long (PASCAL FAR *CNetwork::inet_addr_n)(const char FAR * cp);
 struct hostent FAR * (PASCAL FAR *CNetwork::gethostbyaddr_n)(const char FAR * addr, int len, int type);
 struct hostent FAR * (PASCAL FAR *CNetwork::gethostbyname_n)(const char FAR * name);
 struct servent FAR * (PASCAL FAR *CNetwork::getservbyport_n)(int port, const char FAR * proto);
@@ -248,7 +250,7 @@ CNetwork::inet_aton(const char FAR * cp, InternetAddress FAR * addr)
 		return 0;
 	}
 	else {
-		*(addr->s_addr) = inetAddr;
+		addr->s_addr = inetAddr;
 		return 1;
 	}
 }
@@ -269,7 +271,7 @@ CNetwork::gethostbyaddr(CHostInfo* hostinfo,
 	// winsock returns structures per-thread
 	struct hostent FAR* info = gethostbyaddr_n(addr, len, type);
 	if (info == NULL) {
-		return WSAGetLastError();
+		return getsockerror();
 	}
 	else {
 		CHostInfo tmp(info);
@@ -287,7 +289,7 @@ CNetwork::gethostbyname(CHostInfo* hostinfo,
 	// winsock returns structures per-thread
 	struct hostent FAR* info = gethostbyname_n(name);
 	if (info == NULL) {
-		return WSAGetLastError();
+		return getsockerror();
 	}
 	else {
 		CHostInfo tmp(info);
@@ -305,7 +307,7 @@ CNetwork::getservbyport(CServiceInfo* servinfo,
 	// winsock returns structures per-thread
 	struct servent FAR* info = getservbyport_n(port, proto);
 	if (info == NULL) {
-		return WSAGetLastError();
+		return getsockerror();
 	}
 	else {
 		CServiceInfo tmp(info);
@@ -323,7 +325,7 @@ CNetwork::getservbyname(CServiceInfo* servinfo,
 	// winsock returns structures per-thread
 	struct servent FAR* info = getservbyname_n(name, proto);
 	if (info == NULL) {
-		return WSAGetLastError();
+		return getsockerror();
 	}
 	else {
 		CServiceInfo tmp(info);
@@ -339,9 +341,9 @@ CNetwork::getprotobynumber(CProtocolInfo* protoinfo,
 	assert(protoinfo != NULL);
 
 	// winsock returns structures per-thread
-	struct protoinfo FAR* info = getprotobynumber_n(proto);
+	struct protoent FAR* info = getprotobynumber_n(proto);
 	if (info == NULL) {
-		return WSAGetLastError();
+		return getsockerror();
 	}
 	else {
 		CProtocolInfo tmp(info);
@@ -357,9 +359,9 @@ CNetwork::getprotobyname(CProtocolInfo* protoinfo,
 	assert(protoinfo != NULL);
 
 	// winsock returns structures per-thread
-	struct protoinfo FAR* info = getprotobyname_n(name);
+	struct protoent FAR* info = getprotobyname_n(name);
 	if (info == NULL) {
-		return WSAGetLastError();
+		return getsockerror();
 	}
 	else {
 		CProtocolInfo tmp(info);
@@ -379,7 +381,7 @@ int PASCAL FAR
 CNetwork::setnodelay(CNetwork::Socket s, bool nodelay)
 {
 	BOOL flag = nodelay ? 1 : 0;
-	setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
+	return setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
 }
 
 #endif
@@ -681,25 +683,26 @@ CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
 	FD_ZERO(&writeSet);
 	FD_ZERO(&errSet);
 	for (i = 0; i < nfds; ++i) {
+		int fdi = static_cast<int>(fd[i].fd);
 		if (fd[i].events & kPOLLIN) {
 			FD_SET(fd[i].fd, &readSet);
 			readSetP = &readSet;
-			if (fd[i].fd > n) {
-				n = fd[i].fd;
+			if (fdi > n) {
+				n = fdi;
 			}
 		}
 		if (fd[i].events & kPOLLOUT) {
 			FD_SET(fd[i].fd, &writeSet);
 			writeSetP = &writeSet;
-			if (fd[i].fd > n) {
-				n = fd[i].fd;
+			if (fdi > n) {
+				n = fdi;
 			}
 		}
 		if (true) {
 			FD_SET(fd[i].fd, &errSet);
 			errSetP = &errSet;
-			if (fd[i].fd > n) {
-				n = fd[i].fd;
+			if (fdi > n) {
+				n = fdi;
 			}
 		}
 	}

@@ -74,6 +74,13 @@ setError(bool* errors)
 // multibyte conversion stuff when reentrant versions not available
 //
 
+#if WINDOWS_LIKE
+#define HAVE_MBSTATE_T 1
+#define HAVE_MBSINIT 1
+#define HAVE_MBRTOWC 1
+#define HAVE_WCRTOMB 1
+#endif
+
 #if !HAVE_MBSTATE_T
 struct mbstate_t { int m_dummy; };
 #undef HAVE_MBSINIT
