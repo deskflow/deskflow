@@ -28,7 +28,6 @@
 #	include <X11/Xutil.h>
 #	define XK_MISCELLANY
 #	define XK_XKB_KEYS
-#	define XK_LATIN1
 #	include <X11/keysymdef.h>
 #	if defined(HAVE_X11_EXTENSIONS_XTEST_H)
 #		include <X11/extensions/XTest.h>
@@ -1269,14 +1268,15 @@ CXWindowsSecondaryScreen::findKey(KeyID id, KeyModifierMask& mask) const
 
 	// find the keycodes that generate the keysym
 	KeyCodeIndex index = m_keycodeMap.find(keysym);
-	if (index == noKey() && keysym >= XK_a && keysym <= XK_z) {
-		// for an unfound lower case alpha, try the equivalent upper
-		// case (as some keymaps only include the upper case, notably
-		// Sun Solaris).
-		// Note that this depends on the keysyms for 'a' through 'z'
-		// and 'A' through 'Z' being contiguous.  This is currently
-		// the case and extremely unlikely to change.
-		index = m_keycodeMap.find(keysym + XK_A - XK_a);
+	if (index == noKey()) {
+		// try upper/lower case (as some keymaps only include the
+		// upper case, notably Sun Solaris).
+		KeySym lower, upper;
+		XConvertCase(keysym, &lower, &upper);
+		if (lower != keysym)
+			index = m_keycodeMap.find(lower);
+		else if (upper != keysym)
+			index = m_keycodeMap.find(upper);
 	}
 	if (index == noKey()) {
 		// try backup keysym for certain keys (particularly the numpad
