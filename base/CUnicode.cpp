@@ -54,7 +54,7 @@ CUnicode::UTF8ToUCS2(const CString& src)
 	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
 	while (n > 0) {
 		UInt32 c = fromUTF8(data, n);
-		if (c != s_invalid && c < 0x0000ffff) {
+		if (c != s_invalid && c < 0x00010000) {
 			UInt16 ucs2 = static_cast<UInt16>(c);
 			dst.append(reinterpret_cast<const char*>(&ucs2), 2);
 		}
@@ -223,7 +223,7 @@ CUnicode::UTF8ToWideChar(const CString& src)
 
 	// copy to a wchar_t array
 	wchar_t* dst = new wchar_t[size];
-	::memcpy(dst, src.data(), sizeof(wchar_t) * size);
+	::memcpy(dst, tmp.data(), sizeof(wchar_t) * size);
 	return dst;
 }
 

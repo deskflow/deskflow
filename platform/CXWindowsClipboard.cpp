@@ -164,6 +164,8 @@ log((CLOG_INFO "added"));
 				type   = converter->getAtom();
 				format = converter->getDataSize();
 				data   = converter->fromIClipboard(m_data[clipboardFormat]);
+log((CLOG_INFO "  src: (%d) %s", m_data[clipboardFormat].size(), m_data[clipboardFormat].c_str()));
+log((CLOG_INFO "  dst: (%d) %s", data.size(), data.c_str()));
 			}
 		}
 	}
