@@ -111,6 +111,14 @@ CClient::disconnect(const char* msg)
 	}
 }
 
+void
+CClient::handshakeComplete()
+{
+	m_ready = true;
+	m_screen->enable();
+	sendEvent(getConnectedEvent(), NULL);
+}
+
 bool
 CClient::isConnected() const
 {
@@ -386,10 +394,6 @@ CClient::setupScreen()
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleClipboardGrabbed));
-	EVENTQUEUE->adoptHandler(CServerProxy::getHandshakeCompleteEvent(),
-							m_server,
-							new TMethodEventJob<CClient>(this,
-								&CClient::handleHandshakeComplete));
 }
 
 void
@@ -437,11 +441,7 @@ void
 CClient::cleanupScreen()
 {
 	if (m_server != NULL) {
-		if (!m_ready) {
-			EVENTQUEUE->removeHandler(CServerProxy::getHandshakeCompleteEvent(),
-							m_server);
-		}
-		else {
+		if (m_ready) {
 			m_screen->disable();
 			m_ready = false;
 		}
@@ -521,16 +521,6 @@ CClient::handleDisconnected(const CEvent&, void*)
 	cleanupConnection();
 	LOG((CLOG_DEBUG1 "disconnected"));
 	sendEvent(getDisconnectedEvent(), NULL);
-}
-
-void
-CClient::handleHandshakeComplete(const CEvent&, void*)
-{
-	m_ready = true;
-	EVENTQUEUE->removeHandler(CServerProxy::getHandshakeCompleteEvent(),
-							m_server);
-	sendEvent(getConnectedEvent(), NULL);
-	m_screen->enable();
 }
 
 void

@@ -66,6 +66,12 @@ public:
 	*/
 	void				disconnect(const char* msg);
 
+	//! Notify of handshake complete
+	/*!
+	Notifies the client that the connection handshake has completed.
+	*/
+	void				handshakeComplete();
+
 	//@}
 	//! @name accessors
 	//@{
@@ -152,7 +158,6 @@ private:
 	void				handleConnectTimeout(const CEvent&, void*);
 	void				handleOutputError(const CEvent&, void*);
 	void				handleDisconnected(const CEvent&, void*);
-	void				handleHandshakeComplete(const CEvent&, void*);
 	void				handleShapeChanged(const CEvent&, void*);
 	void				handleClipboardGrabbed(const CEvent&, void*);
 	void				handleHello(const CEvent&, void*);

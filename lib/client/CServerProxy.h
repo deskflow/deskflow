@@ -47,17 +47,6 @@ public:
 	void				onClipboardChanged(ClipboardID, const IClipboard*);
 
 	//@}
-	//! @name accessors
-	//@{
-
-	//! Get handshake complete event type
-	/*!
-	Returns the handshake complete event type.  This is sent when the
-	client has completed the handshake with the server.
-	*/
-	static CEvent::Type	getHandshakeCompleteEvent();
-
-	//@}
 
 protected:
 	enum EResult { kOkay, kUnknown, kDisconnect };
@@ -116,8 +105,6 @@ private:
 	double				m_heartRate;
 
 	MessageParser		m_parser;
-
-	static CEvent::Type	s_handshakeCompleteEvent;
 };
 
 #endif

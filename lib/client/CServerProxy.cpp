@@ -29,9 +29,6 @@
 // CServerProxy
 //
 
-CEvent::Type			CServerProxy::s_handshakeCompleteEvent =
-							CEvent::kUnknown;
-
 CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 	m_client(client),
 	m_stream(stream),
@@ -64,13 +61,6 @@ CServerProxy::~CServerProxy()
 	installHeartBeat(-1.0);
 	EVENTQUEUE->removeHandler(IStream::getInputReadyEvent(),
 							m_stream->getEventTarget());
-}
-
-CEvent::Type
-CServerProxy::getHandshakeCompleteEvent()
-{
-	return CEvent::registerTypeOnce(s_handshakeCompleteEvent,
-							"CServerProxy::handshakeComplete");
 }
 
 void
@@ -141,7 +131,7 @@ CServerProxy::parseHandshakeMessage(const UInt8* code)
 
 		// handshake is complete
 		m_parser = &CServerProxy::parseMessage;
-		EVENTQUEUE->addEvent(CEvent(getHandshakeCompleteEvent(), this));
+		m_client->handshakeComplete();
 	}
 
 	else if (memcmp(code, kMsgCResetOptions, 4) == 0) {
