@@ -55,8 +55,40 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_SYNERGY             ICON    DISCARDABLE     "synergyc.ico"
-#endif    // English (U.S.) resources
+IDI_TASKBAR_NOT_RUNNING ICON    DISCARDABLE     "tb_idle.ico"
+IDI_TASKBAR_NOT_WORKING ICON    DISCARDABLE     "tb_error.ico"
+IDI_TASKBAR_NOT_CONNECTED ICON    DISCARDABLE     "tb_wait.ico"
+IDI_TASKBAR_CONNECTED   ICON    DISCARDABLE     "tb_run.ico"
+
 /////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_TASKBAR_STATUS DIALOG DISCARDABLE  0, 0, 145, 18
+STYLE DS_MODALFRAME | WS_POPUP
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_TASKBAR_STATUS_STATUS,3,3,139,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_TASKBAR MENU DISCARDABLE 
+BEGIN
+    POPUP "Synergy"
+    BEGIN
+        MENUITEM "Show Status",                 IDC_TASKBAR_STATUS
+        MENUITEM SEPARATOR
+        MENUITEM "Quit",                        IDC_TASKBAR_QUIT
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -67,6 +99,9 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_FAILED              "Synergy is about to quit with errors or warnings.  Please check the log then click OK."
 END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 
 
 
