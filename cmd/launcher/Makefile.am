@@ -37,14 +37,14 @@ MAINTAINERCLEANFILES =			\
 	Makefile.in					\
 	$(NULL)
 
-bin_PROGRAMS = synergy
 if MSWINDOWS
+bin_PROGRAMS = synergy
 synergy_SOURCES =				\
 	$(MSWINDOWS_SOURCE_FILES)	\
 	$(NULL)
 endif
 synergy_LDADD =									\
-	$(top_builddir)/lib/client/libserver.a		\
+	$(top_builddir)/lib/server/libserver.a		\
 	$(top_builddir)/lib/platform/libplatform.a	\
 	$(top_builddir)/lib/synergy/libsynergy.a	\
 	$(top_builddir)/lib/net/libnet.a			\
