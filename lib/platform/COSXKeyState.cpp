@@ -197,8 +197,8 @@ COSXKeyState::doUpdateKeys()
 {
 	// save key mapping
 	m_keyMap.clear();
-	if (!filluchrKeysMap(m_keyMap)) {
-		fillKCHRKeysMap(m_keyMap);
+	if (!filluchrKeysMap(m_keyMap, m_capsLockSet)) {
+		fillKCHRKeysMap(m_keyMap, m_capsLockSet);
 	}
 	fillSpecialKeys(m_keyMap, m_virtualKeyMap);
 
@@ -254,6 +254,12 @@ COSXKeyState::mapKey(Keystrokes& keys, KeyID id,
 		return 0;
 	}
 
+	// if the virtual key is caps-lock sensitive then suppress shift
+	KeyModifierMask mask = ~0;
+	if (m_capsLockSet.count(id) != 0) {
+		mask &= ~KeyModifierShift;
+	}
+
 	// FIXME -- for both calls to addKeystrokes below we'd prefer to use
 	// a required mask that generates the same character but matches
 	// the desiredMask as closely as possible.
@@ -283,7 +289,7 @@ COSXKeyState::mapKey(Keystrokes& keys, KeyID id,
 	// add final key
 	return addKeystrokes(keys, sequence.back().m_button,
 							sequence.back().m_requiredState,
-							sequence.back().m_requiredMask,
+							sequence.back().m_requiredMask & mask,
 							isAutoRepeat);
 }
 
@@ -520,11 +526,22 @@ COSXKeyState::fillSpecialKeys(CKeyIDMap& keyMap,
 }
 
 bool
-COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap) const
+COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap, CKeySet& capsLockSet) const
 {
 	assert(m_KCHRResource != NULL);
 
 	CKCHRResource* r = m_KCHRResource;
+
+	// note caps-lock sensitive keys
+	SInt32 uIndex  = r->m_tableSelectionIndex[0];
+	SInt32 clIndex = r->m_tableSelectionIndex[alphaLock >> 8];
+	for (SInt32 j = 0; j < 128; ++j) {
+		UInt8 c = r->m_characterTables[clIndex][j];
+		if (r->m_characterTables[uIndex][j] != c) {
+			KeyID keyID = charToKeyID(c);
+			capsLockSet.insert(keyID);
+		}
+	}
 
 	// build non-composed keys to virtual keys mapping
 	std::map<UInt8, CKeyEventInfo> vkMap;
@@ -548,7 +565,7 @@ COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap) const
 			info.m_requiredState = mask;
 
 			// save character to virtual key mapping
-			if (keyMap.count(c) == 0) {
+			if (vkMap.count(c) == 0) {
 				vkMap[c] = info;
 			}
 
@@ -628,7 +645,7 @@ COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap) const
 }
 
 bool
-COSXKeyState::filluchrKeysMap(CKeyIDMap&) const
+COSXKeyState::filluchrKeysMap(CKeyIDMap&, CKeySet&) const
 {
 	// FIXME -- implement this
 	return false;

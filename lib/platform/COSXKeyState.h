@@ -17,6 +17,7 @@
 
 #include "CKeyState.h"
 #include "stdmap.h"
+#include "stdset.h"
 #include "stdvector.h"
 #include <Carbon/Carbon.h>
 
@@ -78,6 +79,7 @@ private:
 	typedef std::vector<CKeyEventInfo> CKeySequence;
 	typedef std::map<KeyID, CKeySequence> CKeyIDMap;
 	typedef std::map<UInt32, KeyID> CVirtualKeyMap;
+	typedef std::set<KeyID> CKeySet;
 
 	KeyButton			addKeystrokes(Keystrokes& keys,
 							KeyButton keyButton,
@@ -107,13 +109,15 @@ private:
 	// map maps each KeyID to the sequence of keys (with modifiers)
 	// that would have to be synthesized to generate the KeyID character.
 	// Returns false iff no KCHR resource was found.
-	bool				fillKCHRKeysMap(CKeyIDMap& keyMap) const;
+	bool				fillKCHRKeysMap(CKeyIDMap& keyMap,
+							CKeySet& capsLockSet) const;
 
 	// Convert the uchr resource to a KeyID to key sequence map.  the
 	// map maps each KeyID to the sequence of keys (with modifiers)
 	// that would have to be synthesized to generate the KeyID character.
 	// Returns false iff no uchr resource was found.
-	bool				filluchrKeysMap(CKeyIDMap& keyMap) const;
+	bool				filluchrKeysMap(CKeyIDMap& keyMap,
+							CKeySet& capsLockSet) const;
 
 	// Maps an OS X virtual key id to a KeyButton.  This simply remaps
 	// the ids so we don't use KeyButton 0.
@@ -160,6 +164,7 @@ private:
 	UCKeyboardLayout*	m_uchrResource;
 	CKeyIDMap			m_keyMap;
 	CVirtualKeyMap		m_virtualKeyMap;
+	CKeySet				m_capsLockSet;
 };
 
 #endif
