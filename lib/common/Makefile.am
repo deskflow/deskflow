@@ -22,6 +22,7 @@ EXTRA_DIST =				\
 	Version.h				\
 	common.h				\
 	stdbitset.h				\
+	stddeque.h				\
 	stdfstream.h			\
 	stdistream.h			\
 	stdlist.h				\
