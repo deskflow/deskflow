@@ -479,7 +479,4 @@ CXWindowsScreenSaver::disableCallback(void*)
 		CXWindowsUtil::CErrorLock lock(m_display);
 		XSendEvent(m_display, m_xscreensaver, False, 0, &event);
 	}
-
-	// force screen saver off and reset the timer
-	XForceScreenSaver(m_display, ScreenSaverReset);
 }
