@@ -8,6 +8,7 @@
 #include "CClipboard.h"
 #include "CMutex.h"
 #include "CString.h"
+#include "CThread.h"
 #include "XBase.h"
 #include <list>
 #include <map>
@@ -32,8 +33,9 @@ public:
 	// tell server to exit gracefully
 	void				quit();
 
-	// update screen map
-	void				setConfig(const CConfig&);
+	// update screen map.  returns true iff the new configuration was
+	// accepted.
+	bool				setConfig(const CConfig&);
 
 	// handle events on server's screen.  onMouseMovePrimary() returns
 	// true iff the mouse enters a jump zone and jumps.
@@ -105,6 +107,7 @@ private:
 		~CScreenInfo();
 
 	public:
+		CThread			m_thread;
 		CString			m_name;
 		IServerProtocol* m_protocol;
 		SInt32			m_width, m_height;

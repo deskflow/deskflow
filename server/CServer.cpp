@@ -110,13 +110,49 @@ void					CServer::quit()
 	m_primary->stop();
 }
 
-void					CServer::setConfig(const CConfig& config)
+bool					CServer::setConfig(const CConfig& config)
 {
-	CLock lock(&m_mutex);
-	// FIXME -- must disconnect screens no longer listed
-	//   (that may include warping back to server's screen)
-	// FIXME -- server screen must be in new map or map is rejected
-	m_config = config;
+	typedef std::vector<CThread> CThreads;
+	CThreads threads;
+	{
+		CLock lock(&m_mutex);
+
+		// refuse configuration if it doesn't include the primary screen
+		if (m_primaryInfo != NULL &&
+			!config.isScreen(m_primaryInfo->m_name)) {
+			return false;
+		}
+
+		// get the set of screens that are connected but are being
+		// dropped from the configuration.  don't add the primary
+		// screen.
+		for (CScreenList::const_iterator index = m_screens.begin();
+								index != m_screens.end(); ++index) {
+			if (!config.isScreen(index->first) &&
+				index->second != m_primaryInfo) {
+				threads.push_back(index->second->m_thread);
+			}
+		}
+
+		// cancel the old secondary screen threads
+		for (CThreads::iterator index = threads.begin();
+								index != threads.end(); ++index) {
+			index->cancel();
+		}
+
+		// cut over
+		m_config = config;
+	}
+
+	// wait for old secondary screen threads to disconnect.  must
+	// not hold lock while we do this so those threads can finish
+	// any calls to this object.
+	for (CThreads::iterator index = threads.begin();
+								index != threads.end(); ++index) {
+		index->wait();
+	}
+
+	return true;
 }
 
 CString					CServer::getPrimaryScreenName() const
@@ -137,14 +173,22 @@ UInt32					CServer::getActivePrimarySides() const
 {
 	UInt32 sides = 0;
 	CLock lock(&m_mutex);
-	if (!m_config.getNeighbor("primary", CConfig::kLeft).empty())
+	if (!m_config.getNeighbor(getPrimaryScreenName(),
+								CConfig::kLeft).empty()) {
 		sides |= CConfig::kLeftMask;
-	if (!m_config.getNeighbor("primary", CConfig::kRight).empty())
+	}
+	if (!m_config.getNeighbor(getPrimaryScreenName(),
+								CConfig::kRight).empty()) {
 		sides |= CConfig::kRightMask;
-	if (!m_config.getNeighbor("primary", CConfig::kTop).empty())
+	}
+	if (!m_config.getNeighbor(getPrimaryScreenName(),
+								CConfig::kTop).empty()) {
 		sides |= CConfig::kTopMask;
-	if (!m_config.getNeighbor("primary", CConfig::kBottom).empty())
+	}
+	if (!m_config.getNeighbor(getPrimaryScreenName(),
+								CConfig::kBottom).empty()) {
 		sides |= CConfig::kBottomMask;
+	}
 	return sides;
 }
 
@@ -1234,6 +1278,8 @@ CServer::CScreenInfo*	CServer::addConnection(
 		throw XDuplicateClient(name);
 	}
 
+	// FIXME -- throw if the name is not in our map
+
 	// save screen info
 	CScreenInfo* newScreen = new CScreenInfo(name, protocol);
 	m_screens.insert(std::make_pair(name, newScreen));
@@ -1314,6 +1360,7 @@ CServer::CConnectionNote::~CConnectionNote()
 
 CServer::CScreenInfo::CScreenInfo(const CString& name,
 								IServerProtocol* protocol) :
+								m_thread(CThread::getCurrentThread()),
 								m_name(name),
 								m_protocol(protocol),
 								m_width(0), m_height(0),

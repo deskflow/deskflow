@@ -5,6 +5,7 @@
 #include "ProtocolTypes.h"
 #include "IInputStream.h"
 #include "CLog.h"
+#include "CThread.h"
 #include <string.h>
 
 //
@@ -27,9 +28,12 @@ void					CServerProtocol1_0::run()
 {
 	// handle messages until the client hangs up
 	for (;;) {
+		CThread::testCancel();
+
 		// wait for a message
 		UInt8 code[4];
 		UInt32 n = getInputStream()->read(code, 4);
+		CThread::testCancel();
 
 		// verify we got an entire code
 		if (n == 0) {
