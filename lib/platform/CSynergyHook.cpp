@@ -61,7 +61,6 @@ static UINT				g_wmMouseWheel    = 0;
 static DWORD			g_threadID        = 0;
 static HHOOK			g_keyboard        = NULL;
 static HHOOK			g_mouse           = NULL;
-static HHOOK			g_cbt             = NULL;
 static HHOOK			g_getMessage      = NULL;
 static HANDLE			g_hookThreadLL    = NULL;
 static DWORD			g_hookThreadIDLL  = 0;
@@ -122,117 +121,92 @@ restoreCursor()
 }
 
 static
-LRESULT CALLBACK
-keyboardHook(int code, WPARAM wParam, LPARAM lParam)
+bool
+keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
-	if (code >= 0) {
-		if (g_relay) {
-			// forward message to our window
-			PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, wParam, lParam);
+	// forward message to our window.  do this whether or not we're
+	// forwarding events to clients because this'll keep our thread's
+	// key state table up to date.  that's important for querying
+	// the scroll lock toggle state.
+	PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, wParam, lParam);
 
-			// let certain keys pass through
-			switch (wParam) {
-			case VK_CAPITAL:
-			case VK_NUMLOCK:
-			case VK_SCROLL:
-				// pass event on.  we want to let these through to
-				// the window proc because otherwise the keyboard
-				// lights may not stay synchronized.
-				break;
+	if (g_relay) {
+		// let certain keys pass through
+		switch (wParam) {
+		case VK_CAPITAL:
+		case VK_NUMLOCK:
+		case VK_SCROLL:
+			// pass event on.  we want to let these through to
+			// the window proc because otherwise the keyboard
+			// lights may not stay synchronized.
+			break;
 
-			default:
-				// discard event
-				return 1;
-			}
+		default:
+			// discard event
+			return true;
 		}
 	}
 
-	return CallNextHookEx(g_keyboard, code, wParam, lParam);
+	return false;
 }
 
 static
-LRESULT CALLBACK
-mouseHook(int code, WPARAM wParam, LPARAM lParam)
+bool
+mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 wheel)
 {
-	if (code >= 0) {
+	switch (wParam) {
+	case WM_LBUTTONDOWN:
+	case WM_MBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_LBUTTONDBLCLK:
+	case WM_MBUTTONDBLCLK:
+	case WM_RBUTTONDBLCLK:
+	case WM_LBUTTONUP:
+	case WM_MBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_NCLBUTTONDOWN:
+	case WM_NCMBUTTONDOWN:
+	case WM_NCRBUTTONDOWN:
+	case WM_NCLBUTTONDBLCLK:
+	case WM_NCMBUTTONDBLCLK:
+	case WM_NCRBUTTONDBLCLK:
+	case WM_NCLBUTTONUP:
+	case WM_NCMBUTTONUP:
+	case WM_NCRBUTTONUP:
+		// always relay the event.  eat it if relaying.
+		PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_BUTTON, wParam, 0);
+		return g_relay;
+
+	case WM_MOUSEWHEEL:
 		if (g_relay) {
-			switch (wParam) {
-			case WM_LBUTTONDOWN:
-			case WM_MBUTTONDOWN:
-			case WM_RBUTTONDOWN:
-			case WM_LBUTTONUP:
-			case WM_MBUTTONUP:
-			case WM_RBUTTONUP:
-				PostThreadMessage(g_threadID,
-								SYNERGY_MSG_MOUSE_BUTTON, wParam, 0);
-				return 1;
+			// relay event
+			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL, wheel, 0);
+		}
+		return g_relay;
 
-			case WM_MOUSEWHEEL:
-				{
-					// win2k and other systems supporting WM_MOUSEWHEEL in
-					// the mouse hook are gratuitously different (and poorly
-					// documented).  if a low-level mouse hook is in place
-					// it should capture these events so we'll never see
-					// them.
-					switch (g_wheelSupport) {
-					case kWheelModern: {
-						const MOUSEHOOKSTRUCT* info =
-								(const MOUSEHOOKSTRUCT*)lParam;
-						PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL,
-								static_cast<short>(
-									LOWORD(info->dwExtraInfo)), 0);
-						break;
-					}
-
-					case kWheelWin2000: {
-						const MOUSEHOOKSTRUCTWin2000* info =
-								(const MOUSEHOOKSTRUCTWin2000*)lParam;
-						PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL,
-								static_cast<short>(
-									HIWORD(info->mouseData)), 0);
-						break;
-					}
-
-					default:
-						break;
-					}
-				}
-				return 1;
-
-			case WM_MOUSEMOVE:
-				{
-					const MOUSEHOOKSTRUCT* info =
-								(const MOUSEHOOKSTRUCT*)lParam;
-
-					// we want the cursor to be hidden at all times so we
-					// hide the cursor on whatever window has it.  but then
-					// we have to show the cursor whenever we leave that
-					// window (or at some later time before we stop relaying).
-					// so check the window with the cursor.  if it's not the
-					// same window that had it before then show the cursor
-					// in the last window and hide it in this window.
-					DWORD thread = GetWindowThreadProcessId(info->hwnd, NULL);
-					if (thread != g_cursorThread) {
-						restoreCursor();
-						hideCursor(thread);
-					}
-
-					// get position
-					SInt32 x = (SInt32)info->pt.x;
-					SInt32 y = (SInt32)info->pt.y;
-
-					// relay the motion
-					PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
-				}
-				return 1;
+	case WM_NCMOUSEMOVE:
+	case WM_MOUSEMOVE:
+		if (g_relay) {
+			// we want the cursor to be hidden at all times so we
+			// hide the cursor on whatever window has it.  but then
+			// we have to show the cursor whenever we leave that
+			// window (or at some later time before we stop relaying).
+			// so check the window with the cursor.  if it's not the
+			// same window that had it before then show the cursor
+			// in the last window and hide it in this window.
+			DWORD thread = GetCurrentThreadId();
+			if (thread != g_cursorThread) {
+				restoreCursor();
+				hideCursor(thread);
 			}
+
+			// relay and eat event
+			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
+			return true;
 		}
 		else {
 			// check for mouse inside jump zone
 			bool inside = false;
-			const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
-			SInt32 x = (SInt32)info->pt.x;
-			SInt32 y = (SInt32)info->pt.y;
 			if (!inside && (g_zoneSides & kLeftMask) != 0) {
 				inside = (x < g_xScreen + g_zoneSize);
 			}
@@ -246,35 +220,70 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 				inside = (y >= g_yScreen + g_hScreen - g_zoneSize);
 			}
 
-			// if inside then eat event and notify our window
-			if (inside) {
-				restoreCursor();
-				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
-				return 1;
+			// relay the event
+			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
+
+			// if inside then eat the event
+			return inside;
+		}
+	}
+
+	// pass the event
+	return false;
+}
+
+static
+LRESULT CALLBACK
+keyboardHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code >= 0) {
+		// handle the message
+		if (keyboardHookHandler(wParam, lParam)) {
+			return 1;
+		}
+	}
+
+	return CallNextHookEx(g_keyboard, code, wParam, lParam);
+}
+
+static
+LRESULT CALLBACK
+mouseHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code >= 0) {
+		// decode message
+		const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
+		SInt32 x = (SInt32)info->pt.x;
+		SInt32 y = (SInt32)info->pt.y;
+		SInt32 w = 0;
+		if (wParam == WM_MOUSEWHEEL) {
+			// win2k and other systems supporting WM_MOUSEWHEEL in
+			// the mouse hook are gratuitously different (and poorly
+			// documented).  if a low-level mouse hook is in place
+			// it should capture these events so we'll never see
+			// them.
+			switch (g_wheelSupport) {
+			case kWheelModern:
+				w = static_cast<SInt32>(LOWORD(info->dwExtraInfo));
+				break;
+
+			case kWheelWin2000: {
+				const MOUSEHOOKSTRUCTWin2000* info2k =
+						(const MOUSEHOOKSTRUCTWin2000*)lParam;
+				w = static_cast<SInt32>(HIWORD(info2k->mouseData));
+				break;
 			}
-			else {
-				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 			}
+		}
+
+		// handle the message
+		if (mouseHookHandler(wParam, x, y, w)) {
+			return 1;
 		}
 	}
 
 	return CallNextHookEx(g_mouse, code, wParam, lParam);
 }
-
-/*
-static
-LRESULT CALLBACK
-cbtHook(int code, WPARAM wParam, LPARAM lParam)
-{
-	if (code >= 0) {
-		if (g_relay) {
-			// do nothing for now.  may add something later.
-		}
-	}
-
-	return CallNextHookEx(g_cbt, code, wParam, lParam);
-}
-*/
 
 static
 LRESULT CALLBACK
@@ -312,7 +321,7 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 //
 // low-level keyboard hook -- this allows us to capture and handle
 // alt+tab, alt+esc, ctrl+esc, and windows key hot keys.  on the down
-// side, key repeats are not compressed for us.
+// side, key repeats are not reported to us.
 //
 
 static
@@ -320,41 +329,27 @@ LRESULT CALLBACK
 keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
-		if (g_relay) {
-			KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+		// decode the message
+		KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+		WPARAM wParam = info->vkCode;
+		LPARAM lParam = 1;							// repeat code
+		lParam      |= (info->scanCode << 16);		// scan code
+		if (info->flags & LLKHF_EXTENDED) {
+			lParam  |= (1lu << 24);					// extended key
+		}
+		if (info->flags & LLKHF_ALTDOWN) {
+			lParam  |= (1lu << 29);					// context code
+		}
+		if (info->flags & LLKHF_UP) {
+			lParam  |= (1lu << 31);					// transition
+		}
+		// FIXME -- bit 30 should be set if key was already down but
+		// we don't know that info.  as a result we'll never generate
+		// key repeat events.
 
-			// let certain keys pass through
-			switch (info->vkCode) {
-			case VK_CAPITAL:
-			case VK_NUMLOCK:
-			case VK_SCROLL:
-				// pass event on.  we want to let these through to
-				// the window proc because otherwise the keyboard
-				// lights may not stay synchronized.
-				break;
-
-			default:
-				// construct lParam for WM_KEYDOWN, etc.
-				DWORD lParam = 1;							// repeat code
-				lParam      |= (info->scanCode << 16);		// scan code
-				if (info->flags & LLKHF_EXTENDED) {
-					lParam  |= (1lu << 24);					// extended key
-				}
-				if (info->flags & LLKHF_ALTDOWN) {
-					lParam  |= (1lu << 29);					// context code
-				}
-				if (info->flags & LLKHF_UP) {
-					lParam  |= (1lu << 31);					// transition
-				}
-				// FIXME -- bit 30 should be set if key was already down
-
-				// forward message to our window
-				PostThreadMessage(g_threadID,
-								SYNERGY_MSG_KEY, info->vkCode, lParam);
-
-				// discard event
-				return 1;
-			}
+		// handle the message
+		if (keyboardHookHandler(wParam, lParam)) {
+			return 1;
 		}
 	}
 
@@ -363,11 +358,7 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 
 //
 // low-level mouse hook -- this allows us to capture and handle mouse
-// wheel events on all windows NT platforms from NT SP3 and up.  this
-// is both simpler than using the mouse hook and also supports windows
-// windows NT which does not report mouse wheel events.  we need to
-// keep the mouse hook handling of mouse wheel events because the
-// windows 95 family doesn't support low-level hooks.
+// events very early.  the earlier the better.
 //
 
 static
@@ -375,28 +366,15 @@ LRESULT CALLBACK
 mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
-		if (g_relay) {
-			MSLLHOOKSTRUCT* info = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
+		// decode the message
+		MSLLHOOKSTRUCT* info = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
+		SInt32 x = (SInt32)info->pt.x;
+		SInt32 y = (SInt32)info->pt.y;
+		SInt32 w = (SInt32)HIWORD(info->mouseData);
 
-			switch (wParam) {
-			case WM_MOUSEWHEEL:
-				// mouse wheel events are the same for entire NT family
-				// (>=SP3, prior versions have no low level hooks) for
-				// low-level mouse hook messages, unlike (regular) mouse
-				// hook messages which are gratuitously different on
-				// win2k and not sent at all for windows NT.
-
-				// forward message to our window
-				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL,
-									HIWORD(info->mouseData), 0);
-
-				// discard event
-				return 1;
-
-			default:
-				// all other events are passed through
-				break;
-			}
+		// handle the message
+		if (mouseHookHandler(wParam, x, y, w)) {
+			return 1;
 		}
 	}
 
@@ -592,7 +570,6 @@ init(DWORD threadID)
 		g_threadID        = 0;
 		g_keyboard        = NULL;
 		g_mouse           = NULL;
-		g_cbt             = NULL;
 		g_getMessage      = NULL;
 		g_hookThreadLL    = NULL;
 		g_hookThreadIDLL  = 0;
@@ -632,71 +609,21 @@ cleanup(void)
 	return 1;
 }
 
-int
+EHookResult
 install()
 {
 	assert(g_hinstance  != NULL);
 	assert(g_keyboard   == NULL);
 	assert(g_mouse      == NULL);
-	assert(g_cbt        == NULL);
 	assert(g_getMessage == NULL || g_screenSaver);
 
 	// must be initialized
 	if (g_threadID == 0) {
-		return 0;
+		return kHOOK_FAILED;
 	}
 
 	// check for mouse wheel support
 	g_wheelSupport = getWheelSupport();
-
-	// install keyboard hook
-#if !NO_GRAB_KEYBOARD
-	g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
-								&keyboardHook,
-								g_hinstance,
-								0);
-	if (g_keyboard == NULL) {
-		g_threadID = NULL;
-		return 0;
-	}
-#else
-	// keep compiler quiet
-	&keyboardHook;
-#endif
-
-	// install mouse hook
-	g_mouse = SetWindowsHookEx(WH_MOUSE,
-								&mouseHook,
-								g_hinstance,
-								0);
-	if (g_mouse == NULL) {
-		// uninstall keyboard hook before failing
-		if (g_keyboard != NULL) {
-			UnhookWindowsHookEx(g_keyboard);
-			g_keyboard = NULL;
-		}
-		g_threadID = NULL;
-		return 0;
-	}
-
-/*
-	// install CBT hook
-	g_cbt = SetWindowsHookEx(WH_CBT,
-								&cbtHook,
-								g_hinstance,
-								0);
-	if (g_cbt == NULL) {
-		// uninstall keyboard and mouse hooks before failing
-		if (g_keyboard != NULL) {
-			UnhookWindowsHookEx(g_keyboard);
-			g_keyboard = NULL;
-		}
-		UnhookWindowsHookEx(g_mouse);
-		g_mouse    = NULL;
-		g_threadID = NULL;
-		return 0;
-	}
-*/
 
 	// install GetMessage hook (unless already installed)
 	if (g_wheelSupport == kWheelOld && g_getMessage == NULL) {
@@ -704,7 +631,6 @@ install()
 								&getMessageHook,
 								g_hinstance,
 								0);
-		// ignore failure;  we just won't get mouse wheel messages
 	}
 
 	// install low-level keyboard/mouse hooks, if possible.  since these
@@ -735,7 +661,47 @@ install()
 		}
 	}
 
-	return 1;
+	// install non-low-level hooks if the low-level hooks are not installed
+	if (g_hookThreadLL == NULL) {
+#if !NO_GRAB_KEYBOARD
+		g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
+								&keyboardHook,
+								g_hinstance,
+								0);
+#else
+		// keep compiler quiet
+		&keyboardHook;
+#endif
+		g_mouse = SetWindowsHookEx(WH_MOUSE,
+								&mouseHook,
+								g_hinstance,
+								0);
+	}
+
+	// check for any failures.  uninstall all hooks on failure.
+	if (g_hookThreadLL == NULL &&
+#if !NO_GRAB_KEYBOARD
+		(g_keyboard == NULL || g_mouse == NULL)) {
+#else
+		(g_mouse == NULL)) {
+#endif
+		if (g_keyboard != NULL) {
+			UnhookWindowsHookEx(g_keyboard);
+			g_keyboard = NULL;
+		}
+		if (g_mouse != NULL) {
+			UnhookWindowsHookEx(g_mouse);
+			g_mouse = NULL;
+		}
+		if (g_getMessage != NULL && !g_screenSaver) {
+			UnhookWindowsHookEx(g_getMessage);
+			g_getMessage = NULL;
+		}
+		g_threadID = NULL;
+		return kHOOK_FAILED;
+	}
+
+	return (g_hookThreadLL == NULL) ? kHOOK_OKAY : kHOOK_OKAY_LL;
 }
 
 int
@@ -755,20 +721,16 @@ uninstall(void)
 	}
 	if (g_keyboard != NULL) {
 		UnhookWindowsHookEx(g_keyboard);
+		g_keyboard = NULL;
 	}
 	if (g_mouse != NULL) {
 		UnhookWindowsHookEx(g_mouse);
-	}
-	if (g_cbt != NULL) {
-		UnhookWindowsHookEx(g_cbt);
+		g_mouse = NULL;
 	}
 	if (g_getMessage != NULL && !g_screenSaver) {
 		UnhookWindowsHookEx(g_getMessage);
 		g_getMessage = NULL;
 	}
-	g_keyboard     = NULL;
-	g_mouse        = NULL;
-	g_cbt          = NULL;
 	g_wheelSupport = kWheelNone;
 
 	// show the cursor
@@ -837,6 +799,10 @@ setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
 void
 setRelay(int enable)
 {
+	if ((enable != 0) == g_relay) {
+		// no change
+		return;
+	}
 	g_relay = (enable != 0);
 	if (!g_relay) {
 		restoreCursor();

@@ -101,9 +101,6 @@ private:
 	// the main loop's thread id
 	DWORD				m_threadID;
 
-	// our window
-	HWND				m_window;
-
 	// used to discard queued messages that are no longer needed
 	UInt32				m_mark;
 	UInt32				m_markReceived;
@@ -126,6 +123,7 @@ private:
 	SetSidesFunc		m_setSides;
 	SetZoneFunc			m_setZone;
 	SetRelayFunc		m_setRelay;
+	bool				m_lowLevel;
 
 	// stuff for restoring active window
 	HWND				m_lastForegroundWindow;

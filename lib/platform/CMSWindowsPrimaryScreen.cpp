@@ -295,9 +295,9 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 	m_receiver(primaryReceiver),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_threadID(0),
-	m_window(NULL),
 	m_mark(0),
-	m_markReceived(0)
+	m_markReceived(0),
+	m_lowLevel(false)
 {
 	assert(m_receiver != NULL);
 
@@ -333,7 +333,6 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 CMSWindowsPrimaryScreen::~CMSWindowsPrimaryScreen()
 {
 	assert(m_hookLibrary != NULL);
-	assert(m_window      == NULL);
 
 	delete m_screen;
 	FreeLibrary(m_hookLibrary);
@@ -385,8 +384,8 @@ KeyModifierMask
 CMSWindowsPrimaryScreen::getToggleMask() const
 {
 	KeyModifierMask mask = 0;
-	if (isActive()) {
-		// get key state
+	if (!m_lowLevel) {
+		// get key state from our shadow state
 		if ((m_keys[VK_CAPITAL] & 0x01) != 0)
 			mask |= KeyModifierCapsLock;
 		if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
@@ -395,33 +394,13 @@ CMSWindowsPrimaryScreen::getToggleMask() const
 			mask |= KeyModifierScrollLock;
 	}
 	else {
-		// show the window, but make it very small.  we must do this
-		// because GetKeyState() reports the key state according to
-		// processed messages and until the window is visible the
-		// system won't update the state of the toggle keys reported
-		// by that function.  unfortunately, this slows this method
-		// down significantly and, for some reason i don't understand,
-		// causes everything on the screen to redraw.
-		if (m_window != NULL) {
-			MoveWindow(m_window, 1, 1, 1, 1, FALSE);
-			const_cast<CMSWindowsPrimaryScreen*>(this)->showWindow();
-		}
-
-		// get key state
+		// get key state from the system when using low level hooks
 		if ((GetKeyState(VK_CAPITAL) & 0x01) != 0)
 			mask |= KeyModifierCapsLock;
 		if ((GetKeyState(VK_NUMLOCK) & 0x01) != 0)
 			mask |= KeyModifierNumLock;
 		if ((GetKeyState(VK_SCROLL) & 0x01) != 0)
 			mask |= KeyModifierScrollLock;
-
-		// make the window hidden again and restore its size
-		if (m_window != NULL) {
-			const_cast<CMSWindowsPrimaryScreen*>(this)->hideWindow();
-			SInt32 x, y, w, h;
-			m_screen->getShape(x, y, w, h);
-			MoveWindow(m_window, x, y, w, h, FALSE);
-		}
 	}
 
 	return mask;
@@ -444,12 +423,12 @@ CMSWindowsPrimaryScreen::isLockedToScreen() const
 		0x7ffffe5f
 	};
 
-	// check each key.  note that we cannot use GetKeyboardState() here
-	// since it reports the state of keys according to key messages
-	// that have been pulled off the queue.  in general, we won't get
-	// these key messages because they're not for our window.  if any
-	// key (or mouse button) is down then we're locked to the screen.
-	if (isActive()) {
+	// check each key.  if we're capturing events at a low level we
+	// can query the keyboard state using GetKeyState().  if not we
+	// resort to using our shadow keyboard state since the system's
+	// shadow state won't be in sync (because our window is not
+	// getting keyboard events).
+	if (!m_lowLevel) {
 		// use shadow keyboard state in m_keys
 		for (UInt32 i = 0; i < 256; ++i) {
 			if ((m_keys[i] & 0x80) != 0) {
@@ -462,7 +441,7 @@ CMSWindowsPrimaryScreen::isLockedToScreen() const
 		for (UInt32 i = 0; i < 256 / 32; ++i) {
 			for (UInt32 b = 1, j = 0; j < 32; b <<= 1, ++j) {
 				if ((s_mappedKeys[i] & b) != 0) {
-					if (GetAsyncKeyState(i * 32 + j) < 0) {
+					if (GetKeyState(i * 32 + j) < 0) {
 						LOG((CLOG_DEBUG "locked by \"%s\"", g_vkToName[i * 32 + j]));
 						return true;
 					}
@@ -573,9 +552,6 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 						LOG((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x button=0x%04x", key, mask, button));
 						m_receiver->onKeyDown(key, mask, button);
 					}
-
-					// update key state
-					updateKey(msg->wParam, true);
 				}
 				else {
 					// key release.  if the key isn't down according to
@@ -594,51 +570,76 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 					// do key up
 					LOG((CLOG_DEBUG1 "event: key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
 					m_receiver->onKeyUp(key, mask, button);
-
-					// update key state
-					updateKey(msg->wParam, false);
 				}
 			}
 			else {
 				LOG((CLOG_DEBUG2 "event: cannot map key wParam=%d lParam=0x%08x", msg->wParam, msg->lParam));
 			}
 		}
+
+		// keep our shadow key state up to date
+		updateKey(msg->wParam, ((msg->lParam & 0x80000000) == 0));
+
 		return true;
 
-	case SYNERGY_MSG_MOUSE_BUTTON:
+	case SYNERGY_MSG_MOUSE_BUTTON: {
+		static const int s_vkButton[] = {
+			0,				// kButtonNone
+			VK_LBUTTON,		// kButtonLeft, etc.
+			VK_MBUTTON,
+			VK_RBUTTON
+		};
+
+		// get which button
+		bool pressed = false;
+		const ButtonID button = mapButton(msg->wParam);
+
 		// ignore message if posted prior to last mark change
 		if (!ignore()) {
-			static const int s_vkButton[] = {
-				0,				// kButtonNone
-				VK_LBUTTON,		// kButtonLeft, etc.
-				VK_MBUTTON,
-				VK_RBUTTON
-			};
-
-			const ButtonID button = mapButton(msg->wParam);
 			switch (msg->wParam) {
 			case WM_LBUTTONDOWN:
 			case WM_MBUTTONDOWN:
 			case WM_RBUTTONDOWN:
+			case WM_LBUTTONDBLCLK:
+			case WM_MBUTTONDBLCLK:
+			case WM_RBUTTONDBLCLK:
+			case WM_NCLBUTTONDOWN:
+			case WM_NCMBUTTONDOWN:
+			case WM_NCRBUTTONDOWN:
+			case WM_NCLBUTTONDBLCLK:
+			case WM_NCMBUTTONDBLCLK:
+			case WM_NCRBUTTONDBLCLK:
 				LOG((CLOG_DEBUG1 "event: button press button=%d", button));
 				if (button != kButtonNone) {
 					m_receiver->onMouseDown(button);
 					m_keys[s_vkButton[button]] |= 0x80;
 				}
+				pressed = true;
 				break;
 
 			case WM_LBUTTONUP:
 			case WM_MBUTTONUP:
 			case WM_RBUTTONUP:
+			case WM_NCLBUTTONUP:
+			case WM_NCMBUTTONUP:
+			case WM_NCRBUTTONUP:
 				LOG((CLOG_DEBUG1 "event: button release button=%d", button));
 				if (button != kButtonNone) {
 					m_receiver->onMouseUp(button);
 					m_keys[s_vkButton[button]] &= ~0x80;
 				}
+				pressed = false;
 				break;
 			}
 		}
+
+		// keep our shadow key state up to date
+		if (button != kButtonNone) {
+			updateKey(s_vkButton[button], pressed);
+		}
+
 		return true;
+	}
 
 	case SYNERGY_MSG_MOUSE_WHEEL:
 		// ignore message if posted prior to last mark change
@@ -765,29 +766,25 @@ CMSWindowsPrimaryScreen::getJumpZoneSize() const
 }
 
 void
-CMSWindowsPrimaryScreen::postCreateWindow(HWND window)
+CMSWindowsPrimaryScreen::postCreateWindow(HWND)
 {
-	// save window
-	m_window = window;
-
 	// install hooks
-	m_install();
+	switch (m_install()) {
+	case kHOOK_FAILED:
+		// FIXME -- can't install hook so we won't work;  report error
+		m_lowLevel = false;
+		break;
 
-	// resize window
-	// note -- we use a fullscreen window to grab input.  it should
-	// be possible to use a 1x1 window but i've run into problems
-	// with losing keyboard input (focus?) in that case.
-	// unfortunately, hiding the full screen window (when entering
-	// the screen) causes all other windows to redraw.
-	SInt32 x, y, w, h;
-	m_screen->getShape(x, y, w, h);
-	MoveWindow(m_window, x, y, w, h, FALSE);
+	case kHOOK_OKAY:
+		m_lowLevel = false;
+		break;
 
-	if (isActive()) {
-		// hide the cursor
-		showWindow();
+	case kHOOK_OKAY_LL:
+		m_lowLevel = true;
+		break;
 	}
-	else {
+
+	if (!isActive()) {
 		// watch jump zones
 		m_setRelay(false);
 
@@ -799,11 +796,6 @@ CMSWindowsPrimaryScreen::postCreateWindow(HWND window)
 void
 CMSWindowsPrimaryScreen::preDestroyWindow(HWND)
 {
-	// hide the window if it's visible
-	if (isActive()) {
-		hideWindow();
-	}
-
 	// uninstall hooks
 	m_uninstall();
 }
@@ -813,14 +805,11 @@ CMSWindowsPrimaryScreen::onPreMainLoop()
 {
 	// must call mainLoop() from same thread as open()
 	assert(m_threadID == GetCurrentThreadId());
-	assert(m_window   != NULL);
 }
 
 void
 CMSWindowsPrimaryScreen::onPreOpen()
 {
-	assert(m_window == NULL);
-
 	// initialize hook library
 	m_threadID = GetCurrentThreadId();
 	if (m_init(m_threadID) == 0) {
@@ -857,8 +846,6 @@ CMSWindowsPrimaryScreen::onPostClose()
 void
 CMSWindowsPrimaryScreen::onPreEnter()
 {
-	assert(m_window != NULL);
-
 	// enable ctrl+alt+del, alt+tab, etc
 	if (m_is95Family) {
 		DWORD dummy = 0;
@@ -879,8 +866,6 @@ CMSWindowsPrimaryScreen::onPostEnter()
 void
 CMSWindowsPrimaryScreen::onPreLeave()
 {
-	assert(m_window != NULL);
-
 	// all messages prior to now are invalid
 	nextMark();
 }
@@ -904,19 +889,10 @@ void
 CMSWindowsPrimaryScreen::createWindow()
 {
 	// open the desktop and the window
-	m_window = m_screen->openDesktop();
-	if (m_window == NULL) {
+	HWND window = m_screen->openDesktop();
+	if (window == NULL) {
 		throw XScreenOpenFailure();
 	}
-
-	// note -- we use a fullscreen window to grab input.  it should
-	// be possible to use a 1x1 window but i've run into problems
-	// with losing keyboard input (focus?) in that case.
-	// unfortunately, hiding the full screen window (when entering
-	// the scren causes all other windows to redraw).
-	SInt32 x, y, w, h;
-	m_screen->getShape(x, y, w, h);
-	MoveWindow(m_window, x, y, w, h, FALSE);
 }
 
 void
@@ -924,104 +900,19 @@ CMSWindowsPrimaryScreen::destroyWindow()
 {
 	// close the desktop and the window
 	m_screen->closeDesktop();
-	m_window = NULL;
 }
 
 bool
 CMSWindowsPrimaryScreen::showWindow()
 {
-	// remember the active window before we leave.  GetActiveWindow()
-	// will only return the active window for the thread's queue (i.e.
-	// our app) but we need the globally active window.  get that by
-	// attaching input to the foreground window's thread then calling
-	// GetActiveWindow() and then detaching our input.
-	m_lastActiveWindow     = NULL;
-	m_lastForegroundWindow = GetForegroundWindow();
-	m_lastActiveThread     = GetWindowThreadProcessId(
-								m_lastForegroundWindow, NULL);
-	DWORD myThread         = GetCurrentThreadId();
-	if (m_lastActiveThread != 0) {
-		if (myThread != m_lastActiveThread) {
-			if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
-				m_lastActiveWindow = GetActiveWindow();
-				AttachThreadInput(myThread, m_lastActiveThread, FALSE);
-			}
-		}
-	}
-
-	// show our window
-	ShowWindow(m_window, SW_SHOW);
-
-	// force our window to the foreground.  this is necessary to
-	// capture input but is complicated by microsoft's misguided
-	// attempt to prevent applications from changing the
-	// foreground window.  (the user should be in control of that
-	// under normal circumstances but there are exceptions;  the
-	// good folks at microsoft, after abusing the previously
-	// available ability to switch foreground tasks in many of
-	// their apps, changed the behavior to prevent it.  maybe
-	// it was easier than fixing the applications.)
-	//
-	// anyway, simply calling SetForegroundWindow() doesn't work
-	// unless there is no foreground window or we already are the
-	// foreground window.  so we AttachThreadInput() to the
-	// foreground process then call SetForegroundWindow();  that
-	// makes Windows think the foreground process changed the
-	// foreground window which is allowed since the foreground
-	// is "voluntarily" yielding control.  then we unattach the
-	// thread input and go about our business.
-	//
-	// unfortunately, this still doesn't work for console windows
-	// on the windows 95 family.  if a console is the foreground
-	// app on the server when the user leaves the server screen
-	// then the keyboard will not be captured by synergy.
-	if (m_lastActiveThread != myThread) {
-		if (m_lastActiveThread != 0) {
-			AttachThreadInput(myThread, m_lastActiveThread, TRUE);
-		}
-		SetForegroundWindow(m_window);
-		if (m_lastActiveThread != 0) {
-			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
-		}
-	}
-
-	// get keyboard input and capture mouse
-	SetActiveWindow(m_window);
-	SetFocus(m_window);
-	SetCapture(m_window);
-
+	// do nothing.  we don't need to show a window to capture input.
 	return true;
 }
 
 void
 CMSWindowsPrimaryScreen::hideWindow()
 {
-	// restore the active window and hide our window.  we can only set
-	// the active window for another thread if we first attach our input
-	// to that thread.
-	ReleaseCapture();
-	if (m_lastActiveWindow != NULL) {
-		DWORD myThread = GetCurrentThreadId();
-		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
-			// FIXME -- shouldn't raise window if X-Mouse is enabled
-			// but i have no idea how to do that or check if enabled.
-			SetActiveWindow(m_lastActiveWindow);
-			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
-		}
-	}
-
-	// hide the window.  do not wait for it, though, since ShowWindow()
-	// waits for the event loop to process the show-window event, but
-	// that thread may need to lock the mutex that this thread has
-	// already locked.  in particular, that deadlock will occur unless
-	// we use the asynchronous version of show window when a client
-	// disconnects:  thread A will lock the mutex and enter the primary
-	// screen which warps the mouse and calls this method while thread B
-	// will handle the mouse warp event and call methods that try to
-	// lock the mutex.  thread A owns the mutex and is waiting for the
-	// event loop, thread B owns the event loop and is waiting for the
-	// mutex causing deadlock.
-	ShowWindowAsync(m_window, SW_HIDE);
+	// do nothing.  we don't need to show a window to capture input.
 }
 
 void
@@ -1520,15 +1411,27 @@ CMSWindowsPrimaryScreen::mapButton(WPARAM button) const
 {
 	switch (button) {
 	case WM_LBUTTONDOWN:
+	case WM_LBUTTONDBLCLK:
 	case WM_LBUTTONUP:
+	case WM_NCLBUTTONDOWN:
+	case WM_NCLBUTTONDBLCLK:
+	case WM_NCLBUTTONUP:
 		return kButtonLeft;
 
 	case WM_MBUTTONDOWN:
+	case WM_MBUTTONDBLCLK:
 	case WM_MBUTTONUP:
+	case WM_NCMBUTTONDOWN:
+	case WM_NCMBUTTONDBLCLK:
+	case WM_NCMBUTTONUP:
 		return kButtonMiddle;
 
 	case WM_RBUTTONDOWN:
+	case WM_RBUTTONDBLCLK:
 	case WM_RBUTTONUP:
+	case WM_NCRBUTTONDOWN:
+	case WM_NCRBUTTONDBLCLK:
+	case WM_NCRBUTTONUP:
 		return kButtonRight;
 
 	default:

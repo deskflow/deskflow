@@ -43,9 +43,15 @@
 
 extern "C" {
 
+enum EHookResult {
+	kHOOK_FAILED,
+	kHOOK_OKAY,
+	kHOOK_OKAY_LL
+};
+
 typedef int				(*InitFunc)(DWORD targetQueueThreadID);
 typedef int				(*CleanupFunc)(void);
-typedef int				(*InstallFunc)(void);
+typedef EHookResult		(*InstallFunc)(void);
 typedef int				(*UninstallFunc)(void);
 typedef int				(*InstallScreenSaverFunc)(void);
 typedef int				(*UninstallScreenSaverFunc)(void);
@@ -55,7 +61,7 @@ typedef void			(*SetRelayFunc)(int);
 
 CSYNERGYHOOK_API int	init(DWORD);
 CSYNERGYHOOK_API int	cleanup(void);
-CSYNERGYHOOK_API int	install(void);
+CSYNERGYHOOK_API EHookResult	install(void);
 CSYNERGYHOOK_API int	uninstall(void);
 CSYNERGYHOOK_API int	installScreenSaver(void);
 CSYNERGYHOOK_API int	uninstallScreenSaver(void);
