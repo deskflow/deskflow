@@ -590,12 +590,6 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 		// get modifier
 		const unsigned int modifierBit = (1 << index->second);
 
-/* FIXME -- old comment
-		// toggle keys modify the state on press if toggling on and on
-		// release if toggling off.  other keys set the bit on press
-		// and clear the bit on release.  if half-duplex then toggle
-		// each time we get here.
-*/
 		// toggle keys modify the state on release.  other keys set the
 		// bit on press and clear the bit on release.  if half-duplex
 		// then toggle each time we get here.
@@ -603,10 +597,6 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 			if (isHalfDuplex || action == kRelease) {
 				mask ^= modifierBit;
 			}
-/* FIXME -- supposed to toggle on on press and off on release but does it?
-			if (((mask & modifierBit) == 0) == (action == kPress))
-				mask ^= modifierBit;
-*/
 		}
 		else if (action == kPress) {
 			mask |= modifierBit;
@@ -722,15 +712,21 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 	maskOut = (maskIn & ~index->second.m_keyMaskMask);
 	log((CLOG_DEBUG2 "maskIn(0x%04x) & ~maskMask(0x%04x) -> 0x%04x", maskIn, index->second.m_keyMaskMask, maskOut));
 	if (IsKeypadKey(id) || IsPrivateKeypadKey(id)) {
-		maskOut |= index->second.m_keyMask;
-		maskOut &= ~m_numLockMask;
-		log((CLOG_DEBUG2 "keypad key: | mask(0x%04x) & ~numLockMask(0x%04x) -> 0x%04x", index->second.m_keyMask, m_numLockMask, maskOut));
+		if ((m_mask & m_numLockMask) != 0) {
+			maskOut &= ~index->second.m_keyMask;
+			maskOut |= m_numLockMask;
+			log((CLOG_DEBUG2 "keypad key: & ~mask(0x%04x) | numLockMask(0x%04x) -> 0x%04x", index->second.m_keyMask, m_numLockMask, maskOut));
+		}
+		else {
+			maskOut |= index->second.m_keyMask;
+			maskOut &= ~m_numLockMask;
+			log((CLOG_DEBUG2 "keypad key: | mask(0x%04x) & ~numLockMask(0x%04x) -> 0x%04x", index->second.m_keyMask, m_numLockMask, maskOut));
+		}
 	}
 	else {
 		unsigned int maskShift = (index->second.m_keyMask & ShiftMask);
 		log((CLOG_DEBUG2 "maskShift = 0x%04x", maskShift));
-		if (index->second.m_keyMaskMask != 0 &&
-			(m_mask & m_capsLockMask) != 0) {
+		if (maskShift != 0 && (m_mask & m_capsLockMask) != 0) {
 			// shift and capsLock cancel out for keysyms subject to
 			// case conversion but not for keys with shifted
 			// characters that are not case conversions.  see if
@@ -738,13 +734,18 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 			KeySym lKey, uKey;
 			XConvertCase(id, &lKey, &uKey);
 			if (lKey != uKey) {
-				maskShift ^= ShiftMask;
-				log((CLOG_DEBUG2 "maskMask != 0 && capsLock on -> toggle maskShift 0x%04x", maskShift));
+				log((CLOG_DEBUG2 "case convertable, shift && capsLock -> caps lock"));
+				maskShift = m_capsLockMask;
+			}
+			else {
+				log((CLOG_DEBUG2 "case unconvertable, shift && capsLock -> shift, caps lock"));
+				maskShift |= m_capsLockMask;
 			}
 		}
-		maskOut |= maskShift | (m_mask & m_capsLockMask);
+		log((CLOG_DEBUG2 "maskShift = 0x%04x", maskShift));
+		maskOut |= maskShift;
 		maskOut |= (index->second.m_keyMask & ~(ShiftMask | LockMask));
-		log((CLOG_DEBUG2 "| maskShift(0x%04x) | old caps lock(0x%04x) | other (0x%04x) -> 0x%04x", maskShift, (m_mask & m_capsLockMask), (index->second.m_keyMask & ~(ShiftMask | LockMask)), maskOut));
+		log((CLOG_DEBUG2 "| maskShift(0x%04x) | other (0x%04x) -> 0x%04x", maskShift, (index->second.m_keyMask & ~(ShiftMask | LockMask)), maskOut));
 	}
 
 	return true;
