@@ -59,16 +59,21 @@ Section "Synergy (required)"
   File "${DEPTH}\build\synergyc.exe"
   File "${DEPTH}\build\synergys.exe"
   File "${DEPTH}\build\*.dll"
-  File AUTHORS.txt
-  File BUGS.txt
-  File COPYING.txt
   File ChangeLog.txt
-  File FAQ.txt
-  File HISTORY.txt
-  File INSTALL.txt
-  File NEWS.txt
-  File README.txt
-  File TODO.txt
+  File doc\authors.html
+  File doc\autostart.html
+  File doc\compiling.html
+  File doc\configuration.html
+  File doc\developer.html
+  File doc\faq.html
+  File doc\history.html
+  File doc\index.html
+  File doc\license.html
+  File doc\news.html
+  File doc\running.html
+  File doc\security.html
+  File doc\tips.html
+  File doc\todo.html
 
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\Synergy "Install_Dir" "$INSTDIR"

@@ -3,17 +3,8 @@ DEPTH=..\..
 
 NSIS="D:\Program Files\NSIS\makensis"
 
-DOCS =			\
-	AUTHORS		\
-	BUGS		\
-	COPYING		\
-	ChangeLog	\
-	FAQ			\
-	HISTORY		\
-	INSTALL		\
-	NEWS		\
-	README		\
-	TODO		\
+DOCS =						\
+	ChangeLog				\
 	$(NULL)
 
 default: dosifydocs installer

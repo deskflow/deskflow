@@ -90,7 +90,7 @@ dist-pkg: all
 	cp $(PKG_DOC_FILES) $(PKGTOPDIR)/@PACKAGE@-@VERSION@/doc
 	(cd $(PKGTOPDIR)/@PACKAGE@-@VERSION@; \
 		chmod 644 *; \
-		chmod 755 $(PKG_PROG_FILES); \
+		chmod 755 doc $(PKG_PROG_FILES); \
 		strip $(PKG_PROG_FILES) )
 	type=`uname -s -m | tr '[A-Z] ' '[a-z].'`; \
 	(cd $(PKGTOPDIR); tar cf - @PACKAGE@-@VERSION@ | \

@@ -36,13 +36,24 @@ rm -rf $RPM_BUILD_ROOT
 /usr/bin/synergyc
 /usr/bin/synergys
 %doc AUTHORS
-%doc BUGS
 %doc COPYING
 %doc ChangeLog
-%doc FAQ
-%doc HISTORY
 %doc INSTALL
 %doc NEWS
 %doc README
-%doc TODO
+%doc doc/authors.html
+%doc doc/autostart.html
+%doc doc/compiling.html
+%doc doc/configuration.html
+%doc doc/developer.html
+%doc doc/faq.html
+%doc doc/history.html
+%doc doc/index.html
+%doc doc/license.html
+%doc doc/news.html
+%doc doc/running.html
+%doc doc/security.html
+%doc doc/tips.html
+%doc doc/todo.html
+%doc doc/synergy.css
 %doc examples/synergy.conf
