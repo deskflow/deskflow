@@ -625,6 +625,8 @@ CXWindowsPrimaryScreen::mapModifier(unsigned int state) const
 		mask |= KeyModifierAlt;
 	if (state & m_metaMask)
 		mask |= KeyModifierMeta;
+	if (state & m_superMask)
+		mask |= KeyModifierSuper;
 	if (state & m_modeSwitchMask)
 		mask |= KeyModifierModeSwitch;
 	if (state & m_numLockMask)
@@ -691,6 +693,7 @@ CXWindowsPrimaryScreen::updateKeys()
 	// initialize
 	m_altMask        = 0;
 	m_metaMask       = 0;
+	m_superMask      = 0;
 	m_modeSwitchMask = 0;
 	m_numLockMask    = 0;
 	m_capsLockMask   = 0;
@@ -719,6 +722,11 @@ CXWindowsPrimaryScreen::updateKeys()
 			case XK_Meta_L:
 			case XK_Meta_R:
 				m_metaMask       |= bit;
+				break;
+
+			case XK_Super_L:
+			case XK_Super_R:
+				m_superMask      |= bit;
 				break;
 
 			case XK_Mode_switch:

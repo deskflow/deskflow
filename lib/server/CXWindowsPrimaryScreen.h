@@ -100,6 +100,7 @@ private:
 	// modifier masks
 	unsigned int		m_altMask;
 	unsigned int		m_metaMask;
+	unsigned int		m_superMask;
 	unsigned int		m_modeSwitchMask;
 	unsigned int		m_numLockMask;
 	unsigned int		m_capsLockMask;

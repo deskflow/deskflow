@@ -478,8 +478,9 @@ CMSWindowsSecondaryScreen::updateKeys()
 	if ((m_keys[VK_LMENU] & 0x80) != 0 || (m_keys[VK_RMENU] & 0x80) != 0) {
 		m_mask |= KeyModifierAlt;
 	}
+	// note -- no keys for KeyModifierMeta
 	if ((m_keys[VK_LWIN] & 0x80) != 0 || (m_keys[VK_RWIN] & 0x80) != 0) {
-		m_mask |= KeyModifierMeta;
+		m_mask |= KeyModifierSuper;
 	}
 	if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
 		m_mask |= KeyModifierCapsLock;
@@ -583,8 +584,9 @@ static const UINT		g_mapEF00[] =
 	/* 0xd0 */ VK_F19, VK_F20, VK_F21, VK_F22, VK_F23, VK_F24, 0, 0,
 	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xe0 */ 0, VK_LSHIFT, VK_RSHIFT, VK_LCONTROL,
-	/* 0xe4 */ VK_RCONTROL|0x100, VK_CAPITAL, 0, VK_LWIN|0x100,
-	/* 0xe8 */ VK_RWIN|0x100, VK_LMENU, VK_RMENU|0x100, 0, 0, 0, 0, 0,
+	/* 0xe4 */ VK_RCONTROL|0x100, VK_CAPITAL, 0, 0,
+	/* 0xe8 */ 0, VK_LMENU, VK_RMENU|0x100, VK_LWIN|0x100,
+	/* 0xec */ VK_RWIN|0x100, 0, 0, 0,
 	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, VK_DELETE|0x100
 };
@@ -655,7 +657,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 
 	// get output mask.  default output mask carries over the current
 	// toggle modifier states and includes desired shift, control, alt,
-	// and meta states.
+	// meta, and super states.
 	KeyModifierMask outMask = (m_mask &
 								(KeyModifierCapsLock |
 								KeyModifierNumLock |
@@ -664,7 +666,8 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 								(KeyModifierShift |
 								KeyModifierControl |
 								KeyModifierAlt |
-								KeyModifierMeta));
+								KeyModifierMeta |
+								KeyModifierSuper));
 
 	// set control and alt if mode shift (AltGr) is requested
 	if ((mask & KeyModifierModeSwitch) != 0) {
@@ -760,7 +763,8 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		{ KeyModifierShift,		VK_LSHIFT,			VK_RSHIFT,			false },
 		{ KeyModifierControl,	VK_LCONTROL,		VK_RCONTROL | 0x100,false },
 		{ KeyModifierAlt,		VK_LMENU,			VK_RMENU | 0x100,	false },
-		{ KeyModifierMeta,		VK_LWIN | 0x100,	VK_RWIN | 0x100,	false },
+		// note -- no keys for KeyModifierMeta
+		{ KeyModifierSuper,		VK_LWIN | 0x100,	VK_RWIN | 0x100,	false },
 		{ KeyModifierCapsLock,	VK_CAPITAL,			0,					true },
 		{ KeyModifierNumLock,	VK_NUMLOCK | 0x100,	0,					true },
 		{ KeyModifierScrollLock,VK_SCROLL,			0,					true }

@@ -70,9 +70,12 @@ private:
 	enum EKeyAction { kPress, kRelease, kRepeat };
 	class KeyCodeMask {
 	public:
-		KeyCode			m_keycode;
-		unsigned int	m_keyMask;
-		unsigned int	m_keyMaskMask;
+		KeyCodeMask();
+	public:
+		KeyCode			m_keycode[4];
+		// FIXME -- don't need masks
+		unsigned int	m_keyMask[4];
+		unsigned int	m_keyMaskMask[4];
 	};
 	class Keystroke {
 	public:
@@ -82,15 +85,18 @@ private:
 	};
 	typedef std::vector<Keystroke> Keystrokes;
 	typedef std::vector<KeyCode> KeyCodes;
-	typedef std::map<KeyID, KeyCodeMask> KeyCodeMap;
+	typedef std::map<KeySym, KeyCodeMask> KeyCodeMap;
+	typedef KeyCodeMap::const_iterator KeyCodeIndex;
 	typedef std::map<KeyCode, unsigned int> ModifierMap;
 
 	unsigned int		mapButton(ButtonID button) const;
 
 	unsigned int		mapKey(Keystrokes&, KeyCode&, KeyID,
 							KeyModifierMask, EKeyAction) const;
+/*
 	bool				findKeyCode(KeyCode&, unsigned int&,
 							KeyID id, unsigned int) const;
+*/
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 	unsigned int		maskToX(KeyModifierMask) const;
 
@@ -102,7 +108,14 @@ private:
 	void				toggleKey(Display*, KeySym, unsigned int mask);
 	static bool			isToggleKeysym(KeySym);
 
+	KeyCodeIndex		findKey(KeyID keysym, KeyModifierMask& mask) const;
+	KeyCodeIndex		noKey() const;
+	bool				adjustForNumLock(KeySym) const;
+	bool				adjustForCapsLock(KeySym) const;
+
 private:
+	enum { kNONE, kSHIFT, kALTGR, kSHIFT_ALTGR };
+
 	CXWindowsScreen*	m_screen;
 	Window				m_window;
 
@@ -134,6 +147,7 @@ private:
 	// modifier masks
 	unsigned int		m_altMask;
 	unsigned int		m_metaMask;
+	unsigned int		m_superMask;
 	unsigned int		m_modeSwitchMask;
 	unsigned int		m_numLockMask;
 	unsigned int		m_capsLockMask;
@@ -142,6 +156,7 @@ private:
 	// map X modifier key indices to the key codes bound to them
 	unsigned int		m_keysPerModifier;
 	KeyCodes			m_modifierToKeycode;
+	KeyCodes			m_modifierToKeycodes;
 
 	// maps keycodes to modifier indices
 	ModifierMap			m_keycodeToModifier;

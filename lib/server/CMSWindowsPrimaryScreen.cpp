@@ -709,8 +709,8 @@ static const KeyID		g_virtualKey[][2] =
 	/* 0x58 */ kKeyNone,		kKeyNone,		// VK_X
 	/* 0x59 */ kKeyNone,		kKeyNone,		// VK_Y
 	/* 0x5a */ kKeyNone,		kKeyNone,		// VK_Z
-	/* 0x5b */ kKeyNone,		kKeyMeta_L,		// VK_LWIN
-	/* 0x5c */ kKeyNone,		kKeyMeta_R,		// VK_RWIN
+	/* 0x5b */ kKeyNone,		kKeySuper_L,	// VK_LWIN
+	/* 0x5c */ kKeyNone,		kKeySuper_R,	// VK_RWIN
 	/* 0x5d */ kKeyMenu,		kKeyMenu,		// VK_APPS
 	/* 0x5e */ kKeyNone,		kKeyNone,		// undefined
 	/* 0x5f */ kKeyNone,		kKeyNone,		// undefined
