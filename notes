@@ -89,12 +89,6 @@ win32:
   provide taskbar icon
   provide control panel?
 
-win32 dll:
-  should make this as small as possible
-    don't use standard libraries
-    use custom _DllMainCRTStartup();  just call DllMain() from it.
-    use /MERGE linker switch to merge sections
-
 win32 service:
   need message table for proper event reporting
 
