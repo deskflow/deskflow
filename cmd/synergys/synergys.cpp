@@ -277,7 +277,7 @@ static
 int
 runMainInThread(void)
 {
-	int result;
+	int result = 0;
 	CThread appThread(new CFunctionJob(&realMainEntry, &result));
 	try {
 #if WINDOWS_LIKE

@@ -544,7 +544,6 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 	}
 
 	// handle event
-	const MSG* msg = &event->m_msg;
 	switch (msg->message) {
 	case SYNERGY_MSG_MARK:
 		m_markReceived = msg->wParam;
