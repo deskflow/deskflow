@@ -185,10 +185,8 @@ keyboardGetState(BYTE keys[256])
 
 static
 bool
-keyboardHookHandler(WPARAM wParam, LPARAM lParam)
+doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 {
-	attachThreadToForeground();
-
 	// check for dead keys.  we don't forward those to our window.
 	// instead we'll leave the key in the keyboard layout (a buffer
 	// internal to the system) for translation when the next key is
@@ -416,14 +414,22 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 
 	return false;
 }
+
+static
+bool
+keyboardHookHandler(WPARAM wParam, LPARAM lParam)
+{
+	attachThreadToForeground();
+	bool result = doKeyboardHookHandler(wParam, lParam);
+	detachThread();
+	return result;
+}
 #endif
 
 static
 bool
-mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
+doMouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 {
-	attachThreadToForeground();
-
 	switch (wParam) {
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
@@ -520,6 +526,16 @@ mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 
 	// pass the event
 	return false;
+}
+
+static
+bool
+mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
+{
+	attachThreadToForeground();
+	bool result = doMouseHookHandler(wParam, x, y, data);
+	detachThread();
+	return result;
 }
 
 #if !NO_GRAB_KEYBOARD
