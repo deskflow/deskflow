@@ -30,13 +30,13 @@
 #include "LogOutputters.h"
 #include "CString.h"
 #include "CArch.h"
-#include "CArchMiscWindows.h"
 #include <cstring>
 
 #define DAEMON_RUNNING(running_)
 #if WINDOWS_LIKE
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsSecondaryScreen.h"
+#include "CArchMiscWindows.h"
 #include "CMSWindowsClientTaskBarReceiver.h"
 #include "resource.h"
 #undef DAEMON_RUNNING

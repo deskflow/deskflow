@@ -28,7 +28,6 @@
 #include "CLog.h"
 #include "LogOutputters.h"
 #include "CArch.h"
-#include "CArchMiscWindows.h"
 #include "stdfstream.h"
 #include <cstring>
 
@@ -36,6 +35,7 @@
 #if WINDOWS_LIKE
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsPrimaryScreen.h"
+#include "CArchMiscWindows.h"
 #include "CMSWindowsServerTaskBarReceiver.h"
 #include "resource.h"
 #undef DAEMON_RUNNING
