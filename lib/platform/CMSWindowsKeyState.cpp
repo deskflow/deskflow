@@ -1375,6 +1375,18 @@ CMSWindowsKeyState::mapVirtKeyToButton(UINT virtualKey,
 
 		default:
 			button = (KeyButton)MapVirtualKey(virtualKey, 0);
+
+			// okay, now we have the scan code for the virtual key.  windows
+			// may map different virtual keys to the same button.  for example,
+			// windows 95/98/me maps virtual keys 220 and 226 to scan code 86
+			// in the british english keyboard map.  why?  who knows.  it
+			// doesn't make any sense since a button can't actually generate
+			// more than one virtual key.  to avoid this stupidity, we map the
+			// button back to a virtual key to see if it matches the starting
+			// point.
+			if (button == 0 || MapVirtualKey(button, 1) != virtualKey) {
+				return 0;
+			}
 			break;
 		}
 	}
@@ -1440,6 +1452,9 @@ CMSWindowsKeyState::mapVirtKeyToButton(UINT virtualKey,
 		case VK_SEPARATOR:
 		case VK_SUBTRACT:
 		case VK_DECIMAL:
+			break;
+
+		case VK_PAUSE:
 			break;
 
 		default:
