@@ -473,8 +473,15 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 				if (isCurrentDesktop(desk)) {
 					CloseDesktop(desk);
 				}
-				else {
+				else if (!m_screensaver->isActive()) {
+					// don't switch desktops when the screensaver is
+					// active.  we'd most likely switch to the
+					// screensaver desktop which would have the side
+					// effect of forcing the screensaver to stop.
 					switchDesktop(desk);
+				}
+				else {
+					CloseDesktop(desk);
 				}
 			}
 		}

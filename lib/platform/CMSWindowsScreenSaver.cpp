@@ -132,7 +132,7 @@ CMSWindowsScreenSaver::deactivate()
 	bool killed = false;
 	if (!m_is95Family) {
 		// NT runs screen saver in another desktop
-		HDESK desktop = OpenDesktop("screen-saver", 0, FALSE,
+		HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE,
 								DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
 		if (desktop != NULL) {
 			EnumDesktopWindows(desktop,
@@ -146,6 +146,10 @@ CMSWindowsScreenSaver::deactivate()
 	if (!killed) {
 		// find screen saver window and close it
 		HWND hwnd = FindWindow("WindowsScreenSaverClass", NULL);
+		if (hwnd == NULL) {
+			// win2k may use a different class
+			hwnd = FindWindow("Default Screen Saver", NULL);
+		}
 		if (hwnd != NULL) {
 			PostMessage(hwnd, WM_CLOSE, 0, 0);
 		}
@@ -167,7 +171,7 @@ CMSWindowsScreenSaver::isActive() const
 	}
 	else if (m_isNT) {
 		// screen saver runs on a separate desktop
-		HDESK desktop = OpenDesktop("screen-saver", 0, FALSE, MAXIMUM_ALLOWED);
+		HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE, MAXIMUM_ALLOWED);
 		if (desktop == NULL && GetLastError() != ERROR_ACCESS_DENIED) {
 			// desktop doesn't exist so screen saver is not running
 			return false;
@@ -241,7 +245,7 @@ CMSWindowsScreenSaver::findScreenSaver()
 {
 	if (!m_is95Family) {
 		// screen saver runs on a separate desktop
-		HDESK desktop = OpenDesktop("screen-saver", 0, FALSE, MAXIMUM_ALLOWED);
+		HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE, MAXIMUM_ALLOWED);
 		if (desktop != NULL) {
 			// search
 			CFindScreenSaverInfo info;
