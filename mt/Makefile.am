@@ -10,6 +10,13 @@ libmt_a_SOURCES = 			\
 	CThread.cpp				\
 	CThreadRep.cpp			\
 	CTimerThread.cpp		\
+	CCondVar.h				\
+	CLock.h					\
+	CMutex.h				\
+	CThread.h				\
+	CThreadRep.h			\
+	CTimerThread.h			\
+	XThread.h				\
 	$(NULL)
 INCLUDES =					\
 	-I$(DEPTH)/base 		\

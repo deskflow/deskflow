@@ -6,6 +6,8 @@ noinst_LIBRARIES = libhttp.a
 libhttp_a_SOURCES = 		\
 	CHTTPProtocol.cpp		\
 	XHTTP.cpp				\
+	CHTTPProtocol.h			\
+	XHTTP.h					\
 	$(NULL)
 INCLUDES =					\
 	-I$(DEPTH)/base 		\

@@ -10,6 +10,15 @@ libnet_a_SOURCES = 			\
 	CTCPListenSocket.cpp	\
 	XNetwork.cpp			\
 	XSocket.cpp				\
+	CNetwork.h				\
+	CNetworkAddress.h		\
+	CTCPListenSocket.h		\
+	CTCPSocket.h			\
+	IDataSocket.h			\
+	IListenSocket.h			\
+	ISocket.h				\
+	XNetwork.h				\
+	XSocket.h				\
 	$(NULL)
 INCLUDES =					\
 	-I$(DEPTH)/base 		\

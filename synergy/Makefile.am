@@ -11,6 +11,23 @@ libsynergy_a_SOURCES = 		\
 	CTCPSocketFactory.cpp	\
 	XScreen.cpp				\
 	XSynergy.cpp			\
+	CClipboard.h			\
+	CInputPacketStream.h	\
+	COutputPacketStream.h	\
+	CProtocolUtil.h			\
+	CTCPSocketFactory.h		\
+	ClipboardTypes.h		\
+	IClipboard.h			\
+	IPrimaryScreen.h		\
+	ISecondaryScreen.h		\
+	IServerProtocol.h		\
+	ISocketFactory.h		\
+	KeyTypes.h				\
+	MouseTypes.h			\
+	ProtocolTypes.h			\
+	Version.h				\
+	XScreen.h				\
+	XSynergy.h				\
 	$(NULL)
 INCLUDES =					\
 	-I$(DEPTH)/base 		\

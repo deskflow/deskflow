@@ -3,10 +3,12 @@ NULL =
 DEPTH = ..
 
 bin_PROGRAMS = synergy
-synergy_SOURCES = 			\
+synergy_SOURCES = 					\
 	CXWindowsSecondaryScreen.cpp	\
-	CClient.cpp				\
-	client.cpp				\
+	CClient.cpp						\
+	client.cpp						\
+	CClient.h						\
+	CXWindowsSecondaryScreen.h		\
 	$(NULL)
 synergy_LDADD =						\
 	$(DEPTH)/platform/libplatform.a	\
