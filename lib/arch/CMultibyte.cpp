@@ -86,7 +86,7 @@ ARCH_STRING::convStringWCToMB(char* dst,
 			}
 			len += mblen;
 		}
-		int mblen = wctomb(NULL, L'\0');
+		int mblen = wctomb(dummy, L'\0');
 		if (mblen != -1) {
 			len += mblen - 1;
 		}
