@@ -202,6 +202,17 @@ appear before the `links' and `aliases' sections.
         This is identical to halfDuplexCapsLock except it
         applies to the num lock key.
 
+      xtestIsXineramaUnaware = {true|false}
+        This option works around a bug in the XTest extension
+        when used in combination with Xinerama.  It affects
+        X11 clients only.  Not all versions of the XTest
+        extension are aware of the Xinerama extension.  As a
+        result, they do not move the mouse correctly when
+        using multiple Xinerama screens.  This option is
+        currently true by default.  If you know your XTest
+        extension is Xinerama aware then set this option to
+        false.
+
       shift = {shift|ctrl|alt|meta|super|none}
       ctrl  = {shift|ctrl|alt|meta|super|none}
       alt   = {shift|ctrl|alt|meta|super|none}
