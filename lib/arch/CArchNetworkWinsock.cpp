@@ -418,6 +418,7 @@ CArchNetworkWinsock::pollSocket(CPollEntry pe[], int num, double timeout)
 	CArchMultithreadWindows* mt = CArchMultithreadWindows::getInstance();
 	CArchThread thread     = mt->newCurrentThread();
 	WSAEVENT* unblockEvent = (WSAEVENT*)mt->getNetworkDataForThread(thread);
+	ARCH->closeThread(thread);
 	if (unblockEvent == NULL) {
 		unblockEvent  = new WSAEVENT;
 		*unblockEvent = WSACreateEvent_winsock();

@@ -827,7 +827,10 @@ const int*
 CArchNetworkBSD::getUnblockPipe()
 {
 	CArchMultithreadPosix* mt = CArchMultithreadPosix::getInstance();
-	return getUnblockPipeForThread(mt->newCurrentThread());
+	CArchThread thread        = mt->newCurrentThread();
+	const int* p              = getUnblockPipeForThread(thread);
+	ARCH->closeThread(thread);
+	return p;
 }
 
 const int*
