@@ -956,9 +956,21 @@ void					CServer::updatePrimaryClipboard(ClipboardID id)
 		// if clipboard changed then other screens have an
 		// out-of-date clipboard.
 		if (time != clipboard.m_clipboard.getTime()) {
-			log((CLOG_DEBUG "clipboard %d changed", id));
-			clipboard.m_clipboardData = clipboard.m_clipboard.marshall();
-			clearGotClipboard(id);
+			log((CLOG_DEBUG "clipboard %d time changed (%08x to %08x)", id, time, clipboard.m_clipboard.getTime()));
+
+			// marshall data
+			CString newData = clipboard.m_clipboard.marshall();
+
+			// compare old and new data.  if identical then the clipboard
+			// hasn't really changed.
+			if (newData != clipboard.m_clipboardData) {
+				log((CLOG_DEBUG "clipboard %d changed", id));
+				clipboard.m_clipboardData = newData;
+				clearGotClipboard(id);
+			}
+			else {
+				log((CLOG_DEBUG "clipboard %d unchanged", id));
+			}
 			m_primaryInfo->m_gotClipboard[id] = true;
 		}
 	}

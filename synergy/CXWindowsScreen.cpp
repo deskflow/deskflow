@@ -249,12 +249,6 @@ void					CXWindowsScreen::getDisplayClipboard(
 	assert(clipboard != NULL);
 	assert(requestor != None);
 
-	// FIXME -- don't update clipboard object if clipboard hasn't changed
-
-	// clear the clipboard object
-	if (!clipboard->open(timestamp))
-		return;
-
 	// block others from using the display while we get the clipboard.
 	// in particular, this prevents the event thread from stealing the
 	// selection notify event we're expecting.
@@ -271,16 +265,43 @@ void					CXWindowsScreen::getDisplayClipboard(
 	Window owner = XGetSelectionOwner(m_display, selection);
 	if (m_clipboards[id].m_unresponsive) {
 		if (owner != None && owner == m_clipboards[id].m_owner) {
-			clipboard->close();
+			log((CLOG_DEBUG1 "skip unresponsive clipboard owner"));
+			// clear the clipboard and return
+			if (!clipboard->open(timestamp)) {
+				clipboard->close();
+			}
 			return;
 		}
 	}
 	CClipboardInfo& clipboardInfo =
 								const_cast<CClipboardInfo&>(m_clipboards[id]);
 
+	// don't update clipboard object if clipboard hasn't changed.  ask
+	// the selection for the tiemstamp when it acquired the selection.
+	Atom format;
+	CString data;
+	if (getDisplayClipboard(selection, m_atomTimestamp,
+								requestor, timestamp, &format, &data) &&
+		format == m_atomInteger) {
+		// get the owner's time
+		Time time = *reinterpret_cast<const Time*>(data.data());
+		log((CLOG_DEBUG "got clipboard timestamp %08x", time));
+
+		// if unchanged then clipboard hasn't changed
+		if (time == clipboard->getTime())
+			return;
+
+		// use clipboard owner's time as timestamp
+		timestamp = time;
+	}
+
+	// clear the clipboard object
+	if (!clipboard->open(timestamp)) {
+		return;
+	}
+
 	// ask the selection for all the formats it has.  some owners return
 	// the TARGETS atom and some the ATOM atom when TARGETS is requested.
-	Atom format;
 	CString targets;
 	if (getDisplayClipboard(selection, m_atomTargets,
 								requestor, timestamp, &format, &targets) &&
