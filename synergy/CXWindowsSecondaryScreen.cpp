@@ -1,6 +1,7 @@
 #include "CXWindowsSecondaryScreen.h"
 #include "CClient.h"
 #include "CThread.h"
+#include "CLock.h"
 #include "TMethodJob.h"
 #include "CLog.h"
 #include <assert.h>
@@ -111,8 +112,10 @@ void					CXWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 	assert(m_display != NULL);
 	assert(m_window != None);
 
+	CLock lock(&m_mutex);
+
 	// warp to requested location
-	warpCursor(x, y);
+	warpCursorNoLock(x, y);
 
 	// show cursor
 	::XUnmapWindow(m_display, m_window);
@@ -123,6 +126,8 @@ void					CXWindowsSecondaryScreen::leave()
 	assert(m_display != NULL);
 	assert(m_window != None);
 
+	CLock lock(&m_mutex);
+
 	// raise and show the hider window
 	::XMapRaised(m_display, m_window);
 
@@ -131,6 +136,13 @@ void					CXWindowsSecondaryScreen::leave()
 }
 
 void					CXWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
+{
+	CLock lock(&m_mutex);
+	warpCursorNoLock(x, y);
+}
+
+void					CXWindowsSecondaryScreen::warpCursorNoLock(
+								SInt32 x, SInt32 y)
 {
 	assert(m_display != NULL);
 
@@ -143,6 +155,8 @@ void					CXWindowsSecondaryScreen::onKeyDown(
 {
 	assert(m_display != NULL);
 
+	CLock lock(&m_mutex);
+
 	::XTestFakeKeyEvent(m_display, mapKey(key, mask), True, CurrentTime);
 	::XSync(m_display, False);
 }
@@ -152,6 +166,8 @@ void					CXWindowsSecondaryScreen::onKeyRepeat(
 {
 	assert(m_display != NULL);
 
+	CLock lock(&m_mutex);
+
 	// FIXME
 }
 
@@ -159,6 +175,8 @@ void					CXWindowsSecondaryScreen::onKeyUp(
 								KeyID key, KeyModifierMask mask)
 {
 	assert(m_display != NULL);
+
+	CLock lock(&m_mutex);
 
 	::XTestFakeKeyEvent(m_display, mapKey(key, mask), False, CurrentTime);
 	::XSync(m_display, False);
@@ -168,6 +186,8 @@ void					CXWindowsSecondaryScreen::onMouseDown(ButtonID button)
 {
 	assert(m_display != NULL);
 
+	CLock lock(&m_mutex);
+
 	::XTestFakeButtonEvent(m_display, mapButton(button), True, CurrentTime);
 	::XSync(m_display, False);
 }
@@ -175,6 +195,8 @@ void					CXWindowsSecondaryScreen::onMouseDown(ButtonID button)
 void					CXWindowsSecondaryScreen::onMouseUp(ButtonID button)
 {
 	assert(m_display != NULL);
+
+	CLock lock(&m_mutex);
 
 	::XTestFakeButtonEvent(m_display, mapButton(button), False, CurrentTime);
 	::XSync(m_display, False);
@@ -185,6 +207,8 @@ void					CXWindowsSecondaryScreen::onMouseMove(
 {
 	assert(m_display != NULL);
 
+	CLock lock(&m_mutex);
+
 	::XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
 	::XSync(m_display, False);
 }
@@ -192,6 +216,8 @@ void					CXWindowsSecondaryScreen::onMouseMove(
 void					CXWindowsSecondaryScreen::onMouseWheel(SInt32)
 {
 	assert(m_display != NULL);
+
+	CLock lock(&m_mutex);
 
 	// FIXME
 }
@@ -255,18 +281,24 @@ void					CXWindowsSecondaryScreen::eventThread(void*)
 
 	for (;;) {
 		// wait for and then get the next event
+		m_mutex.lock();
 		while (XPending(m_display) == 0) {
+			m_mutex.unlock();
 			CThread::sleep(0.05);
+			m_mutex.lock();
 		}
 		XEvent xevent;
 		XNextEvent(m_display, &xevent);
+		m_mutex.unlock();
 
 		// handle event
 		switch (xevent.type) {
-		  case LeaveNotify:
+		  case LeaveNotify: {
 			// mouse moved out of hider window somehow.  hide the window.
+			CLock lock(&m_mutex);
 			::XUnmapWindow(m_display, m_window);
 			break;
+		  }
 
 /*
 		  // FIXME -- handle screen resolution changes

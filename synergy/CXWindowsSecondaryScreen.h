@@ -1,6 +1,7 @@
 #ifndef CXWINDOWSSECONDARYSCREEN_H
 #define CXWINDOWSSECONDARYSCREEN_H
 
+#include "CMutex.h"
 #include "ISecondaryScreen.h"
 #include <X11/Xlib.h>
 
@@ -29,6 +30,7 @@ class CXWindowsSecondaryScreen : public ISecondaryScreen {
 
   private:
 	Cursor				createBlankCursor();
+	void				warpCursorNoLock(SInt32 xAbsolute, SInt32 yAbsolute);
 	void				eventThread(void*);
 	KeyCode				mapKey(KeyID, KeyModifierMask) const;
 	unsigned int		mapButton(ButtonID button) const;
@@ -41,6 +43,9 @@ class CXWindowsSecondaryScreen : public ISecondaryScreen {
 	Window				m_root;
 	Window				m_window;
 	SInt32				m_w, m_h;
+
+	// X is not thread safe
+	CMutex				m_mutex;
 };
 
 #endif

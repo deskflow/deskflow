@@ -1,6 +1,7 @@
 #ifndef CXWINDOWSPRIMARYSCREEN_H
 #define CXWINDOWSPRIMARYSCREEN_H
 
+#include "CMutex.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "IPrimaryScreen.h"
@@ -25,6 +26,7 @@ class CXWindowsPrimaryScreen : public IPrimaryScreen {
   private:
 	void				selectEvents(Window) const;
 	Cursor				createBlankCursor();
+	void				warpCursorNoLock(SInt32 xAbsolute, SInt32 yAbsolute);
 
 	void				eventThread(void*);
 	KeyModifierMask		mapModifier(unsigned int state) const;
@@ -40,6 +42,9 @@ class CXWindowsPrimaryScreen : public IPrimaryScreen {
 	SInt32				m_w, m_h;
 	Window				m_window;
 	bool				m_active;
+
+	// X is not thread safe
+	CMutex				m_mutex;
 };
 
 #endif

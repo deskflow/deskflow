@@ -1,6 +1,7 @@
 #include "CXWindowsPrimaryScreen.h"
 #include "CServer.h"
 #include "CThread.h"
+#include "CLock.h"
 #include "TMethodJob.h"
 #include "CLog.h"
 #include <assert.h>
@@ -107,6 +108,8 @@ void					CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 	assert(m_window  != None);
 	assert(m_active  == true);
 
+	CLock lock(&m_mutex);
+
 	// warp to requested location
 	::XWarpPointer(m_display, None, m_window, 0, 0, 0, 0, x, y);
 
@@ -134,6 +137,8 @@ void					CXWindowsPrimaryScreen::leave()
 	assert(m_display != NULL);
 	assert(m_window  != None);
 	assert(m_active  == false);
+
+	CLock lock(&m_mutex);
 
 	// raise and show the input window
 	::XMapRaised(m_display, m_window);
@@ -169,7 +174,7 @@ void					CXWindowsPrimaryScreen::leave()
 	log((CLOG_DEBUG "grabbed keyboard"));
 
 	// move the mouse to the center of grab window
-	warpCursor(m_w >> 1, m_h >> 1);
+	warpCursorNoLock(m_w >> 1, m_h >> 1);
 
 	// local client now active
 	m_active = true;
@@ -177,7 +182,13 @@ void					CXWindowsPrimaryScreen::leave()
 
 void					CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
+	CLock lock(&m_mutex);
+	warpCursorNoLock(x, y);
+}
 
+void					CXWindowsPrimaryScreen::warpCursorNoLock(
+								SInt32 x, SInt32 y)
+{
 	// warp the mouse
 	::XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
 	::XSync(m_display, False);
@@ -271,18 +282,24 @@ void					CXWindowsPrimaryScreen::eventThread(void*)
 {
 	for (;;) {
 		// wait for and then get the next event
+		m_mutex.lock();
 		while (XPending(m_display) == 0) {
+			m_mutex.unlock();
 			CThread::sleep(0.05);
+			m_mutex.lock();
 		}
 		XEvent xevent;
 		XNextEvent(m_display, &xevent);
+		m_mutex.unlock();
 
 		// handle event
 		switch (xevent.type) {
-		  case CreateNotify:
+		  case CreateNotify: {
 			// select events on new window
+			CLock lock(&m_mutex);
 			selectEvents(xevent.xcreatewindow.window);
 			break;
+		  }
 
 		  case KeyPress: {
 			log((CLOG_DEBUG "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
@@ -337,17 +354,21 @@ void					CXWindowsPrimaryScreen::eventThread(void*)
 				// probably not since key strokes may go to wrong place.
 
 				// get mouse deltas
-				Window root, window;
-				int xRoot, yRoot, xWindow, yWindow;
-				unsigned int mask;
-				if (!::XQueryPointer(m_display, m_window, &root, &window,
+				{
+					CLock lock(&m_mutex);
+					Window root, window;
+					int xRoot, yRoot, xWindow, yWindow;
+					unsigned int mask;
+					if (!::XQueryPointer(m_display, m_window, &root, &window,
 								&xRoot, &yRoot, &xWindow, &yWindow, &mask))
-					break;
-				x = xRoot - (m_w >> 1);
-				y = yRoot - (m_h >> 1);
+						break;
 
-				// warp mouse back to center
-				warpCursor(m_w >> 1, m_h >> 1);
+					x = xRoot - (m_w >> 1);
+					y = yRoot - (m_h >> 1);
+
+					// warp mouse back to center
+					warpCursorNoLock(m_w >> 1, m_h >> 1);
+				}
 
 				m_server->onMouseMoveSecondary(x, y);
 			}
