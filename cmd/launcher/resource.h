@@ -37,6 +37,7 @@
 #define IDS_UNINSTALLED_USER            33
 #define IDS_INVALID_SERVER_NAME         34
 #define IDS_TITLE                       35
+#define IDS_SERVER_IS_CLIENT            36
 #define IDD_MAIN                        101
 #define IDD_ADD                         102
 #define IDD_WAIT                        103
