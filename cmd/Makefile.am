@@ -22,6 +22,7 @@ SUBDIRS =					\
 	$(NULL)
 
 EXTRA_DIST =				\
+	exec.dsp				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =		\
