@@ -469,7 +469,10 @@ CScreen::enterSecondary(KeyModifierMask toggleMask)
 void
 CScreen::leavePrimary()
 {
-	// do nothing
+	// we don't track keys while on the primary screen so update our
+	// idea of them now.  this is particularly to update the state of
+	// the toggle modifiers.
+	m_screen->updateKeys();
 }
 
 void

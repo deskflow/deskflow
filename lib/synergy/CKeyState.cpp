@@ -39,7 +39,7 @@ void
 CKeyState::setKeyDown(KeyButton button, bool down)
 {
 	button &= kButtonMask;
-	updateKeyState(button, button, down);
+	updateKeyState(button, button, down, false);
 }
 
 void
@@ -149,7 +149,7 @@ CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 	fakeKeyEvents(keys, 1);
 
 	// note that key is down
-	updateKeyState((KeyButton)(button & kButtonMask), localID, true);
+	updateKeyState((KeyButton)(button & kButtonMask), localID, true, true);
 }
 
 void
@@ -230,7 +230,7 @@ CKeyState::fakeKeyUp(KeyButton button)
 	fakeKeyEvents(keys, 1);
 
 	// note that key is now up
-	updateKeyState(button, localID, false);
+	updateKeyState(button, localID, false, true);
 }
 
 void
@@ -486,7 +486,8 @@ CKeyState::fakeKeyEvent(KeyButton button, bool press, bool isAutoRepeat)
 }
 
 void
-CKeyState::updateKeyState(KeyButton serverID, KeyButton localID, bool press)
+CKeyState::updateKeyState(KeyButton serverID, KeyButton localID,
+				bool press, bool fake)
 {
 	// ignore bogus keys
 	if (serverID == 0 || localID == 0) {
@@ -510,6 +511,16 @@ CKeyState::updateKeyState(KeyButton serverID, KeyButton localID, bool press)
 			// never report half-duplex keys as down
 			if (isHalfDuplex(mask)) {
 				m_keys[localID] &= ~kDown;
+				// half-duplex keys on the primary screen don't send the
+				// usual press/release pairs but instead send the press
+				// when toggling on and the release when toggleing off.
+				// since we normally toggle our shadow state on the press
+				// we need to treat the release as a press on the primary
+				// screen.  we know we're on the primary screen if fake is
+				// false.  secondary screens always get press/release pairs.
+				if (!fake) {
+					press = true;
+				}
 			}
 
 			// toggle on the press

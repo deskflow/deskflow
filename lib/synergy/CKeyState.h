@@ -152,7 +152,7 @@ private:
 	void				fakeKeyEvents(const Keystrokes&, UInt32 count);
 	void				fakeKeyEvent(KeyButton, bool press, bool isAutoRepeat);
 	void				updateKeyState(KeyButton serverID,
-							KeyButton localID, bool press);
+							KeyButton localID, bool press, bool fake);
 
 private:
 	enum {
