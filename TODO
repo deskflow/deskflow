@@ -21,18 +21,11 @@ Things to do to synergy, in no particular order:
   Synergy currently supports only ASCII characters typed on the
   keyboard.  It does, however, support Unicode clipboard text.
 
-* Write man pages
-
-* Finish PORTING guide
+* Write man/html pages
 
 * Port to other platforms
 
-  An incomplete list of desired platforms:
-  * MacOS 9
-  * MacOS 10
-  * BSD
-  * HP-UX
-  * AIX
+  Most desired is MacOS X.
 
 * Provide a nice win32 installer/uninstaller
 
@@ -49,3 +42,24 @@ Things to do to synergy, in no particular order:
   is it should losslessly support any type it might be converted to.
   The type is converted to each platform's native type.  For example,
   BMP for images on win32.
+
+* Keyboard shortcuts to jump from screen to screen
+
+Then there are major new features:
+
+* Provide a KVM mode
+
+  In this mode synergy would share the monitor in addition to the
+  keyboard and mouse.
+
+* Add encryption and authentication
+
+  Make synergy is safe to use on untrusted networks.
+
+* Support for limited drag and drop between systems
+
+* Support for (virtual) terminals on unix
+
+  This would be useful in KVM mode to administer several remote
+  headless systems that you don't want running X just so synergy
+  can work.

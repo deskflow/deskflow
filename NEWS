@@ -1,6 +1,22 @@
 Synergy News
 ============
 
+* Jan-20-2003 - Synergy 1.0.0 released
+
+  Made following changes:
+  * Refactored to centralize platform dependent code
+  * Added support for mouse wheel on Windows NT (SP3 and up)
+  * Portability improvements
+  * Added more documentation
+  * Fixes for working with xscreensaver
+  * Fixes for circular screen links
+
+  This release has been tested on Linux and Windows.  It builds and
+  is believed to run on Solaris and FreeBSD.  It is believed to
+  build and run on Irix and AIX.  It builds but does not work on
+  MacOS X.
+
+
 * Dec-25-2002 - Synergy 0.9.14 released
 
   Made following changes:

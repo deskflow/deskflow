@@ -1,3 +1,80 @@
+2003/01/18 14:36:19 crs
+lib/arch/CArchSleepWindows.cpp
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CSynergyHook.cpp
+
+Fixed stupid errors introduced by last attempt to fix broken
+mouse behavior on multimonitor windows systems.  Those errors
+broke synergy on all windows systems running as a server.
+Also added an attempt to reduce the occasional jump that can
+occur when switching screens when windows is the server.
+
+----------
+2003/01/18 14:31:54 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Was forcing modifier keys that have no effect on the keysym
+lookup to be up when synthesizing key events.  Now leaving
+those modifiers in their current state.
+
+----------
+2003/01/18 10:49:13 crs
+Makefile.am
+
+Added a dist-pkg target to put the binary distribution files into
+a tar gzip file.  This is to ease distribution of the binaries on
+systems without a packaging system supported by synergy (which
+currently supports only RPM).
+
+----------
+2003/01/16 21:28:15 crs
+lib/server/CServer.cpp
+
+Fixed lookup of neighbor screens.  The first problem was an old
+code in a conditional for moving left that blew an assert verifying
+that the mouse position was really on the screen if the neighbor
+screen wasn't connected.
+
+After that was fixed there was another problem when one screen
+linked to another which then linked (in the same direction) to
+itself.  If the latter screen wasn't connected then it'd get into
+an infinite loop.
+
+----------
+2003/01/14 19:46:41 crs
+lib/server/CServer.cpp
+
+Moved log message into conditionals so it only appears when the
+conditions are true.
+
+----------
+2003/01/14 19:46:17 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CSynergyHook.cpp
+
+Another try at fixing broken mouse behavior when a windows system
+has multiple monitors with 0,0 of the virtual desktop not at the
+upper-left.
+
+----------
+2003/01/12 16:35:54 crs
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added test of using the client's own name as the server name
+with an appropriate error message.
+
+----------
+2003/01/12 16:08:45 crs
+lib/server/CServer.cpp
+
+Now catching and ignoring errors when writing to a socket in those
+cases where errors were not being caught, typically when responding
+to some other socket or protocol error.
+
+----------
 2003/01/11 21:06:21 crs
 acinclude.m4
 configure.in
