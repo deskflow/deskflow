@@ -34,7 +34,10 @@ COSXEventQueueBuffer::COSXEventQueueBuffer() :
 
 COSXEventQueueBuffer::~COSXEventQueueBuffer()
 {
-	setOSXEvent(NULL);
+	// release the last event
+	if (m_event != NULL) {
+		ReleaseEvent(m_event);
+	}
 }
 
 void
@@ -47,10 +50,16 @@ COSXEventQueueBuffer::waitForEvent(double timeout)
 IEventQueueBuffer::Type
 COSXEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 {
-	EventRef carbonEvent = NULL;
-	OSStatus error = ReceiveNextEvent(0, NULL, 0.0, true, &carbonEvent);
-	setOSXEvent(carbonEvent);
+	// release the previous event
+	if (m_event != NULL) {
+		ReleaseEvent(m_event);
+		m_event = NULL;
+	}
 
+	// get the next event
+	OSStatus error = ReceiveNextEvent(0, NULL, 0.0, true, &m_event);
+
+	// handle the event
 	if (error == eventLoopQuitErr) {
 		event = CEvent(CEvent::kQuit);
 		return kSystem;
@@ -112,13 +121,4 @@ void
 COSXEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
 {
 	delete timer;
-}
-
-void 
-COSXEventQueueBuffer::setOSXEvent(EventRef event)
-{
-	if (m_event != NULL) {
-		ReleaseEvent(m_event);
-	}
-	m_event = RetainEvent(event);
 }
