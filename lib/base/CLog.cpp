@@ -7,7 +7,6 @@
 #if WINDOWS_LIKE
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#define vsnprintf _vsnprintf
 #endif
 
 // names of priorities
