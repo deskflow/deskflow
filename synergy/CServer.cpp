@@ -572,7 +572,7 @@ void					CServer::mapPosition(CScreenInfo* src,
 		if (y < 0)
 			y = 0;
 		else if (y >= src->m_height)
-			y = src->m_height - 1;
+			y = dst->m_height - 1;
 		else
 			y = static_cast<SInt32>(0.5 + y *
 								static_cast<double>(dst->m_height - 1) /
@@ -584,7 +584,7 @@ void					CServer::mapPosition(CScreenInfo* src,
 		if (x < 0)
 			x = 0;
 		else if (x >= src->m_width)
-			x = src->m_width - 1;
+			x = dst->m_width - 1;
 		else
 			x = static_cast<SInt32>(0.5 + x *
 								static_cast<double>(dst->m_width - 1) /
