@@ -17,10 +17,11 @@ ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
 
 dnl checks for header files
 AC_HEADER_STDC
-AC_HEADER_TIME
 AC_CHECK_HEADERS([unistd.h sys/time.h])
 AC_CHECK_HEADERS([istream ostream])
 AC_CHECK_HEADERS([windows.h])
+AC_HEADER_SYS_WAIT
+AC_HEADER_TIME
 AC_PATH_X
 AC_PATH_XTRA
 AC_CHECK_HEADERS([X11/extensions/XTest.h])
@@ -48,7 +49,6 @@ AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(gmtime_r)
 AC_CHECK_FUNCS(getpwuid_r)
 dnl use AC_REPLACE_FUNCS() for stuff in string.h
-dnl AC_HEADER_SYS_WAIT
 
 dnl checks for system services
 

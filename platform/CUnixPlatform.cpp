@@ -5,10 +5,25 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/wait.h>
 #include <fcntl.h>
 #include <syslog.h>
 #include <signal.h>
+#if HAVE_SYS_WAIT_H
+#	include <sys/wait.h>
+#endif
+#if !defined(WIFSIGNALED)
+#	define WIFSIGNALED(w)	(((w) & 0xff) != 0x7f && ((w) & 0xff) != 0)
+#endif
+#if !defined(WIFEXITED)
+#	define WIFEXITED(w)		(((w) & 0xff) == 0)
+#endif
+#if !defined(WTERMSIG)
+#	define WTERMSIG(w)		((w) & 0x7f)
+#endif
+#if !defined(WEXITSTATUS)
+#	define WEXITSTATUS(w)	(((w) >> 8) & 0xff)
+#endif
+
 
 //
 // CUnixPlatform
