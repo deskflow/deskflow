@@ -615,6 +615,15 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 								KeyID id,
 								unsigned int maskIn) const
 {
+	// if XK_Tab is requested with shift active then try XK_ISO_Left_Tab
+	// instead.  if that doesn't work, we'll fall back to XK_Tab with
+	// shift active.  this is to handle primary screens that don't map
+	// XK_ISO_Left_Tab sending events to secondary screens that do.
+	if (id == XK_Tab && (maskIn & ShiftMask) != 0) {
+		id      = XK_ISO_Left_Tab;
+		maskIn &= ~ShiftMask;
+	}
+
 	// find a keycode to generate id.  XKeysymToKeycode() almost does
 	// what we need but won't tell us which index to use with the
 	// keycode.  return false if there's no keycode to generate id.
@@ -666,7 +675,8 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 			break;
 
 		case XK_ISO_Left_Tab:
-			id = XK_Tab;
+			id      = XK_Tab;
+			maskIn |= ShiftMask;
 			break;
 
 		default:
