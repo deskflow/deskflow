@@ -28,7 +28,6 @@ public:
 	virtual IScreen*	getScreen() const;
 
 	// IScreenEventHandler overrides
-	virtual void		onError();
 	virtual void		onScreensaver(bool activated);
 	virtual bool		onPreDispatch(const CEvent* event);
 	virtual bool		onEvent(CEvent* event);

@@ -133,13 +133,6 @@ CXWindowsPrimaryScreen::getScreen() const
 }
 
 void
-CXWindowsPrimaryScreen::onError()
-{
-	// tell server to shutdown
-	m_receiver->onError();
-}
-
-void
 CXWindowsPrimaryScreen::onScreensaver(bool activated)
 {
 	m_receiver->onScreensaver(activated);

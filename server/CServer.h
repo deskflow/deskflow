@@ -55,12 +55,12 @@ public:
 	CString				getPrimaryScreenName() const;
 
 	// IServer overrides
+	virtual void		onError();
 	virtual void		onInfoChanged(const CString&, const CClientInfo&);
 	virtual bool		onGrabClipboard(const CString&, ClipboardID, UInt32);
 	virtual void		onClipboardChanged(ClipboardID, UInt32, const CString&);
 
 	// IPrimaryScreenReceiver overrides
-	virtual void		onError();
 	virtual void		onScreensaver(bool activated);
 	virtual void		onKeyDown(KeyID, KeyModifierMask);
 	virtual void		onKeyUp(KeyID, KeyModifierMask);

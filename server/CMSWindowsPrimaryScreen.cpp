@@ -146,12 +146,6 @@ CMSWindowsPrimaryScreen::getScreen() const
 }
 
 void
-CMSWindowsPrimaryScreen::onError()
-{
-	// ignore
-}
-
-void
 CMSWindowsPrimaryScreen::onScreensaver(bool activated)
 {
 	m_receiver->onScreensaver(activated);

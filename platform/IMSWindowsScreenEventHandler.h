@@ -16,7 +16,6 @@ public:
 	virtual void		preDestroyWindow(HWND) = 0;
 
 	// IScreenEventHandler overrides
-	virtual void		onError() = 0;
 	virtual void		onScreensaver(bool activated) = 0;
 	virtual bool		onPreDispatch(const CEvent* event) = 0;
 	virtual bool		onEvent(CEvent* event) = 0;

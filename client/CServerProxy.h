@@ -34,6 +34,7 @@ public:
 	IOutputStream*		getOutputStream() const;
 
 	// IScreenReceiver overrides
+	virtual void		onError();
 	virtual void		onInfoChanged(const CClientInfo&);
 	virtual bool		onGrabClipboard(ClipboardID);
 	virtual void		onClipboardChanged(ClipboardID, const CString& data);

@@ -70,6 +70,13 @@ CPrimaryClient::getToggleMask() const
 }
 
 void
+CPrimaryClient::onError()
+{
+	// forward to server
+	m_server->onError();
+}
+
+void
 CPrimaryClient::onInfoChanged(const CClientInfo& info)
 {
 	m_info = info;
@@ -79,9 +86,7 @@ CPrimaryClient::onInfoChanged(const CClientInfo& info)
 bool
 CPrimaryClient::onGrabClipboard(ClipboardID id)
 {
-	bool result = m_server->onGrabClipboard(getName(), id, m_seqNum);
-	m_clipboardOwner[id] = result;
-	return result;
+	return m_server->onGrabClipboard(getName(), id, m_seqNum);
 }
 
 void
@@ -93,9 +98,8 @@ CPrimaryClient::onClipboardChanged(ClipboardID id, const CString& data)
 bool
 CPrimaryClient::open()
 {
-	// all clipboards are clean and owned by us
+	// all clipboards are clean
 	for (UInt32 i = 0; i < kClipboardEnd; ++i) {
-		m_clipboardOwner[i] = true;
 		m_clipboardDirty[i] = false;
 	}
 
@@ -159,7 +163,6 @@ CPrimaryClient::grabClipboard(ClipboardID id)
 	m_screen->grabClipboard(id);
 
 	// clipboard is dirty (because someone else owns it now)
-	m_clipboardOwner[id] = false;
 	m_clipboardDirty[id] = true;
 }
 

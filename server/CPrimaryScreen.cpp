@@ -2,10 +2,9 @@
 #include "IScreen.h"
 #include "IScreenReceiver.h"
 #include "ProtocolTypes.h"
+#include "CLock.h"
 #include "CThread.h"
 #include "CLog.h"
-
-// FIXME -- should be locking
 
 //
 // CPrimaryScreen
@@ -84,7 +83,10 @@ CPrimaryScreen::open()
 	}
 
 	// enter the screen
-	enterNoWarp();
+	{
+		CLock lock(&m_mutex);
+		enterNoWarp();
+	}
 
 	// send screen info
 	m_receiver->onInfoChanged(info);
@@ -104,6 +106,7 @@ void
 CPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreensaver)
 {
 	log((CLOG_INFO "entering primary at %d,%d%s", x, y, forScreensaver ? " for screen saver" : ""));
+	CLock lock(&m_mutex);
 	assert(m_active == true);
 
 	enterNoWarp();
@@ -118,6 +121,8 @@ CPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreensaver)
 void
 CPrimaryScreen::enterNoWarp()
 {
+	// note -- must be locked on entry
+
 	// not active anymore
 	m_active = false;
 
@@ -135,6 +140,7 @@ bool
 CPrimaryScreen::leave()
 {
 	log((CLOG_INFO "leaving primary"));
+	CLock lock(&m_mutex);
 	assert(m_active == false);
 
 	// subclass hook
@@ -187,6 +193,7 @@ CPrimaryScreen::grabClipboard(ClipboardID id)
 bool
 CPrimaryScreen::isActive() const
 {
+	CLock lock(&m_mutex);
 	return m_active;
 }
 

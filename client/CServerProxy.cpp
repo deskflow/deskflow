@@ -222,6 +222,12 @@ CServerProxy::getOutputStream() const
 }
 
 void
+CServerProxy::onError()
+{
+	// ignore
+}
+
+void
 CServerProxy::onInfoChanged(const CClientInfo& info)
 {
 	// ignore mouse motion until we receive acknowledgment of our info

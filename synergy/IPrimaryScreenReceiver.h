@@ -11,13 +11,6 @@
 // an IPrimaryScreenReceiver* and notify it of events.
 class IPrimaryScreenReceiver : public IInterface {
 public:
-	// called if the display is unexpectedly closing.
-
-	// called if the screen is unexpectedly closing.  this implies that
-	// the screen is no longer usable and that the program should
-	// close the screen and possibly terminate.
-	virtual void		onError() = 0;
-
 	// called when the screensaver is activated or deactivated
 	virtual void		onScreensaver(bool activated) = 0;
 

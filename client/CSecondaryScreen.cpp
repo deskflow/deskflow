@@ -18,13 +18,6 @@ CSecondaryScreen::~CSecondaryScreen()
 	// do nothing
 }
 
-bool
-CSecondaryScreen::isActive() const
-{
-	CLock lock(&m_mutex);
-	return m_active;
-}
-
 void
 CSecondaryScreen::run()
 {
@@ -85,7 +78,10 @@ CSecondaryScreen::open()
 	}
 
 	// hide the cursor
-	m_active = true;
+	{
+		CLock lock(&m_mutex);
+		m_active = true;
+	}
 	leave();
 }
 
@@ -173,6 +169,13 @@ void
 CSecondaryScreen::screensaver(bool activate)
 {
 	getScreen()->screensaver(activate);
+}
+
+bool
+CSecondaryScreen::isActive() const
+{
+	CLock lock(&m_mutex);
+	return m_active;
 }
 
 void

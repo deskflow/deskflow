@@ -213,6 +213,20 @@ CServer::getActivePrimarySides() const
 }
 
 void
+CServer::onError()
+{
+	// stop all running threads but don't wait too long since some
+	// threads may be unable to proceed until this thread returns.
+	stopThreads(3.0);
+
+	// done with the HTTP server
+	delete m_httpServer;
+	m_httpServer = NULL;
+
+	// note -- we do not attempt to close down the primary screen
+}
+
+void
 CServer::onInfoChanged(const CString& name, const CClientInfo& info)
 {
 	CLock lock(&m_mutex);
@@ -332,20 +346,6 @@ CServer::onClipboardChangedNoLock(ClipboardID id,
 
 	// send the new clipboard to the active screen
 	m_active->setClipboard(id, m_clipboards[id].m_clipboardData);
-}
-
-void
-CServer::onError()
-{
-	// stop all running threads but don't wait too long since some
-	// threads may be unable to proceed until this thread returns.
-	stopThreads(3.0);
-
-	// done with the HTTP server
-	delete m_httpServer;
-	m_httpServer = NULL;
-
-	// note -- we do not attempt to close down the primary screen
 }
 
 void

@@ -43,7 +43,10 @@ public:
 	// activate or deactivate the screen saver
 	virtual void		screensaver(bool activate) = 0;
 
-	// FIXME -- need explanation
+	// ensure that this thread attached with the visible desktop.  this is
+	// mainly intended for windows which has an artificial distinction
+	// between desktops and a thread cannot interact with the visible
+	// desktop unless the thread is attached to that desktop.
 	virtual void		syncDesktop() = 0;
 
 	// accessors
@@ -58,8 +61,9 @@ public:
 	// get the current cursor coordinates
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
 
-	// get the cursor center position
-	// FIXME -- need better explanation
+	// get the cursor center position.  this is where we park the
+	// cursor to compute cursor motion deltas and should be far from
+	// the edges of the screen, typically the center.
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 };
 

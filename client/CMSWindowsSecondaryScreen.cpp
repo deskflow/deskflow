@@ -207,12 +207,6 @@ CMSWindowsSecondaryScreen::getScreen() const
 }
 
 void
-CMSWindowsSecondaryScreen::onError()
-{
-	// ignore
-}
-
-void
 CMSWindowsSecondaryScreen::onScreensaver(bool)
 {
 	// ignore

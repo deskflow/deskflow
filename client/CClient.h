@@ -39,6 +39,7 @@ public:
 	bool 				wasRejected() const;
 
 	// IScreenReceiver overrides
+	virtual void		onError();
 	virtual void		onInfoChanged(const CClientInfo&);
 	virtual bool		onGrabClipboard(ClipboardID);
 	virtual void		onClipboardChanged(ClipboardID, const CString&);
@@ -47,7 +48,6 @@ public:
 	virtual bool		open();
 	virtual void		run();
 	virtual void		close();
-// FIXME -- can we avoid passing everything here?
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
 							bool forScreensaver);
@@ -80,7 +80,7 @@ private:
 
 	// handle server messaging
 	void				runSession(void*);
-	void				deleteSession(CThread*);
+	void				deleteSession(double timeout = -1.0);
 	void				runServer();
 	CServerProxy*		handshakeServer(IDataSocket*);
 
@@ -91,6 +91,7 @@ private:
 	IScreenReceiver*	m_server;
 	CNetworkAddress		m_serverAddress;
 	bool				m_camp;
+	CThread*			m_session;
 	bool				m_active;
 	bool				m_rejected;
 	bool				m_ownClipboard[kClipboardEnd];

@@ -3,6 +3,7 @@
 
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
+#include "CMutex.h"
 
 class IClipboard;
 class IScreen;
@@ -146,8 +147,9 @@ private:
 	void				enterNoWarp();
 
 private:
-	// FIXME -- should have a mutex
+	CMutex				m_mutex;
 
+	// object to notify of changes
 	IScreenReceiver*	m_receiver;
 
 	// m_active is true if this screen has been left

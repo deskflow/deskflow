@@ -27,6 +27,7 @@ CClient::CClient(const CString& clientName) :
 	m_screen(NULL),
 	m_server(NULL),
 	m_camp(false),
+	m_session(NULL),
 	m_active(false),
 	m_rejected(true)
 {
@@ -62,6 +63,13 @@ bool
 CClient::wasRejected() const
 {
 	return m_rejected;
+}
+
+void
+CClient::onError()
+{
+	// close down session but don't wait too long
+	deleteSession(3.0);
 }
 
 void
@@ -144,28 +152,31 @@ CClient::run()
 		log((CLOG_NOTE "starting client \"%s\"", m_name.c_str()));
 
 		// start server interactions
-		thread = new CThread(new TMethodJob<CClient>(
+		{
+			CLock lock(&m_mutex);
+			m_session = new CThread(new TMethodJob<CClient>(
 								this, &CClient::runSession));
+		}
 
 		// handle events
 		m_screen->run();
 
 		// clean up
-		deleteSession(thread);
+		deleteSession();
 		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "client error: %s", e.what()));
 
 		// clean up
-		deleteSession(thread);
+		deleteSession();
 		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		CLock lock(&m_mutex);
 		m_rejected = false;
 	}
 	catch (XThread&) {
 		// clean up
-		deleteSession(thread);
+		deleteSession();
 		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		throw;
 	}
@@ -173,7 +184,7 @@ CClient::run()
 		log((CLOG_DEBUG "unknown client error"));
 
 		// clean up
-		deleteSession(thread);
+		deleteSession();
 		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		throw;
 	}
@@ -424,11 +435,20 @@ CClient::runSession(void*)
 }
 
 void
-CClient::deleteSession(CThread* thread)
+CClient::deleteSession(double timeout)
 {
+	// get session thread object
+	CThread* thread;
+	{
+		CLock lock(&m_mutex);
+		thread    = m_session;
+		m_session = NULL;
+	}
+
+	// shut it down
 	if (thread != NULL) {
 		thread->cancel();
-		thread->wait();
+		thread->wait(timeout);
 		delete thread;
 	}
 }

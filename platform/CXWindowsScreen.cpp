@@ -656,7 +656,7 @@ CXWindowsScreen::ioErrorHandler(Display*)
 	// so we set it to NULL), and exit.
 	log((CLOG_WARN "X display has unexpectedly disconnected"));
 	s_screen->m_display = NULL;
-	s_screen->m_eventHandler->onError();
+	s_screen->m_receiver->onError();
 	log((CLOG_CRIT "quiting due to X display disconnection"));
 	exit(17);
 }

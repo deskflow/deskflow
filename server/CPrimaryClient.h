@@ -35,6 +35,7 @@ public:
 	KeyModifierMask		getToggleMask() const;
 
 	// IScreenReceiver overrides
+	virtual void		onError();
 	virtual void		onInfoChanged(const CClientInfo&);
 	virtual bool		onGrabClipboard(ClipboardID);
 	virtual void		onClipboardChanged(ClipboardID, const CString&);
@@ -71,7 +72,6 @@ private:
 	CString				m_name;
 	UInt32				m_seqNum;
 	CClientInfo			m_info;
-	bool				m_clipboardOwner[kClipboardEnd]; // FIXME -- unneeded?
 	bool				m_clipboardDirty[kClipboardEnd];
 };
 

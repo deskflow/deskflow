@@ -10,6 +10,11 @@
 // notifications (indirectly) from the system.
 class IScreenReceiver : public IInterface {
 public:
+	// called if the screen is unexpectedly closing.  this implies that
+	// the screen is no longer usable and that the program should
+	// close the screen and possibly terminate.
+	virtual void		onError() = 0;
+
 	// notify of client info change
 	virtual void		onInfoChanged(const CClientInfo&) = 0;
 

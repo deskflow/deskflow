@@ -146,13 +146,6 @@ CXWindowsSecondaryScreen::getScreen() const
 }
 
 void
-CXWindowsSecondaryScreen::onError()
-{
-	// ignore
-	// FIXME -- forward this?  to whom?
-}
-
-void
 CXWindowsSecondaryScreen::onScreensaver(bool)
 {
 	// ignore
@@ -273,16 +266,18 @@ CXWindowsSecondaryScreen::createWindow()
 void
 CXWindowsSecondaryScreen::destroyWindow()
 {
-	CDisplayLock display(m_screen);
-	if (display != NULL) {
-		// release keys that are still pressed
-		releaseKeys(display);
+	{
+		CDisplayLock display(m_screen);
+		if (display != NULL) {
+			// release keys that are still pressed
+			releaseKeys(display);
 
-		// no longer impervious to server grabs
-		XTestGrabControl(display, False);
+			// no longer impervious to server grabs
+			XTestGrabControl(display, False);
 
-		// update
-		XSync(display, False);
+			// update
+			XSync(display, False);
+		}
 	}
 
 	// destroy window
