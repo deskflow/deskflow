@@ -398,7 +398,9 @@ CMSWindowsPrimaryScreen::onPreOpen()
 
 	// initialize hook library
 	m_threadID = GetCurrentThreadId();
-	m_init(m_threadID);
+	if (m_init(m_threadID) == 0) {
+		throw XScreenOpenFailure();
+	}
 }
 
 void

@@ -33,7 +33,7 @@ typedef struct tagMOUSEHOOKSTRUCTWin2000 {
 // all data in this shared section *must* be initialized
 
 static HINSTANCE		g_hinstance       = NULL;
-static DWORD			g_process         = NULL;
+static DWORD			g_processID       = 0;
 static EWheelSupport	g_wheelSupport    = kWheelNone;
 static UINT				g_wmMouseWheel    = 0;
 static DWORD			g_threadID        = 0;
@@ -438,17 +438,19 @@ BOOL WINAPI
 DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 {
 	if (reason == DLL_PROCESS_ATTACH) {
-		if (g_hinstance == NULL) {
+		DisableThreadLibraryCalls(instance);
+		if (g_processID == 0) {
 			g_hinstance = instance;
-			g_process   = GetCurrentProcessId();
+			g_processID = GetCurrentProcessId();
 		}
 	}
 	else if (reason == DLL_PROCESS_DETACH) {
-		if (g_process == GetCurrentProcessId()) {
+		if (g_processID == GetCurrentProcessId()) {
 			if (g_keyboard != NULL || g_mouse != NULL || g_cbt != NULL) {
 				uninstall();
 			}
-			g_process = NULL;
+			g_processID = 0;
+			g_hinstance = NULL;
 		}
 	}
 	return TRUE;
@@ -461,18 +463,39 @@ init(DWORD threadID)
 {
 	assert(g_hinstance != NULL);
 
-	// see if already initialized.  if it is we'll shut down and
-	// reinitialize.  this allows the hook DLL to be reclaimed by
-	// a new synergyd if the previous one died unexpectedly.
-	if (g_threadID != 0) {
-		uninstallScreenSaver();
-		uninstall();
-		cleanup();
+	// try to open process that last called init() to see if it's
+	// still running or if it died without cleaning up.
+	if (g_processID != 0 && g_processID != GetCurrentProcessId()) {
+		HANDLE process = OpenProcess(STANDARD_RIGHTS_REQUIRED,
+								FALSE, g_processID);
+		if (process != NULL) {
+			// old process (probably) still exists so refuse to
+			// reinitialize this DLL (and thus steal it from the
+			// old process).
+			CloseHandle(process);
+			return 0;
+		}
+
+		// clean up after old process.  the system should've already
+		// removed the hooks so we just need to reset our state.
+		g_hinstance       = GetModuleHandle("synrgyhk");
+		g_processID       = GetCurrentProcessId();
+		g_wheelSupport    = kWheelNone;
+		g_threadID        = 0;
+		g_keyboard        = NULL;
+		g_mouse           = NULL;
+		g_cbt             = NULL;
+		g_getMessage      = NULL;
+		g_keyHookThread   = NULL;
+		g_keyHookThreadID = 0;
+		g_keyHookEvent    = NULL;
+		g_keyboardLL      = NULL;
+		g_screenSaver     = false;
 	}
 
 	// save thread id.  we'll post messages to this thread's
 	// message queue.
-	g_threadID = threadID;
+	g_threadID     = threadID;
 
 	// set defaults
 	g_relay        = false;
@@ -493,7 +516,9 @@ cleanup(void)
 {
 	assert(g_hinstance != NULL);
 
-	g_threadID = 0;
+	if (g_processID == GetCurrentProcessId()) {
+		g_threadID = 0;
+	}
 
 	return 1;
 }
