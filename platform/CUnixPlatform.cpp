@@ -25,28 +25,21 @@ CUnixPlatform::~CUnixPlatform()
 }
 
 bool
-CUnixPlatform::installDaemon(
-	const char*,
-	const char*,
-	const char*,
-	const char*)
+CUnixPlatform::installDaemon(const char*, const char*, const char*, const char*)
 {
 	// daemons don't require special installation
 	return true;
 }
 
 CUnixPlatform::EResult
-CUnixPlatform::uninstallDaemon(
-	const char*)
+CUnixPlatform::uninstallDaemon(const char*)
 {
 	// daemons don't require special installation
 	return kSuccess;
 }
 
 int
-CUnixPlatform::daemonize(
-	const char* name,
-	DaemonFunc func)
+CUnixPlatform::daemonize(const char* name, DaemonFunc func)
 {
 	// fork so shell thinks we're done and so we're not a process
 	// group leader
@@ -92,17 +85,14 @@ CUnixPlatform::daemonize(
 }
 
 void
-CUnixPlatform::installDaemonLogger(
-	const char* name)
+CUnixPlatform::installDaemonLogger(const char* name)
 {
 	openlog(name, 0, LOG_DAEMON);
 	CLog::setOutputter(&CUnixPlatform::deamonLogger);
 }
 
 int
-CUnixPlatform::restart(
-	RestartFunc func,
-	int minErrorCode)
+CUnixPlatform::restart(RestartFunc func, int minErrorCode)
 {
 	for (;;) {
 		switch (fork()) {
@@ -153,8 +143,7 @@ CUnixPlatform::restart(
 }
 
 const char*
-CUnixPlatform::getBasename(
-	const char* pathname) const
+CUnixPlatform::getBasename(const char* pathname) const
 {
 	if (pathname == NULL) {
 		return NULL;
@@ -189,9 +178,8 @@ CUnixPlatform::getSystemDirectory() const
 }
 
 CString
-CUnixPlatform::addPathComponent(
-	const CString& prefix,
-	const CString& suffix) const
+CUnixPlatform::addPathComponent(const CString& prefix,
+				const CString& suffix) const
 {
 	CString path;
 	path.reserve(prefix.size() + 1 + suffix.size());
@@ -204,9 +192,7 @@ CUnixPlatform::addPathComponent(
 }
 
 bool
-CUnixPlatform::deamonLogger(
-	int priority,
-	const char* msg)
+CUnixPlatform::deamonLogger(int priority, const char* msg)
 {
 	// convert priority
 	switch (priority) {

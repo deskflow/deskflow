@@ -5,9 +5,7 @@
 // CInputPacketStream
 //
 
-CInputPacketStream::CInputPacketStream(
-	IInputStream* stream,
-	bool adopt) :
+CInputPacketStream::CInputPacketStream(IInputStream* stream, bool adopt) :
 	CInputStreamFilter(stream, adopt),
 	m_mutex(),
 	m_size(0),
@@ -28,9 +26,7 @@ CInputPacketStream::close()
 }
 
 UInt32
-CInputPacketStream::read(
-	void* buffer,
-	UInt32 n)
+CInputPacketStream::read(void* buffer, UInt32 n)
 {
 	CLock lock(&m_mutex);
 

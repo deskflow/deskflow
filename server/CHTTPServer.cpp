@@ -31,8 +31,7 @@ CHTTPServer::~CHTTPServer()
 }
 
 void
-CHTTPServer::processRequest(
-	IDataSocket* socket)
+CHTTPServer::processRequest(IDataSocket* socket)
 {
 	assert(socket != NULL);
 
@@ -92,9 +91,7 @@ CHTTPServer::processRequest(
 }
 
 void
-CHTTPServer::doProcessRequest(
-	CHTTPRequest& request,
-	CHTTPReply& reply)
+CHTTPServer::doProcessRequest(CHTTPRequest& request, CHTTPReply& reply)
 {
 	reply.m_majorVersion = request.m_majorVersion;
 	reply.m_minorVersion = request.m_minorVersion;
@@ -123,9 +120,7 @@ CHTTPServer::doProcessRequest(
 }
 
 void
-CHTTPServer::doProcessGetEditMap(
-	CHTTPRequest& /*request*/,
-	CHTTPReply& reply)
+CHTTPServer::doProcessGetEditMap(CHTTPRequest& /*request*/, CHTTPReply& reply)
 {
 	static const char* s_editMapProlog1 =
 	"<html>\r\n"
@@ -234,9 +229,7 @@ CHTTPServer::doProcessGetEditMap(
 }
 
 void
-CHTTPServer::doProcessPostEditMap(
-	CHTTPRequest& request,
-	CHTTPReply& reply)
+CHTTPServer::doProcessPostEditMap(CHTTPRequest& request, CHTTPReply& reply)
 {
 	typedef std::vector<CString> ScreenArray;
 	typedef std::set<CString> ScreenSet;
@@ -330,10 +323,7 @@ CHTTPServer::doProcessPostEditMap(
 }
 
 bool
-CHTTPServer::parseXY(
-	const CString& xy,
-	SInt32& x,
-	SInt32& y)
+CHTTPServer::parseXY(const CString& xy, SInt32& x, SInt32& y)
 {
 	std::istringstream s(xy);
 	char delimiter;
@@ -361,9 +351,7 @@ CHTTPServer::CScreenArray::~CScreenArray()
 }
 
 void
-CHTTPServer::CScreenArray::resize(
-	SInt32 w,
-	SInt32 h)
+CHTTPServer::CScreenArray::resize(SInt32 w, SInt32 h)
 {
 	m_screens.clear();
 	m_screens.resize(w * h);
@@ -372,8 +360,7 @@ CHTTPServer::CScreenArray::resize(
 }
 
 void
-CHTTPServer::CScreenArray::insertRow(
-	SInt32 i)
+CHTTPServer::CScreenArray::insertRow(SInt32 i)
 {
 	assert(i >= 0 && i <= m_h);
 
@@ -396,8 +383,7 @@ CHTTPServer::CScreenArray::insertRow(
 }
 
 void
-CHTTPServer::CScreenArray::insertColumn(
-	SInt32 i)
+CHTTPServer::CScreenArray::insertColumn(SInt32 i)
 {
 	assert(i >= 0 && i <= m_w);
 
@@ -418,8 +404,7 @@ CHTTPServer::CScreenArray::insertColumn(
 }
 
 void
-CHTTPServer::CScreenArray::eraseRow(
-	SInt32 i)
+CHTTPServer::CScreenArray::eraseRow(SInt32 i)
 {
 	assert(i >= 0 && i < m_h);
 
@@ -442,8 +427,7 @@ CHTTPServer::CScreenArray::eraseRow(
 }
 
 void
-CHTTPServer::CScreenArray::eraseColumn(
-	SInt32 i)
+CHTTPServer::CScreenArray::eraseColumn(SInt32 i)
 {
 	assert(i >= 0 && i < m_w);
 
@@ -464,8 +448,7 @@ CHTTPServer::CScreenArray::eraseColumn(
 }
 
 void
-CHTTPServer::CScreenArray::rotateRows(
-	SInt32 i)
+CHTTPServer::CScreenArray::rotateRows(SInt32 i)
 {
 	// nothing to do if no rows
 	if (m_h == 0) {
@@ -496,8 +479,7 @@ CHTTPServer::CScreenArray::rotateRows(
 }
 
 void
-CHTTPServer::CScreenArray::rotateColumns(
-	SInt32 i)
+CHTTPServer::CScreenArray::rotateColumns(SInt32 i)
 {
 	// nothing to do if no columns
 	if (m_h == 0) {
@@ -528,18 +510,13 @@ CHTTPServer::CScreenArray::rotateColumns(
 }
 
 void
-CHTTPServer::CScreenArray::remove(
-	SInt32 x,
-	SInt32 y)
+CHTTPServer::CScreenArray::remove(SInt32 x, SInt32 y)
 {
 	set(x, y, CString());
 }
 
 void
-CHTTPServer::CScreenArray::set(
-	SInt32 x,
-	SInt32 y,
-	const CString& name)
+CHTTPServer::CScreenArray::set(SInt32 x, SInt32 y, const CString& name)
 {
 	assert(x >= 0 && x < m_w);
 	assert(y >= 0 && y < m_h);
@@ -548,9 +525,7 @@ CHTTPServer::CScreenArray::set(
 }
 
 bool
-CHTTPServer::CScreenArray::isAllowed(
-	SInt32 x,
-	SInt32 y) const
+CHTTPServer::CScreenArray::isAllowed(SInt32 x, SInt32 y) const
 {
 	assert(x >= 0 && x < m_w);
 	assert(y >= 0 && y < m_h);
@@ -571,9 +546,7 @@ CHTTPServer::CScreenArray::isAllowed(
 }
 
 bool
-CHTTPServer::CScreenArray::isSet(
-	SInt32 x,
-	SInt32 y) const
+CHTTPServer::CScreenArray::isSet(SInt32 x, SInt32 y) const
 {
 	assert(x >= 0 && x < m_w);
 	assert(y >= 0 && y < m_h);
@@ -582,9 +555,7 @@ CHTTPServer::CScreenArray::isSet(
 }
 
 CString
-CHTTPServer::CScreenArray::get(
-	SInt32 x,
-	SInt32 y) const
+CHTTPServer::CScreenArray::get(SInt32 x, SInt32 y) const
 {
 	assert(x >= 0 && x < m_w);
 	assert(y >= 0 && y < m_h);
@@ -593,10 +564,8 @@ CHTTPServer::CScreenArray::get(
 }
 
 bool
-CHTTPServer::CScreenArray::find(
-	const CString& name,
-	SInt32& xOut,
-	SInt32& yOut) const
+CHTTPServer::CScreenArray::find(const CString& name,
+				SInt32& xOut, SInt32& yOut) const
 {
 	for (SInt32 y = 0; y < m_h; ++y) {
 		for (SInt32 x = 0; x < m_w; ++x) {
@@ -628,8 +597,7 @@ CHTTPServer::CScreenArray::isValid() const
 }
 
 bool
-CHTTPServer::CScreenArray::convertFrom(
-	const CConfig& config)
+CHTTPServer::CScreenArray::convertFrom(const CConfig& config)
 {
 	typedef std::set<CString> ScreenSet;
 
@@ -760,8 +728,7 @@ CHTTPServer::CScreenArray::convertFrom(
 }
 
 void
-CHTTPServer::CScreenArray::convertTo(
-	CConfig& config) const
+CHTTPServer::CScreenArray::convertTo(CConfig& config) const
 {
 	config.removeAllScreens();
 

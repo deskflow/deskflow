@@ -87,9 +87,7 @@ CCondVarBase::broadcast()
 }
 
 bool
-CCondVarBase::wait(
-	CStopwatch& timer,
-	double timeout) const
+CCondVarBase::wait(CStopwatch& timer, double timeout) const
 {
 	// check timeout against timer
 	if (timeout >= 0.0) {
@@ -245,9 +243,7 @@ CCondVarBase::broadcast()
 }
 
 bool
-CCondVarBase::wait(
-	CStopwatch& timer,
-	double timeout) const
+CCondVarBase::wait(CStopwatch& timer, double timeout) const
 {
 	// check timeout against timer
 	if (timeout >= 0.0) {

@@ -6,8 +6,7 @@
 // XHTTP
 //
 
-XHTTP::XHTTP(
-	SInt32 statusCode) :
+XHTTP::XHTTP(SInt32 statusCode) :
 	XBase(),
 	m_status(statusCode),
 	m_reason(getReason(statusCode))
@@ -15,9 +14,7 @@ XHTTP::XHTTP(
 	// do nothing
 }
 
-XHTTP::XHTTP(
-	SInt32 statusCode,
-	const CString& reasonPhrase) :
+XHTTP::XHTTP(SInt32 statusCode, const CString& reasonPhrase) :
 	XBase(),
 	m_status(statusCode),
 	m_reason(reasonPhrase)
@@ -43,8 +40,7 @@ XHTTP::getReason() const
 }
 
 void
-XHTTP::addHeaders(
-	CHTTPReply&) const
+XHTTP::addHeaders(CHTTPReply&) const
 {
 	// do nothing
 }
@@ -69,8 +65,7 @@ XHTTP::getWhat() const throw()
 }
 
 const char*
-XHTTP::getReason(
-	SInt32 status)
+XHTTP::getReason(SInt32 status)
 {
 	switch (status) {
 	case 300: return "Multiple Choices";
@@ -110,8 +105,7 @@ XHTTP::getReason(
 // XHTTPAllow
 //
 
-XHTTPAllow::XHTTPAllow(
-	const CString& allowed) :
+XHTTPAllow::XHTTPAllow(const CString& allowed) :
 	XHTTP(405),
 	m_allowed(allowed)
 {
@@ -124,8 +118,7 @@ XHTTPAllow::~XHTTPAllow()
 }
 
 void
-XHTTPAllow::addHeaders(
-	CHTTPReply& reply) const
+XHTTPAllow::addHeaders(CHTTPReply& reply) const
 {
 	reply.m_headers.push_back(std::make_pair(CString("Allow"), m_allowed));
 }

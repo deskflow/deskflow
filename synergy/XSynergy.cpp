@@ -15,9 +15,7 @@ XBadClient::getWhat() const throw()
 // XIncompatibleClient
 //
 
-XIncompatibleClient::XIncompatibleClient(
-	int major,
-	int minor) :
+XIncompatibleClient::XIncompatibleClient(int major, int minor) :
 	m_major(major),
 	m_minor(minor)
 {
@@ -47,8 +45,7 @@ XIncompatibleClient::getWhat() const throw()
 // XDuplicateClient
 //
 
-XDuplicateClient::XDuplicateClient(
-	const CString& name) :
+XDuplicateClient::XDuplicateClient(const CString& name) :
 	m_name(name)
 {
 	// do nothing
@@ -71,8 +68,7 @@ XDuplicateClient::getWhat() const throw()
 // XUnknownClient
 //
 
-XUnknownClient::XUnknownClient(
-	const CString& name) :
+XUnknownClient::XUnknownClient(const CString& name) :
 	m_name(name)
 {
 	// do nothing

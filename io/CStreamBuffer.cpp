@@ -19,8 +19,7 @@ CStreamBuffer::~CStreamBuffer()
 }
 
 const void*
-CStreamBuffer::peek(
-	UInt32 n)
+CStreamBuffer::peek(UInt32 n)
 {
 	assert(n <= m_size);
 
@@ -40,8 +39,7 @@ CStreamBuffer::peek(
 }
 
 void
-CStreamBuffer::pop(
-	UInt32 n)
+CStreamBuffer::pop(UInt32 n)
 {
 	// discard all chunks if n is greater than or equal to m_size
 	if (n >= m_size) {
@@ -71,9 +69,7 @@ CStreamBuffer::pop(
 }
 
 void
-CStreamBuffer::write(
-	const void* vdata,
-	UInt32 n)
+CStreamBuffer::write(const void* vdata, UInt32 n)
 {
 	assert(vdata != NULL);
 

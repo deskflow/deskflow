@@ -33,8 +33,7 @@ CTimerThread::~CTimerThread()
 }
 
 void
-CTimerThread::timer(
-	void*)
+CTimerThread::timer(void*)
 {
 	log((CLOG_DEBUG1 "timeout in %f seconds", m_timeout));
 	CThread::sleep(m_timeout);

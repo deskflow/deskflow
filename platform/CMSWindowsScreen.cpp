@@ -30,8 +30,7 @@ CMSWindowsScreen::~CMSWindowsScreen()
 }
 
 void
-CMSWindowsScreen::init(
-	HINSTANCE instance)
+CMSWindowsScreen::init(HINSTANCE instance)
 {
 	s_instance = instance;
 }
@@ -151,9 +150,7 @@ CMSWindowsScreen::updateScreenSize()
 }
 
 void
-CMSWindowsScreen::getScreenSize(
-	SInt32* w,
-	SInt32* h) const
+CMSWindowsScreen::getScreenSize(SInt32* w, SInt32* h) const
 {
 	assert(m_class != 0);
 	assert(w != NULL && h != NULL);
@@ -172,8 +169,7 @@ CMSWindowsScreen::openInputDesktop() const
 }
 
 CString
-CMSWindowsScreen::getDesktopName(
-	HDESK desk) const
+CMSWindowsScreen::getDesktopName(HDESK desk) const
 {
 	if (desk == NULL) {
 		return CString();
@@ -190,16 +186,14 @@ CMSWindowsScreen::getDesktopName(
 }
 
 bool
-CMSWindowsScreen::isCurrentDesktop(
-	HDESK desk) const
+CMSWindowsScreen::isCurrentDesktop(HDESK desk) const
 {
 	return CStringUtil::CaselessCmp::equal(getDesktopName(desk),
 								getCurrentDesktopName());
 }
 
 void
-CMSWindowsScreen::getEvent(
-	MSG* msg) const
+CMSWindowsScreen::getEvent(MSG* msg) const
 {
 	// wait for an event in a cancellable way
 	CThread::waitForEvent();
@@ -207,11 +201,7 @@ CMSWindowsScreen::getEvent(
 }
 
 LRESULT CALLBACK
-CMSWindowsScreen::wndProc(
-	HWND hwnd,
-	UINT msg,
-	WPARAM wParam,
-	LPARAM lParam)
+CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	assert(s_screen != NULL);
 	return s_screen->onEvent(hwnd, msg, wParam, lParam);

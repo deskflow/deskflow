@@ -52,9 +52,7 @@ static HMODULE			s_networkModule = NULL;
 
 static
 FARPROC
-netGetProcAddress(
-	HMODULE module,
-	LPCSTR name)
+netGetProcAddress(HMODULE module, LPCSTR name)
 {
 	FARPROC func = ::GetProcAddress(module, name);
 	if (!func) {
@@ -116,8 +114,7 @@ CNetwork::cleanup()
 }
 
 UInt32
-CNetwork::swaphtonl(
-	UInt32 v)
+CNetwork::swaphtonl(UInt32 v)
 {
 	static const union { UInt16 s; UInt8 b[2]; } s_endian = { 0x1234 };
 	if (s_endian.b[0] == 0x34) {
@@ -132,8 +129,7 @@ CNetwork::swaphtonl(
 }
 
 UInt16
-CNetwork::swaphtons(
-	UInt16 v)
+CNetwork::swaphtons(UInt16 v)
 {
 	static const union { UInt16 s; UInt8 b[2]; } s_endian = { 0x1234 };
 	if (s_endian.b[0] == 0x34) {
@@ -146,15 +142,13 @@ CNetwork::swaphtons(
 }
 
 UInt32
-CNetwork::swapntohl(
-	UInt32 v)
+CNetwork::swapntohl(UInt32 v)
 {
 	return swaphtonl(v);
 }
 
 UInt16
-CNetwork::swapntohs(
-	UInt16 v)
+CNetwork::swapntohs(UInt16 v)
 {
 	return swaphtons(v);
 }
@@ -221,10 +215,7 @@ CNetwork::init2(
 }
 
 int PASCAL FAR
-CNetwork::poll2(
-	PollEntry fd[],
-	int nfds,
-	int timeout)
+CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
 {
 	int i;
 
@@ -293,19 +284,13 @@ CNetwork::poll2(
 }
 
 ssize_t PASCAL FAR
-CNetwork::read2(
-	Socket s,
-	void FAR* buf,
-	size_t len)
+CNetwork::read2(Socket s, void FAR* buf, size_t len)
 {
 	return recv(s, buf, len, 0);
 }
 
 ssize_t PASCAL FAR
-CNetwork::write2(
-	Socket s,
-	const void FAR* buf,
-	size_t len)
+CNetwork::write2(Socket s, const void FAR* buf, size_t len)
 {
 	return send(s, buf, len, 0);
 }
@@ -323,29 +308,25 @@ CNetwork::write2(
 #define setfunc(var, name, type) 	var = (type)::name
 
 UInt32
-CNetwork::swaphtonl(
-	UInt32 v)
+CNetwork::swaphtonl(UInt32 v)
 {
 	return htonl(v);
 }
 
 UInt16
-CNetwork::swaphtons(
-	UInt16 v)
+CNetwork::swaphtons(UInt16 v)
 {
 	return htons(v);
 }
 
 UInt32
-CNetwork::swapntohl(
-	UInt32 v)
+CNetwork::swapntohl(UInt32 v)
 {
 	return ntohl(v);
 }
 
 UInt16
-CNetwork::swapntohs(
-	UInt16 v)
+CNetwork::swapntohs(UInt16 v)
 {
 	return ntohs(v);
 }
@@ -366,9 +347,7 @@ myherrno()
 
 static
 int
-mygethostname(
-	char* name,
-	int namelen)
+mygethostname(char* name, int namelen)
 {
 	return gethostname(name, namelen);
 }

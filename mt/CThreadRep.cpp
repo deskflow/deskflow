@@ -402,9 +402,7 @@ CThreadRep::testCancel()
 }
 
 bool
-CThreadRep::wait(
-	CThreadRep* target,
-	double timeout)
+CThreadRep::wait(CThreadRep* target, double timeout)
 {
 	if (target == this) {
 		return false;
@@ -430,8 +428,7 @@ CThreadRep::wait(
 }
 
 void
-CThreadRep::setPriority(
-	int)
+CThreadRep::setPriority(int)
 {
 	// FIXME
 }
@@ -468,15 +465,13 @@ CThreadRep::threadFunc(void* arg)
 }
 
 void
-CThreadRep::threadCancel(
-	int)
+CThreadRep::threadCancel(int)
 {
 	// do nothing
 }
 
 void*
-CThreadRep::threadSignalHandler(
-	void* vrep)
+CThreadRep::threadSignalHandler(void* vrep)
 {
 	CThreadRep* mainThreadRep = reinterpret_cast<CThreadRep*>(vrep);
 
@@ -567,9 +562,7 @@ CThreadRep::testCancel()
 }
 
 bool
-CThreadRep::wait(
-	CThreadRep* target,
-	double timeout)
+CThreadRep::wait(CThreadRep* target, double timeout)
 {
 	// get the current thread.  if it's the same as the target thread
 	// then the thread is waiting on itself.
@@ -620,8 +613,7 @@ CThreadRep::wait(
 }
 
 bool
-CThreadRep::waitForEvent(
-	double timeout)
+CThreadRep::waitForEvent(double timeout)
 {
 	// is cancellation enabled?
 	const DWORD n = (isCancellable() ? 1 : 0);
@@ -658,8 +650,7 @@ CThreadRep::waitForEvent(
 }
 
 void
-CThreadRep::setPriority(
-	int n)
+CThreadRep::setPriority(int n)
 {
 	DWORD pClass = NORMAL_PRIORITY_CLASS;
 	if (n < 0) {
@@ -705,8 +696,7 @@ CThreadRep::getCancelEvent() const
 }
 
 unsigned int __stdcall
-CThreadRep::threadFunc(
-	void* arg)
+CThreadRep::threadFunc(void* arg)
 {
 	CThreadRep* rep = (CThreadRep*)arg;
 

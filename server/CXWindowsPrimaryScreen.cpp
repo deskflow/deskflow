@@ -194,8 +194,7 @@ CXWindowsPrimaryScreen::stop()
 }
 
 void
-CXWindowsPrimaryScreen::open(
-	CServer* server)
+CXWindowsPrimaryScreen::open(CServer* server)
 {
 	assert(m_server == NULL);
 	assert(server   != NULL);
@@ -252,9 +251,7 @@ CXWindowsPrimaryScreen::close()
 }
 
 void
-CXWindowsPrimaryScreen::enter(
-	SInt32 x,
-	SInt32 y)
+CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 {
 	log((CLOG_INFO "entering primary at %d,%d", x, y));
 	assert(m_active == true);
@@ -356,19 +353,14 @@ CXWindowsPrimaryScreen::onConfigure()
 }
 
 void
-CXWindowsPrimaryScreen::warpCursor(
-	SInt32 x,
-	SInt32 y)
+CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
 	CDisplayLock display(this);
 	warpCursorNoLock(display, x, y);
 }
 
 void
-CXWindowsPrimaryScreen::warpCursorNoLock(
-	Display* display,
-	SInt32 x,
-	SInt32 y)
+CXWindowsPrimaryScreen::warpCursorNoLock(Display* display, SInt32 x, SInt32 y)
 {
 	assert(display  != NULL);
 	assert(m_window != None);
@@ -387,24 +379,20 @@ CXWindowsPrimaryScreen::warpCursorNoLock(
 }
 
 void
-CXWindowsPrimaryScreen::setClipboard(
-	ClipboardID id,
-	const IClipboard* clipboard)
+CXWindowsPrimaryScreen::setClipboard(ClipboardID id,
+				const IClipboard* clipboard)
 {
 	setDisplayClipboard(id, clipboard);
 }
 
 void
-CXWindowsPrimaryScreen::grabClipboard(
-	ClipboardID id)
+CXWindowsPrimaryScreen::grabClipboard(ClipboardID id)
 {
 	setDisplayClipboard(id, NULL);
 }
 
 void
-CXWindowsPrimaryScreen::getSize(
-	SInt32* width,
-	SInt32* height) const
+CXWindowsPrimaryScreen::getSize(SInt32* width, SInt32* height) const
 {
 	getScreenSize(width, height);
 }
@@ -416,9 +404,8 @@ CXWindowsPrimaryScreen::getJumpZoneSize() const
 }
 
 void
-CXWindowsPrimaryScreen::getClipboard(
-	ClipboardID id,
-	IClipboard* clipboard) const
+CXWindowsPrimaryScreen::getClipboard(ClipboardID id,
+				IClipboard* clipboard) const
 {
 	getDisplayClipboard(id, clipboard);
 }
@@ -484,8 +471,7 @@ CXWindowsPrimaryScreen::isLockedToScreen() const
 }
 
 void
-CXWindowsPrimaryScreen::onOpenDisplay(
-	Display* display)
+CXWindowsPrimaryScreen::onOpenDisplay(Display* display)
 {
 	assert(m_window == None);
 
@@ -516,16 +502,14 @@ CXWindowsPrimaryScreen::onOpenDisplay(
 }
 
 CXWindowsClipboard*
-CXWindowsPrimaryScreen::createClipboard(
-	ClipboardID id)
+CXWindowsPrimaryScreen::createClipboard(ClipboardID id)
 {
 	CDisplayLock display(this);
 	return new CXWindowsClipboard(display, m_window, id);
 }
 
 void
-CXWindowsPrimaryScreen::onCloseDisplay(
-	Display* display)
+CXWindowsPrimaryScreen::onCloseDisplay(Display* display)
 {
 	assert(m_window != None);
 
@@ -546,17 +530,14 @@ CXWindowsPrimaryScreen::onUnexpectedClose()
 }
 
 void
-CXWindowsPrimaryScreen::onLostClipboard(
-	ClipboardID id)
+CXWindowsPrimaryScreen::onLostClipboard(ClipboardID id)
 {
 	// tell server that the clipboard was grabbed locally
 	m_server->grabClipboard(id);
 }
 
 void
-CXWindowsPrimaryScreen::selectEvents(
-	Display* display,
-	Window w) const
+CXWindowsPrimaryScreen::selectEvents(Display* display, Window w) const
 {
 	// ignore errors while we adjust event masks
 	CXWindowsUtil::CErrorLock lock;
@@ -566,9 +547,7 @@ CXWindowsPrimaryScreen::selectEvents(
 }
 
 void
-CXWindowsPrimaryScreen::doSelectEvents(
-	Display* display,
-	Window w) const
+CXWindowsPrimaryScreen::doSelectEvents(Display* display, Window w) const
 {
 	// we want to track the mouse everywhere on the display.  to achieve
 	// that we select PointerMotionMask on every window.  we also select
@@ -595,8 +574,7 @@ CXWindowsPrimaryScreen::doSelectEvents(
 }
 
 KeyModifierMask
-CXWindowsPrimaryScreen::mapModifier(
-	unsigned int state) const
+CXWindowsPrimaryScreen::mapModifier(unsigned int state) const
 {
 	// FIXME -- should be configurable
 	KeyModifierMask mask = 0;
@@ -618,8 +596,7 @@ CXWindowsPrimaryScreen::mapModifier(
 }
 
 KeyID
-CXWindowsPrimaryScreen::mapKey(
-	XKeyEvent* event) const
+CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 {
 	KeySym keysym;
 	char dummy[1];
@@ -630,8 +607,7 @@ CXWindowsPrimaryScreen::mapKey(
 }
 
 ButtonID
-CXWindowsPrimaryScreen::mapButton(
-	unsigned int button) const
+CXWindowsPrimaryScreen::mapButton(unsigned int button) const
 {
 	// FIXME -- should use button mapping?
 	if (button >= 1 && button <= 3) {
@@ -643,8 +619,7 @@ CXWindowsPrimaryScreen::mapButton(
 }
 
 void
-CXWindowsPrimaryScreen::updateModifierMap(
-	Display* display)
+CXWindowsPrimaryScreen::updateModifierMap(Display* display)
 {
 	// get modifier map from server
 	XModifierKeymap* keymap = XGetModifierMapping(display);
@@ -679,10 +654,7 @@ CXWindowsPrimaryScreen::updateModifierMap(
 }
 
 Bool
-CXWindowsPrimaryScreen::findKeyEvent(
-	Display*,
-	XEvent* xevent,
-	XPointer arg)
+CXWindowsPrimaryScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
 {
 	CKeyEventInfo* filter = reinterpret_cast<CKeyEventInfo*>(arg);
 	return (xevent->type         == filter->m_event &&

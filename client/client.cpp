@@ -44,8 +44,7 @@ static CMutex*			s_logMutex = NULL;
 
 static
 void
-logLock(
-	bool lock)
+logLock(bool lock)
 {
 	assert(s_logMutex != NULL);
 
@@ -66,8 +65,7 @@ static CClient*			s_client = NULL;
 
 static
 int
-realMain(
-	CMutex* mutex)
+realMain(CMutex* mutex)
 {
 	try {
 		// initialize threading library
@@ -242,12 +240,9 @@ PLATFORM_DESC
 
 static
 bool
-isArg(int argi,
-	int argc,
-	const char** argv,
-	const char* name1,
-	const char* name2,
-	int minRequiredParameters = 0)
+isArg(int argi, int argc, const char** argv,
+				const char* name1, const char* name2,
+				int minRequiredParameters = 0)
 {
 	if ((name1 != NULL && strcmp(argv[argi], name1) == 0) ||
 		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
@@ -266,9 +261,7 @@ isArg(int argi,
 
 static
 void
-parse(
-	int argc,
-	const char** argv)
+parse(int argc, const char** argv)
 {
 	assert(pname != NULL);
 	assert(argv  != NULL);
@@ -443,9 +436,7 @@ parse(
 
 static
 bool
-logMessageBox(
-	int priority,
-	const char* msg)
+logMessageBox(int priority, const char* msg)
 {
 	if (priority <= CLog::kFATAL) {
 		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
@@ -472,10 +463,7 @@ daemonStop(void)
 
 static
 int
-daemonStartup(
-	IPlatform* iplatform,
-	int argc,
-	const char** argv)
+daemonStartup(IPlatform* iplatform, int argc, const char** argv)
 {
 	// get platform pointer
 	CWin32Platform* platform = static_cast<CWin32Platform*>(iplatform);
@@ -498,9 +486,7 @@ daemonStartup(
 
 static
 bool
-logDiscard(
-	int,
-	const char*)
+logDiscard(int, const char*)
 {
 	return true;
 }
@@ -520,11 +506,7 @@ checkParse(int e)
 }
 
 int WINAPI
-WinMain(
-	HINSTANCE instance,
-	HINSTANCE,
-	LPSTR,
-	int)
+WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
 	CPlatform platform;
 
@@ -656,18 +638,13 @@ WinMain(
 
 static
 int
-daemonStartup(
-	IPlatform*,
-	int,
-	const char**)
+daemonStartup(IPlatform*, int, const char**)
 {
 	return restartableMain();
 }
 
 int
-main(
-	int argc,
-	char** argv)
+main(int argc, char** argv)
 {
 	CPlatform platform;
 

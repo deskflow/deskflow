@@ -9,9 +9,7 @@
 // CBufferedOutputStream
 //
 
-CBufferedOutputStream::CBufferedOutputStream(
-	CMutex* mutex,
-	IJob* closeCB) :
+CBufferedOutputStream::CBufferedOutputStream(CMutex* mutex, IJob* closeCB) :
 	m_mutex(mutex),
 	m_closeCB(closeCB),
 	m_empty(mutex, true),
@@ -26,15 +24,13 @@ CBufferedOutputStream::~CBufferedOutputStream()
 }
 
 const void*
-CBufferedOutputStream::peek(
-	UInt32 n)
+CBufferedOutputStream::peek(UInt32 n)
 {
 	return m_buffer.peek(n);
 }
 
 void
-CBufferedOutputStream::pop(
-	UInt32 n)
+CBufferedOutputStream::pop(UInt32 n)
 {
 	m_buffer.pop(n);
 	if (m_buffer.getSize() == 0) {
@@ -64,9 +60,7 @@ CBufferedOutputStream::close()
 }
 
 UInt32
-CBufferedOutputStream::write(
-	const void* data,
-	UInt32 n)
+CBufferedOutputStream::write(const void* data, UInt32 n)
 {
 	CLock lock(m_mutex);
 	if (m_closed) {

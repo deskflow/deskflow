@@ -4,10 +4,8 @@
 // XSocketAddress
 //
 
-XSocketAddress::XSocketAddress(
-	Error error,
-	const CString& hostname,
-	UInt16 port) throw() :
+XSocketAddress::XSocketAddress(Error error,
+				const CString& hostname, UInt16 port) throw() :
 	m_error(error),
 	m_hostname(hostname),
 	m_port(port)
@@ -55,8 +53,7 @@ XSocketErrno::XSocketErrno() :
 	// do nothing
 }
 
-XSocketErrno::XSocketErrno(
-	int err) :
+XSocketErrno::XSocketErrno(int err) :
 	MXErrno(err)
 {
 	// do nothing

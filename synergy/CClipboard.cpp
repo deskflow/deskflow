@@ -39,9 +39,7 @@ CClipboard::empty()
 }
 
 void
-CClipboard::add(
-	EFormat format,
-	const CString& data)
+CClipboard::add(EFormat format, const CString& data)
 {
 	assert(m_open);
 	assert(m_owner);
@@ -51,8 +49,7 @@ CClipboard::add(
 }
 
 bool
-CClipboard::open(
-	Time time) const
+CClipboard::open(Time time) const
 {
 	assert(!m_open);
 
@@ -77,25 +74,21 @@ CClipboard::getTime() const
 }
 
 bool
-CClipboard::has(
-	EFormat format) const
+CClipboard::has(EFormat format) const
 {
 	assert(m_open);
 	return m_added[format];
 }
 
 CString
-CClipboard::get(
-	EFormat format) const
+CClipboard::get(EFormat format) const
 {
 	assert(m_open);
 	return m_data[format];
 }
 
 bool
-CClipboard::copy(
-	IClipboard* dst,
-	const IClipboard* src)
+CClipboard::copy(IClipboard* dst, const IClipboard* src)
 {
 	assert(dst != NULL);
 	assert(src != NULL);
@@ -104,10 +97,7 @@ CClipboard::copy(
 }
 
 bool
-CClipboard::copy(
-	IClipboard* dst,
-	const IClipboard* src,
-	Time time)
+CClipboard::copy(IClipboard* dst, const IClipboard* src, Time time)
 {
 	assert(dst != NULL);
 	assert(src != NULL);
@@ -134,9 +124,7 @@ CClipboard::copy(
 }
 
 void
-CClipboard::unmarshall(
-	const CString& data,
-	Time time)
+CClipboard::unmarshall(const CString& data, Time time)
 {
 	const char* index = data.data();
 
@@ -201,8 +189,7 @@ CClipboard::marshall() const
 }
 
 UInt32
-CClipboard::readUInt32(
-	const char* buf) const
+CClipboard::readUInt32(const char* buf) const
 {
 	const unsigned char* ubuf = reinterpret_cast<const unsigned char*>(buf);
 	return	(static_cast<UInt32>(ubuf[0]) << 24) |
@@ -212,9 +199,7 @@ CClipboard::readUInt32(
 }
 
 void
-CClipboard::writeUInt32(
-	CString* buf,
-	UInt32 v) const
+CClipboard::writeUInt32(CString* buf, UInt32 v) const
 {
 	*buf += static_cast<UInt8>((v >> 24) & 0xff);
 	*buf += static_cast<UInt8>((v >> 16) & 0xff);

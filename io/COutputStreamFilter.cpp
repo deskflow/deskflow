@@ -4,9 +4,7 @@
 // COutputStreamFilter
 //
 
-COutputStreamFilter::COutputStreamFilter(
-	IOutputStream* stream,
-	bool adopted) :
+COutputStreamFilter::COutputStreamFilter(IOutputStream* stream, bool adopted) :
 	m_stream(stream),
 	m_adopted(adopted)
 {

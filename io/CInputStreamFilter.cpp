@@ -4,9 +4,7 @@
 // CInputStreamFilter
 //
 
-CInputStreamFilter::CInputStreamFilter(
-	IInputStream* stream,
-	bool adopted) :
+CInputStreamFilter::CInputStreamFilter(IInputStream* stream, bool adopted) :
 	m_stream(stream),
 	m_adopted(adopted)
 {

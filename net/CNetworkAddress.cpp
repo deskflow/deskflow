@@ -21,8 +21,7 @@ CNetworkAddress::CNetworkAddress() :
 	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 }
 
-CNetworkAddress::CNetworkAddress(
-	UInt16 port) :
+CNetworkAddress::CNetworkAddress(UInt16 port) :
 	m_port(port)
 {
 	if (port == 0) {
@@ -37,9 +36,7 @@ CNetworkAddress::CNetworkAddress(
 	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 }
 
-CNetworkAddress::CNetworkAddress(
-	const CString& hostname_,
-	UInt16 port) :
+CNetworkAddress::CNetworkAddress(const CString& hostname_, UInt16 port) :
 	m_hostname(hostname_),
 	m_port(port)
 {

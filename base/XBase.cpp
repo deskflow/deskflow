@@ -44,9 +44,7 @@ XBase::what() const
 }
 
 CString
-XBase::format(
-	const char* /*id*/,
-	const char* fmt, ...) const throw()
+XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
 {
 	// FIXME -- use id to lookup formating string
 	// FIXME -- format string with arguments

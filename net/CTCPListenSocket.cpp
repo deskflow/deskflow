@@ -28,8 +28,7 @@ CTCPListenSocket::~CTCPListenSocket()
 }
 
 void
-CTCPListenSocket::bind(
-	const CNetworkAddress& addr)
+CTCPListenSocket::bind(const CNetworkAddress& addr)
 {
 	if (CNetwork::bind(m_fd, addr.getAddress(),
 								addr.getAddressLength()) == CNetwork::Error) {

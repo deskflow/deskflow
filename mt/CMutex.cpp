@@ -21,8 +21,7 @@ CMutex::~CMutex()
 }
 
 CMutex&
-CMutex::operator=(
-	const CMutex&)
+CMutex::operator=(const CMutex&)
 {
 	return *this;
 }

@@ -10,9 +10,7 @@
 // CBufferedInputStream
 //
 
-CBufferedInputStream::CBufferedInputStream(
-	CMutex* mutex,
-	IJob* closeCB) :
+CBufferedInputStream::CBufferedInputStream(CMutex* mutex, IJob* closeCB) :
 	m_mutex(mutex),
 	m_empty(mutex, true),
 	m_closeCB(closeCB),
@@ -28,9 +26,7 @@ CBufferedInputStream::~CBufferedInputStream()
 }
 
 void
-CBufferedInputStream::write(
-	const void* data,
-	UInt32 n)
+CBufferedInputStream::write(const void* data, UInt32 n)
 {
 	if (!m_hungup && n > 0) {
 		m_buffer.write(data, n);
@@ -47,9 +43,7 @@ CBufferedInputStream::hangup()
 }
 
 UInt32
-CBufferedInputStream::readNoLock(
-	void* dst,
-	UInt32 n)
+CBufferedInputStream::readNoLock(void* dst, UInt32 n)
 {
 	if (m_closed) {
 		throw XIOClosed();
@@ -104,9 +98,7 @@ CBufferedInputStream::close()
 }
 
 UInt32
-CBufferedInputStream::read(
-	void* dst,
-	UInt32 n)
+CBufferedInputStream::read(void* dst, UInt32 n)
 {
 	CLock lock(m_mutex);
 	return readNoLock(dst, n);

@@ -28,8 +28,7 @@
 // CClient
 //
 
-CClient::CClient(
-	const CString& clientName) :
+CClient::CClient(const CString& clientName) :
 	m_name(clientName),
 	m_input(NULL),
 	m_output(NULL),
@@ -48,15 +47,13 @@ CClient::~CClient()
 }
 
 void
-CClient::camp(
-	bool on)
+CClient::camp(bool on)
 {
 	m_camp = on;
 }
 
 bool
-CClient::run(
-	const CNetworkAddress& serverAddress)
+CClient::run(const CNetworkAddress& serverAddress)
 {
 	CThread* thread = NULL;
 	try {
@@ -140,8 +137,7 @@ CClient::quit()
 }
 
 void
-CClient::onClipboardChanged(
-	ClipboardID id)
+CClient::onClipboardChanged(ClipboardID id)
 {
 	log((CLOG_DEBUG "sending clipboard %d changed", id));
 	CLock lock(&m_mutex);

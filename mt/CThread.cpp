@@ -32,8 +32,7 @@ CThread::~CThread()
 }
 
 CThread&
-CThread::operator=(
-	const CThread& thread)
+CThread::operator=(const CThread& thread)
 {
 	if (thread.m_rep != m_rep) {
 		m_rep->unref();
@@ -50,8 +49,7 @@ CThread::init()
 }
 
 void
-CThread::sleep(
-	double timeout)
+CThread::sleep(double timeout)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	if (timeout >= 0.0) {
@@ -62,8 +60,7 @@ CThread::sleep(
 }
 
 void
-CThread::exit(
-	void* result)
+CThread::exit(void* result)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	log((CLOG_DEBUG1 "throw exit on thread %p", currentRep.operator->()));
@@ -71,8 +68,7 @@ CThread::exit(
 }
 
 bool
-CThread::enableCancel(
-	bool enable)
+CThread::enableCancel(bool enable)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	return currentRep->enableCancel(enable);
@@ -85,8 +81,7 @@ CThread::cancel()
 }
 
 void
-CThread::setPriority(
-	int n)
+CThread::setPriority(int n)
 {
 	m_rep->setPriority(n);
 }
@@ -98,8 +93,7 @@ CThread::getCurrentThread()
 }
 
 bool
-CThread::wait(
-	double timeout) const
+CThread::wait(double timeout) const
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	return currentRep->wait(m_rep, timeout);
@@ -107,8 +101,7 @@ CThread::wait(
 
 #if defined(CONFIG_PLATFORM_WIN32)
 bool
-CThread::waitForEvent(
-	double timeout)
+CThread::waitForEvent(double timeout)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
 	return currentRep->waitForEvent(timeout);
@@ -139,15 +132,13 @@ CThread::getUserData()
 }
 
 bool
-CThread::operator==(
-	const CThread& thread) const
+CThread::operator==(const CThread& thread) const
 {
 	return (m_rep == thread.m_rep);
 }
 
 bool
-CThread::operator!=(
-	const CThread& thread) const
+CThread::operator!=(const CThread& thread) const
 {
 	return (m_rep != thread.m_rep);
 }

@@ -9,11 +9,8 @@
 // CServerProtocol
 //
 
-CServerProtocol::CServerProtocol(
-	CServer* server,
-	const CString& client,
-	IInputStream* input,
-	IOutputStream* output) :
+CServerProtocol::CServerProtocol(CServer* server, const CString& client,
+				IInputStream* input, IOutputStream* output) :
 	m_server(server),
 	m_client(client),
 	m_input(input),
@@ -54,13 +51,9 @@ CServerProtocol::getOutputStream() const
 }
 
 IServerProtocol*
-CServerProtocol::create(
-	SInt32 major,
-	SInt32 minor,
-	CServer* server,
-	const CString& client,
-	IInputStream* input,
-	IOutputStream* output)
+CServerProtocol::create(SInt32 major, SInt32 minor,
+				CServer* server, const CString& client,
+				IInputStream* input, IOutputStream* output)
 {
 	// disallow invalid version numbers
 	if (major < 0 || minor < 0) {

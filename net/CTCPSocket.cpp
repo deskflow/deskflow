@@ -55,8 +55,7 @@ CTCPSocket::~CTCPSocket()
 }
 
 void
-CTCPSocket::bind(
-	const CNetworkAddress& addr)
+CTCPSocket::bind(const CNetworkAddress& addr)
 {
 	if (CNetwork::bind(m_fd, addr.getAddress(),
 								addr.getAddressLength()) == CNetwork::Error) {
@@ -108,8 +107,7 @@ CTCPSocket::close()
 }
 
 void
-CTCPSocket::connect(
-	const CNetworkAddress& addr)
+CTCPSocket::connect(const CNetworkAddress& addr)
 {
 	CThread::testCancel();
 	if (CNetwork::connect(m_fd, addr.getAddress(),

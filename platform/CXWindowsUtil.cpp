@@ -8,14 +8,9 @@
 //
 
 bool
-CXWindowsUtil::getWindowProperty(
-	Display* display,
-	Window window,
-	Atom property,
-	CString* data,
-	Atom* type,
-	int* format,
-	bool deleteProperty)
+CXWindowsUtil::getWindowProperty(Display* display, Window window,
+				Atom property, CString* data, Atom* type,
+				int* format, bool deleteProperty)
 {
 	assert(display != NULL);
 	assert(data != NULL);
@@ -88,14 +83,9 @@ CXWindowsUtil::getWindowProperty(
 }
 
 bool
-CXWindowsUtil::setWindowProperty(
-	Display* display,
-	Window window,
-	Atom property,
-	const void* vdata,
-	UInt32 size,
-	Atom type,
-	SInt32 format)
+CXWindowsUtil::setWindowProperty(Display* display, Window window,
+				Atom property, const void* vdata, UInt32 size,
+				Atom type, SInt32 format)
 {
 	const UInt32 length       = 4 * XMaxRequestSize(display);
 	const unsigned char* data = reinterpret_cast<const unsigned char*>(vdata);
@@ -135,9 +125,7 @@ CXWindowsUtil::setWindowProperty(
 }
 
 Time
-CXWindowsUtil::getCurrentTime(
-	Display* display,
-	Window window)
+CXWindowsUtil::getCurrentTime(Display* display, Window window)
 {
 	// select property events on window
 	XWindowAttributes attr;
@@ -174,10 +162,7 @@ CXWindowsUtil::getCurrentTime(
 }
 
 Bool
-CXWindowsUtil::propertyNotifyPredicate(
-	Display*,
-	XEvent* xevent,
-	XPointer arg)
+CXWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 {
 	CPropertyNotifyPredicateInfo* filter =
 						reinterpret_cast<CPropertyNotifyPredicateInfo*>(arg);
@@ -199,15 +184,12 @@ CXWindowsUtil::CErrorLock::CErrorLock()
 	install(&CXWindowsUtil::CErrorLock::ignoreHandler, NULL);
 }
 
-CXWindowsUtil::CErrorLock::CErrorLock(
-	bool* flag)
+CXWindowsUtil::CErrorLock::CErrorLock(bool* flag)
 {
 	install(&CXWindowsUtil::CErrorLock::saveHandler, flag);
 }
 
-CXWindowsUtil::CErrorLock::CErrorLock(
-	ErrorHandler handler,
-	void* data)
+CXWindowsUtil::CErrorLock::CErrorLock(ErrorHandler handler, void* data)
 {
 	install(handler, data);
 }
@@ -219,9 +201,7 @@ CXWindowsUtil::CErrorLock::~CErrorLock()
 }
 
 void
-CXWindowsUtil::CErrorLock::install(
-	ErrorHandler handler,
-	void* data)
+CXWindowsUtil::CErrorLock::install(ErrorHandler handler, void* data)
 {
 	m_handler     = handler;
 	m_userData    = data;
@@ -232,9 +212,7 @@ CXWindowsUtil::CErrorLock::install(
 }
 
 int
-CXWindowsUtil::CErrorLock::internalHandler(
-	Display* display,
-	XErrorEvent* event)
+CXWindowsUtil::CErrorLock::internalHandler(Display* display, XErrorEvent* event)
 {
 	if (s_top != NULL && s_top->m_handler != NULL) {
 		s_top->m_handler(display, event, s_top->m_userData);
@@ -243,19 +221,13 @@ CXWindowsUtil::CErrorLock::internalHandler(
 }
 
 void
-CXWindowsUtil::CErrorLock::ignoreHandler(
-	Display*,
-	XErrorEvent*,
-	void*)
+CXWindowsUtil::CErrorLock::ignoreHandler(Display*, XErrorEvent*, void*)
 {
 	// do nothing
 }
 
 void
-CXWindowsUtil::CErrorLock::saveHandler(
-	Display*,
-	XErrorEvent*,
-	void* flag)
+CXWindowsUtil::CErrorLock::saveHandler(Display*, XErrorEvent*, void* flag)
 {
 	*reinterpret_cast<bool*>(flag) = true;
 }

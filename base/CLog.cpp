@@ -54,9 +54,7 @@ CLog::Lock				CLog::s_lock = &CLog::dummyLock;
 int						CLog::s_maxPriority = -1;
 
 void
-CLog::print(
-	const char* fmt,
-	...)
+CLog::print(const char* fmt, ...)
 {
 	// check if fmt begins with a priority argument
 	int priority = 4;
@@ -90,11 +88,7 @@ CLog::print(
 }
 
 void
-CLog::printt(
-	const char* file,
-	int line,
-	const char* fmt,
-	...)
+CLog::printt(const char* file, int line, const char* fmt, ...)
 {
 	// check if fmt begins with a priority argument
 	int priority = 4;
@@ -141,8 +135,7 @@ CLog::printt(
 }
 
 void
-CLog::setOutputter(
-	Outputter outputter)
+CLog::setOutputter(Outputter outputter)
 {
 	CHoldLock lock(s_lock);
 	s_outputter = outputter;
@@ -156,8 +149,7 @@ CLog::getOutputter()
 }
 
 void
-CLog::setLock(
-	Lock newLock)
+CLog::setLock(Lock newLock)
 {
 	CHoldLock lock(s_lock);
 	s_lock = (newLock == NULL) ? dummyLock : newLock;
@@ -171,8 +163,7 @@ CLog::getLock()
 }
 
 bool
-CLog::setFilter(
-	const char* maxPriority)
+CLog::setFilter(const char* maxPriority)
 {
 	if (maxPriority != NULL) {
 		for (int i = 0; i < g_numPriority; ++i) {
@@ -187,8 +178,7 @@ CLog::setFilter(
 }
 
 void
-CLog::setFilter(
-	int maxPriority)
+CLog::setFilter(int maxPriority)
 {
 	CHoldLock lock(s_lock);
 	s_maxPriority = maxPriority;
@@ -202,8 +192,7 @@ CLog::getFilter()
 }
 
 void
-CLog::dummyLock(
-	bool)
+CLog::dummyLock(bool)
 {
 	// do nothing
 }
@@ -222,9 +211,7 @@ CLog::getMaxPriority()
 }
 
 void
-CLog::output(
-	int priority,
-	char* msg)
+CLog::output(int priority, char* msg)
 {
 	assert(priority >= -1 && priority < g_numPriority);
 	assert(msg != NULL);
@@ -257,12 +244,7 @@ CLog::output(
 }
 
 char*
-CLog::vsprint(
-	int pad,
-	char* buffer,
-	int len,
-	const char* fmt,
-	va_list args)
+CLog::vsprint(int pad, char* buffer, int len, const char* fmt, va_list args)
 {
 	assert(len > 0);
 

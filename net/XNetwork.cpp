@@ -26,9 +26,7 @@ XNetworkFailed::getWhat() const throw()
 // XNetworkVersion
 //
 
-XNetworkVersion::XNetworkVersion(
-	int major,
-	int minor) throw() :
+XNetworkVersion::XNetworkVersion(int major, int minor) throw() :
 	m_major(major),
 	m_minor(minor)
 {
@@ -61,7 +59,7 @@ XNetworkVersion::getWhat() const throw()
 //
 
 XNetworkFunctionUnavailable::XNetworkFunctionUnavailable(
-	const char* name) throw()
+				const char* name) throw()
 {
 	try {
 		m_name = name;

@@ -113,9 +113,7 @@ CXWindowsScreen::getRoot() const
 }
 
 void
-CXWindowsScreen::getScreenSize(
-	SInt32* w,
-	SInt32* h) const
+CXWindowsScreen::getScreenSize(SInt32* w, SInt32* h) const
 {
 	assert(m_display != NULL);
 	assert(w != NULL && h != NULL);
@@ -161,8 +159,7 @@ CXWindowsScreen::createBlankCursor() const
 }
 
 bool
-CXWindowsScreen::getEvent(
-	XEvent* xevent) const
+CXWindowsScreen::getEvent(XEvent* xevent) const
 {
 	// wait for an event in a cancellable way and don't lock the
 	// display while we're waiting.
@@ -217,8 +214,7 @@ CXWindowsScreen::onUnexpectedClose()
 }
 
 bool
-CXWindowsScreen::processEvent(
-	XEvent* xevent)
+CXWindowsScreen::processEvent(XEvent* xevent)
 {
 	switch (xevent->type) {
 	case SelectionClear:
@@ -288,9 +284,8 @@ CXWindowsScreen::processEvent(
 }
 
 bool
-CXWindowsScreen::setDisplayClipboard(
-	ClipboardID id,
-	const IClipboard* clipboard)
+CXWindowsScreen::setDisplayClipboard(ClipboardID id,
+				const IClipboard* clipboard)
 {
 	CLock lock(&m_mutex);
 
@@ -319,9 +314,8 @@ CXWindowsScreen::setDisplayClipboard(
 }
 
 bool
-CXWindowsScreen::getDisplayClipboard(
-	ClipboardID id,
-	IClipboard* clipboard) const
+CXWindowsScreen::getDisplayClipboard(ClipboardID id,
+				IClipboard* clipboard) const
 {
 	assert(clipboard != NULL);
 
@@ -342,10 +336,8 @@ CXWindowsScreen::getDisplayClipboard(
 }
 
 void
-CXWindowsScreen::processClipboardRequest(
-	Window requestor,
-	Time time,
-	Atom property)
+CXWindowsScreen::processClipboardRequest(Window requestor,
+				Time time, Atom property)
 {
 	CLock lock(&m_mutex);
 
@@ -359,8 +351,7 @@ CXWindowsScreen::processClipboardRequest(
 }
 
 void
-CXWindowsScreen::destroyClipboardRequest(
-	Window requestor)
+CXWindowsScreen::destroyClipboardRequest(Window requestor)
 {
 	CLock lock(&m_mutex);
 
@@ -374,8 +365,7 @@ CXWindowsScreen::destroyClipboardRequest(
 }
 
 int
-CXWindowsScreen::ioErrorHandler(
-	Display*)
+CXWindowsScreen::ioErrorHandler(Display*)
 {
 	// the display has disconnected, probably because X is shutting
 	// down.  X forces us to exit at this point.  that's arguably
@@ -395,8 +385,7 @@ CXWindowsScreen::ioErrorHandler(
 // CXWindowsScreen::CDisplayLock
 //
 
-CXWindowsScreen::CDisplayLock::CDisplayLock(
-	const CXWindowsScreen* screen) :
+CXWindowsScreen::CDisplayLock::CDisplayLock(const CXWindowsScreen* screen) :
 	m_mutex(&screen->m_mutex),
 	m_display(screen->m_display)
 {

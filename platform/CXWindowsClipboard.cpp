@@ -10,10 +10,8 @@
 // CXWindowsClipboard
 //
 
-CXWindowsClipboard::CXWindowsClipboard(
-	Display* display,
-	Window window,
-	ClipboardID id) :
+CXWindowsClipboard::CXWindowsClipboard(Display* display,
+				Window window, ClipboardID id) :
 	m_display(display),
 	m_window(window),
 	m_id(id),
@@ -63,8 +61,7 @@ CXWindowsClipboard::~CXWindowsClipboard()
 }
 
 void
-CXWindowsClipboard::lost(
-	Time time)
+CXWindowsClipboard::lost(Time time)
 {
 	log((CLOG_DEBUG "lost clipboard %d ownership at %d", m_id, time));
 	if (m_owner) {
@@ -75,12 +72,8 @@ CXWindowsClipboard::lost(
 }
 
 void
-CXWindowsClipboard::addRequest(
-	Window owner,
-	Window requestor,
-	Atom target,
-	::Time time,
-	Atom property)
+CXWindowsClipboard::addRequest(Window owner, Window requestor,
+				Atom target, ::Time time, Atom property)
 {
 	// must be for our window and we must have owned the selection
 	// at the given time.
@@ -118,11 +111,8 @@ CXWindowsClipboard::addRequest(
 }
 
 bool
-CXWindowsClipboard::addSimpleRequest(
-	Window requestor,
-	Atom target,
-	::Time time,
-	Atom property)
+CXWindowsClipboard::addSimpleRequest(Window requestor,
+				Atom target, ::Time time, Atom property)
 {
 	// obsolete requestors may supply a None property.  in
 	// that case we use the target as the property to store
@@ -162,10 +152,8 @@ CXWindowsClipboard::addSimpleRequest(
 }
 
 bool
-CXWindowsClipboard::processRequest(
-	Window requestor,
-	::Time /*time*/,
-	Atom property)
+CXWindowsClipboard::processRequest(Window requestor,
+				::Time /*time*/, Atom property)
 {
 	CReplyMap::iterator index = m_replies.find(requestor);
 	if (index == m_replies.end()) {
@@ -192,8 +180,7 @@ CXWindowsClipboard::processRequest(
 }
 
 bool
-CXWindowsClipboard::destroyRequest(
-	Window requestor)
+CXWindowsClipboard::destroyRequest(Window requestor)
 {
 	CReplyMap::iterator index = m_replies.find(requestor);
 	if (index == m_replies.end()) {
@@ -257,9 +244,7 @@ CXWindowsClipboard::empty()
 }
 
 void
-CXWindowsClipboard::add(
-	EFormat format,
-	const CString& data)
+CXWindowsClipboard::add(EFormat format, const CString& data)
 {
 	assert(m_open);
 	assert(m_owner);
@@ -273,8 +258,7 @@ CXWindowsClipboard::add(
 }
 
 bool
-CXWindowsClipboard::open(
-	Time time) const
+CXWindowsClipboard::open(Time time) const
 {
 	assert(!m_open);
 
@@ -347,8 +331,7 @@ CXWindowsClipboard::getTime() const
 }
 
 bool
-CXWindowsClipboard::has(
-	EFormat format) const
+CXWindowsClipboard::has(EFormat format) const
 {
 	assert(m_open);
 
@@ -357,8 +340,7 @@ CXWindowsClipboard::has(
 }
 
 CString
-CXWindowsClipboard::get(
-	EFormat format) const
+CXWindowsClipboard::get(EFormat format) const
 {
 	assert(m_open);
 
@@ -367,8 +349,7 @@ CXWindowsClipboard::get(
 }
 
 IClipboard::EFormat
-CXWindowsClipboard::getFormat(
-	Atom src) const
+CXWindowsClipboard::getFormat(Atom src) const
 {
 	// FIXME -- handle more formats (especially mime-type-like formats
 	// and various character encodings like unicode).
@@ -482,10 +463,8 @@ CXWindowsClipboard::icccmFillCache()
 }
 
 bool
-CXWindowsClipboard::icccmGetSelection(
-	Atom target,
-	Atom* actualTarget,
-	CString* data) const
+CXWindowsClipboard::icccmGetSelection(Atom target,
+				Atom* actualTarget, CString* data) const
 {
 	assert(actualTarget != NULL);
 	assert(data         != NULL);
@@ -725,10 +704,8 @@ CXWindowsClipboard::motifGetTime() const
 }
 
 bool
-CXWindowsClipboard::insertMultipleReply(
-	Window requestor,
-	::Time time,
-	Atom property)
+CXWindowsClipboard::insertMultipleReply(Window requestor,
+				::Time time, Atom property)
 {
 	// get the requested targets
 	Atom target;
@@ -780,8 +757,7 @@ CXWindowsClipboard::insertMultipleReply(
 }
 
 void
-CXWindowsClipboard::insertReply(
-	CReply* reply)
+CXWindowsClipboard::insertReply(CReply* reply)
 {
 	assert(reply != NULL);
 
@@ -841,10 +817,8 @@ CXWindowsClipboard::pushReplies()
 }
 
 void
-CXWindowsClipboard::pushReplies(
-	CReplyMap::iterator mapIndex,
-	CReplyList& replies,
-	CReplyList::iterator index)
+CXWindowsClipboard::pushReplies(CReplyMap::iterator mapIndex,
+				CReplyList& replies, CReplyList::iterator index)
 {
 	CReply* reply = *index;
 	while (sendReply(reply)) {
@@ -870,8 +844,7 @@ CXWindowsClipboard::pushReplies(
 }
 
 bool
-CXWindowsClipboard::sendReply(
-	CReply* reply)
+CXWindowsClipboard::sendReply(CReply* reply)
 {
 	assert(reply != NULL);
 
@@ -1005,8 +978,7 @@ CXWindowsClipboard::clearReplies()
 }
 
 void
-CXWindowsClipboard::clearReplies(
-	CReplyList& replies)
+CXWindowsClipboard::clearReplies(CReplyList& replies)
 {
 	for (CReplyList::iterator index = replies.begin();
 								index != replies.end(); ++index) {
@@ -1016,12 +988,8 @@ CXWindowsClipboard::clearReplies(
 }
 
 void
-CXWindowsClipboard::sendNotify(
-	Window requestor,
-	Atom selection,
-	Atom target,
-	Atom property,
-	Time time)
+CXWindowsClipboard::sendNotify(Window requestor,
+				Atom selection, Atom target, Atom property, Time time)
 {
 	XEvent event;
 	event.xselection.type      = SelectionNotify;
@@ -1036,8 +1004,7 @@ CXWindowsClipboard::sendNotify(
 }
 
 bool
-CXWindowsClipboard::wasOwnedAtTime(
-	::Time time) const
+CXWindowsClipboard::wasOwnedAtTime(::Time time) const
 {
 	// not owned if we've never owned the selection
 	if (m_timeOwned == 0) {
@@ -1070,9 +1037,7 @@ CXWindowsClipboard::wasOwnedAtTime(
 }
 
 Atom
-CXWindowsClipboard::getTargetsData(
-	CString& data,
-	int* format) const
+CXWindowsClipboard::getTargetsData(CString& data, int* format) const
 {
 	assert(format != NULL);
 
@@ -1096,9 +1061,7 @@ CXWindowsClipboard::getTargetsData(
 }
 
 Atom
-CXWindowsClipboard::getTimestampData(
-	CString& data,
-	int* format) const
+CXWindowsClipboard::getTimestampData(CString& data, int* format) const
 {
 	assert(format != NULL);
 
@@ -1109,9 +1072,7 @@ CXWindowsClipboard::getTimestampData(
 }
 
 Atom
-CXWindowsClipboard::getStringData(
-	CString& data,
-	int* format) const
+CXWindowsClipboard::getStringData(CString& data, int* format) const
 {
 	assert(format != NULL);
 
@@ -1131,9 +1092,7 @@ CXWindowsClipboard::getStringData(
 //
 
 CXWindowsClipboard::CICCCMGetClipboard::CICCCMGetClipboard(
-	Window requestor,
-	Time time,
-	Atom property) :
+				Window requestor, Time time, Atom property) :
 	m_requestor(requestor),
 	m_time(time),
 	m_property(property),
@@ -1154,12 +1113,8 @@ CXWindowsClipboard::CICCCMGetClipboard::~CICCCMGetClipboard()
 }
 
 bool
-CXWindowsClipboard::CICCCMGetClipboard::readClipboard(
-	Display* display,
-	Atom selection,
-	Atom target,
-	Atom* actualTarget,
-	CString* data)
+CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
+				Atom selection, Atom target, Atom* actualTarget, CString* data)
 {
 	assert(actualTarget != NULL);
 	assert(data         != NULL);
@@ -1216,8 +1171,7 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(
 
 bool
 CXWindowsClipboard::CICCCMGetClipboard::doEventPredicate(
-	Display* display,
-	XEvent* xevent)
+				Display* display, XEvent* xevent)
 {
 	// process event
 	switch (xevent->type) {
@@ -1354,17 +1308,14 @@ log((CLOG_INFO "  INCR secondary chunk"));	// FIXME
 
 Bool
 CXWindowsClipboard::CICCCMGetClipboard::eventPredicate(
-	Display* display,
-	XEvent* xevent,
-	XPointer arg)
+				Display* display, XEvent* xevent, XPointer arg)
 {
 	CICCCMGetClipboard* self = reinterpret_cast<CICCCMGetClipboard*>(arg);
 	return self->doEventPredicate(display, xevent) ? True : False;
 }
 
 void
-CXWindowsClipboard::CICCCMGetClipboard::timeout(
-	void* vdisplay)
+CXWindowsClipboard::CICCCMGetClipboard::timeout(void* vdisplay)
 {
 	// wait
 	CThread::sleep(0.2);	// FIXME -- is this too short?
@@ -1386,10 +1337,7 @@ CXWindowsClipboard::CICCCMGetClipboard::timeout(
 // CXWindowsClipboard::CReply
 //
 
-CXWindowsClipboard::CReply::CReply(
-	Window requestor,
-	Atom target,
-	::Time time) :
+CXWindowsClipboard::CReply::CReply(Window requestor, Atom target, ::Time time) :
 	m_requestor(requestor),
 	m_target(target),
 	m_time(time),
@@ -1404,14 +1352,8 @@ CXWindowsClipboard::CReply::CReply(
 	// do nothing
 }
 
-CXWindowsClipboard::CReply::CReply(
-	Window requestor,
-	Atom target,
-	::Time time,
-	Atom property,
-	const CString& data,
-	Atom type,
-	int format) :
+CXWindowsClipboard::CReply::CReply(Window requestor, Atom target, ::Time time,
+				Atom property, const CString& data, Atom type, int format) :
 	m_requestor(requestor),
 	m_target(target),
 	m_time(time),

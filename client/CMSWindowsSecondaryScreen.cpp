@@ -69,8 +69,7 @@ CMSWindowsSecondaryScreen::stop()
 }
 
 void
-CMSWindowsSecondaryScreen::open(
-	CClient* client)
+CMSWindowsSecondaryScreen::open(CClient* client)
 {
 	assert(m_client == NULL);
 	assert(client   != NULL);
@@ -108,10 +107,7 @@ CMSWindowsSecondaryScreen::close()
 }
 
 void
-CMSWindowsSecondaryScreen::enter(
-	SInt32 x,
-	SInt32 y,
-	KeyModifierMask mask)
+CMSWindowsSecondaryScreen::enter(SInt32 x, SInt32 y, KeyModifierMask mask)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -182,9 +178,7 @@ CMSWindowsSecondaryScreen::leave()
 }
 
 void
-CMSWindowsSecondaryScreen::keyDown(
-	KeyID key,
-	KeyModifierMask mask)
+CMSWindowsSecondaryScreen::keyDown(KeyID key, KeyModifierMask mask)
 {
 	Keystrokes keys;
 	UINT virtualKey;
@@ -224,10 +218,8 @@ CMSWindowsSecondaryScreen::keyDown(
 }
 
 void
-CMSWindowsSecondaryScreen::keyRepeat(
-	KeyID key,
-	KeyModifierMask mask,
-	SInt32 count)
+CMSWindowsSecondaryScreen::keyRepeat(KeyID key,
+				KeyModifierMask mask, SInt32 count)
 {
 	Keystrokes keys;
 	UINT virtualKey;
@@ -248,9 +240,7 @@ CMSWindowsSecondaryScreen::keyRepeat(
 }
 
 void
-CMSWindowsSecondaryScreen::keyUp(
-	KeyID key,
-	KeyModifierMask mask)
+CMSWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
 {
 	Keystrokes keys;
 	UINT virtualKey;
@@ -311,8 +301,7 @@ CMSWindowsSecondaryScreen::keyUp(
 }
 
 void
-CMSWindowsSecondaryScreen::mouseDown(
-	ButtonID button)
+CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -328,8 +317,7 @@ CMSWindowsSecondaryScreen::mouseDown(
 }
 
 void
-CMSWindowsSecondaryScreen::mouseUp(
-	ButtonID button)
+CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -345,9 +333,7 @@ CMSWindowsSecondaryScreen::mouseUp(
 }
 
 void
-CMSWindowsSecondaryScreen::mouseMove(
-	SInt32 x,
-	SInt32 y)
+CMSWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -362,8 +348,7 @@ CMSWindowsSecondaryScreen::mouseMove(
 }
 
 void
-CMSWindowsSecondaryScreen::mouseWheel(
-	SInt32 delta)
+CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -373,9 +358,8 @@ CMSWindowsSecondaryScreen::mouseWheel(
 }
 
 void
-CMSWindowsSecondaryScreen::setClipboard(
-	ClipboardID /*id*/,
-	const IClipboard* src)
+CMSWindowsSecondaryScreen::setClipboard(ClipboardID /*id*/,
+				const IClipboard* src)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -385,8 +369,7 @@ CMSWindowsSecondaryScreen::setClipboard(
 }
 
 void
-CMSWindowsSecondaryScreen::grabClipboard(
-	ClipboardID /*id*/)
+CMSWindowsSecondaryScreen::grabClipboard(ClipboardID /*id*/)
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -398,9 +381,7 @@ CMSWindowsSecondaryScreen::grabClipboard(
 }
 
 void
-CMSWindowsSecondaryScreen::getMousePos(
-	SInt32* x,
-	SInt32* y) const
+CMSWindowsSecondaryScreen::getMousePos(SInt32* x, SInt32* y) const
 {
 	assert(x != NULL);
 	assert(y != NULL);
@@ -421,9 +402,7 @@ CMSWindowsSecondaryScreen::getMousePos(
 }
 
 void
-CMSWindowsSecondaryScreen::getSize(
-	SInt32* width,
-	SInt32* height) const
+CMSWindowsSecondaryScreen::getSize(SInt32* width, SInt32* height) const
 {
 	getScreenSize(width, height);
 }
@@ -435,9 +414,8 @@ CMSWindowsSecondaryScreen::getJumpZoneSize() const
 }
 
 void
-CMSWindowsSecondaryScreen::getClipboard(
-	ClipboardID /*id*/,
-	IClipboard* dst) const
+CMSWindowsSecondaryScreen::getClipboard(ClipboardID /*id*/,
+				IClipboard* dst) const
 {
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
@@ -486,8 +464,7 @@ CMSWindowsSecondaryScreen::onCloseDisplay()
 }
 
 bool
-CMSWindowsSecondaryScreen::onPreTranslate(
-	MSG* msg)
+CMSWindowsSecondaryScreen::onPreTranslate(MSG* msg)
 {
 	// handle event
 	switch (msg->message) {
@@ -511,11 +488,8 @@ CMSWindowsSecondaryScreen::onPreTranslate(
 }
 
 LRESULT
-CMSWindowsSecondaryScreen::onEvent(
-	HWND hwnd,
-	UINT msg,
-	WPARAM wParam,
-	LPARAM lParam)
+CMSWindowsSecondaryScreen::onEvent(HWND hwnd, UINT msg,
+				WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
 	case WM_QUERYENDSESSION:
@@ -582,9 +556,7 @@ CMSWindowsSecondaryScreen::onEvent(
 }
 
 void
-CMSWindowsSecondaryScreen::onEnter(
-	SInt32 x,
-	SInt32 y)
+CMSWindowsSecondaryScreen::onEnter(SInt32 x, SInt32 y)
 {
 	// warp to requested location
 	SInt32 w, h;
@@ -655,8 +627,7 @@ CMSWindowsSecondaryScreen::closeDesktop()
 }
 
 bool
-CMSWindowsSecondaryScreen::switchDesktop(
-	HDESK desk)
+CMSWindowsSecondaryScreen::switchDesktop(HDESK desk)
 {
 	CLock lock(&m_mutex);
 
@@ -1255,9 +1226,7 @@ static const UINT*		g_mapTable[] =
 };
 
 DWORD
-CMSWindowsSecondaryScreen::mapButton(
-	ButtonID button,
-	bool press) const
+CMSWindowsSecondaryScreen::mapButton(ButtonID button, bool press) const
 {
 	// map button id to button flag
 	switch (button) {
@@ -1276,12 +1245,8 @@ CMSWindowsSecondaryScreen::mapButton(
 }
 
 KeyModifierMask
-CMSWindowsSecondaryScreen::mapKey(
-	Keystrokes& keys,
-	UINT& virtualKey,
-	KeyID id,
-	KeyModifierMask mask,
-	EKeyAction action) const
+CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
+				KeyID id, KeyModifierMask mask, EKeyAction action) const
 {
 	// lookup the key table
 	const UInt32 mapID = ((id >> 8) & 0xff);
@@ -1597,9 +1562,7 @@ CMSWindowsSecondaryScreen::mapKey(
 }
 
 void
-CMSWindowsSecondaryScreen::doKeystrokes(
-	const Keystrokes& keys,
-	SInt32 count)
+CMSWindowsSecondaryScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
 {
 	// do nothing if no keys or no repeats
 	if (count < 1 || keys.empty()) {
@@ -1687,9 +1650,7 @@ CMSWindowsSecondaryScreen::updateModifiers()
 }
 
 void
-CMSWindowsSecondaryScreen::toggleKey(
-	UINT virtualKey,
-	KeyModifierMask mask)
+CMSWindowsSecondaryScreen::toggleKey(UINT virtualKey, KeyModifierMask mask)
 {
 	// send key events to simulate a press and release
 	sendKeyEvent(virtualKey, true);
@@ -1701,8 +1662,7 @@ CMSWindowsSecondaryScreen::toggleKey(
 }
 
 UINT
-CMSWindowsSecondaryScreen::virtualKeyToScanCode(
-	UINT& virtualKey)
+CMSWindowsSecondaryScreen::virtualKeyToScanCode(UINT& virtualKey)
 {
 	// try mapping given virtual key
 	UINT code = MapVirtualKey(virtualKey & 0xff, 0);
@@ -1754,8 +1714,7 @@ CMSWindowsSecondaryScreen::virtualKeyToScanCode(
 }
 
 bool
-CMSWindowsSecondaryScreen::isExtendedKey(
-	UINT virtualKey)
+CMSWindowsSecondaryScreen::isExtendedKey(UINT virtualKey)
 {
 	// see if we've already encoded the extended flag
 	if ((virtualKey & 0x100) != 0) {
@@ -1778,9 +1737,7 @@ CMSWindowsSecondaryScreen::isExtendedKey(
 }
 
 void
-CMSWindowsSecondaryScreen::sendKeyEvent(
-	UINT virtualKey,
-	bool press)
+CMSWindowsSecondaryScreen::sendKeyEvent(UINT virtualKey, bool press)
 {
 	DWORD flags = 0;
 	if (isExtendedKey(virtualKey)) {

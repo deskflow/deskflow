@@ -94,8 +94,7 @@ CMSWindowsPrimaryScreen::stop()
 }
 
 void
-CMSWindowsPrimaryScreen::open(
-	CServer* server)
+CMSWindowsPrimaryScreen::open(CServer* server)
 {
 	assert(m_server == NULL);
 	assert(server   != NULL);
@@ -142,9 +141,7 @@ CMSWindowsPrimaryScreen::close()
 }
 
 void
-CMSWindowsPrimaryScreen::enter(
-	SInt32 x,
-	SInt32 y)
+CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 {
 	log((CLOG_INFO "entering primary at %d,%d", x, y));
 	assert(m_active == true);
@@ -239,18 +236,15 @@ CMSWindowsPrimaryScreen::onConfigure()
 }
 
 void
-CMSWindowsPrimaryScreen::warpCursor(
-	SInt32 x,
-	SInt32 y)
+CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
 	// set the cursor position without generating an event
 	SetCursorPos(x, y);
 }
 
 void
-CMSWindowsPrimaryScreen::setClipboard(
-	ClipboardID /*id*/,
-	const IClipboard* src)
+CMSWindowsPrimaryScreen::setClipboard(ClipboardID /*id*/,
+				const IClipboard* src)
 {
 	assert(m_window != NULL);
 
@@ -259,8 +253,7 @@ CMSWindowsPrimaryScreen::setClipboard(
 }
 
 void
-CMSWindowsPrimaryScreen::grabClipboard(
-	ClipboardID /*id*/)
+CMSWindowsPrimaryScreen::grabClipboard(ClipboardID /*id*/)
 {
 	assert(m_window != NULL);
 
@@ -271,9 +264,7 @@ CMSWindowsPrimaryScreen::grabClipboard(
 }
 
 void
-CMSWindowsPrimaryScreen::getSize(
-	SInt32* width,
-	SInt32* height) const
+CMSWindowsPrimaryScreen::getSize(SInt32* width, SInt32* height) const
 {
 	getScreenSize(width, height);
 }
@@ -285,9 +276,8 @@ CMSWindowsPrimaryScreen::getJumpZoneSize() const
 }
 
 void
-CMSWindowsPrimaryScreen::getClipboard(
-	ClipboardID /*id*/,
-	IClipboard* dst) const
+CMSWindowsPrimaryScreen::getClipboard(ClipboardID /*id*/,
+				IClipboard* dst) const
 {
 	assert(m_window != NULL);
 
@@ -373,8 +363,7 @@ CMSWindowsPrimaryScreen::onCloseDisplay()
 }
 
 bool
-CMSWindowsPrimaryScreen::onPreTranslate(
-	MSG* msg)
+CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 {
 	// handle event
 	switch (msg->message) {
@@ -504,11 +493,8 @@ CMSWindowsPrimaryScreen::onPreTranslate(
 }
 
 LRESULT
-CMSWindowsPrimaryScreen::onEvent(
-	HWND hwnd,
-	UINT msg,
-	WPARAM wParam,
-	LPARAM lParam)
+CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
+				WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
 	case WM_QUERYENDSESSION:
@@ -750,8 +736,7 @@ CMSWindowsPrimaryScreen::closeDesktop()
 }
 
 bool
-CMSWindowsPrimaryScreen::switchDesktop(
-	HDESK desk)
+CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 {
 	// did we own the clipboard?
 	bool ownClipboard = (m_clipboardOwner == m_window);
@@ -1300,8 +1285,7 @@ CMSWindowsPrimaryScreen::mapKey(
 }
 
 ButtonID
-CMSWindowsPrimaryScreen::mapButton(
-	WPARAM button) const
+CMSWindowsPrimaryScreen::mapButton(WPARAM button) const
 {
 	switch (button) {
 	case WM_LBUTTONDOWN:
@@ -1350,9 +1334,7 @@ CMSWindowsPrimaryScreen::updateKeys()
 }
 
 void
-CMSWindowsPrimaryScreen::updateKey(
-	UINT vkCode,
-	bool press)
+CMSWindowsPrimaryScreen::updateKey(UINT vkCode, bool press)
 {
 	if (press) {
 		switch (vkCode) {

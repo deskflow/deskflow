@@ -89,10 +89,7 @@ restoreCursor()
 
 static
 LRESULT CALLBACK
-keyboardHook(
-	int code,
-	WPARAM wParam,
-	LPARAM lParam)
+keyboardHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -121,10 +118,7 @@ keyboardHook(
 
 static
 LRESULT CALLBACK
-mouseHook(
-	int code,
-	WPARAM wParam,
-	LPARAM lParam)
+mouseHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -228,10 +222,7 @@ mouseHook(
 
 static
 LRESULT CALLBACK
-cbtHook(
-	int code,
-	WPARAM wParam,
-	LPARAM lParam)
+cbtHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -244,10 +235,7 @@ cbtHook(
 
 static
 LRESULT CALLBACK
-getMessageHook(
-	int code,
-	WPARAM wParam,
-	LPARAM lParam)
+getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -277,10 +265,7 @@ getMessageHook(
 
 static
 LRESULT CALLBACK
-keyboardLLHook(
-	int code,
-	WPARAM wParam,
-	LPARAM lParam)
+keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
@@ -326,8 +311,7 @@ keyboardLLHook(
 
 static
 DWORD WINAPI
-getKeyboardLLProc(
-	void*)
+getKeyboardLLProc(void*)
 {
 	// thread proc for low-level keyboard hook.  this does nothing but
 	// install the hook, process events, and uninstall the hook.
@@ -382,8 +366,7 @@ getKeyboardLLProc(
 
 static
 DWORD WINAPI
-getKeyboardLLProc(
-	void*)
+getKeyboardLLProc(void*)
 {
 	g_keyHookThreadID = 0;
 	SetEvent(g_keyHookEvent);
@@ -441,10 +424,7 @@ getWheelSupport()
 //
 
 BOOL WINAPI
-DllMain(
-	HINSTANCE instance,
-	DWORD reason,
-	LPVOID)
+DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 {
 	if (reason == DLL_PROCESS_ATTACH) {
 		if (g_hinstance == NULL) {
@@ -466,8 +446,7 @@ DllMain(
 extern "C" {
 
 int
-install(
-	DWORD threadID)
+install(DWORD threadID)
 {
 	assert(g_threadID     == 0);
 	assert(g_hinstance    != NULL);
@@ -571,8 +550,7 @@ install(
 }
 
 int
-uninstall(
-	void)
+uninstall(void)
 {
 	assert(g_keyboard != NULL);
 	assert(g_mouse    != NULL);
@@ -607,11 +585,7 @@ uninstall(
 }
 
 void
-setZone(
-	UInt32 sides,
-	SInt32 w,
-	SInt32 h,
-	SInt32 jumpZoneSize)
+setZone(UInt32 sides, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
 {
 	g_zoneSize  = jumpZoneSize;
 	g_zoneSides = sides;
@@ -622,8 +596,7 @@ setZone(
 }
 
 void
-setRelay(
-	void)
+setRelay(void)
 {
 	g_relay     = true;
 	g_zoneSize  = 0;

@@ -14,11 +14,8 @@
 // CServerProtocol1_0
 //
 
-CServerProtocol1_0::CServerProtocol1_0(
-	CServer* server,
-	const CString& client,
-	IInputStream* input,
-	IOutputStream* output) :
+CServerProtocol1_0::CServerProtocol1_0(CServer* server, const CString& client,
+				IInputStream* input, IOutputStream* output) :
 	CServerProtocol(server, client, input, output)
 {
 	// do nothing
@@ -106,11 +103,8 @@ CServerProtocol1_0::sendClose()
 }
 
 void
-CServerProtocol1_0::sendEnter(
-	SInt32 xAbs,
-	SInt32 yAbs,
-	UInt32 seqNum,
-	KeyModifierMask mask)
+CServerProtocol1_0::sendEnter(SInt32 xAbs, SInt32 yAbs,
+				UInt32 seqNum, KeyModifierMask mask)
 {
 	log((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getClient().c_str(), xAbs, yAbs, seqNum, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgCEnter,
@@ -125,25 +119,21 @@ CServerProtocol1_0::sendLeave()
 }
 
 void
-CServerProtocol1_0::sendClipboard(
-	ClipboardID id,
-	const CString& data)
+CServerProtocol1_0::sendClipboard(ClipboardID id, const CString& data)
 {
 	log((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getClient().c_str(), data.size()));
 	CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, id, 0, &data);
 }
 
 void
-CServerProtocol1_0::sendGrabClipboard(
-	ClipboardID id)
+CServerProtocol1_0::sendGrabClipboard(ClipboardID id)
 {
 	log((CLOG_DEBUG "send grab clipboard %d to \"%s\"", id, getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id, 0);
 }
 
 void
-CServerProtocol1_0::sendScreenSaver(
-	bool on)
+CServerProtocol1_0::sendScreenSaver(bool on)
 {
 	log((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getClient().c_str(), on ? 1 : 0));
 	CProtocolUtil::writef(getOutputStream(), kMsgCScreenSaver, on ? 1 : 0);
@@ -157,61 +147,49 @@ CServerProtocol1_0::sendInfoAcknowledgment()
 }
 
 void
-CServerProtocol1_0::sendKeyDown(
-	KeyID key,
-	KeyModifierMask mask)
+CServerProtocol1_0::sendKeyDown(KeyID key, KeyModifierMask mask)
 {
 	log((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyDown, key, mask);
 }
 
 void
-CServerProtocol1_0::sendKeyRepeat(
-	KeyID key,
-	KeyModifierMask mask,
-	SInt32 count)
+CServerProtocol1_0::sendKeyRepeat(KeyID key, KeyModifierMask mask, SInt32 count)
 {
 	log((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getClient().c_str(), key, mask, count));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask, count);
 }
 
 void
-CServerProtocol1_0::sendKeyUp(
-	KeyID key,
-	KeyModifierMask mask)
+CServerProtocol1_0::sendKeyUp(KeyID key, KeyModifierMask mask)
 {
 	log((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyUp, key, mask);
 }
 
 void
-CServerProtocol1_0::sendMouseDown(
-	ButtonID button)
+CServerProtocol1_0::sendMouseDown(ButtonID button)
 {
 	log((CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getClient().c_str(), button));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseDown, button);
 }
 
 void
-CServerProtocol1_0::sendMouseUp(
-	ButtonID button)
+CServerProtocol1_0::sendMouseUp(ButtonID button)
 {
 	log((CLOG_DEBUG1 "send mouse up to \"%s\" id=%d", getClient().c_str(), button));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseUp, button);
 }
 
 void
-CServerProtocol1_0::sendMouseMove(
-	SInt32 xAbs,
-	SInt32 yAbs)
+CServerProtocol1_0::sendMouseMove(SInt32 xAbs, SInt32 yAbs)
 {
 	log((CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getClient().c_str(), xAbs, yAbs));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseMove, xAbs, yAbs);
 }
 
 void
-CServerProtocol1_0::sendMouseWheel(
-	SInt32 delta)
+CServerProtocol1_0::sendMouseWheel(SInt32 delta)
 {
 	log((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getClient().c_str(), delta));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseWheel, delta);
