@@ -1030,7 +1030,7 @@ CMSWindowsSecondaryScreen::mapCharacter(Keystrokes& keys,
 	// strip them both out.
 	if ((desiredMask & (KeyModifierControl | KeyModifierAlt)) ==
 						(KeyModifierControl | KeyModifierAlt)) {
-		outMask &= ~(KeyModifierControl | KeyModifierAlt);
+		desiredMask &= ~(KeyModifierControl | KeyModifierAlt);
 	}
 
 	// strip out the desired shift state.  we're forced to use
@@ -1046,6 +1046,14 @@ CMSWindowsSecondaryScreen::mapCharacter(Keystrokes& keys,
 		outMask |= KeyModifierControl;
 	}
 	if ((modifierState & 4) != 0) {
+		outMask |= KeyModifierAlt;
+	}
+
+	// use desired modifiers
+	if ((desiredMask & KeyModifierControl) != 0) {
+		outMask |= KeyModifierControl;
+	}
+	if ((desiredMask & KeyModifierAlt) != 0) {
 		outMask |= KeyModifierAlt;
 	}
 
