@@ -16,6 +16,7 @@
 #include "CLock.h"
 #include "CMutex.h"
 #include "CThread.h"
+#include "XMT.h"
 #include "XThread.h"
 #include "CLog.h"
 #include "IJob.h"
@@ -113,7 +114,7 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 		status = pthread_create(&m_thread, &attr, threadFunc, (void*)this);
 	pthread_sigmask(SIG_SETMASK, &oldsigset, NULL);
 	if (status != 0) {
-		throw XThreadUnavailable();
+		throw XMTThreadUnavailable();
 	}
 #elif WINDOWS_LIKE
 	unsigned int id;
@@ -121,7 +122,7 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 								threadFunc, (void*)this, 0, &id));
 	m_id     = static_cast<DWORD>(id);
 	if (m_thread == 0) {
-		throw XThreadUnavailable();
+		throw XMTThreadUnavailable();
 	}
 #endif
 

@@ -16,6 +16,11 @@
 #define XTHREAD_H
 
 //! Generic thread exception
+/*!
+Exceptions derived from this class are used by the multithreading
+library to perform stack unwinding when a thread terminates.  These
+exceptions must always be rethrown by clients when caught.
+*/
 class XThread { };
 
 //! Thread exception to exit
@@ -40,12 +45,6 @@ Thrown to cancel a thread.  Clients must not throw this type, but
 must rethrow it if caught (by XThreadCancel, XThread, or ...).
 */
 class XThreadCancel : public XThread { };
-
-//! Thread creation exception
-/*!
-Thrown when a thread cannot be created.
-*/
-class XThreadUnavailable { };
 
 /*!
 \def RETHROW_XTHREAD

@@ -31,6 +31,7 @@
 #include "CLock.h"
 #include "CThread.h"
 #include "CTimerThread.h"
+#include "XMT.h"
 #include "XThread.h"
 #include "CFunctionJob.h"
 #include "CLog.h"
@@ -129,6 +130,14 @@ CServer::mainLoop()
 		m_httpServer = NULL;			\
 		} while (false)
 		FINALLY;
+	}
+	catch (XMT& e) {
+		LOG((CLOG_ERR "server error: %s", e.what()));
+
+		// clean up
+		LOG((CLOG_NOTE "stopping server"));
+		FINALLY;
+		throw;
 	}
 	catch (XBase& e) {
 		LOG((CLOG_ERR "server error: %s", e.what()));

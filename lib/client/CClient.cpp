@@ -31,6 +31,7 @@
 #include "CLock.h"
 #include "CThread.h"
 #include "CTimerThread.h"
+#include "XMT.h"
 #include "XThread.h"
 #include "CLog.h"
 #include "CStopwatch.h"
@@ -208,6 +209,14 @@ CClient::mainLoop()
 		// clean up
 		deleteSession();
 		LOG((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
+	}
+	catch (XMT& e) {
+		LOG((CLOG_ERR "client error: %s", e.what()));
+
+		// clean up
+		deleteSession();
+		LOG((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
+		throw;
 	}
 	catch (XBase& e) {
 		LOG((CLOG_ERR "client error: %s", e.what()));
