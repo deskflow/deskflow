@@ -6,6 +6,7 @@ VDEPTH = ./$(VPATH)
 SUBDIRS =					\
 	lib						\
 	cmd						\
+	dist					\
 	$(NULL)
 
 EXTRA_DIST =				\

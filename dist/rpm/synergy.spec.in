@@ -1,0 +1,37 @@
+Summary:   Mouse and keyboard sharing utility
+Name:      @PACKAGE@
+Version:   @VERSION@
+Release:   1
+Copyright: Copyright (C) 2002 Chris Schoeneman
+Packager:  Chris Schoeneman <crs23@bigfoot.com>
+Group:     FIXME
+Prefixes:  FIXME
+Source:    @PACKAGE@-@VERSION@.tar.gz
+URL:       FIXME
+BuildRoot: /var/tmp/@PACKAGE@-@VERSION@-root
+
+%description
+FIXME
+
+%prep
+%setup
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr
+
+%build
+make
+
+%install
+# FIXME -- install should install doc files
+make install DESTDIR=$RPM_BUILD_ROOT
+# FIXME -- or maybe: make PREFIX=$RPM_BUILD_ROOT%{prefix} install
+
+strip $RPM_BUILD_ROOT/usr/bin/synergy
+strip $RPM_BUILD_ROOT/usr/bin/synergyd
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%attr(755, root, root) /usr/bin/synergy
+%attr(755, root, root) /usr/bin/synergyd
+# FIXME -- add doc files

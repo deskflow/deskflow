@@ -80,5 +80,8 @@ lib/server/Makefile
 cmd/Makefile
 cmd/synergy/Makefile
 cmd/synergyd/Makefile
+dist/Makefile
+dist/rpm/Makefile
+dist/rpm/synergy.spec
 ])
 
