@@ -950,8 +950,15 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 
 	// ignore message if posted prior to last mark change
 	if (!ignore()) {
-		// check for ctrl+alt+del emulation
+		// check for ctrl+alt+del.  we do not want to pass that to the
+		// client.  the user can use ctrl+alt+pause to emulate it.
 		UINT virtKey = (wParam & 0xffu);
+		if (virtKey == VK_DELETE && ctrlAlt) {
+			LOG((CLOG_DEBUG "discard ctrl+alt+del"));
+			return true;
+		}
+
+		// check for ctrl+alt+del emulation
 		if ((virtKey == VK_PAUSE || virtKey == VK_CANCEL) && ctrlAlt) {
 			LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
 			// switch wParam and lParam to be as if VK_DELETE was
