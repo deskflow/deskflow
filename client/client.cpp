@@ -406,9 +406,9 @@ parse(int argc, const char** argv)
 		try {
 			s_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
 		}
-		catch (XSocketAddress&) {
-			log((CLOG_PRINT "%s: invalid server address" BYE,
-								pname, pname));
+		catch (XSocketAddress& e) {
+			log((CLOG_PRINT "%s: %s" BYE,
+								pname, e.what(), pname));
 			bye(kExitArgs);
 		}
 	}

@@ -44,7 +44,7 @@ XSocketAddress::getWhat() const throw()
 		"unknown error for: %{1}:%{2}",
 		"address not found for: %{1}",
 		"no address for: %{1}",
-		"invalid port: %{2}"
+		"invalid port"				// m_port may not be set to the bad port
 	};
 	return format(s_errorID[m_error], s_errorMsg[m_error],
 								m_hostname.c_str(), 
