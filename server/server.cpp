@@ -39,6 +39,8 @@ static bool				s_install     = false;
 static bool				s_uninstall   = false;
 static const char*		s_configFile  = NULL;
 static const char*		s_logFilter   = NULL;
+static CNetworkAddress	s_synergyAddress;
+static CNetworkAddress	s_httpAddress;
 static CConfig			s_config;
 
 
@@ -67,6 +69,7 @@ static void				logLock(bool lock)
 
 static CServer*			s_server = NULL;
 
+#include <signal.h>
 static int				realMain(CMutex* mutex)
 {
 	// s_serverLock should have mutex locked on entry
@@ -82,13 +85,25 @@ static int				realMain(CMutex* mutex)
 
 		bool locked = true;
 		try {
-			// initialize network library
-			CNetwork::init();
-
 			// if configuration has no screens then add this system
 			// as the default
 			if (s_config.begin() == s_config.end()) {
 				s_config.addScreen("primary");
+			}
+
+			// set the contact address, if provided, in the config.
+			// otherwise, if the config doesn't have an address, use
+			// the default.
+			if (s_synergyAddress.isValid()) {
+				s_config.setSynergyAddress(s_synergyAddress);
+			}
+			else if (!s_config.getSynergyAddress().isValid()) {
+				s_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
+			}
+
+			// set HTTP address is provided
+			if (s_httpAddress.isValid()) {
+				s_config.setHTTPAddress(s_httpAddress);
 			}
 
 			// create server
@@ -195,6 +210,7 @@ static void				help()
 "\n"
 "Start the synergy mouse/keyboard sharing server.\n"
 "\n"
+"  -a, --address <address>  listen for clients on the given address.\n"
 "  -c, --config <pathname>  use the named configuration file instead\n"
 "                           where ~ represents the user's home directory.\n"
 "  -d, --debug <level>      filter out log messages with priorty below level.\n"
@@ -212,6 +228,11 @@ static void				help()
 "\n"
 "* marks defaults.\n"
 "\n"
+"The argument for --address is of the form: [<hostname>][:<port>].  The\n"
+"hostname must be the address or hostname of an interface on the system.\n"
+"The default is to listen on all interfaces.  The port overrides the\n"
+"default port, %d.\n"
+"\n"
 "If no configuration file pathname is provided then the first of the\n"
 "following to load sets the configuration:\n"
 "  %s\n"
@@ -222,6 +243,7 @@ static void				help()
 "Where log messages go depends on the platform and whether or not the\n"
 "server is running as a "DAEMON".",
 								pname,
+								kDefaultPort,
 								platform.addPathComponent(
 									platform.getUserDirectory(),
 									CONFIG_NAME).c_str(),
@@ -263,6 +285,32 @@ static void				parse(int argc, const char** argv)
 		if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 			// change logging level
 			s_logFilter = argv[++i];
+		}
+
+		else if (isArg(i, argc, argv, "-a", "--address", 1)) {
+			// save listen address
+			try {
+				s_synergyAddress = CNetworkAddress(argv[i + 1], kDefaultPort);
+			}
+			catch (XSocketAddress&) {
+				log((CLOG_PRINT "%s: invalid address for `%s'" BYE,
+								pname, argv[i], pname));
+				bye(2);
+			}
+			++i;
+		}
+
+		else if (isArg(i, argc, argv, NULL, "--http", 1)) {
+			// save listen address
+			try {
+				s_httpAddress = CNetworkAddress(argv[i + 1], kDefaultPort + 1);
+			}
+			catch (XSocketAddress&) {
+				log((CLOG_PRINT "%s: invalid address for `%s'" BYE,
+								pname, argv[i], pname));
+				bye(2);
+			}
+			++i;
 		}
 
 		else if (isArg(i, argc, argv, "-c", "--config", 1)) {
@@ -527,6 +575,9 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// get program name
 	pname = platform.getBasename(__argv[0]);
 
+	// initialize network library
+	CNetwork::init();
+
 	// parse command line without reporting errors but recording if
 	// the app would've exited.  this is too avoid showing a dialog
 	// box if we're being started as a service because we shouldn't
@@ -648,6 +699,9 @@ int main(int argc, char** argv)
 
 	// get program name
 	pname = platform.getBasename(argv[0]);
+
+	// initialize network library
+	CNetwork::init();
 
 	// parse command line
 	parse(argc, const_cast<const char**>(argv));

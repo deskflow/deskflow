@@ -7,6 +7,9 @@
 static const SInt16		kProtocolMajorVersion = 0;
 static const SInt16		kProtocolMinorVersion = 1;
 
+// contact port number
+static const UInt16		kDefaultPort = 24800;
+
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
 // refers to the n'th argument (counting from one).  message codes are

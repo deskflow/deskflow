@@ -69,6 +69,12 @@ public:
 	static void			init();
 	static void			cleanup();
 
+	// byte swapping functions
+	static UInt32		swaphtonl(UInt32 hostlong);
+	static UInt16		swaphtons(UInt16 hostshort);
+	static UInt32		swapntohl(UInt32 netlong);
+	static UInt16		swapntohs(UInt16 netshort);
+
 	// constants
 
 	static const int	Error;
@@ -100,7 +106,7 @@ public:
 		kHNone = 0
 	};
 
-	// socket interface
+	// socket interface (only available after init())
 
 	static Socket (PASCAL FAR *accept)(Socket s, Address FAR *addr, AddressLength FAR *addrlen);
 	static int (PASCAL FAR *bind)(Socket s, const Address FAR *addr, AddressLength namelen);
@@ -110,13 +116,9 @@ public:
 	static int (PASCAL FAR *getpeername)(Socket s, Address FAR *name, AddressLength FAR * namelen);
 	static int (PASCAL FAR *getsockname)(Socket s, Address FAR *name, AddressLength FAR * namelen);
 	static int (PASCAL FAR *getsockopt)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen);
-	static UInt32 (PASCAL FAR *swaphtonl)(UInt32 hostlong);
-	static UInt16 (PASCAL FAR *swaphtons)(UInt16 hostshort);
 	static unsigned long (PASCAL FAR *inet_addr)(const char FAR * cp);
 	static char FAR * (PASCAL FAR *inet_ntoa)(struct in_addr in);
 	static int (PASCAL FAR *listen)(Socket s, int backlog);
-	static UInt32 (PASCAL FAR *swapntohl)(UInt32 netlong);
-	static UInt16 (PASCAL FAR *swapntohs)(UInt16 netshort);
 	static ssize_t (PASCAL FAR *read)(Socket s, void FAR * buf, size_t len);
 	static ssize_t (PASCAL FAR *recv)(Socket s, void FAR * buf, size_t len, int flags);
 	static ssize_t (PASCAL FAR *recvfrom)(Socket s, void FAR * buf, size_t len, int flags, Address FAR *from, AddressLength FAR * fromlen);

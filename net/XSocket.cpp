@@ -5,7 +5,7 @@
 //
 
 XSocketAddress::XSocketAddress(Error error,
-								const CString& hostname, SInt16 port) throw() :
+								const CString& hostname, UInt16 port) throw() :
 								m_error(error),
 								m_hostname(hostname),
 								m_port(port)
@@ -23,7 +23,7 @@ CString					XSocketAddress::getHostname() const throw()
 	return m_hostname;
 }
 
-SInt16					XSocketAddress::getPort() const throw()
+UInt16					XSocketAddress::getPort() const throw()
 {
 	return m_port;
 }

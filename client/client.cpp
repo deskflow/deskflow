@@ -32,7 +32,7 @@ static bool				s_daemon      = true;
 static bool				s_install     = false;
 static bool				s_uninstall   = false;
 static const char*		s_logFilter   = NULL;
-static const char*		s_serverName  = NULL;
+static CNetworkAddress	s_serverAddress;
 
 
 //
@@ -62,8 +62,6 @@ static CClient*			s_client = NULL;
 
 static int				realMain(CMutex* mutex)
 {
-	static const UInt16 port = 50001;	// FIXME
-
 	try {
 		// initialize threading library
 		CThread::init();
@@ -75,11 +73,7 @@ static int				realMain(CMutex* mutex)
 
 		bool locked = true;
 		try {
-			// initialize network library
-			CNetwork::init();
-
 			// create client
-			CNetworkAddress addr(s_serverName, port);
 			s_client = new CClient("secondary");	// FIXME
 
 			// run client
@@ -87,7 +81,7 @@ static int				realMain(CMutex* mutex)
 				mutex->unlock();
 			}
 			locked = false;
-			s_client->run(addr);
+			s_client->run(s_serverAddress);
 			locked = true;
 			if (mutex != NULL) {
 				mutex->lock();
@@ -194,9 +188,13 @@ static void				help()
 "\n"
 "* marks defaults.\n"
 "\n"
+"The server address is of the form: [<hostname>][:<port>].  The hostname\n"
+"must be the address or hostname of the server.  The port overrides the\n"
+"default port, %d.\n"
+"\n"
 "Where log messages go depends on the platform and whether or not the\n"
 "client is running as a "DAEMON".",
-								pname));
+								pname, kDefaultPort));
 
 }
 
@@ -334,7 +332,16 @@ static void				parse(int argc, const char** argv)
 								pname, argv[i], pname));
 			bye(2);
 		}
-		s_serverName = argv[i];
+
+		// save server address
+		try {
+			s_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
+		}
+		catch (XSocketAddress&) {
+			log((CLOG_PRINT "%s: invalid server address" BYE,
+								pname, pname));
+			bye(2);
+		}
 	}
 
 	// increase default filter level for daemon.  the user must
@@ -445,6 +452,9 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// get program name
 	pname = platform.getBasename(__argv[0]);
 
+	// initialize network library
+	CNetwork::init();
+
 	// parse command line without reporting errors but recording if
 	// the app would've exited.  this is too avoid showing a dialog
 	// box if we're being started as a service because we shouldn't
@@ -504,7 +514,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			commandLine += s_logFilter;
 		}
 		commandLine += " ";
-		commandLine += s_serverName;
+		commandLine += s_serverAddress.getHostname().c_str();
 
 		// install
 		if (!platform.installDaemon(DAEMON_NAME,
@@ -559,6 +569,9 @@ int main(int argc, char** argv)
 
 	// get program name
 	pname = platform.getBasename(argv[0]);
+
+	// initialize network library
+	CNetwork::init();
 
 	// parse command line
 	parse(argc, const_cast<const char**>(argv));

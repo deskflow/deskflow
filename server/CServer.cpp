@@ -83,12 +83,14 @@ void					CServer::run()
 			}
 		}
 
-		// start listening for HTTP requests
-		m_httpServer = new CHTTPServer(this);
-		CThread(new TMethodJob<CServer>(this, &CServer::acceptHTTPClients));
-
 		// start listening for new clients
 		CThread(new TMethodJob<CServer>(this, &CServer::acceptClients));
+
+		// start listening for HTTP requests
+		if (m_config.getHTTPAddress().isValid()) {
+			m_httpServer = new CHTTPServer(this);
+			CThread(new TMethodJob<CServer>(this, &CServer::acceptHTTPClients));
+		}
 
 		// handle events
 		log((CLOG_DEBUG "starting event handling"));
@@ -982,11 +984,10 @@ void					CServer::acceptClients(void*)
 		// bind to the desired port.  keep retrying if we can't bind
 		// the address immediately.
 		CStopwatch timer;
-		CNetworkAddress addr(50001 /* FIXME -- m_port */);
 		for (;;) {
 			try {
 				log((CLOG_DEBUG1 "binding listen socket"));
-				listen->bind(addr);
+				listen->bind(m_config.getSynergyAddress());
 				break;
 			}
 			catch (XSocketAddressInUse&) {
@@ -1166,11 +1167,10 @@ void					CServer::acceptHTTPClients(void*)
 		// bind to the desired port.  keep retrying if we can't bind
 		// the address immediately.
 		CStopwatch timer;
-		CNetworkAddress addr(50002 /* FIXME -- m_httpPort */);
 		for (;;) {
 			try {
-				log((CLOG_DEBUG1 "binding listen socket"));
-				listen->bind(addr);
+				log((CLOG_DEBUG1 "binding HTTP listen socket"));
+				listen->bind(m_config.getHTTPAddress());
 				break;
 			}
 			catch (XSocketAddressInUse&) {

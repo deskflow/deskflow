@@ -6,6 +6,7 @@
 #include "MouseTypes.h"
 #include "CConfig.h"
 #include "CClipboard.h"
+#include "CNetworkAddress.h"
 #include "CCondVar.h"
 #include "CMutex.h"
 #include "CString.h"

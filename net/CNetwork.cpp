@@ -15,13 +15,9 @@ int (PASCAL FAR *CNetwork::ioctl)(CNetwork::Socket s, int cmd, ...);
 int (PASCAL FAR *CNetwork::getpeername)(CNetwork::Socket s, CNetwork::Address FAR *name, CNetwork::AddressLength FAR * namelen);
 int (PASCAL FAR *CNetwork::getsockname)(CNetwork::Socket s, CNetwork::Address FAR *name, CNetwork::AddressLength FAR * namelen);
 int (PASCAL FAR *CNetwork::getsockopt)(CNetwork::Socket s, int level, int optname, void FAR * optval, CNetwork::AddressLength FAR *optlen);
-UInt32 (PASCAL FAR *CNetwork::swaphtonl)(UInt32 hostlong);
-UInt16 (PASCAL FAR *CNetwork::swaphtons)(UInt16 hostshort);
 unsigned long (PASCAL FAR *CNetwork::inet_addr)(const char FAR * cp);
 char FAR * (PASCAL FAR *CNetwork::inet_ntoa)(struct in_addr in);
 int (PASCAL FAR *CNetwork::listen)(CNetwork::Socket s, int backlog);
-UInt32 (PASCAL FAR *CNetwork::swapntohl)(UInt32 netlong);
-UInt16 (PASCAL FAR *CNetwork::swapntohs)(UInt16 netshort);
 ssize_t (PASCAL FAR *CNetwork::read)(CNetwork::Socket s, void FAR * buf, size_t len);
 ssize_t (PASCAL FAR *CNetwork::recv)(CNetwork::Socket s, void FAR * buf, size_t len, int flags);
 ssize_t (PASCAL FAR *CNetwork::recvfrom)(CNetwork::Socket s, void FAR * buf, size_t len, int flags, CNetwork::Address FAR *from, CNetwork::AddressLength FAR * fromlen);
@@ -113,6 +109,38 @@ void					CNetwork::cleanup()
 	}
 }
 
+UInt32					CNetwork::swaphtonl(UInt32 v)
+{
+	static const union { UInt16 s; UInt8 b[2]; } s_endian = { 0x1234 };
+	if (s_endian.b[0] == 0x34)
+		return	((v & 0xff000000lu) >> 24) |
+				((v & 0x00ff0000lu) >>  8) |
+				((v & 0x0000ff00lu) <<  8) |
+				((v & 0x000000fflu) << 24);
+	else
+		return v;
+}
+
+UInt16					CNetwork::swaphtons(UInt16 v)
+{
+	static const union { UInt16 s; UInt8 b[2]; } s_endian = { 0x1234 };
+	if (s_endian.b[0] == 0x34)
+		return	((v & 0xff00u) >> 8) |
+				((v & 0x00ffu) << 8);
+	else
+		return v;
+}
+
+UInt32					CNetwork::swapntohl(UInt32 v)
+{
+	return swaphtonl(v);
+}
+
+UInt16					CNetwork::swapntohs(UInt16 v)
+{
+	return swaphtons(v);
+}
+
 #define setfunc(var, name, type) 	var = (type)netGetProcAddress(module, #name)
 
 void					CNetwork::init2(HMODULE module)
@@ -141,13 +169,9 @@ void					CNetwork::init2(HMODULE module)
 	setfunc(getpeername, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
 	setfunc(getsockname, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
 	setfunc(getsockopt, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));
-	setfunc(swaphtonl, htonl, UInt32 (PASCAL FAR *)(UInt32 hostlong));
-	setfunc(swaphtons, htons, UInt16 (PASCAL FAR *)(UInt16 hostshort));
 	setfunc(inet_addr, inet_addr, unsigned long (PASCAL FAR *)(const char FAR * cp));
 	setfunc(inet_ntoa, inet_ntoa, char FAR * (PASCAL FAR *)(struct in_addr in));
 	setfunc(listen, listen, int (PASCAL FAR *)(Socket s, int backlog));
-	setfunc(swapntohl, ntohl, UInt32 (PASCAL FAR *)(UInt32 netlong));
-	setfunc(swapntohs, ntohs, UInt16 (PASCAL FAR *)(UInt16 netshort));
 	setfunc(recv, recv, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags));
 	setfunc(recvfrom, recvfrom, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags, Address FAR *from, AddressLength FAR * fromlen));
 	setfunc(send, send, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags));
@@ -259,22 +283,22 @@ ssize_t PASCAL FAR		CNetwork::write2(Socket s,
 
 #define setfunc(var, name, type) 	var = (type)::name
 
-static UInt32			myhtonl(UInt32 v)
+UInt32					CNetwork::swaphtonl(UInt32 v)
 {
 	return htonl(v);
 }
 
-static UInt16			myhtons(UInt16 v)
+UInt16					CNetwork::swaphtons(UInt16 v)
 {
 	return htons(v);
 }
 
-static UInt32			myntohl(UInt32 v)
+UInt32					CNetwork::swapntohl(UInt32 v)
 {
 	return ntohl(v);
 }
 
-static UInt16			myntohs(UInt16 v)
+UInt16					CNetwork::swapntohs(UInt16 v)
 {
 	return ntohs(v);
 }
@@ -307,13 +331,9 @@ void					CNetwork::init()
 	setfunc(getpeername, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
 	setfunc(getsockname, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
 	setfunc(getsockopt, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));
-	setfunc(swaphtonl, myhtonl, UInt32 (PASCAL FAR *)(UInt32 hostlong));
-	setfunc(swaphtons, myhtons, UInt16 (PASCAL FAR *)(UInt16 hostshort));
 	setfunc(inet_addr, inet_addr, unsigned long (PASCAL FAR *)(const char FAR * cp));
 	setfunc(inet_ntoa, inet_ntoa, char FAR * (PASCAL FAR *)(struct in_addr in));
 	setfunc(listen, listen, int (PASCAL FAR *)(Socket s, int backlog));
-	setfunc(swapntohl, myntohl, UInt32 (PASCAL FAR *)(UInt32 netlong));
-	setfunc(swapntohs, myntohs, UInt16 (PASCAL FAR *)(UInt16 netshort));
 	setfunc(poll, poll, int (PASCAL FAR *)(CNetwork::PollEntry fds[], int nfds, int timeout));
 	setfunc(read, read, ssize_t (PASCAL FAR *)(CNetwork::Socket s, void FAR * buf, size_t len));
 	setfunc(recv, recv, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags));

@@ -1,4 +1,5 @@
 #include "CConfig.h"
+#include "ProtocolTypes.h"
 #include "stdistream.h"
 #include "stdostream.h"
 #include <assert.h>
@@ -156,6 +157,16 @@ bool					CConfig::disconnect(const CString& srcName,
 	return true;
 }
 
+void					CConfig::setSynergyAddress(const CNetworkAddress& addr)
+{
+	m_synergyAddress = addr;
+}
+
+void					CConfig::setHTTPAddress(const CNetworkAddress& addr)
+{
+	m_httpAddress = addr;
+}
+
 bool					CConfig::isValidScreenName(const CString& name) const
 {
 	// name is valid if matches validname
@@ -245,6 +256,16 @@ CString					CConfig::getNeighbor(const CString& srcName,
 								srcSide - kFirstDirection]);
 }
 
+const CNetworkAddress&	CConfig::getSynergyAddress() const
+{
+	return m_synergyAddress;
+}
+
+const CNetworkAddress&	CConfig::getHTTPAddress() const
+{
+	return m_httpAddress;
+}
+
 const char*				CConfig::dirName(EDirection dir)
 {
 	static const char* s_name[] = { "left", "right", "top", "bottom" };
@@ -277,6 +298,7 @@ bool					CConfig::readLine(std::istream& s, CString& line)
 void					CConfig::readSection(std::istream& s)
 {
 	static const char s_section[] = "section:";
+	static const char s_network[] = "network";
 	static const char s_screens[] = "screens";
 	static const char s_links[]   = "links";
 	static const char s_aliases[] = "aliases";
@@ -304,7 +326,10 @@ void					CConfig::readSection(std::istream& s)
 	}
 
 	// read section
-	if (name == s_screens) {
+	if (name == s_network) {
+		readSectionNetwork(s);
+	}
+	else if (name == s_screens) {
 		readSectionScreens(s);
 	}
 	else if (name == s_links) {
@@ -316,6 +341,61 @@ void					CConfig::readSection(std::istream& s)
 	else {
 		throw XConfigRead("unknown section name");
 	}
+}
+
+void					CConfig::readSectionNetwork(std::istream& s)
+{
+	CString line;
+	CString name;
+	while (readLine(s, line)) {
+		// check for end of section
+		if (line == "end") {
+			return;
+		}
+
+		// parse argument:  `<name>=<value>'
+		CString::size_type i = line.find_first_of(" \t=");
+		if (i == 0) {
+			throw XConfigRead("missing argument name");
+		}
+		if (i == CString::npos) {
+			throw XConfigRead("missing = in argument");
+		}
+		CString name = line.substr(0, i);
+		i = line.find_first_not_of(" \t", i);
+		if (i == CString::npos || line[i] != '=') {
+			throw XConfigRead("missing = in argument");
+		}
+		i = line.find_first_not_of(" \t", i + 1);
+		CString value;
+		if (i != CString::npos) {
+			value = line.substr(i);
+		}
+		if (value.empty()) {
+			throw XConfigRead("missing value after =");
+		}
+
+		if (name == "address") {
+			try {
+				m_synergyAddress = CNetworkAddress(value, kDefaultPort);
+			}
+			catch (XSocketAddress&) {
+				throw XConfigRead("invalid address argument");
+			}
+		}
+		else if (name == "http") {
+			try {
+				m_httpAddress = CNetworkAddress(value, kDefaultPort + 1);
+			}
+			catch (XSocketAddress&) {
+				throw XConfigRead("invalid http argument");
+			}
+		}
+		else {
+			throw XConfigRead("unknown argument");
+		}
+	}
+	throw XConfigRead("unexpected end of screens section");
 }
 
 void					CConfig::readSectionScreens(std::istream& s)
@@ -493,6 +573,18 @@ std::istream&			operator>>(std::istream& s, CConfig& config)
 
 std::ostream&			operator<<(std::ostream& s, const CConfig& config)
 {
+	// network section
+	s << "section: network" << std::endl;
+	if (config.m_synergyAddress.isValid()) {
+		s << "\taddress=" << config.m_synergyAddress.getHostname().c_str() <<
+								std::endl;
+	}
+	if (config.m_httpAddress.isValid()) {
+		s << "\thttp=" << config.m_httpAddress.getHostname().c_str() <<
+								std::endl;
+	}
+	s << "end" << std::endl;
+
 	// screens section
 	s << "section: screens" << std::endl;
 	for (CConfig::const_iterator screen = config.begin();

@@ -3,6 +3,7 @@
 
 #include "BasicTypes.h"
 #include "CString.h"
+#include "CNetworkAddress.h"
 #include "XBase.h"
 #include <iosfwd>
 #include "stdmap.h"
@@ -96,6 +97,11 @@ public:
 	bool				disconnect(const CString& srcName,
 								EDirection srcSide);
 
+	// set the synergy and http listen addresses.  there are no
+	// default addresses.
+	void				setSynergyAddress(const CNetworkAddress&);
+	void				setHTTPAddress(const CNetworkAddress&);
+
 	// accessors
 
 	// returns true iff the given name is a valid screen name.
@@ -120,6 +126,10 @@ public:
 	// screen name.
 	CString				getNeighbor(const CString&, EDirection) const;
 
+	// get the listen addresses
+	const CNetworkAddress&	getSynergyAddress() const;
+	const CNetworkAddress&	getHTTPAddress() const;
+
 	// read/write a configuration.  operator>> will throw XConfigRead
 	// on error.
 	friend std::istream&	operator>>(std::istream&, CConfig&);
@@ -131,6 +141,7 @@ public:
 private:
 	static bool			readLine(std::istream&, CString&);
 	void				readSection(std::istream&);
+	void				readSectionNetwork(std::istream&);
 	void				readSectionScreens(std::istream&);
 	void				readSectionLinks(std::istream&);
 	void				readSectionAliases(std::istream&);
@@ -140,6 +151,8 @@ private:
 
 	CCellMap			m_map;
 	CNameMap			m_nameToCanonicalName;
+	CNetworkAddress		m_synergyAddress;
+	CNetworkAddress		m_httpAddress;
 };
 
 class XConfigRead : public XBase {

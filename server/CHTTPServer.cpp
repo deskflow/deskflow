@@ -308,6 +308,7 @@ void					CHTTPServer::doProcessPostEditMap(
 
 		// convert temporary screen map into a regular map
 		CConfig config;
+		m_server->getConfig(&config);
 		screens.convertTo(config);
 
 		// set new screen map on server
@@ -719,6 +720,8 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 void					CHTTPServer::CScreenArray::convertTo(
 								CConfig& config) const
 {
+	config.removeAllScreens();
+
 	// add screens and find smallest box containing all screens
 	SInt32 x0 = m_w, x1 = 0, y0 = m_h, y1 = 0;
 	for (SInt32 y = 0; y < m_h; ++y) {
