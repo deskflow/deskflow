@@ -1178,11 +1178,11 @@ CServer::acceptClients(void*)
 				break;
 			}
 			catch (XSocketBind& e) {
-				log((CLOG_DEBUG1 "bind failed: %s", e.getErrstr()));
+				log((CLOG_WARN "bind failed: %s", e.getErrstr()));
 
 				// give up if we've waited too long
 				if (timer.getTime() >= m_bindTimeout) {
-					log((CLOG_DEBUG1 "waited too long to bind, giving up"));
+					log((CLOG_ERR "waited too long to bind, giving up"));
 					throw;
 				}
 
