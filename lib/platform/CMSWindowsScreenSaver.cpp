@@ -398,6 +398,9 @@ CMSWindowsScreenSaver::watchDesktopThread(void*)
 
 		// compare name to screen saver desktop name
 		if (_tcsicmp(name, TEXT("Screen-saver")) == 0) {
+// XXX -- getting "Default" as desk when screen saver was running
+// before we started checking on it.  can it be "Default" at other
+// times to?  how do we properly detect a running screen saver?
 			// still the screen saver desktop so keep waiting
 			continue;
 		}
