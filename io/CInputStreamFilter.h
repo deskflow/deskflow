@@ -14,7 +14,7 @@ public:
 
 	// IInputStream overrides
 	virtual void		close() = 0;
-	virtual UInt32		read(void*, UInt32 maxCount) = 0;
+	virtual UInt32		read(void*, UInt32 maxCount, double timeout) = 0;
 	virtual UInt32		getSize() const = 0;
 
 protected:

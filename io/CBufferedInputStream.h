@@ -26,7 +26,7 @@ public:
 	void				hangup();
 
 	// same as read() but caller must lock the mutex
-	UInt32				readNoLock(void*, UInt32 count);
+	UInt32				readNoLock(void*, UInt32 count, double timeout);
 
 	// accessors
 
@@ -36,7 +36,7 @@ public:
 	// IInputStream overrides
 	// these all lock the mutex for their duration
 	virtual void		close();
-	virtual UInt32		read(void*, UInt32 count);
+	virtual UInt32		read(void*, UInt32 count, double timeout);
 	virtual UInt32		getSize() const;
 
 private:

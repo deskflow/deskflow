@@ -10,6 +10,12 @@ static const SInt16		kProtocolMinorVersion = 1;
 // contact port number
 static const UInt16		kDefaultPort = 24800;
 
+// time between heartbeats (in seconds)
+static const double		kHeartRate = 2.0;
+
+// time without a heartbeat that we call death
+static const double		kHeartDeath = 3.0 * kHeartRate;
+
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
 // refers to the n'th argument (counting from one).  message codes are
@@ -23,6 +29,9 @@ static const UInt16		kDefaultPort = 24800;
 //
 // command codes
 //
+
+// no operation;  secondary -> primary
+static const char		kMsgCNoop[] 		= "CNOP";
 
 // close connection;  primary -> secondary
 static const char		kMsgCClose[] 		= "CBYE";

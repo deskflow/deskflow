@@ -2,6 +2,7 @@
 #include "CLock.h"
 #include "CMutex.h"
 #include "CThread.h"
+#include "CStopwatch.h"
 #include "IJob.h"
 #include "XIO.h"
 #include <cstring>
@@ -43,15 +44,19 @@ CBufferedInputStream::hangup()
 }
 
 UInt32
-CBufferedInputStream::readNoLock(void* dst, UInt32 n)
+CBufferedInputStream::readNoLock(void* dst, UInt32 n, double timeout)
 {
 	if (m_closed) {
 		throw XIOClosed();
 	}
 
-	// wait for data (or hangup)
+	// wait for data, hangup, or timeout
+	CStopwatch timer(true);
 	while (!m_hungup && m_empty == true) {
-		m_empty.wait();
+		if (!m_empty.wait(timer, timeout)) {
+			// timed out
+			return (UInt32)-1;
+		}
 	}
 
 	// read data
@@ -98,10 +103,10 @@ CBufferedInputStream::close()
 }
 
 UInt32
-CBufferedInputStream::read(void* dst, UInt32 n)
+CBufferedInputStream::read(void* dst, UInt32 n, double timeout)
 {
 	CLock lock(m_mutex);
-	return readNoLock(dst, n);
+	return readNoLock(dst, n, timeout);
 }
 
 UInt32

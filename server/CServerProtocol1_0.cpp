@@ -8,6 +8,7 @@
 #include "IOutputStream.h"
 #include "CThread.h"
 #include "CLog.h"
+#include "CStopwatch.h"
 #include <cstring>
 
 //
@@ -29,22 +30,35 @@ CServerProtocol1_0::~CServerProtocol1_0()
 void
 CServerProtocol1_0::run()
 {
-	// handle messages until the client hangs up
+	// handle messages until the client hangs up or stops sending heartbeats
+	CStopwatch heartTimer;
 	for (;;) {
 		CThread::testCancel();
 
 		// wait for a message
 		UInt8 code[4];
-		UInt32 n = getInputStream()->read(code, 4);
+		UInt32 n = getInputStream()->read(code, 4, kHeartRate);
 		CThread::testCancel();
 
-		// verify we got an entire code
+		// check if client hungup
 		if (n == 0) {
 			log((CLOG_NOTE "client \"%s\" disconnected", getClient().c_str()));
-
-			// client hungup
 			return;
 		}
+
+		// check if client has stopped sending heartbeats
+		if (n == (UInt32)-1) {
+			if (heartTimer.getTime() > kHeartDeath) {
+				log((CLOG_NOTE "client \"%s\" is dead", getClient().c_str()));
+				return;
+			}
+			continue;
+		}
+
+		// got a message so reset heartbeat monitor
+		heartTimer.reset();
+
+		// verify we got an entire code
 		if (n != 4) {
 			log((CLOG_ERR "incomplete message from \"%s\": %d bytes", getClient().c_str(), n));
 
@@ -56,6 +70,10 @@ CServerProtocol1_0::run()
 		log((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getClient().c_str(), code[0], code[1], code[2], code[3]));
 		if (memcmp(code, kMsgDInfo, 4) == 0) {
 			recvInfo();
+		}
+		else if (memcmp(code, kMsgCNoop, 4) == 0) {
+			// discard no-ops
+			continue;
 		}
 		else if (memcmp(code, kMsgCClipboard, 4) == 0) {
 			recvGrabClipboard();
@@ -83,8 +101,17 @@ CServerProtocol1_0::queryInfo()
 
 	// wait for and verify reply
 	UInt8 code[4];
-	UInt32 n = getInputStream()->read(code, 4);
-	if (n != 4 && memcmp(code, kMsgDInfo, 4) != 0) {
+	for (;;) {
+		UInt32 n = getInputStream()->read(code, 4, -1.0);
+		if (n == 4) {
+			if (memcmp(code, kMsgCNoop, 4) == 0) {
+				// discard heartbeats
+				continue;
+			}
+			if (memcmp(code, kMsgDInfo, 4) == 0) {
+				break;
+			}
+		}
 		throw XBadClient();
 	}
 

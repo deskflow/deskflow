@@ -1,5 +1,6 @@
 #include "CInputPacketStream.h"
 #include "CLock.h"
+#include "CStopwatch.h"
 
 //
 // CInputPacketStream
@@ -26,14 +27,21 @@ CInputPacketStream::close()
 }
 
 UInt32
-CInputPacketStream::read(void* buffer, UInt32 n)
+CInputPacketStream::read(void* buffer, UInt32 n, double timeout)
 {
 	CLock lock(&m_mutex);
 
-	// wait for entire message to be read.  return immediately if
-	// stream hungup.
-	if (!waitForFullMessage()) {
+	// wait for entire message to be read.  return if stream
+	// hungup or timeout.
+	switch (waitForFullMessage(timeout)) {
+	case kData:
+		break;
+
+	case kHungup:
 		return 0;
+
+	case kTimedout:
+		return (UInt32)-1;
 	}
 
 	// limit number of bytes to read to the number of bytes left in the
@@ -43,7 +51,7 @@ CInputPacketStream::read(void* buffer, UInt32 n)
 	}
 
 	// now read from our buffer
-	n = m_buffer.readNoLock(buffer, n);
+	n = m_buffer.readNoLock(buffer, n, -1.0);
 	assert(n <= m_size);
 	m_size -= n;
 
@@ -60,48 +68,70 @@ CInputPacketStream::getSize() const
 UInt32
 CInputPacketStream::getSizeNoLock() const
 {
+	CStopwatch timer(true);
 	while (!hasFullMessage() && getStream()->getSize() > 0) {
 		// read more data
-		if (!getMoreMessage()) {
+		if (getMoreMessage(-1.0) != kData) {
 			// stream hungup
-			return false;
+			return 0;
 		}
 	}
 
 	return m_size;
 }
 
-bool
-CInputPacketStream::waitForFullMessage() const
+CInputPacketStream::EResult
+CInputPacketStream::waitForFullMessage(double timeout) const
 {
+	CStopwatch timer(true);
 	while (!hasFullMessage()) {
+		// compute remaining timeout
+		double t = timeout - timer.getTime();
+		if (timeout >= 0.0 && t <= 0.0) {
+			// timeout
+			return kTimedout;
+		}
+
 		// read more data
-		if (!getMoreMessage()) {
+		switch (getMoreMessage(t)) {
+		case kData:
+			break;
+
+		case kHungup:
 			// stream hungup
-			return false;
+			return kHungup;
+
+		case kTimedout:
+			// stream timed out
+			return kTimedout;
 		}
 	}
 
-	return true;
+	return kData;
 }
 
-bool
-CInputPacketStream::getMoreMessage() const
+CInputPacketStream::EResult
+CInputPacketStream::getMoreMessage(double timeout) const
 {
 	// read more data
 	char buffer[4096];
-	UInt32 n = getStream()->read(buffer, sizeof(buffer));
+	UInt32 n = getStream()->read(buffer, sizeof(buffer), timeout);
+
+	// return if stream timed out
+	if (n == (UInt32)-1) {
+		return kTimedout;
+	}
 
 	// return if stream hungup
 	if (n == 0) {
 		m_buffer.hangup();
-		return false;
+		return kHungup;
 	}
 
 	// append to our buffer
 	m_buffer.write(buffer, n);
 
-	return true;
+	return kData;
 }
 
 bool
@@ -117,7 +147,7 @@ CInputPacketStream::hasFullMessage() const
 
 		// save payload length
 		UInt8 buffer[4];
-		UInt32 n = m_buffer.readNoLock(buffer, sizeof(buffer));
+		UInt32 n = m_buffer.readNoLock(buffer, sizeof(buffer), -1.0);
 		assert(n == 4);
 		m_size = ((UInt32)buffer[0] << 24) |
 				 ((UInt32)buffer[1] << 16) |

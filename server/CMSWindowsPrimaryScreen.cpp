@@ -386,21 +386,27 @@ CMSWindowsPrimaryScreen::onOpenDisplay()
 	// initialize hook library
 	m_init(m_threadID);
 
-	// install the screen saver hook
-	if (m_installScreenSaver != NULL) {
-		m_installScreenSaver();
-	}
+	try {
+		// install the screen saver hook
+		if (m_installScreenSaver != NULL) {
+			m_installScreenSaver();
+		}
 
-	// get the input desktop and switch to it
-	if (m_is95Family) {
-		if (!openDesktop()) {
-			throw XScreenOpenFailure();
+		// get the input desktop and switch to it
+		if (m_is95Family) {
+			if (!openDesktop()) {
+				throw XScreenOpenFailure();
+			}
+		}
+		else {
+			if (!switchDesktop(openInputDesktop())) {
+				throw XScreenOpenFailure();
+			}
 		}
 	}
-	else {
-		if (!switchDesktop(openInputDesktop())) {
-			throw XScreenOpenFailure();
-		}
+	catch (...) {
+		m_cleanup();
+		throw;
 	}
 }
 

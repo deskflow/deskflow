@@ -13,6 +13,7 @@
 #include "CTimerThread.h"
 #include "XThread.h"
 #include "CLog.h"
+#include "CStopwatch.h"
 #include "TMethodJob.h"
 #include <memory>
 
@@ -301,23 +302,36 @@ CClient::runSession(void*)
 		m_compressMouse = false;
 
 		// handle messages from server
+		CStopwatch heartbeat;
 		for (;;) {
 			// if no input is pending then flush compressed mouse motion
 			if (input->getSize() == 0) {
 				flushCompressedMouse();
 			}
 
-			// wait for reply
+			// wait for a message
 			log((CLOG_DEBUG2 "waiting for message"));
 			UInt8 code[4];
-			UInt32 n = input->read(code, 4);
+			UInt32 n = input->read(code, 4, kHeartRate);
 
-			// verify we got an entire code
+			// check if server hungup
 			if (n == 0) {
 				log((CLOG_NOTE "server disconnected"));
-				// server hungup
 				break;
 			}
+
+			// check for time out
+			if (n == (UInt32)-1 || heartbeat.getTime() > kHeartRate) {
+				// send heartbeat
+				CProtocolUtil::writef(m_output, kMsgCNoop);
+				heartbeat.reset();
+				if (n == (UInt32)-1) {
+					// no message to process
+					continue;
+				}
+			}
+
+			// verify we got an entire code
 			if (n != 4) {
 				// client sent an incomplete message
 				log((CLOG_ERR "incomplete message from server"));
@@ -346,6 +360,10 @@ CClient::runSession(void*)
 			}
 			else if (memcmp(code, kMsgDKeyRepeat, 4) == 0) {
 				onKeyRepeat();
+			}
+			else if (memcmp(code, kMsgCNoop, 4) == 0) {
+				// accept and discard no-op
+				continue;
 			}
 			else if (memcmp(code, kMsgCEnter, 4) == 0) {
 				onEnter();

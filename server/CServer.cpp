@@ -42,6 +42,7 @@ CServer::CServer(const CString& serverName) :
 	m_active(NULL),
 	m_primaryInfo(NULL),
 	m_seqNum(0),
+	m_activeSaver(NULL),
 	m_httpServer(NULL),
 	m_httpAvailable(&m_mutex, s_httpMaxSimultaneousRequests)
 {

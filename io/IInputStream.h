@@ -13,8 +13,11 @@ public:
 
 	// read up to maxCount bytes into buffer, return number read.
 	// blocks if no data is currently available.  if buffer is NULL
-	// then the data is discarded.
-	virtual UInt32		read(void* buffer, UInt32 maxCount) = 0;
+	// then the data is discarded.  returns (UInt32)-1 if there's
+	// no data for timeout seconds;  if timeout < 0 then it blocks
+	// until data is available.
+	// (cancellation point)
+	virtual UInt32		read(void* buffer, UInt32 maxCount, double timeout) = 0;
 
 	// accessors
 

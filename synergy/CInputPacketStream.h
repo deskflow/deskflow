@@ -16,13 +16,15 @@ public:
 
 	// IInputStream overrides
 	virtual void		close();
-	virtual UInt32		read(void*, UInt32 maxCount);
+	virtual UInt32		read(void*, UInt32 maxCount, double timeout);
 	virtual UInt32		getSize() const;
 
 private:
+	enum EResult { kData, kHungup, kTimedout };
+
 	UInt32				getSizeNoLock() const;
-	bool				waitForFullMessage() const;
-	bool				getMoreMessage() const;
+	EResult				waitForFullMessage(double timeout) const;
+	EResult				getMoreMessage(double timeout) const;
 	bool				hasFullMessage() const;
 
 private:

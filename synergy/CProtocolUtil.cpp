@@ -348,7 +348,7 @@ CProtocolUtil::read(IInputStream* stream, void* vbuffer, UInt32 count)
 	UInt8* buffer = reinterpret_cast<UInt8*>(vbuffer);
 	while (count > 0) {
 		// read more
-		UInt32 n = stream->read(buffer, count);
+		UInt32 n = stream->read(buffer, count, -1.0);
 
 		// bail if stream has hungup
 		if (n == 0) {

@@ -468,7 +468,7 @@ CHTTPProtocol::readLine(IInputStream* stream, CString& tmpBuffer)
 
 		// read more from stream
 		char buffer[4096];
-		UInt32 n = stream->read(buffer, sizeof(buffer));
+		UInt32 n = stream->read(buffer, sizeof(buffer), -1.0);
 		if (n == 0) {
 			// stream is empty.  return what's leftover.
 			CString line = tmpBuffer;
@@ -514,7 +514,7 @@ CHTTPProtocol::readBlock(IInputStream* stream,
 		if (n > numBytes) {
 			n = numBytes;
 		}
-		n = stream->read(buffer, n);
+		n = stream->read(buffer, n, -1.0);
 
 		// if stream is empty then return what we've got so far
 		if (n == 0) {

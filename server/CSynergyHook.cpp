@@ -468,9 +468,13 @@ init(DWORD threadID)
 {
 	assert(g_hinstance != NULL);
 
-	// see if already initialized
+	// see if already initialized.  if it is we'll shut down and
+	// reinitialize.  this allows the hook DLL to be reclaimed by
+	// a new synergyd if the previous one died unexpectedly.
 	if (g_threadID != 0) {
-		return 0;
+		uninstallScreenSaver();
+		uninstall();
+		cleanup();
 	}
 
 	// save thread id.  we'll post messages to this thread's
@@ -624,9 +628,10 @@ uninstall(void)
 		UnhookWindowsHookEx(g_getMessage);
 		g_getMessage = NULL;
 	}
-	g_keyboard   = NULL;
-	g_mouse      = NULL;
-	g_cbt        = NULL;
+	g_keyboard     = NULL;
+	g_mouse        = NULL;
+	g_cbt          = NULL;
+	g_wheelSupport = kWheelNone;
 
 	// show the cursor
 	restoreCursor();
@@ -664,7 +669,7 @@ uninstallScreenSaver(void)
 	assert(g_hinstance != NULL);
 
 	// uninstall hook unless the mouse wheel hook is installed
-	if (g_getMessage != NULL && g_threadID == 0) {
+	if (g_getMessage != NULL && g_wheelSupport == kWheelNone) {
 		UnhookWindowsHookEx(g_getMessage);
 		g_getMessage = NULL;
 	}
