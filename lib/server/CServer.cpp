@@ -40,6 +40,10 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	m_primaryClient(primaryClient),
 	m_active(primaryClient),
 	m_seqNum(0),
+	m_xDelta(0),
+	m_yDelta(0),
+	m_xDelta2(0),
+	m_yDelta2(0),
 	m_config(config),
 	m_activeSaver(NULL),
 	m_switchDir(kNoDirection),
@@ -374,8 +378,12 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 	stopSwitch();
 
 	// record new position
-	m_x = x;
-	m_y = y;
+	m_x       = x;
+	m_y       = y;
+	m_xDelta  = 0;
+	m_yDelta  = 0;
+	m_xDelta2 = 0;
+	m_yDelta2 = 0;
 
 	// wrapping means leaving the active screen and entering it again.
 	// since that's a waste of time we skip that and just warp the
@@ -758,7 +766,29 @@ CServer::armSwitchTwoTap(SInt32 x, SInt32 y)
 			}
 			if (x >= ax + tapZone && x < ax + aw - tapZone &&
 				y >= ay + tapZone && y < ay + ah - tapZone) {
-				m_switchTwoTapArmed = true;
+				// win32 can generate bogus mouse events that appear to
+				// move in the opposite direction that the mouse actually
+				// moved.  try to ignore that crap here.
+				switch (m_switchDir) {
+				case kLeft:
+					m_switchTwoTapArmed = (m_xDelta > 0 && m_xDelta2 > 0);
+					break;
+
+				case kRight:
+					m_switchTwoTapArmed = (m_xDelta < 0 && m_xDelta2 < 0);
+					break;
+
+				case kTop:
+					m_switchTwoTapArmed = (m_yDelta > 0 && m_yDelta2 > 0);
+					break;
+
+				case kBottom:
+					m_switchTwoTapArmed = (m_yDelta < 0 && m_yDelta2 < 0);
+					break;
+
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -1242,9 +1272,17 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 		return false;
 	}
 
+	// save last delta
+	m_xDelta2 = m_xDelta;
+	m_yDelta2 = m_yDelta;
+
+	// save current delta
+	m_xDelta  = x - m_x;
+	m_yDelta  = y - m_y;
+
 	// save position
-	m_x = x;
-	m_y = y;
+	m_x       = x;
+	m_y       = y;
 
 	// get screen shape
 	SInt32 ax, ay, aw, ah;
@@ -1305,9 +1343,17 @@ CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	const SInt32 xOld = m_x;
 	const SInt32 yOld = m_y;
 
+	// save last delta
+	m_xDelta2 = m_xDelta;
+	m_yDelta2 = m_yDelta;
+
+	// save current delta
+	m_xDelta  = dx;
+	m_yDelta  = dy;
+
 	// accumulate motion
-	m_x += dx;
-	m_y += dy;
+	m_x      += dx;
+	m_y      += dy;
 
 	// get screen shape
 	SInt32 ax, ay, aw, ah;

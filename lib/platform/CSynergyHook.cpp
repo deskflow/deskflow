@@ -457,6 +457,33 @@ mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 			return true;
 		}
 		else if (g_mode == kHOOK_WATCH_JUMP_ZONE) {
+			// low level hooks can report bogus mouse positions that are
+			// outside of the screen.  jeez.  naturally we end up getting
+			// fake motion in the other direction to get the position back
+			// on the screen, which plays havoc with switch on double tap.
+			// CServer deals with that.  we'll clamp positions onto the
+			// screen.  also, if we discard events for positions outside
+			// of the screen then the mouse appears to get a bit jerky
+			// near the edge.  we can either accept that or pass the bogus
+			// events.  we'll try passing the events.
+			bool bogus = false;
+			if (x < g_xScreen) {
+				x     = g_xScreen;
+				bogus = true;
+			}
+			else if (x >= g_xScreen + g_wScreen) {
+				x     = g_xScreen + g_wScreen - 1;
+				bogus = true;
+			}
+			if (y < g_yScreen) {
+				y     = g_yScreen;
+				bogus = true;
+			}
+			else if (y >= g_yScreen + g_hScreen) {
+				y     = g_yScreen + g_hScreen - 1;
+				bogus = true;
+			}
+
 			// check for mouse inside jump zone
 			bool inside = false;
 			if (!inside && (g_zoneSides & kLeftMask) != 0) {
@@ -475,8 +502,8 @@ mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 			// relay the event
 			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 
-			// if inside then eat the event
-			return inside;
+			// if inside and not bogus then eat the event
+			return inside && !bogus;
 		}
 	}
 
@@ -518,13 +545,13 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			// them.
 			switch (g_wheelSupport) {
 			case kWheelModern:
-				w = static_cast<SInt32>(LOWORD(info->dwExtraInfo));
+				w = static_cast<SInt16>(LOWORD(info->dwExtraInfo));
 				break;
 
 			case kWheelWin2000: {
 				const MOUSEHOOKSTRUCTWin2000* info2k =
 						(const MOUSEHOOKSTRUCTWin2000*)lParam;
-				w = static_cast<SInt32>(HIWORD(info2k->mouseData));
+				w = static_cast<SInt16>(HIWORD(info2k->mouseData));
 				break;
 			}
 			}
@@ -561,7 +588,8 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 			if (msg->message == g_wmMouseWheel) {
 				// post message to our window
 				PostThreadMessage(g_threadID,
-								SYNERGY_MSG_MOUSE_WHEEL, msg->wParam, 0);
+								SYNERGY_MSG_MOUSE_WHEEL,
+								static_cast<SInt16>(msg->wParam & 0xffffu), 0);
 
 				// zero out the delta in the message so it's (hopefully)
 				// ignored
@@ -627,9 +655,9 @@ mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 	if (code >= 0) {
 		// decode the message
 		MSLLHOOKSTRUCT* info = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
-		SInt32 x = (SInt32)info->pt.x;
-		SInt32 y = (SInt32)info->pt.y;
-		SInt32 w = (SInt32)HIWORD(info->mouseData);
+		SInt32 x = static_cast<SInt32>(info->pt.x);
+		SInt32 y = static_cast<SInt32>(info->pt.y);
+		SInt32 w = static_cast<SInt16>(HIWORD(info->mouseData));
 
 		// handle the message
 		if (mouseHookHandler(wParam, x, y, w)) {

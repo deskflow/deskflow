@@ -278,6 +278,13 @@ private:
 	// whichever screen is active
 	SInt32				m_x, m_y;
 
+	// last mouse deltas.  this is needed to smooth out double tap
+	// on win32 which reports bogus mouse motion at the edge of
+	// the screen when using low level hooks, synthesizing motion
+	// in the opposite direction the mouse actually moved.
+	SInt32				m_xDelta, m_yDelta;
+	SInt32				m_xDelta2, m_yDelta2;
+
 	// current configuration
 	CConfig				m_config;
 
