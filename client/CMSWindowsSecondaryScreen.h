@@ -1,6 +1,12 @@
 #ifndef CMSWINDOWSSECONDARYSCREEN_H
 #define CMSWINDOWSSECONDARYSCREEN_H
 
+// ensure that we get SendInput()
+#if _WIN32_WINNT <= 0x400
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x401
+#endif
+
 #include "CMSWindowsScreen.h"
 #include "ISecondaryScreen.h"
 #include "CMutex.h"
@@ -66,6 +72,12 @@ private:
 	// get calling thread to use the input desktop
 	void				syncDesktop() const;
 
+	// warp the mouse to the specified position
+	void				warpCursor(SInt32 x, SInt32 y);
+
+	// returns true iff there appear to be multiple monitors
+	bool				isMultimon() const;
+
 	// key and button queries and operations
 	DWORD				mapButton(ButtonID button, bool press) const;
 	KeyModifierMask		mapKey(Keystrokes&, UINT& virtualKey, KeyID,
@@ -85,6 +97,9 @@ private:
 
 	// true if windows 95/98/me
 	bool				m_is95Family;
+
+	// true if system appears to have multiple monitors
+	bool				m_multimon;
 
 	// the main loop's thread id
 	DWORD				m_threadID;

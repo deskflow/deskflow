@@ -9,6 +9,14 @@
 #include "CLog.h"
 #include <cctype>
 
+// these are only defined when WINVER >= 0x0500
+#if !defined(SPI_GETMOUSESPEED)
+#define SPI_GETMOUSESPEED 112
+#endif
+#if !defined(SPI_SETMOUSESPEED)
+#define SPI_SETMOUSESPEED 113
+#endif
+
 //
 // CMSWindowsSecondaryScreen
 //
@@ -135,7 +143,7 @@ CMSWindowsSecondaryScreen::enter(SInt32 x, SInt32 y, KeyModifierMask mask)
 		toggleKey(VK_SCROLL, KeyModifierScrollLock);
 	}
 
-	// hide mouse
+	// show mouse
 	onEnter(x, y);
 }
 
@@ -338,13 +346,7 @@ CMSWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 	CLock lock(&m_mutex);
 	assert(m_window != NULL);
 	syncDesktop();
-
-	SInt32 x0, y0, w, h;
-	getScreenShape(x0, y0, w, h);
-	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.99 * (x - x0)) / (w - 1)),
-								(DWORD)((65535.99 * (y - y0)) / (h - 1)),
-								0, 0);
+	warpCursor(x, y);
 }
 
 void
@@ -426,6 +428,9 @@ void
 CMSWindowsSecondaryScreen::onOpenDisplay()
 {
 	assert(m_window == NULL);
+
+	// note if using multiple monitors
+	m_multimon = isMultimon();
 
 	// save thread id.  we'll need to pass this to the hook library.
 	m_threadID = GetCurrentThreadId();
@@ -546,6 +551,7 @@ CMSWindowsSecondaryScreen::onEvent(HWND hwnd, UINT msg,
 	case WM_DISPLAYCHANGE:
 		// screen resolution has changed
 		updateScreenShape();
+		m_multimon = isMultimon();
 		m_client->onResolutionChanged();
 		return 0;
 	}
@@ -557,12 +563,7 @@ void
 CMSWindowsSecondaryScreen::onEnter(SInt32 x, SInt32 y)
 {
 	// warp to requested location
-	SInt32 x0, y0, w, h;
-	getScreenShape(x0, y0, w, h);
-	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.99 * (x - x0)) / (w - 1)),
-								(DWORD)((65535.99 * (y - y0)) / (h - 1)),
-								0, 0);
+	warpCursor(x, y);
 
 	// show cursor
 	ShowWindow(m_window, SW_HIDE);
@@ -734,6 +735,92 @@ CString
 CMSWindowsSecondaryScreen::getCurrentDesktopName() const
 {
 	return m_deskName;
+}
+
+void
+CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
+{
+	// move the mouse directly to target position on NT family or if
+	// not using multiple monitors.
+	if (!m_multimon || !m_is95Family) {
+		SInt32 x0, y0, w, h;
+		getScreenShape(x0, y0, w, h);
+		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+								(DWORD)((65535.99 * (x - x0)) / (w - 1)),
+								(DWORD)((65535.99 * (y - y0)) / (h - 1)),
+								0, 0);
+	}
+
+	// windows 98 (and Me?) is broken.  you cannot set the absolute
+	// position of the mouse except on the primary monitor but you
+	// can do relative moves onto any monitor.  this is, in microsoft's
+	// words, "by design."  apparently the designers of windows 2000
+	// we're a little less lazy and did it right.
+	//
+	// we use the microsoft recommendation (Q193003): set the absolute
+	// position on the primary monitor, disable mouse acceleration,
+	// relative move the mouse to the final location, restore mouse
+	// acceleration.  to avoid one kind of race condition (the user
+	// clicking the mouse or pressing a key between the absolute and
+	// relative move) we'll use SendInput() which guarantees that the
+	// events are delivered uninterrupted.  we cannot prevent changes
+	// to the mouse acceleration at inopportune times, though.
+	//
+	// point-to-activate (x-mouse) doesn't seem to be bothered by the
+	// absolute/relative combination.  a window over the absolute
+	// position (0,0) does *not* get activated (at least not on win2k)
+	// if the relative move puts the cursor elsewhere.  similarly, the
+	// app under the final mouse position does *not* get deactivated
+	// by the absolute move to 0,0.
+	else {
+		// save mouse speed & acceleration
+		int oldSpeed[4];
+		bool accelChanged =
+					SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed,0) &&
+					SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
+
+		// use 1:1 motion
+		if (accelChanged) {
+			int newSpeed[4] = { 0, 0, 0, 1 };
+			accelChanged =
+					SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
+					SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
+		}
+
+		// send events
+		INPUT events[2];
+		events[0].type           = INPUT_MOUSE;
+		events[0].mi.dx          = 0;
+		events[0].mi.dy          = 0;
+		events[0].mi.mouseData   = 0;
+		events[0].mi.dwFlags     = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+		events[0].mi.time        = GetTickCount();
+		events[0].mi.dwExtraInfo = 0;
+		events[1].type           = INPUT_MOUSE;
+		events[1].mi.dx          = x;
+		events[1].mi.dy          = y;
+		events[1].mi.mouseData   = 0;
+		events[1].mi.dwFlags     = MOUSEEVENTF_MOVE;
+		events[1].mi.time        = events[0].mi.time;
+		events[1].mi.dwExtraInfo = 0;
+		SendInput(sizeof(events) / sizeof(events[0]),
+								events, sizeof(events[0]));
+
+		// restore mouse speed & acceleration
+		if (accelChanged) {
+			SystemParametersInfo(SPI_SETMOUSE, 0, oldSpeed, 0);
+			SystemParametersInfo(SPI_SETMOUSESPEED, 0, oldSpeed + 3, 0);
+		}
+	}
+}
+
+bool
+CMSWindowsSecondaryScreen::isMultimon() const
+{
+	SInt32 x0, y0, w, h;
+	getScreenShape(x0, y0, w, h);
+	return (w != GetSystemMetrics(SM_CXSCREEN) ||
+			h != GetSystemMetrics(SM_CYSCREEN));
 }
 
 // these tables map KeyID (a X windows KeySym) to virtual key codes.
