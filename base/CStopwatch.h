@@ -3,47 +3,84 @@
 
 #include "common.h"
 
+//! A timer class
+/*!
+This class measures time intervals.  All time interval measurement
+should use this class.
+*/
 class CStopwatch {
 public:
-	// the default constructor does an implicit reset() or setTrigger().
-	// if triggered == false then the clock starts ticking.
+	/*!
+	The default constructor does an implicit reset() or setTrigger().
+	If triggered == false then the clock starts ticking.
+	*/
 	CStopwatch(bool triggered = false);
 	~CStopwatch();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// set the start time to the current time, returning the time since
-	// the last reset.  this does not remove the trigger if it's set nor
-	// does it start a stopped clock.  if the clock is stopped then
-	// subsequent reset()'s will return 0.
+	//! Reset the timer to zero
+	/*!
+	Set the start time to the current time, returning the time since
+	the last reset.  This does not remove the trigger if it's set nor
+	does it start a stopped clock.  If the clock is stopped then
+	subsequent reset()'s will return 0.
+	*/
 	double				reset();
 
-	// stop and start the stopwatch.  while stopped, no time elapses.
-	// stop() does not remove the trigger but start() does, even if
-	// the clock was already started.
+	//! Stop the timer
+	/*!
+	Stop the stopwatch.  The time interval while stopped is not
+	counted by the stopwatch.  stop() does not remove the trigger.
+	Has no effect if already stopped.
+	*/
 	void				stop();
+
+	//! Start the timer
+	/*!
+	Start the stopwatch.  start() removes the trigger, even if the
+	stopwatch was already started.
+	*/
 	void				start();
 
-	// setTrigger() stops the clock like stop() except there's an
-	// implicit start() the next time (non-const) getTime() is called.
-	// this is useful when you want the clock to start the first time
-	// you check it.
+	//! Stop the timer and set the trigger
+	/*!
+	setTrigger() stops the clock like stop() except there's an
+	implicit start() the next time (non-const) getTime() is called.
+	This is useful when you want the clock to start the first time
+	you check it.
+	*/
 	void				setTrigger();
 
-	// return the time since the last reset() (or call reset() and
-	// return zero if the trigger is set).
+	//! Get elapsed time
+	/*!
+	Returns the time since the last reset() (or calls reset() and
+	returns zero if the trigger is set).
+	*/
 	double				getTime();
+	//! Same as getTime()
 						operator double();
+	//@}
+	//! @name accessors
+	//@{
 
-	// accessors
-
-	// returns true if the watch is stopped
+	//! Check if timer is stopped
+	/*!
+	Returns true if the stopwatch is stopped.
+	*/
 	bool				isStopped() const;
 
-	// return the time since the last reset().  these cannot trigger
-	// the clock to start so if the trigger is set it's as if it wasn't.
+	// return the time since the last reset().  
+	//! Get elapsed time
+	/*!
+	Returns the time since the last reset().  This cannot trigger the
+	stopwatch to start and will not clear the trigger.
+	*/
 	double				getTime() const;
+	//! Same as getTime() const
 						operator double() const;
+	//@}
 
 private:
 	double				getClock() const;

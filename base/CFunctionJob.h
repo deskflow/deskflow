@@ -3,8 +3,13 @@
 
 #include "IJob.h"
 
+//! Use a function as a job
+/*!
+A job class that invokes a function.
+*/
 class CFunctionJob : public IJob {
 public:
+	//! run() invokes \c func(arg)
 	CFunctionJob(void (*func)(void*), void* arg = NULL);
 	virtual ~CFunctionJob();
 

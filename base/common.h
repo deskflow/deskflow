@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+// this file should be included, directly or indirectly by every other.
+
 #if HAVE_CONFIG_H
 #	include "config.h"
 #endif

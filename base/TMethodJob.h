@@ -3,9 +3,14 @@
 
 #include "IJob.h"
 
+//! Use a function as a job
+/*!
+A job class that invokes a member function.
+*/
 template <class T>
 class TMethodJob : public IJob {
 public:
+	//! run() invokes \c object->method(arg)
 	TMethodJob(T* object, void (T::*method)(void*), void* arg = NULL);
 	virtual ~TMethodJob();
 

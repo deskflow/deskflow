@@ -5,32 +5,99 @@
 #include "BasicTypes.h"
 #include <wchar.h>
 
+//! Unicode utility functions
+/*!
+This class provides functions for converting between various Unicode
+encodings and the current locale encoding.
+*/
 class CUnicode {
 public:
-	// returns true iff the string contains a valid sequence of UTF-8
-	// encoded characters.
+	//! @name accessors
+	//@{
+
+	//! Test UTF-8 string for validity
+	/*!
+	Returns true iff the string contains a valid sequence of UTF-8
+	encoded characters.
+	*/
 	static bool			isUTF8(const CString&);
 
-	// convert from UTF-8 encoding to other encodings.  if errors is
-	// not NULL then it gets true if any characters could not be
-	// encoded in the target encoding and false otherwise.  note
-	// that decoding errors do not set errors to error.  UTF8ToText()
-	// converts to the current locale's (multibyte) encoding.
+	//! Convert from UTF-8 to UCS-2 encoding
+	/*!
+	Convert from UTF-8 to UCS-2.  If errors is not NULL then *errors
+	is set to true iff any character could not be encoded in UCS-2.
+	Decoding errors do not set *errors.
+	*/
 	static CString		UTF8ToUCS2(const CString&, bool* errors = NULL);
+
+	//! Convert from UTF-8 to UCS-4 encoding
+	/*!
+	Convert from UTF-8 to UCS-4.  If errors is not NULL then *errors
+	is set to true iff any character could not be encoded in UCS-4.
+	Decoding errors do not set *errors.
+	*/
 	static CString		UTF8ToUCS4(const CString&, bool* errors = NULL);
+
+	//! Convert from UTF-8 to UTF-16 encoding
+	/*!
+	Convert from UTF-8 to UTF-16.  If errors is not NULL then *errors
+	is set to true iff any character could not be encoded in UTF-16.
+	Decoding errors do not set *errors.
+	*/
 	static CString		UTF8ToUTF16(const CString&, bool* errors = NULL);
+
+	//! Convert from UTF-8 to UTF-32 encoding
+	/*!
+	Convert from UTF-8 to UTF-32.  If errors is not NULL then *errors
+	is set to true iff any character could not be encoded in UTF-32.
+	Decoding errors do not set *errors.
+	*/
 	static CString		UTF8ToUTF32(const CString&, bool* errors = NULL);
+
+	//! Convert from UTF-8 to the current locale encoding
+	/*!
+	Convert from UTF-8 to the current locale encoding.  If errors is not
+	NULL then *errors is set to true iff any character could not be encoded.
+	Decoding errors do not set *errors.
+	*/
 	static CString		UTF8ToText(const CString&, bool* errors = NULL);
 
-	// convert from some encoding to UTF-8.  if errors is not NULL
-	// then it gets true if any characters could not be decoded and
-	// false otherwise.  textToUTF8() converts from the current
-	// locale's (multibyte) encoding.
+	//! Convert from UCS-2 to UTF-8
+	/*!
+	Convert from UCS-2 to UTF-8.  If errors is not NULL then *errors is
+	set to true iff any character could not be decoded.
+	*/
 	static CString		UCS2ToUTF8(const CString&, bool* errors = NULL);
+
+	//! Convert from UCS-4 to UTF-8
+	/*!
+	Convert from UCS-4 to UTF-8.  If errors is not NULL then *errors is
+	set to true iff any character could not be decoded.
+	*/
 	static CString		UCS4ToUTF8(const CString&, bool* errors = NULL);
+
+	//! Convert from UTF-16 to UTF-8
+	/*!
+	Convert from UTF-16 to UTF-8.  If errors is not NULL then *errors is
+	set to true iff any character could not be decoded.
+	*/
 	static CString		UTF16ToUTF8(const CString&, bool* errors = NULL);
+
+	//! Convert from UTF-32 to UTF-8
+	/*!
+	Convert from UTF-32 to UTF-8.  If errors is not NULL then *errors is
+	set to true iff any character could not be decoded.
+	*/
 	static CString		UTF32ToUTF8(const CString&, bool* errors = NULL);
+
+	//! Convert from the current locale encoding to UTF-8
+	/*!
+	Convert from the current locale encoding to UTF-8.  If errors is not
+	NULL then *errors is set to true iff any character could not be decoded.
+	*/
 	static CString		textToUTF8(const CString&, bool* errors = NULL);
+
+	//@}
 
 private:
 	// convert UTF8 to wchar_t string (using whatever encoding is native
