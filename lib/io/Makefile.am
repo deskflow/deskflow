@@ -37,7 +37,7 @@ libio_a_SOURCES = 				\
 	CInputStreamFilter.h		\
 	COutputStreamFilter.h		\
 	CStreamBuffer.h				\
-	CUnicode.h					s\
+	CUnicode.h					\
 	IInputStream.h				\
 	IOutputStream.h				\
 	IStreamFilterFactory.h		\
