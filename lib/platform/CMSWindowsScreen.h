@@ -27,6 +27,7 @@
 class CEventQueueTimer;
 class CMSWindowsScreenSaver;
 class CThread;
+class IJob;
 
 //! Implementation of IPlatformScreen for Microsoft Windows
 class CMSWindowsScreen : public IPlatformScreen {
