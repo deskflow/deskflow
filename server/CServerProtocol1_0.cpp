@@ -118,7 +118,7 @@ void					CServerProtocol1_0::sendGrabClipboard(ClipboardID id)
 
 void					CServerProtocol1_0::sendScreenSaver(bool on)
 {
-	log((CLOG_DEBUG1 "send screen saver to \"%s\"", getClient().c_str()));
+	log((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getClient().c_str(), on ? 1 : 0));
 	CProtocolUtil::writef(getOutputStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
 
@@ -132,7 +132,7 @@ void					CServerProtocol1_0::sendKeyDown(
 void					CServerProtocol1_0::sendKeyRepeat(
 								KeyID key, KeyModifierMask mask, SInt32 count)
 {
-	log((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
+	log((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getClient().c_str(), key, mask, count));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask, count);
 }
 
@@ -167,7 +167,7 @@ void					CServerProtocol1_0::sendMouseMove(
 void					CServerProtocol1_0::sendMouseWheel(
 								SInt32 delta)
 {
-	log((CLOG_DEBUG1 "send mouse wheel to \"%s\" %+d", getClient().c_str(), delta));
+	log((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getClient().c_str(), delta));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseWheel, delta);
 }
 

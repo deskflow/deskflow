@@ -6,6 +6,7 @@
 #include "CThread.h"
 #include "CLog.h"
 #include <assert.h>
+#include <string.h>
 
 //
 // CMSWindowsPrimaryScreen
@@ -85,6 +86,9 @@ void					CMSWindowsPrimaryScreen::open(CServer* server)
 
 	// set the server
 	m_server = server;
+
+	// get keyboard state
+	updateKeys();
 
 	// open the display
 	openDisplay();
@@ -189,7 +193,8 @@ void					CMSWindowsPrimaryScreen::leave()
 		try {
 			m_clipboardOwner = clipboardOwner;
 			if (m_clipboardOwner != m_window) {
-				m_server->grabClipboard();
+				m_server->grabClipboard(kClipboardClipboard);
+				m_server->grabClipboard(kClipboardSelection);
 			}
 		}
 		catch (XBadClient&) {
@@ -209,7 +214,7 @@ void					CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 }
 
 void					CMSWindowsPrimaryScreen::setClipboard(
-								const IClipboard* src)
+								ClipboardID id, const IClipboard* src)
 {
 	assert(m_window != NULL);
 
@@ -217,12 +222,12 @@ void					CMSWindowsPrimaryScreen::setClipboard(
 	CClipboard::copy(&dst, src);
 }
 
-void					CMSWindowsPrimaryScreen::grabClipboard()
+void					CMSWindowsPrimaryScreen::grabClipboard(ClipboardID id)
 {
 	assert(m_window != NULL);
 
 	CMSWindowsClipboard clipboard(m_window);
-	if (clipboard.open()) {
+	if (clipboard.open(0)) {
 		clipboard.close();
 	}
 }
@@ -239,7 +244,7 @@ SInt32					CMSWindowsPrimaryScreen::getJumpZoneSize() const
 }
 
 void					CMSWindowsPrimaryScreen::getClipboard(
-								IClipboard* dst) const
+								ClipboardID id, IClipboard* dst) const
 {
 	assert(m_window != NULL);
 
@@ -349,24 +354,29 @@ if (IsDialogMessage(s_debug, msg)) {
 		if (m_mark == m_markReceived) {
 			KeyModifierMask mask;
 			const KeyID key = mapKey(msg->wParam, msg->lParam, &mask);
-log((CLOG_DEBUG "event: key event vk=%d info=0x%08x", msg->wParam, msg->lParam));
 			if (key != kKeyNone) {
 				if ((msg->lParam & 0x80000000) == 0) {
 					// key press
 					const SInt32 repeat = (SInt32)(msg->lParam & 0xffff);
 					if (repeat >= 2) {
-						log((CLOG_DEBUG "event: key repeat key=%d mask=0x%04x count=%d", key, mask, repeat));
+						log((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d", key, mask, repeat));
 						m_server->onKeyRepeat(key, mask, repeat);
 					}
 					else {
-						log((CLOG_DEBUG "event: key press key=%d mask=0x%04x", key, mask));
+						log((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x", key, mask));
 						m_server->onKeyDown(key, mask);
 					}
+
+					// update key state
+					updateKey(msg->wParam, true);
 				}
 				else {
 					// key release
-					log((CLOG_DEBUG "event: key release key=%d mask=0x%04x", key, mask));
+					log((CLOG_DEBUG1 "event: key release key=%d mask=0x%04x", key, mask));
 					m_server->onKeyUp(key, mask);
+
+					// update key state
+					updateKey(msg->wParam, false);
 				}
 			}
 
@@ -381,7 +391,7 @@ log((CLOG_DEBUG "event: key event vk=%d info=0x%08x", msg->wParam, msg->lParam))
 			case WM_LBUTTONDOWN:
 			case WM_MBUTTONDOWN:
 			case WM_RBUTTONDOWN:
-				log((CLOG_DEBUG "event: button press button=%d", button));
+				log((CLOG_DEBUG1 "event: button press button=%d", button));
 				if (button != kButtonNone) {
 					m_server->onMouseDown(button);
 				}
@@ -390,7 +400,7 @@ log((CLOG_DEBUG "event: key event vk=%d info=0x%08x", msg->wParam, msg->lParam))
 			case WM_LBUTTONUP:
 			case WM_MBUTTONUP:
 			case WM_RBUTTONUP:
-				log((CLOG_DEBUG "event: button release button=%d", button));
+				log((CLOG_DEBUG1 "event: button release button=%d", button));
 				if (button != kButtonNone) {
 					m_server->onMouseUp(button);
 				}
@@ -405,11 +415,11 @@ log((CLOG_DEBUG "event: key event vk=%d info=0x%08x", msg->wParam, msg->lParam))
 			SInt32 x = (SInt32)msg->wParam;
 			SInt32 y = (SInt32)msg->lParam;
 			if (!m_active) {
-				log((CLOG_DEBUG "event: inactive move %d,%d", x, y));
+				log((CLOG_DEBUG2 "event: inactive move %d,%d", x, y));
 				m_server->onMouseMovePrimary(x, y);
 			}
 			else {
-				log((CLOG_DEBUG "event: active move %d,%d", x, y));
+				log((CLOG_DEBUG2 "event: active move %d,%d", x, y));
 
 				// get screen size
 				SInt32 w, h;
@@ -461,7 +471,8 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 		try {
 			m_clipboardOwner = GetClipboardOwner();
 			if (m_clipboardOwner != m_window) {
-				m_server->grabClipboard();
+				m_server->grabClipboard(kClipboardClipboard);
+				m_server->grabClipboard(kClipboardSelection);
 			}
 		}
 		catch (XBadClient&) {
@@ -521,7 +532,7 @@ static const KeyID		g_virtualKey[] =
 	/* 0x1d */ kKeyNone,	// VK_NONCONVERT	
 	/* 0x1e */ kKeyNone,	// VK_ACCEPT		
 	/* 0x1f */ kKeyNone,	// VK_MODECHANGE	
-	/* 0x20 */ 0xff20,		// VK_SPACE			XK_space
+	/* 0x20 */ 0x0020,		// VK_SPACE			XK_space
 	/* 0x21 */ 0xff55,		// VK_PRIOR			XK_Prior
 	/* 0x22 */ 0xff56,		// VK_NEXT			XK_Next
 	/* 0x23 */ 0xff57,		// VK_END			XK_End
@@ -537,16 +548,16 @@ static const KeyID		g_virtualKey[] =
 	/* 0x2d */ 0xff63,		// VK_INSERT		XK_Insert
 	/* 0x2e */ 0xffff,		// VK_DELETE		XK_Delete
 	/* 0x2f */ 0xff6a,		// VK_HELP			XK_Help
-	/* 0x30 */ 0x0030,		// VK_0				XK_0
-	/* 0x31 */ 0x0031,		// VK_1				XK_1
-	/* 0x32 */ 0x0032,		// VK_2				XK_2
-	/* 0x33 */ 0x0033,		// VK_3				XK_3
-	/* 0x34 */ 0x0034,		// VK_4				XK_4
-	/* 0x35 */ 0x0035,		// VK_5				XK_5
-	/* 0x36 */ 0x0036,		// VK_6				XK_6
-	/* 0x37 */ 0x0037,		// VK_7				XK_7
-	/* 0x38 */ 0x0038,		// VK_8				XK_8
-	/* 0x39 */ 0x0039,		// VK_9				XK_9
+	/* 0x30 */ kKeyNone,	// VK_0				XK_0
+	/* 0x31 */ kKeyNone,	// VK_1				XK_1
+	/* 0x32 */ kKeyNone,	// VK_2				XK_2
+	/* 0x33 */ kKeyNone,	// VK_3				XK_3
+	/* 0x34 */ kKeyNone,	// VK_4				XK_4
+	/* 0x35 */ kKeyNone,	// VK_5				XK_5
+	/* 0x36 */ kKeyNone,	// VK_6				XK_6
+	/* 0x37 */ kKeyNone,	// VK_7				XK_7
+	/* 0x38 */ kKeyNone,	// VK_8				XK_8
+	/* 0x39 */ kKeyNone,	// VK_9				XK_9
 	/* 0x3a */ kKeyNone,	// undefined
 	/* 0x3b */ kKeyNone,	// undefined
 	/* 0x3c */ kKeyNone,	// undefined
@@ -554,32 +565,32 @@ static const KeyID		g_virtualKey[] =
 	/* 0x3e */ kKeyNone,	// undefined
 	/* 0x3f */ kKeyNone,	// undefined
 	/* 0x40 */ kKeyNone,	// undefined
-	/* 0x41 */ 0x0041,		// VK_A				XK_A
-	/* 0x42 */ 0x0042,		// VK_B				XK_B
-	/* 0x43 */ 0x0043,		// VK_C				XK_C
-	/* 0x44 */ 0x0044,		// VK_D				XK_D
-	/* 0x45 */ 0x0045,		// VK_E				XK_E
-	/* 0x46 */ 0x0046,		// VK_F				XK_F
-	/* 0x47 */ 0x0047,		// VK_G				XK_G
-	/* 0x48 */ 0x0048,		// VK_H				XK_H
-	/* 0x49 */ 0x0049,		// VK_I				XK_I
-	/* 0x4a */ 0x004a,		// VK_J				XK_J
-	/* 0x4b */ 0x004b,		// VK_K				XK_K
-	/* 0x4c */ 0x004c,		// VK_L				XK_L
-	/* 0x4d */ 0x004d,		// VK_M				XK_M
-	/* 0x4e */ 0x004e,		// VK_N				XK_N
-	/* 0x4f */ 0x004f,		// VK_O				XK_O
-	/* 0x50 */ 0x0050,		// VK_P				XK_P
-	/* 0x51 */ 0x0051,		// VK_Q				XK_Q
-	/* 0x52 */ 0x0052,		// VK_R				XK_R
-	/* 0x53 */ 0x0053,		// VK_S				XK_S
-	/* 0x54 */ 0x0054,		// VK_T				XK_T
-	/* 0x55 */ 0x0055,		// VK_U				XK_U
-	/* 0x56 */ 0x0056,		// VK_V				XK_V
-	/* 0x57 */ 0x0057,		// VK_W				XK_W
-	/* 0x58 */ 0x0058,		// VK_X				XK_X
-	/* 0x59 */ 0x0059,		// VK_Y				XK_Y
-	/* 0x5a */ 0x005a,		// VK_Z				XK_Z
+	/* 0x41 */ kKeyNone,	// VK_A				XK_A
+	/* 0x42 */ kKeyNone,	// VK_B				XK_B
+	/* 0x43 */ kKeyNone,	// VK_C				XK_C
+	/* 0x44 */ kKeyNone,	// VK_D				XK_D
+	/* 0x45 */ kKeyNone,	// VK_E				XK_E
+	/* 0x46 */ kKeyNone,	// VK_F				XK_F
+	/* 0x47 */ kKeyNone,	// VK_G				XK_G
+	/* 0x48 */ kKeyNone,	// VK_H				XK_H
+	/* 0x49 */ kKeyNone,	// VK_I				XK_I
+	/* 0x4a */ kKeyNone,	// VK_J				XK_J
+	/* 0x4b */ kKeyNone,	// VK_K				XK_K
+	/* 0x4c */ kKeyNone,	// VK_L				XK_L
+	/* 0x4d */ kKeyNone,	// VK_M				XK_M
+	/* 0x4e */ kKeyNone,	// VK_N				XK_N
+	/* 0x4f */ kKeyNone,	// VK_O				XK_O
+	/* 0x50 */ kKeyNone,	// VK_P				XK_P
+	/* 0x51 */ kKeyNone,	// VK_Q				XK_Q
+	/* 0x52 */ kKeyNone,	// VK_R				XK_R
+	/* 0x53 */ kKeyNone,	// VK_S				XK_S
+	/* 0x54 */ kKeyNone,	// VK_T				XK_T
+	/* 0x55 */ kKeyNone,	// VK_U				XK_U
+	/* 0x56 */ kKeyNone,	// VK_V				XK_V
+	/* 0x57 */ kKeyNone,	// VK_W				XK_W
+	/* 0x58 */ kKeyNone,	// VK_X				XK_X
+	/* 0x59 */ kKeyNone,	// VK_Y				XK_Y
+	/* 0x5a */ kKeyNone,	// VK_Z				XK_Z
 	/* 0x5b */ 0xffe7,		// VK_LWIN			XK_Meta_L
 	/* 0x5c */ 0xffe8,		// VK_RWIN			XK_Meta_R
 	/* 0x5d */ 0xff67,		// VK_APPS			XK_Menu
@@ -649,12 +660,12 @@ static const KeyID		g_virtualKey[] =
 	/* 0x9d */ kKeyNone,	// unassigned
 	/* 0x9e */ kKeyNone,	// unassigned
 	/* 0x9f */ kKeyNone,	// unassigned
-	/* 0xa0 */ kKeyNone,	// unassigned
-	/* 0xa1 */ kKeyNone,	// unassigned
-	/* 0xa2 */ kKeyNone,	// unassigned
-	/* 0xa3 */ kKeyNone,	// unassigned
-	/* 0xa4 */ kKeyNone,	// unassigned
-	/* 0xa5 */ kKeyNone,	// unassigned
+	/* 0xa0 */ 0xffe1,		// VK_LSHIFT		XK_Shift_L
+	/* 0xa1 */ 0xffe2,		// VK_RSHIFT		XK_Shift_R
+	/* 0xa2 */ 0xffe3,		// VK_LCONTROL		XK_Control_L
+	/* 0xa3 */ 0xffe4,		// VK_RCONTROL		XK_Control_R
+	/* 0xa4 */ 0xffe9,		// VK_LMENU			XK_Alt_L
+	/* 0xa5 */ 0xffea,		// VK_RMENU			XK_Alt_R
 	/* 0xa6 */ kKeyNone,	// unassigned
 	/* 0xa7 */ kKeyNone,	// unassigned
 	/* 0xa8 */ kKeyNone,	// unassigned
@@ -749,69 +760,157 @@ static const KeyID		g_virtualKey[] =
 
 KeyID					CMSWindowsPrimaryScreen::mapKey(
 								WPARAM vkCode, LPARAM info,
-								KeyModifierMask* maskOut) const
+								KeyModifierMask* maskOut)
 {
+	// note:  known microsoft bugs
+	//  Q72583 -- MapVirtualKey() maps keypad keys incorrectly
+	//    95,98: num pad vk code -> invalid scan code
+	//    95,98,NT4: num pad scan code -> bad vk code except
+	//      SEPARATOR, MULTIPLY, SUBTRACT, ADD
+
+	static const KeyID XK_Multi_key = 0xff20;
+
 	assert(maskOut != NULL);
 
 	// map modifier key
-	// FIXME -- should be configurable?
 	KeyModifierMask mask = 0;
-	if (GetKeyState(VK_SHIFT) < 0)
+	if (((m_keys[VK_LSHIFT] |
+		  m_keys[VK_RSHIFT] |
+		  m_keys[VK_SHIFT]) & 0x80) != 0)
 		mask |= KeyModifierShift;
-	if ((GetKeyState(VK_CAPITAL) & 1) != 0)
-		mask |= KeyModifierCapsLock;
-	if (GetKeyState(VK_CONTROL) < 0)
+	if (((m_keys[VK_LCONTROL] |
+		  m_keys[VK_RCONTROL] |
+		  m_keys[VK_CONTROL]) & 0x80) != 0)
 		mask |= KeyModifierControl;
-	if (GetKeyState(VK_MENU) < 0)
+	if (((m_keys[VK_LMENU] |
+		  m_keys[VK_RMENU] |
+		  m_keys[VK_MENU]) & 0x80) != 0)
 		mask |= KeyModifierAlt;
-	if ((GetKeyState(VK_NUMLOCK) & 1) != 0)
-		mask |= KeyModifierNumLock;
-	if (GetKeyState(VK_LWIN) < 0 || GetKeyState(VK_RWIN) < 0)
+	if (((m_keys[VK_LWIN] |
+		  m_keys[VK_RWIN]) & 0x80) != 0)
 		mask |= KeyModifierMeta;
-	if ((GetKeyState(VK_SCROLL) & 1) != 0)
+	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
+		mask |= KeyModifierCapsLock;
+	if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
+		mask |= KeyModifierNumLock;
+	if ((m_keys[VK_SCROLL] & 0x01) != 0)
 		mask |= KeyModifierScrollLock;
 	*maskOut = mask;
 
+	// get the scan code
+	UINT scanCode = static_cast<UINT>((info & 0xff0000) >> 16);
+
+	// convert virtual key to one that distinguishes between left and
+	// right for keys that have left/right versions.  known scan codes
+	// that don't have left/right versions are passed through unchanged.
+	// unknown scan codes return 0.
+	UINT vkCode2 = MapVirtualKey(scanCode, 3);
+
+	// work around bug Q72583 (bad num pad conversion in MapVirtualKey())
+	if (vkCode >= VK_NUMPAD0 && vkCode <= VK_DIVIDE)
+		vkCode2 = vkCode;
+
+	// MapVirtualKey() appears to map VK_LWIN, VK_RWIN, VK_APPS to
+	// some other meaningless virtual key.  work around that bug.
+	else if (vkCode >= VK_LWIN && vkCode <= VK_APPS)
+		vkCode2 = vkCode;
+
+	// sadly, win32 will not distinguish between the left and right
+	// control and alt keys using the above function.  however, we
+	// can check for those:  if bit 24 of info is set then the key
+	// is a "extended" key, such as the right control and right alt
+	// keys.
+	if ((info & 0x1000000) != 0) {
+		switch (vkCode2) {
+		case VK_LCONTROL:
+			vkCode2 = VK_RCONTROL;
+			break;
+
+		case VK_LMENU:
+			vkCode2 = VK_RMENU;
+			break;
+		}
+	}
+
+	// use left/right distinguishing virtual key
+	vkCode = vkCode2;
+	log((CLOG_DEBUG1 "key vk=%d scan=%d", vkCode, scanCode));
+
+	// handle some keys via table lookup
 	KeyID id = g_virtualKey[vkCode];
 	if (id != kKeyNone) {
 		return id;
 	}
 
-	BYTE state[256];
-	GetKeyboardState(state);
+	// check for dead keys
+	if (MapVirtualKey(vkCode, 2) >= 0x8000) {
+		return XK_Multi_key;
+	}
+
+	// ToAscii() maps ctrl+letter to the corresponding control code
+	// and ctrl+backspace to delete.  if we've got a control code or
+	// delete then do ToAscii() again but without the control state.
+	// ToAscii() interprets the control modifier state which we don't
+	// want.  so save the control state then clear it.
+	BYTE lControl       = m_keys[VK_LCONTROL];
+	BYTE rControl       = m_keys[VK_RCONTROL];
+	BYTE control        = m_keys[VK_CONTROL];
+	m_keys[VK_LCONTROL] = 0;
+	m_keys[VK_RCONTROL] = 0;
+	m_keys[VK_CONTROL]  = 0;
+
+	// convert to ascii
 	WORD ascii;
-	int result = ToAscii(vkCode, MapVirtualKey(0, vkCode), state, &ascii, 0);
-	if (result > 0) {
-		// FIXME -- handle dead keys
-		return (KeyID)(ascii & 0x00ff);
+	int result = ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
+
+	// restore control state
+	m_keys[VK_LCONTROL] = lControl;
+	m_keys[VK_RCONTROL] = rControl;
+	m_keys[VK_CONTROL]  = control;
+
+	// if result is less than zero then it was a dead key.  that key
+	// is remembered by the keyboard which we don't want.  remove it
+	// by calling ToAscii() again with arbitrary arguments.
+	if (result < 0) {
+		ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
+		return XK_Multi_key;
 	}
 
+	// if result is 1 then the key was succesfully converted
+	else if (result == 1) {
+		return static_cast<KeyID>(ascii & 0x00ff);
+	}
+
+	// if result is 2 then a previous dead key could not be composed.
+	// put the old dead key back.
+	else if (result == 2) {
+		// get the scan code of the dead key and the shift state
+		// required to generate it.
+		vkCode = VkKeyScan(ascii & 0x00ff);
+
+		// set shift state required to generate key
+		BYTE keys[256];
+		memset(keys, 0, sizeof(keys));
+		if (vkCode & 0x0100)
+			keys[VK_SHIFT] = 0x80;
+		if (vkCode & 0x0100)
+			keys[VK_CONTROL] = 0x80;
+		if (vkCode & 0x0100)
+			keys[VK_MENU] = 0x80;
+
+		// strip shift state off of virtual key code
+		vkCode &= 0x00ff;
+
+		// get the scan code for the key
+		scanCode = MapVirtualKey(vkCode, 0);
+
+		// put it back
+		ToAscii(vkCode, scanCode, keys, &ascii, 0);
+		return XK_Multi_key;
+	}
+
+	// cannot convert key
 	return kKeyNone;
-
-/*
-	UINT character = MapVirtualKey(2, vkCode);
-	if (character != 0) {
-		if ((character & ~0xff) != 0) {
-			// dead key (i.e. a key to compose with the next)
-			// FIXME
-			return kKeyNone;
-		}
-		else {
-			// map character
-			KeyID id = g_virtualKey[character & 0xff];
-
-			// uppercase to lowercase conversion
-			if ((mask & KeyModifierShift) == 0 && id >= 'A' && id <= 'Z')
-				id += 0x20;
-
-			return id;
-		}
-	}
-	else {
-		// non-ascii key
-		return g_virtualKey[vkCode];
-	}
-*/
 }
 
 ButtonID				CMSWindowsPrimaryScreen::mapButton(
@@ -832,5 +931,119 @@ ButtonID				CMSWindowsPrimaryScreen::mapButton(
 
 	default:
 		return kButtonNone;
+	}
+}
+
+void					CMSWindowsPrimaryScreen::updateKeys()
+{
+	// clear key state
+	memset(m_keys, 0, sizeof(m_keys));
+
+	// we only care about the modifier key states
+	m_keys[VK_LSHIFT]   = GetKeyState(VK_LSHIFT);
+	m_keys[VK_RSHIFT]   = GetKeyState(VK_RSHIFT);
+	m_keys[VK_SHIFT]    = GetKeyState(VK_SHIFT);
+	m_keys[VK_LCONTROL] = GetKeyState(VK_LCONTROL);
+	m_keys[VK_RCONTROL] = GetKeyState(VK_RCONTROL);
+	m_keys[VK_CONTROL]  = GetKeyState(VK_CONTROL);
+	m_keys[VK_LMENU]    = GetKeyState(VK_LMENU);
+	m_keys[VK_RMENU]    = GetKeyState(VK_RMENU);
+	m_keys[VK_MENU]     = GetKeyState(VK_MENU);
+	m_keys[VK_LWIN]     = GetKeyState(VK_LWIN);
+	m_keys[VK_RWIN]     = GetKeyState(VK_RWIN);
+	m_keys[VK_APPS]     = GetKeyState(VK_APPS);
+	m_keys[VK_CAPITAL]  = GetKeyState(VK_CAPITAL);
+	m_keys[VK_NUMLOCK]  = GetKeyState(VK_NUMLOCK);
+	m_keys[VK_SCROLL]   = GetKeyState(VK_SCROLL);
+}
+
+void					CMSWindowsPrimaryScreen::updateKey(
+								UINT vkCode, bool press)
+{
+	if (press) {
+		switch (vkCode) {
+		case VK_LSHIFT:
+		case VK_RSHIFT:
+		case VK_SHIFT:
+			m_keys[vkCode]     |= 0x80;
+			m_keys[VK_SHIFT]   |= 0x80;
+			break;
+
+		case VK_LCONTROL:
+		case VK_RCONTROL:
+		case VK_CONTROL:
+			m_keys[vkCode]     |= 0x80;
+			m_keys[VK_CONTROL] |= 0x80;
+			break;
+
+		case VK_LMENU:
+		case VK_RMENU:
+		case VK_MENU:
+			m_keys[vkCode]     |= 0x80;
+			m_keys[VK_MENU]    |= 0x80;
+			break;
+
+		case VK_LWIN:
+		case VK_RWIN:
+		case VK_APPS:
+			m_keys[vkCode]     |= 0x80;
+			break;
+
+		case VK_CAPITAL:
+		case VK_NUMLOCK:
+		case VK_SCROLL:
+			// toggle keys
+			m_keys[vkCode]     |= 0x80;
+			if ((m_keys[vkCode] & 0x01) == 0) {
+				m_keys[vkCode] |= 0x01;
+			}
+			break;
+		}
+	}
+	else {
+		switch (vkCode) {
+		case VK_LSHIFT:
+		case VK_RSHIFT:
+		case VK_SHIFT:
+			m_keys[vkCode]     &= ~0x80;
+			if (((m_keys[VK_LSHIFT] | m_keys[VK_RSHIFT]) & 0x80) == 0) {
+				m_keys[VK_SHIFT] &= ~0x80;
+			}
+			break;
+
+		case VK_LCONTROL:
+		case VK_RCONTROL:
+		case VK_CONTROL:
+			m_keys[vkCode]     &= ~0x80;
+			if (((m_keys[VK_LCONTROL] | m_keys[VK_RCONTROL]) & 0x80) == 0) {
+				m_keys[VK_CONTROL] &= ~0x80;
+			}
+			break;
+
+		case VK_LMENU:
+		case VK_RMENU:
+		case VK_MENU:
+			m_keys[vkCode]     &= ~0x80;
+			if (((m_keys[VK_LMENU] | m_keys[VK_RMENU]) & 0x80) == 0) {
+				m_keys[VK_MENU] &= ~0x80;
+			}
+			break;
+
+		case VK_LWIN:
+		case VK_RWIN:
+		case VK_APPS:
+			m_keys[vkCode]     &= ~0x80;
+			break;
+
+		case VK_CAPITAL:
+		case VK_NUMLOCK:
+		case VK_SCROLL:
+			// toggle keys
+			m_keys[vkCode] &= ~0x80;
+			if ((m_keys[vkCode] & 0x01) != 0) {
+				m_keys[vkCode] &= ~0x01;
+			}
+			break;
+		}
 	}
 }

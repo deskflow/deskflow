@@ -116,7 +116,10 @@ void					CClient::onClipboardChanged(ClipboardID id)
 
 		// send data
 		log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
-		CProtocolUtil::writef(m_output, kMsgDClipboard, id, m_seqNum, &data);
+		if (m_output != NULL) {
+// FIXME -- will we send the clipboard when we connect?
+			CProtocolUtil::writef(m_output, kMsgDClipboard, id, m_seqNum, &data);
+		}
 	}
 }
 
@@ -200,7 +203,7 @@ void					CClient::runSession(void*)
 		// handle messages from server
 		for (;;) {
 			// wait for reply
-			log((CLOG_DEBUG1 "waiting for message"));
+			log((CLOG_DEBUG2 "waiting for message"));
 			UInt8 code[4];
 			UInt32 n = input->read(code, 4);
 
@@ -259,6 +262,7 @@ void					CClient::runSession(void*)
 			}
 			else if (memcmp(code, kMsgCClose, 4) == 0) {
 				// server wants us to hangup
+				log((CLOG_DEBUG1 "recv close"));
 				break;
 			}
 			else {
@@ -342,11 +346,14 @@ void					CClient::onEnter()
 		CProtocolUtil::readf(m_input, kMsgCEnter + 4, &x, &y, &m_seqNum);
 		m_active = true;
 	}
+	log((CLOG_DEBUG1 "recv enter, %d,%d %d", x, y, m_seqNum));
 	m_screen->enter(x, y);
 }
 
 void					CClient::onLeave()
 {
+	log((CLOG_DEBUG1 "recv leave"));
+
 	// tell screen we're leaving
 	m_screen->leave();
 
@@ -391,7 +398,7 @@ void					CClient::onGrabClipboard()
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgCClipboard + 4, &id, &seqNum);
-		log((CLOG_DEBUG "received clipboard %d grab", id));
+		log((CLOG_DEBUG "recv grab clipboard %d", id));
 
 		// validate
 		if (id >= kClipboardEnd) {
@@ -411,6 +418,7 @@ void					CClient::onScreenSaver()
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgCScreenSaver + 4, &on);
 	}
+	log((CLOG_DEBUG1 "recv screen saver on=%d", on));
 	// FIXME
 }
 
@@ -435,7 +443,7 @@ void					CClient::onSetClipboard()
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDClipboard + 4, &id, &seqNum, &data);
 	}
-	log((CLOG_DEBUG "received clipboard %d size=%d", id, data.size()));
+	log((CLOG_DEBUG "recv clipboard %d size=%d", id, data.size()));
 
 	// validate
 	if (id >= kClipboardEnd) {
@@ -452,22 +460,24 @@ void					CClient::onSetClipboard()
 
 void					CClient::onKeyDown()
 {
-	SInt16 id, mask;
+	UInt16 id, mask;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDKeyDown + 4, &id, &mask);
 	}
+	log((CLOG_DEBUG1 "recv key down id=%d, mask=0x%04x", id, mask));
 	m_screen->keyDown(static_cast<KeyID>(id),
 								static_cast<KeyModifierMask>(mask));
 }
 
 void					CClient::onKeyRepeat()
 {
-	SInt16 id, mask, count;
+	UInt16 id, mask, count;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDKeyRepeat + 4, &id, &mask, &count);
 	}
+	log((CLOG_DEBUG1 "recv key repeat id=%d, mask=0x%04x, count=%d", id, mask, count));
 	m_screen->keyRepeat(static_cast<KeyID>(id),
 								static_cast<KeyModifierMask>(mask),
 								count);
@@ -475,11 +485,12 @@ void					CClient::onKeyRepeat()
 
 void					CClient::onKeyUp()
 {
-	SInt16 id, mask;
+	UInt16 id, mask;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDKeyUp + 4, &id, &mask);
 	}
+	log((CLOG_DEBUG1 "recv key up id=%d, mask=0x%04x", id, mask));
 	m_screen->keyUp(static_cast<KeyID>(id),
 								static_cast<KeyModifierMask>(mask));
 }
@@ -491,6 +502,7 @@ void					CClient::onMouseDown()
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseDown + 4, &id);
 	}
+	log((CLOG_DEBUG1 "recv mouse down id=%d", id));
 	m_screen->mouseDown(static_cast<ButtonID>(id));
 }
 
@@ -501,6 +513,7 @@ void					CClient::onMouseUp()
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseUp + 4, &id);
 	}
+	log((CLOG_DEBUG1 "recv mouse up id=%d", id));
 	m_screen->mouseUp(static_cast<ButtonID>(id));
 }
 
@@ -511,6 +524,7 @@ void					CClient::onMouseMove()
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseMove + 4, &x, &y);
 	}
+	log((CLOG_DEBUG2 "recv mouse move %d,%d", x, y));
 	m_screen->mouseMove(x, y);
 }
 
@@ -521,5 +535,6 @@ void					CClient::onMouseWheel()
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseWheel + 4, &delta);
 	}
+	log((CLOG_DEBUG2 "recv mouse wheel %+d", delta));
 	m_screen->mouseWheel(delta);
 }

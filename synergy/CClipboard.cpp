@@ -1,4 +1,5 @@
 #include "CClipboard.h"
+#include <assert.h>
 
 //
 // CClipboard
@@ -92,7 +93,7 @@ void					CClipboard::unmarshall(const CString& data, Time time)
 	index += 4;
 
 	// read each format
-	for (UInt32 format = 0; format < numFormats; ++format) {
+	for (UInt32 i = 0; i < numFormats; ++i) {
 		// get the format id
 		UInt32 format = readUInt32(index);
 		index += 4;
@@ -144,10 +145,11 @@ CString					CClipboard::marshall() const
 
 UInt32					CClipboard::readUInt32(const char* buf) const
 {
-	return	(static_cast<UInt32>(buf[0]) << 24) |
-			(static_cast<UInt32>(buf[1]) << 16) |
-			(static_cast<UInt32>(buf[2]) <<  8) |
-			 static_cast<UInt32>(buf[3]);
+	const unsigned char* ubuf = reinterpret_cast<const unsigned char*>(buf);
+	return	(static_cast<UInt32>(ubuf[0]) << 24) |
+			(static_cast<UInt32>(ubuf[1]) << 16) |
+			(static_cast<UInt32>(ubuf[2]) <<  8) |
+			 static_cast<UInt32>(ubuf[3]);
 }
 
 void					CClipboard::writeUInt32(CString* buf, UInt32 v) const

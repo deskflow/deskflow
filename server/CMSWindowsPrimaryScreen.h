@@ -21,11 +21,11 @@ public:
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		leave();
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
-	virtual void		setClipboard(const IClipboard*);
-	virtual void		grabClipboard();
+	virtual void		setClipboard(ClipboardID, const IClipboard*);
+	virtual void		grabClipboard(ClipboardID);
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
-	virtual void		getClipboard(IClipboard*) const;
+	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 
 protected:
 	// CMSWindowsScreen overrides
@@ -40,8 +40,10 @@ private:
 	void				nextMark();
 
 	KeyID				mapKey(WPARAM keycode, LPARAM info,
-								KeyModifierMask* maskOut) const;
+								KeyModifierMask* maskOut);
 	ButtonID			mapButton(WPARAM button) const;
+	void				updateKeys();
+	void				updateKey(UINT vkCode, bool press);
 
 private:
 	CServer*			m_server;
@@ -53,6 +55,7 @@ private:
 	HINSTANCE			m_hookLibrary;
 	UInt32				m_mark;
 	UInt32				m_markReceived;
+	BYTE				m_keys[256];
 };
 
 #endif

@@ -131,6 +131,10 @@ SOURCE=.\CInputPacketStream.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\ClipboardTypes.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CMSWindowsClipboard.h
 # End Source File
 # Begin Source File

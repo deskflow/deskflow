@@ -86,6 +86,14 @@ void					CMSWindowsSecondaryScreen::open(CClient* client)
 
 	// open the display
 	openDisplay();
+
+	// update key state
+	updateKeys();
+	updateModifiers();
+
+	// assume primary has all clipboards
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
+		grabClipboard(id);
 }
 
 void					CMSWindowsSecondaryScreen::close()
@@ -118,6 +126,10 @@ void					CMSWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 	// show cursor
 	log((CLOG_INFO "show cursor"));
 	ShowWindow(m_window, SW_HIDE);
+
+	// update our keyboard state to reflect the local state
+	updateKeys();
+	updateModifiers();
 }
 
 void					CMSWindowsSecondaryScreen::leave()
@@ -151,7 +163,8 @@ void					CMSWindowsSecondaryScreen::leave()
 	if (m_clipboardOwner != clipboardOwner) {
 		m_clipboardOwner = clipboardOwner;
 		if (m_clipboardOwner != m_window) {
-			m_client->onClipboardChanged();
+			m_client->onClipboardChanged(kClipboardClipboard);
+			m_client->onClipboardChanged(kClipboardSelection);
 		}
 	}
 }
@@ -159,22 +172,45 @@ void					CMSWindowsSecondaryScreen::leave()
 void					CMSWindowsSecondaryScreen::keyDown(
 								KeyID key, KeyModifierMask mask)
 {
-	const UINT vkey = mapKey(key, mask);
-	if (vkey != 0) {
-		const UINT code = MapVirtualKey(vkey, 0);
-		keybd_event(vkey, code, 0, 0);
+	Keystrokes keys;
+	UINT virtualKey;
+
+	// get the sequence of keys to simulate key press and the final
+	// modifier state.
+	m_mask = mapKey(keys, virtualKey, key, mask, true);
+	if (keys.empty())
+		return;
+
+	// generate key events
+	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ++k) {
+		const UINT code = MapVirtualKey(k->first, 0);
+		keybd_event(k->first, code, k->second ? 0 : KEYEVENTF_KEYUP, 0);
 	}
+
+	// note that key is now down
+	m_keys[virtualKey] |= 0x80;
 }
 
 void					CMSWindowsSecondaryScreen::keyRepeat(
 								KeyID key, KeyModifierMask mask, SInt32 count)
 {
-	const UINT vkey = mapKey(key, mask);
-	if (vkey != 0) {
-		const UINT code = MapVirtualKey(vkey, 0);
-		for (SInt32 i = 0; i < count; ++i) {
-			keybd_event(vkey, code, KEYEVENTF_KEYUP, 0);
-			keybd_event(vkey, code, 0, 0);
+	Keystrokes keys;
+	UINT virtualKey;
+
+	// get the sequence of keys to simulate key release and the final
+	// modifier state.
+	m_mask = mapKey(keys, virtualKey, key, mask, true);
+	if (keys.empty())
+		return;
+
+	// generate key events
+// YYY -- need to know which code in Keystrokes should be repeated;
+// then repeat only that key count times
+	for (SInt32 i = 0; i < count; ++i) {
+		for (Keystrokes::const_iterator k = keys.begin();
+								k != keys.end(); ++k) {
+			const UINT code = MapVirtualKey(k->first, 0);
+			keybd_event(k->first, code, k->second ? 0 : KEYEVENTF_KEYUP, 0);
 		}
 	}
 }
@@ -182,61 +218,43 @@ void					CMSWindowsSecondaryScreen::keyRepeat(
 void					CMSWindowsSecondaryScreen::keyUp(
 								KeyID key, KeyModifierMask mask)
 {
-	const UINT vkey = mapKey(key, mask);
-	if (vkey != 0) {
-		const UINT code = MapVirtualKey(vkey, 0);
-		keybd_event(vkey, code, KEYEVENTF_KEYUP, 0);
+	Keystrokes keys;
+	UINT virtualKey;
+
+	// get the sequence of keys to simulate key release and the final
+	// modifier state.
+	m_mask = mapKey(keys, virtualKey, key, mask, false);
+	if (keys.empty())
+		return;
+
+	// generate key events
+	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ++k) {
+		const UINT code = MapVirtualKey(k->first, 0);
+		keybd_event(k->first, code, k->second ? 0 : KEYEVENTF_KEYUP, 0);
 	}
+
+	// note that key is now up
+	m_keys[virtualKey] &= ~0x80;
 }
 
 void					CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
 {
 	// map button id to button flag
-	DWORD flags;
-	switch (button) {
-	case kButtonLeft:
-		flags = MOUSEEVENTF_LEFTDOWN;
-		break;
-
-	case kButtonMiddle:
-		flags = MOUSEEVENTF_MIDDLEDOWN;
-		break;
-
-	case kButtonRight:
-		flags = MOUSEEVENTF_RIGHTDOWN;
-		break;
-
-	default:
-		return;
-	}
+	DWORD flags = mapButton(button);
 
 	// send event
-	mouse_event(flags, 0, 0, 0, 0);
+	if (flags != 0)
+		mouse_event(flags, 0, 0, 0, 0);
 }
 
 void					CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
 {
 	// map button id to button flag
-	DWORD flags;
-	switch (button) {
-	case kButtonLeft:
-		flags = MOUSEEVENTF_LEFTUP;
-		break;
-
-	case kButtonMiddle:
-		flags = MOUSEEVENTF_MIDDLEUP;
-		break;
-
-	case kButtonRight:
-		flags = MOUSEEVENTF_RIGHTUP;
-		break;
-
-	default:
-		return;
-	}
+	DWORD flags = mapButton(button);
 
 	// send event
-	mouse_event(flags, 0, 0, 0, 0);
+	if (flags != 0)
+		mouse_event(flags, 0, 0, 0, 0);
 }
 
 void					CMSWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
@@ -255,7 +273,7 @@ void					CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 }
 
 void					CMSWindowsSecondaryScreen::setClipboard(
-								const IClipboard* src)
+								ClipboardID id, const IClipboard* src)
 {
 	assert(m_window != NULL);
 
@@ -263,12 +281,12 @@ void					CMSWindowsSecondaryScreen::setClipboard(
 	CClipboard::copy(&dst, src);
 }
 
-void					CMSWindowsSecondaryScreen::grabClipboard()
+void					CMSWindowsSecondaryScreen::grabClipboard(ClipboardID id)
 {
 	assert(m_window != NULL);
 
 	CMSWindowsClipboard clipboard(m_window);
-	if (clipboard.open()) {
+	if (clipboard.open(0)) {
 		clipboard.close();
 	}
 }
@@ -285,7 +303,7 @@ SInt32					CMSWindowsSecondaryScreen::getJumpZoneSize() const
 }
 
 void					CMSWindowsSecondaryScreen::getClipboard(
-								IClipboard* dst) const
+								ClipboardID id, IClipboard* dst) const
 {
 	assert(m_window != NULL);
 
@@ -385,7 +403,8 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 		// ownership).
 		m_clipboardOwner = GetClipboardOwner();
 		if (m_clipboardOwner != m_window) {
-			m_client->onClipboardChanged();
+			m_client->onClipboardChanged(kClipboardClipboard);
+			m_client->onClipboardChanged(kClipboardSelection);
 		}
 		return 0;
 
@@ -887,33 +906,281 @@ static const UINT*		g_mapTable[] =
 	/* 0xfc */ NULL, g_terminal, g_function, g_miscellany
 };
 
-UINT					CMSWindowsSecondaryScreen::mapKey(
-								KeyID id, KeyModifierMask /*mask*/) const
+DWORD					CMSWindowsSecondaryScreen::mapButton(
+								ButtonID button) const
 {
-	const UInt32 mapID = ((id >> 8) & 0xff);
-	const UInt32 code  = (id & 0xff);
+	// map button id to button flag
+	switch (button) {
+	case kButtonLeft:
+		return MOUSEEVENTF_LEFTDOWN;
 
-	// lookup the key table
-	const UINT* map = g_mapTable[mapID];
-	if (map == NULL) {
+	case kButtonMiddle:
+		return MOUSEEVENTF_MIDDLEDOWN;
+
+	case kButtonRight:
+		return MOUSEEVENTF_RIGHTDOWN;
+
+	default:
 		return 0;
 	}
+}
 
-	if (mapID == 0) {
-		SHORT scan = VkKeyScan(code);
-		if (scan != 0xffff) {
-			// FIXME -- must ensure shift state is correct.  that means
-			// tracking the shift state from the moment we enter until
-			// the moment we leave (and probably disallowing leave if
-			// any shift keys are down).  if current shift state is
-			// correct then do nothing extra, otherwise must surround
-			// injected key event with injected shift key events to
-			// get shift key in correct state then back to the previous
-			// state.
-			return (UINT)LOBYTE(scan);
+KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
+								Keystrokes& keys,
+								UINT& virtualKey,
+								KeyID id, KeyModifierMask mask,
+								bool press) const
+{
+	// lookup the key table
+	const UInt32 mapID = ((id >> 8) & 0xff);
+	const UINT* map    = g_mapTable[mapID];
+	if (map == NULL) {
+		// unknown key
+		return m_mask;
+	}
+
+	// look up virtual key for id.  default output mask carries over
+	// the current toggle modifier states.
+	const UInt32 code       = (id & 0xff);
+	virtualKey              = map[code];
+	KeyModifierMask outMask = (m_mask &
+								(KeyModifierCapsLock |
+								KeyModifierNumLock |
+								KeyModifierScrollLock));
+
+	// if not in map then ask system to convert ascii character
+	if (virtualKey == 0) {
+		if (mapID != 0) {
+			// not ascii
+			return m_mask;
+		}
+
+		// translate.  return no keys if unknown key.
+		SHORT vk = VkKeyScan(code);
+		if (vk == 0xffff) {
+			return m_mask;
+		}
+
+		// convert system modifier mask to our mask
+		if (HIBYTE(vk) & 1)
+			outMask |= KeyModifierShift;
+		if (HIBYTE(vk) & 2)
+			outMask |= KeyModifierControl;
+		if (HIBYTE(vk) & 4)
+			outMask |= KeyModifierAlt;
+
+		// if caps-lock is on and so is shift then turn off caps-lock
+		if (outMask & (KeyModifierShift | KeyModifierCapsLock) ==
+								(KeyModifierShift | KeyModifierCapsLock))
+			outMask &= ~KeyModifierCapsLock;
+
+		// get virtual key
+		virtualKey = LOBYTE(vk);
+	}
+
+	// if in map then figure out correct modifier state
+	else {
+		// check numeric keypad.  note that while KeyID distinguishes
+		// between the keypad movement keys (e.g. Home, left arrow),
+		// the virtual keys do not.  however, the virtual keys do
+		// distinguish between keypad numbers and operators (e.g.
+		// add, multiply) and their main keyboard counterparts.
+		// therefore, we can ignore the num-lock state for movement
+		// virtual keys but not for numeric keys.
+		if (virtualKey >= VK_NUMPAD0 && virtualKey <= VK_DIVIDE) {
+			// set required shift state based on current numlock state
+			if ((outMask & KeyModifierNumLock) == 0)
+				outMask |= KeyModifierShift;
+		}
+
+		// FIXME -- should check for LeftTab KeySym
+	}
+
+	// a list of modifier key info
+	class CModifierInfo {
+	public:
+		KeyModifierMask	mask;
+		UINT			virtualKey;
+		UINT			virtualKey2;
+		bool			isToggle;
+	};
+	static const CModifierInfo s_modifier[] = {
+		{ KeyModifierShift,			VK_LSHIFT,		VK_RSHIFT,		false },
+		{ KeyModifierControl,		VK_LCONTROL,	VK_RCONTROL,	false },
+		{ KeyModifierAlt,			VK_LMENU,		VK_RMENU,		false },
+		{ KeyModifierMeta,			VK_LWIN,		VK_RWIN,		false },
+		{ KeyModifierCapsLock,		VK_CAPITAL,		0,				true },
+		{ KeyModifierNumLock,		VK_NUMLOCK,		0,				true },
+		{ KeyModifierScrollLock,	VK_SCROLL,		0,				true }
+	};
+	static const unsigned int s_numModifiers =
+								sizeof(s_modifier) / sizeof(s_modifier[0]);
+
+	// note if the key is a modifier
+	unsigned int modifierIndex;
+	switch (virtualKey) {
+	case VK_SHIFT:
+	case VK_LSHIFT:
+	case VK_RSHIFT:
+		modifierIndex = 0;
+		break;
+
+	case VK_CONTROL:
+	case VK_LCONTROL:
+	case VK_RCONTROL:
+		modifierIndex = 1;
+		break;
+
+	case VK_MENU:
+	case VK_LMENU:
+	case VK_RMENU:
+		modifierIndex = 2;
+		break;
+
+	case VK_LWIN:
+	case VK_RWIN:
+		modifierIndex = 3;
+		break;
+
+	case VK_CAPITAL:
+		modifierIndex = 4;
+		break;
+
+	case VK_NUMLOCK:
+		modifierIndex = 5;
+		break;
+
+	case VK_SCROLL:
+		modifierIndex = 6;
+		break;
+
+	default:
+		modifierIndex = s_numModifiers;
+		break;
+	}
+	const bool isModifier = (modifierIndex != s_numModifiers);
+
+	// add the key events required to get to the modifier state
+	// necessary to generate an event yielding id.  also save the
+	// key events required to restore the state.  if the key is
+	// a modifier key then skip this because modifiers should not
+	// modify modifiers.
+	Keystrokes undo;
+	if (outMask != m_mask && !isModifier) {
+		for (unsigned int i = 0; i < s_numModifiers; ++i) {
+			KeyModifierMask bit = s_modifier[i].mask;
+			if ((outMask & bit) != (m_mask & bit)) {
+				if ((outMask & bit) != 0) {
+					// modifier is not active but should be.  if the
+					// modifier is a toggle then toggle it on with a
+					// press/release, otherwise activate it with a
+					// press.
+					const UINT modifierKey = s_modifier[i].virtualKey;
+					keys.push_back(std::make_pair(modifierKey, true));
+					if (s_modifier[i].isToggle) {
+						keys.push_back(std::make_pair(modifierKey, false));
+						undo.push_back(std::make_pair(modifierKey, false));
+						undo.push_back(std::make_pair(modifierKey, true));
+					}
+					else {
+						undo.push_back(std::make_pair(modifierKey, false));
+					}
+				}
+
+				else {
+					// modifier is active but should not be.  if the
+					// modifier is a toggle then toggle it off with a
+					// press/release, otherwise deactivate it with a
+					// release.  we must check each keycode for the
+					// modifier if not a toggle.
+					if (s_modifier[i].isToggle) {
+						const UINT modifierKey = s_modifier[i].virtualKey;
+						keys.push_back(std::make_pair(modifierKey, true));
+						keys.push_back(std::make_pair(modifierKey, false));
+						undo.push_back(std::make_pair(modifierKey, false));
+						undo.push_back(std::make_pair(modifierKey, true));
+					}
+					else {
+						UINT key = s_modifier[i].virtualKey;
+						if ((m_keys[key] & 0x80) != 0) {
+							keys.push_back(std::make_pair(key, false));
+							undo.push_back(std::make_pair(key, true));
+						}
+						key = s_modifier[i].virtualKey2;
+						if ((m_keys[key] & 0x80) != 0) {
+							keys.push_back(std::make_pair(key, false));
+							undo.push_back(std::make_pair(key, true));
+						}
+					}
+				}
+			}
 		}
 	}
 
-	// lookup the key in the table
-	return map[code];
+	// add the key event
+	keys.push_back(std::make_pair(virtualKey, press));
+
+	// add key events to restore the modifier state.  apply events in
+	// the reverse order that they're stored in undo.
+	while (!undo.empty()) {
+		keys.push_back(undo.back());
+		undo.pop_back();
+	}
+
+	// if the key is a modifier key then compute the modifier mask after
+	// this key is pressed.
+	mask = m_mask;
+	if (isModifier) {
+		// toggle keys modify the state on press if toggling on and on
+		// release if toggling off.  other keys set the bit on press
+		// and clear the bit on release.
+		// FIXME -- verify if that's true on win32
+		if (s_modifier[modifierIndex].isToggle) {
+			if (((mask & s_modifier[modifierIndex].mask) == 0) == press)
+				mask ^= s_modifier[modifierIndex].mask;
+		}
+		else if (press) {
+			mask |= s_modifier[modifierIndex].mask;
+		}
+		else {
+			// can't reset bit until all keys that set it are released.
+			// scan those keys to see if any are pressed.
+			bool down = false;
+			if ((m_keys[s_modifier[modifierIndex].virtualKey] & 0x80) != 0) {
+				down = true;
+			}
+			if ((m_keys[s_modifier[modifierIndex].virtualKey2] & 0x80) != 0) {
+				down = true;
+			}
+			if (!down)
+				mask &= ~s_modifier[modifierIndex].mask;
+		}
+	}
+
+	return mask;
+}
+
+void					CMSWindowsSecondaryScreen::updateKeys()
+{
+	GetKeyboardState(m_keys);
+}
+
+void					CMSWindowsSecondaryScreen::updateModifiers()
+{
+	// update active modifier mask
+	m_mask = 0;
+	if ((m_keys[VK_LSHIFT] & 0x80) != 0 || (m_keys[VK_RSHIFT] & 0x80) != 0)
+		m_mask |= KeyModifierShift;
+	if ((m_keys[VK_LCONTROL] & 0x80) != 0 || (m_keys[VK_RCONTROL] & 0x80) != 0)
+		m_mask |= KeyModifierControl;
+	if ((m_keys[VK_LMENU] & 0x80) != 0 || (m_keys[VK_RMENU] & 0x80) != 0)
+		m_mask |= KeyModifierAlt;
+	if ((m_keys[VK_LWIN] & 0x80) != 0 || (m_keys[VK_RWIN] & 0x80) != 0)
+		m_mask |= KeyModifierMeta;
+	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
+		m_mask |= KeyModifierCapsLock;
+	if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
+		m_mask |= KeyModifierNumLock;
+	if ((m_keys[VK_SCROLL] & 0x01) != 0)
+		m_mask |= KeyModifierScrollLock;
 }

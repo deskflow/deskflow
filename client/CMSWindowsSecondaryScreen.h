@@ -3,6 +3,8 @@
 
 #include "CMSWindowsScreen.h"
 #include "ISecondaryScreen.h"
+#include <map>
+#include <vector>
 
 class CMSWindowsSecondaryScreen : public CMSWindowsScreen, public ISecondaryScreen {
 public:
@@ -23,11 +25,11 @@ public:
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		mouseWheel(SInt32 delta);
-	virtual void		setClipboard(const IClipboard*);
-	virtual void		grabClipboard();
+	virtual void		setClipboard(ClipboardID, const IClipboard*);
+	virtual void		grabClipboard(ClipboardID);
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
-	virtual void		getClipboard(IClipboard*) const;
+	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 
 protected:
 	// CMSWindowsScreen overrides
@@ -37,13 +39,27 @@ protected:
 	virtual void		onCloseDisplay();
 
 private:
-	UINT				mapKey(KeyID, KeyModifierMask) const;
+	typedef std::pair<UINT, bool> Keystroke;
+	typedef std::vector<Keystroke> Keystrokes;
+	
+	DWORD				mapButton(ButtonID button) const;
+	KeyModifierMask		mapKey(Keystrokes&, UINT& virtualKey, KeyID,
+								KeyModifierMask, bool press) const;
+
+	void				updateKeys();
+	void				updateModifiers();
 
 private:
 	CClient*			m_client;
 	HWND				m_window;
 	HWND				m_nextClipboardWindow;
 	HWND				m_clipboardOwner;
+
+	// virtual key states
+	BYTE				m_keys[256];
+
+	// current active modifiers
+	KeyModifierMask		m_mask;
 };
 
 #endif

@@ -6,7 +6,9 @@
 // CMSWindowsClipboard
 //
 
-CMSWindowsClipboard::CMSWindowsClipboard(HWND window) : m_window(window)
+CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
+								m_window(window),
+								m_time(0)
 {
 	// do nothing
 }
@@ -16,7 +18,7 @@ CMSWindowsClipboard::~CMSWindowsClipboard()
 	// do nothing
 }
 
-bool					CMSWindowsClipboard::open()
+bool					CMSWindowsClipboard::open(Time time)
 {
 	log((CLOG_INFO "open clipboard"));
 
@@ -29,7 +31,12 @@ bool					CMSWindowsClipboard::open()
 	}
 	else {
 		log((CLOG_WARN "failed to grab clipboard"));
+		CloseClipboard();
+		return false;
 	}
+
+	m_time = time;
+
 	return true;
 }
 
@@ -69,6 +76,11 @@ void					CMSWindowsClipboard::add(
 
 	// done with clipboard
 	CloseClipboard();
+}
+
+IClipboard::Time		CMSWindowsClipboard::getTime() const
+{
+	return m_time;
 }
 
 bool					CMSWindowsClipboard::has(EFormat format) const
@@ -122,7 +134,7 @@ HANDLE					CMSWindowsClipboard::convertTextToWin32(
 								const CString& data) const
 {
 	// compute size of converted text
-	UInt32 dstSize = 0;
+	UInt32 dstSize = 1;
 	const UInt32 srcSize = data.size();
 	const char* src = data.c_str();
 	for (UInt32 index = 0; index < srcSize; ++index) {
@@ -148,6 +160,7 @@ HANDLE					CMSWindowsClipboard::convertTextToWin32(
 				}
 				dst[dstSize++] = src[index];
 			}
+			dst[dstSize] = '\0';
 
 			// done converting
 			GlobalUnlock(gData);
@@ -162,8 +175,11 @@ CString					CMSWindowsClipboard::convertTextFromWin32(
 	// get source data and it's size
 	const char* src = (const char*)GlobalLock(handle);
 	UInt32 srcSize = (SInt32)GlobalSize(handle);
-	if (src == NULL || srcSize == 0)
+	if (src == NULL || srcSize <= 1)
 		return CString();
+
+	// ignore trailing NUL
+	--srcSize;
 
 	// compute size of converted text
 	UInt32 dstSize = 0;
