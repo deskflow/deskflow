@@ -161,6 +161,12 @@ private:
 
 		// the request queues
 		CRequestMap		m_requests;
+
+		// owner of clipboard when we last asked for it
+		Window			m_owner;
+
+		// true iff the previous request to m_owner got no reply
+		bool			m_unresponsive;
 	};
 
 	Display*			m_display;

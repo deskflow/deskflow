@@ -261,6 +261,23 @@ void					CXWindowsScreen::getDisplayClipboard(
 	CLock lock(&m_mutex);
 	Atom selection = m_atomClipboard[id];
 
+	// if we're trying to request the clipboard from the same
+	// unresponsive owner then immediately give up.  this is lame
+	// because we can't be sure the owner won't become responsive;
+	// we can only ask the X server for the current owner, not the
+	// owner at time timestamp, allowing a race condition;  and we
+	// don't detect if the owner window is destroyed in order to
+	// reset the unresponsive flag.
+	Window owner = XGetSelectionOwner(m_display, selection);
+	if (m_clipboards[id].m_unresponsive) {
+		if (owner != None && owner == m_clipboards[id].m_owner) {
+			clipboard->close();
+			return;
+		}
+	}
+	CClipboardInfo& clipboardInfo =
+								const_cast<CClipboardInfo&>(m_clipboards[id]);
+
 	// ask the selection for all the formats it has.  some owners return
 	// the TARGETS atom and some the ATOM atom when TARGETS is requested.
 	Atom format;
@@ -268,6 +285,10 @@ void					CXWindowsScreen::getDisplayClipboard(
 	if (getDisplayClipboard(selection, m_atomTargets,
 								requestor, timestamp, &format, &targets) &&
 		(format == m_atomTargets || format == XA_ATOM)) {
+		// save owner info
+		clipboardInfo.m_owner        = owner;
+		clipboardInfo.m_unresponsive = false;
+
 		// get each target (that we can interpret).  some owners return
 		// some targets multiple times in the list so don't try to get
 		// those multiple times.
@@ -330,6 +351,11 @@ void					CXWindowsScreen::getDisplayClipboard(
 	else {
 		// non-ICCCM conforming selection owner.  try TEXT format.
 		// FIXME
+
+		// save owner info
+		clipboardInfo.m_owner        = owner;
+		clipboardInfo.m_unresponsive = true;
+
 		log((CLOG_DEBUG1 "selection doesn't support TARGETS, format is %d", format));
 	}
 
@@ -1014,7 +1040,9 @@ Time					CXWindowsScreen::getCurrentTimeNoLock(
 CXWindowsScreen::CClipboardInfo::CClipboardInfo() :
 								m_clipboard(),
 								m_lostClipboard(CurrentTime),
-								m_requests()
+								m_requests(),
+								m_owner(None),
+								m_unresponsive(false)
 {
 	// do nothing
 }

@@ -13,7 +13,7 @@ RMR       = /bin/rm -rf
 #
 # compiler options
 #
-GCXXDEFS  = -D_XOPEN_SOURCE=600
+GCXXDEFS  = -D_XOPEN_SOURCE=600 -D_SVID_SOURCE
 GCXXINCS  = -I$(DEPTH)/include -I/usr/X11R6/include
 GCXXOPTS  = -Wall -W -fexceptions
 CXXOPTIMIZER = -g

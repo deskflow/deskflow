@@ -128,6 +128,16 @@ void					CTCPSocket::init()
 	m_output    = new CBufferedOutputStream(m_mutex,
 								new TMethodJob<CTCPSocket>(
 									this, &CTCPSocket::closeOutput));
+
+	// turn off Nagle algorithm.  we send lots of very short messages
+	// that should be sent without (much) delay.  for example, the
+	// mouse motion messages are much less useful if they're delayed.
+	CNetwork::TCPNoDelayType flag = 1;
+	CNetwork::setsockopt(m_fd, SOL_TCP, TCP_NODELAY, &flag, sizeof(flag));
+
+	// don't buffer sends, we merge messages ourself
+	int data = 0;
+	CNetwork::setsockopt(m_fd, SOL_SOCKET, SO_SNDBUF, &data, sizeof(data));
 }
 
 void					CTCPSocket::ioThread(void*)

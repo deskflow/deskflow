@@ -9,6 +9,9 @@
 # define INCL_WINSOCK_API_TYPEDEFS 0
 # include <winsock2.h>
 typedef int ssize_t;
+# if !defined(SOL_TCP)
+#  define SOL_TCP IPPROTO_TCP
+# endif
 #else
 # define FAR
 # define PASCAL
@@ -21,6 +24,9 @@ typedef int ssize_t;
 # include <netdb.h>
 # include <netinet/in.h>
 # include <errno.h>
+# if !defined(TCP_NODELAY) || !defined(SOL_TCP)
+#  include <netinet/tcp.h>
+# endif
 #endif
 
 // FIXME -- must handle htonl and ilk when defined as macros
@@ -31,6 +37,7 @@ public:
 	typedef SOCKET Socket;
 	typedef struct sockaddr Address;
 	typedef int AddressLength;
+	typedef BOOL TCPNoDelayType;
 	struct PollEntry {
 		Socket			fd;
 		short			events;
@@ -47,6 +54,7 @@ public:
 	typedef struct sockaddr Address;
 	typedef socklen_t AddressLength;
 	typedef struct pollfd PollEntry;
+	typedef int TCPNoDelayType;
 	enum {
 		kPOLLIN = POLLIN,
 		kPOLLOUT = POLLOUT,
