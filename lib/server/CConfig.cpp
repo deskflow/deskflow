@@ -315,10 +315,22 @@ CConfig::isValidScreenName(const CString& name) const
 	//  name      ::= [_A-Za-z0-9] | [_A-Za-z0-9][-_A-Za-z0-9]*[_A-Za-z0-9]
 	//  domain    ::= . name
 	//  validname ::= name domain*
+	// we also accept names ending in . because many OS X users have
+	// so misconfigured their systems.
+
+	// empty name is invalid
+	if (name.empty()) {
+		return false;
+	}
 
 	// check each dot separated part
 	CString::size_type b = 0;
 	for (;;) {
+		// accept trailing .
+		if (b == name.size()) {
+			break;
+		}
+
 		// find end of part
 		CString::size_type e = name.find('.', b);
 		if (e == CString::npos) {
