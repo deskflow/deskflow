@@ -346,7 +346,7 @@ const KeyID				CMSWindowsKeyState::s_virtualKey[][2] =
 	/* 0x19 */ { kKeyZenkaku,		kKeyNone },		// VK_KANJI			
 	/* 0x1a */ { kKeyNone,			kKeyNone },		// undefined
 	/* 0x1b */ { kKeyEscape,		kKeyNone },		// VK_ESCAPE
-	/* 0x1c */ { kKeyNone,			kKeyNone },		// VK_CONVERT		
+	/* 0x1c */ { kKeyHenkan,		kKeyNone },		// VK_CONVERT		
 	/* 0x1d */ { kKeyNone,			kKeyNone },		// VK_NONCONVERT	
 	/* 0x1e */ { kKeyNone,			kKeyNone },		// VK_ACCEPT		
 	/* 0x1f */ { kKeyNone,			kKeyNone },		// VK_MODECHANGE	
@@ -664,7 +664,7 @@ const UINT				CMSWindowsKeyState::s_mapEF00[] =
 	/* 0x08 */ VK_BACK, VK_TAB, 0, VK_CLEAR, 0, VK_RETURN, 0, 0,
 	/* 0x10 */ 0, 0, 0, VK_PAUSE, VK_SCROLL, 0/*sys-req*/, 0, 0,
 	/* 0x18 */ 0, 0, 0, VK_ESCAPE, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x20 */ 0, 0, 0, VK_CONVERT, 0, 0, 0, 0,
 	/* 0x28 */ 0, 0, VK_KANJI, 0, 0, 0, 0, 0,
 	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
