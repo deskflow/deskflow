@@ -30,12 +30,14 @@ Linux, Unix:
 
 manifest
 --------
-  linux         windows
-  -----         -------
-  synergy       synergy.exe         the synergy client
-  synergyd      synergyd.exe        the synergy server
-  synergy.conf  synergy.sgc         sample configuration file
-  README        README              this file
+  linux               windows
+  -----               -------
+  README              README              this file
+  synergy             synergy.exe         the synergy client
+  synergyd            synergyd.exe        the synergy server
+  synergy.conf        synergy.sgc         sample configuration file
+  synergy.linux.init                      startup script for client
+  synergyd.linux.init                     startup script for server
 
 
 running synergy
@@ -179,6 +181,15 @@ windows:
   when installing the client you must provide the server
   hostname argument.  to change the arguments you must first
   uninstall then reinstall.
+
+  you must also install the configuration file along with the
+  server.  it's recommended that you put it in the windows
+  directory (e.g. C:\WINNT) and call it "synergy.sgc".  the
+  server will automatically find this file.  however, you can
+  also use the --config command line option and specify an
+  absolute path to the file.  remember that this file must be
+  accessible when the system starts up, before network shares
+  are mapped.
 
   to uninstall use:
 
