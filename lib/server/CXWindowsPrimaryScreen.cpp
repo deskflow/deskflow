@@ -696,6 +696,11 @@ CXWindowsPrimaryScreen::updateKeys()
 	m_capsLockMask   = 0;
 	m_scrollLockMask = 0;
 
+	// work around for my system, which reports this state bit when
+	// mode switch is down, instead of the appropriate modifier bit.
+	// should have no effect on other systems.  -crs 9/02.
+	m_modeSwitchMask |= (1 << 13);
+
 	// set keycodes and masks
 	for (unsigned int i = 0; i < 8; ++i) {
 		const unsigned int bit = (1 << i);
