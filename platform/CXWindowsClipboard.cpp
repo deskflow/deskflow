@@ -3,6 +3,7 @@
 #include "CThread.h"
 #include "CLog.h"
 #include "CStopwatch.h"
+#include "stdvector.h"
 #include <cstdio>
 #include <X11/Xatom.h>
 
@@ -1169,7 +1170,7 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 	// a timeout expires.  we use a timeout so we don't get locked up
 	// by badly behaved selection owners.
 	XEvent xevent;
-	SInt32 lastPending = 0;
+	std::vector<XEvent> events;
 	CStopwatch timeout(true);
 	static const double s_timeout = 0.25;	// FIXME -- is this too short?
 	while (!m_done && !m_failed) {
@@ -1179,22 +1180,24 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 			break;
 		}
 
-		// get how many events are pending now
-		SInt32 pending = XPending(display);
-
-		// process events if there are more otherwise sleep
-		if (pending > lastPending) {
-			lastPending = pending;
-			while (!m_done && !m_failed &&
-					XCheckIfEvent(display, &xevent,
-						&CXWindowsClipboard::CICCCMGetClipboard::eventPredicate,
-						reinterpret_cast<XPointer>(this))) {
-				lastPending = XPending(display);
+		// process events if any otherwise sleep
+		if (XPending(display) > 0) {
+			while (!m_done && !m_failed && XPending(display) > 0) {
+				XNextEvent(display, &xevent);
+				if (!processEvent(display, &xevent)) {
+					// not processed so save it
+					events.push_back(xevent);
+				}
 			}
 		}
 		else {
 			CThread::sleep(0.01);
 		}
+	}
+
+	// put unprocessed events back
+	for (UInt32 i = events.size(); i > 0; --i) {
+		XPutBackEvent(display, &events[i - 1]);
 	}
 
 	// restore mask
@@ -1206,7 +1209,7 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 }
 
 bool
-CXWindowsClipboard::CICCCMGetClipboard::doEventPredicate(
+CXWindowsClipboard::CICCCMGetClipboard::processEvent(
 				Display* display, XEvent* xevent)
 {
 	// process event
@@ -1244,7 +1247,8 @@ CXWindowsClipboard::CICCCMGetClipboard::doEventPredicate(
 			xevent->xproperty.atom   == m_property &&
 			xevent->xproperty.state  == PropertyNewValue) {
 			if (!m_reading) {
-				return false;
+				// we haven't gotten the SelectionNotify yet
+				return true;
 			}
 			break;
 		}
@@ -1323,20 +1327,9 @@ log((CLOG_INFO "  INCR secondary chunk"));	// FIXME
 		m_done          = true;
 	}
 
-	// say we're not interested in this event if the conversion is
-	// incremental.  that'll cause this method to be called again
-	// when there's more data.  we finally finish the incremental
-	// copy when we read a 0 byte property.
+	// this event has been processed
 	logc(!m_incr, (CLOG_DEBUG1 "  got data, %d bytes", m_data->size()));
-	return !m_incr;
-}
-
-Bool
-CXWindowsClipboard::CICCCMGetClipboard::eventPredicate(
-				Display* display, XEvent* xevent, XPointer arg)
-{
-	CICCCMGetClipboard* self = reinterpret_cast<CICCCMGetClipboard*>(arg);
-	return self->doEventPredicate(display, xevent) ? True : False;
+	return true;
 }
 
 

@@ -107,11 +107,7 @@ private:
 							Atom* actualTarget, CString* data);
 
 	private:
-		bool			doEventPredicate(Display* display,
-							XEvent* event);
-		static Bool		eventPredicate(Display* display,
-							XEvent* event,
-							XPointer arg);
+		bool			processEvent(Display* display, XEvent* event);
 
 	private:
 		Window			m_requestor;
