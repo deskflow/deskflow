@@ -1,3 +1,243 @@
+2004/08/05 20:42:51 crs
+dist/nullsoft/synergy.nsi
+
+Fixed missing license file and PORTING in win32 installer build.
+
+----------
+2004/08/04 22:48:30 crs
+synergy.xcode/project.pbxproj
+
+Removed cross-compile setting from project.
+
+----------
+2004/08/04 22:48:08 crs
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+lib/platform/COSXScreen.cpp
+lib/synergy/KeyTypes.h
+
+Fixed handling of auto-repeat, ctrl + character key, and button
+to KeyCode translation.
+
+----------
+2004/08/03 22:02:57 crs
+lib/platform/COSXKeyState.cpp
+
+Fixed space key on OS X server -> client.
+
+----------
+2004/08/03 21:14:30 crs
+lib/arch/CArchMultithreadPosix.cpp
+
+Fixed warnings in deployment build style on OS X.
+
+----------
+2004/08/01 17:37:28 crs
+doc/faq.html
+doc/index.html
+doc/running.html
+
+Fixed errors in new docs markup.
+
+----------
+2004/08/01 17:37:11 crs
+dist/nullsoft/synergy.nsi
+
+Updated win32 installer to use new docs.
+
+----------
+2004/08/01 17:36:53 crs
+COPYING
+
+Reverted COPYING so win32 installer build can use it.
+
+----------
+2004/08/01 16:31:47 crs
+Makefile.am
+dist/nullsoft/installer.mak
+dist/nullsoft/synergy.nsi
+dist/rpm/synergy.spec.in
+
+Updated packagers to handle new documentation.
+
+----------
+2004/08/01 16:04:21 crs
+AUTHORS
+COPYING
+INSTALL
+NEWS
+
+Added files required by automake.  They simply reference the
+corresponding HTML file.
+
+----------
+2004/08/01 16:00:18 crs
+AUTHORS
+BUGS
+COPYING
+FAQ
+HISTORY
+INSTALL
+Makefile.am
+NEWS
+PORTING
+README
+TODO
+configure.in
+doc/Makefile.am
+doc/PORTING
+doc/authors.html
+doc/autostart.html
+doc/compiling.html
+doc/configuration.html
+doc/developer.html
+doc/faq.html
+doc/history.html
+doc/index.html
+doc/license.html
+doc/news.html
+doc/running.html
+doc/security.html
+doc/synergy.css
+doc/tips.html
+doc/todo.html
+
+Updated documentation.  Converted most documation to HTML.
+
+----------
+2004/07/31 14:34:02 crs
+INSTALL
+PORTING
+README
+TODO
+
+Documentation changes.
+
+----------
+2004/07/31 11:19:39 crs
+acinclude.m4
+lib/arch/CArchNetworkBSD.cpp
+lib/platform/CXWindowsEventQueueBuffer.cpp
+
+Now using <poll.h> instead of <sys/poll.h>.  Also added a bit
+to autoconf to ensure we don't use poll on OS X.
+
+----------
+2004/07/29 22:11:27 crs
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+lib/platform/COSXScreen.cpp
+lib/platform/COSXScreen.h
+
+Fixed handling of modifier keys on OS X.  Also made OS X client
+ignore small mouse wheel events (which seem to get sent by some
+win32 systems).  Other platforms were already ignoring them.
+
+----------
+2004/07/29 22:09:28 crs
+cmd/synergys/synergys.cpp
+
+Worked around bug in ifstream::operator!() on OS X.
+
+----------
+2004/07/29 21:59:26 crs
+lib/platform/CSynergyHook.cpp
+
+Fixed handling of ctrl and alt keys when using low level hooks.
+They were being discarded so the server wouldn't correctly send
+ctrl, alt, or AltGr to clients.
+
+----------
+2004/07/29 21:57:42 crs
+lib/platform/CMSWindowsScreenSaver.cpp
+
+Added comment about a problem detecting the screen saver.
+
+----------
+2004/07/29 21:53:30 crs
+lib/platform/CMSWindowsKeyState.cpp
+
+Worked around bogus key mapping on 95/98/me where multiple virtual
+keys are mapped to the same button.  For example, the backslash
+virtual key shares a button with some other virtual key on british
+english key mappings.  Synergy could end up using the wrong virtual
+key.  In the given case, the other virtual key produced no character
+at all.  To determine which virtual key should really be mapped to
+a button we map the button back to a virtual key and see if it's the
+virtual key we started with.
+
+Also fixed mapping of pause key.  Previously, windows+pause sent to
+a win32 client wouldn't bring up system properties like it should.
+
+----------
+2004/07/29 21:50:17 crs
+lib/platform/CMSWindowsDesks.cpp
+
+Synergy now steals window activation when using low level hooks
+and a console window is the active window.  This is to work around
+console windows preventing the hook from detecting the shift key.
+
+----------
+2004/07/29 21:48:40 crs
+lib/net/CTCPSocket.cpp
+
+Worked around bug/weirdness on OS X.  It's reporting that a
+non-blocking connect is available for writing (i.e. the connection
+was successful) when the connection has actually failed.  This
+caused synergy to rapidly retry connecting.  This change makes
+synergy check for a connection error whether one was reported or
+not.  Thankfully, OS X does correctly set the socket error state
+when it bogusly reports a successful connection so we can tell the
+connection failed.
+
+----------
+2004/07/28 21:54:39 crs
+lib/net/CTCPSocket.cpp
+
+Added workaround for apparent bug in OS X 10.3.4.  If you started
+a synergy client on that OS and pointed it at a system that wasn't
+listening for connections then instead of the connection attempt
+failing with 'connection refused' the system would claim the
+connection succeeded.  A subsequent read would reveal the problem
+and synergy would "disconnect" and retry, causing the CPU to spin.
+The system does correctly set the socket error state so this
+workaround checks for socket errors when connecting whether or not
+select reports an error state.
+
+Also, sometimes the system doesn't claim success but doesn't report
+an error.  Synergy eventually times out these attempts.
+
+----------
+2004/07/25 14:18:50 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.1.8.
+
+----------
+2004/06/22 21:11:14 crs
+lib/platform/CXWindowsScreen.cpp
+
+Disable key event capture on X11.  This was going to be used to
+detect synergy hotkeys but a design flaw in X11 makes it problematic
+with many applications.  We'll have to fall back to the more
+traditional XGrabKey when the time comes.
+
+----------
+2004/06/16 21:07:48 crs
+synergy.xcode/project.pbxproj
+
+Added NDEBUG to and removed debugging symbols from XCode deployment
+project.
+
+----------
+2004/06/13 17:11:19 crs
+ChangeLog
+NEWS
+
+Updated documentation.
+
+----------
 2004/06/12 20:48:04 crs
 lib/platform/CMSWindowsDesks.cpp
 lib/platform/CMSWindowsDesks.h
@@ -60,23 +300,23 @@ which causes synergy to die.
 
 ----------
 2004/05/26 19:23:32 crs
-//depot/project/synergy/lib/common/MacOSXPrecomp.h
-//depot/project/synergy/lib/common/common.h
-//depot/project/synergy/lib/platform/COSXClipboardTextConverter.cpp
-//depot/project/synergy/lib/platform/COSXClipboardTextConverter.h
-//depot/project/synergy/lib/platform/COSXEventQueueBuffer.cpp
-//depot/project/synergy/lib/platform/COSXKeyState.cpp
-//depot/project/synergy/lib/platform/COSXKeyState.h
-//depot/project/synergy/lib/platform/COSXScreen.cpp
-//depot/project/synergy/lib/platform/COSXScreen.h
-//depot/project/synergy/synergy.xcode/project.pbxproj
+lib/common/MacOSXPrecomp.h
+lib/common/common.h
+lib/platform/COSXClipboardTextConverter.cpp
+lib/platform/COSXClipboardTextConverter.h
+lib/platform/COSXEventQueueBuffer.cpp
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+lib/platform/COSXScreen.cpp
+lib/platform/COSXScreen.h
+synergy.xcode/project.pbxproj
 
 Merged Bertrand's OS X changes.  Also added support for mouse wheel
 on OS X server.
 
 ----------
 2004/05/18 20:32:13 crs
-//depot/project/synergy/lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.cpp
 
 If the server manages to detect ctrl+alt+del it will no longer send
 that to the client.  If it did then the user could see the effect of
@@ -85,8 +325,8 @@ user can use ctrl+alt+pause to emulate ctrl+alt+del on the client.
 
 ----------
 2004/05/18 20:26:48 crs
-//depot/project/synergy/lib/platform/CXWindowsEventQueueBuffer.cpp
-//depot/project/synergy/lib/platform/CXWindowsEventQueueBuffer.h
+lib/platform/CXWindowsEventQueueBuffer.cpp
+lib/platform/CXWindowsEventQueueBuffer.h
 
 Fixed bug that could allow multiple threads to simultaneously access
 the X11 display connection.  The only problematic method was
@@ -95,13 +335,13 @@ methods are only called from the main thread.
 
 ----------
 2004/05/17 21:55:55 crs
-//depot/project/synergy/cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.cpp
 
 Fixed logging of connection to server.  Was DEBUG now NOTE.
 
 ----------
 2004/05/17 21:55:38 crs
-//depot/project/synergy/lib/platform/CMSWindowsKeyState.cpp
+lib/platform/CMSWindowsKeyState.cpp
 
 Fixed ctrl+alt+del emulation on win32 server.  It was mapping
 VK_DELETE to the keypad delete key.  This key is not interpreted
@@ -109,110 +349,108 @@ on the client as causing ctrl+alt+del.
 
 ----------
 2004/05/16 18:04:36 crs
-//depot/project/synergy/lib/client/CServerProxy.cpp
-//depot/project/synergy/lib/server/CClientProxy1_0.cpp
-//depot/project/synergy/lib/synergy/ProtocolTypes.h
+lib/client/CServerProxy.cpp
+lib/server/CClientProxy1_0.cpp
+lib/synergy/ProtocolTypes.h
 
 Fixed handling of screen resolution changes.
 
 ----------
 2004/05/16 18:03:36 crs
-//depot/project/synergy/cmd/launcher/CAutoStart.cpp
+cmd/launcher/CAutoStart.cpp
 
 Changed (win NT) service to depend on the 'Browser' service to
 ensure correct startup order.
 
 ----------
 2004/05/16 18:02:49 crs
-//depot/project/synergy/all.dsp
-//depot/project/synergy/cmd/exec.dsp
-//depot/project/synergy/cmd/launcher/launcher.dsp
-//depot/project/synergy/cmd/synergyc/synergyc.dsp
-//depot/project/synergy/cmd/synergys/synergys.dsp
-//depot/project/synergy/dist/nullsoft/installer.dsp
-//depot/project/synergy/dist/nullsoft/synergy.nsi
-//depot/project/synergy/lib/arch/arch.dsp
-//depot/project/synergy/lib/base/base.dsp
-//depot/project/synergy/lib/client/client.dsp
-//depot/project/synergy/lib/common/common.dsp
-//depot/project/synergy/lib/io/io.dsp
-//depot/project/synergy/lib/mt/mt.dsp
-//depot/project/synergy/lib/net/net.dsp
-//depot/project/synergy/lib/platform/makehook.dsp
-//depot/project/synergy/lib/platform/platform.dsp
-//depot/project/synergy/lib/platform/synrgyhk.dsp
-//depot/project/synergy/lib/server/server.dsp
-//depot/project/synergy/lib/synergy/libsynergy.dsp
+all.dsp
+cmd/exec.dsp
+cmd/launcher/launcher.dsp
+cmd/synergyc/synergyc.dsp
+cmd/synergys/synergys.dsp
+dist/nullsoft/installer.dsp
+dist/nullsoft/synergy.nsi
+lib/arch/arch.dsp
+lib/base/base.dsp
+lib/client/client.dsp
+lib/common/common.dsp
+lib/io/io.dsp
+lib/mt/mt.dsp
+lib/net/net.dsp
+lib/platform/makehook.dsp
+lib/platform/platform.dsp
+lib/platform/synrgyhk.dsp
+lib/server/server.dsp
+lib/synergy/libsynergy.dsp
 
 Changed VC++ projects to put release targets in ./build, debug
 targets in ./debug, and intermediate files under ./gen.
 
 ----------
 2004/05/15 19:44:05 crs
-//depot/project/synergy/configure.in
-//depot/project/synergy/lib/common/Version.h
+configure.in
+lib/common/Version.h
 
 Changed version to 1.1.6.
 
 ----------
 2004/05/15 19:43:33 crs
-//depot/project/synergy/lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.cpp
 
 Avoided duplicate logging of screen size on win32.
 
 ----------
 2004/05/15 19:41:46 crs
-//depot/project/synergy/Makefile.am
-//depot/project/synergy/configure.in
-//depot/project/synergy/lib/common/common.h
-//depot/project/synergy/lib/platform/COSXClipboard.cpp
-//depot/project/synergy/lib/platform/COSXClipboard.h
-//depot/project/synergy/lib/platform/COSXClipboardAnyTextConverter.cpp
-//depot/project/synergy/lib/platform/COSXClipboardAnyTextConverter.h
-//depot/project/synergy/lib/platform/COSXClipboardTextConverter.cpp
-//depot/project/synergy/lib/platform/COSXClipboardTextConverter.h
-//depot/project/synergy/lib/platform/COSXClipboardUTF16Converter.cpp
-//depot/project/synergy/lib/platform/COSXClipboardUTF16Converter.h
-//depot/project/synergy/lib/platform/COSXEventQueueBuffer.cpp
-//depot/project/synergy/lib/platform/COSXEventQueueBuffer.h
-//depot/project/synergy/lib/platform/COSXScreen.cpp
-//depot/project/synergy/lib/platform/COSXScreen.h
-//depot/project/synergy/lib/platform/Makefile.am
-//depot/project/synergy/synergy.xcode/project.pbxproj
+Makefile.am
+configure.in
+lib/common/common.h
+lib/platform/COSXClipboard.cpp
+lib/platform/COSXClipboard.h
+lib/platform/COSXClipboardAnyTextConverter.cpp
+lib/platform/COSXClipboardAnyTextConverter.h
+lib/platform/COSXClipboardTextConverter.cpp
+lib/platform/COSXClipboardTextConverter.h
+lib/platform/COSXClipboardUTF16Converter.cpp
+lib/platform/COSXClipboardUTF16Converter.h
+lib/platform/COSXEventQueueBuffer.cpp
+lib/platform/COSXEventQueueBuffer.h
+lib/platform/COSXScreen.cpp
+lib/platform/COSXScreen.h
+lib/platform/Makefile.am
+synergy.xcode/project.pbxproj
 
 Added bertrand landry hetu's mac OS X port to date.
 
 ----------
 2004/05/12 20:28:00 crs
-//depot/project/synergy/lib/platform/CXWindowsScreen.cpp
-//depot/project/synergy/lib/platform/CXWindowsScreen.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
 
 Now restoring input focus when entering the screen to the window
 that had the focus when the screen was left.
 
 ----------
 2004/05/12 19:50:58 crs
-//depot/project/synergy/lib/arch/CArchNetworkBSD.cpp
-//depot/project/synergy/lib/arch/CArchNetworkWinsock.cpp
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkWinsock.cpp
 
 Fixed thread reference leak in network code.
 
 ----------
 2004/05/12 19:12:28 crs
-//depot/project/synergy/configure.in
+configure.in
 
 Added configure option to enable debug builds.  If not enabled then
 asserts are disabled.
 
 ----------
 2004/05/12 18:54:03 crs
-//depot/project/synergy/lib/platform/CXWindowsClipboardBMPConverter.cpp
+lib/platform/CXWindowsClipboardBMPConverter.cpp
 
 Fixed build error in gcc 3.3.
 
 ----------
-audrey2% ./nodist/p4tolog -p //depot/project/synergy/ -m 15 | less
-audrey2% ./nodist/p4tolog -p //depot/project/synergy/ -m 15
 2004/05/26 19:23:32 crs
 lib/common/MacOSXPrecomp.h
 lib/common/common.h
