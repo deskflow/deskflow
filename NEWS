@@ -1,6 +1,13 @@
 Synergy News
 ============
 
+* Sep-04-2002 - Synergy 0.9.11 released
+
+  Fixed following bugs:
+  * Worked around missing SendInput() on windows 95/NT 4 prior to SP3
+  * Fixed keyboard mapping on X11 synergy client
+
+
 * Sep-02-2002 - Synergy 0.9.10 released
 
   Fixed following bugs:
