@@ -10,7 +10,7 @@ CNetwork::Socket (PASCAL FAR *CNetwork::accept)(CNetwork::Socket s, CNetwork::Ad
 int (PASCAL FAR *CNetwork::bind)(CNetwork::Socket s, const CNetwork::Address FAR *addr, CNetwork::AddressLength namelen);
 int (PASCAL FAR *CNetwork::close)(CNetwork::Socket s);
 int (PASCAL FAR *CNetwork::connect)(CNetwork::Socket s, const CNetwork::Address FAR *name, CNetwork::AddressLength namelen);
-int (PASCAL FAR *CNetwork::ioctl)(CNetwork::Socket s, int cmd, ...);
+int (PASCAL FAR *CNetwork::ioctl)(CNetwork::Socket s, int cmd, void FAR *);
 int (PASCAL FAR *CNetwork::getpeername)(CNetwork::Socket s, CNetwork::Address FAR *name, CNetwork::AddressLength FAR * namelen);
 int (PASCAL FAR *CNetwork::getsockname)(CNetwork::Socket s, CNetwork::Address FAR *name, CNetwork::AddressLength FAR * namelen);
 int (PASCAL FAR *CNetwork::getsockopt)(CNetwork::Socket s, int level, int optname, void FAR * optval, CNetwork::AddressLength FAR *optlen);
@@ -182,7 +182,7 @@ CNetwork::init2(
 	setfunc(bind, bind, int (PASCAL FAR *)(Socket s, const Address FAR *addr, AddressLength namelen));
 	setfunc(close, closesocket, int (PASCAL FAR *)(Socket s));
 	setfunc(connect, connect, int (PASCAL FAR *)(Socket s, const Address FAR *name, AddressLength namelen));
-	setfunc(ioctl, ioctlsocket, int (PASCAL FAR *)(Socket s, int cmd, ...));
+	setfunc(ioctl, ioctlsocket, int (PASCAL FAR *)(Socket s, int cmd, void FAR *));
 	setfunc(getpeername, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
 	setfunc(getsockname, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
 	setfunc(getsockopt, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));
@@ -301,7 +301,7 @@ int PASCAL FAR
 CNetwork::setblocking2(CNetwork::Socket s, bool blocking)
 {
 	int flag = blocking ? 0 : 1;
-	return ioctlsocket(s, FIONBIO, &flag);
+	return ioctl(s, FIONBIO, &flag);
 }
 
 #endif
@@ -392,7 +392,7 @@ CNetwork::init()
 	setfunc(bind, bind, int (PASCAL FAR *)(Socket s, const Address FAR *addr, AddressLength namelen));
 	setfunc(close, close, int (PASCAL FAR *)(Socket s));
 	setfunc(connect, connect, int (PASCAL FAR *)(Socket s, const Address FAR *name, AddressLength namelen));
-	setfunc(ioctl, ioctl, int (PASCAL FAR *)(Socket s, int cmd, ...));
+	setfunc(ioctl, ioctl, int (PASCAL FAR *)(Socket s, int cmd, void FAR *));
 	setfunc(getpeername, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
 	setfunc(getsockname, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
 	setfunc(getsockopt, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));

@@ -114,7 +114,7 @@ public:
 	static int (PASCAL FAR *bind)(Socket s, const Address FAR *addr, AddressLength namelen);
 	static int (PASCAL FAR *close)(Socket s);
 	static int (PASCAL FAR *connect)(Socket s, const Address FAR *name, AddressLength namelen);
-	static int (PASCAL FAR *ioctl)(Socket s, int cmd, ...);
+	static int (PASCAL FAR *ioctl)(Socket s, int cmd, void FAR *);
 	static int (PASCAL FAR *getpeername)(Socket s, Address FAR *name, AddressLength FAR * namelen);
 	static int (PASCAL FAR *getsockname)(Socket s, Address FAR *name, AddressLength FAR * namelen);
 	static int (PASCAL FAR *getsockopt)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen);
