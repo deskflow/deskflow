@@ -614,7 +614,6 @@ CXWindowsPrimaryScreen::doSelectEvents(Display* display, Window w) const
 KeyModifierMask
 CXWindowsPrimaryScreen::mapModifier(unsigned int state) const
 {
-	// FIXME -- should be configurable
 	KeyModifierMask mask = 0;
 	if (state & ShiftMask)
 		mask |= KeyModifierShift;
@@ -622,13 +621,15 @@ CXWindowsPrimaryScreen::mapModifier(unsigned int state) const
 		mask |= KeyModifierCapsLock;
 	if (state & ControlMask)
 		mask |= KeyModifierControl;
-	if (state & Mod1Mask)
+	if (state & m_altMask)
 		mask |= KeyModifierAlt;
-	if (state & Mod2Mask)
-		mask |= KeyModifierNumLock;
-	if (state & Mod4Mask)
+	if (state & m_metaMask)
 		mask |= KeyModifierMeta;
-	if (state & Mod5Mask)
+	if (state & m_modeSwitchMask)
+		mask |= KeyModifierModeSwitch;
+	if (state & m_numLockMask)
+		mask |= KeyModifierNumLock;
+	if (state & m_scrollLockMask)
 		mask |= KeyModifierScrollLock;
 	return mask;
 }
@@ -688,6 +689,9 @@ CXWindowsPrimaryScreen::updateKeys()
 	XModifierKeymap* keymap = XGetModifierMapping(display);
 
 	// initialize
+	m_altMask        = 0;
+	m_metaMask       = 0;
+	m_modeSwitchMask = 0;
 	m_numLockMask    = 0;
 	m_capsLockMask   = 0;
 	m_scrollLockMask = 0;
@@ -699,16 +703,34 @@ CXWindowsPrimaryScreen::updateKeys()
 			KeyCode keycode = keymap->modifiermap[i *
 								keymap->max_keypermod + j];
 
-			// note toggle modifier bits
+			// note mask for particular modifiers
 			const KeySym keysym = XKeycodeToKeysym(display, keycode, 0);
-			if (keysym == XK_Num_Lock) {
-				m_numLockMask |= bit;
-			}
-			else if (keysym == XK_Caps_Lock) {
-				m_capsLockMask |= bit;
-			}
-			else if (keysym == XK_Scroll_Lock) {
+			switch (keysym) {
+			case XK_Alt_L:
+			case XK_Alt_R:
+				m_altMask        |= bit;
+				break;
+
+			case XK_Meta_L:
+			case XK_Meta_R:
+				m_metaMask       |= bit;
+				break;
+
+			case XK_Mode_switch:
+				m_modeSwitchMask |= bit;
+				break;
+
+			case XK_Num_Lock:
+				m_numLockMask    |= bit;
+				break;
+
+			case XK_Caps_Lock:
+				m_capsLockMask   |= bit;
+				break;
+
+			case XK_Scroll_Lock:
 				m_scrollLockMask |= bit;
+				break;
 			}
 		}
 	}

@@ -97,7 +97,10 @@ private:
 	bool				m_numLockHalfDuplex;
 	bool				m_capsLockHalfDuplex;
 
-	// masks that indicate which modifier bits are for toggle keys
+	// modifier masks
+	unsigned int		m_altMask;
+	unsigned int		m_metaMask;
+	unsigned int		m_modeSwitchMask;
 	unsigned int		m_numLockMask;
 	unsigned int		m_capsLockMask;
 	unsigned int		m_scrollLockMask;

@@ -37,6 +37,7 @@ static const KeyModifierMask	KeyModifierShift      = 0x0001;
 static const KeyModifierMask	KeyModifierControl    = 0x0002;
 static const KeyModifierMask	KeyModifierAlt        = 0x0004;
 static const KeyModifierMask	KeyModifierMeta       = 0x0008;
+static const KeyModifierMask	KeyModifierModeSwitch = 0x0010;
 static const KeyModifierMask	KeyModifierCapsLock   = 0x1000;
 static const KeyModifierMask	KeyModifierNumLock    = 0x2000;
 static const KeyModifierMask	KeyModifierScrollLock = 0x4000;

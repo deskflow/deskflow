@@ -98,6 +98,7 @@ private:
 	void				updateKeycodeMap(Display* display);
 	void				updateModifiers(Display* display);
 	void				updateModifierMap(Display* display);
+	unsigned int		indexToModifierMask(int index) const;
 	void				toggleKey(Display*, KeySym, unsigned int mask);
 	static bool			isToggleKeysym(KeySym);
 
@@ -130,7 +131,10 @@ private:
 	// set bits indicate modifiers that toggle (e.g. caps-lock)
 	unsigned int		m_toggleModifierMask;
 
-	// masks that indicate which modifier bits are for toggle keys
+	// modifier masks
+	unsigned int		m_altMask;
+	unsigned int		m_metaMask;
+	unsigned int		m_modeSwitchMask;
 	unsigned int		m_numLockMask;
 	unsigned int		m_capsLockMask;
 	unsigned int		m_scrollLockMask;

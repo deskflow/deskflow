@@ -812,10 +812,13 @@ CXWindowsSecondaryScreen::maskToX(KeyModifierMask inMask) const
 		outMask |= ControlMask;
 	}
 	if (inMask & KeyModifierAlt) {
-		outMask |= Mod1Mask;
+		outMask |= m_altMask;
 	}
 	if (inMask & KeyModifierMeta) {
-		outMask |= Mod4Mask;
+		outMask |= m_metaMask;
+	}
+	if (inMask & KeyModifierModeSwitch) {
+		outMask |= m_modeSwitchMask;
 	}
 	if (inMask & KeyModifierCapsLock) {
 		outMask |= m_capsLockMask;
@@ -876,8 +879,8 @@ CXWindowsSecondaryScreen::updateKeys()
 	}
 
 	// update mappings and current modifiers
-	updateKeycodeMap(display);
 	updateModifierMap(display);
+	updateKeycodeMap(display);
 	updateModifiers(display);
 }
 
@@ -913,6 +916,9 @@ CXWindowsSecondaryScreen::updateModifiers(Display* display)
 void
 CXWindowsSecondaryScreen::updateKeycodeMap(Display* display)
 {
+	// there are up to 4 keysyms per keycode
+	static const int numKeysyms = 4;
+
 	// get the number of keycodes
 	int minKeycode, maxKeycode;
 	XDisplayKeycodes(display, &minKeycode, &maxKeycode);
@@ -924,44 +930,56 @@ CXWindowsSecondaryScreen::updateKeycodeMap(Display* display)
 								minKeycode, numKeycodes,
 								&keysymsPerKeycode);
 
-	// restrict keysyms per keycode to 2 because, frankly, i have no
-	// idea how/what modifiers are used to access keysyms beyond the
-	// first 2.
-	int numKeysyms = 2;	// keysymsPerKeycode
-
 	// initialize
 	KeyCodeMask entry;
 	m_keycodeMap.clear();
 
 	// insert keys
 	for (int i = 0; i < numKeycodes; ++i) {
-		// how many keysyms for this keycode?
-		int n;
-		for (n = 0; n < numKeysyms; ++n) {
-			if (keysyms[i * keysymsPerKeycode + n] == NoSymbol) {
-				break;
+		// compute mask over all mapped keysyms.  if a keycode has, say,
+		// no shifted keysym then we can ignore the shift state when
+		// synthesizing an event to generate it.
+		entry.m_keyMaskMask = 0;
+		for (int j = 0; j < numKeysyms; ++j) {
+			const KeySym keySym = keysyms[i * keysymsPerKeycode + j];
+			if (keySym != NoSymbol) {
+				entry.m_keyMaskMask |= indexToModifierMask(j);
 			}
 		}
-
-		// move to next keycode if there are no keysyms
-		if (n == 0) {
-			continue;
-		}
-
-		// set the mask of modifiers that this keycode uses
-		entry.m_keyMaskMask = (n == 1) ? 0 : (ShiftMask | LockMask);
 
 		// add entries for this keycode
 		entry.m_keycode = static_cast<KeyCode>(minKeycode + i);
 		for (int j = 0; j < numKeysyms; ++j) {
-			entry.m_keyMask = (j == 0) ? 0 : ShiftMask;
-			m_keycodeMap.insert(std::make_pair(keysyms[i *
-									keysymsPerKeycode + j], entry));
+			const KeySym keySym = keysyms[i * keysymsPerKeycode + j];
+			if (keySym != NoSymbol) {
+				entry.m_keyMask = indexToModifierMask(j) & ~LockMask;
+				m_keycodeMap.insert(std::make_pair(keySym, entry));
+			}
 		}
 	}
 
 	// clean up
 	XFree(keysyms);
+}
+
+unsigned int
+CXWindowsSecondaryScreen::indexToModifierMask(int index) const
+{
+	assert(index >= 0 && index <= 3);
+
+	switch (index) {
+	case 0:
+		return 0;
+
+	case 1:
+		return ShiftMask | LockMask;
+
+	case 2:
+		return m_modeSwitchMask;
+
+	case 3:
+		return ShiftMask | LockMask | m_modeSwitchMask;
+	}
 }
 
 void
@@ -973,6 +991,9 @@ CXWindowsSecondaryScreen::updateModifierMap(Display* display)
 	// initialize
 	m_modifierMask       = 0;
 	m_toggleModifierMask = 0;
+	m_altMask            = 0;
+	m_metaMask           = 0;
+	m_modeSwitchMask     = 0;
 	m_numLockMask        = 0;
 	m_capsLockMask       = 0;
 	m_scrollLockMask     = 0;
@@ -989,29 +1010,49 @@ CXWindowsSecondaryScreen::updateModifierMap(Display* display)
 			// save in modifier to keycode
 			m_modifierToKeycode[i * m_keysPerModifier + j] = keycode;
 
+			// no further interest in unmapped modifier
+			if (keycode == 0) {
+				continue;
+			}
+
 			// save in keycode to modifier
 			m_keycodeToModifier.insert(std::make_pair(keycode, i));
 
-			// modifier is enabled if keycode isn't 0
-			if (keycode != 0) {
-				m_modifierMask |= bit;
-			}
+			// save bit in all-modifiers mask
+			m_modifierMask |= bit;
 
 			// modifier is a toggle if the keysym is a toggle modifier
 			const KeySym keysym = XKeycodeToKeysym(display, keycode, 0);
 			if (isToggleKeysym(keysym)) {
 				m_toggleModifierMask |= bit;
+			}
 
-				// note num/caps-lock
-				if (keysym == XK_Num_Lock) {
-					m_numLockMask |= bit;
-				}
-				else if (keysym == XK_Caps_Lock) {
-					m_capsLockMask |= bit;
-				}
-				else if (keysym == XK_Scroll_Lock) {
-					m_scrollLockMask |= bit;
-				}
+			// note mask for particular modifiers
+			switch (keysym) {
+			case XK_Alt_L:
+			case XK_Alt_R:
+				m_altMask        |= bit;
+				break;
+
+			case XK_Meta_L:
+			case XK_Meta_R:
+				m_metaMask       |= bit;
+				break;
+
+			case XK_Mode_switch:
+				m_modeSwitchMask |= bit;
+				break;
+
+			case XK_Num_Lock:
+				m_numLockMask    |= bit;
+				break;
+
+			case XK_Caps_Lock:
+				m_capsLockMask   |= bit;
+				break;
+
+			case XK_Scroll_Lock:
+				m_scrollLockMask |= bit;
 			}
 		}
 	}
