@@ -227,7 +227,7 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 	// handle nul terminator
 	mblen = wcrtomb(mbc, L'\0', &state);
 	if (mblen != -1) {
-		len += mblen - 1;
+		len += mblen;
 	}
 	assert(mbsinit(&state) != 0);
 
