@@ -3,7 +3,7 @@
 #include "CHTTPProtocol.h"
 #include "CServer.h"
 #include "XHTTP.h"
-#include "ISocket.h"
+#include "IDataSocket.h"
 #include "XThread.h"
 #include "CLog.h"
 #include "stdset.h"
@@ -32,7 +32,7 @@ CHTTPServer::~CHTTPServer()
 
 void
 CHTTPServer::processRequest(
-	ISocket* socket)
+	IDataSocket* socket)
 {
 	assert(socket != NULL);
 

@@ -197,7 +197,7 @@ CClient::runSession(void*)
 {
 	log((CLOG_DEBUG "starting client \"%s\"", m_name.c_str()));
 
-	std::auto_ptr<ISocket> socket;
+	std::auto_ptr<IDataSocket> socket;
 	std::auto_ptr<IInputStream> input;
 	std::auto_ptr<IOutputStream> output;
 	try {
@@ -209,7 +209,7 @@ CClient::runSession(void*)
 
 				// create socket and attempt to connect to server
 				log((CLOG_DEBUG1 "connecting to server"));
-				assign(socket, new CTCPSocket(), ISocket);	// FIXME -- use factory
+				assign(socket, new CTCPSocket(), IDataSocket);	// FIXME -- use factory
 				socket->connect(*m_serverAddress);
 				log((CLOG_INFO "connected to server"));
 				break;

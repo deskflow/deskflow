@@ -1,7 +1,7 @@
 #ifndef CTCPSOCKET_H
 #define CTCPSOCKET_H
 
-#include "ISocket.h"
+#include "IDataSocket.h"
 #include "CNetwork.h"
 
 class CMutex;
@@ -11,7 +11,7 @@ class CThread;
 class CBufferedInputStream;
 class CBufferedOutputStream;
 
-class CTCPSocket : public ISocket {
+class CTCPSocket : public IDataSocket {
 public:
 	CTCPSocket();
 	CTCPSocket(CNetwork::Socket);
@@ -23,8 +23,10 @@ public:
 
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&);
-	virtual void		connect(const CNetworkAddress&);
 	virtual void		close();
+
+	// IDataSocket overrides
+	virtual void		connect(const CNetworkAddress&);
 	virtual IInputStream*	getInputStream();
 	virtual IOutputStream*	getOutputStream();
 

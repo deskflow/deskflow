@@ -43,7 +43,7 @@ CTCPListenSocket::bind(
 	}
 }
 
-ISocket*
+IDataSocket*
 CTCPListenSocket::accept()
 {
 	CNetwork::PollEntry pfds[1];

@@ -68,23 +68,6 @@ CTCPSocket::bind(
 }
 
 void
-CTCPSocket::connect(
-	const CNetworkAddress& addr)
-{
-	CThread::testCancel();
-	if (CNetwork::connect(m_fd, addr.getAddress(),
-								addr.getAddressLength()) == CNetwork::Error) {
-		CThread::testCancel();
-		throw XSocketConnect();
-	}
-
-	// start servicing the socket
-	m_connected = kReadWrite;
-	m_thread    = new CThread(new TMethodJob<CTCPSocket>(
-								this, &CTCPSocket::ioThread));
-}
-
-void
 CTCPSocket::close()
 {
 	// see if buffers should be flushed
@@ -122,6 +105,23 @@ CTCPSocket::close()
 		}
 		m_fd = CNetwork::Null;
 	}
+}
+
+void
+CTCPSocket::connect(
+	const CNetworkAddress& addr)
+{
+	CThread::testCancel();
+	if (CNetwork::connect(m_fd, addr.getAddress(),
+								addr.getAddressLength()) == CNetwork::Error) {
+		CThread::testCancel();
+		throw XSocketConnect();
+	}
+
+	// start servicing the socket
+	m_connected = kReadWrite;
+	m_thread    = new CThread(new TMethodJob<CTCPSocket>(
+								this, &CTCPSocket::ioThread));
 }
 
 IInputStream*

@@ -3,7 +3,7 @@
 
 #include "IInterface.h"
 
-class ISocket;
+class IDataSocket;
 class IListenSocket;
 
 class ISocketFactory : public IInterface {
@@ -13,7 +13,7 @@ public:
 	// accessors
 
 	// create sockets
-	virtual ISocket*	create() const = 0;
+	virtual IDataSocket*	create() const = 0;
 	virtual IListenSocket*	createListen() const = 0;
 };
 

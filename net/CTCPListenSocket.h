@@ -13,10 +13,12 @@ public:
 
 	// accessors
 
-	// IListenSocket overrides
+	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&);
-	virtual ISocket*	accept();
 	virtual void		close();
+
+	// IListenSocket overrides
+	virtual IDataSocket*	accept();
 
 private:
 	CNetwork::Socket	m_fd;

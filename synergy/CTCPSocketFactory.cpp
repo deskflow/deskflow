@@ -16,7 +16,7 @@ CTCPSocketFactory::~CTCPSocketFactory()
 	// do nothing
 }
 
-ISocket*
+IDataSocket*
 CTCPSocketFactory::create() const
 {
 	return new CTCPSocket;

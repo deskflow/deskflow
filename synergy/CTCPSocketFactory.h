@@ -13,7 +13,7 @@ public:
 	// accessors
 
 	// ISocketFactory overrides
-	virtual ISocket*	create() const;
+	virtual IDataSocket*	create() const;
 	virtual IListenSocket*	createListen() const;
 };
 

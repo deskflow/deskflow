@@ -1,25 +1,22 @@
 #ifndef ILISTENSOCKET_H
 #define ILISTENSOCKET_H
 
-#include "IInterface.h"
+#include "ISocket.h"
 
-class CNetworkAddress;
-class ISocket;
+class IDataSocket;
 
-class IListenSocket : public IInterface {
+class IListenSocket : public ISocket {
 public:
 	// manipulators
 
-	// bind the socket to a particular address
-	virtual void		bind(const CNetworkAddress&) = 0;
-
 	// wait for a connection
-	virtual ISocket*	accept() = 0;
+	virtual IDataSocket*	accept() = 0;
 						
-	// close the socket
-	virtual void		close() = 0;
-
 	// accessors
+
+	// ISocket overrides
+	virtual void		bind(const CNetworkAddress&) = 0;
+	virtual void		close() = 0;
 };
 
 #endif

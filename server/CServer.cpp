@@ -9,8 +9,8 @@
 #include "XScreen.h"
 #include "XSynergy.h"
 #include "CNetworkAddress.h"
+#include "IDataSocket.h"
 #include "IListenSocket.h"
-#include "ISocket.h"
 #include "ISocketFactory.h"
 #include "XSocket.h"
 #include "CLock.h"
@@ -1088,7 +1088,7 @@ CServer::acceptClients(void*)
 		for (;;) {
 			// accept connection
 			CThread::testCancel();
-			ISocket* socket = listen->accept();
+			IDataSocket* socket = listen->accept();
 			log((CLOG_NOTE "accepted client connection"));
 			CThread::testCancel();
 
@@ -1111,7 +1111,7 @@ CServer::handshakeClient(
 
 	// get the socket pointer from the argument
 	assert(vsocket != NULL);
-	std::auto_ptr<ISocket> socket(reinterpret_cast<ISocket*>(vsocket));
+	std::auto_ptr<IDataSocket> socket(reinterpret_cast<IDataSocket*>(vsocket));
 
 	// add this thread to the list of threads to cancel.  remove from
 	// list in d'tor.
@@ -1289,7 +1289,7 @@ CServer::acceptHTTPClients(void*)
 
 			// accept connection
 			CThread::testCancel();
-			ISocket* socket = listen->accept();
+			IDataSocket* socket = listen->accept();
 			log((CLOG_NOTE "accepted HTTP connection"));
 			CThread::testCancel();
 
@@ -1313,7 +1313,7 @@ CServer::processHTTPRequest(
 	// list in d'tor.
 	CCleanupNote cleanupNote(this);
 
-	ISocket* socket = reinterpret_cast<ISocket*>(vsocket);
+	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
 	try {
 		// process the request and force delivery
 		m_httpServer->processRequest(socket);

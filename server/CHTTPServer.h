@@ -9,7 +9,7 @@ class CServer;
 class CConfig;
 class CHTTPRequest;
 class CHTTPReply;
-class ISocket;
+class IDataSocket;
 
 class CHTTPServer {
 public:
@@ -19,7 +19,7 @@ public:
 	// manipulators
 
 	// synchronously process an HTTP request on the given socket
-	void				processRequest(ISocket*);
+	void				processRequest(IDataSocket*);
 
 	// accessors
 
