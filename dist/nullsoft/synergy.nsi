@@ -60,20 +60,20 @@ Section "Synergy (required)"
   File "${DEPTH}\build\synergys.exe"
   File "${DEPTH}\build\*.dll"
   File ChangeLog.txt
-  File doc\authors.html
-  File doc\autostart.html
-  File doc\compiling.html
-  File doc\configuration.html
-  File doc\developer.html
-  File doc\faq.html
-  File doc\history.html
-  File doc\index.html
-  File doc\license.html
-  File doc\news.html
-  File doc\running.html
-  File doc\security.html
-  File doc\tips.html
-  File doc\todo.html
+  File ${DEPTH}\doc\authors.html
+  File ${DEPTH}\doc\autostart.html
+  File ${DEPTH}\doc\compiling.html
+  File ${DEPTH}\doc\configuration.html
+  File ${DEPTH}\doc\developer.html
+  File ${DEPTH}\doc\faq.html
+  File ${DEPTH}\doc\history.html
+  File ${DEPTH}\doc\index.html
+  File ${DEPTH}\doc\license.html
+  File ${DEPTH}\doc\news.html
+  File ${DEPTH}\doc\running.html
+  File ${DEPTH}\doc\security.html
+  File ${DEPTH}\doc\tips.html
+  File ${DEPTH}\doc\todo.html
 
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\Synergy "Install_Dir" "$INSTDIR"
@@ -92,9 +92,8 @@ Section "Start Menu Shortcuts"
 
   CreateDirectory "$SMPROGRAMS\Synergy"
   CreateShortCut "$SMPROGRAMS\Synergy\Synergy.lnk" "$INSTDIR\synergy.exe" "" "$INSTDIR\synergy.exe" 0
-  CreateShortCut "$SMPROGRAMS\Synergy\README.lnk" "$INSTDIR\README.txt"
-  CreateShortCut "$SMPROGRAMS\Synergy\NEWS.lnk" "$INSTDIR\NEWS.txt"
-  CreateShortCut "$SMPROGRAMS\Synergy\FAQ.lnk" "$INSTDIR\FAQ.txt"
+  CreateShortCut "$SMPROGRAMS\Synergy\README.lnk" "$INSTDIR\index.html"
+  CreateShortCut "$SMPROGRAMS\Synergy\FAQ.lnk" "$INSTDIR\faq.html"
   CreateShortCut "$SMPROGRAMS\Synergy\Synergy Folder.lnk" "$INSTDIR"
   CreateShortCut "$SMPROGRAMS\Synergy\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
 
