@@ -39,6 +39,8 @@ public:
 
 protected:
 	// CXWindowsScreen overrides
+	virtual bool		onPreDispatch(const CEvent* event);
+	virtual bool		onEvent(CEvent* event);
 	virtual void		onLostClipboard(ClipboardID);
 
 private:
@@ -60,7 +62,26 @@ private:
 	typedef std::map<KeyID, KeyCodeMask> KeyCodeMap;
 	typedef std::map<KeyCode, unsigned int> ModifierMap;
 
-	void				leaveNoLock(Display*);
+	void				showWindow();
+	void				hideWindow();
+
+	// warp the mouse to the specified position
+	void				warpCursor(SInt32 x, SInt32 y);
+
+	// check clipboard ownership and, if necessary, tell the receiver
+	// of a grab.
+	void				checkClipboard();
+
+	// create/destroy window
+	// also attach to desktop;  this destroys and recreates the window
+	// as necessary.
+	void				createWindow();
+	void				destroyWindow();
+
+	// start/stop watch for screen saver changes
+	void				installScreenSaver();
+	void				uninstallScreenSaver();
+
 	unsigned int		mapButton(ButtonID button) const;
 
 	unsigned int		mapKey(Keystrokes&, KeyCode&, KeyID,
@@ -81,6 +102,9 @@ private:
 private:
 	IScreenReceiver*	m_receiver;
 	Window				m_window;
+
+	// m_active is true if this screen has been entered
+	bool				m_active;
 
 	// note toggle keys that toggles on up/down (false) or on
 	// transition (true)

@@ -19,6 +19,12 @@ class IScreenSaver;
 class CXWindowsClipboard;
 class CXWindowsScreenSaver;
 
+class CEvent {
+public:
+	XEvent				m_event;
+	SInt32				m_result;
+};
+
 class CXWindowsScreen {
 public:
 	CXWindowsScreen();
@@ -47,6 +53,12 @@ protected:
 	};
 	friend class CDisplayLock;
 
+	// runs an event loop and returns when exitMainLoop() is called
+	void				mainLoop();
+
+	// force mainLoop() to return
+	void				exitMainLoop();
+
 	// open the X display.  calls onOpenDisplay() after opening the display,
 	// getting the screen, its size, and root window.  then it starts the
 	// event thread.
@@ -56,6 +68,10 @@ protected:
 	// after the event thread has been shut down but before the display
 	// is closed.
 	void				closeDisplay();
+
+	// get the Display*.  only use this when you know the display is
+	// locked but don't have the CDisplayLock available.
+	Display*			getDisplay() const;
 
 	// get the opened screen and its root window.  to get the display
 	// create a CDisplayLock object passing this.  while the object
@@ -83,13 +99,6 @@ protected:
 	// get a cursor that is transparent everywhere
 	Cursor				getBlankCursor() const;
 
-	// wait for and get the next X event.  cancellable.
-	bool				getEvent(XEvent*) const;
-
-	// cause getEvent() to return false immediately and forever after.
-	// the caller must have locked the display.
-	void				doStop();
-
 	// set the contents of the clipboard (i.e. primary selection)
 	bool				setDisplayClipboard(ClipboardID,
 							const IClipboard* clipboard);
@@ -101,6 +110,15 @@ protected:
 	// get the screen saver object
 	CXWindowsScreenSaver*
 						getScreenSaver() const;
+
+	// called for each event before event translation and dispatch.  return
+	// true to skip translation and dispatch.  subclasses should call the
+	// superclass's version first and return true if it returns true.
+	virtual bool		onPreDispatch(const CEvent* event) = 0;
+
+	// called by mainLoop().  iff the event was handled return true and
+	// store the result, if any, in m_result, which defaults to zero.
+	virtual bool		onEvent(CEvent* event) = 0;
 
 	// called if the display is unexpectedly closing.  default does nothing.
 	virtual void		onUnexpectedClose();
@@ -114,9 +132,6 @@ private:
 
 	// remove a timer without locking
 	void				removeTimerNoLock(IJob*);
-
-	// internal event processing
-	bool				processEvent(XEvent*);
 
 	// process timers
 	bool				processTimers();

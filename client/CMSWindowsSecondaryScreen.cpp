@@ -50,53 +50,60 @@ CMSWindowsSecondaryScreen::~CMSWindowsSecondaryScreen()
 void
 CMSWindowsSecondaryScreen::run()
 {
+	assert(m_window != NULL);
+
 	// must call run() from same thread as open()
 	assert(m_threadID == GetCurrentThreadId());
 
 	// change our priority
 	CThread::getCurrentThread().setPriority(-7);
 
-	// poll input desktop to see if it changes (onPreTranslate()
-	// handles WM_TIMER)
-	UINT timer = 0;
-	if (!m_is95Family) {
-		SetTimer(NULL, 0, 200, NULL);
-	}
-
 	// run event loop
-	log((CLOG_INFO "entering event loop"));
-	doRun();
-	log((CLOG_INFO "exiting event loop"));
-
-	// remove timer
-	if (!m_is95Family) {
-		KillTimer(NULL, timer);
+	try {
+		log((CLOG_INFO "entering event loop"));
+		mainLoop();
+		log((CLOG_INFO "exiting event loop"));
+	}
+	catch (...) {
+		log((CLOG_INFO "exiting event loop"));
+		throw;
 	}
 }
 
 void
 CMSWindowsSecondaryScreen::stop()
 {
-	doStop();
+	exitMainLoop();
 }
 
 void
 CMSWindowsSecondaryScreen::open()
 {
-	// open the display
-	openDisplay();
+	assert(m_window == NULL);
 
-	// update key state
-	updateKeys();
-	updateModifiers();
+	try {
+		// open the display
+		openDisplay();
 
-	// assume primary has all clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		grabClipboard(id);
+		// create and prepare our window
+		createWindow();
+
+		// initialize the clipboards;  assume primary has all clipboards
+		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+			grabClipboard(id);
+		}
+
+		// get keyboard state
+		updateKeys();
+		updateModifiers();
+
+		// disable the screen saver
+		installScreenSaver();
 	}
-
-	// disable the screen saver
-	getScreenSaver()->disable();
+	catch (...) {
+		close();
+		throw;
+	}
 
 	// hide the cursor
 	m_active = true;
@@ -106,13 +113,8 @@ CMSWindowsSecondaryScreen::open()
 void
 CMSWindowsSecondaryScreen::close()
 {
-	// release keys that are logically pressed
-	releaseKeys();
-
-	// restore the screen saver settings
-	getScreenSaver()->enable();
-
-	// close the display
+	uninstallScreenSaver();
+	destroyWindow();
 	closeDisplay();
 }
 
@@ -145,8 +147,11 @@ CMSWindowsSecondaryScreen::enter(SInt32 x, SInt32 y, KeyModifierMask mask)
 		toggleKey(VK_SCROLL, KeyModifierScrollLock);
 	}
 
+	// warp to requested location
+	warpCursor(x, y);
+
 	// show mouse
-	onEnter(x, y);
+	hideWindow();
 }
 
 void
@@ -161,30 +166,13 @@ CMSWindowsSecondaryScreen::leave()
 	syncDesktop();
 
 	// hide mouse
-	onLeave();
+	showWindow();
 
 	// not active anymore
 	m_active = false;
 
-	// if we think we own the clipboard but we don't then somebody
-	// grabbed the clipboard on this screen without us knowing.
-	// tell the server that this screen grabbed the clipboard.
-	//
-	// this works around bugs in the clipboard viewer chain.
-	// sometimes NT will simply never send WM_DRAWCLIPBOARD
-	// messages for no apparent reason and rebooting fixes the
-	// problem.  since we don't want a broken clipboard until the
-	// next reboot we do this double check.  clipboard ownership
-	// won't be reflected on other screens until we leave but at
-	// least the clipboard itself will work.
-	HWND clipboardOwner = GetClipboardOwner();
-	if (m_clipboardOwner != clipboardOwner) {
-		m_clipboardOwner = clipboardOwner;
-		if (m_clipboardOwner != m_window) {
-			m_receiver->onGrabClipboard(kClipboardClipboard);
-			m_receiver->onGrabClipboard(kClipboardSelection);
-		}
-	}
+	// make sure our idea of clipboard ownership is correct
+	checkClipboard();
 }
 
 void
@@ -402,15 +390,7 @@ CMSWindowsSecondaryScreen::getMousePos(SInt32& x, SInt32& y) const
 	assert(m_window != NULL);
 	syncDesktop();
 
-	POINT pos;
-	if (GetCursorPos(&pos)) {
-		x = pos.x;
-		y = pos.y;
-	}
-	else {
-		x = 0;
-		y = 0;
-	}
+	getCursorPos(x, y);
 }
 
 void
@@ -437,52 +417,18 @@ CMSWindowsSecondaryScreen::getClipboard(ClipboardID /*id*/,
 	CClipboard::copy(dst, &src);
 }
 
-void
-CMSWindowsSecondaryScreen::onOpenDisplay()
-{
-	assert(m_window == NULL);
-
-	// note if using multiple monitors
-	m_multimon = isMultimon();
-
-	// save thread id.  we'll need to pass this to the hook library.
-	m_threadID = GetCurrentThreadId();
-
-	// get the input desktop and switch to it
-	if (m_is95Family) {
-		if (!openDesktop()) {
-			throw XScreenOpenFailure();
-		}
-	}
-	else {
-		if (!switchDesktop(openInputDesktop())) {
-			throw XScreenOpenFailure();
-		}
-	}
-}
-
-void
-CMSWindowsSecondaryScreen::onCloseDisplay()
-{
-	// disconnect from desktop
-	if (m_is95Family) {
-		closeDesktop();
-	}
-	else {
-		switchDesktop(NULL);
-	}
-
-	// clear thread id
-	m_threadID = 0;
-
-	assert(m_window == NULL);
-	assert(m_desk   == NULL);
-}
-
 bool
-CMSWindowsSecondaryScreen::onPreTranslate(MSG* msg)
+CMSWindowsSecondaryScreen::onPreDispatch(const CEvent* event)
 {
+	assert(event != NULL);
+
+	// forward to superclass
+	if (CMSWindowsScreen::onPreDispatch(event)) {
+		return true;
+	}
+
 	// handle event
+	const MSG* msg = &event->m_msg;
 	switch (msg->message) {
 	case WM_TIMER:
 		// if current desktop is not the input desktop then switch to it
@@ -503,32 +449,35 @@ CMSWindowsSecondaryScreen::onPreTranslate(MSG* msg)
 	return false;
 }
 
-LRESULT
-CMSWindowsSecondaryScreen::onEvent(HWND hwnd, UINT msg,
-				WPARAM wParam, LPARAM lParam)
+bool
+CMSWindowsSecondaryScreen::onEvent(CEvent* event)
 {
-	switch (msg) {
+	assert(event != NULL);
+
+	const MSG& msg = event->msg;
+	switch (msg.message) {
 	case WM_QUERYENDSESSION:
 		if (m_is95Family) {
-			return TRUE;
+			event->m_result = TRUE;
+			return true;
 		}
 		break;
 
 	case WM_ENDSESSION:
 		if (m_is95Family) {
-			if (wParam == TRUE && lParam == 0) {
+			if (msg.wParam == TRUE && msg.lParam == 0) {
 				stop();
 			}
-			return 0;
+			return true;
 		}
 		break;
 
 	case WM_PAINT:
-		ValidateRect(hwnd, NULL);
-		return 0;
+		ValidateRect(msg.hwnd, NULL);
+		return true;
 
 	case WM_ACTIVATEAPP:
-		if (wParam == FALSE) {
+		if (msg.wParam == FALSE) {
 			// some other app activated.  hide the hider window.
 			ShowWindow(m_window, SW_HIDE);
 		}
@@ -538,67 +487,265 @@ CMSWindowsSecondaryScreen::onEvent(HWND hwnd, UINT msg,
 		log((CLOG_DEBUG "clipboard was taken"));
 
 		// first pass it on
-		SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+		if (m_nextClipboardWindow != NULL) {
+			SendMessage(m_nextClipboardWindow,
+								msg.message, msg.wParam, msg.lParam);
+		}
 
 		// now notify client that somebody changed the clipboard (unless
 		// we're now the owner, in which case it's because we took
 		// ownership, or now it's owned by nobody, which will happen if
 		// we owned it and switched desktops because we destroy our
 		// window to do that).
-		m_clipboardOwner = GetClipboardOwner();
-		if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
-			m_receiver->onGrabClipboard(kClipboardClipboard);
-			m_receiver->onGrabClipboard(kClipboardSelection);
+		try {
+			m_clipboardOwner = GetClipboardOwner();
+			if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
+				m_receiver->onGrabClipboard(kClipboardClipboard);
+				m_receiver->onGrabClipboard(kClipboardSelection);
+			}
 		}
-		return 0;
+		catch (XBadClient&) {
+			// ignore.  this can happen if we receive this event
+			// before we've fully started up.
+		}
+		return true;
 
 	case WM_CHANGECBCHAIN:
-		if (m_nextClipboardWindow == (HWND)wParam) {
-			m_nextClipboardWindow = (HWND)lParam;
+		if (m_nextClipboardWindow == (HWND)msg.wParam) {
+			m_nextClipboardWindow = (HWND)msg.lParam;
 		}
-		else {
-			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+		else if (m_nextClipboardWindow != NULL) {
+			SendMessage(m_nextClipboardWindow,
+								msg.message, msg.wParam, msg.lParam);
 		}
-		return 0;
+		return true;
 
 	case WM_DISPLAYCHANGE:
-		// screen resolution has changed
-		updateScreenShape();
-		m_multimon = isMultimon();
+		{
+			// screen resolution may have changed.  get old shape.
+			SInt32 xOld, yOld, wOld, hOld;
+			getScreenShape(xOld, yOld, wOld, hOld);
 
-		// send new info
-		CClientInfo info;
-		getShape(info.m_x, info.m_y, info.m_w, info.m_h);
-		getMousePos(info.m_mx, info.m_my);
-		info.m_zoneSize = getJumpZoneSize();
-		m_receiver->onInfoChanged(info);
-		return 0;
+			// update shape
+			updateScreenShape();
+			m_multimon = isMultimon();
+
+			// collect new screen info
+			CClientInfo info;
+			getScreenShape(info.m_x, info.m_y, info.m_w, info.m_h);
+			getCursorPos(info.m_mx, info.m_my);
+			info.m_zoneSize = getJumpZoneSize();
+
+			// do nothing if resolution hasn't changed
+			if (info.m_x != xOld || info.m_y != yOld ||
+				info.m_w != wOld || info.m_h != hOld) {
+				// send new screen info
+				m_receiver->onInfoChanged(info);
+			}
+
+			return true;
+		}
 	}
 
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	return false;
+}
+
+CString
+CMSWindowsSecondaryScreen::getCurrentDesktopName() const
+{
+	return m_deskName;
 }
 
 void
-CMSWindowsSecondaryScreen::onEnter(SInt32 x, SInt32 y)
+CMSWindowsSecondaryScreen::showWindow()
 {
-	// warp to requested location
-	warpCursor(x, y);
+	// move hider window under the mouse (rather than moving the mouse
+	// somewhere else on the screen)
+	SInt32 x, y;
+	getCursorPos(x, y);
+	MoveWindow(m_window, x, y, 1, 1, FALSE);
 
-	// show cursor
+	// raise and show the hider window.  take activation.
+	ShowWindow(m_window, SW_SHOWNORMAL);
+}
+
+void
+CMSWindowsSecondaryScreen::hideWindow()
+{
 	ShowWindow(m_window, SW_HIDE);
 }
 
 void
-CMSWindowsSecondaryScreen::onLeave()
+CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
-	// move hider window under the mouse (rather than moving the mouse
-	// somewhere else on the screen)
-	POINT point;
-	GetCursorPos(&point);
-	MoveWindow(m_window, point.x, point.y, 1, 1, FALSE);
+	// move the mouse directly to target position on NT family or if
+	// not using multiple monitors.
+	if (!m_multimon || !m_is95Family) {
+		SInt32 x0, y0, w, h;
+		getScreenShape(x0, y0, w, h);
+		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+								(DWORD)((65535.99 * (x - x0)) / (w - 1)),
+								(DWORD)((65535.99 * (y - y0)) / (h - 1)),
+								0, 0);
+	}
 
-	// raise and show the hider window.  take activation.
-	ShowWindow(m_window, SW_SHOWNORMAL);
+	// windows 98 (and Me?) is broken.  you cannot set the absolute
+	// position of the mouse except on the primary monitor but you
+	// can do relative moves onto any monitor.  this is, in microsoft's
+	// words, "by design."  apparently the designers of windows 2000
+	// we're a little less lazy and did it right.
+	//
+	// we use the microsoft recommendation (Q193003): set the absolute
+	// position on the primary monitor, disable mouse acceleration,
+	// relative move the mouse to the final location, restore mouse
+	// acceleration.  to avoid one kind of race condition (the user
+	// clicking the mouse or pressing a key between the absolute and
+	// relative move) we'll use SendInput() which guarantees that the
+	// events are delivered uninterrupted.  we cannot prevent changes
+	// to the mouse acceleration at inopportune times, though.
+	//
+	// point-to-activate (x-mouse) doesn't seem to be bothered by the
+	// absolute/relative combination.  a window over the absolute
+	// position (0,0) does *not* get activated (at least not on win2k)
+	// if the relative move puts the cursor elsewhere.  similarly, the
+	// app under the final mouse position does *not* get deactivated
+	// by the absolute move to 0,0.
+	else {
+		// save mouse speed & acceleration
+		int oldSpeed[4];
+		bool accelChanged =
+					SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed,0) &&
+					SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
+
+		// use 1:1 motion
+		if (accelChanged) {
+			int newSpeed[4] = { 0, 0, 0, 1 };
+			accelChanged =
+					SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
+					SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
+		}
+
+		// send events
+		INPUT events[2];
+		events[0].type           = INPUT_MOUSE;
+		events[0].mi.dx          = 0;
+		events[0].mi.dy          = 0;
+		events[0].mi.mouseData   = 0;
+		events[0].mi.dwFlags     = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
+		events[0].mi.time        = GetTickCount();
+		events[0].mi.dwExtraInfo = 0;
+		events[1].type           = INPUT_MOUSE;
+		events[1].mi.dx          = x;
+		events[1].mi.dy          = y;
+		events[1].mi.mouseData   = 0;
+		events[1].mi.dwFlags     = MOUSEEVENTF_MOVE;
+		events[1].mi.time        = events[0].mi.time;
+		events[1].mi.dwExtraInfo = 0;
+		SendInput(sizeof(events) / sizeof(events[0]),
+								events, sizeof(events[0]));
+
+		// restore mouse speed & acceleration
+		if (accelChanged) {
+			SystemParametersInfo(SPI_SETMOUSE, 0, oldSpeed, 0);
+			SystemParametersInfo(SPI_SETMOUSESPEED, 0, oldSpeed + 3, 0);
+		}
+	}
+}
+
+void
+CMSWindowsSecondaryScreen::checkClipboard()
+{
+	// if we think we own the clipboard but we don't then somebody
+	// grabbed the clipboard on this screen without us knowing.
+	// tell the server that this screen grabbed the clipboard.
+	//
+	// this works around bugs in the clipboard viewer chain.
+	// sometimes NT will simply never send WM_DRAWCLIPBOARD
+	// messages for no apparent reason and rebooting fixes the
+	// problem.  since we don't want a broken clipboard until the
+	// next reboot we do this double check.  clipboard ownership
+	// won't be reflected on other screens until we leave but at
+	// least the clipboard itself will work.
+	HWND clipboardOwner = GetClipboardOwner();
+	if (m_clipboardOwner != clipboardOwner) {
+		try {
+			m_clipboardOwner = clipboardOwner;
+			if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
+				m_receiver->onGrabClipboard(kClipboardClipboard);
+				m_receiver->onGrabClipboard(kClipboardSelection);
+			}
+		}
+		catch (XBadClient&) {
+			// ignore
+		}
+	}
+}
+
+void
+CMSWindowsPrimaryScreen::createWindow()
+{
+	// save thread id
+	m_threadID = GetCurrentThreadId();
+
+	// note if using multiple monitors
+	m_multimon = isMultimon();
+
+	// get the input desktop and switch to it
+	if (m_is95Family) {
+		if (!openDesktop()) {
+			throw XScreenOpenFailure();
+		}
+	}
+	else {
+		if (!switchDesktop(openInputDesktop())) {
+			throw XScreenOpenFailure();
+		}
+	}
+
+	// poll input desktop to see if it changes (onPreDispatch()
+	// handles WM_TIMER)
+	m_timer = 0;
+	if (!m_is95Family) {
+		m_timer = SetTimer(NULL, 0, 200, NULL);
+	}
+}
+
+void
+CMSWindowsPrimaryScreen::destroyWindow()
+{
+	// remove timer
+	if (m_timer != 0) {
+		KillTimer(NULL, m_timer);
+	}
+
+	// release keys that are logically pressed
+	releaseKeys();
+
+	// disconnect from desktop
+	if (m_is95Family) {
+		closeDesktop();
+	}
+	else {
+		switchDesktop(NULL);
+	}
+
+	// clear thread id
+	m_threadID = 0;
+
+	assert(m_window == NULL);
+	assert(m_desk   == NULL);
+}
+
+void
+CMSWindowsSecondaryScreen::installScreenSaver()
+{
+	getScreenSaver()->disable();
+}
+
+void
+CMSWindowsSecondaryScreen::uninstallScreenSaver()
+{
+	getScreenSaver()->enable();
 }
 
 bool
@@ -720,7 +867,7 @@ CMSWindowsSecondaryScreen::switchDesktop(HDESK desk)
 
 	// get desktop up to date
 	if (!m_active) {
-		onLeave();
+		showWindow();
 	}
 
 	return true;
@@ -747,89 +894,6 @@ CMSWindowsSecondaryScreen::syncDesktop() const
 	if (threadID != m_lastThreadID && threadID != m_threadID) {
 		m_lastThreadID = threadID;
 		AttachThreadInput(threadID, m_threadID, TRUE);
-	}
-}
-
-CString
-CMSWindowsSecondaryScreen::getCurrentDesktopName() const
-{
-	return m_deskName;
-}
-
-void
-CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
-{
-	// move the mouse directly to target position on NT family or if
-	// not using multiple monitors.
-	if (!m_multimon || !m_is95Family) {
-		SInt32 x0, y0, w, h;
-		getScreenShape(x0, y0, w, h);
-		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.99 * (x - x0)) / (w - 1)),
-								(DWORD)((65535.99 * (y - y0)) / (h - 1)),
-								0, 0);
-	}
-
-	// windows 98 (and Me?) is broken.  you cannot set the absolute
-	// position of the mouse except on the primary monitor but you
-	// can do relative moves onto any monitor.  this is, in microsoft's
-	// words, "by design."  apparently the designers of windows 2000
-	// we're a little less lazy and did it right.
-	//
-	// we use the microsoft recommendation (Q193003): set the absolute
-	// position on the primary monitor, disable mouse acceleration,
-	// relative move the mouse to the final location, restore mouse
-	// acceleration.  to avoid one kind of race condition (the user
-	// clicking the mouse or pressing a key between the absolute and
-	// relative move) we'll use SendInput() which guarantees that the
-	// events are delivered uninterrupted.  we cannot prevent changes
-	// to the mouse acceleration at inopportune times, though.
-	//
-	// point-to-activate (x-mouse) doesn't seem to be bothered by the
-	// absolute/relative combination.  a window over the absolute
-	// position (0,0) does *not* get activated (at least not on win2k)
-	// if the relative move puts the cursor elsewhere.  similarly, the
-	// app under the final mouse position does *not* get deactivated
-	// by the absolute move to 0,0.
-	else {
-		// save mouse speed & acceleration
-		int oldSpeed[4];
-		bool accelChanged =
-					SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed,0) &&
-					SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
-
-		// use 1:1 motion
-		if (accelChanged) {
-			int newSpeed[4] = { 0, 0, 0, 1 };
-			accelChanged =
-					SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
-					SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
-		}
-
-		// send events
-		INPUT events[2];
-		events[0].type           = INPUT_MOUSE;
-		events[0].mi.dx          = 0;
-		events[0].mi.dy          = 0;
-		events[0].mi.mouseData   = 0;
-		events[0].mi.dwFlags     = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-		events[0].mi.time        = GetTickCount();
-		events[0].mi.dwExtraInfo = 0;
-		events[1].type           = INPUT_MOUSE;
-		events[1].mi.dx          = x;
-		events[1].mi.dy          = y;
-		events[1].mi.mouseData   = 0;
-		events[1].mi.dwFlags     = MOUSEEVENTF_MOVE;
-		events[1].mi.time        = events[0].mi.time;
-		events[1].mi.dwExtraInfo = 0;
-		SendInput(sizeof(events) / sizeof(events[0]),
-								events, sizeof(events[0]));
-
-		// restore mouse speed & acceleration
-		if (accelChanged) {
-			SystemParametersInfo(SPI_SETMOUSE, 0, oldSpeed, 0);
-			SystemParametersInfo(SPI_SETMOUSESPEED, 0, oldSpeed + 3, 0);
-		}
 	}
 }
 

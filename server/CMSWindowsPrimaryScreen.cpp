@@ -22,6 +22,7 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 	m_receiver(receiver),
 	m_primaryReceiver(primaryReceiver),
 	m_threadID(0),
+	m_timer(0),
 	m_desk(NULL),
 	m_deskName(),
 	m_window(NULL),
@@ -95,28 +96,22 @@ CMSWindowsPrimaryScreen::run()
 	// change our priority
 	CThread::getCurrentThread().setPriority(-3);
 
-	// poll input desktop to see if it changes (preTranslateMessage()
-	// handles WM_TIMER)
-	UINT timer = 0;
-	if (!m_is95Family) {
-		SetTimer(NULL, 0, 200, NULL);
-	}
-
 	// run event loop
-	log((CLOG_INFO "entering event loop"));
-	doRun();
-	log((CLOG_INFO "exiting event loop"));
-
-	// remove timer
-	if (!m_is95Family) {
-		KillTimer(NULL, timer);
+	try {
+		log((CLOG_INFO "entering event loop"));
+		mainLoop();
+		log((CLOG_INFO "exiting event loop"));
+	}
+	catch (...) {
+		log((CLOG_INFO "exiting event loop"));
+		throw;
 	}
 }
 
 void
 CMSWindowsPrimaryScreen::stop()
 {
-	doStop();
+	exitMainLoop();
 }
 
 void
@@ -270,50 +265,6 @@ CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 }
 
 void
-CMSWindowsPrimaryScreen::warpCursorToCenter()
-{
-	// warp to center.  the extra info tells the hook DLL to send
-	// SYNERGY_MSG_POST_WARP instead of SYNERGY_MSG_MOUSE_MOVE.
-	SInt32 x, y, w, h;
-	getScreenShape(x, y, w, h);
-	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE,
-						(DWORD)((65535.99 * (m_xCenter - x)) / (w - 1)),
-						(DWORD)((65535.99 * (m_yCenter - y)) / (h - 1)),
-						0,
-						0x12345678);
-// FIXME -- ignore mouse until we get warp notification?
-}
-
-void
-CMSWindowsPrimaryScreen::checkClipboard()
-{
-	// if we think we own the clipboard but we don't then somebody
-	// grabbed the clipboard on this screen without us knowing.
-	// tell the server that this screen grabbed the clipboard.
-	//
-	// this works around bugs in the clipboard viewer chain.
-	// sometimes NT will simply never send WM_DRAWCLIPBOARD
-	// messages for no apparent reason and rebooting fixes the
-	// problem.  since we don't want a broken clipboard until the
-	// next reboot we do this double check.  clipboard ownership
-	// won't be reflected on other screens until we leave but at
-	// least the clipboard itself will work.
-	HWND clipboardOwner = GetClipboardOwner();
-	if (m_clipboardOwner != clipboardOwner) {
-		try {
-			m_clipboardOwner = clipboardOwner;
-			if (m_clipboardOwner != m_window) {
-				m_receiver->onGrabClipboard(kClipboardClipboard);
-				m_receiver->onGrabClipboard(kClipboardSelection);
-			}
-		}
-		catch (XBadClient&) {
-			// ignore
-		}
-	}
-}
-
-void
 CMSWindowsPrimaryScreen::setClipboard(ClipboardID /*id*/,
 				const IClipboard* src)
 {
@@ -408,9 +359,17 @@ CMSWindowsPrimaryScreen::isLockedToScreen() const
 }
 
 bool
-CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
+CMSWindowsPrimaryScreen::onPreTranslate(const CEvent* event)
 {
+	assert(event != NULL);
+
+	// forward to superclass
+	if (CMSWindowsScreen::onPreTranslate(event)) {
+		return true;
+	}
+
 	// handle event
+	const MSG* msg = &event->m_msg;
 	switch (msg->message) {
 	case SYNERGY_MSG_MARK:
 		m_markReceived = msg->wParam;
@@ -567,43 +526,47 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 	return false;
 }
 
-LRESULT
-CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
-				WPARAM wParam, LPARAM lParam)
+bool
+CMSWindowsPrimaryScreen::onEvent(CEvent* event)
 {
-	switch (msg) {
+	assert(event != NULL);
+
+	const MSG& msg = event->msg;
+	switch (msg.message) {
 	case WM_QUERYENDSESSION:
 		if (m_is95Family) {
-			return TRUE;
+			event->m_result = TRUE;
+			return true;
 		}
 		break;
 
 	case WM_ENDSESSION:
 		if (m_is95Family) {
-			if (wParam == TRUE && lParam == 0) {
+			if (msg.wParam == TRUE && msg.lParam == 0) {
 				stop();
 			}
-			return 0;
+			return true;
 		}
 		break;
 
 	case WM_PAINT:
-		ValidateRect(hwnd, NULL);
-		return 0;
+		ValidateRect(msg.hwnd, NULL);
+		return true;
 
 	case WM_DRAWCLIPBOARD:
 		log((CLOG_DEBUG "clipboard was taken"));
 
 		// first pass it on
 		if (m_nextClipboardWindow != NULL) {
-			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+			SendMessage(m_nextClipboardWindow,
+								msg.message, msg.wParam, msg.lParam);
 		}
 
 		// now notify server that somebody changed the clipboard.
 		// skip that if we're the new owner.
 		try {
 			m_clipboardOwner = GetClipboardOwner();
-			if (m_clipboardOwner != m_window) {
+			if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
 				m_receiver->onGrabClipboard(kClipboardClipboard);
 				m_receiver->onGrabClipboard(kClipboardSelection);
 			}
@@ -612,28 +575,36 @@ CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
 			// ignore.  this can happen if we receive this event
 			// before we've fully started up.
 		}
-		return 0;
+		return true;
 
 	case WM_CHANGECBCHAIN:
-		if (m_nextClipboardWindow == (HWND)wParam) {
-			m_nextClipboardWindow = (HWND)lParam;
+		if (m_nextClipboardWindow == (HWND)msg.wParam) {
+			m_nextClipboardWindow = (HWND)msg.lParam;
 		}
 		else if (m_nextClipboardWindow != NULL) {
-			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+			SendMessage(m_nextClipboardWindow,
+								msg.message, msg.wParam, msg.lParam);
 		}
-		return 0;
+		return true;
 
 	case WM_DISPLAYCHANGE:
 		{
-			// screen resolution may have changed
+			// screen resolution may have changed.  get old shape.
 			SInt32 xOld, yOld, wOld, hOld;
 			getScreenShape(xOld, yOld, wOld, hOld);
+
+			// update shape
 			updateScreenShape();
-			SInt32 x, y, w, h;
-			getScreenShape(x, y, w, h);
+
+			// collect new screen info
+			CClientInfo info;
+			getScreenShape(info.m_x, info.m_y, info.m_w, info.m_h);
+			getCursorPos(info.m_mx, info.m_my);
+			info.m_zoneSize = getJumpZoneSize();
 
 			// do nothing if resolution hasn't changed
-			if (x != xOld || y != yOld || w != wOld || h != hOld) {
+			if (info.m_x != xOld || info.m_y != yOld ||
+				info.m_w != wOld || info.m_h != hOld) {
 				// recompute center pixel of primary screen
 				getCursorCenter(m_xCenter, m_yCenter);
 
@@ -644,28 +615,46 @@ CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
 
 				// tell hook about resize if not active
 				else {
-					m_setZone(x, y, w, h, getJumpZoneSize());
+					m_setZone(info.m_x, info.m_y,
+								info.m_w, info.m_h, info.m_zoneSize);
 				}
 
 				// send new screen info
-				POINT pos;
-				GetCursorPos(&pos);
-				CClientInfo info;
-				info.m_x        = x;
-				info.m_y        = y;
-				info.m_w        = w;
-				info.m_h        = h;
-				info.m_zoneSize = getJumpZoneSize();
-				info.m_mx       = pos.x;
-				info.m_my       = pos.y;
 				m_receiver->onInfoChanged(info);
 			}
 
-			return 0;
+			return true;
 		}
 	}
 
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	return false;
+}
+
+CString
+CMSWindowsPrimaryScreen::getCurrentDesktopName() const
+{
+	return m_deskName;
+}
+
+SInt32
+CMSWindowsPrimaryScreen::getJumpZoneSize() const
+{
+	return 1;
+}
+
+void
+CMSWindowsPrimaryScreen::warpCursorToCenter()
+{
+	// warp to center.  the extra info tells the hook DLL to send
+	// SYNERGY_MSG_POST_WARP instead of SYNERGY_MSG_MOUSE_MOVE.
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
+	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE,
+						(DWORD)((65535.99 * (m_xCenter - x)) / (w - 1)),
+						(DWORD)((65535.99 * (m_yCenter - y)) / (h - 1)),
+						0,
+						0x12345678);
+// FIXME -- ignore mouse until we get warp notification?
 }
 
 void
@@ -743,20 +732,33 @@ CMSWindowsPrimaryScreen::hideWindow()
 	ShowWindow(m_window, SW_HIDE);
 }
 
-SInt32
-CMSWindowsPrimaryScreen::getJumpZoneSize() const
-{
-	return 1;
-}
-
 void
-CMSWindowsPrimaryScreen::nextMark()
+CMSWindowsPrimaryScreen::checkClipboard()
 {
-	// next mark
-	++m_mark;
-
-	// mark point in message queue where the mark was changed
-	PostThreadMessage(m_threadID, SYNERGY_MSG_MARK, m_mark, 0);
+	// if we think we own the clipboard but we don't then somebody
+	// grabbed the clipboard on this screen without us knowing.
+	// tell the server that this screen grabbed the clipboard.
+	//
+	// this works around bugs in the clipboard viewer chain.
+	// sometimes NT will simply never send WM_DRAWCLIPBOARD
+	// messages for no apparent reason and rebooting fixes the
+	// problem.  since we don't want a broken clipboard until the
+	// next reboot we do this double check.  clipboard ownership
+	// won't be reflected on other screens until we leave but at
+	// least the clipboard itself will work.
+	HWND clipboardOwner = GetClipboardOwner();
+	if (m_clipboardOwner != clipboardOwner) {
+		try {
+			m_clipboardOwner = clipboardOwner;
+			if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
+				m_receiver->onGrabClipboard(kClipboardClipboard);
+				m_receiver->onGrabClipboard(kClipboardSelection);
+			}
+		}
+		catch (XBadClient&) {
+			// ignore
+		}
+	}
 }
 
 void
@@ -773,11 +775,23 @@ CMSWindowsPrimaryScreen::createWindow()
 			throw XScreenOpenFailure();
 		}
 	}
+
+	// poll input desktop to see if it changes (preTranslateMessage()
+	// handles WM_TIMER)
+	m_timer = 0;
+	if (!m_is95Family) {
+		m_timer = SetTimer(NULL, 0, 200, NULL);
+	}
 }
 
 void
 CMSWindowsPrimaryScreen::destroyWindow()
 {
+	// remove timer
+	if (m_timer != 0) {
+		KillTimer(NULL, m_timer);
+	}
+
 	// disconnect from desktop
 	if (m_is95Family) {
 		closeDesktop();
@@ -977,10 +991,14 @@ CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 	return true;
 }
 
-CString
-CMSWindowsPrimaryScreen::getCurrentDesktopName() const
+void
+CMSWindowsPrimaryScreen::nextMark()
 {
-	return m_deskName;
+	// next mark
+	++m_mark;
+
+	// mark point in message queue where the mark was changed
+	PostThreadMessage(m_threadID, SYNERGY_MSG_MARK, m_mark, 0);
 }
 
 static const KeyID		g_virtualKey[] =

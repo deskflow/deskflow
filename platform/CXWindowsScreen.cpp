@@ -121,6 +121,129 @@ CXWindowsScreen::removeTimerNoLock(IJob* job)
 }
 
 void
+CXWindowsScreen::mainLoop()
+{
+	// wait for an event in a cancellable way and don't lock the
+	// display while we're waiting.
+	CEvent event;
+	m_mutex.lock();
+	while (!m_stop) {
+		while (!m_stop && XPending(m_display) == 0) {
+			// check timers
+			if (processTimers()) {
+				continue;
+			}
+
+			// wait
+			m_mutex.unlock();
+			CThread::sleep(0.01);
+			m_mutex.lock();
+		}
+		if (!m_stop) {
+			// get the event
+			XNextEvent(m_display, &event.m_event);
+
+			// process the event.  if unhandled then let the subclass
+			// have a go at it.
+			m_mutex.unlock();
+			if (!onPreDispatch(&event)) {
+				onEvent(&event);
+			}
+			m_mutex.lock();
+		}
+	}
+	m_mutex.unlock();
+}
+
+void
+CXWindowsScreen::exitMainLoop()
+{
+	CLock lock(&m_mutex);
+	m_stop = true;
+}
+
+bool
+CXWindowsScreen::onPreDispatch(const CEvent* event)
+{
+	assert(event != NULL);
+	const XEvent* xevent = &event->m_event;
+
+	switch (xevent->type) {
+	case SelectionClear:
+		{
+			// we just lost the selection.  that means someone else
+			// grabbed the selection so this screen is now the
+			// selection owner.  report that to the subclass.
+			ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
+			if (id != kClipboardEnd) {
+				log((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
+				m_clipboard[id]->lost(xevent->xselectionclear.time);
+				onLostClipboard(id);
+				return true;
+			}
+		}
+		break;
+
+	case SelectionNotify:
+		// notification of selection transferred.  we shouldn't
+		// get this here because we handle them in the selection
+		// retrieval methods.  we'll just delete the property
+		// with the data (satisfying the usual ICCCM protocol).
+		if (xevent->xselection.property != None) {
+			CLock lock(&m_mutex);
+			XDeleteProperty(m_display,
+								xevent->xselection.requestor,
+								xevent->xselection.property);
+		}
+		return true;
+
+	case SelectionRequest:
+		{
+			// somebody is asking for clipboard data
+			ClipboardID id = getClipboardID(
+								xevent->xselectionrequest.selection);
+			if (id != kClipboardEnd) {
+				CLock lock(&m_mutex);
+				m_clipboard[id]->addRequest(
+								xevent->xselectionrequest.owner,
+								xevent->xselectionrequest.requestor,
+								xevent->xselectionrequest.target,
+								xevent->xselectionrequest.time,
+								xevent->xselectionrequest.property);
+				return true;
+			}
+		}
+		break;
+
+	case PropertyNotify:
+		// property delete may be part of a selection conversion
+		if (xevent->xproperty.state == PropertyDelete) {
+			processClipboardRequest(xevent->xproperty.window,
+								xevent->xproperty.time,
+								xevent->xproperty.atom);
+			return true;
+		}
+		break;
+
+	case DestroyNotify:
+		// looks like one of the windows that requested a clipboard
+		// transfer has gone bye-bye.
+		destroyClipboardRequest(xevent->xdestroywindow.window);
+
+		// we don't know if the event was handled or not so continue
+		break;
+	}
+
+	// let screen saver have a go
+	{
+		CLock lock(&m_mutex);
+		m_screenSaver->onPreDispatch(xevent);
+	}
+
+	return false;
+}
+
+void
 CXWindowsScreen::openDisplay()
 {
 	assert(m_display == NULL);
@@ -177,6 +300,12 @@ CXWindowsScreen::closeDisplay()
 		log((CLOG_DEBUG "closed display"));
 	}
 	XSetIOErrorHandler(NULL);
+}
+
+Display*
+CXWindowsScreen::getDisplay() const
+{
+	return m_display;
 }
 
 int
@@ -294,49 +423,6 @@ CXWindowsScreen::getBlankCursor() const
 	return m_cursor;
 }
 
-bool
-CXWindowsScreen::getEvent(XEvent* xevent) const
-{
-	// wait for an event in a cancellable way and don't lock the
-	// display while we're waiting.
-	m_mutex.lock();
-	for (;;) {
-		while (!m_stop && XPending(m_display) == 0) {
-			// check timers
-			if (const_cast<CXWindowsScreen*>(this)->processTimers()) {
-				continue;
-			}
-
-			// wait
-			m_mutex.unlock();
-			CThread::sleep(0.01);
-			m_mutex.lock();
-		}
-		if (m_stop) {
-			m_mutex.unlock();
-			return false;
-		}
-		else {
-			// get the event
-			XNextEvent(m_display, xevent);
-
-			// process the event.  return the event if unhandled.
-			m_mutex.unlock();
-			if (!const_cast<CXWindowsScreen*>(this)->processEvent(xevent)) {
-				return true;
-			}
-			m_mutex.lock();
-		}
-	}
-}
-
-void
-CXWindowsScreen::doStop()
-{
-	// caller must have locked display
-	m_stop = true;
-}
-
 ClipboardID
 CXWindowsScreen::getClipboardID(Atom selection) const
 {
@@ -353,84 +439,6 @@ void
 CXWindowsScreen::onUnexpectedClose()
 {
 	// do nothing
-}
-
-bool
-CXWindowsScreen::processEvent(XEvent* xevent)
-{
-	switch (xevent->type) {
-	case SelectionClear:
-		{
-			// we just lost the selection.  that means someone else
-			// grabbed the selection so this screen is now the
-			// selection owner.  report that to the subclass.
-			ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
-			if (id != kClipboardEnd) {
-				log((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
-				m_clipboard[id]->lost(xevent->xselectionclear.time);
-				onLostClipboard(id);
-				return true;
-			}
-		}
-		break;
-
-	case SelectionNotify:
-		// notification of selection transferred.  we shouldn't
-		// get this here because we handle them in the selection
-		// retrieval methods.  we'll just delete the property
-		// with the data (satisfying the usual ICCCM protocol).
-		if (xevent->xselection.property != None) {
-			CLock lock(&m_mutex);
-			XDeleteProperty(m_display,
-								xevent->xselection.requestor,
-								xevent->xselection.property);
-		}
-		return true;
-
-	case SelectionRequest:
-		{
-			// somebody is asking for clipboard data
-			ClipboardID id = getClipboardID(
-								xevent->xselectionrequest.selection);
-			if (id != kClipboardEnd) {
-				CLock lock(&m_mutex);
-				m_clipboard[id]->addRequest(
-								xevent->xselectionrequest.owner,
-								xevent->xselectionrequest.requestor,
-								xevent->xselectionrequest.target,
-								xevent->xselectionrequest.time,
-								xevent->xselectionrequest.property);
-				return true;
-			}
-		}
-		break;
-
-	case PropertyNotify:
-		// property delete may be part of a selection conversion
-		if (xevent->xproperty.state == PropertyDelete) {
-			processClipboardRequest(xevent->xproperty.window,
-								xevent->xproperty.time,
-								xevent->xproperty.atom);
-			return true;
-		}
-		break;
-
-	case DestroyNotify:
-		// looks like one of the windows that requested a clipboard
-		// transfer has gone bye-bye.
-		destroyClipboardRequest(xevent->xdestroywindow.window);
-
-		// we don't know if the event was handled or not so continue
-		break;
-	}
-
-	// let screen saver have a go
-	{
-		CLock lock(&m_mutex);
-		m_screenSaver->processEvent(xevent);
-	}
-
-	return false;
 }
 
 bool

@@ -1,8 +1,9 @@
 #include "CXWindowsSecondaryScreen.h"
-#include "CClient.h"
+#include "IScreenReceiver.h"
 #include "CXWindowsClipboard.h"
 #include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
+#include "XScreen.h"
 #include "CThread.h"
 #include "CLog.h"
 #if defined(X_DISPLAY_MISSING)
@@ -26,9 +27,10 @@
 
 CXWindowsSecondaryScreen::CXWindowsSecondaryScreen(IScreenReceiver* receiver) :
 	m_receiver(receiver),
-	m_window(None)
+	m_window(None),
+	m_active(false)
 {
-	// do nothing
+	assert(m_receiver != NULL);
 }
 
 CXWindowsSecondaryScreen::~CXWindowsSecondaryScreen()
@@ -41,135 +43,79 @@ CXWindowsSecondaryScreen::run()
 {
 	assert(m_window != None);
 
-	for (;;) {
-		// wait for and get the next event
-		XEvent xevent;
-		if (!getEvent(&xevent)) {
-			break;
-		}
+	// change our priority
+	CThread::getCurrentThread().setPriority(-7);
 
-		// handle event
-		switch (xevent.type) {
-		case MappingNotify:
-			{
-				// keyboard mapping changed
-				CDisplayLock display(this);
-				XRefreshKeyboardMapping(&xevent.xmapping);
-				updateKeys(display);
-				updateKeycodeMap(display);
-				updateModifierMap(display);
-				updateModifiers(display);
-			}
-			break;
-
-		case LeaveNotify:
-			{
-				// mouse moved out of hider window somehow.  hide the window.
-				assert(m_window != None);
-				CDisplayLock display(this);
-				XUnmapWindow(display, m_window);
-			}
-			break;
-		}
+	// run event loop
+	try {
+		log((CLOG_INFO "entering event loop"));
+		mainLoop();
+		log((CLOG_INFO "exiting event loop"));
+	}
+	catch (...) {
+		log((CLOG_INFO "exiting event loop"));
+		throw;
 	}
 }
 
 void
 CXWindowsSecondaryScreen::stop()
 {
-	CDisplayLock display(this);
-	doStop();
+	exitMainLoop();
 }
 
 void
 CXWindowsSecondaryScreen::open()
 {
-	assert(m_receiver != NULL);
 	assert(m_window == None);
 
-	// open the display
-	openDisplay();
+	try {
+		// open the display
+		openDisplay();
 
-	{
-		CDisplayLock display(this);
+		// create and prepare our window
+		createWindow();
 
-		// verify the availability of the XTest extension
-		int majorOpcode, firstEvent, firstError;
-		if (!XQueryExtension(display, XTestExtensionName,
-								&majorOpcode, &firstEvent, &firstError)) {
-			throw int(6);	// FIXME -- make exception for this
+		// initialize the clipboards;  assume primary has all clipboards
+		initClipboards(m_window);
+		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+			grabClipboard(id);
 		}
 
-		// create the cursor hiding window.  this window is used to hide the
-		// cursor when it's not on the screen.  the window is hidden as soon
-		// as the cursor enters the screen or the display's real cursor is
-		// moved.
-		XSetWindowAttributes attr;
-		attr.event_mask            = LeaveWindowMask;
-		attr.do_not_propagate_mask = 0;
-		attr.override_redirect     = True;
-		attr.cursor                = getBlankCursor();
-		m_window = XCreateWindow(display, getRoot(), 0, 0, 1, 1, 0, 0,
-								InputOnly, CopyFromParent,
-								CWDontPropagate | CWEventMask |
-								CWOverrideRedirect | CWCursor,
-								&attr);
-		log((CLOG_DEBUG "window is 0x%08x", m_window));
+		// check for peculiarities
+		// FIXME -- may have to get these from some database
+		m_numLockHalfDuplex  = false;
+		m_capsLockHalfDuplex = false;
+//		m_numLockHalfDuplex  = true;
+//		m_capsLockHalfDuplex = true;
 
-		// become impervious to server grabs
-		XTestGrabControl(display, True);
-
-		// hide the cursor
-		leaveNoLock(display);
-
-		// initialize the clipboards
-		initClipboards(m_window);
+		// get the display
+		CDisplayLock display(this);
 
 		// update key state
 		updateKeys(display);
 		updateKeycodeMap(display);
 		updateModifierMap(display);
 		updateModifiers(display);
+
+		// disable the screen saver
+		installScreenSaver();
+	}
+	catch (...) {
+		close();
+		throw;
 	}
 
-	// check for peculiarities
-	// FIXME -- may have to get these from some database
-	m_numLockHalfDuplex  = false;
-	m_capsLockHalfDuplex = false;
-//	m_numLockHalfDuplex  = true;
-//	m_capsLockHalfDuplex = true;
-
-	// assume primary has all clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		grabClipboard(id);
-	}
-
-	// disable the screen saver
-	getScreenSaver()->disable();
+	// hide the cursor
+	m_active = true;
+	leave();
 }
 
 void
 CXWindowsSecondaryScreen::close()
 {
-	// release keys that are logically pressed
-	releaseKeys();
-
-	// restore the screen saver settings
-	getScreenSaver()->enable();
-
-	{
-		CDisplayLock display(this);
-		if (display != NULL) {
-			// no longer impervious to server grabs
-			XTestGrabControl(display, False);
-
-			// destroy window
-			XDestroyWindow(display, m_window);
-		}
-		m_window = None;
-	}
-
-	// close the display
+	uninstallScreenSaver();
+	destroyWindow();
 	closeDisplay();
 }
 
@@ -177,15 +123,14 @@ void
 CXWindowsSecondaryScreen::enter(SInt32 x, SInt32 y, KeyModifierMask mask)
 {
 	assert(m_window != None);
+	assert(m_active == false);
+
+	log((CLOG_INFO "entering screen at %d,%d mask=%04x", x, y, mask));
 
 	CDisplayLock display(this);
 
-	// warp to requested location
-	XTestFakeMotionEvent(display, getScreen(), x, y, CurrentTime);
-	XSync(display, False);
-
-	// show cursor
-	XUnmapWindow(display, m_window);
+	// now active
+	m_active = true;
 
 	// update our keyboard state to reflect the local state
 	updateKeys(display);
@@ -202,14 +147,32 @@ CXWindowsSecondaryScreen::enter(SInt32 x, SInt32 y, KeyModifierMask mask)
 	if ((xMask & m_scrollLockMask) != (m_mask & m_scrollLockMask)) {
 		toggleKey(display, XK_Scroll_Lock, m_scrollLockMask);
 	}
-	XSync(display, False);
+
+	// warp to requested location
+	warpCursor(x, y);
+
+	// show mouse
+	hideWindow();
 }
 
 void
 CXWindowsSecondaryScreen::leave()
 {
+	assert(m_window != None);
+	assert(m_active == true);
+
+	log((CLOG_INFO "leaving screen"));
+
 	CDisplayLock display(this);
-	leaveNoLock(display);
+
+	// hide mouse
+	showWindow();
+
+	// not active anymore
+	m_active = false;
+
+	// make sure our idea of clipboard ownership is correct
+	checkClipboard();
 }
 
 void
@@ -290,8 +253,7 @@ void
 CXWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 {
 	CDisplayLock display(this);
-	XTestFakeMotionEvent(display, getScreen(), x, y, CurrentTime);
-	XSync(display, False);
+	warpCursor(x, y);
 }
 
 void
@@ -366,6 +328,44 @@ CXWindowsSecondaryScreen::getClipboard(ClipboardID id,
 	getDisplayClipboard(id, clipboard);
 }
 
+bool
+CXWindowsSecondaryScreen::onPreDispatch(const CEvent* event)
+{
+	// forward to superclass
+	return CXWindowsScreen::onPreDispatch(event);
+}
+
+bool
+CXWindowsSecondaryScreen::onEvent(CEvent* event)
+{
+	assert(event != NULL);
+	XEvent& xevent = event->m_event;
+
+	// handle event
+	switch (xevent.type) {
+	case MappingNotify:
+		{
+			// keyboard mapping changed
+			CDisplayLock display(this);
+			XRefreshKeyboardMapping(&xevent.xmapping);
+			updateKeys(display);
+			updateKeycodeMap(display);
+			updateModifierMap(display);
+			updateModifiers(display);
+		}
+		return true;
+
+	case LeaveNotify:
+		{
+			// mouse moved out of hider window somehow.  hide the window.
+			assert(m_window != None);
+			CDisplayLock display(this);
+			hideWindow();
+		}
+		return true;
+	}
+}
+
 void
 CXWindowsSecondaryScreen::onLostClipboard(ClipboardID id)
 {
@@ -374,25 +374,110 @@ CXWindowsSecondaryScreen::onLostClipboard(ClipboardID id)
 }
 
 void
-CXWindowsSecondaryScreen::leaveNoLock(Display* display)
+CXWindowsSecondaryScreen::showWindow()
 {
-	assert(display  != NULL);
-	assert(m_window != None);
-
 	// move hider window under the mouse (rather than moving the mouse
 	// somewhere else on the screen)
-	int x, y, dummy;
-	unsigned int dummyMask;
-	Window dummyWindow;
-	XQueryPointer(display, getRoot(), &dummyWindow, &dummyWindow,
-								&x, &y, &dummy, &dummy, &dummyMask);
-	XMoveWindow(display, m_window, x, y);
+	SInt32 x, y;
+	getCursorPos(x, y);
+	XMoveWindow(getDisplay(), m_window, x, y);
 
-	// raise and show the hider window
-	XMapRaised(display, m_window);
+	// raise and show the hider window.  take activation.
+	// FIXME -- take focus?
+	XMapRaised(getDisplay(), m_window);
 
+/* XXX -- this should have no effect
 	// hide cursor by moving it into the hider window
-	XWarpPointer(display, None, m_window, 0, 0, 0, 0, 0, 0);
+	XWarpPointer(getDisplay(), None, m_window, 0, 0, 0, 0, 0, 0);
+*/
+}
+
+void
+CXWindowsSecondaryScreen::hideWindow()
+{
+	XUnmapWindow(getDisplay(), m_window);
+}
+
+void
+CXWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
+{
+	XTestFakeMotionEvent(getDisplay(), getScreen(), x, y, CurrentTime);
+	XSync(getDisplay(), False);
+}
+
+void
+CXWindowsSecondaryScreen::checkClipboard()
+{
+	// do nothing, we're always up to date
+}
+
+void
+CXWindowsSecondaryScreen::createWindow()
+{
+	CDisplayLock display(this);
+
+	// verify the availability of the XTest extension
+	int majorOpcode, firstEvent, firstError;
+	if (!XQueryExtension(display, XTestExtensionName,
+								&majorOpcode, &firstEvent, &firstError)) {
+		// FIXME -- subclass exception for more info?
+		throw XScreenOpenFailure();
+	}
+
+	// cursor hider window attributes.  this window is used to hide the
+	// cursor when it's not on the screen.  the window is hidden as soon
+	// as the cursor enters the screen or the display's real cursor is
+	// moved.
+	XSetWindowAttributes attr;
+	attr.event_mask            = LeaveWindowMask;
+	attr.do_not_propagate_mask = 0;
+	attr.override_redirect     = True;
+	attr.cursor                = getBlankCursor();
+
+	// create the cursor hider window
+	m_window = XCreateWindow(display, getRoot(),
+								0, 0, 1, 1, 0, 0,
+								InputOnly, CopyFromParent,
+								CWDontPropagate | CWEventMask |
+								CWOverrideRedirect | CWCursor,
+								&attr);
+	if (m_window == None) {
+		throw XScreenOpenFailure();
+	}
+	log((CLOG_DEBUG "window is 0x%08x", m_window));
+
+	// become impervious to server grabs
+	XTestGrabControl(display, True);
+}
+
+void
+CXWindowsSecondaryScreen::destroyWindow()
+{
+	releaseKeys();
+
+	CDisplayLock display(this);
+	if (display != NULL) {
+		// no longer impervious to server grabs
+		XTestGrabControl(display, False);
+
+		// destroy window
+		if (m_window != None) {
+			XDestroyWindow(display, m_window);
+			m_window = None;
+		}
+	}
+}
+
+void
+CXWindowsSecondaryScreen::installScreenSaver()
+{
+	getScreenSaver()->disable();
+}
+
+void
+CXWindowsSecondaryScreen::uninstallScreenSaver()
+{
+	getScreenSaver()->enable();
 }
 
 unsigned int
@@ -829,17 +914,18 @@ CXWindowsSecondaryScreen::releaseKeys()
 {
 	CDisplayLock display(this);
 
-	// key up for each key that's down
-	for (UInt32 i = 0; i < 256; ++i) {
-		if (m_keys[i]) {
-			XTestFakeKeyEvent(display, i, False, CurrentTime);
-			m_keys[i] = false;
+	if (display != NULL) {
+		// key up for each key that's down
+		for (UInt32 i = 0; i < 256; ++i) {
+			if (m_keys[i]) {
+				XTestFakeKeyEvent(display, i, False, CurrentTime);
+				m_keys[i] = false;
+			}
 		}
+
+		// update
+		XSync(display, False);
 	}
-
-	// update
-	XSync(display, False);
-
 }
 
 void

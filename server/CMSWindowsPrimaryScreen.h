@@ -34,29 +34,24 @@ public:
 	
 protected:
 	// CMSWindowsScreen overrides
-	virtual bool		onPreTranslate(MSG*);
-	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM);
-	virtual void		onOpenDisplay();
-	virtual void		onCloseDisplay();
+	virtual bool		onPreTranslate(const CEvent* event);
+	virtual bool		onEvent(CEvent* event);
 	virtual CString		getCurrentDesktopName() const;
 
 private:
-	void				enterNoWarp();
-	bool				showWindow();
-	void				hideWindow();
-
 	SInt32				getJumpZoneSize() const;
 
 	// warp mouse to center of primary display (used when computing
 	// motion deltas while mouse is on secondary screen).
 	void				warpCursorToCenter();
 
+	void				enterNoWarp();
+	bool				showWindow();
+	void				hideWindow();
+
 	// check clipboard ownership and, if necessary, tell the receiver
 	// of a grab.
 	void				checkClipboard();
-
-	// discard posted messages
-	void				nextMark();
 
 	// create/destroy window
 	// also attach to desktop;  this destroys and recreates the window
@@ -75,6 +70,9 @@ private:
 	// make desk the thread desktop (for windows NT/2000/XP)
 	bool				switchDesktop(HDESK desk);
 
+	// discard posted messages
+	void				nextMark();
+
 	// key and button queries
 	KeyID				mapKey(WPARAM keycode, LPARAM info,
 							KeyModifierMask* maskOut);
@@ -91,6 +89,9 @@ private:
 
 	// the main loop's thread id
 	DWORD				m_threadID;
+
+	// the timer used to check for desktop switching
+	UINT				m_timer;
 
 	// the current desk and it's name
 	HDESK				m_desk;

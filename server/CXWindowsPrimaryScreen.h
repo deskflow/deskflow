@@ -30,22 +30,21 @@ public:
 
 protected:
 	// CXWindowsScreen overrides
+	virtual bool		onPreDispatch(const CEvent* event);
+	virtual bool		onEvent(CEvent* event);
 	virtual void		onUnexpectedClose();
 	virtual void		onLostClipboard(ClipboardID);
 
 private:
-	void				selectEvents(Display*, Window) const;
-	void				doSelectEvents(Display*, Window) const;
-
-	void				enterNoWarp();
-	bool				showWindow();
-	void				hideWindow();
-
 	SInt32				getJumpZoneSize() const;
 
 	void				warpCursorToCenter();
 	void				warpCursorNoFlush(Display*,
 							SInt32 xAbsolute, SInt32 yAbsolute);
+
+	void				enterNoWarp();
+	bool				showWindow();
+	void				hideWindow();
 
 	// check clipboard ownership and, if necessary, tell the receiver
 	// of a grab.
@@ -58,6 +57,9 @@ private:
 	// start/stop watch for screen saver changes
 	void				installScreenSaver();
 	void				uninstallScreenSaver();
+
+	void				selectEvents(Display*, Window) const;
+	void				doSelectEvents(Display*, Window) const;
 
 	KeyModifierMask		mapModifier(unsigned int state) const;
 	KeyID				mapKey(XKeyEvent*) const;

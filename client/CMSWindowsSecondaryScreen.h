@@ -46,10 +46,8 @@ public:
 
 protected:
 	// CMSWindowsScreen overrides
-	virtual bool		onPreTranslate(MSG*);
-	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM);
-	virtual void		onOpenDisplay();
-	virtual void		onCloseDisplay();
+	virtual bool		onPreDispatch(const CEvent* event);
+	virtual bool		onEvent(CEvent* event);
 	virtual CString		getCurrentDesktopName() const;
 
 private:
@@ -62,8 +60,25 @@ private:
 	};
 	typedef std::vector<Keystroke> Keystrokes;
 
-	void				onEnter(SInt32 x, SInt32 y);
-	void				onLeave();
+	void				showWindow();
+	void				hideWindow();
+
+	// warp the mouse to the specified position
+	void				warpCursor(SInt32 x, SInt32 y);
+
+	// check clipboard ownership and, if necessary, tell the receiver
+	// of a grab.
+	void				checkClipboard();
+
+	// create/destroy window
+	// also attach to desktop;  this destroys and recreates the window
+	// as necessary.
+	void				createWindow();
+	void				destroyWindow();
+
+	// start/stop watch for screen saver changes
+	void				installScreenSaver();
+	void				uninstallScreenSaver();
 
 	// open/close desktop (for windows 95/98/me)
 	bool				openDesktop();
@@ -74,9 +89,6 @@ private:
 
 	// get calling thread to use the input desktop
 	void				syncDesktop() const;
-
-	// warp the mouse to the specified position
-	void				warpCursor(SInt32 x, SInt32 y);
 
 	// returns true iff there appear to be multiple monitors
 	bool				isMultimon() const;
@@ -107,6 +119,9 @@ private:
 
 	// the main loop's thread id
 	DWORD				m_threadID;
+
+	// the timer used to check for desktop switching
+	UINT				m_timer;
 
 	// the thread id of the last attached thread
 	mutable DWORD		m_lastThreadID;

@@ -20,8 +20,10 @@ public:
 	CXWindowsScreenSaver(CXWindowsScreen*, Display*);
 	virtual ~CXWindowsScreenSaver();
 
-	// process X event.  returns true if the event was handled.
-	bool				processEvent(XEvent*);
+	// called for each event before event translation and dispatch.  return
+	// true to skip translation and dispatch.  subclasses should call the
+	// superclass's version first and return true if it returns true.
+	bool				onPreDispatch(const XEvent*);
 
 	// tells this object to send a ClientMessage to the given window
 	// when the screen saver activates or deactivates.  only one

@@ -10,6 +10,12 @@
 class CMSWindowsScreenSaver;
 class CThread;
 
+class CEvent {
+public:
+	MSG					m_msg;
+	LRESULT				m_result;
+};
+
 class CMSWindowsScreen {
 public:
 	CMSWindowsScreen();
@@ -25,11 +31,11 @@ public:
 	static HINSTANCE	getInstance();
 
 protected:
-	// runs an event loop and returns when WM_QUIT is received
-	void				doRun();
+	// runs an event loop and returns when exitMainLoop() is called
+	void				mainLoop();
 
-	// sends WM_QUIT to force doRun() to return
-	void				doStop();
+	// force mainLoop() to return
+	void				exitMainLoop();
 
 	// open the X display.  calls onOpenDisplay() after opening the display,
 	// getting the screen, its size, and root window.  then it starts the
@@ -72,15 +78,14 @@ protected:
 	CMSWindowsScreenSaver*
 						getScreenSaver() const;
 
-	// wait for and get the next message.  cancellable.
-	void				getEvent(MSG*) const;
+	// called for each event before event translation and dispatch.  return
+	// true to skip translation and dispatch.  subclasses should call the
+	// superclass's version first and return true if it returns true.
+	virtual bool		onPreDispatch(const CEvent* event);
 
-	// called by doRun() to handle an event.  return true to skip
-	// event translation and dispatch.
-	virtual bool		onPreTranslate(MSG*) = 0;
-
-	// called by window proc.  subclass must call DefWindowProc() if necessary
-	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM) = 0;
+	// called by mainLoop().  iff the event was handled return true and
+	// store the result, if any, in m_result, which defaults to zero.
+	virtual bool		onEvent(CEvent* event) = 0;
 
 	// called by isCurrentDesktop() to get the current desktop name
 	virtual CString		getCurrentDesktopName() const = 0;
@@ -89,6 +94,7 @@ private:
 	// create the transparent cursor
 	void				createBlankCursor();
 
+	// our window proc
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
 
 private:

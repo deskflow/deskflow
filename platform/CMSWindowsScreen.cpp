@@ -48,34 +48,42 @@ CMSWindowsScreen::init(HINSTANCE instance)
 }
 
 void
-CMSWindowsScreen::doRun()
+CMSWindowsScreen::mainLoop()
 {
 	// save thread id for posting quit message
 	m_thread = GetCurrentThreadId();
 
 	// event loop
+	CEvent event;
+	event.m_result = 0;
 	for (;;) {
-		// wait for and get the next event
-		MSG msg;
-		getEvent(&msg);
+		// wait for an event in a cancellable way
+		CThread::waitForEvent();
+		GetMessage(&event.m_msg, NULL, 0, 0);
 
 		// handle quit message
-		if (msg.message == WM_QUIT) {
+		if (event.m_msg.message == WM_QUIT) {
 			break;
 		}
 
 		// dispatch message
-		if (!onPreTranslate(&msg)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+		if (!onPreDispatch(&event)) {
+			TranslateMessage(&event.m_msg);
+			DispatchMessage(&event.m_msg);
 		}
 	}
 }
 
 void
-CMSWindowsScreen::doStop()
+CMSWindowsScreen::exitMainLoop()
 {
 	PostThreadMessage(m_thread, WM_QUIT, 0, 0);
+}
+
+bool
+CMSWindowsScreen::onPreDispatch(const CEvent*)
+{
+	return false;
 }
 
 void
@@ -172,9 +180,13 @@ void
 CMSWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
 {
 	POINT pos;
-	GetCursorPos(&pos);
-	x = pos.x;
-	y = pos.y;
+	if (GetCursorPos(&pos)) {
+		x = pos.x;
+		y = pos.y;
+	}
+	else {
+		getCursorCenter(x, y);
+	}
 }
 
 void
@@ -244,17 +256,22 @@ CMSWindowsScreen::getScreenSaver() const
 	return m_screenSaver;
 }
 
-void
-CMSWindowsScreen::getEvent(MSG* msg) const
-{
-	// wait for an event in a cancellable way
-	CThread::waitForEvent();
-	GetMessage(msg, NULL, 0, 0);
-}
-
 LRESULT CALLBACK
 CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	assert(s_screen != NULL);
-	return s_screen->onEvent(hwnd, msg, wParam, lParam);
+
+	CEvent event;
+	event.m_msg.hwnd    = hwnd;
+	event.m_msg.message = msg;
+	event.m_msg.wParam  = wParam;
+	event.m_msg.lParam  = lParam;
+	event.m_result      = 0;
+
+	if (s_screen->onEvent(&event)) {
+		return event.m_result;
+	}
+	else {
+		return DefWindowProc(hwnd, msg, wParam, lParam);
+	}
 }

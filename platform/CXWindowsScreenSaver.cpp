@@ -97,7 +97,7 @@ CXWindowsScreenSaver::~CXWindowsScreenSaver()
 }
 
 bool
-CXWindowsScreenSaver::processEvent(XEvent* xevent)
+CXWindowsScreenSaver::onPreDispatch(const XEvent* xevent)
 {
 	switch (xevent->type) {
 	case CreateNotify:
