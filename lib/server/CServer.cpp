@@ -1337,7 +1337,7 @@ CServer::runClient(void* vsocket)
 		try {
 			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBad);
 		}
-		catch (XSocket& e) {
+		catch (XSocket&) {
 			// ignore.  client probably aborted the connection.
 		}
 	}
@@ -1453,7 +1453,7 @@ CServer::handshakeClient(IDataSocket* socket)
 			CProtocolUtil::writef(output, kMsgEIncompatible,
 							kProtocolMajorVersion, kProtocolMinorVersion);
 		}
-		catch (XSocket& e) {
+		catch (XSocket&) {
 			// ignore
 		}
 	}
@@ -1463,7 +1463,7 @@ CServer::handshakeClient(IDataSocket* socket)
 		try {
 			CProtocolUtil::writef(output, kMsgEBad);
 		}
-		catch (XSocket& e) {
+		catch (XSocket&) {
 			// ignore.  client probably aborted the connection.
 		}
 	}
