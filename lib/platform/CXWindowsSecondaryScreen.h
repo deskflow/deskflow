@@ -62,6 +62,7 @@ protected:
 	virtual void		onPreOpen();
 	virtual void		onPostOpen();
 	virtual void		onPreEnter();
+	virtual void		onPostEnter();
 	virtual void		onPreLeave();
 	virtual void		createWindow();
 	virtual void		destroyWindow();
@@ -170,6 +171,9 @@ private:
 
 	// map server key buttons to local keycodes
 	ServerKeyMap		m_serverKeyMap;
+
+	// the keyboard control state the last time this screen was entered
+	XKeyboardState		m_keyControl;
 };
 
 #endif

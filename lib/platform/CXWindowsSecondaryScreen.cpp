@@ -139,6 +139,11 @@ CXWindowsSecondaryScreen::keyRepeat(KeyID key,
 		return;
 	}
 
+	// if this keycode shouldn't auto-repeat then ignore
+	if ((m_keyControl.auto_repeats[keycode >> 3] & (1 << (keycode & 7))) == 0) {
+		return;
+	}
+
 	// if we've seen this button (and we should have) then make sure
 	// we release the same key we pressed when we saw it.
 	if (index != m_serverKeyMap.end() && keycode != index->second) {
@@ -367,6 +372,10 @@ void
 CXWindowsSecondaryScreen::onPostOpen()
 {
 	assert(m_window != None);
+
+	// get the keyboard control state
+	CDisplayLock display(m_screen);
+	XGetKeyboardControl(display, &m_keyControl);
 }
 
 void
@@ -376,9 +385,34 @@ CXWindowsSecondaryScreen::onPreEnter()
 }
 
 void
+CXWindowsSecondaryScreen::onPostEnter()
+{
+	assert(m_window != None);
+
+	// get the keyboard control state
+	CDisplayLock display(m_screen);
+	XGetKeyboardControl(display, &m_keyControl);
+
+	// turn off auto-repeat.  we do this so fake key press events don't
+	// cause the local server to generate their own auto-repeats of
+	// those keys.
+	XAutoRepeatOff(display);
+}
+
+void
 CXWindowsSecondaryScreen::onPreLeave()
 {
 	assert(m_window != None);
+
+	// restore the previous keyboard auto-repeat state.  if the user
+	// changed the auto-repeat configuration while on the client then
+	// that state is lost.  that's because we can't get notified by
+	// the X server when the auto-repeat configuration is changed so
+	// we can't track the desired configuration.
+	if (m_keyControl.global_auto_repeat == AutoRepeatModeOn) {
+		CDisplayLock display(m_screen);
+		XAutoRepeatOn(display);
+	}
 }
 
 void
