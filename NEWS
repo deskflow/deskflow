@@ -1,6 +1,12 @@
 Synergy News
 ============
 
+* Jan-22-2003 - Synergy 1.0.1 released
+
+  Made following changes:
+  * Fixed running as a service on Windows NT family
+
+
 * Jan-20-2003 - Synergy 1.0.0 released
 
   Made following changes:
