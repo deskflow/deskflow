@@ -1,11 +1,44 @@
 #include "CServer.h"
 #include "CScreenMap.h"
-#include "CThread.h"
+#include "CLog.h"
+#include "CMutex.h"
 #include "CNetwork.h"
+#include "CThread.h"
+
+//
+// logging thread safety
+//
+
+static CMutex*			s_logMutex = NULL;
+
+static void				logLock(bool lock)
+{
+	assert(s_logMutex != NULL);
+
+	if (lock) {
+		s_logMutex->lock();
+	}
+	else {
+		s_logMutex->unlock();
+	}
+}
+
+
+//
+// main
+//
 
 void					realMain()
 {
+	// initialize threading library
 	CThread::init();
+
+	// make logging thread safe
+	CMutex logMutex;
+	s_logMutex = &logMutex;
+	CLog::setLock(&logLock);
+
+	// initialize network library
 	CNetwork::init();
 
 	CScreenMap screenMap;
@@ -24,13 +57,22 @@ void					realMain()
 		server->run();
 		delete server;
 		CNetwork::cleanup();
+		CLog::setLock(NULL);
+		s_logMutex = NULL;
 	}
 	catch (...) {
 		delete server;
 		CNetwork::cleanup();
+		CLog::setLock(NULL);
+		s_logMutex = NULL;
 		throw;
 	}
 }
+
+
+//
+// platform dependent entry points
+//
 
 #if defined(CONFIG_PLATFORM_WIN32)
 

@@ -1,14 +1,47 @@
 #include "CClient.h"
 #include "CString.h"
+#include "CLog.h"
+#include "CMutex.h"
 #include "CNetwork.h"
 #include "CNetworkAddress.h"
 #include "CThread.h"
+
+//
+// logging thread safety
+//
+
+static CMutex*			s_logMutex = NULL;
+
+static void				logLock(bool lock)
+{
+	assert(s_logMutex != NULL);
+
+	if (lock) {
+		s_logMutex->lock();
+	}
+	else {
+		s_logMutex->unlock();
+	}
+}
+
+
+//
+// main
+//
 
 void					realMain(const CString& name,
 								const CString& hostname,
 								UInt16 port)
 {
+	// initialize threading library
 	CThread::init();
+
+	// make logging thread safe
+	CMutex logMutex;
+	s_logMutex = &logMutex;
+	CLog::setLock(&logLock);
+
+	// initialize network library
 	CNetwork::init();
 
 	CClient* client = NULL;
@@ -18,13 +51,22 @@ void					realMain(const CString& name,
 		client->run(addr);
 		delete client;
 		CNetwork::cleanup();
+		CLog::setLock(NULL);
+		s_logMutex = NULL;
 	}
 	catch (...) {
 		delete client;
 		CNetwork::cleanup();
+		CLog::setLock(NULL);
+		s_logMutex = NULL;
 		throw;
 	}
 }
+
+
+//
+// platform dependent entry points
+//
 
 #if defined(CONFIG_PLATFORM_WIN32)
 

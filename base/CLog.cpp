@@ -9,7 +9,6 @@
 #define vsnprintf _vsnprintf
 #endif
 
-static int				g_maxPriority = -1;
 static const char*		g_priority[] = {
 								"FATAL",
 								"ERROR",
@@ -33,6 +32,8 @@ static const int		g_newlineLength = 2;
 //
 
 CLog::Outputter			CLog::s_outputter = NULL;
+CLog::Lock				CLog::s_lock = &CLog::dummyLock;
+int						CLog::s_maxPriority = -1;
 
 void					CLog::print(const char* fmt, ...)
 {
@@ -100,7 +101,67 @@ void					CLog::printt(const char* file, int line,
 
 void					CLog::setOutputter(Outputter outputter)
 {
+	CHoldLock lock(s_lock);
 	s_outputter = outputter;
+}
+
+CLog::Outputter			CLog::getOutputter()
+{
+	CHoldLock lock(s_lock);
+	return s_outputter;
+}
+
+void					CLog::setLock(Lock newLock)
+{
+	CHoldLock lock(s_lock);
+	s_lock = (newLock == NULL) ? dummyLock : newLock;
+}
+
+CLog::Lock				CLog::getLock()
+{
+	CHoldLock lock(s_lock);
+	return (s_lock == dummyLock) ? NULL : s_lock;
+}
+
+void					CLog::setFilter(int maxPriority)
+{
+	CHoldLock lock(s_lock);
+	s_maxPriority = maxPriority;
+}
+
+int						CLog::getFilter()
+{
+	CHoldLock lock(s_lock);
+	return getMaxPriority();
+}
+
+void					CLog::dummyLock(bool)
+{
+	// do nothing
+}
+
+int						CLog::getMaxPriority()
+{
+	CHoldLock lock(s_lock);
+
+	if (s_maxPriority == -1) {
+#if defined(NDEBUG)
+		s_maxPriority = 4;
+#else
+		s_maxPriority = 5;
+#endif
+		const char* priEnv = getenv("SYN_LOG_PRI");
+		if (priEnv != NULL) {
+			for (int i = 0; i < g_numPriority; ++i) {
+				if (strcmp(priEnv, g_priority[i]) == 0) {
+					s_maxPriority = i;
+					break;
+				}
+			}
+		}
+	}
+
+	return s_maxPriority;
 }
 
 void					CLog::output(int priority, char* msg)
@@ -108,23 +169,7 @@ void					CLog::output(int priority, char* msg)
 	assert(priority >= 0 && priority < g_numPriority);
 	assert(msg != 0);
 
-	if (g_maxPriority == -1) {
-#if defined(NDEBUG)
-		g_maxPriority = 4;
-#else
-		g_maxPriority = 5;
-#endif
-		const char* priEnv = getenv("SYN_LOG_PRI");
-		if (priEnv != NULL) {
-			for (int i = 0; i < g_numPriority; ++i)
-				if (strcmp(priEnv, g_priority[i]) == 0) {
-					g_maxPriority = i;
-					break;
-				}
-		}
-	}
-
-	if (priority <= g_maxPriority) {
+	if (priority <= getMaxPriority()) {
 		// insert priority label
 		int n = strlen(g_priority[priority]);
 		sprintf(msg + g_maxPriorityLength - n, "%s:", g_priority[priority]);
@@ -138,6 +183,7 @@ void					CLog::output(int priority, char* msg)
 #endif
 
 		// print it
+		CHoldLock lock(s_lock);
 		if (s_outputter) {
 			s_outputter(msg + g_maxPriorityLength - n);
 		}
