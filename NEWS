@@ -1,6 +1,14 @@
 Synergy News
 ============
 
+* Mar-31-2004 - Synergy 1.1.4 released
+
+  Made following changes:
+  * Fixed lookup of hosts by name of win32
+  * Reverted tray icon code to 1.0.15 version;  seems to fix the bugs
+  * Fixed crash when caps, num, or scroll lock not in key map on X11
+  * Fixed double tap and wait to switch features
+
 * Mar-28-2004 - Synergy 1.1.3 released
 
   Made following changes:

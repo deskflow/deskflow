@@ -1,3 +1,50 @@
+2004/03/31 22:15:13 crs
+lib/arch/CArchTaskBarWindows.cpp
+lib/arch/CArchTaskBarWindows.h
+lib/arch/IArchTaskBar.h
+
+Reverted task bar code to 1.0.15 version.  That used a window in
+its own thread for handling messages.  It seems to fix most of
+the task bar bugs but there's still an hourglass cursor on NT
+when using the popup menu.
+
+----------
+2004/03/31 22:14:15 crs
+lib/arch/CArchNetworkWinsock.cpp
+
+Fixed lookup of hosts by name on win32.
+
+----------
+2004/03/31 22:14:01 crs
+cmd/launcher/launcher.rc
+
+Make screen drop down lists longer in the launcher.  They're now
+long enough for the scroll bar to show up properly (with the
+thumb) and they have enough space for 6 screens without needing
+the scroll bar.
+
+----------
+2004/03/31 22:12:53 crs
+lib/server/CServer.cpp
+
+Fixed failure to initialize double tap and wait to switch timeouts.
+
+----------
+2004/03/30 18:55:58 crs
+lib/synergy/CKeyState.cpp
+
+Fixed crash bug in CKeyState.  Would deference bogus pointer in
+isModifierActive if there's an unmapped toggle modifier.
+
+----------
+2004/03/30 18:54:56 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.1.4.  This time changing the version before
+making any other changes.
+
+----------
 2004/03/28 14:53:01 crs
 lib/platform/CXWindowsKeyState.cpp
 
