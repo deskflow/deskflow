@@ -66,7 +66,7 @@ private:
 	CString				m_name;
 };
 
-//! Client not in map
+//! Client not in map exception
 /*!
 Thrown when a client attempting to connect is using a name that is
 unknown to the server.
