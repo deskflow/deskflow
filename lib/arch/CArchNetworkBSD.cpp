@@ -611,11 +611,14 @@ CArchNetworkBSD::nameToAddr(const std::string& name)
 		}
 
 		// copy over address (only IPv4 currently supported)
-		addr->m_len       = sizeof(struct sockaddr_in);
-		inaddr.sin_family = info->h_addrtype;
-		inaddr.sin_port   = 0;
-		memcpy(&inaddr.sin_addr, info->h_addr_list[0], info->h_length);
-		memcpy(&addr->m_addr, &inaddr, addr->m_len);
+		if (info->h_addrtype == AF_INET) {
+			addr->m_len       = sizeof(struct sockaddr_in);
+			inaddr.sin_family = info->h_addrtype;
+			inaddr.sin_port   = 0;
+			memcpy(&inaddr.sin_addr, info->h_addr_list[0],
+								sizeof(inaddr.sin_addr));
+			memcpy(&addr->m_addr, &inaddr, addr->m_len);
+		}
 
 		// done with static buffer
 		ARCH->unlockMutex(m_mutex);
