@@ -2,10 +2,6 @@ CServer
  * must have connection thread in screen info map
     allows disconnect if screen map changes and screen is removed
  * put mutex locks wherever necessary (like accessing m_active)
- * must handle disconnect of screen by warping cursor off of it
-
-CClient
- * need methods for screen event handler to call as appropriate
 
 server						client
 ------						------
@@ -16,114 +12,175 @@ hangup if invalid
 query info			-->		
 					<--		info (size)
 
-...
-enter (x,y)			-->
-clipboard data		-->									optional
-mouse/key events	-->									optional
-query clipboard		-->									optional
-					<--		clipboard data					(cont.)
-leave				-->
-
-...
-grab clipboard		-->
-
-... (on clipboard ownership stolen)
-					<--		clipboard lost
-
-... (on screen resize)
-					<--		info (size)
-
-... (on screen saver, primary screen)
-saver (on/off)		-->
-
-...
-quit				-->
-					<--		close
-
----
-primary screen
-	open
-	close
-	enter
-	leave
-	warp
-	clipboard (get/set)
-	screen saver (show/hide)
-	queue events with server (including screen saver activation)
-
-secondary screen
-	open
-	close
-	enter
-	leave
-	warp
-	synth mouse
-	synth key
-	clipboard (get/set)
-	screen saver (show/hide)
-	queue events with client (clipboard lost/changed, size change)
-
----
-client:
-	open
-	close
-	wait: server messages, clipboard taken, screen resize, quit
-
-server:
-	accept
-		asynchronously accept new clients
-	config
-		asynchronously accept and handle config message (via HTTP)
-	primary
-		asynchronously handle primary screen events
-	comm
-		send/recv messages to/from clients
-
 ---
 win32:
-  double click support
   need to support window stations
     login screen on NT is a separate window station
   handle display changes
 
 ---
-not sending VK_?WIN and VK_APPS.  possibly hotkeys being stolen.
-
-VkKeyScan() doesn't get proper shift state unless we map shift
-(etc?) to VK_SHIFT not VK_LSHIFT or VK_RSHIFT.
-
 not handling international characters
 
-X11 key translation (server)
-  handle compose key?
-   * don't send compose, don't send dead keys, send composed key?
-   * send all keys, let client do compose
-
 ---
-translate keys to keysyms
-  shift state is embedded in keysym
-  alt/ctrl/meta are stored separately, also caps/num/scroll lock
-  shift state also stored separately
-
-Win32 to keysym:
-  VK code + shift -> keysym via table lookup
-Win32 from keysym:
-  VK code and shift via table lookup
-  must synth shift key events to get correct character for key
-
 don't allow leaving screen when any key is down
-  that includes shift keys
+  that includes shift keys and mouse buttons
   caps lock, etc must not be down but can be on
 
-may need to handle "half-duplex" caps-lock on secondary screen
+not distinguishing between caps lock and shift lock
+  In Caps Lock mode, the alphabetic keys send their uppercase (shifted) char-
+  acter when pressed alone. For Caps Lock mode, pressing and releasing the
+  lock key turns on the mode and pressing and releasing the lock key again
+  turns off the mode. In Shift Lock mode, all keys on the main keypad send
+  their shifted character when pressed alone. For Shift Lock mode, pressing
+  and releasing the Lock key turns on the mode, and pressing and releasing
+  either the Lock or the Shift key turns off the mode.
 
 ---
-clipboard stuff:
-  PRIMARY -- the current selection, normally pastes with middle-mouse
-  CLIPBOARD -- set by cut/copy menu items, pasted via paste menu item
-synergy must track and transfer both.  however, only X clients need
-the PRIMARY sent to them.
+problems with CLIPBOARD and KDE and NEdit
+  KDE mail reader (others?) and NEdit never reply to selection request
+  perhaps a general Motif problem?
+
+currently sending all clipboards to all clients
+  some clients may not need all clipboards
+  add filtering mechanism
+
+must find app that correctly sets the CLIPBOARD selection for testing
+  synergy must note changes to one or both selections
+    seems to be having trouble with noting CLIPBOARD after PRIMARY changes
+
+investigate klipper
+  KDE's clipboard manager?
+  it crashed once when server did (see below)
 
 ---
-remove space pairs
-  not a good thing for formatting
+got crash when opening netscape window after trying copy in KDE mail
+  BadWindow in ChangeWindowAttributes
+  also got it when trying to transfer big clipboard from secondary
+    or just after transferring and perhaps trying to set locally
+
+---
+sometimes not sending correct clipboard
+  some kind of race condition i think
+  can select text then switch and get empty clipboard
+    switching back to owner screen then out gets correct clipboard
+
+---
+screen resize should report new mouse position
+  client could change it to keep mouse on screen
+  server will need to know new position
+  may need to ignore mouse events sent after resize but before server
+    knows about the change.
+  not handling screen resizing yet
+
+---
+not handling screen saver at all yet
+
+---
+slow leaving primary screen on X
+  possibly due to getting primary clipboards
+  possibly something else
+  could try asynchronously getting primary clipboard
+    race condition on secondary wrt pasting
+
+---
+win32 hook DLL sometimes not unloaded when server is killed?
+  will get assertion on restart as if DLL was still loaded.
+  can tell because all DLL copies share data segment.
+  should prevent multiple copies from loading (or initializing)
+    replace asserts with (multithread locked) check of variables
+    return 0 if busy
+    server must handle failure
+  try to figure out why it's not unloading
+
+---
+test:
+  X primary
+    ctrl+alt+keypad_add, ctrl+alt_keypad_minus -> eaten by primary X server
+    ctrl+alt+backspace probably eaten by primary X server if so configured
+    ctrl+alt+delete probably eaten locally
+      probably underneath primary X server too
+  Win32 desktop -> X laptop
+    eaten global hot keys:
+      ctrl+alt+delete -> task manager (or logon or reboot)
+      alt+[shift+]tab -> cycle through tasks
+      alt+[shift+]esc -> cycle windows
+      ctrl+esc -> start menu
+      windows+R -> run dialog
+      windows+M -> minimize all
+      windows+shift+M -> minimize all
+      windows+F1 -> help
+      windows+E -> explorer
+      windows+F -> find files
+      windows+ctrl+F -> find computer
+      windows+tab -> cycle through taskbar buttons
+      windows+break -> system properties
+    not eaten:
+      alt+space -> system menu
+      shift+F10 -> context menu
+      app key -> context menu
+    misc:
+      accessibility shortcuts: not eaten but dialogs appear anyway
+  X laptop -> Win32 desktop
+    check:
+      shift+tab -> okay
+      alt+[shift+]tab -> okay
+      alt+[shift+]esc -> okay
+      ctrl+esc -> start menu -> okay
+      ctrl+esc, esc, shift+F10 -> toolbar context menu -> okay
+      F10 -> activate menu in explorer -> okay
+      shift+F10 -> context menu -> okay
+      alt+space -> context menu -> okay
+      alt+hyphen -> MDI window menu -> okay
+      alt+letter -> open corresponding menu -> okay
+      alt+F6 -> switch between windows in single program -> okay
+      shift+insert CD-ROM -> bypass auto-run
+    check accessibility shortcuts -> does not work
+    check accessibility features
+      sticky keys -> no
+      filter keys -> no
+      toggle keys -> no
+      mouse keys -> no
+      high contrast -> no
+  X desktop -> win32
+    shift, ctrl, alt not working
+    check:
+      shift+tab
+      windows+R -> run dialog
+      windows+M -> minimize all
+      windows+shift+M -> minimize all
+      windows+F1 -> help
+      windows+E -> explorer
+      windows+F -> find files
+      windows+ctrl+F -> find computer
+      windows+tab -> cycle through taskbar buttons
+      windows+break -> system properties
+      app key -> context menu
+  Win32 -> Win32
+    check accessibility shortcuts work on secondary
+    check accessibility features work on secondary
+
+---
+server asserts if two clients with same name try to connect
+  should simply refuse second client
+also not reaping disconnects very fast
+  investigate slowness
+
+---
+replace all structs with classes
+
+---
+Accessibility Shortcuts
+
+   Key                                Result
+   -------------------------------------------------------------------
+   Tap SHIFT 5 times                  Toggles StickyKeys on and off.
+
+   Press down and hold the right      Toggles FilterKeys on and off.
+   SHIFT key for 8 seconds
+
+   Press down and hold the NUM LOCK   Toggles ToggleKeys on and off.
+   key for 5 seconds
+
+   Left ALT+left SHIFT+NUM LOCK       Toggles MouseKeys on and off.
+
+   Left ALT+left SHIFT+PRINT SCREEN   Toggles High Contrast on and off.
