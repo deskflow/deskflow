@@ -1313,8 +1313,7 @@ CXWindowsScreen::doSelectEvents(Window w) const
 	// select events of interest.  do this before querying the tree so
 	// we'll get notifications of children created after the XQueryTree()
 	// so we won't miss them.
-	XSelectInput(m_display, w, KeyPressMask | KeyReleaseMask |
-							PointerMotionMask | SubstructureNotifyMask);
+	XSelectInput(m_display, w, PointerMotionMask | SubstructureNotifyMask);
 
 	// recurse on child windows
 	Window rw, pw, *cw;
