@@ -18,7 +18,7 @@
 #include "CEvent.h"
 #include "IEventQueue.h"
 #if HAVE_POLL
-#	include <sys/poll.h>
+#	include <poll.h>
 #else
 #	if HAVE_SYS_SELECT_H
 #		include <sys/select.h>

@@ -30,7 +30,7 @@
 #include <string.h>
 
 #if HAVE_POLL
-#	include <sys/poll.h>
+#	include <poll.h>
 #	if HAVE_ALLOCA_H
 #		include <alloca.h>
 #	endif
