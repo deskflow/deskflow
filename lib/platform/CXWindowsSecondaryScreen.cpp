@@ -401,8 +401,7 @@ CXWindowsSecondaryScreen::onPostOpen()
 	CDisplayLock display(m_screen);
 	XGetKeyboardControl(display, &m_keyControl);
 
-	// check if xinerama is enabled and, if so, get the first
-	// screen's dimensions.
+	// check if xinerama is enabled and there is more than one screen
 	m_xinerama = false;
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
 	int eventBase, errorBase;
@@ -412,13 +411,7 @@ CXWindowsSecondaryScreen::onPostOpen()
 			XineramaScreenInfo* screens;
 			screens = XineramaQueryScreens(display, &numScreens);
 			if (screens != NULL) {
-				if (numScreens > 1) {
-					m_xinerama = true;
-					m_xXinerama = screens[0].x_org;
-					m_yXinerama = screens[0].y_org;
-					m_wXinerama = screens[0].width;
-					m_hXinerama = screens[0].height;
-				}
+				m_xinerama = (numScreens > 1);
 				XFree(screens);
 			}
 		}
@@ -579,14 +572,12 @@ CXWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 	CDisplayLock display(m_screen);
 	Display* pDisplay = display;
 
-	if (m_xinerama && m_xtestIsXineramaUnaware &&
-		(x < m_xXinerama || x >= m_xXinerama + m_wXinerama ||
-		 y < m_yXinerama || y >= m_yXinerama + m_hXinerama)) {
-		XWarpPointer(display, None, None, 0, 0, 0, 0, x, y);
+	if (m_xinerama && m_xtestIsXineramaUnaware) {
+		XWarpPointer(display, None, m_screen->getRoot(), 0, 0, 0, 0, x, y);
 	}
 	else {
 		XTestFakeMotionEvent(display, DefaultScreen(pDisplay),
-							x - m_xXinerama, y - m_yXinerama, CurrentTime);
+							x, y, CurrentTime);
 	}
 	XSync(display, False);
 }

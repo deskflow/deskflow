@@ -177,13 +177,11 @@ private:
 	XKeyboardState		m_keyControl;
 
 	// stuff to workaround xtest being xinerama unaware.  attempting
-	// to fake a mouse motion outside the first xinerama screen will
-	// be silently clamped to that screen.  if xtest is buggy then
-	// use XWarpPointer instead.
+	// to fake a mouse motion under xinerama may behave strangely,
+	// especially if screen 0 is not at 0,0 or if faking a motion on
+	// a screen other than screen 0.
 	bool				m_xtestIsXineramaUnaware;
 	bool				m_xinerama;
-	SInt32				m_xXinerama, m_yXinerama;
-	SInt32				m_wXinerama, m_hXinerama;
 };
 
 #endif
