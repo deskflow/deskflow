@@ -488,12 +488,14 @@ CXWindowsClipboard::icccmFillCache()
 	LOG((CLOG_DEBUG "ICCCM fill clipboard %d", m_id));
 
 	// see if we can get the list of available formats from the selection.
-	// if not then use a default list of formats.
+	// if not then use a default list of formats.  note that some clipboard
+	// owners are broken and report TARGETS as the type of the TARGETS data
+	// instead of the correct type ATOM;  allow either.
 	const Atom atomTargets = m_atomTargets;
 	Atom target;
 	CString data;
 	if (!icccmGetSelection(atomTargets, &target, &data) ||
-		target != m_atomAtom) {
+		(target != m_atomAtom && target != m_atomTargets)) {
 		LOG((CLOG_DEBUG1 "selection doesn't support TARGETS"));
 		data = "";
 
