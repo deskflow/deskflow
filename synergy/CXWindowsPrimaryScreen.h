@@ -1,15 +1,12 @@
 #ifndef CXWINDOWSPRIMARYSCREEN_H
 #define CXWINDOWSPRIMARYSCREEN_H
 
-#include "CMutex.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
+#include "CXWindowsScreen.h"
 #include "IPrimaryScreen.h"
-#include <X11/Xlib.h>
 
-class CThread;
-
-class CXWindowsPrimaryScreen : public IPrimaryScreen {
+class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
   public:
 	CXWindowsPrimaryScreen();
 	virtual ~CXWindowsPrimaryScreen();
@@ -23,28 +20,25 @@ class CXWindowsPrimaryScreen : public IPrimaryScreen {
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
 
-  private:
-	void				selectEvents(Window) const;
-	Cursor				createBlankCursor();
-	void				warpCursorNoLock(SInt32 xAbsolute, SInt32 yAbsolute);
+  protected:
+	// CXWindowsScreen overrides
+	virtual void		onOpenDisplay();
+	virtual void		onCloseDisplay();
+	virtual void		eventThread(void*);
 
-	void				eventThread(void*);
+  private:
+	void				selectEvents(Display*, Window) const;
+	void				warpCursorNoLock(Display*,
+								SInt32 xAbsolute, SInt32 yAbsolute);
+
 	KeyModifierMask		mapModifier(unsigned int state) const;
 	KeyID				mapKey(KeyCode, KeyModifierMask) const;
 	ButtonID			mapButton(unsigned int button) const;
 
   private:
 	CServer*			m_server;
-	CThread*			m_eventThread;
-	Display*			m_display;
-	int					m_screen;
-	Window				m_root;
-	SInt32				m_w, m_h;
-	Window				m_window;
 	bool				m_active;
-
-	// X is not thread safe
-	CMutex				m_mutex;
+	Window				m_window;
 };
 
 #endif

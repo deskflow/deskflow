@@ -20,6 +20,7 @@ CXXFILES = 				\
 	CServerProtocol1_0.cpp		\
 	CScreenMap.cpp			\
 	CServer.cpp			\
+	CXWindowsScreen.cpp		\
 	CXWindowsPrimaryScreen.cpp	\
 	CXWindowsSecondaryScreen.cpp	\
 	XSynergy.cpp			\

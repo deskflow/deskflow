@@ -1,13 +1,10 @@
 #ifndef CXWINDOWSSECONDARYSCREEN_H
 #define CXWINDOWSSECONDARYSCREEN_H
 
-#include "CMutex.h"
+#include "CXWindowsScreen.h"
 #include "ISecondaryScreen.h"
-#include <X11/Xlib.h>
 
-class CThread;
-
-class CXWindowsSecondaryScreen : public ISecondaryScreen {
+class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen {
   public:
 	CXWindowsSecondaryScreen();
 	virtual ~CXWindowsSecondaryScreen();
@@ -27,23 +24,20 @@ class CXWindowsSecondaryScreen : public ISecondaryScreen {
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
 
+  protected:
+	// CXWindowsScreen overrides
+	virtual void		onOpenDisplay();
+	virtual void		onCloseDisplay();
+	virtual void		eventThread(void*);
+
   private:
-	Cursor				createBlankCursor();
-	void				eventThread(void*);
+	void				leaveNoLock(Display*);
 	KeyCode				mapKey(KeyID, KeyModifierMask) const;
 	unsigned int		mapButton(ButtonID button) const;
 
   private:
 	CClient*			m_client;
-	CThread*			m_eventThread;
-	Display*			m_display;
-	int					m_screen;
-	Window				m_root;
 	Window				m_window;
-	SInt32				m_w, m_h;
-
-	// X is not thread safe
-	CMutex				m_mutex;
 };
 
 #endif
