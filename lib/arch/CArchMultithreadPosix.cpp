@@ -179,6 +179,7 @@ CArchMultithreadPosix::newCondVar()
 {
 	CArchCondImpl* cond = new CArchCondImpl;
 	int status = pthread_cond_init(&cond->m_cond, NULL);
+	(void)status;
 	assert(status == 0);
 	return cond;
 }
@@ -187,6 +188,7 @@ void
 CArchMultithreadPosix::closeCondVar(CArchCond cond)
 {
 	int status = pthread_cond_destroy(&cond->m_cond);
+	(void)status;
 	assert(status == 0);
 	delete cond;
 }
@@ -195,6 +197,7 @@ void
 CArchMultithreadPosix::signalCondVar(CArchCond cond)
 {
 	int status = pthread_cond_signal(&cond->m_cond);
+	(void)status;
 	assert(status == 0);
 }
 
@@ -202,6 +205,7 @@ void
 CArchMultithreadPosix::broadcastCondVar(CArchCond cond)
 {
 	int status = pthread_cond_broadcast(&cond->m_cond);
+	(void)status;
 	assert(status == 0);
 }
 
@@ -309,6 +313,7 @@ void
 CArchMultithreadPosix::closeMutex(CArchMutex mutex)
 {
 	int status = pthread_mutex_destroy(&mutex->m_mutex);
+	(void)status;
 	assert(status == 0);
 	delete mutex;
 }
