@@ -35,7 +35,7 @@ manifest
   README              README              this file
   synergy             synergy.exe         the synergy client
   synergyd            synergyd.exe        the synergy server
-  synergy.conf        synergy.sgc         sample configuration file
+  synergy.conf        synergy.conf        sample configuration file
   synergy.linux.init                      startup script for client
   synergyd.linux.init                     startup script for server
 
