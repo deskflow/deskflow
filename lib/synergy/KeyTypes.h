@@ -25,13 +25,19 @@ keys, function keys, modifier keys, etc).
 */
 typedef UInt32			KeyID;
 
-//! Modifier key ID
+//! Modifier key mask
 /*!
 Type to hold a bitmask of key modifiers (e.g. shift keys).
 */
 typedef UInt32			KeyModifierMask;
 
-//! @name Modifier key identifiers
+//! Modifier key ID
+/*!
+Type to hold the id of a key modifier (e.g. a shift key).
+*/
+typedef UInt32			KeyModifierID;
+
+//! @name Modifier key masks
 //@{
 static const KeyModifierMask	KeyModifierShift      = 0x0001;
 static const KeyModifierMask	KeyModifierControl    = 0x0002;
@@ -42,6 +48,17 @@ static const KeyModifierMask	KeyModifierModeSwitch = 0x0020;
 static const KeyModifierMask	KeyModifierCapsLock   = 0x1000;
 static const KeyModifierMask	KeyModifierNumLock    = 0x2000;
 static const KeyModifierMask	KeyModifierScrollLock = 0x4000;
+//@}
+
+//! @name Modifier key identifiers
+//@{
+static const KeyModifierID		kKeyModifierIDNull     = 0;
+static const KeyModifierID		kKeyModifierIDShift    = 1;
+static const KeyModifierID		kKeyModifierIDControl  = 2;
+static const KeyModifierID		kKeyModifierIDAlt      = 3;
+static const KeyModifierID		kKeyModifierIDMeta     = 4;
+static const KeyModifierID		kKeyModifierIDSuper    = 5;
+static const KeyModifierID		kKeyModifierIDLast     = 6;
 //@}
 
 //! @name Key identifiers

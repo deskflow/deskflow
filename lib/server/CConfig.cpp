@@ -13,7 +13,7 @@
  */
 
 #include "CConfig.h"
-#include "ProtocolTypes.h"
+#include "KeyTypes.h"
 #include "XSocket.h"
 #include "stdistream.h"
 #include "stdostream.h"
@@ -514,6 +514,24 @@ CConfig::parseBoolean(const CString& arg)
 	throw XConfigRead("invalid argument");
 }
 
+OptionValue
+CConfig::parseModifierKey(const CString& arg)
+{
+	if (CStringUtil::CaselessCmp::equal(arg, "shift"))
+		return static_cast<OptionValue>(kKeyModifierIDShift);
+	if (CStringUtil::CaselessCmp::equal(arg, "ctrl"))
+		return static_cast<OptionValue>(kKeyModifierIDControl);
+	if (CStringUtil::CaselessCmp::equal(arg, "alt"))
+		return static_cast<OptionValue>(kKeyModifierIDAlt);
+	if (CStringUtil::CaselessCmp::equal(arg, "meta"))
+		return static_cast<OptionValue>(kKeyModifierIDMeta);
+	if (CStringUtil::CaselessCmp::equal(arg, "super"))
+		return static_cast<OptionValue>(kKeyModifierIDSuper);
+	if (CStringUtil::CaselessCmp::equal(arg, "none"))
+		return static_cast<OptionValue>(kKeyModifierIDNull);
+	throw XConfigRead("invalid argument");
+}
+
 const char*
 CConfig::getOptionName(OptionID id)
 {
@@ -522,6 +540,21 @@ CConfig::getOptionName(OptionID id)
 	}
 	if (id == kOptionHalfDuplexNumLock) {
 		return "halfDuplexNumLock";
+	}
+	if (id == kOptionModifierMapForShift) {
+		return "shift";
+	}
+	if (id == kOptionModifierMapForControl) {
+		return "ctrl";
+	}
+	if (id == kOptionModifierMapForAlt) {
+		return "alt";
+	}
+	if (id == kOptionModifierMapForMeta) {
+		return "meta";
+	}
+	if (id == kOptionModifierMapForSuper) {
+		return "super";
 	}
 	return NULL;
 }
@@ -532,6 +565,31 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 	if (id == kOptionHalfDuplexCapsLock ||
 		id == kOptionHalfDuplexNumLock) {
 		return (value != 0) ? "true" : "false";
+	}
+	if (id == kOptionModifierMapForShift ||
+		id == kOptionModifierMapForControl ||
+		id == kOptionModifierMapForAlt ||
+		id == kOptionModifierMapForMeta ||
+		id == kOptionModifierMapForSuper) {
+		switch (value) {
+		case kKeyModifierIDShift:
+			return "shift";
+
+		case kKeyModifierIDControl:
+			return "ctrl";
+
+		case kKeyModifierIDAlt:
+			return "alt";
+
+		case kKeyModifierIDMeta:
+			return "meta";
+
+		case kKeyModifierIDSuper:
+			return "super";
+
+		default:
+			return "none";
+		}
 	}
 
 	return "";
@@ -699,6 +757,26 @@ CConfig::readSectionScreens(std::istream& s)
 			else if (name == "halfDuplexNumLock") {
 				addOption(screen, kOptionHalfDuplexNumLock,
 					parseBoolean(value));
+			}
+			else if (name == "shift") {
+				addOption(screen, kOptionModifierMapForShift,
+					parseModifierKey(value));
+			}
+			else if (name == "ctrl") {
+				addOption(screen, kOptionModifierMapForControl,
+					parseModifierKey(value));
+			}
+			else if (name == "alt") {
+				addOption(screen, kOptionModifierMapForAlt,
+					parseModifierKey(value));
+			}
+			else if (name == "meta") {
+				addOption(screen, kOptionModifierMapForMeta,
+					parseModifierKey(value));
+			}
+			else if (name == "super") {
+				addOption(screen, kOptionModifierMapForSuper,
+					parseModifierKey(value));
 			}
 			else {
 				// unknown argument

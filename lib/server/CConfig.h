@@ -293,6 +293,7 @@ public:
 private:
 	static bool			readLine(std::istream&, CString&);
 	static bool			parseBoolean(const CString&);
+	static OptionValue	parseModifierKey(const CString&);
 	static const char*	getOptionName(OptionID);
 	static const char*	getOptionValue(OptionID, OptionValue);
 	void				readSection(std::istream&);

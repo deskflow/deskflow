@@ -42,9 +42,14 @@ typedef std::vector<UInt32> COptionsList;
 
 //! @name Option identifiers
 //@{
-static const OptionID	kOptionHalfDuplexCapsLock   = OPTION_CODE("HDCL");
-static const OptionID	kOptionHalfDuplexNumLock    = OPTION_CODE("HDNL");
-static const OptionID	kOptionHalfDuplexScrollLock = OPTION_CODE("HDSL");
+static const OptionID	kOptionHalfDuplexCapsLock    = OPTION_CODE("HDCL");
+static const OptionID	kOptionHalfDuplexNumLock     = OPTION_CODE("HDNL");
+static const OptionID	kOptionHalfDuplexScrollLock  = OPTION_CODE("HDSL");
+static const OptionID	kOptionModifierMapForShift   = OPTION_CODE("MMFS");
+static const OptionID	kOptionModifierMapForControl = OPTION_CODE("MMFC");
+static const OptionID	kOptionModifierMapForAlt     = OPTION_CODE("MMFA");
+static const OptionID	kOptionModifierMapForMeta    = OPTION_CODE("MMFM");
+static const OptionID	kOptionModifierMapForSuper   = OPTION_CODE("MMFR");
 //@}
 
 #undef OPTION_CODE

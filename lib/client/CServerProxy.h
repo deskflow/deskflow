@@ -16,6 +16,7 @@
 #define CSERVERPROXY_H
 
 #include "IScreenReceiver.h"
+#include "KeyTypes.h"
 #include "CMutex.h"
 
 class IClient;
@@ -92,6 +93,10 @@ private:
 
 	void				sendInfo(const CClientInfo&);
 
+	// modifier key translation
+	KeyID				translateKey(KeyID) const;
+	KeyModifierMask		translateModifierMask(KeyModifierMask) const;
+
 	// message handlers
 	void				enter();
 	void				leave();
@@ -123,6 +128,8 @@ private:
 	SInt32				m_xMouse, m_yMouse;
 
 	bool				m_ignoreMouse;
+
+	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
 };
 
 #endif

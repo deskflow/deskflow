@@ -39,6 +39,10 @@ CServerProxy::CServerProxy(IClient* client,
 	assert(m_client != NULL);
 	assert(m_input  != NULL);
 	assert(m_output != NULL);
+
+	// initialize modifier translation table
+	for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id)
+		m_modifierTranslationTable[id] = id;
 }
 
 CServerProxy::~CServerProxy()
@@ -313,6 +317,110 @@ CServerProxy::sendInfo(const CClientInfo& info)
 								info.m_mx, info.m_my);
 }
 
+KeyID
+CServerProxy::translateKey(KeyID id) const
+{
+	static const KeyID s_translationTable[kKeyModifierIDLast][2] = {
+		{ kKeyNone,      kKeyNone },
+		{ kKeyShift_L,   kKeyShift_R },
+		{ kKeyControl_L, kKeyControl_R },
+		{ kKeyAlt_L,     kKeyAlt_R },
+		{ kKeyMeta_L,    kKeyMeta_R },
+		{ kKeySuper_L,   kKeySuper_R }
+	};
+
+	KeyModifierID id2 = kKeyModifierIDNull;
+	UInt32 side      = 0;
+	switch (id) {
+	case kKeyShift_L:
+		id2  = kKeyModifierIDShift;
+		side = 0;
+		break;
+
+	case kKeyShift_R:
+		id2  = kKeyModifierIDShift;
+		side = 1;
+		break;
+
+	case kKeyControl_L:
+		id2  = kKeyModifierIDControl;
+		side = 0;
+		break;
+
+	case kKeyControl_R:
+		id2  = kKeyModifierIDControl;
+		side = 1;
+		break;
+
+	case kKeyAlt_L:
+		id2  = kKeyModifierIDAlt;
+		side = 0;
+		break;
+
+	case kKeyAlt_R:
+		id2  = kKeyModifierIDAlt;
+		side = 1;
+		break;
+
+	case kKeyMeta_L:
+		id2  = kKeyModifierIDMeta;
+		side = 0;
+		break;
+
+	case kKeyMeta_R:
+		id2  = kKeyModifierIDMeta;
+		side = 1;
+		break;
+
+	case kKeySuper_L:
+		id2  = kKeyModifierIDSuper;
+		side = 0;
+		break;
+
+	case kKeySuper_R:
+		id2  = kKeyModifierIDSuper;
+		side = 1;
+		break;
+	}
+
+	if (id2 != kKeyModifierIDNull) {
+		return s_translationTable[m_modifierTranslationTable[id2]][side];
+	}
+	else {
+		return id;
+	}
+}
+
+KeyModifierMask
+CServerProxy::translateModifierMask(KeyModifierMask mask) const
+{
+	static const KeyModifierMask s_masks[kKeyModifierIDLast] = {
+		0x0000,
+		KeyModifierShift,
+		KeyModifierControl,
+		KeyModifierAlt,
+		KeyModifierMeta,
+		KeyModifierSuper
+	};
+
+	KeyModifierMask newMask = 0;
+	if ((mask & KeyModifierShift) != 0) {
+		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDShift]];
+	}
+	if ((mask & KeyModifierControl) != 0) {
+		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDControl]];
+	}
+	if ((mask & KeyModifierAlt) != 0) {
+		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDAlt]];
+	}
+	if ((mask & KeyModifierMeta) != 0) {
+		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDMeta]];
+	}
+	if ((mask & KeyModifierSuper) != 0) {
+		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDSuper]];
+	}
+}
+
 void
 CServerProxy::enter()
 {
@@ -397,9 +505,16 @@ CServerProxy::keyDown()
 	CProtocolUtil::readf(getInputStream(), kMsgDKeyDown + 4, &id, &mask);
 	LOG((CLOG_DEBUG1 "recv key down id=%d, mask=0x%04x", id, mask));
 
-	// forward
-	getClient()->keyDown(static_cast<KeyID>(id),
+	// translate
+	KeyID id2             = translateKey(static_cast<KeyID>(id));
+	KeyModifierMask mask2 = translateModifierMask(
 								static_cast<KeyModifierMask>(mask));
+	if (id2   != static_cast<KeyID>(id) ||
+		mask2 != static_cast<KeyModifierMask>(mask))
+		LOG((CLOG_DEBUG1 "key down translated to id=%d, mask=0x%04x", id2, mask2));
+
+	// forward
+	getClient()->keyDown(id2, mask2);
 }
 
 void
@@ -414,10 +529,16 @@ CServerProxy::keyRepeat()
 								kMsgDKeyRepeat + 4, &id, &mask, &count);
 	LOG((CLOG_DEBUG1 "recv key repeat id=%d, mask=0x%04x, count=%d", id, mask, count));
 
+	// translate
+	KeyID id2             = translateKey(static_cast<KeyID>(id));
+	KeyModifierMask mask2 = translateModifierMask(
+								static_cast<KeyModifierMask>(mask));
+	if (id2   != static_cast<KeyID>(id) ||
+		mask2 != static_cast<KeyModifierMask>(mask))
+		LOG((CLOG_DEBUG1 "key down translated to id=%d, mask=0x%04x", id2, mask2));
+
 	// forward
-	getClient()->keyRepeat(static_cast<KeyID>(id),
-								static_cast<KeyModifierMask>(mask),
-								count);
+	getClient()->keyRepeat(id2, mask2, count);
 }
 
 void
@@ -431,9 +552,16 @@ CServerProxy::keyUp()
 	CProtocolUtil::readf(getInputStream(), kMsgDKeyUp + 4, &id, &mask);
 	LOG((CLOG_DEBUG1 "recv key up id=%d, mask=0x%04x", id, mask));
 
-	// forward
-	getClient()->keyUp(static_cast<KeyID>(id),
+	// translate
+	KeyID id2             = translateKey(static_cast<KeyID>(id));
+	KeyModifierMask mask2 = translateModifierMask(
 								static_cast<KeyModifierMask>(mask));
+	if (id2   != static_cast<KeyID>(id) ||
+		mask2 != static_cast<KeyModifierMask>(mask))
+		LOG((CLOG_DEBUG1 "key down translated to id=%d, mask=0x%04x", id2, mask2));
+
+	// forward
+	getClient()->keyUp(id2, mask2);
 }
 
 void
@@ -534,6 +662,10 @@ CServerProxy::resetOptions()
 
 	// forward
 	getClient()->resetOptions();
+
+	// reset modifier translation table
+	for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id)
+		m_modifierTranslationTable[id] = id;
 }
 
 void
@@ -546,6 +678,31 @@ CServerProxy::setOptions()
 
 	// forward
 	getClient()->setOptions(options);
+
+	// update modifier table
+	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
+		KeyModifierID id = kKeyModifierIDNull;
+		if (options[i] == kOptionModifierMapForShift) {
+			id = kKeyModifierIDShift;
+		}
+		else if (options[i] == kOptionModifierMapForControl) {
+			id = kKeyModifierIDControl;
+		}
+		else if (options[i] == kOptionModifierMapForAlt) {
+			id = kKeyModifierIDAlt;
+		}
+		else if (options[i] == kOptionModifierMapForMeta) {
+			id = kKeyModifierIDMeta;
+		}
+		else if (options[i] == kOptionModifierMapForSuper) {
+			id = kKeyModifierIDSuper;
+		}
+		if (id != kKeyModifierIDNull) {
+			m_modifierTranslationTable[id] =
+				static_cast<KeyModifierID>(options[i + 1]);
+			LOG((CLOG_DEBUG1 "modifier %d mapped to %d", id, m_modifierTranslationTable[id]));
+		}
+	}
 }
 
 void
