@@ -964,8 +964,8 @@ bool
 CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 {
 	// get which button
-	bool pressed = false;
-	const ButtonID button = mapButtonFromEvent(wParam, lParam);
+	bool pressed    = mapPressFromEvent(wParam, lParam);
+	ButtonID button = mapButtonFromEvent(wParam, lParam);
 
 	// keep our shadow key state up to date
 	if (button >= kButtonLeft && button <= kButtonExtra0 + 1) {
@@ -979,44 +979,17 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 
 	// ignore message if posted prior to last mark change
 	if (!ignore()) {
-		switch (wParam) {
-		case WM_LBUTTONDOWN:
-		case WM_MBUTTONDOWN:
-		case WM_RBUTTONDOWN:
-		case WM_XBUTTONDOWN:
-		case WM_LBUTTONDBLCLK:
-		case WM_MBUTTONDBLCLK:
-		case WM_RBUTTONDBLCLK:
-		case WM_XBUTTONDBLCLK:
-		case WM_NCLBUTTONDOWN:
-		case WM_NCMBUTTONDOWN:
-		case WM_NCRBUTTONDOWN:
-		case WM_NCXBUTTONDOWN:
-		case WM_NCLBUTTONDBLCLK:
-		case WM_NCMBUTTONDBLCLK:
-		case WM_NCRBUTTONDBLCLK:
-		case WM_NCXBUTTONDBLCLK:
+		if (pressed) {
 			LOG((CLOG_DEBUG1 "event: button press button=%d", button));
 			if (button != kButtonNone) {
 				sendEvent(getButtonDownEvent(), CButtonInfo::alloc(button));
 			}
-			pressed = true;
-			break;
-
-		case WM_LBUTTONUP:
-		case WM_MBUTTONUP:
-		case WM_RBUTTONUP:
-		case WM_XBUTTONUP:
-		case WM_NCLBUTTONUP:
-		case WM_NCMBUTTONUP:
-		case WM_NCRBUTTONUP:
-		case WM_NCXBUTTONUP:
+		}
+		else {
 			LOG((CLOG_DEBUG1 "event: button release button=%d", button));
 			if (button != kButtonNone) {
 				sendEvent(getButtonUpEvent(), CButtonInfo::alloc(button));
 			}
-			pressed = false;
-			break;
 		}
 	}
 
@@ -1299,6 +1272,43 @@ CMSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
 
 	default:
 		return kButtonNone;
+	}
+}
+
+bool
+CMSWindowsScreen::mapPressFromEvent(WPARAM msg, LPARAM) const
+{
+	switch (msg) {
+	case WM_LBUTTONDOWN:
+	case WM_MBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_XBUTTONDOWN:
+	case WM_LBUTTONDBLCLK:
+	case WM_MBUTTONDBLCLK:
+	case WM_RBUTTONDBLCLK:
+	case WM_XBUTTONDBLCLK:
+	case WM_NCLBUTTONDOWN:
+	case WM_NCMBUTTONDOWN:
+	case WM_NCRBUTTONDOWN:
+	case WM_NCXBUTTONDOWN:
+	case WM_NCLBUTTONDBLCLK:
+	case WM_NCMBUTTONDBLCLK:
+	case WM_NCRBUTTONDBLCLK:
+	case WM_NCXBUTTONDBLCLK:
+		return true;
+
+	case WM_LBUTTONUP:
+	case WM_MBUTTONUP:
+	case WM_RBUTTONUP:
+	case WM_XBUTTONUP:
+	case WM_NCLBUTTONUP:
+	case WM_NCMBUTTONUP:
+	case WM_NCRBUTTONUP:
+	case WM_NCXBUTTONUP:
+		return false;
+
+	default:
+		return false;
 	}
 }
 

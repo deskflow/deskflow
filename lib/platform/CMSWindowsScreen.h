@@ -157,6 +157,9 @@ private:
 	// map a button event to a button ID
 	ButtonID			mapButtonFromEvent(WPARAM msg, LPARAM button) const;
 
+	// map a button event to a press (true) or release (false)
+	bool				mapPressFromEvent(WPARAM msg, LPARAM button) const;
+
 	// fix the key state, synthesizing fake key releases for keys
 	// that aren't down anymore.
 	void				fixKeys();
