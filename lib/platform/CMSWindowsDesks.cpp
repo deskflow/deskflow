@@ -72,6 +72,8 @@
 #define SYNERGY_MSG_SYNC_KEYS		SYNERGY_HOOK_LAST_MSG + 9
 // install; <unused>
 #define SYNERGY_MSG_SCREENSAVER		SYNERGY_HOOK_LAST_MSG + 10
+// dx; dy
+#define SYNERGY_MSG_FAKE_REL_MOVE	SYNERGY_HOOK_LAST_MSG + 11
 
 //
 // CMSWindowsDesks
@@ -294,6 +296,14 @@ CMSWindowsDesks::fakeMouseMove(SInt32 x, SInt32 y) const
 }
 
 void
+CMSWindowsDesks::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+{
+	sendMessage(SYNERGY_MSG_FAKE_REL_MOVE,
+							static_cast<WPARAM>(dx),
+							static_cast<LPARAM>(dy));
+}
+
+void
 CMSWindowsDesks::fakeMouseWheel(SInt32 delta) const
 {
 	sendMessage(SYNERGY_MSG_FAKE_WHEEL, delta, 0);
@@ -492,40 +502,47 @@ CMSWindowsDesks::deskMouseMove(SInt32 x, SInt32 y) const
 	// the right place, the effect is disconcerting.
 	//
 	// instead we'll get the cursor's current position and do just a
-	// relative move from there to the desired position.  relative
-	// moves are subject to cursor acceleration which we don't want.
-	// so we disable acceleration, do the relative move, then restore
-	// acceleration.  there's a slight chance we'll end up in the
-	// wrong place if the user moves the cursor using this system's
+	// relative move from there to the desired position.
+	else {
+		POINT pos;
+		GetCursorPos(&pos);
+		deskMouseRelativeMove(x - pos.x, y - pos.y);
+	}
+}
+
+void
+CMSWindowsDesks::deskMouseRelativeMove(SInt32 dx, SInt32 dy) const
+{
+	// relative moves are subject to cursor acceleration which we don't
+	// want.so we disable acceleration, do the relative move, then
+	// restore acceleration.  there's a slight chance we'll end up in
+	// the wrong place if the user moves the cursor using this system's
 	// mouse while simultaneously moving the mouse on the server
 	// system.  that defeats the purpose of synergy so we'll assume
 	// that won't happen.  even if it does, the next mouse move will
 	// correct the position.
-	else {
-		// save mouse speed & acceleration
-		int oldSpeed[4];
-		bool accelChanged =
-					SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed, 0) &&
-					SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
 
-		// use 1:1 motion
-		if (accelChanged) {
-			int newSpeed[4] = { 0, 0, 0, 1 };
-			accelChanged =
-					SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
-					SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
-		}
+	// save mouse speed & acceleration
+	int oldSpeed[4];
+	bool accelChanged =
+				SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed, 0) &&
+				SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
 
-		// move relative to mouse position
-		POINT pos;
-		GetCursorPos(&pos);
-		mouse_event(MOUSEEVENTF_MOVE, x - pos.x, y - pos.y, 0, 0);
+	// use 1:1 motion
+	if (accelChanged) {
+		int newSpeed[4] = { 0, 0, 0, 1 };
+		accelChanged =
+				SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
+				SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
+	}
 
-		// restore mouse speed & acceleration
-		if (accelChanged) {
-			SystemParametersInfo(SPI_SETMOUSE, 0, oldSpeed, 0);
-			SystemParametersInfo(SPI_SETMOUSESPEED, 0, oldSpeed + 3, 0);
-		}
+	// move relative to mouse position
+	mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
+
+	// restore mouse speed & acceleration
+	if (accelChanged) {
+		SystemParametersInfo(SPI_SETMOUSE, 0, oldSpeed, 0);
+		SystemParametersInfo(SPI_SETMOUSESPEED, 0, oldSpeed + 3, 0);
 	}
 }
 
@@ -690,6 +707,11 @@ CMSWindowsDesks::deskThread(void* vdesk)
 
 		case SYNERGY_MSG_FAKE_MOVE:
 			deskMouseMove(static_cast<SInt32>(msg.wParam),
+							static_cast<SInt32>(msg.lParam));
+			break;
+
+		case SYNERGY_MSG_FAKE_REL_MOVE:
+			deskMouseRelativeMove(static_cast<SInt32>(msg.wParam),
 							static_cast<SInt32>(msg.lParam));
 			break;
 

@@ -144,6 +144,12 @@ public:
 	*/
 	void				fakeMouseMove(SInt32 x, SInt32 y) const;
 
+	//! Fake mouse move
+	/*!
+	Synthesize a mouse move to the relative coordinates \c dx,dy.
+	*/
+	void				fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
+
 	//! Fake mouse wheel
 	/*!
 	Synthesize a mouse wheel event of amount \c delta.
@@ -176,6 +182,7 @@ private:
 
 	// message handlers
 	void				deskMouseMove(SInt32 x, SInt32 y) const;
+	void				deskMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	void				deskEnter(CDesk* desk);
 	void				deskLeave(CDesk* desk, HKL keyLayout);
 	void				deskThread(void* vdesk);
