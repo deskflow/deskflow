@@ -5,11 +5,14 @@
 #include "ClipboardTypes.h"
 #include "stdmap.h"
 #include "stdlist.h"
+#include "stdvector.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
 #endif
+
+class IXWindowsClipboardConverter;
 
 class CXWindowsClipboard : public IClipboard {
 public:
@@ -51,6 +54,17 @@ public:
 	virtual CString		get(EFormat) const;
 
 private:
+	// remove all converters from our list
+	void				clearConverters();
+
+	// get the converter for a clipboard format.  returns NULL if no
+	// suitable converter.  iff onlyIfNotAdded is true then also
+	// return NULL if a suitable converter was found but we already
+	// have data of the converter's clipboard format.
+	IXWindowsClipboardConverter*
+						getConverter(Atom target,
+							bool onlyIfNotAdded = false) const;
+
 	// convert target atom to clipboard format
 	EFormat				getFormat(Atom target) const;
 
@@ -218,9 +232,10 @@ private:
 	// data conversion methods
 	Atom				getTargetsData(CString&, int* format) const;
 	Atom				getTimestampData(CString&, int* format) const;
-	Atom				getStringData(CString&, int* format) const;
 
 private:
+	typedef std::vector<IXWindowsClipboardConverter*> ConverterList;
+
 	Display*			m_display;
 	Window				m_window;
 	ClipboardID			m_id;
@@ -245,6 +260,9 @@ private:
 	CReplyMap			m_replies;
 	CReplyEventMask		m_eventMasks;
 
+	// clipboard format converters
+	ConverterList		m_converters;
+
 	// atoms we'll need
 	Atom				m_atomTargets;
 	Atom				m_atomMultiple;
@@ -261,6 +279,33 @@ private:
 	Atom				m_atomMotifClipHeader;
 	Atom				m_atomMotifClipAccess;
 	Atom				m_atomGDKSelection;
+};
+
+class IXWindowsClipboardConverter : public IInterface {
+public:
+	// accessors
+
+	// return the clipboard format this object converts from/to
+	virtual IClipboard::EFormat
+						getFormat() const = 0;
+
+	// return the atom representing the X selection format that
+	// this object converts from/to
+	virtual Atom		getAtom() const = 0;
+
+	// return the size (in bits) of data elements returned by
+	// toIClipboard().
+	virtual int			getDataSize() const = 0;
+
+	// convert from the IClipboard format to the X selection format.
+	// the input data must be in the IClipboard format returned by
+	// getFormat().  the return data will be in the X selection
+	// format returned by getAtom().
+	virtual CString		fromIClipboard(const CString&) const = 0;
+
+	// convert from the X selection format to the IClipboard format
+	// (i.e., the reverse of fromIClipboard()).
+	virtual CString		toIClipboard(const CString&) const = 0;
 };
 
 #endif

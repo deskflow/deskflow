@@ -4,22 +4,28 @@ DEPTH = ..
 
 # FIXME -- add CUnixPlatform.cpp as an unbuilt source
 noinst_LIBRARIES = libplatform.a
-libplatform_a_SOURCES = 		\
-	CPlatform.cpp				\
-	CXWindowsClipboard.cpp		\
-	CXWindowsScreen.cpp			\
-	CXWindowsScreenSaver.cpp	\
-	CXWindowsUtil.cpp			\
-	CPlatform.h					\
-	CUnixPlatform.h				\
-	CXWindowsClipboard.h		\
-	CXWindowsScreen.h			\
-	CXWindowsScreenSaver.h		\
-	CXWindowsUtil.h				\
-	IPlatform.h					\
+libplatform_a_SOURCES = 					\
+	CPlatform.cpp							\
+	CXWindowsClipboard.cpp					\
+	CXWindowsClipboardTextConverter.cpp		\
+	CXWindowsClipboardUCS2Converter.cpp		\
+	CXWindowsClipboardUTF8Converter.cpp		\
+	CXWindowsScreen.cpp						\
+	CXWindowsScreenSaver.cpp				\
+	CXWindowsUtil.cpp						\
+	CPlatform.h								\
+	CUnixPlatform.h							\
+	CXWindowsClipboard.h					\
+	CXWindowsClipboardTextConverter.h		\
+	CXWindowsClipboardUCS2Converter.h		\
+	CXWindowsClipboardUTF8Converter.h		\
+	CXWindowsScreen.h						\
+	CXWindowsScreenSaver.h					\
+	CXWindowsUtil.h							\
+	IPlatform.h								\
 	$(NULL)
-INCLUDES =					\
-	-I$(DEPTH)/base 		\
-	-I$(DEPTH)/mt	 		\
-	-I$(DEPTH)/synergy 		\
+INCLUDES =									\
+	-I$(DEPTH)/base 						\
+	-I$(DEPTH)/mt	 						\
+	-I$(DEPTH)/synergy 						\
 	$(NULL)

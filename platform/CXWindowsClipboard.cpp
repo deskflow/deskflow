@@ -1,4 +1,7 @@
 #include "CXWindowsClipboard.h"
+#include "CXWindowsClipboardTextConverter.h"
+#include "CXWindowsClipboardUCS2Converter.h"
+#include "CXWindowsClipboardUTF8Converter.h"
 #include "CXWindowsUtil.h"
 #include "CThread.h"
 #include "CLog.h"
@@ -52,6 +55,20 @@ CXWindowsClipboard::CXWindowsClipboard(Display* display,
 		break;
 	}
 
+	// add converters
+	m_converters.push_back(new CXWindowsClipboardUTF8Converter(m_display,
+								"text/plain;charset=UTF-8"));
+	m_converters.push_back(new CXWindowsClipboardUTF8Converter(m_display,
+								"UTF8_STRING"));
+	m_converters.push_back(new CXWindowsClipboardUCS2Converter(m_display,
+								"text/plain;charset=ISO-10646-UCS-2"));
+	m_converters.push_back(new CXWindowsClipboardUCS2Converter(m_display,
+								"text/unicode"));
+	m_converters.push_back(new CXWindowsClipboardTextConverter(m_display,
+								"text/plain"));
+	m_converters.push_back(new CXWindowsClipboardTextConverter(m_display,
+								"STRING"));
+
 	// we have no data
 	clearCache();
 }
@@ -59,6 +76,7 @@ CXWindowsClipboard::CXWindowsClipboard(Display* display,
 CXWindowsClipboard::~CXWindowsClipboard()
 {
 	clearReplies();
+	clearConverters();
 }
 
 void
@@ -124,7 +142,7 @@ CXWindowsClipboard::addSimpleRequest(Window requestor,
 
 	// handle targets
 	CString data;
-	Atom type = None;
+	Atom type  = None;
 	int format = 0;
 	if (target == m_atomTargets) {
 		type = getTargetsData(data, &format);
@@ -132,9 +150,17 @@ CXWindowsClipboard::addSimpleRequest(Window requestor,
 	else if (target == m_atomTimestamp) {
 		type = getTimestampData(data, &format);
 	}
-	else if (target == m_atomString ||
-			target == m_atomText) {
-		type = getStringData(data, &format);
+	else {
+		IXWindowsClipboardConverter* converter = getConverter(target);
+		IClipboard::EFormat clipboardFormat = converter->getFormat();
+		if (!m_added[clipboardFormat]) {
+			type = None;
+		}
+		else {
+			type   = converter->getAtom();
+			format = converter->getDataSize();
+			data   = converter->fromIClipboard(m_data[clipboardFormat]);
+		}
 	}
 
 	if (type != None) {
@@ -334,17 +360,41 @@ CXWindowsClipboard::get(EFormat format) const
 	return m_data[format];
 }
 
-IClipboard::EFormat
-CXWindowsClipboard::getFormat(Atom src) const
+void
+CXWindowsClipboard::clearConverters()
 {
-	// FIXME -- handle more formats (especially mime-type-like formats
-	// and various character encodings like unicode).
-	if (src == m_atomString ||
-		src == m_atomText /*||
-		src == m_atomCompoundText*/) {
-		return IClipboard::kText;
+	for (ConverterList::iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+		delete *index;
 	}
-	return IClipboard::kNumFormats;
+	m_converters.clear();
+}
+
+IXWindowsClipboardConverter*
+CXWindowsClipboard::getConverter(Atom target, bool onlyIfNotAdded) const
+{
+	IXWindowsClipboardConverter* converter = NULL;
+	for (ConverterList::const_iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+		converter = *index;
+		if (converter->getAtom() == target) {
+			break;
+		}
+	}
+	if (converter == NULL) {
+		log((CLOG_DEBUG1 "  no converter for target %d", target));
+		return NULL;
+	}
+
+	// optionally skip already handled targets
+	if (onlyIfNotAdded) {
+		if (m_added[converter->getFormat()]) {
+			log((CLOG_DEBUG1 "  skipping handled format %d", converter->getFormat()));
+			return NULL;
+		}
+	}
+
+	return converter;
 }
 
 void
@@ -438,44 +488,29 @@ CXWindowsClipboard::icccmFillCache()
 	const Atom* targets = reinterpret_cast<const Atom*>(data.data());
 	const UInt32 numTargets = data.size() / sizeof(Atom);
 	for (UInt32 i = 0; i < numTargets; ++i) {
-		// determine the expected clipboard format
+		// see if we have a converter for this target
 		Atom target = targets[i];
-		IClipboard::EFormat expectedFormat = getFormat(target);
-		if (expectedFormat == IClipboard::kNumFormats) {
-			log((CLOG_DEBUG1 "  no format for target %d", target));
-			continue;
-		}
-		log((CLOG_DEBUG1 " source target %d -> %d", target, expectedFormat));
-
-		// skip already handled targets
-		if (m_added[expectedFormat]) {
-			log((CLOG_DEBUG1 "  skipping handled format %d", expectedFormat));
+		IXWindowsClipboardConverter* converter = getConverter(target, true);
+		if (converter == NULL) {
 			continue;
 		}
 
+		// get the data
 		Atom actualTarget;
 		CString targetData;
 		if (!icccmGetSelection(target, &actualTarget, &targetData)) {
 			log((CLOG_DEBUG1 "  no data for target", target));
 			continue;
 		}
-		logc(actualTarget != target, (CLOG_DEBUG1 "  actual target is %d", actualTarget));
-
-		// use the actual format, not the expected
-		IClipboard::EFormat actualFormat = getFormat(actualTarget);
-		if (actualFormat == IClipboard::kNumFormats) {
-			log((CLOG_DEBUG1 "  no format for target %d", actualTarget));
-			continue;
-		}
-		if (m_added[actualFormat]) {
-			log((CLOG_DEBUG1 "  skipping handled format %d", actualFormat));
+		if (actualTarget != target) {
+			log((CLOG_DEBUG1 "  expected (%d) and actual (%d) targets differ", target, actualTarget));
 			continue;
 		}
 
 		// add to clipboard and note we've done it
-		m_data[actualFormat]  = targetData;
-		m_added[actualFormat] = true;
-		log((CLOG_DEBUG "  added format %d for target %d", actualFormat, target));
+		m_data[converter->getFormat()]  = converter->toIClipboard(targetData);
+		m_added[converter->getFormat()] = true;
+		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
 	}
 }
 
@@ -676,42 +711,36 @@ CXWindowsClipboard::motifFillCache()
 			continue;
 		}
 
-		// determine the expected clipboard format
-		Atom target = motifFormat->m_type;
-		IClipboard::EFormat expectedFormat = getFormat(target);
-		if (expectedFormat == IClipboard::kNumFormats) {
-			log((CLOG_DEBUG1 "  no format for target %d", target));
-			continue;
-		}
-		log((CLOG_DEBUG1 " source target %d -> %d", target, expectedFormat));
 
-		// skip already handled targets
-		if (m_added[expectedFormat]) {
-			log((CLOG_DEBUG1 "  skipping handled format %d", expectedFormat));
+		// see if we have a converter for this target
+		Atom target = motifFormat->m_type;
+		IXWindowsClipboardConverter* converter = getConverter(target, true);
+		if (converter == NULL) {
 			continue;
 		}
 
 		// get the data (finally)
 		SInt32 length = motifFormat->m_length;
 		sprintf(name, "_MOTIF_CLIP_ITEM_%d", motifFormat->m_data);
-    	Atom atomData = XInternAtom(m_display, name, False);
-		data = "";
+    	Atom atomData = XInternAtom(m_display, name, False), atomTarget;
+		CString targetData;
 		if (!CXWindowsUtil::getWindowProperty(m_display, root,
-									atomData, &data,
-									&target, &format, False)) {
+									atomData, &targetData,
+									&atomTarget, &format, False)) {
+			log((CLOG_DEBUG1 "  no data for target", target));
 			continue;
 		}
-		if (target != atomData) {
+		if (atomTarget != atomData) {
 			continue;
 		}
 
 		// truncate data to length specified in the format
-		data.erase(length);
+		targetData.erase(length);
 
 		// add to clipboard and note we've done it
-		m_data[expectedFormat]  = data;
-		m_added[expectedFormat] = true;
-		log((CLOG_DEBUG "  added format %d for target %d", expectedFormat, motifFormat->m_type));
+		m_data[converter->getFormat()]  = converter->toIClipboard(targetData);
+		m_added[converter->getFormat()] = true;
+		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
 	}
 }
 
@@ -1061,7 +1090,7 @@ CXWindowsClipboard::getTargetsData(CString& data, int* format) const
 {
 	assert(format != NULL);
 
-	// construct response
+	// add standard targets
 	Atom atom;
 	atom = m_atomTargets;
 	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
@@ -1069,11 +1098,17 @@ CXWindowsClipboard::getTargetsData(CString& data, int* format) const
 	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
 	atom = m_atomTimestamp;
 	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
-	if (m_added[kText]) {
-		atom = m_atomString;
-		data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
-		atom = m_atomText;
-		data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
+
+	// add targets we can convert to
+	for (ConverterList::const_iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+		IXWindowsClipboardConverter* converter = *index;
+
+		// skip formats we don't have
+		if (!m_added[converter->getFormat()]) {
+			atom = converter->getAtom();
+			data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
+		}
 	}
 
 	*format = 32;
@@ -1090,21 +1125,6 @@ CXWindowsClipboard::getTimestampData(CString& data, int* format) const
 	data.append(reinterpret_cast<const char*>(&m_timeOwned), 4);
 	*format = 32;
 	return m_atomTimestamp;
-}
-
-Atom
-CXWindowsClipboard::getStringData(CString& data, int* format) const
-{
-	assert(format != NULL);
-
-	if (m_added[kText]) {
-		data    = m_data[kText];
-		*format = 8;
-		return m_atomString;
-	}
-	else {
-		return None;
-	}
 }
 
 

@@ -8,12 +8,14 @@ libbase_a_SOURCES =			\
 	CLog.cpp				\
 	CStopwatch.cpp			\
 	CString.cpp				\
+	CUnicode.cpp			\
 	XBase.cpp				\
 	BasicTypes.h			\
 	CFunctionJob.h			\
 	CLog.h					\
 	CStopwatch.h			\
 	CString.h				\
+	CUnicode.h				\
 	IInterface.h			\
 	IJob.h					\
 	TMethodJob.h			\
