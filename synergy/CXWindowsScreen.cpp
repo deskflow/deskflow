@@ -4,6 +4,7 @@
 #include "TMethodJob.h"
 #include "CLog.h"
 #include "CString.h"
+#include "CStopwatch.h"
 #include <string.h>
 #include <assert.h>
 #include <X11/X.h>
@@ -64,6 +65,7 @@ void					CXWindowsScreen::openDisplay()
 	m_atomString       = XInternAtom(m_display, "STRING", False);
 	m_atomText         = XInternAtom(m_display, "TEXT", False);
 	m_atomCompoundText = XInternAtom(m_display, "COMPOUND_TEXT", False);
+	m_atomSynergyTime  = XInternAtom(m_display, "SYNERGY_TIME", False);
 
 	// clipboard atoms
 	m_atomClipboard[kClipboardClipboard] =
@@ -83,7 +85,7 @@ void					CXWindowsScreen::closeDisplay()
 
 	// clear out the clipboard request lists
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		ClipboardInfo& clipboard = m_clipboards[id];
+		CClipboardInfo& clipboard = m_clipboards[id];
 		for (CRequestMap::iterator index = clipboard.m_requests.begin();
 								index != clipboard.m_requests.end(); ++index) {
 			CRequestList* list = index->second;
@@ -221,6 +223,7 @@ bool					CXWindowsScreen::setDisplayClipboard(
 		// we got the selection
 		log((CLOG_INFO "grabbed clipboard at %d", timestamp));
 		m_clipboards[id].m_gotClipboard = timestamp;
+		m_clipboards[id].m_lostClipboard = CurrentTime;
 
 		if (clipboard != NULL) {
 			// save clipboard to serve requests
@@ -271,7 +274,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 		const SInt32 numTargets = targets.size() / sizeof(Atom);
 		std::set<IClipboard::EFormat> clipboardFormats;
 		std::set<Atom> targets;
-		log((CLOG_INFO "getting selection with %d targets", numTargets));
+		log((CLOG_INFO "getting selection %d with %d targets", id, numTargets));
 		for (SInt32 i = 0; i < numTargets; ++i) {
 			Atom format = targetAtoms[i];
 			log((CLOG_DEBUG1 " source target %d", format));
@@ -341,6 +344,8 @@ bool					CXWindowsScreen::getDisplayClipboard(
 	assert(outputType != NULL);
 	assert(outputData != NULL);
 
+	// FIXME -- this doesn't work to retrieve Motif selections.
+
 	// delete data property
 	XDeleteProperty(m_display, requestor, m_atomData);
 
@@ -350,12 +355,18 @@ bool					CXWindowsScreen::getDisplayClipboard(
 
 	// wait for the selection notify event.  can't just mask out other
 	// events because X stupidly doesn't provide a mask for selection
-	// events, so we use a predicate to find our event.
+	// events, so we use a predicate to find our event.  we also set
+	// a time limit for a response so we're not screwed by a bad
+	// clipboard owner.
+	CStopwatch timer(true);
 	XEvent xevent;
-// FIXME -- must limit the time we wait for bad clients
 	while (XCheckIfEvent(m_display, &xevent,
 								&CXWindowsScreen::findSelectionNotify,
 								(XPointer)&requestor) != True) {
+		// return false if we've timed-out
+		if (timer.getTime() >= 1.0)
+			return false;
+
 		// wait a bit
 		CThread::sleep(0.05);
 	}
@@ -557,36 +568,41 @@ Bool					CXWindowsScreen::findPropertyNotify(
 }
 
 void					CXWindowsScreen::addClipboardRequest(
-								Window /*owner*/, Window requestor,
+								Window owner, Window requestor,
 								Atom selection, Atom target,
 								Atom property, Time time)
 {
+	bool success = false;
+
 	// see if it's a selection we know about
 	ClipboardID id;
 	for (id = 0; id < kClipboardEnd; ++id)
 		if (selection == m_atomClipboard[id])
 			break;
-	if (id == kClipboardEnd)
-		return;
 
 	// mutex the display
 	CLock lock(&m_mutex);
-	bool success = false;
 
 	// a request for multiple targets is special
-	if (target == m_atomMultiple) {
-		// add a multiple request
-		if (property != None) {
-			success = sendClipboardMultiple(id, requestor, property, time);
+	if (id != kClipboardEnd) {
+		// check time we own the selection against the requested time
+		if (!wasOwnedAtTime(id, owner, time)) {
+			// fail for time we didn't own selection
 		}
-	}
-	else {
-		// handle remaining request formats
-		success = sendClipboardData(id, requestor, target, property, time);
+		else if (target == m_atomMultiple) {
+			// add a multiple request
+			if (property != None) {
+				success = sendClipboardMultiple(id, requestor, property, time);
+			}
+		}
+		else {
+			// handle remaining request formats
+			success = sendClipboardData(id, requestor, target, property, time);
+		}
 	}
 
 	// send success or failure
-	sendNotify(id, requestor, target, success ? property : None, time);
+	sendNotify(requestor, selection, target, success ? property : None, time);
 }
 
 void					CXWindowsScreen::processClipboardRequest(
@@ -597,7 +613,7 @@ void					CXWindowsScreen::processClipboardRequest(
 
 	// check every clipboard
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		ClipboardInfo& clipboard = m_clipboards[id];
+		CClipboardInfo& clipboard = m_clipboards[id];
 
 		// find the request list
 		CRequestMap::iterator index = clipboard.m_requests.find(requestor);
@@ -670,7 +686,7 @@ void					CXWindowsScreen::destroyClipboardRequest(
 
 	// check every clipboard
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		ClipboardInfo& clipboard = m_clipboards[id];
+		CClipboardInfo& clipboard = m_clipboards[id];
 
 		// find the request list
 		CRequestMap::iterator index = clipboard.m_requests.find(requestor);
@@ -789,60 +805,57 @@ bool					CXWindowsScreen::sendClipboardMultiple(
 	Atom type;
 	SInt32 size;
 	CString data;
-	getData(requestor, property, &type, &size, &data);
-	if (type != m_atomAtomPair) {
-		// unexpected data type
-		return false;
+	if (!getData(requestor, property, &type, &size, &data)) {
+		type = 0;
 	}
 
-	// check each format, replacing ones we can't do with None.  set
-	// the property for each to the requested data (for small requests)
-	// or INCR (for large requests).
+	// we only handle atom pair type
 	bool success = false;
-	bool updated = false;
-	UInt32 numRequests = data.size() / (2 * sizeof(Atom));
-	for (UInt32 index = 0; index < numRequests; ++index) {
-		// get request info
-		const Atom* request = reinterpret_cast<const Atom*>(data.data());
-		const Atom target   = request[2 * index + 0];
-		const Atom property = request[2 * index + 1];
+	if (type == m_atomAtomPair) {
+		// check each format, replacing ones we can't do with None.  set
+		// the property for each to the requested data (for small requests)
+		// or INCR (for large requests).
+		bool updated = false;
+		UInt32 numRequests = data.size() / (2 * sizeof(Atom));
+		for (UInt32 index = 0; index < numRequests; ++index) {
+			// get request info
+			const Atom* request = reinterpret_cast<const Atom*>(data.data());
+			const Atom target   = request[2 * index + 0];
+			const Atom property = request[2 * index + 1];
 
-		// handle target
-		if (property != None) {
-			if (!sendClipboardData(id, requestor, target, property, time)) {
-				// couldn't handle target.  change property to None.
-				const Atom none = None;
-				data.replace((2 * index + 1) * sizeof(Atom), sizeof(Atom),
+			// handle target
+			if (property != None) {
+				if (!sendClipboardData(id, requestor, target, property, time)) {
+					// couldn't handle target.  change property to None.
+					const Atom none = None;
+					data.replace((2 * index + 1) * sizeof(Atom), sizeof(Atom),
 								reinterpret_cast<const char*>(&none),
 								sizeof(none));
-				updated = true;
-			}
-			else {
-				success = true;
+					updated = true;
+				}
+				else {
+					success = true;
+				}
 			}
 		}
-	}
 
-	// update property if we changed it
-	if (updated) {
-		// FIXME -- handle Alloc errors (by returning false)
-		XChangeProperty(m_display, requestor, property,
+		// update property if we changed it
+		if (updated) {
+			// FIXME -- handle Alloc errors (by returning false)
+			XChangeProperty(m_display, requestor, property,
 								m_atomAtomPair,
 								8 * sizeof(Atom),
 								PropModeReplace,
 								reinterpret_cast<const unsigned char*>(
 									data.data()),
 								data.length());
+		}
 	}
 
-	// send notify if any format was successful
-	if (success) {
-		sendNotify(id, requestor, m_atomMultiple,
+	// send notify
+	sendNotify(requestor, m_atomClipboard[id], m_atomMultiple,
 								success ? property : None, time);
-		return true;
-	}
-
-	return false;
+	return success;
 }
 
 bool					CXWindowsScreen::sendClipboardTargets(
@@ -902,18 +915,97 @@ bool					CXWindowsScreen::sendClipboardTimestamp(
 }
 
 void					CXWindowsScreen::sendNotify(
-								ClipboardID id, Window requestor,
+								Window requestor, Atom selection,
 								Atom target, Atom property, Time time)
 {
 	XEvent event;
 	event.xselection.type      = SelectionNotify;
 	event.xselection.display   = m_display;
 	event.xselection.requestor = requestor;
-	event.xselection.selection = m_atomClipboard[id];
+	event.xselection.selection = selection;
 	event.xselection.target    = target;
 	event.xselection.property  = property;
 	event.xselection.time      = time;
 	XSendEvent(m_display, requestor, False, 0, &event);
+}
+
+bool					CXWindowsScreen::wasOwnedAtTime(
+								ClipboardID id, Window window, Time time) const
+{
+	const CClipboardInfo& clipboard = m_clipboards[id];
+
+	// not owned if we've never owned the selection
+	if (clipboard.m_gotClipboard == CurrentTime)
+		return false;
+
+	// if time is CurrentTime then return true if we still own the
+	// selection and false if we do not.  else if we still own the
+	// selection then get the current time, otherwise use
+	// m_lostClipboard as the end time.
+	Time lost = clipboard.m_lostClipboard;
+	if (lost == CurrentTime)
+		if (time == CurrentTime)
+			return true;
+		else
+			lost = getCurrentTimeNoLock(window);
+	else
+		if (time == CurrentTime)
+			return false;
+
+	// compare time to range
+	Time duration = clipboard.m_lostClipboard - clipboard.m_gotClipboard;
+	Time when     = time - clipboard.m_gotClipboard;
+	return (/*when >= 0 &&*/ when < duration);
+}
+
+Time					CXWindowsScreen::getCurrentTime(Window window) const
+{
+	CLock lock(&m_mutex);
+	return getCurrentTimeNoLock(window);
+}
+
+Time					CXWindowsScreen::getCurrentTimeNoLock(
+								Window window) const
+{
+	// do a zero-length append to get the current time
+	unsigned char dummy;
+	XChangeProperty(m_display, window, m_atomSynergyTime,
+								m_atomInteger, 8,
+								PropModeAppend,
+								&dummy, 0);
+
+	// look for property notify events with the following
+	CPropertyNotifyInfo filter;
+	filter.m_window   = window;
+	filter.m_property = m_atomSynergyTime;
+
+	// wait for reply
+	XEvent xevent;
+	while (XCheckIfEvent(m_display, &xevent,
+								&CXWindowsScreen::findPropertyNotify,
+								(XPointer)&filter) != True) {
+		// wait a bit
+		CThread::sleep(0.05);
+	}
+	assert(xevent.type             == PropertyNotify);
+	assert(xevent.xproperty.window == window);
+	assert(xevent.xproperty.atom   == m_atomSynergyTime);
+
+	return xevent.xproperty.time;
+}
+
+
+//
+// CXWindowsScreen::CClipboardInfo
+//
+
+CXWindowsScreen::CClipboardInfo::CClipboardInfo() :
+								m_clipboard(),
+								m_gotClipboard(CurrentTime),
+								m_lostClipboard(CurrentTime),
+								m_requests()
+{
+	// do nothing
 }
 
 

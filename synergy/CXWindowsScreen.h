@@ -91,6 +91,9 @@ class CXWindowsScreen {
 	// terminate a selection request
 	void				destroyClipboardRequest(Window window);
 
+	// get the current server time
+	Time				getCurrentTime(Window) const;
+
 	// called by openDisplay() to allow subclasses to prepare the display
 	virtual void		onOpenDisplay() = 0;
 
@@ -135,11 +138,16 @@ class CXWindowsScreen {
 								Atom property, Time time);
 	bool				sendClipboardTimestamp(ClipboardID, Window requestor,
 								Atom property, Time time);
-	void				sendNotify(ClipboardID, Window requestor,
+	void				sendNotify(Window requestor, Atom selection,
 								Atom target, Atom property, Time time);
+	bool				wasOwnedAtTime(ClipboardID, Window, Time) const;
+	Time				getCurrentTimeNoLock(Window) const;
 
   private:
-	class ClipboardInfo {
+	class CClipboardInfo {
+	public:
+		CClipboardInfo();
+
 	public:
 		// the contents of the clipboard
 		CClipboard		m_clipboard;
@@ -171,20 +179,10 @@ class CXWindowsScreen {
 	Atom				m_atomText;
 	Atom				m_atomCompoundText;
 	Atom				m_atomClipboard[kClipboardEnd];
+	Atom				m_atomSynergyTime;
 
 	// clipboard info
-	ClipboardInfo		m_clipboards[kClipboardEnd];
-/*
-	// the contents of our selection
-	CClipboard			m_clipboard;
-
-	// when we got the selection and when we lost it
-	Time				m_gotClipboard;
-	Time				m_lostClipboard;
-
-	// the request queues
-	CRequestMap			m_requests;
-*/
+	CClipboardInfo		m_clipboards[kClipboardEnd];
 
 	// X is not thread safe
 	CMutex				m_mutex;

@@ -163,6 +163,20 @@ void					CXWindowsPrimaryScreen::run()
 								xevent.xselectionrequest.property,
 								xevent.xselectionrequest.time);
 			}
+			else {
+				// unknown window.  return failure.
+				CDisplayLock display(this);
+				XEvent event;
+				event.xselection.type      = SelectionNotify;
+				event.xselection.display   = display;
+				event.xselection.requestor = xevent.xselectionrequest.requestor;
+				event.xselection.selection = xevent.xselectionrequest.selection;
+				event.xselection.target    = xevent.xselectionrequest.target;
+				event.xselection.property  = None;
+				event.xselection.time      = xevent.xselectionrequest.time;
+				XSendEvent(display, xevent.xselectionrequest.requestor,
+								False, 0, &event);
+			}
 			break;
 
 		  case PropertyNotify:
@@ -326,14 +340,12 @@ void					CXWindowsPrimaryScreen::warpCursorNoLock(
 void					CXWindowsPrimaryScreen::setClipboard(
 								ClipboardID id, const IClipboard* clipboard)
 {
-	// FIXME -- don't use CurrentTime
-	setDisplayClipboard(id, clipboard, m_window, CurrentTime);
+	setDisplayClipboard(id, clipboard, m_window, getCurrentTime(m_window));
 }
 
 void					CXWindowsPrimaryScreen::grabClipboard(ClipboardID id)
 {
-	// FIXME -- don't use CurrentTime
-	setDisplayClipboard(id, NULL, m_window, CurrentTime);
+	setDisplayClipboard(id, NULL, m_window, getCurrentTime(m_window));
 }
 
 void					CXWindowsPrimaryScreen::getSize(
@@ -350,8 +362,7 @@ SInt32					CXWindowsPrimaryScreen::getJumpZoneSize() const
 void					CXWindowsPrimaryScreen::getClipboard(
 								ClipboardID id, IClipboard* clipboard) const
 {
-	// FIXME -- don't use CurrentTime
-	getDisplayClipboard(id, clipboard, m_window, CurrentTime);
+	getDisplayClipboard(id, clipboard, m_window, getCurrentTime(m_window));
 }
 
 void					CXWindowsPrimaryScreen::onOpenDisplay()
@@ -371,7 +382,7 @@ void					CXWindowsPrimaryScreen::onOpenDisplay()
 	attr.event_mask            = PointerMotionMask |// PointerMotionHintMask |
 								 ButtonPressMask | ButtonReleaseMask |
 								 KeyPressMask | KeyReleaseMask |
-								 KeymapStateMask;
+								 KeymapStateMask | PropertyChangeMask;
 	attr.do_not_propagate_mask = 0;
 	attr.override_redirect     = True;
 	attr.cursor                = createBlankCursor();

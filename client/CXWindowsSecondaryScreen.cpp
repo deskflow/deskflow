@@ -89,6 +89,20 @@ void					CXWindowsSecondaryScreen::run()
 								xevent.xselectionrequest.property,
 								xevent.xselectionrequest.time);
 			}
+			else {
+				// unknown window.  return failure.
+				CDisplayLock display(this);
+				XEvent event;
+				event.xselection.type      = SelectionNotify;
+				event.xselection.display   = display;
+				event.xselection.requestor = xevent.xselectionrequest.requestor;
+				event.xselection.selection = xevent.xselectionrequest.selection;
+				event.xselection.target    = xevent.xselectionrequest.target;
+				event.xselection.property  = None;
+				event.xselection.time      = xevent.xselectionrequest.time;
+				XSendEvent(display, xevent.xselectionrequest.requestor,
+								False, 0, &event);
+			}
 			break;
 
 		  case PropertyNotify:
@@ -269,14 +283,12 @@ void					CXWindowsSecondaryScreen::mouseWheel(SInt32)
 void					CXWindowsSecondaryScreen::setClipboard(
 								ClipboardID id, const IClipboard* clipboard)
 {
-	// FIXME -- don't use CurrentTime
-	setDisplayClipboard(id, clipboard, m_window, CurrentTime);
+	setDisplayClipboard(id, clipboard, m_window, getCurrentTime(m_window));
 }
 
 void					CXWindowsSecondaryScreen::grabClipboard(ClipboardID id)
 {
-	// FIXME -- don't use CurrentTime
-	setDisplayClipboard(id, NULL, m_window, CurrentTime);
+	setDisplayClipboard(id, NULL, m_window, getCurrentTime(m_window));
 }
 
 void					CXWindowsSecondaryScreen::getSize(
@@ -293,8 +305,7 @@ SInt32					CXWindowsSecondaryScreen::getJumpZoneSize() const
 void					CXWindowsSecondaryScreen::getClipboard(
 								ClipboardID id, IClipboard* clipboard) const
 {
-	// FIXME -- don't use CurrentTime
-	getDisplayClipboard(id, clipboard, m_window, CurrentTime);
+	getDisplayClipboard(id, clipboard, m_window, getCurrentTime(m_window));
 }
 
 void					CXWindowsSecondaryScreen::onOpenDisplay()
