@@ -107,7 +107,7 @@ test:
       ctrl+esc -> start menu
       windows+R -> run dialog
       windows+M -> minimize all
-      windows+shift+M -> minimize all
+      windows+shift+M -> undo minimize all
       windows+F1 -> help
       windows+E -> explorer
       windows+F -> find files
@@ -142,7 +142,6 @@ test:
       mouse keys -> no
       high contrast -> no
   X desktop -> win32
-    shift, ctrl, alt not working
     check:
       shift+tab
       windows+R -> run dialog
@@ -156,8 +155,40 @@ test:
       windows+break -> system properties
       app key -> context menu
   Win32 -> Win32
+    alt+F6 -> eaten (isabel to audrey, but not audrey to isabel)
     check accessibility shortcuts work on secondary
     check accessibility features work on secondary
+
+---
+audrey->isabel
+  num-lock light on isabel doesn't respond to generated events.
+  seems to be linked to something lower-level.  however, keytest
+  does report num-lock keyboard state is being toggled.
+
+  other toggle lights don't always respond immediately
+    usually go on/off when active window changes though
+
+---
+avoid fullscreen transparent window
+  using CBT hook to discard activation/focus messages
+    but it's not being called when we lose keyboard input
+  also, we sometimes don't get the keyboard input to start with
+
+---
+keyboard hook problems
+  now passing keyboard events through in most cases
+    this fixes problem on isabel where toggle lights don't toggle
+    and num-lock behaved incorrectly (generated wrong keys).
+    seems the DefWindowProc() needed to process the keys
+  unfortunately, keys sometimes leak into wrong app.  seems related
+    to times when we don't get the keyboard input.  key events are
+    not delivered to app on primary until cursor returns to primary.
+    no idea how that's possible.
+  current have some code to check active window and reset it in
+    keyboard hook.  that code doesn't work.
+  seem to be having problems with windows key now, too.  looks like
+    a down is sent but not the corresponding up so secondary system
+    thinks the key is always down.
 
 ---
 server asserts if two clients with same name try to connect
@@ -166,7 +197,38 @@ also not reaping disconnects very fast
   investigate slowness
 
 ---
-replace all structs with classes
+blown assert:
+  client crashed and primary jumped to primary
+  left over queued motion events then processed
+    caused call to CServer::onMouseMoveSecondary
+    m_protocol is NULL because we're on primary screen
+  must flush queued events when jumping to primary
+    check for other things to do when jumping to primary
+
+---
+not detecting disconnect when remote side crashes
+  is there some socket flag to help with this?
+  should catch signal when closing console window and close nicely
+
+---
+sending same clipboard repeatedly from win32 server
+  can we detect no change?
+
+---
+key events sent to console on win me (95/98?) are very slow
+  1/4 to 1/2 second delay before key up is processed
+  key up log message is also delayed
+    console causing a system-wide delay?
+
+---
+adjust thread priorities on win32
+  maybe remove changes altogether
+  currently isabel starts single-stepping mouse when dragging window
+    sometimes it goes normal speed but it's mostly very slow
+    even a very high priority doesn't seem to help
+      haven't tried real-time priority
+  a very high priority on client fixes delay when typeing into console
+  is it the output console causing the slowness?
 
 ---
 Accessibility Shortcuts
@@ -184,3 +246,29 @@ Accessibility Shortcuts
    Left ALT+left SHIFT+NUM LOCK       Toggles MouseKeys on and off.
 
    Left ALT+left SHIFT+PRINT SCREEN   Toggles High Contrast on and off.
+
+---
+disable ctrl+alt+del info:
+  SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, TRUE, &dummy, 0)
+    fools system into thinking screen saver is running
+    that disables ctrl+alt+del, alt+tab, ctrl+esc
+    dunno if keystrokes are queued
+    may be limited to win 95/98/me
+  win nt sp 3 and above:
+    low-level keyboard hook is called before ctrl+esc, alt+tab, alt+esc
+    use that to capture and disable
+    seems that low-level hook is notified of ctrl+alt+del but can't stop it
+  win nt sp 2 and below
+    ctrl+esc can be disabled by replacing task manager (dunno how)
+    RegisterHotKey() can be used to catch alt+tab and alt+esc
+      only while app is running, of course
+  win nt
+    keyboard filter driver can capture keys (see win NT DDK)
+  http://216.239.51.100/search?q=cache:q-f03UHhFMMC:www.thescarms.com/VBasic/StopReBoot.asp+alt%2Btab+disable&hl=en
+    some info on changing keyboard scan code mapping
+    can be used to disable keys but looks like reboot is required
+
+---
+Q179905
+  suggestion for bypassing hook code when called by debugger.
+  may prevent system from getting locked up when debugging.
