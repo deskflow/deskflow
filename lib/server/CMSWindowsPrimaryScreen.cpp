@@ -563,7 +563,19 @@ CMSWindowsPrimaryScreen::hideWindow()
 			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
 		}
 	}
-	ShowWindow(m_window, SW_HIDE);
+
+	// hide the window.  do not wait for it, though, since ShowWindow()
+	// waits for the event loop to process the show-window event, but
+	// that thread may need to lock the mutex that this thread has
+	// already locked.  in particular, that deadlock will occur unless
+	// we use the asynchronous version of show window when a client
+	// disconnects:  thread A will lock the mutex and enter the primary
+	// screen which warps the mouse and calls this method while thread B
+	// will handle the mouse warp event and call methods that try to
+	// lock the mutex.  thread A owns the mutex and is waiting for the
+	// event loop, thread B owns the event loop and is waiting for the
+	// mutex causing deadlock.
+	ShowWindowAsync(m_window, SW_HIDE);
 }
 
 void
