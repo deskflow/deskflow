@@ -244,11 +244,11 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 			*dst++ = '?';
 		}
 		else {
-			dst += len;
+			dst   += mblen;
 		}
 	}
-	*dst = '\0';
-	CString text(mbs);
+	*dst++ = '\0';
+	CString text(mbs, dst - mbs);
 
 	// clean up
 	delete[] mbs;
