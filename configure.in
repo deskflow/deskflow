@@ -1,0 +1,65 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(base/IInterface.h)
+AM_INIT_AUTOMAKE(synergy, 0.5)
+AM_CONFIG_HEADER(config.h)
+
+dnl information on the package
+
+dnl checks for programs
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
+
+dnl checks for libraries
+ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
+
+dnl checks for header files
+AC_HEADER_STDC
+AC_PATH_X
+if test "$no_x" = yes; then
+	AC_MSG_ERROR(You must have X Windows to compile synergy)
+fi
+AC_PATH_XTRA
+AC_CHECK_HEADERS(sys/time.h)
+dnl AC_HEADER_TIME
+
+dnl checks for types
+dnl AC_TYPE_SIZE_T
+
+dnl checks for structures
+AC_STRUCT_TM
+
+dnl checks for compiler characteristics
+
+
+dnl checks for library functions
+dnl AC_TYPE_SIGNAL
+dnl AC_FUNC_FORK
+AC_FUNC_MEMCMP
+AC_FUNC_STRFTIME
+dnl use AC_REPLACE_FUNCS() for stuff in string.h
+dnl AC_HEADER_SYS_WAIT
+
+dnl checks for system services
+
+
+dnl adjust variables for X11 and pthreads
+LIBS="$X_PRE_LIBS $LIBS $X_EXTRA_LIBS $X_LIBS $PTHREAD_LIBS"
+CFLAGS="$CFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
+CXXFLAGS="$CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
+CC="$PTHREAD_CC"
+
+AC_OUTPUT([
+Makefile
+base/Makefile
+mt/Makefile
+io/Makefile
+http/Makefile
+net/Makefile
+synergy/Makefile
+platform/Makefile
+client/Makefile
+server/Makefile
+])
+
