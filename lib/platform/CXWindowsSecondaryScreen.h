@@ -93,7 +93,6 @@ private:
 	typedef std::vector<KeyCode> KeyCodes;
 	typedef std::map<KeySym, KeyCodeMask> KeyCodeMap;
 	typedef KeyCodeMap::const_iterator KeyCodeIndex;
-	typedef std::map<KeyCode, unsigned int> ModifierMap;
 	typedef std::map<KeyButton, KeyCode> ServerKeyMap;
 
 	unsigned int		mapButton(ButtonID button) const;
@@ -108,7 +107,7 @@ private:
 	void				updateKeycodeMap(Display* display);
 	void				updateModifiers(Display* display);
 	void				updateModifierMap(Display* display);
-	unsigned int		indexToModifierMask(int index) const;
+	unsigned int		keySymToModifierIndex(KeySym) const;
 	void				toggleKey(Display*, KeySym, unsigned int mask);
 	static bool			isToggleKeysym(KeySym);
 
@@ -162,13 +161,19 @@ private:
 	unsigned int		m_capsLockMask;
 	unsigned int		m_scrollLockMask;
 
+	// modifier indices
+	unsigned int		m_altIndex;
+	unsigned int		m_metaIndex;
+	unsigned int		m_superIndex;
+	unsigned int		m_modeSwitchIndex;
+	unsigned int		m_numLockIndex;
+	unsigned int		m_capsLockIndex;
+	unsigned int		m_scrollLockIndex;
+
 	// map X modifier key indices to the key codes bound to them
 	unsigned int		m_keysPerModifier;
 	KeyCodes			m_modifierToKeycode;
 	KeyCodes			m_modifierToKeycodes;
-
-	// maps keycodes to modifier indices
-	ModifierMap			m_keycodeToModifier;
 
 	// map server key buttons to local keycodes
 	ServerKeyMap		m_serverKeyMap;

@@ -700,65 +700,120 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	const KeyCodeMask& entry = keyIndex->second;
 	LOG((CLOG_DEBUG2 "keysym is 0x%08x", keysym));
 
+	// note if the key is a modifier
+	unsigned int modifierBit;
+	unsigned int modifierIndex = keySymToModifierIndex(keysym);
+	if (modifierIndex != static_cast<unsigned int>(-1)) {
+		LOG((CLOG_DEBUG2 "keysym is modifier %d", modifierIndex));
+		modifierBit = (1 << modifierIndex);
+	}
+	else {
+		modifierBit = 0;
+	}
+
+	// if the key is a modifier and that modifier is already in the
+	// desired state then ignore the request since there's nothing
+	// to do.  never ignore a toggle modifier on press or release,
+	// though.
+	if (modifierBit != 0) {
+		if (action == kRepeat) {
+			LOG((CLOG_DEBUG2 "ignore repeating modifier"));
+			return m_mask;
+		}
+		if (getBits(m_toggleModifierMask, modifierBit) == 0) {
+			if ((action == kPress   && (m_mask & modifierBit) != 0) ||
+				(action == kRelease && (m_mask & modifierBit) == 0)) {
+				LOG((CLOG_DEBUG2 "modifier in proper state: 0x%04x", m_mask));
+				return m_mask;
+			}
+		}
+	}
+
+	// sensitive notes the modifier keys that affect the synthesized
+	// key event.  these modifiers must be in the expected state to
+	// get the correct keysym and we'll only try to match these
+	// modifiers.
+	//
+	// the shift and mode switch keys can modify any keycode.  num
+	// lock and caps lock only affect certain keysyms and if a
+	// keysym is affected by num lock it is not affected by caps
+	// lock.  no other modifiers have any effect.
+	//
+	// requested notes the modifiers requested by the server and
+	// desired notes the modifier state we ultimately want to match.
+	// only the bits in desired indicated by sensitive are relevant.
+	// we assign the num lock and caps lock bits here if relevant.
+	// we'll assign shift and mode switch later.
+	unsigned int sensitive = ShiftMask | m_modeSwitchMask;
+	unsigned int requested = maskToX(mask);
+	unsigned int desired   = 0;
+	if (adjustForNumLock(keysym)) {
+		sensitive |= m_numLockMask;
+		desired    = assignBits(desired, m_numLockMask, requested);
+	}
+	else if (adjustForCapsLock(keysym)) {
+		sensitive |= m_capsLockMask;
+		desired    = assignBits(desired, m_capsLockMask, requested);
+	}
+
+	// we cannot be sensitive to the modifier we're pressing/releasing
+	sensitive = clearBits(sensitive, modifierBit);
+
 	// we can choose any of the available keycode/modifier states to
 	// generate our keysym.  the most desireable is the one most
-	// closely matching the input mask.  determine the order we
+	// closely matching the current mask.  determine the order we
 	// should try modifier states, from best match to worst.  this
 	// doesn't concern itself with whether or not a given modifier
 	// state has an associated keycode.  we'll just skip those later
-	// if necessary.
-
-	// default is none, shift, mode switch, shift + mode switch
-	unsigned int desired = maskToX(mask);
+	// if necessary.  default is none, shift, mode switch, shift +
+	// mode switch.
 	unsigned int index[4];
 	index[0] = 0;
 	index[1] = 1;
 	index[2] = 2;
 	index[3] = 3;
 
-	// if mode switch is active then 2 and 3 are better than 0 and 1
-	if (getBits(desired, m_modeSwitchMask) != 0) {
-		LOG((CLOG_DEBUG2 "mode switch desired"));
-		index[0] ^= 2;
-		index[1] ^= 2;
-		index[2] ^= 2;
-		index[3] ^= 2;
-	}
-
 	// if shift is active then 1 and 3 are better than 0 and 2.  however,
 	// if the key is affected by NumLock and NumLock is active then 1 and
 	// 3 are better if shift is *not* down (because NumLock acts like
 	// shift for those keysyms and shift cancels NumLock).  similarly for
-	// keys affected by CapsLock.
-	bool desireShift = (getBits(desired, ShiftMask) != 0);
+	// keys affected by CapsLock.  none of this is necessary if the key
+	// is itself shift.
 	bool invertShift = false;
-	LOG((CLOG_DEBUG2 "desire shift: %s", desireShift ? "yes" : "no"));
-	if (adjustForNumLock(keysym)) {
-		LOG((CLOG_DEBUG2 "num lock sensitive"));
-		if (m_numLockMask != 0) {
-			LOG((CLOG_DEBUG2 "we have a num lock"));
-			if (getBits(desired, m_numLockMask) != 0) {
-				LOG((CLOG_DEBUG2 "num lock desired, invert shift"));
+	if (modifierBit != ShiftMask) {
+		bool desireShift = (getBits(m_mask, ShiftMask) != 0);
+		if ((sensitive & m_numLockMask) != 0) {
+			LOG((CLOG_DEBUG2 "num lock sensitive"));
+			if (getBits(m_mask, m_numLockMask) != 0) {
+				LOG((CLOG_DEBUG2 "num lock preferred, invert shift"));
 				invertShift = true;
 			}
 		}
-	}
-	else if (adjustForCapsLock(keysym)) {
-		LOG((CLOG_DEBUG2 "caps lock sensitive"));
-		if (m_capsLockMask != 0) {
-			LOG((CLOG_DEBUG2 "we have a caps lock"));
-			if (getBits(desired, m_capsLockMask) != 0) {
-				LOG((CLOG_DEBUG2 "caps lock desired, invert shift"));
+		else if ((sensitive & m_capsLockMask) != 0) {
+			LOG((CLOG_DEBUG2 "caps lock sensitive"));
+			if (getBits(m_mask, m_capsLockMask) != 0) {
+				LOG((CLOG_DEBUG2 "caps lock preferred, invert shift"));
 				invertShift = true;
 			}
 		}
+		if (desireShift != invertShift) {
+			LOG((CLOG_DEBUG2 "shift preferred"));
+			index[0] ^= 1;
+			index[1] ^= 1;
+			index[2] ^= 1;
+			index[3] ^= 1;
+		}
 	}
-	if (desireShift != invertShift) {
-		LOG((CLOG_DEBUG2 "shift desired"));
-		index[0] ^= 1;
-		index[1] ^= 1;
-		index[2] ^= 1;
-		index[3] ^= 1;
+
+	// if mode switch is active then 2 and 3 are better than 0 and 1,
+	// unless the key is itself mode switch.
+	if (modifierBit != m_modeSwitchMask &&
+		getBits(m_mask, m_modeSwitchMask) != 0) {
+		LOG((CLOG_DEBUG2 "mode switch preferred"));
+		index[0] ^= 2;
+		index[1] ^= 2;
+		index[2] ^= 2;
+		index[3] ^= 2;
 	}
 
 	// find the first modifier state with a keycode we can generate.
@@ -784,37 +839,13 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	keycode = entry.m_keycode[bestIndex];
 	LOG((CLOG_DEBUG2 "bestIndex = %d, keycode = %d", bestIndex, keycode));
 
-	// note if the key is a modifier
-	ModifierMap::const_iterator modIndex = m_keycodeToModifier.find(keycode);
-	unsigned int modifierBit = 0;
-	if (modIndex != m_keycodeToModifier.end()) {
-		LOG((CLOG_DEBUG2 "keysym is modifier %d", modIndex->second));
-		modifierBit = (1 << modIndex->second);
-	}
-
-	// if the key is a modifier and that modifier is already in the
-	// desired state then ignore the request since there's nothing
-	// to do.  never ignore a toggle modifier on press or release,
-	// though.
-	if (modifierBit != 0) {
-		if (action == kRepeat) {
-			LOG((CLOG_DEBUG2 "ignore repeating modifier"));
-			return m_mask;
-		}
-		if (getBits(m_toggleModifierMask, modifierBit) == 0) {
-			if ((action == kPress   && (m_mask & modifierBit) != 0) ||
-				(action == kRelease && (m_mask & modifierBit) == 0)) {
-				LOG((CLOG_DEBUG2 "modifier in proper state: 0x%04x", m_mask));
-				return m_mask;
-			}
-		}
-	}
+	// FIXME -- can remove bits from sensitive if keycode doesn't have
+	// keysyms mapped to shift and/or mode switch.
 
 	// bestIndex tells us if shift and mode switch should be on or off,
 	// except if caps lock or num lock was down then we invert the sense
 	// of bestIndex's lowest bit.
 	// we must match both.
-	unsigned int required = ShiftMask | m_modeSwitchMask;
 	if (((bestIndex & 1) == 0) != invertShift) {
 		desired = clearBits(desired, ShiftMask);
 	}
@@ -828,28 +859,8 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 		desired = setBits(desired, m_modeSwitchMask);
 	}
 
-	// if the key is a modifier then remove it from the desired mask.
-	// we'll be matching the modifiers in the desired mask then adding
-	// a key press or release for the keysym.  if we don't clear the
-	// modifier bit from the desired mask we'll end up dealing with
-	// that key twice, once while matching modifiers and once while
-	// handling the keysym.
-	//
-	// note that instead of clearing the bit, we make it identical to
-	// the same bit in m_mask, meaning it's already in the right state.
-	desired  = assignBits(desired, modifierBit, m_mask);
-	required = clearBits(required, modifierBit);
-	LOG((CLOG_DEBUG2 "desired = 0x%04x, current = 0x%04x", desired, m_mask));
-
-	// some modifiers never have an effect on keysym lookup.  leave
-	// those modifiers alone by copying their state from m_mask to
-	// desired.
-	desired = assignBits(desired,
-							ControlMask |
-							m_altMask |
-							m_metaMask |
-							m_superMask |
-							m_scrollLockMask, m_mask);
+	// we now know what modifiers we want
+	LOG((CLOG_DEBUG2 "modifiers: sensitive = 0x%04x, desired = 0x%04x, current = 0x%04x", sensitive, desired, m_mask));
 
 	// add the key events required to get to the modifier state
 	// necessary to generate an event yielding id.  also save the
@@ -858,99 +869,100 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	// modify modifiers.
 	Keystrokes undo;
 	Keystroke keystroke;
-	if (desired != m_mask) {
-		for (unsigned int i = 0; i < 8; ++i) {
-			unsigned int bit = (1 << i);
-			if (getBits(desired, bit) != getBits(m_mask, bit)) {
-				LOG((CLOG_DEBUG2 "fix modifier %d", i));
-				// get the keycode we're using for this modifier.  if
-				// there isn't one then bail if the modifier is required
-				// or ignore it if not required.
-				KeyCode modifierKey = m_modifierToKeycode[i];
-				if (modifierKey == 0) {
-					LOG((CLOG_DEBUG2 "no key mapped to modifier 0x%04x", bit));
-					if (getBits(required, bit) != 0) {
-						keys.clear();
-						return m_mask;
-					}
-					else {
-						continue;
-					}
-				}
+	for (unsigned int i = 0; i < 8; ++i) {
+		// skip modifiers we don't care about
+		unsigned int bit = (1 << i);
+		if ((bit & sensitive) == 0) {
+			continue;
+		}
 
-				keystroke.m_keycode = modifierKey;
-				keystroke.m_repeat  = false;
-				if (getBits(desired, bit)) {
-					// modifier is not active but should be.  if the
-					// modifier is a toggle then toggle it on with a
-					// press/release, otherwise activate it with a
-					// press.  use the first keycode for the modifier.
-					LOG((CLOG_DEBUG2 "modifier 0x%04x is not active", bit));
-					if (getBits(m_toggleModifierMask, bit) != 0) {
-						LOG((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
-						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
-							(bit == m_numLockMask && m_numLockHalfDuplex)) {
-							keystroke.m_press = True;
-							keys.push_back(keystroke);
-							keystroke.m_press = False;
-							undo.push_back(keystroke);
-						}
-						else {
-							keystroke.m_press = True;
-							keys.push_back(keystroke);
-							keystroke.m_press = False;
-							keys.push_back(keystroke);
-							undo.push_back(keystroke);
-							keystroke.m_press = True;
-							undo.push_back(keystroke);
-						}
-					}
-					else {
-						keystroke.m_press = True;
-						keys.push_back(keystroke);
-						keystroke.m_press = False;
-						undo.push_back(keystroke);
-					}
-				}
+		// skip modifiers that are correct
+		if (getBits(desired, bit) == getBits(m_mask, bit)) {
+			continue;
+		}
 
+		LOG((CLOG_DEBUG2 "fix modifier %d", i));
+		// get the keycode we're using for this modifier.  if
+		// there isn't one then bail if the modifier is required
+		// or ignore it if not required.
+		KeyCode modifierKey = m_modifierToKeycode[i];
+		if (modifierKey == 0) {
+			LOG((CLOG_DEBUG2 "no key mapped to modifier 0x%04x", bit));
+			keys.clear();
+			return m_mask;
+		}
+
+		keystroke.m_keycode = modifierKey;
+		keystroke.m_repeat  = false;
+		if (getBits(desired, bit)) {
+			// modifier is not active but should be.  if the
+			// modifier is a toggle then toggle it on with a
+			// press/release, otherwise activate it with a
+			// press.  use the first keycode for the modifier.
+			LOG((CLOG_DEBUG2 "modifier 0x%04x is not active but should be", bit));
+			if (getBits(m_toggleModifierMask, bit) != 0) {
+				LOG((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
+				if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
+					(bit == m_numLockMask && m_numLockHalfDuplex)) {
+					keystroke.m_press = True;
+					keys.push_back(keystroke);
+					keystroke.m_press = False;
+					undo.push_back(keystroke);
+				}
 				else {
-					// modifier is active but should not be.  if the
-					// modifier is a toggle then toggle it off with a
-					// press/release, otherwise deactivate it with a
-					// release.  we must check each keycode for the
-					// modifier if not a toggle.
-					LOG((CLOG_DEBUG2 "modifier 0x%04x is active", bit));
-					if (getBits(m_toggleModifierMask, bit) != 0) {
-						LOG((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
-						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
-							(bit == m_numLockMask && m_numLockHalfDuplex)) {
-							keystroke.m_press = False;
-							keys.push_back(keystroke);
-							keystroke.m_press = True;
-							undo.push_back(keystroke);
-						}
-						else {
-							keystroke.m_press = True;
-							keys.push_back(keystroke);
-							keystroke.m_press = False;
-							keys.push_back(keystroke);
-							undo.push_back(keystroke);
-							keystroke.m_press = True;
-							undo.push_back(keystroke);
-						}
-					}
-					else {
-						for (unsigned int j = 0; j < m_keysPerModifier; ++j) {
-							const KeyCode key =
-								m_modifierToKeycodes[i * m_keysPerModifier + j];
-							if (key != 0 && m_keys[key]) {
-								keystroke.m_keycode = key;
-								keystroke.m_press   = False;
-								keys.push_back(keystroke);
-								keystroke.m_press   = True;
-								undo.push_back(keystroke);
-							}
-						}
+					keystroke.m_press = True;
+					keys.push_back(keystroke);
+					keystroke.m_press = False;
+					keys.push_back(keystroke);
+					undo.push_back(keystroke);
+					keystroke.m_press = True;
+					undo.push_back(keystroke);
+				}
+			}
+			else {
+				keystroke.m_press = True;
+				keys.push_back(keystroke);
+				keystroke.m_press = False;
+				undo.push_back(keystroke);
+			}
+		}
+
+		else {
+			// modifier is active but should not be.  if the
+			// modifier is a toggle then toggle it off with a
+			// press/release, otherwise deactivate it with a
+			// release.  we must check each keycode for the
+			// modifier if not a toggle.
+			LOG((CLOG_DEBUG2 "modifier 0x%04x is active", bit));
+			if (getBits(m_toggleModifierMask, bit) != 0) {
+				LOG((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
+				if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
+					(bit == m_numLockMask && m_numLockHalfDuplex)) {
+					keystroke.m_press = False;
+					keys.push_back(keystroke);
+					keystroke.m_press = True;
+					undo.push_back(keystroke);
+				}
+				else {
+					keystroke.m_press = True;
+					keys.push_back(keystroke);
+					keystroke.m_press = False;
+					keys.push_back(keystroke);
+					undo.push_back(keystroke);
+					keystroke.m_press = True;
+					undo.push_back(keystroke);
+				}
+			}
+			else {
+				for (unsigned int j = 0; j < m_keysPerModifier; ++j) {
+					const KeyCode key =
+						m_modifierToKeycodes[i * m_keysPerModifier + j];
+					if (key != 0 && m_keys[key]) {
+						keystroke.m_keycode = key;
+						keystroke.m_press   = False;
+						keys.push_back(keystroke);
+						keystroke.m_press   = True;
+						undo.push_back(keystroke);
 					}
 				}
 			}
@@ -1016,7 +1028,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 			// scan those keys to see if any (except keycode) are pressed.
 			bool down = false;
 			for (unsigned int j = 0; !down && j < m_keysPerModifier; ++j) {
-				KeyCode modKeycode = m_modifierToKeycodes[modIndex->second *
+				KeyCode modKeycode = m_modifierToKeycodes[modifierIndex *
 													m_keysPerModifier + j];
 				if (modKeycode != 0 && modKeycode != keycode) {
 					down = m_keys[modKeycode];
@@ -1026,9 +1038,9 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 				mask = clearBits(mask, modifierBit);
 			}
 		}
+		LOG((CLOG_DEBUG2 "new mask: 0x%04x", mask));
 	}
 
-	LOG((CLOG_DEBUG2 "final mask: 0x%04x", mask));
 	return mask;
 }
 
@@ -1307,26 +1319,6 @@ CXWindowsSecondaryScreen::updateKeycodeMap(Display* display)
 	XFree(keysyms);
 }
 
-unsigned int
-CXWindowsSecondaryScreen::indexToModifierMask(int index) const
-{
-	assert(index >= 0 && index <= 3);
-
-	switch (index) {
-	case 0:
-		return 0;
-
-	case 1:
-		return ShiftMask | LockMask;
-
-	case 2:
-		return m_modeSwitchMask;
-
-	case 3:
-		return ShiftMask | LockMask | m_modeSwitchMask;
-	}
-}
-
 void
 CXWindowsSecondaryScreen::updateModifierMap(Display* display)
 {
@@ -1343,6 +1335,13 @@ CXWindowsSecondaryScreen::updateModifierMap(Display* display)
 	m_numLockMask        = 0;
 	m_capsLockMask       = 0;
 	m_scrollLockMask     = 0;
+	m_altIndex           = static_cast<unsigned int>(-1);
+	m_metaIndex          = static_cast<unsigned int>(-1);
+	m_superIndex         = static_cast<unsigned int>(-1);
+	m_modeSwitchIndex    = static_cast<unsigned int>(-1);
+	m_numLockIndex       = static_cast<unsigned int>(-1);
+	m_capsLockIndex      = static_cast<unsigned int>(-1);
+	m_scrollLockIndex    = static_cast<unsigned int>(-1);
 	m_keysPerModifier    = keymap->max_keypermod;
 	m_modifierToKeycode.clear();
 	m_modifierToKeycode.resize(8);
@@ -1368,9 +1367,6 @@ CXWindowsSecondaryScreen::updateModifierMap(Display* display)
 				m_modifierToKeycode[i] = keycode;
 			}
 
-			// save in keycode to modifier
-			m_keycodeToModifier.insert(std::make_pair(keycode, i));
-
 			// save bit in all-modifiers mask
 			m_modifierMask |= bit;
 
@@ -1384,38 +1380,86 @@ CXWindowsSecondaryScreen::updateModifierMap(Display* display)
 			switch (keysym) {
 			case XK_Alt_L:
 			case XK_Alt_R:
+				m_altIndex        = i;
 				m_altMask        |= bit;
 				break;
 
 			case XK_Meta_L:
 			case XK_Meta_R:
+				m_metaIndex       = i;
 				m_metaMask       |= bit;
 				break;
 
 			case XK_Super_L:
 			case XK_Super_R:
+				m_superIndex      = i;
 				m_superMask      |= bit;
 				break;
 
 			case XK_Mode_switch:
+				m_modeSwitchIndex = i;
 				m_modeSwitchMask |= bit;
 				break;
 
 			case XK_Num_Lock:
+				m_numLockIndex    = i;
 				m_numLockMask    |= bit;
 				break;
 
 			case XK_Caps_Lock:
+				m_capsLockIndex   = i;
 				m_capsLockMask   |= bit;
 				break;
 
 			case XK_Scroll_Lock:
+				m_scrollLockIndex = i;
 				m_scrollLockMask |= bit;
+				break;
 			}
 		}
 	}
 
 	XFreeModifiermap(keymap);
+}
+
+unsigned int
+CXWindowsSecondaryScreen::keySymToModifierIndex(KeySym keysym) const
+{
+	switch (keysym) {
+	case XK_Shift_L:
+	case XK_Shift_R:
+		return 0;
+
+	case XK_Control_L:
+	case XK_Control_R:
+		return 2;
+
+	case XK_Alt_L:
+	case XK_Alt_R:
+		return m_altIndex;
+
+	case XK_Meta_L:
+	case XK_Meta_R:
+		return m_metaIndex;
+
+	case XK_Super_L:
+	case XK_Super_R:
+		return m_superIndex;
+
+	case XK_Mode_switch:
+		return m_modeSwitchIndex;
+
+	case XK_Num_Lock:
+		return m_numLockIndex;
+
+	case XK_Caps_Lock:
+		return m_capsLockIndex;
+
+	case XK_Scroll_Lock:
+		return m_scrollLockIndex;
+	}
+
+	return static_cast<unsigned int>(-1);
 }
 
 void
