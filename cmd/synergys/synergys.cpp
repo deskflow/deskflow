@@ -516,7 +516,7 @@ loadConfig(const char* pathname, bool require)
 		LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname));
 		std::ifstream configStream(pathname);
 		if (!configStream) {
-			throw XConfigRead("cannot open configuration");
+			throw XConfigRead("cannot open file");
 		}
 		configStream >> s_config;
 		LOG((CLOG_DEBUG "configuration read successfully"));
