@@ -109,6 +109,13 @@ CUnixPlatform::installDaemonLogger(const char* name)
 int
 CUnixPlatform::restart(RestartFunc func, int minErrorCode)
 {
+	// rely on child to catch these signals
+	sigset_t sigset;
+	sigemptyset(&sigset);
+	sigaddset(&sigset, SIGINT);
+	sigaddset(&sigset, SIGTERM);
+	pthread_sigmask(SIG_BLOCK, &sigset, NULL);
+
 	for (;;) {
 		switch (fork()) {
 		default:
