@@ -40,8 +40,6 @@ manifest
   synergyd            synergyd.exe        the synergy server
                       synrgyhk.dll        the synergy hook dll
   synergy.conf        synergy.conf        sample configuration file
-  synergy.linux.init                      startup script for client
-  synergyd.linux.init                     startup script for server
 
 
 running synergy
@@ -160,7 +158,10 @@ Microsoft Windows only supports the clipboard.  the Windows
 clipboard is transferred to both the X primary selection and the
 clipboard.  whichever X clipboard was changed last becomes the
 Windows clipboard.  end-of-line sequences (LF on linux and unix,
-CRLF on Windows) are automatically converted as necessary.
+CRLF on Windows) are automatically converted as necessary.  the
+clipboards are transferred using Unicode;  if your platforms and
+applications understand Unicode then you should be able to cut
+and paste any Unicode character.
 
 synergy synchronizes screensavers.  the screensavers on client
 screens are disabled when they connect to the server.  when the
@@ -228,31 +229,16 @@ linux, unix:
   can start before the X server does and will repeatly attempt to
   connect to the X server until it succeeds.  however, if the
   server requires authorization then it's unlikely that synergy
-  will ever succeed.  in that case synergy should be (re)started
+  will ever succeed.  so, in general, synergy should be (re)started
   by the X display manager.
 
-  the DISPLAY env var should be set appropriately before starting
-  synergy.  note that it probably will not be set when running
-  boot scripts so you have to set it yourself (probably to ":0").
-  if it's not set then synergy will use the default ":0.0" which
-  is correct in most cases.
+  some display managers (xdm and kdm, but not gdm) grab the
+  keyboard and do not release it until the user logs in, also
+  for security reasons.  this prevents a synergy server from
+  sharing the mouse and keyboard until the user logs in but
+  it doesn't prevent a synergy client from synthesizing mouse
+  and keyboard input.
 
-  finally, some display managers (xdm and kdm, but not gdm)
-  grab the keyboard and do not release it until the user logs
-  in, also for security reasons.  this prevents a synergy server
-  from sharing the mouse and keyboard until the user logs in
-  but it doesn't prevent a synergy client from synthesizing
-  mouse and keyboard input.
-
-  to install synergy as a daemon, you'll need to add the
-  appropriate lines and/or files to start synergy at boot time
-  or modify the display manager screen initialization scripts.
-  do not use the `-f' or `--no-daemon' options.  for the server
-  use the `--config' option to specify the path to the
-  configuration file or just put the configuration in
-  /etc/synergy.conf.
-
-linux:
   you should modify xdm's Xsetup script to start the synergy
   client or server.  for example, somewhere near the bottom of
   Xsetup (but someplace before anywhere the script calls exit)
@@ -277,45 +263,6 @@ linux:
   start synergy when they login.  in this case synergy will not
   be running while on the login screen.
 
-  if your X server does not require authorization then you can
-  start synergy at boot time.  if starting the synergy client
-  using init.d then:
-    # /bin/cp synergy /usr/sbin/synergy
-    # /bin/cp synergy.linux.init /etc/init.d/synergy
-    # /sbin/chkconfig --add synergy
-
-  if starting the synergy server using init.d then:
-    # /bin/cp synergyd /usr/sbin/synergyd
-    # /bin/cp synergyd.linux.init /etc/init.d/synergyd
-    # /bin/cp synergy.conf /etc/synergy.conf
-    # /sbin/chkconfig --add synergyd
-  of course, /etc/synergy.conf should be edited your for systems.
-
-  to manually start or stop the client
-    # /etc/init.d/synergy start
-    # /etc/init.d/synergy stop
-
-  to manually start or stop the server
-    # /etc/init.d/synergyd start
-    # /etc/init.d/synergyd stop
-
-  to uninstall the client:
-    # /etc/init.d/synergy stop
-    # /sbin/chkconfig --del synergy
-    # /bin/rm /etc/init.d/synergy
-    # /bin/rm /usr/sbin/synergy
-
-  to uninstall the server:
-    # /etc/init.d/synergyd stop
-    # /sbin/chkconfig --del synergyd
-    # /bin/rm /etc/synergy.conf
-    # /bin/rm /etc/init.d/synergyd
-    # /bin/rm /usr/sbin/synergyd
-
-  note that synergy.linux.init and synergyd.linux.init are not
-  tested on a wide variety of platforms and may need editing
-  for your platform.
-
 
 common command line options
 ---------------------------
@@ -323,8 +270,8 @@ common command line options
       --daemon          run as a daemon (linux,unix) or background (windows)
   -f, --no-daemon       run in the foreground
   -n, --name <name>     use <name> instead of the hostname
-      --restart         automatically restart on unexpected failures
-  -1, --no-restart      do not restart on unexpected failure
+      --restart         automatically restart on failures
+  -1, --no-restart      do not restart on failure
   -h, --help            print help and exit
       --version         print version information and exit
       --install         install as a service (windows)
@@ -342,6 +289,13 @@ as a service.
 the `--name' option lets the client or server use a name other than
 its hostname for its screen.  this name is used when checking the
 configuration.
+
+neither the client nor server will automatically restart if an error
+occurs that is sure to happen every time.  for example, the server
+will exit immediately if it can't find itself in the screen
+configuration.  on X11 both the client and server will also terminate
+if the connection to the X server is lost.  since xdm will normally
+restart the server and then synergy this is the correct behavior.
 
 
 server command line options
@@ -424,8 +378,7 @@ best server.
 known bugs
 ----------
 all:
-  * non-ASCII characters are not supported
-  * plain text is the only supported clipboard format
+  * non-ASCII keyboard characters are not supported
 
 windows:
   * screen flashes when entering the screen
@@ -466,4 +419,8 @@ tips and tricks
   will interfere with synergy.  use keyboard shortcuts instead.
 
 * synergy's screensaver synchronization works best with xscreensaver
-  under X windows.
+  under X windows.  synergy works better with xscreensaver if it is
+  using of the screensaver extensions.  prior to xscreensaver 4.0
+  you can use `-mit-extension', `-sgi-extension', or `-xidle-extension'
+  command line options to enable an extension.  starting with 4.0
+  you must enable the corresponding option in your .xscreensaver file.
