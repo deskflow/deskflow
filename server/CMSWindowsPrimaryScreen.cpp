@@ -406,6 +406,14 @@ bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 		}
 		return true;
 
+	case SYNERGY_MSG_MOUSE_WHEEL:
+		// ignore if not at current mark
+		if (m_mark == m_markReceived) {
+			log((CLOG_ERR "event: button wheel delta=%d %d", msg->wParam, msg->lParam));
+			m_server->onMouseWheel(msg->wParam);
+		}
+		return true;
+
 	case SYNERGY_MSG_MOUSE_MOVE:
 		// ignore if not at current mark
 		if (m_mark == m_markReceived) {

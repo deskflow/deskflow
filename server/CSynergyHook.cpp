@@ -1,6 +1,29 @@
 #include "CSynergyHook.h"
 #include "CScreenMap.h"
 #include <assert.h>
+#include <zmouse.h>
+
+//
+// extra mouse wheel stuff
+//
+
+enum EWheelSupport {
+	kWheelNone,
+	kWheelOld,
+	kWheelWin2000,
+	kWheelModern
+};
+
+// declare extended mouse hook struct.  useable on win2k
+typedef struct tagMOUSEHOOKSTRUCTWin2000 {
+	MOUSEHOOKSTRUCT mhs;
+	DWORD mouseData;
+} MOUSEHOOKSTRUCTWin2000;
+
+#if !defined(SM_MOUSEWHEELPRESENT)
+#define SM_MOUSEWHEELPRESENT 75
+#endif
+
 
 //
 // globals
@@ -12,10 +35,13 @@
 
 static HINSTANCE		g_hinstance = NULL;
 static DWORD			g_process = NULL;
+static EWheelSupport	g_wheelSupport = kWheelNone;
+static UINT				g_wmMouseWheel = 0;
 static HWND				g_hwnd = NULL;
 static HHOOK			g_keyboard = NULL;
 static HHOOK			g_mouse = NULL;
 static HHOOK			g_cbt = NULL;
+static HHOOK			g_getMessage = NULL;
 static bool				g_relay = false;
 static SInt32			g_zoneSize = 0;
 static UInt32			g_zoneSides = 0;
@@ -23,6 +49,8 @@ static SInt32			g_wScreen = 0;
 static SInt32			g_hScreen = 0;
 static HCURSOR			g_cursor = NULL;
 static DWORD			g_cursorThread = 0;
+
+static int foo = 0;
 
 #pragma data_seg()
 
@@ -58,27 +86,29 @@ static LRESULT CALLBACK	keyboardHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
 		if (g_relay) {
-			if (code == HC_ACTION) {
-				// forward message to our window
-				PostMessage(g_hwnd, SYNERGY_MSG_KEY, wParam, lParam);
+			// forward message to our window
+			PostMessage(g_hwnd, SYNERGY_MSG_KEY, wParam, lParam);
 
-				// if the active window isn't our window then make it
-				// active.
-				const bool wrongFocus = (GetActiveWindow() != g_hwnd);
-				if (wrongFocus) {
-					SetForegroundWindow(g_hwnd);
-				}
+/* XXX -- this doesn't seem to work/help with lost key events
+			// if the active window isn't our window then make it
+			// active.
+			const bool wrongFocus = (GetActiveWindow() != g_hwnd);
+			if (wrongFocus) {
+				SetForegroundWindow(g_hwnd);
+			}
+*/
 
-				// let non-system keyboard messages through to our window.
-				// this allows DefWindowProc() to do normal processing.
-				// for most keys that means do nothing.  for toggle keys
-				// it means updating the thread's toggle state.  discard
-				// system messages (i.e. keys pressed when alt is down) to
-				// prevent unexpected or undesired processing.  also
-				// discard messages if not destined for our window
-				if (wrongFocus || (lParam & 0x20000000lu) != 0) {
-					return 1;
-				}
+			// let certain keys pass through
+			switch (wParam) {
+			case VK_CAPITAL:
+			case VK_NUMLOCK:
+			case VK_SCROLL:
+				// pass event
+				break;
+
+			default:
+				// discard event
+				return 1;
 			}
 		}
 	}
@@ -99,6 +129,33 @@ static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			case WM_RBUTTONUP:
 				PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_BUTTON, wParam, 0);
 				return 1;
+
+			case WM_MOUSEWHEEL: {
+				// win2k and other systems supporting WM_MOUSEWHEEL in
+				// the mouse hook are gratuitously different (and poorly
+				// documented).
+				switch (g_wheelSupport) {
+				case kWheelModern: {
+					const MOUSEHOOKSTRUCT* info =
+								(const MOUSEHOOKSTRUCT*)lParam;
+					PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_WHEEL,
+								static_cast<short>(LOWORD(info->dwExtraInfo)), 0);
+					break;
+				}
+
+				case kWheelWin2000: {
+					const MOUSEHOOKSTRUCTWin2000* info =
+								(const MOUSEHOOKSTRUCTWin2000*)lParam;
+					PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_WHEEL,
+								static_cast<short>(HIWORD(info->mouseData)), 0);
+					break;
+				}
+
+				default:
+					break;
+				}
+				return 1;
+			}
 
 			case WM_MOUSEMOVE: {
 				const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
@@ -174,6 +231,66 @@ static LRESULT CALLBACK	cbtHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_cbt, code, wParam, lParam);
 }
 
+static LRESULT CALLBACK	getMessageHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code >= 0) {
+		if (g_relay) {
+			MSG* msg = reinterpret_cast<MSG*>(lParam);
+			if (msg->message == g_wmMouseWheel) {
+				// post message to our window
+				PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_WHEEL, msg->wParam, 0);
+
+				// zero out the delta in the message so it's (hopefully)
+				// ignored
+				msg->wParam = 0;
+			}
+		}
+	}
+
+	return CallNextHookEx(g_getMessage, code, wParam, lParam);
+}
+
+static EWheelSupport	GetWheelSupport()
+{
+	// get operating system
+	OSVERSIONINFO info;
+	info.dwOSVersionInfoSize = sizeof(info);
+	if (!GetVersionEx(&info)) {
+		return kWheelNone;
+	}
+
+	// see if modern wheel is present
+	if (GetSystemMetrics(SM_MOUSEWHEELPRESENT)) {
+		// note if running on win2k
+		if (info.dwPlatformId   == VER_PLATFORM_WIN32_NT &&
+			info.dwMajorVersion == 5 &&
+			info.dwMinorVersion == 0) {
+			return kWheelWin2000;
+		}
+		return kWheelModern;
+	}
+
+	// not modern.  see if we've got old-style support.
+	UINT wheelSupportMsg    = RegisterWindowMessage(MSH_WHEELSUPPORT);
+	HWND wheelSupportWindow = FindWindow(MSH_WHEELMODULE_CLASS,
+										MSH_WHEELMODULE_TITLE);
+	if (wheelSupportWindow != NULL && wheelSupportMsg != 0) {
+		if (SendMessage(wheelSupportWindow, wheelSupportMsg, 0, 0) != 0) {
+			g_wmMouseWheel = RegisterWindowMessage(MSH_MOUSEWHEEL);
+			if (g_wmMouseWheel != 0) {
+				return kWheelOld;
+			}
+		}
+	}
+
+	// assume modern.  we don't do anything special in this case
+	// except respond to WM_MOUSEWHEEL messages.  GetSystemMetrics()
+	// can apparently return FALSE even if a mouse wheel is present
+	// though i'm not sure exactly when it does that (but WinME does
+	// for my logitech usb trackball).
+	return kWheelModern;
+}
+
 
 //
 // external functions
@@ -202,10 +319,11 @@ extern "C" {
 
 int						install(HWND hwnd)
 {
-	assert(g_hinstance != NULL);
-	assert(g_keyboard  == NULL);
-	assert(g_mouse     == NULL);
-	assert(g_cbt       == NULL);
+	assert(g_hinstance    != NULL);
+	assert(g_keyboard     == NULL);
+	assert(g_mouse        == NULL);
+	assert(g_cbt          == NULL);
+	assert(g_wheelSupport != kWheelOld || g_getMessage == NULL);
 
 	// save window
 	g_hwnd = hwnd;
@@ -218,6 +336,9 @@ int						install(HWND hwnd)
 	g_hScreen      = 0;
 	g_cursor       = NULL;
 	g_cursorThread = 0;
+
+	// check for mouse wheel support
+	g_wheelSupport = GetWheelSupport();
 
 	// install keyboard hook
 	g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
@@ -257,6 +378,15 @@ int						install(HWND hwnd)
 		return 0;
 	}
 
+	// install GetMessage hook
+	if (g_wheelSupport == kWheelOld) {
+		g_getMessage = SetWindowsHookEx(WH_GETMESSAGE,
+								&getMessageHook,
+								g_hinstance,
+								0);
+		// ignore failure;  we just won't get mouse wheel messages
+	}
+
 	return 1;
 }
 
@@ -270,10 +400,14 @@ int						uninstall(void)
 	UnhookWindowsHookEx(g_keyboard);
 	UnhookWindowsHookEx(g_mouse);
 	UnhookWindowsHookEx(g_cbt);
-	g_keyboard = NULL;
-	g_mouse    = NULL;
-	g_cbt      = NULL;
-	g_hwnd     = NULL;
+	if (g_getMessage != NULL) {
+		UnhookWindowsHookEx(g_getMessage);
+	}
+	g_keyboard   = NULL;
+	g_mouse      = NULL;
+	g_cbt        = NULL;
+	g_getMessage = NULL;
+	g_hwnd       = NULL;
 
 	// show the cursor
 	restoreCursor();
