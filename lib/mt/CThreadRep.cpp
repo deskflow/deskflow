@@ -106,7 +106,11 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 	sigaddset(&sigset, SIGINT);
 	sigaddset(&sigset, SIGTERM);
 	pthread_sigmask(SIG_BLOCK, &sigset, &oldsigset);
-	int status = pthread_create(&m_thread, NULL, threadFunc, (void*)this);
+	// pthread_create() RedHat 7.2 smp fails with a NULL attr.
+	pthread_attr_t attr;
+	int status = pthread_attr_init(&attr);
+	if (status == 0)
+		status = pthread_create(&m_thread, &attr, threadFunc, (void*)this);
 	pthread_sigmask(SIG_SETMASK, &oldsigset, NULL);
 	if (status != 0) {
 		throw XThreadUnavailable();
@@ -183,7 +187,9 @@ CThreadRep::initThreads()
 		// instead arrange to catch and handle these signals but
 		// we'd be unable to cancel the main thread since no pthread
 		// calls are allowed in a signal handler.
-		int status = pthread_create(&s_signalThread, NULL,
+		pthread_attr_t attr;
+		pthread_attr_init(&attr);
+		int status = pthread_create(&s_signalThread, &attr,
 								&CThreadRep::threadSignalHandler,
 								getCurrentThreadRep());
 		if (status != 0) {
