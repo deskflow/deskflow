@@ -583,8 +583,61 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 	// what we need but won't tell us which index to use with the
 	// keycode.  return false if there's no keycode to generate id.
 	KeyCodeMap::const_iterator index = m_keycodeMap.find(id);
-	if (index == m_keycodeMap.end())
-		return false;
+	if (index == m_keycodeMap.end()) {
+		// try backup keysym for certain keys (particularly the numpad
+		// keys since most laptops don't have a separate numpad and the
+		// numpad overlaying the main keyboard may not have movement
+		// key bindings).
+		switch (id) {
+		case XK_KP_Home:
+			id = XK_Home;
+			break;
+
+		case XK_KP_Left:
+			id = XK_Left;
+			break;
+
+		case XK_KP_Up:
+			id = XK_Up;
+			break;
+
+		case XK_KP_Right:
+			id = XK_Right;
+			break;
+
+		case XK_KP_Down:
+			id = XK_Down;
+			break;
+
+		case XK_KP_Prior:
+			id = XK_Prior;
+			break;
+
+		case XK_KP_Next:
+			id = XK_Next;
+			break;
+
+		case XK_KP_End:
+			id = XK_End;
+			break;
+
+		case XK_KP_Insert:
+			id = XK_Insert;
+			break;
+
+		case XK_KP_Delete:
+			id = XK_Delete;
+			break;
+
+		default:
+			return false;
+		}
+
+		index = m_keycodeMap.find(id);
+		if (index == m_keycodeMap.end()) {
+			return false;
+		}
+	}
 
 	// save the keycode
 	keycode = index->second.keycode;
