@@ -87,7 +87,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "makehook"=.\server\makehook.dsp - Package Owner=<4>
+Project: "makehook"=.\platform\makehook.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -186,7 +186,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "synrgyhk"=.\server\synrgyhk.dsp - Package Owner=<4>
+Project: "synrgyhk"=.\platform\synrgyhk.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
