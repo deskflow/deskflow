@@ -207,7 +207,14 @@ CMSWindowsScreen::mainLoop()
 
 		// handle quit message
 		if (event.m_msg.message == WM_QUIT) {
-			CThread::getCurrentThread().cancel();
+			if (event.m_msg.wParam == 0) {
+				// force termination
+				CThread::getCurrentThread().cancel();
+			}
+			else {
+				// just exit the main loop
+				break;
+			}
 		}
 
 		// dispatch message
@@ -221,7 +228,8 @@ CMSWindowsScreen::mainLoop()
 void
 CMSWindowsScreen::exitMainLoop()
 {
-	PostThreadMessage(m_threadID, WM_QUIT, 0, 0);
+	// close down cleanly
+	PostThreadMessage(m_threadID, WM_QUIT, 1, 0);
 }
 
 void
