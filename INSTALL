@@ -30,6 +30,12 @@ For a list of options to configure use:
 
   ./configure --help
 
+On Solaris you may need to use:
+
+  ./configure --x-includes=/usr/openwin/include --x-libraries=/usr/openwin/lib
+
+so synergy can find the X11 includes and libraries.
+
 
 Building
 --------

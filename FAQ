@@ -15,6 +15,7 @@ Questions
 10. Do AltGr or Mode-Switch work?
 11. Why isn't synergy ported to platform XYZ?
 12. My client can't connect.  What's wrong?
+13. Linking fails on Solaris.  What's wrong?
 
 
 Answers
@@ -135,3 +136,11 @@ Answers
     rejected" or "connection refused" then the server isn't started,
     can't bind the address, or the client is connecting to the wrong
     host name/address or port.
+
+13. Linking fails on Solaris.  What's wrong?
+
+	Did you add `--x-includes=/usr/openwin/include
+    --x-libraries=/usr/openwin/lib' (without the linebreak) to the
+    `configure' command line?  Solaris puts the X11 includes and
+    libraries in an unusual place and the above lets synergy find
+    them.
