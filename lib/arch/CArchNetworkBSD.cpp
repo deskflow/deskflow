@@ -561,10 +561,10 @@ CArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
 		throwError(errno);
 	}
 	if (blocking) {
-		mode &= ~O_NDELAY;
+		mode &= ~O_NONBLOCK;
 	}
 	else {
-		mode |= O_NDELAY;
+		mode |= O_NONBLOCK;
 	}
 	if (fcntl(fd, F_SETFL, mode) == -1) {
 		throwError(errno);
