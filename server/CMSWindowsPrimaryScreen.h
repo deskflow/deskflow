@@ -52,11 +52,14 @@ private:
 	HWND				m_window;
 	HWND				m_nextClipboardWindow;
 	HWND				m_clipboardOwner;
-	HWND				m_lastActive;
+	HWND				m_lastForegroundWindow;
+	HWND				m_lastActiveWindow;
+	DWORD				m_lastActiveThread;
 	HINSTANCE			m_hookLibrary;
 	UInt32				m_mark;
 	UInt32				m_markReceived;
 	BYTE				m_keys[256];
+	SInt32				m_xCenter, m_yCenter;
 };
 
 #endif

@@ -1,5 +1,4 @@
 #include "CLog.h"
-#include "BasicTypes.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -139,14 +138,15 @@ void					CLog::output(int priority, char* msg)
 #endif
 
 		// print it
-		if (s_outputter)
+		if (s_outputter) {
 			s_outputter(msg + g_maxPriorityLength - n);
-		else
+		}
+		else {
 #if defined(CONFIG_PLATFORM_WIN32)
-			OutputDebugString(msg + g_maxPriorityLength - n);
-#else
-			fprintf(stderr, "%s", msg + g_maxPriorityLength - n);
+			openConsole();
 #endif
+			fprintf(stderr, "%s", msg + g_maxPriorityLength - n);
+		}
 	}
 }
 
@@ -174,3 +174,63 @@ char*					CLog::vsprint(int pad, char* buffer, int len,
 
 	return buffer;
 }
+
+#if defined(CONFIG_PLATFORM_WIN32)
+
+static DWORD			s_thread = 0;
+
+static BOOL WINAPI		CLogSignalHandler(DWORD)
+{
+	// terminate cleanly and skip remaining handlers
+	PostThreadMessage(s_thread, WM_QUIT, 0, 0);
+	return TRUE;
+}
+
+void					CLog::openConsole()
+{
+	static bool s_hasConsole = false;
+
+	// ignore if already created
+	if (s_hasConsole)
+		return;
+
+	// remember the current thread.  when we get a ctrl+break or the
+	// console is closed we'll post WM_QUIT to this thread to shutdown
+	// cleanly.
+	// note -- win95/98/me are broken and will not receive a signal
+	// when the console is closed nor during logoff or shutdown,
+	// see microsoft articles Q130717 and Q134284.  we could work
+	// around this in a painful way using hooks and hidden windows
+	// (as apache does) but it's not worth it.  the app will still
+	// quit, just not cleanly.  users in-the-know can use ctrl+c.
+	s_thread = GetCurrentThreadId();
+
+	// open a console
+	if (!AllocConsole())
+		return;
+
+	// get the handle for error output
+	HANDLE herr = GetStdHandle(STD_ERROR_HANDLE);
+
+	// prep console.  windows 95 and its ilk have braindead
+	// consoles that can't even resize independently of the
+	// buffer size.  use a 25 line buffer for those systems.
+	OSVERSIONINFO osInfo;
+	COORD size = { 80, 1000 };
+	osInfo.dwOSVersionInfoSize = sizeof(osInfo);
+	if (GetVersionEx(&osInfo) &&
+		osInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
+		size.Y = 25;
+	SetConsoleScreenBufferSize(herr, size);
+	SetConsoleTextAttribute(herr,
+							FOREGROUND_RED |
+							FOREGROUND_GREEN |
+							FOREGROUND_BLUE);
+	SetConsoleCtrlHandler(CLogSignalHandler, TRUE);
+
+	// reopen stderr to point at console
+	freopen("con", "w", stderr);
+	s_hasConsole = true;
+}
+
+#endif

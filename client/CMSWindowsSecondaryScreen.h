@@ -57,12 +57,18 @@ private:
 	void				updateKeys();
 	void				updateModifiers();
 	void				toggleKey(UINT virtualKey, KeyModifierMask mask);
+	UINT				virtualKeyToScanCode(UINT& virtualKey);
+	bool				isExtendedKey(UINT virtualKey);
+	void				sendKeyEvent(UINT virtualKey, bool press);
 
 private:
 	CClient*			m_client;
 	HWND				m_window;
 	HWND				m_nextClipboardWindow;
 	HWND				m_clipboardOwner;
+
+	// thread id of the event loop thread
+	DWORD				m_threadID;
 
 	// virtual key states
 	BYTE				m_keys[256];

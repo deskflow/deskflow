@@ -31,47 +31,15 @@ CMSWindowsPrimaryScreen::~CMSWindowsPrimaryScreen()
 	assert(m_hookLibrary == NULL);
 }
 
-static CString s_log;
-static CString s_logMore;
-static HWND s_debug = NULL;
-static HWND s_debugLog = NULL;
-static DWORD s_thread = 0;
-static BOOL CALLBACK WINAPI debugProc(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	switch (msg) {
-	case WM_INITDIALOG:
-		return TRUE;
-
-	case WM_CLOSE:
-		PostQuitMessage(0);
-		return TRUE;
-
-	case WM_APP:
-		if (!s_logMore.empty()) {
-			if (s_log.size() > 20000)
-				s_log = s_logMore;
-			else
-				s_log += s_logMore;
-			s_logMore = "";
-			SendMessage(s_debugLog, WM_SETTEXT, FALSE, (LPARAM)(LPCTSTR)s_log.c_str());
-			SendMessage(s_debugLog, EM_SETSEL, s_log.size(), s_log.size());
-			SendMessage(s_debugLog, EM_SCROLLCARET, 0, 0);
-		}
-		return TRUE;
-	}
-	return FALSE;
-}
-static void debugOutput(const char* msg)
-{
-	s_logMore += msg;
-	PostMessage(s_debug, WM_APP, 0, 0);
-}
-
 void					CMSWindowsPrimaryScreen::run()
 {
-CLog::setOutputter(&debugOutput);
+	// change our priority
+	CThread::getCurrentThread().setPriority(-3);
+
+	// run event loop
+	log((CLOG_INFO "entering event loop"));
 	doRun();
-CLog::setOutputter(NULL);
+	log((CLOG_INFO "exiting event loop"));
 }
 
 void					CMSWindowsPrimaryScreen::stop()
@@ -87,11 +55,11 @@ void					CMSWindowsPrimaryScreen::open(CServer* server)
 	// set the server
 	m_server = server;
 
-	// get keyboard state
-	updateKeys();
-
 	// open the display
 	openDisplay();
+
+	// get keyboard state
+	updateKeys();
 
 	// enter the screen
 	doEnter();
@@ -113,7 +81,6 @@ void					CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 	log((CLOG_INFO "entering primary at %d,%d", x, y));
 	assert(m_active == true);
 
-	// do non-warp enter stuff
 	doEnter();
 
 	// warp to requested location
@@ -122,12 +89,8 @@ void					CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 
 void					CMSWindowsPrimaryScreen::doEnter()
 {
-	// release the capture
-	ReleaseCapture();
-
-	// hide our window and restore the foreground window
-	SetForegroundWindow(m_lastActive);
-	ShowWindow(m_window, SW_HIDE);
+	// not active anymore
+	m_active = false;
 
 	// set the zones that should cause a jump
 	SInt32 w, h;
@@ -136,11 +99,23 @@ void					CMSWindowsPrimaryScreen::doEnter()
 											m_hookLibrary, "setZone");
 	setZone(m_server->getActivePrimarySides(), w, h, getJumpZoneSize());
 
+	// restore the active window and hide our window.  we can only set
+	// the active window for another thread if we first attach our input
+	// to that thread.
+	ReleaseCapture();
+	if (m_lastActiveWindow != NULL) {
+		DWORD myThread = GetCurrentThreadId();
+		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
+			// FIXME -- shouldn't raise window if X-Mouse is enabled
+			// but i have no idea how to do that or check if enabled.
+			SetActiveWindow(m_lastActiveWindow);
+			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
+		}
+	}
+	ShowWindow(m_window, SW_HIDE);
+
 	// all messages prior to now are invalid
 	nextMark();
-
-	// not active anymore
-	m_active = false;
 }
 
 void					CMSWindowsPrimaryScreen::leave()
@@ -148,30 +123,50 @@ void					CMSWindowsPrimaryScreen::leave()
 	log((CLOG_INFO "leaving primary"));
 	assert(m_active == false);
 
+	// do non-warp enter stuff
+	// get state of keys as we leave
+	updateKeys();
+
 	// all messages prior to now are invalid
 	nextMark();
 
-	// remember the active window before we leave
-	m_lastActive = GetForegroundWindow();
+	// remember the active window before we leave.  GetActiveWindow()
+	// will only return the active window for the thread's queue (i.e.
+	// our app) but we need the globally active window.  get that by
+	// attaching input to the foreground window's thread then calling
+	// GetActiveWindow() and then detaching our input.
+	m_lastActiveWindow     = NULL;
+	m_lastForegroundWindow = GetForegroundWindow();
+	m_lastActiveThread     = GetWindowThreadProcessId(
+								m_lastForegroundWindow, NULL);
+	if (m_lastActiveThread != 0) {
+		DWORD myThread = GetCurrentThreadId();
+		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
+			m_lastActiveWindow = GetActiveWindow();
+			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
+		}
+	}
 
-	// show our window and put it in the foreground
+	// show our window
 	ShowWindow(m_window, SW_SHOW);
-	SetForegroundWindow(m_window);
-
-	// capture the cursor so we don't lose keyboard input
-	SetCapture(m_window);
 
 	// relay all mouse and keyboard events
 	SetRelayFunc setRelay = (SetRelayFunc)GetProcAddress(
 											m_hookLibrary, "setRelay");
 	setRelay();
 
-	// warp the mouse to the center of the screen
-	SInt32 w, h;
-	getScreenSize(&w, &h);
-	warpCursor(w >> 1, h >> 1);
+	// get keyboard input and capture mouse
+	SetActiveWindow(m_window);
+	SetFocus(m_window);
+	SetCapture(m_window);
 
-	// warp is also invalid
+	// warp the mouse to the center of the screen
+	getScreenSize(&m_xCenter, &m_yCenter);
+	m_xCenter >>= 1;
+	m_yCenter >>= 1;
+	warpCursor(m_xCenter, m_yCenter);
+
+	// discard messages until after the warp
 	nextMark();
 
 	// local client now active
@@ -205,12 +200,8 @@ void					CMSWindowsPrimaryScreen::leave()
 
 void					CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
-	SInt32 w, h;
-	getScreenSize(&w, &h);
-	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.99 * x) / (w - 1)),
-								(DWORD)((65535.99 * y) / (h - 1)),
-								0, 0);
+	// set the cursor position without generating an event
+	SetCursorPos(x, y);
 }
 
 void					CMSWindowsPrimaryScreen::setClipboard(
@@ -254,7 +245,7 @@ void					CMSWindowsPrimaryScreen::getClipboard(
 
 KeyModifierMask			CMSWindowsPrimaryScreen::getToggleMask() const
 {
-	KeyModifierMask mask;
+	KeyModifierMask mask = 0;
 	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
 		mask |= KeyModifierCapsLock;
 	if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
@@ -264,30 +255,30 @@ KeyModifierMask			CMSWindowsPrimaryScreen::getToggleMask() const
 	return mask;
 }
 
-#include "resource.h" // FIXME
-
 void					CMSWindowsPrimaryScreen::onOpenDisplay()
 {
 	assert(m_window == NULL);
 	assert(m_server != NULL);
 
-// create debug dialog
-s_thread = GetCurrentThreadId();;
-s_debug = CreateDialog(getInstance(), MAKEINTRESOURCE(IDD_SYNERGY), NULL, &debugProc);
-s_debugLog = ::GetDlgItem(s_debug, IDC_LOG);
-CLog::setOutputter(&debugOutput);
-ShowWindow(s_debug, SW_SHOWNORMAL);
-
 	// initialize clipboard owner to current owner.  we don't want
 	// to take ownership of the clipboard just by starting up.
 	m_clipboardOwner = GetClipboardOwner();
+
+	// get screen size
+	// note -- we use a fullscreen window to grab input.  it should
+	// be possible to use a 1x1 window but i've run into problems
+	// with losing keyboard input (focus?) in that case.
+	// unfortunately, hiding the full screen window causes all other
+	// windows to redraw.
+	SInt32 w, h;
+	getScreenSize(&w, &h);
 
 	// create the window
 	m_window = CreateWindowEx(WS_EX_TOPMOST |
 								WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW,
 								(LPCTSTR)getClass(), "Synergy",
 								WS_POPUP,
-								0, 0, 1, 1, NULL, NULL,
+								0, 0, w, h, NULL, NULL,
 								getInstance(),
 								NULL);
 	assert(m_window != NULL);
@@ -307,6 +298,7 @@ ShowWindow(s_debug, SW_SHOWNORMAL);
 		}
 	}
 	if (!hooked) {
+		log((CLOG_ERR "failed to install hooks"));
 		ChangeClipboardChain(m_window, m_nextClipboardWindow);
 		m_nextClipboardWindow = NULL;
 		DestroyWindow(m_window);
@@ -342,19 +334,10 @@ void					CMSWindowsPrimaryScreen::onCloseDisplay()
 	// destroy window
 	DestroyWindow(m_window);
 	m_window = NULL;
-
-CLog::setOutputter(NULL);
-DestroyWindow(s_debug);
-s_debug = NULL;
-s_thread = 0;
 }
 
 bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 {
-if (IsDialogMessage(s_debug, msg)) {
-	return true;
-}
-
 	// handle event
 	switch (msg->message) {
 	case SYNERGY_MSG_MARK:
@@ -391,7 +374,9 @@ if (IsDialogMessage(s_debug, msg)) {
 					updateKey(msg->wParam, false);
 				}
 			}
-
+			else {
+				log((CLOG_DEBUG2 "event: cannot map key wParam=%d lParam=0x%08x", msg->wParam, msg->lParam));
+			}
 		}
 		return true;
 
@@ -431,29 +416,16 @@ if (IsDialogMessage(s_debug, msg)) {
 				m_server->onMouseMovePrimary(x, y);
 			}
 			else {
+				// get mouse deltas
+				x -= m_xCenter;
+				y -= m_yCenter;
 				log((CLOG_DEBUG2 "event: active move %d,%d", x, y));
 
-				// get screen size
-				SInt32 w, h;
-				getScreenSize(&w, &h);
+				// warp mouse back to center
+				warpCursor(m_xCenter, m_yCenter);
 
-				// get center pixel
-				w >>= 1;
-				h >>= 1;
-
-				// ignore and discard message if motion is to center of
-				// screen.  those are caused by us warping the mouse.
-				if (x != w || y != h) {
-					// get mouse deltas
-					x -= w;
-					y -= h;
-
-					// warp mouse back to center
-					warpCursor(w, h);
-
-					// send motion
-					m_server->onMouseMoveSecondary(x, y);
-				}
+				// send motion
+				m_server->onMouseMoveSecondary(x, y);
 			}
 		}
 		return true;
@@ -467,7 +439,7 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 								WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
-	// FIXME -- handle display changes
+	// FIXME -- handle display changes (and resize full-screen window)
 	case WM_PAINT:
 		ValidateRect(hwnd, NULL);
 		return 0;
@@ -500,6 +472,7 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
 		return 0;
 	}
+
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
@@ -808,6 +781,7 @@ KeyID					CMSWindowsPrimaryScreen::mapKey(
 	if ((m_keys[VK_SCROLL] & 0x01) != 0)
 		mask |= KeyModifierScrollLock;
 	*maskOut = mask;
+	log((CLOG_DEBUG2 "key in vk=%d info=0x%08x mask=0x%04x", vkCode, info, mask));
 
 	// get the scan code
 	UINT scanCode = static_cast<UINT>((info & 0xff0000) >> 16);
@@ -827,6 +801,10 @@ KeyID					CMSWindowsPrimaryScreen::mapKey(
 	else if (vkCode >= VK_LWIN && vkCode <= VK_APPS)
 		vkCode2 = vkCode;
 
+	// if MapVirtualKey failed then use original virtual key
+	else if (vkCode2 == 0)
+		vkCode2 = vkCode;
+
 	// sadly, win32 will not distinguish between the left and right
 	// control and alt keys using the above function.  however, we
 	// can check for those:  if bit 24 of info is set then the key
@@ -834,10 +812,12 @@ KeyID					CMSWindowsPrimaryScreen::mapKey(
 	// keys.
 	if ((info & 0x1000000) != 0) {
 		switch (vkCode2) {
+		case VK_CONTROL:
 		case VK_LCONTROL:
 			vkCode2 = VK_RCONTROL;
 			break;
 
+		case VK_MENU:
 		case VK_LMENU:
 			vkCode2 = VK_RMENU;
 			break;
@@ -898,7 +878,7 @@ KeyID					CMSWindowsPrimaryScreen::mapKey(
 	else if (result == 2) {
 		// get the scan code of the dead key and the shift state
 		// required to generate it.
-		vkCode = VkKeyScan(ascii & 0x00ff);
+		vkCode = VkKeyScan(static_cast<TCHAR>(ascii & 0x00ff));
 
 		// set shift state required to generate key
 		BYTE keys[256];
@@ -948,25 +928,29 @@ ButtonID				CMSWindowsPrimaryScreen::mapButton(
 
 void					CMSWindowsPrimaryScreen::updateKeys()
 {
+	// not using GetKeyboardState() because that doesn't seem to give
+	// up-to-date results.  i don't know why that is or why GetKeyState()
+	// should give different results.
+
 	// clear key state
 	memset(m_keys, 0, sizeof(m_keys));
 
 	// we only care about the modifier key states
-	m_keys[VK_LSHIFT]   = GetKeyState(VK_LSHIFT);
-	m_keys[VK_RSHIFT]   = GetKeyState(VK_RSHIFT);
-	m_keys[VK_SHIFT]    = GetKeyState(VK_SHIFT);
-	m_keys[VK_LCONTROL] = GetKeyState(VK_LCONTROL);
-	m_keys[VK_RCONTROL] = GetKeyState(VK_RCONTROL);
-	m_keys[VK_CONTROL]  = GetKeyState(VK_CONTROL);
-	m_keys[VK_LMENU]    = GetKeyState(VK_LMENU);
-	m_keys[VK_RMENU]    = GetKeyState(VK_RMENU);
-	m_keys[VK_MENU]     = GetKeyState(VK_MENU);
-	m_keys[VK_LWIN]     = GetKeyState(VK_LWIN);
-	m_keys[VK_RWIN]     = GetKeyState(VK_RWIN);
-	m_keys[VK_APPS]     = GetKeyState(VK_APPS);
-	m_keys[VK_CAPITAL]  = GetKeyState(VK_CAPITAL);
-	m_keys[VK_NUMLOCK]  = GetKeyState(VK_NUMLOCK);
-	m_keys[VK_SCROLL]   = GetKeyState(VK_SCROLL);
+	m_keys[VK_LSHIFT]   = static_cast<BYTE>(GetKeyState(VK_LSHIFT));
+	m_keys[VK_RSHIFT]   = static_cast<BYTE>(GetKeyState(VK_RSHIFT));
+	m_keys[VK_SHIFT]    = static_cast<BYTE>(GetKeyState(VK_SHIFT));
+	m_keys[VK_LCONTROL] = static_cast<BYTE>(GetKeyState(VK_LCONTROL));
+	m_keys[VK_RCONTROL] = static_cast<BYTE>(GetKeyState(VK_RCONTROL));
+	m_keys[VK_CONTROL]  = static_cast<BYTE>(GetKeyState(VK_CONTROL));
+	m_keys[VK_LMENU]    = static_cast<BYTE>(GetKeyState(VK_LMENU));
+	m_keys[VK_RMENU]    = static_cast<BYTE>(GetKeyState(VK_RMENU));
+	m_keys[VK_MENU]     = static_cast<BYTE>(GetKeyState(VK_MENU));
+	m_keys[VK_LWIN]     = static_cast<BYTE>(GetKeyState(VK_LWIN));
+	m_keys[VK_RWIN]     = static_cast<BYTE>(GetKeyState(VK_RWIN));
+	m_keys[VK_APPS]     = static_cast<BYTE>(GetKeyState(VK_APPS));
+	m_keys[VK_CAPITAL]  = static_cast<BYTE>(GetKeyState(VK_CAPITAL));
+	m_keys[VK_NUMLOCK]  = static_cast<BYTE>(GetKeyState(VK_NUMLOCK));
+	m_keys[VK_SCROLL]   = static_cast<BYTE>(GetKeyState(VK_SCROLL));
 }
 
 void					CMSWindowsPrimaryScreen::updateKey(

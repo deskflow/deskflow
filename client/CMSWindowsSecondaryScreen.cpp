@@ -24,49 +24,18 @@ CMSWindowsSecondaryScreen::~CMSWindowsSecondaryScreen()
 	assert(m_window == NULL);
 }
 
-static CString s_log;
-static CString s_logMore;
-static HWND s_debug = NULL;
-static HWND s_debugLog = NULL;
-static DWORD s_thread = 0;
-static BOOL CALLBACK WINAPI debugProc(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	switch (msg) {
-	case WM_INITDIALOG:
-		return TRUE;
-
-	case WM_CLOSE:
-		PostQuitMessage(0);
-		return TRUE;
-
-	case WM_APP:
-		if (!s_logMore.empty()) {
-			if (s_log.size() > 40000)
-				s_log = s_logMore;
-			else
-				s_log += s_logMore;
-			s_logMore = "";
-			SendMessage(s_debugLog, WM_SETTEXT, FALSE, (LPARAM)(LPCTSTR)s_log.c_str());
-			SendMessage(s_debugLog, EM_SETSEL, s_log.size(), s_log.size());
-			SendMessage(s_debugLog, EM_SCROLLCARET, 0, 0);
-		}
-		return TRUE;
-	}
-	return FALSE;
-}
-static void debugOutput(const char* msg)
-{
-	s_logMore += msg;
-	PostMessage(s_debug, WM_APP, 0, 0);
-}
-
 void					CMSWindowsSecondaryScreen::run()
 {
-CLog::setOutputter(&debugOutput);
+	// change our priority
+	CThread::getCurrentThread().setPriority(-7);
+
+	// save thread id
+	m_threadID = GetCurrentThreadId();
+
+	// run event loop
 	log((CLOG_INFO "entering event loop"));
 	doRun();
 	log((CLOG_INFO "exiting event loop"));
-CLog::setOutputter(NULL);
 }
 
 void					CMSWindowsSecondaryScreen::stop()
@@ -117,6 +86,24 @@ void					CMSWindowsSecondaryScreen::enter(
 
 	log((CLOG_INFO "entering screen at %d,%d mask=%04x", x, y, mask));
 
+	// attach thread input queues
+	AttachThreadInput(GetCurrentThreadId(), m_threadID, TRUE);
+
+	// update our keyboard state to reflect the local state
+	updateKeys();
+	updateModifiers();
+
+	// toggle modifiers that don't match the desired state
+	if ((mask & KeyModifierCapsLock)   != (m_mask & KeyModifierCapsLock)) {
+		toggleKey(VK_CAPITAL, KeyModifierCapsLock);
+	}
+	if ((mask & KeyModifierNumLock)    != (m_mask & KeyModifierNumLock)) {
+		toggleKey(VK_NUMLOCK | 0x100, KeyModifierNumLock);
+	}
+	if ((mask & KeyModifierScrollLock) != (m_mask & KeyModifierScrollLock)) {
+		toggleKey(VK_SCROLL, KeyModifierScrollLock);
+	}
+
 	// warp to requested location
 	SInt32 w, h;
 	getScreenSize(&w, &h);
@@ -128,21 +115,6 @@ void					CMSWindowsSecondaryScreen::enter(
 	// show cursor
 	log((CLOG_INFO "show cursor"));
 	ShowWindow(m_window, SW_HIDE);
-
-	// update our keyboard state to reflect the local state
-	updateKeys();
-	updateModifiers();
-
-	// toggle modifiers that don't match the desired state
-	if ((mask & KeyModifierCapsLock)   != (m_mask & KeyModifierCapsLock)) {
-		toggleKey(VK_CAPITAL, KeyModifierCapsLock);
-	}
-	if ((mask & KeyModifierNumLock)    != (m_mask & KeyModifierNumLock)) {
-		toggleKey(VK_NUMLOCK, KeyModifierNumLock);
-	}
-	if ((mask & KeyModifierScrollLock) != (m_mask & KeyModifierScrollLock)) {
-		toggleKey(VK_SCROLL, KeyModifierScrollLock);
-	}
 }
 
 void					CMSWindowsSecondaryScreen::leave()
@@ -363,18 +335,9 @@ void					CMSWindowsSecondaryScreen::getClipboard(
 	CClipboard::copy(dst, &src);
 }
 
-#include "resource.h" // FIXME
-
 void					CMSWindowsSecondaryScreen::onOpenDisplay()
 {
 	assert(m_window == NULL);
-
-// create debug dialog
-s_thread = GetCurrentThreadId();;
-s_debug = CreateDialog(getInstance(), MAKEINTRESOURCE(IDD_SYNERGY), NULL, &debugProc);
-s_debugLog = ::GetDlgItem(s_debug, IDC_LOG);
-CLog::setOutputter(&debugOutput);
-ShowWindow(s_debug, SW_SHOWNORMAL);
 
 	// initialize clipboard owner to current owner.  we don't want
 	// to take ownership of the clipboard just by starting up.
@@ -410,21 +373,12 @@ void					CMSWindowsSecondaryScreen::onCloseDisplay()
 	// destroy window
 	DestroyWindow(m_window);
 	m_window = NULL;
-
-CLog::setOutputter(NULL);
-DestroyWindow(s_debug);
-s_debug = NULL;
-s_thread = 0;
 }
 
 bool					CMSWindowsSecondaryScreen::onPreTranslate(MSG* msg)
 {
-if (IsDialogMessage(s_debug, msg)) {
-	return true;
-}
 	return false;
 }
-
 
 LRESULT					CMSWindowsSecondaryScreen::onEvent(
 								HWND hwnd, UINT msg,
@@ -467,9 +421,14 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
 		return 0;
 	}
+
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
+// these tables map KeyID (a X windows KeySym) to virtual key codes.
+// if the key is an extended key then the entry is the virtual key
+// code | 0x100.  keys that map to normal characters have a 0 entry
+// and the conversion is done elsewhere.
 static const UINT		g_latin1[] =
 {
 	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -859,7 +818,7 @@ static const UINT		g_function[] =
 static const UINT		g_miscellany[] =
 {
 	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ VK_BACK, VK_TAB, /*0x100 +*/ VK_RETURN, VK_CLEAR, 0, VK_RETURN, 0, 0,
+	/* 0x08 */ VK_BACK, VK_TAB, 0, VK_CLEAR, 0, VK_RETURN, 0, 0,
 	/* 0x10 */ 0, 0, 0, VK_PAUSE, VK_SCROLL, 0/*sys-req*/, 0, 0,
 	/* 0x18 */ 0, 0, 0, VK_ESCAPE, 0, 0, 0, 0,
 	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -868,21 +827,22 @@ static const UINT		g_miscellany[] =
 	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ VK_HOME, VK_LEFT, VK_UP, VK_RIGHT,
-	/* 0x54 */ VK_DOWN, VK_PRIOR, VK_NEXT, VK_END,
+	/* 0x50 */ VK_HOME|0x100, VK_LEFT|0x100, VK_UP|0x100, VK_RIGHT|0x100,
+	/* 0x54 */ VK_DOWN|0x100, VK_PRIOR|0x100, VK_NEXT|0x100, VK_END|0x100,
 	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ VK_SELECT, VK_SNAPSHOT, VK_EXECUTE, VK_INSERT, 0, 0, 0, VK_APPS,
-	/* 0x68 */ 0, 0, VK_HELP, VK_CANCEL, 0, 0, 0, 0,
+	/* 0x60 */ VK_SELECT|0x100, VK_SNAPSHOT|0x100, VK_EXECUTE|0x100, VK_INSERT|0x100,
+	/* 0x64 */ 0, 0, 0, VK_APPS|0x100,
+	/* 0x68 */ 0, 0, VK_HELP|0x100, VK_CANCEL|0x100, 0, 0, 0, 0,
 	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, VK_MODECHANGE, VK_NUMLOCK,
+	/* 0x78 */ 0, 0, 0, 0, 0, 0, VK_MODECHANGE|0x100, VK_NUMLOCK|0x100,
 	/* 0x80 */ VK_SPACE, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, VK_TAB, 0, 0, 0, VK_RETURN, 0, 0,
+	/* 0x88 */ 0, VK_TAB, 0, 0, 0, VK_RETURN|0x100, 0, 0,
 	/* 0x90 */ 0, 0, 0, 0, 0, VK_HOME, VK_LEFT, VK_UP,
 	/* 0x98 */ VK_RIGHT, VK_DOWN, VK_PRIOR, VK_NEXT,
 	/* 0x9c */ VK_END, 0, VK_INSERT, VK_DELETE,
 	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xa8 */ 0, 0, VK_MULTIPLY, VK_ADD,
-	/* 0xac */ VK_SEPARATOR, VK_SUBTRACT, VK_DECIMAL, VK_DIVIDE,
+	/* 0xac */ VK_SEPARATOR, VK_SUBTRACT, VK_DECIMAL, VK_DIVIDE|0x100,
 	/* 0xb0 */ VK_NUMPAD0, VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3,
 	/* 0xb4 */ VK_NUMPAD4, VK_NUMPAD5, VK_NUMPAD6, VK_NUMPAD7,
 	/* 0xb8 */ VK_NUMPAD8, VK_NUMPAD9, 0, 0, 0, 0, VK_F1, VK_F2,
@@ -891,10 +851,10 @@ static const UINT		g_miscellany[] =
 	/* 0xd0 */ VK_F19, VK_F20, VK_F21, VK_F22, VK_F23, VK_F24, 0, 0,
 	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xe0 */ 0, VK_LSHIFT, VK_RSHIFT, VK_LCONTROL,
-	/* 0xe4 */ VK_RCONTROL, VK_CAPITAL, 0, VK_LWIN,
-	/* 0xe8 */ VK_RWIN, VK_LMENU, VK_RMENU, 0, 0, 0, 0, 0,
+	/* 0xe4 */ VK_RCONTROL|0x100, VK_CAPITAL, 0, VK_LWIN|0x100,
+	/* 0xe8 */ VK_RWIN|0x100, VK_LMENU, VK_RMENU|0x100, 0, 0, 0, 0, 0,
 	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, VK_DELETE
+	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, VK_DELETE|0x100
 };
 static const UINT*		g_katakana = NULL;
 static const UINT*		g_arabic = NULL;
@@ -1001,6 +961,10 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 								KeyModifierMeta));
 	log((CLOG_DEBUG2 "key id %d -> virtual key %d", id, virtualKey));
 
+	// extract extended key flag
+	const bool isExtended = ((virtualKey & 0x100) != 0);
+	virtualKey           &= ~0x100;
+
 	// if not in map then ask system to convert ascii character
 	if (virtualKey == 0) {
 		if (mapID != 0) {
@@ -1010,7 +974,7 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 		}
 
 		// translate.  return no keys if unknown key.
-		SHORT vk = VkKeyScan(code);
+		SHORT vk = VkKeyScan(static_cast<TCHAR>(code));
 		if (vk == 0xffff) {
 			log((CLOG_DEBUG2 "no virtual key for character %d", code));
 			return m_mask;
@@ -1033,24 +997,12 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 
 		// handle combination of caps-lock and shift.  if caps-lock is
 		// off locally then use shift as necessary.  if caps-lock is on
-		// locally then shift reverses its meaning (for keys that are
-		// subject to case conversion).
-		if ((m_mask & KeyModifierCapsLock) != 0) {
-			// caps-lock is on.  note if shift is required.
-			log((CLOG_DEBUG2 "caps-lock is on"));
-			const bool needShift = ((outMask & KeyModifierShift) != 0);
-
-			// if needShift is true then see if the key is subject to
-			// case conversion.  if it is then caps-lock and shift
-			// cancel out.  if not then caps-lock is ignored and shift
-			// is required.
-			if (needShift) {
-				// FIXME -- there should be some system call to test
-				// if a key is subject to case conversion.
-				if (tolower(code) != toupper(code)) {
-					log((CLOG_DEBUG2 "turn off shift"));
-					outMask &= ~KeyModifierShift;
-				}
+		// locally then it reverses the meaning of shift for keys that
+		// are subject to case conversion.
+		if ((outMask & KeyModifierCapsLock) != 0) {
+			if (tolower(code) != toupper(code)) {
+				log((CLOG_DEBUG2 "flip shift"));
+				outMask ^= KeyModifierShift;
 			}
 		}
 
@@ -1096,13 +1048,13 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 		bool			m_isToggle;
 	};
 	static const CModifierInfo s_modifier[] = {
-		{ KeyModifierShift,			VK_LSHIFT,		VK_RSHIFT,	false },
-		{ KeyModifierControl,		VK_LCONTROL,	VK_RCONTROL,false },
-		{ KeyModifierAlt,			VK_LMENU,		VK_RMENU,	false },
-		{ KeyModifierMeta,			VK_LWIN,		VK_RWIN,	false },
-		{ KeyModifierCapsLock,		VK_CAPITAL,		0,			true },
-		{ KeyModifierNumLock,		VK_NUMLOCK,		0,			true },
-		{ KeyModifierScrollLock,	VK_SCROLL,		0,			true }
+		{ KeyModifierShift,		VK_LSHIFT,			VK_RSHIFT,			false },
+		{ KeyModifierControl,	VK_LCONTROL,		VK_RCONTROL | 0x100,false },
+		{ KeyModifierAlt,		VK_LMENU,			VK_RMENU | 0x100,	false },
+		{ KeyModifierMeta,		VK_LWIN | 0x100,	VK_RWIN | 0x100,	false },
+		{ KeyModifierCapsLock,	VK_CAPITAL,			0,					true },
+		{ KeyModifierNumLock,	VK_NUMLOCK | 0x100,	0,					true },
+		{ KeyModifierScrollLock,VK_SCROLL,			0,					true }
 	};
 	static const unsigned int s_numModifiers =
 								sizeof(s_modifier) / sizeof(s_modifier[0]);
@@ -1203,7 +1155,7 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 					}
 					else {
 						UINT key = s_modifier[i].m_virtualKey;
-						if ((m_keys[key] & 0x80) != 0) {
+						if ((m_keys[key & 0xff] & 0x80) != 0) {
 							keystroke.m_virtualKey = key;
 							keystroke.m_press      = false;
 							keystroke.m_repeat     = false;
@@ -1212,7 +1164,7 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 							undo.push_back(keystroke);
 						}
 						key = s_modifier[i].m_virtualKey2;
-						if (key != 0 && (m_keys[key] & 0x80) != 0) {
+						if (key != 0 && (m_keys[key & 0xff] & 0x80) != 0) {
 							keystroke.m_virtualKey = key;
 							keystroke.m_press      = false;
 							keystroke.m_repeat     = false;
@@ -1227,23 +1179,23 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 	}
 
 	// add the key event
+	keystroke.m_virtualKey = virtualKey;
+	if (isExtended)
+		keystroke.m_virtualKey |= 0x100;
 	switch (action) {
 	case kPress:
-		keystroke.m_virtualKey = virtualKey;
 		keystroke.m_press      = true;
 		keystroke.m_repeat     = false;
 		keys.push_back(keystroke);
 		break;
 
 	case kRelease:
-		keystroke.m_virtualKey = virtualKey;
 		keystroke.m_press      = false;
 		keystroke.m_repeat     = false;
 		keys.push_back(keystroke);
 		break;
 
 	case kRepeat:
-		keystroke.m_virtualKey = virtualKey;
 		keystroke.m_press      = true;
 		keystroke.m_repeat     = true;
 		keys.push_back(keystroke);
@@ -1276,13 +1228,13 @@ KeyModifierMask			CMSWindowsSecondaryScreen::mapKey(
 			// can't reset bit until all keys that set it are released.
 			// scan those keys to see if any are pressed.
 			bool down = false;
-			if (virtualKey != modifier.m_virtualKey &&
-				(m_keys[modifier.m_virtualKey] & 0x80) != 0) {
+			if (virtualKey != (modifier.m_virtualKey & 0xff) &&
+				(m_keys[modifier.m_virtualKey & 0xff] & 0x80) != 0) {
 				down = true;
 			}
 			if (modifier.m_virtualKey2 != 0 &&
-				virtualKey != modifier.m_virtualKey2 &&
-				(m_keys[modifier.m_virtualKey2] & 0x80) != 0) {
+				virtualKey != (modifier.m_virtualKey2 & 0xff) &&
+				(m_keys[modifier.m_virtualKey2 & 0xff] & 0x80) != 0) {
 				down = true;
 			}
 			if (!down)
@@ -1310,9 +1262,7 @@ void					CMSWindowsSecondaryScreen::doKeystrokes(
 			for (; count > 0; --count) {
 				// send repeating events
 				for (k = start; k != keys.end() && k->m_repeat; ++k) {
-					const UINT code = MapVirtualKey(k->m_virtualKey, 0);
-					keybd_event(k->m_virtualKey, code,
-								k->m_press ? 0 : KEYEVENTF_KEYUP, 0);
+					sendKeyEvent(k->m_virtualKey, k->m_press);
 				}
 			}
 
@@ -1321,9 +1271,7 @@ void					CMSWindowsSecondaryScreen::doKeystrokes(
 		}
 		else {
 			// send event
-			const UINT code = MapVirtualKey(k->m_virtualKey, 0);
-			keybd_event(k->m_virtualKey, code,
-								k->m_press ? 0 : KEYEVENTF_KEYUP, 0);
+			sendKeyEvent(k->m_virtualKey, k->m_press);
 
 			// next key
 			++k;
@@ -1333,22 +1281,25 @@ void					CMSWindowsSecondaryScreen::doKeystrokes(
 
 void					CMSWindowsSecondaryScreen::updateKeys()
 {
-	// GetKeyboardKeys() doesn't seem to do the expected thing
+	// clear key state
 	memset(m_keys, 0, sizeof(m_keys));
-	m_keys[VK_LSHIFT]   = GetKeyState(VK_LSHIFT);
-	m_keys[VK_RSHIFT]   = GetKeyState(VK_RSHIFT);
-	m_keys[VK_SHIFT]    = GetKeyState(VK_SHIFT);
-	m_keys[VK_LCONTROL] = GetKeyState(VK_LCONTROL);
-	m_keys[VK_RCONTROL] = GetKeyState(VK_RCONTROL);
-	m_keys[VK_CONTROL]  = GetKeyState(VK_CONTROL);
-	m_keys[VK_LMENU]    = GetKeyState(VK_LMENU);
-	m_keys[VK_RMENU]    = GetKeyState(VK_RMENU);
-	m_keys[VK_MENU]     = GetKeyState(VK_MENU);
-	m_keys[VK_LWIN]     = GetKeyState(VK_LWIN);
-	m_keys[VK_RWIN]     = GetKeyState(VK_RWIN);
-	m_keys[VK_CAPITAL]  = GetKeyState(VK_CAPITAL);
-	m_keys[VK_NUMLOCK]  = GetKeyState(VK_NUMLOCK);
-	m_keys[VK_SCROLL]   = GetKeyState(VK_SCROLL);
+
+	// we only care about the modifier key states
+	m_keys[VK_LSHIFT]   = static_cast<BYTE>(GetKeyState(VK_LSHIFT));
+	m_keys[VK_RSHIFT]   = static_cast<BYTE>(GetKeyState(VK_RSHIFT));
+	m_keys[VK_SHIFT]    = static_cast<BYTE>(GetKeyState(VK_SHIFT));
+	m_keys[VK_LCONTROL] = static_cast<BYTE>(GetKeyState(VK_LCONTROL));
+	m_keys[VK_RCONTROL] = static_cast<BYTE>(GetKeyState(VK_RCONTROL));
+	m_keys[VK_CONTROL]  = static_cast<BYTE>(GetKeyState(VK_CONTROL));
+	m_keys[VK_LMENU]    = static_cast<BYTE>(GetKeyState(VK_LMENU));
+	m_keys[VK_RMENU]    = static_cast<BYTE>(GetKeyState(VK_RMENU));
+	m_keys[VK_MENU]     = static_cast<BYTE>(GetKeyState(VK_MENU));
+	m_keys[VK_LWIN]     = static_cast<BYTE>(GetKeyState(VK_LWIN));
+	m_keys[VK_RWIN]     = static_cast<BYTE>(GetKeyState(VK_RWIN));
+	m_keys[VK_APPS]     = static_cast<BYTE>(GetKeyState(VK_APPS));
+	m_keys[VK_CAPITAL]  = static_cast<BYTE>(GetKeyState(VK_CAPITAL));
+	m_keys[VK_NUMLOCK]  = static_cast<BYTE>(GetKeyState(VK_NUMLOCK));
+	m_keys[VK_SCROLL]   = static_cast<BYTE>(GetKeyState(VK_SCROLL));
 }
 
 void					CMSWindowsSecondaryScreen::updateModifiers()
@@ -1376,11 +1327,97 @@ void					CMSWindowsSecondaryScreen::toggleKey(
 								UINT virtualKey, KeyModifierMask mask)
 {
 	// send key events to simulate a press and release
-	const UINT code = MapVirtualKey(virtualKey, 0);
-	keybd_event(virtualKey, code, 0, 0);
-	keybd_event(virtualKey, code, KEYEVENTF_KEYUP, 0);
+	sendKeyEvent(virtualKey, true);
+	sendKeyEvent(virtualKey, false);
 
 	// toggle shadow state
-	m_mask             ^= mask;
-	m_keys[virtualKey] ^= 0x01;
+	m_mask                    ^= mask;
+	m_keys[virtualKey & 0xff] ^= 0x01;
+}
+
+UINT					CMSWindowsSecondaryScreen::virtualKeyToScanCode(
+								UINT& virtualKey)
+{
+	// try mapping given virtual key
+	UINT code = MapVirtualKey(virtualKey & 0xff, 0);
+	if (code != 0)
+		return code;
+
+	// no dice.  if the virtual key distinguishes between left/right
+	// then try the one that doesn't distinguish sides.  windows (or
+	// keyboard drivers) are inconsistent in their treatment of these
+	// virtual keys.  the following behaviors have been observed:
+	//
+	//  win2k (gateway desktop):
+	//      MapVirtualKey(vk, 0):
+	//        VK_SHIFT == VK_LSHIFT != VK_RSHIFT
+	//        VK_CONTROL == VK_LCONTROL == VK_RCONTROL
+	//        VK_MENU == VK_LMENU == VK_RMENU
+	//      MapVirtualKey(sc, 3):
+	//        VK_LSHIFT and VK_RSHIFT mapped independently
+	//        VK_LCONTROL is mapped but not VK_RCONTROL
+	//        VK_LMENU is mapped but not VK_RMENU
+	//
+	//  win me (sony vaio laptop):
+	//      MapVirtualKey(vk, 0):
+	//        VK_SHIFT mapped;  VK_LSHIFT, VK_RSHIFT not mapped
+	//        VK_CONTROL mapped;  VK_LCONTROL, VK_RCONTROL not mapped
+	//        VK_MENU mapped;  VK_LMENU, VK_RMENU not mapped
+	//      MapVirtualKey(sc, 3):
+	//        all scan codes unmapped (function apparently unimplemented)
+	switch (virtualKey & 0xff) {
+	case VK_LSHIFT:
+	case VK_RSHIFT:
+		virtualKey = VK_SHIFT;
+		return MapVirtualKey(VK_SHIFT, 0);
+
+	case VK_LCONTROL:
+	case VK_RCONTROL:
+		virtualKey = VK_CONTROL;
+		return MapVirtualKey(VK_CONTROL, 0);
+
+	case VK_LMENU:
+	case VK_RMENU:
+		virtualKey = VK_MENU;
+		return MapVirtualKey(VK_MENU, 0);
+
+	default:
+		return 0;
+	}
+}
+
+bool					CMSWindowsSecondaryScreen::isExtendedKey(
+								UINT virtualKey)
+{
+	// see if we've already encoded the extended flag
+	if ((virtualKey & 0x100) != 0)
+		return true;
+
+	// check known virtual keys
+	switch (virtualKey & 0xff) {
+	case VK_NUMLOCK:
+	case VK_RCONTROL:
+	case VK_RMENU:
+	case VK_LWIN:
+	case VK_RWIN:
+	case VK_APPS:
+		return true;
+
+	default:
+		return false;
+	}
+}
+
+void					CMSWindowsSecondaryScreen::sendKeyEvent(
+								UINT virtualKey, bool press)
+{
+	DWORD flags = 0;
+	if (isExtendedKey(virtualKey))
+		flags |= KEYEVENTF_EXTENDEDKEY;
+	if (!press)
+		flags |= KEYEVENTF_KEYUP;
+	const UINT code = virtualKeyToScanCode(virtualKey);
+	keybd_event(static_cast<BYTE>(virtualKey & 0xff),
+								static_cast<BYTE>(code), flags, 0);
+	log((CLOG_DEBUG2 "send key %d, 0x%04x, %s%s", virtualKey & 0xff, code, ((flags & KEYEVENTF_KEYUP) ? "release" : "press"), ((flags & KEYEVENTF_EXTENDEDKEY) ? " extended" : "")));
 }
