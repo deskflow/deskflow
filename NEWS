@@ -1,6 +1,21 @@
 Synergy News
 ============
 
+* Dec-25-2002 - Synergy 0.9.14 released
+
+  Made following changes:
+  * Fixed solaris compile problems (untested)
+  * Fixed irix compile problems (untested)
+  * Fixed windows client not reconnecting when server dies bug
+  * Fixed loss of ctrl+alt from windows server to non-windows clients
+  * Fixed handling of password protected windows client screen saver
+  * Now handling any number of pointer buttons on X11
+  * Toggle key states now restored when leaving clients
+  * Added support for per-screen config options
+  * Added config options for half-duplex toggle keys on X11
+  * Enabled class diagrams in doxygen documentation
+
+
 * Nov-05-2002 - Synergy 0.9.13 released
 
   Made following changes:
