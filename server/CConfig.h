@@ -80,7 +80,7 @@ public:
 	const_iterator		end() const;
 
 	// returns true iff name names a screen
-	bool				isScreen(const CString& name);
+	bool				isScreen(const CString& name) const;
 
 	// get the neighbor in the given direction.  returns the empty string
 	// if there is no neighbor in that direction.

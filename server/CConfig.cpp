@@ -136,7 +136,7 @@ CConfig::const_iterator	CConfig::end() const
 	return const_iterator(m_map.end());
 }
 
-bool					CConfig::isScreen(const CString& name)
+bool					CConfig::isScreen(const CString& name) const
 {
 	return (m_map.count(name) > 0);
 }
