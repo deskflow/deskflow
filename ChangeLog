@@ -1,3 +1,67 @@
+2002/09/14 21:31:35 crs
+lib/base/XBase.cpp
+lib/base/XBase.h
+
+removed std::exception from base class list of XBase.  this
+is a workaround for gcc 3.2 until everything necessary has
+throw() specifiers.
+
+----------
+2002/09/14 20:56:50 crs
+lib/server/CServer.cpp
+
+now logging bind failures as warnings.
+
+----------
+2002/09/14 20:56:28 crs
+lib/base/XBase.cpp
+lib/base/XBase.h
+lib/io/XIO.cpp
+lib/io/XIO.h
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPSocket.cpp
+lib/net/XSocket.cpp
+lib/net/XSocket.h
+
+added better network error message support.
+
+----------
+2002/09/14 12:07:02 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/server/CXWindowsPrimaryScreen.h
+lib/synergy/KeyTypes.h
+
+Rewrote handling of key press on X11 client;  it should be much
+more robust now.  Also added handling of Super modifier key and
+changed windows keys to map to Super instead of Meta, which is
+the default on my keyboard.
+
+----------
+2002/09/14 12:05:06 crs
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added debug level combo box and version number to title bar of win32
+launcher.
+
+----------
+2002/09/14 12:03:43 crs
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.rc
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.rc
+
+Fixed backend mode.  Now reports log messages and, if any are
+serious, shows a message box before exiting.
+
+----------
 2002/09/04 21:17:01 crs
 NEWS
 configure.in

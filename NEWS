@@ -1,6 +1,16 @@
 Synergy News
 ============
 
+* Sep-14-2002 - Synergy 0.9.12 released
+
+  Made following changes:
+  * Win32 was not reporting log messages properly when run from synergy.exe
+  * Network error messages weren't reporting useful information
+  * Synergy won't build on gcc 3.2; added workaround for known problem
+  * X11 wasn't handling some keys/key combinations correctly
+  * Added option to change logging level when testing from synergy.exe
+
+
 * Sep-04-2002 - Synergy 0.9.11 released
 
   Fixed following bugs:
