@@ -599,9 +599,6 @@ parse(int argc, const char* const* argv)
 	// set defaults
 	ARG->m_name = ARCH->getHostName();
 
-	// identify system
-	LOG((CLOG_INFO "Synergy client on %s", ARCH->getOSName().c_str()));
-
 	// parse options
 	int i;
 	for (i = 1; i < argc; ++i) {
@@ -726,6 +723,9 @@ parse(int argc, const char* const* argv)
 								ARG->m_pname, ARG->m_logFilter, ARG->m_pname));
 		bye(kExitArgs);
 	}
+
+	// identify system
+	LOG((CLOG_INFO "Synergy client on %s", ARCH->getOSName().c_str()));
 }
 
 
