@@ -44,7 +44,7 @@ CClient::~CClient()
 
 void					CClient::run(const CNetworkAddress& serverAddress)
 {
-	CThread* thread;
+	CThread* thread = NULL;
 	try {
 		log((CLOG_NOTE "starting client"));
 
@@ -70,18 +70,22 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		log((CLOG_ERR "client error: %s", e.what()));
 
 		// clean up
-		thread->cancel();
-		thread->wait();
-		delete thread;
+		if (thread != NULL) {
+			thread->cancel();
+			thread->wait();
+			delete thread;
+		}
 		closeSecondaryScreen();
 	}
 	catch (...) {
 		log((CLOG_DEBUG "unknown client error"));
 
 		// clean up
-		thread->cancel();
-		thread->wait();
-		delete thread;
+		if (thread != NULL) {
+			thread->cancel();
+			thread->wait();
+			delete thread;
+		}
 		closeSecondaryScreen();
 		throw;
 	}
