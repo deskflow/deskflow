@@ -17,24 +17,25 @@ VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =				\
 	resource.h				\
-	synergy.dsp				\
-	synergy.ico				\
-	synergy.rc				\
+	synergys.ico			\
+	synergys.dsp			\
+	synergys.rc				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =		\
 	Makefile.in				\
 	$(NULL)
 
-bin_PROGRAMS = synergy
-synergy_SOURCES = 						\
-	synergy.cpp							\
+bin_PROGRAMS = synergys
+synergys_SOURCES = 						\
+	synergys.cpp						\
 	$(NULL)
-synergy_LDADD =							\
-	$(DEPTH)/lib/client/libclient.a		\
+synergys_LDADD =						\
+	$(DEPTH)/lib/server/libserver.a		\
 	$(DEPTH)/lib/platform/libplatform.a	\
 	$(DEPTH)/lib/synergy/libsynergy.a	\
 	$(DEPTH)/lib/net/libnet.a			\
+	$(DEPTH)/lib/http/libhttp.a			\
 	$(DEPTH)/lib/io/libio.a				\
 	$(DEPTH)/lib/mt/libmt.a				\
 	$(DEPTH)/lib/base/libbase.a			\
@@ -49,8 +50,9 @@ INCLUDES =								\
 	-I$(VDEPTH)/lib/base 				\
 	-I$(VDEPTH)/lib/mt	 				\
 	-I$(VDEPTH)/lib/io	 				\
+	-I$(VDEPTH)/lib/http 				\
 	-I$(VDEPTH)/lib/net	 				\
 	-I$(VDEPTH)/lib/synergy				\
 	-I$(VDEPTH)/lib/platform 			\
-	-I$(VDEPTH)/lib/client 				\
+	-I$(VDEPTH)/lib/server	 			\
 	$(NULL)

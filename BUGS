@@ -6,11 +6,6 @@ Report bugs to:  synergy@groundhog.pair.com
 When reporting bugs, please include the version of the operating
 system you're using and what locale you use.
 
-* Documentation is missing
-
-  There are currently no man pages or other documents describing the
-  usage of the various commands.
-
 * Not all keystrokes are handled
 
   Certain keystrokes are not captured by the synergy server and,
@@ -100,9 +95,3 @@ system you're using and what locale you use.
 
   The automake configuration isn't complete so synergy won't build
   properly on some (many) systems.
-
-* Only text is supported on the clipboard
-
-  The clipboard supports Unicode and current locale encoded text but
-  there are numerous other data types it should support, e.g. images,
-  sound, raw binary data, etc.

@@ -25,17 +25,19 @@ The synergy project page is:
 http://sourceforge.net/projects/synergy2/
 
 Report bugs to:
-synergy@groundhog.pair.com
+http://sourceforge.net/tracker/?func=add&group_id=59275&atid=490467
 
 
 Please see the following files for more information:
 AUTHORS   -- The list of synergy's authors
 BUGS      -- A list of known bugs and limitations
 COPYING   -- The license synergy is release under
+FAQ       -- Frequently asked questions about synergy
 HISTORY   -- A brief history of synergy
 INSTALL   -- Detailed build and installation instructions
 NEWS      -- News about the synergy project
 PORTING   -- Porting guide for developers
+TODO      -- List of things to add to synergy
 
 
 System Requirements
@@ -80,9 +82,36 @@ server on the primary screen and the synergy client on all the
 secondary screens.  If it's easier just install both on all of the
 systems.
 
-Third, you create a configuration file for the server.  Only the
-server requires configuration.  Create a text file named
-synergy.conf with the following:
+Third, you configure and start the server.
+  Windows
+  -------
+  Run `synergy' by double clicking on it.  This brings up a dialog.
+  Configure the server:
+
+  * Click the `Server' radio button
+  * Click `Add' to add the server to the `Screens' list
+	* Enter the name of server (the computer name is recommended)
+	* Enter other names the server is known by
+	* Click OK
+  * Use `Add' to add your other computers
+  * Use the controls under `Layout' to link screens together
+	* Click (once) on the server's name in the `Screens' list
+	* Choose the screen to the left of the server
+      * Use `---' if there is no screen to the left of the server
+	* Choose the screens to the right, above and below the server
+	* Repeat the above steps for all the other screens
+  * Enter the server's screen name next to `Screen Name'
+	* This defaults to the computer's name (recommended)
+
+  Now click `Test'.  The server will start and you'll see a console window
+  with log messages telling you about synergy's progress.  If an error
+  occurs you'll get a dialog box telling you synergy is about to quit;
+  read the log messages to determine the problem then correct it and try
+  `Test' again.
+
+  Linux
+  -----
+  Create a text file named synergy.conf with the following:
 
 	section: screens
 	   <screen1>:
@@ -95,36 +124,55 @@ synergy.conf with the following:
 		   left = <screen1>
 	end
 
-Replace each occurrence of `<screen1>' with the host name of the
-primary screen computer and `<screen2>' with the host name of a
-secondary screen computer.  In the above example, <screen2> is to
-the right of <screen1> and <screen1> is to the left of <screen2>.
-If necessary you should replace `right' and `left' with `left',
-`right', 'up', or `down'.  If you have more than two computers
-you can add those too:  add each computer's host name in the
-`screens' section and add the appropriate links.
+  Replace each occurrence of `<screen1>' with the host name of the
+  primary screen computer and `<screen2>' with the host name of a
+  secondary screen computer.  In the above example, <screen2> is to
+  the right of <screen1> and <screen1> is to the left of <screen2>.
+  If necessary you should replace `right' and `left' with `left',
+  `right', 'up', or `down'.  If you have more than two computers
+  you can add those too:  add each computer's host name in the
+  `screens' section and add the appropriate links.
 
-Finally, you start the server then all of the clients.  Normally
-synergy wants to run "in the background."  It detaches from the
-terminal and doesn't have a visible window, effectively
-disappearing from view.  Until you're sure your configuration
-works you should start synergy "in the foreground" using the `-f'
-command line option.
+  Now start the server.  Normally synergy wants to run "in the
+  background."  It detaches from the terminal and doesn't have a
+  visible window, effectively disappearing from view.  Until you're
+  sure your configuration works you should start synergy "in the
+  foreground" using the `-f' command line option:
 
-To get a command line on Windows, choose Run... from the Start
-menu.  Type `cmd' if you're using the Windows NT family or
-`command' if you're using the Windows 95 family and press enter.
+    synergys -f --config synergy.conf
 
-To start the server, enter the following on the command line:
+  Check the reported messages for errors.  Use ctrl+c to stop synergy,
+  correct any problems, and start it again.
 
-  synergyd -f --config synergy.conf
+Finally, start the clients.
+  Windows
+  -------
+  Run `synergy' on the client by double clicking on it.  Configure the
+  client:
 
-To start a client, enter the following:
+  * Click the `Client' radio button
+  * Enter the server's computer name in `Server Host Name'
+	* Do not use any of the server's screen names, unless one of those
+    	is also the computer name
+  * Enter the client's screen name next to `Screen Name'
+	* This defaults to the computer's name (recommended)
+	* This must be one of the names in the server's `Screens' list
+  * Click `Test'
 
-  synergy -f <server-host-name>
+  If an error occurs you'll get a dialog box telling you synergy is
+  about to quit;  read the log messages to determine the problem then
+  correct it and try `Test' again.
 
-where `<server-host-name>' is replaced by the name of the computer
-running the synergy server.
+  Linux
+  -----
+
+  To start a client, enter the following:
+
+	synergyc -f <server-host-name>
+
+  where `<server-host-name>' is replaced by the name of the computer
+  running the synergy server.  If an error is reported use ctrl+c to
+  stop synergy, fix the error, and try again.
 
 Both the client and server should immediately report the connection
 or an error.  If successful, you should now be able to move the
@@ -134,20 +182,28 @@ except use the edge of the screens to jump to other screens.  You
 can also cut-and-paste across computers.  Currently, only text
 transfers between computers.  Start the remaining clients.
 
-Be aware that not all keystrokes can be handled by synergy.  In
-particular, ctrl+alt+del is not handled.  You cannot use synergy
-to log into a Windows NT family system that requires the user to
-press ctrl+alt+del to log on.  You'll need to keep that computer's
-keyboard handy in order to log on.
-
 Once the configuration is verified, see the instructions in INSTALL
-under `Starting Automatically' for details on running synergy in
-the background and on starting synergy automatically when you start
+under `Starting Automatically on ...' for details on running synergy
+in the background and on starting synergy automatically when you start
 your computers.
 
 
 Tips and Tricks
 ---------------
+* Be aware that not all keystrokes can be handled by synergy.  In
+  particular, ctrl+alt+del is not handled.  You cannot use synergy
+  to log into a Windows NT family system that requires the user to
+  press ctrl+alt+del to log on.  You'll need to keep that computer's
+  keyboard handy in order to log on.
+
+* To work around the lack of ctrl+alt+del, you can configure Windows
+  2000 and XP to not require ctrl+alt+del to log on using the System
+  control panel.  If you're the only user of an NT system you might
+  want to enable auto-logon.  In any case, you should keep each
+  computer's keyboard handy, perhaps under the desk or on top of the
+  computer itself.  If the system supports USB you should also be able
+  to attach/detach a keyboard as necessary.
+
 * A screen can be its own neighbor.  That allows a screen to "wrap".
   For example, if a configuration linked the left and right sides of
   a screen to itself then moving off the left of the screen would put
@@ -169,14 +225,6 @@ Tips and Tricks
   the extension).  Starting with 4.0 you must enable the corresponding
   option in your .xscreensaver file.
 
-* To work around the lack of ctrl+alt+del, you can configure Windows
-  2000 and XP to not require ctrl+alt+del to log on using the System
-  control panel.  If you're the only user of an NT system you might
-  want to enable auto-logon.  In any case, you should keep each
-  computer's keyboard handy, perhaps under the desk or on top of the
-  computer itself.  If the system supports USB you should also be able
-  to attach/detach a keyboard as necessary.
-
 * Synergy automatically converts newlines in clipboard text (Linux
   expects \n to end each line while Windows expects \r\n).
 
@@ -193,6 +241,6 @@ Bug Reports
 
 Synergy is being improved all the time but we can only fix problems
 that we know about.  Please let us know of any problems you encounter,
-including confusing or unhelpful documentation.  Send reports to:
+including confusing or unhelpful documentation.  File reports at:
 
-    synergy@groundhog.pair.com
+  http://sourceforge.net/tracker/?func=add&group_id=59275&atid=490467

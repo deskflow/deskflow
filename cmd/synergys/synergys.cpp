@@ -41,14 +41,16 @@
 #if WINDOWS_LIKE
 #define DAEMON_NAME "Synergy Server"
 #elif UNIX_LIKE
-#define DAEMON_NAME "synergyd"
+#define DAEMON_NAME "synergys"
 #endif
 
 // configuration file name
 #if WINDOWS_LIKE
-#define CONFIG_NAME "synergy.sgc"
+#define USR_CONFIG_NAME "synergy.sgc"
+#define SYS_CONFIG_NAME "synergy.sgc"
 #elif UNIX_LIKE
-#define CONFIG_NAME "synergy.conf"
+#define USR_CONFIG_NAME ".synergy.conf"
+#define SYS_CONFIG_NAME "synergy.conf"
 #endif
 
 //
@@ -344,10 +346,10 @@ PLATFORM_EXTRA
 								kDefaultPort,
 								platform.addPathComponent(
 									platform.getUserDirectory(),
-									CONFIG_NAME).c_str(),
+									USR_CONFIG_NAME).c_str(),
 								platform.addPathComponent(
 									platform.getSystemDirectory(),
-									CONFIG_NAME).c_str()));
+									SYS_CONFIG_NAME).c_str()));
 }
 
 static
@@ -586,7 +588,7 @@ loadConfig()
 		CString path = platform.getUserDirectory();
 		if (!path.empty()) {
 			// complete path
-			path = platform.addPathComponent(path, CONFIG_NAME);
+			path = platform.addPathComponent(path, USR_CONFIG_NAME);
 
 			// now try loading the user's configuration
 			loaded = loadConfig(path.c_str(), false);
@@ -595,7 +597,7 @@ loadConfig()
 			// try the system-wide config file
 			path = platform.getSystemDirectory();
 			if (!path.empty()) {
-				path = platform.addPathComponent(path, CONFIG_NAME);
+				path = platform.addPathComponent(path, SYS_CONFIG_NAME);
 				loadConfig(path.c_str(), false);
 			}
 		}

@@ -26,7 +26,7 @@
 
 #define CONFIG_NAME "synergy.sgc"
 #define CLIENT_APP "synergyc.exe"
-#define SERVER_APP "synergyd.exe"
+#define SERVER_APP "synergys.exe"
 
 typedef std::vector<CString> CStringList;
 

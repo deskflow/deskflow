@@ -42,7 +42,7 @@
 #if WINDOWS_LIKE
 #define DAEMON_NAME "Synergy Client"
 #elif UNIX_LIKE
-#define DAEMON_NAME "synergy"
+#define DAEMON_NAME "synergyc"
 #endif
 
 //

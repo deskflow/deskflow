@@ -25,16 +25,16 @@ make
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-strip $RPM_BUILD_ROOT/usr/bin/synergy
-strip $RPM_BUILD_ROOT/usr/bin/synergyd
+strip $RPM_BUILD_ROOT/usr/bin/synergyc
+strip $RPM_BUILD_ROOT/usr/bin/synergys
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-, root, root)
-/usr/bin/synergy
-/usr/bin/synergyd
+/usr/bin/synergyc
+/usr/bin/synergys
 %doc AUTHORS
 %doc BUGS
 %doc COPYING

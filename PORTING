@@ -41,18 +41,98 @@ Coding Style Guide
 Synergy uses many coding conventions.  Contributed code should
 following these guidelines.
 
+- Symbol Naming
+  Names always begin with a letter (never an underscore).  The first
+  letter of interior names are always capitalized.  Acronyms should
+  be all uppercase.  For example: myTextAsASCII.
+
+  Names come it two flavors:  leading capital and leading lowercase.
+  The former have the first character capitalized and the latter
+  don't.  In the following table, leading capital names are indicated
+  by `Name' and leading lowercase names by `name'.
+
+  The naming convention for various things are:
+
+    * Exceptions       -- X + Name    XMyException
+    * Interfaces       -- I + Name    IMyInterface
+    * Template Classes -- T + Name    TMyTemplate<>
+    * Other Classes    -- C + Name    CMyClass
+    * Enumerations     -- E + Name    EMyEnumeration
+    * Constants        -- k + Name    kMyConstant
+    * Data Members     -- m_ + name   m_myDataMember
+    * Methods          -- name        myMethod
+    * Functions        -- name        myFunction
+    * Variables        -- name        myVariable
+
+  Exceptions are types that get thrown and are generally derived
+  (possibly indirectly) from XBase.  Interfaces are derived (possibly
+  indirectly) from IInterface and have only pure virtual functions.
+  Other classes are classes that aren't exceptions or interfaces.
+  Constants include global constants and enumerants.
+
+  Method names should usually have the form `verbObject'.  For example:
+    * isGameOn()
+    * getBeer()
+    * pressPowerButton()
+    * setChannel()
+  In general, use `get' and `set' to read and write state but use `is'
+  to read boolean state.  Note that classes that contain only `is',
+  `get', and `set' are probably plain old data;  you might want to
+  consider using public data members only or, better, refactor your
+  design to have classes that actually do something more than just
+  hold data.
+
+- File Naming
+  Each class should have one source and one header file.  If the
+  class is named `CMyClass' then the source file should be named
+  `CMyClass.cpp' and the header file `CMyClass.h'.
+
+  Headers files not containing a class should have some meaningful
+  name with a leading capital (e.g. `Version.h').
+
+  Source files without a header file have a leading lowercase name.
+  Only files containing the entry point for an application should
+  lack a header file.
+
 - Dependencies
   * No circular library dependencies
     Library dependencies form an acyclic graph.  Conceptually
     libraries can be arranged in layers where each library only
-    references libraries in layers below it, not in the same
-    layer or layers above it.  The makefiles build the lowest
-    layer libraries first and work upwards.
+    references libraries in layers below it, not in the same layer
+    or layers above it.  The makefiles build the lowest layer
+    libraries first and work upwards.
 
   * Avoid circular uses-a relationships
     When possible, design classes with one-way uses-a relationships
     and avoid cycles.  This makes it easier to understand the code.
     However, sometimes it's not always practical so it is permitted.
+
+  * Included files in headers
+    Headers should #include only the necessary headers.  In
+    particular, if a class is referenced in a header file only as a
+    pointer or a reference then use `class COtherClass;' instead of
+    `#include "COtherClass.h".'
+
+  * #include syntax
+    Non-synergy header files must be included using angle brackets
+    while synergy header files must be included using double quotes.
+      #include "CSynergyHeader.h"
+      #include <systemheader.h>
+    The file name in a #include must not be a relative path unless
+    it's a system header file and it's customary to use a relative
+    path, e.g. `#include <sys/types.h>'.  Use compiler options to
+    add necessary directories to the include search path.
+
+  * Included file ordering
+    Files should be included in the following order:
+    * Header for source file
+      The first include for CMyClass.cpp must be CMyClass.h. 
+    * Other headers in directory, sorted alphabetically
+    * Headers for each library, sorted alphabetically per library
+      Include headers from the library closest in the dependency graph
+        first, then the next farthest, etc.  sort alphabetically within
+        each library.
+    * System headers
 
 - C++
   * C++ features
@@ -134,42 +214,53 @@ following these guidelines.
     directly or indirectly, from the class and any of those classes
     have full access to the protected data.
 
+  * Plain old data
+    A class that merely contains data and doesn't perform operations
+    on that data (other than reads and writes) is plain old data (POD).
+    POD should have only public data members and non-copy constructors.
+    It must not have any methods other than constructors, not even a
+    destructor or assignment operators, nor protected or private data.
+
+  * Avoid using friend
+    Avoid declaring friend functions or classes.  They're sometimes
+    necessary for operator overloading.  If you find it necessary to
+    add friends to some class C, consider creating a utility class U.
+    A utility class is declared as the only friend of C and provides
+    only static methods.  Each method forwards to a private method on
+    an object of C type (passed as a parameter to the U's method).
+    This makes maintenance easier since only U has friend access to C
+    and finding any call to U is trivial (they're prefixed by U::).
+
   * Don't test for NULL when using `delete' or `delete[]'
     It's unnecessary since delete does it anyway.
 
-- Naming
-  Names always begin with a letter (never an underscore).  The first
-  letter of interior names are always capitalized.  Acronyms should
-  be all uppercase.  For example: myTextAsASCII.
+- Makefiles
+  Automake's makefiles (named Makefile.am) have a few requirements:
+  * Define the following macros at the top of the file:
+      NULL =
+      DEPTH = <relative-path-to-top-level>
+      VDEPTH = ./$(VPATH)/$(DEPTH)
+    <relative-path-to-top-level> is `..', `../..', `../../..', etc,
+    whichever references the top directory of the synergy tree.  For
+    example, for a subdirectory of the top level use `..', for a
+    subdirectory of a subdirectory of the top level use `../..'.
+  * Lists should have one item per line and end in $(NULL).  For
+    example:
+      EXTRA_DIST =     \
+          kiwi.txt     \
+          mango.cpp    \
+          papaya.h     \
+          $(NULL)
+    Indentation must use tabs in a makefile.  Line continuations
+    (backslashes) should be aligned using tabs.
+  * Lists of files should be sorted alphabetically.  Lists of
+    subdirectories must be in the desired build order.
 
-  Names come it two flavors:  leading capital and leading lowercase.
-  The former have the first character capitalized and the latter
-  don't.  In the following table, leading capital names are indicated
-  by `Name' and leading lowercase names by `name'.
-
-  The naming convention for various things are:
-
-    * Exceptions       -- X + Name    XMyException
-    * Interfaces       -- I + Name    IMyInterface
-    * Template Classes -- T + Name    TMyTemplate<>
-    * Other Classes    -- C + Name    CMyClass
-    * Enumerations     -- E + Name    EMyEnumeration
-    * Constants        -- k + Name    kMyConstant
-    * Data Members     -- m_ + name   m_myDataMember
-    * Methods          -- name        myMethod
-    * Functions        -- name        myFunction
-    * Variables        -- name        myVariable
-
-  Exceptions are types that get thrown and are generally derived
-  (possibly indirectly) from XBase.  Interfaces are derived (possibly
-  indirectly) from IInterface and have only pure virtual functions.
-  Other classes are classes that aren't exceptions or interfaces.
-  Constants include global constants and enumerants.
-
-- Formatting
+- Source Formatting
   Every project has its own formatting style and no style satisfies
   everyone.  New code should be consistent with existing code:
 
+  * All files should include the copyright and license notice
   * Use tabs to indent
   * Tabs are 4 columns
   * Open braces ({) go on same line as introducing statement
@@ -189,6 +280,7 @@ following these guidelines.
   * Other indentation should follow existing practice
   * Use Qt style comments for extraction by doxygen
   * Mark incomplete or buggy code with `FIXME'
+
 
 Class Relationships
 -------------------

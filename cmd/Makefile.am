@@ -17,8 +17,8 @@ VDEPTH = ./$(VPATH)/$(DEPTH)
 
 SUBDIRS =					\
 	launcher				\
-	synergy					\
-	synergyd				\
+	synergyc				\
+	synergys				\
 	$(NULL)
 
 EXTRA_DIST =				\

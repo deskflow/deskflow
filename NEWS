@@ -1,6 +1,10 @@
 Synergy News
 ============
 
-* Initial version of synergy released.  Supports ASCII keys, 5 button
-  wheel mouse, Unicode text clipboard, and screen saver synchronization.
-  Runs on Linux and Microsoft Windows.
+* Aug-11-2002 - Synergy 0.9.8 released
+
+  Supports any number of clients under Linux or Windows 95 or NT4
+  or later.  Includes mouse and keyboard sharing, clipboard
+  synchronization and screen saver synchronization.  Supports ASCII
+  keystrokes, 5 button mouse with wheel, and Unicode text clipboard
+  format.

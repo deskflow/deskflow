@@ -13,31 +13,19 @@ To build synergy from the sources you'll need the following:
   * gcc 2.95 (or up?)
   * X11R4 or up headers and libraries
 
-If building from CVS on Linux you'll also need:
-  * autoconf 2.52 (older versions may work)
-  * automake 1.5 (older versions may work)
-
 
 Configuring the build
 ---------------------
 
 This step is only necessary when building on Linux.
 
-If you're building synergy from CVS you need to create the configure
-script and the Makefile.in files.  To do that:
-
-  % aclocal
-  % autoheader
-  % autoconf
-  % automake
-
 To configure the build for your platform use the configure script:
 
-  % ./configure
+  ./configure
 
 For a list of options to configure use:
 
-  % ./configure --help
+  ./configure --help
 
 
 Building
@@ -45,22 +33,13 @@ Building
 
 Windows:
   Start VC++ and open `synergy.dsw'.  Set the active configuration
-  (Build | Set Active Configuration) to `All - Debug' or `All - Release'.
-  Then build.
-
-  VC++ 6.0 cannot handle project files that lack \r\n newlines.  If you
-  retrieved synergy via CVS then the files should be fine.  But if the
-  workspace appears to be empty then close VC++ and add \r to each line.
-  A convenient way to do that is to get `fixcrlf.exe' from the Internet,
-  search the synergy files for `*.dsp' and drag-and-drop all the project
-  files onto fixcrlf.exe.
-
-  Binaries are built into ./Debug or ./Release.
+  (Build | Set Active Configuration) to `All - Debug' or `All - Release'
+  then build.  Binaries are built into ./Debug or ./Release.
 
 Linux:
   Simply enter:
 
-  % make
+    make
 
   This will build the client and server and leave them in their
   respective source directories.
@@ -71,22 +50,84 @@ Installing
 
 Windows:
   There is no support for creating an installer for synergy or installing
-  the files in a particular location.  The only requirement for installed
-  files is that synrgyhk.dll is in the same directory as synergyd.exe or
-  in one of the system directories.
+  the files in a particular location.  Instead, just copy the following
+  files from the Debug or Release directory to a directory you choose
+  (perhaps under the Program Files directory):
+
+  * synergy.exe
+  * synergyc.exe
+  * synergys.exe
+  * synrgyhk.dll
 
 Linux:
-  % make install
+    make install
 
   will install the client and server into /usr/local/bin unless you
   specified a different directory when you ran configure.
 
-See `Starting Automatically' for details on how to have synergy start up
-automatically when the computer starts.
+See `Starting Automatically on ...' below for details on how to have
+synergy start up automatically when the computer starts.
 
 
-Configuring the Server
-----------------------
+Running on Windows
+------------------
+
+Double click `synergy' on the server computer.  The server is the
+computer who's mouse and keyboard will be shared.  This brings up a
+dialog that lets you configure the server then test out the
+configuration or start the server.
+
+First configure the server.  Click the `Server' radio button
+
+  * Click the `Server' radio button
+  * Click `Add' to add the server to the `Screens' list
+    * Enter the name of server (the computer name is recommended)
+    * Enter other names the server is known by
+    * Click OK
+  * Use `Add' to add your other computers
+  * Use the controls under `Layout' to link screens together
+    * Click (once) on the server's name in the `Screens' list
+    * Choose the screen to the left of the server
+      * Use `---' if there is no screen to the left of the server
+    * Choose the screens to the right, above and below the server
+    * Repeat the above steps for all the other screens
+  * Enter the server's screen name next to `Screen Name'
+    * This defaults to the computer's name (recommended)
+  * Click `Test'
+
+The server will start and you'll see a console window with log messages
+telling you about synergy's progress.  If an error occurs you'll get a
+dialog box telling you synergy is about to quit;  read the log messages
+to determine the problem then correct it and try `Test' again.
+
+Now that the server is running, you'll need to start a client.  On any
+client computer, double click `synergy'.  Of course, you'll need to
+have installed the four files listed under `Installing' above on the
+client computer.  Then configure the client:
+
+  * Click the `Client' radio button
+  * Enter the server's computer name in `Server Host Name'
+    * Do not use any of the server's screen names, unless one of those
+      is also the computer name
+  * Enter the client's screen name next to `Screen Name'
+    * This defaults to the computer's name (recommended)
+    * This must be one of the names in the server's `Screens' list
+  * Click `Test'
+
+If all goes well, the client connects to the server successfully and
+the mouse and keyboard are shared.  If an error occurs you'll get a
+dialog box telling you synergy is about to quit;  read the log messages
+to determine the problem then correct it and try `Test' again.  When
+everything is working correctly, install the software on the other
+client computers (if any) and repeat the steps for configuring the
+client on each.
+
+See `Starting Automatically on Windows' below for configuring synergy
+to start automatically when the computer starts.
+
+
+Configuring the Server on Linux
+-------------------------------
 
 The synergy server requires configuration.  The configuration file is a
 plain text file broken into sections.  Each section has the form:
@@ -166,11 +207,11 @@ The file can have the following sections.
 
 The synergy server will try certain pathnames to load the configuration
 file if the user doesn't specify a path using the `--config' command
-line option.  `synergyd --help' reports those pathnames.
+line option.  `synergys --help' reports those pathnames.
 
 
-Running the Server
-------------------
+Running the Server on Linux
+---------------------------
 
 Run the server on the computer that has the keyboard and mouse to
 be shared.  You must have prepared a configuration file before
@@ -180,29 +221,28 @@ clients but that's not required.
 Run the synergy server on the server system using the following
 command line:
 
-    synergyd -f --config <config-pathname>
+  synergys -f --config <config-pathname>
 
 Replace <config-pathname> with the path to the configuration file.
-The `-f' option causes synergyd to run in the foreground.  This is
+The `-f' option causes synergys to run in the foreground.  This is
 recommended until you've verified that the configuration works.
 If you didn't include the system's hostname in the configuration
 file (either as a screen name or an alias) then you'll have to add
 `--name <screen-name>' to the command line, where <screen-name> is
-a name in the configuration file.  You can use `synergyd --help'
+a name in the configuration file.  You can use `synergys --help'
 for a list of command line options.
 
-On Windows, the file synrgyhk.dll must be in the same directory as
-synergyd.exe or in a system directory otherwise the server will
-refuse to start.
+See `Starting Automatically on Linux' below for running synergy
+automatically when the X server starts.
 
 
-Running the Client
-------------------
+Running the Client on Linux
+---------------------------
 
 Run the client on all computers that aren't the server using the
 following command line:
 
-    synergy -f --no-camp <server-hostname>
+  synergyc -f --no-camp <server-hostname>
 
 Replace <server-hostname> with the hostname or address of the
 server system.  The `-f' option causes synergy to run in the
@@ -228,7 +268,7 @@ the problem.  Here are typical problems and possible solutions:
       check permission to open the X display;
       check that the DISPLAY environment variable is set.
   * already connected:
-      check that synergy isn't already running.
+      check that the synergy client isn't already running.
   * refused client:
       add client to the server's configuration file.
   * connection failed:
@@ -240,33 +280,30 @@ the problem.  Here are typical problems and possible solutions:
 Once all the clients are running, try moving the mouse to each
 screen.  Be sure to check all the configured links. 
 
+See `Starting Automatically on Linux' below for running synergy
+automatically when the X server starts.
 
-Starting Automatically
-----------------------
 
-You can setup synergy to start automatically when your computer does.
+Starting Automatically on Windows
+---------------------------------
 
-Windows:
-  Start the client or server normally except add `--install' as the
-  first option on the command line, followed by the usual options
-  except do not include `-f' or `--no-daemon'.  This will install
-  synergy as a service that will be started at system boot.
+When all the clients work you're ready to have synergy start
+automatically each time the system (re)starts.  Click `Stop' on all
+the clients then on the server'.  Then Click `Start' on the server.
+If it starts successfully then click `OK' to close the message box
+and the dialog.  The synergy server is now running and will be
+automatically started each time the system is started.  Click `Start'
+then `OK' on each of the clients to start the synergy client and
+automatically have it start each time the computer starts.
 
-  Note that the system will look for synergy wherever it was when it
-  was installed.  The server will also look for the configuration
-  file in the path specified by the `--config' option, if supplied,
-  and for synrgyhk.dll in the same directory as synergyd.exe or in
-  a system directory.  Therefore, it's important that these files be
-  on local hard drives;  network drives or removable devices may not
-  be available at boot.
+If you ever want to prevent synergy from starting automatically when
+the computer does, double click `synergy', choose `Client' or `Server'
+(whichever the computer is running as), then click `No Auto-Start'.
+Click `OK' to dismiss the message box then `Quit' to close the dialog.
 
-  On the Windows NT family you can start and stop the service at any
-  time using the Services control panel (under Administrative Tools
-  on Windows 2000 and XP).  On the Windows 95 family you cannot
-  start or stop the service.
 
-  To uninstall the service, run the client or server with just the
-  `--uninstall' command line option.
+Starting Automatically on Linux
+-------------------------------
 
 Linux:
   Synergy requires an X server.  That means a server must be
@@ -282,8 +319,8 @@ Linux:
   anyplace the script calls exit, start the client with something
   like:
 
-    /usr/bin/killall synergy
-    /usr/local/bin/synergy [<options>] <server-host-name>
+    /usr/bin/killall synergyc
+    /usr/local/bin/synergyc [<options>] <server-host-name>
 
   <options> must not include `-f' or `--no-daemon'.  Change the
   paths as necessary.  It's important to make sure no old copies
@@ -291,8 +328,8 @@ Linux:
 
   To start the server use something like:
 
-    /usr/bin/killall synergyd
-    /usr/local/bin/synergyd [<options>] --config <config-pathname>
+    /usr/bin/killall synergys
+    /usr/local/bin/synergys [<options>] --config <config-pathname>
 
   Again, <options> must not include `-f' or `--no-daemon'.  If
   the configuration pathname is one of the default locations then
@@ -337,7 +374,7 @@ occurs that is sure to happen every time.  For example, the server
 will exit immediately if it can't find itself in the configuration.
 On X11 both the client and server will also terminate if the
 connection to the X server is lost.  Since xdm will normally restart
-the server and synergy, this is the correct behavior.
+the X server and synergy, this is the correct behavior.
 
 
 Server Command Line Options

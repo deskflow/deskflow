@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="synergy" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="synergys" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=synergy - Win32 Debug
+CFG=synergys - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "synergy.mak".
+!MESSAGE NMAKE /f "synergys.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "synergy.mak" CFG="synergy - Win32 Debug"
+!MESSAGE NMAKE /f "synergys.mak" CFG="synergys - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "synergy - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "synergy - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "synergys - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "synergys - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "synergy - Win32 Release"
+!IF  "$(CFG)" == "synergys - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\base" /I "..\io" /I "..\mt" /I "..\net" /I "..\synergy" /I "..\platform" /I "..\..\lib\base" /I "..\..\lib\io" /I "..\..\lib\mt" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\client" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\..\lib\base" /I "..\..\lib\mt" /I "..\..\lib\io" /I "..\..\lib\http" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -54,9 +54,9 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /out:"../../Release/synergyc.exe"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
 
-!ELSEIF  "$(CFG)" == "synergy - Win32 Debug"
+!ELSEIF  "$(CFG)" == "synergys - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\..\lib\base" /I "..\..\lib\io" /I "..\..\lib\mt" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\client" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\..\lib\base" /I "..\..\lib\mt" /I "..\..\lib\io" /I "..\..\lib\http" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\server" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -81,24 +81,24 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /out:"../../Debug/synergyc.exe" /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 
 # Begin Target
 
-# Name "synergy - Win32 Release"
-# Name "synergy - Win32 Debug"
+# Name "synergys - Win32 Release"
+# Name "synergys - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\synergy.cpp
+SOURCE=.\synergys.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\synergy.rc
+SOURCE=.\synergys.rc
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -114,7 +114,7 @@ SOURCE=.\resource.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=.\synergy.ico
+SOURCE=.\synergys.ico
 # End Source File
 # End Group
 # End Target

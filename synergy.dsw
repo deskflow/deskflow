@@ -12,10 +12,10 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name synergy
+    Project_Dep_Name synergyc
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name synergyd
+    Project_Dep_Name synergys
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name launcher
@@ -180,7 +180,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "synergy"=.\cmd\synergy\synergy.dsp - Package Owner=<4>
+Project: "synergyc"=.\cmd\synergyc\synergyc.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -213,7 +213,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "synergyd"=.\cmd\synergyd\synergyd.dsp - Package Owner=<4>
+Project: "synergys"=.\cmd\synergys\synergys.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
