@@ -211,7 +211,7 @@ CNetwork::init2(
 	setfunc(sendto_winsock, sendto, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags, const Address FAR *to, AddressLength tolen));
 	setfunc(setsockopt_winsock, setsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, const void FAR * optval, AddressLength optlen));
 	setfunc(shutdown_winsock, shutdown, int (PASCAL FAR *)(Socket s, int how));
-	setfunc(socket,_winsock socket, Socket (PASCAL FAR *)(int af, int type, int protocol));
+	setfunc(socket_winsock, socket, Socket (PASCAL FAR *)(int af, int type, int protocol));
 	setfunc(gethostbyaddr_winsock, gethostbyaddr, struct hostent FAR * (PASCAL FAR *)(const char FAR * addr, int len, int type));
 	setfunc(gethostbyname_winsock, gethostbyname, struct hostent FAR * (PASCAL FAR *)(const char FAR * name));
 	setfunc(getservbyport_winsock, getservbyport, struct servent FAR * (PASCAL FAR *)(int port, const char FAR * proto));
@@ -245,7 +245,7 @@ CNetwork::close(Socket s)
 int
 CNetwork::connect(Socket s, const Address* name, AddressLength namelen)
 {
-	return connect_winsock(s);
+	return connect_winsock(s, name, namelen);
 }
 
 int
@@ -263,7 +263,7 @@ CNetwork::getpeername(Socket s, Address* name, AddressLength* namelen)
 int
 CNetwork::getsockerror(void)
 {
-	return getsockerrror_winsock();
+	return getsockerror_winsock();
 }
 
 int
