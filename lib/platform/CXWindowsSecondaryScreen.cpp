@@ -682,6 +682,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	// get the keysym we're trying to generate and possible keycodes
 	KeySym keysym = keyIndex->first;
 	const KeyCodeMask& entry = keyIndex->second;
+	LOG((CLOG_DEBUG2 "keysym is 0x%08x", keysym));
 
 	// we can choose any of the available keycode/modifier states to
 	// generate our keysym.  the most desireable is the one most
@@ -701,6 +702,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 
 	// if mode switch is active then 2 and 3 are better than 0 and 1
 	if (getBits(desired, m_modeSwitchMask) != 0) {
+		LOG((CLOG_DEBUG2 "mode switch desired"));
 		index[0] ^= 2;
 		index[1] ^= 2;
 		index[2] ^= 2;
@@ -718,7 +720,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	if (adjustForNumLock(keysym)) {
 		LOG((CLOG_DEBUG2 "num lock sensitive"));
 		if (m_numLockMask != 0) {
-			LOG((CLOG_DEBUG2 "we have num lock"));
+			LOG((CLOG_DEBUG2 "we have a num lock"));
 			if (getBits(desired, m_numLockMask) != 0) {
 				LOG((CLOG_DEBUG2 "num lock desired, invert shift"));
 				invertShift = true;
@@ -728,7 +730,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	else if (adjustForCapsLock(keysym)) {
 		LOG((CLOG_DEBUG2 "caps lock sensitive"));
 		if (m_capsLockMask != 0) {
-			LOG((CLOG_DEBUG2 "we have caps lock"));
+			LOG((CLOG_DEBUG2 "we have a caps lock"));
 			if (getBits(desired, m_capsLockMask) != 0) {
 				LOG((CLOG_DEBUG2 "caps lock desired, invert shift"));
 				invertShift = true;
@@ -736,6 +738,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 		}
 	}
 	if (desireShift != invertShift) {
+		LOG((CLOG_DEBUG2 "shift desired"));
 		index[0] ^= 1;
 		index[1] ^= 1;
 		index[2] ^= 1;
@@ -752,10 +755,12 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 				bestIndex = index[bestIndex];
 				break;
 			}
+			LOG((CLOG_DEBUG2 "skip index %d:%d because no mode-switch", bestIndex, index[bestIndex]));
 		}
 	}
 	if (bestIndex == 4) {
 		// no keycode/modifiers to generate the keysym
+		LOG((CLOG_DEBUG2 "no keycode for keysym"));
 		return m_mask;
 	}
 
@@ -767,6 +772,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	ModifierMap::const_iterator modIndex = m_keycodeToModifier.find(keycode);
 	unsigned int modifierBit = 0;
 	if (modIndex != m_keycodeToModifier.end()) {
+		LOG((CLOG_DEBUG2 "keysym is modifier %d", modIndex->second));
 		modifierBit = (1 << modIndex->second);
 	}
 
