@@ -1,5 +1,5 @@
 #include "CSynergyHook.h"
-#include "CConfig.h"
+#include "ProtocolTypes.h"
 #include <zmouse.h>
 
 //
@@ -205,16 +205,16 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
 			SInt32 x = (SInt32)info->pt.x;
 			SInt32 y = (SInt32)info->pt.y;
-			if (!inside && (g_zoneSides & CConfig::kLeftMask) != 0) {
+			if (!inside && (g_zoneSides & kLeftMask) != 0) {
 				inside = (x < g_xScreen + g_zoneSize);
 			}
-			if (!inside && (g_zoneSides & CConfig::kRightMask) != 0) {
+			if (!inside && (g_zoneSides & kRightMask) != 0) {
 				inside = (x >= g_xScreen + g_wScreen - g_zoneSize);
 			}
-			if (!inside && (g_zoneSides & CConfig::kTopMask) != 0) {
+			if (!inside && (g_zoneSides & kTopMask) != 0) {
 				inside = (y < g_yScreen + g_zoneSize);
 			}
-			if (!inside && (g_zoneSides & CConfig::kBottomMask) != 0) {
+			if (!inside && (g_zoneSides & kBottomMask) != 0) {
 				inside = (y >= g_yScreen + g_hScreen - g_zoneSize);
 			}
 
@@ -481,6 +481,17 @@ init(DWORD threadID)
 	// message queue.
 	g_threadID = threadID;
 
+	// set defaults
+	g_relay        = false;
+	g_zoneSides    = 0;
+	g_zoneSize     = 0;
+	g_xScreen      = 0;
+	g_yScreen      = 0;
+	g_wScreen      = 0;
+	g_hScreen      = 0;
+	g_cursor       = NULL;
+	g_cursorThread = 0;
+
 	return 1;
 }
 
@@ -507,17 +518,6 @@ install()
 	if (g_threadID == 0) {
 		return 0;
 	}
-
-	// set defaults
-	g_relay        = false;
-	g_zoneSides    = 0;
-	g_zoneSize     = 0;
-	g_xScreen      = 0;
-	g_yScreen      = 0;
-	g_wScreen      = 0;
-	g_hScreen      = 0;
-	g_cursor       = NULL;
-	g_cursorThread = 0;
 
 	// check for mouse wheel support
 	g_wheelSupport = getWheelSupport();
