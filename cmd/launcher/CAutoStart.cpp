@@ -199,12 +199,12 @@ CAutoStart::onInstall(bool allUsers)
 	// clear error message
 	m_errorMessage = "";
 
-	// install.  depend on Browser
+	// install
 	try {
 		ARCH->installDaemon(m_name.c_str(),
 					m_isServer ? SERVER_DAEMON_INFO : CLIENT_DAEMON_INFO,
 					appPath.c_str(), m_cmdLine.c_str(),
-					"Browser\0", allUsers);
+					NULL, allUsers);
 		askOkay(m_hwnd, getString(IDS_INSTALL_TITLE),
 								getString(allUsers ?
 									IDS_INSTALLED_SYSTEM :
