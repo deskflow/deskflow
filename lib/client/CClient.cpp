@@ -90,8 +90,11 @@ CClient::connect()
 		socket->connect(m_serverAddress);
 	}
 	catch (XBase& e) {
+		cleanupTimer();
+		cleanupConnecting();
 		delete m_stream;
 		m_stream = NULL;
+		LOG((CLOG_DEBUG1 "connection failed"));
 		sendConnectionFailedEvent(e.what());
 		return;
 	}
