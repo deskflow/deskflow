@@ -51,6 +51,29 @@ static const int s_type[] = {
 	SOCK_STREAM
 };
 
+#if !HAVE_INET_ATON
+// parse dotted quad addresses.  we don't bother with the weird BSD'ism
+// of handling octal and hex and partial forms.
+static
+in_addr_t
+inet_aton(const char* cp, struct in_addr* inp)
+{
+	unsigned int a, b, c, d;
+	if (sscanf(cp, "%u.%u.%u.%u", &a, &b, &c, &d) != 4) {
+		return 0;
+	}
+	if (a >= 256 || b >= 256 || c >= 256 || d >= 256) {
+		return 0;
+	}
+	unsigned char* incp = (unsigned char*)inp;
+	incp[0] = (unsigned char)(a & 0xffu);
+	incp[1] = (unsigned char)(b & 0xffu);
+	incp[2] = (unsigned char)(c & 0xffu);
+	incp[3] = (unsigned char)(d & 0xffu);
+	return inp->s_addr;
+}
+#endif
+
 //
 // CArchNetworkBSD
 //

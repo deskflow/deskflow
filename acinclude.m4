@@ -243,6 +243,7 @@ AC_DEFUN([ACX_CHECK_INET_ATON], [
 		LIBS="$save_LIBS"
         AC_MSG_RESULT($acx_inet_aton_ok)
         if test x"$acx_inet_aton_ok" = xyes; then
+        	AC_DEFINE(HAVE_INET_ATON,1,[Define if you have the \`inet_aton\' function.])
             break;
         fi
         INET_ATON_LIBS=""
