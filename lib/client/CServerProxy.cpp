@@ -510,7 +510,7 @@ CServerProxy::keyDown()
 	// parse
 	UInt16 id, mask, button;
 	CProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
-	LOG((CLOG_DEBUG1 "recv key down id=%d, mask=0x%04x, button=0x%04x", id, mask, button));
+	LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
 	// translate
 	KeyID id2             = translateKey(static_cast<KeyID>(id));
@@ -518,7 +518,7 @@ CServerProxy::keyDown()
 								static_cast<KeyModifierMask>(mask));
 	if (id2   != static_cast<KeyID>(id) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
-		LOG((CLOG_DEBUG1 "key down translated to id=%d, mask=0x%04x", id2, mask2));
+		LOG((CLOG_DEBUG1 "key down translated to id=0x%08x, mask=0x%04x", id2, mask2));
 
 	// forward
 	m_client->keyDown(id2, mask2, button);
@@ -534,7 +534,7 @@ CServerProxy::keyRepeat()
 	UInt16 id, mask, count, button;
 	CProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4,
 								&id, &mask, &count, &button);
-	LOG((CLOG_DEBUG1 "recv key repeat id=%d, mask=0x%04x, count=%d, button=0x%04x", id, mask, count, button));
+	LOG((CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x", id, mask, count, button));
 
 	// translate
 	KeyID id2             = translateKey(static_cast<KeyID>(id));
@@ -542,7 +542,7 @@ CServerProxy::keyRepeat()
 								static_cast<KeyModifierMask>(mask));
 	if (id2   != static_cast<KeyID>(id) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
-		LOG((CLOG_DEBUG1 "key repeat translated to id=%d, mask=0x%04x", id2, mask2));
+		LOG((CLOG_DEBUG1 "key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2));
 
 	// forward
 	m_client->keyRepeat(id2, mask2, count, button);
@@ -557,7 +557,7 @@ CServerProxy::keyUp()
 	// parse
 	UInt16 id, mask, button;
 	CProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
-	LOG((CLOG_DEBUG1 "recv key up id=%d, mask=0x%04x, button=0x%04x", id, mask, button));
+	LOG((CLOG_DEBUG1 "recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
 	// translate
 	KeyID id2             = translateKey(static_cast<KeyID>(id));
@@ -565,7 +565,7 @@ CServerProxy::keyUp()
 								static_cast<KeyModifierMask>(mask));
 	if (id2   != static_cast<KeyID>(id) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
-		LOG((CLOG_DEBUG1 "key up translated to id=%d, mask=0x%04x", id2, mask2));
+		LOG((CLOG_DEBUG1 "key up translated to id=0x%08x, mask=0x%04x", id2, mask2));
 
 	// forward
 	m_client->keyUp(id2, mask2, button);
