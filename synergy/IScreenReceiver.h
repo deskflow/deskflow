@@ -6,6 +6,8 @@
 #include "ProtocolTypes.h"
 #include "CString.h"
 
+// the interface for types that receive screen resize and clipboard
+// notifications (indirectly) from the system.
 class IScreenReceiver : public IInterface {
 public:
 	// notify of client info change

@@ -4,7 +4,7 @@
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
 #include "CProtocolUtil.h"
-#include "ISecondaryScreen.h"
+#include "CSecondaryScreen.h"
 #include "IServer.h"
 #include "ProtocolTypes.h"
 #include "XScreen.h"
@@ -148,9 +148,7 @@ CClient::run()
 								this, &CClient::runSession));
 
 		// handle events
-		log((CLOG_DEBUG "starting event handling"));
 		m_screen->run();
-		log((CLOG_DEBUG "stopped event handling"));
 
 		// clean up
 		deleteSession(thread);
@@ -160,7 +158,6 @@ CClient::run()
 		log((CLOG_ERR "client error: %s", e.what()));
 
 		// clean up
-		log((CLOG_DEBUG "stopped event handling"));
 		deleteSession(thread);
 		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		CLock lock(&m_mutex);
@@ -168,7 +165,6 @@ CClient::run()
 	}
 	catch (XThread&) {
 		// clean up
-		log((CLOG_DEBUG "stopped event handling"));
 		deleteSession(thread);
 		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		throw;
@@ -177,7 +173,6 @@ CClient::run()
 		log((CLOG_DEBUG "unknown client error"));
 
 		// clean up
-		log((CLOG_DEBUG "stopped event handling"));
 		deleteSession(thread);
 		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		throw;
@@ -188,6 +183,7 @@ void
 CClient::close()
 {
 	closeSecondaryScreen();
+	log((CLOG_INFO "closed screen"));
 }
 
 void
@@ -291,15 +287,21 @@ CClient::mouseWheel(SInt32 delta)
 }
 
 void
-CClient::screenSaver(bool activate)
+CClient::screensaver(bool activate)
 {
- 	m_screen->screenSaver(activate);
+ 	m_screen->screensaver(activate);
 }
 
 CString
 CClient::getName() const
 {
 	return m_name;
+}
+
+SInt32
+CClient::getJumpZoneSize() const
+{
+	return m_screen->getJumpZoneSize();
 }
 
 void
@@ -309,21 +311,15 @@ CClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-CClient::getCenter(SInt32&, SInt32&) const
+CClient::getCursorPos(SInt32& x, SInt32& y) const
 {
-	assert(0 && "shouldn't be called");
+	m_screen->getCursorPos(x, y);
 }
 
 void
-CClient::getMousePos(SInt32& x, SInt32& y) const
+CClient::getCursorCenter(SInt32&, SInt32&) const
 {
-	m_screen->getMousePos(x, y);
-}
-
-SInt32
-CClient::getJumpZoneSize() const
-{
-	return m_screen->getJumpZoneSize();
+	assert(0 && "shouldn't be called");
 }
 
 // FIXME -- use factory to create screen

@@ -9,6 +9,7 @@ synergyd_SOURCES = 					\
 	CConfig.cpp						\
 	CHTTPServer.cpp					\
 	CPrimaryClient.cpp				\
+	CPrimaryScreen.cpp				\
 	CServer.cpp						\
 	CXWindowsPrimaryScreen.cpp		\
 	server.cpp						\
@@ -17,9 +18,9 @@ synergyd_SOURCES = 					\
 	CConfig.h						\
 	CHTTPServer.h					\
 	CPrimaryClient.h				\
+	CPrimaryScreen.h				\
 	CServer.h						\
 	CXWindowsPrimaryScreen.h		\
-	IPrimaryScreen.h				\
 	$(NULL)
 synergyd_LDADD =					\
 	$(DEPTH)/platform/libplatform.a	\

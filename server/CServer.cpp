@@ -92,7 +92,6 @@ CServer::run()
 		}
 
 		// handle events
-		log((CLOG_DEBUG "starting event handling"));
 		m_primaryClient->run();
 
 		// clean up
@@ -108,9 +107,6 @@ CServer::run()
 		stopThreads();					\
 		delete m_httpServer;			\
 		m_httpServer = NULL;			\
-		if (m_primaryClient != NULL) {	\
-			closePrimaryScreen();		\
-		}								\
 		} while (false)
 		FINALLY;
 	}
@@ -142,6 +138,15 @@ void
 CServer::quit()
 {
 	m_primaryClient->stop();
+}
+
+void
+CServer::close()
+{
+	if (m_primaryClient != NULL) {
+		closePrimaryScreen();
+	}
+	log((CLOG_INFO "closed screen"));
 }
 
 bool
@@ -209,20 +214,6 @@ CServer::getActivePrimarySides() const
 		sides |= CConfig::kBottomMask;
 	}
 	return sides;
-}
-
-void
-CServer::onError()
-{
-	// stop all running threads but don't wait too long since some
-	// threads may be unable to proceed until this thread returns.
-	stopThreads(3.0);
-
-	// done with the HTTP server
-	delete m_httpServer;
-	m_httpServer = NULL;
-
-	// note -- we do not attempt to close down the primary screen
 }
 
 void
@@ -347,10 +338,74 @@ CServer::onClipboardChangedNoLock(ClipboardID id,
 	m_active->setClipboard(id, m_clipboards[id].m_clipboardData);
 }
 
-bool
-CServer::onCommandKey(KeyID /*id*/, KeyModifierMask /*mask*/, bool /*down*/)
+void
+CServer::onError()
 {
-	return false;
+	// stop all running threads but don't wait too long since some
+	// threads may be unable to proceed until this thread returns.
+	stopThreads(3.0);
+
+	// done with the HTTP server
+	delete m_httpServer;
+	m_httpServer = NULL;
+
+	// note -- we do not attempt to close down the primary screen
+}
+
+void
+CServer::onScreensaver(bool activated)
+{
+	log((CLOG_DEBUG "onScreenSaver %s", activated ? "activated" : "deactivated"));
+	CLock lock(&m_mutex);
+
+	if (activated) {
+		// save current screen and position
+		m_activeSaver = m_active;
+		m_xSaver      = m_x;
+		m_ySaver      = m_y;
+
+		// jump to primary screen
+		if (m_active != m_primaryClient) {
+			switchScreen(m_primaryClient, 0, 0, true);
+		}
+	}
+	else {
+		// jump back to previous screen and position.  we must check
+		// that the position is still valid since the screen may have
+		// changed resolutions while the screen saver was running.
+		if (m_activeSaver != NULL && m_activeSaver != m_primaryClient) {
+			// check position
+			IClient* screen = m_activeSaver;
+			SInt32 x, y, w, h;
+			screen->getShape(x, y, w, h);
+			SInt32 zoneSize = screen->getJumpZoneSize();
+			if (m_xSaver < x + zoneSize) {
+				m_xSaver = x + zoneSize;
+			}
+			else if (m_xSaver >= x + w - zoneSize) {
+				m_xSaver = x + w - zoneSize - 1;
+			}
+			if (m_ySaver < y + zoneSize) {
+				m_ySaver = y + zoneSize;
+			}
+			else if (m_ySaver >= y + h - zoneSize) {
+				m_ySaver = y + h - zoneSize - 1;
+			}
+
+			// jump
+			switchScreen(screen, m_xSaver, m_ySaver, false);
+		}
+
+		// reset state
+		m_activeSaver = NULL;
+	}
+
+	// send message to all clients
+	for (CClientList::const_iterator index = m_clients.begin();
+								index != m_clients.end(); ++index) {
+		IClient* client = index->second;
+		client->screensaver(activated);
+	}
 }
 
 void
@@ -615,60 +670,10 @@ CServer::onMouseWheel(SInt32 delta)
 	m_active->mouseWheel(delta);
 }
 
-void
-CServer::onScreenSaver(bool activated)
+bool
+CServer::onCommandKey(KeyID /*id*/, KeyModifierMask /*mask*/, bool /*down*/)
 {
-	log((CLOG_DEBUG "onScreenSaver %s", activated ? "activated" : "deactivated"));
-	CLock lock(&m_mutex);
-
-	if (activated) {
-		// save current screen and position
-		m_activeSaver = m_active;
-		m_xSaver      = m_x;
-		m_ySaver      = m_y;
-
-		// jump to primary screen
-		if (m_active != m_primaryClient) {
-			switchScreen(m_primaryClient, 0, 0, true);
-		}
-	}
-	else {
-		// jump back to previous screen and position.  we must check
-		// that the position is still valid since the screen may have
-		// changed resolutions while the screen saver was running.
-		if (m_activeSaver != NULL && m_activeSaver != m_primaryClient) {
-			// check position
-			IClient* screen = m_activeSaver;
-			SInt32 x, y, w, h;
-			screen->getShape(x, y, w, h);
-			SInt32 zoneSize = screen->getJumpZoneSize();
-			if (m_xSaver < x + zoneSize) {
-				m_xSaver = x + zoneSize;
-			}
-			else if (m_xSaver >= x + w - zoneSize) {
-				m_xSaver = x + w - zoneSize - 1;
-			}
-			if (m_ySaver < y + zoneSize) {
-				m_ySaver = y + zoneSize;
-			}
-			else if (m_ySaver >= y + h - zoneSize) {
-				m_ySaver = y + h - zoneSize - 1;
-			}
-
-			// jump
-			switchScreen(screen, m_xSaver, m_ySaver, false);
-		}
-
-		// reset state
-		m_activeSaver = NULL;
-	}
-
-	// send message to all clients
-	for (CClientList::const_iterator index = m_clients.begin();
-								index != m_clients.end(); ++index) {
-		IClient* client = index->second;
-		client->screenSaver(activated);
-	}
+	return false;
 }
 
 bool
@@ -689,7 +694,7 @@ CServer::isLockedToScreenNoLock() const
 }
 
 void
-CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool screenSaver)
+CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 {
 	assert(dst != NULL);
 #ifndef NDEBUG
@@ -741,7 +746,8 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool screenSaver)
 
 		// enter new screen
 		m_active->enter(x, y, m_seqNum,
-								m_primaryClient->getToggleMask(), screenSaver);
+								m_primaryClient->getToggleMask(),
+								forScreensaver);
 
 		// send the clipboard data to new active screen
 		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
@@ -1209,7 +1215,7 @@ CServer::runClient(void* vsocket)
 	{
 		CLock lock(&m_mutex);
 		if (m_activeSaver != NULL) {
-			proxy->screenSaver(true);
+			proxy->screensaver(true);
 		}
 	}
 
@@ -1510,7 +1516,7 @@ CServer::openPrimaryScreen()
 
 	// create the primary client and open it
 	try {
-		m_primaryClient = new CPrimaryClient(this, primary);
+		m_primaryClient = new CPrimaryClient(this, this, primary);
 
 		// add connection
 		addConnection(m_primaryClient);
@@ -1593,7 +1599,7 @@ CServer::removeConnection(const CString& name)
 	IClient* active = (m_activeSaver != NULL) ? m_activeSaver : m_active;
 	if (active == index->second && active != m_primaryClient) {
 		// record new position (center of primary screen)
-		m_primaryClient->getCenter(m_x, m_y);
+		m_primaryClient->getCursorCenter(m_x, m_y);
 
 		// don't notify active screen since it probably already disconnected
 		log((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", active->getName().c_str(), m_primaryClient->getName().c_str(), m_x, m_y));

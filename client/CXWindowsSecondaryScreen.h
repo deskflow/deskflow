@@ -1,47 +1,55 @@
 #ifndef CXWINDOWSSECONDARYSCREEN_H
 #define CXWINDOWSSECONDARYSCREEN_H
 
-#include "CXWindowsScreen.h"
-#include "ISecondaryScreen.h"
+#include "CSecondaryScreen.h"
+#include "IScreenEventHandler.h"
 #include "stdmap.h"
 #include "stdvector.h"
+#if defined(X_DISPLAY_MISSING)
+#	error X11 is required to build synergy
+#else
+#	include <X11/Xlib.h>
+#endif
 
+class CXWindowsScreen;
 class IScreenReceiver;
 
-class CXWindowsSecondaryScreen : public CXWindowsScreen,
-							public ISecondaryScreen {
+class CXWindowsSecondaryScreen :
+				public CSecondaryScreen, public IScreenEventHandler {
 public:
 	CXWindowsSecondaryScreen(IScreenReceiver*);
 	virtual ~CXWindowsSecondaryScreen();
 
-	// ISecondaryScreen overrides
-	virtual void		run();
-	virtual void		stop();
-	virtual void		open();
-	virtual void		close();
-	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
-							KeyModifierMask mask);
-	virtual void		leave();
+	// CSecondaryScreen overrides
 	virtual void		keyDown(KeyID, KeyModifierMask);
 	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count);
 	virtual void		keyUp(KeyID, KeyModifierMask);
 	virtual void		mouseDown(ButtonID);
 	virtual void		mouseUp(ButtonID);
-	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute);
+	virtual void		mouseMove(SInt32 x, SInt32 y);
 	virtual void		mouseWheel(SInt32 delta);
-	virtual void		setClipboard(ClipboardID, const IClipboard*);
-	virtual void		grabClipboard(ClipboardID);
-	virtual void		screenSaver(bool activate);
-	virtual void		getMousePos(SInt32& x, SInt32& y) const;
-	virtual void		getShape(SInt32&, SInt32&, SInt32&, SInt32&) const;
-	virtual SInt32		getJumpZoneSize() const;
-	virtual void		getClipboard(ClipboardID, IClipboard*) const;
+	virtual IScreen*	getScreen() const;
 
-protected:
-	// CXWindowsScreen overrides
+	// IScreenEventHandler overrides
+	virtual void		onError();
+	virtual void		onScreensaver(bool activated);
 	virtual bool		onPreDispatch(const CEvent* event);
 	virtual bool		onEvent(CEvent* event);
-	virtual void		onLostClipboard(ClipboardID);
+
+protected:
+	// CSecondaryScreen overrides
+	virtual void		onPreRun();
+	virtual void		onPreOpen();
+	virtual void		onPostOpen();
+	virtual void		onPreEnter();
+	virtual void		onPreLeave();
+	virtual void		createWindow();
+	virtual void		destroyWindow();
+	virtual void		showWindow();
+	virtual void		hideWindow();
+	virtual void		warpCursor(SInt32 x, SInt32 y);
+	virtual void		updateKeys();
+	virtual void		setToggleState(KeyModifierMask);
 
 private:
 	enum EKeyAction { kPress, kRelease, kRepeat };
@@ -62,26 +70,6 @@ private:
 	typedef std::map<KeyID, KeyCodeMask> KeyCodeMap;
 	typedef std::map<KeyCode, unsigned int> ModifierMap;
 
-	void				showWindow();
-	void				hideWindow();
-
-	// warp the mouse to the specified position
-	void				warpCursor(SInt32 x, SInt32 y);
-
-	// check clipboard ownership and, if necessary, tell the receiver
-	// of a grab.
-	void				checkClipboard();
-
-	// create/destroy window
-	// also attach to desktop;  this destroys and recreates the window
-	// as necessary.
-	void				createWindow();
-	void				destroyWindow();
-
-	// start/stop watch for screen saver changes
-	void				installScreenSaver();
-	void				uninstallScreenSaver();
-
 	unsigned int		mapButton(ButtonID button) const;
 
 	unsigned int		mapKey(Keystrokes&, KeyCode&, KeyID,
@@ -91,8 +79,7 @@ private:
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 	unsigned int		maskToX(KeyModifierMask) const;
 
-	void				releaseKeys();
-	void				updateKeys(Display* display);
+	void				releaseKeys(Display*);
 	void				updateKeycodeMap(Display* display);
 	void				updateModifiers(Display* display);
 	void				updateModifierMap(Display* display);
@@ -100,11 +87,8 @@ private:
 	static bool			isToggleKeysym(KeySym);
 
 private:
-	IScreenReceiver*	m_receiver;
+	CXWindowsScreen*	m_screen;
 	Window				m_window;
-
-	// m_active is true if this screen has been entered
-	bool				m_active;
 
 	// note toggle keys that toggles on up/down (false) or on
 	// transition (true)

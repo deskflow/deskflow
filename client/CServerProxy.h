@@ -56,7 +56,7 @@ private:
 	void				mouseUp();
 	void				mouseMove();
 	void				mouseWheel();
-	void				screenSaver();
+	void				screensaver();
 	void				queryInfo();
 	void				infoAcknowledgment();
 

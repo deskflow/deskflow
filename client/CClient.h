@@ -7,10 +7,10 @@
 #include "CNetworkAddress.h"
 #include "CMutex.h"
 
+class CSecondaryScreen;
 class CServerProxy;
 class CThread;
 class IDataSocket;
-class ISecondaryScreen;
 class IScreenReceiver;
 
 class CClient : public IScreenReceiver, public IClient {
@@ -50,7 +50,7 @@ public:
 // FIXME -- can we avoid passing everything here?
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
-							bool screenSaver);
+							bool forScreensaver);
 	virtual bool		leave();
 	virtual void		setClipboard(ClipboardID, const CString&);
 	virtual void		grabClipboard(ClipboardID);
@@ -62,13 +62,13 @@ public:
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs);
 	virtual void		mouseWheel(SInt32 delta);
-	virtual void		screenSaver(bool activate);
+	virtual void		screensaver(bool activate);
 	virtual CString		getName() const;
+	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;
-	virtual void		getCenter(SInt32& x, SInt32& y) const;
-	virtual void		getMousePos(SInt32& x, SInt32& y) const;
-	virtual SInt32		getJumpZoneSize() const;
+	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
+	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 
 private:
 	// open/close the secondary screen
@@ -87,7 +87,7 @@ private:
 private:
 	CMutex				m_mutex;
 	CString				m_name;
-	ISecondaryScreen*	m_screen;
+	CSecondaryScreen*	m_screen;
 	IScreenReceiver*	m_server;
 	CNetworkAddress		m_serverAddress;
 	bool				m_camp;

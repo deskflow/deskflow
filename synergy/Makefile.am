@@ -20,6 +20,8 @@ libsynergy_a_SOURCES = 		\
 	IClient.h				\
 	IClipboard.h			\
 	IPrimaryScreenReceiver.h\
+	IScreen.h				\
+	IScreenEventHandler.h	\
 	IScreenReceiver.h		\
 	IScreenSaver.h			\
 	IServer.h				\

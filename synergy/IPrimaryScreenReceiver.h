@@ -5,11 +5,21 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 
+// the interface for receiving notification of events on the primary
+// screen.  the server implements this interface to handle user input.
+// platform dependent primary screen implementation will need to take
+// an IPrimaryScreenReceiver* and notify it of events.
 class IPrimaryScreenReceiver : public IInterface {
 public:
-	// notify of serious error.  this implies that the server should
-	// shutdown.
+	// called if the display is unexpectedly closing.
+
+	// called if the screen is unexpectedly closing.  this implies that
+	// the screen is no longer usable and that the program should
+	// close the screen and possibly terminate.
 	virtual void		onError() = 0;
+
+	// called when the screensaver is activated or deactivated
+	virtual void		onScreensaver(bool activated) = 0;
 
 	// call to notify of events.  onMouseMovePrimary() returns
 	// true iff the mouse enters a jump zone and jumps.
@@ -21,8 +31,6 @@ public:
 	virtual bool		onMouseMovePrimary(SInt32 x, SInt32 y) = 0;
 	virtual void		onMouseMoveSecondary(SInt32 dx, SInt32 dy) = 0;
 	virtual void		onMouseWheel(SInt32 delta) = 0;
-	virtual void		onScreenSaver(bool activated) = 0;
-
 };
 
 #endif

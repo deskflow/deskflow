@@ -116,9 +116,11 @@ realMain(CMutex* mutex)
 			if (!locked && mutex != NULL) {
 				mutex->lock();
 			}
-			s_client->close();
-			delete s_client;
-			s_client = NULL;
+			if (s_client != NULL) {
+				s_client->close();
+				delete s_client;
+				s_client = NULL;
+			}
 			CLog::setLock(NULL);
 			s_logMutex = NULL;
 			throw;

@@ -1,11 +1,7 @@
 #include "CXWindowsPrimaryScreen.h"
-#include "IScreenReceiver.h"
-#include "IPrimaryScreenReceiver.h"
-#include "CXWindowsClipboard.h"
-#include "CXWindowsScreenSaver.h"
+#include "CXWindowsScreen.h"
 #include "CXWindowsUtil.h"
-#include "CClipboard.h"
-#include "ProtocolTypes.h"
+#include "IPrimaryScreenReceiver.h"
 #include "XScreen.h"
 #include "CThread.h"
 #include "CLog.h"
@@ -26,162 +22,17 @@
 CXWindowsPrimaryScreen::CXWindowsPrimaryScreen(
 				IScreenReceiver* receiver,
 				IPrimaryScreenReceiver* primaryReceiver) :
-	m_receiver(receiver),
-	m_primaryReceiver(primaryReceiver),
-	m_active(false),
+	CPrimaryScreen(receiver),
+	m_receiver(primaryReceiver),
 	m_window(None)
 {
-	// do nothing
+	m_screen = new CXWindowsScreen(receiver, this);
 }
 
 CXWindowsPrimaryScreen::~CXWindowsPrimaryScreen()
 {
 	assert(m_window == None);
-}
-
-void
-CXWindowsPrimaryScreen::run()
-{
-	// change our priority
-	CThread::getCurrentThread().setPriority(-3);
-
-	// run event loop
-	try {
-		log((CLOG_INFO "entering event loop"));
-		mainLoop();
-		log((CLOG_INFO "exiting event loop"));
-	}
-	catch (...) {
-		log((CLOG_INFO "exiting event loop"));
-		throw;
-	}
-}
-
-void
-CXWindowsPrimaryScreen::stop()
-{
-	exitMainLoop();
-}
-
-void
-CXWindowsPrimaryScreen::open()
-{
-	assert(m_window == None);
-
-	CClientInfo info;
-	try {
-		// open the display
-		openDisplay();
-
-		// create and prepare our window
-		createWindow();
-
-		// get the display
-		CDisplayLock display(this);
-
-		// initialize the clipboards
-		initClipboards(m_window);
-
-		// miscellaneous initialization
-		m_atomScreenSaver = XInternAtom(display, "SCREENSAVER", False);
-
-		// check for peculiarities
-		// FIXME -- may have to get these from some database
-		m_numLockHalfDuplex  = false;
-		m_capsLockHalfDuplex = false;
-//		m_numLockHalfDuplex  = true;
-//		m_capsLockHalfDuplex = true;
-
-		// collect screen info
-		getScreenShape(info.m_x, info.m_y, info.m_w, info.m_h);
-		getCursorPos(info.m_mx, info.m_my);
-		info.m_zoneSize = getJumpZoneSize();
-
-		// save mouse position
-		m_x = info.m_mx;
-		m_y = info.m_my;
-
-		// compute center pixel of primary screen
-		getCursorCenter(m_xCenter, m_yCenter);
-
-		// update key state
-		updateModifierMap(display);
-
-		// get notified of screen saver activation/deactivation
-		installScreenSaver();
-	}
-	catch (...) {
-		close();
-		throw;
-	}
-
-	// enter the screen
-	enterNoWarp();
-
-	// send screen info
-	m_receiver->onInfoChanged(info);
-}
-
-void
-CXWindowsPrimaryScreen::close()
-{
-	uninstallScreenSaver();
-	destroyWindow();
-	closeDisplay();
-}
-
-void
-CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreenSaver)
-{
-	log((CLOG_INFO "entering primary at %d,%d%s", x, y, forScreenSaver ? " for screen saver" : ""));
-	assert(m_active == true);
-	assert(m_window != None);
-
-	// enter the screen
-	enterNoWarp();
-
-	// warp to requested location
-	if (!forScreenSaver) {
-		warpCursor(x, y);
-	}
-
-	// redirect input to root window.  do not warp the mouse because
-	// that will deactivate the screen saver.
-	else {
-	CDisplayLock display(this);
-		XSetInputFocus(display, PointerRoot, PointerRoot, CurrentTime);
-	}
-}
-
-bool
-CXWindowsPrimaryScreen::leave()
-{
-	log((CLOG_INFO "leaving primary"));
-	assert(m_active == false);
-	assert(m_window != None);
-
-	// show our window
-	if (!showWindow()) {
-		return false;
-	}
-
-	// warp mouse to center
-	warpCursorToCenter();
-	// FIXME -- this doesn't match the win32 version.  that just does
-	// the warp while we flush the input queue until we find the warp
-	// and we discard that too.  would prefer to at least match our
-	// own warping when we receive MotionNotify;  that just does the
-	// warp.  however, the win32 version sometimes stutters when
-	// leaving and perhaps this is why.  hmm, win32 does ignore the
-	// events until after the warp (via the mark).
-
-	// local client now active
-	m_active = true;
-
-	// make sure our idea of clipboard ownership is correct
-	checkClipboard();
-
-	return true;
+	delete m_screen;
 }
 
 void
@@ -193,7 +44,7 @@ CXWindowsPrimaryScreen::reconfigure(UInt32)
 void
 CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
-	CDisplayLock display(this);
+	CDisplayLock display(m_screen);
 
 	// warp mouse
 	warpCursorNoFlush(display, x, y);
@@ -213,30 +64,10 @@ CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 	m_y = y;
 }
 
-void
-CXWindowsPrimaryScreen::setClipboard(ClipboardID id,
-				const IClipboard* clipboard)
-{
-	setDisplayClipboard(id, clipboard);
-}
-
-void
-CXWindowsPrimaryScreen::grabClipboard(ClipboardID id)
-{
-	setDisplayClipboard(id, NULL);
-}
-
-void
-CXWindowsPrimaryScreen::getClipboard(ClipboardID id,
-				IClipboard* clipboard) const
-{
-	getDisplayClipboard(id, clipboard);
-}
-
 KeyModifierMask
 CXWindowsPrimaryScreen::getToggleMask() const
 {
-	CDisplayLock display(this);
+	CDisplayLock display(m_screen);
 
 	// query the pointer to get the keyboard state
 	Window root, window;
@@ -265,7 +96,7 @@ CXWindowsPrimaryScreen::getToggleMask() const
 bool
 CXWindowsPrimaryScreen::isLockedToScreen() const
 {
-	CDisplayLock display(this);
+	CDisplayLock display(m_screen);
 
 	// query the pointer to get the button state
 	Window root, window;
@@ -295,11 +126,29 @@ CXWindowsPrimaryScreen::isLockedToScreen() const
 	return false;
 }
 
-bool
-CXWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
+IScreen*
+CXWindowsPrimaryScreen::getScreen() const
 {
-	// forward to superclass
-	return CXWindowsScreen::onPreDispatch(event);
+	return m_screen;
+}
+
+void
+CXWindowsPrimaryScreen::onError()
+{
+	// tell server to shutdown
+	m_receiver->onError();
+}
+
+void
+CXWindowsPrimaryScreen::onScreensaver(bool activated)
+{
+	m_receiver->onScreensaver(activated);
+}
+
+bool
+CXWindowsPrimaryScreen::onPreDispatch(const CEvent*)
+{
+	return false;
 }
 
 bool
@@ -313,28 +162,15 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 	case CreateNotify:
 		{
 			// select events on new window
-			CDisplayLock display(this);
+			CDisplayLock display(m_screen);
 			selectEvents(display, xevent.xcreatewindow.window);
 		}
 		return true;
 
 	case MappingNotify:
-		{
-			// keyboard mapping changed
-			CDisplayLock display(this);
-			XRefreshKeyboardMapping(&xevent.xmapping);
-			updateModifierMap(display);
-		}
+		// keyboard mapping changed
+		updateKeys();
 		return true;
-
-	case ClientMessage:
-		if (xevent.xclient.message_type == m_atomScreenSaver ||
-			xevent.xclient.format       == 32) {
-			// screen saver activation/deactivation event
-			m_primaryReceiver->onScreenSaver(xevent.xclient.data.l[0] != 0);
-			return true;
-		}
-		break;
 
 	case KeyPress:
 		{
@@ -342,12 +178,12 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
-				m_primaryReceiver->onKeyDown(key, mask);
+				m_receiver->onKeyDown(key, mask);
 				if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
-					m_primaryReceiver->onKeyUp(key, mask | KeyModifierCapsLock);
+					m_receiver->onKeyUp(key, mask | KeyModifierCapsLock);
 				}
 				else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
-					m_primaryReceiver->onKeyUp(key, mask | KeyModifierNumLock);
+					m_receiver->onKeyUp(key, mask | KeyModifierNumLock);
 				}
 			}
 		}
@@ -369,20 +205,24 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 				filter.m_keycode = xevent.xkey.keycode;
 
 				// now check for event
-				XEvent xevent2;
-				CDisplayLock display(this);
-				if (XCheckIfEvent(display, &xevent2,
-								&CXWindowsPrimaryScreen::findKeyEvent,
-								(XPointer)&filter) != True) {
+				bool hasPress;
+				{
+					XEvent xevent2;
+					CDisplayLock display(m_screen);
+					hasPress = (XCheckIfEvent(display, &xevent2,
+									&CXWindowsPrimaryScreen::findKeyEvent,
+									(XPointer)&filter) == True);
+				}
+				if (!hasPress) {
 					// no press event follows so it's a plain release
 					log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 					if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
-						m_primaryReceiver->onKeyDown(key, mask);
+						m_receiver->onKeyDown(key, mask);
 					}
 					else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
-						m_primaryReceiver->onKeyDown(key, mask);
+						m_receiver->onKeyDown(key, mask);
 					}
-					m_primaryReceiver->onKeyUp(key, mask);
+					m_receiver->onKeyUp(key, mask);
 				}
 				else {
 					// found a press event following so it's a repeat.
@@ -390,7 +230,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 					// repeats but we'll just send a repeat of 1.
 					// note that we discard the press event.
 					log((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-					m_primaryReceiver->onKeyRepeat(key, mask, 1);
+					m_receiver->onKeyRepeat(key, mask, 1);
 				}
 			}
 		}
@@ -401,7 +241,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 			log((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
-				m_primaryReceiver->onMouseDown(button);
+				m_receiver->onMouseDown(button);
 			}
 		}
 		return true;
@@ -411,15 +251,15 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 			log((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
-				m_primaryReceiver->onMouseUp(button);
+				m_receiver->onMouseUp(button);
 			}
 			else if (xevent.xbutton.button == 4) {
 				// wheel forward (away from user)
-				m_primaryReceiver->onMouseWheel(120);
+				m_receiver->onMouseWheel(120);
 			}
 			else if (xevent.xbutton.button == 5) {
 				// wheel backward (toward user)
-				m_primaryReceiver->onMouseWheel(-120);
+				m_receiver->onMouseWheel(-120);
 			}
 		}
 		return true;
@@ -443,14 +283,14 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 				// warpCursorNoFlush() for where the events are
 				// sent.  we discard the matching sent event and
 				// can be sure we've skipped the warp event.
-				CDisplayLock display(this);
+				CDisplayLock display(m_screen);
 				do {
 					XMaskEvent(display, PointerMotionMask, &xevent);
 				} while (!xevent.xmotion.send_event);
 			}
-			else if (!m_active) {
+			else if (!isActive()) {
 				// motion on primary screen
-				m_primaryReceiver->onMouseMovePrimary(m_x, m_y);
+				m_receiver->onMouseMovePrimary(m_x, m_y);
 			}
 			else {
 				// motion on secondary screen.  warp mouse back to
@@ -470,7 +310,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 					xevent.xmotion.x_root - m_xCenter >  s_size ||
 					xevent.xmotion.y_root - m_yCenter < -s_size ||
 					xevent.xmotion.y_root - m_yCenter >  s_size) {
-					CDisplayLock display(this);
+					CDisplayLock display(m_screen);
 					warpCursorNoFlush(display, m_xCenter, m_yCenter);
 				}
 
@@ -481,7 +321,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 				// warping to the primary screen's enter position,
 				// effectively overriding it.
 				if (x != 0 || y != 0) {
-					m_primaryReceiver->onMouseMoveSecondary(x, y);
+					m_receiver->onMouseMoveSecondary(x, y);
 				}
 			}
 		}
@@ -492,77 +332,117 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 }
 
 void
-CXWindowsPrimaryScreen::onUnexpectedClose()
+CXWindowsPrimaryScreen::onPreRun()
 {
-	// tell server to shutdown
-	m_primaryReceiver->onError();
-}
-
-void
-CXWindowsPrimaryScreen::onLostClipboard(ClipboardID id)
-{
-	// tell server that the clipboard was grabbed locally
-	m_receiver->onGrabClipboard(id);
-}
-
-SInt32
-CXWindowsPrimaryScreen::getJumpZoneSize() const
-{
-	return 1;
-}
-
-void
-CXWindowsPrimaryScreen::warpCursorToCenter()
-{
-	warpCursor(m_xCenter, m_yCenter);
-}
-
-void
-CXWindowsPrimaryScreen::warpCursorNoFlush(
-				Display* display, SInt32 x, SInt32 y)
-{
-	assert(display  != NULL);
 	assert(m_window != None);
-
-	// send an event that we can recognize before the mouse warp
-	XEvent eventBefore;
-	eventBefore.type                = MotionNotify;
-	eventBefore.xmotion.display     = display;
-	eventBefore.xmotion.window      = m_window;
-	eventBefore.xmotion.root        = getRoot();
-	eventBefore.xmotion.subwindow   = m_window;
-	eventBefore.xmotion.time        = CurrentTime;
-	eventBefore.xmotion.x           = x;
-	eventBefore.xmotion.y           = y;
-	eventBefore.xmotion.x_root      = x;
-	eventBefore.xmotion.y_root      = y;
-	eventBefore.xmotion.state       = 0;
-	eventBefore.xmotion.is_hint     = False;
-	eventBefore.xmotion.same_screen = True;
-	XEvent eventAfter               = eventBefore;
-	XSendEvent(display, m_window, False, 0, &eventBefore);
-
-	// warp mouse
-	XWarpPointer(display, None, getRoot(), 0, 0, 0, 0, x, y);
-
-	// send an event that we can recognize after the mouse warp
-	XSendEvent(display, m_window, False, 0, &eventAfter);
-	XSync(display, False);
-
-	log((CLOG_DEBUG2 "warped to %d,%d", x, y));
 }
 
 void
-CXWindowsPrimaryScreen::enterNoWarp()
+CXWindowsPrimaryScreen::onPreOpen()
 {
-	m_active = false;
-	hideWindow();
+	assert(m_window == None);
+}
+
+void
+CXWindowsPrimaryScreen::onPostOpen()
+{
+	// get cursor info
+	m_screen->getCursorPos(m_x, m_y);
+	m_screen->getCursorCenter(m_xCenter, m_yCenter);
+
+	// check for peculiarities
+	// FIXME -- may have to get these from some database
+	m_numLockHalfDuplex  = false;
+	m_capsLockHalfDuplex = false;
+//	m_numLockHalfDuplex  = true;
+//	m_capsLockHalfDuplex = true;
+}
+
+void
+CXWindowsPrimaryScreen::onPreEnter()
+{
+	assert(m_window != None);
+}
+
+void
+CXWindowsPrimaryScreen::onPreLeave()
+{
+	assert(m_window != None);
+}
+
+void
+CXWindowsPrimaryScreen::onEnterScreenSaver()
+{
+	CDisplayLock display(m_screen);
+
+	// set keyboard focus to root window.  the screensaver should then
+	// pick up key events for when the user enters a password to unlock. 
+	XSetInputFocus(display, PointerRoot, PointerRoot, CurrentTime);
+}
+
+void
+CXWindowsPrimaryScreen::createWindow()
+{
+	assert(m_window == None);
+
+	// get size of screen
+	SInt32 x, y, w, h;
+	m_screen->getShape(x, y, w, h);
+
+	// grab window attributes.  this window is used to capture user
+	// input when the user is focused on another client.  don't let
+	// the window manager mess with it.
+	XSetWindowAttributes attr;
+	attr.event_mask            = PointerMotionMask |
+								 ButtonPressMask | ButtonReleaseMask |
+								 KeyPressMask | KeyReleaseMask |
+								 KeymapStateMask | PropertyChangeMask;
+	attr.do_not_propagate_mask = 0;
+	attr.override_redirect     = True;
+	attr.cursor                = m_screen->getBlankCursor();
+
+	{
+		// create the grab window
+		CDisplayLock display(m_screen);
+		m_window = XCreateWindow(display, m_screen->getRoot(),
+								x, y, w, h, 0, 0,
+								InputOnly, CopyFromParent,
+								CWDontPropagate | CWEventMask |
+								CWOverrideRedirect | CWCursor,
+								&attr);
+		if (m_window == None) {
+			throw XScreenOpenFailure();
+		}
+		log((CLOG_DEBUG "window is 0x%08x", m_window));
+
+		// start watching for events on other windows
+		selectEvents(display, m_screen->getRoot());
+	}
+
+	// tell our superclass about the window
+	m_screen->setWindow(m_window);
+}
+
+void
+CXWindowsPrimaryScreen::destroyWindow()
+{
+	// display can be NULL if the server unexpectedly disconnected
+	if (m_window != None) {
+		m_screen->setWindow(None);
+		CDisplayLock display(m_screen);
+		if (display != NULL) {
+			XDestroyWindow(display, m_window);
+		}
+		m_window = None;
+	}
 }
 
 bool
 CXWindowsPrimaryScreen::showWindow()
 {
-	CDisplayLock display(this);
+	assert(m_window != None);
+
+	CDisplayLock display(m_screen);
 
 	// raise and show the input window
 	XMapRaised(display, m_window);
@@ -616,83 +496,51 @@ CXWindowsPrimaryScreen::showWindow()
 void
 CXWindowsPrimaryScreen::hideWindow()
 {
-	CDisplayLock display(this);
+	CDisplayLock display(m_screen);
 
 	// unmap the grab window.  this also ungrabs the mouse and keyboard.
 	XUnmapWindow(display, m_window);
 }
 
 void
-CXWindowsPrimaryScreen::checkClipboard()
+CXWindowsPrimaryScreen::warpCursorToCenter()
 {
-	// do nothing, we're always up to date
+	warpCursor(m_xCenter, m_yCenter);
 }
 
 void
-CXWindowsPrimaryScreen::createWindow()
+CXWindowsPrimaryScreen::warpCursorNoFlush(
+				Display* display, SInt32 x, SInt32 y)
 {
-	assert(m_window == None);
+	assert(display  != NULL);
+	assert(m_window != None);
 
-	// get size of screen
-	SInt32 x, y, w, h;
-	getScreenShape(x, y, w, h);
+	// send an event that we can recognize before the mouse warp
+	XEvent eventBefore;
+	eventBefore.type                = MotionNotify;
+	eventBefore.xmotion.display     = display;
+	eventBefore.xmotion.window      = m_window;
+	eventBefore.xmotion.root        = m_screen->getRoot();
+	eventBefore.xmotion.subwindow   = m_window;
+	eventBefore.xmotion.time        = CurrentTime;
+	eventBefore.xmotion.x           = x;
+	eventBefore.xmotion.y           = y;
+	eventBefore.xmotion.x_root      = x;
+	eventBefore.xmotion.y_root      = y;
+	eventBefore.xmotion.state       = 0;
+	eventBefore.xmotion.is_hint     = False;
+	eventBefore.xmotion.same_screen = True;
+	XEvent eventAfter               = eventBefore;
+	XSendEvent(display, m_window, False, 0, &eventBefore);
 
-	// grab window attributes.  this window is used to capture user
-	// input when the user is focused on another client.  don't let
-	// the window manager mess with it.
-	XSetWindowAttributes attr;
-	attr.event_mask            = PointerMotionMask |
-								 ButtonPressMask | ButtonReleaseMask |
-								 KeyPressMask | KeyReleaseMask |
-								 KeymapStateMask | PropertyChangeMask;
-	attr.do_not_propagate_mask = 0;
-	attr.override_redirect     = True;
-	attr.cursor                = getBlankCursor();
+	// warp mouse
+	XWarpPointer(display, None, m_screen->getRoot(), 0, 0, 0, 0, x, y);
 
-	// create the grab window
-	CDisplayLock display(this);
-	m_window = XCreateWindow(display, getRoot(),
-								x, y, w, h, 0, 0,
-								InputOnly, CopyFromParent,
-								CWDontPropagate | CWEventMask |
-								CWOverrideRedirect | CWCursor,
-								&attr);
-	if (m_window == None) {
-		throw XScreenOpenFailure();
-	}
-	log((CLOG_DEBUG "window is 0x%08x", m_window));
+	// send an event that we can recognize after the mouse warp
+	XSendEvent(display, m_window, False, 0, &eventAfter);
+	XSync(display, False);
 
-	// start watching for events on other windows
-	selectEvents(display, getRoot());
-}
-
-void
-CXWindowsPrimaryScreen::destroyWindow()
-{
-	// display can be NULL if the server unexpectedly disconnected
-	CDisplayLock display(this);
-	if (display != NULL && m_window != None) {
-		XDestroyWindow(display, m_window);
-	}
-	m_window = None;
-}
-
-void
-CXWindowsPrimaryScreen::installScreenSaver()
-{
-	assert(getScreenSaver() != NULL);
-
-	getScreenSaver()->setNotify(m_window);
-}
-
-void
-CXWindowsPrimaryScreen::uninstallScreenSaver()
-{
-	// stop being notified of screen saver activation/deactivation
-	if (getScreenSaver() != NULL) {
-		getScreenSaver()->setNotify(None);
-	}
-	m_atomScreenSaver = None;
+	log((CLOG_DEBUG2 "warped to %d,%d", x, y));
 }
 
 void
@@ -777,7 +625,7 @@ CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 	KeySym keysym;
 	char dummy[1];
 
-	CDisplayLock display(this);
+	CDisplayLock display(m_screen);
 	XLookupString(event, dummy, 0, &keysym, NULL);
 	return static_cast<KeyID>(keysym);
 }
@@ -795,8 +643,10 @@ CXWindowsPrimaryScreen::mapButton(unsigned int button) const
 }
 
 void
-CXWindowsPrimaryScreen::updateModifierMap(Display* display)
+CXWindowsPrimaryScreen::updateKeys()
 {
+	CDisplayLock display(m_screen);
+
 	// get modifier map from server
 	XModifierKeymap* keymap = XGetModifierMapping(display);
 

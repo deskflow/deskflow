@@ -2,6 +2,7 @@
 #define CSERVER_H
 
 #include "IServer.h"
+#include "IPrimaryScreenReceiver.h"
 #include "CConfig.h"
 #include "CClipboard.h"
 #include "CCondVar.h"
@@ -20,7 +21,7 @@ class IServerProtocol;
 class ISocketFactory;
 class ISecurityFactory;
 
-class CServer : public IServer {
+class CServer : public IServer, public IPrimaryScreenReceiver {
 public:
 	CServer(const CString& serverName);
 	~CServer();
@@ -38,6 +39,9 @@ public:
 	// after a successful open().
 	void				quit();
 
+	// close the server's screen
+	void				close();
+
 	// update screen map.  returns true iff the new configuration was
 	// accepted.
 	bool				setConfig(const CConfig&);
@@ -50,8 +54,14 @@ public:
 	// get the primary screen's name
 	CString				getPrimaryScreenName() const;
 
+	// IServer overrides
+	virtual void		onInfoChanged(const CString&, const CClientInfo&);
+	virtual bool		onGrabClipboard(const CString&, ClipboardID, UInt32);
+	virtual void		onClipboardChanged(ClipboardID, UInt32, const CString&);
+
 	// IPrimaryScreenReceiver overrides
 	virtual void		onError();
+	virtual void		onScreensaver(bool activated);
 	virtual void		onKeyDown(KeyID, KeyModifierMask);
 	virtual void		onKeyUp(KeyID, KeyModifierMask);
 	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
@@ -60,12 +70,6 @@ public:
 	virtual bool		onMouseMovePrimary(SInt32 x, SInt32 y);
 	virtual void		onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	virtual void		onMouseWheel(SInt32 delta);
-	virtual void		onScreenSaver(bool activated);
-
-	// IServer overrides
-	virtual void		onInfoChanged(const CString&, const CClientInfo&);
-	virtual bool		onGrabClipboard(const CString&, ClipboardID, UInt32);
-	virtual void		onClipboardChanged(ClipboardID, UInt32, const CString&);
 
 protected:
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);

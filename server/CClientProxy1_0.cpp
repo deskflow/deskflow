@@ -236,10 +236,17 @@ CClientProxy1_0::mouseWheel(SInt32 delta)
 }
 
 void
-CClientProxy1_0::screenSaver(bool on)
+CClientProxy1_0::screensaver(bool on)
 {
 	log((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0));
 	CProtocolUtil::writef(getOutputStream(), kMsgCScreenSaver, on ? 1 : 0);
+}
+
+SInt32
+CClientProxy1_0::getJumpZoneSize() const
+{
+	CLock lock(&m_mutex);
+	return m_info.m_zoneSize;
 }
 
 void
@@ -253,24 +260,17 @@ CClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-CClientProxy1_0::getCenter(SInt32& x, SInt32& y) const
-{
-	CLock lock(&m_mutex);
-	x = m_info.m_mx;
-	y = m_info.m_my;
-}
-
-void
-CClientProxy1_0::getMousePos(SInt32&, SInt32&) const
+CClientProxy1_0::getCursorPos(SInt32&, SInt32&) const
 {
 	assert(0 && "shouldn't be called");
 }
 
-SInt32
-CClientProxy1_0::getJumpZoneSize() const
+void
+CClientProxy1_0::getCursorCenter(SInt32& x, SInt32& y) const
 {
 	CLock lock(&m_mutex);
-	return m_info.m_zoneSize;
+	x = m_info.m_mx;
+	y = m_info.m_my;
 }
 
 void

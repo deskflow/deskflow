@@ -1,6 +1,7 @@
 #ifndef CXWINDOWSSCREEN_H
 #define CXWINDOWSSCREEN_H
 
+#include "IScreen.h"
 #include "ClipboardTypes.h"
 #include "CMutex.h"
 #include "CStopwatch.h"
@@ -13,9 +14,9 @@
 #include <algorithm>
 #include <functional>
 
-class IClipboard;
 class IJob;
-class IScreenSaver;
+class IScreenEventHandler;
+class IScreenReceiver;
 class CXWindowsClipboard;
 class CXWindowsScreenSaver;
 
@@ -25,9 +26,9 @@ public:
 	SInt32				m_result;
 };
 
-class CXWindowsScreen {
+class CXWindowsScreen : public IScreen {
 public:
-	CXWindowsScreen();
+	CXWindowsScreen(IScreenReceiver*, IScreenEventHandler*);
 	virtual ~CXWindowsScreen();
 
 	// manipulators
@@ -39,94 +40,41 @@ public:
 	void				addTimer(IJob*, double timeout);
 	void				removeTimer(IJob*);
 
-protected:
-	class CDisplayLock {
-	public:
-		CDisplayLock(const CXWindowsScreen*);
-		~CDisplayLock();
+	// set the window (created by the subclass).  this performs some
+	// initialization and saves the window in case it's needed later.
+	void				setWindow(Window);
 
-		operator Display*() const;
+	// accessors
 
-	private:
-		const CMutex*	m_mutex;
-		Display*		m_display;
-	};
-	friend class CDisplayLock;
-
-	// runs an event loop and returns when exitMainLoop() is called
-	void				mainLoop();
-
-	// force mainLoop() to return
-	void				exitMainLoop();
-
-	// open the X display.  calls onOpenDisplay() after opening the display,
-	// getting the screen, its size, and root window.  then it starts the
-	// event thread.
-	void				openDisplay();
-
-	// destroy the window and close the display.  calls onCloseDisplay()
-	// after the event thread has been shut down but before the display
-	// is closed.
-	void				closeDisplay();
-
-	// get the Display*.  only use this when you know the display is
-	// locked but don't have the CDisplayLock available.
-	Display*			getDisplay() const;
-
-	// get the opened screen and its root window.  to get the display
-	// create a CDisplayLock object passing this.  while the object
-	// exists no other threads may access the display.  do not save
-	// the Display* beyond the lifetime of the CDisplayLock.
-	int					getScreen() const;
+	// get the root window of the screen
 	Window				getRoot() const;
-
-	// initialize the clipboards
-	void				initClipboards(Window);
-
-	// update screen size cache
-	void				updateScreenShape();
-
-	// get the shape of the screen
-	void				getScreenShape(SInt32& x, SInt32& y,
-							SInt32& width, SInt32& height) const;
-
-	// get the current cursor position
-	void				getCursorPos(SInt32& x, SInt32& y) const;
-
-	// get the cursor center position
-	void				getCursorCenter(SInt32& x, SInt32& y) const;
 
 	// get a cursor that is transparent everywhere
 	Cursor				getBlankCursor() const;
 
-	// set the contents of the clipboard (i.e. primary selection)
-	bool				setDisplayClipboard(ClipboardID,
-							const IClipboard* clipboard);
-
-	// copy the clipboard contents to clipboard
-	bool				getDisplayClipboard(ClipboardID,
-							IClipboard* clipboard) const;
-
-	// get the screen saver object
-	CXWindowsScreenSaver*
-						getScreenSaver() const;
-
-	// called for each event before event translation and dispatch.  return
-	// true to skip translation and dispatch.  subclasses should call the
-	// superclass's version first and return true if it returns true.
-	virtual bool		onPreDispatch(const CEvent* event) = 0;
-
-	// called by mainLoop().  iff the event was handled return true and
-	// store the result, if any, in m_result, which defaults to zero.
-	virtual bool		onEvent(CEvent* event) = 0;
-
-	// called if the display is unexpectedly closing.  default does nothing.
-	virtual void		onUnexpectedClose();
-
-	// called when a clipboard is lost
-	virtual void		onLostClipboard(ClipboardID) = 0;
+	// IScreen overrides
+	void				open();
+	void				mainLoop();
+	void				exitMainLoop();
+	void				close();
+	bool				setClipboard(ClipboardID, const IClipboard*);
+	void				checkClipboards();
+	void				openScreenSaver(bool notify);
+	void				closeScreenSaver();
+	void				screensaver(bool activate);
+	void				syncDesktop();
+	bool				getClipboard(ClipboardID, IClipboard*) const;
+	void				getShape(SInt32&, SInt32&, SInt32&, SInt32&) const;
+	void				getCursorPos(SInt32&, SInt32&) const;
+	void				getCursorCenter(SInt32&, SInt32&) const;
 
 private:
+	// update screen size cache
+	void				updateScreenShape();
+
+	// process events before dispatching to receiver
+	bool				onPreDispatch(CEvent* event);
+
 	// create the transparent cursor
 	void				createBlankCursor();
 
@@ -255,14 +203,23 @@ private:
 	};
 
 private:
+	friend class CDisplayLock;
+
 	typedef CPriorityQueue<CTimer> CTimerPriorityQueue;
 
+	// X is not thread safe
+	CMutex				m_mutex;
+
 	Display*			m_display;
-	int					m_screen;
 	Window				m_root;
+	bool				m_stop;
+
+	IScreenReceiver*		m_receiver;
+	IScreenEventHandler*	m_eventHandler;
+	Window				m_window;
+
 	SInt32				m_x, m_y;
 	SInt32				m_w, m_h;
-	bool				m_stop;
 
 	// clipboards
 	CXWindowsClipboard*	m_clipboard[kClipboardEnd];
@@ -270,20 +227,31 @@ private:
 	// the transparent cursor
 	Cursor				m_cursor;
 
-	// screen saver
-	CXWindowsScreenSaver*	m_screenSaver;
+	// screen saver stuff
+	CXWindowsScreenSaver*	m_screensaver;
+	bool				m_screensaverNotify;
+	Atom				m_atomScreensaver;
 
 	// timers, the stopwatch used to time, and a mutex for the timers
 	CTimerPriorityQueue	m_timers;
 	CStopwatch			m_time;
 	CMutex				m_timersMutex;
 
-	// X is not thread safe
-	CMutex				m_mutex;
-
 	// pointer to (singleton) screen.  this is only needed by
 	// ioErrorHandler().
 	static CXWindowsScreen*	s_screen;
+};
+
+class CDisplayLock {
+public:
+	CDisplayLock(const CXWindowsScreen*);
+	~CDisplayLock();
+
+	operator Display*() const;
+
+private:
+	const CMutex*		m_mutex;
+	Display*			m_display;
 };
 
 #endif

@@ -3,14 +3,22 @@
 #include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
 #include "CClipboard.h"
+#include "IScreenEventHandler.h"
+#include "IScreenReceiver.h"
 #include "XScreen.h"
 #include "CLock.h"
 #include "CThread.h"
 #include "CLog.h"
 #include "IJob.h"
-#include "CString.h"
-#include <cstdlib>
+//#include "CString.h"
+//#include <cstdlib>
 #include <cstring>
+#if defined(X_DISPLAY_MISSING)
+#	error X11 is required to build synergy
+#else
+#	include <X11/X.h>
+#	include <X11/Xutil.h>
+#endif
 
 //
 // CXWindowsScreen::CTimer
@@ -68,15 +76,24 @@ CXWindowsScreen::CTimer::operator<(const CTimer& t) const
 
 CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 
-CXWindowsScreen::CXWindowsScreen() :
+CXWindowsScreen::CXWindowsScreen(IScreenReceiver* receiver,
+				IScreenEventHandler* eventHandler) :
 	m_display(NULL),
 	m_root(None),
+	m_stop(false),
+	m_receiver(receiver),
+	m_eventHandler(eventHandler),
+	m_window(None),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
-	m_stop(false),
-	m_screenSaver(NULL)
+	m_screensaver(NULL),
+	m_screensaverNotify(false),
+	m_atomScreensaver(None)
 {
-	assert(s_screen == NULL);
+	assert(s_screen       == NULL);
+	assert(m_receiver     != NULL);
+	assert(m_eventHandler != NULL);
+
 	s_screen = this;
 }
 
@@ -121,6 +138,77 @@ CXWindowsScreen::removeTimerNoLock(IJob* job)
 }
 
 void
+CXWindowsScreen::setWindow(Window window)
+{
+	CLock lock(&m_mutex);
+	assert(m_display != NULL);
+
+	// destroy the clipboards
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		delete m_clipboard[id];
+		m_clipboard[id] = NULL;
+	}
+
+	// save the new window
+	m_window = window;
+
+	// initialize the clipboards
+	if (m_window != None) {
+		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+			m_clipboard[id] = new CXWindowsClipboard(m_display, m_window, id);
+		}
+	}
+}
+
+Window
+CXWindowsScreen::getRoot() const
+{
+	assert(m_display != NULL);
+	return m_root;
+}
+
+Cursor
+CXWindowsScreen::getBlankCursor() const
+{
+	return m_cursor;
+}
+
+void
+CXWindowsScreen::open()
+{
+	assert(m_display == NULL);
+
+	// set the X I/O error handler so we catch the display disconnecting
+	XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
+
+	// get the DISPLAY
+	const char* display = getenv("DISPLAY");
+	if (display == NULL) {
+		display = ":0.0";
+	}
+
+	// open the display
+	log((CLOG_DEBUG "XOpenDisplay(\"%s\")", display));
+	m_display = XOpenDisplay(display);
+	if (m_display == NULL) {
+		throw XScreenOpenFailure();
+	}
+
+	// get root window
+	m_root = DefaultRootWindow(m_display);
+
+	// create the transparent cursor
+	createBlankCursor();
+
+	// get screen shape
+	updateScreenShape();
+
+	// initialize the screen saver
+	m_atomScreensaver = XInternAtom(m_display, "SCREENSAVER", False);
+	m_screensaver     = new CXWindowsScreenSaver(this, m_display);
+}
+
+void
 CXWindowsScreen::mainLoop()
 {
 	// wait for an event in a cancellable way and don't lock the
@@ -147,7 +235,7 @@ CXWindowsScreen::mainLoop()
 			// have a go at it.
 			m_mutex.unlock();
 			if (!onPreDispatch(&event)) {
-				onEvent(&event);
+				m_eventHandler->onEvent(&event);
 			}
 			m_mutex.lock();
 		}
@@ -162,23 +250,210 @@ CXWindowsScreen::exitMainLoop()
 	m_stop = true;
 }
 
+void
+CXWindowsScreen::close()
+{
+	CLock lock(&m_mutex);
+
+	// done with screen saver
+	delete m_screensaver;
+	m_screensaver = NULL;
+
+	// destroy clipboards
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		delete m_clipboard[id];
+		m_clipboard[id] = NULL;
+	}
+
+	// close the display
+	if (m_display != NULL) {
+		XCloseDisplay(m_display);
+		m_display = NULL;
+		log((CLOG_DEBUG "closed display"));
+	}
+	XSetIOErrorHandler(NULL);
+}
+
 bool
-CXWindowsScreen::onPreDispatch(const CEvent* event)
+CXWindowsScreen::setClipboard(ClipboardID id, const IClipboard* clipboard)
+{
+	CLock lock(&m_mutex);
+
+	// fail if we don't have the requested clipboard
+	if (m_clipboard[id] == NULL) {
+		return false;
+	}
+
+	// get the actual time.  ICCCM does not allow CurrentTime.
+	Time timestamp = CXWindowsUtil::getCurrentTime(
+								m_display, m_clipboard[id]->getWindow());
+
+	if (clipboard != NULL) {
+		// save clipboard data
+		return CClipboard::copy(m_clipboard[id], clipboard, timestamp);
+	}
+	else {
+		// assert clipboard ownership
+		if (!m_clipboard[id]->open(timestamp)) {
+			return false;
+		}
+		m_clipboard[id]->empty();
+		m_clipboard[id]->close();
+		return true;
+	}
+}
+
+void
+CXWindowsScreen::checkClipboards()
+{
+	// do nothing, we're always up to date
+}
+
+void
+CXWindowsScreen::openScreenSaver(bool notify)
+{
+	CLock lock(&m_mutex);
+	assert(m_screensaver != NULL);
+
+	m_screensaverNotify = notify;
+	if (m_screensaverNotify) {
+		m_screensaver->setNotify(m_window);
+	}
+	else {
+		m_screensaver->disable();
+	}
+}
+
+void
+CXWindowsScreen::closeScreenSaver()
+{
+	CLock lock(&m_mutex);
+	if (m_screensaver != NULL) {
+		if (m_screensaverNotify) {
+			m_screensaver->setNotify(None);
+		}
+		else {
+			m_screensaver->enable();
+		}
+	}
+}
+
+void
+CXWindowsScreen::screensaver(bool activate)
+{
+	CLock lock(&m_mutex);
+	assert(m_screensaver != NULL);
+
+	if (activate) {
+		m_screensaver->activate();
+	}
+	else {
+		m_screensaver->deactivate();
+	}
+}
+
+void
+CXWindowsScreen::syncDesktop()
+{
+	// do nothing;  X doesn't suffer from this bogosity
+}
+
+bool
+CXWindowsScreen::getClipboard(ClipboardID id, IClipboard* clipboard) const
+{
+	assert(clipboard != NULL);
+
+	// block others from using the display while we get the clipboard
+	CLock lock(&m_mutex);
+
+	// fail if we don't have the requested clipboard
+	if (m_clipboard[id] == NULL) {
+		return false;
+	}
+
+	// get the actual time.  ICCCM does not allow CurrentTime.
+	Time timestamp = CXWindowsUtil::getCurrentTime(
+								m_display, m_clipboard[id]->getWindow());
+
+	// copy the clipboard
+	return CClipboard::copy(clipboard, m_clipboard[id], timestamp);
+}
+
+void
+CXWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+{
+	CLock lock(&m_mutex);
+	assert(m_display != NULL);
+
+	x = m_x;
+	y = m_y;
+	w = m_w;
+	h = m_h;
+}
+
+void
+CXWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
+{
+	CLock lock(&m_mutex);
+	assert(m_display != NULL);
+
+	Window root, window;
+	int mx, my, xWindow, yWindow;
+	unsigned int mask;
+	if (XQueryPointer(m_display, getRoot(), &root, &window,
+								&mx, &my, &xWindow, &yWindow, &mask)) {
+		x = mx;
+		y = my;
+	}
+	else {
+		getCursorCenter(x, y);
+	}
+}
+
+void
+CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
+{
+	CLock lock(&m_mutex);
+	assert(m_display != NULL);
+
+	x = m_x + (m_w >> 1);
+	y = m_y + (m_h >> 1);
+}
+
+void
+CXWindowsScreen::updateScreenShape()
+{
+	m_x = 0;
+	m_y = 0;
+	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
+	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
+	log((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
+}
+
+bool
+CXWindowsScreen::onPreDispatch(CEvent* event)
 {
 	assert(event != NULL);
-	const XEvent* xevent = &event->m_event;
+	XEvent* xevent = &event->m_event;
 
 	switch (xevent->type) {
+	case MappingNotify:
+		// keyboard mapping changed
+		XRefreshKeyboardMapping(&xevent->xmapping);
+
+		// pass event on
+		break;
+
 	case SelectionClear:
 		{
 			// we just lost the selection.  that means someone else
 			// grabbed the selection so this screen is now the
-			// selection owner.  report that to the subclass.
+			// selection owner.  report that to the receiver.
 			ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
 			if (id != kClipboardEnd) {
 				log((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
 				m_clipboard[id]->lost(xevent->xselectionclear.time);
-				onLostClipboard(id);
+				m_receiver->onGrabClipboard(id);
 				return true;
 			}
 		}
@@ -225,6 +500,15 @@ CXWindowsScreen::onPreDispatch(const CEvent* event)
 		}
 		break;
 
+	case ClientMessage:
+		if (xevent->xclient.message_type == m_atomScreensaver ||
+			xevent->xclient.format       == 32) {
+			// screen saver activation/deactivation event
+			m_eventHandler->onScreensaver(xevent->xclient.data.l[0] != 0);
+			return true;
+		}
+		break;
+
 	case DestroyNotify:
 		// looks like one of the windows that requested a clipboard
 		// transfer has gone bye-bye.
@@ -237,150 +521,10 @@ CXWindowsScreen::onPreDispatch(const CEvent* event)
 	// let screen saver have a go
 	{
 		CLock lock(&m_mutex);
-		m_screenSaver->onPreDispatch(xevent);
+		m_screensaver->onPreDispatch(xevent);
 	}
 
-	return false;
-}
-
-void
-CXWindowsScreen::openDisplay()
-{
-	assert(m_display == NULL);
-
-	// set the X I/O error handler so we catch the display disconnecting
-	XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
-
-	// get the DISPLAY
-	const char* display = getenv("DISPLAY");
-	if (display == NULL) {
-		display = ":0.0";
-	}
-
-	// open the display
-	log((CLOG_DEBUG "XOpenDisplay(\"%s\")", display));
-	m_display = XOpenDisplay(display);
-	if (m_display == NULL) {
-		throw XScreenOpenFailure();
-	}
-
-	// get default screen and root window
-	m_screen = DefaultScreen(m_display);
-	m_root   = RootWindow(m_display, m_screen);
-
-	// create the transparent cursor
-	createBlankCursor();
-
-	// get screen shape
-	updateScreenShape();
-
-	// initialize the screen saver
-	m_screenSaver = new CXWindowsScreenSaver(this, m_display);
-}
-
-void
-CXWindowsScreen::closeDisplay()
-{
-	CLock lock(&m_mutex);
-
-	// done with screen saver
-	delete m_screenSaver;
-	m_screenSaver = NULL;
-
-	// destroy clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		delete m_clipboard[id];
-		m_clipboard[id] = NULL;
-	}
-
-	// close the display
-	if (m_display != NULL) {
-		XCloseDisplay(m_display);
-		m_display = NULL;
-		log((CLOG_DEBUG "closed display"));
-	}
-	XSetIOErrorHandler(NULL);
-}
-
-Display*
-CXWindowsScreen::getDisplay() const
-{
-	return m_display;
-}
-
-int
-CXWindowsScreen::getScreen() const
-{
-	assert(m_display != NULL);
-	return m_screen;
-}
-
-Window
-CXWindowsScreen::getRoot() const
-{
-	assert(m_display != NULL);
-	return m_root;
-}
-
-void
-CXWindowsScreen::initClipboards(Window window)
-{
-	assert(m_display != NULL);
-	assert(window    != None);
-
-	// initialize clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		m_clipboard[id] = new CXWindowsClipboard(m_display, window, id);
-	}
-}
-
-void
-CXWindowsScreen::updateScreenShape()
-{
-	m_x = 0;
-	m_y = 0;
-	m_w = WidthOfScreen(ScreenOfDisplay(m_display, m_screen));
-	m_h = HeightOfScreen(ScreenOfDisplay(m_display, m_screen));
-	log((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
-}
-
-void
-CXWindowsScreen::getScreenShape(SInt32& x, SInt32& y,
-				SInt32& w, SInt32& h) const
-{
-	assert(m_display != NULL);
-
-	x = m_x;
-	y = m_y;
-	w = m_w;
-	h = m_h;
-}
-
-void
-CXWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
-{
-	assert(m_display != NULL);
-
-	Window root, window;
-	int mx, my, xWindow, yWindow;
-	unsigned int mask;
-	if (XQueryPointer(m_display, getRoot(), &root, &window,
-								&mx, &my, &xWindow, &yWindow, &mask)) {
-		x = mx;
-		y = my;
-	}
-	else {
-		getCursorCenter(x, y);
-	}
-}
-
-void
-CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
-{
-	assert(m_display != NULL);
-
-	x = m_x + (m_w >> 1);
-	y = m_y + (m_h >> 1);
+	return m_eventHandler->onPreDispatch(event);
 }
 
 void
@@ -415,30 +559,6 @@ CXWindowsScreen::createBlankCursor()
 	// don't need bitmap or the data anymore
 	delete[] data;
 	XFreePixmap(m_display, bitmap);
-}
-
-Cursor
-CXWindowsScreen::getBlankCursor() const
-{
-	return m_cursor;
-}
-
-ClipboardID
-CXWindowsScreen::getClipboardID(Atom selection) const
-{
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_clipboard[id] != NULL &&
-			m_clipboard[id]->getSelection() == selection) {
-			return id;
-		}
-	}
-	return kClipboardEnd;
-}
-
-void
-CXWindowsScreen::onUnexpectedClose()
-{
-	// do nothing
 }
 
 bool
@@ -486,62 +606,16 @@ CXWindowsScreen::processTimers()
 	}
 }
 
-CXWindowsScreenSaver*
-CXWindowsScreen::getScreenSaver() const
+ClipboardID
+CXWindowsScreen::getClipboardID(Atom selection) const
 {
-	return m_screenSaver;
-}
-
-bool
-CXWindowsScreen::setDisplayClipboard(ClipboardID id,
-				const IClipboard* clipboard)
-{
-	CLock lock(&m_mutex);
-
-	// fail if we don't have the requested clipboard
-	if (m_clipboard[id] == NULL) {
-		return false;
-	}
-
-	// get the actual time.  ICCCM does not allow CurrentTime.
-	Time timestamp = CXWindowsUtil::getCurrentTime(
-								m_display, m_clipboard[id]->getWindow());
-
-	if (clipboard != NULL) {
-		// save clipboard data
-		return CClipboard::copy(m_clipboard[id], clipboard, timestamp);
-	}
-	else {
-		// assert clipboard ownership
-		if (!m_clipboard[id]->open(timestamp)) {
-			return false;
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		if (m_clipboard[id] != NULL &&
+			m_clipboard[id]->getSelection() == selection) {
+			return id;
 		}
-		m_clipboard[id]->empty();
-		m_clipboard[id]->close();
-		return true;
 	}
-}
-
-bool
-CXWindowsScreen::getDisplayClipboard(ClipboardID id,
-				IClipboard* clipboard) const
-{
-	assert(clipboard != NULL);
-
-	// block others from using the display while we get the clipboard
-	CLock lock(&m_mutex);
-
-	// fail if we don't have the requested clipboard
-	if (m_clipboard[id] == NULL) {
-		return false;
-	}
-
-	// get the actual time.  ICCCM does not allow CurrentTime.
-	Time timestamp = CXWindowsUtil::getCurrentTime(
-								m_display, m_clipboard[id]->getWindow());
-
-	// copy the clipboard
-	return CClipboard::copy(clipboard, m_clipboard[id], timestamp);
+	return kClipboardEnd;
 }
 
 void
@@ -584,17 +658,17 @@ CXWindowsScreen::ioErrorHandler(Display*)
 	// so we set it to NULL), and exit.
 	log((CLOG_WARN "X display has unexpectedly disconnected"));
 	s_screen->m_display = NULL;
-	s_screen->onUnexpectedClose();
+	s_screen->m_eventHandler->onError();
 	log((CLOG_CRIT "quiting due to X display disconnection"));
 	exit(17);
 }
 
 
 //
-// CXWindowsScreen::CDisplayLock
+// CDisplayLock
 //
 
-CXWindowsScreen::CDisplayLock::CDisplayLock(const CXWindowsScreen* screen) :
+CDisplayLock::CDisplayLock(const CXWindowsScreen* screen) :
 	m_mutex(&screen->m_mutex),
 	m_display(screen->m_display)
 {
@@ -603,12 +677,12 @@ CXWindowsScreen::CDisplayLock::CDisplayLock(const CXWindowsScreen* screen) :
 	m_mutex->lock();
 }
 
-CXWindowsScreen::CDisplayLock::~CDisplayLock()
+CDisplayLock::~CDisplayLock()
 {
 	m_mutex->unlock();
 }
 
-CXWindowsScreen::CDisplayLock::operator Display*() const
+CDisplayLock::operator Display*() const
 {
 	return m_display;
 }

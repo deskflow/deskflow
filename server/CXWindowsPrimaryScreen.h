@@ -1,62 +1,58 @@
 #ifndef CXWINDOWSPRIMARYSCREEN_H
 #define CXWINDOWSPRIMARYSCREEN_H
 
-#include "CXWindowsScreen.h"
-#include "IPrimaryScreen.h"
+#include "CPrimaryScreen.h"
+#include "IScreenEventHandler.h"
 #include "MouseTypes.h"
+#if defined(X_DISPLAY_MISSING)
+#	error X11 is required to build synergy
+#else
+#	include <X11/Xlib.h>
+#endif
 
+class CXWindowsScreen;
 class IScreenReceiver;
 class IPrimaryScreenReceiver;
 
-class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
+class CXWindowsPrimaryScreen :
+				public CPrimaryScreen, public IScreenEventHandler {
 public:
 	CXWindowsPrimaryScreen(IScreenReceiver*, IPrimaryScreenReceiver*);
 	virtual ~CXWindowsPrimaryScreen();
 
-	// IPrimaryScreen overrides
-	virtual void		run();
-	virtual void		stop();
-	virtual void		open();
-	virtual void		close();
-	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute, bool);
-	virtual bool		leave();
+	// CPrimaryScreen overrides
 	virtual void		reconfigure(UInt32 activeSides);
-	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
-	virtual void		setClipboard(ClipboardID, const IClipboard*);
-	virtual void		grabClipboard(ClipboardID);
-	virtual void		getClipboard(ClipboardID, IClipboard*) const;
+	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual KeyModifierMask	getToggleMask() const;
 	virtual bool		isLockedToScreen() const;
+	virtual IScreen*	getScreen() const;
 
-protected:
-	// CXWindowsScreen overrides
+	// IScreenEventHandler overrides
+	virtual void		onError();
+	virtual void		onScreensaver(bool activated);
 	virtual bool		onPreDispatch(const CEvent* event);
 	virtual bool		onEvent(CEvent* event);
-	virtual void		onUnexpectedClose();
-	virtual void		onLostClipboard(ClipboardID);
+
+protected:
+	// CPrimaryScreen overrides
+	virtual void		onPreRun();
+	virtual void		onPreOpen();
+	virtual void		onPostOpen();
+	virtual void		onPreEnter();
+	virtual void		onPreLeave();
+	virtual void		onEnterScreenSaver();
+
+	virtual void		createWindow();
+	virtual void		destroyWindow();
+	virtual bool		showWindow();
+	virtual void		hideWindow();
+	virtual void		warpCursorToCenter();
+
+	virtual void		updateKeys();
 
 private:
-	SInt32				getJumpZoneSize() const;
-
-	void				warpCursorToCenter();
 	void				warpCursorNoFlush(Display*,
 							SInt32 xAbsolute, SInt32 yAbsolute);
-
-	void				enterNoWarp();
-	bool				showWindow();
-	void				hideWindow();
-
-	// check clipboard ownership and, if necessary, tell the receiver
-	// of a grab.
-	void				checkClipboard();
-
-	// create/destroy window
-	void				createWindow();
-	void				destroyWindow();
-
-	// start/stop watch for screen saver changes
-	void				installScreenSaver();
-	void				uninstallScreenSaver();
 
 	void				selectEvents(Display*, Window) const;
 	void				doSelectEvents(Display*, Window) const;
@@ -64,8 +60,6 @@ private:
 	KeyModifierMask		mapModifier(unsigned int state) const;
 	KeyID				mapKey(XKeyEvent*) const;
 	ButtonID			mapButton(unsigned int button) const;
-
-	void				updateModifierMap(Display* display);
 
 	class CKeyEventInfo {
 	public:
@@ -77,14 +71,11 @@ private:
 	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
-	IScreenReceiver*		m_receiver;
-	IPrimaryScreenReceiver*	m_primaryReceiver;
+	CXWindowsScreen*	m_screen;
+	IPrimaryScreenReceiver*	m_receiver;
 
-	bool				m_active;
+	// our window
 	Window				m_window;
-
-	// atom for screen saver messages
-	Atom				m_atomScreenSaver;
 
 	// note toggle keys that toggle on up/down (false) or on
 	// transition (true)

@@ -132,6 +132,7 @@ realMain(CMutex* mutex)
 			}
 
 			// clean up
+			s_server->close();
 			delete s_server;
 			s_server = NULL;
 			CLog::setLock(NULL);
@@ -142,8 +143,11 @@ realMain(CMutex* mutex)
 			if (!locked && mutex != NULL) {
 				mutex->lock();
 			}
-			delete s_server;
-			s_server = NULL;
+			if (s_server != NULL) {
+				s_server->close();
+				delete s_server;
+				s_server = NULL;
+			}
 			CLog::setLock(NULL);
 			s_logMutex = NULL;
 			throw;

@@ -131,7 +131,7 @@ CServerProxy::run()
 			}
 
 			else if (memcmp(code, kMsgCScreenSaver, 4) == 0) {
-				screenSaver();
+				screensaver();
 			}
 
 			else if (memcmp(code, kMsgQInfo, 4) == 0) {
@@ -484,7 +484,7 @@ CServerProxy::mouseWheel()
 }
 
 void
-CServerProxy::screenSaver()
+CServerProxy::screensaver()
 {
 	// parse
 	SInt8 on;
@@ -492,7 +492,7 @@ CServerProxy::screenSaver()
 	log((CLOG_DEBUG1 "recv screen saver on=%d", on));
 
 	// forward
-	getClient()->screenSaver(on != 0);
+	getClient()->screensaver(on != 0);
 }
 
 void
@@ -501,7 +501,7 @@ CServerProxy::queryInfo()
 	// get current info
 	CClientInfo info;
 	getClient()->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
-	getClient()->getMousePos(info.m_mx, info.m_my);
+	getClient()->getCursorPos(info.m_mx, info.m_my);
 	info.m_zoneSize = getClient()->getJumpZoneSize();
 
 	// send it

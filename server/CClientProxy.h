@@ -32,7 +32,7 @@ public:
 	virtual void		close() = 0;
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
-							bool screenSaver) = 0;
+							bool forScreensaver) = 0;
 	virtual bool		leave() = 0;
 	virtual void		setClipboard(ClipboardID, const CString&) = 0;
 	virtual void		grabClipboard(ClipboardID) = 0;
@@ -44,13 +44,13 @@ public:
 	virtual void		mouseUp(ButtonID) = 0;
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
 	virtual void		mouseWheel(SInt32 delta) = 0;
-	virtual void		screenSaver(bool activate) = 0;
+	virtual void		screensaver(bool activate) = 0;
 	virtual CString		getName() const;
+	virtual SInt32		getJumpZoneSize() const = 0;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const = 0;
-	virtual void		getCenter(SInt32& x, SInt32& y) const = 0;
-	virtual void		getMousePos(SInt32& x, SInt32& y) const = 0;
-	virtual SInt32		getJumpZoneSize() const = 0;
+	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
+	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 
 private:
 	IServer*			m_server;

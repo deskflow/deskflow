@@ -1,6 +1,6 @@
 #include "CPrimaryClient.h"
 #include "IServer.h"
-#include "IPrimaryScreen.h"
+#include "CPrimaryScreen.h"
 #include "CClipboard.h"
 #include "CLog.h"
 
@@ -15,7 +15,8 @@
 // CPrimaryClient
 //
 
-CPrimaryClient::CPrimaryClient(IServer* server, const CString& name) :
+CPrimaryClient::CPrimaryClient(IServer* server,
+				IPrimaryScreenReceiver* receiver, const CString& name) :
 	m_server(server),
 	m_name(name),
 	m_seqNum(0)
@@ -25,9 +26,9 @@ CPrimaryClient::CPrimaryClient(IServer* server, const CString& name) :
 	// create screen
 	log((CLOG_DEBUG1 "creating primary screen"));
 #if WINDOWS_LIKE
-	m_screen = new CMSWindowsPrimaryScreen(this, m_server);
+	m_screen = new CMSWindowsPrimaryScreen(this, receiver);
 #elif UNIX_LIKE
-	m_screen = new CXWindowsPrimaryScreen(this, m_server);
+	m_screen = new CXWindowsPrimaryScreen(this, receiver);
 #endif
 }
 
@@ -211,7 +212,7 @@ CPrimaryClient::mouseWheel(SInt32)
 }
 
 void
-CPrimaryClient::screenSaver(bool)
+CPrimaryClient::screensaver(bool)
 {
 	// ignore
 }
@@ -220,6 +221,12 @@ CString
 CPrimaryClient::getName() const
 {
 	return m_name;
+}
+
+SInt32
+CPrimaryClient::getJumpZoneSize() const
+{
+	return m_info.m_zoneSize;
 }
 
 void
@@ -232,20 +239,14 @@ CPrimaryClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-CPrimaryClient::getCenter(SInt32& x, SInt32& y) const
-{
-	x = m_info.m_mx;
-	y = m_info.m_my;
-}
-
-void
-CPrimaryClient::getMousePos(SInt32&, SInt32&) const
+CPrimaryClient::getCursorPos(SInt32&, SInt32&) const
 {
 	assert(0 && "shouldn't be called");
 }
 
-SInt32
-CPrimaryClient::getJumpZoneSize() const
+void
+CPrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
 {
-	return m_info.m_zoneSize;
+	x = m_info.m_mx;
+	y = m_info.m_my;
 }
