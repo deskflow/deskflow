@@ -121,6 +121,19 @@ private:
 							KeyModifierMask desiredMask,
 							KeyModifierMask requiredMask) const;
 
+	// pass character to ToAsciiEx(), returning what it returns
+	int					toAscii(TCHAR c, HKL hkl, bool menu, WORD* chars) const;
+
+	// return true iff \c c is a dead character
+	bool				isDeadChar(TCHAR c, HKL hkl, bool menu) const;
+
+	// put back dead key into ToAscii() internal buffer.  returns true
+	// iff the character was a dead key.
+	bool				putBackDeadChar(TCHAR c, HKL hkl, bool menu) const;
+
+	// get the dead key saved in the given keyboard layout, or 0 if none
+	TCHAR				getSavedDeadChar(HKL hkl) const;
+
 private:
 	class CModifierKeys {
 	public:
@@ -130,6 +143,7 @@ private:
 	};
 
 	BYTE				m_keys[256];
+	mutable TCHAR		m_deadKey;
 
 	static const CModifierKeys	s_modifiers[];
 	static const char*		s_vkToName[];

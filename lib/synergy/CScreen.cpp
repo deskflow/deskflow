@@ -239,12 +239,9 @@ CScreen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 	// modifier state.
 	Keystrokes keys;
 	KeyButton key = m_screen->mapKey(keys, *this, id, mask, false);
-	if (key == 0) {
-		LOG((CLOG_DEBUG2 "cannot map key 0x%08x", id));
-		return;
-	}
 	if (keys.empty()) {
 		// do nothing if there are no associated keys
+		LOG((CLOG_DEBUG2 "cannot map key 0x%08x", id));
 		return;
 	}
 

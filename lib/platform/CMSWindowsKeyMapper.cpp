@@ -41,7 +41,9 @@
 // CMSWindowsKeyMapper
 //
 
-// table of modifier keys
+// table of modifier keys.  note that VK_RMENU shows up under the Alt
+// key and ModeSwitch.  when simulating AltGr we need to use the right
+// alt key so we use KeyModifierModeSwitch to get it.
 const CMSWindowsKeyMapper::CModifierKeys
 						CMSWindowsKeyMapper::s_modifiers[] =
 {
@@ -49,6 +51,7 @@ const CMSWindowsKeyMapper::CModifierKeys
 	KeyModifierControl,    { VK_LCONTROL,        VK_RCONTROL | 0x100 },
 	KeyModifierAlt,        { VK_LMENU,           VK_RMENU    | 0x100 },
 	KeyModifierSuper,      { VK_LWIN    | 0x100, VK_RWIN     | 0x100 },
+	KeyModifierModeSwitch, { VK_RMENU   | 0x100, 0                   },
 	KeyModifierCapsLock,   { VK_CAPITAL,         0                   },
 	KeyModifierNumLock,    { VK_NUMLOCK | 0x100, 0                   },
 	KeyModifierScrollLock, { VK_SCROLL,          0                   }
@@ -655,6 +658,9 @@ const KeyButton			CMSWindowsKeyMapper::s_mapEE00[] =
 	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
 };
+/* in g_mapEF00, 0xac is VK_DECIMAL not VK_SEPARATOR because win32
+ * doesn't seem to use VK_SEPARATOR but instead maps VK_DECIMAL to
+ * the same meaning. */
 const KeyButton			CMSWindowsKeyMapper::s_mapEF00[] =
 {
 	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -682,7 +688,7 @@ const KeyButton			CMSWindowsKeyMapper::s_mapEF00[] =
 	/* 0x9c */ VK_END, 0, VK_INSERT, VK_DELETE,
 	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xa8 */ 0, 0, VK_MULTIPLY, VK_ADD,
-	/* 0xac */ VK_SEPARATOR, VK_SUBTRACT, VK_DECIMAL, VK_DIVIDE|0x100,
+	/* 0xac */ VK_DECIMAL, VK_SUBTRACT, VK_DECIMAL, VK_DIVIDE|0x100,
 	/* 0xb0 */ VK_NUMPAD0, VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3,
 	/* 0xb4 */ VK_NUMPAD4, VK_NUMPAD5, VK_NUMPAD6, VK_NUMPAD7,
 	/* 0xb8 */ VK_NUMPAD8, VK_NUMPAD9, 0, 0, 0, 0, VK_F1, VK_F2,
@@ -698,7 +704,7 @@ const KeyButton			CMSWindowsKeyMapper::s_mapEF00[] =
 	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, VK_DELETE|0x100
 };
 
-CMSWindowsKeyMapper::CMSWindowsKeyMapper()
+CMSWindowsKeyMapper::CMSWindowsKeyMapper() : m_deadKey(0)
 {
 	// do nothing
 }
@@ -869,7 +875,7 @@ CMSWindowsKeyMapper::updateKey(KeyButton key, bool pressed)
 KeyButton
 CMSWindowsKeyMapper::mapKey(IKeyState::Keystrokes& keys,
 				const IKeyState& keyState, KeyID id,
-				KeyModifierMask, bool isAutoRepeat) const
+				KeyModifierMask mask, bool isAutoRepeat) const
 {
 	KeyButton virtualKey = 0;
 
@@ -890,9 +896,8 @@ CMSWindowsKeyMapper::mapKey(IKeyState::Keystrokes& keys,
 		}
 	}
 
-/* XXX
 	// special handling of VK_SNAPSHOT
-	if ((virtualKey & 0xff) == VK_SNAPSHOT) {
+	if ((virtualKey & 0xffu) == VK_SNAPSHOT) {
 		// ignore key repeats on print screen
 		if (!isAutoRepeat) {
 			// get event flags
@@ -900,22 +905,20 @@ CMSWindowsKeyMapper::mapKey(IKeyState::Keystrokes& keys,
 			if (isExtendedKey(virtualKey)) {
 				flags |= KEYEVENTF_EXTENDEDKEY;
 			}
-			if (action != kPress) {
-				flags |= KEYEVENTF_KEYUP;
-			}
 
-			// active window or fullscreen?
+			// active window (with alt) or fullscreen (without alt)?
 			BYTE scan = 0;
-			if ((mask & KeyModifierAlt) == 0) {
+			if ((mask & KeyModifierAlt) != 0) {
 				scan = 1;
 			}
 
-			// send event
-			keybd_event(static_cast<BYTE>(virtualKey & 0xff), scan, flags, 0);
+			// send events
+			keybd_event(static_cast<BYTE>(virtualKey & 0xffu), scan, flags, 0);
+			flags |= KEYEVENTF_KEYUP;
+			keybd_event(static_cast<BYTE>(virtualKey & 0xffu), scan, flags, 0);
 		}
 		return 0;
 	}
-*/
 
 	// handle other special keys
 	if (virtualKey != 0) {
@@ -998,32 +1001,21 @@ CMSWindowsKeyMapper::mapKey(IKeyState::Keystrokes& keys,
 	virtualKey = mapCharacter(keys, keyState, multiByte[0], hkl, isAutoRepeat);
 	if (virtualKey != 0) {
 		LOG((CLOG_DEBUG2 "KeyID 0x%08x maps to character %u", id, (unsigned char)multiByte[0]));
-		if ((MapVirtualKey(virtualKey, 2) & 0x80000000u) != 0) {
-			// it looks like this character is a dead key but
-			// MapVirtualKey() will claim it's a dead key even if it's
-			// not (though i don't think it ever claims it's not when
-			// it is).  we need a backup test to ensure that this is
-			// really a dead key.  we could use ToAscii() for this but
-			// that keeps state and it's a hassle to restore that state.
-			// OemKeyScan() appears to do the trick.  if the character
-			// cannot be generated with a single keystroke then it
-			// returns 0xffffffff.
-			if (OemKeyScan(multiByte[0]) != 0xffffffffu) {
-				// character mapped to a dead key but we want the
-				// character for real so send a space key afterwards.
-				LOG((CLOG_DEBUG2 "character mapped to dead key"));
-				IKeyState::Keystroke keystroke;
-				keystroke.m_key    = VK_SPACE;
-				keystroke.m_press  = true;
-				keystroke.m_repeat = false;
-				keys.push_back(keystroke);
-				keystroke.m_press  = false;
-				keys.push_back(keystroke);
+		if (isDeadChar(multiByte[0], hkl, false)) {
+			// character mapped to a dead key but we want the
+			// character for real so send a space key afterwards.
+			LOG((CLOG_DEBUG2 "character mapped to dead key"));
+			IKeyState::Keystroke keystroke;
+			keystroke.m_key    = VK_SPACE;
+			keystroke.m_press  = true;
+			keystroke.m_repeat = false;
+			keys.push_back(keystroke);
+			keystroke.m_press  = false;
+			keys.push_back(keystroke);
 
-				// ignore the release of this key since we already
-				// handled it.
-				virtualKey = 0;
-			}
+			// ignore the release of this key since we already
+			// handled it.
+			virtualKey = 0;
 		}
 		return virtualKey;
 	}
@@ -1074,15 +1066,17 @@ CMSWindowsKeyMapper::mapKeyFromEvent(WPARAM vkCode, LPARAM info,
 	//    95,98,NT4: num pad scan code -> bad vk code except
 	//      SEPARATOR, MULTIPLY, SUBTRACT, ADD
 
+	HKL hkl = GetKeyboardLayout(0);
+
 	// get the scan code and the extended keyboard flag
 	UINT scanCode = static_cast<UINT>((info & 0x00ff0000u) >> 16);
 	int extended  = ((info & 0x01000000) == 0) ? 0 : 1;
+	bool press    = ((info & 0x80000000) == 0);
 	LOG((CLOG_DEBUG1 "key vk=%d info=0x%08x ext=%d scan=%d", vkCode, info, extended, scanCode));
 
 	// handle some keys via table lookup
 	char c   = 0;
 	KeyID id = s_virtualKey[vkCode][extended];
-LOG((CLOG_NOTE "code=%d, info=0x%08x -> id=%d", vkCode, info, id));
 	if (id == kKeyNone) {
 		// not in table
 
@@ -1107,21 +1101,57 @@ LOG((CLOG_NOTE "code=%d, info=0x%08x -> id=%d", vkCode, info, id));
 			keys[VK_MENU]     = 0x80;
 		}
 
-		// convert to ascii
-		WORD ascii;
-		int result = ToAscii(vkCode, scanCode, keys, &ascii,
-								((menu & 0x80) == 0) ? 0 : 1);
+		// get contents of keyboard layout buffer and clear out that
+		// buffer.  we don't want anything placed there by some other
+		// app interfering and we need to put anything there back in
+		// place when we're done.
+		TCHAR oldDeadKey = getSavedDeadChar(hkl);
 
-		// if result is less than zero then it was a dead key.  leave it
-		// there.
+		// put our previous dead key, if any, in the layout buffer
+		putBackDeadChar(m_deadKey, hkl, false);
+		m_deadKey = 0;
+
+		// process key
+		WORD ascii;
+		bool isMenu = ((menu & 0x80) != 0);
+		int result  = ToAsciiEx(vkCode, scanCode, keys, &ascii,
+								isMenu ? 1 : 0, hkl);
+
+		// if result is less than zero then it was a dead key
 		if (result < 0) {
-			id = kKeyMultiKey;
+			// save dead key if a key press.  we catch the dead key
+			// release in the result == 2 case below.
+			if (press) {
+				m_deadKey = static_cast<TCHAR>(ascii & 0xffu);
+			}
 		}
 
 		// if result is 1 then the key was succesfully converted
 		else if (result == 1) {
 			c = static_cast<char>(ascii & 0xff);
-			if (ascii >= 0x80) {
+		}
+
+		// if result is 2 and the two characters are the same and this
+		// is a key release then a dead key was released.  save the
+		// dead key.  if the two characters are the same and this is
+		// not a release then a dead key was pressed twice.  send the
+		// dead key.
+		else if (result == 2) {
+			if (((ascii & 0xff00u) >> 8) == (ascii & 0x00ffu)) {
+				if (!press) {
+					m_deadKey = static_cast<TCHAR>(ascii & 0xffu);
+				}
+				else {
+					putBackDeadChar(oldDeadKey, hkl, false);
+					result = toAscii(' ', hkl, false, &ascii);
+					c = static_cast<char>((ascii >> 8) & 0xffu);
+				}
+			}
+		}
+
+		// map character to key id
+		if (c != 0) {
+			if ((c & 0x80u) != 0) {
 				// character is not really ASCII.  instead it's some
 				// character in the current ANSI code page.  try to
 				// convert that to a Unicode character.  if we fail
@@ -1133,54 +1163,22 @@ LOG((CLOG_NOTE "code=%d, info=0x%08x -> id=%d", vkCode, info, id));
 					id = static_cast<KeyID>(unicode);
 				}
 				else {
-					id = static_cast<KeyID>(ascii & 0x00ff);
+					id = static_cast<KeyID>(c) & 0xffu;
 				}
 			}
 			else {
-				id = static_cast<KeyID>(ascii & 0x00ff);
+				id = static_cast<KeyID>(c) & 0xffu;
 			}
 		}
 
-		// if result is 2 then a previous dead key could not be composed.
-		else if (result == 2) {
-			// if the two characters are the same and this is a key release
-			// then this event is the dead key being released.  we put the
-			// dead key back in that case, otherwise we discard both key
-			// events because we can't compose the character.  alternatively
-			// we could generate key events for both keys.
-			if (((ascii & 0xff00) >> 8) != (ascii & 0x00ff) ||
-				(info & 0x80000000) == 0) {
-				// cannot compose key
-				return kKeyNone;
-			}
+		// clear keyboard layout buffer.  this removes any dead key we
+		// may have just put there.
+		toAscii(' ', hkl, false, NULL);
 
-			// get the scan code of the dead key and the shift state
-			// required to generate it.
-			vkCode = VkKeyScan(static_cast<TCHAR>(ascii & 0x00ff));
-
-			// set shift state required to generate key
-			BYTE keys[256];
-			memset(keys, 0, sizeof(keys));
-			if (vkCode & 0x0100) {
-				keys[VK_SHIFT]   = 0x80;
-			}
-			if (vkCode & 0x0200) {
-				keys[VK_CONTROL] = 0x80;
-			}
-			if (vkCode & 0x0400) {
-				keys[VK_MENU]    = 0x80;
-			}
-
-			// strip shift state off of virtual key code
-			vkCode &= 0x00ff;
-
-			// get the scan code for the key
-			scanCode = MapVirtualKey(vkCode, 0);
-
-			// put it back
-			ToAscii(vkCode, scanCode, keys, &ascii, 0);
-			id = kKeyMultiKey;
-		}
+		// restore keyboard layout buffer so a dead key inserted by
+		// another app doesn't disappear mysteriously (from its point
+		// of view).
+		putBackDeadChar(oldDeadKey, hkl, false);
 	}
 
 	// set mask
@@ -1197,7 +1195,7 @@ LOG((CLOG_NOTE "code=%d, info=0x%08x -> id=%d", vkCode, info, id));
 		// required (only because it solves the problems we've seen
 		// so far).  in the second, we'll use whatever the keyboard
 		// state says.
-		WORD virtualKeyAndModifierState = VkKeyScan(c);
+		WORD virtualKeyAndModifierState = VkKeyScanEx(c, hkl);
 		if (virtualKeyAndModifierState == 0xffff) {
 			// there is no mapping.  assume AltGr.
 			LOG((CLOG_DEBUG1 "no VkKeyScan() mapping"));
@@ -1223,7 +1221,6 @@ LOG((CLOG_NOTE "code=%d, info=0x%08x -> id=%d", vkCode, info, id));
 		*altgr = needAltGr;
 	}
 
-	// map modifier key
 	// map modifier key
 	KeyModifierMask mask = 0;
 	if (((m_keys[VK_LSHIFT] |
@@ -1276,7 +1273,8 @@ UINT
 CMSWindowsKeyMapper::keyToScanCode(KeyButton* virtualKey) const
 {
 	// try mapping given virtual key
-	UINT code = MapVirtualKey((*virtualKey) & 0xffu, 0);
+	HKL hkl   = GetKeyboardLayout(0);
+	UINT code = MapVirtualKeyEx((*virtualKey) & 0xffu, 0, hkl);
 	if (code != 0) {
 		return code;
 	}
@@ -1307,17 +1305,17 @@ CMSWindowsKeyMapper::keyToScanCode(KeyButton* virtualKey) const
 	case VK_LSHIFT:
 	case VK_RSHIFT:
 		*virtualKey = VK_SHIFT;
-		return MapVirtualKey(VK_SHIFT, 0);
+		return MapVirtualKeyEx(VK_SHIFT, 0, hkl);
 
 	case VK_LCONTROL:
 	case VK_RCONTROL:
 		*virtualKey = VK_CONTROL;
-		return MapVirtualKey(VK_CONTROL, 0);
+		return MapVirtualKeyEx(VK_CONTROL, 0, hkl);
 
 	case VK_LMENU:
 	case VK_RMENU:
 		*virtualKey = VK_MENU;
-		return MapVirtualKey(VK_MENU, 0);
+		return MapVirtualKeyEx(VK_MENU, 0, hkl);
 
 	default:
 		return 0;
@@ -1401,16 +1399,28 @@ CMSWindowsKeyMapper::mapCharacter(IKeyState::Keystrokes& keys,
 	// AltGr.  we must always match the desired shift state but only
 	// the desired AltGr state if AltGr is required.  AltGr is actually
 	// ctrl + alt so we can't require that ctrl and alt not be pressed
-	// otherwise users couldn't do, say, ctrl+z.f
+	// otherwise users couldn't do, say, ctrl+z.
+	//
+	// the space character (ascii 32) is special in that it's unaffected
+	// by shift and should match the shift state from keyState.
 	KeyModifierMask desiredMask  = 0;
 	KeyModifierMask requiredMask = KeyModifierShift;
-	if ((modifierState & 0x01u) == 1) {
+	if (c == 32) {
+		if (keyState.isModifierActive(KeyModifierShift)) {
+			desiredMask |= KeyModifierShift;
+		}
+	}
+	else if ((modifierState & 0x01u) == 1) {
 		desiredMask |= KeyModifierShift;
 	}
 	if ((modifierState & 0x06u) == 6) {
-		// add ctrl and alt, which must be matched
-		desiredMask  |= KeyModifierControl | KeyModifierAlt;
-		requiredMask |= KeyModifierControl | KeyModifierAlt;
+		// add ctrl and alt, which must be matched.  match alt via
+		// mode-switch, which uses the right alt key rather than
+		// the left.  windows doesn't care which alt key so long
+		// as ctrl is also down but some apps do their own mapping
+		// and they do care.  Emacs and PuTTY, for example.
+		desiredMask  |= KeyModifierControl | KeyModifierModeSwitch;
+		requiredMask |= KeyModifierControl | KeyModifierModeSwitch;
 	}
 
 	// handle combination of caps-lock and shift.  if caps-lock is
@@ -1427,7 +1437,7 @@ CMSWindowsKeyMapper::mapCharacter(IKeyState::Keystrokes& keys,
 		// then see if it's a dead key.
 		unsigned char uc = static_cast<unsigned char>(c);
 		if (CharLower((LPTSTR)uc) != CharUpper((LPTSTR)uc) ||
-			(MapVirtualKey(virtualKey, 2) & 0x80000000lu) != 0) {
+			(MapVirtualKeyEx(virtualKey, 2, hkl) & 0x80000000lu) != 0) {
 			LOG((CLOG_DEBUG2 "flip shift"));
 			desiredMask ^= KeyModifierShift;
 		}
@@ -1453,6 +1463,7 @@ CMSWindowsKeyMapper::mapToKeystrokes(IKeyState::Keystrokes& keys,
 	IKeyState::Keystrokes undo;
 	if (!adjustModifiers(keys, undo, keyState, desiredMask, requiredMask)) {
 		LOG((CLOG_DEBUG2 "failed to adjust modifiers"));
+		keys.clear();
 		return 0;
 	}
 
@@ -1492,4 +1503,94 @@ CMSWindowsKeyMapper::adjustModifiers(IKeyState::Keystrokes& keys,
 	}
 
 	return true;
+}
+
+int
+CMSWindowsKeyMapper::toAscii(TCHAR c, HKL hkl, bool menu, WORD* chars) const
+{
+	// ignore bogus character
+	if (c == 0) {
+		return 0;
+	}
+
+	// translate the character into its virtual key and its required
+	// modifier state.
+	SHORT virtualKeyAndModifierState = VkKeyScanEx(c, hkl);
+
+	// get virtual key
+	BYTE virtualKey = LOBYTE(virtualKeyAndModifierState);
+	if (virtualKey == 0xffu) {
+		return 0;
+	}
+
+	// get the required modifier state
+	BYTE modifierState = HIBYTE(virtualKeyAndModifierState);
+
+	// set shift state required to generate key
+	BYTE keys[256];
+	memset(keys, 0, sizeof(keys));
+	if (modifierState & 0x01u) {
+		keys[VK_SHIFT]   = 0x80u;
+	}
+	if (modifierState & 0x02u) {
+		keys[VK_CONTROL] = 0x80u;
+	}
+	if (modifierState & 0x04u) {
+		keys[VK_MENU]    = 0x80u;
+	}
+
+	// get the scan code for the key
+	UINT scanCode = MapVirtualKeyEx(virtualKey, 0, hkl);
+
+	// discard characters if chars is NULL
+	WORD dummy;
+	if (chars == NULL) {
+		chars = &dummy;
+	}
+
+	// put it back
+	return ToAsciiEx(virtualKey, scanCode, keys, chars, menu ? 1 : 0, hkl);
+}
+
+bool
+CMSWindowsKeyMapper::isDeadChar(TCHAR c, HKL hkl, bool menu) const
+{
+	// first clear out ToAsciiEx()'s internal buffer by sending it
+	// a space.
+	WORD ascii;
+	int old = toAscii(' ', hkl, 0, &ascii);
+
+	// now pass the character of interest
+	WORD dummy;
+	bool isDead = (toAscii(c, hkl, menu, &dummy) < 0);
+
+	// clear out internal buffer again
+	toAscii(' ', hkl, 0, &dummy);
+
+	// put old dead key back if there was one
+	if (old == 2) {
+		toAscii(static_cast<TCHAR>(ascii & 0xffu), hkl, menu, &dummy);
+	}
+
+	return isDead;
+}
+
+bool
+CMSWindowsKeyMapper::putBackDeadChar(TCHAR c, HKL hkl, bool menu) const
+{
+	return (toAscii(c, hkl, menu, NULL) < 0);
+}
+
+TCHAR
+CMSWindowsKeyMapper::getSavedDeadChar(HKL hkl) const
+{
+	WORD old;
+	int nOld = toAscii(' ', hkl, false, &old);
+	if (nOld == 1 || nOld == 2) {
+		TCHAR c = static_cast<TCHAR>(old & 0xffu);
+		if (nOld == 2 || isDeadChar(c, hkl, false)) {
+			return c;
+		}
+	}
+	return 0;
 }

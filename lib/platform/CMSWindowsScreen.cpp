@@ -381,6 +381,7 @@ CMSWindowsScreen::enter()
 	if (m_isPrimary) {
 		// show the cursor
 		showCursor(true);
+		ShowWindow(m_window, SW_HIDE);
 		m_cursorThread = 0;
 
 		// enable special key sequences on win95 family
@@ -405,16 +406,18 @@ bool
 CMSWindowsScreen::leave()
 {
 	if (m_isPrimary) {
-		// show window
-/* XXX
+		// we don't need a window to capture input but we need a window
+		// to hide the cursor when using low-level hooks.  also take the
+		// activation so we use our keyboard layout, not the layout of
+		// whatever window was active.
 		if (m_lowLevel) {
 			SetWindowPos(m_window, HWND_TOPMOST, m_xCenter, m_yCenter, 1, 1,
 								SWP_NOACTIVATE);
-			ShowWindow(m_window, SW_SHOWNA);
+			ShowWindow(m_window, SW_SHOW);
 		}
-*/
-		// update keys
+
 /* XXX
+		// update keys
 		m_keyMapper.update(NULL);
 */
 
