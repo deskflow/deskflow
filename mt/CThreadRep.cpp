@@ -449,7 +449,7 @@ void					CThreadRep::sleep(double timeout)
 	if (isCancellable())
 		WaitForSingleObject(m_cancel, (DWORD)(1000.0 * timeout));
 	else
-		::Sleep((DWORD)(1000.0 * timeout));
+		Sleep((DWORD)(1000.0 * timeout));
 }
 
 void					CThreadRep::cancel()
@@ -461,7 +461,7 @@ void					CThreadRep::cancel()
 void					CThreadRep::testCancel()
 {
 	// poll cancel event.  return if not set.
-	const DWORD result = ::WaitForSingleObject(getCancelEvent(), 0);
+	const DWORD result = WaitForSingleObject(getCancelEvent(), 0);
 	if (result != WAIT_OBJECT_0)
 		return;
 
@@ -504,11 +504,11 @@ bool					CThreadRep::wait(CThreadRep* target, double timeout)
 	HANDLE handles[2];
 	handles[0] = target->getExitEvent();
 	handles[1] = m_cancel;
-	DWORD result = ::WaitForMultipleObjects(n, handles, FALSE, t);
+	DWORD result = WaitForMultipleObjects(n, handles, FALSE, t);
 
 	// cancel takes priority
 	if (n == 2 && result != WAIT_OBJECT_0 + 1 &&
-					::WaitForSingleObject(handles[1], 0) == WAIT_OBJECT_0)
+					WaitForSingleObject(handles[1], 0) == WAIT_OBJECT_0)
 		result = WAIT_OBJECT_0 + 1;
 
 	// handle result
@@ -563,7 +563,7 @@ unsigned int __stdcall	CThreadRep::threadFunc(void* arg)
 	CThreadRep* rep = (CThreadRep*)arg;
 
 	// initialize OLE
-	const HRESULT hr = ::OleInitialize(NULL);
+	const HRESULT hr = OleInitialize(NULL);
 
 	// run thread
 	rep->doThreadFunc();

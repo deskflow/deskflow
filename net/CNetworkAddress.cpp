@@ -17,7 +17,7 @@ CNetworkAddress::CNetworkAddress(UInt16 port)
 	inetAddress->sin_family      = AF_INET;
 	inetAddress->sin_port        = htons(port);
 	inetAddress->sin_addr.s_addr = INADDR_ANY;
-	::memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
+	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 }
 
 CNetworkAddress::CNetworkAddress(const CString& hostname, UInt16 port)
@@ -44,8 +44,8 @@ CNetworkAddress::CNetworkAddress(const CString& hostname, UInt16 port)
 	struct sockaddr_in* inetAddress = reinterpret_cast<struct sockaddr_in*>(&m_address);
 	inetAddress->sin_family = hent->h_addrtype;
 	inetAddress->sin_port   = htons(port);
-	::memcpy(&inetAddress->sin_addr, hent->h_addr_list[0], hent->h_length);
-	::memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
+	memcpy(&inetAddress->sin_addr, hent->h_addr_list[0], hent->h_length);
+	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 }
 
 CNetworkAddress::~CNetworkAddress()

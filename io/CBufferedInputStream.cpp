@@ -61,7 +61,7 @@ UInt32					CBufferedInputStream::readNoLock(
 	}
 	if (n > 0) {
 		if (dst != NULL) {
-			::memcpy(dst, m_buffer.peek(n), n);
+			memcpy(dst, m_buffer.peek(n), n);
 		}
 		m_buffer.pop(n);
 	}

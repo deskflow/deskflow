@@ -36,7 +36,7 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 
 	// open the display
 	log((CLOG_DEBUG "XOpenDisplay(%s)", "NULL"));
-	m_display = ::XOpenDisplay(NULL);	// FIXME -- allow non-default
+	m_display = XOpenDisplay(NULL);	// FIXME -- allow non-default
 	if (m_display == NULL)
 		throw int(5);	// FIXME -- make exception for this
 
@@ -63,7 +63,7 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 	attr.do_not_propagate_mask = 0;
 	attr.override_redirect     = True;
 	attr.cursor                = createBlankCursor();
-	m_window = ::XCreateWindow(m_display, m_root, 0, 0, m_w, m_h, 0, 0,
+	m_window = XCreateWindow(m_display, m_root, 0, 0, m_w, m_h, 0, 0,
 								InputOnly, CopyFromParent,
 								CWDontPropagate | CWEventMask |
 								CWOverrideRedirect | CWCursor,
@@ -92,11 +92,11 @@ void					CXWindowsPrimaryScreen::close()
 	log((CLOG_DEBUG "stopped event thread"));
 
 	// destroy window
-	::XDestroyWindow(m_display, m_window);
+	XDestroyWindow(m_display, m_window);
 	m_window = None;
 
 	// close the display
-	::XCloseDisplay(m_display);
+	XCloseDisplay(m_display);
 	m_display = NULL;
 	log((CLOG_DEBUG "closed display"));
 }
@@ -111,14 +111,14 @@ void					CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 	CLock lock(&m_mutex);
 
 	// warp to requested location
-	::XWarpPointer(m_display, None, m_window, 0, 0, 0, 0, x, y);
+	XWarpPointer(m_display, None, m_window, 0, 0, 0, 0, x, y);
 
 	// unmap the grab window.  this also ungrabs the mouse and keyboard.
-	::XUnmapWindow(m_display, m_window);
+	XUnmapWindow(m_display, m_window);
 
 	// remove all input events for grab window
 	XEvent event;
-	while (::XCheckWindowEvent(m_display, m_window,
+	while (XCheckWindowEvent(m_display, m_window,
 								PointerMotionMask |
 								ButtonPressMask | ButtonReleaseMask |
 								KeyPressMask | KeyReleaseMask |
@@ -141,7 +141,7 @@ void					CXWindowsPrimaryScreen::leave()
 	CLock lock(&m_mutex);
 
 	// raise and show the input window
-	::XMapRaised(m_display, m_window);
+	XMapRaised(m_display, m_window);
 
 	// grab the mouse and keyboard.  keep trying until we get them.
 	// if we can't grab one after grabbing the other then ungrab
@@ -150,7 +150,7 @@ void					CXWindowsPrimaryScreen::leave()
 	do {
 		// mouse first
 		do {
-			result = ::XGrabPointer(m_display, m_window, True, 0,
+			result = XGrabPointer(m_display, m_window, True, 0,
 								GrabModeAsync, GrabModeAsync,
 								m_window, None, CurrentTime);
 			assert(result != GrabNotViewable);
@@ -162,11 +162,11 @@ void					CXWindowsPrimaryScreen::leave()
 		log((CLOG_DEBUG "grabbed pointer"));
 
 		// now the keyboard
-		result = ::XGrabKeyboard(m_display, m_window, True,
+		result = XGrabKeyboard(m_display, m_window, True,
 								GrabModeAsync, GrabModeAsync, CurrentTime);
 		assert(result != GrabNotViewable);
 		if (result != GrabSuccess) {
-			::XUngrabPointer(m_display, CurrentTime);
+			XUngrabPointer(m_display, CurrentTime);
 			log((CLOG_DEBUG "ungrabbed pointer, waiting to grab keyboard"));
 			CThread::sleep(0.25);
 		}
@@ -190,13 +190,13 @@ void					CXWindowsPrimaryScreen::warpCursorNoLock(
 								SInt32 x, SInt32 y)
 {
 	// warp the mouse
-	::XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
-	::XSync(m_display, False);
+	XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
+	XSync(m_display, False);
 	log((CLOG_DEBUG "warped to %d,%d", x, y));
 
 	// discard mouse events since we just added one we don't want
 	XEvent xevent;
-	while (::XCheckWindowEvent(m_display, m_window,
+	while (XCheckWindowEvent(m_display, m_window,
 								PointerMotionMask, &xevent)) {
 		// do nothing
 	}
@@ -231,15 +231,15 @@ void					CXWindowsPrimaryScreen::selectEvents(Window w) const
 		return;
 
 	// select events of interest
-	::XSelectInput(m_display, w, PointerMotionMask | SubstructureNotifyMask);
+	XSelectInput(m_display, w, PointerMotionMask | SubstructureNotifyMask);
 
 	// recurse on child windows
 	Window rw, pw, *cw;
 	unsigned int nc;
-	if (::XQueryTree(m_display, w, &rw, &pw, &cw, &nc)) {
+	if (XQueryTree(m_display, w, &rw, &pw, &cw, &nc)) {
 		for (unsigned int i = 0; i < nc; ++i)
 			selectEvents(cw[i]);
-		::XFree(cw);
+		XFree(cw);
 	}
 }
 
@@ -249,7 +249,7 @@ Cursor					CXWindowsPrimaryScreen::createBlankCursor()
 
 	// get the closet cursor size to 1x1
 	unsigned int w, h;
-	::XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
+	XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
 
 	// make bitmap data for cursor of closet size.  since the cursor
 	// is blank we can use the same bitmap for shape and mask:  all
@@ -259,7 +259,7 @@ Cursor					CXWindowsPrimaryScreen::createBlankCursor()
 	memset(data, 0, size);
 
 	// make bitmap
-	Pixmap bitmap = ::XCreateBitmapFromData(m_display, m_root, data, w, h);
+	Pixmap bitmap = XCreateBitmapFromData(m_display, m_root, data, w, h);
 
 	// need an arbitrary color for the cursor
 	XColor color;
@@ -268,12 +268,12 @@ Cursor					CXWindowsPrimaryScreen::createBlankCursor()
 	color.flags = DoRed | DoGreen | DoBlue;
 
 	// make cursor from bitmap
-	Cursor cursor = ::XCreatePixmapCursor(m_display, bitmap, bitmap,
+	Cursor cursor = XCreatePixmapCursor(m_display, bitmap, bitmap,
 								&color, &color, 0, 0);
 
 	// don't need bitmap or the data anymore
 	delete[] data;
-	::XFreePixmap(m_display, bitmap);
+	XFreePixmap(m_display, bitmap);
 
 	return cursor;
 }
@@ -359,7 +359,7 @@ void					CXWindowsPrimaryScreen::eventThread(void*)
 					Window root, window;
 					int xRoot, yRoot, xWindow, yWindow;
 					unsigned int mask;
-					if (!::XQueryPointer(m_display, m_window, &root, &window,
+					if (!XQueryPointer(m_display, m_window, &root, &window,
 								&xRoot, &yRoot, &xWindow, &yWindow, &mask))
 						break;
 
@@ -422,7 +422,7 @@ KeyID					CXWindowsPrimaryScreen::mapKey(
 		index = 1;
 	else
 		index = 0;
-	return static_cast<KeyID>(::XKeycodeToKeysym(m_display, keycode, index));
+	return static_cast<KeyID>(XKeycodeToKeysym(m_display, keycode, index));
 }
 
 ButtonID				CXWindowsPrimaryScreen::mapButton(

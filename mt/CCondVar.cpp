@@ -262,11 +262,11 @@ bool					CCondVarBase::wait(
 	m_mutex->unlock();
 
 	// wait for a signal or broadcast
-	DWORD result = ::WaitForMultipleObjects(n, handles, FALSE, winTimeout);
+	DWORD result = WaitForMultipleObjects(n, handles, FALSE, winTimeout);
 
 	// cancel takes priority
 	if (n == 3 && result != WAIT_OBJECT_0 + 2 &&
-					::WaitForSingleObject(handles[2], 0) == WAIT_OBJECT_0)
+					WaitForSingleObject(handles[2], 0) == WAIT_OBJECT_0)
 		result = WAIT_OBJECT_0 + 2;
 
 	// update the waiter count and check if we're the last waiter

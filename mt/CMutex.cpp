@@ -107,25 +107,25 @@ void					CMutex::unlock() const
 void					CMutex::init()
 {
 	CRITICAL_SECTION* mutex = new CRITICAL_SECTION;
-	::InitializeCriticalSection(mutex);
+	InitializeCriticalSection(mutex);
 	m_mutex = reinterpret_cast<void*>(mutex);
 }
 
 void					CMutex::fini()
 {
 	CRITICAL_SECTION* mutex = reinterpret_cast<CRITICAL_SECTION*>(m_mutex);
-	::DeleteCriticalSection(mutex);
+	DeleteCriticalSection(mutex);
 	delete mutex;
 }
 
 void					CMutex::lock() const
 {
-	::EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
+	EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
 }
 
 void					CMutex::unlock() const
 {
-	::LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
+	LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
 }
 
 #endif // CONFIG_PLATFORM_WIN32

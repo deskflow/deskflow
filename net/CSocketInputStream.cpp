@@ -74,7 +74,7 @@ UInt32					CSocketInputStream::read(
 		n = count;
 	}
 	if (n > 0) {
-		::memcpy(dst, m_buffer.peek(n), n);
+		memcpy(dst, m_buffer.peek(n), n);
 		m_buffer.pop(n);
 	}
 

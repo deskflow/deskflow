@@ -36,7 +36,7 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 
 	// open the display
 	log((CLOG_DEBUG "XOpenDisplay(%s)", "NULL"));
-	m_display = ::XOpenDisplay(NULL);	// FIXME -- allow non-default
+	m_display = XOpenDisplay(NULL);	// FIXME -- allow non-default
 	if (m_display == NULL)
 		throw int(5);	// FIXME -- make exception for this
 
@@ -51,7 +51,7 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 
 	// verify the availability of the XTest extension
 	int majorOpcode, firstEvent, firstError;
-	if (!::XQueryExtension(m_display, XTestExtensionName,
+	if (!XQueryExtension(m_display, XTestExtensionName,
 								&majorOpcode, &firstEvent, &firstError))
 		throw int(6);	// FIXME -- make exception for this
 
@@ -67,14 +67,14 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 	attr.do_not_propagate_mask = 0;
 	attr.override_redirect     = True;
 	attr.cursor                = createBlankCursor();
-	m_window = ::XCreateWindow(m_display, m_root, 0, 0, 1, 1, 0, 0,
+	m_window = XCreateWindow(m_display, m_root, 0, 0, 1, 1, 0, 0,
 								InputOnly, CopyFromParent,
 								CWDontPropagate | CWEventMask |
 								CWOverrideRedirect | CWCursor,
 								&attr);
 
 	// become impervious to server grabs
-	::XTestGrabControl(m_display, True);
+	XTestGrabControl(m_display, True);
 
 	// hide the cursor
 	leave();
@@ -96,14 +96,14 @@ void					CXWindowsSecondaryScreen::close()
 	m_eventThread = NULL;
 
 	// no longer impervious to server grabs
-	::XTestGrabControl(m_display, False);
+	XTestGrabControl(m_display, False);
 
 	// destroy window
-	::XDestroyWindow(m_display, m_window);
+	XDestroyWindow(m_display, m_window);
 	m_window = None;
 
 	// close the display
-	::XCloseDisplay(m_display);
+	XCloseDisplay(m_display);
 	m_display = NULL;
 }
 
@@ -115,11 +115,11 @@ void					CXWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 	CLock lock(&m_mutex);
 
 	// warp to requested location
-	::XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
-	::XSync(m_display, False);
+	XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
+	XSync(m_display, False);
 
 	// show cursor
-	::XUnmapWindow(m_display, m_window);
+	XUnmapWindow(m_display, m_window);
 }
 
 void					CXWindowsSecondaryScreen::leave()
@@ -129,19 +129,20 @@ void					CXWindowsSecondaryScreen::leave()
 
 	CLock lock(&m_mutex);
 
-	// move hider window under the mouse
+	// move hider window under the mouse (rather than moving the mouse
+	// somewhere else on the screen)
 	int x, y, dummy;
 	unsigned int dummyMask;
 	Window dummyWindow;
-	::XQueryPointer(m_display, m_root, &dummyWindow, &dummyWindow,
+	XQueryPointer(m_display, m_root, &dummyWindow, &dummyWindow,
 								&x, &y, &dummy, &dummy, &dummyMask);
-	::XMoveWindow(m_display, m_window, x, y);
+	XMoveWindow(m_display, m_window, x, y);
 
 	// raise and show the hider window
-	::XMapRaised(m_display, m_window);
+	XMapRaised(m_display, m_window);
 
 	// hide cursor by moving it into the hider window
-	::XWarpPointer(m_display, None, m_window, 0, 0, 0, 0, 0, 0);
+	XWarpPointer(m_display, None, m_window, 0, 0, 0, 0, 0, 0);
 }
 
 void					CXWindowsSecondaryScreen::keyDown(
@@ -151,8 +152,8 @@ void					CXWindowsSecondaryScreen::keyDown(
 
 	CLock lock(&m_mutex);
 
-	::XTestFakeKeyEvent(m_display, mapKey(key, mask), True, CurrentTime);
-	::XSync(m_display, False);
+	XTestFakeKeyEvent(m_display, mapKey(key, mask), True, CurrentTime);
+	XSync(m_display, False);
 }
 
 void					CXWindowsSecondaryScreen::keyRepeat(
@@ -172,8 +173,8 @@ void					CXWindowsSecondaryScreen::keyUp(
 
 	CLock lock(&m_mutex);
 
-	::XTestFakeKeyEvent(m_display, mapKey(key, mask), False, CurrentTime);
-	::XSync(m_display, False);
+	XTestFakeKeyEvent(m_display, mapKey(key, mask), False, CurrentTime);
+	XSync(m_display, False);
 }
 
 void					CXWindowsSecondaryScreen::mouseDown(ButtonID button)
@@ -182,8 +183,8 @@ void					CXWindowsSecondaryScreen::mouseDown(ButtonID button)
 
 	CLock lock(&m_mutex);
 
-	::XTestFakeButtonEvent(m_display, mapButton(button), True, CurrentTime);
-	::XSync(m_display, False);
+	XTestFakeButtonEvent(m_display, mapButton(button), True, CurrentTime);
+	XSync(m_display, False);
 }
 
 void					CXWindowsSecondaryScreen::mouseUp(ButtonID button)
@@ -192,8 +193,8 @@ void					CXWindowsSecondaryScreen::mouseUp(ButtonID button)
 
 	CLock lock(&m_mutex);
 
-	::XTestFakeButtonEvent(m_display, mapButton(button), False, CurrentTime);
-	::XSync(m_display, False);
+	XTestFakeButtonEvent(m_display, mapButton(button), False, CurrentTime);
+	XSync(m_display, False);
 }
 
 void					CXWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
@@ -202,8 +203,8 @@ void					CXWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 
 	CLock lock(&m_mutex);
 
-	::XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
-	::XSync(m_display, False);
+	XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
+	XSync(m_display, False);
 }
 
 void					CXWindowsSecondaryScreen::mouseWheel(SInt32)
@@ -238,7 +239,7 @@ Cursor					CXWindowsSecondaryScreen::createBlankCursor()
 
 	// get the closet cursor size to 1x1
 	unsigned int w, h;
-	::XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
+	XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
 
 	// make bitmap data for cursor of closet size.  since the cursor
 	// is blank we can use the same bitmap for shape and mask:  all
@@ -248,7 +249,7 @@ Cursor					CXWindowsSecondaryScreen::createBlankCursor()
 	memset(data, 0, size);
 
 	// make bitmap
-	Pixmap bitmap = ::XCreateBitmapFromData(m_display, m_root, data, w, h);
+	Pixmap bitmap = XCreateBitmapFromData(m_display, m_root, data, w, h);
 
 	// need an arbitrary color for the cursor
 	XColor color;
@@ -257,12 +258,12 @@ Cursor					CXWindowsSecondaryScreen::createBlankCursor()
 	color.flags = DoRed | DoGreen | DoBlue;
 
 	// make cursor from bitmap
-	Cursor cursor = ::XCreatePixmapCursor(m_display, bitmap, bitmap,
+	Cursor cursor = XCreatePixmapCursor(m_display, bitmap, bitmap,
 								&color, &color, 0, 0);
 
 	// don't need bitmap or the data anymore
 	delete[] data;
-	::XFreePixmap(m_display, bitmap);
+	XFreePixmap(m_display, bitmap);
 
 	return cursor;
 }
@@ -289,7 +290,7 @@ void					CXWindowsSecondaryScreen::eventThread(void*)
 		  case LeaveNotify: {
 			// mouse moved out of hider window somehow.  hide the window.
 			CLock lock(&m_mutex);
-			::XUnmapWindow(m_display, m_window);
+			XUnmapWindow(m_display, m_window);
 			break;
 		  }
 
@@ -316,7 +317,7 @@ KeyCode					CXWindowsSecondaryScreen::mapKey(
 								KeyID id, KeyModifierMask /*mask*/) const
 {
 	// FIXME -- use mask
-	return ::XKeysymToKeycode(m_display, static_cast<KeySym>(id));
+	return XKeysymToKeycode(m_display, static_cast<KeySym>(id));
 }
 
 unsigned int			CXWindowsSecondaryScreen::mapButton(
