@@ -15,34 +15,6 @@
 #include "XIO.h"
 
 //
-// XIOErrno
-//
-
-XIOErrno::XIOErrno() :
-	MXErrno()
-{
-	// do nothing
-}
-
-XIOErrno::XIOErrno(int err) :
-	MXErrno(err)
-{
-	// do nothing
-}
-
-
-//
-// XIOClose
-//
-
-CString
-XIOClose::getWhat() const throw()
-{
-	return format("XIOClose", "close: %{1}", XIOErrno::getErrstr());
-}
-
-
-//
 // XIOClosed
 //
 

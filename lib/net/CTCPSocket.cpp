@@ -114,7 +114,7 @@ CTCPSocket::close()
 	// close socket
 	if (m_fd != CNetwork::Null) {
 		if (CNetwork::close(m_fd) == CNetwork::Error) {
-			throw XIOClose();
+			throw XSocketIOClose();
 		}
 		m_fd = CNetwork::Null;
 	}

@@ -55,7 +55,7 @@ private:
 //! Mix-in for handling \c errno
 /*!
 This mix-in class for exception classes provides storage and query of
-\c errno.
+\c errno.  On Windows, it uses GetLastError() instead of errno.
 */
 class MXErrno {
 public:
@@ -63,6 +63,7 @@ public:
 	MXErrno();
 	//! Save \c err as the error code
 	MXErrno(int err);
+	virtual ~MXErrno();
 
 	//! @name accessors
 	//@{
@@ -71,12 +72,13 @@ public:
 	int					getErrno() const;
 
 	//! Get the human readable string for the error code
-	const char*			getErrstr() const;
+	virtual const char*	getErrstr() const;
 
 	//@}
 
 private:
 	int					m_errno;
+	mutable char*		m_string;
 };
 
 #endif

@@ -84,7 +84,7 @@ CTCPListenSocket::close()
 		throw XIOClosed();
 	}
 	if (CNetwork::close(m_fd) == CNetwork::Error) {
-		throw XIOClose();
+		throw XSocketIOClose();
 	}
 	m_fd = CNetwork::Null;
 }

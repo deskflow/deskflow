@@ -15,6 +15,7 @@
 #ifndef XSOCKET_H
 #define XSOCKET_H
 
+#include "XIO.h"
 #include "XBase.h"
 #include "CString.h"
 #include "BasicTypes.h"
@@ -61,17 +62,30 @@ private:
 };
 
 //! Generic socket exception using \c errno
-class XSocketErrno : public XSocket, public MXErrno {
+class XSocketErrno : public MXErrno {
 public:
 	XSocketErrno();
 	XSocketErrno(int);
+
+	// MXErrno overrides
+	virtual const char*	getErrstr() const;
+};
+
+//! I/O closing exception
+/*!
+Thrown if a stream cannot be closed.
+*/
+class XSocketIOClose : public XIOClose, public XSocketErrno {
+protected:
+	// XBase overrides
+	virtual CString		getWhat() const throw();
 };
 
 //! Socket cannot bind address exception
 /*!
 Thrown when a socket cannot be bound to an address.
 */
-class XSocketBind : public XSocketErrno {
+class XSocketBind : public XSocket, public XSocketErrno {
 public:
 	XSocketBind() { }
 	XSocketBind(int e) : XSocketErrno(e) { }
@@ -96,7 +110,7 @@ public:
 /*!
 Thrown when a socket cannot connect to a remote endpoint.
 */
-class XSocketConnect : public XSocketErrno {
+class XSocketConnect : public XSocket, public XSocketErrno {
 public:
 	XSocketConnect() { }
 	XSocketConnect(int e) : XSocketErrno(e) { }
@@ -110,7 +124,7 @@ protected:
 /*!
 Thrown when a socket cannot be created (by the operating system).
 */
-class XSocketCreate : public XSocketErrno {
+class XSocketCreate : public XSocket, public XSocketErrno {
 public:
 	XSocketCreate() { }
 	XSocketCreate(int e) : XSocketErrno(e) { }

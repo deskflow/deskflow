@@ -20,22 +20,11 @@
 //! Generic I/O exception
 class XIO : public XBase { };
 
-//! Generic I/O exception using \c errno
-class XIOErrno : public XIO, public MXErrno {
-public:
-	XIOErrno();
-	XIOErrno(int);
-};
-
 //! I/O closing exception
 /*!
 Thrown if a stream cannot be closed.
 */
-class XIOClose: public XIOErrno {
-protected:
-	// XBase overrides
-	virtual CString		getWhat() const throw();
-};
+class XIOClose : public XIO { };
 
 //! I/O already closed exception
 /*!
