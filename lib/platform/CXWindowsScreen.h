@@ -271,6 +271,7 @@ private:
 
 	SInt32				m_x, m_y;
 	SInt32				m_w, m_h;
+	SInt32				m_xCenter, m_yCenter;
 
 	// clipboards
 	CXWindowsClipboard*	m_clipboard[kClipboardEnd];

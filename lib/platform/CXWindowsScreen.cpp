@@ -30,6 +30,12 @@
 #else
 #	include <X11/X.h>
 #	include <X11/Xutil.h>
+#	if HAVE_X11_EXTENSIONS_XINERAMA_H
+		// Xinerama.h may lack extern "C" for inclusion by C++
+		extern "C" {
+#		include <X11/extensions/Xinerama.h>
+		}
+#	endif
 #endif
 #if UNIX_LIKE
 #	if HAVE_POLL
@@ -119,6 +125,7 @@ CXWindowsScreen::CXWindowsScreen(IScreenReceiver* receiver,
 	m_window(None),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
+	m_xCenter(0), m_yCenter(0),
 	m_screensaver(NULL),
 	m_screensaverNotify(false),
 	m_atomScreensaver(None),
@@ -561,8 +568,8 @@ CXWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
 		y = my;
 	}
 	else {
-		x = m_x + (m_w >> 1);
-		y = m_y + (m_h >> 1);
+		x = m_xCenter;
+		y = m_yCenter;
 	}
 }
 
@@ -570,20 +577,54 @@ void
 CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 {
 	CLock lock(&m_mutex);
-	assert(m_display != NULL);
 
-	x = m_x + (m_w >> 1);
-	y = m_y + (m_h >> 1);
+	x = m_xCenter;
+	y = m_yCenter;
 }
 
 void
 CXWindowsScreen::updateScreenShape()
 {
+	// get shape of default screen
 	m_x = 0;
 	m_y = 0;
 	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
 	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
 	LOG((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
+
+	// get center of default screen
+	m_xCenter = m_x + (m_w >> 1);
+	m_yCenter = m_y + (m_h >> 1);
+
+#if HAVE_X11_EXTENSIONS_XINERAMA_H
+	// get center of first Xinerama screen.  Xinerama appears to have
+	// a bug when XWarpPointer() is used in combination with
+	// XGrabPointer().  in that case, the warp is successful but the
+	// next pointer motion warps the pointer again, apparently to
+	// constrain it to some unknown region, possibly the region from
+	// 0,0 to Wm,Hm where Wm (Hm) is the minimum width (height) over
+	// all physical screens.  this warp only seems to happen if the
+	// pointer wasn't in that region before the XWarpPointer().  the
+	// second (unexpected) warp causes synergy to think the pointer
+	// has been moved when it hasn't.  to work around the problem,
+	// we warp the pointer to the center of the first physical
+	// screen instead of the logical screen.
+	int eventBase, errorBase;
+	if (XineramaQueryExtension(m_display, &eventBase, &errorBase)) {
+		if (XineramaIsActive(m_display)) {
+			int numScreens;
+			XineramaScreenInfo* screens;
+			screens = XineramaQueryScreens(m_display, &numScreens);
+			if (screens != NULL) {
+				if (numScreens > 1) {
+					m_xCenter = screens[0].x_org + (screens[0].width  >> 1);
+					m_yCenter = screens[0].y_org + (screens[0].height >> 1);
+				}
+				XFree(screens);
+			}
+		}
+	}
+#endif
 }
 
 bool
