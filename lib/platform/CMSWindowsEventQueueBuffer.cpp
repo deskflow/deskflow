@@ -56,7 +56,7 @@ CMSWindowsEventQueueBuffer::waitForEvent(double timeout)
 	// MsgWaitForMultipleObjects() will block even if the queue isn't
 	// empty if the messages in the queue were there before the last
 	// call to GetMessage()/PeekMessage().
-	if (HIWORD(GetQueueStatus(QS_ALLEVENTS)) != 0) {
+	if (HIWORD(GetQueueStatus(QS_ALLINPUT)) != 0) {
 		return;
 	}
 
@@ -73,12 +73,21 @@ CMSWindowsEventQueueBuffer::waitForEvent(double timeout)
 	// cancellation but that's okay because we're run in the main
 	// thread and we never cancel that thread.
 	HANDLE dummy[1];
-	MsgWaitForMultipleObjects(0, dummy, FALSE, t, QS_ALLEVENTS);
+	MsgWaitForMultipleObjects(0, dummy, FALSE, t, QS_ALLINPUT);
 }
 
 IEventQueueBuffer::Type
 CMSWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 {
+	// peek at messages first.  waiting for QS_ALLINPUT will return
+	// if a message has been sent to our window but GetMessage will
+	// dispatch that message behind our backs and block.  PeekMessage
+	// will also dispatch behind our backs but won't block.
+	if (!PeekMessage(&m_event, NULL, 0, 0, PM_NOREMOVE) &&
+		!PeekMessage(&m_event, (HWND)-1, 0, 0, PM_NOREMOVE)) {
+		return kNone;
+	}
+
 	// BOOL.  yeah, right.
 	BOOL result = GetMessage(&m_event, NULL, 0, 0);
 	if (result == -1) {
@@ -113,7 +122,7 @@ CMSWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 bool
 CMSWindowsEventQueueBuffer::isEmpty() const
 {
-	return (HIWORD(GetQueueStatus(QS_ALLEVENTS)) == 0);
+	return (HIWORD(GetQueueStatus(QS_ALLINPUT)) == 0);
 }
 
 CEventQueueTimer*
