@@ -50,6 +50,7 @@ static const OptionID	kOptionModifierMapForControl = OPTION_CODE("MMFC");
 static const OptionID	kOptionModifierMapForAlt     = OPTION_CODE("MMFA");
 static const OptionID	kOptionModifierMapForMeta    = OPTION_CODE("MMFM");
 static const OptionID	kOptionModifierMapForSuper   = OPTION_CODE("MMFR");
+static const OptionID	kOptionHeartbeat             = OPTION_CODE("HART");
 //@}
 
 #undef OPTION_CODE

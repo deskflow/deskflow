@@ -17,6 +17,7 @@
 #include "XSocket.h"
 #include "stdistream.h"
 #include "stdostream.h"
+#include <stdlib.h>
 
 //
 // CConfig
@@ -504,31 +505,57 @@ CConfig::readLine(std::istream& s, CString& line)
 	return false;
 }
 
-bool
+OptionValue
 CConfig::parseBoolean(const CString& arg)
 {
-	if (CStringUtil::CaselessCmp::equal(arg, "true"))
-		return true;
-	if (CStringUtil::CaselessCmp::equal(arg, "false"))
-		return false;
+	if (CStringUtil::CaselessCmp::equal(arg, "true")) {
+		return static_cast<OptionValue>(true);
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "false")) {
+		return static_cast<OptionValue>(false);
+	}
 	throw XConfigRead("invalid argument");
+}
+
+OptionValue
+CConfig::parseInt(const CString& arg)
+{
+	const char* s = arg.c_str();
+	char* end;
+	long tmp      = strtol(s, &end, 10);
+	if (*end != '\0') {
+		// invalid characters
+		throw XConfigRead("invalid argument");
+	}
+	OptionValue value = static_cast<OptionValue>(tmp);
+	if (value != tmp) {
+		// out of range
+		throw XConfigRead("argument out of range");
+	}
+	return value;
 }
 
 OptionValue
 CConfig::parseModifierKey(const CString& arg)
 {
-	if (CStringUtil::CaselessCmp::equal(arg, "shift"))
+	if (CStringUtil::CaselessCmp::equal(arg, "shift")) {
 		return static_cast<OptionValue>(kKeyModifierIDShift);
-	if (CStringUtil::CaselessCmp::equal(arg, "ctrl"))
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "ctrl")) {
 		return static_cast<OptionValue>(kKeyModifierIDControl);
-	if (CStringUtil::CaselessCmp::equal(arg, "alt"))
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "alt")) {
 		return static_cast<OptionValue>(kKeyModifierIDAlt);
-	if (CStringUtil::CaselessCmp::equal(arg, "meta"))
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "meta")) {
 		return static_cast<OptionValue>(kKeyModifierIDMeta);
-	if (CStringUtil::CaselessCmp::equal(arg, "super"))
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "super")) {
 		return static_cast<OptionValue>(kKeyModifierIDSuper);
-	if (CStringUtil::CaselessCmp::equal(arg, "none"))
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "none")) {
 		return static_cast<OptionValue>(kKeyModifierIDNull);
+	}
 	throw XConfigRead("invalid argument");
 }
 
@@ -556,10 +583,13 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionModifierMapForSuper) {
 		return "super";
 	}
+	if (id == kOptionHeartbeat) {
+		return "heartbeat";
+	}
 	return NULL;
 }
 
-const char*
+CString
 CConfig::getOptionValue(OptionID id, OptionValue value)
 {
 	if (id == kOptionHalfDuplexCapsLock ||
@@ -591,6 +621,9 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 			return "none";
 		}
 	}
+	if (id == kOptionHeartbeat) {
+		return CStringUtil::print("%d", value);
+	}
 
 	return "";
 }
@@ -599,7 +632,7 @@ void
 CConfig::readSection(std::istream& s)
 {
 	static const char s_section[] = "section:";
-	static const char s_network[] = "network";
+	static const char s_options[] = "options";
 	static const char s_screens[] = "screens";
 	static const char s_links[]   = "links";
 	static const char s_aliases[] = "aliases";
@@ -627,8 +660,8 @@ CConfig::readSection(std::istream& s)
 	}
 
 	// read section
-	if (name == s_network) {
-		readSectionNetwork(s);
+	if (name == s_options) {
+		readSectionOptions(s);
 	}
 	else if (name == s_screens) {
 		readSectionScreens(s);
@@ -645,7 +678,7 @@ CConfig::readSection(std::istream& s)
 }
 
 void
-CConfig::readSectionNetwork(std::istream& s)
+CConfig::readSectionOptions(std::istream& s)
 {
 	CString line;
 	CString name;
@@ -692,6 +725,9 @@ CConfig::readSectionNetwork(std::istream& s)
 			catch (XSocketAddress&) {
 				throw XConfigRead("invalid http argument");
 			}
+		}
+		else if (name == "heartbeat") {
+			addOption("", kOptionHeartbeat, parseInt(value));
 		}
 		else {
 			throw XConfigRead("unknown argument");
@@ -931,15 +967,28 @@ operator>>(std::istream& s, CConfig& config)
 std::ostream&
 operator<<(std::ostream& s, const CConfig& config)
 {
-	// network section
-	s << "section: network" << std::endl;
+	// options section
+	s << "section: options" << std::endl;
+	const CConfig::CScreenOptions* options = config.getOptions("");
+	if (options != NULL && options->size() > 0) {
+		for (CConfig::CScreenOptions::const_iterator
+							option  = options->begin();
+							option != options->end(); ++option) {
+			const char* name = CConfig::getOptionName(option->first);
+			CString value    = CConfig::getOptionValue(option->first,
+														option->second);
+			if (name != NULL && !value.empty()) {
+				s << "\t" << name << " = " << value << std::endl;
+			}
+		}
+	}
 	if (config.m_synergyAddress.isValid()) {
-		s << "\taddress=" << config.m_synergyAddress.getHostname().c_str() <<
-								std::endl;
+		s << "\taddress = " <<
+			config.m_synergyAddress.getHostname().c_str() << std::endl;
 	}
 	if (config.m_httpAddress.isValid()) {
-		s << "\thttp=" << config.m_httpAddress.getHostname().c_str() <<
-								std::endl;
+		s << "\thttp = " <<
+			config.m_httpAddress.getHostname().c_str() << std::endl;
 	}
 	s << "end" << std::endl;
 
@@ -953,10 +1002,10 @@ operator<<(std::ostream& s, const CConfig& config)
 			for (CConfig::CScreenOptions::const_iterator
 								option  = options->begin();
 								option != options->end(); ++option) {
-				const char* name  = CConfig::getOptionName(option->first);
-				const char* value = CConfig::getOptionValue(option->first,
+				const char* name = CConfig::getOptionName(option->first);
+				CString value    = CConfig::getOptionValue(option->first,
 															option->second);
-				if (name != NULL && value != NULL) {
+				if (name != NULL && !value.empty()) {
 					s << "\t\t" << name << " = " << value << std::endl;
 				}
 			}

@@ -17,7 +17,6 @@
 
 #include "CClientProxy.h"
 #include "ProtocolTypes.h"
-#include "CMutex.h"
 
 //! Proxy for client implementing protocol version 1.0
 class CClientProxy1_0 : public CClientProxy {
@@ -60,9 +59,10 @@ private:
 	void				recvGrabClipboard();
 
 private:
-	CMutex				m_mutex;
 	CClientInfo			m_info;
 	bool				m_clipboardDirty[kClipboardEnd];
+	double				m_heartRate;
+	double				m_heartDeath;
 };
 
 #endif

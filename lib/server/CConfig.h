@@ -292,12 +292,13 @@ public:
 
 private:
 	static bool			readLine(std::istream&, CString&);
-	static bool			parseBoolean(const CString&);
+	static OptionValue	parseBoolean(const CString&);
+	static OptionValue	parseInt(const CString&);
 	static OptionValue	parseModifierKey(const CString&);
 	static const char*	getOptionName(OptionID);
-	static const char*	getOptionValue(OptionID, OptionValue);
+	static CString		getOptionValue(OptionID, OptionValue);
 	void				readSection(std::istream&);
-	void				readSectionNetwork(std::istream&);
+	void				readSectionOptions(std::istream&);
 	void				readSectionScreens(std::istream&);
 	void				readSectionLinks(std::istream&);
 	void				readSectionAliases(std::istream&);

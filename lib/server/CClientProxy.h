@@ -16,6 +16,7 @@
 #define CCLIENTPROXY_H
 
 #include "IClient.h"
+#include "CMutex.h"
 #include "CString.h"
 
 class IInputStream;
@@ -84,7 +85,16 @@ public:
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 
+protected:
+	//! Get mutex
+	/*!
+	Returns the mutex for this object.  Subclasses should use this
+	mutex to protect their data.
+	*/
+	const CMutex*		getMutex() const;
+
 private:
+	CMutex				m_mutex;
 	IServer*			m_server;
 	CString				m_name;
 	IInputStream*		m_input;

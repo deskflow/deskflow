@@ -217,12 +217,29 @@ CServer::setConfig(const CConfig& config)
 	CLock lock(&m_mutex);
 	m_config = config;
 
+	// process global options
+	const CConfig::CScreenOptions* options = m_config.getOptions("");
+	if (options != NULL && options->size() > 0) {
+/*
+		for (CConfig::CScreenOptions::const_iterator index = options->begin();
+									index != options->end(); ++index) {
+			const OptionID id       = index->first;
+			const OptionValue value = index->second;
+		}
+*/
+	}
+
 	// tell primary screen about reconfiguration
 	if (m_primaryClient != NULL) {
 		m_primaryClient->reconfigure(getActivePrimarySides());
 	}
 
-	// FIXME -- tell all (connected) clients about current options
+	// tell all (connected) clients about current options
+	for (CClientList::const_iterator index = m_clients.begin();
+								index != m_clients.end(); ++index) {
+		IClient* client = index->second;
+		sendOptions(client);
+	}
 
 	return true;
 }
@@ -1622,20 +1639,31 @@ CServer::sendOptions(IClient* client) const
 {
 	// note -- must be locked on entry
 
-	// look up options for client.  we're done if there aren't any.
+	COptionsList optionsList;
+
+	// look up options for client
 	const CConfig::CScreenOptions* options =
 						m_config.getOptions(client->getName());
-	if (options == NULL || options->size() == 0) {
-		return;
+	if (options != NULL && options->size() > 0) {
+		// convert options to a more convenient form for sending
+		optionsList.reserve(2 * options->size());
+		for (CConfig::CScreenOptions::const_iterator index = options->begin();
+									index != options->end(); ++index) {
+			optionsList.push_back(index->first);
+			optionsList.push_back(static_cast<UInt32>(index->second));
+		}
 	}
 
-	// convert options to a more convenient form for sending
-	COptionsList optionsList;
-	optionsList.reserve(2 * options->size());
-	for (CConfig::CScreenOptions::const_iterator index = options->begin();
-								index != options->end(); ++index) {
-		optionsList.push_back(index->first);
-		optionsList.push_back(static_cast<UInt32>(index->second));
+	// look up global options
+	options = m_config.getOptions("");
+	if (options != NULL && options->size() > 0) {
+		// convert options to a more convenient form for sending
+		optionsList.reserve(optionsList.size() + 2 * options->size());
+		for (CConfig::CScreenOptions::const_iterator index = options->begin();
+									index != options->end(); ++index) {
+			optionsList.push_back(index->first);
+			optionsList.push_back(static_cast<UInt32>(index->second));
+		}
 	}
 
 	// send the options

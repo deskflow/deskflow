@@ -59,3 +59,9 @@ CClientProxy::getName() const
 {
 	return m_name;
 }
+
+const CMutex*
+CClientProxy::getMutex() const
+{
+	return &m_mutex;
+}

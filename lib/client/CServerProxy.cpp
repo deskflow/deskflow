@@ -34,7 +34,8 @@ CServerProxy::CServerProxy(IClient* client,
 	m_client(client),
 	m_input(adoptedInput),
 	m_output(adoptedOutput),
-	m_seqNum(0)
+	m_seqNum(0),
+	m_heartRate(kHeartRate)
 {
 	assert(m_client != NULL);
 	assert(m_input  != NULL);
@@ -76,7 +77,7 @@ CServerProxy::mainLoop()
 			// wait for a message
 			LOG((CLOG_DEBUG2 "waiting for message"));
 			UInt8 code[4];
-			UInt32 n = getInputStream()->read(code, 4, kHeartRate);
+			UInt32 n = getInputStream()->read(code, 4, m_heartRate);
 
 			// check if server hungup
 			if (n == 0) {
@@ -86,7 +87,7 @@ CServerProxy::mainLoop()
 
 			// check for time out
 			if (n == (UInt32)-1 ||
-				(kHeartRate >= 0.0 && heartbeat.getTime() > kHeartRate)) {
+				(m_heartRate >= 0.0 && heartbeat.getTime() > m_heartRate)) {
 				// send heartbeat
 				CLock lock(&m_mutex);
 				CProtocolUtil::writef(getOutputStream(), kMsgCNoop);
@@ -663,9 +664,20 @@ CServerProxy::resetOptions()
 	// forward
 	getClient()->resetOptions();
 
+	CLock lock(&m_mutex);
+
+	// reset heart rate
+	m_heartRate = kHeartRate;
+
 	// reset modifier translation table
-	for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id)
+	for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
 		m_modifierTranslationTable[id] = id;
+	}
+
+	// send heartbeat if necessary
+	if (m_heartRate >= 0.0) {
+		CProtocolUtil::writef(getOutputStream(), kMsgCNoop);
+	}
 }
 
 void
@@ -678,6 +690,8 @@ CServerProxy::setOptions()
 
 	// forward
 	getClient()->setOptions(options);
+
+	CLock lock(&m_mutex);
 
 	// update modifier table
 	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
@@ -696,6 +710,15 @@ CServerProxy::setOptions()
 		}
 		else if (options[i] == kOptionModifierMapForSuper) {
 			id = kKeyModifierIDSuper;
+		}
+		else if (options[i] == kOptionHeartbeat) {
+			// update heart rate
+			m_heartRate = 1.0e-3 * static_cast<double>(options[i + 1]);
+
+			// send heartbeat if necessary
+			if (m_heartRate >= 0.0) {
+				CProtocolUtil::writef(getOutputStream(), kMsgCNoop);
+			}
 		}
 		if (id != kKeyModifierIDNull) {
 			m_modifierTranslationTable[id] =

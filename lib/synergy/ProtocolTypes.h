@@ -31,8 +31,8 @@ static const UInt32		kMaxHelloLength = 1024;
 // heartbeat.
 static const double		kHeartRate = -1.0;
 
-// time without a heartbeat that constitutes death
-static const double		kHeartDeath = 3.0 * kHeartRate;
+// number of skipped heartbeats that constitutes death
+static const double		kHeartBeatsUntilDeath = 3.0;
 
 // direction constants
 enum EDirection {

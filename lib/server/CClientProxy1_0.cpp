@@ -31,7 +31,9 @@
 
 CClientProxy1_0::CClientProxy1_0(IServer* server, const CString& name,
 				IInputStream* input, IOutputStream* output) :
-	CClientProxy(server, name, input, output)
+	CClientProxy(server, name, input, output),
+	m_heartRate(kHeartRate),
+	m_heartDeath(kHeartRate * kHeartBeatsUntilDeath)
 {
 	for (UInt32 i = 0; i < kClipboardEnd; ++i) {
 		m_clipboardDirty[i] = true;
@@ -81,7 +83,7 @@ CClientProxy1_0::mainLoop()
 
 		// wait for a message
 		UInt8 code[4];
-		UInt32 n = getInputStream()->read(code, 4, kHeartRate);
+		UInt32 n = getInputStream()->read(code, 4, m_heartRate);
 		CThread::testCancel();
 
 		// check if client hungup
@@ -92,7 +94,7 @@ CClientProxy1_0::mainLoop()
 
 		// check if client has stopped sending heartbeats
 		if (n == (UInt32)-1) {
-			if (kHeartDeath >= 0.0 && heartTimer.getTime() > kHeartDeath) {
+			if (m_heartDeath >= 0.0 && heartTimer.getTime() > m_heartDeath) {
 				LOG((CLOG_NOTE "client \"%s\" is dead", getName().c_str()));
 				return;
 			}
@@ -117,6 +119,7 @@ CClientProxy1_0::mainLoop()
 		}
 		else if (memcmp(code, kMsgCNoop, 4) == 0) {
 			// discard no-ops
+			LOG((CLOG_DEBUG2 "no-op from", getName().c_str()));
 			continue;
 		}
 		else if (memcmp(code, kMsgCClipboard, 4) == 0) {
@@ -168,7 +171,7 @@ void
 CClientProxy1_0::setClipboard(ClipboardID id, const CString& data)
 {
 	// ignore if this clipboard is already clean
-	CLock lock(&m_mutex);
+	CLock lock(getMutex());
 	if (m_clipboardDirty[id]) {
 		// this clipboard is now clean
 		m_clipboardDirty[id] = false;
@@ -185,14 +188,14 @@ CClientProxy1_0::grabClipboard(ClipboardID id)
 	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id, 0);
 
 	// this clipboard is now dirty
-	CLock lock(&m_mutex);
+	CLock lock(getMutex());
 	m_clipboardDirty[id] = true;
 }
 
 void
 CClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty)
 {
-	CLock lock(&m_mutex);
+	CLock lock(getMutex());
 	m_clipboardDirty[id] = dirty;
 }
 
@@ -257,6 +260,11 @@ CClientProxy1_0::resetOptions()
 {
 	LOG((CLOG_DEBUG1 "send reset options to \"%s\"", getName().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCResetOptions);
+
+	// reset heart rate and death
+	CLock lock(getMutex());
+	m_heartRate  = kHeartRate;
+	m_heartDeath = kHeartRate * kHeartBeatsUntilDeath;
 }
 
 void
@@ -264,19 +272,31 @@ CClientProxy1_0::setOptions(const COptionsList& options)
 {
 	LOG((CLOG_DEBUG1 "send set options to \"%s\" size=%d", getName().c_str(), options.size()));
 	CProtocolUtil::writef(getOutputStream(), kMsgDSetOptions, &options);
+
+	// check options
+	CLock lock(getMutex());
+	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
+		if (options[i] == kOptionHeartbeat) {
+			m_heartRate = 1.0e-3 * static_cast<double>(options[i + 1]);
+			if (m_heartRate <= 0.0) {
+				m_heartRate = -1.0;
+			}
+			m_heartDeath = m_heartRate * kHeartBeatsUntilDeath;
+		}
+	}
 }
 
 SInt32
 CClientProxy1_0::getJumpZoneSize() const
 {
-	CLock lock(&m_mutex);
+	CLock lock(getMutex());
 	return m_info.m_zoneSize;
 }
 
 void
 CClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
-	CLock lock(&m_mutex);
+	CLock lock(getMutex());
 	x = m_info.m_x;
 	y = m_info.m_y;
 	w = m_info.m_w;
@@ -292,7 +312,7 @@ CClientProxy1_0::getCursorPos(SInt32&, SInt32&) const
 void
 CClientProxy1_0::getCursorCenter(SInt32& x, SInt32& y) const
 {
-	CLock lock(&m_mutex);
+	CLock lock(getMutex());
 	x = m_info.m_mx;
 	y = m_info.m_my;
 }
@@ -301,7 +321,7 @@ void
 CClientProxy1_0::recvInfo(bool notify)
 {
 	{
-		CLock lock(&m_mutex);
+		CLock lock(getMutex());
 
 		// parse the message
 		SInt16 x, y, w, h, zoneSize, mx, my;

@@ -130,6 +130,7 @@ private:
 	bool				m_ignoreMouse;
 
 	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
+	double				m_heartRate;
 };
 
 #endif
