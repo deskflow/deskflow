@@ -7,6 +7,18 @@
 #include <iosfwd>
 #include <map>
 
+class CConfig;
+
+namespace std {
+struct iterator_traits<CConfig> {
+	typedef CString						value_type;
+	typedef ptrdiff_t					difference_type;
+	typedef bidirectional_iterator_tag	iterator_category;
+	typedef CString*					pointer;
+	typedef CString&					reference;
+};
+};
+
 class CConfig {
 public:
 	enum EDirection { kLeft, kRight, kTop, kBottom,
@@ -22,9 +34,7 @@ private:
 
 public:
 	typedef CCellMap::const_iterator internal_const_iterator;
-	class const_iterator : public std::iterator<
-								std::bidirectional_iterator_tag,
-								CString, ptrdiff_t, CString*, CString&> {
+	class const_iterator : std::iterator_traits<CConfig> {
 	public:
 		explicit const_iterator() : m_i() { }
 		explicit const_iterator(const internal_const_iterator& i) : m_i(i) { }
