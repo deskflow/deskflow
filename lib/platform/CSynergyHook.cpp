@@ -58,6 +58,14 @@ static DWORD			g_cursorThread    = 0;
 
 #pragma data_seg()
 
+// keep linker quiet about floating point stuff.  we don't use any
+// floating point operations but our includes may define some
+// (unused) floating point values.
+#ifndef _DEBUG
+extern "C" int _fltused=0;
+#endif
+
+
 //
 // internal functions
 //
