@@ -51,7 +51,7 @@ ISocket*				CTCPListenSocket::accept()
 		if (status > 0 && (pfds[0].revents & CNetwork::kPOLLIN) != 0) {
 			CNetwork::Address addr;
 			CNetwork::AddressLength addrlen = sizeof(addr);
-			int fd = CNetwork::accept(m_fd, &addr, &addrlen);
+			CNetwork::Socket fd = CNetwork::accept(m_fd, &addr, &addrlen);
 			if (fd != CNetwork::Null) {
 				return new CTCPSocket(fd);
 			}
