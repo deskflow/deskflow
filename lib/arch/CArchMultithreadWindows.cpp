@@ -388,14 +388,17 @@ CArchMultithreadWindows::setPriorityOfThread(CArchThread thread, int n)
 
 	assert(thread != NULL);
 
-	size_t index = s_pBase - n;
-	if (index < 0) {
+	size_t index;
+	if (s_pBase < n) {
 		// lowest priority
 		index = 0;
 	}
-	else if (index > s_pMax) {
-		// highest priority
-		index = s_pMax;
+	else {
+		index = s_pBase - n;
+		if (index > s_pMax) {
+			// highest priority
+			index = s_pMax;
+		}
 	}
 	SetPriorityClass(thread->m_thread, s_pClass[index].m_class);
 	SetThreadPriority(thread->m_thread, s_pClass[index].m_level);

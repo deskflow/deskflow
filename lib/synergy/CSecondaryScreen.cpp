@@ -40,7 +40,7 @@ void
 CSecondaryScreen::mainLoop()
 {
 	// change our priority
-	CThread::getCurrentThread().setPriority(-13);
+	CThread::getCurrentThread().setPriority(-14);
 
 	// run event loop
 	try {
