@@ -57,6 +57,7 @@
 #		define HAVE_SYS_STAT_H 1
 #		define HAVE_SYS_TIME_H 1
 #		define HAVE_SYS_TYPES_H 1
+#		define HAVE_SYS_UTSNAME_H 1
 #		define HAVE_UNISTD_H 1
 #		define HAVE_VSNPRINTF 1
 #		define HAVE_WCHAR_H 1
