@@ -917,7 +917,7 @@ void
 CXWindowsSecondaryScreen::updateKeycodeMap(Display* display)
 {
 	// there are up to 4 keysyms per keycode
-	static const int numKeysyms = 4;
+	static const int maxKeysyms = 4;
 
 	// get the number of keycodes
 	int minKeycode, maxKeycode;
@@ -929,6 +929,12 @@ CXWindowsSecondaryScreen::updateKeycodeMap(Display* display)
 	KeySym* keysyms = XGetKeyboardMapping(display,
 								minKeycode, numKeycodes,
 								&keysymsPerKeycode);
+
+	// we only understand up to maxKeysyms keysyms per keycodes
+	int numKeysyms = keysymsPerKeycode;
+	if (numKeysyms > maxKeysyms) {
+		numKeysyms = maxKeysyms;
+	}
 
 	// initialize
 	KeyCodeMask entry;
