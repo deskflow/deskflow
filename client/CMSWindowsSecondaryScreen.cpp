@@ -111,6 +111,9 @@ CMSWindowsSecondaryScreen::close()
 {
 	assert(m_client != NULL);
 
+	// release keys that are logically pressed
+	releaseKeys();
+
 	// restore the screen saver settings
 	getScreenSaver()->enable();
 
@@ -1694,6 +1697,57 @@ CMSWindowsSecondaryScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
 
 			// next key
 			++k;
+		}
+	}
+}
+
+void
+CMSWindowsSecondaryScreen::releaseKeys()
+{
+	CLock lock(&m_mutex);
+
+	syncDesktop();
+
+	// release left/right modifier keys first.  if the platform doesn't
+	// support them then they won't be set and the non-side-distinuishing
+	// key will retain its state.  if the platform does support them then
+	// the non-side-distinguishing will be reset.
+	if ((m_keys[VK_LSHIFT] & 0x80) != 0) {
+		sendKeyEvent(VK_LSHIFT, false);
+		m_keys[VK_SHIFT]    = 0;
+		m_keys[VK_LSHIFT]   = 0;
+	}
+	if ((m_keys[VK_RSHIFT] & 0x80) != 0) {
+		sendKeyEvent(VK_RSHIFT, false);
+		m_keys[VK_SHIFT]    = 0;
+		m_keys[VK_RSHIFT]   = 0;
+	}
+	if ((m_keys[VK_LCONTROL] & 0x80) != 0) {
+		sendKeyEvent(VK_LCONTROL, false);
+		m_keys[VK_CONTROL]  = 0;
+		m_keys[VK_LCONTROL] = 0;
+	}
+	if ((m_keys[VK_RCONTROL] & 0x80) != 0) {
+		sendKeyEvent(VK_RCONTROL, false);
+		m_keys[VK_CONTROL]  = 0;
+		m_keys[VK_RCONTROL] = 0;
+	}
+	if ((m_keys[VK_LMENU] & 0x80) != 0) {
+		sendKeyEvent(VK_LMENU, false);
+		m_keys[VK_MENU]     = 0;
+		m_keys[VK_LMENU]    = 0;
+	}
+	if ((m_keys[VK_RMENU] & 0x80) != 0) {
+		sendKeyEvent(VK_RMENU, false);
+		m_keys[VK_MENU]     = 0;
+		m_keys[VK_RMENU]    = 0;
+	}
+
+	// now check all the other keys
+	for (UInt32 i = 0; i < sizeof(m_keys) / sizeof(m_keys[0]); ++i) {
+		if ((m_keys[i] & 0x80) != 0) {
+			sendKeyEvent(i, false);
+			m_keys[i] = 0;
 		}
 	}
 }

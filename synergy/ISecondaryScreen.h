@@ -27,7 +27,10 @@ public:
 	// stolen and screen size changed).
 	virtual void		open(CClient*) = 0;
 
-	// close the screen.  should restore the screen saver.
+	// close the screen.  should restore the screen saver.  it should
+	// also simulate key up events for any keys that have simulate key
+	// down events without a matching key up.  without this the client
+	// will leave its keyboard in the wrong logical state.
 	virtual void		close() = 0;
 
 	// called when the user navigates to the secondary screen.  warp

@@ -85,6 +85,7 @@ private:
 							KeyModifierMask, EKeyAction) const;
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 
+	void				releaseKeys();
 	void				updateKeys();
 	void				updateModifiers();
 	void				toggleKey(UINT virtualKey, KeyModifierMask mask);

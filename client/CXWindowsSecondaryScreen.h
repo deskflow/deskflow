@@ -72,6 +72,7 @@ private:
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 	unsigned int		maskToX(KeyModifierMask) const;
 
+	void				releaseKeys();
 	void				updateKeys(Display* display);
 	void				updateKeycodeMap(Display* display);
 	void				updateModifiers(Display* display);

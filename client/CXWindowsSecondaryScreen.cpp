@@ -130,6 +130,9 @@ CXWindowsSecondaryScreen::close()
 {
 	assert(m_client != NULL);
 
+	// release keys that are logically pressed
+	releaseKeys();
+
 	// restore the screen saver settings
 	getScreenSaver()->enable();
 
@@ -848,6 +851,24 @@ CXWindowsSecondaryScreen::maskToX(KeyModifierMask inMask) const
 }
 
 void
+CXWindowsSecondaryScreen::releaseKeys()
+{
+	CDisplayLock display(this);
+
+	// key up for each key that's down
+	for (UInt32 i = 0; i < 256; ++i) {
+		if (m_keys[i]) {
+			XTestFakeKeyEvent(display, i, False, CurrentTime);
+			m_keys[i] = false;
+		}
+	}
+
+	// update
+	XSync(display, False);
+
+}
+
+void
 CXWindowsSecondaryScreen::updateKeys(Display* display)
 {
 	// ask server which keys are pressed
@@ -855,7 +876,7 @@ CXWindowsSecondaryScreen::updateKeys(Display* display)
 	XQueryKeymap(display, keys);
 
 	// transfer to our state
-	for (unsigned int i = 0, j = 0; i < 32; j += 8, ++i) {
+	for (UInt32 i = 0, j = 0; i < 32; j += 8, ++i) {
 		m_keys[j + 0] = ((keys[i] & 0x01) != 0);
 		m_keys[j + 1] = ((keys[i] & 0x02) != 0);
 		m_keys[j + 2] = ((keys[i] & 0x04) != 0);
