@@ -19,10 +19,10 @@ a password to unlock them all.
 Synergy is open source and released under the GNU Public License (GPL).
 
 The synergy home page is:
-FIXME
+http://synergy2.sourceforge.net/
 
 The synergy project page is:
-FIXME
+http://sourceforge.net/projects/synergy2/
 
 Report bugs to:
 synergy@groundhog.pair.com
@@ -32,6 +32,7 @@ Please see the following files for more information:
 AUTHORS   -- The list of synergy's authors
 BUGS      -- A list of known bugs and limitations
 COPYING   -- The license synergy is release under
+HISTORY   -- A brief history of synergy
 INSTALL   -- Detailed build and installation instructions
 NEWS      -- News about the synergy project
 PORTING   -- Porting guide for developers

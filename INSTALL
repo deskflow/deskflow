@@ -1,4 +1,5 @@
-Installation instructions for synergy.
+Synergy Installation Instructions
+=================================
 
 Prerequisites for building
 --------------------------
@@ -190,6 +191,10 @@ file (either as a screen name or an alias) then you'll have to add
 a name in the configuration file.  You can use `synergyd --help'
 for a list of command line options.
 
+On Windows, the file synrgyhk.dll must be in the same directory as
+synergyd.exe or in a system directory otherwise the server will
+refuse to start.
+
 
 Running the Client
 ------------------
@@ -246,6 +251,14 @@ Windows:
   first option on the command line, followed by the usual options
   except do not include `-f' or `--no-daemon'.  This will install
   synergy as a service that will be started at system boot.
+
+  Note that the system will look for synergy wherever it was when it
+  was installed.  The server will also look for the configuration
+  file in the path specified by the `--config' option, if supplied,
+  and for synrgyhk.dll in the same directory as synergyd.exe or in
+  a system directory.  Therefore, it's important that these files be
+  on local hard drives;  network drives or removable devices may not
+  be available at boot.
 
   On the Windows NT family you can start and stop the service at any
   time using the Services control panel (under Administrative Tools
