@@ -188,9 +188,12 @@ Finally, start the clients.
 Both the client and server should immediately report the connection
 or an error.  If successful, you should now be able to move the
 mouse off the appropriate edge of your server's screen and have it
-appear on the client's screen.  Use the mouse and keyboard normally
-except use the edge of the screens to jump to other screens.  You
-can also cut-and-paste across computers.  Currently, only text
+appear on the client's screen.  If you're running the synery server
+on Windows 95, 98, or Me then make sure the synergy log window is
+not the active window;  just click on another window, like synergy's
+`Running Test...' window, if it is.  Use the mouse and keyboard
+normally except use the edge of the screens to jump to other screens.
+You can also cut-and-paste across computers.  Currently, only text
 transfers between computers.  Start the remaining clients.
 
 Once the configuration is verified, see the instructions in INSTALL
@@ -250,6 +253,11 @@ Tips and Tricks
   the INSTALL file for more information.  Synergy does not otherwise
   provide secure communications and it should not be used on or over
   untrusted networks.
+
+* Synergy doesn't work if a 16-bit Windows application has the focus
+  on Windows 95/98/Me.  This is due to limitations of Windows.  One
+  commonly used 16-bit application is the command prompt (command.exe)
+  and this includes synergy's log window when running in test mode.
 
 
 Bug Reports

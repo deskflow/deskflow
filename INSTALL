@@ -95,13 +95,14 @@ First configure the server.  Click the `Server' radio button
     * Click OK
   * Use `Add' to add your other computers
     * Using a computer's name as its screen name is recommended
+    * Choose desired screen options on the `Add' dialog
   * Use the controls under `Layout' to link screens together
     * Click (once) on the server's name in the `Screens' list
     * Choose the screen to the left of the server
       * Use `---' if there is no screen to the left of the server
     * Choose the screens to the right, above and below the server
     * Repeat the above steps for all the other screens
-  * Use `Options...' to set desired options.
+  * Use `Options...' to set desired options
   * If the server's screen name is not the server's computer name:
     * Click `Advanced...'
     * Enter the server's screen name next to `Screen Name'
@@ -307,6 +308,13 @@ appear before the `links' and `aliases' sections.
         the option you have to quickly tap the edge twice to
         switch.  This helps prevent unintentional switching
         when working near the edge of a screen.
+
+      screenSaverSync = {true|false}
+        If set to false then synergy won't synchronize screen
+        savers.  Client screen savers will start according to
+        their individual configurations.  The server screen
+        saver won't start if there is input, even if that input
+        is directed toward a client screen.
 
     You can use both the switchDelay and switchDoubleTap options at
     the same time.  Synergy will switch when either requirement is
