@@ -828,4 +828,6 @@ CArchMultithreadPosix::threadSignalHandler(void*)
 			break;
 		}
 	}
+
+	return NULL;
 }
