@@ -43,6 +43,8 @@ class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 	CServer*			m_server;
 	bool				m_active;
 	Window				m_window;
+
+	bool				m_capsLockHalfDuplex;
 };
 
 #endif

@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <X11/X.h>
 #include <X11/Xutil.h>
+#define XK_MISCELLANY
+#include <X11/keysymdef.h>
 
 //
 // CXWindowsPrimaryScreen
@@ -54,6 +56,8 @@ void					CXWindowsPrimaryScreen::run()
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
 				m_server->onKeyDown(key, mask);
+				if (key == XK_Caps_Lock && m_capsLockHalfDuplex)
+					m_server->onKeyUp(key, mask | KeyModifierCapsLock);
 			}
 			break;
 		  }
@@ -65,6 +69,8 @@ void					CXWindowsPrimaryScreen::run()
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
+				if (key == XK_Caps_Lock && m_capsLockHalfDuplex)
+					m_server->onKeyDown(key, mask);
 				m_server->onKeyUp(key, mask);
 			}
 			break;
@@ -193,6 +199,11 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 
 	// open the display
 	openDisplay();
+
+	// check for peculiarities
+	// FIXME -- may have to get these from some database
+	m_capsLockHalfDuplex = false;
+//	m_capsLockHalfDuplex = true;
 }
 
 void					CXWindowsPrimaryScreen::close()
