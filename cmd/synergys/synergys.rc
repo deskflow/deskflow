@@ -89,7 +89,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_SYNERGY             ICON    DISCARDABLE     "synergy.ico"
+IDI_SYNERGY             ICON    DISCARDABLE     "synergys.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
