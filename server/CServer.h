@@ -33,7 +33,7 @@ public:
 	void				quit();
 
 	// update screen map
-	void				setScreenMap(const CScreenMap&);
+	void				setConfig(const CConfig&);
 
 	// handle events on server's screen.  onMouseMovePrimary() returns
 	// true iff the mouse enters a jump zone and jumps.
@@ -67,7 +67,7 @@ public:
 	bool				isLockedToScreen() const;
 
 	// get the current screen map
-	void				getScreenMap(CScreenMap*) const;
+	void				getConfig(CConfig*) const;
 
 	// get the primary screen's name
 	CString				getPrimaryScreenName() const;
@@ -116,21 +116,21 @@ private:
 	void				switchScreen(CScreenInfo*, SInt32 x, SInt32 y);
 
 	// lookup neighboring screen
-	CScreenInfo*		getNeighbor(CScreenInfo*, CScreenMap::EDirection) const;
+	CScreenInfo*		getNeighbor(CScreenInfo*, CConfig::EDirection) const;
 
 	// lookup neighboring screen.  given a position relative to the
 	// source screen, find the screen we should move onto and where.
 	// if the position is sufficiently far from the source then we
 	// cross multiple screens.
 	CScreenInfo*		getNeighbor(CScreenInfo*,
-								CScreenMap::EDirection,
+								CConfig::EDirection,
 								SInt32& x, SInt32& y) const;
 
 	// adjust coordinates to account for resolution differences.  the
 	// position is converted to a resolution independent form then
 	// converted back to screen coordinates on the destination screen.
 	void				mapPosition(CScreenInfo* src,
-								CScreenMap::EDirection srcSide,
+								CConfig::EDirection srcSide,
 								CScreenInfo* dst,
 								SInt32& x, SInt32& y) const;
 
@@ -207,7 +207,7 @@ private:
 	// current mouse position (in absolute secondary screen coordinates)
 	SInt32				m_x, m_y;
 
-	CScreenMap			m_screenMap;
+	CConfig				m_config;
 
 	CClipboardInfo		m_clipboards[kClipboardEnd];
 

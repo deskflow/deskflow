@@ -2,20 +2,20 @@
 #include <assert.h>
 
 //
-// CScreenMap
+// CConfig
 //
 
-CScreenMap::CScreenMap()
+CConfig::CConfig()
 {
 	// do nothing
 }
 
-CScreenMap::~CScreenMap()
+CConfig::~CConfig()
 {
 	// do nothing
 }
 
-void					CScreenMap::addScreen(const CString& name)
+void					CConfig::addScreen(const CString& name)
 {
 	if (m_map.count(name) != 0) {
 		assert(0 && "name already in map");	// FIXME -- throw instead
@@ -23,7 +23,7 @@ void					CScreenMap::addScreen(const CString& name)
 	m_map.insert(std::make_pair(name, CCell()));
 }
 
-void					CScreenMap::removeScreen(const CString& name)
+void					CConfig::removeScreen(const CString& name)
 {
 	CCellMap::iterator index = m_map.find(name);
 	if (index == m_map.end()) {
@@ -43,12 +43,12 @@ void					CScreenMap::removeScreen(const CString& name)
 	}
 }
 
-void					CScreenMap::removeAllScreens()
+void					CConfig::removeAllScreens()
 {
 	m_map.clear();
 }
 
-void					CScreenMap::connect(const CString& srcName,
+void					CConfig::connect(const CString& srcName,
 								EDirection srcSide,
 								const CString& dstName)
 {
@@ -62,7 +62,7 @@ void					CScreenMap::connect(const CString& srcName,
 	index->second.m_neighbor[srcSide - kFirstDirection] = dstName;
 }
 
-void					CScreenMap::disconnect(const CString& srcName,
+void					CConfig::disconnect(const CString& srcName,
 								EDirection srcSide)
 {
 	// find source cell
@@ -75,19 +75,17 @@ void					CScreenMap::disconnect(const CString& srcName,
 	index->second.m_neighbor[srcSide - kFirstDirection].erase();
 }
 
-CScreenMap::const_iterator
-						CScreenMap::begin() const
+CConfig::const_iterator	CConfig::begin() const
 {
 	return const_iterator(m_map.begin());
 }
 
-CScreenMap::const_iterator
-						CScreenMap::end() const
+CConfig::const_iterator	CConfig::end() const
 {
 	return const_iterator(m_map.end());
 }
 
-CString					CScreenMap::getNeighbor(const CString& srcName,
+CString					CConfig::getNeighbor(const CString& srcName,
 								EDirection srcSide) const
 {
 	// find source cell
@@ -100,7 +98,7 @@ CString					CScreenMap::getNeighbor(const CString& srcName,
 	return index->second.m_neighbor[srcSide - kFirstDirection];
 }
 
-const char*				CScreenMap::dirName(EDirection dir)
+const char*				CConfig::dirName(EDirection dir)
 {
 	static const char* s_name[] = { "left", "right", "top", "bottom" };
 	return s_name[dir - kFirstDirection];

@@ -6,7 +6,7 @@
 #include <vector>
 
 class CServer;
-class CScreenMap;
+class CConfig;
 class CHTTPRequest;
 class CHTTPReply;
 class ISocket;
@@ -56,10 +56,10 @@ protected:
 		void			remove(SInt32 x, SInt32 y);
 		void			set(SInt32 x, SInt32 y, const CString&);
 
-		// convert a CScreenMap to a CScreenArray.  returns true iff
+		// convert a CConfig to a CScreenArray.  returns true iff
 		// all connections are symmetric and therefore exactly
 		// representable by a CScreenArray.
-		bool			convertFrom(const CScreenMap&);
+		bool			convertFrom(const CConfig&);
 
 		// accessors
 
@@ -84,8 +84,8 @@ protected:
 		// to other screens.
 		bool			isValid() const;
 
-		// convert this to a CScreenMap
-		void			convertTo(CScreenMap&) const;
+		// convert this to a CConfig
+		void			convertTo(CConfig&) const;
 
 	private:
 		typedef std::vector<CString> CNames;

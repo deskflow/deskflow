@@ -187,16 +187,16 @@ static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
 			SInt32 x = (SInt32)info->pt.x;
 			SInt32 y = (SInt32)info->pt.y;
-			if (!inside && (g_zoneSides & CScreenMap::kLeftMask) != 0) {
+			if (!inside && (g_zoneSides & CConfig::kLeftMask) != 0) {
 				inside = (x < g_zoneSize);
 			}
-			if (!inside && (g_zoneSides & CScreenMap::kRightMask) != 0) {
+			if (!inside && (g_zoneSides & CConfig::kRightMask) != 0) {
 				inside = (x >= g_wScreen - g_zoneSize);
 			}
-			if (!inside && (g_zoneSides & CScreenMap::kTopMask) != 0) {
+			if (!inside && (g_zoneSides & CConfig::kTopMask) != 0) {
 				inside = (y < g_zoneSize);
 			}
-			if (!inside && (g_zoneSides & CScreenMap::kBottomMask) != 0) {
+			if (!inside && (g_zoneSides & CConfig::kBottomMask) != 0) {
 				inside = (y >= g_hScreen - g_zoneSize);
 			}
 

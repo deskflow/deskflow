@@ -110,13 +110,13 @@ void					CServer::quit()
 	m_primary->stop();
 }
 
-void					CServer::setScreenMap(const CScreenMap& screenMap)
+void					CServer::setConfig(const CConfig& config)
 {
 	CLock lock(&m_mutex);
 	// FIXME -- must disconnect screens no longer listed
 	//   (that may include warping back to server's screen)
 	// FIXME -- server screen must be in new map or map is rejected
-	m_screenMap = screenMap;
+	m_config = config;
 }
 
 CString					CServer::getPrimaryScreenName() const
@@ -125,26 +125,26 @@ CString					CServer::getPrimaryScreenName() const
 	return (m_primaryInfo == NULL) ? "" : m_primaryInfo->m_name;
 }
 
-void					CServer::getScreenMap(CScreenMap* screenMap) const
+void					CServer::getConfig(CConfig* config) const
 {
-	assert(screenMap != NULL);
+	assert(config != NULL);
 
 	CLock lock(&m_mutex);
-	*screenMap = m_screenMap;
+	*config = m_config;
 }
 
 UInt32					CServer::getActivePrimarySides() const
 {
 	UInt32 sides = 0;
 	CLock lock(&m_mutex);
-	if (!m_screenMap.getNeighbor("primary", CScreenMap::kLeft).empty())
-		sides |= CScreenMap::kLeftMask;
-	if (!m_screenMap.getNeighbor("primary", CScreenMap::kRight).empty())
-		sides |= CScreenMap::kRightMask;
-	if (!m_screenMap.getNeighbor("primary", CScreenMap::kTop).empty())
-		sides |= CScreenMap::kTopMask;
-	if (!m_screenMap.getNeighbor("primary", CScreenMap::kBottom).empty())
-		sides |= CScreenMap::kBottomMask;
+	if (!m_config.getNeighbor("primary", CConfig::kLeft).empty())
+		sides |= CConfig::kLeftMask;
+	if (!m_config.getNeighbor("primary", CConfig::kRight).empty())
+		sides |= CConfig::kRightMask;
+	if (!m_config.getNeighbor("primary", CConfig::kTop).empty())
+		sides |= CConfig::kTopMask;
+	if (!m_config.getNeighbor("primary", CConfig::kBottom).empty())
+		sides |= CConfig::kBottomMask;
 	return sides;
 }
 
@@ -388,25 +388,25 @@ bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 	}
 
 	// see if we should change screens
-	CScreenMap::EDirection dir;
+	CConfig::EDirection dir;
 	if (x < m_active->m_zoneSize) {
 		x  -= m_active->m_zoneSize;
-		dir = CScreenMap::kLeft;
+		dir = CConfig::kLeft;
 		log((CLOG_DEBUG1 "switch to left"));
 	}
 	else if (x >= m_active->m_width - m_active->m_zoneSize) {
 		x  += m_active->m_zoneSize;
-		dir = CScreenMap::kRight;
+		dir = CConfig::kRight;
 		log((CLOG_DEBUG1 "switch to right"));
 	}
 	else if (y < m_active->m_zoneSize) {
 		y  -= m_active->m_zoneSize;
-		dir = CScreenMap::kTop;
+		dir = CConfig::kTop;
 		log((CLOG_DEBUG1 "switch to top"));
 	}
 	else if (y >= m_active->m_height - m_active->m_zoneSize) {
 		y  += m_active->m_zoneSize;
-		dir = CScreenMap::kBottom;
+		dir = CConfig::kBottom;
 		log((CLOG_DEBUG1 "switch to bottom"));
 	}
 	else {
@@ -451,21 +451,21 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	CScreenInfo* newScreen = NULL;
 	if (!isLockedToScreen()) {
 		// find direction of neighbor
-		CScreenMap::EDirection dir;
+		CConfig::EDirection dir;
 		if (m_x < 0)
-			dir = CScreenMap::kLeft;
+			dir = CConfig::kLeft;
 		else if (m_x > m_active->m_width - 1)
-			dir = CScreenMap::kRight;
+			dir = CConfig::kRight;
 		else if (m_y < 0)
-			dir = CScreenMap::kTop;
+			dir = CConfig::kTop;
 		else if (m_y > m_active->m_height - 1)
-			dir = CScreenMap::kBottom;
+			dir = CConfig::kBottom;
 		else
 			newScreen = m_active;
 
 		// get neighbor if we should switch
 		if (newScreen == NULL) {
-			log((CLOG_DEBUG1 "leave \"%s\" on %s", m_active->m_name.c_str(), CScreenMap::dirName(dir)));
+			log((CLOG_DEBUG1 "leave \"%s\" on %s", m_active->m_name.c_str(), CConfig::dirName(dir)));
 
 			SInt32 x = m_x, y = m_y;
 			newScreen = getNeighbor(m_active, dir, x, y);
@@ -612,20 +612,20 @@ void					CServer::switchScreen(CScreenInfo* dst,
 }
 
 CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
-								CScreenMap::EDirection dir) const
+								CConfig::EDirection dir) const
 {
 	assert(src != NULL);
 
 	CString srcName = src->m_name;
 	assert(!srcName.empty());
-	log((CLOG_DEBUG2 "find neighbor on %s of \"%s\"", CScreenMap::dirName(dir), srcName.c_str()));
+	log((CLOG_DEBUG2 "find neighbor on %s of \"%s\"", CConfig::dirName(dir), srcName.c_str()));
 	for (;;) {
 		// look up name of neighbor
-		const CString dstName(m_screenMap.getNeighbor(srcName, dir));
+		const CString dstName(m_config.getNeighbor(srcName, dir));
 
 		// if nothing in that direction then return NULL
 		if (dstName.empty()) {
-			log((CLOG_DEBUG2 "no neighbor on %s of \"%s\"", CScreenMap::dirName(dir), srcName.c_str()));
+			log((CLOG_DEBUG2 "no neighbor on %s of \"%s\"", CConfig::dirName(dir), srcName.c_str()));
 			return NULL;
 		}
 
@@ -634,17 +634,17 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		// screen.
 		CScreenList::const_iterator index = m_screens.find(dstName);
 		if (index != m_screens.end()) {
-			log((CLOG_DEBUG2 "\"%s\" is on %s of \"%s\"", dstName.c_str(), CScreenMap::dirName(dir), srcName.c_str()));
+			log((CLOG_DEBUG2 "\"%s\" is on %s of \"%s\"", dstName.c_str(), CConfig::dirName(dir), srcName.c_str()));
 			return index->second;
 		}
 
-		log((CLOG_DEBUG2 "ignored \"%s\" on %s of \"%s\"", dstName.c_str(), CScreenMap::dirName(dir), srcName.c_str()));
+		log((CLOG_DEBUG2 "ignored \"%s\" on %s of \"%s\"", dstName.c_str(), CConfig::dirName(dir), srcName.c_str()));
 		srcName = dstName;
 	}
 }
 
 CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
-								CScreenMap::EDirection srcSide,
+								CConfig::EDirection srcSide,
 								SInt32& x, SInt32& y) const
 {
 	assert(src != NULL);
@@ -658,7 +658,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 
 	// find destination screen, adjusting x or y (but not both)
 	switch (srcSide) {
-	case CScreenMap::kLeft:
+	case CConfig::kLeft:
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			w = lastGoodScreen->m_width;
@@ -672,7 +672,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		}
 		break;
 
-	case CScreenMap::kRight:
+	case CConfig::kRight:
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			x -= w;
@@ -686,7 +686,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		}
 		break;
 
-	case CScreenMap::kTop:
+	case CConfig::kTop:
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			w = lastGoodScreen->m_width;
@@ -700,7 +700,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		}
 		break;
 
-	case CScreenMap::kBottom:
+	case CConfig::kBottom:
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			y -= h;
@@ -727,26 +727,26 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 	if (lastGoodScreen->m_protocol == NULL) {
 		const CString dstName(lastGoodScreen->m_name);
 		switch (srcSide) {
-		case CScreenMap::kLeft:
-			if (!m_screenMap.getNeighbor(dstName, CScreenMap::kRight).empty() &&
+		case CConfig::kLeft:
+			if (!m_config.getNeighbor(dstName, CConfig::kRight).empty() &&
 				x > w - 1 - lastGoodScreen->m_zoneSize)
 				x = w - 1 - lastGoodScreen->m_zoneSize;
 			break;
 
-		case CScreenMap::kRight:
-			if (!m_screenMap.getNeighbor(dstName, CScreenMap::kLeft).empty() &&
+		case CConfig::kRight:
+			if (!m_config.getNeighbor(dstName, CConfig::kLeft).empty() &&
 				x < lastGoodScreen->m_zoneSize)
 				x = lastGoodScreen->m_zoneSize;
 			break;
 
-		case CScreenMap::kTop:
-			if (!m_screenMap.getNeighbor(dstName, CScreenMap::kBottom).empty() &&
+		case CConfig::kTop:
+			if (!m_config.getNeighbor(dstName, CConfig::kBottom).empty() &&
 				y > h - 1 - lastGoodScreen->m_zoneSize)
 				y = h - 1 - lastGoodScreen->m_zoneSize;
 			break;
 
-		case CScreenMap::kBottom:
-			if (!m_screenMap.getNeighbor(dstName, CScreenMap::kTop).empty() &&
+		case CConfig::kBottom:
+			if (!m_config.getNeighbor(dstName, CConfig::kTop).empty() &&
 				y < lastGoodScreen->m_zoneSize)
 				y = lastGoodScreen->m_zoneSize;
 			break;
@@ -757,18 +757,18 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 }
 
 void					CServer::mapPosition(CScreenInfo* src,
-								CScreenMap::EDirection srcSide,
+								CConfig::EDirection srcSide,
 								CScreenInfo* dst,
 								SInt32& x, SInt32& y) const
 {
 	assert(src != NULL);
 	assert(dst != NULL);
-	assert(srcSide >= CScreenMap::kFirstDirection &&
-		   srcSide <= CScreenMap::kLastDirection);
+	assert(srcSide >= CConfig::kFirstDirection &&
+		   srcSide <= CConfig::kLastDirection);
 
 	switch (srcSide) {
-	case CScreenMap::kLeft:
-	case CScreenMap::kRight:
+	case CConfig::kLeft:
+	case CConfig::kRight:
 		if (y < 0)
 			y = 0;
 		else if (y >= src->m_height)
@@ -779,8 +779,8 @@ void					CServer::mapPosition(CScreenInfo* src,
 													(src->m_height - 1));
 		break;
 
-	case CScreenMap::kTop:
-	case CScreenMap::kBottom:
+	case CConfig::kTop:
+	case CConfig::kBottom:
 		if (x < 0)
 			x = 0;
 		else if (x >= src->m_width)

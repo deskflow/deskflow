@@ -163,10 +163,10 @@ void					CHTTPServer::doProcessGetEditMap(
 	// convert screen map into a temporary screen map
 	CScreenArray screens;
 	{
-		CScreenMap currentMap;
-		m_server->getScreenMap(&currentMap);
-		screens.convertFrom(currentMap);
-		// FIXME -- note to user if currentMap couldn't be exactly represented
+		CConfig config;
+		m_server->getConfig(&config);
+		screens.convertFrom(config);
+		// FIXME -- note to user if config couldn't be exactly represented
 	}
 
 	// insert blank columns and rows around array (to allow the user
@@ -300,11 +300,11 @@ void					CHTTPServer::doProcessPostEditMap(
 		}
 
 		// convert temporary screen map into a regular map
-		CScreenMap newMap;
-		screens.convertTo(newMap);
+		CConfig config;
+		screens.convertTo(config);
 
 		// set new screen map on server
-		m_server->setScreenMap(newMap);
+		m_server->setConfig(config);
 
 		// now reply with current map
 		doProcessGetEditMap(request, reply);
@@ -634,13 +634,13 @@ bool					CHTTPServer::CScreenArray::isValid() const
 }
 
 bool					CHTTPServer::CScreenArray::convertFrom(
-								const CScreenMap& screenMap)
+								const CConfig& config)
 {
 	typedef std::set<CString> ScreenSet;
 
 	// insert the first screen
-	CScreenMap::const_iterator index = screenMap.begin();
-	if (index == screenMap.end()) {
+	CConfig::const_iterator index = config.begin();
+	if (index == config.end()) {
 		// no screens
 		resize(0, 0);
 		return true;
@@ -655,7 +655,7 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 
 	// put all but the first screen on the stack
 	// note -- if all screens are 4-connected then we can skip this
-	while (++index != screenMap.end()) {
+	while (++index != config.end()) {
 		screenStack.push_back(*index);
 	}
 
@@ -686,7 +686,7 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 		// insert the screen's neighbors
 		// FIXME -- handle edge wrapping
 		CString neighbor;
-		neighbor = screenMap.getNeighbor(name, CScreenMap::kLeft);
+		neighbor = config.getNeighbor(name, CConfig::kLeft);
 		if (!neighbor.empty() && doneSet.count(neighbor) == 0) {
 			// insert left neighbor, adding a column if necessary
 			if (x == 0 || get(x - 1, y) != neighbor) {
@@ -696,7 +696,7 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 			}
 			screenStack.push_back(neighbor);
 		}
-		neighbor = screenMap.getNeighbor(name, CScreenMap::kRight);
+		neighbor = config.getNeighbor(name, CConfig::kRight);
 		if (!neighbor.empty() && doneSet.count(neighbor) == 0) {
 			// insert right neighbor, adding a column if necessary
 			if (x == m_w - 1 || get(x + 1, y) != neighbor) {
@@ -705,7 +705,7 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 			}
 			screenStack.push_back(neighbor);
 		}
-		neighbor = screenMap.getNeighbor(name, CScreenMap::kTop);
+		neighbor = config.getNeighbor(name, CConfig::kTop);
 		if (!neighbor.empty() && doneSet.count(neighbor) == 0) {
 			// insert top neighbor, adding a row if necessary
 			if (y == 0 || get(x, y - 1) != neighbor) {
@@ -715,7 +715,7 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 			}
 			screenStack.push_back(neighbor);
 		}
-		neighbor = screenMap.getNeighbor(name, CScreenMap::kBottom);
+		neighbor = config.getNeighbor(name, CConfig::kBottom);
 		if (!neighbor.empty() && doneSet.count(neighbor) == 0) {
 			// insert bottom neighbor, adding a row if necessary
 			if (y == m_h - 1 || get(x, y + 1) != neighbor) {
@@ -728,7 +728,7 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 
 	// check symmetry
 	// FIXME -- handle edge wrapping
-	for (index = screenMap.begin(); index != screenMap.end(); ++index) {
+	for (index = config.begin(); index != config.end(); ++index) {
 		const CString& name = *index;
 		SInt32 x, y;
 		if (!find(name, x, y)) {
@@ -736,25 +736,25 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 		}
 
 		CString neighbor;
-		neighbor = screenMap.getNeighbor(name, CScreenMap::kLeft);
+		neighbor = config.getNeighbor(name, CConfig::kLeft);
 		if ((x == 0 && !neighbor.empty()) ||
 			(x > 0 && get(x - 1, y) != neighbor)) {
 			return false;
 		}
 
-		neighbor = screenMap.getNeighbor(name, CScreenMap::kRight);
+		neighbor = config.getNeighbor(name, CConfig::kRight);
 		if ((x == m_w - 1 && !neighbor.empty()) ||
 			(x < m_w - 1 && get(x + 1, y) != neighbor)) {
 			return false;
 		}
 
-		neighbor = screenMap.getNeighbor(name, CScreenMap::kTop);
+		neighbor = config.getNeighbor(name, CConfig::kTop);
 		if ((y == 0 && !neighbor.empty()) ||
 			(y > 0 && get(x, y - 1) != neighbor)) {
 			return false;
 		}
 
-		neighbor = screenMap.getNeighbor(name, CScreenMap::kBottom);
+		neighbor = config.getNeighbor(name, CConfig::kBottom);
 		if ((y == m_h - 1 && !neighbor.empty()) ||
 			(y < m_h - 1 && get(x, y + 1) != neighbor)) {
 			return false;
@@ -765,14 +765,14 @@ bool					CHTTPServer::CScreenArray::convertFrom(
 }
 
 void					CHTTPServer::CScreenArray::convertTo(
-								CScreenMap& screenMap) const
+								CConfig& config) const
 {
 	// add screens and find smallest box containing all screens
 	SInt32 x0 = m_w, x1 = 0, y0 = m_h, y1 = 0;
 	for (SInt32 y = 0; y < m_h; ++y) {
 		for (SInt32 x = 0; x < m_w; ++x) {
 			if (isSet(x, y)) {
-				screenMap.addScreen(get(x, y));
+				config.addScreen(get(x, y));
 				if (x < x0) {
 					x0 = x;
 				}
@@ -799,23 +799,23 @@ void					CHTTPServer::CScreenArray::convertTo(
 				continue;
 			}
 			if (x > x0 && isSet(x - 1, y)) {
-				screenMap.connect(get(x, y),
-							CScreenMap::kLeft,
+				config.connect(get(x, y),
+							CConfig::kLeft,
 							get(x - 1, y));
 			}
 			if (x < x1 && isSet(x + 1, y)) {
-				screenMap.connect(get(x, y),
-							CScreenMap::kRight,
+				config.connect(get(x, y),
+							CConfig::kRight,
 							get(x + 1, y));
 			}
 			if (y > y0 && isSet(x, y - 1)) {
-				screenMap.connect(get(x, y),
-							CScreenMap::kTop,
+				config.connect(get(x, y),
+							CConfig::kTop,
 							get(x, y - 1));
 			}
 			if (y < y1 && isSet(x, y + 1)) {
-				screenMap.connect(get(x, y),
-							CScreenMap::kBottom,
+				config.connect(get(x, y),
+							CConfig::kBottom,
 							get(x, y + 1));
 			}
 		}

@@ -1,11 +1,11 @@
-#ifndef CSCREENMAP_H
-#define CSCREENMAP_H
+#ifndef CCONFIG_H
+#define CCONFIG_H
 
 #include "BasicTypes.h"
 #include "CString.h"
 #include <map>
 
-class CScreenMap {
+class CConfig {
 public:
 	enum EDirection { kLeft, kRight, kTop, kBottom,
 						kFirstDirection = kLeft, kLastDirection = kBottom };
@@ -45,11 +45,11 @@ public:
 		}
 
 	private:
-		CScreenMap::internal_const_iterator	m_i;
+		CConfig::internal_const_iterator	m_i;
 	};
 
-	CScreenMap();
-	virtual ~CScreenMap();
+	CConfig();
+	virtual ~CConfig();
 
 	// manipulators
 
