@@ -20,8 +20,20 @@
 #define CONFIG_PLATFORM_WIN32
 
 #if (_MSC_VER >= 1200)
+// turn off bonehead warnings
 #pragma warning(disable: 4786) // identifier truncated in debug info
-#endif
+
+//
+// ignore warnings inside microsoft's standard C++ library
+//
+// bonehead bugs/warnings
+#pragma warning(disable: 4097) // typedef-name used as synonym
+#pragma warning(disable: 4511) // copy constructor can't be generated
+#pragma warning(disable: 4512) // assignment operator can't be generated
+
+// we'd really rather have these enabled to check our code
+#pragma warning(disable: 4100) // unreferenced formal parameter
+#endif // (_MSC_VER >= 1200)
 
 #else
 
