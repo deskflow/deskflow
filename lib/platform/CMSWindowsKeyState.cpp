@@ -712,6 +712,7 @@ CMSWindowsKeyState::CMSWindowsKeyState(CMSWindowsDesks* desks) :
 	m_desks(desks),
 	m_keyLayout(GetKeyboardLayout(0))
 {
+	// do nothing
 }
 
 CMSWindowsKeyState::~CMSWindowsKeyState()
@@ -751,7 +752,6 @@ KeyID
 CMSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
 				LPARAM info, KeyModifierMask* maskOut) const
 {
-// FIXME -- look into this
 	// note:  known microsoft bugs
 	//  Q72583 -- MapVirtualKey() maps keypad keys incorrectly
 	//    95,98: num pad vk code -> invalid scan code
@@ -1017,6 +1017,7 @@ CMSWindowsKeyState::doUpdateKeys()
 {
 	// clear scan code to/from virtual key mapping
 	memset(m_scanCodeToVirtKey, 0, sizeof(m_scanCodeToVirtKey));
+	memset(m_scanCodeToVirtKeyNumLock, 0, sizeof(m_scanCodeToVirtKeyNumLock));
 	memset(m_virtKeyToScanCode, 0, sizeof(m_virtKeyToScanCode));
 
 	// add modifiers.  note that ModeSwitch is mapped to VK_RMENU and
@@ -1076,10 +1077,21 @@ CMSWindowsKeyState::doUpdateKeys()
 			continue;
 		}
 
-		// okay, now we have the scan code for the virtual key.
-		m_scanCodeToVirtKey[button]  = i;
-		m_scanCodeToVirtKey[button2] = i;
-		m_virtKeyToScanCode[i]       = button;
+		// okay, now we have the scan code for the virtual key.  the
+		// numpad causes some confusion.  buttons on the numpad are
+		// used for two virtual keys (one for num lock off and one
+		// for num lock on).  keep a separate map for virtual keys
+		// used when num lock is on.
+		if ((i >= VK_NUMPAD0 && i <= VK_NUMPAD9) ||
+			i == VK_SEPARATOR || i == VK_DECIMAL) {
+			m_scanCodeToVirtKeyNumLock[button]  = i;
+			m_scanCodeToVirtKeyNumLock[button2] = i;
+		}
+		else {
+			m_scanCodeToVirtKey[button]  = i;
+			m_scanCodeToVirtKey[button2] = i;
+		}
+		m_virtKeyToScanCode[i] = button;
 
 		// if the virtual key is VK_DELETE then use the extended
 		// scan code.  this is important for simulating ctrl+alt+del
@@ -1117,7 +1129,13 @@ void
 CMSWindowsKeyState::doFakeKeyEvent(KeyButton button,
 							bool press, bool isAutoRepeat)
 {
-	UINT vk = m_scanCodeToVirtKey[button];
+	UINT vk = 0;
+	if ((getActiveModifiers() & KeyModifierNumLock) != 0) {
+		vk = m_scanCodeToVirtKeyNumLock[button];
+	}
+	if (vk == 0) {
+		vk = m_scanCodeToVirtKey[button];
+	}
 	m_desks->fakeKeyEvent(button, vk, press, isAutoRepeat);
 }
 

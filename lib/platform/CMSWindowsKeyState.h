@@ -125,6 +125,7 @@ private:
 	HKL					m_keyLayout;
 	CString				m_keyName;
 	UINT				m_scanCodeToVirtKey[512];
+	UINT				m_scanCodeToVirtKeyNumLock[512];
 	KeyButton			m_virtKeyToScanCode[256];
 
 	static const char*	s_vkToName[];
