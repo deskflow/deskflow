@@ -105,12 +105,12 @@ protected:
 	virtual long		getEventMask(Window) const = 0;
 
 private:
-	struct CPropertyNotifyInfo {
+	class CPropertyNotifyInfo {
 	public:
 		Window			m_window;
 		Atom			m_property;
 	};
-	struct CClipboardRequest {
+	class CClipboardRequest {
 	public:
 		CString			m_data;
 		UInt32			m_sent;

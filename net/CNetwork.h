@@ -38,7 +38,8 @@ public:
 	typedef struct sockaddr Address;
 	typedef int AddressLength;
 	typedef BOOL TCPNoDelayType;
-	struct PollEntry {
+	class PollEntry {
+	public:
 		Socket			fd;
 		short			events;
 		short			revents;
