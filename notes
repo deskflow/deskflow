@@ -99,3 +99,24 @@ X11 key translation (server)
    * don't send compose, don't send dead keys, send composed key?
    * send all keys, let client do compose
 
+---
+translate keys to keysyms
+  shift state is embedded in keysym
+  alt/ctrl/meta are stored separately, also caps/num/scroll lock
+  shift state also stored separately
+
+X to keysym:
+  keycode + shift -> keysym via XLookupString()
+X from keysym:
+  keysym -> XKeysymToKeycode() or XGetKeyboardMapping() and search for index
+  must synth shift key events to get correct index for key
+
+Win32 to keysym:
+  VK code + shift -> keysym via table lookup
+Win32 from keysym:
+  VK code and shift via table lookup
+  must synth shift key events to get correct character for key
+
+don't allow leaving screen when any key is down
+  that includes shift keys
+  caps lock, etc must not be down but can be on
