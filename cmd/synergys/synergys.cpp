@@ -579,16 +579,26 @@ loadConfig()
 
 #include "CMSWindowsScreen.h"
 
+static bool				s_hasImportantLogMessages = false;
+
 static
 bool
 logMessageBox(int priority, const char* msg)
 {
-	if (priority <= (s_backend ? CLog::kERROR : CLog::kFATAL)) {
+	// note any important messages the user may need to know about
+	if (priority <= CLog::kWARNING) {
+		s_hasImportantLogMessages = true;
+	}
+
+	// FATAL and PRINT messages get a dialog box if not running as
+	// backend.  if we're running as a backend the user will have
+	// a chance to see the messages when we exit.
+	if (!s_backend && priority <= CLog::kFATAL) {
 		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
 		return true;
 	}
 	else {
-		return s_backend;
+		return false;
 	}
 }
 
@@ -618,6 +628,9 @@ daemonStartup(IPlatform* iplatform, int argc, const char** argv)
 
 	// parse command line
 	parse(argc, argv);
+
+	// cannot run as backend if running as a service
+	s_backend = false;
 
 	// load configuration
 	loadConfig();
@@ -697,6 +710,15 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	}
 
 	CNetwork::cleanup();
+
+	// let user examine any messages if we're running as a backend
+	// by putting up a dialog box before exiting.
+	if (s_backend && s_hasImportantLogMessages) {
+		char msg[1024];
+		msg[0] = '\0';
+		LoadString(instance, IDS_FAILED, msg, sizeof(msg) / sizeof(msg[0]));
+		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
+	}
 
 	return result;
 }

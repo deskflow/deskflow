@@ -49,41 +49,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Dialog
-//
-
-IDD_SYNERGY DIALOG DISCARDABLE  0, 0, 531, 159
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Synergy"
-FONT 8, "MS Sans Serif"
-BEGIN
-    LISTBOX         IDC_LOG,7,7,517,145,NOT LBS_NOTIFY | 
-                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
-                    WS_TABSTOP
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
-BEGIN
-    IDD_SYNERGY, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 524
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 152
-    END
-END
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Icon
 //
 
@@ -98,7 +63,7 @@ IDI_SYNERGY             ICON    DISCARDABLE     "synergys.ico"
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_FAILED              "Synergy is about to quit with an error.  Please check the log for error messages then click OK."
+    IDS_FAILED              "Synergy is about to quit with errors or warnings.  Please check the log then click OK."
 END
 
 #endif    // English (U.S.) resources
