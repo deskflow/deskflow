@@ -1612,10 +1612,22 @@ CMSWindowsScreen::secondaryDeskProc(
 {
 	switch (msg) {
 	case WM_MOUSEMOVE:
-	case WM_ACTIVATE:
-	case WM_ACTIVATEAPP:
 		// hide window
 		ShowWindow(hwnd, SW_HIDE);
+		break;
+
+	case WM_ACTIVATE:
+		// hide window
+		if (LOWORD(wParam) == WA_INACTIVE) {
+			ShowWindow(hwnd, SW_HIDE);
+		}
+		break;
+
+	case WM_ACTIVATEAPP:
+		// hide window
+		if (!(BOOL)wParam) {
+			ShowWindow(hwnd, SW_HIDE);
+		}
 		break;
 	}
 
@@ -1726,6 +1738,7 @@ CMSWindowsScreen::deskLeave(CDesk* desk, DWORD& cursorThreadID)
 		if (desk->m_lowLevel) {
 			SetWindowPos(desk->m_window, HWND_TOPMOST,
 							m_xCenter, m_yCenter, 1, 1, SWP_NOACTIVATE);
+			ShowWindow(desk->m_window, SW_SHOW);
 			if (cursorThreadID == 0) {
 				HWND hwnd      = GetForegroundWindow();
 				cursorThreadID = GetWindowThreadProcessId(hwnd, NULL);
