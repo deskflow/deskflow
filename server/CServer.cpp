@@ -894,7 +894,7 @@ void					CServer::handshakeClient(void* vsocket)
 		}
 		catch (XDuplicateClient& e) {
 			// client has duplicate name
-			log((CLOG_WARN "a client with name \"%s\" is already connected)", e.getName().c_str()));
+			log((CLOG_WARN "a client with name \"%s\" is already connected", e.getName().c_str()));
 			CProtocolUtil::writef(output.get(), kMsgEBusy);
 		}
 		catch (XIncompatibleClient& e) {
