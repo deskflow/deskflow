@@ -56,7 +56,6 @@ AC_TYPE_SIZE_T
 
 dnl checks for structures
 AC_STRUCT_TM
-AC_CHECK_TYPES(mbstate_t,,,[#include <cwchar>])
 
 dnl checks for compiler characteristics
 AC_CHECK_SIZEOF(char, 1)

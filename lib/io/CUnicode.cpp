@@ -75,17 +75,9 @@ setError(bool* errors)
 //
 
 #if WINDOWS_LIKE
-#define HAVE_MBSTATE_T 1
 #define HAVE_MBSINIT 1
 #define HAVE_MBRTOWC 1
 #define HAVE_WCRTOMB 1
-#endif
-
-#if !HAVE_MBSTATE_T
-struct mbstate_t { int m_dummy; };
-#undef HAVE_MBSINIT
-#undef HAVE_MBRTOWC
-#undef HAVE_WCRTOMB
 #endif
 
 #if !HAVE_MBSINIT
