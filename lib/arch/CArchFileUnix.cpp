@@ -52,6 +52,8 @@ CArchFileUnix::getBasename(const char* pathname)
 std::string
 CArchFileUnix::getUserDirectory()
 {
+	char* buffer = NULL;
+	std::string dir;
 #if HAVE_GETPWUID_R
 	struct passwd pwent;
 	struct passwd* pwentp;
@@ -63,18 +65,16 @@ CArchFileUnix::getUserDirectory()
 #else
 	long size = BUFSIZ;
 #endif
-	char* buffer = new char[size];
+	buffer = new char[size];
 	getpwuid_r(getuid(), &pwent, buffer, size, &pwentp);
-	delete[] buffer;
 #else
 	struct passwd* pwentp = getpwuid(getuid());
 #endif
 	if (pwentp != NULL && pwentp->pw_dir != NULL) {
-		return pwentp->pw_dir;
+		dir = pwentp->pw_dir;
 	}
-	else {
-		return std::string();
-	}
+	delete[] buffer;
+	return dir;
 }
 
 std::string
