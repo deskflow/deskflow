@@ -10,9 +10,41 @@ dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
 dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl GNU General Public License for more details.
 
+AC_DEFUN([ACX_CHECK_SOCKLEN_T], [
+	AC_MSG_CHECKING([for socklen_t])
+	AC_TRY_COMPILE([
+		#include <unistd.h>
+		#include <sys/socket.h>
+		],
+		[socklen_t len;],[acx_socklen_t_ok=yes],[acx_socklen_t_ok=no])
+	AC_MSG_RESULT($acx_socklen_t_ok)
+	if test x"$acx_socklen_t_ok" = xyes; then
+		ifelse([$1],,AC_DEFINE(HAVE_SOCKLEN_T,1,[Define if your compiler defines socklen_t.]),[$1])
+		:
+	else
+		acx_socklen_t_ok=no
+		$2
+	fi
+])dnl ACX_CHECK_SOCKLEN_T
+
+AC_DEFUN([ACX_CHECK_CXX], [
+	AC_MSG_CHECKING([if g++ defines correct C++ macro])
+	AC_TRY_COMPILE(, [
+		#if defined(_LANGUAGE_C) && !defined(_LANGUAGE_C_PLUS_PLUS)
+		#error wrong macro
+		#endif],[acx_cxx_macro_ok=yes],[acx_cxx_macro_ok=no])
+	AC_MSG_RESULT($acx_cxx_macro_ok)
+	if test x"$acx_cxx_macro_ok" = xyes; then
+		SYNERGY_CXXFLAGS=""
+	else
+		SYNERGY_CXXFLAGS="-U_LANGUAGE_C -D_LANGUAGE_C_PLUS_PLUS"
+	fi
+])dnl ACX_CHECK_CXX
+
 AC_DEFUN([ACX_CHECK_CXX_BOOL], [
 	AC_MSG_CHECKING([for bool support])
-	AC_TRY_COMPILE(, [bool t = true, f = false;],[acx_cxx_bool_ok=yes])
+	AC_TRY_COMPILE(, [bool t = true, f = false;],
+		[acx_cxx_bool_ok=yes],[acx_cxx_bool_ok=no])
 	AC_MSG_RESULT($acx_cxx_bool_ok)
 	if test x"$acx_cxx_bool_ok" = xyes; then
 		ifelse([$1],,AC_DEFINE(HAVE_CXX_BOOL,1,[Define if your compiler has bool support.]),[$1])
@@ -21,11 +53,12 @@ AC_DEFUN([ACX_CHECK_CXX_BOOL], [
 		acx_cxx_bool_ok=no
 		$2
 	fi
-])dnl ACX_CHECK_BOOL
+])dnl ACX_CHECK_CXX_BOOL
 
 AC_DEFUN([ACX_CHECK_CXX_EXCEPTIONS], [
 	AC_MSG_CHECKING([for exception support])
-	AC_TRY_COMPILE(, [try{throw int(4);}catch(int){throw;}catch(...){}],[acx_cxx_exception_ok=yes])
+	AC_TRY_COMPILE(, [try{throw int(4);}catch(int){throw;}catch(...){}],
+		[acx_cxx_exception_ok=yes],[acx_cxx_exception_ok=no])
 	AC_MSG_RESULT($acx_cxx_exception_ok)
 	if test x"$acx_cxx_exception_ok" = xyes; then
 		ifelse([$1],,AC_DEFINE(HAVE_CXX_EXCEPTIONS,1,[Define if your compiler has exceptions support.]),[$1])
@@ -38,7 +71,9 @@ AC_DEFUN([ACX_CHECK_CXX_EXCEPTIONS], [
 
 AC_DEFUN([ACX_CHECK_CXX_CASTS], [
 	AC_MSG_CHECKING([for C++ cast support])
-	AC_TRY_COMPILE(, [const char* f="a";const_cast<char*>(f);reinterpret_cast<const int*>(f);static_cast<int>(4.5);],[acx_cxx_cast_ok=yes])
+	AC_TRY_COMPILE(, [const char* f="a";const_cast<char*>(f);
+		reinterpret_cast<const int*>(f);static_cast<int>(4.5);],
+		[acx_cxx_cast_ok=yes],[acx_cxx_cast_ok=no])
 	AC_MSG_RESULT($acx_cxx_cast_ok)
 	if test x"$acx_cxx_cast_ok" = xyes; then
 		ifelse([$1],,AC_DEFINE(HAVE_CXX_CASTS,1,[Define if your compiler has C++ cast support.]),[$1])
@@ -51,7 +86,8 @@ AC_DEFUN([ACX_CHECK_CXX_CASTS], [
 
 AC_DEFUN([ACX_CHECK_CXX_MUTABLE], [
 	AC_MSG_CHECKING([for mutable support])
-	AC_TRY_COMPILE(, [struct A{mutable int b;void f() const {b=0;}};A a;a.f();],[acx_cxx_mutable_ok=yes])
+	AC_TRY_COMPILE(, [struct A{mutable int b;void f() const {b=0;}};
+		A a;a.f();],[acx_cxx_mutable_ok=yes],[acx_cxx_mutable_ok=no])
 	AC_MSG_RESULT($acx_cxx_mutable_ok)
 	if test x"$acx_cxx_mutable_ok" = xyes; then
 		ifelse([$1],,AC_DEFINE(HAVE_CXX_MUTABLE,1,[Define if your compiler has mutable support.]),[$1])
@@ -64,7 +100,8 @@ AC_DEFUN([ACX_CHECK_CXX_MUTABLE], [
 
 AC_DEFUN([ACX_CHECK_CXX_STDLIB], [
 	AC_MSG_CHECKING([for C++ standard library])
-	AC_TRY_LINK([#include <set>], [std::set<int> a; a.insert(3);],[acx_cxx_stdlib_ok=yes])
+	AC_TRY_LINK([#include <set>], [std::set<int> a; a.insert(3);],
+		[acx_cxx_stdlib_ok=yes],[acx_cxx_stdlib_ok=no])
 	AC_MSG_RESULT($acx_cxx_stdlib_ok)
 	if test x"$acx_cxx_stdlib_ok" = xyes; then
 		ifelse([$1],,AC_DEFINE(HAVE_CXX_STDLIB,1,[Define if your compiler has standard C++ library support.]),[$1])
@@ -161,7 +198,58 @@ AC_DEFUN([ACX_CHECK_NANOSLEEP], [
         	acx_nanosleep_ok=no
         	$2
 	fi
-])dnl ACX_CHECK_POLL
+])dnl ACX_CHECK_NANOSLEEP
+
+dnl See if we need extra libraries for inet_aton
+AC_DEFUN([ACX_CHECK_INET_ATON], [
+	acx_inet_aton_ok=no
+	acx_inet_aton_list=""
+
+	dnl check if user has set INET_ATON_LIBS
+	save_user_INET_ATON_LIBS="$INET_ATON_LIBS"
+	if test x"$INET_ATON_LIBS" != x; then
+		acx_inet_aton_list=user
+	fi
+
+	dnl check various libraries (including no extra libraries) for
+	dnl inet_aton.  `none' should appear first.
+	acx_inet_aton_list="none $acx_inet_aton_list resolv"
+	for flag in $acx_inet_aton_list; do
+        case $flag in
+            none)
+            AC_MSG_CHECKING([for inet_aton])
+            INET_ATON_LIBS=""
+            ;;
+
+            user)
+            AC_MSG_CHECKING([for inet_aton in $save_user_INET_ATON_LIBS])
+			INET_ATON_LIBS="$save_user_INET_ATON_LIBS"
+            ;;
+
+            *)
+            AC_MSG_CHECKING([for inet_aton in -l$flag])
+            INET_ATON_LIBS="-l$flag"
+            ;;
+        esac
+
+    	save_LIBS="$LIBS"
+    	LIBS="$INET_ATON_LIBS $LIBS"
+    	AC_TRY_LINK([#include <sys/types.h>
+					#include <sys/socket.h>
+					#include <netinet/in.h>
+					#include <arpa/inet.h>],
+            		[struct in_addr addr; inet_aton("foo.bar", &addr);],
+            		acx_inet_aton_ok=yes, acx_inet_aton_ok=no)
+		LIBS="$save_LIBS"
+        AC_MSG_RESULT($acx_inet_aton_ok)
+        if test x"$acx_inet_aton_ok" = xyes; then
+            break;
+        fi
+        INET_ATON_LIBS=""
+	done
+
+	AC_SUBST(INET_ATON_LIBS)
+])dnl ACX_CHECK_INET_ATON
 
 dnl The following macros are from http://www.gnu.org/software/ac-archive/
 dnl which distributes them under the following license:
@@ -207,6 +295,7 @@ dnl delete any notice of this special exception to the GPL from your modified
 dnl version
 
 AC_DEFUN([ACX_PTHREAD], [
+AC_REQUIRE([AC_CANONICAL_HOST])
 acx_pthread_ok=no
 
 # We used to check for pthread.h first, but this fails if pthread.h
@@ -217,11 +306,11 @@ acx_pthread_ok=no
 # etcetera environment variables, and if threads linking works using
 # them:
 if test x"$PTHREAD_LIBS$PTHREAD_CFLAGS" != x; then
-        save_CFLAGS="$CFLAGS"
-        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+        save_CXXFLAGS="$CXXFLAGS"
+        CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
         save_LIBS="$LIBS"
         LIBS="$PTHREAD_LIBS $LIBS"
-        AC_MSG_CHECKING([for pthread_join in LIBS=$PTHREAD_LIBS with CFLAGS=$PTHREAD_CFLAGS])
+        AC_MSG_CHECKING([for pthread_join in LIBS=$PTHREAD_LIBS with CXXFLAGS=$PTHREAD_CFLAGS])
         AC_TRY_LINK_FUNC(pthread_join, acx_pthread_ok=yes)
         AC_MSG_RESULT($acx_pthread_ok)
         if test x"$acx_pthread_ok" = xno; then
@@ -229,7 +318,7 @@ if test x"$PTHREAD_LIBS$PTHREAD_CFLAGS" != x; then
                 PTHREAD_CFLAGS=""
         fi
         LIBS="$save_LIBS"
-        CFLAGS="$save_CFLAGS"
+        CXXFLAGS="$save_CXXFLAGS"
 fi
 
 # We must check for the threads library under a number of different
@@ -296,9 +385,9 @@ for flag in $acx_pthread_flags; do
         esac
 
         save_LIBS="$LIBS"
-        save_CFLAGS="$CFLAGS"
+        save_CXXFLAGS="$CXXFLAGS"
         LIBS="$PTHREAD_LIBS $LIBS"
-        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+        CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 
         # Check for various functions.  We must include pthread.h,
         # since some functions may be macros.  (On the Sequent, we
@@ -316,7 +405,7 @@ for flag in $acx_pthread_flags; do
                     [acx_pthread_ok=yes])
 
         LIBS="$save_LIBS"
-        CFLAGS="$save_CFLAGS"
+        CXXFLAGS="$save_CXXFLAGS"
 
         AC_MSG_RESULT($acx_pthread_ok)
         if test "x$acx_pthread_ok" = xyes; then
@@ -332,8 +421,8 @@ fi
 if test "x$acx_pthread_ok" = xyes; then
         save_LIBS="$LIBS"
         LIBS="$PTHREAD_LIBS $LIBS"
-        save_CFLAGS="$CFLAGS"
-        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+        save_CXXFLAGS="$CXXFLAGS"
+        CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 
         # Detect AIX lossage: threads are created detached by default
         # and the JOINABLE attribute has a nonstandard name (UNDETACHED).
@@ -361,15 +450,38 @@ if test "x$acx_pthread_ok" = xyes; then
         case "${host_cpu}-${host_os}" in
                 *-aix* | *-freebsd*) flag="-D_THREAD_SAFE";;
                 alpha*-osf*)         flag="-D_REENTRANT";;
-                *solaris*)           flag="-D_REENTRANT -D_POSIX_PTHREAD_SEMANTICS";;
+                *solaris*)           flag="-D_REENTRANT";;
         esac
         AC_MSG_RESULT(${flag})
         if test "x$flag" != xno; then
                 PTHREAD_CFLAGS="$flag $PTHREAD_CFLAGS"
         fi
 
+		# Detect POSIX sigwait()
+        AC_MSG_CHECKING([for POSIX sigwait])
+        AC_TRY_LINK([#include <pthread.h>
+					#include <signal.h>],
+                    [sigset_t sigset; int signal; sigwait(&sigset, &signal);],
+                    ok=yes, ok=unknown)
+        if test x"$ok" = xunknown; then
+        		save_CXXFLAGS2="$CXXFLAGS"
+		        CXXFLAGS="$CXXFLAGS -D_POSIX_PTHREAD_SEMANTICS"
+                AC_TRY_LINK([#include <pthread.h>
+					#include <signal.h>],
+                    [sigset_t sigset; int signal; sigwait(&sigset, &signal);],
+                    ok=-D_POSIX_PTHREAD_SEMANTICS, ok=no)
+        		CXXFLAGS="$save_CXXFLAGS2"
+        fi
+        AC_MSG_RESULT(${ok})
+        if test x"$ok" != xno; then
+        	AC_DEFINE(HAVE_POSIX_SIGWAIT,1,[Define if you have a POSIX \`sigwait\' function.])
+        	if test x"$ok" != xyes; then
+                PTHREAD_CFLAGS="$ok $PTHREAD_CFLAGS"
+			fi
+        fi
+
         LIBS="$save_LIBS"
-        CFLAGS="$save_CFLAGS"
+        CXXFLAGS="$save_CXXFLAGS"
 
         # More AIX lossage: must compile with cc_r
         AC_CHECK_PROG(PTHREAD_CC, cc_r, cc_r, ${CC})
@@ -389,5 +501,4 @@ else
         acx_pthread_ok=no
         $2
 fi
-
 ])dnl ACX_PTHREAD

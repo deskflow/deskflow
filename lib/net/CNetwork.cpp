@@ -21,46 +21,46 @@
 // CNetwork
 //
 
-CNetwork::Socket (PASCAL FAR *CNetwork::accept)(CNetwork::Socket s, CNetwork::Address FAR *addr, CNetwork::AddressLength FAR *addrlen);
-int (PASCAL FAR *CNetwork::bind)(CNetwork::Socket s, const CNetwork::Address FAR *addr, CNetwork::AddressLength namelen);
-int (PASCAL FAR *CNetwork::close)(CNetwork::Socket s);
-int (PASCAL FAR *CNetwork::connect)(CNetwork::Socket s, const CNetwork::Address FAR *name, CNetwork::AddressLength namelen);
-int (PASCAL FAR *CNetwork::ioctl)(CNetwork::Socket s, int cmd, void FAR *);
-int (PASCAL FAR *CNetwork::getpeername)(CNetwork::Socket s, CNetwork::Address FAR *name, CNetwork::AddressLength FAR * namelen);
-int (PASCAL FAR *CNetwork::getsockname)(CNetwork::Socket s, CNetwork::Address FAR *name, CNetwork::AddressLength FAR * namelen);
-int (PASCAL FAR *CNetwork::getsockopt)(CNetwork::Socket s, int level, int optname, void FAR * optval, CNetwork::AddressLength FAR *optlen);
-int (PASCAL FAR *CNetwork::listen)(CNetwork::Socket s, int backlog);
-ssize_t (PASCAL FAR *CNetwork::read)(CNetwork::Socket s, void FAR * buf, size_t len);
-ssize_t (PASCAL FAR *CNetwork::recv)(CNetwork::Socket s, void FAR * buf, size_t len, int flags);
-ssize_t (PASCAL FAR *CNetwork::recvfrom)(CNetwork::Socket s, void FAR * buf, size_t len, int flags, CNetwork::Address FAR *from, CNetwork::AddressLength FAR * fromlen);
-int (PASCAL FAR *CNetwork::poll)(CNetwork::PollEntry fds[], int nfds, int timeout);
-ssize_t (PASCAL FAR *CNetwork::send)(CNetwork::Socket s, const void FAR * buf, size_t len, int flags);
-ssize_t (PASCAL FAR *CNetwork::sendto)(CNetwork::Socket s, const void FAR * buf, size_t len, int flags, const CNetwork::Address FAR *to, CNetwork::AddressLength tolen);
-int (PASCAL FAR *CNetwork::setsockopt)(CNetwork::Socket s, int level, int optname, const void FAR * optval, CNetwork::AddressLength optlen);
-int (PASCAL FAR *CNetwork::shutdown)(CNetwork::Socket s, int how);
-CNetwork::Socket (PASCAL FAR *CNetwork::socket)(int af, int type, int protocol);
-ssize_t (PASCAL FAR *CNetwork::write)(CNetwork::Socket s, const void FAR * buf, size_t len);
-int (PASCAL FAR *CNetwork::gethostname)(char FAR * name, int namelen);
-int (PASCAL FAR *CNetwork::getsockerror)(void);
-
 #if WINDOWS_LIKE
 
-int (PASCAL FAR *CNetwork::select)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);
-int (PASCAL FAR *CNetwork::WSACleanup)(void);
-int (PASCAL FAR *CNetwork::__WSAFDIsSet)(CNetwork::Socket, fd_set FAR *);
-char FAR * (PASCAL FAR *CNetwork::inet_ntoa_n)(struct in_addr in);
-unsigned long (PASCAL FAR *CNetwork::inet_addr_n)(const char FAR * cp);
-struct hostent FAR * (PASCAL FAR *CNetwork::gethostbyaddr_n)(const char FAR * addr, int len, int type);
-struct hostent FAR * (PASCAL FAR *CNetwork::gethostbyname_n)(const char FAR * name);
-struct servent FAR * (PASCAL FAR *CNetwork::getservbyport_n)(int port, const char FAR * proto);
-struct servent FAR * (PASCAL FAR *CNetwork::getservbyname_n)(const char FAR * name, const char FAR * proto);
-struct protoent FAR * (PASCAL FAR *CNetwork::getprotobynumber_n)(int proto);
-struct protoent FAR * (PASCAL FAR *CNetwork::getprotobyname_n)(const char FAR * name);
+static CNetwork::Socket (PASCAL FAR *accept_winsock)(CNetwork::Socket s, CNetwork::Address FAR *addr, CNetwork::AddressLength FAR *addrlen);
+static int (PASCAL FAR *bind_winsock)(CNetwork::Socket s, const CNetwork::Address FAR *addr, CNetwork::AddressLength namelen);
+static int (PASCAL FAR *close_winsock)(CNetwork::Socket s);
+static int (PASCAL FAR *connect_winsock)(CNetwork::Socket s, const CNetwork::Address FAR *name, CNetwork::AddressLength namelen);
+static int (PASCAL FAR *gethostname_winsock)(char FAR * name, int namelen);
+static int (PASCAL FAR *getpeername_winsock)(CNetwork::Socket s, CNetwork::Address FAR *name, CNetwork::AddressLength FAR * namelen);
+static int (PASCAL FAR *getsockerror_winsock)(void);
+static int (PASCAL FAR *getsockname_winsock)(CNetwork::Socket s, CNetwork::Address FAR *name, CNetwork::AddressLength FAR * namelen);
+static int (PASCAL FAR *getsockopt_winsock)(CNetwork::Socket s, int level, int optname, void FAR * optval, CNetwork::AddressLength FAR *optlen);
+static char FAR * (PASCAL FAR *inet_ntoa_winsock)(struct in_addr in);
+static unsigned long (PASCAL FAR *inet_addr_winsock)(const char FAR * cp);
+static int (PASCAL FAR *ioctl_winsock)(CNetwork::Socket s, int cmd, void FAR *);
+static int (PASCAL FAR *listen_winsock)(CNetwork::Socket s, int backlog);
+static ssize_t (PASCAL FAR *recv_winsock)(CNetwork::Socket s, void FAR * buf, size_t len, int flags);
+static ssize_t (PASCAL FAR *recvfrom_winsock)(CNetwork::Socket s, void FAR * buf, size_t len, int flags, CNetwork::Address FAR *from, CNetwork::AddressLength FAR * fromlen);
+static int (PASCAL FAR *select_winsock)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);
+static ssize_t (PASCAL FAR *send_winsock)(CNetwork::Socket s, const void FAR * buf, size_t len, int flags);
+static ssize_t (PASCAL FAR *sendto_winsock)(CNetwork::Socket s, const void FAR * buf, size_t len, int flags, const CNetwork::Address FAR *to, CNetwork::AddressLength tolen);
+static int (PASCAL FAR *setsockopt_winsock)(CNetwork::Socket s, int level, int optname, const void FAR * optval, CNetwork::AddressLength optlen);
+static int (PASCAL FAR *shutdown_winsock)(CNetwork::Socket s, int how);
+static CNetwork::Socket (PASCAL FAR *socket_winsock)(int af, int type, int protocol);
+static struct hostent FAR * (PASCAL FAR *gethostbyaddr_winsock)(const char FAR * addr, int len, int type);
+static struct hostent FAR * (PASCAL FAR *gethostbyname_winsock)(const char FAR * name);
+static struct servent FAR * (PASCAL FAR *getservbyport_winsock)(int port, const char FAR * proto);
+static struct servent FAR * (PASCAL FAR *getservbyname_winsock)(const char FAR * name, const char FAR * proto);
+static struct protoent FAR * (PASCAL FAR *getprotobynumber_winsock)(int proto);
+static struct protoent FAR * (PASCAL FAR *getprotobyname_winsock)(const char FAR * name);
+static int (PASCAL FAR *WSACleanup_winsock)(void);
+static int (PASCAL FAR *WSAFDIsSet_winsock)(CNetwork::Socket, fd_set FAR *);
+
 const int				CNetwork::Error = SOCKET_ERROR;
-const CNetwork::Socket	CNetwork::Null = INVALID_SOCKET;
+const CNetwork::Socket	CNetwork::Null  = INVALID_SOCKET;
 
 #undef FD_ISSET
-#define FD_ISSET(fd, set) CNetwork::__WSAFDIsSet((SOCKET)(fd), (fd_set FAR *)(set))
+#define FD_ISSET(fd, set) WSAFDIsSet_winsock((SOCKET)(fd), (fd_set FAR *)(set))
+
+// have poll() pick up our select() pointer
+#define select select_winsock
 
 static HMODULE			s_networkModule = NULL;
 
@@ -78,8 +78,8 @@ netGetProcAddress(HMODULE module, LPCSTR name)
 void
 CNetwork::init()
 {
-	assert(WSACleanup      == NULL);
-	assert(s_networkModule == NULL);
+	assert(WSACleanup_winsock == NULL);
+	assert(s_networkModule    == NULL);
 
 	// try winsock 2
 	HMODULE module = (HMODULE)::LoadLibrary("ws2_32.dll");
@@ -119,11 +119,11 @@ void
 CNetwork::cleanup()
 {
 	if (s_networkModule != NULL) {
-		WSACleanup();
+		WSACleanup_winsock();
 		::FreeLibrary(s_networkModule);
 
-		WSACleanup      = NULL;
-		s_networkModule = NULL;
+		WSACleanup_winsock = NULL;
+		s_networkModule    = NULL;
 	}
 }
 
@@ -191,61 +191,100 @@ CNetwork::init2(
 	}
 
 	// get function addresses
-	setfunc(accept, accept, Socket (PASCAL FAR *)(Socket s, Address FAR *addr, AddressLength FAR *addrlen));
-	setfunc(bind, bind, int (PASCAL FAR *)(Socket s, const Address FAR *addr, AddressLength namelen));
-	setfunc(close, closesocket, int (PASCAL FAR *)(Socket s));
-	setfunc(connect, connect, int (PASCAL FAR *)(Socket s, const Address FAR *name, AddressLength namelen));
-	setfunc(ioctl, ioctlsocket, int (PASCAL FAR *)(Socket s, int cmd, void FAR *));
-	setfunc(getpeername, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
-	setfunc(getsockname, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
-	setfunc(getsockopt, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));
-	setfunc(inet_addr_n, inet_addr, unsigned long (PASCAL FAR *)(const char FAR * cp));
-	setfunc(inet_ntoa_n, inet_ntoa, char FAR * (PASCAL FAR *)(struct in_addr in));
-	setfunc(listen, listen, int (PASCAL FAR *)(Socket s, int backlog));
-	setfunc(recv, recv, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags));
-	setfunc(recvfrom, recvfrom, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags, Address FAR *from, AddressLength FAR * fromlen));
-	setfunc(send, send, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags));
-	setfunc(sendto, sendto, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags, const Address FAR *to, AddressLength tolen));
-	setfunc(setsockopt, setsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, const void FAR * optval, AddressLength optlen));
-	setfunc(shutdown, shutdown, int (PASCAL FAR *)(Socket s, int how));
-	setfunc(socket, socket, Socket (PASCAL FAR *)(int af, int type, int protocol));
-	setfunc(gethostname, gethostname, int (PASCAL FAR *)(char FAR * name, int namelen));
-	setfunc(gethostbyaddr_n, gethostbyaddr, struct hostent FAR * (PASCAL FAR *)(const char FAR * addr, int len, int type));
-	setfunc(gethostbyname_n, gethostbyname, struct hostent FAR * (PASCAL FAR *)(const char FAR * name));
-	setfunc(getservbyport_n, getservbyport, struct servent FAR * (PASCAL FAR *)(int port, const char FAR * proto));
-	setfunc(getservbyname_n, getservbyname, struct servent FAR * (PASCAL FAR *)(const char FAR * name, const char FAR * proto));
-	setfunc(getprotobynumber_n, getprotobynumber, struct protoent FAR * (PASCAL FAR *)(int proto));
-	setfunc(getprotobyname_n, getprotobyname, struct protoent FAR * (PASCAL FAR *)(const char FAR * name));
-	setfunc(getsockerror, WSAGetLastError, int (PASCAL FAR *)(void));
-	setfunc(WSACleanup, WSACleanup, int (PASCAL FAR *)(void));
-	setfunc(__WSAFDIsSet, __WSAFDIsSet, int (PASCAL FAR *)(CNetwork::Socket, fd_set FAR *));
-	setfunc(select, select, int (PASCAL FAR *)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout));
-	poll  = poll2;
-	read  = read2;
-	write = write2;
+	setfunc(accept_winsock, accept, Socket (PASCAL FAR *)(Socket s, Address FAR *addr, AddressLength FAR *addrlen));
+	setfunc(bind_winsock, bind, int (PASCAL FAR *)(Socket s, const Address FAR *addr, AddressLength namelen));
+	setfunc(close_winsock, closesocket, int (PASCAL FAR *)(Socket s));
+	setfunc(connect_winsock, connect, int (PASCAL FAR *)(Socket s, const Address FAR *name, AddressLength namelen));
+	setfunc(gethostname_winsock, gethostname, int (PASCAL FAR *)(char FAR * name, int namelen));
+	setfunc(getpeername_winsock, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
+	setfunc(getsockerror_winsock, WSAGetLastError, int (PASCAL FAR *)(void));
+	setfunc(getsockname_winsock, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
+	setfunc(getsockopt_winsock, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));
+	setfunc(inet_addr_winsock, inet_addr, unsigned long (PASCAL FAR *)(const char FAR * cp));
+	setfunc(inet_ntoa_winsock, inet_ntoa, char FAR * (PASCAL FAR *)(struct in_addr in));
+	setfunc(ioctl_winsock, ioctlsocket, int (PASCAL FAR *)(Socket s, int cmd, void FAR *));
+	setfunc(listen_winsock, listen, int (PASCAL FAR *)(Socket s, int backlog));
+	setfunc(recv_winsock, recv, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags));
+	setfunc(recvfrom_winsock, recvfrom, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags, Address FAR *from, AddressLength FAR * fromlen));
+	setfunc(select_winsock, select, int (PASCAL FAR *)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout));
+	setfunc(send_winsock, send, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags));
+	setfunc(sendto_winsock, sendto, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags, const Address FAR *to, AddressLength tolen));
+	setfunc(setsockopt_winsock, setsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, const void FAR * optval, AddressLength optlen));
+	setfunc(shutdown_winsock, shutdown, int (PASCAL FAR *)(Socket s, int how));
+	setfunc(socket,_winsock socket, Socket (PASCAL FAR *)(int af, int type, int protocol));
+	setfunc(gethostbyaddr_winsock, gethostbyaddr, struct hostent FAR * (PASCAL FAR *)(const char FAR * addr, int len, int type));
+	setfunc(gethostbyname_winsock, gethostbyname, struct hostent FAR * (PASCAL FAR *)(const char FAR * name));
+	setfunc(getservbyport_winsock, getservbyport, struct servent FAR * (PASCAL FAR *)(int port, const char FAR * proto));
+	setfunc(getservbyname_winsock, getservbyname, struct servent FAR * (PASCAL FAR *)(const char FAR * name, const char FAR * proto));
+	setfunc(getprotobynumber_winsock, getprotobynumber, struct protoent FAR * (PASCAL FAR *)(int proto));
+	setfunc(getprotobyname_winsock, getprotobyname, struct protoent FAR * (PASCAL FAR *)(const char FAR * name));
+	setfunc(WSACleanup_winsock, WSACleanup, int (PASCAL FAR *)(void));
+	setfunc(WSAFDIsSet_winsock, __WSAFDIsSet, int (PASCAL FAR *)(CNetwork::Socket, fd_set FAR *));
 
 	s_networkModule = module;
 }
 
-ssize_t PASCAL FAR
-CNetwork::read2(Socket s, void FAR* buf, size_t len)
+CNetwork::Socket
+CNetwork::accept(Socket s, Address* addr, AddressLength* addrlen)
 {
-	return recv(s, buf, len, 0);
+	return accept_winsock(s, addr, addrlen);
 }
 
-ssize_t PASCAL FAR
-CNetwork::write2(Socket s, const void FAR* buf, size_t len)
+int
+CNetwork::bind(Socket s, const Address* addr, AddressLength namelen)
 {
-	return send(s, buf, len, 0);
+	return bind_winsock(s, addr, namelen);
 }
 
-int PASCAL FAR
-CNetwork::inet_aton(const char FAR * cp, InternetAddress FAR * addr)
+int
+CNetwork::close(Socket s)
+{
+	return close_winsock(s);
+}
+
+int
+CNetwork::connect(Socket s, const Address* name, AddressLength namelen)
+{
+	return connect_winsock(s);
+}
+
+int
+CNetwork::gethostname(char* name, int namelen)
+{
+	return gethostname_winsock(name, namelen);
+}
+
+int
+CNetwork::getpeername(Socket s, Address* name, AddressLength* namelen)
+{
+	return getpeername_winsock(s, name, namelen);
+}
+
+int
+CNetwork::getsockerror(void)
+{
+	return getsockerrror_winsock();
+}
+
+int
+CNetwork::getsockname(Socket s, Address* name, AddressLength* namelen)
+{
+	return getsockname_winsock(s, name, namelen);
+}
+
+int
+CNetwork::getsockopt(Socket s, int level, int optname, void* optval, AddressLength* optlen)
+{
+	return getsockopt_winsock(s, level, optname, optval, optlen);
+}
+
+int
+CNetwork::inet_aton(const char* cp, InternetAddress* addr)
 {
 	assert(addr != NULL);
 
-	// fake it with inet_addr
-	unsigned long inetAddr = inet_addr_n(cp);
+	// fake it with inet_addr, which is per-thread on winsock
+	unsigned long inetAddr = inet_addr_winsock(cp);
 	if (inetAddr == INADDR_NONE) {
 		return 0;
 	}
@@ -255,21 +294,86 @@ CNetwork::inet_aton(const char FAR * cp, InternetAddress FAR * addr)
 	}
 }
 
-CString PASCAL FAR
+CString
 CNetwork::inet_ntoa(struct in_addr in)
 {
 	// winsock returns strings per-thread
-	return CString(inet_ntoa_n(in));
+	return CString(inet_ntoa_winsock(in));
 }
 
-int PASCAL FAR
-CNetwork::gethostbyaddr(CHostInfo* hostinfo,
-						const char FAR * addr, int len, int type)
+int
+CNetwork::ioctl(Socket s, int cmd, void* arg)
+{
+	return ioctl_winsock(s, cmd, arg);
+}
+
+int
+CNetwork::listen(Socket s, int backlog)
+{
+	return listen_winsock(s, backlog);
+}
+
+ssize_t
+CNetwork::read(Socket s, void* buf, size_t len)
+{
+	return recv_winsock(s, buf, len, 0);
+}
+
+ssize_t
+CNetwork::recv(Socket s, void* buf, size_t len, int flags)
+{
+	return recv_winsock(s, buf, len, flags);
+}
+
+ssize_t
+CNetwork::recvfrom(Socket s, void* buf, size_t len, int flags, Address* from, AddressLength* fromlen)
+{
+	return recvfrom_winsock(s, buf, len, flags, from, fromlen);
+}
+
+ssize_t
+CNetwork::send(Socket s, const void* buf, size_t len, int flags)
+{
+	return send_winsock(s, buf, len, flags);
+}
+
+ssize_t
+CNetwork::sendto(Socket s, const void* buf, size_t len, int flags, const Address* to, AddressLength tolen)
+{
+	return sendto_winsock(s, buf, len, flags, to, tolen);
+}
+
+int
+CNetwork::setsockopt(Socket s, int level, int optname, const void* optval, AddressLength optlen)
+{
+	return setsockopt_winsock(s, level, optname, optval, optlen);
+}
+
+int
+CNetwork::shutdown(Socket s, int how)
+{
+	return shutdown_winsock(s, how);
+}
+
+CNetwork::Socket
+CNetwork::socket(int af, int type, int protocol)
+{
+	return socket_winsock(af, type, protocol);
+}
+
+ssize_t
+CNetwork::write(Socket s, const void* buf, size_t len)
+{
+	return send_winsock(s, buf, len, 0);
+}
+
+int
+CNetwork::gethostbyaddr(CHostInfo* hostinfo, const char* addr, int len, int type)
 {
 	assert(hostinfo != NULL);
 
 	// winsock returns structures per-thread
-	struct hostent FAR* info = gethostbyaddr_n(addr, len, type);
+	struct hostent FAR* info = gethostbyaddr_winsock(addr, len, type);
 	if (info == NULL) {
 		return getsockerror();
 	}
@@ -280,14 +384,13 @@ CNetwork::gethostbyaddr(CHostInfo* hostinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::gethostbyname(CHostInfo* hostinfo,
-						const char FAR * name)
+int
+CNetwork::gethostbyname(CHostInfo* hostinfo, const char* name)
 {
 	assert(hostinfo != NULL);
 
 	// winsock returns structures per-thread
-	struct hostent FAR* info = gethostbyname_n(name);
+	struct hostent FAR* info = gethostbyname_winsock(name);
 	if (info == NULL) {
 		return getsockerror();
 	}
@@ -298,14 +401,13 @@ CNetwork::gethostbyname(CHostInfo* hostinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::getservbyport(CServiceInfo* servinfo,
-						int port, const char FAR * proto)
+int
+CNetwork::getservbyport(CServiceInfo* servinfo, int port, const char* proto)
 {
 	assert(servinfo != NULL);
 
 	// winsock returns structures per-thread
-	struct servent FAR* info = getservbyport_n(port, proto);
+	struct servent FAR* info = getservbyport_winsock(port, proto);
 	if (info == NULL) {
 		return getsockerror();
 	}
@@ -316,14 +418,13 @@ CNetwork::getservbyport(CServiceInfo* servinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::getservbyname(CServiceInfo* servinfo,
-						const char FAR * name, const char FAR * proto)
+int
+CNetwork::getservbyname(CServiceInfo* servinfo, const char* name, const char* proto)
 {
 	assert(servinfo != NULL);
 
 	// winsock returns structures per-thread
-	struct servent FAR* info = getservbyname_n(name, proto);
+	struct servent FAR* info = getservbyname_winsock(name, proto);
 	if (info == NULL) {
 		return getsockerror();
 	}
@@ -334,14 +435,13 @@ CNetwork::getservbyname(CServiceInfo* servinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::getprotobynumber(CProtocolInfo* protoinfo,
-						int proto)
+int
+CNetwork::getprotobynumber(CProtocolInfo* protoinfo, int proto)
 {
 	assert(protoinfo != NULL);
 
 	// winsock returns structures per-thread
-	struct protoent FAR* info = getprotobynumber_n(proto);
+	struct protoent FAR* info = getprotobynumber_winsock(proto);
 	if (info == NULL) {
 		return getsockerror();
 	}
@@ -352,14 +452,13 @@ CNetwork::getprotobynumber(CProtocolInfo* protoinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::getprotobyname(CProtocolInfo* protoinfo,
-						const char FAR * name)
+int
+CNetwork::getprotobyname(CProtocolInfo* protoinfo, const char* name)
 {
 	assert(protoinfo != NULL);
 
 	// winsock returns structures per-thread
-	struct protoent FAR* info = getprotobyname_n(name);
+	struct protoent FAR* info = getprotobyname_winsock(name);
 	if (info == NULL) {
 		return getsockerror();
 	}
@@ -370,15 +469,15 @@ CNetwork::getprotobyname(CProtocolInfo* protoinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::setblocking(CNetwork::Socket s, bool blocking)
+int
+CNetwork::setblocking(Socket s, bool blocking)
 {
 	int flag = blocking ? 0 : 1;
 	return ioctl(s, FIONBIO, &flag);
 }
 
-int PASCAL FAR
-CNetwork::setnodelay(CNetwork::Socket s, bool nodelay)
+int
+CNetwork::setnodelay(Socket s, bool nodelay)
 {
 	BOOL flag = nodelay ? 1 : 0;
 	return setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
@@ -391,25 +490,18 @@ CNetwork::setnodelay(CNetwork::Socket s, bool nodelay)
 #include "CMutex.h"
 #include "CLock.h"
 
-#if HAVE_SYS_TYPES_H
-#	include <sys/types.h>
-#endif
-#if HAVE_SYS_STAT_H
-#	include <sys/stat.h>
-#endif
 #if HAVE_UNISTD_H
 #	include <unistd.h>
 #endif
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #if !defined(TCP_NODELAY)
 #	include <netinet/tcp.h>
 #endif
 
 const int				CNetwork::Error = -1;
-const CNetwork::Socket	CNetwork::Null = -1;
+const CNetwork::Socket	CNetwork::Null  = -1;
 
 static CMutex*			s_networkMutex = NULL;
 
@@ -450,32 +542,6 @@ CNetwork::init()
 	catch (...) {
 		throw XNetworkFailed();
 	}
-
-	setfunc(accept, accept, Socket (PASCAL FAR *)(Socket s, Address FAR *addr, AddressLength FAR *addrlen));
-	setfunc(bind, bind, int (PASCAL FAR *)(Socket s, const Address FAR *addr, AddressLength namelen));
-	setfunc(close, close, int (PASCAL FAR *)(Socket s));
-	setfunc(connect, connect, int (PASCAL FAR *)(Socket s, const Address FAR *name, AddressLength namelen));
-	setfunc(ioctl, ioctl, int (PASCAL FAR *)(Socket s, int cmd, void FAR *));
-	setfunc(getpeername, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
-	setfunc(getsockname, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
-	setfunc(getsockopt, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));
-	setfunc(listen, listen, int (PASCAL FAR *)(Socket s, int backlog));
-#if HAVE_POLL
-	setfunc(poll, poll, int (PASCAL FAR *)(CNetwork::PollEntry fds[], int nfds, int timeout));
-#else
-	setfunc(poll, CNetwork::poll2, int (PASCAL FAR *)(CNetwork::PollEntry fds[], int nfds, int timeout));
-#endif
-	setfunc(read, read, ssize_t (PASCAL FAR *)(CNetwork::Socket s, void FAR * buf, size_t len));
-	setfunc(recv, recv, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags));
-	setfunc(recvfrom, recvfrom, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags, Address FAR *from, AddressLength FAR * fromlen));
-	setfunc(send, send, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags));
-	setfunc(sendto, sendto, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags, const Address FAR *to, AddressLength tolen));
-	setfunc(setsockopt, setsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, const void FAR * optval, AddressLength optlen));
-	setfunc(shutdown, shutdown, int (PASCAL FAR *)(Socket s, int how));
-	setfunc(socket, socket, Socket (PASCAL FAR *)(int af, int type, int protocol));
-	setfunc(write, write, ssize_t (PASCAL FAR *)(CNetwork::Socket s, const void FAR * buf, size_t len));
-	gethostname  = gethostname2;
-	getsockerror = getsockerror2;
 }
 
 void
@@ -485,25 +551,67 @@ CNetwork::cleanup()
 	s_networkMutex = NULL;
 }
 
-int PASCAL FAR
-CNetwork::gethostname2(char* name, int namelen)
+CNetwork::Socket
+CNetwork::accept(Socket s, Address* addr, AddressLength* addrlen)
+{
+	return ::accept(s, addr, addrlen);
+}
+
+int
+CNetwork::bind(Socket s, const Address* addr, AddressLength namelen)
+{
+	return ::bind(s, addr, namelen);
+}
+
+int
+CNetwork::close(Socket s)
+{
+	return ::close(s);
+}
+
+int
+CNetwork::connect(Socket s, const Address* name, AddressLength namelen)
+{
+	return ::connect(s, name, namelen);
+}
+
+int
+CNetwork::gethostname(char* name, int namelen)
 {
 	return ::gethostname(name, namelen);
 }
 
-int PASCAL FAR
-CNetwork::getsockerror2(void)
+int
+CNetwork::getpeername(Socket s, Address* name, AddressLength* namelen)
+{
+	return ::getpeername(s, name, namelen);
+}
+
+int
+CNetwork::getsockerror(void)
 {
 	return errno;
 }
 
-int PASCAL FAR
-CNetwork::inet_aton(const char FAR * cp, InternetAddress FAR * addr)
+int
+CNetwork::getsockname(Socket s, Address* name, AddressLength* namelen)
+{
+	return ::getsockname(s, name, namelen);
+}
+
+int
+CNetwork::getsockopt(Socket s, int level, int optname, void* optval, AddressLength* optlen)
+{
+	return ::getsockopt(s, level, optname, optval, optlen);
+}
+
+int
+CNetwork::inet_aton(const char* cp, InternetAddress* addr)
 {
 	return ::inet_aton(cp, addr);
 }
 
-CString PASCAL FAR
+CString
 CNetwork::inet_ntoa(struct in_addr in)
 {
 	// single threaded access to inet_ntoa functions
@@ -511,15 +619,80 @@ CNetwork::inet_ntoa(struct in_addr in)
 	return CString(::inet_ntoa(in));
 }
 
-int PASCAL FAR
-CNetwork::gethostbyaddr(CHostInfo* hostinfo,
-						const char FAR * addr, int len, int type)
+int
+CNetwork::ioctl(Socket s, int cmd, void* arg)
+{
+	return ::ioctl(s, cmd, arg);
+}
+
+int
+CNetwork::listen(Socket s, int backlog)
+{
+	return ::listen(s, backlog);
+}
+
+ssize_t
+CNetwork::read(Socket s, void* buf, size_t len)
+{
+	return ::read(s, buf, len);
+}
+
+ssize_t
+CNetwork::recv(Socket s, void* buf, size_t len, int flags)
+{
+	return ::recv(s, buf, len, flags);
+}
+
+ssize_t
+CNetwork::recvfrom(Socket s, void* buf, size_t len, int flags, Address* from, AddressLength* fromlen)
+{
+	return ::recvfrom(s, buf, len, flags, from, fromlen);
+}
+
+ssize_t
+CNetwork::send(Socket s, const void* buf, size_t len, int flags)
+{
+	return ::send(s, buf, len, flags);
+}
+
+ssize_t
+CNetwork::sendto(Socket s, const void* buf, size_t len, int flags, const Address* to, AddressLength tolen)
+{
+	return ::sendto(s, buf, len, flags, to, tolen);
+}
+
+int
+CNetwork::setsockopt(Socket s, int level, int optname, const void* optval, AddressLength optlen)
+{
+	return ::setsockopt(s, level, optname, optval, optlen);
+}
+
+int
+CNetwork::shutdown(Socket s, int how)
+{
+	return ::shutdown(s, how);
+}
+
+CNetwork::Socket
+CNetwork::socket(int af, int type, int protocol)
+{
+	return ::socket(af, type, protocol);
+}
+
+ssize_t
+CNetwork::write(Socket s, const void* buf, size_t len)
+{
+	return ::write(s, buf, len);
+}
+
+int
+CNetwork::gethostbyaddr(CHostInfo* hostinfo, const char* addr, int len, int type)
 {
 	assert(hostinfo != NULL);
 
 	// single threaded access to netdb functions
 	CLock lock(s_networkMutex);
-	struct hostent FAR* info = ::gethostbyaddr(addr, len, type);
+	struct hostent* info = ::gethostbyaddr(addr, len, type);
 	if (info == NULL) {
 		return h_errno;
 	}
@@ -530,15 +703,14 @@ CNetwork::gethostbyaddr(CHostInfo* hostinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::gethostbyname(CHostInfo* hostinfo,
-						const char FAR * name)
+int
+CNetwork::gethostbyname(CHostInfo* hostinfo, const char* name)
 {
 	assert(hostinfo != NULL);
 
 	// single threaded access to netdb functions
 	CLock lock(s_networkMutex);
-	struct hostent FAR* info = ::gethostbyname(name);
+	struct hostent* info = ::gethostbyname(name);
 	if (info == NULL) {
 		return h_errno;
 	}
@@ -549,15 +721,14 @@ CNetwork::gethostbyname(CHostInfo* hostinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::getservbyport(CServiceInfo* servinfo,
-						int port, const char FAR * proto)
+int
+CNetwork::getservbyport(CServiceInfo* servinfo, int port, const char* proto)
 {
 	assert(servinfo != NULL);
 
 	// single threaded access to netdb functions
 	CLock lock(s_networkMutex);
-	struct servent FAR* info = ::getservbyport(port, proto);
+	struct servent* info = ::getservbyport(port, proto);
 	if (info == NULL) {
 		return -1;
 	}
@@ -568,15 +739,14 @@ CNetwork::getservbyport(CServiceInfo* servinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::getservbyname(CServiceInfo* servinfo,
-						const char FAR * name, const char FAR * proto)
+int
+CNetwork::getservbyname(CServiceInfo* servinfo, const char* name, const char* proto)
 {
 	assert(servinfo != NULL);
 
 	// single threaded access to netdb functions
 	CLock lock(s_networkMutex);
-	struct servent FAR* info = ::getservbyname(name, proto);
+	struct servent* info = ::getservbyname(name, proto);
 	if (info == NULL) {
 		return -1;
 	}
@@ -587,15 +757,14 @@ CNetwork::getservbyname(CServiceInfo* servinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::getprotobynumber(CProtocolInfo* protoinfo,
-						int proto)
+int
+CNetwork::getprotobynumber(CProtocolInfo* protoinfo, int proto)
 {
 	assert(protoinfo != NULL);
 
 	// single threaded access to netdb functions
 	CLock lock(s_networkMutex);
-	struct protoent FAR* info = ::getprotobynumber(proto);
+	struct protoent* info = ::getprotobynumber(proto);
 	if (info == NULL) {
 		return -1;
 	}
@@ -606,15 +775,14 @@ CNetwork::getprotobynumber(CProtocolInfo* protoinfo,
 	}
 }
 
-int PASCAL FAR
-CNetwork::getprotobyname(CProtocolInfo* protoinfo,
-						const char FAR * name)
+int
+CNetwork::getprotobyname(CProtocolInfo* protoinfo, const char* name)
 {
 	assert(protoinfo != NULL);
 
 	// single threaded access to netdb functions
 	CLock lock(s_networkMutex);
-	struct protoent FAR* info = ::getprotobyname(name);
+	struct protoent* info = ::getprotobyname(name);
 	if (info == NULL) {
 		return -1;
 	}
@@ -625,7 +793,7 @@ CNetwork::getprotobyname(CProtocolInfo* protoinfo,
 	}
 }
 
-int PASCAL FAR
+int
 CNetwork::setblocking(CNetwork::Socket s, bool blocking)
 {
 	int mode = fcntl(s, F_GETFL, 0);
@@ -644,18 +812,26 @@ CNetwork::setblocking(CNetwork::Socket s, bool blocking)
 	return 0;
 }
 
-int PASCAL FAR
+int
 CNetwork::setnodelay(CNetwork::Socket s, bool nodelay)
 {
 	int flag = nodelay ? 1 : 0;
-	setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
+	return setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
 }
 
 #endif
 
-#if WINDOWS_LIKE || !HAVE_POLL
+#if HAVE_POLL
 
-#if HAVE_SYS_SELECT_H
+int
+CNetwork::poll(PollEntry fd[], int nfds, int timeout)
+{
+	return ::poll(fd, nfds, timeout);
+}
+
+#else // !HAVE_POLL
+
+#if HAVE_SYS_SELECT_H && !WINDOWS_LIKE
 #	include <sys/select.h>
 #endif
 #if HAVE_SYS_TIME_H
@@ -668,8 +844,8 @@ CNetwork::setnodelay(CNetwork::Socket s, bool nodelay)
 #	include <unistd.h>
 #endif
 
-int PASCAL FAR
-CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
+int
+CNetwork::poll(PollEntry fd[], int nfds, int timeout)
 {
 	int i;
 
@@ -752,7 +928,7 @@ CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
 	return n;
 }
 
-#endif
+#endif // !HAVE_POLL
 
 
 //

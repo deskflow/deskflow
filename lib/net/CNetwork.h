@@ -19,21 +19,15 @@
 #include "CString.h"
 #include "stdvector.h"
 
+#if !defined(HAVE_SOCKLEN_T)
 // Darwin is so unsure what to use for socklen_t it makes us choose
-#if defined(__APPLE__)
-#	if !defined(_BSD_SOCKLEN_T_) 	
-#		define _BSD_SOCKLEN_T_ int
+#	if defined(__APPLE__)
+#		if !defined(_BSD_SOCKLEN_T_) 	
+#			define _BSD_SOCKLEN_T_ int
+#		endif
+#	else
+typedef int socklen_t;
 #	endif
-#endif
-
-#if HAVE_SYS_TYPES_H
-#	include <sys/types.h>
-#endif
-#if HAVE_SYS_SOCKET_H
-#	include <sys/socket.h>
-#endif
-#if HAVE_POLL
-#	include <sys/poll.h>
 #endif
 
 #if WINDOWS_LIKE
@@ -42,14 +36,21 @@
 #	define INCL_WINSOCK_API_TYPEDEFS 0
 #	include <winsock2.h>
 typedef int ssize_t;
-#else
-#	undef FAR
-#	undef PASCAL
-#	define FAR
-#	define PASCAL
+#	define SELECT_TYPE_ARG1 int
+#	define SELECT_TYPE_ARG234 (fd_set *)
+#	define SELECT_TYPE_ARG5 (struct timeval *)
 #endif
 
 #if UNIX_LIKE
+#	if HAVE_SYS_TYPES_H
+#		include <sys/types.h>
+#	endif
+#	if HAVE_SYS_SOCKET_H
+#		include <sys/socket.h>
+#	endif
+#	if HAVE_POLL
+#		include <sys/poll.h>
+#	endif
 #	include <netinet/in.h>
 #	include <netdb.h>
 #	include <errno.h>
@@ -73,7 +74,7 @@ public:
 	typedef struct in_addr InternetAddress;
 #endif
 
-#if WINDOWS_LIKE || !HAVE_POLL
+#if !HAVE_POLL
 	class PollEntry {
 	public:
 		Socket			fd;
@@ -220,95 +221,51 @@ public:
 
 	// socket interface (only available after init())
 
-	static Socket (PASCAL FAR *accept)(Socket s, Address FAR *addr, AddressLength FAR *addrlen);
-	static int (PASCAL FAR *bind)(Socket s, const Address FAR *addr, AddressLength namelen);
-	static int (PASCAL FAR *close)(Socket s);
-	static int (PASCAL FAR *connect)(Socket s, const Address FAR *name, AddressLength namelen);
-	static int (PASCAL FAR *ioctl)(Socket s, int cmd, void FAR *);
-	static int (PASCAL FAR *getpeername)(Socket s, Address FAR *name, AddressLength FAR * namelen);
-	static int (PASCAL FAR *getsockname)(Socket s, Address FAR *name, AddressLength FAR * namelen);
-	static int (PASCAL FAR *getsockopt)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen);
-	static int PASCAL FAR inet_aton(const char FAR * cp, InternetAddress FAR * addr);
-	static CString PASCAL FAR inet_ntoa(struct in_addr in);
-	static int (PASCAL FAR *listen)(Socket s, int backlog);
-	static ssize_t (PASCAL FAR *read)(Socket s, void FAR * buf, size_t len);
-	static ssize_t (PASCAL FAR *recv)(Socket s, void FAR * buf, size_t len, int flags);
-	static ssize_t (PASCAL FAR *recvfrom)(Socket s, void FAR * buf, size_t len, int flags, Address FAR *from, AddressLength FAR * fromlen);
-	static int (PASCAL FAR *poll)(PollEntry[], int nfds, int timeout);
-	static ssize_t (PASCAL FAR *send)(Socket s, const void FAR * buf, size_t len, int flags);
-	static ssize_t (PASCAL FAR *sendto)(Socket s, const void FAR * buf, size_t len, int flags, const Address FAR *to, AddressLength tolen);
-	static int (PASCAL FAR *setsockopt)(Socket s, int level, int optname, const void FAR * optval, AddressLength optlen);
-	static int (PASCAL FAR *shutdown)(Socket s, int how);
-	static Socket (PASCAL FAR *socket)(int af, int type, int protocol);
-	static ssize_t (PASCAL FAR *write)(Socket s, const void FAR * buf, size_t len);
-	static int (PASCAL FAR *gethostname)(char FAR * name, int namelen);
-	static int PASCAL FAR gethostbyaddr(CHostInfo* hostinfo, const char FAR * addr, int len, int type);
-	static int PASCAL FAR gethostbyname(CHostInfo* hostinfo, const char FAR * name);
-	static int PASCAL FAR getservbyport(CServiceInfo* servinfo, int port, const char FAR * proto);
-	static int PASCAL FAR getservbyname(CServiceInfo* servinfo, const char FAR * name, const char FAR * proto);
-	static int PASCAL FAR getprotobynumber(CProtocolInfo* protoinfo, int proto);
-	static int PASCAL FAR getprotobyname(CProtocolInfo* protoinfo, const char FAR * name);
-	static int (PASCAL FAR *getsockerror)(void);
+	static Socket		accept(Socket s, Address* addr, AddressLength* addrlen);
+	static int			bind(Socket s, const Address* addr, AddressLength namelen);
+	static int			close(Socket s);
+	static int			connect(Socket s, const Address* name, AddressLength namelen);
+	static int			gethostname(char* name, int namelen);
+	static int			getpeername(Socket s, Address* name, AddressLength* namelen);
+	static int			getsockerror(void);
+	static int			getsockname(Socket s, Address* name, AddressLength* namelen);
+	static int			getsockopt(Socket s, int level, int optname, void* optval, AddressLength* optlen);
+	static int			inet_aton(const char* cp, InternetAddress* addr);
+	static CString		inet_ntoa(struct in_addr in);
+	static int			ioctl(Socket s, int cmd, void* );
+	static int			listen(Socket s, int backlog);
+	static int			poll(PollEntry[], int nfds, int timeout);
+	static ssize_t		read(Socket s, void* buf, size_t len);
+	static ssize_t		recv(Socket s, void* buf, size_t len, int flags);
+	static ssize_t		recvfrom(Socket s, void* buf, size_t len, int flags, Address* from, AddressLength* fromlen);
+	static ssize_t		send(Socket s, const void* buf, size_t len, int flags);
+	static ssize_t		sendto(Socket s, const void* buf, size_t len, int flags, const Address* to, AddressLength tolen);
+	static int			setsockopt(Socket s, int level, int optname, const void* optval, AddressLength optlen);
+	static int			shutdown(Socket s, int how);
+	static Socket		socket(int af, int type, int protocol);
+	static ssize_t		write(Socket s, const void* buf, size_t len);
+	static int			gethostbyaddr(CHostInfo* hostinfo, const char* addr, int len, int type);
+	static int			gethostbyname(CHostInfo* hostinfo, const char* name);
+	static int			getservbyport(CServiceInfo* servinfo, int port, const char* proto);
+	static int			getservbyname(CServiceInfo* servinfo, const char* name, const char* proto);
+	static int			getprotobynumber(CProtocolInfo* protoinfo, int proto);
+	static int			getprotobyname(CProtocolInfo* protoinfo, const char* name);
 
 	// convenience functions (only available after init())
 
 	//! Set socket to (non-)blocking operation
-	static int PASCAL FAR setblocking(CNetwork::Socket s, bool blocking);
+	static int			setblocking(Socket s, bool blocking);
 
 	//! Turn Nagle algorithm on or off on socket
 	/*!
 	Set socket to send messages immediately (true) or to collect small
 	messages into one packet (false).
 	*/
-	static int PASCAL FAR setnodelay(CNetwork::Socket s, bool nodelay);
+	static int			setnodelay(Socket s, bool nodelay);
 
 private:
 #if WINDOWS_LIKE
-#define SELECT_TYPE_ARG1 int
-#define SELECT_TYPE_ARG234 (fd_set *)
-#define SELECT_TYPE_ARG5 (struct timeval *)
 	static void			init2(HMODULE);
-	static ssize_t PASCAL FAR read2(Socket s, void FAR * buf, size_t len);
-	static ssize_t PASCAL FAR write2(Socket s, const void FAR * buf, size_t len);
-	static int (PASCAL FAR *WSACleanup)(void);
-	static int (PASCAL FAR *__WSAFDIsSet)(CNetwork::Socket, fd_set FAR *);
-	static int (PASCAL FAR *select)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);
-	static char FAR * (PASCAL FAR *inet_ntoa_n)(struct in_addr in);
-	static unsigned long (PASCAL FAR *inet_addr_n)(const char FAR * cp);
-	static struct hostent FAR * (PASCAL FAR *gethostbyaddr_n)(const char FAR * addr, int len, int type);
-	static struct hostent FAR * (PASCAL FAR *gethostbyname_n)(const char FAR * name);
-	static struct servent FAR * (PASCAL FAR *getservbyport_n)(int port, const char FAR * proto);
-	static struct servent FAR * (PASCAL FAR *getservbyname_n)(const char FAR * name, const char FAR * proto);
-	static struct protoent FAR * (PASCAL FAR *getprotobynumber_n)(int proto);
-	static struct protoent FAR * (PASCAL FAR *getprotobyname_n)(const char FAR * name);
-#endif
-
-#if UNIX_LIKE
-	static int PASCAL FAR gethostname2(char FAR * name, int namelen);
-	static int PASCAL FAR getsockerror2(void);
-#endif
-
-#if WINDOWS_LIKE || UNIX_LIKE
-/* FIXME -- reentrant netdb stuff
-create classes for hostent, servent, protoent.
-each class can clean itself up automatically.
-inside CNetwork we'll convert from netdb structs to classes.
-clients will pass a class pointer which CNetwork will assign to (or swap into).
-won't need free...() functions to clean up structs.
-each class should know how to copy from respective netdb struct.
-will need to fix CNetworkAddress to use classes.
-*/
-	static void copyhostent(struct hostent FAR * dst, const struct hostent FAR * src);
-	static void copyservent(struct servent FAR * dst, const struct servent FAR * src);
-	static void copyprotoent(struct protoent FAR * dst, const struct protoent FAR * src);
-
-	static void freehostent(struct hostent FAR * ent);
-	static void freeservent(struct servent FAR * ent);
-	static void freeprotoent(struct protoent FAR * ent);
-#endif
-
-#if WINDOWS_LIKE || !HAVE_POLL
-	static int PASCAL FAR poll2(PollEntry[], int nfds, int timeout);
 #endif
 };
 

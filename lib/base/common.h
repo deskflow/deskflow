@@ -22,7 +22,7 @@
 #endif
 
 // check if win32 platform
-#if defined(_WIN32) || HAVE_WINDOWS_H
+#if defined(_WIN32)
 #	define WINDOWS_LIKE 1
 
 	// VC++ specific
@@ -56,7 +56,7 @@
 #		define SIZE_OF_INT		4
 #		define SIZE_OF_LONG		4
 #	endif
-#endif // defined(_WIN32) || HAVE_WINDOWS_H
+#endif // defined(_WIN32)
 
 // unix-like if not like anything else
 #if (!defined(WINDOWS_LIKE) || WINDOWS_LIKE == 0)

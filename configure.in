@@ -35,15 +35,22 @@ AC_CHECK_PROG(HAVE_DOT, dot, YES, NO)
 dnl do checks using C++
 AC_LANG_CPLUSPLUS
 
+dnl our files end in .cpp not .C so tests should also end in .cpp
+ac_ext=cpp
+
+dnl check compiler
+ACX_CHECK_CXX
+
 dnl checks for libraries
 ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
 ACX_CHECK_NANOSLEEP
+ACX_CHECK_INET_ATON
 
 dnl checks for header files
 AC_HEADER_STDC
-AC_CHECK_HEADERS([unistd.h sys/time.h])
+AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h])
+AC_CHECK_HEADERS([sys/socket.h sys/select.h])
 AC_CHECK_HEADERS([istream ostream sstream])
-AC_CHECK_HEADERS([windows.h])
 AC_HEADER_TIME
 AC_PATH_X
 AC_PATH_XTRA
@@ -54,6 +61,7 @@ CPPFLAGS="$save_CPPFLAGS"
 
 dnl checks for types
 AC_TYPE_SIZE_T
+ACX_CHECK_SOCKLEN_T
 
 dnl checks for structures
 AC_STRUCT_TM
@@ -71,7 +79,6 @@ ACX_CHECK_CXX_STDLIB(,AC_MSG_ERROR(Your compiler must support the C++ standard l
 
 dnl checks for library functions
 dnl AC_TYPE_SIGNAL
-AC_FUNC_FORK
 AC_FUNC_MEMCMP
 AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(gmtime_r)
@@ -86,8 +93,8 @@ dnl checks for system services
 
 
 dnl adjust variables for X11 and pthreads
-CXXFLAGS="$CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
-LIBS="$NANOSLEEP_LIBS $PTHREAD_LIBS $LIBS"
+CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
+LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $PTHREAD_LIBS $LIBS"
 
 AC_OUTPUT([
 Makefile
