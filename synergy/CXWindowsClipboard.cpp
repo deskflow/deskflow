@@ -14,9 +14,10 @@ CXWindowsClipboard::~CXWindowsClipboard()
 {
 }
 
-void					CXWindowsClipboard::open()
+bool					CXWindowsClipboard::open()
 {
 	log((CLOG_INFO "open clipboard"));
+	return true;
 }
 
 void					CXWindowsClipboard::close()

@@ -9,7 +9,7 @@ class CXWindowsClipboard : public IClipboard {
 	virtual ~CXWindowsClipboard();
 
 	// IClipboard overrides
-	virtual void		open();
+	virtual bool		open();
 	virtual void		close();
 	virtual void		add(EFormat, const CString& data);
 	virtual bool		has(EFormat) const;
