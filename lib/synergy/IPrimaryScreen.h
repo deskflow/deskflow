@@ -17,6 +17,8 @@
 
 #include "IInterface.h"
 #include "IKeyState.h"
+#include "CEvent.h"
+#include "MouseTypes.h"
 
 //! Primary screen interface
 /*!
@@ -25,6 +27,43 @@ primary screen implementations.
 */
 class IPrimaryScreen : public IInterface {
 public:
+	//! Key event data
+	class CKeyInfo {
+	public:
+		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
+
+	public:
+		KeyID			m_key;
+		KeyModifierMask	m_mask;
+		KeyButton		m_button;
+		SInt32			m_count;
+	};
+	//! Button event data
+	class CButtonInfo {
+	public:
+		static CButtonInfo* alloc(ButtonID);
+
+	public:
+		ButtonID		m_button;
+	};
+	//! Motion event data
+	class CMotionInfo {
+	public:
+		static CMotionInfo* alloc(SInt32 x, SInt32 y);
+
+	public:
+		SInt32			m_x;
+		SInt32			m_y;
+	};
+	//! Wheel motion event data
+	class CWheelInfo {
+	public:
+		static CWheelInfo* alloc(SInt32);
+
+	public:
+		SInt32			m_wheel;
+	};
+
 	//! @name manipulators
 	//@{
 
@@ -58,9 +97,19 @@ public:
 
 	//! Test if mouse is pressed
 	/*!
-	Return true if any mouse button is currently pressed.
+	Return true if any mouse button is currently pressed.  Ideally,
+	"current" means up to the last processed event but it can mean
+	the current physical mouse button state.
 	*/
 	virtual bool		isAnyMouseButtonDown() const = 0;
+
+	//! Get current modifier key state
+	/*!
+	Returns the current modifier key state.  Ideally, "current" means
+	up to the lat processed event but it can mean the current physical
+	modifier key state.
+	*/
+	virtual KeyModifierMask	getActiveModifiers() const = 0;
 
 	//! Get cursor center position
 	/*!
@@ -76,7 +125,47 @@ public:
 	*/
 	virtual const char*	getKeyName(KeyButton) const = 0;
 
+	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
+	static CEvent::Type	getKeyDownEvent();
+	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
+	static CEvent::Type	getKeyUpEvent();
+	//! Get key repeat event type.  Event data is CKeyInfo*.
+	static CEvent::Type	getKeyRepeatEvent();
+	//! Get button down event type.  Event data is CButtonInfo*.
+	static CEvent::Type	getButtonDownEvent();
+	//! Get button up event type.  Event data is CButtonInfo*.
+	static CEvent::Type	getButtonUpEvent();
+	//! Get mouse motion on the primary screen event type
+	/*!
+	Event data is CMotionInfo* and the values are an absolute position.
+	*/
+	static CEvent::Type	getMotionOnPrimaryEvent();
+	//! Get mouse motion on a secondary screen event type
+	/*!
+	Event data is CMotionInfo* and the values are motion deltas not
+	absolute coordinates.
+	*/
+	static CEvent::Type	getMotionOnSecondaryEvent();
+	//! Get mouse wheel event type.  Event data is CWheelInfo*.
+	static CEvent::Type	getWheelEvent();
+	//! Get screensaver activated event type
+	static CEvent::Type	getScreensaverActivatedEvent();
+	//! Get screensaver deactivated event type
+	static CEvent::Type	getScreensaverDeactivatedEvent();
+
 	//@}
+
+private:
+	static CEvent::Type	s_keyDownEvent;
+	static CEvent::Type	s_keyUpEvent;
+	static CEvent::Type	s_keyRepeatEvent;
+	static CEvent::Type	s_buttonDownEvent;
+	static CEvent::Type	s_buttonUpEvent;
+	static CEvent::Type	s_motionPrimaryEvent;
+	static CEvent::Type	s_motionSecondaryEvent;
+	static CEvent::Type	s_wheelEvent;
+	static CEvent::Type	s_ssActivatedEvent;
+	static CEvent::Type	s_ssDeactivatedEvent;
 };
 
 #endif

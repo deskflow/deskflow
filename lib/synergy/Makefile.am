@@ -30,7 +30,7 @@ libsynergy_a_SOURCES = 			\
 	CProtocolUtil.cpp			\
 	CScreen.cpp					\
 	IClipboard.cpp				\
-	IPlatformScreen.cpp			\
+	IPrimaryScreen.cpp			\
 	IScreen.cpp					\
 	XScreen.cpp					\
 	XSynergy.cpp				\

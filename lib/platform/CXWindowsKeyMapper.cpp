@@ -173,21 +173,21 @@ CXWindowsKeyMapper::update(Display* display, IKeyState* keyState)
 	// transfer to our state
 	for (UInt32 i = 0, j = 0; i < 32; j += 8, ++i) {
 		if ((keys[i] & 0x01) != 0)
-			keyState->setKeyDown(j + 0);
+			keyState->setKeyDown(j + 0, true);
 		if ((keys[i] & 0x02) != 0)
-			keyState->setKeyDown(j + 1);
+			keyState->setKeyDown(j + 1, true);
 		if ((keys[i] & 0x04) != 0)
-			keyState->setKeyDown(j + 2);
+			keyState->setKeyDown(j + 2, true);
 		if ((keys[i] & 0x08) != 0)
-			keyState->setKeyDown(j + 3);
+			keyState->setKeyDown(j + 3, true);
 		if ((keys[i] & 0x10) != 0)
-			keyState->setKeyDown(j + 4);
+			keyState->setKeyDown(j + 4, true);
 		if ((keys[i] & 0x20) != 0)
-			keyState->setKeyDown(j + 5);
+			keyState->setKeyDown(j + 5, true);
 		if ((keys[i] & 0x40) != 0)
-			keyState->setKeyDown(j + 6);
+			keyState->setKeyDown(j + 6, true);
 		if ((keys[i] & 0x80) != 0)
-			keyState->setKeyDown(j + 7);
+			keyState->setKeyDown(j + 7, true);
 	}
 
 	// set toggle modifier states

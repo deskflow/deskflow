@@ -20,7 +20,6 @@
 #include "ISecondaryScreen.h"
 #include "ClipboardTypes.h"
 #include "OptionTypes.h"
-#include "CEvent.h"
 
 class IClipboard;
 class IKeyState;
@@ -29,51 +28,11 @@ class IKeyState;
 /*!
 This interface defines the methods common to all platform dependent
 screen implementations that are used by both primary and secondary
-screens.  A platform screen is expected to post the events defined
-in \c IScreen when appropriate.  It should also post events defined
-in \c IPlatformScreen if acting as the primary screen.  The target
-on the events should be the value returned by \c getEventTarget().
+screens.
 */
 class IPlatformScreen : public IScreen,
 				public IPrimaryScreen, public ISecondaryScreen {
 public:
-	//! Key event data
-	class CKeyInfo {
-	public:
-		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
-
-	public:
-		KeyID			m_key;
-		KeyModifierMask	m_mask;
-		KeyButton		m_button;
-		SInt32			m_count;
-	};
-	//! Button event data
-	class CButtonInfo {
-	public:
-		static CButtonInfo* alloc(ButtonID);
-
-	public:
-		ButtonID		m_button;
-	};
-	//! Motion event data
-	class CMotionInfo {
-	public:
-		static CMotionInfo* alloc(SInt32 x, SInt32 y);
-
-	public:
-		SInt32			m_x;
-		SInt32			m_y;
-	};
-	//! Wheel motion event data
-	class CWheelInfo {
-	public:
-		static CWheelInfo* alloc(SInt32);
-
-	public:
-		SInt32			m_wheel;
-	};
-
 	//! @name manipulators
 	//@{
 
@@ -167,7 +126,8 @@ public:
 
 	//! Get keyboard state
 	/*!
-	Put the current keyboard state into the IKeyState passed to \c open().
+	Put the current keyboard state into the IKeyState passed to
+	\c setKeyState().
 	*/
 	virtual void		updateKeys() = 0;
 
@@ -187,34 +147,6 @@ public:
 	*/
 	virtual bool		isPrimary() const = 0;
 
-	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
-	static CEvent::Type	getKeyDownEvent();
-	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
-	static CEvent::Type	getKeyUpEvent();
-	//! Get key repeat event type.  Event data is CKeyInfo*.
-	static CEvent::Type	getKeyRepeatEvent();
-	//! Get button down event type.  Event data is CButtonInfo*.
-	static CEvent::Type	getButtonDownEvent();
-	//! Get button up event type.  Event data is CButtonInfo*.
-	static CEvent::Type	getButtonUpEvent();
-	//! Get mouse motion on the primary screen event type
-	/*!
-	Event data is CMotionInfo* and the values are an absolute position.
-	*/
-	static CEvent::Type	getMotionOnPrimaryEvent();
-	//! Get mouse motion on a secondary screen event type
-	/*!
-	Event data is CMotionInfo* and the values are motion deltas not
-	absolute coordinates.
-	*/
-	static CEvent::Type	getMotionOnSecondaryEvent();
-	//! Get mouse wheel event type.  Event data is CWheelInfo*.
-	static CEvent::Type	getWheelEvent();
-	//! Get screensaver activated event type
-	static CEvent::Type	getScreensaverActivatedEvent();
-	//! Get screensaver deactivated event type
-	static CEvent::Type	getScreensaverDeactivatedEvent();
-
 	//@}
 
 	// IScreen overrides
@@ -229,6 +161,7 @@ public:
 	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
 	virtual SInt32		getJumpZoneSize() const = 0;
 	virtual bool		isAnyMouseButtonDown() const = 0;
+	virtual KeyModifierMask	getActiveModifiers() const = 0;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 	virtual const char*	getKeyName(KeyButton) const = 0;
 
@@ -243,17 +176,32 @@ public:
 							KeyModifierMask desiredMask,
 							bool isAutoRepeat) const = 0;
 
-private:
-	static CEvent::Type	s_keyDownEvent;
-	static CEvent::Type	s_keyUpEvent;
-	static CEvent::Type	s_keyRepeatEvent;
-	static CEvent::Type	s_buttonDownEvent;
-	static CEvent::Type	s_buttonUpEvent;
-	static CEvent::Type	s_motionPrimaryEvent;
-	static CEvent::Type	s_motionSecondaryEvent;
-	static CEvent::Type	s_wheelEvent;
-	static CEvent::Type	s_ssActivatedEvent;
-	static CEvent::Type	s_ssDeactivatedEvent;
+protected:
+	//! Handle system event
+	/*!
+	A platform screen is expected to install a handler for system
+	events in its c'tor like so:
+	\code
+	EVENTQUEUE->adoptHandler(CEvent::kSystem,
+	 					 IEventQueue::getSystemTarget(),
+	 					 new TMethodEventJob<IPlatformScreen>(this,
+	 						 &IPlatformScreen::handleSystemEvent));
+	\endcode
+	It should remove the handler in its d'tor.  Override the
+	\c handleSystemEvent() method to process system events.
+	It should post the events \c IScreen as appropriate.
+
+	A primary screen has further responsibilities.  It should post
+	the events in \c IPrimaryScreen as appropriate.  It should also
+	call \c setKeyDown() on the \c IKeyState passed to \c setKeyState()
+	whenever a key is pressed or released (but not for key repeats).
+	And it should call \c updateKeys() on the \c IKeyState if necessary
+	when the keyboard mapping changes.
+
+	The target of all events should be the value returned by
+	\c getEventTarget().
+	*/
+	virtual void		handleSystemEvent(const CEvent& event, void*) = 0;
 };
 
 #endif

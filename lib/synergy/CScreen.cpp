@@ -394,21 +394,22 @@ CScreen::isLockedToScreen() const
 		return true;
 	}
 
-	// we don't keep primary key state up to date so get the
-	// current state.
-	const_cast<CScreen*>(this)->updateKeys();
-
-	// check for scroll lock toggled on
-	if (isModifierActive(KeyModifierScrollLock)) {
-		LOG((CLOG_DEBUG "locked by scroll lock"));
-		return true;
-	}
-
 	// check for any pressed key
 	KeyButton key = isAnyKeyDown();
 	if (key != 0) {
-		LOG((CLOG_DEBUG "locked by %s", m_screen->getKeyName(key)));
-		return true;
+		// double check current state of the keys.  this shouldn't
+		// be necessary but we don't seem to get some key release
+		// events sometimes.  this is an emergency backup so the
+		// client doesn't get stuck on the screen.
+		const_cast<CScreen*>(this)->updateKeys();
+		KeyButton key2 = isAnyKeyDown();
+		if (key2 != 0) {
+			LOG((CLOG_DEBUG "locked by %s", m_screen->getKeyName(key2)));
+			return true;
+		}
+		else {
+			LOG((CLOG_DEBUG "spuriously locked by %s", m_screen->getKeyName(key)));
+		}
 	}
 
 	// not locked
@@ -476,6 +477,7 @@ CScreen::updateKeys()
 void
 CScreen::releaseKeys()
 {
+LOG((CLOG_INFO "releaseKeys")); // FIXME
 	// release keys that we've synthesized a press for and only those
 	// keys.  we don't want to synthesize a release on a key the user
 	// is still physically pressing.
@@ -489,9 +491,16 @@ CScreen::releaseKeys()
 }
 
 void
-CScreen::setKeyDown(KeyButton key)
+CScreen::setKeyDown(KeyButton key, bool down)
 {
-	m_keys[key & 0xffu] |= kDown;
+	if (!isHalfDuplex(getMaskForKey(key))) {
+		if (down) {
+			m_keys[key & 0xffu] |= kDown;
+		}
+		else {
+			m_keys[key & 0xffu] &= ~kDown;
+		}
+	}
 }
 
 void
@@ -614,11 +623,11 @@ KeyModifierMask
 CScreen::getActiveModifiers() const
 {
 	if (m_isPrimary) {
-		// we don't keep primary key state up to date so get the
-		// current state.
-		const_cast<CScreen*>(this)->updateKeys();
+		return m_screen->getActiveModifiers();
 	}
-	return m_mask;
+	else {
+		return m_mask;
+	}
 }
 
 bool

@@ -51,9 +51,9 @@ public:
 
 	//! Mark key as being down
 	/*!
-	Sets the state of \c key to down.
+	Sets the state of \c key to down or up.
 	*/
-	virtual void		setKeyDown(KeyButton key) = 0;
+	virtual void		setKeyDown(KeyButton key, bool down) = 0;
 
 	//! Mark modifier as being toggled on
 	/*!

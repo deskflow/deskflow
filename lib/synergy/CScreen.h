@@ -187,10 +187,9 @@ public:
 	//! Get screen lock state
 	/*!
 	Returns true if there's any reason that the user should not be
-	allowed to leave the screen.  Active toggle keys (excluding the
-	scroll lock key) are not be counted as reasons to lock to the
-	screen.  If this method returns true it logs a message on why at
-	the CLOG_DEBUG level.
+	allowed to leave the screen (usually because a button or key is
+	pressed).  If this method returns true it logs a message as to
+	why at the CLOG_DEBUG level.
 	*/
 	bool				isLockedToScreen() const;
 
@@ -221,7 +220,7 @@ public:
 	// IKeyState overrides
 	virtual void		updateKeys();
 	virtual void		releaseKeys();
-	virtual void		setKeyDown(KeyButton key);
+	virtual void		setKeyDown(KeyButton key, bool);
 	virtual void		setToggled(KeyModifierMask);
 	virtual void		addModifier(KeyModifierMask, KeyButtons&);
 	virtual void		setToggleState(KeyModifierMask);

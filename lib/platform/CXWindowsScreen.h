@@ -67,6 +67,7 @@ public:
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
+	virtual KeyModifierMask	getActiveModifiers() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 	virtual const char*	getKeyName(KeyButton) const;
 
@@ -123,7 +124,7 @@ private:
 
 	bool				grabMouseAndKeyboard();
 	void				onKeyPress(XKeyEvent&);
-	void				onKeyRelease(XKeyEvent&);
+	void				onKeyRelease(XKeyEvent&, bool isRepeat);
 	void				onMousePress(const XButtonEvent&);
 	void				onMouseRelease(const XButtonEvent&);
 	void				onMouseMove(const XMotionEvent&);

@@ -184,8 +184,8 @@ CXWindowsScreen::CXWindowsScreen(bool isPrimary) :
 
 	// install event handlers
 	EVENTQUEUE->adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
-							new TMethodEventJob<CXWindowsScreen>(this,
-								&CXWindowsScreen::handleSystemEvent));
+							new TMethodEventJob<IPlatformScreen>(this,
+								&IPlatformScreen::handleSystemEvent));
 
 	// install the platform event queue
 	EVENTQUEUE->adoptBuffer(new CXWindowsEventQueueBuffer(m_display, m_window));
@@ -243,6 +243,9 @@ CXWindowsScreen::enable()
 
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
+	}
+	else {
+		m_keyState->updateKeys();
 	}
 }
 
@@ -544,6 +547,21 @@ CXWindowsScreen::isAnyMouseButtonDown() const
 	return false;
 }
 
+KeyModifierMask
+CXWindowsScreen::getActiveModifiers() const
+{
+	// query the pointer to get the modifier state
+	Window root, window;
+	int xRoot, yRoot, xWindow, yWindow;
+	unsigned int state;
+	if (XQueryPointer(m_display, m_root, &root, &window,
+								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
+		return m_keyMapper.mapModifier(state);
+	}
+
+	return 0;
+}
+
 void
 CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 {
@@ -841,11 +859,48 @@ CXWindowsScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id)
 	sendEvent(type, info);
 }
 
+Bool
+CXWindowsScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
+{
+	CKeyEventFilter* filter = reinterpret_cast<CKeyEventFilter*>(arg);
+	return (xevent->type         == filter->m_event &&
+			xevent->xkey.window  == filter->m_window &&
+			xevent->xkey.time    == filter->m_time &&
+			xevent->xkey.keycode == filter->m_keycode) ? True : False;
+}
+
 void
 CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 {
 	XEvent* xevent = reinterpret_cast<XEvent*>(event.getData());
 	assert(xevent != NULL);
+
+	// update key state
+	bool isRepeat = false;
+	if (m_isPrimary) {
+		if (xevent->type == KeyRelease) {
+			// check if this is a key repeat by getting the next
+			// KeyPress event that has the same key and time as
+			// this release event, if any.  first prepare the
+			// filter info.
+			CKeyEventFilter filter;
+			filter.m_event   = KeyPress;
+			filter.m_window  = xevent->xkey.window;
+			filter.m_time    = xevent->xkey.time;
+			filter.m_keycode = xevent->xkey.keycode;
+			XEvent xevent2;
+			isRepeat = (XCheckIfEvent(m_display, &xevent2,
+							&CXWindowsScreen::findKeyEvent,
+							(XPointer)&filter) == True);
+		}
+
+		if (xevent->type == KeyPress || xevent->type == KeyRelease) {
+			if (!isRepeat) {
+				m_keyState->setKeyDown(xevent->xkey.keycode,
+							xevent->type == KeyPress);
+			}
+		}
+	}
 
 	// let input methods try to handle event first
 	if (m_ic != NULL) {
@@ -977,7 +1032,7 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 
 	case KeyRelease:
 		if (m_isPrimary) {
-			onKeyRelease(xevent->xkey);
+			onKeyRelease(xevent->xkey, isRepeat);
 		}
 		return;
 
@@ -1037,41 +1092,12 @@ CXWindowsScreen::onKeyPress(XKeyEvent& xkey)
 	}
 }
 
-Bool
-CXWindowsScreen::findKeyEvent(Display*, XEvent* xevent, XPointer arg)
-{
-	CKeyEventFilter* filter = reinterpret_cast<CKeyEventFilter*>(arg);
-	return (xevent->type         == filter->m_event &&
-			xevent->xkey.window  == filter->m_window &&
-			xevent->xkey.time    == filter->m_time &&
-			xevent->xkey.keycode == filter->m_keycode) ? True : False;
-}
-
 void
-CXWindowsScreen::onKeyRelease(XKeyEvent& xkey)
+CXWindowsScreen::onKeyRelease(XKeyEvent& xkey, bool isRepeat)
 {
 	const KeyModifierMask mask = m_keyMapper.mapModifier(xkey.state);
 	KeyID key                  = mapKeyFromX(&xkey);
 	if (key != kKeyNone) {
-		// check if this is a key repeat by getting the next
-		// KeyPress event that has the same key and time as
-		// this release event, if any.  first prepare the
-		// filter info.
-		CKeyEventFilter filter;
-		filter.m_event   = KeyPress;
-		filter.m_window  = xkey.window;
-		filter.m_time    = xkey.time;
-		filter.m_keycode = xkey.keycode;
-
-		// now check for event
-		bool hasPress;
-		{
-			XEvent xevent2;
-			hasPress = (XCheckIfEvent(m_display, &xevent2,
-							&CXWindowsScreen::findKeyEvent,
-							(XPointer)&filter) == True);
-		}
-
 		// check for ctrl+alt+del emulation
 		if ((key == kKeyPause || key == kKeyBreak) &&
 			(mask & (KeyModifierControl | KeyModifierAlt)) ==
@@ -1079,11 +1105,11 @@ CXWindowsScreen::onKeyRelease(XKeyEvent& xkey)
 			// pretend it's ctrl+alt+del and ignore autorepeat
 			LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
 			key      = kKeyDelete;
-			hasPress = false;
+			isRepeat = false;
 		}
 
 		KeyButton keycode = static_cast<KeyButton>(xkey.keycode);
-		if (!hasPress) {
+		if (!isRepeat) {
 			// no press event follows so it's a plain release
 			LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", keycode, xkey.state));
 			KeyModifierMask keyMask = m_keyState->getMaskForKey(keycode);
