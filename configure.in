@@ -54,7 +54,6 @@ dnl checks for system services
 
 
 dnl adjust variables for X11 and pthreads
-LIBS="$X_PRE_LIBS $LIBS $X_EXTRA_LIBS $X_LIBS $PTHREAD_LIBS"
 CFLAGS="$CFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
 CXXFLAGS="$CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
 CC="$PTHREAD_CC"

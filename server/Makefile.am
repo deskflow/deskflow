@@ -20,9 +20,10 @@ synergyd_LDADD =					\
 	$(DEPTH)/io/libio.a				\
 	$(DEPTH)/mt/libmt.a				\
 	$(DEPTH)/base/libbase.a			\
+	$(X_LIBS)						\
+	$(X_PRE_LIBS)					\
 	-lX11							\
-	-lXext							\
-	-lXtst							\
+	$(X_EXTRA_LIBS)					\
 	$(NULL)
 INCLUDES =					\
 	-I$(DEPTH)/base 		\
