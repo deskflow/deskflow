@@ -180,7 +180,8 @@ solutions:
 <li>failed to open screen (X11 only)
 <p>
       Check permission to open the X display;<br>
-      check that the DISPLAY environment variable is set.
+      check that the DISPLAY environment variable is set;<br>
+      use the <span class="code">--display</span> command line option.
 </p>
 <li>already connected
 <p>
@@ -242,6 +243,11 @@ and <span class="code">synergyc</span>.
     <td></td><td>run as a daemon (Unix) or background (Windows)</td>
   </tr>
   <tr>
+    <td>&nbsp;</td><td><span class="code">&nbsp;</span></td>
+    <td><span class="code">--display <span class="arg">display</span></span></td>
+    <td>&nbsp;&nbsp;</td><td>connect to X server at <span class="arg">display</span> (X11 only)</td>
+  </tr>
+  <tr>
     <td>&nbsp;</td><td><span class="code">-f,</span></td>
     <td><span class="code">--no-daemon</span></td>
     <td></td><td>run in the foreground</td>
@@ -270,8 +276,9 @@ and <span class="code">synergyc</span>.
     <td>&nbsp;</td><td><span class="code"></span></td>
     <td><span class="code">--version</span></td>
     <td></td><td>print version information and exit</td>
-  </tr>      
+  </tr>
 </table>
+</p>
 <p>
 Debug levels are from highest to lowest:  <span class="code">FATAL</span>,
 <span class="code">ERROR</span>, <span class="code">WARNING</span>,
