@@ -646,6 +646,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionXTestXineramaUnaware) {
 		return "xtestIsXineramaUnaware";
 	}
+	if (id == kOptionIgnoreNumLock) {
+		return "ignoreNumLock";
+	}
 	return NULL;
 }
 
@@ -655,7 +658,8 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 	if (id == kOptionHalfDuplexCapsLock ||
 		id == kOptionHalfDuplexNumLock ||
 		id == kOptionScreenSaverSync ||
-		id == kOptionXTestXineramaUnaware) {
+		id == kOptionXTestXineramaUnaware ||
+		id == kOptionIgnoreNumLock) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||
@@ -889,6 +893,10 @@ CConfig::readSectionScreens(std::istream& s)
 			}
 			else if (name == "xtestIsXineramaUnaware") {
 				addOption(screen, kOptionXTestXineramaUnaware,
+					parseBoolean(value));
+			}
+			else if (name == "ignoreNumLock") {
+				addOption(screen, kOptionIgnoreNumLock,
 					parseBoolean(value));
 			}
 			else {

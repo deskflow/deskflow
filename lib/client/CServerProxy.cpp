@@ -445,6 +445,11 @@ CServerProxy::enter()
 		m_seqNum        = seqNum;
 	}
 
+	// ignore num lock if so desired
+	if (m_ignoreNumLock) {
+		mask &= ~KeyModifierNumLock;
+	}
+
 	// forward
 	getClient()->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
 }
@@ -520,6 +525,12 @@ CServerProxy::keyDown()
 		mask2 != static_cast<KeyModifierMask>(mask))
 		LOG((CLOG_DEBUG1 "key down translated to id=%d, mask=0x%04x", id2, mask2));
 
+	// ignore num lock if so desired
+	if (id2 == kKeyNumLock && m_ignoreNumLock) {
+		LOG((CLOG_DEBUG1 "ignoring num lock"));
+		return;
+	}
+
 	// forward
 	getClient()->keyDown(id2, mask2, button);
 }
@@ -544,6 +555,12 @@ CServerProxy::keyRepeat()
 		mask2 != static_cast<KeyModifierMask>(mask))
 		LOG((CLOG_DEBUG1 "key repeat translated to id=%d, mask=0x%04x", id2, mask2));
 
+	// ignore num lock if so desired
+	if (id2 == kKeyNumLock && m_ignoreNumLock) {
+		LOG((CLOG_DEBUG1 "ignoring num lock"));
+		return;
+	}
+
 	// forward
 	getClient()->keyRepeat(id2, mask2, count, button);
 }
@@ -566,6 +583,12 @@ CServerProxy::keyUp()
 	if (id2   != static_cast<KeyID>(id) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
 		LOG((CLOG_DEBUG1 "key up translated to id=%d, mask=0x%04x", id2, mask2));
+
+	// ignore num lock if so desired
+	if (id2 == kKeyNumLock && m_ignoreNumLock) {
+		LOG((CLOG_DEBUG1 "ignoring num lock"));
+		return;
+	}
 
 	// forward
 	getClient()->keyUp(id2, mask2, button);
@@ -684,6 +707,9 @@ CServerProxy::resetOptions()
 	if (m_heartRate >= 0.0) {
 		CProtocolUtil::writef(getOutputStream(), kMsgCNoop);
 	}
+
+	// don't ignore num lock
+	m_ignoreNumLock = false;
 }
 
 void
@@ -725,6 +751,9 @@ CServerProxy::setOptions()
 			if (m_heartRate >= 0.0) {
 				CProtocolUtil::writef(getOutputStream(), kMsgCNoop);
 			}
+		}
+		else if (options[i] == kOptionIgnoreNumLock) {
+			m_ignoreNumLock = true;
 		}
 		if (id != kKeyModifierIDNull) {
 			m_modifierTranslationTable[id] =
