@@ -68,6 +68,7 @@ CServer::CServer(const CString& serverName) :
 	m_switchTwoTapDelay(0.0),
 	m_switchTwoTapEngaged(false),
 	m_switchTwoTapArmed(false),
+	m_switchTwoTapZone(3),
 	m_status(kNotRunning)
 {
 	// do nothing
@@ -726,8 +727,16 @@ CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
 		dir = kBottom;
 	}
 	else {
-		// still on local screen
-		onNoSwitch();
+		// still on local screen.  check if we're inside the tap region.
+		SInt32 tapZone = (zoneSize < m_switchTwoTapZone) ?
+							m_switchTwoTapZone : zoneSize;
+		bool inTapZone = (x <  ax + tapZone ||
+						  x >= ax + aw - tapZone ||
+						  y <  ay + tapZone ||
+						  y >= ay + ah - tapZone);
+
+		// failed to switch
+		onNoSwitch(inTapZone);
 		return false;
 	}
 
@@ -831,7 +840,17 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 					break;
 				}
 				if (clearWait) {
-					onNoSwitch();
+					// still on local screen.  check if we're inside the
+					// tap region.
+					SInt32 tapZone = (zoneSize < m_switchTwoTapZone) ?
+										m_switchTwoTapZone : zoneSize;
+					bool inTapZone = (m_x <  ax + tapZone ||
+									  m_x >= ax + aw - tapZone ||
+									  m_y <  ay + tapZone ||
+									  m_y >= ay + ah - tapZone);
+
+					// failed to switch
+					onNoSwitch(inTapZone);
 				}
 			}
 
@@ -1290,7 +1309,7 @@ CServer::isSwitchOkay(IClient* newScreen, EDirection dir, SInt32 x, SInt32 y)
 }
 
 void
-CServer::onNoSwitch()
+CServer::onNoSwitch(bool inTapZone)
 {
 	if (m_switchTwoTapEngaged) {
 		if (m_switchTwoTapTimer.getTime() > m_switchTwoTapDelay) {
@@ -1298,7 +1317,7 @@ CServer::onNoSwitch()
 			m_switchTwoTapEngaged = false;
 			m_switchTwoTapArmed   = false;
 		}
-		else {
+		else if (!inTapZone) {
 			// we've moved away from the edge and there's still
 			// time to get back for a double tap.
 			m_switchTwoTapArmed = true;

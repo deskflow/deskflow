@@ -258,7 +258,7 @@ private:
 
 	// update switch state due to a mouse move that doesn't try to
 	// switch screens.
-	void				onNoSwitch();
+	void				onNoSwitch(bool inTapZone);
 
 	// reset switch wait state
 	void				clearSwitchState();
@@ -403,6 +403,7 @@ private:
 	CStopwatch			m_switchTwoTapTimer;
 	bool				m_switchTwoTapEngaged;
 	bool				m_switchTwoTapArmed;
+	SInt32				m_switchTwoTapZone;
 
 	// the status change jobs and status
 	CJobList			m_statusJobs;
