@@ -19,10 +19,13 @@
 #define SYNERGY_MSG_MARK			WM_APP + 0x0011	// mark id; <unused>
 #define SYNERGY_MSG_KEY				WM_APP + 0x0012	// vk code; key data
 #define SYNERGY_MSG_MOUSE_BUTTON	WM_APP + 0x0013	// button msg; <unused>
-#define SYNERGY_MSG_MOUSE_MOVE		WM_APP + 0x0014	// x; y
-#define SYNERGY_MSG_POST_WARP		WM_APP + 0x0015	// x; y
-#define SYNERGY_MSG_MOUSE_WHEEL		WM_APP + 0x0016	// delta; <unused>
-#define SYNERGY_MSG_SCREEN_SAVER	WM_APP + 0x0017	// activated; <unused>
+#define SYNERGY_MSG_MOUSE_WHEEL		WM_APP + 0x0014	// delta; <unused>
+#define SYNERGY_MSG_MOUSE_MOVE		WM_APP + 0x0015	// x; y
+#define SYNERGY_MSG_POST_WARP		WM_APP + 0x0016	// <unused>; <unused>
+#define SYNERGY_MSG_PRE_WARP		WM_APP + 0x0017	// x; y
+#define SYNERGY_MSG_SCREEN_SAVER	WM_APP + 0x0018	// activated; <unused>
+#define SYNERGY_MSG_INPUT_FIRST		SYNERGY_MSG_KEY
+#define SYNERGY_MSG_INPUT_LAST		SYNERGY_MSG_PRE_WARP
 
 extern "C" {
 

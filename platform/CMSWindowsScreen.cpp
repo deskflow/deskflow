@@ -1,6 +1,7 @@
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsClipboard.h"
 #include "CMSWindowsScreenSaver.h"
+#include "CPlatform.h"
 #include "CClipboard.h"
 #include "IMSWindowsScreenEventHandler.h"
 #include "IScreenReceiver.h"
@@ -35,6 +36,7 @@ CMSWindowsScreen::CMSWindowsScreen(IScreenReceiver* receiver,
 	m_class(NULL),
 	m_icon(NULL),
 	m_cursor(NULL),
+	m_is95Family(CPlatform::isWindows95Family()),
 	m_window(NULL),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
@@ -206,7 +208,11 @@ CMSWindowsScreen::mainLoop()
 void
 CMSWindowsScreen::exitMainLoop()
 {
+	// post an arbitrary message after the quit because
+	// MsgWaitForMultipleObjects() is broken and might not wake up if
+	// just WM_QUIT is in the queue.
 	PostThreadMessage(m_threadID, WM_QUIT, 0, 0);
+	PostThreadMessage(m_threadID, WM_APP + 1, 0, 0);
 }
 
 void

@@ -19,8 +19,7 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 	m_threadID(0),
 	m_window(NULL),
 	m_mark(0),
-	m_markReceived(0),
-	m_mouseMoveIgnore(0)
+	m_markReceived(0)
 {
 	assert(m_receiver != NULL);
 
@@ -71,9 +70,15 @@ CMSWindowsPrimaryScreen::reconfigure(UInt32 activeSides)
 void
 CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
-	// set the cursor position without generating an event
-// FIXME -- doesn't this generate an event anyway?
-	SetCursorPos(x, y);
+	// warp mouse
+	warpCursorNoFlush(x, y);
+
+	// remove all input events before and including warp
+	MSG msg;
+	while (PeekMessage(&msg, NULL, SYNERGY_MSG_INPUT_FIRST,
+								SYNERGY_MSG_INPUT_LAST, PM_REMOVE)) {
+		// do nothing
+	}
 
 	// save position as last position
 	m_x = x;
@@ -165,7 +170,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 
 	case SYNERGY_MSG_KEY:
 		// ignore message if posted prior to last mark change
-		if (m_markReceived == m_mark) {
+		if (!ignore()) {
 			KeyModifierMask mask;
 			const KeyID key = mapKey(msg->wParam, msg->lParam, &mask);
 			if (key != kKeyNone) {
@@ -201,7 +206,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 
 	case SYNERGY_MSG_MOUSE_BUTTON:
 		// ignore message if posted prior to last mark change
-		if (m_markReceived == m_mark) {
+		if (!ignore()) {
 			static const int s_vkButton[] = {
 				0,				// kButtonNone
 				VK_LBUTTON,		// kButtonLeft, etc.
@@ -236,52 +241,64 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 
 	case SYNERGY_MSG_MOUSE_WHEEL:
 		// ignore message if posted prior to last mark change
-		if (m_markReceived == m_mark) {
-			log((CLOG_ERR "event: button wheel delta=%d %d", msg->wParam, msg->lParam));
+		if (!ignore()) {
+			log((CLOG_DEBUG1 "event: button wheel delta=%d %d", msg->wParam, msg->lParam));
 			m_receiver->onMouseWheel(msg->wParam);
 		}
 		return true;
 
+	case SYNERGY_MSG_PRE_WARP:
+		{
+			// save position to compute delta of next motion
+			m_x = static_cast<SInt32>(msg->wParam);
+			m_y = static_cast<SInt32>(msg->lParam);
+
+			// we warped the mouse.  discard events until we find the
+			// matching post warp event.  see warpCursorNoFlush() for
+			// where the events are sent.  we discard the matching
+			// post warp event and can be sure we've skipped the warp
+			// event.
+			MSG msg;
+			do {
+				GetMessage(&msg, NULL, SYNERGY_MSG_MOUSE_MOVE,
+										SYNERGY_MSG_POST_WARP);
+			} while (msg.message != SYNERGY_MSG_POST_WARP);
+
+			return true;
+		}
+
+	case SYNERGY_MSG_POST_WARP:
+		log((CLOG_WARN "unmatched post warp"));
+		return true;
+
 	case SYNERGY_MSG_MOUSE_MOVE:
 		// ignore message if posted prior to last mark change
-		if (m_markReceived == m_mark) {
-			SInt32 x = static_cast<SInt32>(msg->wParam);
-			SInt32 y = static_cast<SInt32>(msg->lParam);
+		if (!ignore()) {
+			// compute motion delta (relative to the last known
+			// mouse position)
+			SInt32 x = static_cast<SInt32>(msg->wParam) - m_x;
+			SInt32 y = static_cast<SInt32>(msg->lParam) - m_y;
+
+			// save position to compute delta of next motion
+			m_x = static_cast<SInt32>(msg->wParam);
+			m_y = static_cast<SInt32>(msg->lParam);
+
 			if (!isActive()) {
-				m_receiver->onMouseMovePrimary(x, y);
+				// motion on primary screen
+				m_receiver->onMouseMovePrimary(m_x, m_y);
 			}
 			else {
-				// compute motion delta.  this is relative to the
-				// last known mouse position.
-				x  -= m_x;
-				y  -= m_y;
+				// motion on secondary screen.  warp mouse back to
+				// center.
+				if (x != 0 || y != 0) {
+					// back to center
+					warpCursorNoFlush(m_xCenter, m_yCenter);
 
-				// save position to compute delta of next motion
-				m_x = static_cast<SInt32>(msg->wParam);
-				m_y = static_cast<SInt32>(msg->lParam);
-
-				// ignore if the mouse didn't move or we're ignoring
-				// motion.
-				if (m_mouseMoveIgnore == 0) {
-					if (x != 0 || y != 0) {
-						// back to center
-						warpCursorToCenter();
-
-						// send motion
-						m_receiver->onMouseMoveSecondary(x, y);
-					}
-				}
-				else {
-					// ignored one more motion event
-					--m_mouseMoveIgnore;
+					// send motion
+					m_receiver->onMouseMoveSecondary(x, y);
 				}
 			}
 		}
-		return true;
-
-	case SYNERGY_MSG_POST_WARP:
-		m_x = static_cast<SInt32>(msg->wParam);
-		m_y = static_cast<SInt32>(msg->lParam);
 		return true;
 	}
 
@@ -414,9 +431,6 @@ CMSWindowsPrimaryScreen::onPreEnter()
 {
 	assert(m_window != NULL);
 
-	// reset motion ignore count
-	m_mouseMoveIgnore = 0;
-
 	// enable ctrl+alt+del, alt+tab, etc
 	if (m_is95Family) {
 		DWORD dummy = 0;
@@ -450,23 +464,11 @@ CMSWindowsPrimaryScreen::onPostLeave(bool success)
 		// relay all mouse and keyboard events
 		m_setRelay(true);
 
-		// ignore this many mouse motion events (not including the already
-		// queued events).  on (at least) the win2k login desktop, one
-		// motion event is reported using a position from before the above
-		// warpCursor().  i don't know why it does that and other desktops
-		// don't have the same problem.  anyway, simply ignoring that event
-		// works around it.
-// FIXME -- is this true now that we're using mouse_event?
-		m_mouseMoveIgnore = 1;
-
 		// disable ctrl+alt+del, alt+tab, etc
 		if (m_is95Family) {
 			DWORD dummy = 0;
 			SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, TRUE, &dummy, 0);
 		}
-
-		// discard messages until after the warp
-		nextMark();
 	}
 }
 
@@ -550,16 +552,21 @@ CMSWindowsPrimaryScreen::hideWindow()
 void
 CMSWindowsPrimaryScreen::warpCursorToCenter()
 {
-	// warp to center.  the extra info tells the hook DLL to send
-	// SYNERGY_MSG_POST_WARP instead of SYNERGY_MSG_MOUSE_MOVE.
-	SInt32 x, y, w, h;
-	m_screen->getShape(x, y, w, h);
-	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE,
-						(DWORD)((65535.99 * (m_xCenter - x)) / (w - 1)),
-						(DWORD)((65535.99 * (m_yCenter - y)) / (h - 1)),
-						0,
-						0x12345678);
-// FIXME -- ignore mouse until we get warp notification?
+	warpCursor(m_xCenter, m_yCenter);
+}
+
+void
+CMSWindowsPrimaryScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
+{
+	// send an event that we can recognize before the mouse warp
+	PostThreadMessage(m_threadID, SYNERGY_MSG_PRE_WARP, x, y);
+
+	// warp mouse.  hopefully this inserts a mouse motion event
+	// between the previous message and the following message.
+	SetCursorPos(x, y);
+
+	// send an event that we can recognize after the mouse warp
+	PostThreadMessage(m_threadID, SYNERGY_MSG_POST_WARP, 0, 0);
 }
 
 void
@@ -570,6 +577,12 @@ CMSWindowsPrimaryScreen::nextMark()
 
 	// mark point in message queue where the mark was changed
 	PostThreadMessage(m_threadID, SYNERGY_MSG_MARK, m_mark, 0);
+}
+
+bool
+CMSWindowsPrimaryScreen::ignore() const
+{
+	return (m_mark != m_markReceived);
 }
 
 static const KeyID		g_virtualKey[] =
@@ -984,15 +997,14 @@ CMSWindowsPrimaryScreen::mapKey(
 		// set shift state required to generate key
 		BYTE keys[256];
 		memset(keys, 0, sizeof(keys));
-// FIXME -- surely these masks should be different in each if expression
 		if (vkCode & 0x0100) {
-			keys[VK_SHIFT] = 0x80;
+			keys[VK_SHIFT]   = 0x80;
 		}
-		if (vkCode & 0x0100) {
+		if (vkCode & 0x0200) {
 			keys[VK_CONTROL] = 0x80;
 		}
-		if (vkCode & 0x0100) {
-			keys[VK_MENU] = 0x80;
+		if (vkCode & 0x0400) {
+			keys[VK_MENU]    = 0x80;
 		}
 
 		// strip shift state off of virtual key code

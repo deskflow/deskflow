@@ -56,8 +56,14 @@ protected:
 private:
 	void				enterNoWarp();
 
+	// warp cursor without discarding queued events
+	void				warpCursorNoFlush(SInt32 x, SInt32 y);
+
 	// discard posted messages
 	void				nextMark();
+
+	// test if event should be ignored
+	bool				ignore() const;
 
 	// key and button queries
 	KeyID				mapKey(WPARAM keycode, LPARAM info,
@@ -90,9 +96,6 @@ private:
 
 	// position of center pixel of screen
 	SInt32				m_xCenter, m_yCenter;
-
-	// used to ignore mouse motion
-	SInt32				m_mouseMoveIgnore;
 
 	// hook library stuff
 	HINSTANCE			m_hookLibrary;

@@ -155,18 +155,11 @@ CPrimaryScreen::leave()
 	// get keyboard state as we leave
 	updateKeys();
 
-	// warp mouse to center
-	warpCursorToCenter();
-	// FIXME -- this doesn't match the win32 version.  that just does
-	// the warp while we flush the input queue until we find the warp
-	// and we discard that too.  would prefer to at least match our
-	// own warping when we receive MotionNotify;  that just does the
-	// warp.  however, the win32 version sometimes stutters when
-	// leaving and perhaps this is why.  hmm, win32 does ignore the
-	// events until after the warp (via the mark).
-
 	// subclass hook
 	onPostLeave(true);
+
+	// warp mouse to center
+	warpCursorToCenter();
 
 	// local client now active
 	m_active = true;

@@ -47,7 +47,9 @@ public:
 	// primary screen are linked to clients.
 	virtual void		reconfigure(UInt32 activeSides) = 0;
 
-	// warp the cursor to the given absolute coordinates
+	// warp the cursor to the given absolute coordinates.  also
+	// discard input events up to and including the warp before
+	// returning.
 	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
 
 	// set the screen's clipboard contents.  this is usually called
