@@ -354,9 +354,30 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 	static bool gotSendInput     = false;
 	static SendInput_t SendInput = NULL;
 
+	// motion is simple (i.e. it's on the primary monitor) if there
+	// is only one monitor.
+	bool simple = !m_screen->isMultimon();
+	if (!simple) {
+		// also simple if motion is within the primary monitor
+		simple = (x >= 0 && x < GetSystemMetrics(SM_CXSCREEN) &&
+				  y >= 0 && y < GetSystemMetrics(SM_CYSCREEN));
+		if (!simple && !m_is95Family) {
+			// also simple if not on windows 95 family since the
+			// NT family mouse_event() allows absolute moves to
+			// any monitor.
+			//
+			// note -- this is possibly untrue if the primary
+			// monitor isn't upper-left most so limit it to that
+			// situation.
+			SInt32 x0, y0, w, h;
+			m_screen->getShape(x0, y0, w, h);
+			simple = (x0 == 0 && y0 == 0);
+		}
+	}
+
 	// move the mouse directly to target position on NT family or if
 	// not using multiple monitors.
-	if (!m_screen->isMultimon() || !m_is95Family) {
+	if (simple) {
 		SInt32 x0, y0, w, h;
 		m_screen->getShape(x0, y0, w, h);
 		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,

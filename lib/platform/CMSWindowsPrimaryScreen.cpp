@@ -310,8 +310,15 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			m_y = static_cast<SInt32>(msg->lParam);
 
 			if (!isActive()) {
+				// shift by origin of virtual screen.  the synergy
+				// hook DLL does not account for
+				SInt32 w, h;
+				m_screen->getShape(x, y, w, h);
+				x += m_x;
+				y += m_y;
+
 				// motion on primary screen
-				m_receiver->onMouseMovePrimary(m_x, m_y);
+				m_receiver->onMouseMovePrimary(x, y);
 			}
 			else {
 				// motion on secondary screen.  warp mouse back to
