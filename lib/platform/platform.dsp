@@ -95,6 +95,14 @@ SOURCE=.\CMSWindowsClipboardAnyTextConverter.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CMSWindowsClipboardBitmapConverter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardHTMLConverter.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CMSWindowsClipboardTextConverter.cpp
 # End Source File
 # Begin Source File
@@ -136,6 +144,14 @@ SOURCE=.\CMSWindowsClipboard.h
 # Begin Source File
 
 SOURCE=.\CMSWindowsClipboardAnyTextConverter.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardBitmapConverter.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardHTMLConverter.h
 # End Source File
 # Begin Source File
 

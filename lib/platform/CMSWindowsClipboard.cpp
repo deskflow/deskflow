@@ -15,6 +15,8 @@
 #include "CMSWindowsClipboard.h"
 #include "CMSWindowsClipboardTextConverter.h"
 #include "CMSWindowsClipboardUTF16Converter.h"
+#include "CMSWindowsClipboardBitmapConverter.h"
+#include "CMSWindowsClipboardHTMLConverter.h"
 #include "CLog.h"
 #include "CArchMiscWindows.h"
 
@@ -35,6 +37,8 @@ CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
 		// let it do so to avoid text encoding issues.
 		m_converters.push_back(new CMSWindowsClipboardTextConverter);
 	}
+	m_converters.push_back(new CMSWindowsClipboardBitmapConverter);
+	m_converters.push_back(new CMSWindowsClipboardHTMLConverter);
 }
 
 CMSWindowsClipboard::~CMSWindowsClipboard()

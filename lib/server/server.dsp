@@ -103,6 +103,10 @@ SOURCE=.\CClientProxy1_1.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CClientProxy1_2.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CClientProxyUnknown.cpp
 # End Source File
 # Begin Source File
@@ -136,6 +140,10 @@ SOURCE=.\CClientProxy1_0.h
 # Begin Source File
 
 SOURCE=.\CClientProxy1_1.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CClientProxy1_2.h
 # End Source File
 # Begin Source File
 
