@@ -84,8 +84,9 @@ void					CProtocolUtil::readf(IInputStream* stream,
 				case 2:
 					// 2 byte integer
 					*reinterpret_cast<UInt16*>(v) =
+						static_cast<UInt16>(
 						(static_cast<UInt16>(buffer[0]) << 8) |
-						 static_cast<UInt16>(buffer[1]);
+						 static_cast<UInt16>(buffer[1]));
 					log((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt16*>(v), *reinterpret_cast<UInt16*>(v)));
 					break;
 

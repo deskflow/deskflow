@@ -46,9 +46,6 @@ protected:
 	// wait for and get the next message.  cancellable.
 	void				getEvent(MSG*) const;
 
-	// copy the clipboard contents to clipboard
-	void				getDisplayClipboard(IClipboard* clipboard, HWND) const;
-
 	// called by doRun() to handle an event.  return true to skip
 	// event translation and dispatch.
 	virtual bool		onPreTranslate(MSG*) = 0;

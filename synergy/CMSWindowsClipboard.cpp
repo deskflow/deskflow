@@ -20,7 +20,7 @@ CMSWindowsClipboard::~CMSWindowsClipboard()
 
 bool					CMSWindowsClipboard::open(Time time)
 {
-	log((CLOG_INFO "open clipboard"));
+	log((CLOG_DEBUG "open clipboard"));
 
 	if (!OpenClipboard(m_window)) {
 		log((CLOG_WARN "failed to open clipboard"));
@@ -42,14 +42,14 @@ bool					CMSWindowsClipboard::open(Time time)
 
 void					CMSWindowsClipboard::close()
 {
-	log((CLOG_INFO "close clipboard"));
+	log((CLOG_DEBUG "close clipboard"));
 	CloseClipboard();
 }
 
 void					CMSWindowsClipboard::add(
 								EFormat format, const CString& data)
 {
-	log((CLOG_INFO "add %d bytes to clipboard format: %d", data.size(), format));
+	log((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
 
 	if (!OpenClipboard(m_window)) {
 		log((CLOG_WARN "failed to open clipboard"));
