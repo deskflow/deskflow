@@ -200,24 +200,25 @@ CClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty)
 }
 
 void
-CClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask)
+CClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton)
 {
 	LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
-	CProtocolUtil::writef(getOutputStream(), kMsgDKeyDown, key, mask);
+	CProtocolUtil::writef(getOutputStream(), kMsgDKeyDown1_0, key, mask);
 }
 
 void
-CClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count)
+CClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask,
+				SInt32 count, KeyButton)
 {
 	LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count));
-	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask, count);
+	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat1_0, key, mask, count);
 }
 
 void
-CClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask)
+CClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask, KeyButton)
 {
 	LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
-	CProtocolUtil::writef(getOutputStream(), kMsgDKeyUp, key, mask);
+	CProtocolUtil::writef(getOutputStream(), kMsgDKeyUp1_0, key, mask);
 }
 
 void

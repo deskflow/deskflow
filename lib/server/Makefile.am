@@ -27,6 +27,7 @@ noinst_LIBRARIES = libserver.a
 libserver_a_SOURCES = 				\
 	CClientProxy.cpp				\
 	CClientProxy1_0.cpp				\
+	CClientProxy1_1.cpp				\
 	CConfig.cpp						\
 	CHTTPServer.cpp					\
 	CPrimaryClient.cpp				\

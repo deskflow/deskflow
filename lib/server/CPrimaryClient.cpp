@@ -201,19 +201,19 @@ CPrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
 }
 
 void
-CPrimaryClient::keyDown(KeyID, KeyModifierMask)
+CPrimaryClient::keyDown(KeyID, KeyModifierMask, KeyButton)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32)
+CPrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::keyUp(KeyID, KeyModifierMask)
+CPrimaryClient::keyUp(KeyID, KeyModifierMask, KeyButton)
 {
 	// ignore
 }

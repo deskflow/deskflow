@@ -95,7 +95,8 @@ CXWindowsSecondaryScreen::~CXWindowsSecondaryScreen()
 }
 
 void
-CXWindowsSecondaryScreen::keyDown(KeyID key, KeyModifierMask mask)
+CXWindowsSecondaryScreen::keyDown(KeyID key,
+				KeyModifierMask mask, KeyButton button)
 {
 	Keystrokes keys;
 	KeyCode keycode;
@@ -113,14 +114,23 @@ CXWindowsSecondaryScreen::keyDown(KeyID key, KeyModifierMask mask)
 	// note that key is now down
 	m_keys[keycode]     = true;
 	m_fakeKeys[keycode] = true;
+
+	// note which server key generated this key
+	m_serverKeyMap[button] = keycode;
 }
 
 void
 CXWindowsSecondaryScreen::keyRepeat(KeyID key,
-				KeyModifierMask mask, SInt32 count)
+				KeyModifierMask mask, SInt32 count, KeyButton button)
 {
 	Keystrokes keys;
 	KeyCode keycode;
+
+	// if we haven't seen this button go down then ignore it
+	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
+	if (index == m_serverKeyMap.end()) {
+		return;
+	}
 
 	// get the sequence of keys to simulate key repeat and the final
 	// modifier state.
@@ -129,21 +139,78 @@ CXWindowsSecondaryScreen::keyRepeat(KeyID key,
 		return;
 	}
 
+	// if we've seen this button (and we should have) then make sure
+	// we release the same key we pressed when we saw it.
+	if (index != m_serverKeyMap.end() && keycode != index->second) {
+		// replace key up with previous keycode but leave key down
+		// alone so it uses the new keycode and store that keycode
+		// in the server key map.
+		for (Keystrokes::iterator index2 = keys.begin();
+								index2 != keys.end(); ++index2) {
+			if (index2->m_keycode == index->second) {
+				index2->m_keycode = index->second;
+				break;
+			}
+		}
+
+		// note that old key is now up
+		m_keys[index->second]     = false;
+		m_fakeKeys[index->second] = false;
+
+		// map server key to new key
+		index->second = keycode;
+
+		// note that new key is now down
+		m_keys[index->second]     = true;
+		m_fakeKeys[index->second] = true;
+	}
+
 	// generate key events
 	doKeystrokes(keys, count);
 }
 
 void
-CXWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
+CXWindowsSecondaryScreen::keyUp(KeyID key,
+				KeyModifierMask mask, KeyButton button)
 {
 	Keystrokes keys;
 	KeyCode keycode;
 
+	// if we haven't seen this button go down then ignore it
+	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
+	if (index == m_serverKeyMap.end()) {
+		return;
+	}
+
 	// get the sequence of keys to simulate key release and the final
 	// modifier state.
 	m_mask = mapKey(keys, keycode, key, mask, kRelease);
+
+	// if there are no keys to generate then we should at least generate
+	// a key release for the key we pressed.
 	if (keys.empty()) {
-		return;
+		Keystroke keystroke;
+		keycode             = index->second;
+		keystroke.m_keycode = keycode;
+		keystroke.m_press   = False;
+		keystroke.m_repeat  = false;
+		keys.push_back(keystroke);
+	}
+
+	// if we've seen this button (and we should have) then make sure
+	// we release the same key we pressed when we saw it.
+	if (index != m_serverKeyMap.end() && keycode != index->second) {
+		// replace key up with previous keycode
+		for (Keystrokes::iterator index2 = keys.begin();
+								index2 != keys.end(); ++index2) {
+			if (index2->m_keycode == keycode) {
+				index2->m_keycode = index->second;
+				break;
+			}
+		}
+
+		// use old keycode
+		keycode = index->second;
 	}
 
 	// generate key events
@@ -152,6 +219,11 @@ CXWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
 	// note that key is now up
 	m_keys[keycode]     = false;
 	m_fakeKeys[keycode] = false;
+
+	// remove server key from map
+	if (index != m_serverKeyMap.end()) {
+		m_serverKeyMap.erase(index);
+	}
 }
 
 void

@@ -20,6 +20,7 @@
 #include "COutputPacketStream.h"
 #include "CProtocolUtil.h"
 #include "CClientProxy1_0.h"
+#include "CClientProxy1_1.h"
 #include "OptionTypes.h"
 #include "ProtocolTypes.h"
 #include "XScreen.h"
@@ -615,9 +616,9 @@ CServer::onOneShotTimerExpired(UInt32 id)
 }
 
 void
-CServer::onKeyDown(KeyID id, KeyModifierMask mask)
+CServer::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
-	LOG((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x", id, mask));
+	LOG((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x button=0x%04x", id, mask, button));
 	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
@@ -627,13 +628,13 @@ CServer::onKeyDown(KeyID id, KeyModifierMask mask)
 	}
 
 	// relay
-	m_active->keyDown(id, mask);
+	m_active->keyDown(id, mask, button);
 }
 
 void
-CServer::onKeyUp(KeyID id, KeyModifierMask mask)
+CServer::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button)
 {
-	LOG((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x", id, mask));
+	LOG((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button));
 	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
@@ -643,13 +644,14 @@ CServer::onKeyUp(KeyID id, KeyModifierMask mask)
 	}
 
 	// relay
-	m_active->keyUp(id, mask);
+	m_active->keyUp(id, mask, button);
 }
 
 void
-CServer::onKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count)
+CServer::onKeyRepeat(KeyID id, KeyModifierMask mask,
+				SInt32 count, KeyButton button)
 {
-	LOG((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d", id, mask, count));
+	LOG((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x", id, mask, count, button));
 	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
@@ -660,7 +662,7 @@ CServer::onKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count)
 	}
 
 	// relay
-	m_active->keyRepeat(id, mask, count);
+	m_active->keyRepeat(id, mask, count, button);
 }
 
 void
@@ -1698,18 +1700,7 @@ CServer::handshakeClient(IDataSocket* socket)
 		}
 
 		// disallow invalid version numbers
-		if (major < 0 || minor < 0) {
-			throw XIncompatibleClient(major, minor);
-		}
-
-		// disallow connection from test versions to release versions
-		if (major == 0 && kProtocolMajorVersion != 0) {
-			throw XIncompatibleClient(major, minor);
-		}
-
-		// hangup (with error) if version isn't supported
-		if (major > kProtocolMajorVersion ||
-			(major == kProtocolMajorVersion && minor > kProtocolMinorVersion)) {
+		if (major <= 0 || minor < 0) {
 			throw XIncompatibleClient(major, minor);
 		}
 
@@ -1720,7 +1711,22 @@ CServer::handshakeClient(IDataSocket* socket)
 
 		// create client proxy for highest version supported by the client
 		LOG((CLOG_DEBUG1 "creating proxy for client \"%s\" version %d.%d", name.c_str(), major, minor));
-		proxy = new CClientProxy1_0(this, name, input, output);
+		if (major == 1) {
+			switch (minor) {
+			case 0:
+				proxy = new CClientProxy1_0(this, name, input, output);
+				break;
+
+			case 1:
+				proxy = new CClientProxy1_1(this, name, input, output);
+				break;
+			}
+		}
+
+		// hangup (with error) if version isn't supported
+		if (proxy == NULL) {
+			throw XIncompatibleClient(major, minor);
+		}
 
 		// negotiate
 		// FIXME

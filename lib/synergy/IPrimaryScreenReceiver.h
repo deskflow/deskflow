@@ -43,11 +43,12 @@ public:
 	// call to notify of events.  onMouseMovePrimary() returns
 	// true iff the mouse enters a jump zone and jumps.
 	//! Notify of key press
-	virtual void		onKeyDown(KeyID, KeyModifierMask) = 0;
+	virtual void		onKeyDown(KeyID, KeyModifierMask, KeyButton) = 0;
 	//! Notify of key release
-	virtual void		onKeyUp(KeyID, KeyModifierMask) = 0;
+	virtual void		onKeyUp(KeyID, KeyModifierMask, KeyButton) = 0;
 	//! Notify of key repeat
-	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;
+	virtual void		onKeyRepeat(KeyID, KeyModifierMask,
+							SInt32 count, KeyButton) = 0;
 	//! Notify of mouse button press
 	virtual void		onMouseDown(ButtonID) = 0;
 	//! Notify of mouse button release

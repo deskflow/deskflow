@@ -37,9 +37,10 @@ public:
 	virtual ~CXWindowsSecondaryScreen();
 
 	// CSecondaryScreen overrides
-	virtual void		keyDown(KeyID, KeyModifierMask);
-	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count);
-	virtual void		keyUp(KeyID, KeyModifierMask);
+	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);
+	virtual void		keyRepeat(KeyID, KeyModifierMask,
+							SInt32 count, KeyButton);
+	virtual void		keyUp(KeyID, KeyModifierMask, KeyButton);
 	virtual void		mouseDown(ButtonID);
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 x, SInt32 y);
@@ -91,6 +92,7 @@ private:
 	typedef std::map<KeySym, KeyCodeMask> KeyCodeMap;
 	typedef KeyCodeMap::const_iterator KeyCodeIndex;
 	typedef std::map<KeyCode, unsigned int> ModifierMap;
+	typedef std::map<KeyButton, KeyCode> ServerKeyMap;
 
 	unsigned int		mapButton(ButtonID button) const;
 
@@ -165,6 +167,9 @@ private:
 
 	// maps keycodes to modifier indices
 	ModifierMap			m_keycodeToModifier;
+
+	// map server key buttons to local keycodes
+	ServerKeyMap		m_serverKeyMap;
 };
 
 #endif

@@ -365,21 +365,22 @@ CClient::setClipboardDirty(ClipboardID, bool)
 }
 
 void
-CClient::keyDown(KeyID id, KeyModifierMask mask)
+CClient::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
- 	m_screen->keyDown(id, mask);
+ 	m_screen->keyDown(id, mask, button);
 }
 
 void
-CClient::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count)
+CClient::keyRepeat(KeyID id, KeyModifierMask mask,
+				SInt32 count, KeyButton button)
 {
- 	m_screen->keyRepeat(id, mask, count);
+ 	m_screen->keyRepeat(id, mask, count, button);
 }
 
 void
-CClient::keyUp(KeyID id, KeyModifierMask mask)
+CClient::keyUp(KeyID id, KeyModifierMask mask, KeyButton button)
 {
- 	m_screen->keyUp(id, mask);
+ 	m_screen->keyUp(id, mask, button);
 }
 
 void

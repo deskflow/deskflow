@@ -521,9 +521,11 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 
 			// process as if it were a key up
 			KeyModifierMask mask;
+			KeyButton button = static_cast<KeyButton>(
+								(lParam & 0x00ff0000u) >> 16);
 			const KeyID key = mapKey(wParam, lParam, &mask);
-			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x", key, mask));
-			m_receiver->onKeyUp(key, mask);
+			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
+			m_receiver->onKeyUp(key, mask, button);
 			updateKey(wParam, false);
 		}
 		if ((m_keys[VK_RWIN] & 0x80) != 0 &&
@@ -536,9 +538,11 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 
 			// process as if it were a key up
 			KeyModifierMask mask;
+			KeyButton button = static_cast<KeyButton>(
+								(lParam & 0x00ff0000u) >> 16);
 			const KeyID key = mapKey(wParam, lParam, &mask);
-			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x", key, mask));
-			m_receiver->onKeyUp(key, mask);
+			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
+			m_receiver->onKeyUp(key, mask, button);
 			updateKey(wParam, false);
 		}
 	}
@@ -554,18 +558,20 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 		if (!ignore()) {
 			KeyModifierMask mask;
 			const KeyID key = mapKey(msg->wParam, msg->lParam, &mask);
-			if (key != kKeyNone) {
+			KeyButton button = static_cast<KeyButton>(
+								(msg->lParam & 0x00ff0000u) >> 16);
+			if (key != kKeyNone && key != kKeyMultiKey) {
 				if ((msg->lParam & 0x80000000) == 0) {
 					// key press
 					const bool wasDown  = ((msg->lParam & 0x40000000) != 0);
 					const SInt32 repeat = (SInt32)(msg->lParam & 0xffff);
 					if (repeat >= 2 || wasDown) {
-						LOG((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d", key, mask, repeat));
-						m_receiver->onKeyRepeat(key, mask, repeat);
+						LOG((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d button=0x%04x", key, mask, repeat, button));
+						m_receiver->onKeyRepeat(key, mask, repeat, button);
 					}
 					else {
-						LOG((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x", key, mask));
-						m_receiver->onKeyDown(key, mask);
+						LOG((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x button=0x%04x", key, mask, button));
+						m_receiver->onKeyDown(key, mask, button);
 					}
 
 					// update key state
@@ -580,14 +586,14 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 					// keys like alt+tab, ctrl+esc, etc.
 					if (m_is95Family && !isModifier(msg->wParam) &&
 						(m_keys[msg->wParam] & 0x80) == 0) {
-						LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x", key, mask));
-						m_receiver->onKeyDown(key, mask);
+						LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask, button));
+						m_receiver->onKeyDown(key, mask, button);
 						updateKey(msg->wParam, true);
 					}
 
 					// do key up
-					LOG((CLOG_DEBUG1 "event: key release key=%d mask=0x%04x", key, mask));
-					m_receiver->onKeyUp(key, mask);
+					LOG((CLOG_DEBUG1 "event: key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
+					m_receiver->onKeyUp(key, mask, button);
 
 					// update key state
 					updateKey(msg->wParam, false);
@@ -1408,11 +1414,6 @@ CMSWindowsPrimaryScreen::mapKey(
 		return id;
 	}
 
-	// check for dead keys
-	if (MapVirtualKey(vkCode, 2) >= 0x8000) {
-		return kKeyMultiKey;
-	}
-
 	// save the control state then clear it.  ToAscii() maps ctrl+letter
 	// to the corresponding control code and ctrl+backspace to delete.
 	// we don't want that translation so we clear the control modifier
@@ -1421,14 +1422,21 @@ CMSWindowsPrimaryScreen::mapKey(
 	BYTE lControl = m_keys[VK_LCONTROL];
 	BYTE rControl = m_keys[VK_RCONTROL];
 	BYTE control  = m_keys[VK_CONTROL];
+	BYTE lMenu    = m_keys[VK_LMENU];
+	BYTE menu     = m_keys[VK_MENU];
 	if ((mask & KeyModifierModeSwitch) == 0) {
 		m_keys[VK_LCONTROL] = 0;
 		m_keys[VK_RCONTROL] = 0;
 		m_keys[VK_CONTROL]  = 0;
 	}
+	else {
+		m_keys[VK_LCONTROL] = 0x80;
+		m_keys[VK_CONTROL]  = 0x80;
+		m_keys[VK_LMENU]    = 0x80;
+		m_keys[VK_MENU]     = 0x80;
+	}
 
 	// convert to ascii
-	// FIXME -- support unicode
 	WORD ascii;
 	int result = ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
 
@@ -1436,23 +1444,45 @@ CMSWindowsPrimaryScreen::mapKey(
 	m_keys[VK_LCONTROL] = lControl;
 	m_keys[VK_RCONTROL] = rControl;
 	m_keys[VK_CONTROL]  = control;
+	m_keys[VK_LMENU]    = lMenu;
+	m_keys[VK_MENU]     = menu;
 
-	// if result is less than zero then it was a dead key.  that key
-	// is remembered by the keyboard which we don't want.  remove it
-	// by calling ToAscii() again with arbitrary arguments.
+	// if result is less than zero then it was a dead key.  leave it
+	// there.
 	if (result < 0) {
-		ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
 		return kKeyMultiKey;
 	}
 
 	// if result is 1 then the key was succesfully converted
 	else if (result == 1) {
+		if (ascii >= 0x80) {
+			// character is not really ASCII.  instead it's some
+			// character in the current ANSI code page.  try to
+			// convert that to a Unicode character.  if we fail
+			// then use the single byte character as is.
+			char src = static_cast<char>(ascii & 0xff);
+			wchar_t unicode;
+			if (MultiByteToWideChar(CP_THREAD_ACP, MB_PRECOMPOSED,
+										&src, 1, &unicode, 1) > 0) {
+				return static_cast<KeyID>(unicode);
+			}
+		}
 		return static_cast<KeyID>(ascii & 0x00ff);
 	}
 
 	// if result is 2 then a previous dead key could not be composed.
-	// put the old dead key back.
 	else if (result == 2) {
+		// if the two characters are the same and this is a key release
+		// then this event is the dead key being released.  we put the
+		// dead key back in that case, otherwise we discard both key
+		// events because we can't compose the character.  alternatively
+		// we could generate key events for both keys.
+		if (((ascii & 0xff00) >> 8) != (ascii & 0x00ff) ||
+			(info & 0x80000000) == 0) {
+			// cannot compose key
+			return kKeyNone;
+		}
+
 		// get the scan code of the dead key and the shift state
 		// required to generate it.
 		vkCode = VkKeyScan(static_cast<TCHAR>(ascii & 0x00ff));

@@ -49,7 +49,8 @@ CMSWindowsSecondaryScreen::~CMSWindowsSecondaryScreen()
 }
 
 void
-CMSWindowsSecondaryScreen::keyDown(KeyID key, KeyModifierMask mask)
+CMSWindowsSecondaryScreen::keyDown(KeyID key,
+				KeyModifierMask mask, KeyButton button)
 {
 	Keystrokes keys;
 	UINT virtualKey;
@@ -89,17 +90,26 @@ CMSWindowsSecondaryScreen::keyDown(KeyID key, KeyModifierMask mask)
 		m_fakeKeys[VK_MENU]    |= 0x80;
 		break;
 	}
+
+	// note which server key generated this key
+	m_serverKeyMap[button] = virtualKey;
 }
 
 void
 CMSWindowsSecondaryScreen::keyRepeat(KeyID key,
-				KeyModifierMask mask, SInt32 count)
+				KeyModifierMask mask, SInt32 count, KeyButton button)
 {
 	Keystrokes keys;
 	UINT virtualKey;
 
 	CLock lock(&m_mutex);
 	m_screen->syncDesktop();
+
+	// if we haven't seen this button go down then ignore it
+	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
+	if (index == m_serverKeyMap.end()) {
+		return;
+	}
 
 	// get the sequence of keys to simulate key repeat and the final
 	// modifier state.
@@ -108,12 +118,40 @@ CMSWindowsSecondaryScreen::keyRepeat(KeyID key,
 		return;
 	}
 
+	// if we've seen this button (and we should have) then make sure
+	// we release the same key we pressed when we saw it.
+	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
+	if (index != m_serverKeyMap.end() && virtualKey != index->second) {
+		// replace key up with previous keycode but leave key down
+		// alone so it uses the new keycode and store that keycode
+		// in the server key map.
+		for (Keystrokes::iterator index2 = keys.begin();
+								index2 != keys.end(); ++index2) {
+			if (index2->m_virtualKey == index->second) {
+				index2->m_virtualKey = index->second;
+				break;
+			}
+		}
+
+		// note that old key is now up
+		m_keys[index->second]     = false;
+		m_fakeKeys[index->second] = false;
+
+		// map server key to new key
+		index->second = virtualKey;
+
+		// note that new key is now down
+		m_keys[index->second]     = true;
+		m_fakeKeys[index->second] = true;
+	}
+
 	// generate key events
 	doKeystrokes(keys, count);
 }
 
 void
-CMSWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
+CMSWindowsSecondaryScreen::keyUp(KeyID key,
+				KeyModifierMask mask, KeyButton button)
 {
 	Keystrokes keys;
 	UINT virtualKey;
@@ -121,11 +159,41 @@ CMSWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
 	CLock lock(&m_mutex);
 	m_screen->syncDesktop();
 
+	// if we haven't seen this button go down then ignore it
+	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
+	if (index == m_serverKeyMap.end()) {
+		return;
+	}
+
 	// get the sequence of keys to simulate key release and the final
 	// modifier state.
 	m_mask = mapKey(keys, virtualKey, key, mask, kRelease);
+
+	// if there are no keys to generate then we should at least generate
+	// a key release for the key we pressed.
 	if (keys.empty()) {
-		return;
+		Keystroke keystroke;
+		virtualKey             = index->second;
+		keystroke.m_virtualKey = virtualKey;
+		keystroke.m_press      = false;
+		keystroke.m_repeat     = false;
+		keys.push_back(keystroke);
+	}
+
+	// if we've seen this button (and we should have) then make sure
+	// we release the same key we pressed when we saw it.
+	if (index != m_serverKeyMap.end() && virtualKey != index->second) {
+		// replace key up with previous virtual key
+		for (Keystrokes::iterator index2 = keys.begin();
+								index2 != keys.end(); ++index2) {
+			if (index2->m_virtualKey == virtualKey) {
+				index2->m_virtualKey = index->second;
+				break;
+			}
+		}
+
+		// use old virtual key
+		virtualKey = index->second;
 	}
 
 	// generate key events
@@ -176,6 +244,11 @@ CMSWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
 			m_fakeKeys[VK_MENU]    &= ~0x80;
 		}
 		break;
+	}
+
+	// remove server key from map
+	if (index != m_serverKeyMap.end()) {
+		m_serverKeyMap.erase(index);
 	}
 }
 
@@ -716,8 +789,20 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 	// if not in map then ask system to convert character
 	if (virtualKey == 0) {
 		// translate.  return no keys if unknown key.
-		// FIXME -- handle unicode
-		TCHAR ascii = static_cast<TCHAR>(id & 0x000000ff);
+		char ascii;
+		wchar_t unicode = static_cast<wchar_t>(id & 0x0000ffff);
+		BOOL error;
+		if (WideCharToMultiByte(CP_THREAD_ACP,
+#if defined(WC_NO_BEST_FIT_CHARS)
+								WC_NO_BEST_FIT_CHARS |
+#endif
+								WC_COMPOSITECHECK |
+								WC_DEFAULTCHAR,
+								&unicode, 1,
+								&ascii, 1, NULL, &error) == 0 || error) {
+			LOG((CLOG_DEBUG2 "character %d not in code page", id));
+			return m_mask;
+		}
 		SHORT vk = VkKeyScan(ascii);
 		if (vk == 0xffff) {
 			LOG((CLOG_DEBUG2 "no virtual key for character %d", id));

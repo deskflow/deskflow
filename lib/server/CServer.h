@@ -187,9 +187,10 @@ public:
 	// IPrimaryScreenReceiver overrides
 	virtual void		onScreensaver(bool activated);
 	virtual void		onOneShotTimerExpired(UInt32 id);
-	virtual void		onKeyDown(KeyID, KeyModifierMask);
-	virtual void		onKeyUp(KeyID, KeyModifierMask);
-	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
+	virtual void		onKeyDown(KeyID, KeyModifierMask, KeyButton);
+	virtual void		onKeyUp(KeyID, KeyModifierMask, KeyButton);
+	virtual void		onKeyRepeat(KeyID, KeyModifierMask,
+							SInt32 count, KeyButton);
 	virtual void		onMouseDown(ButtonID);
 	virtual void		onMouseUp(ButtonID);
 	virtual bool		onMouseMovePrimary(SInt32 x, SInt32 y);

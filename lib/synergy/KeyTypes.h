@@ -19,11 +19,18 @@
 
 //! Key ID
 /*!
-Type to hold a key identifier.  The encoding is UTF-32, using
+Type to hold a key symbol identifier.  The encoding is UTF-32, using
 U+E000 through U+EFFF for the various control keys (e.g. arrow
 keys, function keys, modifier keys, etc).
 */
 typedef UInt32			KeyID;
+
+//! Key Code
+/*!
+Type to hold a physical key identifier.  That is, it identifies a
+physical key on the keyboard.
+*/
+typedef UInt16			KeyButton;
 
 //! Modifier key mask
 /*!

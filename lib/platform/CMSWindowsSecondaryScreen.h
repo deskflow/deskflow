@@ -38,9 +38,10 @@ public:
 	virtual ~CMSWindowsSecondaryScreen();
 
 	// CSecondaryScreen overrides
-	virtual void		keyDown(KeyID, KeyModifierMask);
-	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count);
-	virtual void		keyUp(KeyID, KeyModifierMask);
+	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);
+	virtual void		keyRepeat(KeyID, KeyModifierMask,
+							SInt32 count, KeyButton);
+	virtual void		keyUp(KeyID, KeyModifierMask, KeyButton);
 	virtual void		mouseDown(ButtonID);
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute);
@@ -83,6 +84,7 @@ private:
 		bool			m_repeat;
 	};
 	typedef std::vector<Keystroke> Keystrokes;
+	typedef std::map<KeyButton, UINT> ServerKeyMap;
 
 	// open/close desktop (for windows 95/98/me)
 	bool				openDesktop();
@@ -123,6 +125,9 @@ private:
 
 	// current active modifiers
 	KeyModifierMask		m_mask;
+
+	// map server key buttons to local virtual keys
+	ServerKeyMap		m_serverKeyMap;
 };
 
 #endif

@@ -241,12 +241,15 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
-				m_receiver->onKeyDown(key, mask);
+				m_receiver->onKeyDown(key, mask,
+								static_cast<KeyButton>(xevent.xkey.keycode));
 				if (key == kKeyCapsLock && m_capsLockHalfDuplex) {
-					m_receiver->onKeyUp(key, mask | KeyModifierCapsLock);
+					m_receiver->onKeyUp(key, mask | KeyModifierCapsLock,
+								static_cast<KeyButton>(xevent.xkey.keycode));
 				}
 				else if (key == kKeyNumLock && m_numLockHalfDuplex) {
-					m_receiver->onKeyUp(key, mask | KeyModifierNumLock);
+					m_receiver->onKeyUp(key, mask | KeyModifierNumLock,
+								static_cast<KeyButton>(xevent.xkey.keycode));
 				}
 			}
 		}
@@ -280,12 +283,15 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 					// no press event follows so it's a plain release
 					LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 					if (key == kKeyCapsLock && m_capsLockHalfDuplex) {
-						m_receiver->onKeyDown(key, mask);
+						m_receiver->onKeyDown(key, mask,
+								static_cast<KeyButton>(xevent.xkey.keycode));
 					}
 					else if (key == kKeyNumLock && m_numLockHalfDuplex) {
-						m_receiver->onKeyDown(key, mask);
+						m_receiver->onKeyDown(key, mask,
+								static_cast<KeyButton>(xevent.xkey.keycode));
 					}
-					m_receiver->onKeyUp(key, mask);
+					m_receiver->onKeyUp(key, mask,
+								static_cast<KeyButton>(xevent.xkey.keycode));
 				}
 				else {
 					// found a press event following so it's a repeat.
@@ -293,7 +299,8 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 					// repeats but we'll just send a repeat of 1.
 					// note that we discard the press event.
 					LOG((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-					m_receiver->onKeyRepeat(key, mask, 1);
+					m_receiver->onKeyRepeat(key, mask, 1,
+								static_cast<KeyButton>(xevent.xkey.keycode));
 				}
 			}
 		}

@@ -68,9 +68,10 @@ public:
 	virtual void		setClipboard(ClipboardID, const CString&) = 0;
 	virtual void		grabClipboard(ClipboardID) = 0;
 	virtual void		setClipboardDirty(ClipboardID, bool) = 0;
-	virtual void		keyDown(KeyID, KeyModifierMask) = 0;
-	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;
-	virtual void		keyUp(KeyID, KeyModifierMask) = 0;
+	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton) = 0;
+	virtual void		keyRepeat(KeyID, KeyModifierMask,
+							SInt32 count, KeyButton) = 0;
+	virtual void		keyUp(KeyID, KeyModifierMask, KeyButton) = 0;
 	virtual void		mouseDown(ButtonID) = 0;
 	virtual void		mouseUp(ButtonID) = 0;
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;

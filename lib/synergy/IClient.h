@@ -103,23 +103,28 @@ public:
 	//! Notify of key press
 	/*!
 	Synthesize key events to generate a press of key \c id.  If possible
-	match the given modifier mask.
+	match the given modifier mask.  The KeyButton identifies the physical
+	key on the server that generated this key down.  The client must
+	ensure that a key up or key repeat that uses the same KeyButton will
+	synthesize an up or repeat for the same client key synthesized by
+	keyDown().
 	*/
-	virtual void		keyDown(KeyID id, KeyModifierMask) = 0;
+	virtual void		keyDown(KeyID id, KeyModifierMask, KeyButton) = 0;
 
 	//! Notify of key repeat
 	/*!
 	Synthesize key events to generate a press and release of key \c id
 	\c count times.  If possible match the given modifier mask.
 	*/
-	virtual void		keyRepeat(KeyID id, KeyModifierMask, SInt32 count) = 0;
+	virtual void		keyRepeat(KeyID id, KeyModifierMask,
+							SInt32 count, KeyButton) = 0;
 
 	//! Notify of key release
 	/*!
 	Synthesize key events to generate a release of key \c id.  If possible
 	match the given modifier mask.
 	*/
-	virtual void		keyUp(KeyID id, KeyModifierMask) = 0;
+	virtual void		keyUp(KeyID id, KeyModifierMask, KeyButton) = 0;
 
 	//! Notify of mouse press
 	/*!

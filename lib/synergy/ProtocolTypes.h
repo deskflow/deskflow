@@ -18,8 +18,10 @@
 #include "BasicTypes.h"
 
 // protocol version number
+// 1.0:  initial protocol
+// 1.1:  adds KeyCode to key press, release, and repeat
 static const SInt16		kProtocolMajorVersion = 1;
-static const SInt16		kProtocolMinorVersion = 0;
+static const SInt16		kProtocolMinorVersion = 1;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
@@ -137,16 +139,34 @@ static const char		kMsgCInfoAck[]		= "CIAK";
 //
 
 // key pressed:  primary -> secondary
-// $1 = KeyID, $2 = KeyModifierMask
-static const char		kMsgDKeyDown[]		= "DKDN%2i%2i";
+// $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton
+// the KeyButton identifies the physical key on the primary used to
+// generate this key.  the secondary should note the KeyButton along
+// with the physical key it uses to generate the key press.  on
+// release, the secondary can then use the primary's KeyButton to
+// find its corresponding physical key and release it.  this is
+// necessary because the KeyID on release may not be the KeyID of
+// the press.  this can happen with combining (dead) keys or if
+// the keyboard layouts are not identical and the user releases
+// a modifier key before releasing the modified key.
+static const char		kMsgDKeyDown[]		= "DKDN%2i%2i%2i";
+
+// key pressed 1.0:  same as above but without KeyButton
+static const char		kMsgDKeyDown1_0[]	= "DKDN%2i%2i";
 
 // key auto-repeat:  primary -> secondary
-// $1 = KeyID, $2 = KeyModifierMask, $3 = number of repeats
-static const char		kMsgDKeyRepeat[]	= "DKRP%2i%2i%2i";
+// $1 = KeyID, $2 = KeyModifierMask, $3 = number of repeats, $4 = KeyButton
+static const char		kMsgDKeyRepeat[]	= "DKRP%2i%2i%2i%2i";
+
+// key auto-repeat 1.0:  same as above but without KeyButton
+static const char		kMsgDKeyRepeat1_0[]	= "DKRP%2i%2i%2i";
 
 // key released:  primary -> secondary
-// $1 = KeyID, $2 = KeyModifierMask
-static const char		kMsgDKeyUp[]		= "DKUP%2i%2i";
+// $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton
+static const char		kMsgDKeyUp[]		= "DKUP%2i%2i%2i";
+
+// key released 1.0:  same as above but without KeyButton
+static const char		kMsgDKeyUp1_0[]		= "DKUP%2i%2i";
 
 // mouse button pressed:  primary -> secondary
 // $1 = ButtonID
