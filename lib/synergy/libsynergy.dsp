@@ -175,6 +175,10 @@ SOURCE=.\MouseTypes.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\OptionTypes.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\ProtocolTypes.h
 # End Source File
 # Begin Source File
