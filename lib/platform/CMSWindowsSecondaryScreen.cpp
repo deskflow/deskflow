@@ -68,21 +68,25 @@ CMSWindowsSecondaryScreen::keyDown(KeyID key, KeyModifierMask mask)
 	doKeystrokes(keys, 1);
 
 	// note that key is now down
-	m_keys[virtualKey] |= 0x80;
+	m_keys[virtualKey]         |= 0x80;
+	m_fakeKeys[virtualKey]     |= 0x80;
 	switch (virtualKey) {
 	case VK_LSHIFT:
 	case VK_RSHIFT:
-		m_keys[VK_SHIFT]   |= 0x80;
+		m_keys[VK_SHIFT]       |= 0x80;
+		m_fakeKeys[VK_SHIFT]   |= 0x80;
 		break;
 
 	case VK_LCONTROL:
 	case VK_RCONTROL:
-		m_keys[VK_CONTROL] |= 0x80;
+		m_keys[VK_CONTROL]     |= 0x80;
+		m_fakeKeys[VK_CONTROL] |= 0x80;
 		break;
 
 	case VK_LMENU:
 	case VK_RMENU:
-		m_keys[VK_MENU]    |= 0x80;
+		m_keys[VK_MENU]        |= 0x80;
+		m_fakeKeys[VK_MENU]    |= 0x80;
 		break;
 	}
 }
@@ -128,41 +132,48 @@ CMSWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
 	doKeystrokes(keys, 1);
 
 	// note that key is now up
-	m_keys[virtualKey] &= ~0x80;
+	m_keys[virtualKey]             &= ~0x80;
+	m_fakeKeys[virtualKey]         &= ~0x80;
 	switch (virtualKey) {
 	case VK_LSHIFT:
 		if ((m_keys[VK_RSHIFT] & 0x80) == 0) {
-			m_keys[VK_SHIFT]   &= ~0x80;
+			m_keys[VK_SHIFT]       &= ~0x80;
+			m_fakeKeys[VK_SHIFT]   &= ~0x80;
 		}
 		break;
 
 	case VK_RSHIFT:
 		if ((m_keys[VK_LSHIFT] & 0x80) == 0) {
-			m_keys[VK_SHIFT]   &= ~0x80;
+			m_keys[VK_SHIFT]       &= ~0x80;
+			m_fakeKeys[VK_SHIFT]   &= ~0x80;
 		}
 		break;
 
 	case VK_LCONTROL:
 		if ((m_keys[VK_RCONTROL] & 0x80) == 0) {
-			m_keys[VK_CONTROL] &= ~0x80;
+			m_keys[VK_CONTROL]     &= ~0x80;
+			m_fakeKeys[VK_CONTROL] &= ~0x80;
 		}
 		break;
 
 	case VK_RCONTROL:
 		if ((m_keys[VK_LCONTROL] & 0x80) == 0) {
-			m_keys[VK_CONTROL] &= ~0x80;
+			m_keys[VK_CONTROL]     &= ~0x80;
+			m_fakeKeys[VK_CONTROL] &= ~0x80;
 		}
 		break;
 
 	case VK_LMENU:
 		if ((m_keys[VK_RMENU] & 0x80) == 0) {
-			m_keys[VK_MENU]    &= ~0x80;
+			m_keys[VK_MENU]        &= ~0x80;
+			m_fakeKeys[VK_MENU]    &= ~0x80;
 		}
 		break;
 
 	case VK_RMENU:
 		if ((m_keys[VK_LMENU] & 0x80) == 0) {
-			m_keys[VK_MENU]    &= ~0x80;
+			m_keys[VK_MENU]        &= ~0x80;
+			m_fakeKeys[VK_MENU]    &= ~0x80;
 		}
 		break;
 	}
@@ -439,6 +450,7 @@ CMSWindowsSecondaryScreen::updateKeys()
 {
 	// clear key state
 	memset(m_keys, 0, sizeof(m_keys));
+	memset(m_fakeKeys, 0, sizeof(m_keys));
 
 	// we only care about the modifier key states
 	m_keys[VK_LSHIFT]   = static_cast<BYTE>(GetKeyState(VK_LSHIFT));
@@ -456,6 +468,11 @@ CMSWindowsSecondaryScreen::updateKeys()
 	m_keys[VK_CAPITAL]  = static_cast<BYTE>(GetKeyState(VK_CAPITAL));
 	m_keys[VK_NUMLOCK]  = static_cast<BYTE>(GetKeyState(VK_NUMLOCK));
 	m_keys[VK_SCROLL]   = static_cast<BYTE>(GetKeyState(VK_SCROLL));
+
+	// copy over lock states to m_fakeKeys
+	m_fakeKeys[VK_CAPITAL] = (m_keys[VK_CAPITAL] & 0x01);
+	m_fakeKeys[VK_NUMLOCK] = (m_keys[VK_NUMLOCK] & 0x01);
+	m_fakeKeys[VK_SCROLL]  = (m_keys[VK_SCROLL]  & 0x01);
 
 	// update active modifier mask
 	m_mask = 0;
@@ -1012,6 +1029,10 @@ CMSWindowsSecondaryScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
 void
 CMSWindowsSecondaryScreen::releaseKeys()
 {
+	// release keys that we've synthesized a press for and only those
+	// keys.  we don't want to synthesize a release on a key the user
+	// is still physically pressing.
+
 	CLock lock(&m_mutex);
 
 	m_screen->syncDesktop();
@@ -1020,42 +1041,42 @@ CMSWindowsSecondaryScreen::releaseKeys()
 	// support them then they won't be set and the non-side-distinuishing
 	// key will retain its state.  if the platform does support them then
 	// the non-side-distinguishing will be reset.
-	if ((m_keys[VK_LSHIFT] & 0x80) != 0) {
+	if ((m_fakeKeys[VK_LSHIFT] & 0x80) != 0) {
 		sendKeyEvent(VK_LSHIFT, false);
-		m_keys[VK_SHIFT]    = 0;
-		m_keys[VK_LSHIFT]   = 0;
+		m_fakeKeys[VK_SHIFT]    = 0;
+		m_fakeKeys[VK_LSHIFT]   = 0;
 	}
-	if ((m_keys[VK_RSHIFT] & 0x80) != 0) {
+	if ((m_fakeKeys[VK_RSHIFT] & 0x80) != 0) {
 		sendKeyEvent(VK_RSHIFT, false);
-		m_keys[VK_SHIFT]    = 0;
-		m_keys[VK_RSHIFT]   = 0;
+		m_fakeKeys[VK_SHIFT]    = 0;
+		m_fakeKeys[VK_RSHIFT]   = 0;
 	}
-	if ((m_keys[VK_LCONTROL] & 0x80) != 0) {
+	if ((m_fakeKeys[VK_LCONTROL] & 0x80) != 0) {
 		sendKeyEvent(VK_LCONTROL, false);
-		m_keys[VK_CONTROL]  = 0;
-		m_keys[VK_LCONTROL] = 0;
+		m_fakeKeys[VK_CONTROL]  = 0;
+		m_fakeKeys[VK_LCONTROL] = 0;
 	}
-	if ((m_keys[VK_RCONTROL] & 0x80) != 0) {
+	if ((m_fakeKeys[VK_RCONTROL] & 0x80) != 0) {
 		sendKeyEvent(VK_RCONTROL, false);
-		m_keys[VK_CONTROL]  = 0;
-		m_keys[VK_RCONTROL] = 0;
+		m_fakeKeys[VK_CONTROL]  = 0;
+		m_fakeKeys[VK_RCONTROL] = 0;
 	}
-	if ((m_keys[VK_LMENU] & 0x80) != 0) {
+	if ((m_fakeKeys[VK_LMENU] & 0x80) != 0) {
 		sendKeyEvent(VK_LMENU, false);
-		m_keys[VK_MENU]     = 0;
-		m_keys[VK_LMENU]    = 0;
+		m_fakeKeys[VK_MENU]     = 0;
+		m_fakeKeys[VK_LMENU]    = 0;
 	}
-	if ((m_keys[VK_RMENU] & 0x80) != 0) {
+	if ((m_fakeKeys[VK_RMENU] & 0x80) != 0) {
 		sendKeyEvent(VK_RMENU, false);
-		m_keys[VK_MENU]     = 0;
-		m_keys[VK_RMENU]    = 0;
+		m_fakeKeys[VK_MENU]     = 0;
+		m_fakeKeys[VK_RMENU]    = 0;
 	}
 
 	// now check all the other keys
-	for (UInt32 i = 0; i < sizeof(m_keys) / sizeof(m_keys[0]); ++i) {
-		if ((m_keys[i] & 0x80) != 0) {
+	for (UInt32 i = 0; i < sizeof(m_fakeKeys) / sizeof(m_fakeKeys[0]); ++i) {
+		if ((m_fakeKeys[i] & 0x80) != 0) {
 			sendKeyEvent(i, false);
-			m_keys[i] = 0;
+			m_fakeKeys[i] = 0;
 		}
 	}
 }
@@ -1068,8 +1089,9 @@ CMSWindowsSecondaryScreen::toggleKey(UINT virtualKey, KeyModifierMask mask)
 	sendKeyEvent(virtualKey, false);
 
 	// toggle shadow state
-	m_mask                    ^= mask;
-	m_keys[virtualKey & 0xff] ^= 0x01;
+	m_mask                        ^= mask;
+	m_keys[virtualKey & 0xff]     ^= 0x01;
+	m_fakeKeys[virtualKey & 0xff] ^= 0x01;
 }
 
 UINT

@@ -111,7 +111,8 @@ CXWindowsSecondaryScreen::keyDown(KeyID key, KeyModifierMask mask)
 	doKeystrokes(keys, 1);
 
 	// note that key is now down
-	m_keys[keycode] = true;
+	m_keys[keycode]     = true;
+	m_fakeKeys[keycode] = true;
 }
 
 void
@@ -149,7 +150,8 @@ CXWindowsSecondaryScreen::keyUp(KeyID key, KeyModifierMask mask)
 	doKeystrokes(keys, 1);
 
 	// note that key is now up
-	m_keys[keycode] = false;
+	m_keys[keycode]     = false;
+	m_fakeKeys[keycode] = false;
 }
 
 void
@@ -251,10 +253,12 @@ CXWindowsSecondaryScreen::onEvent(CEvent* event)
 
 	// handle event
 	switch (xevent.type) {
-	case MappingNotify:
+	case MappingNotify: {
 		// keyboard mapping changed
-		updateKeys();
+		CDisplayLock display(m_screen);
+		doUpdateKeys(display);
 		return true;
+	}
 
 	case LeaveNotify:
 		// mouse moved out of hider window somehow.  hide the window.
@@ -905,20 +909,19 @@ CXWindowsSecondaryScreen::doReleaseKeys(Display* display)
 {
 	assert(display != NULL);
 
-	// key up for each key that's down
+	// key release for each key that we faked a press for
 	for (UInt32 i = 0; i < 256; ++i) {
-		if (m_keys[i]) {
+		if (m_fakeKeys[i]) {
 			XTestFakeKeyEvent(display, i, False, CurrentTime);
-			m_keys[i] = false;
+			m_fakeKeys[i] = false;
+			m_keys[i]     = false;
 		}
 	}
 }
 
 void
-CXWindowsSecondaryScreen::updateKeys()
+CXWindowsSecondaryScreen::doUpdateKeys(Display* display)
 {
-	CDisplayLock display(m_screen);
-
 	// query the button mapping
 	UInt32 numButtons = XGetPointerMapping(display, NULL, 0);
 	unsigned char* tmpButtons = new unsigned char[numButtons];
@@ -947,6 +950,17 @@ CXWindowsSecondaryScreen::updateKeys()
 	// clean up
 	delete[] tmpButtons;
 
+	// update mappings and current modifiers
+	updateModifierMap(display);
+	updateKeycodeMap(display);
+	updateModifiers(display);
+}
+
+void
+CXWindowsSecondaryScreen::updateKeys()
+{
+	CDisplayLock display(m_screen);
+
 	// ask server which keys are pressed
 	char keys[32];
 	XQueryKeymap(display, keys);
@@ -963,10 +977,11 @@ CXWindowsSecondaryScreen::updateKeys()
 		m_keys[j + 7] = ((keys[i] & 0x80) != 0);
 	}
 
-	// update mappings and current modifiers
-	updateModifierMap(display);
-	updateKeycodeMap(display);
-	updateModifiers(display);
+	// we've fake pressed no keys
+	m_fakeKeys.reset();
+
+	// update mappings and current modifiers and mouse buttons
+	doUpdateKeys(display);
 }
 
 void

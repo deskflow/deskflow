@@ -103,6 +103,10 @@ SOURCE=.\IInterface.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\stdbitset.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\stdfstream.h
 # End Source File
 # Begin Source File

@@ -21,6 +21,7 @@ EXTRA_DIST =				\
 	IInterface.h			\
 	Version.h				\
 	common.h				\
+	stdbitset.h				\
 	stdfstream.h			\
 	stdistream.h			\
 	stdlist.h				\

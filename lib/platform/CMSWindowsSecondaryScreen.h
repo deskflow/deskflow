@@ -115,8 +115,11 @@ private:
 	// our window
 	HWND				m_window;
 
-	// virtual key states
+	// virtual key states as set by us or the user
 	BYTE				m_keys[256];
+
+	// virtual key states as set by us
+	BYTE				m_fakeKeys[256];
 
 	// current active modifiers
 	KeyModifierMask		m_mask;

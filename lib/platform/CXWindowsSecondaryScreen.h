@@ -17,6 +17,7 @@
 
 #include "CSecondaryScreen.h"
 #include "IScreenEventHandler.h"
+#include "stdbitset.h"
 #include "stdmap.h"
 #include "stdvector.h"
 #if defined(X_DISPLAY_MISSING)
@@ -78,9 +79,6 @@ private:
 		KeyCodeMask();
 	public:
 		KeyCode			m_keycode[4];
-		// FIXME -- don't need masks
-		unsigned int	m_keyMask[4];
-		unsigned int	m_keyMaskMask[4];
 	};
 	class Keystroke {
 	public:
@@ -101,6 +99,7 @@ private:
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 	unsigned int		maskToX(KeyModifierMask) const;
 
+	void				doUpdateKeys(Display*);
 	void				doReleaseKeys(Display*);
 	void				updateKeycodeMap(Display* display);
 	void				updateModifiers(Display* display);
@@ -125,8 +124,13 @@ private:
 	bool				m_numLockHalfDuplex;
 	bool				m_capsLockHalfDuplex;
 
-	// set entries indicate keys that are pressed.  indexed by keycode.
-	bool				m_keys[256];
+	// set entries indicate keys that are pressed (by us or by the user).
+	// indexed by keycode.
+	std::bitset<256>	m_keys;
+
+	// set entries indicate keys that are synthetically pressed by us.
+	// this is normally the same as m_keys.
+	std::bitset<256>	m_fakeKeys;
 
 	// logical to physical button mapping.  m_buttons[i] gives the
 	// physical button for logical button i+1.
