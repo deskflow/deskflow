@@ -96,6 +96,7 @@ protected:
 
 private:
 	CServer*			m_server;
+	static const UInt32	s_maxRequestSize;
 };
 
 #endif

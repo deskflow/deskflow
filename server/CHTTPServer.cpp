@@ -14,6 +14,11 @@
 // CHTTPServer
 //
 
+// maximum size of an HTTP request.  this should be large enough to
+// handle any reasonable request but small enough to prevent a
+// malicious client from causing us to use too much memory.
+const UInt32			CHTTPServer::s_maxRequestSize = 32768;
+
 CHTTPServer::CHTTPServer(CServer* server) : m_server(server)
 {
 	// do nothing
@@ -31,7 +36,8 @@ void					CHTTPServer::processRequest(ISocket* socket)
 	CHTTPRequest* request = NULL;
 	try {
 		// parse request
-		request = CHTTPProtocol::readRequest(socket->getInputStream());
+		request = CHTTPProtocol::readRequest(
+								socket->getInputStream(), s_maxRequestSize);
 		if (request == NULL) {
 			throw XHTTP(400);
 		}
