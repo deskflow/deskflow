@@ -228,12 +228,8 @@ CSecondaryScreen::screensaver(bool activate)
 
 	// activate/deactivation screen saver iff synchronization enabled
 	if (screenSaverSync) {
-LOG((CLOG_INFO "screensaver(%s)", activate ? "on" : "off"));
 		getScreen()->screensaver(activate);
 	}
-else {
-LOG((CLOG_INFO "screensaver(%s) ignored", activate ? "on" : "off"));
-}
 }
 
 void
