@@ -196,7 +196,7 @@ CArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
 		setBlockingOnSocket(fd, false);
 	}
 	catch (...) {
-		close(fd);
+		close_winsock(fd);
 		throw;
 	}
 
@@ -205,7 +205,7 @@ CArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
 	socket->m_socket        = fd;
 	socket->m_refCount      = 1;
 	socket->m_event         = WSACreateEvent_winsock();
-	socket->m_pollWrite     = false;
+	socket->m_pollWrite     = true;
 	return socket;
 }
 
@@ -318,7 +318,7 @@ CArchNetworkWinsock::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 		setBlockingOnSocket(fd, false);
 	}
 	catch (...) {
-		close(fd);
+		close_winsock(fd);
 		delete socket;
 		free(tmp);
 		*addr = NULL;
