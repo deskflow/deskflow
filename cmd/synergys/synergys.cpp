@@ -144,6 +144,12 @@ static CClientListener*			s_listener          = NULL;
 static CServerTaskBarReceiver*	s_taskBarReceiver   = NULL;
 static CEvent::Type				s_reloadConfigEvent = CEvent::kUnknown;
 
+CEvent::Type
+getReloadConfigEvent()
+{
+	return CEvent::registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
+}
+
 static
 void
 updateStatus()
@@ -395,7 +401,7 @@ static
 void
 reloadSignalHandler(CArch::ESignal, void*)
 {
-	EVENTQUEUE->addEvent(CEvent(s_reloadConfigEvent,
+	EVENTQUEUE->addEvent(CEvent(getReloadConfigEvent(),
 							IEventQueue::getSystemTarget()));
 }
 
@@ -454,9 +460,8 @@ mainLoop()
 	}
 
 	// handle hangup signal by reloading the server's configuration
-	CEvent::registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
 	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);
-	EVENTQUEUE->adoptHandler(s_reloadConfigEvent,
+	EVENTQUEUE->adoptHandler(getReloadConfigEvent(),
 							IEventQueue::getSystemTarget(),
 							new CFunctionEventJob(&reloadConfig));
 
@@ -475,7 +480,7 @@ mainLoop()
 
 	// close down
 	LOG((CLOG_DEBUG1 "stopping server"));
-	EVENTQUEUE->removeHandler(s_reloadConfigEvent,
+	EVENTQUEUE->removeHandler(getReloadConfigEvent(),
 							IEventQueue::getSystemTarget());
 	stopServer();
 	updateStatus();

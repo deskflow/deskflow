@@ -15,11 +15,14 @@
 #include "CMSWindowsServerTaskBarReceiver.h"
 #include "CServer.h"
 #include "CMSWindowsClipboard.h"
+#include "IEventQueue.h"
 #include "LogOutputters.h"
 #include "BasicTypes.h"
 #include "CArch.h"
 #include "CArchTaskBarWindows.h"
 #include "resource.h"
+
+extern CEvent::Type		getReloadConfigEvent();
 
 //
 // CMSWindowsServerTaskBarReceiver
@@ -169,6 +172,11 @@ CMSWindowsServerTaskBarReceiver::runMenu(int x, int y)
 
 	case IDC_TASKBAR_LOG:
 		copyLog();
+		break;
+
+	case IDC_RELOAD_CONFIG:
+		EVENTQUEUE->addEvent(CEvent(getReloadConfigEvent(),
+							IEventQueue::getSystemTarget()));
 		break;
 
 	case IDC_TASKBAR_QUIT:
