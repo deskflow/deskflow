@@ -31,6 +31,7 @@
 #else
 #	include <X11/X.h>
 #	include <X11/Xutil.h>
+#	define XK_MISCELLANY
 #	define XK_XKB_KEYS
 #	include <X11/keysymdef.h>
 #	if HAVE_X11_EXTENSIONS_XTEST_H
@@ -583,6 +584,20 @@ CXWindowsScreen::fakeMouseWheel(SInt32 delta) const
 	const unsigned int xButton = mapButtonToX(static_cast<ButtonID>(
 												(delta >= 0) ? -1 : -2));
 	if (xButton == 0) {
+		// If we get here, then the XServer does not support the scroll
+		// wheel buttons, so send PageUp/PageDown keystrokes instead.
+		// Patch by Tom Chadwick.
+		KeyCode keycode = 0;
+		if (delta >= 0) {
+			keycode = XKeysymToKeycode(m_display, XK_Page_Up);
+		}
+		else {
+			keycode = XKeysymToKeycode(m_display, XK_Page_Down);
+		}
+		if (keycode != 0) {
+			XTestFakeKeyEvent(m_display, keycode, True,  CurrentTime);
+			XTestFakeKeyEvent(m_display, keycode, False, CurrentTime);
+		}
 		return;
 	}
 
