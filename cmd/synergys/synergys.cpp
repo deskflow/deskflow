@@ -268,16 +268,17 @@ realMain(void)
 
 static
 void
-realMainEntry(void*)
+realMainEntry(void* vresult)
 {
-	CThread::exit(reinterpret_cast<void*>(realMain()));
+	*reinterpret_cast<int*>(vresult) = realMain();
 }
 
 static
 int
 runMainInThread(void)
 {
-	CThread appThread(new CFunctionJob(&realMainEntry));
+	int result;
+	CThread appThread(new CFunctionJob(&realMainEntry, &result));
 	try {
 #if WINDOWS_LIKE
 		MSG msg;
@@ -292,7 +293,7 @@ runMainInThread(void)
 #else
 		appThread.wait(-1.0);
 #endif
-		return reinterpret_cast<int>(appThread.getResult());
+		return result;
 	}
 	catch (XThread&) {
 		appThread.cancel();
