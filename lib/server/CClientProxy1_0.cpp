@@ -218,9 +218,11 @@ CClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-CClientProxy1_0::getCursorPos(SInt32&, SInt32&) const
+CClientProxy1_0::getCursorPos(SInt32& x, SInt32& y) const
 {
-	assert(0 && "shouldn't be called");
+	// note -- this returns the cursor pos from when we last got client info
+	x = m_info.m_mx;
+	y = m_info.m_my;
 }
 
 void
@@ -372,9 +374,9 @@ bool
 CClientProxy1_0::recvInfo()
 {
 	// parse the message
-	SInt16 x, y, w, h, dummy1, dummy2, dummy3;
+	SInt16 x, y, w, h, dummy1, mx, my;
 	if (!CProtocolUtil::readf(getStream(), kMsgDInfo + 4,
-							&x, &y, &w, &h, &dummy1, &dummy2, &dummy3)) {
+							&x, &y, &w, &h, &dummy1, &mx, &my)) {
 		return false;
 	}
 	LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d", getName().c_str(), x, y, w, h));
@@ -385,10 +387,12 @@ CClientProxy1_0::recvInfo()
 	}
 
 	// save
-	m_info.m_x = x;
-	m_info.m_y = y;
-	m_info.m_w = w;
-	m_info.m_h = h;
+	m_info.m_x  = x;
+	m_info.m_y  = y;
+	m_info.m_w  = w;
+	m_info.m_h  = h;
+	m_info.m_mx = mx;
+	m_info.m_my = my;
 
 	// acknowledge receipt
 	LOG((CLOG_DEBUG1 "send info ack to \"%s\"", getName().c_str()));

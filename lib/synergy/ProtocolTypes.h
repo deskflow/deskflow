@@ -201,7 +201,7 @@ static const char		kMsgDClipboard[]	= "DCLP%1i%4i%s";
 // $2 = coordinate of topmost pixel on secondary screen,
 // $3 = width of secondary screen in pixels,
 // $4 = height of secondary screen in pixels,
-// $5 = size of warp zone,
+// $5 = size of warp zone, (obsolete)
 // $6, $7 = the x,y position of the mouse on the secondary screen.
 //
 // the secondary screen must send this message in response to the
@@ -274,8 +274,11 @@ public:
 	//! Obsolete (jump zone size)
 	SInt32				obsolete1;
 
-	//! Obsolete (mouse position)
-	SInt32				obsolete2, obsolete3;
+	//! Mouse position
+	/*!
+	The current location of the mouse cursor.
+	*/
+	SInt32				m_mx, m_my;
 };
 
 #endif

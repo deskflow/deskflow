@@ -334,7 +334,8 @@ CServerProxy::sendInfo(const CClientInfo& info)
 	LOG((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d", info.m_x, info.m_y, info.m_w, info.m_h));
 	CProtocolUtil::writef(m_stream, kMsgDInfo,
 								info.m_x, info.m_y,
-								info.m_w, info.m_h, 0, 0, 0);
+								info.m_w, info.m_h, 0,
+								info.m_mx, info.m_my);
 }
 
 KeyID
@@ -779,6 +780,7 @@ CServerProxy::queryInfo()
 {
 	CClientInfo info;
 	m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
+	m_client->getCursorPos(info.m_mx, info.m_my);
 	sendInfo(info);
 }
 
