@@ -1,3 +1,25 @@
+2003/01/22 08:37:32 crs
+NEWS
+configure.in
+lib/common/Version.h
+
+Changed version number to 1.0.1.
+
+----------
+2003/01/22 08:36:43 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/arch/CArchDaemonWindows.cpp
+lib/arch/CArchDaemonWindows.h
+lib/arch/CArchLogWindows.cpp
+lib/arch/CArchMiscWindows.cpp
+lib/arch/CArchMiscWindows.h
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchMultithreadWindows.h
+
+Fixed running as a service on Windows NT family.
+
+----------
 2003/01/18 14:36:19 crs
 lib/arch/CArchSleepWindows.cpp
 lib/platform/CMSWindowsPrimaryScreen.cpp
