@@ -1,7 +1,8 @@
 Known Bugs in Synergy
 =====================
 
-Report bugs to:  synergy@groundhog.pair.com
+Report bugs at:
+http://sourceforge.net/tracker/?func=browse&group_id=59275&atid=490467
 
 When reporting bugs, please include the version of the operating
 system you're using and what locale you use.
@@ -77,10 +78,9 @@ system you're using and what locale you use.
   when toggled on and KeyRelease when toggled off (instead of KeyPress
   and KeyRelease for each physical press and release).
 
-* Not handling mode-switch and shift-lock (X11)
+* Not handling shift-lock (X11)
 
-  Synergy neither handles the mode-switch key nor shift-lock behavior
-  (as opposed to caps-lock).
+  Synergy doesn't handle shift-lock behavior (as opposed to caps-lock).
 
 * Large Motif clipboard items are truncated (X11)
 
@@ -94,4 +94,4 @@ system you're using and what locale you use.
 * Automake isn't fully configured (Linux)
 
   The automake configuration isn't complete so synergy won't build
-  properly on some (many) systems.
+  or fail to build properly on some (many) systems.

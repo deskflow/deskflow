@@ -17,12 +17,12 @@
 #include "CPlatform.h"
 #include "CNetwork.h"
 #include "Version.h"
-#include "stdfstream.h"
 #include "stdvector.h"
 #include "resource.h"
 
-#define WINDOWS_LEAN_AND_MEAN
-#include <windows.h>
+// these must come after the above because it includes windows.h
+#include "LaunchUtil.h"
+#include "CAutoStart.h"
 
 #define CONFIG_NAME "synergy.sgc"
 #define CLIENT_APP "synergyc.exe"
@@ -45,9 +45,10 @@ public:
 	HANDLE				m_stop;
 };
 
+HINSTANCE s_instance = NULL;
+
 static const TCHAR* s_mainClass   = TEXT("GoSynergy");
 static const TCHAR* s_layoutClass = TEXT("SynergyLayout");
-static HINSTANCE s_instance       = NULL;
 
 static HWND s_mainWindow;
 static CConfig s_config;
@@ -93,89 +94,18 @@ isNameInList(const CStringList& names, const CString& name)
 }
 
 static
-CString
-getString(DWORD id)
-{
-	char buffer[1024];
-	buffer[0] = '\0';
-	LoadString(s_instance, id, buffer, sizeof(buffer) / sizeof(buffer[0]));
-	return buffer;
-}
-
-static
-CString
-getErrorString(DWORD error)
-{
-	char* buffer;
-	if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-								FORMAT_MESSAGE_IGNORE_INSERTS |
-								FORMAT_MESSAGE_FROM_SYSTEM,
-								0,
-								error,
-								MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-								(LPTSTR)&buffer,
-								0,
-								NULL) == 0) {
-		return getString(IDS_ERROR);
-	}
-	else {
-		CString result(buffer);
-		LocalFree(buffer);
-		return result;
-	}
-}
-
-static
-void
-showError(HWND hwnd, const CString& msg)
-{
-	CString title = getString(IDS_ERROR);
-	MessageBox(hwnd, msg.c_str(), title.c_str(), MB_OK | MB_APPLMODAL);
-}
-
-static
-void
-askOkay(HWND hwnd, const CString& title, const CString& msg)
-{
-	MessageBox(hwnd, msg.c_str(), title.c_str(), MB_OK | MB_APPLMODAL);
-}
-
-static
-bool
-askVerify(HWND hwnd, const CString& msg)
-{
-	CString title = getString(IDS_VERIFY);
-	int result = MessageBox(hwnd, msg.c_str(),
-								title.c_str(), MB_OKCANCEL | MB_APPLMODAL);
-	return (result == IDOK);
-}
-
-static
-CString
-getWindowText(HWND hwnd)
-{
-	LRESULT size = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
-	char* buffer = new char[size + 1];
-	SendMessage(hwnd, WM_GETTEXT, size + 1, (LPARAM)buffer);
-	buffer[size] = '\0';
-	CString result(buffer);
-	delete[] buffer;
-	return result;
-}
-
-static
-void
-enableItem(HWND hwnd, int id, bool enabled)
-{
-	EnableWindow(GetDlgItem(hwnd, id), enabled);
-}
-
-static
 bool
 isClientChecked(HWND hwnd)
 {
 	HWND child = GetDlgItem(hwnd, IDC_MAIN_CLIENT_RADIO);
 	return (SendMessage(child, BM_GETCHECK, 0, 0) == BST_CHECKED);
+}
+
+static
+void
+enableSaveControls(HWND hwnd)
+{
+	enableItem(hwnd, IDC_MAIN_SAVE, s_config != s_oldConfig);
 }
 
 static
@@ -217,6 +147,7 @@ enableMainWindowControls(HWND hwnd)
 	enableItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_LABEL, client);
 	enableItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_EDIT, client);
 	enableScreensControls(hwnd);
+	enableSaveControls(hwnd);
 }
 
 static
@@ -310,6 +241,7 @@ addScreen(HWND hwnd)
 		// update neighbors
 		updateNeighbors(hwnd);
 		enableScreensControls(hwnd);
+		enableSaveControls(hwnd);
 	}
 }
 
@@ -370,6 +302,7 @@ editScreen(HWND hwnd)
 
 		// update neighbors
 		updateNeighbors(hwnd);
+		enableSaveControls(hwnd);
 	}
 }
 
@@ -400,6 +333,7 @@ removeScreen(HWND hwnd)
 	// update neighbors
 	updateNeighbors(hwnd);
 	enableScreensControls(hwnd);
+	enableSaveControls(hwnd);
 }
 
 static
@@ -431,6 +365,8 @@ changeNeighbor(HWND hwnd, HWND combo, EDirection direction)
 		s_config.connect(screen, direction, CString(neighbor));
 		delete[] neighbor;
 	}
+
+	enableSaveControls(hwnd);
 }
 
 static
@@ -459,16 +395,16 @@ execApp(const char* app, const CString& cmdLine, PROCESS_INFORMATION* procInfo)
 	startup.hStdError       = NULL;
 
 	// prepare path to app
-	CPlatform platform;
-	char myPathname[MAX_PATH];
-	GetModuleFileName(s_instance, myPathname, MAX_PATH);
-	const char* myBasename = platform.getBasename(myPathname);
-	CString appPath = CString(myPathname, myBasename - myPathname);
-	appPath += app;
+	CString appPath = getAppPath(app);
+
+	// put path to app in command line
+	CString commandLine = "\"";
+	commandLine += appPath;
+	commandLine += "\" ";
+	commandLine += cmdLine;
 
 	// start child
-	if (CreateProcess(appPath.c_str(),
-								(char*)cmdLine.c_str(),
+	if (CreateProcess(NULL, (char*)commandLine.c_str(),
 								NULL,
 								NULL,
 								FALSE,
@@ -487,30 +423,11 @@ execApp(const char* app, const CString& cmdLine, PROCESS_INFORMATION* procInfo)
 }
 
 static
-bool
-uninstallApp(const char* app)
-{
-	PROCESS_INFORMATION procInfo;
-
-	// uninstall
-	DWORD exitCode = kExitFailed;
-	if (execApp(app, "-z --uninstall", &procInfo)) {
-		WaitForSingleObject(procInfo.hProcess, INFINITE);
-		GetExitCodeProcess(procInfo.hProcess, &exitCode);
-		CloseHandle(procInfo.hProcess);
-		CloseHandle(procInfo.hThread);
-	}
-
-	return (exitCode == kExitSuccess);
-}
-
-static
-HANDLE
-launchApp(HWND hwnd, bool testing, DWORD* threadID)
+CString
+getCommandLine(HWND hwnd, bool testing)
 {
 	// decide if client or server
 	const bool isClient = isClientChecked(hwnd);
-	const char* app = isClient ? CLIENT_APP : SERVER_APP;
 
 	// get and verify screen name
 	HWND child = GetDlgItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
@@ -520,14 +437,14 @@ launchApp(HWND hwnd, bool testing, DWORD* threadID)
 								getString(IDS_INVALID_SCREEN_NAME).c_str(),
 								name.c_str()));
 		SetFocus(child);
-		return NULL;
+		return CString();
 	}
 	if (!isClient && !s_config.isScreen(name)) {
 		showError(hwnd, CStringUtil::format(
 								getString(IDS_UNKNOWN_SCREEN_NAME).c_str(),
 								name.c_str()));
 		SetFocus(child);
-		return NULL;
+		return CString();
 	}
 
 	// get and verify port
@@ -541,7 +458,7 @@ launchApp(HWND hwnd, bool testing, DWORD* threadID)
 								portString.c_str(),
 								defaultPortString.c_str()));
 		SetFocus(child);
-		return NULL;
+		return CString();
 	}
 
 	// prepare command line
@@ -557,10 +474,10 @@ launchApp(HWND hwnd, bool testing, DWORD* threadID)
 		CString server = getWindowText(child);
 		if (!s_config.isValidScreenName(server)) {
 			showError(hwnd, CStringUtil::format(
-								getString(IDS_INVALID_SCREEN_NAME).c_str(),
+								getString(IDS_INVALID_SERVER_NAME).c_str(),
 								server.c_str()));
 			SetFocus(child);
-			return NULL;
+			return CString();
 		}
 
 		if (testing) {
@@ -576,27 +493,21 @@ launchApp(HWND hwnd, bool testing, DWORD* threadID)
 		cmdLine += portString;
 	}
 
-	// uninstall client and server then reinstall one of them
-	if (!testing) {
-		// uninstall client and server
-		uninstallApp(CLIENT_APP);
-		uninstallApp(SERVER_APP);
+	return cmdLine;
+}
 
-		// install client or server
-		PROCESS_INFORMATION procInfo;
-		DWORD exitCode = kExitFailed;
-		if (execApp(app, CString("-z --install") + cmdLine, &procInfo)) {
-			WaitForSingleObject(procInfo.hProcess, INFINITE);
-			GetExitCodeProcess(procInfo.hProcess, &exitCode);
-			CloseHandle(procInfo.hProcess);
-			CloseHandle(procInfo.hThread);
-		}
+static
+HANDLE
+launchApp(HWND hwnd, bool testing, DWORD* threadID)
+{
+	// decide if client or server
+	const bool isClient = isClientChecked(hwnd);
+	const char* app = isClient ? CLIENT_APP : SERVER_APP;
 
-		// see if install succeeded
-		if (exitCode != kExitSuccess) {
-			showError(hwnd, getString(IDS_INSTALL_FAILED).c_str());
-			return NULL;
-		}
+	// prepare command line
+	CString cmdLine = getCommandLine(hwnd, testing);
+	if (cmdLine.empty()) {
+		return NULL;
 	}
 
 	// start child
@@ -717,93 +628,15 @@ waitForChild(HWND hwnd, HANDLE thread, DWORD threadID)
 }
 
 static
-bool
-loadConfig(const CString& pathname, CConfig& config)
-{
-	try {
-		std::ifstream stream(pathname.c_str());
-		if (stream) {
-			stream >> config;
-			return true;
-		}
-	}
-	catch (...) {
-		// ignore
-	}
-	return false;
-}
-
-static
-bool
-saveConfig(const CString& pathname, const CConfig& config)
-{
-	try {
-		std::ofstream stream(pathname.c_str());
-		if (stream) {
-			stream << config;
-			return !!stream;
-		}
-	}
-	catch (...) {
-		// ignore
-	}
-	return false;
-}
-
-static
-bool
-saveConfig(const CConfig& config)
-{
-	CPlatform platform;
-
-	CString path = platform.getUserDirectory();
-	if (!path.empty()) {
-		// try loading the user's configuration
-		path = platform.addPathComponent(path, CONFIG_NAME);
-		if (saveConfig(path, config)) {
-			return true;
-		}
-	}
-
-	// try the system-wide config file
-	path = platform.getSystemDirectory();
-	if (!path.empty()) {
-		path = platform.addPathComponent(path, CONFIG_NAME);
-		if (saveConfig(path, config)) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-static
 void
 initMainWindow(HWND hwnd)
 {
 	CPlatform platform;
 
 	// load configuration
-	bool configLoaded = false;
-	CString path = platform.getUserDirectory();
-	if (!path.empty()) {
-		// try loading the user's configuration
-		path = platform.addPathComponent(path, CONFIG_NAME);
-		if (loadConfig(path, s_config)) {
-			configLoaded = true;
-		}
-		else {
-			// try the system-wide config file
-			path = platform.getSystemDirectory();
-			if (!path.empty()) {
-				path = platform.addPathComponent(path, CONFIG_NAME);
-				if (loadConfig(path, s_config)) {
-					configLoaded = true;
-				}
-			}
-		}
-	}
+	bool configLoaded = loadConfig(s_config);
 	s_oldConfig = s_config;
+	enableSaveControls(hwnd);
 
 	// choose client/server radio buttons
 	HWND child;
@@ -978,81 +811,80 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 			return 0;
 
-		case IDOK: {
-			// save data
-			if (s_config != s_oldConfig) {
-				if (!saveConfig(s_config)) {
-					showError(hwnd, CStringUtil::format(
-								getString(IDS_SAVE_FAILED).c_str(),
-								getErrorString(GetLastError()).c_str()));
-					return 0;
-				}
-				s_oldConfig = s_config;
-			}
-
-			// launch child app
-			HANDLE thread = launchApp(hwnd, false, NULL);
-			if (thread == NULL) {
-				return 0;
-			}
-			CloseHandle(thread);
-
-			// notify of success
-			askOkay(hwnd, getString(IDS_STARTED_TITLE),
-								getString(IDS_STARTED));
-
-			// quit
-			PostQuitMessage(0);
-			return 0;
-		}
-
+		case IDOK:
 		case IDC_MAIN_TEST: {
+			// note if testing
+			const bool testing = (LOWORD(wParam) == IDC_MAIN_TEST);
+
 			// save data
 			if (s_config != s_oldConfig) {
-				if (!saveConfig(s_config)) {
+				if (!saveConfig(s_config, false)) {
 					showError(hwnd, CStringUtil::format(
 								getString(IDS_SAVE_FAILED).c_str(),
 								getErrorString(GetLastError()).c_str()));
 					return 0;
 				}
 				s_oldConfig = s_config;
+				enableSaveControls(hwnd);
 			}
 
 			// launch child app
 			DWORD threadID;
-			HANDLE thread = launchApp(hwnd, true, &threadID);
+			HANDLE thread = launchApp(hwnd, testing, &threadID);
 			if (thread == NULL) {
 				return 0;
 			}
 
-			// wait for process to stop, allowing the user to kill it
-			waitForChild(hwnd, thread, threadID);
+			// handle child program
+			if (testing) {
+				// wait for process to stop, allowing the user to kill it
+				waitForChild(hwnd, thread, threadID);
 
-			// clean up
-			CloseHandle(thread);
-			return 0;
-		}
-
-		case IDC_MAIN_UNINSTALL: {
-			// uninstall client and server
-			bool removedClient = uninstallApp(CLIENT_APP);
-			bool removedServer = uninstallApp(SERVER_APP);
-			if (!removedClient) {
-				showError(hwnd, CStringUtil::format(
-								getString(IDS_UNINSTALL_FAILED).c_str(),
-								getString(IDS_CLIENT).c_str()));
-			}
-			else if (!removedServer) {
-				showError(hwnd, CStringUtil::format(
-								getString(IDS_UNINSTALL_FAILED).c_str(),
-								getString(IDS_SERVER).c_str()));
+				// clean up
+				CloseHandle(thread);
 			}
 			else {
-				askOkay(hwnd, getString(IDS_UNINSTALL_TITLE),
-								getString(IDS_UNINSTALLED));
+				// don't need thread handle
+				CloseHandle(thread);
+
+				// notify of success
+				askOkay(hwnd, getString(IDS_STARTED_TITLE),
+								getString(IDS_STARTED));
+
+				// quit
+				PostQuitMessage(0);
 			}
 			return 0;
 		}
+
+		case IDC_MAIN_AUTOSTART: {
+			// construct command line
+			CString cmdLine = getCommandLine(hwnd, false);
+			if (!cmdLine.empty()) {
+				// run dialog
+				CAutoStart autoStart(hwnd,
+							isClientChecked(hwnd) ? NULL : &s_config,
+							cmdLine);
+				autoStart.doModal();
+				if (autoStart.wasUserConfigSaved()) {
+					s_oldConfig = s_config;
+					enableSaveControls(hwnd);
+				}
+			}
+			return 0;
+		}
+
+		case IDC_MAIN_SAVE:
+			if (!saveConfig(s_config, false)) {
+				showError(hwnd, CStringUtil::format(
+								getString(IDS_SAVE_FAILED).c_str(),
+								getErrorString(GetLastError()).c_str()));
+			}
+			else {
+				s_oldConfig = s_config;
+				enableSaveControls(hwnd);
+			}
+			return 0;
 
 		case IDC_MAIN_CLIENT_RADIO:
 		case IDC_MAIN_SERVER_RADIO:

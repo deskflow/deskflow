@@ -511,7 +511,7 @@ CClient::runServer()
 		for (;;) {
 			try {
 				// allow connect this much time to succeed
-				CTimerThread timer(m_camp ? -1.0 : 30.0);
+				CTimerThread timer(15.0);
 
 				// create socket and attempt to connect to server
 				log((CLOG_DEBUG1 "connecting to server"));
@@ -532,7 +532,7 @@ CClient::runServer()
 				}
 
 				// we're camping.  wait a bit before retrying
-				CThread::sleep(5.0);
+				CThread::sleep(15.0);
 			}
 		}
 

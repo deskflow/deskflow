@@ -43,18 +43,22 @@ public:
 	system and \c description is a short human readable description of
 	the daemon.  \c pathname is the path to the daemon executable.
 	\c commandLine should \b not include the name of program as the
-	first argument.
+	first argument.  If \c allUsers is true then the daemon will be
+	installed to start at boot time, otherwise it will be installed to
+	start when the current user logs in.
 	*/
 	// FIXME -- throw on error?  will get better error messages that way.
 	virtual bool		installDaemon(const char* name,
 							const char* description,
 							const char* pathname,
-							const char* commandLine) = 0;
+							const char* commandLine,
+							bool allUsers) = 0;
+
 	//! Uninstall daemon
 	/*!
 	Uninstall a daemon.
 	*/
-	virtual EResult		uninstallDaemon(const char* name) = 0;
+	virtual EResult		uninstallDaemon(const char* name, bool allUsers) = 0;
 
 	//! Daemonize the process
 	/*!
@@ -90,6 +94,24 @@ public:
 	//@}
 	//! @name accessors
 	//@{
+
+	//! Check if user has permission to install the daemon
+	/*!
+	Returns true iff the caller has permission to install or
+	uninstall the daemon.  Note that even if this method returns
+	true it's possible that installing/uninstalling the service
+	may still fail.  This method ignores whether or not the
+	service is already installed.
+	*/
+	virtual bool		canInstallDaemon(const char* name,
+							bool allUsers) const = 0;
+
+	//! Check if the daemon is installed
+	/*!
+	Returns true iff the daemon is installed.
+	*/
+	virtual bool		isDaemonInstalled(const char* name,
+							bool allUsers) const = 0;
 
 	//! Extract base name
 	/*!

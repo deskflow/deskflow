@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by synergy.rc
+// Used by synergyc.rc
 //
 #define IDS_FAILED                      1
 #define IDD_SYNERGY                     101

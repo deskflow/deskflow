@@ -96,9 +96,9 @@ First configure the server.  Click the `Server' radio button
   * Click `Test'
 
 The server will start and you'll see a console window with log messages
-telling you about synergy's progress.  If an error occurs you'll get a
-dialog box telling you synergy is about to quit;  read the log messages
-to determine the problem then correct it and try `Test' again.
+telling you about synergy's progress.  If an error occurs you'll get one
+or more dialog boxes telling you what the errors are;  read the errors
+to determine the problem then correct them and try `Test' again.
 
 Now that the server is running, you'll need to start a client.  On any
 client computer, double click `synergy'.  Of course, you'll need to
@@ -115,9 +115,9 @@ client computer.  Then configure the client:
   * Click `Test'
 
 If all goes well, the client connects to the server successfully and
-the mouse and keyboard are shared.  If an error occurs you'll get a
-dialog box telling you synergy is about to quit;  read the log messages
-to determine the problem then correct it and try `Test' again.  When
+the mouse and keyboard are shared.  If an error occurs you'll get one
+or more dialog boxes telling you  what the errors are;  read the errors
+to determine the problem then correct them and try `Test' again.  When
 everything is working correctly, install the software on the other
 client computers (if any) and repeat the steps for configuring the
 client on each.
@@ -289,17 +289,31 @@ Starting Automatically on Windows
 
 When all the clients work you're ready to have synergy start
 automatically each time the system (re)starts.  Click `Stop' on all
-the clients then on the server'.  Then Click `Start' on the server.
-If it starts successfully then click `OK' to close the message box
-and the dialog.  The synergy server is now running and will be
-automatically started each time the system is started.  Click `Start'
-then `OK' on each of the clients to start the synergy client and
-automatically have it start each time the computer starts.
+the clients then on the server'.  Now click the `Configure' button by
+the text `Automatic Startup'.  The `Auto Start' dialog will pop up.
+If an error occurs then correct the problem and click `Configure'
+again.
 
-If you ever want to prevent synergy from starting automatically when
-the computer does, double click `synergy', choose `Client' or `Server'
-(whichever the computer is running as), then click `No Auto-Start'.
-Click `OK' to dismiss the message box then `Quit' to close the dialog.
+On the `Auto Start' dialog you'll configure synergy to start
+automatically when the computer starts or when you log in.  You can
+also configure synergy to not start automatically.  You can only
+start synergy automatically when the computer starts if you have
+sufficient access rights.  The dialog will let you know if you have
+sufficient permission.
+
+If synergy is already configured to automatically start then there
+will be two `Uninstall' buttons, at most one of which is enabled.
+Click the enabled button, if any, to configure synergy to not start
+automatically.
+
+If synergy is not configured to start automatically then there will
+be two `Install' buttons.  If you have sufficient permission to
+have synergy start automatically when the computer does then the
+`Install' button in the `When Computer Starts' box will be enabled.
+Click it to have synergy start for all users when the computer starts.
+In this case, synergy will be available during the login screen.
+Otherwise, click the `Install' button in the `When You Log In' box
+to have synergy automatically start when you log in.
 
 
 Starting Automatically on Linux
@@ -353,8 +367,6 @@ Common Command Line Options
   -1, --no-restart      do not restart on failure
   -h, --help            print help and exit
       --version         print version information and exit
-      --install         install as a service (Windows only)
-      --uninstall       uninstall service (Windows only)
 
 Debug levels are from highest to lowest:  FATAL, ERROR, WARNING, NOTE,
 INFO, DEBUG, DEBUG1, and DEBUG2.  Only messages at or above the given

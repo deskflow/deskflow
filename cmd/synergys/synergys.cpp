@@ -61,10 +61,6 @@ static const char*		pname         = NULL;
 static bool				s_backend     = false;
 static bool				s_restartable = true;
 static bool				s_daemon      = true;
-#if WINDOWS_LIKE
-static bool				s_install     = false;
-static bool				s_uninstall   = false;
-#endif
 static const char*		s_configFile  = NULL;
 static const char*		s_logFilter   = NULL;
 static CString			s_name;
@@ -275,13 +271,8 @@ help()
 #if WINDOWS_LIKE
 
 #  define PLATFORM_ARGS												\
-" {--daemon|--no-daemon}"											\
-" [--install]\n"													\
-"or\n"																\
-" --uninstall\n"
-#  define PLATFORM_DESC												\
-"      --install            install server as a daemon.\n"			\
-"      --uninstall          uninstall server daemon.\n"
+" {--daemon|--no-daemon}"
+#  define PLATFORM_DESC
 #  define PLATFORM_EXTRA											\
 "At least one command line argument is required.  If you don't otherwise\n"	\
 "need an argument use `--daemon'.\n"										\
@@ -334,7 +325,7 @@ PLATFORM_EXTRA
 "default port, %d.\n"
 "\n"
 "If no configuration file pathname is provided then the first of the\n"
-"following to load sets the configuration:\n"
+"following to load successfully sets the configuration:\n"
 "  %s\n"
 "  %s\n"
 "If no configuration file can be loaded then the configuration uses its\n"
@@ -465,30 +456,6 @@ parse(int argc, const char** argv)
 			bye(kExitSuccess);
 		}
 
-#if WINDOWS_LIKE
-		else if (isArg(i, argc, argv, NULL, "--install")) {
-			s_install = true;
-			if (s_uninstall) {
-				log((CLOG_PRINT "%s: `--install' and `--uninstall'"
-								" are mutually exclusive" BYE,
-								pname, argv[i], pname));
-				bye(kExitArgs);
-			}
-		}
-#endif
-
-#if WINDOWS_LIKE
-		else if (isArg(i, argc, argv, NULL, "--uninstall")) {
-			s_uninstall = true;
-			if (s_install) {
-				log((CLOG_PRINT "%s: `--install' and `--uninstall'"
-								" are mutually exclusive" BYE,
-								pname, argv[i], pname));
-				bye(kExitArgs);
-			}
-		}
-#endif
-
 		else if (isArg(i, argc, argv, "--", NULL)) {
 			// remaining arguments are not options
 			++i;
@@ -612,24 +579,16 @@ loadConfig()
 
 #include "CMSWindowsScreen.h"
 
-static bool				s_errors = false;
-
 static
 bool
 logMessageBox(int priority, const char* msg)
 {
-	if (priority <= CLog::kERROR) {
-		s_errors = true;
-	}
-	if (s_backend) {
-		return true;
-	}
-	if (priority <= CLog::kFATAL) {
+	if (priority <= (s_backend ? CLog::kERROR : CLog::kFATAL)) {
 		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
 		return true;
 	}
 	else {
-		return false;
+		return s_backend;
 	}
 }
 
@@ -658,13 +617,7 @@ daemonStartup(IPlatform* iplatform, int argc, const char** argv)
 	bye = &byeThrow;
 
 	// parse command line
-	s_install   = false;
-	s_uninstall = false;
 	parse(argc, argv);
-	if (s_install || s_uninstall) {
-		// not allowed to install/uninstall from service
-		throw CWin32Platform::CDaemonFailed(kExitArgs);
-	}
 
 	// load configuration
 	loadConfig();
@@ -715,62 +668,6 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// parse command line
 	parse(__argc, const_cast<const char**>(__argv));
 
-	// install/uninstall
-	if (s_install) {
-		// get the full path to this program
-		TCHAR path[MAX_PATH];
-		if (GetModuleFileName(NULL, path,
-								sizeof(path) / sizeof(path[0])) == 0) {
-			log((CLOG_CRIT "cannot determine absolute path to program"));
-			return kExitFailed;
-		}
-
-		// construct the command line to start the service with
-		CString commandLine;
-		commandLine += "--daemon";
-		if (s_restartable) {
-			commandLine += " --restart";
-		}
-		else {
-			commandLine += " --no-restart";
-		}
-		if (s_logFilter != NULL) {
-			commandLine += " --debug ";
-			commandLine += s_logFilter;
-		}
-		if (s_configFile != NULL) {
-			commandLine += " --config \"";
-			commandLine += s_configFile;
-			commandLine += "\"";
-		}
-
-		// install
-		if (!platform.installDaemon(DAEMON_NAME,
-					"Shares this system's mouse and keyboard with others.",
-					path, commandLine.c_str())) {
-			log((CLOG_CRIT "failed to install service"));
-			return kExitFailed;
-		}
-		log((CLOG_PRINT "installed successfully"));
-		return kExitSuccess;
-	}
-	else if (s_uninstall) {
-		switch (platform.uninstallDaemon(DAEMON_NAME)) {
-		case IPlatform::kSuccess:
-			log((CLOG_PRINT "uninstalled successfully"));
-			return kExitSuccess;
-
-		case IPlatform::kFailed:
-			log((CLOG_CRIT "failed to uninstall service"));
-			return kExitFailed;
-
-		case IPlatform::kAlready:
-			log((CLOG_CRIT "service isn't installed"));
-			// return success since service is uninstalled
-			return kExitSuccess;
-		}
-	}
-
 	// load configuration
 	loadConfig();
 
@@ -800,15 +697,6 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	}
 
 	CNetwork::cleanup();
-
-	// if running as a non-daemon backend and there was an error then
-	// wait for the user to click okay so he can see the error messages.
-	if (s_backend && !s_daemon && (result == kExitFailed || s_errors)) {
-		char msg[1024];
-		msg[0] = '\0';
-		LoadString(instance, IDS_FAILED, msg, sizeof(msg) / sizeof(msg[0]));
-		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
-	}
 
 	return result;
 }

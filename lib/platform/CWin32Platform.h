@@ -71,10 +71,15 @@ public:
 	virtual bool		installDaemon(const char* name,
 							const char* description,
 							const char* pathname,
-							const char* commandLine);
-	virtual EResult		uninstallDaemon(const char* name);
+							const char* commandLine,
+							bool allUsers);
+	virtual EResult		uninstallDaemon(const char* name, bool allUsers);
 	virtual int			daemonize(const char* name, DaemonFunc);
 	virtual void		installDaemonLogger(const char* name);
+	virtual bool		canInstallDaemon(const char* name,
+							bool allUsers) const;
+	virtual bool		isDaemonInstalled(const char* name,
+							bool allUsers) const;
 	virtual const char*	getBasename(const char* pathname) const;
 	virtual CString		getUserDirectory() const;
 	virtual CString		getSystemDirectory() const;
@@ -93,6 +98,7 @@ private:
 	static CString		readValueString(HKEY, const char* name);
 	static HKEY			openNTServicesKey();
 	static HKEY			open95ServicesKey();
+	static HKEY			openUserStartupKey();
 
 	void				serviceMain(DWORD, LPTSTR*);
 	static void WINAPI	serviceMainEntry(DWORD, LPTSTR*);

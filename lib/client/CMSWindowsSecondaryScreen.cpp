@@ -459,6 +459,7 @@ CMSWindowsSecondaryScreen::updateKeys()
 	if ((m_keys[VK_SCROLL] & 0x01) != 0) {
 		m_mask |= KeyModifierScrollLock;
 	}
+	// note -- do not save KeyModifierModeSwitch in m_mask
 	log((CLOG_DEBUG2 "modifiers on update: 0x%04x", m_mask));
 }
 
@@ -633,6 +634,11 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 								KeyModifierControl |
 								KeyModifierAlt |
 								KeyModifierMeta));
+
+	// set control and alt if mode shift (AltGr) is requested
+	if ((mask & KeyModifierModeSwitch) != 0) {
+		outMask |= KeyModifierControl | KeyModifierAlt;
+	}
 
 	// extract extended key flag
 	const bool isExtended = ((virtualKey & 0x100) != 0);

@@ -94,14 +94,16 @@ CWin32Platform::setStatusError(SERVICE_STATUS_HANDLE handle, DWORD error)
 
 bool
 CWin32Platform::installDaemon(const char* name, const char* description,
-				const char* pathname, const char* commandLine)
+				const char* pathname, const char* commandLine, bool allUsers)
 {
-	// windows 95 family services
-	if (isWindows95Family()) {
+	// if not for all users then use the user's autostart registry.
+	// key.  if windows 95 family then use windows 95 services key.
+	if (!allUsers || isWindows95Family()) {
 		// open registry
-		HKEY key = open95ServicesKey();
+		HKEY key = isWindows95Family() ? open95ServicesKey() :
+										openUserStartupKey();
 		if (key == NULL) {
-			log((CLOG_ERR "cannot open RunServices registry key", GetLastError()));
+			log((CLOG_ERR "cannot open registry key", GetLastError()));
 			return false;
 		}
 
@@ -152,6 +154,8 @@ CWin32Platform::installDaemon(const char* name, const char* description,
 			CloseServiceHandle(mgr);
 		}
 		else {
+// FIXME -- handle ERROR_SERVICE_EXISTS
+
 			log((CLOG_ERR "CreateService failed with %d", GetLastError()));
 			CloseServiceHandle(mgr);
 			return false;
@@ -162,7 +166,7 @@ CWin32Platform::installDaemon(const char* name, const char* description,
 		key      = openKey(key, name);
 		if (key == NULL) {
 			// can't open key
-			uninstallDaemon(name);
+			uninstallDaemon(name, allUsers);
 			return false;
 		}
 
@@ -173,7 +177,7 @@ CWin32Platform::installDaemon(const char* name, const char* description,
 		key = openKey(key, "Parameters");
 		if (key == NULL) {
 			// can't open key
-			uninstallDaemon(name);
+			uninstallDaemon(name, allUsers);
 			return false;
 		}
 		setValue(key, "CommandLine", commandLine);
@@ -186,14 +190,16 @@ CWin32Platform::installDaemon(const char* name, const char* description,
 }
 
 IPlatform::EResult
-CWin32Platform::uninstallDaemon(const char* name)
+CWin32Platform::uninstallDaemon(const char* name, bool allUsers)
 {
-	// windows 95 family services
-	if (isWindows95Family()) {
+	// if not for all users then use the user's autostart registry.
+	// key.  if windows 95 family then use windows 95 services key.
+	if (!allUsers || isWindows95Family()) {
 		// open registry
-		HKEY key = open95ServicesKey();
+		HKEY key = isWindows95Family() ? open95ServicesKey() :
+										openUserStartupKey();
 		if (key == NULL) {
-			log((CLOG_ERR "cannot open RunServices registry key", GetLastError()));
+			log((CLOG_ERR "cannot open registry key", GetLastError()));
 			return kAlready;
 		}
 
@@ -334,6 +340,91 @@ CWin32Platform::installDaemonLogger(const char* name)
 	}
 }
 
+bool
+CWin32Platform::canInstallDaemon(const char* name, bool allUsers) const
+{
+	// if not for all users then use the user's autostart registry.
+	// key.  if windows 95 family then use windows 95 services key.
+	if (!allUsers || isWindows95Family()) {
+		// check if we can open the registry key
+		HKEY key = isWindows95Family() ? open95ServicesKey() :
+										openUserStartupKey();
+		closeKey(key);
+		return (key != NULL);
+	}
+
+	// windows NT family services
+	else {
+		// check if we can open service manager for write
+		SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
+		if (mgr == NULL) {
+			return false;
+		}
+		CloseServiceHandle(mgr);
+
+		// check if we can open the registry key for this service
+		HKEY key = openNTServicesKey();
+		key      = openKey(key, name);
+		key      = openKey(key, "Parameters");
+		closeKey(key);
+
+		return (key != NULL);
+	}
+}
+
+bool
+CWin32Platform::isDaemonInstalled(const char* name, bool allUsers) const
+{
+	// if not for all users then use the user's autostart registry.
+	// key.  if windows 95 family then use windows 95 services key.
+	if (!allUsers || isWindows95Family()) {
+		// check if we can open the registry key
+		HKEY key = isWindows95Family() ? open95ServicesKey() :
+										openUserStartupKey();
+		if (key == NULL) {
+			return false;
+		}
+
+		// check for entry
+		const bool installed = !readValueString(key, name).empty();
+
+		// clean up
+		closeKey(key);
+
+		return installed;
+	}
+
+	// windows NT family services
+	else {
+		// check parameters for this service
+		HKEY key = openNTServicesKey();
+		key      = openKey(key, name);
+		key      = openKey(key, "Parameters");
+		if (key != NULL) {
+			const bool installed = !readValueString(key, "CommandLine").empty();
+			closeKey(key);
+			if (!installed) {
+				return false;
+			}
+		}
+
+		// open service manager
+		SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
+		if (mgr == NULL) {
+			return false;
+		}
+
+		// open the service
+		SC_HANDLE service = OpenService(mgr, name, GENERIC_READ);
+
+		// clean up
+		CloseServiceHandle(service);
+		CloseServiceHandle(mgr);
+
+		return (service != NULL);
+	}
+}
+
 const char*
 CWin32Platform::getBasename(const char* pathname) const
 {
@@ -436,6 +527,11 @@ CWin32Platform::addPathComponent(const CString& prefix,
 HKEY
 CWin32Platform::openKey(HKEY key, const char* keyName)
 {
+	// ignore if parent is NULL
+	if (key == NULL) {
+		return NULL;
+	}
+
 	// open next key
 	HKEY newKey;
 	LONG result = RegOpenKeyEx(key, keyName, 0,
@@ -553,6 +649,21 @@ CWin32Platform::open95ServicesKey()
 	};
 
 	return openKey(HKEY_LOCAL_MACHINE, s_keyNames);
+}
+
+HKEY
+CWin32Platform::openUserStartupKey()
+{
+	static const char* s_keyNames[] = {
+		_T("Software"),
+		_T("Microsoft"),
+		_T("Windows"),
+		_T("CurrentVersion"),
+		_T("Run"),
+		NULL
+	};
+
+	return openKey(HKEY_CURRENT_USER, s_keyNames);
 }
 
 int

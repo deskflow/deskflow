@@ -38,14 +38,15 @@ CUnixPlatform::~CUnixPlatform()
 }
 
 bool
-CUnixPlatform::installDaemon(const char*, const char*, const char*, const char*)
+CUnixPlatform::installDaemon(const char*, const char*,
+				const char*, const char*, bool)
 {
 	// daemons don't require special installation
 	return true;
 }
 
 CUnixPlatform::EResult
-CUnixPlatform::uninstallDaemon(const char*)
+CUnixPlatform::uninstallDaemon(const char*, bool)
 {
 	// daemons don't require special installation
 	return kSuccess;
@@ -104,6 +105,18 @@ CUnixPlatform::installDaemonLogger(const char* name)
 {
 	openlog(name, 0, LOG_DAEMON);
 	CLog::setOutputter(&CUnixPlatform::deamonLogger);
+}
+
+bool
+CUnixPlatform::canInstallDaemon(const char*, bool) const
+{
+	return false;
+}
+
+bool
+CUnixPlatform::isDaemonInstalled(const char*, bool) const
+{
+	return false;
 }
 
 const char*
