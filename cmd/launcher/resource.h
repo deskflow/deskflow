@@ -38,6 +38,8 @@
 #define IDS_INVALID_SERVER_NAME         34
 #define IDS_TITLE                       35
 #define IDS_SERVER_IS_CLIENT            36
+#define IDS_ADD_SCREEN                  37
+#define IDS_EDIT_SCREEN                 38
 #define IDD_MAIN                        101
 #define IDD_ADD                         102
 #define IDD_WAIT                        103
@@ -59,6 +61,7 @@
 #define IDC_ADD_SCREEN_NAME_EDIT        1020
 #define IDC_MAIN_SERVER_REMOVE_BUTTON   1020
 #define IDC_ADD_ALIASES_EDIT            1021
+#define IDC_MAIN_SERVER_OPTIONS_BUTTON  1021
 #define IDC_MAIN_SERVER_LEFT_COMBO      1022
 #define IDC_MAIN_SERVER_RIGHT_COMBO     1023
 #define IDC_MAIN_SERVER_TOP_COMBO       1024
@@ -74,6 +77,8 @@
 #define IDC_AUTOSTART_INSTALL_SYSTEM    1034
 #define IDC_MAIN_AUTOSTART              1035
 #define IDC_MAIN_DEBUG                  1036
+#define IDC_ADD_HD_CAPS_CHECK           1037
+#define IDC_ADD_HD_NUM_CHECK            1038
 
 // Next default values for new objects
 // 
@@ -82,7 +87,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        106
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1037
+#define _APS_NEXT_CONTROL_VALUE         1038
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

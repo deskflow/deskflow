@@ -33,8 +33,9 @@ typedef std::vector<CString> CStringList;
 
 class CScreenInfo {
 public:
-	CString				m_screen;
-	CStringList			m_aliases;
+	CString					m_screen;
+	CStringList				m_aliases;
+	CConfig::CScreenOptions	m_options;
 };
 
 class CChildWaitInfo {
@@ -266,6 +267,14 @@ addScreen(HWND hwnd)
 			ARG->m_config.addAlias(info.m_screen, *index);
 		}
 
+		// set options
+		ARG->m_config.removeOptions(info.m_screen);
+		for (CConfig::CScreenOptions::const_iterator
+								index  = info.m_options.begin();
+								index != info.m_options.end(); ++index) {
+			ARG->m_config.addOption(info.m_screen, index->first, index->second);
+		}
+
 		// update neighbors
 		updateNeighbors(hwnd);
 		enableScreensControls(hwnd);
@@ -295,6 +304,11 @@ editScreen(HWND hwnd)
 			info.m_aliases.push_back(index->first);
 		}
 	}
+	const CConfig::CScreenOptions* options =
+							ARG->m_config.getOptions(info.m_screen);
+	if (options != NULL) {
+		info.m_options = *options;
+	}
 
 	// save current info
 	CScreenInfo oldInfo = info;
@@ -318,6 +332,14 @@ editScreen(HWND hwnd)
 		for (CStringList::const_iterator index = info.m_aliases.begin();
 								index != info.m_aliases.end(); ++index) {
 			ARG->m_config.addAlias(info.m_screen, *index);
+		}
+
+		// set options
+		ARG->m_config.removeOptions(info.m_screen);
+		for (CConfig::CScreenOptions::const_iterator
+								index  = info.m_options.begin();
+								index != info.m_options.end(); ++index) {
+			ARG->m_config.addOption(info.m_screen, index->first, index->second);
 		}
 
 		// update list
@@ -740,6 +762,18 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_INITDIALOG: {
 		info = (CScreenInfo*)lParam;
 
+		// set title
+		CString title;
+		if (info->m_screen.empty()) {
+			title = getString(IDS_ADD_SCREEN);
+		}
+		else {
+			title = CStringUtil::format(
+								getString(IDS_EDIT_SCREEN).c_str(),
+								info->m_screen.c_str());
+		}
+		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)title.c_str());
+
 		// fill in screen name
 		HWND child = getItem(hwnd, IDC_ADD_SCREEN_NAME_EDIT);
 		SendMessage(child, WM_SETTEXT, 0, (LPARAM)info->m_screen.c_str());
@@ -755,6 +789,25 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		child = getItem(hwnd, IDC_ADD_ALIASES_EDIT);
 		SendMessage(child, WM_SETTEXT, 0, (LPARAM)aliases.c_str());
+
+		// set options
+		CConfig::CScreenOptions::const_iterator index;
+		child = getItem(hwnd, IDC_ADD_HD_CAPS_CHECK);
+		index = info->m_options.find(kOptionHalfDuplexCapsLock);
+		if (index != info->m_options.end() && index->second != 0) {
+			SendMessage(child, BM_SETCHECK, BST_CHECKED, 0);
+		}
+		else {
+			SendMessage(child, BM_SETCHECK, BST_UNCHECKED, 0);
+		}
+		child = getItem(hwnd, IDC_ADD_HD_NUM_CHECK);
+		index = info->m_options.find(kOptionHalfDuplexNumLock);
+		if (index != info->m_options.end() && index->second != 0) {
+			SendMessage(child, BM_SETCHECK, BST_CHECKED, 0);
+		}
+		else {
+			SendMessage(child, BM_SETCHECK, BST_UNCHECKED, 0);
+		}
 
 		return TRUE;
 	}
@@ -824,9 +877,25 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 			}
 
-			// save data
+			// save name data
 			info->m_screen  = newName;
 			info->m_aliases = newAliases;
+
+			// save options
+			child = getItem(hwnd, IDC_ADD_HD_CAPS_CHECK);
+			if (SendMessage(child, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+				info->m_options[kOptionHalfDuplexCapsLock] = 1;
+			}
+			else {
+				info->m_options.erase(kOptionHalfDuplexCapsLock);
+			}
+			child = getItem(hwnd, IDC_ADD_HD_NUM_CHECK);
+			if (SendMessage(child, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+				info->m_options[kOptionHalfDuplexNumLock] = 1;
+			}
+			else {
+				info->m_options.erase(kOptionHalfDuplexNumLock);
+			}
 
 			// success
 			EndDialog(hwnd, 1);

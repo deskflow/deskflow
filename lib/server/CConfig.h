@@ -188,7 +188,7 @@ public:
 	is a known screen.
 	*/
 	bool				addOption(const CString& name,
-							UInt32 option, SInt32 value);
+							OptionID option, OptionValue value);
 
 	//! Remove a screen option
 	/*!
@@ -196,7 +196,14 @@ public:
 	nothing if the option doesn't exist on the screen.  Returns true
 	iff \c name is a known screen.
 	*/
-	bool				removeOption(const CString& name, UInt32 option);
+	bool				removeOption(const CString& name, OptionID option);
+
+	//! Remove a screen options
+	/*!
+	Removes all options and values from the named screen.  Returns true
+	iff \c name is a known screen.
+	*/
+	bool				removeOptions(const CString& name);
 
 	//@}
 	//! @name accessors

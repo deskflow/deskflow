@@ -241,7 +241,7 @@ CConfig::setHTTPAddress(const CNetworkAddress& addr)
 }
 
 bool
-CConfig::addOption(const CString& name, UInt32 option, SInt32 value)
+CConfig::addOption(const CString& name, OptionID option, OptionValue value)
 {
 	// find cell
 	CCellMap::iterator index = m_map.find(name);
@@ -255,7 +255,7 @@ CConfig::addOption(const CString& name, UInt32 option, SInt32 value)
 }
 
 bool
-CConfig::removeOption(const CString& name, UInt32 option)
+CConfig::removeOption(const CString& name, OptionID option)
 {
 	// find cell
 	CCellMap::iterator index = m_map.find(name);
@@ -265,6 +265,20 @@ CConfig::removeOption(const CString& name, UInt32 option)
 
 	// remove option
 	index->second.m_options.erase(option);
+	return true;
+}
+
+bool
+CConfig::removeOptions(const CString& name)
+{
+	// find cell
+	CCellMap::iterator index = m_map.find(name);
+	if (index == m_map.end()) {
+		return false;
+	}
+
+	// remove option
+	index->second.m_options.clear();
 	return true;
 }
 
@@ -421,6 +435,17 @@ CConfig::operator==(const CConfig& x) const
 	for (CCellMap::const_iterator index1 = m_map.begin(),
 								index2 = x.m_map.begin();
 								index1 != m_map.end(); ++index1, ++index2) {
+		// compare names
+		if (!CStringUtil::CaselessCmp::equal(index1->first, index2->first)) {
+			return false;
+		}
+
+		// compare options
+		if (index1->second.m_options != index2->second.m_options) {
+			return false;
+		}
+
+		// compare neighbors
 		for (UInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i) {
 			if (!CStringUtil::CaselessCmp::equal(index1->second.m_neighbor[i],
 								index2->second.m_neighbor[i])) {
