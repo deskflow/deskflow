@@ -312,7 +312,7 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 	resetError(errors);
 
 	// get length of multibyte string
-	UInt32 n   = src.size() + 1;
+	UInt32 n   = src.size();
 	size_t len = 0;
 	mbstate_t state;
 	memset(&state, 0, sizeof(state));
