@@ -75,6 +75,7 @@ BEGIN
         MENUITEM "Show Status",                 IDC_TASKBAR_STATUS
         MENUITEM "Copy Log To Clipboard",       IDC_TASKBAR_LOG
         MENUITEM "Reload Configuration",        IDC_RELOAD_CONFIG
+        MENUITEM "Force Reconnect",             IDC_FORCE_RECONNECT
         MENUITEM SEPARATOR
         MENUITEM "Quit",                        IDC_TASKBAR_QUIT
     END

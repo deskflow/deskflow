@@ -23,6 +23,7 @@
 #include "resource.h"
 
 extern CEvent::Type		getReloadConfigEvent();
+extern CEvent::Type		getForceReconnectEvent();
 
 //
 // CMSWindowsServerTaskBarReceiver
@@ -176,6 +177,11 @@ CMSWindowsServerTaskBarReceiver::runMenu(int x, int y)
 
 	case IDC_RELOAD_CONFIG:
 		EVENTQUEUE->addEvent(CEvent(getReloadConfigEvent(),
+							IEventQueue::getSystemTarget()));
+		break;
+
+	case IDC_FORCE_RECONNECT:
+		EVENTQUEUE->addEvent(CEvent(getForceReconnectEvent(),
 							IEventQueue::getSystemTarget()));
 		break;
 
