@@ -1049,27 +1049,60 @@ CXWindowsClipboard::sendReply(CReply* reply)
 		LOG((CLOG_DEBUG1 "clipboard: sending notify to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		reply->m_replied = true;
 
-		// HACK -- work around apparent bug in lesstif, which doesn't
-		// wait around for the SelectionNotify then gets confused when
-		// it sees it the next time it requests the selection.  if it
-		// looks like a lesstif requestor window then don't send the
-		// SelectionNotify.  it looks like a lesstif requestor if:
-		//   it has a _MOTIF_CLIP_LOCK_ACCESS_VALID property
-		//   it does not have a GDK_SELECTION property
-		CString dummy;
-		if (m_id != kClipboardClipboard ||
-			!CXWindowsUtil::getWindowProperty(m_display,
+		// dump every property on the requestor window to the debug2
+		// log.  we've seen what appears to be a bug in lesstif and
+		// knowing the properties may help design a workaround, if
+		// it becomes necessary.
+		if (CLOG->getFilter() >= CLog::kDEBUG2) {
+			CXWindowsUtil::CErrorLock lock(m_display);
+			int n;
+			Atom* props = XListProperties(m_display, reply->m_requestor, &n);
+			LOG((CLOG_DEBUG2 "properties of 0x%08x:", reply->m_requestor));
+			for (int i = 0; i < n; ++i) {
+				Atom target;
+				CString data;
+				char* name = XGetAtomName(m_display, props[i]);
+				if (!CXWindowsUtil::getWindowProperty(m_display,
 								reply->m_requestor,
-								m_atomMotifClipAccess,
-								&dummy, NULL, NULL, False) ||
-			CXWindowsUtil::getWindowProperty(m_display,
-								reply->m_requestor,
-								m_atomGDKSelection,
-								&dummy, NULL, NULL, False)) {
-			sendNotify(reply->m_requestor, m_selection,
+								props[i], &data, &target, NULL, False)) {
+					LOG((CLOG_DEBUG2 "  %s: <can't read property>", name));
+				}
+				else {
+					// if there are any non-ascii characters in string
+					// then print the binary data.
+					static const char* hex = "0123456789abcdef";
+					for (CString::size_type j = 0; j < data.size(); ++j) {
+						if (data[j] < 32 || data[j] > 126) {
+							CString tmp;
+							tmp.reserve(data.size() * 3);
+							for (j = 0; j < data.size(); ++j) {
+								unsigned char v = (unsigned char)data[j];
+								tmp += hex[v >> 16];
+								tmp += hex[v & 15];
+								tmp += ' ';
+							}
+							data = tmp;
+							break;
+						}
+					}
+					char* type = XGetAtomName(m_display, target);
+					LOG((CLOG_DEBUG2 "  %s (%s): %s", name, type, data.c_str()));
+					if (type != NULL) {
+						XFree(type);
+					}
+				}
+				if (name != NULL) {
+					XFree(name);
+				}
+			}
+			if (props != NULL) {
+				XFree(props);
+			}
+		}
+
+		sendNotify(reply->m_requestor, m_selection,
 								reply->m_target, reply->m_property,
 								reply->m_time);
-		}
 	}
 
 	// wait for delete notify

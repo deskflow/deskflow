@@ -170,8 +170,13 @@ CThread::threadFunc(void* vjob)
 		result = e.m_result;
 		LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x, result %p", id, result));
 	}
+	catch (XBase& e) {
+		LOG((CLOG_ERR "exception on thread 0x%08x: %s", id, e.what()));
+		delete job;
+		throw;
+	}
 	catch (...) {
-		LOG((CLOG_DEBUG1 "exception on thread 0x%08x", id));
+		LOG((CLOG_ERR "exception on thread 0x%08x: <unknown>", id));
 		delete job;
 		throw;
 	}

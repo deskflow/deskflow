@@ -753,9 +753,6 @@ CArchMultithreadWindows::doThreadFunc(CArchThread thread)
 	lockMutex(m_threadMutex);
 	unlockMutex(m_threadMutex);
 
-	// default priority is slightly below normal
-	setPriorityOfThread(thread, 1);
-
 	void* result = NULL;
 	try {
 		// go
