@@ -485,9 +485,9 @@ if test "x$acx_pthread_ok" = xyes; then
         AC_TRY_LINK([#include <pthread.h>
 					#include <signal.h>],
                     [pthread_kill(pthread_self(), SIGTERM);],
-                    ok=yes, ok=unknown)
+                    ok=yes, ok=no)
         AC_MSG_RESULT(${ok})
-        if test x"$ok" != xno; then
+        if test x"$ok" = xyes; then
         	AC_DEFINE(HAVE_PTHREAD_SIGNAL,1,[Define if you have \`pthread_sigmask\' and \`pthread_kill\' functions.])
         fi
 
