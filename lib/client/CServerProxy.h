@@ -80,6 +80,7 @@ private:
 	void				mouseDown();
 	void				mouseUp();
 	void				mouseMove();
+	void				mouseRelativeMove();
 	void				mouseWheel();
 	void				screensaver();
 	void				resetOptions();
@@ -97,7 +98,9 @@ private:
 	UInt32				m_seqNum;
 
 	bool				m_compressMouse;
+	bool				m_compressMouseRelative;
 	SInt32				m_xMouse, m_yMouse;
+	SInt32				m_dxMouse, m_dyMouse;
 
 	bool				m_ignoreMouse;
 

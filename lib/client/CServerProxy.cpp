@@ -35,6 +35,11 @@ CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 	m_timer(NULL),
 	m_seqNum(0),
 	m_compressMouse(false),
+	m_compressMouseRelative(false),
+	m_xMouse(0),
+	m_yMouse(0),
+	m_dxMouse(0),
+	m_dyMouse(0),
 	m_ignoreMouse(false),
 	m_heartRate(0.0),
 	m_parser(&CServerProxy::parseHandshakeMessage)
@@ -189,6 +194,10 @@ CServerProxy::parseMessage(const UInt8* code)
 		mouseMove();
 	}
 
+	else if (memcmp(code, kMsgDMouseRelMove, 4) == 0) {
+		mouseRelativeMove();
+	}
+
 	else if (memcmp(code, kMsgDMouseWheel, 4) == 0) {
 		mouseWheel();
 	}
@@ -310,6 +319,12 @@ CServerProxy::flushCompressedMouse()
 	if (m_compressMouse) {
 		m_compressMouse = false;
 		m_client->mouseMove(m_xMouse, m_yMouse);
+	}
+	if (m_compressMouseRelative) {
+		m_compressMouseRelative = false;
+		m_client->mouseRelativeMove(m_dxMouse, m_dyMouse);
+		m_dxMouse = 0;
+		m_dyMouse = 0;
 	}
 }
 
@@ -442,8 +457,11 @@ CServerProxy::enter()
 	LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
 
 	// discard old compressed mouse motion, if any
-	m_compressMouse = false;
-	m_seqNum        = seqNum;
+	m_compressMouse         = false;
+	m_compressMouseRelative = false;
+	m_dxMouse               = 0;
+	m_dyMouse               = 0;
+	m_seqNum                = seqNum;
 
 	// forward
 	m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
@@ -619,15 +637,48 @@ CServerProxy::mouseMove()
 
 	// if compressing then ignore the motion but record it
 	if (m_compressMouse) {
-		ignore   = true;
-		m_xMouse = x;
-		m_yMouse = y;
+		m_compressMouseRelative = false;
+		ignore    = true;
+		m_xMouse  = x;
+		m_yMouse  = y;
+		m_dxMouse = 0;
+		m_dyMouse = 0;
 	}
 	LOG((CLOG_DEBUG2 "recv mouse move %d,%d", x, y));
 
 	// forward
 	if (!ignore) {
 		m_client->mouseMove(x, y);
+	}
+}
+
+void
+CServerProxy::mouseRelativeMove()
+{
+	// parse
+	bool ignore;
+	SInt16 dx, dy;
+	CProtocolUtil::readf(m_stream, kMsgDMouseRelMove + 4, &dx, &dy);
+
+	// note if we should ignore the move
+	ignore = m_ignoreMouse;
+
+	// compress mouse motion events if more input follows
+	if (!ignore && !m_compressMouseRelative && m_stream->isReady()) {
+		m_compressMouseRelative = true;
+	}
+
+	// if compressing then ignore the motion but record it
+	if (m_compressMouseRelative) {
+		ignore     = true;
+		m_dxMouse += dx;
+		m_dyMouse += dy;
+	}
+	LOG((CLOG_DEBUG2 "recv mouse relative move %d,%d", dx, dy));
+
+	// forward
+	if (!ignore) {
+		m_client->mouseRelativeMove(dx, dy);
 	}
 }
 
