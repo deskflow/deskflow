@@ -1190,6 +1190,7 @@ bool					CXWindowsClipboard::CICCCMGetClipboard::doEventPredicate(
 		// done if this is the timeout message
 		if (xevent->xclient.window       == m_requestor &&
 			xevent->xclient.message_type == m_timeout) {
+			m_failed = true;
 			return true;
 		}
 
