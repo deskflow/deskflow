@@ -161,11 +161,16 @@ log((CLOG_INFO "found converter"));
 log((CLOG_INFO "clipboard format: %d", clipboardFormat));
 			if (m_added[clipboardFormat]) {
 log((CLOG_INFO "added"));
-				type   = converter->getAtom();
-				format = converter->getDataSize();
-				data   = converter->fromIClipboard(m_data[clipboardFormat]);
+				try {
+					data   = converter->fromIClipboard(m_data[clipboardFormat]);
+					format = converter->getDataSize();
+					type   = converter->getAtom();
 log((CLOG_INFO "  src: (%d) %s", m_data[clipboardFormat].size(), m_data[clipboardFormat].c_str()));
 log((CLOG_INFO "  dst: (%d) %s", data.size(), data.c_str()));
+				}
+				catch (...) {
+					// ignore -- cannot convert
+				}
 			}
 		}
 	}
@@ -529,15 +534,17 @@ CXWindowsClipboard::icccmFillCache()
 		}
 
 		// add to clipboard and note we've done it
-		m_data[converter->getFormat()]  = converter->toIClipboard(targetData);
-		m_added[converter->getFormat()] = true;
-// XXX
-char* name = XGetAtomName(m_display, target);
-log((CLOG_INFO "src atom: %d %s", target, name));
-XFree(name);
-log((CLOG_INFO "src data size: %d", targetData.size()));
-log((CLOG_INFO "utf8 data size: %d", m_data[converter->getFormat()].size()));
-		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
+		IClipboard::EFormat format = converter->getFormat();
+		try {
+			m_data[format] = converter->toIClipboard(targetData);
+			if (!m_data[format].empty()) {
+				m_added[format] = true;
+				log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
+			}
+		}
+		catch (...) {
+			// ignore -- could not convert data
+		}
 	}
 }
 
@@ -791,15 +798,17 @@ CXWindowsClipboard::motifFillCache()
 		targetData.erase(length);
 
 		// add to clipboard and note we've done it
-		m_data[converter->getFormat()]  = converter->toIClipboard(targetData);
-		m_added[converter->getFormat()] = true;
-// XXX
-char* name = XGetAtomName(m_display, target);
-log((CLOG_INFO "src atom: %d %s", target, name));
-XFree(name);
-log((CLOG_INFO "src data size: %d", targetData.size()));
-log((CLOG_INFO "utf8 data size: %d", m_data[converter->getFormat()].size()));
-		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
+		IClipboard::EFormat format = converter->getFormat();
+		try {
+			m_data[format] = converter->toIClipboard(targetData);
+			if (!m_data[format].empty()) {
+				m_added[format] = true;
+				log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
+			}
+		}
+		catch (...) {
+			// ignore -- could not convert data
+		}
 	}
 }
 

@@ -1,4 +1,5 @@
 #include "CUnicode.h"
+#include <limits.h>
 #include <string.h>
 
 //
@@ -39,7 +40,8 @@ decode32(const UInt8* n)
 // CUnicode
 //
 
-UInt32					CUnicode::s_invalid = 0x0000ffff;
+UInt32					CUnicode::s_invalid     = 0x0000ffff;
+UInt32					CUnicode::s_replacement = 0x0000fffd;
 
 CString
 CUnicode::UTF8ToUCS2(const CString& src)
@@ -54,10 +56,11 @@ CUnicode::UTF8ToUCS2(const CString& src)
 	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
 	while (n > 0) {
 		UInt32 c = fromUTF8(data, n);
-		if (c != s_invalid && c < 0x00010000) {
-			UInt16 ucs2 = static_cast<UInt16>(c);
-			dst.append(reinterpret_cast<const char*>(&ucs2), 2);
+		if (c == s_invalid || c >= 0x00010000) {
+			c = s_replacement;
 		}
+		UInt16 ucs2 = static_cast<UInt16>(c);
+		dst.append(reinterpret_cast<const char*>(&ucs2), 2);
 	}
 
 	return dst;
@@ -76,9 +79,10 @@ CUnicode::UTF8ToUCS4(const CString& src)
 	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
 	while (n > 0) {
 		UInt32 c = fromUTF8(data, n);
-		if (c != s_invalid) {
-			dst.append(reinterpret_cast<const char*>(&c), 4);
+		if (c == s_invalid) {
+			c = s_replacement;
 		}
+		dst.append(reinterpret_cast<const char*>(&c), 4);
 	}
 
 	return dst;
@@ -97,18 +101,19 @@ CUnicode::UTF8ToUTF16(const CString& src)
 	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
 	while (n > 0) {
 		UInt32 c = fromUTF8(data, n);
-		if (c != s_invalid && c < 0x0010ffff) {
-			if (c < 0x00010000) {
-				UInt16 ucs2 = static_cast<UInt16>(c);
-				dst.append(reinterpret_cast<const char*>(&ucs2), 2);
-			}
-			else {
-				c -= 0x00010000;
-				UInt16 utf16h = static_cast<UInt16>(c >> 10) + 0xd800;
-				UInt16 utf16l = (static_cast<UInt16>(c) & 0x03ff) + 0xdc00;
-				dst.append(reinterpret_cast<const char*>(&utf16h), 2);
-				dst.append(reinterpret_cast<const char*>(&utf16l), 2);
-			}
+		if (c == s_invalid || c >= 0x00110000) {
+			c = s_replacement;
+		}
+		if (c < 0x00010000) {
+			UInt16 ucs2 = static_cast<UInt16>(c);
+			dst.append(reinterpret_cast<const char*>(&ucs2), 2);
+		}
+		else {
+			c -= 0x00010000;
+			UInt16 utf16h = static_cast<UInt16>(c >> 10) + 0xd800;
+			UInt16 utf16l = (static_cast<UInt16>(c) & 0x03ff) + 0xdc00;
+			dst.append(reinterpret_cast<const char*>(&utf16h), 2);
+			dst.append(reinterpret_cast<const char*>(&utf16l), 2);
 		}
 	}
 
@@ -118,8 +123,23 @@ CUnicode::UTF8ToUTF16(const CString& src)
 CString
 CUnicode::UTF8ToUTF32(const CString& src)
 {
-	// FIXME -- should ensure dst has no characters over U-0010FFFF
-	return UTF8ToUCS4(src);
+	// get size of input string and reserve some space in output.
+	// include UTF8's nul terminator.
+	UInt32 n = src.size() + 1;
+	CString dst;
+	dst.reserve(4 * n);
+
+	// convert each character
+	const UInt8* data = reinterpret_cast<const UInt8*>(src.c_str());
+	while (n > 0) {
+		UInt32 c = fromUTF8(data, n);
+		if (c == s_invalid || c >= 0x00110000) {
+			c = s_replacement;
+		}
+		dst.append(reinterpret_cast<const char*>(&c), 4);
+	}
+
+	return dst;
 }
 
 CString
@@ -157,24 +177,48 @@ CUnicode::UTF8ToText(const CString& src)
 	wchar_t* tmp = UTF8ToWideChar(src);
 
 	// get length of multibyte string
+	size_t len = 0;
+	char mbc[MB_LEN_MAX];
 	mbstate_t state;
 	memset(&state, 0, sizeof(state));
-	const wchar_t* scratch = tmp;
-	size_t len = wcsrtombs(NULL, &scratch, 0, &state);
-	if (len == (size_t)-1) {
-		// invalid character in src
-		delete[] tmp;
-		return CString();
+	for (const wchar_t* scan = tmp; *scan != 0; ++scan) {
+		size_t mblen = wcrtomb(mbc, *scan, &state);
+		if (mblen == -1) {
+			// unconvertable character
+			len += 1;
+		}
+		else {
+			len += mblen;
+		}
 	}
 
+	// check if state is in initial state.  if not then count the
+	// bytes for returning it to the initial state.
+	if (mbsinit(&state) == 0) {
+		len += wcrtomb(mbc, L'\0', &state) - 1;
+	}
+	assert(mbsinit(&state) != 0);
+
+	// allocate multibyte string
+	char* mbs = new char[len + 1];
+
 	// convert to multibyte
-	scratch = tmp;
-	char* dst = new char[len + 1];
-	wcsrtombs(dst, &scratch, len + 1, &state);
-	CString text(dst);
+	char* dst = mbs;
+	for (const wchar_t* scan = tmp; *scan != 0; ++scan) {
+		size_t mblen = wcrtomb(dst, *scan, &state);
+		if (mblen == -1) {
+			// unconvertable character
+			*dst++ = '?';
+		}
+		else {
+			dst += len;
+		}
+	}
+	*dst = '\0';
+	CString text(mbs);
 
 	// clean up
-	delete[] dst;
+	delete[] mbs;
 	delete[] tmp;
 
 	return text;
@@ -297,6 +341,7 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n)
 		}
 		else if (n == 1) {
 			// error -- missing second word
+			toUTF8(dst, s_replacement);
 		}
 		else if (c >= 0x0000d800 && c <= 0x0000dbff) {
 			UInt32 c2 = decode16(data);
@@ -304,6 +349,7 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n)
 			--n;
 			if (c2 < 0x0000dc00 || c2 > 0x0000dfff) {
 				// error -- [d800,dbff] not followed by [dc00,dfff]
+				toUTF8(dst, s_replacement);
 			}
 			else {
 				c = (((c - 0x0000d800) << 10) | (c2 - 0x0000dc00)) + 0x00010000;
@@ -312,6 +358,7 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n)
 		}
 		else {
 			// error -- [dc00,dfff] without leading [d800,dbff]
+			toUTF8(dst, s_replacement);
 		}
 	}
 
@@ -326,8 +373,25 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n)
 CString
 CUnicode::doUTF32ToUTF8(const UInt8* data, UInt32 n)
 {
-	// FIXME -- should check that src has no characters over U-0010FFFF
-	return doUCS4ToUTF8(data, n);
+	// make some space
+	CString dst;
+	dst.reserve(n);
+
+	// convert each character
+	for (; n > 0; data += 4, --n) {
+		UInt32 c = decode32(data);
+		if (c >= 0x00110000) {
+			c = s_replacement;
+		}
+		toUTF8(dst, c);
+	}
+
+	// remove extra trailing nul
+	if (dst.size() > 0 && dst[dst.size() - 1] == '\0') {
+		dst.resize(dst.size() - 1);
+	}
+
+	return dst;
 }
 
 UInt32
@@ -433,9 +497,53 @@ CUnicode::fromUTF8(const UInt8*& data, UInt32& n)
 		assert(0 && "invalid size");
 	}
 
+	// check that all bytes after the first have the pattern 10xxxxxx.
+	// truncated sequences are treated as a single malformed character.
+	bool truncated = false;
+	switch (size) {
+	case 6:
+		if ((data[5] & 0xc0) != 0x80) {
+			truncated = true;
+			size = 5;
+		}
+		// fall through
+
+	case 5:
+		if ((data[4] & 0xc0) != 0x80) {
+			truncated = true;
+			size = 4;
+		}
+		// fall through
+
+	case 4:
+		if ((data[3] & 0xc0) != 0x80) {
+			truncated = true;
+			size = 3;
+		}
+		// fall through
+
+	case 3:
+		if ((data[2] & 0xc0) != 0x80) {
+			truncated = true;
+			size = 2;
+		}
+		// fall through
+
+	case 2:
+		if ((data[1] & 0xc0) != 0x80) {
+			truncated = true;
+			size = 1;
+		}
+	}
+
 	// update parameters
 	data += size;
 	n    -= size;
+
+	// invalid if sequence was truncated
+	if (truncated) {
+		return s_invalid;
+	}
 
 	// check for characters that didn't use the smallest possible encoding
 	static UInt32 s_minChar[] = {
@@ -451,29 +559,11 @@ CUnicode::fromUTF8(const UInt8*& data, UInt32& n)
 		return s_invalid;
 	}
 
-	// check that all bytes after the first have the pattern 10xxxxxx.
-	UInt8 a = 0x80;
-	switch (size) {
-	case 6:
-		a |= data[5];
-		// fall through
-
-	case 5:
-		a |= data[4];
-		// fall through
-
-	case 4:
-		a |= data[3];
-		// fall through
-
-	case 3:
-		a |= data[2];
-		// fall through
-
-	case 2:
-		a |= data[1];
+	// check for characters not in ISO-10646
+	if (c >= 0x0000d800 && c <= 0x0000dfff) {
+		return s_invalid;
 	}
-	if ((a & 0xc0) != 0x80) {
+	if (c >= 0x0000fffe && c <= 0x0000ffff) {
 		return s_invalid;
 	}
 
@@ -481,10 +571,16 @@ CUnicode::fromUTF8(const UInt8*& data, UInt32& n)
 }
 
 void
-CUnicode::toUTF8(CString& dst, const UInt32 c)
+CUnicode::toUTF8(CString& dst, UInt32 c)
 {
 	UInt8 data[6];
 
+	// handle characters outside the valid range
+	if (c >= 0x80000000) {
+		c = s_replacement;
+	}
+
+	// convert to UTF-8
 	if (c < 0x00000080) {
 		data[0] = static_cast<UInt8>(c);
 		dst.append(reinterpret_cast<char*>(data), 1);
@@ -525,6 +621,6 @@ CUnicode::toUTF8(CString& dst, const UInt32 c)
 		dst.append(reinterpret_cast<char*>(data), 6);
 	}
 	else {
-		// invalid character
+		assert(0 && "character out of range");
 	}
 }

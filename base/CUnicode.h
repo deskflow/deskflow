@@ -39,10 +39,11 @@ private:
 
 	// convert characters to/from UTF8
 	static UInt32		fromUTF8(const UInt8*& src, UInt32& size);
-	static void			toUTF8(CString& dst, const UInt32 c);
+	static void			toUTF8(CString& dst, UInt32 c);
 
 private:
 	static UInt32		s_invalid;
+	static UInt32		s_replacement;
 };
 
 #endif
