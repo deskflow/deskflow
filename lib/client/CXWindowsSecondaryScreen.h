@@ -65,6 +65,7 @@ protected:
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual void		updateKeys();
 	virtual void		setToggleState(KeyModifierMask);
+	virtual KeyModifierMask	getToggleState() const;
 
 private:
 	enum EKeyAction { kPress, kRelease, kRepeat };

@@ -22,7 +22,9 @@
 // CSecondaryScreen
 //
 
-CSecondaryScreen::CSecondaryScreen()
+CSecondaryScreen::CSecondaryScreen() :
+	m_active(false),
+	m_toggleKeys(0)
 {
 	// do nothing
 }
@@ -128,6 +130,9 @@ CSecondaryScreen::enter(SInt32 x, SInt32 y, KeyModifierMask mask)
 	// update our keyboard state to reflect the local state
 	updateKeys();
 
+	// remember toggle key state
+	m_toggleKeys = getToggleState();
+
 	// toggle modifiers that don't match the desired state
 	setToggleState(mask);
 
@@ -152,6 +157,9 @@ CSecondaryScreen::leave()
 
 	// subclass hook
 	onPreLeave();
+
+	// restore toggle key state
+	setToggleState(m_toggleKeys);
 
 	// hide mouse
 	showWindow();

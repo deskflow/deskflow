@@ -405,6 +405,22 @@ CXWindowsSecondaryScreen::setToggleState(KeyModifierMask mask)
 	}
 }
 
+KeyModifierMask
+CXWindowsSecondaryScreen::getToggleState() const
+{
+	KeyModifierMask mask = 0;
+	if ((m_mask & m_capsLockMask) != 0) {
+		mask |= KeyModifierCapsLock;
+	}
+	if ((m_mask & m_numLockMask) != 0) {
+		mask |= KeyModifierNumLock;
+	}
+	if ((m_mask & m_scrollLockMask) != 0) {
+		mask |= KeyModifierScrollLock;
+	}
+	return mask;
+}
+
 unsigned int
 CXWindowsSecondaryScreen::mapButton(ButtonID id) const
 {

@@ -324,11 +324,20 @@ protected:
 	*/
 	virtual void		setToggleState(KeyModifierMask) = 0;
 
+	//! Get the toggle key state
+	/*!
+	Returns the current state of the toggle keys.
+	*/
+	virtual KeyModifierMask	getToggleState() const = 0;
+
 private:
 	CMutex				m_mutex;
 
 	// m_active is true if this screen has been entered
 	bool				m_active;
+
+	// the toggle key state when this screen was last entered
+	KeyModifierMask		m_toggleKeys;
 };
 
 #endif

@@ -510,6 +510,14 @@ CMSWindowsSecondaryScreen::setToggleState(KeyModifierMask mask)
 	}
 }
 
+KeyModifierMask
+CMSWindowsSecondaryScreen::getToggleState() const
+{
+	return (m_mask & (KeyModifierCapsLock |
+					  KeyModifierNumLock |
+					  KeyModifierScrollLock));
+}
+
 // map special KeyID keys to virtual key codes. if the key is an
 // extended key then the entry is the virtual key code | 0x100.
 // unmapped keys have a 0 entry.
