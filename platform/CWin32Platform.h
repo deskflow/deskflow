@@ -71,6 +71,8 @@ private:
 	void				serviceMain(DWORD, LPTSTR*);
 	static void WINAPI	serviceMainEntry(DWORD, LPTSTR*);
 
+	void				runDaemonThread(void*);
+
 	void				serviceHandler(DWORD ctrl);
 	static void WINAPI	serviceHandlerEntry(DWORD ctrl);
 

@@ -2,6 +2,7 @@
 #include "CLock.h"
 #include "CThread.h"
 #include "CLog.h"
+#include "TMethodJob.h"
 #include "stdvector.h"
 #include <cstring>
 #include <shlobj.h>
@@ -556,9 +557,13 @@ CWin32Platform::runDaemon(RunFunc run, StopFunc stop)
 			// mark server as running
 			setStatus(m_statusHandle, SERVICE_RUNNING);
 
-			// run callback
+			// run callback in another thread
 			m_serviceRunning = true;
-			result = run(m_serviceMutex);
+			{
+				CThread thread(new TMethodJob<CWin32Platform>(this,
+								&CWin32Platform::runDaemonThread, run));
+				result = reinterpret_cast<int>(thread.getResult());
+			}
 			m_serviceRunning = false;
 
 			// notify handler that the server stopped.  if handler
@@ -618,6 +623,13 @@ CWin32Platform::runDaemon(RunFunc run, StopFunc stop)
 
 		throw;
 	}
+}
+
+void
+CWin32Platform::runDaemonThread(void* vrun)
+{
+	RunFunc run = reinterpret_cast<RunFunc>(vrun);
+	CThread::exit(reinterpret_cast<void*>(run(m_serviceMutex)));
 }
 
 void

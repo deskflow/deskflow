@@ -194,7 +194,7 @@ CMSWindowsScreen::mainLoop()
 
 		// handle quit message
 		if (event.m_msg.message == WM_QUIT) {
-			break;
+			CThread::getCurrentThread().cancel();
 		}
 
 		// dispatch message
