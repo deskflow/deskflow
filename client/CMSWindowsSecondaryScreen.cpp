@@ -463,361 +463,10 @@ CMSWindowsSecondaryScreen::setToggleState(KeyModifierMask mask)
 	}
 }
 
-// these tables map KeyID (a X windows KeySym) to virtual key codes.
-// if the key is an extended key then the entry is the virtual key
-// code | 0x100.  keys that map to normal characters have a 0 entry
-// and the conversion is done elsewhere.
-static const UINT		g_latin1[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_latin2[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_latin3[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_latin4[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_latin5[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_latin6[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_latin7[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_latin8[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_latin9[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_terminal[] =
-{
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-static const UINT		g_function[] =
+// map special KeyID keys to virtual key codes. if the key is an
+// extended key then the entry is the virtual key code | 0x100.
+// unmapped keys have a 0 entry.
+static const UINT		g_mapEE00[] =
 {
 	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -852,8 +501,7 @@ static const UINT		g_function[] =
 	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
 };
-/* XK_KP_Space to XK_KP_Equal */
-static const UINT		g_miscellany[] =
+static const UINT		g_mapEF00[] =
 {
 	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x08 */ VK_BACK, VK_TAB, 0, VK_CLEAR, 0, VK_RETURN, 0, 0,
@@ -894,61 +542,6 @@ static const UINT		g_miscellany[] =
 	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, VK_DELETE|0x100
 };
-static const UINT*		g_katakana = NULL;
-static const UINT*		g_arabic = NULL;
-static const UINT*		g_cyrillic = NULL;
-static const UINT*		g_greek = NULL;
-static const UINT*		g_technical = NULL;
-static const UINT*		g_special = NULL;
-static const UINT*		g_publishing = NULL;
-static const UINT*		g_apl = NULL;
-static const UINT*		g_hebrew = NULL;
-static const UINT*		g_thai = NULL;
-static const UINT*		g_korean = NULL;
-static const UINT*		g_armenian = NULL;
-static const UINT*		g_georgian = NULL;
-static const UINT*		g_azeri = NULL;
-static const UINT*		g_vietnamese = NULL;
-static const UINT*		g_currency = NULL;
-static const UINT*		g_mapTable[] =
-{
-	/* 0x00 */ g_latin1, g_latin2, g_latin3, g_latin4,
-	/* 0x04 */ g_katakana, g_arabic, g_cyrillic, g_greek,
-	/* 0x08 */ g_technical, g_special, g_publishing, g_apl,
-	/* 0x0c */ g_hebrew, g_thai, g_korean, NULL,
-	/* 0x10 */ NULL, NULL, g_latin8, g_latin9,
-	/* 0x14 */ g_armenian, g_georgian, g_azeri, NULL,
-	/* 0x18 */ NULL, NULL, NULL, NULL, NULL, NULL, g_vietnamese, NULL,
-	/* 0x20 */ g_currency, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x28 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x30 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x38 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x40 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x48 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x50 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x58 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x60 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x68 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x70 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x78 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x80 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x88 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x90 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0x98 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xa0 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xa8 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xb0 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xb8 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xc0 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xc8 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xd0 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xd8 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xe0 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xe8 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xf0 */ NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-	/* 0xf8 */ NULL, NULL, NULL, NULL,
-	/* 0xfc */ NULL, g_terminal, g_function, g_miscellany
-};
 
 DWORD
 CMSWindowsSecondaryScreen::mapButton(ButtonID button, bool press) const
@@ -973,19 +566,25 @@ KeyModifierMask
 CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 				KeyID id, KeyModifierMask mask, EKeyAction action) const
 {
-	// lookup the key table
-	const UInt32 mapID = ((id >> 8) & 0xff);
-	const UINT* map    = g_mapTable[mapID];
-	if (map == NULL) {
-		// unknown key
-		return m_mask;
+	virtualKey = 0;
+
+	// check for special keys
+	if ((id & 0xfffff000) == 0xe000) {
+		if ((id & 0xff00) == 0xee00) {
+			virtualKey = g_mapEE00[id & 0xff];
+		}
+		else if ((id & 0xff00) == 0xef00) {
+			virtualKey = g_mapEF00[id & 0xff];
+		}
+		if (virtualKey == 0) {
+			log((CLOG_DEBUG2 "unknown special key"));
+			return m_mask;
+		}
 	}
 
-	// look up virtual key for id.  default output mask carries over
-	// the current toggle modifier states and includes desired shift,
-	// control, alt, and meta states.
-	const UInt32 code       = (id & 0xff);
-	virtualKey              = map[code];
+	// get output mask.  default output mask carries over the current
+	// toggle modifier states and includes desired shift, control, alt,
+	// and meta states.
 	KeyModifierMask outMask = (m_mask &
 								(KeyModifierCapsLock |
 								KeyModifierNumLock |
@@ -995,24 +594,19 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 								KeyModifierControl |
 								KeyModifierAlt |
 								KeyModifierMeta));
-	log((CLOG_DEBUG2 "key id %d -> virtual key %d", id, virtualKey));
 
 	// extract extended key flag
 	const bool isExtended = ((virtualKey & 0x100) != 0);
 	virtualKey           &= ~0x100;
 
-	// if not in map then ask system to convert ascii character
+	// if not in map then ask system to convert character
 	if (virtualKey == 0) {
-		if (mapID != 0) {
-			// not ascii
-			log((CLOG_DEBUG2 "not ascii"));
-			return m_mask;
-		}
-
 		// translate.  return no keys if unknown key.
-		SHORT vk = VkKeyScan(static_cast<TCHAR>(code));
+		// FIXME -- handle unicode
+		TCHAR ascii = static_cast<TCHAR>(id & 0x000000ff);
+		SHORT vk = VkKeyScan(ascii);
 		if (vk == 0xffff) {
-			log((CLOG_DEBUG2 "no virtual key for character %d", code));
+			log((CLOG_DEBUG2 "no virtual key for character %d", id));
 			return m_mask;
 		}
 
@@ -1032,14 +626,13 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		if (HIBYTE(vk) & 4) {
 			outMask |= KeyModifierAlt;
 		}
-		log((CLOG_DEBUG2 "character %d to virtual key %d mask 0x%04x", code, LOBYTE(vk), outMask));
 
 		// handle combination of caps-lock and shift.  if caps-lock is
 		// off locally then use shift as necessary.  if caps-lock is on
 		// locally then it reverses the meaning of shift for keys that
 		// are subject to case conversion.
 		if ((outMask & KeyModifierCapsLock) != 0) {
-			if (tolower(code) != toupper(code)) {
+			if (tolower(ascii) != toupper(ascii)) {
 				log((CLOG_DEBUG2 "flip shift"));
 				outMask ^= KeyModifierShift;
 			}
@@ -1072,11 +665,12 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 			}
 		}
 
-		// check for ISO_Left_Tab
-		else if (id == 0xfe20) {
+		// check for left tab
+		else if (id == kKeyLeftTab) {
 			outMask |= KeyModifierShift;
 		}
 	}
+	log((CLOG_DEBUG2 "KeyID %d to virtual key %d mask 0x%04x", id, virtualKey, outMask));
 
 	// a list of modifier key info
 	class CModifierInfo {

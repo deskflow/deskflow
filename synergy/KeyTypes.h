@@ -40,6 +40,9 @@ static const KeyID		kKeySysReq		= 0xEF15;
 static const KeyID		kKeyEscape		= 0xEF1B;
 static const KeyID		kKeyDelete		= 0xEFFF;	/* Delete, rubout */
 
+// multi-key character composition
+static const KeyID		kKeyMultiKey	= 0xEF20;	/* Multi-key character compose */
+
 // cursor control
 static const KeyID		kKeyHome		= 0xEF50;
 static const KeyID		kKeyLeft		= 0xEF51;	/* Move left, left arrow */

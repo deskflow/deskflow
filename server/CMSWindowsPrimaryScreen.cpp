@@ -589,262 +589,262 @@ CMSWindowsPrimaryScreen::ignore() const
 
 static const KeyID		g_virtualKey[] =
 {
-	/* 0x00 */ kKeyNone,	// reserved
-	/* 0x01 */ kKeyNone,	// VK_LBUTTON
-	/* 0x02 */ kKeyNone,	// VK_RBUTTON
-	/* 0x03 */ 0xff6b,		// VK_CANCEL		XK_Break
-	/* 0x04 */ kKeyNone,	// VK_MBUTTON
-	/* 0x05 */ kKeyNone,	// undefined
-	/* 0x06 */ kKeyNone,	// undefined
-	/* 0x07 */ kKeyNone,	// undefined
-	/* 0x08 */ 0xff08,		// VK_BACK			XK_Backspace
-	/* 0x09 */ 0xff09,		// VK_TAB			VK_Tab
-	/* 0x0a */ kKeyNone,	// undefined
-	/* 0x0b */ kKeyNone,	// undefined
-	/* 0x0c */ 0xff0b,		// VK_CLEAR			XK_Clear
-	/* 0x0d */ 0xff0d,		// VK_RETURN		XK_Return
-	/* 0x0e */ kKeyNone,	// undefined
-	/* 0x0f */ kKeyNone,	// undefined
-	/* 0x10 */ 0xffe1,		// VK_SHIFT			XK_Shift_L
-	/* 0x11 */ 0xffe3,		// VK_CONTROL		XK_Control_L
-	/* 0x12 */ 0xffe9,		// VK_MENU			XK_Alt_L
-	/* 0x13 */ 0xff13,		// VK_PAUSE			XK_Pause
-	/* 0x14 */ 0xffe5,		// VK_CAPITAL		XK_Caps_Lock
-	/* 0x15 */ kKeyNone,	// VK_KANA			
-	/* 0x16 */ kKeyNone,	// VK_HANGUL		
-	/* 0x17 */ kKeyNone,	// VK_JUNJA			
-	/* 0x18 */ kKeyNone,	// VK_FINAL			
-	/* 0x19 */ kKeyNone,	// VK_KANJI			
-	/* 0x1a */ kKeyNone,	// undefined
-	/* 0x1b */ 0xff1b,		// VK_ESCAPE		XK_Escape
-	/* 0x1c */ kKeyNone,	// VK_CONVERT		
-	/* 0x1d */ kKeyNone,	// VK_NONCONVERT	
-	/* 0x1e */ kKeyNone,	// VK_ACCEPT		
-	/* 0x1f */ kKeyNone,	// VK_MODECHANGE	
-	/* 0x20 */ 0x0020,		// VK_SPACE			XK_space
-	/* 0x21 */ 0xff55,		// VK_PRIOR			XK_Prior
-	/* 0x22 */ 0xff56,		// VK_NEXT			XK_Next
-	/* 0x23 */ 0xff57,		// VK_END			XK_End
-	/* 0x24 */ 0xff50,		// VK_HOME			XK_Home
-	/* 0x25 */ 0xff51,		// VK_LEFT			XK_Left
-	/* 0x26 */ 0xff52,		// VK_UP			XK_Up
-	/* 0x27 */ 0xff53,		// VK_RIGHT			XK_Right
-	/* 0x28 */ 0xff54,		// VK_DOWN			XK_Down
-	/* 0x29 */ 0xff60,		// VK_SELECT		XK_Select
-	/* 0x2a */ kKeyNone,	// VK_PRINT			
-	/* 0x2b */ 0xff62,		// VK_EXECUTE		XK_Execute
-	/* 0x2c */ 0xff61,		// VK_SNAPSHOT		XK_Print
-	/* 0x2d */ 0xff63,		// VK_INSERT		XK_Insert
-	/* 0x2e */ 0xffff,		// VK_DELETE		XK_Delete
-	/* 0x2f */ 0xff6a,		// VK_HELP			XK_Help
-	/* 0x30 */ kKeyNone,	// VK_0				XK_0
-	/* 0x31 */ kKeyNone,	// VK_1				XK_1
-	/* 0x32 */ kKeyNone,	// VK_2				XK_2
-	/* 0x33 */ kKeyNone,	// VK_3				XK_3
-	/* 0x34 */ kKeyNone,	// VK_4				XK_4
-	/* 0x35 */ kKeyNone,	// VK_5				XK_5
-	/* 0x36 */ kKeyNone,	// VK_6				XK_6
-	/* 0x37 */ kKeyNone,	// VK_7				XK_7
-	/* 0x38 */ kKeyNone,	// VK_8				XK_8
-	/* 0x39 */ kKeyNone,	// VK_9				XK_9
-	/* 0x3a */ kKeyNone,	// undefined
-	/* 0x3b */ kKeyNone,	// undefined
-	/* 0x3c */ kKeyNone,	// undefined
-	/* 0x3d */ kKeyNone,	// undefined
-	/* 0x3e */ kKeyNone,	// undefined
-	/* 0x3f */ kKeyNone,	// undefined
-	/* 0x40 */ kKeyNone,	// undefined
-	/* 0x41 */ kKeyNone,	// VK_A				XK_A
-	/* 0x42 */ kKeyNone,	// VK_B				XK_B
-	/* 0x43 */ kKeyNone,	// VK_C				XK_C
-	/* 0x44 */ kKeyNone,	// VK_D				XK_D
-	/* 0x45 */ kKeyNone,	// VK_E				XK_E
-	/* 0x46 */ kKeyNone,	// VK_F				XK_F
-	/* 0x47 */ kKeyNone,	// VK_G				XK_G
-	/* 0x48 */ kKeyNone,	// VK_H				XK_H
-	/* 0x49 */ kKeyNone,	// VK_I				XK_I
-	/* 0x4a */ kKeyNone,	// VK_J				XK_J
-	/* 0x4b */ kKeyNone,	// VK_K				XK_K
-	/* 0x4c */ kKeyNone,	// VK_L				XK_L
-	/* 0x4d */ kKeyNone,	// VK_M				XK_M
-	/* 0x4e */ kKeyNone,	// VK_N				XK_N
-	/* 0x4f */ kKeyNone,	// VK_O				XK_O
-	/* 0x50 */ kKeyNone,	// VK_P				XK_P
-	/* 0x51 */ kKeyNone,	// VK_Q				XK_Q
-	/* 0x52 */ kKeyNone,	// VK_R				XK_R
-	/* 0x53 */ kKeyNone,	// VK_S				XK_S
-	/* 0x54 */ kKeyNone,	// VK_T				XK_T
-	/* 0x55 */ kKeyNone,	// VK_U				XK_U
-	/* 0x56 */ kKeyNone,	// VK_V				XK_V
-	/* 0x57 */ kKeyNone,	// VK_W				XK_W
-	/* 0x58 */ kKeyNone,	// VK_X				XK_X
-	/* 0x59 */ kKeyNone,	// VK_Y				XK_Y
-	/* 0x5a */ kKeyNone,	// VK_Z				XK_Z
-	/* 0x5b */ 0xffe7,		// VK_LWIN			XK_Meta_L
-	/* 0x5c */ 0xffe8,		// VK_RWIN			XK_Meta_R
-	/* 0x5d */ 0xff67,		// VK_APPS			XK_Menu
-	/* 0x5e */ kKeyNone,	// undefined
-	/* 0x5f */ kKeyNone,	// undefined
-	/* 0x60 */ 0xffb0,		// VK_NUMPAD0		XK_KP_0
-	/* 0x61 */ 0xffb1,		// VK_NUMPAD1		XK_KP_1
-	/* 0x62 */ 0xffb2,		// VK_NUMPAD2		XK_KP_2
-	/* 0x63 */ 0xffb3,		// VK_NUMPAD3		XK_KP_3
-	/* 0x64 */ 0xffb4,		// VK_NUMPAD4		XK_KP_4
-	/* 0x65 */ 0xffb5,		// VK_NUMPAD5		XK_KP_5
-	/* 0x66 */ 0xffb6,		// VK_NUMPAD6		XK_KP_6
-	/* 0x67 */ 0xffb7,		// VK_NUMPAD7		XK_KP_7
-	/* 0x68 */ 0xffb8,		// VK_NUMPAD8		XK_KP_8
-	/* 0x69 */ 0xffb9,		// VK_NUMPAD9		XK_KP_9
-	/* 0x6a */ 0xffaa,		// VK_MULTIPLY		XK_KP_Multiply
-	/* 0x6b */ 0xffab,		// VK_ADD			XK_KP_Add
-	/* 0x6c */ 0xffac,		// VK_SEPARATOR		XK_KP_Separator
-	/* 0x6d */ 0xffad,		// VK_SUBTRACT		XK_KP_Subtract
-	/* 0x6e */ 0xffae,		// VK_DECIMAL		XK_KP_Decimal
-	/* 0x6f */ 0xffaf,		// VK_DIVIDE		XK_KP_Divide
-	/* 0x70 */ 0xffbe,		// VK_F1			XK_F1
-	/* 0x71 */ 0xffbf,		// VK_F2			XK_F2
-	/* 0x72 */ 0xffc0,		// VK_F3			XK_F3
-	/* 0x73 */ 0xffc1,		// VK_F4			XK_F4
-	/* 0x74 */ 0xffc2,		// VK_F5			XK_F5
-	/* 0x75 */ 0xffc3,		// VK_F6			XK_F6
-	/* 0x76 */ 0xffc4,		// VK_F7			XK_F7
-	/* 0x77 */ 0xffc5,		// VK_F8			XK_F8
-	/* 0x78 */ 0xffc6,		// VK_F9			XK_F9
-	/* 0x79 */ 0xffc7,		// VK_F10			XK_F10
-	/* 0x7a */ 0xffc8,		// VK_F11			XK_F11
-	/* 0x7b */ 0xffc9,		// VK_F12			XK_F12
-	/* 0x7c */ 0xffca,		// VK_F13			XK_F13
-	/* 0x7d */ 0xffcb,		// VK_F14			XK_F14
-	/* 0x7e */ 0xffcc,		// VK_F15			XK_F15
-	/* 0x7f */ 0xffcd,		// VK_F16			XK_F16
-	/* 0x80 */ 0xffce,		// VK_F17			XK_F17
-	/* 0x81 */ 0xffcf,		// VK_F18			XK_F18
-	/* 0x82 */ 0xffd0,		// VK_F19			XK_F19
-	/* 0x83 */ 0xffd1,		// VK_F20			XK_F20
-	/* 0x84 */ 0xffd2,		// VK_F21			XK_F21
-	/* 0x85 */ 0xffd3,		// VK_F22			XK_F22
-	/* 0x86 */ 0xffd4,		// VK_F23			XK_F23
-	/* 0x87 */ 0xffd5,		// VK_F24			XK_F24
-	/* 0x88 */ kKeyNone,	// unassigned
-	/* 0x89 */ kKeyNone,	// unassigned
-	/* 0x8a */ kKeyNone,	// unassigned
-	/* 0x8b */ kKeyNone,	// unassigned
-	/* 0x8c */ kKeyNone,	// unassigned
-	/* 0x8d */ kKeyNone,	// unassigned
-	/* 0x8e */ kKeyNone,	// unassigned
-	/* 0x8f */ kKeyNone,	// unassigned
-	/* 0x90 */ 0xff7f,		// VK_NUMLOCK		XK_Num_Lock
-	/* 0x91 */ 0xff14,		// VK_SCROLL		XK_Scroll_Lock
-	/* 0x92 */ kKeyNone,	// unassigned
-	/* 0x93 */ kKeyNone,	// unassigned
-	/* 0x94 */ kKeyNone,	// unassigned
-	/* 0x95 */ kKeyNone,	// unassigned
-	/* 0x96 */ kKeyNone,	// unassigned
-	/* 0x97 */ kKeyNone,	// unassigned
-	/* 0x98 */ kKeyNone,	// unassigned
-	/* 0x99 */ kKeyNone,	// unassigned
-	/* 0x9a */ kKeyNone,	// unassigned
-	/* 0x9b */ kKeyNone,	// unassigned
-	/* 0x9c */ kKeyNone,	// unassigned
-	/* 0x9d */ kKeyNone,	// unassigned
-	/* 0x9e */ kKeyNone,	// unassigned
-	/* 0x9f */ kKeyNone,	// unassigned
-	/* 0xa0 */ 0xffe1,		// VK_LSHIFT		XK_Shift_L
-	/* 0xa1 */ 0xffe2,		// VK_RSHIFT		XK_Shift_R
-	/* 0xa2 */ 0xffe3,		// VK_LCONTROL		XK_Control_L
-	/* 0xa3 */ 0xffe4,		// VK_RCONTROL		XK_Control_R
-	/* 0xa4 */ 0xffe9,		// VK_LMENU			XK_Alt_L
-	/* 0xa5 */ 0xffea,		// VK_RMENU			XK_Alt_R
-	/* 0xa6 */ kKeyNone,	// unassigned
-	/* 0xa7 */ kKeyNone,	// unassigned
-	/* 0xa8 */ kKeyNone,	// unassigned
-	/* 0xa9 */ kKeyNone,	// unassigned
-	/* 0xaa */ kKeyNone,	// unassigned
-	/* 0xab */ kKeyNone,	// unassigned
-	/* 0xac */ kKeyNone,	// unassigned
-	/* 0xad */ kKeyNone,	// unassigned
-	/* 0xae */ kKeyNone,	// unassigned
-	/* 0xaf */ kKeyNone,	// unassigned
-	/* 0xb0 */ kKeyNone,	// unassigned
-	/* 0xb1 */ kKeyNone,	// unassigned
-	/* 0xb2 */ kKeyNone,	// unassigned
-	/* 0xb3 */ kKeyNone,	// unassigned
-	/* 0xb4 */ kKeyNone,	// unassigned
-	/* 0xb5 */ kKeyNone,	// unassigned
-	/* 0xb6 */ kKeyNone,	// unassigned
-	/* 0xb7 */ kKeyNone,	// unassigned
-	/* 0xb8 */ kKeyNone,	// unassigned
-	/* 0xb9 */ kKeyNone,	// unassigned
-	/* 0xba */ kKeyNone,	// OEM specific
-	/* 0xbb */ kKeyNone,	// OEM specific
-	/* 0xbc */ kKeyNone,	// OEM specific
-	/* 0xbd */ kKeyNone,	// OEM specific
-	/* 0xbe */ kKeyNone,	// OEM specific
-	/* 0xbf */ kKeyNone,	// OEM specific
-	/* 0xc0 */ kKeyNone,	// OEM specific
-	/* 0xc1 */ kKeyNone,	// unassigned
-	/* 0xc2 */ kKeyNone,	// unassigned
-	/* 0xc3 */ kKeyNone,	// unassigned
-	/* 0xc4 */ kKeyNone,	// unassigned
-	/* 0xc5 */ kKeyNone,	// unassigned
-	/* 0xc6 */ kKeyNone,	// unassigned
-	/* 0xc7 */ kKeyNone,	// unassigned
-	/* 0xc8 */ kKeyNone,	// unassigned
-	/* 0xc9 */ kKeyNone,	// unassigned
-	/* 0xca */ kKeyNone,	// unassigned
-	/* 0xcb */ kKeyNone,	// unassigned
-	/* 0xcc */ kKeyNone,	// unassigned
-	/* 0xcd */ kKeyNone,	// unassigned
-	/* 0xce */ kKeyNone,	// unassigned
-	/* 0xcf */ kKeyNone,	// unassigned
-	/* 0xd0 */ kKeyNone,	// unassigned
-	/* 0xd1 */ kKeyNone,	// unassigned
-	/* 0xd2 */ kKeyNone,	// unassigned
-	/* 0xd3 */ kKeyNone,	// unassigned
-	/* 0xd4 */ kKeyNone,	// unassigned
-	/* 0xd5 */ kKeyNone,	// unassigned
-	/* 0xd6 */ kKeyNone,	// unassigned
-	/* 0xd7 */ kKeyNone,	// unassigned
-	/* 0xd8 */ kKeyNone,	// unassigned
-	/* 0xd9 */ kKeyNone,	// unassigned
-	/* 0xda */ kKeyNone,	// unassigned
-	/* 0xdb */ kKeyNone,	// OEM specific
-	/* 0xdc */ kKeyNone,	// OEM specific
-	/* 0xdd */ kKeyNone,	// OEM specific
-	/* 0xde */ kKeyNone,	// OEM specific
-	/* 0xdf */ kKeyNone,	// OEM specific
-	/* 0xe0 */ kKeyNone,	// OEM specific
-	/* 0xe1 */ kKeyNone,	// OEM specific
-	/* 0xe2 */ kKeyNone,	// OEM specific
-	/* 0xe3 */ kKeyNone,	// OEM specific
-	/* 0xe4 */ kKeyNone,	// OEM specific
-	/* 0xe5 */ kKeyNone,	// unassigned
-	/* 0xe6 */ kKeyNone,	// OEM specific
-	/* 0xe7 */ kKeyNone,	// unassigned
-	/* 0xe8 */ kKeyNone,	// unassigned
-	/* 0xe9 */ kKeyNone,	// OEM specific
-	/* 0xea */ kKeyNone,	// OEM specific
-	/* 0xeb */ kKeyNone,	// OEM specific
-	/* 0xec */ kKeyNone,	// OEM specific
-	/* 0xed */ kKeyNone,	// OEM specific
-	/* 0xee */ kKeyNone,	// OEM specific
-	/* 0xef */ kKeyNone,	// OEM specific
-	/* 0xf0 */ kKeyNone,	// OEM specific
-	/* 0xf1 */ kKeyNone,	// OEM specific
-	/* 0xf2 */ kKeyNone,	// OEM specific
-	/* 0xf3 */ kKeyNone,	// OEM specific
-	/* 0xf4 */ kKeyNone,	// OEM specific
-	/* 0xf5 */ kKeyNone,	// OEM specific
-	/* 0xf6 */ kKeyNone,	// VK_ATTN			
-	/* 0xf7 */ kKeyNone,	// VK_CRSEL			
-	/* 0xf8 */ kKeyNone,	// VK_EXSEL			
-	/* 0xf9 */ kKeyNone,	// VK_EREOF			
-	/* 0xfa */ kKeyNone,	// VK_PLAY			
-	/* 0xfb */ kKeyNone,	// VK_ZOOM			
-	/* 0xfc */ kKeyNone,	// reserved
-	/* 0xfd */ kKeyNone,	// VK_PA1			
-	/* 0xfe */ kKeyNone,	// VK_OEM_CLEAR		
-	/* 0xff */ kKeyNone		// reserved
+	/* 0x00 */ kKeyNone,		// reserved
+	/* 0x01 */ kKeyNone,		// VK_LBUTTON
+	/* 0x02 */ kKeyNone,		// VK_RBUTTON
+	/* 0x03 */ kKeyBreak,		// VK_CANCEL
+	/* 0x04 */ kKeyNone,		// VK_MBUTTON
+	/* 0x05 */ kKeyNone,		// undefined
+	/* 0x06 */ kKeyNone,		// undefined
+	/* 0x07 */ kKeyNone,		// undefined
+	/* 0x08 */ kKeyBackSpace,	// VK_BACK
+	/* 0x09 */ kKeyTab,			// VK_TAB
+	/* 0x0a */ kKeyNone,		// undefined
+	/* 0x0b */ kKeyNone,		// undefined
+	/* 0x0c */ kKeyClear,		// VK_CLEAR
+	/* 0x0d */ kKeyReturn,		// VK_RETURN
+	/* 0x0e */ kKeyNone,		// undefined
+	/* 0x0f */ kKeyNone,		// undefined
+	/* 0x10 */ kKeyShift_L,		// VK_SHIFT
+	/* 0x11 */ kKeyControl_L,	// VK_CONTROL
+	/* 0x12 */ kKeyAlt_L,		// VK_MENU
+	/* 0x13 */ kKeyPause,		// VK_PAUSE
+	/* 0x14 */ kKeyCapsLock,	// VK_CAPITAL
+	/* 0x15 */ kKeyNone,		// VK_KANA			
+	/* 0x16 */ kKeyNone,		// VK_HANGUL		
+	/* 0x17 */ kKeyNone,		// VK_JUNJA			
+	/* 0x18 */ kKeyNone,		// VK_FINAL			
+	/* 0x19 */ kKeyNone,		// VK_KANJI			
+	/* 0x1a */ kKeyNone,		// undefined
+	/* 0x1b */ kKeyEscape,		// VK_ESCAPE
+	/* 0x1c */ kKeyNone,		// VK_CONVERT		
+	/* 0x1d */ kKeyNone,		// VK_NONCONVERT	
+	/* 0x1e */ kKeyNone,		// VK_ACCEPT		
+	/* 0x1f */ kKeyNone,		// VK_MODECHANGE	
+	/* 0x20 */ 0x0020,			// VK_SPACE
+	/* 0x21 */ kKeyPageUp,		// VK_PRIOR
+	/* 0x22 */ kKeyPageDown,	// VK_NEXT
+	/* 0x23 */ kKeyEnd,			// VK_END
+	/* 0x24 */ kKeyHome,		// VK_HOME
+	/* 0x25 */ kKeyLeft,		// VK_LEFT
+	/* 0x26 */ kKeyUp,			// VK_UP
+	/* 0x27 */ kKeyRight,		// VK_RIGHT
+	/* 0x28 */ kKeyDown,		// VK_DOWN
+	/* 0x29 */ kKeySelect,		// VK_SELECT
+	/* 0x2a */ kKeyNone,		// VK_PRINT
+	/* 0x2b */ kKeyExecute,		// VK_EXECUTE
+	/* 0x2c */ kKeyPrint,		// VK_SNAPSHOT
+	/* 0x2d */ kKeyInsert,		// VK_INSERT
+	/* 0x2e */ kKeyDelete,		// VK_DELETE
+	/* 0x2f */ kKeyHelp,		// VK_HELP
+	/* 0x30 */ kKeyNone,		// VK_0
+	/* 0x31 */ kKeyNone,		// VK_1
+	/* 0x32 */ kKeyNone,		// VK_2
+	/* 0x33 */ kKeyNone,		// VK_3
+	/* 0x34 */ kKeyNone,		// VK_4
+	/* 0x35 */ kKeyNone,		// VK_5
+	/* 0x36 */ kKeyNone,		// VK_6
+	/* 0x37 */ kKeyNone,		// VK_7
+	/* 0x38 */ kKeyNone,		// VK_8
+	/* 0x39 */ kKeyNone,		// VK_9
+	/* 0x3a */ kKeyNone,		// undefined
+	/* 0x3b */ kKeyNone,		// undefined
+	/* 0x3c */ kKeyNone,		// undefined
+	/* 0x3d */ kKeyNone,		// undefined
+	/* 0x3e */ kKeyNone,		// undefined
+	/* 0x3f */ kKeyNone,		// undefined
+	/* 0x40 */ kKeyNone,		// undefined
+	/* 0x41 */ kKeyNone,		// VK_A
+	/* 0x42 */ kKeyNone,		// VK_B
+	/* 0x43 */ kKeyNone,		// VK_C
+	/* 0x44 */ kKeyNone,		// VK_D
+	/* 0x45 */ kKeyNone,		// VK_E
+	/* 0x46 */ kKeyNone,		// VK_F
+	/* 0x47 */ kKeyNone,		// VK_G
+	/* 0x48 */ kKeyNone,		// VK_H
+	/* 0x49 */ kKeyNone,		// VK_I
+	/* 0x4a */ kKeyNone,		// VK_J
+	/* 0x4b */ kKeyNone,		// VK_K
+	/* 0x4c */ kKeyNone,		// VK_L
+	/* 0x4d */ kKeyNone,		// VK_M
+	/* 0x4e */ kKeyNone,		// VK_N
+	/* 0x4f */ kKeyNone,		// VK_O
+	/* 0x50 */ kKeyNone,		// VK_P
+	/* 0x51 */ kKeyNone,		// VK_Q
+	/* 0x52 */ kKeyNone,		// VK_R
+	/* 0x53 */ kKeyNone,		// VK_S
+	/* 0x54 */ kKeyNone,		// VK_T
+	/* 0x55 */ kKeyNone,		// VK_U
+	/* 0x56 */ kKeyNone,		// VK_V
+	/* 0x57 */ kKeyNone,		// VK_W
+	/* 0x58 */ kKeyNone,		// VK_X
+	/* 0x59 */ kKeyNone,		// VK_Y
+	/* 0x5a */ kKeyNone,		// VK_Z
+	/* 0x5b */ kKeyMeta_L,		// VK_LWIN
+	/* 0x5c */ kKeyMeta_R,		// VK_RWIN
+	/* 0x5d */ kKeyMenu,		// VK_APPS
+	/* 0x5e */ kKeyNone,		// undefined
+	/* 0x5f */ kKeyNone,		// undefined
+	/* 0x60 */ kKeyKP_0,		// VK_NUMPAD0
+	/* 0x61 */ kKeyKP_1,		// VK_NUMPAD1
+	/* 0x62 */ kKeyKP_2,		// VK_NUMPAD2
+	/* 0x63 */ kKeyKP_3,		// VK_NUMPAD3
+	/* 0x64 */ kKeyKP_4,		// VK_NUMPAD4
+	/* 0x65 */ kKeyKP_5,		// VK_NUMPAD5
+	/* 0x66 */ kKeyKP_6,		// VK_NUMPAD6
+	/* 0x67 */ kKeyKP_7,		// VK_NUMPAD7
+	/* 0x68 */ kKeyKP_8,		// VK_NUMPAD8
+	/* 0x69 */ kKeyKP_9,		// VK_NUMPAD9
+	/* 0x6a */ kKeyKP_Multiply,	// VK_MULTIPLY
+	/* 0x6b */ kKeyKP_Add,		// VK_ADD
+	/* 0x6c */ kKeyKP_Separator,// VK_SEPARATOR
+	/* 0x6d */ kKeyKP_Subtract,	// VK_SUBTRACT
+	/* 0x6e */ kKeyKP_Decimal,	// VK_DECIMAL
+	/* 0x6f */ kKeyKP_Divide,	// VK_DIVIDE
+	/* 0x70 */ kKeyF1,			// VK_F1
+	/* 0x71 */ kKeyF2,			// VK_F2
+	/* 0x72 */ kKeyF3,			// VK_F3
+	/* 0x73 */ kKeyF4,			// VK_F4
+	/* 0x74 */ kKeyF5,			// VK_F5
+	/* 0x75 */ kKeyF6,			// VK_F6
+	/* 0x76 */ kKeyF7,			// VK_F7
+	/* 0x77 */ kKeyF8,			// VK_F8
+	/* 0x78 */ kKeyF9,			// VK_F9
+	/* 0x79 */ kKeyF10,			// VK_F10
+	/* 0x7a */ kKeyF11,			// VK_F11
+	/* 0x7b */ kKeyF12,			// VK_F12
+	/* 0x7c */ kKeyF13,			// VK_F13
+	/* 0x7d */ kKeyF14,			// VK_F14
+	/* 0x7e */ kKeyF15,			// VK_F15
+	/* 0x7f */ kKeyF16,			// VK_F16
+	/* 0x80 */ kKeyF17,			// VK_F17
+	/* 0x81 */ kKeyF18,			// VK_F18
+	/* 0x82 */ kKeyF19,			// VK_F19
+	/* 0x83 */ kKeyF20,			// VK_F20
+	/* 0x84 */ kKeyF21,			// VK_F21
+	/* 0x85 */ kKeyF22,			// VK_F22
+	/* 0x86 */ kKeyF23,			// VK_F23
+	/* 0x87 */ kKeyF24,			// VK_F24
+	/* 0x88 */ kKeyNone,		// unassigned
+	/* 0x89 */ kKeyNone,		// unassigned
+	/* 0x8a */ kKeyNone,		// unassigned
+	/* 0x8b */ kKeyNone,		// unassigned
+	/* 0x8c */ kKeyNone,		// unassigned
+	/* 0x8d */ kKeyNone,		// unassigned
+	/* 0x8e */ kKeyNone,		// unassigned
+	/* 0x8f */ kKeyNone,		// unassigned
+	/* 0x90 */ kKeyNumLock,		// VK_NUMLOCK
+	/* 0x91 */ kKeyScrollLock,	// VK_SCROLL
+	/* 0x92 */ kKeyNone,		// unassigned
+	/* 0x93 */ kKeyNone,		// unassigned
+	/* 0x94 */ kKeyNone,		// unassigned
+	/* 0x95 */ kKeyNone,		// unassigned
+	/* 0x96 */ kKeyNone,		// unassigned
+	/* 0x97 */ kKeyNone,		// unassigned
+	/* 0x98 */ kKeyNone,		// unassigned
+	/* 0x99 */ kKeyNone,		// unassigned
+	/* 0x9a */ kKeyNone,		// unassigned
+	/* 0x9b */ kKeyNone,		// unassigned
+	/* 0x9c */ kKeyNone,		// unassigned
+	/* 0x9d */ kKeyNone,		// unassigned
+	/* 0x9e */ kKeyNone,		// unassigned
+	/* 0x9f */ kKeyNone,		// unassigned
+	/* 0xa0 */ kKeyShift_L,		// VK_LSHIFT
+	/* 0xa1 */ kKeyShift_R,		// VK_RSHIFT
+	/* 0xa2 */ kKeyControl_L,	// VK_LCONTROL
+	/* 0xa3 */ kKeyControl_R,	// VK_RCONTROL
+	/* 0xa4 */ kKeyAlt_L,		// VK_LMENU
+	/* 0xa5 */ kKeyAlt_R,		// VK_RMENU
+	/* 0xa6 */ kKeyNone,		// unassigned
+	/* 0xa7 */ kKeyNone,		// unassigned
+	/* 0xa8 */ kKeyNone,		// unassigned
+	/* 0xa9 */ kKeyNone,		// unassigned
+	/* 0xaa */ kKeyNone,		// unassigned
+	/* 0xab */ kKeyNone,		// unassigned
+	/* 0xac */ kKeyNone,		// unassigned
+	/* 0xad */ kKeyNone,		// unassigned
+	/* 0xae */ kKeyNone,		// unassigned
+	/* 0xaf */ kKeyNone,		// unassigned
+	/* 0xb0 */ kKeyNone,		// unassigned
+	/* 0xb1 */ kKeyNone,		// unassigned
+	/* 0xb2 */ kKeyNone,		// unassigned
+	/* 0xb3 */ kKeyNone,		// unassigned
+	/* 0xb4 */ kKeyNone,		// unassigned
+	/* 0xb5 */ kKeyNone,		// unassigned
+	/* 0xb6 */ kKeyNone,		// unassigned
+	/* 0xb7 */ kKeyNone,		// unassigned
+	/* 0xb8 */ kKeyNone,		// unassigned
+	/* 0xb9 */ kKeyNone,		// unassigned
+	/* 0xba */ kKeyNone,		// OEM specific
+	/* 0xbb */ kKeyNone,		// OEM specific
+	/* 0xbc */ kKeyNone,		// OEM specific
+	/* 0xbd */ kKeyNone,		// OEM specific
+	/* 0xbe */ kKeyNone,		// OEM specific
+	/* 0xbf */ kKeyNone,		// OEM specific
+	/* 0xc0 */ kKeyNone,		// OEM specific
+	/* 0xc1 */ kKeyNone,		// unassigned
+	/* 0xc2 */ kKeyNone,		// unassigned
+	/* 0xc3 */ kKeyNone,		// unassigned
+	/* 0xc4 */ kKeyNone,		// unassigned
+	/* 0xc5 */ kKeyNone,		// unassigned
+	/* 0xc6 */ kKeyNone,		// unassigned
+	/* 0xc7 */ kKeyNone,		// unassigned
+	/* 0xc8 */ kKeyNone,		// unassigned
+	/* 0xc9 */ kKeyNone,		// unassigned
+	/* 0xca */ kKeyNone,		// unassigned
+	/* 0xcb */ kKeyNone,		// unassigned
+	/* 0xcc */ kKeyNone,		// unassigned
+	/* 0xcd */ kKeyNone,		// unassigned
+	/* 0xce */ kKeyNone,		// unassigned
+	/* 0xcf */ kKeyNone,		// unassigned
+	/* 0xd0 */ kKeyNone,		// unassigned
+	/* 0xd1 */ kKeyNone,		// unassigned
+	/* 0xd2 */ kKeyNone,		// unassigned
+	/* 0xd3 */ kKeyNone,		// unassigned
+	/* 0xd4 */ kKeyNone,		// unassigned
+	/* 0xd5 */ kKeyNone,		// unassigned
+	/* 0xd6 */ kKeyNone,		// unassigned
+	/* 0xd7 */ kKeyNone,		// unassigned
+	/* 0xd8 */ kKeyNone,		// unassigned
+	/* 0xd9 */ kKeyNone,		// unassigned
+	/* 0xda */ kKeyNone,		// unassigned
+	/* 0xdb */ kKeyNone,		// OEM specific
+	/* 0xdc */ kKeyNone,		// OEM specific
+	/* 0xdd */ kKeyNone,		// OEM specific
+	/* 0xde */ kKeyNone,		// OEM specific
+	/* 0xdf */ kKeyNone,		// OEM specific
+	/* 0xe0 */ kKeyNone,		// OEM specific
+	/* 0xe1 */ kKeyNone,		// OEM specific
+	/* 0xe2 */ kKeyNone,		// OEM specific
+	/* 0xe3 */ kKeyNone,		// OEM specific
+	/* 0xe4 */ kKeyNone,		// OEM specific
+	/* 0xe5 */ kKeyNone,		// unassigned
+	/* 0xe6 */ kKeyNone,		// OEM specific
+	/* 0xe7 */ kKeyNone,		// unassigned
+	/* 0xe8 */ kKeyNone,		// unassigned
+	/* 0xe9 */ kKeyNone,		// OEM specific
+	/* 0xea */ kKeyNone,		// OEM specific
+	/* 0xeb */ kKeyNone,		// OEM specific
+	/* 0xec */ kKeyNone,		// OEM specific
+	/* 0xed */ kKeyNone,		// OEM specific
+	/* 0xee */ kKeyNone,		// OEM specific
+	/* 0xef */ kKeyNone,		// OEM specific
+	/* 0xf0 */ kKeyNone,		// OEM specific
+	/* 0xf1 */ kKeyNone,		// OEM specific
+	/* 0xf2 */ kKeyNone,		// OEM specific
+	/* 0xf3 */ kKeyNone,		// OEM specific
+	/* 0xf4 */ kKeyNone,		// OEM specific
+	/* 0xf5 */ kKeyNone,		// OEM specific
+	/* 0xf6 */ kKeyNone,		// VK_ATTN			
+	/* 0xf7 */ kKeyNone,		// VK_CRSEL			
+	/* 0xf8 */ kKeyNone,		// VK_EXSEL			
+	/* 0xf9 */ kKeyNone,		// VK_EREOF			
+	/* 0xfa */ kKeyNone,		// VK_PLAY			
+	/* 0xfb */ kKeyNone,		// VK_ZOOM			
+	/* 0xfc */ kKeyNone,		// reserved
+	/* 0xfd */ kKeyNone,		// VK_PA1			
+	/* 0xfe */ kKeyNone,		// VK_OEM_CLEAR		
+	/* 0xff */ kKeyNone			// reserved
 };
 
 KeyID
@@ -858,8 +858,6 @@ CMSWindowsPrimaryScreen::mapKey(
 	//    95,98: num pad vk code -> invalid scan code
 	//    95,98,NT4: num pad scan code -> bad vk code except
 	//      SEPARATOR, MULTIPLY, SUBTRACT, ADD
-
-	static const KeyID XK_Multi_key = 0xff20;
 
 	assert(maskOut != NULL);
 
@@ -952,7 +950,7 @@ CMSWindowsPrimaryScreen::mapKey(
 
 	// check for dead keys
 	if (MapVirtualKey(vkCode, 2) >= 0x8000) {
-		return XK_Multi_key;
+		return kKeyMultiKey;
 	}
 
 	// ToAscii() maps ctrl+letter to the corresponding control code
@@ -968,6 +966,7 @@ CMSWindowsPrimaryScreen::mapKey(
 	m_keys[VK_CONTROL]  = 0;
 
 	// convert to ascii
+	// FIXME -- support unicode
 	WORD ascii;
 	int result = ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
 
@@ -981,7 +980,7 @@ CMSWindowsPrimaryScreen::mapKey(
 	// by calling ToAscii() again with arbitrary arguments.
 	if (result < 0) {
 		ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
-		return XK_Multi_key;
+		return kKeyMultiKey;
 	}
 
 	// if result is 1 then the key was succesfully converted
@@ -1017,7 +1016,7 @@ CMSWindowsPrimaryScreen::mapKey(
 
 		// put it back
 		ToAscii(vkCode, scanCode, keys, &ascii, 0);
-		return XK_Multi_key;
+		return kKeyMultiKey;
 	}
 
 	// cannot convert key
