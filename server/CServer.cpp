@@ -132,8 +132,16 @@ UInt32					CServer::getActivePrimarySides() const
 	return sides;
 }
 
+void					CServer::setInfo(
+								SInt32 w, SInt32 h, SInt32 zoneSize,
+								SInt32 x, SInt32 y)
+{
+	setInfo(m_primaryInfo->m_name, w, h, zoneSize, x, y);
+}
+
 void					CServer::setInfo(const CString& client,
-								SInt32 w, SInt32 h, SInt32 zoneSize)
+								SInt32 w, SInt32 h, SInt32 zoneSize,
+								SInt32 x, SInt32 y)
 {
 	assert(!client.empty());
 	assert(w > 0);
@@ -151,12 +159,29 @@ void					CServer::setInfo(const CString& client,
 	// update client info
 	CScreenInfo* info = index->second;
 	if (info == m_active) {
-		// FIXME -- ensure mouse is still on screen.  warp it if necessary.
+		// update the remote mouse coordinates
+		m_x = x;
+		m_y = y;
 	}
 	info->m_width    = w;
 	info->m_height   = h;
 	info->m_zoneSize = zoneSize;
-	log((CLOG_NOTE "client \"%s\" size=%dx%d zone=%d", client.c_str(), w, h, zoneSize));
+	log((CLOG_NOTE "client \"%s\" size=%dx%d zone=%d pos=%d,%d", client.c_str(), w, h, zoneSize, x, y));
+
+	// send acknowledgement (if client isn't the primary)
+	if (info->m_protocol != NULL) {
+		info->m_protocol->sendInfoAcknowledgment();
+	}
+
+	// handle resolution change to primary screen
+	else {
+		if (info == m_active) {
+			onMouseMovePrimary(x, y);
+		}
+		else {
+			onMouseMoveSecondary(0, 0);
+		}
+	}
 }
 
 void					CServer::grabClipboard(ClipboardID id)
@@ -1011,6 +1036,10 @@ void					CServer::openPrimaryScreen()
 	// reset sequence number
 	m_seqNum = 0;
 
+	// add connection
+	m_active = addConnection(CString("primary"/* FIXME */), NULL);
+	m_primaryInfo = m_active;
+
 	// open screen
 	log((CLOG_DEBUG1 "creating primary screen"));
 #if defined(CONFIG_PLATFORM_WIN32)
@@ -1020,16 +1049,6 @@ void					CServer::openPrimaryScreen()
 #endif
 	log((CLOG_DEBUG1 "opening primary screen"));
 	m_primary->open(this);
-
-	// add connection
-	m_active = addConnection(CString("primary"/* FIXME */), NULL);
-	m_primaryInfo = m_active;
-
-	// update info
-	m_primary->getSize(&m_active->m_width, &m_active->m_height);
-	m_active->m_zoneSize = m_primary->getJumpZoneSize();
-	log((CLOG_NOTE "server size=%dx%d zone=%d", m_active->m_width, m_active->m_height, m_active->m_zoneSize));
-	// FIXME -- need way for primary screen to call us back
 
 	// set the clipboard owner to the primary screen and then get the
 	// current clipboard data.

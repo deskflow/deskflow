@@ -30,6 +30,7 @@ public:
 	virtual void		sendClipboard(ClipboardID, const CString&) = 0;
 	virtual void		sendGrabClipboard(ClipboardID) = 0;
 	virtual void		sendScreenSaver(bool on) = 0;
+	virtual void		sendInfoAcknowledgment() = 0;
 	virtual void		sendKeyDown(KeyID, KeyModifierMask) = 0;
 	virtual void		sendKeyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;
 	virtual void		sendKeyUp(KeyID, KeyModifierMask) = 0;

@@ -66,6 +66,9 @@ public:
 
 	// accessors
 
+	// get the position of the mouse on the screen
+	virtual void		getMousePos(SInt32* x, SInt32* y) const = 0;
+
 	// get the size of the screen
 	virtual void		getSize(SInt32* width, SInt32* height) const = 0;
 

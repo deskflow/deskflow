@@ -61,6 +61,11 @@ void					CMSWindowsPrimaryScreen::open(CServer* server)
 	// get keyboard state
 	updateKeys();
 
+	// send screen info
+	SInt32 w, h;
+	getScreenSize(&w, &h);
+	m_server->setInfo(w, h, getJumpZoneSize(), 0, 0);
+
 	// enter the screen
 	doEnter();
 }
@@ -246,18 +251,35 @@ void					CMSWindowsPrimaryScreen::getClipboard(
 KeyModifierMask			CMSWindowsPrimaryScreen::getToggleMask() const
 {
 	KeyModifierMask mask = 0;
-	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
+	if ((GetKeyState(VK_CAPITAL) & 0x01) != 0)
 		mask |= KeyModifierCapsLock;
-	if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
+	if ((GetKeyState(VK_NUMLOCK) & 0x01) != 0)
 		mask |= KeyModifierNumLock;
-	if ((m_keys[VK_SCROLL] & 0x01) != 0)
+	if ((GetKeyState(VK_SCROLL) & 0x01) != 0)
 		mask |= KeyModifierScrollLock;
 	return mask;
 }
 
 bool					CMSWindowsPrimaryScreen::isLockedToScreen() const
 {
-	// FIXME
+	// check buttons
+	if (GetAsyncKeyState(VK_LBUTTON) < 0 ||
+		GetAsyncKeyState(VK_MBUTTON) < 0 ||
+		GetAsyncKeyState(VK_RBUTTON) < 0) {
+		return true;
+	}
+
+	// check keys
+	BYTE keys[256];
+	if (GetKeyboardState(keys)) {
+		for (unsigned int i = 0; i < sizeof(keys); ++i) {
+			if ((keys[i] & 0x80) != 0) {
+				return true;
+			}
+		}
+	}
+
+	// not locked
 	return false;
 }
 
@@ -433,13 +455,17 @@ bool					CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 				// get mouse deltas
 				x -= m_xCenter;
 				y -= m_yCenter;
-				log((CLOG_DEBUG2 "event: active move %d,%d", x, y));
 
-				// warp mouse back to center
-				warpCursor(m_xCenter, m_yCenter);
+				// ignore if the mouse didn't move
+				if (x != 0 && y != 0) {
+					log((CLOG_DEBUG2 "event: active move %d,%d", x, y));
 
-				// send motion
-				m_server->onMouseMoveSecondary(x, y);
+					// warp mouse back to center
+					warpCursor(m_xCenter, m_yCenter);
+
+					// send motion
+					m_server->onMouseMoveSecondary(x, y);
+				}
 			}
 		}
 		return true;
@@ -485,6 +511,36 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 		else
 			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
 		return 0;
+
+	case WM_DISPLAYCHANGE: {
+		// screen resolution has changed
+		SInt32 w, h;
+		updateScreenSize();
+		getScreenSize(&w, &h);
+
+		// recompute center pixel of screen
+		m_xCenter = w >> 1;
+		m_yCenter = h >> 1;
+
+		// warp mouse to center if active
+		if (m_active) {
+			warpCursor(m_xCenter, m_yCenter);
+		}
+
+		// tell hook about resize if not active
+		else {
+			SetZoneFunc setZone = (SetZoneFunc)GetProcAddress(
+											m_hookLibrary, "setZone");
+			setZone(m_server->getActivePrimarySides(), w, h, getJumpZoneSize());
+		}
+
+		// send new screen info
+		POINT pos;
+		GetCursorPos(&pos);
+		m_server->setInfo(w, h, getJumpZoneSize(), pos.x, pos.y);
+
+		return 0;
+	}
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);

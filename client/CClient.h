@@ -23,6 +23,7 @@ public:
 
 	// handle events on client's screen
 	void				onClipboardChanged(ClipboardID);
+	void				onResolutionChanged();
 
 	// accessors
 
@@ -40,6 +41,8 @@ private:
 	void				onGrabClipboard();
 	void				onScreenSaver();
 	void				onQueryInfo();
+	void				onQueryInfoNoLock();
+	void				onInfoAcknowledgment();
 	void				onSetClipboard();
 	void				onKeyDown();
 	void				onKeyRepeat();
@@ -61,8 +64,10 @@ private:
 	const CNetworkAddress*	m_serverAddress;
 	bool				m_active;
 	UInt32				m_seqNum;
+	bool				m_ignoreMove;
 	bool				m_ownClipboard[kClipboardEnd];
 	IClipboard::Time	m_timeClipboard[kClipboardEnd];
+	CString				m_dataClipboard[kClipboardEnd];
 };
 
 #endif

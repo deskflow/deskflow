@@ -40,6 +40,9 @@ protected:
 	static HINSTANCE	getInstance();
 	ATOM				getClass() const;
 
+	// update screen size cache
+	void				updateScreenSize();
+
 	// get the size of the screen
 	void				getScreenSize(SInt32* w, SInt32* h) const;
 

@@ -28,7 +28,11 @@ public:
 	// can't be detected then this object should disable the system's
 	// screen saver timer and should start the screen saver after
 	// idling for an appropriate time.
-	virtual void		open(CServer*) = 0;
+	//
+	// open() must call server->setInfo() to notify the server of the
+	// primary screen's resolution and jump zone size.  the mouse
+	// position is ignored and may be 0,0.
+	virtual void		open(CServer* server) = 0;
 
 	// close the screen.  should restore the screen saver timer if it
 	// was disabled.

@@ -315,6 +315,23 @@ void					CMSWindowsSecondaryScreen::grabClipboard(ClipboardID id)
 	}
 }
 
+void					CMSWindowsSecondaryScreen::getMousePos(
+								SInt32* x, SInt32* y) const
+{
+	assert(x != NULL);
+	assert(y != NULL);
+
+	POINT pos;
+	if (GetCursorPos(&pos)) {
+		*x = pos.x;
+		*y = pos.y;
+	}
+	else {
+		*x = 0;
+		*y = 0;
+	}
+}
+
 void					CMSWindowsSecondaryScreen::getSize(
 								SInt32* width, SInt32* height) const
 {
@@ -419,6 +436,12 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 			m_nextClipboardWindow = (HWND)lParam;
 		else
 			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+		return 0;
+
+	case WM_DISPLAYCHANGE:
+		// screen resolution has changed
+		updateScreenSize();
+		m_client->onResolutionChanged();
 		return 0;
 	}
 

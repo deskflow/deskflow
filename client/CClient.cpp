@@ -32,7 +32,8 @@ CClient::CClient(const CString& clientName) :
 								m_output(NULL),
 								m_screen(NULL),
 								m_active(false),
-								m_seqNum(0)
+								m_seqNum(0),
+								m_ignoreMove(false)
 {
 	// do nothing
 }
@@ -106,7 +107,7 @@ void					CClient::onClipboardChanged(ClipboardID id)
 	m_timeClipboard[id] = 0;
 
 	// if we're not the active screen then send the clipboard now,
-	// otherwise we'll until we leave.
+	// otherwise we'll wait until we leave.
 	if (!m_active) {
 		// get clipboard
 		CClipboard clipboard;
@@ -125,6 +126,19 @@ void					CClient::onClipboardChanged(ClipboardID id)
 			CProtocolUtil::writef(m_output, kMsgDClipboard, id, m_seqNum, &data);
 		}
 	}
+}
+
+void					CClient::onResolutionChanged()
+{
+	log((CLOG_DEBUG "resolution changed"));
+
+	CLock lock(&m_mutex);
+
+	// start ignoring mouse movement until we get an acknowledgment
+	m_ignoreMove = true;
+
+	// send notification of resolution change
+	onQueryInfoNoLock();
 }
 
 #include "CTCPSocket.h" // FIXME
@@ -260,6 +274,9 @@ void					CClient::runSession(void*)
 			}
 			else if (memcmp(code, kMsgQInfo, 4) == 0) {
 				onQueryInfo();
+			}
+			else if (memcmp(code, kMsgCInfoAck, 4) == 0) {
+				onInfoAcknowledgment();
 			}
 			else if (memcmp(code, kMsgDClipboard, 4) == 0) {
 				onSetClipboard();
@@ -399,10 +416,13 @@ void					CClient::onLeave()
 				// marshall the data
 				CString data = clipboard.marshall();
 
-				// send data
-				log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
-				CProtocolUtil::writef(m_output,
+				// save and send data if different
+				if (data != m_dataClipboard[id]) {
+					log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
+					m_dataClipboard[id] = data;
+					CProtocolUtil::writef(m_output,
 								kMsgDClipboard, id, m_seqNum, &data);
+				}
 			}
 		}
 	}
@@ -441,13 +461,26 @@ void					CClient::onScreenSaver()
 
 void					CClient::onQueryInfo()
 {
-	SInt32 w, h;
+	CLock lock(&m_mutex);
+	onQueryInfoNoLock();
+}
+
+void					CClient::onQueryInfoNoLock()
+{
+	SInt32 x, y, w, h;
+	m_screen->getMousePos(&x, &y);
 	m_screen->getSize(&w, &h);
 	SInt32 zoneSize = m_screen->getJumpZoneSize();
 
-	log((CLOG_DEBUG1 "sending info size=%d,%d zone=%d", w, h, zoneSize));
+	log((CLOG_DEBUG1 "sending info size=%d,%d zone=%d pos=%d,%d", w, h, zoneSize, x, y));
+	CProtocolUtil::writef(m_output, kMsgDInfo, w, h, zoneSize, x, y);
+}
+
+void					CClient::onInfoAcknowledgment()
+{
+	log((CLOG_DEBUG1 "recv info acknowledgment"));
 	CLock lock(&m_mutex);
-	CProtocolUtil::writef(m_output, kMsgDInfo, w, h, zoneSize);
+	m_ignoreMove = false;
 }
 
 void					CClient::onSetClipboard()
@@ -536,13 +569,17 @@ void					CClient::onMouseUp()
 
 void					CClient::onMouseMove()
 {
+	bool ignore;
 	SInt16 x, y;
 	{
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseMove + 4, &x, &y);
+		ignore = m_ignoreMove;
 	}
 	log((CLOG_DEBUG2 "recv mouse move %d,%d", x, y));
-	m_screen->mouseMove(x, y);
+	if (!ignore) {
+		m_screen->mouseMove(x, y);
+	}
 }
 
 void					CClient::onMouseWheel()

@@ -135,6 +135,13 @@ ATOM					CMSWindowsScreen::getClass() const
 	return m_class;
 }
 
+void					CMSWindowsScreen::updateScreenSize()
+{
+	m_w = GetSystemMetrics(SM_CXSCREEN);
+	m_h = GetSystemMetrics(SM_CYSCREEN);
+	log((CLOG_INFO "display resize: %dx%d", m_w, m_h));
+}
+
 void					CMSWindowsScreen::getScreenSize(
 								SInt32* w, SInt32* h) const
 {

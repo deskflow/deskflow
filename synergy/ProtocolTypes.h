@@ -50,6 +50,12 @@ static const char		kMsgCClipboard[] 	= "CCLP%1i%4i";
 // screensaver on primary has started ($1 == 1) or closed ($1 == 0)
 static const char		kMsgCScreenSaver[] 	= "CSEC%1i";
 
+// resolution change acknowledgment:  primary -> secondary
+// sent by primary in response to a secondary screen's kMsgDInfo.
+// this is sent for every kMsgDInfo, whether or not the primary
+// had sent a kMsgQInfo.
+static const char		kMsgCInfoAck[] = "CIAK";
+
 
 //
 // data codes
@@ -80,7 +86,8 @@ static const char		kMsgDMouseUp[]		= "DMUP%1i";
 static const char		kMsgDMouseMove[]	= "DMMV%2i%2i";
 
 // mouse button pressed:  primary -> secondary
-// $1 = delta
+// $1 = delta.  the delta should be +120 for one tick forward (away
+// from the user) and -120 for one tick backward (toward the user).
 static const char		kMsgDMouseWheel[]	= "DMWM%2i";
 
 // clipboard data:  primary <-> secondary
@@ -92,8 +99,16 @@ static const char		kMsgDClipboard[]	= "DCLP%1i%4i%s";
 
 // client data:  secondary -> primary
 // $1 = seconary screen width in pixels, $2 = screen height, $3 =
-// size of warp zone.
-static const char		kMsgDInfo[]			= "DINF%2i%2i%2i";
+// size of warp zone.  $4 and $5 are the x,y position of the mouse
+// on the secondary screen.
+//
+// the secondary screen must send this message in response to the
+// kMsgQInfo message.  it must also send this message when the
+// screen's resolution changes.  in this case, the secondary screen
+// should ignore any kMsgDMouseMove messages until it receives a
+// kMsgCInfoAck in order to prevent attempts to move the mouse off
+// the new screen area.
+static const char		kMsgDInfo[]			= "DINF%2i%2i%2i%2i%2i";
 
 
 //

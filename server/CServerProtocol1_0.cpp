@@ -124,6 +124,12 @@ void					CServerProtocol1_0::sendScreenSaver(bool on)
 	CProtocolUtil::writef(getOutputStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
 
+void					CServerProtocol1_0::sendInfoAcknowledgment()
+{
+	log((CLOG_DEBUG1 "send info ack to \"%s\"", getClient().c_str()));
+	CProtocolUtil::writef(getOutputStream(), kMsgCInfoAck);
+}
+
 void					CServerProtocol1_0::sendKeyDown(
 								KeyID key, KeyModifierMask mask)
 {
@@ -176,17 +182,21 @@ void					CServerProtocol1_0::sendMouseWheel(
 void					CServerProtocol1_0::recvInfo()
 {
 	// parse the message
-	SInt16 w, h, zoneInfo;
-	CProtocolUtil::readf(getInputStream(), kMsgDInfo + 4, &w, &h, &zoneInfo);
-	log((CLOG_DEBUG "received client \"%s\" info size=%dx%d, zone=%d", getClient().c_str(), w, h, zoneInfo));
+	SInt16 x, y, w, h, zoneInfo;
+	CProtocolUtil::readf(getInputStream(), kMsgDInfo + 4,
+								&w, &h, &zoneInfo, &x, &y);
+	log((CLOG_DEBUG "received client \"%s\" info size=%dx%d, zone=%d, pos=%d,%d", getClient().c_str(), w, h, zoneInfo, x, y));
 
 	// validate
 	if (w <= 0 || h <= 0 || zoneInfo < 0) {
 		throw XBadClient();
 	}
+	if (x < 0 || y < 0 || x >= w || y >= h) {
+		throw XBadClient();
+	}
 
 	// tell server of change
-	getServer()->setInfo(getClient(), w, h, zoneInfo);
+	getServer()->setInfo(getClient(), w, h, zoneInfo, x, y);
 }
 
 void					CServerProtocol1_0::recvClipboard()

@@ -28,6 +28,7 @@ public:
 	virtual void		mouseWheel(SInt32 delta);
 	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);
+	virtual void		getMousePos(SInt32* x, SInt32* y) const;
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;

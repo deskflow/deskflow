@@ -268,6 +268,11 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 		CDisplayLock display(this);
 		updateModifierMap(display);
 	}
+
+	// send screen info
+	SInt32 w, h;
+	getScreenSize(&w, &h);
+	m_server->setInfo(w, h, getJumpZoneSize(), 0, 0);
 }
 
 void					CXWindowsPrimaryScreen::close()

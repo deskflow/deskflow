@@ -22,6 +22,7 @@ public:
 	virtual void		sendClipboard(ClipboardID, const CString&);
 	virtual void		sendGrabClipboard(ClipboardID);
 	virtual void		sendScreenSaver(bool on);
+	virtual void		sendInfoAcknowledgment();
 	virtual void		sendKeyDown(KeyID, KeyModifierMask);
 	virtual void		sendKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
 	virtual void		sendKeyUp(KeyID, KeyModifierMask);

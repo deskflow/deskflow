@@ -46,9 +46,16 @@ public:
 	void				onMouseWheel(SInt32 delta);
 	void				grabClipboard(ClipboardID);
 
+	// handle updates from primary
+	void				setInfo(SInt32 wScreen, SInt32 hScreen,
+								SInt32 zoneSize,
+								SInt32 xMouse, SInt32 yMouse);
+
 	// handle messages from clients
 	void				setInfo(const CString& clientName,
-								SInt32 w, SInt32 h, SInt32 zoneSize);
+								SInt32 wScreen, SInt32 hScreen,
+								SInt32 zoneSize,
+								SInt32 xMouse, SInt32 yMouse);
 	void				grabClipboard(ClipboardID,
 								UInt32 seqNum, const CString& clientName);
 	void				setClipboard(ClipboardID,
@@ -187,6 +194,7 @@ private:
 	// the sequence number of enter messages
 	UInt32				m_seqNum;
 
+	// current mouse position (in absolute secondary screen coordinates)
 	SInt32				m_x, m_y;
 
 	CScreenMap			m_screenMap;
