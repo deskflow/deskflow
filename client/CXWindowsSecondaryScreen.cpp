@@ -465,8 +465,8 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 			unsigned int bit = (1 << i);
 			if ((outMask & bit) != (m_mask & bit)) {
 				// get list of keycodes for the modifier.  if there isn't
-				// one then there's no key mapped to this modifier.
-				// we can't generate the desired key so bail.
+				// one then there's no key mapped to this modifier and we
+				// can't generate the desired key so bail.
 				const KeyCode* modifierKeys =
 								&m_modifierToKeycode[i * m_keysPerModifier];
 				KeyCode modifierKey = modifierKeys[0];
@@ -478,24 +478,26 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 					return m_mask;
 				}
 
-				if (modifierKey != 0 && (outMask & bit) != 0) {
+				keystroke.m_keycode = modifierKey;
+				keystroke.m_repeat  = false;
+				if ((outMask & bit) != 0) {
 					// modifier is not active but should be.  if the
 					// modifier is a toggle then toggle it on with a
 					// press/release, otherwise activate it with a
 					// press.  use the first keycode for the modifier.
 					log((CLOG_DEBUG2 "modifier 0x%04x is not active", bit));
-					keystroke.m_keycode = modifierKey;
-					keystroke.m_press   = True;
-					keystroke.m_repeat  = false;
-					keys.push_back(keystroke);
 					if ((bit & m_toggleModifierMask) != 0) {
 						log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
 						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
 							(bit == m_numLockMask && m_numLockHalfDuplex)) {
+							keystroke.m_press = True;
+							keys.push_back(keystroke);
 							keystroke.m_press = False;
 							undo.push_back(keystroke);
 						}
 						else {
+							keystroke.m_press = True;
+							keys.push_back(keystroke);
 							keystroke.m_press = False;
 							keys.push_back(keystroke);
 							undo.push_back(keystroke);
@@ -504,12 +506,14 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 						}
 					}
 					else {
+						keystroke.m_press = True;
+						keys.push_back(keystroke);
 						keystroke.m_press = False;
 						undo.push_back(keystroke);
 					}
 				}
 
-				else if ((outMask & bit) == 0) {
+				else {
 					// modifier is active but should not be.  if the
 					// modifier is a toggle then toggle it off with a
 					// press/release, otherwise deactivate it with a
@@ -517,28 +521,22 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 					// modifier if not a toggle.
 					log((CLOG_DEBUG2 "modifier 0x%04x is active", bit));
 					if ((bit & m_toggleModifierMask) != 0) {
-						if (modifierKey != 0) {
-							log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
-							keystroke.m_keycode = modifierKey;
-							keystroke.m_repeat  = false;
-							if ((bit == m_capsLockMask &&
-									m_capsLockHalfDuplex) ||
-								(bit == m_numLockMask &&
-									m_numLockHalfDuplex)) {
-								keystroke.m_press = False;
-								keys.push_back(keystroke);
-								keystroke.m_press = True;
-								undo.push_back(keystroke);
-							}
-							else {
-								keystroke.m_press = True;
-								keys.push_back(keystroke);
-								keystroke.m_press = False;
-								keys.push_back(keystroke);
-								undo.push_back(keystroke);
-								keystroke.m_press = True;
-								undo.push_back(keystroke);
-							}
+						log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
+						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
+							(bit == m_numLockMask && m_numLockHalfDuplex)) {
+							keystroke.m_press = False;
+							keys.push_back(keystroke);
+							keystroke.m_press = True;
+							undo.push_back(keystroke);
+						}
+						else {
+							keystroke.m_press = True;
+							keys.push_back(keystroke);
+							keystroke.m_press = False;
+							keys.push_back(keystroke);
+							undo.push_back(keystroke);
+							keystroke.m_press = True;
+							undo.push_back(keystroke);
 						}
 					}
 					else {
@@ -547,7 +545,6 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 							if (key != 0 && m_keys[key]) {
 								keystroke.m_keycode = key;
 								keystroke.m_press   = False;
-								keystroke.m_repeat  = false;
 								keys.push_back(keystroke);
 								keystroke.m_press   = True;
 								undo.push_back(keystroke);
