@@ -16,6 +16,8 @@
 #define CXWINDOWSEVENTQUEUEBUFFER_H
 
 #include "IEventQueueBuffer.h"
+#include "CMutex.h"
+#include "stdvector.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
@@ -38,10 +40,18 @@ public:
 	virtual void		deleteTimer(CEventQueueTimer*) const;
 
 private:
+	void				flush();
+
+private:
+	typedef std::vector<XEvent> CEventList;
+
+	CMutex				m_mutex;
 	Display*			m_display;
 	Window				m_window;
 	Atom				m_userEvent;
 	XEvent				m_event;
+	CEventList			m_postedEvents;
+	bool				m_waiting;
 };
 
 #endif

@@ -13,6 +13,7 @@
  */
 
 #include "CXWindowsEventQueueBuffer.h"
+#include "CLock.h"
 #include "CThread.h"
 #include "CEvent.h"
 #include "IEventQueue.h"
@@ -47,7 +48,8 @@ class CEventQueueTimer { };
 CXWindowsEventQueueBuffer::CXWindowsEventQueueBuffer(
 				Display* display, Window window) :
 	m_display(display),
-	m_window(window)
+	m_window(window),
+	m_waiting(false)
 {
 	assert(m_display != NULL);
 	assert(m_window  != None);
@@ -63,6 +65,17 @@ CXWindowsEventQueueBuffer::~CXWindowsEventQueueBuffer()
 void
 CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 {
+	CThread::testCancel();
+
+	{
+		CLock lock(&m_mutex);
+		// we're now waiting for events
+		m_waiting = true;
+
+		// push out pending events
+		flush();
+	}
+
 	// use poll() to wait for a message from the X server or for timeout.
 	// this is a good deal more efficient than polling and sleeping.
 #if HAVE_POLL
@@ -93,7 +106,6 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 	// wait for message from X server or for timeout.  also check
 	// if the thread has been cancelled.  poll() should return -1
 	// with EINTR when the thread is cancelled.
-	CThread::testCancel();
 #if HAVE_POLL
 	poll(pfds, 1, timeout);
 #else
@@ -103,12 +115,24 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 						SELECT_TYPE_ARG234 NULL,
 						SELECT_TYPE_ARG5   timeoutPtr);
 #endif
+
+	{
+		// we're no longer waiting for events
+		CLock lock(&m_mutex);
+		m_waiting = true;
+	}
+
 	CThread::testCancel();
 }
 
 IEventQueueBuffer::Type
 CXWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 {
+	CLock lock(&m_mutex);
+
+	// push out pending events
+	flush();
+
 	// get next event
 	XNextEvent(m_display, &m_event);
 
@@ -128,25 +152,33 @@ CXWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 bool
 CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 {
-	// send ourself a message
+	// prepare a message
 	XEvent xevent;
 	xevent.xclient.type         = ClientMessage;
 	xevent.xclient.window       = m_window;
 	xevent.xclient.message_type = m_userEvent;
 	xevent.xclient.format       = 32;
 	xevent.xclient.data.l[0]    = static_cast<long>(dataID);
-	if (XSendEvent(m_display, m_window, False, 0, &xevent) == 0) {
-		return false;
+
+	// save the message
+	CLock lock(&m_mutex);
+	m_postedEvents.push_back(xevent);
+
+	// if we're currently waiting for an event then send saved events to
+	// the X server now.  if we're not waiting then some other thread
+	// might be using the display connection so we can't safely use it
+	// too.
+	if (m_waiting) {
+		flush();
 	}
 
-	// force waitForEvent() to return
-	XFlush(m_display);
 	return true;
 }
 
 bool
 CXWindowsEventQueueBuffer::isEmpty() const
 {
+	CLock lock(&m_mutex);
 	return (XPending(m_display) == 0);
 }
 
@@ -160,4 +192,17 @@ void
 CXWindowsEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
 {
 	delete timer;
+}
+
+void
+CXWindowsEventQueueBuffer::flush()
+{
+	// note -- m_mutex must be locked on entry
+
+	// flush the posted event list to the X server
+	for (size_t i = 0; i < m_postedEvents.size(); ++i) {
+		XSendEvent(m_display, m_window, False, 0, &m_postedEvents[i]);
+	}
+	XFlush(m_display);
+	m_postedEvents.clear();
 }
