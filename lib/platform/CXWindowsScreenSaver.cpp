@@ -196,8 +196,7 @@ CXWindowsScreenSaver::enable()
 void
 CXWindowsScreenSaver::disable()
 {
-	// for xscreensaver.  5 seconds should be plenty often to
-	// suppress the screen saver.
+	// for xscreensaver
 	m_disabled = true;
 	updateDisableJob();
 
@@ -447,6 +446,7 @@ CXWindowsScreenSaver::updateDisableJob()
 	assert(m_disableJob != NULL);
 
 	if (m_disabled && !m_suppressDisable && !m_disableJobInstalled) {
+		// 5 seconds should be plenty often to suppress the screen saver
 		m_disableJobInstalled = true;
 		m_screen->addTimer(m_disableJob, 5.0);
 	}
