@@ -125,8 +125,8 @@ private:
 // disables cancellation in the c'tor and enables it in the d'tor.
 class CThreadMaskCancel {
 public:
-	CThreadMaskCancel() : m_old(CThread::enableCancel(false)) { }
-	~CThreadMaskCancel() { CThread::enableCancel(m_old); }
+	CThreadMaskCancel();
+	~CThreadMaskCancel();
 
 private:
 	bool				m_old;

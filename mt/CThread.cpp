@@ -117,3 +117,18 @@ bool					CThread::operator!=(const CThread& thread) const
 {
 	return (m_rep != thread.m_rep);
 }
+
+
+//
+// CThreadMaskCancel
+//
+
+CThreadMaskCancel::CThreadMaskCancel() : m_old(CThread::enableCancel(false))
+{
+	// do nothing
+}
+
+CThreadMaskCancel::~CThreadMaskCancel()
+{
+	CThread::enableCancel(m_old);
+}

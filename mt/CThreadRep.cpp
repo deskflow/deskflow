@@ -534,10 +534,21 @@ bool					CThreadRep::wait(CThreadRep* target, double timeout)
 
 void					CThreadRep::setPriority(int n)
 {
+	DWORD pClass = NORMAL_PRIORITY_CLASS;
 	if (n < 0) {
 		switch (-n) {
 		case 1:  n = THREAD_PRIORITY_ABOVE_NORMAL; break;
-		default: n = THREAD_PRIORITY_HIGHEST; break;
+		case 2:  n = THREAD_PRIORITY_HIGHEST; break;
+		default:
+			pClass = HIGH_PRIORITY_CLASS;
+			switch (-n - 3) {
+			case 0:  n = THREAD_PRIORITY_LOWEST; break;
+			case 1:  n = THREAD_PRIORITY_BELOW_NORMAL; break;
+			case 2:  n = THREAD_PRIORITY_NORMAL; break;
+			case 3:  n = THREAD_PRIORITY_ABOVE_NORMAL; break;
+			default: n = THREAD_PRIORITY_HIGHEST; break;
+			}
+			break;
 		}
 	}
 	else {
@@ -548,6 +559,7 @@ void					CThreadRep::setPriority(int n)
 		default: n = THREAD_PRIORITY_IDLE; break;
 		}
 	}
+	SetPriorityClass(m_thread, pClass);
 	SetThreadPriority(m_thread, n);
 }
 
