@@ -47,8 +47,8 @@ static HANDLE			g_keyHookEvent    = NULL;
 static HHOOK			g_keyboardLL      = NULL;
 static bool				g_screenSaver     = false;
 static bool				g_relay           = false;
-static SInt32			g_zoneSize        = 0;
 static UInt32			g_zoneSides       = 0;
+static SInt32			g_zoneSize        = 0;
 static SInt32			g_xScreen         = 0;
 static SInt32			g_yScreen         = 0;
 static SInt32			g_wScreen         = 0;
@@ -510,8 +510,8 @@ install()
 
 	// set defaults
 	g_relay        = false;
-	g_zoneSize     = 0;
 	g_zoneSides    = 0;
+	g_zoneSize     = 0;
 	g_xScreen      = 0;
 	g_yScreen      = 0;
 	g_wScreen      = 0;
@@ -681,30 +681,28 @@ uninstallScreenSaver(void)
 }
 
 void
-setZone(UInt32 sides,
-				SInt32 x, SInt32 y, SInt32 w, SInt32 h,
-				SInt32 jumpZoneSize)
+setSides(UInt32 sides)
 {
-	g_zoneSize  = jumpZoneSize;
 	g_zoneSides = sides;
-	g_xScreen   = x;
-	g_yScreen   = y;
-	g_wScreen   = w;
-	g_hScreen   = h;
-	g_relay     = false;
-	restoreCursor();
 }
 
 void
-setRelay(void)
+setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
 {
-	g_relay     = true;
-	g_zoneSize  = 0;
-	g_zoneSides = 0;
-	g_xScreen   = 0;
-	g_yScreen   = 0;
-	g_wScreen   = 0;
-	g_hScreen   = 0;
+	g_zoneSize = jumpZoneSize;
+	g_xScreen  = x;
+	g_yScreen  = y;
+	g_wScreen  = w;
+	g_hScreen  = h;
+}
+
+void
+setRelay(int enable)
+{
+	g_relay = (enable != 0);
+	if (!g_relay) {
+		restoreCursor();
+	}
 }
 
 }

@@ -108,6 +108,10 @@ SOURCE=.\client.rc
 
 SOURCE=.\CMSWindowsSecondaryScreen.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\CServerProxy.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -119,6 +123,18 @@ SOURCE=.\CClient.h
 # Begin Source File
 
 SOURCE=.\CMSWindowsSecondaryScreen.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CServerProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ISecondaryScreen.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\resource.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

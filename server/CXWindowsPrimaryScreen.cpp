@@ -397,7 +397,7 @@ CXWindowsPrimaryScreen::leave()
 }
 
 void
-CXWindowsPrimaryScreen::reconfigure()
+CXWindowsPrimaryScreen::reconfigure(UInt32)
 {
 	// do nothing
 }

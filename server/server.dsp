@@ -94,6 +94,14 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\CClientProxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CClientProxy1_0.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CConfig.cpp
 # End Source File
 # Begin Source File
@@ -106,15 +114,11 @@ SOURCE=.\CMSWindowsPrimaryScreen.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CPrimaryClient.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CServer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CServerProtocol.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CServerProtocol1_0.cpp
 # End Source File
 # Begin Source File
 
@@ -130,6 +134,14 @@ SOURCE=.\server.rc
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\CClientProxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CClientProxy1_0.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CConfig.h
 # End Source File
 # Begin Source File
@@ -142,15 +154,15 @@ SOURCE=.\CMSWindowsPrimaryScreen.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CPrimaryClient.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CServer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CServerProtocol.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CServerProtocol1_0.h
+SOURCE=.\IPrimaryScreen.h
 # End Source File
 # Begin Source File
 

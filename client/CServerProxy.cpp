@@ -239,6 +239,7 @@ CServerProxy::onGrabClipboard(ClipboardID id)
 	log((CLOG_DEBUG1 "sending clipboard %d changed", id));
 	CLock lock(&m_mutex);
 	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id, m_seqNum);
+	return true;
 }
 
 void
@@ -253,7 +254,7 @@ void
 CServerProxy::flushCompressedMouse()
 {
 	bool send = false;
-	SInt32 x, y;
+	SInt32 x = 0, y = 0;
 	{
 		CLock lock(&m_mutex);
 		if (m_compressMouse) {

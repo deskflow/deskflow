@@ -1,5 +1,5 @@
 #include "CMSWindowsSecondaryScreen.h"
-#include "CClient.h"
+#include "IScreenReceiver.h"
 #include "CClipboard.h"
 #include "CMSWindowsClipboard.h"
 #include "CMSWindowsScreenSaver.h"
@@ -22,8 +22,9 @@
 // CMSWindowsSecondaryScreen
 //
 
-CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen() :
-	m_client(NULL),
+CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen(
+				IScreenReceiver* receiver) :
+	m_receiver(receiver),
 	m_threadID(0),
 	m_lastThreadID(0),
 	m_desk(NULL),
@@ -32,6 +33,8 @@ CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen() :
 	m_active(false),
 	m_nextClipboardWindow(NULL)
 {
+	assert(m_receiver != NULL);
+
 	m_is95Family = CPlatform::isWindows95Family();
 
 	// make sure this thread has a message queue
@@ -78,14 +81,8 @@ CMSWindowsSecondaryScreen::stop()
 }
 
 void
-CMSWindowsSecondaryScreen::open(CClient* client)
+CMSWindowsSecondaryScreen::open()
 {
-	assert(m_client == NULL);
-	assert(client   != NULL);
-
-	// set the client
-	m_client = client;
-
 	// open the display
 	openDisplay();
 
@@ -109,8 +106,6 @@ CMSWindowsSecondaryScreen::open(CClient* client)
 void
 CMSWindowsSecondaryScreen::close()
 {
-	assert(m_client != NULL);
-
 	// release keys that are logically pressed
 	releaseKeys();
 
@@ -119,9 +114,6 @@ CMSWindowsSecondaryScreen::close()
 
 	// close the display
 	closeDisplay();
-
-	// done with client
-	m_client = NULL;
 }
 
 void
@@ -189,8 +181,8 @@ CMSWindowsSecondaryScreen::leave()
 	if (m_clipboardOwner != clipboardOwner) {
 		m_clipboardOwner = clipboardOwner;
 		if (m_clipboardOwner != m_window) {
-			m_client->onClipboardChanged(kClipboardClipboard);
-			m_client->onClipboardChanged(kClipboardSelection);
+			m_receiver->onGrabClipboard(kClipboardClipboard);
+			m_receiver->onGrabClipboard(kClipboardSelection);
 		}
 	}
 }
@@ -555,8 +547,8 @@ CMSWindowsSecondaryScreen::onEvent(HWND hwnd, UINT msg,
 		// window to do that).
 		m_clipboardOwner = GetClipboardOwner();
 		if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
-			m_client->onClipboardChanged(kClipboardClipboard);
-			m_client->onClipboardChanged(kClipboardSelection);
+			m_receiver->onGrabClipboard(kClipboardClipboard);
+			m_receiver->onGrabClipboard(kClipboardSelection);
 		}
 		return 0;
 
@@ -573,7 +565,13 @@ CMSWindowsSecondaryScreen::onEvent(HWND hwnd, UINT msg,
 		// screen resolution has changed
 		updateScreenShape();
 		m_multimon = isMultimon();
-		m_client->onResolutionChanged();
+
+		// send new info
+		CClientInfo info;
+		getShape(info.m_x, info.m_y, info.m_w, info.m_h);
+		getMousePos(info.m_mx, info.m_my);
+		info.m_zoneSize = getJumpZoneSize();
+		m_receiver->onInfoChanged(info);
 		return 0;
 	}
 

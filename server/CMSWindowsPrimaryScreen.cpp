@@ -1,8 +1,11 @@
 #include "CMSWindowsPrimaryScreen.h"
-#include "CServer.h"
+#include "IScreenReceiver.h"
+#include "IPrimaryScreenReceiver.h"
 #include "CMSWindowsClipboard.h"
 #include "CMSWindowsScreenSaver.h"
 #include "CPlatform.h"
+#include "CClipboard.h"
+#include "ProtocolTypes.h"
 #include "XScreen.h"
 #include "XSynergy.h"
 #include "CThread.h"
@@ -13,8 +16,11 @@
 // CMSWindowsPrimaryScreen
 //
 
-CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen() :
-	m_server(NULL),
+CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
+				IScreenReceiver* receiver,
+				IPrimaryScreenReceiver* primaryReceiver) :
+	m_receiver(receiver),
+	m_primaryReceiver(primaryReceiver),
 	m_threadID(0),
 	m_desk(NULL),
 	m_deskName(),
@@ -25,19 +31,24 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen() :
 	m_nextClipboardWindow(NULL),
 	m_clipboardOwner(NULL)
 {
+	assert(m_receiver        != NULL);
+	assert(m_primaryReceiver != NULL);
+
 	// load the hook library
 	m_hookLibrary = LoadLibrary("synrgyhk");
 	if (m_hookLibrary == NULL) {
 		log((CLOG_ERR "failed to load hook library"));
 		throw XScreenOpenFailure();
 	}
+	m_setSides  = (SetSidesFunc)GetProcAddress(m_hookLibrary, "setSides");
 	m_setZone   = (SetZoneFunc)GetProcAddress(m_hookLibrary, "setZone");
 	m_setRelay  = (SetRelayFunc)GetProcAddress(m_hookLibrary, "setRelay");
 	m_install   = (InstallFunc)GetProcAddress(m_hookLibrary, "install");
 	m_uninstall = (UninstallFunc)GetProcAddress(m_hookLibrary, "uninstall");
 	m_init      = (InitFunc)GetProcAddress(m_hookLibrary, "init");
 	m_cleanup   = (CleanupFunc)GetProcAddress(m_hookLibrary, "cleanup");
-	if (m_setZone   == NULL ||
+	if (m_setSides  == NULL ||
+		m_setZone   == NULL ||
 		m_setRelay  == NULL ||
 		m_install   == NULL ||
 		m_uninstall == NULL ||
@@ -114,14 +125,8 @@ CMSWindowsPrimaryScreen::stop()
 }
 
 void
-CMSWindowsPrimaryScreen::open(CServer* server)
+CMSWindowsPrimaryScreen::open()
 {
-	assert(m_server == NULL);
-	assert(server   != NULL);
-
-	// set the server
-	m_server = server;
-
 	// open the display
 	openDisplay();
 
@@ -137,9 +142,12 @@ CMSWindowsPrimaryScreen::open(CServer* server)
 	m_y = pos.y;
 
 	// send screen info
-	SInt32 x, y, w, h;
-	getScreenShape(x, y, w, h);
-	m_server->setInfo(x, y, w, h, getJumpZoneSize(), m_x, m_y);
+	CClientInfo info;
+	getScreenShape(info.m_x, info.m_y, info.m_w, info.m_h);
+	info.m_zoneSize = getJumpZoneSize();
+	info.m_mx       = m_x;
+	info.m_my       = m_y;
+	m_receiver->onInfoChanged(info);
 
 	// compute center pixel of primary screen
 	m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
@@ -148,6 +156,9 @@ CMSWindowsPrimaryScreen::open(CServer* server)
 	// get keyboard state
 	updateKeys();
 
+	// set jump zones
+	m_setZone(info.m_x, info.m_y, info.m_w, info.m_h, info.m_zoneSize);
+
 	// enter the screen
 	enterNoWarp();
 }
@@ -155,13 +166,8 @@ CMSWindowsPrimaryScreen::open(CServer* server)
 void
 CMSWindowsPrimaryScreen::close()
 {
-	assert(m_server != NULL);
-
 	// close the display
 	closeDisplay();
-
-	// done with server
-	m_server = NULL;
 }
 
 void
@@ -194,7 +200,7 @@ CMSWindowsPrimaryScreen::leave()
 	}
 
 	// relay all mouse and keyboard events
-	m_setRelay();
+	m_setRelay(true);
 
 	// get state of keys as we leave
 	updateKeys();
@@ -239,8 +245,8 @@ CMSWindowsPrimaryScreen::leave()
 		try {
 			m_clipboardOwner = clipboardOwner;
 			if (m_clipboardOwner != m_window) {
-				m_server->grabClipboard(kClipboardClipboard);
-				m_server->grabClipboard(kClipboardSelection);
+				m_receiver->onGrabClipboard(kClipboardClipboard);
+				m_receiver->onGrabClipboard(kClipboardSelection);
 			}
 		}
 		catch (XBadClient&) {
@@ -252,14 +258,9 @@ CMSWindowsPrimaryScreen::leave()
 }
 
 void
-CMSWindowsPrimaryScreen::onConfigure()
+CMSWindowsPrimaryScreen::reconfigure(UInt32 activeSides)
 {
-	if ((m_is95Family || m_desk != NULL) && !m_active) {
-		SInt32 x, y, w, h;
-		getScreenShape(x, y, w, h);
-		m_setZone(m_server->getActivePrimarySides(),
-								x, y, w, h, getJumpZoneSize());
-	}
+	m_setSides(activeSides);
 }
 
 void
@@ -306,19 +307,6 @@ CMSWindowsPrimaryScreen::grabClipboard(ClipboardID /*id*/)
 	if (clipboard.open(0)) {
 		clipboard.close();
 	}
-}
-
-void
-CMSWindowsPrimaryScreen::getShape(
-				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
-{
-	getScreenShape(x, y, w, h);
-}
-
-SInt32
-CMSWindowsPrimaryScreen::getJumpZoneSize() const
-{
-	return 1;
 }
 
 void
@@ -390,17 +378,10 @@ CMSWindowsPrimaryScreen::isLockedToScreen() const
 	return false;
 }
 
-bool
-CMSWindowsPrimaryScreen::isScreenSaverActive() const
-{
-	return getScreenSaver()->isActive();
-}
-
 void
 CMSWindowsPrimaryScreen::onOpenDisplay()
 {
 	assert(m_window == NULL);
-	assert(m_server != NULL);
 
 	// save thread id.  we'll need to pass this to the hook library.
 	m_threadID = GetCurrentThreadId();
@@ -478,11 +459,11 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 					const SInt32 repeat = (SInt32)(msg->lParam & 0xffff);
 					if (repeat >= 2) {
 						log((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d", key, mask, repeat));
-						m_server->onKeyRepeat(key, mask, repeat);
+						m_primaryReceiver->onKeyRepeat(key, mask, repeat);
 					}
 					else {
 						log((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x", key, mask));
-						m_server->onKeyDown(key, mask);
+						m_primaryReceiver->onKeyDown(key, mask);
 					}
 
 					// update key state
@@ -491,7 +472,7 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 				else {
 					// key release
 					log((CLOG_DEBUG1 "event: key release key=%d mask=0x%04x", key, mask));
-					m_server->onKeyUp(key, mask);
+					m_primaryReceiver->onKeyUp(key, mask);
 
 					// update key state
 					updateKey(msg->wParam, false);
@@ -520,7 +501,7 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 			case WM_RBUTTONDOWN:
 				log((CLOG_DEBUG1 "event: button press button=%d", button));
 				if (button != kButtonNone) {
-					m_server->onMouseDown(button);
+					m_primaryReceiver->onMouseDown(button);
 					m_keys[s_vkButton[button]] |= 0x80;
 				}
 				break;
@@ -530,7 +511,7 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 			case WM_RBUTTONUP:
 				log((CLOG_DEBUG1 "event: button release button=%d", button));
 				if (button != kButtonNone) {
-					m_server->onMouseUp(button);
+					m_primaryReceiver->onMouseUp(button);
 					m_keys[s_vkButton[button]] &= ~0x80;
 				}
 				break;
@@ -542,7 +523,7 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 		// ignore message if posted prior to last mark change
 		if (m_markReceived == m_mark) {
 			log((CLOG_ERR "event: button wheel delta=%d %d", msg->wParam, msg->lParam));
-			m_server->onMouseWheel(msg->wParam);
+			m_primaryReceiver->onMouseWheel(msg->wParam);
 		}
 		return true;
 
@@ -552,7 +533,7 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 			SInt32 x = static_cast<SInt32>(msg->wParam);
 			SInt32 y = static_cast<SInt32>(msg->lParam);
 			if (!m_active) {
-				m_server->onMouseMovePrimary(x, y);
+				m_primaryReceiver->onMouseMovePrimary(x, y);
 			}
 			else {
 				// compute motion delta.  this is relative to the
@@ -572,7 +553,7 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 						warpCursorToCenter();
 
 						// send motion
-						m_server->onMouseMoveSecondary(x, y);
+						m_primaryReceiver->onMouseMoveSecondary(x, y);
 					}
 				}
 				else {
@@ -591,11 +572,11 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 	case SYNERGY_MSG_SCREEN_SAVER:
 		if (msg->wParam != 0) {
 			if (getScreenSaver()->checkStarted(msg->message, FALSE, 0)) {
-				m_server->onScreenSaver(true);
+				m_primaryReceiver->onScreenSaver(true);
 			}
 		}
 		else {
-			m_server->onScreenSaver(false);
+			m_primaryReceiver->onScreenSaver(false);
 		}
 		return true;
 
@@ -655,8 +636,8 @@ CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
 		try {
 			m_clipboardOwner = GetClipboardOwner();
 			if (m_clipboardOwner != m_window) {
-				m_server->grabClipboard(kClipboardClipboard);
-				m_server->grabClipboard(kClipboardSelection);
+				m_receiver->onGrabClipboard(kClipboardClipboard);
+				m_receiver->onGrabClipboard(kClipboardSelection);
 			}
 		}
 		catch (XBadClient&) {
@@ -696,13 +677,21 @@ CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
 
 				// tell hook about resize if not active
 				else {
-					onConfigure();
+					m_setZone(x, y, w, h, getJumpZoneSize());
 				}
 
 				// send new screen info
 				POINT pos;
 				GetCursorPos(&pos);
-				m_server->setInfo(x, y, w, h, getJumpZoneSize(), pos.x, pos.y);
+				CClientInfo info;
+				info.m_x        = x;
+				info.m_y        = y;
+				info.m_w        = w;
+				info.m_h        = h;
+				info.m_zoneSize = getJumpZoneSize();
+				info.m_mx       = pos.x;
+				info.m_my       = pos.y;
+				m_receiver->onInfoChanged(info);
 			}
 
 			return 0;
@@ -727,8 +716,8 @@ CMSWindowsPrimaryScreen::enterNoWarp()
 		SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, FALSE, &dummy, 0);
 	}
 
-	// install jump zones
-	onConfigure();
+	// watch jump zones
+	m_setRelay(false);
 
 	// restore active window and hide our window
 	onEnter();
@@ -785,6 +774,12 @@ CMSWindowsPrimaryScreen::onLeave()
 	SetCapture(m_window);
 
 	return true;
+}
+
+SInt32
+CMSWindowsPrimaryScreen::getJumpZoneSize() const
+{
+	return 1;
 }
 
 void
@@ -956,8 +951,8 @@ CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 		onLeave();
 	}
 	else {
-		// set jump zones
-		onConfigure();
+		// watch jump zones
+		m_setRelay(false);
 
 		// all messages prior to now are invalid
 		nextMark();

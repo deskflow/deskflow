@@ -20,7 +20,7 @@ public:
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute, bool);
 	virtual bool		leave();
-	virtual void		reconfigure();
+	virtual void		reconfigure(UInt32 activeSides);
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);

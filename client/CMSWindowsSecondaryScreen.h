@@ -13,16 +13,18 @@
 #include "CString.h"
 #include "stdvector.h"
 
+class IScreenReceiver;
+
 class CMSWindowsSecondaryScreen : public CMSWindowsScreen,
 							public ISecondaryScreen {
 public:
-	CMSWindowsSecondaryScreen();
+	CMSWindowsSecondaryScreen(IScreenReceiver*);
 	virtual ~CMSWindowsSecondaryScreen();
 
 	// ISecondaryScreen overrides
 	virtual void		run();
 	virtual void		stop();
-	virtual void		open(CClient*);
+	virtual void		open();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
 							KeyModifierMask mask);
@@ -95,7 +97,7 @@ private:
 
 private:
 	CMutex				m_mutex;
-	CClient*			m_client;
+	IScreenReceiver*	m_receiver;
 
 	// true if windows 95/98/me
 	bool				m_is95Family;

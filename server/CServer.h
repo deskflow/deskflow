@@ -50,9 +50,6 @@ public:
 	// get the primary screen's name
 	CString				getPrimaryScreenName() const;
 
-	// get the sides of the primary screen that have neighbors
-	UInt32				getActivePrimarySides() const;
-
 	// IPrimaryScreenReceiver overrides
 	virtual void		onError();
 	virtual void		onKeyDown(KeyID, KeyModifierMask);
@@ -75,6 +72,9 @@ protected:
 
 private:
 	typedef std::list<CThread> CThreadList;
+
+	// get the sides of the primary screen that have neighbors
+	UInt32				getActivePrimarySides() const;
 
 	// handle mouse motion
 	bool				onMouseMovePrimaryNoLock(SInt32 x, SInt32 y);

@@ -32,9 +32,9 @@ typedef int				(*InstallFunc)(void);
 typedef int				(*UninstallFunc)(void);
 typedef int				(*InstallScreenSaverFunc)(void);
 typedef int				(*UninstallScreenSaverFunc)(void);
-typedef void			(*SetZoneFunc)(UInt32,
-							SInt32, SInt32, SInt32, SInt32, SInt32);
-typedef void			(*SetRelayFunc)(void);
+typedef void			(*SetSidesFunc)(UInt32);
+typedef void			(*SetZoneFunc)(SInt32, SInt32, SInt32, SInt32, SInt32);
+typedef void			(*SetRelayFunc)(int);
 
 CSYNERGYHOOK_API int	init(DWORD);
 CSYNERGYHOOK_API int	cleanup(void);
@@ -42,10 +42,10 @@ CSYNERGYHOOK_API int	install(void);
 CSYNERGYHOOK_API int	uninstall(void);
 CSYNERGYHOOK_API int	installScreenSaver(void);
 CSYNERGYHOOK_API int	uninstallScreenSaver(void);
-CSYNERGYHOOK_API void	setZone(UInt32 sides,
-							SInt32 x, SInt32 y, SInt32 w, SInt32 h,
+CSYNERGYHOOK_API void	setSides(UInt32 sides);
+CSYNERGYHOOK_API void	setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
 							SInt32 jumpZoneSize);
-CSYNERGYHOOK_API void	setRelay(void);
+CSYNERGYHOOK_API void	setRelay(int enable);	// relay iff enable != 0
 
 }
 

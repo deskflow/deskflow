@@ -191,8 +191,7 @@ CClient::close()
 }
 
 void
-CClient::enter(SInt32 xAbs, SInt32 yAbs,
-				UInt32 seqNum, KeyModifierMask mask, bool)
+CClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 {
 	{
 		CLock lock(&m_mutex);
@@ -216,6 +215,8 @@ CClient::leave()
 			sendClipboard(id);
 		}
 	}
+
+	return true;
 }
 
 void

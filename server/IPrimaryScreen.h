@@ -57,10 +57,10 @@ public:
 	// leave() must not call any receiver methods except onError().
 	virtual bool		leave() = 0;
 
-	// called when the configuration has changed.  subclasses may need
-	// to adjust things (like the jump zones) after the configuration
-	// changes.
-	virtual void		reconfigure() = 0;
+	// called when the configuration has changed.  activeSides is a
+	// bitmask of CConfig::EDirectionMask indicating which sides of
+	// the primary screen are linked to clients.
+	virtual void		reconfigure(UInt32 activeSides) = 0;
 
 	// warp the cursor to the given position
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute) = 0;

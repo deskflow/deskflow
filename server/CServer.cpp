@@ -8,7 +8,6 @@
 #include "ProtocolTypes.h"
 #include "XScreen.h"
 #include "XSynergy.h"
-// XXX #include "CNetworkAddress.h"
 #include "IDataSocket.h"
 #include "IListenSocket.h"
 #include "ISocketFactory.h"
@@ -167,7 +166,7 @@ CServer::setConfig(const CConfig& config)
 
 	// tell primary screen about reconfiguration
 	if (m_primaryClient != NULL) {
-		m_primaryClient->reconfigure();
+		m_primaryClient->reconfigure(getActivePrimarySides());
 	}
 
 	return true;
@@ -191,8 +190,8 @@ CServer::getConfig(CConfig* config) const
 UInt32
 CServer::getActivePrimarySides() const
 {
+	// note -- m_mutex must be locked on entry
 	UInt32 sides = 0;
-	CLock lock(&m_mutex);
 	if (!m_config.getNeighbor(getPrimaryScreenName(),
 								CConfig::kLeft).empty()) {
 		sides |= CConfig::kLeftMask;
@@ -723,7 +722,7 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool screenSaver)
 		// update the primary client's clipboards if we're leaving the
 		// primary screen.
 		if (m_active == m_primaryClient) {
-			for (UInt32 id = 0; id < kClipboardEnd; ++id) {
+			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 				CClipboardInfo& clipboard = m_clipboards[id];
 				if (clipboard.m_clipboardOwner == m_primaryClient->getName()) {
 					CString clipboardData;
@@ -973,13 +972,13 @@ CServer::closeClients(const CConfig& config)
 								index != m_clientThreads.end(); ) {
 			const CString& name = index->first;
 			if (!config.isCanonicalName(name)) {
-				// save the thread and remove it from m_clientThreads
-				threads.push_back(index->second);
-				m_clientThreads.erase(index++);
-
 				// lookup IClient with name
 				CClientList::const_iterator index2 = m_clients.find(name);
 				assert(index2 != m_clients.end());
+
+				// save the thread and remove it from m_clientThreads
+				threads.push_back(index->second);
+				m_clientThreads.erase(index++);
 
 				// close that client
 				assert(index2->second != m_primaryClient);
@@ -1520,6 +1519,9 @@ CServer::openPrimaryScreen()
 		// open the screen
 		log((CLOG_DEBUG1 "opening primary screen"));
 		m_primaryClient->open();
+
+		// tell it about the active sides
+		m_primaryClient->reconfigure(getActivePrimarySides());
 	}
 	catch (...) {
 		if (m_active != NULL) {

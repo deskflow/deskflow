@@ -43,9 +43,9 @@ CPrimaryClient::stop()
 }
 
 void
-CPrimaryClient::reconfigure()
+CPrimaryClient::reconfigure(UInt32 activeSides)
 {
-	m_screen->reconfigure();
+	m_screen->reconfigure(activeSides);
 }
 
 void

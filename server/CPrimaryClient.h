@@ -20,7 +20,7 @@ public:
 	void				stop();
 
 	// called by server when the configuration changes
-	void				reconfigure();
+	void				reconfigure(UInt32 activeSides);
 
 	// accessors
 

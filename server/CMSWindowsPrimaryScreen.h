@@ -2,36 +2,36 @@
 #define CMSWINDOWSPRIMARYSCREEN_H
 
 #include "CMSWindowsScreen.h"
+#include "IPrimaryScreen.h"
 #include "CSynergyHook.h"
 #include "MouseTypes.h"
-#include "IPrimaryScreen.h"
 #include "CString.h"
+
+class IScreenReceiver;
+class IPrimaryScreenReceiver;
 
 class CMSWindowsPrimaryScreen : public CMSWindowsScreen, public IPrimaryScreen {
 public:
 	typedef bool (CMSWindowsPrimaryScreen::*HookMethod)(int, WPARAM, LPARAM);
 
-	CMSWindowsPrimaryScreen();
+	CMSWindowsPrimaryScreen(IScreenReceiver*, IPrimaryScreenReceiver*);
 	virtual ~CMSWindowsPrimaryScreen();
 
 	// IPrimaryScreen overrides
 	virtual void		run();
 	virtual void		stop();
-	virtual void		open(CServer*);
+	virtual void		open();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute, bool);
 	virtual bool		leave();
-	virtual void		onConfigure();
+	virtual void		reconfigure(UInt32 activeSides);
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);
-	virtual void		getShape(SInt32&, SInt32&, SInt32&, SInt32&) const;
-	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 	virtual KeyModifierMask	getToggleMask() const;
 	virtual bool		isLockedToScreen() const;
-	virtual bool		isScreenSaverActive() const;
-
+	
 protected:
 	// CMSWindowsScreen overrides
 	virtual bool		onPreTranslate(MSG*);
@@ -44,6 +44,8 @@ private:
 	void				enterNoWarp();
 	void				onEnter();
 	bool				onLeave();
+
+	SInt32				getJumpZoneSize() const;
 
 	// warp mouse to center of primary display (used when computing
 	// motion deltas while mouse is on secondary screen).
@@ -67,7 +69,8 @@ private:
 	void				updateKey(UINT vkCode, bool press);
 
 private:
-	CServer*			m_server;
+	IScreenReceiver*		m_receiver;
+	IPrimaryScreenReceiver*	m_primaryReceiver;
 
 	// true if windows 95/98/me
 	bool				m_is95Family;
@@ -111,6 +114,7 @@ private:
 	CleanupFunc			m_cleanup;
 	InstallFunc			m_install;
 	UninstallFunc		m_uninstall;
+	SetSidesFunc		m_setSides;
 	SetZoneFunc			m_setZone;
 	SetRelayFunc		m_setRelay;
 	InstallScreenSaverFunc		m_installScreenSaver;

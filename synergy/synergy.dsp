@@ -143,19 +143,27 @@ SOURCE=.\CTCPSocketFactory.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IClient.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\IClipboard.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IPrimaryScreen.h
+SOURCE=.\IPrimaryScreenReceiver.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ISecondaryScreen.h
+SOURCE=.\IScreenReceiver.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IServerProtocol.h
+SOURCE=.\IScreenSaver.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IServer.h
 # End Source File
 # Begin Source File
 
