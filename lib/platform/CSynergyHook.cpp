@@ -94,6 +94,7 @@ static SInt32			g_wScreen         = 0;
 static SInt32			g_hScreen         = 0;
 static WPARAM			g_deadVirtKey     = 0;
 static LPARAM			g_deadLParam      = 0;
+static WPARAM			g_oldDeadVirtKey  = 0;
 static BYTE				g_deadKeyState[256] = { 0 };
 static DWORD			g_hookThread      = 0;
 static DWORD			g_attachedThread  = 0;
@@ -185,21 +186,44 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	// check for dead keys.  we don't forward those to our window.
 	// instead we'll leave the key in the keyboard layout (a buffer
 	// internal to the system) for translation when the next key is
-	// pressed.
+	// pressed.  note that some systems set bit 31 to indicate a
+	// dead key and others bit 15.  nice.
 	UINT c = MapVirtualKey(wParam, 2);
-	if ((c & 0x80000000u) != 0) {
+	PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | 0x00000000, c);
+	PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | (c << 8) | 0x01000000, lParam);
+	if ((c & 0x80008000u) != 0) {
 		if ((lParam & 0x80000000u) == 0) {
 			if (g_deadVirtKey == 0) {
 				// dead key press, no dead key in the buffer
 				g_deadVirtKey = wParam;
 				g_deadLParam  = lParam;
 				keyboardGetState(g_deadKeyState);
+				PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | 0x02000000, lParam);
 				return false;
 			}
 			// second dead key press in a row so let it pass
+			PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | 0x03000000, lParam);
+		}
+		else if (wParam == g_oldDeadVirtKey) {
+			// dead key release for second dead key in a row.  discard
+			// because we've already handled it.  also take it out of
+			// the keyboard buffer.
+			g_oldDeadVirtKey = 0;
+			WORD c;
+			UINT scanCode = ((lParam & 0x00ff0000u) >> 16);
+			ToAscii(wParam, scanCode, g_deadKeyState, &c, 0);
+			PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | 0x09000000, lParam);
+			return true;
 		}
 		else {
 			// dead key release
+			PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | 0x04000000, lParam);
 			return false;
 		}
 	}
@@ -256,6 +280,8 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		// alt are being used as individual modifiers rather than AltGr.
 		// we have to put the dead key back first, if there was one.
 		if (n == 0 && (control & 0x80) != 0 && (menu & 0x80) != 0) {
+			PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | 0x05000000, lParam);
 			if (g_deadVirtKey != 0) {
 				ToAscii(g_deadVirtKey, (g_deadLParam & 0x00ff0000u) >> 16,
 							g_deadKeyState, &c, flags);
@@ -269,6 +295,9 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 			n = ToAscii(wParam, scanCode, keys, &c, flags);
 		}
 
+		PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | (c << 8) | ((n & 0xff) << 16) | 0x06000000,
+							lParam);
 		switch (n) {
 		default:
 			// key is a dead key;  we're not expecting this since we
@@ -307,6 +336,9 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		if (g_deadVirtKey != 0) {
 			ToAscii(g_deadVirtKey, (g_deadLParam & 0x00ff0000u) >> 16,
 							g_deadKeyState, &c, flags);
+			for (int i = 0; i < 256; ++i) {
+				g_deadKeyState[i] = 0;
+			}
 		}
 
 		// clear out old dead key state
@@ -318,12 +350,17 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	// forwarding events to clients because this'll keep our thread's
 	// key state table up to date.  that's important for querying
 	// the scroll lock toggle state.
+	PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							charAndVirtKey | 0x07000000, lParam);
 	PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, charAndVirtKey, lParam);
 
 	// send fake key release if the user just pressed two dead keys
 	// in a row, otherwise we'll lose the release because we always
 	// return from the top of this function for all dead key releases.
-	if ((c & 0x80000000u) != 0) {
+	if ((c & 0x80008000u) != 0) {
+		g_oldDeadVirtKey = wParam;
+		PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
+							wParam | 0x08000000, lParam);
 		PostThreadMessage(g_threadID, SYNERGY_MSG_KEY,
 							charAndVirtKey, lParam | 0x80000000u);
 	}
@@ -342,6 +379,14 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		case VK_SHIFT:
 		case VK_LSHIFT:
 		case VK_RSHIFT:
+			// pass the shift modifiers.  if we don't do this
+			// we may not get the right dead key when caps lock
+			// is on.  for example, on the french layout (with
+			// english keycaps) on caps lock then press shift + [
+			// and q.  instead of an A with ^ above it you get an
+			// A with dots above it.
+			break;
+
 		case VK_CONTROL:
 		case VK_LCONTROL:
 		case VK_RCONTROL:
@@ -349,8 +394,8 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		case VK_LMENU:
 		case VK_RMENU:
 		case VK_HANGUL:
-			// always pass the shift modifiers
-			break;
+			// discard the control and alt modifiers
+			return true;
 
 		default:
 			// discard
@@ -787,12 +832,14 @@ install()
 								g_hinstance,
 								0);
 	}
+#if !NO_GRAB_KEYBOARD
 	if (g_keyboardLL == NULL) {
 		g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
 								&keyboardHook,
 								g_hinstance,
 								0);
 	}
+#endif
 
 	// check that we got all the hooks we wanted
 	if ((g_getMessage == NULL && g_wheelSupport == kWheelOld) ||

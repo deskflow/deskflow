@@ -23,6 +23,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+class CEventQueueTimer;
 class CMSWindowsDesks;
 class CMSWindowsKeyState;
 class CMSWindowsScreenSaver;
@@ -156,6 +157,16 @@ private:
 	// map a button event to a button ID
 	ButtonID			mapButtonFromEvent(WPARAM msg, LPARAM button) const;
 
+	// fix the key state, synthesizing fake key releases for keys
+	// that aren't down anymore.
+	void				fixKeys();
+
+	// (un)schedule a later call to fixKeys
+	void				scheduleFixKeys();
+
+	// event handler to fix the key state
+	void				handleFixKeys(const CEvent&, void*);
+
 	// job to update the key state
 	void				updateKeysCB(void*);
 
@@ -199,6 +210,9 @@ private:
 
 	// the keyboard layout to use when off primary screen
 	HKL					m_keyLayout;
+
+	// the timer used to check for fixing key state
+	CEventQueueTimer*	m_fixTimer;
 
 	// screen saver stuff
 	CMSWindowsScreenSaver*	m_screensaver;

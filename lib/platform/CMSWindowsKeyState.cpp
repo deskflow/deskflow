@@ -573,7 +573,8 @@ const KeyID				CMSWindowsKeyState::s_virtualKey[][2] =
 	/* 0xff */ kKeyNone,		kKeyNone		// reserved
 };
 
-// map special KeyID keys to virtual key codes
+// map special KeyID keys to virtual key codes plus whether or not
+// the key maps to an extended scan code
 const UINT				CMSWindowsKeyState::s_mapE000[] =
 {
 	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -597,15 +598,15 @@ const UINT				CMSWindowsKeyState::s_mapE000[] =
 	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xa0 */ 0, 0, 0, 0,
-	/* 0xa4 */ 0, 0, VK_BROWSER_BACK, VK_BROWSER_FORWARD,
-	/* 0xa8 */ VK_BROWSER_REFRESH, VK_BROWSER_STOP,
-	/* 0xaa */ VK_BROWSER_SEARCH, VK_BROWSER_FAVORITES,
-	/* 0xac */ VK_BROWSER_HOME, VK_VOLUME_MUTE,
-	/* 0xae */ VK_VOLUME_DOWN, VK_VOLUME_UP,
-	/* 0xb0 */ VK_MEDIA_NEXT_TRACK, VK_MEDIA_PREV_TRACK,
-	/* 0xb2 */ VK_MEDIA_STOP, VK_MEDIA_PLAY_PAUSE,
-	/* 0xb4 */ VK_LAUNCH_MAIL, VK_LAUNCH_MEDIA_SELECT,
-	/* 0xb6 */ VK_LAUNCH_APP1, VK_LAUNCH_APP2,
+	/* 0xa4 */ 0, 0, VK_BROWSER_BACK | 0x100u, VK_BROWSER_FORWARD | 0x100u,
+	/* 0xa8 */ VK_BROWSER_REFRESH | 0x100u, VK_BROWSER_STOP | 0x100u,
+	/* 0xaa */ VK_BROWSER_SEARCH | 0x100u, VK_BROWSER_FAVORITES | 0x100u,
+	/* 0xac */ VK_BROWSER_HOME | 0x100u, VK_VOLUME_MUTE | 0x100u,
+	/* 0xae */ VK_VOLUME_DOWN | 0x100u, VK_VOLUME_UP | 0x100u,
+	/* 0xb0 */ VK_MEDIA_NEXT_TRACK | 0x100u, VK_MEDIA_PREV_TRACK | 0x100u,
+	/* 0xb2 */ VK_MEDIA_STOP | 0x100u, VK_MEDIA_PLAY_PAUSE | 0x100u,
+	/* 0xb4 */ VK_LAUNCH_MAIL | 0x100u, VK_LAUNCH_MEDIA_SELECT | 0x100u,
+	/* 0xb6 */ VK_LAUNCH_APP1 | 0x100u, VK_LAUNCH_APP2 | 0x100u,
 	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -666,35 +667,41 @@ const UINT				CMSWindowsKeyState::s_mapEF00[] =
 	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ VK_HOME, VK_LEFT, VK_UP, VK_RIGHT,
-	/* 0x54 */ VK_DOWN, VK_PRIOR, VK_NEXT, VK_END,
+	/* 0x50 */ VK_HOME | 0x100u, VK_LEFT | 0x100u,
+	/* 0x52 */ VK_UP | 0x100u, VK_RIGHT | 0x100u,
+	/* 0x54 */ VK_DOWN | 0x100u, VK_PRIOR | 0x100u,
+	/* 0x56 */ VK_NEXT | 0x100u, VK_END | 0x100u,
 	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ VK_SELECT, VK_SNAPSHOT, VK_EXECUTE, VK_INSERT,
-	/* 0x64 */ 0, 0, 0, VK_APPS,
-	/* 0x68 */ 0, 0, VK_HELP, VK_CANCEL, 0, 0, 0, 0,
+	/* 0x60 */ VK_SELECT, VK_SNAPSHOT, VK_EXECUTE, VK_INSERT | 0x100u,
+	/* 0x64 */ 0, 0, 0, VK_APPS | 0x100u,
+	/* 0x68 */ 0, 0, VK_HELP, VK_CANCEL | 0x100u, 0, 0, 0, 0,
 	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, VK_NUMLOCK,
+	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, VK_NUMLOCK | 0x100u,
 	/* 0x80 */ VK_SPACE, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, VK_TAB, 0, 0, 0, VK_RETURN, 0, 0,
+	/* 0x88 */ 0, VK_TAB, 0, 0, 0, VK_RETURN | 0x100u, 0, 0,
 	/* 0x90 */ 0, 0, 0, 0, 0, VK_HOME, VK_LEFT, VK_UP,
 	/* 0x98 */ VK_RIGHT, VK_DOWN, VK_PRIOR, VK_NEXT,
 	/* 0x9c */ VK_END, 0, VK_INSERT, VK_DELETE,
 	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xa8 */ 0, 0, VK_MULTIPLY, VK_ADD,
-	/* 0xac */ VK_DECIMAL, VK_SUBTRACT, VK_DECIMAL, VK_DIVIDE,
+	/* 0xac */ VK_DECIMAL, VK_SUBTRACT, VK_DECIMAL, VK_DIVIDE | 0x100u,
 	/* 0xb0 */ VK_NUMPAD0, VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3,
 	/* 0xb4 */ VK_NUMPAD4, VK_NUMPAD5, VK_NUMPAD6, VK_NUMPAD7,
 	/* 0xb8 */ VK_NUMPAD8, VK_NUMPAD9, 0, 0, 0, 0, VK_F1, VK_F2,
 	/* 0xc0 */ VK_F3, VK_F4, VK_F5, VK_F6, VK_F7, VK_F8, VK_F9, VK_F10,
-	/* 0xc8 */ VK_F11, VK_F12, VK_F13, VK_F14, VK_F15, VK_F16, VK_F17, VK_F18,
-	/* 0xd0 */ VK_F19, VK_F20, VK_F21, VK_F22, VK_F23, VK_F24, 0, 0,
+	/* 0xc8 */ VK_F11, VK_F12, VK_F13 | 0x100u, VK_F14 | 0x100u,
+	/* 0xcc */ VK_F15 | 0x100u, VK_F16 | 0x100u,
+	/* 0xce */ VK_F17 | 0x100u, VK_F18 | 0x100u,
+	/* 0xd0 */ VK_F19 | 0x100u, VK_F20 | 0x100u,
+	/* 0xd2 */ VK_F21 | 0x100u, VK_F22 | 0x100u,
+	/* 0xd4 */ VK_F23 | 0x100u, VK_F24 | 0x100u, 0, 0,
 	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, VK_LSHIFT, VK_RSHIFT, VK_LCONTROL,
-	/* 0xe4 */ VK_RCONTROL, VK_CAPITAL, 0, 0,
-	/* 0xe8 */ 0, VK_LMENU, VK_RMENU, VK_LWIN,
-	/* 0xec */ VK_RWIN, 0, 0, 0,
+	/* 0xe0 */ 0, VK_LSHIFT, VK_RSHIFT | 0x100u, VK_LCONTROL,
+	/* 0xe4 */ VK_RCONTROL | 0x100u, VK_CAPITAL, 0, 0,
+	/* 0xe8 */ 0, VK_LMENU, VK_RMENU | 0x100u, VK_LWIN | 0x100u,
+	/* 0xec */ VK_RWIN | 0x100u, 0, 0, 0,
 	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, VK_DELETE
+	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, VK_DELETE | 0x100u
 };
 
 CMSWindowsKeyState::CMSWindowsKeyState(CMSWindowsDesks* desks) :
@@ -733,7 +740,7 @@ CMSWindowsKeyState::fixKey(void* target, UINT virtualKey)
 		KeyID key = mapKeyFromEvent(virtualKey, lParam, &mask);
 		LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
 		CKeyState::sendKeyEvent(target, false, false, key, mask, 1, button);
-		CKeyState::setKeyDown(button, false);
+		setKeyDown(button, false);
 	}
 }
 
@@ -741,6 +748,7 @@ KeyID
 CMSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey,
 				LPARAM info, KeyModifierMask* maskOut) const
 {
+// FIXME -- look into this
 	// note:  known microsoft bugs
 	//  Q72583 -- MapVirtualKey() maps keypad keys incorrectly
 	//    95,98: num pad vk code -> invalid scan code
@@ -838,34 +846,13 @@ CMSWindowsKeyState::virtualKeyToButton(UINT virtualKey) const
 }
 
 void
-CMSWindowsKeyState::setKeyDown(KeyButton button, bool down)
-{
-	CKeyState::setKeyDown(button, down);
-
-	// special case:  we detect ctrl+alt+del being pressed on some
-	// systems but we don't detect the release of those keys.  so
-	// if ctrl, alt, and del are down then mark them up.
-	if (down && isKeyDown(m_virtKeyToScanCode[VK_DELETE])) {
-		KeyModifierMask mask = getActiveModifiers();
-		if ((mask & (KeyModifierControl | KeyModifierAlt)) ==
-							(KeyModifierControl | KeyModifierAlt)) {
-			CKeyState::setKeyDown(m_virtKeyToScanCode[VK_LCONTROL], false);
-			CKeyState::setKeyDown(m_virtKeyToScanCode[VK_RCONTROL], false);
-			CKeyState::setKeyDown(m_virtKeyToScanCode[VK_LMENU], false);
-			CKeyState::setKeyDown(m_virtKeyToScanCode[VK_RMENU], false);
-			CKeyState::setKeyDown(m_virtKeyToScanCode[VK_DELETE], false);
-		}
-	}
-}
-
-void
 CMSWindowsKeyState::sendKeyEvent(void* target,
 							bool press, bool isAutoRepeat,
 							KeyID key, KeyModifierMask mask,
 							SInt32 count, KeyButton button)
 {
 	if (press || isAutoRepeat) {
-		// if AltGr required for this key then make sure
+		// if AltGr is required for this key then make sure
 		// the ctrl and alt keys are *not* down on the
 		// client.  windows simulates AltGr with ctrl and
 		// alt for some inexplicable reason and clients
@@ -950,37 +937,6 @@ CMSWindowsKeyState::sendKeyEvent(void* target,
 		}
 	}
 	else {
-		// key release.  if the key isn't down according to
-		// our table then we never got the key press event
-		// for it.  if it's not a modifier key then we'll
-		// synthesize the press first.  only do this on
-		// the windows 95 family, which eats certain special
-		// keys like alt+tab, ctrl+esc, etc.
-		if (m_is95Family && isKeyDown(button)) {
-			switch (m_scanCodeToVirtKey[button]) {
-			case VK_LSHIFT:
-			case VK_RSHIFT:
-			case VK_SHIFT:
-			case VK_LCONTROL:
-			case VK_RCONTROL:
-			case VK_CONTROL:
-			case VK_LMENU:
-			case VK_RMENU:
-			case VK_MENU:
-			case VK_CAPITAL:
-			case VK_NUMLOCK:
-			case VK_SCROLL:
-			case VK_LWIN:
-			case VK_RWIN:
-				break;
-
-			default:
-				CKeyState::sendKeyEvent(target,
-							true, false, key, mask, 1, button);
-				break;
-			}
-		}
-
 		// do key up
 		CKeyState::sendKeyEvent(target, false, false, key, mask, 1, button);
 	}
@@ -1065,47 +1021,35 @@ CMSWindowsKeyState::doUpdateKeys()
 	// KeyModifierModeSwitch mask can be converted to keystrokes.  it
 	// must be mapped before the Alt modifier so that the Alt modifier
 	// takes precedence when mapping keystrokes to modifier masks.
-	//
-	// we have to explicitly set the extended key flag for some
-	// modifiers because the win32 API is inadequate.
 	KeyButtons keys;
-	keys.push_back((KeyButton)(MapVirtualKey(VK_RMENU, 0) | 0x100));
+	keys.push_back(mapVirtKeyToButton(VK_RMENU));
 	addModifier(KeyModifierModeSwitch, keys);
 	keys.clear();
-	keys.push_back((KeyButton)MapVirtualKey(VK_LSHIFT, 0));
-	keys.push_back((KeyButton)(MapVirtualKey(VK_RSHIFT, 0) | 0x100));
+	keys.push_back(mapVirtKeyToButton(VK_LSHIFT));
+	keys.push_back(mapVirtKeyToButton(VK_RSHIFT));
 	addModifier(KeyModifierShift, keys);
 	keys.clear();
-	keys.push_back((KeyButton)MapVirtualKey(VK_LCONTROL, 0));
-	keys.push_back((KeyButton)(MapVirtualKey(VK_RCONTROL, 0) | 0x100));
+	keys.push_back(mapVirtKeyToButton(VK_LCONTROL));
+	keys.push_back(mapVirtKeyToButton(VK_RCONTROL));
 	addModifier(KeyModifierControl, keys);
 	keys.clear();
-	keys.push_back((KeyButton)MapVirtualKey(VK_LMENU, 0));
-	keys.push_back((KeyButton)(MapVirtualKey(VK_RMENU, 0) | 0x100));
+	keys.push_back(mapVirtKeyToButton(VK_LMENU));
+	keys.push_back(mapVirtKeyToButton(VK_RMENU));
 	addModifier(KeyModifierAlt, keys);
 	keys.clear();
-	keys.push_back((KeyButton)(MapVirtualKey(VK_LWIN, 0) | 0x100));
-	keys.push_back((KeyButton)(MapVirtualKey(VK_RWIN, 0) | 0x100));
+	keys.push_back(mapVirtKeyToButton(VK_LWIN));
+	keys.push_back(mapVirtKeyToButton(VK_RWIN));
 	addModifier(KeyModifierSuper, keys);
 	keys.clear();
-	keys.push_back((KeyButton)MapVirtualKey(VK_CAPITAL, 0));
+	keys.push_back(mapVirtKeyToButton(VK_CAPITAL));
 	addModifier(KeyModifierCapsLock, keys);
 	keys.clear();
-	keys.push_back((KeyButton)(MapVirtualKey(VK_NUMLOCK, 0) | 0x100));
+	keys.push_back(mapVirtKeyToButton(VK_NUMLOCK));
 	addModifier(KeyModifierNumLock, keys);
 	keys.clear();
-	keys.push_back((KeyButton)MapVirtualKey(VK_SCROLL, 0));
+	keys.push_back(mapVirtKeyToButton(VK_SCROLL));
 	addModifier(KeyModifierScrollLock, keys);
 
-/* FIXME -- potential problem here on win me
-	//  win me (sony vaio laptop):
-	//      MapVirtualKey(vk, 0):
-	//        VK_SHIFT mapped;  VK_LSHIFT, VK_RSHIFT not mapped
-	//        VK_CONTROL mapped;  VK_LCONTROL, VK_RCONTROL not mapped
-	//        VK_MENU mapped;  VK_LMENU, VK_RMENU not mapped
-	//      MapVirtualKey(sc, 3):
-	//        all scan codes unmapped (function apparently unimplemented)
-*/
 	BYTE keyState[256];
 	GetKeyboardState(keyState);
 	for (UINT i = 1; i < 256; ++i) {
@@ -1123,63 +1067,20 @@ CMSWindowsKeyState::doUpdateKeys()
 		}
 
 		// map to a scancode and back to a virtual key
-		UINT scancode = MapVirtualKey(i, 0);
-		UINT virtKey  = MapVirtualKey(scancode, 3);
-		if (virtKey == 0) {
-			// assume MapVirtualKey(xxx, 3) is unimplemented
-			virtKey = i;
-		}
-		else if (scancode == 0) {
-			// the VK_PAUSE virtual key doesn't map properly
-			if (i == VK_PAUSE) {
-				// i hope this works on all keyboards
-				scancode = 0x45;
-				virtKey  = i;
-			}
-			else {
-				continue;
-			}
-		}
-
-		// we need some adjustments due to inadequacies in the API.
-		// the API provides no means to query the keyboard by scan
-		// code that i can see.  so we're doing it by virtual key.
-		// but a single virtual key can map to multiple physical
-		// keys.  for example, VK_HOME maps to NumPad 7 and to the
-		// (extended key) Home key.  this means we can never tell
-		// which of the two keys is pressed.
-		//
-		// this is a problem if a key is down when this method is
-		// called.  if the extended key is down we'll record the
-		// non-extended key as being down.  when the extended key
-		// goes up, we'll record that correctly and leave the
-		// non-extended key as being down.  to deal with that we
-		// always re-check the keyboard state if we think we're
-		// locked to a screen because a key is down.  the re-check
-		// should clear it up.
-		//
-		// the win32 functions that take scan codes are:
-
-		//
-		// if the mapped virtual key doesn't match the starting
-		// point then there's a really good chance that that virtual
-		// key is mapped to an extended key.  however, this is not
-		// the case for modifiers that don't distinguish between left
-		// and right.  also VK_NUMLOCK gets mapped to a non-extended
-		// key but it should be.
-		if (virtKey != i || i == VK_NUMLOCK) {
-			if (i != VK_SHIFT && i != VK_CONTROL && i != VK_MENU) {
-				scancode |= 0x100;
-			}
+		KeyButton button2;
+		KeyButton button = mapVirtKeyToButton(i, button2);
+		if (button == 0) {
+			continue;
 		}
 
 		// okay, now we have the scan code for the virtual key.
-		m_scanCodeToVirtKey[scancode] = i;
-		m_virtKeyToScanCode[i]        = (KeyButton)scancode;
+		m_scanCodeToVirtKey[button]  = i;
+		m_scanCodeToVirtKey[button2] = i;
+		m_virtKeyToScanCode[i]       = button;
 
 		// save the key state
 		if ((keyState[i] & 0x80) != 0) {
-			setKeyDown((KeyButton)scancode, true);
+			setKeyDown(button, true);
 		}
 
 		// toggle state applies to all keys but we only want it for
@@ -1214,27 +1115,27 @@ KeyButton
 CMSWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
 				KeyModifierMask mask, bool isAutoRepeat) const
 {
-	UINT virtualKey = 0;
+	UINT extVirtualKey = 0;
 
 	// check for special keys
 	if ((id & 0xfffff000u) == 0xe000u) {
 		if ((id & 0xff00u) == 0xe000u) {
-			virtualKey = s_mapE000[id & 0xffu];
+			extVirtualKey = s_mapE000[id & 0xffu];
 		}
 		else if ((id & 0xff00) == 0xee00) {
-			virtualKey = s_mapEE00[id & 0xffu];
+			extVirtualKey = s_mapEE00[id & 0xffu];
 		}
 		else if ((id & 0xff00) == 0xef00) {
-			virtualKey = s_mapEF00[id & 0xffu];
+			extVirtualKey = s_mapEF00[id & 0xffu];
 		}
-		if (virtualKey == 0) {
+		if (extVirtualKey == 0) {
 			LOG((CLOG_DEBUG2 "unknown special key"));
 			return 0;
 		}
 	}
 
 	// special handling of VK_SNAPSHOT
-	if (virtualKey == VK_SNAPSHOT) {
+	if (extVirtualKey == VK_SNAPSHOT) {
 		// ignore key repeats on print screen
 		if (!isAutoRepeat) {
 			// active window (with alt) or fullscreen (without alt)?
@@ -1251,7 +1152,7 @@ CMSWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
 	}
 
 	// handle other special keys
-	if (virtualKey != 0) {
+	if (extVirtualKey != 0) {
 		// compute required modifiers
 		KeyModifierMask requiredMask = 0;
 		KeyModifierMask outMask      = 0;
@@ -1262,6 +1163,7 @@ CMSWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
 		// (e.g. add, multiply) and their main keyboard counterparts.
 		// therefore, we can ignore the num-lock state for movement virtual
 		// keys but not for numeric keys.
+		UINT virtualKey = (extVirtualKey & 0xffu);
 		if (virtualKey >= VK_NUMPAD0 && virtualKey <= VK_DIVIDE) {
 			requiredMask |= KeyModifierNumLock;
 			if ((getActiveModifiers() & KeyModifierNumLock) != 0) {
@@ -1277,9 +1179,12 @@ CMSWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
 		}
 
 		// now generate the keystrokes and return the resulting modifier mask
-		KeyButton scanCode = m_virtKeyToScanCode[virtualKey];
-		LOG((CLOG_DEBUG2 "KeyID 0x%08x to virtual key %d scan code 0x%04x mask 0x%04x", id, virtualKey, scanCode, outMask));
-		return mapToKeystrokes(keys, scanCode,
+		KeyButton button = m_virtKeyToScanCode[virtualKey];
+		if ((extVirtualKey & 0x100u) != 0) {
+			button |= 0x100u;
+		}
+		LOG((CLOG_DEBUG2 "KeyID 0x%08x to virtual key %d scan code 0x%03x mask 0x%04x", id, virtualKey, button, outMask));
+		return mapToKeystrokes(keys, button,
 								outMask, requiredMask, isAutoRepeat);
 	}
 
@@ -1405,6 +1310,196 @@ CMSWindowsKeyState::getCodePageFromLangID(LANGID langid) const
 	}
 
 	return codePage;
+}
+
+KeyButton
+CMSWindowsKeyState::mapVirtKeyToButton(UINT virtualKey,
+				KeyButton& extended) const
+{
+	// this method does what MapVirtualKey(virtualKey, 0) should do.
+	// we have to explicitly set the extended key flag for some
+	// modifiers because the win32 API is inadequate.  we also find
+	// the unextended and the extended scancodes for those virtual
+	// keys that have both except for VK_SHIFT, VK_CONTROL, and VK_MENU.
+	//
+	// the windows 95 family doesn't map the side distinguishing virtual
+	// keys.  but we know that VK_CONTROL maps to VK_LCONTROL and
+	// that VK_RCONTROL is the same scan code | 0x100.  similarly for
+	// VK_MENU.  but VK_RSHIFT cannot be determined that way so we
+	// search for it.
+	extended = 0;
+	KeyButton button;
+	if (m_is95Family) {
+		UINT scancode;
+		switch (virtualKey) {
+		case VK_LSHIFT:
+			button = (KeyButton)MapVirtualKey(VK_SHIFT, 0);
+			break;
+
+		case VK_RSHIFT:
+			// we have to search
+			scancode = MapVirtualKey(VK_SHIFT, 0);
+			for (UINT i = 1; i < 256; ++i) {
+				if (i != scancode && MapVirtualKey(i, 1) == VK_SHIFT) {
+					return (KeyButton)(i);
+				}
+			}
+			return 0;
+
+		case VK_LCONTROL:
+		case VK_RCONTROL:
+			button = (KeyButton)MapVirtualKey(VK_CONTROL, 0);
+			break;
+
+		case VK_LMENU:
+		case VK_RMENU:
+			button = (KeyButton)MapVirtualKey(VK_MENU, 0);
+			break;
+
+		case VK_PAUSE:
+			// mapped to 0.  i hope this works on all keyboards.
+			button = (KeyButton)0x45u;
+			break;
+
+		case VK_DIVIDE:
+			// mapped to 0.  i hope this works on all keyboards.
+			button = (KeyButton)0x35u;
+			break;
+
+		default:
+			button = (KeyButton)MapVirtualKey(virtualKey, 0);
+			break;
+		}
+	}
+	else {
+		switch (virtualKey) {
+		case VK_PAUSE:
+			// mapped to 0.  i hope this works on all keyboards.
+			button = (KeyButton)0x45u;
+			break;
+
+		default:
+			button = (KeyButton)MapVirtualKey(virtualKey, 0);
+			break;
+		}
+	}
+
+	// map extended keys
+	switch (virtualKey) {
+	case VK_RETURN:		// Return/numpad Enter
+	case VK_PRIOR:		// numpad PageUp/PageUp
+	case VK_NEXT:		// numpad PageDown/PageDown
+	case VK_END:		// numpad End/End
+	case VK_HOME:		// numpad Home/Home
+	case VK_LEFT:		// numpad Left/Left
+	case VK_UP:			// numpad Up/Up
+	case VK_RIGHT:		// numpad Right/Right
+	case VK_DOWN:		// numpad Down/Down
+	case VK_INSERT:		// numpad Insert/Insert
+	case VK_DELETE:		// numpad Delete/Delete
+//	case VK_SELECT:
+//	case VK_EXECUTE:
+//	case VK_HELP:
+		extended = (KeyButton)(button | 0x100u);
+		break;
+	}
+
+	// see if the win32 API can help us determine an extended key.
+	// if the remapped virtual key doesn't match the starting
+	// point then there's a really good chance that that virtual
+	// key is mapped to an extended key.  however, this is not
+	// the case for modifiers that don't distinguish between left
+	// and right.
+	UINT virtualKey2 = MapVirtualKey(button, 3);
+	if (virtualKey2 != 0 && virtualKey2 != virtualKey) {
+		switch (virtualKey) {
+		case VK_SHIFT:
+		case VK_CONTROL:
+		case VK_MENU:
+			break;
+
+		case VK_NUMPAD0:
+		case VK_NUMPAD1:
+		case VK_NUMPAD2:
+		case VK_NUMPAD3:
+		case VK_NUMPAD4:
+		case VK_NUMPAD5:
+		case VK_NUMPAD6:
+		case VK_NUMPAD7:
+		case VK_NUMPAD8:
+		case VK_NUMPAD9:
+		case VK_MULTIPLY:
+		case VK_ADD:
+		case VK_SEPARATOR:
+		case VK_SUBTRACT:
+		case VK_DECIMAL:
+			break;
+
+		default:
+			button  |= 0x100u;
+			extended = 0;
+			break;
+		}
+		return button;
+	}
+
+	// note other extended keys that the win32 API won't help us with.
+	// on the windows 95 family this is the only way to find extended
+	// keys since MapVirtualKey(N, 3) is unimplemented.
+	switch (virtualKey) {
+	case VK_CANCEL:
+	case VK_LWIN:
+	case VK_RWIN:
+	case VK_APPS:
+//	case VK_SEPARATOR:
+	case VK_DIVIDE:
+	case VK_F13:
+	case VK_F14:
+	case VK_F15:
+	case VK_F16:
+	case VK_F17:
+	case VK_F18:
+	case VK_F19:
+	case VK_F20:
+	case VK_F21:
+	case VK_F22:
+	case VK_F23:
+	case VK_F24:
+	case VK_NUMLOCK:
+	case VK_RSHIFT:
+	case VK_RCONTROL:
+	case VK_RMENU:
+	case VK_BROWSER_BACK:
+	case VK_BROWSER_FORWARD:
+	case VK_BROWSER_REFRESH:
+	case VK_BROWSER_STOP:
+	case VK_BROWSER_SEARCH:
+	case VK_BROWSER_FAVORITES:
+	case VK_BROWSER_HOME:
+	case VK_VOLUME_MUTE:
+	case VK_VOLUME_DOWN:
+	case VK_VOLUME_UP:
+	case VK_MEDIA_NEXT_TRACK:
+	case VK_MEDIA_PREV_TRACK:
+	case VK_MEDIA_STOP:
+	case VK_MEDIA_PLAY_PAUSE:
+	case VK_LAUNCH_MAIL:
+	case VK_LAUNCH_MEDIA_SELECT:
+	case VK_LAUNCH_APP1:
+	case VK_LAUNCH_APP2:
+		button  |= 0x100u;
+		extended = 0;
+		break;
+	}
+
+	return button;
+}
+
+KeyButton
+CMSWindowsKeyState::mapVirtKeyToButton(UINT virtualKey) const
+{
+	KeyButton dummy;
+	return mapVirtKeyToButton(virtualKey, dummy);
 }
 
 KeyButton

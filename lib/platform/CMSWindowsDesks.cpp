@@ -13,7 +13,6 @@
  */
 
 #include "CMSWindowsDesks.h"
-#include "CMSWindowsDesktop.h"
 #include "CMSWindowsScreen.h"
 #include "IScreenSaver.h"
 #include "XScreen.h"
@@ -200,6 +199,27 @@ CMSWindowsDesks::fakeKeyEvent(
 				KeyButton button, UINT virtualKey,
 				bool press, bool /*isAutoRepeat*/) const
 {
+	// win 95 family doesn't understand handed modifier virtual keys
+	if (m_is95Family) {
+		switch (virtualKey) {
+		case VK_LSHIFT:
+		case VK_RSHIFT:
+			virtualKey = VK_SHIFT;
+			break;
+
+		case VK_LCONTROL:
+		case VK_RCONTROL:
+			virtualKey = VK_CONTROL;
+			break;
+
+		case VK_LMENU:
+		case VK_RMENU:
+			virtualKey = VK_MENU;
+			break;
+		}
+	}
+
+	// synthesize event
 	DWORD flags = 0;
 	if (((button & 0x100u) != 0)) {
 		flags |= KEYEVENTF_EXTENDEDKEY;
@@ -552,6 +572,14 @@ CMSWindowsDesks::deskLeave(CDesk* desk, HKL keyLayout)
 		SetWindowPos(desk->m_window, HWND_TOPMOST, x, y, w, h,
 							SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
+		// if not using low-level hooks we have to also activate the
+		// window to ensure we don't lose keyboard focus.
+		// FIXME -- see if this can be avoided.  if so then always
+		// disable the window (see handling of SYNERGY_MSG_SWITCH).
+		if (!desk->m_lowLevel) {
+			SetActiveWindow(desk->m_window);
+		}
+
 		// switch to requested keyboard layout
 		ActivateKeyboardLayout(keyLayout, 0);
 	}
@@ -594,11 +622,6 @@ CMSWindowsDesks::deskThread(void* vdesk)
 			// ignore
 			LOG((CLOG_DEBUG "can't create desk window for %s", desk->m_name.c_str()));
 		}
-
-		// a window on the primary screen should never activate
-		if (m_isPrimary && desk->m_window != NULL) {
-			EnableWindow(desk->m_window, FALSE);
-		}
 	}
 
 	// tell main thread that we're ready
@@ -636,6 +659,10 @@ CMSWindowsDesks::deskThread(void* vdesk)
 					desk->m_lowLevel = true;
 					break;
 				}
+
+				// a window on the primary screen with low-level hooks
+				// should never activate.
+				EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
 			}
 			break;
 

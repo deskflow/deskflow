@@ -33,10 +33,9 @@ public:
 
 	//! Mark key as being down
 	/*!
-	Sets the state of \p button to down or up.  If this is overridden
-	it must forward to the superclass.
+	Sets the state of \p button to down or up.
 	*/
-	virtual void		setKeyDown(KeyButton button, bool down);
+	void				setKeyDown(KeyButton button, bool down);
 
 	//! Mark modifier as being toggled on
 	/*!

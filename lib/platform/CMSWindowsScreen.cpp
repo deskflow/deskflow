@@ -83,6 +83,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary,
 	m_mark(0),
 	m_markReceived(0),
 	m_keyLayout(NULL),
+	m_fixTimer(NULL),
 	m_screensaver(NULL),
 	m_screensaverNotify(false),
 	m_nextClipboardWindow(NULL),
@@ -216,6 +217,13 @@ CMSWindowsScreen::disable()
 		// allow the system to enter power saving mode
 		CArchMiscWindows::removeBusyState(CArchMiscWindows::kSYSTEM |
 							CArchMiscWindows::kDISPLAY);
+	}
+
+	// uninstall fix key timer
+	if (m_fixTimer != NULL) {
+		EVENTQUEUE->removeHandler(CEvent::kTimer, m_fixTimer);
+		EVENTQUEUE->deleteTimer(m_fixTimer);
+		m_fixTimer = NULL;
 	}
 
 	// stop snooping the clipboard
@@ -680,6 +688,10 @@ CMSWindowsScreen::onPreDispatch(HWND hwnd,
 	switch (message) {
 	case SYNERGY_MSG_SCREEN_SAVER:
 		return onScreensaver(wParam != 0);
+
+	case SYNERGY_MSG_DEBUG:
+		LOG((CLOG_INFO "hook: 0x%08x 0x%08x", wParam, lParam));
+		return true;
 	}
 
 	if (m_isPrimary) {
@@ -693,27 +705,6 @@ bool
 CMSWindowsScreen::onPreDispatchPrimary(HWND,
 				UINT message, WPARAM wParam, LPARAM lParam)
 {
-	// fake a key release for the windows keys if we think they're
-	// down but they're really up.  we have to do this because if the
-	// user presses and releases a windows key without pressing any
-	// other key while it's down then the system will eat the key
-	// release.  if we don't detect that and synthesize the release
-	// then the client won't take the usual windows key release action
-	// (which on windows is to show the start menu).
-	//
-	// since the key could go up at any time we'll check the state on
-	// every event.  only check on the windows 95 family since the NT 
-	// family reports the key release as usual.  obviously we skip
-	// this if the event is for a windows key itself.
-	if (m_is95Family && message != SYNERGY_MSG_KEY) {
-		if (wParam != VK_LWIN) {
-			m_keyState->fixKey(getEventTarget(), VK_LWIN);
-		}
-		if (wParam != VK_RWIN) {
-			m_keyState->fixKey(getEventTarget(), VK_RWIN);
-		}
-	}
-
 	// handle event
 	switch (message) {
 	case SYNERGY_MSG_MARK:
@@ -840,22 +831,67 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 {
 	LOG((CLOG_DEBUG1 "event: Key char=%d, vk=0x%02x, lParam=0x%08x", (wParam & 0xff00u) >> 8, wParam & 0xffu, lParam));
 
-	// update key state.  ignore key repeats.
+	// fix up key state
+	fixKeys();
+
+	// get key info
 	KeyButton button = (KeyButton)((lParam & 0x01ff0000) >> 16);
-	if ((lParam & 0xc0000000u) == 0x00000000) {
+	bool down        = ((lParam & 0xc0000000u) == 0x00000000u);
+	bool up          = ((lParam & 0x80000000u) == 0x80000000u);
+	bool wasDown     = isKeyDown(button);
+
+	// the windows keys are a royal pain on the windows 95 family.
+	// the system eats the key up events if and only if the windows
+	// key wasn't combined with another key, i.e. it was tapped.
+	// fixKeys() and scheduleFixKeys() are all about synthesizing
+	// the missing key up.  but even windows itself gets a little
+	// confused and sets bit 30 in lParam if you tap the windows
+	// key twice.  that bit means the key was previously down and
+	// that makes some sense since the up event was missing.
+	// anyway, on the windows 95 family we forget about windows
+	// key repeats and treat anything that's not a key down as a
+	// key up.
+	if (m_is95Family &&
+		((wParam & 0xffu) == VK_LWIN || (wParam & 0xffu) == VK_RWIN)) {
+		down = !up;
+	}
+
+	// update key state.  ignore key repeats.
+	if (down) {
 		m_keyState->setKeyDown(button, true);
 	}
-	else if ((lParam & 0x80000000u) == 0x80000000) {
+	else if (up) {
 		m_keyState->setKeyDown(button, false);
+	}
+
+	// schedule a timer if we need to fix keys later
+	scheduleFixKeys();
+
+	// special case:  we detect ctrl+alt+del being pressed on some
+	// systems but we don't detect the release of those keys.  so
+	// if ctrl, alt, and del are down then mark them up.
+	KeyModifierMask mask = getActiveModifiers();
+	bool ctrlAlt = ((mask & (KeyModifierControl | KeyModifierAlt)) ==
+							(KeyModifierControl | KeyModifierAlt));
+	if (down && ctrlAlt &&
+		isKeyDown(m_keyState->virtualKeyToButton(VK_DELETE))) {
+		m_keyState->setKeyDown(
+							m_keyState->virtualKeyToButton(VK_LCONTROL), false);
+		m_keyState->setKeyDown(
+							m_keyState->virtualKeyToButton(VK_RCONTROL), false);
+		m_keyState->setKeyDown(
+							m_keyState->virtualKeyToButton(VK_LMENU), false);
+		m_keyState->setKeyDown(
+							m_keyState->virtualKeyToButton(VK_RMENU), false);
+		m_keyState->setKeyDown(
+							m_keyState->virtualKeyToButton(VK_DELETE), false);
 	}
 
 	// ignore message if posted prior to last mark change
 	if (!ignore()) {
 		// check for ctrl+alt+del emulation
 		UINT virtKey = (wParam & 0xffu);
-		if ((virtKey == VK_PAUSE || virtKey == VK_CANCEL) &&
-			(m_keyState->getActiveModifiers() &
-							(KeyModifierControl | KeyModifierAlt)) != 0) {
+		if ((virtKey == VK_PAUSE || virtKey == VK_CANCEL) && ctrlAlt) {
 			LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
 			// switch wParam and lParam to be as if VK_DELETE was
 			// pressed or released
@@ -870,9 +906,41 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 		KeyID key = m_keyState->mapKeyFromEvent(wParam, lParam, &mask);
 		button    = static_cast<KeyButton>((lParam & 0x01ff0000u) >> 16);
 		if (key != kKeyNone) {
+			// fix up key.  if the key isn't down according to
+			// our table then we never got the key press event
+			// for it.  if it's not a modifier key then we'll
+			// synthesize the press first.  only do this on
+			// the windows 95 family, which eats certain special
+			// keys like alt+tab, ctrl+esc, etc.
+			if (m_is95Family && !wasDown && up) {
+				switch (virtKey) {
+				case VK_LSHIFT:
+				case VK_RSHIFT:
+				case VK_SHIFT:
+				case VK_LCONTROL:
+				case VK_RCONTROL:
+				case VK_CONTROL:
+				case VK_LMENU:
+				case VK_RMENU:
+				case VK_MENU:
+				case VK_CAPITAL:
+				case VK_NUMLOCK:
+				case VK_SCROLL:
+				case VK_LWIN:
+				case VK_RWIN:
+					break;
+
+				default:
+					m_keyState->sendKeyEvent(getEventTarget(),
+							true, false, key, mask, 1, button);
+					break;
+				}
+			}
+
+			// do it
 			m_keyState->sendKeyEvent(getEventTarget(),
-							((lParam & 0x80000000) == 0),
-							((lParam & 0x40000000) == 1),
+							((lParam & 0x80000000u) == 0),
+							((lParam & 0x40000000u) == 1),
 							key, mask, (SInt32)(lParam & 0xffff), button);
 		}
 		else {
@@ -1223,6 +1291,58 @@ CMSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
 	default:
 		return kButtonNone;
 	}
+}
+
+void
+CMSWindowsScreen::fixKeys()
+{
+	// fake key releases for the windows keys if we think they're
+	// down but they're really up.  we have to do this because if the
+	// user presses and releases a windows key without pressing any
+	// other key while it's down then the system will eat the key
+	// release.  if we don't detect that and synthesize the release
+	// then the client won't take the usual windows key release action
+	// (which on windows is to show the start menu).
+	//
+	// only check on the windows 95 family since the NT family reports
+	// the key releases as usual.
+	if (m_is95Family) {
+		m_keyState->fixKey(getEventTarget(), VK_LWIN);
+		m_keyState->fixKey(getEventTarget(), VK_RWIN);
+
+		// check if we need the fix timer anymore
+		scheduleFixKeys();
+	}
+}
+
+void
+CMSWindowsScreen::scheduleFixKeys()
+{
+	if (m_is95Family) {
+		// see if any keys that need fixing are down
+		bool fix =
+			(m_keyState->isKeyDown(m_keyState->virtualKeyToButton(VK_LWIN)) ||
+			 m_keyState->isKeyDown(m_keyState->virtualKeyToButton(VK_RWIN)));
+
+		// start or stop fix timer
+		if (fix && m_fixTimer == NULL) {
+			m_fixTimer = EVENTQUEUE->newTimer(0.1, NULL);
+			EVENTQUEUE->adoptHandler(CEvent::kTimer, m_fixTimer,
+								new TMethodEventJob<CMSWindowsScreen>(
+									this, &CMSWindowsScreen::handleFixKeys));
+		}
+		else if (!fix && m_fixTimer != NULL) {
+			EVENTQUEUE->removeHandler(CEvent::kTimer, m_fixTimer);
+			EVENTQUEUE->deleteTimer(m_fixTimer);
+			m_fixTimer = NULL;
+		}
+	}
+}
+
+void
+CMSWindowsScreen::handleFixKeys(const CEvent&, void*)
+{
+	fixKeys();
 }
 
 void

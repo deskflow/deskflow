@@ -64,7 +64,6 @@ public:
 	//@}
 
 	// IKeyState overrides
-	virtual void		setKeyDown(KeyButton button, bool down);
 	virtual void		sendKeyEvent(void* target,
 							bool press, bool isAutoRepeat,
 							KeyID key, KeyModifierMask mask,
@@ -87,6 +86,14 @@ private:
 
 	// convert a language ID to a code page
 	UINT				getCodePageFromLangID(LANGID langid) const;
+
+	// map a virtual key to a button.  this tries to deal with the
+	// broken win32 API as best it can.
+	KeyButton			mapVirtKeyToButton(UINT virtualKey,
+							KeyButton& extended) const;
+
+	// same as above and discard extended
+	KeyButton			mapVirtKeyToButton(UINT virtualKey) const;
 
 	// map character \c c given keyboard layout \c hkl to the keystrokes
 	// to generate it.
