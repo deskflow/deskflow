@@ -43,6 +43,11 @@ public:
 	// wait for thread to exit or for current thread to cancel
 	bool				wait(CThreadRep*, double timeout);
 
+#if defined(CONFIG_PLATFORM_WIN32)
+	// wait for a message on the queue
+	bool				waitForEvent(double timeout);
+#endif
+
 	// set the priority
 	void				setPriority(int n);
 

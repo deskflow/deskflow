@@ -1,6 +1,8 @@
 #ifndef CTHREAD_H
 #define CTHREAD_H
 
+#include "common.h"
+
 class IJob;
 class CThreadRep;
 
@@ -102,6 +104,13 @@ public:
 	// timeout (or error) and true on success.
 	// (cancellation point)
 	bool				wait(double timeout = -1.0) const;
+
+#if defined(CONFIG_PLATFORM_WIN32)
+	// wait for a message in the queue.  returns true if a message
+	// is available.
+	// (cancellation point)
+	static bool			waitForEvent(double timeout = -1.0);
+#endif
 
 	// get the exit result.  does an implicit wait().  returns NULL
 	// immediately if called by a thread on itself.  returns NULL for

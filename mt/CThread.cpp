@@ -105,6 +105,16 @@ CThread::wait(
 	return currentRep->wait(m_rep, timeout);
 }
 
+#if defined(CONFIG_PLATFORM_WIN32)
+bool
+CThread::waitForEvent(
+	double timeout)
+{
+	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
+	return currentRep->waitForEvent(timeout);
+}
+#endif
+
 void
 CThread::testCancel()
 {

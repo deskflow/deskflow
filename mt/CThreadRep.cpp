@@ -614,7 +614,45 @@ CThreadRep::wait(
 		testCancel();
 
 	default:
-		// error
+		// timeout or error
+		return false;
+	}
+}
+
+bool
+CThreadRep::waitForEvent(
+	double timeout)
+{
+	// is cancellation enabled?
+	const DWORD n = (isCancellable() ? 1 : 0);
+
+	// convert timeout
+	DWORD t;
+	if (timeout < 0.0) {
+		t = INFINITE;
+	}
+	else {
+		t = (DWORD)(1000.0 * timeout);
+	}
+
+	// wait for this thread to be cancelled or for the target thread to
+	// terminate.
+	HANDLE handles[1];
+	handles[0] = m_cancel;
+	DWORD result = MsgWaitForMultipleObjects(n, handles, FALSE, t, QS_ALLINPUT);
+
+	// handle result
+	switch (result) {
+	case WAIT_OBJECT_0 + 1:
+		// message is available
+		return true;
+
+	case WAIT_OBJECT_0 + 0:
+		// this thread was cancelled.  does not return.
+		testCancel();
+
+	default:
+		// timeout or error
 		return false;
 	}
 }

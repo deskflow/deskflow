@@ -30,6 +30,12 @@
 // this one's a little too aggressive
 #pragma warning(disable: 4127) // conditional expression is constant
 
+// emitted incorrectly under release build in some circumstances
+#if defined(NDEBUG)
+#pragma warning(disable: 4702) // unreachable code
+#pragma warning(disable: 4701) // local variable maybe used uninitialized
+#endif
+
 #endif // (_MSC_VER >= 1200)
 
 #else

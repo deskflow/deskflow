@@ -16,10 +16,8 @@
 
 // platform dependent name of a daemon
 #if defined(CONFIG_PLATFORM_WIN32)
-#define DAEMON "service"
 #define DAEMON_NAME "Synergy Client"
 #elif defined(CONFIG_PLATFORM_UNIX)
-#define DAEMON "daemon"
 #define DAEMON_NAME "synergy"
 #endif
 
@@ -127,8 +125,6 @@ realMain(
 		// terminated
 		return 1;
 	}
-
-	return 0;
 }
 
 static
@@ -182,17 +178,34 @@ static
 void
 help()
 {
+#if defined(CONFIG_PLATFORM_WIN32)
+
+#  define PLATFORM_ARGS												\
+" [--install]"														\
+" <server-address>\n"												\
+"or\n"																\
+" --uninstall\n"
+#  define PLATFORM_DESC												\
+"      --install            install server as a service.\n"			\
+"      --uninstall          uninstall server service.\n"
+
+#else
+
+#  define PLATFORM_ARGS												\
+" <server-address>\n"
+#  define PLATFORM_DESC
+
+#endif
+
 	log((CLOG_PRINT
 "Usage: %s"
-" [--"DAEMON"|--no-"DAEMON"]"
 " [--camp|--no-camp]"
+" [--daemon|--no-daemon]"
 " [--debug <level>]"
 " [--name <screen-name>]"
 " [--restart|--no-restart]"
-" [--install]"
-" <server-address>\n"
-"or\n"
-" --uninstall\n"
+PLATFORM_ARGS
+"\n"
 "Start the synergy mouse/keyboard sharing server.\n"
 "\n"
 "*     --camp               keep attempting to connect to the server until\n"
@@ -201,8 +214,8 @@ help()
 "  -d, --debug <level>      filter out log messages with priorty below level.\n"
 "                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
 "                           DEBUG, DEBUG1, DEBUG2.\n"
-"  -f, --no-"DAEMON"          run the client in the foreground.\n"
-"*     --"DAEMON"             run the client as a "DAEMON".\n"
+"  -f, --no-daemon          run the client in the foreground.\n"
+"*     --daemon             run the client as a daemon.\n"
 "  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
 "                           ourself to the server.\n"
 "  -1, --no-restart         do not try to restart the client if it fails for\n"
@@ -210,9 +223,8 @@ help()
 "*     --restart            restart the client automatically if it fails for\n"
 "                           some unexpected reason, including the server\n"
 "                           disconnecting but not including failing to\n"
-"                           connect to the server."
-"      --install            install server as a "DAEMON".\n"
-"      --uninstall          uninstall server "DAEMON".\n"
+"                           connect to the server.\n"
+PLATFORM_DESC
 "  -h, --help               display this help and exit.\n"
 "      --version            display version information and exit.\n"
 "\n"
@@ -223,7 +235,7 @@ help()
 "default port, %d.\n"
 "\n"
 "Where log messages go depends on the platform and whether or not the\n"
-"client is running as a "DAEMON".",
+"client is running as a daemon.",
 								pname, kDefaultPort));
 
 }
@@ -291,12 +303,12 @@ parse(
 			s_camp = false;
 		}
 
-		else if (isArg(i, argc, argv, "-f", "--no-"DAEMON)) {
+		else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
 			// not a daemon
 			s_daemon = false;
 		}
 
-		else if (isArg(i, argc, argv, NULL, "--"DAEMON)) {
+		else if (isArg(i, argc, argv, NULL, "--daemon")) {
 			// daemonize
 			s_daemon = true;
 		}
@@ -321,12 +333,8 @@ parse(
 			bye(0);
 		}
 
+#if defined(CONFIG_PLATFORM_WIN32)
 		else if (isArg(i, argc, argv, NULL, "--install")) {
-#if !defined(CONFIG_PLATFORM_WIN32)
-			log((CLOG_PRINT "%s: `%s' not supported on this platform" BYE,
-								pname, argv[i], pname));
-			bye(2);
-#endif
 			s_install = true;
 			if (s_uninstall) {
 				log((CLOG_PRINT "%s: `--install' and `--uninstall'"
@@ -335,13 +343,10 @@ parse(
 				bye(2);
 			}
 		}
-
-		else if (isArg(i, argc, argv, NULL, "--uninstall")) {
-#if !defined(CONFIG_PLATFORM_WIN32)
-			log((CLOG_PRINT "%s: `%s' not supported on this platform" BYE,
-								pname, argv[i], pname));
-			bye(2);
 #endif
+
+#if defined(CONFIG_PLATFORM_WIN32)
+		else if (isArg(i, argc, argv, NULL, "--uninstall")) {
 			s_uninstall = true;
 			if (s_install) {
 				log((CLOG_PRINT "%s: `--install' and `--uninstall'"
@@ -350,6 +355,7 @@ parse(
 				bye(2);
 			}
 		}
+#endif
 
 		else if (isArg(i, argc, argv, "--", NULL)) {
 			// remaining arguments are not options
@@ -491,16 +497,6 @@ daemonStartup(
 }
 
 static
-int
-daemonStartup95(
-	IPlatform*,
-	int,
-	const char**)
-{
-	return realMain(NULL);
-}
-
-static
 bool
 logDiscard(
 	int,
@@ -556,12 +552,13 @@ WinMain(
 		// ignore
 	}
 
+	// send PRINT and FATAL output to a message box
+	CLog::setOutputter(&logMessageBox);
+
 	// if we're not starting as an NT service then reparse the command
 	// line normally.
-	if (s_die || !s_daemon || s_install || s_uninstall ||
+	if (s_die || __argc > 1 || s_install || s_uninstall ||
 		CWin32Platform::isWindows95Family()) {
-		// send PRINT and FATAL output to a message box
-		CLog::setOutputter(&logMessageBox);
 
 		// exit on bye
 		bye = &exit;
@@ -570,9 +567,9 @@ WinMain(
 		parse(__argc, const_cast<const char**>(__argv));
 	}
 
-	// if starting as a daemon then we ignore the startup command line
-	// here.  we'll parse the command line passed in when the service
-	// control manager calls us back.
+	// if no arguments were provided then we're hopefully starting as
+	// a service.  we'll parse the command line passed in when the
+	// service control manager calls us back.
 	else {
 		// do nothing
 	}
@@ -588,7 +585,7 @@ WinMain(
 		}
 
 		// construct the command line to start the service with
-		CString commandLine = "--"DAEMON;
+		CString commandLine = "--daemon";
 		if (s_restartable) {
 			commandLine += " --restart";
 		}
@@ -613,29 +610,42 @@ WinMain(
 		return 0;
 	}
 	else if (s_uninstall) {
-		if (!platform.uninstallDaemon(DAEMON_NAME)) {
+		switch (platform.uninstallDaemon(DAEMON_NAME)) {
+		case IPlatform::kSuccess:
+			log((CLOG_PRINT "uninstalled successfully"));
+			return 0;
+
+		case IPlatform::kFailed:
 			log((CLOG_CRIT "failed to uninstall service"));
 			return 16;
+
+		case IPlatform::kAlready:
+			log((CLOG_CRIT "service isn't installed"));
+			return 16;
 		}
-		log((CLOG_PRINT "uninstalled successfully"));
-		return 0;
 	}
 
 	// daemonize if requested
 	int result;
-	if (s_daemon) {
+	if (__argc <= 1) {
 		if (CWin32Platform::isWindows95Family()) {
-			result = platform.daemonize(DAEMON_NAME, &daemonStartup95);
+			result = -1;
 		}
 		else {
 			result = platform.daemonize(DAEMON_NAME, &daemonStartup);
 		}
 		if (result == -1) {
-			log((CLOG_CRIT "failed to start as a service"));
+			log((CLOG_CRIT "failed to start as a service" BYE, pname));
 			return 16;
 		}
 	}
 	else {
+		// if a daemon then redirect log
+		if (s_daemon) {
+			platform.installDaemonLogger(__argv[0]);
+		}
+
+		// run
 		result = restartableMain();
 	}
 

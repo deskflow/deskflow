@@ -35,12 +35,12 @@ CUnixPlatform::installDaemon(
 	return true;
 }
 
-bool
+CUnixPlatform::EResult
 CUnixPlatform::uninstallDaemon(
 	const char*)
 {
 	// daemons don't require special installation
-	return true;
+	return kSuccess;
 }
 
 int
@@ -85,10 +85,18 @@ CUnixPlatform::daemonize(
 	dup(1);
 
 	// hook up logger
-	setDaemonLogger(name);
+	installDaemonLogger(name);
 
 	// invoke function
 	return func(this, 1, &name);
+}
+
+void
+CUnixPlatform::installDaemonLogger(
+	const char* name)
+{
+	openlog(name, 0, LOG_DAEMON);
+	CLog::setOutputter(&CUnixPlatform::deamonLogger);
 }
 
 int
@@ -193,14 +201,6 @@ CUnixPlatform::addPathComponent(
 	}
 	path += suffix;
 	return path;
-}
-
-void
-CUnixPlatform::setDaemonLogger(
-	const char* name)
-{
-	openlog(name, 0, LOG_DAEMON);
-	CLog::setOutputter(&CUnixPlatform::deamonLogger);
 }
 
 bool

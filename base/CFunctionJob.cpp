@@ -11,6 +11,11 @@ CFunctionJob::CFunctionJob(void (*func)(void*), void* arg) :
 	// do nothing
 }
 
+CFunctionJob::~CFunctionJob()
+{
+	// do nothing
+}
+
 void
 CFunctionJob::run()
 {

@@ -9,6 +9,12 @@ public:
 	typedef int			(*DaemonFunc)(IPlatform*, int argc, const char** argv);
 	typedef int			(*RestartFunc)();
 
+	enum EResult {
+		kSuccess,
+		kFailed,
+		kAlready
+	};
+
 	// manipulators
 
 	// install/uninstall a daemon.  commandLine should *not*
@@ -18,12 +24,10 @@ public:
 							const char* description,
 							const char* pathname,
 							const char* commandLine) = 0;
-	virtual bool		uninstallDaemon(const char* name) = 0;
+	virtual EResult		uninstallDaemon(const char* name) = 0;
 
-	// daemonize.  this should have the side effect of sending log
-	// messages to a system message logger since messages can no
-	// longer go to the console.  returns true iff successful.
-	// the name is the name of the daemon.
+	// daemonize.  this should call installDaemonLogger().  returns
+	// true iff successful.  the name is the name of the daemon.
 
 	// daemonize.  this should have the side effect of sending log
 	// messages to a system message logger since messages can no
@@ -43,6 +47,11 @@ public:
 	//   particular, it must call RegisterServiceCtrlHandler() and
 	//   SetServiceStatus().
 	virtual int			daemonize(const char* name, DaemonFunc func) = 0;
+
+	// directs CLog to send messages to the daemon log.  used when
+	// messages should no longer go to the console.  name is used
+	// in the log to identify this process.
+	virtual void		installDaemonLogger(const char* name) = 0;
 
 	// continually restart the given function in a separate process
 	// or thread until it exits normally with a code less than the

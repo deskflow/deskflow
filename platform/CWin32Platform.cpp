@@ -180,7 +180,7 @@ CWin32Platform::installDaemon(
 	}
 }
 
-bool
+IPlatform::EResult
 CWin32Platform::uninstallDaemon(
 	const char* name)
 {
@@ -190,7 +190,7 @@ CWin32Platform::uninstallDaemon(
 		HKEY key = open95ServicesKey();
 		if (key == NULL) {
 			log((CLOG_ERR "cannot open RunServices registry key", GetLastError()));
-			return false;
+			return kAlready;
 		}
 
 		// remove entry
@@ -199,7 +199,7 @@ CWin32Platform::uninstallDaemon(
 		// clean up
 		closeKey(key);
 
-		return true;
+		return kSuccess;
 	}
 
 	// windows NT family services
@@ -216,26 +216,41 @@ CWin32Platform::uninstallDaemon(
 		SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
 		if (mgr == NULL) {
 			log((CLOG_ERR "OpenSCManager failed with %d", GetLastError()));
-			return false;
+			return kFailed;
 		}
 
 		// open the service.  oddly, you must open a service to delete it.
-		bool success;
+		EResult result;
 		SC_HANDLE service = OpenService(mgr, name, DELETE);
 		if (service == NULL) {
-			log((CLOG_ERR "OpenService failed with %d", GetLastError()));
-			success = false;
+			const DWORD e = GetLastError();
+			log((CLOG_ERR "OpenService failed with %d", e));
+			result = (e == ERROR_SERVICE_DOES_NOT_EXIST) ? kAlready : kFailed;
 		}
 
 		else {
-			success = (DeleteService(service) != 0);
+			if (DeleteService(service) != 0) {
+				result = kSuccess;
+			}
+			else {
+				const DWORD e = GetLastError();
+				switch (e) {
+				case ERROR_SERVICE_MARKED_FOR_DELETE:
+					result = kAlready;
+					break;
+
+				default:
+					result = kFailed;
+					break;
+				}
+			}
 			CloseServiceHandle(service);
 		}
 
 		// close the manager
 		CloseServiceHandle(mgr);
 
-		return success;
+		return result;
 	}
 }
 
@@ -300,6 +315,21 @@ CWin32Platform::daemonize(
 		log((CLOG_ERR "StartServiceCtrlDispatcher failed with %d", GetLastError()));
 		s_daemonPlatform = NULL;
 		return -1;
+	}
+}
+
+void
+CWin32Platform::installDaemonLogger(
+	const char* name)
+{
+	if (!CWin32Platform::isWindows95Family()) {
+		// open event log and direct log messages to it
+		if (s_eventLog == NULL) {
+			s_eventLog = RegisterEventSource(NULL, name);
+			if (s_eventLog != NULL) {
+				CLog::setOutputter(&CWin32Platform::serviceLogger);
+			}
+		}
 	}
 }
 
@@ -643,12 +673,7 @@ CWin32Platform::serviceMain(
 	const char** argv = const_cast<const char**>(argvIn);
 
 	// open event log and direct log messages to it
-	if (s_eventLog == NULL) {
-		s_eventLog = RegisterEventSource(NULL, argv[0]);
-		if (s_eventLog != NULL) {
-			CLog::setOutputter(&CWin32Platform::serviceLogger);
-		}
-	}
+	installDaemonLogger(argv[0]);
 
 	// create synchronization objects
 	CThread::init();

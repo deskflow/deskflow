@@ -7,6 +7,7 @@ template <class T>
 class TMethodJob : public IJob {
 public:
 	TMethodJob(T* object, void (T::*method)(void*), void* arg = NULL);
+	virtual ~TMethodJob();
 
 	// IJob overrides
 	virtual void		run();
@@ -23,6 +24,13 @@ TMethodJob<T>::TMethodJob(T* object, void (T::*method)(void*), void* arg) :
 	m_object(object),
 	m_method(method),
 	m_arg(arg)
+{
+	// do nothing
+}
+
+template <class T>
+inline
+TMethodJob<T>::~TMethodJob()
 {
 	// do nothing
 }

@@ -65,6 +65,11 @@ CLog::print(
 		fmt += 3;
 	}
 
+	// done if below priority threshold
+	if (priority > getMaxPriority()) {
+		return;
+	}
+
 	// compute prefix padding length
 	int pad = g_priorityPad;
 
@@ -96,6 +101,11 @@ CLog::printt(
 	if (fmt[0] == '%' && fmt[1] == 'z') {
 		priority = fmt[2] - '\060';
 		fmt += 3;
+	}
+
+	// done if below priority threshold
+	if (priority > getMaxPriority()) {
+		return;
 	}
 
 	// compute prefix padding length
@@ -217,34 +227,32 @@ CLog::output(
 	char* msg)
 {
 	assert(priority >= -1 && priority < g_numPriority);
-	assert(msg != 0);
+	assert(msg != NULL);
 
-	if (priority <= getMaxPriority()) {
-		// insert priority label
-		int n = -g_prioritySuffixLength;
-		if (priority >= 0) {
-			n = strlen(g_priority[priority]);
-			sprintf(msg + g_maxPriorityLength - n,
-								"%s:", g_priority[priority]);
-			msg[g_maxPriorityLength + 1] = ' ';
-		}
+	// insert priority label
+	int n = -g_prioritySuffixLength;
+	if (priority >= 0) {
+		n = strlen(g_priority[priority]);
+		sprintf(msg + g_maxPriorityLength - n,
+							"%s:", g_priority[priority]);
+		msg[g_maxPriorityLength + 1] = ' ';
+	}
 
-		// put a newline at the end
+	// put a newline at the end
 #if defined(CONFIG_PLATFORM_WIN32)
-		strcat(msg + g_priorityPad, "\r\n");
+	strcat(msg + g_priorityPad, "\r\n");
 #else
-		strcat(msg + g_priorityPad, "\n");
+	strcat(msg + g_priorityPad, "\n");
 #endif
 
-		// print it
-		CHoldLock lock(s_lock);
-		if (s_outputter == NULL ||
-			!s_outputter(priority, msg + g_maxPriorityLength - n)) {
+	// print it
+	CHoldLock lock(s_lock);
+	if (s_outputter == NULL ||
+		!s_outputter(priority, msg + g_maxPriorityLength - n)) {
 #if defined(CONFIG_PLATFORM_WIN32)
-			openConsole();
+		openConsole();
 #endif
-			fprintf(stderr, "%s", msg + g_maxPriorityLength - n);
-		}
+		fprintf(stderr, "%s", msg + g_maxPriorityLength - n);
 	}
 }
 
@@ -267,7 +275,7 @@ CLog::vsprint(
 	}
 
 	// start allocating buffers until we write the whole string
-	buffer = 0;
+	buffer = NULL;
 	do {
 		delete[] buffer;
 		len *= 2;

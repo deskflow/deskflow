@@ -6,6 +6,7 @@
 class CFunctionJob : public IJob {
 public:
 	CFunctionJob(void (*func)(void*), void* arg = NULL);
+	virtual ~CFunctionJob();
 
 	// IJob overrides
 	virtual void		run();

@@ -33,6 +33,7 @@ private:
 
 	ChunkList			m_chunks;
 	UInt32				m_size;
+	UInt32				m_headUsed;
 };
 
 #endif

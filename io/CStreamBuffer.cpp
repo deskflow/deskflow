@@ -7,7 +7,8 @@
 const UInt32			CStreamBuffer::kChunkSize = 4096;
 
 CStreamBuffer::CStreamBuffer() :
-	m_size(0)
+	m_size(0),
+	m_headUsed(0)
 {
 	// do nothing
 }
@@ -25,17 +26,17 @@ CStreamBuffer::peek(
 
 	// reserve space in first chunk
 	ChunkList::iterator head = m_chunks.begin();
-	head->reserve(n);
+	head->reserve(n + m_headUsed);
 
 	// consolidate chunks into the first chunk until it has n bytes
 	ChunkList::iterator scan = head;
 	++scan;
-	while (head->size() < n && scan != m_chunks.end()) {
+	while (head->size() - m_headUsed < n && scan != m_chunks.end()) {
 		head->insert(head->end(), scan->begin(), scan->end());
 		scan = m_chunks.erase(scan);
 	}
 
-	return reinterpret_cast<const void*>(head->begin());
+	return reinterpret_cast<const void*>(head->begin() + m_headUsed);
 }
 
 void
@@ -44,7 +45,8 @@ CStreamBuffer::pop(
 {
 	// discard all chunks if n is greater than or equal to m_size
 	if (n >= m_size) {
-		m_size = 0;
+		m_size     = 0;
+		m_headUsed = 0;
 		m_chunks.clear();
 		return;
 	}
@@ -55,15 +57,16 @@ CStreamBuffer::pop(
 	// discard chunks until more than n bytes would've been discarded
 	ChunkList::iterator scan = m_chunks.begin();
 	assert(scan != m_chunks.end());
-	while (scan->size() <= n) {
-		n   -= scan->size();
-		scan = m_chunks.erase(scan);
+	while (scan->size() - m_headUsed <= n) {
+		n         -= scan->size() - m_headUsed;
+		m_headUsed = 0;
+		scan       = m_chunks.erase(scan);
 		assert(scan != m_chunks.end());
 	}
 
 	// remove left over bytes from the head chunk
 	if (n > 0) {
-		scan->erase(scan->begin(), scan->begin() + n);
+		m_headUsed += n;
 	}
 }
 

@@ -16,6 +16,7 @@
 CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen() :
 	m_client(NULL),
 	m_threadID(0),
+	m_lastThreadID(0),
 	m_desk(NULL),
 	m_deskName(),
 	m_window(NULL),
@@ -741,17 +742,23 @@ CMSWindowsSecondaryScreen::syncDesktop() const
 {
 	// note -- mutex must be locked on entry
 
-	DWORD threadID = GetCurrentThreadId();
+	// change calling thread's desktop
 	if (!m_is95Family) {
-		if (GetThreadDesktop(threadID) != m_desk) {
-			// FIXME -- this doesn't work.  if we set a desktop then
-			// sending events doesn't work.
-			if (SetThreadDesktop(m_desk) == 0) {
-				log((CLOG_ERR "failed to set desktop: %d", GetLastError()));
-			}
+		if (SetThreadDesktop(m_desk) == 0) {
+			log((CLOG_WARN "failed to set desktop: %d", GetLastError()));
 		}
 	}
-	AttachThreadInput(threadID, m_threadID, TRUE);
+
+	// attach input queues if not already attached.  this has a habit
+	// of sucking up more and more CPU each time it's called (even if
+	// the threads are already attached).  since we only expect one
+	// thread to call this more than once we can save just the last
+	// the attached thread.
+	DWORD threadID = GetCurrentThreadId();
+	if (threadID != m_lastThreadID && threadID != m_threadID) {
+		m_lastThreadID = threadID;
+		AttachThreadInput(threadID, m_threadID, TRUE);
+	}
 }
 
 CString

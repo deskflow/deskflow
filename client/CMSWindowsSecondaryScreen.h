@@ -89,6 +89,9 @@ private:
 	// the main loop's thread id
 	DWORD				m_threadID;
 
+	// the thread id of the last attached thread
+	mutable DWORD		m_lastThreadID;
+
 	// the current desk and it's name
 	HDESK				m_desk;
 	CString				m_deskName;
