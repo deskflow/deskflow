@@ -216,6 +216,8 @@ static const KeyID		kKeyHyper_R		= 0xEFEE;	/* Right hyper */
 static const KeyID		kKeyLeftTab		= 0xEE20;
 
 // extended keys
+static const KeyID		kKeyEject			= 0xE001;
+static const KeyID		kKeySleep			= 0xE05F;
 static const KeyID		kKeyWWWBack			= 0xE0A6;
 static const KeyID		kKeyWWWForward		= 0xE0A7;
 static const KeyID		kKeyWWWRefresh		= 0xE0A8;
