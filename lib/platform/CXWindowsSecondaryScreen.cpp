@@ -628,6 +628,16 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	required = clearBits(required, modifierBit);
 	LOG((CLOG_DEBUG2 "desired = 0x%04x, current = 0x%04x", desired, m_mask));
 
+	// some modifiers never have an effect on keysym lookup.  leave
+	// those modifiers alone by copying their state from m_mask to
+	// desired.
+	desired = assignBits(desired,
+							ControlMask |
+							m_altMask |
+							m_metaMask |
+							m_superMask |
+							m_scrollLockMask, m_mask);
+
 	// add the key events required to get to the modifier state
 	// necessary to generate an event yielding id.  also save the
 	// key events required to restore the state.  if the key is
