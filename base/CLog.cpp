@@ -97,12 +97,13 @@ void					CLog::printt(const char* file, int line,
 	buffer[pad - 1] = ' ';
 
 	// discard file and line if priority < 0
+	char* message = buffer;
 	if (priority < 0) {
-		buffer += pad - g_priorityPad;
+		message += pad - g_priorityPad;
 	}
 
 	// output buffer
-	output(priority, buffer);
+	output(priority, message);
 
 	// clean up
 	if (buffer != stack)
