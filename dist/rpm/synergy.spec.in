@@ -43,7 +43,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc HISTORY
 %doc INSTALL
 %doc NEWS
-%doc PORTING
 %doc README
 %doc TODO
 %doc examples/synergy.conf
