@@ -46,14 +46,17 @@ AC_CHECK_HEADERS([windows.h])
 AC_HEADER_TIME
 AC_PATH_X
 AC_PATH_XTRA
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$X_CFLAGS $CPPFLAGS"
 AC_CHECK_HEADERS([X11/extensions/XTest.h])
+CPPFLAGS="$save_CPPFLAGS"
 
 dnl checks for types
 AC_TYPE_SIZE_T
 
 dnl checks for structures
 AC_STRUCT_TM
-AC_CHECK_TYPES(mbstate_t,,,[#include <wchar.h>])
+AC_CHECK_TYPES(mbstate_t,,,[#include <cwchar>])
 
 dnl checks for compiler characteristics
 AC_CHECK_SIZEOF(char, 1)
@@ -72,7 +75,7 @@ AC_FUNC_FORK
 AC_FUNC_MEMCMP
 AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(gmtime_r)
-AC_CHECK_FUNCS(getpwuid_r)
+ACX_CHECK_GETPWUID_R
 AC_CHECK_FUNCS(vsnprintf)
 AC_CHECK_FUNCS(wcrtomb mbrtowc mbsinit)
 AC_FUNC_SELECT_ARGTYPES

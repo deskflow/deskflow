@@ -141,7 +141,11 @@ CUnixPlatform::getUserDirectory() const
 #if HAVE_GETPWUID_R
 	struct passwd pwent;
 	struct passwd* pwentp;
+#if defined(_SC_GETPW_R_SIZE_MAX)
 	long size = sysconf(_SC_GETPW_R_SIZE_MAX);
+#else
+	long size = BUFSIZ;
+#endif
 	char* buffer = new char[size];
 	getpwuid_r(getuid(), &pwent, buffer, size, &pwentp);
 	delete[] buffer;

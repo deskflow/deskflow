@@ -75,6 +75,22 @@ AC_DEFUN([ACX_CHECK_CXX_STDLIB], [
 	fi
 ])dnl ACX_CHECK_CXX_STDLIB
 
+AC_DEFUN([ACX_CHECK_GETPWUID_R], [
+	AC_MSG_CHECKING([for working getpwuid_r])
+	AC_TRY_LINK([#include <pwd.h>],
+		[char buffer[4096]; struct passwd pwd, *pwdp;
+		getpwuid_r(0, &pwd, buffer, sizeof(buffer), &pwdp);],
+		acx_getpwuid_r_ok=yes, acx_getpwuid_r_ok=no)
+	AC_MSG_RESULT($acx_getpwuid_r_ok)
+	if test x"$acx_getpwuid_r_ok" = xyes; then
+		ifelse([$1],,AC_DEFINE(HAVE_GETPWUID_R,1,[Define if you have a working \`getpwuid_r\' function.]),[$1])
+		:
+	else
+		acx_getpwuid_r_ok=no
+		$2
+	fi
+])dnl ACX_CHECK_GETPWUID_R
+
 AC_DEFUN([ACX_CHECK_POLL], [
     AC_MSG_CHECKING([for poll])
     AC_TRY_LINK([#include <sys/poll.h>],

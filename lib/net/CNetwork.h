@@ -19,6 +19,13 @@
 #include "CString.h"
 #include "stdvector.h"
 
+// Darwin is so unsure what to use for socklen_t it makes us choose
+#if defined(__APPLE__)
+#	if !defined(_BSD_SOCKLEN_T_) 	
+#		define _BSD_SOCKLEN_T_ int
+#	endif
+#endif
+
 #if HAVE_SYS_TYPES_H
 #	include <sys/types.h>
 #endif

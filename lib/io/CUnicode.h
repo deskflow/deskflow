@@ -17,7 +17,7 @@
 
 #include "CString.h"
 #include "BasicTypes.h"
-#include <wchar.h>
+#include <cwchar>
 
 //! Unicode utility functions
 /*!
