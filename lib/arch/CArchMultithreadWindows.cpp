@@ -389,7 +389,7 @@ CArchMultithreadWindows::setPriorityOfThread(CArchThread thread, int n)
 	assert(thread != NULL);
 
 	size_t index;
-	if (s_pBase < n) {
+	if (n > 0 && s_pBase < n) {
 		// lowest priority
 		index = 0;
 	}
@@ -400,7 +400,7 @@ CArchMultithreadWindows::setPriorityOfThread(CArchThread thread, int n)
 			index = s_pMax;
 		}
 	}
-	SetPriorityClass(thread->m_thread, s_pClass[index].m_class);
+	SetPriorityClass(GetCurrentProcess(), s_pClass[index].m_class);
 	SetThreadPriority(thread->m_thread, s_pClass[index].m_level);
 }
 
@@ -749,12 +749,12 @@ CArchMultithreadWindows::threadFunc(void* vrep)
 void
 CArchMultithreadWindows::doThreadFunc(CArchThread thread)
 {
-	// default priority is slightly below normal
-	setPriorityOfThread(thread, 1);
-
 	// wait for parent to initialize this object
 	lockMutex(m_threadMutex);
 	unlockMutex(m_threadMutex);
+
+	// default priority is slightly below normal
+	setPriorityOfThread(thread, 1);
 
 	void* result = NULL;
 	try {
