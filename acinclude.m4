@@ -75,6 +75,21 @@ AC_DEFUN([ACX_CHECK_CXX_STDLIB], [
 	fi
 ])dnl ACX_CHECK_CXX_STDLIB
 
+AC_DEFUN([ACX_CHECK_POLL], [
+    AC_MSG_CHECKING([for poll])
+    AC_TRY_LINK([#include <sys/poll.h>],
+            	[struct pollfd ufds[] = { 0, POLLIN, 0 }; poll(ufds, 1, 10);],
+            	acx_poll_ok=yes, acx_poll_ok=no)
+	AC_MSG_RESULT($acx_poll_ok)
+	if test x"$acx_poll_ok" = xyes; then
+		ifelse([$1],,AC_DEFINE(HAVE_POLL,1,[Define if you have the `poll' function.]),[$1])
+		:
+	else
+		acx_poll_ok=no
+		$2
+	fi
+])dnl ACX_CHECK_POLL
+
 dnl The following macros are from http://www.gnu.org/software/ac-archive/
 dnl which distributes them under the following license:
 dnl

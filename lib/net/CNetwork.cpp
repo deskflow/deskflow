@@ -51,6 +51,7 @@ struct protoent FAR * (PASCAL FAR *CNetwork::getprotobyname)(const char FAR * na
 int (PASCAL FAR *CNetwork::getsockerror)(void);
 int (PASCAL FAR *CNetwork::gethosterror)(void);
 int (PASCAL FAR *CNetwork::setblocking)(CNetwork::Socket s, bool blocking);
+int (PASCAL FAR *CNetwork::setnodelay)(CNetwork::Socket s, bool blocking);
 
 #if WINDOWS_LIKE
 
@@ -226,77 +227,9 @@ CNetwork::init2(
 	read        = read2;
 	write       = write2;
 	setblocking = setblocking2;
+	setnodelay  = setnodelay2;
 
 	s_networkModule = module;
-}
-
-int PASCAL FAR
-CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
-{
-	int i;
-
-	// prepare sets for select
-	fd_set readSet, writeSet, errSet;
-	fd_set* readSetP  = NULL;
-	fd_set* writeSetP = NULL;
-	fd_set* errSetP   = NULL;
-	FD_ZERO(&readSet);
-	FD_ZERO(&writeSet);
-	FD_ZERO(&errSet);
-	for (i = 0; i < nfds; ++i) {
-		if (fd[i].events & kPOLLIN) {
-			FD_SET(fd[i].fd, &readSet);
-			readSetP = &readSet;
-		}
-		if (fd[i].events & kPOLLOUT) {
-			FD_SET(fd[i].fd, &writeSet);
-			writeSetP = &writeSet;
-		}
-		if (true) {
-			FD_SET(fd[i].fd, &errSet);
-			errSetP = &errSet;
-		}
-	}
-
-	// prepare timeout for select
-	struct timeval timeout2;
-	struct timeval* timeout2P;
-	if (timeout < 0) {
-		timeout2P = NULL;
-	}
-	else {
-		timeout2P = &timeout2;
-		timeout2.tv_sec  = timeout / 1000;
-		timeout2.tv_usec = 1000 * (timeout % 1000);
-	}
-
-	// do the select.  note that winsock ignores the first argument.
-	int n = select(0, readSetP, writeSetP, errSetP, timeout2P);
-
-	// handle results
-	if (n == Error) {
-		return Error;
-	}
-	if (n == 0) {
-		return 0;
-	}
-	n = 0;
-	for (i = 0; i < nfds; ++i) {
-		fd[i].revents = 0;
-		if (FD_ISSET(fd[i].fd, &readSet)) {
-			fd[i].revents |= kPOLLIN;
-		}
-		if (FD_ISSET(fd[i].fd, &writeSet)) {
-			fd[i].revents |= kPOLLOUT;
-		}
-		if (FD_ISSET(fd[i].fd, &errSet)) {
-			fd[i].revents |= kPOLLERR;
-		}
-		if (fd[i].revents != 0) {
-			++n;
-		}
-	}
-	return n;
 }
 
 ssize_t PASCAL FAR
@@ -318,16 +251,38 @@ CNetwork::setblocking2(CNetwork::Socket s, bool blocking)
 	return ioctl(s, FIONBIO, &flag);
 }
 
+int PASCAL FAR
+CNetwork::setnodelay2(CNetwork::Socket s, bool nodelay)
+{
+	BOOL flag = nodelay ? 1 : 0;
+	setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
+}
+
 #endif
 
 #if UNIX_LIKE
 
-#include <unistd.h>
+#if HAVE_SYS_TYPES_H
+#	include <sys/types.h>
+#endif
+#if HAVE_SYS_STAT_H
+#	include <sys/stat.h>
+#endif
+#if HAVE_UNISTD_H
+#	include <unistd.h>
+#endif
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
+#if !defined(TCP_NODELAY) || !defined(SOL_TCP)
+#	include <netinet/tcp.h>
+#endif
 
 // FIXME -- use reentrant versions of non-reentrant functions
+
+const int				CNetwork::Error = -1;
+const CNetwork::Socket	CNetwork::Null = -1;
 
 #define setfunc(var, name, type) 	var = (type)::name
 
@@ -355,30 +310,73 @@ CNetwork::swapntohs(UInt16 v)
 	return ntohs(v);
 }
 
-static
-int
-myerrno()
+void
+CNetwork::init()
+{
+	setfunc(accept, accept, Socket (PASCAL FAR *)(Socket s, Address FAR *addr, AddressLength FAR *addrlen));
+	setfunc(bind, bind, int (PASCAL FAR *)(Socket s, const Address FAR *addr, AddressLength namelen));
+	setfunc(close, close, int (PASCAL FAR *)(Socket s));
+	setfunc(connect, connect, int (PASCAL FAR *)(Socket s, const Address FAR *name, AddressLength namelen));
+	setfunc(ioctl, ioctl, int (PASCAL FAR *)(Socket s, int cmd, void FAR *));
+	setfunc(getpeername, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
+	setfunc(getsockname, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
+	setfunc(getsockopt, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));
+	setfunc(inet_addr, inet_addr, unsigned long (PASCAL FAR *)(const char FAR * cp));
+	setfunc(inet_ntoa, inet_ntoa, char FAR * (PASCAL FAR *)(struct in_addr in));
+	setfunc(listen, listen, int (PASCAL FAR *)(Socket s, int backlog));
+#if HAVE_POLL
+	setfunc(poll, poll, int (PASCAL FAR *)(CNetwork::PollEntry fds[], int nfds, int timeout));
+#else
+	setfunc(poll, CNetwork::poll2, int (PASCAL FAR *)(CNetwork::PollEntry fds[], int nfds, int timeout));
+#endif
+	setfunc(read, read, ssize_t (PASCAL FAR *)(CNetwork::Socket s, void FAR * buf, size_t len));
+	setfunc(recv, recv, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags));
+	setfunc(recvfrom, recvfrom, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags, Address FAR *from, AddressLength FAR * fromlen));
+	setfunc(send, send, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags));
+	setfunc(sendto, sendto, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags, const Address FAR *to, AddressLength tolen));
+	setfunc(setsockopt, setsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, const void FAR * optval, AddressLength optlen));
+	setfunc(shutdown, shutdown, int (PASCAL FAR *)(Socket s, int how));
+	setfunc(socket, socket, Socket (PASCAL FAR *)(int af, int type, int protocol));
+	setfunc(write, write, ssize_t (PASCAL FAR *)(CNetwork::Socket s, const void FAR * buf, size_t len));
+	setfunc(gethostbyaddr, gethostbyaddr, struct hostent FAR * (PASCAL FAR *)(const char FAR * addr, int len, int type));
+	setfunc(gethostbyname, gethostbyname, struct hostent FAR * (PASCAL FAR *)(const char FAR * name));
+	setfunc(getservbyport, getservbyport, struct servent FAR * (PASCAL FAR *)(int port, const char FAR * proto));
+	setfunc(getservbyname, getservbyname, struct servent FAR * (PASCAL FAR *)(const char FAR * name, const char FAR * proto));
+	setfunc(getprotobynumber, getprotobynumber, struct protoent FAR * (PASCAL FAR *)(int proto));
+	setfunc(getprotobyname, getprotobyname, struct protoent FAR * (PASCAL FAR *)(const char FAR * name));
+	gethostname  = gethostname2;
+	getsockerror = getsockerror2;
+	gethosterror = gethosterror2;
+	setblocking  = setblocking2;
+	setnodelay   = setnodelay2;
+}
+
+void
+CNetwork::cleanup()
+{
+	// do nothing
+}
+
+int PASCAL FAR
+CNetwork::gethostname2(char* name, int namelen)
+{
+	return ::gethostname(name, namelen);
+}
+
+int PASCAL FAR
+CNetwork::getsockerror2(void)
 {
 	return errno;
 }
 
-static
-int
-myherrno()
+int PASCAL FAR
+CNetwork::gethosterror2(void)
 {
 	return h_errno;
 }
 
-static
-int
-mygethostname(char* name, int namelen)
-{
-	return gethostname(name, namelen);
-}
-
-static
-int
-mysetblocking(CNetwork::Socket s, bool blocking)
+int PASCAL FAR
+CNetwork::setblocking2(CNetwork::Socket s, bool blocking)
 {
 	int mode = fcntl(s, F_GETFL, 0);
 	if (mode == -1) {
@@ -396,49 +394,111 @@ mysetblocking(CNetwork::Socket s, bool blocking)
 	return 0;
 }
 
-const int				CNetwork::Error = -1;
-const CNetwork::Socket	CNetwork::Null = -1;
-
-void
-CNetwork::init()
+int PASCAL FAR
+CNetwork::setnodelay2(CNetwork::Socket s, bool nodelay)
 {
-	setfunc(accept, accept, Socket (PASCAL FAR *)(Socket s, Address FAR *addr, AddressLength FAR *addrlen));
-	setfunc(bind, bind, int (PASCAL FAR *)(Socket s, const Address FAR *addr, AddressLength namelen));
-	setfunc(close, close, int (PASCAL FAR *)(Socket s));
-	setfunc(connect, connect, int (PASCAL FAR *)(Socket s, const Address FAR *name, AddressLength namelen));
-	setfunc(ioctl, ioctl, int (PASCAL FAR *)(Socket s, int cmd, void FAR *));
-	setfunc(getpeername, getpeername, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
-	setfunc(getsockname, getsockname, int (PASCAL FAR *)(Socket s, Address FAR *name, AddressLength FAR * namelen));
-	setfunc(getsockopt, getsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen));
-	setfunc(inet_addr, inet_addr, unsigned long (PASCAL FAR *)(const char FAR * cp));
-	setfunc(inet_ntoa, inet_ntoa, char FAR * (PASCAL FAR *)(struct in_addr in));
-	setfunc(listen, listen, int (PASCAL FAR *)(Socket s, int backlog));
-	setfunc(poll, poll, int (PASCAL FAR *)(CNetwork::PollEntry fds[], int nfds, int timeout));
-	setfunc(read, read, ssize_t (PASCAL FAR *)(CNetwork::Socket s, void FAR * buf, size_t len));
-	setfunc(recv, recv, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags));
-	setfunc(recvfrom, recvfrom, ssize_t (PASCAL FAR *)(Socket s, void FAR * buf, size_t len, int flags, Address FAR *from, AddressLength FAR * fromlen));
-	setfunc(send, send, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags));
-	setfunc(sendto, sendto, ssize_t (PASCAL FAR *)(Socket s, const void FAR * buf, size_t len, int flags, const Address FAR *to, AddressLength tolen));
-	setfunc(setsockopt, setsockopt, int (PASCAL FAR *)(Socket s, int level, int optname, const void FAR * optval, AddressLength optlen));
-	setfunc(shutdown, shutdown, int (PASCAL FAR *)(Socket s, int how));
-	setfunc(socket, socket, Socket (PASCAL FAR *)(int af, int type, int protocol));
-	setfunc(write, write, ssize_t (PASCAL FAR *)(CNetwork::Socket s, const void FAR * buf, size_t len));
-	setfunc(gethostbyaddr, gethostbyaddr, struct hostent FAR * (PASCAL FAR *)(const char FAR * addr, int len, int type));
-	setfunc(gethostbyname, gethostbyname, struct hostent FAR * (PASCAL FAR *)(const char FAR * name));
-	setfunc(gethostname, mygethostname, int (PASCAL FAR *)(char FAR * name, int namelen));
-	setfunc(getservbyport, getservbyport, struct servent FAR * (PASCAL FAR *)(int port, const char FAR * proto));
-	setfunc(getservbyname, getservbyname, struct servent FAR * (PASCAL FAR *)(const char FAR * name, const char FAR * proto));
-	setfunc(getprotobynumber, getprotobynumber, struct protoent FAR * (PASCAL FAR *)(int proto));
-	setfunc(getprotobyname, getprotobyname, struct protoent FAR * (PASCAL FAR *)(const char FAR * name));
-	setfunc(getsockerror, myerrno, int (PASCAL FAR *)(void));
-	setfunc(gethosterror, myherrno, int (PASCAL FAR *)(void));
-	setfunc(setblocking, mysetblocking, int (PASCAL FAR *)(Socket, bool));
+	int flag = nodelay ? 1 : 0;
+	setsockopt(s, SOL_TCP, TCP_NODELAY, &flag, sizeof(flag));
 }
 
-void
-CNetwork::cleanup()
+#endif
+
+#if WINDOWS_LIKE || !HAVE_POLL
+
+#if HAVE_SYS_SELECT_H
+#	include <sys/select.h>
+#endif
+#if HAVE_SYS_TIME_H
+#	include <sys/time.h>
+#endif
+#if HAVE_SYS_TYPES_H
+#	include <sys/types.h>
+#endif
+#if HAVE_UNISTD_H
+#	include <unistd.h>
+#endif
+
+int PASCAL FAR
+CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
 {
-	// do nothing
+	int i;
+
+	// prepare sets for select
+	int n = 0;
+	fd_set readSet, writeSet, errSet;
+	fd_set* readSetP  = NULL;
+	fd_set* writeSetP = NULL;
+	fd_set* errSetP   = NULL;
+	FD_ZERO(&readSet);
+	FD_ZERO(&writeSet);
+	FD_ZERO(&errSet);
+	for (i = 0; i < nfds; ++i) {
+		if (fd[i].events & kPOLLIN) {
+			FD_SET(fd[i].fd, &readSet);
+			readSetP = &readSet;
+			if (fd[i].fd > n) {
+				n = fd[i].fd;
+			}
+		}
+		if (fd[i].events & kPOLLOUT) {
+			FD_SET(fd[i].fd, &writeSet);
+			writeSetP = &writeSet;
+			if (fd[i].fd > n) {
+				n = fd[i].fd;
+			}
+		}
+		if (true) {
+			FD_SET(fd[i].fd, &errSet);
+			errSetP = &errSet;
+			if (fd[i].fd > n) {
+				n = fd[i].fd;
+			}
+		}
+	}
+
+	// prepare timeout for select
+	struct timeval timeout2;
+	struct timeval* timeout2P;
+	if (timeout < 0) {
+		timeout2P = NULL;
+	}
+	else {
+		timeout2P = &timeout2;
+		timeout2.tv_sec  = timeout / 1000;
+		timeout2.tv_usec = 1000 * (timeout % 1000);
+	}
+
+	// do the select.  note that winsock ignores the first argument.
+	n = select((SELECT_TYPE_ARG1)  n + 1,
+				SELECT_TYPE_ARG234 readSetP,
+				SELECT_TYPE_ARG234 writeSetP,
+				SELECT_TYPE_ARG234 errSetP,
+				SELECT_TYPE_ARG5   timeout2P);
+
+	// handle results
+	if (n == Error) {
+		return Error;
+	}
+	if (n == 0) {
+		return 0;
+	}
+	n = 0;
+	for (i = 0; i < nfds; ++i) {
+		fd[i].revents = 0;
+		if (FD_ISSET(fd[i].fd, &readSet)) {
+			fd[i].revents |= kPOLLIN;
+		}
+		if (FD_ISSET(fd[i].fd, &writeSet)) {
+			fd[i].revents |= kPOLLOUT;
+		}
+		if (FD_ISSET(fd[i].fd, &errSet)) {
+			fd[i].revents |= kPOLLERR;
+		}
+		if (fd[i].revents != 0) {
+			++n;
+		}
+	}
+	return n;
 }
 
 #endif

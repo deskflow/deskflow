@@ -32,7 +32,22 @@
 #	include <X11/Xutil.h>
 #endif
 #if UNIX_LIKE
-#include <sys/poll.h>
+#	if HAVE_POLL
+#		include <sys/poll.h>
+#	else
+#		if HAVE_SYS_SELECT_H
+#			include <sys/select.h>
+#		endif
+#		if HAVE_SYS_TIME_H
+#			include <sys/time.h>
+#		endif
+#		if HAVE_SYS_TYPES_H
+#			include <sys/types.h>
+#		endif
+#		if HAVE_UNISTD_H
+#			include <unistd.h>
+#		endif
+#	endif
 #endif
 
 //
@@ -240,19 +255,48 @@ CXWindowsScreen::mainLoop()
 
 	// use poll() to wait for a message from the X server or for timeout.
 	// this is a good deal more efficient than polling and sleeping.
+#if HAVE_POLL
 	struct pollfd pfds[1];
 	pfds[0].fd     = ConnectionNumber(m_display);
 	pfds[0].events = POLLIN;
+#endif
 	while (!m_stop) {
 		// compute timeout to next timer
+#if HAVE_POLL
 		int timeout = (m_timers.empty() ? -1 :
 								static_cast<int>(1000.0 * m_timers.top()));
+#else
+		struct timeval timeout;
+		struct timeval* timeoutPtr;
+		if (m_timers.empty()) {
+			timeoutPtr = NULL;
+		}
+		else {
+			timeout.tv_sec  = static_cast<int>(m_timers.top());
+			timeout.tv_usec = static_cast<int>(1.0e+6 *
+									(m_timers.top() - timeout.tv_sec));
+			timeoutPtr      = &timeout;
+		}
+
+		// initialize file descriptor sets
+		fd_set rfds;
+		FD_ZERO(&rfds);
+		FD_SET(ConnectionNumber(m_display), &rfds);
+#endif
 
 		// wait for message from X server or for timeout.  also check
 		// if the thread has been cancelled.  poll() should return -1
 		// with EINTR when the thread is cancelled.
 		m_mutex.unlock();
+#if HAVE_POLL
 		poll(pfds, 1, timeout);
+#else
+		select(ConnectionNumber(m_display) + 1,
+							SELECT_TYPE_ARG234 &rfds,
+							SELECT_TYPE_ARG234 NULL,
+							SELECT_TYPE_ARG234 NULL,
+							SELECT_TYPE_ARG5   timeoutPtr);
+#endif
 		CThread::testCancel();
 		m_mutex.lock();
 

@@ -72,6 +72,8 @@ AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(gmtime_r)
 AC_CHECK_FUNCS(getpwuid_r)
 AC_CHECK_FUNCS(vsnprintf)
+AC_FUNC_SELECT_ARGTYPES
+ACX_CHECK_POLL
 dnl use AC_REPLACE_FUNCS() for stuff in string.h
 
 dnl checks for system services

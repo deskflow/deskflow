@@ -17,15 +17,22 @@
 
 #include "BasicTypes.h"
 
+#if HAVE_SYS_TYPES_H
+#	include <sys/types.h>
+#endif
+#if HAVE_SYS_SOCKET_H
+#	include <sys/socket.h>
+#endif
+#if HAVE_POLL
+#	include <sys/poll.h>
+#endif
+
 #if WINDOWS_LIKE
 	// declare no functions in winsock2
 #	define INCL_WINSOCK_API_PROTOTYPES 0
 #	define INCL_WINSOCK_API_TYPEDEFS 0
 #	include <winsock2.h>
 typedef int ssize_t;
-#	if !defined(SOL_TCP)
-# 		define SOL_TCP IPPROTO_TCP
-#	endif
 #else
 #	undef FAR
 #	undef PASCAL
@@ -34,15 +41,8 @@ typedef int ssize_t;
 #endif
 
 #if UNIX_LIKE
-# include <sys/types.h>
-# include <sys/poll.h>
-# include <sys/socket.h>
-# include <netdb.h>
-# include <netinet/in.h>
-# include <errno.h>
-# if !defined(TCP_NODELAY) || !defined(SOL_TCP)
-#  include <netinet/tcp.h>
-# endif
+#	include <netdb.h>
+#	include <errno.h>
 #endif
 
 //! Networking functions
@@ -53,7 +53,13 @@ public:
 	typedef SOCKET Socket;
 	typedef struct sockaddr Address;
 	typedef int AddressLength;
-	typedef BOOL TCPNoDelayType;
+#elif UNIX_LIKE
+	typedef int Socket;
+	typedef struct sockaddr Address;
+	typedef socklen_t AddressLength;
+#endif
+
+#if WINDOWS_LIKE || !HAVE_POLL
 	class PollEntry {
 	public:
 		Socket			fd;
@@ -61,21 +67,17 @@ public:
 		short			revents;
 	};
 	enum {
-		kPOLLIN = 1,
-		kPOLLOUT = 2,
-		kPOLLERR = 4,
+		kPOLLIN   = 1,
+		kPOLLOUT  = 2,
+		kPOLLERR  = 4,
 		kPOLLNVAL = 8
 	};
-#elif UNIX_LIKE
-	typedef int Socket;
-	typedef struct sockaddr Address;
-	typedef socklen_t AddressLength;
+#else
 	typedef struct pollfd PollEntry;
-	typedef int TCPNoDelayType;
 	enum {
-		kPOLLIN = POLLIN,
-		kPOLLOUT = POLLOUT,
-		kPOLLERR = POLLERR,
+		kPOLLIN   = POLLIN,
+		kPOLLOUT  = POLLOUT,
+		kPOLLERR  = POLLERR,
 		kPOLLNVAL = POLLNVAL
 	};
 #endif
@@ -183,16 +185,38 @@ public:
 	//! Set socket to (non-)blocking operation
 	static int (PASCAL FAR *setblocking)(CNetwork::Socket s, bool blocking);
 
-#if WINDOWS_LIKE
+	//! Turn Nagle algorithm on or off on socket
+	/*!
+	Set socket to send messages immediately (true) or to collect small
+	messages into one packet (false).
+	*/
+	static int (PASCAL FAR *setnodelay)(CNetwork::Socket s, bool nodelay);
+
 private:
+#if WINDOWS_LIKE
+#define SELECT_TYPE_ARG1 int
+#define SELECT_TYPE_ARG234 (fd_set *)
+#define SELECT_TYPE_ARG5 (struct timeval *)
 	static void			init2(HMODULE);
-	static int PASCAL FAR poll2(PollEntry[], int nfds, int timeout);
 	static ssize_t PASCAL FAR read2(Socket s, void FAR * buf, size_t len);
 	static ssize_t PASCAL FAR write2(Socket s, const void FAR * buf, size_t len);
 	static int PASCAL FAR setblocking2(CNetwork::Socket s, bool blocking);
+	static int PASCAL FAR setnodelay2(CNetwork::Socket s, bool nodelay);
 	static int (PASCAL FAR *WSACleanup)(void);
 	static int (PASCAL FAR *__WSAFDIsSet)(CNetwork::Socket, fd_set FAR *);
 	static int (PASCAL FAR *select)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);
+#endif
+
+#if UNIX_LIKE
+	static int PASCAL FAR gethostname2(char FAR * name, int namelen);
+	static int PASCAL FAR getsockerror2(void);
+	static int PASCAL FAR gethosterror2(void);
+	static int PASCAL FAR setblocking2(CNetwork::Socket s, bool blocking);
+	static int PASCAL FAR setnodelay2(CNetwork::Socket s, bool nodelay);
+#endif
+
+#if WINDOWS_LIKE || !HAVE_POLL
+	static int PASCAL FAR poll2(PollEntry[], int nfds, int timeout);
 #endif
 };
 

@@ -208,8 +208,7 @@ CTCPSocket::init()
 	// turn off Nagle algorithm.  we send lots of very short messages
 	// that should be sent without (much) delay.  for example, the
 	// mouse motion messages are much less useful if they're delayed.
-	CNetwork::TCPNoDelayType flag = 1;
-	CNetwork::setsockopt(m_fd, SOL_TCP, TCP_NODELAY, &flag, sizeof(flag));
+	CNetwork::setnodelay(m_fd, true);
 }
 
 void
