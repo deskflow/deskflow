@@ -16,10 +16,10 @@ dnl initialize
 AC_INIT(lib/common/common.h)
 AC_CONFIG_AUX_DIR(config)
 
-dnl current version
-MAJOR_VERSION=1
-MINOR_VERSION=1
-RELEASE_VERSION=8
+dnl current version, extracted from $srcdir/lib/common/Version.h
+MAJOR_VERSION=`grep '#.*define VERSION "' $srcdir/lib/common/Version.h | sed -e 's/.*"\([0-9]*\)\.[0-9]*\.[0-9]*".*/\1/'`
+MINOR_VERSION=`grep '#.*define VERSION "' $srcdir/lib/common/Version.h | sed -e 's/.*"[0-9]*\.\([0-9]*\)\.[0-9]*".*/\1/'`
+RELEASE_VERSION=`grep '#.*define VERSION "' $srcdir/lib/common/Version.h | sed -e 's/.*"[0-9]*\.[0-9]*\.\([0-9]*\)".*/\1/'`
 
 dnl initialize automake
 AM_INIT_AUTOMAKE(synergy, $MAJOR_VERSION.$MINOR_VERSION.$RELEASE_VERSION)
