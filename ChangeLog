@@ -1,3 +1,26 @@
+2002/09/04 21:17:01 crs
+NEWS
+configure.in
+lib/base/Version.h
+
+Changed version number to 0.9.11.  Added NEWS item.
+
+----------
+2002/09/04 21:14:18 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+
+now looking up SendEvent() using GetProcAddress() so win95
+systems can run the synergy client.
+
+----------
+2002/09/04 20:17:54 crs
+lib/client/CXWindowsSecondaryScreen.cpp
+
+fixed bug that caused the wrong keycode to be used for most,
+possibly all, keysyms.  was reading past the end of an array
+of keysyms.
+
+----------
 2002/09/02 17:36:25 crs
 configure.in
 lib/base/Version.h
