@@ -60,18 +60,20 @@ void					CClient::runSession(void*)
 		IOutputStream* srcOutput = socket->getOutputStream();
 
 		// attach the encryption layer
+		bool own = false;
 /* FIXME -- implement ISecurityFactory
 		if (m_securityFactory != NULL) {
-			input.reset(m_securityFactory->createInputFilter(srcInput, false));
-			output.reset(m_securityFactory->createOutputFilter(srcOutput, false));
+			input.reset(m_securityFactory->createInputFilter(srcInput, own));
+			output.reset(m_securityFactory->createOutputFilter(srcOutput, own));
 			srcInput  = input.get();
 			srcOutput = output.get();
+			own       = true;
 		}
 */
 
 		// attach the packetizing filters
-		input.reset(new CInputPacketStream(srcInput, true));
-		output.reset(new COutputPacketStream(srcOutput, true));
+		input.reset(new CInputPacketStream(srcInput, own));
+		output.reset(new COutputPacketStream(srcOutput, own));
 
 		// wait for hello from server
 		log((CLOG_DEBUG "wait for hello"));
