@@ -19,7 +19,7 @@
 
 // set version macro if not set yet
 #if !defined(VERSION)
-#	define VERSION "1.1.11"
+#	define VERSION "1.2.0"
 #endif
 
 // important strings
