@@ -13,6 +13,7 @@
 CBufferedOutputStream::CBufferedOutputStream(CMutex* mutex, IJob* closeCB) :
 								m_mutex(mutex),
 								m_closeCB(closeCB),
+								m_empty(mutex, true),
 								m_closed(false)
 {
 	assert(m_mutex != NULL);
@@ -31,6 +32,9 @@ const void*				CBufferedOutputStream::peek(UInt32 n)
 void					CBufferedOutputStream::pop(UInt32 n)
 {
 	m_buffer.pop(n);
+	if (m_buffer.getSize() == 0) {
+		m_empty.broadcast();
+	}
 }
 
 UInt32					CBufferedOutputStream::getSize() const
@@ -67,14 +71,8 @@ UInt32					CBufferedOutputStream::write(
 void					CBufferedOutputStream::flush()
 {
 	// wait until all data is written
-	while (getSizeWithLock() > 0) {
-		CThread::sleep(0.05);
+	CLock lock(m_mutex);
+	while (m_buffer.getSize() > 0) {
+		m_empty.wait();
 	}
 }
-
-UInt32					CBufferedOutputStream::getSizeWithLock() const
-{
-	CLock lock(m_mutex);
-	return m_buffer.getSize();
-}
-

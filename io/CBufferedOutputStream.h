@@ -3,6 +3,7 @@
 
 #include "CStreamBuffer.h"
 #include "IOutputStream.h"
+#include "CCondVar.h"
 
 class CMutex;
 class IJob;
@@ -34,11 +35,9 @@ public:
 	virtual void		flush();
 
 private:
-	UInt32				getSizeWithLock() const;
-
-private:
 	CMutex*				m_mutex;
 	IJob*				m_closeCB;
+	CCondVar<bool>		m_empty;
 	CStreamBuffer		m_buffer;
 	bool				m_closed;
 };

@@ -80,25 +80,35 @@ void					CTCPSocket::connect(const CNetworkAddress& addr)
 
 void					CTCPSocket::close()
 {
-	// shutdown I/O thread before close
-	if (m_thread != NULL) {
-		// flush if output buffer not empty and output buffer not closed
-		bool doFlush;
-		{
-			CLock lock(m_mutex);
-			doFlush = ((m_connected & kWrite) != 0);
-		}
-		if (doFlush) {
-			m_output->flush();
-		}
+	// see if buffers should be flushed
+	bool doFlush = false;
+	{
+		CLock lock(m_mutex);
+		doFlush = (m_thread != NULL && (m_connected & kWrite) != 0);
+	}
 
-		m_thread->cancel();
+	// flush buffers
+	if (doFlush) {
+		m_output->flush();
+	}
+
+	// cause ioThread to exit
+	{
+		CLock lock(m_mutex);
+		if (m_fd != CNetwork::Null) {
+			CNetwork::shutdown(m_fd, 2);
+			m_connected = kClosed;
+		}
+	}
+
+	// wait for thread
+	if (m_thread != NULL) {
 		m_thread->wait();
 		delete m_thread;
 		m_thread = NULL;
 	}
 
-	CLock lock(m_mutex);
+	// close socket
 	if (m_fd != CNetwork::Null) {
 		if (CNetwork::close(m_fd) == CNetwork::Error) {
 			throw XIOClose();
@@ -190,14 +200,7 @@ void					CTCPSocket::ioService()
 		}
 
 		// check for status
-		CThread::testCancel();
-		if (pfds[0].events == 0) {
-			CThread::sleep(0.05);
-			CThread::testCancel();
-			continue;
-		}
-		const int status = CNetwork::poll(pfds, 1, 50);
-		CThread::testCancel();
+		const int status = CNetwork::poll(pfds, 1, 10);
 
 		// transfer data and handle errors
 		if (status == 1) {
