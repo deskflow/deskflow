@@ -272,8 +272,11 @@ CServer::getDisconnectedEvent()
 }
 
 bool
-CServer::onCommandKey(KeyID /*id*/, KeyModifierMask /*mask*/, bool /*down*/)
+CServer::onCommandKey(KeyID id, KeyModifierMask /*mask*/, bool /*down*/)
 {
+	if (id == kKeyScrollLock) {
+		m_primaryClient->reconfigure(getActivePrimarySides());
+	}
 	return false;
 }
 
@@ -291,17 +294,19 @@ UInt32
 CServer::getActivePrimarySides() const
 {
 	UInt32 sides = 0;
-	if (getNeighbor(m_primaryClient, kLeft) != NULL) {
-		sides |= kLeftMask;
-	}
-	if (getNeighbor(m_primaryClient, kRight) != NULL) {
-		sides |= kRightMask;
-	}
-	if (getNeighbor(m_primaryClient, kTop) != NULL) {
-		sides |= kTopMask;
-	}
-	if (getNeighbor(m_primaryClient, kBottom) != NULL) {
-		sides |= kBottomMask;
+	if (!isLockedToScreen()) {
+		if (getNeighbor(m_primaryClient, kLeft) != NULL) {
+			sides |= kLeftMask;
+		}
+		if (getNeighbor(m_primaryClient, kRight) != NULL) {
+			sides |= kRightMask;
+		}
+		if (getNeighbor(m_primaryClient, kTop) != NULL) {
+			sides |= kTopMask;
+		}
+		if (getNeighbor(m_primaryClient, kBottom) != NULL) {
+			sides |= kBottomMask;
+		}
 	}
 	return sides;
 }
@@ -1148,6 +1153,7 @@ void
 CServer::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x button=0x%04x", id, mask, button));
+LOG((CLOG_INFO "onKeyDown: id=%d mask=0x%04x button=0x%04x", id, mask, button));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -1163,6 +1169,7 @@ void
 CServer::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button));
+LOG((CLOG_INFO "onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -1179,6 +1186,7 @@ CServer::onKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x", id, mask, count, button));
+LOG((CLOG_INFO "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x", id, mask, count, button));
 	assert(m_active != NULL);
 
 	// handle command keys
