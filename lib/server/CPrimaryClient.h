@@ -24,12 +24,12 @@ class CScreen;
 /*!
 The primary screen does not have a client associated with it.  This
 class provides a pseudo-client to allow the primary screen to be
-treated as if it was on a client.
+treated as if it was a client.
 */
 class CPrimaryClient : public IClient {
 public:
 	/*!
-	\c name is the name of the server.  \p screen is adopted.
+	\c name is the name of the server and \p screen is primary screen.
 	*/
 	CPrimaryClient(const CString& name, CScreen* screen);
 	~CPrimaryClient();

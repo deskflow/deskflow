@@ -33,7 +33,6 @@ CServerTaskBarReceiver::~CServerTaskBarReceiver()
 	// do nothing
 }
 
-#include "CLog.h"
 void
 CServerTaskBarReceiver::updateStatus(CServer* server, const CString& errorMsg)
 {
@@ -62,7 +61,6 @@ CServerTaskBarReceiver::updateStatus(CServer* server, const CString& errorMsg)
 
 		// let subclasses have a go
 		onStatusChanged(server);
-LOG((CLOG_INFO "### status: %s", getToolTip().c_str()));
 	}
 
 	// tell task bar

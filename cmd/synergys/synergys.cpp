@@ -118,6 +118,7 @@ createScreen()
 //
 
 static CServer*					s_server          = NULL;
+static CScreen*					s_serverScreen    = NULL;
 static CPrimaryClient*			s_primaryClient   = NULL;
 static CClientListener*			s_listener        = NULL;
 static CServerTaskBarReceiver*	s_taskBarReceiver = NULL;
@@ -171,6 +172,20 @@ closeClientListener(CClientListener* listen)
 }
 
 static
+CScreen*
+openServerScreen()
+{
+	return createScreen();
+}
+
+static
+void
+closeServerScreen(CScreen* screen)
+{
+	delete screen;
+}
+
+static
 void
 handleScreenError(const CEvent&, void*)
 {
@@ -179,10 +194,9 @@ handleScreenError(const CEvent&, void*)
 
 static
 CPrimaryClient*
-openPrimaryClient(const CString& name)
+openPrimaryClient(const CString& name, CScreen* screen)
 {
 	LOG((CLOG_DEBUG1 "creating primary screen"));
-	CScreen* screen = createScreen();
 	CPrimaryClient* primaryClient = new CPrimaryClient(name, screen);
 	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
 							primaryClient->getEventTarget(),
@@ -280,13 +294,16 @@ bool
 startServer()
 {
 	double retryTime;
+	CScreen* serverScreen         = NULL;
 	CPrimaryClient* primaryClient = NULL;
 	CClientListener* listener     = NULL;
 	try {
 		CString name    = ARG->m_config.getCanonicalName(ARG->m_name);
-		primaryClient   = openPrimaryClient(name);
+		serverScreen    = openServerScreen();
+		primaryClient   = openPrimaryClient(name, serverScreen);
 		listener        = openClientListener(ARG->m_config.getSynergyAddress());
 		s_server        = openServer(ARG->m_config, primaryClient);
+		s_serverScreen  = serverScreen;
 		s_primaryClient = primaryClient;
 		s_listener      = listener;
 		updateStatus();
@@ -297,6 +314,7 @@ startServer()
 		LOG((CLOG_WARN "cannot open primary screen: %s", e.what()));
 		closeClientListener(listener);
 		closePrimaryClient(primaryClient);
+		closeServerScreen(serverScreen);
 		updateStatus(CString("cannot open primary screen: ") + e.what());
 		retryTime = e.getRetryTime();
 	}
@@ -304,6 +322,7 @@ startServer()
 		LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
 		closeClientListener(listener);
 		closePrimaryClient(primaryClient);
+		closeServerScreen(serverScreen);
 		updateStatus(CString("cannot listen for clients: ") + e.what());
 		retryTime = 10.0;
 	}
@@ -311,12 +330,14 @@ startServer()
 		LOG((CLOG_CRIT "cannot open primary screen: %s", e.what()));
 		closeClientListener(listener);
 		closePrimaryClient(primaryClient);
+		closeServerScreen(serverScreen);
 		return false;
 	}
 	catch (XBase& e) {
 		LOG((CLOG_CRIT "failed to start server: %s", e.what()));
 		closeClientListener(listener);
 		closePrimaryClient(primaryClient);
+		closeServerScreen(serverScreen);
 		return false;
 	}
 
@@ -332,6 +353,20 @@ startServer()
 		// don't try again
 		return false;
 	}
+}
+
+static
+void
+stopServer()
+{
+	closeClientListener(s_listener);
+	closeServer(s_server);
+	closePrimaryClient(s_primaryClient);
+	closeServerScreen(s_serverScreen);
+	s_server        = NULL;
+	s_listener      = NULL;
+	s_primaryClient = NULL;
+	s_serverScreen  = NULL;
 }
 
 static
@@ -383,12 +418,7 @@ realMain()
 
 	// close down
 	LOG((CLOG_DEBUG1 "stopping server"));
-	closeClientListener(s_listener);
-	closeServer(s_server);
-	closePrimaryClient(s_primaryClient);
-	s_server        = NULL;
-	s_listener      = NULL;
-	s_primaryClient = NULL;
+	stopServer();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
 

@@ -33,7 +33,7 @@ CPrimaryClient::CPrimaryClient(const CString& name, CScreen* screen) :
 
 CPrimaryClient::~CPrimaryClient()
 {
-	delete m_screen;
+	// do nothing
 }
 
 void
