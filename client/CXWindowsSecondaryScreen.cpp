@@ -98,8 +98,8 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 	// FIXME -- may have to get these from some database
 	m_numLockHalfDuplex  = false;
 	m_capsLockHalfDuplex = false;
-//	m_numLockHalfDuplex  = true;
-//	m_capsLockHalfDuplex = true;
+	m_numLockHalfDuplex  = true;
+	m_capsLockHalfDuplex = true;
 
 	// assume primary has all clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
@@ -434,14 +434,19 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 		for (unsigned int i = 0; i < 8; ++i) {
 			unsigned int bit = (1 << i);
 			if ((outMask & bit) != (m_mask & bit)) {
-				// get list of keycodes for the modifier.  there must
-				// be at least one.
+				// get list of keycodes for the modifier.  if there isn't
+				// one then there's no key mapped to this modifier.
+				// we can't generate the desired key so bail.
 				const KeyCode* modifierKeys =
 								&m_modifierToKeycode[i * m_keysPerModifier];
 				KeyCode modifierKey = modifierKeys[0];
-				if (modifierKey == 0)
+				if (modifierKey == 0) {
 					modifierKey = modifierKeys[1];
-				assert(modifierKeys[0] != 0);
+				}
+				if (modifierKey == 0) {
+					log((CLOG_DEBUG1 "no key mapped to modifier 0x%04x", bit));
+					return m_mask;
+				}
 
 				if (modifierKey != 0 && (outMask & bit) != 0) {
 					// modifier is not active but should be.  if the
