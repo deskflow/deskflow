@@ -270,7 +270,7 @@ static
 void
 handleClientConnected(const CEvent&, void*)
 {
-	LOG((CLOG_DEBUG "connected to server"));
+	LOG((CLOG_NOTE "connected to server"));
 	resetRestartTimeout();
 	updateStatus();
 }
