@@ -33,4 +33,3 @@ void					CTimerThread::timer(void*)
 	log((CLOG_DEBUG1 "timeout"));
 	m_callingThread->cancel();
 }
-
