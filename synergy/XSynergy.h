@@ -3,25 +3,35 @@
 
 #include "XBase.h"
 
+//! Generic synergy exception
 class XSynergy : public XBase { };
 
-// client is misbehaving
+//! Client error exception
+/*!
+Thrown when the client fails to follow the protocol.
+*/
 class XBadClient : public XSynergy {
 protected:
 	virtual CString		getWhat() const throw();
 };
 
-// client has incompatible version
+//! Incompatible client exception
+/*!
+Thrown when a client attempting to connect has an incompatible version.
+*/
 class XIncompatibleClient : public XSynergy {
 public:
 	XIncompatibleClient(int major, int minor);
 
-	// manipulators
+	//! @name accessors
+	//@{
 
-	// accessors
-
+	//! Get client's major version number
 	int					getMajor() const throw();
+	//! Get client's minor version number
 	int					getMinor() const throw();
+
+	//@}
 
 protected:
 	virtual CString		getWhat() const throw();
@@ -31,17 +41,23 @@ private:
 	int					m_minor;
 };
 
-// client has duplicate name (i.e. client with name is already connected)
+//! Client already connected exception
+/*!
+Thrown when a client attempting to connect is using the same name as
+a client that is already connected.
+*/
 class XDuplicateClient : public XSynergy {
 public:
 	XDuplicateClient(const CString& name);
 
-	// manipulators
+	//! @name accessors
+	//@{
 
-	// accessors
-
+	//! Get client's name
 	virtual const CString&
 						getName() const throw();
+
+	//@}
 
 protected:
 	virtual CString		getWhat() const throw();
@@ -50,17 +66,23 @@ private:
 	CString				m_name;
 };
 
-// client has unknown name (i.e. name is not in server's screen map)
+//! Client not in map
+/*!
+Thrown when a client attempting to connect is using a name that is
+unknown to the server.
+*/
 class XUnknownClient : public XSynergy {
 public:
 	XUnknownClient(const CString& name);
 
-	// manipulators
+	//! @name accessors
+	//@{
 
-	// accessors
-
+	//! Get the client's name
 	virtual const CString&
 						getName() const throw();
+
+	//@}
 
 protected:
 	virtual CString		getWhat() const throw();

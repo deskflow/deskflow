@@ -5,14 +5,14 @@
 #include "CBufferedInputStream.h"
 #include "CMutex.h"
 
+//! Packetizing input stream filter
+/*!
+Filters an input stream to extract packet by packet.
+*/
 class CInputPacketStream : public CInputStreamFilter {
 public:
 	CInputPacketStream(IInputStream*, bool adoptStream = true);
 	~CInputPacketStream();
-
-	// manipulators
-
-	// accessors
 
 	// IInputStream overrides
 	virtual void		close();

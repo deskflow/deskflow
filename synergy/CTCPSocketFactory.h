@@ -3,14 +3,11 @@
 
 #include "ISocketFactory.h"
 
+//! Socket factory for TCP sockets
 class CTCPSocketFactory : public ISocketFactory {
 public:
 	CTCPSocketFactory();
 	virtual ~CTCPSocketFactory();
-
-	// manipulators
-
-	// accessors
 
 	// ISocketFactory overrides
 	virtual IDataSocket*	create() const;

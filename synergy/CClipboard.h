@@ -1,34 +1,58 @@
 #ifndef CCLIPBOARD_H
 #define CCLIPBOARD_H
 
-//
-// CClipboard -- stores clipboard data in a memory buffer
-//
-
 #include "IClipboard.h"
 
+//! Memory buffer clipboard
+/*!
+This class implements a clipboard that stores data in memory.
+*/
 class CClipboard : public IClipboard {
 public:
 	CClipboard();
 	virtual ~CClipboard();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// unmarshall clipboard data
-	void				unmarshall(const CString& data, Time);
+	//! Unmarshall clipboard data
+	/*!
+	Extract marshalled clipboard data and store it in this clipboard.
+	Sets the clipboard time to \c time.
+	*/
+	void				unmarshall(const CString& data, Time time);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// marshall clipboard data
+	//! Marshall clipboard data
+	/*!
+	Merge this clipboard's data into a single buffer that can be later
+	unmarshalled to restore the clipboard and return the buffer.
+	*/
 	CString				marshall() const;
 
-	// transfer all the data in one clipboard to another.  the
-	// clipboards can be of any concrete clipboard type (and
-	// they don't have to be the same type).  this also sets
-	// the timestamp to time, if provided, or the time in src.
-	// returns true iff the copy succeeded.
+	//! Copy clipboard
+	/*!
+	Transfers all the data in one clipboard to another.  The
+	clipboards can be of any concrete clipboard type (and
+	they don't have to be the same type).  This also sets
+	the destination clipboard's timestamp to source clipboard's
+	timestamp.  Returns true iff the copy succeeded.
+	*/
 	static bool			copy(IClipboard* dst, const IClipboard* src);
+
+	//! Copy clipboard
+	/*!
+	Transfers all the data in one clipboard to another.  The
+	clipboards can be of any concrete clipboard type (and they
+	don't have to be the same type).  This also sets the
+	timestamp to \c time.  Returns true iff the copy succeeded.
+	*/
 	static bool			copy(IClipboard* dst, const IClipboard* src, Time);
+
+	//@}
 
 	// IClipboard overrides
 	virtual bool		empty();

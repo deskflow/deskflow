@@ -3,14 +3,15 @@
 
 #include "COutputStreamFilter.h"
 
+//! Packetizing output stream filter
+/*!
+Filters an output stream to create packets that include message
+boundaries.  Each write() is considered a single packet.
+*/
 class COutputPacketStream : public COutputStreamFilter {
 public:
 	COutputPacketStream(IOutputStream*, bool adoptStream = true);
 	~COutputPacketStream();
-
-	// manipulators
-
-	// accessors
 
 	// IOutputStream overrides
 	virtual void		close();

@@ -3,11 +3,11 @@
 
 #include "BasicTypes.h"
 
-// version number
+// protocol version number
 static const SInt16		kProtocolMajorVersion = 0;
 static const SInt16		kProtocolMinorVersion = 7;
 
-// contact port number
+// default contact port number
 static const UInt16		kDefaultPort = 24800;
 
 // time between heartbeats (in seconds)
@@ -181,16 +181,37 @@ static const char		kMsgEBad[]			= "EBAD";
 // structures
 //
 
+//! Screen information
+/*!
+This class contains information about a screen.
+*/
 class CClientInfo {
 public:
-	// the coordinates of the screen 
+	//! Screen position
+	/*!
+	The position of the upper-left corner of the screen.  This is
+	typically 0,0.
+	*/
 	SInt32				m_x, m_y;
+
+	//! Screen size
+	/*!
+	The size of the screen in pixels.
+	*/
 	SInt32				m_w, m_h;
 
-	// the size of the jump zone
+	//! Jump zone size
+	/*!
+	This is the size of the jump zone.  The cursor jumps to the adjacent
+	screen when it comes within this many pixels of the edge of the screen.
+	*/
 	SInt32				m_zoneSize;
 
-	// mouse position
+	//! Mouse position
+	/*!
+	The position of the cursor.  This is not kept up-to-date so it's
+	only meaningful when receiving an update.
+	*/
 	SInt32				m_mx, m_my;
 };
 

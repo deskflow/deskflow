@@ -8,32 +8,52 @@ class CEvent;
 
 class IScreen;
 
-// the interface through which IScreen sends notification of events.
-// each platform will derive two types from IScreenEventHandler, one
-// for handling events on the primary screen and one for the
-// secondary screen.  the header file with the IScreen subclass for
-// each platform should define the CEvent type, which depends on the
-// type of native events for that platform.
+//! Screen event handler interface
+/*!
+This is the interface through which IScreen sends notification of events.
+Each platform will derive two types from IScreenEventHandler, one
+for handling events on the primary screen and one for the
+secondary screen.  The header file with the IScreen subclass for
+each platform should define the CEvent type, which depends on the
+type of native events for that platform.
+*/
 class IScreenEventHandler : public IInterface {
 public:
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// called when the screensaver is activated or deactivated
+	//! Notify of screen saver change
+	/*!
+	Called when the screensaver is activated or deactivated.
+	*/
 	virtual void		onScreensaver(bool activated) = 0;
 
-	// called for each event before event translation and dispatch.  return
-	// true to skip translation and dispatch.  subclasses should call the
-	// superclass's version first and return true if it returns true.
+	//! Event filtering
+	/*!
+	Called for each event before event translation and dispatch.  Return
+	true to skip translation and dispatch.  Subclasses should call the
+	superclass's version first and return true if it returns true.
+	*/
 	virtual bool		onPreDispatch(const CEvent* event) = 0;
 
-	// called by mainLoop().  iff the event was handled return true and
-	// store the result, if any, in m_result, which defaults to zero.
+	//! Event handling
+	/*!
+	Called to handle an event.  Iff the event was handled return true and
+	store the result, if any, in event->m_result, which defaults to zero.
+	*/
 	virtual bool		onEvent(CEvent* event) = 0;
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// called to get the jump zone size
+	//! Get jump zone size
+	/*!
+	Called to get the jump zone size.
+	*/
 	virtual SInt32		getJumpZoneSize() const = 0;
+
+	//@}
 };
 
 #endif

@@ -3,9 +3,14 @@
 
 #include "BasicTypes.h"
 
-// type to hold a clipboard identifier
+//! Clipboard ID
+/*!
+Type to hold a clipboard identifier.
+*/
 typedef UInt8			ClipboardID;
 
+//! @name Clipboard identifiers
+//@{
 // clipboard identifiers.  kClipboardClipboard is what is normally
 // considered the clipboard (e.g. the cut/copy/paste menu items
 // affect it).  kClipboardSelection is the selection on those
@@ -17,5 +22,6 @@ static const ClipboardID	kClipboardSelection = 1;
 
 // the number of clipboards (i.e. one greater than the last clipboard id)
 static const ClipboardID	kClipboardEnd       = 2;
+//@}
 
 #endif

@@ -6,65 +6,128 @@
 
 class IClipboard;
 
-// the interface for platform dependent screen implementations.  each
-// platform will derive a type from IScreen for interaction with the
-// platform's screen that's common to primary and secondary screens.
+//! Screen interface
+/*!
+This interface defines the methods common to all platform dependent
+screen implementations that are use by both primary and secondary
+screens.
+*/
 class IScreen : public IInterface {
 public:
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// open the screen
+	//! Open screen
+	/*!
+	Called to open and initialize the screen.
+	*/
 	virtual void		open() = 0;
 
-	// runs an event loop and returns when exitMainLoop() is called.
-	// must be called between open() and close().
+	//! Run event loop
+	/*!
+	Run the event loop and return when exitMainLoop() is called.
+	This must be called between a successful open() and close().
+	*/
 	virtual void		mainLoop() = 0;
 
-	// force mainLoop() to return
+	//! Exit event loop
+	/*!
+	Force mainLoop() to return.  This call can return before
+	mailLoop() does (i.e. asynchronously).
+	*/
 	virtual void		exitMainLoop() = 0;
 
-	// close the screen
+	//! Close screen
+	/*!
+	Called to close the screen.  close() should quietly ignore calls
+	that don't have a matching successful call to open().
+	*/
 	virtual void		close() = 0;
 
-	// set the contents of the clipboard
-	virtual bool		setClipboard(ClipboardID, const IClipboard*) = 0;
+	//! Set clipboard
+	/*!
+	Set the contents of the system clipboard indicated by \c id.
+	*/
+	virtual bool		setClipboard(ClipboardID id, const IClipboard*) = 0;
 
-	// check clipboard ownership and notify IScreenReceiver (set through
-	// some other interface) if any changed
+	//! Check clipboard owner
+	/*!
+	Check ownership of all clipboards and notify an IScreenReceiver (set
+	through some other interface) if any changed.  This is used as a
+	backup in case the system doesn't reliably report clipboard ownership
+	changes.
+	*/
 	virtual void		checkClipboards() = 0;
 
-	// open/close the screen saver.  if notify is true then this object
-	// will call IScreenEventHandler's onScreenSaver() when the screensaver
-	// activates or deactivates until close.  if notify is false then
-	// the screen saver is disabled on open and restored on close.
+	//! Open screen saver
+	/*!
+	Open the screen saver.  If \c notify is true then this object must
+	call an IScreenEventHandler's (set through some other interface)
+	onScreenSaver() when the screensaver activates or deactivates until
+	it's closed.  If \c notify is false then the screen saver is
+	disabled on open and restored on close.
+	*/
 	virtual void		openScreensaver(bool notify) = 0;
+
+	//! Close screen saver
+	/*!
+	// Close the screen saver.  Stop reporting screen saver activation
+	and deactivation and, if the screen saver was disabled by
+	openScreensaver(), enable the screen saver.
+	*/
 	virtual void		closeScreensaver() = 0;
 
-	// activate or deactivate the screen saver
+	//! Activate/deactivate screen saver
+	/*!
+	Forcibly activate the screen saver if \c activate is true otherwise
+	forcibly deactivate it.
+	*/
 	virtual void		screensaver(bool activate) = 0;
 
-	// ensure that this thread attached with the visible desktop.  this is
-	// mainly intended for windows which has an artificial distinction
-	// between desktops and a thread cannot interact with the visible
-	// desktop unless the thread is attached to that desktop.
+	//! Attach to desktop
+	/*!
+	Called to ensure that this thread is attached to the visible desktop.
+	This is mainly intended for microsoft windows which has an artificial
+	distinction between desktops where a thread cannot interact with the
+	visible desktop unless the thread is attached to that desktop.  Since
+	it doesn't report when the visible desktop changes we must poll.
+	*/
 	virtual void		syncDesktop() = 0;
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// get the contents of the clipboard
-	virtual bool		getClipboard(ClipboardID, IClipboard*) const = 0;
+	//! Get clipboard
+	/*!
+	Save the contents of the clipboard indicated by \c id and return
+	true iff successful.
+	*/
+	virtual bool		getClipboard(ClipboardID id, IClipboard*) const = 0;
 
-	// get the shape of the screen
+	//! Get screen shape
+	/*!
+	Return the position of the upper-left corner of the screen in \c x and
+	\c y and the size of the screen in \c w (width) and \c h (height).
+	*/
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& w, SInt32& h) const = 0;
 
-	// get the current cursor coordinates
+	//! Get cursor position
+	/*!
+	Return the current position of the cursor in \c x and \c y.
+	*/
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
 
-	// get the cursor center position.  this is where we park the
-	// cursor to compute cursor motion deltas and should be far from
-	// the edges of the screen, typically the center.
+	//! Get cursor center position
+	/*!
+	Return the cursor center position which is where we park the
+	cursor to compute cursor motion deltas and should be far from
+	the edges of the screen, typically the center.
+	*/
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
+
+	//@}
 };
 
 #endif

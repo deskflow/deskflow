@@ -3,9 +3,13 @@
 
 #include "XBase.h"
 
+//! Generic screen exception
 class XScreen : public XBase { };
 
-// screen cannot be opened
+//! Cannot open screen exception
+/*!
+Thrown when a screen cannot be opened or initialized.
+*/
 class XScreenOpenFailure : public XScreen {
 protected:
 	virtual CString		getWhat() const throw();

@@ -3,15 +3,22 @@
 
 #include "BasicTypes.h"
 
-// type to hold a key identifier.  the encoding is UTF-32, using
-// U+E000 through U+EFFF for the various control keys (e.g. arrow
-// keys, function keys, modifier keys, etc).
+//! Key ID
+/*!
+Type to hold a key identifier.  The encoding is UTF-32, using
+U+E000 through U+EFFF for the various control keys (e.g. arrow
+keys, function keys, modifier keys, etc).
+*/
 typedef UInt32			KeyID;
 
-// type to hold bitmask of key modifiers (e.g. shift keys)
+//! Modifier key ID
+/*!
+Type to hold a bitmask of key modifiers (e.g. shift keys).
+*/
 typedef UInt32			KeyModifierMask;
 
-// modifier key bitmasks
+//! @name Modifier key identifiers
+//@{
 static const KeyModifierMask	KeyModifierShift      = 0x0001;
 static const KeyModifierMask	KeyModifierControl    = 0x0002;
 static const KeyModifierMask	KeyModifierAlt        = 0x0004;
@@ -19,11 +26,12 @@ static const KeyModifierMask	KeyModifierMeta       = 0x0008;
 static const KeyModifierMask	KeyModifierCapsLock   = 0x1000;
 static const KeyModifierMask	KeyModifierNumLock    = 0x2000;
 static const KeyModifierMask	KeyModifierScrollLock = 0x4000;
+//@}
 
-//
-// key codes.  all codes except kKeyNone are equal to the corresponding
+//! @name Key identifiers
+//@{
+// all identifiers except kKeyNone are equal to the corresponding
 // X11 keysym - 0x1000.
-//
 
 // no key
 static const KeyID		kKeyNone		= 0x0000;
@@ -163,5 +171,6 @@ static const KeyID		kKeyHyper_R		= 0xEFEE;	/* Right hyper */
 
 // more function and modifier keys
 static const KeyID		kKeyLeftTab		= 0xEE20;
+//@}
 
 #endif

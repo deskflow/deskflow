@@ -6,23 +6,43 @@
 #include "ProtocolTypes.h"
 #include "CString.h"
 
-// the interface for types that receive screen resize and clipboard
-// notifications (indirectly) from the system.
+//! Screen event receiver interface
+/*!
+This interface defines the methods common to most types that receive
+events for changes to a screen.  Note that the methods in this
+interface are similar to the methods in IServer but have different
+parameters.  This interface is suitable for client-side types.
+*/
 class IScreenReceiver : public IInterface {
 public:
-	// called if the screen is unexpectedly closing.  this implies that
-	// the screen is no longer usable and that the program should
-	// close the screen and possibly terminate.
+	//! Notify of error
+	/*!
+	Called when the screen is unexpectedly closing.  This implies that
+	the screen is no longer usable and that the program should close
+	the screen and probably terminate.
+	*/
 	virtual void		onError() = 0;
 
-	// notify of client info change
+	//! Notify of client screen change
+	/*!
+	Called when the client's info has changed.  For example, when the
+	screen resolution has changed.
+	*/
 	virtual void		onInfoChanged(const CClientInfo&) = 0;
 
-	// notify of clipboard grab.  returns true if the grab was honored,
-	// false otherwise.
+	//! Notify of clipboad grab
+	/*!
+	Called when the clipboard was grabbed by another program and,
+	therefore, we no longer own it.  Returns true if the grab was
+	honored, false otherwise.
+	*/
 	virtual bool		onGrabClipboard(ClipboardID) = 0;
 
-	// notify of new clipboard data
+	//! Notify of new clipboard data
+	/*!
+	Called when the data on the clipboard has changed because some
+	other program has changed it.
+	*/
 	virtual void		onClipboardChanged(ClipboardID,
 							const CString& data) = 0;
 };
