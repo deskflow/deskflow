@@ -101,9 +101,9 @@ XHTTP::getReason(SInt32 status)
 // XHTTPAllow
 //
 
-XHTTPAllow::XHTTPAllow(const CString& allowed) :
+XHTTPAllow::XHTTPAllow(const CString& allowedMethods) :
 	XHTTP(405),
-	m_allowed(allowed)
+	m_allowed(allowedMethods)
 {
 	// do nothing
 }

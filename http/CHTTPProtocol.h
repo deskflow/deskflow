@@ -10,88 +10,162 @@
 class IInputStream;
 class IOutputStream;
 
+//! HTTP request type
+/*!
+This class encapsulates an HTTP request.
+*/
 class CHTTPRequest {
-public:
+private:
 	typedef std::list<std::pair<CString, CString> > CHeaderList;
-	typedef std::map<CString, CHeaderList::iterator,
-							CStringUtil::CaselessCmp> CHeaderMap;
+public:
+	//! Iterator on headers
+	/*!
+	An iterator on the headers.  Each element is a std::pair;  first is
+	the header name as a CString, second is the header value as a CString.
+	*/
 	typedef CHeaderList::const_iterator const_iterator;
 
 	CHTTPRequest();
 	~CHTTPRequest();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// add a header by name.  replaces existing header, if any.
-	// headers are sent in the order they're inserted.  replacing
-	// a header does not change its original position in the order.
+	//! Insert header
+	/*!
+	Add a header by name replacing the existing header, if any.
+	Headers are sent in the order they're inserted.  Replacing
+	a header does not change its original position in the order.
+	*/
 	void				insertHeader(const CString& name, const CString& value);
 
-	// append a header.  equivalent to insertHeader() if the header
-	// doesn't exist, otherwise it appends a comma and the value to
-	// the existing header.
+	//! Append header
+	/*!
+	Append a header.  Equivalent to insertHeader() if the header
+	doesn't exist, otherwise it appends a comma and the value to
+	the existing header.
+	*/
 	void				appendHeader(const CString& name, const CString& value);
 
-	// remove a header by name.  does nothing if no such header.
+	//! Remove header
+	/*!
+	Remove a header by name.  Does nothing if the header doesn't exist.
+	*/
 	void				eraseHeader(const CString& name);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// returns true iff the header exists
+	//! Check header existence
+	/*!
+	Returns true iff the header exists.
+	*/
 	bool				isHeader(const CString& name) const;
 
-	// get a header by name.  returns the empty string if no such header.
+	//! Get header
+	/*!
+	Get a header by name.  Returns the empty string if the header
+	doesn't exist.
+	*/
 	CString				getHeader(const CString& name) const;
 
-	// get iterator over all headers in the order they were added
+	// headers are iterated in the order they were added.
+	//! Get beginning header iterator
 	const_iterator		begin() const { return m_headers.begin(); }
+	//! Get ending header iterator
 	const_iterator		end() const { return m_headers.end(); }
+
+	//@}
 
 public:
 	// note -- these members are public for convenience
+	//! The HTTP method
 	CString				m_method;
+	//! The HTTP URI
 	CString				m_uri;
+	//! The HTTP major version number
 	SInt32				m_majorVersion;
+	//! The HTTP minor version number
 	SInt32				m_minorVersion;
+	//! The HTTP body, after transfer decoding
 	CString				m_body;
 
 private:
+	typedef std::map<CString, CHeaderList::iterator,
+							CStringUtil::CaselessCmp> CHeaderMap;
+
 	CHeaderList			m_headers;
 	CHeaderMap			m_headerByName;
 };
 
+//! HTTP reply type
+/*!
+This class encapsulates an HTTP reply.
+*/
 class CHTTPReply {
 public:
+	//! Header list
+	/*!
+	The type of the reply header list.  Each pair is the header name
+	and value, respectively for first and second.
+	*/
 	typedef std::vector<std::pair<CString, CString> > CHeaderList;
 
+	// note -- these members are public for convenience
+	//! The HTTP major version number
 	SInt32				m_majorVersion;
+	//! The HTTP minor version number
 	SInt32				m_minorVersion;
+	//! The HTTP status code
 	SInt32				m_status;
+	//! The HTTP reason phrase
 	CString				m_reason;
+	//! The HTTP method
 	CString				m_method;
-
+	//! The HTTP headers
 	CHeaderList			m_headers;
-
+	//! The HTTP body
 	CString				m_body;
 };
 
+//! HTTP protocol utilities
+/*!
+This class provides utility functions for HTTP.
+*/
 class CHTTPProtocol {
 public:
-	// read and parse an HTTP request.  result is returned in a
-	// CHTTPRequest which the client must delete.  throws an
-	// XHTTP if there was a parse error.  throws an XIO exception
-	// if there was a read error.  if maxSize is greater than
-	// zero and the request is larger than maxSize bytes then
-	// throws XHTTP(413).
+	//! Multipart form parts
+	/*!
+	Each element is the contents of a multipart form part indexed by
+	it's name.
+	*/
+	typedef std::map<CString, CString> CFormParts;
+
+	//! Read HTTP request
+	/*!
+	Read and parse an HTTP request.  The result is returned in a
+	CHTTPRequest which the client must delete.  Throws an
+	XHTTP if there was a parse error.  Throws an XIO exception
+	if there was a read error.  If \c maxSize is greater than
+	zero and the request is larger than \c maxSize bytes then
+	throws XHTTP(413) (request entity too large).
+	*/
 	static CHTTPRequest*	readRequest(IInputStream*, UInt32 maxSize = 0);
 
-	// send an HTTP reply on the stream
+	//! Send HTTP response
+	/*!
+	Send an HTTP reply.  The Content-Length and Date headers are set
+	automatically.
+	*/
 	static void			reply(IOutputStream*, CHTTPReply&);
 
-	// parse a multipart/form-data body into its parts.  returns true
-	// iff the entire body was correctly parsed.
+	//! Parse multipart form data
+	/*!
+	Parse a multipart/form-data body into its parts.  Returns true
+	iff the entire body was correctly parsed.
+	*/
 	// FIXME -- name/value pairs insufficient to save part headers
-	typedef std::map<CString, CString> CFormParts;
 	static bool			parseFormData(const CHTTPRequest&,
 							CFormParts& parts);
 
