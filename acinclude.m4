@@ -10,6 +10,71 @@ dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
 dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl GNU General Public License for more details.
 
+AC_DEFUN([ACX_CHECK_CXX_BOOL], [
+	AC_MSG_CHECKING([for bool support])
+	AC_TRY_COMPILE(, [bool t = true, f = false;],[acx_cxx_bool_ok=yes])
+	AC_MSG_RESULT($acx_cxx_bool_ok)
+	if test x"$acx_cxx_bool_ok" = xyes; then
+		ifelse([$1],,AC_DEFINE(HAVE_CXX_BOOL,1,[Define if your compiler has bool support.]),[$1])
+		:
+	else
+		acx_cxx_bool_ok=no
+		$2
+	fi
+])dnl ACX_CHECK_BOOL
+
+AC_DEFUN([ACX_CHECK_CXX_EXCEPTIONS], [
+	AC_MSG_CHECKING([for exception support])
+	AC_TRY_COMPILE(, [try{throw int(4);}catch(int){throw;}catch(...){}],[acx_cxx_exception_ok=yes])
+	AC_MSG_RESULT($acx_cxx_exception_ok)
+	if test x"$acx_cxx_exception_ok" = xyes; then
+		ifelse([$1],,AC_DEFINE(HAVE_CXX_EXCEPTIONS,1,[Define if your compiler has exceptions support.]),[$1])
+		:
+	else
+		acx_cxx_exception_ok=no
+		$2
+	fi
+])dnl ACX_CHECK_CXX_EXCEPTIONS
+
+AC_DEFUN([ACX_CHECK_CXX_CASTS], [
+	AC_MSG_CHECKING([for C++ cast support])
+	AC_TRY_COMPILE(, [const char* f="a";const_cast<char*>(f);reinterpret_cast<const int*>(f);static_cast<int>(4.5);],[acx_cxx_cast_ok=yes])
+	AC_MSG_RESULT($acx_cxx_cast_ok)
+	if test x"$acx_cxx_cast_ok" = xyes; then
+		ifelse([$1],,AC_DEFINE(HAVE_CXX_CASTS,1,[Define if your compiler has C++ cast support.]),[$1])
+		:
+	else
+		acx_cxx_cast_ok=no
+		$2
+	fi
+])dnl ACX_CHECK_CXX_CASTS
+
+AC_DEFUN([ACX_CHECK_CXX_MUTABLE], [
+	AC_MSG_CHECKING([for mutable support])
+	AC_TRY_COMPILE(, [struct A{mutable int b;void f() const {b=0;}};A a;a.f();],[acx_cxx_mutable_ok=yes])
+	AC_MSG_RESULT($acx_cxx_mutable_ok)
+	if test x"$acx_cxx_mutable_ok" = xyes; then
+		ifelse([$1],,AC_DEFINE(HAVE_CXX_MUTABLE,1,[Define if your compiler has mutable support.]),[$1])
+		:
+	else
+		acx_cxx_mutable_ok=no
+		$2
+	fi
+])dnl ACX_CHECK_CXX_MUTABLE
+
+AC_DEFUN([ACX_CHECK_CXX_STDLIB], [
+	AC_MSG_CHECKING([for C++ standard library])
+	AC_TRY_LINK([#include <set>], [std::set<int> a; a.insert(3);],[acx_cxx_stdlib_ok=yes])
+	AC_MSG_RESULT($acx_cxx_stdlib_ok)
+	if test x"$acx_cxx_stdlib_ok" = xyes; then
+		ifelse([$1],,AC_DEFINE(HAVE_CXX_STDLIB,1,[Define if your compiler has standard C++ library support.]),[$1])
+		:
+	else
+		acx_cxx_stdlib_ok=no
+		$2
+	fi
+])dnl ACX_CHECK_CXX_STDLIB
+
 dnl The following macros are from http://www.gnu.org/software/ac-archive/
 dnl which distributes them under the following license:
 dnl

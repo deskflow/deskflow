@@ -34,10 +34,13 @@ AC_PROG_RANLIB
 dnl checks for libraries
 ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
 
+dnl do checks using C++
+AC_LANG(C++)
+
 dnl checks for header files
 AC_HEADER_STDC
 AC_CHECK_HEADERS([unistd.h sys/time.h])
-AC_CHECK_HEADERS([istream ostream])
+AC_CHECK_HEADERS([istream ostream sstream])
 AC_CHECK_HEADERS([windows.h])
 AC_HEADER_TIME
 AC_PATH_X
@@ -45,7 +48,7 @@ AC_PATH_XTRA
 AC_CHECK_HEADERS([X11/extensions/XTest.h])
 
 dnl checks for types
-dnl AC_TYPE_SIZE_T
+AC_TYPE_SIZE_T
 
 dnl checks for structures
 AC_STRUCT_TM
@@ -55,11 +58,11 @@ AC_CHECK_SIZEOF(char, 1)
 AC_CHECK_SIZEOF(short, 2)
 AC_CHECK_SIZEOF(int, 2)
 AC_CHECK_SIZEOF(long, 4)
-dnl require bool support
-dnl require template support
-dnl require exception support
-dnl require C++ casting support
-dnl require mutable support
+ACX_CHECK_CXX_BOOL(,AC_MSG_ERROR(Your compiler must support bool to compile synergy))
+ACX_CHECK_CXX_EXCEPTIONS(,AC_MSG_ERROR(Your compiler must support exceptions to compile synergy))
+ACX_CHECK_CXX_CASTS(,AC_MSG_ERROR(Your compiler must support C++ casts to compile synergy))
+ACX_CHECK_CXX_MUTABLE(,AC_MSG_ERROR(Your compiler must support mutable to compile synergy))
+ACX_CHECK_CXX_STDLIB(,AC_MSG_ERROR(Your compiler must support the C++ standard library to compile synergy))
 
 dnl checks for library functions
 dnl AC_TYPE_SIGNAL
