@@ -298,10 +298,10 @@ private:
 	ServerKeyMap		m_serverKeyMap;
 
 	// system key states as set by us or the user
-	KeyState			m_keys[256];
+	KeyState			m_keys[512];
 
 	// system key states as set by us
-	KeyState			m_fakeKeys[256];
+	KeyState			m_fakeKeys[512];
 
 	// modifier info
 	MaskToKeys			m_maskToKeys;

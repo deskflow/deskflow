@@ -84,28 +84,6 @@
 #define XBUTTON2			0x0002
 #endif
 
-// multimedia keys
-#if !defined(VK_BROWSER_BACK)
-#define VK_BROWSER_BACK			0xA6
-#define VK_BROWSER_FORWARD		0xA7
-#define VK_BROWSER_REFRESH		0xA8
-#define VK_BROWSER_STOP			0xA9
-#define VK_BROWSER_SEARCH		0xAA
-#define VK_BROWSER_FAVORITES	0xAB
-#define VK_BROWSER_HOME			0xAC
-#define VK_VOLUME_MUTE			0xAD
-#define VK_VOLUME_DOWN			0xAE
-#define VK_VOLUME_UP			0xAF
-#define VK_MEDIA_NEXT_TRACK		0xB0
-#define VK_MEDIA_PREV_TRACK		0xB1
-#define VK_MEDIA_STOP			0xB2
-#define VK_MEDIA_PLAY_PAUSE		0xB3
-#define VK_LAUNCH_MAIL			0xB4
-#define VK_LAUNCH_MEDIA_SELECT	0xB5
-#define VK_LAUNCH_APP1			0xB6
-#define VK_LAUNCH_APP2			0xB7
-#endif
-
 //
 // CMSWindowsScreen
 //
@@ -231,8 +209,7 @@ void
 CMSWindowsScreen::setKeyState(IKeyState* keyState)
 {
 	m_keyState = keyState;
-	m_keyMapper.update(m_keyState);
-	memset(m_buttons, 0, sizeof(m_buttons));
+	updateKeys();
 }
 
 void
@@ -336,6 +313,7 @@ CMSWindowsScreen::leave()
 
 	// tell the key mapper about the keyboard layout
 	m_keyMapper.setKeyLayout(m_keyLayout);
+	sendDeskMessage(SYNERGY_MSG_SYNC_KEYS, 0, 0);
 
 	// tell desk that we're leaving and tell it the keyboard layout
 	sendDeskMessage(SYNERGY_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
@@ -464,6 +442,7 @@ CMSWindowsScreen::updateKeys()
 {
 	sendDeskMessage(SYNERGY_MSG_SYNC_KEYS, 0, 0);
 	memset(m_buttons, 0, sizeof(m_buttons));
+	// FIXME -- get the button state
 }
 
 void
@@ -568,6 +547,12 @@ CMSWindowsScreen::isAnyMouseButtonDown() const
 	return false;
 }
 
+KeyModifierMask
+CMSWindowsScreen::getActiveModifiers() const
+{
+	return m_keyMapper.getActiveModifiers();
+}
+
 void
 CMSWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 {
@@ -582,19 +567,19 @@ CMSWindowsScreen::getKeyName(KeyButton virtualKey) const
 }
 
 void
-CMSWindowsScreen::fakeKeyEvent(KeyButton virtualKey, bool press) const
+CMSWindowsScreen::fakeKeyEvent(KeyButton id, bool press) const
 {
 	DWORD flags = 0;
-	if (m_keyMapper.isExtendedKey(virtualKey)) {
+	if (m_keyMapper.isExtendedKey(id)) {
 		flags |= KEYEVENTF_EXTENDEDKEY;
 	}
 	if (!press) {
 		flags |= KEYEVENTF_KEYUP;
 	}
-	UINT code = m_keyMapper.keyToScanCode(&virtualKey);
+	UINT vk = m_keyMapper.buttonToVirtualKey(id);
 	sendDeskMessage(SYNERGY_MSG_FAKE_KEY, flags,
-							MAKEWORD(static_cast<BYTE>(code),
-								static_cast<BYTE>(virtualKey & 0xffu)));
+							MAKEWORD(static_cast<BYTE>(id & 0xffu),
+								static_cast<BYTE>(vk & 0xffu)));
 }
 
 bool
@@ -870,9 +855,8 @@ CMSWindowsScreen::onPreDispatchPrimary(HWND,
 	// if the user presses and releases a windows key without pressing
 	// any other key while it's down then windows will eat the key
 	// release.  if we don't detect that and synthesize the release
-	// then the user will be locked to the screen and the client won't
-	// take the usual windows key release action (which on windows is
-	// to show the start menu).
+	// then the cclient won't take the usual windows key release action
+	// (which on windows is to show the start menu).
 	//
 	// we can use GetKeyState() to check the state of the windows keys
 	// because, event though the key release is not reported to us,
@@ -881,42 +865,12 @@ CMSWindowsScreen::onPreDispatchPrimary(HWND,
 	// state on every event.  only check on windows 95 family since
 	// NT family reports the key release as usual.  obviously we skip
 	// this if the event is for the windows key itself.
-	if (m_is95Family) {
-		if (m_keyMapper.isPressed(VK_LWIN) &&
-			(GetAsyncKeyState(VK_LWIN) & 0x8000) == 0 &&
-			!(message == SYNERGY_MSG_KEY && wParam == VK_LWIN)) {
-			// compute appropriate parameters for fake event
-			WPARAM wParam = VK_LWIN;
-			LPARAM lParam = 0xc1000000;
-			lParam |= (0x00ff0000 & (MapVirtualKey(wParam, 0) << 24));
-
-			// process as if it were a key up
-			KeyModifierMask mask;
-			KeyButton button = static_cast<KeyButton>(
-								(lParam & 0x00ff0000u) >> 16);
-			KeyID key = m_keyMapper.mapKeyFromEvent(wParam,
-													lParam, &mask, NULL);
-			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
-			sendEvent(getKeyUpEvent(), CKeyInfo::alloc(key, mask, button, 1));
-			m_keyMapper.updateKey(static_cast<KeyButton>(wParam), false);
+	if (m_is95Family && message != SYNERGY_MSG_KEY) {
+		if (wParam != VK_LWIN) {
+			fixKey(VK_LWIN);
 		}
-		if (m_keyMapper.isPressed(VK_RWIN) &&
-			(GetAsyncKeyState(VK_RWIN) & 0x8000) == 0 &&
-			!(message == SYNERGY_MSG_KEY && wParam == VK_RWIN)) {
-			// compute appropriate parameters for fake event
-			WPARAM wParam = VK_RWIN;
-			LPARAM lParam = 0xc1000000;
-			lParam |= (0x00ff0000 & (MapVirtualKey(wParam, 0) << 24));
-
-			// process as if it were a key up
-			KeyModifierMask mask;
-			KeyButton button = static_cast<KeyButton>(
-								(lParam & 0x00ff0000u) >> 16);
-			KeyID key = m_keyMapper.mapKeyFromEvent(wParam,
-													lParam, &mask, NULL);
-			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
-			sendEvent(getKeyUpEvent(), CKeyInfo::alloc(key, mask, button, 1));
-			m_keyMapper.updateKey(static_cast<KeyButton>(wParam), false);
+		if (wParam != VK_RWIN) {
+			fixKey(VK_RWIN);
 		}
 	}
 
@@ -1047,6 +1001,16 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 	WPARAM charAndVirtKey = wParam;
 	wParam &= 0xffu;
 
+	// update key state.  ignore key repeats.
+	if ((lParam & 0xc0000000u) == 0x00000000) {
+		KeyButton scancode = (KeyButton)((lParam & 0x01ff0000) >> 16);
+		m_keyState->setKeyDown(scancode, true);
+	}
+	else if ((lParam & 0xc0000000u) == 0xc0000000) {
+		KeyButton scancode = (KeyButton)((lParam & 0x01ff0000) >> 16);
+		m_keyState->setKeyDown(scancode, false);
+	}
+
 	// ignore message if posted prior to last mark change
 	if (!ignore()) {
 		// check for ctrl+alt+del emulation
@@ -1054,9 +1018,11 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 			(m_keyMapper.isPressed(VK_CONTROL) &&
 			m_keyMapper.isPressed(VK_MENU))) {
 			LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
-			wParam  = VK_DELETE;
-			lParam &= 0xffff0000;
-			lParam |= 0x00000001;
+			wParam         = VK_DELETE;
+			lParam        &= 0xfffe0000;
+			lParam        |= m_keyMapper.virtualKeyToButton(wParam) << 16;
+			lParam        |= 0x00000001;
+			charAndVirtKey = wParam;
 		}
 
 		// process key normally
@@ -1065,7 +1031,7 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 		const KeyID key = m_keyMapper.mapKeyFromEvent(
 							charAndVirtKey, lParam, &mask, &altgr);
 		KeyButton button = static_cast<KeyButton>(
-							(lParam & 0x00ff0000u) >> 16);
+							(lParam & 0x01ff0000u) >> 16);
 		if (key != kKeyNone && key != kKeyMultiKey) {
 			if ((lParam & 0x80000000) == 0) {
 				// key press
@@ -1085,43 +1051,34 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 				if (altgr) {
 					KeyID key;
 					KeyButton button;
-					UINT scanCode;
 					KeyModifierMask mask2 = (mask &
 										~(KeyModifierControl |
 										KeyModifierAlt |
 										KeyModifierModeSwitch));
 					if (ctrlL) {
-						key      = kKeyControl_L;
-						button   = VK_LCONTROL;
-						scanCode = m_keyMapper.keyToScanCode(&button);
-						button   = static_cast<KeyButton>(scanCode);
+						key    = kKeyControl_L;
+						button = m_keyMapper.virtualKeyToButton(VK_LCONTROL);
 						LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask2, button));
 						sendEvent(getKeyUpEvent(),
 							CKeyInfo::alloc(key, mask2, button, 1));
 					}
 					if (ctrlR) {
-						key      = kKeyControl_R;
-						button   = VK_RCONTROL;
-						scanCode = m_keyMapper.keyToScanCode(&button);
-						button   = static_cast<KeyButton>(scanCode);
+						key    = kKeyControl_R;
+						button = m_keyMapper.virtualKeyToButton(VK_RCONTROL);
 						LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask2, button));
 						sendEvent(getKeyUpEvent(),
 							CKeyInfo::alloc(key, mask2, button, 1));
 					}
 					if (altL) {
-						key      = kKeyAlt_L;
-						button   = VK_LMENU;
-						scanCode = m_keyMapper.keyToScanCode(&button);
-						button   = static_cast<KeyButton>(scanCode);
+						key    = kKeyAlt_L;
+						button = m_keyMapper.virtualKeyToButton(VK_LMENU);
 						LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask2, button));
 						sendEvent(getKeyUpEvent(),
 							CKeyInfo::alloc(key, mask2, button, 1));
 					}
 					if (altR) {
-						key      = kKeyAlt_R;
-						button   = VK_RMENU;
-						scanCode = m_keyMapper.keyToScanCode(&button);
-						button   = static_cast<KeyButton>(scanCode);
+						key    = kKeyAlt_R;
+						button = m_keyMapper.virtualKeyToButton(VK_RMENU);
 						LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask2, button));
 						sendEvent(getKeyUpEvent(),
 							CKeyInfo::alloc(key, mask2, button, 1));
@@ -1149,16 +1106,13 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 				if (altgr) {
 					KeyID key;
 					KeyButton button;
-					UINT scanCode;
 					KeyModifierMask mask2 = (mask &
 										~(KeyModifierControl |
 										KeyModifierAlt |
 										KeyModifierModeSwitch));
 					if (ctrlL) {
 						key    = kKeyControl_L;
-						button = VK_LCONTROL;
-						scanCode = m_keyMapper.keyToScanCode(&button);
-						button   = static_cast<KeyButton>(scanCode);
+						button = m_keyMapper.virtualKeyToButton(VK_LCONTROL);
 						LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask2, button));
 						sendEvent(getKeyDownEvent(),
 							CKeyInfo::alloc(key, mask2, button, 1));
@@ -1166,9 +1120,7 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 					}
 					if (ctrlR) {
 						key    = kKeyControl_R;
-						button = VK_RCONTROL;
-						scanCode = m_keyMapper.keyToScanCode(&button);
-						button   = static_cast<KeyButton>(scanCode);
+						button = m_keyMapper.virtualKeyToButton(VK_RCONTROL);
 						LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask2, button));
 						sendEvent(getKeyDownEvent(),
 							CKeyInfo::alloc(key, mask2, button, 1));
@@ -1176,9 +1128,7 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 					}
 					if (altL) {
 						key    = kKeyAlt_L;
-						button = VK_LMENU;
-						scanCode = m_keyMapper.keyToScanCode(&button);
-						button   = static_cast<KeyButton>(scanCode);
+						button = m_keyMapper.virtualKeyToButton(VK_LMENU);
 						LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask2, button));
 						sendEvent(getKeyDownEvent(),
 							CKeyInfo::alloc(key, mask2, button, 1));
@@ -1186,9 +1136,7 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 					}
 					if (altR) {
 						key    = kKeyAlt_R;
-						button = VK_RMENU;
-						scanCode = m_keyMapper.keyToScanCode(&button);
-						button   = static_cast<KeyButton>(scanCode);
+						button = m_keyMapper.virtualKeyToButton(VK_RMENU);
 						LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask2, button));
 						sendEvent(getKeyDownEvent(),
 							CKeyInfo::alloc(key, mask2, button, 1));
@@ -1203,12 +1151,13 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 				// synthesize the press first.  only do this on
 				// the windows 95 family, which eats certain special
 				// keys like alt+tab, ctrl+esc, etc.
-				if (m_is95Family && !isModifier(wParam) &&
-					m_keyMapper.isPressed(static_cast<KeyButton>(wParam))) {
+				if (m_is95Family &&
+					!m_keyMapper.isModifier(wParam) &&
+					m_keyMapper.isPressed(wParam)) {
 					LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask, button));
 					sendEvent(getKeyDownEvent(),
 							CKeyInfo::alloc(key, mask, button, 1));
-					m_keyMapper.updateKey(static_cast<KeyButton>(wParam), true);
+					m_keyMapper.updateKey(lParam & 0x3fffffffu);
 				}
 
 				// do key up
@@ -1223,8 +1172,7 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 	}
 
 	// keep our shadow key state up to date
-	m_keyMapper.updateKey(static_cast<KeyButton>(wParam),
-							((lParam & 0x80000000) == 0));
+	m_keyMapper.updateKey(lParam);
 
 	return true;
 }
@@ -1520,6 +1468,25 @@ CMSWindowsScreen::enableSpecialKeys(bool enable) const
 	}
 }
 
+void
+CMSWindowsScreen::fixKey(UINT virtualKey)
+{
+	if (m_keyMapper.isPressed(virtualKey) &&
+		(GetAsyncKeyState(virtualKey) & 0x8000) == 0) {
+		// compute appropriate parameters for fake event
+		KeyButton button = m_keyMapper.virtualKeyToButton(virtualKey);
+		LPARAM lParam    = 0xc0000000 | ((LPARAM)button << 16);
+
+		// process as if it were a key up
+		KeyModifierMask mask;
+		KeyID key = m_keyMapper.mapKeyFromEvent(virtualKey,
+												lParam, &mask, NULL);
+		LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
+		sendEvent(getKeyUpEvent(), CKeyInfo::alloc(key, mask, button, 1));
+		m_keyMapper.updateKey(lParam);
+	}
+}
+
 DWORD
 CMSWindowsScreen::mapButtonToEvent(ButtonID button,
 				bool press, DWORD* inData) const
@@ -1613,31 +1580,6 @@ CMSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
 
 	default:
 		return kButtonNone;
-	}
-}
-
-bool
-CMSWindowsScreen::isModifier(UINT vkCode) const
-{
-	switch (vkCode) {
-	case VK_LSHIFT:
-	case VK_RSHIFT:
-	case VK_SHIFT:
-	case VK_LCONTROL:
-	case VK_RCONTROL:
-	case VK_CONTROL:
-	case VK_LMENU:
-	case VK_RMENU:
-	case VK_MENU:
-	case VK_CAPITAL:
-	case VK_NUMLOCK:
-	case VK_SCROLL:
-	case VK_LWIN:
-	case VK_RWIN:
-		return true;
-
-	default:
-		return false;
 	}
 }
 

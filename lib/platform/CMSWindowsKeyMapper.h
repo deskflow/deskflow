@@ -16,6 +16,7 @@
 #define CMSWINDOWSKEYMAPPER_H
 
 #include "IKeyState.h"
+#include "CString.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -42,7 +43,7 @@ public:
 	/*!
 	Updates the shadow keyboard state.
 	*/
-	void				updateKey(KeyButton key, bool pressed);
+	void				updateKey(LPARAM eventLParam);
 
 	//! Set the active keyboard layout
 	/*!
@@ -77,23 +78,41 @@ public:
 	KeyID				mapKeyFromEvent(WPARAM charAndVirtKey, LPARAM info,
 							KeyModifierMask* maskOut, bool* altgr) const;
 
+	//! Check if virtual key is a modifier
+	/*!
+	Returns true iff \p virtKey refers to a modifier key.
+	*/
+	bool				isModifier(UINT virtKey) const;
+
 	//! Test shadow key state
 	/*!
 	Returns true iff the shadow state indicates the key is pressed.
 	*/
-	bool				isPressed(KeyButton key) const;
+	bool				isPressed(UINT virtKey) const;
 
-	//! Map key to a scan code
+	//! Map button to a virtual key
 	/*!
-	Returns the scan code for \c key and possibly adjusts \c key.
+	Returns the virtual key for \c button.
 	*/
-	UINT				keyToScanCode(KeyButton* key) const;
+	UINT				buttonToVirtualKey(KeyButton button) const;
+
+	//! Map virtual key to a button
+	/*!
+	Returns the button for virtual key \c virtKey.
+	*/
+	KeyButton			virtualKeyToButton(UINT virtKey) const;
 
 	//! Check for extended key
 	/*!
 	Returns true iff \c key is an extended key
 	*/
-	bool				isExtendedKey(KeyButton key) const;
+	bool				isExtendedKey(KeyButton button) const;
+
+	//! Get current modifier key state
+	/*!
+	Returns the current modifier key state.
+	*/
+	KeyModifierMask		getActiveModifiers() const;
 
 	//! Get name of key
 	/*!
@@ -116,7 +135,7 @@ private:
 	// map \c virtualKey to the keystrokes to generate it, along with
 	// keystrokes to update and restore the modifier state.
 	KeyButton			mapToKeystrokes(IKeyState::Keystrokes& keys,
-							const IKeyState& keyState, KeyButton virtualKey,
+							const IKeyState& keyState, KeyButton button,
 							KeyModifierMask desiredMask,
 							KeyModifierMask requiredMask,
 							bool isAutoRepeat) const;
@@ -127,6 +146,18 @@ private:
 							const IKeyState& keyState,
 							KeyModifierMask desiredMask,
 							KeyModifierMask requiredMask) const;
+
+	//! Test shadow key toggle state
+	/*!
+	Returns true iff the shadow state indicates the key is toggled on.
+	*/
+	bool				isToggled(UINT virtKey) const;
+
+	//! Get shadow modifier key state
+	/*!
+	Returns the shadow modifier key state.
+	*/
+	KeyModifierMask		getShadowModifiers(bool needAltGr) const;
 
 	// pass character to ToAsciiEx(), returning what it returns
 	int					toAscii(TCHAR c, HKL hkl, bool menu, WORD* chars) const;
@@ -142,16 +173,24 @@ private:
 		KeyButton		m_keys[s_maxKeys];
 	};
 
-	BYTE				m_keys[256];
+	// map of key state for each scan code.  this would be 8 bits
+	// except windows reuses some scan codes for "extended" keys
+	// we actually need 9 bits.  an example is the left and right
+	// alt keys;  they share the same scan code but the right key
+	// is "extended".
+	BYTE				m_keys[512];
+	UINT				m_scanCodeToVirtKey[512];
+	KeyButton			m_virtKeyToScanCode[256];
 	mutable TCHAR		m_deadKey;
 	HKL					m_keyLayout;
+	CString				m_keyName;
 
 	static const CModifierKeys	s_modifiers[];
-	static const char*		s_vkToName[];
-	static const KeyID		s_virtualKey[][2];
-	static const KeyButton	s_mapE000[];
-	static const KeyButton	s_mapEE00[];
-	static const KeyButton	s_mapEF00[];
+	static const char*	s_vkToName[];
+	static const KeyID	s_virtualKey[][2];
+	static const UINT	s_mapE000[];
+	static const UINT	s_mapEE00[];
+	static const UINT	s_mapEF00[];
 };
 
 #endif

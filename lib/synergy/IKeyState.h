@@ -68,7 +68,7 @@ public:
 	example, if buttons 5 and 23 were mapped to KeyModifierShift (perhaps
 	as left and right shift keys) then the mask would be KeyModifierShift
 	and \c keys would contain 5 and 23.  A modifier with no keys is
-	ignored.  All keys must be valid (not zero).  \c keys may be modified
+	ignored.  Keys that are zero are ignored.  \c keys may be modified
 	by the call.
 	*/
 	virtual void		addModifier(KeyModifierMask, KeyButtons& keys) = 0;

@@ -86,6 +86,7 @@ public:
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
+	virtual KeyModifierMask	getActiveModifiers() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 	virtual const char*	getKeyName(KeyButton) const;
 
@@ -167,6 +168,10 @@ private:
 
 	// enable/disable special key combinations so we can catch/pass them
 	void				enableSpecialKeys(bool) const;
+
+	// send fake key up if shadow state says virtualKey is down but
+	// system says it isn't.
+	void				fixKey(UINT virtualKey);
 
 	// map a button ID and action to a mouse event
 	DWORD				mapButtonToEvent(ButtonID button,

@@ -235,14 +235,14 @@ CScreen::keyRepeat(KeyID id,
 	// dead key.  for example, a dead accent followed by 'a' will
 	// generate an 'a with accent' followed by a repeating 'a'.  the
 	// keycodes for the two keysyms might be different.
-	key &= 0xffu;
+	key &= 0x1ffu;
 	if (key != index->second) {
 		// replace key up with previous key id but leave key down
 		// alone so it uses the new keycode and store that keycode
 		// in the server key map.
 		for (Keystrokes::iterator index2 = keys.begin();
 								index2 != keys.end(); ++index2) {
-			if ((index2->m_key & 0xffu) == key) {
+			if ((index2->m_key & 0x1ffu) == key) {
 				index2->m_key = index->second;
 				break;
 			}
@@ -477,11 +477,10 @@ CScreen::updateKeys()
 void
 CScreen::releaseKeys()
 {
-LOG((CLOG_INFO "releaseKeys")); // FIXME
 	// release keys that we've synthesized a press for and only those
 	// keys.  we don't want to synthesize a release on a key the user
 	// is still physically pressing.
-	for (KeyButton i = 1; i < 256; ++i) {
+	for (KeyButton i = 1; i < sizeof(m_keys) / sizeof(m_keys[0]); ++i) {
 		if ((m_fakeKeys[i] & kDown) != 0) {
 			fakeKeyEvent(i, false, false);
 			m_keys[i]     &= ~kDown;
@@ -495,10 +494,10 @@ CScreen::setKeyDown(KeyButton key, bool down)
 {
 	if (!isHalfDuplex(getMaskForKey(key))) {
 		if (down) {
-			m_keys[key & 0xffu] |= kDown;
+			m_keys[key & 0x1ffu] |= kDown;
 		}
 		else {
-			m_keys[key & 0xffu] &= ~kDown;
+			m_keys[key & 0x1ffu] &= ~kDown;
 		}
 	}
 }
@@ -515,7 +514,7 @@ CScreen::setToggled(KeyModifierMask mask)
 	}
 	for (KeyButtons::const_iterator j = i->second.begin();
 							j != i->second.end(); ++j) {
-		m_keys[(*j) & 0xffu] |= kToggled;
+		m_keys[(*j) & 0x1ffu] |= kToggled;
 	}
 }
 
@@ -536,8 +535,9 @@ CScreen::addModifier(KeyModifierMask mask, KeyButtons& keys)
 	// index mask by keycodes
 	for (KeyButtons::iterator j = keys.begin(); j != keys.end(); ++j) {
 		// key must be valid
-		assert(((*j) & 0xffu) != 0);
-		m_keyToMask[static_cast<KeyButton>((*j) & 0xffu)] = mask;
+		if (((*j) & 0x1ffu) != 0) {
+			m_keyToMask[static_cast<KeyButton>((*j) & 0x1ffu)] = mask;
+		}
 	}
 
 	// index keys by mask
@@ -563,7 +563,7 @@ CScreen::setToggleState(KeyModifierMask mask)
 KeyButton
 CScreen::isAnyKeyDown() const
 {
-	for (UInt32 i = 1; i <  256; ++i) {
+	for (UInt32 i = 1; i < sizeof(m_keys) / sizeof(m_keys[0]); ++i) {
 		if ((m_keys[i] & kDown) != 0) {
 			return static_cast<KeyButton>(i);
 		}
@@ -574,7 +574,7 @@ CScreen::isAnyKeyDown() const
 bool
 CScreen::isKeyDown(KeyButton key) const
 {
-	key &= 0xffu;
+	key &= 0x1ffu;
 	return (key != 0 && ((m_keys[key] & kDown) != 0));
 }
 
@@ -867,7 +867,7 @@ void
 CScreen::updateKeyState(KeyButton button, KeyButton key, bool press)
 {
 	// ignore bogus keys
-	key &= 0xffu;
+	key &= 0x1ffu;
 	if (button == 0 || key == 0) {
 		return;
 	}
@@ -931,13 +931,13 @@ CScreen::toggleKey(KeyModifierMask mask)
 
 	// toggle shadow state
 	m_mask      ^= mask;
-	key         &= 0xffu;
+	key         &= 0x1ffu;
 	m_keys[key] ^= kToggled;
 }
 
 bool
 CScreen::isKeyToggled(KeyButton key) const
 {
-	key &= 0xffu;
+	key &= 0x1ffu;
 	return (key != 0 && ((m_keys[key] & kToggled) != 0));
 }

@@ -107,7 +107,7 @@ SOURCE=.\IClipboard.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\IPlatformScreen.cpp
+SOURCE=.\IPrimaryScreen.cpp
 # End Source File
 # Begin Source File
 
