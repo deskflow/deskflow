@@ -40,7 +40,7 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 	// load the hook library
 	m_hookLibrary = LoadLibrary("synrgyhk");
 	if (m_hookLibrary == NULL) {
-		LOG((CLOG_ERR "failed to load hook library"));
+		LOG((CLOG_ERR "Failed to load hook library;  synrgyhk.dll is missing"));
 		throw XScreenOpenFailure();
 	}
 	m_setSides  = (SetSidesFunc)GetProcAddress(m_hookLibrary, "setSides");
@@ -57,7 +57,7 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 		m_uninstall == NULL ||
 		m_init      == NULL ||
 		m_cleanup   == NULL) {
-		LOG((CLOG_ERR "invalid hook library"));
+		LOG((CLOG_ERR "Invalid hook library;  use a newer synrgyhk.dll"));
 		FreeLibrary(m_hookLibrary);
 		throw XScreenOpenFailure();
 	}
@@ -425,7 +425,7 @@ CMSWindowsPrimaryScreen::onPreOpen()
 	// initialize hook library
 	m_threadID = GetCurrentThreadId();
 	if (m_init(m_threadID) == 0) {
-		LOG((CLOG_ERR "cannot initialize hook library"));
+		LOG((CLOG_ERR "Cannot initialize hook library;  is synergy already running?"));
 		throw XScreenOpenFailure();
 	}
 }
