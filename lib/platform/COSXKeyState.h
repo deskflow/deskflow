@@ -79,7 +79,7 @@ private:
 	typedef std::vector<CKeyEventInfo> CKeySequence;
 	typedef std::map<KeyID, CKeySequence> CKeyIDMap;
 	typedef std::map<UInt32, KeyID> CVirtualKeyMap;
-	typedef std::set<KeyID> CKeySet;
+	typedef std::map<UInt16, std::pair<SInt32, KeyModifierMask> > CDeadKeyMap;
 
 	KeyButton			addKeystrokes(Keystrokes& keys,
 							KeyButton keyButton,
@@ -109,15 +109,14 @@ private:
 	// map maps each KeyID to the sequence of keys (with modifiers)
 	// that would have to be synthesized to generate the KeyID character.
 	// Returns false iff no KCHR resource was found.
-	bool				fillKCHRKeysMap(CKeyIDMap& keyMap,
-							CKeySet& capsLockSet) const;
+	bool				fillKCHRKeysMap(CKeyIDMap& keyMap) const;
 
 	// Convert the uchr resource to a KeyID to key sequence map.  the
 	// map maps each KeyID to the sequence of keys (with modifiers)
 	// that would have to be synthesized to generate the KeyID character.
-	// Returns false iff no uchr resource was found.
-	bool				filluchrKeysMap(CKeyIDMap& keyMap,
-							CKeySet& capsLockSet) const;
+	// Returns false iff no uchr resource was found or it couldn't be
+	// mapped.
+	bool				filluchrKeysMap(CKeyIDMap& keyMap) const;
 
 	// Maps an OS X virtual key id to a KeyButton.  This simply remaps
 	// the ids so we don't use KeyButton 0.
@@ -134,9 +133,19 @@ private:
 	static KeyID		unicharToKeyID(UniChar);
 
 	// Choose the modifier mask with the fewest modifiers for character
-	// mapping table i.
+	// mapping table i.  The tableSelectors table has numEntries.  If
+	// no mapping is found for i, try mapping defaultIndex.
 	static KeyModifierMask
-						maskForTable(UInt8 i, UInt8* tableSelectors);
+						maskForTable(UInt8 i, UInt8* tableSelectors,
+							UInt32 numEntries, UInt8 defaultIndex);
+
+	// Save characters built from dead key sequences.
+	static void			mapDeadKeySequence(CKeyIDMap& keyMap,
+							CKeySequence& sequence,
+							UInt16 state, const UInt8* base,
+							const UCKeyStateRecordsIndex* sri,
+							const UCKeyStateTerminators* st,
+							CDeadKeyMap& dkMap);
 
 private:
 	// OS X uses a physical key if 0 for the 'A' key.  synergy reserves
@@ -157,6 +166,7 @@ private:
 	};
 
 	SInt16				m_keyboardLayoutID;
+	UInt32				m_keyboardType;
 	mutable UInt32		m_deadKeyState;
 	Handle				m_KCHRHandle;
 	Handle				m_uchrHandle;
@@ -164,7 +174,7 @@ private:
 	UCKeyboardLayout*	m_uchrResource;
 	CKeyIDMap			m_keyMap;
 	CVirtualKeyMap		m_virtualKeyMap;
-	CKeySet				m_capsLockSet;
+	bool				m_uchrFound;
 };
 
 #endif
