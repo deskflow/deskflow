@@ -265,12 +265,12 @@ CXWindowsUtil::CErrorLock::internalHandler(Display* display, XErrorEvent* event)
 void
 CXWindowsUtil::CErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
 {
-	log((CLOG_DEBUG "ignoring X error: %d", e->error_code));
+	log((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
 }
 
 void
 CXWindowsUtil::CErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
 {
-	log((CLOG_DEBUG "flagging X error: %d", e->error_code));
+	log((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
 	*reinterpret_cast<bool*>(flag) = true;
 }
