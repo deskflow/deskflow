@@ -23,6 +23,9 @@ class CUnixTCPSocket : public CSocket {
   private:
 	CUnixTCPSocket(int);
 
+	// disable Nagle algorithm
+	void				setNoDelay();
+
 	// callbacks for read/write events
 	void				readCB();
 	void				writeCB();

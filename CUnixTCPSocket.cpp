@@ -31,12 +31,8 @@ CUnixTCPSocket::CUnixTCPSocket() : m_fd(-1),
 		throw XSocketCreate(::strerror(errno));
 	}
 
-	// turn off Nagle algorithm.  we send lots of really short messages.
-	struct protoent* p = getprotobyname("tcp");
-	if (p) {
-		int on = 1;
-		setsockopt(m_fd, p->p_proto, TCP_NODELAY, &on, sizeof(on));
-	}
+	// always send immediately
+	setNoDelay();
 }
 
 CUnixTCPSocket::CUnixTCPSocket(int fd) : m_fd(fd),
@@ -44,6 +40,7 @@ CUnixTCPSocket::CUnixTCPSocket(int fd) : m_fd(fd),
 								m_addedJobs(false)
 {
 	assert(m_fd != -1);
+	setNoDelay();
 }
 
 CUnixTCPSocket::~CUnixTCPSocket()
@@ -266,5 +263,16 @@ void					CUnixTCPSocket::write(
 		// account for written data
 		ptr += n;
 		numBytes -= n;
+	}
+}
+
+void					CUnixTCPSocket::setNoDelay()
+{
+	// turn off Nagle algorithm.  we send lots of really short messages
+	// so we'll accept the (much) larger overhead to reduce latency.
+	struct protoent* p = getprotobyname("tcp");
+	if (p) {
+		int on = 1;
+		setsockopt(m_fd, p->p_proto, TCP_NODELAY, &on, sizeof(on));
 	}
 }
