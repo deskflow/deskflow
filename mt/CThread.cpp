@@ -127,8 +127,7 @@ CThread::getResult() const
 void*
 CThread::getUserData()
 {
-	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	return currentRep->getUserData();
+	return m_rep->getUserData();
 }
 
 bool

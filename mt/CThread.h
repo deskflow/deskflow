@@ -88,14 +88,13 @@ public:
 	// return a thread object representing the calling thread
 	static CThread		getCurrentThread();
 
-	// get the user data passed to the constructor for the current
-	// thread.
-	static void*		getUserData();
-
 	// testCancel() does nothing but is a cancellation point.  call
 	// this to make a function itself a cancellation point.
 	// (cancellation point)
 	static void			testCancel();
+
+	// get the user data passed to the constructor for this thread.
+	void*				getUserData();
 
 	// waits for the thread to terminate (by exit() or cancel() or
 	// by returning from the thread job).  returns immediately if

@@ -1,8 +1,9 @@
 #include "CXWindowsPrimaryScreen.h"
-#include "CServer.h"
+#include "IPrimaryReceiver.h"
 #include "CXWindowsClipboard.h"
 #include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
+#include "CClipboard.h"
 #include "CThread.h"
 #include "CLog.h"
 #include "CStopwatch.h"
@@ -19,8 +20,8 @@
 // CXWindowsPrimaryScreen
 //
 
-CXWindowsPrimaryScreen::CXWindowsPrimaryScreen() :
-	m_server(NULL),
+CXWindowsPrimaryScreen::CXWindowsPrimaryScreen(IPrimaryReceiver* receiver) :
+	m_receiver(receiver),
 	m_active(false),
 	m_window(None)
 {
@@ -65,7 +66,7 @@ CXWindowsPrimaryScreen::run()
 			if (xevent.xclient.message_type == m_atomScreenSaver ||
 				xevent.xclient.format       == 32) {
 				// screen saver activation/deactivation event
-				m_server->onScreenSaver(xevent.xclient.data.l[0] != 0);
+				m_receiver->onScreenSaver(xevent.xclient.data.l[0] != 0);
 			}
 			break;
 
@@ -75,12 +76,12 @@ CXWindowsPrimaryScreen::run()
 				const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 				const KeyID key = mapKey(&xevent.xkey);
 				if (key != kKeyNone) {
-					m_server->onKeyDown(key, mask);
+					m_receiver->onKeyDown(key, mask);
 					if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
-						m_server->onKeyUp(key, mask | KeyModifierCapsLock);
+						m_receiver->onKeyUp(key, mask | KeyModifierCapsLock);
 					}
 					else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
-						m_server->onKeyUp(key, mask | KeyModifierNumLock);
+						m_receiver->onKeyUp(key, mask | KeyModifierNumLock);
 					}
 				}
 			}
@@ -110,12 +111,12 @@ CXWindowsPrimaryScreen::run()
 						// no press event follows so it's a plain release
 						log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 						if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
-							m_server->onKeyDown(key, mask);
+							m_receiver->onKeyDown(key, mask);
 						}
 						else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
-							m_server->onKeyDown(key, mask);
+							m_receiver->onKeyDown(key, mask);
 						}
-						m_server->onKeyUp(key, mask);
+						m_receiver->onKeyUp(key, mask);
 					}
 					else {
 						// found a press event following so it's a repeat.
@@ -123,7 +124,7 @@ CXWindowsPrimaryScreen::run()
 						// repeats but we'll just send a repeat of 1.
 						// note that we discard the press event.
 						log((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-						m_server->onKeyRepeat(key, mask, 1);
+						m_receiver->onKeyRepeat(key, mask, 1);
 					}
 				}
 			}
@@ -134,7 +135,7 @@ CXWindowsPrimaryScreen::run()
 				log((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
 				const ButtonID button = mapButton(xevent.xbutton.button);
 				if (button != kButtonNone) {
-					m_server->onMouseDown(button);
+					m_receiver->onMouseDown(button);
 				}
 			}
 			break;
@@ -144,15 +145,15 @@ CXWindowsPrimaryScreen::run()
 				log((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
 				const ButtonID button = mapButton(xevent.xbutton.button);
 				if (button != kButtonNone) {
-					m_server->onMouseUp(button);
+					m_receiver->onMouseUp(button);
 				}
 				else if (xevent.xbutton.button == 4) {
 					// wheel forward (away from user)
-					m_server->onMouseWheel(120);
+					m_receiver->onMouseWheel(120);
 				}
 				else if (xevent.xbutton.button == 5) {
 					// wheel backward (toward user)
-					m_server->onMouseWheel(-120);
+					m_receiver->onMouseWheel(-120);
 				}
 			}
 			break;
@@ -183,7 +184,7 @@ CXWindowsPrimaryScreen::run()
 				}
 				else if (!m_active) {
 					// motion on primary screen
-					m_server->onMouseMovePrimary(m_x, m_y);
+					m_receiver->onMouseMovePrimary(m_x, m_y);
 				}
 				else {
 					// motion on secondary screen.  warp mouse back to
@@ -214,7 +215,7 @@ CXWindowsPrimaryScreen::run()
 					// warping to the primary screen's enter position,
 					// effectively overriding it.
 					if (x != 0 || y != 0) {
-						m_server->onMouseMoveSecondary(x, y);
+						m_receiver->onMouseMoveSecondary(x, y);
 					}
 				}
 			}
@@ -231,16 +232,10 @@ CXWindowsPrimaryScreen::stop()
 }
 
 void
-CXWindowsPrimaryScreen::open(CServer* server)
+CXWindowsPrimaryScreen::open()
 {
-	assert(m_server == NULL);
-	assert(server   != NULL);
-
 	// open the display
 	openDisplay();
-
-	// set the server
-	m_server = server;
 
 	// check for peculiarities
 	// FIXME -- may have to get these from some database
@@ -283,23 +278,18 @@ CXWindowsPrimaryScreen::open(CServer* server)
 	m_yCenter = y + (h >> 1);
 
 	// send screen info
-	m_server->setInfo(x, y, w, h, getJumpZoneSize(), m_x, m_y);
+	m_receiver->onInfoChanged(x, y, w, h, 1, m_x, m_y);
 }
 
 void
 CXWindowsPrimaryScreen::close()
 {
-	assert(m_server != NULL);
-
 	// stop being notified of screen saver activation/deactivation
 	getScreenSaver()->setNotify(None);
 	m_atomScreenSaver = None;
 
 	// close the display
 	closeDisplay();
-
-	// done with server
-	m_server = NULL;
 }
 
 void
@@ -394,7 +384,7 @@ CXWindowsPrimaryScreen::leave()
 }
 
 void
-CXWindowsPrimaryScreen::onConfigure()
+CXWindowsPrimaryScreen::reconfigure()
 {
 	// do nothing
 }
@@ -476,19 +466,6 @@ CXWindowsPrimaryScreen::grabClipboard(ClipboardID id)
 }
 
 void
-CXWindowsPrimaryScreen::getShape(
-				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
-{
-	getScreenShape(x, y, w, h);
-}
-
-SInt32
-CXWindowsPrimaryScreen::getJumpZoneSize() const
-{
-	return 1;
-}
-
-void
 CXWindowsPrimaryScreen::getClipboard(ClipboardID id,
 				IClipboard* clipboard) const
 {
@@ -555,13 +532,6 @@ CXWindowsPrimaryScreen::isLockedToScreen() const
 	return false;
 }
 
-bool
-CXWindowsPrimaryScreen::isScreenSaverActive() const
-{
-	CDisplayLock display(this);
-	return getScreenSaver()->isActive();
-}
-
 void
 CXWindowsPrimaryScreen::onOpenDisplay(Display* display)
 {
@@ -616,16 +586,14 @@ void
 CXWindowsPrimaryScreen::onUnexpectedClose()
 {
 	// tell server to shutdown
-	if (m_server != NULL) {
-		m_server->shutdown();
-	}
+	m_receiver->onError();
 }
 
 void
 CXWindowsPrimaryScreen::onLostClipboard(ClipboardID id)
 {
 	// tell server that the clipboard was grabbed locally
-	m_server->grabClipboard(id);
+	m_receiver->onGrabClipboard(id);
 }
 
 void

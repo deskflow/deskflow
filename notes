@@ -8,15 +8,26 @@ query info			-->
 					<--		info (size)
 
 ---
+nedit doesn't seem to be playing nice with the motif clipboard lock
+  it's not releasing it
+  may need to learn more about how the motif clipboard lock works
+  not sure if this a new problem with synergy or a problem with new nedit
+
+---
 enable heartbeat disconnection or remove heartbeat sending in client
   should either ship with it fully enabled or fully disabled
   possibly make it part of startup negotiation
 
 ---
-sometimes jumping too far into secondary screen
-  probably bogus delta (adding in center pixel coords into delta?)
-  this is with an X primary and secondary
-    don't know which matters but probably X primary
+getting a stuttering when leaving win32 server screen
+
+---
+merge platform dependent code into platform independent where possible
+  also try to simplify where possible
+
+---
+IServer and IPrimaryReceiver are really similar
+  can we merge them into one?
 
 ---
 use automake
@@ -33,20 +44,59 @@ HTTP stuff
     handy for debugging at least
 
 ---
-make generic input devices?
-  replace mouse and keyboard with button and valuator devices?
-  could fairly easily add new devices then
-  valuators would have to come in groups that change together
-    mouse position would be two ganged valuators
-  key events are not simply button presses though
-    they have a non-boolean character, shift state, and repeat count
-    maybe another device type:  {data, state, repeat}
+negotiation:
+  use a generic negotiation message (name/value pair) or specific
+  messages (name/values)?  later allows more parsing to be done by
+  CProtocolUtil but how can we skip unknown messages?  would have
+  to have a method on CInputPacketStream to discard to end of
+  message and we'd need to know the stream is a CInputPacketStream.
 
-must handle on-the-fly addition/removal of devices
-  USB allows hotplugging and we should support, say, an added joystick
+  how does negotiation proceed?
+    could have sequence of queries and replies:
+      server -> client -> server ... end
+      client -> server -> client ... end
+    or a sequence of messages:
+      server -> client ... end
+      client -> server ... end
+    probably go with latter because it's more efficient but make it
+    3-way:
+      client -> server ... end
+      server -> client ... end
+      client -> server ... end
+    first messages from client must be version and name.  the server
+    can create the appropriate protocol object right away then.
 
-must have device negotiation
-  at very least it negotiates mouse/keyboard at start
+  example: clipboard formats:
+    # CNEG = negotiation command CNEG%s%s
+    # CNGE = end of negotiation command
+    # cbfa = clipboard, format, add (permitted format)
+    # cbia = clipboard, id, add (clipboard with id exists)
+    client -> server:  CNEG "vers" "1.0"
+    client -> server:  CNEG "name" "foobar"
+    client -> server:  CNGE
+    server -> client:  CNEG "cbfa" "text/plain/LF"
+    server -> client:  CNEG "cbfa" "image/BMP"
+    server -> client:  CNGE
+    client -> server:  CNEG "cbia" "0"
+    client -> server:  CNGE
+
+  server should just ask CProtocol (renamed from CServerProtocol) to
+  return a protocol.  CProtocol should do negotiation, create the
+  appropriate protocol object, finish negotiation, and return the
+  new protocol object.  unless connection is registered with server,
+  though, we can't save any screen info.  perhaps CProtocol should
+  also return a screen info object or that should be part of the
+  protocol object (currently the protocol is part of the screen info).
+  if screen info is available to CProtocol then it should finish with
+  requesting the screen info, waiting for and then handling the reply.
+  the server can then just ask CProtocol for the protocol object then
+  add it to the connections.
+
+  maybe call the protocol types CClientProxy since that's how the
+  server uses it:  as a stand-in for the client object.  the interface
+  should closely reflect the CClient interface.  do the reverse for
+  a server proxy for the client.  maybe even have interface classes
+  for the client and server methods.
 
 ---
 should add clipboard data type format negotiation
@@ -71,6 +121,28 @@ this will allow future versions to interoperate better.  it also
 allows compatibility with versions that are identical except for
 the support clipboard formats, obviating bumping up the protocol
 version number.
+
+maybe config file can list format shared libraries to load.  user
+can then pick formats to support.  but why would you ever want
+fewer formats?
+
+should the major burden of translation be on client or server?
+probably client since it knows the formats preferred by the
+platform and may be able to use platform utilities to convert.
+server would then just support formats that minimize loss of
+information.
+
+desired formats to support:
+  text (LF)
+  text with character set
+  unicode (LF)
+  rich text (or some kind of formatting)
+  bitmap (BMP, PNG?)
+  sound (WAV)
+
+note that formats should be added to the win32 clipboard in the
+order of most descriptive to least because they're kept in order
+and apps will generally use the first suitable match.
 
 ---
 hot keys
@@ -130,6 +202,7 @@ xscreensaver won't start if pointer on secondary screen
   unless using MIT or SGI screen saver extensions
   otherwise it cannot know when to stop the screen saver
     cos it can't grab mouse and keyboard
+
 ---
 all screensavers hidden when showing win32 screensaver lock window
   win32 kills the screen saver and shows the lock window
@@ -395,6 +468,10 @@ gspencer:
   over from master to client, which would make me suspect the "capture"
   code, since if you have a key down you aren't supposed to be able to
   cross over...
+
+gspencer:
+  bouncy mouse at edge of screen (win32 server).  almost certainly
+  related to changes that fixed mouse delta calculation.
 
 
 == fixed? ===

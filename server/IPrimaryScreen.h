@@ -5,7 +5,6 @@
 #include "KeyTypes.h"
 #include "ClipboardTypes.h"
 
-class CServer;
 class IClipboard;
 
 class IPrimaryScreen : public IInterface {
@@ -21,7 +20,8 @@ public:
 	// cause run() to return
 	virtual void		stop() = 0;
 
-	// initialize the screen and start reporting events to the server.
+	// initialize the screen and start reporting events to the receiver
+	// (which is set through some interface of the derived class).
 	// events should be reported no matter where on the screen they
 	// occur but do not interfere with normal event dispatch.  the
 	// screen saver engaging should be reported as an event.  if that
@@ -29,10 +29,11 @@ public:
 	// screen saver timer and should start the screen saver after
 	// idling for an appropriate time.
 	//
-	// open() must call server->setInfo() to notify the server of the
-	// primary screen's resolution and jump zone size.  the mouse
-	// position is ignored and may be 0,0.
-	virtual void		open(CServer* server) = 0;
+	// open() must call receiver->onInfoChanged() to notify of the
+	// primary screen's initial resolution and jump zone size.  it
+	// must also call receiver->onClipboardChanged() for each
+	// clipboard that the primary screen has.
+	virtual void		open() = 0;
 
 	// close the screen.  should restore the screen saver timer if it
 	// was disabled.
@@ -44,24 +45,30 @@ public:
 	// call to leave() which preceeds it, however the screen should
 	// assume an implicit call to enter() in the call to open().
 	// if warpCursor is false then do not warp the mouse.
+	//
+	// enter() must not call any receiver methods except onError().
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
 							bool forScreenSaver) = 0;
 
-	// called when the user navigates off the primary screen.  hide
-	// the cursor and grab exclusive access to the input devices.
-	// return true iff successful.
+	// called when the user navigates off the primary screen.  hide the
+	// cursor and grab exclusive access to the input devices.  return
+	// true iff successful.
+	//
+	// leave() must not call any receiver methods except onError().
 	virtual bool		leave() = 0;
 
 	// called when the configuration has changed.  subclasses may need
 	// to adjust things (like the jump zones) after the configuration
 	// changes.
-	virtual void		onConfigure() = 0;
+	virtual void		reconfigure() = 0;
 
 	// warp the cursor to the given position
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
 
 	// set the screen's clipboard contents.  this is usually called
 	// soon after an enter().
+	//
+	// setClipboard() must not call any receiver methods except onError().
 	virtual void		setClipboard(ClipboardID, const IClipboard*) = 0;
 
 	// synergy should own the clipboard
@@ -69,16 +76,9 @@ public:
 
 	// accessors
 
-	// get the screen region
-	virtual void		getShape(SInt32& x, SInt32& y,
-							SInt32& width, SInt32& height) const = 0;
-
-	// get the size of jump zone
-	virtual SInt32		getJumpZoneSize() const = 0;
-
-	// get the screen's clipboard contents.  the implementation can
-	// and should avoid setting the clipboard object if the screen's
-	// clipboard hasn't changed.
+	// return the contents of the given clipboard.
+	//
+	// getClipboard() must not call any receiver methods except onError().
 	virtual void		getClipboard(ClipboardID, IClipboard*) const = 0;
 
 	// get the primary screen's current toggle modifier key state.
@@ -90,9 +90,6 @@ public:
 	// any other reason that the user should not be allowed to switch
 	// screens.
 	virtual bool		isLockedToScreen() const = 0;
-
-	// return true if the screen saver is activated
-	virtual bool		isScreenSaverActive() const = 0;
 };
 
 #endif

@@ -525,6 +525,7 @@ CXWindowsClipboard::motifLockClipboard() const
 	// fail if anybody owns the lock (even us, so this is non-recursive)
     Window lockOwner = XGetSelectionOwner(m_display, m_atomMotifClipLock);
 	if (lockOwner != None) {
+		log((CLOG_DEBUG1 "motif lock owner 0x%08x", lockOwner));
 		return false;
 	}
 
@@ -536,6 +537,7 @@ CXWindowsClipboard::motifLockClipboard() const
 	XSetSelectionOwner(m_display, m_atomMotifClipLock, m_window, time);
     lockOwner = XGetSelectionOwner(m_display, m_atomMotifClipLock);
 	if (lockOwner != m_window) {
+		log((CLOG_DEBUG1 "motif lock owner 0x%08x", lockOwner));
 		return false;
 	}
 

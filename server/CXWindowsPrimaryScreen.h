@@ -5,28 +5,27 @@
 #include "IPrimaryScreen.h"
 #include "MouseTypes.h"
 
+class IPrimaryReceiver;
+
 class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 public:
-	CXWindowsPrimaryScreen();
+	CXWindowsPrimaryScreen(IPrimaryReceiver*);
 	virtual ~CXWindowsPrimaryScreen();
 
 	// IPrimaryScreen overrides
 	virtual void		run();
 	virtual void		stop();
-	virtual void		open(CServer*);
+	virtual void		open();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute, bool);
 	virtual bool		leave();
-	virtual void		onConfigure();
+	virtual void		reconfigure();
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);
-	virtual void		getShape(SInt32&, SInt32&, SInt32&, SInt32&) const;
-	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 	virtual KeyModifierMask	getToggleMask() const;
 	virtual bool		isLockedToScreen() const;
-	virtual bool		isScreenSaverActive() const;
 
 protected:
 	// CXWindowsScreen overrides
@@ -61,7 +60,7 @@ private:
 	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
-	CServer*			m_server;
+	IPrimaryReceiver*	m_receiver;
 	bool				m_active;
 	Window				m_window;
 

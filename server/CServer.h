@@ -1,6 +1,7 @@
 #ifndef CSERVER_H
 #define CSERVER_H
 
+#include "IServer.h"
 #include "CConfig.h"
 #include "CClipboard.h"
 #include "ClipboardTypes.h"
@@ -13,14 +14,17 @@
 #include "stdlist.h"
 #include "stdmap.h"
 
+class CClientProxy;
+class CHTTPServer;
+class CPrimaryClient;
 class CThread;
+class IClient;
+class IDataSocket;
 class IServerProtocol;
 class ISocketFactory;
 class ISecurityFactory;
-class IPrimaryScreen;
-class CHTTPServer;
 
-class CServer {
+class CServer : public IServer {
 public:
 	CServer(const CString& serverName);
 	~CServer();
@@ -38,49 +42,11 @@ public:
 	// after a successful open().
 	void				quit();
 
-	// tell the server to shutdown.  this is called in an emergency
-	// when we need to tell the server that we cannot continue.  the
-	// server will attempt to clean up.
-	void				shutdown();
-
 	// update screen map.  returns true iff the new configuration was
 	// accepted.
 	bool				setConfig(const CConfig&);
 
-	// handle events on server's screen.  onMouseMovePrimary() returns
-	// true iff the mouse enters a jump zone and jumps.
-	void				onKeyDown(KeyID, KeyModifierMask);
-	void				onKeyUp(KeyID, KeyModifierMask);
-	void				onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
-	void				onMouseDown(ButtonID);
-	void				onMouseUp(ButtonID);
-	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
-	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
-	void				onMouseWheel(SInt32 delta);
-	void				grabClipboard(ClipboardID);
-	void				onScreenSaver(bool activated);
-
-	// handle updates from primary
-	void				setInfo(SInt32 xScreen, SInt32 yScreen,
-							SInt32 wScreen, SInt32 hScreen,
-							SInt32 zoneSize,
-							SInt32 xMouse, SInt32 yMouse);
-
-	// handle messages from clients
-	void				setInfo(const CString& clientName,
-							SInt32 xScreen, SInt32 yScreen,
-							SInt32 wScreen, SInt32 hScreen,
-							SInt32 zoneSize,
-							SInt32 xMouse, SInt32 yMouse);
-	void				grabClipboard(ClipboardID,
-							UInt32 seqNum, const CString& clientName);
-	void				setClipboard(ClipboardID,
-							UInt32 seqNum, const CString& data);
-
 	// accessors
-
-	// returns true if the mouse should be locked to the current screen
-	bool				isLockedToScreen() const;
 
 	// get the current screen map
 	void				getConfig(CConfig*) const;
@@ -91,64 +57,58 @@ public:
 	// get the sides of the primary screen that have neighbors
 	UInt32				getActivePrimarySides() const;
 
+	// IServer overrides
+	virtual void		onError();
+	virtual void		onInfoChanged(const CString& clientName);
+	virtual bool		onGrabClipboard(ClipboardID,
+							UInt32 seqNum, const CString& clientName);
+	virtual void		onClipboardChanged(ClipboardID,
+							UInt32 seqNum, const CString& data);
+	virtual void		onKeyDown(KeyID, KeyModifierMask);
+	virtual void		onKeyUp(KeyID, KeyModifierMask);
+	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
+	virtual void		onMouseDown(ButtonID);
+	virtual void		onMouseUp(ButtonID);
+	virtual bool		onMouseMovePrimary(SInt32 x, SInt32 y);
+	virtual void		onMouseMoveSecondary(SInt32 dx, SInt32 dy);
+	virtual void		onMouseWheel(SInt32 delta);
+	virtual void		onGrabClipboard(ClipboardID);
+	virtual void		onScreenSaver(bool activated);
+
 protected:
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
 
 private:
-	typedef std::list<CThread*> CThreadList;
-
-	class CScreenInfo {
-	public:
-		CScreenInfo(const CString& name, IServerProtocol*);
-		~CScreenInfo();
-
-	public:
-		// the thread handling this screen's connection.  used when
-		// forcing a screen to disconnect.
-		CThread			m_thread;
-		CString			m_name;
-		IServerProtocol* m_protocol;
-		bool			m_ready;
-
-		// screen shape and jump zone size
-		SInt32			m_x, m_y;
-		SInt32			m_w, m_h;
-		SInt32			m_zoneSize;
-
-		bool			m_gotClipboard[kClipboardEnd];
-	};
+	typedef std::list<CThread> CThreadList;
 
 	// handle mouse motion
 	bool				onMouseMovePrimaryNoLock(SInt32 x, SInt32 y);
 	void				onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy);
 
-	// update screen info
-	void				setInfoNoLock(const CString& screenName,
-							SInt32 xScreen, SInt32 yScreen,
-							SInt32 wScreen, SInt32 hScreen,
-							SInt32 zoneSize,
-							SInt32 xMouse, SInt32 yMouse);
-
 	// grab the clipboard
-	void				grabClipboardNoLock(ClipboardID,
+	bool				grabClipboardNoLock(ClipboardID,
 							UInt32 seqNum, const CString& clientName);
+
+	// set the clipboard
+	void				onClipboardChangedNoLock(ClipboardID,
+							UInt32 seqNum, const CString& data);
 
 	// returns true iff mouse should be locked to the current screen
 	bool				isLockedToScreenNoLock() const;
 
 	// change the active screen
-	void				switchScreen(CScreenInfo*,
+	void				switchScreen(IClient*,
 							SInt32 x, SInt32 y, bool forScreenSaver);
 
 	// lookup neighboring screen
-	CScreenInfo*		getNeighbor(CScreenInfo*, CConfig::EDirection) const;
+	IClient*			getNeighbor(IClient*, CConfig::EDirection) const;
 
 	// lookup neighboring screen.  given a position relative to the
 	// source screen, find the screen we should move onto and where.
 	// if the position is sufficiently far from the source then we
 	// cross multiple screens.  if there is no suitable screen then
 	// return NULL and x,y are not modified.
-	CScreenInfo*		getNeighbor(CScreenInfo*,
+	IClient*			getNeighbor(IClient*,
 							CConfig::EDirection,
 							SInt32& x, SInt32& y) const;
 
@@ -156,14 +116,12 @@ private:
 	void				openPrimaryScreen();
 	void				closePrimaryScreen();
 
-	// clear gotClipboard flags in all screens
-	void				clearGotClipboard(ClipboardID);
-
-	// send clipboard to the active screen if it doesn't already have it
-	void				sendClipboard(ClipboardID);
-
 	// update the clipboard if owned by the primary screen
 	void				updatePrimaryClipboard(ClipboardID);
+
+	// close all clients that are *not* in config, not including the
+	// primary client.
+	void				closeClients(const CConfig& config);
 
 	// start a thread, adding it to the list of threads
 	void				startThread(IJob* adopted);
@@ -180,8 +138,9 @@ private:
 	// thread method to accept incoming client connections
 	void				acceptClients(void*);
 
-	// thread method to do startup handshake with client
-	void				handshakeClient(void*);
+	// thread method to do client interaction
+	void				runClient(void*);
+	CClientProxy*		handshakeClient(IDataSocket*);
 
 	// thread method to accept incoming HTTP connections
 	void				acceptHTTPClients(void*);
@@ -190,11 +149,10 @@ private:
 	void				processHTTPRequest(void*);
 
 	// connection list maintenance
-	CScreenInfo*		addConnection(const CString& name, IServerProtocol*);
+	void				addConnection(IClient*);
 	void				removeConnection(const CString& name);
 
 private:
-	typedef std::map<CString, CScreenInfo*> CScreenList;
 	class CClipboardInfo {
 	public:
 		CClipboardInfo();
@@ -204,7 +162,6 @@ private:
 		CString			m_clipboardData;
 		CString			m_clipboardOwner;
 		UInt32			m_clipboardSeqNum;
-		bool			m_clipboardReady;
 	};
 
 	CMutex				m_mutex;
@@ -212,6 +169,7 @@ private:
 	// the name of the primary screen
 	CString				m_name;
 
+	// how long to wait to bind our socket until we give up
 	double				m_bindTimeout;
 
 	ISocketFactory*		m_socketFactory;
@@ -221,10 +179,21 @@ private:
 	CThreadList			m_threads;
 
 	// the screens
-	IPrimaryScreen*		m_primary;
-	CScreenList			m_screens;
-	CScreenInfo*		m_active;
-	CScreenInfo*		m_primaryInfo;
+	typedef std::map<CString, IClient*> CClientList;
+	typedef std::map<CString, CThread> CClientThreadList;
+
+	// all clients indexed by name
+	CClientList			m_clients;
+
+	// run thread of all secondary screen clients.  does not include the
+	// primary screen's run thread.
+	CClientThreadList	m_clientThreads;
+
+	// the primary screen client
+	CPrimaryClient*		m_primaryClient;
+
+	// the client with focus
+	IClient*			m_active;
 
 	// the sequence number of enter messages
 	UInt32				m_seqNum;
@@ -239,7 +208,7 @@ private:
 	CClipboardInfo		m_clipboards[kClipboardEnd];
 
 	// state saved when screen saver activates
-	CScreenInfo*		m_activeSaver;
+	IClient*			m_activeSaver;
 	SInt32				m_xSaver, m_ySaver;
 
 	// HTTP request processing stuff

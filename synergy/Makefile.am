@@ -17,10 +17,11 @@ libsynergy_a_SOURCES = 		\
 	CProtocolUtil.h			\
 	CTCPSocketFactory.h		\
 	ClipboardTypes.h		\
+	IClient.h				\
 	IClipboard.h			\
 	IScreenSaver.h			\
 	ISecondaryScreen.h		\
-	IServerProtocol.h		\
+	IServer.h				\
 	ISocketFactory.h		\
 	KeyTypes.h				\
 	MouseTypes.h			\

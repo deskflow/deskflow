@@ -4,20 +4,23 @@ DEPTH = ..
 
 bin_PROGRAMS = synergyd
 synergyd_SOURCES = 					\
+	CClientProxy.cpp				\
+	CClientProxy1_0.cpp				\
 	CConfig.cpp						\
-	CServerProtocol.cpp				\
-	CServerProtocol1_0.cpp			\
-	CXWindowsPrimaryScreen.cpp		\
-	CServer.cpp						\
 	CHTTPServer.cpp					\
+	CPrimaryClient.cpp				\
+	CServer.cpp						\
+	CXWindowsPrimaryScreen.cpp		\
 	server.cpp						\
+	CClientProxy.h					\
+	CClientProxy1_0.h				\
 	CConfig.h						\
 	CHTTPServer.h					\
+	CPrimaryClient.h				\
 	CServer.h						\
-	CServerProtocol.h				\
-	CServerProtocol1_0.h			\
-	CSynergyHook.h					\
 	CXWindowsPrimaryScreen.h		\
+	IPrimaryReceiver.h				\
+	IPrimaryScreen.h				\
 	$(NULL)
 synergyd_LDADD =					\
 	$(DEPTH)/platform/libplatform.a	\
