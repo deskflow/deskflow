@@ -1,0 +1,53 @@
+Synergy To Do List
+==================
+
+Things to do to synergy, in no particular order:
+
+* Provide GUI configuration
+
+  There's a GUI tool on win32 but no other platforms.  It'd be nice
+  if the tool allowed users to drag screen icons around to set the
+  links between them, but this complicated because links aren't
+  necessarily symmetrical.
+
+* Provide taskbar feedback
+
+  An icon indicating synergy's state in the taskbar would be nice.
+  It could also provide a means for viewing recent log messages,
+  stopping synergy, and forcing disconnection.
+
+* Support non-ASCII keyboards
+
+  Synergy currently supports only ASCII characters typed on the
+  keyboard.  It does, however, support Unicode clipboard text.
+
+* Write man pages
+
+* Finish PORTING guide
+
+* Port to other platforms
+
+  An incomplete list of desired platforms:
+  * MacOS 9
+  * MacOS 10
+  * BSD
+  * Irix
+  * Solaris
+  * HP-UX
+  * AIX
+
+* Provide a nice win32 installer/uninstaller
+
+  Synergy doesn't have any special needs so even just unzipping is
+  satisfactory, but a proper installer would be nice.  And, more
+  importantly, it should provide an uninstaller.
+
+* Add more clipboard formats
+
+  Synergy currently supports only text on the clipboard.  It should
+  support more formats, such as images and sound.  For each format,
+  some canonical type must be chosen.  For text, that's UTF-8 with
+  \n for newlines.  For images, it might be BMP or PNG.  Whatever it
+  is it should losslessly support any type it might be converted to.
+  The type is converted to each platform's native type.  For example,
+  BMP for images on win32.

@@ -26,6 +26,7 @@ EXTRA_DIST =				\
 	FAQ						\
 	HISTORY					\
 	PORTING					\
+	TODO					\
 	all.dsp					\
 	synergy.dsw				\
 	doc/doxygen.cfg.in		\
@@ -61,3 +62,9 @@ dist-rpm: dist
 		mv -f $(RPMTOPDIR)/SRPMS/*.rpm . && \
 		mv -f $(RPMTOPDIR)/RPMS/*/*.rpm . && \
 		rm -rf $(RPMTOPDIR)
+
+# build zip
+# FIXME -- have automake generate this rule for us
+dist-zip: distdir
+	zip -r $(distdir).zip $(distdir)
+	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
