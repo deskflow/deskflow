@@ -150,12 +150,8 @@ Time					CXWindowsUtil::getCurrentTime(
 
 	// wait for reply
 	XEvent xevent;
-	while (XCheckIfEvent(display, &xevent,
-								&CXWindowsUtil::propertyNotifyPredicate,
-								(XPointer)&filter) != True) {
-		// wait a bit
-		CThread::sleep(0.05);
-	}
+	XIfEvent(display, &xevent, &CXWindowsUtil::propertyNotifyPredicate,
+								(XPointer)&filter);
 	assert(xevent.type             == PropertyNotify);
 	assert(xevent.xproperty.window == window);
 	assert(xevent.xproperty.atom   == atom);

@@ -106,6 +106,7 @@ private:
 		static Bool		eventPredicate(Display* display,
 								XEvent* event,
 								XPointer arg);
+		void			timeout(void*);
 
 	private:
 		Window			m_requestor;
@@ -124,6 +125,9 @@ private:
 		// the actual type of the data.  if this is None then the
 		// selection owner cannot convert to the requested type.
 		Atom*			m_actualTarget;
+
+		// property used in event to wake up event loop
+		Atom			m_timeout;
 
 	public:
 		// true iff the selection owner didn't follow ICCCM conventions

@@ -1,8 +1,8 @@
 #include "CXWindowsClipboard.h"
 #include "CXWindowsUtil.h"
 #include "CLog.h"
-#include "CStopwatch.h"
 #include "CThread.h"
+#include "TMethodJob.h"
 #include <stdio.h>
 #include <X11/Xatom.h>
 
@@ -1099,6 +1099,9 @@ bool					CXWindowsClipboard::CICCCMGetClipboard::readClipboard(
 	*m_actualTarget = None;
 	*m_data         = "";
 
+	// get timeout atom
+	m_timeout = XInternAtom(display, "SYNERGY_TIMEOUT", False);
+
 	// delete target property
 	XDeleteProperty(display, m_requestor, m_property);
 
@@ -1112,26 +1115,21 @@ bool					CXWindowsClipboard::CICCCMGetClipboard::readClipboard(
 	XConvertSelection(display, selection, target,
 								m_property, m_requestor, m_time);
 
-	// process selection events.  use a timeout so we don't get
-	// screwed by a bad selection owner.
-	CStopwatch timer(true);
+	// process selection events.  have a separate thread send us an
+	// event after a timeout so we don't get locked up by badly
+	// behaved selection owners.
+	CThread timer(new TMethodJob<CXWindowsClipboard::CICCCMGetClipboard>(
+						this,
+						&CXWindowsClipboard::CICCCMGetClipboard::timeout,
+						display));
 	XEvent xevent;
 	while (!m_done && !m_failed) {
-		// return false if we've timed-out
-		if (timer.getTime() >= 0.2) {
-			log((CLOG_DEBUG1 "request timed out"));
-			XSelectInput(display, m_requestor, attr.your_event_mask);
-			return false;
-		}
-
 		// process events
-		if (!XCheckIfEvent(display, &xevent,
+		XIfEvent(display, &xevent,
 						&CXWindowsClipboard::CICCCMGetClipboard::eventPredicate,
-						reinterpret_cast<XPointer>(this))) {
-			// wait a bit to avoid spinning
-			CThread::sleep(0.05);
-		}
+						reinterpret_cast<XPointer>(this));
 	}
+	timer.cancel();
 
 	// restore mask
 	XSelectInput(display, m_requestor, attr.your_event_mask);
@@ -1188,6 +1186,16 @@ bool					CXWindowsClipboard::CICCCMGetClipboard::doEventPredicate(
 		// otherwise not interested
 		return false;
 
+	case ClientMessage:
+		// done if this is the timeout message
+		if (xevent->xclient.window       == m_requestor &&
+			xevent->xclient.message_type == m_timeout) {
+			return true;
+		}
+
+		// otherwise not interested
+		return false;
+
 	default:
 		// not interested
 		return false;
@@ -1200,7 +1208,7 @@ bool					CXWindowsClipboard::CICCCMGetClipboard::doEventPredicate(
 								m_property, m_data, &target, NULL, True)) {
 		// unable to read property
 		m_failed = true;
-		return True;
+		return true;
 	}
 
 	// note if incremental.  if we're already incremental then the
@@ -1274,6 +1282,24 @@ Bool					CXWindowsClipboard::CICCCMGetClipboard::eventPredicate(
 {
 	CICCCMGetClipboard* self = reinterpret_cast<CICCCMGetClipboard*>(arg);
 	return self->doEventPredicate(display, xevent) ? True : False;
+}
+
+void					CXWindowsClipboard::CICCCMGetClipboard::timeout(
+								void* vdisplay)
+{
+	// wait
+	CThread::sleep(0.2);	// FIXME -- is this too short?
+
+	// send wake up
+	Display* display = reinterpret_cast<Display*>(vdisplay);
+	XEvent event;
+	event.xclient.type         = ClientMessage;
+	event.xclient.display      = display;
+	event.xclient.window       = m_requestor;
+	event.xclient.message_type = m_timeout;
+	event.xclient.format       = 8;
+	CXWindowsUtil::CErrorLock lock;
+	XSendEvent(display, m_requestor, False, 0, &event);
 }
 
 
