@@ -14,7 +14,7 @@
 Name "Synergy"
 
 ; The file to write
-OutFile "${DEPTH}/SynergyInstaller.exe"
+OutFile "${DEPTH}\build\SynergyInstaller.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\Synergy
@@ -55,10 +55,10 @@ Section "Synergy (required)"
   SetOutPath $INSTDIR
   
   ; Put files there
-  File "${DEPTH}\Release\synergy.exe"
-  File "${DEPTH}\Release\synergyc.exe"
-  File "${DEPTH}\Release\synergys.exe"
-  File "${DEPTH}\Release\*.dll"
+  File "${DEPTH}\build\synergy.exe"
+  File "${DEPTH}\build\synergyc.exe"
+  File "${DEPTH}\build\synergys.exe"
+  File "${DEPTH}\build\*.dll"
   File AUTHORS.txt
   File BUGS.txt
   File COPYING.txt

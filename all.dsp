@@ -36,8 +36,8 @@ MTL=midl.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release"
-# PROP Intermediate_Dir "Release"
+# PROP Output_Dir "..\..\build"
+# PROP Intermediate_Dir "..\..\gen\build"
 # PROP Target_Dir ""
 
 !ELSEIF  "$(CFG)" == "all - Win32 Debug"
@@ -49,8 +49,8 @@ MTL=midl.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug"
-# PROP Intermediate_Dir "Debug"
+# PROP Output_Dir "..\..\debug"
+# PROP Intermediate_Dir "..\..\gen\debug"
 # PROP Target_Dir ""
 
 !ENDIF 

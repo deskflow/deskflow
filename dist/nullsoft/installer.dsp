@@ -43,7 +43,7 @@ CFG=installer - Win32 Debug
 # PROP Intermediate_Dir "."
 # PROP Cmd_Line "nmake /nologo /f "installer.mak""
 # PROP Rebuild_Opt "/a"
-# PROP Target_File "..\..\SynergyInstaller.exe"
+# PROP Target_File "..\..\build\SynergyInstaller.exe"
 # PROP Bsc_Name ""
 # PROP Target_Dir ""
 NSIS=makensis
@@ -94,17 +94,7 @@ SOURCE=.\dosify.c
 # Begin Source File
 
 SOURCE=.\installer.mak
-
-!IF  "$(CFG)" == "installer - Win32 Release"
-
 # PROP Intermediate_Dir "."
-
-!ELSEIF  "$(CFG)" == "installer - Win32 Debug"
-
-# PROP Intermediate_Dir "."
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
