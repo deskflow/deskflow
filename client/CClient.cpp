@@ -33,6 +33,7 @@ CClient::CClient(const CString& clientName) :
 								m_input(NULL),
 								m_output(NULL),
 								m_screen(NULL),
+								m_camp(false),
 								m_active(false),
 								m_seqNum(0),
 								m_ignoreMove(false)
@@ -45,7 +46,12 @@ CClient::~CClient()
 	// do nothing
 }
 
-void					CClient::run(const CNetworkAddress& serverAddress)
+void					CClient::camp(bool on)
+{
+	m_camp = on;
+}
+
+bool					CClient::run(const CNetworkAddress& serverAddress)
 {
 	CThread* thread = NULL;
 	try {
@@ -74,9 +80,10 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		// clean up
 		log((CLOG_NOTE "stopping client"));
 		thread->cancel();
-		thread->wait();
+		void* result = thread->getResult();
 		delete thread;
 		closeSecondaryScreen();
+		return (result != NULL);
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "client error: %s", e.what()));
@@ -89,6 +96,7 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 			delete thread;
 		}
 		closeSecondaryScreen();
+		return true;
 	}
 	catch (XThread&) {
 		// clean up
@@ -183,14 +191,29 @@ void					CClient::runSession(void*)
 	std::auto_ptr<IInputStream> input;
 	std::auto_ptr<IOutputStream> output;
 	try {
-		// allow connect this much time to succeed
-		CTimerThread timer(30.0);		// FIXME -- timeout in member
+		for (;;) {
+			try {
+				// allow connect this much time to succeed
+				// FIXME -- timeout in member
+				CTimerThread timer(m_camp ? -1.0 : 30.0);
 
-		// create socket and attempt to connect to server
-		log((CLOG_DEBUG1 "connecting to server"));
-		assign(socket, new CTCPSocket(), ISocket);	// FIXME -- use factory
-		socket->connect(*m_serverAddress);
-		log((CLOG_INFO "connected to server"));
+				// create socket and attempt to connect to server
+				log((CLOG_DEBUG1 "connecting to server"));
+				assign(socket, new CTCPSocket(), ISocket);	// FIXME -- use factory
+				socket->connect(*m_serverAddress);
+				log((CLOG_INFO "connected to server"));
+				break;
+			}
+			catch (XSocketConnect&) {
+				// failed to connect.  if not camping then rethrow.
+				if (!m_camp) {
+					throw;
+				}
+
+				// we're camping.  wait a bit before retrying
+				CThread::sleep(5.0);
+			}
+		}
 
 		// get the input and output streams
 		IInputStream*  srcInput  = socket->getInputStream();
@@ -207,6 +230,9 @@ void					CClient::runSession(void*)
 			own       = true;
 		}
 */
+
+		// give handshake some time
+		CTimerThread timer(30.0);
 
 		// attach the packetizing filters
 		assign(input, new CInputPacketStream(srcInput, own), IInputStream);
@@ -238,7 +264,7 @@ void					CClient::runSession(void*)
 	catch (XIncompatibleClient& e) {
 		log((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
 		m_screen->stop();
-		return;
+		CThread::exit(NULL);
 	}
 	catch (XThread&) {
 		log((CLOG_ERR "connection timed out"));
@@ -248,7 +274,12 @@ void					CClient::runSession(void*)
 	catch (XBase& e) {
 		log((CLOG_ERR "connection failed: %s", e.what()));
 		m_screen->stop();
-		return;
+		CThread::exit(NULL);
+	}
+	catch (...) {
+		log((CLOG_ERR "connection failed: <unknown error>"));
+		m_screen->stop();
+		CThread::exit(NULL);
 	}
 
 	try {
@@ -346,7 +377,7 @@ void					CClient::runSession(void*)
 	catch (XBase& e) {
 		log((CLOG_ERR "error: %s", e.what()));
 		m_screen->stop();
-		return;
+		CThread::exit(reinterpret_cast<void*>(1));
 	}
 
 	// done with socket
@@ -355,6 +386,8 @@ void					CClient::runSession(void*)
 
 	// exit event loop
 	m_screen->stop();
+
+	CThread::exit(reinterpret_cast<void*>(1));
 }
 
 // FIXME -- use factory to create screen

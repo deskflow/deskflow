@@ -19,8 +19,17 @@ public:
 
 	// manipulators
 
+	// turn camping on or off.  when camping the client will keep
+	// trying to connect to the server until it succeeds.  this
+	// is useful if the client may start before the server.  do
+	// not call this while in run().
+	void				camp(bool on);
+
 	// start the client.  does not return until quit() is called.
-	void				run(const CNetworkAddress& serverAddress);
+	// returns true if the client ever connected to the server
+	// successfully.  may also throw exceptions after successfully
+	// connecting.
+	bool				run(const CNetworkAddress& serverAddress);
 
 	// tell client to exit gracefully
 	void				quit();
@@ -67,6 +76,7 @@ private:
 	IOutputStream*		m_output;
 	ISecondaryScreen*	m_screen;
 	const CNetworkAddress*	m_serverAddress;
+	bool				m_camp;
 	bool				m_active;
 	UInt32				m_seqNum;
 	bool				m_ignoreMove;

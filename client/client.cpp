@@ -29,6 +29,7 @@
 static const char*		pname         = NULL;
 static bool				s_restartable = true;
 static bool				s_daemon      = true;
+static bool				s_camp        = true;
 static bool				s_install     = false;
 static bool				s_uninstall   = false;
 static const char*		s_logFilter   = NULL;
@@ -76,13 +77,14 @@ static int				realMain(CMutex* mutex)
 		try {
 			// create client
 			s_client = new CClient(s_name);
+			s_client->camp(s_camp);
 
 			// run client
 			if (mutex != NULL) {
 				mutex->unlock();
 			}
 			locked = false;
-			s_client->run(s_serverAddress);
+			bool success = s_client->run(s_serverAddress);
 			locked = true;
 			if (mutex != NULL) {
 				mutex->lock();
@@ -94,6 +96,8 @@ static int				realMain(CMutex* mutex)
 			CNetwork::cleanup();
 			CLog::setLock(NULL);
 			s_logMutex = NULL;
+
+			return success ? 16 : 0;
 		}
 		catch (...) {
 			// clean up
@@ -166,6 +170,7 @@ static void				help()
 	log((CLOG_PRINT
 "Usage: %s"
 " [--"DAEMON"|--no-"DAEMON"]"
+" [--camp|--no-camp]"
 " [--debug <level>]"
 " [--name <screen-name>]"
 " [--restart|--no-restart]"
@@ -175,6 +180,9 @@ static void				help()
 " --uninstall\n"
 "Start the synergy mouse/keyboard sharing server.\n"
 "\n"
+"*     --camp               keep attempting to connect to the server until\n"
+"                           successful.\n"
+"      --no-camp            do not camp.\n"
 "  -d, --debug <level>      filter out log messages with priorty below level.\n"
 "                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
 "                           DEBUG, DEBUG1, DEBUG2.\n"
@@ -184,7 +192,10 @@ static void				help()
 "                           ourself to the server.\n"
 "  -1, --no-restart         do not try to restart the client if it fails for\n"
 "                           some reason.\n"
-"*     --restart            restart the client automatically if it fails.\n"
+"*     --restart            restart the client automatically if it fails for\n"
+"                           some unexpected reason, including the server\n"
+"                           disconnecting but not including failing to\n"
+"                           connect to the server."
 "      --install            install server as a "DAEMON".\n"
 "      --uninstall          uninstall server "DAEMON".\n"
 "  -h, --help               display this help and exit.\n"
@@ -246,6 +257,16 @@ static void				parse(int argc, const char** argv)
 		else if (isArg(i, argc, argv, "-n", "--name", 1)) {
 			// save screen name
 			s_name = argv[++i];
+		}
+
+		else if (isArg(i, argc, argv, NULL, "--camp")) {
+			// enable camping
+			s_camp = true;
+		}
+
+		else if (isArg(i, argc, argv, NULL, "--no-camp")) {
+			// disable camping
+			s_camp = false;
 		}
 
 		else if (isArg(i, argc, argv, "-f", "--no-"DAEMON)) {
