@@ -47,9 +47,12 @@ public:
 private:
 	void				runSession(void*);
 
-	// open/close the primary screen
+	// open/close the secondary screen
 	void				openSecondaryScreen();
 	void				closeSecondaryScreen();
+
+	// if compressing mouse motion then send the last motion now
+	void				flushCompressedMouse();
 
 	// message handlers
 	void				onEnter();
@@ -86,6 +89,9 @@ private:
 	bool				m_ownClipboard[kClipboardEnd];
 	IClipboard::Time	m_timeClipboard[kClipboardEnd];
 	CString				m_dataClipboard[kClipboardEnd];
+
+	bool				m_compressMouse;
+	SInt32				m_xMouse, m_yMouse;
 };
 
 #endif

@@ -297,8 +297,16 @@ CClient::runSession(void*)
 
 	bool fail = false;
 	try {
+		// no compressed mouse motion yet
+		m_compressMouse = false;
+
 		// handle messages from server
 		for (;;) {
+			// if no input is pending then flush compressed mouse motion
+			if (input->getSize() == 0) {
+				flushCompressedMouse();
+			}
+
 			// wait for reply
 			log((CLOG_DEBUG2 "waiting for message"));
 			UInt8 code[4];
@@ -463,6 +471,15 @@ CClient::closeSecondaryScreen()
 }
 
 void
+CClient::flushCompressedMouse()
+{
+	if (m_compressMouse) {
+		m_compressMouse = false;
+		m_screen->mouseMove(m_xMouse, m_yMouse);
+	}
+}
+
+void
 CClient::onEnter()
 {
 	SInt16 x, y;
@@ -473,6 +490,11 @@ CClient::onEnter()
 		m_active = true;
 	}
 	log((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, m_seqNum, mask));
+
+	// discard old compressed mouse motion, if any
+	m_compressMouse = false;
+
+	// tell screen we're entering
 	m_screen->enter(x, y, static_cast<KeyModifierMask>(mask));
 }
 
@@ -480,6 +502,9 @@ void
 CClient::onLeave()
 {
 	log((CLOG_DEBUG1 "recv leave"));
+
+	// send last mouse motion
+	flushCompressedMouse();
 
 	// tell screen we're leaving
 	m_screen->leave();
@@ -610,6 +635,9 @@ CClient::onSetClipboard()
 void
 CClient::onKeyDown()
 {
+	// get mouse up to date
+	flushCompressedMouse();
+
 	UInt16 id, mask;
 	{
 		CLock lock(&m_mutex);
@@ -623,6 +651,9 @@ CClient::onKeyDown()
 void
 CClient::onKeyRepeat()
 {
+	// get mouse up to date
+	flushCompressedMouse();
+
 	UInt16 id, mask, count;
 	{
 		CLock lock(&m_mutex);
@@ -637,6 +668,9 @@ CClient::onKeyRepeat()
 void
 CClient::onKeyUp()
 {
+	// get mouse up to date
+	flushCompressedMouse();
+
 	UInt16 id, mask;
 	{
 		CLock lock(&m_mutex);
@@ -650,6 +684,9 @@ CClient::onKeyUp()
 void
 CClient::onMouseDown()
 {
+	// get mouse up to date
+	flushCompressedMouse();
+
 	SInt8 id;
 	{
 		CLock lock(&m_mutex);
@@ -662,6 +699,9 @@ CClient::onMouseDown()
 void
 CClient::onMouseUp()
 {
+	// get mouse up to date
+	flushCompressedMouse();
+
 	SInt8 id;
 	{
 		CLock lock(&m_mutex);
@@ -680,6 +720,16 @@ CClient::onMouseMove()
 		CLock lock(&m_mutex);
 		CProtocolUtil::readf(m_input, kMsgDMouseMove + 4, &x, &y);
 		ignore = m_ignoreMove;
+
+		// compress mouse motion events if more input follows
+		if (!ignore && !m_compressMouse && m_input->getSize() > 0) {
+			m_compressMouse = true;
+		}
+		if (m_compressMouse) {
+			ignore   = true;
+			m_xMouse = x;
+			m_yMouse = y;
+		}
 	}
 	log((CLOG_DEBUG2 "recv mouse move %d,%d", x, y));
 	if (!ignore) {
@@ -690,6 +740,9 @@ CClient::onMouseMove()
 void
 CClient::onMouseWheel()
 {
+	// get mouse up to date
+	flushCompressedMouse();
+
 	SInt16 delta;
 	{
 		CLock lock(&m_mutex);
