@@ -1,6 +1,7 @@
 #include "CProtocolUtil.h"
 #include "IInputStream.h"
 #include "IOutputStream.h"
+#include "CLog.h"
 #include <assert.h>
 #include <ctype.h>
 #include <string.h>
@@ -14,6 +15,7 @@ void					CProtocolUtil::writef(IOutputStream* stream,
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
+	log((CLOG_DEBUG "writef(%s)", fmt));
 
 	va_list args;
 
@@ -36,7 +38,8 @@ void					CProtocolUtil::writef(IOutputStream* stream,
 	// write buffer
 	UInt8* scan = buffer;
 	while (count > 0) {
-		const UInt32 n = stream->write(scan, n);
+		const UInt32 n = stream->write(scan, count);
+		log((CLOG_DEBUG "wrote %d of %d bytes", n, count));
 		count -= n;
 		scan  += n;
 	}
@@ -51,6 +54,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 	assert(fmt != NULL);
 
 	va_list args;
+	va_start(args, fmt);
 
 	// begin scanning
 	while (*fmt) {
@@ -162,6 +166,8 @@ void					CProtocolUtil::readf(IInputStream* stream,
 			++fmt;
 		}
 	}
+
+	va_end(args);
 }
 
 UInt32					CProtocolUtil::getLength(
