@@ -70,7 +70,7 @@ CServer::open()
 }
 
 void
-CServer::run()
+CServer::mainLoop()
 {
 	// check preconditions
 	{
@@ -94,7 +94,7 @@ CServer::run()
 		}
 
 		// handle events
-		m_primaryClient->run();
+		m_primaryClient->mainLoop();
 
 		// clean up
 		log((CLOG_NOTE "stopping server"));
@@ -137,9 +137,9 @@ CServer::run()
 }
 
 void
-CServer::quit()
+CServer::exitMainLoop()
 {
-	m_primaryClient->stop();
+	m_primaryClient->exitMainLoop();
 }
 
 void
@@ -1167,7 +1167,7 @@ CServer::acceptClients(void*)
 	catch (XBase& e) {
 		log((CLOG_ERR "cannot listen for clients: %s", e.what()));
 		delete listen;
-		quit();
+		exitMainLoop();
 	}
 	catch (...) {
 		delete listen;
@@ -1238,7 +1238,7 @@ CServer::runClient(void* vsocket)
 	// handle client messages
 	try {
 		log((CLOG_NOTE "client \"%s\" has connected", proxy->getName().c_str()));
-		proxy->run();
+		proxy->mainLoop();
 	}
 	catch (XBadClient&) {
 		// client not behaving
@@ -1252,7 +1252,7 @@ CServer::runClient(void* vsocket)
 		// FIXME -- could print network address if socket had suitable method
 	}
 	catch (...) {
-		// run() was probably cancelled
+		// mainLoop() was probably cancelled
 		removeConnection(proxy->getName());
 		delete socket;
 		throw;
@@ -1463,7 +1463,7 @@ CServer::acceptHTTPClients(void*)
 		log((CLOG_ERR "cannot listen for HTTP clients: %s", e.what()));
 		delete listen;
 		// FIXME -- quit?
-		quit();
+		exitMainLoop();
 	}
 	catch (...) {
 		delete listen;

@@ -44,20 +44,20 @@ public:
 
 	//! Server main loop
 	/*!
-	Run server's event loop and return when quit() is called.
+	Run server's event loop and return when exitMainLoop() is called.
 	This must be called between a successful open() and close().
 
 	(cancellation point)
 	*/
-	void				run();
+	void				mainLoop();
 
 	//! Exit event loop
 	/*!
-	Force run() to return.  This call can return before
-	run() does (i.e. asynchronously).  This may only be
+	Force mainLoop() to return.  This call can return before
+	mainLoop() does (i.e. asynchronously).  This may only be
 	called between a successful open() and close().
 	*/
-	void				quit();
+	void				exitMainLoop();
 
 	//! Close server
 	/*!

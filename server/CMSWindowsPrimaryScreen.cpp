@@ -384,9 +384,9 @@ CMSWindowsPrimaryScreen::preDestroyWindow(HWND)
 }
 
 void
-CMSWindowsPrimaryScreen::onPreRun()
+CMSWindowsPrimaryScreen::onPreMainLoop()
 {
-	// must call run() from same thread as open()
+	// must call mainLoop() from same thread as open()
 	assert(m_threadID == GetCurrentThreadId());
 	assert(m_window   != NULL);
 }

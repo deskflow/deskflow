@@ -23,7 +23,7 @@ CPrimaryScreen::~CPrimaryScreen()
 }
 
 void
-CPrimaryScreen::run()
+CPrimaryScreen::mainLoop()
 {
 	// change our priority
 	CThread::getCurrentThread().setPriority(-3);
@@ -31,20 +31,20 @@ CPrimaryScreen::run()
 	// run event loop
 	try {
 		log((CLOG_DEBUG "entering event loop"));
-		onPreRun();
+		onPreMainLoop();
 		getScreen()->mainLoop();
-		onPostRun();
+		onPostMainLoop();
 		log((CLOG_DEBUG "exiting event loop"));
 	}
 	catch (...) {
-		onPostRun();
+		onPostMainLoop();
 		log((CLOG_DEBUG "exiting event loop"));
 		throw;
 	}
 }
 
 void
-CPrimaryScreen::stop()
+CPrimaryScreen::exitMainLoop()
 {
 	getScreen()->exitMainLoop();
 }
@@ -198,13 +198,13 @@ CPrimaryScreen::getClipboard(ClipboardID id,
 }
 
 void
-CPrimaryScreen::onPreRun()
+CPrimaryScreen::onPreMainLoop()
 {
 	// do nothing
 }
 
 void
-CPrimaryScreen::onPostRun()
+CPrimaryScreen::onPostMainLoop()
 {
 	// do nothing
 }

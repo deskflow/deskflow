@@ -34,7 +34,7 @@ public:
 	Turns camping on or off.  When camping the client will keep
 	trying to connect to the server until it succeeds.  This
 	is useful if the client may start before the server.  Do
-	not call this while in run().
+	not call this while in mainLoop().
 	*/
 	void				camp(bool on);
 
@@ -46,11 +46,11 @@ public:
 
 	//! Exit event loop
 	/*!
-	Force run() to return.  This call can return before
-	run() does (i.e. asynchronously).  This may only be
+	Force mainLoop() to return.  This call can return before
+	mainLoop() does (i.e. asynchronously).  This may only be
 	called between a successful open() and close().
 	*/
-	void				quit();
+	void				exitMainLoop();
 
 	//@}
 	//! @name accessors
@@ -72,7 +72,7 @@ public:
 
 	// IClient overrides
 	virtual bool		open();
-	virtual void		run();
+	virtual void		mainLoop();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,

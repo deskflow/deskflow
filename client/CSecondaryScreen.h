@@ -37,17 +37,17 @@ public:
 	//! Run event loop
 	/*!
 	Run the screen's event loop.  This returns when it detects
-	the application should terminate or when stop() is called.
-	run() may only be called between open() and close().
+	the application should terminate or when exitMainLoop() is called.
+	mainLoop() may only be called between open() and close().
 	*/
-	void				run();
+	void				mainLoop();
 
 	//! Exit event loop
 	/*!
-	Force run() to return.  This call can return before
-	run() does (i.e. asynchronously).
+	Force mainLoop() to return.  This call can return before
+	mainLoop() does (i.e. asynchronously).
 	*/
-	void				stop();
+	void				exitMainLoop();
 
 	//! Close screen
 	/*!
@@ -189,19 +189,19 @@ public:
 	//@}
 
 protected:
-	//! Pre-run() hook
+	//! Pre-mainLoop() hook
 	/*!
-	Called on entry to run().  Override to perform platform specific
+	Called on entry to mainLoop().  Override to perform platform specific
 	operations.  Default does nothing.  May throw.
 	*/
-	virtual void		onPreRun();
+	virtual void		onPreMainLoop();
 
-	//! Post-run() hook
+	//! Post-mainLoop() hook
 	/*!
-	Called on exit from run().  Override to perform platform specific
+	Called on exit from mainLoop().  Override to perform platform specific
 	operations.  Default does nothing.  May \b not throw.
 	*/
-	virtual void		onPostRun();
+	virtual void		onPostMainLoop();
 
 	//! Pre-open() hook
 	/*!

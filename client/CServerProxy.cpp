@@ -33,7 +33,7 @@ CServerProxy::~CServerProxy()
 }
 
 bool
-CServerProxy::run()
+CServerProxy::mainLoop()
 {
 	bool failedToConnect = false;
 	try {

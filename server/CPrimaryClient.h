@@ -29,11 +29,11 @@ public:
 
 	//! Exit event loop
 	/*!
-	Force run() to return.  This call can return before
-	run() does (i.e. asynchronously).  This may only be
+	Force mainLoop() to return.  This call can return before
+	mainLoop() does (i.e. asynchronously).  This may only be
 	called between a successful open() and close().
 	*/
-	void				stop();
+	void				exitMainLoop();
 
 	//! Update configuration
 	/*!
@@ -73,7 +73,7 @@ public:
 
 	// IClient overrides
 	virtual bool		open();
-	virtual void		run();
+	virtual void		mainLoop();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,

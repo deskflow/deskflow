@@ -43,7 +43,7 @@ public:
 
 protected:
 	// CSecondaryScreen overrides
-	virtual void		onPreRun();
+	virtual void		onPreMainLoop();
 	virtual void		onPreOpen();
 	virtual void		onPreEnter();
 	virtual void		onPreLeave();

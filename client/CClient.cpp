@@ -54,9 +54,9 @@ CClient::setAddress(const CNetworkAddress& serverAddress)
 }
 
 void
-CClient::quit()
+CClient::exitMainLoop()
 {
-	m_screen->stop();
+	m_screen->exitMainLoop();
 }
 
 bool
@@ -133,7 +133,7 @@ CClient::open()
 }
 
 void
-CClient::run()
+CClient::mainLoop()
 {
 	{
 		CLock lock(&m_mutex);
@@ -157,7 +157,7 @@ CClient::run()
 		}
 
 		// handle events
-		m_screen->run();
+		m_screen->mainLoop();
 
 		// clean up
 		deleteSession();
@@ -430,11 +430,11 @@ CClient::runSession(void*)
 	try {
 		log((CLOG_DEBUG "starting server proxy"));
 		runServer();
-		m_screen->stop();
+		m_screen->exitMainLoop();
 		log((CLOG_DEBUG "stopping server proxy"));
 	}
 	catch (...) {
-		m_screen->stop();
+		m_screen->exitMainLoop();
 		log((CLOG_DEBUG "stopping server proxy"));
 		throw;
 	}
@@ -521,7 +521,7 @@ CClient::runServer()
 		bool rejected = true;
 		if (proxy != NULL) {
 			log((CLOG_DEBUG1 "communicating with server"));
-			rejected = !proxy->run();
+			rejected = !proxy->mainLoop();
 		}
 
 		// clean up

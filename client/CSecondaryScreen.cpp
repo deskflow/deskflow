@@ -19,7 +19,7 @@ CSecondaryScreen::~CSecondaryScreen()
 }
 
 void
-CSecondaryScreen::run()
+CSecondaryScreen::mainLoop()
 {
 	// change our priority
 	CThread::getCurrentThread().setPriority(-7);
@@ -27,20 +27,20 @@ CSecondaryScreen::run()
 	// run event loop
 	try {
 		log((CLOG_DEBUG "entering event loop"));
-		onPreRun();
+		onPreMainLoop();
 		getScreen()->mainLoop();
-		onPostRun();
+		onPostMainLoop();
 		log((CLOG_DEBUG "exiting event loop"));
 	}
 	catch (...) {
-		onPostRun();
+		onPostMainLoop();
 		log((CLOG_DEBUG "exiting event loop"));
 		throw;
 	}
 }
 
 void
-CSecondaryScreen::stop()
+CSecondaryScreen::exitMainLoop()
 {
 	getScreen()->exitMainLoop();
 }
@@ -200,13 +200,13 @@ CSecondaryScreen::getCursorPos(SInt32& x, SInt32& y) const
 }
 
 void
-CSecondaryScreen::onPreRun()
+CSecondaryScreen::onPreMainLoop()
 {
 	// do nothing
 }
 
 void
-CSecondaryScreen::onPostRun()
+CSecondaryScreen::onPostMainLoop()
 {
 	// do nothing
 }

@@ -258,7 +258,7 @@ CMSWindowsSecondaryScreen::preDestroyWindow(HWND)
 }
 
 void
-CMSWindowsSecondaryScreen::onPreRun()
+CMSWindowsSecondaryScreen::onPreMainLoop()
 {
 	assert(m_window != NULL);
 }

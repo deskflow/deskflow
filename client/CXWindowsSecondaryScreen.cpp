@@ -184,7 +184,7 @@ CXWindowsSecondaryScreen::getJumpZoneSize() const
 }
 
 void
-CXWindowsSecondaryScreen::onPreRun()
+CXWindowsSecondaryScreen::onPreMainLoop()
 {
 	assert(m_window != None);
 }

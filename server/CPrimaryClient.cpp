@@ -40,9 +40,9 @@ CPrimaryClient::~CPrimaryClient()
 }
 
 void
-CPrimaryClient::stop()
+CPrimaryClient::exitMainLoop()
 {
-	m_screen->stop();
+	m_screen->exitMainLoop();
 }
 
 void
@@ -122,9 +122,9 @@ CPrimaryClient::open()
 }
 
 void
-CPrimaryClient::run()
+CPrimaryClient::mainLoop()
 {
-	m_screen->run();
+	m_screen->mainLoop();
 }
 
 void

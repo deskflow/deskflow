@@ -15,7 +15,7 @@ public:
 
 	// IClient overrides
 	virtual bool		open();
-	virtual void		run();
+	virtual void		mainLoop();
 	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,

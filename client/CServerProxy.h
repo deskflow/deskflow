@@ -36,7 +36,7 @@ public:
 
 	(cancellation point)
 	*/
-	bool				run();
+	bool				mainLoop();
 
 	//@}
 	//! @name accessors

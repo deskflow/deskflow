@@ -332,7 +332,7 @@ CXWindowsPrimaryScreen::getJumpZoneSize() const
 }
 
 void
-CXWindowsPrimaryScreen::onPreRun()
+CXWindowsPrimaryScreen::onPreMainLoop()
 {
 	assert(m_window != None);
 }

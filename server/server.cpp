@@ -125,7 +125,7 @@ realMain(CMutex* mutex)
 						mutex->unlock();
 					}
 					locked = false;
-					s_server->run();
+					s_server->mainLoop();
 					locked = true;
 					if (mutex != NULL) {
 						mutex->lock();
@@ -568,7 +568,7 @@ static
 void
 daemonStop(void)
 {
-	s_server->quit();
+	s_server->exitMainLoop();
 }
 
 static

@@ -31,7 +31,7 @@ public:
 
 	(cancellation point)
 	*/
-	virtual void		run() = 0;
+	virtual void		mainLoop() = 0;
 
 	//! Close client
 	/*!

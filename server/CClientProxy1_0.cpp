@@ -60,7 +60,7 @@ CClientProxy1_0::open()
 }
 
 void
-CClientProxy1_0::run()
+CClientProxy1_0::mainLoop()
 {
 	// handle messages until the client hangs up or stops sending heartbeats
 	CStopwatch heartTimer;
