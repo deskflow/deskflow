@@ -17,19 +17,29 @@ CConfig::~CConfig()
 	// do nothing
 }
 
-void					CConfig::addScreen(const CString& name)
+bool					CConfig::addScreen(const CString& name)
 {
-	if (m_map.count(name) != 0) {
-		assert(0 && "name already in map");	// FIXME -- throw instead
+	// alias name must not exist
+	if (m_nameToCanonicalName.find(name) != m_nameToCanonicalName.end()) {
+		return false;
 	}
+
+	// add cell
 	m_map.insert(std::make_pair(name, CCell()));
+
+	// add name
+	m_nameToCanonicalName.insert(std::make_pair(name, name));
+
+	return true;
 }
 
 void					CConfig::removeScreen(const CString& name)
 {
-	CCellMap::iterator index = m_map.find(name);
+	// get canonical name and find cell
+	CString canonical = getCanonicalName(name);
+	CCellMap::iterator index = m_map.find(canonical);
 	if (index == m_map.end()) {
-		assert(0 && "name not in map");	// FIXME -- throw instead
+		return;
 	}
 
 	// remove from map
@@ -39,42 +49,111 @@ void					CConfig::removeScreen(const CString& name)
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
 		CCell& cell = index->second;
 		for (SInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i)
-			if (cell.m_neighbor[i] == name) {
+			if (getCanonicalName(cell.m_neighbor[i]) == canonical) {
 				cell.m_neighbor[i].erase();
 			}
+	}
+
+	// remove aliases (and canonical name)
+	for (CNameMap::iterator index = m_nameToCanonicalName.begin();
+								index != m_nameToCanonicalName.end(); ) {
+		if (index->second == canonical) {
+			m_nameToCanonicalName.erase(index++);
+		}
+		else {
+			++index;
+		}
 	}
 }
 
 void					CConfig::removeAllScreens()
 {
 	m_map.clear();
+	m_nameToCanonicalName.clear();
 }
 
-void					CConfig::connect(const CString& srcName,
+bool					CConfig::addAlias(const CString& canonical,
+								const CString& alias)
+{
+	// alias name must not exist
+	if (m_nameToCanonicalName.find(alias) != m_nameToCanonicalName.end()) {
+		return false;
+	}
+
+	// canonical name must be known
+	if (m_nameToCanonicalName.find(canonical) == m_nameToCanonicalName.end()) {
+		return false;
+	}
+
+	// insert alias
+	m_nameToCanonicalName.insert(std::make_pair(alias, canonical));
+
+	return true;
+}
+
+bool					CConfig::removeAlias(const CString& alias)
+{
+	// must not be a canonical name
+	if (m_map.find(alias) != m_map.end()) {
+		return false;
+	}
+
+	// find alias
+	CNameMap::iterator index = m_nameToCanonicalName.find(alias);
+	if (index == m_nameToCanonicalName.end()) {
+		return false;
+	}
+
+	// remove alias
+	m_nameToCanonicalName.erase(index);
+
+	return true;
+}
+
+void					CConfig::removeAllAliases()
+{
+	// remove all names
+	m_nameToCanonicalName.clear();
+
+	// put the canonical names back in
+	for (CCellMap::iterator index = m_map.begin();
+								index != m_map.end(); ++index) {
+		m_nameToCanonicalName.insert(
+								std::make_pair(index->first, index->first));
+	}
+}
+
+bool					CConfig::connect(const CString& srcName,
 								EDirection srcSide,
 								const CString& dstName)
 {
 	// find source cell
-	CCellMap::iterator index = m_map.find(srcName);
+	CCellMap::iterator index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
-		assert(0 && "name not in map");	// FIXME -- throw instead
+		return false;
 	}
 
-	// connect side (overriding any previous connection)
+	// connect side (overriding any previous connection).  we
+	// canonicalize in getNeighbor() instead of here because the
+	// destination name doesn't have to exist yet.
 	index->second.m_neighbor[srcSide - kFirstDirection] = dstName;
+
+	return true;
 }
 
-void					CConfig::disconnect(const CString& srcName,
+bool					CConfig::disconnect(const CString& srcName,
 								EDirection srcSide)
 {
 	// find source cell
 	CCellMap::iterator index = m_map.find(srcName);
 	if (index == m_map.end()) {
-		assert(0 && "name not in map");	// FIXME -- throw instead
+		return false;
 	}
 
 	// disconnect side
 	index->second.m_neighbor[srcSide - kFirstDirection].erase();
+
+	return true;
 }
 
 bool					CConfig::isValidScreenName(const CString& name) const
@@ -133,20 +212,37 @@ CConfig::const_iterator	CConfig::end() const
 
 bool					CConfig::isScreen(const CString& name) const
 {
-	return (m_map.count(name) > 0);
+	return (m_nameToCanonicalName.count(name) > 0);
+}
+
+bool					CConfig::isCanonicalName(const CString& name) const
+{
+	return CStringUtil::CaselessCmp::equal(getCanonicalName(name), name);
+}
+
+CString					CConfig::getCanonicalName(const CString& name) const
+{
+	CNameMap::const_iterator index = m_nameToCanonicalName.find(name);
+	if (index == m_nameToCanonicalName.end()) {
+		return CString();
+	}
+	else {
+		return index->second;
+	}
 }
 
 CString					CConfig::getNeighbor(const CString& srcName,
 								EDirection srcSide) const
 {
 	// find source cell
-	CCellMap::const_iterator index = m_map.find(srcName);
+	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
-		assert(0 && "name not in map");	// FIXME -- throw instead
+		return CString();
 	}
 
 	// return connection
-	return index->second.m_neighbor[srcSide - kFirstDirection];
+	return getCanonicalName(index->second.m_neighbor[
+								srcSide - kFirstDirection]);
 }
 
 const char*				CConfig::dirName(EDirection dir)
@@ -183,6 +279,7 @@ void					CConfig::readSection(std::istream& s)
 	static const char s_section[] = "section:";
 	static const char s_screens[] = "screens";
 	static const char s_links[]   = "links";
+	static const char s_aliases[] = "aliases";
 
 	CString line;
 	if (!readLine(s, line)) {
@@ -213,6 +310,9 @@ void					CConfig::readSection(std::istream& s)
 	else if (name == s_links) {
 		readSectionLinks(s);
 	}
+	else if (name == s_aliases) {
+		readSectionAliases(s);
+	}
 	else {
 		throw XConfigRead("unknown section name");
 	}
@@ -239,7 +339,9 @@ void					CConfig::readSectionScreens(std::istream& s)
 			}
 
 			// add the screen to the configuration
-			addScreen(name);
+			if (!addScreen(name)) {
+				throw XConfigRead("duplicate screen name");
+			}
 		}
 		else if (name.empty()) {
 			throw XConfigRead("argument before first screen");
@@ -266,9 +368,12 @@ void					CConfig::readSectionLinks(std::istream& s)
 			// strip :
 			screen = line.substr(0, line.size() - 1);
 
-			// verify we known about the screen
+			// verify we know about the screen
 			if (!isScreen(screen)) {
 				throw XConfigRead("unknown screen name");
+			}
+			if (!isCanonicalName(screen)) {
+				throw XConfigRead("cannot use screen name alias here");
 			}
 		}
 		else if (screen.empty()) {
@@ -328,6 +433,47 @@ void					CConfig::readSectionLinks(std::istream& s)
 	throw XConfigRead("unexpected end of links section");
 }
 
+void					CConfig::readSectionAliases(std::istream& s)
+{
+	CString line;
+	CString screen;
+	while (readLine(s, line)) {
+		// check for end of section
+		if (line == "end") {
+			return;
+		}
+
+		// see if it's the next screen
+		if (line[line.size() - 1] == ':') {
+			// strip :
+			screen = line.substr(0, line.size() - 1);
+
+			// verify we know about the screen
+			if (!isScreen(screen)) {
+				throw XConfigRead("unknown screen name");
+			}
+			if (!isCanonicalName(screen)) {
+				throw XConfigRead("cannot use screen name alias here");
+			}
+		}
+		else if (screen.empty()) {
+			throw XConfigRead("argument before first screen");
+		}
+		else {
+			// verify validity of screen name
+			if (!isValidScreenName(line)) {
+				throw XConfigRead("invalid screen alias");
+			}
+
+			// add alias
+			if (!addAlias(screen, line)) {
+				throw XConfigRead("alias is duplicate screen name");
+			}
+		}
+	}
+	throw XConfigRead("unexpected end of aliases section");
+}
+
 
 //
 // CConfig I/O
@@ -383,6 +529,33 @@ std::ostream&			operator<<(std::ostream& s, const CConfig& config)
 		}
 	}
 	s << "end" << std::endl;
+
+	// aliases section (if there are any)
+	if (config.m_map.size() != config.m_nameToCanonicalName.size()) {
+		// map canonical to alias
+		CConfig::CNameMap aliases;
+		for (CConfig::CNameMap::const_iterator
+								index = config.m_nameToCanonicalName.begin();
+								index != config.m_nameToCanonicalName.end();
+								++index) {
+			if (index->first != index->second) {
+				aliases.insert(std::make_pair(index->second, index->first));
+			}
+		}
+
+		// dump it
+		CString screen;
+		s << "section: aliases" << std::endl;
+		for (CConfig::CNameMap::const_iterator index = aliases.begin();
+								index != aliases.end(); ++index) {
+			if (index->first != screen) {
+				screen = index->first;
+				s << "\t" << screen.c_str() << std::endl;
+			}
+			s << "\t\t" << index->second.c_str() << std::endl;
+		}
+		s << "end" << std::endl;
+	}
 
 	return s;
 }

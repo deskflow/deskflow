@@ -6,6 +6,7 @@
 #include "XBase.h"
 #include <iosfwd>
 #include "stdmap.h"
+#include "stdset.h"
 
 class CConfig;
 
@@ -66,18 +67,33 @@ public:
 	// manipulators
 
 	// note that case is preserved in screen names but is ignored when
-	// comparing names.
+	// comparing names.  screen names and their aliases share a
+	// namespace and must be unique.
 
-	// add/remove screens
-	void				addScreen(const CString& name);
+	// add/remove screens.  addScreen() returns false if the name
+	// already exists.  the remove methods automatically remove
+	// aliases for the named screen and disconnect any connections
+	// to the removed screen(s).
+	bool				addScreen(const CString& name);
 	void				removeScreen(const CString& name);
 	void				removeAllScreens();
 
-	// connect edges
-	void				connect(const CString& srcName,
+	// add/remove alias for a screen name.  an alias can be used
+	// any place the canonical screen name can (except addScreen).
+	// addAlias() returns false if the alias name already exists
+	// or the canonical name is unknown.  removeAlias() fails if
+	// the alias is unknown or a canonical name.
+	bool				addAlias(const CString& canonical,
+								const CString& alias);
+	bool				removeAlias(const CString& alias);
+	void				removeAllAliases();
+
+	// connect/disconnect edges.  both return false if srcName is
+	// unknown.
+	bool				connect(const CString& srcName,
 								EDirection srcSide,
 								const CString& dstName);
-	void				disconnect(const CString& srcName,
+	bool				disconnect(const CString& srcName,
 								EDirection srcSide);
 
 	// accessors
@@ -85,15 +101,23 @@ public:
 	// returns true iff the given name is a valid screen name.
 	bool				isValidScreenName(const CString&) const;
 
-	// iterators over screen names
+	// iterators over (canonical) screen names
 	const_iterator		begin() const;
 	const_iterator		end() const;
 
 	// returns true iff name names a screen
 	bool				isScreen(const CString& name) const;
 
+	// returns true iff name is the canonical name of a screen
+	bool				isCanonicalName(const CString& name) const;
+
+	// returns the canonical name of a screen or the empty string if
+	// the name is unknown.  returns the canonical name if one is given.
+	CString				getCanonicalName(const CString& name) const;
+
 	// get the neighbor in the given direction.  returns the empty string
-	// if there is no neighbor in that direction.
+	// if there is no neighbor in that direction.  returns the canonical
+	// screen name.
 	CString				getNeighbor(const CString&, EDirection) const;
 
 	// read/write a configuration.  operator>> will throw XConfigRead
@@ -109,9 +133,13 @@ private:
 	void				readSection(std::istream&);
 	void				readSectionScreens(std::istream&);
 	void				readSectionLinks(std::istream&);
+	void				readSectionAliases(std::istream&);
 
 private:
+	typedef std::map<CString, CString, CStringUtil::CaselessCmp> CNameMap;
+
 	CCellMap			m_map;
+	CNameMap			m_nameToCanonicalName;
 };
 
 class XConfigRead : public XBase {

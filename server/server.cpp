@@ -394,14 +394,15 @@ static bool				loadConfig(const char* pathname, bool require)
 		log((CLOG_DEBUG "configuration read successfully"));
 		return true;
 	}
-	catch (XConfigRead&) {
+	catch (XConfigRead& e) {
 		if (require) {
-			log((CLOG_PRINT "%s: cannot read configuration '%s'",
-								pname, pathname));
+			log((CLOG_PRINT "%s: cannot read configuration '%s': %s",
+								pname, pathname, e.what()));
 			bye(3);
 		}
 		else {
-			log((CLOG_DEBUG "cannot read configuration \"%s\"", pathname));
+			log((CLOG_DEBUG "cannot read configuration \"%s\": %s",
+								pathname, e.what()));
 		}
 	}
 	return false;

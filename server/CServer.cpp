@@ -171,38 +171,31 @@ bool					CServer::setConfig(const CConfig& config)
 		}
 
 		// get the set of screens that are connected but are being
-		// dropped from the configuration.  don't add the primary
-		// screen.  also tell the secondary screen to disconnect.
+		// dropped from the configuration (or who's canonical name
+		// is changing).  don't add the primary screen.  also tell
+		// the secondary screen to disconnect.
 		for (CScreenList::const_iterator index = m_screens.begin();
 								index != m_screens.end(); ++index) {
-			if (!config.isScreen(index->first) &&
-				index->second != m_primaryInfo) {
+			if (index->second != m_primaryInfo &&
+				!config.isCanonicalName(index->first)) {
 				assert(index->second->m_protocol != NULL);
 				index->second->m_protocol->sendClose();
 				threads.push_back(index->second->m_thread);
 			}
 		}
+	}
 
-		// wait a moment to allow each secondary screen to close
-		// its connection before we close it (to avoid having our
-		// socket enter TIME_WAIT).
-		if (threads.size() > 0) {
-			CThread::sleep(1.0);
-		}
+	// wait a moment to allow each secondary screen to close
+	// its connection before we close it (to avoid having our
+	// socket enter TIME_WAIT).
+	if (threads.size() > 0) {
+		CThread::sleep(1.0);
+	}
 
-		// cancel the old secondary screen threads
-		for (CThreads::iterator index = threads.begin();
+	// cancel the old secondary screen threads
+	for (CThreads::iterator index = threads.begin();
 								index != threads.end(); ++index) {
-			index->cancel();
-		}
-
-		// cut over
-		m_config = config;
-
-		// tell primary screen about reconfiguration
-		if (m_primary != NULL) {
-			m_primary->onConfigure();
-		}
+		index->cancel();
 	}
 
 	// wait for old secondary screen threads to disconnect.  must
@@ -211,6 +204,15 @@ bool					CServer::setConfig(const CConfig& config)
 	for (CThreads::iterator index = threads.begin();
 								index != threads.end(); ++index) {
 		index->wait();
+	}
+
+	// cut over
+	CLock lock(&m_mutex);
+	m_config = config;
+
+	// tell primary screen about reconfiguration
+	if (m_primary != NULL) {
+		m_primary->onConfigure();
 	}
 
 	return true;
@@ -280,7 +282,8 @@ void					CServer::setInfoNoLock(const CString& screen,
 	assert(zoneSize >= 0);
 
 	// screen must be connected
-	CScreenList::iterator index = m_screens.find(screen);
+	CString screenName = m_config.getCanonicalName(screen);
+	CScreenList::iterator index = m_screens.find(screenName);
 	if (index == m_screens.end()) {
 		throw XBadClient();
 	}
@@ -339,14 +342,15 @@ void					CServer::grabClipboardNoLock(
 	CClipboardInfo& clipboard = m_clipboards[id];
 
 	// screen must be connected
-	CScreenList::iterator index = m_screens.find(screen);
+	CString screenName = m_config.getCanonicalName(screen);
+	CScreenList::iterator index = m_screens.find(screenName);
 	if (index == m_screens.end()) {
 		throw XBadClient();
 	}
 
 	// ignore grab if sequence number is old.  always allow primary
 	// screen to grab.
-	if (screen != m_primaryInfo->m_name &&
+	if (screenName != m_primaryInfo->m_name &&
 		seqNum < clipboard.m_clipboardSeqNum) {
 		log((CLOG_INFO "ignored screen \"%s\" grab of clipboard %d", screen.c_str(), id));
 		return;
@@ -354,7 +358,7 @@ void					CServer::grabClipboardNoLock(
 
 	// mark screen as owning clipboard
 	log((CLOG_INFO "screen \"%s\" grabbed clipboard %d from \"%s\"", screen.c_str(), id, clipboard.m_clipboardOwner.c_str()));
-	clipboard.m_clipboardOwner  = screen;
+	clipboard.m_clipboardOwner  = screenName;
 	clipboard.m_clipboardSeqNum = seqNum;
 
 	// no screens have the new clipboard except the sender
@@ -363,7 +367,7 @@ void					CServer::grabClipboardNoLock(
 
 	// tell all other screens to take ownership of clipboard
 	for (index = m_screens.begin(); index != m_screens.end(); ++index) {
-		if (index->first != screen) {
+		if (index->first != screenName) {
 			CScreenInfo* info = index->second;
 			if (info->m_protocol == NULL) {
 				m_primary->grabClipboard(id);
@@ -1460,19 +1464,21 @@ CServer::CScreenInfo*	CServer::addConnection(
 
 	CLock lock(&m_mutex);
 
-	// can only have one screen with a given name at any given time
-	if (m_screens.count(name) != 0) {
-		throw XDuplicateClient(name);
-	}
-
 	// name must be in our configuration
 	if (!m_config.isScreen(name)) {
 		throw XUnknownClient(name);
 	}
+	CString screenName = m_config.getCanonicalName(name);
+
+	// can only have one screen with a given name at any given time
+	if (m_screens.count(screenName) != 0) {
+		throw XDuplicateClient(name);
+	}
 
 	// save screen info
-	CScreenInfo* newScreen = new CScreenInfo(name, protocol);
-	m_screens.insert(std::make_pair(name, newScreen));
+	CScreenInfo* newScreen = new CScreenInfo(screenName, protocol);
+	m_screens.insert(std::make_pair(screenName, newScreen));
+	log((CLOG_DEBUG "added connection \"%s\" (\"%s\")", name.c_str(), screenName.c_str()));
 
 	return newScreen;
 }
@@ -1483,7 +1489,8 @@ void					CServer::removeConnection(const CString& name)
 	CLock lock(&m_mutex);
 
 	// find screen info
-	CScreenList::iterator index = m_screens.find(name);
+	CString screenName = m_config.getCanonicalName(name);
+	CScreenList::iterator index = m_screens.find(screenName);
 	assert(index != m_screens.end());
 
 	// if this is active screen then we have to jump off of it
