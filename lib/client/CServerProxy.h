@@ -128,7 +128,6 @@ private:
 	SInt32				m_xMouse, m_yMouse;
 
 	bool				m_ignoreMouse;
-	bool				m_ignoreNumLock;
 
 	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
 	double				m_heartRate;
