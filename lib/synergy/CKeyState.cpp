@@ -510,7 +510,6 @@ CKeyState::updateKeyState(KeyButton serverID, KeyButton localID, bool press)
 			// never report half-duplex keys as down
 			if (isHalfDuplex(mask)) {
 				m_keys[localID] &= ~kDown;
-				press            = true;
 			}
 
 			// toggle on the press
