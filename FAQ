@@ -4,7 +4,7 @@ Synergy Frequently Asked Questions
 Questions
 ---------
 1.  Why doesn't ctrl+alt+del work on secondary screens?
-2.  Can the server and client be on different operating systems?
+2.  Can the server and client be using different operating systems?
 3.  What's the difference between synergy and x2x, x2vnc, etc?
 4.  What does "Cannot initialize hook library" mean?
 5.  What security/encryption does synergy provide?
@@ -13,7 +13,8 @@ Questions
 8.  Can synergy share the display in addition to the mouse and keyboard?
 9.  Can synergy do drag and drop between computers?
 10. Do AltGr or Mode-Switch work?
-11. Why isn't synergy ported to platform X?
+11. Why isn't synergy ported to platform XYZ?
+12. My client can't connect.  What's wrong?
 
 
 Answers
@@ -27,7 +28,7 @@ Answers
     Future versions may add support for or some equivalent to
     ctrl+alt+del.
 
-2.  Can the server and client be on different operating systems?
+2.  Can the server and client be using different operating systems?
 
     Yes.  The synergy network protocol is platform neutral so
     synergy doesn't care what operating systems are running on
@@ -116,10 +117,21 @@ Answers
     on Windows and are having trouble with Ctrl+Alt_L = AltGr, try using
     the right Alt key as AltGr instead.
 
-11. Why isn't synergy ported to platform X?
+11. Why isn't synergy ported to platform XYZ?
 
-    Probably because the developers don't have access to platform X
-    and/or are unfamiliar with development on X.  Also, synergy has
+    Probably because the developers don't have access to platform XYZ
+    and/or are unfamiliar with development on XYZ.  Also, synergy has
     inherently non-portable aspects so there's a not insignificant
     effort involved in porting.
 
+12. My client can't connect.  What's wrong?
+
+    A common mistake when starting the client is to give the wrong
+    server host name.  The last synergyc command line option (Unix)
+    or the "Server Host Name" edit field (Windows) should be the
+    host name (or IP address) of the server *not* the client's host
+    name.  If you get the error "connection failed: cannot connect
+    socket" followed by "the attempt to connect was forcefully
+    rejected" or "connection refused" then the server isn't started,
+    can't bind the address, or the client is connecting to the wrong
+    host name/address or port.
