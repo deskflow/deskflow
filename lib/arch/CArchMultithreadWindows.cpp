@@ -378,7 +378,12 @@ CArchMultithreadWindows::setPriorityOfThread(CArchThread thread, int n)
 		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_HIGHEST      },
 		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_TIME_CRITICAL}
 	};
+#if defined(_DEBUG)
+	// don't use really high priorities when debugging
+	static const size_t s_pMax  = 13;
+#else
 	static const size_t s_pMax  = sizeof(s_pClass) / sizeof(s_pClass[0]) - 1;
+#endif
 	static const size_t s_pBase = 8;	// index of normal priority
 
 	assert(thread != NULL);
