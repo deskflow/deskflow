@@ -18,6 +18,7 @@
 #include "XArchWindows.h"
 
 static const int s_family[] = {
+	PF_UNSPEC,
 	PF_INET
 };
 static const int s_type[] = {
