@@ -19,7 +19,7 @@ AC_CONFIG_AUX_DIR(config)
 dnl current version
 MAJOR_VERSION=1
 MINOR_VERSION=1
-RELEASE_VERSION=4
+RELEASE_VERSION=5
 
 dnl initialize automake
 AM_INIT_AUTOMAKE(synergy, $MAJOR_VERSION.$MINOR_VERSION.$RELEASE_VERSION)
@@ -106,17 +106,6 @@ LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $PTHREAD_LIBS $LIBS"
 
 AC_OUTPUT([
 Makefile
-lib/Makefile
-lib/arch/Makefile
-lib/base/Makefile
-lib/common/Makefile
-lib/mt/Makefile
-lib/io/Makefile
-lib/net/Makefile
-lib/synergy/Makefile
-lib/platform/Makefile
-lib/client/Makefile
-lib/server/Makefile
 cmd/Makefile
 cmd/launcher/Makefile
 cmd/synergyc/Makefile
@@ -126,4 +115,15 @@ dist/nullsoft/Makefile
 dist/rpm/Makefile
 dist/rpm/synergy.spec
 doc/doxygen.cfg
+lib/Makefile
+lib/arch/Makefile
+lib/base/Makefile
+lib/client/Makefile
+lib/common/Makefile
+lib/io/Makefile
+lib/mt/Makefile
+lib/net/Makefile
+lib/platform/Makefile
+lib/server/Makefile
+lib/synergy/Makefile
 ])
