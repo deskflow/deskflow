@@ -1,22 +1,24 @@
-nedit doesn't seem to be playing nice with the motif clipboard lock
-  it's not releasing it
-  may need to learn more about how the motif clipboard lock works
-  not sure if this a new problem with synergy or a problem with new nedit
+not handling large motif selections
+  don't know protocol for transfer
+
+---
+not handling international characters
+
+---
+try to determine X11 keyboard quirks automatically
+  in particular, set the half-duplex flags
+  maybe KBD extension will help determine this
+
+bug with half-duplex keys
+  win32 server sent num-lock to grace
+  grace converts to half-duplex so only synthesizes key down
+  now grace starts server and is locked to screen
+  grace should ignore half duplex keys when seeing if locked to screen
 
 ---
 enable heartbeat disconnection or remove heartbeat sending in client
   should either ship with it fully enabled or fully disabled
   possibly make it part of startup negotiation
-
----
-not handling large motif selections
-  there must be a limit because properties can only be so big
-  don't know protocol for transfer, though
-
----
-synergy should never restart if X server connection was lost?
-  if synergy server connection was lost then restart
-    unless --no-restart
 
 ---
 use automake
@@ -31,10 +33,6 @@ HTTP stuff
   provide way to kill/restart server via HTTP
   provide way to query why locked to screen?
     handy for debugging at least
-
----
-hot keys
-  should have keyboard shortcuts to jump to screens
 
 ---
 win32:
@@ -58,13 +56,6 @@ desktop switcher program failure when running synergy as service
   don't know why
 
 ---
-bug with half-duplex keys
-  win32 server sent num-lock to grace
-  grace converts to half-duplex so only synthesizes key down
-  now grace starts server and is locked to screen
-  grace should ignore half duplex keys when seeing if locked to screen
-
----
 bug in updating screens
   saw a goofy set of screens after update
   i think the config was similar to:
@@ -73,13 +64,14 @@ bug in updating screens
     D E
 
 ---
+hot keys
+  should have keyboard shortcuts to jump to screens
+
+---
 should switch to user nobody (or something similar) if running as root
   for security reasons
   will make it impossible to overwrite /etc/synergy.conf
     if that file is only root writable (as it should be)
-
----
-not handling international characters
 
 ---
 xscreensaver won't start if pointer on secondary screen
@@ -111,14 +103,6 @@ need timeout on CXWindowsClipboard::CReply objects
   assumption is that requestor is broken
 
 ---
-inconsistencies
-  exceptions
-    using getWhat() in some places to return a code, elsewhere returns message
-  references/pointers
-    should use pointers for any in/out parameter
-      but using references in some places
-
----
 avoid fullscreen transparent window on win32
   using CBT hook to discard activation/focus messages
     but it's not being called when we lose keyboard input
@@ -139,11 +123,6 @@ keyboard hook problems (win32)
   seem to be having problems with windows key now, too.  looks like
     a down is sent but not the corresponding up so secondary system
     thinks the key is always down.
-
----
-try to determine X11 keyboard quirks automatically
-  in particular, set the half-duplex flags
-  maybe KBD extension will help determine this
 
 ---
 key events sent to console on win me (95/98?) are very slow
