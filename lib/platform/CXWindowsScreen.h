@@ -156,6 +156,10 @@ private:
 	// keyboard stuff
 	CXWindowsKeyState*	m_keyState;
 
+	// input focus stuff
+	Window				m_lastFocus;
+	int					m_lastFocusRevert;
+
 	// input method stuff
 	XIM					m_im;
 	XIC					m_ic;

@@ -114,6 +114,8 @@ CXWindowsScreen::CXWindowsScreen(bool isPrimary) :
 	m_xCenter(0), m_yCenter(0),
 	m_xCursor(0), m_yCursor(0),
 	m_keyState(NULL),
+	m_lastFocus(None),
+	m_lastFocusRevert(RevertToNone),
 	m_im(NULL),
 	m_ic(NULL),
 	m_lastKeycode(0),
@@ -257,6 +259,13 @@ CXWindowsScreen::enter()
 	// keyboard if they're grabbed.
 	XUnmapWindow(m_display, m_window);
 
+	// set the input focus to what it had been when we took it
+	if (m_lastFocus != None) {
+		// the window may not exist anymore so ignore errors
+		CXWindowsUtil::CErrorLock lock(m_display);
+		XSetInputFocus(m_display, m_lastFocus, m_lastFocusRevert, CurrentTime);
+	}
+
 /* maybe call this if entering for the screensaver
 	// set keyboard focus to root window.  the screensaver should then
 	// pick up key events for when the user enters a password to unlock. 
@@ -304,6 +313,9 @@ CXWindowsScreen::leave()
 		XUnmapWindow(m_display, m_window);
 		return false;
 	}
+
+	// save current focus
+	XGetInputFocus(m_display, &m_lastFocus, &m_lastFocusRevert);
 
 	// take focus
 	XSetInputFocus(m_display, m_window, RevertToPointerRoot, CurrentTime);
