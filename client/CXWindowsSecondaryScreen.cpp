@@ -1,4 +1,6 @@
 #include "CXWindowsSecondaryScreen.h"
+#include "CXWindowsClipboard.h"
+#include "CXWindowsUtil.h"
 #include "CClient.h"
 #include "CThread.h"
 #include "CLog.h"
@@ -57,71 +59,6 @@ void					CXWindowsSecondaryScreen::run()
 			XUnmapWindow(display, m_window);
 			break;
 		}
-
-		case SelectionClear:
-			// we just lost the selection.  that means someone else
-			// grabbed the selection so this screen is now the
-			// selection owner.  report that to the server.
-			if (lostClipboard(xevent.xselectionclear.selection,
-								xevent.xselectionclear.time)) {
-				m_client->onClipboardChanged(getClipboardID(
-								xevent.xselectionclear.selection));
-			}
-			break;
-
-		case SelectionNotify:
-			// notification of selection transferred.  we shouldn't
-			// get this here because we handle them in the selection
-			// retrieval methods.  we'll just delete the property
-			// with the data (satisfying the usual ICCCM protocol).
-			if (xevent.xselection.property != None) {
-				CDisplayLock display(this);
-				XDeleteProperty(display, m_window, xevent.xselection.property);
-			}
-			break;
-
-		case SelectionRequest:
-			// somebody is asking for clipboard data
-			if (xevent.xselectionrequest.owner == m_window) {
-				addClipboardRequest(m_window,
-								xevent.xselectionrequest.requestor,
-								xevent.xselectionrequest.selection,
-								xevent.xselectionrequest.target,
-								xevent.xselectionrequest.property,
-								xevent.xselectionrequest.time);
-			}
-			else {
-				// unknown window.  return failure.
-				CDisplayLock display(this);
-				XEvent event;
-				event.xselection.type      = SelectionNotify;
-				event.xselection.display   = display;
-				event.xselection.requestor = xevent.xselectionrequest.requestor;
-				event.xselection.selection = xevent.xselectionrequest.selection;
-				event.xselection.target    = xevent.xselectionrequest.target;
-				event.xselection.property  = None;
-				event.xselection.time      = xevent.xselectionrequest.time;
-				XSendEvent(display, xevent.xselectionrequest.requestor,
-								False, 0, &event);
-			}
-			break;
-
-		case PropertyNotify:
-			// clipboard transfers involve property changes so forward
-			// the event to the superclass.  we only care about the
-			// deletion of properties.
-			if (xevent.xproperty.state == PropertyDelete) {
-				processClipboardRequest(xevent.xproperty.window,
-								xevent.xproperty.atom,
-								xevent.xproperty.time);
-			}
-			break;
-
-		case DestroyNotify:
-			// looks like one of the windows that requested a clipboard
-			// transfer has gone bye-bye.
-			destroyClipboardRequest(xevent.xdestroywindow.window);
-			break;
 		}
 	}
 }
@@ -315,12 +252,12 @@ void					CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 void					CXWindowsSecondaryScreen::setClipboard(
 								ClipboardID id, const IClipboard* clipboard)
 {
-	setDisplayClipboard(id, clipboard, m_window, getCurrentTime(m_window));
+	setDisplayClipboard(id, clipboard);
 }
 
 void					CXWindowsSecondaryScreen::grabClipboard(ClipboardID id)
 {
-	setDisplayClipboard(id, NULL, m_window, getCurrentTime(m_window));
+	setDisplayClipboard(id, NULL);
 }
 
 void					CXWindowsSecondaryScreen::getMousePos(
@@ -350,7 +287,7 @@ SInt32					CXWindowsSecondaryScreen::getJumpZoneSize() const
 void					CXWindowsSecondaryScreen::getClipboard(
 								ClipboardID id, IClipboard* clipboard) const
 {
-	getDisplayClipboard(id, clipboard, m_window, getCurrentTime(m_window));
+	getDisplayClipboard(id, clipboard);
 }
 
 void					CXWindowsSecondaryScreen::onOpenDisplay()
@@ -381,6 +318,13 @@ void					CXWindowsSecondaryScreen::onOpenDisplay()
 	leaveNoLock(display);
 }
 
+CXWindowsClipboard*		CXWindowsSecondaryScreen::createClipboard(
+								ClipboardID id)
+{
+	CDisplayLock display(this);
+	return new CXWindowsClipboard(display, m_window, id);
+}
+
 void					CXWindowsSecondaryScreen::onCloseDisplay()
 {
 	assert(m_window != None);
@@ -392,6 +336,13 @@ void					CXWindowsSecondaryScreen::onCloseDisplay()
 	// destroy window
 	XDestroyWindow(display, m_window);
 	m_window = None;
+}
+
+void					CXWindowsSecondaryScreen::onLostClipboard(
+								ClipboardID id)
+{
+	// tell client that the clipboard was grabbed locally
+	m_client->onClipboardChanged(id);
 }
 
 long					CXWindowsSecondaryScreen::getEventMask(Window w) const

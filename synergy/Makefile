@@ -23,6 +23,7 @@ CXXFILES = 				\
 	CTCPSocketFactory.cpp		\
 	CXWindowsClipboard.cpp		\
 	CXWindowsScreen.cpp		\
+	CXWindowsUtil.cpp		\
 	XSynergy.cpp			\
 	$(NULL)
 

@@ -5,9 +5,10 @@
 // CClipboard
 //
 
-CClipboard::CClipboard()
+CClipboard::CClipboard() : m_open(false), m_owner(false)
 {
 	open(0);
+	empty();
 	close();
 }
 
@@ -16,8 +17,10 @@ CClipboard::~CClipboard()
 	// do nothing
 }
 
-bool					CClipboard::open(Time time)
+bool					CClipboard::empty()
 {
+	assert(m_open);
+
 	// clear all data
 	for (SInt32 index = 0; index < kNumFormats; ++index) {
 		m_data[index]  = "";
@@ -25,60 +28,90 @@ bool					CClipboard::open(Time time)
 	}
 
 	// save time
+	m_timeOwned = m_time;
+
+	// we're the owner now
+	m_owner = true;
+
+	return true;
+}
+
+void					CClipboard::add(EFormat format, const CString& data)
+{
+	assert(m_open);
+	assert(m_owner);
+
+	m_data[format]  = data;
+	m_added[format] = true;
+}
+
+bool					CClipboard::open(Time time) const
+{
+	assert(!m_open);
+
+	m_open = true;
 	m_time = time;
 
 	return true;
 }
 
-void					CClipboard::close()
+void					CClipboard::close() const
 {
-	// do nothing
-}
+	assert(m_open);
 
-void					CClipboard::add(EFormat format, const CString& data)
-{
-	m_data[format]  = data;
-	m_added[format] = true;
+	m_open = false;
 }
 
 CClipboard::Time		CClipboard::getTime() const
 {
-	return m_time;
+	return m_timeOwned;
 }
 
 bool					CClipboard::has(EFormat format) const
 {
+	assert(m_open);
 	return m_added[format];
 }
 
 CString					CClipboard::get(EFormat format) const
 {
+	assert(m_open);
 	return m_data[format];
 }
 
-void					CClipboard::copy(IClipboard* dst, const IClipboard* src)
+bool					CClipboard::copy(IClipboard* dst, const IClipboard* src)
 {
 	assert(dst != NULL);
 	assert(src != NULL);
 
-	copy(dst, src, src->getTime());
+	return copy(dst, src, src->getTime());
 }
 
-void					CClipboard::copy(IClipboard* dst,
+bool					CClipboard::copy(IClipboard* dst,
 								const IClipboard* src, Time time)
 {
 	assert(dst != NULL);
 	assert(src != NULL);
 
-	if (dst->open(time)) {
-		for (SInt32 format = 0; format != IClipboard::kNumFormats; ++format) {
-			IClipboard::EFormat eFormat = (IClipboard::EFormat)format;
-			if (src->has(eFormat)) {
-				dst->add(eFormat, src->get(eFormat));
+	bool success = false;
+	if (src->open(time)) {
+		if (dst->open(time)) {
+			if (dst->empty()) {
+				for (SInt32 format = 0;
+								format != IClipboard::kNumFormats; ++format) {
+					IClipboard::EFormat eFormat = (IClipboard::EFormat)format;
+					if (src->has(eFormat)) {
+						dst->add(eFormat, src->get(eFormat));
+					}
+				}
+				success = true;
 			}
+			dst->close();
 		}
-		dst->close();
+		src->close();
 	}
+
+	return success;
 }
 
 void					CClipboard::unmarshall(const CString& data, Time time)
@@ -87,6 +120,7 @@ void					CClipboard::unmarshall(const CString& data, Time time)
 
 	// clear existing data
 	open(time);
+	empty();
 
 	// read the number of formats
 	const UInt32 numFormats = readUInt32(index);

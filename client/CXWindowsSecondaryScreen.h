@@ -3,6 +3,7 @@
 
 #include "CXWindowsScreen.h"
 #include "ISecondaryScreen.h"
+#include <map>
 #include <vector>
 
 class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen {
@@ -35,7 +36,10 @@ public:
 protected:
 	// CXWindowsScreen overrides
 	virtual void		onOpenDisplay();
+	virtual CXWindowsClipboard*
+						createClipboard(ClipboardID);
 	virtual void		onCloseDisplay();
+	virtual void		onLostClipboard(ClipboardID);
 	virtual long		getEventMask(Window) const;
 
 private:

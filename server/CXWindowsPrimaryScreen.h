@@ -30,7 +30,10 @@ public:
 protected:
 	// CXWindowsScreen overrides
 	virtual void		onOpenDisplay();
+	virtual CXWindowsClipboard*
+						createClipboard(ClipboardID);
 	virtual void		onCloseDisplay();
+	virtual void		onLostClipboard(ClipboardID);
 	virtual long		getEventMask(Window) const;
 
 private:
