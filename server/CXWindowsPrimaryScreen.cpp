@@ -202,16 +202,30 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 //	m_numLockHalfDuplex  = true;
 //	m_capsLockHalfDuplex = true;
 
-	// update key state
+	// get screen size
+	SInt32 w, h;
+	getScreenSize(&w, &h);
+
+	int x, y;
 	{
 		CDisplayLock display(this);
+
+		// update key state
 		updateModifierMap(display);
+
+		// get mouse position
+		Window root, window;
+		int xWindow, yWindow;
+		unsigned int mask;
+		if (!XQueryPointer(display, m_window, &root, &window,
+								&x, &y, &xWindow, &yWindow, &mask)) {
+			x = w >> 1;
+			y = h >> 1;
+		}
 	}
 
 	// send screen info
-	SInt32 w, h;
-	getScreenSize(&w, &h);
-	m_server->setInfo(w, h, getJumpZoneSize(), 0, 0);
+	m_server->setInfo(w, h, getJumpZoneSize(), x, y);
 }
 
 void					CXWindowsPrimaryScreen::close()

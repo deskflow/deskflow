@@ -111,7 +111,9 @@ void					CMSWindowsPrimaryScreen::open(CServer* server)
 	// send screen info
 	SInt32 w, h;
 	getScreenSize(&w, &h);
-	m_server->setInfo(w, h, getJumpZoneSize(), 0, 0);
+	POINT pos;
+	GetCursorPos(&pos);
+	m_server->setInfo(w, h, getJumpZoneSize(), pos.x, pos.y);
 
 	// compute center pixel of screen
 	m_xCenter = w >> 1;

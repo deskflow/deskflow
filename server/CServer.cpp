@@ -894,9 +894,11 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 	}
 	assert(lastGoodScreen != NULL);
 
+/* allow screen to be it's own neighbor to allow wrapping
 	// no neighbor if best neighbor is the source itself
 	if (lastGoodScreen == src)
 		return NULL;
+*/
 
 	// if entering primary screen then be sure to move in far enough
 	// to avoid the jump zone.  if entering a side that doesn't have
