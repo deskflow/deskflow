@@ -4,6 +4,7 @@
 #include "CLog.h"
 #include <assert.h>
 #include <X11/X.h>
+#include <X11/Xutil.h>
 
 //
 // CXWindowsPrimaryScreen
@@ -40,10 +41,17 @@ void					CXWindowsPrimaryScreen::run()
 			break;
 		  }
 
+		  case MappingNotify: {
+			// keyboard mapping changed
+			CDisplayLock display(this);
+			XRefreshKeyboardMapping(&xevent.xmapping);
+			break;
+		  }
+
 		  case KeyPress: {
 			log((CLOG_DEBUG "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
-			const KeyID key = mapKey(xevent.xkey.keycode, mask);
+			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
 				m_server->onKeyDown(key, mask);
 			}
@@ -55,7 +63,7 @@ void					CXWindowsPrimaryScreen::run()
 		  case KeyRelease: {
 			log((CLOG_DEBUG "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
-			const KeyID key = mapKey(xevent.xkey.keycode, mask);
+			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
 				m_server->onKeyUp(key, mask);
 			}
@@ -406,33 +414,31 @@ KeyModifierMask			CXWindowsPrimaryScreen::mapModifier(
 {
 	// FIXME -- should be configurable
 	KeyModifierMask mask = 0;
-	if (state & 1)
+	if (state & ShiftMask)
 		mask |= KeyModifierShift;
-	if (state & 2)
+	if (state & LockMask)
 		mask |= KeyModifierCapsLock;
-	if (state & 4)
+	if (state & ControlMask)
 		mask |= KeyModifierControl;
-	if (state & 8)
+	if (state & Mod1Mask)
 		mask |= KeyModifierAlt;
-	if (state & 16)
+	if (state & Mod2Mask)
 		mask |= KeyModifierNumLock;
-	if (state & 32)
+	if (state & Mod4Mask)
 		mask |= KeyModifierMeta;
-	if (state & 128)
+	if (state & Mod5Mask)
 		mask |= KeyModifierScrollLock;
 	return mask;
 }
 
-KeyID					CXWindowsPrimaryScreen::mapKey(
-								KeyCode keycode, KeyModifierMask mask) const
+KeyID					CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 {
-	int index;
-	if (mask & KeyModifierShift)
-		index = 1;
-	else
-		index = 0;
+	KeySym keysym;
+	char dummy[1];
+
 	CDisplayLock display(this);
-	return static_cast<KeyID>(XKeycodeToKeysym(display, keycode, index));
+	XLookupString(event, dummy, 0, &keysym, NULL);
+	return static_cast<KeyID>(keysym);
 }
 
 ButtonID				CXWindowsPrimaryScreen::mapButton(

@@ -36,7 +36,7 @@ class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 								SInt32 xAbsolute, SInt32 yAbsolute);
 
 	KeyModifierMask		mapModifier(unsigned int state) const;
-	KeyID				mapKey(KeyCode, KeyModifierMask) const;
+	KeyID				mapKey(XKeyEvent*) const;
 	ButtonID			mapButton(unsigned int button) const;
 
   private:

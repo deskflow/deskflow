@@ -6,7 +6,7 @@
 // type to hold a key identifier
 typedef UInt32			KeyID;
 
-// type to hold bitmask of key modifiers (i.e. shift keys)
+// type to hold bitmask of key modifiers (e.g. shift keys)
 typedef UInt32			KeyModifierMask;
 
 // key codes
