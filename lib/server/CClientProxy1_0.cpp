@@ -80,12 +80,10 @@ CClientProxy1_0::mainLoop()
 
 		// check if client has stopped sending heartbeats
 		if (n == (UInt32)-1) {
-/* FIXME -- disabled to avoid masking bugs
-			if (heartTimer.getTime() > kHeartDeath) {
+			if (kHeartDeath >= 0.0 && heartTimer.getTime() > kHeartDeath) {
 				log((CLOG_NOTE "client \"%s\" is dead", getName().c_str()));
 				return;
 			}
-*/
 			continue;
 		}
 

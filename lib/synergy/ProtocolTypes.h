@@ -13,10 +13,11 @@ static const UInt16		kDefaultPort = 24800;
 // maximum total length for greeting returned by client
 static const UInt32		kMaxHelloLength = 1024;
 
-// time between heartbeats (in seconds)
-static const double		kHeartRate = 2.0;
+// time between heartbeats (in seconds).  negative value disables
+// heartbeat.
+static const double		kHeartRate = -1.0;
 
-// time without a heartbeat that we call death
+// time without a heartbeat that constitutes death
 static const double		kHeartDeath = 3.0 * kHeartRate;
 
 // direction constants

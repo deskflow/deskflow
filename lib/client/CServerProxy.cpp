@@ -66,7 +66,8 @@ CServerProxy::mainLoop()
 			}
 
 			// check for time out
-			if (n == (UInt32)-1 || heartbeat.getTime() > kHeartRate) {
+			if (n == (UInt32)-1 ||
+				(kHeartRate >= 0.0 && heartbeat.getTime() > kHeartRate)) {
 				// send heartbeat
 				CLock lock(&m_mutex);
 				CProtocolUtil::writef(getOutputStream(), kMsgCNoop);
