@@ -458,7 +458,7 @@ const KeyID COSXKeyState::s_virtualKey[] =
 
 COSXKeyState::COSXKeyState()
 {
-	// do nothing
+	setHalfDuplexMask(0);
 }
 
 COSXKeyState::~COSXKeyState()
@@ -494,6 +494,12 @@ COSXKeyState::sendKeyEvent(void* target,
 	}
 }
 
+void
+COSXKeyState::setHalfDuplexMask(KeyModifierMask mask)
+{
+	CKeyState::setHalfDuplexMask(mask | KeyModifierCapsLock);
+}
+
 bool
 COSXKeyState::fakeCtrlAltDel()
 {
@@ -518,10 +524,33 @@ COSXKeyState::doUpdateKeys()
 	// FIXME -- this probably needs to be more dynamic to support
 	// non-english keyboards.  also need to map modifiers needed
 	// for each KeyID.
+	// FIXME -- add one so we don't use KeyButton 0 (reserved to be no key)
 	for (UInt32 i = 0; i < sizeof(s_keys) / sizeof(s_keys[0]); ++i) {
 		m_keyMap.insert(std::make_pair(s_keys[i].m_keyID,
 							s_keys[i].m_button + 1));
 	}
+
+	// add modifiers
+	KeyButtons keys;
+	addKeyButton(keys, kKeyShift_L);
+	addKeyButton(keys, kKeyShift_R);
+	addModifier(KeyModifierShift, keys);
+	keys.clear();
+	addKeyButton(keys, kKeyControl_L);
+	addKeyButton(keys, kKeyControl_R);
+	addModifier(KeyModifierControl, keys);
+	keys.clear();
+	addKeyButton(keys, kKeyAlt_L);
+	addKeyButton(keys, kKeyAlt_R);
+	addModifier(KeyModifierAlt, keys);
+	keys.clear();
+	addKeyButton(keys, kKeySuper_L);
+	addKeyButton(keys, kKeySuper_R);
+	addModifier(KeyModifierSuper, keys);
+	keys.clear();
+	addKeyButton(keys, kKeyCapsLock);
+	addModifier(KeyModifierCapsLock, keys);
+	keys.clear();
 }
 
 void
@@ -529,6 +558,7 @@ COSXKeyState::doFakeKeyEvent(KeyButton button, bool press, bool isAutoRepeat)
 {
 	LOG((CLOG_DEBUG2 "doFakeKeyEvent button:%d, press:%d", button, press));
 	// let system figure out character for us
+	// FIXME -- subtracting one because we added one in doUpdateKeys.
 	CGPostKeyboardEvent(0, static_cast<CGKeyCode>(button) - 1, press);
 }
 
@@ -618,7 +648,7 @@ COSXKeyState::mapKeyFromEvent(EventRef event, KeyModifierMask* maskOut) const
 	if (id != kKeyNone && c != 0)  {
 		// FIXME
 	}
-	
+
 	// map modifier key
 	if (maskOut != NULL) {
 		activeMask &= ~KeyModifierModeSwitch;
@@ -626,5 +656,59 @@ COSXKeyState::mapKeyFromEvent(EventRef event, KeyModifierMask* maskOut) const
 	}
 
 	return id;
-
 }
+
+void
+COSXKeyState::addKeyButton(KeyButtons& keys, KeyID id) const
+{
+	CKeyMap::const_iterator keyIndex = m_keyMap.find(id);
+	if (keyIndex == m_keyMap.end()) {
+		return;
+	}
+	// XXX -- subtract one because added one in doUpdateKeys
+	keys.push_back(keyIndex->second - 1);
+}
+
+void
+COSXKeyState::handleModifierKeys(void* target,
+				KeyModifierMask oldMask, KeyModifierMask newMask)
+{
+	// compute changed modifiers
+	KeyModifierMask changed = (oldMask ^ newMask);
+
+	// synthesize changed modifier keys
+	if ((changed & KeyModifierShift) != 0) {
+		handleModifierKey(target, kKeyShift_L,
+							(newMask & KeyModifierShift) != 0);
+	}
+	if ((changed & KeyModifierControl) != 0) {
+		handleModifierKey(target, kKeyControl_L,
+							(newMask & KeyModifierControl) != 0);
+	}
+	if ((changed & KeyModifierAlt) != 0) {
+		handleModifierKey(target, kKeyAlt_L,
+							(newMask & KeyModifierAlt) != 0);
+	}
+	if ((changed & KeyModifierSuper) != 0) {
+		handleModifierKey(target, kKeySuper_L,
+							(newMask & KeyModifierSuper) != 0);
+	}
+	if ((changed & KeyModifierCapsLock) != 0) {
+		handleModifierKey(target, kKeyCapsLock,
+							(newMask & KeyModifierCapsLock) != 0);
+	}
+}
+
+void
+COSXKeyState::handleModifierKey(void* target, KeyID id, bool down)
+{
+	CKeyMap::const_iterator keyIndex = m_keyMap.find(id);
+	if (keyIndex == m_keyMap.end()) {
+		return;
+	}
+	// FIXME -- subtract one because we added one in doUpdateKeys
+	KeyButton button = keyIndex->second - 1;
+	setKeyDown(button, down);
+	sendKeyEvent(target, down, false, id, getActiveModifiers(), 0, button);
+}
+

@@ -303,6 +303,12 @@ COSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 void
 COSXScreen::fakeMouseWheel(SInt32 delta) const
 {
+	// synergy uses a wheel step size of 120.  the mac uses a step size of 1.
+	delta /= 120;
+	if (delta == 0) {
+		return;
+	}
+
 	CFPropertyListRef pref = ::CFPreferencesCopyValue(
 							CFSTR("com.apple.scrollwheel.scaling") , 
 							kCFPreferencesAnyApplication, 
@@ -327,6 +333,8 @@ COSXScreen::fakeMouseWheel(SInt32 delta) const
 		CFRelease(pref);
 	}
 
+	// note that we ignore the magnitude of the delta.  i think this is to
+	// avoid local wheel acceleration.
 	if (delta < 0) {
 		wheelIncr = -wheelIncr;
 	}
@@ -799,15 +807,26 @@ COSXScreen::onKey(EventRef event) const
 {
 	UInt32 eventKind = GetEventKind(event);
 
+	// get the key
 	KeyButton button;
 	GetEventParameter(event, kEventParamKeyCode, typeUInt32,
 							NULL, sizeof(button), NULL, &button);
-		
+	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, button));
+
+	// sadly, OS X doesn't report the button for modifier keys.  button will
+	// be zero for modifier keys.  since that's not good enough we'll have
+	// to figure out what the key was.
+	if (button == 0 && eventKind == kEventRawKeyModifiersChanged) {
+		// get old and new modifier state
+		KeyModifierMask oldMask = getActiveModifiers();
+		KeyModifierMask newMask = mapMacModifiersToSynergy(event);
+		m_keyState->handleModifierKeys(getEventTarget(), oldMask, newMask);
+		return true;
+	}
+
 	bool down	  = (eventKind == kEventRawKeyDown);
 	bool up		  = (eventKind == kEventRawKeyUp);
 	bool isRepeat = (eventKind == kEventRawKeyRepeat);
-
-	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, button));
 	
 	if (down) {
 		m_keyState->setKeyDown(button, true);
@@ -840,6 +859,44 @@ COSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
 	}
 	
 	return kButtonNone;
+}
+
+KeyModifierMask
+COSXScreen::mapMacModifiersToSynergy(EventRef event) const
+{
+	// get native bit mask
+	UInt32 macMask;
+	GetEventParameter(event, kEventParamKeyModifiers, typeUInt32,
+							NULL, sizeof(macMask), NULL, &macMask);
+
+	// convert
+	KeyModifierMask outMask = 0;
+	if ((macMask & shiftKey) != 0) {
+		outMask |= KeyModifierShift;
+	}
+	if ((macMask & rightShiftKey) != 0) {
+		outMask |= KeyModifierShift;
+	}
+	if ((macMask & controlKey) != 0) {
+		outMask |= KeyModifierControl;
+	}
+	if ((macMask & rightControlKey) != 0) {
+		outMask |= KeyModifierControl;
+	}
+	if ((macMask & cmdKey) != 0) {
+		outMask |= KeyModifierAlt;
+	}
+	if ((macMask & optionKey) != 0) {
+		outMask |= KeyModifierSuper;
+	}
+	if ((macMask & rightOptionKey) != 0) {
+		outMask |= KeyModifierSuper;
+	}
+	if ((macMask & alphaLock) != 0) {
+		outMask |= KeyModifierCapsLock;
+	}
+
+	return outMask;
 }
 
 void

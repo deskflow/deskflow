@@ -36,13 +36,23 @@ public:
 	KeyID				mapKeyFromEvent(EventRef event,
 							KeyModifierMask* maskOut) const;
 
+	//! Handle modifier key change
+	/*!
+	Determines which modifier keys have changed and updates the modifier
+	state and sends key events as appropriate.
+	*/
+	void				handleModifierKeys(void* target,
+							KeyModifierMask oldMask, KeyModifierMask newMask);
+
 	// IKeyState overrides
+	virtual void		setHalfDuplexMask(KeyModifierMask);
 	virtual bool		fakeCtrlAltDel();
 	virtual const char*	getKeyName(KeyButton) const;
 	virtual void		sendKeyEvent(void* target,
 							bool press, bool isAutoRepeat,
 							KeyID key, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
+
 protected:
 	// IKeyState overrides
 	virtual void		doUpdateKeys();
@@ -56,6 +66,8 @@ private:
 	bool				adjustModifiers(Keystrokes& keys,
 							Keystrokes& undo,
 							KeyModifierMask desiredMask) const;
+	void				addKeyButton(KeyButtons& keys, KeyID id) const;
+	void				handleModifierKey(void* target, KeyID id, bool down);
 
 private:
 	typedef std::map<KeyID, KeyButton> CKeyMap;

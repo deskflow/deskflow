@@ -91,6 +91,9 @@ private:
 
 	// map mac mouse button to synergy buttons
 	ButtonID			mapMacButtonToSynergy(UInt16) const;
+
+	// map mac modifier mask to synergy modifier mask
+	KeyModifierMask		mapMacModifiersToSynergy(EventRef event) const;
 	
 	/// Resolution switch callback
 	static pascal void	displayManagerCallback(void* inUserData,
