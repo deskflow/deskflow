@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# Startup script for synergy client
+#
+# chkconfig: 5 98 02
+# description: Starts/stops synergy client when X server is started/stopped
+#
+# processname: synergy
+
+# startup command line arguments
+ARGS=192.168.1.3
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+case "$1" in
+  start)
+        echo -n "Starting synergy client: "
+        daemon synergy $ARGS
+        RETVAL=$?
+        echo
+        ;;
+  stop)
+        echo -n "Stopping synergy client: "
+        killproc synergy
+        RETVAL=$?
+        echo
+        ;;
+  status)
+        status synergy
+        RETVAL=$?
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        RETVAL=$?
+        ;;
+  *)
+        echo "Usage: synergy {start|stop|status|restart}"
+        exit 1
+esac
+
+exit $RETVAL

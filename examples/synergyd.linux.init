@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# Startup script for synergy server
+#
+# chkconfig: 5 98 02
+# description: Starts/stops synergy server when X server is started/stopped
+#
+# processname: synergyd
+
+# startup command line arguments
+ARGS=
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+case "$1" in
+  start)
+        echo -n "Starting synergy server: "
+        daemon synergyd $ARGS
+        RETVAL=$?
+        echo
+        ;;
+  stop)
+        echo -n "Stopping synergy server: "
+        killproc synergyd
+        RETVAL=$?
+        echo
+        ;;
+  status)
+        status synergyd
+        RETVAL=$?
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        RETVAL=$?
+        ;;
+  *)
+        echo "Usage: synergyd {start|stop|status|restart}"
+        exit 1
+esac
+
+exit $RETVAL
