@@ -4,8 +4,8 @@
 #include "BasicTypes.h"
 
 // protocol version number
-static const SInt16		kProtocolMajorVersion = 0;
-static const SInt16		kProtocolMinorVersion = 7;
+static const SInt16		kProtocolMajorVersion = 1;
+static const SInt16		kProtocolMinorVersion = 0;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;

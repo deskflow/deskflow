@@ -8,6 +8,10 @@ EXTRA_DIST =						\
 	CMSWindowsSecondaryScreen.h		\
 	$(NULL)
 
+MAINTAINERCLEANFILES =				\
+	Makefile.in						\
+	$(NULL)
+
 noinst_LIBRARIES = libclient.a
 libclient_a_SOURCES = 				\
 	CClient.cpp						\

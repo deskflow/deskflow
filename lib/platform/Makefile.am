@@ -25,6 +25,10 @@ EXTRA_DIST =								\
 	IMSWindowsScreenEventHandler.h			\
 	$(NULL)
 
+MAINTAINERCLEANFILES =						\
+	Makefile.in								\
+	$(NULL)
+
 noinst_LIBRARIES = libplatform.a
 libplatform_a_SOURCES = 					\
 	CPlatform.cpp							\

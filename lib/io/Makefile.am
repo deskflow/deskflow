@@ -2,8 +2,12 @@
 NULL =
 DEPTH = ../..
 
-EXTRA_DIST =				\
-	io.dsp					\
+EXTRA_DIST =					\
+	io.dsp						\
+	$(NULL)
+
+MAINTAINERCLEANFILES =			\
+	Makefile.in					\
 	$(NULL)
 
 noinst_LIBRARIES = libio.a

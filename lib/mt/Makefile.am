@@ -6,6 +6,10 @@ EXTRA_DIST =				\
 	mt.dsp					\
 	$(NULL)
 
+MAINTAINERCLEANFILES =		\
+	Makefile.in				\
+	$(NULL)
+
 noinst_LIBRARIES = libmt.a
 libmt_a_SOURCES = 			\
 	CLock.cpp				\

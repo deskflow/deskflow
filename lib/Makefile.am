@@ -2,7 +2,6 @@
 NULL =
 DEPTH = ..
 
-EXTRA_DIST =
 SUBDIRS =					\
 	base					\
 	mt						\
@@ -13,4 +12,11 @@ SUBDIRS =					\
 	platform				\
 	client					\
 	server					\
+	$(NULL)
+
+EXTRA_DIST =				\
+	$(NULL)
+
+MAINTAINERCLEANFILES =		\
+	Makefile.in				\
 	$(NULL)

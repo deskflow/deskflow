@@ -8,6 +8,10 @@ EXTRA_DIST =						\
 	CMSWindowsPrimaryScreen.h		\
 	$(NULL)
 
+MAINTAINERCLEANFILES =				\
+	Makefile.in						\
+	$(NULL)
+
 noinst_LIBRARIES = libserver.a
 libserver_a_SOURCES = 				\
 	CClientProxy.cpp				\

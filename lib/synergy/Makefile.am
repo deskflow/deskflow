@@ -6,6 +6,10 @@ EXTRA_DIST =					\
 	libsynergy.dsp				\
 	$(NULL)
 
+MAINTAINERCLEANFILES =			\
+	Makefile.in					\
+	$(NULL)
+
 noinst_LIBRARIES = libsynergy.a
 libsynergy_a_SOURCES = 			\
 	CInputPacketStream.cpp		\
@@ -30,7 +34,6 @@ libsynergy_a_SOURCES = 			\
 	KeyTypes.h					\
 	MouseTypes.h				\
 	ProtocolTypes.h				\
-	Version.h					\
 	XScreen.h					\
 	XSynergy.h					\
 	$(NULL)

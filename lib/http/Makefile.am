@@ -6,6 +6,10 @@ EXTRA_DIST =				\
 	http.dsp				\
 	$(NULL)
 
+MAINTAINERCLEANFILES =		\
+	Makefile.in				\
+	$(NULL)
+
 noinst_LIBRARIES = libhttp.a
 libhttp_a_SOURCES = 		\
 	CHTTPProtocol.cpp		\

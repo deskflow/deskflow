@@ -6,6 +6,10 @@ EXTRA_DIST =				\
 	base.dsp				\
 	$(NULL)
 
+MAINTAINERCLEANFILES =		\
+	Makefile.in				\
+	$(NULL)
+
 noinst_LIBRARIES = libbase.a
 libbase_a_SOURCES =			\
 	CFunctionJob.cpp		\
@@ -23,6 +27,7 @@ libbase_a_SOURCES =			\
 	IInterface.h			\
 	IJob.h					\
 	TMethodJob.h			\
+	Version.h				\
 	XBase.h					\
 	common.h				\
 	stdfstream.h			\

@@ -6,6 +6,10 @@ EXTRA_DIST =				\
 	net.dsp					\
 	$(NULL)
 
+MAINTAINERCLEANFILES =		\
+	Makefile.in				\
+	$(NULL)
+
 noinst_LIBRARIES = libnet.a
 libnet_a_SOURCES = 			\
 	CNetwork.cpp			\

@@ -2,8 +2,14 @@
 NULL =
 DEPTH = ..
 
-EXTRA_DIST =
 SUBDIRS =					\
 	synergy					\
 	synergyd				\
+	$(NULL)
+
+EXTRA_DIST =				\
+	$(NULL)
+
+MAINTAINERCLEANFILES =		\
+	Makefile.in				\
 	$(NULL)

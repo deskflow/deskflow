@@ -2,10 +2,14 @@
 NULL =
 DEPTH = ../..
 
-EXTRA_DIST =							\
-	synergyd.dsp						\
-	synergyd.rc							\
-	resource.h							\
+EXTRA_DIST =				\
+	synergyd.dsp			\
+	synergyd.rc				\
+	resource.h				\
+	$(NULL)
+
+MAINTAINERCLEANFILES =		\
+	Makefile.in				\
 	$(NULL)
 
 bin_PROGRAMS = synergyd

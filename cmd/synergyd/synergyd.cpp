@@ -242,12 +242,10 @@ void
 version()
 {
 	log((CLOG_PRINT
-"%s %d.%d.%d, protocol version %d.%d\n"
+"%s %s, protocol version %d.%d\n"
 "%s",
 								pname,
-								kMajorVersion,
-								kMinorVersion,
-								kReleaseVersion,
+								kVersion,
 								kProtocolMajorVersion,
 								kProtocolMinorVersion,
 								kCopyright));

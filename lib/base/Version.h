@@ -1,7 +1,12 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#include "BasicTypes.h"
+#include "common.h"
+
+// set version macro if not set yet
+#if !defined(VERSION)
+#	define VERSION "1.0.0"
+#endif
 
 // important strings
 static const char* kCopyright       = "Copyright (C) 2002 Chris Schoeneman";
@@ -10,9 +15,7 @@ static const char* kWebsite         = "";
 
 // build version.  follows linux kernel style:  an even minor number implies
 // a release version, odd implies development version.
-static const SInt16 kMajorVersion   = 0;
-static const SInt16 kMinorVersion   = 9;
-static const SInt16 kReleaseVersion = 7;
+static const char* kVersion			= VERSION;
 
 // exit codes
 static const int kExitSuccess		= 0;	// successful completion
