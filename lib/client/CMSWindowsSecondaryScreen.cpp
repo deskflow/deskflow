@@ -596,6 +596,31 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		}
 	}
 
+	// special handling of VK_SNAPSHOT
+	if ((virtualKey & 0xff) == VK_SNAPSHOT) {
+		// ignore key repeats on print screen
+		if (action != kRepeat) {
+			// get event flags
+			DWORD flags = 0;
+			if (isExtendedKey(virtualKey)) {
+				flags |= KEYEVENTF_EXTENDEDKEY;
+			}
+			if (action != kPress) {
+				flags |= KEYEVENTF_KEYUP;
+			}
+
+			// active window or fullscreen?
+			BYTE scan = 0;
+			if ((mask & KeyModifierAlt) == 0) {
+				scan = 1;
+			}
+
+			// send event
+			keybd_event(static_cast<BYTE>(virtualKey & 0xff), scan, flags, 0);
+		}
+		return m_mask;
+	}
+
 	// get output mask.  default output mask carries over the current
 	// toggle modifier states and includes desired shift, control, alt,
 	// and meta states.
@@ -992,7 +1017,7 @@ CMSWindowsSecondaryScreen::toggleKey(UINT virtualKey, KeyModifierMask mask)
 }
 
 UINT
-CMSWindowsSecondaryScreen::virtualKeyToScanCode(UINT& virtualKey)
+CMSWindowsSecondaryScreen::virtualKeyToScanCode(UINT& virtualKey) const
 {
 	// try mapping given virtual key
 	UINT code = MapVirtualKey(virtualKey & 0xff, 0);
@@ -1044,7 +1069,7 @@ CMSWindowsSecondaryScreen::virtualKeyToScanCode(UINT& virtualKey)
 }
 
 bool
-CMSWindowsSecondaryScreen::isExtendedKey(UINT virtualKey)
+CMSWindowsSecondaryScreen::isExtendedKey(UINT virtualKey) const
 {
 	// see if we've already encoded the extended flag
 	if ((virtualKey & 0x100) != 0) {
@@ -1079,5 +1104,5 @@ CMSWindowsSecondaryScreen::sendKeyEvent(UINT virtualKey, bool press)
 	const UINT code = virtualKeyToScanCode(virtualKey);
 	keybd_event(static_cast<BYTE>(virtualKey & 0xff),
 								static_cast<BYTE>(code), flags, 0);
-	log((CLOG_DEBUG2 "send key %d, 0x%04x, %s%s", virtualKey & 0xff, code, ((flags & KEYEVENTF_KEYUP) ? "release" : "press"), ((flags & KEYEVENTF_EXTENDEDKEY) ? " extended" : "")));
+	log((CLOG_DEBUG1 "send key %d, 0x%04x, %s%s", virtualKey & 0xff, code, ((flags & KEYEVENTF_KEYUP) ? "release" : "press"), ((flags & KEYEVENTF_EXTENDEDKEY) ? " extended" : "")));
 }

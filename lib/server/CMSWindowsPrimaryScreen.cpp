@@ -929,6 +929,15 @@ CMSWindowsPrimaryScreen::mapKey(
 		vkCode2 = vkCode;
 	}
 
+	// if the original vkCode is VK_SNAPSHOT then use it.  oddly enough,
+	// some keyboards use the same scan code for keypad multiply and
+	// print screen.  the difference is that the latter has the extended
+	// key flag set.  but MapVirtualKey() doesn't seem capable of using
+	// that flag.
+	else if (vkCode == VK_SNAPSHOT) {
+		vkCode2 = vkCode;
+	}
+
 	// if MapVirtualKey failed then use original virtual key
 	else if (vkCode2 == 0) {
 		vkCode2 = vkCode;

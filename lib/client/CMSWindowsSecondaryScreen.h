@@ -97,8 +97,8 @@ private:
 
 	void				releaseKeys();
 	void				toggleKey(UINT virtualKey, KeyModifierMask mask);
-	UINT				virtualKeyToScanCode(UINT& virtualKey);
-	bool				isExtendedKey(UINT virtualKey);
+	UINT				virtualKeyToScanCode(UINT& virtualKey) const;
+	bool				isExtendedKey(UINT virtualKey) const;
 	void				sendKeyEvent(UINT virtualKey, bool press);
 
 private:
