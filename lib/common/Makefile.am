@@ -17,6 +17,7 @@ EXTRA_DIST =				\
 	common.dsp				\
 	BasicTypes.h			\
 	IInterface.h			\
+	MacOSXPrecomp.h			\
 	common.h				\
 	stdbitset.h				\
 	stddeque.h				\
