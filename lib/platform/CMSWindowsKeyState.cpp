@@ -315,262 +315,262 @@ const char*				CMSWindowsKeyState::s_vkToName[] =
 // map virtual keys to synergy key enumeration
 const KeyID				CMSWindowsKeyState::s_virtualKey[][2] =
 {
-	/* 0x00 */ kKeyNone,		kKeyNone,		// reserved
-	/* 0x01 */ kKeyNone,		kKeyNone,		// VK_LBUTTON
-	/* 0x02 */ kKeyNone,		kKeyNone,		// VK_RBUTTON
-	/* 0x03 */ kKeyNone,		kKeyBreak,		// VK_CANCEL
-	/* 0x04 */ kKeyNone,		kKeyNone,		// VK_MBUTTON
-	/* 0x05 */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x06 */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x07 */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x08 */ kKeyBackSpace,	kKeyNone,		// VK_BACK
-	/* 0x09 */ kKeyTab,			kKeyNone,		// VK_TAB
-	/* 0x0a */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x0b */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x0c */ kKeyClear,		kKeyClear,		// VK_CLEAR
-	/* 0x0d */ kKeyReturn,		kKeyKP_Enter,	// VK_RETURN
-	/* 0x0e */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x0f */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x10 */ kKeyShift_L,		kKeyShift_R,	// VK_SHIFT
-	/* 0x11 */ kKeyControl_L,	kKeyControl_R,	// VK_CONTROL
-	/* 0x12 */ kKeyAlt_L,		kKeyAlt_R,		// VK_MENU
-	/* 0x13 */ kKeyPause,		kKeyNone,		// VK_PAUSE
-	/* 0x14 */ kKeyCapsLock,	kKeyNone,		// VK_CAPITAL
-	/* 0x15 */ kKeyNone,		kKeyNone,		// VK_KANA			
-	/* 0x16 */ kKeyNone,		kKeyNone,		// VK_HANGUL		
-	/* 0x17 */ kKeyNone,		kKeyNone,		// VK_JUNJA			
-	/* 0x18 */ kKeyNone,		kKeyNone,		// VK_FINAL			
-	/* 0x19 */ kKeyZenkaku,		kKeyNone,		// VK_KANJI			
-	/* 0x1a */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x1b */ kKeyEscape,		kKeyNone,		// VK_ESCAPE
-	/* 0x1c */ kKeyNone,		kKeyNone,		// VK_CONVERT		
-	/* 0x1d */ kKeyNone,		kKeyNone,		// VK_NONCONVERT	
-	/* 0x1e */ kKeyNone,		kKeyNone,		// VK_ACCEPT		
-	/* 0x1f */ kKeyNone,		kKeyNone,		// VK_MODECHANGE	
-	/* 0x20 */ kKeyNone,		kKeyNone,		// VK_SPACE
-	/* 0x21 */ kKeyKP_PageUp,	kKeyPageUp,		// VK_PRIOR
-	/* 0x22 */ kKeyKP_PageDown,	kKeyPageDown,	// VK_NEXT
-	/* 0x23 */ kKeyKP_End,		kKeyEnd,		// VK_END
-	/* 0x24 */ kKeyKP_Home,		kKeyHome,		// VK_HOME
-	/* 0x25 */ kKeyKP_Left,		kKeyLeft,		// VK_LEFT
-	/* 0x26 */ kKeyKP_Up,		kKeyUp,			// VK_UP
-	/* 0x27 */ kKeyKP_Right,	kKeyRight,		// VK_RIGHT
-	/* 0x28 */ kKeyKP_Down,		kKeyDown,		// VK_DOWN
-	/* 0x29 */ kKeySelect,		kKeySelect,		// VK_SELECT
-	/* 0x2a */ kKeyNone,		kKeyNone,		// VK_PRINT
-	/* 0x2b */ kKeyExecute,		kKeyExecute,	// VK_EXECUTE
-	/* 0x2c */ kKeyPrint,		kKeyPrint,		// VK_SNAPSHOT
-	/* 0x2d */ kKeyKP_Insert,	kKeyInsert,		// VK_INSERT
-	/* 0x2e */ kKeyKP_Delete,	kKeyDelete,		// VK_DELETE
-	/* 0x2f */ kKeyHelp,		kKeyHelp,		// VK_HELP
-	/* 0x30 */ kKeyNone,		kKeyNone,		// VK_0
-	/* 0x31 */ kKeyNone,		kKeyNone,		// VK_1
-	/* 0x32 */ kKeyNone,		kKeyNone,		// VK_2
-	/* 0x33 */ kKeyNone,		kKeyNone,		// VK_3
-	/* 0x34 */ kKeyNone,		kKeyNone,		// VK_4
-	/* 0x35 */ kKeyNone,		kKeyNone,		// VK_5
-	/* 0x36 */ kKeyNone,		kKeyNone,		// VK_6
-	/* 0x37 */ kKeyNone,		kKeyNone,		// VK_7
-	/* 0x38 */ kKeyNone,		kKeyNone,		// VK_8
-	/* 0x39 */ kKeyNone,		kKeyNone,		// VK_9
-	/* 0x3a */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x3b */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x3c */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x3d */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x3e */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x3f */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x40 */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x41 */ kKeyNone,		kKeyNone,		// VK_A
-	/* 0x42 */ kKeyNone,		kKeyNone,		// VK_B
-	/* 0x43 */ kKeyNone,		kKeyNone,		// VK_C
-	/* 0x44 */ kKeyNone,		kKeyNone,		// VK_D
-	/* 0x45 */ kKeyNone,		kKeyNone,		// VK_E
-	/* 0x46 */ kKeyNone,		kKeyNone,		// VK_F
-	/* 0x47 */ kKeyNone,		kKeyNone,		// VK_G
-	/* 0x48 */ kKeyNone,		kKeyNone,		// VK_H
-	/* 0x49 */ kKeyNone,		kKeyNone,		// VK_I
-	/* 0x4a */ kKeyNone,		kKeyNone,		// VK_J
-	/* 0x4b */ kKeyNone,		kKeyNone,		// VK_K
-	/* 0x4c */ kKeyNone,		kKeyNone,		// VK_L
-	/* 0x4d */ kKeyNone,		kKeyNone,		// VK_M
-	/* 0x4e */ kKeyNone,		kKeyNone,		// VK_N
-	/* 0x4f */ kKeyNone,		kKeyNone,		// VK_O
-	/* 0x50 */ kKeyNone,		kKeyNone,		// VK_P
-	/* 0x51 */ kKeyNone,		kKeyNone,		// VK_Q
-	/* 0x52 */ kKeyNone,		kKeyNone,		// VK_R
-	/* 0x53 */ kKeyNone,		kKeyNone,		// VK_S
-	/* 0x54 */ kKeyNone,		kKeyNone,		// VK_T
-	/* 0x55 */ kKeyNone,		kKeyNone,		// VK_U
-	/* 0x56 */ kKeyNone,		kKeyNone,		// VK_V
-	/* 0x57 */ kKeyNone,		kKeyNone,		// VK_W
-	/* 0x58 */ kKeyNone,		kKeyNone,		// VK_X
-	/* 0x59 */ kKeyNone,		kKeyNone,		// VK_Y
-	/* 0x5a */ kKeyNone,		kKeyNone,		// VK_Z
-	/* 0x5b */ kKeyNone,		kKeySuper_L,	// VK_LWIN
-	/* 0x5c */ kKeyNone,		kKeySuper_R,	// VK_RWIN
-	/* 0x5d */ kKeyMenu,		kKeyMenu,		// VK_APPS
-	/* 0x5e */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x5f */ kKeyNone,		kKeyNone,		// undefined
-	/* 0x60 */ kKeyKP_0,		kKeyNone,		// VK_NUMPAD0
-	/* 0x61 */ kKeyKP_1,		kKeyNone,		// VK_NUMPAD1
-	/* 0x62 */ kKeyKP_2,		kKeyNone,		// VK_NUMPAD2
-	/* 0x63 */ kKeyKP_3,		kKeyNone,		// VK_NUMPAD3
-	/* 0x64 */ kKeyKP_4,		kKeyNone,		// VK_NUMPAD4
-	/* 0x65 */ kKeyKP_5,		kKeyNone,		// VK_NUMPAD5
-	/* 0x66 */ kKeyKP_6,		kKeyNone,		// VK_NUMPAD6
-	/* 0x67 */ kKeyKP_7,		kKeyNone,		// VK_NUMPAD7
-	/* 0x68 */ kKeyKP_8,		kKeyNone,		// VK_NUMPAD8
-	/* 0x69 */ kKeyKP_9,		kKeyNone,		// VK_NUMPAD9
-	/* 0x6a */ kKeyKP_Multiply,	kKeyNone,		// VK_MULTIPLY
-	/* 0x6b */ kKeyKP_Add,		kKeyNone,		// VK_ADD
-	/* 0x6c */ kKeyKP_Separator,kKeyKP_Separator,// VK_SEPARATOR
-	/* 0x6d */ kKeyKP_Subtract,	kKeyNone,		// VK_SUBTRACT
-	/* 0x6e */ kKeyKP_Decimal,	kKeyNone,		// VK_DECIMAL
-	/* 0x6f */ kKeyNone,		kKeyKP_Divide,	// VK_DIVIDE
-	/* 0x70 */ kKeyF1,			kKeyNone,		// VK_F1
-	/* 0x71 */ kKeyF2,			kKeyNone,		// VK_F2
-	/* 0x72 */ kKeyF3,			kKeyNone,		// VK_F3
-	/* 0x73 */ kKeyF4,			kKeyNone,		// VK_F4
-	/* 0x74 */ kKeyF5,			kKeyNone,		// VK_F5
-	/* 0x75 */ kKeyF6,			kKeyNone,		// VK_F6
-	/* 0x76 */ kKeyF7,			kKeyNone,		// VK_F7
-	/* 0x77 */ kKeyF8,			kKeyNone,		// VK_F8
-	/* 0x78 */ kKeyF9,			kKeyNone,		// VK_F9
-	/* 0x79 */ kKeyF10,			kKeyNone,		// VK_F10
-	/* 0x7a */ kKeyF11,			kKeyNone,		// VK_F11
-	/* 0x7b */ kKeyF12,			kKeyNone,		// VK_F12
-	/* 0x7c */ kKeyF13,			kKeyF13,		// VK_F13
-	/* 0x7d */ kKeyF14,			kKeyF14,		// VK_F14
-	/* 0x7e */ kKeyF15,			kKeyF15,		// VK_F15
-	/* 0x7f */ kKeyF16,			kKeyF16,		// VK_F16
-	/* 0x80 */ kKeyF17,			kKeyF17,		// VK_F17
-	/* 0x81 */ kKeyF18,			kKeyF18,		// VK_F18
-	/* 0x82 */ kKeyF19,			kKeyF19,		// VK_F19
-	/* 0x83 */ kKeyF20,			kKeyF20,		// VK_F20
-	/* 0x84 */ kKeyF21,			kKeyF21,		// VK_F21
-	/* 0x85 */ kKeyF22,			kKeyF22,		// VK_F22
-	/* 0x86 */ kKeyF23,			kKeyF23,		// VK_F23
-	/* 0x87 */ kKeyF24,			kKeyF24,		// VK_F24
-	/* 0x88 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x89 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x8a */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x8b */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x8c */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x8d */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x8e */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x8f */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x90 */ kKeyNumLock,		kKeyNumLock,	// VK_NUMLOCK
-	/* 0x91 */ kKeyScrollLock,	kKeyNone,		// VK_SCROLL
-	/* 0x92 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x93 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x94 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x95 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x96 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x97 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x98 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x99 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x9a */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x9b */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x9c */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x9d */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x9e */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0x9f */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xa0 */ kKeyShift_L,		kKeyShift_L,	// VK_LSHIFT
-	/* 0xa1 */ kKeyShift_R,		kKeyShift_R,	// VK_RSHIFT
-	/* 0xa2 */ kKeyControl_L,	kKeyControl_L,	// VK_LCONTROL
-	/* 0xa3 */ kKeyControl_R,	kKeyControl_R,	// VK_RCONTROL
-	/* 0xa4 */ kKeyAlt_L,		kKeyAlt_L,		// VK_LMENU
-	/* 0xa5 */ kKeyAlt_R,		kKeyAlt_R,		// VK_RMENU
-	/* 0xa6 */ kKeyNone,		kKeyWWWBack,	// VK_BROWSER_BACK
-	/* 0xa7 */ kKeyNone,		kKeyWWWForward,	// VK_BROWSER_FORWARD
-	/* 0xa8 */ kKeyNone,		kKeyWWWRefresh,	// VK_BROWSER_REFRESH
-	/* 0xa9 */ kKeyNone,		kKeyWWWStop,	// VK_BROWSER_STOP
-	/* 0xaa */ kKeyNone,		kKeyWWWSearch,	// VK_BROWSER_SEARCH
-	/* 0xab */ kKeyNone,		kKeyWWWFavorites,	// VK_BROWSER_FAVORITES
-	/* 0xac */ kKeyNone,		kKeyWWWHome,	// VK_BROWSER_HOME
-	/* 0xad */ kKeyNone,		kKeyAudioMute,	// VK_VOLUME_MUTE
-	/* 0xae */ kKeyNone,		kKeyAudioDown,	// VK_VOLUME_DOWN
-	/* 0xaf */ kKeyNone,		kKeyAudioUp,	// VK_VOLUME_UP
-	/* 0xb0 */ kKeyNone,		kKeyAudioNext,	// VK_MEDIA_NEXT_TRACK
-	/* 0xb1 */ kKeyNone,		kKeyAudioPrev,	// VK_MEDIA_PREV_TRACK
-	/* 0xb2 */ kKeyNone,		kKeyAudioStop,	// VK_MEDIA_STOP
-	/* 0xb3 */ kKeyNone,		kKeyAudioPlay,	// VK_MEDIA_PLAY_PAUSE
-	/* 0xb4 */ kKeyNone,		kKeyAppMail,	// VK_LAUNCH_MAIL
-	/* 0xb5 */ kKeyNone,		kKeyAppMedia,	// VK_LAUNCH_MEDIA_SELECT
-	/* 0xb6 */ kKeyNone,		kKeyAppUser1,	// VK_LAUNCH_APP1
-	/* 0xb7 */ kKeyNone,		kKeyAppUser2,	// VK_LAUNCH_APP2
-	/* 0xb8 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb9 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xba */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xbb */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xbc */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xbd */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xbe */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xbf */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xc0 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xc1 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xc2 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xc3 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xc4 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xc5 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xc6 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xc7 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xc8 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xc9 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xca */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xcb */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xcc */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xcd */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xce */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xcf */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd0 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd1 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd2 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd3 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd4 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd5 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd6 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd7 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd8 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xd9 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xda */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xdb */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xdc */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xdd */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xde */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xdf */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xe0 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xe1 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xe2 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xe3 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xe4 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xe5 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xe6 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xe7 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xe8 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xe9 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xea */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xeb */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xec */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xed */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xee */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xef */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xf0 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xf1 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xf2 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xf3 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xf4 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xf5 */ kKeyNone,		kKeyNone,		// OEM specific
-	/* 0xf6 */ kKeyNone,		kKeyNone,		// VK_ATTN			
-	/* 0xf7 */ kKeyNone,		kKeyNone,		// VK_CRSEL			
-	/* 0xf8 */ kKeyNone,		kKeyNone,		// VK_EXSEL			
-	/* 0xf9 */ kKeyNone,		kKeyNone,		// VK_EREOF			
-	/* 0xfa */ kKeyNone,		kKeyNone,		// VK_PLAY			
-	/* 0xfb */ kKeyNone,		kKeyNone,		// VK_ZOOM			
-	/* 0xfc */ kKeyNone,		kKeyNone,		// reserved
-	/* 0xfd */ kKeyNone,		kKeyNone,		// VK_PA1			
-	/* 0xfe */ kKeyNone,		kKeyNone,		// VK_OEM_CLEAR		
-	/* 0xff */ kKeyNone,		kKeyNone		// reserved
+	/* 0x00 */ { kKeyNone,			kKeyNone },		// reserved
+	/* 0x01 */ { kKeyNone,			kKeyNone },		// VK_LBUTTON
+	/* 0x02 */ { kKeyNone,			kKeyNone },		// VK_RBUTTON
+	/* 0x03 */ { kKeyNone,			kKeyBreak },	// VK_CANCEL
+	/* 0x04 */ { kKeyNone,			kKeyNone },		// VK_MBUTTON
+	/* 0x05 */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x06 */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x07 */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x08 */ { kKeyBackSpace,		kKeyNone },		// VK_BACK
+	/* 0x09 */ { kKeyTab,			kKeyNone },		// VK_TAB
+	/* 0x0a */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x0b */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x0c */ { kKeyClear,			kKeyClear },	// VK_CLEAR
+	/* 0x0d */ { kKeyReturn,		kKeyKP_Enter },	// VK_RETURN
+	/* 0x0e */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x0f */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x10 */ { kKeyShift_L,		kKeyShift_R },	// VK_SHIFT
+	/* 0x11 */ { kKeyControl_L,		kKeyControl_R },// VK_CONTROL
+	/* 0x12 */ { kKeyAlt_L,			kKeyAlt_R },	// VK_MENU
+	/* 0x13 */ { kKeyPause,			kKeyNone },		// VK_PAUSE
+	/* 0x14 */ { kKeyCapsLock,		kKeyNone },		// VK_CAPITAL
+	/* 0x15 */ { kKeyNone,			kKeyNone },		// VK_KANA			
+	/* 0x16 */ { kKeyNone,			kKeyNone },		// VK_HANGUL		
+	/* 0x17 */ { kKeyNone,			kKeyNone },		// VK_JUNJA			
+	/* 0x18 */ { kKeyNone,			kKeyNone },		// VK_FINAL			
+	/* 0x19 */ { kKeyZenkaku,		kKeyNone },		// VK_KANJI			
+	/* 0x1a */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x1b */ { kKeyEscape,		kKeyNone },		// VK_ESCAPE
+	/* 0x1c */ { kKeyNone,			kKeyNone },		// VK_CONVERT		
+	/* 0x1d */ { kKeyNone,			kKeyNone },		// VK_NONCONVERT	
+	/* 0x1e */ { kKeyNone,			kKeyNone },		// VK_ACCEPT		
+	/* 0x1f */ { kKeyNone,			kKeyNone },		// VK_MODECHANGE	
+	/* 0x20 */ { kKeyNone,			kKeyNone },		// VK_SPACE
+	/* 0x21 */ { kKeyKP_PageUp,		kKeyPageUp },	// VK_PRIOR
+	/* 0x22 */ { kKeyKP_PageDown,	kKeyPageDown },	// VK_NEXT
+	/* 0x23 */ { kKeyKP_End,		kKeyEnd },		// VK_END
+	/* 0x24 */ { kKeyKP_Home,		kKeyHome },		// VK_HOME
+	/* 0x25 */ { kKeyKP_Left,		kKeyLeft },		// VK_LEFT
+	/* 0x26 */ { kKeyKP_Up,			kKeyUp },		// VK_UP
+	/* 0x27 */ { kKeyKP_Right,		kKeyRight },	// VK_RIGHT
+	/* 0x28 */ { kKeyKP_Down,		kKeyDown },		// VK_DOWN
+	/* 0x29 */ { kKeySelect,		kKeySelect },	// VK_SELECT
+	/* 0x2a */ { kKeyNone,			kKeyNone },		// VK_PRINT
+	/* 0x2b */ { kKeyExecute,		kKeyExecute },	// VK_EXECUTE
+	/* 0x2c */ { kKeyPrint,			kKeyPrint },	// VK_SNAPSHOT
+	/* 0x2d */ { kKeyKP_Insert,		kKeyInsert },	// VK_INSERT
+	/* 0x2e */ { kKeyKP_Delete,		kKeyDelete },	// VK_DELETE
+	/* 0x2f */ { kKeyHelp,			kKeyHelp },		// VK_HELP
+	/* 0x30 */ { kKeyNone,			kKeyNone },		// VK_0
+	/* 0x31 */ { kKeyNone,			kKeyNone },		// VK_1
+	/* 0x32 */ { kKeyNone,			kKeyNone },		// VK_2
+	/* 0x33 */ { kKeyNone,			kKeyNone },		// VK_3
+	/* 0x34 */ { kKeyNone,			kKeyNone },		// VK_4
+	/* 0x35 */ { kKeyNone,			kKeyNone },		// VK_5
+	/* 0x36 */ { kKeyNone,			kKeyNone },		// VK_6
+	/* 0x37 */ { kKeyNone,			kKeyNone },		// VK_7
+	/* 0x38 */ { kKeyNone,			kKeyNone },		// VK_8
+	/* 0x39 */ { kKeyNone,			kKeyNone },		// VK_9
+	/* 0x3a */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x3b */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x3c */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x3d */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x3e */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x3f */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x40 */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x41 */ { kKeyNone,			kKeyNone },		// VK_A
+	/* 0x42 */ { kKeyNone,			kKeyNone },		// VK_B
+	/* 0x43 */ { kKeyNone,			kKeyNone },		// VK_C
+	/* 0x44 */ { kKeyNone,			kKeyNone },		// VK_D
+	/* 0x45 */ { kKeyNone,			kKeyNone },		// VK_E
+	/* 0x46 */ { kKeyNone,			kKeyNone },		// VK_F
+	/* 0x47 */ { kKeyNone,			kKeyNone },		// VK_G
+	/* 0x48 */ { kKeyNone,			kKeyNone },		// VK_H
+	/* 0x49 */ { kKeyNone,			kKeyNone },		// VK_I
+	/* 0x4a */ { kKeyNone,			kKeyNone },		// VK_J
+	/* 0x4b */ { kKeyNone,			kKeyNone },		// VK_K
+	/* 0x4c */ { kKeyNone,			kKeyNone },		// VK_L
+	/* 0x4d */ { kKeyNone,			kKeyNone },		// VK_M
+	/* 0x4e */ { kKeyNone,			kKeyNone },		// VK_N
+	/* 0x4f */ { kKeyNone,			kKeyNone },		// VK_O
+	/* 0x50 */ { kKeyNone,			kKeyNone },		// VK_P
+	/* 0x51 */ { kKeyNone,			kKeyNone },		// VK_Q
+	/* 0x52 */ { kKeyNone,			kKeyNone },		// VK_R
+	/* 0x53 */ { kKeyNone,			kKeyNone },		// VK_S
+	/* 0x54 */ { kKeyNone,			kKeyNone },		// VK_T
+	/* 0x55 */ { kKeyNone,			kKeyNone },		// VK_U
+	/* 0x56 */ { kKeyNone,			kKeyNone },		// VK_V
+	/* 0x57 */ { kKeyNone,			kKeyNone },		// VK_W
+	/* 0x58 */ { kKeyNone,			kKeyNone },		// VK_X
+	/* 0x59 */ { kKeyNone,			kKeyNone },		// VK_Y
+	/* 0x5a */ { kKeyNone,			kKeyNone },		// VK_Z
+	/* 0x5b */ { kKeyNone,			kKeySuper_L },	// VK_LWIN
+	/* 0x5c */ { kKeyNone,			kKeySuper_R },	// VK_RWIN
+	/* 0x5d */ { kKeyMenu,			kKeyMenu },		// VK_APPS
+	/* 0x5e */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x5f */ { kKeyNone,			kKeyNone },		// undefined
+	/* 0x60 */ { kKeyKP_0,			kKeyNone },		// VK_NUMPAD0
+	/* 0x61 */ { kKeyKP_1,			kKeyNone },		// VK_NUMPAD1
+	/* 0x62 */ { kKeyKP_2,			kKeyNone },		// VK_NUMPAD2
+	/* 0x63 */ { kKeyKP_3,			kKeyNone },		// VK_NUMPAD3
+	/* 0x64 */ { kKeyKP_4,			kKeyNone },		// VK_NUMPAD4
+	/* 0x65 */ { kKeyKP_5,			kKeyNone },		// VK_NUMPAD5
+	/* 0x66 */ { kKeyKP_6,			kKeyNone },		// VK_NUMPAD6
+	/* 0x67 */ { kKeyKP_7,			kKeyNone },		// VK_NUMPAD7
+	/* 0x68 */ { kKeyKP_8,			kKeyNone },		// VK_NUMPAD8
+	/* 0x69 */ { kKeyKP_9,			kKeyNone },		// VK_NUMPAD9
+	/* 0x6a */ { kKeyKP_Multiply,	kKeyNone },		// VK_MULTIPLY
+	/* 0x6b */ { kKeyKP_Add,		kKeyNone },		// VK_ADD
+	/* 0x6c */ { kKeyKP_Separator,	kKeyKP_Separator },// VK_SEPARATOR
+	/* 0x6d */ { kKeyKP_Subtract,	kKeyNone },		// VK_SUBTRACT
+	/* 0x6e */ { kKeyKP_Decimal,	kKeyNone },		// VK_DECIMAL
+	/* 0x6f */ { kKeyNone,			kKeyKP_Divide },// VK_DIVIDE
+	/* 0x70 */ { kKeyF1,			kKeyNone },		// VK_F1
+	/* 0x71 */ { kKeyF2,			kKeyNone },		// VK_F2
+	/* 0x72 */ { kKeyF3,			kKeyNone },		// VK_F3
+	/* 0x73 */ { kKeyF4,			kKeyNone },		// VK_F4
+	/* 0x74 */ { kKeyF5,			kKeyNone },		// VK_F5
+	/* 0x75 */ { kKeyF6,			kKeyNone },		// VK_F6
+	/* 0x76 */ { kKeyF7,			kKeyNone },		// VK_F7
+	/* 0x77 */ { kKeyF8,			kKeyNone },		// VK_F8
+	/* 0x78 */ { kKeyF9,			kKeyNone },		// VK_F9
+	/* 0x79 */ { kKeyF10,			kKeyNone },		// VK_F10
+	/* 0x7a */ { kKeyF11,			kKeyNone },		// VK_F11
+	/* 0x7b */ { kKeyF12,			kKeyNone },		// VK_F12
+	/* 0x7c */ { kKeyF13,			kKeyF13 },		// VK_F13
+	/* 0x7d */ { kKeyF14,			kKeyF14 },		// VK_F14
+	/* 0x7e */ { kKeyF15,			kKeyF15 },		// VK_F15
+	/* 0x7f */ { kKeyF16,			kKeyF16 },		// VK_F16
+	/* 0x80 */ { kKeyF17,			kKeyF17 },		// VK_F17
+	/* 0x81 */ { kKeyF18,			kKeyF18 },		// VK_F18
+	/* 0x82 */ { kKeyF19,			kKeyF19 },		// VK_F19
+	/* 0x83 */ { kKeyF20,			kKeyF20 },		// VK_F20
+	/* 0x84 */ { kKeyF21,			kKeyF21 },		// VK_F21
+	/* 0x85 */ { kKeyF22,			kKeyF22 },		// VK_F22
+	/* 0x86 */ { kKeyF23,			kKeyF23 },		// VK_F23
+	/* 0x87 */ { kKeyF24,			kKeyF24 },		// VK_F24
+	/* 0x88 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x89 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x8a */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x8b */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x8c */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x8d */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x8e */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x8f */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x90 */ { kKeyNumLock,		kKeyNumLock },	// VK_NUMLOCK
+	/* 0x91 */ { kKeyScrollLock,	kKeyNone },		// VK_SCROLL
+	/* 0x92 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x93 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x94 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x95 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x96 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x97 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x98 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x99 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x9a */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x9b */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x9c */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x9d */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x9e */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0x9f */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xa0 */ { kKeyShift_L,		kKeyShift_L },	// VK_LSHIFT
+	/* 0xa1 */ { kKeyShift_R,		kKeyShift_R },	// VK_RSHIFT
+	/* 0xa2 */ { kKeyControl_L,		kKeyControl_L },// VK_LCONTROL
+	/* 0xa3 */ { kKeyControl_R,		kKeyControl_R },// VK_RCONTROL
+	/* 0xa4 */ { kKeyAlt_L,			kKeyAlt_L },	// VK_LMENU
+	/* 0xa5 */ { kKeyAlt_R,			kKeyAlt_R },	// VK_RMENU
+	/* 0xa6 */ { kKeyNone,			kKeyWWWBack },	// VK_BROWSER_BACK
+	/* 0xa7 */ { kKeyNone,			kKeyWWWForward },// VK_BROWSER_FORWARD
+	/* 0xa8 */ { kKeyNone,			kKeyWWWRefresh },// VK_BROWSER_REFRESH
+	/* 0xa9 */ { kKeyNone,			kKeyWWWStop },	// VK_BROWSER_STOP
+	/* 0xaa */ { kKeyNone,			kKeyWWWSearch },// VK_BROWSER_SEARCH
+	/* 0xab */ { kKeyNone,			kKeyWWWFavorites },// VK_BROWSER_FAVORITES
+	/* 0xac */ { kKeyNone,			kKeyWWWHome },	// VK_BROWSER_HOME
+	/* 0xad */ { kKeyNone,			kKeyAudioMute },// VK_VOLUME_MUTE
+	/* 0xae */ { kKeyNone,			kKeyAudioDown },// VK_VOLUME_DOWN
+	/* 0xaf */ { kKeyNone,			kKeyAudioUp },	// VK_VOLUME_UP
+	/* 0xb0 */ { kKeyNone,			kKeyAudioNext },// VK_MEDIA_NEXT_TRACK
+	/* 0xb1 */ { kKeyNone,			kKeyAudioPrev },// VK_MEDIA_PREV_TRACK
+	/* 0xb2 */ { kKeyNone,			kKeyAudioStop },// VK_MEDIA_STOP
+	/* 0xb3 */ { kKeyNone,			kKeyAudioPlay },// VK_MEDIA_PLAY_PAUSE
+	/* 0xb4 */ { kKeyNone,			kKeyAppMail },	// VK_LAUNCH_MAIL
+	/* 0xb5 */ { kKeyNone,			kKeyAppMedia },	// VK_LAUNCH_MEDIA_SELECT
+	/* 0xb6 */ { kKeyNone,			kKeyAppUser1 },	// VK_LAUNCH_APP1
+	/* 0xb7 */ { kKeyNone,			kKeyAppUser2 },	// VK_LAUNCH_APP2
+	/* 0xb8 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xb9 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xba */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xbb */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xbc */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xbd */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xbe */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xbf */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xc0 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xc1 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xc2 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xc3 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xc4 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xc5 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xc6 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xc7 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xc8 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xc9 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xca */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xcb */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xcc */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xcd */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xce */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xcf */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd0 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd1 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd2 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd3 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd4 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd5 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd6 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd7 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd8 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xd9 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xda */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xdb */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xdc */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xdd */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xde */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xdf */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xe0 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xe1 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xe2 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xe3 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xe4 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xe5 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xe6 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xe7 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xe8 */ { kKeyNone,			kKeyNone },		// unassigned
+	/* 0xe9 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xea */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xeb */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xec */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xed */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xee */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xef */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xf0 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xf1 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xf2 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xf3 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xf4 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xf5 */ { kKeyNone,			kKeyNone },		// OEM specific
+	/* 0xf6 */ { kKeyNone,			kKeyNone },		// VK_ATTN			
+	/* 0xf7 */ { kKeyNone,			kKeyNone },		// VK_CRSEL			
+	/* 0xf8 */ { kKeyNone,			kKeyNone },		// VK_EXSEL			
+	/* 0xf9 */ { kKeyNone,			kKeyNone },		// VK_EREOF			
+	/* 0xfa */ { kKeyNone,			kKeyNone },		// VK_PLAY			
+	/* 0xfb */ { kKeyNone,			kKeyNone },		// VK_ZOOM			
+	/* 0xfc */ { kKeyNone,			kKeyNone },		// reserved
+	/* 0xfd */ { kKeyNone,			kKeyNone },		// VK_PA1			
+	/* 0xfe */ { kKeyNone,			kKeyNone },		// VK_OEM_CLEAR		
+	/* 0xff */ { kKeyNone,			kKeyNone }		// reserved
 };
 
 // map special KeyID keys to virtual key codes plus whether or not
@@ -1561,7 +1561,8 @@ CMSWindowsKeyState::mapCharacter(Keystrokes& keys,
 		// first check the easy way.  if that doesn't work
 		// then see if it's a dead key.
 		unsigned char uc = static_cast<unsigned char>(c);
-		if (CharLower((LPTSTR)uc) != CharUpper((LPTSTR)uc) ||
+		if (CharLower(reinterpret_cast<LPTSTR>(uc)) !=
+			CharUpper(reinterpret_cast<LPTSTR>(uc)) ||
 			(MapVirtualKeyEx(virtualKey, 2, hkl) & 0x80000000lu) != 0) {
 			LOG((CLOG_DEBUG2 "flip shift"));
 			desiredMask ^= KeyModifierShift;

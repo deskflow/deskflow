@@ -692,8 +692,8 @@ parse(int argc, const char* const* argv)
 	ARG->m_name = ARCH->getHostName();
 
 	// parse options
-	int i;
-	for (i = 1; i < argc; ++i) {
+	int i = 1;
+	for (; i < argc; ++i) {
 		if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 			// change logging level
 			ARG->m_logFilter = argv[++i];

@@ -13,6 +13,7 @@
  */
 
 #include "XArchWindows.h"
+#include "CArchNetworkWinsock.h"
 
 //
 // XArchEvalWindows

@@ -277,7 +277,7 @@ CArchDaemonWindows::daemonize(const char* name, DaemonFunc func)
 			FreeLibrary(kernel);
 			throw XArchDaemonFailed(new XArchEvalWindows(err));
 		}
-		if (RegisterServiceProcess(NULL, 1) == 0) {
+		if (RegisterServiceProcess(0, 1) == 0) {
 			// RegisterServiceProcess failed
 			DWORD err = GetLastError();
 			FreeLibrary(kernel);
@@ -590,7 +590,7 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 	// register our service handler function
 	m_statusHandle = RegisterServiceCtrlHandler(argv[0],
 								&CArchDaemonWindows::serviceHandlerEntry);
-	if (m_statusHandle == NULL) {
+	if (m_statusHandle == 0) {
 		// cannot start as service
 		m_daemonResult = -1;
 		ARCH->closeCondVar(m_serviceCondVar);

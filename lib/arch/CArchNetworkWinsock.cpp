@@ -15,6 +15,7 @@
 
 #include "CArchNetworkWinsock.h"
 #include "CArch.h"
+#include "CArchMultithreadWindows.h"
 #include "IArchMultithread.h"
 #include "XArchWindows.h"
 #include <malloc.h>
@@ -578,7 +579,7 @@ CArchNetworkWinsock::throwErrorOnSocket(CArchSocket s)
 void
 CArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking)
 {
-	assert(s != NULL);
+	assert(s != 0);
 
 	int flag = blocking ? 0 : 1;
 	if (ioctl_winsock(s, FIONBIO, &flag) == SOCKET_ERROR) {

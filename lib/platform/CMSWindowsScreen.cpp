@@ -32,15 +32,19 @@
 #include "CArch.h"
 #include "CArchMiscWindows.h"
 #include <string.h>
+#include <pbt.h>
 
 //
-// add backwards compatible multihead support (and suppress bogus warning)
+// add backwards compatible multihead support (and suppress bogus warning).
+// this isn't supported on MinGW yet AFAICT.
 //
+#if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable: 4706) // assignment within conditional
 #define COMPILE_MULTIMON_STUBS
 #include <multimon.h>
 #pragma warning(pop)
+#endif
 
 // X button stuff
 #if !defined(WM_XBUTTONDOWN)
@@ -60,6 +64,11 @@
 #define VK_XBUTTON2			0x06
 #endif
 
+// WM_POWERBROADCAST stuff
+#if !defined(PBT_APMRESUMEAUTOMATIC)
+#define PBT_APMRESUMEAUTOMATIC	0x0012
+#endif
+
 //
 // CMSWindowsScreen
 //
@@ -73,7 +82,6 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary,
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_isOnScreen(m_isPrimary),
 	m_class(0),
-	m_window(NULL),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
 	m_xCenter(0), m_yCenter(0),
@@ -86,6 +94,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary,
 	m_fixTimer(NULL),
 	m_screensaver(NULL),
 	m_screensaverNotify(false),
+	m_window(NULL),
 	m_nextClipboardWindow(NULL),
 	m_ownClipboard(false),
 	m_desks(NULL),
@@ -600,7 +609,7 @@ void
 CMSWindowsScreen::destroyClass(ATOM windowClass) const
 {
 	if (windowClass != 0) {
-		UnregisterClass((LPCTSTR)windowClass, s_instance);
+		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_instance);
 	}
 }
 
@@ -610,7 +619,7 @@ CMSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
 	HWND window = CreateWindowEx(WS_EX_TOPMOST |
 									WS_EX_TRANSPARENT |
 									WS_EX_TOOLWINDOW,
-								(LPCTSTR)windowClass,
+								reinterpret_cast<LPCTSTR>(windowClass),
 								name,
 								WS_POPUP,
 								0, 0, 1, 1,

@@ -70,8 +70,10 @@ typedef struct tagMOUSEHOOKSTRUCTWin2000 {
 // globals
 //
 
+#if defined(_MSC_VER)
 #pragma comment(linker, "-section:shared,rws")
 #pragma data_seg("shared")
+#endif
 // all data in this shared section *must* be initialized
 
 static HINSTANCE		g_hinstance       = NULL;
@@ -99,13 +101,17 @@ static BYTE				g_deadKeyState[256] = { 0 };
 static DWORD			g_hookThread      = 0;
 static DWORD			g_attachedThread  = 0;
 
+#if defined(_MSC_VER)
 #pragma data_seg()
+#endif
 
 // keep linker quiet about floating point stuff.  we don't use any
 // floating point operations but our includes may define some
 // (unused) floating point values.
 #ifndef _DEBUG
-extern "C" int _fltused=0;
+extern "C" {
+int _fltused=0;
+}
 #endif
 
 
@@ -554,6 +560,9 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 				w = static_cast<SInt16>(HIWORD(info2k->mouseData));
 				break;
 			}
+
+			default:
+				break;
 			}
 		}
 
@@ -601,7 +610,7 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_getMessage, code, wParam, lParam);
 }
 
-#if (_WIN32_WINNT >= 0x0400) && !NO_LOWLEVEL_HOOKS
+#if (_WIN32_WINNT >= 0x0400) && defined(_MSC_VER) && !NO_LOWLEVEL_HOOKS
 
 //
 // low-level keyboard hook -- this allows us to capture and handle
@@ -693,6 +702,7 @@ getWheelSupport()
 	}
 
 	// not modern.  see if we've got old-style support.
+#if defined(MSH_WHEELSUPPORT)
 	UINT wheelSupportMsg    = RegisterWindowMessage(MSH_WHEELSUPPORT);
 	HWND wheelSupportWindow = FindWindow(MSH_WHEELMODULE_CLASS,
 										MSH_WHEELMODULE_TITLE);
@@ -704,6 +714,7 @@ getWheelSupport()
 			}
 		}
 	}
+#endif
 
 	// assume modern.  we don't do anything special in this case
 	// except respond to WM_MOUSEWHEEL messages.  GetSystemMetrics()
@@ -830,7 +841,7 @@ install()
 	}
 
 	// install low-level hooks.  we require that they both get installed.
-#if (_WIN32_WINNT >= 0x0400) && !NO_LOWLEVEL_HOOKS
+#if (_WIN32_WINNT >= 0x0400) && defined(_MSC_VER) && !NO_LOWLEVEL_HOOKS
 	g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
 								&mouseLLHook,
 								g_hinstance,

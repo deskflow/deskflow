@@ -387,7 +387,8 @@ void
 CMSWindowsDesks::destroyClass(ATOM windowClass) const
 {
 	if (windowClass != 0) {
-		UnregisterClass((LPCTSTR)windowClass, CMSWindowsScreen::getInstance());
+		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass),
+							CMSWindowsScreen::getInstance());
 	}
 }
 
@@ -397,7 +398,7 @@ CMSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
 	HWND window = CreateWindowEx(WS_EX_TOPMOST |
 									WS_EX_TRANSPARENT |
 									WS_EX_TOOLWINDOW,
-								(LPCTSTR)windowClass,
+								reinterpret_cast<LPCTSTR>(windowClass),
 								name,
 								WS_POPUP,
 								0, 0, 1, 1,

@@ -42,8 +42,8 @@ CMSWindowsScreenSaver::CMSWindowsScreenSaver() :
 	m_wasSecure(false),
 	m_wasSecureAnInt(false),
 	m_process(NULL),
-	m_threadID(0),
-	m_watch(NULL)
+	m_watch(NULL),
+	m_threadID(0)
 {
 	// detect OS
 	m_is95Family = false;

@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  */
 
-#if !defined(_MT)
+#if defined(_MSC_VER) && !defined(_MT)
 #	error multithreading compile option is required
 #endif
 
@@ -415,12 +415,12 @@ CArchMultithreadWindows::setPriorityOfThread(CArchThread thread, int n)
 	assert(thread != NULL);
 
 	size_t index;
-	if (n > 0 && s_pBase < n) {
+	if (n > 0 && s_pBase < (size_t)n) {
 		// lowest priority
 		index = 0;
 	}
 	else {
-		index = s_pBase - n;
+		index = (size_t)((int)s_pBase - n);
 		if (index > s_pMax) {
 			// highest priority
 			index = s_pMax;

@@ -13,6 +13,7 @@
  */
 
 #include "CArchTaskBarWindows.h"
+#include "CArchMiscWindows.h"
 #include "IArchTaskBarReceiver.h"
 #include "CArch.h"
 #include "XArch.h"
@@ -464,7 +465,7 @@ CArchTaskBarWindows::threadMainLoop()
 
 	// handle failure
 	if (m_hwnd == NULL) {
-		UnregisterClass((LPCTSTR)windowClass, s_appInstance);
+		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_appInstance);
 		return;
 	}
 
@@ -480,7 +481,7 @@ CArchTaskBarWindows::threadMainLoop()
 	// clean up
 	removeAllIcons();
 	DestroyWindow(m_hwnd);
-	UnregisterClass((LPCTSTR)windowClass, s_appInstance);
+	UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_appInstance);
 }
 
 void*

@@ -32,7 +32,7 @@ ARCH_LIBS=""
 ARCH_CFLAGS=""
 AC_CANONICAL_HOST
 case $host in
-	*-*-windows*)
+	*-*-mingw32* | *-*-windows*)
 	acx_host_arch="WIN32"
 	acx_host_winapi="MSWINDOWS"
 	ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_WIN32=1 -DWINAPI_MSWINDOWS=1"

@@ -209,11 +209,8 @@ CProtocolUtil::vreadf(IStream* stream, const char* fmt, va_list args)
 				const bool useFixed = (len <= sizeof(buffer));
 
 				// allocate a buffer to read the data
-				UInt8* sBuffer;
-				if (useFixed) {
-					sBuffer = buffer;
-				}
-				else {
+				UInt8* sBuffer = buffer;
+				if (!useFixed) {
 					sBuffer = new UInt8[len];
 				}
 

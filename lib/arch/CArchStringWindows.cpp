@@ -16,6 +16,7 @@
 
 #include "CArchStringWindows.h"
 #include <windows.h>
+#include <stdio.h>
 
 #include "CMultibyte.cpp"
 
