@@ -17,6 +17,9 @@
 #	include <X11/X.h>
 #	include <X11/Xutil.h>
 #endif
+#if UNIX_LIKE
+#include <sys/poll.h>
+#endif
 
 //
 // CXWindowsScreen::CTimer
@@ -218,19 +221,32 @@ CXWindowsScreen::mainLoop()
 	// display while we're waiting.
 	CEvent event;
 	m_mutex.lock();
-	while (!m_stop) {
-		while (!m_stop && XPending(m_display) == 0) {
-			// check timers
-			if (processTimers()) {
-				continue;
-			}
 
-			// wait
-			m_mutex.unlock();
-			CThread::sleep(0.01);
-			m_mutex.lock();
-		}
-		if (!m_stop) {
+#if UNIX_LIKE
+
+	// use poll() to wait for a message from the X server or for timeout.
+	// this is a good deal more efficient than polling and sleeping.
+	struct pollfd pfds[1];
+	pfds[0].fd     = ConnectionNumber(m_display);
+	pfds[0].events = POLLIN;
+	while (!m_stop) {
+		// compute timeout to next timer
+		int timeout = (m_timers.empty() ? -1 :
+								static_cast<int>(1000.0 * m_timers.top()));
+
+		// wait for message from X server or for timeout.  also check
+		// if the thread has been cancelled.  poll() should return -1
+		// with EINTR when the thread is cancelled.
+		m_mutex.unlock();
+		poll(pfds, 1, timeout);
+		CThread::testCancel();
+		m_mutex.lock();
+
+		// process timers
+		processTimers();
+
+		// handle pending events
+		while (!m_stop && XPending(m_display) > 0) {
 			// get the event
 			XNextEvent(m_display, &event.m_event);
 
@@ -243,6 +259,41 @@ CXWindowsScreen::mainLoop()
 			m_mutex.lock();
 		}
 	}
+
+#else // !UNIX_LIKE
+
+	// poll and sleep
+	while (!m_stop) {
+		// poll for pending events and process timers
+		while (!m_stop && XPending(m_display) == 0) {
+			// check timers
+			if (processTimers()) {
+				continue;
+			}
+
+			// wait
+			m_mutex.unlock();
+			CThread::sleep(0.01);
+			m_mutex.lock();
+		}
+
+		// process events
+		while (!m_stop && XPending(m_display) > 0) {
+			// get the event
+			XNextEvent(m_display, &event.m_event);
+
+			// process the event.  if unhandled then let the subclass
+			// have a go at it.
+			m_mutex.unlock();
+			if (!onPreDispatch(&event)) {
+				m_eventHandler->onEvent(&event);
+			}
+			m_mutex.lock();
+		}
+	}
+
+#endif // !UNIX_LIKE
+
 	m_mutex.unlock();
 }
 
