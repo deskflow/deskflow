@@ -268,7 +268,6 @@ CXWindowsSecondaryScreen::onPostOpen()
 	m_capsLockHalfDuplex = false;
 //	m_numLockHalfDuplex  = true;
 //	m_capsLockHalfDuplex = true;
-
 }
 
 void
@@ -438,7 +437,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	// keysym with that mask.  we override the bits in the mask
 	// that cannot be accomodated.
 
-	// note if the key is the caps lock and it's "half-duplex"
+	// note if the key is "half-duplex"
 	const bool isHalfDuplex = ((id == kKeyCapsLock && m_capsLockHalfDuplex) ||
 								(id == kKeyNumLock && m_numLockHalfDuplex));
 
@@ -452,6 +451,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	KeyCodeIndex keyIndex = findKey(id, outMask);
 	if (keyIndex == noKey()) {
 		// cannot convert id to keysym
+		LOG((CLOG_DEBUG2 "no keysym for key"));
 		return m_mask;
 	}
 
@@ -490,28 +490,27 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	// keys affected by CapsLock.
 	bool desireShift = (getBits(desired, ShiftMask) != 0);
 	bool invertShift = false;
-LOG((CLOG_DEBUG1 "desire shift 1: %s", desireShift?"yes":"no"));
+	LOG((CLOG_DEBUG2 "desire shift: %s", desireShift ? "yes" : "no"));
 	if (adjustForNumLock(keysym)) {
-LOG((CLOG_DEBUG1 "num lock sensitive"));
+		LOG((CLOG_DEBUG2 "num lock sensitive"));
 		if (m_numLockMask != 0) {
-LOG((CLOG_DEBUG1 "we have num lock"));
+			LOG((CLOG_DEBUG2 "we have num lock"));
 			if (getBits(desired, m_numLockMask) != 0) {
-LOG((CLOG_DEBUG1 "num lock desired, invert shift"));
+				LOG((CLOG_DEBUG2 "num lock desired, invert shift"));
 				invertShift = true;
 			}
 		}
 	}
 	else if (adjustForCapsLock(keysym)) {
-LOG((CLOG_DEBUG1 "caps lock sensitive"));
+		LOG((CLOG_DEBUG2 "caps lock sensitive"));
 		if (m_capsLockMask != 0) {
-LOG((CLOG_DEBUG1 "we have caps lock"));
+			LOG((CLOG_DEBUG2 "we have caps lock"));
 			if (getBits(desired, m_capsLockMask) != 0) {
-LOG((CLOG_DEBUG1 "caps lock desired, invert shift"));
+				LOG((CLOG_DEBUG2 "caps lock desired, invert shift"));
 				invertShift = true;
 			}
 		}
 	}
-LOG((CLOG_DEBUG1 "desire shift 2: %s", desireShift?"yes":"no"));
 	if (desireShift != invertShift) {
 		index[0] ^= 1;
 		index[1] ^= 1;
@@ -538,7 +537,7 @@ LOG((CLOG_DEBUG1 "desire shift 2: %s", desireShift?"yes":"no"));
 
 	// get the keycode
 	keycode = entry.m_keycode[bestIndex];
-LOG((CLOG_DEBUG1 "bestIndex = %d, keycode = %d", bestIndex, keycode));
+	LOG((CLOG_DEBUG2 "bestIndex = %d, keycode = %d", bestIndex, keycode));
 
 	// note if the key is a modifier
 	ModifierMap::const_iterator modIndex = m_keycodeToModifier.find(keycode);
@@ -553,13 +552,13 @@ LOG((CLOG_DEBUG1 "bestIndex = %d, keycode = %d", bestIndex, keycode));
 	// though.
 	if (modifierBit != 0) {
 		if (action == kRepeat) {
-LOG((CLOG_DEBUG1 "ignore repeating modifier"));
+			LOG((CLOG_DEBUG2 "ignore repeating modifier"));
 			return m_mask;
 		}
 		if (getBits(m_toggleModifierMask, modifierBit) == 0) {
 			if ((action == kPress   && (m_mask & modifierBit) != 0) ||
 				(action == kRelease && (m_mask & modifierBit) == 0)) {
-LOG((CLOG_DEBUG1 "modifier in proper state: 0x%04x", m_mask));
+				LOG((CLOG_DEBUG2 "modifier in proper state: 0x%04x", m_mask));
 				return m_mask;
 			}
 		}
@@ -594,7 +593,7 @@ LOG((CLOG_DEBUG1 "modifier in proper state: 0x%04x", m_mask));
 	// the same bit in m_mask, meaning it's already in the right state.
 	desired  = assignBits(desired, modifierBit, m_mask);
 	required = clearBits(required, modifierBit);
-LOG((CLOG_DEBUG1 "desired = 0x%04x, current = 0x%04x", desired, m_mask));
+	LOG((CLOG_DEBUG2 "desired = 0x%04x, current = 0x%04x", desired, m_mask));
 
 	// add the key events required to get to the modifier state
 	// necessary to generate an event yielding id.  also save the
@@ -607,13 +606,13 @@ LOG((CLOG_DEBUG1 "desired = 0x%04x, current = 0x%04x", desired, m_mask));
 		for (unsigned int i = 0; i < 8; ++i) {
 			unsigned int bit = (1 << i);
 			if (getBits(desired, bit) != getBits(m_mask, bit)) {
-LOG((CLOG_DEBUG1 "fix modifier %d", i));
+				LOG((CLOG_DEBUG2 "fix modifier %d", i));
 				// get the keycode we're using for this modifier.  if
 				// there isn't one then bail if the modifier is required
 				// or ignore it if not required.
 				KeyCode modifierKey = m_modifierToKeycode[i];
 				if (modifierKey == 0) {
-					LOG((CLOG_DEBUG1 "no key mapped to modifier 0x%04x", bit));
+					LOG((CLOG_DEBUG2 "no key mapped to modifier 0x%04x", bit));
 					if (getBits(required, bit) != 0) {
 						keys.clear();
 						return m_mask;
@@ -773,7 +772,7 @@ LOG((CLOG_DEBUG1 "fix modifier %d", i));
 		}
 	}
 
-LOG((CLOG_DEBUG1 "final mask: 0x%04x", mask));
+	LOG((CLOG_DEBUG2 "final mask: 0x%04x", mask));
 	return mask;
 }
 
@@ -821,7 +820,6 @@ CXWindowsSecondaryScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
 unsigned int
 CXWindowsSecondaryScreen::maskToX(KeyModifierMask inMask) const
 {
-	// FIXME -- should be configurable.  also not using Mod3Mask.
 	unsigned int outMask = 0;
 	if (inMask & KeyModifierShift) {
 		outMask |= ShiftMask;
@@ -961,7 +959,6 @@ CXWindowsSecondaryScreen::updateKeycodeMap(Display* display)
 	}
 
 	// initialize
-//	KeyCodeMask entry;
 	m_keycodeMap.clear();
 
 	// insert keys
@@ -1011,31 +1008,6 @@ CXWindowsSecondaryScreen::updateKeycodeMap(Display* display)
 			// save keycode for keysym and modifiers
 			entry.m_keycode[j] = static_cast<KeyCode>(minKeycode + i);
 		}
-
-/*
-		// compute mask over all mapped keysyms.  if a keycode has, say,
-		// no shifted keysym then we can ignore the shift state when
-		// synthesizing an event to generate it.
-		entry.m_keyMaskMask = 0;
-		for (int j = 0; j < numKeysyms; ++j) {
-			const KeySym keysym = keysyms[i * keysymsPerKeycode + j];
-			if (keysym != NoSymbol) {
-				entry.m_keyMaskMask |= indexToModifierMask(j);
-			}
-		}
-
-		// add entries for this keycode
-		entry.m_keycode = static_cast<KeyCode>(minKeycode + i);
-		for (int j = 0; j < numKeysyms; ++j) {
-			const KeySym keysym = keysyms[i * keysymsPerKeycode + j];
-			if (keysym != NoSymbol) {
-// FIXME
-//				entry.m_keyMask = indexToModifierMask(j) & ~LockMask;
-entry.m_keyMask = 0;
-				m_keycodeMap[i].insert(std::make_pair(keysym, entry));
-			}
-		}
-*/
 	}
 
 	// clean up
