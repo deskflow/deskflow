@@ -28,7 +28,33 @@ ARCH_STRING::vsnprintf(char* str, int size, const char* fmt, va_list ap)
 	return n;
 }
 
-#else // !HAVE_VSNPRINTF
+#elif UNIX_LIKE // !HAVE_VSNPRINTF
+
+#include <stdio.h>
+
+int
+ARCH_STRING::vsnprintf(char* str, int size, const char* fmt, va_list ap)
+{
+	static FILE* bitbucket = fopen("/dev/null", "w");
+	if (bitbucket == NULL) {
+		// uh oh
+		if (size > 0) {
+			str[0] = '\0';
+		}
+		return 0;
+	}
+	else {
+		// count the characters using the bitbucket
+		int n = vfprintf(bitbucket, fmt, ap);
+		if (n + 1 <= size) {
+			// it'll fit so print it into str
+			vsprintf(str, fmt, ap);
+		}
+		return n;
+	}
+}
+
+#else // !HAVE_VSNPRINTF && !UNIX_LIKE
 
 // FIXME
 #error vsnprintf not implemented
