@@ -1,13 +1,3 @@
-server						client
-------						------
-[accept]			<--		connect
-challenge			-->		[encrypt]
-[verify]			<--		response (encrypted challenge, client name)
-hangup if invalid
-query info			-->		
-					<--		info (size)
-
----
 nedit doesn't seem to be playing nice with the motif clipboard lock
   it's not releasing it
   may need to learn more about how the motif clipboard lock works
@@ -19,15 +9,14 @@ enable heartbeat disconnection or remove heartbeat sending in client
   possibly make it part of startup negotiation
 
 ---
-getting a stuttering when leaving win32 server screen
+not handling large motif selections
+  there must be a limit because properties can only be so big
+  don't know protocol for transfer, though
 
 ---
-merge platform dependent code into platform independent where possible
-  also try to simplify where possible
-
----
-IServer and IPrimaryReceiver are really similar
-  can we merge them into one?
+synergy should never restart if X server connection was lost?
+  if synergy server connection was lost then restart
+    unless --no-restart
 
 ---
 use automake
@@ -42,107 +31,6 @@ HTTP stuff
   provide way to kill/restart server via HTTP
   provide way to query why locked to screen?
     handy for debugging at least
-
----
-negotiation:
-  use a generic negotiation message (name/value pair) or specific
-  messages (name/values)?  later allows more parsing to be done by
-  CProtocolUtil but how can we skip unknown messages?  would have
-  to have a method on CInputPacketStream to discard to end of
-  message and we'd need to know the stream is a CInputPacketStream.
-
-  how does negotiation proceed?
-    could have sequence of queries and replies:
-      server -> client -> server ... end
-      client -> server -> client ... end
-    or a sequence of messages:
-      server -> client ... end
-      client -> server ... end
-    probably go with latter because it's more efficient but make it
-    3-way:
-      client -> server ... end
-      server -> client ... end
-      client -> server ... end
-    first messages from client must be version and name.  the server
-    can create the appropriate protocol object right away then.
-
-  example: clipboard formats:
-    # CNEG = negotiation command CNEG%s%s
-    # CNGE = end of negotiation command
-    # cbfa = clipboard, format, add (permitted format)
-    # cbia = clipboard, id, add (clipboard with id exists)
-    client -> server:  CNEG "vers" "1.0"
-    client -> server:  CNEG "name" "foobar"
-    client -> server:  CNGE
-    server -> client:  CNEG "cbfa" "text/plain/LF"
-    server -> client:  CNEG "cbfa" "image/BMP"
-    server -> client:  CNGE
-    client -> server:  CNEG "cbia" "0"
-    client -> server:  CNGE
-
-  server should just ask CProtocol (renamed from CServerProtocol) to
-  return a protocol.  CProtocol should do negotiation, create the
-  appropriate protocol object, finish negotiation, and return the
-  new protocol object.  unless connection is registered with server,
-  though, we can't save any screen info.  perhaps CProtocol should
-  also return a screen info object or that should be part of the
-  protocol object (currently the protocol is part of the screen info).
-  if screen info is available to CProtocol then it should finish with
-  requesting the screen info, waiting for and then handling the reply.
-  the server can then just ask CProtocol for the protocol object then
-  add it to the connections.
-
-  maybe call the protocol types CClientProxy since that's how the
-  server uses it:  as a stand-in for the client object.  the interface
-  should closely reflect the CClient interface.  do the reverse for
-  a server proxy for the client.  maybe even have interface classes
-  for the client and server methods.
-
----
-should add clipboard data type format negotiation
-  server sends permitted data type formats
-  client responds with known formats in permitted list
-  client must only send permitted formats
-    server can discard non-permitted formats
-  server must only send known, permitted formats to client
-  formats are names of the form [a-zA-Z0-9_/]+
-  server must be able to translate between all permitted formats
-  example:  text formats:
-    text/plain/CRLF  -- windows plain text
-    text/plain/LF    -- unix plain text
-    text/plain/CR    -- mac plain text
-    text/rtf         -- rich text (does that require a particular newline?)
-  or image formats:
-    image/BMP
-    image/RAW
-    image/XPM
-
-this will allow future versions to interoperate better.  it also
-allows compatibility with versions that are identical except for
-the support clipboard formats, obviating bumping up the protocol
-version number.
-
-maybe config file can list format shared libraries to load.  user
-can then pick formats to support.  but why would you ever want
-fewer formats?
-
-should the major burden of translation be on client or server?
-probably client since it knows the formats preferred by the
-platform and may be able to use platform utilities to convert.
-server would then just support formats that minimize loss of
-information.
-
-desired formats to support:
-  text (LF)
-  text with character set
-  unicode (LF)
-  rich text (or some kind of formatting)
-  bitmap (BMP, PNG?)
-  sound (WAV)
-
-note that formats should be added to the win32 clipboard in the
-order of most descriptive to least because they're kept in order
-and apps will generally use the first suitable match.
 
 ---
 hot keys
@@ -191,10 +79,6 @@ should switch to user nobody (or something similar) if running as root
     if that file is only root writable (as it should be)
 
 ---
-Xsetup file may have to kill previous synergy
-  or synergy should exit if there's already a synergy running
-
----
 not handling international characters
 
 ---
@@ -220,17 +104,6 @@ not distinguishing between caps lock and shift lock
   their shifted character when pressed alone. For Shift Lock mode, pressing
   and releasing the Lock key turns on the mode, and pressing and releasing
   either the Lock or the Shift key turns off the mode.
-
----
-currently sending all clipboards to all clients
-  some clients may not need all clipboards
-  add filtering mechanism
-    setup is probably part of clipboard (format) negotiation
-
----
-not handling large motif selections
-  there must be a limit because properties can only be so big
-  don't know protocol for transfer, though
 
 ---
 need timeout on CXWindowsClipboard::CReply objects
@@ -461,28 +334,6 @@ better support for reloading configuration (liz)
 non-functional on ctrl+alt+del screen in win2k (kurt)
   i suppose it must be when win2k is the client.  mouse input wasn't
   working.  keyboard probably didn't work either.
-
-gspencer:
-  OK, I've narrowed it down a little -- it seems to happen if you have any
-  key down (I tried the shift key and the letter 's' key) when you cross
-  over from master to client, which would make me suspect the "capture"
-  code, since if you have a key down you aren't supposed to be able to
-  cross over...
-
-gspencer:
-  bouncy mouse at edge of screen (win32 server).  almost certainly
-  related to changes that fixed mouse delta calculation.
-
-
-== fixed? ===
-dragging windows is too slow
-  grace (as client) exhibits this
-    dunno if it happens with audrey2 as the client
-  liz says her windows laptop does it too
-  also closing/iconifying has a delay
-  dragging multiple files also sluggish
-
-liz seems to still be seeing sluggish cursor updates
 
 ---
 automake stuff
