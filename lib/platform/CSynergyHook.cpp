@@ -400,8 +400,13 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		case VK_LMENU:
 		case VK_RMENU:
 		case VK_HANGUL:
-			// discard the control and alt modifiers
-			return true;
+			// pass the control and alt modifiers if using a low
+			// level hook, discard them if not.
+			if (g_hookThread == 0) {
+				return true;
+			}
+			break;
+
 
 		default:
 			// discard
