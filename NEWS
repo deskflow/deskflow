@@ -1,6 +1,13 @@
 Synergy News
 ============
 
+* Jan-25-2003 - Synergy 1.0.2 released
+
+  Made following changes:
+  * Fixed out-of-bounds array lookup in the BSD and Windows network code
+  * Added ability to set screen options from Windows launch dialog
+
+
 * Jan-22-2003 - Synergy 1.0.1 released
 
   Made following changes:
