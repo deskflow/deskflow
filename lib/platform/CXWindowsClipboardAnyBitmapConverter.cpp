@@ -31,47 +31,36 @@ public:
 };
 
 // BMP is little-endian
-static inline
-UInt16
-toLE(UInt16 data)
+
+static
+void
+toLE(UInt8*& dst, UInt16 src)
 {
-	union x16 {
-		UInt8	n8[2];
-		UInt16	n16;
-	} c;
-	c.n8[0] = static_cast<UInt8>(data & 0xffu);
-	c.n8[1] = static_cast<UInt8>((data >> 8) & 0xffu);
-	return c.n16;
+	dst[0] = static_cast<UInt8>(src & 0xffu);
+	dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
+	dst += 2;
 }
 
-static inline
-SInt32
-toLE(SInt32 data)
+static
+void
+toLE(UInt8*& dst, SInt32 src)
 {
-	union x32 {
-		UInt8	n8[4];
-		SInt32	n32;
-	} c;
-	c.n8[0] = static_cast<UInt8>(data & 0xffu);
-	c.n8[1] = static_cast<UInt8>((data >>  8) & 0xffu);
-	c.n8[2] = static_cast<UInt8>((data >> 16) & 0xffu);
-	c.n8[3] = static_cast<UInt8>((data >> 24) & 0xffu);
-	return c.n32;
+	dst[0] = static_cast<UInt8>(src & 0xffu);
+	dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
+	dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
+	dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+	dst += 4;
 }
 
-static inline
-UInt32
-toLE(UInt32 data)
+static
+void
+toLE(UInt8*& dst, UInt32 src)
 {
-	union x32 {
-		UInt8	n8[4];
-		UInt32	n32;
-	} c;
-	c.n8[0] = static_cast<UInt8>(data & 0xffu);
-	c.n8[1] = static_cast<UInt8>((data >>  8) & 0xffu);
-	c.n8[2] = static_cast<UInt8>((data >> 16) & 0xffu);
-	c.n8[3] = static_cast<UInt8>((data >> 24) & 0xffu);
-	return c.n32;
+	dst[0] = static_cast<UInt8>(src & 0xffu);
+	dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
+	dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
+	dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+	dst += 4;
 }
 
 static inline
@@ -178,20 +167,21 @@ CXWindowsClipboardAnyBitmapConverter::toIClipboard(const CString& image) const
 	}
 
 	// fill BMP info header with little-endian data
-	CBMPInfoHeader infoHeader;
-	infoHeader.biSize          = toLE(40);
-	infoHeader.biWidth         = toLE(w);
-	infoHeader.biHeight        = toLE(h);
-	infoHeader.biPlanes        = toLE(1);
-	infoHeader.biBitCount      = toLE(depth);
-	infoHeader.biCompression   = toLE(0);		// BI_RGB
-	infoHeader.biSizeImage     = image.size();
-	infoHeader.biXPelsPerMeter = toLE(2834);	// 72 dpi
-	infoHeader.biYPelsPerMeter = toLE(2834);	// 72 dpi
-	infoHeader.biClrUsed       = toLE(0);
-	infoHeader.biClrImportant  = toLE(0);
+	UInt8 infoHeader[40];
+	UInt8* dst = infoHeader;
+	toLE(dst, static_cast<UInt32>(40));
+	toLE(dst, static_cast<SInt32>(w));
+	toLE(dst, static_cast<SInt32>(h));
+	toLE(dst, static_cast<UInt16>(1));
+	toLE(dst, static_cast<UInt16>(depth));
+	toLE(dst, static_cast<UInt32>(0));		// BI_RGB
+	toLE(dst, static_cast<UInt32>(image.size()));
+	toLE(dst, static_cast<SInt32>(2834));	// 72 dpi
+	toLE(dst, static_cast<SInt32>(2834));	// 72 dpi
+	toLE(dst, static_cast<UInt32>(0));
+	toLE(dst, static_cast<UInt32>(0));
 
 	// construct image
-	return CString(reinterpret_cast<const char*>(&infoHeader),
+	return CString(reinterpret_cast<const char*>(infoHeader),
 							sizeof(infoHeader)) + rawBMP;
 }

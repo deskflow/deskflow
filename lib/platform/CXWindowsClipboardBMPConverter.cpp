@@ -35,19 +35,32 @@ fromLEU32(const UInt8* data)
 			(static_cast<UInt32>(data[3]) << 24);
 }
 
-static inline
-UInt32
-toLE(UInt32 data)
+static
+void
+toLE(UInt8*& dst, char src)
 {
-	union x32 {
-		UInt8	n8[4];
-		UInt32	n32;
-	} c;
-	c.n8[0] = static_cast<UInt8>(data & 0xffu);
-	c.n8[1] = static_cast<UInt8>((data >>  8) & 0xffu);
-	c.n8[2] = static_cast<UInt8>((data >> 16) & 0xffu);
-	c.n8[3] = static_cast<UInt8>((data >> 24) & 0xffu);
-	return c.n32;
+	dst[0] = static_cast<UInt8>(src);
+	dst += 1;
+}
+
+static
+void
+toLE(UInt8*& dst, UInt16 src)
+{
+	dst[0] = static_cast<UInt8>(src & 0xffu);
+	dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
+	dst += 2;
+}
+
+static
+void
+toLE(UInt8*& dst, UInt32 src)
+{
+	dst[0] = static_cast<UInt8>(src & 0xffu);
+	dst[1] = static_cast<UInt8>((src >>  8) & 0xffu);
+	dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
+	dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+	dst += 4;
 }
 
 //
@@ -88,15 +101,15 @@ CString
 CXWindowsClipboardBMPConverter::fromIClipboard(const CString& bmp) const
 {
 	// create BMP image
-	CBMPHeader header;
-	char* type       = reinterpret_cast<char*>(&header.type);
-	type[0]          = 'B';
-	type[1]          = 'M';
-	header.size      = toLE(14 + bmp.size());
-	header.reserved1 = 0;
-	header.reserved2 = 0;
-	header.offset    = toLE(14 + 40);
-	return CString(reinterpret_cast<const char*>(&header), 14) + bmp;
+	UInt8 header[14];
+	UInt8* dst = header;
+	toLE(dst, 'B');
+	toLE(dst, 'M');
+	toLE(dst, 14 + bmp.size());
+	toLE(dst, static_cast<UInt16>(0));
+	toLE(dst, static_cast<UInt16>(0));
+	toLE(dst, static_cast<UInt32>(14 + 40));
+	return CString(reinterpret_cast<const char*>(header), 14) + bmp;
 }
 
 CString
