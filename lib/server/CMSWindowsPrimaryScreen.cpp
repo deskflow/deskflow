@@ -902,9 +902,12 @@ CMSWindowsPrimaryScreen::mapKey(
 		  m_keys[VK_CONTROL]) & 0x80) != 0) {
 		mask |= KeyModifierControl;
 	}
-	if (((m_keys[VK_LMENU] |
-		  m_keys[VK_RMENU] |
-		  m_keys[VK_MENU]) & 0x80) != 0) {
+	if ((m_keys[VK_RMENU] & 0x80) != 0) {
+		// right alt => AltGr on windows
+		mask |= KeyModifierModeSwitch;
+	}
+	else if (((m_keys[VK_LMENU] |
+			   m_keys[VK_MENU]) & 0x80) != 0) {
 		mask |= KeyModifierAlt;
 	}
 	if (((m_keys[VK_LWIN] |
@@ -920,12 +923,19 @@ CMSWindowsPrimaryScreen::mapKey(
 	if ((m_keys[VK_SCROLL] & 0x01) != 0) {
 		mask |= KeyModifierScrollLock;
 	}
+	// ctrl+alt => AltGr on windows
+/* don't convert ctrl+alt to mode switch.  if we do that then we can
+ * never send ctrl+alt+[key] from windows to some platform that
+ * doesn't treat ctrl+alt as mode switch (i.e. all other platforms).
+ * instead, let windows clients automatically treat ctrl+alt as
+ * AltGr and let other clients use ctrl+alt as is.  the right alt
+ * key serves as a mode switch key.
 	if ((mask & (KeyModifierControl | KeyModifierAlt)) ==
 				(KeyModifierControl | KeyModifierAlt)) {
-		// ctrl+alt => AltGr on windows
 		mask |= KeyModifierModeSwitch;
 		mask &= ~(KeyModifierControl | KeyModifierAlt);
 	}
+*/
 	*maskOut = mask;
 	LOG((CLOG_DEBUG2 "key in vk=%d info=0x%08x mask=0x%04x", vkCode, info, mask));
 
