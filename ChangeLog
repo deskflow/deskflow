@@ -1,3 +1,44 @@
+2003/01/08 22:17:44 crs
+//depot/project/synergy/FAQ
+//depot/project/synergy/INSTALL
+
+Added bit about configuring on Solaris, which requires some
+options to find the X11 includes and libraries.
+
+----------
+2003/01/08 21:36:14 crs
+//depot/project/synergy/lib/arch/CArchMultithreadPosix.cpp
+//depot/project/synergy/lib/arch/CArchMultithreadPosix.h
+//depot/project/synergy/lib/arch/CArchNetworkBSD.cpp
+
+Portability fixes.  Now builds on Linux 2.2 and 2.4 and solaris.
+Also builds on i386, alpha, G3/G4, and sparc.
+
+----------
+2003/01/08 21:36:13 crs
+//depot/project/synergy/lib/client/CClient.cpp
+//depot/project/synergy/lib/platform/CXWindowsUtil.cpp
+
+Changed log level of two messages.  Now won't spew about reading
+window properties and will report connection failure at DEBUG
+instead of DEBUG1.
+
+----------
+2003/01/08 21:36:10 crs
+//depot/project/synergy/FAQ
+
+Added a FAQ entry for client being rejected.  User probably didn't
+start the server or told the client the wrong server host name.
+
+----------
+2003/01/07 21:47:27 crs
+//depot/project/synergy/ChangeLog
+//depot/project/synergy/configure.in
+//depot/project/synergy/lib/common/Version.h
+
+Changed version number to 0.9.15.  Added 0.9.15 log entries.
+
+----------
 2003/01/07 21:12:51 crs
 lib/platform/CMSWindowsPrimaryScreen.cpp
 
