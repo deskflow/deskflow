@@ -43,7 +43,8 @@ CMSWindowsScreenSaver::CMSWindowsScreenSaver() :
 	m_wasSecureAnInt(false),
 	m_process(NULL),
 	m_watch(NULL),
-	m_threadID(0)
+	m_threadID(0),
+	m_active(false)
 {
 	// detect OS
 	m_is95Family = false;
@@ -76,6 +77,11 @@ CMSWindowsScreenSaver::~CMSWindowsScreenSaver()
 bool
 CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	// if already started then say it didn't just start
+	if (m_active) {
+		return false;
+	}
+
 	// screen saver may have started.  look for it and get
 	// the process.  if we can't find it then assume it
 	// didn't really start.  we wait a moment before
@@ -322,7 +328,8 @@ CMSWindowsScreenSaver::watchDesktop()
 
 	// watch desktop in another thread
 	LOG((CLOG_DEBUG "watching screen saver desktop"));
-	m_watch = new CThread(new TMethodJob<CMSWindowsScreenSaver>(this,
+	m_active = true;
+	m_watch  = new CThread(new TMethodJob<CMSWindowsScreenSaver>(this,
 								&CMSWindowsScreenSaver::watchDesktopThread));
 }
 
@@ -336,6 +343,7 @@ CMSWindowsScreenSaver::watchProcess(HANDLE process)
 	if (process != NULL) {
 		LOG((CLOG_DEBUG "watching screen saver process"));
 		m_process = process;
+		m_active  = true;
 		m_watch   = new CThread(new TMethodJob<CMSWindowsScreenSaver>(this,
 								&CMSWindowsScreenSaver::watchProcessThread));
 	}
@@ -349,7 +357,8 @@ CMSWindowsScreenSaver::unwatchProcess()
 		m_watch->cancel();
 		m_watch->wait();
 		delete m_watch;
-		m_watch = NULL;
+		m_watch  = NULL;
+		m_active = false;
 	}
 	if (m_process != NULL) {
 		CloseHandle(m_process);
@@ -394,6 +403,7 @@ CMSWindowsScreenSaver::watchDesktopThread(void*)
 		}
 
 		// send screen saver deactivation message
+		m_active = false;
 		PostThreadMessage(m_threadID, m_msg, m_wParam, m_lParam);
 		return;
 	}
@@ -409,6 +419,7 @@ CMSWindowsScreenSaver::watchProcessThread(void*)
 			LOG((CLOG_DEBUG "screen saver died"));
 
 			// send screen saver deactivation message
+			m_active = false;
 			PostThreadMessage(m_threadID, m_msg, m_wParam, m_lParam);
 			return;
 		}

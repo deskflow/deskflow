@@ -83,6 +83,10 @@ private:
 	UINT				m_msg;
 	WPARAM				m_wParam;
 	LPARAM				m_lParam;
+
+	// checkActive state.  true if the screen saver is being watched
+	// for deactivation (and is therefore active).
+	bool				m_active;
 };
 
 #endif

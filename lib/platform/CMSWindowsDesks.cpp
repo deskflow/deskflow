@@ -115,6 +115,8 @@ CMSWindowsDesks::~CMSWindowsDesks()
 void
 CMSWindowsDesks::enable()
 {
+	m_threadID = GetCurrentThreadId();
+
 	// set the active desk and (re)install the hooks
 	checkDesk();
 
@@ -843,6 +845,10 @@ CMSWindowsDesks::checkDesk()
 		if (!wasOnScreen) {
 			sendMessage(SYNERGY_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
 		}
+	}
+	else if (name != m_activeDeskName) {
+		// screen saver might have started
+		PostThreadMessage(m_threadID, SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
 	}
 }
 

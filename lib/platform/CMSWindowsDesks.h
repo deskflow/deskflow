@@ -233,6 +233,7 @@ private:
 	CEventQueueTimer*	m_timer;
 
 	// screen saver stuff
+	DWORD				m_threadID;
 	const IScreenSaver*	m_screensaver;
 	bool				m_screensaverNotify;
 
