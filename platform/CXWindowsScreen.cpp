@@ -7,9 +7,60 @@
 #include "CLock.h"
 #include "CThread.h"
 #include "CLog.h"
+#include "IJob.h"
 #include "CString.h"
 #include <cstdlib>
 #include <cstring>
+
+//
+// CXWindowsScreen::CTimer
+//
+
+CXWindowsScreen::CTimer::CTimer(IJob* job, double timeout) :
+	m_job(job),
+	m_timeout(timeout)
+{
+	assert(m_job != NULL);
+	assert(m_timeout > 0.0);
+
+	reset();
+}
+
+CXWindowsScreen::CTimer::~CTimer()
+{
+	// do nothing
+}
+
+void
+CXWindowsScreen::CTimer::run()
+{
+	m_job->run();
+}
+
+void
+CXWindowsScreen::CTimer::reset()
+{
+	m_time = m_timeout;
+}
+
+CXWindowsScreen::CTimer::CTimer&
+CXWindowsScreen::CTimer::operator-=(double dt)
+{
+	m_time -= dt;
+	return *this;
+}
+
+CXWindowsScreen::CTimer::operator double() const
+{
+	return m_time;
+}
+
+bool
+CXWindowsScreen::CTimer::operator<(const CTimer& t) const
+{
+	return m_time < t.m_time;
+}
+
 
 //
 // CXWindowsScreen
@@ -35,6 +86,38 @@ CXWindowsScreen::~CXWindowsScreen()
 	assert(m_display == NULL);
 
 	s_screen = NULL;
+}
+
+void
+CXWindowsScreen::addTimer(IJob* job, double timeout)
+{
+	CLock lock(&m_timersMutex);
+	removeTimerNoLock(job);
+	m_timers.push(CTimer(job, timeout));
+}
+
+void
+CXWindowsScreen::removeTimer(IJob* job)
+{
+	CLock lock(&m_timersMutex);
+	removeTimerNoLock(job);
+}
+
+void
+CXWindowsScreen::removeTimerNoLock(IJob* job)
+{
+	// do it the hard way.  first collect all jobs that are not
+	// the removed job.
+	CTimerPriorityQueue::container_type tmp;
+	for (CTimerPriorityQueue::iterator index = m_timers.begin();
+								index != m_timers.end(); ++index) {
+		if (index->getJob() != job) {
+			tmp.push_back(*index);
+		}
+	}
+
+	// now swap in the new list
+	m_timers.swap(tmp);
 }
 
 void
@@ -81,7 +164,7 @@ CXWindowsScreen::openDisplay()
 	}
 
 	// initialize the screen saver
-	m_screenSaver = new CXWindowsScreenSaver(m_display);
+	m_screenSaver = new CXWindowsScreenSaver(this, m_display);
 }
 
 void
@@ -181,6 +264,12 @@ CXWindowsScreen::getEvent(XEvent* xevent) const
 	m_mutex.lock();
 	for (;;) {
 		while (!m_stop && XPending(m_display) == 0) {
+			// check timers
+			if (const_cast<CXWindowsScreen*>(this)->processTimers()) {
+				continue;
+			}
+
+			// wait
 			m_mutex.unlock();
 			CThread::sleep(0.01);
 			m_mutex.lock();
@@ -298,11 +387,54 @@ CXWindowsScreen::processEvent(XEvent* xevent)
 	}
 
 	// let screen saver have a go
-	if (m_screenSaver->processEvent(xevent)) {
-		return true;
-	}
+	m_screenSaver->processEvent(xevent);
 
 	return false;
+}
+
+bool
+CXWindowsScreen::processTimers()
+{
+	std::vector<IJob*> jobs;
+	{
+		CLock lock(&m_timersMutex);
+
+		// get current time
+		const double time = m_time.getTime();
+
+		// done if no timers have expired
+		if (m_timers.empty() || m_timers.top() > time) {
+			return false;
+		}
+
+		// subtract current time from all timers.  note that this won't
+		// change the order of elements in the priority queue (except
+		// for floating point round off which we'll ignore).
+		for (CTimerPriorityQueue::iterator index = m_timers.begin();
+								index != m_timers.end(); ++index) {
+			(*index) -= time;
+		}
+
+		// process all timers at or below zero, saving the jobs
+		while (m_timers.top() <= 0.0) {
+			CTimer timer = m_timers.top();
+			jobs.push_back(timer.getJob());
+			timer.reset();
+			m_timers.pop();
+			m_timers.push(timer);
+		}
+
+		// reset the clock
+		m_time.reset();
+	}
+
+	// now run the jobs.  note that if one of these jobs removes
+	// a timer later in the jobs list and deletes that job pointer
+	// then this will crash when it tries to run that job.
+	for (std::vector<IJob*>::iterator index = jobs.begin();
+								index != jobs.end(); ++index) {
+		(*index)->run();
+	}
 }
 
 CXWindowsScreenSaver*

@@ -29,6 +29,8 @@ synergyd_LDADD =					\
 	$(DEPTH)/base/libbase.a			\
 	$(X_LIBS)						\
 	$(X_PRE_LIBS)					\
+	-lXtst							\
+	-lXext							\
 	-lX11							\
 	$(X_EXTRA_LIBS)					\
 	$(NULL)

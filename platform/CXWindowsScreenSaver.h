@@ -2,18 +2,22 @@
 #define CXWINDOWSSCREENSAVER_H
 
 #include "IScreenSaver.h"
+#include "stdmap.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
 #endif
 
+class IJob;
+class CXWindowsScreen;
+
 class CXWindowsScreenSaver : public IScreenSaver {
 public:
 	// note -- the caller must ensure that Display* passed to c'tor isn't
 	// being used in another call to Xlib when calling any method on this
 	// object (including during the c'tor and d'tor) except processEvent().
-	CXWindowsScreenSaver(Display*);
+	CXWindowsScreenSaver(CXWindowsScreen*, Display*);
 	virtual ~CXWindowsScreenSaver();
 
 	// process X event.  returns true if the event was handled.
@@ -38,17 +42,42 @@ private:
 	// send a notification
 	void				sendNotify(bool activated);
 
+	// find and set the running xscreensaver's window.  returns true iff
+	// found.
+	bool				findXScreenSaver();
+
+	// set the xscreensaver's window, updating the activation state flag
+	void				setXScreenSaver(Window);
+
+	// returns true if the window appears to be the xscreensaver window
+	bool				isXScreenSaver(Window) const;
+
 	// set xscreensaver's activation state flag.  sends notification
 	// if the state has changed.
-	void				setXScreenSaver(bool activated);
-
-	// find the running xscreensaver's window
-	void				updateXScreenSaver();
+	void				setXScreenSaverActive(bool activated);
 
 	// send a command to xscreensaver
 	void				sendXScreenSaverCommand(Atom, long = 0, long = 0);
 
+	// watch all windows that could potentially be the xscreensaver for
+	// the events that will confirm it.
+	void				watchForXScreenSaver();
+
+	// stop watching all watched windows
+	void				clearWatchForXScreenSaver();
+
+	// add window to the watch list
+	void				addWatchXScreenSaver(Window window);
+
+	// called periodically to prevent the screen saver from starting
+	void				disableCallback(void*);
+
 private:
+	typedef std::map<Window, long> CWatchList;
+
+	// the event loop object
+	CXWindowsScreen*	m_screen;
+
 	// the X display
 	Display*			m_display;
 
@@ -67,6 +96,9 @@ private:
 	// dummy window to receive xscreensaver repsonses
 	Window				m_xscreensaverSink;
 
+	// potential xscreensaver windows being watched
+	CWatchList			m_watchWindows;
+
 	// atoms used to communicate with xscreensaver's window
 	Atom				m_atomScreenSaver;
 	Atom				m_atomScreenSaverVersion;
@@ -78,6 +110,9 @@ private:
 	int					m_interval;
 	int					m_preferBlanking;
 	int					m_allowExposures;
+
+	// the job used to invoke disableCallback
+	IJob*				m_disableJob;
 };
 
 #endif

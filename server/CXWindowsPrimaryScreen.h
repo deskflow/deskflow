@@ -26,6 +26,7 @@ public:
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 	virtual KeyModifierMask	getToggleMask() const;
 	virtual bool		isLockedToScreen() const;
+	virtual bool		isScreenSaverActive() const;
 
 protected:
 	// CXWindowsScreen overrides

@@ -3,13 +3,18 @@
 
 #include "ClipboardTypes.h"
 #include "CMutex.h"
+#include "CStopwatch.h"
+#include "stdvector.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
 #endif
+#include <algorithm>
+#include <functional>
 
 class IClipboard;
+class IJob;
 class IScreenSaver;
 class CXWindowsClipboard;
 class CXWindowsScreenSaver;
@@ -18,6 +23,15 @@ class CXWindowsScreen {
 public:
 	CXWindowsScreen();
 	virtual ~CXWindowsScreen();
+
+	// manipulators
+
+	// add/remove a job to invoke every timeout seconds.  the job is
+	// called with the display locked.  if a job timeout expires twice
+	// or more before the job can be called then the job is called
+	// just once.  the caller retains ownership of the job.
+	void				addTimer(IJob*, double timeout);
+	void				removeTimer(IJob*);
 
 protected:
 	class CDisplayLock {
@@ -94,8 +108,14 @@ protected:
 	virtual void		onLostClipboard(ClipboardID) = 0;
 
 private:
+	// remove a timer without locking
+	void				removeTimerNoLock(IJob*);
+
 	// internal event processing
 	bool				processEvent(XEvent*);
+
+	// process timers
+	bool				processTimers();
 
 	// determine the clipboard from the X selection.  returns
 	// kClipboardEnd if no such clipboard.
@@ -112,6 +132,112 @@ private:
 	static int			ioErrorHandler(Display*);
 
 private:
+	// a priority queue will direct access to the elements
+	template <class T, class Container = std::vector<T>,
+				class Compare = std::greater<typename Container::value_type> >
+	class CPriorityQueue {
+	public:
+		typedef typename Container::value_type value_type;
+		typedef typename Container::size_type size_type;
+		typedef typename Container::iterator iterator;
+		typedef Container container_type;
+
+		CPriorityQueue() { }
+		CPriorityQueue(Container& swappedIn);
+		~CPriorityQueue() { }
+
+		// manipulators
+
+		void			push(const value_type& v)
+		{
+			c.push_back(v);
+			std::push_heap(c.begin(), c.end(), comp);
+		}
+
+		void			pop()
+		{
+			std::pop_heap(c.begin(), c.end(), comp);
+			c.pop_back();
+		}
+
+		iterator		begin()
+		{
+			return c.begin();
+		}
+
+		iterator		end()
+		{
+			return c.end();
+		}
+
+		void			swap(CPriorityQueue<T, Container, Compare>& q)
+		{
+			c.swap(q.c);
+		}
+
+		void			swap(Container& c2)
+		{
+			c.swap(c2);
+			std::make_heap(c.begin(), c.end(), comp);
+		}
+
+		// accessors
+
+		bool			empty() const
+		{
+			return c.empty();
+		}
+
+		size_type		size() const
+		{
+			return c.size();
+		}
+
+		const value_type&
+						top() const
+		{
+			return c.front();
+		}
+
+	private:
+		Container		c;
+		Compare			comp;
+	};
+
+	// a timer priority queue element
+	class CTimer {
+	public:
+		CTimer(IJob* job, double timeout);
+		~CTimer();
+
+		// manipulators
+
+		void			run();
+
+		void			reset();
+
+		CTimer&			operator-=(double);
+
+		// accessors
+
+		IJob*			getJob() const
+		{
+			return m_job;
+		}
+
+		operator double() const;
+
+		bool			operator<(const CTimer&) const;
+
+	private:
+		IJob*			m_job;
+		double			m_timeout;
+		double			m_time;
+	};
+
+private:
+	typedef CPriorityQueue<CTimer> CTimerPriorityQueue;
+
 	Display*			m_display;
 	int					m_screen;
 	Window				m_root;
@@ -124,6 +250,11 @@ private:
 
 	// screen saver
 	CXWindowsScreenSaver*	m_screenSaver;
+
+	// timers, the stopwatch used to time, and a mutex for the timers
+	CTimerPriorityQueue	m_timers;
+	CStopwatch			m_time;
+	CMutex				m_timersMutex;
 
 	// X is not thread safe
 	CMutex				m_mutex;

@@ -545,6 +545,13 @@ CXWindowsPrimaryScreen::isLockedToScreen() const
 	return false;
 }
 
+bool
+CXWindowsPrimaryScreen::isScreenSaverActive() const
+{
+	CDisplayLock display(this);
+	return getScreenSaver()->isActive();
+}
+
 void
 CXWindowsPrimaryScreen::onOpenDisplay(Display* display)
 {

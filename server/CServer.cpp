@@ -1284,6 +1284,12 @@ CServer::handshakeClient(void* vsocket)
 				// now connected;  client no longer subject to timeout.
 			}
 
+			// activate screen saver on new client if active on the
+			// primary screen
+			if (m_primary->isScreenSaverActive()) {
+				protocol->sendScreenSaver(true);
+			}
+
 			// handle messages from client.  returns when the client
 			// disconnects.
 			log((CLOG_NOTE "client \"%s\" has connected", name.c_str()));

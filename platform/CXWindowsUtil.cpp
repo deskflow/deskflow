@@ -13,7 +13,6 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 				int* format, bool deleteProperty)
 {
 	assert(display != NULL);
-	assert(data != NULL);
 
 	Atom actualType;
 	int actualDatumSize;
@@ -59,7 +58,13 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 		}
 
 		// append data
-		data->append((char*)rawData, numBytes);
+		if (data != NULL) {
+			data->append((char*)rawData, numBytes);
+		}
+		else {
+			// data is not required so don't try to get any more
+			bytesLeft = 0;
+		}
 
 		// done with returned data
 		XFree(rawData);
@@ -78,7 +83,7 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 		*format = static_cast<SInt32>(actualDatumSize);
 	}
 
-	log((CLOG_DEBUG1 "read property %d on window 0x%08x: bytes=%d", property, window, data->size()));
+	log((CLOG_DEBUG1 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
 	return true;
 }
 

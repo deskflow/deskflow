@@ -88,6 +88,9 @@ public:
 	// any other reason that the user should not be allowed to switch
 	// screens.
 	virtual bool		isLockedToScreen() const = 0;
+
+	// return true if the screen saver is activated
+	virtual bool		isScreenSaverActive() const = 0;
 };
 
 #endif
