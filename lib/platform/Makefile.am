@@ -15,6 +15,9 @@ NULL =
 
 XWINDOWS_SOURCE_FILES =						\
 	CXWindowsClipboard.cpp					\
+	CXWindowsClipboardAnyBitmapConverter.cpp\
+	CXWindowsClipboardBMPConverter.cpp		\
+	CXWindowsClipboardHTMLConverter.cpp		\
 	CXWindowsClipboardTextConverter.cpp		\
 	CXWindowsClipboardUCS2Converter.cpp		\
 	CXWindowsClipboardUTF8Converter.cpp		\
@@ -24,6 +27,9 @@ XWINDOWS_SOURCE_FILES =						\
 	CXWindowsScreenSaver.cpp				\
 	CXWindowsUtil.cpp						\
 	CXWindowsClipboard.h					\
+	CXWindowsClipboardAnyBitmapConverter.h	\
+	CXWindowsClipboardBMPConverter.h		\
+	CXWindowsClipboardHTMLConverter.h		\
 	CXWindowsClipboardTextConverter.h		\
 	CXWindowsClipboardUCS2Converter.h		\
 	CXWindowsClipboardUTF8Converter.h		\
@@ -36,6 +42,8 @@ XWINDOWS_SOURCE_FILES =						\
 MSWINDOWS_SOURCE_FILES =					\
 	CMSWindowsClipboard.cpp					\
 	CMSWindowsClipboardAnyTextConverter.cpp	\
+	CMSWindowsClipboardBitmapConverter.cpp	\
+	CMSWindowsClipboardHTMLConverter.cpp	\
 	CMSWindowsClipboardTextConverter.cpp	\
 	CMSWindowsClipboardUTF16Converter.cpp	\
 	CMSWindowsDesks.cpp						\
@@ -46,6 +54,8 @@ MSWINDOWS_SOURCE_FILES =					\
 	CMSWindowsUtil.cpp						\
 	CMSWindowsClipboard.h					\
 	CMSWindowsClipboardAnyTextConverter.h	\
+	CMSWindowsClipboardBitmapConverter.h	\
+	CMSWindowsClipboardHTMLConverter.h		\
 	CMSWindowsClipboardTextConverter.h		\
 	CMSWindowsClipboardUTF16Converter.h		\
 	CMSWindowsDesks.h						\

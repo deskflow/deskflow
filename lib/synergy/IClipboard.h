@@ -40,6 +40,17 @@ public:
 	via add() and retrieved via get() must be in one of these formats.
 	Platform dependent clipboard subclasses can and should present any
 	suitable formats derivable from these formats.
+
+	\c kText is a text format encoded in UTF-8.  Newlines are LF (not
+	CR or LF/CR).
+
+	\k kBitmap is an image format.  The data is a BMP file without the
+	14 byte header (i.e. starting at the INFOHEADER) and with the image
+	data immediately following the 40 byte INFOHEADER.
+
+	\k kHTML is a text format encoded in UTF-8 and containing a valid
+	HTML fragment (but not necessarily a complete HTML document).
+	Newlines are LF.
 	*/
 	enum EFormat {
 		kText,			//!< Text format, UTF-8, newline is LF

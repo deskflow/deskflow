@@ -23,30 +23,44 @@
 inline
 static
 UInt16
-decode16(const UInt8* n)
+decode16(const UInt8* n, bool byteSwapped)
 {
 	union x16 {
 		UInt8	n8[2];
 		UInt16	n16;
 	} c;
-	c.n8[0] = n[0];
-	c.n8[1] = n[1];
+	if (byteSwapped) {
+		c.n8[0] = n[1];
+		c.n8[1] = n[0];
+	}
+	else {
+		c.n8[0] = n[0];
+		c.n8[1] = n[1];
+	}
 	return c.n16;
 }
 
 inline
 static
 UInt32
-decode32(const UInt8* n)
+decode32(const UInt8* n, bool byteSwapped)
 {
 	union x32 {
 		UInt8	n8[4];
 		UInt32	n32;
 	} c;
-	c.n8[0] = n[0];
-	c.n8[1] = n[1];
-	c.n8[2] = n[2];
-	c.n8[3] = n[3];
+	if (byteSwapped) {
+		c.n8[0] = n[3];
+		c.n8[1] = n[2];
+		c.n8[2] = n[1];
+		c.n8[3] = n[0];
+	}
+	else {
+		c.n8[0] = n[0];
+		c.n8[1] = n[1];
+		c.n8[2] = n[2];
+		c.n8[3] = n[3];
+	}
 	return c.n32;
 }
 
@@ -366,9 +380,29 @@ CUnicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	CString dst;
 	dst.reserve(n);
 
+	// check if first character is 0xfffe or 0xfeff
+	bool byteSwapped = false;
+	if (n >= 1) {
+		switch (decode16(data, false)) {
+		case 0x0000feff:
+			data += 2;
+			--n;
+			break;
+
+		case 0x0000fffe:
+			byteSwapped = true;
+			data += 2;
+			--n;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	// convert each character
 	for (; n > 0; data += 2, --n) {
-		UInt32 c = decode16(data);
+		UInt32 c = decode16(data, byteSwapped);
 		toUTF8(dst, c, errors);
 	}
 
@@ -382,9 +416,29 @@ CUnicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	CString dst;
 	dst.reserve(n);
 
+	// check if first character is 0xfffe or 0xfeff
+	bool byteSwapped = false;
+	if (n >= 1) {
+		switch (decode32(data, false)) {
+		case 0x0000feff:
+			data += 4;
+			--n;
+			break;
+
+		case 0x0000fffe:
+			byteSwapped = true;
+			data += 4;
+			--n;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	// convert each character
 	for (; n > 0; data += 4, --n) {
-		UInt32 c = decode32(data);
+		UInt32 c = decode32(data, byteSwapped);
 		toUTF8(dst, c, errors);
 	}
 
@@ -398,9 +452,29 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	CString dst;
 	dst.reserve(n);
 
+	// check if first character is 0xfffe or 0xfeff
+	bool byteSwapped = false;
+	if (n >= 1) {
+		switch (decode16(data, false)) {
+		case 0x0000feff:
+			data += 2;
+			--n;
+			break;
+
+		case 0x0000fffe:
+			byteSwapped = true;
+			data += 2;
+			--n;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	// convert each character
 	for (; n > 0; data += 2, --n) {
-		UInt32 c = decode16(data);
+		UInt32 c = decode16(data, byteSwapped);
 		if (c < 0x0000d800 || c > 0x0000dfff) {
 			toUTF8(dst, c, errors);
 		}
@@ -410,7 +484,7 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 			toUTF8(dst, s_replacement, NULL);
 		}
 		else if (c >= 0x0000d800 && c <= 0x0000dbff) {
-			UInt32 c2 = decode16(data);
+			UInt32 c2 = decode16(data, byteSwapped);
 			data += 2;
 			--n;
 			if (c2 < 0x0000dc00 || c2 > 0x0000dfff) {
@@ -440,9 +514,29 @@ CUnicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	CString dst;
 	dst.reserve(n);
 
+	// check if first character is 0xfffe or 0xfeff
+	bool byteSwapped = false;
+	if (n >= 1) {
+		switch (decode32(data, false)) {
+		case 0x0000feff:
+			data += 4;
+			--n;
+			break;
+
+		case 0x0000fffe:
+			byteSwapped = true;
+			data += 4;
+			--n;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	// convert each character
 	for (; n > 0; data += 4, --n) {
-		UInt32 c = decode32(data);
+		UInt32 c = decode32(data, byteSwapped);
 		if (c >= 0x00110000) {
 			setError(errors);
 			c = s_replacement;

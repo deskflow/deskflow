@@ -16,6 +16,8 @@
 #include "CXWindowsClipboardTextConverter.h"
 #include "CXWindowsClipboardUCS2Converter.h"
 #include "CXWindowsClipboardUTF8Converter.h"
+#include "CXWindowsClipboardHTMLConverter.h"
+#include "CXWindowsClipboardBMPConverter.h"
 #include "CXWindowsUtil.h"
 #include "CThread.h"
 #include "CLog.h"
@@ -68,6 +70,9 @@ CXWindowsClipboard::CXWindowsClipboard(Display* display,
 	}
 
 	// add converters, most desired first
+	m_converters.push_back(new CXWindowsClipboardHTMLConverter(m_display,
+								"text/html"));
+	m_converters.push_back(new CXWindowsClipboardBMPConverter(m_display));
 	m_converters.push_back(new CXWindowsClipboardUTF8Converter(m_display,
 								"text/plain;charset=UTF-8"));
 	m_converters.push_back(new CXWindowsClipboardUTF8Converter(m_display,
