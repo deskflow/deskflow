@@ -232,9 +232,4 @@ CCondVar<T>::operator const T&() const
 	return m_data;
 }
 
-
-// force instantiation of these common types
-template class CCondVar<bool>;
-template class CCondVar<SInt32>;
-
 #endif
