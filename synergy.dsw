@@ -56,6 +56,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name synergy
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name platform
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -123,6 +126,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "platform"=.\platform\platform.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "server"=.\server\server.dsp - Package Owner=<4>
 
 Package=<5>
@@ -133,6 +148,9 @@ Package=<4>
 {{{
     Begin Project Dependency
     Project_Dep_Name base
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name http
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name io
@@ -147,10 +165,10 @@ Package=<4>
     Project_Dep_Name synergy
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name makehook
+    Project_Dep_Name platform
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name http
+    Project_Dep_Name makehook
     End Project Dependency
 }}}
 

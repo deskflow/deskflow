@@ -95,14 +95,6 @@ SOURCE=.\CInputPacketStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsClipboard.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMSWindowsScreen.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\COutputPacketStream.cpp
 # End Source File
 # Begin Source File
@@ -136,14 +128,6 @@ SOURCE=.\CInputPacketStream.h
 # Begin Source File
 
 SOURCE=.\ClipboardTypes.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMSWindowsClipboard.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMSWindowsScreen.h
 # End Source File
 # Begin Source File
 

@@ -4,6 +4,7 @@
 #include "CMutex.h"
 #include "CNetwork.h"
 #include "CNetworkAddress.h"
+#include "CPlatform.h"
 #include "CThread.h"
 #include "XThread.h"
 #include "ProtocolTypes.h"
@@ -248,20 +249,13 @@ static void				parse(int argc, char** argv)
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
+	CPlatform platform;
+
+	// save instance
 	CMSWindowsScreen::init(instance);
 
 	// get program name
-	pname = strrchr(argv[0], '/');
-	if (pname == NULL) {
-		pname = argv[0];
-	}
-	else {
-		++pname;
-	}
-	const char* pname2 = strrchr(argv[0], '\\');
-	if (pname2 != NULL && pname2 > pname) {
-		pname = pname2 + 1;
-	}
+	pname = platform.getBasename(argv[0]);
 
 // FIXME -- direct CLog to MessageBox
 
@@ -292,107 +286,26 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 #elif defined(CONFIG_PLATFORM_UNIX)
 
-#include <stdio.h>
-#include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <pwd.h>
-#include <syslog.h>
-#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
-static void				daemonize()
-{
-	// fork so shell thinks we're done and so we're not a process
-	// group leader
-	switch (fork()) {
-	case -1:
-		// failed
-		log((CLOG_PRINT "failed to daemonize"));
-		exit(1);
-
-	case 0:
-		// child
-		break;
-
-	default:
-		// parent exits
-		exit(0);
-	}
-
-	// become leader of a new session
-	setsid();
-
-	// chdir to root so we don't keep mounted filesystems points busy
-	chdir("/");
-
-	// mask off permissions for any but owner
-	umask(077);
-
-	// close open files.  we only expect stdin, stdout, stderr to be open.
-	close(0);
-	close(1);
-	close(2);
-
-	// attach file descriptors 0, 1, 2 to /dev/null so inadvertent use
-	// of standard I/O safely goes in the bit bucket.
-	open("/dev/null", O_RDWR);
-	dup(0);
-	dup(0);
-}
-
-static void				syslogOutputter(int priority, const char* msg)
-{
-	// convert priority
-	switch (priority) {
-	case CLog::kFATAL:
-	case CLog::kERROR:
-		priority = LOG_ERR;
-		break;
-
-	case CLog::kWARNING:
-		priority = LOG_WARNING;
-		break;
-
-	case CLog::kNOTE:
-		priority = LOG_NOTICE;
-		break;
-
-	case CLog::kINFO:
-		priority = LOG_INFO;
-		break;
-
-	default:
-		priority = LOG_DEBUG;
-		break;
-	}
-
-	// log it
-	syslog(priority, "%s", msg);
-}
-
 int main(int argc, char** argv)
 {
+	CPlatform platform;
+
 	// get program name
-	pname = strrchr(argv[0], '/');
-	if (pname == NULL) {
-		pname = argv[0];
-	}
-	else {
-		++pname;
-	}
+	pname = platform.getBasename(argv[0]);
 
 	// parse command line
 	parse(argc, argv);
 
 	// daemonize if requested
 	if (s_daemon) {
-		daemonize();
-
-		// send log to syslog
-		openlog("synergy", 0, LOG_DAEMON);
-		CLog::setOutputter(&syslogOutputter);
+		if (!platform.daemonize("synergy")) {
+			log((CLOG_CRIT "failed to daemonize"));
+			return 16;
+		}
 	}
 
 	// run the server.  if running as a daemon then run it in a child

@@ -4,7 +4,7 @@ include $(DEPTH)/Makecommon
 #
 # target file
 #
-TARGET = client
+TARGET = synergy
 
 #
 # source files
@@ -15,6 +15,7 @@ LCXXINCS =				\
 	-I$(DEPTH)/io	 		\
 	-I$(DEPTH)/net	 		\
 	-I$(DEPTH)/synergy		\
+	-I$(DEPTH)/platform 		\
 	$(NULL)
 CXXFILES = 				\
 	CXWindowsSecondaryScreen.cpp	\
@@ -26,6 +27,7 @@ CXXFILES = 				\
 # libraries we depend on
 #
 DEPLIBS =				\
+	$(LIBDIR)/libplatform.a		\
 	$(LIBDIR)/libsynergy.a		\
 	$(LIBDIR)/libnet.a		\
 	$(LIBDIR)/libio.a		\

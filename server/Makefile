@@ -4,7 +4,7 @@ include $(DEPTH)/Makecommon
 #
 # target file
 #
-TARGET = server
+TARGET = synergyd
 
 #
 # source files
@@ -16,6 +16,7 @@ LCXXINCS =				\
 	-I$(DEPTH)/http 		\
 	-I$(DEPTH)/net	 		\
 	-I$(DEPTH)/synergy		\
+	-I$(DEPTH)/platform 		\
 	$(NULL)
 CXXFILES = 				\
 	CConfig.cpp			\
@@ -31,6 +32,7 @@ CXXFILES = 				\
 # libraries we depend on
 #
 DEPLIBS =				\
+	$(LIBDIR)/libplatform.a		\
 	$(LIBDIR)/libsynergy.a		\
 	$(LIBDIR)/libnet.a		\
 	$(LIBDIR)/libhttp.a		\
