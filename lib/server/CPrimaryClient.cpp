@@ -63,6 +63,12 @@ CPrimaryClient::reconfigure(UInt32 activeSides)
 	m_screen->reconfigure(activeSides);
 }
 
+UInt32
+CPrimaryClient::addOneShotTimer(double timeout)
+{
+	return m_screen->addOneShotTimer(timeout);
+}
+
 void
 CPrimaryClient::getClipboard(ClipboardID id, CString& data) const
 {

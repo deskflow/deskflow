@@ -102,6 +102,12 @@ CXWindowsPrimaryScreen::setOptions(const COptionsList& options)
 	}
 }
 
+UInt32
+CXWindowsPrimaryScreen::addOneShotTimer(double timeout)
+{
+	return m_screen->addOneShotTimer(timeout);
+}
+
 KeyModifierMask
 CXWindowsPrimaryScreen::getToggleMask() const
 {
@@ -385,6 +391,12 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 	}
 
 	return false;
+}
+
+void
+CXWindowsPrimaryScreen::onOneShotTimerExpired(UInt32 id)
+{
+	m_receiver->onOneShotTimerExpired(id);
 }
 
 SInt32

@@ -69,6 +69,14 @@ public:
 	*/
 	void				removeTimer(IJob*);
 
+	//! Install a one-shot timer
+	/*!
+	Installs a one-shot timer for \c timeout seconds and returns the
+	id of the timer (which will be passed to the receiver's
+	\c onTimerExpired()).
+	*/
+	UInt32				addOneShotTimer(double timeout);
+
 	//! Set window
 	/*!
 	Set the window (created by the subclass).  This performs some
@@ -216,7 +224,7 @@ private:
 	// a timer priority queue element
 	class CTimer {
 	public:
-		CTimer(IJob* job, double timeout);
+		CTimer(IJob* job, double startTime, double resetTime);
 		~CTimer();
 
 		// manipulators
@@ -242,6 +250,7 @@ private:
 		IJob*			m_job;
 		double			m_timeout;
 		double			m_time;
+		double			m_startTime;
 	};
 
 private:
@@ -278,6 +287,7 @@ private:
 	CTimerPriorityQueue	m_timers;
 	CStopwatch			m_time;
 	CMutex				m_timersMutex;
+	CTimer*				m_oneShotTimer;
 
 	// pointer to (singleton) screen.  this is only needed by
 	// ioErrorHandler().

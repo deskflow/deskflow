@@ -141,6 +141,7 @@ public:
 
 	// IPrimaryScreenReceiver overrides
 	virtual void		onScreensaver(bool activated);
+	virtual void		onOneShotTimerExpired(UInt32 id);
 	virtual void		onKeyDown(KeyID, KeyModifierMask);
 	virtual void		onKeyUp(KeyID, KeyModifierMask);
 	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
@@ -196,6 +197,9 @@ private:
 	// return NULL and x,y are not modified.
 	IClient*			getNeighbor(IClient*, EDirection,
 							SInt32& x, SInt32& y) const;
+
+	// reset switch wait state
+	void				clearSwitchWait();
 
 	// send screen options to \c client
 	void				sendOptions(IClient* client) const;
@@ -320,6 +324,12 @@ private:
 	CHTTPServer*		m_httpServer;
 	CCondVar<SInt32>	m_httpAvailable;
 	static const SInt32	s_httpMaxSimultaneousRequests;
+
+	double				m_switchWaitDelay;
+	EDirection			m_switchWaitDir;
+	UInt32				m_switchWaitTimer;
+	IClient*			m_switchWaitScreen;
+	SInt32				m_switchWaitX, m_switchWaitY;
 };
 
 #endif

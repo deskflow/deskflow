@@ -129,6 +129,13 @@ public:
 	*/
 	virtual void		setOptions(const COptionsList& options) = 0;
 
+	//! Install a one-shot timer
+	/*!
+	Installs a one-shot timer for \c timeout seconds and returns the
+	id of the timer.
+	*/
+	virtual UInt32		addOneShotTimer(double timeout) = 0;
+
 	//@}
 	//! @name accessors
 	//@{

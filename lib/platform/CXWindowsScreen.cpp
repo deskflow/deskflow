@@ -54,14 +54,13 @@
 // CXWindowsScreen::CTimer
 //
 
-CXWindowsScreen::CTimer::CTimer(IJob* job, double timeout) :
+CXWindowsScreen::CTimer::CTimer(IJob* job, double startTime, double resetTime) :
 	m_job(job),
-	m_timeout(timeout)
+	m_timeout(resetTime),
+	m_time(resetTime),
+	m_startTime(startTime)
 {
-	assert(m_job != NULL);
 	assert(m_timeout > 0.0);
-
-	reset();
 }
 
 CXWindowsScreen::CTimer::~CTimer()
@@ -72,19 +71,23 @@ CXWindowsScreen::CTimer::~CTimer()
 void
 CXWindowsScreen::CTimer::run()
 {
-	m_job->run();
+	if (m_job != NULL) {
+		m_job->run();
+	}
 }
 
 void
 CXWindowsScreen::CTimer::reset()
 {
-	m_time = m_timeout;
+	m_time      = m_timeout;
+	m_startTime = 0.0;
 }
 
 CXWindowsScreen::CTimer::CTimer&
 CXWindowsScreen::CTimer::operator-=(double dt)
 {
-	m_time -= dt;
+	m_time     -= dt - m_startTime;
+	m_startTime = 0.0;
 	return *this;
 }
 
@@ -118,7 +121,8 @@ CXWindowsScreen::CXWindowsScreen(IScreenReceiver* receiver,
 	m_w(0), m_h(0),
 	m_screensaver(NULL),
 	m_screensaverNotify(false),
-	m_atomScreensaver(None)
+	m_atomScreensaver(None),
+	m_oneShotTimer(NULL)
 {
 	assert(s_screen       == NULL);
 	assert(m_receiver     != NULL);
@@ -137,6 +141,7 @@ CXWindowsScreen::~CXWindowsScreen()
 	assert(s_screen  != NULL);
 	assert(m_display == NULL);
 
+	delete m_oneShotTimer;
 	s_screen = NULL;
 }
 
@@ -145,7 +150,7 @@ CXWindowsScreen::addTimer(IJob* job, double timeout)
 {
 	CLock lock(&m_timersMutex);
 	removeTimerNoLock(job);
-	m_timers.push(CTimer(job, timeout));
+	m_timers.push(CTimer(job, m_time.getTime(), timeout));
 }
 
 void
@@ -170,6 +175,15 @@ CXWindowsScreen::removeTimerNoLock(IJob* job)
 
 	// now swap in the new list
 	m_timers.swap(tmp);
+}
+
+UInt32
+CXWindowsScreen::addOneShotTimer(double timeout)
+{
+	CLock lock(&m_timersMutex);
+	// FIXME -- support multiple one-shot timers
+	m_oneShotTimer = new CTimer(NULL, m_time.getTime(), timeout);
+	return 0;
 }
 
 void
@@ -262,19 +276,27 @@ CXWindowsScreen::mainLoop()
 #endif
 	while (!m_stop) {
 		// compute timeout to next timer
+		double dtimeout;
+		{
+			CLock timersLock(&m_timersMutex);
+			dtimeout = (m_timers.empty() ? -1.0 : m_timers.top());
+			if (m_oneShotTimer != NULL &&
+				(dtimeout == -1.0 || *m_oneShotTimer < dtimeout)) {
+				dtimeout = *m_oneShotTimer;
+			}
+		}
 #if HAVE_POLL
-		int timeout = (m_timers.empty() ? -1 :
-								static_cast<int>(1000.0 * m_timers.top()));
+		int timeout = static_cast<int>(1000.0 * dtimeout);
 #else
 		struct timeval timeout;
 		struct timeval* timeoutPtr;
-		if (m_timers.empty()) {
+		if (dtimeout < 0.0) {
 			timeoutPtr = NULL;
 		}
 		else {
-			timeout.tv_sec  = static_cast<int>(m_timers.top());
+			timeout.tv_sec  = static_cast<int>(dtimeout);
 			timeout.tv_usec = static_cast<int>(1.0e+6 *
-									(m_timers.top() - timeout.tv_sec));
+									(dtimeout - timeout.tv_sec));
 			timeoutPtr      = &timeout;
 		}
 
@@ -697,6 +719,7 @@ CXWindowsScreen::createBlankCursor()
 bool
 CXWindowsScreen::processTimers()
 {
+	bool oneShot = false;
 	std::vector<IJob*> jobs;
 	{
 		CLock lock(&m_timersMutex);
@@ -705,8 +728,19 @@ CXWindowsScreen::processTimers()
 		const double time = m_time.getTime();
 
 		// done if no timers have expired
-		if (m_timers.empty() || m_timers.top() > time) {
+		if ((m_oneShotTimer == NULL || *m_oneShotTimer > time) &&
+			(m_timers.empty() || m_timers.top() > time)) {
 			return false;
+		}
+
+		// handle one shot timers
+		if (m_oneShotTimer != NULL) {
+			*m_oneShotTimer -= time;
+			if (*m_oneShotTimer <= 0.0) {
+				delete m_oneShotTimer;
+				m_oneShotTimer = NULL;
+				oneShot = true;
+			}
 		}
 
 		// subtract current time from all timers.  note that this won't
@@ -718,16 +752,25 @@ CXWindowsScreen::processTimers()
 		}
 
 		// process all timers at or below zero, saving the jobs
-		while (m_timers.top() <= 0.0) {
-			CTimer timer = m_timers.top();
-			jobs.push_back(timer.getJob());
-			timer.reset();
-			m_timers.pop();
-			m_timers.push(timer);
+		if (!m_timers.empty()) {
+			while (m_timers.top() <= 0.0) {
+				CTimer timer = m_timers.top();
+				jobs.push_back(timer.getJob());
+				timer.reset();
+				m_timers.pop();
+				m_timers.push(timer);
+			}
 		}
 
 		// reset the clock
 		m_time.reset();
+	}
+
+	// now notify of the one shot timers
+	if (oneShot) {
+		m_mutex.unlock();
+		m_eventHandler->onOneShotTimerExpired(0);
+		m_mutex.lock();
 	}
 
 	// now run the jobs.  note that if one of these jobs removes

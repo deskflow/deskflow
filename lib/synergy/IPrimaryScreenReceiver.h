@@ -34,6 +34,12 @@ public:
 	*/
 	virtual void		onScreensaver(bool activated) = 0;
 
+	//! Notify of one-shot timer expiration
+	/*!
+	Called when a one-shot timer expires.
+	*/
+	virtual void		onOneShotTimerExpired(UInt32 id) = 0;
+
 	// call to notify of events.  onMouseMovePrimary() returns
 	// true iff the mouse enters a jump zone and jumps.
 	//! Notify of key press

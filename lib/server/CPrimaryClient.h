@@ -59,6 +59,13 @@ public:
 	*/
 	void				reconfigure(UInt32 activeSides);
 
+	//! Install a one-shot timer
+	/*!
+	Installs a one-shot timer for \c timeout seconds and returns the
+	id of the timer (which will be passed to \c onTimerExpired()).
+	*/
+	UInt32				addOneShotTimer(double timeout);
+
 	//@}
 	//! @name accessors
 	//@{

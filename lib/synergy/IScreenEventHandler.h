@@ -57,6 +57,12 @@ public:
 	*/
 	virtual bool		onEvent(CEvent* event) = 0;
 
+	//! Notify of one-shot timer expiration
+	/*!
+	Called when a one-shot timer expires.
+	*/
+	virtual void		onOneShotTimerExpired(UInt32 id) = 0;
+
 	//@}
 	//! @name accessors
 	//@{

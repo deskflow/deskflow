@@ -263,6 +263,12 @@ CXWindowsSecondaryScreen::onEvent(CEvent* event)
 	}
 }
 
+void
+CXWindowsSecondaryScreen::onOneShotTimerExpired(UInt32)
+{
+	// ignore
+}
+
 SInt32
 CXWindowsSecondaryScreen::getJumpZoneSize() const
 {

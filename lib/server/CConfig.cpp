@@ -624,6 +624,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionHeartbeat) {
 		return "heartbeat";
 	}
+	if (id == kOptionScreenSwitchDelay) {
+		return "switchDelay";
+	}
 	return NULL;
 }
 
@@ -659,7 +662,8 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 			return "none";
 		}
 	}
-	if (id == kOptionHeartbeat) {
+	if (id == kOptionHeartbeat ||
+		id == kOptionScreenSwitchDelay) {
 		return CStringUtil::print("%d", value);
 	}
 
@@ -766,6 +770,9 @@ CConfig::readSectionOptions(std::istream& s)
 		}
 		else if (name == "heartbeat") {
 			addOption("", kOptionHeartbeat, parseInt(value));
+		}
+		else if (name == "switchDelay") {
+			addOption("", kOptionScreenSwitchDelay, parseInt(value));
 		}
 		else {
 			throw XConfigRead("unknown argument");
