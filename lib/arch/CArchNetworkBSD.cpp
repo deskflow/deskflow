@@ -502,7 +502,8 @@ CArchNetworkBSD::throwErrorOnSocket(CArchSocket s)
 	// get the error from the socket layer
 	int err        = 0;
 	socklen_t size = sizeof(err);
-	if (getsockopt(s->m_fd, SOL_SOCKET, SO_ERROR, &err, &size) == -1) {
+	if (getsockopt(s->m_fd, SOL_SOCKET, SO_ERROR,
+							(optval_t*)&err, &size) == -1) {
 		err = errno;
 	}
 
@@ -540,13 +541,15 @@ CArchNetworkBSD::setNoDelayOnSocket(CArchSocket s, bool noDelay)
 	// get old state
 	int oflag;
 	socklen_t size = sizeof(oflag);
-	if (getsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY, &oflag, &size) == -1) {
+	if (getsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY,
+							(optval_t*)&oflag, &size) == -1) {
 		throwError(errno);
 	}
 
 	int flag = noDelay ? 1 : 0;
 	size     = sizeof(flag);
-	if (setsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY, &flag, size) == -1) {
+	if (setsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY,
+							(optval_t*)&flag, size) == -1) {
 		throwError(errno);
 	}
 
