@@ -27,8 +27,8 @@ InstallDirRegKey HKLM "Software\Synergy" "Install_Dir"
 
 ; Pages
 
-Page license
 Page components
+Page license
 Page directory
 Page instfiles
 
@@ -38,7 +38,7 @@ UninstPage instfiles
 ;--------------------------------
 
 ; Text
-ComponentText "This this install Synergy on your computer.  Select the optional components you want to install."
+ComponentText "This will install Synergy on your computer.  Select the optional components you want to install."
 DirText "Choose a directory to install Synergy to:"
 UninstallText "This will uninstall Synergy from your computer."
 LicenseText "Synergy is distributed under the GNU GPL:"
