@@ -30,6 +30,7 @@ dnl information on the package
 dnl checks for programs
 AC_PROG_CXX
 AC_PROG_RANLIB
+AC_CHECK_PROG(HAVE_DOT, dot, YES, NO)
 
 dnl do checks using C++
 AC_LANG_CPLUSPLUS
