@@ -455,7 +455,7 @@ CXWindowsPrimaryScreen::showWindow()
 	do {
 		// keyboard first
 		do {
-		result = XGrabKeyboard(display, m_window, True,
+			result = XGrabKeyboard(display, m_window, True,
 								GrabModeAsync, GrabModeAsync, CurrentTime);
 			assert(result != GrabNotViewable);
 			if (result != GrabSuccess) {
