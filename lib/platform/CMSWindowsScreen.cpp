@@ -106,7 +106,9 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary,
 	m_setMode(NULL),
 	m_keyState(NULL),
 	m_suspend(suspend),
-	m_resume(resume)
+	m_resume(resume),
+	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
+	m_showingMouse(false)
 {
 	assert(s_instance != NULL);
 	assert(s_screen   == NULL);
@@ -125,6 +127,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary,
 		updateScreenShape();
 		m_class       = createWindowClass();
 		m_window      = createWindow(m_class, "Synergy");
+		forceShowCursor();
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
 		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 	}
@@ -240,6 +243,7 @@ CMSWindowsScreen::disable()
 	m_nextClipboardWindow = NULL;
 
 	m_isOnScreen = m_isPrimary;
+	forceShowCursor();
 }
 
 void
@@ -259,6 +263,7 @@ CMSWindowsScreen::enter()
 
 	// now on screen
 	m_isOnScreen = true;
+	forceShowCursor();
 }
 
 bool
@@ -292,6 +297,7 @@ CMSWindowsScreen::leave()
 
 	// now off screen
 	m_isOnScreen = false;
+	forceShowCursor();
 
 	return true;
 }
@@ -523,6 +529,36 @@ void
 CMSWindowsScreen::updateKeys()
 {
 	m_desks->updateKeys();
+}
+
+void
+CMSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
+				KeyButton button)
+{
+	CPlatformScreen::fakeKeyDown(id, mask, button);
+	updateForceShowCursor();
+}
+
+void
+CMSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+				SInt32 count, KeyButton button)
+{
+	CPlatformScreen::fakeKeyRepeat(id, mask, count, button);
+	updateForceShowCursor();
+}
+
+void
+CMSWindowsScreen::fakeKeyUp(KeyButton button)
+{
+	CPlatformScreen::fakeKeyUp(button);
+	updateForceShowCursor();
+}
+
+void
+CMSWindowsScreen::fakeToggle(KeyModifierMask modifier)
+{
+	CPlatformScreen::fakeToggle(modifier);
+	updateForceShowCursor();
 }
 
 HINSTANCE
@@ -829,6 +865,16 @@ CMSWindowsScreen::onEvent(HWND, UINT msg,
 		}
 		*result = TRUE;
 		return true;
+
+	case WM_DEVICECHANGE:
+		forceShowCursor();
+		break;
+
+	case WM_SETTINGCHANGE:
+		if (wParam == SPI_SETMOUSEKEYS) {
+			forceShowCursor();
+		}
+		break;
 	}
 
 	return false;
@@ -1375,6 +1421,60 @@ CMSWindowsScreen::updateKeysCB(void*)
 {
 	m_keyState->updateKeys();
 	updateButtons();
+}
+
+void
+CMSWindowsScreen::forceShowCursor()
+{
+	// check for mouse
+	m_hasMouse = (GetSystemMetrics(SM_MOUSEPRESENT) != 0);
+
+	// decide if we should show the mouse
+	bool showMouse = (!m_hasMouse && !m_isPrimary && m_isOnScreen);
+
+	// show/hide the mouse
+	if (showMouse != m_showingMouse) {
+		if (showMouse) {
+			m_oldMouseKeys.cbSize = sizeof(m_oldMouseKeys);
+			m_gotOldMouseKeys =
+				(SystemParametersInfo(SPI_GETMOUSEKEYS,
+							m_oldMouseKeys.cbSize,	&m_oldMouseKeys, 0) != 0);
+			if (m_gotOldMouseKeys) {
+				m_mouseKeys    = m_oldMouseKeys;
+				m_showingMouse = true;
+				updateForceShowCursor();
+			}
+		}
+		else {
+			if (m_gotOldMouseKeys) {
+				SystemParametersInfo(SPI_SETMOUSEKEYS,
+							m_oldMouseKeys.cbSize,
+							&m_oldMouseKeys, SPIF_SENDCHANGE);
+				m_showingMouse = false;
+			}
+		}
+	}
+}
+
+void
+CMSWindowsScreen::updateForceShowCursor()
+{
+	DWORD oldFlags = m_mouseKeys.dwFlags;
+
+	// turn on MouseKeys
+	m_mouseKeys.dwFlags = MKF_AVAILABLE | MKF_MOUSEKEYSON;
+
+	// make sure MouseKeys is active in whatever state the NumLock is
+	// not currently in.
+	if ((m_keyState->getActiveModifiers() & KeyModifierNumLock) != 0) {
+		m_mouseKeys.dwFlags |= MKF_REPLACENUMBERS;
+	}
+
+	// update MouseKeys
+	if (oldFlags != m_mouseKeys.dwFlags) {
+		SystemParametersInfo(SPI_SETMOUSEKEYS,
+							m_mouseKeys.cbSize, &m_mouseKeys, SPIF_SENDCHANGE);
+	}
 }
 
 LRESULT CALLBACK
