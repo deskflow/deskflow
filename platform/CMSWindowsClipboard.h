@@ -8,6 +8,7 @@
 
 class IMSWindowsClipboardConverter;
 
+//! Microsoft windows clipboard implementation
 class CMSWindowsClipboard : public IClipboard {
 public:
 	CMSWindowsClipboard(HWND window);
@@ -37,6 +38,11 @@ private:
 	ConverterList		m_converters;
 };
 
+//! Clipboard format converter interface
+/*!
+This interface defines the methods common to all win32 clipboard format
+converters.
+*/
 class IMSWindowsClipboardConverter : public IInterface {
 public:
 	// accessors

@@ -19,37 +19,61 @@ class IScreenReceiver;
 class CXWindowsClipboard;
 class CXWindowsScreenSaver;
 
+// X11 event
 class CEvent {
 public:
 	XEvent				m_event;
 	SInt32				m_result;
 };
 
+// X11 screen implementation
 class CXWindowsScreen : public IScreen {
 public:
 	CXWindowsScreen(IScreenReceiver*, IScreenEventHandler*);
 	virtual ~CXWindowsScreen();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// add/remove a job to invoke every timeout seconds.  the job is
-	// called with the display locked.  if a job timeout expires twice
-	// or more before the job can be called then the job is called
-	// just once.  the caller retains ownership of the job.
+	//! Add timer
+	/*!
+	Add a job to invoke every timeout seconds.  The job is
+	called with the display locked.  If a job timeout expires twice
+	or more before the job can be called then the job is called
+	just once.  The caller retains ownership of the job.
+	*/
 	void				addTimer(IJob*, double timeout);
+
+	//! Remove timer
+	/*!
+	Remove a job.  The caller retains ownership of the job.
+	*/
 	void				removeTimer(IJob*);
 
-	// set the window (created by the subclass).  this performs some
-	// initialization and saves the window in case it's needed later.
+	//! Set window
+	/*!
+	Set the window (created by the subclass).  This performs some
+	initialization and saves the window in case it's needed later.
+	*/
 	void				setWindow(Window);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// get the root window of the screen
+	//! Get window
+	/*!
+	Returns the root window of the screen.
+	*/
 	Window				getRoot() const;
 
-	// get a cursor that is transparent everywhere
+	//! Get transparent cursor
+	/*!
+	Returns a cursor that is transparent everywhere.
+	*/
 	Cursor				getBlankCursor() const;
+
+	//@}
 
 	// IScreen overrides
 	void				open();

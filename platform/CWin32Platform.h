@@ -7,6 +7,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+//! Microsoft windows platform dependent functions
 class CWin32Platform : public IPlatform {
 public:
 	typedef int			(*RunFunc)(CMutex*);
@@ -15,24 +16,35 @@ public:
 	CWin32Platform();
 	virtual ~CWin32Platform();
 
-	// returns true iff the platform is win95/98/me
+	//! Test if windows 95, et al.
+	/*!
+	Returns true iff the platform is win95/98/me.
+	*/
 	static bool			isWindows95Family();
 
-	// utility for calling SetServiceStatus()
+	//! Utility for calling SetServiceStatus()
 	static void			setStatus(SERVICE_STATUS_HANDLE, DWORD state);
+	//! Utility for calling SetServiceStatus()
 	static void			setStatus(SERVICE_STATUS_HANDLE,
 							DWORD state, DWORD step, DWORD waitHint);
+	//! Utility for calling SetServiceStatus()
 	static void			setStatusError(SERVICE_STATUS_HANDLE, DWORD error);
 
-	// run a service.  the RunFunc should unlock the passed in mutex
-	// (which will be locked on entry) when not initializing or
-	// shutting down (i.e. when running its loop).  StopFunc should
-	// cause the RunFunc() to return.  returns what RunFunc returns.
-	// RunFunc should throw CDaemonFailed if the service fails.
+	//! Run service
+	/*!
+	Run a service.  The RunFunc should unlock the passed in mutex
+	(which will be locked on entry) when not initializing or
+	shutting down (i.e. when running its loop).  StopFunc should
+	cause the RunFunc() to return.  Returns what RunFunc returns.
+	RunFunc should throw CDaemonFailed if the service fails.
+	*/
 	int					runDaemon(RunFunc, StopFunc);
 
-	// thrown by RunFunc on service failure.  result is the error
-	// code reported by the service.
+	//! Daemon failed exception
+	/*!
+	Thrown by RunFunc on service failure.  Result is the error
+	code reported by the service.
+	*/
 	class CDaemonFailed {
 	public:
 		CDaemonFailed(int result) : m_result(result) { }

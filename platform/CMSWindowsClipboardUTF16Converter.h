@@ -3,6 +3,7 @@
 
 #include "CMSWindowsClipboardAnyTextConverter.h"
 
+//! Convert to/from UTF-16 encoding
 class CMSWindowsClipboardUTF16Converter :
 				public CMSWindowsClipboardAnyTextConverter {
 public:

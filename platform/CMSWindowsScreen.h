@@ -11,6 +11,7 @@
 class CMSWindowsScreenSaver;
 class CThread;
 
+// Microsoft windows event
 class CEvent {
 public:
 	MSG					m_msg;
@@ -20,29 +21,52 @@ public:
 class IScreenReceiver;
 class IMSWindowsScreenEventHandler;
 
+// Microsoft windows screen implementation
 class CMSWindowsScreen : public IScreen {
 public:
 	CMSWindowsScreen(IScreenReceiver*, IMSWindowsScreenEventHandler*);
 	virtual ~CMSWindowsScreen();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
+	//! Initialize
+	/*!
+	Saves the application's HINSTANCE.  This \b must be called by
+	WinMain with the HINSTANCE it was passed.
+	*/
 	static void			init(HINSTANCE);
 
-	// open the desktop and create and return the window.  returns NULL
-	// on failure.
+	//! Open desktop
+	/*!
+	Open the desktop and create and return the window.  Returns NULL
+	on failure.
+	*/
 	HWND				openDesktop();
 
-	// close the window and desktop
+	//! Close desktop
+	/*!
+	Close the window and desktop.
+	*/
 	void				closeDesktop();
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// returns true iff the system appears to have multiple monitors
+	//! Test for multiple monitors
+	/*!
+	Returns true iff the system appears to have multiple monitors.
+	*/
 	bool				isMultimon() const;
 
-	// get the application instance handle
+	//! Get instance
+	/*!
+	Returns the application instance handle passed to init().
+	*/
 	static HINSTANCE	getInstance();
+
+	//@}
 
 	// IScreen overrides
 	// note -- this class expects the hook DLL to have been loaded

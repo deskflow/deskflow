@@ -7,18 +7,25 @@
 
 class CThread;
 
+//! Microsoft windows screen saver implementation
 class CMSWindowsScreenSaver : public IScreenSaver {
 public:
 	CMSWindowsScreenSaver();
 	virtual ~CMSWindowsScreenSaver();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// check if the screen saver really started.  returns false if it
-	// hasn't, true otherwise.  when the screen saver stops msg will
-	// be posted to the current thread's message queue with the given
-	// parameters.
+	//! Check if screen saver started
+	/*!
+	Check if the screen saver really started.  Returns false if it
+	hasn't, true otherwise.  When the screen saver stops, \c msg will
+	be posted to the current thread's message queue with the given
+	parameters.
+	*/
 	bool				checkStarted(UINT msg, WPARAM, LPARAM);
+
+	//@}
 
 	// IScreenSaver overrides
 	virtual void		enable();

@@ -3,8 +3,12 @@
 
 #include "CXWindowsClipboard.h"
 
+//! Convert to/from locale text encoding
 class CXWindowsClipboardTextConverter : public IXWindowsClipboardConverter {
 public:
+	/*!
+	\c name is converted to an atom and that is reported by getAtom().
+	*/
 	CXWindowsClipboardTextConverter(Display* display, const char* name);
 	virtual ~CXWindowsClipboardTextConverter();
 

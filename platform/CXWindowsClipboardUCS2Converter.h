@@ -3,8 +3,12 @@
 
 #include "CXWindowsClipboard.h"
 
+//! Convert to/from UCS-2 encoding
 class CXWindowsClipboardUCS2Converter : public IXWindowsClipboardConverter {
 public:
+	/*!
+	\c name is converted to an atom and that is reported by getAtom().
+	*/
 	CXWindowsClipboardUCS2Converter(Display* display, const char* name);
 	virtual ~CXWindowsClipboardUCS2Converter();
 

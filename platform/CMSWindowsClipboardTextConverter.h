@@ -3,6 +3,7 @@
 
 #include "CMSWindowsClipboardAnyTextConverter.h"
 
+//! Convert to/from locale text encoding
 class CMSWindowsClipboardTextConverter :
 				public CMSWindowsClipboardAnyTextConverter {
 public:

@@ -12,6 +12,7 @@
 class IJob;
 class CXWindowsScreen;
 
+//! X11 screen saver implementation
 class CXWindowsScreenSaver : public IScreenSaver {
 public:
 	// note -- the caller must ensure that Display* passed to c'tor isn't
@@ -20,18 +21,29 @@ public:
 	CXWindowsScreenSaver(CXWindowsScreen*, Display*);
 	virtual ~CXWindowsScreenSaver();
 
-	// called for each event before event translation and dispatch.  return
-	// true to skip translation and dispatch.  subclasses should call the
-	// superclass's version first and return true if it returns true.
+	//! @name manipulators
+	//@{
+
+	//! Event filtering
+	/*!
+	Called for each event before event translation and dispatch.  Return
+	true to skip translation and dispatch.  Subclasses should call the
+	superclass's version first and return true if it returns true.
+	*/
 	bool				onPreDispatch(const XEvent*);
 
-	// tells this object to send a ClientMessage to the given window
-	// when the screen saver activates or deactivates.  only one
-	// window can be notified.  the message type is the "SCREENSAVER"
-	// atom, the format is 32, and the data.l[0] member is non-zero
-	// if activated, zero if deactivated.  pass in None to disable
-	// notification;
+	//! Set notify target
+	/*!
+	Tells this object to send a ClientMessage to the given window
+	when the screen saver activates or deactivates.  Only one window
+	can be notified at a time.  The message type is the "SCREENSAVER"
+	atom, the format is 32, and the data.l[0] member is non-zero
+	if activated, zero if deactivated.  Pass None to disable
+	notification.
+	*/
 	void				setNotify(Window);
+
+	//@}
 
 	// IScreenSaver overrides
 	virtual void		enable();

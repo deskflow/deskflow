@@ -3,6 +3,7 @@
 
 #include "CMSWindowsClipboard.h"
 
+//! Convert to/from some text encoding
 class CMSWindowsClipboardAnyTextConverter :
 				public IMSWindowsClipboardConverter {
 public:
@@ -17,11 +18,20 @@ public:
 	virtual CString		toIClipboard(HANDLE) const;
 
 protected:
-	// do UTF-8 conversion only.  memory handle allocation and
-	// linefeed conversion is done by this class.  doFromIClipboard()
-	// must include the nul terminator in the returned string (not
-	// including the CString's nul terminator).
+	//! Convert from IClipboard format
+	/*!
+	Do UTF-8 conversion only.  Memory handle allocation and
+	linefeed conversion is done by this class.  doFromIClipboard()
+	must include the nul terminator in the returned string (not
+	including the CString's nul terminator).
+	*/
 	virtual CString		doFromIClipboard(const CString&) const = 0;
+
+	//! Convert to IClipboard format
+	/*!
+	Do UTF-8 conversion only.  Memory handle allocation and
+	linefeed conversion is done by this class.
+	*/
 	virtual CString		doToIClipboard(const CString&) const = 0;
 
 private:

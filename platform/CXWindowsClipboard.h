@@ -14,34 +14,58 @@
 
 class IXWindowsClipboardConverter;
 
+//! X11 clipboard implementation
 class CXWindowsClipboard : public IClipboard {
 public:
-	CXWindowsClipboard(Display*, Window, ClipboardID);
+	/*!
+	Use \c window as the window that owns or interacts with the
+	clipboard identified by \c id.
+	*/
+	CXWindowsClipboard(Display*, Window window, ClipboardID id);
 	virtual ~CXWindowsClipboard();
 
-	// tell clipboard it lost ownership
+	//! Notify clipboard was lost
+	/*!
+	Tells clipboard it lost ownership at the given time.
+	*/
 	void				lost(Time);
 
-	// add a selection request to the request list.  if the given
-	// owner window isn't this clipboard's window then this simply
-	// sends a failure event to the requestor.
+	//! Add clipboard request
+	/*!
+	Adds a selection request to the request list.  If the given
+	owner window isn't this clipboard's window then this simply
+	sends a failure event to the requestor.
+	*/
 	void				addRequest(Window owner,
 							Window requestor, Atom target,
 							::Time time, Atom property);
 
-	// continue processing a selection request.  returns true if the
-	// request was handled, false if the request was unknown.
+	//! Process clipboard request
+	/*!
+	Continues processing a selection request.  Returns true if the
+	request was handled, false if the request was unknown.
+	*/
 	bool				processRequest(Window requestor,
 							::Time time, Atom property);
 
-	// terminate a selection request.  returns true iff the request
-	// was known and handled.
+	//! Cancel clipboard request
+	/*!
+	Terminate a selection request.  Returns true iff the request
+	was known and handled.
+	*/
 	bool				destroyRequest(Window requestor);
 
-	// get the clipboard's window
+	//! Get window
+	/*!
+	Returns the clipboard's window (passed the c'tor).
+	*/
 	Window				getWindow() const;
 
-	// get the clipboard selection atom
+	//! Get selection atom
+	/*!
+	Returns the selection atom that identifies the clipboard to X11
+	(e.g. XA_PRIMARY).
+	*/
 	Atom				getSelection() const;
 
 	// IClipboard overrides
@@ -281,31 +305,54 @@ private:
 	Atom				m_atomGDKSelection;
 };
 
+//! Clipboard format converter interface
+/*!
+This interface defines the methods common to all X11 clipboard format
+converters.
+*/
 class IXWindowsClipboardConverter : public IInterface {
 public:
-	// accessors
+	//! @name accessors
+	//@{
 
-	// return the clipboard format this object converts from/to
+	//! Get clipboard format
+	/*!
+	Return the clipboard format this object converts from/to.
+	*/
 	virtual IClipboard::EFormat
 						getFormat() const = 0;
 
-	// return the atom representing the X selection format that
-	// this object converts from/to
+	//! Get X11 format atom
+	/*!
+	Return the atom representing the X selection format that
+	this object converts from/to.
+	*/
 	virtual Atom		getAtom() const = 0;
 
-	// return the size (in bits) of data elements returned by
-	// toIClipboard().
+	//! Get X11 property datum size
+	/*!
+	Return the size (in bits) of data elements returned by
+	toIClipboard().
+	*/
 	virtual int			getDataSize() const = 0;
 
-	// convert from the IClipboard format to the X selection format.
-	// the input data must be in the IClipboard format returned by
-	// getFormat().  the return data will be in the X selection
-	// format returned by getAtom().
+	//! Convert from IClipboard format
+	/*!
+	Convert from the IClipboard format to the X selection format.
+	The input data must be in the IClipboard format returned by
+	getFormat().  The return data will be in the X selection
+	format returned by getAtom().
+	*/
 	virtual CString		fromIClipboard(const CString&) const = 0;
 
-	// convert from the X selection format to the IClipboard format
-	// (i.e., the reverse of fromIClipboard()).
+	//! Convert to IClipboard format
+	/*!
+	Convert from the X selection format to the IClipboard format
+	(i.e., the reverse of fromIClipboard()).
+	*/
 	virtual CString		toIClipboard(const CString&) const = 0;
+
+	//@}
 };
 
 #endif

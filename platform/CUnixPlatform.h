@@ -3,6 +3,7 @@
 
 #include "IPlatform.h"
 
+//! Unix platform dependent functions
 class CUnixPlatform : public IPlatform {
 public:
 	CUnixPlatform();
