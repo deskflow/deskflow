@@ -585,13 +585,23 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 		// get modifier
 		const unsigned int modifierBit = (1 << index->second);
 
+/* FIXME -- old comment
 		// toggle keys modify the state on press if toggling on and on
 		// release if toggling off.  other keys set the bit on press
 		// and clear the bit on release.  if half-duplex then toggle
 		// each time we get here.
+*/
+		// toggle keys modify the state on release.  other keys set the
+		// bit on press and clear the bit on release.  if half-duplex
+		// then toggle each time we get here.
 		if ((modifierBit & m_toggleModifierMask) != 0) {
+			if (action == kRelease) {
+				mask ^= modifierBit;
+			}
+/* FIXME -- supposed to toggle on on press and off on release but does it?
 			if (((mask & modifierBit) == 0) == (action == kPress))
 				mask ^= modifierBit;
+*/
 		}
 		else if (action == kPress) {
 			mask |= modifierBit;
