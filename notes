@@ -1,8 +1,3 @@
-CServer
- * must have connection thread in screen info map
-    allows disconnect if screen map changes and screen is removed
- * put mutex locks wherever necessary (like accessing m_active)
-
 server						client
 ------						------
 [accept]			<--		connect
@@ -16,13 +11,22 @@ query info			-->
 use automake
 
 ---
-need config file and parser
-  remove hard coded debugging stuff (in server.cpp)
+HTTP stuff
+  no way to save config using HTTP
+    should have a button or a page to force save of config
+    or just save config every time it's changed
+  should use authentication (at least basic)
+
+---
+use hostname instead of "primary", "secondary"
+
+---
+add aliases in config file
+  any alias of a screen name counts as that screen name
+  handy for mapping FQDN <-> hostname
 
 ---
 win32:
-  need to support window stations
-    login screen on NT is a separate window station
   provide taskbar icon
 
 win32 dll:
@@ -30,7 +34,91 @@ win32 dll:
     don't use standard libraries
     use custom _DllMainCRTStartup();  just call DllMain() from it.
     use /MERGE linker switch to merge sections
-  should use mutex on all public functions
+
+clean up c:\winnt\synergy.sgc
+
+desktop switcher program failure when running synergy as service
+  returns access denied from CreateDesktop()
+  don't know why
+
+log window may prevent changing desktop
+  should start console in a thread just for that purpose
+
+client will need to be able to retry connecting to server
+  in case server isn't ready yet, client can camp
+
+---
+bug with half-duplex keys
+  win32 server sent num-lock to grace
+  grace converts to half-duplex so only synthesizes key down
+  now grace starts server and is locked to screen
+  grace should ignore half duplex keys when seeing if locked to screen
+
+---
+CClient and CServer:
+  not checking in stop() that we're actually running
+  must mutex m_primary/m_screen
+    they could be NULL if in the middle of shutting down
+
+---
+win32 screen saver
+  win95 etc:
+    keybd_event can terminate screen saver but not mouse_event
+    keybd_event resets screen saver start timer but not mouse_event
+    to kill screen saver (if it's known to be running):
+		PostMessage (GetActiveWindow(), WM_CLOSE, 0, 0L);
+    to find if screen saver is running:
+		FindWindow ("WindowsScreenSaverClass", NULL);
+  win nt 4:
+    mouse_event resets screen saver start timer but not keybd_event
+    neither can stop screen saver because it runs in a separate desktop
+    to kill screen saver:
+		BOOL CALLBACK KillScreenSaverFunc(HWND hwnd, LPARAM lParam)
+		{
+		  if(IsWindowVisible(hwnd))
+			  PostMessage(hwnd, WM_CLOSE, 0, 0);
+		  return TRUE;
+		}
+
+		HDESK hdesk;
+
+		hdesk = OpenDesktop(TEXT("Screen-saver"),
+						   0,
+						   FALSE,
+						   DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
+		if (hdesk)
+		{
+		  EnumDesktopWindows(hdesk, KillScreenSaverFunc, 0);
+		  CloseDesktop(hdesk);
+		}
+
+---
+unix:
+  restarting fails to connect until a user logs in:
+    Xlib: no protocol specified
+    this is caused by login manager
+      all clients are rejected, except those started by manager itself
+    workaround is to have synergy started by login manager
+      should then use --no-restart, though that's not necessary
+    affects client and server
+  cannot switch screens on login screen:
+    xdm,kdm grab keyboard for duration of login screen
+    synergy cannot switch unless it can grab keyboard
+    gdm doesn't appear to grab keyboard or mouse for duration
+    affects server, only
+
+  get auto-restart into platform code
+    provide a `int(*)(void)' ptr to an auto-restart function
+    function just forks(), calls ptr, waits, repeats
+    may need something else on win32 or maybe just skip it
+
+---
+bug in updating screens
+  saw a goofy set of screens after update
+  i think the config was similar to:
+    A B
+    C
+    D E
 
 ---
 not handling international characters
@@ -49,42 +137,16 @@ not distinguishing between caps lock and shift lock
   either the Lock or the Shift key turns off the mode.
 
 ---
-problems with CLIPBOARD and KDE and NEdit
-  KDE mail reader (others?) and NEdit never reply to selection request
-  perhaps a general Motif problem?
-
 currently sending all clipboards to all clients
   some clients may not need all clipboards
   add filtering mechanism
-
-must find app that correctly sets the CLIPBOARD selection for testing
-  synergy must note changes to one or both selections
-    seems to be having trouble with noting CLIPBOARD after PRIMARY changes
-
-investigate klipper
-  KDE's clipboard manager?
-  it crashed once when server did (see below)
-
----
-blown assertion
-  between client being added to screen list and sending screen size:
-    attempt to switch to that screen blows assert
-    x,y isn't inside screen because screen has zero size
-  maybe have a "ready" flag for each client
-    only count ready clients when finding neighbor
-  or don't add client to screen list until fully ready
-
----
-got crash when opening netscape window after trying copy in KDE mail
-  BadWindow in ChangeWindowAttributes
-  also got it when trying to transfer big clipboard from secondary
-    or just after transferring and perhaps trying to set locally
 
 ---
 sometimes not sending correct clipboard
   some kind of race condition i think
   can select text then switch and get empty clipboard
     switching back to owner screen then out gets correct clipboard
+  dunno if this is still a problem
 
 ---
 win32 not sending correct clipboard
@@ -93,11 +155,17 @@ win32 not sending correct clipboard
   problem persisted;  also got 43 bytes for a 2 byte selection
 
 ---
-slow leaving primary screen on X
-  possibly due to getting primary clipboards
-  possibly something else
-  could try asynchronously getting primary clipboard
-    race condition on secondary wrt pasting
+need timeout on CXWindowsClipboard::CReply objects
+  should flush replies that are too old
+  assumption is that requestor is broken
+
+---
+inconsistencies
+  exceptions
+    using getWhat() in some places to return a code, elsewhere returns message
+  references/pointers
+    should use pointers for any in/out parameter
+      but using references in some places
 
 ---
 win32 hook DLL sometimes not unloaded when server is killed?
@@ -213,15 +281,6 @@ try to determine keyboard quirks automatically
   maybe KBD extension will help determine this
 
 ---
-blown assert:
-  client crashed and primary jumped to primary
-  left over queued motion events then processed
-    caused call to CServer::onMouseMoveSecondary
-    m_protocol is NULL because we're on primary screen
-  must flush queued events when jumping to primary
-    check for other things to do when jumping to primary
-
----
 key events sent to console on win me (95/98?) are very slow
   1/4 to 1/2 second delay before key up is processed
   key up log message is also delayed
@@ -236,6 +295,14 @@ adjust thread priorities on win32
       haven't tried real-time priority
   a very high priority on client fixes delay when typeing into console
   is it the output console causing the slowness?
+
+---
+must send up key events when leaving screen for keys still down
+  some key combos get eaten and the key ups aren't sent
+  e.g. ctrl+alt+del on win2k to grace
+    mouse is forced back to to win2k
+    ctrl and alt up not sent to grace
+    grace thinks ctrl and alt are down 'til user physically press/releases them
 
 ---
 Accessibility Shortcuts
@@ -281,26 +348,21 @@ Q179905
   may prevent system from getting locked up when debugging.
 
 ---
-config file format:
-
-section screens
-  <screen>:
-    # args in any order
-    # not sure if any args
-end
-
-section links
-  <screen>:
-    # args in any order
-    [left=<screen>]
-    [right=<screen>]
-    [up=<screen>]
-    [down=<screen>]
-end
+how is CTCPSocket::connect() able to cancel?
+  looks like it can't
+  make it asynchronous and use poll() to wait for connection
+    use testCancel() to make it cancellable
 
 ---
-will have to redo clipboard stuff on win32
-
-need timeout on CReply objects
-  should flush replies that are too old
-  assumption is that requestor is broken
+win32 rel notes:
+  HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Windows\NoInteractiveServices
+    can prevent an interactive service from running interactively.
+    how can we tell if we're not running interactively?
+    even if not interactive we can use MessageBox() to alert user
+      use MB_SERVICE_NOTIFICATION flag
+      must use a separate thread in initialization if called from handler
+      must close dialog if CTRL_LOGOFF_EVENT is received
+        see SetConsoleCtrlHandler() and CLog (which uses it)
+    maybe possible to get around NoInteractiveServices
+      modify DACLs on windows station/desktops to impersonate logged on user
+      see "Interacting with the User by a Win32 Service"
