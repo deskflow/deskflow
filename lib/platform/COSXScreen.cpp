@@ -35,16 +35,72 @@ COSXScreen::COSXScreen(bool isPrimary) :
 	m_sequenceNumber(0),
 	m_screensaver(NULL),
 	m_screensaverNotify(false),
-	m_ownClipboard(false)
+	m_ownClipboard(false),
+	m_hiddenWindow(NULL),
+	m_userInputWindow(NULL),
+	m_displayManagerNotificationUPP(NULL)
 {
 	try {
 		m_displayID = CGMainDisplayID();
 		updateScreenShape();
 		m_screensaver = new COSXScreenSaver();
 		m_keyState    = new COSXKeyState();
-		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
+
+		if (m_isPrimary) {
+			// 1x1 window (to minimze the back buffer allocated for this
+			// window.
+			Rect bounds = { 100, 100, 101, 101 };
+
+			// m_hiddenWindow is a window meant to let us get mouse moves
+			// when the focus is on this computer.  If you get your event
+			// from the application event target you'll get every mouse
+			// moves. On the other hand the Window event target will only
+			// get events when the mouse moves over the window. 
+			
+			// The ignoreClicks attributes makes it impossible for the
+			// user to click on our invisible window. 
+			CreateNewWindow(kUtilityWindowClass, 
+							kWindowNoShadowAttribute |
+							kWindowIgnoreClicksAttribute |
+							kWindowNoActivatesAttribute, 
+							&bounds, &m_hiddenWindow);
+			
+			// Make it invisible
+			SetWindowAlpha(m_hiddenWindow, 0);
+			ShowWindow(m_hiddenWindow);
+
+			// m_userInputWindow is a window meant to let us get mouse moves
+			// when the focus is on this computer. 
+			Rect inputBounds = { 100, 100, 200, 200 };
+			CreateNewWindow(kUtilityWindowClass, 
+							kWindowNoShadowAttribute |
+							kWindowOpaqueForEventsAttribute |
+							kWindowStandardHandlerAttribute, 
+							&inputBounds, &m_userInputWindow);
+
+			SetWindowAlpha(m_userInputWindow, 0);
+		}
+		
+		m_displayManagerNotificationUPP =
+			NewDMExtendedNotificationUPP(displayManagerCallback);
+
+		OSStatus err = GetCurrentProcess(&m_PSN);
+
+		err = DMRegisterExtendedNotifyProc(m_displayManagerNotificationUPP,
+							this, 0, &m_PSN);
 	}
 	catch (...) {
+		DMRemoveExtendedNotifyProc(m_displayManagerNotificationUPP,
+							NULL, &m_PSN, 0);
+		if (m_hiddenWindow) {
+			ReleaseWindow(m_hiddenWindow);
+			m_hiddenWindow = NULL;
+		}
+
+		if (m_userInputWindow) {
+			ReleaseWindow(m_userInputWindow);
+			m_userInputWindow = NULL;
+		}
 		delete m_keyState;
 		delete m_screensaver;
 		throw;
@@ -64,6 +120,20 @@ COSXScreen::~COSXScreen()
 	disable();
 	EVENTQUEUE->adoptBuffer(NULL);
 	EVENTQUEUE->removeHandler(CEvent::kSystem, IEventQueue::getSystemTarget());
+
+	if (m_hiddenWindow) {
+		ReleaseWindow(m_hiddenWindow);
+		m_hiddenWindow = NULL;
+	}
+
+	if (m_userInputWindow) {
+		ReleaseWindow(m_userInputWindow);
+		m_userInputWindow = NULL;
+	}
+
+	DMRemoveExtendedNotifyProc(m_displayManagerNotificationUPP,
+							NULL, &m_PSN, 0);
+	
 	delete m_keyState;
 	delete m_screensaver;
 }
@@ -159,6 +229,7 @@ COSXScreen::postMouseEvent(const CGPoint & pos) const
 	// 2 - Right
 	// 3 - Middle
 	// Whatever the USB device defined.
+	//
 	// It is a bit weird that the behaviour of buttons over 3 are dependent
 	// on currently plugged in USB devices.
 	CGPostMouseEvent(pos, true, sizeof(m_buttons) / sizeof(m_buttons[0]),
@@ -233,12 +304,12 @@ void
 COSXScreen::fakeMouseWheel(SInt32 delta) const
 {
 	CFPropertyListRef pref = ::CFPreferencesCopyValue(
-							CFSTR("com.apple.scrollwheel.scaling"),
-							kCFPreferencesAnyApplication,
+							CFSTR("com.apple.scrollwheel.scaling") , 
+							kCFPreferencesAnyApplication, 
 							kCFPreferencesCurrentUser,
 							kCFPreferencesAnyHost);
 
-	int32_t wheelIncr = 10;
+	int32_t wheelIncr = 1;
 
 	if (pref != NULL) {
 		CFTypeID id = CFGetTypeID(pref);
@@ -248,6 +319,9 @@ COSXScreen::fakeMouseWheel(SInt32 delta) const
 			double scaling;
 			if (CFNumberGetValue(value, kCFNumberDoubleType, &scaling)) {
 				wheelIncr = (int32_t)(8 * scaling);
+				if (wheelIncr == 0) {
+					wheelIncr = 1;
+				}
 			}
 		}
 		CFRelease(pref);
@@ -311,7 +385,13 @@ void
 COSXScreen::enter()
 {
 	if (m_isPrimary) {
-		// FIXME -- stop capturing input, watch jump zones
+		// stop capturing input, watch jump zones
+		HideWindow( m_userInputWindow );
+		ShowWindow( m_hiddenWindow );
+
+		SetMouseCoalescingEnabled(true, NULL);
+
+		CGSetLocalEventsSuppressionInterval(HUGE_VAL);
 	}
 	else {
 		// show cursor
@@ -340,10 +420,21 @@ COSXScreen::leave()
 		updateKeys();
 
 		// warp to center
+		// FIXME -- this should be the center of the main monitor
 		warpCursor(m_xCenter, m_yCenter);
 
 		// capture events
-		// FIXME
+		HideWindow(m_hiddenWindow);
+		ShowWindow(m_userInputWindow);
+		RepositionWindow(m_userInputWindow,
+							m_userInputWindow, kWindowCenterOnMainScreen);
+		SetUserFocusWindow(m_userInputWindow);
+
+		// The OS will coalesce some events if they are similar enough in a
+		// short period of time this is bad for us since we need every event
+		// to send it over to other machines.  So disable it.		
+		SetMouseCoalescingEnabled(false, NULL);
+		CGSetLocalEventsSuppressionInterval(0.0001);
 	}
 	else {
 		// hide cursor
@@ -457,13 +548,13 @@ COSXScreen::isPrimary() const
 }
 
 void
-COSXScreen::sendEvent(CEvent::Type type, void* data)
+COSXScreen::sendEvent(CEvent::Type type, void* data) const
 {
 	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), data));
 }
 
 void
-COSXScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id)
+COSXScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id) const
 {
 	CClipboardInfo* info   = (CClipboardInfo*)malloc(sizeof(CClipboardInfo));
 	info->m_id             = id;
@@ -471,50 +562,284 @@ COSXScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id)
 	sendEvent(type, info);
 }
 
-
 void
 COSXScreen::handleSystemEvent(const CEvent& event, void*)
 {
-/*
-	EventRef * carbonEvent = reinterpret_cast<EventRef *>(event.getData());
+	EventRef* carbonEvent = reinterpret_cast<EventRef*>(event.getData());
 	assert(carbonEvent != NULL);
 
-	UInt32 eventClass = GetEventClass( *carbonEvent );
+	UInt32 eventClass = GetEventClass(*carbonEvent);
 	
-	switch( eventClass )  
-	{
-		case kEventClassMouse:
+	switch (eventClass) {
+	case kEventClassMouse:
+		switch (GetEventKind(*carbonEvent)) {
+		case kEventMouseDown:
 		{
-			UInt32 eventKind = GetEventKind( *carbonEvent );
-			switch( eventKind )
-			{
-				case kEventMouseMoved:
-				{
-					HIPoint point;
-					GetEventParameter( *carbonEvent,
-						kEventParamMouseDelta,
-						typeHIPoint,
-						NULL,
-						sizeof(point),
-						NULL,
-						&point);
-						
-				} break;
-			}
-		}break;
-
-		case kEventClassKeyboard: 
-		{
-		
+			UInt16 myButton;
+			GetEventParameter(*carbonEvent,
+					kEventParamMouseButton,
+					typeMouseButton,
+					NULL,
+					sizeof(myButton),
+					NULL,
+					&myButton);
+			onMouseButton(true, myButton);
+			break;
 		}
 
-		default: 
+		case kEventMouseUp:
 		{
-		
-		} break;
-	
+			UInt16 myButton;
+			GetEventParameter(*carbonEvent,
+					kEventParamMouseButton,
+					typeMouseButton,
+					NULL,
+					sizeof(myButton),
+					NULL,
+					&myButton);
+			onMouseButton(false, myButton);
+			break;
+		}
+
+		case kEventMouseDragged:
+		case kEventMouseMoved:
+		{
+			HIPoint point;
+			GetEventParameter(*carbonEvent,
+					kEventParamMouseLocation,
+					typeHIPoint,
+					NULL,
+					sizeof(point),
+					NULL,
+					&point);
+			onMouseMove((SInt32)point.x, (SInt32)point.y);
+			break;
+		}
+
+		case kEventMouseWheelMoved:
+		{
+			EventMouseWheelAxis axis;
+			SInt32 delta;
+			GetEventParameter(*carbonEvent,
+					kEventParamMouseWheelAxis,
+					typeMouseWheelAxis,
+					NULL,
+					sizeof(axis),
+					NULL,
+					&axis);
+			if (axis == kEventMouseWheelAxisY) {
+				GetEventParameter(*carbonEvent,
+					kEventParamMouseWheelDelta,
+					typeLongInteger,
+					NULL,
+					sizeof(delta),
+					NULL,
+					&delta);
+				onMouseWheel(120 * (SInt32)delta);
+			}
+			break;
+		}
+		}
+		break;
+
+	case kEventClassKeyboard: 
+		switch (GetEventKind(*carbonEvent)) {
+		case kEventRawKeyUp:
+		case kEventRawKeyDown:
+		case kEventRawKeyRepeat:
+		case kEventRawKeyModifiersChanged:
+//		case kEventHotKeyPressed:
+//		case kEventHotKeyReleased:
+			onKey(*carbonEvent);
+			break;
+		}
+		break;
+
+	case kEventClassWindow:
+		SendEventToWindow(*carbonEvent, m_userInputWindow);
+		switch (GetEventKind(*carbonEvent)) {
+		case kEventWindowActivated:
+			LOG((CLOG_DEBUG1 "window activated"));
+			break;
+
+		case kEventWindowDeactivated:
+			LOG((CLOG_DEBUG1 "window deactivated"));
+			break;
+
+		case kEventWindowFocusAcquired:
+			LOG((CLOG_DEBUG1 "focus acquired"));
+			break;
+
+		case kEventWindowFocusRelinquish:
+			LOG((CLOG_DEBUG1 "focus released"));
+			break;
+		}
+		break;
+
+	default: 
+		break;
 	}
-*/
+}
+
+bool 
+COSXScreen::onMouseMove(SInt32 mx, SInt32 my)
+{
+	LOG((CLOG_DEBUG2 "mouse move %+d,%+d", mx, my));
+
+	SInt32 x = mx - m_xCursor;
+	SInt32 y = my - m_yCursor;
+
+	if ((x == 0 && y == 0) || (mx == m_xCenter && mx == m_yCenter)) {
+		return true;
+	}
+
+	// save position to compute delta of next motion
+	m_xCursor = mx;
+	m_yCursor = my;
+
+	if (m_isOnScreen) {
+		// motion on primary screen
+		sendEvent(getMotionOnPrimaryEvent(),
+							CMotionInfo::alloc(m_xCursor, m_yCursor));
+	}
+	else {
+		// motion on secondary screen.  warp mouse back to
+		// center.
+		warpCursor(m_xCenter, m_yCenter);
+
+		// examine the motion.  if it's about the distance
+		// from the center of the screen to an edge then
+		// it's probably a bogus motion that we want to
+		// ignore (see warpCursorNoFlush() for a further
+		// description).
+		static SInt32 bogusZoneSize = 10;
+		if (-x + bogusZoneSize > m_xCenter - m_x ||
+			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
+			-y + bogusZoneSize > m_yCenter - m_y ||
+			 y + bogusZoneSize > m_y + m_h - m_yCenter) {
+			LOG((CLOG_DEBUG "dropped bogus motion %+d,%+d", x, y));
+		}
+		else {
+			// send motion
+			sendEvent(getMotionOnSecondaryEvent(), CMotionInfo::alloc(x, y));
+		}
+	}
+
+	return true;
+}
+
+bool				
+COSXScreen::onMouseButton(bool pressed, UInt16 macButton) const
+{
+	// Buttons 2 and 3 are inverted on the mac
+	ButtonID button = mapMacButtonToSynergy(macButton);
+
+	if (pressed) {
+		LOG((CLOG_DEBUG1 "event: button press button=%d", button));
+		if (button != kButtonNone) {
+			sendEvent(getButtonDownEvent(), CButtonInfo::alloc(button));
+		}
+	}
+	else {
+		LOG((CLOG_DEBUG1 "event: button release button=%d", button));
+		if (button != kButtonNone) {
+			sendEvent(getButtonUpEvent(), CButtonInfo::alloc(button));
+		}
+	}
+	
+	return true;
+}
+
+bool
+COSXScreen::onMouseWheel(SInt32 delta) const
+{
+	LOG((CLOG_DEBUG1 "event: button wheel delta=%d", delta));
+	sendEvent(getWheelEvent(), CWheelInfo::alloc(delta));
+	return true;
+}
+
+pascal void 
+COSXScreen::displayManagerCallback(void* inUserData, SInt16 inMessage, void*)
+{
+	COSXScreen* screen = (COSXScreen*)inUserData;
+
+	if (inMessage == kDMNotifyEvent) {
+		screen->onDisplayChange();
+	}
+}
+
+bool
+COSXScreen::onDisplayChange()
+{
+	// screen resolution may have changed.  save old shape.
+	SInt32 xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
+
+	// update shape
+	updateScreenShape();
+
+	// do nothing if resolution hasn't changed
+	if (xOld != m_x || yOld != m_y || wOld != m_w || hOld != m_h) {
+		if (m_isPrimary) {
+			// warp mouse to center if off screen
+			if (!m_isOnScreen) {
+				warpCursor(m_xCenter, m_yCenter);
+			}
+		}
+
+		// send new screen info
+		sendEvent(getShapeChangedEvent());
+	}
+
+	return true;
+}
+
+
+bool				
+COSXScreen::onKey(EventRef event) const
+{
+	UInt32 eventKind = GetEventKind(event);
+
+	KeyButton button;
+	GetEventParameter(event, kEventParamKeyCode, typeUInt32,
+							NULL, sizeof(button), NULL, &button);
+		
+	bool down	  = (eventKind == kEventRawKeyDown);
+	bool up		  = (eventKind == kEventRawKeyUp);
+	bool isRepeat = (eventKind == kEventRawKeyRepeat);
+
+	LOG((CLOG_DEBUG1 "event: Key event kind: %d, keycode=%d", eventKind, button));
+	
+	if (down) {
+		m_keyState->setKeyDown(button, true);
+	}
+	else if (up) {
+		m_keyState->setKeyDown(button, false);
+	}
+
+	KeyModifierMask mask;
+	KeyID key = m_keyState->mapKeyFromEvent(event, &mask);
+	
+	m_keyState->sendKeyEvent(getEventTarget(), down, isRepeat,
+							key, mask, 0, button);
+
+	return true;
+}
+
+ButtonID 
+COSXScreen::mapMacButtonToSynergy(UInt16 macButton) const
+{
+	switch (macButton) {
+	case 1:
+		return kButtonLeft;
+
+	case 2:
+		return kButtonRight;
+
+	case 3:
+		return kButtonMiddle;
+	}
+	
+	return kButtonNone;
 }
 
 void
@@ -574,7 +899,7 @@ COSXScreen::updateScreenShape()
 	m_xCenter = m_x + (m_w >> 1);
 	m_yCenter = m_y + (m_h >> 1);
 
-	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount, (displayCount == 1) ? "display" : "displays"));
-
 	free(displays);
+
+	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount, (displayCount == 1) ? "display" : "displays"));
 }

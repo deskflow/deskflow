@@ -27,7 +27,7 @@
 #	endif
 
 	// we may not have run configure on OS X
-#   if defined(__APPLE__)
+#	if defined(__APPLE__)
 #		define SYSAPI_UNIX 1
 #		define WINAPI_CARBON 1
 
@@ -45,11 +45,9 @@
 #		define HAVE_MEMORY_H 1
 #		define HAVE_NANOSLEEP 1
 #		define HAVE_OSTREAM 1
-#		define HAVE_POLL 1
 #		define HAVE_POSIX_SIGWAIT 1
 #		define HAVE_PTHREAD 1
 #		define HAVE_PTHREAD_SIGNAL 1
-#		define HAVE_SOCKLEN_T 1
 #		define HAVE_SSTREAM 1
 #		define HAVE_STDINT_H 1
 #		define HAVE_STDLIB_H 1
@@ -74,7 +72,7 @@
 #		define STDC_HEADERS 1
 #		define TIME_WITH_SYS_TIME 1
 #		define X_DISPLAY_MISSING 1
-#   endif
+#	endif
 #endif
 
 // VC++ specific

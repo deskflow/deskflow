@@ -71,6 +71,8 @@
 //084
 		08FB7793FE84155DC02AAC07 = {
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				SDKROOT = /Developer/SDKs/MacOSX10.2.8.sdk;
 			};
 			buildStyles = (
 				014CEA460018CE2711CA2923,
@@ -186,6 +188,7 @@
 			files = (
 				4C537F15064E293000D3815C,
 				4C537F17064E293000D3815C,
+				4C7D7CDA066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -214,6 +217,7 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base ./lib/mt ./lib/io ./lib/net ./lib/synergy ./lib/platform ./lib/client";
 				INSTALL_PATH = /usr/local/bin;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -455,6 +459,7 @@
 				4C537F51064E2A0F00D3815C,
 				4C537F53064E2A0F00D3815C,
 				4C537F55064E2A0F00D3815C,
+				4C7D7CE4066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -489,6 +494,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base ./lib/mt ./lib/io ./lib/net ./lib/synergy ./lib/platform";
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -874,6 +880,7 @@
 		4C5E868A0648C2ED003C637B = {
 			buildActionMask = 2147483647;
 			files = (
+				4C7D7CDD066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -900,6 +907,7 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1328,6 +1336,7 @@
 		};
 		4C5E86CA0648C6FB003C637B = {
 			children = (
+				4C7D7CD9066319560097CA11,
 				4C5E86CB0648C725003C637B,
 			);
 			isa = PBXGroup;
@@ -3246,11 +3255,93 @@
 			settings = {
 			};
 		};
+		4C7D7CD9066319560097CA11 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = common.h;
+			path = lib/common/common.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4C7D7CDA066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CDB066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CDC066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CDD066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CDE066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CDF066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CE0066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CE1066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CE2066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CE3066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CE4066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4C7D7CE5066319560097CA11 = {
+			fileRef = 4C7D7CD9066319560097CA11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4CB43775063E406A00969041 = {
 			buildActionMask = 2147483647;
 			files = (
 				4C5E87BE0648C969003C637B,
 				4C5E87C00648C969003C637B,
+				4C7D7CE5066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3279,6 +3370,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base ./lib/mt ./lib/io ./lib/net ./lib/synergy ./lib/platform";
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3365,6 +3457,7 @@
 				4C5E86BF0648C412003C637B,
 				4C5E86C30648C653003C637B,
 				4C5E86C70648C6B7003C637B,
+				4C7D7CDC066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3405,6 +3498,7 @@
 				HEADER_SEARCH_PATHS = ./lib/common;
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3452,6 +3546,7 @@
 				4C5E87090648C7B9003C637B,
 				4C5E870A0648C7B9003C637B,
 				4C5E870C0648C7B9003C637B,
+				4C7D7CDE066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3489,6 +3584,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch";
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3580,6 +3676,7 @@
 				4C5E871F0648C809003C637B,
 				4C5E87210648C809003C637B,
 				4C5E87220648C809003C637B,
+				4C7D7CDF066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3610,6 +3707,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base";
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3658,6 +3756,7 @@
 				4C5E87310648C83C003C637B,
 				4C5E87320648C83C003C637B,
 				4C5E87340648C83C003C637B,
+				4C7D7CE0066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3687,6 +3786,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base ./lib/mt";
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3725,6 +3825,7 @@
 				4C5E875B0648C870003C637B,
 				4C5E875C0648C870003C637B,
 				4C5E875E0648C870003C637B,
+				4C7D7CE1066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3759,6 +3860,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base ./lib/mt ./lib/io";
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3876,6 +3978,7 @@
 				4C5E879C0648C8BD003C637B,
 				4C5E879E0648C8BD003C637B,
 				4C5E87A00648C8BD003C637B,
+				4C7D7CE2066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3914,6 +4017,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base ./lib/mt ./lib/io ./lib/net";
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3972,6 +4076,7 @@
 				4CD034960650B6F100525ED1,
 				4CD034980650B6F100525ED1,
 				4CD0349A0650B6F100525ED1,
+				4C7D7CE3066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4006,6 +4111,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base ./lib/mt ./lib/io /lib/synergy";
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -4034,6 +4140,7 @@
 			files = (
 				4C5E87C70648C9D2003C637B,
 				4C5E87C90648C9D2003C637B,
+				4C7D7CDB066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4064,6 +4171,7 @@
 				HEADER_SEARCH_PATHS = "./lib/common ./lib/arch ./lib/base ./lib/mt ./lib/io ./lib/net ./lib/synergy ./lib/platform ./lib/client";
 				INSTALL_PATH = /usr/local/bin;
 				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";

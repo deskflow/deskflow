@@ -32,6 +32,10 @@ protected:
 	virtual CString		doFromIClipboard(const CString&) const;
 	virtual CString		doToIClipboard(const CString&) const;
 
+	// generic encoding converter
+	static CString		convertString(const CString& data,  
+							CFStringEncoding fromEncoding,
+							CFStringEncoding toEncoding);
 };
 
 #endif

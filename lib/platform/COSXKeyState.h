@@ -28,10 +28,21 @@ public:
 	COSXKeyState();
 	virtual ~COSXKeyState();
 
+	//! Map key event to a key
+	/*!
+	Converts a key event into a KeyID and the shadow modifier state
+	to a modifier mask.
+	*/
+	KeyID				mapKeyFromEvent(EventRef event,
+							KeyModifierMask* maskOut) const;
+
 	// IKeyState overrides
 	virtual bool		fakeCtrlAltDel();
 	virtual const char*	getKeyName(KeyButton) const;
-
+	virtual void		sendKeyEvent(void* target,
+							bool press, bool isAutoRepeat,
+							KeyID key, KeyModifierMask mask,
+							SInt32 count, KeyButton button);
 protected:
 	// IKeyState overrides
 	virtual void		doUpdateKeys();
@@ -50,6 +61,8 @@ private:
 	typedef std::map<KeyID, KeyButton> CKeyMap;
 
 	CKeyMap				m_keyMap;
+
+	static const KeyID	s_virtualKey[];
 };
 
 #endif

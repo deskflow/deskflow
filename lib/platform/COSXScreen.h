@@ -28,11 +28,6 @@ public:
 	COSXScreen(bool isPrimary);
 	virtual ~COSXScreen();
 
-	//! @name manipulators
-	//@{
-
-	//@}
-
 	// IScreen overrides
 	virtual void*		getEventTarget() const;
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
@@ -79,8 +74,28 @@ private:
 	void				postMouseEvent(const CGPoint &) const;
 	
 	// convenience function to send events
-	void				sendEvent(CEvent::Type type, void* = NULL);
-	void				sendClipboardEvent(CEvent::Type type, ClipboardID id);
+	void				sendEvent(CEvent::Type type, void* = NULL) const;
+	void				sendClipboardEvent(CEvent::Type type, ClipboardID id) const;
+
+	// message handlers
+	bool				onMouseMove(SInt32 x, SInt32 y);
+	// mouse button handler.  pressed is true if this is a mousedown
+	// event, false if it is a mouseup event.  macButton is the index
+	// of the button pressed using the mac button mapping.
+	bool				onMouseButton(bool pressed, UInt16 macButton) const;
+	bool				onMouseWheel(SInt32 delta) const;
+
+	bool				onDisplayChange();
+
+	bool				onKey(EventRef event) const;
+
+	// map mac mouse button to synergy buttons
+	ButtonID			mapMacButtonToSynergy(UInt16) const;
+	
+	/// Resolution switch callback
+	static pascal void	displayManagerCallback(void* inUserData,
+							SInt16 inMessage, void* inNotifyData);
+
 	
 private:
 	// true if screen is being used as a primary screen, false otherwise
@@ -115,6 +130,17 @@ private:
 
 	// clipboard stuff
 	bool				m_ownClipboard;
+	
+	// window object that gets user input events when the server
+	// has focus.
+	WindowRef			m_hiddenWindow;
+	// window object that gets user input events when the server
+	// does not have focus.
+	WindowRef			m_userInputWindow;
+	
+	// display manager stuff (to get screen resolution switches).
+	DMExtendedNotificationUPP   m_displayManagerNotificationUPP;
+	ProcessSerialNumber			m_PSN;
 };
 
 #endif
