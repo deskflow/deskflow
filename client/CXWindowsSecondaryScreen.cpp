@@ -717,16 +717,10 @@ void					CXWindowsSecondaryScreen::doKeystrokes(
 			// with m_repeat == false count times.
 			Keystrokes::const_iterator start = k;
 			for (; count > 0; --count) {
-				// we generally want repeating keys to use the exact
-				// same event time for each release/press pair so we
-				// don't want to use CurrentTime which can't ensure
-				// that.
-				Time time = getCurrentTime(m_window);
-
 				// send repeating events
 				for (k = start; k != keys.end() && k->m_repeat; ++k) {
 					XTestFakeKeyEvent(display,
-								k->m_keycode, k->m_press, time);
+								k->m_keycode, k->m_press, CurrentTime);
 				}
 			}
 
