@@ -254,6 +254,7 @@ BEGIN
     IDS_UNINSTALLED_USER    "Removed auto-start.  Synergy will not automatically start each time you log in."
     IDS_INVALID_SERVER_NAME "Server name `%{1}' is invalid."
     IDS_TITLE               "Synergy - Version %{1}"
+    IDS_SERVER_IS_CLIENT    "Please enter the computer name of the synergy server, not\nthe name of this computer, in the Server Host Name field."
 END
 
 #endif    // English (U.S.) resources

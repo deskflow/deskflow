@@ -514,6 +514,18 @@ getCommandLine(HWND hwnd, bool testing)
 			return CString();
 		}
 
+		// compare server name to local host.  a common error
+		// is to provide the client's name for the server.  we
+		// don't bother to check the addresses though that'd be
+		// more accurate.
+		if (CStringUtil::CaselessCmp::equal(ARCH->getHostName(), server)) {
+			showError(hwnd, CStringUtil::format(
+								getString(IDS_SERVER_IS_CLIENT).c_str(),
+								server.c_str()));
+			SetFocus(child);
+			return CString();
+		}
+
 		if (testing) {
 			cmdLine += " --no-camp";
 		}
