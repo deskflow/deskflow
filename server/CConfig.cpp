@@ -277,7 +277,7 @@ bool					CConfig::readLine(std::istream& s, CString& line)
 	s >> std::ws;
 	while (std::getline(s, line)) {
 		// strip comments and then trailing whitespace
-		CString::size_type i = line.rfind('#');
+		CString::size_type i = line.find('#');
 		if (i != CString::npos) {
 			line.erase(i);
 		}
