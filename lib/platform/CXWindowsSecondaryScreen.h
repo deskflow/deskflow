@@ -77,48 +77,87 @@ protected:
 
 private:
 	enum EKeyAction { kPress, kRelease, kRepeat };
-	class KeyCodeMask {
-	public:
-		KeyCodeMask();
-	public:
-		KeyCode			m_keycode[4];
-	};
+	typedef unsigned int ModifierIndex;
+	typedef unsigned int ModifierMask;
 	class Keystroke {
 	public:
 		KeyCode			m_keycode;
 		Bool			m_press;
 		bool			m_repeat;
 	};
-	typedef std::vector<Keystroke> Keystrokes;
+	class KeyMapping {
+	public:
+		KeyMapping();
+
+	public:
+		// KeyCode to generate keysym and whether keycode[i] is
+		// sensitive to shift and mode switch.
+		KeyCode			m_keycode[4];
+		bool			m_shiftSensitive[4];
+		bool			m_modeSwitchSensitive[4];
+
+		// the modifier mask of keysym or 0 if not a modifier
+		ModifierMask	m_modifierMask;
+
+		// whether keysym is sensitive to caps and num lock
+		bool			m_numLockSensitive;
+		bool			m_capsLockSensitive;
+	};
+
 	typedef std::vector<KeyCode> KeyCodes;
-	typedef std::map<KeySym, KeyCodeMask> KeyCodeMap;
-	typedef KeyCodeMap::const_iterator KeyCodeIndex;
+	typedef std::map<KeyCode, ModifierIndex> KeyCodeToModifierMap;
+	typedef std::map<KeySym, KeyMapping> KeySymMap;
+	typedef KeySymMap::const_iterator KeySymIndex;
+	typedef std::vector<Keystroke> Keystrokes;
+	typedef std::vector<KeySym> KeySyms;
+	typedef std::map<KeySym, KeySyms> KeySymsMap;
 	typedef std::map<KeyButton, KeyCode> ServerKeyMap;
 
 	unsigned int		mapButton(ButtonID button) const;
 
-	unsigned int		mapKey(Keystrokes&, KeyCode&, KeyID,
+	ModifierMask		mapKey(Keystrokes&, KeyCode&, KeyID,
 							KeyModifierMask, EKeyAction) const;
+	ModifierMask		mapKeyRelease(Keystrokes&, KeyCode) const;
+	bool				mapToKeystrokes(Keystrokes& keys,
+							KeyCode& keycode,
+							ModifierMask& finalMask,
+							KeySymIndex keyIndex,
+							ModifierMask currentMask,
+							EKeyAction action) const;
+	bool				adjustModifiers(Keystrokes& keys,
+							Keystrokes& undo,
+							ModifierMask& inOutMask,
+							ModifierMask desiredMask) const;
+	bool				adjustModifier(Keystrokes& keys,
+							Keystrokes& undo,
+							KeySym keysym,
+							bool desireActive) const;
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
-	unsigned int		maskToX(KeyModifierMask) const;
+	ModifierMask		maskToX(KeyModifierMask) const;
+
+	unsigned int		findBestKeyIndex(KeySymIndex keyIndex,
+							ModifierMask currentMask) const;
+	bool				isShiftInverted(KeySymIndex keyIndex,
+							ModifierMask currentMask) const;
+	ModifierMask		getModifierMask(KeySym) const;
 
 	void				doUpdateKeys(Display*);
 	void				doReleaseKeys(Display*);
-	void				updateKeycodeMap(Display* display);
+	void				updateKeysymMap(Display* display);
 	void				updateModifiers(Display* display);
-	void				updateModifierMap(Display* display);
-	unsigned int		keySymToModifierIndex(KeySym) const;
-	void				toggleKey(Display*, KeySym, unsigned int mask);
+	ModifierIndex		keySymToModifierIndex(KeySym) const;
+	void				toggleKey(Display*, KeySym, ModifierMask mask);
 	static bool			isToggleKeysym(KeySym);
 
-	KeyCodeIndex		findKey(KeyID keysym, KeyModifierMask mask) const;
-	KeyCodeIndex		noKey() const;
+	KeySym				keyIDToKeySym(KeyID id, ModifierMask mask) const;
 	bool				adjustForNumLock(KeySym) const;
 	bool				adjustForCapsLock(KeySym) const;
 
-private:
-	enum { kNONE, kSHIFT, kALTGR, kSHIFT_ALTGR };
+	bool				decomposeKeySym(KeySym keysym,
+							KeySyms& decomposed) const;
+	static const KeySymsMap&	getDecomposedKeySymTable();
 
+private:
 	CXWindowsScreen*	m_screen;
 	Window				m_window;
 
@@ -140,40 +179,44 @@ private:
 	std::vector<unsigned char>	m_buttons;
 
 	// current active modifiers (X key masks)
-	unsigned int		m_mask;
-
-	// maps key IDs to X keycodes and the X modifier key mask needed
-	// to generate the right keysym
-	KeyCodeMap			m_keycodeMap;
+	ModifierMask		m_mask;
 
 	// the modifiers that have keys bound to them
-	unsigned int		m_modifierMask;
+	ModifierMask		m_modifierMask;
 
 	// set bits indicate modifiers that toggle (e.g. caps-lock)
-	unsigned int		m_toggleModifierMask;
+	ModifierMask		m_toggleModifierMask;
+
+	// keysym to keycode mapping
+	KeySymMap			m_keysymMap;
+
+	// modifier index to keycodes
+	KeyCodes			m_modifierKeycodes[8];
+
+	// keycode to modifier index
+	KeyCodeToModifierMap	m_keycodeToModifier;
+
+	// modifier keysyms
+	KeySym				m_shiftKeysym;
+	KeySym				m_ctrlKeysym;
+	KeySym				m_altKeysym;
+	KeySym				m_metaKeysym;
+	KeySym				m_superKeysym;
+	KeySym				m_modeSwitchKeysym;
+	KeySym				m_numLockKeysym;
+	KeySym				m_capsLockKeysym;
+	KeySym				m_scrollLockKeysym;
 
 	// modifier masks
-	unsigned int		m_altMask;
-	unsigned int		m_metaMask;
-	unsigned int		m_superMask;
-	unsigned int		m_modeSwitchMask;
-	unsigned int		m_numLockMask;
-	unsigned int		m_capsLockMask;
-	unsigned int		m_scrollLockMask;
-
-	// modifier indices
-	unsigned int		m_altIndex;
-	unsigned int		m_metaIndex;
-	unsigned int		m_superIndex;
-	unsigned int		m_modeSwitchIndex;
-	unsigned int		m_numLockIndex;
-	unsigned int		m_capsLockIndex;
-	unsigned int		m_scrollLockIndex;
-
-	// map X modifier key indices to the key codes bound to them
-	unsigned int		m_keysPerModifier;
-	KeyCodes			m_modifierToKeycode;
-	KeyCodes			m_modifierToKeycodes;
+	ModifierMask		m_shiftMask;
+	ModifierMask		m_ctrlMask;
+	ModifierMask		m_altMask;
+	ModifierMask		m_metaMask;
+	ModifierMask		m_superMask;
+	ModifierMask		m_modeSwitchMask;
+	ModifierMask		m_numLockMask;
+	ModifierMask		m_capsLockMask;
+	ModifierMask		m_scrollLockMask;
 
 	// map server key buttons to local keycodes
 	ServerKeyMap		m_serverKeyMap;
@@ -187,6 +230,9 @@ private:
 	// a screen other than screen 0.
 	bool				m_xtestIsXineramaUnaware;
 	bool				m_xinerama;
+
+	// a table of keysym decompositions
+	static KeySymsMap	s_decomposedKeySyms;
 };
 
 #endif
