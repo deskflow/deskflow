@@ -75,6 +75,8 @@ CGlobalOptions::init(HWND hwnd)
 	setItemChecked(child, false);
 	child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_TIME);
 	setWindowText(child, buffer);
+	child = getItem(hwnd, IDC_GLOBAL_SCREENSAVER_SYNC);
+	setItemChecked(child, true);
 
 	// get the global options
 	const CConfig::CScreenOptions* options = m_config->getOptions("");
@@ -109,6 +111,10 @@ CGlobalOptions::init(HWND hwnd)
 					child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_TIME);
 					setWindowText(child, buffer);
 				}
+			}
+			else if (id == kOptionScreenSaverSync) {
+				child = getItem(hwnd, IDC_GLOBAL_SCREENSAVER_SYNC);
+				setItemChecked(child, (value != 0));
 			}
 		}
 	}
@@ -173,6 +179,7 @@ CGlobalOptions::save(HWND hwnd)
 	m_config->removeOption("", kOptionScreenSwitchDelay);
 	m_config->removeOption("", kOptionScreenSwitchTwoTap);
 	m_config->removeOption("", kOptionHeartbeat);
+	m_config->removeOption("", kOptionScreenSaverSync);
 
 	// add requested options
 	child = getItem(hwnd, IDC_GLOBAL_DELAY_CHECK);
@@ -186,6 +193,10 @@ CGlobalOptions::save(HWND hwnd)
 	child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_CHECK);
 	if (isItemChecked(child)) {
 		m_config->addOption("", kOptionHeartbeat, newHeartbeatTime);
+	}
+	child = getItem(hwnd, IDC_GLOBAL_SCREENSAVER_SYNC);
+	if (!isItemChecked(child)) {
+		m_config->addOption("", kOptionScreenSaverSync, 0);
 	}
 
 	// save last values
