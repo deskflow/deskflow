@@ -936,6 +936,10 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 	// from wide char to multibyte, then from multibyte to wide char
 	// forcing conversion to composite characters, then from wide
 	// char back to multibyte without making precomposed characters.
+	//
+	// after the first conversion to multibyte we see if we can map
+	// the key.  if so then we don't bother trying to decompose dead
+	// keys.
 	BOOL error;
 	char multiByte[2 * MB_LEN_MAX];
 	wchar_t unicode[2];
@@ -947,6 +951,11 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 								NULL, &error);
 	if (nChars == 0 || error) {
 		LOG((CLOG_DEBUG2 "KeyID 0x%08x not in code page", id));
+		return m_mask;
+	}
+	virtualKey = mapCharacter(keys, multiByte[0], hkl, m_mask, mask, action);
+	if (virtualKey != static_cast<UINT>(-1)) {
+		LOG((CLOG_DEBUG2 "KeyID 0x%08x maps to character %u", id, (unsigned char)multiByte[0]));
 		return m_mask;
 	}
 	nChars = MultiByteToWideChar(codePage,
@@ -1040,6 +1049,10 @@ CMSWindowsSecondaryScreen::mapCharacter(Keystrokes& keys,
 
 	// get virtual key
 	UINT virtualKey    = LOBYTE(virtualKeyAndModifierState);
+	if (LOBYTE(virtualKeyAndModifierState) == 0xff) {
+		LOG((CLOG_DEBUG2 "cannot map character %d", static_cast<unsigned char>(c)));
+		return static_cast<UINT>(-1);
+	}
 
 	// get the required modifier state
 	BYTE modifierState = HIBYTE(virtualKeyAndModifierState);
