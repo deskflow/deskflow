@@ -27,6 +27,33 @@ AM_CONFIG_HEADER(config.h)
 
 dnl information on the package
 
+dnl decide on platform
+ARCH_LIBS=""
+ARCH_CFLAGS=""
+AC_CANONICAL_HOST
+case $host in
+	*-*-windows*)
+	acx_host_arch="WIN32"
+	acx_host_winapi="MSWINDOWS"
+	ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_WIN32=1 -DWINAPI_MSWINDOWS=1"
+	;;
+	*-*-darwin*)
+	acx_host_arch="UNIX"
+	acx_host_winapi="CARBON"
+	ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_UNIX=1 -DWINAPI_CARBON=1"
+	;;
+	*)
+	acx_host_arch="UNIX"
+	acx_host_winapi="XWINDOWS"
+	ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_UNIX=1 -DWINAPI_XWINDOWS=1"
+	;;
+esac
+AM_CONDITIONAL(WIN32, test x$acx_host_arch = xWIN32)
+AM_CONDITIONAL(UNIX, test x$acx_host_arch = xUNIX)
+AM_CONDITIONAL(MSWINDOWS, test x$acx_host_winapi = xMSWINDOWS)
+AM_CONDITIONAL(CARBON, test x$acx_host_winapi = xCARBON)
+AM_CONDITIONAL(XWINDOWS, test x$acx_host_winapi = xXWINDOWS)
+
 dnl checks for programs
 AC_PROG_CXX
 AC_PROG_RANLIB
@@ -45,7 +72,14 @@ dnl macros we should do testing with
 CXXFLAGS="$CXXFLAGS -D_BSD_SOURCE -D_XOPEN_SOURCE=500"
 
 dnl checks for libraries
-ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
+if test x"$acx_host_arch" = xUNIX; then
+	ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
+	ARCH_LIBS="$PTHREAD_LIBS $ARCH_LIBS"
+	ARCH_CFLAGS="$ARCH_CFLAGS $PTHREAD_CFLAGS"
+fi
+if test x"$acx_host_winapi" = xCARBON; then
+	ARCH_LIBS="-framework Carbon $ARCH_LIBS"
+fi
 ACX_CHECK_NANOSLEEP
 ACX_CHECK_INET_ATON
 
@@ -55,14 +89,33 @@ AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h wchar.h])
 AC_CHECK_HEADERS([sys/socket.h sys/select.h])
 AC_CHECK_HEADERS([istream ostream sstream])
 AC_HEADER_TIME
-AC_PATH_X
-AC_PATH_XTRA
-save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$X_CFLAGS $CPPFLAGS"
-AC_CHECK_HEADERS([X11/extensions/XTest.h])
-AC_CHECK_LIB(Xinerama, XineramaQueryExtension, AC_CHECK_HEADERS([X11/extensions/Xinerama.h]) [X_LIBS="$X_LIBS -lXinerama"], , [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
-AC_CHECK_LIB(Xext, DPMSQueryExtension, AC_CHECK_HEADERS([X11/extensions/dpms.h]) [X_LIBS="$X_LIBS -lXext"], , [$X_LIBS -lX11 $X_EXTRA_LIBS])
-CPPFLAGS="$save_CPPFLAGS"
+if test x"$acx_host_winapi" = xXWINDOWS; then
+	AC_PATH_X
+	AC_PATH_XTRA
+	save_CPPFLAGS="$CPPFLAGS"
+	CPPFLAGS="$X_CFLAGS $CPPFLAGS"
+	AC_CHECK_LIB(Xtst,
+		XTestQueryExtension,
+		AC_CHECK_HEADERS([X11/extensions/XTest.h],
+			[X_LIBS="$X_LIBS -lXtst"],
+			AC_MSG_ERROR(Your must have the XTest headers to compile synergy)),
+		AC_MSG_ERROR(You must have the XTest library to build synergy),
+		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+	AC_CHECK_LIB(Xinerama,
+		XineramaQueryExtension,
+		AC_CHECK_HEADERS([X11/extensions/Xinerama.h],
+			[X_LIBS="$X_LIBS -lXinerama"]),
+		,
+		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+	AC_CHECK_LIB(Xext,
+		DPMSQueryExtension,
+		AC_CHECK_HEADERS([X11/extensions/dpms.h]),
+		,
+		[$X_LIBS -lX11 $X_EXTRA_LIBS])
+	CPPFLAGS="$save_CPPFLAGS"
+	ARCH_LIBS="$X_LIBS $X_PRE_LIBS -lXext -lX11 $X_EXTRA_LIBS $ARCH_LIBS"
+	ARCH_CFLAGS="$ARCH_CFLAGS $X_CFLAGS"
+fi
 
 dnl checks for types
 AC_TYPE_SIZE_T
@@ -100,9 +153,9 @@ dnl enable maximum compiler warnings and warnings are errors.
 ACX_CXX_WARNINGS
 ACX_CXX_WARNINGS_ARE_ERRORS
 
-dnl adjust variables for X11 and pthreads
-CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
-LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $PTHREAD_LIBS $LIBS"
+dnl adjust compiler and linker variables
+CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $ARCH_CFLAGS"
+LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $ARCH_LIBS $LIBS"
 
 AC_OUTPUT([
 Makefile

@@ -45,24 +45,6 @@
 		}
 #	endif
 #endif
-#if UNIX_LIKE
-#	if HAVE_POLL
-#		include <sys/poll.h>
-#	else
-#		if HAVE_SYS_SELECT_H
-#			include <sys/select.h>
-#		endif
-#		if HAVE_SYS_TIME_H
-#			include <sys/time.h>
-#		endif
-#		if HAVE_SYS_TYPES_H
-#			include <sys/types.h>
-#		endif
-#		if HAVE_UNISTD_H
-#			include <unistd.h>
-#		endif
-#	endif
-#endif
 #include "CArch.h"
 
 // map "Internet" keys to KeyIDs

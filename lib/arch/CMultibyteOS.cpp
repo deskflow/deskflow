@@ -14,6 +14,7 @@
 
 #include <string.h>
 #include <cwchar>
+#include <limits.h>
 
 class CArchMBStateImpl {
 public:

@@ -37,7 +37,7 @@
 #include <cstring>
 
 #define DAEMON_RUNNING(running_)
-#if WINDOWS_LIKE
+#if WINAPI_MSWINDOWS
 #include "CArchMiscWindows.h"
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsUtil.h"
@@ -45,23 +45,26 @@
 #include "resource.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
-#elif UNIX_LIKE
+#elif WINAPI_XWINDOWS
 #include "CXWindowsScreen.h"
 #include "CXWindowsServerTaskBarReceiver.h"
+#elif WINAPI_CARBON
+#include "COSXScreen.h"
+#include "COSXServerTaskBarReceiver.h"
 #endif
 
 // platform dependent name of a daemon
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 #define DAEMON_NAME "Synergy Server"
-#elif UNIX_LIKE
+#elif SYSAPI_UNIX
 #define DAEMON_NAME "synergys"
 #endif
 
 // configuration file name
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 #define USR_CONFIG_NAME "synergy.sgc"
 #define SYS_CONFIG_NAME "synergy.sgc"
-#elif UNIX_LIKE
+#elif SYSAPI_UNIX
 #define USR_CONFIG_NAME ".synergy.conf"
 #define SYS_CONFIG_NAME "synergy.conf"
 #endif
@@ -113,10 +116,12 @@ static
 CScreen*
 createScreen()
 {
-#if WINDOWS_LIKE
+#if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(true, NULL, NULL));
-#elif UNIX_LIKE
+#elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(true));
+#elif WINAPI_CARBON
+	return new CScreen(new COSXScreen(true));
 #endif
 }
 
@@ -124,11 +129,13 @@ static
 CServerTaskBarReceiver*
 createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 {
-#if WINDOWS_LIKE
+#if WINAPI_MSWINDOWS
 	return new CMSWindowsServerTaskBarReceiver(
 							CMSWindowsScreen::getInstance(), logBuffer);
-#elif UNIX_LIKE
+#elif WINAPI_XWINDOWS
 	return new CXWindowsServerTaskBarReceiver(logBuffer);
+#elif WINAPI_CARBON
+	return new COSXServerTaskBarReceiver(logBuffer);
 #endif
 }
 
@@ -579,7 +586,7 @@ static
 void
 help()
 {
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 
 #  define PLATFORM_ARGS												\
 " {--daemon|--no-daemon}"
@@ -778,7 +785,7 @@ parse(int argc, const char* const* argv)
 	// increase default filter level for daemon.  the user must
 	// explicitly request another level for a daemon.
 	if (ARG->m_daemon && ARG->m_logFilter == NULL) {
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 		if (CArchMiscWindows::isWindows95Family()) {
 			// windows 95 has no place for logging so avoid showing
 			// the log console window.
@@ -870,7 +877,7 @@ loadConfig()
 // platform dependent entry points
 //
 
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 
 static bool				s_hasImportantLogMessages = false;
 
@@ -994,7 +1001,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	}
 }
 
-#elif UNIX_LIKE
+#elif SYSAPI_UNIX
 
 int
 main(int argc, char** argv)

@@ -27,7 +27,7 @@
 #undef ARCH_TIME
 
 // include appropriate architecture implementation
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 #	include "CArchConsoleWindows.h"
 #	include "CArchDaemonWindows.h"
 #	include "CArchFileWindows.h"
@@ -39,7 +39,7 @@
 #	include "CArchStringWindows.h"
 #	include "CArchTaskBarWindows.h"
 #	include "CArchTimeWindows.h"
-#elif UNIX_LIKE
+#elif SYSAPI_UNIX
 #	include "CArchConsoleUnix.h"
 #	include "CArchDaemonUnix.h"
 #	include "CArchFileUnix.h"
@@ -118,7 +118,7 @@ CArch::CArch(ARCH_ARGS* args)
 	m_daemon  = new ARCH_DAEMON;
 	m_taskbar = new ARCH_TASKBAR(args);
 
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 	CArchMiscWindows::init();
 #endif
 }

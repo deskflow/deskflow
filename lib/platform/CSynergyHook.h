@@ -16,13 +16,8 @@
 #define CSYNERGYHOOK_H
 
 #include "BasicTypes.h"
-
-#if WINDOWS_LIKE
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#else
-#error CSynergyHook is a win32 specific file
-#endif
 
 #if defined(SYNRGYHK_EXPORTS)
 #define CSYNERGYHOOK_API __declspec(dllexport)

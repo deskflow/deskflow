@@ -13,17 +13,36 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 
-EXTRA_DIST =							\
+COMMON_SOURCE_FILES =					\
+	CServerTaskBarReceiver.cpp			\
+	CServerTaskBarReceiver.h			\
+	synergys.cpp						\
+	$(NULL)
+XWINDOWS_SOURCE_FILES =					\
+	CXWindowsServerTaskBarReceiver.cpp	\
+	CXWindowsServerTaskBarReceiver.h	\
+	$(NULL)
+MSWINDOWS_SOURCE_FILES =				\
 	CMSWindowsServerTaskBarReceiver.cpp	\
 	CMSWindowsServerTaskBarReceiver.h	\
 	resource.h							\
-	synergys.ico						\
-	synergys.dsp						\
 	synergys.rc							\
+	$(NULL)
+CARBON_SOURCE_FILES =					\
+	COSXServerTaskBarReceiver.cpp		\
+	COSXServerTaskBarReceiver.h			\
+	$(NULL)
+
+EXTRA_DIST =							\
+	synergys.dsp						\
+	synergys.ico						\
 	tb_error.ico						\
 	tb_idle.ico							\
 	tb_run.ico							\
 	tb_wait.ico							\
+	$(XWINDOWS_SOURCE_FILES)			\
+	$(MSWINDOWS_SOURCE_FILES)			\
+	$(CARBON_SOURCE_FILES)				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =					\
@@ -31,13 +50,24 @@ MAINTAINERCLEANFILES =					\
 	$(NULL)
 
 bin_PROGRAMS = synergys
-synergys_SOURCES = 						\
-	CServerTaskBarReceiver.cpp			\
-	CServerTaskBarReceiver.h			\
-	CXWindowsServerTaskBarReceiver.cpp	\
-	CXWindowsServerTaskBarReceiver.h	\
-	synergys.cpp						\
+if XWINDOWS
+synergys_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(XWINDOWS_SOURCE_FILES)			\
 	$(NULL)
+endif
+if MSWINDOWS
+synergys_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(MSWINDOWS_SOURCE_FILES)			\
+	$(NULL)
+endif
+if CARBON
+synergys_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(CARBON_SOURCE_FILES)				\
+	$(NULL)
+endif
 synergys_LDADD =								\
 	$(top_builddir)/lib/server/libserver.a		\
 	$(top_builddir)/lib/platform/libplatform.a	\
@@ -48,12 +78,6 @@ synergys_LDADD =								\
 	$(top_builddir)/lib/base/libbase.a			\
 	$(top_builddir)/lib/common/libcommon.a		\
 	$(top_builddir)/lib/arch/libarch.a			\
-	$(X_LIBS)									\
-	$(X_PRE_LIBS)								\
-	-lXtst										\
-	-lXext										\
-	-lX11										\
-	$(X_EXTRA_LIBS)								\
 	$(NULL)
 INCLUDES =								\
 	-I$(top_srcdir)/lib/common			\

@@ -13,17 +13,36 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 
-EXTRA_DIST =							\
+COMMON_SOURCE_FILES =					\
+	CClientTaskBarReceiver.cpp			\
+	CClientTaskBarReceiver.h			\
+	synergyc.cpp						\
+	$(NULL)
+XWINDOWS_SOURCE_FILES =					\
+	CXWindowsClientTaskBarReceiver.cpp	\
+	CXWindowsClientTaskBarReceiver.h	\
+	$(NULL)
+MSWINDOWS_SOURCE_FILES =				\
 	CMSWindowsClientTaskBarReceiver.cpp	\
 	CMSWindowsClientTaskBarReceiver.h	\
 	resource.h							\
+	synergyc.rc							\
+	$(NULL)
+CARBON_SOURCE_FILES =					\
+	COSXClientTaskBarReceiver.cpp		\
+	COSXClientTaskBarReceiver.h			\
+	$(NULL)
+
+EXTRA_DIST =							\
 	synergyc.dsp						\
 	synergyc.ico						\
-	synergyc.rc							\
 	tb_error.ico						\
 	tb_idle.ico							\
 	tb_run.ico							\
 	tb_wait.ico							\
+	$(XWINDOWS_SOURCE_FILES)			\
+	$(MSWINDOWS_SOURCE_FILES)			\
+	$(CARBON_SOURCE_FILES)				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =					\
@@ -31,13 +50,24 @@ MAINTAINERCLEANFILES =					\
 	$(NULL)
 
 bin_PROGRAMS = synergyc
-synergyc_SOURCES = 						\
-	CClientTaskBarReceiver.cpp			\
-	CClientTaskBarReceiver.h			\
-	CXWindowsClientTaskBarReceiver.cpp	\
-	CXWindowsClientTaskBarReceiver.h	\
-	synergyc.cpp						\
+if XWINDOWS
+synergyc_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(XWINDOWS_SOURCE_FILES)			\
 	$(NULL)
+endif
+if MSWINDOWS
+synergyc_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(MSWINDOWS_SOURCE_FILES)			\
+	$(NULL)
+endif
+if CARBON
+synergyc_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(CARBON_SOURCE_FILES)				\
+	$(NULL)
+endif
 synergyc_LDADD =								\
 	$(top_builddir)/lib/client/libclient.a		\
 	$(top_builddir)/lib/platform/libplatform.a	\
@@ -48,12 +78,6 @@ synergyc_LDADD =								\
 	$(top_builddir)/lib/base/libbase.a			\
 	$(top_builddir)/lib/common/libcommon.a		\
 	$(top_builddir)/lib/arch/libarch.a			\
-	$(X_LIBS)									\
-	$(X_PRE_LIBS)								\
-	-lXtst										\
-	-lXext										\
-	-lX11										\
-	$(X_EXTRA_LIBS)								\
 	$(NULL)
 INCLUDES =								\
 	-I$(top_srcdir)/lib/common			\

@@ -14,6 +14,7 @@
 
 #include "CArchNetworkBSD.h"
 #include "CArch.h"
+#include "CArchMultithreadPosix.h"
 #include "XArchUnix.h"
 #if HAVE_SYS_TYPES_H
 #	include <sys/types.h>

@@ -17,7 +17,7 @@
 
 #include "common.h"
 
-#if (HAVE_MBSINIT && HAVE_MBRTOWC && HAVE_WCRTOMB) || WINDOWS_LIKE
+#if (HAVE_MBSINIT && HAVE_MBRTOWC && HAVE_WCRTOMB) || SYSAPI_WIN32
 #include "CMultibyteOS.cpp"
 #else
 #include "CMultibyteEmu.cpp"

@@ -26,7 +26,7 @@ it sorts by std::greater, it has a forward iterator through the elements
 (which can appear in any order), and its contents can be swapped.
 */
 template <class T, class Container = std::vector<T>,
-#if WINDOWS_LIKE
+#if defined(_MSC_VER)
 			class Compare = std::greater<Container::value_type> >
 #else
 			class Compare = std::greater<typename Container::value_type> >

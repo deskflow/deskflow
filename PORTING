@@ -333,16 +333,25 @@ other files.  On Unix, synergy uses autoconf/automake which produces
 a `configure' script that generates makefiles.  On Windows, synergy
 uses Visual C++ workspace and project files.  If you're porting to
 another Unix variant, you may need to adjust `configure.in',
-`acinclude.m4', and Unix flavor dependent code in lib/arch.
+`acinclude.m4', and Unix flavor dependent code in lib/arch.  Note
+especially the SYSAPI_* and WINAPI_* macro definitions in
+ARCH_CFLAGS.  Exactly one of each must be defined.  It should also
+add AM_CONDITIONALs if a new SYSAPI_* or WINAPI_* was added.
 
 Adjusting lib/common/common.h:
 
 The lib/common/common.h header file is included directly or indirectly
-by every other file.  It prepares some platform dependent macros for
-integer sizes and defines a macro for conveniently testing which
-platform we're building on.  That macro is named *_LIKE (e.g. UNIX_LIKE)
-and has the value `1'.  Exactly one *_LIKE macro must be defined by
-common.h.
+by every other file.  Its primary job is to include config.h, which
+defines macros depending on what the 'configure' script discovered
+about the system.  If the platform does not use the 'configure' script
+it must define the appropriate SYSAPI_* and WINAPI_* macro.  It may
+also do other platform specific setup.
+
+Adjusting lib/common/BasicTypes.h:
+
+No changes should be necessary in BasicTypes.h.  However, if the
+platform's system header files define SInt8, et al. you may need
+to adjust the typedefs to match the system's definitions.
 
 Implementing lib/arch:
 
@@ -354,6 +363,18 @@ Platforms requiring special functions should create a class named
 CArchMiscXXX where XXX is the platform name.  The class should have
 only static methods.  Clients can include the appropriate header
 file and make calls directly, surrounded by a suitable #ifdef/#endif.
+
+If using automake, the Makefile.am should list the system specific
+files in a XXX_SOURCE_FILES macro where XXX matches the appropriate
+AM_CONDITIONAL symbol.  XXX_SOURCE_FILES must be added to EXTRA_DIST
+and the following added above the INCLUDES macro:
+
+	if XXX
+	libarch_a_SOURCES =			\
+		$(COMMON_SOURCE_FILES)	\
+		$(XXX_SOURCE_FILES)		\
+		$(NULL)
+	endif
 
 Implementing lib/platform:
 
@@ -380,6 +401,15 @@ classes should be derived and implemented:
 
   * CXXXScreenSaver : IScreenSaver
 	Provides screen saver operations.
+
+If using automake, the Makefile.am should list the window system
+specific files in a XXX_SOURCE_FILES macro where XXX matches the
+appropriate AM_CONDITIONAL symbol.  XXX_SOURCE_FILES must be added
+to EXTRA_DIST and the following added above the INCLUDES macro:
+
+	if XXX
+	libplatform_a_SOURCES = $(XXX_SOURCE_FILES)
+	endif
 
 Tweaks:
 

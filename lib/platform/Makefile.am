@@ -13,10 +13,27 @@
 ## Process this file with automake to produce Makefile.in
 NULL =
 
-EXTRA_DIST =								\
-	makehook.dsp							\
-	platform.dsp							\
-	synrgyhk.dsp							\
+XWINDOWS_SOURCE_FILES =						\
+	CXWindowsClipboard.cpp					\
+	CXWindowsClipboardTextConverter.cpp		\
+	CXWindowsClipboardUCS2Converter.cpp		\
+	CXWindowsClipboardUTF8Converter.cpp		\
+	CXWindowsEventQueueBuffer.cpp			\
+	CXWindowsKeyState.cpp					\
+	CXWindowsScreen.cpp						\
+	CXWindowsScreenSaver.cpp				\
+	CXWindowsUtil.cpp						\
+	CXWindowsClipboard.h					\
+	CXWindowsClipboardTextConverter.h		\
+	CXWindowsClipboardUCS2Converter.h		\
+	CXWindowsClipboardUTF8Converter.h		\
+	CXWindowsEventQueueBuffer.h				\
+	CXWindowsKeyState.h						\
+	CXWindowsScreen.h						\
+	CXWindowsScreenSaver.h					\
+	CXWindowsUtil.h							\
+	$(NULL)
+MSWINDOWS_SOURCE_FILES =					\
 	CMSWindowsClipboard.cpp					\
 	CMSWindowsClipboardAnyTextConverter.cpp	\
 	CMSWindowsClipboardTextConverter.cpp	\
@@ -40,32 +57,42 @@ EXTRA_DIST =								\
 	CMSWindowsUtil.h						\
 	CSynergyHook.h							\
 	$(NULL)
+CARBON_SOURCE_FILES =						\
+	COSXClipboard.cpp						\
+	COSXEventQueueBuffer.cpp				\
+	COSXKeyState.cpp						\
+	COSXScreen.cpp							\
+	COSXScreenSaver.cpp						\
+	COSXClipboard.h							\
+	COSXEventQueueBuffer.h					\
+	COSXKeyState.h							\
+	COSXScreen.h							\
+	COSXScreenSaver.h						\
+	$(NULL)
+
+EXTRA_DIST =								\
+	makehook.dsp							\
+	platform.dsp							\
+	synrgyhk.dsp							\
+	$(XWINDOWS_SOURCE_FILES)				\
+	$(MSWINDOWS_SOURCE_FILES)				\
+	$(CARBON_SOURCE_FILES)					\
+	$(NULL)
 
 MAINTAINERCLEANFILES =						\
 	Makefile.in								\
 	$(NULL)
 
 noinst_LIBRARIES = libplatform.a
-libplatform_a_SOURCES = 					\
-	CXWindowsClipboard.cpp					\
-	CXWindowsClipboardTextConverter.cpp		\
-	CXWindowsClipboardUCS2Converter.cpp		\
-	CXWindowsClipboardUTF8Converter.cpp		\
-	CXWindowsEventQueueBuffer.cpp			\
-	CXWindowsKeyState.cpp					\
-	CXWindowsScreen.cpp						\
-	CXWindowsScreenSaver.cpp				\
-	CXWindowsUtil.cpp						\
-	CXWindowsClipboard.h					\
-	CXWindowsClipboardTextConverter.h		\
-	CXWindowsClipboardUCS2Converter.h		\
-	CXWindowsClipboardUTF8Converter.h		\
-	CXWindowsEventQueueBuffer.h				\
-	CXWindowsKeyState.h						\
-	CXWindowsScreen.h						\
-	CXWindowsScreenSaver.h					\
-	CXWindowsUtil.h							\
-	$(NULL)
+if XWINDOWS
+libplatform_a_SOURCES = $(XWINDOWS_SOURCE_FILES)
+endif
+if MSWINDOWS
+libplatform_a_SOURCES = $(MSWINDOWS_SOURCE_FILES)
+endif
+if CARBON
+libplatform_a_SOURCES = $(CARBON_SOURCE_FILES)
+endif
 INCLUDES =									\
 	-I$(top_srcdir)/lib/common				\
 	-I$(top_srcdir)/lib/arch				\
