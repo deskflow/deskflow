@@ -93,6 +93,12 @@ CScreen::disable()
 	CLock lock(&m_mutex);
 	assert(m_enabled);
 
+	if (!m_isPrimary && m_entered) {
+		leave();
+	}
+	else if (m_isPrimary && !m_entered) {
+		enter();
+	}
 	m_screen->disable();
 	if (m_isPrimary) {
 		disablePrimary();
