@@ -1,4 +1,5 @@
 #include "CServer.h"
+#include "CHTTPServer.h"
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
 #include "CServerProtocol.h"
@@ -15,6 +16,7 @@
 #include "CThread.h"
 #include "CTimerThread.h"
 #include "CStopwatch.h"
+#include "CFunctionJob.h"
 #include "TMethodJob.h"
 #include "CLog.h"
 #include <assert.h>
@@ -44,7 +46,8 @@ else { wait(0); exit(1); }
 CServer::CServer() : m_primary(NULL),
 								m_active(NULL),
 								m_primaryInfo(NULL),
-								m_seqNum(0)
+								m_seqNum(0),
+								m_httpServer(NULL)
 {
 	m_socketFactory = NULL;
 	m_securityFactory = NULL;
@@ -63,11 +66,12 @@ void					CServer::run()
 		// connect to primary screen
 		openPrimaryScreen();
 
+		// start listening for HTTP requests
+		m_httpServer = new CHTTPServer(this);
+		CThread(new TMethodJob<CServer>(this, &CServer::acceptHTTPClients));
+
 		// start listening for new clients
 		CThread(new TMethodJob<CServer>(this, &CServer::acceptClients));
-
-		// start listening for configuration connections
-		// FIXME
 
 		// handle events
 		log((CLOG_DEBUG "starting event handling"));
@@ -75,6 +79,8 @@ void					CServer::run()
 
 		// clean up
 		log((CLOG_NOTE "stopping server"));
+		delete m_httpServer;
+		m_httpServer = NULL;
 		cleanupThreads();
 		closePrimaryScreen();
 	}
@@ -82,6 +88,8 @@ void					CServer::run()
 		log((CLOG_ERR "server error: %s", e.what()));
 
 		// clean up
+		delete m_httpServer;
+		m_httpServer = NULL;
 		cleanupThreads();
 		closePrimaryScreen();
 	}
@@ -89,6 +97,8 @@ void					CServer::run()
 		log((CLOG_DEBUG "unknown server error"));
 
 		// clean up
+		delete m_httpServer;
+		m_httpServer = NULL;
 		cleanupThreads();
 		closePrimaryScreen();
 		throw;
@@ -107,6 +117,12 @@ void					CServer::setScreenMap(const CScreenMap& screenMap)
 	//   (that may include warping back to server's screen)
 	// FIXME -- server screen must be in new map or map is rejected
 	m_screenMap = screenMap;
+}
+
+CString					CServer::getPrimaryScreenName() const
+{
+	CLock lock(&m_mutex);
+	return (m_primaryInfo == NULL) ? "" : m_primaryInfo->m_name;
 }
 
 void					CServer::getScreenMap(CScreenMap* screenMap) const
@@ -953,6 +969,88 @@ void					CServer::handshakeClient(void* vsocket)
 		// misc error
 		log((CLOG_WARN "error communicating with client \"%s\": %s", name.c_str(), e.what()));
 		// FIXME -- could print network address if socket had suitable method
+	}
+}
+
+void					CServer::acceptHTTPClients(void*)
+{
+	log((CLOG_DEBUG1 "starting to wait for HTTP clients"));
+
+	// add this thread to the list of threads to cancel.  remove from
+	// list in d'tor.
+	CCleanupNote cleanupNote(this);
+
+	std::auto_ptr<IListenSocket> listen;
+	try {
+		// create socket listener
+//		listen = std::auto_ptr<IListenSocket>(m_socketFactory->createListen());
+		assign(listen, new CTCPListenSocket, IListenSocket); // FIXME
+
+		// bind to the desired port.  keep retrying if we can't bind
+		// the address immediately.
+		CStopwatch timer;
+		CNetworkAddress addr(50002 /* FIXME -- m_httpPort */);
+		for (;;) {
+			try {
+				log((CLOG_DEBUG1 "binding listen socket"));
+				listen->bind(addr);
+				break;
+			}
+			catch (XSocketAddressInUse&) {
+				// give up if we've waited too long
+				if (timer.getTime() >= m_bindTimeout) {
+					log((CLOG_DEBUG1 "waited too long to bind HTTP, giving up"));
+					throw;
+				}
+
+				// wait a bit before retrying
+				log((CLOG_DEBUG1 "bind HTTP failed;  waiting to retry"));
+				CThread::sleep(5.0);
+			}
+		}
+
+		// accept connections and begin processing them
+		log((CLOG_DEBUG1 "waiting for HTTP connections"));
+		for (;;) {
+			// accept connection
+			CThread::testCancel();
+			ISocket* socket = listen->accept();
+			log((CLOG_NOTE "accepted HTTP connection"));
+			CThread::testCancel();
+
+			// handle HTTP request
+			CThread(new TMethodJob<CServer>(
+								this, &CServer::processHTTPRequest, socket));
+		}
+	}
+	catch (XBase& e) {
+		log((CLOG_ERR "cannot listen for HTTP clients: %s", e.what()));
+		quit();
+	}
+}
+
+void					CServer::processHTTPRequest(void* vsocket)
+{
+	// add this thread to the list of threads to cancel.  remove from
+	// list in d'tor.
+	CCleanupNote cleanupNote(this);
+
+	ISocket* socket = reinterpret_cast<ISocket*>(vsocket);
+	try {
+		// process the request and force delivery
+		m_httpServer->processRequest(socket);
+		socket->getOutputStream()->flush();
+
+		// wait a moment to give the client a chance to hangup first
+		CThread::sleep(3.0);
+
+		// clean up
+		socket->close();
+		delete socket;
+	}
+	catch (...) {
+		delete socket;
+		throw;
 	}
 }
 

@@ -75,6 +75,18 @@ void					CScreenMap::disconnect(const CString& srcName,
 	index->second.m_neighbor[srcSide - kFirstDirection].erase();
 }
 
+CScreenMap::const_iterator
+						CScreenMap::begin() const
+{
+	return const_iterator(m_map.begin());
+}
+
+CScreenMap::const_iterator
+						CScreenMap::end() const
+{
+	return const_iterator(m_map.end());
+}
+
 CString					CScreenMap::getNeighbor(const CString& srcName,
 								EDirection srcSide) const
 {

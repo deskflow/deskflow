@@ -17,6 +17,7 @@ class IServerProtocol;
 class ISocketFactory;
 class ISecurityFactory;
 class IPrimaryScreen;
+class CHTTPServer;
 
 class CServer {
 public:
@@ -67,6 +68,9 @@ public:
 
 	// get the current screen map
 	void				getScreenMap(CScreenMap*) const;
+
+	// get the primary screen's name
+	CString				getPrimaryScreenName() const;
 
 	// get the sides of the primary screen that have neighbors
 	UInt32				getActivePrimarySides() const;
@@ -152,6 +156,12 @@ private:
 	// thread method to do startup handshake with client
 	void				handshakeClient(void*);
 
+	// thread method to accept incoming HTTP connections
+	void				acceptHTTPClients(void*);
+
+	// thread method to process HTTP requests
+	void				processHTTPRequest(void*);
+
 	// thread cleanup list maintenance
 	friend class CCleanupNote;
 	void				addCleanupThread(const CThread& thread);
@@ -200,6 +210,9 @@ private:
 	CScreenMap			m_screenMap;
 
 	CClipboardInfo		m_clipboards[kClipboardEnd];
+
+	// server for processing HTTP requests
+	CHTTPServer*		m_httpServer;
 };
 
 #endif

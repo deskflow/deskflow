@@ -13,6 +13,7 @@ LCXXINCS =				\
 	-I$(DEPTH)/base 		\
 	-I$(DEPTH)/mt	 		\
 	-I$(DEPTH)/io	 		\
+	-I$(DEPTH)/http 		\
 	-I$(DEPTH)/net	 		\
 	-I$(DEPTH)/synergy		\
 	$(NULL)
@@ -22,6 +23,7 @@ CXXFILES = 				\
 	CServerProtocol1_0.cpp		\
 	CXWindowsPrimaryScreen.cpp	\
 	CServer.cpp			\
+	CHTTPServer.cpp			\
 	server.cpp			\
 	$(NULL)
 
@@ -31,6 +33,7 @@ CXXFILES = 				\
 DEPLIBS =				\
 	$(LIBDIR)/libsynergy.a		\
 	$(LIBDIR)/libnet.a		\
+	$(LIBDIR)/libhttp.a		\
 	$(LIBDIR)/libio.a		\
 	$(LIBDIR)/libmt.a		\
 	$(LIBDIR)/libbase.a		\

@@ -20,6 +20,9 @@
 #define CONFIG_PLATFORM_WIN32
 
 #if (_MSC_VER >= 1200)
+// work around for statement scoping bug
+#define for if (false) { } else for
+
 // turn off bonehead warnings
 #pragma warning(disable: 4786) // identifier truncated in debug info
 

@@ -9,6 +9,7 @@ SUBDIRS = 				\
 	base				\
 	mt				\
 	io				\
+	http				\
 	net				\
 	synergy 			\
 	client				\
