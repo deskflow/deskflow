@@ -109,6 +109,12 @@ CThread::waitForEvent(double timeout) const
 	return s_map[ARCH->waitForEvent(m_thread, timeout)];
 }
 
+void
+CThread::unblock() const
+{
+	ARCH->unblockThread(m_thread);
+}
+
 void*
 CThread::getResult() const
 {

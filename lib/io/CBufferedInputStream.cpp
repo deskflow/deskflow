@@ -26,9 +26,10 @@
 //
 
 CBufferedInputStream::CBufferedInputStream(
-				CMutex* mutex, IJob* adoptedCloseCB) :
+				CMutex* mutex, IJob* adoptedEmptyCB, IJob* adoptedCloseCB) :
 	m_mutex(mutex),
 	m_empty(mutex, true),
+	m_emptyCB(adoptedEmptyCB),
 	m_closeCB(adoptedCloseCB),
 	m_closed(false),
 	m_hungup(false)
@@ -39,6 +40,7 @@ CBufferedInputStream::CBufferedInputStream(
 CBufferedInputStream::~CBufferedInputStream()
 {
 	delete m_closeCB;
+	delete m_emptyCB;
 }
 
 void
@@ -63,6 +65,9 @@ CBufferedInputStream::readNoLock(void* buffer, UInt32 n, double timeout)
 {
 	if (m_closed) {
 		throw XIOClosed();
+	}
+	if (n == 0) {
+		return n;
 	}
 
 	// wait for data, hangup, or timeout
@@ -90,6 +95,9 @@ CBufferedInputStream::readNoLock(void* buffer, UInt32 n, double timeout)
 	if (m_buffer.getSize() == 0) {
 		m_empty = true;
 		m_empty.broadcast();
+		if (m_emptyCB != NULL) {
+			m_emptyCB->run();
+		}
 	}
 	return n;
 }

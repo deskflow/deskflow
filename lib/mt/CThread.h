@@ -180,6 +180,15 @@ public:
 	*/
 	EWaitResult			waitForEvent(double timeout = -1.0) const;
 
+	//! Unblock thread in system call
+	/*!
+	Cause a thread that's in a blocking system call to return.  This
+	call may return before the thread is unblocked.  If the thread is
+	not in a blocking system call, this call has no effect.  This does
+	not cause CMutex::lock() or CCondVar::wait() to return prematurely.
+	*/
+	void				unblock() const;
+
 	//! Get the exit result
 	/*!
 	Returns the exit result.  This does an implicit wait().  It returns

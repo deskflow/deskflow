@@ -117,6 +117,7 @@ public:
 	virtual void		testCancelThread();
 	virtual bool		wait(CArchThread, double timeout);
 	virtual EWaitResult	waitForEvent(CArchThread, double timeout);
+	virtual void		unblockThread(CArchThread thread);
 	virtual bool		isSameThread(CArchThread, CArchThread);
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);
@@ -187,6 +188,22 @@ private:
 	IArchString*		m_string;
 	IArchTaskBar*		m_taskbar;
 	IArchTime*			m_time;
+};
+
+//! Convenience object to lock/unlock an arch mutex
+class CArchMutexLock {
+public:
+	CArchMutexLock(CArchMutex mutex) : m_mutex(mutex)
+	{
+		ARCH->lockMutex(m_mutex);
+	}
+	~CArchMutexLock()
+	{
+		ARCH->unlockMutex(m_mutex);
+	}
+
+private:
+	CArchMutex			m_mutex;
 };
 
 #endif

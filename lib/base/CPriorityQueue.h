@@ -56,6 +56,13 @@ public:
 		c.pop_back();
 	}
 
+	//! Erase element
+	void				erase(iterator i)
+	{
+		c.erase(i);
+		std::make_heap(c.begin(), c.end(), comp);
+	}
+
 	//! Get start iterator
 	iterator			begin()
 	{

@@ -16,6 +16,7 @@
 #define ISOCKET_H
 
 #include "IInterface.h"
+#include "CEvent.h"
 
 class CNetworkAddress;
 
@@ -40,7 +41,28 @@ public:
 	*/
 	virtual void		close() = 0;
 
+	//! Set the socket's event target
+	/*!
+	Sets the target of any events sent by the socket.  The default is NULL.
+	*/
+	virtual void		setEventTarget(void*) = 0;
+
 	//@}
+	//! @name accessors
+	//@{
+
+	//! Get disconnected event type
+	/*!
+	Returns the socket disconnected event type.  A socket sends this
+	event when the remote side of the socket has disconnected or
+	shutdown.
+	*/
+	static CEvent::Type	getDisconnectedEvent();
+
+	//@}
+
+private:
+	static CEvent::Type	s_disconnectedEvent;
 };
 
 #endif

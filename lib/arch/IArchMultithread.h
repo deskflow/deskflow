@@ -228,6 +228,15 @@ public:
 	*/
 	virtual EWaitResult	waitForEvent(CArchThread thread, double timeout) = 0;
 
+	//! Unblock thread in system call
+	/*!
+	Cause a thread that's in a blocking system call to return.  This
+	call may return before the thread is unblocked.  If the thread is
+	not in a blocking system call, this call has no effect.  This does
+	not cause a lockMutex() or waitCondVar() to return prematurely.
+	*/
+	virtual void		unblockThread(CArchThread thread) = 0;
+
 	//! Compare threads
 	/*!
 	Returns true iff two thread objects refer to the same thread.

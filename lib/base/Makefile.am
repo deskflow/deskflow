@@ -25,25 +25,34 @@ MAINTAINERCLEANFILES =		\
 
 noinst_LIBRARIES = libbase.a
 libbase_a_SOURCES =			\
+	CEvent.cpp				\
+	CEventQueue.cpp			\
+	CFunctionEventJob.cpp	\
 	CFunctionJob.cpp		\
 	CJobList.cpp			\
 	CLog.cpp				\
+	CSimpleEventQueue.cpp	\
 	CStopwatch.cpp			\
 	CStringUtil.cpp			\
 	CUnicode.cpp			\
 	LogOutputters.cpp		\
 	XBase.cpp				\
+	CEvent.h				\
+	CEventQueue.h			\
 	CFunctionJob.h			\
 	CJobList.h				\
 	CLog.h					\
 	CPriorityQueue.h		\
+	CSimpleEventQueue.h		\
 	CStopwatch.h			\
 	CString.h				\
 	CStringUtil.h			\
 	CUnicode.h				\
+	IEventQueue.h			\
 	IJob.h					\
 	ILogOutputter.h			\
 	LogOutputters.h			\
+	TMethodEventJob.h		\
 	TMethodJob.h			\
 	XBase.h					\
 	$(NULL)

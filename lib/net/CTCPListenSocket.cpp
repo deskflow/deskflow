@@ -13,11 +13,16 @@
  */
 
 #include "CTCPListenSocket.h"
-#include "CTCPSocket.h"
 #include "CNetworkAddress.h"
-#include "XIO.h"
+#include "CSocketMultiplexer.h"
+#include "CTCPSocket.h"
+#include "TSocketMultiplexerMethodJob.h"
 #include "XSocket.h"
-#include "CThread.h"
+#include "XIO.h"
+#include "CEvent.h"
+#include "CEventQueue.h"
+#include "CLock.h"
+#include "CMutex.h"
 #include "CArch.h"
 #include "XArch.h"
 
@@ -25,8 +30,10 @@
 // CTCPListenSocket
 //
 
-CTCPListenSocket::CTCPListenSocket()
+CTCPListenSocket::CTCPListenSocket() :
+	m_target(NULL)
 {
+	m_mutex = new CMutex;
 	try {
 		m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
 	}
@@ -38,19 +45,28 @@ CTCPListenSocket::CTCPListenSocket()
 CTCPListenSocket::~CTCPListenSocket()
 {
 	try {
-		ARCH->closeSocket(m_socket);
+		if (m_socket != NULL) {
+			CSocketMultiplexer::getInstance()->removeSocket(this);
+			ARCH->closeSocket(m_socket);
+		}
 	}
 	catch (...) {
 		// ignore
 	}
+	delete m_mutex;
 }
 
 void
 CTCPListenSocket::bind(const CNetworkAddress& addr)
 {
 	try {
+		CLock lock(m_mutex);
 		ARCH->bindSocket(m_socket, addr.getAddress());
 		ARCH->listenOnSocket(m_socket);
+		CSocketMultiplexer::getInstance()->addSocket(this,
+							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
+								this, &CTCPListenSocket::serviceListening,
+								m_socket, true, false));
 	}
 	catch (XArchNetworkAddressInUse& e) {
 		throw XSocketAddressInUse(e.what());
@@ -63,36 +79,55 @@ CTCPListenSocket::bind(const CNetworkAddress& addr)
 IDataSocket*
 CTCPListenSocket::accept()
 {
-	// accept asynchronously so we can check for cancellation
-	IArchNetwork::CPollEntry pfds[1];
-	pfds[0].m_socket = m_socket;
-	pfds[0].m_events = IArchNetwork::kPOLLIN;
-	for (;;) {
-		ARCH->testCancelThread();
-		try {
-			const int status = ARCH->pollSocket(pfds, 1, 0.01);
-			if (status > 0 &&
-				(pfds[0].m_revents & IArchNetwork::kPOLLIN) != 0) {
-				return new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
-			}
-		}
-		catch (XArchNetwork&) {
-			// ignore and retry
-		}
+	try {
+		CSocketMultiplexer::getInstance()->addSocket(this,
+							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
+								this, &CTCPListenSocket::serviceListening,
+								m_socket, true, false));
+		return new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
+	}
+	catch (XArchNetwork&) {
+		return NULL;
 	}
 }
 
 void
 CTCPListenSocket::close()
 {
+	CLock lock(m_mutex);
 	if (m_socket == NULL) {
 		throw XIOClosed();
 	}
 	try {
+		CSocketMultiplexer::getInstance()->removeSocket(this);
 		ARCH->closeSocket(m_socket);
 		m_socket = NULL;
 	}
 	catch (XArchNetwork& e) {
 		throw XSocketIOClose(e.what());
 	}
+}
+
+void
+CTCPListenSocket::setEventTarget(void* target)
+{
+	CLock lock(m_mutex);
+	m_target = target;
+}
+
+ISocketMultiplexerJob*
+CTCPListenSocket::serviceListening(ISocketMultiplexerJob* job,
+							bool read, bool, bool error)
+{
+	if (error) {
+		close();
+		return NULL;
+	}
+	if (read) {
+		CEventQueue::getInstance()->addEvent(
+							CEvent(getConnectingEvent(), m_target, NULL));
+		// stop polling on this socket until the client accepts
+		return NULL;
+	}
+	return job;
 }

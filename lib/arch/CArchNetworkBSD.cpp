@@ -200,11 +200,6 @@ CArchNetworkBSD::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 				ARCH->testCancelThread();
 				continue;
 			}
-			if (err == ECONNABORTED) {
-				// connection was aborted;  try again
-				ARCH->testCancelThread();
-				continue;
-			}
 			delete newSocket;
 			delete *addr;
 			*addr = NULL;
@@ -242,11 +237,6 @@ CArchNetworkBSD::connectSocket(CArchSocket s, CArchNetAddress addr)
 			if (errno == EISCONN) {
 				// already connected
 				break;
-			}
-
-			if (errno == EAGAIN) {
-				// connecting
-				throw XArchNetworkConnecting(new XArchEvalUnix(errno));
 			}
 
 			throwError(errno);
@@ -290,14 +280,15 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 	}
 
 	// do the poll
+	int t = (timeout < 0.0) ? -1 : static_cast<int>(1000.0 * timeout);
 	int n;
 	do {
-		n = poll(pfd, num, static_cast<int>(1000.0 * timeout));
+		n = poll(pfd, num, t);
 		if (n == -1) {
 			if (errno == EINTR) {
 				// interrupted system call
 				ARCH->testCancelThread();
-				continue;
+				return 0;
 			}
 			throwError(errno);
 		}
@@ -382,7 +373,7 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 		// prepare timeout for select
 		struct timeval timeout2;
 		struct timeval* timeout2P;
-		if (timeout < 0) {
+		if (timeout < 0.0) {
 			timeout2P = NULL;
 		}
 		else {
@@ -404,7 +395,7 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 			if (errno == EINTR) {
 				// interrupted system call
 				ARCH->testCancelThread();
-				continue;
+				return 0;
 			}
 			throwError(errno);
 		}

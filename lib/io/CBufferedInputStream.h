@@ -36,8 +36,12 @@ public:
 	The \c mutex must not be NULL and will be used to ensure thread
 	safe access.  If \c adoptedCloseCB is not NULL it will be called
 	when close() is called, allowing the creator to detect the close.
+	If adoptedEmptyCB is not NULL, it will be called whenever the
+	buffer becomes empty (except it won't be called by the c'tor nor
+	when the buffer is closed).
 	*/
-	CBufferedInputStream(CMutex* mutex, IJob* adoptedCloseCB);
+	CBufferedInputStream(CMutex* mutex,
+							IJob* adoptedEmptyCB, IJob* adoptedCloseCB);
 	~CBufferedInputStream();
 
 	//! @name manipulators
@@ -87,6 +91,7 @@ public:
 private:
 	CMutex*				m_mutex;
 	CCondVar<bool>		m_empty;
+	IJob*				m_emptyCB;
 	IJob*				m_closeCB;
 	CStreamBuffer		m_buffer;
 	bool				m_closed;

@@ -357,6 +357,12 @@ CArch::waitForEvent(CArchThread thread, double timeout)
 	return m_mt->waitForEvent(thread, timeout);
 }
 
+void
+CArch::unblockThread(CArchThread thread)
+{
+	m_mt->unblockThread(thread);
+}
+
 bool
 CArch::isSameThread(CArchThread thread1, CArchThread thread2)
 {

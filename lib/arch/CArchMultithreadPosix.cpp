@@ -522,6 +522,12 @@ CArchMultithreadPosix::waitForEvent(CArchThread, double /*timeout*/)
 	return kTimeout;
 }
 
+void
+CArchMultithreadPosix::unblockThread(CArchThread thread)
+{
+	pthread_kill(thread->m_thread, SIGWAKEUP);
+}
+
 bool
 CArchMultithreadPosix::isSameThread(CArchThread thread1, CArchThread thread2)
 {

@@ -56,6 +56,7 @@ public:
 	virtual void		testCancelThread();
 	virtual bool		wait(CArchThread, double timeout);
 	virtual EWaitResult	waitForEvent(CArchThread, double timeout);
+	virtual void		unblockThread(CArchThread thread);
 	virtual bool		isSameThread(CArchThread, CArchThread);
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);

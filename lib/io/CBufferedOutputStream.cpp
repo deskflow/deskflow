@@ -24,8 +24,9 @@
 //
 
 CBufferedOutputStream::CBufferedOutputStream(
-				CMutex* mutex, IJob* adoptedCloseCB) :
+				CMutex* mutex, IJob* adoptedFillCB, IJob* adoptedCloseCB) :
 	m_mutex(mutex),
+	m_fillCB(adoptedFillCB),
 	m_closeCB(adoptedCloseCB),
 	m_empty(mutex, true),
 	m_closed(false)
@@ -36,6 +37,7 @@ CBufferedOutputStream::CBufferedOutputStream(
 CBufferedOutputStream::~CBufferedOutputStream()
 {
 	delete m_closeCB;
+	delete m_fillCB;
 }
 
 const void*
@@ -68,7 +70,6 @@ CBufferedOutputStream::close()
 	}
 
 	m_closed = true;
-	m_buffer.pop(m_buffer.getSize());
 	if (m_closeCB != NULL) {
 		m_closeCB->run();
 	}
@@ -82,7 +83,13 @@ CBufferedOutputStream::write(const void* buffer, UInt32 n)
 		throw XIOClosed();
 	}
 
+	bool wasEmpty = (m_buffer.getSize() == 0);
 	m_buffer.write(buffer, n);
+	if (wasEmpty && n > 0) {
+		if (m_fillCB != NULL) {
+			m_fillCB->run();
+		}
+	}
 	return n;
 }
 
