@@ -87,3 +87,9 @@ CString					CScreenMap::getNeighbor(const CString& srcName,
 	// return connection
 	return index->second.m_neighbor[srcSide - kFirstDirection];
 }
+
+const char*				CScreenMap::dirName(EDirection dir)
+{
+	static const char* s_name[] = { "left", "right", "top", "bottom" };
+	return s_name[dir - kFirstDirection];
+}

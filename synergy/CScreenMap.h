@@ -33,6 +33,9 @@ class CScreenMap {
 	// if there is no neighbor in that direction.
 	CString				getNeighbor(const CString&, EDirection) const throw();
 
+	// get the name of a direction (for debugging)
+	static const char*	dirName(EDirection);
+
   private:
 	class CCell {
 	  public:

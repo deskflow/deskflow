@@ -6,7 +6,7 @@
 #include "ProtocolTypes.h"
 #include "CTimerThread.h"
 #include "XSynergy.h"
-#include <stdio.h>
+#include "CLog.h"
 #include <memory>
 
 //
@@ -29,6 +29,8 @@ CClient::~CClient()
 #include "CXWindowsSecondaryScreen.h"
 void					CClient::run(const CNetworkAddress& serverAddress)
 {
+	log((CLOG_DEBUG "starting client \"%s\"", m_name.c_str()));
+
 	std::auto_ptr<ISocket> socket;
 	std::auto_ptr<IInputStream> input;
 	std::auto_ptr<IOutputStream> output;
@@ -37,8 +39,10 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		CTimerThread timer(30.0);		// FIXME -- timeout in member
 
 		// create socket and attempt to connect to server
+		log((CLOG_DEBUG "connecting to server"));
 		socket.reset(new CTCPSocket());	// FIXME -- use factory
 		socket->connect(serverAddress);
+		log((CLOG_INFO "connected to server"));
 
 		// get the input and output streams
 		IInputStream*  srcInput  = socket->getInputStream();
@@ -59,16 +63,19 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		output.reset(new COutputPacketStream(srcOutput, true));
 
 		// wait for hello from server
+		log((CLOG_DEBUG "wait for hello"));
 		SInt32 major, minor;
 		CProtocolUtil::readf(input.get(), "Synergy%2i%2i", &major, &minor);
 
 		// check versions
+		log((CLOG_DEBUG "got hello version %d.%d", major, minor));
 		if (major < kMajorVersion ||
 			(major == kMajorVersion && minor < kMinorVersion)) {
 			throw XIncompatibleClient(major, minor);
 		}
 
 		// say hello back
+		log((CLOG_DEBUG "say hello version %d.%d", kMajorVersion, kMinorVersion));
 		CProtocolUtil::writef(output.get(), "Synergy%2i%2i%s",
 								kMajorVersion, kMinorVersion,
 								m_name.size(), m_name.data());
@@ -78,27 +85,27 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		m_output = output.get();
 	}
 	catch (XIncompatibleClient& e) {
-		fprintf(stderr, "incompatible server version (%d.%d)\n",
-								e.getMajor(), e.getMinor());
+		log((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
 		return;
 	}
 	catch (XThread&) {
-		fprintf(stderr, "connection timed out\n");
+		log((CLOG_ERR "connection timed out"));
 		throw;
 	}
 	catch (XBase& e) {
-		fprintf(stderr, "connection failed: %s\n", e.what());
+		log((CLOG_ERR "connection failed: %s", e.what()));
 		return;
 	}
 
 	// connect to screen
 	std::auto_ptr<CScreenCleaner> screenCleaner;
 	try {
+		log((CLOG_DEBUG "creating secondary screen"));
 		m_screen = new CXWindowsSecondaryScreen;
 		screenCleaner.reset(new CScreenCleaner(this, m_screen));
 	}
 	catch (XBase& e) {
-		fprintf(stderr, "cannot open screen: %s\n", e.what());
+		log((CLOG_ERR "cannot open screen: %s", e.what()));
 		return;
 	}
 
@@ -106,21 +113,24 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		// handle messages from server
 		for (;;) {
 			// wait for reply
+			log((CLOG_DEBUG "waiting for message"));
 			UInt8 code[4];
 			UInt32 n = input->read(code, 4);
 
 			// verify we got an entire code
 			if (n == 0) {
+				log((CLOG_NOTE "server disconnected"));
 				// server hungup
 				break;
 			}
 			if (n != 4) {
 				// client sent an incomplete message
-				fprintf(stderr, "incomplete message from server\n");
+				log((CLOG_ERR "incomplete message from server"));
 				break;
 			}
 
 			// parse message
+			log((CLOG_DEBUG "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
 			if (memcmp(code, kMsgDMouseMove, 4) == 0) {
 				onMouseMove();
 			}
@@ -169,20 +179,22 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 			}
 			else {
 				// unknown message
-				fprintf(stderr, "unknown message from server\n");
+				log((CLOG_ERR "unknown message from server"));
 				break;
 			}
 		}
 	}
 	catch (XBase& e) {
-		fprintf(stderr, "error: %s\n", e.what());
+		log((CLOG_ERR "error: %s", e.what()));
 		return;
 	}
 
 	// done with screen
+	log((CLOG_DEBUG "destroying secondary screen"));
 	screenCleaner.reset();
 
 	// done with socket
+	log((CLOG_DEBUG "disconnecting from server"));
 	socket->close();
 }
 
@@ -215,6 +227,7 @@ void					CClient::onQueryInfo()
 	SInt32 w, h;
 	m_screen->getSize(&w, &h);
 	SInt32 zoneSize = m_screen->getJumpZoneSize();
+	log((CLOG_DEBUG "sending info size=%d,%d zone=%d", w, h, zoneSize));
 	CProtocolUtil::writef(m_output, kMsgDInfo, w, h, zoneSize);
 }
 

@@ -13,6 +13,7 @@ LCXXINCS =				\
 	$(NULL)
 CXXFILES = 				\
 	XBase.cpp			\
+	CLog.cpp			\
 	CFunctionJob.cpp		\
 	CStopwatch.cpp			\
 	$(NULL)

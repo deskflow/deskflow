@@ -2,6 +2,7 @@
 #include "CServer.h"
 #include "CThread.h"
 #include "TMethodJob.h"
+#include "CLog.h"
 #include <assert.h>
 #include <X11/X.h>
 
@@ -33,6 +34,7 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 	m_server = server;
 
 	// open the display
+	log((CLOG_DEBUG "XOpenDisplay(%s)", "NULL"));
 	m_display = ::XOpenDisplay(NULL);	// FIXME -- allow non-default
 	if (m_display == NULL)
 		throw int(5);	// FIXME -- make exception for this
@@ -44,6 +46,7 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 	// get screen size
 	m_w = WidthOfScreen(screen);
 	m_h = HeightOfScreen(screen);
+	log((CLOG_INFO "primary display size: %dx%d", m_w, m_h));
 
 	// get the root window
 	Window root = RootWindow(m_display, m_screen);
@@ -80,10 +83,12 @@ void					CXWindowsPrimaryScreen::close()
 	assert(m_eventThread != NULL);
 
 	// stop event thread
+	log((CLOG_DEBUG "stopping event thread"));
 	m_eventThread->cancel();
 	m_eventThread->wait();
 	delete m_eventThread;
 	m_eventThread = NULL;
+	log((CLOG_DEBUG "stopped event thread"));
 
 	// destroy window
 	::XDestroyWindow(m_display, m_window);
@@ -92,10 +97,12 @@ void					CXWindowsPrimaryScreen::close()
 	// close the display
 	::XCloseDisplay(m_display);
 	m_display = NULL;
+	log((CLOG_DEBUG "closed display"));
 }
 
 void					CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 {
+	log((CLOG_INFO "entering primary at %d,%d", x, y));
 	assert(m_display != NULL);
 	assert(m_window  != None);
 	assert(m_active  == true);
@@ -123,6 +130,7 @@ void					CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 
 void					CXWindowsPrimaryScreen::leave()
 {
+	log((CLOG_INFO "leaving primary"));
 	assert(m_display != NULL);
 	assert(m_window  != None);
 	assert(m_active  == false);
@@ -141,9 +149,12 @@ void					CXWindowsPrimaryScreen::leave()
 								GrabModeAsync, GrabModeAsync,
 								m_window, None, CurrentTime);
 			assert(result != GrabNotViewable);
-			if (result != GrabSuccess)
+			if (result != GrabSuccess) {
+				log((CLOG_DEBUG "waiting to grab pointer"));
 				CThread::sleep(0.25);
+			}
 		} while (result != GrabSuccess);
+		log((CLOG_DEBUG "grabbed pointer"));
 
 		// now the keyboard
 		result = ::XGrabKeyboard(m_display, m_window, True,
@@ -151,9 +162,11 @@ void					CXWindowsPrimaryScreen::leave()
 		assert(result != GrabNotViewable);
 		if (result != GrabSuccess) {
 			::XUngrabPointer(m_display, CurrentTime);
+			log((CLOG_DEBUG "ungrabbed pointer, waiting to grab keyboard"));
 			CThread::sleep(0.25);
 		}
 	} while (result != GrabSuccess);
+	log((CLOG_DEBUG "grabbed keyboard"));
 
 	// move the mouse to the center of grab window
 	warpCursor(m_w >> 1, m_h >> 1);
@@ -169,6 +182,7 @@ void					CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 	Window root = RootWindow(m_display, m_screen);
 	::XWarpPointer(m_display, None, root, 0, 0, 0, 0, x, y);
 	::XSync(m_display, False);
+	log((CLOG_DEBUG "warped to %d,%d", x, y));
 
 	// discard mouse events since we just added one we don't want
 	XEvent xevent;
@@ -237,6 +251,7 @@ void					CXWindowsPrimaryScreen::eventThread(void*)
 			break;
 
 		  case KeyPress: {
+			log((CLOG_DEBUG "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(xevent.xkey.keycode, mask);
 			if (key != kKeyNone) {
@@ -248,6 +263,7 @@ void					CXWindowsPrimaryScreen::eventThread(void*)
 		  // FIXME -- simulate key repeat.  X sends press/release for
 		  // repeat.  must detect auto repeat and use kKeyRepeat.
 		  case KeyRelease: {
+			log((CLOG_DEBUG "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(xevent.xkey.keycode, mask);
 			if (key != kKeyNone) {
@@ -257,6 +273,7 @@ void					CXWindowsPrimaryScreen::eventThread(void*)
 		  }
 
 		  case ButtonPress: {
+			log((CLOG_DEBUG "event: ButtonPress button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				m_server->onMouseDown(button);
@@ -265,6 +282,7 @@ void					CXWindowsPrimaryScreen::eventThread(void*)
 		  }
 
 		  case ButtonRelease: {
+			log((CLOG_DEBUG "event: ButtonRelease button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				m_server->onMouseUp(button);
@@ -273,6 +291,7 @@ void					CXWindowsPrimaryScreen::eventThread(void*)
 		  }
 
 		  case MotionNotify: {
+			log((CLOG_DEBUG "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
 			SInt32 x, y;
 			if (!m_active) {
 				x = xevent.xmotion.x_root;
