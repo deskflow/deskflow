@@ -42,6 +42,7 @@ LCXXINCS =				\
 	-I$(DEPTH)/mt	 		\
 	-I$(DEPTH)/io	 		\
 	-I$(DEPTH)/net	 		\
+	-I$(DEPTH)/synergy 		\
 	$(NULL)
 CXXFILES = test.cpp
 
@@ -49,6 +50,7 @@ CXXFILES = test.cpp
 # libraries we depend on
 #
 DEPLIBS =				\
+	$(LIBDIR)/libsynergy.a		\
 	$(LIBDIR)/libnet.a		\
 	$(LIBDIR)/libio.a		\
 	$(LIBDIR)/libmt.a		\
@@ -61,3 +63,4 @@ LLDLIBS  =				\
 
 test: $(OBJECTS) $(DEPLIBS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS) $(LDFLAGS)
+

@@ -2,15 +2,22 @@
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
 #include "CProtocolUtil.h"
+#include "ISecondaryScreen.h"
+#include "ProtocolTypes.h"
 #include "CTimerThread.h"
+#include "XSynergy.h"
 #include <stdio.h>
+#include <memory>
 
 //
 // CClient
 //
 
 CClient::CClient(const CString& clientName) :
-								m_name(clientName)
+								m_name(clientName),
+								m_input(NULL),
+								m_output(NULL),
+								m_screen(NULL)
 {
 }
 
@@ -19,6 +26,7 @@ CClient::~CClient()
 }
 
 #include "CTCPSocket.h"
+#include "CXWindowsSecondaryScreen.h"
 void					CClient::run(const CNetworkAddress& serverAddress)
 {
 	std::auto_ptr<ISocket> socket;
@@ -84,12 +92,18 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 	}
 
 	// connect to screen
-	// FIXME -- make object that closes and destroys screen in
-	// it's d'tor.  screen must not be handling event queue by
-	// the time the streams are destroyed.
-
-	// handle messages from server
+	std::auto_ptr<CScreenCleaner> screenCleaner;
 	try {
+		m_screen = new CXWindowsSecondaryScreen;
+		screenCleaner.reset(new CScreenCleaner(this, m_screen));
+	}
+	catch (XBase& e) {
+		fprintf(stderr, "cannot open screen: %s\n", e.what());
+		return;
+	}
+
+	try {
+		// handle messages from server
 		for (;;) {
 			// wait for reply
 			UInt8 code[4];
@@ -108,46 +122,46 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 
 			// parse message
 			if (memcmp(code, kMsgDMouseMove, 4) == 0) {
-				onMouseMove(input.get());
+				onMouseMove();
 			}
 			else if (memcmp(code, kMsgDMouseWheel, 4) == 0) {
-				onMouseWheel(input.get());
+				onMouseWheel();
 			}
 			else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
-				onKeyDown(input.get());
+				onKeyDown();
 			}
 			else if (memcmp(code, kMsgDKeyUp, 4) == 0) {
-				onKeyUp(input.get());
+				onKeyUp();
 			}
 			else if (memcmp(code, kMsgDMouseDown, 4) == 0) {
-				onMouseDown(input.get());
+				onMouseDown();
 			}
 			else if (memcmp(code, kMsgDMouseUp, 4) == 0) {
-				onMouseUp(input.get());
+				onMouseUp();
 			}
 			else if (memcmp(code, kMsgDKeyRepeat, 4) == 0) {
-				onKeyRepeat(input.get());
+				onKeyRepeat();
 			}
 			else if (memcmp(code, kMsgCEnter, 4) == 0) {
-				onEnter(input.get());
+				onEnter();
 			}
 			else if (memcmp(code, kMsgCLeave, 4) == 0) {
-				onLeave(input.get());
+				onLeave();
 			}
 			else if (memcmp(code, kMsgCClipboard, 4) == 0) {
-				onGrabClipboard(input.get());
+				onGrabClipboard();
 			}
 			else if (memcmp(code, kMsgCScreenSaver, 4) == 0) {
-				onScreenSaver(input.get());
+				onScreenSaver();
 			}
 			else if (memcmp(code, kMsgQInfo, 4) == 0) {
-				onQueryInfo(input.get());
+				onQueryInfo();
 			}
 			else if (memcmp(code, kMsgQClipboard, 4) == 0) {
-				onQueryClipboard(input.get());
+				onQueryClipboard();
 			}
 			else if (memcmp(code, kMsgDClipboard, 4) == 0) {
-				onSetClipboard(input.get());
+				onSetClipboard();
 			}
 			else if (memcmp(code, kMsgCClose, 4) == 0) {
 				// server wants us to hangup
@@ -159,14 +173,17 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 				break;
 			}
 		}
-
-		// done with socket
-		m_socket->close();
 	}
 	catch (XBase& e) {
 		fprintf(stderr, "error: %s\n", e.what());
 		return;
 	}
+
+	// done with screen
+	screenCleaner.reset();
+
+	// done with socket
+	socket->close();
 }
 
 void					CClient::onEnter()
@@ -196,7 +213,7 @@ void					CClient::onScreenSaver()
 void					CClient::onQueryInfo()
 {
 	SInt32 w, h;
-	m_screen->getSize(w, h);
+	m_screen->getSize(&w, &h);
 	SInt32 zoneSize = m_screen->getJumpZoneSize();
 	CProtocolUtil::writef(m_output, kMsgDInfo, w, h, zoneSize);
 }
@@ -215,16 +232,16 @@ void					CClient::onKeyDown()
 {
 	SInt32 id, mask;
 	CProtocolUtil::readf(m_input, kMsgDKeyDown + 4, &id, &mask);
-	m_screen->onKeyDown(reinterpret_cast<KeyID>(id),
-								reinterpret_cast<KeyModifierMask>(mask));
+	m_screen->onKeyDown(static_cast<KeyID>(id),
+								static_cast<KeyModifierMask>(mask));
 }
 
 void					CClient::onKeyRepeat()
 {
 	SInt32 id, mask, count;
 	CProtocolUtil::readf(m_input, kMsgDKeyRepeat + 4, &id, &mask, &count);
-	m_screen->onKeyRepeat(reinterpret_cast<KeyID>(id),
-								reinterpret_cast<KeyModifierMask>(mask),
+	m_screen->onKeyRepeat(static_cast<KeyID>(id),
+								static_cast<KeyModifierMask>(mask),
 								count);
 }
 
@@ -232,22 +249,22 @@ void					CClient::onKeyUp()
 {
 	SInt32 id, mask;
 	CProtocolUtil::readf(m_input, kMsgDKeyUp + 4, &id, &mask);
-	m_screen->onKeyUp(reinterpret_cast<KeyID>(id),
-								reinterpret_cast<KeyModifierMask>(mask));
+	m_screen->onKeyUp(static_cast<KeyID>(id),
+								static_cast<KeyModifierMask>(mask));
 }
 
 void					CClient::onMouseDown()
 {
 	SInt32 id;
 	CProtocolUtil::readf(m_input, kMsgDMouseDown + 4, &id);
-	m_screen->onMouseDown(reinterpret_cast<ButonID>(id));
+	m_screen->onMouseDown(static_cast<ButtonID>(id));
 }
 
 void					CClient::onMouseUp()
 {
 	SInt32 id;
 	CProtocolUtil::readf(m_input, kMsgDMouseUp + 4, &id);
-	m_screen->onMouseUp(reinterpret_cast<ButonID>(id));
+	m_screen->onMouseUp(static_cast<ButtonID>(id));
 }
 
 void					CClient::onMouseMove()
@@ -262,4 +279,29 @@ void					CClient::onMouseWheel()
 	SInt32 delta;
 	CProtocolUtil::readf(m_input, kMsgDMouseWheel + 4, &delta);
 	m_screen->onMouseWheel(delta);
+}
+
+
+//
+// CClient::CScreenCleaner
+//
+
+CClient::CScreenCleaner::CScreenCleaner(CClient* client,
+								ISecondaryScreen* screen) :
+								m_screen(screen)
+{
+	assert(m_screen != NULL);
+	try {
+		m_screen->open(client);
+	}
+	catch (...) {
+		delete m_screen;
+		throw;
+	}
+}
+
+CClient::CScreenCleaner::~CScreenCleaner()
+{
+	m_screen->close();
+	delete m_screen;
 }

@@ -9,7 +9,6 @@ CServer
  * put mutex locks wherever necessary (like accessing m_active)
 
 CClient
- * need thread to handle screen
  * need methods for screen event handler to call as appropriate
 
 server						client

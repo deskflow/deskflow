@@ -7,6 +7,7 @@
 class CNetworkAddress;
 class IInputStream;
 class IOutputStream;
+class ISecondaryScreen;
 
 class CClient {
   public:
@@ -38,9 +39,20 @@ class CClient {
 	void				onMouseWheel();
 
   private:
+	class CScreenCleaner {
+	  public:
+		CScreenCleaner(CClient*, ISecondaryScreen*);
+		~CScreenCleaner();
+
+	  private:
+		ISecondaryScreen*	m_screen;
+	};
+
+  private:
 	CString				m_name;
-	IInputStream*		m_output;
+	IInputStream*		m_input;
 	IOutputStream*		m_output;
+	ISecondaryScreen*	m_screen;
 };
 
 #endif

@@ -4,7 +4,6 @@
 #include "TMethodJob.h"
 #include <assert.h>
 #include <X11/X.h>
-#include <X11/extensions/XTest.h>
 
 //
 // CXWindowsPrimaryScreen

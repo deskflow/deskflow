@@ -3,6 +3,8 @@
 
 #include "IInterface.h"
 #include "BasicTypes.h"
+#include "KeyTypes.h"
+#include "MouseTypes.h"
 
 class CClient;
 //class IClipboard;

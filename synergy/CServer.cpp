@@ -545,6 +545,7 @@ void					CServer::mapPosition(CScreenInfo* src,
 	}
 }
 
+#include "CTCPListenSocket.h"
 void					CServer::acceptClients(void*)
 {
 	// add this thread to the list of threads to cancel.  remove from
@@ -554,7 +555,8 @@ void					CServer::acceptClients(void*)
 	std::auto_ptr<IListenSocket> listen;
 	try {
 		// create socket listener
-		listen.reset(m_socketFactory->createListen());
+//		listen.reset(m_socketFactory->createListen());
+		listen.reset(new CTCPListenSocket);		// FIXME
 
 		// bind to the desired port.  keep retrying if we can't bind
 		// the address immediately.
@@ -712,7 +714,12 @@ void					CServer::openPrimaryScreen()
 	m_primary->open(this);
 
 	// add connection
-	m_active  = addConnection(CString("primary"/* FIXME */), NULL);
+	m_active = addConnection(CString("primary"/* FIXME */), NULL);
+
+	// update info
+	m_primary->getSize(&m_active->m_width, &m_active->m_height);
+	m_active->m_zoneSize = m_primary->getJumpZoneSize();
+	// FIXME -- need way for primary screen to call us back
 }
 
 void					CServer::closePrimaryScreen() throw()

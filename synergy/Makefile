@@ -15,11 +15,13 @@ CXXFILES = 				\
 	COutputPacketStream.cpp		\
 	CTCPSocketFactory.cpp		\
 	CProtocolUtil.cpp		\
+	CClient.cpp			\
 	CServerProtocol.cpp		\
 	CServerProtocol1_0.cpp		\
 	CScreenMap.cpp			\
 	CServer.cpp			\
 	CXWindowsPrimaryScreen.cpp	\
+	CXWindowsSecondaryScreen.cpp	\
 	XSynergy.cpp			\
 	$(NULL)
 
@@ -37,8 +39,11 @@ LLDLIBS  =				\
 	-lpthread			\
 	$(NULL)
 
-targets: server
+targets: server client
 
-server: $(OBJECTS) $(DEPLIBS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS) $(LDFLAGS)
+server: server.o $(OBJECTS) $(DEPLIBS)
+	$(CXX) $(CXXFLAGS) -o $@ server.o $(OBJECTS) $(LDFLAGS)
+
+client: client.o $(OBJECTS) $(DEPLIBS)
+	$(CXX) $(CXXFLAGS) -o $@ client.o $(OBJECTS) $(LDFLAGS)
 
