@@ -16,6 +16,7 @@
 #include "CMSWindowsClipboardTextConverter.h"
 #include "CMSWindowsClipboardUTF16Converter.h"
 #include "CLog.h"
+#include "CArchMiscWindows.h"
 
 //
 // CMSWindowsClipboard
@@ -29,7 +30,11 @@ CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
 {
 	// add converters, most desired first
 	m_converters.push_back(new CMSWindowsClipboardUTF16Converter);
-	m_converters.push_back(new CMSWindowsClipboardTextConverter);
+	if (CArchMiscWindows::isWindows95Family()) {
+		// windows nt family converts to/from unicode automatically.
+		// let it do so to avoid text encoding issues.
+		m_converters.push_back(new CMSWindowsClipboardTextConverter);
+	}
 }
 
 CMSWindowsClipboard::~CMSWindowsClipboard()
