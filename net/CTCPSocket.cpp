@@ -134,12 +134,6 @@ void					CTCPSocket::init()
 	// mouse motion messages are much less useful if they're delayed.
 	CNetwork::TCPNoDelayType flag = 1;
 	CNetwork::setsockopt(m_fd, SOL_TCP, TCP_NODELAY, &flag, sizeof(flag));
-
-#if !defined(CONFIG_PLATFORM_WIN32)
-	// don't buffer sends, we merge messages ourself
-	int data = 0;
-	CNetwork::setsockopt(m_fd, SOL_SOCKET, SO_SNDBUF, &data, sizeof(data));
-#endif
 }
 
 void					CTCPSocket::ioThread(void*)
