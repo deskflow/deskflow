@@ -401,6 +401,7 @@ linux:
     toggle off on the key release after the next key press.  synergy
     doesn't handle these properly.
   * shift-lock (as opposed to caps-lock) is not supported
+  * large (~256k) motif clipboard items are not copied properly
 
 
 tips and tricks
