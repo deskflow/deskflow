@@ -309,7 +309,6 @@ help()
 {
 	LOG((CLOG_PRINT
 "Usage: %s"
-" [--camp|--no-camp]"
 " [--daemon|--no-daemon]"
 " [--debug <level>]"
 " [--name <screen-name>]"
