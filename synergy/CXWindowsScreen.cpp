@@ -279,6 +279,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 	// don't update clipboard object if clipboard hasn't changed.  ask
 	// the selection for the tiemstamp when it acquired the selection.
 	Atom format;
+/* XXX -- timestamp not always updated when clipboard is changed
 	CString data;
 	if (getDisplayClipboard(selection, m_atomTimestamp,
 								requestor, timestamp, &format, &data) &&
@@ -294,6 +295,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 		// use clipboard owner's time as timestamp
 		timestamp = time;
 	}
+*/
 
 	// clear the clipboard object
 	if (!clipboard->open(timestamp)) {
