@@ -10,6 +10,7 @@ SUBDIRS = 				\
 	mt				\
 	io				\
 	net				\
+	synergy 			\
 	$(NULL)
 #
 # targets
