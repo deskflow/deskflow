@@ -1,6 +1,26 @@
 Synergy News
 ============
 
+* May-10-2003 - Synergy 1.0.8 released
+
+  Made following changes:
+  * Fixed hook forwarding (fixing interaction with objectbar)
+  * Fixed "Windows" key handling and added support Win+E, Win+F, etc
+  * Added win 95/98/me support for Alt+Tab, Alt+Esc, Ctrl+Esc
+  * Fixed scroll lock locking to server screen
+  * Fixed screen flashing on X11 and Windows
+  * Fixed compile problem on 64 bit systems
+  * Fixed Xinerama support
+  * Now allowing screen names that include underscores
+  * Improved non-ASCII key handling on Windows
+  * Fixed lagginess
+  * Fixed failure to capture all mouse input on Windows
+  * Fixed auto-repeat bugs on X11
+  * Added option to disable screen saver synchronization
+  * Added support for 4th and 5th mouse buttons on Windows
+  * Added support for "Internet" and "Multimedia" keys
+  * Fixed jumping from client to itself (mouse wrapping)
+
 * Mar-27-2003 - Synergy 1.0.6 released
 
   Made following changes:

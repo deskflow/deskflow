@@ -1,3 +1,308 @@
+2003/05/10 17:27:05 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.8.
+
+----------
+2003/05/10 17:26:42 crs
+INSTALL
+README
+
+Updated documentation.
+
+----------
+2003/05/08 21:59:35 crs
+lib/server/CServer.cpp
+
+Fixed jumping to same client screen.  It was broken by an earlier
+change (probably double tap).  Jumping to the same server screen
+worked correctly.
+
+----------
+2003/05/04 21:40:42 crs
+configure.in
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/synergy/KeyTypes.h
+lib/synergy/MouseTypes.h
+
+Added support for 4th and 5th (non-mouse-wheel) buttons and
+"Internet" keyboard keys.
+
+----------
+2003/05/03 15:16:30 crs
+cmd/launcher/CGlobalOptions.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added screen saver synchronization option to win32 launcher dialog.
+
+----------
+2003/05/03 14:54:03 crs
+lib/synergy/CSecondaryScreen.cpp
+
+Removed accidental debugging code.
+
+----------
+2003/05/03 14:38:36 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/server/CConfig.cpp
+lib/synergy/CSecondaryScreen.cpp
+lib/synergy/CSecondaryScreen.h
+lib/synergy/OptionTypes.h
+
+Added global configuration option to disable screen saver
+synchronization.
+
+----------
+2003/05/03 13:57:52 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Forgot to restore global auto-repeat configuration on exit.
+
+----------
+2003/05/03 13:50:06 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/synergy/CSecondaryScreen.cpp
+lib/synergy/CSecondaryScreen.h
+
+Now warping mouse to center of screen when leaving client screens.
+Some users requested this.  Also, the hider window is mapped before
+warping the mouse so the active window shouldn't change if the focus
+policy is point-to-focus.  Showing the window first can also reduce
+the likelihood of seeing the cursor briefly in its hidden position.
+
+----------
+2003/05/03 13:28:21 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Now turning off auto-repeat when on an X11 client.  This prevents
+the server from auto-repeating fake events, which is undesired
+since synergy will do the auto-repeating itself.  This also
+disables auto-repeat on any keys locally configured on X11 to not
+auto-repeat.  That's mainly to suppress auto-repeat on modifier
+keys, which auto-repeat on win32 but not X11.
+
+----------
+2003/05/03 12:54:22 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CSynergyHook.h
+
+Fixed a few win32 keyboard/mouse problems.  First, the mouse hook
+now captures non-client area mouse messages.  Previously, these
+were ignored (because i forgot about them) and they caused all
+kinds of problems because they weren't forwarded.  For example,
+clicking on a window border would cause the window to start
+resizing when the mouse came back to the server screen.  Moving
+inside a title bar meant that the mouse wouldn't move on the
+client screen.
+
+Second, because non-client messages are now handled, the full
+screen transparent window is no longer necessary to capture
+input so it's never displayed.  (The window is still necessary
+for clipboard ownership so it's still created.)  No transparent
+window means no screen flashing.  It also means we don't have to
+become the foreground and active window.  This plays better with
+apps that minimize or restore when they're no longer the
+foreground application/active window.
+
+Third, fixed the low level keyboard hook to forward toggle key
+updates, which it was neglecting to do.
+
+Finally, keyboard and mouse input is always forwarded from the hook
+to the primary screen handler which then shadows the current key
+and mouse button state.  If we're using low level hooks then this
+isn't really necessary and GetKeyState() always returns the right
+info but without low level hooks it means we can just use the
+shadow state.  It also means we don't have to show our window in
+order to get the system's key state table up to date, fixing the
+screen flash when checking for the scroll lock state.
+
+----------
+2003/05/03 12:37:03 crs
+lib/arch/CArchMultithreadWindows.cpp
+lib/synergy/CPrimaryScreen.cpp
+lib/synergy/CSecondaryScreen.cpp
+
+Boosted priority of main synergy threads to be very high (highest
+realtime priority).  After some testing it appears that anything
+less than this can starve synergy in some circumstances, preventing
+it from forwarding messages to clients.  This is a rather risky
+change since synergy can now virtually take over a system if it
+behaves badly.  This change only affects windows systems since
+lib/arch of other platforms don't yet attempt to boost priority.
+
+----------
+2003/04/27 18:05:32 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/server/Makefile.am
+lib/server/server.dsp
+
+Fixes to previous checkpoint.  Non-ascii keys seem to work correctly.
+Still not supporting key composition on X11.
+
+----------
+2003/04/27 17:01:14 crs
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CServerProxy.cpp
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CClientProxy1_1.cpp
+lib/server/CClientProxy1_1.h
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/Makefile.am
+lib/synergy/CSecondaryScreen.h
+lib/synergy/IClient.h
+lib/synergy/IPrimaryScreenReceiver.h
+lib/synergy/KeyTypes.h
+lib/synergy/ProtocolTypes.h
+
+Checkpointing improved key handling.  This change adds non-ASCII
+key handling to win32 on both client and server.  It also changes
+the protocol and adds code to ensure every key pressed also gets
+released and that that doesn't get confused when the KeyID for
+the press is different from the KeyID of the release (or repeat).
+
+----------
+2003/04/24 20:11:38 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsUtil.cpp
+lib/platform/CXWindowsUtil.h
+
+Added KeySym <-> Unicode mappings.  Changed code to use those
+mappings to better support Unicode key events.
+
+----------
+2003/04/24 20:10:13 crs
+cmd/Makefile.am
+
+Added exec.dsp to EXTRA_DIST.
+
+----------
+2003/04/16 20:59:25 crs
+all.dsp
+cmd/exec.dsp
+lib/platform/makehook.dsp
+lib/platform/synrgyhk.dsp
+synergy.dsw
+
+Win32 project configuration fixes.
+
+----------
+2003/04/16 20:59:14 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/platform/CMSWindowsPrimaryScreen.cpp
+
+Minor win32 fixes.
+
+----------
+2003/04/16 20:05:00 crs
+lib/server/CConfig.cpp
+
+Now allowing screen names with underscores.
+
+----------
+2003/04/14 22:16:21 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+
+Fixed incorrect initialization of an XMotionEvent.
+
+----------
+2003/04/14 22:15:56 crs
+configure.in
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+
+Added workaround for apparent Xinerama bug when warping the pointer.
+This should allow synergy to be used on a system using Xinerama to
+create a single logical screen from multiple physical screens.
+
+----------
+2003/04/13 18:14:01 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+
+Fixed problem with type casting void* to int.
+
+----------
+2003/04/13 17:13:27 crs
+lib/platform/CXWindowsScreenSaver.cpp
+
+Removed periodic call to XForceScreenSaver() to prevent the built-in
+screen saver from activating.  It was unnecessary since the built-in
+screen saver is disabled as appropriate;  this call was just to
+ensure that the screen saver wouldn't start if an external program
+reactivated the screen saver after synergy disabled it.
+
+It's possible that this was causing screen flicker under gnome, though
+i don't know why.  It's also possible that periodically sending events
+to xscreensaver is causing the flicker but removing that code is more
+difficult because xscreensaver can't be disabled, only deactivated or
+killed.
+
+----------
+2003/04/13 14:59:53 crs
+lib/platform/CMSWindowsClipboard.cpp
+lib/platform/CMSWindowsClipboard.h
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CSynergyHook.cpp
+
+Fixed several win32 bugs.  First, synergy wasn't forwarding mouse
+events to other hook functions, which broke some tools like objectbar.
+Second, windows key processing was fixed.  Previously pressing and
+release the key would only send a press event, locking the user onto
+the client window;  also, the win32 server treated as a Meta modifier
+instead of a Super modifier, which broke any use of it as any kind of
+modifier key.  Third, added hacks to support several key combinations
+on windows 95/98/me that are treated specially by windows, including
+Alt+Tab, Alt+Shift+Tab, Alt+Esc, Alt+Shift+Esc, Ctrl+Esc, and any
+combination using the windows key like Win+E and Win+F but not
+Ctrl+Alt+Del.  Fourth, scroll lock only locking to the client (which
+only happened when using a synergy server on windows) has been fixed;
+unfortunately the solution causes a lot of screen redraws for some
+reason.  Finally, there's been a fix to clipboard handling that may
+or may not fix a problem where the clipboard would stop transferring
+between systems after a little while.  I can't be sure if it fixes
+the problem because I can't reproduce the problem.
+
+----------
+2003/04/13 14:39:17 crs
+cmd/launcher/launcher.rc
+
+Added mention of tray icon to launcher start message box.
+
+----------
 2003/03/26 21:03:58 crs
 configure.in
 lib/common/Version.h
