@@ -16,9 +16,11 @@
 #define XBASE_H
 
 #include "CString.h"
+/*
 #include "stdpre.h"
 #include <exception>
 #include "stdpost.h"
+*/
 
 //! Exception base class
 /*!
@@ -52,33 +54,73 @@ private:
 	mutable CString		m_what;
 };
 
-//! Mix-in for handling \c errno
 /*!
-This mix-in class for exception classes provides storage and query of
-\c errno.  On Windows, it uses GetLastError() instead of errno.
+\def XBASE_SUBCLASS
+Convenience macro to subclass from XBase (or a subclass of it),
+providing the c'tor taking a const CString&.  getWhat() is not
+declared.
 */
-class MXErrno {
-public:
-	//! Save \c errno as the error code
-	MXErrno();
-	//! Save \c err as the error code
-	MXErrno(int err);
-	virtual ~MXErrno();
+#define XBASE_SUBCLASS(name_, super_)									\
+class name_ : public super_ {											\
+public:																	\
+	name_() : super_() { }												\
+	name_(const CString& msg) : super_(msg) { }							\
+}
 
-	//! @name accessors
-	//@{
+/*!
+\def XBASE_SUBCLASS
+Convenience macro to subclass from XBase (or a subclass of it),
+providing the c'tor taking a const CString&.  getWhat() must be
+implemented.
+*/
+#define XBASE_SUBCLASS_WHAT(name_, super_)								\
+class name_ : public super_ {											\
+public:																	\
+	name_() : super_() { }												\
+	name_(const CString& msg) : super_(msg) { }							\
+																		\
+protected:																\
+	virtual CString		getWhat() const throw();						\
+}
 
-	//! Get the error code
-	int					getErrno() const;
-
-	//! Get the human readable string for the error code
-	virtual const char*	getErrstr() const;
-
-	//@}
-
-private:
-	int					m_errno;
-	mutable char*		m_string;
-};
+/*!
+\def XBASE_SUBCLASS_FORMAT
+Convenience macro to subclass from XBase (or a subclass of it),
+providing the c'tor taking a const CString&.  what() is overridden
+to call getWhat() when first called;  getWhat() can format the
+error message and can call what() to get the message passed to the
+c'tor.
+*/
+#define XBASE_SUBCLASS_FORMAT(name_, super_)							\
+class name_ : public super_ {											\
+private:																\
+	enum EState { kFirst, kFormat, kDone };								\
+																		\
+public:																	\
+	name_() : super_(), m_state(kDone) { }								\
+	name_(const CString& msg) : super_(msg), m_state(kFirst) { }		\
+																		\
+	virtual const char*	what() const									\
+	{																	\
+		if (m_state == kFirst) {										\
+			m_state = kFormat;											\
+			m_formatted = getWhat();									\
+			m_state = kDone;											\
+		}																\
+		if (m_state == kDone) {											\
+			return m_formatted.c_str();									\
+		}																\
+		else {															\
+			return super_::what();										\
+		}																\
+	}																	\
+																		\
+protected:																\
+	virtual CString		getWhat() const throw();						\
+																		\
+private:																\
+	mutable EState				m_state;								\
+	mutable std::string			m_formatted;							\
+}
 
 #endif

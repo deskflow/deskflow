@@ -10,16 +10,19 @@ The synergy source code organization is:
 
 .               -- root makefiles, some standard documentation
 cmd             -- program source code
-  synergy       -- synergy client
-  synergyd      -- synergy server
+  launcher      -- synergy launcher for Windows
+  synergyc      -- synergy client
+  synergys      -- synergy server
 config          -- stuff for autoconf/automake
 dist            -- files for creating distributions
   rpm           -- files for creating RPMs
 doc             -- placeholder for documentation
 examples        -- example files
 lib             -- library source code
+  arch          -- platform dependent utility library
   base          -- simple utilities
   client        -- synergy client library
+  common        -- commonly needed header files
   http          -- simple http tools
   io            -- I/O
   mt            -- multithreading
@@ -130,7 +133,7 @@ following these guidelines.
     * Other headers in directory, sorted alphabetically
     * Headers for each library, sorted alphabetically per library
       Include headers from the library closest in the dependency graph
-        first, then the next farthest, etc.  sort alphabetically within
+        first, then the next farthest, etc.  Sort alphabetically within
         each library.
     * System headers
 
@@ -181,12 +184,8 @@ following these guidelines.
     Inheriting implementation from multiple classes can have unpleasant
     consequences in C++ due to it's limited capabilities.  Classes can
     inherit	from any number of interface classes.  An interface class
-    provides only pure virtual methods.
-
-    Synergy breaks this rule in two places.  First is that IInterface
-    implements the virtual destructor.  However, it's just an empty
-    method so it doesn't really count. Second is MXErrno which provides
-    implementation for exceptions that use the global errno variable.
+    provides only pure virtual methods.  Synergy breaks this rule in
+	IInterface which implements the virtual destructor for convenience.
 
   * No globals
 	Avoid global variables.  All global variables must be static, making
@@ -272,18 +271,20 @@ following these guidelines.
   * Open brace for function is on a line by itself in first column
   * Close brace for function lines up with open brace
   * Always use braces on: if, else, for, while, do, switch
-  * `else {' goes on it's own line
+  * `else {' goes on its own line
   * Always explicitly test pointers against NULL
     e.g. `if (ptr == NULL)' not `if (ptr)'
+  * Always explicitly test integral values against 0
+    e.g. `if (i == 0)' not `if (i)'
   * Put spaces around binary operators and after statements
     e.g. `if (a == b) {' not `if(a==b){'
   * C'tor initializers are one per line, indented one tab stop
   * Other indentation should follow existing practice
-  * Use Qt style comments for extraction by doxygen
+  * Use Qt style comments for extraction by doxygen (i.e. //! and /*!)
   * Mark incomplete or buggy code with `FIXME'
 
 - Other
-  * calls to log() should always be all on one line (even past column 80)
+  * calls to LOG() should always be all on one line (even past column 80)
 
 
 Class Relationships
@@ -300,4 +301,51 @@ FIXME -- high level overview of class relationships
 Portability
 -----------
 
-FIXME -- information about porting to new platforms
+Porting synergy to a new platform requires the following steps:
+
+- Setting up the build
+- Adjusting lib/common/common.h
+- Implementing lib/arch
+- Implementing lib/platform
+- Implementing primary and secondary screens for the platform
+- Tweaking synergyc and synergys
+
+Setting up the build:
+
+The first phase is simply to create the files necessary to build the
+other files.  On Unix, synergy uses autoconf/automake which produces
+a `configure' script that generates makefiles.  On Windows, synergy
+uses Visual C++ workspace and project files.  If you're porting to
+another Unix variant, you may need to adjust `configure.in',
+`acinclude.m4', and Unix flavor dependent code in lib/arch.
+
+Adjusting lib/common/common.h:
+
+The lib/common/common.h header file is included directly or indirectly
+by every other file.  It prepares some platform dependent macros for
+integer sizes and defines a macro for conveniently testing which
+platform we're building on.  That macro is named *_LIKE (e.g. UNIX_LIKE)
+and has the value `1'.  Exactly one *_LIKE macro must be defined by
+common.h.
+
+Implementing lib/arch:
+
+Most platform dependent code lives in lib/arch.  There are several
+interface classes there and they must all be implemented for each
+platform.  See the interface header files for more information.
+
+Implementing lib/platform:
+
+Most of the remaining platform dependent code lives in lib/platform.
+The code there implements platform dependent window, clipboard, and
+screen saver handling.  The following interfaces must be implemented:
+
+FIXME
+
+Implementing primary and secondary screens for the platform:
+
+FIXME
+
+Tweaking synergyc and synergys:
+
+FIXME

@@ -18,16 +18,13 @@
 #include "XBase.h"
 
 //! Generic screen exception
-class XScreen : public XBase { };
+XBASE_SUBCLASS(XScreen, XBase);
 
 //! Cannot open screen exception
 /*!
 Thrown when a screen cannot be opened or initialized.
 */
-class XScreenOpenFailure : public XScreen {
-protected:
-	virtual CString		getWhat() const throw();
-};
+XBASE_SUBCLASS_WHAT(XScreenOpenFailure, XScreen);
 
 //! Screen unavailable exception
 /*!

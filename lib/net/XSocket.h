@@ -21,7 +21,7 @@
 #include "BasicTypes.h"
 
 //! Generic socket exception
-class XSocket : public XBase { };
+XBASE_SUBCLASS(XSocket, XBase);
 
 //! Socket bad address exception
 /*!
@@ -37,7 +37,7 @@ public:
 		kBadPort		//!< The port is invalid
 	};
 
-	XSocketAddress(EError, const CString& hostname, UInt16 port) throw();
+	XSocketAddress(EError, const CString& hostname, int port) throw();
 
 	//! @name accessors
 	//@{
@@ -47,7 +47,7 @@ public:
 	//! Get the hostname
 	CString				getHostname() const throw();
 	//! Get the port
-	UInt16				getPort() const throw();
+	int					getPort() const throw();
 
 	//@}
 
@@ -58,80 +58,38 @@ protected:
 private:
 	EError				m_error;
 	CString				m_hostname;
-	UInt16				m_port;
-};
-
-//! Generic socket exception using \c errno
-class XSocketErrno : public MXErrno {
-public:
-	XSocketErrno();
-	XSocketErrno(int);
-
-	// MXErrno overrides
-	virtual const char*	getErrstr() const;
+	int					m_port;
 };
 
 //! I/O closing exception
 /*!
 Thrown if a stream cannot be closed.
 */
-class XSocketIOClose : public XIOClose, public XSocketErrno {
-protected:
-	// XBase overrides
-	virtual CString		getWhat() const throw();
-};
+XBASE_SUBCLASS_FORMAT(XSocketIOClose, XIOClose);
 
 //! Socket cannot bind address exception
 /*!
 Thrown when a socket cannot be bound to an address.
 */
-class XSocketBind : public XSocket, public XSocketErrno {
-public:
-	XSocketBind() { }
-	XSocketBind(int e) : XSocketErrno(e) { }
-
-protected:
-	// XBase overrides
-	virtual CString		getWhat() const throw();
-};
+XBASE_SUBCLASS_FORMAT(XSocketBind, XSocket);
 
 //! Socket address in use exception
 /*!
 Thrown when a socket cannot be bound to an address because the address
 is already in use.
 */
-class XSocketAddressInUse : public XSocketBind {
-public:
-	XSocketAddressInUse() { }
-	XSocketAddressInUse(int e) : XSocketBind(e) { }
-};
+XBASE_SUBCLASS(XSocketAddressInUse, XSocketBind);
 
 //! Cannot connect socket exception
 /*!
 Thrown when a socket cannot connect to a remote endpoint.
 */
-class XSocketConnect : public XSocket, public XSocketErrno {
-public:
-	XSocketConnect() { }
-	XSocketConnect(int e) : XSocketErrno(e) { }
-
-protected:
-	// XBase overrides
-	virtual CString		getWhat() const throw();
-};
+XBASE_SUBCLASS_FORMAT(XSocketConnect, XSocket);
 
 //! Cannot create socket exception
 /*!
 Thrown when a socket cannot be created (by the operating system).
 */
-class XSocketCreate : public XSocket, public XSocketErrno {
-public:
-	XSocketCreate() { }
-	XSocketCreate(int e) : XSocketErrno(e) { }
-
-protected:
-	// XBase overrides
-	virtual CString		getWhat() const throw();
-};
+XBASE_SUBCLASS_FORMAT(XSocketCreate, XSocket);
 
 #endif

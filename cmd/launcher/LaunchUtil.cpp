@@ -13,8 +13,8 @@
  */
 
 #include "CConfig.h"
-#include "CPlatform.h"
 #include "LaunchUtil.h"
+#include "CArch.h"
 #include "resource.h"
 #include "stdfstream.h"
 
@@ -107,10 +107,9 @@ CString
 getAppPath(const CString& appName)
 {
 	// prepare path to app
-	CPlatform platform;
 	char myPathname[MAX_PATH];
 	GetModuleFileName(s_instance, myPathname, MAX_PATH);
-	const char* myBasename = platform.getBasename(myPathname);
+	const char* myBasename = ARCH->getBasename(myPathname);
 	CString appPath = CString(myPathname, myBasename - myPathname);
 	appPath += appName;
 	return appPath;
@@ -136,24 +135,20 @@ loadConfig(const CString& pathname, CConfig& config)
 bool
 loadConfig(CConfig& config)
 {
-	CPlatform platform;
-
 	// load configuration
 	bool configLoaded = false;
-	CString path = platform.getUserDirectory();
+	CString path = ARCH->getUserDirectory();
 	if (!path.empty()) {
-		CPlatform platform;
-
 		// try loading the user's configuration
-		path = platform.addPathComponent(path, CONFIG_NAME);
+		path = ARCH->concatPath(path, CONFIG_NAME);
 		if (loadConfig(path, config)) {
 			configLoaded = true;
 		}
 		else {
 			// try the system-wide config file
-			path = platform.getSystemDirectory();
+			path = ARCH->getSystemDirectory();
 			if (!path.empty()) {
-				path = platform.addPathComponent(path, CONFIG_NAME);
+				path = ARCH->concatPath(path, CONFIG_NAME);
 				if (loadConfig(path, config)) {
 					configLoaded = true;
 				}
@@ -183,13 +178,11 @@ saveConfig(const CString& pathname, const CConfig& config)
 bool
 saveConfig(const CConfig& config, bool sysOnly)
 {
-	CPlatform platform;
-
 	// try saving the user's configuration
 	if (!sysOnly) {
-		CString path = platform.getUserDirectory();
+		CString path = ARCH->getUserDirectory();
 		if (!path.empty()) {
-			path = platform.addPathComponent(path, CONFIG_NAME);
+			path = ARCH->concatPath(path, CONFIG_NAME);
 			if (saveConfig(path, config)) {
 				return true;
 			}
@@ -198,9 +191,9 @@ saveConfig(const CConfig& config, bool sysOnly)
 
 	// try the system-wide config file
 	else {
-		CString path = platform.getSystemDirectory();
+		CString path = ARCH->getSystemDirectory();
 		if (!path.empty()) {
-			path = platform.addPathComponent(path, CONFIG_NAME);
+			path = ARCH->concatPath(path, CONFIG_NAME);
 			if (saveConfig(path, config)) {
 				return true;
 			}

@@ -16,6 +16,8 @@ DEPTH = ..
 VDEPTH = ./$(VPATH)/$(DEPTH)
 
 SUBDIRS =					\
+	common					\
+	arch					\
 	base					\
 	mt						\
 	io						\

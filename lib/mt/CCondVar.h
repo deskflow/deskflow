@@ -17,6 +17,7 @@
 
 #include "CMutex.h"
 #include "BasicTypes.h"
+#include "IArchMultithread.h"
 
 class CStopwatch;
 
@@ -112,22 +113,13 @@ public:
 	//@}
 
 private:
-	void				init();
-	void				fini();
-
 	// not implemented
 	CCondVarBase(const CCondVarBase&);
 	CCondVarBase&		operator=(const CCondVarBase&);
 
 private:
 	CMutex*				m_mutex;
-	void*				m_cond;
-
-#if WINDOWS_LIKE
-	enum { kSignal, kBroadcast };
-	mutable UInt32		m_waitCount;
-	CMutex				m_waitCountMutex;
-#endif
+	CArchCond			m_cond;
 };
 
 //! Condition variable

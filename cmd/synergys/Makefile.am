@@ -39,6 +39,7 @@ synergys_LDADD =						\
 	$(DEPTH)/lib/io/libio.a				\
 	$(DEPTH)/lib/mt/libmt.a				\
 	$(DEPTH)/lib/base/libbase.a			\
+	$(DEPTH)/lib/arch/libarch.a			\
 	$(X_LIBS)							\
 	$(X_PRE_LIBS)						\
 	-lXtst								\
@@ -47,6 +48,8 @@ synergys_LDADD =						\
 	$(X_EXTRA_LIBS)						\
 	$(NULL)
 INCLUDES =								\
+	-I$(VDEPTH)/lib/common				\
+	-I$(VDEPTH)/lib/arch				\
 	-I$(VDEPTH)/lib/base 				\
 	-I$(VDEPTH)/lib/mt	 				\
 	-I$(VDEPTH)/lib/io	 				\

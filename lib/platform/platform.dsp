@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\base" /I "..\mt" /I "..\io" /I "..\synergy" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\synergy" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\base" /I "..\mt" /I "..\io" /I "..\synergy" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\synergy" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -109,10 +109,6 @@ SOURCE=.\CMSWindowsScreen.cpp
 
 SOURCE=.\CMSWindowsScreenSaver.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=.\CPlatform.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -143,32 +139,7 @@ SOURCE=.\CMSWindowsScreenSaver.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CPlatform.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CWin32Platform.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\IMSWindowsScreenEventHandler.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\IPlatform.h
-# End Source File
-# End Group
-# Begin Group "Resource Files"
-
-# PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-# End Group
-# Begin Group "Included Files"
-
-# PROP Default_Filter "inc"
-# Begin Source File
-
-SOURCE=.\CWin32Platform.cpp
-# PROP Exclude_From_Build 1
 # End Source File
 # End Group
 # End Target

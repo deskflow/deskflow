@@ -16,7 +16,7 @@
 #define CTCPLISTENSOCKET_H
 
 #include "IListenSocket.h"
-#include "CNetwork.h"
+#include "IArchNetwork.h"
 
 //! TCP listen socket
 /*!
@@ -35,7 +35,7 @@ public:
 	virtual IDataSocket*	accept();
 
 private:
-	CNetwork::Socket	m_fd;
+	CArchSocket			m_socket;
 };
 
 #endif

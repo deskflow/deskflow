@@ -15,7 +15,6 @@
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsClipboard.h"
 #include "CMSWindowsScreenSaver.h"
-#include "CPlatform.h"
 #include "CClipboard.h"
 #include "IMSWindowsScreenEventHandler.h"
 #include "IScreenReceiver.h"
@@ -24,6 +23,8 @@
 #include "TMethodJob.h"
 #include "CLog.h"
 #include "CString.h"
+#include "CStringUtil.h"
+#include "CArchMiscWindows.h"
 #include <cstring>
 
 //
@@ -49,7 +50,7 @@ CMSWindowsScreen::CMSWindowsScreen(IScreenReceiver* receiver,
 	m_class(NULL),
 	m_icon(NULL),
 	m_cursor(NULL),
-	m_is95Family(CPlatform::isWindows95Family()),
+	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_window(NULL),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),

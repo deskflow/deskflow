@@ -14,14 +14,12 @@
 
 #include "CLog.h"
 #include "CString.h"
+#include "CStringUtil.h"
+#include "LogOutputters.h"
+#include "CArch.h"
+#include "Version.h"
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
-
-#if WINDOWS_LIKE
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#endif
 
 // names of priorities
 static const char*		g_priority[] = {
@@ -56,26 +54,64 @@ static const int		g_prioritySuffixLength = 2;
 static const int		g_priorityPad = g_maxPriorityLength +
 										g_prioritySuffixLength;
 
-// platform newline sequence
-#if WINDOWS_LIKE
-static const char*		g_newline = "\r\n";
-#else
-static const char*		g_newline = "\n";
-#endif
+//
+// CLogLock
+//
+// Convenience object to lock/unlock a mutex.
+//
 
-// minimum length of a newline sequence
-static const int		g_newlineLength = 2;
+class CLogLock {
+public:
+	CLogLock(CArchMutex mutex) : m_mutex(mutex) { ARCH->lockMutex(m_mutex); }
+	~CLogLock() { ARCH->unlockMutex(m_mutex); }
+
+private:
+	CArchMutex			m_mutex;
+};
+
 
 //
 // CLog
 //
 
-CLog::Outputter			CLog::s_outputter = NULL;
-CLog::Lock				CLog::s_lock = &CLog::dummyLock;
-int						CLog::s_maxPriority = -1;
+CLog*					CLog::s_log = NULL;
+
+CLog::CLog()
+{
+	assert(s_log == NULL);
+
+	// create mutex for multithread safe operation
+	m_mutex            = ARCH->newMutex();
+
+	// other initalization
+	m_maxPriority      = g_defaultMaxPriority;
+	m_maxNewlineLength = 0;
+	insert(new CConsoleLogOutputter);
+}
+
+CLog::~CLog()
+{
+	// clean up
+	for (COutputterList::iterator index  = m_outputters.begin();
+								  index != m_outputters.end(); ++index) {
+		delete *index;
+	}
+	ARCH->closeMutex(m_mutex);
+	s_log = NULL;
+}
+
+CLog*
+CLog::getInstance()
+{
+	// note -- not thread safe;  client must initialize log safely
+	if (s_log == NULL) {
+		s_log = new CLog;
+	}
+	return s_log;
+}
 
 void
-CLog::print(const char* fmt, ...)
+CLog::print(const char* fmt, ...) const
 {
 	// check if fmt begins with a priority argument
 	int priority = 4;
@@ -85,7 +121,7 @@ CLog::print(const char* fmt, ...)
 	}
 
 	// done if below priority threshold
-	if (priority > getMaxPriority()) {
+	if (priority > getFilter()) {
 		return;
 	}
 
@@ -98,7 +134,7 @@ CLog::print(const char* fmt, ...)
 	va_start(args, fmt);
 	char* buffer = CStringUtil::vsprint(stack,
 								sizeof(stack) / sizeof(stack[0]),
-								pad, g_newlineLength, fmt, args);
+								pad, m_maxNewlineLength, fmt, args);
 	va_end(args);
 
 	// output buffer
@@ -110,7 +146,7 @@ CLog::print(const char* fmt, ...)
 }
 
 void
-CLog::printt(const char* file, int line, const char* fmt, ...)
+CLog::printt(const char* file, int line, const char* fmt, ...) const
 {
 	// check if fmt begins with a priority argument
 	int priority = 4;
@@ -120,7 +156,7 @@ CLog::printt(const char* file, int line, const char* fmt, ...)
 	}
 
 	// done if below priority threshold
-	if (priority > getMaxPriority()) {
+	if (priority > getFilter()) {
 		return;
 	}
 
@@ -136,7 +172,7 @@ CLog::printt(const char* file, int line, const char* fmt, ...)
 	va_start(args, fmt);
 	char* buffer = CStringUtil::vsprint(stack,
 								sizeof(stack) / sizeof(stack[0]),
-								pad, g_newlineLength, fmt, args);
+								pad, m_maxNewlineLength, fmt, args);
 	va_end(args);
 
 	// print the prefix to the buffer.  leave space for priority label.
@@ -158,31 +194,34 @@ CLog::printt(const char* file, int line, const char* fmt, ...)
 }
 
 void
-CLog::setOutputter(Outputter outputter)
+CLog::insert(ILogOutputter* outputter)
 {
-	CHoldLock lock(s_lock);
-	s_outputter = outputter;
-}
+	assert(outputter               != NULL);
+	assert(outputter->getNewline() != NULL);
 
-CLog::Outputter
-CLog::getOutputter()
-{
-	CHoldLock lock(s_lock);
-	return s_outputter;
+	CLogLock lock(m_mutex);
+	m_outputters.push_front(outputter);
+	int newlineLength = strlen(outputter->getNewline());
+	if (newlineLength > m_maxNewlineLength) {
+		m_maxNewlineLength = newlineLength;
+	}
 }
 
 void
-CLog::setLock(Lock newLock)
+CLog::remove(ILogOutputter* outputter)
 {
-	CHoldLock lock(s_lock);
-	s_lock = (newLock == NULL) ? dummyLock : newLock;
+	CLogLock lock(m_mutex);
+	m_outputters.remove(outputter);
 }
 
-CLog::Lock
-CLog::getLock()
+void
+CLog::pop_front()
 {
-	CHoldLock lock(s_lock);
-	return (s_lock == dummyLock) ? NULL : s_lock;
+	CLogLock lock(m_mutex);
+	if (!m_outputters.empty()) {
+		delete m_outputters.front();
+		m_outputters.pop_front();
+	}
 }
 
 bool
@@ -203,38 +242,19 @@ CLog::setFilter(const char* maxPriority)
 void
 CLog::setFilter(int maxPriority)
 {
-	CHoldLock lock(s_lock);
-	s_maxPriority = maxPriority;
+	CLogLock lock(m_mutex);
+	m_maxPriority = maxPriority;
 }
 
 int
-CLog::getFilter()
+CLog::getFilter() const
 {
-	CHoldLock lock(s_lock);
-	return getMaxPriority();
+	CLogLock lock(m_mutex);
+	return m_maxPriority;
 }
 
 void
-CLog::dummyLock(bool)
-{
-	// do nothing
-}
-
-int
-CLog::getMaxPriority()
-{
-	CHoldLock lock(s_lock);
-
-	if (s_maxPriority == -1) {
-		s_maxPriority = g_defaultMaxPriority;
-		setFilter(getenv("SYN_LOG_PRI"));
-	}
-
-	return s_maxPriority;
-}
-
-void
-CLog::output(int priority, char* msg)
+CLog::output(int priority, char* msg) const
 {
 	assert(priority >= -1 && priority < g_numPriority);
 	assert(msg != NULL);
@@ -249,79 +269,23 @@ CLog::output(int priority, char* msg)
 		msg[g_maxPriorityLength + 1] = ' ';
 	}
 
-	// put a newline at the end
-	strcat(msg + g_priorityPad, g_newline);
+	// write to each outputter
+	CLogLock lock(m_mutex);
+	for (COutputterList::const_iterator index  = m_outputters.begin();
+										index != m_outputters.end(); ++index) {
+		// get outputter
+		ILogOutputter* outputter = *index;
+		
+		// put an appropriate newline at the end
+		strcat(msg + g_priorityPad, outputter->getNewline());
 
-	// print it
-	CHoldLock lock(s_lock);
-	if (s_outputter == NULL ||
-		!s_outputter(priority, msg + g_maxPriorityLength - n)) {
-#if WINDOWS_LIKE
-		openConsole();
-#endif
-		fprintf(stderr, "%s", msg + g_maxPriorityLength - n);
+		// open the outputter
+		outputter->open(kApplication);
+
+		// write message and break out of loop if it returns false
+		if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority),
+							msg + g_maxPriorityLength - n)) {
+			break;
+		}
 	}
 }
-
-#if WINDOWS_LIKE
-
-static DWORD			s_thread = 0;
-
-static
-BOOL WINAPI
-CLogSignalHandler(DWORD)
-{
-	// terminate cleanly and skip remaining handlers
-	PostThreadMessage(s_thread, WM_QUIT, 0, 0);
-	return TRUE;
-}
-
-void
-CLog::openConsole()
-{
-	static bool s_hasConsole = false;
-
-	// ignore if already created
-	if (s_hasConsole)
-		return;
-
-	// remember the current thread.  when we get a ctrl+break or the
-	// console is closed we'll post WM_QUIT to this thread to shutdown
-	// cleanly.
-	// note -- win95/98/me are broken and will not receive a signal
-	// when the console is closed nor during logoff or shutdown,
-	// see microsoft articles Q130717 and Q134284.  we could work
-	// around this in a painful way using hooks and hidden windows
-	// (as apache does) but it's not worth it.  the app will still
-	// quit, just not cleanly.  users in-the-know can use ctrl+c.
-	s_thread = GetCurrentThreadId();
-
-	// open a console
-	if (!AllocConsole())
-		return;
-
-	// get the handle for error output
-	HANDLE herr = GetStdHandle(STD_ERROR_HANDLE);
-
-	// prep console.  windows 95 and its ilk have braindead
-	// consoles that can't even resize independently of the
-	// buffer size.  use a 25 line buffer for those systems.
-	OSVERSIONINFO osInfo;
-	COORD size = { 80, 1000 };
-	osInfo.dwOSVersionInfoSize = sizeof(osInfo);
-	if (GetVersionEx(&osInfo) &&
-		osInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
-		size.Y = 25;
-	SetConsoleScreenBufferSize(herr, size);
-	SetConsoleTextAttribute(herr,
-							FOREGROUND_RED |
-							FOREGROUND_GREEN |
-							FOREGROUND_BLUE);
-	SetConsoleCtrlHandler(CLogSignalHandler, TRUE);
-
-	// reopen stderr to point at console
-	freopen("con", "w", stderr);
-	s_hasConsole = true;
-}
-
-#endif

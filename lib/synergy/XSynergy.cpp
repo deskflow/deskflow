@@ -13,6 +13,7 @@
  */
 
 #include "XSynergy.h"
+#include "CStringUtil.h"
 
 //
 // XBadClient

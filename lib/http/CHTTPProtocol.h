@@ -16,6 +16,7 @@
 #define CHTTPPROTOCOL_H
 
 #include "CString.h"
+#include "CStringUtil.h"
 #include "BasicTypes.h"
 #include "stdlist.h"
 #include "stdmap.h"

@@ -38,6 +38,7 @@
 #include "CLog.h"
 #include "CStopwatch.h"
 #include "TMethodJob.h"
+#include "CArch.h"
 
 //
 // CServer
@@ -1074,7 +1075,7 @@ CServer::closeClients(const CConfig& config)
 	// wait a moment to allow each client to close its connection
 	// before we close it (to avoid having our socket enter TIME_WAIT).
 	if (threads.size() > 0) {
-		CThread::sleep(1.0);
+		ARCH->sleep(1.0);
 	}
 
 	// cancel the old client threads
@@ -1103,10 +1104,10 @@ CServer::startThread(IJob* job)
 	// reap completed threads
 	doReapThreads(m_threads);
 
-	// add new thread to list.  use the job as user data for logging.
-	CThread thread(job, job);
+	// add new thread to list
+	CThread thread(job);
 	m_threads.push_back(thread);
-	LOG((CLOG_DEBUG1 "started thread %p", thread.getUserData()));
+	LOG((CLOG_DEBUG1 "started thread 0x%08x", thread.getID()));
 	return thread;
 }
 
@@ -1152,13 +1153,13 @@ CServer::stopThreads(double timeout)
 	CStopwatch timer(true);
 	while (threads.size() > 0 && (timeout < 0.0 || timer.getTime() < timeout)) {
 		doReapThreads(threads);
-		CThread::sleep(0.01);
+		ARCH->sleep(0.01);
 	}
 
 	// delete remaining threads
 	for (CThreadList::iterator index = threads.begin();
 								index != threads.end(); ++index) {
-		LOG((CLOG_DEBUG1 "reaped running thread %p", index->getUserData()));
+		LOG((CLOG_DEBUG1 "reaped running thread 0x%08x", index->getID()));
 	}
 
 	LOG((CLOG_DEBUG1 "stopped threads"));
@@ -1178,7 +1179,7 @@ CServer::doReapThreads(CThreadList& threads)
 								index != threads.end(); ) {
 		if (index->wait(0.0)) {
 			// thread terminated
-			LOG((CLOG_DEBUG1 "reaped thread %p", index->getUserData()));
+			LOG((CLOG_DEBUG1 "reaped thread 0x%08x", index->getID()));
 			index = threads.erase(index);
 		}
 		else {
@@ -1211,7 +1212,7 @@ CServer::acceptClients(void*)
 				break;
 			}
 			catch (XSocketAddressInUse& e) {
-				LOG((CLOG_WARN "bind failed: %s", e.getErrstr()));
+				LOG((CLOG_WARN "bind failed: %s", e.what()));
 
 				// give up if we've waited too long
 				if (timer.getTime() >= m_bindTimeout) {
@@ -1220,7 +1221,7 @@ CServer::acceptClients(void*)
 				}
 
 				// wait a bit before retrying
-				CThread::sleep(5.0);
+				ARCH->sleep(5.0);
 			}
 		}
 
@@ -1489,7 +1490,7 @@ CServer::acceptHTTPClients(void*)
 				break;
 			}
 			catch (XSocketBind& e) {
-				LOG((CLOG_DEBUG1 "bind HTTP failed: %s", e.getErrstr()));
+				LOG((CLOG_DEBUG1 "bind HTTP failed: %s", e.what()));
 
 				// give up if we've waited too long
 				if (timer.getTime() >= m_bindTimeout) {
@@ -1498,7 +1499,7 @@ CServer::acceptHTTPClients(void*)
 				}
 
 				// wait a bit before retrying
-				CThread::sleep(5.0);
+				ARCH->sleep(5.0);
 			}
 		}
 
@@ -1550,7 +1551,7 @@ CServer::processHTTPRequest(void* vsocket)
 		socket->getOutputStream()->flush();
 
 		// wait a moment to give the client a chance to hangup first
-		CThread::sleep(3.0);
+		ARCH->sleep(3.0);
 
 		// clean up
 		socket->close();

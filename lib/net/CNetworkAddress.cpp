@@ -14,53 +14,47 @@
 
 #include "CNetworkAddress.h"
 #include "XSocket.h"
+#include "CArch.h"
+#include "XArch.h"
 #include <cstdlib>
-#include <cstring>
 
 //
 // CNetworkAddress
 //
 
 CNetworkAddress::CNetworkAddress() :
-	m_port(0)
+	m_address(NULL)
 {
 	// note -- make no calls to CNetwork socket interface here;
 	// we're often called prior to CNetwork::init().
-
-	struct sockaddr_in* inetAddress = reinterpret_cast<
-										struct sockaddr_in*>(&m_address);
-	inetAddress->sin_family      = AF_INET;
-	inetAddress->sin_port        = CNetwork::swaphtons(m_port);
-	inetAddress->sin_addr.s_addr = INADDR_ANY;
-	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 }
 
-CNetworkAddress::CNetworkAddress(UInt16 port) :
-	m_port(port)
+CNetworkAddress::CNetworkAddress(int port)
 {
 	if (port == 0) {
-		throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+		throw XSocketAddress(XSocketAddress::kBadPort, "", port);
 	}
 
-	struct sockaddr_in* inetAddress = reinterpret_cast<
-										struct sockaddr_in*>(&m_address);
-	inetAddress->sin_family      = AF_INET;
-	inetAddress->sin_port        = CNetwork::swaphtons(m_port);
-	inetAddress->sin_addr.s_addr = INADDR_ANY;
-	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
+	m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
+	ARCH->setAddrPort(m_address, port);
 }
 
-CNetworkAddress::CNetworkAddress(const CString& hostname_, UInt16 port) :
-	m_hostname(hostname_),
-	m_port(port)
+CNetworkAddress::CNetworkAddress(const CNetworkAddress& addr) :
+	m_address(ARCH->copyAddr(addr.m_address)),
+	m_hostname(addr.m_hostname)
 {
-	CString hostname(m_hostname);
+	// do nothing
+}
 
+CNetworkAddress::CNetworkAddress(const CString& hostname_, int port) :
+	m_hostname(hostname_)
+{
 	if (port == 0) {
-		throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+		throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, port);
 	}
 
 	// check for port suffix
+	CString hostname(m_hostname);
 	CString::size_type i = hostname.rfind(':');
 	if (i != CString::npos && i + 1 < hostname.size()) {
 		// found a colon.  see if it looks like an IPv6 address.
@@ -92,91 +86,81 @@ CNetworkAddress::CNetworkAddress(const CString& hostname_, UInt16 port) :
 				suffixPort <= 0 || suffixPort > 65535) {
 				// bogus port
 				throw XSocketAddress(XSocketAddress::kBadPort,
-											m_hostname, m_port);
+											m_hostname, port);
 			}
 			else {
 				// good port
-				port = static_cast<UInt16>(suffixPort);
+				port = static_cast<int>(suffixPort);
 				hostname.erase(i);
 			}
 		}
 	}
 
 	// if hostname is empty then use wildcard address
-	struct sockaddr_in* inetAddress = reinterpret_cast<
-										struct sockaddr_in*>(&m_address);
 	if (hostname.empty()) {
-		inetAddress->sin_family      = AF_INET;
-		inetAddress->sin_port        = CNetwork::swaphtons(port);
-		inetAddress->sin_addr.s_addr = INADDR_ANY;
-		memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
-		return;
+		m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
+		ARCH->setAddrPort(m_address, port);
 	}
-
-	// convert dot notation to address
-	if (CNetwork::inet_aton(hostname.c_str(), &inetAddress->sin_addr) != 0) {
-		inetAddress->sin_family = AF_INET;
-		inetAddress->sin_port   = CNetwork::swaphtons(port);
-		memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
-		return;
+	else {
+		// look up name
+		try {
+			m_address = ARCH->nameToAddr(hostname);
+			ARCH->setAddrPort(m_address, port);
+		}
+		catch (XArchNetworkNameUnknown&) {
+			throw XSocketAddress(XSocketAddress::kNotFound, hostname, port);
+		}
+		catch (XArchNetworkNameNoAddress&) {
+			throw XSocketAddress(XSocketAddress::kNoAddress, hostname, port);
+		}
+		catch (XArchNetworkName&) {
+			throw XSocketAddress(XSocketAddress::kUnknown, hostname, port);
+		}
 	}
-
-	// look up name
-	CNetwork::CHostInfo hostInfo;
-	switch (CNetwork::gethostbyname(&hostInfo, hostname.c_str())) {
-	case CNetwork::kHOST_OK:
-		break;
-
-	case CNetwork::kHOST_NOT_FOUND:
-		throw XSocketAddress(XSocketAddress::kNotFound, hostname, port);
-
-	case CNetwork::kNO_DATA:
-		throw XSocketAddress(XSocketAddress::kNoAddress, hostname, port);
-
-	case CNetwork::kNO_RECOVERY:
-	case CNetwork::kTRY_AGAIN:
-	default:
-		throw XSocketAddress(XSocketAddress::kUnknown, hostname, port);
-	}
-
-	inetAddress->sin_family = hostInfo.m_addressType;
-	inetAddress->sin_port   = CNetwork::swaphtons(port);
-	memcpy(&inetAddress->sin_addr, hostInfo.m_addresses[0],
-									hostInfo.m_addressLength);
-	memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 }
 
 CNetworkAddress::~CNetworkAddress()
 {
-	// do nothing
+	if (m_address != NULL) {
+		ARCH->closeAddr(m_address);
+	}
+}
+
+CNetworkAddress&
+CNetworkAddress::operator=(const CNetworkAddress& addr)
+{
+	CArchNetAddress newAddr = NULL;
+	if (addr.m_address != NULL) {
+		newAddr = ARCH->copyAddr(addr.m_address);
+	}
+	if (m_address != NULL) {
+		ARCH->closeAddr(m_address);
+	}
+	m_hostname = addr.m_hostname;
+	m_address  = newAddr;
+	return *this;
 }
 
 bool
 CNetworkAddress::isValid() const
 {
-	return (m_port != 0);
+	return (m_address != NULL);
 }
 
-const CNetwork::Address*
+const CArchNetAddress&
 CNetworkAddress::getAddress() const
 {
-	return &m_address;
+	return m_address;
 }
-					
-CNetwork::AddressLength
-CNetworkAddress::getAddressLength() const
+
+int
+CNetworkAddress::getPort() const
 {
-	return sizeof(m_address);
+	return (m_address == NULL) ? 0 : ARCH->getAddrPort(m_address);
 }
 
 CString
 CNetworkAddress::getHostname() const
 {
 	return m_hostname;
-}
-
-UInt16
-CNetworkAddress::getPort() const
-{
-	return m_port;
 }

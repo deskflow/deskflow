@@ -28,29 +28,23 @@ libbase_a_SOURCES =			\
 	CFunctionJob.cpp		\
 	CLog.cpp				\
 	CStopwatch.cpp			\
-	CString.cpp				\
+	CStringUtil.cpp			\
+	CUnicode.cpp			\
+	LogOutputters.cpp		\
 	XBase.cpp				\
-	BasicTypes.h			\
 	CFunctionJob.h			\
 	CLog.h					\
 	CStopwatch.h			\
 	CString.h				\
-	IInterface.h			\
+	CStringUtil.h			\
+	CUnicode.h				\
 	IJob.h					\
+	ILogOutputter.h			\
+	LogOutputters.h			\
 	TMethodJob.h			\
-	Version.h				\
 	XBase.h					\
-	common.h				\
-	stdfstream.h			\
-	stdistream.h			\
-	stdlist.h				\
-	stdmap.h				\
-	stdostream.h			\
-	stdpost.h				\
-	stdpre.h				\
-	stdset.h				\
-	stdsstream.h			\
-	stdvector.h				\
 	$(NULL)
 INCLUDES =					\
+	-I$(VDEPTH)/lib/common	\
+	-I$(VDEPTH)/lib/arch	\
 	$(NULL)

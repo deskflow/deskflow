@@ -13,7 +13,7 @@ dnl GNU General Public License for more details.
 dnl Process this file with autoconf to produce a configure script.
 
 dnl initialize
-AC_INIT(lib/base/common.h)
+AC_INIT(lib/common/common.h)
 AC_CONFIG_AUX_DIR(config)
 
 dnl current version
@@ -99,7 +99,9 @@ LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $PTHREAD_LIBS $LIBS"
 AC_OUTPUT([
 Makefile
 lib/Makefile
+lib/arch/Makefile
 lib/base/Makefile
+lib/common/Makefile
 lib/mt/Makefile
 lib/io/Makefile
 lib/http/Makefile

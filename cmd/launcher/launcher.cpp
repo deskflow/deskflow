@@ -14,9 +14,9 @@
 
 #include "CConfig.h"
 #include "ProtocolTypes.h"
-#include "CPlatform.h"
-#include "CNetwork.h"
 #include "CLog.h"
+#include "CStringUtil.h"
+#include "CArch.h"
 #include "Version.h"
 #include "stdvector.h"
 #include "resource.h"
@@ -62,10 +62,26 @@ static const char* s_debugName[][2] = {
 };
 static const int s_defaultDebug = 3;	// INFO
 
-static HWND s_mainWindow;
-static CConfig s_config;
-static CConfig s_oldConfig;
-static CStringList s_screens;
+//
+// program arguments
+//
+
+#define ARG CArgs::s_instance
+
+class CArgs {
+public:
+	CArgs() { s_instance = this; }
+	~CArgs() { s_instance = NULL; }
+
+public:
+	static CArgs*		s_instance;
+	CConfig				m_config;
+	CConfig				m_oldConfig;
+	CStringList			m_screens;
+};
+
+CArgs*					CArgs::s_instance = NULL;
+
 
 static
 BOOL CALLBACK
@@ -117,7 +133,7 @@ static
 void
 enableSaveControls(HWND hwnd)
 {
-	enableItem(hwnd, IDC_MAIN_SAVE, s_config != s_oldConfig);
+	enableItem(hwnd, IDC_MAIN_SAVE, ARG->m_config != ARG->m_oldConfig);
 }
 
 static
@@ -171,8 +187,8 @@ updateNeighbor(HWND hwnd, const CString& screen, EDirection direction)
 
 	// add all screens to combo box
 	if (!screen.empty()) {
-		for (CConfig::const_iterator index = s_config.begin();
-								index != s_config.end(); ++index) {
+		for (CConfig::const_iterator index  = ARG->m_config.begin();
+									 index != ARG->m_config.end(); ++index) {
 			SendMessage(hwnd, CB_INSERTSTRING,
 								(WPARAM)-1, (LPARAM)index->c_str());
 		}
@@ -184,7 +200,7 @@ updateNeighbor(HWND hwnd, const CString& screen, EDirection direction)
 	// select neighbor in combo box
 	LRESULT index = 0;
 	if (!screen.empty()) {
-		const CString& neighbor = s_config.getNeighbor(screen, direction);
+		const CString& neighbor = ARG->m_config.getNeighbor(screen, direction);
 		if (!neighbor.empty()) {
 			index = SendMessage(hwnd, CB_FINDSTRINGEXACT,
 								0, (LPARAM)neighbor.c_str());
@@ -205,7 +221,7 @@ updateNeighbors(HWND hwnd)
 	HWND child    = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
 	LRESULT index = SendMessage(child, LB_GETCURSEL, 0, 0);
 	if (index != LB_ERR) {
-		screen = s_screens[index];
+		screen = ARG->m_screens[index];
 	}
 
 	// set neighbor combo boxes
@@ -230,7 +246,7 @@ addScreen(HWND hwnd)
 	if (DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_ADD),
 								hwnd, addDlgProc, (LPARAM)&info) != 0) {
 		// get current number of screens
-		UInt32 i = s_screens.size();
+		UInt32 i = ARG->m_screens.size();
 
 		// add screen to list control
 		HWND child = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
@@ -239,15 +255,15 @@ addScreen(HWND hwnd)
 		SendMessage(child, LB_ADDSTRING, 0, (LPARAM)item.c_str());
 
 		// add screen to screen list
-		s_screens.push_back(info.m_screen);
+		ARG->m_screens.push_back(info.m_screen);
 
 		// add screen to config
-		s_config.addScreen(info.m_screen);
+		ARG->m_config.addScreen(info.m_screen);
 
 		// add aliases to config
 		for (CStringList::const_iterator index = info.m_aliases.begin();
 								index != info.m_aliases.end(); ++index) {
-			s_config.addAlias(info.m_screen, *index);
+			ARG->m_config.addAlias(info.m_screen, *index);
 		}
 
 		// update neighbors
@@ -271,9 +287,9 @@ editScreen(HWND hwnd)
 
 	// fill in screen info
 	CScreenInfo info;
-	info.m_screen = s_screens[index];
-	for (CConfig::all_const_iterator index = s_config.beginAll();
-								index != s_config.endAll(); ++index) {
+	info.m_screen = ARG->m_screens[index];
+	for (CConfig::all_const_iterator index = ARG->m_config.beginAll();
+								index != ARG->m_config.endAll(); ++index) {
 		if (CStringUtil::CaselessCmp::equal(index->second, info.m_screen) &&
 			!CStringUtil::CaselessCmp::equal(index->second, index->first)) {
 			info.m_aliases.push_back(index->first);
@@ -287,21 +303,21 @@ editScreen(HWND hwnd)
 	if (DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_ADD),
 								hwnd, addDlgProc, (LPARAM)&info) != 0) {
 		// replace screen
-		s_screens[index] = info.m_screen;
+		ARG->m_screens[index] = info.m_screen;
 
 		// remove old aliases
 		for (CStringList::const_iterator index = oldInfo.m_aliases.begin();
 								index != oldInfo.m_aliases.end(); ++index) {
-			s_config.removeAlias(*index);
+			ARG->m_config.removeAlias(*index);
 		}
 
 		// replace name
-		s_config.renameScreen(oldInfo.m_screen, info.m_screen);
+		ARG->m_config.renameScreen(oldInfo.m_screen, info.m_screen);
 
 		// add new aliases
 		for (CStringList::const_iterator index = info.m_aliases.begin();
 								index != info.m_aliases.end(); ++index) {
-			s_config.addAlias(info.m_screen, *index);
+			ARG->m_config.addAlias(info.m_screen, *index);
 		}
 
 		// update list
@@ -331,16 +347,16 @@ removeScreen(HWND hwnd)
 	}
 
 	// get screen name
-	CString name = s_screens[index];
+	CString name = ARG->m_screens[index];
 
 	// remove screen from list control
 	SendMessage(child, LB_DELETESTRING, index, 0);
 
 	// remove screen from screen list
-	s_screens.erase(&s_screens[index]);
+	ARG->m_screens.erase(&ARG->m_screens[index]);
 
 	// remove screen from config (this also removes aliases)
-	s_config.removeScreen(name);
+	ARG->m_config.removeScreen(name);
 
 	// update neighbors
 	updateNeighbors(hwnd);
@@ -361,20 +377,20 @@ changeNeighbor(HWND hwnd, HWND combo, EDirection direction)
 	}
 
 	// get screen name
-	CString screen = s_screens[index];
+	CString screen = ARG->m_screens[index];
 
 	// get selected neighbor
 	index = SendMessage(combo, CB_GETCURSEL, 0, 0);
 
 	// remove old connection
-	s_config.disconnect(screen, direction);
+	ARG->m_config.disconnect(screen, direction);
 
 	// add new connection
 	if (index != LB_ERR && index != 0) {
 		LRESULT size = SendMessage(combo, CB_GETLBTEXTLEN, index, 0);
 		char* neighbor = new char[size + 1];
 		SendMessage(combo, CB_GETLBTEXT, index, (LPARAM)neighbor);
-		s_config.connect(screen, direction, CString(neighbor));
+		ARG->m_config.connect(screen, direction, CString(neighbor));
 		delete[] neighbor;
 	}
 
@@ -444,14 +460,14 @@ getCommandLine(HWND hwnd, bool testing)
 	// get and verify screen name
 	HWND child = getItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
 	CString name = getWindowText(child);
-	if (!s_config.isValidScreenName(name)) {
+	if (!ARG->m_config.isValidScreenName(name)) {
 		showError(hwnd, CStringUtil::format(
 								getString(IDS_INVALID_SCREEN_NAME).c_str(),
 								name.c_str()));
 		SetFocus(child);
 		return CString();
 	}
-	if (!isClient && !s_config.isScreen(name)) {
+	if (!isClient && !ARG->m_config.isScreen(name)) {
 		showError(hwnd, CStringUtil::format(
 								getString(IDS_UNKNOWN_SCREEN_NAME).c_str(),
 								name.c_str()));
@@ -490,7 +506,7 @@ getCommandLine(HWND hwnd, bool testing)
 		// check server name
 		child = getItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_EDIT);
 		CString server = getWindowText(child);
-		if (!s_config.isValidScreenName(server)) {
+		if (!ARG->m_config.isValidScreenName(server)) {
 			showError(hwnd, CStringUtil::format(
 								getString(IDS_INVALID_SERVER_NAME).c_str(),
 								server.c_str()));
@@ -649,15 +665,13 @@ static
 void
 initMainWindow(HWND hwnd)
 {
-	CPlatform platform;
-
 	// append version number to title
 	CString titleFormat = getString(IDS_TITLE);
 	setWindowText(hwnd, CStringUtil::format(titleFormat.c_str(), VERSION));
 
 	// load configuration
-	bool configLoaded = loadConfig(s_config);
-	s_oldConfig = s_config;
+	bool configLoaded = loadConfig(ARG->m_config);
+	ARG->m_oldConfig = ARG->m_config;
 	enableSaveControls(hwnd);
 
 	// choose client/server radio buttons
@@ -673,9 +687,9 @@ initMainWindow(HWND hwnd)
 	if (configLoaded) {
 		int i = 1;
 		child = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
-		for (CConfig::const_iterator index = s_config.begin();
-								index != s_config.end(); ++i, ++index) {
-			s_screens.push_back(*index);
+		for (CConfig::const_iterator index = ARG->m_config.begin();
+								index != ARG->m_config.end(); ++i, ++index) {
+			ARG->m_screens.push_back(*index);
 			CString item = CStringUtil::print("%d. %s", i, index->c_str());
 			SendMessage(child, LB_ADDSTRING, 0, (LPARAM)item.c_str());
 		}
@@ -687,9 +701,9 @@ initMainWindow(HWND hwnd)
 	child = getItem(hwnd, IDC_MAIN_ADVANCED_PORT_EDIT);
 	SendMessage(child, WM_SETTEXT, 0, (LPARAM)buffer);
 
-	CNetwork::gethostname(buffer, sizeof(buffer));
+	CString hostname = ARCH->getHostName();
 	child = getItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
-	SendMessage(child, WM_SETTEXT, 0, (LPARAM)buffer);
+	SendMessage(child, WM_SETTEXT, 0, (LPARAM)hostname.c_str());
 
 	child = getItem(hwnd, IDC_MAIN_DEBUG);
 	for (unsigned int i = 0; i < sizeof(s_debugName) /
@@ -746,7 +760,7 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			tokenize(newAliases, getWindowText(child));
 
 			// name must be valid
-			if (!s_config.isValidScreenName(newName)) {
+			if (!ARG->m_config.isValidScreenName(newName)) {
 				showError(hwnd, CStringUtil::format(
 								getString(IDS_INVALID_SCREEN_NAME).c_str(),
 								newName.c_str()));
@@ -756,7 +770,7 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			// aliases must be valid
 			for (CStringList::const_iterator index = newAliases.begin();
 								index != newAliases.end(); ++index) {
-				if (!s_config.isValidScreenName(*index)) {
+				if (!ARG->m_config.isValidScreenName(*index)) {
 					showError(hwnd, CStringUtil::format(
 								getString(IDS_INVALID_SCREEN_NAME).c_str(),
 								index->c_str()));
@@ -775,7 +789,7 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			// name must not exist in config but allow same name.  also
 			// allow name if it exists in the old alias list but not the
 			// new one.
-			if (s_config.isScreen(newName) &&
+			if (ARG->m_config.isScreen(newName) &&
 				!CStringUtil::CaselessCmp::equal(newName, info->m_screen) &&
 				!isNameInList(info->m_aliases, newName)) {
 				showError(hwnd, CStringUtil::format(
@@ -788,7 +802,7 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			// allow an alias to be the old name.
 			for (CStringList::const_iterator index = newAliases.begin();
 								index != newAliases.end(); ++index) {
-				if (s_config.isScreen(*index) &&
+				if (ARG->m_config.isScreen(*index) &&
 					!CStringUtil::CaselessCmp::equal(*index, info->m_screen) &&
 					!isNameInList(info->m_aliases, *index)) {
 					showError(hwnd, CStringUtil::format(
@@ -830,7 +844,7 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (LOWORD(wParam)) {
 		case IDCANCEL:
 			// test for unsaved data
-			if (s_config != s_oldConfig) {
+			if (ARG->m_config != ARG->m_oldConfig) {
 				if (!askVerify(hwnd, getString(IDS_UNSAVED_DATA_REALLY_QUIT))) {
 					return 0;
 				}
@@ -846,14 +860,14 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			const bool testing = (LOWORD(wParam) == IDC_MAIN_TEST);
 
 			// save data
-			if (s_config != s_oldConfig) {
-				if (!saveConfig(s_config, false)) {
+			if (ARG->m_config != ARG->m_oldConfig) {
+				if (!saveConfig(ARG->m_config, false)) {
 					showError(hwnd, CStringUtil::format(
 								getString(IDS_SAVE_FAILED).c_str(),
 								getErrorString(GetLastError()).c_str()));
 					return 0;
 				}
-				s_oldConfig = s_config;
+				ARG->m_oldConfig = ARG->m_config;
 				enableSaveControls(hwnd);
 			}
 
@@ -892,11 +906,11 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (!cmdLine.empty()) {
 				// run dialog
 				CAutoStart autoStart(hwnd,
-							isClientChecked(hwnd) ? NULL : &s_config,
+							isClientChecked(hwnd) ? NULL : &ARG->m_config,
 							cmdLine);
 				autoStart.doModal();
 				if (autoStart.wasUserConfigSaved()) {
-					s_oldConfig = s_config;
+					ARG->m_oldConfig = ARG->m_config;
 					enableSaveControls(hwnd);
 				}
 			}
@@ -904,13 +918,13 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 
 		case IDC_MAIN_SAVE:
-			if (!saveConfig(s_config, false)) {
+			if (!saveConfig(ARG->m_config, false)) {
 				showError(hwnd, CStringUtil::format(
 								getString(IDS_SAVE_FAILED).c_str(),
 								getErrorString(GetLastError()).c_str()));
 			}
 			else {
-				s_oldConfig = s_config;
+				ARG->m_oldConfig = ARG->m_config;
 				enableSaveControls(hwnd);
 			}
 			return 0;
@@ -981,10 +995,11 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int nCmdShow)
 {
-	s_instance = instance;
+	CArch arch;
+	CLOG;
+	CArgs args;
 
-	// initialize network library
-	CNetwork::init();
+	s_instance = instance;
 
 	// register main window (dialog) class
 	WNDCLASSEX classInfo;
@@ -1009,13 +1024,14 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int nCmdShow)
 	RegisterClassEx(&classInfo);
 
 	// create main window
-	s_mainWindow = CreateDialog(s_instance, MAKEINTRESOURCE(IDD_MAIN), 0, NULL);
+	HWND m_mainWindow = CreateDialog(s_instance,
+							MAKEINTRESOURCE(IDD_MAIN), 0, NULL);
 
 	// prep window
-	initMainWindow(s_mainWindow);
+	initMainWindow(m_mainWindow);
 
 	// show window
-	ShowWindow(s_mainWindow, nCmdShow);
+	ShowWindow(m_mainWindow, nCmdShow);
 
 	// main loop
 	MSG msg;
@@ -1032,7 +1048,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int nCmdShow)
 			break;
 
 		default:
-			if (!IsDialogMessage(s_mainWindow, &msg)) {
+			if (!IsDialogMessage(m_mainWindow, &msg)) {
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}

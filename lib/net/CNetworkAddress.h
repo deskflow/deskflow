@@ -15,9 +15,9 @@
 #ifndef CNETWORKADDRESS_H
 #define CNETWORKADDRESS_H
 
-#include "CNetwork.h"
 #include "CString.h"
 #include "BasicTypes.h"
+#include "IArchNetwork.h"
 
 //! Network address type
 /*!
@@ -34,7 +34,7 @@ public:
 	Construct the wildcard address with the given port.  \c port must
 	not be zero.
 	*/
-	CNetworkAddress(UInt16 port);
+	CNetworkAddress(int port);
 
 	/*!
 	Construct the network address for the given \c hostname and \c port.
@@ -44,9 +44,13 @@ public:
 	that suffix is extracted and used as the port, overridding the port
 	parameter.  Neither the extracted port or \c port may be zero.
 	*/
-	CNetworkAddress(const CString& hostname, UInt16 port);
+	CNetworkAddress(const CString& hostname, int port);
+
+	CNetworkAddress(const CNetworkAddress&);
 
 	~CNetworkAddress();
+
+	CNetworkAddress&	operator=(const CNetworkAddress&);
 
 	//! @name accessors
 	//@{
@@ -62,14 +66,14 @@ public:
 	Returns the address in the platform's native network address
 	structure.
 	*/
-	const CNetwork::Address*	getAddress() const;
+	const CArchNetAddress&	getAddress() const;
 
-	//! Get address length
+	//! Get port
 	/*!
-	Returns the length of the address in the platform's native network
-	address structure.
+	Returns the port passed to the c'tor as a suffix to the hostname,
+	if that existed, otherwise as passed directly to the c'tor.
 	*/
-	CNetwork::AddressLength		getAddressLength() const;
+	int					getPort() const;
 
 	//! Get hostname
 	/*!
@@ -77,19 +81,11 @@ public:
 	*/
 	CString				getHostname() const;
 
-	//! Get port
-	/*!
-	Returns the port passed to the c'tor as a suffix to the hostname,
-	if that existed, otherwise as passed directly to the c'tor.
-	*/
-	UInt16				getPort() const;
-
 	//@}
 
 private:
-	CNetwork::Address	m_address;
+	CArchNetAddress		m_address;
 	CString				m_hostname;
-	UInt16				m_port;
 };
 
 #endif

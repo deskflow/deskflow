@@ -36,6 +36,7 @@
 #include "CLog.h"
 #include "CStopwatch.h"
 #include "TMethodJob.h"
+#include "CArch.h"
 
 //
 // CClient
@@ -545,7 +546,7 @@ CClient::runServer()
 				break;
 			}
 			catch (XSocketConnect& e) {
-				LOG((CLOG_DEBUG1 "failed to connect to server: %s", e.getErrstr()));
+				LOG((CLOG_DEBUG1 "failed to connect to server: %s", e.what()));
 
 				// failed to connect.  if not camping then rethrow.
 				if (!m_camp) {
@@ -553,7 +554,7 @@ CClient::runServer()
 				}
 
 				// we're camping.  wait a bit before retrying
-				CThread::sleep(15.0);
+				ARCH->sleep(15.0);
 			}
 		}
 

@@ -18,16 +18,13 @@
 #include "XBase.h"
 
 //! Generic synergy exception
-class XSynergy : public XBase { };
+XBASE_SUBCLASS(XSynergy, XBase);
 
 //! Client error exception
 /*!
 Thrown when the client fails to follow the protocol.
 */
-class XBadClient : public XSynergy {
-protected:
-	virtual CString		getWhat() const throw();
-};
+XBASE_SUBCLASS_WHAT(XBadClient, XSynergy);
 
 //! Incompatible client exception
 /*!

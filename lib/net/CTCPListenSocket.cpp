@@ -18,6 +18,8 @@
 #include "XIO.h"
 #include "XSocket.h"
 #include "CThread.h"
+#include "CArch.h"
+#include "XArch.h"
 
 //
 // CTCPListenSocket
@@ -25,16 +27,18 @@
 
 CTCPListenSocket::CTCPListenSocket()
 {
-	m_fd = CNetwork::socket(PF_INET, SOCK_STREAM, 0);
-	if (m_fd == CNetwork::Null) {
-		throw XSocketCreate();
+	try {
+		m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
+	}
+	catch (XArchNetwork& e) {
+		throw XSocketCreate(e.what());
 	}
 }
 
 CTCPListenSocket::~CTCPListenSocket()
 {
 	try {
-		close();
+		ARCH->closeSocket(m_socket);
 	}
 	catch (...) {
 		// ignore
@@ -44,15 +48,15 @@ CTCPListenSocket::~CTCPListenSocket()
 void
 CTCPListenSocket::bind(const CNetworkAddress& addr)
 {
-	if (CNetwork::bind(m_fd, addr.getAddress(),
-								addr.getAddressLength()) == CNetwork::Error) {
-		if (CNetwork::getsockerror() == CNetwork::kEADDRINUSE) {
-			throw XSocketAddressInUse();
-		}
-		throw XSocketBind();
+	try {
+		ARCH->bindSocket(m_socket, addr.getAddress());
+		ARCH->listenOnSocket(m_socket);
 	}
-	if (CNetwork::listen(m_fd, 3) == CNetwork::Error) {
-		throw XSocketBind();
+	catch (XArchNetworkAddressInUse& e) {
+		throw XSocketAddressInUse(e.what());
+	}
+	catch (XArchNetwork& e) {
+		throw XSocketBind(e.what());
 	}
 }
 
@@ -60,19 +64,20 @@ IDataSocket*
 CTCPListenSocket::accept()
 {
 	// accept asynchronously so we can check for cancellation
-	CNetwork::PollEntry pfds[1];
-	pfds[0].fd     = m_fd;
-	pfds[0].events = CNetwork::kPOLLIN;
+	IArchNetwork::CPollEntry pfds[1];
+	pfds[0].m_socket = m_socket;
+	pfds[0].m_events = IArchNetwork::kPOLLIN;
 	for (;;) {
-		CThread::testCancel();
-		const int status = CNetwork::poll(pfds, 1, 10);
-		if (status > 0 && (pfds[0].revents & CNetwork::kPOLLIN) != 0) {
-			CNetwork::Address addr;
-			CNetwork::AddressLength addrlen = sizeof(addr);
-			CNetwork::Socket fd = CNetwork::accept(m_fd, &addr, &addrlen);
-			if (fd != CNetwork::Null) {
-				return new CTCPSocket(fd);
+		ARCH->testCancelThread();
+		try {
+			const int status = ARCH->pollSocket(pfds, 1, 0.01);
+			if (status > 0 &&
+				(pfds[0].m_revents & IArchNetwork::kPOLLIN) != 0) {
+				return new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
 			}
+		}
+		catch (XArchNetwork&) {
+			// ignore and retry
 		}
 	}
 }
@@ -80,11 +85,14 @@ CTCPListenSocket::accept()
 void
 CTCPListenSocket::close()
 {
-	if (m_fd == CNetwork::Null) {
+	if (m_socket == NULL) {
 		throw XIOClosed();
 	}
-	if (CNetwork::close(m_fd) == CNetwork::Error) {
-		throw XSocketIOClose();
+	try {
+		ARCH->closeSocket(m_socket);
+		m_socket = NULL;
 	}
-	m_fd = CNetwork::Null;
+	catch (XArchNetwork& e) {
+		throw XSocketIOClose(e.what());
+	}
 }

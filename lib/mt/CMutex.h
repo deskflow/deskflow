@@ -15,6 +15,8 @@
 #ifndef CMUTEX_H
 #define CMUTEX_H
 
+#include "IArchMultithread.h"
+
 //! Mutual exclusion
 /*!
 A non-recursive mutual exclusion object.  Only one thread at a time can
@@ -69,12 +71,8 @@ public:
 	//@}
 
 private:
-	void				init();
-	void				fini();
-
-private:
 	friend class CCondVarBase;
-	void*				m_mutex;
+	CArchMutex			m_mutex;
 };
 
 #endif

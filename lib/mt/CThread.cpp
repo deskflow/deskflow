@@ -13,161 +13,166 @@
  */
 
 #include "CThread.h"
-#include "CLock.h"
-#include "CThreadRep.h"
+#include "XMT.h"
 #include "XThread.h"
 #include "CLog.h"
-#include "CStopwatch.h"
+#include "IJob.h"
+#include "CArch.h"
 
 //
 // CThread
 //
 
-CThread::CThread(IJob* job, void* userData)
+CThread::CThread(IJob* job)
 {
-	m_rep = new CThreadRep(job, userData);
+	m_thread = ARCH->newThread(&CThread::threadFunc, job);
+	if (m_thread == NULL) {
+		// couldn't create thread
+		delete job;
+		throw XMTThreadUnavailable();
+	}
 }
 
-CThread::CThread(const CThread& thread) :
-	m_rep(thread.m_rep)
+CThread::CThread(const CThread& thread)
 {
-	m_rep->ref();
+	m_thread = ARCH->copyThread(thread.m_thread);
 }
 
-CThread::CThread(CThreadRep* rep) :
-	m_rep(rep)
+CThread::CThread(CArchThread adoptedThread)
 {
-	// do nothing.  rep should have already been Ref()'d.
+	m_thread = adoptedThread;
 }
 
 CThread::~CThread()
 {
-	m_rep->unref();
+	ARCH->closeThread(m_thread);
 }
 
 CThread&
 CThread::operator=(const CThread& thread)
 {
-	if (thread.m_rep != m_rep) {
-		m_rep->unref();
-		m_rep = thread.m_rep;
-		m_rep->ref();
-	}
+	// copy given thread and release ours
+	CArchThread copy = ARCH->copyThread(thread.m_thread);
+	ARCH->closeThread(m_thread);
+
+	// cut over
+	m_thread = copy;
+
 	return *this;
-}
-
-void
-CThread::init()
-{
-	CThreadRep::initThreads();
-}
-
-void
-CThread::sleep(double timeout)
-{
-	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	if (timeout >= 0.0) {
-		currentRep->testCancel();
-		currentRep->sleep(timeout);
-	}
-	currentRep->testCancel();
 }
 
 void
 CThread::exit(void* result)
 {
-	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	LOG((CLOG_DEBUG1 "throw exit on thread %p", currentRep.operator->()));
 	throw XThreadExit(result);
-}
-
-bool
-CThread::enableCancel(bool enable)
-{
-	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	return currentRep->enableCancel(enable);
 }
 
 void
 CThread::cancel()
 {
-	m_rep->cancel();
+	ARCH->cancelThread(m_thread);
 }
 
 void
 CThread::setPriority(int n)
 {
-	m_rep->setPriority(n);
+	ARCH->setPriorityOfThread(m_thread, n);
 }
 
 CThread
 CThread::getCurrentThread()
 {
-	return CThread(CThreadRep::getCurrentThreadRep());
+	return CThread(ARCH->newCurrentThread());
+}
+
+void
+CThread::testCancel()
+{
+	ARCH->testCancelThread();
 }
 
 bool
 CThread::wait(double timeout) const
 {
-	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	return currentRep->wait(m_rep, timeout);
+	return ARCH->wait(m_thread, timeout);
 }
 
-#if WINDOWS_LIKE
 bool
 CThread::waitForEvent(double timeout)
 {
-	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	return currentRep->waitForEvent(timeout);
-}
-#endif
-
-void
-CThread::testCancel()
-{
-	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	currentRep->testCancel();
+	return ARCH->waitForEvent(timeout);
 }
 
 void*
 CThread::getResult() const
 {
 	if (wait())
-		return m_rep->getResult();
+		return ARCH->getResultOfThread(m_thread);
 	else
 		return NULL;
 }
 
-void*
-CThread::getUserData()
+IArchMultithread::ThreadID
+CThread::getID() const
 {
-	return m_rep->getUserData();
+	return ARCH->getIDOfThread(m_thread);
 }
 
 bool
 CThread::operator==(const CThread& thread) const
 {
-	return (m_rep == thread.m_rep);
+	return ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
 bool
 CThread::operator!=(const CThread& thread) const
 {
-	return (m_rep != thread.m_rep);
+	return !ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-
-//
-// CThreadMaskCancel
-//
-
-CThreadMaskCancel::CThreadMaskCancel() :
-	m_old(CThread::enableCancel(false))
+void*
+CThread::threadFunc(void* vjob)
 {
-	// do nothing
-}
+	// get this thread's id for logging
+	IArchMultithread::ThreadID id;
+	{
+		CArchThread thread = ARCH->newCurrentThread();
+		id = ARCH->getIDOfThread(thread);
+		ARCH->closeThread(thread);
+	}
 
-CThreadMaskCancel::~CThreadMaskCancel()
-{
-	CThread::enableCancel(m_old);
+	// get job
+	IJob* job = reinterpret_cast<IJob*>(vjob);
+
+	// run job
+	void* result = NULL;
+	try {
+		// go
+		LOG((CLOG_DEBUG1 "thread 0x%08x entry", id));
+		job->run();
+		LOG((CLOG_DEBUG1 "thread 0x%08x exit", id));
+	}
+
+	catch (XThreadCancel&) {
+		// client called cancel()
+		LOG((CLOG_DEBUG1 "caught cancel on thread 0x%08x", id));
+		delete job;
+		throw;
+	}
+	catch (XThreadExit& e) {
+		// client called exit()
+		result = e.m_result;
+		LOG((CLOG_DEBUG1 "caught exit on thread 0x%08x, result %p", id, result));
+	}
+	catch (...) {
+		LOG((CLOG_DEBUG1 "exception on thread 0x%08x", id));
+		delete job;
+		throw;
+	}
+
+	// done with job
+	delete job;
+
+	// return exit result
+	return result;
 }

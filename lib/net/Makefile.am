@@ -25,14 +25,11 @@ MAINTAINERCLEANFILES =		\
 
 noinst_LIBRARIES = libnet.a
 libnet_a_SOURCES = 			\
-	CNetwork.cpp			\
 	CNetworkAddress.cpp		\
 	CTCPListenSocket.cpp	\
 	CTCPSocket.cpp			\
 	CTCPSocketFactory.cpp	\
-	XNetwork.cpp			\
 	XSocket.cpp				\
-	CNetwork.h				\
 	CNetworkAddress.h		\
 	CTCPListenSocket.h		\
 	CTCPSocket.h			\
@@ -41,10 +38,11 @@ libnet_a_SOURCES = 			\
 	IListenSocket.h			\
 	ISocket.h				\
 	ISocketFactory.h		\
-	XNetwork.h				\
 	XSocket.h				\
 	$(NULL)
 INCLUDES =					\
+	-I$(VDEPTH)/lib/common	\
+	-I$(VDEPTH)/lib/arch	\
 	-I$(VDEPTH)/lib/base 	\
 	-I$(VDEPTH)/lib/mt	 	\
 	-I$(VDEPTH)/lib/io	 	\

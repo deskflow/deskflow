@@ -18,6 +18,7 @@
 #include "OptionTypes.h"
 #include "ProtocolTypes.h"
 #include "CNetworkAddress.h"
+#include "CStringUtil.h"
 #include "XBase.h"
 #include "stdmap.h"
 #include "stdset.h"

@@ -38,6 +38,8 @@ libclient_a_SOURCES = 				\
 	ISecondaryScreenFactory.h		\
 	$(NULL)
 INCLUDES =							\
+	-I$(VDEPTH)/lib/common			\
+	-I$(VDEPTH)/lib/arch			\
 	-I$(VDEPTH)/lib/base 			\
 	-I$(VDEPTH)/lib/mt	 			\
 	-I$(VDEPTH)/lib/io	 			\

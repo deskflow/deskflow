@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -99,7 +99,15 @@ SOURCE=.\CStopwatch.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CString.cpp
+SOURCE=.\CStringUtil.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CUnicode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\LogOutputters.cpp
 # End Source File
 # Begin Source File
 
@@ -111,19 +119,11 @@ SOURCE=.\XBase.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\BasicTypes.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\CFunctionJob.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\CLog.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\common.h
 # End Source File
 # Begin Source File
 
@@ -135,7 +135,11 @@ SOURCE=.\CString.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IInterface.h
+SOURCE=.\CStringUtil.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CUnicode.h
 # End Source File
 # Begin Source File
 
@@ -143,51 +147,15 @@ SOURCE=.\IJob.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\stdfstream.h
+SOURCE=.\ILogOutputter.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\stdistream.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stdlist.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stdmap.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stdostream.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stdpost.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stdpre.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stdset.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stdsstream.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stdvector.h
+SOURCE=.\LogOutputters.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\TMethodJob.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Version.h
 # End Source File
 # Begin Source File
 

@@ -15,9 +15,9 @@
 #include "CMSWindowsPrimaryScreen.h"
 #include "CMSWindowsScreen.h"
 #include "IPrimaryScreenReceiver.h"
-#include "CPlatform.h"
 #include "XScreen.h"
 #include "CLog.h"
+#include "CArchMiscWindows.h"
 #include <cstring>
 
 //
@@ -29,7 +29,7 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 				IPrimaryScreenReceiver* primaryReceiver) :
 	CPrimaryScreen(receiver),
 	m_receiver(primaryReceiver),
-	m_is95Family(CPlatform::isWindows95Family()),
+	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_threadID(0),
 	m_window(NULL),
 	m_mark(0),

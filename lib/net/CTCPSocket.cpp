@@ -18,12 +18,12 @@
 #include "CNetworkAddress.h"
 #include "XIO.h"
 #include "XSocket.h"
-#include "CCondVar.h"
 #include "CLock.h"
 #include "CMutex.h"
 #include "CThread.h"
-#include "CStopwatch.h"
 #include "TMethodJob.h"
+#include "CArch.h"
+#include "XArch.h"
 
 //
 // CTCPSocket
@@ -31,17 +31,19 @@
 
 CTCPSocket::CTCPSocket()
 {
-	m_fd = CNetwork::socket(PF_INET, SOCK_STREAM, 0);
-	if (m_fd == CNetwork::Null) {
-		throw XSocketCreate();
+	try {
+		m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
+	}
+	catch (XArchNetwork& e) {
+		throw XSocketCreate(e.what());
 	}
 	init();
 }
 
-CTCPSocket::CTCPSocket(CNetwork::Socket fd) :
-	m_fd(fd)
+CTCPSocket::CTCPSocket(CArchSocket socket) :
+	m_socket(socket)
 {
-	assert(m_fd != CNetwork::Null);
+	assert(m_socket != NULL);
 
 	init();
 
@@ -59,7 +61,7 @@ CTCPSocket::~CTCPSocket()
 		close();
 	}
 	catch (...) {
-		// ignore failures
+		// ignore
 	}
 
 	// clean up
@@ -71,12 +73,14 @@ CTCPSocket::~CTCPSocket()
 void
 CTCPSocket::bind(const CNetworkAddress& addr)
 {
-	if (CNetwork::bind(m_fd, addr.getAddress(),
-								addr.getAddressLength()) == CNetwork::Error) {
-		if (errno == CNetwork::kEADDRINUSE) {
-			throw XSocketAddressInUse();
-		}
-		throw XSocketBind();
+	try {
+		ARCH->bindSocket(m_socket, addr.getAddress());
+	}
+	catch (XArchNetworkAddressInUse& e) {
+		throw XSocketAddressInUse(e.what());
+	}
+	catch (XArchNetwork& e) {
+		throw XSocketBind(e.what());
 	}
 }
 
@@ -96,12 +100,21 @@ CTCPSocket::close()
 	}
 
 	// cause ioThread to exit
-	{
+	if (m_socket != NULL) {
 		CLock lock(m_mutex);
-		if (m_fd != CNetwork::Null) {
-			CNetwork::shutdown(m_fd, 2);
-			m_connected = kClosed;
+		try {
+			ARCH->closeSocketForRead(m_socket);
 		}
+		catch (XArchNetwork&) {
+			// ignore
+		}
+		try {
+			ARCH->closeSocketForWrite(m_socket);
+		}
+		catch (XArchNetwork&) {
+			// ignore
+		}
+		m_connected = kClosed;
 	}
 
 	// wait for thread
@@ -112,67 +125,71 @@ CTCPSocket::close()
 	}
 
 	// close socket
-	if (m_fd != CNetwork::Null) {
-		if (CNetwork::close(m_fd) == CNetwork::Error) {
-			throw XSocketIOClose();
+	if (m_socket != NULL) {
+		try {
+			ARCH->closeSocket(m_socket);
+			m_socket = NULL;
 		}
-		m_fd = CNetwork::Null;
+		catch (XArchNetwork& e) {
+			throw XSocketIOClose(e.what());
+		}
 	}
 }
 
 void
 CTCPSocket::connect(const CNetworkAddress& addr)
 {
-	// connect asynchronously so we can check for cancellation
-	CNetwork::setblocking(m_fd, false);
-	if (CNetwork::connect(m_fd, addr.getAddress(),
-								addr.getAddressLength()) == CNetwork::Error) {
-		// check for failure
-		if (CNetwork::getsockerror() != CNetwork::kECONNECTING) {
-			XSocketConnect e;
-			CNetwork::setblocking(m_fd, true);
-			throw e;
+	do {
+		// connect asynchronously so we can check for cancellation.
+		// we can't wrap setting and resetting the blocking flag in
+		// the c'tor/d'tor of a class (to make resetting automatic)
+		// because setBlockingOnSocket() can throw and it might be
+		// called while unwinding the stack due to a throw.
+		try {
+			ARCH->setBlockingOnSocket(m_socket, false);
+			ARCH->connectSocket(m_socket, addr.getAddress());
+			ARCH->setBlockingOnSocket(m_socket, true);
+
+			// connected
+			break;
+		}
+		catch (XArchNetworkConnecting&) {
+			// connection is in progress
+			ARCH->setBlockingOnSocket(m_socket, true);
+		}
+		catch (XArchNetwork& e) {
+			ARCH->setBlockingOnSocket(m_socket, true);
+			throw XSocketConnect(e.what());
 		}
 
 		// wait for connection or failure
-		CNetwork::PollEntry pfds[1];
-		pfds[0].fd     = m_fd;
-		pfds[0].events = CNetwork::kPOLLOUT;
+		IArchNetwork::CPollEntry pfds[1];
+		pfds[0].m_socket = m_socket;
+		pfds[0].m_events = IArchNetwork::kPOLLOUT;
 		for (;;) {
-			CThread::testCancel();
-			const int status = CNetwork::poll(pfds, 1, 10);
-			if (status > 0) {
-				if ((pfds[0].revents & (CNetwork::kPOLLERR |
-										CNetwork::kPOLLNVAL)) != 0) {
-					// connection failed
-					int error = 0;
-					CNetwork::AddressLength size = sizeof(error);
-					CNetwork::setblocking(m_fd, true);
-					CNetwork::getsockopt(m_fd, SOL_SOCKET, SO_ERROR,
-								reinterpret_cast<char*>(&error), &size);
-					throw XSocketConnect(error);
-				}
-				if ((pfds[0].revents & CNetwork::kPOLLOUT) != 0) {
-					int error;
-					CNetwork::AddressLength size = sizeof(error);
-					if (CNetwork::getsockopt(m_fd, SOL_SOCKET, SO_ERROR,
-								reinterpret_cast<char*>(&error),
-								&size) == CNetwork::Error ||
-								error != 0) {
+			ARCH->testCancelThread();
+			try {
+				const int status = ARCH->pollSocket(pfds, 1, 0.01);
+				if (status > 0) {
+					if ((pfds[0].m_revents & (IArchNetwork::kPOLLERR |
+											  IArchNetwork::kPOLLNVAL)) != 0) {
 						// connection failed
-						CNetwork::setblocking(m_fd, true);
-						throw XSocketConnect(error);
+						ARCH->throwErrorOnSocket(m_socket);
 					}
+					if ((pfds[0].m_revents & IArchNetwork::kPOLLOUT) != 0) {
+						// connection may have failed or succeeded
+						ARCH->throwErrorOnSocket(m_socket);
 
-					// connected!
-					break;
+						// connected!
+						break;
+					}
 				}
 			}
+			catch (XArchNetwork& e) {
+				throw XSocketConnect(e.what());
+			}
 		}
-	}
-
-	// back to blocking
-	CNetwork::setblocking(m_fd, true);
+	} while (false);
 
 	// start servicing the socket
 	m_connected = kReadWrite;
@@ -208,7 +225,20 @@ CTCPSocket::init()
 	// turn off Nagle algorithm.  we send lots of very short messages
 	// that should be sent without (much) delay.  for example, the
 	// mouse motion messages are much less useful if they're delayed.
-	CNetwork::setnodelay(m_fd, true);
+// FIXME -- the client should do this
+	try {
+		ARCH->setNoDelayOnSocket(m_socket, true);
+	}
+	catch (XArchNetwork& e) {
+		try {
+			ARCH->closeSocket(m_socket);
+			m_socket = NULL;
+		}
+		catch (XArchNetwork&) {
+			// ignore
+		}
+		throw XSocketCreate(e.what());
+	}
 }
 
 void
@@ -244,84 +274,80 @@ CTCPSocket::ioCleanup()
 void
 CTCPSocket::ioService()
 {
-	assert(m_fd != CNetwork::Null);
+	assert(m_socket != NULL);
 
 	// now service the connection
-	CNetwork::PollEntry pfds[1];
-	pfds[0].fd = m_fd;
+	IArchNetwork::CPollEntry pfds[1];
+	pfds[0].m_socket = m_socket;
 	for (;;) {
 		{
 			// choose events to poll for
 			CLock lock(m_mutex);
-			pfds[0].events = 0;
+			pfds[0].m_events = 0;
 			if (m_connected == 0) {
 				return;
 			}
 			if ((m_connected & kRead) != 0) {
 				// still open for reading
-				pfds[0].events |= CNetwork::kPOLLIN;
+				pfds[0].m_events |= IArchNetwork::kPOLLIN;
 			}
 			if ((m_connected & kWrite) != 0 && m_output->getSize() > 0) {
 				// data queued for writing
-				pfds[0].events |= CNetwork::kPOLLOUT;
+				pfds[0].m_events |= IArchNetwork::kPOLLOUT;
 			}
 		}
 
-		// check for status
-		const int status = CNetwork::poll(pfds, 1, 10);
+		try {
+			// check for status
+			const int status = ARCH->pollSocket(pfds, 1, 0.01);
 
-		// transfer data and handle errors
-		if (status == 1) {
-			if ((pfds[0].revents & (CNetwork::kPOLLERR |
-									CNetwork::kPOLLNVAL)) != 0) {
-				// stream is no good anymore so bail
-				m_input->hangup();
-				return;
-			}
-
-			// read some data
-			if (pfds[0].revents & CNetwork::kPOLLIN) {
-				UInt8 buffer[4096];
-				ssize_t n = CNetwork::read(m_fd, buffer, sizeof(buffer));
-				if (n > 0) {
+			// transfer data and handle errors
+			if (status == 1) {
+				if ((pfds[0].m_revents & (IArchNetwork::kPOLLERR |
+										  IArchNetwork::kPOLLNVAL)) != 0) {
+					// stream is no good anymore so bail
 					CLock lock(m_mutex);
-					m_input->write(buffer, n);
-				}
-				else if (n == 0) {
-					// stream hungup
 					m_input->hangup();
-					m_connected &= ~kRead;
+					return;
 				}
-				else {
-					// socket failed
-					if (CNetwork::getsockerror() != CNetwork::kEINTR) {
-						return;
+
+				// read some data
+				if (pfds[0].m_revents & IArchNetwork::kPOLLIN) {
+					UInt8 buffer[4096];
+					size_t n = ARCH->readSocket(m_socket,
+												buffer, sizeof(buffer));
+					CLock lock(m_mutex);
+					if (n > 0) {
+						m_input->write(buffer, n);
+					}
+					else {
+						// stream hungup
+						m_input->hangup();
+						m_connected &= ~kRead;
+					}
+				}
+
+				// write some data
+				if (pfds[0].m_revents & IArchNetwork::kPOLLOUT) {
+					CLock lock(m_mutex);
+
+					// get amount of data to write
+					UInt32 n = m_output->getSize();
+
+					// write data
+					const void* buffer = m_output->peek(n);
+					size_t n2 = ARCH->writeSocket(m_socket, buffer, n);
+
+					// discard written data
+					if (n2 > 0) {
+						m_output->pop(n2);
 					}
 				}
 			}
-
-			// write some data
-			if (pfds[0].revents & CNetwork::kPOLLOUT) {
-				CLock lock(m_mutex);
-
-				// get amount of data to write
-				UInt32 n = m_output->getSize();
-
-				// write data
-				const void* buffer = m_output->peek(n);
-				ssize_t n2 = (UInt32)CNetwork::write(m_fd, buffer, n);
-
-				// discard written data
-				if (n2 > 0) {
-					m_output->pop(n);
-				}
-				else if (n2 < 0) {
-					// socket failed
-					if (CNetwork::getsockerror() != CNetwork::kEINTR) {
-						return;
-					}
-				}
-			}
+		}
+		catch (XArchNetwork&) {
+			// socket has failed
+			return;
 		}
 	}
 }
@@ -330,14 +356,24 @@ void
 CTCPSocket::closeInput(void*)
 {
 	// note -- m_mutex should already be locked
-	CNetwork::shutdown(m_fd, 0);
-	m_connected &= ~kRead;
+	try {
+		ARCH->closeSocketForRead(m_socket);
+		m_connected &= ~kRead;
+	}
+	catch (XArchNetwork&) {
+		// ignore
+	}
 }
 
 void
 CTCPSocket::closeOutput(void*)
 {
 	// note -- m_mutex should already be locked
-	CNetwork::shutdown(m_fd, 1);
-	m_connected &= ~kWrite;
+	try {
+		ARCH->closeSocketForWrite(m_socket);
+		m_connected &= ~kWrite;
+	}
+	catch (XArchNetwork&) {
+		// ignore
+	}
 }

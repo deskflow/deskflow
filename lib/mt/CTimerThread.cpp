@@ -16,6 +16,7 @@
 #include "CThread.h"
 #include "TMethodJob.h"
 #include "CLog.h"
+#include "CArch.h"
 
 //
 // CTimerThread
@@ -50,7 +51,7 @@ void
 CTimerThread::timer(void*)
 {
 	LOG((CLOG_DEBUG1 "timeout in %f seconds", m_timeout));
-	CThread::sleep(m_timeout);
+	ARCH->sleep(m_timeout);
 	LOG((CLOG_DEBUG1 "timeout"));
 	m_callingThread->cancel();
 }

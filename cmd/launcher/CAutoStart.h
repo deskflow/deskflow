@@ -57,9 +57,6 @@ private:
 	bool				onInstall(bool allUsers);
 	bool				onUninstall(bool allUsers);
 
-	// log handling
-	static bool			onLog(int priority, const char* message);
-
 	// message handling
 	BOOL				doDlgProc(HWND, UINT, WPARAM, LPARAM);
 	static BOOL CALLBACK dlgProc(HWND, UINT, WPARAM, LPARAM);

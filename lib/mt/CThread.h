@@ -16,9 +16,9 @@
 #define CTHREAD_H
 
 #include "common.h"
+#include "IArchMultithread.h"
 
 class IJob;
-class CThreadRep;
 
 //! Thread handle
 /*!
@@ -43,10 +43,9 @@ public:
 	//! Run \c adoptedJob in a new thread
 	/*!
 	Create and start a new thread executing the \c adoptedJob.  The
-	user data can be retrieved with getUserData().  The new thread
-	takes ownership of \c adoptedJob and will delete it.
+	new thread takes ownership of \c adoptedJob and will delete it.
 	*/
-	CThread(IJob* adoptedJob, void* userData = 0);
+	CThread(IJob* adoptedJob);
 
 	//! Duplicate a thread handle
 	/*!
@@ -74,24 +73,6 @@ public:
 	*/
 	CThread&			operator=(const CThread&);
 
-	//! Initialize the thread library
-	/*!
-	Initialize the thread library.  This \b must be called before
-	any other thread methods or creating a thread object.  It is
-	harmless to call init() multiple times.
-	*/
-	static void			init();
-
-	//! Sleep
-	/*!
-	Blocks the calling thread for \c timeout seconds.  If
-	\c timeout < 0.0 then the call returns immediately.  If \c timeout
-	== 0.0 then the calling thread yields the CPU.
-
-	(cancellation point)
-	*/
-	static void			sleep(double timeout);
-
 	//! Terminate the calling thread
 	/*!
 	Terminate the calling thread.  This function does not return but
@@ -106,15 +87,6 @@ public:
 	or add the \c RETHROW_XTHREAD macro to the \c catch(...) block.
 	*/
 	static void			exit(void*);
-
-	//! Enable or disable cancellation
-	/*!
-	Enable or disable cancellation.  The default is enabled.  This is not
-	a cancellation point so if you just enabled cancellation and want to
-	allow immediate cancellation you need to call testCancel().
-	Returns the previous state.
-	*/
-	static bool			enableCancel(bool);
 
 	//! Cancel thread
 	/*!
@@ -173,12 +145,6 @@ public:
 	*/
 	static void			testCancel();
 
-	//! Get the thread user data
-	/*!
-	Gets the user data passed to the c'tor that created this thread.
-	*/
-	void*				getUserData();
-
 	//! Wait for thread to terminate
 	/*!
 	Waits for the thread to terminate (by exit() or cancel() or
@@ -192,7 +158,6 @@ public:
 	*/
 	bool				wait(double timeout = -1.0) const;
 
-#if WINDOWS_LIKE
 	//! Wait for an event (win32)
 	/*!
 	Wait for the message queue to contain a message for up to \c timeout
@@ -207,7 +172,6 @@ public:
 	(cancellation point)
 	*/
 	static bool			waitForEvent(double timeout = -1.0);
-#endif
 
 	//! Get the exit result
 	/*!
@@ -218,6 +182,15 @@ public:
 	(cancellation point)
 	*/
 	void*				getResult() const;
+
+	//! Get the thread id
+	/*!
+	Returns an integer id for this thread.  This id must not be used to
+	check if two CThread objects refer to the same thread.  Use
+	operator==() for that.
+	*/
+	IArchMultithread::ThreadID
+						getID() const;
 
 	//! Compare thread handles
 	/*!
@@ -234,24 +207,12 @@ public:
 	//@}
 
 private:
-	CThread(CThreadRep*);
+	CThread(CArchThread);
+
+	static void*		threadFunc(void*);
 
 private:
-	CThreadRep*			m_rep;
-};
-
-//! Disable cancellation utility
-/*!
-This class disables cancellation for the current thread in the c'tor
-and enables it in the d'tor.
-*/
-class CThreadMaskCancel {
-public:
-	CThreadMaskCancel();
-	~CThreadMaskCancel();
-
-private:
-	bool				m_old;
+	CArchThread			m_thread;
 };
 
 #endif

@@ -29,18 +29,18 @@ libmt_a_SOURCES = 			\
 	CMutex.cpp				\
 	CCondVar.cpp			\
 	CThread.cpp				\
-	CThreadRep.cpp			\
 	CTimerThread.cpp		\
 	XMT.cpp					\
 	CCondVar.h				\
 	CLock.h					\
 	CMutex.h				\
 	CThread.h				\
-	CThreadRep.h			\
 	CTimerThread.h			\
 	XMT.h					\
 	XThread.h				\
 	$(NULL)
 INCLUDES =					\
+	-I$(VDEPTH)/lib/common	\
+	-I$(VDEPTH)/lib/arch	\
 	-I$(VDEPTH)/lib/base 	\
 	$(NULL)

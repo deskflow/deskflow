@@ -16,11 +16,10 @@
 #define CTCPSOCKET_H
 
 #include "IDataSocket.h"
-#include "CNetwork.h"
+#include "BasicTypes.h"
+#include "IArchNetwork.h"
 
 class CMutex;
-template <class T>
-class CCondVar;
 class CThread;
 class CBufferedInputStream;
 class CBufferedOutputStream;
@@ -32,7 +31,7 @@ A data socket using TCP.
 class CTCPSocket : public IDataSocket {
 public:
 	CTCPSocket();
-	CTCPSocket(CNetwork::Socket);
+	CTCPSocket(CArchSocket);
 	~CTCPSocket();
 
 	// ISocket overrides
@@ -55,7 +54,7 @@ private:
 private:
 	enum { kClosed = 0, kRead = 1, kWrite = 2, kReadWrite = 3 };
 
-	CNetwork::Socket		m_fd;
+	CArchSocket				m_socket;
 	CBufferedInputStream*	m_input;
 	CBufferedOutputStream*	m_output;
 

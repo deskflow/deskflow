@@ -13,6 +13,7 @@
  */
 
 #include "XBase.h"
+#include "CStringUtil.h"
 #include <cerrno>
 #include <cstdarg>
 
@@ -78,66 +79,4 @@ XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
 	va_end(args);
 
 	return result;
-}
-
-
-//
-// MXErrno
-//
-
-MXErrno::MXErrno() :
-#if WINDOWS_LIKE
-	m_errno(GetLastError()),
-#else
-	m_errno(errno),
-#endif
-	m_string(NULL)
-{
-	// do nothing
-}
-
-MXErrno::MXErrno(int err) :
-	m_errno(err),
-	m_string(NULL)
-{
-	// do nothing
-}
-
-MXErrno::~MXErrno()
-{
-	if (m_string != NULL) {
-#if WINDOWS_LIKE
-		LocalFree(m_string);
-#endif
-	}
-}
-
-int
-MXErrno::getErrno() const
-{
-	return m_errno;
-}
-
-const char*
-MXErrno::getErrstr() const
-{
-#if WINDOWS_LIKE
-	if (m_string != NULL) {
-		if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-								FORMAT_MESSAGE_IGNORE_INSERTS |
-								FORMAT_MESSAGE_FROM_SYSTEM,
-								0,
-								error,
-								MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-								(LPTSTR)&m_string,
-								0,
-								NULL) == 0) {
-			m_string = NULL;
-			return "unknown error";
-		}
-	}
-	return m_string;
-#else
-	return strerror(m_errno);
-#endif
 }

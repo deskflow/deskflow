@@ -12,8 +12,11 @@
  * GNU General Public License for more details.
  */
 
-#include "CPlatform.h"
 #include "CLog.h"
+#include "ILogOutputter.h"
+#include "CArch.h"
+#include "CStringUtil.h"
+#include "XArch.h"
 #include "CAutoStart.h"
 #include "LaunchUtil.h"
 #include "resource.h"
@@ -22,6 +25,37 @@
 #define SERVER_DAEMON_NAME "Synergy Server"
 #define CLIENT_DAEMON_INFO "Shares this system's mouse and keyboard with others."
 #define SERVER_DAEMON_INFO "Shares this system's mouse and keyboard with others."
+
+//
+// CAutoStartOutputter
+//
+// This class detects a message above a certain level and saves it
+//
+
+class CAutoStartOutputter : public ILogOutputter {
+public:
+	CAutoStartOutputter(CString* msg) : m_msg(msg) { }
+	virtual ~CAutoStartOutputter() { }
+
+	// ILogOutputter overrides
+	virtual void		open(const char*) { }
+	virtual void		close() { }
+	virtual bool		write(ELevel level, const char* message);
+	virtual const char*	getNewline() const { return ""; }
+
+private:
+	CString*			m_msg;
+};
+
+bool
+CAutoStartOutputter::write(ELevel level, const char* message)
+{
+	if (level <= CLog::kERROR) {
+		*m_msg = message;
+	}
+	return false;
+}
+
 
 //
 // CAutoStart
@@ -51,8 +85,7 @@ void
 CAutoStart::doModal()
 {
 	// install our log outputter
-	CLog::Outputter oldOutputter = CLog::getOutputter();
-	CLog::setOutputter(&CAutoStart::onLog);
+	CLOG->insert(new CAutoStartOutputter(&m_errorMessage));
 
 	// reset saved flag
 	m_userConfigSaved = false;
@@ -61,8 +94,8 @@ CAutoStart::doModal()
 	DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_AUTOSTART),
 								m_parent, dlgProc, (LPARAM)this);
 
-	// restore log outputter
-	CLog::setOutputter(oldOutputter);
+	// remove log outputter
+	CLOG->pop_front();
 }
 
 bool
@@ -74,19 +107,16 @@ CAutoStart::wasUserConfigSaved() const
 void
 CAutoStart::update()
 {
-	// need a platform object
-	CPlatform platform;
-
 	// get installation state
-	const bool installedSystem = platform.isDaemonInstalled(
+	const bool installedSystem = ARCH->isDaemonInstalled(
 										m_name.c_str(), true);
-	const bool installedUser   = platform.isDaemonInstalled(
+	const bool installedUser   = ARCH->isDaemonInstalled(
 										m_name.c_str(), false);
 
 	// get user's permissions
-	const bool canInstallSystem = platform.canInstallDaemon(
+	const bool canInstallSystem = ARCH->canInstallDaemon(
 										m_name.c_str(), true);
-	const bool canInstallUser   = platform.canInstallDaemon(
+	const bool canInstallUser   = ARCH->canInstallDaemon(
 										m_name.c_str(), false);
 
 	// update messages
@@ -165,22 +195,25 @@ CAutoStart::onInstall(bool allUsers)
 	m_errorMessage = "";
 
 	// install
-	CPlatform platform;
-	if (!platform.installDaemon(m_name.c_str(),
+	try {
+		ARCH->installDaemon(m_name.c_str(),
 					m_isServer ? SERVER_DAEMON_INFO : CLIENT_DAEMON_INFO,
-					appPath.c_str(), m_cmdLine.c_str(), allUsers)) {
+					appPath.c_str(), m_cmdLine.c_str(), allUsers);
+		askOkay(m_hwnd, getString(IDS_INSTALL_TITLE),
+								getString(allUsers ?
+									IDS_INSTALLED_SYSTEM :
+									IDS_INSTALLED_USER));
+		return true;
+	}
+	catch (XArchDaemon& e) {
 		if (m_errorMessage.empty()) {
-			m_errorMessage = getString(IDS_INSTALL_GENERIC_ERROR);
+			m_errorMessage = CStringUtil::format(
+								getString(IDS_INSTALL_GENERIC_ERROR).c_str(),
+								e.what().c_str());
 		}
 		showError(m_hwnd, m_errorMessage);
 		return false;
 	}
-
-	askOkay(m_hwnd, getString(IDS_INSTALL_TITLE),
-								getString(allUsers ?
-									IDS_INSTALLED_SYSTEM :
-									IDS_INSTALLED_USER));
-	return true;
 }
 
 bool
@@ -190,30 +223,23 @@ CAutoStart::onUninstall(bool allUsers)
 	m_errorMessage = "";
 
 	// uninstall
-	CPlatform platform;
-	if (platform.uninstallDaemon(m_name.c_str(), allUsers) !=
-													IPlatform::kSuccess) {
+	try {
+		ARCH->uninstallDaemon(m_name.c_str(), allUsers);
+		askOkay(m_hwnd, getString(IDS_UNINSTALL_TITLE),
+								getString(allUsers ?
+									IDS_UNINSTALLED_SYSTEM :
+									IDS_UNINSTALLED_USER));
+		return true;
+	}
+	catch (XArchDaemon& e) {
 		if (m_errorMessage.empty()) {
-			m_errorMessage = getString(IDS_UNINSTALL_GENERIC_ERROR);
+			m_errorMessage = CStringUtil::format(
+								getString(IDS_UNINSTALL_GENERIC_ERROR).c_str(),
+								e.what().c_str());
 		}
 		showError(m_hwnd, m_errorMessage);
 		return false;
 	}
-
-	askOkay(m_hwnd, getString(IDS_UNINSTALL_TITLE),
-								getString(allUsers ?
-									IDS_UNINSTALLED_SYSTEM :
-									IDS_UNINSTALLED_USER));
-	return true;
-}
-
-bool
-CAutoStart::onLog(int priority, const char* message)
-{
-	if (priority <= CLog::kERROR) {
-		s_singleton->m_errorMessage = message;
-	}
-	return true;
 }
 
 BOOL

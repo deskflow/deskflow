@@ -14,6 +14,7 @@
 
 #include "XHTTP.h"
 #include "CHTTPProtocol.h"
+#include "CStringUtil.h"
 #include "stdsstream.h"
 
 //

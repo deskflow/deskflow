@@ -16,7 +16,14 @@
 #define CLOG_H
 
 #include "common.h"
+#include "IArchMultithread.h"
+#include "IInterface.h"
+#include "stdlist.h"
 #include <stdarg.h>
+
+#define CLOG (CLog::getInstance())
+
+class ILogOutputter;
 
 //! Logging facility
 /*!
@@ -42,56 +49,51 @@ public:
 		kDEBUG2			//!< For even more detailed debugging messages
 	};
 
-	//! Outputter function.
-	/*!
-	Type of outputter function.  The outputter should write \c message,
-	which has the given \c priority, to a log and return true.  Or it can
-	return false to let CLog use the default outputter.
-	*/
-	typedef bool		(*Outputter)(int priority, const char* message);
-
-	//! Locking function
-	/*!
-	Type of lock/unlock function.  If \c lock is true then block other
-	threads that try to lock until this thread unlocks.  If \c lock is
-	false then unlock and allow another (waiting) thread to lock.
-	*/
-	typedef void		(*Lock)(bool lock);
+	~CLog();
 
 	//! @name manipulators
 	//@{
 
-	//! Set the function used to write the log
+	//! Add an outputter to the head of the list
 	/*!
-	Sets the function used to write to the log.  The outputter function
-	is called with the formatted string to write and the priority level.
-	CLog will have already filtered messages below the current filter
-	priority.  A NULL outputter means to use the default which is to print
-	to stderr.  Note that the outputter should not call CLog methods but,
-	if it does, the current lock function must permit recursive locks.
-	*/
-	static void			setOutputter(Outputter);
+	Inserts an outputter to the head of the outputter list.  When the
+	logger writes a message, it goes to the outputter at the head of
+	the outputter list.  If that outputter's \c write() method returns
+	true then it also goes to the next outputter, as so on until an
+	outputter returns false or there are no more outputters.  Outputters
+	still in the outputter list when the log is destroyed will be
+	deleted.
 
-	//! Set the lock/unlock function
-	/*!
-	Set the lock/unlock function.  Use setLock(NULL) to remove the
-	locking function.  There is no default lock function;  do not call
-	CLog from multiple threads unless a working lock function has been
-	installed.
+	By default, the logger has one outputter installed which writes to
+	the console.
 	*/
-	static void			setLock(Lock);
+	void				insert(ILogOutputter* adopted);
+
+	//! Remove an outputter from the list
+	/*!
+	Removes the first occurrence of the given outputter from the
+	outputter list.  It does nothing if the outputter is not in the
+	list.  The outputter is not deleted.
+	*/
+	void				remove(ILogOutputter* orphaned);
+
+	//! Remove the outputter from the head of the list
+	/*!
+	Removes and deletes the outputter at the head of the outputter list.
+	This does nothing if the outputter list is empty.
+	*/
+	void				pop_front();
 
 	//! Set the minimum priority filter.
 	/*!
 	Set the filter.  Messages below this priority are discarded.
 	The default priority is 4 (INFO) (unless built without NDEBUG
-	in which case it's 5 (DEBUG)).  The default can be overridden
-	by setting the SYN_LOG_PRI env var to "FATAL", "ERROR", etc.
-	setFilter(const char*) returns true if the priority \c name was
-	recognized;  if \c name is NULL then it simply returns true.
+	in which case it's 5 (DEBUG)).   setFilter(const char*) returns
+	true if the priority \c name was recognized;  if \c name is NULL
+	then it simply returns true.
 	*/
-	static bool			setFilter(const char* name);
-	static void			setFilter(int);
+	bool				setFilter(const char* name);
+	void				setFilter(int);
 
 	//@}
 	//! @name accessors
@@ -101,52 +103,38 @@ public:
 	/*!
 	Print a log message using the printf-like \c format and arguments.
 	*/
-	static void			print(const char* format, ...);
+	void				print(const char* format, ...) const;
 
 	//! Print a log message
 	/*!
 	Print a log message using the printf-like \c format and arguments
 	preceded by the filename and line number.
 	*/
-	static void			printt(const char* file, int line,
-							const char* format, ...);
-
-	//! Get the function used to write the log
-	static Outputter	getOutputter();
-
-	//! Get the lock/unlock function
-	/*!
-	Get the lock/unlock function.  Note that the lock function is
-	used when retrieving the lock function.
-	*/
-	static Lock			getLock();
+	void				printt(const char* file, int line,
+							const char* format, ...) const;
 
 	//! Get the minimum priority level.
-	static int			getFilter();
+	int					getFilter() const;
+
+	//! Get the singleton instance of the log
+	static CLog*		getInstance();
 
 	//@}
 
 private:
-	class CHoldLock {
-	public:
-		CHoldLock(Lock lock) : m_lock(lock) { m_lock(true); }
-		~CHoldLock() { m_lock(false); }
+	CLog();
 
-	private:
-		Lock			m_lock;
-	};
-
-	static void			dummyLock(bool);
-	static int			getMaxPriority();
-	static void			output(int priority, char* msg);
-#if WINDOWS_LIKE
-	static void			openConsole();
-#endif
+	void				output(int priority, char* msg) const;
 
 private:
-	static Outputter	s_outputter;
-	static Lock			s_lock;
-	static int			s_maxPriority;
+	typedef std::list<ILogOutputter*> COutputterList;
+
+	static CLog*		s_log;
+
+	CArchMutex			m_mutex;
+	COutputterList		m_outputters;
+	int					m_maxNewlineLength;
+	int					m_maxPriority;
 };
 
 /*!
@@ -193,12 +181,12 @@ which includes the filename and line number.
 #define LOGC(_a1, _a2)
 #define CLOG_TRACE
 #elif defined(NDEBUG)
-#define LOG(_a1)		CLog::print _a1
-#define LOGC(_a1, _a2)	if (_a1) CLog::print _a2
+#define LOG(_a1)		CLOG->print _a1
+#define LOGC(_a1, _a2)	if (_a1) CLOG->print _a2
 #define CLOG_TRACE
 #else
-#define LOG(_a1)		CLog::printt _a1
-#define LOGC(_a1, _a2)	if (_a1) CLog::printt _a2
+#define LOG(_a1)		CLOG->printt _a1
+#define LOGC(_a1, _a2)	if (_a1) CLOG->printt _a2
 #define CLOG_TRACE		__FILE__, __LINE__,
 #endif
 

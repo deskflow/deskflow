@@ -14,10 +14,10 @@
 
 #include "CMSWindowsSecondaryScreen.h"
 #include "CMSWindowsScreen.h"
-#include "CPlatform.h"
 #include "XScreen.h"
 #include "CLock.h"
 #include "CLog.h"
+#include "CArchMiscWindows.h"
 #include <cctype>
 
 // these are only defined when WINVER >= 0x0500
@@ -34,7 +34,7 @@
 
 CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen(
 				IScreenReceiver* receiver) :
-	m_is95Family(CPlatform::isWindows95Family()),
+	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_window(NULL),
 	m_mask(0)
 {

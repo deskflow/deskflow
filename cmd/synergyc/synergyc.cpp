@@ -14,11 +14,9 @@
 
 #include "CClient.h"
 #include "ISecondaryScreenFactory.h"
-#include "CPlatform.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
 #include "XScreen.h"
-#include "CNetwork.h"
 #include "CNetworkAddress.h"
 #include "CTCPSocketFactory.h"
 #include "XSocket.h"
@@ -28,12 +26,18 @@
 #include "CThread.h"
 #include "XThread.h"
 #include "CLog.h"
+#include "LogOutputters.h"
 #include "CString.h"
+#include "CArch.h"
+#include "CArchMiscWindows.h"
 #include <cstring>
 
+#define DAEMON_RUNNING(running_)
 #if WINDOWS_LIKE
 #include "CMSWindowsSecondaryScreen.h"
 #include "resource.h"
+#undef DAEMON_RUNNING
+#define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif UNIX_LIKE
 #include "CXWindowsSecondaryScreen.h"
 #endif
@@ -49,35 +53,33 @@
 // program arguments
 //
 
-static const char*		pname         = NULL;
-static bool				s_backend     = false;
-static bool				s_restartable = true;
-static bool				s_daemon      = true;
-static bool				s_camp        = true;
-static const char*		s_logFilter   = NULL;
-static CString			s_name;
-static CNetworkAddress	s_serverAddress;
+#define ARG CArgs::s_instance
 
+class CArgs {
+public:
+	CArgs() :
+		m_pname(NULL),
+		m_backend(false),
+		m_restartable(true),
+		m_daemon(true),
+		m_camp(true),
+		m_logFilter(NULL)
+		{ s_instance = this; }
+	~CArgs() { s_instance = NULL; }
 
-//
-// logging thread safety
-//
+public:
+	static CArgs*		s_instance;
+	const char* 		m_pname;
+	bool				m_backend;
+	bool				m_restartable;
+	bool				m_daemon;
+	bool		 		m_camp;
+	const char* 		m_logFilter;
+	CString 			m_name;
+	CNetworkAddress 	m_serverAddress;
+};
 
-static CMutex*			s_logMutex = NULL;
-
-static
-void
-logLock(bool lock)
-{
-	assert(s_logMutex != NULL);
-
-	if (lock) {
-		s_logMutex->lock();
-	}
-	else {
-		s_logMutex->unlock();
-	}
-}
+CArgs*					CArgs::s_instance = NULL;
 
 
 //
@@ -113,27 +115,17 @@ static CClient*			s_client = NULL;
 
 static
 int
-realMain(CMutex* mutex)
+realMain(void)
 {
-	// caller should have mutex locked on entry
-
-	// initialize threading library
-	CThread::init();
-
-	// make logging thread safe
-	CMutex logMutex;
-	s_logMutex = &logMutex;
-	CLog::setLock(&logLock);
-
 	int result = kExitSuccess;
 	do {
 		bool opened = false;
 		bool locked = true;
 		try {
 			// create client
-			s_client = new CClient(s_name);
-			s_client->camp(s_camp);
-			s_client->setAddress(s_serverAddress);
+			s_client = new CClient(ARG->m_name);
+			s_client->camp(ARG->m_camp);
+			s_client->setAddress(ARG->m_serverAddress);
 			s_client->setScreenFactory(new CSecondaryScreenFactory);
 			s_client->setSocketFactory(new CTCPSocketFactory);
 			s_client->setStreamFilterFactory(NULL);
@@ -144,9 +136,7 @@ realMain(CMutex* mutex)
 				opened = true;
 
 				// run client
-				if (mutex != NULL) {
-					mutex->unlock();
-				}
+				DAEMON_RUNNING(true);
 				locked = false;
 				s_client->mainLoop();
 				locked = true;
@@ -160,8 +150,8 @@ realMain(CMutex* mutex)
 
 				// clean up
 #define FINALLY do {								\
-				if (!locked && mutex != NULL) {		\
-					mutex->lock();					\
+				if (!locked) {						\
+					DAEMON_RUNNING(false);			\
 				}									\
 				if (s_client != NULL) {				\
 					if (opened) {					\
@@ -175,8 +165,8 @@ realMain(CMutex* mutex)
 			}
 			catch (XScreenUnavailable& e) {
 				// wait before retrying if we're going to retry
-				if (s_restartable) {
-					CThread::sleep(e.getRetryTime());
+				if (ARG->m_restartable) {
+					ARCH->sleep(e.getRetryTime());
 				}
 				else {
 					result = kExitFailed;
@@ -189,8 +179,8 @@ realMain(CMutex* mutex)
 			}
 			catch (...) {
 				// don't try to restart and fail
-				s_restartable = false;
-				result        = kExitFailed;
+				ARG->m_restartable = false;
+				result             = kExitFailed;
 				FINALLY;
 			}
 #undef FINALLY
@@ -200,19 +190,10 @@ realMain(CMutex* mutex)
 		}
 		catch (XThread&) {
 			// terminated
-			s_restartable = false;
-			result        = kExitTerminated;
+			ARG->m_restartable = false;
+			result             = kExitTerminated;
 		}
-		catch (...) {
-			CLog::setLock(NULL);
-			s_logMutex = NULL;
-			throw;
-		}
-	} while (s_restartable);
-
-	// clean up
-	CLog::setLock(NULL);
-	s_logMutex = NULL;
+	} while (ARG->m_restartable);
 
 	return result;
 }
@@ -233,7 +214,7 @@ version()
 	LOG((CLOG_PRINT
 "%s %s, protocol version %d.%d\n"
 "%s",
-								pname,
+								ARG->m_pname,
 								kVersion,
 								kProtocolMajorVersion,
 								kProtocolMinorVersion,
@@ -279,7 +260,7 @@ help()
 "\n"
 "Where log messages go depends on the platform and whether or not the\n"
 "client is running as a daemon.",
-								pname, kDefaultPort));
+								ARG->m_pname, kDefaultPort));
 
 }
 
@@ -294,7 +275,7 @@ isArg(int argi, int argc, const char** argv,
 		// match.  check args left.
 		if (argi + minRequiredParameters >= argc) {
 			LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
-								pname, argv[argi], pname));
+								ARG->m_pname, argv[argi], ARG->m_pname));
 			bye(kExitArgs);
 		}
 		return true;
@@ -308,61 +289,58 @@ static
 void
 parse(int argc, const char** argv)
 {
-	assert(pname != NULL);
-	assert(argv  != NULL);
-	assert(argc  >= 1);
+	assert(ARG->m_pname != NULL);
+	assert(argv         != NULL);
+	assert(argc         >= 1);
 
 	// set defaults
-	char hostname[256];
-	if (CNetwork::gethostname(hostname, sizeof(hostname)) != CNetwork::Error) {
-		s_name = hostname;
-	}
+	ARG->m_name = ARCH->getHostName();
 
 	// parse options
 	int i;
 	for (i = 1; i < argc; ++i) {
 		if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 			// change logging level
-			s_logFilter = argv[++i];
+			ARG->m_logFilter = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, "-n", "--name", 1)) {
 			// save screen name
-			s_name = argv[++i];
+			ARG->m_name = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, NULL, "--camp")) {
 			// enable camping
-			s_camp = true;
+			ARG->m_camp = true;
 		}
 
 		else if (isArg(i, argc, argv, NULL, "--no-camp")) {
 			// disable camping
-			s_camp = false;
+			ARG->m_camp = false;
 		}
 
 		else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
 			// not a daemon
-			s_daemon = false;
+			ARG->m_daemon = false;
 		}
 
 		else if (isArg(i, argc, argv, NULL, "--daemon")) {
 			// daemonize
-			s_daemon = true;
+			ARG->m_daemon = true;
 		}
 
 		else if (isArg(i, argc, argv, "-1", "--no-restart")) {
 			// don't try to restart
-			s_restartable = false;
+			ARG->m_restartable = false;
 		}
 
 		else if (isArg(i, argc, argv, NULL, "--restart")) {
 			// try to restart
-			s_restartable = true;
+			ARG->m_restartable = true;
 		}
 
 		else if (isArg(i, argc, argv, "-z", NULL)) {
-			s_backend = true;
+			ARG->m_backend = true;
 		}
 
 		else if (isArg(i, argc, argv, "-h", "--help")) {
@@ -383,7 +361,7 @@ parse(int argc, const char** argv)
 
 		else if (argv[i][0] == '-') {
 			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-								pname, argv[i], pname));
+								ARG->m_pname, argv[i], ARG->m_pname));
 			bye(kExitArgs);
 		}
 
@@ -396,47 +374,58 @@ parse(int argc, const char** argv)
 	// exactly one non-option argument (server-address)
 	if (i == argc) {
 		LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
-								pname, pname));
+								ARG->m_pname, ARG->m_pname));
 		bye(kExitArgs);
 	}
 	if (i + 1 != argc) {
 		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-								pname, argv[i], pname));
+								ARG->m_pname, argv[i], ARG->m_pname));
 		bye(kExitArgs);
 	}
 
 	// save server address
 	try {
-		s_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
+		ARG->m_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
 	}
 	catch (XSocketAddress& e) {
 		LOG((CLOG_PRINT "%s: %s" BYE,
-								pname, e.what(), pname));
+								ARG->m_pname, e.what(), ARG->m_pname));
 		bye(kExitFailed);
 	}
 
 	// increase default filter level for daemon.  the user must
 	// explicitly request another level for a daemon.
-	if (s_daemon && s_logFilter == NULL) {
+	if (ARG->m_daemon && ARG->m_logFilter == NULL) {
 #if WINDOWS_LIKE
-		if (CPlatform::isWindows95Family()) {
+		if (CArchMiscWindows::isWindows95Family()) {
 			// windows 95 has no place for logging so avoid showing
 			// the log console window.
-			s_logFilter = "FATAL";
+			ARG->m_logFilter = "FATAL";
 		}
 		else
 #endif
 		{
-			s_logFilter = "NOTE";
+			ARG->m_logFilter = "NOTE";
 		}
 	}
 
 	// set log filter
-	if (!CLog::setFilter(s_logFilter)) {
+	if (!CLOG->setFilter(ARG->m_logFilter)) {
 		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-								pname, s_logFilter, pname));
+								ARG->m_pname, ARG->m_logFilter, ARG->m_pname));
 		bye(kExitArgs);
 	}
+}
+
+static
+void
+useSystemLog()
+{
+	// redirect log messages
+	ILogOutputter* logger = new CSystemLogOutputter;
+	logger->open(DAEMON_NAME);
+	CLOG->insert(new CStopLogOutputter);
+	CLOG->insert(logger);
 }
 
 //
@@ -449,24 +438,41 @@ parse(int argc, const char** argv)
 
 static bool				s_hasImportantLogMessages = false;
 
-static
+//
+// CMessageBoxOutputter
+//
+// This class writes severe log messages to a message box
+//
+
+class CMessageBoxOutputter : public ILogOutputter {
+public:
+	CMessageBoxOutputter() { }
+	virtual ~CMessageBoxOutputter() { }
+
+	// ILogOutputter overrides
+	virtual void		open(const char*) { }
+	virtual void		close() { }
+	virtual bool		write(ELevel level, const char* message);
+	virtual const char*	getNewline() const { return ""; }
+};
+
 bool
-logMessageBox(int priority, const char* msg)
+CMessageBoxOutputter::write(ELevel level, const char* message)
 {
 	// note any important messages the user may need to know about
-	if (priority <= CLog::kWARNING) {
+	if (level <= CLog::kWARNING) {
 		s_hasImportantLogMessages = true;
 	}
 
 	// FATAL and PRINT messages get a dialog box if not running as
 	// backend.  if we're running as a backend the user will have
 	// a chance to see the messages when we exit.
-	if (!s_backend && priority <= CLog::kFATAL) {
-		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
-		return true;
+	if (!ARG->m_backend && level <= CLog::kFATAL) {
+		MessageBox(NULL, message, ARG->m_pname, MB_OK | MB_ICONWARNING);
+		return false;
 	}
 	else {
-		return false;
+		return true;
 	}
 }
 
@@ -474,7 +480,7 @@ static
 void
 byeThrow(int x)
 {
-	throw CWin32Platform::CDaemonFailed(x);
+	CArchMiscWindows::daemonFailed(x);
 }
 
 static
@@ -486,10 +492,9 @@ daemonStop(void)
 
 static
 int
-daemonStartup(IPlatform* iplatform, int argc, const char** argv)
+daemonStartup(int argc, const char** argv)
 {
-	// get platform pointer
-	CWin32Platform* platform = static_cast<CWin32Platform*>(iplatform);
+	useSystemLog();
 
 	// catch errors that would normally exit
 	bye = &byeThrow;
@@ -498,35 +503,35 @@ daemonStartup(IPlatform* iplatform, int argc, const char** argv)
 	parse(argc, argv);
 
 	// cannot run as backend if running as a service
-	s_backend = false;
+	ARG->m_backend = false;
 
 	// run as a service
-	return platform->runDaemon(realMain, daemonStop);
+	return CArchMiscWindows::runDaemon(realMain, daemonStop);
 }
 
 static
 int
-daemonStartup95(IPlatform*, int, const char**)
+daemonStartup95(int, const char**)
 {
-	return realMain(NULL);
+	useSystemLog();
+	return realMain();
 }
 
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
-	CPlatform platform;
+	CArch arch;
+	CLOG;
+	CArgs args;
 
 	// save instance
 	CMSWindowsScreen::init(instance);
 
 	// get program name
-	pname = platform.getBasename(__argv[0]);
-
-	// initialize network library
-	CNetwork::init();
+	ARG->m_pname = ARCH->getBasename(__argv[0]);
 
 	// send PRINT and FATAL output to a message box
-	CLog::setOutputter(&logMessageBox);
+	CLOG->insert(new CMessageBoxOutputter);
 
 	// windows NT family starts services using no command line options.
 	// since i'm not sure how to tell the difference between that and
@@ -534,10 +539,10 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// arguments and we're on NT then we're being invoked as a service.
 	// users on NT can use `--daemon' or `--no-daemon' to force us out
 	// of the service code path.
-	if (__argc <= 1 && !CWin32Platform::isWindows95Family()) {
-		int result = platform.daemonize(DAEMON_NAME, &daemonStartup);
+	if (__argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
+		int result = ARCH->daemonize(DAEMON_NAME, &daemonStartup);
 		if (result == -1) {
-			LOG((CLOG_CRIT "failed to start as a service" BYE, pname));
+			LOG((CLOG_CRIT "failed to start as a service" BYE, ARG->m_pname));
 			return kExitFailed;
 		}
 		return result;
@@ -548,38 +553,36 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 	// daemonize if requested
 	int result;
-	if (s_daemon) {
-		// redirect log messages
-		platform.installDaemonLogger(DAEMON_NAME);
-
+	if (ARG->m_daemon) {
 		// start as a daemon
-		if (CWin32Platform::isWindows95Family()) {
-			result = platform.daemonize(DAEMON_NAME, &daemonStartup95);
-			if (result == -1) {
-				LOG((CLOG_CRIT "failed to start as a service" BYE, pname));
+		if (CArchMiscWindows::isWindows95Family()) {
+			try {
+				result = ARCH->daemonize(DAEMON_NAME, &daemonStartup95);
+			}
+			catch (XArchDaemon&) {
+				LOG((CLOG_CRIT "failed to start as a service" BYE, ARG->m_pname));
 				result = kExitFailed;
 			}
 		}
 		else {
 			// cannot start a service from the command line so just
 			// run normally (except with log messages redirected).
-			result = realMain(NULL);
+			useSystemLog();
+			result = realMain();
 		}
 	}
 	else {
 		// run
-		result = realMain(NULL);
+		result = realMain();
 	}
-
-	CNetwork::cleanup();
 
 	// let user examine any messages if we're running as a backend
 	// by putting up a dialog box before exiting.
-	if (s_backend && s_hasImportantLogMessages) {
+	if (ARG->m_backend && s_hasImportantLogMessages) {
 		char msg[1024];
 		msg[0] = '\0';
 		LoadString(instance, IDS_FAILED, msg, sizeof(msg) / sizeof(msg[0]));
-		MessageBox(NULL, msg, pname, MB_OK | MB_ICONWARNING);
+		MessageBox(NULL, msg, ARG->m_pname, MB_OK | MB_ICONWARNING);
 	}
 
 	return result;
@@ -589,39 +592,39 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 static
 int
-daemonStartup(IPlatform*, int, const char**)
+daemonStartup(int, const char**)
 {
-	return realMain(NULL);
+	useSystemLog();
+	return realMain();
 }
 
 int
 main(int argc, char** argv)
 {
-	CPlatform platform;
+	CArch arch;
+	CLOG;
+	CArgs args;
 
 	// get program name
-	pname = platform.getBasename(argv[0]);
-
-	// initialize network library
-	CNetwork::init();
+	ARG->m_pname = ARCH->getBasename(argv[0]);
 
 	// parse command line
 	parse(argc, const_cast<const char**>(argv));
 
 	// daemonize if requested
 	int result;
-	if (s_daemon) {
-		result = platform.daemonize(DAEMON_NAME, &daemonStartup);
-		if (result == -1) {
+	if (ARG->m_daemon) {
+		try {
+			result = ARCH->daemonize(DAEMON_NAME, &daemonStartup);
+		}
+		catch (XArchDaemon&) {
 			LOG((CLOG_CRIT "failed to daemonize"));
-			return kExitFailed;
+			result = kExitFailed;
 		}
 	}
 	else {
-		result = realMain(NULL);
+		result = realMain();
 	}
-
-	CNetwork::cleanup();
 
 	return result;
 }

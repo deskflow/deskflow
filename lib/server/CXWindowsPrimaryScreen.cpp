@@ -29,6 +29,7 @@
 #	define XK_XKB_KEYS
 #	include <X11/keysymdef.h>
 #endif
+#include "CArch.h"
 
 //
 // CXWindowsPrimaryScreen
@@ -517,7 +518,7 @@ CXWindowsPrimaryScreen::showWindow()
 			assert(result != GrabNotViewable);
 			if (result != GrabSuccess) {
 				LOG((CLOG_DEBUG2 "waiting to grab keyboard"));
-				CThread::sleep(0.05);
+				ARCH->sleep(0.05);
 				if (timer.getTime() >= s_timeout) {
 					LOG((CLOG_DEBUG2 "grab keyboard timed out"));
 					XUnmapWindow(display, m_window);
@@ -536,7 +537,7 @@ CXWindowsPrimaryScreen::showWindow()
 			// back off to avoid grab deadlock
 			XUngrabKeyboard(display, CurrentTime);
 			LOG((CLOG_DEBUG2 "ungrabbed keyboard, waiting to grab pointer"));
-			CThread::sleep(0.05);
+			ARCH->sleep(0.05);
 			if (timer.getTime() >= s_timeout) {
 				LOG((CLOG_DEBUG2 "grab pointer timed out"));
 				XUnmapWindow(display, m_window);

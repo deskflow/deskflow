@@ -20,6 +20,7 @@
 #include "CThread.h"
 #include "CLog.h"
 #include "CStopwatch.h"
+#include "CArch.h"
 #include "stdvector.h"
 #include <cstdio>
 #include <X11/Xatom.h>
@@ -751,16 +752,16 @@ CXWindowsClipboard::motifFillCache()
 		}
 
 		// see if atom is in target list
-		CMotifFormatMap::const_iterator index =
+		CMotifFormatMap::const_iterator index2 =
 								motifFormats.find(converter->getAtom());
-		if (index == motifFormats.end()) {
+		if (index2 == motifFormats.end()) {
 			continue;
 		}
 
 		// get format
 		const CMotifClipFormat* motifFormat =
 								reinterpret_cast<const CMotifClipFormat*>(
-									index->second.data());
+									index2->second.data());
 		const Atom target                   = motifFormat->m_type;
 
 		// get the data (finally)
@@ -1283,7 +1284,7 @@ CXWindowsClipboard::CICCCMGetClipboard::readClipboard(Display* display,
 			}
 		}
 		else {
-			CThread::sleep(0.01);
+			ARCH->sleep(0.01);
 		}
 	}
 

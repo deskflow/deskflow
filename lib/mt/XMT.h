@@ -18,16 +18,12 @@
 #include "XBase.h"
 
 //! Generic multithreading exception
-class XMT : public XBase { };
+XBASE_SUBCLASS(XMT, XBase);
 
 //! Thread creation exception
 /*!
 Thrown when a thread cannot be created.
 */
-class XMTThreadUnavailable : public XMT {
-protected:
-	// XBase overrides
-	virtual CString		getWhat() const throw();
-};
+XBASE_SUBCLASS_WHAT(XMTThreadUnavailable, XMT);
 
 #endif

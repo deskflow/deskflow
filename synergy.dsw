@@ -24,6 +24,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "arch"=.\lib\arch\arch.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "base"=.\lib\base\base.dsp - Package Owner=<4>
 
 Package=<5>
@@ -37,6 +49,18 @@ Package=<4>
 ###############################################################################
 
 Project: "client"=.\lib\client\client.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "common"=.\lib\common\common.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -80,6 +104,12 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name common
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name arch
+    End Project Dependency
     Begin Project Dependency
     Project_Dep_Name base
     End Project Dependency
@@ -189,6 +219,12 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
+    Project_Dep_Name common
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name arch
+    End Project Dependency
+    Begin Project Dependency
     Project_Dep_Name base
     End Project Dependency
     Begin Project Dependency
@@ -221,6 +257,12 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name common
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name arch
+    End Project Dependency
     Begin Project Dependency
     Project_Dep_Name base
     End Project Dependency
