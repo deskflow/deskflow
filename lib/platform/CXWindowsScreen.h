@@ -30,7 +30,7 @@ class CXWindowsScreenSaver;
 //! Implementation of IPlatformScreen for X11
 class CXWindowsScreen : public CPlatformScreen {
 public:
-	CXWindowsScreen(bool isPrimary);
+	CXWindowsScreen(const char* displayName, bool isPrimary);
 	virtual ~CXWindowsScreen();
 
 	//! @name manipulators
@@ -111,7 +111,7 @@ private:
 		KeyCode			m_keycode;
 	};
 
-	Display*			openDisplay() const;
+	Display*			openDisplay(const char* displayName) const;
 	void				saveShape();
 	Window				openWindow() const;
 	void				openIM();

@@ -88,7 +88,10 @@ public:
 		m_restartable(true),
 		m_daemon(true),
 		m_configFile(),
-		m_logFilter(NULL)
+		m_logFilter(NULL),
+		m_display(NULL),
+		m_synergyAddress(NULL),
+		m_config(NULL)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
 
@@ -100,6 +103,7 @@ public:
 	bool				m_daemon;
 	CString		 		m_configFile;
 	const char* 		m_logFilter;
+	const char*			m_display;
 	CString 			m_name;
 	CNetworkAddress*	m_synergyAddress;
 	CConfig*			m_config;
@@ -119,7 +123,7 @@ createScreen()
 #if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(true, NULL, NULL));
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(true));
+	return new CScreen(new CXWindowsScreen(ARG->m_display, true));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(true));
 #endif
@@ -613,19 +617,29 @@ static
 void
 help()
 {
+#if WINAPI_XWINDOWS
+#  define USAGE_DISPLAY_ARG		\
+" [--display <display>]"
+#  define USAGE_DISPLAY_INFO	\
+"      --display <display>  connect to the X server at <display>\n"
+#else
+#  define USAGE_DISPLAY_ARG
+#  define USAGE_DISPLAY_INFO
+#endif
+
 #if SYSAPI_WIN32
 
-#  define PLATFORM_ARGS												\
-" {--daemon|--no-daemon}"
+#  define PLATFORM_ARGS														\
+" [--daemon|--no-daemon]"
 #  define PLATFORM_DESC
-#  define PLATFORM_EXTRA											\
+#  define PLATFORM_EXTRA													\
 "At least one command line argument is required.  If you don't otherwise\n"	\
 "need an argument use `--daemon'.\n"										\
 "\n"
 
 #else
 
-#  define PLATFORM_ARGS												\
+#  define PLATFORM_ARGS														\
 " [--daemon|--no-daemon]"
 #  define PLATFORM_DESC
 #  define PLATFORM_EXTRA
@@ -637,10 +651,11 @@ help()
 " [--address <address>]"
 " [--config <pathname>]"
 " [--debug <level>]"
+USAGE_DISPLAY_ARG
 " [--name <screen-name>]"
-" [--restart|--no-restart]\n"
+" [--restart|--no-restart]"
 PLATFORM_ARGS
-"\n"
+"\n\n"
 "Start the synergy mouse/keyboard sharing server.\n"
 "\n"
 "  -a, --address <address>  listen for clients on the given address.\n"
@@ -648,6 +663,7 @@ PLATFORM_ARGS
 "  -d, --debug <level>      filter out log messages with priorty below level.\n"
 "                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
 "                           DEBUG, DEBUG1, DEBUG2.\n"
+USAGE_DISPLAY_INFO
 "  -f, --no-daemon          run the server in the foreground.\n"
 "*     --daemon             run the server as a daemon.\n"
 "  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
@@ -749,6 +765,13 @@ parse(int argc, const char* const* argv)
 			// save configuration file path
 			ARG->m_configFile = argv[++i];
 		}
+
+#if WINAPI_XWINDOWS
+		else if (isArg(i, argc, argv, "-display", "--display", 1)) {
+			// use alternative display
+			ARG->m_display = argv[++i];
+		}
+#endif
 
 		else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
 			// not a daemon

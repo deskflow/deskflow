@@ -103,7 +103,7 @@ static const KeySym		g_map1008FF[] =
 
 CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 
-CXWindowsScreen::CXWindowsScreen(bool isPrimary) :
+CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary) :
 	m_isPrimary(isPrimary),
 	m_display(NULL),
 	m_root(None),
@@ -132,7 +132,7 @@ CXWindowsScreen::CXWindowsScreen(bool isPrimary) :
 	XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
 
 	try {
-		m_display     = openDisplay();
+		m_display     = openDisplay(displayName);
 		m_root        = DefaultRootWindow(m_display);
 		saveShape();
 		m_window      = openWindow();
@@ -599,12 +599,14 @@ CXWindowsScreen::fakeMouseWheel(SInt32 delta) const
 }
 
 Display*
-CXWindowsScreen::openDisplay() const
+CXWindowsScreen::openDisplay(const char* displayName) const
 {
 	// get the DISPLAY
-	const char* displayName = getenv("DISPLAY");
 	if (displayName == NULL) {
-		displayName = ":0.0";
+		displayName = getenv("DISPLAY");
+		if (displayName == NULL) {
+			displayName = ":0.0";
+		}
 	}
 
 	// open the display

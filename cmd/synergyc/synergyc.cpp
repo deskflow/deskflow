@@ -79,6 +79,7 @@ public:
 		m_restartable(true),
 		m_daemon(true),
 		m_logFilter(NULL),
+		m_display(NULL),
 		m_serverAddress(NULL)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
@@ -90,6 +91,7 @@ public:
 	bool				m_restartable;
 	bool				m_daemon;
 	const char* 		m_logFilter;
+	const char*			m_display;
 	CString 			m_name;
 	CNetworkAddress* 	m_serverAddress;
 };
@@ -110,7 +112,7 @@ createScreen()
 							new CFunctionJob(&handleSystemSuspend),
 							new CFunctionJob(&handleSystemResume)));
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(false));
+	return new CScreen(new CXWindowsScreen(ARG->m_display, false));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(false));
 #endif
@@ -521,19 +523,31 @@ static
 void
 help()
 {
+#if WINAPI_XWINDOWS
+#  define USAGE_DISPLAY_ARG		\
+" [--display <display>]"
+#  define USAGE_DISPLAY_INFO	\
+"      --display <display>  connect to the X server at <display>\n"
+#else
+#  define USAGE_DISPLAY_ARG
+#  define USAGE_DISPLAY_INFO
+#endif
+
 	LOG((CLOG_PRINT
 "Usage: %s"
 " [--daemon|--no-daemon]"
 " [--debug <level>]"
+USAGE_DISPLAY_ARG
 " [--name <screen-name>]"
 " [--restart|--no-restart]"
-" <server-address>\n"
-"\n"
+" <server-address>"
+"\n\n"
 "Start the synergy mouse/keyboard sharing server.\n"
 "\n"
 "  -d, --debug <level>      filter out log messages with priorty below level.\n"
 "                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
 "                           DEBUG, DEBUG1, DEBUG2.\n"
+USAGE_DISPLAY_INFO
 "  -f, --no-daemon          run the client in the foreground.\n"
 "*     --daemon             run the client as a daemon.\n"
 "  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
@@ -618,6 +632,13 @@ parse(int argc, const char* const* argv)
 			// daemonize
 			ARG->m_daemon = true;
 		}
+
+#if WINAPI_XWINDOWS
+		else if (isArg(i, argc, argv, "-display", "--display", 1)) {
+			// use alternative display
+			ARG->m_display = argv[++i];
+		}
+#endif
 
 		else if (isArg(i, argc, argv, "-1", "--no-restart")) {
 			// don't try to restart
