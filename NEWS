@@ -1,6 +1,21 @@
 Synergy News
 ============
 
+* Nov-05-2002 - Synergy 0.9.13 released
+
+  Made following changes:
+  * Fixed solaris compile problems (untested)
+  * Fixed MacOS X compile problems (semi-functional)
+  * Fixed gcc-3.2 compile problems
+  * Fixed some thread startup and shutdown bugs
+  * Server now quits if bind() fails with an error other than in use
+  * Fixed bug in moving mouse on Win98 without multiple monitors
+  * Fixed bug in handling TCP socket errors on read and write
+  * Fixed spurious screen saver activation on X11
+  * Unix platforms can now read Win32 configuration files
+  * Minor error reporting fixes
+
+
 * Sep-14-2002 - Synergy 0.9.12 released
 
   Made following changes:

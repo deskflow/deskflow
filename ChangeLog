@@ -1,3 +1,232 @@
+2002/11/05 19:23:05 crs
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsScreenSaver.h
+
+Fixed bug in detecting screen saver activation.  Was using || instead
+of && in conditional.
+
+----------
+2002/11/03 18:09:28 crs
+acinclude.m4
+configure.in
+lib/io/CUnicode.h
+lib/net/CNetwork.h
+lib/platform/CUnixPlatform.cpp
+
+Merged fixes for building on MacOS X.  It dies on one file with
+an internal compiler error;  building that file without
+optimization works around the compiler bug.  Sadly, synergy can
+only interact with X windows, not native MacOS windows.
+
+----------
+2002/10/30 22:22:16 crs
+acinclude.m4
+
+Escaped quotes to satisfy older autoheader versions.
+
+----------
+2002/10/30 22:16:30 crs
+lib/net/CNetwork.h
+lib/net/CTCPSocket.cpp
+
+Fixed bugs in error handling in CTCPSocket;  previously was not
+handling read errors at all and error handling for writes was
+never being used.  Now the socket disconnects if a read or write
+fails on the socket for any reason except EINTR.  Also added
+<netinet/in.h> to includes in CNetwork.h because it's needed on
+some platforms.
+
+----------
+2002/10/29 22:07:55 crs
+all.dsp
+lib/base/base.dsp
+lib/client/client.dsp
+lib/http/http.dsp
+lib/io/CUnicode.cpp
+lib/io/io.dsp
+lib/mt/mt.dsp
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/net.dsp
+lib/platform/makehook.dsp
+lib/platform/platform.dsp
+lib/platform/synrgyhk.dsp
+lib/server/server.dsp
+lib/synergy/libsynergy.dsp
+
+Ported recent changes to win32 and fixed CRLF problems with project
+files (most had CRCRCRLF).
+
+----------
+2002/10/28 22:49:21 crs
+acinclude.m4
+configure.in
+lib/mt/CThreadRep.cpp
+
+solaris configure and build fixes.  without having solaris i
+can only hope that these changes actually work.
+
+----------
+2002/10/22 22:35:13 crs
+configure.in
+lib/io/CUnicode.cpp
+
+Added workarounds for missing reentrant versions of wide char
+to/from multi-byte conversion functions.
+
+----------
+2002/10/22 21:30:48 crs
+lib/base/CUnicode.cpp
+lib/base/CUnicode.h
+lib/base/Makefile.am
+lib/io/CUnicode.cpp
+lib/io/CUnicode.h
+lib/io/Makefile.am
+lib/platform/Makefile.am
+
+Moved CUnicode to lib/io.  That's a reasonable place for it
+that's after lib/mt.  It needs to be after lib/mt in preparation
+for supporting platforms without the reentrant wide char and
+multi-byte functions.
+
+----------
+2002/10/20 22:39:54 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+
+Fixed conditional to test for multimon to do nasty win32 mouse
+positioning hack.  Was doing hack if *not* a multiple monitor
+system but should've been doing it if is *is* a multimon system.
+
+----------
+2002/10/20 22:36:24 crs
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/CNetworkAddress.cpp
+
+Replaced inet_addr() with inet_aton(), which is a better function
+anyway but isn't implemented in winsock, removed use of INADDR_NONE
+which some platforms don't define except on winsock which does
+define it, and changed SOL_TCP to IPPROTO_TCP which should work on
+more platforms.
+
+----------
+2002/10/17 21:37:41 crs
+lib/platform/CXWindowsScreen.cpp
+
+Fixed CXWindowsScreen to force the event loop to wake up when
+exitMainLoop() is called.
+
+----------
+2002/10/17 21:37:37 crs
+lib/mt/CThreadRep.cpp
+
+Fixed CThreadRep to not raise a signal on the thread if it's
+already dead.  Otherwise the signal could propagate to the
+parent thread (at least on linux threads) and cause havoc.
+
+----------
+2002/10/17 21:37:31 crs
+lib/server/CServer.cpp
+lib/server/CServer.h
+
+Changed server to fail with an error if in can't bind() the listen
+socket for any reason other than it's in use.
+
+----------
+2002/10/17 20:56:28 crs
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/CNetworkAddress.cpp
+
+Changed non-reentrant network functions to be reentrant and
+thread safe.
+
+----------
+2002/10/16 22:01:50 crs
+acinclude.m4
+configure.in
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/CTCPSocket.cpp
+lib/platform/CXWindowsScreen.cpp
+
+Added support for using select() instead of poll().
+
+----------
+2002/10/15 22:17:41 crs
+lib/server/CConfig.cpp
+
+CConfig now accepts and discards \r at the end of a line.  This
+allows the unix server to read configuration files created on
+microsoft windows platforms.
+
+----------
+2002/10/15 22:08:10 crs
+cmd/synergys/synergys.cpp
+lib/server/CConfig.cpp
+
+Fixed use of %s instead of %{1} in format() call.
+
+----------
+2002/10/15 22:01:41 crs
+lib/client/CClient.cpp
+lib/mt/CThreadRep.cpp
+lib/mt/Makefile.am
+lib/mt/XMT.cpp
+lib/mt/XMT.h
+lib/mt/XThread.h
+lib/server/CServer.cpp
+
+Renamed XThreadUnavailable to XMTThreadUnavailable and derived it
+from XBase so it can be caught normally.  Changed client and server
+to handle unavailable threads (in main loop, anyway).
+
+----------
+2002/10/15 21:35:12 crs
+lib/mt/CThreadRep.cpp
+
+Workaround for pthread bug on RedHat 7.2 on multiprocessor
+systems.
+
+----------
+2002/10/15 21:29:44 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/base/CLog.h
+lib/client/CClient.cpp
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CSecondaryScreen.cpp
+lib/client/CServerProxy.cpp
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/http/CHTTPProtocol.cpp
+lib/mt/CMutex.cpp
+lib/mt/CThread.cpp
+lib/mt/CThreadRep.cpp
+lib/mt/CTimerThread.cpp
+lib/net/CNetwork.cpp
+lib/platform/CMSWindowsClipboard.cpp
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CWin32Platform.cpp
+lib/platform/CXWindowsClipboard.cpp
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsUtil.cpp
+lib/server/CClientProxy1_0.cpp
+lib/server/CHTTPServer.cpp
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryScreen.cpp
+lib/server/CServer.cpp
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/synergy/CProtocolUtil.cpp
+
+Changed log() and logc() macros to LOG() and LOGC(), respectively.
+This avoids a conflict with the standard math library log()
+function.
+
+----------
 2002/09/14 21:31:35 crs
 lib/base/XBase.cpp
 lib/base/XBase.h
