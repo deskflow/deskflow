@@ -252,7 +252,7 @@ CLog::vsprint(int pad, char* buffer, int len, const char* fmt, va_list args)
 	int n;
 	if (len >= pad) {
 		n = vsnprintf(buffer + pad, len - pad, fmt, args);
-		if (n != -1 && n <= len - pad + g_newlineLength)
+		if (n >= 0 && n <= len - pad + g_newlineLength)
 			return buffer;
 	}
 
@@ -263,7 +263,7 @@ CLog::vsprint(int pad, char* buffer, int len, const char* fmt, va_list args)
 		len *= 2;
 		buffer = new char[len + pad];
 		n = vsnprintf(buffer + pad, len - pad, fmt, args);
-	} while (n == -1 || n > len - pad + g_newlineLength);
+	} while (n < 0 || n > len - pad + g_newlineLength);
 
 	return buffer;
 }
