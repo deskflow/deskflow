@@ -5,7 +5,6 @@
 #include "CClipboard.h"
 #include "IMSWindowsScreenEventHandler.h"
 #include "IScreenReceiver.h"
-#include "XSynergy.h"
 #include "CThread.h"
 #include "CLock.h"
 #include "TMethodJob.h"
@@ -278,15 +277,10 @@ CMSWindowsScreen::checkClipboards()
 	// least the clipboard itself will work.
 	HWND clipboardOwner = GetClipboardOwner();
 	if (m_clipboardOwner != clipboardOwner) {
-		try {
-			m_clipboardOwner = clipboardOwner;
-			if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
-				m_receiver->onGrabClipboard(kClipboardClipboard);
-				m_receiver->onGrabClipboard(kClipboardSelection);
-			}
-		}
-		catch (XBadClient&) {
-			// ignore
+		m_clipboardOwner = clipboardOwner;
+		if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
+			m_receiver->onGrabClipboard(kClipboardClipboard);
+			m_receiver->onGrabClipboard(kClipboardSelection);
 		}
 	}
 }
@@ -509,16 +503,10 @@ CMSWindowsScreen::onEvent(CEvent* event)
 		// ownership, or now it's owned by nobody, which will happen if
 		// we owned it and switched desktops because we destroy our
 		// window to do that).
-		try {
-			m_clipboardOwner = GetClipboardOwner();
-			if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
-				m_receiver->onGrabClipboard(kClipboardClipboard);
-				m_receiver->onGrabClipboard(kClipboardSelection);
-			}
-		}
-		catch (XBadClient&) {
-			// ignore.  this can happen if we receive this event
-			// before we've fully started up.
+		m_clipboardOwner = GetClipboardOwner();
+		if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
+			m_receiver->onGrabClipboard(kClipboardClipboard);
+			m_receiver->onGrabClipboard(kClipboardSelection);
 		}
 		return true;
 

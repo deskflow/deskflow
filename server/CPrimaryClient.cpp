@@ -1,5 +1,6 @@
 #include "CPrimaryClient.h"
 #include "IServer.h"
+#include "XSynergy.h"
 #include "CPrimaryScreen.h"
 #include "CClipboard.h"
 #include "CLog.h"
@@ -81,13 +82,23 @@ void
 CPrimaryClient::onInfoChanged(const CClientInfo& info)
 {
 	m_info = info;
-	m_server->onInfoChanged(getName(), m_info);
+	try {
+		m_server->onInfoChanged(getName(), m_info);
+	}
+	catch (XBadClient&) {
+		// ignore
+	}
 }
 
 bool
 CPrimaryClient::onGrabClipboard(ClipboardID id)
 {
-	return m_server->onGrabClipboard(getName(), id, m_seqNum);
+	try {
+		return m_server->onGrabClipboard(getName(), id, m_seqNum);
+	}
+	catch (XBadClient&) {
+		return false;
+	}
 }
 
 void
