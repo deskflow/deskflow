@@ -43,6 +43,10 @@
 #	endif
 #endif
 
+#if !HAVE_INET_ATON
+#	include <stdio.h>
+#endif
+
 #if HAVE_ALLOCA_H
 #	define freea(x_)
 #else

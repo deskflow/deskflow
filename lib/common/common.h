@@ -67,12 +67,6 @@
 #define __FP__
 #endif
 
-// Need this on FreeBSD to get nanosleep.  We can't define this on, say,
-// Linux because that unconditionally defines it.
-#if defined(__FreeBSD__)
-#define _POSIX_VERSION 199506L
-#endif
-
 // define NULL
 #ifndef NULL
 #define NULL 0

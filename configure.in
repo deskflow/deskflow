@@ -32,15 +32,15 @@ ARCH_LIBS=""
 ARCH_CFLAGS=""
 AC_CANONICAL_HOST
 case $host in
-	*-*-mingw32* | *-*-windows*)
+*-*-mingw32* | *-*-windows*)
 	acx_host_arch="WIN32"
 	acx_host_winapi="MSWINDOWS"
 	;;
-	*-*-darwin*)
+*-*-darwin*)
 	acx_host_arch="UNIX"
 	acx_host_winapi="CARBON"
 	;;
-	*)
+*)
 	acx_host_arch="UNIX"
 	acx_host_winapi="XWINDOWS"
 	;;
@@ -66,8 +66,15 @@ ac_ext=cpp
 dnl check compiler
 ACX_CHECK_CXX
 
-dnl macros we should do testing with
-CXXFLAGS="$CXXFLAGS -D_BSD_SOURCE -D_XOPEN_SOURCE=500"
+dnl different platforms have somewhat incompatible requirements for
+dnl BSD and Posix macros.
+case $host in
+*-*-openbsd* | *-*-freebsd*)
+	;;
+*)
+	CXXFLAGS="$CXXFLAGS -D_BSD_SOURCE -D_XOPEN_SOURCE=500"
+	;;
+esac
 
 dnl checks for libraries
 if test x"$acx_host_arch" = xUNIX; then
