@@ -100,7 +100,7 @@ class CXWindowsScreen {
 		Window			m_requestor;
 		Atom			m_property;
 		Atom			m_type;
-		int				m_format;
+		int				m_size;
 	};
 	typedef std::list<CClipboardRequest*> CRequestList;
 	typedef std::map<Window, CRequestList*> CRequestMap;
@@ -117,16 +117,15 @@ class CXWindowsScreen {
 	static Bool			findPropertyNotify(Display*,
 								XEvent* xevent, XPointer arg);
 
-	void				sendClipboardData(CRequestList*);
-	void				sendClipboardData(Window requestor, Atom target,
+	bool				sendClipboardData(Window requestor, Atom target,
 								Atom property, Time time);
-	void				sendClipboardTargets(Window requestor,
+	bool				sendClipboardMultiple(Window requestor,
+								Atom property, Time time);
+	bool				sendClipboardTargets(Window requestor,
+								Atom property, Time time);
+	bool				sendClipboardTimestamp(Window requestor,
 								Atom property, Time time);
 	void				sendNotify(Window requestor, Atom target,
-								Atom property, Time time);
-	void				addClipboardRequest(Window requestor, Atom target,
-								Atom property, Time time);
-	bool				addClipboardMultipleRequest(Window requestor,
 								Atom property, Time time);
 
   private:
@@ -145,6 +144,7 @@ class CXWindowsScreen {
 	Atom				m_atomInteger;
 	Atom				m_atomData;
 	Atom				m_atomINCR;
+	Atom				m_atomString;
 	Atom				m_atomText;
 	Atom				m_atomCompoundText;
 

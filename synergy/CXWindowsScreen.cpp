@@ -62,6 +62,7 @@ void					CXWindowsScreen::openDisplay()
 	m_atomInteger      = XInternAtom(m_display, "INTEGER", False);
 	m_atomData         = XInternAtom(m_display, "DESTINATION", False);
 	m_atomINCR         = XInternAtom(m_display, "INCR", False);
+	m_atomString       = XInternAtom(m_display, "STRING", False);
 	m_atomText         = XInternAtom(m_display, "TEXT", False);
 	m_atomCompoundText = XInternAtom(m_display, "COMPOUND_TEXT", False);
 
@@ -75,6 +76,18 @@ void					CXWindowsScreen::closeDisplay()
 
 	// let subclass close down display
 	onCloseDisplay();
+
+	// clear out the clipboard request lists
+	for (CRequestMap::iterator index = m_requests.begin();
+								index != m_requests.end(); ++index) {
+		CRequestList* list = index->second;
+		for (CRequestList::iterator index2 = list->begin();
+								index2 != list->end(); ++index2) {
+			delete *index2;
+		}
+		delete list;
+	}
+	m_requests.clear();
 
 	// close the display
 	XCloseDisplay(m_display);
@@ -166,7 +179,7 @@ void					CXWindowsScreen::doStop()
 	m_stop = true;
 }
 
-void					CXWindowsScreen::lostClipboard(
+bool					CXWindowsScreen::lostClipboard(
 								Atom selection, Time timestamp)
 {
 	if (selection == kClipboardSelection) {
@@ -506,7 +519,7 @@ IClipboard::EFormat		CXWindowsScreen::getFormat(Atom src) const
 Bool					CXWindowsScreen::findSelectionNotify(
 								Display*, XEvent* xevent, XPointer arg)
 {
-	Window requestor = *static_cast<Window*>(arg);
+	Window requestor = *reinterpret_cast<Window*>(arg);
 	return (xevent->type                 == SelectionNotify &&
 			xevent->xselection.requestor == requestor) ? True : False;
 }
@@ -514,7 +527,7 @@ Bool					CXWindowsScreen::findSelectionNotify(
 Bool					CXWindowsScreen::findPropertyNotify(
 								Display*, XEvent* xevent, XPointer arg)
 {
-	CPropertyNotifyInfo* filter = static_cast<CPropertyNotifyInfo*>(arg);
+	CPropertyNotifyInfo* filter = reinterpret_cast<CPropertyNotifyInfo*>(arg);
 	return (xevent->type             == PropertyNotify &&
 			xevent->xproperty.window == filter->m_window &&
 			xevent->xproperty.atom   == filter->m_property &&
@@ -526,102 +539,227 @@ void					CXWindowsScreen::addClipboardRequest(
 								Atom selection, Atom target,
 								Atom property, Time time)
 {
-	// mutex the display
-	CLock lock(&m_mutex);
-
 	// we can only own kClipboardSelection
 	if (selection != kClipboardSelection) {
 		return;
 	}
 
+	// mutex the display
+	CLock lock(&m_mutex);
+	bool success = false;
+
 	// a request for multiple targets is special
 	if (target == m_atomMultiple) {
 		// add a multiple request
 		if (property != None) {
-			if (addClipboardMultipleRequest(requestor, property, time)) {
-				return;
-			}
+			success = sendClipboardMultiple(requestor, property, time);
 		}
-
-		// bad request or couldn't satisfy request
-		sendNotify(requestor, target, None, time);
-		return;
+	}
+	else {
+		// handle remaining request formats
+		success = sendClipboardData(requestor, target, property, time);
 	}
 
-	// handle remaining request formats
-	doAddClipboardRequest(requestor, target, property, time);
+	// send success or failure
+	sendNotify(requestor, target, success ? property : None, time);
 }
 
-void					CXWindowsScreen::doAddClipboardRequest(
-								Window requestor, Atom target,
-								Atom property, Time time)
+void					CXWindowsScreen::processClipboardRequest(
+								Window requestor,
+								Atom property, Time /*time*/)
 {
-	// check the target.  if we can't handle the format then send
-	// a failure notification.
-	IClipboard::EFormat format = getFormat(target);
-	if (format == IClipboard::kNumFormats) {
-		sendNotify(requestor, target, None, time);
+	CLock lock(&m_mutex);
+
+	// find the request list
+	CRequestMap::iterator index = m_requests.find(requestor);
+	if (index == m_requests.end()) {
+		log((CLOG_WARN "received property event on unexpected window"));
 		return;
 	}
+	CRequestList* list = index->second;
 
-	// we could process short requests without adding to the request
-	// queue but we'll keep things simple by doing all requests the
-	// same way.
-	addClipboardRequest(requestor, property, time, target);
+	// find the property in the list
+	CRequestList::iterator index2;
+	for (index2 = list->begin(); index2 != list->end(); ++index2) {
+		if ((*index2)->m_property == property) {
+			break;
+		}
+	}
+	if (index2 == list->end()) {
+		log((CLOG_WARN "received property event on unexpected property"));
+		return;
+	}
+	CClipboardRequest* request = *index2;
+
+	// compute amount of data to send
+	assert(request->m_sent <= request->m_data.size());
+	UInt32 count = request->m_data.size() - request->m_sent;
+	if (count > kMaxRequestSize) {
+		// limit maximum chunk size
+		count = kMaxRequestSize;
+
+		// make it a multiple of the size
+		count &= ~((request->m_size >> 3) - 1);
+	}
+
+	// send more data
+	// FIXME -- handle Alloc errors (by returning false)
+	XChangeProperty(m_display, request->m_requestor, request->m_property,
+								request->m_type, request->m_size,
+								PropModeReplace,
+								reinterpret_cast<const unsigned char*>(
+									request->m_data.data() + request->m_sent),
+								count / (request->m_size >> 3));
+
+	// account for sent data
+	request->m_sent += count;
+
+	// if we sent zero bytes then we're done sending this data.  remove
+	// it from the list and, if the list is empty, the list from the
+	// map.
+	list->erase(index2);
+	delete request;
+	if (list->empty()) {
+		m_requests.erase(index);
+		delete list;
+	}
 }
 
 bool					CXWindowsScreen::sendClipboardData(
 								Window requestor, Atom target,
 								Atom property, Time time)
 {
-	// FIXME -- caller must send notify event
 	if (target == m_atomTargets) {
 		return sendClipboardTargets(requestor, property, time);
 	}
 	else if (target == m_atomTimestamp) {
-		// FIXME -- handle Alloc errors (by returning false)
-		XChangeProperty(m_display, requestor, property,
-								m_atomInteger, sizeof(m_gotClipboard),
-								PropModeReplace,
-								reinterpret_cast<unsigned char*>(&m_gotClipboard),
-								1);
-		return true;
+		return sendClipboardTimestamp(requestor, property, time);
 	}
-	else if (getFormat(target) != IClipboard::kNumFormats) {
-		// convert clipboard to appropriate format
+	else {
+		// compute the type and size for the requested target and
+		// convert the data from the clipboard.
+		Atom type = None;
+		int size = 0;
 		CString data;
+		if (target == m_atomText || target == m_atomString) {
+			if (m_clipboard.has(IClipboard::kText)) {
+				type = m_atomString;
+				size = 8;
+				data = m_clipboard.get(IClipboard::kText);
+			}
+		}
+
+		// fail if we don't recognize or can't handle the target
+		if (type == None || size == 0) {
+			return false;
+		}
 
 		if (data.size() > kMaxRequestSize) {
 			// FIXME -- handle Alloc errors (by returning false)
+			// set property to INCR
 			const UInt32 zero = 0;
 			XChangeProperty(m_display, requestor, property,
 								m_atomINCR, sizeof(zero),
 								PropModeReplace,
-								reinterpret_cast<unsigned char*>(&zero),
+								reinterpret_cast<const unsigned char*>(&zero),
 								1);
-			// FIXME -- add to request list
+
+			// get the appropriate list, creating it if necessary
+			CRequestList* list = m_requests[requestor];
+			if (list == NULL) {
+				list = new CRequestList;
+				m_requests[requestor] = list;
+			}
+
+			// create request object
+			CClipboardRequest* request = new CClipboardRequest;
+			request->m_data      = data;
+			request->m_sent      = 0;
+			request->m_requestor = requestor;
+			request->m_property  = property;
+			request->m_type      = type;
+			request->m_size      = size;
+
+			// add request to request list
+			list->push_back(request);
 		}
 		else {
 			// FIXME -- handle Alloc errors (by returning false)
 			XChangeProperty(m_display, requestor, property,
-								/* FIXME -- use appropriate type */,
-								/* FIXME -- use appropriate size */,
+								type, size,
 								PropModeReplace,
-								data.data(), data.size());
+								reinterpret_cast<const unsigned char*>(data.data()),
+								data.size() / (size >> 3));
 		}
 		return true;
 	}
 	return false;
 }
 
-void					CXWindowsScreen::sendClipboardData(CRequestList* list)
+bool					CXWindowsScreen::sendClipboardMultiple(
+								Window requestor,
+								Atom property, Time time)
 {
-	// send more data from the request at the head of the queue
+	// get the list of requested formats
+	Atom type;
+	SInt32 size;
+	CString data;
+	getData(requestor, property, &type, &size, &data);
+	if (type != m_atomAtomPair) {
+		// unexpected data type
+		return false;
+	}
+
+	// check each format, replacing ones we can't do with None.  set
+	// the property for each to the requested data (for small requests)
+	// or INCR (for large requests).
+	bool success = false;
+	bool updated = false;
+	UInt32 numRequests = data.size() / (2 * sizeof(Atom));
+	for (UInt32 index = 0; index < numRequests; ++index) {
+		// get request info
+		const Atom* request = reinterpret_cast<const Atom*>(data.data());
+		const Atom target   = request[2 * index + 0];
+		const Atom property = request[2 * index + 1];
+
+		// handle target
+		if (property != None) {
+			if (!sendClipboardData(requestor, target, property, time)) {
+				// couldn't handle target.  change property to None.
+				const Atom none = None;
+				data.replace((2 * index + 1) * sizeof(Atom), sizeof(Atom),
+								reinterpret_cast<const char*>(&none),
+								sizeof(none));
+				updated = true;
+			}
+			else {
+				success = true;
+			}
+		}
+	}
+
+	// update property if we changed it
+	if (updated) {
+		// FIXME -- handle Alloc errors (by returning false)
+		XChangeProperty(m_display, requestor, property,
+								m_atomAtomPair, sizeof(Atom),
+								PropModeReplace,
+								reinterpret_cast<const unsigned char*>(data.data()),
+								data.length());
+	}
+
+	// send notify if any format was successful
+	if (success) {
+		sendNotify(requestor, m_atomMultiple, success ? property : None, time);
+		return true;
+	}
+
+	return false;
 }
 
 bool					CXWindowsScreen::sendClipboardTargets(
 								Window requestor,
-								Atom property, Time time)
+								Atom property, Time /*time*/)
 {
 	// count the number of targets, plus TARGETS and MULTIPLE
 	SInt32 numTargets = 2;
@@ -652,6 +790,19 @@ bool					CXWindowsScreen::sendClipboardTargets(
 	return true;
 }
 
+bool					CXWindowsScreen::sendClipboardTimestamp(
+								Window requestor,
+								Atom property, Time /*time*/)
+{
+	// FIXME -- handle Alloc errors (by returning false)
+	XChangeProperty(m_display, requestor, property,
+								m_atomInteger, sizeof(m_gotClipboard),
+								PropModeReplace,
+								reinterpret_cast<unsigned char*>(&m_gotClipboard),
+								1);
+	return true;
+}
+
 void					CXWindowsScreen::sendNotify(
 								Window requestor, Atom target,
 								Atom property, Time time)
@@ -665,61 +816,6 @@ void					CXWindowsScreen::sendNotify(
 	event.xselection.property  = property;
 	event.xselection.time      = time;
 	XSendEvent(m_display, requestor, False, 0, &event);
-}
-
-void					CXWindowsScreen::processClipboardRequest(
-								Window requestor,
-								Atom property, Time time)
-{
-	// FIXME
-}
-
-void					CXWindowsScreen::addClipboardRequest(
-								Window requestor, Atom target,
-								Atom property, Time time);
-{
-	// FIXME -- add to queue.  send first part.
-}
-
-bool					CXWindowsScreen::addClipboardMultipleRequest(
-								Window requestor,
-								Atom property, Time time)
-{
-	// get the list of requested formats
-	Atom type;
-	SInt32 size;
-	CString data;
-	getData(requestor, property, &type, &size, &data);
-	if (type != m_atomAtomPair) {
-		// unexpected data type
-		return false;
-	}
-
-	// check each format, replacing ones we can't do with None.  set
-	// the property for each to the requested data (for small requests)
-	// or INCR (for large requests).
-	bool updated = false;
-	const Atom none = None;
-	const Atom* request = static_cast<const Atom*>(data.data());
-	UInt32 numRequests = data.size() / (2 * sizeof(Atom));
-	for (UInt32 index = 0; index < numRequests; ++index) {
-		// get request info
-		const Atom target   = request[2 * index + 0];
-		const Atom property = request[2 * index + 1];
-
-		// handle target
-		if (property != None &&
-			!sendClipboardData(requestor, target, property, time)) {
-			// couldn't handle target.  change property to None.
-			data.replace((2 * index + 1) * sizeof(Atom), sizeof(Atom),
-								static_cast<const char*>(&none), sizeof(none));
-			updated = true;
-		}
-	}
-
-	// FIXME -- update property if updated is true
-	// FIXME -- send notify.  if no formats were allowed then send failure
-	// but return true.
 }
 
 
