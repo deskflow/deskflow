@@ -260,6 +260,10 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 CString
 CUnicode::UCS2ToUTF8(const CString& src, bool* errors)
 {
+	// default to success
+	resetError(errors);
+
+	// convert
 	UInt32 n = src.size() >> 1;
 	return doUCS2ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
 }
@@ -267,6 +271,10 @@ CUnicode::UCS2ToUTF8(const CString& src, bool* errors)
 CString
 CUnicode::UCS4ToUTF8(const CString& src, bool* errors)
 {
+	// default to success
+	resetError(errors);
+
+	// convert
 	UInt32 n = src.size() >> 2;
 	return doUCS4ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
 }
@@ -274,6 +282,10 @@ CUnicode::UCS4ToUTF8(const CString& src, bool* errors)
 CString
 CUnicode::UTF16ToUTF8(const CString& src, bool* errors)
 {
+	// default to success
+	resetError(errors);
+
+	// convert
 	UInt32 n = src.size() >> 1;
 	return doUTF16ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
 }
@@ -281,6 +293,10 @@ CUnicode::UTF16ToUTF8(const CString& src, bool* errors)
 CString
 CUnicode::UTF32ToUTF8(const CString& src, bool* errors)
 {
+	// default to success
+	resetError(errors);
+
+	// convert
 	UInt32 n = src.size() >> 2;
 	return doUTF32ToUTF8(reinterpret_cast<const UInt8*>(src.data()), n, errors);
 }
@@ -334,13 +350,13 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 	for (const char* scan = src.c_str(); n > 0 && *scan != 0; ++dst) {
 		size_t mblen = mbrtowc(dst, scan, n, &state);
 		switch (mblen) {
-		case (size_t)2:
+		case (size_t)-2:
 			// incomplete character.  convert to unknown character.
 			*dst = (wchar_t)0xfffd;
 			n    = 0;
 			break;
 
-		case (size_t)1:
+		case (size_t)-1:
 			// invalid character.  count one unknown character and
 			// start at the next byte.
 			scan += 1;
@@ -404,9 +420,6 @@ CUnicode::wideCharToUTF8(const wchar_t* src, bool* errors)
 CString
 CUnicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 {
-	// default to success
-	resetError(errors);
-
 	// make some space
 	CString dst;
 	dst.reserve(n);
@@ -428,9 +441,6 @@ CUnicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 CString
 CUnicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 {
-	// default to success
-	resetError(errors);
-
 	// make some space
 	CString dst;
 	dst.reserve(n);
@@ -452,9 +462,6 @@ CUnicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 CString
 CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 {
-	// default to success
-	resetError(errors);
-
 	// make some space
 	CString dst;
 	dst.reserve(n);
@@ -502,9 +509,6 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 CString
 CUnicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 {
-	// default to success
-	resetError(errors);
-
 	// make some space
 	CString dst;
 	dst.reserve(n);
