@@ -127,7 +127,6 @@ CClient::open()
 	}
 	catch (XScreenOpenFailure&) {
 		// can't open screen yet.  wait a few seconds to retry.
-		CThread::sleep(3.0);
 		log((CLOG_INFO "failed to open screen"));
 		return false;
 	}
@@ -360,7 +359,15 @@ CClient::openSecondaryScreen()
 	m_screen = new CXWindowsSecondaryScreen(this);
 #endif
 	log((CLOG_DEBUG1 "opening secondary screen"));
-	m_screen->open();
+	try {
+		m_screen->open();
+	}
+	catch (...) {
+		log((CLOG_DEBUG1 "destroying secondary screen"));
+		delete m_screen;
+		m_screen = NULL;
+		throw;
+	}
 }
 
 void
@@ -472,7 +479,9 @@ CClient::runServer()
 				log((CLOG_INFO "connected to server"));
 				break;
 			}
-			catch (XSocketConnect&) {
+			catch (XSocketConnect& e) {
+				log((CLOG_DEBUG1 "failed to connect to server: %s", e.getErrstr()));
+
 				// failed to connect.  if not camping then rethrow.
 				if (!m_camp) {
 					throw;

@@ -34,6 +34,7 @@ CPrimaryClient::CPrimaryClient(IServer* server,
 
 CPrimaryClient::~CPrimaryClient()
 {
+	log((CLOG_DEBUG1 "destroying primary screen"));
 	delete m_screen;
 }
 

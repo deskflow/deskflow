@@ -7,22 +7,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <syslog.h>
-#include <signal.h>
-#if HAVE_SYS_WAIT_H
-#	include <sys/wait.h>
-#endif
-#if !defined(WIFSIGNALED)
-#	define WIFSIGNALED(w)	(((w) & 0xff) != 0x7f && ((w) & 0xff) != 0)
-#endif
-#if !defined(WIFEXITED)
-#	define WIFEXITED(w)		(((w) & 0xff) == 0)
-#endif
-#if !defined(WTERMSIG)
-#	define WTERMSIG(w)		((w) & 0x7f)
-#endif
-#if !defined(WEXITSTATUS)
-#	define WEXITSTATUS(w)	(((w) >> 8) & 0xff)
-#endif
 
 
 //
@@ -104,64 +88,6 @@ CUnixPlatform::installDaemonLogger(const char* name)
 {
 	openlog(name, 0, LOG_DAEMON);
 	CLog::setOutputter(&CUnixPlatform::deamonLogger);
-}
-
-int
-CUnixPlatform::restart(RestartFunc func, int minErrorCode)
-{
-	// rely on child to catch these signals
-	sigset_t sigset;
-	sigemptyset(&sigset);
-	sigaddset(&sigset, SIGINT);
-	sigaddset(&sigset, SIGTERM);
-	pthread_sigmask(SIG_BLOCK, &sigset, NULL);
-
-	for (;;) {
-		switch (fork()) {
-		default:
-			{
-				// parent process.  wait for child to exit.
-				int status;
-				if (wait(&status) == -1) {
-					// wait failed.  this is unexpected so bail.
-					log((CLOG_CRIT "wait() failed"));
-					return minErrorCode;
-				}
-
-				// what happened?  if the child exited normally with a
-				// status less than 16 then the child was deliberately
-				// terminated so we also terminate.
-				if (WIFEXITED(status) && WEXITSTATUS(status) < minErrorCode) {
-					return WEXITSTATUS(status);
-				}
-
-				// did child die horribly?
-				if (WIFSIGNALED(status)) {
-					switch (WTERMSIG(status)) {
-					case SIGHUP:
-					case SIGINT:
-					case SIGQUIT:
-					case SIGTERM:
-						break;
-
-					default:
-						// uh oh.  bail out.
-						return 16;
-					}
-				}
-			}
-			break;
-
-		case -1:
-			// fork() failed.  log the error and proceed as a child
-			log((CLOG_WARN "fork() failed;  cannot automatically restart on error"));
-			// fall through
-
-		case 0:
-			// child process
-			return func();
-		}
-	}
 }
 
 const char*

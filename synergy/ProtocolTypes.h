@@ -5,7 +5,7 @@
 
 // version number
 static const SInt16		kProtocolMajorVersion = 0;
-static const SInt16		kProtocolMinorVersion = 1;
+static const SInt16		kProtocolMinorVersion = 7;
 
 // contact port number
 static const UInt16		kDefaultPort = 24800;
@@ -87,7 +87,7 @@ static const char		kMsgCScreenSaver[] 	= "CSEC%1i";
 // sent by primary in response to a secondary screen's kMsgDInfo.
 // this is sent for every kMsgDInfo, whether or not the primary
 // had sent a kMsgQInfo.
-static const char		kMsgCInfoAck[] = "CIAK";
+static const char		kMsgCInfoAck[]		= "CIAK";
 
 
 //
@@ -165,16 +165,16 @@ static const char		kMsgQInfo[]			= "QINF";
 static const char		kMsgEIncompatible[]	= "EICV%2i%2i";
 
 // name provided when connecting is already in use:  primary -> secondary
-static const char		kMsgEBusy[] = "EBSY";
+static const char		kMsgEBusy[] 		= "EBSY";
 
 // unknown client:  primary -> secondary
 // name provided when connecting is not in primary's screen
 // configuration map.
-static const char		kMsgEUnknown[] = "EUNK";
+static const char		kMsgEUnknown[]		= "EUNK";
 
 // protocol violation:  primary -> secondary
 // primary should disconnect after sending this message.
-static const char		kMsgEBad[] = "EBAD";
+static const char		kMsgEBad[]			= "EBAD";
 
 
 //

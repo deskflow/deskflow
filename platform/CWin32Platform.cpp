@@ -319,15 +319,6 @@ CWin32Platform::installDaemonLogger(const char* name)
 	}
 }
 
-int
-CWin32Platform::restart(RestartFunc func, int /*minErrorCode*/)
-{
-	// FIXME -- start in separate process or thread.  note that this
-	// isn't too critical as win32 doesn't force us to terminate for
-	// any reason so we should never have to restart.
-	return func();
-}
-
 const char*
 CWin32Platform::getBasename(const char* pathname) const
 {

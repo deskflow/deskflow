@@ -36,20 +36,36 @@ public:
 };
 
 class XSocketBind : public XSocketErrno {
+public:
+	XSocketBind() { }
+	XSocketBind(int e) : XSocketErrno(e) { }
+
 protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 };
 
-class XSocketAddressInUse : public XSocketBind { };
+class XSocketAddressInUse : public XSocketBind {
+public:
+	XSocketAddressInUse() { }
+	XSocketAddressInUse(int e) : XSocketBind(e) { }
+};
 
 class XSocketConnect : public XSocketErrno {
+public:
+	XSocketConnect() { }
+	XSocketConnect(int e) : XSocketErrno(e) { }
+
 protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 };
 
 class XSocketCreate : public XSocketErrno {
+public:
+	XSocketCreate() { }
+	XSocketCreate(int e) : XSocketErrno(e) { }
+
 protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();

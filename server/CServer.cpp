@@ -59,13 +59,11 @@ CServer::open()
 	}
 	catch (XScreenOpenFailure&) {
 		// can't open screen yet.  wait a few seconds to retry.
-		CThread::sleep(3.0);
 		log((CLOG_INFO "failed to open screen"));
 		return false;
 	}
 	catch (XUnknownClient& e) {
 		// can't open screen yet.  wait a few seconds to retry.
-		CThread::sleep(3.0);
 		log((CLOG_CRIT "unknown screen name `%s'", e.getName().c_str()));
 		return false;
 	}
@@ -1135,7 +1133,9 @@ CServer::acceptClients(void*)
 				listen->bind(m_config.getSynergyAddress());
 				break;
 			}
-			catch (XSocketAddressInUse&) {
+			catch (XSocketBind& e) {
+				log((CLOG_DEBUG1 "bind failed: %s", e.getErrstr()));
+
 				// give up if we've waited too long
 				if (timer.getTime() >= m_bindTimeout) {
 					log((CLOG_DEBUG1 "waited too long to bind, giving up"));
@@ -1143,7 +1143,6 @@ CServer::acceptClients(void*)
 				}
 
 				// wait a bit before retrying
-				log((CLOG_DEBUG1 "bind failed;  waiting to retry"));
 				CThread::sleep(5.0);
 			}
 		}
@@ -1419,7 +1418,9 @@ CServer::acceptHTTPClients(void*)
 				listen->bind(m_config.getHTTPAddress());
 				break;
 			}
-			catch (XSocketAddressInUse&) {
+			catch (XSocketBind& e) {
+				log((CLOG_DEBUG1 "bind HTTP failed: %s", e.getErrstr()));
+
 				// give up if we've waited too long
 				if (timer.getTime() >= m_bindTimeout) {
 					log((CLOG_DEBUG1 "waited too long to bind HTTP, giving up"));
@@ -1427,7 +1428,6 @@ CServer::acceptHTTPClients(void*)
 				}
 
 				// wait a bit before retrying
-				log((CLOG_DEBUG1 "bind HTTP failed;  waiting to retry"));
 				CThread::sleep(5.0);
 			}
 		}

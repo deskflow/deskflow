@@ -77,114 +77,106 @@ static
 int
 realMain(CMutex* mutex)
 {
-	// s_serverLock should have mutex locked on entry
+	// caller should have mutex locked on entry
 
-	try {
-		// initialize threading library
-		CThread::init();
-
-		// make logging thread safe
-		CMutex logMutex;
-		s_logMutex = &logMutex;
-		CLog::setLock(&logLock);
-
-		bool locked = true;
+	int result = kExitSuccess;
+	do {
 		try {
-			// if configuration has no screens then add this system
-			// as the default
-			if (s_config.begin() == s_config.end()) {
-				s_config.addScreen(s_name);
-			}
+			// initialize threading library
+			CThread::init();
 
-			// set the contact address, if provided, in the config.
-			// otherwise, if the config doesn't have an address, use
-			// the default.
-			if (s_synergyAddress.isValid()) {
-				s_config.setSynergyAddress(s_synergyAddress);
-			}
-			else if (!s_config.getSynergyAddress().isValid()) {
-				s_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
-			}
+			// make logging thread safe
+			CMutex logMutex;
+			s_logMutex = &logMutex;
+			CLog::setLock(&logLock);
 
-			// set HTTP address is provided
-			if (s_httpAddress.isValid()) {
-				s_config.setHTTPAddress(s_httpAddress);
-			}
+			bool opened = false;
+			bool locked = true;
+			try {
+				// if configuration has no screens then add this system
+				// as the default
+				if (s_config.begin() == s_config.end()) {
+					s_config.addScreen(s_name);
+				}
 
-			// create server
-			s_server = new CServer(s_name);
-			s_server->setConfig(s_config);
-			if (!s_server->open()) {
+				// set the contact address, if provided, in the config.
+				// otherwise, if the config doesn't have an address, use
+				// the default.
+				if (s_synergyAddress.isValid()) {
+					s_config.setSynergyAddress(s_synergyAddress);
+				}
+				else if (!s_config.getSynergyAddress().isValid()) {
+					s_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
+				}
+
+				// set HTTP address if provided
+				if (s_httpAddress.isValid()) {
+					s_config.setHTTPAddress(s_httpAddress);
+				}
+
+				// create server
+				s_server = new CServer(s_name);
+				s_server->setConfig(s_config);
+				if (s_server->open()) {
+					opened = true;
+
+					// run server (unlocked)
+					if (mutex != NULL) {
+						mutex->unlock();
+					}
+					locked = false;
+					s_server->run();
+					locked = true;
+					if (mutex != NULL) {
+						mutex->lock();
+					}
+
+					// clean up
+					s_server->close();
+				}
+				else {
+					// wait a few seconds before retrying
+					if (s_restartable) {
+						CThread::sleep(3.0);
+					}
+					else {
+						result = kExitFailed;
+					}
+				}
+
+				// clean up
 				delete s_server;
 				s_server = NULL;
-				return 16;
+				CLog::setLock(NULL);
+				s_logMutex = NULL;
 			}
-
-			// run server (unlocked)
-			if (mutex != NULL) {
-				mutex->unlock();
+			catch (...) {
+				// clean up
+				if (!locked && mutex != NULL) {
+					mutex->lock();
+				}
+				if (s_server != NULL) {
+					if (opened) {
+						s_server->close();
+					}
+					delete s_server;
+					s_server = NULL;
+				}
+				CLog::setLock(NULL);
+				s_logMutex = NULL;
+				throw;
 			}
-			locked = false;
-			s_server->run();
-			locked = true;
-			if (mutex != NULL) {
-				mutex->lock();
-			}
-
-			// clean up
-			s_server->close();
-			delete s_server;
-			s_server = NULL;
-			CLog::setLock(NULL);
-			s_logMutex = NULL;
 		}
-		catch (...) {
-			// clean up
-			if (!locked && mutex != NULL) {
-				mutex->lock();
-			}
-			if (s_server != NULL) {
-				s_server->close();
-				delete s_server;
-				s_server = NULL;
-			}
-			CLog::setLock(NULL);
-			s_logMutex = NULL;
-			throw;
+		catch (XBase& e) {
+			log((CLOG_CRIT "failed: %s", e.what()));
 		}
-	}
-	catch (XBase& e) {
-		log((CLOG_CRIT "failed: %s", e.what()));
-		return 16;
-	}
-	catch (XThread&) {
-		// terminated
-		return 1;
-	}
+		catch (XThread&) {
+			// terminated
+			return kExitTerminated;
+		}
+	} while (s_restartable);
 
-	return 0;
-}
-
-static
-int
-restartMain()
-{
-	return realMain(NULL);
-}
-
-// invoke realMain and wait for it.  if s_restartable then keep
-// restarting realMain until it returns a terminate code.
-static
-int
-restartableMain()
-{
-	if (s_restartable) {
-		CPlatform platform;
-		return platform.restart(restartMain, 16);
-	}
-	else {
-		return realMain(NULL);
-	}
+	return result;
 }
 
 
@@ -308,7 +300,7 @@ isArg(int argi, int argc, const char** argv,
 		if (argi + minRequiredParameters >= argc) {
 			log((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
 								pname, argv[argi], pname));
-			bye(2);
+			bye(kExitArgs);
 		}
 		return true;
 	}
@@ -347,7 +339,7 @@ parse(int argc, const char** argv)
 			catch (XSocketAddress&) {
 				log((CLOG_PRINT "%s: invalid address for `%s'" BYE,
 								pname, argv[i], pname));
-				bye(2);
+				bye(kExitArgs);
 			}
 			++i;
 		}
@@ -360,7 +352,7 @@ parse(int argc, const char** argv)
 			catch (XSocketAddress&) {
 				log((CLOG_PRINT "%s: invalid address for `%s'" BYE,
 								pname, argv[i], pname));
-				bye(2);
+				bye(kExitArgs);
 			}
 			++i;
 		}
@@ -397,12 +389,12 @@ parse(int argc, const char** argv)
 
 		else if (isArg(i, argc, argv, "-h", "--help")) {
 			help();
-			bye(0);
+			bye(kExitSuccess);
 		}
 
 		else if (isArg(i, argc, argv, NULL, "--version")) {
 			version();
-			bye(0);
+			bye(kExitSuccess);
 		}
 
 #if WINDOWS_LIKE
@@ -412,7 +404,7 @@ parse(int argc, const char** argv)
 				log((CLOG_PRINT "%s: `--install' and `--uninstall'"
 								" are mutually exclusive" BYE,
 								pname, argv[i], pname));
-				bye(2);
+				bye(kExitArgs);
 			}
 		}
 #endif
@@ -424,7 +416,7 @@ parse(int argc, const char** argv)
 				log((CLOG_PRINT "%s: `--install' and `--uninstall'"
 								" are mutually exclusive" BYE,
 								pname, argv[i], pname));
-				bye(2);
+				bye(kExitArgs);
 			}
 		}
 #endif
@@ -438,7 +430,7 @@ parse(int argc, const char** argv)
 		else if (argv[i][0] == '-') {
 			log((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 								pname, argv[i], pname));
-			bye(2);
+			bye(kExitArgs);
 		}
 
 		else {
@@ -451,7 +443,7 @@ parse(int argc, const char** argv)
 	if (i != argc) {
 		log((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 								pname, argv[i], pname));
-		bye(2);
+		bye(kExitArgs);
 	}
 
 	// increase default filter level for daemon.  the user must
@@ -474,7 +466,7 @@ parse(int argc, const char** argv)
 	if (!CLog::setFilter(s_logFilter)) {
 		log((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
 								pname, s_logFilter, pname));
-		bye(2);
+		bye(kExitArgs);
 	}
 }
 
@@ -499,7 +491,7 @@ loadConfig(const char* pathname, bool require)
 		if (require) {
 			log((CLOG_PRINT "%s: cannot read configuration '%s': %s",
 								pname, pathname, e.what()));
-			bye(3);
+			bye(kExitConfig);
 		}
 		else {
 			log((CLOG_DEBUG "cannot read configuration \"%s\": %s",
@@ -595,7 +587,7 @@ daemonStartup(IPlatform* iplatform, int argc, const char** argv)
 	parse(argc, argv);
 	if (s_install || s_uninstall) {
 		// not allowed to install/uninstall from service
-		throw CWin32Platform::CDaemonFailed(1);
+		throw CWin32Platform::CDaemonFailed(kExitArgs);
 	}
 
 	// load configuration
@@ -609,7 +601,7 @@ static
 int
 daemonStartup95(IPlatform*, int, const char**)
 {
-	return restartableMain();
+	return realMain(NULL);
 }
 
 int WINAPI
@@ -639,7 +631,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		int result = platform.daemonize(DAEMON_NAME, &daemonStartup);
 		if (result == -1) {
 			log((CLOG_CRIT "failed to start as a service" BYE, pname));
-			return 16;
+			return kExitFailed;
 		}
 		return result;
 	}
@@ -654,7 +646,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		if (GetModuleFileName(NULL, path,
 								sizeof(path) / sizeof(path[0])) == 0) {
 			log((CLOG_CRIT "cannot determine absolute path to program"));
-			return 16;
+			return kExitFailed;
 		}
 
 		// construct the command line to start the service with
@@ -681,24 +673,24 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 					"Shares this system's mouse and keyboard with others.",
 					path, commandLine.c_str())) {
 			log((CLOG_CRIT "failed to install service"));
-			return 16;
+			return kExitFailed;
 		}
 		log((CLOG_PRINT "installed successfully"));
-		return 0;
+		return kExitSuccess;
 	}
 	else if (s_uninstall) {
 		switch (platform.uninstallDaemon(DAEMON_NAME)) {
 		case IPlatform::kSuccess:
 			log((CLOG_PRINT "uninstalled successfully"));
-			return 0;
+			return kExitSuccess;
 
 		case IPlatform::kFailed:
 			log((CLOG_CRIT "failed to uninstall service"));
-			return 16;
+			return kExitFailed;
 
 		case IPlatform::kAlready:
 			log((CLOG_CRIT "service isn't installed"));
-			return 16;
+			return kExitFailed;
 		}
 	}
 
@@ -716,18 +708,18 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			result = platform.daemonize(DAEMON_NAME, &daemonStartup95);
 			if (result == -1) {
 				log((CLOG_CRIT "failed to start as a service" BYE, pname));
-				return 16;
+				return kExitFailed;
 			}
 		}
 		else {
 			// cannot start a service from the command line so just
 			// run normally (except with log messages redirected).
-			result = restartableMain();
+			result = realMain(NULL);
 		}
 	}
 	else {
 		// run
-		result = restartableMain();
+		result = realMain(NULL);
 	}
 
 	CNetwork::cleanup();
@@ -741,7 +733,7 @@ static
 int
 daemonStartup(IPlatform*, int, const char**)
 {
-	return restartableMain();
+	return realMain(NULL);
 }
 
 int
@@ -767,11 +759,11 @@ main(int argc, char** argv)
 		result = platform.daemonize(DAEMON_NAME, &daemonStartup);
 		if (result == -1) {
 			log((CLOG_CRIT "failed to daemonize"));
-			return 16;
+			return kExitFailed;
 		}
 	}
 	else {
-		result = restartableMain();
+		result = realMain(NULL);
 	}
 
 	CNetwork::cleanup();

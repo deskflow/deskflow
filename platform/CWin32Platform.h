@@ -49,7 +49,6 @@ public:
 	virtual EResult		uninstallDaemon(const char* name);
 	virtual int			daemonize(const char* name, DaemonFunc);
 	virtual void		installDaemonLogger(const char* name);
-	virtual int			restart(RestartFunc, int minErrorCode);
 	virtual const char*	getBasename(const char* pathname) const;
 	virtual CString		getUserDirectory() const;
 	virtual CString		getSystemDirectory() const;

@@ -115,8 +115,9 @@ CTCPSocket::connect(const CNetworkAddress& addr)
 								addr.getAddressLength()) == CNetwork::Error) {
 		// check for failure
 		if (CNetwork::getsockerror() != CNetwork::kECONNECTING) {
+			XSocketConnect e;
 			CNetwork::setblocking(m_fd, true);
-			throw XSocketConnect();
+			throw e;
 		}
 
 		// wait for connection or failure
@@ -130,8 +131,12 @@ CTCPSocket::connect(const CNetworkAddress& addr)
 				if ((pfds[0].revents & (CNetwork::kPOLLERR |
 										CNetwork::kPOLLNVAL)) != 0) {
 					// connection failed
+					int error = 0;
+					CNetwork::AddressLength size = sizeof(error);
 					CNetwork::setblocking(m_fd, true);
-					throw XSocketConnect();
+					CNetwork::getsockopt(m_fd, SOL_SOCKET, SO_ERROR,
+								reinterpret_cast<char*>(&error), &size);
+					throw XSocketConnect(error);
 				}
 				if ((pfds[0].revents & CNetwork::kPOLLOUT) != 0) {
 					int error;
@@ -142,7 +147,7 @@ CTCPSocket::connect(const CNetworkAddress& addr)
 								error != 0) {
 						// connection failed
 						CNetwork::setblocking(m_fd, true);
-						throw XSocketConnect();
+						throw XSocketConnect(error);
 					}
 
 					// connected!

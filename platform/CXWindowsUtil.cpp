@@ -206,7 +206,9 @@ CXWindowsUtil::CErrorLock::CErrorLock(Display* display,
 CXWindowsUtil::CErrorLock::~CErrorLock()
 {
 	// make sure everything finishes before uninstalling handler
-	XSync(m_display, False);
+	if (m_display != NULL) {
+		XSync(m_display, False);
+	}
 
 	// restore old handler
 	XSetErrorHandler(m_oldXHandler);
@@ -217,7 +219,9 @@ void
 CXWindowsUtil::CErrorLock::install(ErrorHandler handler, void* data)
 {
 	// make sure everything finishes before installing handler
-	XSync(m_display, False);
+	if (m_display != NULL) {
+		XSync(m_display, False);
+	}
 
 	// install handler
 	m_handler     = handler;

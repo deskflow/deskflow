@@ -93,6 +93,11 @@ CXWindowsScreen::CXWindowsScreen(IScreenReceiver* receiver,
 	assert(m_eventHandler != NULL);
 
 	s_screen = this;
+
+	// no clipboards to start with
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		m_clipboard[id] = NULL;
+	}
 }
 
 CXWindowsScreen::~CXWindowsScreen()
@@ -670,7 +675,10 @@ CDisplayLock::CDisplayLock(const CXWindowsScreen* screen) :
 	m_mutex(&screen->m_mutex),
 	m_display(screen->m_display)
 {
-	assert(m_display != NULL);
+	// note -- it's permitted for m_display to be NULL.  that might
+	// happen if we couldn't connect to the display or if the
+	// display unexpectedly disconnected.  the caller is expected
+	// to check for NULL as necessary.
 
 	m_mutex->lock();
 }

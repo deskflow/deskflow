@@ -7,7 +7,6 @@
 class IPlatform : public IInterface {
 public:
 	typedef int			(*DaemonFunc)(IPlatform*, int argc, const char** argv);
-	typedef int			(*RestartFunc)();
 
 	enum EResult {
 		kSuccess,
@@ -52,11 +51,6 @@ public:
 	// messages should no longer go to the console.  name is used
 	// in the log to identify this process.
 	virtual void		installDaemonLogger(const char* name) = 0;
-
-	// continually restart the given function in a separate process
-	// or thread until it exits normally with a code less than the
-	// given code then return the code.
-	virtual int			restart(RestartFunc, int minErrorCode) = 0;
 
 	// accessors
 
