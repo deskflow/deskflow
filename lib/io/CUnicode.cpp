@@ -71,6 +71,61 @@ setError(bool* errors)
 }
 
 //
+// multibyte conversion stuff when reentrant versions not available
+//
+
+#if !HAVE_MBSTATE_T
+struct mbstate_t { int m_dummy; };
+#undef HAVE_MBSINIT
+#undef HAVE_MBRTOWC
+#undef HAVE_WCRTOMB
+#endif
+
+#if !HAVE_MBSINIT
+static
+int
+mbsinit(const mbstate_t*)
+{
+	return 1;
+}
+#endif
+
+#if !HAVE_MBRTOWC
+#include "CLock.h"
+#include "CMutex.h"
+
+static CMutex s_mbrtowcMutex;
+
+static
+size_t
+mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t*)
+{
+	CLock lock(&s_mbrtowcMutex);
+	int result = mbtowc(pwc, s, n);
+	if (result < 0)
+		return (size_t)-1;
+	else
+		return result;
+}
+#endif
+
+#if !HAVE_WCRTOMB
+#include "CLock.h"
+#include "CMutex.h"
+
+static CMutex s_wcrtombMutex;
+
+static
+size_t
+wcrtomb(char* s, wchar_t wc, mbstate_t*)
+{
+	CLock lock(&s_wcrtombMutex);
+	return (size_t)wctomb(s, wc);
+}
+#endif
+
+
+//
 // CUnicode
 //
 

@@ -52,6 +52,7 @@ AC_TYPE_SIZE_T
 
 dnl checks for structures
 AC_STRUCT_TM
+AC_CHECK_TYPES(mbstate_t,,,[#include <wchar.h>])
 
 dnl checks for compiler characteristics
 AC_CHECK_SIZEOF(char, 1)
@@ -72,6 +73,7 @@ AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(gmtime_r)
 AC_CHECK_FUNCS(getpwuid_r)
 AC_CHECK_FUNCS(vsnprintf)
+AC_CHECK_FUNCS(wcrtomb mbrtowc mbsinit)
 AC_FUNC_SELECT_ARGTYPES
 ACX_CHECK_POLL
 dnl use AC_REPLACE_FUNCS() for stuff in string.h
