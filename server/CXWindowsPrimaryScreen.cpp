@@ -57,8 +57,12 @@ void					CXWindowsPrimaryScreen::run()
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
 				m_server->onKeyDown(key, mask);
-				if (key == XK_Caps_Lock && m_capsLockHalfDuplex)
+				if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
 					m_server->onKeyUp(key, mask | KeyModifierCapsLock);
+				}
+				else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
+					m_server->onKeyUp(key, mask | KeyModifierNumLock);
+				}
 			}
 			break;
 		}
@@ -85,8 +89,12 @@ void					CXWindowsPrimaryScreen::run()
 								(XPointer)&filter) != True) {
 					// no press event follows so it's a plain release
 					log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-					if (key == XK_Caps_Lock && m_capsLockHalfDuplex)
+					if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
 						m_server->onKeyDown(key, mask);
+					}
+					else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
+						m_server->onKeyDown(key, mask);
+					}
 					m_server->onKeyUp(key, mask);
 				}
 				else {
@@ -242,7 +250,9 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 
 	// check for peculiarities
 	// FIXME -- may have to get these from some database
+	m_numLockHalfDuplex  = false;
 	m_capsLockHalfDuplex = false;
+//	m_numLockHalfDuplex  = true;
 //	m_capsLockHalfDuplex = true;
 
 	// update key state

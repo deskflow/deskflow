@@ -57,8 +57,9 @@ private:
 	bool				m_active;
 	Window				m_window;
 
-	// note if caps lock key toggles on up/down (false) or on
+	// note toggle keys that toggle on up/down (false) or on
 	// transition (true)
+	bool				m_numLockHalfDuplex;
 	bool				m_capsLockHalfDuplex;
 
 	// masks that indicate which modifier bits are for toggle keys
