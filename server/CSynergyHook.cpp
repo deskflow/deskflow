@@ -169,8 +169,6 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 				{
 					const MOUSEHOOKSTRUCT* info =
 								(const MOUSEHOOKSTRUCT*)lParam;
-					SInt32 x = (SInt32)info->pt.x;
-					SInt32 y = (SInt32)info->pt.y;
 
 					// we want the cursor to be hidden at all times so we
 					// hide the cursor on whatever window has it.  but then
@@ -186,7 +184,16 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 					}
 
 					// relay the motion
-					PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
+					SInt32 x = (SInt32)info->pt.x;
+					SInt32 y = (SInt32)info->pt.y;
+					if (info->dwExtraInfo == 0x12345678) {
+						PostThreadMessage(g_threadID,
+								SYNERGY_MSG_POST_WARP, x, y);
+					}
+					else {
+						PostThreadMessage(g_threadID,
+								SYNERGY_MSG_MOUSE_MOVE, x, y);
+					}
 				}
 				return 1;
 			}

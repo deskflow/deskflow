@@ -342,8 +342,8 @@ CMSWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 	SInt32 x0, y0, w, h;
 	getScreenShape(x0, y0, w, h);
 	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(SInt32)(65535.99 * x / (w - 1)) + x0,
-								(SInt32)(65535.99 * y / (h - 1)) + y0,
+								(DWORD)((65535.99 * (x - x0)) / (w - 1)),
+								(DWORD)((65535.99 * (y - y0)) / (h - 1)),
 								0, 0);
 }
 
@@ -560,8 +560,8 @@ CMSWindowsSecondaryScreen::onEnter(SInt32 x, SInt32 y)
 	SInt32 x0, y0, w, h;
 	getScreenShape(x0, y0, w, h);
 	mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65535.99 * x) / (w - 1)) + x0,
-								(DWORD)((65535.99 * y) / (h - 1)) + y0,
+								(DWORD)((65535.99 * (x - x0)) / (w - 1)),
+								(DWORD)((65535.99 * (y - y0)) / (h - 1)),
 								0, 0);
 
 	// show cursor

@@ -151,39 +151,70 @@ CXWindowsPrimaryScreen::run()
 		case MotionNotify:
 			{
 				log((CLOG_DEBUG2 "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
-				SInt32 x, y;
+				SInt32 x = xevent.xmotion.x_root;
+				SInt32 y = xevent.xmotion.y_root;
 				if (!m_active) {
-					x = xevent.xmotion.x_root;
-					y = xevent.xmotion.y_root;
 					m_server->onMouseMovePrimary(x, y);
 				}
 				else {
-					// FIXME -- slurp up all remaining motion events?
-					// probably not since keystrokes may go to wrong place.
+					// compute motion delta.  this is relative to the
+					// last known mouse position.
+					x  -= m_x;
+					y  -= m_y;
 
-// XXX -- why call XQueryPointer?
-					// get mouse deltas
-					{
+					// save position to compute delta of next motion
+					m_x = xevent.xmotion.x_root;
+					m_y = xevent.xmotion.y_root;
+
+					// if event was sent then ignore it and discard
+					// the event from the mouse warp.  this is how we
+					// warp the mouse back to the center of the screen
+					// without that causing a corresponding motion on
+					// the secondary screen.
+					if (xevent.xmotion.send_event) {
+						// ignore event
+						x = 0;
+						y = 0;
+
+						// discard events until we find the matching
+						// sent event.  see below for where the events
+						// are sent.  we discard the matching sent
+						// event and can be sure we've skipped the
+						// warp event.
 						CDisplayLock display(this);
-						Window root, window;
-						int xRoot, yRoot, xWindow, yWindow;
-						unsigned int mask;
-						if (!XQueryPointer(display, m_window, &root, &window,
-								&xRoot, &yRoot, &xWindow, &yWindow, &mask)) {
-							break;
-						}
-
-						// compute position of center of window
-						SInt32 x0, y0, w, h;
-						getScreenShape(x0, y0, w, h);
-						x = xRoot - (w >> 1);
-						y = yRoot - (h >> 1);
-
-						// warp mouse back to center
-						warpCursorNoLock(display, w >> 1, h >> 1);
+						do {
+							XMaskEvent(display, PointerMotionMask, &xevent);
+						} while (!xevent.xmotion.send_event);
 					}
 
-					m_server->onMouseMoveSecondary(x, y);
+					// warp mouse back to center
+					if (x != 0 || y != 0) {
+						CDisplayLock display(this);
+						// send an event that we can recognize before
+						// the mouse warp.
+						XEvent eventBefore    = xevent;
+						xevent.xmotion.window = m_window;
+						xevent.xmotion.time   = CurrentTime;
+						xevent.xmotion.x      = m_xCenter;
+						xevent.xmotion.y      = m_yCenter;
+						xevent.xmotion.x_root = m_xCenter;
+						xevent.xmotion.y_root = m_yCenter;
+						XEvent eventAfter     = eventBefore;
+						XSendEvent(display, m_window, False, 0, &xevent);
+
+						// warp mouse back to center
+						XWarpPointer(display, None, getRoot(),
+							0, 0, 0, 0, m_xCenter, m_yCenter);
+
+						// send an event that we can recognize after
+						// the mouse warp.
+						XSendEvent(display, m_window, False, 0, &xevent);
+					}
+
+					// send event if mouse moved
+					if (x != 0 || y != 0) {
+						m_server->onMouseMoveSecondary(x, y);
+					}
 				}
 			}
 			break;
@@ -221,7 +252,6 @@ CXWindowsPrimaryScreen::open(CServer* server)
 	SInt32 x, y, w, h;
 	getScreenShape(x, y, w, h);
 
-	int mx, my;
 	{
 		CDisplayLock display(this);
 
@@ -230,17 +260,25 @@ CXWindowsPrimaryScreen::open(CServer* server)
 
 		// get mouse position
 		Window root, window;
-		int xWindow, yWindow;
+		int mx, my, xWindow, yWindow;
 		unsigned int mask;
 		if (!XQueryPointer(display, m_window, &root, &window,
 								&mx, &my, &xWindow, &yWindow, &mask)) {
 			mx = w >> 1;
 			my = h >> 1;
 		}
+
+		// save mouse position
+		m_x = x;
+		m_y = y;
 	}
 
+	// save position of center of screen
+	m_xCenter = x + (w >> 1);
+	m_yCenter = y + (h >> 1);
+
 	// send screen info
-	m_server->setInfo(x, y, w, h, getJumpZoneSize(), mx, my);
+	m_server->setInfo(x, y, w, h, getJumpZoneSize(), m_x, m_y);
 }
 
 void
@@ -341,9 +379,7 @@ CXWindowsPrimaryScreen::leave()
 	log((CLOG_DEBUG1 "grabbed pointer and keyboard"));
 
 	// move the mouse to the center of grab window
-	SInt32 x, y, w, h;
-	getScreenShape(x, y, w, h);
-	warpCursorNoLock(display, w >> 1, h >> 1);
+	warpCursorNoLock(display, m_xCenter, m_yCenter);
 
 	// local client now active
 	m_active = true;
@@ -381,6 +417,10 @@ CXWindowsPrimaryScreen::warpCursorNoLock(Display* display, SInt32 x, SInt32 y)
 								PointerMotionMask, &xevent)) {
 		// do nothing
 	}
+
+	// save position as last position
+	m_x = x;
+	m_y = y;
 }
 
 void

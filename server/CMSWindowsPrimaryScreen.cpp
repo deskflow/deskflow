@@ -110,12 +110,16 @@ CMSWindowsPrimaryScreen::open(CServer* server)
 	m_markReceived = 0;
 	nextMark();
 
+	// save cursor pos
+	POINT pos;
+	GetCursorPos(&pos);
+	m_x = pos.x;
+	m_y = pos.y;
+
 	// send screen info
 	SInt32 x, y, w, h;
 	getScreenShape(x, y, w, h);
-	POINT pos;
-	GetCursorPos(&pos);
-	m_server->setInfo(x, y, w, h, getJumpZoneSize(), pos.x, pos.y);
+	m_server->setInfo(x, y, w, h, getJumpZoneSize(), m_x, m_y);
 
 	// compute center pixel of primary screen
 	m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
@@ -174,7 +178,7 @@ CMSWindowsPrimaryScreen::leave()
 	updateKeys();
 
 	// warp mouse to center of screen
-	warpCursor(m_xCenter, m_yCenter);
+	warpCursorToCenter();
 
 	// ignore this many mouse motion events (not including the already
 	// queued events).  on (at least) the win2k login desktop, one
@@ -182,6 +186,7 @@ CMSWindowsPrimaryScreen::leave()
 	// warpCursor().  i don't know why it does that and other desktops
 	// don't have the same problem.  anyway, simply ignoring that event
 	// works around it.
+// FIXME -- is this true now that we're using mouse_event?
 	m_mouseMoveIgnore = 1;
 
 	// disable ctrl+alt+del, alt+tab, etc
@@ -240,6 +245,24 @@ CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
 	// set the cursor position without generating an event
 	SetCursorPos(x, y);
+
+	// save position as last position
+	m_x = x;
+	m_y = y;
+}
+
+void
+CMSWindowsPrimaryScreen::warpCursorToCenter()
+{
+	// warp to center.  the extra info tells the hook DLL to send
+	// SYNERGY_MSG_POST_WARP instead of SYNERGY_MSG_MOUSE_MOVE.
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
+	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE,
+						(DWORD)((65535.99 * (m_xCenter - x)) / (w - 1)),
+						(DWORD)((65535.99 * (m_yCenter - y)) / (h - 1)),
+						0,
+						0x12345678);
 }
 
 void
@@ -451,16 +474,21 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 				m_server->onMouseMovePrimary(x, y);
 			}
 			else {
-				// get mouse deltas
-				x -= m_xCenter;
-				y -= m_yCenter;
+				// compute motion delta.  this is relative to the
+				// last known mouse position.
+				x  -= m_x;
+				y  -= m_y;
+
+				// save position to compute delta of next motion
+				m_x = static_cast<SInt32>(msg->wParam);
+				m_y = static_cast<SInt32>(msg->lParam);
 
 				// ignore if the mouse didn't move or we're ignoring
 				// motion.
 				if (m_mouseMoveIgnore == 0) {
-					if (x != 0 && y != 0) {
-						// warp mouse back to center
-						warpCursor(m_xCenter, m_yCenter);
+					if (x != 0 || y != 0) {
+						// back to center
+						warpCursorToCenter();
 
 						// send motion
 						m_server->onMouseMoveSecondary(x, y);
@@ -472,6 +500,11 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 				}
 			}
 		}
+		return true;
+
+	case SYNERGY_MSG_POST_WARP:
+		m_x = static_cast<SInt32>(msg->wParam);
+		m_y = static_cast<SInt32>(msg->lParam);
 		return true;
 
 	case WM_TIMER:
@@ -566,7 +599,7 @@ CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
 
 				// warp mouse to center if active
 				if (m_active) {
-					warpCursor(m_xCenter, m_yCenter);
+					warpCursorToCenter();
 				}
 
 				// tell hook about resize if not active

@@ -44,6 +44,10 @@ private:
 	void				onEnter();
 	bool				onLeave();
 
+	// warp mouse to center of primary display (used when computing
+	// motion deltas while mouse is on secondary screen).
+	void				warpCursorToCenter();
+
 	// discard posted messages
 	void				nextMark();
 
@@ -90,6 +94,9 @@ private:
 
 	// map of key state
 	BYTE				m_keys[256];
+
+	// last mouse position
+	SInt32				m_x, m_y;
 
 	// position of center pixel of screen
 	SInt32				m_xCenter, m_yCenter;

@@ -71,6 +71,12 @@ private:
 	unsigned int		m_numLockMask;
 	unsigned int		m_capsLockMask;
 	unsigned int		m_scrollLockMask;
+
+	// last mouse position
+	SInt32				m_x, m_y;
+
+	// position of center pixel of screen
+	SInt32				m_xCenter, m_yCenter;
 };
 
 #endif

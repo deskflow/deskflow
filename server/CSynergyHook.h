@@ -20,7 +20,8 @@
 #define SYNERGY_MSG_KEY				WM_APP + 0x0012	// vk code; key data
 #define SYNERGY_MSG_MOUSE_BUTTON	WM_APP + 0x0013	// button msg; <unused>
 #define SYNERGY_MSG_MOUSE_MOVE		WM_APP + 0x0014	// x; y
-#define SYNERGY_MSG_MOUSE_WHEEL		WM_APP + 0x0015	// delta; <unused>
+#define SYNERGY_MSG_POST_WARP		WM_APP + 0x0015	// x; y
+#define SYNERGY_MSG_MOUSE_WHEEL		WM_APP + 0x0016	// delta; <unused>
 
 extern "C" {
 
