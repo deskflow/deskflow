@@ -1,12 +1,10 @@
 #
-# empty define, used to terminate lists
-#
-NULL = 
-
-#
 # build tools
 #
+AR        = /usr/bin/ar cru
+CD        = cd
 CXX       = /usr/bin/g++
+ECHO      = echo
 LD        = /usr/bin/ld
 MKDIR     = /bin/mkdir
 RM        = /bin/rm -f
@@ -15,12 +13,8 @@ RMR       = /bin/rm -rf
 #
 # compiler options
 #
-CXXFLAGS  = $(LCXXFLAGS) $(GCXXFLAGS) $(CXXOPTIMIZER) $(MKDEPOPT)
-LCXXFLAGS = $(LCXXDEFS) $(LCXXINCS) $(LCXXOPTS)
-GCXXFLAGS = $(GCXXDEFS) $(GCXXINCS) $(GCXXOPTS)
-
-GCXXDEFS  = -D_POSIX_SOURCE
-GCXXINCS  = -I$(DEPTH)/include -I/usr/include -I/usr/X11R6/include
+GCXXDEFS  = -D_POSIX_C_SOURCE=199309
+GCXXINCS  = -I$(DEPTH)/include -I/usr/X11R6/include
 GCXXOPTS  = -Wall -W -fexceptions -fno-rtti
 CXXOPTIMIZER = -g
 #CXXOPTIMIZER = -O2 -DNDEBUG
@@ -28,12 +22,13 @@ CXXOPTIMIZER = -g
 #
 # linker options
 #
-LDFLAGS	  = $(LDOPTS) $(LDLIBS)
-LDOPTS	  = $(LLDOPTS) $(GLDOPTS)
-LDLIBS	  = $(LLDLIBS) $(GLDLIBS)
-
 GLDLIBS	  = -L/usr/X11R6/lib -lX11 -lXext -lXtst
-GLDOPTS	  =
+GLDOPTS	  = -L$(LIBDIR)
+
+#
+# library stuff
+#
+LIBTARGET = $(LIBDIR)/lib$(TARGET).a
 
 #
 # dependency generation stuff
@@ -45,59 +40,27 @@ MKDEPPOST = $(MKDEP) -f $(MKDEPFILE) $*.d; $(RM) $*.d
 MKDEPFILE = Makedepend
 
 #
-# Convenience file list macros:
-#
-SOURCES   = $(CXXFILES)
-OBJECTS   = $(CXXFILES:.cpp=.o)
-
-#
 # stuff to clean
 #
 DIRT      = $(_FORCE) $(LDIRT) $(GDIRT)
 GDIRT     = *.[eoud] a.out core ar.tmp.* $(MKDEPFILE)
 
 #
-# always unsatisfied target
+# Rule macros for nonterminal makefiles that iterate over subdirectories,
+# making the current target.  Set SUBDIRS to the relevant list of kids.
 #
-_FORCE    = $(COMMONPREF)_force
+# Set NOSUBMESG to any value to suppress a warning that subdirectories 
+# are not present.
+#
+SUBDIR_MAKERULE= \
+	if test ! -d $$d; then \
+		if test "$(NOSUBMESG)" = "" ; then \
+			${ECHO} "SKIPPING $$d: No such directory."; \
+		fi \
+	else \
+		${ECHO} "${CD} $$d; $(MAKE) $${RULE:=$@}"; \
+		(${CD} $$d; ${MAKE} $${RULE:=$@}); \
+	fi
 
-#
-#
-# common rules
-#
-#
-
-#
-# default target.  makefiles must define a target named `targets'.
-#
-default: targets
-
-#
-# always unsatisfied target
-#
-$(_FORCE):
-
-#
-# cleaners
-#
-COMMONTARGETS = clean clobber
-$(COMMONPREF)clean: $(_FORCE)
-	$(RM) $(DIRT)
-
-$(COMMONPREF)clobber: clean $(_FORCE)
-	$(RM) $(TARGETS)
-
-#
-# implicit target rules
-#
-.SUFFIXES: .cpp .o
-
-.cpp.o:
-	$(MKDEPPRE)
-	$(CXX) $(CXXFLAGS) -c $<
-	$(MKDEPPOST)
-
-#
-# load dependencies
-#
-sinclude $(MKDEPFILE)
+SUBDIRS_MAKERULE= \
+	@for d in $(SUBDIRS); do $(SUBDIR_MAKERULE); done

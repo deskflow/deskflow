@@ -1,38 +1,63 @@
 DEPTH=.
-include Make-linux
+COMMONPREF = root
+include Makecommon
 
 #
-# target files
+# subdirectories
 #
-TARGETS  = main
+SUBDIRS = 				\
+	base				\
+	mt				\
+	io				\
+	net				\
+	$(NULL)
+#
+# targets
+#
+
+default: $(COMMONPREF)_force
+	$(SUBDIRS_MAKERULE)
+
+all targets: default
+
+clean:
+	$(RMR) $(LIBDIR)
+	$(SUBDIRS_MAKERULE)
+
+clobber:
+	$(RMR) $(LIBDIR)
+	$(SUBDIRS_MAKERULE)
+
+#
+#
+# test
+#
+#
 
 #
 # source files
 #
-CXXFILES = 				\
-	XBase.cpp			\
-	CTrace.cpp			\
-	CEventQueue.cpp			\
-	CSocket.cpp			\
-	CMessageSocket.cpp		\
-	CSocketFactory.cpp		\
-	CServer.cpp			\
-	CClient.cpp			\
-	CScreenProxy.cpp		\
-	CXScreen.cpp			\
-	CUnixXScreen.cpp		\
-	CUnixTCPSocket.cpp		\
-	CUnixEventQueue.cpp		\
-	main.cpp			\
+LCXXINCS =				\
+	-I$(DEPTH)/base 		\
+	-I$(DEPTH)/mt	 		\
+	-I$(DEPTH)/io	 		\
+	-I$(DEPTH)/net	 		\
 	$(NULL)
+CXXFILES = test.cpp
 
 #
 # libraries we depend on
 #
-DEPLIBS  = \
+DEPLIBS =				\
+	$(LIBDIR)/libnet.a		\
+	$(LIBDIR)/libio.a		\
+	$(LIBDIR)/libmt.a		\
+	$(LIBDIR)/libbase.a		\
+	$(NULL)
+LLDLIBS  =				\
+	$(DEPLIBS)			\
+	-lpthread			\
 	$(NULL)
 
-targets: $(TARGETS)
-
-main: $(OBJECTS) $(DEPLIBS)
+test: $(OBJECTS) $(DEPLIBS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS) $(LDFLAGS)
