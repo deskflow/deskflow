@@ -315,8 +315,17 @@ COSXKeyState::mapKey(Keystrokes& keys, KeyID id,
 	// if the desired mask includes Alt or Control then match the
 	// desired mask.  this ensures that combinations like
 	// Command+Shift+S use the Command and Shift modifiers and
-	// those like Command+S do not use the shift modifier.
-	if ((desiredMask & (KeyModifierControl | KeyModifierAlt)) != 0) {
+	// those like Command+S do not use the shift modifier.  do not
+	// do this if the key to synthesize is a modifier key, otherwise
+	// we'd apply modifiers to modifiers which breaks things (by
+	// say, putting a Control press and release around a Control
+	// press).
+	if ((desiredMask & (KeyModifierControl | KeyModifierAlt)) != 0 &&
+		id != kKeyShift_L   && id != kKeyShift_R   &&
+		id != kKeyControl_L && id != kKeyControl_R &&
+		id != kKeyAlt_L     && id != kKeyAlt_R     &&
+		id != kKeySuper_L   && id != kKeySuper_R   &&
+		id != kKeyMeta_L    && id != kKeyMeta_R) {
 		return addKeystrokes(keys, sequence.back().m_button,
 							desiredMask,
 							KeyModifierShift | KeyModifierSuper |

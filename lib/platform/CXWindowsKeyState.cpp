@@ -414,9 +414,40 @@ CXWindowsKeyState::updateKeysymMap()
 			}
 
 			// get keysym and get/create key mapping
-			const int keycodeIndex = keycode - minKeycode;
-			const KeySym keysym    = keysyms[keycodeIndex *
+			int keycodeIndex = keycode - minKeycode;
+			KeySym keysym    = keysyms[keycodeIndex *
 											keysymsPerKeycode + 0];
+
+			// prefer XK_ISO_Level3_Shift over XK_Mode_switch.  newer
+			// versions of X use the former only.  we assume here that
+			// if you have XK_ISO_Level3_Shift mapped then that's what
+			// you want to use even if XK_Mode_switch is also mapped.
+			if (j == 0 && keysym == XK_Mode_switch) {
+				// sort modifiers->modifiermap for this modifier so
+				// that a keycode mapped to XK_ISO_Level3_Shift appears
+				// before those mapped to anything else.  this one keycode
+				// is enough so long as it's first because mapModifier in
+				// CKeyState uses the first keycode in modifierKeys to
+				// generate the key event for this modifier.
+				KeyCode* keycodes = modifiers->modifiermap +
+										i * keysPerModifier + j;
+				for (unsigned int k = j + 1; k < keysPerModifier; ++k) {
+					KeySym keysym2 = keysyms[(keycodes[k] - minKeycode) *
+										keysymsPerKeycode + 0];
+					if (keysym2 == XK_ISO_Level3_Shift) {
+						// found an XK_ISO_Level3_Shift.  swap it with
+						// the keycode in index j.
+						keycodes[j] = keycodes[k];
+						keycodes[k] = keycode;
+
+						// now use the new first keycode
+						keycode      = keycodes[j];
+						keycodeIndex = keycode - minKeycode;
+						keysym       = keysym2;
+						break;
+					}
+				}
+			}
 
 			// get modifier mask if we haven't yet.  this has the side
 			// effect of setting the m_*Mask members.
