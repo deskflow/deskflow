@@ -36,14 +36,17 @@ static const double		kHeartBeatsUntilDeath = 3.0;
 
 // direction constants
 enum EDirection {
+	kNoDirection,
 	kLeft,
 	kRight,
 	kTop,
 	kBottom,
 	kFirstDirection = kLeft,
-	kLastDirection = kBottom
+	kLastDirection = kBottom,
+	kNumDirections = kLastDirection - kFirstDirection + 1
 };
 enum EDirectionMask {
+	kNoDirMask  = 0,
 	kLeftMask   = 1 << kLeft,
 	kRightMask  = 1 << kRight,
 	kTopMask    = 1 << kTop,

@@ -22,6 +22,7 @@
 #include "CCondVar.h"
 #include "CMutex.h"
 #include "CThread.h"
+#include "CStopwatch.h"
 #include "stdlist.h"
 #include "stdmap.h"
 
@@ -198,8 +199,18 @@ private:
 	IClient*			getNeighbor(IClient*, EDirection,
 							SInt32& x, SInt32& y) const;
 
+	// test if a switch is permitted.  this includes testing user
+	// options like switch delay and tracking any state required to
+	// implement them.  returns true iff a switch is permitted.
+	bool				isSwitchOkay(IClient* dst, EDirection,
+							SInt32 x, SInt32 y);
+
+	// update switch state due to a mouse move that doesn't try to
+	// switch screens.
+	void				onNoSwitch();
+
 	// reset switch wait state
-	void				clearSwitchWait();
+	void				clearSwitchState();
 
 	// send screen options to \c client
 	void				sendOptions(IClient* client) const;
@@ -325,11 +336,22 @@ private:
 	CCondVar<SInt32>	m_httpAvailable;
 	static const SInt32	s_httpMaxSimultaneousRequests;
 
+	// common state for screen switch tests.  all tests are always
+	// trying to reach the same screen in the same direction.
+	EDirection			m_switchDir;
+	IClient*			m_switchScreen;
+
+	// state for delayed screen switching
 	double				m_switchWaitDelay;
-	EDirection			m_switchWaitDir;
 	UInt32				m_switchWaitTimer;
-	IClient*			m_switchWaitScreen;
+	bool				m_switchWaitEngaged;
 	SInt32				m_switchWaitX, m_switchWaitY;
+
+	// state for double-tap screen switching
+	double				m_switchTwoTapDelay;
+	CStopwatch			m_switchTwoTapTimer;
+	bool				m_switchTwoTapEngaged;
+	bool				m_switchTwoTapArmed;
 };
 
 #endif

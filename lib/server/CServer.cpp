@@ -60,8 +60,13 @@ CServer::CServer(const CString& serverName) :
 	m_activeSaver(NULL),
 	m_httpServer(NULL),
 	m_httpAvailable(&m_mutex, s_httpMaxSimultaneousRequests),
+	m_switchDir(kNoDirection),
+	m_switchScreen(NULL),
 	m_switchWaitDelay(0.0),
-	m_switchWaitScreen(NULL)
+	m_switchWaitEngaged(false),
+	m_switchTwoTapDelay(0.0),
+	m_switchTwoTapEngaged(false),
+	m_switchTwoTapArmed(false)
 {
 	// do nothing
 }
@@ -231,7 +236,14 @@ CServer::setConfig(const CConfig& config)
 				if (m_switchWaitDelay < 0.0) {
 					m_switchWaitDelay = 0.0;
 				}
-				clearSwitchWait();
+				m_switchWaitEngaged = false;
+			}
+			else if (id == kOptionScreenSwitchTwoTap) {
+				m_switchTwoTapDelay = 1.0e-3 * static_cast<double>(value);
+				if (m_switchTwoTapDelay < 0.0) {
+					m_switchTwoTapDelay = 0.0;
+				}
+				m_switchTwoTapEngaged = false;
 			}
 		}
 	}
@@ -508,29 +520,20 @@ CServer::onOneShotTimerExpired(UInt32 id)
 {
 	CLock lock(&m_mutex);
 
-	// ignore old timer or if there's no jump screen anymore
-	if (m_switchWaitScreen == NULL || id != m_switchWaitTimer) {
-		clearSwitchWait();
+	// ignore if it's an old timer or if switch wait isn't engaged anymore
+	if (!m_switchWaitEngaged || id != m_switchWaitTimer) {
 		return;
 	}
 
 	// ignore if mouse is locked to screen
 	if (isLockedToScreenNoLock()) {
-		clearSwitchWait();
+		LOG((CLOG_DEBUG1 "locked to screen"));
+		clearSwitchState();
 		return;
 	}
 
 	// switch screen
-	switchScreen(m_switchWaitScreen, m_switchWaitX, m_switchWaitY, false);
-}
-
-void
-CServer::clearSwitchWait()
-{
-	if (m_switchWaitScreen != NULL) {
-		LOG((CLOG_DEBUG1 "cancel switch wait"));
-		m_switchWaitScreen = NULL;
-	}
+	switchScreen(m_switchScreen, m_switchWaitX, m_switchWaitY, false);
 }
 
 void
@@ -629,60 +632,37 @@ CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
 	if (x < ax + zoneSize) {
 		x  -= zoneSize;
 		dir = kLeft;
-		LOG((CLOG_DEBUG1 "switch to left"));
 	}
 	else if (x >= ax + aw - zoneSize) {
 		x  += zoneSize;
 		dir = kRight;
-		LOG((CLOG_DEBUG1 "switch to right"));
 	}
 	else if (y < ay + zoneSize) {
 		y  -= zoneSize;
 		dir = kTop;
-		LOG((CLOG_DEBUG1 "switch to top"));
 	}
 	else if (y >= ay + ah - zoneSize) {
 		y  += zoneSize;
 		dir = kBottom;
-		LOG((CLOG_DEBUG1 "switch to bottom"));
 	}
 	else {
 		// still on local screen
-		clearSwitchWait();
+		onNoSwitch();
 		return false;
 	}
 
-	// get jump destination and, if no screen in jump direction,
-	// then ignore the move.
+	// get jump destination
 	IClient* newScreen = getNeighbor(m_active, dir, x, y);
-	if (newScreen == NULL) {
-		clearSwitchWait();
+
+	// should we switch or not?
+	if (isSwitchOkay(newScreen, dir, x, y)) {
+		// switch screen
+		switchScreen(newScreen, x, y, false);
+		return true;
+	}
+	else {
 		return false;
 	}
-
-	// if waiting before a switch then prepare to switch later
-	if (m_switchWaitDelay > 0.0) {
-		if (m_switchWaitScreen == NULL || dir != m_switchWaitDir) {
-			m_switchWaitDir    = dir;
-			m_switchWaitScreen = newScreen;
-			m_switchWaitX      = x;
-			m_switchWaitY      = y;
-			m_switchWaitTimer  = m_primaryClient->addOneShotTimer(
-													m_switchWaitDelay);
-			LOG((CLOG_DEBUG1 "waiting to switch"));
-		}
-		return false;
-	}
-
-	// ignore if mouse is locked to screen
-	if (isLockedToScreenNoLock()) {
-		LOG((CLOG_DEBUG1 "locked to screen"));
-		return false;
-	}
-
-	// switch screen
-	switchScreen(newScreen, x, y, false);
-	return true;
 }
 
 void
@@ -721,93 +701,75 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 	SInt32 ax, ay, aw, ah;
 	m_active->getShape(ax, ay, aw, ah);
 
-	// find direction of neighbor
-	EDirection dir;
-	IClient* newScreen = NULL;
-	if (m_x < ax) {
-		dir = kLeft;
-	}
-	else if (m_x > ax + aw - 1) {
-		dir = kRight;
-	}
-	else if (m_y < ay) {
-		dir = kTop;
-	}
-	else if (m_y > ay + ah - 1) {
-		dir = kBottom;
-	}
-	else {
-		newScreen = m_active;
+	// find direction of neighbor and get the neighbor
+	IClient* newScreen;
+	do {
+		EDirection dir;
+		if (m_x < ax) {
+			dir = kLeft;
+		}
+		else if (m_x > ax + aw - 1) {
+			dir = kRight;
+		}
+		else if (m_y < ay) {
+			dir = kTop;
+		}
+		else if (m_y > ay + ah - 1) {
+			dir = kBottom;
+		}
+		else {
+			// we haven't left the screen
+			newScreen = m_active;
 
-		// keep compiler quiet about unset variable
-		dir = kLeft;
-	}
+			// if waiting and mouse is not on the border we're waiting
+			// on then stop waiting.  also if it's not on the border
+			// then arm the double tap.
+			if (m_switchScreen != NULL) {
+				bool clearWait;
+				SInt32 zoneSize = m_primaryClient->getJumpZoneSize();
+				switch (m_switchDir) {
+				case kLeft:
+					clearWait = (m_x >= ax + zoneSize);
+					break;
 
-	// switch screens if the mouse is outside the screen and not
-	// locked to the screen
-	bool clamp = false;
-	if (newScreen == NULL) {
-		// get neighbor we should switch to
+				case kRight:
+					clearWait = (m_x <= ax + aw - 1 - zoneSize);
+					break;
+
+				case kTop:
+					clearWait = (m_y >= ay + zoneSize);
+					break;
+
+				case kBottom:
+					clearWait = (m_y <= ay + ah - 1 + zoneSize);
+					break;
+				}
+				if (clearWait) {
+					onNoSwitch();
+				}
+			}
+
+			// skip rest of block
+			break;
+		}
+
+		// try to switch screen.  get the neighbor.
 		newScreen = getNeighbor(m_active, dir, m_x, m_y);
-		LOG((CLOG_DEBUG1 "leave \"%s\" on %s", m_active->getName().c_str(), CConfig::dirName(dir)));
-		if (newScreen == NULL) {
-			LOG((CLOG_DEBUG1 "no neighbor %s", CConfig::dirName(dir)));
-			clamp = true;
-		}
-		else if (m_switchWaitDelay > 0.0) {
-			// wait to switch;  prepare to switch later
-			if (m_switchWaitScreen == NULL || dir != m_switchWaitDir) {
-				m_switchWaitDir    = dir;
-				m_switchWaitScreen = newScreen;
-				m_switchWaitX      = m_x;
-				m_switchWaitY      = m_y;
-				m_switchWaitTimer  = m_primaryClient->addOneShotTimer(
-														m_switchWaitDelay);
-				LOG((CLOG_DEBUG1 "waiting to switch"));
-			}
 
-			// don't try to switch screen now
-			m_x   = xOld + dx;
-			m_y   = yOld + dy;
-			clamp = true;
+		// see if we should switch
+		if (!isSwitchOkay(newScreen, dir, m_x, m_y)) {
+			newScreen = m_active;
 		}
-		else if (isLockedToScreenNoLock()) {
-			// clamp to edge when locked to screen
-			LOG((CLOG_DEBUG1 "locked to screen"));
-			clamp = true;
-		}
+	} while (false);
+
+	if (newScreen != m_active) {
+		// switch screens
+		switchScreen(newScreen, m_x, m_y, false);
 	}
 	else {
-		// on same screen.  if waiting and mouse is not on the border
-		// we're waiting on then stop waiting.
-		if (m_switchWaitScreen != NULL) {
-			bool clearWait;
-			SInt32 zoneSize = m_primaryClient->getJumpZoneSize();
-			switch (m_switchWaitDir) {
-			case kLeft:
-				clearWait = (m_x >= ax + zoneSize);
-				break;
-
-			case kRight:
-				clearWait = (m_x <= ax + aw - 1 - zoneSize);
-				break;
-
-			case kTop:
-				clearWait = (m_y >= ay + zoneSize);
-				break;
-
-			case kBottom:
-				clearWait = (m_y <= ay + ah - 1 + zoneSize);
-				break;
-			}
-			if (clearWait) {
-				clearSwitchWait();
-			}
-		}
-	}
-
-	// clamp mouse to edge
-	if (clamp) {
+		// same screen.  clamp mouse to edge.
+		m_x = xOld + dx;
+		m_y = yOld + dy;
 		if (m_x < ax) {
 			m_x = ax;
 			LOG((CLOG_DEBUG2 "clamp to left of \"%s\"", m_active->getName().c_str()));
@@ -824,21 +786,12 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 			m_y = ay + ah - 1;
 			LOG((CLOG_DEBUG2 "clamp to bottom of \"%s\"", m_active->getName().c_str()));
 		}
-		newScreen = NULL;
-	}
 
-	// warp cursor if on same screen
-	if (newScreen == NULL || newScreen == m_active) {
-		// do nothing if mouse didn't move
+		// warp cursor if it moved.
 		if (m_x != xOld || m_y != yOld) {
 			LOG((CLOG_DEBUG2 "move on %s to %d,%d", m_active->getName().c_str(), m_x, m_y));
 			m_active->mouseMove(m_x, m_y);
 		}
-	}
-
-	// otherwise screen screens
-	else {
-		switchScreen(newScreen, m_x, m_y, false);
 	}
 }
 
@@ -894,7 +847,7 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 	LOG((CLOG_INFO "switch from \"%s\" to \"%s\" at %d,%d", m_active->getName().c_str(), dst->getName().c_str(), x, y));
 
 	// stop waiting to switch
-	clearSwitchWait();
+	clearSwitchState();
 
 	// record new position
 	m_x = x;
@@ -1166,6 +1119,120 @@ CServer::getNeighbor(IClient* src,
 	return dst;
 }
 
+bool
+CServer::isSwitchOkay(IClient* newScreen, EDirection dir, SInt32 x, SInt32 y)
+{
+	LOG((CLOG_DEBUG1 "try to leave \"%s\" on %s", m_active->getName().c_str(), CConfig::dirName(dir)));
+
+	// is there a neighbor?
+	if (newScreen == NULL) {
+		// there's no neighbor.  we don't want to switch and we don't
+		// want to try to switch later.
+		LOG((CLOG_DEBUG1 "no neighbor %s", CConfig::dirName(dir)));
+		clearSwitchState();
+		return false;
+	}
+
+	// should we switch or not?
+	bool preventSwitch = false;
+	bool allowSwitch   = false;
+
+	// note if the switch direction has changed.  save the new
+	// direction and screen if so.
+	bool isNewDirection  = (dir != m_switchDir);
+	if (isNewDirection || m_switchScreen == NULL) {
+		m_switchDir    = dir;
+		m_switchScreen = newScreen;
+	}
+
+	// is this a double tap and do we care?
+	if (!allowSwitch && m_switchTwoTapDelay > 0.0) {
+		if (isNewDirection || !m_switchTwoTapEngaged) {
+			// tapping a different or new edge.  prepare for second tap.
+			preventSwitch         = true;
+			m_switchTwoTapEngaged = true;
+			m_switchTwoTapArmed   = false;
+			m_switchTwoTapTimer.reset();
+			LOG((CLOG_DEBUG1 "waiting for second tap"));
+		}
+		else {
+			// second tap if we were armed.  if soon enough then switch.
+			if (m_switchTwoTapArmed &&
+				m_switchTwoTapTimer.getTime() <= m_switchTwoTapDelay) {
+				allowSwitch = true;
+			}
+			else {
+				// not fast enough.  reset the clock.
+				preventSwitch         = true;
+				m_switchTwoTapEngaged = true;
+				m_switchTwoTapArmed   = false;
+				m_switchTwoTapTimer.reset();
+				LOG((CLOG_DEBUG1 "waiting for second tap"));
+			}
+		}
+	}
+
+	// if waiting before a switch then prepare to switch later
+	if (!allowSwitch && m_switchWaitDelay > 0.0) {
+		if (isNewDirection) {
+			m_switchWaitEngaged = true;
+			m_switchWaitX       = x;
+			m_switchWaitY       = y;
+			m_switchWaitTimer   = m_primaryClient->addOneShotTimer(
+													m_switchWaitDelay);
+			LOG((CLOG_DEBUG1 "waiting to switch"));
+		}
+		preventSwitch = true;
+	}
+
+	// ignore if mouse is locked to screen
+	if (!preventSwitch && isLockedToScreenNoLock()) {
+		LOG((CLOG_DEBUG1 "locked to screen"));
+		preventSwitch = true;
+
+		// don't try to switch later.  it's possible that we might
+		// not be locked to the screen when the wait delay expires
+		// and could switch then but we'll base the decision on
+		// when the user first attempts the switch.  this also
+		// ensures that all switch tests are using the same
+		clearSwitchState();
+	}
+
+	return !preventSwitch;
+}
+
+void
+CServer::onNoSwitch()
+{
+	if (m_switchTwoTapEngaged) {
+		if (m_switchTwoTapTimer.getTime() > m_switchTwoTapDelay) {
+			// second tap took too long.  disengage.
+			m_switchTwoTapEngaged = false;
+			m_switchTwoTapArmed   = false;
+		}
+		else {
+			// we've moved away from the edge and there's still
+			// time to get back for a double tap.
+			m_switchTwoTapArmed = true;
+		}
+	}
+
+	// once the mouse moves away from the edge we no longer want to
+	// switch after a delay.
+	m_switchWaitEngaged = false;
+}
+
+void
+CServer::clearSwitchState()
+{
+	if (m_switchScreen != NULL) {
+		m_switchDir           = kNoDirection;
+		m_switchScreen        = NULL;
+		m_switchWaitEngaged   = false;
+		m_switchTwoTapEngaged = false;
+	}
+}
+
 void
 CServer::closeClients(const CConfig& config)
 {
@@ -1196,8 +1263,8 @@ CServer::closeClients(const CConfig& config)
 				index2->second->close();
 
 				// don't switch to it if we planned to
-				if (index2->second == m_switchWaitScreen) {
-					clearSwitchWait();
+				if (index2->second == m_switchScreen) {
+					clearSwitchState();
 				}
 			}
 			else {
@@ -1890,7 +1957,9 @@ CServer::removeConnection(const CString& name)
 		m_primaryClient->getCursorCenter(m_x, m_y);
 
 		// stop waiting to switch if we were
-		clearSwitchWait();
+		if (active == m_switchScreen) {
+			clearSwitchState();
+		}
 
 		// don't notify active screen since it probably already disconnected
 		LOG((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", active->getName().c_str(), m_primaryClient->getName().c_str(), m_x, m_y));

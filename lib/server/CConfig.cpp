@@ -79,7 +79,7 @@ CConfig::renameScreen(const CString& oldName,
 
 	// update connections
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
-		for (UInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i) {
+		for (UInt32 i = 0; i < kNumDirections; ++i) {
 			if (CStringUtil::CaselessCmp::equal(getCanonicalName(
 						index->second.m_neighbor[i]), oldCanonical)) {
 				index->second.m_neighbor[i] = newName;
@@ -117,7 +117,7 @@ CConfig::removeScreen(const CString& name)
 	// disconnect
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
 		CCell& cell = index->second;
-		for (UInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i) {
+		for (UInt32 i = 0; i < kNumDirections; ++i) {
 			if (getCanonicalName(cell.m_neighbor[i]) == canonical) {
 				cell.m_neighbor[i].erase();
 			}
@@ -200,6 +200,8 @@ bool
 CConfig::connect(const CString& srcName,
 				EDirection srcSide, const CString& dstName)
 {
+	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+
 	// find source cell
 	CCellMap::iterator index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
@@ -217,6 +219,8 @@ CConfig::connect(const CString& srcName,
 bool
 CConfig::disconnect(const CString& srcName, EDirection srcSide)
 {
+	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+
 	// find source cell
 	CCellMap::iterator index = m_map.find(srcName);
 	if (index == m_map.end()) {
@@ -406,6 +410,8 @@ CConfig::getCanonicalName(const CString& name) const
 CString
 CConfig::getNeighbor(const CString& srcName, EDirection srcSide) const
 {
+	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+
 	// find source cell
 	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
 	if (index == m_map.end()) {
@@ -485,7 +491,7 @@ CConfig::operator==(const CConfig& x) const
 		}
 
 		// compare neighbors
-		for (UInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i) {
+		for (UInt32 i = 0; i < kNumDirections; ++i) {
 			if (!CStringUtil::CaselessCmp::equal(index1->second.m_neighbor[i],
 								index2->second.m_neighbor[i])) {
 				return false;
@@ -516,6 +522,9 @@ const char*
 CConfig::dirName(EDirection dir)
 {
 	static const char* s_name[] = { "left", "right", "top", "bottom" };
+
+	assert(dir >= kFirstDirection && dir <= kLastDirection);
+
 	return s_name[dir - kFirstDirection];
 }
 
@@ -627,6 +636,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionScreenSwitchDelay) {
 		return "switchDelay";
 	}
+	if (id == kOptionScreenSwitchTwoTap) {
+		return "switchDoubleTap";
+	}
 	return NULL;
 }
 
@@ -663,7 +675,8 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 		}
 	}
 	if (id == kOptionHeartbeat ||
-		id == kOptionScreenSwitchDelay) {
+		id == kOptionScreenSwitchDelay ||
+		id == kOptionScreenSwitchTwoTap) {
 		return CStringUtil::print("%d", value);
 	}
 
@@ -773,6 +786,9 @@ CConfig::readSectionOptions(std::istream& s)
 		}
 		else if (name == "switchDelay") {
 			addOption("", kOptionScreenSwitchDelay, parseInt(value));
+		}
+		else if (name == "switchDoubleTap") {
+			addOption("", kOptionScreenSwitchTwoTap, parseInt(value));
 		}
 		else {
 			throw XConfigRead("unknown argument");
