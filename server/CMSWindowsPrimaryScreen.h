@@ -42,8 +42,8 @@ protected:
 
 private:
 	void				enterNoWarp();
-	void				onEnter();
-	bool				onLeave();
+	bool				showWindow();
+	void				hideWindow();
 
 	SInt32				getJumpZoneSize() const;
 
@@ -51,8 +51,22 @@ private:
 	// motion deltas while mouse is on secondary screen).
 	void				warpCursorToCenter();
 
+	// check clipboard ownership and, if necessary, tell the receiver
+	// of a grab.
+	void				checkClipboard();
+
 	// discard posted messages
 	void				nextMark();
+
+	// create/destroy window
+	// also attach to desktop;  this destroys and recreates the window
+	// as necessary.
+	void				createWindow();
+	void				destroyWindow();
+
+	// start/stop watch for screen saver changes
+	void				installScreenSaver();
+	void				uninstallScreenSaver();
 
 	// open/close desktop (for windows 95/98/me)
 	bool				openDesktop();

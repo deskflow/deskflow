@@ -141,27 +141,15 @@ CXWindowsScreen::openDisplay()
 		throw XScreenOpenFailure();
 	}
 
-	// get default screen
-	m_screen       = DefaultScreen(m_display);
-	Screen* screen = ScreenOfDisplay(m_display, m_screen);
+	// get default screen and root window
+	m_screen = DefaultScreen(m_display);
+	m_root   = RootWindow(m_display, m_screen);
+
+	// create the transparent cursor
+	createBlankCursor();
 
 	// get screen shape
-	m_x = 0;
-	m_y = 0;
-	m_w = WidthOfScreen(screen);
-	m_h = HeightOfScreen(screen);
-	log((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
-
-	// get the root window
-	m_root = RootWindow(m_display, m_screen);
-
-	// let subclass prep display
-	onOpenDisplay(m_display);
-
-	// initialize clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		m_clipboard[id] = createClipboard(id);
-	}
+	updateScreenShape();
 
 	// initialize the screen saver
 	m_screenSaver = new CXWindowsScreenSaver(this, m_display);
@@ -171,9 +159,6 @@ void
 CXWindowsScreen::closeDisplay()
 {
 	CLock lock(&m_mutex);
-
-	// let subclass close down display
-	onCloseDisplay(m_display);
 
 	// done with screen saver
 	delete m_screenSaver;
@@ -209,8 +194,30 @@ CXWindowsScreen::getRoot() const
 }
 
 void
-CXWindowsScreen::getScreenShape(
-				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+CXWindowsScreen::initClipboards(Window window)
+{
+	assert(m_display != NULL);
+	assert(window    != None);
+
+	// initialize clipboards
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		m_clipboard[id] = new CXWindowsClipboard(m_display, window, id);
+	}
+}
+
+void
+CXWindowsScreen::updateScreenShape()
+{
+	m_x = 0;
+	m_y = 0;
+	m_w = WidthOfScreen(ScreenOfDisplay(m_display, m_screen));
+	m_h = HeightOfScreen(ScreenOfDisplay(m_display, m_screen));
+	log((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
+}
+
+void
+CXWindowsScreen::getScreenShape(SInt32& x, SInt32& y,
+				SInt32& w, SInt32& h) const
 {
 	assert(m_display != NULL);
 
@@ -220,8 +227,35 @@ CXWindowsScreen::getScreenShape(
 	h = m_h;
 }
 
-Cursor
-CXWindowsScreen::createBlankCursor() const
+void
+CXWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
+{
+	assert(m_display != NULL);
+
+	Window root, window;
+	int mx, my, xWindow, yWindow;
+	unsigned int mask;
+	if (XQueryPointer(m_display, getRoot(), &root, &window,
+								&mx, &my, &xWindow, &yWindow, &mask)) {
+		x = mx;
+		y = my;
+	}
+	else {
+		getCursorCenter(x, y);
+	}
+}
+
+void
+CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
+{
+	assert(m_display != NULL);
+
+	x = m_x + (m_w >> 1);
+	y = m_y + (m_h >> 1);
+}
+
+void
+CXWindowsScreen::createBlankCursor()
 {
 	// this seems just a bit more complicated than really necessary
 
@@ -246,14 +280,18 @@ CXWindowsScreen::createBlankCursor() const
 	color.flags = DoRed | DoGreen | DoBlue;
 
 	// make cursor from bitmap
-	Cursor cursor = XCreatePixmapCursor(m_display, bitmap, bitmap,
+	m_cursor = XCreatePixmapCursor(m_display, bitmap, bitmap,
 								&color, &color, 0, 0);
 
 	// don't need bitmap or the data anymore
 	delete[] data;
 	XFreePixmap(m_display, bitmap);
+}
 
-	return cursor;
+Cursor
+CXWindowsScreen::getBlankCursor() const
+{
+	return m_cursor;
 }
 
 bool

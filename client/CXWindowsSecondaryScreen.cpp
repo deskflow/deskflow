@@ -85,18 +85,45 @@ void
 CXWindowsSecondaryScreen::open()
 {
 	assert(m_receiver != NULL);
+	assert(m_window == None);
 
 	// open the display
 	openDisplay();
 
 	{
-		// verify the availability of the XTest extension
 		CDisplayLock display(this);
+
+		// verify the availability of the XTest extension
 		int majorOpcode, firstEvent, firstError;
 		if (!XQueryExtension(display, XTestExtensionName,
 								&majorOpcode, &firstEvent, &firstError)) {
 			throw int(6);	// FIXME -- make exception for this
 		}
+
+		// create the cursor hiding window.  this window is used to hide the
+		// cursor when it's not on the screen.  the window is hidden as soon
+		// as the cursor enters the screen or the display's real cursor is
+		// moved.
+		XSetWindowAttributes attr;
+		attr.event_mask            = LeaveWindowMask;
+		attr.do_not_propagate_mask = 0;
+		attr.override_redirect     = True;
+		attr.cursor                = getBlankCursor();
+		m_window = XCreateWindow(display, getRoot(), 0, 0, 1, 1, 0, 0,
+								InputOnly, CopyFromParent,
+								CWDontPropagate | CWEventMask |
+								CWOverrideRedirect | CWCursor,
+								&attr);
+		log((CLOG_DEBUG "window is 0x%08x", m_window));
+
+		// become impervious to server grabs
+		XTestGrabControl(display, True);
+
+		// hide the cursor
+		leaveNoLock(display);
+
+		// initialize the clipboards
+		initClipboards(m_window);
 
 		// update key state
 		updateKeys(display);
@@ -129,6 +156,18 @@ CXWindowsSecondaryScreen::close()
 
 	// restore the screen saver settings
 	getScreenSaver()->enable();
+
+	{
+		CDisplayLock display(this);
+		if (display != NULL) {
+			// no longer impervious to server grabs
+			XTestGrabControl(display, False);
+
+			// destroy window
+			XDestroyWindow(display, m_window);
+		}
+		m_window = None;
+	}
 
 	// close the display
 	closeDisplay();
@@ -304,13 +343,7 @@ void
 CXWindowsSecondaryScreen::getMousePos(SInt32& x, SInt32& y) const
 {
 	CDisplayLock display(this);
-	int xTmp, yTmp, dummy;
-	unsigned int dummyMask;
-	Window dummyWindow;
-	XQueryPointer(display, getRoot(), &dummyWindow, &dummyWindow,
-								&xTmp, &yTmp, &dummy, &dummy, &dummyMask);
-	x = xTmp;
-	y = yTmp;
+	getCursorPos(x, y);
 }
 
 void
@@ -331,56 +364,6 @@ CXWindowsSecondaryScreen::getClipboard(ClipboardID id,
 				IClipboard* clipboard) const
 {
 	getDisplayClipboard(id, clipboard);
-}
-
-void
-CXWindowsSecondaryScreen::onOpenDisplay(Display* display)
-{
-	assert(m_window == None);
-
-	// create the cursor hiding window.  this window is used to hide the
-	// cursor when it's not on the screen.  the window is hidden as soon
-	// as the cursor enters the screen or the display's real cursor is
-	// moved.
-	XSetWindowAttributes attr;
-	attr.event_mask            = LeaveWindowMask;
-	attr.do_not_propagate_mask = 0;
-	attr.override_redirect     = True;
-	attr.cursor                = createBlankCursor();
-	m_window = XCreateWindow(display, getRoot(), 0, 0, 1, 1, 0, 0,
-								InputOnly, CopyFromParent,
-								CWDontPropagate | CWEventMask |
-								CWOverrideRedirect | CWCursor,
-								&attr);
-	log((CLOG_DEBUG "window is 0x%08x", m_window));
-
-	// become impervious to server grabs
-	XTestGrabControl(display, True);
-
-	// hide the cursor
-	leaveNoLock(display);
-}
-
-CXWindowsClipboard*
-CXWindowsSecondaryScreen::createClipboard(ClipboardID id)
-{
-	CDisplayLock display(this);
-	return new CXWindowsClipboard(display, m_window, id);
-}
-
-void
-CXWindowsSecondaryScreen::onCloseDisplay(Display* display)
-{
-	assert(m_window != None);
-
-	if (display != NULL) {
-		// no longer impervious to server grabs
-		XTestGrabControl(display, False);
-
-		// destroy window
-		XDestroyWindow(display, m_window);
-	}
-	m_window = None;
 }
 
 void

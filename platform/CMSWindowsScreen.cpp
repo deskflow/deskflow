@@ -84,16 +84,8 @@ CMSWindowsScreen::openDisplay()
 	assert(s_instance != NULL);
 	assert(m_class    == 0);
 
-	// create a transparent cursor
-	int cw = GetSystemMetrics(SM_CXCURSOR);
-	int ch = GetSystemMetrics(SM_CYCURSOR);
-	UInt8* cursorAND = new UInt8[ch * ((cw + 31) >> 2)];
-	UInt8* cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
-	memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
-	memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
-	m_cursor = CreateCursor(s_instance, 0, 0, cw, ch, cursorAND, cursorXOR);
-	delete[] cursorXOR;
-	delete[] cursorAND;
+	// create the transparent cursor
+	createBlankCursor();
 
 	// register a window class
 	WNDCLASSEX classInfo;
@@ -109,13 +101,10 @@ CMSWindowsScreen::openDisplay()
 	classInfo.lpszMenuName  = NULL;
 	classInfo.lpszClassName = "Synergy";
 	classInfo.hIconSm       = NULL;
-	m_class = RegisterClassEx(&classInfo);
+	m_class                 = RegisterClassEx(&classInfo);
 
 	// get screen shape
 	updateScreenShape();
-
-	// let subclass prep display
-	onOpenDisplay();
 
 	// initialize the screen saver
 	m_screenSaver = new CMSWindowsScreenSaver();
@@ -125,22 +114,22 @@ void
 CMSWindowsScreen::closeDisplay()
 {
 	assert(s_instance != NULL);
-	assert(m_class    != 0);
 
 	// done with screen saver
 	delete m_screenSaver;
 	m_screenSaver = NULL;
 
-	// let subclass close down display
-	onCloseDisplay();
-
 	// unregister the window class
-	UnregisterClass((LPCTSTR)m_class, s_instance);
-	m_class = 0;
+	if (m_class != 0) {
+		UnregisterClass((LPCTSTR)m_class, s_instance);
+		m_class = 0;
+	}
 
 	// delete resources
-	DestroyCursor(m_cursor);
-	m_cursor = NULL;
+	if (m_cursor != NULL) {
+		DestroyCursor(m_cursor);
+		m_cursor = NULL;
+	}
 
 	log((CLOG_DEBUG "closed display"));
 }
@@ -168,8 +157,8 @@ CMSWindowsScreen::updateScreenShape()
 }
 
 void
-CMSWindowsScreen::getScreenShape(
-				SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+CMSWindowsScreen::getScreenShape(SInt32& x, SInt32& y,
+				SInt32& w, SInt32& h) const
 {
 	assert(m_class != 0);
 
@@ -177,6 +166,43 @@ CMSWindowsScreen::getScreenShape(
 	y = m_y;
 	w = m_w;
 	h = m_h;
+}
+
+void
+CMSWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
+{
+	POINT pos;
+	GetCursorPos(&pos);
+	x = pos.x;
+	y = pos.y;
+}
+
+void
+CMSWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
+{
+	x = GetSystemMetrics(SM_CXSCREEN) >> 1;
+	y = GetSystemMetrics(SM_CYSCREEN) >> 1;
+}
+
+HCURSOR
+CMSWindowsScreen::getBlankCursor() const
+{
+	return m_cursor;
+}
+
+void
+CMSWindowsScreen::createBlankCursor()
+{
+	// create a transparent cursor
+	int cw = GetSystemMetrics(SM_CXCURSOR);
+	int ch = GetSystemMetrics(SM_CYCURSOR);
+	UInt8* cursorAND = new UInt8[ch * ((cw + 31) >> 2)];
+	UInt8* cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
+	memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
+	memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
+	m_cursor = CreateCursor(s_instance, 0, 0, cw, ch, cursorAND, cursorXOR);
+	delete[] cursorXOR;
+	delete[] cursorAND;
 }
 
 HDESK

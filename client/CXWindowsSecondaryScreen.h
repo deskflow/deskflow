@@ -39,10 +39,6 @@ public:
 
 protected:
 	// CXWindowsScreen overrides
-	virtual void		onOpenDisplay(Display*);
-	virtual CXWindowsClipboard*
-						createClipboard(ClipboardID);
-	virtual void		onCloseDisplay(Display*);
 	virtual void		onLostClipboard(ClipboardID);
 
 private:

@@ -51,6 +51,12 @@ protected:
 	void				getScreenShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;
 
+	// get the current cursor position
+	void				getCursorPos(SInt32& x, SInt32& y) const;
+
+	// get the cursor center position
+	void				getCursorCenter(SInt32& x, SInt32& y) const;
+
 	// get the input desktop.  caller must CloseDesktop() the result.
 	// do not call under windows 95/98/me.
 	HDESK				openInputDesktop() const;
@@ -76,16 +82,13 @@ protected:
 	// called by window proc.  subclass must call DefWindowProc() if necessary
 	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM) = 0;
 
-	// called by openDisplay() to allow subclasses to prepare the display
-	virtual void		onOpenDisplay() = 0;
-
-	// called by closeDisplay() to 
-	virtual void		onCloseDisplay() = 0;
-
 	// called by isCurrentDesktop() to get the current desktop name
 	virtual CString		getCurrentDesktopName() const = 0;
 
 private:
+	// create the transparent cursor
+	void				createBlankCursor();
+
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
 
 private:

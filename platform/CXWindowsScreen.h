@@ -57,17 +57,31 @@ protected:
 	// is closed.
 	void				closeDisplay();
 
-	// get the opened screen, its shape, its root window.  to get the
-	// display create a CDisplayLock object passing this.  while the
-	// object exists no other threads may access the display.  do not
-	// save the Display* beyond the lifetime of the CDisplayLock.
+	// get the opened screen and its root window.  to get the display
+	// create a CDisplayLock object passing this.  while the object
+	// exists no other threads may access the display.  do not save
+	// the Display* beyond the lifetime of the CDisplayLock.
 	int					getScreen() const;
-	void				getScreenShape(
-							SInt32& x, SInt32& y, SInt32& w, SInt32& h) const;
 	Window				getRoot() const;
 
-	// create a cursor that is transparent everywhere
-	Cursor				createBlankCursor() const;
+	// initialize the clipboards
+	void				initClipboards(Window);
+
+	// update screen size cache
+	void				updateScreenShape();
+
+	// get the shape of the screen
+	void				getScreenShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const;
+
+	// get the current cursor position
+	void				getCursorPos(SInt32& x, SInt32& y) const;
+
+	// get the cursor center position
+	void				getCursorCenter(SInt32& x, SInt32& y) const;
+
+	// get a cursor that is transparent everywhere
+	Cursor				getBlankCursor() const;
 
 	// wait for and get the next X event.  cancellable.
 	bool				getEvent(XEvent*) const;
@@ -88,19 +102,6 @@ protected:
 	CXWindowsScreenSaver*
 						getScreenSaver() const;
 
-	// called by openDisplay() to allow subclasses to prepare the display.
-	// the display is locked and passed to the subclass.
-	virtual void		onOpenDisplay(Display*) = 0;
-
-	// called by openDisplay() after onOpenDisplay() to create each clipboard
-	virtual CXWindowsClipboard*
-						createClipboard(ClipboardID) = 0;
-
-	// called by closeDisplay() to allow subclasses to clean up the display.
-	// the display is locked and passed to the subclass.  note that the
-	// display may be NULL if the display has unexpectedly disconnected.
-	virtual void		onCloseDisplay(Display*) = 0;
-
 	// called if the display is unexpectedly closing.  default does nothing.
 	virtual void		onUnexpectedClose();
 
@@ -108,6 +109,9 @@ protected:
 	virtual void		onLostClipboard(ClipboardID) = 0;
 
 private:
+	// create the transparent cursor
+	void				createBlankCursor();
+
 	// remove a timer without locking
 	void				removeTimerNoLock(IJob*);
 
@@ -247,6 +251,9 @@ private:
 
 	// clipboards
 	CXWindowsClipboard*	m_clipboard[kClipboardEnd];
+
+	// the transparent cursor
+	Cursor				m_cursor;
 
 	// screen saver
 	CXWindowsScreenSaver*	m_screenSaver;

@@ -82,11 +82,6 @@ CMSWindowsPrimaryScreen::~CMSWindowsPrimaryScreen()
 	assert(m_hookLibrary != NULL);
 	assert(m_window      == NULL);
 
-	// uninstall screen saver hook
-	if (m_uninstallScreenSaver != NULL) {
-		m_uninstallScreenSaver();
-	}
-
 	// done with hook library
 	FreeLibrary(m_hookLibrary);
 }
@@ -127,54 +122,74 @@ CMSWindowsPrimaryScreen::stop()
 void
 CMSWindowsPrimaryScreen::open()
 {
-	// open the display
-	openDisplay();
+	assert(m_window == NULL);
 
-	// initialize marks
-	m_mark         = 0;
-	m_markReceived = 0;
-	nextMark();
-
-	// save cursor pos
-	POINT pos;
-	GetCursorPos(&pos);
-	m_x = pos.x;
-	m_y = pos.y;
-
-	// send screen info
 	CClientInfo info;
-	getScreenShape(info.m_x, info.m_y, info.m_w, info.m_h);
-	info.m_zoneSize = getJumpZoneSize();
-	info.m_mx       = m_x;
-	info.m_my       = m_y;
-	m_receiver->onInfoChanged(info);
+	try {
+		// initialize hook library
+		m_threadID = GetCurrentThreadId();
+		m_init(m_threadID);
 
-	// compute center pixel of primary screen
-	m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
-	m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
+		// open the display
+		openDisplay();
 
-	// get keyboard state
-	updateKeys();
+		// create and prepare our window
+		createWindow();
 
-	// set jump zones
-	m_setZone(info.m_x, info.m_y, info.m_w, info.m_h, info.m_zoneSize);
+		// set jump zones
+		m_setZone(info.m_x, info.m_y, info.m_w, info.m_h, info.m_zoneSize);
+
+		// initialize marks
+		m_mark         = 0;
+		m_markReceived = 0;
+		nextMark();
+
+		// collect screen info
+		getScreenShape(info.m_x, info.m_y, info.m_w, info.m_h);
+		getCursorPos(info.m_mx, info.m_my);
+		info.m_zoneSize = getJumpZoneSize();
+
+		// save mouse position
+		m_x = info.m_mx;
+		m_y = info.m_my;
+
+		// compute center pixel of primary screen
+		getCursorCenter(m_xCenter, m_yCenter);
+
+		// get keyboard state
+		updateKeys();
+
+		// get notified of screen saver activation/deactivation
+		installScreenSaver();
+	}
+	catch (...) {
+		close();
+		throw;
+	}
 
 	// enter the screen
 	enterNoWarp();
+
+	// send screen info
+	m_receiver->onInfoChanged(info);
 }
 
 void
 CMSWindowsPrimaryScreen::close()
 {
-	// close the display
+	uninstallScreenSaver();
+	destroyWindow();
 	closeDisplay();
+	m_cleanup();
+	m_threadID = 0;
 }
 
 void
 CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreenSaver)
 {
-	log((CLOG_INFO "entering primary at %d,%d", x, y));
+	log((CLOG_INFO "entering primary at %d,%d%s", x, y, forScreenSaver ? " for screen saver" : ""));
 	assert(m_active == true);
+	assert(m_window != NULL);
 
 	// enter the screen
 	enterNoWarp();
@@ -190,12 +205,13 @@ CMSWindowsPrimaryScreen::leave()
 {
 	log((CLOG_INFO "leaving primary"));
 	assert(m_active == false);
+	assert(m_window != NULL);
 
 	// all messages prior to now are invalid
 	nextMark();
 
-	// save active window, show ours, and grab mouse/keyboard
-	if (!onLeave()) {
+	// show our window
+	if (!showWindow()) {
 		return false;
 	}
 
@@ -229,6 +245,48 @@ CMSWindowsPrimaryScreen::leave()
 	// local client now active
 	m_active = true;
 
+	// make sure our idea of clipboard ownership is correct
+	checkClipboard();
+
+	return true;
+}
+
+void
+CMSWindowsPrimaryScreen::reconfigure(UInt32 activeSides)
+{
+	m_setSides(activeSides);
+}
+
+void
+CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
+{
+	// set the cursor position without generating an event
+// FIXME -- doesn't this generate an event anyway?
+	SetCursorPos(x, y);
+
+	// save position as last position
+	m_x = x;
+	m_y = y;
+}
+
+void
+CMSWindowsPrimaryScreen::warpCursorToCenter()
+{
+	// warp to center.  the extra info tells the hook DLL to send
+	// SYNERGY_MSG_POST_WARP instead of SYNERGY_MSG_MOUSE_MOVE.
+	SInt32 x, y, w, h;
+	getScreenShape(x, y, w, h);
+	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE,
+						(DWORD)((65535.99 * (m_xCenter - x)) / (w - 1)),
+						(DWORD)((65535.99 * (m_yCenter - y)) / (h - 1)),
+						0,
+						0x12345678);
+// FIXME -- ignore mouse until we get warp notification?
+}
+
+void
+CMSWindowsPrimaryScreen::checkClipboard()
+{
 	// if we think we own the clipboard but we don't then somebody
 	// grabbed the clipboard on this screen without us knowing.
 	// tell the server that this screen grabbed the clipboard.
@@ -253,45 +311,13 @@ CMSWindowsPrimaryScreen::leave()
 			// ignore
 		}
 	}
-
-	return true;
-}
-
-void
-CMSWindowsPrimaryScreen::reconfigure(UInt32 activeSides)
-{
-	m_setSides(activeSides);
-}
-
-void
-CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
-{
-	// set the cursor position without generating an event
-	SetCursorPos(x, y);
-
-	// save position as last position
-	m_x = x;
-	m_y = y;
-}
-
-void
-CMSWindowsPrimaryScreen::warpCursorToCenter()
-{
-	// warp to center.  the extra info tells the hook DLL to send
-	// SYNERGY_MSG_POST_WARP instead of SYNERGY_MSG_MOUSE_MOVE.
-	SInt32 x, y, w, h;
-	getScreenShape(x, y, w, h);
-	mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE,
-						(DWORD)((65535.99 * (m_xCenter - x)) / (w - 1)),
-						(DWORD)((65535.99 * (m_yCenter - y)) / (h - 1)),
-						0,
-						0x12345678);
 }
 
 void
 CMSWindowsPrimaryScreen::setClipboard(ClipboardID /*id*/,
 				const IClipboard* src)
 {
+	// FIXME -- this is identical to CMSWindowsSecondaryScreen's code
 	assert(m_window != NULL);
 
 	CMSWindowsClipboard dst(m_window);
@@ -301,10 +327,12 @@ CMSWindowsPrimaryScreen::setClipboard(ClipboardID /*id*/,
 void
 CMSWindowsPrimaryScreen::grabClipboard(ClipboardID /*id*/)
 {
+	// FIXME -- this is identical to CMSWindowsSecondaryScreen's code
 	assert(m_window != NULL);
 
 	CMSWindowsClipboard clipboard(m_window);
 	if (clipboard.open(0)) {
+		// FIXME -- don't we need to empty it?
 		clipboard.close();
 	}
 }
@@ -313,6 +341,7 @@ void
 CMSWindowsPrimaryScreen::getClipboard(ClipboardID /*id*/,
 				IClipboard* dst) const
 {
+	// FIXME -- this is identical to CMSWindowsSecondaryScreen's code
 	assert(m_window != NULL);
 
 	CMSWindowsClipboard src(m_window);
@@ -376,67 +405,6 @@ CMSWindowsPrimaryScreen::isLockedToScreen() const
 
 	// not locked
 	return false;
-}
-
-void
-CMSWindowsPrimaryScreen::onOpenDisplay()
-{
-	assert(m_window == NULL);
-
-	// save thread id.  we'll need to pass this to the hook library.
-	m_threadID = GetCurrentThreadId();
-
-	// initialize hook library
-	m_init(m_threadID);
-
-	try {
-		// install the screen saver hook
-		if (m_installScreenSaver != NULL) {
-			m_installScreenSaver();
-		}
-
-		// get the input desktop and switch to it
-		if (m_is95Family) {
-			if (!openDesktop()) {
-				throw XScreenOpenFailure();
-			}
-		}
-		else {
-			if (!switchDesktop(openInputDesktop())) {
-				throw XScreenOpenFailure();
-			}
-		}
-	}
-	catch (...) {
-		m_cleanup();
-		throw;
-	}
-}
-
-void
-CMSWindowsPrimaryScreen::onCloseDisplay()
-{
-	// disconnect from desktop
-	if (m_is95Family) {
-		closeDesktop();
-	}
-	else {
-		switchDesktop(NULL);
-	}
-
-	// uninstall the screen saver hook
-	if (m_uninstallScreenSaver != NULL) {
-		m_uninstallScreenSaver();
-	}
-
-	// cleanup hook library
-	m_cleanup();
-
-	// clear thread id
-	m_threadID = 0;
-
-	assert(m_window == NULL);
-	assert(m_desk   == NULL);
 }
 
 bool
@@ -667,8 +635,7 @@ CMSWindowsPrimaryScreen::onEvent(HWND hwnd, UINT msg,
 			// do nothing if resolution hasn't changed
 			if (x != xOld || y != yOld || w != wOld || h != hOld) {
 				// recompute center pixel of primary screen
-				m_xCenter = GetSystemMetrics(SM_CXSCREEN) >> 1;
-				m_yCenter = GetSystemMetrics(SM_CYSCREEN) >> 1;
+				getCursorCenter(m_xCenter, m_yCenter);
 
 				// warp mouse to center if active
 				if (m_active) {
@@ -720,33 +687,14 @@ CMSWindowsPrimaryScreen::enterNoWarp()
 	m_setRelay(false);
 
 	// restore active window and hide our window
-	onEnter();
+	hideWindow();
 
 	// all messages prior to now are invalid
 	nextMark();
 }
 
-void
-CMSWindowsPrimaryScreen::onEnter()
-{
-	// restore the active window and hide our window.  we can only set
-	// the active window for another thread if we first attach our input
-	// to that thread.
-	ReleaseCapture();
-	if (m_lastActiveWindow != NULL) {
-		DWORD myThread = GetCurrentThreadId();
-		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
-			// FIXME -- shouldn't raise window if X-Mouse is enabled
-			// but i have no idea how to do that or check if enabled.
-			SetActiveWindow(m_lastActiveWindow);
-			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
-		}
-	}
-	ShowWindow(m_window, SW_HIDE);
-}
-
 bool
-CMSWindowsPrimaryScreen::onLeave()
+CMSWindowsPrimaryScreen::showWindow()
 {
 	// remember the active window before we leave.  GetActiveWindow()
 	// will only return the active window for the thread's queue (i.e.
@@ -776,6 +724,25 @@ CMSWindowsPrimaryScreen::onLeave()
 	return true;
 }
 
+void
+CMSWindowsPrimaryScreen::hideWindow()
+{
+	// restore the active window and hide our window.  we can only set
+	// the active window for another thread if we first attach our input
+	// to that thread.
+	ReleaseCapture();
+	if (m_lastActiveWindow != NULL) {
+		DWORD myThread = GetCurrentThreadId();
+		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
+			// FIXME -- shouldn't raise window if X-Mouse is enabled
+			// but i have no idea how to do that or check if enabled.
+			SetActiveWindow(m_lastActiveWindow);
+			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
+		}
+	}
+	ShowWindow(m_window, SW_HIDE);
+}
+
 SInt32
 CMSWindowsPrimaryScreen::getJumpZoneSize() const
 {
@@ -790,6 +757,55 @@ CMSWindowsPrimaryScreen::nextMark()
 
 	// mark point in message queue where the mark was changed
 	PostThreadMessage(m_threadID, SYNERGY_MSG_MARK, m_mark, 0);
+}
+
+void
+CMSWindowsPrimaryScreen::createWindow()
+{
+	// get the input desktop and switch to it
+	if (m_is95Family) {
+		if (!openDesktop()) {
+			throw XScreenOpenFailure();
+		}
+	}
+	else {
+		if (!switchDesktop(openInputDesktop())) {
+			throw XScreenOpenFailure();
+		}
+	}
+}
+
+void
+CMSWindowsPrimaryScreen::destroyWindow()
+{
+	// disconnect from desktop
+	if (m_is95Family) {
+		closeDesktop();
+	}
+	else {
+		switchDesktop(NULL);
+	}
+
+	assert(m_window == NULL);
+	assert(m_desk   == NULL);
+}
+
+void
+CMSWindowsPrimaryScreen::installScreenSaver()
+{
+	// install the screen saver hook
+	if (m_installScreenSaver != NULL) {
+		m_installScreenSaver();
+	}
+}
+
+void
+CMSWindowsPrimaryScreen::uninstallScreenSaver()
+{
+	// uninstall the screen saver hook
+	if (m_uninstallScreenSaver != NULL) {
+		m_uninstallScreenSaver();
+	}
 }
 
 bool
@@ -835,7 +851,7 @@ CMSWindowsPrimaryScreen::closeDesktop()
 	if (m_window != NULL) {
 		// restore active window and hide ours
 		if (m_active) {
-			onEnter();
+			hideWindow();
 		}
 
 		// first remove clipboard snooper
@@ -866,7 +882,7 @@ CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 	if (m_window != NULL) {
 		// restore active window and hide ours
 		if (m_active) {
-			onEnter();
+			hideWindow();
 		}
 
 		// first remove clipboard snooper
@@ -948,7 +964,7 @@ CMSWindowsPrimaryScreen::switchDesktop(HDESK desk)
 
 	// get active window and show ours
 	if (m_active) {
-		onLeave();
+		showWindow();
 	}
 	else {
 		// watch jump zones
