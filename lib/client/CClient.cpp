@@ -546,7 +546,7 @@ CClient::runServer()
 				break;
 			}
 			catch (XSocketConnect& e) {
-				LOG((CLOG_DEBUG1 "failed to connect to server: %s", e.what()));
+				LOG((CLOG_DEBUG "failed to connect to server: %s", e.what()));
 
 				// failed to connect.  if not camping then rethrow.
 				if (!m_camp) {

@@ -99,7 +99,7 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 	}
 
 	if (result == Success) {
-		LOG((CLOG_DEBUG1 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
+		LOG((CLOG_DEBUG2 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
 		return true;
 	}
 	else {
