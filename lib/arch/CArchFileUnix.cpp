@@ -56,6 +56,9 @@ CArchFileUnix::getUserDirectory()
 	struct passwd* pwentp;
 #if defined(_SC_GETPW_R_SIZE_MAX)
 	long size = sysconf(_SC_GETPW_R_SIZE_MAX);
+	if (size == -1) {
+		size = BUFSIZ;
+	}
 #else
 	long size = BUFSIZ;
 #endif

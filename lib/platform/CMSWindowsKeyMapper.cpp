@@ -345,7 +345,7 @@ const KeyID				CMSWindowsKeyMapper::s_virtualKey[][2] =
 	/* 0x16 */ kKeyNone,		kKeyNone,		// VK_HANGUL		
 	/* 0x17 */ kKeyNone,		kKeyNone,		// VK_JUNJA			
 	/* 0x18 */ kKeyNone,		kKeyNone,		// VK_FINAL			
-	/* 0x19 */ kKeyNone,		kKeyNone,		// VK_KANJI			
+	/* 0x19 */ kKeyZenkaku,		kKeyNone,		// VK_KANJI			
 	/* 0x1a */ kKeyNone,		kKeyNone,		// undefined
 	/* 0x1b */ kKeyEscape,		kKeyNone,		// VK_ESCAPE
 	/* 0x1c */ kKeyNone,		kKeyNone,		// VK_CONVERT		
@@ -668,7 +668,7 @@ const KeyButton			CMSWindowsKeyMapper::s_mapEF00[] =
 	/* 0x10 */ 0, 0, 0, VK_PAUSE, VK_SCROLL, 0/*sys-req*/, 0, 0,
 	/* 0x18 */ 0, 0, 0, VK_ESCAPE, 0, 0, 0, 0,
 	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x28 */ 0, 0, VK_KANJI, 0, 0, 0, 0, 0,
 	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,

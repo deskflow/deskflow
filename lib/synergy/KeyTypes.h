@@ -86,6 +86,7 @@ static const KeyID		kKeyPause		= 0xEF13;	/* Pause, hold */
 static const KeyID		kKeyScrollLock	= 0xEF14;
 static const KeyID		kKeySysReq		= 0xEF15;
 static const KeyID		kKeyEscape		= 0xEF1B;
+static const KeyID		kKeyZenkaku		= 0xEF2A;	/* Zenkaku/Hankaku */
 static const KeyID		kKeyDelete		= 0xEFFF;	/* Delete, rubout */
 
 // multi-key character composition
