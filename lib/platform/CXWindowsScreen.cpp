@@ -288,6 +288,7 @@ CXWindowsScreen::mainLoop()
 		// if the thread has been cancelled.  poll() should return -1
 		// with EINTR when the thread is cancelled.
 		m_mutex.unlock();
+		CThread::testCancel();
 #if HAVE_POLL
 		poll(pfds, 1, timeout);
 #else
@@ -358,8 +359,28 @@ CXWindowsScreen::mainLoop()
 void
 CXWindowsScreen::exitMainLoop()
 {
+	// m_stop should be a condition variable that we signal here
+	// but we can't wait on both the condition variable and the
+	// X connection so there's no point.  however, we do need
+	// to wake up the X connection so send ourself some event.
 	CLock lock(&m_mutex);
 	m_stop = true;
+
+	if (m_display != NULL && m_window != None) {
+		XEvent event;
+		event.xclient.type         = ClientMessage;
+		event.xclient.display      = m_display;
+		event.xclient.window       = m_window;
+		event.xclient.message_type = XInternAtom(m_display, "ATOM", False);
+		event.xclient.format       = 32;
+		event.xclient.data.l[0]    = 0;
+		event.xclient.data.l[1]    = 0;
+		event.xclient.data.l[2]    = 0;
+		event.xclient.data.l[3]    = 0;
+		event.xclient.data.l[4]    = 0;
+		CXWindowsUtil::CErrorLock lock(m_display);
+		XSendEvent(m_display, m_window, False, 0, &event);
+	}
 }
 
 void
