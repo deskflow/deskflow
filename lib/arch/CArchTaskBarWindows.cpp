@@ -41,45 +41,43 @@ CArchTaskBarWindows::CArchTaskBarWindows(void* appInstance) :
 	// save app instance
 	s_appInstance = reinterpret_cast<HINSTANCE>(appInstance);
 
-	// register the task bar restart message
-	m_taskBarRestart        = RegisterWindowMessage(TEXT("TaskbarCreated"));
+	// we need a mutex
+	m_mutex       = ARCH->newMutex();
 
-	// register a window class
-	WNDCLASSEX classInfo;
-	classInfo.cbSize        = sizeof(classInfo);
-	classInfo.style         = CS_NOCLOSE;
-	classInfo.lpfnWndProc   = &CArchTaskBarWindows::staticWndProc;
-	classInfo.cbClsExtra    = 0;
-	classInfo.cbWndExtra    = sizeof(CArchTaskBarWindows*);
-	classInfo.hInstance     = s_appInstance;
-	classInfo.hIcon         = NULL;
-	classInfo.hCursor       = NULL;
-	classInfo.hbrBackground = NULL;
-	classInfo.lpszMenuName  = NULL;
-	classInfo.lpszClassName = TEXT("SynergyTaskBar");
-	classInfo.hIconSm       = NULL;
-	m_windowClass           = RegisterClassEx(&classInfo);
+	// and a condition variable which uses the above mutex
+	m_ready       = false;
+	m_condVar     = ARCH->newCondVar();
 
-	// create window
-	m_hwnd = CreateWindowEx(WS_EX_TOOLWINDOW,
-							reinterpret_cast<LPCTSTR>(m_windowClass),
-							TEXT("Synergy Task Bar"),
-							WS_POPUP,
-							0, 0, 1, 1,
-							NULL,
-							NULL,
-							s_appInstance,
-							reinterpret_cast<void*>(this));
+	// we're going to want to get a result from the thread we're
+	// about to create to know if it initialized successfully.
+	// so we lock the condition variable.
+	ARCH->lockMutex(m_mutex);
+
+	// open a window and run an event loop in a separate thread.
+	// this has to happen in a separate thread because if we
+	// create a window on the current desktop with the current
+	// thread then the current thread won't be able to switch
+	// desktops if it needs to.
+	m_thread      = ARCH->newThread(&CArchTaskBarWindows::threadEntry, this);
+
+	// wait for child thread
+	while (!m_ready) {
+		ARCH->waitCondVar(m_condVar, m_mutex, -1.0);
+	}
+
+	// ready
+	ARCH->unlockMutex(m_mutex);
 }
 
 CArchTaskBarWindows::~CArchTaskBarWindows()
 {
-	if (m_hwnd != NULL) {
-		removeAllIcons();
-		DestroyWindow(m_hwnd);
+	if (m_thread != NULL) {
+		PostMessage(m_hwnd, WM_QUIT, 0, 0);
+		ARCH->wait(m_thread, -1.0);
+		ARCH->closeThread(m_thread);
 	}
-	UnregisterClass((LPCTSTR)m_windowClass, s_appInstance);
-
+	ARCH->closeCondVar(m_condVar);
+	ARCH->closeMutex(m_mutex);
 	s_instance = NULL;
 }
 
@@ -98,10 +96,6 @@ CArchTaskBarWindows::removeDialog(HWND hwnd)
 void
 CArchTaskBarWindows::addReceiver(IArchTaskBarReceiver* receiver)
 {
-	if (m_hwnd == NULL) {
-		return;
-	}
-
 	// ignore bogus receiver
 	if (receiver == NULL) {
 		return;
@@ -176,43 +170,53 @@ CArchTaskBarWindows::recycleID(UINT id)
 void
 CArchTaskBarWindows::addIcon(UINT id)
 {
+	ARCH->lockMutex(m_mutex);
 	CIDToReceiverMap::const_iterator index = m_idTable.find(id);
 	if (index != m_idTable.end()) {
 		modifyIconNoLock(index->second, NIM_ADD);
 	}
+	ARCH->unlockMutex(m_mutex);
 }
 
 void
 CArchTaskBarWindows::removeIcon(UINT id)
 {
+	ARCH->lockMutex(m_mutex);
 	removeIconNoLock(id);
+	ARCH->unlockMutex(m_mutex);
 }
 
 void
 CArchTaskBarWindows::updateIcon(UINT id)
 {
+	ARCH->lockMutex(m_mutex);
 	CIDToReceiverMap::const_iterator index = m_idTable.find(id);
 	if (index != m_idTable.end()) {
 		modifyIconNoLock(index->second, NIM_MODIFY);
 	}
+	ARCH->unlockMutex(m_mutex);
 }
 
 void
 CArchTaskBarWindows::addAllIcons()
 {
+	ARCH->lockMutex(m_mutex);
 	for (CReceiverToInfoMap::const_iterator index = m_receivers.begin();
 									index != m_receivers.end(); ++index) {
 		modifyIconNoLock(index, NIM_ADD);
 	}
+	ARCH->unlockMutex(m_mutex);
 }
 
 void
 CArchTaskBarWindows::removeAllIcons()
 {
+	ARCH->lockMutex(m_mutex);
 	for (CReceiverToInfoMap::const_iterator index = m_receivers.begin();
 									index != m_receivers.end(); ++index) {
 		removeIconNoLock(index->second.m_id);
 	}
+	ARCH->unlockMutex(m_mutex);
 }
 
 void
@@ -305,6 +309,49 @@ CArchTaskBarWindows::handleIconMessage(
 	}
 }
 
+bool
+CArchTaskBarWindows::processDialogs(MSG* msg)
+{
+	// only one thread can be in this method on any particular object
+	// at any given time.  that's not a problem since only our event
+	// loop calls this method and there's just one of those.
+
+	ARCH->lockMutex(m_mutex);
+
+	// remove removed dialogs
+	m_dialogs.erase(false);
+
+	// merge added dialogs into the dialog list
+	for (CDialogs::const_iterator index = m_addedDialogs.begin();
+							index != m_addedDialogs.end(); ++index) {
+		m_dialogs.insert(std::make_pair(index->first, index->second));
+	}
+	m_addedDialogs.clear();
+
+	ARCH->unlockMutex(m_mutex);
+
+	// check message against all dialogs until one handles it.
+	// note that we don't hold a lock while checking because
+	// the message is processed and may make calls to this
+	// object.  that's okay because addDialog() and
+	// removeDialog() don't change the map itself (just the
+	// values of some elements).
+	ARCH->lockMutex(m_mutex);
+	for (CDialogs::const_iterator index = m_dialogs.begin();
+							index != m_dialogs.end(); ++index) {
+		if (index->second) {
+			ARCH->unlockMutex(m_mutex);
+			if (IsDialogMessage(index->first, msg)) {
+				return true;
+			}
+			ARCH->lockMutex(m_mutex);
+		}
+	}
+	ARCH->unlockMutex(m_mutex);
+
+	return false;
+}
+
 LRESULT
 CArchTaskBarWindows::wndProc(HWND hwnd,
 				UINT msg, WPARAM wParam, LPARAM lParam)
@@ -374,4 +421,71 @@ CArchTaskBarWindows::staticWndProc(HWND hwnd, UINT msg,
 	else {
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
+}
+
+void
+CArchTaskBarWindows::threadMainLoop()
+{
+	// register the task bar restart message
+	m_taskBarRestart        = RegisterWindowMessage(TEXT("TaskbarCreated"));
+
+	// register a window class
+	WNDCLASSEX classInfo;
+	classInfo.cbSize        = sizeof(classInfo);
+	classInfo.style         = CS_NOCLOSE;
+	classInfo.lpfnWndProc   = &CArchTaskBarWindows::staticWndProc;
+	classInfo.cbClsExtra    = 0;
+	classInfo.cbWndExtra    = sizeof(CArchTaskBarWindows*);
+	classInfo.hInstance     = s_appInstance;
+	classInfo.hIcon         = NULL;
+	classInfo.hCursor       = NULL;
+	classInfo.hbrBackground = NULL;
+	classInfo.lpszMenuName  = NULL;
+	classInfo.lpszClassName = TEXT("SynergyTaskBar");
+	classInfo.hIconSm       = NULL;
+	ATOM windowClass        = RegisterClassEx(&classInfo);
+
+	// create window
+	m_hwnd = CreateWindowEx(WS_EX_TOOLWINDOW,
+							reinterpret_cast<LPCTSTR>(windowClass),
+							TEXT("Synergy Task Bar"),
+							WS_POPUP,
+							0, 0, 1, 1,
+							NULL,
+							NULL,
+							s_appInstance,
+							reinterpret_cast<void*>(this));
+
+	// signal ready
+	ARCH->lockMutex(m_mutex);
+	m_ready = true;
+	ARCH->broadcastCondVar(m_condVar);
+	ARCH->unlockMutex(m_mutex);
+
+	// handle failure
+	if (m_hwnd == NULL) {
+		UnregisterClass((LPCTSTR)windowClass, s_appInstance);
+		return;
+	}
+
+	// main loop
+	MSG msg;
+	while (GetMessage(&msg, NULL, 0, 0)) {
+		if (!processDialogs(&msg)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+
+	// clean up
+	removeAllIcons();
+	DestroyWindow(m_hwnd);
+	UnregisterClass((LPCTSTR)windowClass, s_appInstance);
+}
+
+void*
+CArchTaskBarWindows::threadEntry(void* self)
+{
+	reinterpret_cast<CArchTaskBarWindows*>(self)->threadMainLoop();
+	return NULL;
 }

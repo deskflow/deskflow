@@ -18,6 +18,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "IArchTaskBar.h"
+#include "IArchMultithread.h"
 #include "stdmap.h"
 #include "stdvector.h"
 #include <windows.h>
@@ -77,13 +78,21 @@ private:
 	LRESULT				wndProc(HWND, UINT, WPARAM, LPARAM);
 	static LRESULT CALLBACK
 						staticWndProc(HWND, UINT, WPARAM, LPARAM);
+	void				threadMainLoop();
+	static void*		threadEntry(void*);
 
 private:
 	static CArchTaskBarWindows*	s_instance;
 	static HINSTANCE	s_appInstance;
 
+	// multithread data
+	CArchMutex			m_mutex;
+	CArchCond			m_condVar;
+	bool				m_ready;
+	int					m_result;
+	CArchThread			m_thread;
+
 	// child thread data
-	ATOM				m_windowClass;
 	HWND				m_hwnd;
 	UINT				m_taskBarRestart;
 
