@@ -5,10 +5,10 @@ Things to do to synergy, in no particular order:
 
 * Provide GUI configuration
 
-  There's a GUI tool on win32 but no other platforms.  It'd be nice
-  if the tool allowed users to drag screen icons around to set the
-  links between them, but this complicated because links aren't
-  necessarily symmetrical.
+  There's a GUI tool on win32 but no other platforms.  Also, it'd be
+  nice if the tool allowed users to drag screen icons around to set
+  the links between them (though this assumes links are symmetrical
+  and synergy supports asymmetrical links).
 
 * Provide taskbar feedback
 
@@ -16,18 +16,13 @@ Things to do to synergy, in no particular order:
   and to quit synergy.  It'd be nice to have something similar on
   X11.
 
-* Support non-ASCII keyboards
-
-  Synergy currently supports only ASCII characters typed on the
-  keyboard.  It does, however, support Unicode clipboard text.
-
-* Write man/html pages
-
 * Port to other platforms
 
   Most desired is MacOS X.
 
-* Provide a nice win32 installer/uninstaller
+* Write man/html pages
+
+* Provide a win32 installer/uninstaller
 
   Synergy doesn't have any special needs so even just unzipping is
   satisfactory, but a proper installer would be nice.  And, more
@@ -43,19 +38,12 @@ Things to do to synergy, in no particular order:
   The type is converted to each platform's native type.  For example,
   BMP for images on win32.
 
-* Keyboard shortcuts to jump from screen to screen
-
 Then there are major new features:
 
 * Provide a KVM mode
 
   In this mode synergy would share the monitor in addition to the
   keyboard and mouse.
-
-* Add encryption and authentication
-
-  Make synergy is safe to use on untrusted networks.  Using synergy
-  through SSH can provide this until synergy has it built-in.
 
 * Support for limited drag and drop between systems
 
@@ -64,3 +52,10 @@ Then there are major new features:
   This would be useful in KVM mode to administer several remote
   headless systems that you don't want running X just so synergy
   can work.
+
+* Configurable keys
+
+  This includes shortcuts to jump to different screens, always
+  directing certain keystrokes to the same system, never sending
+  certain keystrokes to some systems, and remapping keys on the
+  server to other keys on the clients.

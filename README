@@ -57,7 +57,10 @@ System Requirements
     (use `xdpyinfo | grep XTEST' to check for XTEST).
 
 In this document, "Unix" means any of the following:  Linux, Solaris,
-Irix.
+Irix.  Synergy may compile and run on other Unix variants, too.  Patches
+for other platforms are welcome (including patches that package binaries);
+See the contact information available off of the synergy home page or use
+the patch page on sourceforge.
 
 
 Installation
@@ -77,9 +80,9 @@ The first step is to pick which keyboard and mouse you want to share.
 The computer with that keyboard and mouse is called the "primary
 screen" and it runs the synergy server.  All of the other computers
 are "secondary screens" and run the synergy client.  The Windows NT
-family, starting with NT 4 with service pack 3, is the best choice
-for the primary screen but Unix is good too.  (This is based on the
-known bugs;  see BUGS for more details.)
+family, starting with NT 4 with service pack 3, and Unix are the best
+choices.  The Windows version provides a convenient GUI for
+configuration.
 
 Second, you install the software.  Choose the appropriate package
 and install it.  On Windows you should unzip the files into the
@@ -205,18 +208,12 @@ your computers.
 Tips and Tricks
 ---------------
 * Be aware that not all keystrokes can be handled by synergy.  In
-  particular, ctrl+alt+del is not handled.  You cannot use synergy
-  to log into a Windows NT family system that requires the user to
-  press ctrl+alt+del to log on.  You'll need to keep that computer's
-  keyboard handy in order to log on.
-
-* To work around the lack of ctrl+alt+del, you can configure Windows
-  2000 and XP to not require ctrl+alt+del to log on using the System
-  control panel.  If you're the only user of an NT system you might
-  want to enable auto-logon.  In any case, you should keep each
-  computer's keyboard handy, perhaps under the desk or on top of the
-  computer itself.  If the system supports USB you should also be able
-  to attach/detach a keyboard as necessary.
+  particular, ctrl+alt+del is not handled.  However, synergy can
+  convert ctrl+alt+pause into ctrl+alt+del on the client side.
+  (Synergy must be installed as a service on the client for this to
+  work on the Windows NT family.)  Some non-standard keys may not
+  work, especially "multimedia" buttons, though several are
+  correctly handled.
 
 * A screen can be its own neighbor.  That allows a screen to "wrap".
   For example, if a configuration linked the left and right sides of
