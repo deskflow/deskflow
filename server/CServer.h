@@ -4,6 +4,7 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "CScreenMap.h"
+#include "CClipboard.h"
 #include "CMutex.h"
 #include "CString.h"
 #include "XBase.h"
@@ -36,16 +37,19 @@ class CServer {
 	// true iff the mouse enters a jump zone and jumps.
 	void				onKeyDown(KeyID, KeyModifierMask);
 	void				onKeyUp(KeyID, KeyModifierMask);
-	void				onKeyRepeat(KeyID, KeyModifierMask);
+	void				onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
 	void				onMouseDown(ButtonID);
 	void				onMouseUp(ButtonID);
 	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
 	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	void				onMouseWheel(SInt32 delta);
+	void				grabClipboard();
 
 	// handle messages from clients
 	void				setInfo(const CString& clientName,
 								SInt32 w, SInt32 h, SInt32 zoneSize);
+	void				grabClipboard(const CString& clientName);
+	void				setClipboard(UInt32 seqNum, const CString& data);
 
 	// accessors
 
@@ -91,6 +95,7 @@ class CServer {
 		IServerProtocol* m_protocol;
 		SInt32			m_width, m_height;
 		SInt32			m_zoneSize;
+		bool			m_gotClipboard;
 	};
 
 	// change the active screen
@@ -159,6 +164,12 @@ class CServer {
 	SInt32				m_x, m_y;
 
 	CScreenMap			m_screenMap;
+
+	CClipboard			m_clipboard;
+	CString				m_clipboardData;
+	CString				m_clipboardOwner;
+	UInt32				m_clipboardSeqNum;
+	bool				m_clipboardReady;
 };
 
 #endif

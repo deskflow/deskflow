@@ -191,6 +191,12 @@ UInt32					CProtocolUtil::getLength(
 
 			  case 's':
 				assert(len == 0);
+				len = (va_arg(args, CString*))->size() + 4;
+				(void)va_arg(args, UInt8*);
+				break;
+
+			  case 'S':
+				assert(len == 0);
 				len = va_arg(args, UInt32) + 4;
 				(void)va_arg(args, UInt8*);
 				break;
@@ -258,6 +264,21 @@ void			 		CProtocolUtil::writef(void* buffer,
 			  }
 
 			  case 's': {
+				assert(len == 0);
+				const CString* src = va_arg(args, CString*);
+				const UInt32 len = (src != NULL) ? src->size() : 0;
+				*dst++ = static_cast<UInt8>((len >> 24) & 0xff);
+				*dst++ = static_cast<UInt8>((len >> 16) & 0xff);
+				*dst++ = static_cast<UInt8>((len >>  8) & 0xff);
+				*dst++ = static_cast<UInt8>( len        & 0xff);
+				if (len != 0) {
+					memcpy(dst, src->data(), len);
+					dst += len;
+				}
+				break;
+			  }
+
+			  case 'S': {
 				assert(len == 0);
 				const UInt32 len = va_arg(args, UInt32);
 				const UInt8* src = va_arg(args, UInt8*);

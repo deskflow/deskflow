@@ -14,10 +14,10 @@
 #define CSYNERGYHOOK_API
 #endif
 
-#define SYNERGY_MSG_MARK			WM_APP + 0x0001	// mark id; <unused>
-#define SYNERGY_MSG_KEY				WM_APP + 0x0002	// vk code; key data
-#define SYNERGY_MSG_MOUSE_BUTTON	WM_APP + 0x0003	// button msg; <unused>
-#define SYNERGY_MSG_MOUSE_MOVE		WM_APP + 0x0004	// x; y
+#define SYNERGY_MSG_MARK			WM_APP + 0x0011	// mark id; <unused>
+#define SYNERGY_MSG_KEY				WM_APP + 0x0012	// vk code; key data
+#define SYNERGY_MSG_MOUSE_BUTTON	WM_APP + 0x0013	// button msg; <unused>
+#define SYNERGY_MSG_MOUSE_MOVE		WM_APP + 0x0014	// x; y
 
 typedef int				(*InstallFunc)(HWND);
 typedef int				(*UninstallFunc)(void);

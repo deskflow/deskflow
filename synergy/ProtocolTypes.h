@@ -16,7 +16,7 @@ static const SInt32		kMinorVersion = 1;
 static const char		kMsgCClose[] 		= "CBYE";		// server
 static const char		kMsgCEnter[] 		= "CINN%2i%2i";	// server
 static const char		kMsgCLeave[] 		= "COUT";		// server
-static const char		kMsgCClipboard[] 	= "CCLP";		// server
+static const char		kMsgCClipboard[] 	= "CCLP";		// server/client
 static const char		kMsgCScreenSaver[] 	= "CSEC%1i";	// server
 
 static const char		kMsgDKeyDown[]		= "DKDN%2i%2i";	// server
@@ -26,10 +26,10 @@ static const char		kMsgDMouseDown[]	= "DMDN%1i";	// server
 static const char		kMsgDMouseUp[]		= "DMUP%1i";	// server
 static const char		kMsgDMouseMove[]	= "DMMV%2i%2i";	// server
 static const char		kMsgDMouseWheel[]	= "DMWM%2i";	// server
-static const char		kMsgDClipboard[]	= "DCLP%s";		// server
+static const char		kMsgDClipboard[]	= "DCLP%4i%s";	// server/client
 static const char		kMsgDInfo[]			= "DINF%2i%2i%2i";	// client
 
-static const char		kMsgQClipboard[]	= "QCLP";		// server
+static const char		kMsgQClipboard[]	= "QCLP%4i";	// server
 static const char		kMsgQInfo[]			= "QINF";		// server
 
 static const char		kMsgEIncompatible[]	= "EICV";

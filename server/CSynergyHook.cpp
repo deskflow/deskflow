@@ -56,7 +56,10 @@ static void				restoreCursor()
 static LRESULT CALLBACK	keyboardHook(int code, WPARAM wParam, LPARAM lParam)
 {
 	if (code >= 0) {
-		// FIXME
+		if (g_relay) {
+			PostMessage(g_hwnd, SYNERGY_MSG_KEY, wParam, lParam);
+			return 1;
+		}
 	}
 
 	return CallNextHookEx(g_keyboard, code, wParam, lParam);

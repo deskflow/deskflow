@@ -117,19 +117,46 @@ void					CXWindowsPrimaryScreen::run()
 			break;
 		  }
 
-/*
 		  case SelectionClear:
-			target->XXX(xevent.xselectionclear.);
+			// we just lost the selection.  that means someone else
+			// grabbed the selection so this screen is now the
+			// selection owner.  report that to the server.
+			m_server->grabClipboard();
 			break;
 
 		  case SelectionNotify:
-			target->XXX(xevent.xselection.);
+			// notification of selection transferred.  we shouldn't
+			// get this here because we handle them in the selection
+			// retrieval methods.  we'll just delete the property
+			// with the data (satisfying the usual ICCCM protocol).
+			if (xevent.xselection.property != None) {
+				CDisplayLock display(this);
+				XDeleteProperty(display, m_window, xevent.xselection.property);
+			}
 			break;
 
 		  case SelectionRequest:
-			target->XXX(xevent.xselectionrequest.);
+			// somebody is asking for clipboard data
+			if (xevent.xselectionrequest.owner == m_window) {
+				addClipboardRequest(m_window,
+								xevent.xselectionrequest.requestor,
+								xevent.xselectionrequest.selection,
+								xevent.xselectionrequest.target,
+								xevent.xselectionrequest.property,
+								xevent.xselectionrequest.time);
+			}
 			break;
-*/
+
+		  case PropertyNotify:
+			// clipboard transfers involve property changes so forward
+			// the event to the superclass.  we only care about the
+			// deletion of properties.
+			if (xevent.xproperty.state == PropertyDelete) {
+				processClipboardRequest(xevent.xproperty.window,
+								xevent.xproperty.atom,
+								xevent.xproperty.time);
+			}
+			break;
 		}
 	}
 }
@@ -267,19 +294,17 @@ void					CXWindowsPrimaryScreen::warpCursorNoLock(
 	}
 }
 
-#include <X11/Xatom.h> // FIXME
 void					CXWindowsPrimaryScreen::setClipboard(
-								const IClipboard* /*clipboard*/)
+								const IClipboard* clipboard)
 {
-	// FIXME -- put this in superclass?
 	// FIXME -- don't use CurrentTime
-	CDisplayLock display(this);
-	XSetSelectionOwner(display, XA_PRIMARY, m_window, CurrentTime);
-	if (XGetSelectionOwner(display, XA_PRIMARY) == m_window) {
-		// we got the selection
-		log((CLOG_DEBUG "grabbed clipboard"));
-	}
-	// FIXME -- need to copy or adopt the clipboard to serve future requests
+	setDisplayClipboard(clipboard, m_window, CurrentTime);
+}
+
+void					CXWindowsPrimaryScreen::grabClipboard()
+{
+	// FIXME -- don't use CurrentTime
+	setDisplayClipboard(NULL, m_window, CurrentTime);
 }
 
 void					CXWindowsPrimaryScreen::getSize(
@@ -296,7 +321,6 @@ SInt32					CXWindowsPrimaryScreen::getJumpZoneSize() const
 void					CXWindowsPrimaryScreen::getClipboard(
 								IClipboard* clipboard) const
 {
-	// FIXME -- put this in superclass?
 	// FIXME -- don't use CurrentTime
 	getDisplayClipboard(clipboard, m_window, CurrentTime);
 }

@@ -54,10 +54,10 @@ class IPrimaryScreen : public IInterface {
 /*
 	// show or hide the screen saver
 	virtual void		onScreenSaver(bool show) = 0;
-
-	// clipboard input
-	virtual void		onClipboardChanged() = 0;
 */
+
+	// synergy should own the clipboard
+	virtual void		grabClipboard() = 0;
 
 	// accessors
 

@@ -1,5 +1,7 @@
 #include "CMSWindowsSecondaryScreen.h"
+#include "CMSWindowsClipboard.h"
 #include "CClient.h"
+#include "CClipboard.h"
 #include "CThread.h"
 #include "CLog.h"
 #include <assert.h>
@@ -10,7 +12,8 @@
 
 CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen() :
 								m_client(NULL),
-								m_window(NULL)
+								m_window(NULL),
+								m_nextClipboardWindow(NULL)
 {
 	// do nothing
 }
@@ -20,6 +23,8 @@ CMSWindowsSecondaryScreen::~CMSWindowsSecondaryScreen()
 	assert(m_window == NULL);
 }
 
+static CString s_log;
+static CString s_logMore;
 static HWND s_debug = NULL;
 static HWND s_debugLog = NULL;
 static DWORD s_thread = 0;
@@ -32,39 +37,40 @@ static BOOL CALLBACK WINAPI debugProc(HWND, UINT msg, WPARAM wParam, LPARAM lPar
 	  case WM_CLOSE:
 		PostQuitMessage(0);
 		return TRUE;
+
+	  case WM_APP:
+		if (!s_logMore.empty()) {
+			if (s_log.size() > 20000)
+				s_log = s_logMore;
+			else
+				s_log += s_logMore;
+			s_logMore = "";
+			SendMessage(s_debugLog, WM_SETTEXT, FALSE, (LPARAM)(LPCTSTR)s_log.c_str());
+			SendMessage(s_debugLog, EM_SETSEL, s_log.size(), s_log.size());
+			SendMessage(s_debugLog, EM_SCROLLCARET, 0, 0);
+		}
+		return TRUE;
 	}
 	return FALSE;
 }
 static void debugOutput(const char* msg)
 {
-	if (s_thread != 0) {
-		const DWORD threadID = ::GetCurrentThreadId();
-		if (threadID != s_thread) {
-			GetDesktopWindow();
-			AttachThreadInput(threadID, s_thread, TRUE);
-		}
-	}
-	DWORD len = SendMessage(s_debugLog, WM_GETTEXTLENGTH, 0, 0);
-	if (len > 20000) {
-		SendMessage(s_debugLog, EM_SETSEL, -1, 0);
-		SendMessage(s_debugLog, WM_SETTEXT, FALSE, (LPARAM)(LPCTSTR)msg);
-	}
-	else {
-		SendMessage(s_debugLog, EM_SETSEL, -1, len);
-		SendMessage(s_debugLog, EM_REPLACESEL, FALSE, (LPARAM)(LPCTSTR)msg);
-	}
-	SendMessage(s_debugLog, EM_SCROLLCARET, 0, 0);
+	s_logMore += msg;
+	PostMessage(s_debug, WM_APP, 0, 0);
 }
 
 void					CMSWindowsSecondaryScreen::run()
 {
 CLog::setOutputter(&debugOutput);
+	log((CLOG_INFO "entering event loop"));
 	doRun();
+	log((CLOG_INFO "exiting event loop"));
 CLog::setOutputter(NULL);
 }
 
 void					CMSWindowsSecondaryScreen::stop()
 {
+	log((CLOG_INFO "requesting event loop stop"));
 	doStop();
 }
 
@@ -72,6 +78,8 @@ void					CMSWindowsSecondaryScreen::open(CClient* client)
 {
 	assert(m_client == NULL);
 	assert(client   != NULL);
+
+	log((CLOG_INFO "opening screen"));
 
 	// set the client
 	m_client = client;
@@ -84,6 +92,8 @@ void					CMSWindowsSecondaryScreen::close()
 {
 	assert(m_client != NULL);
 
+	log((CLOG_INFO "closing screen"));
+
 	// close the display
 	closeDisplay();
 
@@ -95,6 +105,8 @@ void					CMSWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 {
 	assert(m_window != NULL);
 
+	log((CLOG_INFO "entering screen at %d,%d", x, y));
+
 	// warp to requested location
 	SInt32 w, h;
 	getScreenSize(&w, &h);
@@ -104,12 +116,15 @@ void					CMSWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 								0, 0);
 
 	// show cursor
+	log((CLOG_INFO "show cursor"));
 	ShowWindow(m_window, SW_HIDE);
 }
 
 void					CMSWindowsSecondaryScreen::leave()
 {
 	assert(m_window != NULL);
+
+	log((CLOG_INFO "leaving screen"));
 
 	// move hider window under the mouse (rather than moving the mouse
 	// somewhere else on the screen)
@@ -118,10 +133,27 @@ void					CMSWindowsSecondaryScreen::leave()
 	MoveWindow(m_window, point.x, point.y, 1, 1, FALSE);
 
 	// raise and show the hider window.  take activation.
+	log((CLOG_INFO "hide cursor"));
 	ShowWindow(m_window, SW_SHOWNORMAL);
 
-	// hide cursor by moving it into the hider window
-	SetCursorPos(point.x, point.y);
+	// if we think we own the clipboard but we don't then somebody
+	// grabbed the clipboard on this screen without us knowing.
+	// tell the server that this screen grabbed the clipboard.
+	//
+	// this works around bugs in the clipboard viewer chain.
+	// sometimes NT will simply never send WM_DRAWCLIPBOARD
+	// messages for no apparent reason and rebooting fixes the
+	// problem.  since we don't want a broken clipboard until the
+	// next reboot we do this double check.  clipboard ownership
+	// won't be reflected on other screens until we leave but at
+	// least the clipboard itself will work.
+	HWND clipboardOwner = GetClipboardOwner();
+	if (m_clipboardOwner != clipboardOwner) {
+		m_clipboardOwner = clipboardOwner;
+		if (m_clipboardOwner != m_window) {
+			m_client->onClipboardChanged();
+		}
+	}
 }
 
 void					CMSWindowsSecondaryScreen::keyDown(
@@ -222,6 +254,25 @@ void					CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 	mouse_event(MOUSEEVENTF_WHEEL, 0, 0, delta, 0);
 }
 
+void					CMSWindowsSecondaryScreen::setClipboard(
+								const IClipboard* src)
+{
+	assert(m_window != NULL);
+
+	CMSWindowsClipboard dst(m_window);
+	CClipboard::copy(&dst, src);
+}
+
+void					CMSWindowsSecondaryScreen::grabClipboard()
+{
+	assert(m_window != NULL);
+
+	CMSWindowsClipboard clipboard(m_window);
+	if (clipboard.open()) {
+		clipboard.close();
+	}
+}
+
 void					CMSWindowsSecondaryScreen::getSize(
 								SInt32* width, SInt32* height) const
 {
@@ -231,6 +282,15 @@ void					CMSWindowsSecondaryScreen::getSize(
 SInt32					CMSWindowsSecondaryScreen::getJumpZoneSize() const
 {
 	return 0;
+}
+
+void					CMSWindowsSecondaryScreen::getClipboard(
+								IClipboard* dst) const
+{
+	assert(m_window != NULL);
+
+	CMSWindowsClipboard src(m_window);
+	CClipboard::copy(dst, &src);
 }
 
 #include "resource.h" // FIXME
@@ -246,6 +306,10 @@ s_debugLog = ::GetDlgItem(s_debug, IDC_LOG);
 CLog::setOutputter(&debugOutput);
 ShowWindow(s_debug, SW_SHOWNORMAL);
 
+	// initialize clipboard owner to current owner.  we don't want
+	// to take ownership of the clipboard just by starting up.
+	m_clipboardOwner = GetClipboardOwner();
+
 	// create the cursor hiding window.  this window is used to hide the
 	// cursor when it's not on the screen.  the window is hidden as soon
 	// as the cursor enters the screen or the display's real cursor is
@@ -253,18 +317,25 @@ ShowWindow(s_debug, SW_SHOWNORMAL);
 	m_window = CreateWindowEx(WS_EX_TOPMOST |
 								WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW,
 								(LPCTSTR)getClass(), "Synergy",
-								WS_POPUP | WS_DISABLED,
+								WS_POPUP,
 								0, 0, 1, 1, NULL, NULL,
 								getInstance(),
 								NULL);
 
 	// hide the cursor
 	leave();
+
+	// install our clipboard snooper
+	m_nextClipboardWindow = SetClipboardViewer(m_window);
 }
 
 void					CMSWindowsSecondaryScreen::onCloseDisplay()
 {
 	assert(m_window != NULL);
+
+	// remove clipboard snooper
+	ChangeClipboardChain(m_window, m_nextClipboardWindow);
+	m_nextClipboardWindow = NULL;
 
 	// destroy window
 	DestroyWindow(m_window);
@@ -276,49 +347,56 @@ s_debug = NULL;
 s_thread = 0;
 }
 
-bool					CMSWindowsSecondaryScreen::onEvent(MSG* msg)
+bool					CMSWindowsSecondaryScreen::onPreTranslate(MSG* msg)
 {
 if (IsDialogMessage(s_debug, msg)) {
 	return true;
 }
+	return false;
+}
 
-	// handle event
-	switch (msg->message) {
+
+LRESULT					CMSWindowsSecondaryScreen::onEvent(
+								HWND hwnd, UINT msg,
+								WPARAM wParam, LPARAM lParam)
+{
+	switch (msg) {
 	  // FIXME -- handle display changes
 	  case WM_PAINT:
-		ValidateRect(m_window, NULL);
-		return true;
-
-	  case WM_MOUSEMOVE:
-		// mouse was moved.  hide the hider window.
-		ShowWindow(m_window, SW_HIDE);
-		break;
+		ValidateRect(hwnd, NULL);
+		return 0;
 
 	  case WM_ACTIVATEAPP:
-		if (msg->wParam == FALSE) {
+		if (wParam == FALSE) {
 			// some other app activated.  hide the hider window.
+			log((CLOG_INFO "show cursor"));
 			ShowWindow(m_window, SW_HIDE);
 		}
 		break;
 
-/*
-	  // FIXME -- handle screen resolution changes
+	  case WM_DRAWCLIPBOARD:
+		log((CLOG_DEBUG "clipboard was taken"));
 
-	  case SelectionClear:
-		target->XXX(xevent.xselectionclear.);
-		break;
+		// first pass it on
+		SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
 
-	  case SelectionNotify:
-		target->XXX(xevent.xselection.);
-		break;
+		// now notify client that somebody changed the clipboard (unless
+		// we're now the owner, in which case it's because we took
+		// ownership).
+		m_clipboardOwner = GetClipboardOwner();
+		if (m_clipboardOwner != m_window) {
+			m_client->onClipboardChanged();
+		}
+		return 0;
 
-	  case SelectionRequest:
-		target->XXX(xevent.xselectionrequest.);
-		break;
-*/
+	  case WM_CHANGECBCHAIN:
+		if (m_nextClipboardWindow == (HWND)wParam)
+			m_nextClipboardWindow = (HWND)lParam;
+		else
+			SendMessage(m_nextClipboardWindow, msg, wParam, lParam);
+		return 0;
 	}
-
-	return false;
+	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
 static const UINT		g_latin1[] =
@@ -745,9 +823,11 @@ static const UINT		g_miscellany[] =
 	/* 0xc8 */ VK_F11, VK_F12, VK_F13, VK_F14, VK_F15, VK_F16, VK_F17, VK_F18,
 	/* 0xd0 */ VK_F19, VK_F20, VK_F21, VK_F22, VK_F23, VK_F24, 0, 0,
 	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, VK_LSHIFT, VK_RSHIFT, VK_LCONTROL,
+/* FIXME -- want to use LSHIFT, LCONTROL, and LMENU but those don't seem
+ * to affect the shift state for VkKeyScan. */
+	/* 0xe0 */ 0, VK_SHIFT, VK_RSHIFT, VK_CONTROL,
 	/* 0xe4 */ VK_RCONTROL, VK_CAPITAL, 0, VK_LWIN,
-	/* 0xe8 */ VK_RWIN, VK_LMENU, VK_RMENU, 0, 0, 0, 0, 0,
+	/* 0xe8 */ VK_RWIN, VK_MENU, VK_RMENU, 0, 0, 0, 0, 0,
 	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, VK_DELETE
 };

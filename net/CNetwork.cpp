@@ -44,6 +44,7 @@ int (PASCAL FAR *CNetwork::gethosterror)(void);
 
 #if defined(CONFIG_PLATFORM_WIN32)
 
+int (PASCAL FAR *CNetwork::select)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);
 int (PASCAL FAR *CNetwork::WSACleanup)(void);
 int (PASCAL FAR *CNetwork::__WSAFDIsSet)(CNetwork::Socket, fd_set FAR *);
 const int				CNetwork::Error = SOCKET_ERROR;
@@ -220,6 +221,7 @@ int PASCAL FAR			CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
 		return Error;
 	if (n == 0)
 		return 0;
+	n = 0;
 	for (i = 0; i < nfds; ++i) {
 		fd[i].revents = 0;
 		if (FD_ISSET(fd[i].fd, &readSet))
@@ -228,6 +230,8 @@ int PASCAL FAR			CNetwork::poll2(PollEntry fd[], int nfds, int timeout)
 			fd[i].revents |= kPOLLOUT;
 		if (FD_ISSET(fd[i].fd, &errSet))
 			fd[i].revents |= kPOLLERR;
+		if (fd[i].revents != 0)
+			++n;
 	}
 	return n;
 }

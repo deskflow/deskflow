@@ -43,7 +43,9 @@ else { wait(0); exit(1); }
 
 CServer::CServer() : m_primary(NULL),
 								m_active(NULL),
-								m_primaryInfo(NULL)
+								m_primaryInfo(NULL),
+								m_clipboardSeqNum(0),
+								m_clipboardReady(false)
 {
 	m_socketFactory = NULL;
 	m_securityFactory = NULL;
@@ -78,7 +80,7 @@ void					CServer::run()
 		closePrimaryScreen();
 	}
 	catch (XBase& e) {
-		log((CLOG_ERR "server error: %s\n", e.what()));
+		log((CLOG_ERR "server error: %s", e.what()));
 
 		// clean up
 		cleanupThreads();
@@ -148,6 +150,93 @@ void					CServer::setInfo(const CString& client,
 	log((CLOG_NOTE "client \"%s\" size=%dx%d zone=%d", client.c_str(), w, h, zoneSize));
 }
 
+void					CServer::grabClipboard()
+{
+	grabClipboard(m_primaryInfo->m_name);
+}
+
+void					CServer::grabClipboard(const CString& client)
+{
+	CLock lock(&m_mutex);
+
+	// client must be connected
+	CScreenList::iterator index = m_screens.find(client);
+	if (index == m_screens.end()) {
+		throw XBadClient();
+	}
+
+	log((CLOG_NOTE "client \"%s\" grabbed clipboard from \"%s\"", client.c_str(), m_clipboardOwner.c_str()));
+
+	// save the clipboard owner
+	m_clipboardOwner = client;
+
+	// mark client as having the clipboard data
+	index->second->m_gotClipboard = true;
+
+	// tell all other clients to take ownership of clipboard and mark
+	// them as not having the data yet.
+	for (index = m_screens.begin(); index != m_screens.end(); ++index) {
+		if (index->first != client) {
+			CScreenInfo* info = index->second;
+			info->m_gotClipboard = false;
+			if (info->m_protocol == NULL) {
+				m_primary->grabClipboard();
+			}
+			else {
+				info->m_protocol->sendGrabClipboard();
+			}
+		}
+	}	
+
+	// increment the clipboard sequence number so we can identify the
+	// clipboard query's response.
+	++m_clipboardSeqNum;
+
+	// begin getting the clipboard data
+	if (m_active->m_protocol == NULL) {
+		// get clipboard immediately from primary screen
+		m_primary->getClipboard(&m_clipboard);
+		m_clipboardData  = m_clipboard.marshall();
+		m_clipboardReady = true;
+	}
+	else {
+		// clear out the clipboard since existing data is now out of date.
+		if (m_clipboard.open()) {
+			m_clipboard.close();
+		}
+		m_clipboardReady = false;
+
+		// send request but don't wait for reply
+		m_active->m_protocol->sendQueryClipboard(m_clipboardSeqNum);
+	}
+}
+
+void					CServer::setClipboard(
+								UInt32 seqNum, const CString& data)
+{
+	// update the clipboard if the sequence number matches
+	CLock lock(&m_mutex);
+	if (seqNum == m_clipboardSeqNum) {
+		// unmarshall into our clipboard buffer
+		m_clipboardData = data;
+		m_clipboard.unmarshall(m_clipboardData);
+		m_clipboardReady = true;
+
+		// if the active client doesn't have the clipboard data
+		// (and it won't unless the client is the one sending us
+		// the data) then send the data now.
+		if (!m_active->m_gotClipboard) {
+			if (m_active->m_protocol == NULL) {
+				m_primary->setClipboard(&m_clipboard);
+			}
+			else {
+				m_active->m_protocol->sendClipboard(m_clipboardData);
+			}
+			m_active->m_gotClipboard = true;
+		}
+	}
+}
+
 bool					CServer::onCommandKey(KeyID /*id*/,
 								KeyModifierMask /*mask*/, bool /*down*/)
 {
@@ -186,9 +275,10 @@ void					CServer::onKeyUp(KeyID id, KeyModifierMask mask)
 	}
 }
 
-void					CServer::onKeyRepeat(KeyID id, KeyModifierMask mask)
+void					CServer::onKeyRepeat(
+								KeyID id, KeyModifierMask mask, SInt32 count)
 {
-	log((CLOG_DEBUG "onKeyRepeat id=%d mask=0x%04x", id, mask));
+	log((CLOG_DEBUG "onKeyRepeat id=%d mask=0x%04x count=%d", id, mask, count));
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -199,7 +289,7 @@ void					CServer::onKeyRepeat(KeyID id, KeyModifierMask mask)
 
 	// relay
 	if (m_active->m_protocol != NULL) {
-		m_active->m_protocol->sendKeyRepeat(id, mask);
+		m_active->m_protocol->sendKeyRepeat(id, mask, count);
 	}
 }
 
@@ -385,11 +475,6 @@ bool					CServer::isLockedToScreen() const
 	return false;
 }
 
-#if defined(CONFIG_PLATFORM_WIN32)
-#include "CMSWindowsClipboard.h" // FIXME
-#elif defined(CONFIG_PLATFORM_UNIX)
-#include "CXWindowsClipboard.h" // FIXME
-#endif
 void					CServer::switchScreen(CScreenInfo* dst,
 								SInt32 x, SInt32 y)
 {
@@ -398,6 +483,7 @@ void					CServer::switchScreen(CScreenInfo* dst,
 	assert(m_active != NULL);
 
 	log((CLOG_NOTE "switch from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), dst->m_name.c_str(), x, y));
+	// FIXME -- we're not locked here but we probably should be
 
 	// wrapping means leaving the active screen and entering it again.
 	// since that's a waste of time we skip that and just warp the
@@ -406,14 +492,6 @@ void					CServer::switchScreen(CScreenInfo* dst,
 		// leave active screen
 		if (m_active->m_protocol == NULL) {
 			m_primary->leave();
-
-			// FIXME -- testing
-#if defined(CONFIG_PLATFORM_WIN32)
-			CMSWindowsClipboard clipboard;
-#elif defined(CONFIG_PLATFORM_UNIX)
-			CXWindowsClipboard clipboard;
-#endif
-			m_primary->getClipboard(&clipboard);
 		}
 		else {
 			m_active->m_protocol->sendLeave();
@@ -428,6 +506,17 @@ void					CServer::switchScreen(CScreenInfo* dst,
 		}
 		else {
 			m_active->m_protocol->sendEnter(x, y);
+		}
+
+		// send the clipboard data if we haven't done so yet
+		if (m_clipboardReady && !m_active->m_gotClipboard) {
+			if (m_active->m_protocol == NULL) {
+				m_primary->setClipboard(&m_clipboard);
+			}
+			else {
+				m_active->m_protocol->sendClipboard(m_clipboardData);
+			}
+			m_active->m_gotClipboard = true;
 		}
 	}
 	else {
@@ -827,6 +916,13 @@ void					CServer::openPrimaryScreen()
 	m_active->m_zoneSize = m_primary->getJumpZoneSize();
 	log((CLOG_NOTE "server size=%dx%d zone=%d", m_active->m_width, m_active->m_height, m_active->m_zoneSize));
 	// FIXME -- need way for primary screen to call us back
+
+	// set the clipboard owner to the primary screen and then get the
+	// current clipboard data.
+	m_primary->getClipboard(&m_clipboard);
+	m_clipboardData  = m_clipboard.marshall();
+	m_clipboardReady = true;
+	m_clipboardOwner = m_active->m_name;
 }
 
 void					CServer::closePrimaryScreen()
@@ -979,7 +1075,8 @@ CServer::CScreenInfo::CScreenInfo(const CString& name,
 								m_name(name),
 								m_protocol(protocol),
 								m_width(0), m_height(0),
-								m_zoneSize(0)
+								m_zoneSize(0),
+								m_gotClipboard(false)
 {
 	// do nothing
 }

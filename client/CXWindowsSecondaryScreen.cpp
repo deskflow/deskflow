@@ -19,7 +19,7 @@ CXWindowsSecondaryScreen::CXWindowsSecondaryScreen() :
 
 CXWindowsSecondaryScreen::~CXWindowsSecondaryScreen()
 {
-	assert(m_window  == None);
+	assert(m_window == None);
 }
 
 void					CXWindowsSecondaryScreen::run()
@@ -43,21 +43,46 @@ void					CXWindowsSecondaryScreen::run()
 			break;
 		  }
 
-/*
-		  // FIXME -- handle screen resolution changes
-
 		  case SelectionClear:
-			target->XXX(xevent.xselectionclear.);
+			// we just lost the selection.  that means someone else
+			// grabbed the selection so this screen is now the
+			// selection owner.  report that to the server.
+			m_client->onClipboardChanged();
 			break;
 
 		  case SelectionNotify:
-			target->XXX(xevent.xselection.);
+			// notification of selection transferred.  we shouldn't
+			// get this here because we handle them in the selection
+			// retrieval methods.  we'll just delete the property
+			// with the data (satisfying the usual ICCCM protocol).
+			if (xevent.xselection.property != None) {
+				CDisplayLock display(this);
+				XDeleteProperty(display, m_window, xevent.xselection.property);
+			}
 			break;
 
 		  case SelectionRequest:
-			target->XXX(xevent.xselectionrequest.);
+			// somebody is asking for clipboard data
+			if (xevent.xselectionrequest.owner == m_window) {
+				addClipboardRequest(m_window,
+								xevent.xselectionrequest.requestor,
+								xevent.xselectionrequest.selection,
+								xevent.xselectionrequest.target,
+								xevent.xselectionrequest.property,
+								xevent.xselectionrequest.time);
+			}
 			break;
-*/
+
+		  case PropertyNotify:
+			// clipboard transfers involve property changes so forward
+			// the event to the superclass.  we only care about the
+			// deletion of properties.
+			if (xevent.xproperty.state == PropertyDelete) {
+				processClipboardRequest(xevent.xproperty.window,
+								xevent.xproperty.atom,
+								xevent.xproperty.time);
+			}
+			break;
 		}
 	}
 }
@@ -167,6 +192,19 @@ void					CXWindowsSecondaryScreen::mouseWheel(SInt32)
 	// FIXME
 }
 
+void					CXWindowsSecondaryScreen::setClipboard(
+								const IClipboard* clipboard)
+{
+	// FIXME -- don't use CurrentTime
+	setDisplayClipboard(clipboard, m_window, CurrentTime);
+}
+
+void					CXWindowsSecondaryScreen::grabClipboard()
+{
+	// FIXME -- don't use CurrentTime
+	setDisplayClipboard(NULL, m_window, CurrentTime);
+}
+
 void					CXWindowsSecondaryScreen::getSize(
 								SInt32* width, SInt32* height) const
 {
@@ -176,6 +214,13 @@ void					CXWindowsSecondaryScreen::getSize(
 SInt32					CXWindowsSecondaryScreen::getJumpZoneSize() const
 {
 	return 0;
+}
+
+void					CXWindowsSecondaryScreen::getClipboard(
+								IClipboard* clipboard) const
+{
+	// FIXME -- don't use CurrentTime
+	getDisplayClipboard(clipboard, m_window, CurrentTime);
 }
 
 void					CXWindowsSecondaryScreen::onOpenDisplay()

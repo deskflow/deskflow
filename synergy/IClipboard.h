@@ -8,14 +8,16 @@ class CString;
 
 class IClipboard : public IInterface {
   public:
-	enum EFormat { kText, kNum };
+	enum EFormat { kText, kNumFormats };
 
 	// manipulators
 
 	// grab ownership of and clear the clipboard of all data.
 	// only add() may be called between an open() and its
-	// corresponding close().
-	virtual void		open() = 0;
+	// corresponding close().  if open() returns false then
+	// the clipboard could not be opened or grabbed;  do not
+	// call close() in that case.
+	virtual bool		open() = 0;
 
 	// close the clipboard.  close() must match a preceding open().
 	// this signals that the clipboard has been filled with all the

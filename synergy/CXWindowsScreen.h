@@ -1,8 +1,8 @@
 #ifndef CXWINDOWSSCREEN_H
 #define CXWINDOWSSCREEN_H
 
+#include "CClipboard.h"
 #include "CMutex.h"
-#include "IClipboard.h"
 #include "BasicTypes.h"
 #include <X11/Xlib.h>
 
@@ -54,11 +54,24 @@ class CXWindowsScreen {
 	// cause getEvent() to return false immediately and forever after
 	void				doStop();
 
+	bool				setDisplayClipboard(const IClipboard* clipboard,
+								Window requestor, Time timestamp);
+
 	// copy the clipboard contents to clipboard.  requestor must be a
 	// valid window;  it will be used to receive the transfer.  timestamp
 	// should be the timestamp of the provoking event and not CurrentTime.
 	void				getDisplayClipboard(IClipboard* clipboard,
 								Window requestor, Time timestamp) const;
+
+	// add a selection request to the request list
+	void				addClipboardRequest(
+								Window owner, Window requestor,
+								Atom selection, Atom target,
+								Atom property, Time time);
+
+	// continue processing a selection request
+	void				processClipboardRequest(Window window,
+								Atom property, Time time);
 
 	// called by openDisplay() to allow subclasses to prepare the display
 	virtual void		onOpenDisplay() = 0;
@@ -85,6 +98,14 @@ class CXWindowsScreen {
 	static Bool			findPropertyNotify(Display*,
 								XEvent* xevent, XPointer arg);
 
+	void				sendClipboardTargetsNotify(Window requestor,
+								Atom property, Time time);
+	void				addClipboardRequest(Window requestor,
+								Atom property, Time time,
+								IClipboard::EFormat);
+	void				addClipboardMultipleRequest(Window requestor,
+								Atom property, Time time);
+
   private:
 	Display*			m_display;
 	int					m_screen;
@@ -94,10 +115,14 @@ class CXWindowsScreen {
 
 	// atoms we'll need
 	Atom				m_atomTargets;
+	Atom				m_atomMultiple;
 	Atom				m_atomData;
 	Atom				m_atomINCR;
 	Atom				m_atomText;
 	Atom				m_atomCompoundText;
+
+	// the contents of our selection
+	CClipboard			m_clipboard;
 
 	// X is not thread safe
 	CMutex				m_mutex;

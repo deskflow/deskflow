@@ -87,11 +87,12 @@ win32:
   handle display changes
 
 ---
-win32 key translation (client)
-  get character for key (with appropriate shift)
-  keypad enter -> VK_???
-  sys req -> VK_???
-  compose -> VK_???
+not sending VK_?WIN and VK_APPS.  possibly hotkeys being stolen.
+
+VkKeyScan() doesn't get proper shift state unless we map shift
+(etc?) to VK_SHIFT not VK_LSHIFT or VK_RSHIFT.
+
+not handling international characters
 
 X11 key translation (server)
   handle compose key?

@@ -18,11 +18,12 @@ class CServerProtocol1_0 : public CServerProtocol {
 	virtual void		sendClose();
 	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs);
 	virtual void		sendLeave();
+	virtual void		sendClipboard(const CString&);
 	virtual void		sendGrabClipboard();
-	virtual void		sendQueryClipboard();
+	virtual void		sendQueryClipboard(UInt32 seqNum);
 	virtual void		sendScreenSaver(bool on);
 	virtual void		sendKeyDown(KeyID, KeyModifierMask);
-	virtual void		sendKeyRepeat(KeyID, KeyModifierMask);
+	virtual void		sendKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
 	virtual void		sendKeyUp(KeyID, KeyModifierMask);
 	virtual void		sendMouseDown(ButtonID);
 	virtual void		sendMouseUp(ButtonID);
@@ -32,6 +33,8 @@ class CServerProtocol1_0 : public CServerProtocol {
   protected:
 	// IServerProtocol overrides
 	virtual void		recvInfo();
+	virtual void		recvClipboard();
+	virtual void		recvGrabClipboard();
 };
 
 #endif

@@ -92,6 +92,10 @@ Project: "makehook"=.\server\makehook.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
+    begin source code control
+    millpond
+    .\server
+    end source code control
 }}}
 
 Package=<4>

@@ -1,6 +1,7 @@
 #ifndef CCLIENT_H
 #define CCLIENT_H
 
+#include "CMutex.h"
 #include "CString.h"
 #include "BasicTypes.h"
 
@@ -17,6 +18,9 @@ class CClient {
 	// manipulators
 
 	void				run(const CNetworkAddress& serverAddress);
+
+	// handle events on client's screen
+	void				onClipboardChanged();
 
 	// accessors
 
@@ -45,6 +49,7 @@ class CClient {
 	void				onMouseWheel();
 
   private:
+	CMutex				m_mutex;
 	CString				m_name;
 	IInputStream*		m_input;
 	IOutputStream*		m_output;

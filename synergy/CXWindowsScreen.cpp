@@ -52,6 +52,7 @@ void					CXWindowsScreen::openDisplay()
 
 	// get some atoms
 	m_atomTargets      = XInternAtom(m_display, "TARGETS", False);
+	m_atomMultiple     = XInternAtom(m_display, "MULTIPLE", False);
 	m_atomData         = XInternAtom(m_display, "DESTINATION", False);
 	m_atomINCR         = XInternAtom(m_display, "INCR", False);
 	m_atomText         = XInternAtom(m_display, "TEXT", False);
@@ -143,12 +144,12 @@ bool					CXWindowsScreen::getEvent(XEvent* xevent) const
 	}
 	if (m_stop) {
 		m_mutex.unlock();
-		return true;
+		return false;
 	}
 	else {
 		XNextEvent(m_display, xevent);
 		m_mutex.unlock();
-		return false;
+		return true;
 	}
 }
 
@@ -156,6 +157,34 @@ void					CXWindowsScreen::doStop()
 {
 	CLock lock(&m_mutex);
 	m_stop = true;
+}
+
+bool					CXWindowsScreen::setDisplayClipboard(
+								const IClipboard* clipboard,
+								Window requestor, Time timestamp)
+{
+	CLock lock(&m_mutex);
+
+	XSetSelectionOwner(m_display, XA_PRIMARY, requestor, timestamp);
+	if (XGetSelectionOwner(m_display, XA_PRIMARY) == requestor) {
+		// we got the selection
+		log((CLOG_DEBUG "grabbed clipboard"));
+
+		if (clipboard != NULL) {
+			// save clipboard to serve requests
+			CClipboard::copy(&m_clipboard, clipboard);
+		}
+		else {
+			// clear clipboard
+			if (m_clipboard.open()) {
+				m_clipboard.close();
+			}
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 void					CXWindowsScreen::getDisplayClipboard(
@@ -166,7 +195,8 @@ void					CXWindowsScreen::getDisplayClipboard(
 	assert(requestor != None);
 
 	// clear the clipboard object
-	clipboard->open();
+	if (!clipboard->open())
+		return;
 
 	// block others from using the display while we get the clipboard.
 	// in particular, this prevents the event thread from stealing the
@@ -209,7 +239,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 
 			// if we can use the format and we haven't already retrieved
 			// it then get it
-			if (expectedFormat == IClipboard::kNum) {
+			if (expectedFormat == IClipboard::kNumFormats) {
 				log((CLOG_DEBUG "  no format for target", format));
 				continue;
 			}
@@ -227,7 +257,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 
 			// use the actual format, not the expected
 			IClipboard::EFormat actualFormat = getFormat(format);
-			if (actualFormat == IClipboard::kNum) {
+			if (actualFormat == IClipboard::kNumFormats) {
 				log((CLOG_DEBUG "  no format for target", format));
 				continue;
 			}
@@ -452,7 +482,7 @@ IClipboard::EFormat		CXWindowsScreen::getFormat(Atom src) const
 		src == m_atomText ||
 		src == m_atomCompoundText)
 		return IClipboard::kText;
-	return IClipboard::kNum;
+	return IClipboard::kNumFormats;
 }
 
 Bool					CXWindowsScreen::findSelectionNotify(
@@ -471,6 +501,98 @@ Bool					CXWindowsScreen::findPropertyNotify(
 			xevent->xproperty.window == filter->m_window &&
 			xevent->xproperty.atom   == filter->m_property &&
 			xevent->xproperty.state  == PropertyNewValue) ? True : False;
+}
+
+void					CXWindowsScreen::addClipboardRequest(
+								Window /*owner*/, Window requestor,
+								Atom selection, Atom target,
+								Atom property, Time time)
+{
+	// mutex the display
+	CLock lock(&m_mutex);
+
+	// check the target
+	IClipboard::EFormat format = IClipboard::kNumFormats;
+	if (selection == XA_PRIMARY) {
+		if (target == m_atomTargets) {
+			// send the list of available targets
+			sendClipboardTargetsNotify(requestor, property, time);
+			return;
+		}
+		else if (target == m_atomMultiple) {
+			// add a multiple request
+			if (property != None) {
+				addClipboardMultipleRequest(requestor, property, time);
+				return;
+			}
+		}
+		else {
+			format = getFormat(target);
+		}
+	}
+
+	// if we can't handle the format then send a failure notification
+	if (format == IClipboard::kNumFormats) {
+		XEvent event;
+		event.xselection.type      = SelectionNotify;
+		event.xselection.display   = m_display;
+		event.xselection.requestor = requestor;
+		event.xselection.selection = selection;
+		event.xselection.target    = target;
+		event.xselection.property  = None;
+		event.xselection.time      = time;
+		XSendEvent(m_display, requestor, False, 0, &event);
+		return;
+	}
+
+	// we could process short requests without adding to the request
+	// queue but we'll keep things simple by doing all requests the
+	// same way.
+	// FIXME
+}
+
+void					CXWindowsScreen::sendClipboardTargetsNotify(
+								Window requestor,
+								Atom property, Time time)
+{
+	// construct response
+	// FIXME
+
+	// set property
+	// FIXME
+
+	// send notification
+	XEvent event;
+	event.xselection.type      = SelectionNotify;
+	event.xselection.display   = m_display;
+	event.xselection.requestor = requestor;
+	event.xselection.selection = XA_PRIMARY;
+	event.xselection.target    = m_atomTargets;
+	event.xselection.property  = property;
+	event.xselection.time      = time;
+	XSendEvent(m_display, requestor, False, 0, &event);
+}
+
+void					CXWindowsScreen::processClipboardRequest(
+								Window requestor,
+								Atom property, Time time)
+{
+	// FIXME
+}
+
+void					CXWindowsScreen::addClipboardRequest(
+								Window requestor,
+								Atom property, Time time,
+								IClipboard::EFormat format)
+{
+	// FIXME
+}
+
+void					CXWindowsScreen::addClipboardMultipleRequest(
+								Window requestor,
+								Atom property, Time time)
+{
+	// FIXME
 }
 
 

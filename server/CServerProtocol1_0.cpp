@@ -1,5 +1,6 @@
 #include "CServerProtocol1_0.h"
 #include "CServer.h"
+#include "CClipboard.h"
 #include "CProtocolUtil.h"
 #include "ProtocolTypes.h"
 #include "IInputStream.h"
@@ -49,6 +50,12 @@ void					CServerProtocol1_0::run()
 		if (memcmp(code, kMsgDInfo, 4) == 0) {
 			recvInfo();
 		}
+		else if (memcmp(code, kMsgCClipboard, 4) == 0) {
+			recvGrabClipboard();
+		}
+		else if (memcmp(code, kMsgDClipboard, 4) == 0) {
+			recvClipboard();
+		}
 		// FIXME -- more message here
 		else {
 			log((CLOG_ERR "unknown message from client \"%s\"", getClient().c_str()));
@@ -96,16 +103,22 @@ void					CServerProtocol1_0::sendLeave()
 	CProtocolUtil::writef(getOutputStream(), kMsgCLeave);
 }
 
+void					CServerProtocol1_0::sendClipboard(const CString& data)
+{
+	log((CLOG_INFO "send clipboard to \"%s\" size=%d", getClient().c_str(), data.size()));
+	CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, 0, &data);
+}
+
 void					CServerProtocol1_0::sendGrabClipboard()
 {
 	log((CLOG_INFO "send grab clipboard to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard);
 }
 
-void					CServerProtocol1_0::sendQueryClipboard()
+void					CServerProtocol1_0::sendQueryClipboard(UInt32 seqNum)
 {
 	log((CLOG_INFO "query clipboard to \"%s\"", getClient().c_str()));
-	CProtocolUtil::writef(getOutputStream(), kMsgQClipboard);
+	CProtocolUtil::writef(getOutputStream(), kMsgQClipboard, seqNum);
 }
 
 void					CServerProtocol1_0::sendScreenSaver(bool on)
@@ -122,10 +135,10 @@ void					CServerProtocol1_0::sendKeyDown(
 }
 
 void					CServerProtocol1_0::sendKeyRepeat(
-								KeyID key, KeyModifierMask mask)
+								KeyID key, KeyModifierMask mask, SInt32 count)
 {
 	log((CLOG_INFO "send key repeat to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
-	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask);
+	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask, count);
 }
 
 void					CServerProtocol1_0::sendKeyUp(
@@ -179,3 +192,17 @@ void					CServerProtocol1_0::recvInfo()
 	getServer()->setInfo(getClient(), w, h, zoneInfo);
 }
 
+void					CServerProtocol1_0::recvClipboard()
+{
+	UInt32 seqNum;
+	CString data;
+	CProtocolUtil::readf(getInputStream(), kMsgDClipboard + 4, &seqNum, &data);
+	log((CLOG_INFO "received client \"%s\" clipboard seqnum=%d, size=%d", getClient().c_str(), seqNum, data.size()));
+	getServer()->setClipboard(seqNum, data);
+}
+
+void					CServerProtocol1_0::recvGrabClipboard()
+{
+	log((CLOG_INFO "received client \"%s\" grabbed clipboard", getClient().c_str()));
+	getServer()->grabClipboard(getClient());
+}

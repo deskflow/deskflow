@@ -41,7 +41,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	}
 
 	try {
-		realMain("ingrid", __argv[1], 50001);
+		realMain("secondary", __argv[1], 50001);
 		return 0;
 	}
 	catch (XBase& e) {
@@ -64,7 +64,7 @@ int main(int argc, char** argv)
 	}
 
 	try {
-		realMain("ingrid", argv[1], 50001);
+		realMain("secondary", argv[1], 50001);
 		return 0;
 	}
 	catch (XBase& e) {

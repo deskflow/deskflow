@@ -20,7 +20,8 @@ class CProtocolUtil {
 	//   %1i  -- converts integer argument to 1 byte integer
 	//   %2i  -- converts integer argument to 2 byte integer in NBO
 	//   %4i  -- converts integer argument to 4 byte integer in NBO
-	//   %s   -- converts integer N and const UInt8* to stream of N bytes
+	//   %s   -- converts CString* to stream of bytes
+	//   %S   -- converts integer N and const UInt8* to stream of N bytes
 	static void			writef(IOutputStream*,
 								const char* fmt, ...);
 

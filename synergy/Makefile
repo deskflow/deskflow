@@ -19,6 +19,7 @@ CXXFILES = 				\
 	CInputPacketStream.cpp		\
 	COutputPacketStream.cpp		\
 	CProtocolUtil.cpp		\
+	CClipboard.cpp			\
 	CTCPSocketFactory.cpp		\
 	CXWindowsClipboard.cpp		\
 	CXWindowsScreen.cpp		\

@@ -49,8 +49,12 @@ class CMSWindowsScreen {
 	// copy the clipboard contents to clipboard
 	void				getDisplayClipboard(IClipboard* clipboard, HWND) const;
 
-	// called by doRun() to handle an event
-	virtual bool		onEvent(MSG*) = 0;
+	// called by doRun() to handle an event.  return true to skip
+	// event translation and dispatch.
+	virtual bool		onPreTranslate(MSG*) = 0;
+
+	// called by window proc.  subclass must call DefWindowProc() if necessary
+	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM) = 0;
 
 	// called by openDisplay() to allow subclasses to prepare the display
 	virtual void		onOpenDisplay() = 0;
@@ -68,6 +72,7 @@ class CMSWindowsScreen {
 	HCURSOR				m_cursor;
 	SInt32				m_w, m_h;
 	DWORD				m_thread;
+	static CMSWindowsScreen*	s_screen;
 };
 
 #endif

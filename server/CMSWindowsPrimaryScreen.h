@@ -22,13 +22,15 @@ class CMSWindowsPrimaryScreen : public CMSWindowsScreen, public IPrimaryScreen {
 	virtual void		leave();
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		setClipboard(const IClipboard*);
+	virtual void		grabClipboard();
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(IClipboard*) const;
 
   protected:
 	// CMSWindowsScreen overrides
-	virtual bool		onEvent(MSG*);
+	virtual bool		onPreTranslate(MSG*);
+	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM);
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
 
@@ -37,17 +39,17 @@ class CMSWindowsPrimaryScreen : public CMSWindowsScreen, public IPrimaryScreen {
 
 	void				nextMark();
 
-//	bool				keyboardHook(int, WPARAM, LPARAM);
-//	bool				mouseHook(int, WPARAM, LPARAM);
-
-	KeyModifierMask		mapModifier(WPARAM keycode, LPARAM info) const;
-	KeyID				mapKey(WPARAM keycode, LPARAM info) const;
+	KeyID				mapKey(WPARAM keycode, LPARAM info,
+								KeyModifierMask* maskOut) const;
 	ButtonID			mapButton(WPARAM button) const;
 
   private:
 	CServer*			m_server;
 	bool				m_active;
 	HWND				m_window;
+	HWND				m_nextClipboardWindow;
+	HWND				m_clipboardOwner;
+	HWND				m_lastActive;
 	HINSTANCE			m_hookLibrary;
 	UInt32				m_mark;
 	UInt32				m_markReceived;

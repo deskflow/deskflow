@@ -12,6 +12,7 @@
 //
 
 HINSTANCE				CMSWindowsScreen::s_instance = NULL;
+CMSWindowsScreen*		CMSWindowsScreen::s_screen = NULL;
 
 CMSWindowsScreen::CMSWindowsScreen() :
 								m_class(0),
@@ -19,12 +20,14 @@ CMSWindowsScreen::CMSWindowsScreen() :
 								m_w(0), m_h(0),
 								m_thread(0)
 {
-	// do nothing
+	assert(s_screen == NULL);
+	s_screen = this;
 }
 
 CMSWindowsScreen::~CMSWindowsScreen()
 {
 	assert(m_class == 0);
+	s_screen = NULL;
 }
 
 void					CMSWindowsScreen::init(HINSTANCE instance)
@@ -46,7 +49,7 @@ void					CMSWindowsScreen::doRun()
 		}
 
 		// dispatch message
-		if (!onEvent(&msg)) {
+		if (!onPreTranslate(&msg)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
@@ -66,10 +69,13 @@ void					CMSWindowsScreen::openDisplay()
 	// create a transparent cursor
 	int cw = GetSystemMetrics(SM_CXCURSOR);
 	int ch = GetSystemMetrics(SM_CYCURSOR);
-	UInt8* cursorBits = new UInt8[ch * ((cw + 31) >> 5)];
-	memset(cursorBits, 0, ch * ((cw + 31) >> 5));
-	m_cursor = CreateCursor(s_instance, 0, 0, cw, ch, cursorBits, cursorBits);
-	delete[] cursorBits;
+	UInt8* cursorAND = new UInt8[ch * ((cw + 31) >> 2)];
+	UInt8* cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
+	memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
+	memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
+	m_cursor = CreateCursor(s_instance, 0, 0, cw, ch, cursorAND, cursorXOR);
+	delete[] cursorXOR;
+	delete[] cursorAND;
 
 	// register a window class
 	WNDCLASSEX classInfo;
@@ -197,7 +203,7 @@ void					CMSWindowsScreen::getDisplayClipboard(
 
 			// if we can use the format and we haven't already retrieved
 			// it then get it
-			if (expectedFormat == IClipboard::kNum) {
+			if (expectedFormat == IClipboard::kNumFormats) {
 				log((CLOG_DEBUG "  no format for target", format));
 				continue;
 			}
@@ -215,7 +221,7 @@ void					CMSWindowsScreen::getDisplayClipboard(
 
 			// use the actual format, not the expected
 			IClipboard::EFormat actualFormat = getFormat(format);
-			if (actualFormat == IClipboard::kNum) {
+			if (actualFormat == IClipboard::kNumFormats) {
 				log((CLOG_DEBUG "  no format for target", format));
 				continue;
 			}
@@ -244,5 +250,6 @@ LRESULT CALLBACK		CMSWindowsScreen::wndProc(
 								HWND hwnd, UINT msg,
 								WPARAM wParam, LPARAM lParam)
 {
-	return DefWindowProc(hwnd, msg, wParam, lParam);
+	assert(s_screen != NULL);
+	return s_screen->onEvent(hwnd, msg, wParam, lParam);
 }

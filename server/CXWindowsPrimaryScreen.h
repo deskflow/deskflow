@@ -20,6 +20,7 @@ class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 	virtual void		leave();
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		setClipboard(const IClipboard*);
+	virtual void		grabClipboard();
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(IClipboard*) const;

@@ -23,12 +23,16 @@ class CMSWindowsSecondaryScreen : public CMSWindowsScreen, public ISecondaryScre
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		mouseWheel(SInt32 delta);
+	virtual void		setClipboard(const IClipboard*);
+	virtual void		grabClipboard();
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
+	virtual void		getClipboard(IClipboard*) const;
 
   protected:
 	// CMSWindowsScreen overrides
-	virtual bool		onEvent(MSG*);
+	virtual bool		onPreTranslate(MSG*);
+	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM);
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
 
@@ -38,6 +42,8 @@ class CMSWindowsSecondaryScreen : public CMSWindowsScreen, public ISecondaryScre
   private:
 	CClient*			m_client;
 	HWND				m_window;
+	HWND				m_nextClipboardWindow;
+	HWND				m_clipboardOwner;
 };
 
 #endif

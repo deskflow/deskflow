@@ -7,7 +7,7 @@
 #include "MouseTypes.h"
 
 class CClient;
-//class IClipboard;
+class IClipboard;
 
 class ISecondaryScreen : public IInterface {
   public:
@@ -50,17 +50,17 @@ class ISecondaryScreen : public IInterface {
 	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
 	virtual void		mouseWheel(SInt32 delta) = 0;
 
-/*
 	// set the screen's clipboard contents.  this is usually called
 	// soon after an enter().
 	virtual void		setClipboard(const IClipboard*) = 0;
 
+/*
 	// show or hide the screen saver
 	virtual void		screenSaver(bool show) = 0;
-
-	// clipboard input
-	virtual void		clipboardChanged() = 0;
 */
+
+	// take ownership of clipboard
+	virtual void		grabClipboard() = 0;
 
 	// accessors
 
@@ -70,10 +70,8 @@ class ISecondaryScreen : public IInterface {
 	// get the size of jump zone
 	virtual SInt32		getJumpZoneSize() const = 0;
 
-/*
 	// get the screen's clipboard contents
 	virtual void		getClipboard(IClipboard*) const = 0;
-*/
 };
 
 #endif
