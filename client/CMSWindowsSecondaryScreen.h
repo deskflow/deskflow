@@ -40,12 +40,19 @@ protected:
 	virtual void		onCloseDisplay();
 
 private:
-	typedef std::pair<UINT, bool> Keystroke;
+	enum EKeyAction { kPress, kRelease, kRepeat };
+	class Keystroke {
+	public:
+		UINT			m_virtualKey;
+		bool			m_press;
+		bool			m_repeat;
+	};
 	typedef std::vector<Keystroke> Keystrokes;
 	
-	DWORD				mapButton(ButtonID button) const;
+	DWORD				mapButton(ButtonID button, bool press) const;
 	KeyModifierMask		mapKey(Keystrokes&, UINT& virtualKey, KeyID,
-								KeyModifierMask, bool press) const;
+								KeyModifierMask, EKeyAction) const;
+	void				doKeystrokes(const Keystrokes&, SInt32 count);
 
 	void				updateKeys();
 	void				updateModifiers();

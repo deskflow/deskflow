@@ -252,7 +252,7 @@ void					CMSWindowsPrimaryScreen::getClipboard(
 	CClipboard::copy(dst, &src);
 }
 
-KeyModifierMask			CXWindowsPrimaryScreen::getToggleMask() const
+KeyModifierMask			CMSWindowsPrimaryScreen::getToggleMask() const
 {
 	KeyModifierMask mask;
 	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
