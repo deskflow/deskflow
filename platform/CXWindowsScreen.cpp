@@ -292,7 +292,9 @@ CXWindowsScreen::processEvent(XEvent* xevent)
 		// looks like one of the windows that requested a clipboard
 		// transfer has gone bye-bye.
 		destroyClipboardRequest(xevent->xdestroywindow.window);
-		return true;
+
+		// we don't know if the event was handled or not so continue
+		break;
 	}
 
 	// let screen saver have a go

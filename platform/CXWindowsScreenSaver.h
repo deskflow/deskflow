@@ -46,7 +46,7 @@ private:
 	void				updateXScreenSaver();
 
 	// send a command to xscreensaver
-	void				sendXScreenSaverCommand(Atom, long = 0, long = 0) const;
+	void				sendXScreenSaverCommand(Atom, long = 0, long = 0);
 
 private:
 	// the X display
@@ -63,6 +63,9 @@ private:
 
 	// xscreensaver activation state
 	bool				m_xscreensaverActive;
+
+	// dummy window to receive xscreensaver repsonses
+	Window				m_xscreensaverSink;
 
 	// atoms used to communicate with xscreensaver's window
 	Atom				m_atomScreenSaver;

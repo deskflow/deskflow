@@ -1,5 +1,6 @@
 #include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
+#include "CLog.h"
 #include <X11/Xatom.h>
 
 //
@@ -21,6 +22,21 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(Display* display) :
 	m_atomScreenSaverDeactivate = XInternAtom(m_display,
 										"DEACTIVATE", False);
 
+	// create dummy window to receive xscreensaver responses.  earlier
+	// versions of xscreensaver will die if we pass None as the window.
+	XSetWindowAttributes attr;
+	attr.event_mask            = 0;//PropertyChangeMask;
+	attr.do_not_propagate_mask = 0;
+	attr.override_redirect     = True;
+	m_xscreensaverSink = XCreateWindow(m_display,
+								DefaultRootWindow(m_display),
+								0, 0, 1, 1, 0, 0,
+								InputOnly, CopyFromParent,
+								CWDontPropagate | CWEventMask |
+								CWOverrideRedirect,
+								&attr);
+	log((CLOG_DEBUG "xscreensaver sink window is 0x%08x", m_xscreensaverSink));
+
 	// watch top-level windows for changes
 	{
 		bool error = false;
@@ -31,6 +47,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(Display* display) :
 		m_rootEventMask = attr.your_event_mask;
 		XSelectInput(m_display, root, m_rootEventMask | SubstructureNotifyMask);
 		if (error) {
+			log((CLOG_DEBUG "didn't set root event mask"));
 			m_rootEventMask = 0;
 		}
 	}
@@ -59,6 +76,7 @@ CXWindowsScreenSaver::processEvent(XEvent* xevent)
 		if (xevent->xdestroywindow.window == m_xscreensaver) {
 			// xscreensaver is gone
 			setXScreenSaver(false);
+			log((CLOG_DEBUG "xscreensaver died"));
 			m_xscreensaver = None;
 			return true;
 		}
@@ -188,6 +206,7 @@ void
 CXWindowsScreenSaver::setXScreenSaver(bool activated)
 {
 	if (m_xscreensaverActive != activated) {
+		log((CLOG_DEBUG "xscreensaver %s", activated ? "activated" : "deactivated"));
 		m_xscreensaverActive = activated;
 		sendNotify(activated);
 	}
@@ -215,6 +234,7 @@ CXWindowsScreenSaver::updateXScreenSaver()
                                    &data, &type, NULL, False) &&
 								type == XA_STRING) {
 				m_xscreensaver = cw[i];
+				log((CLOG_DEBUG "found xscreensaver: 0x%08x", m_xscreensaver));
 				break;
 			}
 		}
@@ -235,13 +255,12 @@ CXWindowsScreenSaver::updateXScreenSaver()
 }
 
 void
-CXWindowsScreenSaver::sendXScreenSaverCommand(
-				Atom cmd, long arg1, long arg2) const
+CXWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
 {
 	XEvent event;
 	event.xclient.type         = ClientMessage;
 	event.xclient.display      = m_display;
-	event.xclient.window       = None;
+	event.xclient.window       = m_xscreensaverSink;
 	event.xclient.message_type = m_atomScreenSaver;
 	event.xclient.format       = 32;
 	event.xclient.data.l[0]    = static_cast<long>(cmd);
@@ -250,6 +269,11 @@ CXWindowsScreenSaver::sendXScreenSaverCommand(
 	event.xclient.data.l[3]    = 0;
 	event.xclient.data.l[4]    = 0;
 
-	CXWindowsUtil::CErrorLock lock(m_display);
+	log((CLOG_DEBUG "send xscreensaver command: %d %d %d", (long)cmd, arg1, arg2));
+	bool error = false;
+	CXWindowsUtil::CErrorLock lock(m_display, &error);
 	XSendEvent(m_display, m_xscreensaver, False, 0, &event);
+	if (error) {
+		updateXScreenSaver();
+	}
 }
