@@ -4,8 +4,10 @@
 #include "CProtocolUtil.h"
 #include "ISecondaryScreen.h"
 #include "ProtocolTypes.h"
+#include "CThread.h"
 #include "CTimerThread.h"
 #include "XSynergy.h"
+#include "TMethodJob.h"
 #include "CLog.h"
 #include <memory>
 
@@ -19,15 +21,24 @@ CClient::CClient(const CString& clientName) :
 								m_output(NULL),
 								m_screen(NULL)
 {
+	// do nothing
 }
 
 CClient::~CClient()
 {
+	// do nothing
+}
+
+void					CClient::run(const CNetworkAddress& serverAddress)
+{
+	m_serverAddress = &serverAddress;
+	CThread thread(new TMethodJob<CClient>(this, &CClient::runSession));
+	thread.wait();
 }
 
 #include "CTCPSocket.h"
 #include "CXWindowsSecondaryScreen.h"
-void					CClient::run(const CNetworkAddress& serverAddress)
+void					CClient::runSession(void*)
 {
 	log((CLOG_DEBUG "starting client \"%s\"", m_name.c_str()));
 
@@ -41,7 +52,7 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		// create socket and attempt to connect to server
 		log((CLOG_DEBUG "connecting to server"));
 		socket.reset(new CTCPSocket());	// FIXME -- use factory
-		socket->connect(serverAddress);
+		socket->connect(*m_serverAddress);
 		log((CLOG_INFO "connected to server"));
 
 		// get the input and output streams

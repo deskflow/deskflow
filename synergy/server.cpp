@@ -1,9 +1,12 @@
 #include "CServer.h"
 #include "CScreenMap.h"
+#include "CThread.h"
 #include <stdio.h>
 
 int main(int argc, char** argv)
 {
+	CThread::init();
+
 	if (argc != 1) {
 		fprintf(stderr, "usage: %s\n", argv[0]);
 		return 1;

@@ -32,10 +32,14 @@ void					CServerProtocol1_0::run()
 
 		// verify we got an entire code
 		if (n == 0) {
+			log((CLOG_NOTE "client \"%s\" disconnected", getClient().c_str()));
+
 			// client hungup
 			return;
 		}
 		if (n != 4) {
+			log((CLOG_ERR "incomplete message from \"%s\": %d bytes", getClient().c_str(), n));
+
 			// client sent an incomplete message
 			throw XBadClient();
 		}
@@ -47,6 +51,8 @@ void					CServerProtocol1_0::run()
 		}
 		// FIXME -- more message here
 		else {
+			log((CLOG_ERR "unknown message from client \"%s\"", getClient().c_str()));
+
 			// unknown message
 			throw XBadClient();
 		}

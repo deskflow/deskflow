@@ -1,4 +1,5 @@
 #include "CMutex.h"
+#include "CLog.h"
 #include <assert.h>
 
 //
@@ -40,10 +41,15 @@ void					CMutex::init()
 	m_mutex = reinterpret_cast<void*>(mutex);
 }
 
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 void					CMutex::fini()
 {
 	pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(m_mutex);
 	int status = pthread_mutex_destroy(mutex);
+	logc(status != 0, (CLOG_ERR "pthread_mutex_destroy status %d", status));
 	assert(status == 0);
 	delete mutex;
 }
@@ -67,6 +73,7 @@ void					CMutex::lock() const
 		break;
 
 	  default:
+		log((CLOG_ERR "pthread_mutex_lock status %d", status));
 		assert(0 && "unexpected error");
 	}
 }
@@ -86,6 +93,7 @@ void					CMutex::unlock() const
 		break;
 
 	  default:
+		log((CLOG_ERR "pthread_mutex_unlock status %d", status));
 		assert(0 && "unexpected error");
 	}
 }

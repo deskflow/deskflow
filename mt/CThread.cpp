@@ -58,6 +58,11 @@ CThread&				CThread::operator=(const CThread& thread)
 	return *this;
 }
 
+void					CThread::init()
+{
+	CThreadRep::initThreads();
+}
+
 void					CThread::sleep(double timeout)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());

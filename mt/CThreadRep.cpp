@@ -1,7 +1,8 @@
 #include "CThreadRep.h"
 #include "CThread.h"
-#include "XThread.h"
+#include "CMutex.h"
 #include "CLock.h"
+#include "XThread.h"
 #include "IJob.h"
 #include <assert.h>
 
@@ -16,7 +17,7 @@ class XThreadUnavailable { };
 // CThreadRep
 //
 
-CMutex					CThreadRep::s_mutex;
+CMutex*					CThreadRep::s_mutex = NULL;
 CThreadRep*				CThreadRep::s_head = NULL;
 
 CThreadRep::CThreadRep() : m_prev(NULL),
@@ -26,6 +27,7 @@ CThreadRep::CThreadRep() : m_prev(NULL),
 								m_userData(NULL)
 {
 	// note -- s_mutex must be locked on entry
+	assert(s_mutex != NULL);
 
 	// initialize stuff
 	init();
@@ -65,6 +67,7 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 								m_userData(userData)
 {
 	assert(m_job != NULL);
+	assert(s_mutex != NULL);
 
 	// create a thread rep for the main thread if the current thread
 	// is unknown.  note that this might cause multiple "main" threads
@@ -75,7 +78,7 @@ CThreadRep::CThreadRep(IJob* job, void* userData) :
 	init();
 
 	// hold mutex while we create the thread
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 
 	// start the thread.  throw if it doesn't start.
 #if defined(CONFIG_PTHREADS)
@@ -124,15 +127,22 @@ CThreadRep::~CThreadRep()
 	fini();
 }
 
+void					CThreadRep::initThreads()
+{
+	if (s_mutex == NULL) {
+		s_mutex = new CMutex;
+	}
+}
+
 void					CThreadRep::ref()
 {
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 	++m_refCount;
 }
 
 void					CThreadRep::unref()
 {
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 	if (--m_refCount == 0) {
 		delete this;
 	}
@@ -140,7 +150,7 @@ void					CThreadRep::unref()
 
 bool					CThreadRep::enableCancel(bool enable)
 {
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 	const bool old = m_cancellable;
 	m_cancellable = enable;
 	return old;
@@ -148,7 +158,7 @@ bool					CThreadRep::enableCancel(bool enable)
 
 bool					CThreadRep::isCancellable() const
 {
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 	return (m_cancellable && !m_cancelling);
 }
 
@@ -166,6 +176,8 @@ void*					CThreadRep::getUserData() const
 
 CThreadRep*				CThreadRep::getCurrentThreadRep()
 {
+	assert(s_mutex != NULL);
+
 #if defined(CONFIG_PTHREADS)
 	const pthread_t thread = pthread_self();	
 #elif defined(CONFIG_PLATFORM_WIN32)
@@ -173,7 +185,7 @@ CThreadRep*				CThreadRep::getCurrentThreadRep()
 #endif
 
 	// lock list while we search
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 
 	// search
 	CThreadRep* scan = s_head;
@@ -207,7 +219,7 @@ void					CThreadRep::doThreadFunc()
 	setPriority(1);
 
 	// wait for parent to initialize this object
-	{ CLock lock(&s_mutex); }
+	{ CLock lock(s_mutex); }
 
 	void* result = NULL;
 	try {
@@ -263,12 +275,13 @@ void					CThreadRep::sleep(double timeout)
 	struct timespec t;
 	t.tv_sec  = (long)timeout;
 	t.tv_nsec = (long)(1000000000.0 * (timeout - (double)t.tv_sec));
-	nanosleep(&t, NULL);
+	while (nanosleep(&t, &t) < 0)
+		testCancel();
 }
 
 void					CThreadRep::cancel()
 {
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 	if (m_cancellable && !m_cancelling) {
 		m_cancel = true;
 
@@ -281,7 +294,7 @@ void					CThreadRep::testCancel()
 {
 	{
 		// prevent further cancellation
-		CLock lock(&s_mutex);
+		CLock lock(s_mutex);
 		if (!m_cancel || !m_cancellable || m_cancelling)
 			return;
 
@@ -303,14 +316,14 @@ bool					CThreadRep::wait(CThreadRep* target, double timeout)
 	if (target->isExited())
 		return true;
 
-	if (timeout > 0.0) {
+	if (timeout != 0.0) {
 		CStopwatch timer;
 		do {
 			sleep(0.05);
 			testCancel();
 			if (target->isExited())
 				return true;
-		} while (timer.getTime() <= timeout);
+		} while (timeout < 0.0 || timer.getTime() <= timeout);
 	}
 
 	return false;
@@ -323,7 +336,7 @@ void					CThreadRep::setPriority(int)
 
 bool					CThreadRep::isExited() const
 {
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 	return m_exit;
 }
 
@@ -341,7 +354,7 @@ void*					CThreadRep::threadFunc(void* arg)
 	rep->unref();
 
 	// mark as terminated
-	CLock lock(&s_mutex);
+	CLock lock(s_mutex);
 	rep->m_exit = true;
 
 	// terminate the thread
@@ -400,7 +413,7 @@ void					CThreadRep::testCancel()
 
 	{
 		// ignore if disabled or already cancelling
-		CLock lock(&s_mutex);
+		CLock lock(s_mutex);
 		if (!m_cancellable || m_cancelling)
 			return;
 

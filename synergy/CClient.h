@@ -22,6 +22,8 @@ class CClient {
 
 
   private:
+	void				runSession(void*);
+
 	// message handlers
 	void				onEnter();
 	void				onLeave();
@@ -53,6 +55,7 @@ class CClient {
 	IInputStream*		m_input;
 	IOutputStream*		m_output;
 	ISecondaryScreen*	m_screen;
+	const CNetworkAddress*	m_serverAddress;
 };
 
 #endif

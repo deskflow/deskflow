@@ -52,6 +52,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
+	log((CLOG_DEBUG "readf(%s)", fmt));
 
 	va_list args;
 	va_start(args, fmt);
@@ -93,6 +94,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 						  static_cast<UInt32>(buffer[3]);
 					break;
 				}
+				log((CLOG_DEBUG "readf: read %d byte integer: %d (0x%x)", len, *v, *v));
 				break;
 			  }
 
@@ -129,6 +131,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 					}
 					throw;
 				}
+				log((CLOG_DEBUG "readf: read %d byte string: %.*s", len, len, sBuffer));
 
 				// save the data
 				CString* dst = va_arg(args, CString*);
@@ -159,6 +162,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 
 			// verify match
 			if (buffer[0] != *fmt) {
+				log((CLOG_DEBUG "readf: format mismatch: %c vs %c", *fmt, buffer[0]));
 				throw XIOReadMismatch();
 			}
 
@@ -322,6 +326,7 @@ void					CProtocolUtil::read(IInputStream* stream,
 
 		// bail if stream has hungup
 		if (n == 0) {
+			log((CLOG_DEBUG "unexpected disconnect in readf(), %d bytes left", count));
 			throw XIOEndOfStream();
 		}
 

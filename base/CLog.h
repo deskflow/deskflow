@@ -16,12 +16,15 @@ class CLog {
 
 #if defined(NOLOGGING)
 #define log(_a1)
+#define logc(_a1, _a2)
 #define CLOG_TRACE
 #elif defined(NDEBUG)
 #define log(_a1)		CLog::print _a1
+#define logc(_a1, _a2)	if (_a1) CLog::print _a2
 #define CLOG_TRACE
 #else
 #define log(_a1)		CLog::printt _a1
+#define logc(_a1, _a2)	if (_a1) CLog::printt _a2
 #define CLOG_TRACE		__FILE__, __LINE__,
 #endif
 

@@ -1,7 +1,6 @@
 #ifndef CTHREADREP_H
 #define CTHREADREP_H
 
-#include "CMutex.h"
 #include "BasicTypes.h"
 
 #if defined(CONFIG_PTHREADS)
@@ -10,6 +9,7 @@
 #include <windows.h>
 #endif
 
+class CMutex;
 class IJob;
 
 class CThreadRep {
@@ -17,6 +17,9 @@ class CThreadRep {
 	CThreadRep(IJob*, void* userData);
 
 	// manipulators
+
+	// initialize the thread library
+	static void			initThreads();
 
 	// change ref count
 	void				ref();
@@ -92,7 +95,7 @@ class CThreadRep {
 	CThreadRep& operator=(const CThreadRep&);
 
   private:
-	static CMutex		s_mutex;
+	static CMutex*		s_mutex;
 	static CThreadRep*	s_head;
 
 	CThreadRep*			m_prev;

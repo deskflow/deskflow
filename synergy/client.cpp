@@ -1,9 +1,12 @@
 #include "CClient.h"
 #include "CNetworkAddress.h"
+#include "CThread.h"
 #include <stdio.h>
 
 int main(int argc, char** argv)
 {
+	CThread::init();
+
 	if (argc != 2) {
 		fprintf(stderr, "usage: %s <hostname>\n", argv[0]);
 		return 1;

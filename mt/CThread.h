@@ -28,6 +28,11 @@ class CThread {
 	// start a new thread.
     CThread&			operator=(const CThread&);
 
+	// initialize the thread library.  this must be called before
+	// any other thread methods or creating a thread object.  it
+	// is harmless to call init() multiple times.
+	static void			init();
+
     // the calling thread sleeps for the given number of seconds.  if
     // timeout <= 0.0 then the call returns immediately.  if timeout
 	// == 0.0 then the calling thread yields the CPU.
