@@ -49,8 +49,9 @@ CString
 XNetworkVersion::getWhat() const throw()
 {
 	return format("XNetworkVersion",
-								"unsupported network version %d.%d",
-								m_major, m_minor);
+								"unsupported network version %{1}.%{2}",
+								CStringUtil::print("%d", m_major).c_str(),
+								CStringUtil::print("%d", m_minor).c_str());
 }
 
 
@@ -73,6 +74,6 @@ CString
 XNetworkFunctionUnavailable::getWhat() const throw()
 {
 	return format("XNetworkFunctionUnavailable",
-								"missing network function %s",
+								"missing network function %{1}",
 								m_name.c_str());
 }

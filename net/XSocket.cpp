@@ -34,12 +34,21 @@ XSocketAddress::getPort() const throw()
 CString
 XSocketAddress::getWhat() const throw()
 {
-	return "no address";
-/* FIXME
-	return format("XSocketAddress", "no address: %1:%2",
-								m_hostname.t_str(), 
-								CString::sprintf("%d", m_port).t_str());
-*/
+	static const char* s_errorID[] = {
+		"XSocketAddressUnknown",
+		"XSocketAddressNotFound",
+		"XSocketAddressNoAddress",
+		"XSocketAddressBadPort"
+	};
+	static const char* s_errorMsg[] = {
+		"unknown error for: %{1}:%{2}",
+		"address not found for: %{1}",
+		"no address for: %{1}",
+		"invalid port: %{2}"
+	};
+	return format(s_errorID[m_error], s_errorMsg[m_error],
+								m_hostname.c_str(), 
+								CStringUtil::print("%d", m_port).c_str());
 }
 
 

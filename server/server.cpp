@@ -336,9 +336,9 @@ parse(int argc, const char** argv)
 			try {
 				s_synergyAddress = CNetworkAddress(argv[i + 1], kDefaultPort);
 			}
-			catch (XSocketAddress&) {
-				log((CLOG_PRINT "%s: invalid address for `%s'" BYE,
-								pname, argv[i], pname));
+			catch (XSocketAddress& e) {
+				log((CLOG_PRINT "%s: invalid address for `%s'.  %s." BYE,
+								pname, argv[i], e.what(), pname));
 				bye(kExitArgs);
 			}
 			++i;
@@ -349,9 +349,9 @@ parse(int argc, const char** argv)
 			try {
 				s_httpAddress = CNetworkAddress(argv[i + 1], kDefaultPort + 1);
 			}
-			catch (XSocketAddress&) {
-				log((CLOG_PRINT "%s: invalid address for `%s'" BYE,
-								pname, argv[i], pname));
+			catch (XSocketAddress& e) {
+				log((CLOG_PRINT "%s: invalid address for `%s'.  %s." BYE,
+								pname, argv[i], e.what(), pname));
 				bye(kExitArgs);
 			}
 			++i;

@@ -370,5 +370,5 @@ CProtocolUtil::read(IInputStream* stream, void* vbuffer, UInt32 count)
 CString
 XIOReadMismatch::getWhat() const throw()
 {
-	return "CProtocolUtil::readf() mismatch";
+	return format("XIOReadMismatch", "CProtocolUtil::readf() mismatch");
 }

@@ -48,20 +48,16 @@ XHTTP::addHeaders(CHTTPReply&) const
 CString
 XHTTP::getWhat() const throw()
 {
-	try {
-		std::ostringstream s;
-		s << m_status << " ";
-		if (!m_reason.empty()) {
-			s << m_reason.c_str();
-		}
-		else {
-			s << getReason(m_status);
-		}
-		return s.str();
+	const char* reason;
+	if (m_reason.empty()) {
+		reason = getReason(m_status);
 	}
-	catch (...) {
-		return CString();
+	else {
+		reason = m_reason.c_str();
 	}
+	return format("XHTTP", "%{1} %{2}",
+								CStringUtil::print("%d", m_status).c_str(),
+								reason);
 }
 
 const char*

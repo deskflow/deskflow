@@ -37,7 +37,9 @@ XIncompatibleClient::getMinor() const throw()
 CString
 XIncompatibleClient::getWhat() const throw()
 {
-	return "XIncompatibleClient";
+	return format("XIncompatibleClient", "incompatible client %{1}.%{2}",
+								CStringUtil::print("%d", m_major).c_str(),
+								CStringUtil::print("%d", m_minor).c_str());
 }
 
 
@@ -60,7 +62,7 @@ XDuplicateClient::getName() const throw()
 CString
 XDuplicateClient::getWhat() const throw()
 {
-	return "XDuplicateClient";
+	return format("XDuplicateClient", "duplicate client %{1}", m_name.c_str());
 }
 
 
@@ -83,5 +85,5 @@ XUnknownClient::getName() const throw()
 CString
 XUnknownClient::getWhat() const throw()
 {
-	return "XUnknownClient";
+	return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
 }

@@ -695,5 +695,5 @@ XConfigRead::~XConfigRead()
 CString
 XConfigRead::getWhat() const throw()
 {
-	return m_error;
+	return format("XConfigRead", "read error: %s", m_error.c_str());
 }

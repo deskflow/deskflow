@@ -1,5 +1,6 @@
 #include "XBase.h"
 #include <cerrno>
+#include <cstdarg>
 
 // win32 wants a const char* argument to std::exception c'tor
 #if WINDOWS_LIKE
@@ -46,9 +47,22 @@ XBase::what() const
 CString
 XBase::format(const char* /*id*/, const char* fmt, ...) const throw()
 {
-	// FIXME -- use id to lookup formating string
-	// FIXME -- format string with arguments
-	return fmt;
+	// FIXME -- lookup message string using id as an index.  set
+	// fmt to that string if it exists.
+
+	// format
+	CString result;
+	va_list args;
+	va_start(args, fmt);
+	try {
+		result = CStringUtil::vformat(fmt, args);
+	}
+	catch (...) {
+		// ignore
+	}
+	va_end(args);
+
+	return result;
 }
 
 

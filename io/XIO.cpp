@@ -24,7 +24,7 @@ XIOErrno::XIOErrno(int err) :
 CString
 XIOClose::getWhat() const throw()
 {
-	return format("XIOClose", "close: %1", XIOErrno::getErrstr());
+	return format("XIOClose", "close: %{1}", XIOErrno::getErrstr());
 }
 
 

@@ -7,5 +7,5 @@
 CString
 XScreenOpenFailure::getWhat() const throw()
 {
-	return "XScreenOpenFailure";
+	return format("XScreenOpenFailure", "unable to open screen");
 }
