@@ -404,7 +404,11 @@ CServerProxy::translateModifierMask(KeyModifierMask mask) const
 		KeyModifierSuper
 	};
 
-	KeyModifierMask newMask = 0;
+	KeyModifierMask newMask = mask & ~(KeyModifierShift |
+										KeyModifierControl |
+										KeyModifierAlt |
+										KeyModifierMeta |
+										KeyModifierSuper);
 	if ((mask & KeyModifierShift) != 0) {
 		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDShift]];
 	}
