@@ -168,10 +168,10 @@ CThreadRep::initThreads()
 		sigaddset(&sigset, SIGTERM);
 		pthread_sigmask(SIG_BLOCK, &sigset, NULL);
 
-		// fire up the INT and TERM signal handler thread
-		// FIXME -- i've seen this thread hanging around after the app
-		// asserted.  should figure out how it stays alive and prevent
-		// it from happening.
+		// fire up the INT and TERM signal handler thread.  we could
+		// instead arrange to catch and handle these signals but
+		// we'd be unable to cancel the main thread since no pthread
+		// calls are allowed in a signal handler.
 		int status = pthread_create(&s_signalThread, NULL,
 								&CThreadRep::threadSignalHandler,
 								getCurrentThreadRep());
@@ -285,7 +285,9 @@ CThreadRep::doThreadFunc()
 	void* result = NULL;
 	try {
 		// go
+		log((CLOG_DEBUG1 "thread %p entry", this));
 		m_job->run();
+		log((CLOG_DEBUG1 "thread %p exit", this));
 	}
 
 	catch (XThreadCancel&) {
@@ -471,11 +473,24 @@ CThreadRep::threadSignalHandler(void* vrep)
 {
 	CThreadRep* mainThreadRep = reinterpret_cast<CThreadRep*>(vrep);
 
+	// detach
+	pthread_detach(pthread_self());
+
 	// add signal to mask
 	sigset_t sigset;
 	sigemptyset(&sigset);
 	sigaddset(&sigset, SIGINT);
 	sigaddset(&sigset, SIGTERM);
+
+	// also wait on SIGABRT.  on linux (others?) this thread (process)
+	// will persist after all the other threads evaporate due to an
+	// assert unless we wait on SIGABRT.  that means our resources (like
+	// the socket we're listening on) are not released and never will be
+	// until the lingering thread is killed.  i don't know why sigwait()
+	// should protect the thread from being killed.  note that sigwait()
+	// doesn't actually return if we receive SIGABRT and, for some
+	// reason, we don't have to block SIGABRT.
+	sigaddset(&sigset, SIGABRT);
 
 	// we exit the loop via thread cancellation in sigwait()
 	for (;;) {
