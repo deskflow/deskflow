@@ -1,0 +1,93 @@
+#
+#
+# common definitions
+#
+#
+
+#
+# empty define, used to terminate lists
+#
+NULL = 
+
+#
+# target directories
+#
+LIBDIR    = $(DEPTH)/lib
+TARGETDIR = $(DEPTH)/bin
+
+#
+# compiler options
+#
+CXXFLAGS  = $(LCXXFLAGS) $(GCXXFLAGS) $(CXXOPTIMIZER) $(MKDEPOPT)
+LCXXFLAGS = $(LCXXDEFS) $(LCXXINCS) $(LCXXOPTS)
+GCXXFLAGS = $(GCXXDEFS) $(GCXXINCS) $(GCXXOPTS)
+
+#
+# linker options
+#
+LDFLAGS	  = $(LDOPTS) $(LDLIBS)
+LDOPTS	  = $(LLDOPTS) $(GLDOPTS)
+LDLIBS	  = $(LLDLIBS) $(GLDLIBS)
+
+#
+# ar options
+#
+ARF	= $(AR)
+
+#
+# Convenience file list macros:
+#
+SOURCES   = $(CXXFILES)
+OBJECTS   = $(CXXFILES:.cpp=.o)
+
+#
+# always unsatisfied target
+#
+_FORCE    = $(COMMONPREF)_force
+
+#
+#
+# common rules
+#
+#
+
+#
+# default target.  makefiles must define a target named `targets'.
+#
+$(COMMONPREF)default: targets
+
+#
+# always unsatisfied target
+#
+$(_FORCE):
+
+#
+# cleaners
+#
+COMMONTARGETS = clean clobber
+$(COMMONPREF)clean: $(_FORCE)
+	$(RM) $(DIRT)
+
+$(COMMONPREF)clobber: clean $(_FORCE)
+	$(RM) $(TARGETS)
+
+#
+# implicit target rules
+#
+.SUFFIXES: .cpp .o
+
+.cpp.o:
+	$(MKDEPPRE)
+	$(CXX) $(CXXFLAGS) -c $<
+	$(MKDEPPOST)
+
+#
+# platform stuff
+#
+include $(DEPTH)/Make-linux
+#include $(DEPTH)/Make-solaris
+
+#
+# load dependencies
+#
+sinclude $(MKDEPFILE)

@@ -1,0 +1,24 @@
+#ifndef IOUTPUTSTREAM_H
+#define IOUTPUTSTREAM_H
+
+#include "IInterface.h"
+#include "BasicTypes.h"
+#include "XIO.h"
+
+class IOutputStream : public IInterface {
+  public:
+	// manipulators
+
+	// close the stream
+	virtual void		close() throw(XIO) = 0;
+
+	// write count bytes to stream
+	virtual UInt32		write(const void*, UInt32 count) throw(XIO) = 0;
+
+	// flush the stream
+	virtual void		flush() throw(XIO) = 0;
+
+	// accessors
+};
+
+#endif

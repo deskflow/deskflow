@@ -1,0 +1,85 @@
+throw specs:
+  must add XThread if method can be cancelled
+  must add out-of-memory exception if method allocs and returns an object
+    should catch and handle out-of-mem if object wasn't going to be returned
+
+CServer
+ * must have connection thread in screen info map
+    allows disconnect if screen map changes and screen is removed
+ * put mutex locks wherever necessary (like accessing m_active)
+
+CClient
+ * need thread to handle screen
+ * need methods for screen event handler to call as appropriate
+
+server						client
+------						------
+[accept]			<--		connect
+challenge			-->		[encrypt]
+[verify]			<--		response (encrypted challenge, client name)
+hangup if invalid
+query info			-->		
+					<--		info (size)
+
+...
+enter (x,y)			-->
+clipboard data		-->									optional
+mouse/key events	-->									optional
+query clipboard		-->									optional
+					<--		clipboard data					(cont.)
+leave				-->
+
+...
+grab clipboard		-->
+
+... (on clipboard ownership stolen)
+					<--		clipboard lost
+
+... (on screen resize)
+					<--		info (size)
+
+... (on screen saver, primary screen)
+saver (on/off)		-->
+
+...
+quit				-->
+					<--		close
+
+---
+primary screen
+	open
+	close
+	enter
+	leave
+	warp
+	clipboard (get/set)
+	screen saver (show/hide)
+	queue events with server (including screen saver activation)
+
+secondary screen
+	open
+	close
+	enter
+	leave
+	warp
+	synth mouse
+	synth key
+	clipboard (get/set)
+	screen saver (show/hide)
+	queue events with client (clipboard lost/changed, size change)
+
+---
+client:
+	open
+	close
+	wait: server messages, clipboard taken, screen resize, quit
+
+server:
+	accept
+		asynchronously accept new clients
+	config
+		asynchronously accept and handle config message (via HTTP)
+	primary
+		asynchronously handle primary screen events
+	comm
+		send/recv messages to/from clients
