@@ -40,7 +40,7 @@ void
 CPrimaryScreen::mainLoop()
 {
 	// change our priority
-	CThread::getCurrentThread().setPriority(-3);
+	CThread::getCurrentThread().setPriority(-13);
 
 	// run event loop
 	try {

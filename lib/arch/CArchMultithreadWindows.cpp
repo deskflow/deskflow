@@ -348,35 +348,52 @@ CArchMultithreadWindows::cancelThread(CArchThread thread)
 void
 CArchMultithreadWindows::setPriorityOfThread(CArchThread thread, int n)
 {
+	struct CPriorityInfo {
+	public:
+		DWORD		m_class;
+		int			m_level;
+	};
+	static const CPriorityInfo s_pClass[] = {
+		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_IDLE         },
+		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_LOWEST       },
+		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_BELOW_NORMAL },
+		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_NORMAL       },
+		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_ABOVE_NORMAL },
+		{ IDLE_PRIORITY_CLASS,     THREAD_PRIORITY_HIGHEST      },
+		{ NORMAL_PRIORITY_CLASS,   THREAD_PRIORITY_LOWEST       },
+		{ NORMAL_PRIORITY_CLASS,   THREAD_PRIORITY_BELOW_NORMAL },
+		{ NORMAL_PRIORITY_CLASS,   THREAD_PRIORITY_NORMAL       },
+		{ NORMAL_PRIORITY_CLASS,   THREAD_PRIORITY_ABOVE_NORMAL },
+		{ NORMAL_PRIORITY_CLASS,   THREAD_PRIORITY_HIGHEST      },
+		{ HIGH_PRIORITY_CLASS,     THREAD_PRIORITY_LOWEST       },
+		{ HIGH_PRIORITY_CLASS,     THREAD_PRIORITY_BELOW_NORMAL },
+		{ HIGH_PRIORITY_CLASS,     THREAD_PRIORITY_NORMAL       },
+		{ HIGH_PRIORITY_CLASS,     THREAD_PRIORITY_ABOVE_NORMAL },
+		{ HIGH_PRIORITY_CLASS,     THREAD_PRIORITY_HIGHEST      },
+		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_IDLE         },
+		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_LOWEST       },
+		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_BELOW_NORMAL },
+		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_NORMAL       },
+		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_ABOVE_NORMAL },
+		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_HIGHEST      },
+		{ REALTIME_PRIORITY_CLASS, THREAD_PRIORITY_TIME_CRITICAL}
+	};
+	static const size_t s_pMax  = sizeof(s_pClass) / sizeof(s_pClass[0]) - 1;
+	static const size_t s_pBase = 8;	// index of normal priority
+
 	assert(thread != NULL);
 
-	DWORD pClass = NORMAL_PRIORITY_CLASS;
-	if (n < 0) {
-		switch (-n) {
-		case 1:  n = THREAD_PRIORITY_ABOVE_NORMAL; break;
-		case 2:  n = THREAD_PRIORITY_HIGHEST; break;
-		default:
-			pClass = HIGH_PRIORITY_CLASS;
-			switch (-n - 3) {
-			case 0:  n = THREAD_PRIORITY_LOWEST; break;
-			case 1:  n = THREAD_PRIORITY_BELOW_NORMAL; break;
-			case 2:  n = THREAD_PRIORITY_NORMAL; break;
-			case 3:  n = THREAD_PRIORITY_ABOVE_NORMAL; break;
-			default: n = THREAD_PRIORITY_HIGHEST; break;
-			}
-			break;
-		}
+	size_t index = s_pBase - n;
+	if (index < 0) {
+		// lowest priority
+		index = 0;
 	}
-	else {
-		switch (n) {
-		case 0:  n = THREAD_PRIORITY_NORMAL; break;
-		case 1:  n = THREAD_PRIORITY_BELOW_NORMAL; break;
-		case 2:  n = THREAD_PRIORITY_LOWEST; break;
-		default: n = THREAD_PRIORITY_IDLE; break;
-		}
+	else if (index > s_pMax) {
+		// highest priority
+		index = s_pMax;
 	}
-	SetPriorityClass(thread->m_thread, pClass);
-	SetThreadPriority(thread->m_thread, n);
+	SetPriorityClass(thread->m_thread, s_pClass[index].m_class);
+	SetThreadPriority(thread->m_thread, s_pClass[index].m_level);
 }
 
 void
