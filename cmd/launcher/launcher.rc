@@ -308,7 +308,7 @@ BEGIN
     IDS_SAVE_FAILED         "Failed to save configuration: %{1}"
     IDS_STARTUP_FAILED      "Failed to start synergy: %{1}"
     IDS_STARTED_TITLE       "Started"
-    IDS_STARTED             "Synergy was successfully started.  Use the task manager to terminate it."
+    IDS_STARTED             "Synergy was successfully started.  Use the task manager or tray icon to terminate it."
     IDS_UNINSTALL_TITLE     "Removed Auto-Start"
 END
 
