@@ -108,7 +108,7 @@ CMSWindowsClipboard::get(EFormat format) const
 	// find the converter for the first clipboard format we can handle
 	IMSWindowsClipboardConverter* converter = NULL;
 	UINT win32Format = EnumClipboardFormats(0);
-	while (win32Format != 0) {
+	while (converter == NULL && win32Format != 0) {
 		for (ConverterList::const_iterator index = m_converters.begin();
 								index != m_converters.end(); ++index) {
 			converter = *index;
