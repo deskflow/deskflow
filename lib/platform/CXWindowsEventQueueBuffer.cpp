@@ -119,7 +119,7 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 	{
 		// we're no longer waiting for events
 		CLock lock(&m_mutex);
-		m_waiting = true;
+		m_waiting = false;
 	}
 
 	CThread::testCancel();
