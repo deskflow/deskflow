@@ -16,19 +16,14 @@ NULL =
 SUBDIRS =							\
 	lib								\
 	cmd								\
+	doc								\
 	dist							\
 	$(NULL)
 
 EXTRA_DIST =						\
-	BUGS							\
-	FAQ								\
-	HISTORY							\
-	PORTING							\
-	TODO							\
 	all.dsp							\
 	synergy.dsw						\
 	synergy.xcode/project.pbxproj	\
-	doc/doxygen.cfg.in				\
 	examples/synergy.conf			\
 	$(NULL)
 
@@ -42,24 +37,19 @@ MAINTAINERCLEANFILES =				\
 	configure						\
 	stamp-h.in						\
 	stamp-h1						\
-	doc/doxygen.cfg					\
-	doc/doxygen/html/*				\
 	$(NULL)
 
 PKG_FILES =							\
-	AUTHORS							\
-	BUGS							\
-	COPYING							\
 	ChangeLog						\
-	FAQ								\
-	HISTORY							\
-	INSTALL							\
-	NEWS							\
 	README							\
-	TODO							\
 	cmd/synergyc/synergyc			\
 	cmd/synergys/synergys			\
 	examples/synergy.conf			\
+	$(NULL)
+PKG_DOC_FILES =						\
+	doc/PORTING						\
+	doc/*.html						\
+	doc/*.css						\
 	$(NULL)
 PKG_PROG_FILES =					\
 	synergyc						\
@@ -95,7 +85,9 @@ dist-pkg: all
 	rm -rf $(PKGTOPDIR)
 	mkdir $(PKGTOPDIR)
 	mkdir $(PKGTOPDIR)/@PACKAGE@-@VERSION@
+	mkdir $(PKGTOPDIR)/@PACKAGE@-@VERSION@/doc
 	cp $(PKG_FILES) $(PKGTOPDIR)/@PACKAGE@-@VERSION@
+	cp $(PKG_DOC_FILES) $(PKGTOPDIR)/@PACKAGE@-@VERSION@/doc
 	(cd $(PKGTOPDIR)/@PACKAGE@-@VERSION@; \
 		chmod 644 *; \
 		chmod 755 $(PKG_PROG_FILES); \

@@ -1,0 +1,133 @@
+body {
+	font-family: arial, helvetica, sans-serif;
+	font-size:  small;
+	font-weight: normal;
+	margin-left: 0in;
+	margin-right: 0in;
+}
+
+/* show underline on light blue links only on hover */
+a {
+	text-decoration: none;
+	color: #6699ff;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+/* heading */
+h3 {
+	display: block;
+	margin-top: 0em;
+	margin-bottom: 1.25em;
+	font-weight: bold;
+	font-variant: small-caps;
+	font-size: 125%;
+}
+
+/* subheading */
+h4 {
+	display: block;
+	margin-top: 0em;
+	margin-bottom: 1em;
+	font-weight: bold;
+	font-variant: small-caps;
+	font-size: 100%;
+}
+
+/* emphasis */
+b {
+	font-weight: bold;
+}
+
+/* formatted code */
+pre {
+	display: block;
+	white-space: pre;
+	font-family: courier;
+	font-size: 87.5%;
+}
+
+.banner {
+	font-weight: normal;
+	font-variant: small-caps;
+	font-size: 400%;
+	width: 100%;
+	padding: 0px 0px 0px 5px;
+	border-bottom: solid #6699ff 1px;
+}
+.banner a {
+	color: #000000;
+}
+.banner a:hover {
+	text-decoration: none;
+	color: #000000;
+}
+
+.nav {
+	font-size: x-small;
+	font-weight: normal;
+	background-color: #d4d4d4;
+
+	padding: 2px 0px 2px 0px;
+	margin: 0px;
+}
+.nav a:hover {
+	text-decoration: none;
+	color: #666666;
+}
+.nav td {
+	padding-right: 20px;
+	padding-left: 5px;
+	text-indent: 1em;
+}
+.nav .section {
+	width: 100%;
+	text-indent: 0em;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	border-bottom: solid #aaaaaa 1px;
+	padding-bottom: 0px;
+	font-weight: bold;
+	color: #777777;
+}
+
+.main {
+	font-size: small;
+	font-weight: normal;
+	margin-left: 0.1in;
+	margin-right: 0.25in;
+}
+
+.main table {
+	font-size: small;
+	font-weight: normal;
+	margin-left: 0.1in;
+	margin-right: 0.25in;
+}
+
+.date {
+	font-weight: bold;
+}
+
+.arg {
+	font-style: italic;
+	font-family: courier;
+}
+
+.code {
+	font-family: courier;
+}
+
+.code table {
+	font-size: small;
+}
+
+.fakelink {
+	color: #6699ff;
+}
+
+.hide {
+	display:none
+}

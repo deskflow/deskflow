@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+	<title>Synergy Security Guide</title>
+</head>
+<body class="main">
+<h3>Authentication and Encryption</h3>
+<p>
+Synergy does not do any authentication or encryption.  Any computer
+can connect to the synergy server if it provides a screen name known
+to the server, and all data is transferred between the server and the
+clients unencrypted which means that anyone can, say, extract the
+key presses used to type a password.  Therefore, synergy should not
+be used on untrusted networks.
+</p>
+<p>
+However, there are tools that can add authentication and encryption
+to synergy without modifying either those tools or synergy.  One
+such tool is SSH (which stands for secure shell).  A free implementation
+of SSH is called <a href="http://www.openssh.com/">OpenSSH</a> and runs
+on Linux, many Unixes, and Windows (in combination with
+<a href="http://www.cygwin.com/">Cygwin</a>).
+</p>
+
+<h3>Configuring the Server</h3>
+<p>
+Install the OpenSSH server on the same computer as the synergy server.
+Configure the OpenSSH server as usual (synergy doesn't demand any
+special options in OpenSSH) and start it.  Start the synergy server as
+usual;  the synergy server requires no special options to work with
+OpenSSH.
+</p>
+
+<h3>Configuring the Clients</h3>
+<p>
+Install the OpenSSH client on each synergy client computer.  Then, on
+each client, start the OpenSSH client using port forwarding:
+<pre>
+  ssh -f -N -L 24800:<span class="arg">server-hostname</span>:24800 <span class="arg">server-hostname</span>
+</pre>
+The <span class="arg">server-hostname</span> is the name or address
+of the computer with the OpenSSH and synergy servers.
+The 24800 is the default network port used by synergy;  if you use
+a different port then replace both instances of 24800 with the port
+number that you use.  Finally, start the synergy client normally
+except use <span class="code">localhost</span> as the server host
+name.  For example:
+<pre>
+  synergyc -f localhost
+</pre>
+Synergy will then run normally except all communication is passed
+through OpenSSH which decrypts/encrypts it on behalf of synergy.
+</p>
+</body>
+</html>

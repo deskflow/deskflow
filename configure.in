@@ -186,6 +186,7 @@ dist/Makefile
 dist/nullsoft/Makefile
 dist/rpm/Makefile
 dist/rpm/synergy.spec
+doc/Makefile
 doc/doxygen.cfg
 lib/Makefile
 lib/arch/Makefile
