@@ -116,12 +116,34 @@ pre {
 	font-family: courier;
 }
 
+.userinput {
+	display: block;
+	white-space: pre;
+	font-family: courier;
+	font-size: 87.5%;
+	font-weight: bold;
+}
+
 .code {
 	font-family: courier;
 }
 
 .code table {
 	font-size: small;
+}
+
+/* block of code */
+.codeblock {
+	display: block;
+	white-space: pre;
+	font-family: courier;
+	font-size: 87.5%;
+	border: 1px solid #000000;
+	padding: 1em;
+	padding-top: 0em;
+	margin: 1em;
+	background-color: #cccccc;
+	color: #000000;
 }
 
 .fakelink {
