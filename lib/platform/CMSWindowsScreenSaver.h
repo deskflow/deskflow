@@ -58,9 +58,11 @@ private:
 	static BOOL CALLBACK	findScreenSaverFunc(HWND hwnd, LPARAM lParam);
 	static BOOL CALLBACK	killScreenSaverFunc(HWND hwnd, LPARAM lParam);
 
-	HWND				findScreenSaver();
+	DWORD				findScreenSaver();
+	void				watchDesktop();
 	void				watchProcess(HANDLE process);
 	void				unwatchProcess();
+	void				watchDesktopThread(void*);
 	void				watchProcessThread(void*);
 
 private:

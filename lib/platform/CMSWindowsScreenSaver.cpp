@@ -16,6 +16,9 @@
 #include "CThread.h"
 #include "CLog.h"
 #include "TMethodJob.h"
+#include "CArch.h"
+#include <malloc.h>
+#include <tchar.h>
 
 #if !defined(SPI_GETSCREENSAVERRUNNING)
 #define SPI_GETSCREENSAVERRUNNING 114
@@ -70,29 +73,35 @@ CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 	// the system is idle or the user deliberately started
 	// the screen saver.
 	Sleep(250);
-	HWND hwnd = findScreenSaver();
-	if (hwnd == NULL) {
-		// didn't start
-		LOG((CLOG_DEBUG "can't find screen saver window"));
-		return false;
-	}
 
-	// get the process
-	DWORD processID;
-	GetWindowThreadProcessId(hwnd, &processID);
-	HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, processID);
-	if (process == NULL) {
-		// didn't start
-		LOG((CLOG_DEBUG "can't open screen saver process"));
-		return false;
-	}
-
-	// watch for the process to exit
+	// set parameters common to all screen saver handling
 	m_threadID = GetCurrentThreadId();
 	m_msg      = msg;
 	m_wParam   = wParam;
 	m_lParam   = lParam;
-	watchProcess(process);
+
+	// we handle the screen saver differently for the windows
+	// 95 and nt families.
+	if (m_is95Family) {
+		// on windows 95 we wait for the screen saver process
+		// to terminate.  get the process.
+		DWORD processID = findScreenSaver();
+		HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, processID);
+		if (process == NULL) {
+			// didn't start
+			LOG((CLOG_DEBUG "can't open screen saver process"));
+			return false;
+		}
+
+		// watch for the process to exit
+		watchProcess(process);
+	}
+	else {
+		// on the windows nt family we wait for the desktop to
+		// change until it's neither the Screen-Saver desktop
+		// nor a desktop we can't open (the login desktop).
+		watchDesktop();
+	}
 
 	return true;
 }
@@ -240,39 +249,39 @@ CMSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg)
 	return TRUE;
 }
 
-HWND
+DWORD
 CMSWindowsScreenSaver::findScreenSaver()
 {
-	if (!m_is95Family) {
-		// screen saver runs on a separate desktop
-		HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE, MAXIMUM_ALLOWED);
-		if (desktop != NULL) {
-			// search
-			CFindScreenSaverInfo info;
-			info.m_desktop = desktop;
-			info.m_window  = NULL;
-			EnumDesktopWindows(desktop,
-								&CMSWindowsScreenSaver::findScreenSaverFunc,
-								reinterpret_cast<LPARAM>(&info));
+	// try windows 95 way
+	HWND hwnd = FindWindow("WindowsScreenSaverClass", NULL);
 
-			// done with desktop
-			CloseDesktop(desktop);
-
-			// return window if found
-			if (info.m_window != NULL) {
-				return info.m_window;
-			}
-		}
+	// get process ID of process that owns the window, if found
+	if (hwnd != NULL) {
+		DWORD processID;
+		GetWindowThreadProcessId(hwnd, &processID);
+		return processID;
 	}
 
-	// try windows 95 way
-	return FindWindow("WindowsScreenSaverClass", NULL);
+	// not found
+	return 0;
+}
+
+void
+CMSWindowsScreenSaver::watchDesktop()
+{
+	// stop watching previous process/desktop
+	unwatchProcess();
+
+	// watch desktop in another thread
+	LOG((CLOG_DEBUG "watching screen saver desktop"));
+	m_watch = new CThread(new TMethodJob<CMSWindowsScreenSaver>(this,
+								&CMSWindowsScreenSaver::watchDesktopThread));
 }
 
 void
 CMSWindowsScreenSaver::watchProcess(HANDLE process)
 {
-	// stop watching previous process
+	// stop watching previous process/desktop
 	unwatchProcess();
 
 	// watch new process in another thread
@@ -288,7 +297,7 @@ void
 CMSWindowsScreenSaver::unwatchProcess()
 {
 	if (m_watch != NULL) {
-		LOG((CLOG_DEBUG "stopped watching screen saver process"));
+		LOG((CLOG_DEBUG "stopped watching screen saver process/desktop"));
 		m_watch->cancel();
 		m_watch->wait();
 		delete m_watch;
@@ -301,14 +310,57 @@ CMSWindowsScreenSaver::unwatchProcess()
 }
 
 void
+CMSWindowsScreenSaver::watchDesktopThread(void*)
+{
+	DWORD reserved = 0;
+	TCHAR* name    = NULL;
+
+	for (;;) {
+		// wait a bit
+		ARCH->sleep(0.2);
+
+		// get current desktop
+		HDESK desk = OpenInputDesktop(0, FALSE, GENERIC_READ);
+		if (desk == NULL) {
+			// can't open desktop so keep waiting
+			continue;
+		}
+
+		// get current desktop name length
+		DWORD size;
+		GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
+
+		// allocate more space for the name, if necessary
+		if (size > reserved) {
+			reserved = size;
+			name     = (TCHAR*)alloca(reserved + sizeof(TCHAR));
+		}
+
+		// get current desktop name
+		GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
+
+		// compare name to screen saver desktop name
+		if (_tcsicmp(name, TEXT("Screen-saver")) == 0) {
+			// still the screen saver desktop so keep waiting
+			continue;
+		}
+
+		// send screen saver deactivation message
+		PostThreadMessage(m_threadID, m_msg, m_wParam, m_lParam);
+		return;
+	}
+}
+
+void
 CMSWindowsScreenSaver::watchProcessThread(void*)
 {
 	for (;;) {
 		CThread::testCancel();
 		if (WaitForSingleObject(m_process, 50) == WAIT_OBJECT_0) {
-			// process terminated.  send screen saver deactivation
-			// message.
+			// process terminated
 			LOG((CLOG_DEBUG "screen saver died"));
+
+			// send screen saver deactivation message
 			PostThreadMessage(m_threadID, m_msg, m_wParam, m_lParam);
 			return;
 		}
