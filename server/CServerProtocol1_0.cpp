@@ -4,6 +4,7 @@
 #include "CProtocolUtil.h"
 #include "ProtocolTypes.h"
 #include "IInputStream.h"
+#include "IOutputStream.h"
 #include "CLog.h"
 #include "CThread.h"
 #include <string.h>
@@ -92,6 +93,9 @@ void					CServerProtocol1_0::sendClose()
 {
 	log((CLOG_DEBUG1 "send close to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClose);
+
+	// force the close to be sent before we return
+	getOutputStream()->flush();
 }
 
 void					CServerProtocol1_0::sendEnter(

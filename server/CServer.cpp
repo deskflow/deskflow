@@ -125,13 +125,22 @@ bool					CServer::setConfig(const CConfig& config)
 
 		// get the set of screens that are connected but are being
 		// dropped from the configuration.  don't add the primary
-		// screen.
+		// screen.  also tell the secondary screen to disconnect.
 		for (CScreenList::const_iterator index = m_screens.begin();
 								index != m_screens.end(); ++index) {
 			if (!config.isScreen(index->first) &&
 				index->second != m_primaryInfo) {
+				assert(index->second->m_protocol != NULL);
+				index->second->m_protocol->sendClose();
 				threads.push_back(index->second->m_thread);
 			}
+		}
+
+		// wait a moment to allow each secondary screen to close
+		// its connection before we close it (to avoid having our
+		// socket enter TIME_WAIT).
+		if (threads.size() > 0) {
+			CThread::sleep(1.0);
 		}
 
 		// cancel the old secondary screen threads
@@ -196,28 +205,39 @@ void					CServer::setInfo(
 								SInt32 w, SInt32 h, SInt32 zoneSize,
 								SInt32 x, SInt32 y)
 {
-	setInfo(m_primaryInfo->m_name, w, h, zoneSize, x, y);
+	CLock lock(&m_mutex);
+	assert(m_primaryInfo != NULL);
+	setInfoNoLock(m_primaryInfo->m_name, w, h, zoneSize, x, y);
 }
 
 void					CServer::setInfo(const CString& client,
 								SInt32 w, SInt32 h, SInt32 zoneSize,
 								SInt32 x, SInt32 y)
 {
-	assert(!client.empty());
+	CLock lock(&m_mutex);
+	setInfoNoLock(client, w, h, zoneSize, x, y);
+}
+
+void					CServer::setInfoNoLock(const CString& screen,
+								SInt32 w, SInt32 h, SInt32 zoneSize,
+								SInt32 x, SInt32 y)
+{
+	assert(!screen.empty());
 	assert(w > 0);
 	assert(h > 0);
 	assert(zoneSize >= 0);
 
-	CLock lock(&m_mutex);
-
-	// client must be connected
-	CScreenList::iterator index = m_screens.find(client);
+	// screen must be connected
+	CScreenList::iterator index = m_screens.find(screen);
 	if (index == m_screens.end()) {
 		throw XBadClient();
 	}
 
-	// update client info
+	// screen is now ready (i.e. available to user)
 	CScreenInfo* info = index->second;
+	info->m_ready = true;
+
+	// update screen info
 	if (info == m_active) {
 		// update the remote mouse coordinates
 		m_x = x;
@@ -226,9 +246,9 @@ void					CServer::setInfo(const CString& client,
 	info->m_width    = w;
 	info->m_height   = h;
 	info->m_zoneSize = zoneSize;
-	log((CLOG_NOTE "client \"%s\" size=%dx%d zone=%d pos=%d,%d", client.c_str(), w, h, zoneSize, x, y));
+	log((CLOG_NOTE "screen \"%s\" size=%dx%d zone=%d pos=%d,%d", screen.c_str(), w, h, zoneSize, x, y));
 
-	// send acknowledgement (if client isn't the primary)
+	// send acknowledgement (if screen isn't the primary)
 	if (info->m_protocol != NULL) {
 		info->m_protocol->sendInfoAcknowledgment();
 	}
@@ -236,17 +256,19 @@ void					CServer::setInfo(const CString& client,
 	// handle resolution change to primary screen
 	else {
 		if (info == m_active) {
-			onMouseMovePrimary(x, y);
+			onMouseMovePrimaryNoLock(x, y);
 		}
 		else {
-			onMouseMoveSecondary(0, 0);
+			onMouseMoveSecondaryNoLock(0, 0);
 		}
 	}
 }
 
 void					CServer::grabClipboard(ClipboardID id)
 {
-	grabClipboard(id, 0, m_primaryInfo->m_name);
+	CLock lock(&m_mutex);
+	assert(m_primaryInfo != NULL);
+	grabClipboardNoLock(id, 0, m_primaryInfo->m_name);
 }
 
 void					CServer::grabClipboard(
@@ -254,25 +276,33 @@ void					CServer::grabClipboard(
 								const CString& client)
 {
 	CLock lock(&m_mutex);
+	grabClipboardNoLock(id, seqNum, client);
+}
+
+void					CServer::grabClipboardNoLock(
+								ClipboardID id, UInt32 seqNum,
+								const CString& screen)
+{
+	// note -- must be locked on entry
 	CClipboardInfo& clipboard = m_clipboards[id];
 
 	// screen must be connected
-	CScreenList::iterator index = m_screens.find(client);
+	CScreenList::iterator index = m_screens.find(screen);
 	if (index == m_screens.end()) {
 		throw XBadClient();
 	}
 
 	// ignore grab if sequence number is old.  always allow primary
 	// screen to grab.
-	if (client != m_primaryInfo->m_name &&
+	if (screen != m_primaryInfo->m_name &&
 		seqNum < clipboard.m_clipboardSeqNum) {
-		log((CLOG_INFO "ignored client \"%s\" grab of clipboard %d", client.c_str(), id));
+		log((CLOG_INFO "ignored screen \"%s\" grab of clipboard %d", screen.c_str(), id));
 		return;
 	}
 
 	// mark screen as owning clipboard
-	log((CLOG_NOTE "client \"%s\" grabbed clipboard %d from \"%s\"", client.c_str(), id, clipboard.m_clipboardOwner.c_str()));
-	clipboard.m_clipboardOwner  = client;
+	log((CLOG_NOTE "screen \"%s\" grabbed clipboard %d from \"%s\"", screen.c_str(), id, clipboard.m_clipboardOwner.c_str()));
+	clipboard.m_clipboardOwner  = screen;
 	clipboard.m_clipboardSeqNum = seqNum;
 
 	// no screens have the new clipboard except the sender
@@ -281,7 +311,7 @@ void					CServer::grabClipboard(
 
 	// tell all other screens to take ownership of clipboard
 	for (index = m_screens.begin(); index != m_screens.end(); ++index) {
-		if (index->first != client) {
+		if (index->first != screen) {
 			CScreenInfo* info = index->second;
 			if (info->m_protocol == NULL) {
 				m_primary->grabClipboard(id);
@@ -317,12 +347,12 @@ void					CServer::setClipboard(ClipboardID id,
 
 	// ignore update if sequence number is old
 	if (seqNum < clipboard.m_clipboardSeqNum) {
-		log((CLOG_INFO "ignored client \"%s\" update of clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
+		log((CLOG_INFO "ignored screen \"%s\" update of clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
 		return;
 	}
 
 	// unmarshall into our clipboard buffer
-	log((CLOG_NOTE "client \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
+	log((CLOG_NOTE "screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
 	clipboard.m_clipboardReady = true;
 	clipboard.m_clipboardData  = data;
 	clipboard.m_clipboard.unmarshall(clipboard.m_clipboardData, 0);
@@ -349,6 +379,7 @@ bool					CServer::onCommandKey(KeyID /*id*/,
 void					CServer::onKeyDown(KeyID id, KeyModifierMask mask)
 {
 	log((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x", id, mask));
+	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -365,6 +396,7 @@ void					CServer::onKeyDown(KeyID id, KeyModifierMask mask)
 void					CServer::onKeyUp(KeyID id, KeyModifierMask mask)
 {
 	log((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x", id, mask));
+	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -382,6 +414,7 @@ void					CServer::onKeyRepeat(
 								KeyID id, KeyModifierMask mask, SInt32 count)
 {
 	log((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d", id, mask, count));
+	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
 	// handle command keys
@@ -399,6 +432,7 @@ void					CServer::onKeyRepeat(
 void					CServer::onMouseDown(ButtonID id)
 {
 	log((CLOG_DEBUG1 "onMouseDown id=%d", id));
+	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
 	// relay
@@ -410,6 +444,7 @@ void					CServer::onMouseDown(ButtonID id)
 void					CServer::onMouseUp(ButtonID id)
 {
 	log((CLOG_DEBUG1 "onMouseUp id=%d", id));
+	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
 	// relay
@@ -421,13 +456,18 @@ void					CServer::onMouseUp(ButtonID id)
 bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 {
 	log((CLOG_DEBUG2 "onMouseMovePrimary %d,%d", x, y));
+	CLock lock(&m_mutex);
+	return onMouseMovePrimaryNoLock(x, y);
+}
 
+bool					CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
+{
 	// mouse move on primary (server's) screen
 	assert(m_active != NULL);
 	assert(m_active->m_protocol == NULL);
 
 	// ignore if mouse is locked to screen
-	if (isLockedToScreen()) {
+	if (isLockedToScreenNoLock()) {
 		return false;
 	}
 
@@ -477,10 +517,25 @@ bool					CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 {
 	log((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
+	CLock lock(&m_mutex);
+	onMouseMoveSecondaryNoLock(dx, dy);
+}
 
+void					CServer::onMouseMoveSecondaryNoLock(
+								SInt32 dx, SInt32 dy)
+{
 	// mouse move on secondary (client's) screen
 	assert(m_active != NULL);
-	assert(m_active->m_protocol != NULL);
+	if (m_active->m_protocol == NULL) {
+		// we're actually on the primary screen.  this can happen
+		// when the primary screen begins processing a mouse move
+		// for a secondary screen, then the active (secondary)
+		// screen disconnects causing us to jump to the primary
+		// screen, and finally the primary screen finishes
+		// processing the mouse move, still thinking it's for
+		// a secondary screen.  we just ignore the motion.
+		return;
+	}
 
 	// save old position
 	const SInt32 xOld = m_x;
@@ -493,7 +548,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 	// switch screens if the mouse is outside the screen and not
 	// locked to the screen
 	CScreenInfo* newScreen = NULL;
-	if (!isLockedToScreen()) {
+	if (!isLockedToScreenNoLock()) {
 		// find direction of neighbor
 		CConfig::EDirection dir;
 		if (m_x < 0)
@@ -564,6 +619,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 void					CServer::onMouseWheel(SInt32 delta)
 {
 	log((CLOG_DEBUG1 "onMouseWheel %+d", delta));
+	CLock lock(&m_mutex);
 	assert(m_active != NULL);
 
 	// relay
@@ -573,6 +629,12 @@ void					CServer::onMouseWheel(SInt32 delta)
 }
 
 bool					CServer::isLockedToScreen() const
+{
+	CLock lock(&m_mutex);
+	return isLockedToScreenNoLock();
+}
+
+bool					CServer::isLockedToScreenNoLock() const
 {
 	// locked if primary says we're locked
 	if (m_primary->isLockedToScreen()) {
@@ -673,11 +735,11 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 			return NULL;
 		}
 
-		// look up neighbor cell.  if the screen is connected then
-		// we can stop.  otherwise we skip over an unconnected
-		// screen.
+		// look up neighbor cell.  if the screen is connected and
+		// ready then we can stop.  otherwise we skip over an
+		// unconnected screen.
 		CScreenList::const_iterator index = m_screens.find(dstName);
-		if (index != m_screens.end()) {
+		if (index != m_screens.end() && index->second->m_ready) {
 			log((CLOG_DEBUG2 "\"%s\" is on %s of \"%s\"", dstName.c_str(), CConfig::dirName(dir), srcName.c_str()));
 			return index->second;
 		}
@@ -1371,6 +1433,7 @@ CServer::CScreenInfo::CScreenInfo(const CString& name,
 								m_thread(CThread::getCurrentThread()),
 								m_name(name),
 								m_protocol(protocol),
+								m_ready(false),
 								m_width(0), m_height(0),
 								m_zoneSize(0)
 {

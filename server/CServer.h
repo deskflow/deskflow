@@ -66,6 +66,7 @@ public:
 
 	// accessors
 
+	// returns true if the mouse should be locked to the current screen
 	bool				isLockedToScreen() const;
 
 	// get the current screen map
@@ -107,13 +108,33 @@ private:
 		~CScreenInfo();
 
 	public:
+		// the thread handling this screen's connection.  used when
+		// forcing a screen to disconnect.
 		CThread			m_thread;
 		CString			m_name;
 		IServerProtocol* m_protocol;
+		bool			m_ready;
 		SInt32			m_width, m_height;
 		SInt32			m_zoneSize;
 		bool			m_gotClipboard[kClipboardEnd];
 	};
+
+	// handle mouse motion
+	bool				onMouseMovePrimaryNoLock(SInt32 x, SInt32 y);
+	void				onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy);
+
+	// update screen info
+	void				setInfoNoLock(const CString& screenName,
+								SInt32 wScreen, SInt32 hScreen,
+								SInt32 zoneSize,
+								SInt32 xMouse, SInt32 yMouse);
+
+	// grab the clipboard
+	void				grabClipboardNoLock(ClipboardID,
+								UInt32 seqNum, const CString& clientName);
+
+	// returns true iff mouse should be locked to the current screen
+	bool				isLockedToScreenNoLock() const;
 
 	// change the active screen
 	void				switchScreen(CScreenInfo*, SInt32 x, SInt32 y);
