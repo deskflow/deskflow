@@ -21,9 +21,10 @@
 #define EVENTQUEUE IEventQueue::getInstance()
 
 class IEventJob;
+class IEventQueueBuffer;
 
 // Opaque type for timer info.  This is defined by subclasses of
-// IEventQueue.
+// IEventQueueBuffer.
 class CEventQueueTimer;
 
 //! Event queue interface
@@ -43,6 +44,13 @@ public:
 
 	//! @name manipulators
 	//@{
+
+	//! Set the buffer
+	/*!
+	Replace the current event queue buffer.  Any queued events are
+	discarded.  The queue takes ownership of the buffer.
+	*/
+	virtual void		adoptBuffer(IEventQueueBuffer*) = 0;
 
 	//! Remove event from queue
 	/*!

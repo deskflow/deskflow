@@ -13,6 +13,7 @@
  */
 
 #include "CEventQueue.h"
+#include "CSimpleEventQueueBuffer.h"
 #include "IEventJob.h"
 #include "CArch.h"
 
@@ -34,20 +35,42 @@ CEventQueue::CEventQueue()
 	setInstance(this);
 	m_mutex = ARCH->newMutex();
 	ARCH->setInterruptHandler(&interrupt, NULL);
+	m_buffer = new CSimpleEventQueueBuffer;
 }
 
 CEventQueue::~CEventQueue()
 {
+	delete m_buffer;
 	ARCH->setInterruptHandler(NULL, NULL);
 	ARCH->closeMutex(m_mutex);
 	setInstance(NULL);
+}
+
+void
+CEventQueue::adoptBuffer(IEventQueueBuffer* buffer)
+{
+	CArchMutexLock lock(m_mutex);
+
+	// discard old buffer and old events
+	delete m_buffer;
+	for (CEventTable::iterator i = m_events.begin(); i != m_events.end(); ++i) {
+		CEvent::deleteData(i->second);
+	}
+	m_events.clear();
+	m_oldEventIDs.clear();
+
+	// use new buffer
+	m_buffer = buffer;
+	if (m_buffer == NULL) {
+		m_buffer = new CSimpleEventQueueBuffer;
+	}
 }
 
 bool
 CEventQueue::getEvent(CEvent& event, double timeout)
 {
 	// if no events are waiting then handle timers and then wait
-	if (doIsEmpty()) {
+	if (m_buffer->isEmpty()) {
 		// handle timers first
 		if (hasTimerExpired(event)) {
 			return true;
@@ -62,15 +85,30 @@ CEventQueue::getEvent(CEvent& event, double timeout)
 		}
 
 		// wait for an event
-		waitForEvent(timeout);
+		m_buffer->waitForEvent(timeout);
 	}
 
 	// if no events are pending then do the timers
-	if (doIsEmpty()) {
+	if (m_buffer->isEmpty()) {
 		return hasTimerExpired(event);
 	}
 
-	return doGetEvent(event);
+	UInt32 dataID;
+	IEventQueueBuffer::Type type = m_buffer->getEvent(event, dataID);
+	switch (type) {
+	case IEventQueueBuffer::kNone:
+		return false;
+
+	case IEventQueueBuffer::kSystem:
+		return true;
+
+	case IEventQueueBuffer::kUser:
+	{
+		CArchMutexLock lock(m_mutex);
+		event = removeEvent(dataID);
+		return true;
+	}
+	}
 }
 
 bool
@@ -99,11 +137,13 @@ CEventQueue::addEvent(const CEvent& event)
 		break;
 	}
 
+	CArchMutexLock lock(m_mutex);
+
 	// store the event's data locally
 	UInt32 eventID = saveEvent(event);
 
 	// add it
-	if (!doAddEvent(eventID)) {
+	if (!m_buffer->addEvent(eventID)) {
 		// failed to send event
 		removeEvent(eventID);
 		CEvent::deleteData(event);
@@ -115,7 +155,7 @@ CEventQueue::newTimer(double duration, void* target)
 {
 	assert(duration > 0.0);
 
-	CEventQueueTimer* timer = doNewTimer(duration, false);
+	CEventQueueTimer* timer = m_buffer->newTimer(duration, false);
 	CArchMutexLock lock(m_mutex);
 	m_timers.insert(timer);
 	m_timerQueue.push(CTimer(timer, duration, target, false));
@@ -127,7 +167,7 @@ CEventQueue::newOneShotTimer(double duration, void* target)
 {
 	assert(duration > 0.0);
 
-	CEventQueueTimer* timer = doNewTimer(duration, true);
+	CEventQueueTimer* timer = m_buffer->newTimer(duration, true);
 	CArchMutexLock lock(m_mutex);
 	m_timers.insert(timer);
 	m_timerQueue.push(CTimer(timer, duration, target, true));
@@ -137,27 +177,24 @@ CEventQueue::newOneShotTimer(double duration, void* target)
 void
 CEventQueue::deleteTimer(CEventQueueTimer* timer)
 {
-	{
-		CArchMutexLock lock(m_mutex);
-		for (CTimerQueue::iterator index = m_timerQueue.begin();
-								index != m_timerQueue.end(); ++index) {
-			if (index->getTimer() == timer) {
-				m_timerQueue.erase(index);
-				break;
-			}
-		}
-		CTimers::iterator index = m_timers.find(timer);
-		if (index != m_timers.end()) {
-			m_timers.erase(index);
+	CArchMutexLock lock(m_mutex);
+	for (CTimerQueue::iterator index = m_timerQueue.begin();
+							index != m_timerQueue.end(); ++index) {
+		if (index->getTimer() == timer) {
+			m_timerQueue.erase(index);
+			break;
 		}
 	}
-	doDeleteTimer(timer);
+	CTimers::iterator index = m_timers.find(timer);
+	if (index != m_timers.end()) {
+		m_timers.erase(index);
+	}
+	m_buffer->deleteTimer(timer);
 }
 
 void
 CEventQueue::adoptHandler(void* target, IEventJob* handler)
 {
-	CArchMutexLock lock(m_mutex);
 	doAdoptHandler(CEvent::kUnknown, target, handler);
 }
 
@@ -165,14 +202,12 @@ void
 CEventQueue::adoptHandler(CEvent::Type type, void* target, IEventJob* handler)
 {
 	assert(type != CEvent::kUnknown);
-	CArchMutexLock lock(m_mutex);
 	doAdoptHandler(type, target, handler);
 }
 
 IEventJob*
 CEventQueue::orphanHandler(void* target)
 {
-	CArchMutexLock lock(m_mutex);
 	return doOrphanHandler(CEvent::kUnknown, target);
 }
 
@@ -180,7 +215,6 @@ IEventJob*
 CEventQueue::orphanHandler(CEvent::Type type, void* target)
 {
 	assert(type != CEvent::kUnknown);
-	CArchMutexLock lock(m_mutex);
 	return doOrphanHandler(type, target);
 }
 
@@ -199,6 +233,7 @@ CEventQueue::removeHandler(CEvent::Type type, void* target)
 void
 CEventQueue::doAdoptHandler(CEvent::Type type, void* target, IEventJob* handler)
 {
+	CArchMutexLock lock(m_mutex);
 	IEventJob*& job = m_handlers[CTypeTarget(type, target)];
 	delete job;
 	job = handler;
@@ -207,6 +242,7 @@ CEventQueue::doAdoptHandler(CEvent::Type type, void* target, IEventJob* handler)
 IEventJob*
 CEventQueue::doOrphanHandler(CEvent::Type type, void* target)
 {
+	CArchMutexLock lock(m_mutex);
 	CHandlerTable::iterator index = m_handlers.find(CTypeTarget(type, target));
 	if (index != m_handlers.end()) {
 		IEventJob* handler = index->second;
@@ -221,7 +257,7 @@ CEventQueue::doOrphanHandler(CEvent::Type type, void* target)
 bool
 CEventQueue::isEmpty() const
 {
-	return (doIsEmpty() && getNextTimerTimeout() != 0.0);
+	return (m_buffer->isEmpty() && getNextTimerTimeout() != 0.0);
 }
 
 IEventJob*
@@ -243,8 +279,6 @@ CEventQueue::getHandler(CEvent::Type type, void* target) const
 UInt32
 CEventQueue::saveEvent(const CEvent& event)
 {
-	CArchMutexLock lock(m_mutex);
-
 	// choose id
 	UInt32 id;
 	if (!m_oldEventIDs.empty()) {
@@ -265,8 +299,6 @@ CEventQueue::saveEvent(const CEvent& event)
 CEvent
 CEventQueue::removeEvent(UInt32 eventID)
 {
-	CArchMutexLock lock(m_mutex);
-
 	// look up id
 	CEventTable::iterator index = m_events.find(eventID);
 	if (index == m_events.end()) {
@@ -286,8 +318,6 @@ CEventQueue::removeEvent(UInt32 eventID)
 bool
 CEventQueue::hasTimerExpired(CEvent& event)
 {
-	CArchMutexLock lock(m_mutex);
-
 	// return true if there's a timer in the timer priority queue that
 	// has expired.  if returning true then fill in event appropriately
 	// and reset and reinsert the timer.
@@ -330,8 +360,6 @@ CEventQueue::hasTimerExpired(CEvent& event)
 double
 CEventQueue::getNextTimerTimeout() const
 {
-	CArchMutexLock lock(m_mutex);
-
 	// return -1 if no timers, 0 if the top timer has expired, otherwise
 	// the time until the top timer in the timer priority queue will
 	// expire.
