@@ -95,7 +95,7 @@
 #if defined(HAVE_X11_XF86KEYSYM_H)
 static const KeySym		g_mapE000[] =
 {
-	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x00 */ 0, XF86XK_Eject, 0, 0, 0, 0, 0, 0,
 	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -278,6 +278,45 @@ CXWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
 
 	// get the mapping for this keysym
 	KeySymIndex keyIndex = m_keysymMap.find(keysym);
+	if (keyIndex != m_keysymMap.end()) {
+		// the keysym is mapped to some keycode.  create the keystrokes
+		// for this keysym.
+		return mapToKeystrokes(keys, keyIndex, isAutoRepeat);
+	}
+
+	// we can't find the keysym mapped to any keycode.  this doesn't
+	// necessarily mean we can't generate the keysym, though.  if the
+	// keysym can be created by combining keysyms then we may still
+	// be okay.
+	CXWindowsUtil::KeySyms decomposition;
+	if (CXWindowsUtil::decomposeKeySym(keysym, decomposition)) {
+		LOG((CLOG_DEBUG2 "decomposed keysym 0x%08x into %d keysyms", keysym, decomposition.size()));
+
+		// map each decomposed keysym to keystrokes.  we want the mask
+		// and the keycode from the last keysym (which should be the
+		// only non-dead key).  the dead keys are not sensitive to
+		// anything but shift and mode switch.
+		KeyButton keycode = 0;
+		for (CXWindowsUtil::KeySyms::const_iterator i = decomposition.begin();
+								i != decomposition.end(); ++i) {
+			// lookup the key
+			keysym   = *i;
+			keyIndex = m_keysymMap.find(keysym);
+			if (keyIndex == m_keysymMap.end()) {
+				// missing a required keysym
+				LOG((CLOG_DEBUG2 "can't map keysym %d: 0x%04x", i - decomposition.begin(), keysym));
+				return 0;
+			}
+
+			// the keysym is mapped to some keycode
+			keycode = mapToKeystrokes(keys, keyIndex, isAutoRepeat);
+			if (keycode == 0) {
+				return 0;
+			}
+		}
+
+		return keycode;
+	}
 
 	// if the mapping isn't found and keysym is caps lock sensitive
 	// then convert the case of the keysym and try again.
@@ -292,47 +331,14 @@ CXWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
 				keyIndex = m_keysymMap.find(lKey);
 			}
 		}
-	}
-
-	if (keyIndex != m_keysymMap.end()) {
-		// the keysym is mapped to some keycode.  create the keystrokes
-		// for this keysym.
-		return mapToKeystrokes(keys, keyIndex, isAutoRepeat);
-	}
-
-	// we can't find the keysym mapped to any keycode.  this doesn't
-	// necessarily mean we can't generate the keysym, though.  if the
-	// keysym can be created by combining keysyms then we may still
-	// be okay.
-	CXWindowsUtil::KeySyms decomposition;
-	if (!CXWindowsUtil::decomposeKeySym(keysym, decomposition)) {
-		return 0;
-	}
-	LOG((CLOG_DEBUG2 "decomposed keysym 0x%08x into %d keysyms", keysym, decomposition.size()));
-
-	// map each decomposed keysym to keystrokes.  we want the mask
-	// and the keycode from the last keysym (which should be the
-	// only non-dead key).  the dead keys are not sensitive to
-	// anything but shift and mode switch.
-	KeyButton keycode = 0;
-	for (CXWindowsUtil::KeySyms::const_iterator i = decomposition.begin();
-								i != decomposition.end(); ++i) {
-		// lookup the key
-		keysym   = *i;
-		keyIndex = m_keysymMap.find(keysym);
-		if (keyIndex == m_keysymMap.end()) {
-			// missing a required keysym
-			return 0;
-		}
-
-		// the keysym is mapped to some keycode
-		keycode = mapToKeystrokes(keys, keyIndex, isAutoRepeat);
-		if (keycode == 0) {
-			return 0;
+		if (keyIndex != m_keysymMap.end()) {
+			// the keysym is mapped to some keycode.  create the keystrokes
+			// for this keysym.
+			return mapToKeystrokes(keys, keyIndex, isAutoRepeat);
 		}
 	}
 
-	return keycode;
+	return 0;
 }
 
 void
@@ -794,6 +800,7 @@ CXWindowsKeyState::mapToKeystrokes(Keystrokes& keys,
 	if (isAutoRepeat &&
 		(m_keyControl.auto_repeats[keycode >> 3] &
 							static_cast<char>(1 << (keycode & 7))) == 0) {
+		LOG((CLOG_DEBUG2 "non-autorepeating"));
 		return 0;
 	}
 
@@ -923,24 +930,34 @@ CXWindowsKeyState::adjustModifiers(Keystrokes& keys,
 	// get mode switch set correctly.  do this before shift because
 	// mode switch may be sensitive to the shift modifier and will
 	// set/reset it as necessary.
-	const bool wantModeSwitch = ((desiredMask & KeyModifierModeSwitch) != 0);
-	const bool haveModeSwitch = ((currentMask & KeyModifierModeSwitch) != 0);
+	bool forceShift     = false;
+	bool wantShift      = ((desiredMask & KeyModifierShift) != 0);
+	bool wantModeSwitch = ((desiredMask & KeyModifierModeSwitch) != 0);
+	bool haveModeSwitch = ((currentMask & KeyModifierModeSwitch) != 0);
 	if (wantModeSwitch != haveModeSwitch) {
 		LOG((CLOG_DEBUG2 "fix mode switch"));
 
-		// adjust shift if necessary
+		// adjust shift if necessary (i.e. turn it off it's on and mode
+		// shift is sensitive to the shift key)
 		KeySymIndex modeSwitchIndex = m_keysymMap.find(m_modeSwitchKeysym);
 		assert(modeSwitchIndex != m_keysymMap.end());
 		if (modeSwitchIndex->second.m_shiftSensitive[0]) {
-			const bool wantShift = false;
-			const bool haveShift = ((currentMask & KeyModifierShift) != 0);
-			if (wantShift != haveShift) {
+			bool haveShift = ((currentMask & KeyModifierShift) != 0);
+			if (haveShift) {
 				// add shift keystrokes
 				LOG((CLOG_DEBUG2 "fix shift for mode switch"));
-				if (!mapModifier(keys, undo, KeyModifierShift, wantShift)) {
+				if (!mapModifier(keys, undo, KeyModifierShift, false, true)) {
 					return false;
 				}
+
+				// our local concept of shift has flipped
 				currentMask ^= KeyModifierShift;
+
+				// force shift to get turned on below if we had to turn
+				// off here and shift is desired.  if we didn't force it
+				// then mapModifier would think shift is already down
+				// and ignore the request.
+				forceShift   = wantShift;
 			}
 		}
 
@@ -952,12 +969,11 @@ CXWindowsKeyState::adjustModifiers(Keystrokes& keys,
 	}
 
 	// get shift set correctly
-	const bool wantShift = ((desiredMask & KeyModifierShift) != 0);
-	const bool haveShift = ((currentMask & KeyModifierShift) != 0);
+	bool haveShift = ((currentMask & KeyModifierShift) != 0);
 	if (wantShift != haveShift) {
 		// add shift keystrokes
 		LOG((CLOG_DEBUG2 "fix shift"));
-		if (!mapModifier(keys, undo, KeyModifierShift, wantShift)) {
+		if (!mapModifier(keys, undo, KeyModifierShift, wantShift, forceShift)) {
 			return false;
 		}
 		currentMask ^= KeyModifierShift;

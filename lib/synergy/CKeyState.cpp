@@ -295,7 +295,7 @@ CKeyState::addModifier(KeyModifierMask modifier, const KeyButtons& buttons)
 
 bool
 CKeyState::mapModifier(Keystrokes& keys, Keystrokes& undo,
-				KeyModifierMask mask, bool desireActive) const
+				KeyModifierMask mask, bool desireActive, bool force) const
 {
 	// look up modifier
 	const KeyButtons& buttons = m_maskToKeys[getIndexForModifier(mask)];
@@ -304,7 +304,7 @@ CKeyState::mapModifier(Keystrokes& keys, Keystrokes& undo,
 	}
 
 	// ignore if already in desired state
-	if (isModifierActive(mask) == desireActive) {
+	if (!force && isModifierActive(mask) == desireActive) {
 		return true;
 	}
 

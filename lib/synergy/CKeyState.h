@@ -102,16 +102,19 @@ protected:
 
 	//! Get key events to change modifier state
 	/*!
-	Retrieves the key events necessary to activate (\c desireActive is true)
-	or deactivate (\c desireActive is false) the modifier given by \c mask
-	by pushing them onto the back of \c keys.  \c mask must specify exactly
-	one modifier.  \c undo receives the key events necessary to restore the
-	modifier's previous state.  They're pushed onto \c undo in the reverse
-	order they should be executed.  Returns true if the modifier can be
-	adjusted, false otherwise.
+	Retrieves the key events necessary to activate (\p desireActive is true)
+	or deactivate (\p desireActive is false) the modifier given by \p mask
+	by pushing them onto the back of \p keys.  \p mask must specify exactly
+	one modifier.  \p undo receives the key events necessary to restore the
+	modifier's previous state.  They're pushed onto \p undo in the reverse
+	order they should be executed.  If \p force is false then \p keys and
+	\p undo are only changed if the modifier is not currently in the
+	desired state.  If \p force is true then \p keys and \p undo are always
+	changed.  Returns true if the modifier can be adjusted, false otherwise.
 	*/
 	bool				mapModifier(Keystrokes& keys, Keystrokes& undo,
-							KeyModifierMask mask, bool desireActive) const;
+							KeyModifierMask mask, bool desireActive,
+							bool force = false) const;
 
 	//! Update the key state
 	/*!
