@@ -95,6 +95,10 @@ SOURCE=.\CClientProxy1_0.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CClientProxy1_1.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CConfig.cpp
 # End Source File
 # Begin Source File
@@ -120,6 +124,10 @@ SOURCE=.\CClientProxy.h
 # Begin Source File
 
 SOURCE=.\CClientProxy1_0.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CClientProxy1_1.h
 # End Source File
 # Begin Source File
 

@@ -25,6 +25,7 @@
 #include "IMSWindowsScreenEventHandler.h"
 #include "CMutex.h"
 #include "CString.h"
+#include "stdmap.h"
 #include "stdvector.h"
 
 class CMSWindowsScreen;

@@ -120,7 +120,6 @@ CMSWindowsSecondaryScreen::keyRepeat(KeyID key,
 
 	// if we've seen this button (and we should have) then make sure
 	// we release the same key we pressed when we saw it.
-	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
 	if (index != m_serverKeyMap.end() && virtualKey != index->second) {
 		// replace key up with previous keycode but leave key down
 		// alone so it uses the new keycode and store that keycode

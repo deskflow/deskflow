@@ -34,6 +34,7 @@ libserver_a_SOURCES = 				\
 	CServer.cpp						\
 	CClientProxy.h					\
 	CClientProxy1_0.h				\
+	CClientProxy1_1.h				\
 	CConfig.h						\
 	CHTTPServer.h					\
 	CPrimaryClient.h				\
