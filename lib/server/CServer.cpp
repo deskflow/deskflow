@@ -782,6 +782,7 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 	m_active->getShape(ax, ay, aw, ah);
 
 	// find direction of neighbor and get the neighbor
+	bool jump = true;
 	IClient* newScreen;
 	do {
 		EDirection dir;
@@ -800,6 +801,7 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 		else {
 			// we haven't left the screen
 			newScreen = m_active;
+			jump      = false;
 
 			// if waiting and mouse is not on the border we're waiting
 			// on then stop waiting.  also if it's not on the border
@@ -843,10 +845,11 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 		// see if we should switch
 		if (!isSwitchOkay(newScreen, dir, m_x, m_y)) {
 			newScreen = m_active;
+			jump      = false;
 		}
 	} while (false);
 
-	if (newScreen != m_active) {
+	if (jump) {
 		// switch screens
 		switchScreen(newScreen, m_x, m_y, false);
 	}
