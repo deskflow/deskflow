@@ -2,6 +2,7 @@
 #include "CClient.h"
 #include "CThread.h"
 #include "TMethodJob.h"
+#include "CLog.h"
 #include <assert.h>
 #include <X11/X.h>
 #include <X11/extensions/XTest.h>
@@ -33,6 +34,7 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 	m_client = client;
 
 	// open the display
+	log((CLOG_DEBUG "XOpenDisplay(%s)", "NULL"));
 	m_display = ::XOpenDisplay(NULL);	// FIXME -- allow non-default
 	if (m_display == NULL)
 		throw int(5);	// FIXME -- make exception for this
@@ -44,6 +46,7 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 	// get screen size
 	m_w = WidthOfScreen(screen);
 	m_h = HeightOfScreen(screen);
+	log((CLOG_INFO "secondary display size: %dx%d", m_w, m_h));
 
 	// verify the availability of the XTest extension
 	int majorOpcode, firstEvent, firstError;
@@ -51,8 +54,29 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 								&majorOpcode, &firstEvent, &firstError))
 		throw int(6);	// FIXME -- make exception for this
 
+	// get the root window
+	m_root = RootWindow(m_display, m_screen);
+
+	// create the cursor hiding window.  this window is used to hide the
+	// cursor when it's not on the screen.  the window is hidden as soon
+	// as the cursor enters the screen or the display's real cursor is
+	// moved.
+	XSetWindowAttributes attr;
+	attr.event_mask            = LeaveWindowMask;
+	attr.do_not_propagate_mask = 0;
+	attr.override_redirect     = True;
+	attr.cursor                = createBlankCursor();
+	m_window = ::XCreateWindow(m_display, m_root, 0, 0, 1, 1, 0, 0,
+								InputOnly, CopyFromParent,
+								CWDontPropagate | CWEventMask |
+								CWOverrideRedirect | CWCursor,
+								&attr);
+
 	// become impervious to server grabs
 	::XTestGrabControl(m_display, True);
+
+	// hide the cursor
+	leave();
 
 	// start processing events
 	m_eventThread = new CThread(new TMethodJob<CXWindowsSecondaryScreen>(
@@ -73,6 +97,10 @@ void					CXWindowsSecondaryScreen::close()
 	// no longer impervious to server grabs
 	::XTestGrabControl(m_display, False);
 
+	// destroy window
+	::XDestroyWindow(m_display, m_window);
+	m_window = None;
+
 	// close the display
 	::XCloseDisplay(m_display);
 	m_display = NULL;
@@ -81,20 +109,25 @@ void					CXWindowsSecondaryScreen::close()
 void					CXWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 {
 	assert(m_display != NULL);
+	assert(m_window != None);
 
 	// warp to requested location
 	warpCursor(x, y);
 
 	// show cursor
-	// FIXME
+	::XUnmapWindow(m_display, m_window);
 }
 
 void					CXWindowsSecondaryScreen::leave()
 {
 	assert(m_display != NULL);
+	assert(m_window != None);
 
-	// hide cursor
-	// FIXME
+	// raise and show the hider window
+	::XMapRaised(m_display, m_window);
+
+	// hide cursor by moving it into the hider window
+	::XWarpPointer(m_display, None, m_window, 0, 0, 0, 0, 0, 0);
 }
 
 void					CXWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
@@ -180,8 +213,46 @@ SInt32					CXWindowsSecondaryScreen::getJumpZoneSize() const
 	return 0;
 }
 
+Cursor					CXWindowsSecondaryScreen::createBlankCursor()
+{
+	// this seems just a bit more complicated than really necessary
+
+	// get the closet cursor size to 1x1
+	unsigned int w, h;
+	::XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
+
+	// make bitmap data for cursor of closet size.  since the cursor
+	// is blank we can use the same bitmap for shape and mask:  all
+	// zeros.
+	const int size = ((w + 7) >> 3) * h;
+	char* data = new char[size];
+	memset(data, 0, size);
+
+	// make bitmap
+	Pixmap bitmap = ::XCreateBitmapFromData(m_display, m_root, data, w, h);
+
+	// need an arbitrary color for the cursor
+	XColor color;
+	color.pixel = 0;
+	color.red   = color.green = color.blue = 0;
+	color.flags = DoRed | DoGreen | DoBlue;
+
+	// make cursor from bitmap
+	Cursor cursor = ::XCreatePixmapCursor(m_display, bitmap, bitmap,
+								&color, &color, 0, 0);
+
+	// don't need bitmap or the data anymore
+	delete[] data;
+	::XFreePixmap(m_display, bitmap);
+
+	return cursor;
+}
+
 void					CXWindowsSecondaryScreen::eventThread(void*)
 {
+	assert(m_display != NULL);
+	assert(m_window != None);
+
 	for (;;) {
 		// wait for and then get the next event
 		while (XPending(m_display) == 0) {
@@ -193,8 +264,8 @@ void					CXWindowsSecondaryScreen::eventThread(void*)
 		// handle event
 		switch (xevent.type) {
 		  case LeaveNotify:
-			// mouse moved out of window somehow.  hide the window.
-//			::XUnmapWindow(m_display, m_window);
+			// mouse moved out of hider window somehow.  hide the window.
+			::XUnmapWindow(m_display, m_window);
 			break;
 
 /*

@@ -28,6 +28,7 @@ class CXWindowsSecondaryScreen : public ISecondaryScreen {
 	virtual SInt32		getJumpZoneSize() const;
 
   private:
+	Cursor				createBlankCursor();
 	void				eventThread(void*);
 	KeyCode				mapKey(KeyID, KeyModifierMask) const;
 	unsigned int		mapButton(ButtonID button) const;
@@ -37,6 +38,7 @@ class CXWindowsSecondaryScreen : public ISecondaryScreen {
 	CThread*			m_eventThread;
 	Display*			m_display;
 	int					m_screen;
+	Window				m_root;
 	Window				m_window;
 	SInt32				m_w, m_h;
 };

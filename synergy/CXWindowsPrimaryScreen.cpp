@@ -49,7 +49,7 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 	log((CLOG_INFO "primary display size: %dx%d", m_w, m_h));
 
 	// get the root window
-	Window root = RootWindow(m_display, m_screen);
+	m_root = RootWindow(m_display, m_screen);
 
 	// create the grab window.  this window is used to capture user
 	// input when the user is focussed on another client.  don't let
@@ -61,15 +61,15 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 								 KeymapStateMask;
 	attr.do_not_propagate_mask = 0;
 	attr.override_redirect     = True;
-	attr.cursor                = None;
-	m_window = ::XCreateWindow(m_display, root, 0, 0, m_w, m_h, 0, 0,
+	attr.cursor                = createBlankCursor();
+	m_window = ::XCreateWindow(m_display, m_root, 0, 0, m_w, m_h, 0, 0,
 								InputOnly, CopyFromParent,
 								CWDontPropagate | CWEventMask |
 								CWOverrideRedirect | CWCursor,
 								&attr);
 
 	// start watching for events on other windows
-	selectEvents(root);
+	selectEvents(m_root);
 
 	// start processing events
 	m_eventThread = new CThread(new TMethodJob<CXWindowsPrimaryScreen>(
@@ -179,8 +179,7 @@ void					CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
 
 	// warp the mouse
-	Window root = RootWindow(m_display, m_screen);
-	::XWarpPointer(m_display, None, root, 0, 0, 0, 0, x, y);
+	::XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
 	::XSync(m_display, False);
 	log((CLOG_DEBUG "warped to %d,%d", x, y));
 
@@ -231,6 +230,41 @@ void					CXWindowsPrimaryScreen::selectEvents(Window w) const
 			selectEvents(cw[i]);
 		::XFree(cw);
 	}
+}
+
+Cursor					CXWindowsPrimaryScreen::createBlankCursor()
+{
+	// this seems just a bit more complicated than really necessary
+
+	// get the closet cursor size to 1x1
+	unsigned int w, h;
+	::XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
+
+	// make bitmap data for cursor of closet size.  since the cursor
+	// is blank we can use the same bitmap for shape and mask:  all
+	// zeros.
+	const int size = ((w + 7) >> 3) * h;
+	char* data = new char[size];
+	memset(data, 0, size);
+
+	// make bitmap
+	Pixmap bitmap = ::XCreateBitmapFromData(m_display, m_root, data, w, h);
+
+	// need an arbitrary color for the cursor
+	XColor color;
+	color.pixel = 0;
+	color.red   = color.green = color.blue = 0;
+	color.flags = DoRed | DoGreen | DoBlue;
+
+	// make cursor from bitmap
+	Cursor cursor = ::XCreatePixmapCursor(m_display, bitmap, bitmap,
+								&color, &color, 0, 0);
+
+	// don't need bitmap or the data anymore
+	delete[] data;
+	::XFreePixmap(m_display, bitmap);
+
+	return cursor;
 }
 
 void					CXWindowsPrimaryScreen::eventThread(void*)

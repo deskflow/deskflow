@@ -24,6 +24,7 @@ class CXWindowsPrimaryScreen : public IPrimaryScreen {
 
   private:
 	void				selectEvents(Window) const;
+	Cursor				createBlankCursor();
 
 	void				eventThread(void*);
 	KeyModifierMask		mapModifier(unsigned int state) const;
@@ -35,6 +36,7 @@ class CXWindowsPrimaryScreen : public IPrimaryScreen {
 	CThread*			m_eventThread;
 	Display*			m_display;
 	int					m_screen;
+	Window				m_root;
 	SInt32				m_w, m_h;
 	Window				m_window;
 	bool				m_active;
