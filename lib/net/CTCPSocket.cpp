@@ -292,6 +292,12 @@ CTCPSocket::ioService()
 					m_input->hangup();
 					m_connected &= ~kRead;
 				}
+				else {
+					// socket failed
+					if (CNetwork::getsockerror() != CNetwork::kEINTR) {
+						return;
+					}
+				}
 			}
 
 			// write some data
@@ -303,14 +309,17 @@ CTCPSocket::ioService()
 
 				// write data
 				const void* buffer = m_output->peek(n);
-				n = (UInt32)CNetwork::write(m_fd, buffer, n);
+				ssize_t n2 = (UInt32)CNetwork::write(m_fd, buffer, n);
 
 				// discard written data
-				if (n > 0) {
+				if (n2 > 0) {
 					m_output->pop(n);
 				}
-				else if (n == (UInt32)-1 && CNetwork::getsockerror() == EPIPE) {
-					return;
+				else if (n2 < 0) {
+					// socket failed
+					if (CNetwork::getsockerror() != CNetwork::kEINTR) {
+						return;
+					}
 				}
 			}
 		}

@@ -43,6 +43,7 @@ typedef int ssize_t;
 #endif
 
 #if UNIX_LIKE
+#	include <netinet/in.h>
 #	include <netdb.h>
 #	include <errno.h>
 #endif
@@ -183,9 +184,11 @@ public:
 #if WINDOWS_LIKE
 		kEADDRINUSE				= WSAEADDRINUSE,
 		kECONNECTING			= WSAEWOULDBLOCK,
+		kEINTR					= WSAEINTR,
 #elif UNIX_LIKE
 		kEADDRINUSE				= EADDRINUSE,
 		kECONNECTING			= EINPROGRESS,
+		kEINTR					= EINTR,
 #endif
 		kNone = 0
 	};
