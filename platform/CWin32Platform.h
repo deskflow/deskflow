@@ -4,6 +4,7 @@
 #include "IPlatform.h"
 #include "CCondVar.h"
 #include "CMutex.h"
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 class CWin32Platform : public IPlatform {

@@ -29,8 +29,6 @@ typedef int ssize_t;
 # endif
 #endif
 
-// FIXME -- must handle htonl and ilk when defined as macros
-
 class CNetwork {
 public:
 #if defined(CONFIG_PLATFORM_WIN32)

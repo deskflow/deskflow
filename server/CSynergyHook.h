@@ -2,6 +2,7 @@
 #define CSYNERGYHOOK_H
 
 #include "BasicTypes.h"
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 #if defined(CONFIG_PLATFORM_WIN32)

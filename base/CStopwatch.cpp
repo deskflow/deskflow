@@ -5,12 +5,13 @@
 //
 
 CStopwatch::CStopwatch(bool triggered) :
-								m_mark(0.0),
-								m_triggered(triggered),
-								m_stopped(triggered)
+	m_mark(0.0),
+	m_triggered(triggered),
+	m_stopped(triggered)
 {
-	if (!triggered)
+	if (!triggered) {
 		m_mark = getClock();
+	}
 }
 
 CStopwatch::~CStopwatch()
@@ -18,7 +19,8 @@ CStopwatch::~CStopwatch()
 	// do nothing
 }
 
-double					CStopwatch::reset()
+double
+CStopwatch::reset()
 {
 	if (m_stopped) {
 		const double dt = m_mark;
@@ -33,43 +35,52 @@ double					CStopwatch::reset()
 	}
 }
 
-void					CStopwatch::stop()
+void
+CStopwatch::stop()
 {
-	if (m_stopped)
+	if (m_stopped) {
 		return;
+	}
 
 	// save the elapsed time
 	m_mark	  = getClock() - m_mark;
 	m_stopped = true;
 }
 
-void					CStopwatch::start()
+void
+CStopwatch::start()
 {
 	m_triggered = false;
-	if (!m_stopped)
+	if (!m_stopped) {
 		return;
+	}
 
 	// set the mark such that it reports the time elapsed at stop()
 	m_mark	  = getClock() - m_mark;
 	m_stopped = false;
 }
 
-void					CStopwatch::setTrigger()
+void
+CStopwatch::setTrigger()
 {
 	stop();
 	m_triggered = true;
 }
 
-double					CStopwatch::getTime()
+double
+CStopwatch::getTime()
 {
 	if (m_triggered) {
 		const double dt = m_mark;
 		start();
 		return dt;
 	}
-	if (m_stopped)
+	else if (m_stopped) {
 		return m_mark;
-	return getClock() - m_mark;
+	}
+	else {
+		return getClock() - m_mark;
+	}
 }
 
 CStopwatch::operator double()
@@ -77,16 +88,21 @@ CStopwatch::operator double()
 	return getTime();
 }
 
-bool					CStopwatch::isStopped() const
+bool
+CStopwatch::isStopped() const
 {
 	return m_stopped;
 }
 
-double					CStopwatch::getTime() const
+double
+CStopwatch::getTime() const
 {
-	if (m_stopped)
+	if (m_stopped) {
 		return m_mark;
-	return getClock() - m_mark;
+	}
+	else {
+		return getClock() - m_mark;
+	}
 }
 
 CStopwatch::operator double() const
@@ -98,7 +114,8 @@ CStopwatch::operator double() const
 
 #include <sys/time.h>
 
-double					CStopwatch::getClock() const
+double
+CStopwatch::getClock() const
 {
 	struct timeval t;
 	gettimeofday(&t, NULL);
@@ -121,6 +138,7 @@ double					CStopwatch::getClock() const
 #define MMNOMMIO        // Multimedia file I/O support
 #define MMNOMMSYSTEM    // General MMSYSTEM functions
 
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <mmsystem.h>
 
@@ -150,18 +168,21 @@ CStopwatchInit::CStopwatchInit()
 	else {
 		// load winmm.dll and get timeGetTime
 		s_mmInstance = LoadLibrary("winmm");
-		if (s_mmInstance)
+		if (s_mmInstance) {
 			s_tgt = (PTimeGetTime)GetProcAddress(s_mmInstance, "timeGetTime");
+		}
 	}
 }
 
 CStopwatchInit::~CStopwatchInit()
 {
-	if (s_mmInstance)
+	if (s_mmInstance) {
 		FreeLibrary(reinterpret_cast<HMODULE>(s_mmInstance));
+	}
 }
 
-double					CStopwatch::getClock() const
+double
+CStopwatch::getClock() const
 {
 	// get time.  we try three ways, in order of descending precision
 	if (s_freq != 0.0) {

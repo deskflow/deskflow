@@ -5,10 +5,12 @@
 #include <assert.h>
 
 #if defined(CONFIG_PLATFORM_WIN32)
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #define vsnprintf _vsnprintf
 #endif
 
+// names of priorities
 static const char*		g_priority[] = {
 								"FATAL",
 								"ERROR",
@@ -19,17 +21,29 @@ static const char*		g_priority[] = {
 								"DEBUG1",
 								"DEBUG2"
 							};
+
+// number of priorities
 static const int		g_numPriority = (int)(sizeof(g_priority) /
 											sizeof(g_priority[0]));
+
+// the default priority
 #if defined(NDEBUG)
 static const int		g_defaultMaxPriority = 4;
 #else
 static const int		g_defaultMaxPriority = 5;
 #endif
-static const int		g_maxPriorityLength = 7; // length of longest string
+
+// length of longest string in g_priority
+static const int		g_maxPriorityLength = 7;
+
+// length of suffix string (": ")
 static const int		g_prioritySuffixLength = 2;
+
+// amount of padded required to fill in the priority prefix
 static const int		g_priorityPad = g_maxPriorityLength +
 										g_prioritySuffixLength;
+
+// minimum length of a newline sequence
 static const int		g_newlineLength = 2;
 
 //
@@ -40,7 +54,10 @@ CLog::Outputter			CLog::s_outputter = NULL;
 CLog::Lock				CLog::s_lock = &CLog::dummyLock;
 int						CLog::s_maxPriority = -1;
 
-void					CLog::print(const char* fmt, ...)
+void
+CLog::print(
+	const char* fmt,
+	...)
 {
 	// check if fmt begins with a priority argument
 	int priority = 4;
@@ -68,8 +85,12 @@ void					CLog::print(const char* fmt, ...)
 		delete[] buffer;
 }
 
-void					CLog::printt(const char* file, int line,
-								const char* fmt, ...)
+void
+CLog::printt(
+	const char* file,
+	int line,
+	const char* fmt,
+	...)
 {
 	// check if fmt begins with a priority argument
 	int priority = 4;
@@ -110,31 +131,39 @@ void					CLog::printt(const char* file, int line,
 		delete[] buffer;
 }
 
-void					CLog::setOutputter(Outputter outputter)
+void
+CLog::setOutputter(
+	Outputter outputter)
 {
 	CHoldLock lock(s_lock);
 	s_outputter = outputter;
 }
 
-CLog::Outputter			CLog::getOutputter()
+CLog::Outputter
+CLog::getOutputter()
 {
 	CHoldLock lock(s_lock);
 	return s_outputter;
 }
 
-void					CLog::setLock(Lock newLock)
+void
+CLog::setLock(
+	Lock newLock)
 {
 	CHoldLock lock(s_lock);
 	s_lock = (newLock == NULL) ? dummyLock : newLock;
 }
 
-CLog::Lock				CLog::getLock()
+CLog::Lock
+CLog::getLock()
 {
 	CHoldLock lock(s_lock);
 	return (s_lock == dummyLock) ? NULL : s_lock;
 }
 
-bool					CLog::setFilter(const char* maxPriority)
+bool
+CLog::setFilter(
+	const char* maxPriority)
 {
 	if (maxPriority != NULL) {
 		for (int i = 0; i < g_numPriority; ++i) {
@@ -148,24 +177,30 @@ bool					CLog::setFilter(const char* maxPriority)
 	return true;
 }
 
-void					CLog::setFilter(int maxPriority)
+void
+CLog::setFilter(
+	int maxPriority)
 {
 	CHoldLock lock(s_lock);
 	s_maxPriority = maxPriority;
 }
 
-int						CLog::getFilter()
+int
+CLog::getFilter()
 {
 	CHoldLock lock(s_lock);
 	return getMaxPriority();
 }
 
-void					CLog::dummyLock(bool)
+void
+CLog::dummyLock(
+	bool)
 {
 	// do nothing
 }
 
-int						CLog::getMaxPriority()
+int
+CLog::getMaxPriority()
 {
 	CHoldLock lock(s_lock);
 
@@ -177,7 +212,10 @@ int						CLog::getMaxPriority()
 	return s_maxPriority;
 }
 
-void					CLog::output(int priority, char* msg)
+void
+CLog::output(
+	int priority,
+	char* msg)
 {
 	assert(priority >= -1 && priority < g_numPriority);
 	assert(msg != 0);
@@ -211,8 +249,13 @@ void					CLog::output(int priority, char* msg)
 	}
 }
 
-char*					CLog::vsprint(int pad, char* buffer, int len,
-								const char* fmt, va_list args)
+char*
+CLog::vsprint(
+	int pad,
+	char* buffer,
+	int len,
+	const char* fmt,
+	va_list args)
 {
 	assert(len > 0);
 
@@ -240,14 +283,17 @@ char*					CLog::vsprint(int pad, char* buffer, int len,
 
 static DWORD			s_thread = 0;
 
-static BOOL WINAPI		CLogSignalHandler(DWORD)
+static
+BOOL WINAPI
+CLogSignalHandler(DWORD)
 {
 	// terminate cleanly and skip remaining handlers
 	PostThreadMessage(s_thread, WM_QUIT, 0, 0);
 	return TRUE;
 }
 
-void					CLog::openConsole()
+void
+CLog::openConsole()
 {
 	static bool s_hasConsole = false;
 

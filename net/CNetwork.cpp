@@ -125,8 +125,8 @@ UInt16					CNetwork::swaphtons(UInt16 v)
 {
 	static const union { UInt16 s; UInt8 b[2]; } s_endian = { 0x1234 };
 	if (s_endian.b[0] == 0x34)
-		return	((v & 0xff00u) >> 8) |
-				((v & 0x00ffu) << 8);
+		return static_cast<UInt16>(	((v & 0xff00u) >> 8) |
+									((v & 0x00ffu) << 8));
 	else
 		return v;
 }
