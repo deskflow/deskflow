@@ -15,6 +15,18 @@
 // FIXME -- temporary exception type
 class XThreadUnavailable { };
 
+#ifndef NDEBUG
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+static void threadDebug(int)
+{
+	if (fork() == 0) abort();
+	else { wait(0); exit(1); }
+}
+#endif
+
 //
 // CThreadRep
 //
@@ -122,21 +134,31 @@ void					CThreadRep::initThreads()
 #if defined(CONFIG_PTHREADS)
 		// install SIGWAKEUP handler
 		struct sigaction act;
-		act.sa_handler = &threadCancel;
+		sigemptyset(&act.sa_mask);
 # if defined(SA_INTERRUPT)
 		act.sa_flags   = SA_INTERRUPT;
 # else
 		act.sa_flags   = 0;
 # endif
-		sigemptyset(&act.sa_mask);
+		act.sa_handler = &threadCancel;
 		sigaction(SIGWAKEUP, &act, NULL);
+# ifndef NDEBUG
+		act.sa_handler = &threadDebug;
+		sigaction(SIGSEGV, &act, NULL);
+# endif
 #endif
 
 		// set signal mask
 		sigset_t sigset;
 		sigemptyset(&sigset);
 		sigaddset(&sigset, SIGWAKEUP);
+#ifndef NDEBUG
+		sigaddset(&sigset, SIGSEGV);
+#endif
 		pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
+		sigemptyset(&sigset);
+		sigaddset(&sigset, SIGPIPE);
+		pthread_sigmask(SIG_BLOCK, &sigset, NULL);
 	}
 }
 
@@ -368,7 +390,13 @@ void*					CThreadRep::threadFunc(void* arg)
 	sigset_t sigset;
 	sigemptyset(&sigset);
 	sigaddset(&sigset, SIGWAKEUP);
+#ifndef NDEBUG
+	sigaddset(&sigset, SIGSEGV);
+#endif
 	pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
+	sigemptyset(&sigset);
+	sigaddset(&sigset, SIGPIPE);
+	pthread_sigmask(SIG_BLOCK, &sigset, NULL);
 
 	// run thread
 	rep->doThreadFunc();

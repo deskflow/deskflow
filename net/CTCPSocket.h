@@ -30,7 +30,8 @@ class CTCPSocket : public ISocket {
 
   private:
 	void				init();
-	void				service(void*);
+	void				ioThread(void*);
+	void				ioService();
 	void				closeInput(void*);
 	void				closeOutput(void*);
 

@@ -87,6 +87,9 @@ void					CBufferedInputStream::close()
 	}
 
 	m_closed = true;
+	m_hungup = true;
+	m_buffer.pop(m_buffer.getSize());
+	m_empty.broadcast();
 	if (m_closeCB) {
 		m_closeCB->run();
 	}

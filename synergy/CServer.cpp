@@ -20,6 +20,15 @@
 #include <assert.h>
 #include <memory>
 
+/* XXX
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+if (fork() == 0) abort();
+else { wait(0); exit(1); }
+*/
+
 //
 // CServer
 //
@@ -647,18 +656,20 @@ void					CServer::handshakeClient(void* vsocket)
 		std::auto_ptr<IOutputStream> output;
 
 		// attach the encryption layer
+		bool own = false;
 		if (m_securityFactory != NULL) {
 /* FIXME -- implement ISecurityFactory
-			input.reset(m_securityFactory->createInputFilter(srcInput, false));
-			output.reset(m_securityFactory->createOutputFilter(srcOutput, false));
+			input.reset(m_securityFactory->createInputFilter(srcInput, own));
+			output.reset(m_securityFactory->createOutputFilter(srcOutput, own));
 			srcInput  = input.get();
 			srcOutput = output.get();
+			own       = true;
 */
 		}
 
 		// attach the packetizing filters
-		input.reset(new CInputPacketStream(srcInput, true));
-		output.reset(new COutputPacketStream(srcOutput, true));
+		input.reset(new CInputPacketStream(srcInput, own));
+		output.reset(new COutputPacketStream(srcOutput, own));
 
 		std::auto_ptr<IServerProtocol> protocol;
 		std::auto_ptr<CConnectionNote> connectedNote;

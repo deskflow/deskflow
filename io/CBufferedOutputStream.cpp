@@ -46,6 +46,7 @@ void					CBufferedOutputStream::close()
 	}
 
 	m_closed = true;
+	m_buffer.pop(m_buffer.getSize());
 	if (m_closeCB) {
 		m_closeCB->run();
 	}

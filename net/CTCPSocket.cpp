@@ -29,8 +29,7 @@ CTCPSocket::CTCPSocket()
 	init();
 }
 
-CTCPSocket::CTCPSocket(int fd) :
-								m_fd(fd)
+CTCPSocket::CTCPSocket(int fd) : m_fd(fd)
 {
 	assert(m_fd != -1);
 
@@ -41,7 +40,7 @@ CTCPSocket::CTCPSocket(int fd) :
 
 	// start handling socket
 	m_thread = new CThread(new TMethodJob<CTCPSocket>(
-								this, &CTCPSocket::service));
+								this, &CTCPSocket::ioThread));
 }
 
 CTCPSocket::~CTCPSocket()
@@ -54,9 +53,9 @@ CTCPSocket::~CTCPSocket()
 	}
 
 	// clean up
-	delete m_mutex;
 	delete m_input;
 	delete m_output;
+	delete m_mutex;
 }
 
 void					CTCPSocket::bind(const CNetworkAddress& addr)
@@ -80,7 +79,7 @@ void					CTCPSocket::connect(const CNetworkAddress& addr)
 	// start servicing the socket
 	m_connected = kReadWrite;
 	m_thread    = new CThread(new TMethodJob<CTCPSocket>(
-								this, &CTCPSocket::service));
+								this, &CTCPSocket::ioThread));
 }
 
 void					CTCPSocket::close()
@@ -135,7 +134,21 @@ void					CTCPSocket::init()
 									this, &CTCPSocket::closeOutput));
 }
 
-void					CTCPSocket::service(void*)
+void					CTCPSocket::ioThread(void*)
+{
+	try {
+		ioService();
+		m_input->close();
+		m_output->close();
+	}
+	catch (...) {
+		m_input->close();
+		m_output->close();
+		throw;
+	}
+}
+
+void					CTCPSocket::ioService()
 {
 	assert(m_fd != -1);
 
@@ -198,11 +211,14 @@ void					CTCPSocket::service(void*)
 
 				// write data
 				const void* buffer = m_output->peek(n);
-				n = write(m_fd, buffer, n);
+				n = (UInt32)write(m_fd, buffer, n);
 
 				// discard written data
 				if (n > 0) {
 					m_output->pop(n);
+				}
+				else if (n == (UInt32)-1 && errno == EPIPE) {
+					return;
 				}
 			}
 		}
