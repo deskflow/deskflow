@@ -326,6 +326,8 @@ CXWindowsScreen::close()
 void
 CXWindowsScreen::enable()
 {
+	CLock lock(&m_mutex);
+
 	if (!m_isPrimary) {
 		// get the keyboard control state
 		XKeyboardState keyControl;
@@ -347,6 +349,8 @@ CXWindowsScreen::enable()
 void
 CXWindowsScreen::disable()
 {
+	CLock lock(&m_mutex);
+
 	// release input context focus
 	if (m_ic != NULL) {
 		XUnsetICFocus(m_ic);
@@ -1760,8 +1764,6 @@ CXWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 
 	LOG((CLOG_DEBUG2 "warped to %d,%d", x, y));
 }
-
-// ------------------
 
 void
 CXWindowsScreen::updateButtons()
