@@ -55,10 +55,12 @@ public:
 	typedef SOCKET Socket;
 	typedef struct sockaddr Address;
 	typedef int AddressLength;
+	typedef struct in_addr InternetAddress;
 #elif UNIX_LIKE
 	typedef int Socket;
 	typedef struct sockaddr Address;
 	typedef socklen_t AddressLength;
+	typedef struct in_addr InternetAddress;
 #endif
 
 #if WINDOWS_LIKE || !HAVE_POLL
@@ -214,7 +216,7 @@ public:
 	static int (PASCAL FAR *getpeername)(Socket s, Address FAR *name, AddressLength FAR * namelen);
 	static int (PASCAL FAR *getsockname)(Socket s, Address FAR *name, AddressLength FAR * namelen);
 	static int (PASCAL FAR *getsockopt)(Socket s, int level, int optname, void FAR * optval, AddressLength FAR *optlen);
-	static unsigned long (PASCAL FAR *inet_addr)(const char FAR * cp);
+	static int PASCAL FAR inet_aton(const char FAR * cp, InternetAddress FAR * addr);
 	static CString PASCAL FAR inet_ntoa(struct in_addr in);
 	static int (PASCAL FAR *listen)(Socket s, int backlog);
 	static ssize_t (PASCAL FAR *read)(Socket s, void FAR * buf, size_t len);
@@ -260,6 +262,7 @@ private:
 	static int (PASCAL FAR *__WSAFDIsSet)(CNetwork::Socket, fd_set FAR *);
 	static int (PASCAL FAR *select)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);
 	static char FAR * (PASCAL FAR *inet_ntoa_n)(struct in_addr in);
+	static unsigned long (PASCAL FAR *inet_addr_n)(const char FAR * cp);
 	static struct hostent FAR * (PASCAL FAR *gethostbyaddr_n)(const char FAR * addr, int len, int type);
 	static struct hostent FAR * (PASCAL FAR *gethostbyname_n)(const char FAR * name);
 	static struct servent FAR * (PASCAL FAR *getservbyport_n)(int port, const char FAR * proto);

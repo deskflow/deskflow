@@ -103,9 +103,9 @@ CNetworkAddress::CNetworkAddress(const CString& hostname_, UInt16 port) :
 	}
 
 	// if hostname is empty then use wildcard address
-	if (hostname.empty()) {
-		struct sockaddr_in* inetAddress = reinterpret_cast<
+	struct sockaddr_in* inetAddress = reinterpret_cast<
 										struct sockaddr_in*>(&m_address);
+	if (hostname.empty()) {
 		inetAddress->sin_family      = AF_INET;
 		inetAddress->sin_port        = CNetwork::swaphtons(port);
 		inetAddress->sin_addr.s_addr = INADDR_ANY;
@@ -114,13 +114,9 @@ CNetworkAddress::CNetworkAddress(const CString& hostname_, UInt16 port) :
 	}
 
 	// convert dot notation to address
-	unsigned long addr = CNetwork::inet_addr(hostname.c_str());
-	if (addr != INADDR_NONE) {
-		struct sockaddr_in* inetAddress = reinterpret_cast<
-										struct sockaddr_in*>(&m_address);
-		inetAddress->sin_family      = AF_INET;
-		inetAddress->sin_port        = CNetwork::swaphtons(port);
-		inetAddress->sin_addr.s_addr = addr;
+	if (CNetwork::inet_aton(hostname.c_str(), &inetAddress->sin_addr) != 0) {
+		inetAddress->sin_family = AF_INET;
+		inetAddress->sin_port   = CNetwork::swaphtons(port);
 		memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
 		return;
 	}
@@ -143,8 +139,6 @@ CNetworkAddress::CNetworkAddress(const CString& hostname_, UInt16 port) :
 		throw XSocketAddress(XSocketAddress::kUnknown, hostname, port);
 	}
 
-	struct sockaddr_in* inetAddress = reinterpret_cast<
-										struct sockaddr_in*>(&m_address);
 	inetAddress->sin_family = hostInfo.m_addressType;
 	inetAddress->sin_port   = CNetwork::swaphtons(port);
 	memcpy(&inetAddress->sin_addr, hostInfo.m_addresses[0],
