@@ -6,7 +6,7 @@
 #include <map>
 
 class CScreenMap {
-  public:
+public:
 	enum EDirection { kLeft, kRight, kTop, kBottom,
 						kFirstDirection = kLeft, kLastDirection = kBottom };
 	enum EDirectionMask { kLeftMask = 1, kRightMask = 2,
@@ -38,9 +38,9 @@ class CScreenMap {
 	// get the name of a direction (for debugging)
 	static const char*	dirName(EDirection);
 
-  private:
+private:
 	class CCell {
-	  public:
+	public:
 		CString			m_neighbor[kLastDirection - kFirstDirection + 1];
 	};
 	typedef std::map<CString, CCell> CCellMap;

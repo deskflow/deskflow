@@ -9,7 +9,7 @@ class CServer;
 class IClipboard;
 
 class IPrimaryScreen : public IInterface {
-  public:
+public:
 	// manipulators
 
 	// enter the screen's message loop.  this returns when it detects

@@ -9,7 +9,7 @@ class CNetworkAddress;
 class ISocket;
 
 class IListenSocket : public IInterface {
-  public:
+public:
 	// manipulators
 
 	// bind the socket to a particular address

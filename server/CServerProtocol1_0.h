@@ -4,7 +4,7 @@
 #include "CServerProtocol.h"
 
 class CServerProtocol1_0 : public CServerProtocol {
-  public:
+public:
 	CServerProtocol1_0(CServer*, const CString&, IInputStream*, IOutputStream*);
 	~CServerProtocol1_0();
 
@@ -29,7 +29,7 @@ class CServerProtocol1_0 : public CServerProtocol {
 	virtual void		sendMouseMove(SInt32 xAbs, SInt32 yAbs);
 	virtual void		sendMouseWheel(SInt32 delta);
 
-  protected:
+protected:
 	// IServerProtocol overrides
 	virtual void		recvInfo();
 	virtual void		recvClipboard();

@@ -7,7 +7,7 @@
 #include "IPrimaryScreen.h"
 
 class CMSWindowsPrimaryScreen : public CMSWindowsScreen, public IPrimaryScreen {
-  public:
+public:
 	typedef bool (CMSWindowsPrimaryScreen::*HookMethod)(int, WPARAM, LPARAM);
 
 	CMSWindowsPrimaryScreen();
@@ -27,14 +27,14 @@ class CMSWindowsPrimaryScreen : public CMSWindowsScreen, public IPrimaryScreen {
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(IClipboard*) const;
 
-  protected:
+protected:
 	// CMSWindowsScreen overrides
 	virtual bool		onPreTranslate(MSG*);
 	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM);
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
 
-  private:
+private:
 	void				doEnter();
 
 	void				nextMark();
@@ -43,7 +43,7 @@ class CMSWindowsPrimaryScreen : public CMSWindowsScreen, public IPrimaryScreen {
 								KeyModifierMask* maskOut) const;
 	ButtonID			mapButton(WPARAM button) const;
 
-  private:
+private:
 	CServer*			m_server;
 	bool				m_active;
 	HWND				m_window;

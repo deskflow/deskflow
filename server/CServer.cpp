@@ -606,7 +606,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 
 	// find destination screen, adjusting x or y (but not both)
 	switch (srcSide) {
-	  case CScreenMap::kLeft:
+	case CScreenMap::kLeft:
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			w = lastGoodScreen->m_width;
@@ -620,7 +620,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		}
 		break;
 
-	  case CScreenMap::kRight:
+	case CScreenMap::kRight:
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			x -= w;
@@ -634,7 +634,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		}
 		break;
 
-	  case CScreenMap::kTop:
+	case CScreenMap::kTop:
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			w = lastGoodScreen->m_width;
@@ -648,7 +648,7 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		}
 		break;
 
-	  case CScreenMap::kBottom:
+	case CScreenMap::kBottom:
 		while (dst != NULL) {
 			lastGoodScreen = dst;
 			y -= h;
@@ -675,25 +675,25 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 	if (lastGoodScreen->m_protocol == NULL) {
 		const CString dstName(lastGoodScreen->m_name);
 		switch (srcSide) {
-		  case CScreenMap::kLeft:
+		case CScreenMap::kLeft:
 			if (!m_screenMap.getNeighbor(dstName, CScreenMap::kRight).empty() &&
 				x > w - 1 - lastGoodScreen->m_zoneSize)
 				x = w - 1 - lastGoodScreen->m_zoneSize;
 			break;
 
-		  case CScreenMap::kRight:
+		case CScreenMap::kRight:
 			if (!m_screenMap.getNeighbor(dstName, CScreenMap::kLeft).empty() &&
 				x < lastGoodScreen->m_zoneSize)
 				x = lastGoodScreen->m_zoneSize;
 			break;
 
-		  case CScreenMap::kTop:
+		case CScreenMap::kTop:
 			if (!m_screenMap.getNeighbor(dstName, CScreenMap::kBottom).empty() &&
 				y > h - 1 - lastGoodScreen->m_zoneSize)
 				y = h - 1 - lastGoodScreen->m_zoneSize;
 			break;
 
-		  case CScreenMap::kBottom:
+		case CScreenMap::kBottom:
 			if (!m_screenMap.getNeighbor(dstName, CScreenMap::kTop).empty() &&
 				y < lastGoodScreen->m_zoneSize)
 				y = lastGoodScreen->m_zoneSize;
@@ -715,8 +715,8 @@ void					CServer::mapPosition(CScreenInfo* src,
 		   srcSide <= CScreenMap::kLastDirection);
 
 	switch (srcSide) {
-	  case CScreenMap::kLeft:
-	  case CScreenMap::kRight:
+	case CScreenMap::kLeft:
+	case CScreenMap::kRight:
 		if (y < 0)
 			y = 0;
 		else if (y >= src->m_height)
@@ -727,8 +727,8 @@ void					CServer::mapPosition(CScreenInfo* src,
 													(src->m_height - 1));
 		break;
 
-	  case CScreenMap::kTop:
-	  case CScreenMap::kBottom:
+	case CScreenMap::kTop:
+	case CScreenMap::kBottom:
 		if (x < 0)
 			x = 0;
 		else if (x >= src->m_width)

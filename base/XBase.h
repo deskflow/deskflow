@@ -5,7 +5,7 @@
 #include <exception>
 
 class XBase : public std::exception {
-  public:
+public:
 	XBase();
 	XBase(const CString& msg);
 	virtual ~XBase();
@@ -13,7 +13,7 @@ class XBase : public std::exception {
 	// std::exception overrides
 	virtual const char*	what() const;
 
-  protected:
+protected:
 	// returns a human readable string describing the exception
 	virtual CString		getWhat() const throw() = 0;
 
@@ -21,12 +21,12 @@ class XBase : public std::exception {
 	virtual CString		format(const char* id,
 								const char* defaultFormat, ...) const throw();
 
-  private:
+private:
 	mutable CString		m_what;
 };
 
 class MXErrno {
-  public:
+public:
 	MXErrno();
 	MXErrno(int);
 
@@ -37,7 +37,7 @@ class MXErrno {
 	int					getErrno() const;
 	const char*			getErrstr() const;
 
-  private:
+private:
 	int					m_errno;
 };
 

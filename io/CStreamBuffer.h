@@ -6,7 +6,7 @@
 #include <vector>
 
 class CStreamBuffer {
-  public:
+public:
 	CStreamBuffer();
 	~CStreamBuffer();
 
@@ -25,7 +25,7 @@ class CStreamBuffer {
 	// return the number of bytes in the buffer
 	UInt32				getSize() const;
 
-  private:
+private:
 	static const UInt32	kChunkSize;
 
 	typedef std::vector<UInt8> Chunk;

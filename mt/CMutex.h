@@ -5,7 +5,7 @@
 
 // recursive mutex class
 class CMutex {
-  public:
+public:
 	// copy c'tor is equivalent to default c'tor.  it's here to
 	// allow copying of objects that have mutexes.
 	CMutex();
@@ -14,22 +14,22 @@ class CMutex {
 
 	// manipulators
 
-    // this has no effect.  it's only here to allow assignment of
+	// this has no effect.  it's only here to allow assignment of
 	// objects that have mutexes.
-    CMutex&				operator=(const CMutex&);
+	CMutex&				operator=(const CMutex&);
 
 	// accessors
 
 	void				lock() const;
 	void				unlock() const;
 
-  private:
+private:
 	void				init();
 	void				fini();
 
-  private:
+private:
 	friend class CCondVarBase;
-    void*				m_mutex;
+	void*				m_mutex;
 };
 
 #endif

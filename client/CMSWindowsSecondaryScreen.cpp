@@ -31,14 +31,14 @@ static DWORD s_thread = 0;
 static BOOL CALLBACK WINAPI debugProc(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
-	  case WM_INITDIALOG:
+	case WM_INITDIALOG:
 		return TRUE;
 
-	  case WM_CLOSE:
+	case WM_CLOSE:
 		PostQuitMessage(0);
 		return TRUE;
 
-	  case WM_APP:
+	case WM_APP:
 		if (!s_logMore.empty()) {
 			if (s_log.size() > 20000)
 				s_log = s_logMore;
@@ -194,19 +194,19 @@ void					CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
 	// map button id to button flag
 	DWORD flags;
 	switch (button) {
-	  case kButtonLeft:
+	case kButtonLeft:
 		flags = MOUSEEVENTF_LEFTDOWN;
 		break;
 
-	  case kButtonMiddle:
+	case kButtonMiddle:
 		flags = MOUSEEVENTF_MIDDLEDOWN;
 		break;
 
-	  case kButtonRight:
+	case kButtonRight:
 		flags = MOUSEEVENTF_RIGHTDOWN;
 		break;
 
-	  default:
+	default:
 		return;
 	}
 
@@ -219,19 +219,19 @@ void					CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
 	// map button id to button flag
 	DWORD flags;
 	switch (button) {
-	  case kButtonLeft:
+	case kButtonLeft:
 		flags = MOUSEEVENTF_LEFTUP;
 		break;
 
-	  case kButtonMiddle:
+	case kButtonMiddle:
 		flags = MOUSEEVENTF_MIDDLEUP;
 		break;
 
-	  case kButtonRight:
+	case kButtonRight:
 		flags = MOUSEEVENTF_RIGHTUP;
 		break;
 
-	  default:
+	default:
 		return;
 	}
 
@@ -361,12 +361,12 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 								WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
-	  // FIXME -- handle display changes
-	  case WM_PAINT:
+	// FIXME -- handle display changes
+	case WM_PAINT:
 		ValidateRect(hwnd, NULL);
 		return 0;
 
-	  case WM_ACTIVATEAPP:
+	case WM_ACTIVATEAPP:
 		if (wParam == FALSE) {
 			// some other app activated.  hide the hider window.
 			log((CLOG_INFO "show cursor"));
@@ -374,7 +374,7 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 		}
 		break;
 
-	  case WM_DRAWCLIPBOARD:
+	case WM_DRAWCLIPBOARD:
 		log((CLOG_DEBUG "clipboard was taken"));
 
 		// first pass it on
@@ -389,7 +389,7 @@ LRESULT					CMSWindowsSecondaryScreen::onEvent(
 		}
 		return 0;
 
-	  case WM_CHANGECBCHAIN:
+	case WM_CHANGECBCHAIN:
 		if (m_nextClipboardWindow == (HWND)wParam)
 			m_nextClipboardWindow = (HWND)lParam;
 		else

@@ -12,19 +12,19 @@
 class CString;
 
 class CXWindowsScreen {
-  public:
+public:
 	CXWindowsScreen();
 	virtual ~CXWindowsScreen();
 
-  protected:
+protected:
 	class CDisplayLock {
-	  public:
+	public:
 		CDisplayLock(const CXWindowsScreen*);
 		~CDisplayLock();
 
 		operator Display*() const;
 
-	  private:
+	private:
 		const CMutex*	m_mutex;
 		Display*		m_display;
 	};
@@ -104,14 +104,14 @@ class CXWindowsScreen {
 	// get the X event mask required by the subclass for the given window
 	virtual long		getEventMask(Window) const = 0;
 
-  private:
+private:
 	struct CPropertyNotifyInfo {
-	  public:
+	public:
 		Window			m_window;
 		Atom			m_property;
 	};
 	struct CClipboardRequest {
-	  public:
+	public:
 		CString			m_data;
 		UInt32			m_sent;
 		Window			m_requestor;
@@ -147,7 +147,7 @@ class CXWindowsScreen {
 	bool				wasOwnedAtTime(ClipboardID, Window, Time) const;
 	Time				getCurrentTimeNoLock(Window) const;
 
-  private:
+private:
 	class CClipboardInfo {
 	public:
 		CClipboardInfo();

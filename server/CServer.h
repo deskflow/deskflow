@@ -19,7 +19,7 @@ class ISecurityFactory;
 class IPrimaryScreen;
 
 class CServer {
-  public:
+public:
 	CServer();
 	~CServer();
 
@@ -64,36 +64,36 @@ class CServer {
 	// get the sides of the primary screen that have neighbors
 	UInt32				getActivePrimarySides() const;
 
-  protected:
+protected:
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
 
-  private:
+private:
 	class CCleanupNote {
-	  public:
+	public:
 		CCleanupNote(CServer*);
 		~CCleanupNote();
 
-	  private:
+	private:
 		CServer*		m_server;
 	};
 
 	class CConnectionNote {
-	  public:
+	public:
 		CConnectionNote(CServer*, const CString&, IServerProtocol*);
 		~CConnectionNote();
 
-	  private:
+	private:
 		bool			m_pending;
 		CServer*		m_server;
 		CString			m_name;
 	};
 
 	class CScreenInfo {
-	  public:
+	public:
 		CScreenInfo(const CString& name, IServerProtocol*);
 		~CScreenInfo();
 
-	  public:
+	public:
 		CString			m_name;
 		IServerProtocol* m_protocol;
 		SInt32			m_width, m_height;
@@ -155,7 +155,7 @@ class CServer {
 	CScreenInfo*		addConnection(const CString& name, IServerProtocol*);
 	void				removeConnection(const CString& name);
 
-  private:
+private:
 	typedef std::list<CThread*> CThreadList;
 	typedef std::map<CString, CScreenInfo*> CScreenList;
 	class CClipboardInfo {

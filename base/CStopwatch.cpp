@@ -135,7 +135,7 @@ static PTimeGetTime		s_tgt = NULL;
 //
 
 class CStopwatchInit {
-  public:
+public:
 	CStopwatchInit();
 	~CStopwatchInit();
 };

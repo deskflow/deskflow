@@ -4,7 +4,7 @@
 #include "IOutputStream.h"
 
 class COutputStreamFilter : public IOutputStream {
-  public:
+public:
 	COutputStreamFilter(IOutputStream*, bool adoptStream = true);
 	~COutputStreamFilter();
 
@@ -17,10 +17,10 @@ class COutputStreamFilter : public IOutputStream {
 	virtual UInt32		write(const void*, UInt32 count) = 0;
 	virtual void		flush() = 0;
 
-  protected:
+protected:
 	IOutputStream*		getStream() const;
 
-  private:
+private:
 	IOutputStream*		m_stream;
 	bool				m_adopted;
 };

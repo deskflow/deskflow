@@ -8,44 +8,44 @@ class CThreadRep;
 
 // note -- do not derive from this class
 class CThread {
-  public:
-    // create and start a new thread executing the job.
+public:
+	// create and start a new thread executing the job.
 	// the user data can be retrieved with getUserData().
-    CThread(IJob* adopted, void* userData = 0);
+	CThread(IJob* adopted, void* userData = 0);
 
-    // make a new thread object that refers to an existing thread.
+	// make a new thread object that refers to an existing thread.
 	// this does *not* start a new thread.
-    CThread(const CThread&);
+	CThread(const CThread&);
 
-    // release thread.  this does not terminate the thread.  a thread
-    // will keep running until the job completes or calls exit().
-    ~CThread();
+	// release thread.  this does not terminate the thread.  a thread
+	// will keep running until the job completes or calls exit().
+	~CThread();
 
-    // manipulators
+	// manipulators
 
-    // assign thread.  this has no effect on the threads.  it simply
-    // makes this thread object refer to another thread.  it does *not*
+	// assign thread.  this has no effect on the threads.  it simply
+	// makes this thread object refer to another thread.  it does *not*
 	// start a new thread.
-    CThread&			operator=(const CThread&);
+	CThread&			operator=(const CThread&);
 
 	// initialize the thread library.  this must be called before
 	// any other thread methods or creating a thread object.  it
 	// is harmless to call init() multiple times.
 	static void			init();
 
-    // the calling thread sleeps for the given number of seconds.  if
-    // timeout <= 0.0 then the call returns immediately.  if timeout
+	// the calling thread sleeps for the given number of seconds.  if
+	// timeout <= 0.0 then the call returns immediately.  if timeout
 	// == 0.0 then the calling thread yields the CPU.
 	// (cancellation point)
-    static void			sleep(double timeout);
+	static void			sleep(double timeout);
 
-    // terminate the calling thread.  this function does not return but
-    // the stack is unwound and automatic objects are destroyed, as if
-    // exit() threw an exception (which is, in fact, what it does).  the
-    // argument is saved as the result returned by getResult().  if you
-    // have a catch(...) block then you should add the following before
-    // it to avoid catching the exit:  catch(CThreadExit&) { throw; }
-    static void			exit(void*);
+	// terminate the calling thread.  this function does not return but
+	// the stack is unwound and automatic objects are destroyed, as if
+	// exit() threw an exception (which is, in fact, what it does).  the
+	// argument is saved as the result returned by getResult().  if you
+	// have a catch(...) block then you should add the following before
+	// it to avoid catching the exit:  catch(CThreadExit&) { throw; }
+	static void			exit(void*);
 
 	// enable/disable cancellation.  default is enabled.  this is not
 	// a cancellation point so if you enabled cancellation and want to
@@ -76,26 +76,26 @@ class CThread {
 	// exception.  clients that catch(...) must either rethrow the
 	// exception or include a catch (XThreadCancel) handler that
 	// rethrows.
-    void				cancel();
+	void				cancel();
 
-    // change the priority of the thread.  normal priority is 0, 1 is
+	// change the priority of the thread.  normal priority is 0, 1 is
 	// the next lower, etc.  -1 is the next higher, etc. but boosting
 	// the priority may not be available.
-    void				setPriority(int n);
+	void				setPriority(int n);
 
-    // accessors
+	// accessors
 
-    // return a thread object representing the calling thread
-    static CThread		getCurrentThread();
+	// return a thread object representing the calling thread
+	static CThread		getCurrentThread();
 
-    // get the user data passed to the constructor for the current
+	// get the user data passed to the constructor for the current
 	// thread.
-    static void*		getUserData();
+	static void*		getUserData();
 
-    // testCancel() does nothing but is a cancellation point.  call
+	// testCancel() does nothing but is a cancellation point.  call
 	// this to make a function itself a cancellation point.
 	// (cancellation point)
-    static void			testCancel();
+	static void			testCancel();
 
 	// waits for the thread to terminate (by exit() or cancel() or
 	// by returning from the thread job).  returns immediately if
@@ -105,30 +105,30 @@ class CThread {
 	// (cancellation point)
 	bool				wait(double timeout = -1.0) const;
 
-    // get the exit result.  does an implicit wait().  returns NULL
+	// get the exit result.  does an implicit wait().  returns NULL
 	// immediately if called by a thread on itself.  returns NULL for
 	// threads that were cancelled.
 	// (cancellation point)
 	void*				getResult() const;
 
-    // compare threads for (in)equality
-    bool				operator==(const CThread&) const;
-    bool				operator!=(const CThread&) const;
+	// compare threads for (in)equality
+	bool				operator==(const CThread&) const;
+	bool				operator!=(const CThread&) const;
 
-  private:
-    CThread(CThreadRep*);
+private:
+	CThread(CThreadRep*);
 
-  private:
-    CThreadRep*			m_rep;
+private:
+	CThreadRep*			m_rep;
 };
 
 // disables cancellation in the c'tor and enables it in the d'tor.
 class CThreadMaskCancel {
-  public:
+public:
 	CThreadMaskCancel() : m_old(CThread::enableCancel(false)) { }
 	~CThreadMaskCancel() { CThread::enableCancel(m_old); }
 
-  private:
+private:
 	bool				m_old;
 };
 

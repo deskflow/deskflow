@@ -4,19 +4,19 @@
 #include <stdarg.h>
 
 class CLog {
-  public:
+public:
 	typedef void		(*Outputter)(const char*);
 
 	static void			print(const char*, ...);
 	static void			printt(const char* file, int line, const char*, ...);
 	static void			setOutputter(Outputter);
 
-  private:
+private:
 	static void			output(int priority, char* msg);
 	static char*		vsprint(int pad, char*, int len, const char*, va_list);
 	static int			nprint(const char*, va_list);
 
-  private:
+private:
 	static Outputter	s_outputter;
 };
 

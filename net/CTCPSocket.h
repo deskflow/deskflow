@@ -13,7 +13,7 @@ class CBufferedInputStream;
 class CBufferedOutputStream;
 
 class CTCPSocket : public ISocket {
-  public:
+public:
 	CTCPSocket();
 	CTCPSocket(CNetwork::Socket);
 	~CTCPSocket();
@@ -29,14 +29,14 @@ class CTCPSocket : public ISocket {
 	virtual IInputStream*	getInputStream();
 	virtual IOutputStream*	getOutputStream();
 
-  private:
+private:
 	void				init();
 	void				ioThread(void*);
 	void				ioService();
 	void				closeInput(void*);
 	void				closeOutput(void*);
 
-  private:
+private:
 	enum { kClosed = 0, kRead = 1, kWrite = 2, kReadWrite = 3 };
 
 	CNetwork::Socket		m_fd;

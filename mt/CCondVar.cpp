@@ -148,14 +148,14 @@ bool					CCondVarBase::wait(
 	}
 
 	switch (status) {
-	  case 0:
+	case 0:
 		// success
 		return true;
 
-	  case ETIMEDOUT:
+	case ETIMEDOUT:
 		return false;
 
-	  default:
+	default:
 		assert(0 && "condition variable wait error");
 		return false;
 	}
@@ -183,8 +183,8 @@ void					CCondVarBase::init()
 {
 	// prepare events
 	HANDLE* events     = new HANDLE[2];
-    events[kSignal]    = CreateEvent(NULL, FALSE, FALSE, NULL);
-    events[kBroadcast] = CreateEvent(NULL, TRUE,  FALSE, NULL);
+	events[kSignal]    = CreateEvent(NULL, FALSE, FALSE, NULL);
+	events[kBroadcast] = CreateEvent(NULL, TRUE,  FALSE, NULL);
 
 	// prepare members
 	m_cond      = reinterpret_cast<void*>(events);
@@ -194,8 +194,8 @@ void					CCondVarBase::init()
 void					CCondVarBase::fini()
 {
 	HANDLE* events = reinterpret_cast<HANDLE*>(m_cond);
-    CloseHandle(events[kSignal]);
-    CloseHandle(events[kBroadcast]);
+	CloseHandle(events[kSignal]);
+	CloseHandle(events[kBroadcast]);
 	delete[] events;
 }
 
@@ -210,7 +210,7 @@ void					CCondVarBase::signal()
 
 	// wake one thread if anybody is waiting
 	if (hasWaiter)
-	    SetEvent(reinterpret_cast<HANDLE*>(m_cond)[kSignal]);
+		SetEvent(reinterpret_cast<HANDLE*>(m_cond)[kSignal]);
 }
 
 void					CCondVarBase::broadcast()
@@ -224,7 +224,7 @@ void					CCondVarBase::broadcast()
 
 	// wake all threads if anybody is waiting
 	if (hasWaiter)
-	    SetEvent(reinterpret_cast<HANDLE*>(m_cond)[kBroadcast]);
+		SetEvent(reinterpret_cast<HANDLE*>(m_cond)[kBroadcast]);
 }
 
 bool					CCondVarBase::wait(

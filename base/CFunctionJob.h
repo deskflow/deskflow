@@ -4,13 +4,13 @@
 #include "IJob.h"
 
 class CFunctionJob : public IJob {
-  public:
+public:
 	CFunctionJob(void (*func)(void*), void* arg = NULL);
 
 	// IJob overrides
 	virtual void		run();
 
-  private:
+private:
 	void				(*m_func)(void*);
 	void*				m_arg;
 };

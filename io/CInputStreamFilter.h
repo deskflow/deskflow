@@ -4,7 +4,7 @@
 #include "IInputStream.h"
 
 class CInputStreamFilter : public IInputStream {
-  public:
+public:
 	CInputStreamFilter(IInputStream*, bool adoptStream = true);
 	~CInputStreamFilter();
 
@@ -17,10 +17,10 @@ class CInputStreamFilter : public IInputStream {
 	virtual UInt32		read(void*, UInt32 maxCount) = 0;
 	virtual UInt32		getSize() const = 0;
 
-  protected:
+protected:
 	IInputStream*		getStream() const;
 
-  private:
+private:
 	IInputStream*		m_stream;
 	bool				m_adopted;
 };

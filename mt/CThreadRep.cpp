@@ -518,15 +518,15 @@ bool					CThreadRep::wait(CThreadRep* target, double timeout)
 
 	// handle result
 	switch (result) {
-	  case WAIT_OBJECT_0 + 0:
+	case WAIT_OBJECT_0 + 0:
 		// target thread terminated
 		return true;
 
-	  case WAIT_OBJECT_0 + 1:
+	case WAIT_OBJECT_0 + 1:
 		// this thread was cancelled.  does not return.
 		testCancel();
 
-	  default:
+	default:
 		// error
 		return false;
 	}
@@ -536,16 +536,16 @@ void					CThreadRep::setPriority(int n)
 {
 	if (n < 0) {
 		switch (-n) {
-		  case 1:  n = THREAD_PRIORITY_ABOVE_NORMAL; break;
-		  default: n = THREAD_PRIORITY_HIGHEST; break;
+		case 1:  n = THREAD_PRIORITY_ABOVE_NORMAL; break;
+		default: n = THREAD_PRIORITY_HIGHEST; break;
 		}
 	}
 	else {
 		switch (n) {
-		  case 0:  n = THREAD_PRIORITY_NORMAL; break;
-		  case 1:  n = THREAD_PRIORITY_BELOW_NORMAL; break;
-		  case 2:  n = THREAD_PRIORITY_LOWEST; break;
-		  default: n = THREAD_PRIORITY_IDLE; break;
+		case 0:  n = THREAD_PRIORITY_NORMAL; break;
+		case 1:  n = THREAD_PRIORITY_BELOW_NORMAL; break;
+		case 2:  n = THREAD_PRIORITY_LOWEST; break;
+		default: n = THREAD_PRIORITY_IDLE; break;
 		}
 	}
 	SetThreadPriority(m_thread, n);

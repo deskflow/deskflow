@@ -13,7 +13,7 @@ class IOutputStream;
 class ISecondaryScreen;
 
 class CClient {
-  public:
+public:
 	CClient(const CString& clientName);
 	~CClient();
 
@@ -27,7 +27,7 @@ class CClient {
 	// accessors
 
 
-  private:
+private:
 	void				runSession(void*);
 
 	// open/close the primary screen
@@ -49,7 +49,7 @@ class CClient {
 	void				onMouseMove();
 	void				onMouseWheel();
 
-  private:
+private:
 	CMutex				m_mutex;
 	CString				m_name;
 	IInputStream*		m_input;

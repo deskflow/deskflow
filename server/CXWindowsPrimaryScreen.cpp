@@ -36,21 +36,21 @@ void					CXWindowsPrimaryScreen::run()
 
 		// handle event
 		switch (xevent.type) {
-		  case CreateNotify: {
+		case CreateNotify: {
 			// select events on new window
 			CDisplayLock display(this);
 			selectEvents(display, xevent.xcreatewindow.window);
 			break;
-		  }
+		}
 
-		  case MappingNotify: {
+		case MappingNotify: {
 			// keyboard mapping changed
 			CDisplayLock display(this);
 			XRefreshKeyboardMapping(&xevent.xmapping);
 			break;
-		  }
+		}
 
-		  case KeyPress: {
+		case KeyPress: {
 			log((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
@@ -60,11 +60,11 @@ void					CXWindowsPrimaryScreen::run()
 					m_server->onKeyUp(key, mask | KeyModifierCapsLock);
 			}
 			break;
-		  }
+		}
 
-		  // FIXME -- simulate key repeat.  X sends press/release for
-		  // repeat.  must detect auto repeat and use kKeyRepeat.
-		  case KeyRelease: {
+		// FIXME -- simulate key repeat.  X sends press/release for
+		// repeat.  must detect auto repeat and use kKeyRepeat.
+		case KeyRelease: {
 			log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
@@ -74,27 +74,27 @@ void					CXWindowsPrimaryScreen::run()
 				m_server->onKeyUp(key, mask);
 			}
 			break;
-		  }
+		}
 
-		  case ButtonPress: {
+		case ButtonPress: {
 			log((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				m_server->onMouseDown(button);
 			}
 			break;
-		  }
+		}
 
-		  case ButtonRelease: {
+		case ButtonRelease: {
 			log((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				m_server->onMouseUp(button);
 			}
 			break;
-		  }
+		}
 
-		  case MotionNotify: {
+		case MotionNotify: {
 			log((CLOG_DEBUG2 "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
 			SInt32 x, y;
 			if (!m_active) {
@@ -129,9 +129,9 @@ void					CXWindowsPrimaryScreen::run()
 				m_server->onMouseMoveSecondary(x, y);
 			}
 			break;
-		  }
+		}
 
-		  case SelectionClear:
+		case SelectionClear:
 			// we just lost the selection.  that means someone else
 			// grabbed the selection so this screen is now the
 			// selection owner.  report that to the server.
@@ -142,7 +142,7 @@ void					CXWindowsPrimaryScreen::run()
 			}
 			break;
 
-		  case SelectionNotify:
+		case SelectionNotify:
 			// notification of selection transferred.  we shouldn't
 			// get this here because we handle them in the selection
 			// retrieval methods.  we'll just delete the property
@@ -153,7 +153,7 @@ void					CXWindowsPrimaryScreen::run()
 			}
 			break;
 
-		  case SelectionRequest:
+		case SelectionRequest:
 			// somebody is asking for clipboard data
 			if (xevent.xselectionrequest.owner == m_window) {
 				addClipboardRequest(m_window,
@@ -179,7 +179,7 @@ void					CXWindowsPrimaryScreen::run()
 			}
 			break;
 
-		  case PropertyNotify:
+		case PropertyNotify:
 			// clipboard transfers involve property changes so forward
 			// the event to the superclass.  we only care about the
 			// deletion of properties.
@@ -190,7 +190,7 @@ void					CXWindowsPrimaryScreen::run()
 			}
 			break;
 
-		  case DestroyNotify:
+		case DestroyNotify:
 			// looks like one of the windows that requested a clipboard
 			// transfer has gone bye-bye.
 			destroyClipboardRequest(xevent.xdestroywindow.window);

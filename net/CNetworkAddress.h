@@ -8,7 +8,7 @@
 class CString;
 
 class CNetworkAddress {
-  public:
+public:
 	CNetworkAddress(UInt16 port);
 	CNetworkAddress(const CString& hostname, UInt16 port);
 	~CNetworkAddress();
@@ -20,7 +20,7 @@ class CNetworkAddress {
 	const CNetwork::Address*	getAddress() const;
 	CNetwork::AddressLength		getAddressLength() const;
 
-  private:
+private:
 	CNetwork::Address	m_address;
 };
 

@@ -9,7 +9,7 @@ class CMutex;
 class IJob;
 
 class CSocketInputStream : public IInputStream {
-  public:
+public:
 	CSocketInputStream(CMutex*, IJob* adoptedCloseCB);
 	~CSocketInputStream();
 
@@ -30,7 +30,7 @@ class CSocketInputStream : public IInputStream {
 	virtual UInt32		read(void*, UInt32 count);
 	virtual UInt32		getSize() const;
 
-  private:
+private:
 	CMutex*				m_mutex;
 	CCondVar<bool>		m_empty;
 	IJob*				m_closeCB;

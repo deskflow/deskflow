@@ -7,17 +7,17 @@ class CMutex;
 class CCondVarBase;
 
 class CLock {
-  public:
+public:
 	CLock(const CMutex* mutex);
 	CLock(const CCondVarBase* cv);
 	~CLock();
 
-  private:
+private:
 	// not implemented
 	CLock(const CLock&);
 	CLock& operator=(const CLock&);
 
-  private:
+private:
 	const CMutex*		m_mutex;
 };
 

@@ -60,19 +60,19 @@ void					CMutex::lock() const
 	int status = pthread_mutex_lock(mutex);
 
 	switch (status) {
-	  case 0:
+	case 0:
 		// success
 		return;
 
-	  case EDEADLK:
+	case EDEADLK:
 		assert(0 && "lock already owned");
 		break;
 
-	  case EAGAIN:
+	case EAGAIN:
 		assert(0 && "too many recursive locks");
 		break;
 
-	  default:
+	default:
 		log((CLOG_ERR "pthread_mutex_lock status %d", status));
 		assert(0 && "unexpected error");
 	}
@@ -84,15 +84,15 @@ void					CMutex::unlock() const
 	int status = pthread_mutex_unlock(mutex);
 
 	switch (status) {
-	  case 0:
+	case 0:
 		// success
 		return;
 
-	  case EPERM:
+	case EPERM:
 		assert(0 && "thread doesn't own a lock");
 		break;
 
-	  default:
+	default:
 		log((CLOG_ERR "pthread_mutex_unlock status %d", status));
 		assert(0 && "unexpected error");
 	}

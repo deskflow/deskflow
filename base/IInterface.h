@@ -4,7 +4,7 @@
 #include "common.h"
 
 class IInterface {
-  public:
+public:
 	virtual ~IInterface() { }
 };
 

@@ -8,19 +8,19 @@
 class XNetwork : public XBase { };
 
 class XNetworkUnavailable : public XNetwork {
-  protected:
+protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 };
 
 class XNetworkFailed : public XNetwork {
-  protected:
+protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 };
 
 class XNetworkVersion : public XNetwork {
-  public:
+public:
 	XNetworkVersion(int major, int minor) throw();
 
 	// accessors
@@ -28,24 +28,24 @@ class XNetworkVersion : public XNetwork {
 	int					getMajor() const throw();
 	int					getMinor() const throw();
 
-  protected:
+protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 
-  private:
+private:
 	int					m_major;
 	int					m_minor;
 };
 
 class XNetworkFunctionUnavailable : public XNetwork {
-  public:
+public:
 	XNetworkFunctionUnavailable(const char* name) throw();
 
-  protected:
+protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 
-  private:
+private:
 	CString				m_name;
 };
 

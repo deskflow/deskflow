@@ -6,7 +6,7 @@
 #include "CMutex.h"
 
 class CInputPacketStream : public CInputStreamFilter {
-  public:
+public:
 	CInputPacketStream(IInputStream*, bool adoptStream = true);
 	~CInputPacketStream();
 
@@ -19,11 +19,11 @@ class CInputPacketStream : public CInputStreamFilter {
 	virtual UInt32		read(void*, UInt32 maxCount);
 	virtual UInt32		getSize() const;
 
-  private:
+private:
 	UInt32				getSizeNoLock() const;
 	bool				hasFullMessage() const;
 
-  private:
+private:
 	CMutex				m_mutex;
 	mutable UInt32					m_size;
 	mutable CBufferedInputStream	m_buffer;

@@ -13,7 +13,7 @@ class CMutex;
 class IJob;
 
 class CThreadRep {
-  public:
+public:
 	CThreadRep(IJob*, void* userData);
 
 	// manipulators
@@ -25,9 +25,9 @@ class CThreadRep {
 	void				ref();
 	void				unref();
 
-    // the calling thread sleeps for t seconds.  if t == 0.0 then
-    // the thread yields the CPU.
-    void				sleep(double timeout);
+	// the calling thread sleeps for t seconds.  if t == 0.0 then
+	// the thread yields the CPU.
+	void				sleep(double timeout);
 
 	// cancel the thread
 	void				cancel();
@@ -42,16 +42,16 @@ class CThreadRep {
 	// wait for thread to exit or for current thread to cancel
 	bool				wait(CThreadRep*, double timeout);
 
-    // set the priority
-    void				setPriority(int n);
+	// set the priority
+	void				setPriority(int n);
 
-    // accessors
+	// accessors
 
-    // get the exit result for this thread.  thread must be terminated.
-    void*				getResult() const;
+	// get the exit result for this thread.  thread must be terminated.
+	void*				getResult() const;
 
-    // get the user data passed to the constructor
-    void*				getUserData() const;
+	// get the user data passed to the constructor
+	void*				getUserData() const;
 
 	// get the current cancellable state
 	bool				isCancellable() const;
@@ -63,14 +63,14 @@ class CThreadRep {
 	HANDLE				getCancelEvent() const;
 #endif
 
-    // return the thread rep for the calling thread.  the returned
-    // rep has been ref()'d.
-    static CThreadRep*	getCurrentThreadRep();
+	// return the thread rep for the calling thread.  the returned
+	// rep has been ref()'d.
+	static CThreadRep*	getCurrentThreadRep();
 
-  protected:
+protected:
 	virtual ~CThreadRep();
 
-  private:
+private:
 	// internal constructor
 	CThreadRep();
 
@@ -94,7 +94,7 @@ class CThreadRep {
 	CThreadRep(const CThreadRep&);
 	CThreadRep& operator=(const CThreadRep&);
 
-  private:
+private:
 	static CMutex*		s_mutex;
 	static CThreadRep*	s_head;
 
@@ -127,18 +127,18 @@ class CThreadRep {
 //
 
 class CThreadPtr {
-  public:
+public:
 	CThreadPtr(CThreadRep* rep) : m_rep(rep) { }
 	~CThreadPtr() { m_rep->unref(); }
 
 	CThreadRep*			operator->() const { return m_rep; }
 
-  private:
+private:
 	// not implemented
 	CThreadPtr(const CThreadPtr&);
 	CThreadPtr& operator=(const CThreadPtr&);
 
-  private:
+private:
 	CThreadRep*			m_rep;
 };
 

@@ -8,7 +8,7 @@ class CMutex;
 class IJob;
 
 class CBufferedOutputStream : public IOutputStream {
-  public:
+public:
 	CBufferedOutputStream(CMutex*, IJob* adoptedCloseCB);
 	~CBufferedOutputStream();
 
@@ -33,10 +33,10 @@ class CBufferedOutputStream : public IOutputStream {
 	virtual UInt32		write(const void*, UInt32 count);
 	virtual void		flush();
 
-  private:
+private:
 	UInt32				getSizeWithLock() const;
 
-  private:
+private:
 	CMutex*				m_mutex;
 	IJob*				m_closeCB;
 	CStreamBuffer		m_buffer;

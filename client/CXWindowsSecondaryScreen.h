@@ -6,7 +6,7 @@
 #include <vector>
 
 class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen {
-  public:
+public:
 	CXWindowsSecondaryScreen();
 	virtual ~CXWindowsSecondaryScreen();
 
@@ -30,13 +30,13 @@ class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 
-  protected:
+protected:
 	// CXWindowsScreen overrides
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
 	virtual long		getEventMask(Window) const;
 
-  private:
+private:
 	struct KeyCodeMask {
 	public:
 		KeyCode			keycode;
@@ -64,7 +64,7 @@ class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen
 	void				updateModifierMap(Display* display);
 	static bool			isToggleKeysym(KeySym);
 
-  private:
+private:
 	CClient*			m_client;
 	Window				m_window;
 

@@ -53,11 +53,11 @@ void					CMSWindowsClipboard::add(
 	const UINT win32Format = convertFormatToWin32(format);
 	HANDLE win32Data;
 	switch (win32Format) {
-	  case CF_TEXT:
+	case CF_TEXT:
 		win32Data = convertTextToWin32(data);
 		break;
 
-	  default:
+	default:
 		win32Data = NULL;
 		break;
 	}
@@ -95,7 +95,7 @@ CString					CMSWindowsClipboard::get(EFormat format) const
 	if (win32Data != NULL) {
 		// convert the data
 		switch (win32Format) {
-		  case CF_TEXT:
+		case CF_TEXT:
 			data = convertTextFromWin32(win32Data);
 		}
 	}
@@ -110,10 +110,10 @@ UINT					CMSWindowsClipboard::convertFormatToWin32(
 								EFormat format) const
 {
 	switch (format) {
-	  case kText:
+	case kText:
 		return CF_TEXT;
 
-	  default:
+	default:
 		return 0;
 	}
 }

@@ -9,7 +9,7 @@ class CMutex;
 class IJob;
 
 class CBufferedInputStream : public IInputStream {
-  public:
+public:
 	CBufferedInputStream(CMutex*, IJob* adoptedCloseCB);
 	~CBufferedInputStream();
 
@@ -39,7 +39,7 @@ class CBufferedInputStream : public IInputStream {
 	virtual UInt32		read(void*, UInt32 count);
 	virtual UInt32		getSize() const;
 
-  private:
+private:
 	CMutex*				m_mutex;
 	CCondVar<bool>		m_empty;
 	IJob*				m_closeCB;

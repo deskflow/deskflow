@@ -38,14 +38,14 @@ static DWORD s_thread = 0;
 static BOOL CALLBACK WINAPI debugProc(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
-	  case WM_INITDIALOG:
+	case WM_INITDIALOG:
 		return TRUE;
 
-	  case WM_CLOSE:
+	case WM_CLOSE:
 		PostQuitMessage(0);
 		return TRUE;
 
-	  case WM_APP:
+	case WM_APP:
 		if (!s_logMore.empty()) {
 			if (s_log.size() > 20000)
 				s_log = s_logMore;
@@ -340,11 +340,11 @@ if (IsDialogMessage(s_debug, msg)) {
 
 	// handle event
 	switch (msg->message) {
-	  case SYNERGY_MSG_MARK:
+	case SYNERGY_MSG_MARK:
 		m_markReceived = msg->wParam;
 		return true;
 
-	  case SYNERGY_MSG_KEY:
+	case SYNERGY_MSG_KEY:
 		// ignore if not at current mark
 		if (m_mark == m_markReceived) {
 			KeyModifierMask mask;
@@ -373,23 +373,23 @@ log((CLOG_DEBUG "event: key event vk=%d info=0x%08x", msg->wParam, msg->lParam))
 		}
 		return true;
 
-	  case SYNERGY_MSG_MOUSE_BUTTON:
+	case SYNERGY_MSG_MOUSE_BUTTON:
 		// ignore if not at current mark
 		if (m_mark == m_markReceived) {
 			const ButtonID button = mapButton(msg->wParam);
 			switch (msg->wParam) {
-			  case WM_LBUTTONDOWN:
-			  case WM_MBUTTONDOWN:
-			  case WM_RBUTTONDOWN:
+			case WM_LBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_RBUTTONDOWN:
 				log((CLOG_DEBUG "event: button press button=%d", button));
 				if (button != kButtonNone) {
 					m_server->onMouseDown(button);
 				}
 				break;
 
-			  case WM_LBUTTONUP:
-			  case WM_MBUTTONUP:
-			  case WM_RBUTTONUP:
+			case WM_LBUTTONUP:
+			case WM_MBUTTONUP:
+			case WM_RBUTTONUP:
 				log((CLOG_DEBUG "event: button release button=%d", button));
 				if (button != kButtonNone) {
 					m_server->onMouseUp(button);
@@ -399,7 +399,7 @@ log((CLOG_DEBUG "event: key event vk=%d info=0x%08x", msg->wParam, msg->lParam))
 		}
 		return true;
 
-	  case SYNERGY_MSG_MOUSE_MOVE:
+	case SYNERGY_MSG_MOUSE_MOVE:
 		// ignore if not at current mark
 		if (m_mark == m_markReceived) {
 			SInt32 x = (SInt32)msg->wParam;
@@ -445,12 +445,12 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 								WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
-	  // FIXME -- handle display changes
-	  case WM_PAINT:
+	// FIXME -- handle display changes
+	case WM_PAINT:
 		ValidateRect(hwnd, NULL);
 		return 0;
 
-	  case WM_DRAWCLIPBOARD:
+	case WM_DRAWCLIPBOARD:
 		log((CLOG_DEBUG "clipboard was taken"));
 
 		// first pass it on
@@ -470,7 +470,7 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 		}
 		return 0;
 
-	  case WM_CHANGECBCHAIN:
+	case WM_CHANGECBCHAIN:
 		if (m_nextClipboardWindow == (HWND)wParam)
 			m_nextClipboardWindow = (HWND)lParam;
 		else
@@ -818,19 +818,19 @@ ButtonID				CMSWindowsPrimaryScreen::mapButton(
 								WPARAM button) const
 {
 	switch (button) {
-	  case WM_LBUTTONDOWN:
-	  case WM_LBUTTONUP:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
 		return kButtonLeft;
 
-	  case WM_MBUTTONDOWN:
-	  case WM_MBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
 		return kButtonMiddle;
 
-	  case WM_RBUTTONDOWN:
-	  case WM_RBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
 		return kButtonRight;
 
-	  default:
+	default:
 		return kButtonNone;
 	}
 }

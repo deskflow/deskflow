@@ -4,7 +4,7 @@
 #include "IInterface.h"
 
 class IJob : public IInterface {
-  public:
+public:
 	virtual void		run() = 0;
 };
 

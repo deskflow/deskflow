@@ -10,7 +10,7 @@ class CString;
 class CThread;
 
 class CMSWindowsScreen {
-  public:
+public:
 	CMSWindowsScreen();
 	virtual ~CMSWindowsScreen();
 
@@ -18,7 +18,7 @@ class CMSWindowsScreen {
 
 	static void			init(HINSTANCE);
 
-  protected:
+protected:
 	// runs an event loop and returns when WM_QUIT is received
 	void				doRun();
 
@@ -62,10 +62,10 @@ class CMSWindowsScreen {
 	// called by closeDisplay() to 
 	virtual void		onCloseDisplay() = 0;
 
-  private:
+private:
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
 
-  private:
+private:
 	static HINSTANCE	s_instance;
 	ATOM				m_class;
 	HICON				m_icon;

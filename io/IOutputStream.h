@@ -6,7 +6,7 @@
 #include "XIO.h"
 
 class IOutputStream : public IInterface {
-  public:
+public:
 	// manipulators
 
 	// close the stream

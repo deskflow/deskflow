@@ -7,7 +7,7 @@
 #include "IPrimaryScreen.h"
 
 class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
-  public:
+public:
 	CXWindowsPrimaryScreen();
 	virtual ~CXWindowsPrimaryScreen();
 
@@ -25,13 +25,13 @@ class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(ClipboardID, IClipboard*) const;
 
-  protected:
+protected:
 	// CXWindowsScreen overrides
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
 	virtual long		getEventMask(Window) const;
 
-  private:
+private:
 	void				selectEvents(Display*, Window) const;
 	void				warpCursorNoLock(Display*,
 								SInt32 xAbsolute, SInt32 yAbsolute);
@@ -40,7 +40,7 @@ class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 	KeyID				mapKey(XKeyEvent*) const;
 	ButtonID			mapButton(unsigned int button) const;
 
-  private:
+private:
 	CServer*			m_server;
 	bool				m_active;
 	Window				m_window;

@@ -7,25 +7,25 @@
 class XIO : public XBase { };
 
 class XIOErrno : public XIO, public MXErrno {
-  public:
+public:
 	XIOErrno();
 	XIOErrno(int);
 };
 
 class XIOClose: public XIOErrno {
-  protected:
+protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 };
 
 class XIOClosed : public XIO {
-  protected:
+protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 };
 
 class XIOEndOfStream : public XIO {
-  protected:
+protected:
 	// XBase overrides
 	virtual CString		getWhat() const throw();
 };

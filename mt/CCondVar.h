@@ -7,7 +7,7 @@
 class CStopwatch;
 
 class CCondVarBase {
-  public:
+public:
 	// mutex must be supplied.  all condition variables have an
 	// associated mutex.  the copy c'tor uses the same mutex as the
 	// argument and is otherwise like the default c'tor.
@@ -45,7 +45,7 @@ class CCondVarBase {
 	// get the mutex passed to the c'tor
 	CMutex*				getMutex() const;
 
-  private:
+private:
 	void				init();
 	void				fini();
 
@@ -53,7 +53,7 @@ class CCondVarBase {
 	CCondVarBase(const CCondVarBase&);
 	CCondVarBase&		operator=(const CCondVarBase&);
 
-  private:
+private:
 	CMutex*				m_mutex;
 	void*				m_cond;
 
@@ -66,7 +66,7 @@ class CCondVarBase {
 
 template <class T>
 class CCondVar : public CCondVarBase {
-  public:
+public:
 	CCondVar(CMutex* mutex, const T&);
 	CCondVar(const CCondVar&);
 	~CCondVar();
@@ -85,7 +85,7 @@ class CCondVar : public CCondVarBase {
 	// calling this method.
 						operator const T&() const;
 
-  private:
+private:
 	T					m_data;
 };
 

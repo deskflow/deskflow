@@ -9,7 +9,7 @@
 #include "CString.h"
 
 class CClipboard : public IClipboard {
-  public:
+public:
 	CClipboard();
 	virtual ~CClipboard();
 
@@ -40,11 +40,11 @@ class CClipboard : public IClipboard {
 	static void			copy(IClipboard* dst, const IClipboard* src);
 	static void			copy(IClipboard* dst, const IClipboard* src, Time);
 
-  private:
+private:
 	UInt32				readUInt32(const char*) const;
 	void				writeUInt32(CString*, UInt32) const;
 
-  private:
+private:
 	Time				m_time;
 	bool				m_added[kNumFormats];
 	CString				m_data[kNumFormats];

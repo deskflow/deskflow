@@ -6,18 +6,18 @@
 class CThread;
 
 class CTimerThread {
-  public:
+public:
 	CTimerThread(double timeout);
 	~CTimerThread();
 
-  private:
+private:
 	void				timer(void*);
 
 	// not implemented
 	CTimerThread(const CTimerThread&);
 	CTimerThread& operator=(const CTimerThread&);
 
-  private:
+private:
 	double				m_timeout;
 	CThread*			m_callingThread;
 	CThread*			m_timingThread;

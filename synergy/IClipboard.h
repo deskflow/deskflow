@@ -7,7 +7,7 @@
 class CString;
 
 class IClipboard : public IInterface {
-  public:
+public:
 	// timestamp type.  timestamps are in milliseconds from some
 	// arbitrary starting time.  timestamps will wrap around to 0
 	// after about 49 3/4 days.

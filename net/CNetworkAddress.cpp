@@ -24,15 +24,15 @@ CNetworkAddress::CNetworkAddress(const CString& hostname, UInt16 port)
 	struct hostent* hent = CNetwork::gethostbyname(hostname.c_str());
 	if (hent == NULL) {
 		switch (CNetwork::gethosterror()) {
-		  case CNetwork::kHOST_NOT_FOUND:
+		case CNetwork::kHOST_NOT_FOUND:
 			throw XSocketAddress(XSocketAddress::kNotFound, hostname, port);
 
-		  case CNetwork::kNO_DATA:
+		case CNetwork::kNO_DATA:
 			throw XSocketAddress(XSocketAddress::kNoAddress, hostname, port);
 
-		  case CNetwork::kNO_RECOVERY:
-		  case CNetwork::kTRY_AGAIN:
-		  default:
+		case CNetwork::kNO_RECOVERY:
+		case CNetwork::kTRY_AGAIN:
+		default:
 			throw XSocketAddress(XSocketAddress::kUnknown, hostname, port);
 		}
 	}

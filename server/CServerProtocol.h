@@ -9,7 +9,7 @@ class IInputStream;
 class IOutputStream;
 
 class CServerProtocol : public IServerProtocol {
-  public:
+public:
 	CServerProtocol(CServer*, const CString& clientName,
 								IInputStream*, IOutputStream*);
 	~CServerProtocol();
@@ -44,13 +44,13 @@ class CServerProtocol : public IServerProtocol {
 	virtual void		sendMouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
 	virtual void		sendMouseWheel(SInt32 delta) = 0;
 
-  protected:
+protected:
 	//IServerProtocol overrides
 	virtual void		recvInfo() = 0;
 	virtual void		recvClipboard() = 0;
 	virtual void		recvGrabClipboard() = 0;
 
-  private:
+private:
 	CServer*			m_server;
 	CString				m_client;
 	IInputStream*		m_input;

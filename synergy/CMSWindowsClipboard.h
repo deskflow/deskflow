@@ -5,7 +5,7 @@
 #include <windows.h>
 
 class CMSWindowsClipboard : public IClipboard {
-  public:
+public:
 	CMSWindowsClipboard(HWND window);
 	virtual ~CMSWindowsClipboard();
 
@@ -16,12 +16,12 @@ class CMSWindowsClipboard : public IClipboard {
 	virtual bool		has(EFormat) const;
 	virtual CString		get(EFormat) const;
 
-  private:
+private:
 	UINT				convertFormatToWin32(EFormat) const;
 	HANDLE				convertTextToWin32(const CString& data) const;
 	CString				convertTextFromWin32(HANDLE) const;
 
-  private:
+private:
 	HWND				m_window;
 };
 

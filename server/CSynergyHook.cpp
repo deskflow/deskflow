@@ -70,16 +70,16 @@ static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
 	if (code >= 0) {
 		if (g_relay) {
 			switch (wParam) {
-			  case WM_LBUTTONDOWN:
-			  case WM_MBUTTONDOWN:
-			  case WM_RBUTTONDOWN:
-			  case WM_LBUTTONUP:
-			  case WM_MBUTTONUP:
-			  case WM_RBUTTONUP:
+			case WM_LBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_RBUTTONDOWN:
+			case WM_LBUTTONUP:
+			case WM_MBUTTONUP:
+			case WM_RBUTTONUP:
 				PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_BUTTON, wParam, 0);
 				return 1;
 
-			  case WM_MOUSEMOVE: {
+			case WM_MOUSEMOVE: {
 				const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
 				SInt32 x = (SInt32)info->pt.x;
 				SInt32 y = (SInt32)info->pt.y;
@@ -100,7 +100,7 @@ static LRESULT CALLBACK	mouseHook(int code, WPARAM wParam, LPARAM lParam)
 				// relay the motion
 				PostMessage(g_hwnd, SYNERGY_MSG_MOUSE_MOVE, x, y);
 				return 1;
-			  }
+			}
 			}
 		}
 		else {

@@ -7,13 +7,13 @@ class XSynergy : public XBase { };
 
 // client is misbehaving
 class XBadClient : public XSynergy {
-  protected:
+protected:
 	virtual CString		getWhat() const throw();
 };
 
 // client has incompatible version
 class XIncompatibleClient : public XSynergy {
-  public:
+public:
 	XIncompatibleClient(int major, int minor);
 
 	// manipulators
@@ -23,10 +23,10 @@ class XIncompatibleClient : public XSynergy {
 	int					getMajor() const throw();
 	int					getMinor() const throw();
 
-  protected:
+protected:
 	virtual CString		getWhat() const throw();
 
-  private:
+private:
 	int					m_major;
 	int					m_minor;
 };

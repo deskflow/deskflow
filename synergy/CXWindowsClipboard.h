@@ -4,7 +4,7 @@
 #include "IClipboard.h"
 
 class CXWindowsClipboard : public IClipboard {
-  public:
+public:
 	CXWindowsClipboard();
 	virtual ~CXWindowsClipboard();
 

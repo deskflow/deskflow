@@ -11,7 +11,7 @@
 class IClipboard;
 
 class IServerProtocol : public IInterface {
-  public:
+public:
 	// manipulators
 
 	// process messages from the client and insert the appropriate
@@ -39,7 +39,7 @@ class IServerProtocol : public IInterface {
 
 	// accessors
 
-  protected:
+protected:
 	// manipulators
 
 	virtual void		recvInfo() = 0;

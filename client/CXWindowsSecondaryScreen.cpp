@@ -38,7 +38,7 @@ void					CXWindowsSecondaryScreen::run()
 
 		// handle event
 		switch (xevent.type) {
-		  case MappingNotify: {
+		case MappingNotify: {
 			// keyboard mapping changed
 			CDisplayLock display(this);
 			XRefreshKeyboardMapping(&xevent.xmapping);
@@ -47,17 +47,17 @@ void					CXWindowsSecondaryScreen::run()
 			updateModifierMap(display);
 			updateModifiers(display);
 			break;
-		  }
+		}
 
-		  case LeaveNotify: {
+		case LeaveNotify: {
 			// mouse moved out of hider window somehow.  hide the window.
 			assert(m_window != None);
 			CDisplayLock display(this);
 			XUnmapWindow(display, m_window);
 			break;
-		  }
+		}
 
-		  case SelectionClear:
+		case SelectionClear:
 			// we just lost the selection.  that means someone else
 			// grabbed the selection so this screen is now the
 			// selection owner.  report that to the server.
@@ -68,7 +68,7 @@ void					CXWindowsSecondaryScreen::run()
 			}
 			break;
 
-		  case SelectionNotify:
+		case SelectionNotify:
 			// notification of selection transferred.  we shouldn't
 			// get this here because we handle them in the selection
 			// retrieval methods.  we'll just delete the property
@@ -79,7 +79,7 @@ void					CXWindowsSecondaryScreen::run()
 			}
 			break;
 
-		  case SelectionRequest:
+		case SelectionRequest:
 			// somebody is asking for clipboard data
 			if (xevent.xselectionrequest.owner == m_window) {
 				addClipboardRequest(m_window,
@@ -105,7 +105,7 @@ void					CXWindowsSecondaryScreen::run()
 			}
 			break;
 
-		  case PropertyNotify:
+		case PropertyNotify:
 			// clipboard transfers involve property changes so forward
 			// the event to the superclass.  we only care about the
 			// deletion of properties.
@@ -116,7 +116,7 @@ void					CXWindowsSecondaryScreen::run()
 			}
 			break;
 
-		  case DestroyNotify:
+		case DestroyNotify:
 			// looks like one of the windows that requested a clipboard
 			// transfer has gone bye-bye.
 			destroyClipboardRequest(xevent.xdestroywindow.window);

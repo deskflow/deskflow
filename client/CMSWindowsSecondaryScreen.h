@@ -5,7 +5,7 @@
 #include "ISecondaryScreen.h"
 
 class CMSWindowsSecondaryScreen : public CMSWindowsScreen, public ISecondaryScreen {
-  public:
+public:
 	CMSWindowsSecondaryScreen();
 	virtual ~CMSWindowsSecondaryScreen();
 
@@ -29,17 +29,17 @@ class CMSWindowsSecondaryScreen : public CMSWindowsScreen, public ISecondaryScre
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getClipboard(IClipboard*) const;
 
-  protected:
+protected:
 	// CMSWindowsScreen overrides
 	virtual bool		onPreTranslate(MSG*);
 	virtual LRESULT		onEvent(HWND, UINT, WPARAM, LPARAM);
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
 
-  private:
+private:
 	UINT				mapKey(KeyID, KeyModifierMask) const;
 
-  private:
+private:
 	CClient*			m_client;
 	HWND				m_window;
 	HWND				m_nextClipboardWindow;

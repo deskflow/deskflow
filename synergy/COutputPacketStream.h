@@ -4,7 +4,7 @@
 #include "COutputStreamFilter.h"
 
 class COutputPacketStream : public COutputStreamFilter {
-  public:
+public:
 	COutputPacketStream(IOutputStream*, bool adoptStream = true);
 	~COutputPacketStream();
 

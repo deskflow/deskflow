@@ -5,13 +5,13 @@
 
 template <class T>
 class TMethodJob : public IJob {
-  public:
+public:
 	TMethodJob(T* object, void (T::*method)(void*), void* arg = NULL);
 
 	// IJob overrides
 	virtual void		run();
 
-  private:
+private:
 	T*					m_object;
 	void				(T::*m_method)(void*);
 	void*				m_arg;

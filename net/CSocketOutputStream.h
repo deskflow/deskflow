@@ -8,7 +8,7 @@ class CMutex;
 class IJob;
 
 class CSocketOutputStream : public IOutputStream {
-  public:
+public:
 	CSocketOutputStream(CMutex*, IJob* adoptedCloseCB);
 	~CSocketOutputStream();
 
@@ -30,10 +30,10 @@ class CSocketOutputStream : public IOutputStream {
 	virtual UInt32		write(const void*, UInt32 count);
 	virtual void		flush();
 
-  private:
+private:
 	UInt32				getSizeWithLock() const;
 
-  private:
+private:
 	CMutex*				m_mutex;
 	IJob*				m_closeCB;
 	CSocketStreamBuffer	m_buffer;

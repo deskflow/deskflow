@@ -64,7 +64,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 			++fmt;
 			UInt32 len = eatLength(&fmt);
 			switch (*fmt) {
-			  case 'i': {
+			case 'i': {
 				// check for valid length
 				assert(len == 1 || len == 2 || len == 4);
 
@@ -75,13 +75,13 @@ void					CProtocolUtil::readf(IInputStream* stream,
 				// convert it
 				void* v = va_arg(args, void*);
 				switch (len) {
-				  case 1:
+				case 1:
 					// 1 byte integer
 					*reinterpret_cast<UInt8*>(v) = buffer[0];
 					log((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt8*>(v), *reinterpret_cast<UInt8*>(v)));
 					break;
 
-				  case 2:
+				case 2:
 					// 2 byte integer
 					*reinterpret_cast<UInt16*>(v) =
 						(static_cast<UInt16>(buffer[0]) << 8) |
@@ -89,7 +89,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 					log((CLOG_DEBUG2 "readf: read %d byte integer: %d (0x%x)", len, *reinterpret_cast<UInt16*>(v), *reinterpret_cast<UInt16*>(v)));
 					break;
 
-				  case 4:
+				case 4:
 					// 4 byte integer
 					*reinterpret_cast<UInt32*>(v) =
 						(static_cast<UInt32>(buffer[0]) << 24) |
@@ -100,9 +100,9 @@ void					CProtocolUtil::readf(IInputStream* stream,
 					break;
 				}
 				break;
-			  }
+			}
 
-			  case 's': {
+			case 's': {
 				assert(len == 0);
 
 				// read the string length
@@ -146,13 +146,13 @@ void					CProtocolUtil::readf(IInputStream* stream,
 					delete[] sBuffer;
 				}
 				break;
-			  }
+			}
 
-			  case '%':
+			case '%':
 				assert(len == 0);
 				break;
 
-			  default:
+			default:
 				assert(0 && "invalid format specifier");
 			}
 
@@ -188,29 +188,29 @@ UInt32					CProtocolUtil::getLength(
 			++fmt;
 			UInt32 len = eatLength(&fmt);
 			switch (*fmt) {
-			  case 'i':
+			case 'i':
 				assert(len == 1 || len == 2 || len == 4);
 				(void)va_arg(args, UInt32);
 				break;
 
-			  case 's':
+			case 's':
 				assert(len == 0);
 				len = (va_arg(args, CString*))->size() + 4;
 				(void)va_arg(args, UInt8*);
 				break;
 
-			  case 'S':
+			case 'S':
 				assert(len == 0);
 				len = va_arg(args, UInt32) + 4;
 				(void)va_arg(args, UInt8*);
 				break;
 
-			  case '%':
+			case '%':
 				assert(len == 0);
 				len = 1;
 				break;
 
-			  default:
+			default:
 				assert(0 && "invalid format specifier");
 			}
 
@@ -238,21 +238,21 @@ void			 		CProtocolUtil::writef(void* buffer,
 			++fmt;
 			UInt32 len = eatLength(&fmt);
 			switch (*fmt) {
-			  case 'i': {
+			case 'i': {
 				const UInt32 v = va_arg(args, UInt32);
 				switch (len) {
-				  case 1:
+				case 1:
 					// 1 byte integer
 					*dst++ = static_cast<UInt8>(v & 0xff);
 					break;
 
-				  case 2:
+				case 2:
 					// 2 byte integer
 					*dst++ = static_cast<UInt8>((v >> 8) & 0xff);
 					*dst++ = static_cast<UInt8>( v       & 0xff);
 					break;
 
-				  case 4:
+				case 4:
 					// 4 byte integer
 					*dst++ = static_cast<UInt8>((v >> 24) & 0xff);
 					*dst++ = static_cast<UInt8>((v >> 16) & 0xff);
@@ -260,14 +260,14 @@ void			 		CProtocolUtil::writef(void* buffer,
 					*dst++ = static_cast<UInt8>( v        & 0xff);
 					break;
 
-				  default:
+				default:
 					assert(0 && "invalid integer format length");
 					return;
 				}
 				break;
-			  }
+			}
 
-			  case 's': {
+			case 's': {
 				assert(len == 0);
 				const CString* src = va_arg(args, CString*);
 				const UInt32 len = (src != NULL) ? src->size() : 0;
@@ -280,9 +280,9 @@ void			 		CProtocolUtil::writef(void* buffer,
 					dst += len;
 				}
 				break;
-			  }
+			}
 
-			  case 'S': {
+			case 'S': {
 				assert(len == 0);
 				const UInt32 len = va_arg(args, UInt32);
 				const UInt8* src = va_arg(args, UInt8*);
@@ -293,14 +293,14 @@ void			 		CProtocolUtil::writef(void* buffer,
 				memcpy(dst, src, len);
 				dst += len;
 				break;
-			  }
+			}
 
-			  case '%':
+			case '%':
 				assert(len == 0);
 				*dst++ = '%';
 				break;
 
-			  default:
+			default:
 				assert(0 && "invalid format specifier");
 			}
 
@@ -321,17 +321,17 @@ UInt32					CProtocolUtil::eatLength(const char** pfmt)
 	for (;;) {
 		UInt32 d;
 		switch (*fmt) {
-		  case '0': d = 0; break;
-		  case '1': d = 1; break;
-		  case '2': d = 2; break;
-		  case '3': d = 3; break;
-		  case '4': d = 4; break;
-		  case '5': d = 5; break;
-		  case '6': d = 6; break;
-		  case '7': d = 7; break;
-		  case '8': d = 8; break;
-		  case '9': d = 9; break;
-		  default: *pfmt = fmt; return n;
+		case '0': d = 0; break;
+		case '1': d = 1; break;
+		case '2': d = 2; break;
+		case '3': d = 3; break;
+		case '4': d = 4; break;
+		case '5': d = 5; break;
+		case '6': d = 6; break;
+		case '7': d = 7; break;
+		case '8': d = 8; break;
+		case '9': d = 9; break;
+		default: *pfmt = fmt; return n;
 		}
 		n = 10 * n + d;
 		++fmt;

@@ -15,7 +15,7 @@
 #define _CS(_x) 		_x
 
 class CString : public std::string {
-  public:
+public:
 	typedef char _e;
 	typedef _e CharT;
 	typedef std::allocator<_e> _a;

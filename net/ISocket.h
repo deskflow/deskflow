@@ -11,7 +11,7 @@ class IInputStream;
 class IOutputStream;
 
 class ISocket : public IInterface {
-  public:
+public:
 	// manipulators
 
 	// bind the socket to a particular address

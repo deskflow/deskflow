@@ -10,12 +10,12 @@ class XThread { };
 // must not throw this type but must rethrow it if caught (by
 // XThreadExit, XThread, or ...).
 class XThreadExit : public XThread {
-  public:
-    XThreadExit(void* result) : m_result(result) { }
-    ~XThreadExit() { }
+public:
+	XThreadExit(void* result) : m_result(result) { }
+	~XThreadExit() { }
 
-  public:
-    void*				m_result;
+public:
+	void*				m_result;
 };
 
 // thrown to cancel a thread.  clients must not throw this type, but

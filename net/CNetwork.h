@@ -26,7 +26,7 @@ typedef int ssize_t;
 // FIXME -- must handle htonl and ilk when defined as macros
 
 class CNetwork {
-  public:
+public:
 #if defined(CONFIG_PLATFORM_WIN32)
 	typedef SOCKET Socket;
 	typedef struct sockaddr Address;
@@ -129,7 +129,7 @@ class CNetwork {
 	static int (PASCAL FAR *gethosterror)(void);
 
 #if defined(CONFIG_PLATFORM_WIN32)
-  private:
+private:
 	static void			init2(HMODULE);
 	static int PASCAL FAR poll2(PollEntry[], int nfds, int timeout);
 	static ssize_t PASCAL FAR read2(Socket s, void FAR * buf, size_t len);

@@ -403,19 +403,19 @@ bool					CXWindowsScreen::getDisplayClipboard(
 		// transferred.  use it as a hint to size our buffer.
 		UInt32 size;
 		switch (datumSize) {
-		  case 8:
+		case 8:
 			size = *(reinterpret_cast<const UInt8*>(data.data()));
 			break;
 
-		  case 16:
+		case 16:
 			size = *(reinterpret_cast<const UInt16*>(data.data()));
 			break;
 
-		  case 32:
+		case 32:
 			size = *(reinterpret_cast<const UInt32*>(data.data()));
 			break;
 
-		  default:
+		default:
 			assert(0 && "invalid datum size");
 		}
 

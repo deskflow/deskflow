@@ -8,7 +8,7 @@ class ISocket;
 class IListenSocket;
 
 class ISocketFactory : public IInterface {
-  public:
+public:
 	// manipulators
 
 	// accessors

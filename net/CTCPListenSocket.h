@@ -5,7 +5,7 @@
 #include "CNetwork.h"
 
 class CTCPListenSocket : public IListenSocket {
-  public:
+public:
 	CTCPListenSocket();
 	~CTCPListenSocket();
 
@@ -18,7 +18,7 @@ class CTCPListenSocket : public IListenSocket {
 	virtual ISocket*	accept();
 	virtual void		close();
 
-  private:
+private:
 	CNetwork::Socket	m_fd;
 };
 

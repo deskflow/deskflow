@@ -4,7 +4,7 @@
 #include "ISocketFactory.h"
 
 class CTCPSocketFactory : public ISocketFactory {
-  public:
+public:
 	CTCPSocketFactory();
 	virtual ~CTCPSocketFactory();
 
