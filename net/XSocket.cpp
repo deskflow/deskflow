@@ -35,7 +35,7 @@ CString
 XSocketAddress::getWhat() const throw()
 {
 	return "no address";
-/*
+/* FIXME
 	return format("XSocketAddress", "no address: %1:%2",
 								m_hostname.t_str(), 
 								CString::sprintf("%d", m_port).t_str());
