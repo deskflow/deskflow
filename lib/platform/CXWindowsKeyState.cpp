@@ -16,7 +16,7 @@
 #include "CXWindowsUtil.h"
 #include "CLog.h"
 #include "CStringUtil.h"
-#if defined(X_DISPLAY_MISSING)
+#if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
 #	include <X11/X.h>
@@ -92,7 +92,7 @@
 #endif
 
 // map special KeyID keys to KeySyms
-#if defined(HAVE_X11_XF86KEYSYM_H)
+#if HAVE_X11_XF86KEYSYM_H
 static const KeySym		g_mapE000[] =
 {
 	/* 0x00 */ 0, XF86XK_Eject, 0, 0, 0, 0, 0, 0,
@@ -647,7 +647,7 @@ CXWindowsKeyState::keyIDToKeySym(KeyID id, KeyModifierMask mask) const
 	if ((id & 0xfffff000) == 0xe000) {
 		// special character
 		switch (id & 0x0000ff00) {
-#if defined(HAVE_X11_XF86KEYSYM_H)
+#if HAVE_X11_XF86KEYSYM_H
 		case 0xe000:
 			return g_mapE000[id & 0xff];
 #endif

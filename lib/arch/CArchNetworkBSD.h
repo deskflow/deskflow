@@ -24,7 +24,7 @@
 #	include <sys/socket.h>
 #endif
 
-#if !defined(HAVE_SOCKLEN_T)
+#if !HAVE_SOCKLEN_T
 typedef int socklen_t;
 #endif
 

@@ -104,23 +104,27 @@ if test x"$acx_host_winapi" = xXWINDOWS; then
 		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
 	AC_CHECK_HEADERS([X11/extensions/XTest.h],,
 		AC_MSG_ERROR(You must have the XTest headers to compile synergy))
-	AC_CHECK_LIB(Xinerama,
-		XineramaQueryExtension,
-		[X_LIBS="$X_LIBS -lXinerama"],
+	AC_CHECK_HEADERS([X11/extensions/Xinerama.h],
+		[acx_xinerama_lib_ok=yes],
 		[acx_xinerama_lib_ok=no],
-		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
-	if test x"$acx_xinerama_lib_ok" != xno; then
-		AC_CHECK_HEADERS([X11/extensions/Xinerama.h],,,
-			[#include <X11/Xlib.h>])
+		[#include <X11/Xlib.h>])
+	if test x"$acx_xinerama_lib_ok" = xyes; then
+		AC_CHECK_LIB(Xinerama,
+			XineramaQueryExtension,
+			[X_LIBS="$X_LIBS -lXinerama"],
+			[AC_DEFINE(HAVE_X11_EXTENSIONS_XINERAMA_H, 0)],
+			[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
 	fi
-	AC_CHECK_LIB(Xext,
-		DPMSQueryExtension,
+	AC_CHECK_HEADERS([X11/extensions/dpms.h],
 		[acx_dpms_lib_ok=yes],
 		[acx_dpms_lib_ok=no],
-		[$X_LIBS -lX11 $X_EXTRA_LIBS])
+		[#include <X11/Xlib.h>])
 	if test x"$acx_dpms_lib_ok" = xyes; then
-		AC_CHECK_HEADERS([X11/extensions/dpms.h],,,
-			[#include <X11/Xlib.h>])
+		AC_CHECK_LIB(Xext,
+			DPMSQueryExtension,
+			[true],
+			[AC_DEFINE(HAVE_X11_EXTENSIONS_DPMS_H, 0)],
+			[$X_LIBS -lX11 $X_EXTRA_LIBS])
 	fi
 	CPPFLAGS="$save_CPPFLAGS"
 	ARCH_LIBS="$X_LIBS $X_PRE_LIBS -lXext -lX11 $X_EXTRA_LIBS $ARCH_LIBS"

@@ -20,12 +20,12 @@
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
 #include <X11/Xatom.h>
-#if defined(HAVE_X11_EXTENSIONS_XTEST_H)
+#if HAVE_X11_EXTENSIONS_XTEST_H
 #	include <X11/extensions/XTest.h>
 #else
 #	error The XTest extension is required to build synergy
 #endif
-#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+#if HAVE_X11_EXTENSIONS_DPMS_H
 extern "C" {
 #	include <X11/Xmd.h>
 #	include <X11/extensions/dpms.h>
@@ -60,7 +60,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 
 	// check for DPMS extension.  this is an alternative screen saver
 	// that powers down the display.
-#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+#if HAVE_X11_EXTENSIONS_DPMS_H
 	int eventBase, errorBase;
 	if (DPMSQueryExtension(m_display, &eventBase, &errorBase)) {
 		if (DPMSCapable(m_display)) {
@@ -509,7 +509,7 @@ CXWindowsScreenSaver::handleDisableTimer(const CEvent&, void*)
 void
 CXWindowsScreenSaver::activateDPMS(bool activate)
 {
-#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+#if HAVE_X11_EXTENSIONS_DPMS_H
 	if (m_dpms) {
 		// DPMSForceLevel will generate a BadMatch if DPMS is disabled
 		CXWindowsUtil::CErrorLock lock(m_display);
@@ -521,7 +521,7 @@ CXWindowsScreenSaver::activateDPMS(bool activate)
 void
 CXWindowsScreenSaver::enableDPMS(bool enable)
 {
-#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+#if HAVE_X11_EXTENSIONS_DPMS_H
 	if (m_dpms) {
 		if (enable) {
 			DPMSEnable(m_display);
@@ -536,7 +536,7 @@ CXWindowsScreenSaver::enableDPMS(bool enable)
 bool
 CXWindowsScreenSaver::isDPMSEnabled() const
 {
-#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+#if HAVE_X11_EXTENSIONS_DPMS_H
 	if (m_dpms) {
 		CARD16 level;
 		BOOL state;
@@ -554,7 +554,7 @@ CXWindowsScreenSaver::isDPMSEnabled() const
 bool
 CXWindowsScreenSaver::isDPMSActivated() const
 {
-#if defined(HAVE_X11_EXTENSIONS_DPMS_H)
+#if HAVE_X11_EXTENSIONS_DPMS_H
 	if (m_dpms) {
 		CARD16 level;
 		BOOL state;

@@ -17,11 +17,11 @@
 
 #include "CKeyState.h"
 #include "stdmap.h"
-#if defined(X_DISPLAY_MISSING)
+#if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
-#	if defined(HAVE_X11_EXTENSIONS_XTEST_H)
+#	if HAVE_X11_EXTENSIONS_XTEST_H
 #		include <X11/extensions/XTest.h>
 #	else
 #		error The XTest extension is required to build synergy

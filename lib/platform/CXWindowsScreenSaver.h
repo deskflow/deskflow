@@ -17,7 +17,7 @@
 
 #include "IScreenSaver.h"
 #include "stdmap.h"
-#if defined(X_DISPLAY_MISSING)
+#if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
