@@ -66,6 +66,15 @@ investigate klipper
   it crashed once when server did (see below)
 
 ---
+blown assertion
+  between client being added to screen list and sending screen size:
+    attempt to switch to that screen blows assert
+    x,y isn't inside screen because screen has zero size
+  maybe have a "ready" flag for each client
+    only count ready clients when finding neighbor
+  or don't add client to screen list until fully ready
+
+---
 got crash when opening netscape window after trying copy in KDE mail
   BadWindow in ChangeWindowAttributes
   also got it when trying to transfer big clipboard from secondary
@@ -270,3 +279,28 @@ disable ctrl+alt+del info:
 Q179905
   suggestion for bypassing hook code when called by debugger.
   may prevent system from getting locked up when debugging.
+
+---
+config file format:
+
+section screens
+  <screen>:
+    # args in any order
+    # not sure if any args
+end
+
+section links
+  <screen>:
+    # args in any order
+    [left=<screen>]
+    [right=<screen>]
+    [up=<screen>]
+    [down=<screen>]
+end
+
+---
+will have to redo clipboard stuff on win32
+
+need timeout on CReply objects
+  should flush replies that are too old
+  assumption is that requestor is broken
