@@ -156,7 +156,7 @@ void					CMSWindowsScreen::getEvent(MSG* msg) const
 {
 	// wait for an event in a cancellable way
 	while (HIWORD(GetQueueStatus(QS_ALLINPUT)) == 0) {
-		CThread::sleep(0.05);
+		CThread::sleep(0.01);
 	}
 	GetMessage(msg, NULL, 0, 0);
 }

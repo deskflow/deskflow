@@ -141,7 +141,7 @@ bool					CXWindowsScreen::getEvent(XEvent* xevent) const
 	for (;;) {
 		while (!m_stop && XPending(m_display) == 0) {
 			m_mutex.unlock();
-			CThread::sleep(0.05);
+			CThread::sleep(0.01);
 			m_mutex.lock();
 		}
 		if (m_stop) {
