@@ -122,6 +122,12 @@ private:
 
 	UINT				getCodePageFromLangID(LANGID) const;
 
+	// generate a fake ctrl+alt+del
+	void				synthesizeCtrlAltDel();
+
+	// thread that generates fake ctrl+alt+del
+	static void			ctrlAltDelThread(void*);
+
 private:
 	CMutex				m_mutex;
 	CMSWindowsScreen*	m_screen;

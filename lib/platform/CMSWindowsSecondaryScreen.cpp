@@ -16,6 +16,8 @@
 #include "CMSWindowsScreen.h"
 #include "XScreen.h"
 #include "CLock.h"
+#include "CThread.h"
+#include "CFunctionJob.h"
 #include "CLog.h"
 #include "CArchMiscWindows.h"
 #include <cctype>
@@ -93,6 +95,14 @@ CMSWindowsSecondaryScreen::keyDown(KeyID key,
 
 	CLock lock(&m_mutex);
 	m_screen->syncDesktop();
+
+	// check for ctrl+alt+del emulation
+	if (key == kKeyDelete &&
+		(mask & (KeyModifierControl | KeyModifierAlt)) ==
+				(KeyModifierControl | KeyModifierAlt)) {
+		synthesizeCtrlAltDel();
+		return;
+	}
 
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
@@ -1516,4 +1526,53 @@ CMSWindowsSecondaryScreen::getCodePageFromLangID(LANGID langid) const
 	}
 
 	return codePage;
+}
+
+void
+CMSWindowsSecondaryScreen::synthesizeCtrlAltDel()
+{
+	LOG((CLOG_DEBUG "emulating ctrl+alt+del"));
+	if (!m_is95Family) {
+		// to fake ctrl+alt+del on the NT family we broadcast a suitable
+		// hotkey to all windows on the winlogon desktop.  however, we
+		// the current thread must be on that desktop to do the broadcast
+		// and we can't switch just any thread because some own windows
+		// or hooks.  so start a new thread to do the real work.
+		CThread cad(new CFunctionJob(
+							&CMSWindowsSecondaryScreen::ctrlAltDelThread));
+		cad.wait();
+	}
+	else {
+		Keystrokes keys;
+		UINT virtualKey;
+		KeyID key            = kKeyDelete;
+		KeyModifierMask mask = KeyModifierControl | KeyModifierAlt;
+
+		// get the sequence of keys to simulate ctrl+alt+del
+		mapKey(keys, virtualKey, key, mask, kPress);
+		if (!keys.empty()) {
+			// generate key events
+			doKeystrokes(keys, 1);
+		}
+	}
+}
+
+void
+CMSWindowsSecondaryScreen::ctrlAltDelThread(void*)
+{
+	// get the Winlogon desktop at whatever privilege we can
+	HDESK desk = OpenDesktop("Winlogon", 0, FALSE, MAXIMUM_ALLOWED);
+	if (desk != NULL) {
+		if (SetThreadDesktop(desk)) {
+			PostMessage(HWND_BROADCAST, WM_HOTKEY, 0,
+						MAKELPARAM(MOD_CONTROL | MOD_ALT, VK_DELETE));
+		}
+		else {
+			LOG((CLOG_DEBUG "can't switch to Winlogon desk: %d", GetLastError()));
+		}
+		CloseDesktop(desk);
+	}
+	else {
+		LOG((CLOG_DEBUG "can't open Winlogon desk: %d", GetLastError()));
+	}
 }

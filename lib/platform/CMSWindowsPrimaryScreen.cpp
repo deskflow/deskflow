@@ -521,15 +521,29 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 	case SYNERGY_MSG_KEY:
 		// ignore message if posted prior to last mark change
 		if (!ignore()) {
+			WPARAM wParam = msg->wParam;
+			LPARAM lParam = msg->lParam;
+
+			// check for ctrl+alt+del emulation
+			if ((wParam == VK_PAUSE || wParam == VK_CANCEL) &&
+				(m_keys[VK_CONTROL] & 0x80) != 0 &&
+				(m_keys[VK_MENU]    & 0x80) != 0) {
+				LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
+				wParam  = VK_DELETE;
+				lParam &= 0xffff0000;
+				lParam |= 0x00000001;
+			}
+
+			// process key normally
 			KeyModifierMask mask;
-			const KeyID key = mapKey(msg->wParam, msg->lParam, &mask);
+			const KeyID key = mapKey(wParam, lParam, &mask);
 			KeyButton button = static_cast<KeyButton>(
-								(msg->lParam & 0x00ff0000u) >> 16);
+								(lParam & 0x00ff0000u) >> 16);
 			if (key != kKeyNone && key != kKeyMultiKey) {
-				if ((msg->lParam & 0x80000000) == 0) {
+				if ((lParam & 0x80000000) == 0) {
 					// key press
-					const bool wasDown  = ((msg->lParam & 0x40000000) != 0);
-					const SInt32 repeat = (SInt32)(msg->lParam & 0xffff);
+					const bool wasDown  = ((lParam & 0x40000000) != 0);
+					const SInt32 repeat = (SInt32)(lParam & 0xffff);
 					if (repeat >= 2 || wasDown) {
 						LOG((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d button=0x%04x", key, mask, repeat, button));
 						m_receiver->onKeyRepeat(key, mask, repeat, button);

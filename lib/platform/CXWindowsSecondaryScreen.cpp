@@ -117,6 +117,17 @@ CXWindowsSecondaryScreen::keyDown(KeyID key,
 	Keystrokes keys;
 	KeyCode keycode;
 
+	// check for ctrl+alt+del emulation
+	if ((mask & (KeyModifierControl | KeyModifierAlt)) ==
+				(KeyModifierControl | KeyModifierAlt) &&
+		key == XK_Up - 0xff00 + 0xef00) {
+		// just convert the key to Delete and synthesize the key
+		// normally.  the X server/window manager will do the right
+		// thing (or, at least XFree86/KDE will).
+		LOG((CLOG_DEBUG "ctrl+alt+del emulation"));
+		key = XK_Delete - 0xff00u + 0xef00u;
+	}
+
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
 	m_mask = mapKey(keys, keycode, key, mask, kPress);

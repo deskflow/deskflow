@@ -239,8 +239,18 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 		{
 			LOG((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
-			const KeyID key = mapKey(&xevent.xkey);
+			KeyID key                  = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
+				// check for ctrl+alt+del emulation
+				if ((key == kKeyPause || key == kKeyCancel) &&
+					(mask & (KeyModifierControl | KeyModifierAlt)) ==
+							(KeyModifierControl | KeyModifierAlt)) {
+					// pretend it's ctrl+alt+del
+					LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
+					key = kKeyDelete;
+				}
+
+				// handle key
 				m_receiver->onKeyDown(key, mask,
 								static_cast<KeyButton>(xevent.xkey.keycode));
 				if (key == kKeyCapsLock && m_capsLockHalfDuplex) {
@@ -258,7 +268,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 	case KeyRelease:
 		{
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
-			const KeyID key = mapKey(&xevent.xkey);
+			KeyID key                  = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
 				// check if this is a key repeat by getting the next
 				// KeyPress event that has the same key and time as
@@ -279,6 +289,18 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 									&CXWindowsPrimaryScreen::findKeyEvent,
 									(XPointer)&filter) == True);
 				}
+
+				// check for ctrl+alt+del emulation
+				if ((key == kKeyPause || key == kKeyCancel) &&
+					(mask & (KeyModifierControl | KeyModifierAlt)) ==
+							(KeyModifierControl | KeyModifierAlt)) {
+					// pretend it's ctrl+alt+del and ignore autorepeat
+					LOG((CLOG_DEBUG "emulate ctrl+alt+del"));
+					key      = kKeyDelete;
+					hasPress = false;
+				}
+
+
 				if (!hasPress) {
 					// no press event follows so it's a plain release
 					LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
