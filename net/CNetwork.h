@@ -84,8 +84,10 @@ public:
 	enum {
 #if WINDOWS_LIKE
 		kEADDRINUSE				= WSAEADDRINUSE,
+		kECONNECTING			= WSAEWOULDBLOCK,
 #elif UNIX_LIKE
 		kEADDRINUSE				= EADDRINUSE,
+		kECONNECTING			= EINPROGRESS,
 #endif
 		kNone = 0
 	};
@@ -139,12 +141,17 @@ public:
 	static int (PASCAL FAR *getsockerror)(void);
 	static int (PASCAL FAR *gethosterror)(void);
 
+	// convenience functions (only available after init())
+
+	static int (PASCAL FAR *setblocking)(CNetwork::Socket s, bool blocking);
+
 #if WINDOWS_LIKE
 private:
 	static void			init2(HMODULE);
 	static int PASCAL FAR poll2(PollEntry[], int nfds, int timeout);
 	static ssize_t PASCAL FAR read2(Socket s, void FAR * buf, size_t len);
 	static ssize_t PASCAL FAR write2(Socket s, const void FAR * buf, size_t len);
+	static int PASCAL FAR setblocking2(CNetwork::Socket s, bool blocking);
 	static int (PASCAL FAR *WSACleanup)(void);
 	static int (PASCAL FAR *__WSAFDIsSet)(CNetwork::Socket, fd_set FAR *);
 	static int (PASCAL FAR *select)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout);

@@ -109,12 +109,51 @@ CTCPSocket::close()
 void
 CTCPSocket::connect(const CNetworkAddress& addr)
 {
-	CThread::testCancel();
+	// connect asynchronously so we can check for cancellation
+	CNetwork::setblocking(m_fd, false);
 	if (CNetwork::connect(m_fd, addr.getAddress(),
 								addr.getAddressLength()) == CNetwork::Error) {
-		CThread::testCancel();
-		throw XSocketConnect();
+		// check for failure
+		if (CNetwork::getsockerror() != CNetwork::kECONNECTING) {
+			CNetwork::setblocking(m_fd, true);
+			throw XSocketConnect();
+		}
+
+		// wait for connection or failure
+		CNetwork::PollEntry pfds[1];
+		pfds[0].fd     = m_fd;
+		pfds[0].events = CNetwork::kPOLLOUT;
+		for (;;) {
+			CThread::testCancel();
+			const int status = CNetwork::poll(pfds, 1, 10);
+			if (status > 0) {
+				if ((pfds[0].revents & (CNetwork::kPOLLERR |
+										CNetwork::kPOLLNVAL)) != 0) {
+					// connection failed
+					CNetwork::setblocking(m_fd, true);
+					throw XSocketConnect();
+				}
+				if ((pfds[0].revents & CNetwork::kPOLLOUT) != 0) {
+					int error;
+					CNetwork::AddressLength size = sizeof(error);
+					if (CNetwork::getsockopt(m_fd, SOL_SOCKET, SO_ERROR,
+								reinterpret_cast<char*>(&error),
+								&size) == CNetwork::Error ||
+								error != 0) {
+						// connection failed
+						CNetwork::setblocking(m_fd, true);
+						throw XSocketConnect();
+					}
+
+					// connected!
+					break;
+				}
+			}
+		}
 	}
+
+	// back to blocking
+	CNetwork::setblocking(m_fd, true);
 
 	// start servicing the socket
 	m_connected = kReadWrite;

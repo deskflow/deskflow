@@ -36,6 +36,7 @@ struct protoent FAR * (PASCAL FAR *CNetwork::getprotobynumber)(int proto);
 struct protoent FAR * (PASCAL FAR *CNetwork::getprotobyname)(const char FAR * name);
 int (PASCAL FAR *CNetwork::getsockerror)(void);
 int (PASCAL FAR *CNetwork::gethosterror)(void);
+int (PASCAL FAR *CNetwork::setblocking)(CNetwork::Socket s, bool blocking);
 
 #if WINDOWS_LIKE
 
@@ -207,9 +208,10 @@ CNetwork::init2(
 	setfunc(WSACleanup, WSACleanup, int (PASCAL FAR *)(void));
 	setfunc(__WSAFDIsSet, __WSAFDIsSet, int (PASCAL FAR *)(CNetwork::Socket, fd_set FAR *));
 	setfunc(select, select, int (PASCAL FAR *)(int nfds, fd_set FAR *readfds, fd_set FAR *writefds, fd_set FAR *exceptfds, const struct timeval FAR *timeout));
-	poll  = poll2;
-	read  = read2;
-	write = write2;
+	poll        = poll2;
+	read        = read2;
+	write       = write2;
+	setblocking = setblocking2;
 
 	s_networkModule = module;
 }
@@ -295,11 +297,19 @@ CNetwork::write2(Socket s, const void FAR* buf, size_t len)
 	return send(s, buf, len, 0);
 }
 
+int PASCAL FAR
+CNetwork::setblocking2(CNetwork::Socket s, bool blocking)
+{
+	int flag = blocking ? 0 : 1;
+	return ioctlsocket(s, FIONBIO, &flag);
+}
+
 #endif
 
 #if UNIX_LIKE
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/ioctl.h>
 #include <arpa/inet.h>
 
@@ -352,6 +362,26 @@ mygethostname(char* name, int namelen)
 	return gethostname(name, namelen);
 }
 
+static
+int
+mysetblocking(CNetwork::Socket s, bool blocking)
+{
+	int mode = fcntl(s, F_GETFL, 0);
+	if (mode == -1) {
+		return -1;
+	}
+	if (blocking) {
+		mode &= ~O_NDELAY;
+	}
+	else {
+		mode |= O_NDELAY;
+	}
+	if (fcntl(s, F_SETFL, mode) < 0) {
+		return -1;
+	}
+	return 0;
+}
+
 const int				CNetwork::Error = -1;
 const CNetwork::Socket	CNetwork::Null = -1;
 
@@ -388,6 +418,7 @@ CNetwork::init()
 	setfunc(getprotobyname, getprotobyname, struct protoent FAR * (PASCAL FAR *)(const char FAR * name));
 	setfunc(getsockerror, myerrno, int (PASCAL FAR *)(void));
 	setfunc(gethosterror, myherrno, int (PASCAL FAR *)(void));
+	setfunc(setblocking, mysetblocking, int (PASCAL FAR *)(Socket, bool));
 }
 
 void

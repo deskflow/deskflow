@@ -45,6 +45,7 @@ CTCPListenSocket::bind(const CNetworkAddress& addr)
 IDataSocket*
 CTCPListenSocket::accept()
 {
+	// accept asynchronously so we can check for cancellation
 	CNetwork::PollEntry pfds[1];
 	pfds[0].fd     = m_fd;
 	pfds[0].events = CNetwork::kPOLLIN;
