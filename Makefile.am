@@ -26,3 +26,7 @@ MAINTAINERCLEANFILES =		\
 	stamp-h.in				\
 	stamp-h1				\
 	$(NULL)
+
+# build doxygen documentation
+doxygen:
+	doxygen doc/doxygen.cfg
