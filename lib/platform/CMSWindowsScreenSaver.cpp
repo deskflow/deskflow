@@ -100,6 +100,15 @@ CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 		// on the windows nt family we wait for the desktop to
 		// change until it's neither the Screen-Saver desktop
 		// nor a desktop we can't open (the login desktop).
+		// since windows will send the request-to-start-screen-
+		// saver message even when the screen saver is disabled
+		// we first check that the screen saver is indeed active
+		// before watching for it to stop.
+		if (!isActive()) {
+			LOG((CLOG_DEBUG "can't open screen saver desktop"));
+			return false;
+		}
+
 		watchDesktop();
 	}
 
