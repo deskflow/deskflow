@@ -293,10 +293,23 @@ void					CXWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 	XSync(display, False);
 }
 
-void					CXWindowsSecondaryScreen::mouseWheel(SInt32)
+void					CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 {
+	// choose button depending on rotation direction
+	const unsigned int button = (delta >= 0) ? 4 : 5;
+
+	// now use absolute value of delta
+	if (delta < 0) {
+		delta = -delta;
+	}
+
+	// send as many clicks as necessary
 	CDisplayLock display(this);
-	// FIXME
+	for (; delta >= 120; delta -= 120) {
+		XTestFakeButtonEvent(display, button, True, CurrentTime);
+		XTestFakeButtonEvent(display, button, False, CurrentTime);
+	}
+	XSync(display, False);
 }
 
 void					CXWindowsSecondaryScreen::setClipboard(

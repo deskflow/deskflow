@@ -124,6 +124,14 @@ void					CXWindowsPrimaryScreen::run()
 			if (button != kButtonNone) {
 				m_server->onMouseUp(button);
 			}
+			else if (xevent.xbutton.button == 4) {
+				// wheel forward (away from user)
+				m_server->onMouseWheel(120);
+			}
+			else if (xevent.xbutton.button == 5) {
+				// wheel backward (toward user)
+				m_server->onMouseWheel(-120);
+			}
 			break;
 		}
 
