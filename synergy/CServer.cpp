@@ -305,6 +305,7 @@ void					CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
 				m_y = y;
 			}
 			else {
+				log((CLOG_DEBUG "no neighbor; clamping"));
 				if (m_x < 0)
 					m_x = 0;
 				else if (m_x > m_active->m_width - 1)
@@ -446,8 +447,8 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 	assert(src != NULL);
 
 	// get the first neighbor
+	CScreenInfo* lastGoodScreen = src;
 	CScreenInfo* dst = getNeighbor(src, srcSide);
-	CScreenInfo* lastGoodScreen = dst;
 
 	// get the source screen's size (needed for kRight and kBottom)
 	SInt32 w = src->m_width, h = src->m_height;
@@ -510,12 +511,16 @@ CServer::CScreenInfo*	CServer::getNeighbor(CScreenInfo* src,
 		}
 		break;
 	}
+	assert(lastGoodScreen != NULL);
+
+	// no neighbor if best neighbor is the source itself
+	if (lastGoodScreen == src)
+		return NULL;
 
 	// if entering primary screen then be sure to move in far enough
 	// to avoid the jump zone.  if entering a side that doesn't have
 	// a neighbor (i.e. an asymmetrical side) then we don't need to
 	// move inwards because that side can't provoke a jump.
-	assert(lastGoodScreen != NULL);
 	if (lastGoodScreen->m_protocol == NULL) {
 		const CString dstName(lastGoodScreen->m_name);
 		switch (srcSide) {
