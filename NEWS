@@ -1,6 +1,17 @@
 Synergy News
 ============
 
+* Sep-02-2002 - Synergy 0.9.10 released
+
+  Fixed following bugs:
+  * The Pause/Break and KP_Enter buttons were not working correctly on windows
+  * Configuration options were being lost on windows after a reboot
+  * Added support for AltGr/ModeSwitch keys
+  * Added support for auto-start on windows when not administrator
+  * Improved autoconf
+  * Added workaround for lack of sstream header on g++ 2.95.
+
+
 * Aug-18-2002 - Synergy 0.9.9 released
 
   Fixed three bugs:
