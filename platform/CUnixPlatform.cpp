@@ -161,10 +161,18 @@ CUnixPlatform::getBasename(const char* pathname) const
 CString
 CUnixPlatform::getUserDirectory() const
 {
-	// FIXME -- use geteuid?  shouldn't run this setuid anyway.
-	struct passwd* pwent = getpwuid(getuid());
-	if (pwent != NULL && pwent->pw_dir != NULL) {
-		return pwent->pw_dir;
+#if HAVE_GETPWUID_R
+	struct passwd pwent;
+	struct passwd* pwentp;
+	long size = sysconf(_SC_GETPW_R_SIZE_MAX);
+	char* buffer = new char[size];
+	getpwuid_r(getuid(), &pwent, buffer, size, &pwentp);
+	delete[] buffer;
+#else
+	struct passwd* pwentp = getpwuid(getuid());
+#endif
+	if (pwentp != NULL && pwentp->pw_dir != NULL) {
+		return pwentp->pw_dir;
 	}
 	else {
 		return CString();

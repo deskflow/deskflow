@@ -273,14 +273,18 @@ CHTTPProtocol::reply(IOutputStream* stream, CHTTPReply& reply)
 	// get date
 	// FIXME -- should use C++ locale stuff but VC++ time_put is broken.
 	// FIXME -- double check that VC++ is broken
-	// FIXME -- should mutex gmtime() since the return value may not
-	// be thread safe
 	char date[30];
 	{
 		const char* oldLocale = setlocale(LC_TIME, "C");
 		time_t t = time(NULL);
-		struct tm* tm = gmtime(&t);
-		strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S GMT", tm);
+#if HAVE_GMTIME_R
+		struct tm tm;
+		struct tm* tmp = &tm;
+		gmtime_r(&t, tmp);
+#else
+		struct tm* tmp = gmtime(&t);
+#endif
+		strftime(date, sizeof(date), "%a, %d %b %Y %H:%M:%S GMT", tmp);
 		setlocale(LC_TIME, oldLocale);
 	}
 

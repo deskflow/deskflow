@@ -45,6 +45,8 @@ dnl AC_TYPE_SIGNAL
 dnl AC_FUNC_FORK
 AC_FUNC_MEMCMP
 AC_FUNC_STRFTIME
+AC_CHECK_FUNCS(gmtime_r)
+AC_CHECK_FUNCS(getpwuid_r)
 dnl use AC_REPLACE_FUNCS() for stuff in string.h
 dnl AC_HEADER_SYS_WAIT
 
