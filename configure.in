@@ -38,7 +38,8 @@ case $host in
 	;;
 *-*-darwin*)
 	acx_host_arch="UNIX"
-	acx_host_winapi="CARBON"
+	acx_host_winapi="XWINDOWS"
+#	acx_host_winapi="CARBON"
 	;;
 *)
 	acx_host_arch="UNIX"
