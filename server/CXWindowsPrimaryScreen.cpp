@@ -12,6 +12,7 @@
 #	include <X11/X.h>
 #	include <X11/Xutil.h>
 #	define XK_MISCELLANY
+#	define XK_XKB_KEYS
 #	include <X11/keysymdef.h>
 #endif
 
@@ -172,10 +173,10 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
 				m_receiver->onKeyDown(key, mask);
-				if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
+				if (key == kKeyCapsLock && m_capsLockHalfDuplex) {
 					m_receiver->onKeyUp(key, mask | KeyModifierCapsLock);
 				}
-				else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
+				else if (key == kKeyNumLock && m_numLockHalfDuplex) {
 					m_receiver->onKeyUp(key, mask | KeyModifierNumLock);
 				}
 			}
@@ -209,10 +210,10 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 				if (!hasPress) {
 					// no press event follows so it's a plain release
 					log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
-					if (key == XK_Caps_Lock && m_capsLockHalfDuplex) {
+					if (key == kKeyCapsLock && m_capsLockHalfDuplex) {
 						m_receiver->onKeyDown(key, mask);
 					}
-					else if (key == XK_Num_Lock && m_numLockHalfDuplex) {
+					else if (key == kKeyNumLock && m_numLockHalfDuplex) {
 						m_receiver->onKeyDown(key, mask);
 					}
 					m_receiver->onKeyUp(key, mask);
@@ -621,12 +622,35 @@ CXWindowsPrimaryScreen::mapModifier(unsigned int state) const
 KeyID
 CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 {
+	CDisplayLock display(m_screen);
+
+	// convert to a keysym
+	// FIXME -- we're not properly handling unicode
 	KeySym keysym;
 	char dummy[1];
-
-	CDisplayLock display(m_screen);
 	XLookupString(event, dummy, 0, &keysym, NULL);
-	return static_cast<KeyID>(keysym);
+
+	// convert key
+	switch (keysym & 0xffffff00) {
+	case 0x0000:
+		// Latin-1
+		return static_cast<KeyID>(keysym);
+
+	case 0xfe00:
+		// ISO 9995 Function and Modifier Keys
+		if (keysym == XK_ISO_Left_Tab) {
+			return kKeyLeftTab;
+		}
+		return kKeyNone;
+
+	case 0xff00:
+		// MISCELLANY
+		return static_cast<KeyID>(keysym - 0xff00 + 0xef00);
+
+	default:
+		// FIXME -- support unicode characters
+		return kKeyNone;
+	}
 }
 
 ButtonID

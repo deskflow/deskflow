@@ -371,8 +371,8 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	// that cannot be accomodated.
 
 	// note if the key is the caps lock and it's "half-duplex"
-	const bool isHalfDuplex = ((id == XK_Caps_Lock && m_capsLockHalfDuplex) ||
-								(id == XK_Num_Lock && m_numLockHalfDuplex));
+	const bool isHalfDuplex = ((id == kKeyCapsLock && m_capsLockHalfDuplex) ||
+								(id == kKeyNumLock && m_numLockHalfDuplex));
 
 	// ignore releases and repeats for half-duplex keys
 	if (isHalfDuplex && action != kPress) {
@@ -385,10 +385,10 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	if (!findKeyCode(keycode, outMask, id, maskToX(mask))) {
 		// we cannot generate the desired keysym because no key
 		// maps to that keysym.  just return the current mask.
-		log((CLOG_DEBUG2 "no keycode for keysym %d modifiers 0x%04x", id, mask));
+		log((CLOG_DEBUG2 "no keycode for KeyID %d modifiers 0x%04x", id, mask));
 		return m_mask;
 	}
-	log((CLOG_DEBUG2 "keysym %d -> keycode %d modifiers 0x%04x", id, keycode, outMask));
+	log((CLOG_DEBUG2 "keysym %d -> KeyID %d modifiers 0x%04x", id, keycode, outMask));
 
 	// if we cannot match the modifier mask then don't return any
 	// keys and just return the current mask.
@@ -580,67 +580,93 @@ bool
 CXWindowsSecondaryScreen::findKeyCode(KeyCode& keycode,
 				unsigned int& maskOut, KeyID id, unsigned int maskIn) const
 {
-	// if XK_Tab is requested with shift active then try XK_ISO_Left_Tab
+	// convert id to keysym
+	KeySym keysym = 0;
+	switch (id & 0xffffff00) {
+	case 0x0000:
+		// Latin-1
+		keysym = static_cast<KeySym>(id);
+		break;
+
+	case 0xee00:
+		// ISO 9995 Function and Modifier Keys
+		if (id == kKeyLeftTab) {
+			keysym = XK_ISO_Left_Tab;
+		}
+		break;
+
+	case 0xef00:
+		// MISCELLANY
+		keysym = static_cast<KeySym>(id - 0xef00 + 0xff00);
+		break;
+	}
+
+	// fail if unknown key
+	if (keysym == 0) {
+		return false;
+	}
+
+	// if kKeyTab is requested with shift active then try XK_ISO_Left_Tab
 	// instead.  if that doesn't work, we'll fall back to XK_Tab with
 	// shift active.  this is to handle primary screens that don't map
 	// XK_ISO_Left_Tab sending events to secondary screens that do.
-	if (id == XK_Tab && (maskIn & ShiftMask) != 0) {
-		id      = XK_ISO_Left_Tab;
+	if (keysym == XK_Tab && (maskIn & ShiftMask) != 0) {
+		keysym  = XK_ISO_Left_Tab;
 		maskIn &= ~ShiftMask;
 	}
 
 	// find a keycode to generate id.  XKeysymToKeycode() almost does
 	// what we need but won't tell us which index to use with the
 	// keycode.  return false if there's no keycode to generate id.
-	KeyCodeMap::const_iterator index = m_keycodeMap.find(id);
+	KeyCodeMap::const_iterator index = m_keycodeMap.find(keysym);
 	if (index == m_keycodeMap.end()) {
 		// try backup keysym for certain keys (particularly the numpad
 		// keys since most laptops don't have a separate numpad and the
 		// numpad overlaying the main keyboard may not have movement
 		// key bindings).
-		switch (id) {
+		switch (keysym) {
 		case XK_KP_Home:
-			id = XK_Home;
+			keysym = XK_Home;
 			break;
 
 		case XK_KP_Left:
-			id = XK_Left;
+			keysym = XK_Left;
 			break;
 
 		case XK_KP_Up:
-			id = XK_Up;
+			keysym = XK_Up;
 			break;
 
 		case XK_KP_Right:
-			id = XK_Right;
+			keysym = XK_Right;
 			break;
 
 		case XK_KP_Down:
-			id = XK_Down;
+			keysym = XK_Down;
 			break;
 
 		case XK_KP_Prior:
-			id = XK_Prior;
+			keysym = XK_Prior;
 			break;
 
 		case XK_KP_Next:
-			id = XK_Next;
+			keysym = XK_Next;
 			break;
 
 		case XK_KP_End:
-			id = XK_End;
+			keysym = XK_End;
 			break;
 
 		case XK_KP_Insert:
-			id = XK_Insert;
+			keysym = XK_Insert;
 			break;
 
 		case XK_KP_Delete:
-			id = XK_Delete;
+			keysym = XK_Delete;
 			break;
 
 		case XK_ISO_Left_Tab:
-			id      = XK_Tab;
+			keysym  = XK_Tab;
 			maskIn |= ShiftMask;
 			break;
 
@@ -648,7 +674,7 @@ CXWindowsSecondaryScreen::findKeyCode(KeyCode& keycode,
 			return false;
 		}
 
-		index = m_keycodeMap.find(id);
+		index = m_keycodeMap.find(keysym);
 		if (index == m_keycodeMap.end()) {
 			return false;
 		}
@@ -659,14 +685,14 @@ CXWindowsSecondaryScreen::findKeyCode(KeyCode& keycode,
 
 	// compute output mask.  that's the set of modifiers that need to
 	// be enabled when the keycode event is encountered in order to
-	// generate the id keysym and match maskIn.  it's possible that
+	// generate the keysym and match maskIn.  it's possible that
 	// maskIn wants, say, a shift key to be down but that would make
 	// it impossible to generate the keysym.  in that case we must
 	// override maskIn.  this is complicated by caps/shift-lock and
 	// num-lock.
 	maskOut = (maskIn & ~index->second.m_keyMaskMask);
 	log((CLOG_DEBUG2 "maskIn(0x%04x) & ~maskMask(0x%04x) -> 0x%04x", maskIn, index->second.m_keyMaskMask, maskOut));
-	if (IsKeypadKey(id) || IsPrivateKeypadKey(id)) {
+	if (IsKeypadKey(keysym) || IsPrivateKeypadKey(keysym)) {
 		if ((m_mask & m_numLockMask) != 0) {
 			maskOut &= ~index->second.m_keyMask;
 			maskOut |= m_numLockMask;
@@ -687,7 +713,7 @@ CXWindowsSecondaryScreen::findKeyCode(KeyCode& keycode,
 			// characters that are not case conversions.  see if
 			// case conversion is necessary.
 			KeySym lKey, uKey;
-			XConvertCase(id, &lKey, &uKey);
+			XConvertCase(keysym, &lKey, &uKey);
 			if (lKey != uKey) {
 				log((CLOG_DEBUG2 "case convertable, shift && capsLock -> caps lock"));
 				maskShift = m_capsLockMask;
