@@ -1287,7 +1287,7 @@ CXWindowsUtil::initKeyMaps()
 {
 	// note that keysyms 0x13a4 and 0x20ac both map to 0x20ac, which
 	// means ambiguity when converting unicode 0x20ac to a keysym.
-	// as written, the m_UCS4ToKeySym will map to XK_EuroSign.
+	// as written, the s_UCS4ToKeySym will map to XK_EuroSign.
 	if (s_keySymToUCS4.empty()) {
 		for (size_t i =0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
 			s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
