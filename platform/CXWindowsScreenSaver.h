@@ -111,6 +111,9 @@ private:
 	int					m_preferBlanking;
 	int					m_allowExposures;
 
+	// true iff the disabled job timer is installed
+	bool				m_disabled;
+
 	// the job used to invoke disableCallback
 	IJob*				m_disableJob;
 };

@@ -20,7 +20,8 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	m_display(display),
 	m_notify(None),
 	m_xscreensaver(None),
-	m_xscreensaverActive(false)
+	m_xscreensaverActive(false),
+	m_disabled(false)
 {
 	// screen saver disable callback
 	m_disableJob = new TMethodJob<CXWindowsScreenSaver>(this,
@@ -165,8 +166,8 @@ CXWindowsScreenSaver::setNotify(Window notify)
 void
 CXWindowsScreenSaver::enable()
 {
-log((CLOG_INFO "enable screensaver"));
 	// for xscreensaver
+	m_disabled = false;
 	m_screen->removeTimer(m_disableJob);
 
 	// for built-in X screen saver
@@ -177,9 +178,9 @@ log((CLOG_INFO "enable screensaver"));
 void
 CXWindowsScreenSaver::disable()
 {
-log((CLOG_INFO "disable screensaver"));
 	// for xscreensaver.  5 seconds should be plenty often to
 	// suppress the screen saver.
+	m_disabled = true;
 	m_screen->addTimer(m_disableJob, 5.0);
 
 	// use built-in X screen saver
@@ -193,6 +194,11 @@ log((CLOG_INFO "disable screensaver"));
 void
 CXWindowsScreenSaver::activate()
 {
+	// remove disable job timer
+	if (m_disabled) {
+		m_screen->removeTimer(m_disableJob);
+	}
+
 	// try xscreensaver
 	findXScreenSaver();
 	if (m_xscreensaver != None) {
@@ -207,6 +213,11 @@ CXWindowsScreenSaver::activate()
 void
 CXWindowsScreenSaver::deactivate()
 {
+	// reinstall disable job timer
+	if (m_disabled) {
+		m_screen->addTimer(m_disableJob, 5.0);
+	}
+
 	// try xscreensaver
 	findXScreenSaver();
 	if (m_xscreensaver != None) {
