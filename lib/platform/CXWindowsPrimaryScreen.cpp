@@ -598,7 +598,7 @@ CXWindowsPrimaryScreen::warpCursorNoFlush(
 	eventBefore.xmotion.x_root      = x;
 	eventBefore.xmotion.y_root      = y;
 	eventBefore.xmotion.state       = 0;
-	eventBefore.xmotion.is_hint     = False;
+	eventBefore.xmotion.is_hint     = NotifyNormal;
 	eventBefore.xmotion.same_screen = True;
 	XEvent eventAfter               = eventBefore;
 	XSendEvent(display, m_window, False, 0, &eventBefore);
