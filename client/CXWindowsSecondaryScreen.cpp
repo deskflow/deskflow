@@ -310,6 +310,7 @@ void					CXWindowsSecondaryScreen::onOpenDisplay()
 								CWDontPropagate | CWEventMask |
 								CWOverrideRedirect | CWCursor,
 								&attr);
+	log((CLOG_DEBUG "window is 0x%08x", m_window));
 
 	// become impervious to server grabs
 	XTestGrabControl(display, True);
@@ -343,14 +344,6 @@ void					CXWindowsSecondaryScreen::onLostClipboard(
 {
 	// tell client that the clipboard was grabbed locally
 	m_client->onClipboardChanged(id);
-}
-
-long					CXWindowsSecondaryScreen::getEventMask(Window w) const
-{
-	if (w == m_window)
-		return LeaveWindowMask;
-	else
-		return NoEventMask;
 }
 
 void					CXWindowsSecondaryScreen::leaveNoLock(Display* display)
@@ -778,7 +771,7 @@ void					CXWindowsSecondaryScreen::doKeystrokes(
 unsigned int			CXWindowsSecondaryScreen::maskToX(
 								KeyModifierMask inMask) const
 {
-	// FIXME -- should be configurable.  not using Mod3Mask.
+	// FIXME -- should be configurable.  also not using Mod3Mask.
 	unsigned int outMask = 0;
 	if (inMask & KeyModifierShift)
 		outMask |= ShiftMask;
@@ -817,8 +810,17 @@ void					CXWindowsSecondaryScreen::updateKeys(Display* display)
 }
 
 void					CXWindowsSecondaryScreen::updateModifiers(
-								Display*)
+								Display* display)
 {
+	// query the pointer to get the keyboard state
+	Window root, window;
+	int xRoot, yRoot, xWindow, yWindow;
+	unsigned int state;
+	if (!XQueryPointer(display, m_window, &root, &window,
+								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
+		state = 0;
+	}
+
 	// update active modifier mask
 	m_mask = 0;
 	for (unsigned int i = 0; i < 8; ++i) {
@@ -829,8 +831,9 @@ void					CXWindowsSecondaryScreen::updateModifiers(
 					m_mask |= bit;
 			}
 		}
-		else {
-			// FIXME -- not sure how to check current lock states
+		else if ((bit & state) != 0) {
+			// toggle is on
+			m_mask |= bit;
 		}
 	}
 }

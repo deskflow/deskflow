@@ -40,7 +40,6 @@ protected:
 						createClipboard(ClipboardID);
 	virtual void		onCloseDisplay();
 	virtual void		onLostClipboard(ClipboardID);
-	virtual long		getEventMask(Window) const;
 
 private:
 	enum EKeyAction { kPress, kRelease, kRepeat };
