@@ -199,7 +199,8 @@ void					CXScreen::onMouseMove(SInt32 x, SInt32 y)
 	assert(m_display != NULL);
 	assert(m_primary == false);
 
-	XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
+	::XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
+	::XSync(m_display, False);
 }
 
 void					CXScreen::onMouseWheel(SInt32)

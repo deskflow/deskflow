@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h> // FIXME -- for disabling nagle algorithm
 #include <unistd.h>
 #include <fcntl.h>
 #include <netdb.h>
@@ -28,6 +29,13 @@ CUnixTCPSocket::CUnixTCPSocket() : m_fd(-1),
 	if (mode == -1 || ::fcntl(m_fd, F_SETFL, mode | O_NONBLOCK) == -1) {
 		::close(m_fd);
 		throw XSocketCreate(::strerror(errno));
+	}
+
+	// turn off Nagle algorithm.  we send lots of really short messages.
+	struct protoent* p = getprotobyname("tcp");
+	if (p) {
+		int on = 1;
+		setsockopt(m_fd, p->p_proto, TCP_NODELAY, &on, sizeof(on));
 	}
 }
 
