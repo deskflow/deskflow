@@ -485,10 +485,11 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			lParam |= (0x00ff0000 & (MapVirtualKey(wParam, 0) << 24));
 
 			// process as if it were a key up
+			bool altgr;
 			KeyModifierMask mask;
 			KeyButton button = static_cast<KeyButton>(
 								(lParam & 0x00ff0000u) >> 16);
-			const KeyID key = mapKey(wParam, lParam, &mask);
+			const KeyID key = mapKey(wParam, lParam, &mask, &altgr);
 			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
 			m_receiver->onKeyUp(key, mask, button);
 			updateKey(wParam, false);
@@ -502,10 +503,11 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			lParam |= (0x00ff0000 & (MapVirtualKey(wParam, 0) << 24));
 
 			// process as if it were a key up
+			bool altgr;
 			KeyModifierMask mask;
 			KeyButton button = static_cast<KeyButton>(
 								(lParam & 0x00ff0000u) >> 16);
-			const KeyID key = mapKey(wParam, lParam, &mask);
+			const KeyID key = mapKey(wParam, lParam, &mask, &altgr);
 			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask, button));
 			m_receiver->onKeyUp(key, mask, button);
 			updateKey(wParam, false);
@@ -535,22 +537,111 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			}
 
 			// process key normally
+			bool altgr;
 			KeyModifierMask mask;
-			const KeyID key = mapKey(wParam, lParam, &mask);
+			const KeyID key = mapKey(wParam, lParam, &mask, &altgr);
 			KeyButton button = static_cast<KeyButton>(
 								(lParam & 0x00ff0000u) >> 16);
 			if (key != kKeyNone && key != kKeyMultiKey) {
 				if ((lParam & 0x80000000) == 0) {
 					// key press
-					const bool wasDown  = ((lParam & 0x40000000) != 0);
-					const SInt32 repeat = (SInt32)(lParam & 0xffff);
-					if (repeat >= 2 || wasDown) {
+
+					// if AltGr required for this key then make sure
+					// the ctrl and alt keys are *not* down on the
+					// client.  windows simulates AltGr with ctrl and
+					// alt for some inexplicable reason and clients
+					// will get confused if they see mode switch and
+					// ctrl and alt.  we'll also need to put ctrl and
+					// alt back the way there were after we simulate
+					// the key.
+					bool ctrlL = ((m_keys[VK_LCONTROL] & 0x80) != 0);
+					bool ctrlR = ((m_keys[VK_RCONTROL] & 0x80) != 0);
+					bool altL  = ((m_keys[VK_LMENU]    & 0x80) != 0);
+					bool altR  = ((m_keys[VK_RMENU]    & 0x80) != 0);
+					if (altgr) {
+						KeyID key;
+						KeyButton button;
+						KeyModifierMask mask2 = (mask &
+											~(KeyModifierControl |
+											KeyModifierAlt |
+											KeyModifierModeSwitch));
+						if (ctrlL) {
+							key    = kKeyControl_L;
+							button = mapKeyToScanCode(VK_LCONTROL, VK_CONTROL);
+							LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask2, button));
+							m_receiver->onKeyUp(key, mask2, button);
+						}
+						if (ctrlR) {
+							key    = kKeyControl_R;
+							button = mapKeyToScanCode(VK_RCONTROL, VK_CONTROL);
+							LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask2, button));
+							m_receiver->onKeyUp(key, mask2, button);
+						}
+						if (altL) {
+							key    = kKeyAlt_L;
+							button = mapKeyToScanCode(VK_LMENU, VK_MENU);
+							LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask2, button));
+							m_receiver->onKeyUp(key, mask2, button);
+						}
+						if (altR) {
+							key    = kKeyAlt_R;
+							button = mapKeyToScanCode(VK_RMENU, VK_MENU);
+							LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x button=0x%04x", key, mask2, button));
+							m_receiver->onKeyUp(key, mask2, button);
+						}
+					}
+
+					// send key
+					const bool wasDown = ((lParam & 0x40000000) != 0);
+					SInt32 repeat      = (SInt32)(lParam & 0xffff);
+					if (!wasDown) {
+						LOG((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x button=0x%04x", key, mask, button));
+						m_receiver->onKeyDown(key, mask, button);
+						if (repeat > 0) {
+							--repeat;
+						}
+					}
+					if (repeat >= 1) {
 						LOG((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d button=0x%04x", key, mask, repeat, button));
 						m_receiver->onKeyRepeat(key, mask, repeat, button);
 					}
-					else {
-						LOG((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x button=0x%04x", key, mask, button));
-						m_receiver->onKeyDown(key, mask, button);
+
+					// restore ctrl and alt state
+					if (altgr) {
+						KeyID key;
+						KeyButton button;
+						KeyModifierMask mask2 = (mask &
+											~(KeyModifierControl |
+											KeyModifierAlt |
+											KeyModifierModeSwitch));
+						if (ctrlL) {
+							key    = kKeyControl_L;
+							button = mapKeyToScanCode(VK_LCONTROL, VK_CONTROL);
+							LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask2, button));
+							m_receiver->onKeyDown(key, mask2, button);
+							mask2 |= KeyModifierControl;
+						}
+						if (ctrlR) {
+							key    = kKeyControl_R;
+							button = mapKeyToScanCode(VK_RCONTROL, VK_CONTROL);
+							LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask2, button));
+							m_receiver->onKeyDown(key, mask2, button);
+							mask2 |= KeyModifierControl;
+						}
+						if (altL) {
+							key    = kKeyAlt_L;
+							button = mapKeyToScanCode(VK_LMENU, VK_MENU);
+							LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask2, button));
+							m_receiver->onKeyDown(key, mask2, button);
+							mask2 |= KeyModifierAlt;
+						}
+						if (altR) {
+							key    = kKeyAlt_R;
+							button = mapKeyToScanCode(VK_RMENU, VK_MENU);
+							LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x button=0x%04x", key, mask2, button));
+							m_receiver->onKeyDown(key, mask2, button);
+							mask2 |= KeyModifierAlt;
+						}
 					}
 				}
 				else {
@@ -1283,7 +1374,8 @@ KeyID
 CMSWindowsPrimaryScreen::mapKey(
 	WPARAM vkCode,
 	LPARAM info,
-	KeyModifierMask* maskOut)
+	KeyModifierMask* maskOut,
+	bool* altgr)
 {
 	// note:  known microsoft bugs
 	//  Q72583 -- MapVirtualKey() maps keypad keys incorrectly
@@ -1292,166 +1384,177 @@ CMSWindowsPrimaryScreen::mapKey(
 	//      SEPARATOR, MULTIPLY, SUBTRACT, ADD
 
 	assert(maskOut != NULL);
-
-	// map modifier key
-	KeyModifierMask mask = 0;
-	if (((m_keys[VK_LSHIFT] |
-		  m_keys[VK_RSHIFT] |
-		  m_keys[VK_SHIFT]) & 0x80) != 0) {
-		mask |= KeyModifierShift;
-	}
-	if (((m_keys[VK_LCONTROL] |
-		  m_keys[VK_RCONTROL] |
-		  m_keys[VK_CONTROL]) & 0x80) != 0) {
-		mask |= KeyModifierControl;
-	}
-	if ((m_keys[VK_RMENU] & 0x80) != 0) {
-		// right alt => AltGr on windows
-		mask |= KeyModifierModeSwitch;
-	}
-	else if (((m_keys[VK_LMENU] |
-			   m_keys[VK_MENU]) & 0x80) != 0) {
-		mask |= KeyModifierAlt;
-	}
-	if (((m_keys[VK_LWIN] |
-		  m_keys[VK_RWIN]) & 0x80) != 0) {
-		mask |= KeyModifierSuper;
-	}
-	if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
-		mask |= KeyModifierCapsLock;
-	}
-	if ((m_keys[VK_NUMLOCK] & 0x01) != 0) {
-		mask |= KeyModifierNumLock;
-	}
-	if ((m_keys[VK_SCROLL] & 0x01) != 0) {
-		mask |= KeyModifierScrollLock;
-	}
-	// ctrl+alt => AltGr on windows
-/* don't convert ctrl+alt to mode switch.  if we do that then we can
- * never send ctrl+alt+[key] from windows to some platform that
- * doesn't treat ctrl+alt as mode switch (i.e. all other platforms).
- * instead, let windows clients automatically treat ctrl+alt as
- * AltGr and let other clients use ctrl+alt as is.  the right alt
- * key serves as a mode switch key.
-	if ((mask & (KeyModifierControl | KeyModifierAlt)) ==
-				(KeyModifierControl | KeyModifierAlt)) {
-		mask |= KeyModifierModeSwitch;
-		mask &= ~(KeyModifierControl | KeyModifierAlt);
-	}
-*/
-	*maskOut = mask;
-	LOG((CLOG_DEBUG2 "key in vk=%d info=0x%08x mask=0x%04x", vkCode, info, mask));
+	assert(altgr   != NULL);
 
 	// get the scan code and the extended keyboard flag
 	UINT scanCode = static_cast<UINT>((info & 0x00ff0000u) >> 16);
 	int extended  = ((info & 0x01000000) == 0) ? 0 : 1;
-	LOG((CLOG_DEBUG1 "key vk=%d ext=%d scan=%d", vkCode, extended, scanCode));
+	LOG((CLOG_DEBUG1 "key vk=%d info=0x%08x ext=%d scan=%d", vkCode, info, extended, scanCode));
 
 	// handle some keys via table lookup
+	char c   = 0;
 	KeyID id = g_virtualKey[vkCode][extended];
-	if (id != kKeyNone) {
-		return id;
-	}
+	if (id == kKeyNone) {
+		// not in table
 
-	// save the control state then clear it.  ToAscii() maps ctrl+letter
-	// to the corresponding control code and ctrl+backspace to delete.
-	// we don't want that translation so we clear the control modifier
-	// state.  however, if we want to simulate AltGr (which is ctrl+alt)
-	// then we must not clear it.
-	BYTE lControl = m_keys[VK_LCONTROL];
-	BYTE rControl = m_keys[VK_RCONTROL];
-	BYTE control  = m_keys[VK_CONTROL];
-	BYTE lMenu    = m_keys[VK_LMENU];
-	BYTE menu     = m_keys[VK_MENU];
-	if ((mask & KeyModifierModeSwitch) == 0) {
-		m_keys[VK_LCONTROL] = 0;
-		m_keys[VK_RCONTROL] = 0;
-		m_keys[VK_CONTROL]  = 0;
-	}
-	else {
-		m_keys[VK_LCONTROL] = 0x80;
-		m_keys[VK_CONTROL]  = 0x80;
-		m_keys[VK_LMENU]    = 0x80;
-		m_keys[VK_MENU]     = 0x80;
-	}
+		// save the control state then clear it.  ToAscii() maps ctrl+letter
+		// to the corresponding control code and ctrl+backspace to delete.
+		// we don't want that translation so we clear the control modifier
+		// state.  however, if we want to simulate AltGr (which is ctrl+alt)
+		// then we must not clear it.
+		BYTE lControl = m_keys[VK_LCONTROL];
+		BYTE rControl = m_keys[VK_RCONTROL];
+		BYTE control  = m_keys[VK_CONTROL];
+		BYTE lMenu    = m_keys[VK_LMENU];
+		BYTE menu     = m_keys[VK_MENU];
+		if ((control & 0x80) == 0 || (menu & 0x80) == 0) {
+			m_keys[VK_LCONTROL] = 0;
+			m_keys[VK_RCONTROL] = 0;
+			m_keys[VK_CONTROL]  = 0;
+		}
+		else {
+			m_keys[VK_LCONTROL] = 0x80;
+			m_keys[VK_CONTROL]  = 0x80;
+			m_keys[VK_LMENU]    = 0x80;
+			m_keys[VK_MENU]     = 0x80;
+		}
 
-	// convert to ascii
-	WORD ascii;
-	int result = ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
+		// convert to ascii
+		WORD ascii;
+		int result = ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
 
-	// restore control state
-	m_keys[VK_LCONTROL] = lControl;
-	m_keys[VK_RCONTROL] = rControl;
-	m_keys[VK_CONTROL]  = control;
-	m_keys[VK_LMENU]    = lMenu;
-	m_keys[VK_MENU]     = menu;
+		// restore control state
+		m_keys[VK_LCONTROL] = lControl;
+		m_keys[VK_RCONTROL] = rControl;
+		m_keys[VK_CONTROL]  = control;
+		m_keys[VK_LMENU]    = lMenu;
+		m_keys[VK_MENU]     = menu;
 
-	// if result is less than zero then it was a dead key.  leave it
-	// there.
-	if (result < 0) {
-		return kKeyMultiKey;
-	}
+		// if result is less than zero then it was a dead key.  leave it
+		// there.
+		if (result < 0) {
+			id = kKeyMultiKey;
+		}
 
-	// if result is 1 then the key was succesfully converted
-	else if (result == 1) {
-		if (ascii >= 0x80) {
-			// character is not really ASCII.  instead it's some
-			// character in the current ANSI code page.  try to
-			// convert that to a Unicode character.  if we fail
-			// then use the single byte character as is.
-			char src = static_cast<char>(ascii & 0xff);
-			wchar_t unicode;
-			if (MultiByteToWideChar(CP_THREAD_ACP, MB_PRECOMPOSED,
-										&src, 1, &unicode, 1) > 0) {
-				return static_cast<KeyID>(unicode);
+		// if result is 1 then the key was succesfully converted
+		else if (result == 1) {
+			c = static_cast<char>(ascii & 0xff);
+			if (ascii >= 0x80) {
+				// character is not really ASCII.  instead it's some
+				// character in the current ANSI code page.  try to
+				// convert that to a Unicode character.  if we fail
+				// then use the single byte character as is.
+				char src = c;
+				wchar_t unicode;
+				if (MultiByteToWideChar(CP_THREAD_ACP, MB_PRECOMPOSED,
+											&src, 1, &unicode, 1) > 0) {
+					id = static_cast<KeyID>(unicode);
+				}
+				else {
+					id = static_cast<KeyID>(ascii & 0x00ff);
+				}
+			}
+			else {
+				id = static_cast<KeyID>(ascii & 0x00ff);
 			}
 		}
-		return static_cast<KeyID>(ascii & 0x00ff);
+
+		// if result is 2 then a previous dead key could not be composed.
+		else if (result == 2) {
+			// if the two characters are the same and this is a key release
+			// then this event is the dead key being released.  we put the
+			// dead key back in that case, otherwise we discard both key
+			// events because we can't compose the character.  alternatively
+			// we could generate key events for both keys.
+			if (((ascii & 0xff00) >> 8) != (ascii & 0x00ff) ||
+				(info & 0x80000000) == 0) {
+				// cannot compose key
+				return kKeyNone;
+			}
+
+			// get the scan code of the dead key and the shift state
+			// required to generate it.
+			vkCode = VkKeyScan(static_cast<TCHAR>(ascii & 0x00ff));
+
+			// set shift state required to generate key
+			BYTE keys[256];
+			memset(keys, 0, sizeof(keys));
+			if (vkCode & 0x0100) {
+				keys[VK_SHIFT]   = 0x80;
+			}
+			if (vkCode & 0x0200) {
+				keys[VK_CONTROL] = 0x80;
+			}
+			if (vkCode & 0x0400) {
+				keys[VK_MENU]    = 0x80;
+			}
+
+			// strip shift state off of virtual key code
+			vkCode &= 0x00ff;
+
+			// get the scan code for the key
+			scanCode = MapVirtualKey(vkCode, 0);
+
+			// put it back
+			ToAscii(vkCode, scanCode, keys, &ascii, 0);
+			id = kKeyMultiKey;
+		}
 	}
 
-	// if result is 2 then a previous dead key could not be composed.
-	else if (result == 2) {
-		// if the two characters are the same and this is a key release
-		// then this event is the dead key being released.  we put the
-		// dead key back in that case, otherwise we discard both key
-		// events because we can't compose the character.  alternatively
-		// we could generate key events for both keys.
-		if (((ascii & 0xff00) >> 8) != (ascii & 0x00ff) ||
-			(info & 0x80000000) == 0) {
-			// cannot compose key
-			return kKeyNone;
+	// set mask
+	*altgr = false;
+	if (id != kKeyNone && id != kKeyMultiKey && c != 0) {
+		// note if key requires AltGr
+		SHORT virtualKeyAndModifierState = VkKeyScan(c);
+		BYTE modifierState = HIBYTE(virtualKeyAndModifierState);
+		if ((modifierState & 6) == 6) {
+			// key requires ctrl and alt == AltGr
+			*altgr = true;
 		}
 
-		// get the scan code of the dead key and the shift state
-		// required to generate it.
-		vkCode = VkKeyScan(static_cast<TCHAR>(ascii & 0x00ff));
-
-		// set shift state required to generate key
-		BYTE keys[256];
-		memset(keys, 0, sizeof(keys));
-		if (vkCode & 0x0100) {
-			keys[VK_SHIFT]   = 0x80;
+		// map modifier key
+		KeyModifierMask mask = 0;
+		if (((m_keys[VK_LSHIFT] |
+			  m_keys[VK_RSHIFT] |
+			  m_keys[VK_SHIFT]) & 0x80) != 0) {
+			mask |= KeyModifierShift;
 		}
-		if (vkCode & 0x0200) {
-			keys[VK_CONTROL] = 0x80;
+		if (*altgr) {
+			mask |= KeyModifierModeSwitch;
 		}
-		if (vkCode & 0x0400) {
-			keys[VK_MENU]    = 0x80;
+		else {
+			if (((m_keys[VK_LCONTROL] |
+				  m_keys[VK_RCONTROL] |
+				  m_keys[VK_CONTROL]) & 0x80) != 0) {
+				mask |= KeyModifierControl;
+			}
+			if (((m_keys[VK_LMENU] |
+				  m_keys[VK_RMENU] |
+				  m_keys[VK_MENU]) & 0x80) != 0) {
+				mask |= KeyModifierAlt;
+			}
 		}
-
-		// strip shift state off of virtual key code
-		vkCode &= 0x00ff;
-
-		// get the scan code for the key
-		scanCode = MapVirtualKey(vkCode, 0);
-
-		// put it back
-		ToAscii(vkCode, scanCode, keys, &ascii, 0);
-		return kKeyMultiKey;
+		if (((m_keys[VK_LWIN] |
+			  m_keys[VK_RWIN]) & 0x80) != 0) {
+			mask |= KeyModifierSuper;
+		}
+		if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
+			mask |= KeyModifierCapsLock;
+		}
+		if ((m_keys[VK_NUMLOCK] & 0x01) != 0) {
+			mask |= KeyModifierNumLock;
+		}
+		if ((m_keys[VK_SCROLL] & 0x01) != 0) {
+			mask |= KeyModifierScrollLock;
+		}
+		*maskOut = mask;
+	}
+	else {
+		// don't care
+		*maskOut = 0;
 	}
 
-	// cannot convert key
-	return kKeyNone;
+	return id;
 }
 
 ButtonID
@@ -1678,4 +1781,14 @@ CMSWindowsPrimaryScreen::isModifier(UINT vkCode) const
 	default:
 		return false;
 	}
+}
+
+KeyButton
+CMSWindowsPrimaryScreen::mapKeyToScanCode(UINT vk1, UINT vk2) const
+{
+	KeyButton button = static_cast<KeyButton>(MapVirtualKey(vk1, 0));
+	if (button == 0) {
+		button = static_cast<KeyButton>(MapVirtualKey(vk2, 0));
+	}
+	return button;
 }
