@@ -159,7 +159,9 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 
 	// check for peculiarities
 	// FIXME -- may have to get these from some database
+	m_numLockHalfDuplex  = false;
 	m_capsLockHalfDuplex = false;
+//	m_numLockHalfDuplex  = true;
 //	m_capsLockHalfDuplex = true;
 
 	// assume primary has all clipboards
@@ -421,7 +423,8 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 	// that cannot be accomodated.
 
 	// note if the key is the caps lock and it's "half-duplex"
-	const bool isHalfDuplex = (id == XK_Caps_Lock && m_capsLockHalfDuplex);
+	const bool isHalfDuplex = ((id == XK_Caps_Lock && m_capsLockHalfDuplex) ||
+								(id == XK_Num_Lock && m_numLockHalfDuplex));
 
 	// ignore releases and repeats for half-duplex keys
 	if (isHalfDuplex && action != kPress) {
@@ -479,15 +482,16 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 					keys.push_back(keystroke);
 					if ((bit & m_toggleModifierMask) != 0) {
 						log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
-						if (bit != m_capsLockMask || !m_capsLockHalfDuplex) {
+						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
+							(bit == m_numLockMask && m_numLockHalfDuplex)) {
 							keystroke.m_press = False;
-							keys.push_back(keystroke);
-							undo.push_back(keystroke);
-							keystroke.m_press = True;
 							undo.push_back(keystroke);
 						}
 						else {
 							keystroke.m_press = False;
+							keys.push_back(keystroke);
+							undo.push_back(keystroke);
+							keystroke.m_press = True;
 							undo.push_back(keystroke);
 						}
 					}
@@ -508,18 +512,19 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 						log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
 						keystroke.m_keycode = modifierKeys[0];
 						keystroke.m_repeat  = False;
-						if (bit != m_capsLockMask || !m_capsLockHalfDuplex) {
-							keystroke.m_press = True;
-							keys.push_back(keystroke);
+						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
+							(bit == m_numLockMask && m_numLockHalfDuplex)) {
 							keystroke.m_press = False;
 							keys.push_back(keystroke);
-							undo.push_back(keystroke);
 							keystroke.m_press = True;
 							undo.push_back(keystroke);
 						}
 						else {
+							keystroke.m_press = True;
+							keys.push_back(keystroke);
 							keystroke.m_press = False;
 							keys.push_back(keystroke);
+							undo.push_back(keystroke);
 							keystroke.m_press = True;
 							undo.push_back(keystroke);
 						}
@@ -595,7 +600,7 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 		// bit on press and clear the bit on release.  if half-duplex
 		// then toggle each time we get here.
 		if ((modifierBit & m_toggleModifierMask) != 0) {
-			if (action == kRelease) {
+			if (isHalfDuplex || action == kRelease) {
 				mask ^= modifierBit;
 			}
 /* FIXME -- supposed to toggle on on press and off on release but does it?
@@ -964,7 +969,8 @@ void					CXWindowsSecondaryScreen::toggleKey(
 	KeyCode keycode = index->second.m_keycode;
 
 	// toggle the key
-	if (keysym == XK_Caps_Lock && m_capsLockHalfDuplex) {
+	if ((keysym == XK_Caps_Lock && m_capsLockHalfDuplex) ||
+		(keysym == XK_Num_Lock && m_numLockHalfDuplex)) {
 		// "half-duplex" toggle
 		XTestFakeKeyEvent(display, keycode, (m_mask & mask) == 0, CurrentTime);
 	}
