@@ -96,7 +96,7 @@ SOURCE=.\CMSWindowsPrimaryScreen.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CScreenMap.cpp
+SOURCE=.\CConfig.cpp
 # End Source File
 # Begin Source File
 
@@ -128,7 +128,7 @@ SOURCE=.\CMSWindowsPrimaryScreen.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CScreenMap.h
+SOURCE=.\CConfig.h
 # End Source File
 # Begin Source File
 

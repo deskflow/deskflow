@@ -18,7 +18,7 @@ LCXXINCS =				\
 	-I$(DEPTH)/synergy		\
 	$(NULL)
 CXXFILES = 				\
-	CScreenMap.cpp			\
+	CConfig.cpp			\
 	CServerProtocol.cpp		\
 	CServerProtocol1_0.cpp		\
 	CXWindowsPrimaryScreen.cpp	\
