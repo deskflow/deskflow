@@ -281,60 +281,41 @@ CXWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
 	if (keyIndex != m_keysymMap.end()) {
 		// the keysym is mapped to some keycode.  create the keystrokes
 		// for this keysym.
-		return mapToKeystrokes(keys, keyIndex, isAutoRepeat);
+		return mapToKeystrokes(keys, keyIndex, isAutoRepeat, false);
 	}
 
 	// we can't find the keysym mapped to any keycode.  this doesn't
 	// necessarily mean we can't generate the keysym, though.  if the
 	// keysym can be created by combining keysyms then we may still
 	// be okay.
-	CXWindowsUtil::KeySyms decomposition;
-	if (CXWindowsUtil::decomposeKeySym(keysym, decomposition)) {
-		LOG((CLOG_DEBUG2 "decomposed keysym 0x%08x into %d keysyms", keysym, decomposition.size()));
-
-		// map each decomposed keysym to keystrokes.  we want the mask
-		// and the keycode from the last keysym (which should be the
-		// only non-dead key).  the dead keys are not sensitive to
-		// anything but shift and mode switch.
-		KeyButton keycode = 0;
-		for (CXWindowsUtil::KeySyms::const_iterator i = decomposition.begin();
-								i != decomposition.end(); ++i) {
-			// lookup the key
-			keysym   = *i;
-			keyIndex = m_keysymMap.find(keysym);
-			if (keyIndex == m_keysymMap.end()) {
-				// missing a required keysym
-				LOG((CLOG_DEBUG2 "can't map keysym %d: 0x%04x", i - decomposition.begin(), keysym));
-				return 0;
-			}
-
-			// the keysym is mapped to some keycode
-			keycode = mapToKeystrokes(keys, keyIndex, isAutoRepeat);
-			if (keycode == 0) {
-				return 0;
-			}
+	if (!isAutoRepeat) {
+		KeyButton keycode = mapDecompositionToKeystrokes(keys, keysym, true);
+		if (keycode != 0) {
+			return keycode;
 		}
-
-		return keycode;
+		keycode = mapDecompositionToKeystrokes(keys, keysym, false);
+		if (keycode != 0) {
+			// no key is left synthetically down when using the compose key
+			// so return 0 even though we succeeded.
+			return 0;
+		}
 	}
 
-	// if the mapping isn't found and keysym is caps lock sensitive
-	// then convert the case of the keysym and try again.
-	if (keyIndex == m_keysymMap.end()) {
-		KeySym lKey, uKey;
-		XConvertCase(keysym, &lKey, &uKey);
-		if (lKey != uKey) {
-			if (lKey == keysym) {
-				keyIndex = m_keysymMap.find(uKey);
-			}
-			else {
-				keyIndex = m_keysymMap.find(lKey);
-			}
+	// if the keysym is caps lock sensitive then convert the case of
+	// the keysym and try again.
+	KeySym lKey, uKey;
+	XConvertCase(keysym, &lKey, &uKey);
+	if (lKey != uKey) {
+		if (lKey == keysym) {
+			keyIndex = m_keysymMap.find(uKey);
+		}
+		else {
+			keyIndex = m_keysymMap.find(lKey);
 		}
 		if (keyIndex != m_keysymMap.end()) {
 			// the keysym is mapped to some keycode.  create the keystrokes
 			// for this keysym.
-			return mapToKeystrokes(keys, keyIndex, isAutoRepeat);
+			return mapToKeystrokes(keys, keyIndex, isAutoRepeat, false);
 		}
 	}
 
@@ -786,7 +767,8 @@ CXWindowsKeyState::keyIDToKeySym(KeyID id, KeyModifierMask mask) const
 
 KeyButton
 CXWindowsKeyState::mapToKeystrokes(Keystrokes& keys,
-				KeySymIndex keyIndex, bool isAutoRepeat) const
+				KeySymIndex keyIndex, bool isAutoRepeat,
+				bool pressAndRelease) const
 {
 	// keyIndex must be valid
 	assert(keyIndex != m_keysymMap.end());
@@ -873,7 +855,14 @@ CXWindowsKeyState::mapToKeystrokes(Keystrokes& keys,
 	// add the key event
 	Keystroke keystroke;
 	keystroke.m_key        = keycode;
-	if (!isAutoRepeat) {
+	if (pressAndRelease) {
+		keystroke.m_press  = true;
+		keystroke.m_repeat = false;
+		keys.push_back(keystroke);
+		keystroke.m_press  = false;
+		keys.push_back(keystroke);
+	}
+	else if (!isAutoRepeat) {
 		keystroke.m_press  = true;
 		keystroke.m_repeat = false;
 		keys.push_back(keystroke);
@@ -891,6 +880,60 @@ CXWindowsKeyState::mapToKeystrokes(Keystrokes& keys,
 		keys.push_back(undo.back());
 		undo.pop_back();
 	}
+
+	return keycode;
+}
+
+KeyButton
+CXWindowsKeyState::mapDecompositionToKeystrokes(
+				Keystrokes& keys, KeySym keysym, bool usingDeadKeys) const
+{
+	// decompose the keysym
+	CXWindowsUtil::KeySyms decomposed;
+	if (usingDeadKeys) {
+		if (!CXWindowsUtil::decomposeKeySymWithDeadKeys(keysym, decomposed)) {
+			// no decomposition
+			return 0;
+		}
+		LOG((CLOG_DEBUG2 "decomposed keysym 0x%08x into %d keysyms using dead keys", keysym, decomposed.size()));
+	}
+	else {
+		if (!CXWindowsUtil::decomposeKeySymWithCompose(keysym, decomposed)) {
+			// no decomposition
+			return 0;
+		}
+		LOG((CLOG_DEBUG2 "decomposed keysym 0x%08x into %d keysyms using compose key", keysym, decomposed.size()));
+	}
+	size_t n = decomposed.size();
+	if (n == 0) {
+		// nothing in the decomposition
+		return 0;
+	}
+
+	// map to keystrokes
+	Keystrokes keystrokes;
+	KeyButton keycode = 0;
+	for (size_t i = 0; i < n; ++i) {
+		// lookup the key
+		keysym               = decomposed[i];
+		KeySymIndex keyIndex = m_keysymMap.find(keysym);
+		if (keyIndex == m_keysymMap.end()) {
+			// missing a required keysym
+			LOG((CLOG_DEBUG2 "can't map keysym %d: 0x%04x", i, keysym));
+			return 0;
+		}
+
+		// the keysym is mapped to some keycode.  add press and
+		// release unless this is the last key and usingDeadKeys.
+		keycode = mapToKeystrokes(keystrokes, keyIndex,
+						false, (i + 1 < n || !usingDeadKeys));
+		if (keycode == 0) {
+			return 0;
+		}
+	}
+
+	// copy keystrokes
+	keys.insert(keys.end(), keystrokes.begin(), keystrokes.end());
 
 	return keycode;
 }

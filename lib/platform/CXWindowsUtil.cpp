@@ -17,6 +17,7 @@
 #include "CLog.h"
 #include "CStringUtil.h"
 #include <X11/Xatom.h>
+#define XK_MISCELLANY
 #define XK_XKB_KEYS
 #define XK_LATIN1
 #define XK_LATIN2
@@ -814,7 +815,7 @@ struct codepair {
 { 0x20ac, 0x20ac }  /*                    EuroSign  EURO SIGN */
 };
 
-static const KeySym s_rawDecomposeTable[] = {
+static const KeySym s_rawDeadDecomposeTable[] = {
 	// non-dead version of dead keys
 	XK_grave,        XK_dead_grave,       XK_space, 0,
 	XK_acute,        XK_dead_acute,       XK_space, 0,
@@ -1026,6 +1027,116 @@ static const KeySym s_rawDecomposeTable[] = {
 	0
 };
 
+static const KeySym s_rawComposedDecomposeTable[] = {
+	XK_AE,				XK_Multi_key,	XK_A,			XK_E,			0,
+	XK_Aacute,			XK_Multi_key,	XK_A,			XK_apostrophe,	0,
+	XK_Acircumflex,		XK_Multi_key,	XK_A,			XK_asciicircum,	0,
+	XK_Adiaeresis,		XK_Multi_key,	XK_A,			XK_quotedbl,	0,
+	XK_Agrave,			XK_Multi_key,	XK_A,			XK_grave,		0,
+	XK_Aring,			XK_Multi_key,	XK_A,			XK_asterisk,	0,
+	XK_Atilde,			XK_Multi_key,	XK_A,			XK_asciitilde,	0,
+	XK_Ccedilla,		XK_Multi_key,	XK_C,			XK_comma,		0,
+	XK_ETH,				XK_Multi_key,	XK_D,			XK_minus,		0,
+	XK_Eacute,			XK_Multi_key,	XK_E,			XK_apostrophe,	0,
+	XK_Ecircumflex,		XK_Multi_key,	XK_E,			XK_asciicircum,	0,
+	XK_Ediaeresis,		XK_Multi_key,	XK_E,			XK_quotedbl,	0,
+	XK_Egrave,			XK_Multi_key,	XK_E,			XK_grave,		0,
+	XK_Iacute,			XK_Multi_key,	XK_I,			XK_apostrophe,	0,
+	XK_Icircumflex,		XK_Multi_key,	XK_I,			XK_asciicircum,	0,
+	XK_Idiaeresis,		XK_Multi_key,	XK_I,			XK_quotedbl,	0,
+	XK_Igrave,			XK_Multi_key,	XK_I,			XK_grave,		0,
+	XK_Ntilde,			XK_Multi_key,	XK_N,			XK_asciitilde,	0,
+	XK_Oacute,			XK_Multi_key,	XK_O,			XK_apostrophe,	0,
+	XK_Ocircumflex,		XK_Multi_key,	XK_O,			XK_asciicircum,	0,
+	XK_Odiaeresis,		XK_Multi_key,	XK_O,			XK_quotedbl,	0,
+	XK_Ograve,			XK_Multi_key,	XK_O,			XK_grave,		0,
+	XK_Ooblique,		XK_Multi_key,	XK_O,			XK_slash,		0,
+	XK_Otilde,			XK_Multi_key,	XK_O,			XK_asciitilde,	0,
+	XK_THORN,			XK_Multi_key,	XK_T,			XK_H,			0,
+	XK_Uacute,			XK_Multi_key,	XK_U,			XK_apostrophe,	0,
+	XK_Ucircumflex,		XK_Multi_key,	XK_U,			XK_asciicircum,	0,
+	XK_Udiaeresis,		XK_Multi_key,	XK_U,			XK_quotedbl,	0,
+	XK_Ugrave,			XK_Multi_key,	XK_U,			XK_grave,		0,
+	XK_Yacute,			XK_Multi_key,	XK_Y,			XK_apostrophe,	0,
+	XK_aacute,			XK_Multi_key,	XK_a,			XK_apostrophe,	0,
+	XK_acircumflex,		XK_Multi_key,	XK_a,			XK_asciicircum,	0,
+	XK_acute,			XK_Multi_key,	XK_apostrophe,	XK_apostrophe,	0,
+	XK_adiaeresis,		XK_Multi_key,	XK_a,			XK_quotedbl,	0,
+	XK_ae,				XK_Multi_key,	XK_a,			XK_e,			0,
+	XK_agrave,			XK_Multi_key,	XK_a,			XK_grave,		0,
+	XK_aring,			XK_Multi_key,	XK_a,			XK_asterisk,	0,
+	XK_at,				XK_Multi_key,	XK_A,			XK_T,			0,
+	XK_atilde,			XK_Multi_key,	XK_a,			XK_asciitilde,	0,
+	XK_backslash,		XK_Multi_key,	XK_slash,		XK_slash,		0,
+	XK_bar,				XK_Multi_key,	XK_L,			XK_V,			0,
+	XK_braceleft,		XK_Multi_key,	XK_parenleft,	XK_minus,		0,
+	XK_braceright,		XK_Multi_key,	XK_parenright,	XK_minus,		0,
+	XK_bracketleft,		XK_Multi_key,	XK_parenleft,	XK_parenleft,	0,
+	XK_bracketright,	XK_Multi_key,	XK_parenright,	XK_parenright,	0,
+	XK_brokenbar,		XK_Multi_key,	XK_B,			XK_V,			0,
+	XK_ccedilla,		XK_Multi_key,	XK_c,			XK_comma,		0,
+	XK_cedilla,			XK_Multi_key,	XK_comma,		XK_comma,		0,
+	XK_cent,			XK_Multi_key,	XK_c,			XK_slash,		0,
+	XK_copyright,		XK_Multi_key,	XK_parenleft,	XK_c,			0,
+	XK_currency,		XK_Multi_key,	XK_o,			XK_x,			0,
+	XK_degree,			XK_Multi_key,	XK_0,			XK_asciicircum,	0,
+	XK_diaeresis,		XK_Multi_key,	XK_quotedbl,	XK_quotedbl,	0,
+	XK_division,		XK_Multi_key,	XK_colon,		XK_minus,		0,
+	XK_eacute,			XK_Multi_key,	XK_e,			XK_apostrophe,	0,
+	XK_ecircumflex,		XK_Multi_key,	XK_e,			XK_asciicircum,	0,
+	XK_ediaeresis,		XK_Multi_key,	XK_e,			XK_quotedbl,	0,
+	XK_egrave,			XK_Multi_key,	XK_e,			XK_grave,		0,
+	XK_eth,				XK_Multi_key,	XK_d,			XK_minus,		0,
+	XK_exclamdown,		XK_Multi_key,	XK_exclam,		XK_exclam,		0,
+	XK_guillemotleft,	XK_Multi_key,	XK_less,		XK_less,		0,
+	XK_guillemotright,	XK_Multi_key,	XK_greater,		XK_greater,		0,
+	XK_numbersign,		XK_Multi_key,	XK_plus,		XK_plus,		0,
+	XK_hyphen,			XK_Multi_key,	XK_minus,		XK_minus,		0,
+	XK_iacute,			XK_Multi_key,	XK_i,			XK_apostrophe,	0,
+	XK_icircumflex,		XK_Multi_key,	XK_i,			XK_asciicircum,	0,
+	XK_idiaeresis,		XK_Multi_key,	XK_i,			XK_quotedbl,	0,
+	XK_igrave,			XK_Multi_key,	XK_i,			XK_grave,		0,
+	XK_macron,			XK_Multi_key,	XK_minus,		XK_asciicircum,	0,
+	XK_masculine,		XK_Multi_key,	XK_o,			XK_underscore,	0,
+	XK_mu,				XK_Multi_key,	XK_u,			XK_slash,		0,
+	XK_multiply,		XK_Multi_key,	XK_x,			XK_x,			0,
+	XK_nobreakspace,	XK_Multi_key,	XK_space,		XK_space,		0,
+	XK_notsign,			XK_Multi_key,	XK_comma,		XK_minus,		0,
+	XK_ntilde,			XK_Multi_key,	XK_n,			XK_asciitilde,	0,
+	XK_oacute,			XK_Multi_key,	XK_o,			XK_apostrophe,	0,
+	XK_ocircumflex,		XK_Multi_key,	XK_o,			XK_asciicircum,	0,
+	XK_odiaeresis,		XK_Multi_key,	XK_o,			XK_quotedbl,	0,
+	XK_ograve,			XK_Multi_key,	XK_o,			XK_grave,		0,
+	XK_onehalf,			XK_Multi_key,	XK_1,			XK_2,			0,
+	XK_onequarter,		XK_Multi_key,	XK_1,			XK_4,			0,
+	XK_onesuperior,		XK_Multi_key,	XK_1,			XK_asciicircum,	0,
+	XK_ordfeminine,		XK_Multi_key,	XK_a,			XK_underscore,	0,
+	XK_oslash,			XK_Multi_key,	XK_o,			XK_slash,		0,
+	XK_otilde,			XK_Multi_key,	XK_o,			XK_asciitilde,	0,
+	XK_paragraph,		XK_Multi_key,	XK_p,			XK_exclam,		0,
+	XK_periodcentered,	XK_Multi_key,	XK_period,		XK_period,		0,
+	XK_plusminus,		XK_Multi_key,	XK_plus,		XK_minus,		0,
+	XK_questiondown,	XK_Multi_key,	XK_question,	XK_question,	0,
+	XK_registered,		XK_Multi_key,	XK_parenleft,	XK_r,			0,
+	XK_section,			XK_Multi_key,	XK_s,			XK_o,			0,
+	XK_ssharp,			XK_Multi_key,	XK_s,			XK_s,			0,
+	XK_sterling,		XK_Multi_key,	XK_L,			XK_minus,		0,
+	XK_thorn,			XK_Multi_key,	XK_t,			XK_h,			0,
+	XK_threequarters,	XK_Multi_key,	XK_3,			XK_4,			0,
+	XK_threesuperior,	XK_Multi_key,	XK_3,			XK_asciicircum,	0,
+	XK_twosuperior,		XK_Multi_key,	XK_2,			XK_asciicircum,	0,
+	XK_uacute,			XK_Multi_key,	XK_u,			XK_apostrophe,	0,
+	XK_ucircumflex,		XK_Multi_key,	XK_u,			XK_asciicircum,	0,
+	XK_udiaeresis,		XK_Multi_key,	XK_u,			XK_quotedbl,	0,
+	XK_ugrave,			XK_Multi_key,	XK_u,			XK_grave,		0,
+	XK_yacute,			XK_Multi_key,	XK_y,			XK_apostrophe,	0,
+	XK_ydiaeresis,		XK_Multi_key,	XK_y,			XK_quotedbl,	0,
+	XK_yen,				XK_Multi_key,	XK_y,			XK_equal,		0,
+
+	// end of table
+	0
+};
+
 
 //
 // CXWindowsUtil
@@ -1033,7 +1144,8 @@ static const KeySym s_rawDecomposeTable[] = {
 
 CXWindowsUtil::CKeySymMap	CXWindowsUtil::s_keySymToUCS4;
 CXWindowsUtil::CUCS4Map		CXWindowsUtil::s_UCS4ToKeySym;
-CXWindowsUtil::CKeySymsMap	CXWindowsUtil::s_decomposedKeySyms;
+CXWindowsUtil::CKeySymsMap	CXWindowsUtil::s_deadKeyDecomposedKeySyms;
+CXWindowsUtil::CKeySymsMap	CXWindowsUtil::s_composeDecomposedKeySyms;
 
 bool
 CXWindowsUtil::getWindowProperty(Display* display, Window window,
@@ -1231,18 +1343,33 @@ CXWindowsUtil::mapUCS4ToKeySym(UInt32 c)
 }
 
 bool
-CXWindowsUtil::decomposeKeySym(KeySym keysym, KeySyms& decomposed)
+CXWindowsUtil::decomposeKeySymWithDeadKeys(KeySym keysym, KeySyms& decomposed)
 {
 	// unfortunately, X11 doesn't appear to have any way of
 	// decomposing a keysym into its component keysyms.  we'll
 	// use a lookup table for certain character sets.
 	initKeyMaps();
-	CKeySymsMap::const_iterator i = s_decomposedKeySyms.find(keysym);
-	if (i == s_decomposedKeySyms.end()) {
-		return false;
+	CKeySymsMap::const_iterator i = s_deadKeyDecomposedKeySyms.find(keysym);
+	if (i != s_deadKeyDecomposedKeySyms.end()) {
+		decomposed = i->second;
+		return true;
 	}
-	decomposed = i->second;
-	return true;
+	return false;
+}
+
+bool
+CXWindowsUtil::decomposeKeySymWithCompose(KeySym keysym, KeySyms& decomposed)
+{
+	// unfortunately, X11 doesn't appear to have any way of
+	// decomposing a keysym into its component keysyms.  we'll
+	// use a lookup table for certain character sets.
+	initKeyMaps();
+	CKeySymsMap::const_iterator i = i = s_composeDecomposedKeySyms.find(keysym);
+	if (i != s_composeDecomposedKeySyms.end()) {
+		decomposed = i->second;
+		return true;
+	}
+	return false;
 }
 
 CString
@@ -1296,10 +1423,22 @@ CXWindowsUtil::initKeyMaps()
 	}
 
 	// fill decomposed key table if not filled yet
-	if (s_decomposedKeySyms.empty()) {
-		for (const KeySym* scan = s_rawDecomposeTable; *scan != 0; ++scan) {
+	if (s_deadKeyDecomposedKeySyms.empty()) {
+		for (const KeySym* scan = s_rawDeadDecomposeTable; *scan != 0; ++scan) {
 			// add an entry for this keysym
-			KeySyms& entry = s_decomposedKeySyms[*scan];
+			KeySyms& entry = s_deadKeyDecomposedKeySyms[*scan];
+
+			// add the decomposed keysyms for the keysym
+			while (*++scan != 0) {
+				entry.push_back(*scan);
+			}
+		}
+	}
+	if (s_composeDecomposedKeySyms.empty()) {
+		for (const KeySym* scan =
+			s_rawComposedDecomposeTable; *scan != 0; ++scan) {
+			// add an entry for this keysym
+			KeySyms& entry = s_composeDecomposedKeySyms[*scan];
 
 			// add the decomposed keysyms for the keysym
 			while (*++scan != 0) {

@@ -334,6 +334,7 @@ CXWindowsScreen::leave()
 	if (m_ic != NULL) {
 		XmbResetIC(m_ic);
 		XSetICFocus(m_ic);
+		m_filtered.clear();
 	}
 
 	// now off screen
@@ -876,6 +877,18 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 
 		// now filter the event
 		if (XFilterEvent(xevent, None)) {
+			if (xevent->type == KeyPress) {
+				// add filtered presses to the filtered list
+				m_filtered.insert(m_lastKeycode);
+			}
+			return;
+		}
+
+		// discard matching key releases for key presses that were
+		// filtered and remove them from our filtered list.
+		else if (xevent->type == KeyRelease &&
+			m_filtered.count(xevent->xkey.keycode) > 0) {
+			m_filtered.erase(xevent->xkey.keycode);
 			return;
 		}
 	}
@@ -1030,14 +1043,26 @@ CXWindowsScreen::onKeyPress(XKeyEvent& xkey)
 
 		// get which button.  see call to XFilterEvent() in onEvent()
 		// for more info.
+		bool isFake = false;
 		KeyButton keycode = static_cast<KeyButton>(xkey.keycode);
 		if (keycode == 0) {
+			isFake  = true;
 			keycode = static_cast<KeyButton>(m_lastKeycode);
+			if (keycode == 0) {
+				// no keycode
+				return;
+			}
 		}
 
 		// handle key
 		m_keyState->sendKeyEvent(getEventTarget(),
 							true, false, key, mask, 1, keycode);
+
+		// do fake release if this is a fake press
+		if (isFake) {
+			m_keyState->sendKeyEvent(getEventTarget(),
+							false, false, key, mask, 1, keycode);
+		}
 	}
 }
 

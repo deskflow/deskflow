@@ -100,7 +100,13 @@ private:
 	// map a KeySym into the keystrokes to produce it
 	KeyButton			mapToKeystrokes(Keystrokes& keys,
 							KeySymIndex keyIndex,
-							bool isAutoRepeat) const;
+							bool isAutoRepeat,
+							bool pressAndRelease) const;
+
+	// map a decomposition into keystrokes to produce it.  returns the
+	// last key added to keys iff successful and 0 otherwise.
+	KeyButton			mapDecompositionToKeystrokes(Keystrokes& keys,
+							KeySym keysym, bool usingDeadKeys) const;
 
 	// choose the best set of modifiers to generate the KeySym
 	unsigned int		findBestKeyIndex(KeySymIndex keyIndex,

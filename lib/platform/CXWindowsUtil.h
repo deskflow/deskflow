@@ -73,13 +73,23 @@ public:
 	*/
 	static KeySym		mapUCS4ToKeySym(UInt32);
 
-	//! Decompose a KeySym
+	//! Decompose a KeySym using dead keys
 	/*!
 	Decomposes \c keysym into its component keysyms.  All but the last
 	decomposed KeySym are dead keys.  Returns true iff the decomposition
 	was successful.
 	*/
-	static bool			decomposeKeySym(KeySym keysym, KeySyms& decomposed);
+	static bool			decomposeKeySymWithDeadKeys(KeySym keysym,
+							KeySyms& decomposed);
+
+	//! Decompose a KeySym using the compose key
+	/*!
+	Decomposes \c keysym into its component keysyms.  The first key is
+	Multi_key and the rest are normal (i.e. not dead) keys.  Returns
+	true iff the decomposition was successful.
+	*/
+	static bool			decomposeKeySymWithCompose(KeySym keysym,
+							KeySyms& decomposed);
 
 	//! Convert Atom to its string
 	/*!
@@ -162,7 +172,8 @@ private:
 
 	static CKeySymMap	s_keySymToUCS4;
 	static CUCS4Map		s_UCS4ToKeySym;
-	static CKeySymsMap	s_decomposedKeySyms;
+	static CKeySymsMap	s_deadKeyDecomposedKeySyms;
+	static CKeySymsMap	s_composeDecomposedKeySyms;
 };
 
 #endif

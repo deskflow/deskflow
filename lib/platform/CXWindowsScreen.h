@@ -16,6 +16,7 @@
 #define CXWINDOWSSCREEN_H
 
 #include "CPlatformScreen.h"
+#include "stdset.h"
 #include "stdvector.h"
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
@@ -135,6 +136,7 @@ private:
 	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
+	typedef std::set<bool> CFilteredKeycodes;
 	// true if screen is being used as a primary screen, false otherwise
 	bool				m_isPrimary;
 
@@ -164,6 +166,7 @@ private:
 	XIM					m_im;
 	XIC					m_ic;
 	KeyCode				m_lastKeycode;
+	CFilteredKeycodes	m_filtered;
 
 	// clipboards
 	CXWindowsClipboard*	m_clipboard[kClipboardEnd];
