@@ -16,6 +16,7 @@
 class CMSWindowsScreen;
 class IScreenReceiver;
 
+//! Microsoft windows secondary screen implementation
 class CMSWindowsSecondaryScreen :
 				public CSecondaryScreen, public IMSWindowsScreenEventHandler {
 public:

@@ -53,8 +53,15 @@ CHTTPServer::processRequest(IDataSocket* socket)
 			request->m_uri = request->m_uri.substr(n);
 		}
 
-		// process
+		// prepare reply
 		CHTTPReply reply;
+		reply.m_majorVersion = request->m_majorVersion;
+		reply.m_minorVersion = request->m_minorVersion;
+		reply.m_status       = 200;
+		reply.m_reason       = "OK";
+		reply.m_method       = request->m_method;
+
+		// process
 		doProcessRequest(*request, reply);
 
 		// send reply
@@ -93,21 +100,19 @@ CHTTPServer::processRequest(IDataSocket* socket)
 void
 CHTTPServer::doProcessRequest(CHTTPRequest& request, CHTTPReply& reply)
 {
-	reply.m_majorVersion = request.m_majorVersion;
-	reply.m_minorVersion = request.m_minorVersion;
-	reply.m_status       = 200;
-	reply.m_reason       = "OK";
-	reply.m_method       = request.m_method;
-	reply.m_headers.push_back(std::make_pair(CString("Content-Type"),
-											CString("text/html")));
-
 	// switch based on uri
 	if (request.m_uri == "/editmap") {
 		if (request.m_method == "GET" || request.m_method == "HEAD") {
 			doProcessGetEditMap(request, reply);
+			reply.m_headers.push_back(std::make_pair(
+								CString("Content-Type"),
+									CString("text/html")));
 		}
 		else if (request.m_method == "POST") {
 			doProcessPostEditMap(request, reply);
+			reply.m_headers.push_back(std::make_pair(
+								CString("Content-Type"),
+									CString("text/html")));
 		}
 		else {
 			throw XHTTPAllow("GET, HEAD, POST");

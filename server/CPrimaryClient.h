@@ -10,29 +10,60 @@ class CPrimaryScreen;
 class IPrimaryScreenReceiver;
 class IServer;
 
+//! Primary screen as pseudo-client
+/*!
+The primary screen does not have a client associated with it.  This
+class provides a pseudo-client to allow the primary screen to be
+treated as if it was on a client.
+*/
 class CPrimaryClient : public IScreenReceiver, public IClient {
 public:
+	/*!
+	\c name is the name of the server.
+	*/
 	CPrimaryClient(IServer*, IPrimaryScreenReceiver*, const CString& name);
 	~CPrimaryClient();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// cause run() to return
+	//! Exit event loop
+	/*!
+	Force run() to return.  This call can return before
+	run() does (i.e. asynchronously).  This may only be
+	called between a successful open() and close().
+	*/
 	void				stop();
 
-	// called by server when the configuration changes
+	//! Update configuration
+	/*!
+	Handles reconfiguration of jump zones.
+	*/
 	void				reconfigure(UInt32 activeSides);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// return the contents of the given clipboard.
+	//! Get clipboard
+	/*!
+	Save the marshalled contents of the clipboard indicated by \c id.
+	*/
 	void				getClipboard(ClipboardID, CString&) const;
 
-	// returns true iff the user is locked to the primary screen
+	//! Get toggle key state
+	/*!
+	Returns the primary screen's current toggle modifier key state.
+	*/
+	KeyModifierMask		getToggleMask() const;
+
+	//! Get screen lock state
+	/*!
+	Returns true if the user is locked to the screen.
+	*/
 	bool				isLockedToScreen() const;
 
-	// returns the state of the toggle keys on the primary screen
-	KeyModifierMask		getToggleMask() const;
+	//@}
 
 	// IScreenReceiver overrides
 	virtual void		onError();

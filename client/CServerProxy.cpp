@@ -15,10 +15,10 @@
 //
 
 CServerProxy::CServerProxy(IClient* client,
-				IInputStream* input, IOutputStream* output) :
+				IInputStream* adoptedInput, IOutputStream* adoptedOutput) :
 	m_client(client),
-	m_input(input),
-	m_output(output),
+	m_input(adoptedInput),
+	m_output(adoptedOutput),
 	m_seqNum(0)
 {
 	assert(m_client != NULL);

@@ -13,30 +13,56 @@ class CThread;
 class IDataSocket;
 class IScreenReceiver;
 
+//! Synergy client
+/*!
+This class implements the top-level client algorithms for synergy.
+*/
 class CClient : public IScreenReceiver, public IClient {
 public:
+	/*!
+	This client will attempt to connect the server using \c clientName
+	as its name.
+	*/
 	CClient(const CString& clientName);
 	~CClient();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// turn camping on or off.  when camping the client will keep
-	// trying to connect to the server until it succeeds.  this
-	// is useful if the client may start before the server.  do
-	// not call this while in run().
+	//! Set camping state
+	/*!
+	Turns camping on or off.  When camping the client will keep
+	trying to connect to the server until it succeeds.  This
+	is useful if the client may start before the server.  Do
+	not call this while in run().
+	*/
 	void				camp(bool on);
 
-	// set the server's address that the client should connect to
+	//! Set server address
+	/*!
+	Sets the server's address that the client should connect to.
+	*/
 	void				setAddress(const CNetworkAddress& serverAddress);
 
-	// tell client to exit run() gracefully.  this must only be called
-	// after a successful open().
+	//! Exit event loop
+	/*!
+	Force run() to return.  This call can return before
+	run() does (i.e. asynchronously).  This may only be
+	called between a successful open() and close().
+	*/
 	void				quit();
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// returns true if the server rejected us
+	//!
+	/*!
+	Returns true if the server rejected our connection.
+	*/
 	bool 				wasRejected() const;
+
+	//@}
 
 	// IScreenReceiver overrides
 	virtual void		onError();

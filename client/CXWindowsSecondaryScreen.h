@@ -14,6 +14,7 @@
 class CXWindowsScreen;
 class IScreenReceiver;
 
+//! X11 secondary screen implementation
 class CXWindowsSecondaryScreen :
 				public CSecondaryScreen, public IScreenEventHandler {
 public:

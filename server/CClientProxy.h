@@ -8,23 +8,39 @@ class IInputStream;
 class IOutputStream;
 class IServer;
 
+//! Generic proxy for client
 class CClientProxy : public IClient {
 public:
+	/*!
+	\c name is the name of the client.
+	*/
 	CClientProxy(IServer* server, const CString& name,
 							IInputStream* adoptedInput,
 							IOutputStream* adoptedOutput);
 	~CClientProxy();
 
-	// manipulators
+	//! @name accessors
+	//@{
 
-	// accessors
-
-	// get the server
+	//! Get server
+	/*!
+	Returns the server passed to the c'tor.
+	*/
 	IServer*			getServer() const;
 
-	// get the input and output streams for the client
+	//! Get input stream
+	/*!
+	Returns the input stream passed to the c'tor.
+	*/
 	IInputStream*		getInputStream() const;
+
+	//! Get output stream
+	/*!
+	Returns the output stream passed to the c'tor.
+	*/
 	IOutputStream*		getOutputStream() const;
+
+	//@}
 
 	// IClient overrides
 	virtual bool		open() = 0;

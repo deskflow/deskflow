@@ -41,7 +41,8 @@ public:
 	//! Notify of new clipboard data
 	/*!
 	Called when the data on the clipboard has changed because some
-	other program has changed it.
+	other program has changed it.  \c data will have marshalled
+	clipboard data.
 	*/
 	virtual void		onClipboardChanged(ClipboardID,
 							const CString& data) = 0;

@@ -33,7 +33,8 @@ public:
 	//! Exit event loop
 	/*!
 	Force mainLoop() to return.  This call can return before
-	mailLoop() does (i.e. asynchronously).
+	mainLoop() does (i.e. asynchronously).  This may only be
+	called between a successful open() and close().
 	*/
 	virtual void		exitMainLoop() = 0;
 

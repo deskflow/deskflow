@@ -14,6 +14,7 @@ class CXWindowsScreen;
 class IScreenReceiver;
 class IPrimaryScreenReceiver;
 
+//! X11 primary screen implementation
 class CXWindowsPrimaryScreen :
 				public CPrimaryScreen, public IScreenEventHandler {
 public:

@@ -20,6 +20,16 @@ struct iterator_traits<CConfig> {
 };
 };
 
+//! Server configuration
+/*!
+This class holds server configuration information.  That includes
+the names of screens and their aliases, the links between them,
+and network addresses.
+
+Note that case is preserved in screen names but is ignored when
+comparing names.  Screen names and their aliases share a
+namespace and must be unique.
+*/
 class CConfig {
 private:
 	class CCell {
@@ -59,78 +69,154 @@ public:
 	CConfig();
 	virtual ~CConfig();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// note that case is preserved in screen names but is ignored when
-	// comparing names.  screen names and their aliases share a
-	// namespace and must be unique.
-
-	// add/remove screens.  addScreen() returns false if the name
-	// already exists.  the remove methods automatically remove
-	// aliases for the named screen and disconnect any connections
-	// to the removed screen(s).
+	//! Add screen
+	/*!
+	Adds a screen, returning true iff successful.  If a screen or
+	alias with the given name exists then it fails.
+	*/
 	bool				addScreen(const CString& name);
+
+	//! Remove screen
+	/*!
+	Removes a screen.  This also removes aliases for the screen and
+	disconnects any connections to the screen.  \c name may be an
+	alias.
+	*/
 	void				removeScreen(const CString& name);
+
+	//! Remove all screens
+	/*!
+	Removes all screens, aliases, and connections.
+	*/
 	void				removeAllScreens();
 
-	// add/remove alias for a screen name.  an alias can be used
-	// any place the canonical screen name can (except addScreen).
-	// addAlias() returns false if the alias name already exists
-	// or the canonical name is unknown.  removeAlias() fails if
-	// the alias is unknown or a canonical name.
+	//! Add alias
+	/*!
+	Adds an alias for a screen name.  An alias can be used
+	any place the canonical screen name can (except addScreen()).
+	Returns false if the alias name already exists or the canonical
+	name is unknown, otherwise returns true.
+	*/
 	bool				addAlias(const CString& canonical,
 							const CString& alias);
+
+	//! Remove alias
+	/*!
+	Removes an alias for a screen name.  It returns false if the
+	alias is unknown or a canonical name, otherwise returns true.
+	*/
 	bool				removeAlias(const CString& alias);
+
+	//! Remove all aliases
+	/*!
+	This removes all aliases but not the screens.
+	*/
 	void				removeAllAliases();
 
-	// connect/disconnect edges.  both return false if srcName is
-	// unknown.
+	//! Connect screens
+	/*!
+	Establishes a one-way connection between opposite edges of two
+	screens.  The user will be able to jump from the \c srcSide of
+	screen \c srcName to the opposite side of screen \c dstName
+	when both screens are connected to the server and the user
+	isn't locked to a screen.  Returns false if \c srcName is
+	unknown.
+	*/
 	bool				connect(const CString& srcName,
 							EDirection srcSide,
 							const CString& dstName);
+
+	//! Disconnect screens
+	/*!
+	Removes a connection created by connect().  Returns false if
+	\c srcName is unknown.
+	*/
 	bool				disconnect(const CString& srcName,
 							EDirection srcSide);
 
-	// set the synergy and http listen addresses.  there are no
-	// default addresses.
+	//! Set server address
+	/*!
+	Set the synergy listen addresses.  There is no default address so
+	this must be called to run a server using this configuration.
+	*/
 	void				setSynergyAddress(const CNetworkAddress&);
+
+	//! Set HTTP server address
+	/*!
+	Set the HTTP listen addresses.  There is no default address so
+	this must be called to run an HTTP server using this configuration.
+	*/
 	void				setHTTPAddress(const CNetworkAddress&);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// returns true iff the given name is a valid screen name.
-	bool				isValidScreenName(const CString&) const;
+	//! Test screen name validity
+	/*!
+	Returns true iff \c name is a valid screen name.
+	*/
+	bool				isValidScreenName(const CString& name) const;
 
-	// iterators over (canonical) screen names
+	//! Get beginning (canonical) screen name iterator
 	const_iterator		begin() const;
+	//! Get ending (canonical) screen name iterator
 	const_iterator		end() const;
 
-	// returns true iff name names a screen
+	//! Test for screen name
+	/*!
+	Returns true iff \c name names a screen.
+	*/
 	bool				isScreen(const CString& name) const;
 
-	// returns true iff name is the canonical name of a screen
+	//! Test for canonical screen name
+	/*!
+	Returns true iff \c name is the canonical name of a screen.
+	*/
 	bool				isCanonicalName(const CString& name) const;
 
-	// returns the canonical name of a screen or the empty string if
-	// the name is unknown.  returns the canonical name if one is given.
+	//! Get canonical name
+	/*!
+	Returns the canonical name of a screen or the empty string if
+	the name is unknown.  Returns the canonical name if one is given.
+	*/
 	CString				getCanonicalName(const CString& name) const;
 
-	// get the neighbor in the given direction.  returns the empty string
-	// if there is no neighbor in that direction.  returns the canonical
-	// screen name.
+	//! Get neighbor
+	/*!
+	Returns the canonical screen name of the neighbor in the given
+	direction (set through connect()).  Returns the empty string
+	if there is no neighbor in that direction.
+	*/
 	CString				getNeighbor(const CString&, EDirection) const;
 
-	// get the listen addresses
+	//! Get the server address
 	const CNetworkAddress&	getSynergyAddress() const;
+	//! Get the HTTP server address
 	const CNetworkAddress&	getHTTPAddress() const;
 
-	// read/write a configuration.  operator>> will throw XConfigRead
-	// on error.
+	//! Read configuration
+	/*!
+	Reads a configuration from a stream.  Throws XConfigRead on error.
+	*/
 	friend std::istream&	operator>>(std::istream&, CConfig&);
+
+	//! Write configuration
+	/*!
+	Writes a configuration to a stream.
+	*/
 	friend std::ostream&	operator<<(std::ostream&, const CConfig&);
 
-	// get the name of a direction (for debugging)
+	//! Get direction name
+	/*!
+	Returns the name of a direction (for debugging).
+	*/
 	static const char*	dirName(EDirection);
+
+	//@}
 
 private:
 	static bool			readLine(std::istream&, CString&);
@@ -149,6 +235,10 @@ private:
 	CNetworkAddress		m_httpAddress;
 };
 
+//! Configuration stream read exception
+/*!
+Thrown when a configuration stream cannot be parsed.
+*/
 class XConfigRead : public XBase {
 public:
 	XConfigRead(const CString&);

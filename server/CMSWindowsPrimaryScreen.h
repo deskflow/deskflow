@@ -11,6 +11,7 @@ class CMSWindowsScreen;
 class IScreenReceiver;
 class IPrimaryScreenReceiver;
 
+//! Microsoft windows primary screen implementation
 class CMSWindowsPrimaryScreen :
 				public CPrimaryScreen, public IMSWindowsScreenEventHandler {
 public:

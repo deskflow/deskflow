@@ -23,10 +23,11 @@ public:
 	*/
 	virtual bool		open() = 0;
 
-	//! Run client
+	//! Client main loop
 	/*!
-	Service the client.  This method is typically called in a separate
-	thread and is exited by cancelling the thread.
+	Run client's event loop.  This method is typically called in a
+	separate thread and is exited by cancelling the thread.  This
+	must be called between a successful open() and close().
 
 	(cancellation point)
 	*/
@@ -62,9 +63,10 @@ public:
 	/*!
 	Update the client's clipboard.  This implies that the client's
 	clipboard is now up to date.  If the client's clipboard was
-	already known to be up to date then this may do nothing.
+	already known to be up to date then this may do nothing.  \c data
+	has marshalled clipboard data.
 	*/
-	virtual void		setClipboard(ClipboardID, const CString&) = 0;
+	virtual void		setClipboard(ClipboardID, const CString& data) = 0;
 
 	//! Grab clipboard
 	/*!
@@ -152,7 +154,7 @@ public:
 	//! Get screen shape
 	/*!
 	Return the position of the upper-left corner of the screen in \c x and
-	\c y and the size of the screen in \c w (width) and \c h (height).
+	\c y and the size of the screen in \c width and \c height.
 	*/
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const = 0;

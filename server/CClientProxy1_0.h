@@ -5,6 +5,7 @@
 #include "ProtocolTypes.h"
 #include "CMutex.h"
 
+//! Proxy for client implementing protocol version 1.0
 class CClientProxy1_0 : public CClientProxy {
 public:
 	CClientProxy1_0(IServer* server, const CString& name,

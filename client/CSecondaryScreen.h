@@ -9,126 +9,305 @@
 class IClipboard;
 class IScreen;
 
-// platform independent base class for secondary screen implementations.
-// each platform will derive a class from CSecondaryScreen to handle
-// platform dependent operations.
+//! Generic client-side screen
+/*!
+This is a platform independent base class for secondary screen
+implementations.  A secondary screen is a client-side screen.
+Each platform will derive a class from CSecondaryScreen to handle
+platform dependent operations.
+*/
 class CSecondaryScreen {
 public:
 	CSecondaryScreen();
 	virtual ~CSecondaryScreen();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// enter the screen's message loop.  this returns when it detects
-	// the application should terminate or when stop() is called.
-	// run() may only be called between open() and close().
-	void				run();
-
-	// cause run() to return
-	void				stop();
-
-	// initialize the screen, hide the cursor, and disable the screen
-	// saver.  start reporting events to the IScreenReceiver (which is
-	// set through some other interface).
+	//! Open screen
+	/*!
+	Opens the screen.  This includes initializing the screen,
+	hiding the cursor, and disabling the screen saver.  It also causes
+	events to the reported to an IScreenReceiver (which is set through
+	some other interface).  Calls close() before returning (rethrowing)
+	if it fails for any reason.
+	*/
 	void				open();
 
-	// close the screen.  should restore the screen saver.  it should
-	// also simulate key up events for any keys that have simulate key
-	// down events without a matching key up.  without this the client
-	// will leave its keyboard in the wrong logical state.
+	//! Run event loop
+	/*!
+	Run the screen's event loop.  This returns when it detects
+	the application should terminate or when stop() is called.
+	run() may only be called between open() and close().
+	*/
+	void				run();
+
+	//! Exit event loop
+	/*!
+	Force run() to return.  This call can return before
+	run() does (i.e. asynchronously).
+	*/
+	void				stop();
+
+	//! Close screen
+	/*!
+	Closes the screen.  This restores the screen saver, shows the cursor
+	and closes the screen.  It also synthesizes key up events for any
+	keys that are logically down;  without this the client will leave
+	its keyboard in the wrong logical state.
+	*/
 	void				close();
 
-	// called when the user navigates to this secondary screen.  warps
-	// the cursor to the given absoltue coordinates and unhide it.  prepare to
-	// simulate input events.
+	//! Enter screen
+	/*!
+	Called when the user navigates to this secondary screen.  Warps
+	the cursor to the absolute coordinates \c x,y and unhides
+	it.  Also prepares to synthesize input events.
+	*/
 	void				enter(SInt32 x, SInt32 y, KeyModifierMask mask);
 
-	// called when the user navigates off the secondary screen.  clean
-	// up input event simulation and hide the cursor.
+	//! Leave screen
+	/*!
+	Called when the user navigates off the secondary screen.  Cleans
+	up input event synthesis and hides the cursor.
+	*/
 	void				leave();
 
-	// set the screen's clipboard contents.  this is usually called
-	// soon after an enter().
+	//! Set clipboard
+	/*!
+	Sets the system's clipboard contents.  This is usually called
+	soon after an enter().
+	*/
 	void				setClipboard(ClipboardID, const IClipboard*);
 
-	// synergy should own the clipboard
+	//! Grab clipboard
+	/*!
+	Grabs (i.e. take ownership of) the system clipboard.
+	*/
 	void				grabClipboard(ClipboardID);
 
-	// activate or deactivate the screen saver
+	//! Activate/deactivate screen saver
+	/*!
+	Forcibly activates the screen saver if \c activate is true otherwise
+	forcibly deactivates it.
+	*/
 	void				screensaver(bool activate);
 
-	// keyboard input event synthesis
-	virtual void		keyDown(KeyID, KeyModifierMask) = 0;
-	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;
-	virtual void		keyUp(KeyID, KeyModifierMask) = 0;
+	//! Notify of key press
+	/*!
+	Synthesize key events to generate a press of key \c id.  If possible
+	match the given modifier mask.
+	*/
+	virtual void		keyDown(KeyID id, KeyModifierMask) = 0;
 
-	// mouse input event synthesis
-	virtual void		mouseDown(ButtonID) = 0;
-	virtual void		mouseUp(ButtonID) = 0;
-	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
+	//! Notify of key repeat
+	/*!
+	Synthesize key events to generate a press and release of key \c id
+	\c count times.  If possible match the given modifier mask.
+	*/
+	virtual void		keyRepeat(KeyID id, KeyModifierMask, SInt32 count) = 0;
+
+	//! Notify of key release
+	/*!
+	Synthesize key events to generate a release of key \c id.  If possible
+	match the given modifier mask.
+	*/
+	virtual void		keyUp(KeyID id, KeyModifierMask) = 0;
+
+	//! Notify of mouse press
+	/*!
+	Synthesize mouse events to generate a press of mouse button \c id.
+	*/
+	virtual void		mouseDown(ButtonID id) = 0;
+
+	//! Notify of mouse release
+	/*!
+	Synthesize mouse events to generate a release of mouse button \c id.
+	*/
+	virtual void		mouseUp(ButtonID id) = 0;
+
+	//! Notify of mouse motion
+	/*!
+	Synthesize mouse events to generate mouse motion to the absolute
+	screen position \c xAbs,yAbs.
+	*/
+	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
+
+	//! Notify of mouse wheel motion
+	/*!
+	Synthesize mouse events to generate mouse wheel motion of \c delta.
+	\c delta is positive for motion away from the user and negative for
+	motion towards the user.  Each wheel click should generate a delta
+	of +/-120.
+	*/
 	virtual void		mouseWheel(SInt32 delta) = 0;
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// returns true iff the screen is active (i.e. the user has entered
-	// the screen)
+	//! Test if active
+	/*!
+	Returns true iff the screen is active (i.e. the user has entered
+	the screen).  Note this is the reverse of a primary screen.
+	*/
 	bool				isActive() const;
 
-	// return the contents of the given clipboard
-	void				getClipboard(ClipboardID, IClipboard*) const;
+	//! Get clipboard
+	/*!
+	Saves the contents of the system clipboard indicated by \c id.
+	*/
+	void				getClipboard(ClipboardID id, IClipboard*) const;
 
-	// returns the size of the zone on the edges of the screen that
-	// causes the cursor to jump to another screen.
+	//! Get jump zone size
+	/*!
+	Return the jump zone size, the size of the regions on the edges of
+	the screen that cause the cursor to jump to another screen.
+	*/
 	virtual SInt32		getJumpZoneSize() const = 0;
 
-	// get the shape (position of upper-left corner and size) of the
-	// screen
+	//! Get screen shape
+	/*!
+	Return the position of the upper-left corner of the screen in \c x and
+	\c y and the size of the screen in \c width and \c height.
+	*/
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;
 
-	// get the position of the mouse on the screen
+	//! Get cursor position
+	/*!
+	Return the current position of the cursor in \c x,y.
+	*/
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
 
-	// get the platform dependent screen object
+	//! Get screen
+	/*!
+	Return the platform dependent screen.
+	*/
 	virtual IScreen*	getScreen() const = 0;
 
+	//@}
+
 protected:
-	// template method hooks.  these are called on entry/exit to the
-	// named method.  override to do platform specific operations.
-	// defaults do nothing.
+	//! Pre-run() hook
+	/*!
+	Called on entry to run().  Override to perform platform specific
+	operations.  Default does nothing.  May throw.
+	*/
 	virtual void		onPreRun();
+
+	//! Post-run() hook
+	/*!
+	Called on exit from run().  Override to perform platform specific
+	operations.  Default does nothing.  May \b not throw.
+	*/
 	virtual void		onPostRun();
+
+	//! Pre-open() hook
+	/*!
+	Called on entry to open().  Override to perform platform specific
+	operations.  Default does nothing.  May throw.
+	*/
 	virtual void		onPreOpen();
+
+	//! Post-open() hook
+	/*!
+	Called on exit from open() iff the open was successful.  Default
+	does nothing.  May throw.
+	*/
 	virtual void		onPostOpen();
+
+	//! Pre-close() hook
+	/*!
+	Called on entry to close().  Override to perform platform specific
+	operations.  Default does nothing.  May \b not throw.
+	*/
 	virtual void		onPreClose();
+
+	//! Post-close() hook
+	/*!
+	Called on exit from close().  Override to perform platform specific
+	operations.  Default does nothing.  May \b not throw.
+	*/
 	virtual void		onPostClose();
+
+	//! Pre-enter() hook
+	/*!
+	Called on entry to enter() after desktop synchronization.  Override
+	to perform platform specific operations.  Default does nothing.  May
+	\b not throw.
+	*/
 	virtual void		onPreEnter();
+
+	//! Post-enter() hook
+	/*!
+	Called on exit from enter().  Override to perform platform specific
+	operations.  Default does nothing.  May \b not throw.
+	*/
 	virtual void		onPostEnter();
+
+	//! Pre-leave() hook
+	/*!
+	Called on entry to leave() after desktop synchronization.  Override
+	to perform platform specific operations.  Default does nothing.  May
+	\b not throw.
+	*/
 	virtual void		onPreLeave();
+
+	//! Post-leave() hook
+	/*!
+	Called on exit from leave().  Override to perform platform specific
+	operations.  Default does nothing.  May \b not throw.
+	*/
 	virtual void		onPostLeave();
 
-	// create/destroy the window.  this window is generally used to
-	// receive events and hide the cursor.
+	//! Create window
+	/*!
+	Called to create the window.  This window is generally used to
+	receive events and hide the cursor.
+	*/
 	virtual void		createWindow() = 0;
+
+	//! Destroy window
+	/*!
+	Called to destroy the window created by createWindow().
+	*/
 	virtual void		destroyWindow() = 0;
 
-	// called when the user navigates off the secondary screen.  hide
-	// the cursor.
+	//! Show window
+	/*!
+	Called when the user navigates off this secondary screen.  It needn't
+	actually show the window created by createWindow() but it must hide
+	the cursor and clean up event synthesis.
+	*/
 	virtual void		showWindow() = 0;
 
-	// called when the user navigates to this secondary screen.  show
-	// the cursor and prepare to synthesize input events.
+	//! Hide window
+	/*!
+	Called when the user navigates to this secondary screen.  It should
+	hide the window (if shown), show the cursor, and prepare to synthesize
+	input events.
+	*/
 	virtual void		hideWindow() = 0;
 
-	// warp the cursor to the given absolute coordinates
+	//! Warp cursor
+	/*!
+	Warp the cursor to the absolute coordinates \c x,y.
+	*/
 	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
 
-	// check the current keyboard state.  normally a screen will save
-	// the keyboard state in this method and use this shadow state
-	// when synthesizing events.
+	//! Synchronize key state
+	/*!
+	Check the current keyboard state.  Normally a screen will save
+	the keyboard state in this method and use this shadow state
+	when synthesizing events.
+	*/
 	virtual void		updateKeys() = 0;
 
-	// toggle modifiers that don't match the given state
+	//! Synchronize toggle key state
+	/*!
+	Toggle modifiers that don't match the given state so that they do.
+	*/
 	virtual void		setToggleState(KeyModifierMask) = 0;
 
 private:

@@ -11,26 +11,52 @@ class CHTTPRequest;
 class CHTTPReply;
 class IDataSocket;
 
+//! Simple HTTP server
+/*!
+This class implements a simple HTTP server for interacting with the
+synergy server.
+*/
 class CHTTPServer {
 public:
 	CHTTPServer(CServer*);
 	virtual ~CHTTPServer();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// synchronously process an HTTP request on the given socket
+	//! Process HTTP request
+	/*!
+	Synchronously processes an HTTP request on the given socket.
+	*/
 	void				processRequest(IDataSocket*);
 
-	// accessors
+	//@}
 
 protected:
+	//! Process HTTP request
+	/*!
+	Processes a successfully read HTTP request.  The reply is partially
+	filled in (version, method, status (200) and reason (OK)).  This
+	method checks the URI and handles the request, filling in the rest
+	of the reply.  If the request cannot be satisfied it throws an
+	appropriate XHTTP exception.
+	*/
 	virtual void		doProcessRequest(CHTTPRequest&, CHTTPReply&);
 
+	//! Process request for map
 	virtual void		doProcessGetEditMap(CHTTPRequest&, CHTTPReply&);
+
+	//! Process request for changing map
 	virtual void		doProcessPostEditMap(CHTTPRequest&, CHTTPReply&);
 
+	//! Parse coordinate string
 	static bool			parseXY(const CString&, SInt32& x, SInt32& y);
 
+	//! Screen map helper
+	/*!
+	This class represents the screen map as a resizable array.  It's
+	used to handle map requests.
+	*/
 	class CScreenArray {
 	public:
 		CScreenArray();

@@ -20,38 +20,76 @@ class IServerProtocol;
 class ISocketFactory;
 class ISecurityFactory;
 
+//! Synergy server
+/*!
+This class implements the top-level server algorithms for synergy.
+*/
 class CServer : public IServer, public IPrimaryScreenReceiver {
 public:
+	/*!
+	The server will look itself up in the configuration using \c serverName
+	as its name.
+	*/
 	CServer(const CString& serverName);
 	~CServer();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// open the server's screen
+	//! Open server
+	/*!
+	Open the server and return true iff successful.
+	*/
 	bool				open();
 
-	// start the server.  does not return until quit() is called.
-	// this must be preceeded by a successful call to open().
+	//! Server main loop
+	/*!
+	Run server's event loop and return when quit() is called.
+	This must be called between a successful open() and close().
+
+	(cancellation point)
+	*/
 	void				run();
 
-	// tell server to exit gracefully.  this may only be called
-	// after a successful open().
+	//! Exit event loop
+	/*!
+	Force run() to return.  This call can return before
+	run() does (i.e. asynchronously).  This may only be
+	called between a successful open() and close().
+	*/
 	void				quit();
 
-	// close the server's screen
+	//! Close server
+	/*!
+	Close the server.
+	*/
 	void				close();
 
-	// update screen map.  returns true iff the new configuration was
-	// accepted.
+	//! Set configuration
+	/*!
+	Change the server's configuration.  Returns true iff the new
+	configuration was accepted (it must include the server's name).
+	This will disconnect any clients no longer in the configuration.
+	*/
 	bool				setConfig(const CConfig&);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// get the current screen map
+	//! Get configuration
+	/*!
+	Returns the current configuration.
+	*/
 	void				getConfig(CConfig*) const;
 
-	// get the primary screen's name
+	//! Get name
+	/*!
+	Returns the server's name passed to the c'tor
+	*/
 	CString				getPrimaryScreenName() const;
+
+	//@}
 
 	// IServer overrides
 	virtual void		onError();
@@ -71,6 +109,10 @@ public:
 	virtual void		onMouseWheel(SInt32 delta);
 
 protected:
+	//! Handle special keys
+	/*!
+	Handles keys with special meaning.
+	*/
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
 
 private:
