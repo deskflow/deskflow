@@ -100,7 +100,7 @@ Running on Windows
 ------------------
 
 Double click `synergy' on the server computer.  The server is the
-computer who's mouse and keyboard will be shared.  This brings up a
+computer that shares its mouse and keyboard.  This brings up a
 dialog that lets you configure the server then test out the
 configuration or start the server.
 
@@ -126,6 +126,12 @@ First configure the server.  Click the `Server' radio button
     * Enter the server's screen name next to `Screen Name'
     * Click `OK'
   * Click `Test'
+
+Note that when you link screens together you must explictly link in both
+directions.  For instance, if you have computer A on the left of B then
+you must indicate A is to the left of B *and* that B is to the right of
+A.  If you don't do both then you'll find you're unable to leave one of
+the screens.
 
 The server will start and you'll see a console window with log messages
 telling you about synergy's progress.  If an error occurs you'll get one
@@ -251,6 +257,28 @@ to create the configuration file.
         the windows client to map meta to alt (using `meta =
         alt').
 
+  * aliases
+    <args> is a list of screen names just like in the `screens'
+    section except each screen is followed by a list of aliases,
+    one per line *not* followed by a colon.  An alias is a
+    screen name and must be unique.  During screen name lookup
+    each alias is equivalent to the screen name it aliases.  So
+    a client can connect using its canonical screen name or any
+    of its aliases.  
+
+    Example:
+
+      section: aliases
+        larry:
+          larry.stooges.com
+        curly:
+          shemp
+      end
+
+    Screen `larry' is also known as `larry.stooges.com' and can
+    connect as either name.  Screen `curly' is also known as
+    `shemp'.  (Hey, it's just an example.)
+
   * links
     <args> is a list of screen names just like in the `screens'
     section except each screen is followed by a list of links,
@@ -279,28 +307,6 @@ to create the configuration file.
     `larry', and `larry' is below `curly'.  Note that links do
     not have to be symmetrical;  moving up from moe then down
     from curly lands the cursor on larry.
-
-  * aliases
-    <args> is a list of screen names just like in the `screens'
-    section except each screen is followed by a list of aliases,
-    one per line *not* followed by a colon.  An alias is a
-    screen name and must be unique.  During screen name lookup
-    each alias is equivalent to the screen name it aliases.  So
-    a client can connect using its canonical screen name or any
-    of its aliases.  
-
-    Example:
-
-      section: aliases
-        larry:
-          larry.stooges.com
-        curly:
-          shemp
-      end
-
-    Screen `larry' is also known as `larry.stooges.com' and can
-    connect as either name.  Screen `curly' is also known as
-    `shemp'.  (Hey, it's just an example.)
 
   * options
     <args> is a list of lines of the form `name = value'.  These
@@ -485,30 +491,66 @@ the necessary (probably root) permission to modify the display
 manager configuration files.  If you don't have that permission
 you can start synergy after logging in via the .xsession file.
 
-To have the display manager start synergy, edit the Xsetup script.
-The location of this file depends on your installation.  It might
-be /etc/X11/xdm/Xsetup.  Near the end of the file but before
-anyplace the script calls exit, start the client with something
-like:
+Typically, you need to edit three script files.  The first file
+will start synergy before a user logs in, the second will kill
+that copy of synergy, and the third will start it again after
+the user logs in.
+
+The contents of the scripts varies
+greatly between systems so there's no one definite place where
+you should insert your edits.  However, these scripts often exit
+before reaching the bottom so put the edits near the top of the
+script.
+
+The location and names of these files depend on the operating
+system and display manager you're using.  A good guess for the
+location is /etc/X11.  Typical file names are:
+
+      xdm              gdm
+      ---              ---
+  1)  xdm/Xsetup       gdm/Init/Default (*)
+  2)  xdm/Xstartup     gdm/PostLogin/Default (*)
+  3)  xdm/Xsession     gdm/Sessions/Default (*, **)
+
+*) The Default' file is used if no other suitable file is found.
+gdm will try <displayname> (e.g. ':0', ':1') and <hostname> (e.g.
+'somehost'), in that order, before and instead of 'Default'.
+**) gdm may use gdm/Xsession, xdm/Xsession or dm/Xsession if
+gdm/Sessions/Default doesn't exist.
+
+For a synergy client, add the following to the first file:
 
   /usr/bin/killall synergyc
-  /usr/local/bin/synergyc [<options>] <server-host-name>
+  sleep 1
+  /usr/bin/synergyc [<options>] <synergy-server-hostname>
 
-<options> must not include `-f' or `--no-daemon'.  Change the
-paths as necessary.  It's important to make sure no old copies
-of synergy are running so they can't interfere with the new one.
+Of course, the path to synergyc depends on where you installed it
+so adjust as necessary.
 
-To start the server use something like:
+Add to the second file:
 
-  /usr/bin/killall synergys
-  /usr/local/bin/synergys [<options>] --config <config-pathname>
+  /usr/bin/killall synergyc
+  sleep 1
 
-Again, <options> must not include `-f' or `--no-daemon'.  If
-the configuration pathname is one of the default locations then
-you don't need the `--config' option.
+And to the third file:
+
+  /usr/bin/killall synergyc
+  sleep 1
+  /usr/bin/synergyc [<options>] <synergy-server-hostname>
+
+Note that <options> must not include '-f' or '--no-daemon' or
+the script will never exit and you won't be able to log in.
+
+The changes are the same for the synergy server except replace
+'synergyc' with 'synergys' and use the appropriate synergys
+command line options.  Note that the first script is run as root
+so synergys will look for the configuration file in root's home
+directory then in /etc.  Make sure it exists in one of those
+places or use the '--config <config-pathname' option to specify
+its location.
 
 Note that some display managers (xdm and kdm, but not gdm) grab
-the keyboard and do not release it until the user logs in, for
+the keyboard and do not release it until the user logs in for
 security reasons.  This prevents a synergy server from sharing
 the mouse and keyboard until the user logs in.  It doesn't
 prevent a synergy client from synthesizing mouse and keyboard

@@ -52,7 +52,7 @@ System Requirements
 
 * Microsoft Windows NT, Windows 2000, Windows XP (the Windows NT family);
 
-* Mac OS X 10.3 (10.2 may work);
+* Mac OS X 10.2 or higher;
 
 * Unix:
   X Windows version 11 revision 4 or up with the XTEST extension
@@ -87,17 +87,17 @@ via TCP/IP networking.  Most systems come with this installed.
 The first step is to pick which keyboard and mouse you want to share.
 The computer with that keyboard and mouse is called the "primary
 screen" and it runs the synergy server.  All of the other computers
-are "secondary screens" and run the synergy client.  The Windows NT
-family, starting with NT 4 with service pack 3, and Unix are the best
-choices.  The Windows version provides a convenient GUI for
-configuration.
+are "secondary screens" and run the synergy client.
 
 Second, you install the software.  Choose the appropriate package
 and install it.  On Windows you should run SynergyInstaller.  You
 must install the software on all the computers that will share the
 mouse and keyboard.
 
-Third, you configure and start the server.
+Third, you configure and start the server.  The Windows version
+provides a convenient GUI for configuration.  Other platforms
+require creating a simple text file.
+
   Windows
   -------
   Run `synergy' by double clicking on it.  This brings up a dialog.
@@ -121,6 +121,12 @@ Third, you configure and start the server.
     * Click `Advanced...'
     * Enter the server's screen name next to `Screen Name'
     * Click `OK'
+
+  Note that when you link screens together you must explictly link in both
+  directions.  For instance, if you have computer A on the left of B then
+  you must indicate A is to the left of B *and* that B is to the right of
+  A.  If you don't do both then you'll find you're unable to leave one of
+  the screens.
 
   Now click `Test'.  The server will start and you'll see a console window
   with log messages telling you about synergy's progress.  If an error
@@ -202,8 +208,9 @@ on Windows 95, 98, or Me then make sure the synergy log window is
 not the active window;  just click on another window, like synergy's
 `Running Test...' window, if it is.  Use the mouse and keyboard
 normally except use the edge of the screens to jump to other screens.
-You can also cut-and-paste across computers.  Currently, only text
-transfers between computers.  Start the remaining clients.
+You can also cut-and-paste text, HTML, and images across computers
+(HTML and images are not supported on OS X yet).  Start the remaining
+clients.
 
 Once the configuration is verified, see the instructions in INSTALL
 under `Starting Automatically on ...' for details on running synergy

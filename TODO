@@ -14,11 +14,11 @@ Things to do to synergy, in no particular order:
 
   There's a tray icon on win32 for checking synergy's current status
   and to quit synergy.  It'd be nice to have something similar on
-  X11.
+  other platforms.
 
 * Port to other platforms
 
-  The MacOS X port is still incomplete but getting close.
+  The MacOS X port is usable but still incomplete.
 
 * Write man/html pages
 
@@ -52,3 +52,7 @@ Then there are major new features:
   directing certain keystrokes to the same system, never sending
   certain keystrokes to some systems, and remapping keys on the
   server to other keys on the clients.
+
+* On-the-fly configuration
+
+  There should be a way of reconfiguring synergy while it's running.

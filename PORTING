@@ -239,14 +239,8 @@ following these guidelines.
 
 - Makefiles
   Automake's makefiles (named Makefile.am) have a few requirements:
-  * Define the following macros at the top of the file:
+  * Define the following macro at the top of the file:
       NULL =
-      DEPTH = <relative-path-to-top-level>
-      VDEPTH = ./$(VPATH)/$(DEPTH)
-    <relative-path-to-top-level> is `..', `../..', `../../..', etc,
-    whichever references the top directory of the synergy tree.  For
-    example, for a subdirectory of the top level use `..', for a
-    subdirectory of a subdirectory of the top level use `../..'.
   * Lists should have one item per line and end in $(NULL).  For
     example:
       EXTRA_DIST =     \
@@ -256,7 +250,8 @@ following these guidelines.
           $(NULL)
     Indentation must use tabs in a makefile.  Line continuations
     (backslashes) should be aligned using tabs.
-  * Lists of files should be sorted alphabetically.  Lists of
+  * Lists of files should be sorted alphabetically in groups (e..g
+    source files, header files, then other files).  Lists of
     subdirectories must be in the desired build order.
 
 - Source Formatting
