@@ -751,8 +751,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		CArch arch(instance);
 		CMSWindowsScreen::init(instance);
 		CLOG;
-// FIXME
-//		CThread::getCurrentThread().setPriority(-14);
+		CThread::getCurrentThread().setPriority(-14);
 		CArgs args;
 
 		// windows NT family starts services using no command line options.
