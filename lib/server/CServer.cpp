@@ -1289,7 +1289,12 @@ CServer::runClient(void* vsocket)
 	catch (XDuplicateClient& e) {
 		// client has duplicate name
 		LOG((CLOG_WARN "a client with name \"%s\" is already connected", e.getName().c_str()));
-		CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBusy);
+		try {
+			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBusy);
+		}
+		catch (XSocket&) {
+			// ignore
+		}
 		delete proxy;
 		delete socket;
 		return;
@@ -1297,7 +1302,12 @@ CServer::runClient(void* vsocket)
 	catch (XUnknownClient& e) {
 		// client has unknown name
 		LOG((CLOG_WARN "a client with name \"%s\" is not in the map", e.getName().c_str()));
-		CProtocolUtil::writef(proxy->getOutputStream(), kMsgEUnknown);
+		try {
+			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEUnknown);
+		}
+		catch (XSocket&) {
+			// ignore
+		}
 		delete proxy;
 		delete socket;
 		return;
@@ -1324,7 +1334,12 @@ CServer::runClient(void* vsocket)
 	catch (XBadClient&) {
 		// client not behaving
 		LOG((CLOG_WARN "protocol error from client \"%s\"", proxy->getName().c_str()));
-		CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBad);
+		try {
+			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBad);
+		}
+		catch (XSocket& e) {
+			// ignore.  client probably aborted the connection.
+		}
 	}
 	catch (XBase& e) {
 		// misc error
@@ -1434,13 +1449,23 @@ CServer::handshakeClient(IDataSocket* socket)
 	catch (XIncompatibleClient& e) {
 		// client is incompatible
 		LOG((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
-		CProtocolUtil::writef(output, kMsgEIncompatible,
+		try {
+			CProtocolUtil::writef(output, kMsgEIncompatible,
 							kProtocolMajorVersion, kProtocolMinorVersion);
+		}
+		catch (XSocket& e) {
+			// ignore
+		}
 	}
 	catch (XBadClient&) {
 		// client not behaving
 		LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
-		CProtocolUtil::writef(output, kMsgEBad);
+		try {
+			CProtocolUtil::writef(output, kMsgEBad);
+		}
+		catch (XSocket& e) {
+			// ignore.  client probably aborted the connection.
+		}
 	}
 	catch (XBase& e) {
 		// misc error
