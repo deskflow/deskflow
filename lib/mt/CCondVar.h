@@ -17,7 +17,6 @@
 
 #include "CMutex.h"
 #include "BasicTypes.h"
-#include "IArchMultithread.h"
 
 class CStopwatch;
 

@@ -17,7 +17,6 @@
 
 #include "common.h"
 #include "IArchMultithread.h"
-#include "IInterface.h"
 #include "stdlist.h"
 #include <stdarg.h>
 

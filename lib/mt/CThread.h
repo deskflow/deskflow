@@ -15,7 +15,6 @@
 #ifndef CTHREAD_H
 #define CTHREAD_H
 
-#include "common.h"
 #include "IArchMultithread.h"
 
 class IJob;

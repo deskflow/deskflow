@@ -15,6 +15,8 @@
 #ifndef CTIMERTHREAD_H
 #define CTIMERTHREAD_H
 
+#include "common.h"
+
 class CThread;
 
 //! A timer thread

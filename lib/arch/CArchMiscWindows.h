@@ -15,6 +15,8 @@
 #ifndef CARCHMISCWINDOWS_H
 #define CARCHMISCWINDOWS_H
 
+#include "common.h"
+
 //! Miscellaneous win32 functions.
 class CArchMiscWindows {
 public:

@@ -15,6 +15,7 @@
 #ifndef XARCH_H
 #define XARCH_H
 
+#include "common.h"
 #include "stdstring.h"
 
 //! Generic thread exception

@@ -15,6 +15,7 @@
 #ifndef ILOGOUTPUTTER_H
 #define ILOGOUTPUTTER_H
 
+#include "IInterface.h"
 #include "CLog.h"
 
 //! Outputter interface

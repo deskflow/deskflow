@@ -15,6 +15,7 @@
 #ifndef CSTRING_H
 #define CSTRING_H
 
+#include "common.h"
 #include "stdstring.h"
 
 // use standard C++ string class for our string class
