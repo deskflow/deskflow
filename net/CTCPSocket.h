@@ -11,15 +11,15 @@ class CThread;
 class CBufferedInputStream;
 class CBufferedOutputStream;
 
+//! TCP data socket
+/*!
+A data socket using TCP.
+*/
 class CTCPSocket : public IDataSocket {
 public:
 	CTCPSocket();
 	CTCPSocket(CNetwork::Socket);
 	~CTCPSocket();
-
-	// manipulators
-
-	// accessors
 
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&);

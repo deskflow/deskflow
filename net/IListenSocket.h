@@ -5,14 +5,26 @@
 
 class IDataSocket;
 
+//! Listen socket interface
+/*!
+This interface defines the methods common to all network sockets that
+listen for incoming connections.
+*/
 class IListenSocket : public ISocket {
 public:
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// wait for a connection
+	//! Accept connection
+	/*!
+	Wait for and accept a connection, returning a socket representing
+	the full-duplex data stream.
+
+	(cancellation point)
+	*/
 	virtual IDataSocket*	accept() = 0;
-						
-	// accessors
+
+	//@}
 
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&) = 0;

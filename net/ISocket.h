@@ -5,18 +5,28 @@
 
 class CNetworkAddress;
 
+//! Generic socket interface
+/*!
+This interface defines the methods common to all network sockets.
+*/
 class ISocket : public IInterface {
 public:
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// bind the socket to a particular address
+	//! Bind socket to address
+	/*!
+	Binds the socket to a particular address.
+	*/
 	virtual void		bind(const CNetworkAddress&) = 0;
 
-	// close the socket.  this will flush the output stream if it
-	// hasn't been closed yet.
+	//! Close socket
+	/*!
+	Closes the socket.  This should flush the output stream.
+	*/
 	virtual void		close() = 0;
 
-	// accessors
+	//@}
 };
 
 #endif

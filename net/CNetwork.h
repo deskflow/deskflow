@@ -31,8 +31,10 @@ typedef int ssize_t;
 # endif
 #endif
 
+//! Networking functions
 class CNetwork {
 public:
+	// platform dependent types
 #if WINDOWS_LIKE
 	typedef SOCKET Socket;
 	typedef struct sockaddr Address;
@@ -64,20 +66,39 @@ public:
 	};
 #endif
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
+	//! Initialize network subsystem
+	/*!
+	This \b must be called before any other calls to the network subsystem.
+	*/
 	static void			init();
+
+	//! Clean up network subsystem
+	/*!
+	This should be called when the network subsystem is no longer needed
+	and no longer in use.
+	*/
 	static void			cleanup();
 
 	// byte swapping functions
+	//! Swap bytes to network order
 	static UInt32		swaphtonl(UInt32 hostlong);
+	//! Swap bytes to network order
 	static UInt16		swaphtons(UInt16 hostshort);
+	//! Swap bytes to host order
 	static UInt32		swapntohl(UInt32 netlong);
+	//! Swap bytes to host order
 	static UInt16		swapntohs(UInt16 netshort);
 
-	// constants
+	//@}
+	//! @name constants
+	//@{
 
+	//! The error type
 	static const int	Error;
+	//! The non-socket
 	static const Socket	Null;
 
 	// getsockerror() constants
@@ -107,6 +128,8 @@ public:
 #endif
 		kHNone = 0
 	};
+
+	//@}
 
 	// socket interface (only available after init())
 
@@ -143,6 +166,7 @@ public:
 
 	// convenience functions (only available after init())
 
+	//! Set socket to (non-)blocking operation
 	static int (PASCAL FAR *setblocking)(CNetwork::Socket s, bool blocking);
 
 #if WINDOWS_LIKE

@@ -6,19 +6,40 @@
 class IInputStream;
 class IOutputStream;
 
+//! Data stream socket interface
+/*!
+This interface defines the methods common to all network sockets that
+represent a full-duplex data stream.
+*/
 class IDataSocket : public ISocket {
 public:
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// connect the socket
+	//! Connect socket
+	/*!
+	Attempt to connect to a remote endpoint.  This waits until the
+	connection is established or fails.  If it fails it throws an
+	XSocketConnect exception.
+
+	(cancellation point)
+	*/
 	virtual void		connect(const CNetworkAddress&) = 0;
 
-	// get the input and output streams for the socket.  closing
-	// these streams closes the appropriate half of the socket.
+	//! Get input stream
+	/*!
+	Returns the input stream for reading from the socket.  Closing this
+	stream will shutdown the socket for reading.
+	*/
 	virtual IInputStream*	getInputStream() = 0;
+	//! Get output stream
+	/*!
+	Returns the output stream for writing to the socket.  Closing this
+	stream will shutdown the socket for writing.
+	*/
 	virtual IOutputStream*	getOutputStream() = 0;
 
-	// accessors
+	//@}
 
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&) = 0;

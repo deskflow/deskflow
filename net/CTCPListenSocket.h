@@ -4,14 +4,14 @@
 #include "IListenSocket.h"
 #include "CNetwork.h"
 
+//! TCP listen socket
+/*!
+A listen socket using TCP.
+*/
 class CTCPListenSocket : public IListenSocket {
 public:
 	CTCPListenSocket();
 	~CTCPListenSocket();
-
-	// manipulators
-
-	// accessors
 
 	// ISocket overrides
 	virtual void		bind(const CNetworkAddress&);
