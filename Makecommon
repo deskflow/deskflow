@@ -39,6 +39,7 @@ ARF	= $(AR)
 #
 SOURCES   = $(CXXFILES)
 OBJECTS   = $(CXXFILES:.cpp=.o)
+TARGETS   = $(BINTARGET) $(LIBTARGET)
 
 #
 # always unsatisfied target
