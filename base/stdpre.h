@@ -3,6 +3,7 @@
 #pragma warning(disable: 4514)		// unreferenced inline
 #pragma warning(disable: 4710)		// not inlined
 #pragma warning(disable: 4663)		// C++ change, template specialization
+#pragma warning(disable: 4503)		// decorated name length too long
 #pragma warning(push, 3)
 #pragma warning(disable: 4018)		// signed/unsigned mismatch
 #pragma warning(disable: 4284)
