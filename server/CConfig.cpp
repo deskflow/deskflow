@@ -1,5 +1,12 @@
 #include "CConfig.h"
 #include <assert.h>
+// FIXME -- fix this with automake and config.h
+#if !defined(CONFIG_PLATFORM_LINUX)
+#include <istream>
+#include <ostream>
+#else
+#include <iostream>
+#endif
 
 //
 // CConfig
@@ -75,6 +82,50 @@ void					CConfig::disconnect(const CString& srcName,
 	index->second.m_neighbor[srcSide - kFirstDirection].erase();
 }
 
+bool					CConfig::isValidScreenName(const CString& name) const
+{
+	// name is valid if matches validname
+	//  name      ::= [A-Za-z0-9] | [A-Za-z0-9][-A-Za-z0-9]*[A-Za-z0-9]
+	//  domain    ::= . name
+	//  validname ::= name domain*
+
+	// check each dot separated part
+	CString::size_type b = 0;
+	for (;;) {
+		// find end of part
+		CString::size_type e = name.find('.', b);
+		if (e == CString::npos) {
+			e = name.size();
+		}
+
+		// part may not be empty
+		if (e - b < 1) {
+			return false;
+		}
+
+		// check first and last characters
+		if (!isalnum(name[b]) || !isalnum(name[e - 1])) {
+			return false;
+		}
+
+		// check interior characters
+		for (CString::size_type i = b; i < e; ++i) {
+			if (!isalnum(name[i]) && name[i] != '-') {
+				return false;
+			}
+		}
+
+		// next part
+		if (e == name.size()) {
+			// no more parts
+			break;
+		}
+		b = e + 1;
+	}
+
+	return true;
+}
+
 CConfig::const_iterator	CConfig::begin() const
 {
 	return const_iterator(m_map.begin());
@@ -83,6 +134,11 @@ CConfig::const_iterator	CConfig::begin() const
 CConfig::const_iterator	CConfig::end() const
 {
 	return const_iterator(m_map.end());
+}
+
+bool					CConfig::isScreen(const CString& name)
+{
+	return (m_map.count(name) > 0);
 }
 
 CString					CConfig::getNeighbor(const CString& srcName,
@@ -102,4 +158,256 @@ const char*				CConfig::dirName(EDirection dir)
 {
 	static const char* s_name[] = { "left", "right", "top", "bottom" };
 	return s_name[dir - kFirstDirection];
+}
+
+bool					CConfig::readLine(istream& s, CString& line)
+{
+	s >> std::ws;
+	while (getline(s, line)) {
+		// strip comments and then trailing whitespace
+		CString::size_type i = line.rfind('#');
+		if (i != CString::npos) {
+			line.erase(i);
+		}
+		i = line.find_last_not_of(" \t");
+		if (i != CString::npos) {
+			line.erase(i + 1);
+		}
+
+		// return non empty line
+		if (!line.empty()) {
+			return true;
+		}
+		s >> std::ws;
+	}
+	return false;
+}
+
+void					CConfig::readSection(istream& s)
+{
+	static const char s_section[] = "section:";
+	static const char s_screens[] = "screens";
+	static const char s_links[]   = "links";
+
+	CString line;
+	if (!readLine(s, line)) {
+		// no more sections
+		return;
+	}
+
+	// should be a section header
+	if (line.find(s_section) != 0) {
+		throw XConfigRead("found data outside section");
+	}
+
+	// get section name
+	CString::size_type i = line.find_first_not_of(" \t", sizeof(s_section) - 1);
+	if (i == CString::npos) {
+		throw XConfigRead("section name is missing");
+	}
+	CString name = line.substr(i);
+	i = name.find_first_of(" \t");
+	if (i != CString::npos) {
+		throw XConfigRead("unexpected data after section name");
+	}
+
+	// read section
+	if (name == s_screens) {
+		readSectionScreens(s);
+	}
+	else if (name == s_links) {
+		readSectionLinks(s);
+	}
+	else {
+		throw XConfigRead("unknown section name");
+	}
+}
+
+void					CConfig::readSectionScreens(istream& s)
+{
+	CString line;
+	CString name;
+	while (readLine(s, line)) {
+		// check for end of section
+		if (line == "end") {
+			return;
+		}
+
+		// see if it's the next screen
+		if (line[line.size() - 1] == ':') {
+			// strip :
+			name = line.substr(0, line.size() - 1);
+
+			// verify validity of screen name
+			if (!isValidScreenName(name)) {
+				throw XConfigRead("invalid screen name");
+			}
+
+			// add the screen to the configuration
+			addScreen(name);
+		}
+		else if (name.empty()) {
+			throw XConfigRead("argument before first screen");
+		}
+		else {
+			throw XConfigRead("unknown argument");
+		}
+	}
+	throw XConfigRead("unexpected end of screens section");
+}
+
+void					CConfig::readSectionLinks(istream& s)
+{
+	CString line;
+	CString screen;
+	while (readLine(s, line)) {
+		// check for end of section
+		if (line == "end") {
+			return;
+		}
+
+		// see if it's the next screen
+		if (line[line.size() - 1] == ':') {
+			// strip :
+			screen = line.substr(0, line.size() - 1);
+
+			// verify we known about the screen
+			if (!isScreen(screen)) {
+				throw XConfigRead("unknown screen name");
+			}
+		}
+		else if (screen.empty()) {
+			throw XConfigRead("argument before first screen");
+		}
+		else {
+			// parse argument:  `<name>=<value>'
+			CString::size_type i = line.find_first_of(" \t=");
+			if (i == 0) {
+				throw XConfigRead("missing argument name");
+			}
+			if (i == CString::npos) {
+				throw XConfigRead("missing = in argument");
+			}
+			CString name = line.substr(0, i);
+			i = line.find_first_not_of(" \t", i);
+			if (i == CString::npos || line[i] != '=') {
+				throw XConfigRead("missing = in argument");
+			}
+			i = line.find_first_not_of(" \t", i + 1);
+			CString value;
+			if (i != CString::npos) {
+				value = line.substr(i);
+			}
+
+			// handle argument
+			if (name == "left") {
+				if (!isScreen(value)) {
+					throw XConfigRead("unknown screen");
+				}
+				connect(screen, kLeft, value);
+			}
+			else if (name == "right") {
+				if (!isScreen(value)) {
+					throw XConfigRead("unknown screen");
+				}
+				connect(screen, kRight, value);
+			}
+			else if (name == "up") {
+				if (!isScreen(value)) {
+					throw XConfigRead("unknown screen");
+				}
+				connect(screen, kTop, value);
+			}
+			else if (name == "down") {
+				if (!isScreen(value)) {
+					throw XConfigRead("unknown screen");
+				}
+				connect(screen, kBottom, value);
+			}
+			else {
+				// unknown argument
+				throw XConfigRead("unknown argument");
+			}
+		}
+	}
+	throw XConfigRead("unexpected end of links section");
+}
+
+
+//
+// CConfig I/O
+//
+
+istream&				operator>>(istream& s, CConfig& config)
+{
+	// FIXME -- should track line and column to improve error reporting
+
+	CConfig tmp;
+	while (s) {
+		tmp.readSection(s);
+	}
+	config = tmp;
+	return s;
+}
+
+ostream&				operator<<(ostream& s, const CConfig& config)
+{
+	// screens section
+	s << "section: screens" << endl;
+	for (CConfig::const_iterator screen = config.begin();
+								screen != config.end(); ++screen) {
+		s << "\t" << screen->c_str() << ":" << endl;
+	}
+	s << "end" << endl;
+
+	// links section
+	CString neighbor;
+	s << "section: links" << endl;
+	for (CConfig::const_iterator screen = config.begin();
+								screen != config.end(); ++screen) {
+		s << "\t" << screen->c_str() << ":" << endl;
+
+		neighbor = config.getNeighbor(*screen, CConfig::kLeft);
+		if (!neighbor.empty()) {
+			s << "\t\tleft=" << neighbor.c_str() << endl;
+		}
+
+		neighbor = config.getNeighbor(*screen, CConfig::kRight);
+		if (!neighbor.empty()) {
+			s << "\t\tright=" << neighbor.c_str() << endl;
+		}
+
+		neighbor = config.getNeighbor(*screen, CConfig::kTop);
+		if (!neighbor.empty()) {
+			s << "\t\tup=" << neighbor.c_str() << endl;
+		}
+
+		neighbor = config.getNeighbor(*screen, CConfig::kBottom);
+		if (!neighbor.empty()) {
+			s << "\t\tdown=" << neighbor.c_str() << endl;
+		}
+	}
+	s << "end" << endl;
+
+	return s;
+}
+
+
+//
+// CConfig I/O exceptions
+//
+
+XConfigRead::XConfigRead(const CString& error) : m_error(error)
+{
+	// do nothing
+}
+
+XConfigRead::~XConfigRead()
+{
+	// do nothing
+}
+
+CString					XConfigRead::getWhat() const throw()
+{
+	return m_error;
 }

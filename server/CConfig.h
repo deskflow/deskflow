@@ -3,6 +3,8 @@
 
 #include "BasicTypes.h"
 #include "CString.h"
+#include "XBase.h"
+#include <iosfwd>
 #include <map>
 
 class CConfig {
@@ -53,6 +55,9 @@ public:
 
 	// manipulators
 
+	// note that case is preserved in screen names but has no effect
+	// FIXME -- make that true
+
 	// add/remove screens
 	void				addScreen(const CString& name);
 	void				removeScreen(const CString& name);
@@ -67,19 +72,49 @@ public:
 
 	// accessors
 
+	// returns true iff the given name is a valid screen name.
+	bool				isValidScreenName(const CString&) const;
+
 	// iterators over screen names
 	const_iterator		begin() const;
 	const_iterator		end() const;
+
+	// returns true iff name names a screen
+	bool				isScreen(const CString& name);
 
 	// get the neighbor in the given direction.  returns the empty string
 	// if there is no neighbor in that direction.
 	CString				getNeighbor(const CString&, EDirection) const;
 
+	// read/write a configuration.  operator>> will throw XConfigRead
+	// on error.
+	friend istream&		operator>>(istream&, CConfig&);
+	friend ostream&		operator<<(ostream&, const CConfig&);
+
 	// get the name of a direction (for debugging)
 	static const char*	dirName(EDirection);
 
 private:
+	static bool			readLine(istream&, CString&);
+	void				readSection(istream&);
+	void				readSectionScreens(istream&);
+	void				readSectionLinks(istream&);
+
+private:
 	CCellMap			m_map;
+};
+
+class XConfigRead : public XBase {
+public:
+	XConfigRead(const CString&);
+	~XConfigRead();
+
+protected:
+	// XBase overrides
+	virtual CString		getWhat() const throw();
+
+private:
+	CString				m_error;
 };
 
 #endif

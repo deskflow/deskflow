@@ -4,6 +4,14 @@
 #include "CMutex.h"
 #include "CNetwork.h"
 #include "CThread.h"
+#include <fstream>
+
+//
+// config file stuff
+//
+
+static const char* s_configFileName = "synergy.conf";
+
 
 //
 // logging thread safety
@@ -41,17 +49,19 @@ void					realMain()
 	// initialize network library
 	CNetwork::init();
 
-	CConfig config;
-	config.addScreen("primary");
-	config.addScreen("secondary");
-	config.addScreen("secondary2");
-	config.connect("primary", CConfig::kRight, "secondary");
-	config.connect("secondary", CConfig::kLeft, "primary");
-	config.connect("secondary", CConfig::kRight, "secondary2");
-	config.connect("secondary2", CConfig::kLeft, "secondary");
-
 	CServer* server = NULL;
 	try {
+		CConfig config;
+		{
+			log((CLOG_DEBUG "opening configuration"));
+			ifstream configStream(s_configFileName);
+			if (!configStream) {
+				throw XConfigRead("cannot open configuration");
+			}
+			configStream >> config;
+			log((CLOG_DEBUG "configuration read successfully"));
+		}
+
 		server = new CServer();
 		server->setConfig(config);
 		server->run();
@@ -93,6 +103,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		return 0;
 	}
 	catch (XBase& e) {
+		log((CLOG_CRIT "failed: %s", e.what()));
 		CString msg = "failed: ";
 		msg += e.what();
 		MessageBox(NULL, msg.c_str(), "error", MB_OK | MB_ICONERROR);
@@ -116,6 +127,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 	catch (XBase& e) {
+		log((CLOG_CRIT "failed: %s", e.what()));
 		fprintf(stderr, "failed: %s\n", e.what());
 		return 1;
 	}
