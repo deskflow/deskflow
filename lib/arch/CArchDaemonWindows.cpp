@@ -542,7 +542,6 @@ CArchDaemonWindows::doRunDaemon(RunFunc run)
 	// should only be called from DaemonFunc
 	assert(m_serviceMutex != NULL);
 	assert(run  != NULL);
-	assert(stop != NULL);
 
 	ARCH->lockMutex(m_serviceMutex);
 	try {
