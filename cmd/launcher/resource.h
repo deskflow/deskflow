@@ -36,6 +36,7 @@
 #define IDS_UNINSTALLED_SYSTEM          32
 #define IDS_UNINSTALLED_USER            33
 #define IDS_INVALID_SERVER_NAME         34
+#define IDS_TITLE                       35
 #define IDD_MAIN                        101
 #define IDD_ADD                         102
 #define IDD_WAIT                        103
@@ -71,6 +72,7 @@
 #define IDC_AUTOSTART_INSTALL_USER      1033
 #define IDC_AUTOSTART_INSTALL_SYSTEM    1034
 #define IDC_MAIN_AUTOSTART              1035
+#define IDC_MAIN_DEBUG                  1036
 
 // Next default values for new objects
 // 
@@ -79,7 +81,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        106
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1036
+#define _APS_NEXT_CONTROL_VALUE         1037
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

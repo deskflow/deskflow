@@ -97,6 +97,9 @@ BEGIN
                     ES_NUMBER
     LTEXT           "Automatic Startup:",IDC_STATIC,12,212,59,8
     PUSHBUTTON      "Con&figure...",IDC_MAIN_AUTOSTART,78,210,50,14
+    LTEXT           "Test &Debug Level:",IDC_STATIC,151,212,60,8
+    COMBOBOX        IDC_MAIN_DEBUG,216,210,61,60,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Sa&ve",IDC_MAIN_SAVE,75,241,50,14
     DEFPUSHBUTTON   "&Test",IDC_MAIN_TEST,131,241,50,14
     PUSHBUTTON      "Start",IDOK,187,241,50,14
@@ -250,6 +253,7 @@ BEGIN
     IDS_UNINSTALLED_SYSTEM  "Removed auto-start.  Synergy will not automatically start each time you start or reboot your computer."
     IDS_UNINSTALLED_USER    "Removed auto-start.  Synergy will not automatically start each time you log in."
     IDS_INVALID_SERVER_NAME "Server name `%{1}' is invalid."
+    IDS_TITLE               "Synergy - Version %{1}"
 END
 
 #endif    // English (U.S.) resources

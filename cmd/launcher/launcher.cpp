@@ -16,6 +16,7 @@
 #include "ProtocolTypes.h"
 #include "CPlatform.h"
 #include "CNetwork.h"
+#include "CLog.h"
 #include "Version.h"
 #include "stdvector.h"
 #include "resource.h"
@@ -49,6 +50,17 @@ HINSTANCE s_instance = NULL;
 
 static const TCHAR* s_mainClass   = TEXT("GoSynergy");
 static const TCHAR* s_layoutClass = TEXT("SynergyLayout");
+
+static const char* s_debugName[][2] = {
+	{ TEXT("Error"),   "ERROR" },
+	{ TEXT("Warning"), "WARNING" },
+	{ TEXT("Note"),    "NOTE" },
+	{ TEXT("Info"),    "INFO" },
+	{ TEXT("Debug"),   "DEBUG" },
+	{ TEXT("Debug1"),  "DEBUG1" },
+	{ TEXT("Debug2"),  "DEBUG2" }
+};
+static const int s_defaultDebug = 3;	// INFO
 
 static HWND s_mainWindow;
 static CConfig s_config;
@@ -97,7 +109,7 @@ static
 bool
 isClientChecked(HWND hwnd)
 {
-	HWND child = GetDlgItem(hwnd, IDC_MAIN_CLIENT_RADIO);
+	HWND child = getItem(hwnd, IDC_MAIN_CLIENT_RADIO);
 	return (SendMessage(child, BM_GETCHECK, 0, 0) == BST_CHECKED);
 }
 
@@ -116,7 +128,7 @@ enableScreensControls(HWND hwnd)
 	bool client         = isClientChecked(hwnd);
 	bool screenSelected = false;
 	if (!client) {
-		HWND child = GetDlgItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
+		HWND child = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
 		if (SendMessage(child, LB_GETCURSEL, 0, 0) != LB_ERR) {
 			screenSelected = true;
 		}
@@ -167,7 +179,7 @@ updateNeighbor(HWND hwnd, const CString& screen, EDirection direction)
 	}
 
 	// add empty neighbor to combo box
-	SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)"---");
+	SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)TEXT("---"));
 
 	// select neighbor in combo box
 	LRESULT index = 0;
@@ -190,20 +202,20 @@ updateNeighbors(HWND hwnd)
 {
 	// get selected screen name or empty string if no selection
 	CString screen;
-	HWND child    = GetDlgItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
+	HWND child    = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
 	LRESULT index = SendMessage(child, LB_GETCURSEL, 0, 0);
 	if (index != LB_ERR) {
 		screen = s_screens[index];
 	}
 
 	// set neighbor combo boxes
-	child = GetDlgItem(hwnd, IDC_MAIN_SERVER_LEFT_COMBO);
+	child = getItem(hwnd, IDC_MAIN_SERVER_LEFT_COMBO);
 	updateNeighbor(child, screen, kLeft);
-	child = GetDlgItem(hwnd, IDC_MAIN_SERVER_RIGHT_COMBO);
+	child = getItem(hwnd, IDC_MAIN_SERVER_RIGHT_COMBO);
 	updateNeighbor(child, screen, kRight);
-	child = GetDlgItem(hwnd, IDC_MAIN_SERVER_TOP_COMBO);
+	child = getItem(hwnd, IDC_MAIN_SERVER_TOP_COMBO);
 	updateNeighbor(child, screen, kTop);
-	child = GetDlgItem(hwnd, IDC_MAIN_SERVER_BOTTOM_COMBO);
+	child = getItem(hwnd, IDC_MAIN_SERVER_BOTTOM_COMBO);
 	updateNeighbor(child, screen, kBottom);
 }
 
@@ -221,7 +233,7 @@ addScreen(HWND hwnd)
 		UInt32 i = s_screens.size();
 
 		// add screen to list control
-		HWND child = GetDlgItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
+		HWND child = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
 		CString item = CStringUtil::print("%d. %s",
 								i + 1, info.m_screen.c_str());
 		SendMessage(child, LB_ADDSTRING, 0, (LPARAM)item.c_str());
@@ -250,7 +262,7 @@ void
 editScreen(HWND hwnd)
 {
 	// get selected list item
-	HWND child    = GetDlgItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
+	HWND child    = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
 	LRESULT index = SendMessage(child, LB_GETCURSEL, 0, 0);
 	if (index == LB_ERR) {
 		// no selection
@@ -311,7 +323,7 @@ void
 removeScreen(HWND hwnd)
 {
 	// get selected list item
-	HWND child    = GetDlgItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
+	HWND child    = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
 	LRESULT index = SendMessage(child, LB_GETCURSEL, 0, 0);
 	if (index == LB_ERR) {
 		// no selection
@@ -341,7 +353,7 @@ void
 changeNeighbor(HWND hwnd, HWND combo, EDirection direction)
 {
 	// get selected screen
-	HWND child    = GetDlgItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
+	HWND child    = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
 	LRESULT index = SendMessage(child, LB_GETCURSEL, 0, 0);
 	if (index == LB_ERR) {
 		// no selection
@@ -430,7 +442,7 @@ getCommandLine(HWND hwnd, bool testing)
 	const bool isClient = isClientChecked(hwnd);
 
 	// get and verify screen name
-	HWND child = GetDlgItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
+	HWND child = getItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
 	CString name = getWindowText(child);
 	if (!s_config.isValidScreenName(name)) {
 		showError(hwnd, CStringUtil::format(
@@ -448,7 +460,7 @@ getCommandLine(HWND hwnd, bool testing)
 	}
 
 	// get and verify port
-	child = GetDlgItem(hwnd, IDC_MAIN_ADVANCED_PORT_EDIT);
+	child = getItem(hwnd, IDC_MAIN_ADVANCED_PORT_EDIT);
 	CString portString = getWindowText(child);
 	UInt32 port = (UInt32)atoi(portString.c_str());
 	if (port < 1 || port > 65535) {
@@ -464,13 +476,19 @@ getCommandLine(HWND hwnd, bool testing)
 	// prepare command line
 	CString cmdLine;
 	if (testing) {
+		// constant testing args
 		cmdLine += " -z --no-restart --no-daemon";
+
+		// debug level testing arg
+		child = getItem(hwnd, IDC_MAIN_DEBUG);
+		cmdLine += " --debug ";
+		cmdLine += s_debugName[SendMessage(child, CB_GETCURSEL, 0, 0)][1];
 	}
 	cmdLine += " --name ";
 	cmdLine += name;
 	if (isClient) {
 		// check server name
-		child = GetDlgItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_EDIT);
+		child = getItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_EDIT);
 		CString server = getWindowText(child);
 		if (!s_config.isValidScreenName(server)) {
 			showError(hwnd, CStringUtil::format(
@@ -633,6 +651,10 @@ initMainWindow(HWND hwnd)
 {
 	CPlatform platform;
 
+	// append version number to title
+	CString titleFormat = getString(IDS_TITLE);
+	setWindowText(hwnd, CStringUtil::format(titleFormat.c_str(), VERSION));
+
 	// load configuration
 	bool configLoaded = loadConfig(s_config);
 	s_oldConfig = s_config;
@@ -640,17 +662,17 @@ initMainWindow(HWND hwnd)
 
 	// choose client/server radio buttons
 	HWND child;
-	child = GetDlgItem(hwnd, IDC_MAIN_CLIENT_RADIO);
+	child = getItem(hwnd, IDC_MAIN_CLIENT_RADIO);
 	SendMessage(child, BM_SETCHECK, !configLoaded ?
 								BST_CHECKED : BST_UNCHECKED, 0);
-	child = GetDlgItem(hwnd, IDC_MAIN_SERVER_RADIO);
+	child = getItem(hwnd, IDC_MAIN_SERVER_RADIO);
 	SendMessage(child, BM_SETCHECK, configLoaded ?
 								BST_CHECKED : BST_UNCHECKED, 0);
 
 	// if config is loaded then initialize server controls
 	if (configLoaded) {
 		int i = 1;
-		child = GetDlgItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
+		child = getItem(hwnd, IDC_MAIN_SERVER_SCREENS_LIST);
 		for (CConfig::const_iterator index = s_config.begin();
 								index != s_config.end(); ++i, ++index) {
 			s_screens.push_back(*index);
@@ -662,12 +684,19 @@ initMainWindow(HWND hwnd)
 	// initialize other controls
 	char buffer[256];
 	sprintf(buffer, "%d", kDefaultPort);
-	child = GetDlgItem(hwnd, IDC_MAIN_ADVANCED_PORT_EDIT);
+	child = getItem(hwnd, IDC_MAIN_ADVANCED_PORT_EDIT);
 	SendMessage(child, WM_SETTEXT, 0, (LPARAM)buffer);
 
 	CNetwork::gethostname(buffer, sizeof(buffer));
-	child = GetDlgItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
+	child = getItem(hwnd, IDC_MAIN_ADVANCED_NAME_EDIT);
 	SendMessage(child, WM_SETTEXT, 0, (LPARAM)buffer);
+
+	child = getItem(hwnd, IDC_MAIN_DEBUG);
+	for (unsigned int i = 0; i < sizeof(s_debugName) /
+								sizeof(s_debugName[0]); ++i) {
+		SendMessage(child, CB_ADDSTRING, 0, (LPARAM)s_debugName[i][0]);
+	}
+	SendMessage(child, CB_SETCURSEL, s_defaultDebug, 0);
 
 	// update neighbor combo boxes
 	enableMainWindowControls(hwnd);
@@ -686,7 +715,7 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		info = (CScreenInfo*)lParam;
 
 		// fill in screen name
-		HWND child = GetDlgItem(hwnd, IDC_ADD_SCREEN_NAME_EDIT);
+		HWND child = getItem(hwnd, IDC_ADD_SCREEN_NAME_EDIT);
 		SendMessage(child, WM_SETTEXT, 0, (LPARAM)info->m_screen.c_str());
 
 		// fill in aliases
@@ -698,7 +727,7 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			aliases += *index;
 		}
-		child = GetDlgItem(hwnd, IDC_ADD_ALIASES_EDIT);
+		child = getItem(hwnd, IDC_ADD_ALIASES_EDIT);
 		SendMessage(child, WM_SETTEXT, 0, (LPARAM)aliases.c_str());
 
 		return TRUE;
@@ -711,9 +740,9 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			CStringList newAliases;
 
 			// extract name and aliases
-			HWND child = GetDlgItem(hwnd, IDC_ADD_SCREEN_NAME_EDIT);
+			HWND child = getItem(hwnd, IDC_ADD_SCREEN_NAME_EDIT);
 			newName = getWindowText(child);
-			child = GetDlgItem(hwnd, IDC_ADD_ALIASES_EDIT);
+			child = getItem(hwnd, IDC_ADD_ALIASES_EDIT);
 			tokenize(newAliases, getWindowText(child));
 
 			// name must be valid
