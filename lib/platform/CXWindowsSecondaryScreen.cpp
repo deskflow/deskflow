@@ -37,6 +37,12 @@
 #	if defined(HAVE_X11_XF86KEYSYM_H)
 #		include <X11/XF86keysym.h>
 #	endif
+#	if !defined(XF86XK_Launch0)
+#		define XF86XK_Launch0 0x1008FF40
+#	endif
+#	if !defined(XF86XK_Launch1)
+#		define XF86XK_Launch1 0x1008FF41
+#	endif
 #endif
 
 //
