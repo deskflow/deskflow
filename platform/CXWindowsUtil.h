@@ -30,9 +30,9 @@ public:
 	class CErrorLock {
 	public:
 		typedef void (*ErrorHandler)(Display*, XErrorEvent*, void* userData);
-		CErrorLock();
-		CErrorLock(bool* errorFlag);
-		CErrorLock(ErrorHandler, void* userData);
+		CErrorLock(Display*);
+		CErrorLock(Display*, bool* errorFlag);
+		CErrorLock(Display*, ErrorHandler, void* userData);
 		~CErrorLock();
 
 	private:
@@ -44,6 +44,7 @@ public:
 	private:
 		typedef int (*XErrorHandler)(Display*, XErrorEvent*);
 
+		Display*		m_display;
 		ErrorHandler	m_handler;
 		void*			m_userData;
 		XErrorHandler	m_oldXHandler;

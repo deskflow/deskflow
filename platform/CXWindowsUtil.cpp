@@ -19,7 +19,7 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 	int actualDatumSize;
 
 	// ignore errors.  XGetWindowProperty() will report failure.
-	CXWindowsUtil::CErrorLock lock;
+	CXWindowsUtil::CErrorLock lock(display);
 
 	// read the property
 	const long length = XMaxRequestSize(display);
@@ -93,7 +93,7 @@ CXWindowsUtil::setWindowProperty(Display* display, Window window,
 
 	// save errors
 	bool error = false;
-	CXWindowsUtil::CErrorLock lock(&error);
+	CXWindowsUtil::CErrorLock lock(display, &error);
 
 	// how much data to send in first chunk?
 	UInt32 chunkSize = size;
@@ -179,23 +179,31 @@ CXWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 
 CXWindowsUtil::CErrorLock*	CXWindowsUtil::CErrorLock::s_top = NULL;
 
-CXWindowsUtil::CErrorLock::CErrorLock()
+CXWindowsUtil::CErrorLock::CErrorLock(Display* display) :
+	m_display(display)
 {
 	install(&CXWindowsUtil::CErrorLock::ignoreHandler, NULL);
 }
 
-CXWindowsUtil::CErrorLock::CErrorLock(bool* flag)
+CXWindowsUtil::CErrorLock::CErrorLock(Display* display, bool* flag) :
+	m_display(display)
 {
 	install(&CXWindowsUtil::CErrorLock::saveHandler, flag);
 }
 
-CXWindowsUtil::CErrorLock::CErrorLock(ErrorHandler handler, void* data)
+CXWindowsUtil::CErrorLock::CErrorLock(Display* display,
+				ErrorHandler handler, void* data) :
+	m_display(display)
 {
 	install(handler, data);
 }
 
 CXWindowsUtil::CErrorLock::~CErrorLock()
 {
+	// make sure everything finishes before uninstalling handler
+	XSync(m_display, False);
+
+	// restore old handler
 	XSetErrorHandler(m_oldXHandler);
 	s_top = m_next;
 }
@@ -203,6 +211,10 @@ CXWindowsUtil::CErrorLock::~CErrorLock()
 void
 CXWindowsUtil::CErrorLock::install(ErrorHandler handler, void* data)
 {
+	// make sure everything finishes before installing handler
+	XSync(m_display, False);
+
+	// install handler
 	m_handler     = handler;
 	m_userData    = data;
 	m_oldXHandler = XSetErrorHandler(
@@ -221,13 +233,14 @@ CXWindowsUtil::CErrorLock::internalHandler(Display* display, XErrorEvent* event)
 }
 
 void
-CXWindowsUtil::CErrorLock::ignoreHandler(Display*, XErrorEvent*, void*)
+CXWindowsUtil::CErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
 {
-	// do nothing
+	log((CLOG_DEBUG "ignoring X error: %d", e->error_code));
 }
 
 void
-CXWindowsUtil::CErrorLock::saveHandler(Display*, XErrorEvent*, void* flag)
+CXWindowsUtil::CErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
 {
+	log((CLOG_DEBUG "flagging X error: %d", e->error_code));
 	*reinterpret_cast<bool*>(flag) = true;
 }

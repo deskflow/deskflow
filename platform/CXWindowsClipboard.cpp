@@ -800,7 +800,7 @@ CXWindowsClipboard::insertReply(CReply* reply)
 	if (newWindow) {
 		// note errors while we adjust event masks
 		bool error = false;
-		CXWindowsUtil::CErrorLock lock(&error);
+		CXWindowsUtil::CErrorLock lock(m_display, &error);
 
 		// get and save the current event mask
 		XWindowAttributes attr;
@@ -852,7 +852,7 @@ CXWindowsClipboard::pushReplies(CReplyMap::iterator mapIndex,
 	// if there are no more replies in the list then remove the list
 	// and stop watching the requestor for events.
 	if (replies.empty()) {
-		CXWindowsUtil::CErrorLock lock;
+		CXWindowsUtil::CErrorLock lock(m_display);
 		Window requestor = mapIndex->first;
 		XSelectInput(m_display, requestor, m_eventMasks[requestor]);
 		m_replies.erase(mapIndex);
@@ -926,7 +926,7 @@ CXWindowsClipboard::sendReply(CReply* reply)
 		log((CLOG_DEBUG1 "clipboard: sending failure to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		reply->m_done = true;
 		if (reply->m_property != None) {
-			CXWindowsUtil::CErrorLock lock;
+			CXWindowsUtil::CErrorLock lock(m_display);
 			XDeleteProperty(m_display, reply->m_requestor, reply->m_property);
 		}
 
@@ -1016,7 +1016,7 @@ CXWindowsClipboard::sendNotify(Window requestor,
 	event.xselection.target    = target;
 	event.xselection.property  = property;
 	event.xselection.time      = time;
-	CXWindowsUtil::CErrorLock lock;
+	CXWindowsUtil::CErrorLock lock(m_display);
 	XSendEvent(m_display, requestor, False, 0, &event);
 }
 

@@ -24,7 +24,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(Display* display) :
 	// watch top-level windows for changes
 	{
 		bool error = false;
-		CXWindowsUtil::CErrorLock lock(&error);
+		CXWindowsUtil::CErrorLock lock(m_display, &error);
 		Window root = DefaultRootWindow(m_display);
 		XWindowAttributes attr;
 		XGetWindowAttributes(m_display, root, &attr);
@@ -46,7 +46,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(Display* display) :
 CXWindowsScreenSaver::~CXWindowsScreenSaver()
 {
 	// stop watching root for events
-	CXWindowsUtil::CErrorLock lock;
+	CXWindowsUtil::CErrorLock lock(m_display);
 	Window root = DefaultRootWindow(m_display);
 	XSelectInput(m_display, root, m_rootEventMask);
 }
@@ -179,7 +179,7 @@ CXWindowsScreenSaver::sendNotify(bool activated)
 		event.xclient.data.l[3]    = 0;
 		event.xclient.data.l[4]    = 0;
 
-		CXWindowsUtil::CErrorLock lock;
+		CXWindowsUtil::CErrorLock lock(m_display);
 		XSendEvent(m_display, m_notify, False, 0, &event);
 	}
 }
@@ -202,7 +202,7 @@ CXWindowsScreenSaver::updateXScreenSaver()
 	}
 
 	// find top-level window with m_atomScreenSaverVersion string property
-	CXWindowsUtil::CErrorLock lock;
+	CXWindowsUtil::CErrorLock lock(m_display);
 	Window root  = DefaultRootWindow(m_display);
 	Window rw, pw, *cw;
 	unsigned int nc;
@@ -224,7 +224,7 @@ CXWindowsScreenSaver::updateXScreenSaver()
 	// see if xscreensaver is active
 	if (m_xscreensaver != None) {
 		bool error = false;
-		CXWindowsUtil::CErrorLock lock(&error);
+		CXWindowsUtil::CErrorLock lock(m_display, &error);
 		XWindowAttributes attr;
 		XGetWindowAttributes(m_display, m_xscreensaver, &attr);
 		setXScreenSaver(!error && attr.map_state != IsUnmapped);
@@ -250,6 +250,6 @@ CXWindowsScreenSaver::sendXScreenSaverCommand(
 	event.xclient.data.l[3]    = 0;
 	event.xclient.data.l[4]    = 0;
 
-	CXWindowsUtil::CErrorLock lock;
+	CXWindowsUtil::CErrorLock lock(m_display);
 	XSendEvent(m_display, m_xscreensaver, False, 0, &event);
 }

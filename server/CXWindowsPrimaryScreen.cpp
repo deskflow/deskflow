@@ -617,7 +617,7 @@ CXWindowsPrimaryScreen::selectEvents(Display* display, Window w) const
 	// ignore errors while we adjust event masks.  windows could be
 	// destroyed at any time after the XQueryTree() in doSelectEvents()
 	// so we must ignore BadWindow errors.
-	CXWindowsUtil::CErrorLock lock;
+	CXWindowsUtil::CErrorLock lock(display);
 
 	// adjust event masks
 	doSelectEvents(display, w);
