@@ -103,12 +103,24 @@ private:
 							bool press, DWORD* data) const;
 	KeyModifierMask		mapKey(Keystrokes&, UINT& virtualKey, KeyID,
 							KeyModifierMask, EKeyAction) const;
+	UINT				mapCharacter(Keystrokes& keys,
+							char c, HKL hkl,
+							KeyModifierMask currentMask,
+							KeyModifierMask desiredMask,
+							EKeyAction action) const;
+	KeyModifierMask		mapToKeystrokes(Keystrokes& keys,
+							UINT virtualKey,
+							KeyModifierMask currentMask,
+							KeyModifierMask desiredMask,
+							EKeyAction action) const;
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
 
 	void				toggleKey(UINT virtualKey, KeyModifierMask mask);
 	UINT				virtualKeyToScanCode(UINT& virtualKey) const;
 	bool				isExtendedKey(UINT virtualKey) const;
 	void				sendKeyEvent(UINT virtualKey, bool press);
+
+	UINT				getCodePageFromLangID(LANGID) const;
 
 private:
 	CMutex				m_mutex;

@@ -747,7 +747,7 @@ static const UINT		g_mapEF00[] =
 	/* 0x64 */ 0, 0, 0, VK_APPS|0x100,
 	/* 0x68 */ 0, 0, VK_HELP|0x100, VK_CANCEL|0x100, 0, 0, 0, 0,
 	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, VK_MODECHANGE|0x100, VK_NUMLOCK|0x100,
+	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, VK_NUMLOCK|0x100,
 	/* 0x80 */ VK_SPACE, 0, 0, 0, 0, 0, 0, 0,
 	/* 0x88 */ 0, VK_TAB, 0, 0, 0, VK_RETURN|0x100, 0, 0,
 	/* 0x90 */ 0, 0, 0, 0, 0, VK_HOME, VK_LEFT, VK_UP,
@@ -867,94 +867,32 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		return m_mask;
 	}
 
-	// get output mask.  default output mask carries over the current
-	// toggle modifier states and includes desired shift, control, alt,
-	// meta, and super states.
-	KeyModifierMask outMask = (m_mask &
-								(KeyModifierCapsLock |
-								KeyModifierNumLock |
-								KeyModifierScrollLock));
-	outMask                |= (mask &
-								(KeyModifierShift |
-								KeyModifierControl |
-								KeyModifierAlt |
-								KeyModifierMeta |
-								KeyModifierSuper));
+	// handle other special keys
+	if (virtualKey != 0) {
+		// compute the final desired modifier mask.  special keys use
+		// the desired modifiers as given except we keep the caps lock,
+		// num lock, and scroll lock as is.
+		KeyModifierMask outMask = (m_mask &
+									(KeyModifierCapsLock |
+									KeyModifierNumLock |
+									KeyModifierScrollLock));
+		outMask                |= (mask &
+									(KeyModifierShift |
+									KeyModifierControl |
+									KeyModifierAlt |
+									KeyModifierMeta |
+									KeyModifierSuper));
 
-	// set control and alt if mode shift (AltGr) is requested
-	if ((mask & KeyModifierModeSwitch) != 0) {
-		outMask |= KeyModifierControl | KeyModifierAlt;
-	}
+		// strip out extended key flag
+		UINT virtualKey2 = (virtualKey & ~0x100);
 
-	// extract extended key flag
-	const bool isExtended = ((virtualKey & 0x100) != 0);
-	virtualKey           &= ~0x100;
-
-	// if not in map then ask system to convert character
-	if (virtualKey == 0) {
-		// translate.  return no keys if unknown key.
-		char ascii;
-		wchar_t unicode = static_cast<wchar_t>(id & 0x0000ffff);
-		BOOL error;
-		if (WideCharToMultiByte(CP_THREAD_ACP,
-#if defined(WC_NO_BEST_FIT_CHARS)
-								WC_NO_BEST_FIT_CHARS |
-#endif
-								WC_COMPOSITECHECK |
-								WC_DEFAULTCHAR,
-								&unicode, 1,
-								&ascii, 1, NULL, &error) == 0 || error) {
-			LOG((CLOG_DEBUG2 "character %d not in code page", id));
-			return m_mask;
-		}
-		SHORT vk = VkKeyScan(ascii);
-		if (vk == 0xffff) {
-			LOG((CLOG_DEBUG2 "no virtual key for character %d", id));
-			return m_mask;
-		}
-
-		// use whatever shift state VkKeyScan says
-		// FIXME -- also for control and alt, but it's more difficult
-		// to determine if control and alt must be off or if it just
-		// doesn't matter.
-		outMask &= ~KeyModifierShift;
-
-		// convert system modifier mask to our mask
-		if (HIBYTE(vk) & 1) {
-			outMask |= KeyModifierShift;
-		}
-		if (HIBYTE(vk) & 2) {
-			outMask |= KeyModifierControl;
-		}
-		if (HIBYTE(vk) & 4) {
-			outMask |= KeyModifierAlt;
-		}
-
-		// handle combination of caps-lock and shift.  if caps-lock is
-		// off locally then use shift as necessary.  if caps-lock is on
-		// locally then it reverses the meaning of shift for keys that
-		// are subject to case conversion.
-		if ((outMask & KeyModifierCapsLock) != 0) {
-			if (tolower(ascii) != toupper(ascii)) {
-				LOG((CLOG_DEBUG2 "flip shift"));
-				outMask ^= KeyModifierShift;
-			}
-		}
-
-		// get virtual key
-		virtualKey = LOBYTE(vk);
-	}
-
-	// if in map then figure out correct modifier state
-	else {
-		// check numeric keypad.  note that while KeyID distinguishes
-		// between the keypad movement keys (e.g. Home, left arrow),
-		// the virtual keys do not.  however, the virtual keys do
-		// distinguish between keypad numbers and operators (e.g.
-		// add, multiply) and their main keyboard counterparts.
-		// therefore, we can ignore the num-lock state for movement
-		// virtual keys but not for numeric keys.
-		if (virtualKey >= VK_NUMPAD0 && virtualKey <= VK_DIVIDE) {
+		// check numeric keypad.  note that virtual keys do not distinguish
+		// between the keypad and non-keypad movement keys.  however, the
+		// virtual keys do distinguish between keypad numbers and operators
+		// (e.g. add, multiply) and their main keyboard counterparts.
+		// therefore, we can ignore the num-lock state for movement virtual
+		// keys but not for numeric keys.
+		if (virtualKey2 >= VK_NUMPAD0 && virtualKey2 <= VK_DIVIDE) {
 			// set required shift state based on current numlock state
 			if ((outMask & KeyModifierNumLock) == 0) {
 				if ((m_mask & KeyModifierNumLock) == 0) {
@@ -968,13 +906,184 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 			}
 		}
 
-		// check for left tab
-		else if (id == kKeyLeftTab) {
-			outMask |= KeyModifierShift;
+		// check for left tab.  that requires the shift key.
+		if (id == kKeyLeftTab) {
+			mask |= KeyModifierShift;
+		}
+
+		// now generate the keystrokes and return the resulting modifier mask
+		LOG((CLOG_DEBUG2 "KeyID 0x%08x to virtual key %d mask 0x%04x", id, virtualKey2, outMask));
+		return mapToKeystrokes(keys, virtualKey, m_mask, outMask, action);
+	}
+
+	// determine the thread that'll receive this event
+	// FIXME -- we can't be sure we'll get the right thread here
+	HWND  targetWindow = GetForegroundWindow();
+	DWORD targetThread = GetWindowThreadProcessId(targetWindow, NULL);
+
+	// figure out the code page for the target thread.  i'm just
+	// guessing here.  get the target thread's keyboard layout,
+	// extract the language id from that, and choose the code page
+	// based on that language.
+	HKL hkl       = GetKeyboardLayout(targetThread);
+	LANGID langID = static_cast<LANGID>(LOWORD(hkl));
+	UINT codePage = getCodePageFromLangID(langID);
+	LOG((CLOG_DEBUG2 "using code page %d and language id 0x%04x for thread 0x%08x", codePage, langID, targetThread));
+
+	// regular characters are complicated by dead keys.  it may not be
+	// possible to generate a desired character directly.  we may need
+	// to generate a dead key first then some other character.  the
+	// app receiving the events will compose these two characters into
+	// a single precomposed character.
+	//
+	// as best as i can tell this is the simplest way to convert a
+	// character into its uncomposed version.  along the way we'll
+	// discover if the key cannot be handled at all.  we convert
+	// from wide char to multibyte, then from multibyte to wide char
+	// forcing conversion to composite characters, then from wide
+	// char back to multibyte without making precomposed characters.
+	BOOL error;
+	char multiByte[2 * MB_LEN_MAX];
+	wchar_t unicode[2];
+	unicode[0] = static_cast<wchar_t>(id & 0x0000ffff);
+	int nChars = WideCharToMultiByte(codePage,
+								WC_COMPOSITECHECK | WC_DEFAULTCHAR,
+								unicode, 1,
+								multiByte, sizeof(multiByte),
+								NULL, &error);
+	if (nChars == 0 || error) {
+		LOG((CLOG_DEBUG2 "KeyID 0x%08x not in code page", id));
+		return m_mask;
+	}
+	nChars = MultiByteToWideChar(codePage,
+								MB_COMPOSITE | MB_ERR_INVALID_CHARS,
+								multiByte, nChars,
+								unicode, 2);
+	if (nChars == 0) {
+		LOG((CLOG_DEBUG2 "KeyID 0x%08x mb->wc mapping failed", id));
+		return m_mask;
+	}
+	nChars = WideCharToMultiByte(codePage,
+								0,
+								unicode, nChars,
+								multiByte, sizeof(multiByte),
+								NULL, &error);
+	if (nChars == 0 || error) {
+		LOG((CLOG_DEBUG2 "KeyID 0x%08x wc->mb mapping failed", id));
+		return m_mask;
+	}
+
+	// we expect one or two characters in multiByte.  if there are two
+	// then the *second* is a dead key.  process the dead key if there.
+	// FIXME -- we assume each character is one byte here
+	if (nChars > 2) {
+		LOG((CLOG_DEBUG2 "multibyte characters not supported for character 0x%04x", id));
+		return m_mask;
+	}
+	if (nChars == 2) {
+		LOG((CLOG_DEBUG2 "KeyID 0x%08x needs dead key %u", id, (unsigned char)multiByte[1]));
+		mapCharacter(keys, multiByte[1], hkl, m_mask, mask, action);
+	}
+
+	// process character
+	LOG((CLOG_DEBUG2 "KeyID 0x%08x maps to character %u", id, (unsigned char)multiByte[0]));
+	virtualKey = mapCharacter(keys, multiByte[0], hkl, m_mask, mask, action);
+
+	// non-special key cannot modify the modifier mask
+	return m_mask;
+}
+
+UINT
+CMSWindowsSecondaryScreen::mapCharacter(Keystrokes& keys,
+				char c, HKL hkl,
+				KeyModifierMask currentMask,
+				KeyModifierMask desiredMask, EKeyAction action) const
+{
+	// translate the character into its virtual key and its required
+	// modifier state.
+	SHORT virtualKeyAndModifierState = VkKeyScanEx(c, hkl);
+
+	// get virtual key
+	UINT virtualKey    = LOBYTE(virtualKeyAndModifierState);
+
+	// get the required modifier state
+	BYTE modifierState = HIBYTE(virtualKeyAndModifierState);
+
+	// compute the final desired modifier mask.  this is the
+	// desired modifier mask except that the system might require
+	// that certain modifiers be up or down in order to generate
+	// the character.  to start with, we know that we want to keep
+	// the caps lock, num lock, scroll lock modifiers as is.  also,
+	// the system never requires the meta or super modifiers so we
+	// can set those however we like.
+	KeyModifierMask outMask = (currentMask &
+								(KeyModifierCapsLock |
+								KeyModifierNumLock |
+								KeyModifierScrollLock));
+	outMask                |= (desiredMask &
+								(KeyModifierMeta |
+								KeyModifierSuper));
+
+	// win32 does not permit ctrl and alt used together to
+	// modify a character because ctrl and alt together mean
+	// AltGr.  if the desired mask has both ctrl and alt then
+	// strip them both out.
+	if ((desiredMask & (KeyModifierControl | KeyModifierAlt)) ==
+						(KeyModifierControl | KeyModifierAlt)) {
+		outMask &= ~(KeyModifierControl | KeyModifierAlt);
+	}
+
+	// strip out the desired shift state.  we're forced to use
+	// a particular shift state to generate the desired character.
+	outMask &= ~KeyModifierShift;
+
+	// use the required modifiers.  if AltGr is required then
+	// modifierState will indicate control and alt.
+	if ((modifierState & 1) != 0) {
+		outMask |= KeyModifierShift;
+	}
+	if ((modifierState & 2) != 0) {
+		outMask |= KeyModifierControl;
+	}
+	if ((modifierState & 4) != 0) {
+		outMask |= KeyModifierAlt;
+	}
+
+	// handle combination of caps-lock and shift.  if caps-lock is
+	// off locally then use shift as necessary.  if caps-lock is on
+	// locally then it reverses the meaning of shift for keys that
+	// are subject to case conversion.
+	if ((outMask & KeyModifierCapsLock) != 0) {
+		// there doesn't seem to be a simple way to test if a
+		// character respects the caps lock key.  for normal
+		// characters it's easy enough but CharLower() and
+		// CharUpper() don't map dead keys even though they
+		// do respect caps lock for some unfathomable reason.
+		// first check the easy way.  if that doesn't work
+		// then see if it's a dead key.
+		unsigned char uc = static_cast<unsigned char>(c);
+		if (CharLower((LPTSTR)uc) != CharUpper((LPTSTR)uc) ||
+			(MapVirtualKey(virtualKey, 2) & 0x80000000lu) != 0) {
+			LOG((CLOG_DEBUG2 "flip shift"));
+			outMask ^= KeyModifierShift;
 		}
 	}
-	LOG((CLOG_DEBUG2 "KeyID %d to virtual key %d mask 0x%04x", id, virtualKey, outMask));
 
+	// now generate the keystrokes.  ignore the resulting modifier
+	// mask since it can't have changed (because we don't call this
+	// method for modifier keys).
+	LOG((CLOG_DEBUG2 "character %d to virtual key %d mask 0x%04x", (unsigned char)c, virtualKey, outMask));
+	mapToKeystrokes(keys, virtualKey, currentMask, outMask, action);
+
+	return virtualKey;
+}
+
+KeyModifierMask
+CMSWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
+				UINT virtualKey,
+				KeyModifierMask currentMask,
+				KeyModifierMask desiredMask, EKeyAction action) const
+{
 	// a list of modifier key info
 	class CModifierInfo {
 	public:
@@ -996,9 +1105,12 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 	static const unsigned int s_numModifiers =
 								sizeof(s_modifier) / sizeof(s_modifier[0]);
 
+	// strip out extended key flag
+	UINT virtualKey2 = (virtualKey & ~0x100);
+
 	// note if the key is a modifier
 	unsigned int modifierIndex;
-	switch (virtualKey) {
+	switch (virtualKey2) {
 	case VK_SHIFT:
 	case VK_LSHIFT:
 	case VK_RSHIFT:
@@ -1040,18 +1152,17 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 	}
 	const bool isModifier = (modifierIndex != s_numModifiers);
 
-	// add the key events required to get to the modifier state
-	// necessary to generate an event yielding id.  also save the
-	// key events required to restore the state.  if the key is
-	// a modifier key then skip this because modifiers should not
-	// modify modifiers.
+	// add the key events required to get to the desired modifier state.
+	// also save the key events required to restore the current state.
+	// if the key is a modifier key then skip this because modifiers
+	// should not modify modifiers.
 	Keystrokes undo;
 	Keystroke keystroke;
-	if (outMask != m_mask && !isModifier) {
+	if (desiredMask != currentMask && !isModifier) {
 		for (unsigned int i = 0; i < s_numModifiers; ++i) {
 			KeyModifierMask bit = s_modifier[i].m_mask;
-			if ((outMask & bit) != (m_mask & bit)) {
-				if ((outMask & bit) != 0) {
+			if ((desiredMask & bit) != (currentMask & bit)) {
+				if ((desiredMask & bit) != 0) {
 					// modifier is not active but should be.  if the
 					// modifier is a toggle then toggle it on with a
 					// press/release, otherwise activate it with a
@@ -1117,25 +1228,22 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 
 	// add the key event
 	keystroke.m_virtualKey = virtualKey;
-	if (isExtended) {
-		keystroke.m_virtualKey |= 0x100;
-	}
 	switch (action) {
 	case kPress:
-		keystroke.m_press      = true;
-		keystroke.m_repeat     = false;
+		keystroke.m_press  = true;
+		keystroke.m_repeat = false;
 		keys.push_back(keystroke);
 		break;
 
 	case kRelease:
-		keystroke.m_press      = false;
-		keystroke.m_repeat     = false;
+		keystroke.m_press  = false;
+		keystroke.m_repeat = false;
 		keys.push_back(keystroke);
 		break;
 
 	case kRepeat:
-		keystroke.m_press      = true;
-		keystroke.m_repeat     = true;
+		keystroke.m_press  = true;
+		keystroke.m_repeat = true;
 		keys.push_back(keystroke);
 		break;
 	}
@@ -1149,7 +1257,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 
 	// if the key is a modifier key then compute the modifier mask after
 	// this key is pressed.
-	mask = m_mask;
+	KeyModifierMask mask = currentMask;
 	if (isModifier && action != kRepeat) {
 		// toggle keys modify the state on release.  other keys set
 		// the bit on press and clear the bit on release.
@@ -1166,12 +1274,12 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 			// can't reset bit until all keys that set it are released.
 			// scan those keys to see if any are pressed.
 			bool down = false;
-			if (virtualKey != (modifier.m_virtualKey & 0xff) &&
+			if (virtualKey2 != (modifier.m_virtualKey & 0xff) &&
 				(m_keys[modifier.m_virtualKey & 0xff] & 0x80) != 0) {
 				down = true;
 			}
 			if (modifier.m_virtualKey2 != 0 &&
-				virtualKey != (modifier.m_virtualKey2 & 0xff) &&
+				virtualKey2 != (modifier.m_virtualKey2 & 0xff) &&
 				(m_keys[modifier.m_virtualKey2 & 0xff] & 0x80) != 0) {
 				down = true;
 			}
@@ -1180,7 +1288,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		}
 	}
 
-	LOG((CLOG_DEBUG2 "previous modifiers 0x%04x, final modifiers 0x%04x", m_mask, mask));
+	LOG((CLOG_DEBUG2 "previous modifiers 0x%04x, final modifiers 0x%04x", currentMask, mask));
 	return mask;
 }
 
@@ -1375,4 +1483,29 @@ CMSWindowsSecondaryScreen::sendKeyEvent(UINT virtualKey, bool press)
 	keybd_event(static_cast<BYTE>(virtualKey & 0xff),
 								static_cast<BYTE>(code), flags, 0);
 	LOG((CLOG_DEBUG1 "send key %d, 0x%04x, %s%s", virtualKey & 0xff, code, ((flags & KEYEVENTF_KEYUP) ? "release" : "press"), ((flags & KEYEVENTF_EXTENDEDKEY) ? " extended" : "")));
+}
+
+UINT
+CMSWindowsSecondaryScreen::getCodePageFromLangID(LANGID langid) const
+{
+	// construct a locale id from the language id
+	LCID lcid = MAKELCID(langid, SORT_DEFAULT);
+
+	// get the ANSI code page for this locale
+	char data[6];
+	if (GetLocaleInfoA(lcid, LOCALE_IDEFAULTANSICODEPAGE, data, 6) == 0) {
+		// can't get code page
+		LOG((CLOG_DEBUG1 "can't find code page for langid 0x%04x", langid));
+		return CP_ACP;
+	}
+
+	// convert stringified code page into a number
+	UINT codePage = static_cast<UINT>(atoi(data));
+	if (codePage == 0) {
+		// parse failed
+		LOG((CLOG_DEBUG1 "can't parse code page %s for langid 0x%04x", data, langid));
+		return CP_ACP;
+	}
+
+	return codePage;
 }
