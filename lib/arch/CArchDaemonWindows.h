@@ -29,7 +29,6 @@
 class CArchDaemonWindows : public IArchDaemon {
 public:
 	typedef int			(*RunFunc)(void);
-	typedef void		(*StopFunc)(void);
 
 	CArchDaemonWindows();
 	virtual ~CArchDaemonWindows();
@@ -41,12 +40,13 @@ public:
 	daemon processing.  The \c runFunc should perform the daemon's
 	main loop, calling \c daemonRunning(true) when it enters the main loop
 	(i.e. after initialization) and \c daemonRunning(false) when it leaves
-	the main loop.  The \c stopFunc function is called when the daemon
-	must exit the main loop and must cause \c runFunc to return.  This
-	function returns what \c runFunc returns.  \c runFunc should call
-	\c daemonFailed() if the daemon fails.
+	the main loop.  The \c runFunc is called in a new thread and when the
+	daemon must exit the main loop due to some external control the
+	thread is cancelled on behalf of the client.  This function returns
+	what \c runFunc returns.  \c runFunc should call \c daemonFailed() if
+	the daemon fails.
 	*/
-	static int			runDaemon(RunFunc runFunc, StopFunc stopFunc);
+	static int			runDaemon(RunFunc runFunc);
 
 	//! Indicate daemon is in main loop
 	/*!
@@ -87,7 +87,7 @@ private:
 	static HKEY			open95ServicesKey();
 	static HKEY			openUserStartupKey();
 
-	int					doRunDaemon(RunFunc runFunc, StopFunc stopFunc);
+	int					doRunDaemon(RunFunc runFunc);
 	void				doDaemonRunning(bool running);
 
 	static void			setStatus(DWORD state);
@@ -120,8 +120,8 @@ private:
 	DWORD				m_serviceState;
 	bool				m_serviceHandlerWaiting;
 	bool				m_serviceRunning;
-	StopFunc			m_stop;
 
+	CArchThread			m_daemonThread;
 	DaemonFunc			m_daemonFunc;
 	int					m_daemonResult;
 

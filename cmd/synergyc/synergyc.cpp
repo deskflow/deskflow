@@ -145,6 +145,7 @@ realMain(void)
 				locked = false;
 				s_client->mainLoop();
 				locked = true;
+				DAEMON_RUNNING(false);
 
 				// get client status
 				if (s_client->wasRejected()) {
@@ -157,6 +158,7 @@ realMain(void)
 #define FINALLY do {								\
 				if (!locked) {						\
 					DAEMON_RUNNING(false);			\
+					locked = true;					\
 				}									\
 				if (s_client != NULL) {				\
 					if (opened) {					\
@@ -489,13 +491,6 @@ byeThrow(int x)
 }
 
 static
-void
-daemonStop(void)
-{
-	s_client->exitMainLoop();
-}
-
-static
 int
 daemonStartup(int argc, const char** argv)
 {
@@ -511,7 +506,7 @@ daemonStartup(int argc, const char** argv)
 	ARG->m_backend = false;
 
 	// run as a service
-	return CArchMiscWindows::runDaemon(realMain, daemonStop);
+	return CArchMiscWindows::runDaemon(realMain);
 }
 
 static
@@ -545,12 +540,13 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// users on NT can use `--daemon' or `--no-daemon' to force us out
 	// of the service code path.
 	if (__argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
-		int result = ARCH->daemonize(DAEMON_NAME, &daemonStartup);
-		if (result == -1) {
-			LOG((CLOG_CRIT "failed to start as a service" BYE, ARG->m_pname));
+		try {
+			return ARCH->daemonize(DAEMON_NAME, &daemonStartup);
+		}
+		catch (XArchDaemon& e) {
+			LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
 			return kExitFailed;
 		}
-		return result;
 	}
 
 	// parse command line
@@ -564,8 +560,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			try {
 				result = ARCH->daemonize(DAEMON_NAME, &daemonStartup95);
 			}
-			catch (XArchDaemon&) {
-				LOG((CLOG_CRIT "failed to start as a service" BYE, ARG->m_pname));
+			catch (XArchDaemon& e) {
+				LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
 				result = kExitFailed;
 			}
 		}

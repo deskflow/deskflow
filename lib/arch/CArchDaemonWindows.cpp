@@ -24,7 +24,8 @@
 
 CArchDaemonWindows*		CArchDaemonWindows::s_daemon = NULL;
 
-CArchDaemonWindows::CArchDaemonWindows()
+CArchDaemonWindows::CArchDaemonWindows() :
+	m_daemonThread(NULL)
 {
 	// do nothing
 }
@@ -35,11 +36,11 @@ CArchDaemonWindows::~CArchDaemonWindows()
 }
 
 int
-CArchDaemonWindows::runDaemon(RunFunc runFunc, StopFunc stopFunc)
+CArchDaemonWindows::runDaemon(RunFunc runFunc)
 {
 	assert(s_daemon != NULL);
 
-	return s_daemon->doRunDaemon(runFunc, stopFunc);
+	return s_daemon->doRunDaemon(runFunc);
 }
 
 void
@@ -293,7 +294,7 @@ CArchDaemonWindows::daemonize(const char* name, DaemonFunc func)
 		// hook us up to the service control manager.  this won't return
 		// (if successful) until the processes have terminated.
 		s_daemon = this;
-		if (StartServiceCtrlDispatcher(entry)) {
+		if (StartServiceCtrlDispatcher(entry) == 0) {
 			// StartServiceCtrlDispatcher failed
 			s_daemon = NULL;
 			throw XArchDaemonFailed(new XArchEvalWindows);
@@ -536,7 +537,7 @@ CArchDaemonWindows::openUserStartupKey()
 }
 
 int
-CArchDaemonWindows::doRunDaemon(RunFunc run, StopFunc stop)
+CArchDaemonWindows::doRunDaemon(RunFunc run)
 {
 	// should only be called from DaemonFunc
 	assert(m_serviceMutex != NULL);
@@ -546,7 +547,6 @@ CArchDaemonWindows::doRunDaemon(RunFunc run, StopFunc stop)
 	ARCH->lockMutex(m_serviceMutex);
 	try {
 		int result;
-		m_stop                  = stop;
 		m_serviceHandlerWaiting = false;
 		m_serviceRunning        = false;
 		for (;;) {
@@ -555,13 +555,11 @@ CArchDaemonWindows::doRunDaemon(RunFunc run, StopFunc stop)
 
 			// run callback in another thread
 			m_serviceRunning = true;
-			{
-				CArchThread thread = ARCH->newThread(
+			m_daemonThread = ARCH->newThread(
 							&CArchDaemonWindows::runDaemonThreadEntry, run);
-				ARCH->wait(thread, -1.0);
-				result = reinterpret_cast<int>(ARCH->getResultOfThread(thread));
-				ARCH->closeThread(thread);
-			}
+			ARCH->wait(m_daemonThread, -1.0);
+			result = reinterpret_cast<int>(
+							ARCH->getResultOfThread(m_daemonThread));
 			m_serviceRunning = false;
 
 			// notify handler that the server stopped.  if handler
@@ -585,6 +583,10 @@ CArchDaemonWindows::doRunDaemon(RunFunc run, StopFunc stop)
 			if (m_serviceState == SERVICE_STOPPED) {
 				break;
 			}
+
+			// done with callback thread
+			ARCH->closeThread(m_daemonThread);
+			m_daemonThread = NULL;
 		}
 
 		// prevent daemonHandler from changing state
@@ -598,7 +600,10 @@ CArchDaemonWindows::doRunDaemon(RunFunc run, StopFunc stop)
 		setStatus(m_serviceState);
 
 		// clean up
-		m_stop = NULL;
+		if (m_daemonThread != NULL) {
+			ARCH->closeThread(m_daemonThread);
+			m_daemonThread = NULL;
+		}
 		ARCH->unlockMutex(m_serviceMutex);
 
 		return result;
@@ -716,7 +721,7 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 	}
 
 	// tell service control manager that we're starting
-	setStatus(SERVICE_START_PENDING, 0, 1000);
+	setStatus(SERVICE_START_PENDING, 0, 10000);
 
 	// if no arguments supplied then try getting them from the registry.
 	// the first argument doesn't count because it's the service name.
@@ -830,12 +835,12 @@ CArchDaemonWindows::serviceHandler(DWORD ctrl)
 	case SERVICE_CONTROL_PAUSE:
 		// update state
 		m_serviceState = SERVICE_PAUSE_PENDING;
-		setStatus(m_serviceState, 0, 1000);
+		setStatus(m_serviceState, 0, 5000);
 
 		// stop run callback if running and wait for it to finish
 		if (m_serviceRunning) {
 			m_serviceHandlerWaiting = true;
-			m_stop();
+			ARCH->cancelThread(m_daemonThread);
 			ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
 		}
 
@@ -860,12 +865,12 @@ CArchDaemonWindows::serviceHandler(DWORD ctrl)
 	case SERVICE_CONTROL_SHUTDOWN:
 		// update state
 		m_serviceState = SERVICE_STOP_PENDING;
-		setStatus(m_serviceState, 0, 1000);
+		setStatus(m_serviceState, 0, 5000);
 
 		// stop run callback if running and wait for it to finish
 		if (m_serviceRunning) {
 			m_serviceHandlerWaiting = true;
-			m_stop();
+			ARCH->cancelThread(m_daemonThread);
 			ARCH->waitCondVar(m_serviceCondVar, m_serviceMutex, -1.0);
 		}
 

@@ -175,12 +175,12 @@ realMain(void)
 				DAEMON_RUNNING(true);
 				locked = false;
 				s_server->mainLoop();
-				locked = true;
 
 				// clean up
 #define FINALLY do {								\
 				if (!locked) {						\
 					DAEMON_RUNNING(false);			\
+					locked = true;					\
 				}									\
 				if (s_server != NULL) {				\
 					if (opened) {					\
@@ -209,7 +209,7 @@ realMain(void)
 			catch (...) {
 				// don't try to restart and fail
 				ARG->m_restartable = false;
-				result           = kExitFailed;
+				result             = kExitFailed;
 				FINALLY;
 			}
 #undef FINALLY
@@ -220,7 +220,7 @@ realMain(void)
 		catch (XThread&) {
 			// terminated
 			ARG->m_restartable = false;
-			result           = kExitTerminated;
+			result             = kExitTerminated;
 		}
 	} while (ARG->m_restartable);
 
@@ -620,13 +620,6 @@ byeThrow(int x)
 }
 
 static
-void
-daemonStop(void)
-{
-	s_server->exitMainLoop();
-}
-
-static
 int
 daemonStartup(int argc, const char** argv)
 {
@@ -645,7 +638,7 @@ daemonStartup(int argc, const char** argv)
 	loadConfig();
 
 	// run as a service
-	return CArchMiscWindows::runDaemon(realMain, daemonStop);
+	return CArchMiscWindows::runDaemon(realMain);
 }
 
 static
@@ -682,8 +675,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		try {
 			return ARCH->daemonize(DAEMON_NAME, &daemonStartup);
 		}
-		catch (XArchDaemon&) {
-			LOG((CLOG_CRIT "failed to start as a service" BYE, ARG->m_pname));
+		catch (XArchDaemon& e) {
+			LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
 			return kExitFailed;
 		}
 	}
@@ -702,8 +695,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			try {
 				result = ARCH->daemonize(DAEMON_NAME, &daemonStartup95);
 			}
-			catch (XArchDaemon&) {
-				LOG((CLOG_CRIT "failed to start as a service" BYE, ARG->m_pname));
+			catch (XArchDaemon& e) {
+				LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
 				result = kExitFailed;
 			}
 		}

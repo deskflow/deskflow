@@ -78,6 +78,7 @@ public:
 private:
 	CArchThreadImpl*	find(DWORD id);
 	CArchThreadImpl*	findNoRef(DWORD id);
+	CArchThreadImpl*	findNoRefOrCreate(DWORD id);
 	void				insert(CArchThreadImpl* thread);
 	void				erase(CArchThreadImpl* thread);
 

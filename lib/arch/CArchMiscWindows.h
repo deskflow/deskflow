@@ -19,7 +19,6 @@
 class CArchMiscWindows {
 public:
 	typedef int			(*RunFunc)(void);
-	typedef void		(*StopFunc)(void);
 
 	//! Test if windows 95, et al.
 	/*!
@@ -31,7 +30,7 @@ public:
 	/*!
 	Delegates to CArchDaemonWindows.
 	*/
-	static int			runDaemon(RunFunc runFunc, StopFunc stopFunc);
+	static int			runDaemon(RunFunc runFunc);
 
 	//! Indicate daemon is in main loop
 	/*!

@@ -311,7 +311,7 @@ CArchMultithreadWindows::closeThread(CArchThread thread)
 
 		// remove thread from list
 		lockMutex(m_threadMutex);
-		assert(findNoRef(thread->m_id) == thread);
+		assert(findNoRefOrCreate(thread->m_id) == thread);
 		erase(thread);
 		unlockMutex(m_threadMutex);
 
@@ -532,6 +532,23 @@ CArchMultithreadWindows::find(DWORD id)
 CArchThreadImpl*
 CArchMultithreadWindows::findNoRef(DWORD id)
 {
+	CArchThreadImpl* impl = findNoRefOrCreate(id);
+	if (impl == NULL) {
+		// create thread for calling thread which isn't in our list and
+		// add it to the list.  this won't normally happen but it can if
+		// the system calls us under a new thread, like it does when we
+		// run as a service.
+		impl           = new CArchThreadImpl;
+		impl->m_thread = NULL;
+		impl->m_id     = GetCurrentThreadId();
+		insert(impl);
+	}
+	return impl;
+}
+
+CArchThreadImpl*
+CArchMultithreadWindows::findNoRefOrCreate(DWORD id)
+{
 	// linear search
 	for (CThreadList::const_iterator index  = m_threadList.begin();
 									 index != m_threadList.end(); ++index) {
@@ -548,7 +565,7 @@ CArchMultithreadWindows::insert(CArchThreadImpl* thread)
 	assert(thread != NULL);
 
 	// thread shouldn't already be on the list
-	assert(findNoRef(thread->m_id) == NULL);
+	assert(findNoRefOrCreate(thread->m_id) == NULL);
 
 	// append to list
 	m_threadList.push_back(thread);
@@ -570,7 +587,7 @@ void
 CArchMultithreadWindows::refThread(CArchThreadImpl* thread)
 {
 	assert(thread != NULL);
-	assert(findNoRef(thread->m_id) != NULL);
+	assert(findNoRefOrCreate(thread->m_id) != NULL);
 	++thread->m_refCount;
 }
 

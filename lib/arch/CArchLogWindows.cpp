@@ -77,7 +77,7 @@ CArchLogWindows::writeLog(ELevel level, const char* msg)
 								0,					// event ID
 								NULL,
 								0,
-								strlen(msg + 1),	// raw data size
+								strlen(msg) + 1,	// raw data size
 								NULL,
 								const_cast<char*>(msg));// raw data
 	}

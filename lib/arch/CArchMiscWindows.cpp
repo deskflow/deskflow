@@ -35,9 +35,9 @@ CArchMiscWindows::isWindows95Family()
 }
 
 int
-CArchMiscWindows::runDaemon(RunFunc runFunc, StopFunc stopFunc)
+CArchMiscWindows::runDaemon(RunFunc runFunc)
 {
-	return CArchDaemonWindows::runDaemon(runFunc, stopFunc);
+	return CArchDaemonWindows::runDaemon(runFunc);
 }
 
 void
