@@ -295,7 +295,9 @@ CArchMutex
 CArchMultithreadPosix::newMutex()
 {
 	pthread_mutexattr_t attr;
-	int status = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+	int status = pthread_mutexattr_init(&attr);
+	assert(status == 0);
+	status = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
 	assert(status == 0);
 	CArchMutexImpl* mutex = new CArchMutexImpl;
 	status = pthread_mutex_init(&mutex->m_mutex, &attr);
