@@ -1144,7 +1144,7 @@ static const KeyID		g_virtualKey[][2] =
 	/* 0x1d */ kKeyNone,		kKeyNone,		// VK_NONCONVERT	
 	/* 0x1e */ kKeyNone,		kKeyNone,		// VK_ACCEPT		
 	/* 0x1f */ kKeyNone,		kKeyNone,		// VK_MODECHANGE	
-	/* 0x20 */ 0x0020,			kKeyNone,		// VK_SPACE
+	/* 0x20 */ kKeyNone,		kKeyNone,		// VK_SPACE
 	/* 0x21 */ kKeyKP_PageUp,	kKeyPageUp,		// VK_PRIOR
 	/* 0x22 */ kKeyKP_PageDown,	kKeyPageDown,	// VK_NEXT
 	/* 0x23 */ kKeyKP_End,		kKeyEnd,		// VK_END
@@ -1421,7 +1421,8 @@ CMSWindowsPrimaryScreen::mapKey(
 
 		// convert to ascii
 		WORD ascii;
-		int result = ToAscii(vkCode, scanCode, m_keys, &ascii, 0);
+		int result = ToAscii(vkCode, scanCode, m_keys, &ascii,
+								((menu & 0x80) == 0) ? 0 : 1);
 
 		// restore control state
 		m_keys[VK_LCONTROL] = lControl;
@@ -1504,12 +1505,37 @@ CMSWindowsPrimaryScreen::mapKey(
 	// set mask
 	*altgr = false;
 	if (id != kKeyNone && id != kKeyMultiKey && c != 0) {
-		// note if key requires AltGr
-		SHORT virtualKeyAndModifierState = VkKeyScan(c);
-		BYTE modifierState = HIBYTE(virtualKeyAndModifierState);
-		if ((modifierState & 6) == 6) {
-			// key requires ctrl and alt == AltGr
+		// note if key requires AltGr.  VkKeyScan() can have a problem
+		// with some characters.  there are two problems in particular.
+		// first, typing a dead key then pressing space will cause
+		// VkKeyScan() to return 0xffff.  second, certain characters
+		// may map to multiple virtual keys and we might get the wrong
+		// one.  if that happens then we might not get the right
+		// modifier mask.  AltGr+9 on the french keyboard layout (^)
+		// has this problem.  in the first case, we'll assume AltGr is
+		// required (only because it solves the problems we've seen
+		// so far).  in the second, we'll use whatever the keyboard
+		// state says.
+		WORD virtualKeyAndModifierState = VkKeyScan(c);
+		if (virtualKeyAndModifierState == 0xffff) {
+			// there is no mapping.  assume AltGr.
+			LOG((CLOG_DEBUG1 "no VkKeyScan() mapping"));
 			*altgr = true;
+		}
+		else if (LOBYTE(virtualKeyAndModifierState) != vkCode) {
+			// we didn't get the key that was actually pressed
+			LOG((CLOG_DEBUG1 "VkKeyScan() mismatch"));
+			if ((m_keys[VK_CONTROL] & 0x80) != 0 &&
+				(m_keys[VK_MENU] & 0x80) != 0) {
+				*altgr = true;
+			}
+		}
+		else {
+			BYTE modifierState = HIBYTE(virtualKeyAndModifierState);
+			if ((modifierState & 6) == 6) {
+				// key requires ctrl and alt == AltGr
+				*altgr = true;
+			}
 		}
 
 		// map modifier key
