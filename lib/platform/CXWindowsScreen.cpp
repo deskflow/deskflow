@@ -239,7 +239,7 @@ CXWindowsScreen::open()
 	updateScreenShape();
 
 	// initialize the screen saver
-	m_atomScreensaver = XInternAtom(m_display, "SCREENSAVER", False);
+	m_atomScreensaver = XInternAtom(m_display, "SYNERGY_SCREENSAVER", False);
 	m_screensaver     = new CXWindowsScreenSaver(this, m_display);
 }
 
@@ -634,7 +634,7 @@ CXWindowsScreen::onPreDispatch(CEvent* event)
 		break;
 
 	case ClientMessage:
-		if (xevent->xclient.message_type == m_atomScreensaver ||
+		if (xevent->xclient.message_type == m_atomScreensaver &&
 			xevent->xclient.format       == 32) {
 			// screen saver activation/deactivation event
 			m_eventHandler->onScreensaver(xevent->xclient.data.l[0] != 0);

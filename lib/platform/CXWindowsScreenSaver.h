@@ -132,6 +132,7 @@ private:
 	Atom				m_atomScreenSaverVersion;
 	Atom				m_atomScreenSaverActivate;
 	Atom				m_atomScreenSaverDeactivate;
+	Atom				m_atomSynergyScreenSaver;
 
 	// built-in screen saver settings
 	int					m_timeout;

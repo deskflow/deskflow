@@ -50,6 +50,8 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 										"ACTIVATE", False);
 	m_atomScreenSaverDeactivate = XInternAtom(m_display,
 										"DEACTIVATE", False);
+	m_atomSynergyScreenSaver    = XInternAtom(m_display,
+										"SYNERGY_SCREENSAVER", False);
 
 	// create dummy window to receive xscreensaver responses.  this
 	// shouldn't be necessary (we should be able to send responses
@@ -263,7 +265,7 @@ CXWindowsScreenSaver::sendNotify(bool activated)
 		event.xclient.type         = ClientMessage;
 		event.xclient.display      = m_display;
 		event.xclient.window       = m_notify;
-		event.xclient.message_type = m_atomScreenSaver;
+		event.xclient.message_type = m_atomSynergyScreenSaver;
 		event.xclient.format       = 32;
 		event.xclient.data.l[0]    = activated ? 1 : 0;
 		event.xclient.data.l[1]    = 0;
@@ -342,7 +344,7 @@ void
 CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
 {
 	if (m_xscreensaverActive != activated) {
-		LOG((CLOG_DEBUG "xscreensaver %s", activated ? "activated" : "deactivated"));
+		LOG((CLOG_DEBUG "xscreensaver %s on window 0x%08x", activated ? "activated" : "deactivated", m_xscreensaver));
 		m_xscreensaverActive = activated;
 		sendNotify(activated);
 	}
