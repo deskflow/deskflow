@@ -334,16 +334,22 @@ CTCPSocket::newJob()
 {
 	// note -- must have m_mutex locked on entry
 
-	if (m_socket == NULL || !(m_readable || m_writable)) {
+	if (m_socket == NULL) {
 		return NULL;
 	}
 	else if (!m_connected) {
 		assert(!m_readable);
+		if (!(m_readable || m_writable)) {
+			return NULL;
+		}
 		return new TSocketMultiplexerMethodJob<CTCPSocket>(
 								this, &CTCPSocket::serviceConnecting,
 								m_socket, m_readable, m_writable);
 	}
 	else {
+		if (!(m_readable || (m_writable && (m_outputBuffer.getSize() > 0)))) {
+			return NULL;
+		}
 		return new TSocketMultiplexerMethodJob<CTCPSocket>(
 								this, &CTCPSocket::serviceConnected,
 								m_socket, m_readable,
