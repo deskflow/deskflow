@@ -35,7 +35,7 @@ CStreamBuffer::peek(UInt32 n)
 		scan = m_chunks.erase(scan);
 	}
 
-	return reinterpret_cast<const void*>(head->begin() + m_headUsed);
+	return reinterpret_cast<const void*>(&(head->begin()[m_headUsed]));
 }
 
 void

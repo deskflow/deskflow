@@ -6,8 +6,8 @@
 #endif
 #include "stdpost.h"
 
-#if defined(_MSC_VER)
-// istream has no overloads for __int* types
+#if defined(_MSC_VER) && _MSC_VER <= 1200
+// VC++6 istream has no overloads for __int* types, .NET does
 inline
 std::istream& operator>>(std::istream& s, SInt8& i)
 { return s >> (signed char&)i; }
