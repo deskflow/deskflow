@@ -561,40 +561,16 @@ CArch::vsnprintf(char* str, int size, const char* fmt, va_list ap)
 	return m_string->vsnprintf(str, size, fmt, ap);
 }
 
-CArchMBState
-CArch::newMBState()
+int
+CArch::convStringMBToWC(wchar_t* dst, const char* src, UInt32 n, bool* errors)
 {
-	return m_string->newMBState();
-}
-
-void
-CArch::closeMBState(CArchMBState state)
-{
-	m_string->closeMBState(state);
-}
-
-void
-CArch::initMBState(CArchMBState state)
-{
-	m_string->initMBState(state);
-}
-
-bool
-CArch::isInitMBState(CArchMBState state)
-{
-	return m_string->isInitMBState(state);
+	return m_string->convStringMBToWC(dst, src, n, errors);
 }
 
 int
-CArch::convMBToWC(wchar_t* dst, const char* src, int n, CArchMBState state)
+CArch::convStringWCToMB(char* dst, const wchar_t* src, UInt32 n, bool* errors)
 {
-	return m_string->convMBToWC(dst, src, n, state);
-}
-
-int
-CArch::convWCToMB(char* dst, wchar_t src, CArchMBState state)
-{
-	return m_string->convWCToMB(dst, src, state);
+	return m_string->convStringWCToMB(dst, src, n, errors);
 }
 
 IArchString::EWideCharEncoding

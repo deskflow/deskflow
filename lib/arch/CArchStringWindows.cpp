@@ -18,22 +18,11 @@
 #include <windows.h>
 #include <stdio.h>
 
-#include "CMultibyte.cpp"
-
 //
 // CArchStringWindows
 //
 
-CArchStringWindows::CArchStringWindows()
-{
-	initMB();
-}
-
-CArchStringWindows::~CArchStringWindows()
-{
-	cleanMB();
-}
-
+#include "CMultibyte.cpp"
 #define HAVE_VSNPRINTF 1
 #define ARCH_VSNPRINTF _vsnprintf
 #include "vsnprintf.cpp"

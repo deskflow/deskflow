@@ -28,12 +28,10 @@ public:
 	// IArchString overrides
 	virtual int			vsnprintf(char* str,
 							int size, const char* fmt, va_list ap);
-	virtual CArchMBState	newMBState();
-	virtual void		closeMBState(CArchMBState);
-	virtual void		initMBState(CArchMBState);
-	virtual bool		isInitMBState(CArchMBState);
-	virtual int			convMBToWC(wchar_t*, const char*, int, CArchMBState);
-	virtual int			convWCToMB(char*, wchar_t, CArchMBState);
+	virtual int			convStringMBToWC(wchar_t*,
+							const char*, UInt32 n, bool* errors);
+	virtual int			convStringWCToMB(char*,
+							const wchar_t*, UInt32 n, bool* errors);
 	virtual EWideCharEncoding
 						getWideCharEncoding();
 };

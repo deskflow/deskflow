@@ -142,7 +142,6 @@ AC_FUNC_STRFTIME
 AC_CHECK_FUNCS(gmtime_r)
 ACX_CHECK_GETPWUID_R
 AC_CHECK_FUNCS(vsnprintf)
-AC_CHECK_FUNCS(wcrtomb mbrtowc mbsinit)
 AC_FUNC_SELECT_ARGTYPES
 ACX_CHECK_POLL
 dnl use AC_REPLACE_FUNCS() for stuff in string.h

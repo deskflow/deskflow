@@ -140,16 +140,6 @@ SOURCE=.\CMultibyte.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMultibyteEmu.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMultibyteOS.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
 SOURCE=.\vsnprintf.cpp
 # PROP Exclude_From_Build 1
 # End Source File

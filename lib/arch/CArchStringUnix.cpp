@@ -15,22 +15,11 @@
 #include "CArchStringUnix.h"
 #include <stdio.h>
 
-#include "CMultibyte.cpp"
-
 //
 // CArchStringUnix
 //
 
-CArchStringUnix::CArchStringUnix()
-{
-	initMB();
-}
-
-CArchStringUnix::~CArchStringUnix()
-{
-	cleanMB();
-}
-
+#include "CMultibyte.cpp"
 #include "vsnprintf.cpp"
 
 IArchString::EWideCharEncoding

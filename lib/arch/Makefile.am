@@ -86,8 +86,6 @@ WIN32_SOURCE_FILES = 			\
 EXTRA_DIST =					\
 	arch.dsp					\
 	CMultibyte.cpp				\
-	CMultibyteEmu.cpp			\
-	CMultibyteOS.cpp			\
 	vsnprintf.cpp				\
 	$(UNIX_SOURCE_FILES)		\
 	$(WIN32_SOURCE_FILES)		\
