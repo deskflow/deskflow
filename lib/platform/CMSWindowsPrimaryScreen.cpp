@@ -1537,48 +1537,44 @@ CMSWindowsPrimaryScreen::mapKey(
 				*altgr = true;
 			}
 		}
+	}
 
-		// map modifier key
-		KeyModifierMask mask = 0;
-		if (((m_keys[VK_LSHIFT] |
-			  m_keys[VK_RSHIFT] |
-			  m_keys[VK_SHIFT]) & 0x80) != 0) {
-			mask |= KeyModifierShift;
-		}
-		if (*altgr) {
-			mask |= KeyModifierModeSwitch;
-		}
-		else {
-			if (((m_keys[VK_LCONTROL] |
-				  m_keys[VK_RCONTROL] |
-				  m_keys[VK_CONTROL]) & 0x80) != 0) {
-				mask |= KeyModifierControl;
-			}
-			if (((m_keys[VK_LMENU] |
-				  m_keys[VK_RMENU] |
-				  m_keys[VK_MENU]) & 0x80) != 0) {
-				mask |= KeyModifierAlt;
-			}
-		}
-		if (((m_keys[VK_LWIN] |
-			  m_keys[VK_RWIN]) & 0x80) != 0) {
-			mask |= KeyModifierSuper;
-		}
-		if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
-			mask |= KeyModifierCapsLock;
-		}
-		if ((m_keys[VK_NUMLOCK] & 0x01) != 0) {
-			mask |= KeyModifierNumLock;
-		}
-		if ((m_keys[VK_SCROLL] & 0x01) != 0) {
-			mask |= KeyModifierScrollLock;
-		}
-		*maskOut = mask;
+	// map modifier key
+	KeyModifierMask mask = 0;
+	if (((m_keys[VK_LSHIFT] |
+		  m_keys[VK_RSHIFT] |
+		  m_keys[VK_SHIFT]) & 0x80) != 0) {
+		mask |= KeyModifierShift;
+	}
+	if (*altgr) {
+		mask |= KeyModifierModeSwitch;
 	}
 	else {
-		// don't care
-		*maskOut = 0;
+		if (((m_keys[VK_LCONTROL] |
+			  m_keys[VK_RCONTROL] |
+			  m_keys[VK_CONTROL]) & 0x80) != 0) {
+			mask |= KeyModifierControl;
+		}
+		if (((m_keys[VK_LMENU] |
+			  m_keys[VK_RMENU] |
+			  m_keys[VK_MENU]) & 0x80) != 0) {
+			mask |= KeyModifierAlt;
+		}
 	}
+	if (((m_keys[VK_LWIN] |
+		  m_keys[VK_RWIN]) & 0x80) != 0) {
+		mask |= KeyModifierSuper;
+	}
+	if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
+		mask |= KeyModifierCapsLock;
+	}
+	if ((m_keys[VK_NUMLOCK] & 0x01) != 0) {
+		mask |= KeyModifierNumLock;
+	}
+	if ((m_keys[VK_SCROLL] & 0x01) != 0) {
+		mask |= KeyModifierScrollLock;
+	}
+	*maskOut = mask;
 
 	return id;
 }
