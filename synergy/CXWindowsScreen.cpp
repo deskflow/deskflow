@@ -186,6 +186,7 @@ bool					CXWindowsScreen::lostClipboard(
 		// note the time
 		CLock lock(&m_mutex);
 		m_lostClipboard = timestamp;
+		log((CLOG_INFO "lost clipboard ownership at %d", timestamp));
 		return true;
 	}
 	return false;
@@ -200,7 +201,7 @@ bool					CXWindowsScreen::setDisplayClipboard(
 	XSetSelectionOwner(m_display, kClipboardSelection, requestor, timestamp);
 	if (XGetSelectionOwner(m_display, kClipboardSelection) == requestor) {
 		// we got the selection
-		log((CLOG_DEBUG "grabbed clipboard"));
+		log((CLOG_INFO "grabbed clipboard at %d", timestamp));
 		m_gotClipboard = timestamp;
 
 		if (clipboard != NULL) {
@@ -251,7 +252,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 		const SInt32 numTargets = targets.size() / sizeof(Atom);
 		std::set<IClipboard::EFormat> clipboardFormats;
 		std::set<Atom> targets;
-		log((CLOG_DEBUG "selection has %d targets", numTargets));
+		log((CLOG_INFO "getting selection with %d targets", numTargets));
 		for (SInt32 i = 0; i < numTargets; ++i) {
 			Atom format = targetAtoms[i];
 			log((CLOG_DEBUG " source target %d", format));
@@ -300,6 +301,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 			// add to clipboard and note we've done it
 			clipboard->add(actualFormat, data);
 			clipboardFormats.insert(actualFormat);
+			log((CLOG_INFO "  added format %d for target %d", actualFormat, format));
 		}
 	}
 	else {
@@ -573,7 +575,6 @@ void					CXWindowsScreen::processClipboardRequest(
 	// find the request list
 	CRequestMap::iterator index = m_requests.find(requestor);
 	if (index == m_requests.end()) {
-		log((CLOG_WARN "received property event on unexpected window"));
 		return;
 	}
 	CRequestList* list = index->second;
@@ -655,11 +656,13 @@ bool					CXWindowsScreen::sendClipboardData(
 		}
 
 		if (data.size() > kMaxRequestSize) {
+			log((CLOG_DEBUG "handling clipboard request for %d as INCR", target));
+
 			// FIXME -- handle Alloc errors (by returning false)
 			// set property to INCR
 			const UInt32 zero = 0;
 			XChangeProperty(m_display, requestor, property,
-								m_atomINCR, sizeof(zero),
+								m_atomINCR, 8 * sizeof(zero),
 								PropModeReplace,
 								reinterpret_cast<const unsigned char*>(&zero),
 								1);
@@ -684,6 +687,8 @@ bool					CXWindowsScreen::sendClipboardData(
 			list->push_back(request);
 		}
 		else {
+			log((CLOG_DEBUG "handling clipboard request for %d", target));
+
 			// FIXME -- handle Alloc errors (by returning false)
 			XChangeProperty(m_display, requestor, property,
 								type, size,
@@ -700,6 +705,8 @@ bool					CXWindowsScreen::sendClipboardMultiple(
 								Window requestor,
 								Atom property, Time time)
 {
+	log((CLOG_DEBUG "handling clipboard request for MULTIPLE"));
+
 	// get the list of requested formats
 	Atom type;
 	SInt32 size;
@@ -742,7 +749,7 @@ bool					CXWindowsScreen::sendClipboardMultiple(
 	if (updated) {
 		// FIXME -- handle Alloc errors (by returning false)
 		XChangeProperty(m_display, requestor, property,
-								m_atomAtomPair, sizeof(Atom),
+								m_atomAtomPair, 8 * sizeof(Atom),
 								PropModeReplace,
 								reinterpret_cast<const unsigned char*>(data.data()),
 								data.length());
@@ -761,10 +768,12 @@ bool					CXWindowsScreen::sendClipboardTargets(
 								Window requestor,
 								Atom property, Time /*time*/)
 {
+	log((CLOG_DEBUG "handling request for TARGETS"));
+
 	// count the number of targets, plus TARGETS and MULTIPLE
 	SInt32 numTargets = 2;
 	if (m_clipboard.has(IClipboard::kText)) {
-		numTargets += 1;
+		numTargets += 2;
 	}
 
 	// construct response
@@ -774,12 +783,13 @@ bool					CXWindowsScreen::sendClipboardTargets(
 	response[count++] = m_atomMultiple;
 	if (m_clipboard.has(IClipboard::kText)) {
 		response[count++] = m_atomText;
+		response[count++] = m_atomString;
 	}
 
 	// send response (we assume we can transfer the entire list at once)
 	// FIXME -- handle Alloc errors (by returning false)
 	XChangeProperty(m_display, requestor, property,
-								m_atomAtom, sizeof(Atom),
+								m_atomAtom, 8 * sizeof(Atom),
 								PropModeReplace,
 								reinterpret_cast<unsigned char*>(response),
 								count);
@@ -794,9 +804,11 @@ bool					CXWindowsScreen::sendClipboardTimestamp(
 								Window requestor,
 								Atom property, Time /*time*/)
 {
+	log((CLOG_DEBUG "handling clipboard request for TIMESTAMP"));
+
 	// FIXME -- handle Alloc errors (by returning false)
 	XChangeProperty(m_display, requestor, property,
-								m_atomInteger, sizeof(m_gotClipboard),
+								m_atomInteger, 8 * sizeof(m_gotClipboard),
 								PropModeReplace,
 								reinterpret_cast<unsigned char*>(&m_gotClipboard),
 								1);
