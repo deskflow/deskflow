@@ -3,12 +3,21 @@
 
 class CThread;
 
+//! A timer thread
+/*!
+An object of this class cancels the thread that called the c'tor unless
+the object is destroyed before a given timeout.
+*/
 class CTimerThread {
 public:
-	// cancels the calling thread after timeout seconds unless destroyed
-	// before then.  if timeout is less than zero then it never times
-	// out and is a no-op.
+	//! Cancel calling thread after \c timeout seconds
+	/*!
+	Cancels the calling thread after \c timeout seconds unless destroyed
+	before then.  If \c timeout is less than zero then it never times
+	out and this is a no-op.
+	*/
 	CTimerThread(double timeout);
+	//! Cancel the timer thread
 	~CTimerThread();
 
 private:

@@ -13,6 +13,7 @@
 class CMutex;
 class IJob;
 
+//! Internal thread class;  do not use directly
 class CThreadRep {
 public:
 	CThreadRep(IJob*, void* userData);

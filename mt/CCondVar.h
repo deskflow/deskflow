@@ -6,43 +6,96 @@
 
 class CStopwatch;
 
+//! Generic condition variable
+/*!
+This class provides functionality common to all condition variables
+but doesn't provide the actual variable storage.  A condition variable
+is a multiprocessing primitive that can be waited on.  Every condition
+variable has an associated mutex.
+*/
 class CCondVarBase {
 public:
-	// mutex must be supplied.  all condition variables have an
-	// associated mutex.
+	/*!
+	\c mutex must not be NULL.  All condition variables have an
+	associated mutex.  The mutex needn't be unique to one condition
+	variable.
+	*/
 	CCondVarBase(CMutex* mutex);
 	~CCondVarBase();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// lock/unlock the mutex.  see CMutex.
+	//! Lock the condition variable's mutex
+	/*!
+	Lock the condition variable's mutex.  The condition variable should
+	be locked before reading or writing it.  It must be locked for a
+	call to wait().  Locks are not recursive;  locking a locked mutex
+	will deadlock the thread.
+	*/
 	void				lock() const;
+
+	//! Unlock the condition variable's mutex
 	void				unlock() const;
 
-	// signal the condition.  Signal() wakes one waiting thread.
-	// Broadcast() wakes all waiting threads.
+	//! Signal the condition variable
+	/*!
+	Wake up one waiting thread, if there are any.  Which thread gets
+	woken is undefined.
+	*/
 	void				signal();
+
+	//! Signal the condition variable
+	/*!
+	Wake up all waiting threads, if any.
+	*/
 	void				broadcast();
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// wait on the condition.  if timeout < 0 then wait until signalled,
-	// otherwise up to timeout seconds or until signalled, whichever
-	// comes first.  since clients normally wait on condition variables
-	// in a loop, clients can provide a CStopwatch that acts as the
-	// timeout clock.  using it, clients don't have to recalculate the
-	// timeout on each iteration.  passing a stopwatch with a negative
-	// timeout is pointless but permitted.
-	//
-	// returns true if the object was signalled during the wait, false
-	// otherwise.
-	//
-	// (cancellation point)
+	//! Wait on the condition variable
+	/*!
+	Wait on the condition variable.  If \c timeout < 0 then wait until
+	signalled, otherwise up to \c timeout seconds or until signalled,
+	whichever comes first.	Returns true if the object was signalled
+	during the wait, false otherwise.
+	
+	The proper way to wait for a condition is:
+	\code
+	cv.lock();
+	while (cv-expr) {
+		cv.wait();
+    }
+	cv.unlock();
+	\endcode
+	where \c cv-expr involves the value of \c cv and is false when the
+	condition is satisfied.
+
+	(cancellation point)
+	*/
 	bool				wait(double timeout = -1.0) const;
-	bool				wait(CStopwatch&, double timeout) const;
 
-	// get the mutex passed to the c'tor
+	//! Wait on the condition variable
+	/*!
+	Same as \c wait(double) but use \c timer to compare against \timeout.
+	Since clients normally wait on condition variables in a loop, clients
+	can use this to avoid recalculating \c timeout on each iteration.
+	Passing a stopwatch with a negative \c timeout is pointless (it will
+	never time out) but permitted.
+
+	(cancellation point)
+	*/
+	bool				wait(CStopwatch& timer, double timeout) const;
+
+	//! Get the mutex
+	/*!
+	Get the mutex passed to the c'tor.
+	*/
 	CMutex*				getMutex() const;
+
+	//@}
 
 private:
 	void				init();
@@ -63,26 +116,48 @@ private:
 #endif
 };
 
+//! Condition variable
+/*!
+A condition variable with storage for type \c T.
+*/
 template <class T>
 class CCondVar : public CCondVarBase {
 public:
-	CCondVar(CMutex* mutex, const T&);
+	//! Initialize using \c value
+	CCondVar(CMutex* mutex, const T& value);
+	//! Initialize using another condition variable's value
 	CCondVar(const CCondVar&);
 	~CCondVar();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// assigns the value of the variable
-	CCondVar&			operator=(const CCondVar&);
+	//! Assigns the value of \c cv to this
+	/*!
+	Set the variable's value.  The condition variable should be locked
+	before calling this method.
+	*/
+	CCondVar&			operator=(const CCondVar& cv);
 
-	// assign the value
-	CCondVar&			operator=(const T&);
+	//! Assigns \c value to this
+	/*!
+	Set the variable's value.  The condition variable should be locked
+	before calling this method.
+	*/
+	CCondVar&			operator=(const T& v);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// get the const value.  this object should be locked before
-	// calling this method.
+	//! Get the variable's value
+	/*!
+	Get the variable's value.  The condition variable should be locked
+	before calling this method.
+	*/
 						operator const T&() const;
+
+	//@}
 
 private:
 	T					m_data;
