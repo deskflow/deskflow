@@ -89,25 +89,7 @@ protected:
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
 
 private:
-	class CCleanupNote {
-	public:
-		CCleanupNote(CServer*);
-		~CCleanupNote();
-
-	private:
-		CServer*		m_server;
-	};
-
-	class CConnectionNote {
-	public:
-		CConnectionNote(CServer*, const CString&, IServerProtocol*);
-		~CConnectionNote();
-
-	private:
-		bool			m_pending;
-		CServer*		m_server;
-		CString			m_name;
-	};
+	typedef std::list<CThread*> CThreadList;
 
 	class CScreenInfo {
 	public:
@@ -176,8 +158,17 @@ private:
 	// update the clipboard if owned by the primary screen
 	void				updatePrimaryClipboard(ClipboardID);
 
-	// cancel running threads
-	void				cleanupThreads(double timeout = -1.0);
+	// start a thread, adding it to the list of threads
+	void				startThread(IJob* adopted);
+
+	// cancel running threads, waiting at most timeout seconds for
+	// them to finish.
+	void				stopThreads(double timeout = -1.0);
+
+	// reap threads, clearing finished threads from the thread list.
+	// doReapThreads does the work on the given thread list.
+	void				reapThreads();
+	void				doReapThreads(CThreadList&);
 
 	// thread method to accept incoming client connections
 	void				acceptClients(void*);
@@ -191,18 +182,11 @@ private:
 	// thread method to process HTTP requests
 	void				processHTTPRequest(void*);
 
-	// thread cleanup list maintenance
-	friend class CCleanupNote;
-	void				addCleanupThread(const CThread& thread);
-	void				removeCleanupThread(const CThread& thread);
-
 	// connection list maintenance
-	friend class CConnectionNote;
 	CScreenInfo*		addConnection(const CString& name, IServerProtocol*);
 	void				removeConnection(const CString& name);
 
 private:
-	typedef std::list<CThread*> CThreadList;
 	typedef std::map<CString, CScreenInfo*> CScreenList;
 	class CClipboardInfo {
 	public:
@@ -225,8 +209,7 @@ private:
 	ISocketFactory*		m_socketFactory;
 	ISecurityFactory*	m_securityFactory;
 
-	CThreadList			m_cleanupList;
-	CCondVar<SInt32>	m_cleanupSize;
+	CThreadList			m_threads;
 
 	IPrimaryScreen*		m_primary;
 	CScreenList			m_screens;

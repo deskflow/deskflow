@@ -38,7 +38,6 @@ const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
 
 CServer::CServer(const CString& serverName) :
 	m_name(serverName),
-	m_cleanupSize(&m_mutex, 0),
 	m_primary(NULL),
 	m_active(NULL),
 	m_primaryInfo(NULL),
@@ -81,12 +80,13 @@ CServer::run()
 		}
 
 		// start listening for new clients
-		CThread(new TMethodJob<CServer>(this, &CServer::acceptClients));
+		startThread(new TMethodJob<CServer>(this, &CServer::acceptClients));
 
 		// start listening for HTTP requests
 		if (m_config.getHTTPAddress().isValid()) {
 			m_httpServer = new CHTTPServer(this);
-			CThread(new TMethodJob<CServer>(this, &CServer::acceptHTTPClients));
+			startThread(new TMethodJob<CServer>(this,
+								&CServer::acceptHTTPClients));
 		}
 
 		// handle events
@@ -95,7 +95,7 @@ CServer::run()
 
 		// clean up
 		log((CLOG_NOTE "stopping server"));
-		cleanupThreads();
+		stopThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
 		closePrimaryScreen();
@@ -105,7 +105,7 @@ CServer::run()
 
 		// clean up
 		log((CLOG_NOTE "stopping server"));
-		cleanupThreads();
+		stopThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
 		if (m_primary != NULL) {
@@ -115,7 +115,7 @@ CServer::run()
 	catch (XThread&) {
 		// clean up
 		log((CLOG_NOTE "stopping server"));
-		cleanupThreads();
+		stopThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
 		if (m_primary != NULL) {
@@ -128,7 +128,7 @@ CServer::run()
 
 		// clean up
 		log((CLOG_NOTE "stopping server"));
-		cleanupThreads();
+		stopThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
 		if (m_primary != NULL) {
@@ -149,7 +149,7 @@ CServer::shutdown()
 {
 	// stop all running threads but don't wait too long since some
 	// threads may be unable to proceed until this thread returns.
-	cleanupThreads(3.0);
+	stopThreads(3.0);
 
 	// done with the HTTP server
 	delete m_httpServer;
@@ -207,6 +207,9 @@ CServer::setConfig(const CConfig& config)
 								index != threads.end(); ++index) {
 		index->wait();
 	}
+
+	// clean up thread list
+	reapThreads();
 
 	// cut over
 	CLock lock(&m_mutex);
@@ -993,15 +996,84 @@ CServer::getNeighbor(CScreenInfo* src,
 	return dst;
 }
 
+void
+CServer::startThread(IJob* job)
+{
+	CLock lock(&m_mutex);
+	doReapThreads(m_threads);
+	CThread* thread = new CThread(job);
+	m_threads.push_back(thread);
+	log((CLOG_DEBUG1 "started thread %p", thread));
+}
+
+void
+CServer::stopThreads(double timeout)
+{
+	log((CLOG_DEBUG1 "stopping threads"));
+
+	// swap thread list so nobody can mess with it
+	CThreadList threads;
+	{
+		CLock lock(&m_mutex);
+		threads.swap(m_threads);
+	}
+
+	// cancel every thread
+	for (CThreadList::iterator index = threads.begin();
+								index != threads.end(); ++index) {
+		CThread* thread = *index;
+		thread->cancel();
+	}
+
+	// now wait for the threads
+	CStopwatch timer(true);
+	while (threads.size() > 0 && (timeout < 0.0 || timer.getTime() < timeout)) {
+		doReapThreads(threads);
+		CThread::sleep(0.01);
+	}
+
+	// delete remaining threads
+	for (CThreadList::iterator index = threads.begin();
+								index != threads.end(); ++index) {
+		CThread* thread = *index;
+		log((CLOG_DEBUG1 "reaped running thread %p", thread));
+		delete thread;
+	}
+
+	log((CLOG_DEBUG1 "stopped threads"));
+}
+
+void
+CServer::reapThreads()
+{
+	CLock lock(&m_mutex);
+	doReapThreads(m_threads);
+}
+
+void
+CServer::doReapThreads(CThreadList& threads)
+{
+	for (CThreadList::iterator index = threads.begin();
+								index != threads.end(); ) {
+		CThread* thread = *index;
+		if (thread->wait(0.0)) {
+			// thread terminated
+			index = threads.erase(index);
+			log((CLOG_DEBUG1 "reaped thread %p", thread));
+			delete thread;
+		}
+		else {
+			// thread is running
+			++index;
+		}
+	}
+}
+
 #include "CTCPListenSocket.h"
 void
 CServer::acceptClients(void*)
 {
 	log((CLOG_DEBUG1 "starting to wait for clients"));
-
-	// add this thread to the list of threads to cancel.  remove from
-	// list in d'tor.
-	CCleanupNote cleanupNote(this);
 
 	std::auto_ptr<IListenSocket> listen;
 	try {
@@ -1041,7 +1113,7 @@ CServer::acceptClients(void*)
 			CThread::testCancel();
 
 			// start handshake thread
-			CThread(new TMethodJob<CServer>(
+			startThread(new TMethodJob<CServer>(
 								this, &CServer::handshakeClient, socket));
 		}
 	}
@@ -1059,10 +1131,6 @@ CServer::handshakeClient(void* vsocket)
 	// get the socket pointer from the argument
 	assert(vsocket != NULL);
 	std::auto_ptr<IDataSocket> socket(reinterpret_cast<IDataSocket*>(vsocket));
-
-	// add this thread to the list of threads to cancel.  remove from
-	// list in d'tor.
-	CCleanupNote cleanupNote(this);
 
 	CString name("<unknown>");
 	try {
@@ -1088,8 +1156,8 @@ CServer::handshakeClient(void* vsocket)
 		assign(input, new CInputPacketStream(srcInput, own), IInputStream);
 		assign(output, new COutputPacketStream(srcOutput, own), IOutputStream);
 
+		bool connected = false;
 		std::auto_ptr<IServerProtocol> protocol;
-		std::auto_ptr<CConnectionNote> connectedNote;
 		try {
 			{
 				// give the client a limited time to complete the handshake
@@ -1135,8 +1203,8 @@ CServer::handshakeClient(void* vsocket)
 									IServerProtocol);
 
 				// client is now pending
-				assign(connectedNote, new CConnectionNote(this,
-									name, protocol.get()), CConnectionNote);
+				addConnection(name, protocol.get());
+				connected = true;
 
 				// ask and wait for the client's info
 				log((CLOG_DEBUG1 "waiting for info for client \"%s\"", name.c_str()));
@@ -1173,9 +1241,18 @@ CServer::handshakeClient(void* vsocket)
 			log((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
 			CProtocolUtil::writef(output.get(), kMsgEBad);
 		}
+		catch (...) {
+			if (connected) {
+				removeConnection(name);
+			}
+			throw;
+		}
 
 		// flush any pending output
 		output.get()->flush();
+		if (connected) {
+			removeConnection(name);
+		}
 	}
 	catch (XBase& e) {
 		// misc error
@@ -1188,10 +1265,6 @@ void
 CServer::acceptHTTPClients(void*)
 {
 	log((CLOG_DEBUG1 "starting to wait for HTTP clients"));
-
-	// add this thread to the list of threads to cancel.  remove from
-	// list in d'tor.
-	CCleanupNote cleanupNote(this);
 
 	std::auto_ptr<IListenSocket> listen;
 	try {
@@ -1241,7 +1314,7 @@ CServer::acceptHTTPClients(void*)
 			CThread::testCancel();
 
 			// handle HTTP request
-			CThread(new TMethodJob<CServer>(
+			startThread(new TMethodJob<CServer>(
 								this, &CServer::processHTTPRequest, socket));
 		}
 	}
@@ -1255,10 +1328,6 @@ CServer::acceptHTTPClients(void*)
 void
 CServer::processHTTPRequest(void* vsocket)
 {
-	// add this thread to the list of threads to cancel.  remove from
-	// list in d'tor.
-	CCleanupNote cleanupNote(this);
-
 	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
 	try {
 		// process the request and force delivery
@@ -1439,73 +1508,6 @@ CServer::closePrimaryScreen()
 	m_primary = NULL;
 }
 
-void
-CServer::addCleanupThread(const CThread& thread)
-{
-	CLock lock(&m_mutex);
-	m_cleanupList.insert(m_cleanupList.begin(), new CThread(thread));
-	m_cleanupSize = m_cleanupSize + 1;
-}
-
-void
-CServer::removeCleanupThread(const CThread& thread)
-{
-	CLock lock(&m_mutex);
-	for (CThreadList::iterator index = m_cleanupList.begin();
-								index != m_cleanupList.end(); ++index) {
-		if (**index == thread) {
-			CThread* thread = *index;
-			m_cleanupList.erase(index);
-			m_cleanupSize = m_cleanupSize - 1;
-			if (m_cleanupSize == 0) {
-				m_cleanupSize.broadcast();
-			}
-			delete thread;
-			return;
-		}
-	}
-}
-
-void
-CServer::cleanupThreads(double timeout)
-{
-	log((CLOG_DEBUG1 "cleaning up threads"));
-
-	// first cancel every thread except the current one (with mutex
-	// locked so the cleanup list won't change).
-	CLock lock(&m_mutex);
-	CThread current(CThread::getCurrentThread());
-	SInt32 minCount = 0;
-	for (CThreadList::iterator index = m_cleanupList.begin();
-								index != m_cleanupList.end(); ++index) {
-		CThread* thread = *index;
-		if (thread != &current) {
-			thread->cancel();
-		}
-		else {
-			minCount = 1;
-		}
-	}
-
-	// now wait for the threads (with mutex unlocked as each thread
-	// will remove itself from the list)
-	CStopwatch timer(true);
-	while (m_cleanupSize > minCount) {
-		m_cleanupSize.wait(timer, timeout);
-	}
-
-	// delete remaining threads
-	for (CThreadList::iterator index = m_cleanupList.begin();
-								index != m_cleanupList.end(); ++index) {
-		CThread* thread = *index;
-		delete thread;
-	}
-	m_cleanupList.clear();
-	m_cleanupSize = 0;
-
-	log((CLOG_DEBUG1 "cleaned up threads"));
-}
-
 CServer::CScreenInfo*
 CServer::addConnection(const CString& name, IServerProtocol* protocol)
 {
@@ -1560,42 +1562,6 @@ CServer::removeConnection(const CString& name)
 	// done with screen info
 	delete index->second;
 	m_screens.erase(index);
-}
-
-
-//
-// CServer::CCleanupNote
-//
-
-CServer::CCleanupNote::CCleanupNote(CServer* server) :
-	m_server(server)
-{
-	assert(m_server != NULL);
-	m_server->addCleanupThread(CThread::getCurrentThread());
-}
-
-CServer::CCleanupNote::~CCleanupNote()
-{
-	m_server->removeCleanupThread(CThread::getCurrentThread());
-}
-
-
-//
-// CServer::CConnectionNote
-//
-
-CServer::CConnectionNote::CConnectionNote(CServer* server,
-				const CString& name, IServerProtocol* protocol) :
-	m_server(server),
-	m_name(name)
-{
-	assert(m_server != NULL);
-	m_server->addConnection(m_name, protocol);
-}
-
-CServer::CConnectionNote::~CConnectionNote()
-{
-	m_server->removeConnection(m_name);
 }
 
 
