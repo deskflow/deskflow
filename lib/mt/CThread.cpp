@@ -79,6 +79,12 @@ CThread::setPriority(int n)
 	ARCH->setPriorityOfThread(m_thread, n);
 }
 
+void
+CThread::unblockPollSocket()
+{
+	ARCH->unblockPollSocket(m_thread);
+}
+
 CThread
 CThread::getCurrentThread()
 {
@@ -95,24 +101,6 @@ bool
 CThread::wait(double timeout) const
 {
 	return ARCH->wait(m_thread, timeout);
-}
-
-CThread::EWaitResult
-CThread::waitForEvent(double timeout) const
-{
-	// IArchMultithread EWaitResults map directly to our EWaitResults
-	static const EWaitResult s_map[] = {
-		kEvent,
-		kExit,
-		kTimeout
-	};
-	return s_map[ARCH->waitForEvent(m_thread, timeout)];
-}
-
-void
-CThread::unblock() const
-{
-	ARCH->unblockThread(m_thread);
 }
 
 void*

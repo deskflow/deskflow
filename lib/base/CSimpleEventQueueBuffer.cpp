@@ -53,7 +53,7 @@ CSimpleEventQueueBuffer::waitForEvent(double timeout)
 }
 
 IEventQueueBuffer::Type
-CSimpleEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
+CSimpleEventQueueBuffer::getEvent(CEvent&, UInt32& dataID)
 {
 	CArchMutexLock lock(m_queueMutex);
 	if (!m_queueReady) {

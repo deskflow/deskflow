@@ -58,6 +58,7 @@ private:
 	HMENU				m_menu;
 	HICON				m_icon[kMaxState];
 	const CBufferedLogOutputter*	m_logBuffer;
+	static const UINT	s_stateToIconID[];
 };
 
 #endif

@@ -740,7 +740,7 @@ CXWindowsClipboard::motifFillCache()
 		// save it
 		motifFormats.insert(std::make_pair(motifFormat->m_type, data));
 	}
-	const UInt32 numMotifFormats = motifFormats.size();
+	//const UInt32 numMotifFormats = motifFormats.size();
 
 	// try each converter in order (because they're in order of
 	// preference).

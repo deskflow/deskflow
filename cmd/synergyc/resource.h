@@ -3,6 +3,8 @@
 // Used by synergyc.rc
 //
 #define IDS_FAILED                      1
+#define IDS_INIT_FAILED                 2
+#define IDS_UNCAUGHT_EXCEPTION          3
 #define IDI_SYNERGY                     101
 #define IDI_TASKBAR_NOT_RUNNING         102
 #define IDI_TASKBAR_NOT_WORKING         103

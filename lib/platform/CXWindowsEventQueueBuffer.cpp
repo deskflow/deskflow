@@ -143,6 +143,7 @@ CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 
 	// force waitForEvent() to return
 	XFlush(m_display);
+	return true;
 }
 
 bool
@@ -154,7 +155,7 @@ CXWindowsEventQueueBuffer::isEmpty() const
 CEventQueueTimer*
 CXWindowsEventQueueBuffer::newTimer(double, bool) const
 {
-	return new CEventQueueTimer();
+	return new CEventQueueTimer;
 }
 
 void

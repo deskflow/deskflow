@@ -119,10 +119,6 @@ SOURCE=.\CArchFileWindows.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CArchImpl.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\CArchLogWindows.h
 # End Source File
 # Begin Source File

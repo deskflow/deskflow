@@ -76,13 +76,10 @@ static DWORD			g_threadID        = 0;
 static HHOOK			g_keyboard        = NULL;
 static HHOOK			g_mouse           = NULL;
 static HHOOK			g_getMessage      = NULL;
-static HANDLE			g_hookThreadLL    = NULL;
-static DWORD			g_hookThreadIDLL  = 0;
-static HANDLE			g_hookEventLL     = NULL;
 static HHOOK			g_keyboardLL      = NULL;
 static HHOOK			g_mouseLL         = NULL;
 static bool				g_screenSaver     = false;
-static EHookMode		g_mode            = kHOOK_WATCH_JUMP_ZONE;
+static EHookMode		g_mode            = kHOOK_DISABLE;
 static UInt32			g_zoneSides       = 0;
 static SInt32			g_zoneSize        = 0;
 static SInt32			g_xScreen         = 0;
@@ -141,6 +138,7 @@ restoreCursor()
 	g_cursorThread = 0;
 }
 
+#if !NO_GRAB_KEYBOARD
 static
 bool
 keyboardHookHandler(WPARAM wParam, LPARAM lParam)
@@ -170,6 +168,7 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 
 	return false;
 }
+#endif
 
 static
 bool
@@ -231,7 +230,7 @@ mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 			return true;
 		}
-		else {
+		else if (g_mode == kHOOK_WATCH_JUMP_ZONE) {
 			// check for mouse inside jump zone
 			bool inside = false;
 			if (!inside && (g_zoneSides & kLeftMask) != 0) {
@@ -259,6 +258,7 @@ mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 	return false;
 }
 
+#if !NO_GRAB_KEYBOARD
 static
 LRESULT CALLBACK
 keyboardHook(int code, WPARAM wParam, LPARAM lParam)
@@ -272,6 +272,7 @@ keyboardHook(int code, WPARAM wParam, LPARAM lParam)
 
 	return CallNextHookEx(g_keyboard, code, wParam, lParam);
 }
+#endif
 
 static
 LRESULT CALLBACK
@@ -354,6 +355,7 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 // side, key repeats are not reported to us.
 //
 
+#if !NO_GRAB_KEYBOARD
 static
 LRESULT CALLBACK
 keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
@@ -385,6 +387,7 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 
 	return CallNextHookEx(g_keyboardLL, code, wParam, lParam);
 }
+#endif
 
 //
 // low-level mouse hook -- this allows us to capture and handle mouse
@@ -409,92 +412,6 @@ mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 	}
 
 	return CallNextHookEx(g_mouseLL, code, wParam, lParam);
-}
-
-static
-DWORD WINAPI
-getLowLevelProc(void*)
-{
-	// thread proc for low-level keyboard/mouse hooks.  this does
-	// nothing but install the hook, process events, and uninstall
-	// the hook.
-
-	// force this thread to have a message queue
-	MSG msg;
-	PeekMessage(&msg, NULL, WM_USER, WM_USER, PM_NOREMOVE);
-
-#if !NO_GRAB_KEYBOARD
-	// install low-level keyboard hook
-	g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL,
-								&keyboardLLHook,
-								g_hinstance,
-								0);
-	if (g_keyboardLL == NULL) {
-		// indicate failure and exit
-		g_hookThreadIDLL = 0;
-		SetEvent(g_hookEventLL);
-		return 1;
-	}
-#else
-	// keep compiler quiet
-	&keyboardLLHook;
-#endif
-
-	// install low-level mouse hook
-	g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
-								&mouseLLHook,
-								g_hinstance,
-								0);
-	if (g_mouseLL == NULL) {
-		// indicate failure and exit
-		if (g_keyboardLL != NULL) {
-			UnhookWindowsHookEx(g_keyboardLL);
-			g_keyboardLL     = NULL;
-		}
-		g_hookThreadIDLL = 0;
-		SetEvent(g_hookEventLL);
-		return 1;
-	}
-
-	// ready
-	SetEvent(g_hookEventLL);
-
-	// message loop
-	bool done = false;
-	while (!done) {
-		switch (GetMessage(&msg, NULL, 0, 0)) {
-		case -1:
-			break;
-
-		case 0:
-			done = true;
-			break;
-
-		default:
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			break;
-		}
-	}
-
-	// uninstall hook
-	UnhookWindowsHookEx(g_mouseLL);
-	UnhookWindowsHookEx(g_keyboardLL);
-	g_mouseLL    = NULL;
-	g_keyboardLL = NULL;
-
-	return 0;
-}
-
-#else // (_WIN32_WINNT < 0x0400)
-
-static
-DWORD WINAPI
-getLowLevelProc(void*)
-{
-	g_hookThreadIDLL = 0;
-	SetEvent(g_hookEventLL);
-	return 1;
 }
 
 #endif
@@ -559,12 +476,8 @@ DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 	}
 	else if (reason == DLL_PROCESS_DETACH) {
 		if (g_processID == GetCurrentProcessId()) {
-			if (g_keyboard   != NULL ||
-				g_mouse      != NULL ||
-				g_getMessage != NULL) {
-				uninstall();
-				uninstallScreenSaver();
-			}
+			uninstall();
+			uninstallScreenSaver();
 			g_processID = 0;
 			g_hinstance = NULL;
 		}
@@ -601,9 +514,6 @@ init(DWORD threadID)
 		g_keyboard        = NULL;
 		g_mouse           = NULL;
 		g_getMessage      = NULL;
-		g_hookThreadLL    = NULL;
-		g_hookThreadIDLL  = 0;
-		g_hookEventLL     = NULL;
 		g_keyboardLL      = NULL;
 		g_mouseLL         = NULL;
 		g_screenSaver     = false;
@@ -614,7 +524,7 @@ init(DWORD threadID)
 	g_threadID     = threadID;
 
 	// set defaults
-	g_mode         = kHOOK_WATCH_JUMP_ZONE;
+	g_mode         = kHOOK_DISABLE;
 	g_zoneSides    = 0;
 	g_zoneSize     = 0;
 	g_xScreen      = 0;
@@ -663,75 +573,51 @@ install()
 								0);
 	}
 
-	// install low-level keyboard/mouse hooks, if possible.  since these
-	// hooks are called in the context of the installing thread and that
-	// thread must have a message loop but we don't want the caller's
-	// message loop to do the work, we'll fire up a separate thread
-	// just for the hooks.  note that low-level hooks are only available
-	// on windows NT SP3 and above.
-	g_hookEventLL = CreateEvent(NULL, TRUE, FALSE, NULL);
-	if (g_hookEventLL != NULL) {
-		g_hookThreadLL = CreateThread(NULL, 0, &getLowLevelProc, 0,
-								CREATE_SUSPENDED, &g_hookThreadIDLL);
-		if (g_hookThreadLL != NULL) {
-			// start the thread and wait for it to initialize
-			ResumeThread(g_hookThreadLL);
-			WaitForSingleObject(g_hookEventLL, INFINITE);
-			ResetEvent(g_hookEventLL);
-
-			// the thread clears g_hookThreadIDLL if it failed
-			if (g_hookThreadIDLL == 0) {
-				CloseHandle(g_hookThreadLL);
-				g_hookThreadLL = NULL;
-			}
-		}
-		if (g_hookThreadLL == NULL) {
-			CloseHandle(g_hookEventLL);
-			g_hookEventLL = NULL;
-		}
-	}
-
-	// install non-low-level hooks if the low-level hooks are not installed
-	if (g_hookThreadLL == NULL) {
+	// install keyboard hook
 #if !NO_GRAB_KEYBOARD
+#if (_WIN32_WINNT >= 0x0400)
+	g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL,
+								&keyboardLLHook,
+								g_hinstance,
+								0);
+#endif
+	if (g_keyboardLL == NULL) {
 		g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
 								&keyboardHook,
 								g_hinstance,
 								0);
-#else
-		// keep compiler quiet
-		&keyboardHook;
+	}
 #endif
+
+	// install mouse hook
+#if (_WIN32_WINNT >= 0x0400)
+	g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
+								&mouseLLHook,
+								g_hinstance,
+								0);
+#endif
+	if (g_mouseLL == NULL) {
 		g_mouse = SetWindowsHookEx(WH_MOUSE,
 								&mouseHook,
 								g_hinstance,
 								0);
 	}
 
-	// check for any failures.  uninstall all hooks on failure.
-	if (g_hookThreadLL == NULL &&
+	// check that we got all the hooks we wanted
+	if ((g_getMessage == NULL && g_wheelSupport == kWheelOld) ||
 #if !NO_GRAB_KEYBOARD
-		(g_keyboard == NULL || g_mouse == NULL)) {
-#else
-		(g_mouse == NULL)) {
+		(g_keyboardLL == NULL && g_keyboard     == NULL) ||
 #endif
-		if (g_keyboard != NULL) {
-			UnhookWindowsHookEx(g_keyboard);
-			g_keyboard = NULL;
-		}
-		if (g_mouse != NULL) {
-			UnhookWindowsHookEx(g_mouse);
-			g_mouse = NULL;
-		}
-		if (g_getMessage != NULL && !g_screenSaver) {
-			UnhookWindowsHookEx(g_getMessage);
-			g_getMessage = NULL;
-		}
-		g_threadID = NULL;
+		(g_mouseLL    == NULL && g_mouse        == NULL)) {
+		uninstall();
 		return kHOOK_FAILED;
 	}
 
-	return (g_hookThreadLL == NULL) ? kHOOK_OKAY : kHOOK_OKAY_LL;
+	if (g_keyboardLL != NULL || g_mouseLL != NULL) {
+		return kHOOK_OKAY_LL;
+	}
+
+	return kHOOK_OKAY;
 }
 
 int
@@ -740,14 +626,13 @@ uninstall(void)
 	assert(g_hinstance != NULL);
 
 	// uninstall hooks
-	if (g_hookThreadLL != NULL) {
-		PostThreadMessage(g_hookThreadIDLL, WM_QUIT, 0, 0);
-		WaitForSingleObject(g_hookThreadLL, INFINITE);
-		CloseHandle(g_hookEventLL);
-		CloseHandle(g_hookThreadLL);
-		g_hookEventLL    = NULL;
-		g_hookThreadLL   = NULL;
-		g_hookThreadIDLL = 0;
+	if (g_keyboardLL != NULL) {
+		UnhookWindowsHookEx(g_keyboardLL);
+		g_keyboardLL = NULL;
+	}
+	if (g_mouseLL != NULL) {
+		UnhookWindowsHookEx(g_mouseLL);
+		g_mouseLL = NULL;
 	}
 	if (g_keyboard != NULL) {
 		UnhookWindowsHookEx(g_keyboard);

@@ -19,7 +19,6 @@ EXTRA_DIST =				\
 	common.dsp				\
 	BasicTypes.h			\
 	IInterface.h			\
-	Version.h				\
 	common.h				\
 	stdbitset.h				\
 	stddeque.h				\
@@ -38,6 +37,12 @@ EXTRA_DIST =				\
 
 MAINTAINERCLEANFILES =		\
 	Makefile.in				\
+	$(NULL)
+
+noinst_LIBRARIES = libcommon.a
+libcommon_a_SOURCES =		\
+	Version.cpp				\
+	Version.h				\
 	$(NULL)
 
 INCLUDES =					\

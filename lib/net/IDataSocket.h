@@ -65,9 +65,13 @@ public:
 	//@}
 
 	// ISocket overrides
+	// close() and getEventTarget() aren't pure to work around a bug
+	// in VC++6.  it claims the methods are unused locals and warns
+	// that it's removing them.  it's presumably tickled by inheriting
+	// methods with identical signatures from both superclasses.
 	virtual void		bind(const CNetworkAddress&) = 0;
-	virtual void		close() = 0;
-	virtual void*		getEventTarget() const = 0;
+	virtual void		close();
+	virtual void*		getEventTarget() const;
 
 	// IStream overrides
 	virtual UInt32		read(void* buffer, UInt32 n) = 0;

@@ -39,7 +39,8 @@ CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 	m_seqNum(0),
 	m_compressMouse(false),
 	m_ignoreMouse(false),
-	m_heartRate(0.0)
+	m_heartRate(0.0),
+	m_parser(&CServerProxy::parseHandshakeMessage)
 {
 	assert(m_client != NULL);
 	assert(m_stream != NULL);
@@ -52,7 +53,7 @@ CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 	EVENTQUEUE->adoptHandler(IStream::getInputReadyEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CServerProxy>(this,
-								&CServerProxy::handleMessage));
+								&CServerProxy::handleData));
 
 	// send heartbeat
 	installHeartBeat(kHeartRate);
@@ -61,6 +62,8 @@ CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 CServerProxy::~CServerProxy()
 {
 	installHeartBeat(-1.0);
+	EVENTQUEUE->removeHandler(IStream::getInputReadyEvent(),
+							m_stream->getEventTarget());
 }
 
 CEvent::Type
@@ -87,134 +90,191 @@ CServerProxy::installHeartBeat(double heartRate)
 }
 
 void
-CServerProxy::handleMessage(const CEvent&, void*)
+CServerProxy::handleData(const CEvent&, void*)
 {
-	while (m_stream->isReady()) {
-		// read next code
-		UInt8 code[4];
-		UInt32 n = m_stream->read(code, sizeof(code));
-		if (n == 0) {
-			break;
-		}
+	// handle messages until there are no more.  first read message code.
+	UInt8 code[4];
+	UInt32 n = m_stream->read(code, 4);
+	while (n != 0) {
+		// verify we got an entire code
 		if (n != 4) {
-			// client sent an incomplete message
-			LOG((CLOG_ERR "incomplete message from server"));
+			LOG((CLOG_ERR "incomplete message from server: %d bytes", n));
 			m_client->disconnect("incomplete message from server");
 			return;
 		}
 
 		// parse message
 		LOG((CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
-		if (memcmp(code, kMsgDMouseMove, 4) == 0) {
-			mouseMove();
-		}
-
-		else if (memcmp(code, kMsgDMouseWheel, 4) == 0) {
-			mouseWheel();
-		}
-
-		else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
-			keyDown();
-		}
-
-		else if (memcmp(code, kMsgDKeyUp, 4) == 0) {
-			keyUp();
-		}
-
-		else if (memcmp(code, kMsgDMouseDown, 4) == 0) {
-			mouseDown();
-		}
-
-		else if (memcmp(code, kMsgDMouseUp, 4) == 0) {
-			mouseUp();
-		}
-
-		else if (memcmp(code, kMsgDKeyRepeat, 4) == 0) {
-			keyRepeat();
-		}
-
-		else if (memcmp(code, kMsgCNoop, 4) == 0) {
-			// accept and discard no-op
-		}
-
-		else if (memcmp(code, kMsgCEnter, 4) == 0) {
-			enter();
-		}
-
-		else if (memcmp(code, kMsgCLeave, 4) == 0) {
-			leave();
-		}
-
-		else if (memcmp(code, kMsgCClipboard, 4) == 0) {
-			grabClipboard();
-		}
-
-		else if (memcmp(code, kMsgCScreenSaver, 4) == 0) {
-			screensaver();
-		}
-
-		else if (memcmp(code, kMsgQInfo, 4) == 0) {
-			queryInfo();
-		}
-
-		else if (memcmp(code, kMsgCInfoAck, 4) == 0) {
-			infoAcknowledgment();
-		}
-
-		else if (memcmp(code, kMsgDClipboard, 4) == 0) {
-			setClipboard();
-		}
-
-		else if (memcmp(code, kMsgCResetOptions, 4) == 0) {
-			resetOptions();
-		}
-
-		else if (memcmp(code, kMsgDSetOptions, 4) == 0) {
-			setOptions();
-		}
-
-		else if (memcmp(code, kMsgCClose, 4) == 0) {
-			// server wants us to hangup
-			LOG((CLOG_DEBUG1 "recv close"));
-			m_client->disconnect(NULL);
+		switch ((this->*m_parser)(code)) {
+		case kOkay:
 			break;
-		}
 
-		else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
-			SInt32 major, minor;
-			CProtocolUtil::readf(m_stream,
-							kMsgEIncompatible + 4, &major, &minor);
-			LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));
-			m_client->disconnect("server has incompatible version");
+		case kUnknown:
+			LOG((CLOG_ERR "invalid message from server"));
+			m_client->disconnect("invalid message from server");
+			return;
+
+		case kDisconnect:
 			return;
 		}
 
-		else if (memcmp(code, kMsgEBusy, 4) == 0) {
-			LOG((CLOG_ERR "server already has a connected client with name \"%s\"", m_client->getName().c_str()));
-			m_client->disconnect("server already has a connected client with our name");
-			return;
-		}
-
-		else if (memcmp(code, kMsgEUnknown, 4) == 0) {
-			LOG((CLOG_ERR "server refused client with name \"%s\"", m_client->getName().c_str()));
-			m_client->disconnect("server refused client with our name");
-			return;
-		}
-
-		else if (memcmp(code, kMsgEBad, 4) == 0) {
-			LOG((CLOG_ERR "server disconnected due to a protocol error"));
-			m_client->disconnect("server reported a protocol error");
-			return;
-		}
-
-		else {
-			// unknown message
-			LOG((CLOG_ERR "unknown message: %d %d %d %d [%c%c%c%c]", code[0], code[1], code[2], code[3], code[0], code[1], code[2], code[3]));
-			m_client->disconnect("unknown message from server");
-			return;
-		}
+		// next message
+		n = m_stream->read(code, 4);
 	}
+
 	flushCompressedMouse();
+}
+
+CServerProxy::EResult
+CServerProxy::parseHandshakeMessage(const UInt8* code)
+{
+	if (memcmp(code, kMsgQInfo, 4) == 0) {
+		queryInfo();
+	}
+
+	else if (memcmp(code, kMsgCInfoAck, 4) == 0) {
+		infoAcknowledgment();
+	}
+
+	else if (memcmp(code, kMsgCResetOptions, 4) == 0) {
+		resetOptions();
+
+		// handshake is complete
+		m_parser = &CServerProxy::parseMessage;
+		EVENTQUEUE->addEvent(CEvent(getHandshakeCompleteEvent(), this));
+	}
+
+	else if (memcmp(code, kMsgCNoop, 4) == 0) {
+		// accept and discard no-op
+	}
+
+	else if (memcmp(code, kMsgCClose, 4) == 0) {
+		// server wants us to hangup
+		LOG((CLOG_DEBUG1 "recv close"));
+		m_client->disconnect(NULL);
+		return kDisconnect;
+	}
+
+	else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
+		SInt32 major, minor;
+		CProtocolUtil::readf(m_stream,
+						kMsgEIncompatible + 4, &major, &minor);
+		LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));
+		m_client->disconnect("server has incompatible version");
+		return kDisconnect;
+	}
+
+	else if (memcmp(code, kMsgEBusy, 4) == 0) {
+		LOG((CLOG_ERR "server already has a connected client with name \"%s\"", m_client->getName().c_str()));
+		m_client->disconnect("server already has a connected client with our name");
+		return kDisconnect;
+	}
+
+	else if (memcmp(code, kMsgEUnknown, 4) == 0) {
+		LOG((CLOG_ERR "server refused client with name \"%s\"", m_client->getName().c_str()));
+		m_client->disconnect("server refused client with our name");
+		return kDisconnect;
+	}
+
+	else if (memcmp(code, kMsgEBad, 4) == 0) {
+		LOG((CLOG_ERR "server disconnected due to a protocol error"));
+		m_client->disconnect("server reported a protocol error");
+		return kDisconnect;
+	}
+	else {
+		return kUnknown;
+	}
+
+	return kOkay;
+}
+
+CServerProxy::EResult
+CServerProxy::parseMessage(const UInt8* code)
+{
+	if (memcmp(code, kMsgDMouseMove, 4) == 0) {
+		mouseMove();
+	}
+
+	else if (memcmp(code, kMsgDMouseWheel, 4) == 0) {
+		mouseWheel();
+	}
+
+	else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
+		keyDown();
+	}
+
+	else if (memcmp(code, kMsgDKeyUp, 4) == 0) {
+		keyUp();
+	}
+
+	else if (memcmp(code, kMsgDMouseDown, 4) == 0) {
+		mouseDown();
+	}
+
+	else if (memcmp(code, kMsgDMouseUp, 4) == 0) {
+		mouseUp();
+	}
+
+	else if (memcmp(code, kMsgDKeyRepeat, 4) == 0) {
+		keyRepeat();
+	}
+
+	else if (memcmp(code, kMsgCNoop, 4) == 0) {
+		// accept and discard no-op
+	}
+
+	else if (memcmp(code, kMsgCEnter, 4) == 0) {
+		enter();
+	}
+
+	else if (memcmp(code, kMsgCLeave, 4) == 0) {
+		leave();
+	}
+
+	else if (memcmp(code, kMsgCClipboard, 4) == 0) {
+		grabClipboard();
+	}
+
+	else if (memcmp(code, kMsgCScreenSaver, 4) == 0) {
+		screensaver();
+	}
+
+	else if (memcmp(code, kMsgQInfo, 4) == 0) {
+		queryInfo();
+	}
+
+	else if (memcmp(code, kMsgCInfoAck, 4) == 0) {
+		infoAcknowledgment();
+	}
+
+	else if (memcmp(code, kMsgDClipboard, 4) == 0) {
+		setClipboard();
+	}
+
+	else if (memcmp(code, kMsgCResetOptions, 4) == 0) {
+		resetOptions();
+	}
+
+	else if (memcmp(code, kMsgDSetOptions, 4) == 0) {
+		setOptions();
+	}
+
+	else if (memcmp(code, kMsgCClose, 4) == 0) {
+		// server wants us to hangup
+		LOG((CLOG_DEBUG1 "recv close"));
+		m_client->disconnect(NULL);
+		return kDisconnect;
+	}
+	else if (memcmp(code, kMsgEBad, 4) == 0) {
+		LOG((CLOG_ERR "server disconnected due to a protocol error"));
+		m_client->disconnect("server reported a protocol error");
+		return kDisconnect;
+	}
+	else {
+		return kUnknown;
+	}
+
+	return kOkay;
 }
 
 void

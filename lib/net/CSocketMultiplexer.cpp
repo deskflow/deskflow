@@ -54,6 +54,7 @@ CSocketMultiplexer::CSocketMultiplexer() :
 CSocketMultiplexer::~CSocketMultiplexer()
 {
 	m_thread->cancel();
+	m_thread->unblockPollSocket();
 	m_thread->wait();
 	delete m_thread;
 	delete m_polling;
@@ -87,7 +88,7 @@ CSocketMultiplexer::addSocket(ISocket* socket, ISocketMultiplexerJob* job)
 	*m_pollable = false;
 
 	// break thread out of poll
-	m_thread->unblock();
+	m_thread->unblockPollSocket();
 
 	// wait for poll to finish
 	while (*m_polling) {
@@ -129,7 +130,7 @@ CSocketMultiplexer::removeSocket(ISocket* socket)
 	*m_pollable = false;
 
 	// break thread out of poll
-	m_thread->unblock();
+	m_thread->unblockPollSocket();
 
 	// wait until thread finishes poll
 	while (*m_polling) {
@@ -160,11 +161,12 @@ CSocketMultiplexer::serviceThread(void*)
 
 	// service the connections
 	for (;;) {
+		CThread::testCancel();
 		{
 			CLock lock(m_mutex);
 
 			// wait until pollable
-			while (!*m_pollable) {
+			while (!(bool)*m_pollable) {
 				m_pollable->wait();
 			}
 
@@ -281,7 +283,6 @@ CSocketMultiplexer::CJobCursor
 CSocketMultiplexer::nextCursor(CJobCursor cursor)
 {
 	CLock lock(m_mutex);
-	ISocketMultiplexerJob* job = NULL;
 	CJobCursor j = m_socketJobs.end();
 	CJobCursor i = cursor;
 	while (++i != m_socketJobs.end()) {

@@ -89,7 +89,7 @@ CProtocolUtil::vwritef(IStream* stream,
 	}
 }
 
-bool
+void
 CProtocolUtil::vreadf(IStream* stream, const char* fmt, va_list args)
 {
 	assert(stream != NULL);

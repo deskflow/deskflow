@@ -308,8 +308,8 @@ CXWindowsKeyMapper::updateKeysymMap(Display* display, IKeyState* keyState)
 	}
 
 	// get modifier map from server
-	XModifierKeymap* modifiers = XGetModifierMapping(display);
-	int keysPerModifier        = modifiers->max_keypermod;
+	XModifierKeymap* modifiers   = XGetModifierMapping(display);
+	unsigned int keysPerModifier = modifiers->max_keypermod;
 
 	// clear state
 	m_keysymMap.clear();
@@ -330,7 +330,6 @@ CXWindowsKeyMapper::updateKeysymMap(Display* display, IKeyState* keyState)
 	// the keysym map.  also collect all keycodes for each modifier.
 	for (unsigned int i = 0; i < 8; ++i) {
 		// no keycodes for this modifier yet
-		bool hasKeycode = false;
 		KeyModifierMask mask = 0;
 		IKeyState::KeyButtons modifierKeys;
 

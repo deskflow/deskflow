@@ -44,10 +44,18 @@ public:
 	virtual ~CArchMultithreadWindows();
 
 	//
+	// manipulators
+	//
+
+	void				setNetworkDataForCurrentThread(void*);
+
+	//
 	// accessors
 	//
 
 	HANDLE				getCancelEventForCurrentThread();
+
+	void*				getNetworkDataForThread(CArchThread);
 
 	static CArchMultithreadWindows*	getInstance();
 
@@ -69,11 +77,12 @@ public:
 	virtual void		setPriorityOfThread(CArchThread, int n);
 	virtual void		testCancelThread();
 	virtual bool		wait(CArchThread, double timeout);
-	virtual EWaitResult	waitForEvent(CArchThread, double timeout);
 	virtual bool		isSameThread(CArchThread, CArchThread);
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);
 	virtual ThreadID	getIDOfThread(CArchThread);
+	virtual void		setInterruptHandler(InterruptFunc, void*);
+	virtual void		interrupt();
 
 private:
 	CArchThreadImpl*	find(DWORD id);
@@ -96,6 +105,10 @@ private:
 	CArchMutex			m_threadMutex;
 
 	CThreadList			m_threadList;
+	CArchThread			m_mainThread;
+
+	InterruptFunc		m_signalFunc;
+	void*				m_signalUserData;
 };
 
 #endif

@@ -116,8 +116,6 @@ public:
 	virtual void		setPriorityOfThread(CArchThread, int n);
 	virtual void		testCancelThread();
 	virtual bool		wait(CArchThread, double timeout);
-	virtual EWaitResult	waitForEvent(CArchThread, double timeout);
-	virtual void		unblockThread(CArchThread thread);
 	virtual bool		isSameThread(CArchThread, CArchThread);
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);
@@ -136,6 +134,7 @@ public:
 	virtual CArchSocket	acceptSocket(CArchSocket s, CArchNetAddress* addr);
 	virtual void		connectSocket(CArchSocket s, CArchNetAddress name);
 	virtual int			pollSocket(CPollEntry[], int num, double timeout);
+	virtual void		unblockPollSocket(CArchThread thread);
 	virtual size_t		readSocket(CArchSocket s, void* buf, size_t len);
 	virtual size_t		writeSocket(CArchSocket s,
 							const void* buf, size_t len);

@@ -21,17 +21,17 @@
 #include "CArchTaskBarWindows.h"
 #include "resource.h"
 
-static const UINT g_stateToIconID[CMSWindowsServerTaskBarReceiver::kMaxState] =
+//
+// CMSWindowsServerTaskBarReceiver
+//
+
+const UINT CMSWindowsServerTaskBarReceiver::s_stateToIconID[kMaxState] =
 {
 	IDI_TASKBAR_NOT_RUNNING,
 	IDI_TASKBAR_NOT_WORKING,
 	IDI_TASKBAR_NOT_CONNECTED,
 	IDI_TASKBAR_CONNECTED
 };
-
-//
-// CMSWindowsServerTaskBarReceiver
-//
 
 CMSWindowsServerTaskBarReceiver::CMSWindowsServerTaskBarReceiver(
 				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer) :
@@ -41,7 +41,7 @@ CMSWindowsServerTaskBarReceiver::CMSWindowsServerTaskBarReceiver(
 	m_logBuffer(logBuffer)
 {
 	for (UInt32 i = 0; i < kMaxState; ++i) {
-		m_icon[i] = loadIcon(g_stateToIconID[i]);
+		m_icon[i] = loadIcon(s_stateToIconID[i]);
 	}
 	m_menu = LoadMenu(m_appInstance, MAKEINTRESOURCE(IDR_TASKBAR));
 
@@ -77,12 +77,7 @@ CMSWindowsServerTaskBarReceiver::showStatus()
 	std::string status = getToolTip();
 
 	// get the connect clients, if any
-	typedef std::vector<CString> CClientList;
-	CClientList clients;
-	CServer* server = getServer();
-	if (server != NULL) {
-		server->getClients(clients);
-	}
+	const CClients& clients = getClients();
 
 	// done getting status
 	unlock();
@@ -92,7 +87,7 @@ CMSWindowsServerTaskBarReceiver::showStatus()
 	SendMessage(child, WM_SETTEXT, 0, (LPARAM)status.c_str());
 	child = GetDlgItem(m_window, IDC_TASKBAR_STATUS_CLIENTS);
 	SendMessage(child, LB_RESETCONTENT, 0, 0);
-	for (CClientList::const_iterator index = clients.begin();
+	for (CClients::const_iterator index = clients.begin();
 							index != clients.end(); ) {
 		const char* client = index->c_str();
 		if (++index == clients.end()) {
@@ -191,7 +186,7 @@ CMSWindowsServerTaskBarReceiver::primaryAction()
 const IArchTaskBarReceiver::Icon
 CMSWindowsServerTaskBarReceiver::getIcon() const
 {
-	return reinterpret_cast<Icon>(m_icon[getState()]);
+	return reinterpret_cast<Icon>(m_icon[getStatus()]);
 }
 
 void

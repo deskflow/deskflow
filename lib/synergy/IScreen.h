@@ -73,8 +73,7 @@ public:
 	//! Get shape changed event type
 	/*!
 	Returns the shape changed event type.  This is sent whenever the
-	screen's shape changes, the cursor center moves, or the jump zone
-	size changes.
+	screen's shape changes.
 	*/
 	static CEvent::Type	getShapeChangedEvent();
 

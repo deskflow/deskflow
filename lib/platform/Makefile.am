@@ -28,6 +28,7 @@ EXTRA_DIST =								\
 	CMSWindowsKeyMapper.cpp					\
 	CMSWindowsScreen.cpp					\
 	CMSWindowsScreenSaver.cpp				\
+	CMSWindowsUtil.cpp						\
 	CSynergyHook.cpp						\
 	CMSWindowsClipboard.h					\
 	CMSWindowsClipboardAnyTextConverter.h	\
@@ -38,6 +39,7 @@ EXTRA_DIST =								\
 	CMSWindowsKeyMapper.h					\
 	CMSWindowsScreen.h						\
 	CMSWindowsScreenSaver.h					\
+	CMSWindowsUtil.h						\
 	CSynergyHook.h							\
 	$(NULL)
 

@@ -21,6 +21,12 @@
 //! Encapsulate Microsoft Windows desktop
 class CMSWindowsDesktop {
 public:
+	//! Open the desktop
+	/*!
+	Opens the desktop named \p name.  The caller must close the desktop.
+	*/
+	static HDESK		openDesktop(const CString& name);
+
 	//! Open the input desktop
 	/*!
 	Opens the input desktop.  The caller must close the desktop.

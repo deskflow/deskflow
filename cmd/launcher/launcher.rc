@@ -332,8 +332,8 @@ BEGIN
                             "Synergy is not configured to start automatically."
     IDS_INSTALL_LABEL       "Install"
     IDS_UNINSTALL_LABEL     "Uninstall"
-    IDS_INSTALL_GENERIC_ERROR "Install failed: %{1}."
-    IDS_UNINSTALL_GENERIC_ERROR "Uninstall failed: %{1}."
+    IDS_INSTALL_GENERIC_ERROR "Install failed: %{1}"
+    IDS_UNINSTALL_GENERIC_ERROR "Uninstall failed: %{1}"
     IDS_INSTALL_TITLE       "Installed Auto-Start"
     IDS_INSTALLED_SYSTEM    "Installed auto-start.  Synergy will now automatically start each time you start your computer."
     IDS_INSTALLED_USER      "Installed auto-start.  Synergy will now automatically start each time you log in."
@@ -348,6 +348,7 @@ BEGIN
     IDS_SERVER_IS_CLIENT    "Please enter the computer name of the synergy server, not\nthe name of this computer, in the Server Host Name field."
     IDS_ADD_SCREEN          "Add Screen"
     IDS_EDIT_SCREEN         "Edit Screen %{1}"
+    IDS_ERROR_CODE          "Error code: %{1}"
 END
 
 #endif    // English (U.S.) resources

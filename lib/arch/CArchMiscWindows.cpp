@@ -19,9 +19,12 @@
 // CArchMiscWindows
 //
 
+CArchMiscWindows::CDialogs* CArchMiscWindows::s_dialogs = NULL;
+
 void
 CArchMiscWindows::init()
 {
+	s_dialogs = new CDialogs;
 	isWindows95Family();
 }
 
@@ -62,6 +65,12 @@ void
 CArchMiscWindows::daemonFailed(int result)
 {
 	CArchDaemonWindows::daemonFailed(result);
+}
+
+UINT
+CArchMiscWindows::getDaemonQuitMessage()
+{
+	return CArchDaemonWindows::getDaemonQuitMessage();
 }
 
 HKEY
@@ -195,4 +204,28 @@ CArchMiscWindows::readValueInt(HKEY key, const TCHAR* name)
 		return 0;
 	}
 	return value;
+}
+
+void
+CArchMiscWindows::addDialog(HWND hwnd)
+{
+	s_dialogs->insert(hwnd);
+}
+
+void
+CArchMiscWindows::removeDialog(HWND hwnd)
+{
+	s_dialogs->erase(hwnd);
+}
+
+bool
+CArchMiscWindows::processDialog(MSG* msg)
+{
+	for (CDialogs::const_iterator index = s_dialogs->begin();
+							index != s_dialogs->end(); ++index) {
+		if (IsDialogMessage(*index, msg)) {
+			return true;
+		}
+	}
+	return false;
 }

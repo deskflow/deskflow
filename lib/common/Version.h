@@ -23,17 +23,17 @@
 #endif
 
 // important strings
-static const char* kApplication     = "synergy";
-static const char* kCopyright       = "Copyright (C) 2002 Chris Schoeneman";
-static const char* kContact         = "Chris Schoeneman, crs23@bigfoot.com";
-static const char* kWebsite         = "http://synergy2.sourceforge.net/";
+extern const char* kApplication;
+extern const char* kCopyright;
+extern const char* kContact;
+extern const char* kWebsite;
 
 // build version.  follows linux kernel style:  an even minor number implies
 // a release version, odd implies development version.
-static const char* kVersion			= VERSION;
+extern const char* kVersion;
 
 // application version
-static const char* kAppVersion      = "synergy " VERSION;
+extern const char* kAppVersion;
 
 // exit codes
 static const int kExitSuccess		= 0;	// successful completion

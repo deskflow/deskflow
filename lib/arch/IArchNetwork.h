@@ -18,6 +18,9 @@
 #include "IInterface.h"
 #include "stdstring.h"
 
+class CArchThreadImpl;
+typedef CArchThreadImpl* CArchThread;
+
 /*!      
 \class CArchSocketImpl
 \brief Internal socket data.
@@ -179,11 +182,20 @@ public:
 	the \c m_revents members of the entries.  \c kPOLLERR and \c kPOLLNVAL
 	are set in \c m_revents as appropriate.  If a socket indicates
 	\c kPOLLERR then \c throwErrorOnSocket() can be used to determine
-	the type of error.
+	the type of error.  Returns 0 immediately regardless of the \c timeout
+	if no valid sockets are selected for testing.
 
 	(Cancellation point)
 	*/
 	virtual int			pollSocket(CPollEntry[], int num, double timeout) = 0;
+
+	//! Unblock thread in pollSocket()
+	/*!
+	Cause a thread that's in a pollSocket() call to return.  This
+	call may return before the thread is unblocked.  If the thread is
+	not in a pollSocket() call this call has no effect.
+	*/
+	virtual void		unblockPollSocket(CArchThread thread) = 0;
 
 	//! Read data from socket
 	/*!

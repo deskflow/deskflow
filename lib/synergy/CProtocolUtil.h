@@ -71,7 +71,7 @@ public:
 private:
 	static void			vwritef(IStream*,
 							const char* fmt, UInt32 size, va_list);
-	static bool			vreadf(IStream*,
+	static void			vreadf(IStream*,
 							const char* fmt, va_list);
 
 	static UInt32		getLength(const char* fmt, va_list);

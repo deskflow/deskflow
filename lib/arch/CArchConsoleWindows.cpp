@@ -110,7 +110,7 @@ CArchConsoleWindows::getNewlineForConsole()
 BOOL WINAPI
 CArchConsoleWindows::signalHandler(DWORD)
 {
-	// terminate thread and skip remaining handlers
-	ARCH->cancelThread(s_thread);
+	// terminate app and skip remaining handlers
+	ARCH->interrupt();
 	return TRUE;
 }

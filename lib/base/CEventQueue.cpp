@@ -169,6 +169,10 @@ retry:
 			event = removeEvent(dataID);
 			return true;
 		}
+
+	default:
+		assert(0 && "invalid event type");
+		return false;
 	}
 }
 
@@ -498,7 +502,7 @@ CEventQueue::CTimer::reset()
 	m_time = m_timeout;
 }
 
-CEventQueue::CTimer::CTimer&
+CEventQueue::CTimer&
 CEventQueue::CTimer::operator-=(double dt)
 {
 	m_time -= dt;

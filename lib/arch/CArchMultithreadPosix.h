@@ -37,6 +37,19 @@ public:
 	CArchMultithreadPosix();
 	virtual ~CArchMultithreadPosix();
 
+	//! @name manipulators
+	//@{
+
+	void				unblockThread(CArchThread thread);
+
+	//@}
+	//! @name accessors
+	//@{
+
+	static CArchMultithreadPosix*	getInstance();
+
+	//@}
+
 	// IArchMultithread overrides
 	virtual CArchCond	newCondVar();
 	virtual void		closeCondVar(CArchCond);
@@ -55,8 +68,6 @@ public:
 	virtual void		setPriorityOfThread(CArchThread, int n);
 	virtual void		testCancelThread();
 	virtual bool		wait(CArchThread, double timeout);
-	virtual EWaitResult	waitForEvent(CArchThread, double timeout);
-	virtual void		unblockThread(CArchThread thread);
 	virtual bool		isSameThread(CArchThread, CArchThread);
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);

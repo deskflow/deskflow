@@ -47,13 +47,13 @@ CClientListener::CClientListener(const CNetworkAddress& address,
 		LOG((CLOG_DEBUG1 "binding listen socket"));
 		m_listen->bind(address);
 	}
-	catch (XSocketAddressInUse& e) {
+	catch (XSocketAddressInUse&) {
 		delete m_listen;
 		delete m_socketFactory;
 		delete m_streamFilterFactory;
 		throw;
 	}
-	catch (XBase& e) {
+	catch (XBase&) {
 		delete m_listen;
 		delete m_socketFactory;
 		delete m_streamFilterFactory;

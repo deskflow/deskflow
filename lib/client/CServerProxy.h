@@ -42,9 +42,9 @@ public:
 	//! @name manipulators
 	//@{
 
-	virtual void		onInfoChanged();
-	virtual bool		onGrabClipboard(ClipboardID);
-	virtual void		onClipboardChanged(ClipboardID, const IClipboard*);
+	void				onInfoChanged();
+	bool				onGrabClipboard(ClipboardID);
+	void				onClipboardChanged(ClipboardID, const IClipboard*);
 
 	//@}
 	//! @name accessors
@@ -59,6 +59,11 @@ public:
 
 	//@}
 
+protected:
+	enum EResult { kOkay, kUnknown, kDisconnect };
+	EResult				parseHandshakeMessage(const UInt8* code);
+	EResult				parseMessage(const UInt8* code);
+
 private:
 	// if compressing mouse motion then send the last motion now
 	void				flushCompressedMouse();
@@ -72,7 +77,7 @@ private:
 	KeyModifierMask		translateModifierMask(KeyModifierMask) const;
 
 	// event handlers
-	void				handleMessage(const CEvent&, void*);
+	void				handleData(const CEvent&, void*);
 	void				handleHeartBeat(const CEvent&, void*);
 
 	// message handlers
@@ -94,6 +99,8 @@ private:
 	void				infoAcknowledgment();
 
 private:
+	typedef EResult (CServerProxy::*MessageParser)(const UInt8*);
+
 	CClient*			m_client;
 	IStream*			m_stream;
 	CEventQueueTimer*	m_timer;
@@ -107,6 +114,8 @@ private:
 
 	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
 	double				m_heartRate;
+
+	MessageParser		m_parser;
 
 	static CEvent::Type	s_handshakeCompleteEvent;
 };

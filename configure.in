@@ -94,6 +94,9 @@ dnl use AC_REPLACE_FUNCS() for stuff in string.h
 
 dnl checks for system services
 
+dnl enable maximum compiler warnings and warnings are errors.
+ACX_CXX_WARNINGS
+ACX_CXX_WARNINGS_ARE_ERRORS
 
 dnl adjust variables for X11 and pthreads
 CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS -D_BSD_SOURCE -D_XOPEN_SOURCE=500"

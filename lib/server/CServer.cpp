@@ -37,8 +37,8 @@ CEvent::Type			CServer::s_errorEvent        = CEvent::kUnknown;
 CEvent::Type			CServer::s_disconnectedEvent = CEvent::kUnknown;
 
 CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
-	m_active(primaryClient),
 	m_primaryClient(primaryClient),
+	m_active(primaryClient),
 	m_seqNum(0),
 	m_config(config),
 	m_activeSaver(NULL),
@@ -117,9 +117,6 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	// add connection
 	addClient(m_primaryClient);
 
-	// tell it about the active sides
-	m_primaryClient->reconfigure(getActivePrimarySides());
-
 	// tell primary client about its options
 	sendOptions(m_primaryClient);
 
@@ -171,8 +168,7 @@ bool
 CServer::setConfig(const CConfig& config)
 {
 	// refuse configuration if it doesn't include the primary screen
-	if (m_primaryClient != NULL &&
-		!config.isScreen(m_primaryClient->getName())) {
+	if (!config.isScreen(m_primaryClient->getName())) {
 		return false;
 	}
 
@@ -185,9 +181,7 @@ CServer::setConfig(const CConfig& config)
 	processOptions();
 
 	// tell primary screen about reconfiguration
-	if (m_primaryClient != NULL) {
-		m_primaryClient->reconfigure(getActivePrimarySides());
-	}
+	m_primaryClient->reconfigure(getActivePrimarySides());
 
 	// tell all (connected) clients about current options
 	for (CClientList::const_iterator index = m_clients.begin();
@@ -296,18 +290,17 @@ CServer::getName(const IClient* client) const
 UInt32
 CServer::getActivePrimarySides() const
 {
-	CString primaryName = getName(m_primaryClient);
 	UInt32 sides = 0;
-	if (!m_config.getNeighbor(primaryName, kLeft).empty()) {
+	if (getNeighbor(m_primaryClient, kLeft) != NULL) {
 		sides |= kLeftMask;
 	}
-	if (!m_config.getNeighbor(primaryName, kRight).empty()) {
+	if (getNeighbor(m_primaryClient, kRight) != NULL) {
 		sides |= kRightMask;
 	}
-	if (!m_config.getNeighbor(primaryName, kTop).empty()) {
+	if (getNeighbor(m_primaryClient, kTop) != NULL) {
 		sides |= kTopMask;
 	}
-	if (!m_config.getNeighbor(primaryName, kBottom).empty()) {
+	if (getNeighbor(m_primaryClient, kBottom) != NULL) {
 		sides |= kBottomMask;
 	}
 	return sides;
@@ -546,6 +539,10 @@ CServer::getNeighbor(IClient* src,
 		assert(lastGoodScreen != NULL);
 		y += dy;
 		break;
+
+	case kNoDirection:
+		assert(0 && "bad direction");
+		return NULL;
 	}
 
 	// save destination screen
@@ -582,6 +579,10 @@ CServer::getNeighbor(IClient* src,
 				y < dy + getJumpZoneSize(dst))
 				y = dy + getJumpZoneSize(dst);
 			break;
+
+		case kNoDirection:
+			assert(0 && "bad direction");
+			return NULL;
 		}
 	}
 
@@ -623,6 +624,10 @@ CServer::getNeighbor(IClient* src,
 		}
 		x += dx;
 		break;
+
+	case kNoDirection:
+		assert(0 && "bad direction");
+		return NULL;
 	}
 
 	return dst;
@@ -999,13 +1004,13 @@ CServer::handleWheelEvent(const CEvent& event, void*)
 }
 
 void
-CServer::handleScreensaverActivatedEvent(const CEvent& event, void*)
+CServer::handleScreensaverActivatedEvent(const CEvent&, void*)
 {
 	onScreensaver(true);
 }
 
 void
-CServer::handleScreensaverDeactivatedEvent(const CEvent& event, void*)
+CServer::handleScreensaverDeactivatedEvent(const CEvent&, void*)
 {
 	onScreensaver(false);
 }
@@ -1212,7 +1217,6 @@ CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
 	LOG((CLOG_DEBUG2 "onMouseMovePrimary %d,%d", x, y));
 
 	// mouse move on primary (server's) screen
-	assert(m_primaryClient != NULL);
 	assert(m_active == m_primaryClient);
 
 	// save position
@@ -1429,6 +1433,10 @@ CServer::addClient(IClient* client)
 	// add to list
 	m_clientSet.insert(client);
 	m_clients.insert(std::make_pair(name, client));
+
+	// tell primary client about the active sides
+	m_primaryClient->reconfigure(getActivePrimarySides());
+
 	return true;
 }
 
@@ -1452,6 +1460,7 @@ CServer::removeClient(IClient* client)
 	// remove from list
 	m_clients.erase(i);
 	m_clientSet.erase(client);
+
 	return true;
 }
 
@@ -1477,7 +1486,7 @@ CServer::closeClient(IClient* client, const char* msg)
 
 	// install timer.  wait timeout seconds for client to close.
 	double timeout = 5.0;
-	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(5.0, NULL);
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleClientCloseTimeout, client));
@@ -1577,6 +1586,9 @@ CServer::forceLeaveClient(IClient* client)
 	if (m_activeSaver == client) {
 		m_activeSaver = NULL;
 	}
+
+	// tell primary client about the active sides
+	m_primaryClient->reconfigure(getActivePrimarySides());
 }
 
 

@@ -60,6 +60,7 @@ public:
 	virtual CArchSocket	acceptSocket(CArchSocket s, CArchNetAddress* addr);
 	virtual void		connectSocket(CArchSocket s, CArchNetAddress name);
 	virtual int			pollSocket(CPollEntry[], int num, double timeout);
+	virtual void		unblockPollSocket(CArchThread thread);
 	virtual size_t		readSocket(CArchSocket s, void* buf, size_t len);
 	virtual size_t		writeSocket(CArchSocket s,
 							const void* buf, size_t len);

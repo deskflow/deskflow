@@ -14,6 +14,7 @@
 
 #include "CConfig.h"
 #include "LaunchUtil.h"
+#include "CMSWindowsUtil.h"
 #include "CArch.h"
 #include "resource.h"
 #include "stdfstream.h"
@@ -23,32 +24,13 @@
 CString
 getString(DWORD id)
 {
-	char buffer[1024];
-	buffer[0] = '\0';
-	LoadString(s_instance, id, buffer, sizeof(buffer) / sizeof(buffer[0]));
-	return buffer;
+	return CMSWindowsUtil::getString(s_instance, id);
 }
 
 CString
 getErrorString(DWORD error)
 {
-	char* buffer;
-	if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-								FORMAT_MESSAGE_IGNORE_INSERTS |
-								FORMAT_MESSAGE_FROM_SYSTEM,
-								0,
-								error,
-								MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-								(LPTSTR)&buffer,
-								0,
-								NULL) == 0) {
-		return getString(IDS_ERROR);
-	}
-	else {
-		CString result(buffer);
-		LocalFree(buffer);
-		return result;
-	}
+	return CMSWindowsUtil::getErrorString(s_instance, error, IDS_ERROR);
 }
 
 void

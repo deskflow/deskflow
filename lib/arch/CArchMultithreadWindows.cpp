@@ -50,6 +50,7 @@ public:
 	bool				m_cancelling;
 	HANDLE				m_exit;
 	void*				m_result;
+	void*				m_networkData;
 };
 
 CArchThreadImpl::CArchThreadImpl() :
@@ -59,7 +60,8 @@ CArchThreadImpl::CArchThreadImpl() :
 	m_func(NULL),
 	m_userData(NULL),
 	m_cancelling(false),
-	m_result(NULL)
+	m_result(NULL),
+	m_networkData(NULL)
 {
 	m_exit   = CreateEvent(NULL, TRUE, FALSE, NULL);
 	m_cancel = CreateEvent(NULL, TRUE, FALSE, NULL);
@@ -78,7 +80,9 @@ CArchThreadImpl::~CArchThreadImpl()
 
 CArchMultithreadWindows*	CArchMultithreadWindows::s_instance = NULL;
 
-CArchMultithreadWindows::CArchMultithreadWindows()
+CArchMultithreadWindows::CArchMultithreadWindows() :
+	m_signalFunc(NULL),
+	m_signalUserData(NULL)
 {
 	assert(s_instance == NULL);
 	s_instance = this;
@@ -88,10 +92,10 @@ CArchMultithreadWindows::CArchMultithreadWindows()
 
 	// create thread for calling (main) thread and add it to our
 	// list.  no need to lock the mutex since we're the only thread.
-	CArchThreadImpl* mainThread = new CArchThreadImpl;
-	mainThread->m_thread = NULL;
-	mainThread->m_id     = GetCurrentThreadId();
-	insert(mainThread);
+	m_mainThread           = new CArchThreadImpl;
+	m_mainThread->m_thread = NULL;
+	m_mainThread->m_id     = GetCurrentThreadId();
+	insert(m_mainThread);
 }
 
 CArchMultithreadWindows::~CArchMultithreadWindows()
@@ -106,6 +110,24 @@ CArchMultithreadWindows::~CArchMultithreadWindows()
 
 	// done with mutex
 	delete m_threadMutex;
+}
+
+void
+CArchMultithreadWindows::setNetworkDataForCurrentThread(void* data)
+{
+	lockMutex(m_threadMutex);
+	CArchThreadImpl* thread = findNoRef(GetCurrentThreadId());
+	thread->m_networkData = data;
+	unlockMutex(m_threadMutex);
+}
+
+void*
+CArchMultithreadWindows::getNetworkDataForThread(CArchThread thread)
+{
+	lockMutex(m_threadMutex);
+	void* data = thread->m_networkData;
+	unlockMutex(m_threadMutex);
+	return data;
 }
 
 HANDLE
@@ -183,7 +205,7 @@ CArchMultithreadWindows::waitCondVar(CArchCond cond,
 
 	// make a list of the condition variable events and the cancel event
 	// for the current thread.
-	HANDLE handles[3];
+	HANDLE handles[4];
 	handles[0] = cond->m_events[CArchCondImpl::kSignal];
 	handles[1] = cond->m_events[CArchCondImpl::kBroadcast];
 	handles[2] = getCancelEventForCurrentThread();
@@ -446,8 +468,8 @@ CArchMultithreadWindows::wait(CArchThread target, double timeout)
 		t = (DWORD)(1000.0 * timeout);
 	}
 
-	// wait for this thread to be cancelled or for the target thread to
-	// terminate.
+	// wait for this thread to be cancelled or woken up or for the
+	// target thread to terminate.
 	HANDLE handles[2];
 	handles[0] = target->m_exit;
 	handles[1] = self->m_cancel;
@@ -478,137 +500,6 @@ CArchMultithreadWindows::wait(CArchThread target, double timeout)
 	}
 }
 
-IArchMultithread::EWaitResult
-CArchMultithreadWindows::waitForEvent(CArchThread target, double timeout)
-{
-	// find current thread.  ref the target so it can't go away while
-	// we're watching it.
-	lockMutex(m_threadMutex);
-	CArchThreadImpl* self = findNoRef(GetCurrentThreadId());
-	assert(self != NULL);
-	if (target != NULL) {
-		refThread(target);
-	}
-	unlockMutex(m_threadMutex);
-
-	// see if we've been cancelled before checking if any events
-	// are pending.
-	DWORD result = WaitForSingleObject(self->m_cancel, 0);
-	if (result == WAIT_OBJECT_0) {
-		if (target != NULL) {
-			closeThread(target);
-		}
-		testCancelThreadImpl(self);
-	}
-
-	// check if messages are available first.  if we don't do this then
-	// MsgWaitForMultipleObjects() will block even if the queue isn't
-	// empty if the messages in the queue were there before the last
-	// call to GetMessage()/PeekMessage().
-	if (HIWORD(GetQueueStatus(QS_ALLINPUT)) != 0) {
-		return kEvent;
-	}
-
-	// convert timeout
-	DWORD t;
-	if (timeout < 0.0) {
-		t = INFINITE;
-	}
-	else {
-		t = (DWORD)(1000.0 * timeout);
-	}
-
-	// wait for this thread to be cancelled or for the target thread to
-	// terminate.
-	DWORD n    = (target == NULL || target == self) ? 1 : 2;
-	HANDLE handles[2];
-	handles[0] = self->m_cancel;
-	handles[1] = (n == 2) ? target->m_exit : NULL;
-	result     = MsgWaitForMultipleObjects(n, handles, FALSE, t, QS_ALLINPUT);
-
-	// cancel takes priority
-	if (result != WAIT_OBJECT_0 + 0 &&
-		WaitForSingleObject(handles[0], 0) == WAIT_OBJECT_0) {
-		result = WAIT_OBJECT_0 + 0;
-	}
-
-	// release target
-	if (target != NULL) {
-		closeThread(target);
-	}
-
-	// handle result
-	switch (result) {
-	case WAIT_OBJECT_0 + 0:
-		// this thread was cancelled.  does not return.
-		testCancelThreadImpl(self);
-
-	case WAIT_OBJECT_0 + 1:
-		// target thread terminated
-		if (n == 2) {
-			return kExit;
-		}
-		// fall through
-
-	case WAIT_OBJECT_0 + 2:
-		// message is available
-		return kEvent;
-
-	default:
-		// timeout or error
-		return kTimeout;
-	}
-}
-
-/*
-bool
-CArchMultithreadWindows::waitForEvent(double timeout)
-{
-	// check if messages are available first.  if we don't do this then
-	// MsgWaitForMultipleObjects() will block even if the queue isn't
-	// empty if the messages in the queue were there before the last
-	// call to GetMessage()/PeekMessage().
-	if (HIWORD(GetQueueStatus(QS_ALLINPUT)) != 0) {
-		return true;
-	}
-
-	// find current thread
-	lockMutex(m_threadMutex);
-	CArchThreadImpl* self = findNoRef(GetCurrentThreadId());
-	unlockMutex(m_threadMutex);
-	assert(self != NULL);
-
-	// convert timeout
-	DWORD t;
-	if (timeout < 0.0) {
-		t = INFINITE;
-	}
-	else {
-		t = (DWORD)(1000.0 * timeout);
-	}
-
-	// wait for this thread to be cancelled or for a message
-	HANDLE handles[1];
-	handles[0] = self->m_cancel;
-	DWORD result = MsgWaitForMultipleObjects(1, handles, FALSE, t, QS_ALLINPUT);
-
-	// handle result
-	switch (result) {
-	case WAIT_OBJECT_0 + 1:
-		// message is available
-		return true;
-
-	case WAIT_OBJECT_0 + 0:
-		// this thread was cancelled.  does not return.
-		testCancelThreadImpl(self);
-
-	default:
-		// timeout or error
-		return false;
-	}
-}
-*/
-
 bool
 CArchMultithreadWindows::isSameThread(CArchThread thread1, CArchThread thread2)
 {
@@ -635,6 +526,29 @@ IArchMultithread::ThreadID
 CArchMultithreadWindows::getIDOfThread(CArchThread thread)
 {
 	return static_cast<ThreadID>(thread->m_id);
+}
+
+void
+CArchMultithreadWindows::setInterruptHandler(InterruptFunc func, void* userData)
+{
+	lockMutex(m_threadMutex);
+	m_signalFunc     = func;
+	m_signalUserData = userData;
+	unlockMutex(m_threadMutex);
+}
+
+void
+CArchMultithreadWindows::interrupt() 
+{
+	lockMutex(m_threadMutex);
+	if (m_signalFunc != NULL) {
+		m_signalFunc(m_signalUserData);
+		ARCH->unblockPollSocket(m_mainThread);
+	}
+	else {
+		ARCH->cancelThread(m_mainThread);
+	}
+	unlockMutex(m_threadMutex);
 }
 
 CArchThreadImpl*

@@ -48,6 +48,7 @@ synergyc_LDADD =						\
 	$(DEPTH)/lib/io/libio.a				\
 	$(DEPTH)/lib/mt/libmt.a				\
 	$(DEPTH)/lib/base/libbase.a			\
+	$(DEPTH)/lib/common/libcommon.a		\
 	$(DEPTH)/lib/arch/libarch.a			\
 	$(X_LIBS)							\
 	$(X_PRE_LIBS)						\

@@ -19,6 +19,7 @@
 
 #include "common.h"
 #include "stdstring.h"
+#include "stdset.h"
 #include <windows.h>
 
 //! Miscellaneous win32 functions.
@@ -53,6 +54,12 @@ public:
 	*/
 	static void			daemonFailed(int result);
 
+	//! Get daemon quit message
+	/*!
+	Delegates to CArchDaemonWindows.
+	*/
+	static UINT			getDaemonQuitMessage();
+
 	//! Open and return a registry key, closing the parent key
 	static HKEY			openKey(HKEY parent, const TCHAR* child);
 
@@ -83,6 +90,24 @@ public:
 
 	//! Read a DWORD value from the registry
 	static DWORD		readValueInt(HKEY, const TCHAR* name);
+
+	//! Add a dialog
+	static void			addDialog(HWND);
+
+	//! Remove a dialog
+	static void			removeDialog(HWND);
+
+	//! Process dialog message
+	/*!
+	Checks if the message is destined for a dialog.  If so the message
+	is passed to the dialog and returns true, otherwise returns false.
+	*/
+	static bool			processDialog(MSG*);
+
+private:
+	typedef std::set<HWND> CDialogs;
+
+	static CDialogs*	s_dialogs;
 };
 
 #endif

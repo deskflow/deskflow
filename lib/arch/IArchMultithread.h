@@ -67,13 +67,6 @@ synergy.  Each architecture must implement this interface.
 */
 class IArchMultithread : public IInterface {
 public:
-	//! Result of waitForEvent()
-	enum EWaitResult {
-		kEvent,				//!< An event is pending
-		kExit,				//!< Thread exited
-		kTimeout			//!< Wait timed out
-	};
-
 	//! Type of thread entry point
 	typedef void* (*ThreadFunc)(void*);
 	//! Type of thread identifier
@@ -212,30 +205,6 @@ public:
 	(Cancellation point)
 	*/
 	virtual bool		wait(CArchThread thread, double timeout) = 0;
-
-	//! Wait for a user event
-	/*!
-	Waits for up to \c timeout seconds for a pending user event or
-	\c thread to exit (normally or by cancellation).  Waits forever
-	if \c timeout < 0.  Returns kEvent if an event occurred, kExit
-	if \c thread exited, or kTimeout if the timeout expired.  If
-	\c thread is NULL then it doesn't wait for any thread to exit
-	and it will not return kExit.
-
-	This method is not required by all platforms.
-
-	(Cancellation point)
-	*/
-	virtual EWaitResult	waitForEvent(CArchThread thread, double timeout) = 0;
-
-	//! Unblock thread in system call
-	/*!
-	Cause a thread that's in a blocking system call to return.  This
-	call may return before the thread is unblocked.  If the thread is
-	not in a blocking system call, this call has no effect.  This does
-	not cause a lockMutex() or waitCondVar() to return prematurely.
-	*/
-	virtual void		unblockThread(CArchThread thread) = 0;
 
 	//! Compare threads
 	/*!

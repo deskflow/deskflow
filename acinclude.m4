@@ -513,3 +513,33 @@ else
         $2
 fi
 ])dnl ACX_PTHREAD
+
+dnl enable maximum compiler warnings
+dnl we only know how to do this for g++
+AC_DEFUN([ACX_CXX_WARNINGS], [
+	AC_MSG_CHECKING([for C++ compiler warning flags])
+	if test "$GXX" = "yes"; then
+		acx_cxx_warnings="-Wall"
+	fi
+	if test -n "$acx_cxx_warnings"; then
+		CXXFLAGS="$CXXFLAGS $acx_cxx_warnings"
+	else
+		acx_cxx_warnings="unknown"
+	fi
+	AC_MSG_RESULT($acx_cxx_warnings)
+])dnl ACX_CXX_WARNINGS
+
+dnl enable compiler warnings are errors
+dnl we only know how to do this for g++
+AC_DEFUN([ACX_CXX_WARNINGS_ARE_ERRORS], [
+	AC_MSG_CHECKING([for C++ compiler warning are errors flags])
+	if test "$GXX" = "yes"; then
+		acx_cxx_warnings_are_errors="-Werror"
+	fi
+	if test -n "$acx_cxx_warnings_are_errors"; then
+		CXXFLAGS="$CXXFLAGS $acx_cxx_warnings_are_errors"
+	else
+		acx_cxx_warnings_are_errors="unknown"
+	fi
+	AC_MSG_RESULT($acx_cxx_warnings_are_errors)
+])dnl ACX_CXX_WARNINGS_ARE_ERRORS

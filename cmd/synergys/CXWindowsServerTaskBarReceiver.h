@@ -17,10 +17,12 @@
 
 #include "CServerTaskBarReceiver.h"
 
+class CBufferedLogOutputter;
+
 //! Implementation of CServerTaskBarReceiver for X Windows
 class CXWindowsServerTaskBarReceiver : public CServerTaskBarReceiver {
 public:
-	CXWindowsServerTaskBarReceiver();
+	CXWindowsServerTaskBarReceiver(const CBufferedLogOutputter*);
 	virtual ~CXWindowsServerTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides

@@ -134,6 +134,18 @@ CArchMultithreadPosix::~CArchMultithreadPosix()
 	s_instance = NULL;
 }
 
+void
+CArchMultithreadPosix::unblockThread(CArchThread thread)
+{
+	pthread_kill(thread->m_thread, SIGWAKEUP);
+}
+
+CArchMultithreadPosix*
+CArchMultithreadPosix::getInstance()
+{
+	return s_instance;
+}
+
 CArchCond
 CArchMultithreadPosix::newCondVar()
 {
@@ -517,19 +529,6 @@ CArchMultithreadPosix::wait(CArchThread target, double timeout)
 	}
 }
 
-IArchMultithread::EWaitResult
-CArchMultithreadPosix::waitForEvent(CArchThread, double /*timeout*/)
-{
-	// not implemented
-	return kTimeout;
-}
-
-void
-CArchMultithreadPosix::unblockThread(CArchThread thread)
-{
-	pthread_kill(thread->m_thread, SIGWAKEUP);
-}
-
 bool
 CArchMultithreadPosix::isSameThread(CArchThread thread1, CArchThread thread2)
 {
@@ -575,7 +574,7 @@ CArchMultithreadPosix::interrupt()
 	lockMutex(m_threadMutex);
 	if (m_signalFunc != NULL) {
 		m_signalFunc(m_signalUserData);
-		pthread_kill(m_mainThread->m_thread, SIGWAKEUP);
+		unblockThread(m_mainThread);
 	}
 	else {
 		ARCH->cancelThread(m_mainThread);

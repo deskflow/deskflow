@@ -121,6 +121,10 @@ SOURCE=.\CMSWindowsScreen.cpp
 
 SOURCE=.\CMSWindowsScreenSaver.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsUtil.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -160,6 +164,10 @@ SOURCE=.\CMSWindowsScreen.h
 # Begin Source File
 
 SOURCE=.\CMSWindowsScreenSaver.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsUtil.h
 # End Source File
 # End Group
 # End Target

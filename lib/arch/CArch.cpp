@@ -351,18 +351,6 @@ CArch::wait(CArchThread thread, double timeout)
 	return m_mt->wait(thread, timeout);
 }
 
-IArchMultithread::EWaitResult
-CArch::waitForEvent(CArchThread thread, double timeout)
-{
-	return m_mt->waitForEvent(thread, timeout);
-}
-
-void
-CArch::unblockThread(CArchThread thread)
-{
-	m_mt->unblockThread(thread);
-}
-
 bool
 CArch::isSameThread(CArchThread thread1, CArchThread thread2)
 {
@@ -390,13 +378,13 @@ CArch::getIDOfThread(CArchThread thread)
 void
 CArch::setInterruptHandler(InterruptFunc func, void* userData)
 {
-	return m_mt->setInterruptHandler(func, userData);
+	m_mt->setInterruptHandler(func, userData);
 }
 
 void
 CArch::interrupt()
 {
-	return m_mt->interrupt();
+	m_mt->interrupt();
 }
 
 CArchSocket
@@ -457,6 +445,12 @@ int
 CArch::pollSocket(CPollEntry pe[], int num, double timeout)
 {
 	return m_net->pollSocket(pe, num, timeout);
+}
+
+void
+CArch::unblockPollSocket(CArchThread thread)
+{
+	m_net->unblockPollSocket(thread);
 }
 
 size_t

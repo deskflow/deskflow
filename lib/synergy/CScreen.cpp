@@ -27,8 +27,8 @@ CScreen::CScreen(IPlatformScreen* platformScreen) :
 	m_isPrimary(platformScreen->isPrimary()),
 	m_enabled(false),
 	m_entered(m_isPrimary),
-	m_toggleKeys(0),
-	m_screenSaverSync(true)
+	m_screenSaverSync(true),
+	m_toggleKeys(0)
 {
 	assert(m_screen != NULL);
 
@@ -376,7 +376,7 @@ CScreen::setOptions(const COptionsList& options)
 void
 CScreen::setSequenceNumber(UInt32 seqNum)
 {
-	return m_screen->setSequenceNumber(seqNum);
+	m_screen->setSequenceNumber(seqNum);
 }
 
 bool

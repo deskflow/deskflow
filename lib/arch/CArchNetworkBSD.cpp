@@ -424,6 +424,12 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 
 #endif
 
+void
+CArchNetworkBSD::unblockPollSocket(CArchThread thread)
+{
+	CArchMultithreadPosix::getInstance()->unblockThread(thread);
+}
+
 size_t
 CArchNetworkBSD::readSocket(CArchSocket s, void* buf, size_t len)
 {
@@ -435,8 +441,8 @@ CArchNetworkBSD::readSocket(CArchSocket s, void* buf, size_t len)
 		if (n == -1) {
 			if (errno == EINTR) {
 				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
+				n = 0;
+				break;
 			}
 			else if (errno == EAGAIN) {
 				n = 0;
@@ -460,8 +466,8 @@ CArchNetworkBSD::writeSocket(CArchSocket s, const void* buf, size_t len)
 		if (n == -1) {
 			if (errno == EINTR) {
 				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
+				n = 0;
+				break;
 			}
 			else if (errno == EAGAIN) {
 				// no buffer space

@@ -28,6 +28,8 @@
 #include "CEventQueue.h"
 #include "CFunctionEventJob.h"
 #include "CLog.h"
+#include "CString.h"
+#include "CStringUtil.h"
 #include "LogOutputters.h"
 #include "CArch.h"
 #include "XArch.h"
@@ -36,8 +38,9 @@
 
 #define DAEMON_RUNNING(running_)
 #if WINDOWS_LIKE
-#include "CMSWindowsScreen.h"
 #include "CArchMiscWindows.h"
+#include "CMSWindowsScreen.h"
+#include "CMSWindowsUtil.h"
 #include "CMSWindowsServerTaskBarReceiver.h"
 #include "resource.h"
 #undef DAEMON_RUNNING
@@ -62,6 +65,10 @@
 #define USR_CONFIG_NAME ".synergy.conf"
 #define SYS_CONFIG_NAME "synergy.conf"
 #endif
+
+typedef int (*StartupFunc)(int, char**);
+static void parse(int argc, const char* const* argv);
+static void loadConfig();
 
 //
 // program arguments
@@ -90,8 +97,8 @@ public:
 	const char* 		m_configFile;
 	const char* 		m_logFilter;
 	CString 			m_name;
-	CNetworkAddress 	m_synergyAddress;
-	CConfig 			m_config;
+	CNetworkAddress*	m_synergyAddress;
+	CConfig*			m_config;
 };
 
 CArgs*					CArgs::s_instance = NULL;
@@ -109,6 +116,18 @@ createScreen()
 	return new CScreen(new CMSWindowsScreen(true));
 #elif UNIX_LIKE
 	return new CScreen(new CXWindowsScreen(true));
+#endif
+}
+
+static
+CServerTaskBarReceiver*
+createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
+{
+#if WINDOWS_LIKE
+	return new CMSWindowsServerTaskBarReceiver(
+							CMSWindowsScreen::getInstance(), logBuffer);
+#elif UNIX_LIKE
+	return new CXWindowsServerTaskBarReceiver(logBuffer);
 #endif
 }
 
@@ -299,11 +318,11 @@ startServer()
 	CPrimaryClient* primaryClient = NULL;
 	CClientListener* listener     = NULL;
 	try {
-		CString name    = ARG->m_config.getCanonicalName(ARG->m_name);
+		CString name    = ARG->m_config->getCanonicalName(ARG->m_name);
 		serverScreen    = openServerScreen();
 		primaryClient   = openPrimaryClient(name, serverScreen);
-		listener        = openClientListener(ARG->m_config.getSynergyAddress());
-		s_server        = openServer(ARG->m_config, primaryClient);
+		listener        = openClientListener(ARG->m_config->getSynergyAddress());
+		s_server        = openServer(*ARG->m_config, primaryClient);
 		s_serverScreen  = serverScreen;
 		s_primaryClient = primaryClient;
 		s_listener      = listener;
@@ -372,26 +391,26 @@ stopServer()
 
 static
 int
-realMain()
+mainLoop()
 {
 	// if configuration has no screens then add this system
 	// as the default
-	if (ARG->m_config.begin() == ARG->m_config.end()) {
-		ARG->m_config.addScreen(ARG->m_name);
+	if (ARG->m_config->begin() == ARG->m_config->end()) {
+		ARG->m_config->addScreen(ARG->m_name);
 	}
 
 	// set the contact address, if provided, in the config.
 	// otherwise, if the config doesn't have an address, use
 	// the default.
-	if (ARG->m_synergyAddress.isValid()) {
-		ARG->m_config.setSynergyAddress(ARG->m_synergyAddress);
+	if (ARG->m_synergyAddress->isValid()) {
+		ARG->m_config->setSynergyAddress(*ARG->m_synergyAddress);
 	}
-	else if (!ARG->m_config.getSynergyAddress().isValid()) {
-		ARG->m_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
+	else if (!ARG->m_config->getSynergyAddress().isValid()) {
+		ARG->m_config->setSynergyAddress(CNetworkAddress(kDefaultPort));
 	}
 
 	// canonicalize the primary screen name
-	CString primaryName = ARG->m_config.getCanonicalName(ARG->m_name);
+	CString primaryName = ARG->m_config->getCanonicalName(ARG->m_name);
 	if (primaryName.empty()) {
 		LOG((CLOG_CRIT "unknown screen name `%s'", ARG->m_name.c_str()));
 		return kExitFailed;
@@ -407,8 +426,8 @@ realMain()
 	// run event loop.  if startServer() failed we're supposed to retry
 	// later.  the timer installed by startServer() will take care of
 	// that.
-	DAEMON_RUNNING(true);
 	CEvent event;
+	DAEMON_RUNNING(true);
 	EVENTQUEUE->getEvent(event);
 	while (event.getType() != CEvent::kQuit) {
 		EVENTQUEUE->dispatchEvent(event);
@@ -426,43 +445,71 @@ realMain()
 	return kExitSuccess;
 }
 
-/* XXX
 static
-void
-realMainEntry(void* vresult)
+int
+daemonMainLoop(int, const char**)
 {
-	*reinterpret_cast<int*>(vresult) = realMain();
+	CSystemLogger sysLogger(DAEMON_NAME);
+	return mainLoop();
 }
 
 static
 int
-runMainInThread(void)
+standardStartup(int argc, char** argv)
 {
-	int result = 0;
-	CThread appThread(new CFunctionJob(&realMainEntry, &result));
-	try {
-#if WINDOWS_LIKE
-		MSG msg;
-		while (appThread.waitForEvent(-1.0) == CThread::kEvent) {
-			// check for a quit event
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-				if (msg.message == WM_QUIT) {
-					CThread::getCurrentThread().cancel();
-				}
-			}
-		}
-#else
-		appThread.wait(-1.0);
-#endif
-		return result;
+	// parse command line
+	parse(argc, argv);
+
+	// load configuration
+	loadConfig();
+
+	// daemonize if requested
+	if (ARG->m_daemon) {
+		return ARCH->daemonize(DAEMON_NAME, &daemonMainLoop);
 	}
-	catch (XThread&) {
-		appThread.cancel();
-		appThread.wait(-1.0);
-		throw;
+	else {
+		return mainLoop();
 	}
 }
-*/
+
+static
+int
+run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+{
+	// general initialization
+	CSocketMultiplexer multiplexer;
+	CEventQueue eventQueue;
+	ARG->m_synergyAddress = new CNetworkAddress;
+	ARG->m_config         = new CConfig;
+	ARG->m_pname          = ARCH->getBasename(argv[0]);
+
+	// install caller's output filter
+	if (outputter != NULL) {
+		CLOG->insert(outputter);
+	}
+
+	// save log messages
+	CBufferedLogOutputter logBuffer(1000);
+	CLOG->insert(&logBuffer, true);
+
+	// make the task bar receiver.  the user can control this app
+	// through the task bar.
+	s_taskBarReceiver = createTaskBarReceiver(&logBuffer);
+
+	// run
+	int result = startup(argc, argv);
+
+	// done with task bar receiver
+	delete s_taskBarReceiver;
+
+	// done with log buffer
+	CLOG->remove(&logBuffer);
+
+	delete ARG->m_config;
+	delete ARG->m_synergyAddress;
+	return result;
+}
+
 
 //
 // command line parsing
@@ -606,7 +653,7 @@ parse(int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, "-a", "--address", 1)) {
 			// save listen address
 			try {
-				ARG->m_synergyAddress = CNetworkAddress(argv[i + 1],
+				*ARG->m_synergyAddress = CNetworkAddress(argv[i + 1],
 														kDefaultPort);
 			}
 			catch (XSocketAddress& e) {
@@ -723,7 +770,7 @@ loadConfig(const char* pathname)
 		if (!configStream) {
 			throw XConfigRead("cannot open file");
 		}
-		configStream >> ARG->m_config;
+		configStream >> *ARG->m_config;
 		LOG((CLOG_DEBUG "configuration read successfully"));
 		return true;
 	}
@@ -828,197 +875,107 @@ byeThrow(int x)
 
 static
 int
-daemonStartup(int argc, const char** argv)
+daemonNTMainLoop(int argc, const char** argv)
 {
-	CSystemLogger sysLogger(DAEMON_NAME);
-
-	// catch errors that would normally exit
-	bye = &byeThrow;
-
-	// parse command line
 	parse(argc, argv);
-
-	// cannot run as backend if running as a service
 	ARG->m_backend = false;
-
-	// load configuration
 	loadConfig();
-
-	// run as a service
-	return CArchMiscWindows::runDaemon(realMain);
+	return CArchMiscWindows::runDaemon(mainLoop);
 }
 
 static
 int
-daemonStartup95(int, const char**)
+daemonNTStartup(int, char**)
 {
 	CSystemLogger sysLogger(DAEMON_NAME);
-	return runMainInThread();
+	bye = &byeThrow;
+	return ARCH->daemonize(DAEMON_NAME, &daemonNTMainLoop);
 }
 
 static
-int
-run(int argc, char** argv)
+void
+showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 {
-	// windows NT family starts services using no command line options.
-	// since i'm not sure how to tell the difference between that and
-	// a user providing no options we'll assume that if there are no
-	// arguments and we're on NT then we're being invoked as a service.
-	// users on NT can use `--daemon' or `--no-daemon' to force us out
-	// of the service code path.
-	if (argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
-		try {
-			return ARCH->daemonize(DAEMON_NAME, &daemonStartup);
-		}
-		catch (XArchDaemon& e) {
-			LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
-		}
-		return kExitFailed;
-	}
-
-	// parse command line
-	parse(argc, argv);
-
-	// load configuration
-	loadConfig();
-
-	// daemonize if requested
-	if (ARG->m_daemon) {
-		// start as a daemon
-		if (CArchMiscWindows::isWindows95Family()) {
-			try {
-				return ARCH->daemonize(DAEMON_NAME, &daemonStartup95);
-			}
-			catch (XArchDaemon& e) {
-				LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
-			}
-			return kExitFailed;
-		}
-		else {
-			// cannot start a service from the command line so just
-			// run normally (except with log messages redirected).
-			CSystemLogger sysLogger(DAEMON_NAME);
-			return runMainInThread();
-		}
-	}
-	else {
-		// run
-		return runMainInThread();
-	}
+	CString fmt = CMSWindowsUtil::getString(instance, id);
+	CString msg = CStringUtil::format(fmt.c_str(), arg);
+	MessageBox(NULL, msg.c_str(), title, MB_OK | MB_ICONWARNING);
 }
 
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
-	CArch arch(instance);
-	CLOG;
-	CArgs args;
-
-	// save instance
-	CMSWindowsScreen::init(instance);
-
-	// get program name
-	ARG->m_pname = ARCH->getBasename(__argv[0]);
-
-	// send PRINT and FATAL output to a message box
-	CLOG->insert(new CMessageBoxOutputter);
-
-	// save log messages
-	CBufferedLogOutputter logBuffer(1000);
-	CLOG->insert(&logBuffer, true);
-
-	// make the task bar receiver.  the user can control this app
-	// through the task bar.
-	s_taskBarReceiver = new CMSWindowsServerTaskBarReceiver(instance,
-															&logBuffer);
-
-	int result;
 	try {
-		// run in foreground or as a daemon
-		result = run(__argc, __argv);
+		CArch arch(instance);
+		CMSWindowsScreen::init(instance);
+		CLOG;
+// FIXME
+//		CThread::getCurrentThread().setPriority(-14);
+		CArgs args;
+
+		// windows NT family starts services using no command line options.
+		// since i'm not sure how to tell the difference between that and
+		// a user providing no options we'll assume that if there are no
+		// arguments and we're on NT then we're being invoked as a service.
+		// users on NT can use `--daemon' or `--no-daemon' to force us out
+		// of the service code path.
+		StartupFunc startup = &standardStartup;
+		if (__argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
+			startup = &daemonNTStartup;
+		}
+
+		// send PRINT and FATAL output to a message box
+		int result = run(__argc, __argv, new CMessageBoxOutputter, startup);
+
+		// let user examine any messages if we're running as a backend
+		// by putting up a dialog box before exiting.
+		if (args.m_backend && s_hasImportantLogMessages) {
+			showError(instance, args.m_pname, IDS_FAILED, "");
+		}
+
+		delete CLOG;
+		return result;
+	}
+	catch (XBase& e) {
+		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, e.what());
+		throw;
+	}
+	catch (XArch& e) {
+		showError(instance, __argv[0], IDS_INIT_FAILED, e.what().c_str());
+		return kExitFailed;
 	}
 	catch (...) {
-		// note that we don't rethrow thread cancellation.  we'll
-		// be exiting soon so it doesn't matter.  what we'd like
-		// is for everything after this try/catch to be in a
-		// finally block.
-		result = kExitFailed;
+		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, "<unknown>");
+		throw;
 	}
-
-	// done with task bar receiver
-	delete s_taskBarReceiver;
-
-	// done with log buffer
-	CLOG->remove(&logBuffer);
-
-	// let user examine any messages if we're running as a backend
-	// by putting up a dialog box before exiting.
-	if (ARG->m_backend && s_hasImportantLogMessages) {
-		char msg[1024];
-		msg[0] = '\0';
-		LoadString(instance, IDS_FAILED, msg, sizeof(msg) / sizeof(msg[0]));
-		MessageBox(NULL, msg, ARG->m_pname, MB_OK | MB_ICONWARNING);
-	}
-
-	delete CLOG;
-	return result;
 }
 
 #elif UNIX_LIKE
 
-static
-int
-daemonStartup(int, const char**)
-{
-	CSystemLogger sysLogger(DAEMON_NAME);
-	return realMain();
-}
-
 int
 main(int argc, char** argv)
 {
-	CArch arch;
-	CLOG;
-
-	// go really fast
-	CThread::getCurrentThread().setPriority(-14);
-
-	CSocketMultiplexer multiplexer;
-	CEventQueue eventQueue;
-
-	// get program name
 	CArgs args;
-	ARG->m_pname = ARCH->getBasename(argv[0]);
-
-	// make the task bar receiver.  the user can control this app
-	// through the task bar.
-	s_taskBarReceiver = new CXWindowsServerTaskBarReceiver;
-
-	// parse command line
-	parse(argc, argv);
-
-	// load configuration
-	loadConfig();
-
-	// daemonize if requested
-	int result;
-	if (ARG->m_daemon) {
-		try {
-			result = ARCH->daemonize(DAEMON_NAME, &daemonStartup);
-		}
-		catch (XArchDaemon&) {
-			LOG((CLOG_CRIT "failed to daemonize"));
-			result = kExitFailed;
-		}
+	try {
+		int result;
+		CArch arch;
+		CLOG;
+		CArgs args;
+		result = run(argc, argv, NULL, &standardStartup);
+		delete CLOG;
+		return result;
 	}
-	else {
-		result = realMain();
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "Uncaught exception: %s\n", e.what()));
+		throw;
 	}
-
-	// done with task bar receiver
-	delete s_taskBarReceiver;
-
-	return result;
+	catch (XArch& e) {
+		LOG((CLOG_CRIT "Initialization failed: %s" BYE, e.what().c_str()));
+		return kExitFailed;
+	}
+	catch (...) {
+		LOG((CLOG_CRIT "Uncaught exception: <unknown exception>\n"));
+		throw;
+	}
 }
 
 #else

@@ -741,7 +741,7 @@ CMSWindowsKeyMapper::update(IKeyState* keyState)
 		for (size_t j = 0; j < CModifierKeys::s_maxKeys; ++j) {
 			if (s_modifiers[i].m_keys[j] != 0) {
 				SHORT s = GetKeyState(s_modifiers[i].m_keys[j]);
-				m_keys[s_modifiers[i].m_keys[j]] = static_cast<BYTE>(s);
+				m_keys[s_modifiers[i].m_keys[j] & 0xffu] = static_cast<BYTE>(s);
 				if (keyState != NULL) {
 					if ((s & 0x01) != 0) {
 						keyState->setToggled(s_modifiers[i].m_mask);
