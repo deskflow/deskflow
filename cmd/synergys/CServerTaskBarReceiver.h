@@ -15,7 +15,6 @@
 #ifndef CSERVERTASKBARRECEIVER_H
 #define CSERVERTASKBARRECEIVER_H
 
-#include "CMutex.h"
 #include "CString.h"
 #include "IArchTaskBarReceiver.h"
 #include "stdvector.h"
@@ -81,7 +80,6 @@ protected:
 	virtual void		onStatusChanged(CServer* server);
 
 private:
-	CMutex				m_mutex;
 	EState				m_state;
 	CString				m_errorMessage;
 	CClients			m_clients;

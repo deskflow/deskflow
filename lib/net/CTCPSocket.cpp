@@ -31,8 +31,7 @@
 
 CTCPSocket::CTCPSocket() :
 	m_mutex(),
-	m_flushed(&m_mutex, true),
-	m_eventFilter(NULL)
+	m_flushed(&m_mutex, true)
 {
 	try {
 		m_socket = ARCH->newSocket(IArchNetwork::kINET, IArchNetwork::kSTREAM);
@@ -47,8 +46,7 @@ CTCPSocket::CTCPSocket() :
 CTCPSocket::CTCPSocket(CArchSocket socket) :
 	m_mutex(),
 	m_socket(socket),
-	m_flushed(&m_mutex, true),
-	m_eventFilter(NULL)
+	m_flushed(&m_mutex, true)
 {
 	assert(m_socket != NULL);
 
@@ -92,7 +90,7 @@ CTCPSocket::close()
 
 	// clear buffers and enter disconnected state
 	if (m_connected) {
-		sendSocketEvent(getDisconnectedEvent());
+		sendEvent(getDisconnectedEvent());
 	}
 	onDisconnected();
 
@@ -132,7 +130,7 @@ CTCPSocket::read(void* buffer, UInt32 n)
 
 	// if no more data and we cannot read or write then send disconnected
 	if (n > 0 && m_inputBuffer.getSize() == 0 && !m_readable && !m_writable) {
-		sendSocketEvent(getDisconnectedEvent());
+		sendEvent(getDisconnectedEvent());
 		m_connected = false;
 	}
 
@@ -148,7 +146,7 @@ CTCPSocket::write(const void* buffer, UInt32 n)
 
 		// must not have shutdown output
 		if (!m_writable) {
-			sendStreamEvent(getOutputErrorEvent());
+			sendEvent(getOutputErrorEvent());
 			return;
 		}
 
@@ -197,7 +195,7 @@ CTCPSocket::shutdownInput()
 
 		// shutdown buffer for reading
 		if (m_readable) {
-			sendStreamEvent(getInputShutdownEvent());
+			sendEvent(getInputShutdownEvent());
 			onInputShutdown();
 			useNewJob = true;
 		}
@@ -224,7 +222,7 @@ CTCPSocket::shutdownOutput()
 
 		// shutdown buffer for writing
 		if (m_writable) {
-			sendStreamEvent(getOutputShutdownEvent());
+			sendEvent(getOutputShutdownEvent());
 			onOutputShutdown();
 			useNewJob = true;
 		}
@@ -232,13 +230,6 @@ CTCPSocket::shutdownOutput()
 	if (useNewJob) {
 		setJob(newJob());
 	}
-}
-
-void
-CTCPSocket::setEventFilter(IEventJob* filter)
-{
-	CLock lock(&m_mutex);
-	m_eventFilter = filter;
 }
 
 bool
@@ -255,13 +246,6 @@ CTCPSocket::getSize() const
 	return m_inputBuffer.getSize();
 }
 
-IEventJob*
-CTCPSocket::getEventFilter() const
-{
-	CLock lock(&m_mutex);
-	return m_eventFilter;
-}
-
 void
 CTCPSocket::connect(const CNetworkAddress& addr)
 {
@@ -276,7 +260,7 @@ CTCPSocket::connect(const CNetworkAddress& addr)
 
 		try {
 			if (ARCH->connectSocket(m_socket, addr.getAddress())) {
-				sendSocketEvent(getConnectedEvent());
+				sendEvent(getConnectedEvent());
 				onConnected();
 			}
 			else {
@@ -358,12 +342,6 @@ CTCPSocket::newJob()
 }
 
 void
-CTCPSocket::sendSocketEvent(CEvent::Type type)
-{
-	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), NULL));
-}
-
-void
 CTCPSocket::sendConnectionFailedEvent(const char* msg)
 {
 	CConnectionFailedInfo* info = (CConnectionFailedInfo*)malloc(
@@ -374,14 +352,9 @@ CTCPSocket::sendConnectionFailedEvent(const char* msg)
 }
 
 void
-CTCPSocket::sendStreamEvent(CEvent::Type type)
+CTCPSocket::sendEvent(CEvent::Type type)
 {
-	if (m_eventFilter != NULL) {
-		m_eventFilter->run(CEvent(type, getEventTarget(), NULL));
-	}
-	else {
-		EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), NULL));
-	}
+	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), NULL));
 }
 
 void
@@ -455,7 +428,7 @@ CTCPSocket::serviceConnecting(ISocketMultiplexerJob* job,
 	}
 
 	if (write) {
-		sendSocketEvent(getConnectedEvent());
+		sendEvent(getConnectedEvent());
 		onConnected();
 		return newJob();
 	}
@@ -470,7 +443,7 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 	CLock lock(&m_mutex);
 
 	if (error) {
-		sendSocketEvent(getDisconnectedEvent());
+		sendEvent(getDisconnectedEvent());
 		onDisconnected();
 		return newJob();
 	}
@@ -488,7 +461,7 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			if (n > 0) {
 				m_outputBuffer.pop(n);
 				if (m_outputBuffer.getSize() == 0) {
-					sendStreamEvent(getOutputFlushedEvent());
+					sendEvent(getOutputFlushedEvent());
 					m_flushed = true;
 					m_flushed.broadcast();
 					needNewJob = true;
@@ -499,9 +472,9 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			// remote read end of stream hungup.  our output side
 			// has therefore shutdown.
 			onOutputShutdown();
-			sendStreamEvent(getOutputShutdownEvent());
+			sendEvent(getOutputShutdownEvent());
 			if (!m_readable && m_inputBuffer.getSize() == 0) {
-				sendSocketEvent(getDisconnectedEvent());
+				sendEvent(getDisconnectedEvent());
 				m_connected = false;
 			}
 			needNewJob = true;
@@ -509,14 +482,14 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 		catch (XArchNetworkDisconnected&) {
 			// stream hungup
 			onDisconnected();
-			sendSocketEvent(getDisconnectedEvent());
+			sendEvent(getDisconnectedEvent());
 			needNewJob = true;
 		}
 		catch (XArchNetwork&) {
 			// other write error
 			onDisconnected();
-			sendStreamEvent(getOutputErrorEvent());
-			sendSocketEvent(getDisconnectedEvent());
+			sendEvent(getOutputErrorEvent());
+			sendEvent(getDisconnectedEvent());
 			needNewJob = true;
 		}
 	}
@@ -536,16 +509,16 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 
 				// send input ready if input buffer was empty
 				if (wasEmpty) {
-					sendStreamEvent(getInputReadyEvent());
+					sendEvent(getInputReadyEvent());
 				}
 			}
 			else {
 				// remote write end of stream hungup.  our input side
 				// has therefore shutdown but don't flush our buffer
 				// since there's still data to be read.
-				sendStreamEvent(getInputShutdownEvent());
+				sendEvent(getInputShutdownEvent());
 				if (!m_writable && m_inputBuffer.getSize() == 0) {
-					sendSocketEvent(getDisconnectedEvent());
+					sendEvent(getDisconnectedEvent());
 					m_connected = false;
 				}
 				m_readable = false;
@@ -554,7 +527,7 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 		}
 		catch (XArchNetworkDisconnected&) {
 			// stream hungup
-			sendSocketEvent(getDisconnectedEvent());
+			sendEvent(getDisconnectedEvent());
 			onDisconnected();
 			needNewJob = true;
 		}

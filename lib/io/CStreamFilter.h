@@ -33,19 +33,17 @@ public:
 	~CStreamFilter();
 
 	// IStream overrides
-	// These all just forward to the underlying stream.  Override as
-	// necessary.
+	// These all just forward to the underlying stream except getEventTarget.
+	// Override as necessary.  getEventTarget returns a pointer to this.
 	virtual void		close();
 	virtual UInt32		read(void* buffer, UInt32 n);
 	virtual void		write(const void* buffer, UInt32 n);
 	virtual void		flush();
 	virtual void		shutdownInput();
 	virtual void		shutdownOutput();
-	virtual void		setEventFilter(IEventJob* filter);
 	virtual void*		getEventTarget() const;
 	virtual bool		isReady() const;
 	virtual UInt32		getSize() const;
-	virtual IEventJob*	getEventFilter() const;
 
 protected:
 	//! Get the stream
@@ -53,6 +51,16 @@ protected:
 	Returns the stream passed to the c'tor.
 	*/
 	IStream*			getStream() const;
+
+	//! Handle events from source stream
+	/*!
+	Does the event filtering.  The default simply dispatches an event
+	identical except using this object as the event target.
+	*/
+	virtual void		filterEvent(const CEvent&);
+
+private:
+	void				handleUpstreamEvent(const CEvent&, void*);
 
 private:
 	IStream*			m_stream;

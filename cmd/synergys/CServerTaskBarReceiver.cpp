@@ -38,7 +38,6 @@ CServerTaskBarReceiver::updateStatus(CServer* server, const CString& errorMsg)
 {
 	{
 		// update our status
-		CLock lock(&m_mutex);
 		m_errorMessage = errorMsg;
 		if (server == NULL) {
 			if (m_errorMessage.empty()) {
@@ -100,13 +99,13 @@ CServerTaskBarReceiver::onStatusChanged(CServer*)
 void
 CServerTaskBarReceiver::lock() const
 {
-	m_mutex.lock();
+	// do nothing
 }
 
 void
 CServerTaskBarReceiver::unlock() const
 {
-	m_mutex.unlock();
+	// do nothing
 }
 
 std::string

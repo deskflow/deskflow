@@ -183,6 +183,9 @@ CEventQueue::dispatchEvent(const CEvent& event)
 {
 	void* target   = event.getTarget();
 	IEventJob* job = getHandler(event.getType(), target);
+	if (job == NULL) {
+		job = getHandler(CEvent::kUnknown, target);
+	}
 	if (job != NULL) {
 		job->run(event);
 		return true;
@@ -274,64 +277,55 @@ CEventQueue::deleteTimer(CEventQueueTimer* timer)
 }
 
 void
-CEventQueue::adoptHandler(void* target, IEventJob* handler)
-{
-	doAdoptHandler(CEvent::kUnknown, target, handler);
-}
-
-void
 CEventQueue::adoptHandler(CEvent::Type type, void* target, IEventJob* handler)
 {
-	assert(type != CEvent::kUnknown);
-	doAdoptHandler(type, target, handler);
-}
-
-IEventJob*
-CEventQueue::orphanHandler(void* target)
-{
-	return doOrphanHandler(CEvent::kUnknown, target);
-}
-
-IEventJob*
-CEventQueue::orphanHandler(CEvent::Type type, void* target)
-{
-	assert(type != CEvent::kUnknown);
-	return doOrphanHandler(type, target);
-}
-
-void
-CEventQueue::removeHandler(void* target)
-{
-	delete orphanHandler(target);
+	CArchMutexLock lock(m_mutex);
+	IEventJob*& job = m_handlers[target][type];
+	delete job;
+	job = handler;
 }
 
 void
 CEventQueue::removeHandler(CEvent::Type type, void* target)
 {
-	delete orphanHandler(type, target);
+	IEventJob* handler = NULL;
+	{
+		CArchMutexLock lock(m_mutex);
+		CHandlerTable::iterator index = m_handlers.find(target);
+		if (index != m_handlers.end()) {
+			CTypeHandlerTable& typeHandlers = index->second;
+			CTypeHandlerTable::iterator index2 = typeHandlers.find(type);
+			if (index2 != typeHandlers.end()) {
+				handler = index2->second;
+				typeHandlers.erase(index2);
+			}
+		}
+	}
+	delete handler;
 }
 
 void
-CEventQueue::doAdoptHandler(CEvent::Type type, void* target, IEventJob* handler)
+CEventQueue::removeHandlers(void* target)
 {
-	CArchMutexLock lock(m_mutex);
-	IEventJob*& job = m_handlers[CTypeTarget(type, target)];
-	delete job;
-	job = handler;
-}
-
-IEventJob*
-CEventQueue::doOrphanHandler(CEvent::Type type, void* target)
-{
-	CArchMutexLock lock(m_mutex);
-	CHandlerTable::iterator index = m_handlers.find(CTypeTarget(type, target));
-	if (index != m_handlers.end()) {
-		IEventJob* handler = index->second;
-		m_handlers.erase(index);
-		return handler;
+	std::vector<IEventJob*> handlers;
+	{
+		CArchMutexLock lock(m_mutex);
+		CHandlerTable::iterator index = m_handlers.find(target);
+		if (index != m_handlers.end()) {
+			// copy to handlers array and clear table for target
+			CTypeHandlerTable& typeHandlers = index->second;
+			for (CTypeHandlerTable::iterator index2 = typeHandlers.begin();
+							index2 != typeHandlers.end(); ++index2) {
+				handlers.push_back(index2->second);
+			}
+			typeHandlers.clear();
+		}
 	}
-	else {
-		return NULL;
+
+	// delete handlers
+	for (std::vector<IEventJob*>::iterator index = handlers.begin();
+							index != handlers.end(); ++index) {
+		delete *index;
 	}
 }
 
@@ -345,14 +339,13 @@ IEventJob*
 CEventQueue::getHandler(CEvent::Type type, void* target) const
 {
 	CArchMutexLock lock(m_mutex);
-	CHandlerTable::const_iterator index =
-							m_handlers.find(CTypeTarget(type, target));
+	CHandlerTable::const_iterator index = m_handlers.find(target);
 	if (index != m_handlers.end()) {
-		return index->second;
-	}
-	index = m_handlers.find(CTypeTarget(CEvent::kUnknown, target));
-	if (index != m_handlers.end()) {
-		return index->second;
+		const CTypeHandlerTable& typeHandlers = index->second;
+		CTypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
+		if (index2 != typeHandlers.end()) {
+			return index2->second;
+		}
 	}
 	return NULL;
 }
@@ -451,30 +444,6 @@ CEventQueue::getNextTimerTimeout() const
 		return 0.0;
 	}
 	return m_timerQueue.top();
-}
-
-
-//
-// CEventQueue::CTypeTarget
-//
-
-CEventQueue::CTypeTarget::CTypeTarget(CEvent::Type type, void* target) :
-	m_type(type),
-	m_target(target)
-{
-	// do nothing
-}
-
-CEventQueue::CTypeTarget::~CTypeTarget()
-{
-	// do nothing
-}
-
-bool
-CEventQueue::CTypeTarget::operator<(const CTypeTarget& tt) const
-{
-	return (m_type < tt.m_type ||
-			(m_type == tt.m_type && m_target < tt.m_target));
 }
 
 

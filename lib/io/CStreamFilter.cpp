@@ -13,6 +13,8 @@
  */
 
 #include "CStreamFilter.h"
+#include "IEventQueue.h"
+#include "TMethodEventJob.h"
 
 //
 // CStreamFilter
@@ -22,11 +24,16 @@ CStreamFilter::CStreamFilter(IStream* stream, bool adoptStream) :
 	m_stream(stream),
 	m_adopted(adoptStream)
 {
-	// do nothing
+	// replace handlers for m_stream
+	EVENTQUEUE->removeHandlers(m_stream->getEventTarget());
+	EVENTQUEUE->adoptHandler(CEvent::kUnknown, m_stream->getEventTarget(),
+							new TMethodEventJob<CStreamFilter>(this,
+								&CStreamFilter::handleUpstreamEvent));
 }
 
 CStreamFilter::~CStreamFilter()
 {
+	EVENTQUEUE->removeHandler(CEvent::kUnknown, m_stream->getEventTarget());
 	if (m_adopted) {
 		delete m_stream;
 	}
@@ -68,16 +75,10 @@ CStreamFilter::shutdownOutput()
 	getStream()->shutdownOutput();
 }
 
-void
-CStreamFilter::setEventFilter(IEventJob* filter)
-{
-	getStream()->setEventFilter(filter);
-}
-
 void*
 CStreamFilter::getEventTarget() const
 {
-	return getStream()->getEventTarget();
+	return const_cast<void*>(reinterpret_cast<const void*>(this));
 }
 
 bool
@@ -92,14 +93,21 @@ CStreamFilter::getSize() const
 	return getStream()->getSize();
 }
 
-IEventJob*
-CStreamFilter::getEventFilter() const
-{
-	return getStream()->getEventFilter();
-}
-
 IStream*
 CStreamFilter::getStream() const
 {
 	return m_stream;
+}
+
+void
+CStreamFilter::filterEvent(const CEvent& event)
+{
+	EVENTQUEUE->dispatchEvent(CEvent(event.getType(),
+						getEventTarget(), event.getData()));
+}
+
+void
+CStreamFilter::handleUpstreamEvent(const CEvent& event, void*)
+{
+	filterEvent(event);
 }

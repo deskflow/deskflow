@@ -74,16 +74,6 @@ fi
 dnl check compiler
 ACX_CHECK_CXX
 
-dnl different platforms have somewhat incompatible requirements for
-dnl BSD and Posix macros.
-case $host in
-*-*-openbsd* | *-*-freebsd*)
-	;;
-*)
-	CXXFLAGS="$CXXFLAGS -D_BSD_SOURCE -D_XOPEN_SOURCE=500"
-	;;
-esac
-
 dnl checks for libraries
 if test x"$acx_host_arch" = xUNIX; then
 	ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))

@@ -43,13 +43,10 @@ public:
 	virtual CEventQueueTimer*
 						newOneShotTimer(double duration, void* target);
 	virtual void		deleteTimer(CEventQueueTimer*);
-	virtual void		adoptHandler(void* target, IEventJob* dispatcher);
 	virtual void		adoptHandler(CEvent::Type type,
 							void* target, IEventJob* handler);
-	virtual IEventJob*	orphanHandler(void* target);
-	virtual IEventJob*	orphanHandler(CEvent::Type type, void* target);
-	virtual void		removeHandler(void* target);
 	virtual void		removeHandler(CEvent::Type type, void* target);
+	virtual void		removeHandlers(void* target);
 	virtual CEvent::Type
 						registerType(const char* name);
 	virtual CEvent::Type
@@ -59,27 +56,12 @@ public:
 	virtual const char*	getTypeName(CEvent::Type type);
 
 private:
-	void				doAdoptHandler(CEvent::Type type,
-							void* target, IEventJob* handler);
-	IEventJob*			doOrphanHandler(CEvent::Type type, void* target);
-
 	UInt32				saveEvent(const CEvent& event);
 	CEvent				removeEvent(UInt32 eventID);
 	bool				hasTimerExpired(CEvent& event);
 	double				getNextTimerTimeout() const;
 
 private:
-	class CTypeTarget {
-	public:
-		CTypeTarget(CEvent::Type type, void* target);
-		~CTypeTarget();
-
-		bool			operator<(const CTypeTarget&) const;
-
-	private:
-		CEvent::Type	m_type;
-		void*			m_target;
-	};
 	class CTimer {
 	public:
 		CTimer(CEventQueueTimer*, double timeout, double initialTime,
@@ -111,8 +93,9 @@ private:
 	typedef CPriorityQueue<CTimer> CTimerQueue;
 	typedef std::map<UInt32, CEvent> CEventTable;
 	typedef std::vector<UInt32> CEventIDList;
-	typedef std::map<CTypeTarget, IEventJob*> CHandlerTable;
 	typedef std::map<CEvent::Type, const char*> CTypeMap;
+	typedef std::map<CEvent::Type, IEventJob*> CTypeHandlerTable;
+	typedef std::map<void*, CTypeHandlerTable> CHandlerTable;
 
 	CArchMutex			m_mutex;
 

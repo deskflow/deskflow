@@ -38,7 +38,6 @@ CClientTaskBarReceiver::updateStatus(CClient* client, const CString& errorMsg)
 {
 	{
 		// update our status
-		CLock lock(&m_mutex);
 		m_errorMessage = errorMsg;
 		if (client == NULL) {
 			if (m_errorMessage.empty()) {
@@ -95,13 +94,13 @@ CClientTaskBarReceiver::onStatusChanged(CClient*)
 void
 CClientTaskBarReceiver::lock() const
 {
-	m_mutex.lock();
+	// do nothing
 }
 
 void
 CClientTaskBarReceiver::unlock() const
 {
-	m_mutex.unlock();
+	// do nothing
 }
 
 std::string

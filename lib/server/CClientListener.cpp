@@ -75,7 +75,12 @@ CClientListener::~CClientListener()
 	for (CNewClients::iterator index = m_newClients.begin();
 								index != m_newClients.end(); ++index) {
 		CClientProxyUnknown* client = *index;
-		EVENTQUEUE->removeHandler(client);
+		EVENTQUEUE->removeHandler(
+							CClientProxyUnknown::getSuccessEvent(), client);
+		EVENTQUEUE->removeHandler(
+							CClientProxyUnknown::getFailureEvent(), client);
+		EVENTQUEUE->removeHandler(
+							CClientProxy::getDisconnectedEvent(), client);
 		delete client;
 	}
 

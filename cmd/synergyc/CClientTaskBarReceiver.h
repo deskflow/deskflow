@@ -15,7 +15,6 @@
 #ifndef CCLIENTTASKBARRECEIVER_H
 #define CCLIENTTASKBARRECEIVER_H
 
-#include "CMutex.h"
 #include "CString.h"
 #include "IArchTaskBarReceiver.h"
 
@@ -76,7 +75,6 @@ protected:
 	virtual void		onStatusChanged(CClient* client);
 
 private:
-	CMutex				m_mutex;
 	EState				m_state;
 	CString				m_errorMessage;
 };

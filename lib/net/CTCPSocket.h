@@ -46,10 +46,8 @@ public:
 	virtual void		flush();
 	virtual void		shutdownInput();
 	virtual void		shutdownOutput();
-	virtual void		setEventFilter(IEventJob* filter);
 	virtual bool		isReady() const;
 	virtual UInt32		getSize() const;
-	virtual IEventJob*	getEventFilter() const;
 
 	// IDataSocket overrides
 	virtual void		connect(const CNetworkAddress&);
@@ -59,9 +57,8 @@ private:
 
 	void				setJob(ISocketMultiplexerJob*);
 	ISocketMultiplexerJob*	newJob();
-	void				sendSocketEvent(CEvent::Type);
 	void				sendConnectionFailedEvent(const char*);
-	void				sendStreamEvent(CEvent::Type);
+	void				sendEvent(CEvent::Type);
 
 	void				onConnected();
 	void				onInputShutdown();
@@ -84,7 +81,6 @@ private:
 	bool				m_connected;
 	bool				m_readable;
 	bool				m_writable;
-	IEventJob*			m_eventFilter;
 };
 
 #endif

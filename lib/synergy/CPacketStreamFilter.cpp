@@ -24,19 +24,14 @@
 CPacketStreamFilter::CPacketStreamFilter(IStream* stream, bool adoptStream) :
 	CStreamFilter(stream, adoptStream),
 	m_size(0),
-	m_eventFilter(NULL),
 	m_inputShutdown(false)
 {
-	// install event filter
-	getStream()->setEventFilter(new TMethodEventJob<CPacketStreamFilter>(
-							this, &CPacketStreamFilter::filterEvent, NULL));
+	// do nothing
 }
 
 CPacketStreamFilter::~CPacketStreamFilter()
 {
-	IEventJob* job = getStream()->getEventFilter();
-	getStream()->setEventFilter(NULL);
-	delete job;
+	// do nothing
 }
 
 void
@@ -79,7 +74,8 @@ CPacketStreamFilter::read(void* buffer, UInt32 n)
 	readPacketSize();
 
 	if (m_inputShutdown && m_size == 0) {
-		sendEvent(CEvent(getInputShutdownEvent(), getEventTarget(), NULL));
+		EVENTQUEUE->addEvent(CEvent(getInputShutdownEvent(),
+						getEventTarget(), NULL));
 	}
 
 	return n;
@@ -109,13 +105,6 @@ CPacketStreamFilter::shutdownInput()
 	CStreamFilter::shutdownInput();
 }
 
-void
-CPacketStreamFilter::setEventFilter(IEventJob* filter)
-{
-	CLock lock(&m_mutex);
-	m_eventFilter = filter;
-}
-
 bool
 CPacketStreamFilter::isReady() const
 {
@@ -128,13 +117,6 @@ CPacketStreamFilter::getSize() const
 {
 	CLock lock(&m_mutex);
 	return isReadyNoLock() ? m_size : 0;
-}
-
-IEventJob*
-CPacketStreamFilter::getEventFilter() const
-{
-	CLock lock(&m_mutex);
-	return m_eventFilter;
 }
 
 bool
@@ -159,11 +141,9 @@ CPacketStreamFilter::readPacketSize()
 	}
 }
 
-void
+bool
 CPacketStreamFilter::readMore()
 {
-	// note -- m_mutex must be locked on entry
-
 	// note if we have whole packet
 	bool wasReady = isReadyNoLock();
 
@@ -184,40 +164,27 @@ CPacketStreamFilter::readMore()
 
 	// if we weren't ready before but now we are then send a
 	// input ready event apparently from the filtered stream.
-	if (wasReady != isReady) {
-		sendEvent(CEvent(getInputReadyEvent(), getEventTarget(), NULL));
-	}
+	return (wasReady != isReady);
 }
 
 void
-CPacketStreamFilter::sendEvent(const CEvent& event)
+CPacketStreamFilter::filterEvent(const CEvent& event)
 {
-	if (m_eventFilter != NULL) {
-		m_eventFilter->run(event);
-	}
-	else {
-		EVENTQUEUE->addEvent(event);
-	}
-}
-
-void
-CPacketStreamFilter::filterEvent(const CEvent& event, void*)
-{
-	CLock lock(&m_mutex);
-
 	if (event.getType() == getInputReadyEvent()) {
-		readMore();
-		return;
+		CLock lock(&m_mutex);
+		if (!readMore()) {
+			return;
+		}
 	}
 	else if (event.getType() == getInputShutdownEvent()) {
 		// discard this if we have buffered data
+		CLock lock(&m_mutex);
 		m_inputShutdown = true;
-		if (m_size == 0) {
-			sendEvent(CEvent(getInputShutdownEvent(), getEventTarget(), NULL));
+		if (m_size != 0) {
+			return;
 		}
-		return;
 	}
 
 	// pass event
-	sendEvent(event);
+	CStreamFilter::filterEvent(event);
 }

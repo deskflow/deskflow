@@ -114,46 +114,16 @@ public:
 	*/
 	virtual void		deleteTimer(CEventQueueTimer*) = 0;
 
-	//! Register an event handler
-	/*!
-	Registers an event handler for \p target.  The \p handler is
-	adopted.  Any existing handler for the target is deleted.
-	\c dispatchEvent() will invoke \p handler for any event for
-	\p target that doesn't have a type specific handler.
-	*/
-	virtual void		adoptHandler(void* target, IEventJob* handler) = 0;
-
 	//! Register an event handler for an event type
 	/*!
 	Registers an event handler for \p type and \p target.  The \p handler
 	is adopted.  Any existing handler for the type,target pair is deleted.
 	\c dispatchEvent() will invoke \p handler for any event for \p target
-	of type \p type.
+	of type \p type.  If no such handler exists it will use the handler
+	for \p target and type \p kUnknown if it exists.
 	*/
 	virtual void		adoptHandler(CEvent::Type type,
 							void* target, IEventJob* handler) = 0;
-
-	//! Unregister an event handler
-	/*!
-	Unregisters an event handler for \p target and returns it.
-	Returns NULL if there was no such handler.  The client becomes
-	responsible for deleting the returned handler.
-	*/
-	virtual IEventJob*	orphanHandler(void* target) = 0;
-
-	//! Unregister an event handler for an event type
-	/*!
-	Unregisters an event handler for the \p type, \p target pair and
-	returns it.  Returns NULL if there was no such handler.  The
-	client becomes responsible for deleting the returned handler.
-	*/
-	virtual IEventJob*	orphanHandler(CEvent::Type type, void* target) = 0;
-
-	//! Unregister an event handler
-	/*!
-	Unregisters an event handler for \p target and deletes it.
-	*/
-	virtual void		removeHandler(void* target) = 0;
 
 	//! Unregister an event handler for an event type
 	/*!
@@ -161,6 +131,12 @@ public:
 	deletes it.
 	*/
 	virtual void		removeHandler(CEvent::Type type, void* target) = 0;
+
+	//! Unregister all event handlers for an event target
+	/*!
+	Unregisters all event handlers for the \p target and deletes them.
+	*/
+	virtual void		removeHandlers(void* target) = 0;
 
 	//! Creates a new event type
 	/*!
@@ -192,9 +168,8 @@ public:
 
 	//! Get an event handler
 	/*!
-	Finds and returns the event handler for the \p type, \p target pair.
-	If there is no such handler, returns the handler for \p target.  If
-	that doesn't exist, returns NULL.
+	Finds and returns the event handler for the \p type, \p target pair
+	if it exists, otherwise it returns NULL.
 	*/
 	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const = 0;
 

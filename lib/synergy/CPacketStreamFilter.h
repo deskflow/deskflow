@@ -33,24 +33,22 @@ public:
 	virtual UInt32		read(void* buffer, UInt32 n);
 	virtual void		write(const void* buffer, UInt32 n);
 	virtual void		shutdownInput();
-	virtual void		setEventFilter(IEventJob* filter);
 	virtual bool		isReady() const;
 	virtual UInt32		getSize() const;
-	virtual IEventJob*	getEventFilter() const;
+
+protected:
+	// CStreamFilter overrides
+	virtual void		filterEvent(const CEvent&);
 
 private:
 	bool				isReadyNoLock() const;
 	void				readPacketSize();
-
-	void				readMore();
-	void				sendEvent(const CEvent&);
-	void				filterEvent(const CEvent&, void*);
+	bool				readMore();
 
 private:
 	CMutex				m_mutex;
 	UInt32				m_size;
 	CStreamBuffer		m_buffer;
-	IEventJob*			m_eventFilter;
 	bool				m_inputShutdown;
 };
 
