@@ -12,9 +12,9 @@ Things to do to synergy, in no particular order:
 
 * Provide taskbar feedback
 
-  An icon indicating synergy's state in the taskbar would be nice.
-  It could also provide a means for viewing recent log messages,
-  stopping synergy, and forcing disconnection.
+  There's a tray icon on win32 for checking synergy's current status
+  and to quit synergy.  It'd be nice to have something similar on
+  X11.
 
 * Support non-ASCII keyboards
 

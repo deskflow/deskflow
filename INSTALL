@@ -94,14 +94,18 @@ First configure the server.  Click the `Server' radio button
     * Enter other names the server is known by
     * Click OK
   * Use `Add' to add your other computers
+    * Using a computer's name as its screen name is recommended
   * Use the controls under `Layout' to link screens together
     * Click (once) on the server's name in the `Screens' list
     * Choose the screen to the left of the server
       * Use `---' if there is no screen to the left of the server
     * Choose the screens to the right, above and below the server
     * Repeat the above steps for all the other screens
-  * Enter the server's screen name next to `Screen Name'
-    * This defaults to the computer's name (recommended)
+  * Use `Options...' to set desired options.
+  * If the server's screen name is not the server's computer name:
+    * Click `Advanced...'
+    * Enter the server's screen name next to `Screen Name'
+    * Click `OK'
   * Click `Test'
 
 The server will start and you'll see a console window with log messages
@@ -118,18 +122,26 @@ client computer.  Then configure the client:
   * Enter the server's computer name in `Server Host Name'
     * Do not use any of the server's screen names, unless one of those
       is also the computer name
-  * Enter the client's screen name next to `Screen Name'
-    * This defaults to the computer's name (recommended)
-    * This must be one of the names in the server's `Screens' list
+  * If the client's screen name is not the client's computer name:
+    * Click `Advanced...'
+    * Enter the client's screen name next to `Screen Name'
+    * Click `OK'
   * Click `Test'
 
 If all goes well, the client connects to the server successfully and
 the mouse and keyboard are shared.  If an error occurs you'll get one
-or more dialog boxes telling you  what the errors are;  read the errors
+or more dialog boxes telling you what the errors are;  read the errors
 to determine the problem then correct them and try `Test' again.  When
 everything is working correctly, install the software on the other
 client computers (if any) and repeat the steps for configuring the
 client on each.
+
+Once the clients and server are working you can stop the clients and
+server by clicking the `Stop' button on each computer or by right
+clicking on the tray icon (by the clock in the task bar) and choosing
+`Quit'.  Then click `Start' on the server computer then on each of
+the clients.  Synergy will start and the dialog window will close.
+You can stop synergy or check on its status using the tray icon.
 
 See `Starting Automatically on Windows' below for configuring synergy
 to start automatically when the computer starts.
@@ -146,30 +158,75 @@ plain text file broken into sections.  Each section has the form:
   end
 
 Comments are introduced by `#' and continue to the end of the line.
-The file can have the following sections.
+The file can have the following sections.  The `screens' section must
+appear before the `links' and `aliases' sections.
 
   * screens
     <args> is a list of screen names, one name per line, each
     followed by a colon.  Names are arbitrary strings but they
     must be unique.  The hostname of each computer is recommended.
     There must be a screen name for the server and each client.
+    Each screen can specify a number of options.  Options have the
+    form `name = value' and a listed one per line after the screen
+    name.
 
 	Example:
 
       section: screens
     	moe:
     	larry:
+          halfDuplexCapsLock = true
+          halfDuplexNumLock = true
     	curly:
+          meta = alt
       end
 
     This declares three screens named:  moe, larry, and curly.
+    Screen `larry' has half-duplex caps lock and num lock keys
+    (see below) and screen `curly' converts the meta modifier key
+    to the alt key.
+
+    Screen can have the following options:
+
+      halfDuplexCapsLock = {true|false}
+        This computer has a caps lock key that doesn't report a
+        press and a release event when the user presses it but
+        instead reports a press event when it's turned on and a
+        release event when it's turned off.  If caps lock acts
+        strangely on all screens then you may need this option
+        on the server screen.  If it acts strangely on one
+        screen then that screen may need the option.
+
+      halfDuplexNumLock = {true|false}
+        This is identical to halfDuplexCapsLock except it
+        applies to the num lock key.
+
+      shift = {shift|ctrl|alt|meta|super|none}
+      ctrl  = {shift|ctrl|alt|meta|super|none}
+      alt   = {shift|ctrl|alt|meta|super|none}
+      meta  = {shift|ctrl|alt|meta|super|none}
+      super = {shift|ctrl|alt|meta|super|none}
+        Map a modifier key pressed on the server's keyboard to
+        a different modifier on this client.  This option only
+        has an effect on a client screen;  it's accepted and
+        ignored on the server screen.
+
+        You can map, say, the shift key to shift (the default),
+	    ctrl, alt, meta, super or nothing.  Normally, you
+        wouldn't remap shift or ctrl.  You might, however, have
+        an X11 server with meta bound to the Alt keys.  To use
+        this server effectively with a windows client, which
+        doesn't use meta but uses alt extensively, you'll want
+        the windows client to map meta to alt (using `meta =
+        alt').
 
   * links
     <args> is a list of screen names just like in the `screens'
-    section except each screen is followed by a list of links.
-    Each link has the form `<left|right|up|down> = <name>'.
-    A link indicates which screen is adjacent in the given
-    direction.
+    section except each screen is followed by a list of links,
+    one per line.  Each link has the form `<left|right|up|down> =
+    <name>'.  A link indicates which screen is adjacent in the
+    given direction.
+    
 
     Example:
 
@@ -213,6 +270,47 @@ The file can have the following sections.
     Screen `larry' is also known as `larry.stooges.com' and can
     connect as either name.  Screen `curly' is also known as
     `shemp'.  (Hey, it's just an example.)
+
+  * options
+    <args> is a list of lines of the form `name = value'.  These
+    set the global options.
+
+    Example:
+
+      section: options
+        heatbeat = 5000
+        switchDelay = 500
+      end
+
+    You can use the following options:
+
+      heartbeat = N
+        The server will expect each client to send a message no
+        less than every N milliseconds.  If no message arrives
+        from a client within 3N seconds the server forces that
+        client to disconnect.
+
+        If synergy fails to detect clients disconnecting while
+        the server is sleeping or vice versa, try using this
+        option.
+
+      switchDelay = N
+        Synergy won't switch screens when the mouse reaches the
+        edge of a screen unless it stays on the edge for N
+        milliseconds.  This helps prevent unintentional
+        switching when working near the edge of a screen.
+
+      switchDoubleTap = N
+        Synergy won't switch screens when the mouse reaches the
+        edge of a screen unless it's moved away from the edge
+        and then back to the edge within N milliseconds.  With
+        the option you have to quickly tap the edge twice to
+        switch.  This helps prevent unintentional switching
+        when working near the edge of a screen.
+
+    You can use both the switchDelay and switchDoubleTap options at
+    the same time.  Synergy will switch when either requirement is
+    satisfied.
 
 The synergy server will try certain pathnames to load the configuration
 file if the user doesn't specify a path using the `--config' command
@@ -298,8 +396,8 @@ Starting Automatically on Windows
 
 When all the clients work you're ready to have synergy start
 automatically each time the system (re)starts.  Click `Stop' on all
-the clients then on the server'.  Now click the `Configure' button by
-the text `Automatic Startup'.  The `Auto Start' dialog will pop up.
+the clients then on the server'.  Now click the `Configure...' button
+by the text `Automatic Startup'.  The `Auto Start' dialog will pop up.
 If an error occurs then correct the problem and click `Configure'
 again.
 

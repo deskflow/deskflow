@@ -16,7 +16,8 @@ Questions
 11. Why isn't synergy ported to platform XYZ?
 12. My client can't connect.  What's wrong?
 13. Linking fails on Solaris.  What's wrong?
-
+14. The screen saver never starts.  Why not?
+15. I can't switch screens anymore for no apparent reason.  Why?
 
 Answers
 -------
@@ -163,3 +164,28 @@ Answers
     `configure' command line?  Solaris puts the X11 includes and
     libraries in an unusual place and the above lets synergy find
     them.
+
+14. The screen saver never starts.  Why not?
+
+    If the synergy server is on X Windows then the screen saver will
+    not start while the mouse is on a client screen.  This is a
+    consequence of how X Windows, synergy and xscreensaver work.
+
+15. I can't switch screens anymore for no apparent reason.  Why?
+
+    This sometimes happens but all the causes aren't yet known.  One
+    known cause is if the synergy server in running on Windows
+    95/98/Me and a 16-bit application is in the foreground when the
+    screen saver starts.  Windows fails to notify synergy that the
+    screen saver has started in this situation (which is a bug in
+    Windows, not synergy) and synergy may intercept some keyboard
+    input and divert it to a client when the screen saver is running.
+    As a result, it's possible for the server system to believe a key
+    is pressed when it really isn't.  Typically, it's the return key
+    and simply tapping it will allow synergy to switch screens again.
+    
+    If this problem happens to you, try tapping the enter key to see
+    if that solves the problem.  If not, you can try running with
+    debug logging (--debug DEBUG) and synergy will report exactly why
+    it refuses to switch screens.  If it claims a key is down then
+    try tapping that key and see if that solves the problem.

@@ -169,15 +169,16 @@ following these guidelines.
     is a macro for `for' in lib/base/common.h when building under
     Microsoft Visual C++ that works around the fact that that compiler
     doesn't follow the new scoping rules.  Use the macro if your
-    compiler using the old scoping rules.
+    compiler uses the old scoping rules.
 
   * Standard C++ library
     The standard C++ library containers should always be used in favor
     of custom containers wherever reasonable.  std::string is used
     throughout synergy but only as the CString typedef;  always use
-    CString, never std::string.  Synergy avoids using auto_ptr due to
-    some portability problems.  Synergy makes limited use of standard
-    algorithms and streams but they can be freely used in new code.
+    CString, never std::string except in the arch library.  Synergy
+    avoids using auto_ptr due to some portability problems.  Synergy
+    makes limited use of standard algorithms and streams but they can
+    be freely used in new code.
 
   * Limited multiple inheritance
     Classes should inherit implementation from at most one superclass. 
@@ -207,7 +208,7 @@ following these guidelines.
     should be private, not public or protected.  This makes it much
     easier to track the use of a member when reading code.  Protected
     data is not allowed because `protected' is a synonym for `public
-    to my subclasses' and public data is Bad Thing.  While it might
+    to my subclasses' and public data is a Bad Thing.  While it might
     seem okay in this limited situation, the situation is not at all
     limited since an arbitrary number of classes can be derived,
     directly or indirectly, from the class and any of those classes
@@ -219,6 +220,9 @@ following these guidelines.
     POD should have only public data members and non-copy constructors.
     It must not have any methods other than constructors, not even a
     destructor or assignment operators, nor protected or private data.
+    Note that this definition of POD is not the definition used in the
+    C++ standard, which limits the contained data types to types that
+    have no constructors, destructors, or methods.
 
   * Avoid using friend
     Avoid declaring friend functions or classes.  They're sometimes
