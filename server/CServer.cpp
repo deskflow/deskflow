@@ -950,6 +950,8 @@ void					CServer::updatePrimaryClipboard(ClipboardID id)
 		// if clipboard changed then other screens have an
 		// out-of-date clipboard.
 		if (time != clipboard.m_clipboard.getTime()) {
+			log((CLOG_DEBUG "clipboard %d changed", id));
+			clipboard.m_clipboardData = clipboard.m_clipboard.marshall();
 			clearGotClipboard(id);
 			m_primaryInfo->m_gotClipboard[id] = true;
 		}

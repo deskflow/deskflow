@@ -29,6 +29,7 @@ class CXWindowsPrimaryScreen : public CXWindowsScreen, public IPrimaryScreen {
 	// CXWindowsScreen overrides
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
+	virtual long		getEventMask(Window) const;
 
   private:
 	void				selectEvents(Display*, Window) const;

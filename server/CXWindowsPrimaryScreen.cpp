@@ -406,6 +406,17 @@ void					CXWindowsPrimaryScreen::onCloseDisplay()
 	m_window = None;
 }
 
+long					CXWindowsPrimaryScreen::getEventMask(Window w) const
+{
+	if (w == m_window)
+		return PointerMotionMask |// PointerMotionHintMask |
+								 ButtonPressMask | ButtonReleaseMask |
+								 KeyPressMask | KeyReleaseMask |
+								 KeymapStateMask;
+	else
+		return PointerMotionMask | SubstructureNotifyMask;
+}
+
 void					CXWindowsPrimaryScreen::selectEvents(
 								Display* display, Window w) const
 {
@@ -419,8 +430,7 @@ void					CXWindowsPrimaryScreen::selectEvents(
 		return;
 
 	// select events of interest
-	XSelectInput(display, w, PointerMotionMask | SubstructureNotifyMask |
-								PropertyChangeMask);
+	XSelectInput(display, w, PointerMotionMask | SubstructureNotifyMask);
 
 	// recurse on child windows
 	Window rw, pw, *cw;

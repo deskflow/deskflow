@@ -34,6 +34,7 @@ class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen
 	// CXWindowsScreen overrides
 	virtual void		onOpenDisplay();
 	virtual void		onCloseDisplay();
+	virtual long		getEventMask(Window) const;
 
   private:
 	struct KeyCodeMask {

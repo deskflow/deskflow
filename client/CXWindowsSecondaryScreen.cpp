@@ -319,7 +319,7 @@ void					CXWindowsSecondaryScreen::onOpenDisplay()
 	// as the cursor enters the screen or the display's real cursor is
 	// moved.
 	XSetWindowAttributes attr;
-	attr.event_mask            = LeaveWindowMask | PropertyChangeMask;
+	attr.event_mask            = LeaveWindowMask;
 	attr.do_not_propagate_mask = 0;
 	attr.override_redirect     = True;
 	attr.cursor                = createBlankCursor();
@@ -347,6 +347,14 @@ void					CXWindowsSecondaryScreen::onCloseDisplay()
 	// destroy window
 	XDestroyWindow(display, m_window);
 	m_window = None;
+}
+
+long					CXWindowsSecondaryScreen::getEventMask(Window w) const
+{
+	if (w == m_window)
+		return LeaveWindowMask;
+	else
+		return NoEventMask;
 }
 
 void					CXWindowsSecondaryScreen::leaveNoLock(Display* display)

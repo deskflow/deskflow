@@ -672,7 +672,7 @@ void					CXWindowsScreen::processClipboardRequest(
 				clipboard.m_requests.erase(index);
 				delete list;
 			}
-			XSelectInput(m_display, requestor, NoEventMask);
+			XSelectInput(m_display, requestor, getEventMask(requestor));
 		}
 
 		// request has been serviced
@@ -765,9 +765,12 @@ bool					CXWindowsScreen::sendClipboardData(
 			list->push_back(request);
 
 			// start watching requestor for property changes and
-			// destruction
-			XSelectInput(m_display, requestor, StructureNotifyMask |
-												PropertyChangeMask);
+			// destruction, in addition to other events required by
+			// the subclass.
+			XSelectInput(m_display, requestor,
+								getEventMask(requestor) |
+									StructureNotifyMask |
+									PropertyChangeMask);
 
 			// FIXME -- handle Alloc errors (by returning false)
 			// set property to INCR
@@ -968,6 +971,11 @@ Time					CXWindowsScreen::getCurrentTime(Window window) const
 Time					CXWindowsScreen::getCurrentTimeNoLock(
 								Window window) const
 {
+	// select property events on window
+	// note -- this will break clipboard transfer if used on a requestor
+	// window, so don't do that.
+	XSelectInput(m_display, window, getEventMask(window) | PropertyChangeMask);
+
 	// do a zero-length append to get the current time
 	unsigned char dummy;
 	XChangeProperty(m_display, window, m_atomSynergyTime,
@@ -991,6 +999,9 @@ Time					CXWindowsScreen::getCurrentTimeNoLock(
 	assert(xevent.type             == PropertyNotify);
 	assert(xevent.xproperty.window == window);
 	assert(xevent.xproperty.atom   == m_atomSynergyTime);
+
+	// restore event mask
+	XSelectInput(m_display, window, getEventMask(window));
 
 	return xevent.xproperty.time;
 }

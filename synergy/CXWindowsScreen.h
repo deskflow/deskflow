@@ -101,6 +101,9 @@ class CXWindowsScreen {
 	// called by closeDisplay() to 
 	virtual void		onCloseDisplay() = 0;
 
+	// get the X event mask required by the subclass for the given window
+	virtual long		getEventMask(Window) const = 0;
+
   private:
 	struct CPropertyNotifyInfo {
 	  public:
