@@ -36,6 +36,7 @@ CAdvancedOptions::CAdvancedOptions(HWND parent, CConfig* config) :
 {
 	assert(s_singleton == NULL);
 	s_singleton = this;
+	init();
 }
 
 CAdvancedOptions::~CAdvancedOptions()
@@ -95,7 +96,7 @@ CAdvancedOptions::getCommandLine(bool isClient, const CString& serverName) const
 }
 
 void
-CAdvancedOptions::init(HWND hwnd)
+CAdvancedOptions::init()
 {
 	// get values from registry
 	HKEY key = CArchMiscWindows::openKey(HKEY_CURRENT_USER, getSettingsPath());
@@ -110,9 +111,6 @@ CAdvancedOptions::init(HWND hwnd)
 		}
 		CArchMiscWindows::closeKey(key);
 	}
-
-	// now set GUI
-	doInit(hwnd);
 }
 
 void
@@ -194,7 +192,7 @@ CAdvancedOptions::doDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM)
 {
 	switch (message) {
 	case WM_INITDIALOG:
-		init(hwnd);
+		doInit(hwnd);
 		return TRUE;
 
 	case WM_COMMAND:

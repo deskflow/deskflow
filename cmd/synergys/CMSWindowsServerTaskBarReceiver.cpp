@@ -210,7 +210,7 @@ CMSWindowsServerTaskBarReceiver::copyLog() const
 		if (!data.empty()) {
 			CMSWindowsClipboard clipboard(m_window);
 			clipboard.open(0);
-			clipboard.empty();
+			clipboard.emptyUnowned();
 			clipboard.add(IClipboard::kText, data);
 			clipboard.close();
 		}

@@ -28,6 +28,21 @@ public:
 	CMSWindowsClipboard(HWND window);
 	virtual ~CMSWindowsClipboard();
 
+	//! Empty clipboard without ownership
+	/*!
+	Take ownership of the clipboard and clear all data from it.
+	This must be called between a successful open() and close().
+	Return false if the clipboard ownership could not be taken;
+	the clipboard should not be emptied in this case.  Unlike
+	empty(), isOwnedBySynergy() will return false when emptied
+	this way.  This is useful when synergy wants to put data on
+	clipboard but pretend (to itself) that some other app did it.
+	When using empty(), synergy assumes the data came from the
+	server and doesn't need to be sent back.  emptyUnowned()
+	makes synergy send the data to the server.
+	*/
+	bool				emptyUnowned();
+
 	//! Test if clipboard is owned by synergy
 	static bool			isOwnedBySynergy();
 

@@ -43,13 +43,23 @@ CMSWindowsClipboard::~CMSWindowsClipboard()
 }
 
 bool
-CMSWindowsClipboard::empty()
+CMSWindowsClipboard::emptyUnowned()
 {
 	LOG((CLOG_DEBUG "empty clipboard"));
 
 	// empty the clipboard (and take ownership)
 	if (!EmptyClipboard()) {
 		LOG((CLOG_DEBUG "failed to grab clipboard"));
+		return false;
+	}
+
+	return true;
+}
+
+bool
+CMSWindowsClipboard::empty()
+{
+	if (!emptyUnowned()) {
 		return false;
 	}
 

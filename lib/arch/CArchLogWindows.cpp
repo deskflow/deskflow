@@ -20,7 +20,7 @@
 // CArchLogWindows
 //
 
-CArchLogWindows::CArchLogWindows()
+CArchLogWindows::CArchLogWindows() : m_eventLog(NULL)
 {
 	// do nothing
 }
@@ -33,7 +33,7 @@ CArchLogWindows::~CArchLogWindows()
 void
 CArchLogWindows::openLog(const char* name)
 {
-	if (!CArchMiscWindows::isWindows95Family()) {
+	if (m_eventLog == NULL && !CArchMiscWindows::isWindows95Family()) {
 		m_eventLog = RegisterEventSource(NULL, name);
 	}
 }

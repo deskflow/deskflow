@@ -54,7 +54,7 @@ public:
 	//@}
 
 private:
-	void				init(HWND hwnd);
+	void				init();
 	void				doInit(HWND hwnd);
 	bool				save(HWND hwnd);
 	void				setDefaults(HWND hwnd);
