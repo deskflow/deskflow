@@ -160,44 +160,37 @@ CXWindowsPrimaryScreen::run()
 		case MotionNotify:
 			{
 				log((CLOG_DEBUG2 "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
-				SInt32 x = xevent.xmotion.x_root;
-				SInt32 y = xevent.xmotion.y_root;
-				if (!m_active) {
-					m_server->onMouseMovePrimary(x, y);
+
+				// compute motion delta (relative to the last known
+				// mouse position)
+				SInt32 x = xevent.xmotion.x_root - m_x;
+				SInt32 y = xevent.xmotion.y_root - m_y;
+
+				// save position to compute delta of next motion
+				m_x = xevent.xmotion.x_root;
+				m_y = xevent.xmotion.y_root;
+
+				if (xevent.xmotion.send_event) {
+					// we warped the mouse.  discard events until we
+					// find the matching sent event.  see
+					// warpCursorNoLockNoFlush() for where the events
+					// are sent.  we discard the matching sent event
+					// and can be sure we've skipped the warp event.
+					CDisplayLock display(this);
+					do {
+						XMaskEvent(display, PointerMotionMask, &xevent);
+					} while (!xevent.xmotion.send_event);
+				}
+				else if (!m_active) {
+					// motion on primary screen
+					m_server->onMouseMovePrimary(m_x, m_y);
 				}
 				else {
-					// compute motion delta.  this is relative to the
-					// last known mouse position.
-					x  -= m_x;
-					y  -= m_y;
-
-					// save position to compute delta of next motion
-					m_x = xevent.xmotion.x_root;
-					m_y = xevent.xmotion.y_root;
-
-					// if event was sent then ignore it and discard
-					// the event from the mouse warp.  this is how we
-					// warp the mouse back to the center of the screen
-					// without that causing a corresponding motion on
-					// the secondary screen.
-					if (xevent.xmotion.send_event) {
-						// ignore event
-						x = 0;
-						y = 0;
-
-						// discard events until we find the matching
-						// sent event.  see below for where the events
-						// are sent.  we discard the matching sent
-						// event and can be sure we've skipped the
-						// warp event.
-						CDisplayLock display(this);
-						do {
-							XMaskEvent(display, PointerMotionMask, &xevent);
-						} while (!xevent.xmotion.send_event);
-					}
-
-					// warp mouse back to center.  my lombard (powerbook
-					// g3) using the adbmouse driver has two problems:
+					// motion on secondary screen.  warp mouse back to
+					// center.
+					//
+					// my lombard (powerbook g3) running linux and
+					// using the adbmouse driver has two problems:
 					// first, the driver only sends motions of +/-2
 					// pixels and, second, it seems to discard some
 					// physical input after a warp.  the former isn't a
@@ -211,28 +204,15 @@ CXWindowsPrimaryScreen::run()
 						xevent.xmotion.y_root - m_yCenter < -s_size ||
 						xevent.xmotion.y_root - m_yCenter >  s_size) {
 						CDisplayLock display(this);
-						// send an event that we can recognize before
-						// the mouse warp.
-						XEvent eventBefore    = xevent;
-						xevent.xmotion.window = m_window;
-						xevent.xmotion.time   = CurrentTime;
-						xevent.xmotion.x      = m_xCenter;
-						xevent.xmotion.y      = m_yCenter;
-						xevent.xmotion.x_root = m_xCenter;
-						xevent.xmotion.y_root = m_yCenter;
-						XEvent eventAfter     = eventBefore;
-						XSendEvent(display, m_window, False, 0, &xevent);
-
-						// warp mouse back to center
-						XWarpPointer(display, None, getRoot(),
-							0, 0, 0, 0, m_xCenter, m_yCenter);
-
-						// send an event that we can recognize after
-						// the mouse warp.
-						XSendEvent(display, m_window, False, 0, &xevent);
+						warpCursorNoLockNoFlush(display, m_xCenter, m_yCenter);
 					}
 
-					// send event if mouse moved
+					// send event if mouse moved.  do this after warping
+					// back to center in case the motion takes us onto
+					// the primary screen.  if we sent the event first
+					// in that case then the warp would happen after
+					// warping to the primary screen's enter position,
+					// effectively overriding it.
 					if (x != 0 || y != 0) {
 						m_server->onMouseMoveSecondary(x, y);
 					}
@@ -331,28 +311,18 @@ CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreenSaver)
 
 	CDisplayLock display(this);
 
-	// warp to requested location
-	if (!forScreenSaver) {
-		XWarpPointer(display, None, m_window, 0, 0, 0, 0, x, y);
-	}
-
 	// unmap the grab window.  this also ungrabs the mouse and keyboard.
 	XUnmapWindow(display, m_window);
 
-	// redirect input to root window
-	if (forScreenSaver) {
-		XSetInputFocus(display, PointerRoot, PointerRoot, CurrentTime);
+	// warp to requested location
+	if (!forScreenSaver) {
+		warpCursorNoLock(display, x, y);
 	}
 
-	// remove all input events for grab window
-	XEvent event;
-	while (XCheckWindowEvent(display, m_window,
-								PointerMotionMask |
-								ButtonPressMask | ButtonReleaseMask |
-								KeyPressMask | KeyReleaseMask |
-								KeymapStateMask,
-								&event)) {
-		// do nothing
+	// redirect input to root window.  do not warp the mouse because
+	// that will deactivate the screen saver.
+	else {
+		XSetInputFocus(display, PointerRoot, PointerRoot, CurrentTime);
 	}
 
 	// not active anymore
@@ -414,7 +384,7 @@ CXWindowsPrimaryScreen::leave()
 	} while (result != GrabSuccess);
 	log((CLOG_DEBUG1 "grabbed pointer and keyboard"));
 
-	// move the mouse to the center of grab window
+	// warp mouse to center
 	warpCursorNoLock(display, m_xCenter, m_yCenter);
 
 	// local client now active
@@ -439,24 +409,57 @@ CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 void
 CXWindowsPrimaryScreen::warpCursorNoLock(Display* display, SInt32 x, SInt32 y)
 {
-	assert(display  != NULL);
-	assert(m_window != None);
+	// warp mouse
+	warpCursorNoLockNoFlush(display, x, y);
 
-	// warp the mouse
-	XWarpPointer(display, None, getRoot(), 0, 0, 0, 0, x, y);
-	XSync(display, False);
-	log((CLOG_DEBUG2 "warped to %d,%d", x, y));
-
-	// discard mouse events since we just added one we don't want
-	XEvent xevent;
-	while (XCheckWindowEvent(display, m_window,
-								PointerMotionMask, &xevent)) {
+	// remove all input events before and including warp
+	XEvent event;
+	while (XCheckMaskEvent(display, PointerMotionMask |
+								ButtonPressMask | ButtonReleaseMask |
+								KeyPressMask | KeyReleaseMask |
+								KeymapStateMask,
+								&event)) {
 		// do nothing
 	}
 
 	// save position as last position
 	m_x = x;
 	m_y = y;
+}
+
+void
+CXWindowsPrimaryScreen::warpCursorNoLockNoFlush(
+				Display* display, SInt32 x, SInt32 y)
+{
+	assert(display  != NULL);
+	assert(m_window != None);
+
+	// send an event that we can recognize before the mouse warp
+	XEvent eventBefore;
+	eventBefore.type                = MotionNotify;
+	eventBefore.xmotion.display     = display;
+	eventBefore.xmotion.window      = m_window;
+	eventBefore.xmotion.root        = getRoot();
+	eventBefore.xmotion.subwindow   = m_window;
+	eventBefore.xmotion.time        = CurrentTime;
+	eventBefore.xmotion.x           = x;
+	eventBefore.xmotion.y           = y;
+	eventBefore.xmotion.x_root      = x;
+	eventBefore.xmotion.y_root      = y;
+	eventBefore.xmotion.state       = 0;
+	eventBefore.xmotion.is_hint     = False;
+	eventBefore.xmotion.same_screen = True;
+	XEvent eventAfter               = eventBefore;
+	XSendEvent(display, m_window, False, 0, &eventBefore);
+
+	// warp mouse
+	XWarpPointer(display, None, getRoot(), 0, 0, 0, 0, x, y);
+
+	// send an event that we can recognize after the mouse warp
+	XSendEvent(display, m_window, False, 0, &eventAfter);
+	XSync(display, False);
+
+	log((CLOG_DEBUG2 "warped to %d,%d", x, y));
 }
 
 void

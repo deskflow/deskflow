@@ -42,6 +42,8 @@ private:
 	void				doSelectEvents(Display*, Window) const;
 	void				warpCursorNoLock(Display*,
 							SInt32 xAbsolute, SInt32 yAbsolute);
+	void				warpCursorNoLockNoFlush(Display*,
+							SInt32 xAbsolute, SInt32 yAbsolute);
 
 	KeyModifierMask		mapModifier(unsigned int state) const;
 	KeyID				mapKey(XKeyEvent*) const;
