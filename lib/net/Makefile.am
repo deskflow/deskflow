@@ -2,6 +2,10 @@
 NULL =
 DEPTH = ../..
 
+EXTRA_DIST =				\
+	net.dsp					\
+	$(NULL)
+
 noinst_LIBRARIES = libnet.a
 libnet_a_SOURCES = 			\
 	CNetwork.cpp			\

@@ -2,6 +2,10 @@
 NULL =
 DEPTH = ../..
 
+EXTRA_DIST =				\
+	base.dsp				\
+	$(NULL)
+
 noinst_LIBRARIES = libbase.a
 libbase_a_SOURCES =			\
 	CFunctionJob.cpp		\

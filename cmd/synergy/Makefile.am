@@ -2,6 +2,12 @@
 NULL =
 DEPTH = ../..
 
+EXTRA_DIST =							\
+	synergy.dsp							\
+	synergy.rc							\
+	resource.h							\
+	$(NULL)
+
 bin_PROGRAMS = synergy
 synergy_SOURCES = 						\
 	synergy.cpp							\

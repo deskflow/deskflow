@@ -2,6 +2,12 @@
 NULL =
 DEPTH = ../..
 
+EXTRA_DIST =						\
+	client.dsp						\
+	CMSWindowsSecondaryScreen.cpp	\
+	CMSWindowsSecondaryScreen.h		\
+	$(NULL)
+
 noinst_LIBRARIES = libclient.a
 libclient_a_SOURCES = 				\
 	CClient.cpp						\

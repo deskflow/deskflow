@@ -2,8 +2,14 @@
 NULL =
 DEPTH = .
 
-EXTRA_DIST =
-SUBDIRS =					\
-	lib						\
-	cmd						\
+EXTRA_DIST =					\
+	all.dsp						\
+	synergy.dsw					\
+	doc/doxygen.cfg				\
+	examples/synergy.conf		\
+	$(NULL)
+
+SUBDIRS =						\
+	lib							\
+	cmd							\
 	$(NULL)

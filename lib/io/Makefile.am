@@ -2,6 +2,10 @@
 NULL =
 DEPTH = ../..
 
+EXTRA_DIST =				\
+	io.dsp					\
+	$(NULL)
+
 noinst_LIBRARIES = libio.a
 libio_a_SOURCES = 				\
 	CBufferedInputStream.cpp	\

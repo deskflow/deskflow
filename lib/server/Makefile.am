@@ -2,6 +2,12 @@
 NULL =
 DEPTH = ../..
 
+EXTRA_DIST =						\
+	server.dsp						\
+	CMSWindowsPrimaryScreen.cpp		\
+	CMSWindowsPrimaryScreen.h		\
+	$(NULL)
+
 noinst_LIBRARIES = libserver.a
 libserver_a_SOURCES = 				\
 	CClientProxy.cpp				\

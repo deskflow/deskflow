@@ -2,7 +2,29 @@
 NULL =
 DEPTH = ../..
 
-# FIXME -- add CUnixPlatform.cpp as an unbuilt source
+EXTRA_DIST =								\
+	makehook.dsp							\
+	platform.dsp							\
+	synrgyhk.dsp							\
+	CMSWindowsClipboard.cpp					\
+	CMSWindowsClipboardAnyTextConverter.cpp	\
+	CMSWindowsClipboardTextConverter.cpp	\
+	CMSWindowsClipboardUTF16Converter.cpp	\
+	CMSWindowsScreen.cpp					\
+	CMSWindowsScreenSaver.cpp				\
+	CSynergyHook.cpp						\
+	CWin32Platform.cpp						\
+	CMSWindowsClipboard.h					\
+	CMSWindowsClipboardAnyTextConverter.h	\
+	CMSWindowsClipboardTextConverter.h		\
+	CMSWindowsClipboardUTF16Converter.h		\
+	CMSWindowsScreen.h						\
+	CMSWindowsScreenSaver.h					\
+	CSynergyHook.h							\
+	CWin32Platform.h						\
+	IMSWindowsScreenEventHandler.h			\
+	$(NULL)
+
 noinst_LIBRARIES = libplatform.a
 libplatform_a_SOURCES = 					\
 	CPlatform.cpp							\
@@ -23,6 +45,9 @@ libplatform_a_SOURCES = 					\
 	CXWindowsScreenSaver.h					\
 	CXWindowsUtil.h							\
 	IPlatform.h								\
+	$(NULL)
+EXTRA_libplatform_a_SOURCES =				\
+	CUnixPlatform.cpp						\
 	$(NULL)
 INCLUDES =									\
 	-I$(DEPTH)/lib/base 					\
