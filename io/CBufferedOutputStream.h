@@ -8,30 +8,59 @@
 class CMutex;
 class IJob;
 
+//! Memory buffer output stream
+/*!
+This class provides an output stream that writes to a memory buffer.
+It also provides a means for the owner to ensure thread safe access.
+Typically, an owner object will make this object visible to clients
+that need access to an IOutputStream while using the CBufferedOutputStream
+methods to read the data written to the stream.
+*/
 class CBufferedOutputStream : public IOutputStream {
 public:
-	CBufferedOutputStream(CMutex*, IJob* adoptedCloseCB);
+	/*!
+	The \c mutex must not be NULL and will be used to ensure thread
+	safe access.  If \c adoptedCloseCB is not NULL it will be called
+	when close() is called, allowing the creator to detect the close.
+	*/
+	CBufferedOutputStream(CMutex* mutex, IJob* adoptedCloseCB);
 	~CBufferedOutputStream();
 
-	// the caller is expected to lock the mutex before calling
-	// methods unless otherwise noted.
+	//! @name manipulators
+	//@{
 
-	// manipulators
-
-	// peek() returns a buffer of n bytes (which must be <= getSize()).
-	// pop() discards the next n bytes.
+	//! Read data without removing from buffer
+	/*!
+	Returns a buffer of \c n bytes (which must be <= getSize()).  The
+	caller must not modify the buffer nor delete it.  The mutex must
+	be locked before calling this.
+	*/
 	const void*			peek(UInt32 n);
+
+	//! Discard data
+	/*!
+	Discards the next \c n bytes.  If \c n >= getSize() then the buffer
+	is cleared.  The mutex must be locked before calling this.
+	*/
 	void				pop(UInt32 n);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// return the number of bytes in the buffer
+	//! Get size of buffer
+	/*!
+	Returns the number of bytes in the buffer.  The mutex must be locked
+	before calling this.
+	*/
 	UInt32				getSize() const;
+
+	//@}
 
 	// IOutputStream overrides
 	// these all lock the mutex for their duration
 	virtual void		close();
-	virtual UInt32		write(const void*, UInt32 count);
+	virtual UInt32		write(const void*, UInt32 n);
 	virtual void		flush();
 
 private:

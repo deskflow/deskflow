@@ -3,14 +3,20 @@
 
 #include "IOutputStream.h"
 
+//! A filtering output stream
+/*!
+This class wraps an output stream.  Subclasses provide indirect access
+to the stream, typically performing some filtering.
+*/
 class COutputStreamFilter : public IOutputStream {
 public:
-	COutputStreamFilter(IOutputStream*, bool adoptStream = true);
+	/*!
+	Create a wrapper around \c stream.  Iff \c adoptStream is true then
+	this object takes ownership of the stream and will delete it in the
+	d'tor.
+	*/
+	COutputStreamFilter(IOutputStream* stream, bool adoptStream = true);
 	~COutputStreamFilter();
-
-	// manipulators
-
-	// accessors
 
 	// IOutputStream overrides
 	virtual void		close() = 0;
@@ -18,6 +24,10 @@ public:
 	virtual void		flush() = 0;
 
 protected:
+	//! Get the stream
+	/*!
+	Returns the stream passed to the c'tor.
+	*/
 	IOutputStream*		getStream() const;
 
 private:

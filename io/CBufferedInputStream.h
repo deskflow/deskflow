@@ -8,35 +8,66 @@
 class CMutex;
 class IJob;
 
+//! Memory buffer input stream
+/*!
+This class provides an input stream that reads from a memory buffer.
+It also provides a means for the owner to ensure thread safe access.
+Typically, an owner object will make this object visible to clients
+that need access to an IInputStream while using the CBufferedInputStream
+methods to write data to the stream.
+*/
 class CBufferedInputStream : public IInputStream {
 public:
-	CBufferedInputStream(CMutex*, IJob* adoptedCloseCB);
+	/*!
+	The \c mutex must not be NULL and will be used to ensure thread
+	safe access.  If \c adoptedCloseCB is not NULL it will be called
+	when close() is called, allowing the creator to detect the close.
+	*/
+	CBufferedInputStream(CMutex* mutex, IJob* adoptedCloseCB);
 	~CBufferedInputStream();
 
-	// the caller is expected to lock the mutex before calling
-	// methods unless otherwise noted.
+	//! @name manipulators
+	//@{
 
-	// manipulators
+	//! Write data to stream
+	/*!
+	Write \c n bytes from \c buffer to the stream.  The mutex must
+	be locked before calling this.
+	*/
+	void				write(const void* buffer, UInt32 n);
 
-	// write() appends n bytes to the buffer
-	void				write(const void*, UInt32 n);
-
-	// causes read() to always return immediately.  if there is no
-	// more data then it returns 0.  further writes are discarded.
+	//! Hangup stream
+	/*!
+	Causes read() to always return immediately.  If there is no
+	more data to read then it returns 0.  Further writes are discarded.
+	The mutex must be locked before calling this.
+	*/
 	void				hangup();
 
-	// same as read() but caller must lock the mutex
-	UInt32				readNoLock(void*, UInt32 count, double timeout);
+	//! Read from stream
+	/*!
+	This is the same as read() but the mutex must be locked before
+	calling this.
+	*/
+	UInt32				readNoLock(void*, UInt32 n, double timeout);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// same as getSize() but caller must lock the mutex
+	//! Get remaining size of stream
+	/*!
+	This is the same as getSize() but the mutex must be locked before
+	calling this.
+	*/
 	UInt32				getSizeNoLock() const;
+
+	//@}
 
 	// IInputStream overrides
 	// these all lock the mutex for their duration
 	virtual void		close();
-	virtual UInt32		read(void*, UInt32 count, double timeout);
+	virtual UInt32		read(void*, UInt32 n, double timeout);
 	virtual UInt32		getSize() const;
 
 private:

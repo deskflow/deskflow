@@ -11,10 +11,11 @@
 // CBufferedInputStream
 //
 
-CBufferedInputStream::CBufferedInputStream(CMutex* mutex, IJob* closeCB) :
+CBufferedInputStream::CBufferedInputStream(
+				CMutex* mutex, IJob* adoptedCloseCB) :
 	m_mutex(mutex),
 	m_empty(mutex, true),
-	m_closeCB(closeCB),
+	m_closeCB(adoptedCloseCB),
 	m_closed(false),
 	m_hungup(false)
 {
@@ -27,10 +28,10 @@ CBufferedInputStream::~CBufferedInputStream()
 }
 
 void
-CBufferedInputStream::write(const void* data, UInt32 n)
+CBufferedInputStream::write(const void* buffer, UInt32 n)
 {
 	if (!m_hungup && n > 0) {
-		m_buffer.write(data, n);
+		m_buffer.write(buffer, n);
 		m_empty = (m_buffer.getSize() == 0);
 		m_empty.broadcast();
 	}
@@ -44,7 +45,7 @@ CBufferedInputStream::hangup()
 }
 
 UInt32
-CBufferedInputStream::readNoLock(void* dst, UInt32 n, double timeout)
+CBufferedInputStream::readNoLock(void* buffer, UInt32 n, double timeout)
 {
 	if (m_closed) {
 		throw XIOClosed();
@@ -65,8 +66,8 @@ CBufferedInputStream::readNoLock(void* dst, UInt32 n, double timeout)
 		n = count;
 	}
 	if (n > 0) {
-		if (dst != NULL) {
-			memcpy(dst, m_buffer.peek(n), n);
+		if (buffer != NULL) {
+			memcpy(buffer, m_buffer.peek(n), n);
 		}
 		m_buffer.pop(n);
 	}
@@ -97,16 +98,16 @@ CBufferedInputStream::close()
 	m_hungup = true;
 	m_buffer.pop(m_buffer.getSize());
 	m_empty.broadcast();
-	if (m_closeCB) {
+	if (m_closeCB != NULL) {
 		m_closeCB->run();
 	}
 }
 
 UInt32
-CBufferedInputStream::read(void* dst, UInt32 n, double timeout)
+CBufferedInputStream::read(void* buffer, UInt32 n, double timeout)
 {
 	CLock lock(m_mutex);
-	return readNoLock(dst, n, timeout);
+	return readNoLock(buffer, n, timeout);
 }
 
 UInt32

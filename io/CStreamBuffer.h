@@ -5,25 +5,50 @@
 #include "stdlist.h"
 #include "stdvector.h"
 
+//! FIFO of bytes
+/*!
+This class maintains a FIFO (first-in, last-out) buffer of bytes.
+*/
 class CStreamBuffer {
 public:
 	CStreamBuffer();
 	~CStreamBuffer();
 
-	// manipulators
+	//! @name manipulators
+	//@{
 
-	// peek() returns a buffer of n bytes (which must be <= getSize()).
-	// pop() discards the next n bytes.
+	//! Read data without removing from buffer
+	/*!
+	Return a pointer to memory with the next \c n bytes in the buffer
+	(which must be <= getSize()).  The caller must not modify the returned
+	memory nor delete it.
+	*/
 	const void*			peek(UInt32 n);
+
+	//! Discard data
+	/*!
+	Discards the next \c n bytes.  If \c n >= getSize() then the buffer
+	is cleared.
+	*/
 	void				pop(UInt32 n);
 
-	// write() appends n bytes to the buffer
-	void				write(const void*, UInt32 n);
+	//! Write data to buffer
+	/*!
+	Appends \c n bytes from \c data to the buffer.
+	*/
+	void				write(const void* data, UInt32 n);
 
-	// accessors
+	//@}
+	//! @name accessors
+	//@{
 
-	// return the number of bytes in the buffer
+	//! Get size of buffer
+	/*!
+	Returns the number of bytes in the buffer.
+	*/
 	UInt32				getSize() const;
+
+	//@}
 
 private:
 	static const UInt32	kChunkSize;

@@ -9,9 +9,10 @@
 // CBufferedOutputStream
 //
 
-CBufferedOutputStream::CBufferedOutputStream(CMutex* mutex, IJob* closeCB) :
+CBufferedOutputStream::CBufferedOutputStream(
+				CMutex* mutex, IJob* adoptedCloseCB) :
 	m_mutex(mutex),
-	m_closeCB(closeCB),
+	m_closeCB(adoptedCloseCB),
 	m_empty(mutex, true),
 	m_closed(false)
 {
@@ -54,20 +55,20 @@ CBufferedOutputStream::close()
 
 	m_closed = true;
 	m_buffer.pop(m_buffer.getSize());
-	if (m_closeCB) {
+	if (m_closeCB != NULL) {
 		m_closeCB->run();
 	}
 }
 
 UInt32
-CBufferedOutputStream::write(const void* data, UInt32 n)
+CBufferedOutputStream::write(const void* buffer, UInt32 n)
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
 		throw XIOClosed();
 	}
 
-	m_buffer.write(data, n);
+	m_buffer.write(buffer, n);
 	return n;
 }
 
