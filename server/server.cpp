@@ -4,7 +4,8 @@
 #include "CMutex.h"
 #include "CNetwork.h"
 #include "CThread.h"
-#include <fstream>
+#include "stdfstream.h"
+#include <assert.h>
 
 //
 // config file stuff
@@ -54,7 +55,7 @@ void					realMain()
 		CConfig config;
 		{
 			log((CLOG_DEBUG "opening configuration"));
-			ifstream configStream(s_configFileName);
+			std::ifstream configStream(s_configFileName);
 			if (!configStream) {
 				throw XConfigRead("cannot open configuration");
 			}

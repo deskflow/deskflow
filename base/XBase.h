@@ -2,7 +2,9 @@
 #define XBASE_H
 
 #include "CString.h"
+#include "stdpre.h"
 #include <exception>
+#include "stdpost.h"
 
 class XBase : public std::exception {
 public:

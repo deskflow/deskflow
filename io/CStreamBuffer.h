@@ -2,8 +2,8 @@
 #define CSTREAMBUFFER_H
 
 #include "BasicTypes.h"
-#include <list>
-#include <vector>
+#include "stdlist.h"
+#include "stdvector.h"
 
 class CStreamBuffer {
 public:

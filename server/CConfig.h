@@ -5,7 +5,7 @@
 #include "CString.h"
 #include "XBase.h"
 #include <iosfwd>
-#include <map>
+#include "stdmap.h"
 
 class CConfig;
 
@@ -57,7 +57,7 @@ public:
 		}
 
 	private:
-		CConfig::internal_const_iterator	m_i;
+		internal_const_iterator	m_i;
 	};
 
 	CConfig();
@@ -98,17 +98,17 @@ public:
 
 	// read/write a configuration.  operator>> will throw XConfigRead
 	// on error.
-	friend istream&		operator>>(istream&, CConfig&);
-	friend ostream&		operator<<(ostream&, const CConfig&);
+	friend std::istream&	operator>>(std::istream&, CConfig&);
+	friend std::ostream&	operator<<(std::ostream&, const CConfig&);
 
 	// get the name of a direction (for debugging)
 	static const char*	dirName(EDirection);
 
 private:
-	static bool			readLine(istream&, CString&);
-	void				readSection(istream&);
-	void				readSectionScreens(istream&);
-	void				readSectionLinks(istream&);
+	static bool			readLine(std::istream&, CString&);
+	void				readSection(std::istream&);
+	void				readSectionScreens(std::istream&);
+	void				readSectionLinks(std::istream&);
 
 private:
 	CCellMap			m_map;

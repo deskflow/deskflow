@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="mt" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="http" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=mt - Win32 Debug
+CFG=http - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "mt.mak".
+!MESSAGE NMAKE /f "http.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "mt.mak" CFG="mt - Win32 Debug"
+!MESSAGE NMAKE /f "http.mak" CFG="http - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "mt - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "mt - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "http - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "http - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=mt - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "mt - Win32 Release"
+!IF  "$(CFG)" == "http - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\base" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\base" /I "..\io" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -52,7 +52,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
-!ELSEIF  "$(CFG)" == "mt - Win32 Debug"
+!ELSEIF  "$(CFG)" == "http - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\base" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\base" /I "..\io" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -80,34 +80,18 @@ LIB32=link.exe -lib
 
 # Begin Target
 
-# Name "mt - Win32 Release"
-# Name "mt - Win32 Debug"
+# Name "http - Win32 Release"
+# Name "http - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\CCondVar.cpp
+SOURCE=.\CHTTPProtocol.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CLock.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMutex.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CThread.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CThreadRep.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CTimerThread.cpp
+SOURCE=.\XHTTP.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -115,31 +99,11 @@ SOURCE=.\CTimerThread.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\CCondVar.h
+SOURCE=.\CHTTPProtocol.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CLock.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMutex.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CThread.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CThreadRep.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CTimerThread.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\XThread.h
+SOURCE=.\XHTTP.h
 # End Source File
 # End Group
 # End Target

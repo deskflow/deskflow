@@ -20,6 +20,7 @@ public:
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		leave();
+	virtual void		onConfigure();
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);
@@ -49,6 +50,7 @@ private:
 
 private:
 	CServer*			m_server;
+	bool				m_is95Family;
 	bool				m_active;
 	HWND				m_window;
 	HWND				m_nextClipboardWindow;

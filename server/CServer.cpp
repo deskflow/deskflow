@@ -151,6 +151,11 @@ bool					CServer::setConfig(const CConfig& config)
 
 		// cut over
 		m_config = config;
+
+		// tell primary screen about reconfiguration
+		if (m_primary != NULL) {
+			m_primary->onConfigure();
+		}
 	}
 
 	// wait for old secondary screen threads to disconnect.  must

@@ -5,6 +5,7 @@
 #include "CNetwork.h"
 #include "CNetworkAddress.h"
 #include "CThread.h"
+#include <assert.h>
 
 //
 // logging thread safety

@@ -22,7 +22,13 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen() :
 								m_mark(0),
 								m_markReceived(0)
 {
-	// do nothing
+	// detect operating system
+	OSVERSIONINFO version;
+	version.dwOSVersionInfoSize = sizeof(version);
+	if (GetVersionEx(&version) == 0) {
+		log((CLOG_WARN "cannot determine OS: %d", GetLastError()));
+	}
+	m_is95Family = (version.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
 }
 
 CMSWindowsPrimaryScreen::~CMSWindowsPrimaryScreen()
@@ -97,7 +103,19 @@ void					CMSWindowsPrimaryScreen::doEnter()
 	// not active anymore
 	m_active = false;
 
-	// set the zones that should cause a jump
+	// release keyboard/mouse and set the zones that should cause a jump
+/* FIXME
+if (UnregisterHotKey(m_window, 0x0001) != 0) {
+log((CLOG_INFO "released hot key"));
+}
+else {
+log((CLOG_INFO "failed to release hot key: %d", GetLastError()));
+}
+*/
+	if (m_is95Family) {
+		DWORD dummy = 0;
+		SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, FALSE, &dummy, 0);
+	}
 	SInt32 w, h;
 	getScreenSize(&w, &h);
 	SetZoneFunc setZone = (SetZoneFunc)GetProcAddress(
@@ -159,6 +177,19 @@ void					CMSWindowsPrimaryScreen::leave()
 	SetRelayFunc setRelay = (SetRelayFunc)GetProcAddress(
 											m_hookLibrary, "setRelay");
 	setRelay();
+	if (m_is95Family) {
+		// disable ctrl+alt+del, alt+tab, ctrl+esc
+		DWORD dummy = 0;
+		SystemParametersInfo(SPI_SETSCREENSAVERRUNNING, TRUE, &dummy, 0);
+	}
+/* FIXME
+if (RegisterHotKey(m_window, 0x0001, MOD_ALT, VK_TAB) != 0) {
+log((CLOG_INFO "got hot key"));
+}
+else {
+log((CLOG_INFO "failed to get hot key: %d", GetLastError()));
+}
+*/
 
 	// get keyboard input and capture mouse
 	SetActiveWindow(m_window);
@@ -200,6 +231,17 @@ void					CMSWindowsPrimaryScreen::leave()
 		catch (XBadClient&) {
 			// ignore
 		}
+	}
+}
+
+void					CMSWindowsPrimaryScreen::onConfigure()
+{
+	if (!m_active) {
+		SInt32 w, h;
+		getScreenSize(&w, &h);
+		SetZoneFunc setZone = (SetZoneFunc)GetProcAddress(
+											m_hookLibrary, "setZone");
+		setZone(m_server->getActivePrimarySides(), w, h, getJumpZoneSize());
 	}
 }
 
@@ -479,7 +521,12 @@ LRESULT					CMSWindowsPrimaryScreen::onEvent(
 								WPARAM wParam, LPARAM lParam)
 {
 	switch (msg) {
-	// FIXME -- handle display changes (and resize full-screen window)
+/*
+case WM_HOTKEY:
+log((CLOG_INFO "hot key: %d, %d, %s %s %s", wParam, HIWORD(lParam), (LOWORD(lParam) & MOD_ALT) ? "ALT" : "", (LOWORD(lParam) & MOD_CONTROL) ? "CTRL" : "", (LOWORD(lParam) & MOD_SHIFT) ? "SHIFT" : "", (LOWORD(lParam) & MOD_WIN) ? "WIN" : ""));
+return 0;
+*/
+
 	case WM_PAINT:
 		ValidateRect(hwnd, NULL);
 		return 0;

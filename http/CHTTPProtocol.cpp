@@ -3,11 +3,12 @@
 #include "XHTTP.h"
 #include "IInputStream.h"
 #include "IOutputStream.h"
+#include "stdsstream.h"
+#include <assert.h>
 #include <ctype.h>
 #include <locale.h>
 #include <time.h>
 #include <algorithm>
-#include <sstream>
 
 //
 // CHTTPUtil::CaselessCmp
@@ -88,6 +89,7 @@ CHTTPRequest*		CHTTPProtocol::readRequest(IInputStream* stream)
 			// parse version
 			char dot;
 			s.str(version);
+			s.clear();
 			s.ignore(5);
 			s >> request->m_majorVersion;
 			s.get(dot);
@@ -229,7 +231,7 @@ void					CHTTPProtocol::reply(
 	}
 
 	// write reply header
-	ostringstream s;
+	std::ostringstream s;
 	s << "HTTP/" << reply.m_majorVersion << "." <<
 					reply.m_minorVersion << " " <<
 					reply.m_status << " " <<

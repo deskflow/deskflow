@@ -3,8 +3,8 @@
 
 #include "CMSWindowsScreen.h"
 #include "ISecondaryScreen.h"
-#include <map>
-#include <vector>
+#include "stdmap.h"
+#include "stdvector.h"
 
 class CMSWindowsSecondaryScreen : public CMSWindowsScreen, public ISecondaryScreen {
 public:

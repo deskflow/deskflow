@@ -10,8 +10,8 @@
 #include "CString.h"
 #include "CThread.h"
 #include "XBase.h"
-#include <list>
-#include <map>
+#include "stdlist.h"
+#include "stdmap.h"
 
 class CThread;
 class IServerProtocol;

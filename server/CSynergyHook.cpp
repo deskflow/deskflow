@@ -42,6 +42,10 @@ static HHOOK			g_keyboard = NULL;
 static HHOOK			g_mouse = NULL;
 static HHOOK			g_cbt = NULL;
 static HHOOK			g_getMessage = NULL;
+static HANDLE			g_keyHookThread = NULL;
+static DWORD			g_keyHookThreadID = 0;
+static HANDLE			g_keyHookEvent = NULL;
+static HHOOK			g_keyboardLL = NULL;
 static bool				g_relay = false;
 static SInt32			g_zoneSize = 0;
 static UInt32			g_zoneSides = 0;
@@ -103,7 +107,9 @@ static LRESULT CALLBACK	keyboardHook(int code, WPARAM wParam, LPARAM lParam)
 			case VK_CAPITAL:
 			case VK_NUMLOCK:
 			case VK_SCROLL:
-				// pass event
+				// pass event on.  we want to let these through to
+				// the window proc because otherwise the keyboard
+				// lights may not stay synchronized.
 				break;
 
 			default:
@@ -250,6 +256,119 @@ static LRESULT CALLBACK	getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_getMessage, code, wParam, lParam);
 }
 
+#if (_WIN32_WINNT >= 0x0400)
+
+//
+// low-level keyboard hook -- this allows us to capture and handle
+// alt+tab, alt+esc, ctrl+esc, and windows key hot keys.  on the down
+// side, key repeats are not compressed for us.
+//
+
+static LRESULT CALLBACK	keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code >= 0) {
+		if (g_relay) {
+			KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+
+			// let certain keys pass through
+			switch (info->vkCode) {
+			case VK_CAPITAL:
+			case VK_NUMLOCK:
+			case VK_SCROLL:
+				// pass event on.  we want to let these through to
+				// the window proc because otherwise the keyboard
+				// lights may not stay synchronized.
+				break;
+
+			default:
+				// construct lParam for WM_KEYDOWN, etc.
+				DWORD lParam = 1;							// repeat code
+				lParam      |= (info->scanCode << 16);		// scan code
+				if (info->flags & LLKHF_EXTENDED) {
+					lParam  |= (1lu << 24);					// extended key
+				}
+				if (info->flags & LLKHF_ALTDOWN) {
+					lParam  |= (1lu << 29);					// context code
+				}
+				if (info->flags & LLKHF_UP) {
+					lParam  |= (1lu << 31);					// transition
+				}
+				// FIXME -- bit 30 should be set if key was already down
+
+				// forward message to our window
+				PostMessage(g_hwnd, SYNERGY_MSG_KEY, info->vkCode, lParam);
+
+				// discard event
+				return 1;
+			}
+		}
+	}
+
+	return CallNextHookEx(g_keyboardLL, code, wParam, lParam);
+}
+
+static DWORD WINAPI		getKeyboardLLProc(void*)
+{
+	// thread proc for low-level keyboard hook.  this does nothing but
+	// install the hook, process events, and uninstall the hook.
+
+	// force this thread to have a message queue
+	MSG msg;
+	PeekMessage(&msg, NULL, WM_USER, WM_USER, PM_NOREMOVE);
+
+	// install low-level keyboard hook
+	g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL,
+								&keyboardLLHook,
+								g_hinstance,
+								0);
+	if (g_keyboardLL == NULL) {
+		// indicate failure and exit
+		g_keyHookThreadID = 0;
+		SetEvent(g_keyHookEvent);
+		return 1;
+	}
+
+	// ready
+	SetEvent(g_keyHookEvent);
+
+	// message loop
+	bool done = false;
+	while (!done) {
+		switch (GetMessage(&msg, NULL, 0, 0)) {
+		case -1:
+			break;
+
+		case 0:
+			done = true;
+			break;
+
+		default:
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			break;
+		}
+	}
+
+	// uninstall hook
+	UnhookWindowsHookEx(g_keyboardLL);
+	g_keyboardLL = NULL;
+
+	return 0;
+}
+
+#else // (_WIN32_WINNT < 0x0400)
+
+#error foo
+
+static DWORD WINAPI		getKeyboardLLProc(void*)
+{
+	g_keyHookThreadID = 0;
+	SetEvent(g_keyHookEvent);
+	return 1;
+}
+
+#endif
+
 static EWheelSupport	GetWheelSupport()
 {
 	// get operating system
@@ -286,8 +405,8 @@ static EWheelSupport	GetWheelSupport()
 	// assume modern.  we don't do anything special in this case
 	// except respond to WM_MOUSEWHEEL messages.  GetSystemMetrics()
 	// can apparently return FALSE even if a mouse wheel is present
-	// though i'm not sure exactly when it does that (but WinME does
-	// for my logitech usb trackball).
+	// though i'm not sure exactly when it does that (WinME returns
+	// FALSE for my logitech USB trackball).
 	return kWheelModern;
 }
 
@@ -387,6 +506,34 @@ int						install(HWND hwnd)
 		// ignore failure;  we just won't get mouse wheel messages
 	}
 
+	// install low-level keyboard hook, if possible.  since this hook
+	// is called in the context of the installing thread and that
+	// thread must have a message loop but we don't want the caller's
+	// message loop to do the work, we'll fire up a separate thread
+	// just for the hook.  note that low-level keyboard hooks are only
+	// available on windows NT SP3 and above.
+	g_keyHookEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (g_keyHookEvent != NULL) {
+		g_keyHookThread = CreateThread(NULL, 0, &getKeyboardLLProc, 0,
+								CREATE_SUSPENDED, &g_keyHookThreadID);
+		if (g_keyHookThread != NULL) {
+			// start the thread and wait for it to initialize
+			ResumeThread(g_keyHookThread);
+			WaitForSingleObject(g_keyHookEvent, INFINITE);
+			ResetEvent(g_keyHookEvent);
+
+			// the thread clears g_keyHookThreadID if it failed
+			if (g_keyHookThreadID == 0) {
+				CloseHandle(g_keyHookThread);
+				g_keyHookThread = NULL;
+			}
+		}
+		if (g_keyHookThread == NULL) {
+			CloseHandle(g_keyHookEvent);
+			g_keyHookEvent = NULL;
+		}
+	}
+
 	return 1;
 }
 
@@ -397,6 +544,15 @@ int						uninstall(void)
 	assert(g_cbt      != NULL);
 
 	// uninstall hooks
+	if (g_keyHookThread != NULL) {
+		PostThreadMessage(g_keyHookThreadID, WM_QUIT, 0, 0);
+		WaitForSingleObject(g_keyHookThread, INFINITE);
+		CloseHandle(g_keyHookEvent);
+		CloseHandle(g_keyHookThread);
+		g_keyHookEvent    = NULL;
+		g_keyHookThread   = NULL;
+		g_keyHookThreadID = 0;
+	}
 	UnhookWindowsHookEx(g_keyboard);
 	UnhookWindowsHookEx(g_mouse);
 	UnhookWindowsHookEx(g_cbt);

@@ -6,8 +6,9 @@
 #include "CLog.h"
 #include "XThread.h"
 #include "ISocket.h"
-#include <set>
-#include <sstream>
+#include "stdset.h"
+#include "stdsstream.h"
+#include <assert.h>
 
 //
 // CHTTPServer
@@ -158,7 +159,7 @@ void					CHTTPServer::doProcessGetEditMap(
 	static const char* s_editMapScreenEnd =
 	"</td>\r\n";
 
-	ostringstream s;
+	std::ostringstream s;
 
 	// convert screen map into a temporary screen map
 	CScreenArray screens;
@@ -236,7 +237,7 @@ void					CHTTPServer::doProcessPostEditMap(
 	}
 
 	try {
-		ostringstream s;
+		std::ostringstream s;
 
 		// convert post data into a temporary screen map.  also check
 		// that no screen name is invalid or used more than once.
@@ -309,7 +310,7 @@ void					CHTTPServer::doProcessPostEditMap(
 		// now reply with current map
 		doProcessGetEditMap(request, reply);
 	}
-	catch (XHTTP& e) {
+	catch (XHTTP&) {
 		// FIXME -- construct a more meaningful error?
 		throw;
 	}
@@ -318,7 +319,7 @@ void					CHTTPServer::doProcessPostEditMap(
 bool					CHTTPServer::parseXY(
 								const CString& xy, SInt32& x, SInt32& y)
 {
-	istringstream s(xy);
+	std::istringstream s(xy);
 	char delimiter;
 	s >> x;
 	s.get(delimiter);
@@ -326,65 +327,10 @@ bool					CHTTPServer::parseXY(
 	return (!!s && delimiter == 'x');
 }
 
-/*
-#include <iostream> // FIXME
-// FIXME
-	cout << "method:  " << request.m_method << endl;
-	cout << "uri:     " << request.m_uri << endl;
-	cout << "version: " << request.m_majorVersion << "." <<
-								request.m_majorVersion << endl;
 
-	cout << "headers:" << endl;
-	for (CHTTPRequest::CHeaderMap::const_iterator
-								index = request.m_headerIndexByName.begin();
-								index != request.m_headerIndexByName.end();
-								++index) {
-		assert(index->second < request.m_headers.size());
-		cout << "  " << index->first << ": " <<
-								request.m_headers[index->second] << endl;
-	}
-	cout << endl;
-
-	cout << request.m_body << endl;
-
-// FIXME
-	reply.m_majorVersion = request.m_majorVersion;
-	reply.m_minorVersion = request.m_minorVersion;
-	reply.m_status       = 200;
-	reply.m_reason       = "OK";
-	reply.m_method       = request.m_method;
-	reply.m_headers.push_back(std::make_pair(CString("Content-Type"),
-											CString("text/html")));
-if (request.m_uri != "/bar") {
-	reply.m_body    = 
-"<html>\r\n"
-" <head>\r\n"
-"  <title>test</title>\r\n"
-" </head>\r\n"
-" <body>\r\n"
-"  <h2>test</h2>\r\n"
-"  <form method=POST action=\"bar\" enctype=\"multipart/form-data\">\r\n"
-"   <input type=text name=a size=8 maxlength=40 value=\"aValue\">\r\n"
-"   <input type=submit name=b value=\"blah\">\r\n"
-"  </form>\r\n"
-" </body>\r\n"
-"</html>\r\n"
-;
-}
-else {
-	reply.m_body    = 
-"<html>\r\n"
-" <head>\r\n"
-"  <title>test reply</title>\r\n"
-" </head>\r\n"
-" <body>\r\n"
-"  <h2>test reply</h2>\r\n"
-" </body>\r\n"
-"</html>\r\n"
-;
-}
-	// FIXME
-*/
+//
+// CHTTPServer::CScreenArray
+//
 
 CHTTPServer::CScreenArray::CScreenArray() : m_w(0), m_h(0)
 {

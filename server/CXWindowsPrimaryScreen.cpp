@@ -303,6 +303,11 @@ void					CXWindowsPrimaryScreen::leave()
 	m_active = true;
 }
 
+void					CXWindowsPrimaryScreen::onConfigure()
+{
+	// do nothing
+}
+
 void					CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
 	CDisplayLock display(this);

@@ -2,7 +2,14 @@
 #define CSTRING_H
 
 #include "common.h"
+#include "stdpre.h"
 #include <string>
+#include "stdpost.h"
+
+#if defined(_MSC_VER)
+#pragma warning(push, 4)
+#pragma warning(disable: 4097) // typedef-name used as synonym
+#endif
 
 #ifndef CSTRING_DEF_CTOR
 #define CSTRING_ALLOC1
@@ -36,6 +43,10 @@ public:
 	CString(_It _f, _It _l CSTRING_ALLOC1) :
 								_Myt(_f, _l CSTRING_ALLOC2) { }
 };
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
 
 #endif
 

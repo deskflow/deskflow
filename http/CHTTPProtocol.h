@@ -3,8 +3,8 @@
 
 #include "BasicTypes.h"
 #include "CString.h"
-#include <map>
-#include <vector>
+#include "stdmap.h"
+#include "stdvector.h"
 
 class IInputStream;
 class IOutputStream;

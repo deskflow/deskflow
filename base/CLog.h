@@ -37,11 +37,11 @@ public:
 private:
 	class CHoldLock {
 	public:
-		CHoldLock(CLog::Lock lock) : m_lock(lock) { m_lock(true); }
+		CHoldLock(Lock lock) : m_lock(lock) { m_lock(true); }
 		~CHoldLock() { m_lock(false); }
 
 	private:
-		CLog::Lock		m_lock;
+		Lock			m_lock;
 	};
 
 	static void			dummyLock(bool);

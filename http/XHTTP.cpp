@@ -1,6 +1,6 @@
 #include "XHTTP.h"
 #include "CHTTPProtocol.h"
-#include <stdio.h>
+#include "stdsstream.h"
 
 //
 // XHTTP
@@ -45,16 +45,15 @@ void					XHTTP::addHeaders(CHTTPReply&) const
 CString					XHTTP::getWhat() const throw()
 {
 	try {
-		char code[20];
-		sprintf(code, "%d ", m_status);
-		CString msg(code);
+		std::ostringstream s;
+		s << m_status << " ";
 		if (!m_reason.empty()) {
-			msg += m_reason;
+			s << m_reason.c_str();
 		}
 		else {
-			msg += getReason(m_status);
+			s << getReason(m_status);
 		}
-		return msg;
+		return s.str();
 	}
 	catch (...) {
 		return CString();

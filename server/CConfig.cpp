@@ -1,12 +1,7 @@
 #include "CConfig.h"
+#include "stdistream.h"
+#include "stdostream.h"
 #include <assert.h>
-// FIXME -- fix this with automake and config.h
-#if !defined(CONFIG_PLATFORM_LINUX)
-#include <istream>
-#include <ostream>
-#else
-#include <iostream>
-#endif
 
 //
 // CConfig
@@ -160,10 +155,10 @@ const char*				CConfig::dirName(EDirection dir)
 	return s_name[dir - kFirstDirection];
 }
 
-bool					CConfig::readLine(istream& s, CString& line)
+bool					CConfig::readLine(std::istream& s, CString& line)
 {
 	s >> std::ws;
-	while (getline(s, line)) {
+	while (std::getline(s, line)) {
 		// strip comments and then trailing whitespace
 		CString::size_type i = line.rfind('#');
 		if (i != CString::npos) {
@@ -183,7 +178,7 @@ bool					CConfig::readLine(istream& s, CString& line)
 	return false;
 }
 
-void					CConfig::readSection(istream& s)
+void					CConfig::readSection(std::istream& s)
 {
 	static const char s_section[] = "section:";
 	static const char s_screens[] = "screens";
@@ -223,7 +218,7 @@ void					CConfig::readSection(istream& s)
 	}
 }
 
-void					CConfig::readSectionScreens(istream& s)
+void					CConfig::readSectionScreens(std::istream& s)
 {
 	CString line;
 	CString name;
@@ -256,7 +251,7 @@ void					CConfig::readSectionScreens(istream& s)
 	throw XConfigRead("unexpected end of screens section");
 }
 
-void					CConfig::readSectionLinks(istream& s)
+void					CConfig::readSectionLinks(std::istream& s)
 {
 	CString line;
 	CString screen;
@@ -338,7 +333,7 @@ void					CConfig::readSectionLinks(istream& s)
 // CConfig I/O
 //
 
-istream&				operator>>(istream& s, CConfig& config)
+std::istream&			operator>>(std::istream& s, CConfig& config)
 {
 	// FIXME -- should track line and column to improve error reporting
 
@@ -350,44 +345,44 @@ istream&				operator>>(istream& s, CConfig& config)
 	return s;
 }
 
-ostream&				operator<<(ostream& s, const CConfig& config)
+std::ostream&			operator<<(std::ostream& s, const CConfig& config)
 {
 	// screens section
-	s << "section: screens" << endl;
+	s << "section: screens" << std::endl;
 	for (CConfig::const_iterator screen = config.begin();
 								screen != config.end(); ++screen) {
-		s << "\t" << screen->c_str() << ":" << endl;
+		s << "\t" << screen->c_str() << ":" << std::endl;
 	}
-	s << "end" << endl;
+	s << "end" << std::endl;
 
 	// links section
 	CString neighbor;
-	s << "section: links" << endl;
+	s << "section: links" << std::endl;
 	for (CConfig::const_iterator screen = config.begin();
 								screen != config.end(); ++screen) {
-		s << "\t" << screen->c_str() << ":" << endl;
+		s << "\t" << screen->c_str() << ":" << std::endl;
 
 		neighbor = config.getNeighbor(*screen, CConfig::kLeft);
 		if (!neighbor.empty()) {
-			s << "\t\tleft=" << neighbor.c_str() << endl;
+			s << "\t\tleft=" << neighbor.c_str() << std::endl;
 		}
 
 		neighbor = config.getNeighbor(*screen, CConfig::kRight);
 		if (!neighbor.empty()) {
-			s << "\t\tright=" << neighbor.c_str() << endl;
+			s << "\t\tright=" << neighbor.c_str() << std::endl;
 		}
 
 		neighbor = config.getNeighbor(*screen, CConfig::kTop);
 		if (!neighbor.empty()) {
-			s << "\t\tup=" << neighbor.c_str() << endl;
+			s << "\t\tup=" << neighbor.c_str() << std::endl;
 		}
 
 		neighbor = config.getNeighbor(*screen, CConfig::kBottom);
 		if (!neighbor.empty()) {
-			s << "\t\tdown=" << neighbor.c_str() << endl;
+			s << "\t\tdown=" << neighbor.c_str() << std::endl;
 		}
 	}
-	s << "end" << endl;
+	s << "end" << std::endl;
 
 	return s;
 }

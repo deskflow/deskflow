@@ -3,7 +3,7 @@
 
 #include "BasicTypes.h"
 #include "CString.h"
-#include <vector>
+#include "stdvector.h"
 
 class CServer;
 class CConfig;

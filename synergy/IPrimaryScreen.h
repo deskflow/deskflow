@@ -49,6 +49,11 @@ public:
 	// the cursor and grab exclusive access to the input devices.
 	virtual void		leave() = 0;
 
+	// called when the configuration has changed.  subclasses may need
+	// to adjust things (like the jump zones) after the configuration
+	// changes.
+	virtual void		onConfigure() = 0;
+
 	// warp the cursor to the given position
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
 

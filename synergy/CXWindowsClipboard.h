@@ -4,9 +4,9 @@
 #include "IClipboard.h"
 #include "ClipboardTypes.h"
 #include "CString.h"
+#include "stdmap.h"
+#include "stdlist.h"
 #include <X11/Xlib.h>
-#include <map>
-#include <list>
 
 class CXWindowsClipboard : public IClipboard {
 public:

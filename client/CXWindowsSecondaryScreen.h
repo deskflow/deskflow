@@ -3,8 +3,8 @@
 
 #include "CXWindowsScreen.h"
 #include "ISecondaryScreen.h"
-#include <map>
-#include <vector>
+#include "stdmap.h"
+#include "stdvector.h"
 
 class CXWindowsSecondaryScreen : public CXWindowsScreen, public ISecondaryScreen {
 public:

@@ -21,6 +21,11 @@ static const char*		g_priority[] = {
 							};
 static const int		g_numPriority = (int)(sizeof(g_priority) /
 											sizeof(g_priority[0]));
+#if defined(NDEBUG)
+static const int		g_defaultMaxPriority = 4;
+#else
+static const int		g_defaultMaxPriority = 5;
+#endif
 static const int		g_maxPriorityLength = 7; // length of longest string
 static const int		g_prioritySuffixLength = 2;
 static const int		g_priorityPad = g_maxPriorityLength +
@@ -145,11 +150,7 @@ int						CLog::getMaxPriority()
 	CHoldLock lock(s_lock);
 
 	if (s_maxPriority == -1) {
-#if defined(NDEBUG)
-		s_maxPriority = 4;
-#else
-		s_maxPriority = 5;
-#endif
+		s_maxPriority = g_defaultMaxPriority;
 		const char* priEnv = getenv("SYN_LOG_PRI");
 		if (priEnv != NULL) {
 			for (int i = 0; i < g_numPriority; ++i) {
