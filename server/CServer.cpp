@@ -284,8 +284,7 @@ void					CServer::setInfoNoLock(const CString& screen,
 	assert(zoneSize >= 0);
 
 	// screen must be connected
-	CString screenName = m_config.getCanonicalName(screen);
-	CScreenList::iterator index = m_screens.find(screenName);
+	CScreenList::iterator index = m_screens.find(screen);
 	if (index == m_screens.end()) {
 		throw XBadClient();
 	}
@@ -344,15 +343,14 @@ void					CServer::grabClipboardNoLock(
 	CClipboardInfo& clipboard = m_clipboards[id];
 
 	// screen must be connected
-	CString screenName = m_config.getCanonicalName(screen);
-	CScreenList::iterator index = m_screens.find(screenName);
+	CScreenList::iterator index = m_screens.find(screen);
 	if (index == m_screens.end()) {
 		throw XBadClient();
 	}
 
 	// ignore grab if sequence number is old.  always allow primary
 	// screen to grab.
-	if (screenName != m_primaryInfo->m_name &&
+	if (screen != m_primaryInfo->m_name &&
 		seqNum < clipboard.m_clipboardSeqNum) {
 		log((CLOG_INFO "ignored screen \"%s\" grab of clipboard %d", screen.c_str(), id));
 		return;
@@ -360,7 +358,7 @@ void					CServer::grabClipboardNoLock(
 
 	// mark screen as owning clipboard
 	log((CLOG_INFO "screen \"%s\" grabbed clipboard %d from \"%s\"", screen.c_str(), id, clipboard.m_clipboardOwner.c_str()));
-	clipboard.m_clipboardOwner  = screenName;
+	clipboard.m_clipboardOwner  = screen;
 	clipboard.m_clipboardSeqNum = seqNum;
 
 	// no screens have the new clipboard except the sender
@@ -369,7 +367,7 @@ void					CServer::grabClipboardNoLock(
 
 	// tell all other screens to take ownership of clipboard
 	for (index = m_screens.begin(); index != m_screens.end(); ++index) {
-		if (index->first != screenName) {
+		if (index->first != screen) {
 			CScreenInfo* info = index->second;
 			if (info->m_protocol == NULL) {
 				m_primary->grabClipboard(id);
@@ -1094,6 +1092,11 @@ void					CServer::handshakeClient(void* vsocket)
 					throw XBadClient();
 				}
 
+				// convert name to canonical form (if any)
+				if (m_config.isScreen(name)) {
+					name = m_config.getCanonicalName(name);
+				}
+
 				// create a protocol interpreter for the version
 				log((CLOG_DEBUG1 "creating interpreter for client \"%s\" version %d.%d", name.c_str(), major, minor));
 				assign(protocol, CServerProtocol::create(major, minor,
@@ -1334,10 +1337,11 @@ void					CServer::openPrimaryScreen()
 	// reset sequence number
 	m_seqNum = 0;
 
+	CString primary = m_config.getCanonicalName("primary"); // FIXME
 	try {
 		// add connection
-		m_active      = addConnection(CString("primary"/* FIXME */), NULL);
-		m_primaryInfo = m_active;
+		m_active        = addConnection(primary, NULL);
+		m_primaryInfo   = m_active;
 
 		// open screen
 		log((CLOG_DEBUG1 "creating primary screen"));
@@ -1351,7 +1355,7 @@ void					CServer::openPrimaryScreen()
 	}
 	catch (...) {
 		if (m_primary != NULL) {
-			removeConnection(CString("primary"/* FIXME */));
+			removeConnection(primary);
 			delete m_primary;
 		}
 		m_primary     = NULL;
@@ -1376,7 +1380,8 @@ void					CServer::closePrimaryScreen()
 	assert(m_primary != NULL);
 
 	// remove connection
-	removeConnection(CString("primary"/* FIXME */));
+	CString primary = m_config.getCanonicalName("primary"); // FIXME
+	removeConnection(primary);
 
 	// close the primary screen
 	try {
@@ -1468,17 +1473,16 @@ CServer::CScreenInfo*	CServer::addConnection(
 	if (!m_config.isScreen(name)) {
 		throw XUnknownClient(name);
 	}
-	CString screenName = m_config.getCanonicalName(name);
 
 	// can only have one screen with a given name at any given time
-	if (m_screens.count(screenName) != 0) {
+	if (m_screens.count(name) != 0) {
 		throw XDuplicateClient(name);
 	}
 
 	// save screen info
-	CScreenInfo* newScreen = new CScreenInfo(screenName, protocol);
-	m_screens.insert(std::make_pair(screenName, newScreen));
-	log((CLOG_DEBUG "added connection \"%s\" (\"%s\")", name.c_str(), screenName.c_str()));
+	CScreenInfo* newScreen = new CScreenInfo(name, protocol);
+	m_screens.insert(std::make_pair(name, newScreen));
+	log((CLOG_DEBUG "added connection \"%s\"", name.c_str()));
 
 	return newScreen;
 }
@@ -1489,8 +1493,7 @@ void					CServer::removeConnection(const CString& name)
 	CLock lock(&m_mutex);
 
 	// find screen info
-	CString screenName = m_config.getCanonicalName(name);
-	CScreenList::iterator index = m_screens.find(screenName);
+	CScreenList::iterator index = m_screens.find(name);
 	assert(index != m_screens.end());
 
 	// if this is active screen then we have to jump off of it
