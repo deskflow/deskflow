@@ -282,6 +282,7 @@ void					CClient::runSession(void*)
 		CThread::exit(NULL);
 	}
 
+	bool fail = false;
 	try {
 		// handle messages from server
 		for (;;) {
@@ -353,18 +354,22 @@ void					CClient::runSession(void*)
 			}
 			else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
 				onErrorIncompatible();
+				fail = true;
 				break;
 			}
 			else if (memcmp(code, kMsgEBusy, 4) == 0) {
 				onErrorBusy();
+				fail = true;
 				break;
 			}
 			else if (memcmp(code, kMsgEUnknown, 4) == 0) {
 				onErrorUnknown();
+				fail = true;
 				break;
 			}
 			else if (memcmp(code, kMsgEBad, 4) == 0) {
 				onErrorBad();
+				fail = true;
 				break;
 			}
 			else {
@@ -387,7 +392,7 @@ void					CClient::runSession(void*)
 	// exit event loop
 	m_screen->stop();
 
-	CThread::exit(reinterpret_cast<void*>(1));
+	CThread::exit(fail ? NULL : reinterpret_cast<void*>(1));
 }
 
 // FIXME -- use factory to create screen
