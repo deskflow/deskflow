@@ -395,8 +395,6 @@ getKeyboardLLProc(void*)
 
 #else // (_WIN32_WINNT < 0x0400)
 
-#error foo
-
 static
 DWORD WINAPI
 getKeyboardLLProc(void*)
