@@ -114,7 +114,7 @@ CScreen*
 createScreen()
 {
 #if WINDOWS_LIKE
-	return new CScreen(new CMSWindowsScreen(true));
+	return new CScreen(new CMSWindowsScreen(true, NULL, NULL));
 #elif UNIX_LIKE
 	return new CScreen(new CXWindowsScreen(true));
 #endif

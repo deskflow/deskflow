@@ -31,7 +31,7 @@ class CThread;
 //! Implementation of IPlatformScreen for Microsoft Windows
 class CMSWindowsScreen : public IPlatformScreen {
 public:
-	CMSWindowsScreen(bool isPrimary);
+	CMSWindowsScreen(bool isPrimary, IJob* suspend, IJob* resume);
 	virtual ~CMSWindowsScreen();
 
 	//! @name manipulators
@@ -112,7 +112,7 @@ private:
 	};
 	typedef std::map<CString, CDesk*> CDesks;
 
-// FIXME -- comment
+	// initialization and shutdown operations
 	HINSTANCE			openHookLibrary(const char* name);
 	void				closeHookLibrary(HINSTANCE hookLibrary) const;
 	HCURSOR				createBlankCursor() const;
@@ -122,8 +122,12 @@ private:
 	void				destroyClass(ATOM windowClass) const;
 	HWND				createWindow(ATOM windowClass, const char* name) const;
 	void				destroyWindow(HWND) const;
+
+	// convenience function to send events
 	void				sendEvent(CEvent::Type type, void* = NULL);
 	void				sendClipboardEvent(CEvent::Type type, ClipboardID id);
+
+	// system event handler (does DispatchMessage)
 	void				handleSystemEvent(const CEvent& event, void*);
 
 	// handle message before it gets dispatched.  returns true iff
@@ -148,7 +152,6 @@ private:
 	bool				onDisplayChange();
 	bool				onClipboardChange();
 
-// XXX
 	// warp cursor without discarding queued events
 	void				warpCursorNoFlush(SInt32 x, SInt32 y);
 
@@ -157,7 +160,6 @@ private:
 
 	// test if event should be ignored
 	bool				ignore() const;
-// XXX
 
 	// update screen size cache
 	void				updateScreenShape();
@@ -277,6 +279,10 @@ private:
 
 	// map of button state
 	BYTE				m_buttons[1 + kButtonExtra0 + 1];
+
+	// suspend/resume callbacks
+	IJob*				m_suspend;
+	IJob*				m_resume;
 
 	static CMSWindowsScreen*	s_screen;
 };

@@ -113,7 +113,8 @@
 HINSTANCE				CMSWindowsScreen::s_instance = NULL;
 CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
 
-CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
+CMSWindowsScreen::CMSWindowsScreen(bool isPrimary,
+				IJob* suspend, IJob* resume) :
 	m_isPrimary(isPrimary),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_isOnScreen(m_isPrimary),
@@ -137,16 +138,29 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
 	m_activeDesk(NULL),
 	m_activeDeskName(),
 	m_hookLibrary(NULL),
+	m_init(NULL),
+	m_cleanup(NULL),
+	m_install(NULL),
+	m_uninstall(NULL),
+	m_setSides(NULL),
+	m_setZone(NULL),
+	m_setMode(NULL),
+	m_installScreensaver(NULL),
+	m_uninstallScreensaver(NULL),
 	m_keyState(NULL),
 	m_mutex(),
-	m_deskReady(&m_mutex, false)
+	m_deskReady(&m_mutex, false),
+	m_suspend(suspend),
+	m_resume(resume)
 {
 	assert(s_instance != NULL);
 	assert(s_screen   == NULL);
 
 	s_screen = this;
 	try {
-		m_hookLibrary = openHookLibrary("synrgyhk");
+		if (m_isPrimary) {
+			m_hookLibrary = openHookLibrary("synrgyhk");
+		}
 		m_cursor      = createBlankCursor();
 		m_class       = createWindowClass();
 		m_deskClass   = createDeskWindowClass(m_isPrimary);
@@ -171,9 +185,6 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
 		throw;
 	}
 
-	// install our clipboard snooper
-	m_nextClipboardWindow = SetClipboardViewer(m_window);
-
 	// install event handlers
 	EVENTQUEUE->adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
 							new TMethodEventJob<CMSWindowsScreen>(this,
@@ -190,14 +201,14 @@ CMSWindowsScreen::~CMSWindowsScreen()
 	disable();
 	EVENTQUEUE->adoptBuffer(NULL);
 	EVENTQUEUE->removeHandler(CEvent::kSystem, IEventQueue::getSystemTarget());
-	removeDesks();
-	ChangeClipboardChain(m_window, m_nextClipboardWindow);
 	delete m_screensaver;
 	destroyWindow(m_window);
 	destroyClass(m_deskClass);
 	destroyClass(m_class);
 	destroyCursor(m_cursor);
 	closeHookLibrary(m_hookLibrary);
+	delete m_suspend;
+	delete m_resume;
 	s_screen = NULL;
 }
 
@@ -229,6 +240,9 @@ CMSWindowsScreen::enable()
 {
 	assert(m_isOnScreen == m_isPrimary);
 
+	// install our clipboard snooper
+	m_nextClipboardWindow = SetClipboardViewer(m_window);
+
 	if (m_isPrimary) {
 		// update shadow key state
 		m_keyMapper.update(NULL);
@@ -238,6 +252,12 @@ CMSWindowsScreen::enable()
 
 		// watch jump zones
 		m_setMode(kHOOK_WATCH_JUMP_ZONE);
+	}
+	else {
+		// prevent the system from entering power saving modes.  if
+		// it did we'd be forced to disconnect from the server and
+		// the server would not be able to wake us up.
+		CArchMiscWindows::addBusyState(CArchMiscWindows::kSYSTEM);
 	}
 
 	// set the active desk and (re)install the hooks
@@ -263,10 +283,27 @@ CMSWindowsScreen::disable()
 		m_timer = NULL;
 	}
 
-	// disable hooks
 	if (m_isPrimary) {
+		// disable hooks
 		m_setMode(kHOOK_DISABLE);
+
+		// enable special key sequences on win95 family
+		enableSpecialKeys(true);
 	}
+	else {
+		// allow the system to enter power saving mode
+		CArchMiscWindows::removeBusyState(CArchMiscWindows::kSYSTEM |
+							CArchMiscWindows::kDISPLAY);
+	}
+
+	// destroy desks
+	removeDesks();
+
+	// stop snooping the clipboard
+	ChangeClipboardChain(m_window, m_nextClipboardWindow);
+	m_nextClipboardWindow = NULL;
+
+	m_isOnScreen = m_isPrimary;
 }
 
 void
@@ -973,6 +1010,25 @@ CMSWindowsScreen::onEvent(HWND, UINT msg,
 
 	case WM_DISPLAYCHANGE:
 		return onDisplayChange();
+
+	case WM_POWERBROADCAST:
+		switch (wParam) {
+		case PBT_APMRESUMEAUTOMATIC:
+		case PBT_APMRESUMECRITICAL:
+		case PBT_APMRESUMESUSPEND:
+			if (m_resume != NULL) {
+				m_resume->run();
+			}
+			break;
+
+		case PBT_APMSUSPEND:
+			if (m_suspend != NULL) {
+				m_suspend->run();
+			}
+			break;
+		}
+		*result = TRUE;
+		return true;
 	}
 
 	return false;
@@ -1316,10 +1372,16 @@ CMSWindowsScreen::onScreensaver(bool activated)
 	if (activated) {
 		if (m_screensaver->checkStarted(SYNERGY_MSG_SCREEN_SAVER, FALSE, 0)) {
 			sendEvent(getScreensaverActivatedEvent());
+
+			// enable display power down
+			CArchMiscWindows::removeBusyState(CArchMiscWindows::kDISPLAY);
 		}
 	}
 	else {
 		sendEvent(getScreensaverDeactivatedEvent());
+
+		// disable display power down
+		CArchMiscWindows::addBusyState(CArchMiscWindows::kDISPLAY);
 	}
 
 	return true;
@@ -1616,7 +1678,6 @@ LRESULT CALLBACK
 CMSWindowsScreen::primaryDeskProc(
 				HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	// FIXME
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
@@ -1893,6 +1954,7 @@ CMSWindowsScreen::deskThread(void* vdesk)
 	}
 
 	// clean up
+	deskEnter(desk);
 	if (desk->m_window != NULL) {
 		DestroyWindow(desk->m_window);
 	}
@@ -1927,6 +1989,8 @@ CMSWindowsScreen::removeDesks()
 		delete desk;
 	}
 	m_desks.clear();
+	m_activeDesk     = NULL;
+	m_activeDeskName = "";
 }
 
 void
@@ -1952,7 +2016,6 @@ CMSWindowsScreen::checkDesk()
 	// active becaue we'd most likely switch to the screensaver desktop
 	// which would have the side effect of forcing the screensaver to
 	// stop.
-	// FIXME -- really not switch if screensaver is active?
 	if (name != m_activeDeskName && !m_screensaver->isActive()) {
 		// show cursor on previous desk
 		if (!m_isOnScreen) {
@@ -1986,24 +2049,6 @@ CMSWindowsScreen::checkDesk()
 		}
 	}
 }
-
-// FIXME -- may want some of following when we switch desks.  calling
-// nextMark() for isPrimary may lead to loss of events.  updateKeys()
-// is to catch any key events lost between switching and detecting the
-// switch.  neither are strictly necessary.
-/*
-	if (m_isPrimary) {
-		if (m_isOnScreen) {
-			// all messages prior to now are invalid
-			// FIXME -- is this necessary;  couldn't we lose key releases?
-			nextMark();
-		}
-	}
-	else {
-		// update key state
-		updateKeys();
-	}
-*/
 
 bool
 CMSWindowsScreen::isDeskAccessible(const CDesk* desk) const

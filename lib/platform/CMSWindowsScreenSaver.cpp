@@ -13,10 +13,12 @@
  */
 
 #include "CMSWindowsScreenSaver.h"
+#include "CMSWindowsScreen.h"
 #include "CThread.h"
 #include "CLog.h"
 #include "TMethodJob.h"
 #include "CArch.h"
+#include "CArchMiscWindows.h"
 #include <malloc.h>
 #include <tchar.h>
 
@@ -24,11 +26,21 @@
 #define SPI_GETSCREENSAVERRUNNING 114
 #endif
 
+static const TCHAR* g_isSecureNT = "ScreenSaverIsSecure";
+static const TCHAR* g_isSecure9x = "ScreenSaverUsePassword";
+static const TCHAR* const g_pathScreenSaverIsSecure[] = {
+	"Control Panel",
+	"Desktop",
+	NULL
+};
+
 //
 // CMSWindowsScreenSaver
 //
 
 CMSWindowsScreenSaver::CMSWindowsScreenSaver() :
+	m_wasSecure(false),
+	m_wasSecureAnInt(false),
 	m_process(NULL),
 	m_threadID(0),
 	m_watch(NULL)
@@ -119,6 +131,14 @@ void
 CMSWindowsScreenSaver::enable()
 {
 	SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, m_wasEnabled, 0, 0);
+
+	// restore password protection
+	if (m_wasSecure) {
+		setSecure(true, m_wasSecureAnInt);
+	}
+
+	// restore display power down
+	CArchMiscWindows::removeBusyState(CArchMiscWindows::kDISPLAY);
 }
 
 void
@@ -126,6 +146,15 @@ CMSWindowsScreenSaver::disable()
 {
 	SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);
 	SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, 0, 0);
+
+	// disable password protected screensaver
+	m_wasSecure = isSecure(&m_wasSecureAnInt);
+	if (m_wasSecure) {
+		setSecure(false, m_wasSecureAnInt);
+	}
+
+	// disable display power down
+	CArchMiscWindows::addBusyState(CArchMiscWindows::kDISPLAY);
 }
 
 void
@@ -141,6 +170,9 @@ CMSWindowsScreenSaver::activate()
 			// no foreground window.  pretend we got the event instead.
 			DefWindowProc(NULL, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
 		}
+
+		// restore power save when screen saver activates
+		CArchMiscWindows::removeBusyState(CArchMiscWindows::kDISPLAY);
 	}
 }
 
@@ -179,6 +211,9 @@ CMSWindowsScreenSaver::deactivate()
 								!m_wasEnabled, 0, SPIF_SENDWININICHANGE);
 	SystemParametersInfo(SPI_SETSCREENSAVEACTIVE,
 								 m_wasEnabled, 0, SPIF_SENDWININICHANGE);
+
+	// disable display power down
+	CArchMiscWindows::removeBusyState(CArchMiscWindows::kDISPLAY);
 }
 
 bool
@@ -252,8 +287,11 @@ BOOL CALLBACK
 CMSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg)
 {
 	if (IsWindowVisible(hwnd)) {
-		PostMessage(hwnd, WM_CLOSE, 0, 0);
-		*reinterpret_cast<bool*>(arg) = true;
+		HINSTANCE instance = (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE);
+		if (instance != CMSWindowsScreen::getInstance()) {
+			PostMessage(hwnd, WM_CLOSE, 0, 0);
+			*reinterpret_cast<bool*>(arg) = true;
+		}
 	}
 	return TRUE;
 }
@@ -374,4 +412,61 @@ CMSWindowsScreenSaver::watchProcessThread(void*)
 			return;
 		}
 	}
+}
+
+void
+CMSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt)
+{
+	HKEY hkey =
+		CArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+	if (hkey == NULL) {
+		return;
+	}
+
+	const TCHAR* isSecure = m_is95Family ? g_isSecure9x : g_isSecureNT;
+	if (saveSecureAsInt) {
+		CArchMiscWindows::setValue(hkey, isSecure, secure ? 1 : 0);
+	}
+	else {
+		CArchMiscWindows::setValue(hkey, isSecure, secure ? "1" : "0");
+	}
+
+	CArchMiscWindows::closeKey(hkey);
+}
+
+bool
+CMSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
+{
+	// get the password protection setting key
+	HKEY hkey =
+		CArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+	if (hkey == NULL) {
+		return false;
+	}
+
+	// get the value.  the value may be an int or a string, depending
+	// on the version of windows.
+	bool result;
+	const TCHAR* isSecure = m_is95Family ? g_isSecure9x : g_isSecureNT;
+	switch (CArchMiscWindows::typeOfValue(hkey, isSecure)) {
+	default:
+		result = false;
+
+	case CArchMiscWindows::kUINT: {
+		DWORD value =
+			CArchMiscWindows::readValueInt(hkey, isSecure);
+		*wasSecureFlagAnInt = true;
+		result = (value != 0);
+	}
+
+	case CArchMiscWindows::kSTRING: {
+		std::string value =
+			CArchMiscWindows::readValueString(hkey, isSecure);
+		*wasSecureFlagAnInt = false;
+		result = (value != "0");
+	}
+	}
+
+	CArchMiscWindows::closeKey(hkey);
+	return result;
 }

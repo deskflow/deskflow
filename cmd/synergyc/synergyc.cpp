@@ -24,6 +24,7 @@
 #include "CThread.h"
 #include "CEventQueue.h"
 #include "CFunctionEventJob.h"
+#include "CFunctionJob.h"
 #include "CLog.h"
 #include "CString.h"
 #include "CStringUtil.h"
@@ -54,7 +55,12 @@
 #endif
 
 typedef int (*StartupFunc)(int, char**);
+static bool startClient();
 static void parse(int argc, const char* const* argv);
+#if WINDOWS_LIKE
+static void handleSystemSuspend(void*);
+static void handleSystemResume(void*);
+#endif
 
 //
 // program arguments
@@ -97,7 +103,9 @@ CScreen*
 createScreen()
 {
 #if WINDOWS_LIKE
-	return new CScreen(new CMSWindowsScreen(false));
+	return new CScreen(new CMSWindowsScreen(false,
+							new CFunctionJob(&handleSystemSuspend),
+							new CFunctionJob(&handleSystemResume)));
 #elif UNIX_LIKE
 	return new CScreen(new CXWindowsScreen(false));
 #endif
@@ -124,6 +132,7 @@ static CClient*					s_client          = NULL;
 static CScreen*					s_clientScreen    = NULL;
 static CClientTaskBarReceiver*	s_taskBarReceiver = NULL;
 static double					s_retryTime       = 0.0;
+static bool						s_suspened        = false;
 
 static
 void
@@ -181,6 +190,26 @@ handleScreenError(const CEvent&, void*)
 	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 }
 
+#if WINDOWS_LIKE
+static
+void
+handleSystemSuspend(void*)
+{
+	LOG((CLOG_NOTE "system suspending"));
+	s_suspened = true;
+	s_client->disconnect(NULL);
+}
+
+static
+void
+handleSystemResume(void*)
+{
+	LOG((CLOG_NOTE "system resuming"));
+	s_suspened = false;
+	startClient();
+}
+#endif
+
 static
 CScreen*
 openClientScreen()
@@ -211,11 +240,12 @@ handleClientRestart(const CEvent&, void* vtimer)
 	// discard old timer
 	CEventQueueTimer* timer = reinterpret_cast<CEventQueueTimer*>(vtimer);
 	EVENTQUEUE->deleteTimer(timer);
-	EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
+	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
 
 	// reconnect
-	s_client->connect();
-	updateStatus();
+	if (!s_suspened) {
+		startClient();
+	}
 }
 
 static
@@ -251,7 +281,9 @@ handleClientFailed(const CEvent& e, void*)
 	}
 	else {
 		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what));
-		scheduleClientRestart(nextRestartTimeout());
+		if (!s_suspened) {
+			scheduleClientRestart(nextRestartTimeout());
+		}
 	}
 }
 
@@ -263,7 +295,7 @@ handleClientDisconnected(const CEvent&, void*)
 	if (!ARG->m_restartable) {
 		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 	}
-	else {
+	else if (!s_suspened) {
 		s_client->connect();
 	}
 	updateStatus();
@@ -308,11 +340,13 @@ startClient()
 	double retryTime;
 	CScreen* clientScreen = NULL;
 	try {
-		clientScreen = openClientScreen();
-		s_client     = openClient(ARG->m_name,
+		if (s_clientScreen == NULL) {
+			clientScreen = openClientScreen();
+			s_client     = openClient(ARG->m_name,
 							*ARG->m_serverAddress, clientScreen);
-		s_clientScreen  = clientScreen;
-		LOG((CLOG_NOTE "started client"));
+			s_clientScreen  = clientScreen;
+			LOG((CLOG_NOTE "started client"));
+		}
 		s_client->connect();
 		updateStatus();
 		return true;

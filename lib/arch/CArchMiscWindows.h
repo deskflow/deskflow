@@ -25,6 +25,19 @@
 //! Miscellaneous win32 functions.
 class CArchMiscWindows {
 public:
+	enum EValueType {
+		kUNKNOWN,
+		kNO_VALUE,
+		kUINT,
+		kSTRING,
+		kBINARY
+	};
+	enum EBusyModes {
+		kIDLE   = 0x0000,
+		kSYSTEM  = 0x0001,
+		kDISPLAY = 0x0002
+	};
+
 	typedef int			(*RunFunc)(void);
 
 	//! Initialize
@@ -78,6 +91,9 @@ public:
 	//! Test if a value exists
 	static bool			hasValue(HKEY key, const TCHAR* name);
 
+	//! Get type of value
+	static EValueType	typeOfValue(HKEY key, const TCHAR* name);
+
 	//! Set a string value in the registry
 	static void			setValue(HKEY key, const TCHAR* name,
 							const std::string& value);
@@ -85,11 +101,21 @@ public:
 	//! Set a DWORD value in the registry
 	static void			setValue(HKEY key, const TCHAR* name, DWORD value);
 
+	//! Set a BINARY value in the registry
+	/*!
+	Sets the \p name value of \p key to \p value.data().
+	*/
+	static void			setValueBinary(HKEY key, const TCHAR* name,
+							const std::string& value);
+
 	//! Read a string value from the registry
 	static std::string	readValueString(HKEY, const TCHAR* name);
 
 	//! Read a DWORD value from the registry
 	static DWORD		readValueInt(HKEY, const TCHAR* name);
+
+	//! Read a BINARY value from the registry
+	static std::string	readValueBinary(HKEY, const TCHAR* name);
 
 	//! Add a dialog
 	static void			addDialog(HWND);
@@ -104,10 +130,28 @@ public:
 	*/
 	static bool			processDialog(MSG*);
 
+	//! Disable power saving
+	static void			addBusyState(DWORD busyModes);
+
+	//! Enable power saving
+	static void			removeBusyState(DWORD busyModes);
+
+private:
+	//! Read a string value from the registry
+	static std::string	readBinaryOrString(HKEY, const TCHAR* name, DWORD type);
+
+	//! Set thread busy state
+	static void			setThreadExecutionState(DWORD);
+
+	static DWORD WINAPI	dummySetThreadExecutionState(DWORD);
+
 private:
 	typedef std::set<HWND> CDialogs;
+	typedef DWORD (WINAPI *STES_t)(DWORD);
 
 	static CDialogs*	s_dialogs;
+	static DWORD		s_busyState;
+	static STES_t		s_stes;
 };
 
 #endif
