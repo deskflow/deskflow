@@ -327,7 +327,7 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 
 #else
 
-void
+int
 CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 {
 	int i, n;
@@ -765,8 +765,10 @@ CArchNetworkBSD::throwError(int err)
 	case ENODEV:
 	case ENOBUFS:
 	case ENOMEM:
-	case ENOSR:
 	case ENETDOWN:
+#if defined(ENOSR)
+	case ENOSR:
+#endif
 		throw XArchNetworkResource(new XArchEvalUnix(err));
 
 	case EPROTOTYPE:
@@ -777,8 +779,10 @@ CArchNetworkBSD::throwError(int err)
 	case EINVAL:
 	case ENOPROTOOPT:
 	case EOPNOTSUPP:
-	case ENOPKG:
 	case ESHUTDOWN:
+#if defined(ENOPKG)
+	case ENOPKG:
+#endif
 		throw XArchNetworkSupport(new XArchEvalUnix(err));
 
 	case EIO:

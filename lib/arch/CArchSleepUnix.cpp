@@ -69,7 +69,7 @@ CArchSleepUnix::sleep(double timeout)
 		ARCH->testCancelThread();
 #else
 	/* emulate nanosleep() with select() */
-	double startTime = time();
+	double startTime = ARCH->time();
 	double timeLeft  = timeout;
 	while (timeLeft > 0.0) {
 		struct timeval timeout2;
@@ -82,7 +82,7 @@ CArchSleepUnix::sleep(double timeout)
 				SELECT_TYPE_ARG234 NULL,
 				SELECT_TYPE_ARG5   &timeout2);
 		ARCH->testCancelThread();
-		timeLeft = timeout - (time() - startTime);
+		timeLeft = timeout - (ARCH->time() - startTime);
 	}
 #endif
 }

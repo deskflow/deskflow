@@ -14,11 +14,42 @@
 
 #include "CArch.h"
 #include <string.h>
-#include <cwchar>
+#if HAVE_WCHAR_H
+#	include <wchar.h>
+#elif __APPLE__
+	// wtf?  Darwin puts mbtowc() et al. in stdlib
+#	include <stdlib.h>
+#else
+	// platform apparently has no wchar_t support.  provide dummy
+	// implementations.  hopefully at least the C++ compiler has
+	// a built-in wchar_t type.
+#	undef HAVE_MBSINIT
+
+static inline
+int
+mbtowc(wchar_t* dst, const char* src, int n)
+{
+	*dst = static_cast<wchar_t>(*src);
+	return 1;
+}
+
+static inline
+int
+wctomb(char* dst, wchar_t src)
+{
+	*dst = static_cast<char>(src);
+	return 1;
+}
+
+#endif
 
 class CArchMBStateImpl {
 public:
+#if HAVE_MBSINIT
 	mbstate_t			m_mbstate;
+#else
+	int					m_mbstate;	// dummy data
+#endif
 };
 
 //
@@ -50,7 +81,9 @@ ARCH_STRING::initMBState(CArchMBState state)
 bool
 ARCH_STRING::isInitMBState(CArchMBState state)
 {
-#if !HAVE_MBSINIT
+	// if we're using this file mbsinit() probably doesn't exist
+	// but use it if it does
+#if HAVE_MBSINIT
 	return (mbsinit(&state->m_mbstate) != 0);
 #else
 	return true;

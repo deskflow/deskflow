@@ -480,6 +480,17 @@ if test "x$acx_pthread_ok" = xyes; then
 			fi
         fi
 
+		# Detect pthread signal functions
+        AC_MSG_CHECKING([for pthread signal functions])
+        AC_TRY_LINK([#include <pthread.h>
+					#include <signal.h>],
+                    [pthread_kill(pthread_self(), SIGTERM);],
+                    ok=yes, ok=unknown)
+        AC_MSG_RESULT(${ok})
+        if test x"$ok" != xno; then
+        	AC_DEFINE(HAVE_PTHREAD_SIGNAL,1,[Define if you have \`pthread_sigmask\' and \`pthread_kill\' functions.])
+        fi
+
         LIBS="$save_LIBS"
         CXXFLAGS="$save_CXXFLAGS"
 

@@ -22,14 +22,7 @@
 #endif
 
 #if !defined(HAVE_SOCKLEN_T)
-// Darwin is so unsure what to use for socklen_t it makes us choose
-#	if defined(__APPLE__)
-#		if !defined(_BSD_SOCKLEN_T_) 	
-#			define _BSD_SOCKLEN_T_ int
-#		endif
-#	else
 typedef int socklen_t;
-#	endif
 #endif
 
 #define ARCH_NETWORK CArchNetworkBSD

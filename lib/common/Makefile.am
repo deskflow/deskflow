@@ -17,14 +17,6 @@ VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =				\
 	common.dsp				\
-	$(NULL)
-
-MAINTAINERCLEANFILES =		\
-	Makefile.in				\
-	$(NULL)
-
-noinst_LIBRARIES = libcommon.a
-libcommon_a_SOURCES =		\
 	BasicTypes.h			\
 	IInterface.h			\
 	Version.h				\
@@ -41,5 +33,10 @@ libcommon_a_SOURCES =		\
 	stdstring.h				\
 	stdvector.h				\
 	$(NULL)
+
+MAINTAINERCLEANFILES =		\
+	Makefile.in				\
+	$(NULL)
+
 INCLUDES =					\
 	$(NULL)
