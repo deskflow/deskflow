@@ -48,10 +48,12 @@ CServerProtocol1_0::run()
 
 		// check if client has stopped sending heartbeats
 		if (n == (UInt32)-1) {
+/* FIXME -- disabled to avoid masking bugs
 			if (heartTimer.getTime() > kHeartDeath) {
 				log((CLOG_NOTE "client \"%s\" is dead", getClient().c_str()));
 				return;
 			}
+*/
 			continue;
 		}
 
