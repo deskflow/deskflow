@@ -992,6 +992,11 @@ void					CServer::handshakeClient(void* vsocket)
 			log((CLOG_WARN "a client with name \"%s\" is already connected", e.getName().c_str()));
 			CProtocolUtil::writef(output.get(), kMsgEBusy);
 		}
+		catch (XUnknownClient& e) {
+			// client has unknown name
+			log((CLOG_WARN "a client with name \"%s\" is not in the map", e.getName().c_str()));
+			CProtocolUtil::writef(output.get(), kMsgEUnknown);
+		}
 		catch (XIncompatibleClient& e) {
 			// client is incompatible
 			// FIXME -- could print network address if socket had suitable method
@@ -1278,7 +1283,10 @@ CServer::CScreenInfo*	CServer::addConnection(
 		throw XDuplicateClient(name);
 	}
 
-	// FIXME -- throw if the name is not in our map
+	// name must be in our configuration
+	if (!m_config.isScreen(name)) {
+		throw XUnknownClient(name);
+	}
 
 	// save screen info
 	CScreenInfo* newScreen = new CScreenInfo(name, protocol);

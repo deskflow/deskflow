@@ -131,6 +131,11 @@ static const char		kMsgEIncompatible[]	= "EICV%2i%2i";
 // name provided when connecting is already in use:  primary -> secondary
 static const char		kMsgEBusy[] = "EBSY";
 
+// unknown client:  primary -> secondary
+// name provided when connecting is not in primary's screen
+// configuration map.
+static const char		kMsgEUnknown[] = "EUNK";
+
 // protocol violation:  primary -> secondary
 // primary should disconnect after sending this message.
 static const char		kMsgEBad[] = "EBAD";

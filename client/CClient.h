@@ -53,6 +53,7 @@ private:
 	void				onMouseWheel();
 	void				onErrorIncompatible();
 	void				onErrorBusy();
+	void				onErrorUnknown();
 	void				onErrorBad();
 
 private:

@@ -55,3 +55,23 @@ CString					XDuplicateClient::getWhat() const throw()
 {
 	return "XDuplicateClient";
 }
+
+
+//
+// XUnknownClient
+//
+
+XUnknownClient::XUnknownClient(const CString& name) : m_name(name)
+{
+	// do nothing
+}
+
+const CString&			XUnknownClient::getName() const throw()
+{
+	return m_name;
+}
+
+CString					XUnknownClient::getWhat() const throw()
+{
+	return "XUnknownClient";
+}

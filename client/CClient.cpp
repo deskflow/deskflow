@@ -294,6 +294,10 @@ void					CClient::runSession(void*)
 				onErrorBusy();
 				break;
 			}
+			else if (memcmp(code, kMsgEUnknown, 4) == 0) {
+				onErrorUnknown();
+				break;
+			}
 			else if (memcmp(code, kMsgEBad, 4) == 0) {
 				onErrorBad();
 				break;
@@ -604,6 +608,11 @@ void					CClient::onErrorIncompatible()
 void					CClient::onErrorBusy()
 {
 	log((CLOG_ERR "server already has a connected client with name \"%s\"", m_name.c_str()));
+}
+
+void					CClient::onErrorUnknown()
+{
+	log((CLOG_ERR "server refused client with name \"%s\"", m_name.c_str()));
 }
 
 void					CClient::onErrorBad()
