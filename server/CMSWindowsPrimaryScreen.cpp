@@ -347,19 +347,41 @@ CMSWindowsPrimaryScreen::getToggleMask() const
 bool
 CMSWindowsPrimaryScreen::isLockedToScreen() const
 {
-	// check buttons
-	if (GetAsyncKeyState(VK_LBUTTON) < 0 ||
-		GetAsyncKeyState(VK_MBUTTON) < 0 ||
-		GetAsyncKeyState(VK_RBUTTON) < 0) {
-		return true;
-	}
+	// virtual key table.  the table defines the virtual keys that are
+	// mapped to something (including mouse buttons, OEM and kanji keys
+	// but not unassigned or undefined keys).
+	static const UInt32 s_mappedKeys[] = {
+		0xfbff331e,
+		0x03ffffff,
+		0x3ffffffe,
+		0xffffffff,
+		0x000300ff,
+		0xfc000000,
+		0xf8000001,
+		0x7ffffe5f
+	};
 
-	// check keys
-	BYTE keys[256];
-	if (GetKeyboardState(keys)) {
-		for (unsigned int i = 0; i < sizeof(keys); ++i) {
-			if ((keys[i] & 0x80) != 0) {
+	// check each key.  note that we cannot use GetKeyboardState() here
+	// since it reports the state of keys according to key messages
+	// that have been pulled off the queue.  in general, we won't get
+	// these key messages because they're not for our window.  if any
+	// key (or mouse button) is down then we're locked to the screen.
+	if (m_active) {
+		// use shadow keyboard state in m_keys
+		for (UInt32 i = 0; i < 256; ++i) {
+			if ((m_keys[i] & 0x80) != 0) {
 				return true;
+			}
+		}
+	}
+	else {
+		for (UInt32 i = 0; i < 256 / 32; ++i) {
+			for (UInt32 b = 1, j = 0; j < 32; b <<= 1, ++j) {
+				if ((s_mappedKeys[i] & b) != 0) {
+					if (GetAsyncKeyState(i * 32 + j) < 0) {
+						return true;
+					}
+				}
 			}
 		}
 	}
@@ -1454,16 +1476,17 @@ CMSWindowsPrimaryScreen::updateKey(UINT vkCode, bool press)
 			m_keys[VK_MENU]    |= 0x80;
 			break;
 
-		case VK_LWIN:
-		case VK_RWIN:
-		case VK_APPS:
-			m_keys[vkCode]     |= 0x80;
-			break;
-
 		case VK_CAPITAL:
 		case VK_NUMLOCK:
 		case VK_SCROLL:
 			// toggle keys
+			m_keys[vkCode]     |= 0x80;
+			break;
+
+		default:
+		case VK_LWIN:
+		case VK_RWIN:
+		case VK_APPS:
 			m_keys[vkCode]     |= 0x80;
 			break;
 		}
@@ -1497,18 +1520,19 @@ CMSWindowsPrimaryScreen::updateKey(UINT vkCode, bool press)
 			}
 			break;
 
-		case VK_LWIN:
-		case VK_RWIN:
-		case VK_APPS:
-			m_keys[vkCode]     &= ~0x80;
-			break;
-
 		case VK_CAPITAL:
 		case VK_NUMLOCK:
 		case VK_SCROLL:
 			// toggle keys
-			m_keys[vkCode] &= ~0x80;
-			m_keys[vkCode] ^=  0x01;
+			m_keys[vkCode]     &= ~0x80;
+			m_keys[vkCode]     ^=  0x01;
+			break;
+
+		default:
+		case VK_LWIN:
+		case VK_RWIN:
+		case VK_APPS:
+			m_keys[vkCode]     &= ~0x80;
 			break;
 		}
 	}
