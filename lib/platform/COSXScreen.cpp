@@ -174,10 +174,9 @@ COSXScreen::getCursorPos(SInt32& x, SInt32& y) const
 }
 
 void
-COSXScreen::reconfigure(UInt32 activeSides)
+COSXScreen::reconfigure(UInt32)
 {
-	// FIXME
-	(void)activeSides;
+	// do nothing
 }
 
 void
@@ -198,7 +197,6 @@ COSXScreen::warpCursor(SInt32 x, SInt32 y)
 SInt32
 COSXScreen::getJumpZoneSize() const
 {
-	// FIXME -- is this correct?
 	return 1;
 }
 
@@ -355,7 +353,7 @@ COSXScreen::enable()
 
 		// hide cursor
 		if (!m_cursorHidden) {
-			CGDisplayHideCursor(m_displayID);
+//			CGDisplayHideCursor(m_displayID);
 			m_cursorHidden = true;
 		}
 
@@ -377,7 +375,7 @@ COSXScreen::disable()
 	else {
 		// show cursor
 		if (m_cursorHidden) {
-			CGDisplayShowCursor(m_displayID);
+//			CGDisplayShowCursor(m_displayID);
 			m_cursorHidden = false;
 		}
 
@@ -404,7 +402,7 @@ COSXScreen::enter()
 	else {
 		// show cursor
 		if (m_cursorHidden) {
-			CGDisplayShowCursor(m_displayID);
+//			CGDisplayShowCursor(m_displayID);
 			m_cursorHidden = false;
 		}
 
@@ -446,7 +444,7 @@ COSXScreen::leave()
 	else {
 		// hide cursor
 		if (!m_cursorHidden) {
-			CGDisplayHideCursor(m_displayID);
+//			CGDisplayHideCursor(m_displayID);
 			m_cursorHidden = true;
 		}
 
@@ -576,7 +574,7 @@ COSXScreen::handleSystemEvent(const CEvent& event, void*)
 	assert(carbonEvent != NULL);
 
 	UInt32 eventClass = GetEventClass(*carbonEvent);
-	
+
 	switch (eventClass) {
 	case kEventClassMouse:
 		switch (GetEventKind(*carbonEvent)) {
