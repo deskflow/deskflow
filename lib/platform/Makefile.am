@@ -23,9 +23,9 @@ EXTRA_DIST =								\
 	CMSWindowsClipboardAnyTextConverter.cpp	\
 	CMSWindowsClipboardTextConverter.cpp	\
 	CMSWindowsClipboardUTF16Converter.cpp	\
-	CMSWindowsDesktop.cpp					\
+	CMSWindowsDesks.cpp						\
 	CMSWindowsEventQueueBuffer.cpp			\
-	CMSWindowsKeyMapper.cpp					\
+	CMSWindowsKeyState.cpp					\
 	CMSWindowsScreen.cpp					\
 	CMSWindowsScreenSaver.cpp				\
 	CMSWindowsUtil.cpp						\
@@ -34,9 +34,9 @@ EXTRA_DIST =								\
 	CMSWindowsClipboardAnyTextConverter.h	\
 	CMSWindowsClipboardTextConverter.h		\
 	CMSWindowsClipboardUTF16Converter.h		\
-	CMSWindowsDesktop.h						\
+	CMSWindowsDesks.h						\
 	CMSWindowsEventQueueBuffer.h			\
-	CMSWindowsKeyMapper.h					\
+	CMSWindowsKeyState.h					\
 	CMSWindowsScreen.h						\
 	CMSWindowsScreenSaver.h					\
 	CMSWindowsUtil.h						\
