@@ -55,7 +55,7 @@ CXWindowsClipboard::CXWindowsClipboard(Display* display,
 		break;
 	}
 
-	// add converters
+	// add converters, most desired first
 	m_converters.push_back(new CXWindowsClipboardUTF8Converter(m_display,
 								"text/plain;charset=UTF-8"));
 	m_converters.push_back(new CXWindowsClipboardUTF8Converter(m_display,
@@ -484,14 +484,28 @@ CXWindowsClipboard::icccmFillCache()
 		data.append(reinterpret_cast<char*>(&target), sizeof(target));
 	}
 
-	// try getting each format
+	// try each converter in order (because they're in order of
+	// preference).
 	const Atom* targets = reinterpret_cast<const Atom*>(data.data());
 	const UInt32 numTargets = data.size() / sizeof(Atom);
-	for (UInt32 i = 0; i < numTargets; ++i) {
-		// see if we have a converter for this target
-		Atom target = targets[i];
-		IXWindowsClipboardConverter* converter = getConverter(target, true);
-		if (converter == NULL) {
+	for (ConverterList::const_iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+		IXWindowsClipboardConverter* converter = *index;
+
+		// skip already handled targets
+		if (m_added[converter->getFormat()]) {
+			continue;
+		}
+
+		// see if atom is in target list
+		Atom target = None;
+		for (UInt32 i = 0; i < numTargets; ++i) {
+			if (converter->getAtom() == targets[i]) {
+				target = targets[i];
+				break;
+			}
+		}
+		if (target == None) {
 			continue;
 		}
 
@@ -503,13 +517,19 @@ CXWindowsClipboard::icccmFillCache()
 			continue;
 		}
 		if (actualTarget != target) {
-			log((CLOG_DEBUG1 "  expected (%d) and actual (%d) targets differ", target, actualTarget));
+			log((CLOG_DEBUG1 "  expeted (%d) and actual (%d) targets differ", target, actualTarget));
 			continue;
 		}
 
 		// add to clipboard and note we've done it
 		m_data[converter->getFormat()]  = converter->toIClipboard(targetData);
 		m_added[converter->getFormat()] = true;
+// XXX
+char* name = XGetAtomName(m_display, target);
+log((CLOG_INFO "src atom: %d %s", target, name));
+XFree(name);
+log((CLOG_INFO "src data size: %d", targetData.size()));
+log((CLOG_INFO "utf8 data size: %d", m_data[converter->getFormat()].size()));
 		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
 	}
 }
@@ -686,7 +706,8 @@ CXWindowsClipboard::motifFillCache()
 		return;
 	}
 
-	// convert each available format
+	// get the available formats
+	std::vector<CMotifClipFormat> motifFormats;
 	for (SInt32 i = 0; i < item->m_numFormats; ++i) {
 		// get Motif format property from the root window
 		sprintf(name, "_MOTIF_CLIP_ITEM_%d", item->m_formats[i]);
@@ -711,17 +732,42 @@ CXWindowsClipboard::motifFillCache()
 			continue;
 		}
 
+		// save it
+		motifFormats.push_back(*motifFormat);
+	}
+	const UInt32 numMotifFormats = motifFormats.size();
 
-		// see if we have a converter for this target
-		Atom target = motifFormat->m_type;
-		IXWindowsClipboardConverter* converter = getConverter(target, true);
-		if (converter == NULL) {
+
+
+	// try each converter in order (because they're in order of
+	// preference).
+	const Atom* targets = reinterpret_cast<const Atom*>(data.data());
+	const UInt32 numTargets = data.size() / sizeof(Atom);
+	for (ConverterList::const_iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+		IXWindowsClipboardConverter* converter = *index;
+
+		// skip already handled targets
+		if (m_added[converter->getFormat()]) {
+			continue;
+		}
+
+		// see if atom is in target list
+		UInt32 i;
+		Atom target = None;
+		for (i = 0; i < numMotifFormats; ++i) {
+			if (converter->getAtom() == motifFormats[i].m_type) {
+				target = motifFormats[i].m_type;
+				break;
+			}
+		}
+		if (target == None) {
 			continue;
 		}
 
 		// get the data (finally)
-		SInt32 length = motifFormat->m_length;
-		sprintf(name, "_MOTIF_CLIP_ITEM_%d", motifFormat->m_data);
+		SInt32 length = motifFormats[i].m_length;
+		sprintf(name, "_MOTIF_CLIP_ITEM_%d", motifFormats[i].m_data);
     	Atom atomData = XInternAtom(m_display, name, False), atomTarget;
 		CString targetData;
 		if (!CXWindowsUtil::getWindowProperty(m_display, root,
@@ -740,6 +786,12 @@ CXWindowsClipboard::motifFillCache()
 		// add to clipboard and note we've done it
 		m_data[converter->getFormat()]  = converter->toIClipboard(targetData);
 		m_added[converter->getFormat()] = true;
+// XXX
+char* name = XGetAtomName(m_display, target);
+log((CLOG_INFO "src atom: %d %s", target, name));
+XFree(name);
+log((CLOG_INFO "src data size: %d", targetData.size()));
+log((CLOG_INFO "utf8 data size: %d", m_data[converter->getFormat()].size()));
 		log((CLOG_DEBUG "  added format %d for target %d", converter->getFormat(), target));
 	}
 }
@@ -1100,6 +1152,8 @@ CXWindowsClipboard::getTargetsData(CString& data, int* format) const
 	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
 
 	// add targets we can convert to
+// XXX
+log((CLOG_INFO "targets"));
 	for (ConverterList::const_iterator index = m_converters.begin();
 								index != m_converters.end(); ++index) {
 		IXWindowsClipboardConverter* converter = *index;
@@ -1108,6 +1162,9 @@ CXWindowsClipboard::getTargetsData(CString& data, int* format) const
 		if (!m_added[converter->getFormat()]) {
 			atom = converter->getAtom();
 			data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
+char* name = XGetAtomName(m_display, atom);
+log((CLOG_INFO "  %d %s", atom, name));
+XFree(name);
 		}
 	}
 
