@@ -82,6 +82,7 @@ CArchDaemonWindows::installDaemon(const char* name,
 				const char* description,
 				const char* pathname,
 				const char* commandLine,
+				const char* dependencies,
 				bool allUsers)
 {
 	// if not for all users then use the user's autostart registry.
@@ -130,7 +131,7 @@ CArchDaemonWindows::installDaemon(const char* name,
 								pathname,
 								NULL,
 								NULL,
-								NULL,
+								dependencies,
 								NULL,
 								NULL);
 		if (service == NULL) {

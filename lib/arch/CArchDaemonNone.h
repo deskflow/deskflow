@@ -36,6 +36,7 @@ public:
 							const char* description,
 							const char* pathname,
 							const char* commandLine,
+							const char* dependencies,
 							bool allUsers);
 	virtual void		uninstallDaemon(const char* name, bool allUsers);
 	virtual int			daemonize(const char* name, DaemonFunc func);

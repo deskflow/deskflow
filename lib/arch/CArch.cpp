@@ -178,9 +178,11 @@ CArch::installDaemon(const char* name,
 				const char* description,
 				const char* pathname,
 				const char* commandLine,
+				const char* dependencies,
 				bool allUsers)
 {
-	m_daemon->installDaemon(name, description, pathname, commandLine, allUsers);
+	m_daemon->installDaemon(name, description, pathname,
+							commandLine, dependencies, allUsers);
 }
 
 void
