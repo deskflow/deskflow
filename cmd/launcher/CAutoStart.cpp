@@ -199,12 +199,12 @@ CAutoStart::onInstall(bool allUsers)
 	// clear error message
 	m_errorMessage = "";
 
-	// install.  depend on NetBT (NetBIOS over TCP/IP).
+	// install.  depend on Browser
 	try {
 		ARCH->installDaemon(m_name.c_str(),
 					m_isServer ? SERVER_DAEMON_INFO : CLIENT_DAEMON_INFO,
 					appPath.c_str(), m_cmdLine.c_str(),
-					"NetBT\0", allUsers);
+					"Browser\0", allUsers);
 		askOkay(m_hwnd, getString(IDS_INSTALL_TITLE),
 								getString(allUsers ?
 									IDS_INSTALLED_SYSTEM :
