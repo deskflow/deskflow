@@ -31,11 +31,12 @@ dnl checks for programs
 AC_PROG_CXX
 AC_PROG_RANLIB
 
-dnl checks for libraries
-ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
-
 dnl do checks using C++
 AC_LANG_CPLUSPLUS
+
+dnl checks for libraries
+ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
+ACX_CHECK_NANOSLEEP
 
 dnl checks for header files
 AC_HEADER_STDC
@@ -83,6 +84,7 @@ dnl checks for system services
 
 dnl adjust variables for X11 and pthreads
 CXXFLAGS="$CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
+LIBS="$NANOSLEEP_LIBS $PTHREAD_LIBS $LIBS"
 
 AC_OUTPUT([
 Makefile

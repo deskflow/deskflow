@@ -351,6 +351,17 @@ CThreadRep::doThreadFunc()
 #		include <time.h>
 #	endif
 #endif
+#if !HAVE_NANOSLEEP
+#	if HAVE_SYS_SELECT_H
+#		include <sys/select.h>
+#	endif
+#	if HAVE_SYS_TYPES_H
+#		include <sys/types.h>
+#	endif
+#	if HAVE_UNISTD_H
+#		include <unistd.h>
+#	endif
+#endif
 
 void
 CThreadRep::init()
@@ -378,11 +389,30 @@ CThreadRep::sleep(
 	if (timeout < 0.0) {
 		return;
 	}
+#if HAVE_NANOSLEEP
 	struct timespec t;
 	t.tv_sec  = (long)timeout;
 	t.tv_nsec = (long)(1000000000.0 * (timeout - (double)t.tv_sec));
 	while (nanosleep(&t, &t) < 0)
 		testCancel();
+#else
+	/* emulate nanosleep() with select() */
+	CStopwatch timer(true);
+	double timeLeft = timeout - timer.getTime();
+	while (timeLeft > 0.0) {
+		struct timeval timeout2;
+		timeout2.tv_sec  = static_cast<int>(timeLeft);
+		timeout2.tv_usec = static_cast<int>(1.0e+6 * (timeLeft -
+														timeout2.tv_sec));
+		select((SELECT_TYPE_ARG1)  0,
+				SELECT_TYPE_ARG234 NULL,
+				SELECT_TYPE_ARG234 NULL,
+				SELECT_TYPE_ARG234 NULL,
+				SELECT_TYPE_ARG5   &timeout2);
+		testCancel();
+		timeLeft = timeout - timer.getTime();
+	}
+#endif
 }
 
 void

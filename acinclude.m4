@@ -90,6 +90,63 @@ AC_DEFUN([ACX_CHECK_POLL], [
 	fi
 ])dnl ACX_CHECK_POLL
 
+dnl See if we need extra libraries for nanosleep
+AC_DEFUN([ACX_CHECK_NANOSLEEP], [
+	acx_nanosleep_ok=no
+	acx_nanosleep_list=""
+
+	dnl check if user has set NANOSLEEP_LIBS
+	save_user_NANOSLEEP_LIBS="$NANOSLEEP_LIBS"
+	if test x"$NANOSLEEP_LIBS" != x; then
+		acx_nanosleep_list=user
+	fi
+
+	dnl check various libraries (including no extra libraries) for
+	dnl nanosleep.  `none' should appear first.
+	acx_nanosleep_list="none $acx_nanosleep_list rt"
+	for flag in $acx_nanosleep_list; do
+        case $flag in
+            none)
+            AC_MSG_CHECKING([for nanosleep])
+            NANOSLEEP_LIBS=""
+            ;;
+
+            user)
+            AC_MSG_CHECKING([for nanosleep in $save_user_NANOSLEEP_LIBS])
+			NANOSLEEP_LIBS="$save_user_NANOSLEEP_LIBS"
+            ;;
+
+            *)
+            AC_MSG_CHECKING([for nanosleep in -l$flag])
+            NANOSLEEP_LIBS="-l$flag"
+            ;;
+        esac
+
+    	save_LIBS="$LIBS"
+    	LIBS="$NANOSLEEP_LIBS $LIBS"
+    	AC_TRY_LINK([#include <time.h>],
+            		[struct timespec t = { 1, 1000 }; nanosleep(&t, NULL);],
+            		acx_nanosleep_ok=yes, acx_nanosleep_ok=no)
+		LIBS="$save_LIBS"
+        AC_MSG_RESULT($acx_nanosleep_ok)
+        if test x"$acx_nanosleep_ok" = xyes; then
+            break;
+        fi
+        NANOSLEEP_LIBS=""
+	done
+
+	AC_SUBST(NANOSLEEP_LIBS)
+
+	# execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:
+	if test x"$acx_nanosleep_ok" = xyes; then
+        	ifelse([$1],,AC_DEFINE(HAVE_NANOSLEEP,1,[Define if you have the `nanosleep' function.]),[$1])
+        	:
+	else
+        	acx_nanosleep_ok=no
+        	$2
+	fi
+])dnl ACX_CHECK_POLL
+
 dnl The following macros are from http://www.gnu.org/software/ac-archive/
 dnl which distributes them under the following license:
 dnl
