@@ -3,7 +3,70 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "all"=.\all.dsp - Package Owner=<4>
+Project: "all"=".\all.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name launcher
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "arch"=".\lib\arch\arch.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "base"=".\lib\base\base.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "client"=".\lib\client\client.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "common"=".\lib\common\common.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "exec"=".\cmd\exec.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -17,14 +80,11 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name synergys
     End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name launcher
-    End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "arch"=.\lib\arch\arch.dsp - Package Owner=<4>
+Project: "http"=".\lib\HTTP\http.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -36,7 +96,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "base"=.\lib\base\base.dsp - Package Owner=<4>
+Project: "io"=".\lib\io\io.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -48,55 +108,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "client"=.\lib\client\client.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "common"=.\lib\common\common.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "http"=.\lib\HTTP\http.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "io"=.\lib\io\io.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "launcher"=.\cmd\launcher\launcher.dsp - Package Owner=<4>
+Project: "launcher"=".\cmd\launcher\launcher.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -131,11 +143,14 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name server
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name exec
+    End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "libsynergy"=.\lib\synergy\libsynergy.dsp - Package Owner=<4>
+Project: "libsynergy"=".\lib\synergy\libsynergy.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -147,7 +162,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "makehook"=.\lib\platform\makehook.dsp - Package Owner=<4>
+Project: "makehook"=".\lib\platform\makehook.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -162,7 +177,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "mt"=.\lib\mt\mt.dsp - Package Owner=<4>
+Project: "mt"=".\lib\mt\mt.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -174,7 +189,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "net"=.\lib\net\net.dsp - Package Owner=<4>
+Project: "net"=".\lib\net\net.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -186,7 +201,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "platform"=.\lib\platform\platform.dsp - Package Owner=<4>
+Project: "platform"=".\lib\platform\platform.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -198,7 +213,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "server"=.\lib\server\server.dsp - Package Owner=<4>
+Project: "server"=".\lib\server\server.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -210,7 +225,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "synergyc"=.\cmd\synergyc\synergyc.dsp - Package Owner=<4>
+Project: "synergyc"=".\cmd\synergyc\synergyc.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -249,7 +264,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "synergys"=.\cmd\synergys\synergys.dsp - Package Owner=<4>
+Project: "synergys"=".\cmd\synergys\synergys.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -294,7 +309,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "synrgyhk"=.\lib\platform\synrgyhk.dsp - Package Owner=<4>
+Project: "synrgyhk"=".\lib\platform\synrgyhk.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="all" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="exec" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Generic Project" 0x010a
 
-CFG=all - Win32 Debug
+CFG=exec - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "all.mak".
+!MESSAGE NMAKE /f "exec.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "all.mak" CFG="all - Win32 Debug"
+!MESSAGE NMAKE /f "exec.mak" CFG="exec - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "all - Win32 Release" (based on "Win32 (x86) Generic Project")
-!MESSAGE "all - Win32 Debug" (based on "Win32 (x86) Generic Project")
+!MESSAGE "exec - Win32 Release" (based on "Win32 (x86) Generic Project")
+!MESSAGE "exec - Win32 Debug" (based on "Win32 (x86) Generic Project")
 !MESSAGE 
 
 # Begin Project
@@ -27,7 +27,7 @@ CFG=all - Win32 Debug
 # PROP Scc_LocalPath ""
 MTL=midl.exe
 
-!IF  "$(CFG)" == "all - Win32 Release"
+!IF  "$(CFG)" == "exec - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -40,7 +40,7 @@ MTL=midl.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 
-!ELSEIF  "$(CFG)" == "all - Win32 Debug"
+!ELSEIF  "$(CFG)" == "exec - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -57,7 +57,7 @@ MTL=midl.exe
 
 # Begin Target
 
-# Name "all - Win32 Release"
-# Name "all - Win32 Debug"
+# Name "exec - Win32 Release"
+# Name "exec - Win32 Debug"
 # End Target
 # End Project
