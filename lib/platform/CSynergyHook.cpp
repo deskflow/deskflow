@@ -17,6 +17,14 @@
 #include <zmouse.h>
 
 //
+// debugging compile flag.  when not zero the server doesn't grab
+// the keyboard when the mouse leaves the server screen.  this
+// makes it possible to use the debugger (via the keyboard) when
+// all user input would normally be caught by the hook procedures.
+//
+#define NO_GRAB_KEYBOARD 0
+
+//
 // extra mouse wheel stuff
 //
 
@@ -258,6 +266,7 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 	return CallNextHookEx(g_mouse, code, wParam, lParam);
 }
 
+/*
 static
 LRESULT CALLBACK
 cbtHook(int code, WPARAM wParam, LPARAM lParam)
@@ -270,6 +279,7 @@ cbtHook(int code, WPARAM wParam, LPARAM lParam)
 
 	return CallNextHookEx(g_cbt, code, wParam, lParam);
 }
+*/
 
 static
 LRESULT CALLBACK
@@ -409,6 +419,7 @@ getLowLevelProc(void*)
 	MSG msg;
 	PeekMessage(&msg, NULL, WM_USER, WM_USER, PM_NOREMOVE);
 
+#if !NO_GRAB_KEYBOARD
 	// install low-level keyboard hook
 	g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL,
 								&keyboardLLHook,
@@ -420,6 +431,10 @@ getLowLevelProc(void*)
 		SetEvent(g_hookEventLL);
 		return 1;
 	}
+#else
+	// keep compiler quiet
+	&keyboardLLHook;
+#endif
 
 	// install low-level mouse hook
 	g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL,
@@ -428,8 +443,10 @@ getLowLevelProc(void*)
 								0);
 	if (g_mouseLL == NULL) {
 		// indicate failure and exit
-		UnhookWindowsHookEx(g_keyboardLL);
-		g_keyboardLL     = NULL;
+		if (g_keyboardLL != NULL) {
+			UnhookWindowsHookEx(g_keyboardLL);
+			g_keyboardLL     = NULL;
+		}
 		g_hookThreadIDLL = 0;
 		SetEvent(g_hookEventLL);
 		return 1;
@@ -634,6 +651,7 @@ install()
 	g_wheelSupport = getWheelSupport();
 
 	// install keyboard hook
+#if !NO_GRAB_KEYBOARD
 	g_keyboard = SetWindowsHookEx(WH_KEYBOARD,
 								&keyboardHook,
 								g_hinstance,
@@ -642,6 +660,10 @@ install()
 		g_threadID = NULL;
 		return 0;
 	}
+#else
+	// keep compiler quiet
+	&keyboardHook;
+#endif
 
 	// install mouse hook
 	g_mouse = SetWindowsHookEx(WH_MOUSE,
@@ -650,12 +672,15 @@ install()
 								0);
 	if (g_mouse == NULL) {
 		// uninstall keyboard hook before failing
-		UnhookWindowsHookEx(g_keyboard);
-		g_keyboard = NULL;
+		if (g_keyboard != NULL) {
+			UnhookWindowsHookEx(g_keyboard);
+			g_keyboard = NULL;
+		}
 		g_threadID = NULL;
 		return 0;
 	}
 
+/*
 	// install CBT hook
 	g_cbt = SetWindowsHookEx(WH_CBT,
 								&cbtHook,
@@ -663,13 +688,16 @@ install()
 								0);
 	if (g_cbt == NULL) {
 		// uninstall keyboard and mouse hooks before failing
-		UnhookWindowsHookEx(g_keyboard);
+		if (g_keyboard != NULL) {
+			UnhookWindowsHookEx(g_keyboard);
+			g_keyboard = NULL;
+		}
 		UnhookWindowsHookEx(g_mouse);
-		g_keyboard = NULL;
 		g_mouse    = NULL;
 		g_threadID = NULL;
 		return 0;
 	}
+*/
 
 	// install GetMessage hook (unless already installed)
 	if (g_wheelSupport == kWheelOld && g_getMessage == NULL) {
