@@ -718,12 +718,15 @@ CMSWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 void
 CMSWindowsScreen::updateButtons()
 {
+	int numButtons               = GetSystemMetrics(SM_CMOUSEBUTTONS);
 	m_buttons[kButtonNone]       = false;
 	m_buttons[kButtonLeft]       = (GetKeyState(VK_LBUTTON)  < 0);
-	m_buttons[kButtonMiddle]     = (GetKeyState(VK_MBUTTON)  < 0);
 	m_buttons[kButtonRight]      = (GetKeyState(VK_RBUTTON)  < 0);
-	m_buttons[kButtonExtra0 + 0] = (GetKeyState(VK_XBUTTON1) < 0);
-	m_buttons[kButtonExtra0 + 1] = (GetKeyState(VK_XBUTTON2) < 0);
+	m_buttons[kButtonMiddle]     = (GetKeyState(VK_MBUTTON)  < 0);
+	m_buttons[kButtonExtra0 + 0] = (numButtons >= 4) &&
+								   (GetKeyState(VK_XBUTTON1) < 0);
+	m_buttons[kButtonExtra0 + 1] = (numButtons >= 5) &&
+								   (GetKeyState(VK_XBUTTON2) < 0);
 }
 
 IKeyState*
@@ -1329,10 +1332,16 @@ CMSWindowsScreen::mapButtonFromEvent(WPARAM msg, LPARAM button) const
 	case WM_NCXBUTTONUP:
 		switch (button) {
 		case XBUTTON1:
-			return kButtonExtra0 + 0;
+			if (GetSystemMetrics(SM_CMOUSEBUTTONS) >= 4) {
+				return kButtonExtra0 + 0;
+			}
+			break;
 
 		case XBUTTON2:
-			return kButtonExtra0 + 1;
+			if (GetSystemMetrics(SM_CMOUSEBUTTONS) >= 5) {
+				return kButtonExtra0 + 1;
+			}
+			break;
 		}
 		return kButtonNone;
 
