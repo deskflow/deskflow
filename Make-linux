@@ -42,7 +42,7 @@ MKDEP     = $(DEPTH)/tools/depconv
 MKDEPOPT  = -MD
 MKDEPPRE  =
 MKDEPPOST = $(MKDEP) -f $(MKDEPFILE) $*.d; $(RM) $*.d
-MKDEPFILE = Makedepend
+MKDEPFILE = .depend
 
 #
 # stuff to clean
