@@ -321,8 +321,24 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 					// back to center
 					warpCursorNoFlush(m_xCenter, m_yCenter);
 
-					// send motion
-					m_receiver->onMouseMoveSecondary(x, y);
+					// examine the motion.  if it's about the distance
+					// from the center of the screen to an edge then
+					// it's probably a bogus motion that we want to
+					// ignore (see warpCursorNoFlush() for a further
+					// description).
+					static SInt32 bogusZoneSize = 10;
+					SInt32 x0, y0, w0, h0;
+					m_screen->getShape(x0, y0, w0, h0);
+					if (-x + bogusZoneSize > m_xCenter - x0 ||
+						 x + bogusZoneSize > x0 + w0 - m_xCenter ||
+						-y + bogusZoneSize > m_yCenter - y0 ||
+						 y + bogusZoneSize > y0 + h0 - m_yCenter) {
+						LOG((CLOG_DEBUG "dropped bogus motion %+d,%+d", x, y));
+					}
+					else {
+						// send motion
+						m_receiver->onMouseMoveSecondary(x, y);
+					}
 				}
 			}
 		}
@@ -655,7 +671,9 @@ CMSWindowsPrimaryScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 	// we need the hook to process all mouse events that occur
 	// before we warp before we do the warp but i'm not sure how
 	// to guarantee that.  yielding the CPU here may reduce the
-	// chance of undesired behavior.
+	// chance of undesired behavior.  we'll also check for very
+	// large motions that look suspiciously like about half width
+	// or height of the screen.
 	ARCH->sleep(0.0);
 
 	// send an event that we can recognize after the mouse warp
