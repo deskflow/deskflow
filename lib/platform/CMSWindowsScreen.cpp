@@ -1168,6 +1168,8 @@ CMSWindowsScreen::onDisplayChange()
 
 		// send new screen info
 		sendEvent(getShapeChangedEvent());
+
+		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
 	}
 
 	return true;
@@ -1259,7 +1261,6 @@ CMSWindowsScreen::updateScreenShape()
 	// check for multiple monitors
 	m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) ||
 				  m_h != GetSystemMetrics(SM_CYSCREEN));
-	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
 
 	// tell the desks
 	m_desks->setShape(m_x, m_y, m_w, m_h, m_xCenter, m_yCenter, m_multimon);
