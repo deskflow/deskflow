@@ -1829,6 +1829,19 @@ const CXWindowsSecondaryScreen::KeySymsMap&
 CXWindowsSecondaryScreen::getDecomposedKeySymTable()
 {
 	static const KeySym s_rawTable[] = {
+		// non-dead version of dead keys
+		XK_grave,        XK_dead_grave,       XK_space, 0,
+		XK_acute,        XK_dead_acute,       XK_space, 0,
+		XK_asciicircum,  XK_dead_circumflex,  XK_space, 0,
+		XK_asciitilde,   XK_dead_tilde,       XK_space, 0,
+		XK_cedilla,      XK_dead_cedilla,     XK_space, 0,
+		XK_ogonek,       XK_dead_ogonek,      XK_space, 0,
+		XK_caron,        XK_dead_caron,       XK_space, 0,
+		XK_abovedot,     XK_dead_abovedot,    XK_space, 0,
+		XK_doubleacute,  XK_dead_doubleacute, XK_space, 0,
+		XK_breve,        XK_dead_breve,       XK_space, 0,
+		XK_macron,       XK_dead_macron,      XK_space, 0,
+
 		// Latin-1 (ISO 8859-1)
 		XK_Agrave,       XK_dead_grave,       XK_A, 0,
 		XK_Aacute,       XK_dead_acute,       XK_A, 0,
