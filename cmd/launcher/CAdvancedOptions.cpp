@@ -19,6 +19,7 @@
 #include "CArchMiscWindows.h"
 #include "CAdvancedOptions.h"
 #include "LaunchUtil.h"
+#include "XArch.h"
 #include "resource.h"
 
 //
@@ -32,7 +33,8 @@ CAdvancedOptions::CAdvancedOptions(HWND parent, CConfig* config) :
 	m_config(config),
 	m_isClient(false),
 	m_screenName(ARCH->getHostName()),
-	m_port(kDefaultPort)
+	m_port(kDefaultPort),
+	m_interface()
 {
 	assert(s_singleton == NULL);
 	s_singleton = this;
@@ -68,6 +70,12 @@ CAdvancedOptions::getPort() const
 }
 
 CString
+CAdvancedOptions::getInterface() const
+{
+	return m_interface;
+}
+
+CString
 CAdvancedOptions::getCommandLine(bool isClient, const CString& serverName) const
 {
 	CString cmdLine;
@@ -88,7 +96,11 @@ CAdvancedOptions::getCommandLine(bool isClient, const CString& serverName) const
 		cmdLine += portString;
 	}
 	else {
-		cmdLine += " --address :";
+		cmdLine += " --address ";
+		if (!m_interface.empty()) {
+			cmdLine += m_interface;
+		}
+		cmdLine += ":";
 		cmdLine += portString;
 	}
 
@@ -101,13 +113,18 @@ CAdvancedOptions::init()
 	// get values from registry
 	HKEY key = CArchMiscWindows::openKey(HKEY_CURRENT_USER, getSettingsPath());
 	if (key != NULL) {
-		DWORD newPort   = CArchMiscWindows::readValueInt(key, "port");
-		CString newName = CArchMiscWindows::readValueString(key, "name");
+		DWORD newPort        = CArchMiscWindows::readValueInt(key, "port");
+		CString newName      = CArchMiscWindows::readValueString(key, "name");
+		CString newInterface =
+			CArchMiscWindows::readValueString(key, "interface");
 		if (newPort != 0) {
 			m_port = static_cast<int>(newPort);
 		}
 		if (!newName.empty()) {
 			m_screenName = newName;
+		}
+		if (!newInterface.empty()) {
+			m_interface = newInterface;
 		}
 		CArchMiscWindows::closeKey(key);
 	}
@@ -125,11 +142,16 @@ CAdvancedOptions::doInit(HWND hwnd)
 
 	child = getItem(hwnd, IDC_ADVANCED_NAME_EDIT);
 	SendMessage(child, WM_SETTEXT, 0, (LPARAM)m_screenName.c_str());
+
+	child = getItem(hwnd, IDC_ADVANCED_INTERFACE_EDIT);
+	SendMessage(child, WM_SETTEXT, 0, (LPARAM)m_interface.c_str());
 }
 
 bool
 CAdvancedOptions::save(HWND hwnd)
 {
+	SetCursor(LoadCursor(NULL, IDC_WAIT));
+
 	HWND child = getItem(hwnd, IDC_ADVANCED_NAME_EDIT);
 	CString name = getWindowText(child);
 	if (!m_config->isValidScreenName(name)) {
@@ -145,6 +167,23 @@ CAdvancedOptions::save(HWND hwnd)
 								name.c_str()));
 		SetFocus(child);
 		return false;
+	}
+
+	child = getItem(hwnd, IDC_ADVANCED_INTERFACE_EDIT);
+	CString iface = getWindowText(child);
+	if (!m_isClient) {
+		try {
+			if (!iface.empty()) {
+				ARCH->nameToAddr(iface);
+			}
+		}
+		catch (XArchNetworkName& e) {
+			showError(hwnd, CStringUtil::format(
+								getString(IDS_INVALID_INTERFACE_NAME).c_str(),
+								iface.c_str(), e.what().c_str()));
+			SetFocus(child);
+			return false;
+		}
 	}
 
 	// get and verify port
@@ -164,12 +203,14 @@ CAdvancedOptions::save(HWND hwnd)
 	// save state
 	m_screenName = name;
 	m_port       = port;
+	m_interface  = iface;
 
 	// save values to registry
 	HKEY key = CArchMiscWindows::openKey(HKEY_CURRENT_USER, getSettingsPath());
 	if (key != NULL) {
 		CArchMiscWindows::setValue(key, "port", m_port);
 		CArchMiscWindows::setValue(key, "name", m_screenName);
+		CArchMiscWindows::setValue(key, "interface", m_interface);
 		CArchMiscWindows::closeKey(key);
 	}
 
@@ -182,6 +223,7 @@ CAdvancedOptions::setDefaults(HWND hwnd)
 	// restore defaults
 	m_screenName = ARCH->getHostName();
 	m_port       = kDefaultPort;
+	m_interface  = "";
 
 	// update GUI
 	doInit(hwnd);

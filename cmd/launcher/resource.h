@@ -43,6 +43,7 @@
 #define IDS_INVALID_TIME                39
 #define IDS_ERROR_CODE                  39
 #define IDS_AUTOSTART_PERMISSION_ALL    40
+#define IDS_INVALID_INTERFACE_NAME      41
 #define IDD_MAIN                        101
 #define IDD_ADD                         102
 #define IDD_WAIT                        103
@@ -89,6 +90,7 @@
 #define IDC_ADVANCED_PORT_EDIT          1039
 #define IDC_ADD_HD_SCROLL_CHECK         1039
 #define IDC_MAIN_DEBUG                  1040
+#define IDC_ADVANCED_INTERFACE_EDIT     1040
 #define IDC_GLOBAL_DELAY_CHECK          1041
 #define IDC_GLOBAL_DELAY_TIME           1042
 #define IDC_GLOBAL_TWO_TAP_CHECK        1043
