@@ -11,8 +11,11 @@ void					realMain()
 	CScreenMap screenMap;
 	screenMap.addScreen("primary");
 	screenMap.addScreen("secondary");
+	screenMap.addScreen("secondary2");
 	screenMap.connect("primary", CScreenMap::kRight, "secondary");
 	screenMap.connect("secondary", CScreenMap::kLeft, "primary");
+	screenMap.connect("secondary", CScreenMap::kRight, "secondary2");
+	screenMap.connect("secondary2", CScreenMap::kLeft, "secondary");
 
 	CServer* server = NULL;
 	try {
