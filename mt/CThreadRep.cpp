@@ -179,6 +179,9 @@ void					CThreadRep::initThreads()
 		pthread_sigmask(SIG_BLOCK, &sigset, NULL);
 
 		// fire up the INT and TERM signal handler thread
+		// FIXME -- i've seen this thread hanging around after the app
+		// asserted.  should figure out how it stays alive and prevent
+		// it from happening.
 		int status = pthread_create(&s_signalThread, NULL,
 								&CThreadRep::threadSignalHandler,
 								getCurrentThreadRep());
