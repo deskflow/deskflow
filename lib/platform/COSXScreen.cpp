@@ -52,7 +52,7 @@ COSXScreen::COSXScreen(bool isPrimary) :
 			Rect bounds = { 100, 100, 101, 101 };
 
 			// m_hiddenWindow is a window meant to let us get mouse moves
-			// when the focus is on this computer.  If you get your event
+			// when the focus is on another computer.  If you get your event
 			// from the application event target you'll get every mouse
 			// moves. On the other hand the Window event target will only
 			// get events when the mouse moves over the window. 
@@ -428,7 +428,6 @@ COSXScreen::leave()
 		updateKeys();
 
 		// warp to center
-		// FIXME -- this should be the center of the main monitor
 		warpCursor(m_xCenter, m_yCenter);
 
 		// capture events
@@ -940,16 +939,14 @@ COSXScreen::updateScreenShape()
 		return;
 	}
 
-	CGDirectDisplayID* displays = 
-		(CGDirectDisplayID*)malloc(displayCount * sizeof(CGDirectDisplayID));
-
+	CGDirectDisplayID* displays = new CGDirectDisplayID[displayCount];
 	if (displays == NULL) {
 		return;
 	}
 
 	if (CGGetActiveDisplayList(displayCount,
 							displays, &displayCount) != CGDisplayNoErr) {
-		free(displays);
+		delete[] displays;
 		return;
 	}
 
@@ -967,11 +964,18 @@ COSXScreen::updateScreenShape()
 	m_h = (SInt32)totalBounds.size.height;
 
 	// get center of default screen
-	// XXX -- this should compute the center of displays[0]
-	m_xCenter = m_x + (m_w >> 1);
-	m_yCenter = m_y + (m_h >> 1);
+	GDHandle mainScreen = GetMainDevice();
+	if (mainScreen != NULL) {
+		const Rect& rect = (*mainScreen)->gdRect;
+		m_xCenter = (rect.left + rect.right) / 2;
+		m_yCenter = (rect.top + rect.bottom) / 2;
+	}
+	else {
+		m_xCenter = m_x + (m_w >> 1);
+		m_yCenter = m_y + (m_h >> 1);
+	}
 
-	free(displays);
+	delete[] displays;
 
 	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount, (displayCount == 1) ? "display" : "displays"));
 }
