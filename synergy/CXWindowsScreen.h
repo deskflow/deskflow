@@ -76,9 +76,6 @@ protected:
 	// called when a clipboard is lost
 	virtual void		onLostClipboard(ClipboardID) = 0;
 
-	// get the X event mask required by the subclass for the given window
-	virtual long		getEventMask(Window) const = 0;
-
 private:
 	// internal event processing
 	bool				processEvent(XEvent*);

@@ -17,6 +17,36 @@ public:
 								Atom type, SInt32 format);
 	static Time			getCurrentTime(Display*, Window);
 
+	// class to set an X error handler in the c'tor and restore the
+	// previous error handler in the d'tor.  a lock should only
+	// be installed while the display is locked by the thread.
+	//
+	// CErrorLock() ignores errors
+	// CErrorLock(bool* flag) sets *flag to true if any error occurs
+	class CErrorLock {
+	public:
+		typedef void (*ErrorHandler)(Display*, XErrorEvent*, void* userData);
+		CErrorLock();
+		CErrorLock(bool* errorFlag);
+		CErrorLock(ErrorHandler, void* userData);
+		~CErrorLock();
+
+	private:
+		void			install(ErrorHandler, void*);
+		static int		internalHandler(Display*, XErrorEvent*);
+		static void		ignoreHandler(Display*, XErrorEvent*, void*);
+		static void		saveHandler(Display*, XErrorEvent*, void*);
+
+	private:
+		typedef int (*XErrorHandler)(Display*, XErrorEvent*);
+
+		ErrorHandler	m_handler;
+		void*			m_userData;
+		XErrorHandler	m_oldXHandler;
+		CErrorLock*		m_next;
+		static CErrorLock*	s_top;
+	};
+
 private:
 	class CPropertyNotifyPredicateInfo {
 	public:

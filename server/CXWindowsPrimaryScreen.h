@@ -34,10 +34,10 @@ protected:
 						createClipboard(ClipboardID);
 	virtual void		onCloseDisplay();
 	virtual void		onLostClipboard(ClipboardID);
-	virtual long		getEventMask(Window) const;
 
 private:
 	void				selectEvents(Display*, Window) const;
+	void				doSelectEvents(Display*, Window) const;
 	void				warpCursorNoLock(Display*,
 								SInt32 xAbsolute, SInt32 yAbsolute);
 

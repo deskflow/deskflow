@@ -1,7 +1,12 @@
 #include "CXWindowsUtil.h"
 #include "CLog.h"
 #include "CThread.h"
+#include <assert.h>
 #include <X11/Xatom.h>
+
+//
+// CXWindowsUtil
+//
 
 bool					CXWindowsUtil::getWindowProperty(
 								Display* display,
@@ -14,6 +19,9 @@ bool					CXWindowsUtil::getWindowProperty(
 
 	Atom actualType;
 	int actualDatumSize;
+
+	// ignore errors.  XGetWindowProperty() will report failure.
+	CXWindowsUtil::CErrorLock lock;
 
 	// read the property
 	const long length = XMaxRequestSize(display);
@@ -82,12 +90,13 @@ bool					CXWindowsUtil::setWindowProperty(
 								const void* vdata, UInt32 size,
 								Atom type, SInt32 format)
 {
-// FIXME -- must catch Alloc errors (using XSetErrorHandler()) and
-// report failure to caller.
-
 	const UInt32 length       = 4 * XMaxRequestSize(display);
 	const unsigned char* data = reinterpret_cast<const unsigned char*>(vdata);
 	const UInt32 datumSize    = static_cast<UInt32>(format / 8);
+
+	// save errors
+	bool error = false;
+	CXWindowsUtil::CErrorLock lock(&error);
 
 	// how much data to send in first chunk?
 	UInt32 chunkSize = size;
@@ -102,7 +111,7 @@ bool					CXWindowsUtil::setWindowProperty(
 	// append remaining chunks
 	data += chunkSize;
 	size -= chunkSize;
-	while (size > 0) {
+	while (!error && size > 0) {
 		chunkSize = size;
 		if (chunkSize > length)
 			chunkSize = length;
@@ -113,7 +122,7 @@ bool					CXWindowsUtil::setWindowProperty(
 		size -= chunkSize;
 	}
 
-	return true;
+	return !error;
 }
 
 Time					CXWindowsUtil::getCurrentTime(
@@ -166,4 +175,64 @@ Bool					CXWindowsUtil::propertyNotifyPredicate(
 			xevent->xproperty.window == filter->m_window &&
 			xevent->xproperty.atom   == filter->m_property &&
 			xevent->xproperty.state  == PropertyNewValue) ? True : False;
+}
+
+
+//
+// CXWindowsUtil::CErrorLock
+//
+
+CXWindowsUtil::CErrorLock*	CXWindowsUtil::CErrorLock::s_top = NULL;
+
+CXWindowsUtil::CErrorLock::CErrorLock()
+{
+	install(&CXWindowsUtil::CErrorLock::ignoreHandler, NULL);
+}
+
+CXWindowsUtil::CErrorLock::CErrorLock(bool* flag)
+{
+	install(&CXWindowsUtil::CErrorLock::saveHandler, flag);
+}
+
+CXWindowsUtil::CErrorLock::CErrorLock(ErrorHandler handler, void* data)
+{
+	install(handler, data);
+}
+
+CXWindowsUtil::CErrorLock::~CErrorLock()
+{
+	XSetErrorHandler(m_oldXHandler);
+	s_top = m_next;
+}
+
+void					CXWindowsUtil::CErrorLock::install(
+								ErrorHandler handler, void* data)
+{
+	m_handler     = handler;
+	m_userData    = data;
+	m_oldXHandler = XSetErrorHandler(
+								&CXWindowsUtil::CErrorLock::internalHandler);
+	m_next        = s_top;
+	s_top         = this;
+}
+
+int						CXWindowsUtil::CErrorLock::internalHandler(
+								Display* display, XErrorEvent* event)
+{
+	if (s_top != NULL && s_top->m_handler != NULL) {
+		s_top->m_handler(display, event, s_top->m_userData);
+	}
+	return 0;
+}
+
+void					CXWindowsUtil::CErrorLock::ignoreHandler(
+								Display*, XErrorEvent*, void*)
+{
+	// do nothing
+}
+
+void					CXWindowsUtil::CErrorLock::saveHandler(
+								Display*, XErrorEvent*, void* flag)
+{
+	*reinterpret_cast<bool*>(flag) = true;
 }

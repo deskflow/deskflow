@@ -190,6 +190,7 @@ bool					CXWindowsClipboard::destroyRequest(
 
 	// destroy all replies for this window
 	clearReplies(index->second);
+	m_replies.erase(index);
 
 	// note -- we don't stop watching the window for events because
 	// we're called in response to the window being destroyed.
@@ -758,11 +759,24 @@ void					CXWindowsClipboard::insertReply(CReply* reply)
 	// want events in case the window is destroyed or any of its
 	// properties change.
 	if (newWindow) {
+		// note errors while we adjust event masks
+		bool error = false;
+		CXWindowsUtil::CErrorLock lock(&error);
+
+		// get and save the current event mask
 		XWindowAttributes attr;
 		XGetWindowAttributes(m_display, reply->m_requestor, &attr);
+		m_eventMasks[reply->m_requestor] = attr.your_event_mask;
+
+		// add the events we want
 		XSelectInput(m_display, reply->m_requestor, attr.your_event_mask |
 								StructureNotifyMask | PropertyChangeMask);
-		m_eventMasks[reply->m_requestor] = attr.your_event_mask;
+
+		// if we failed then the window has already been destroyed
+		if (error) {
+			m_replies.erase(reply->m_requestor);
+			delete reply;
+		}
 	}
 }
 
@@ -799,6 +813,7 @@ void					CXWindowsClipboard::pushReplies(
 	// if there are no more replies in the list then remove the list
 	// and stop watching the requestor for events.
 	if (replies.empty()) {
+		CXWindowsUtil::CErrorLock lock;
 		Window requestor = mapIndex->first;
 		XSelectInput(m_display, requestor, m_eventMasks[requestor]);
 		m_replies.erase(mapIndex);
@@ -871,6 +886,7 @@ bool					CXWindowsClipboard::sendReply(CReply* reply)
 		log((CLOG_DEBUG1 "clipboard: sending failure to 0x%08x,%d,%d", reply->m_requestor, reply->m_target, reply->m_property));
 		reply->m_done = true;
 		if (reply->m_property != None) {
+			CXWindowsUtil::CErrorLock lock;
 			XDeleteProperty(m_display, reply->m_requestor, reply->m_property);
 		}
 
@@ -958,6 +974,7 @@ void					CXWindowsClipboard::sendNotify(
 	event.xselection.target    = target;
 	event.xselection.property  = property;
 	event.xselection.time      = time;
+	CXWindowsUtil::CErrorLock lock;
 	XSendEvent(m_display, requestor, False, 0, &event);
 }
 

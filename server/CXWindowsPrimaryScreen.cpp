@@ -440,6 +440,7 @@ void					CXWindowsPrimaryScreen::onOpenDisplay()
 								CWDontPropagate | CWEventMask |
 								CWOverrideRedirect | CWCursor,
 								&attr);
+	log((CLOG_DEBUG "window is 0x%08x", m_window));
 
 	// start watching for events on other windows
 	selectEvents(display, getRoot());
@@ -469,18 +470,17 @@ void					CXWindowsPrimaryScreen::onLostClipboard(
 	m_server->grabClipboard(id);
 }
 
-long					CXWindowsPrimaryScreen::getEventMask(Window w) const
+void					CXWindowsPrimaryScreen::selectEvents(
+								Display* display, Window w) const
 {
-	if (w == m_window)
-		return PointerMotionMask |// PointerMotionHintMask |
-								 ButtonPressMask | ButtonReleaseMask |
-								 KeyPressMask | KeyReleaseMask |
-								 KeymapStateMask;
-	else
-		return PointerMotionMask | SubstructureNotifyMask;
+	// ignore errors while we adjust event masks
+	CXWindowsUtil::CErrorLock lock;
+
+	// adjust event masks
+	doSelectEvents(display, w);
 }
 
-void					CXWindowsPrimaryScreen::selectEvents(
+void					CXWindowsPrimaryScreen::doSelectEvents(
 								Display* display, Window w) const
 {
 	// we want to track the mouse everywhere on the display.  to achieve
@@ -500,7 +500,7 @@ void					CXWindowsPrimaryScreen::selectEvents(
 	unsigned int nc;
 	if (XQueryTree(display, w, &rw, &pw, &cw, &nc)) {
 		for (unsigned int i = 0; i < nc; ++i)
-			selectEvents(display, cw[i]);
+			doSelectEvents(display, cw[i]);
 		XFree(cw);
 	}
 }
