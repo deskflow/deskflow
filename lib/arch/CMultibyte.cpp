@@ -19,7 +19,7 @@
 #include "CArch.h"
 #include <limits.h>
 #include <string.h>
-#if HAVE_WCHAR_H
+#if HAVE_WCHAR_H || defined(_MSC_VER)
 #	include <wchar.h>
 #elif __APPLE__
 	// wtf?  Darwin puts mbtowc() et al. in stdlib
@@ -112,7 +112,7 @@ ARCH_STRING::convStringWCToMB(char* dst,
 	}
 	ARCH->unlockMutex(s_mutex);
 
-	return (ssize_t)len;
+	return len;
 }
 
 int
@@ -201,7 +201,7 @@ ARCH_STRING::convStringMBToWC(wchar_t* dst,
 	}
 	ARCH->unlockMutex(s_mutex);
 
-	return (ssize_t)len;
+	return len;
 }
 
 #endif
