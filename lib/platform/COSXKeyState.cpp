@@ -241,7 +241,7 @@ const KeyID COSXKeyState::s_virtualKey[] =
 	/* 0x2e */ kKeyNone,		// M
 	/* 0x2f */ kKeyNone,		// .
 	/* 0x30 */ kKeyTab,			// tab
-	/* 0x31 */ kKeyKP_Space,	// space
+	/* 0x31 */ kKeyNone,		// space
 	/* 0x32 */ kKeyNone,		// `
 	/* 0x33 */ kKeyBackSpace,	// Backspace
 	/* 0x34 */ kKeyNone,		// undefined
