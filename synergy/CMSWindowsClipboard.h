@@ -10,9 +10,10 @@ public:
 	virtual ~CMSWindowsClipboard();
 
 	// IClipboard overrides
-	virtual bool		open(Time);
-	virtual void		close();
+	virtual bool		empty();
 	virtual void		add(EFormat, const CString& data);
+	virtual bool		open(Time) const;
+	virtual void		close() const;
 	virtual Time		getTime() const;
 	virtual bool		has(EFormat) const;
 	virtual CString		get(EFormat) const;
@@ -24,7 +25,7 @@ private:
 
 private:
 	HWND				m_window;
-	Time				m_time;
+	mutable Time		m_time;
 };
 
 #endif

@@ -18,43 +18,22 @@ CMSWindowsClipboard::~CMSWindowsClipboard()
 	// do nothing
 }
 
-bool					CMSWindowsClipboard::open(Time time)
+bool					CMSWindowsClipboard::empty()
 {
-	log((CLOG_DEBUG "open clipboard"));
+	log((CLOG_DEBUG "empty clipboard"));
 
-	if (!OpenClipboard(m_window)) {
-		log((CLOG_WARN "failed to open clipboard"));
+	if (!EmptyClipboard()) {
+		log((CLOG_DEBUG "failed to grab clipboard"));
 		return false;
 	}
-	if (EmptyClipboard()) {
-		log((CLOG_DEBUG "grabbed clipboard"));
-	}
-	else {
-		log((CLOG_WARN "failed to grab clipboard"));
-		CloseClipboard();
-		return false;
-	}
-
-	m_time = time;
 
 	return true;
-}
-
-void					CMSWindowsClipboard::close()
-{
-	log((CLOG_DEBUG "close clipboard"));
-	CloseClipboard();
 }
 
 void					CMSWindowsClipboard::add(
 								EFormat format, const CString& data)
 {
 	log((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
-
-	if (!OpenClipboard(m_window)) {
-		log((CLOG_WARN "failed to open clipboard"));
-		return;
-	}
 
 	// convert data to win32 required form
 	const UINT win32Format = convertFormatToWin32(format);
@@ -73,8 +52,25 @@ void					CMSWindowsClipboard::add(
 	if (win32Data != NULL) {
 		SetClipboardData(win32Format, win32Data);
 	}
+}
 
-	// done with clipboard
+bool					CMSWindowsClipboard::open(Time time) const
+{
+	log((CLOG_DEBUG "open clipboard"));
+
+	if (!OpenClipboard(m_window)) {
+		log((CLOG_WARN "failed to open clipboard"));
+		return false;
+	}
+
+	m_time = time;
+
+	return true;
+}
+
+void					CMSWindowsClipboard::close() const
+{
+	log((CLOG_DEBUG "close clipboard"));
 	CloseClipboard();
 }
 
@@ -96,11 +92,6 @@ CString					CMSWindowsClipboard::get(EFormat format) const
 	if (win32Format == 0)
 		return CString();
 
-	if (!OpenClipboard(m_window)) {
-		log((CLOG_WARN "failed to open clipboard"));
-		return CString();
-	}
-
 	// get a handle to the clipboard data and convert it
 	HANDLE win32Data = GetClipboardData(win32Format);
 	CString data;
@@ -111,9 +102,6 @@ CString					CMSWindowsClipboard::get(EFormat format) const
 			data = convertTextFromWin32(win32Data);
 		}
 	}
-
-	// close the clipboard
-	CloseClipboard();
 
 	return data;
 }
