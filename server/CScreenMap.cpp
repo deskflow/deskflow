@@ -36,7 +36,7 @@ void					CScreenMap::removeScreen(const CString& name)
 	// disconnect
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
 		CCell& cell = index->second;
-		for (SInt32 i = 0; kLastDirection - kFirstDirection; ++i)
+		for (SInt32 i = 0; i <= kLastDirection - kFirstDirection; ++i)
 			if (cell.m_neighbor[i] == name) {
 				cell.m_neighbor[i].erase();
 			}
