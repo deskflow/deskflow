@@ -151,15 +151,20 @@ CXWindowsClipboard::addSimpleRequest(Window requestor,
 		type = getTimestampData(data, &format);
 	}
 	else {
+char* name = XGetAtomName(m_display, target);
+log((CLOG_INFO "request target: %d %s", target, name));
+XFree(name);
 		IXWindowsClipboardConverter* converter = getConverter(target);
-		IClipboard::EFormat clipboardFormat = converter->getFormat();
-		if (!m_added[clipboardFormat]) {
-			type = None;
-		}
-		else {
-			type   = converter->getAtom();
-			format = converter->getDataSize();
-			data   = converter->fromIClipboard(m_data[clipboardFormat]);
+		if (converter != NULL) {
+log((CLOG_INFO "found converter"));
+			IClipboard::EFormat clipboardFormat = converter->getFormat();
+log((CLOG_INFO "clipboard format: %d", clipboardFormat));
+			if (m_added[clipboardFormat]) {
+log((CLOG_INFO "added"));
+				type   = converter->getAtom();
+				format = converter->getDataSize();
+				data   = converter->fromIClipboard(m_data[clipboardFormat]);
+			}
 		}
 	}
 
@@ -1152,19 +1157,14 @@ CXWindowsClipboard::getTargetsData(CString& data, int* format) const
 	data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
 
 	// add targets we can convert to
-// XXX
-log((CLOG_INFO "targets"));
 	for (ConverterList::const_iterator index = m_converters.begin();
 								index != m_converters.end(); ++index) {
 		IXWindowsClipboardConverter* converter = *index;
 
 		// skip formats we don't have
-		if (!m_added[converter->getFormat()]) {
+		if (m_added[converter->getFormat()]) {
 			atom = converter->getAtom();
 			data.append(reinterpret_cast<char*>(&atom), sizeof(Atom));
-char* name = XGetAtomName(m_display, atom);
-log((CLOG_INFO "  %d %s", atom, name));
-XFree(name);
 		}
 	}
 
