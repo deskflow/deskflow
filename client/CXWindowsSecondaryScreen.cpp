@@ -156,6 +156,11 @@ void					CXWindowsSecondaryScreen::open(CClient* client)
 		updateModifiers(display);
 	}
 
+	// check for peculiarities
+	// FIXME -- may have to get these from some database
+	m_capsLockHalfDuplex = false;
+//	m_capsLockHalfDuplex = true;
+
 	// assume primary has all clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id)
 		grabClipboard(id);
@@ -403,18 +408,28 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 	// keysym with that mask.  we override the bits in the mask
 	// that cannot be accomodated.
 
+	// note if the key is the caps lock and it's "half-duplex"
+	const bool isHalfDuplex = (id == XK_Caps_Lock && m_capsLockHalfDuplex);
+
+	// ignore releases for half-duplex keys
+	if (isHalfDuplex && !press) {
+		return m_mask;
+	}
+
 	// lookup the a keycode for this key id.  also return the
 	// key modifier mask required.
 	unsigned int outMask;
 	if (!findKeyCode(keycode, outMask, id, maskToX(mask))) {
 		// we cannot generate the desired keysym because no key
 		// maps to that keysym.  just return the current mask.
+		log((CLOG_DEBUG2 "no keycode for keysym %d modifiers %04x", id, mask));
 		return m_mask;
 	}
 
 	// if we cannot match the modifier mask then don't return any
 	// keys and just return the current mask.
 	if ((outMask & m_modifierMask) != outMask) {
+		log((CLOG_DEBUG2 "cannot match modifiers %04x", outMask));
 		return m_mask;
 	}
 
@@ -482,6 +497,11 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 		}
 	}
 
+	// note if the press of a half-duplex key should be treated as a release
+	if (isHalfDuplex && (m_mask & (1 << index->second)) != 0) {
+		press = false;
+	}
+
 	// add the key event
 	keys.push_back(std::make_pair(keycode, press));
 
@@ -501,7 +521,8 @@ KeyModifierMask			CXWindowsSecondaryScreen::mapKey(
 
 		// toggle keys modify the state on press if toggling on and on
 		// release if toggling off.  other keys set the bit on press
-		// and clear the bit on release.
+		// and clear the bit on release.  if half-duplex then toggle
+		// each time we get here.
 		if ((modifierBit & m_toggleModifierMask) != 0) {
 			if (((mask & modifierBit) == 0) == press)
 				mask ^= modifierBit;

@@ -68,6 +68,10 @@ private:
 	CClient*			m_client;
 	Window				m_window;
 
+	// note if caps lock key toggles on up/down (false) or on
+	// transition (true)
+	bool				m_capsLockHalfDuplex;
+
 	// set entries indicate keys that are pressed.  indexed by keycode.
 	bool				m_keys[256];
 
