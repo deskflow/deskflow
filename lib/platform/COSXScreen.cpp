@@ -29,6 +29,7 @@
 COSXScreen::COSXScreen(bool isPrimary) :
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
+	m_cursorPosValid(false),
 	m_cursorHidden(false),
 	m_keyState(NULL),
 	m_sequenceNumber(0),
@@ -94,8 +95,11 @@ COSXScreen::getCursorPos(SInt32& x, SInt32& y) const
 {
 	Point mouse;
 	GetGlobalMouse(&mouse);
-	x = mouse.h;
-	y = mouse.v;
+	x                = mouse.h;
+	y                = mouse.v;
+	m_cursorPosValid = true;
+	m_xCursor        = x;
+	m_yCursor        = y;
 }
 
 void
@@ -115,8 +119,9 @@ COSXScreen::warpCursor(SInt32 x, SInt32 y)
 	CGWarpMouseCursorPosition(pos);
 
 	// save new cursor position
-	m_xCursor = x;
-	m_yCursor = y;
+	m_xCursor        = x;
+	m_yCursor        = y;
+	m_cursorPosValid = true;
 }
 
 SInt32
@@ -157,6 +162,10 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press) const
 	// use this API and if we want to support more buttons we have
 	// to recompile.
 	CGPoint pos;
+	if (!m_cursorPosValid) {
+		SInt32 x, y;
+		getCursorPos(x, y);
+	}
 	pos.x = m_xCursor;
 	pos.y = m_yCursor;
 	CGPostMouseEvent(pos, false, sizeof(m_buttons) / sizeof(m_buttons[0]),
@@ -178,8 +187,32 @@ COSXScreen::fakeMouseMove(SInt32 x, SInt32 y) const
 	CGPostMouseEvent(pos, true, 0, m_buttons[0]);
 
 	// save new cursor position
-	m_xCursor = x;
-	m_yCursor = y;
+	m_xCursor        = x;
+	m_yCursor        = y;
+	m_cursorPosValid = true;
+}
+
+void
+COSXScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+{
+	// OS X does not appear to have a fake relative mouse move function.
+	// simulate it by getting the current mouse position and adding to
+	// that.  this can yield the wrong answer but there's not much else
+	// we can do.
+
+	// get current position
+	Point oldPos;
+	GetGlobalMouse(&oldPos);
+
+	// synthesize event
+	CGPoint pos;
+	pos.x = oldPos.h + dx;
+	pos.y = oldPos.v + dy;
+	// FIXME -- is it okay to pass no buttons here?
+	CGPostMouseEvent(pos, true, 0, m_buttons[0]);
+
+	// we now assume we don't know the current cursor position
+	m_cursorPosValid = false;
 }
 
 void
