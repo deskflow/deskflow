@@ -1404,6 +1404,10 @@ CXWindowsScreen::mapKeyFromX(XKeyEvent* event) const
 		if (keysym == XK_ISO_Left_Tab) {
 			return kKeyLeftTab;
 		}
+		if (keysym == XK_ISO_Level3_Shift) {
+			// treat ISO_Level3_Shift as ModeSwitch
+			return kKeyModeSwitch;
+		}
 		return kKeyNone;
 
 	case 0xff00:
