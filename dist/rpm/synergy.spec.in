@@ -35,4 +35,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root)
 /usr/bin/synergy
 /usr/bin/synergyd
-%doc AUTHORS BUGS COPYING ChangeLog FAQ INSTALL NEWS README
+%doc AUTHORS
+%doc BUGS
+%doc COPYING
+%doc ChangeLog
+%doc FAQ
+%doc HISTORY
+%doc INSTALL
+%doc NEWS
+%doc PORTING
+%doc README
+%doc TODO
+%doc examples/synergy.conf
