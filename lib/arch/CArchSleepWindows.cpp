@@ -46,6 +46,9 @@ CArchSleepWindows::sleep(double timeout)
 	if (mt != NULL) {
 		HANDLE cancelEvent = mt->getCancelEventForCurrentThread();
 		WaitForSingleObject(cancelEvent, (DWORD)(1000.0 * timeout));
+		if (timeout == 0.0) {
+			Sleep(0);
+		}
 	}
 	else {
 		Sleep((DWORD)(1000.0 * timeout));

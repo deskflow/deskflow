@@ -17,6 +17,7 @@
 #include "IPrimaryScreenReceiver.h"
 #include "XScreen.h"
 #include "CLog.h"
+#include "CArch.h"
 #include "CArchMiscWindows.h"
 #include <cstring>
 
@@ -311,7 +312,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 
 			if (!isActive()) {
 				// motion on primary screen
-				m_receiver->onMouseMovePrimary(x, y);
+				m_receiver->onMouseMovePrimary(m_x, m_y);
 			}
 			else {
 				// motion on secondary screen.  warp mouse back to
@@ -640,6 +641,22 @@ CMSWindowsPrimaryScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 	// warp mouse.  hopefully this inserts a mouse motion event
 	// between the previous message and the following message.
 	SetCursorPos(x, y);
+
+	// yield the CPU.  there's a race condition when warping:
+	//   a hardware mouse event occurs
+	//   the mouse hook is not called because that process doesn't have the CPU
+	//   we send PRE_WARP, SetCursorPos(), send POST_WARP
+	//   we process all of those events and update m_x, m_y
+	//   we finish our time slice
+	//   the hook is called
+	//   the hook sends us a mouse event from the pre-warp position
+	//   we get the CPU
+	//   we compute a bogus warp
+	// we need the hook to process all mouse events that occur
+	// before we warp before we do the warp but i'm not sure how
+	// to guarantee that.  yielding the CPU here may reduce the
+	// chance of undesired behavior.
+	ARCH->sleep(0.0);
 
 	// send an event that we can recognize after the mouse warp
 	PostThreadMessage(m_threadID, SYNERGY_MSG_POST_WARP, 0, 0);

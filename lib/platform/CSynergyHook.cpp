@@ -229,8 +229,8 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			// desktop coordinates.
 			bool inside = false;
 			const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
-			SInt32 x = (SInt32)info->pt.x + g_xScreen;
-			SInt32 y = (SInt32)info->pt.y + g_yScreen;
+			SInt32 x = (SInt32)info->pt.x;
+			SInt32 y = (SInt32)info->pt.y;
 			if (!inside && (g_zoneSides & kLeftMask) != 0) {
 				inside = (x < g_xScreen + g_zoneSize);
 			}
@@ -246,6 +246,8 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 
 			// if inside then eat event and notify our window
 			if (inside) {
+				x += g_xScreen;
+				y += g_yScreen;
 				restoreCursor();
 				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 				return 1;
