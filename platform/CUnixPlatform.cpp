@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <syslog.h>
+#include <signal.h>
 
 //
 // CUnixPlatform
