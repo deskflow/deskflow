@@ -30,19 +30,16 @@ class ISecondaryScreen : public IInterface {
 	// up input event simulation and hide the cursor.
 	virtual void		leave() = 0;
 
-	// warp the cursor to the given position
-	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
-
 	// keyboard input simulation
-	virtual void		onKeyDown(KeyID, KeyModifierMask) = 0;
-	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;
-	virtual void		onKeyUp(KeyID, KeyModifierMask) = 0;
+	virtual void		keyDown(KeyID, KeyModifierMask) = 0;
+	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;
+	virtual void		keyUp(KeyID, KeyModifierMask) = 0;
 
 	// mouse input simulation
-	virtual void		onMouseDown(ButtonID) = 0;
-	virtual void		onMouseUp(ButtonID) = 0;
-	virtual void		onMouseMove(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
-	virtual void		onMouseWheel(SInt32 delta) = 0;
+	virtual void		mouseDown(ButtonID) = 0;
+	virtual void		mouseUp(ButtonID) = 0;
+	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
+	virtual void		mouseWheel(SInt32 delta) = 0;
 
 /*
 	// set the screen's clipboard contents.  this is usually called
@@ -50,10 +47,10 @@ class ISecondaryScreen : public IInterface {
 	virtual void		setClipboard(const IClipboard*) = 0;
 
 	// show or hide the screen saver
-	virtual void		onScreenSaver(bool show) = 0;
+	virtual void		screenSaver(bool show) = 0;
 
 	// clipboard input
-	virtual void		onClipboardChanged() = 0;
+	virtual void		clipboardChanged() = 0;
 */
 
 	// accessors

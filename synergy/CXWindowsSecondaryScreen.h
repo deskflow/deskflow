@@ -17,20 +17,18 @@ class CXWindowsSecondaryScreen : public ISecondaryScreen {
 	virtual void		close();
 	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		leave();
-	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
-	virtual void		onKeyDown(KeyID, KeyModifierMask);
-	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
-	virtual void		onKeyUp(KeyID, KeyModifierMask);
-	virtual void		onMouseDown(ButtonID);
-	virtual void		onMouseUp(ButtonID);
-	virtual void		onMouseMove(SInt32 xAbsolute, SInt32 yAbsolute);
-	virtual void		onMouseWheel(SInt32 delta);
+	virtual void		keyDown(KeyID, KeyModifierMask);
+	virtual void		keyRepeat(KeyID, KeyModifierMask, SInt32 count);
+	virtual void		keyUp(KeyID, KeyModifierMask);
+	virtual void		mouseDown(ButtonID);
+	virtual void		mouseUp(ButtonID);
+	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute);
+	virtual void		mouseWheel(SInt32 delta);
 	virtual void		getSize(SInt32* width, SInt32* height) const;
 	virtual SInt32		getJumpZoneSize() const;
 
   private:
 	Cursor				createBlankCursor();
-	void				warpCursorNoLock(SInt32 xAbsolute, SInt32 yAbsolute);
 	void				eventThread(void*);
 	KeyCode				mapKey(KeyID, KeyModifierMask) const;
 	unsigned int		mapButton(ButtonID button) const;

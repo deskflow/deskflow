@@ -258,7 +258,7 @@ void					CClient::onKeyDown()
 {
 	SInt32 id, mask;
 	CProtocolUtil::readf(m_input, kMsgDKeyDown + 4, &id, &mask);
-	m_screen->onKeyDown(static_cast<KeyID>(id),
+	m_screen->keyDown(static_cast<KeyID>(id),
 								static_cast<KeyModifierMask>(mask));
 }
 
@@ -266,7 +266,7 @@ void					CClient::onKeyRepeat()
 {
 	SInt32 id, mask, count;
 	CProtocolUtil::readf(m_input, kMsgDKeyRepeat + 4, &id, &mask, &count);
-	m_screen->onKeyRepeat(static_cast<KeyID>(id),
+	m_screen->keyRepeat(static_cast<KeyID>(id),
 								static_cast<KeyModifierMask>(mask),
 								count);
 }
@@ -275,7 +275,7 @@ void					CClient::onKeyUp()
 {
 	SInt32 id, mask;
 	CProtocolUtil::readf(m_input, kMsgDKeyUp + 4, &id, &mask);
-	m_screen->onKeyUp(static_cast<KeyID>(id),
+	m_screen->keyUp(static_cast<KeyID>(id),
 								static_cast<KeyModifierMask>(mask));
 }
 
@@ -283,28 +283,28 @@ void					CClient::onMouseDown()
 {
 	SInt32 id;
 	CProtocolUtil::readf(m_input, kMsgDMouseDown + 4, &id);
-	m_screen->onMouseDown(static_cast<ButtonID>(id));
+	m_screen->mouseDown(static_cast<ButtonID>(id));
 }
 
 void					CClient::onMouseUp()
 {
 	SInt32 id;
 	CProtocolUtil::readf(m_input, kMsgDMouseUp + 4, &id);
-	m_screen->onMouseUp(static_cast<ButtonID>(id));
+	m_screen->mouseUp(static_cast<ButtonID>(id));
 }
 
 void					CClient::onMouseMove()
 {
 	SInt32 x, y;
 	CProtocolUtil::readf(m_input, kMsgDMouseMove + 4, &x, &y);
-	m_screen->onMouseMove(x, y);
+	m_screen->mouseMove(x, y);
 }
 
 void					CClient::onMouseWheel()
 {
 	SInt32 delta;
 	CProtocolUtil::readf(m_input, kMsgDMouseWheel + 4, &delta);
-	m_screen->onMouseWheel(delta);
+	m_screen->mouseWheel(delta);
 }
 
 

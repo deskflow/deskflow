@@ -115,7 +115,8 @@ void					CXWindowsSecondaryScreen::enter(SInt32 x, SInt32 y)
 	CLock lock(&m_mutex);
 
 	// warp to requested location
-	warpCursorNoLock(x, y);
+	::XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
+	::XSync(m_display, False);
 
 	// show cursor
 	::XUnmapWindow(m_display, m_window);
@@ -135,22 +136,7 @@ void					CXWindowsSecondaryScreen::leave()
 	::XWarpPointer(m_display, None, m_window, 0, 0, 0, 0, 0, 0);
 }
 
-void					CXWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
-{
-	CLock lock(&m_mutex);
-	warpCursorNoLock(x, y);
-}
-
-void					CXWindowsSecondaryScreen::warpCursorNoLock(
-								SInt32 x, SInt32 y)
-{
-	assert(m_display != NULL);
-
-	::XTestFakeMotionEvent(m_display, m_screen, x, y, CurrentTime);
-	::XSync(m_display, False);
-}
-
-void					CXWindowsSecondaryScreen::onKeyDown(
+void					CXWindowsSecondaryScreen::keyDown(
 								KeyID key, KeyModifierMask mask)
 {
 	assert(m_display != NULL);
@@ -161,7 +147,7 @@ void					CXWindowsSecondaryScreen::onKeyDown(
 	::XSync(m_display, False);
 }
 
-void					CXWindowsSecondaryScreen::onKeyRepeat(
+void					CXWindowsSecondaryScreen::keyRepeat(
 								KeyID, KeyModifierMask, SInt32)
 {
 	assert(m_display != NULL);
@@ -171,7 +157,7 @@ void					CXWindowsSecondaryScreen::onKeyRepeat(
 	// FIXME
 }
 
-void					CXWindowsSecondaryScreen::onKeyUp(
+void					CXWindowsSecondaryScreen::keyUp(
 								KeyID key, KeyModifierMask mask)
 {
 	assert(m_display != NULL);
@@ -182,7 +168,7 @@ void					CXWindowsSecondaryScreen::onKeyUp(
 	::XSync(m_display, False);
 }
 
-void					CXWindowsSecondaryScreen::onMouseDown(ButtonID button)
+void					CXWindowsSecondaryScreen::mouseDown(ButtonID button)
 {
 	assert(m_display != NULL);
 
@@ -192,7 +178,7 @@ void					CXWindowsSecondaryScreen::onMouseDown(ButtonID button)
 	::XSync(m_display, False);
 }
 
-void					CXWindowsSecondaryScreen::onMouseUp(ButtonID button)
+void					CXWindowsSecondaryScreen::mouseUp(ButtonID button)
 {
 	assert(m_display != NULL);
 
@@ -202,8 +188,7 @@ void					CXWindowsSecondaryScreen::onMouseUp(ButtonID button)
 	::XSync(m_display, False);
 }
 
-void					CXWindowsSecondaryScreen::onMouseMove(
-								SInt32 x, SInt32 y)
+void					CXWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
 {
 	assert(m_display != NULL);
 
@@ -213,7 +198,7 @@ void					CXWindowsSecondaryScreen::onMouseMove(
 	::XSync(m_display, False);
 }
 
-void					CXWindowsSecondaryScreen::onMouseWheel(SInt32)
+void					CXWindowsSecondaryScreen::mouseWheel(SInt32)
 {
 	assert(m_display != NULL);
 
