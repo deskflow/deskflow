@@ -470,9 +470,9 @@ CMSWindowsSecondaryScreen::updateKeys()
 	m_keys[VK_SCROLL]   = static_cast<BYTE>(GetKeyState(VK_SCROLL));
 
 	// copy over lock states to m_fakeKeys
-	m_fakeKeys[VK_CAPITAL] = (m_keys[VK_CAPITAL] & 0x01);
-	m_fakeKeys[VK_NUMLOCK] = (m_keys[VK_NUMLOCK] & 0x01);
-	m_fakeKeys[VK_SCROLL]  = (m_keys[VK_SCROLL]  & 0x01);
+	m_fakeKeys[VK_CAPITAL] = static_cast<BYTE>(m_keys[VK_CAPITAL] & 0x01);
+	m_fakeKeys[VK_NUMLOCK] = static_cast<BYTE>(m_keys[VK_NUMLOCK] & 0x01);
+	m_fakeKeys[VK_SCROLL]  = static_cast<BYTE>(m_keys[VK_SCROLL]  & 0x01);
 
 	// update active modifier mask
 	m_mask = 0;
