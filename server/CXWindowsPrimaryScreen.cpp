@@ -160,6 +160,12 @@ void					CXWindowsPrimaryScreen::run()
 								xevent.xproperty.time);
 			}
 			break;
+
+		  case DestroyNotify:
+			// looks like one of the windows that requested a clipboard
+			// transfer has gone bye-bye.
+			destroyClipboardRequest(xevent.xdestroywindow.window);
+			break;
 		}
 	}
 }

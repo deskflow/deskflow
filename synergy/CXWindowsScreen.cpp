@@ -578,6 +578,7 @@ void					CXWindowsScreen::processClipboardRequest(
 		return;
 	}
 	CRequestList* list = index->second;
+	assert(list != NULL);
 
 	// find the property in the list
 	CRequestList::iterator index2;
@@ -591,6 +592,7 @@ void					CXWindowsScreen::processClipboardRequest(
 		return;
 	}
 	CClipboardRequest* request = *index2;
+	assert(request != NULL);
 
 	// compute amount of data to send
 	assert(request->m_sent <= request->m_data.size());
@@ -617,13 +619,43 @@ void					CXWindowsScreen::processClipboardRequest(
 
 	// if we sent zero bytes then we're done sending this data.  remove
 	// it from the list and, if the list is empty, the list from the
-	// map.
-	list->erase(index2);
-	delete request;
-	if (list->empty()) {
-		m_requests.erase(index);
-		delete list;
+	// map.  also stop watching the requestor for events.
+	if (count == 0) {
+		list->erase(index2);
+		delete request;
+		if (list->empty()) {
+			m_requests.erase(index);
+			delete list;
+		}
+		XSelectInput(m_display, requestor, NoEventMask);
 	}
+}
+
+void					CXWindowsScreen::destroyClipboardRequest(
+								Window requestor)
+{
+	CLock lock(&m_mutex);
+
+	// find the request list
+	CRequestMap::iterator index = m_requests.find(requestor);
+	if (index == m_requests.end()) {
+		return;
+	}
+	CRequestList* list = index->second;
+	assert(list != NULL);
+
+	// destroy every request in the list
+	for (CRequestList::iterator index2 = list->begin();
+								index2 != list->end(); ++index2) {
+		delete *index2;
+	}
+
+	// remove and destroy the list
+	m_requests.erase(index);
+	delete list;
+
+	// note -- we don't stop watching the window for events because
+	// we're called in response to the window being destroyed.
 }
 
 bool					CXWindowsScreen::sendClipboardData(
@@ -658,15 +690,6 @@ bool					CXWindowsScreen::sendClipboardData(
 		if (data.size() > kMaxRequestSize) {
 			log((CLOG_DEBUG "handling clipboard request for %d as INCR", target));
 
-			// FIXME -- handle Alloc errors (by returning false)
-			// set property to INCR
-			const UInt32 zero = 0;
-			XChangeProperty(m_display, requestor, property,
-								m_atomINCR, 8 * sizeof(zero),
-								PropModeReplace,
-								reinterpret_cast<const unsigned char*>(&zero),
-								1);
-
 			// get the appropriate list, creating it if necessary
 			CRequestList* list = m_requests[requestor];
 			if (list == NULL) {
@@ -685,6 +708,20 @@ bool					CXWindowsScreen::sendClipboardData(
 
 			// add request to request list
 			list->push_back(request);
+
+			// start watching requestor for property changes and
+			// destruction
+			XSelectInput(m_display, requestor, StructureNotifyMask |
+												PropertyChangeMask);
+
+			// FIXME -- handle Alloc errors (by returning false)
+			// set property to INCR
+			const UInt32 zero = 0;
+			XChangeProperty(m_display, requestor, property,
+								m_atomINCR, 8 * sizeof(zero),
+								PropModeReplace,
+								reinterpret_cast<const unsigned char*>(&zero),
+								1);
 		}
 		else {
 			log((CLOG_DEBUG "handling clipboard request for %d", target));

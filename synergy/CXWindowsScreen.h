@@ -81,6 +81,9 @@ class CXWindowsScreen {
 	void				processClipboardRequest(Window window,
 								Atom property, Time time);
 
+	// terminate a selection request
+	void				destroyClipboardRequest(Window window);
+
 	// called by openDisplay() to allow subclasses to prepare the display
 	virtual void		onOpenDisplay() = 0;
 
