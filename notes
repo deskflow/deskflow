@@ -7,9 +7,14 @@ CServer
  * must have connection thread in screen info map
     allows disconnect if screen map changes and screen is removed
  * put mutex locks wherever necessary (like accessing m_active)
+ * must handle disconnect of screen by warping cursor off of it
 
 CClient
  * need methods for screen event handler to call as appropriate
+
+threads and X:
+  X doesn't handle threading very well.  need to ensure that all X
+  calls are protected by a mutex.
 
 server						client
 ------						------
