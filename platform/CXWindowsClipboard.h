@@ -271,6 +271,7 @@ private:
 	Atom				m_atomMultiple;
 	Atom				m_atomTimestamp;
 	Atom				m_atomInteger;
+	Atom				m_atomAtom;
 	Atom				m_atomAtomPair;
 	Atom				m_atomData;
 	Atom				m_atomINCR;

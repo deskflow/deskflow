@@ -30,6 +30,7 @@ CXWindowsClipboard::CXWindowsClipboard(Display* display,
 	m_atomMultiple        = XInternAtom(m_display, "MULTIPLE", False);
 	m_atomTimestamp       = XInternAtom(m_display, "TIMESTAMP", False);
 	m_atomInteger         = XInternAtom(m_display, "INTEGER", False);
+	m_atomAtom            = XInternAtom(m_display, "ATOM", False);
 	m_atomAtomPair        = XInternAtom(m_display, "ATOM_PAIR", False);
 	m_atomData            = XInternAtom(m_display, "CLIP_TEMPORARY", False);
 	m_atomINCR            = XInternAtom(m_display, "INCR", False);
@@ -476,7 +477,8 @@ CXWindowsClipboard::icccmFillCache()
 	const Atom atomTargets = m_atomTargets;
 	Atom target;
 	CString data;
-	if (!icccmGetSelection(atomTargets, &target, &data)) {
+	if (!icccmGetSelection(atomTargets, &target, &data) ||
+		target != m_atomAtom) {
 		log((CLOG_DEBUG1 "selection doesn't support TARGETS"));
 		data = "";
 
@@ -1156,7 +1158,7 @@ CXWindowsClipboard::getTargetsData(CString& data, int* format) const
 	}
 
 	*format = 32;
-	return m_atomTargets;
+	return m_atomAtom;
 }
 
 Atom
