@@ -96,15 +96,14 @@ private:
 							SInt32 x, SInt32 y, bool forScreenSaver);
 
 	// lookup neighboring screen
-	IClient*			getNeighbor(IClient*, CConfig::EDirection) const;
+	IClient*			getNeighbor(IClient*, EDirection) const;
 
 	// lookup neighboring screen.  given a position relative to the
 	// source screen, find the screen we should move onto and where.
 	// if the position is sufficiently far from the source then we
 	// cross multiple screens.  if there is no suitable screen then
 	// return NULL and x,y are not modified.
-	IClient*			getNeighbor(IClient*,
-							CConfig::EDirection,
+	IClient*			getNeighbor(IClient*, EDirection,
 							SInt32& x, SInt32& y) const;
 
 	// open/close the primary screen

@@ -16,6 +16,23 @@ static const double		kHeartRate = 2.0;
 // time without a heartbeat that we call death
 static const double		kHeartDeath = 3.0 * kHeartRate;
 
+// direction constants
+enum EDirection {
+	kLeft,
+	kRight,
+	kTop,
+	kBottom,
+	kFirstDirection = kLeft,
+	kLastDirection = kBottom
+};
+enum EDirectionMask {
+	kLeftMask   = 1 << kLeft,
+	kRightMask  = 1 << kRight,
+	kTopMask    = 1 << kTop,
+	kBottomMask = 1 << kBottom
+};
+
+
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
 // refers to the n'th argument (counting from one).  message codes are

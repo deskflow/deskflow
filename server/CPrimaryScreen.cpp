@@ -73,7 +73,7 @@ CPrimaryScreen::open()
 		updateKeys();
 
 		// get notified of screen saver activation/deactivation
-		getScreen()->openScreenSaver(true);
+		getScreen()->openScreensaver(true);
 
 		// subclass hook
 		onPostOpen();
@@ -94,7 +94,7 @@ void
 CPrimaryScreen::close()
 {
 	onPreClose();
-	getScreen()->closeScreenSaver();
+	getScreen()->closeScreensaver();
 	destroyWindow();
 	getScreen()->close();
 	onPostClose();
@@ -195,12 +195,6 @@ CPrimaryScreen::getClipboard(ClipboardID id,
 				IClipboard* clipboard) const
 {
 	getScreen()->getClipboard(id, clipboard);
-}
-
-SInt32
-CPrimaryScreen::getJumpZoneSize() const
-{
-	return 1;
 }
 
 void

@@ -110,6 +110,10 @@ SOURCE=.\CMSWindowsSecondaryScreen.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CSecondaryScreen.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CServerProxy.cpp
 # End Source File
 # End Group
@@ -126,11 +130,11 @@ SOURCE=.\CMSWindowsSecondaryScreen.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CServerProxy.h
+SOURCE=.\CSecondaryScreen.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ISecondaryScreen.h
+SOURCE=.\CServerProxy.h
 # End Source File
 # Begin Source File
 

@@ -78,8 +78,8 @@ public:
 	void				getClipboard(ClipboardID, IClipboard*) const;
 
 	// returns the size of the zone on the edges of the screen that
-	// causes the cursor to jump to another screen.  default returns 0.
-	virtual SInt32		getJumpZoneSize() const;
+	// causes the cursor to jump to another screen.
+	virtual SInt32		getJumpZoneSize() const = 0;
 
 	// get the shape (position of upper-left corner and size) of the
 	// screen

@@ -1,6 +1,7 @@
 #ifndef CCONFIG_H
 #define CCONFIG_H
 
+#include "ProtocolTypes.h"
 #include "CNetworkAddress.h"
 #include "XBase.h"
 #include "stdmap.h"
@@ -20,11 +21,6 @@ struct iterator_traits<CConfig> {
 };
 
 class CConfig {
-public:
-	enum EDirection { kLeft, kRight, kTop, kBottom,
-						kFirstDirection = kLeft, kLastDirection = kBottom };
-	enum EDirectionMask { kLeftMask = 1, kRightMask = 2,
-							kTopMask = 4, kBottomMask = 8 };
 private:
 	class CCell {
 	public:

@@ -155,6 +155,14 @@ SOURCE=.\IPrimaryScreenReceiver.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IScreen.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IScreenEventHandler.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\IScreenReceiver.h
 # End Source File
 # Begin Source File

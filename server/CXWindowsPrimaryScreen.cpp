@@ -331,6 +331,12 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 	return false;
 }
 
+SInt32
+CXWindowsPrimaryScreen::getJumpZoneSize() const
+{
+	return 1;
+}
+
 void
 CXWindowsPrimaryScreen::onPreRun()
 {
@@ -419,7 +425,7 @@ CXWindowsPrimaryScreen::createWindow()
 		selectEvents(display, m_screen->getRoot());
 	}
 
-	// tell our superclass about the window
+	// tell generic screen about the window
 	m_screen->setWindow(m_window);
 }
 

@@ -42,8 +42,8 @@ public:
 	bool				leave();
 
 	// called when the configuration has changed.  activeSides is a
-	// bitmask of CConfig::EDirectionMask indicating which sides of
-	// the primary screen are linked to clients.
+	// bitmask of EDirectionMask indicating which sides of the
+	// primary screen are linked to clients.
 	virtual void		reconfigure(UInt32 activeSides) = 0;
 
 	// warp the cursor to the given absolute coordinates
@@ -66,8 +66,8 @@ public:
 	void				getClipboard(ClipboardID, IClipboard*) const;
 
 	// returns the size of the zone on the edges of the screen that
-	// causes the cursor to jump to another screen.  default returns 1.
-	virtual SInt32		getJumpZoneSize() const;
+	// causes the cursor to jump to another screen.
+	virtual SInt32		getJumpZoneSize() const = 0;
 
 	// get the primary screen's current toggle modifier key state.
 	// the returned mask should have the corresponding bit set for

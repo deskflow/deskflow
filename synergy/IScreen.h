@@ -37,8 +37,8 @@ public:
 	// will call IScreenEventHandler's onScreenSaver() when the screensaver
 	// activates or deactivates until close.  if notify is false then
 	// the screen saver is disabled on open and restored on close.
-	virtual void		openScreenSaver(bool notify) = 0;
-	virtual void		closeScreenSaver() = 0;
+	virtual void		openScreensaver(bool notify) = 0;
+	virtual void		closeScreensaver() = 0;
 
 	// activate or deactivate the screen saver
 	virtual void		screensaver(bool activate) = 0;

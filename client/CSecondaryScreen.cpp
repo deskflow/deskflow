@@ -74,7 +74,7 @@ CSecondaryScreen::open()
 		updateKeys();
 
 		// disable the screen saver
-		getScreen()->openScreenSaver(false);
+		getScreen()->openScreensaver(false);
 
 		// subclass hook
 		onPostOpen();
@@ -93,7 +93,7 @@ void
 CSecondaryScreen::close()
 {
 	onPreClose();
-	getScreen()->closeScreenSaver();
+	getScreen()->closeScreensaver();
 	destroyWindow();
 	getScreen()->close();
 	onPostClose();
@@ -180,12 +180,6 @@ CSecondaryScreen::getClipboard(ClipboardID id,
 				IClipboard* clipboard) const
 {
 	getScreen()->getClipboard(id, clipboard);
-}
-
-SInt32
-CSecondaryScreen::getJumpZoneSize() const
-{
-	return 0;
 }
 
 void

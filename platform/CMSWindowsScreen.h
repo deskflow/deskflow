@@ -1,7 +1,8 @@
 #ifndef CMSWINDOWSSCREEN_H
 #define CMSWINDOWSSCREEN_H
 
-#include "IClipboard.h"
+#include "IScreen.h"
+#include "CSynergyHook.h"
 #include "CMutex.h"
 #include "CString.h"
 #define WIN32_LEAN_AND_MEAN
@@ -16,52 +17,69 @@ public:
 	LRESULT				m_result;
 };
 
-class CMSWindowsScreen {
+class IScreenReceiver;
+class IMSWindowsScreenEventHandler;
+
+class CMSWindowsScreen : public IScreen {
 public:
-	CMSWindowsScreen();
+	CMSWindowsScreen(IScreenReceiver*, IMSWindowsScreenEventHandler*);
 	virtual ~CMSWindowsScreen();
 
 	// manipulators
 
 	static void			init(HINSTANCE);
 
+	// open the desktop and create and return the window.  returns NULL
+	// on failure.
+	HWND				openDesktop();
+
+	// close the window and desktop
+	void				closeDesktop();
+
 	// accessors
+
+	// returns true iff the system appears to have multiple monitors
+	bool				isMultimon() const;
 
 	// get the application instance handle
 	static HINSTANCE	getInstance();
 
-protected:
-	// runs an event loop and returns when exitMainLoop() is called
+	// IScreen overrides
+	// note -- this class expects the hook DLL to have been loaded
+	// and initialized before open() is called.
+	void				open();
 	void				mainLoop();
-
-	// force mainLoop() to return
 	void				exitMainLoop();
+	void				close();
+	bool				setClipboard(ClipboardID, const IClipboard*);
+	void				checkClipboards();
+	void				openScreensaver(bool notify);
+	void				closeScreensaver();
+	void				screensaver(bool activate);
+	void				syncDesktop();
+	bool				getClipboard(ClipboardID, IClipboard*) const;
+	void				getShape(SInt32&, SInt32&, SInt32&, SInt32&) const;
+	void				getCursorPos(SInt32&, SInt32&) const;
+	void				getCursorCenter(SInt32&, SInt32&) const;
 
-	// open the X display.  calls onOpenDisplay() after opening the display,
-	// getting the screen, its size, and root window.  then it starts the
-	// event thread.
-	void				openDisplay();
-
-	// destroy the window and close the display.  calls onCloseDisplay()
-	// after the event thread has been shut down but before the display
-	// is closed.
-	void				closeDisplay();
-
-	// get the registered window class atom
-	ATOM				getClass() const;
-
+private:
 	// update screen size cache
 	void				updateScreenShape();
 
-	// get the size of the screen
-	void				getScreenShape(SInt32& x, SInt32& y,
-							SInt32& width, SInt32& height) const;
+	// internal pre-dispatch event processing
+	bool				onPreDispatch(const CEvent* event);
 
-	// get the current cursor position
-	void				getCursorPos(SInt32& x, SInt32& y) const;
+	// internal (post-dispatch) event processing
+	bool				onEvent(CEvent* event);
 
-	// get the cursor center position
-	void				getCursorCenter(SInt32& x, SInt32& y) const;
+	// create the transparent cursor
+	void				createBlankCursor();
+
+	// switch to the given desktop.  this destroys the window and unhooks
+	// all hooks, switches the desktop, then creates the window and rehooks
+	// all hooks (because you can't switch the thread's desktop if it has
+	// any windows or hooks).
+	bool				switchDesktop(HDESK desk);
 
 	// get the input desktop.  caller must CloseDesktop() the result.
 	// do not call under windows 95/98/me.
@@ -74,38 +92,56 @@ protected:
 	// windows 95/98/me.
 	bool				isCurrentDesktop(HDESK desk) const;
 
-	// get the screen saver object
-	CMSWindowsScreenSaver*
-						getScreenSaver() const;
-
-	// called for each event before event translation and dispatch.  return
-	// true to skip translation and dispatch.  subclasses should call the
-	// superclass's version first and return true if it returns true.
-	virtual bool		onPreDispatch(const CEvent* event);
-
-	// called by mainLoop().  iff the event was handled return true and
-	// store the result, if any, in m_result, which defaults to zero.
-	virtual bool		onEvent(CEvent* event) = 0;
-
-	// called by isCurrentDesktop() to get the current desktop name
-	virtual CString		getCurrentDesktopName() const = 0;
-
-private:
-	// create the transparent cursor
-	void				createBlankCursor();
-
 	// our window proc
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
 
 private:
 	static HINSTANCE	s_instance;
+
+	IScreenReceiver*	m_receiver;
+	IMSWindowsScreenEventHandler*	m_eventHandler;
+
 	ATOM				m_class;
 	HICON				m_icon;
 	HCURSOR				m_cursor;
+
+	// true if windows 95/98/me
+	bool				m_is95Family;
+
+	// our window
+	HWND				m_window;
+
+	// screen shape
 	SInt32				m_x, m_y;
 	SInt32				m_w, m_h;
-	DWORD				m_thread;
-	CMSWindowsScreenSaver*	m_screenSaver;
+
+	// true if system appears to have multiple monitors
+	bool				m_multimon;
+
+	// the main loop's thread id
+	DWORD				m_threadID;
+
+	// the thread id of the last attached thread
+	DWORD				m_lastThreadID;
+
+	// clipboard stuff
+	HWND				m_nextClipboardWindow;
+	HWND				m_clipboardOwner;
+
+	// the timer used to check for desktop switching
+	UINT				m_timer;
+
+	// the current desk and it's name
+	HDESK				m_desk;
+	CString				m_deskName;
+
+	// screen saver stuff
+	HINSTANCE					m_hookLibrary;
+	InstallScreenSaverFunc		m_installScreensaver;
+	UninstallScreenSaverFunc	m_uninstallScreensaver;
+	CMSWindowsScreenSaver*		m_screensaver;
+	bool						m_screensaverNotify;
+
 	static CMSWindowsScreen*	s_screen;
 };
 

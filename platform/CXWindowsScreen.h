@@ -2,7 +2,6 @@
 #define CXWINDOWSSCREEN_H
 
 #include "IScreen.h"
-#include "ClipboardTypes.h"
 #include "CMutex.h"
 #include "CStopwatch.h"
 #include "stdvector.h"
@@ -59,8 +58,8 @@ public:
 	void				close();
 	bool				setClipboard(ClipboardID, const IClipboard*);
 	void				checkClipboards();
-	void				openScreenSaver(bool notify);
-	void				closeScreenSaver();
+	void				openScreensaver(bool notify);
+	void				closeScreensaver();
 	void				screensaver(bool activate);
 	void				syncDesktop();
 	bool				getClipboard(ClipboardID, IClipboard*) const;

@@ -146,16 +146,16 @@ CXWindowsSecondaryScreen::getScreen() const
 }
 
 void
-CXWindowsSecondaryScreen::onScreensaver(bool)
-{
-	// ignore
-}
-
-void
 CXWindowsSecondaryScreen::onError()
 {
 	// ignore
 	// FIXME -- forward this?  to whom?
+}
+
+void
+CXWindowsSecondaryScreen::onScreensaver(bool)
+{
+	// ignore
 }
 
 bool
@@ -182,6 +182,12 @@ CXWindowsSecondaryScreen::onEvent(CEvent* event)
 		hideWindow();
 		return true;
 	}
+}
+
+SInt32
+CXWindowsSecondaryScreen::getJumpZoneSize() const
+{
+	return 0;
 }
 
 void
@@ -260,7 +266,7 @@ CXWindowsSecondaryScreen::createWindow()
 		XTestGrabControl(display, True);
 	}
 
-	// tell our superclass about the window
+	// tell generic screen about the window
 	m_screen->setWindow(m_window);
 }
 
@@ -275,14 +281,18 @@ CXWindowsSecondaryScreen::destroyWindow()
 		// no longer impervious to server grabs
 		XTestGrabControl(display, False);
 
-		// destroy window
-		if (m_window != None) {
-			XDestroyWindow(display, m_window);
-			m_window = None;
-		}
-
 		// update
 		XSync(display, False);
+	}
+
+	// destroy window
+	if (m_window != None) {
+		m_screen->setWindow(None);
+		CDisplayLock display(m_screen);
+		if (display != NULL) {
+			XDestroyWindow(display, m_window);
+		}
+		m_window = None;
 	}
 }
 

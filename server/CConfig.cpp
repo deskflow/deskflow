@@ -624,22 +624,22 @@ operator<<(std::ostream& s, const CConfig& config)
 								screen != config.end(); ++screen) {
 		s << "\t" << screen->c_str() << ":" << std::endl;
 
-		neighbor = config.getNeighbor(*screen, CConfig::kLeft);
+		neighbor = config.getNeighbor(*screen, kLeft);
 		if (!neighbor.empty()) {
 			s << "\t\tleft=" << neighbor.c_str() << std::endl;
 		}
 
-		neighbor = config.getNeighbor(*screen, CConfig::kRight);
+		neighbor = config.getNeighbor(*screen, kRight);
 		if (!neighbor.empty()) {
 			s << "\t\tright=" << neighbor.c_str() << std::endl;
 		}
 
-		neighbor = config.getNeighbor(*screen, CConfig::kTop);
+		neighbor = config.getNeighbor(*screen, kTop);
 		if (!neighbor.empty()) {
 			s << "\t\tup=" << neighbor.c_str() << std::endl;
 		}
 
-		neighbor = config.getNeighbor(*screen, CConfig::kBottom);
+		neighbor = config.getNeighbor(*screen, kBottom);
 		if (!neighbor.empty()) {
 			s << "\t\tdown=" << neighbor.c_str() << std::endl;
 		}

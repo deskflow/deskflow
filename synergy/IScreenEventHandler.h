@@ -34,6 +34,11 @@ public:
 	// called by mainLoop().  iff the event was handled return true and
 	// store the result, if any, in m_result, which defaults to zero.
 	virtual bool		onEvent(CEvent* event) = 0;
+
+	// accessors
+
+	// called to get the jump zone size
+	virtual SInt32		getJumpZoneSize() const = 0;
 };
 
 #endif

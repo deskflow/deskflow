@@ -127,6 +127,10 @@ SOURCE=.\CWin32Platform.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IMSWindowsScreenEventHandler.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\IPlatform.h
 # End Source File
 # End Group

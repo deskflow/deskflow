@@ -10,8 +10,6 @@
 #include "CThread.h"
 #include "CLog.h"
 #include "IJob.h"
-//#include "CString.h"
-//#include <cstdlib>
 #include <cstring>
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
@@ -310,7 +308,7 @@ CXWindowsScreen::checkClipboards()
 }
 
 void
-CXWindowsScreen::openScreenSaver(bool notify)
+CXWindowsScreen::openScreensaver(bool notify)
 {
 	CLock lock(&m_mutex);
 	assert(m_screensaver != NULL);
@@ -325,7 +323,7 @@ CXWindowsScreen::openScreenSaver(bool notify)
 }
 
 void
-CXWindowsScreen::closeScreenSaver()
+CXWindowsScreen::closeScreensaver()
 {
 	CLock lock(&m_mutex);
 	if (m_screensaver != NULL) {

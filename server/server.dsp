@@ -118,6 +118,10 @@ SOURCE=.\CPrimaryClient.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CPrimaryScreen.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CServer.cpp
 # End Source File
 # Begin Source File
@@ -158,11 +162,11 @@ SOURCE=.\CPrimaryClient.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CServer.h
+SOURCE=.\CPrimaryScreen.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IPrimaryScreen.h
+SOURCE=.\CServer.h
 # End Source File
 # Begin Source File
 

@@ -197,21 +197,17 @@ CServer::getActivePrimarySides() const
 {
 	// note -- m_mutex must be locked on entry
 	UInt32 sides = 0;
-	if (!m_config.getNeighbor(getPrimaryScreenName(),
-								CConfig::kLeft).empty()) {
-		sides |= CConfig::kLeftMask;
+	if (!m_config.getNeighbor(getPrimaryScreenName(), kLeft).empty()) {
+		sides |= kLeftMask;
 	}
-	if (!m_config.getNeighbor(getPrimaryScreenName(),
-								CConfig::kRight).empty()) {
-		sides |= CConfig::kRightMask;
+	if (!m_config.getNeighbor(getPrimaryScreenName(), kRight).empty()) {
+		sides |= kRightMask;
 	}
-	if (!m_config.getNeighbor(getPrimaryScreenName(),
-								CConfig::kTop).empty()) {
-		sides |= CConfig::kTopMask;
+	if (!m_config.getNeighbor(getPrimaryScreenName(), kTop).empty()) {
+		sides |= kTopMask;
 	}
-	if (!m_config.getNeighbor(getPrimaryScreenName(),
-								CConfig::kBottom).empty()) {
-		sides |= CConfig::kBottomMask;
+	if (!m_config.getNeighbor(getPrimaryScreenName(), kBottom).empty()) {
+		sides |= kBottomMask;
 	}
 	return sides;
 }
@@ -505,25 +501,25 @@ CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
 	SInt32 zoneSize = m_active->getJumpZoneSize();
 
 	// see if we should change screens
-	CConfig::EDirection dir;
+	EDirection dir;
 	if (x < ax + zoneSize) {
 		x  -= zoneSize;
-		dir = CConfig::kLeft;
+		dir = kLeft;
 		log((CLOG_DEBUG1 "switch to left"));
 	}
 	else if (x >= ax + aw - zoneSize) {
 		x  += zoneSize;
-		dir = CConfig::kRight;
+		dir = kRight;
 		log((CLOG_DEBUG1 "switch to right"));
 	}
 	else if (y < ay + zoneSize) {
 		y  -= zoneSize;
-		dir = CConfig::kTop;
+		dir = kTop;
 		log((CLOG_DEBUG1 "switch to top"));
 	}
 	else if (y >= ay + ah - zoneSize) {
 		y  += zoneSize;
-		dir = CConfig::kBottom;
+		dir = kBottom;
 		log((CLOG_DEBUG1 "switch to bottom"));
 	}
 	else {
@@ -584,24 +580,24 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 	IClient* newScreen = NULL;
 	if (!isLockedToScreenNoLock()) {
 		// find direction of neighbor
-		CConfig::EDirection dir;
+		EDirection dir;
 		if (m_x < ax) {
-			dir = CConfig::kLeft;
+			dir = kLeft;
 		}
 		else if (m_x > ax + aw - 1) {
-			dir = CConfig::kRight;
+			dir = kRight;
 		}
 		else if (m_y < ay) {
-			dir = CConfig::kTop;
+			dir = kTop;
 		}
 		else if (m_y > ay + ah - 1) {
-			dir = CConfig::kBottom;
+			dir = kBottom;
 		}
 		else {
 			newScreen = m_active;
 
 			// keep compiler quiet about unset variable
-			dir = CConfig::kLeft;
+			dir = kLeft;
 		}
 
 		// get neighbor if we should switch
@@ -760,7 +756,7 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 }
 
 IClient*
-CServer::getNeighbor(IClient* src, CConfig::EDirection dir) const
+CServer::getNeighbor(IClient* src, EDirection dir) const
 {
 	assert(src != NULL);
 
@@ -793,7 +789,7 @@ CServer::getNeighbor(IClient* src, CConfig::EDirection dir) const
 
 IClient*
 CServer::getNeighbor(IClient* src,
-				CConfig::EDirection srcSide, SInt32& x, SInt32& y) const
+				EDirection srcSide, SInt32& x, SInt32& y) const
 {
 	assert(src != NULL);
 
@@ -816,7 +812,7 @@ CServer::getNeighbor(IClient* src,
 	// actual to canonical position on entry to and from canonical to
 	// actual on exit from the search.
 	switch (srcSide) {
-	case CConfig::kLeft:
+	case kLeft:
 		x -= dx;
 		while (dst != NULL && dst != lastGoodScreen) {
 			lastGoodScreen = dst;
@@ -832,7 +828,7 @@ CServer::getNeighbor(IClient* src,
 		x += dx;
 		break;
 
-	case CConfig::kRight:
+	case kRight:
 		x -= dx;
 		while (dst != NULL) {
 			x -= dw;
@@ -848,7 +844,7 @@ CServer::getNeighbor(IClient* src,
 		x += dx;
 		break;
 
-	case CConfig::kTop:
+	case kTop:
 		y -= dy;
 		while (dst != NULL) {
 			lastGoodScreen = dst;
@@ -864,7 +860,7 @@ CServer::getNeighbor(IClient* src,
 		y += dy;
 		break;
 
-	case CConfig::kBottom:
+	case kBottom:
 		y -= dy;
 		while (dst != NULL) {
 			y -= dh;
@@ -892,26 +888,26 @@ CServer::getNeighbor(IClient* src,
 	if (dst == m_primaryClient) {
 		const CString dstName(dst->getName());
 		switch (srcSide) {
-		case CConfig::kLeft:
-			if (!m_config.getNeighbor(dstName, CConfig::kRight).empty() &&
+		case kLeft:
+			if (!m_config.getNeighbor(dstName, kRight).empty() &&
 				x > dx + dw - 1 - dst->getJumpZoneSize())
 				x = dx + dw - 1 - dst->getJumpZoneSize();
 			break;
 
-		case CConfig::kRight:
-			if (!m_config.getNeighbor(dstName, CConfig::kLeft).empty() &&
+		case kRight:
+			if (!m_config.getNeighbor(dstName, kLeft).empty() &&
 				x < dx + dst->getJumpZoneSize())
 				x = dx + dst->getJumpZoneSize();
 			break;
 
-		case CConfig::kTop:
-			if (!m_config.getNeighbor(dstName, CConfig::kBottom).empty() &&
+		case kTop:
+			if (!m_config.getNeighbor(dstName, kBottom).empty() &&
 				y > dy + dh - 1 - dst->getJumpZoneSize())
 				y = dy + dh - 1 - dst->getJumpZoneSize();
 			break;
 
-		case CConfig::kBottom:
-			if (!m_config.getNeighbor(dstName, CConfig::kTop).empty() &&
+		case kBottom:
+			if (!m_config.getNeighbor(dstName, kTop).empty() &&
 				y < dy + dst->getJumpZoneSize())
 				y = dy + dst->getJumpZoneSize();
 			break;
@@ -925,8 +921,8 @@ CServer::getNeighbor(IClient* src,
 	// should be set 120 pixels from the top (again 20% from the
 	// top).
 	switch (srcSide) {
-	case CConfig::kLeft:
-	case CConfig::kRight:
+	case kLeft:
+	case kRight:
 		y -= sy;
 		if (y < 0) {
 			y = 0;
@@ -941,8 +937,8 @@ CServer::getNeighbor(IClient* src,
 		y += dy;
 		break;
 
-	case CConfig::kTop:
-	case CConfig::kBottom:
+	case kTop:
+	case kBottom:
 		x -= sx;
 		if (x < 0) {
 			x = 0;

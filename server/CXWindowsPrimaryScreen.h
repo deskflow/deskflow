@@ -32,6 +32,7 @@ public:
 	virtual void		onScreensaver(bool activated);
 	virtual bool		onPreDispatch(const CEvent* event);
 	virtual bool		onEvent(CEvent* event);
+	virtual SInt32		getJumpZoneSize() const;
 
 protected:
 	// CPrimaryScreen overrides

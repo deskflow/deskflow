@@ -649,7 +649,7 @@ CHTTPServer::CScreenArray::convertFrom(const CConfig& config)
 		// insert the screen's neighbors
 		// FIXME -- handle edge wrapping
 		CString neighbor;
-		neighbor = config.getNeighbor(name, CConfig::kLeft);
+		neighbor = config.getNeighbor(name, kLeft);
 		if (!neighbor.empty() && doneSet.count(neighbor) == 0) {
 			// insert left neighbor, adding a column if necessary
 			if (x == 0 || get(x - 1, y) != neighbor) {
@@ -659,7 +659,7 @@ CHTTPServer::CScreenArray::convertFrom(const CConfig& config)
 			}
 			screenStack.push_back(neighbor);
 		}
-		neighbor = config.getNeighbor(name, CConfig::kRight);
+		neighbor = config.getNeighbor(name, kRight);
 		if (!neighbor.empty() && doneSet.count(neighbor) == 0) {
 			// insert right neighbor, adding a column if necessary
 			if (x == m_w - 1 || get(x + 1, y) != neighbor) {
@@ -668,7 +668,7 @@ CHTTPServer::CScreenArray::convertFrom(const CConfig& config)
 			}
 			screenStack.push_back(neighbor);
 		}
-		neighbor = config.getNeighbor(name, CConfig::kTop);
+		neighbor = config.getNeighbor(name, kTop);
 		if (!neighbor.empty() && doneSet.count(neighbor) == 0) {
 			// insert top neighbor, adding a row if necessary
 			if (y == 0 || get(x, y - 1) != neighbor) {
@@ -678,7 +678,7 @@ CHTTPServer::CScreenArray::convertFrom(const CConfig& config)
 			}
 			screenStack.push_back(neighbor);
 		}
-		neighbor = config.getNeighbor(name, CConfig::kBottom);
+		neighbor = config.getNeighbor(name, kBottom);
 		if (!neighbor.empty() && doneSet.count(neighbor) == 0) {
 			// insert bottom neighbor, adding a row if necessary
 			if (y == m_h - 1 || get(x, y + 1) != neighbor) {
@@ -699,25 +699,25 @@ CHTTPServer::CScreenArray::convertFrom(const CConfig& config)
 		}
 
 		CString neighbor;
-		neighbor = config.getNeighbor(name, CConfig::kLeft);
+		neighbor = config.getNeighbor(name, kLeft);
 		if ((x == 0 && !neighbor.empty()) ||
 			(x > 0 && get(x - 1, y) != neighbor)) {
 			return false;
 		}
 
-		neighbor = config.getNeighbor(name, CConfig::kRight);
+		neighbor = config.getNeighbor(name, kRight);
 		if ((x == m_w - 1 && !neighbor.empty()) ||
 			(x < m_w - 1 && get(x + 1, y) != neighbor)) {
 			return false;
 		}
 
-		neighbor = config.getNeighbor(name, CConfig::kTop);
+		neighbor = config.getNeighbor(name, kTop);
 		if ((y == 0 && !neighbor.empty()) ||
 			(y > 0 && get(x, y - 1) != neighbor)) {
 			return false;
 		}
 
-		neighbor = config.getNeighbor(name, CConfig::kBottom);
+		neighbor = config.getNeighbor(name, kBottom);
 		if ((y == m_h - 1 && !neighbor.empty()) ||
 			(y < m_h - 1 && get(x, y + 1) != neighbor)) {
 			return false;
@@ -764,24 +764,16 @@ CHTTPServer::CScreenArray::convertTo(CConfig& config) const
 				continue;
 			}
 			if (x > x0 && isSet(x - 1, y)) {
-				config.connect(get(x, y),
-							CConfig::kLeft,
-							get(x - 1, y));
+				config.connect(get(x, y), kLeft, get(x - 1, y));
 			}
 			if (x < x1 && isSet(x + 1, y)) {
-				config.connect(get(x, y),
-							CConfig::kRight,
-							get(x + 1, y));
+				config.connect(get(x, y), kRight, get(x + 1, y));
 			}
 			if (y > y0 && isSet(x, y - 1)) {
-				config.connect(get(x, y),
-							CConfig::kTop,
-							get(x, y - 1));
+				config.connect(get(x, y), kTop, get(x, y - 1));
 			}
 			if (y < y1 && isSet(x, y + 1)) {
-				config.connect(get(x, y),
-							CConfig::kBottom,
-							get(x, y + 1));
+				config.connect(get(x, y), kBottom, get(x, y + 1));
 			}
 		}
 	}
