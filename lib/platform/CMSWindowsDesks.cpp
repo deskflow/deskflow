@@ -558,6 +558,10 @@ CMSWindowsDesks::deskEnter(CDesk* desk)
 	SetWindowPos(desk->m_window, HWND_BOTTOM, 0, 0, 0, 0,
 							SWP_NOMOVE | SWP_NOSIZE |
 							SWP_NOACTIVATE | SWP_HIDEWINDOW);
+
+	// this is here only because of the "ConsoleWindowClass" stuff in
+	// deskLeave.
+	EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
 }
 
 void
@@ -598,6 +602,26 @@ CMSWindowsDesks::deskLeave(CDesk* desk, HKL keyLayout)
 		// disable the window (see handling of SYNERGY_MSG_SWITCH).
 		if (!desk->m_lowLevel) {
 			SetActiveWindow(desk->m_window);
+		}
+
+		// if the active window is a console then activate our window.
+		// we do this because for some reason our hook reports unshifted
+		// characters when the shift is down and a console window is
+		// active.  interestingly we do see the shift key go down and up.
+		// note that we must enable the window to activate it and we
+		// need to disable the window on deskEnter.
+		// FIXME -- figure out the real problem here and solve it.
+		else {
+			HWND foreground = GetForegroundWindow();
+			if (foreground != NULL) {
+				char className[40];
+				if (GetClassName(foreground, className,
+								sizeof(className) / sizeof(className[0])) &&
+					strcmp(className, "ConsoleWindowClass") == 0) {
+					EnableWindow(desk->m_window, TRUE);
+					SetActiveWindow(desk->m_window);
+				}
+			}
 		}
 
 		// switch to requested keyboard layout
