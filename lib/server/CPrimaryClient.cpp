@@ -14,10 +14,6 @@
 
 #include "CPrimaryClient.h"
 #include "CScreen.h"
-#include "IScreenFactory.h"
-#include "IServer.h"
-#include "XScreen.h"
-#include "XSynergy.h"
 #include "CClipboard.h"
 #include "CLog.h"
 
@@ -25,40 +21,19 @@
 // CPrimaryClient
 //
 
-CPrimaryClient::CPrimaryClient(IScreenFactory* screenFactory,
-				IServer* server,
-				IPrimaryScreenReceiver* receiver,
-				const CString& name) :
-	m_server(server),
+CPrimaryClient::CPrimaryClient(const CString& name, CScreen* screen) :
 	m_name(name),
-	m_seqNum(0)
+	m_screen(screen)
 {
-	assert(m_server != NULL);
-
-	// create screen
-	LOG((CLOG_DEBUG1 "creating primary screen"));
-	if (screenFactory != NULL) {
-		IPlatformScreen* platformScreen =
-							screenFactory->create(this, receiver);
-		if (platformScreen != NULL) {
-			m_screen = new CScreen(platformScreen, this);
-		}
-	}
-	if (m_screen == NULL) {
-		throw XScreenOpenFailure();
+	// all clipboards are clean
+	for (UInt32 i = 0; i < kClipboardEnd; ++i) {
+		m_clipboardDirty[i] = false;
 	}
 }
 
 CPrimaryClient::~CPrimaryClient()
 {
-	LOG((CLOG_DEBUG1 "destroying primary screen"));
 	delete m_screen;
-}
-
-void
-CPrimaryClient::exitMainLoop()
-{
-	m_screen->exitMainLoop();
 }
 
 void
@@ -67,24 +42,10 @@ CPrimaryClient::reconfigure(UInt32 activeSides)
 	m_screen->reconfigure(activeSides);
 }
 
-UInt32
-CPrimaryClient::addOneShotTimer(double timeout)
-{
-	return m_screen->addOneShotTimer(timeout);
-}
-
 void
-CPrimaryClient::getClipboard(ClipboardID id, CString& data) const
+CPrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
 {
-	CClipboard clipboard;
-	m_screen->getClipboard(id, &clipboard);
-	data = clipboard.marshall();
-}
-
-bool
-CPrimaryClient::isLockedToScreen() const
-{
-	return m_screen->isLockedToScreen();
+	m_screen->getCursorCenter(x, y);
 }
 
 KeyModifierMask
@@ -93,64 +54,41 @@ CPrimaryClient::getToggleMask() const
 	return m_screen->getActiveModifiers();
 }
 
-void
-CPrimaryClient::onError()
+bool
+CPrimaryClient::isLockedToScreen() const
 {
-	// forward to server
-	m_server->onError();
+	return m_screen->isLockedToScreen();
 }
 
-void
-CPrimaryClient::onInfoChanged(const CClientInfo& info)
+void*
+CPrimaryClient::getEventTarget() const
 {
-	m_info = info;
-	try {
-		m_server->onInfoChanged(getName(), m_info);
-	}
-	catch (XBadClient&) {
-		// ignore
-	}
+	return m_screen->getEventTarget();
 }
 
 bool
-CPrimaryClient::onGrabClipboard(ClipboardID id)
+CPrimaryClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
-	try {
-		return m_server->onGrabClipboard(getName(), id, m_seqNum);
-	}
-	catch (XBadClient&) {
-		return false;
-	}
+	return m_screen->getClipboard(id, clipboard);
+}
+
+SInt32
+CPrimaryClient::getJumpZoneSize() const
+{
+	return m_screen->getJumpZoneSize();
 }
 
 void
-CPrimaryClient::onClipboardChanged(ClipboardID id, const CString& data)
+CPrimaryClient::getShape(SInt32& x, SInt32& y,
+				SInt32& width, SInt32& height) const
 {
-	m_server->onClipboardChanged(id, m_seqNum, data);
+	m_screen->getShape(x, y, width, height);
 }
 
 void
-CPrimaryClient::open()
+CPrimaryClient::getCursorPos(SInt32& x, SInt32& y) const
 {
-	// all clipboards are clean
-	for (UInt32 i = 0; i < kClipboardEnd; ++i) {
-		m_clipboardDirty[i] = false;
-	}
-
-	// now open the screen
-	m_screen->open();
-}
-
-void
-CPrimaryClient::mainLoop()
-{
-	m_screen->mainLoop();
-}
-
-void
-CPrimaryClient::close()
-{
-	m_screen->close();
+	m_screen->getCursorPos(x, y);
 }
 
 void
@@ -169,8 +107,7 @@ void
 CPrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
 				UInt32 seqNum, KeyModifierMask, bool screensaver)
 {
-	// note -- we must not call any server methods except onError().
-	m_seqNum = seqNum;
+	m_screen->setSequenceNumber(seqNum);
 	if (!screensaver) {
 		m_screen->warpCursor(xAbs, yAbs);
 	}
@@ -180,15 +117,12 @@ CPrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
 bool
 CPrimaryClient::leave()
 {
-	// note -- we must not call any server methods except onError().
 	return m_screen->leave();
 }
 
 void
 CPrimaryClient::setClipboard(ClipboardID id, const CString& data)
 {
-	// note -- we must not call any server methods except onError().
-
 	// ignore if this clipboard is already clean
 	if (m_clipboardDirty[id]) {
 		// this clipboard is now clean
@@ -283,32 +217,4 @@ CString
 CPrimaryClient::getName() const
 {
 	return m_name;
-}
-
-SInt32
-CPrimaryClient::getJumpZoneSize() const
-{
-	return m_info.m_zoneSize;
-}
-
-void
-CPrimaryClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
-{
-	x = m_info.m_x;
-	y = m_info.m_y;
-	w = m_info.m_w;
-	h = m_info.m_h;
-}
-
-void
-CPrimaryClient::getCursorPos(SInt32&, SInt32&) const
-{
-	assert(0 && "shouldn't be called");
-}
-
-void
-CPrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
-{
-	x = m_info.m_mx;
-	y = m_info.m_my;
 }

@@ -16,14 +16,9 @@
 #define CPRIMARYCLIENT_H
 
 #include "IClient.h"
-#include "IScreenReceiver.h"
 #include "ProtocolTypes.h"
 
 class CScreen;
-class IClipboard;
-class IScreenFactory;
-class IPrimaryScreenReceiver;
-class IServer;
 
 //! Primary screen as pseudo-client
 /*!
@@ -31,27 +26,16 @@ The primary screen does not have a client associated with it.  This
 class provides a pseudo-client to allow the primary screen to be
 treated as if it was on a client.
 */
-class CPrimaryClient : public IScreenReceiver, public IClient {
+class CPrimaryClient : public IClient {
 public:
 	/*!
-	\c name is the name of the server.  The caller retains ownership of
-	\c factory.  Throws XScreenOpenFailure or whatever the factory can
-	throw if the screen cannot be created.
+	\c name is the name of the server.  \p screen is adopted.
 	*/
-	CPrimaryClient(IScreenFactory* factory, IServer*,
-							IPrimaryScreenReceiver*, const CString& name);
+	CPrimaryClient(const CString& name, CScreen* screen);
 	~CPrimaryClient();
 
 	//! @name manipulators
 	//@{
-
-	//! Exit event loop
-	/*!
-	Force mainLoop() to return.  This call can return before
-	mainLoop() does (i.e. asynchronously).  This may only be
-	called between a successful open() and close().
-	*/
-	void				exitMainLoop();
 
 	//! Update configuration
 	/*!
@@ -59,22 +43,17 @@ public:
 	*/
 	void				reconfigure(UInt32 activeSides);
 
-	//! Install a one-shot timer
-	/*!
-	Installs a one-shot timer for \c timeout seconds and returns the
-	id of the timer (which will be passed to \c onTimerExpired()).
-	*/
-	UInt32				addOneShotTimer(double timeout);
-
 	//@}
 	//! @name accessors
 	//@{
 
-	//! Get clipboard
+	//! Get cursor center position
 	/*!
-	Save the marshalled contents of the clipboard indicated by \c id.
+	Return the cursor center position which is where we park the
+	cursor to compute cursor motion deltas and should be far from
+	the edges of the screen, typically the center.
 	*/
-	void				getClipboard(ClipboardID, CString&) const;
+	void				getCursorCenter(SInt32& x, SInt32& y) const;
 
 	//! Get toggle key state
 	/*!
@@ -90,19 +69,19 @@ public:
 
 	//@}
 
-	// IScreenReceiver overrides
-	virtual void		onError();
-	virtual void		onInfoChanged(const CClientInfo&);
-	virtual bool		onGrabClipboard(ClipboardID);
-	virtual void		onClipboardChanged(ClipboardID, const CString&);
-
-// XXX -- these go in IClient
+	// FIXME -- these probably belong on IScreen
 	virtual void		enable();
 	virtual void		disable();
+
+	// IScreen overrides
+	virtual void*		getEventTarget() const;
+	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
+	virtual SInt32		getJumpZoneSize() const;
+	virtual void		getShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const;
+	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
+
 	// IClient overrides
-	virtual void		open();
-	virtual void		mainLoop();
-	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
 							bool forScreensaver);
@@ -122,18 +101,10 @@ public:
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
 	virtual CString		getName() const;
-	virtual SInt32		getJumpZoneSize() const;
-	virtual void		getShape(SInt32& x, SInt32& y,
-							SInt32& width, SInt32& height) const;
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
-	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 
 private:
-	IServer*			m_server;
-	CScreen*			m_screen;
 	CString				m_name;
-	UInt32				m_seqNum;
-	CClientInfo			m_info;
+	CScreen*			m_screen;
 	bool				m_clipboardDirty[kClipboardEnd];
 };
 

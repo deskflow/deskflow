@@ -77,6 +77,7 @@ public:
 	virtual void			setAddrPort(CArchNetAddress, int port);
 	virtual int				getAddrPort(CArchNetAddress);
 	virtual bool			isAnyAddr(CArchNetAddress);
+	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress);
 
 private:
 	void				throwError(int);

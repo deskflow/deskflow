@@ -73,7 +73,6 @@ CProtocolUtil::vwritef(IStream* stream,
 	}
 
 	// fill buffer
-	// FIXME -- can we use alloca?
 	UInt8* buffer = new UInt8[size];
 	writef(buffer, fmt, args);
 

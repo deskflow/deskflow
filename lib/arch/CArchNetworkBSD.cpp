@@ -29,6 +29,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <string.h>
 
 #if HAVE_POLL
 #	include <sys/poll.h>
@@ -748,6 +749,13 @@ CArchNetworkBSD::isAnyAddr(CArchNetAddress addr)
 		assert(0 && "unknown address family");
 		return true;
 	}
+}
+
+bool
+CArchNetworkBSD::isEqualAddr(CArchNetAddress a, CArchNetAddress b)
+{
+	return (a->m_len == b->m_len &&
+			memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
 }
 
 void

@@ -29,6 +29,8 @@ libsynergy_a_SOURCES = 			\
 	CPacketStreamFilter.cpp		\
 	CProtocolUtil.cpp			\
 	CScreen.cpp					\
+	IPlatformScreen.cpp			\
+	IScreen.cpp					\
 	XScreen.cpp					\
 	XSynergy.cpp				\
 	CClipboard.h				\
@@ -41,12 +43,9 @@ libsynergy_a_SOURCES = 			\
 	IKeyState.h					\
 	IPlatformScreen.h			\
 	IPrimaryScreen.h			\
-	IPrimaryScreenReceiver.h	\
-	IScreenFactory.h			\
-	IScreenReceiver.h			\
+	IScreen.h					\
 	IScreenSaver.h				\
 	ISecondaryScreen.h			\
-	IServer.h					\
 	KeyTypes.h					\
 	MouseTypes.h				\
 	OptionTypes.h				\

@@ -575,6 +575,7 @@ CArchMultithreadPosix::interrupt()
 	lockMutex(m_threadMutex);
 	if (m_signalFunc != NULL) {
 		m_signalFunc(m_signalUserData);
+		pthread_kill(m_mainThread->m_thread, SIGWAKEUP);
 	}
 	else {
 		ARCH->cancelThread(m_mainThread);

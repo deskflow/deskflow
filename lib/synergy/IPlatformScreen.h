@@ -15,10 +15,12 @@
 #ifndef IPLATFORMSCREEN_H
 #define IPLATFORMSCREEN_H
 
+#include "IScreen.h"
 #include "IPrimaryScreen.h"
 #include "ISecondaryScreen.h"
 #include "ClipboardTypes.h"
 #include "OptionTypes.h"
+#include "CEvent.h"
 
 class IClipboard;
 class IKeyState;
@@ -27,27 +29,60 @@ class IKeyState;
 /*!
 This interface defines the methods common to all platform dependent
 screen implementations that are used by both primary and secondary
-screens.
+screens.  A platform screen is expected to post the events defined
+in \c IScreen when appropriate.  It should also post events defined
+in \c IPlatformScreen if acting as the primary screen.  The target
+on the events should be the value returned by \c getEventTarget().
 */
-class IPlatformScreen : public IPrimaryScreen, public ISecondaryScreen {
+class IPlatformScreen : public IScreen,
+				public IPrimaryScreen, public ISecondaryScreen {
 public:
+	//! Key event data
+	class CKeyInfo {
+	public:
+		CKeyInfo(KeyID, KeyModifierMask, KeyButton, SInt32 count);
+
+	public:
+		KeyID			m_key;
+		KeyModifierMask	m_mask;
+		KeyButton		m_button;
+		SInt32			m_count;
+	};
+	//! Button event data
+	class CButtonInfo {
+	public:
+		CButtonInfo(ButtonID);
+
+	public:
+		ButtonID		m_button;
+	};
+	//! Motion event data
+	class CMotionInfo {
+	public:
+		CMotionInfo(SInt32 x, SInt32 y);
+
+	public:
+		SInt32			m_x;
+		SInt32			m_y;
+	};
+	//! Wheel motion event data
+	class CWheelInfo {
+	public:
+		CWheelInfo(SInt32);
+
+	public:
+		SInt32			m_wheel;
+	};
+
 	//! @name manipulators
 	//@{
 
-	//! Open screen
+	//! Set the key state
 	/*!
-	Called to open and initialize the screen.  Throw XScreenUnavailable
-	if the screen cannot be opened but retrying later may succeed.
-	Otherwise throw some other XScreenOpenFailure exception.
+	Sets the key state object.  This object tracks keyboard state and
+	the screen is expected to keep it up to date.
 	*/
-	virtual void		open(IKeyState*) = 0;
-
-	//! Close screen
-	/*!
-	Called to close the screen.  close() should quietly ignore calls
-	that don't have a matching successful call to open().
-	*/
-	virtual void		close() = 0;
+	virtual void		setKeyState(IKeyState*) = 0;
 
 	//! Enable screen
 	/*!
@@ -63,21 +98,6 @@ public:
 	be reported.
 	*/
 	virtual void		disable() = 0;
-
-	//! Run event loop
-	/*!
-	Run the event loop and return when exitMainLoop() is called.
-	This must be called between a successful open() and close().
-	*/
-	virtual void		mainLoop() = 0;
-
-	//! Exit event loop
-	/*!
-	Force mainLoop() to return.  This call can return before
-	mainLoop() does (i.e. asynchronously).  This may only be
-	called between a successful open() and close().
-	*/
-	virtual void		exitMainLoop() = 0;
 
 	//! Enter screen
 	/*!
@@ -102,22 +122,19 @@ public:
 
 	//! Check clipboard owner
 	/*!
-	Check ownership of all clipboards and notify an IScreenReceiver (set
-	through some other interface) if any changed.  This is used as a
-	backup in case the system doesn't reliably report clipboard ownership
-	changes.
+	Check ownership of all clipboards and post grab events for any that
+	have changed.  This is used as a backup in case the system doesn't
+	reliably report clipboard ownership changes.
 	*/
 	virtual void		checkClipboards() = 0;
 
 	//! Open screen saver
 	/*!
 	Open the screen saver.  If \c notify is true then this object must
-	call an IScreenEventHandler's (set through some other interface)
-	onScreenSaver() when the screensaver activates or deactivates until
-	it's closed.  If \c notify is false then the screen saver is
-	disabled on open and restored on close.
+	send events when the screen saver activates or deactivates until
+	\c closeScreensaver() is called.  If \c notify is false then the
+	screen saver is disabled and restored on \c closeScreensaver().
 	*/
-// XXX -- pass an interface pointer, not a notify flag
 	virtual void		openScreensaver(bool notify) = 0;
 
 	//! Close screen saver
@@ -154,6 +171,12 @@ public:
 	*/
 	virtual void		updateKeys() = 0;
 
+	//! Set clipboard sequence number
+	/*!
+	Sets the sequence number to use in subsequent clipboard events.
+	*/
+	virtual void		setSequenceNumber(UInt32) = 0;
+
 	//@}
 	//! @name accessors
 	//@{
@@ -164,35 +187,49 @@ public:
 	*/
 	virtual bool		isPrimary() const = 0;
 
-	//! Get clipboard
+	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
+	static CEvent::Type	getKeyDownEvent();
+	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
+	static CEvent::Type	getKeyUpEvent();
+	//! Get key repeat event type.  Event data is CKeyInfo*.
+	static CEvent::Type	getKeyRepeatEvent();
+	//! Get button down event type.  Event data is CButtonInfo*.
+	static CEvent::Type	getButtonDownEvent();
+	//! Get button up event type.  Event data is CButtonInfo*.
+	static CEvent::Type	getButtonUpEvent();
+	//! Get mouse motion on the primary screen event type
 	/*!
-	Save the contents of the clipboard indicated by \c id and return
-	true iff successful.
+	Event data is CMotionInfo* and the values are an absolute position.
 	*/
-	virtual bool		getClipboard(ClipboardID id, IClipboard*) const = 0;
-
-	//! Get screen shape
+	static CEvent::Type	getMotionOnPrimaryEvent();
+	//! Get mouse motion on a secondary screen event type
 	/*!
-	Return the position of the upper-left corner of the screen in \c x and
-	\c y and the size of the screen in \c w (width) and \c h (height).
+	Event data is CMotionInfo* and the values are motion deltas not
+	absolute coordinates.
 	*/
-	virtual void		getShape(SInt32& x, SInt32& y,
-							SInt32& w, SInt32& h) const = 0;
-
-	//! Get cursor position
-	/*!
-	Return the current position of the cursor in \c x and \c y.
-	*/
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
+	static CEvent::Type	getMotionOnSecondaryEvent();
+	//! Get mouse wheel event type.  Event data is CWheelInfo*.
+	static CEvent::Type	getWheelEvent();
+	//! Get screensaver activated event type
+	static CEvent::Type	getScreensaverActivatedEvent();
+	//! Get screensaver deactivated event type
+	static CEvent::Type	getScreensaverDeactivatedEvent();
 
 	//@}
+
+	// IScreen overrides
+	virtual void*		getEventTarget() const = 0;
+	virtual bool		getClipboard(ClipboardID id, IClipboard*) const = 0;
+	virtual void		getShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const = 0;
+	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
 
 	// IPrimaryScreen overrides
 	virtual void		reconfigure(UInt32 activeSides) = 0;
 	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
-	virtual UInt32		addOneShotTimer(double timeout) = 0;
 	virtual SInt32		getJumpZoneSize() const = 0;
 	virtual bool		isAnyMouseButtonDown() const = 0;
+	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 	virtual const char*	getKeyName(KeyButton) const = 0;
 
 	// ISecondaryScreen overrides
@@ -205,6 +242,18 @@ public:
 							const IKeyState& keyState, KeyID id,
 							KeyModifierMask desiredMask,
 							bool isAutoRepeat) const = 0;
+
+private:
+	static CEvent::Type	s_keyDownEvent;
+	static CEvent::Type	s_keyUpEvent;
+	static CEvent::Type	s_keyRepeatEvent;
+	static CEvent::Type	s_buttonDownEvent;
+	static CEvent::Type	s_buttonUpEvent;
+	static CEvent::Type	s_motionPrimaryEvent;
+	static CEvent::Type	s_motionSecondaryEvent;
+	static CEvent::Type	s_wheelEvent;
+	static CEvent::Type	s_ssActivatedEvent;
+	static CEvent::Type	s_ssDeactivatedEvent;
 };
 
 #endif

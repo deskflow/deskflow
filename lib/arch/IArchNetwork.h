@@ -265,6 +265,9 @@ public:
 	//! Get the port of an address
 	virtual int				getAddrPort(CArchNetAddress) = 0;
 
+	//! Test addresses for equality
+	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress) = 0;
+
 	//! Test for the "any" address
 	/*!
 	Returns true if \c addr is the "any" address.  \c newAnyAddr()

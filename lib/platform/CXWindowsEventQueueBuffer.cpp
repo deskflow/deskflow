@@ -12,9 +12,10 @@
  * GNU General Public License for more details.
  */
 
-#include "CXWindowsEventQueue.h"
-#include "CEvent.h"
+#include "CXWindowsEventQueueBuffer.h"
 #include "CThread.h"
+#include "CEvent.h"
+#include "IEventQueue.h"
 #if UNIX_LIKE
 #	if HAVE_POLL
 #		include <sys/poll.h>
@@ -42,52 +43,27 @@ class CEventQueueTimer { };
 
 
 //
-// CXWindowsEventQueue
+// CXWindowsEventQueueBuffer
 //
 
-CXWindowsEventQueue::CXWindowsEventQueue(Display* display) :
-	m_display(display)
+CXWindowsEventQueueBuffer::CXWindowsEventQueueBuffer(
+				Display* display, Window window) :
+	m_display(display),
+	m_window(window)
 {
+	assert(m_display != NULL);
+	assert(m_window  != None);
+
 	m_userEvent = XInternAtom(m_display, "SYNERGY_USER_EVENT", False);
-
-	XSetWindowAttributes attr;
-	m_window = XCreateWindow(m_display, DefaultRootWindow(m_display),
-							0, 0, 1, 1, 0, 0, InputOnly, CopyFromParent,
-							0, &attr);
 }
 
-CXWindowsEventQueue::~CXWindowsEventQueue()
+CXWindowsEventQueueBuffer::~CXWindowsEventQueueBuffer()
 {
-	XDestroyWindow(m_display, m_window);
+	// do nothing
 }
 
 void
-CXWindowsEventQueue::processSystemEvent(CEvent& event)
-{
-	event = CEvent(CEvent::kSystem, getSystemTarget(), &m_event);
-}
-
-void
-CXWindowsEventQueue::processClientMessage(CEvent& event)
-{
-	assert(m_event.xany.type == ClientMessage);
-
-	// handle user events specially
-	if (m_event.xclient.message_type == m_userEvent) {
-		// get event data
-		CEventData data = removeEventData(m_event.xclient.data.l[1]);
-
-		// create event
-		event = CEvent(static_cast<size_t>(m_event.xclient.data.l[0]),
-							data.first, data.second);
-	}
-	else {
-		processSystemEvent(event);
-	}
-}
-
-void
-CXWindowsEventQueue::waitForEvent(double dtimeout)
+CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 {
 	// use poll() to wait for a message from the X server or for timeout.
 	// this is a good deal more efficient than polling and sleeping.
@@ -132,25 +108,27 @@ CXWindowsEventQueue::waitForEvent(double dtimeout)
 	CThread::testCancel();
 }
 
-bool
-CXWindowsEventQueue::doGetEvent(CEvent& event)
+IEventQueueBuffer::Type
+CXWindowsEventQueueBuffer::getEvent(CEvent& event, UInt32& dataID)
 {
 	// get next event
 	XNextEvent(m_display, &m_event);
 
 	// process event
-	if (m_event.xany.type == ClientMessage) {
-		processClientMessage(event);
+	if (m_event.xany.type == ClientMessage &&
+		m_event.xclient.message_type == m_userEvent) {
+		dataID = static_cast<UInt32>(m_event.xclient.data.l[0]);
+		return kUser;
 	}
 	else {
-		processSystemEvent(event);
+		event = CEvent(CEvent::kSystem,
+							IEventQueue::getSystemTarget(), &m_event);
+		return kSystem;
 	}
-
-	return true;
 }
 
 bool
-CXWindowsEventQueue::doAddEvent(CEvent::Type type, UInt32 dataID)
+CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 {
 	// send ourself a message
 	XEvent xevent;
@@ -158,25 +136,29 @@ CXWindowsEventQueue::doAddEvent(CEvent::Type type, UInt32 dataID)
 	xevent.xclient.window       = m_window;
 	xevent.xclient.message_type = m_userEvent;
 	xevent.xclient.format       = 32;
-	xevent.xclient.data.l[0]    = static_cast<long>(type);
-	xevent.xclient.data.l[1]    = static_cast<long>(dataID);
-	return (XSendEvent(m_display, m_window, False, 0, &xevent) != 0);
+	xevent.xclient.data.l[0]    = static_cast<long>(dataID);
+	if (XSendEvent(m_display, m_window, False, 0, &xevent) == 0) {
+		return false;
+	}
+
+	// force waitForEvent() to return
+	XFlush(m_display);
 }
 
 bool
-CXWindowsEventQueue::doIsEmpty() const
+CXWindowsEventQueueBuffer::isEmpty() const
 {
 	return (XPending(m_display) == 0);
 }
 
 CEventQueueTimer*
-CXWindowsEventQueue::doNewTimer(double, bool) const
+CXWindowsEventQueueBuffer::newTimer(double, bool) const
 {
 	return new CEventQueueTimer();
 }
 
 void
-CXWindowsEventQueue::doDeleteTimer(CEventQueueTimer* timer) const
+CXWindowsEventQueueBuffer::deleteTimer(CEventQueueTimer* timer) const
 {
 	delete timer;
 }

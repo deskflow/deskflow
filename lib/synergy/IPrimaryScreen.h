@@ -25,7 +25,6 @@ primary screen implementations.
 */
 class IPrimaryScreen : public IInterface {
 public:
-// XXX -- may need an interface for sending events
 	//! @name manipulators
 	//@{
 
@@ -46,15 +45,6 @@ public:
 	*/
 	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
 
-	//! Install a one-shot timer
-	/*!
-	Installs a one-shot timer for \c timeout seconds and returns the
-	id of the timer.
-	*/
-// XXX -- need to specify the receiver of the event.  or we should
-// pass a job.  need a method to remove the timer?
-	virtual UInt32		addOneShotTimer(double timeout) = 0;
-
 	//@}
 	//! @name accessors
 	//@{
@@ -71,6 +61,14 @@ public:
 	Return true if any mouse button is currently pressed.
 	*/
 	virtual bool		isAnyMouseButtonDown() const = 0;
+
+	//! Get cursor center position
+	/*!
+	Return the cursor center position which is where we park the
+	cursor to compute cursor motion deltas and should be far from
+	the edges of the screen, typically the center.
+	*/
+	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 
 	//! Get name of key
 	/*!

@@ -19,6 +19,7 @@
 #include "XSocket.h"
 #include "CLock.h"
 #include "CEventQueue.h"
+#include "CLog.h"
 #include "IEventJob.h"
 #include "CArch.h"
 #include "XArch.h"
@@ -102,8 +103,8 @@ CTCPSocket::close()
 			ARCH->closeSocket(socket);
 		}
 		catch (XArchNetwork& e) {
-			// FIXME -- just discard this for now
-			//throw XSocketIOClose(e.what());
+			// ignore, there's not much we can do
+			LOG((CLOG_WARN "error closing socket: %s", e.what().c_str()));
 		}
 	}
 }
@@ -257,7 +258,6 @@ CTCPSocket::connect(const CNetworkAddress& addr)
 	}
 
 	try {
-// FIXME -- don't throw if in progress, just return that info
 		ARCH->connectSocket(m_socket, addr.getAddress());
 		sendSocketEvent(getConnectedEvent());
 		onConnected();
@@ -281,15 +281,13 @@ CTCPSocket::init()
 	m_readable  = false;
 	m_writable  = false;
 
-	// make socket non-blocking
-// FIXME -- check for error
-	ARCH->setBlockingOnSocket(m_socket, false);
-
-	// turn off Nagle algorithm.  we send lots of very short messages
-	// that should be sent without (much) delay.  for example, the
-	// mouse motion messages are much less useful if they're delayed.
-// FIXME -- the client should do this
 	try {
+		// make socket non-blocking
+		ARCH->setBlockingOnSocket(m_socket, false);
+
+		// turn off Nagle algorithm.  we send lots of very short messages
+		// that should be sent without (much) delay.  for example, the
+		// mouse motion messages are much less useful if they're delayed.
 		ARCH->setNoDelayOnSocket(m_socket, true);
 	}
 	catch (XArchNetwork& e) {

@@ -23,5 +23,6 @@ CEvent::Type			IListenSocket::s_connectingEvent = CEvent::kUnknown;
 CEvent::Type
 IListenSocket::getConnectingEvent()
 {
-	return CEvent::registerTypeOnce(s_connectingEvent);
+	return CEvent::registerTypeOnce(s_connectingEvent,
+							"IListenSocket::connecting");
 }

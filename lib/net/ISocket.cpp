@@ -23,5 +23,6 @@ CEvent::Type			ISocket::s_disconnectedEvent = CEvent::kUnknown;
 CEvent::Type
 ISocket::getDisconnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_disconnectedEvent);
+	return CEvent::registerTypeOnce(s_disconnectedEvent,
+							"ISocket::disconnected");
 }

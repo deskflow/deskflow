@@ -13,12 +13,9 @@
  */
 
 #include "CClientProxy1_0.h"
-#include "CServer.h"
-#include "CClipboard.h"
 #include "CProtocolUtil.h"
 #include "XSynergy.h"
 #include "IStream.h"
-#include "CLock.h"
 #include "CLog.h"
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
@@ -28,16 +25,12 @@
 // CClientProxy1_0
 //
 
-CClientProxy1_0::CClientProxy1_0(IServer* server,
-				const CString& name, IStream* stream) :
-	CClientProxy(server, name, stream),
+CClientProxy1_0::CClientProxy1_0(const CString& name, IStream* stream) :
+	CClientProxy(name, stream),
 	m_heartbeatAlarm(kHeartRate * kHeartBeatsUntilDeath),
-	m_heartbeatTimer(NULL)
+	m_heartbeatTimer(NULL),
+	m_parser(&CClientProxy1_0::parseHandshakeMessage)
 {
-	for (UInt32 i = 0; i < kClipboardEnd; ++i) {
-		m_clipboardDirty[i] = true;
-	}
-
 	// install event handlers
 	EVENTQUEUE->adoptHandler(IStream::getInputReadyEvent(),
 							stream->getEventTarget(),
@@ -59,7 +52,8 @@ CClientProxy1_0::CClientProxy1_0(IServer* server,
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleFlatline, NULL));
 
-	// FIXME -- open() replacement must install initial heartbeat timer
+	LOG((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
+	CProtocolUtil::writef(getStream(), kMsgQInfo);
 }
 
 CClientProxy1_0::~CClientProxy1_0()
@@ -70,11 +64,9 @@ CClientProxy1_0::~CClientProxy1_0()
 void
 CClientProxy1_0::disconnect()
 {
-	CLock lock(getMutex());
 	removeHandlers();
-	// FIXME -- send disconnect event (server should be listening for this)
-	getStream()->flush();
 	getStream()->close();
+	EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), getEventTarget()));
 }
 
 void
@@ -98,7 +90,6 @@ CClientProxy1_0::removeHandlers()
 void
 CClientProxy1_0::addHeartbeatTimer()
 {
-	CLock lock(getMutex());
 	if (m_heartbeatAlarm > 0.0) {
 		m_heartbeatTimer = EVENTQUEUE->newOneShotTimer(m_heartbeatAlarm, this);
 	}
@@ -107,7 +98,6 @@ CClientProxy1_0::addHeartbeatTimer()
 void
 CClientProxy1_0::removeHeartbeatTimer()
 {
-	CLock lock(getMutex());
 	if (m_heartbeatTimer != NULL) {
 		EVENTQUEUE->deleteTimer(m_heartbeatTimer);
 		m_heartbeatTimer = NULL;
@@ -130,7 +120,7 @@ CClientProxy1_0::handleData(const CEvent&, void*)
 
 		// parse message
 		LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
-		if (!parseMessage(code)) {
+		if (!(this->*m_parser)(code)) {
 			LOG((CLOG_ERR "invalid message from client \"%s\"", getName().c_str()));
 			disconnect();
 			return;
@@ -146,10 +136,34 @@ CClientProxy1_0::handleData(const CEvent&, void*)
 }
 
 bool
+CClientProxy1_0::parseHandshakeMessage(const UInt8* code)
+{
+	if (memcmp(code, kMsgCNoop, 4) == 0) {
+		// discard no-ops
+		LOG((CLOG_DEBUG2 "no-op from", getName().c_str()));
+		return true;
+	}
+	else if (memcmp(code, kMsgDInfo, 4) == 0) {
+		// future messages get parsed by parseMessage
+		m_parser = &CClientProxy1_0::parseMessage;
+		if (recvInfo()) {
+			EVENTQUEUE->addEvent(CEvent(getReadyEvent(), getEventTarget()));
+			return true;
+		}
+	}
+	return false;
+}
+
+bool
 CClientProxy1_0::parseMessage(const UInt8* code)
 {
 	if (memcmp(code, kMsgDInfo, 4) == 0) {
-		return recvInfo(true);
+		if (recvInfo()) {
+			EVENTQUEUE->addEvent(
+							CEvent(getShapeChangedEvent(), getEventTarget()));
+			return true;
+		}
+		return false;
 	}
 	else if (memcmp(code, kMsgCNoop, 4) == 0) {
 		// discard no-ops
@@ -168,14 +182,14 @@ CClientProxy1_0::parseMessage(const UInt8* code)
 void
 CClientProxy1_0::handleDisconnect(const CEvent&, void*)
 {
-	LOG((CLOG_NOTE "client \"%s\" disconnected", getName().c_str()));
+	LOG((CLOG_NOTE "client \"%s\" has disconnected", getName().c_str()));
 	disconnect();
 }
 
 void
 CClientProxy1_0::handleWriteError(const CEvent&, void*)
 {
-	LOG((CLOG_ERR "error writing to client \"%s\"", getName().c_str()));
+	LOG((CLOG_WARN "error writing to client \"%s\"", getName().c_str()));
 	disconnect();
 }
 
@@ -187,44 +201,28 @@ CClientProxy1_0::handleFlatline(const CEvent&, void*)
 	disconnect();
 }
 
-// FIXME -- replace this
-void
-CClientProxy1_0::open()
+bool
+CClientProxy1_0::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
-	// send request
-	LOG((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
-	CProtocolUtil::writef(getStream(), kMsgQInfo);
-	getStream()->flush();
-
-	// wait for and verify reply
-	UInt8 code[4];
-	for (;;) {
-		UInt32 n = getStream()->read(code, 4);
-		if (n == 4) {
-			if (memcmp(code, kMsgCNoop, 4) == 0) {
-				// discard heartbeats
-				continue;
-			}
-			if (memcmp(code, kMsgDInfo, 4) == 0) {
-				break;
-			}
-		}
-		throw XBadClient();
-	}
-
-	// handle reply
-	recvInfo(false);
+	CClipboard::copy(clipboard, &m_clipboard[id].m_clipboard);
+	return true;
 }
 
-// FIXME -- replace this
 void
-CClientProxy1_0::close()
+CClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
-	LOG((CLOG_DEBUG1 "send close to \"%s\"", getName().c_str()));
-	CProtocolUtil::writef(getStream(), kMsgCClose);
+	x = m_info.m_x;
+	y = m_info.m_y;
+	w = m_info.m_w;
+	h = m_info.m_h;
+}
 
-	// force the close to be sent before we return
-	getStream()->flush();
+void
+CClientProxy1_0::getCursorPos(SInt32& x, SInt32& y) const
+{
+	assert(0 && "shouldn't be called");
+	x = m_info.m_mx;
+	y = m_info.m_my;
 }
 
 void
@@ -250,10 +248,9 @@ void
 CClientProxy1_0::setClipboard(ClipboardID id, const CString& data)
 {
 	// ignore if this clipboard is already clean
-	CLock lock(getMutex());
-	if (m_clipboardDirty[id]) {
+	if (m_clipboard[id].m_dirty) {
 		// this clipboard is now clean
-		m_clipboardDirty[id] = false;
+		m_clipboard[id].m_dirty = false;
 
 		LOG((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getName().c_str(), data.size()));
 		CProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, &data);
@@ -267,15 +264,13 @@ CClientProxy1_0::grabClipboard(ClipboardID id)
 	CProtocolUtil::writef(getStream(), kMsgCClipboard, id, 0);
 
 	// this clipboard is now dirty
-	CLock lock(getMutex());
-	m_clipboardDirty[id] = true;
+	m_clipboard[id].m_dirty = true;
 }
 
 void
 CClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty)
 {
-	CLock lock(getMutex());
-	m_clipboardDirty[id] = dirty;
+	m_clipboard[id].m_dirty = dirty;
 }
 
 void
@@ -342,7 +337,6 @@ CClientProxy1_0::resetOptions()
 	CProtocolUtil::writef(getStream(), kMsgCResetOptions);
 
 	// reset heart rate and death
-	CLock lock(getMutex());
 	m_heartbeatAlarm = kHeartRate * kHeartBeatsUntilDeath;
 	removeHeartbeatTimer();
 	addHeartbeatTimer();
@@ -355,7 +349,6 @@ CClientProxy1_0::setOptions(const COptionsList& options)
 	CProtocolUtil::writef(getStream(), kMsgDSetOptions, &options);
 
 	// check options
-	CLock lock(getMutex());
 	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
 		if (options[i] == kOptionHeartbeat) {
 			double rate = 1.0e-3 * static_cast<double>(options[i + 1]);
@@ -369,73 +362,33 @@ CClientProxy1_0::setOptions(const COptionsList& options)
 	}
 }
 
-SInt32
-CClientProxy1_0::getJumpZoneSize() const
-{
-	CLock lock(getMutex());
-	return m_info.m_zoneSize;
-}
-
-void
-CClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
-{
-	CLock lock(getMutex());
-	x = m_info.m_x;
-	y = m_info.m_y;
-	w = m_info.m_w;
-	h = m_info.m_h;
-}
-
-void
-CClientProxy1_0::getCursorPos(SInt32&, SInt32&) const
-{
-	assert(0 && "shouldn't be called");
-}
-
-void
-CClientProxy1_0::getCursorCenter(SInt32& x, SInt32& y) const
-{
-	CLock lock(getMutex());
-	x = m_info.m_mx;
-	y = m_info.m_my;
-}
-
 bool
-CClientProxy1_0::recvInfo(bool notify)
+CClientProxy1_0::recvInfo()
 {
-	{
-		CLock lock(getMutex());
+	// parse the message
+	SInt16 x, y, w, h, zoneSize, mx, my;
+	if (!CProtocolUtil::readf(getStream(), kMsgDInfo + 4,
+							&x, &y, &w, &h, &zoneSize, &mx, &my)) {
+		return false;
+	}
+	LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d, zone=%d, pos=%d,%d", getName().c_str(), x, y, w, h, zoneSize, mx, my));
 
-		// parse the message
-		SInt16 x, y, w, h, zoneSize, mx, my;
-		if (!CProtocolUtil::readf(getStream(), kMsgDInfo + 4,
-								&x, &y, &w, &h, &zoneSize, &mx, &my)) {
-			return false;
-		}
-		LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d, zone=%d, pos=%d,%d", getName().c_str(), x, y, w, h, zoneSize, mx, my));
-
-		// validate
-		if (w <= 0 || h <= 0 || zoneSize < 0) {
-			return false;
-		}
-		if (mx < x || my < y || mx >= x + w || my >= y + h) {
-			return false;
-		}
-
-		// save
-		m_info.m_x        = x;
-		m_info.m_y        = y;
-		m_info.m_w        = w;
-		m_info.m_h        = h;
-		m_info.m_zoneSize = zoneSize;
-		m_info.m_mx       = mx;
-		m_info.m_my       = my;
+	// validate
+	if (w <= 0 || h <= 0 || zoneSize < 0) {
+		return false;
+	}
+	if (mx < x || my < y || mx >= x + w || my >= y + h) {
+		return false;
 	}
 
-	// tell server of change
-	if (notify) {
-		getServer()->onInfoChanged(getName(), m_info);
-	}
+	// save
+	m_info.m_x        = x;
+	m_info.m_y        = y;
+	m_info.m_w        = w;
+	m_info.m_h        = h;
+	m_info.m_zoneSize = zoneSize;
+	m_info.m_mx       = mx;
+	m_info.m_my       = my;
 
 	// acknowledge receipt
 	LOG((CLOG_DEBUG1 "send info ack to \"%s\"", getName().c_str()));
@@ -461,9 +414,17 @@ CClientProxy1_0::recvClipboard()
 		return false;
 	}
 
-	// send update.  this calls us back to reset our clipboard dirty flag
-	// so don't hold a lock during the call.
-	getServer()->onClipboardChanged(id, seqNum, data);
+	// save clipboard
+	m_clipboard[id].m_clipboard.unmarshall(data, 0);
+	m_clipboard[id].m_sequenceNumber = seqNum;
+
+	// notify
+	CClipboardInfo* info   = new CClipboardInfo;
+	info->m_id             = id;
+	info->m_sequenceNumber = seqNum;
+	EVENTQUEUE->addEvent(CEvent(getClipboardChangedEvent(),
+							getEventTarget(), info));
+
 	return true;
 }
 
@@ -483,8 +444,25 @@ CClientProxy1_0::recvGrabClipboard()
 		return false;
 	}
 
-	// send update.  this calls us back to reset our clipboard dirty flag
-	// so don't hold a lock during the call.
-	getServer()->onGrabClipboard(getName(), id, seqNum);
+	// notify
+	CClipboardInfo* info   = new CClipboardInfo;
+	info->m_id             = id;
+	info->m_sequenceNumber = seqNum;
+	EVENTQUEUE->addEvent(CEvent(getClipboardGrabbedEvent(),
+							getEventTarget(), info));
+
 	return true;
+}
+
+
+//
+// CClientProxy1_0::CClientClipboard
+//
+
+CClientProxy1_0::CClientClipboard::CClientClipboard() :
+	m_clipboard(),
+	m_sequenceNumber(0),
+	m_dirty(true)
+{
+	// do nothing
 }

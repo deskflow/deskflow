@@ -27,29 +27,34 @@ CEvent::Type			IStream::s_outputShutdownEvent = CEvent::kUnknown;
 CEvent::Type
 IStream::getInputReadyEvent()
 {
-	return CEvent::registerTypeOnce(s_inputReadyEvent);
+	return CEvent::registerTypeOnce(s_inputReadyEvent,
+							"IStream::inputReady");
 }
 
 CEvent::Type
 IStream::getOutputFlushedEvent()
 {
-	return CEvent::registerTypeOnce(s_outputFlushedEvent);
+	return CEvent::registerTypeOnce(s_outputFlushedEvent,
+							"IStream::outputFlushed");
 }
 
 CEvent::Type
 IStream::getOutputErrorEvent()
 {
-	return CEvent::registerTypeOnce(s_outputErrorEvent);
+	return CEvent::registerTypeOnce(s_outputErrorEvent,
+							"IStream::outputError");
 }
 
 CEvent::Type
 IStream::getInputShutdownEvent()
 {
-	return CEvent::registerTypeOnce(s_inputShutdownEvent);
+	return CEvent::registerTypeOnce(s_inputShutdownEvent,
+							"IStream::inputShutdown");
 }
 
 CEvent::Type
 IStream::getOutputShutdownEvent()
 {
-	return CEvent::registerTypeOnce(s_outputShutdownEvent);
+	return CEvent::registerTypeOnce(s_outputShutdownEvent,
+							"IStream::outputShutdown");
 }

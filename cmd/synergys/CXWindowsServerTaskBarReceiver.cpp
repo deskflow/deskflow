@@ -53,9 +53,3 @@ CXWindowsServerTaskBarReceiver::getIcon() const
 {
 	return NULL;
 }
-
-void
-CXWindowsServerTaskBarReceiver::onStatusChanged()
-{
-	// do nothing
-}

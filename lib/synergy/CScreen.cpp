@@ -14,41 +14,26 @@
 
 #include "CScreen.h"
 #include "IPlatformScreen.h"
-#include "IScreenReceiver.h"
-#include "ISecondaryScreen.h"
 #include "ProtocolTypes.h"
-#include "CLock.h"
-#include "CThread.h"
 #include "CLog.h"
+#include "IEventQueue.h"
 
 //
 // CScreen
 //
 
-CScreen::CScreen(IPlatformScreen* platformScreen, IScreenReceiver* receiver) :
+CScreen::CScreen(IPlatformScreen* platformScreen) :
 	m_screen(platformScreen),
-	m_receiver(receiver),
 	m_isPrimary(platformScreen->isPrimary()),
 	m_enabled(false),
 	m_entered(m_isPrimary),
 	m_toggleKeys(0),
 	m_screenSaverSync(true)
 {
-	// do nothing
-}
-
-CScreen::~CScreen()
-{
-	delete m_screen;
-}
-
-void
-CScreen::open()
-{
-	CLock lock(&m_mutex);
+	assert(m_screen != NULL);
 
 	// open screen
-	m_screen->open(this);
+	m_screen->setKeyState(this);
 
 	// reset options
 	resetOptions();
@@ -56,23 +41,20 @@ CScreen::open()
 	LOG((CLOG_DEBUG "opened display"));
 }
 
-void
-CScreen::close()
+CScreen::~CScreen()
 {
-	CLock lock(&m_mutex);
+	if (m_enabled) {
+		disable();
+	}
 	assert(!m_enabled);
 	assert(m_entered == m_isPrimary);
-
-	// close screen
-	m_screen->close();
-
+	delete m_screen;
 	LOG((CLOG_DEBUG "closed display"));
 }
 
 void
 CScreen::enable()
 {
-	CLock lock(&m_mutex);
 	assert(!m_enabled);
 
 	m_screen->enable();
@@ -90,7 +72,6 @@ CScreen::enable()
 void
 CScreen::disable()
 {
-	CLock lock(&m_mutex);
 	assert(m_enabled);
 
 	if (!m_isPrimary && m_entered) {
@@ -112,33 +93,8 @@ CScreen::disable()
 }
 
 void
-CScreen::mainLoop()
-{
-	// change our priority
-	CThread::getCurrentThread().setPriority(-14);
-
-	// run event loop
-	try {
-		LOG((CLOG_DEBUG "entering event loop"));
-		m_screen->mainLoop();
-		LOG((CLOG_DEBUG "exiting event loop"));
-	}
-	catch (...) {
-		LOG((CLOG_DEBUG "exiting event loop"));
-		throw;
-	}
-}
-
-void
-CScreen::exitMainLoop()
-{
-	m_screen->exitMainLoop();
-}
-
-void
 CScreen::enter()
 {
-	CLock lock(&m_mutex);
 	assert(m_entered == false);
 	LOG((CLOG_INFO "entering screen"));
 
@@ -157,7 +113,6 @@ CScreen::enter()
 bool
 CScreen::leave()
 {
-	CLock lock(&m_mutex);
 	assert(m_entered == true);
 	LOG((CLOG_INFO "leaving screen"));
 
@@ -209,8 +164,6 @@ CScreen::grabClipboard(ClipboardID id)
 void
 CScreen::screensaver(bool activate)
 {
-	CLock lock(&m_mutex);
-
 	if (!m_isPrimary) {
 		// activate/deactivation screen saver iff synchronization enabled
 		if (m_screenSaverSync) {
@@ -222,7 +175,6 @@ CScreen::screensaver(bool activate)
 void
 CScreen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
-	CLock lock(&m_mutex);
 	assert(!m_isPrimary);
 
 	// check for ctrl+alt+del emulation
@@ -256,7 +208,6 @@ void
 CScreen::keyRepeat(KeyID id,
 				KeyModifierMask mask, SInt32 count, KeyButton button)
 {
-	CLock lock(&m_mutex);
 	assert(!m_isPrimary);
 
 	// if we haven't seen this button go down then ignore it
@@ -316,7 +267,6 @@ CScreen::keyRepeat(KeyID id,
 void
 CScreen::keyUp(KeyID, KeyModifierMask, KeyButton button)
 {
-	CLock lock(&m_mutex);
 	assert(!m_isPrimary);
 
 	// if we haven't seen this button go down then ignore it
@@ -372,8 +322,6 @@ CScreen::mouseWheel(SInt32 delta)
 void
 CScreen::resetOptions()
 {
-	CLock lock(&m_mutex);
-
 	// reset options
 	m_numLockHalfDuplex  = false;
 	m_capsLockHalfDuplex = false;
@@ -394,8 +342,6 @@ CScreen::resetOptions()
 void
 CScreen::setOptions(const COptionsList& options)
 {
-	CLock lock(&m_mutex);
-
 	// update options
 	bool oldScreenSaverSync = m_screenSaverSync;
 	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
@@ -427,35 +373,16 @@ CScreen::setOptions(const COptionsList& options)
 	m_screen->setOptions(options);
 }
 
-UInt32
-CScreen::addOneShotTimer(double timeout)
+void
+CScreen::setSequenceNumber(UInt32 seqNum)
 {
-	return m_screen->addOneShotTimer(timeout);
+	return m_screen->setSequenceNumber(seqNum);
 }
 
 bool
 CScreen::isOnScreen() const
 {
-	CLock lock(&m_mutex);
 	return m_entered;
-}
-
-void
-CScreen::getClipboard(ClipboardID id,
-				IClipboard* clipboard) const
-{
-	m_screen->getClipboard(id, clipboard);
-}
-
-SInt32
-CScreen::getJumpZoneSize() const
-{
-	if (!m_isPrimary) {
-		return 0;
-	}
-	else {
-		return m_screen->getJumpZoneSize();
-	}
 }
 
 bool
@@ -488,6 +415,35 @@ CScreen::isLockedToScreen() const
 	return false;
 }
 
+SInt32
+CScreen::getJumpZoneSize() const
+{
+	if (!m_isPrimary) {
+		return 0;
+	}
+	else {
+		return m_screen->getJumpZoneSize();
+	}
+}
+
+void
+CScreen::getCursorCenter(SInt32& x, SInt32& y) const
+{
+	m_screen->getCursorCenter(x, y);
+}
+
+void*
+CScreen::getEventTarget() const
+{
+	return m_screen;
+}
+
+bool
+CScreen::getClipboard(ClipboardID id, IClipboard* clipboard) const
+{
+	return m_screen->getClipboard(id, clipboard);
+}
+
 void
 CScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 {
@@ -503,8 +459,6 @@ CScreen::getCursorPos(SInt32& x, SInt32& y) const
 void
 CScreen::updateKeys()
 {
-	CLock lock(&m_mutex);
-
 	// clear key state
 	memset(m_keys,     0, sizeof(m_keys));
 	memset(m_fakeKeys, 0, sizeof(m_fakeKeys));
@@ -522,8 +476,6 @@ CScreen::updateKeys()
 void
 CScreen::releaseKeys()
 {
-	CLock lock(&m_mutex);
-
 	// release keys that we've synthesized a press for and only those
 	// keys.  we don't want to synthesize a release on a key the user
 	// is still physically pressing.
@@ -539,16 +491,12 @@ CScreen::releaseKeys()
 void
 CScreen::setKeyDown(KeyButton key)
 {
-	CLock lock(&m_mutex);
-
 	m_keys[key & 0xffu] |= kDown;
 }
 
 void
 CScreen::setToggled(KeyModifierMask mask)
 {
-	CLock lock(&m_mutex);
-
 	if (!isToggle(mask)) {
 		return;
 	}
@@ -565,8 +513,6 @@ CScreen::setToggled(KeyModifierMask mask)
 void
 CScreen::addModifier(KeyModifierMask mask, KeyButtons& keys)
 {
-	CLock lock(&m_mutex);
-
 	// the modifier must have associated keys
 	if (keys.empty()) {
 		return;
@@ -608,8 +554,6 @@ CScreen::setToggleState(KeyModifierMask mask)
 KeyButton
 CScreen::isAnyKeyDown() const
 {
-	CLock lock(&m_mutex);
-
 	for (UInt32 i = 1; i <  256; ++i) {
 		if ((m_keys[i] & kDown) != 0) {
 			return static_cast<KeyButton>(i);
@@ -621,8 +565,6 @@ CScreen::isAnyKeyDown() const
 bool
 CScreen::isKeyDown(KeyButton key) const
 {
-	CLock lock(&m_mutex);
-
 	key &= 0xffu;
 	return (key != 0 && ((m_keys[key] & kDown) != 0));
 }
@@ -638,8 +580,6 @@ CScreen::isToggle(KeyModifierMask mask) const
 bool
 CScreen::isHalfDuplex(KeyModifierMask mask) const
 {
-	CLock lock(&m_mutex);
-
 	return ((mask == KeyModifierCapsLock && m_capsLockHalfDuplex) ||
 			(mask == KeyModifierNumLock  && m_numLockHalfDuplex));
 }
@@ -647,8 +587,6 @@ CScreen::isHalfDuplex(KeyModifierMask mask) const
 bool
 CScreen::isModifierActive(KeyModifierMask mask) const
 {
-	CLock lock(&m_mutex);
-
 	MaskToKeys::const_iterator i = m_maskToKeys.find(mask);
 	if (i == m_maskToKeys.end()) {
 		return false;
@@ -675,7 +613,6 @@ CScreen::isModifierActive(KeyModifierMask mask) const
 KeyModifierMask
 CScreen::getActiveModifiers() const
 {
-	CLock lock(&m_mutex);
 	if (m_isPrimary) {
 		// we don't keep primary key state up to date so get the
 		// current state.
@@ -688,8 +625,6 @@ bool
 CScreen::mapModifier(Keystrokes& keys, Keystrokes& undo,
 				KeyModifierMask mask, bool desireActive) const
 {
-	CLock lock(&m_mutex);
-
 	// look up modifier
 	MaskToKeys::const_iterator i = m_maskToKeys.find(mask);
 	if (i == m_maskToKeys.end()) {
@@ -751,7 +686,6 @@ CScreen::mapModifier(Keystrokes& keys, Keystrokes& undo,
 KeyModifierMask
 CScreen::getMaskForKey(KeyButton key) const
 {
-	CLock lock(&m_mutex);
 	KeyToMask::const_iterator i = m_keyToMask.find(key);
 	if (i == m_keyToMask.end()) {
 		return 0;
@@ -767,12 +701,8 @@ CScreen::enablePrimary()
 	// get notified of screen saver activation/deactivation
 	m_screen->openScreensaver(true);
 
-	// collect and send screen info
-	CClientInfo info;
-	m_screen->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
-	m_screen->getCursorPos(info.m_mx, info.m_my);
-	info.m_zoneSize = getJumpZoneSize();
-	m_receiver->onInfoChanged(info);
+	// claim screen changed size
+	EVENTQUEUE->addEvent(CEvent(getShapeChangedEvent(), getEventTarget()));
 }
 
 void

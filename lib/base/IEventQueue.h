@@ -80,7 +80,8 @@ public:
 	is returned the data points to a \c CTimerEvent.  The client must pass
 	the returned timer to \c deleteTimer() (whether or not the timer has
 	expired) to release the timer.  The returned timer event uses the
-	given \p target.
+	given \p target.  If \p target is NULL it uses the returned timer as
+	the target.
 
 	Events for a single timer don't accumulate in the queue, even if the
 	client reading events can't keep up.  Instead, the \c m_count member
@@ -89,7 +90,7 @@ public:
 	removed (or since the timer was added).
 	*/
 	virtual CEventQueueTimer*
-						newTimer(double duration, void* target = NULL) = 0;
+						newTimer(double duration, void* target) = 0;
 
 	//! Create a one-shot timer
 	/*!
@@ -99,11 +100,12 @@ public:
 	The \m c_count member of the \c CTimerEvent is always 1.  The client
 	must pass the returned timer to \c deleteTimer() (whether or not the
 	timer has expired) to release the timer.  The returned timer event
-	uses the given \p target.
+	uses the given \p target.  If \p target is NULL it uses the returned
+	timer as the target.
 	*/
 	virtual CEventQueueTimer*
 						newOneShotTimer(double duration,
-							void* target = NULL) = 0;
+							void* target) = 0;
 
 	//! Destroy a timer
 	/*!
@@ -160,6 +162,23 @@ public:
 	*/
 	virtual void		removeHandler(CEvent::Type type, void* target) = 0;
 
+	//! Creates a new event type
+	/*!
+	Returns a unique event type id.
+	*/
+	virtual CEvent::Type
+						registerType(const char* name) = 0;
+
+	//! Creates a new event type
+	/*!
+	If \p type contains \c kUnknown then it is set to a unique event
+	type id otherwise it is left alone.  The final value of \p type
+	is returned.
+	*/
+	virtual CEvent::Type
+						registerTypeOnce(CEvent::Type& type,
+							const char* name) = 0;
+
 	//@}
 	//! @name accessors
 	//@{
@@ -178,6 +197,13 @@ public:
 	that doesn't exist, returns NULL.
 	*/
 	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const = 0;
+
+	//! Get name for event
+	/*!
+	Returns the name for the event \p type.  This is primarily for
+	debugging.
+	*/
+	virtual const char*	getTypeName(CEvent::Type type) = 0;
 
 	//! Get the system event type target
 	/*!

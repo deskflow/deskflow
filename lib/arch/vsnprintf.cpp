@@ -56,7 +56,6 @@ ARCH_STRING::vsnprintf(char* str, int size, const char* fmt, va_list ap)
 
 #else // !HAVE_VSNPRINTF && !UNIX_LIKE
 
-// FIXME
 #error vsnprintf not implemented
 
 #endif // !HAVE_VSNPRINTF

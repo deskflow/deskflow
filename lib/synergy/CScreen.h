@@ -12,44 +12,31 @@
  * GNU General Public License for more details.
  */
 
-#ifndef CSECONDARYSCREEN_H
-#define CSECONDARYSCREEN_H
+#ifndef CSCREEN_H
+#define CSCREEN_H
 
 #include "IKeyState.h"
+#include "IScreen.h"
 #include "ClipboardTypes.h"
 #include "MouseTypes.h"
 #include "OptionTypes.h"
-#include "CMutex.h"
 #include "stdmap.h"
 
 class IClipboard;
 class IPlatformScreen;
-class IScreenReceiver;
 
 //! Platform independent screen
 /*!
 This is a platform independent screen.  It can work as either a
 primary or secondary screen.
 */
-class CScreen : public IKeyState {
+class CScreen : public IScreen, public IKeyState {
 public:
-	CScreen(IPlatformScreen* platformScreen, IScreenReceiver*);
+	CScreen(IPlatformScreen* platformScreen);
 	virtual ~CScreen();
 
 	//! @name manipulators
 	//@{
-
-	//! Open screen
-	/*!
-	Opens the screen.
-	*/
-	void				open();
-
-	//! Close screen
-	/*!
-	Closes the screen.
-	*/
-	void				close();
 
 	//! Activate screen
 	/*!
@@ -65,21 +52,6 @@ public:
 	reported.  It also releases keys that are logically pressed.
 	*/
 	void				disable();
-
-	//! Run event loop
-	/*!
-	Run the screen's event loop.  This returns when it detects
-	the application should terminate or when exitMainLoop() is called.
-	mainLoop() may only be called between open() and close().
-	*/
-	void				mainLoop();
-
-	//! Exit event loop
-	/*!
-	Force mainLoop() to return.  This call can return before
-	mainLoop() does (i.e. asynchronously).
-	*/
-	void				exitMainLoop();
 
 	//! Enter screen
 	/*!
@@ -196,12 +168,11 @@ public:
 	*/
 	void				setOptions(const COptionsList& options);
 
-	//! Install a one-shot timer
+	//! Set clipboard sequence number
 	/*!
-	Installs a one-shot timer for \c timeout seconds and returns the
-	id of the timer.
+	Sets the sequence number to use in subsequent clipboard events.
 	*/
-	UInt32				addOneShotTimer(double timeout);
+	void				setSequenceNumber(UInt32);
 
 	//@}
 	//! @name accessors
@@ -213,19 +184,6 @@ public:
 	*/
 	bool				isOnScreen() const;
 
-	//! Get clipboard
-	/*!
-	Saves the contents of the system clipboard indicated by \c id.
-	*/
-	void				getClipboard(ClipboardID id, IClipboard*) const;
-
-	//! Get jump zone size
-	/*!
-	Returns the jump zone size, the size of the regions on the edges of
-	the screen that cause the cursor to jump to another screen.
-	*/
-	SInt32				getJumpZoneSize() const;
-
 	//! Get screen lock state
 	/*!
 	Returns true if there's any reason that the user should not be
@@ -236,21 +194,29 @@ public:
 	*/
 	bool				isLockedToScreen() const;
 
-	//! Get screen shape
+	//! Get jump zone size
 	/*!
-	Returns the position of the upper-left corner of the screen in \c x
-	and \c y and the size of the screen in \c width and \c height.
+	Return the jump zone size, the size of the regions on the edges of
+	the screen that cause the cursor to jump to another screen.
 	*/
-	void				getShape(SInt32& x, SInt32& y,
-							SInt32& width, SInt32& height) const;
+	SInt32				getJumpZoneSize() const;
 
-	//! Get cursor position
+	//! Get cursor center position
 	/*!
-	Returns the current position of the cursor in \c x,y.
+	Return the cursor center position which is where we park the
+	cursor to compute cursor motion deltas and should be far from
+	the edges of the screen, typically the center.
 	*/
-	void				getCursorPos(SInt32& x, SInt32& y) const;
+	void				getCursorCenter(SInt32& x, SInt32& y) const;
 
 	//@}
+
+	// IScreen overrides
+	virtual void*		getEventTarget() const;
+	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
+	virtual void		getShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const;
+	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
 
 	// IKeyState overrides
 	virtual void		updateKeys();
@@ -307,13 +273,8 @@ private:
 	typedef std::map<KeyModifierMask, KeyButtons>	MaskToKeys;
 	typedef std::map<KeyButton, KeyModifierMask>	KeyToMask;
 
-	CMutex				m_mutex;
-
 	// our platform dependent screen
 	IPlatformScreen*	m_screen;
-
-	// our screen receiver
-	IScreenReceiver*	m_receiver;
 
 	// true if screen is being used as a primary screen, false otherwise
 	bool				m_isPrimary;

@@ -21,9 +21,8 @@
 // CClientProxy1_1
 //
 
-CClientProxy1_1::CClientProxy1_1(IServer* server,
-				const CString& name, IStream* stream) :
-	CClientProxy1_0(server, name, stream)
+CClientProxy1_1::CClientProxy1_1(const CString& name, IStream* stream) :
+	CClientProxy1_0(name, stream)
 {
 	// do nothing
 }

@@ -13,15 +13,18 @@
  */
 
 #include "CClientProxy.h"
+#include "CProtocolUtil.h"
 #include "IStream.h"
+#include "CLog.h"
 
 //
 // CClientProxy
 //
 
-CClientProxy::CClientProxy(IServer* server,
-				const CString& name, IStream* stream) :
-	m_server(server),
+CEvent::Type			CClientProxy::s_readyEvent        = CEvent::kUnknown;
+CEvent::Type			CClientProxy::s_disconnectedEvent = CEvent::kUnknown;
+
+CClientProxy::CClientProxy(const CString& name, IStream* stream) :
 	m_name(name),
 	m_stream(stream)
 {
@@ -33,10 +36,14 @@ CClientProxy::~CClientProxy()
 	delete m_stream;
 }
 
-IServer*
-CClientProxy::getServer() const
+void
+CClientProxy::close(const char* msg)
 {
-	return m_server;
+	LOG((CLOG_DEBUG1 "send close \"%s\" to \"%s\"", msg, getName().c_str()));
+	CProtocolUtil::writef(getStream(), msg);
+
+	// force the close to be sent before we return
+	getStream()->flush();
 }
 
 IStream*
@@ -51,8 +58,22 @@ CClientProxy::getName() const
 	return m_name;
 }
 
-const CMutex*
-CClientProxy::getMutex() const
+CEvent::Type
+CClientProxy::getReadyEvent()
 {
-	return &m_mutex;
+	return CEvent::registerTypeOnce(s_readyEvent,
+							"CClientProxy::ready");
+}
+
+CEvent::Type
+CClientProxy::getDisconnectedEvent()
+{
+	return CEvent::registerTypeOnce(s_disconnectedEvent,
+							"CClientProxy::disconnected");
+}
+
+void*
+CClientProxy::getEventTarget() const
+{
+	return static_cast<IScreen*>(const_cast<CClientProxy*>(this));
 }

@@ -39,9 +39,9 @@ public:
 	virtual bool		dispatchEvent(const CEvent& event);
 	virtual void		addEvent(const CEvent& event);
 	virtual CEventQueueTimer*
-						newTimer(double duration, void* target = NULL);
+						newTimer(double duration, void* target);
 	virtual CEventQueueTimer*
-						newOneShotTimer(double duration, void* target = NULL);
+						newOneShotTimer(double duration, void* target);
 	virtual void		deleteTimer(CEventQueueTimer*);
 	virtual void		adoptHandler(void* target, IEventJob* dispatcher);
 	virtual void		adoptHandler(CEvent::Type type,
@@ -50,8 +50,13 @@ public:
 	virtual IEventJob*	orphanHandler(CEvent::Type type, void* target);
 	virtual void		removeHandler(void* target);
 	virtual void		removeHandler(CEvent::Type type, void* target);
+	virtual CEvent::Type
+						registerType(const char* name);
+	virtual CEvent::Type
+						registerTypeOnce(CEvent::Type& type, const char* name);
 	virtual bool		isEmpty() const;
 	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const;
+	virtual const char*	getTypeName(CEvent::Type type);
 
 private:
 	void				doAdoptHandler(CEvent::Type type,
@@ -77,7 +82,8 @@ private:
 	};
 	class CTimer {
 	public:
-		CTimer(CEventQueueTimer*, double timeout, void* target, bool oneShot);
+		CTimer(CEventQueueTimer*, double timeout, double initialTime,
+							void* target, bool oneShot);
 		~CTimer();
 
 		void			reset();
@@ -106,19 +112,28 @@ private:
 	typedef std::map<UInt32, CEvent> CEventTable;
 	typedef std::vector<UInt32> CEventIDList;
 	typedef std::map<CTypeTarget, IEventJob*> CHandlerTable;
+	typedef std::map<CEvent::Type, const char*> CTypeMap;
 
 	CArchMutex			m_mutex;
 
+	// registered events
+	CEvent::Type		m_nextType;
+	CTypeMap			m_typeMap;
+
+	// buffer of events
 	IEventQueueBuffer*	m_buffer;
 
+	// saved events
 	CEventTable			m_events;
 	CEventIDList		m_oldEventIDs;
 
+	// timers
 	CStopwatch			m_time;
 	CTimers				m_timers;
 	CTimerQueue			m_timerQueue;
 	CTimerEvent			m_timerEvent;
 
+	// event handlers
 	CHandlerTable		m_handlers;
 };
 

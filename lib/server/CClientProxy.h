@@ -16,11 +16,10 @@
 #define CCLIENTPROXY_H
 
 #include "IClient.h"
-#include "CMutex.h"
+#include "CEvent.h"
 #include "CString.h"
 
 class IStream;
-class IServer;
 
 //! Generic proxy for client
 class CClientProxy : public IClient {
@@ -28,17 +27,21 @@ public:
 	/*!
 	\c name is the name of the client.
 	*/
-	CClientProxy(IServer* server, const CString& name, IStream* adoptedStream);
+	CClientProxy(const CString& name, IStream* adoptedStream);
 	~CClientProxy();
 
-	//! @name accessors
+	//! @name manipulators
 	//@{
 
-	//! Get server
+	//! Disconnect
 	/*!
-	Returns the server passed to the c'tor.
+	Ask the client to disconnect, using \p msg as the reason.
 	*/
-	IServer*			getServer() const;
+	void				close(const char* msg);
+
+	//@}
+	//! @name accessors
+	//@{
 
 	//! Get stream
 	/*!
@@ -46,12 +49,31 @@ public:
 	*/
 	IStream*			getStream() const;
 
+	//! Get ready event type
+	/*!
+	Returns the ready event type.  This is sent when the client has
+	completed the initial handshake.  Until it is sent, the client is
+	not fully connected.
+	*/
+	static CEvent::Type	getReadyEvent();
+
+	//! Get disconnect event type
+	/*!
+	Returns the disconnect event type.  This is sent when the client
+	disconnects or is disconnected.  The target is getEventTarget().
+	*/
+	static CEvent::Type	getDisconnectedEvent();
+
 	//@}
 
+	// IScreen
+	virtual void*		getEventTarget() const;
+	virtual bool		getClipboard(ClipboardID id, IClipboard*) const = 0;
+	virtual void		getShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const = 0;
+	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
+
 	// IClient overrides
-	virtual void		open() = 0;
-	virtual void		mainLoop() = 0;
-	virtual void		close() = 0;
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
 							bool forScreensaver) = 0;
@@ -71,25 +93,13 @@ public:
 	virtual void		resetOptions() = 0;
 	virtual void		setOptions(const COptionsList& options) = 0;
 	virtual CString		getName() const;
-	virtual SInt32		getJumpZoneSize() const = 0;
-	virtual void		getShape(SInt32& x, SInt32& y,
-							SInt32& width, SInt32& height) const = 0;
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
-	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
-
-protected:
-	//! Get mutex
-	/*!
-	Returns the mutex for this object.  Subclasses should use this
-	mutex to protect their data.
-	*/
-	const CMutex*		getMutex() const;
 
 private:
-	CMutex				m_mutex;
-	IServer*			m_server;
 	CString				m_name;
 	IStream*			m_stream;
+
+	static CEvent::Type	s_readyEvent;
+	static CEvent::Type	s_disconnectedEvent;
 };
 
 #endif

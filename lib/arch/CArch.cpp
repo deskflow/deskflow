@@ -555,6 +555,12 @@ CArch::isAnyAddr(CArchNetAddress addr)
 	return m_net->isAnyAddr(addr);
 }
 
+bool
+CArch::isEqualAddr(CArchNetAddress a, CArchNetAddress b)
+{
+	return m_net->isEqualAddr(a, b);
+}
+
 void
 CArch::sleep(double timeout)
 {

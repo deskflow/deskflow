@@ -446,11 +446,9 @@ CConfig::getOptions(const CString& name) const
 bool
 CConfig::operator==(const CConfig& x) const
 {
-/* FIXME -- no compare available for CNetworkAddress
 	if (m_synergyAddress != x.m_synergyAddress) {
 		return false;
 	}
-*/
 	if (m_map.size() != x.m_map.size()) {
 		return false;
 	}

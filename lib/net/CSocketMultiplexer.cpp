@@ -18,6 +18,7 @@
 #include "CLock.h"
 #include "CMutex.h"
 #include "CThread.h"
+#include "CLog.h"
 #include "TMethodJob.h"
 #include "CArch.h"
 #include "XArch.h"
@@ -207,8 +208,8 @@ CSocketMultiplexer::serviceThread(void*)
 			// check for status
 			status = ARCH->pollSocket(&pfds[0], pfds.size(), -1);
 		}
-		catch (XArchNetwork&) {
-			// FIXME -- uh oh
+		catch (XArchNetwork& e) {
+			LOG((CLOG_WARN "error in socket multiplexer: %s", e.what().c_str()));
 			status = 0;
 		}
 

@@ -14,18 +14,16 @@
 
 #include "CXWindowsScreen.h"
 #include "CXWindowsClipboard.h"
+#include "CXWindowsEventQueueBuffer.h"
 #include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
 #include "CClipboard.h"
-#include "IScreenReceiver.h"
-#include "IPrimaryScreenReceiver.h"
 #include "XScreen.h"
-#include "CLock.h"
-#include "CThread.h"
 #include "CLog.h"
 #include "CStopwatch.h"
 #include "CStringUtil.h"
-#include "IJob.h"
+#include "IEventQueue.h"
+#include "TMethodEventJob.h"
 #include <cstring>
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
@@ -109,16 +107,24 @@ static const KeySym		g_map1008FF[] =
 // CXWindowsScreen
 //
 
+// NOTE -- the X display is shared among several objects but is owned
+// by the CXWindowsScreen.  Xlib is not reentrant so we must ensure
+// that no two objects can simultaneously call Xlib with the display.
+// this is easy since we only make X11 calls from the main thread.
+// we must also ensure that these objects do not use the display in
+// their destructors or, if they do, we can tell them not to.  This
+// is to handle unexpected disconnection of the X display, when any
+// call on the display is invalid.  In that situation we discard the
+// display and the X11 event queue buffer, ignore any calls that try
+// to use the display, and wait to be destroyed.
+
 CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 
-CXWindowsScreen::CXWindowsScreen(IScreenReceiver* receiver,
-				IPrimaryScreenReceiver* primaryReceiver) :
-	m_isPrimary(primaryReceiver != NULL),
+CXWindowsScreen::CXWindowsScreen(bool isPrimary) :
+	m_isPrimary(isPrimary),
 	m_display(NULL),
 	m_root(None),
 	m_window(None),
-	m_receiver(receiver),
-	m_primaryReceiver(primaryReceiver),
 	m_isOnScreen(m_isPrimary),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
@@ -129,205 +135,99 @@ CXWindowsScreen::CXWindowsScreen(IScreenReceiver* receiver,
 	m_im(NULL),
 	m_ic(NULL),
 	m_lastKeycode(0),
-	m_atomQuit(None),
+	m_sequenceNumber(0),
 	m_screensaver(NULL),
 	m_screensaverNotify(false),
-	m_atomScreensaver(None),
-	m_oneShotTimer(NULL),
 	m_xtestIsXineramaUnaware(true)
 {
-	assert(s_screen   == NULL);
-	assert(m_receiver != NULL);
+	assert(s_screen == NULL);
 
 	s_screen = this;
 
-	// no clipboards to start with
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		m_clipboard[id] = NULL;
+	// set the X I/O error handler so we catch the display disconnecting
+	XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
+
+	try {
+		m_display     = openDisplay();
+		m_root        = DefaultRootWindow(m_display);
+		saveShape();
+		m_window      = openWindow();
+		m_screensaver = new CXWindowsScreenSaver(m_display,
+								m_window, getEventTarget());
+		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
+		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 	}
+	catch (...) {
+		if (m_display != NULL) {
+			XCloseDisplay(m_display);
+		}
+		throw;
+	}
+
+	// primary/secondary screen only initialization
+	if (m_isPrimary) {
+		// start watching for events on other windows
+		selectEvents(m_root);
+
+		// prepare to use input methods
+		openIM();
+	}
+	else {
+		// become impervious to server grabs
+		XTestGrabControl(m_display, True);
+	}
+
+	// initialize the clipboards
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		m_clipboard[id] = new CXWindowsClipboard(m_display, m_window, id);
+	}
+
+	// install event handlers
+	EVENTQUEUE->adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
+							new TMethodEventJob<CXWindowsScreen>(this,
+								&CXWindowsScreen::handleSystemEvent));
+
+	// install the platform event queue
+	EVENTQUEUE->adoptBuffer(new CXWindowsEventQueueBuffer(m_display, m_window));
 }
 
 CXWindowsScreen::~CXWindowsScreen()
 {
 	assert(s_screen  != NULL);
-	assert(m_display == NULL);
+	assert(m_display != NULL);
 
-	delete m_oneShotTimer;
+	EVENTQUEUE->adoptBuffer(NULL);
+	EVENTQUEUE->removeHandler(CEvent::kSystem, IEventQueue::getSystemTarget());
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		delete m_clipboard[id];
+	}
+	delete m_screensaver;
+	m_screensaver = NULL;
+	if (m_display != NULL) {
+		// FIXME -- is it safe to clean up the IC and IM without a display?
+		if (m_ic != NULL) {
+			XDestroyIC(m_ic);
+		}
+		if (m_im != NULL) {
+			XCloseIM(m_im);
+		}
+		XDestroyWindow(m_display, m_window);
+		XCloseDisplay(m_display);
+	}
+	XSetIOErrorHandler(NULL);
+
 	s_screen = NULL;
 }
 
 void
-CXWindowsScreen::open(IKeyState* keyState)
+CXWindowsScreen::setKeyState(IKeyState* keyState)
 {
-	assert(m_display == NULL);
-
-	try {
-		// set the X I/O error handler so we catch the display disconnecting
-		XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
-
-		// get the DISPLAY
-		const char* display = getenv("DISPLAY");
-		if (display == NULL) {
-			display = ":0.0";
-		}
-
-		// open the display
-		LOG((CLOG_DEBUG "XOpenDisplay(\"%s\")", display));
-		m_display = XOpenDisplay(display);
-		if (m_display == NULL) {
-			throw XScreenUnavailable(60.0);
-		}
-
-		// verify the availability of the XTest extension
-		if (!m_isPrimary) {
-			int majorOpcode, firstEvent, firstError;
-			if (!XQueryExtension(m_display, XTestExtensionName,
-								&majorOpcode, &firstEvent, &firstError)) {
-				LOG((CLOG_ERR "XTEST extension not available"));
-				throw XScreenOpenFailure();
-			}
-		}
-
-		// get root window
-		m_root = DefaultRootWindow(m_display);
-
-		// get shape of default screen
-		m_x = 0;
-		m_y = 0;
-		m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
-		m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
-		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
-
-		// get center of default screen
-		m_xCenter = m_x + (m_w >> 1);
-		m_yCenter = m_y + (m_h >> 1);
-
-		// check if xinerama is enabled and there is more than one screen.
-		// get center of first Xinerama screen.  Xinerama appears to have
-		// a bug when XWarpPointer() is used in combination with
-		// XGrabPointer().  in that case, the warp is successful but the
-		// next pointer motion warps the pointer again, apparently to
-		// constrain it to some unknown region, possibly the region from
-		// 0,0 to Wm,Hm where Wm (Hm) is the minimum width (height) over
-		// all physical screens.  this warp only seems to happen if the
-		// pointer wasn't in that region before the XWarpPointer().  the
-		// second (unexpected) warp causes synergy to think the pointer
-		// has been moved when it hasn't.  to work around the problem,
-		// we warp the pointer to the center of the first physical
-		// screen instead of the logical screen.
-		m_xinerama = false;
-#if HAVE_X11_EXTENSIONS_XINERAMA_H
-		int eventBase, errorBase;
-		if (XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
-			XineramaIsActive(m_display)) {
-			int numScreens;
-			XineramaScreenInfo* screens;
-			screens = XineramaQueryScreens(m_display, &numScreens);
-			if (screens != NULL) {
-				if (numScreens > 1) {
-					m_xinerama = true;
-					m_xCenter  = screens[0].x_org + (screens[0].width  >> 1);
-					m_yCenter  = screens[0].y_org + (screens[0].height >> 1);
-				}
-				XFree(screens);
-			}
-		}
-#endif
-
-		// create the window
-		m_window = createWindow();
-		if (m_window == None) {
-			throw XScreenOpenFailure();
-		}
-		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
-
-		if (m_isPrimary) {
-			// start watching for events on other windows
-			selectEvents(m_root);
-
-			// prepare to use input methods
-			openIM();
-		}
-
-		// initialize the clipboards
-		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			m_clipboard[id] = new CXWindowsClipboard(m_display, m_window, id);
-		}
-
-		// initialize the screen saver
-		m_atomScreensaver = XInternAtom(m_display,
-										"SYNERGY_SCREENSAVER", False);
-		m_screensaver     = new CXWindowsScreenSaver(this, m_display);
-	}
-	catch (...) {
-		close();
-		throw;
-	}
-
-	// save the IKeyState
 	m_keyState = keyState;
-
-	// we'll send ourself an event of this type to exit the main loop
-	m_atomQuit = XInternAtom(m_display, "SYNERGY_QUIT", False);
-
-	if (!m_isPrimary) {
-		// become impervious to server grabs
-		XTestGrabControl(m_display, True);
-	}
-}
-
-void
-CXWindowsScreen::close()
-{
-	// done with m_keyState
-	m_keyState = NULL;
-
-	// done with screen saver
-	delete m_screensaver;
-
-	// destroy clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		delete m_clipboard[id];
-		m_clipboard[id] = NULL;
-	}
-
-	// done with input methods
-	if (m_ic != NULL) {
-		XDestroyIC(m_ic);
-	}
-	if (m_im != NULL) {
-		XCloseIM(m_im);
-	}
-
-	// done with window
-	if (m_window != None) {
-		XDestroyWindow(m_display, m_window);
-	}
-
-	// close the display
-	if (m_display != NULL) {
-		XCloseDisplay(m_display);
-	}
-
-	// restore error handler
-	XSetIOErrorHandler(NULL);
-
-	// reset state
-	m_atomQuit        = None;
-	m_screensaver     = NULL;
-	m_atomScreensaver = None;
-	m_ic              = NULL;
-	m_im              = NULL;
-	m_window          = None;
-	m_root            = None;
-	m_display         = NULL;
 }
 
 void
 CXWindowsScreen::enable()
 {
-	CLock lock(&m_mutex);
-
 	if (!m_isPrimary) {
 		// get the keyboard control state
 		XKeyboardState keyControl;
@@ -349,8 +249,6 @@ CXWindowsScreen::enable()
 void
 CXWindowsScreen::disable()
 {
-	CLock lock(&m_mutex);
-
 	// release input context focus
 	if (m_ic != NULL) {
 		XUnsetICFocus(m_ic);
@@ -367,144 +265,8 @@ CXWindowsScreen::disable()
 }
 
 void
-CXWindowsScreen::mainLoop()
-{
-	// wait for an event in a cancellable way and don't lock the
-	// display while we're waiting.  we use CLock to ensure that
-	// we unlock on exit but we directly unlock/lock the mutex
-	// for certain sections when we mustn't hold the lock.  it's
-	// very important that these sections not return (even by
-	// exception or cancellation) without first reestablishing
-	// the lock.
-	XEvent event;
-	CLock lock(&m_mutex);
-
-	for (;;) {
-
-#if UNIX_LIKE
-
-		// compute timeout to next timer
-		double dtimeout;
-		{
-			CLock timersLock(&m_timersMutex);
-			dtimeout = (m_timers.empty() ? -1.0 : m_timers.top());
-			if (m_oneShotTimer != NULL &&
-				(dtimeout == -1.0 || *m_oneShotTimer < dtimeout)) {
-				dtimeout = *m_oneShotTimer;
-			}
-		}
-
-		// use poll() to wait for a message from the X server or for timeout.
-		// this is a good deal more efficient than polling and sleeping.
-#if HAVE_POLL
-		struct pollfd pfds[1];
-		pfds[0].fd     = ConnectionNumber(m_display);
-		pfds[0].events = POLLIN;
-		int timeout    = static_cast<int>(1000.0 * dtimeout);
-#else
-		struct timeval timeout;
-		struct timeval* timeoutPtr;
-		if (dtimeout < 0.0) {
-			timeoutPtr = NULL;
-		}
-		else {
-			timeout.tv_sec  = static_cast<int>(dtimeout);
-			timeout.tv_usec = static_cast<int>(1.0e+6 *
-									(dtimeout - timeout.tv_sec));
-			timeoutPtr      = &timeout;
-		}
-
-		// initialize file descriptor sets
-		fd_set rfds;
-		FD_ZERO(&rfds);
-		FD_SET(ConnectionNumber(m_display), &rfds);
-#endif
-
-		// wait for message from X server or for timeout.  also check
-		// if the thread has been cancelled.  poll() should return -1
-		// with EINTR when the thread is cancelled.
-		CThread::testCancel();
-		m_mutex.unlock();
-#if HAVE_POLL
-		poll(pfds, 1, timeout);
-#else
-		select(ConnectionNumber(m_display) + 1,
-							SELECT_TYPE_ARG234 &rfds,
-							SELECT_TYPE_ARG234 NULL,
-							SELECT_TYPE_ARG234 NULL,
-							SELECT_TYPE_ARG5   timeoutPtr);
-#endif
-		m_mutex.lock();
-		CThread::testCancel();
-
-		// process timers
-		processTimers();
-
-#else // !UNIX_LIKE
-
-		// poll for pending events and process timers
-		while (XPending(m_display) == 0) {
-			// check timers
-			if (processTimers()) {
-				continue;
-			}
-
-			// wait
-			try {
-				m_mutex.unlock();
-				CThread::sleep(0.01);
-				m_mutex.lock();
-			}
-			catch (...) {
-				m_mutex.lock();
-				throw;
-			}
-		}
-
-#endif // !UNIX_LIKE
-
-		// process events
-		while (XPending(m_display) > 0) {
-			// get the event
-			XNextEvent(m_display, &event);
-			if (isQuitEvent(&event)) {
-				return;
-			}
-
-			// process the event
-			onEvent(&event);
-		}
-	}
-}
-
-void
-CXWindowsScreen::exitMainLoop()
-{
-	// send ourself a quit event.  this will wake up the event loop
-	// and cause it to exit.
-	if (m_atomQuit != None) {
-		XEvent event;
-		event.xclient.type         = ClientMessage;
-		event.xclient.display      = m_display;
-		event.xclient.window       = m_window;
-		event.xclient.message_type = m_atomQuit;
-		event.xclient.format       = 32;
-		event.xclient.data.l[0]    = 0;
-		event.xclient.data.l[1]    = 0;
-		event.xclient.data.l[2]    = 0;
-		event.xclient.data.l[3]    = 0;
-		event.xclient.data.l[4]    = 0;
-		CLock lock(&m_mutex);
-		CXWindowsUtil::CErrorLock errorLock(m_display);
-		XSendEvent(m_display, m_window, False, 0, &event);
-	}
-}
-
-void
 CXWindowsScreen::enter()
 {
-	CLock lock(&m_mutex);
-
 	// release input context focus
 	if (m_ic != NULL) {
 		XUnsetICFocus(m_ic);
@@ -539,8 +301,6 @@ CXWindowsScreen::enter()
 bool
 CXWindowsScreen::leave()
 {
-	CLock lock(&m_mutex);
-
 	if (!m_isPrimary) {
 		// restore the previous keyboard auto-repeat state.  if the user
 		// changed the auto-repeat configuration while on the client then
@@ -590,8 +350,6 @@ CXWindowsScreen::leave()
 bool
 CXWindowsScreen::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
-	CLock lock(&m_mutex);
-
 	// fail if we don't have the requested clipboard
 	if (m_clipboard[id] == NULL) {
 		return false;
@@ -625,14 +383,8 @@ CXWindowsScreen::checkClipboards()
 void
 CXWindowsScreen::openScreensaver(bool notify)
 {
-	CLock lock(&m_mutex);
-	assert(m_screensaver != NULL);
-
 	m_screensaverNotify = notify;
-	if (m_screensaverNotify) {
-		m_screensaver->setNotify(m_window);
-	}
-	else {
+	if (!m_screensaverNotify) {
 		m_screensaver->disable();
 	}
 }
@@ -640,23 +392,14 @@ CXWindowsScreen::openScreensaver(bool notify)
 void
 CXWindowsScreen::closeScreensaver()
 {
-	CLock lock(&m_mutex);
-	if (m_screensaver != NULL) {
-		if (m_screensaverNotify) {
-			m_screensaver->setNotify(None);
-		}
-		else {
-			m_screensaver->enable();
-		}
+	if (!m_screensaverNotify) {
+		m_screensaver->enable();
 	}
 }
 
 void
 CXWindowsScreen::screensaver(bool activate)
 {
-	CLock lock(&m_mutex);
-	assert(m_screensaver != NULL);
-
 	if (activate) {
 		m_screensaver->activate();
 	}
@@ -685,11 +428,15 @@ CXWindowsScreen::setOptions(const COptionsList& options)
 void
 CXWindowsScreen::updateKeys()
 {
-	CLock lock(&m_mutex);
-
 	// update keyboard and mouse button mappings
 	m_keyMapper.update(m_display, m_keyState);
 	updateButtons();
+}
+
+void
+CXWindowsScreen::setSequenceNumber(UInt32 seqNum)
+{
+	m_sequenceNumber = seqNum;
 }
 
 bool
@@ -698,13 +445,16 @@ CXWindowsScreen::isPrimary() const
 	return m_isPrimary;
 }
 
+void*
+CXWindowsScreen::getEventTarget() const
+{
+	return const_cast<CXWindowsScreen*>(this);
+}
+
 bool
 CXWindowsScreen::getClipboard(ClipboardID id, IClipboard* clipboard) const
 {
 	assert(clipboard != NULL);
-
-	// block others from using the display while we get the clipboard
-	CLock lock(&m_mutex);
 
 	// fail if we don't have the requested clipboard
 	if (m_clipboard[id] == NULL) {
@@ -731,9 +481,6 @@ CXWindowsScreen::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 void
 CXWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
 {
-	CLock lock(&m_mutex);
-	assert(m_display != NULL);
-
 	Window root, window;
 	int mx, my, xWindow, yWindow;
 	unsigned int mask;
@@ -757,8 +504,6 @@ CXWindowsScreen::reconfigure(UInt32)
 void
 CXWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 {
-	CLock lock(&m_mutex);
-
 	// warp mouse
 	warpCursorNoFlush(x, y);
 
@@ -777,15 +522,6 @@ CXWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 	m_yCursor = y;
 }
 
-UInt32
-CXWindowsScreen::addOneShotTimer(double timeout)
-{
-	CLock lock(&m_timersMutex);
-	// FIXME -- support multiple one-shot timers
-	m_oneShotTimer = new CTimer(NULL, m_time.getTime(), timeout);
-	return 0;
-}
-
 SInt32
 CXWindowsScreen::getJumpZoneSize() const
 {
@@ -795,8 +531,6 @@ CXWindowsScreen::getJumpZoneSize() const
 bool
 CXWindowsScreen::isAnyMouseButtonDown() const
 {
-	CLock lock(&m_mutex);
-
 	// query the pointer to get the button state
 	Window root, window;
 	int xRoot, yRoot, xWindow, yWindow;
@@ -810,11 +544,16 @@ CXWindowsScreen::isAnyMouseButtonDown() const
 	return false;
 }
 
+void
+CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
+{
+	x = m_xCenter;
+	y = m_yCenter;
+}
+
 const char*
 CXWindowsScreen::getKeyName(KeyButton keycode) const
 {
-	CLock lock(&m_mutex);
-
 	KeySym keysym = XKeycodeToKeysym(m_display, keycode, 0);
 	char* name    = XKeysymToString(keysym);
 	if (name != NULL) {
@@ -830,7 +569,6 @@ CXWindowsScreen::getKeyName(KeyButton keycode) const
 void
 CXWindowsScreen::fakeKeyEvent(KeyButton keycode, bool press) const
 {
-	CLock lock(&m_mutex);
 	XTestFakeKeyEvent(m_display, keycode, press ? True : False, CurrentTime);
 	XFlush(m_display);
 }
@@ -847,7 +585,6 @@ CXWindowsScreen::fakeMouseButton(ButtonID button, bool press) const
 {
 	const unsigned int xButton = mapButtonToX(button);
 	if (xButton != 0) {
-		CLock lock(&m_mutex);
 		XTestFakeButtonEvent(m_display, xButton,
 							press ? True : False, CurrentTime);
 		XFlush(m_display);
@@ -857,7 +594,6 @@ CXWindowsScreen::fakeMouseButton(ButtonID button, bool press) const
 void
 CXWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y) const
 {
-	CLock lock(&m_mutex);
 	if (m_xinerama && m_xtestIsXineramaUnaware) {
 		XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
 	}
@@ -884,7 +620,6 @@ CXWindowsScreen::fakeMouseWheel(SInt32 delta) const
 	}
 
 	// send as many clicks as necessary
-	CLock lock(&m_mutex);
 	for (; delta >= 120; delta -= 120) {
 		XTestFakeButtonEvent(m_display, xButton, True, CurrentTime);
 		XTestFakeButtonEvent(m_display, xButton, False, CurrentTime);
@@ -901,17 +636,84 @@ CXWindowsScreen::mapKey(IKeyState::Keystrokes& keys,
 	return m_keyMapper.mapKey(keys, keyState, id, desiredMask, isAutoRepeat);
 }
 
-bool
-CXWindowsScreen::isQuitEvent(XEvent* event) const
+Display*
+CXWindowsScreen::openDisplay() const
 {
-	return (m_atomQuit                  != None &&
-			event->type                 == ClientMessage &&
-			event->xclient.window       == m_window &&
-			event->xclient.message_type == m_atomQuit);
+	// get the DISPLAY
+	const char* displayName = getenv("DISPLAY");
+	if (displayName == NULL) {
+		displayName = ":0.0";
+	}
+
+	// open the display
+	LOG((CLOG_DEBUG "XOpenDisplay(\"%s\")", displayName));
+	Display* display = XOpenDisplay(displayName);
+	if (display == NULL) {
+		throw XScreenUnavailable(60.0);
+	}
+
+	// verify the availability of the XTest extension
+	if (!m_isPrimary) {
+		int majorOpcode, firstEvent, firstError;
+		if (!XQueryExtension(display, XTestExtensionName,
+							&majorOpcode, &firstEvent, &firstError)) {
+			LOG((CLOG_ERR "XTEST extension not available"));
+			XCloseDisplay(display);
+			throw XScreenOpenFailure();
+		}
+	}
+
+	return display;
+}
+
+void
+CXWindowsScreen::saveShape()
+{
+	// get shape of default screen
+	m_x = 0;
+	m_y = 0;
+	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
+	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
+
+	// get center of default screen
+	m_xCenter = m_x + (m_w >> 1);
+	m_yCenter = m_y + (m_h >> 1);
+
+	// check if xinerama is enabled and there is more than one screen.
+	// get center of first Xinerama screen.  Xinerama appears to have
+	// a bug when XWarpPointer() is used in combination with
+	// XGrabPointer().  in that case, the warp is successful but the
+	// next pointer motion warps the pointer again, apparently to
+	// constrain it to some unknown region, possibly the region from
+	// 0,0 to Wm,Hm where Wm (Hm) is the minimum width (height) over
+	// all physical screens.  this warp only seems to happen if the
+	// pointer wasn't in that region before the XWarpPointer().  the
+	// second (unexpected) warp causes synergy to think the pointer
+	// has been moved when it hasn't.  to work around the problem,
+	// we warp the pointer to the center of the first physical
+	// screen instead of the logical screen.
+	m_xinerama = false;
+#if HAVE_X11_EXTENSIONS_XINERAMA_H
+	int eventBase, errorBase;
+	if (XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
+		XineramaIsActive(m_display)) {
+		int numScreens;
+		XineramaScreenInfo* screens;
+		screens = XineramaQueryScreens(m_display, &numScreens);
+		if (screens != NULL) {
+			if (numScreens > 1) {
+				m_xinerama = true;
+				m_xCenter  = screens[0].x_org + (screens[0].width  >> 1);
+				m_yCenter  = screens[0].y_org + (screens[0].height >> 1);
+			}
+			XFree(screens);
+		}
+	}
+#endif
 }
 
 Window
-CXWindowsScreen::createWindow() const
+CXWindowsScreen::openWindow() const
 {
 	// default window attributes.  we don't want the window manager
 	// messing with our window and we don't want the cursor to be
@@ -951,11 +753,15 @@ CXWindowsScreen::createWindow() const
 	}
 
 	// create and return the window
-	return XCreateWindow(m_display, m_root, x, y, w, h, 0, 0,
+	Window window = XCreateWindow(m_display, m_root, x, y, w, h, 0, 0,
 							InputOnly, CopyFromParent,
 							CWDontPropagate | CWEventMask |
 							CWOverrideRedirect | CWCursor,
 							&attr);
+	if (window == None) {
+		throw XScreenOpenFailure();
+	}
+	return window;
 }
 
 void
@@ -1021,40 +827,24 @@ CXWindowsScreen::openIM()
 }
 
 void
-CXWindowsScreen::addTimer(IJob* job, double timeout)
+CXWindowsScreen::sendEvent(CEvent::Type type, void* data)
 {
-	CLock lock(&m_timersMutex);
-	removeTimerNoLock(job);
-	m_timers.push(CTimer(job, m_time.getTime(), timeout));
+	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), data));
 }
 
 void
-CXWindowsScreen::removeTimer(IJob* job)
+CXWindowsScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id)
 {
-	CLock lock(&m_timersMutex);
-	removeTimerNoLock(job);
+	CClipboardInfo* info   = new CClipboardInfo;
+	info->m_id             = id;
+	info->m_sequenceNumber = m_sequenceNumber;
+	sendEvent(type, info);
 }
 
 void
-CXWindowsScreen::removeTimerNoLock(IJob* job)
+CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 {
-	// do it the hard way.  first collect all jobs that are not
-	// the removed job.
-	CTimerPriorityQueue::container_type tmp;
-	for (CTimerPriorityQueue::iterator index = m_timers.begin();
-								index != m_timers.end(); ++index) {
-		if (index->getJob() != job) {
-			tmp.push_back(*index);
-		}
-	}
-
-	// now swap in the new list
-	m_timers.swap(tmp);
-}
-
-void
-CXWindowsScreen::onEvent(XEvent* xevent)
-{
+	XEvent* xevent = reinterpret_cast<XEvent*>(event.getData());
 	assert(xevent != NULL);
 
 	// let input methods try to handle event first
@@ -1082,13 +872,20 @@ CXWindowsScreen::onEvent(XEvent* xevent)
 		}
 	}
 
+	// let screen saver have a go
+	if (m_screensaver->handleXEvent(xevent)) {
+		// screen saver handled it
+		return;
+	}
+
+	// handle the event ourself
 	switch (xevent->type) {
 	case CreateNotify:
 		if (m_isPrimary) {
 			// select events on new window
 			selectEvents(xevent->xcreatewindow.window);
 		}
-		return;
+		break;
 
 	case MappingNotify:
 		if (XPending(m_display) > 0) {
@@ -1122,7 +919,7 @@ CXWindowsScreen::onEvent(XEvent* xevent)
 			if (id != kClipboardEnd) {
 				LOG((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
 				m_clipboard[id]->lost(xevent->xselectionclear.time);
-				m_receiver->onGrabClipboard(id);
+				sendClipboardEvent(getClipboardGrabbedEvent(), id);
 				return;
 			}
 		}
@@ -1138,7 +935,7 @@ CXWindowsScreen::onEvent(XEvent* xevent)
 								xevent->xselection.requestor,
 								xevent->xselection.property);
 		}
-		return;
+		break;
 
 	case SelectionRequest:
 		{
@@ -1163,17 +960,6 @@ CXWindowsScreen::onEvent(XEvent* xevent)
 			processClipboardRequest(xevent->xproperty.window,
 								xevent->xproperty.time,
 								xevent->xproperty.atom);
-			return;
-		}
-		break;
-
-	case ClientMessage:
-		if (m_isPrimary &&
-			xevent->xclient.message_type == m_atomScreensaver &&
-			xevent->xclient.format       == 32) {
-			// screen saver activation/deactivation event
-			m_primaryReceiver->onScreensaver(xevent->xclient.data.l[0] != 0);
-			return;
 		}
 		break;
 
@@ -1216,9 +1002,6 @@ CXWindowsScreen::onEvent(XEvent* xevent)
 	default:
 		break;
 	}
-
-	// let screen saver have a go
-	m_screensaver->onPreDispatch(xevent);
 }
 
 void
@@ -1245,10 +1028,11 @@ CXWindowsScreen::onKeyPress(XKeyEvent& xkey)
 		}
 
 		// handle key
-		m_primaryReceiver->onKeyDown(key, mask, keycode);
+		sendEvent(getKeyDownEvent(), new CKeyInfo(key, mask, keycode, 1));
 		KeyModifierMask keyMask = m_keyState->getMaskForKey(keycode);
 		if (m_keyState->isHalfDuplex(keyMask)) {
-			m_primaryReceiver->onKeyUp(key, mask | keyMask, keycode);
+			sendEvent(getKeyUpEvent(),
+							new CKeyInfo(key, mask | keyMask, keycode, 1));
 		}
 	}
 }
@@ -1304,9 +1088,10 @@ CXWindowsScreen::onKeyRelease(XKeyEvent& xkey)
 			LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", keycode, xkey.state));
 			KeyModifierMask keyMask = m_keyState->getMaskForKey(keycode);
 			if (m_keyState->isHalfDuplex(keyMask)) {
-				m_primaryReceiver->onKeyDown(key, mask, keycode);
+				sendEvent(getKeyDownEvent(),
+							new CKeyInfo(key, mask, keycode, 1));
 			}
-			m_primaryReceiver->onKeyUp(key, mask, keycode);
+			sendEvent(getKeyUpEvent(), new CKeyInfo(key, mask, keycode, 1));
 		}
 		else {
 			// found a press event following so it's a repeat.
@@ -1314,7 +1099,7 @@ CXWindowsScreen::onKeyRelease(XKeyEvent& xkey)
 			// repeats but we'll just send a repeat of 1.
 			// note that we discard the press event.
 			LOG((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", keycode, xkey.state));
-			m_primaryReceiver->onKeyRepeat(key, mask, 1, keycode);
+			sendEvent(getKeyRepeatEvent(), new CKeyInfo(key, mask, keycode, 1));
 		}
 	}
 }
@@ -1325,7 +1110,7 @@ CXWindowsScreen::onMousePress(const XButtonEvent& xbutton)
 	LOG((CLOG_DEBUG1 "event: ButtonPress button=%d", xbutton.button));
 	const ButtonID button = mapButtonFromX(&xbutton);
 	if (button != kButtonNone) {
-		m_primaryReceiver->onMouseDown(button);
+		sendEvent(getButtonDownEvent(), new CButtonInfo(button));
 	}
 }
 
@@ -1335,15 +1120,15 @@ CXWindowsScreen::onMouseRelease(const XButtonEvent& xbutton)
 	LOG((CLOG_DEBUG1 "event: ButtonRelease button=%d", xbutton.button));
 	const ButtonID button = mapButtonFromX(&xbutton);
 	if (button != kButtonNone) {
-		m_primaryReceiver->onMouseUp(button);
+		sendEvent(getButtonUpEvent(), new CButtonInfo(button));
 	}
 	else if (xbutton.button == 4) {
 		// wheel forward (away from user)
-		m_primaryReceiver->onMouseWheel(120);
+		sendEvent(getWheelEvent(), new CWheelInfo(120));
 	}
 	else if (xbutton.button == 5) {
 		// wheel backward (toward user)
-		m_primaryReceiver->onMouseWheel(-120);
+		sendEvent(getWheelEvent(), new CWheelInfo(-120));
 	}
 }
 
@@ -1374,7 +1159,8 @@ CXWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 	}
 	else if (m_isOnScreen) {
 		// motion on primary screen
-		m_primaryReceiver->onMouseMovePrimary(m_xCursor, m_yCursor);
+		sendEvent(getMotionOnPrimaryEvent(),
+							new CMotionInfo(m_xCursor, m_yCursor));
 	}
 	else {
 		// motion on secondary screen.  warp mouse back to
@@ -1404,7 +1190,7 @@ CXWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 		// warping to the primary screen's enter position,
 		// effectively overriding it.
 		if (x != 0 || y != 0) {
-			m_primaryReceiver->onMouseMoveSecondary(x, y);
+			sendEvent(getMotionOnSecondaryEvent(), new CMotionInfo(x, y));
 		}
 	}
 }
@@ -1445,72 +1231,6 @@ CXWindowsScreen::createBlankCursor() const
 	return cursor;
 }
 
-bool
-CXWindowsScreen::processTimers()
-{
-	bool oneShot = false;
-	std::vector<IJob*> jobs;
-	{
-		CLock lock(&m_timersMutex);
-
-		// get current time
-		const double time = m_time.getTime();
-
-		// done if no timers have expired
-		if ((m_oneShotTimer == NULL || *m_oneShotTimer > time) &&
-			(m_timers.empty() || m_timers.top() > time)) {
-			return false;
-		}
-
-		// handle one shot timers
-		if (m_oneShotTimer != NULL) {
-			*m_oneShotTimer -= time;
-			if (*m_oneShotTimer <= 0.0) {
-				delete m_oneShotTimer;
-				m_oneShotTimer = NULL;
-				oneShot = true;
-			}
-		}
-
-		// subtract current time from all timers.  note that this won't
-		// change the order of elements in the priority queue (except
-		// for floating point round off which we'll ignore).
-		for (CTimerPriorityQueue::iterator index = m_timers.begin();
-								index != m_timers.end(); ++index) {
-			(*index) -= time;
-		}
-
-		// process all timers at or below zero, saving the jobs
-		if (!m_timers.empty()) {
-			while (m_timers.top() <= 0.0) {
-				CTimer timer = m_timers.top();
-				jobs.push_back(timer.getJob());
-				timer.reset();
-				m_timers.pop();
-				m_timers.push(timer);
-			}
-		}
-
-		// reset the clock
-		m_time.reset();
-	}
-
-	// now notify of the one shot timers
-	if (oneShot) {
-		m_mutex.unlock();
-		m_primaryReceiver->onOneShotTimerExpired(0);
-		m_mutex.lock();
-	}
-
-	// now run the jobs.  note that if one of these jobs removes
-	// a timer later in the jobs list and deletes that job pointer
-	// then this will crash when it tries to run that job.
-	for (std::vector<IJob*>::iterator index = jobs.begin();
-								index != jobs.end(); ++index) {
-		(*index)->run();
-	}
-}
-
 ClipboardID
 CXWindowsScreen::getClipboardID(Atom selection) const
 {
@@ -1548,20 +1268,38 @@ CXWindowsScreen::destroyClipboardRequest(Window requestor)
 	}
 }
 
+void
+CXWindowsScreen::onError()
+{
+	// prevent further access to the X display
+	EVENTQUEUE->adoptBuffer(NULL);
+	m_screensaver->destroy();
+	m_screensaver = NULL;
+	m_display     = NULL;
+
+	// notify of failure
+	sendEvent(getErrorEvent(), NULL);
+
+	// FIXME -- should ensure that we ignore operations that involve
+	// m_display from now on.  however, Xlib will simply exit the
+	// application in response to the X I/O error so there's no
+	// point in trying to really handle the error.  if we did want
+	// to handle the error, it'd probably be easiest to delegate to
+	// one of two objects.  one object would take the implementation
+	// from this class.  the other object would be stub methods that
+	// don't use X11.  on error, we'd switch to the latter.
+}
+
 int
 CXWindowsScreen::ioErrorHandler(Display*)
 {
 	// the display has disconnected, probably because X is shutting
-	// down.  X forces us to exit at this point.  that's arguably
-	// a flaw in X but, realistically, it's difficult to gracefully
-	// handle not having a Display* anymore.  we'll simply log the
-	// error, notify the subclass (which must not use the display
-	// so we set it to NULL), and exit.
-	LOG((CLOG_WARN "X display has unexpectedly disconnected"));
-	s_screen->m_display = NULL;
-	s_screen->m_receiver->onError();
-	LOG((CLOG_CRIT "quiting due to X display disconnection"));
-	exit(17);
+	// down.  X forces us to exit at this point which is annoying.
+	// we'll pretend as if we won't exit so we try to make sure we
+	// don't access the display anymore.
+	LOG((CLOG_CRIT "X display has unexpectedly disconnected"));
+	s_screen->onError();
+	return 0;
 }
 
 void
@@ -1853,57 +1591,4 @@ CXWindowsScreen::grabMouseAndKeyboard()
 
 	LOG((CLOG_DEBUG1 "grabbed pointer and keyboard"));
 	return true;
-}
-
-
-//
-// CXWindowsScreen::CTimer
-//
-
-CXWindowsScreen::CTimer::CTimer(IJob* job, double startTime, double resetTime) :
-	m_job(job),
-	m_timeout(resetTime),
-	m_time(resetTime),
-	m_startTime(startTime)
-{
-	assert(m_timeout > 0.0);
-}
-
-CXWindowsScreen::CTimer::~CTimer()
-{
-	// do nothing
-}
-
-void
-CXWindowsScreen::CTimer::run()
-{
-	if (m_job != NULL) {
-		m_job->run();
-	}
-}
-
-void
-CXWindowsScreen::CTimer::reset()
-{
-	m_time      = m_timeout;
-	m_startTime = 0.0;
-}
-
-CXWindowsScreen::CTimer::CTimer&
-CXWindowsScreen::CTimer::operator-=(double dt)
-{
-	m_time     -= dt - m_startTime;
-	m_startTime = 0.0;
-	return *this;
-}
-
-CXWindowsScreen::CTimer::operator double() const
-{
-	return m_time;
-}
-
-bool
-CXWindowsScreen::CTimer::operator<(const CTimer& t) const
-{
-	return m_time < t.m_time;
 }

@@ -12,44 +12,30 @@
  * GNU General Public License for more details.
  */
 
-#ifndef CXWINDOWSEVENTQUEUE_H
-#define CXWINDOWSEVENTQUEUE_H
+#ifndef CXWINDOWSEVENTQUEUEBUFFER_H
+#define CXWINDOWSEVENTQUEUEBUFFER_H
 
-#include "CEventQueue.h"
+#include "IEventQueueBuffer.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
 #endif
 
-//! Event queue for X11
-class CXWindowsEventQueue : public CEventQueue {
+//! Event queue buffer for X11
+class CXWindowsEventQueueBuffer : public IEventQueueBuffer {
 public:
-	CXWindowsEventQueue(Display*);
-	virtual ~CXWindowsEventQueue();
+	CXWindowsEventQueueBuffer(Display*, Window);
+	virtual ~CXWindowsEventQueueBuffer();
 
-	//! @name manipulators
-	//@{
-
-	//@}
-	//! @name accessors
-	//@{
-
-	//@}
-
-protected:
-	// CEventQueue overrides
+	// IEventQueueBuffer overrides
 	virtual void		waitForEvent(double timeout);
-	virtual bool		doGetEvent(CEvent& event);
-	virtual bool		doAddEvent(CEvent::Type type, UInt32 dataID);
-	virtual bool		doIsEmpty() const;
+	virtual Type		getEvent(CEvent& event, UInt32& dataID);
+	virtual bool		addEvent(UInt32 dataID);
+	virtual bool		isEmpty() const;
 	virtual CEventQueueTimer*
-						doNewTimer(double duration, bool oneShot) const;
-	virtual void		doDeleteTimer(CEventQueueTimer*) const;
-
-private:
-	void				processSystemEvent(CEvent& event);
-	void				processClientMessage(CEvent& event);
+						newTimer(double duration, bool oneShot) const;
+	virtual void		deleteTimer(CEventQueueTimer*) const;
 
 private:
 	Display*			m_display;

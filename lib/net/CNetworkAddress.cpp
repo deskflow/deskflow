@@ -142,6 +142,18 @@ CNetworkAddress::operator=(const CNetworkAddress& addr)
 }
 
 bool
+CNetworkAddress::operator==(const CNetworkAddress& addr) const
+{
+	return ARCH->isEqualAddr(m_address, addr.m_address);
+}
+
+bool
+CNetworkAddress::operator!=(const CNetworkAddress& addr) const
+{
+	return !operator==(addr);
+}
+
+bool
 CNetworkAddress::isValid() const
 {
 	return (m_address != NULL);

@@ -16,6 +16,7 @@
 #define ISCREENSAVER_H
 
 #include "IInterface.h"
+#include "CEvent.h"
 
 //! Screen saver interface
 /*!

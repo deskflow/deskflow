@@ -13,7 +13,9 @@
  */
 
 #include "CEventQueue.h"
+#include "CLog.h"
 #include "CSimpleEventQueueBuffer.h"
+#include "CStopwatch.h"
 #include "IEventJob.h"
 #include "CArch.h"
 
@@ -30,7 +32,8 @@ interrupt(void*)
 // CEventQueue
 //
 
-CEventQueue::CEventQueue()
+CEventQueue::CEventQueue() :
+	m_nextType(CEvent::kLast)
 {
 	setInstance(this);
 	m_mutex = ARCH->newMutex();
@@ -44,6 +47,54 @@ CEventQueue::~CEventQueue()
 	ARCH->setInterruptHandler(NULL, NULL);
 	ARCH->closeMutex(m_mutex);
 	setInstance(NULL);
+}
+
+CEvent::Type
+CEventQueue::registerType(const char* name)
+{
+	CArchMutexLock lock(m_mutex);
+	m_typeMap.insert(std::make_pair(m_nextType, name));
+	LOG((CLOG_DEBUG1 "registered event type %s as %d", name, m_nextType));
+	return m_nextType++;
+}
+
+CEvent::Type
+CEventQueue::registerTypeOnce(CEvent::Type& type, const char* name)
+{
+	CArchMutexLock lock(m_mutex);
+	if (type == CEvent::kUnknown) {
+		m_typeMap.insert(std::make_pair(m_nextType, name));
+		LOG((CLOG_DEBUG1 "registered event type %s as %d", name, m_nextType));
+		type = m_nextType++;
+	}
+	return type;
+}
+
+const char*
+CEventQueue::getTypeName(CEvent::Type type)
+{
+	switch (type) {
+	case CEvent::kUnknown:
+		return "nil";
+
+	case CEvent::kQuit:
+		return "quit";
+
+	case CEvent::kSystem:
+		return "system";
+
+	case CEvent::kTimer:
+		return "timer";
+
+	default:
+		CTypeMap::const_iterator i = m_typeMap.find(type);
+		if (i == m_typeMap.end()) {
+			return "<unknown>";
+		}
+		else {
+			return i->second;
+		}
+	}
 }
 
 void
@@ -69,45 +120,55 @@ CEventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 bool
 CEventQueue::getEvent(CEvent& event, double timeout)
 {
+	CStopwatch timer(true);
+retry:
 	// if no events are waiting then handle timers and then wait
-	if (m_buffer->isEmpty()) {
+	while (m_buffer->isEmpty()) {
 		// handle timers first
 		if (hasTimerExpired(event)) {
 			return true;
+		}
+
+		// get time remaining in timeout
+		double timeLeft = timeout - timer.getTime();
+		if (timeout >= 0.0 && timeLeft <= 0.0) {
+			return false;
 		}
 
 		// get time until next timer expires.  if there is a timer
 		// and it'll expire before the client's timeout then use
 		// that duration for our timeout instead.
 		double timerTimeout = getNextTimerTimeout();
-		if (timerTimeout >= 0.0 && timerTimeout < timeout) {
-			timeout = timerTimeout;
+		if (timeout < 0.0 || (timerTimeout >= 0.0 && timerTimeout < timeLeft)) {
+			timeLeft = timerTimeout;
 		}
 
 		// wait for an event
-		m_buffer->waitForEvent(timeout);
+		m_buffer->waitForEvent(timeLeft);
 	}
 
-	// if no events are pending then do the timers
-	if (m_buffer->isEmpty()) {
-		return hasTimerExpired(event);
-	}
-
+	// get the event
 	UInt32 dataID;
 	IEventQueueBuffer::Type type = m_buffer->getEvent(event, dataID);
 	switch (type) {
 	case IEventQueueBuffer::kNone:
+		if (timeout < 0.0 || timeout <= timer.getTime()) {
+			// don't want to fail if client isn't expecting that
+			// so if getEvent() fails with an infinite timeout
+			// then just try getting another event.
+			goto retry;
+		}
 		return false;
 
 	case IEventQueueBuffer::kSystem:
 		return true;
 
 	case IEventQueueBuffer::kUser:
-	{
-		CArchMutexLock lock(m_mutex);
-		event = removeEvent(dataID);
-		return true;
-	}
+		{
+			CArchMutexLock lock(m_mutex);
+			event = removeEvent(dataID);
+			return true;
+		}
 	}
 }
 
@@ -156,9 +217,16 @@ CEventQueue::newTimer(double duration, void* target)
 	assert(duration > 0.0);
 
 	CEventQueueTimer* timer = m_buffer->newTimer(duration, false);
+	if (target == NULL) {
+		target = timer;
+	}
 	CArchMutexLock lock(m_mutex);
 	m_timers.insert(timer);
-	m_timerQueue.push(CTimer(timer, duration, target, false));
+	// initial duration is requested duration plus whatever's on
+	// the clock currently because the latter will be subtracted
+	// the next time we check for timers.
+	m_timerQueue.push(CTimer(timer, duration,
+							duration + m_time.getTime(), target, false));
 	return timer;
 }
 
@@ -168,9 +236,16 @@ CEventQueue::newOneShotTimer(double duration, void* target)
 	assert(duration > 0.0);
 
 	CEventQueueTimer* timer = m_buffer->newTimer(duration, true);
+	if (target == NULL) {
+		target = timer;
+	}
 	CArchMutexLock lock(m_mutex);
 	m_timers.insert(timer);
-	m_timerQueue.push(CTimer(timer, duration, target, true));
+	// initial duration is requested duration plus whatever's on
+	// the clock currently because the latter will be subtracted
+	// the next time we check for timers.
+	m_timerQueue.push(CTimer(timer, duration,
+							duration + m_time.getTime(), target, true));
 	return timer;
 }
 
@@ -401,13 +476,13 @@ CEventQueue::CTypeTarget::operator<(const CTypeTarget& tt) const
 // CEventQueue::CTimer
 //
 
-CEventQueue::CTimer::CTimer(CEventQueueTimer* timer,
-				double timeout, void* target, bool oneShot) :
+CEventQueue::CTimer::CTimer(CEventQueueTimer* timer, double timeout,
+				double initialTime, void* target, bool oneShot) :
 	m_timer(timer),
 	m_timeout(timeout),
 	m_target(target),
 	m_oneShot(oneShot),
-	m_time(timeout)
+	m_time(initialTime)
 {
 	assert(m_timeout > 0.0);
 }

@@ -16,6 +16,7 @@
 #define CEVENT_H
 
 #include "BasicTypes.h"
+#include "stdmap.h"
 
 //! Event
 /*!
@@ -46,6 +47,33 @@ public:
 	//! @name manipulators
 	//@{
 
+	//! Creates a new event type
+	/*!
+	Returns a unique event type id.
+	*/
+	static Type			registerType(const char* name);
+
+	//! Creates a new event type
+	/*!
+	If \p type contains \c kUnknown then it is set to a unique event
+	type id otherwise it is left alone.  The final value of \p type
+	is returned.
+	*/
+	static Type			registerTypeOnce(Type& type, const char* name);
+
+	//! Get name for event
+	/*!
+	Returns the name for the event \p type.  This is primarily for
+	debugging.
+	*/
+	static const char*	getTypeName(Type type);
+
+	//! Release event data
+	/*!
+	Deletes event data for the given event.
+	*/
+	static void			deleteData(const CEvent&);
+
 	//@}
 	//! @name accessors
 	//@{
@@ -68,33 +96,12 @@ public:
 	*/
 	void*				getData() const;
 
-	//! Creates a new event type
-	/*!
-	Returns a unique event type id.
-	*/
-	static Type			registerType();
-
-	//! Creates a new event type
-	/*!
-	If \p type contains \c kUnknown then it is set to a unique event
-	type id otherwise it is left alone.  The final value of \p type
-	is returned.
-	*/
-	static Type			registerTypeOnce(Type& type);
-
-	//! Release event data
-	/*!
-	Deletes event data for the given event.
-	*/
-	static void			deleteData(const CEvent&);
-
 	//@}
 
 private:
 	Type				m_type;
 	void*				m_target;
 	void*				m_data;
-	static Type			s_nextType;
 };
 
 #endif

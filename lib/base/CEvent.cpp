@@ -13,12 +13,11 @@
  */
 
 #include "CEvent.h"
+#include "CEventQueue.h"
 
 //
 // CEvent
 //
-
-CEvent::Type			CEvent::s_nextType = kLast;
 
 CEvent::CEvent() :
 	m_type(kUnknown),
@@ -55,20 +54,21 @@ CEvent::getData() const
 }
 
 CEvent::Type
-CEvent::registerType()
+CEvent::registerType(const char* name)
 {
-	// FIXME -- lock mutex (need a mutex)
-	return s_nextType++;
+	return EVENTQUEUE->registerType(name);
 }
 
 CEvent::Type
-CEvent::registerTypeOnce(Type& type)
+CEvent::registerTypeOnce(Type& type, const char* name)
 {
-	// FIXME -- lock mutex (need a mutex)
-	if (type == CEvent::kUnknown) {
-		type = s_nextType++;
-	}
-	return type;
+	return EVENTQUEUE->registerTypeOnce(type, name);
+}
+
+const char*
+CEvent::getTypeName(Type type)
+{
+	return EVENTQUEUE->getTypeName(type);
 }
 
 void

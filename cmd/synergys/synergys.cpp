@@ -12,22 +12,25 @@
  * GNU General Public License for more details.
  */
 
-#include "CServer.h"
+#include "CClientListener.h"
+#include "CClientProxy.h"
 #include "CConfig.h"
-#include "IScreenFactory.h"
+#include "CPrimaryClient.h"
+#include "CServer.h"
+#include "CScreen.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
 #include "XScreen.h"
+#include "CSocketMultiplexer.h"
 #include "CTCPSocketFactory.h"
 #include "XSocket.h"
-#include "CLock.h"
-#include "CMutex.h"
 #include "CThread.h"
-#include "XThread.h"
-#include "CFunctionJob.h"
+#include "CEventQueue.h"
+#include "CFunctionEventJob.h"
 #include "CLog.h"
 #include "LogOutputters.h"
 #include "CArch.h"
+#include "XArch.h"
 #include "stdfstream.h"
 #include <cstring>
 
@@ -98,63 +101,15 @@ CArgs*					CArgs::s_instance = NULL;
 // platform dependent factories
 //
 
-//! Factory for creating screens
-/*!
-Objects of this type create screens appropriate for the platform.
-*/
-class CScreenFactory : public IScreenFactory {
-public:
-	CScreenFactory() { }
-	virtual ~CScreenFactory() { }
-
-	// IScreenFactory overrides
-	virtual IPlatformScreen*
-						create(IScreenReceiver*, IPrimaryScreenReceiver*);
-};
-
-IPlatformScreen*
-CScreenFactory::create(IScreenReceiver* receiver,
-				IPrimaryScreenReceiver* primaryReceiver)
+static
+CScreen*
+createScreen()
 {
 #if WINDOWS_LIKE
-	return new CMSWindowsScreen(receiver, primaryReceiver);
+	return new CScreen(new CMSWindowsScreen(true));
 #elif UNIX_LIKE
-	return new CXWindowsScreen(receiver, primaryReceiver);
+	return new CScreen(new CXWindowsScreen(true));
 #endif
-}
-
-
-//! CQuitJob
-/*!
-A job that cancels a given thread.
-*/
-class CQuitJob : public IJob {
-public:
-	CQuitJob(const CThread& thread);
-	~CQuitJob();
-
-	// IJob overrides
-	virtual void		run();
-
-private:
-	CThread				m_thread;
-};
-
-CQuitJob::CQuitJob(const CThread& thread) :
-	m_thread(thread)
-{
-	// do nothing
-}
-
-CQuitJob::~CQuitJob()
-{
-	// do nothing
-}
-
-void
-CQuitJob::run()
-{
-	m_thread.cancel();
 }
 
 
@@ -163,101 +118,284 @@ CQuitJob::run()
 //
 
 static CServer*					s_server          = NULL;
+static CPrimaryClient*			s_primaryClient   = NULL;
+static CClientListener*			s_listener        = NULL;
 static CServerTaskBarReceiver*	s_taskBarReceiver = NULL;
 
 static
-int
-realMain(void)
+void
+updateStatus()
 {
-	int result = kExitSuccess;
-	do {
-		bool opened = false;
-		bool locked = true;
-		try {
-			// if configuration has no screens then add this system
-			// as the default
-			if (ARG->m_config.begin() == ARG->m_config.end()) {
-				ARG->m_config.addScreen(ARG->m_name);
-			}
-
-			// set the contact address, if provided, in the config.
-			// otherwise, if the config doesn't have an address, use
-			// the default.
-			if (ARG->m_synergyAddress.isValid()) {
-				ARG->m_config.setSynergyAddress(ARG->m_synergyAddress);
-			}
-			else if (!ARG->m_config.getSynergyAddress().isValid()) {
-				ARG->m_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
-			}
-
-			// create server
-			s_server = new CServer(ARG->m_name);
-			s_server->setConfig(ARG->m_config);
-			s_server->setScreenFactory(new CScreenFactory);
-			s_server->setSocketFactory(new CTCPSocketFactory);
-			s_server->setStreamFilterFactory(NULL);
-
-			// open server
-			try {
-				s_taskBarReceiver->setServer(s_server);
-				s_server->open();
-				opened = true;
-
-				// run server
-				DAEMON_RUNNING(true);
-				locked = false;
-				s_server->mainLoop();
-
-				// clean up
-#define FINALLY do {									\
-					if (!locked) {						\
-						DAEMON_RUNNING(false);			\
-						locked = true;					\
-					}									\
-					if (opened) {						\
-						s_server->close();				\
-					}									\
-					s_taskBarReceiver->setServer(NULL);	\
-					delete s_server;					\
-					s_server = NULL;					\
-				} while (false)
-				FINALLY;
-			}
-			catch (XScreenUnavailable& e) {
-				// wait before retrying if we're going to retry
-				if (ARG->m_restartable) {
-					ARCH->sleep(e.getRetryTime());
-				}
-				else {
-					result = kExitFailed;
-				}
-				FINALLY;
-			}
-			catch (XThread&) {
-				FINALLY;
-				throw;
-			}
-			catch (...) {
-				// don't try to restart and fail
-				ARG->m_restartable = false;
-				result             = kExitFailed;
-				FINALLY;
-			}
-#undef FINALLY
-		}
-		catch (XBase& e) {
-			LOG((CLOG_CRIT "failed: %s", e.what()));
-		}
-		catch (XThread&) {
-			// terminated
-			ARG->m_restartable = false;
-			result             = kExitTerminated;
-		}
-	} while (ARG->m_restartable);
-
-	return result;
+	s_taskBarReceiver->updateStatus(s_server, "");
 }
 
+static
+void
+updateStatus(const CString& msg)
+{
+	s_taskBarReceiver->updateStatus(s_server, msg);
+}
+
+static
+void
+handleClientConnected(const CEvent&, void* vlistener)
+{
+	CClientListener* listener = reinterpret_cast<CClientListener*>(vlistener);
+	CClientProxy* client = listener->getNextClient();
+	if (client != NULL) {
+		s_server->adoptClient(client);
+		updateStatus();
+	}
+}
+
+static
+CClientListener*
+openClientListener(const CNetworkAddress& address)
+{
+	CClientListener* listen =
+		new CClientListener(address, new CTCPSocketFactory, NULL);
+	EVENTQUEUE->adoptHandler(CClientListener::getConnectedEvent(), listen,
+							new CFunctionEventJob(
+								&handleClientConnected, listen));
+	return listen;
+}
+
+static
+void
+closeClientListener(CClientListener* listen)
+{
+	if (listen != NULL) {
+		EVENTQUEUE->removeHandler(CClientListener::getConnectedEvent(), listen);
+		delete listen;
+	}
+}
+
+static
+void
+handleScreenError(const CEvent&, void*)
+{
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+static
+CPrimaryClient*
+openPrimaryClient(const CString& name)
+{
+	LOG((CLOG_DEBUG1 "creating primary screen"));
+	CScreen* screen = createScreen();
+	CPrimaryClient* primaryClient = new CPrimaryClient(name, screen);
+	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
+							primaryClient->getEventTarget(),
+							new CFunctionEventJob(
+								&handleScreenError));
+	return primaryClient;
+}
+
+static
+void
+closePrimaryClient(CPrimaryClient* primaryClient)
+{
+	if (primaryClient != NULL) {
+		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
+							primaryClient->getEventTarget());
+		delete primaryClient;
+	}
+}
+
+static
+void
+handleNoClients(const CEvent&, void*)
+{
+	updateStatus();
+}
+
+static
+void
+handleClientsDisconnected(const CEvent&, void*)
+{
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+static
+CServer*
+openServer(const CConfig& config, CPrimaryClient* primaryClient)
+{
+	CServer* server = new CServer(config, primaryClient);
+	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
+						new CFunctionEventJob(handleNoClients));
+	return server;
+}
+
+static
+void
+closeServer(CServer* server)
+{
+	if (server == NULL) {
+		return;
+	}
+
+	// tell all clients to disconnect
+	server->disconnect();
+
+	// wait for clients to disconnect for up to timeout seconds
+	double timeout = 3.0;
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+						new CFunctionEventJob(handleClientsDisconnected));
+	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
+						new CFunctionEventJob(handleClientsDisconnected));
+	CEvent event;
+	EVENTQUEUE->getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event);
+	}
+	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
+	EVENTQUEUE->deleteTimer(timer);
+	EVENTQUEUE->removeHandler(CServer::getDisconnectedEvent(), server);
+
+	// done with server
+	delete server;
+}
+
+static bool startServer();
+
+static
+void
+retryStartHandler(const CEvent&, void* vtimer)
+{
+	// discard old timer
+	CEventQueueTimer* timer = reinterpret_cast<CEventQueueTimer*>(vtimer);
+	EVENTQUEUE->deleteTimer(timer);
+	EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
+
+	// try starting the server again
+	LOG((CLOG_DEBUG1 "retry starting server"));
+	startServer();
+}
+
+static
+bool
+startServer()
+{
+	double retryTime;
+	CPrimaryClient* primaryClient = NULL;
+	CClientListener* listener     = NULL;
+	try {
+		CString name    = ARG->m_config.getCanonicalName(ARG->m_name);
+		primaryClient   = openPrimaryClient(name);
+		listener        = openClientListener(ARG->m_config.getSynergyAddress());
+		s_server        = openServer(ARG->m_config, primaryClient);
+		s_primaryClient = primaryClient;
+		s_listener      = listener;
+		updateStatus();
+		LOG((CLOG_NOTE "started server"));
+		return true;
+	}
+	catch (XScreenUnavailable& e) {
+		LOG((CLOG_WARN "cannot open primary screen: %s", e.what()));
+		closeClientListener(listener);
+		closePrimaryClient(primaryClient);
+		updateStatus(CString("cannot open primary screen: ") + e.what());
+		retryTime = e.getRetryTime();
+	}
+	catch (XSocketAddressInUse& e) {
+		LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
+		closeClientListener(listener);
+		closePrimaryClient(primaryClient);
+		updateStatus(CString("cannot listen for clients: ") + e.what());
+		retryTime = 10.0;
+	}
+	catch (XScreenOpenFailure& e) {
+		LOG((CLOG_CRIT "cannot open primary screen: %s", e.what()));
+		closeClientListener(listener);
+		closePrimaryClient(primaryClient);
+		return false;
+	}
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "failed to start server: %s", e.what()));
+		closeClientListener(listener);
+		closePrimaryClient(primaryClient);
+		return false;
+	}
+
+	if (ARG->m_restartable) {
+		// install a timer and handler to retry later
+		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+		CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+		EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+							new CFunctionEventJob(&retryStartHandler, timer));
+		return true;
+	}
+	else {
+		// don't try again
+		return false;
+	}
+}
+
+static
+int
+realMain()
+{
+	// if configuration has no screens then add this system
+	// as the default
+	if (ARG->m_config.begin() == ARG->m_config.end()) {
+		ARG->m_config.addScreen(ARG->m_name);
+	}
+
+	// set the contact address, if provided, in the config.
+	// otherwise, if the config doesn't have an address, use
+	// the default.
+	if (ARG->m_synergyAddress.isValid()) {
+		ARG->m_config.setSynergyAddress(ARG->m_synergyAddress);
+	}
+	else if (!ARG->m_config.getSynergyAddress().isValid()) {
+		ARG->m_config.setSynergyAddress(CNetworkAddress(kDefaultPort));
+	}
+
+	// canonicalize the primary screen name
+	CString primaryName = ARG->m_config.getCanonicalName(ARG->m_name);
+	if (primaryName.empty()) {
+		LOG((CLOG_CRIT "unknown screen name `%s'", ARG->m_name.c_str()));
+		return kExitFailed;
+	}
+
+	// start the server.  if this return false then we've failed and
+	// we shouldn't retry.
+	LOG((CLOG_DEBUG1 "starting server"));
+	if (!startServer()) {
+		return kExitFailed;
+	}
+
+	// run event loop.  if startServer() failed we're supposed to retry
+	// later.  the timer installed by startServer() will take care of
+	// that.
+	DAEMON_RUNNING(true);
+	CEvent event;
+	EVENTQUEUE->getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event);
+	}
+	DAEMON_RUNNING(false);
+
+	// close down
+	LOG((CLOG_DEBUG1 "stopping server"));
+	closeClientListener(s_listener);
+	closeServer(s_server);
+	closePrimaryClient(s_primaryClient);
+	s_server        = NULL;
+	s_listener      = NULL;
+	s_primaryClient = NULL;
+	updateStatus();
+	LOG((CLOG_NOTE "stopped server"));
+
+	return kExitSuccess;
+}
+
+/* XXX
 static
 void
 realMainEntry(void* vresult)
@@ -293,7 +431,7 @@ runMainInThread(void)
 		throw;
 	}
 }
-
+*/
 
 //
 // command line parsing
@@ -666,9 +804,6 @@ daemonStartup(int argc, const char** argv)
 {
 	CSystemLogger sysLogger(DAEMON_NAME);
 
-	// have to cancel this thread to quit
-	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
-
 	// catch errors that would normally exit
 	bye = &byeThrow;
 
@@ -768,7 +903,6 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// through the task bar.
 	s_taskBarReceiver = new CMSWindowsServerTaskBarReceiver(instance,
 															&logBuffer);
-	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
 
 	int result;
 	try {
@@ -817,15 +951,20 @@ main(int argc, char** argv)
 {
 	CArch arch;
 	CLOG;
-	CArgs args;
+
+	// go really fast
+	CThread::getCurrentThread().setPriority(-14);
+
+	CSocketMultiplexer multiplexer;
+	CEventQueue eventQueue;
 
 	// get program name
+	CArgs args;
 	ARG->m_pname = ARCH->getBasename(argv[0]);
 
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
 	s_taskBarReceiver = new CXWindowsServerTaskBarReceiver;
-	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
 
 	// parse command line
 	parse(argc, argv);

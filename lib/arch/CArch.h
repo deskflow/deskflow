@@ -153,6 +153,7 @@ public:
 	virtual void			setAddrPort(CArchNetAddress, int port);
 	virtual int				getAddrPort(CArchNetAddress);
 	virtual bool			isAnyAddr(CArchNetAddress);
+	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress);
 
 	// IArchSleep overrides
 	virtual void		sleep(double timeout);

@@ -24,11 +24,13 @@ CEvent::Type			IDataSocket::s_failedEvent    = CEvent::kUnknown;
 CEvent::Type
 IDataSocket::getConnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_connectedEvent);
+	return CEvent::registerTypeOnce(s_connectedEvent,
+							"IDataSocket::connected");
 }
 
 CEvent::Type
 IDataSocket::getConnectionFailedEvent()
 {
-	return CEvent::registerTypeOnce(s_failedEvent);
+	return CEvent::registerTypeOnce(s_failedEvent,
+							"IDataSocket::failed");
 }
