@@ -3,10 +3,13 @@ synergy
 synergy: [noun] a mutually advantageous conjunction of distinct elements
 
 synergy lets you easily share a single mouse and keyboard between
-multiple computers through software.  it also merges each system's
-clipboards into one, allowing cut-and-paste between systems.
-redirecting the mouse and keyboard is as simple as moving the
-mouse off the edge of your screen.
+multiple computers, each with its own display, using software only.
+redirecting the mouse and keyboard is as simple as moving the mouse
+off the edge of your screen.  synergy merges the clipboards of all
+the systems into one, allowing cut-and-paste between systems.  it
+also synchronizes screensavers so they all start and stop together
+and, if screen locking is enabled, only one screen requires a
+password to unlock them all.
 
 
 system requirements
@@ -147,9 +150,7 @@ connected screen.  if there is no connected screen in that
 direction then the mouse will not leave the starting screen.
 
 disconnecting a client while the mouse is on it causes the mouse
-to instantly jump to the center of the server screen.  note that
-there's a bug in this situation where keys may be left in the
-logical pressed state;  see the "known bugs" section.
+to instantly jump to the center of the server screen.
 
 the clipboard is automatically transferred between screens.  if
 you copy on one screen you just switch to another screen and paste.
@@ -160,6 +161,17 @@ clipboard is transferred to both the X primary selection and the
 clipboard.  whichever X clipboard was changed last becomes the
 Windows clipboard.  end-of-line sequences (LF on linux and unix,
 CRLF on Windows) are automatically converted as necessary.
+
+synergy synchronizes screensavers.  the screensavers on client
+screens are disabled when they connect to the server.  when the
+primary screen's screensaver starts, the screensaver on each
+secondary screen starts too.  all the secondary screensavers are
+stopped when the primary screensaver stops.  moving the mouse or
+pressing a key will stop the primary screensaver, regardless of
+which screen the mouse was on when the screensavers started.  if
+the primary screensaver requires a password to unlock then the
+user is prevented from switching to the secondary screens until
+the primary screen is unlocked.
 
 
 installing as a daemon/service
@@ -217,7 +229,9 @@ linux, unix:
   connect to the X server until it succeeds.  the DISPLAY env var
   should be set appropriately before starting synergy.  note that
   it probably will not be set when running startup scripts so you
-  have to set it yourself (probably to ":0").
+  have to set it yourself (probably to ":0").  if it's not set
+  then synergy will use the default ":0.0" which is correct in
+  most cases.
 
   if the X server goes down then all the clients connected to it
   must terminate.  synergy has to deal with this because some
@@ -228,13 +242,13 @@ linux, unix:
 
   some display managers also prevent any X client other than
   those they themselves start from connecting to the X server
-  for security reasons.  for these display managers, synergy
-  should be part of the manager's screen initialization script
-  and synergy should be started with the --no-restart option
-  since the display manager will do the restarting.  otherwise,
-  synergy should not use the --no-restart option and it can be
-  started at boot time (sometime after the network is started)
-  or when the X server is started.
+  during login for security reasons.  for these display managers,
+  synergy should be part of the manager's screen initialization
+  script and synergy should be started with the --no-restart
+  option since the display manager will do the restarting.
+  otherwise, synergy should not use the --no-restart option and
+  it can be started at boot time (sometime after the network is
+  started) or when the X server is started.
 
   finally, some display managers (xdm and kdm, but not gdm)
   grab the keyboard and do not release it until the user logs
@@ -325,12 +339,13 @@ server command line options
   -a, --address <address>  listen for connections on the given address
   -c, --config <pathname>  read configuration from <pathname>
 
-an address has one of the following forms:
+<address> has one of the following forms:
   <hostname>
   :<port>
   <hostname>:<port>
 <hostname> is a hostname or address of a network interface on the
-server system.  <port> is a port number from 1 to 65535.
+server system.  <port> is a port number from 1 to 65535.  <hostname>
+defaults to the system's hostname and <port> defaults to 24800.
 
 
 client command line options
@@ -339,7 +354,9 @@ client command line options
   --no-camp                try connection to server only once
   <address>                address of server
 
-see the "server command line options" for a description of <address>.
+see the "server command line options" for a description of <address>
+but note that there is no default <hostname> though there is a
+default <port>.
 
 
 release notes
@@ -397,22 +414,15 @@ best server.
 known bugs
 ----------
 all:
-  * screen savers are not handled
   * non-ASCII characters are not supported
-  * keys may be left in the logical pressed state on a client if it
-    terminates while the mouse is on that client.  physically pressing
-    and releasing the key fixes the problem.
   * plain text is the only supported clipboard format
 
 windows:
   * screen flashes when entering the screen
-  * synergy may interfere with desktop switcher programs, however
+  * synergy may interfere with desktop switcher programs.  however,
     synergy understands and handles multiple desktops.
   * there should be a control panel
   * there should be a taskbar icon
-  * hook DLL sometimes not properly shutdown.  this is usually only
-    a problem when forcibly killing the synergy server then trying
-    to restart it.  logging off and on should fix it.
 
 windows 95 family:
   * typing into a console window can be slow
@@ -424,9 +434,6 @@ windows NT family:
   * does not gracefully handle NoInteractiveServices being enabled
 
 linux:
-  * one thread may linger if the application crashes.
-    use kill or killall to terminate this process (threads are
-    processes under linux) before restarting.
   * some keyboards have toggle keys that toggle on on key press and
     toggle off on the key release after the next key press.  synergy
     doesn't handle these properly.
@@ -448,3 +455,4 @@ tips and tricks
 * turn off mouse driven virtual desktop switching on X windows.  it
   will interfere with synergy.  use keyboard shortcuts instead.
 
+* synergy's screensaver synchronization works best with xscreensaver.
