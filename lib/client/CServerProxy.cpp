@@ -136,12 +136,16 @@ CServerProxy::parseHandshakeMessage(const UInt8* code)
 		infoAcknowledgment();
 	}
 
-	else if (memcmp(code, kMsgCResetOptions, 4) == 0) {
-		resetOptions();
+	else if (memcmp(code, kMsgDSetOptions, 4) == 0) {
+		setOptions();
 
 		// handshake is complete
 		m_parser = &CServerProxy::parseMessage;
 		EVENTQUEUE->addEvent(CEvent(getHandshakeCompleteEvent(), this));
+	}
+
+	else if (memcmp(code, kMsgCResetOptions, 4) == 0) {
+		resetOptions();
 	}
 
 	else if (memcmp(code, kMsgCNoop, 4) == 0) {
