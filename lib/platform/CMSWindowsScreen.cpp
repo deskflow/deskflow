@@ -690,7 +690,7 @@ CMSWindowsScreen::onPreDispatch(HWND hwnd,
 		return onScreensaver(wParam != 0);
 
 	case SYNERGY_MSG_DEBUG:
-		LOG((CLOG_INFO "hook: 0x%08x 0x%08x", wParam, lParam));
+		LOG((CLOG_DEBUG1 "hook: 0x%08x 0x%08x", wParam, lParam));
 		return true;
 	}
 

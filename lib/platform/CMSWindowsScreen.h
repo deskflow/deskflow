@@ -199,6 +199,7 @@ private:
 	// last mouse position
 	SInt32				m_xCursor, m_yCursor;
 
+	// last clipboard
 	UInt32				m_sequenceNumber;
 
 	// used to discard queued messages that are no longer needed
