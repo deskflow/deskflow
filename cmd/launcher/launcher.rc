@@ -62,7 +62,7 @@ BEGIN
                     IDC_STATIC,7,7,286,19
     GROUPBOX        "",IDC_STATIC,7,29,286,31
     GROUPBOX        "",IDC_STATIC,7,67,286,103
-    GROUPBOX        "Advanced Options",IDC_STATIC,7,177,286,56
+    GROUPBOX        "Options",IDC_STATIC,7,177,286,56
     CONTROL         "&Client",IDC_MAIN_CLIENT_RADIO,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,11,29,33,10
     CONTROL         "Server",IDC_MAIN_SERVER_RADIO,"Button",
@@ -79,26 +79,23 @@ BEGIN
     PUSHBUTTON      "&Remove",IDC_MAIN_SERVER_REMOVE_BUTTON,12,150,50,14
     LTEXT           "&Layout:",IDC_MAIN_SERVER_LAYOUT_LABEL,138,79,24,8
     LTEXT           "Left:",IDC_MAIN_SERVER_LEFT_LABEL,144,93,15,8
-    COMBOBOX        IDC_MAIN_SERVER_LEFT_COMBO,175,91,118,46,
+    COMBOBOX        IDC_MAIN_SERVER_LEFT_COMBO,175,91,111,46,
                     CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Right:",IDC_MAIN_SERVER_RIGHT_LABEL,144,109,20,8
-    COMBOBOX        IDC_MAIN_SERVER_RIGHT_COMBO,175,107,118,46,
+    COMBOBOX        IDC_MAIN_SERVER_RIGHT_COMBO,175,107,112,46,
                     CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Above:",IDC_MAIN_SERVER_TOP_LABEL,144,125,24,8
-    COMBOBOX        IDC_MAIN_SERVER_TOP_COMBO,175,123,118,46,
+    COMBOBOX        IDC_MAIN_SERVER_TOP_COMBO,175,123,112,46,
                     CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Below:",IDC_MAIN_SERVER_BOTTOM_LABEL,144,141,22,8
-    COMBOBOX        IDC_MAIN_SERVER_BOTTOM_COMBO,175,139,118,46,
+    COMBOBOX        IDC_MAIN_SERVER_BOTTOM_COMBO,175,139,112,46,
                     CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Screen &Name:",IDC_STATIC,12,192,46,8
-    EDITTEXT        IDC_MAIN_ADVANCED_NAME_EDIT,64,190,106,12,ES_AUTOHSCROLL
-    LTEXT           "&Port:",IDC_STATIC,194,192,16,8
-    EDITTEXT        IDC_MAIN_ADVANCED_PORT_EDIT,216,190,40,12,ES_AUTOHSCROLL | 
-                    ES_NUMBER
-    LTEXT           "Automatic Startup:",IDC_STATIC,12,212,59,8
-    PUSHBUTTON      "Con&figure...",IDC_MAIN_AUTOSTART,78,210,50,14
-    LTEXT           "Test &Debug Level:",IDC_STATIC,151,212,60,8
-    COMBOBOX        IDC_MAIN_DEBUG,216,210,61,60,CBS_DROPDOWNLIST | 
+    PUSHBUTTON      "&Options...",IDC_MAIN_OPTIONS,12,191,50,14
+    PUSHBUTTON      "Adva&nced...",IDC_MAIN_ADVANCED,68,191,50,14
+    LTEXT           "Automatic Startup:",IDC_STATIC,138,193,59,8
+    PUSHBUTTON      "Con&figure...",IDC_MAIN_AUTOSTART,202,191,50,14
+    LTEXT           "Test &Debug Level:",IDC_STATIC,12,216,60,8
+    COMBOBOX        IDC_MAIN_DEBUG,78,213,61,60,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Sa&ve",IDC_MAIN_SAVE,75,241,50,14
     DEFPUSHBUTTON   "&Test",IDC_MAIN_TEST,131,241,50,14
@@ -157,6 +154,50 @@ BEGIN
                     IDC_STATIC,7,43,181,17
 END
 
+IDD_GLOBAL_OPTIONS DIALOG DISCARDABLE  0, 0, 207, 148
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Options"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "It's easy to unintentionally switch screens when the pointer is near a screen's edge.  Synergy can prevent switching until certain conditions are met to reduce unintentional switching.",
+                    IDC_STATIC,7,7,191,26
+    LTEXT           "Synergy can wait to switch until the cursor has been at a screen's edge for some amount of time.",
+                    IDC_STATIC,7,37,193,16
+    CONTROL         "Switch after waiting",IDC_GLOBAL_DELAY_CHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,59,77,10
+    EDITTEXT        IDC_GLOBAL_DELAY_TIME,112,58,45,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    LTEXT           "ms",IDC_STATIC,159,60,10,8
+    LTEXT           "Synergy can switch only when the cursor hits a screen edge twice within some amount of time.",
+                    IDC_STATIC,7,77,193,16
+    CONTROL         "Switch on double tap within",IDC_GLOBAL_TWO_TAP_CHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,99,103,10
+    EDITTEXT        IDC_GLOBAL_TWO_TAP_TIME,112,98,45,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    LTEXT           "ms",IDC_STATIC,159,100,10,8
+    DEFPUSHBUTTON   "OK",IDOK,94,127,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,150,127,50,14
+END
+
+IDD_ADVANCED_OPTIONS DIALOG DISCARDABLE  0, 0, 230, 133
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Advanced Options"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Synergy normally uses this computer's name as its screen name.  Enter another name here if you want to use a different screen name.",
+                    IDC_STATIC,7,7,216,19
+    LTEXT           "Screen &Name:",IDC_STATIC,7,34,46,8
+    EDITTEXT        IDC_ADVANCED_NAME_EDIT,63,32,106,12,ES_AUTOHSCROLL
+    LTEXT           "Synergy normally uses a particular network port number.  Enter an alternative port here.  (The server and all clients must use the same port number.)",
+                    IDC_STATIC,7,56,216,26
+    LTEXT           "&Port:",IDC_STATIC,7,90,16,8
+    EDITTEXT        IDC_ADVANCED_PORT_EDIT,63,88,40,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "&Defaults",IDC_ADVANCED_DEFAULTS,7,112,50,14
+    DEFPUSHBUTTON   "OK",IDOK,118,112,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,173,112,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -196,6 +237,22 @@ BEGIN
         RIGHTMARGIN, 188
         TOPMARGIN, 7
         BOTTOMMARGIN, 182
+    END
+
+    IDD_GLOBAL_OPTIONS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 200
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 141
+    END
+
+    IDD_ADVANCED_OPTIONS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 223
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 126
     END
 END
 #endif    // APSTUDIO_INVOKED

@@ -19,6 +19,7 @@
 #include "CLog.h"
 #include "CStringUtil.h"
 #include "CArch.h"
+#include "CArchMiscWindows.h"
 #include "Version.h"
 #include "stdvector.h"
 #include "resource.h"
@@ -703,12 +704,39 @@ initMainWindow(HWND hwnd)
 	ARG->m_oldConfig = ARG->m_config;
 	enableSaveControls(hwnd);
 
+	// get settings from registry
+	bool isServer = configLoaded;
+	int debugLevel = s_defaultDebug;
+	CString server;
+	HKEY key = CArchMiscWindows::openKey(HKEY_CURRENT_USER, getSettingsPath());
+	if (key != NULL) {
+		if (isServer && CArchMiscWindows::hasValue(key, "isServer")) {
+			isServer = (CArchMiscWindows::readValueInt(key, "isServer") != 0);
+		}
+		if (CArchMiscWindows::hasValue(key, "debug")) {
+			debugLevel = static_cast<int>(
+								CArchMiscWindows::readValueInt(key, "debug"));
+			if (debugLevel < 0) {
+				debugLevel = 0;
+			}
+			else if (debugLevel > CLog::kDEBUG2) {
+				debugLevel = CLog::kDEBUG2;
+			}
+		}
+		server = CArchMiscWindows::readValueString(key, "server");
+		CArchMiscWindows::closeKey(key);
+	}
+
 	// choose client/server radio buttons
 	HWND child;
 	child = getItem(hwnd, IDC_MAIN_CLIENT_RADIO);
-	setItemChecked(child, !configLoaded);
+	setItemChecked(child, !isServer);
 	child = getItem(hwnd, IDC_MAIN_SERVER_RADIO);
-	setItemChecked(child, configLoaded);
+	setItemChecked(child, isServer);
+
+	// set server name
+	child = getItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_EDIT);
+	setWindowText(child, server);
 
 	// if config is loaded then initialize server controls
 	if (configLoaded) {
@@ -728,11 +756,29 @@ initMainWindow(HWND hwnd)
 								sizeof(s_debugName[0]); ++i) {
 		SendMessage(child, CB_ADDSTRING, 0, (LPARAM)s_debugName[i][0]);
 	}
-	SendMessage(child, CB_SETCURSEL, s_defaultDebug, 0);
+	SendMessage(child, CB_SETCURSEL, debugLevel, 0);
 
 	// update neighbor combo boxes
 	enableMainWindowControls(hwnd);
 	updateNeighbors(hwnd);
+}
+
+static
+void
+saveMainWindow(HWND hwnd)
+{
+	HKEY key = CArchMiscWindows::openKey(HKEY_CURRENT_USER, getSettingsPath());
+	if (key != NULL) {
+		HWND child;
+		child = getItem(hwnd, IDC_MAIN_CLIENT_SERVER_NAME_EDIT);
+		CArchMiscWindows::setValue(key, "server", getWindowText(child));
+		child = getItem(hwnd, IDC_MAIN_DEBUG);
+		CArchMiscWindows::setValue(key, "debug",
+								SendMessage(child, CB_GETCURSEL, 0, 0));
+		CArchMiscWindows::setValue(key, "isServer",
+								isClientChecked(hwnd) ? 0 : 1);
+		CArchMiscWindows::closeKey(key);
+	}
 }
 
 static
@@ -1128,16 +1174,16 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int nCmdShow)
 	RegisterClassEx(&classInfo);
 
 	// create main window
-	HWND m_mainWindow = CreateDialog(s_instance,
+	HWND mainWindow = CreateDialog(s_instance,
 							MAKEINTRESOURCE(IDD_MAIN), 0, NULL);
 
 	// prep windows
-	initMainWindow(m_mainWindow);
-	s_globalOptions = new CGlobalOptions(m_mainWindow, &ARG->m_config);
-	s_advancedOptions = new CAdvancedOptions(m_mainWindow, &ARG->m_config);
+	initMainWindow(mainWindow);
+	s_globalOptions = new CGlobalOptions(mainWindow, &ARG->m_config);
+	s_advancedOptions = new CAdvancedOptions(mainWindow, &ARG->m_config);
 
 	// show window
-	ShowWindow(m_mainWindow, nCmdShow);
+	ShowWindow(mainWindow, nCmdShow);
 
 	// main loop
 	MSG msg;
@@ -1154,13 +1200,16 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int nCmdShow)
 			break;
 
 		default:
-			if (!IsDialogMessage(m_mainWindow, &msg)) {
+			if (!IsDialogMessage(mainWindow, &msg)) {
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
 			break;
 		}
 	} while (!done);
+
+	// save values to registry
+	saveMainWindow(mainWindow);
 
 	return msg.wParam;
 }

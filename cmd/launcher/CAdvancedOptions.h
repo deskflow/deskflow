@@ -55,7 +55,9 @@ public:
 
 private:
 	void				init(HWND hwnd);
+	void				doInit(HWND hwnd);
 	bool				save(HWND hwnd);
+	void				setDefaults(HWND hwnd);
 
 	// message handling
 	BOOL				doDlgProc(HWND, UINT, WPARAM, LPARAM);

@@ -214,3 +214,15 @@ saveConfig(const CConfig& config, bool sysOnly)
 
 	return false;
 }
+
+const TCHAR* const*
+getSettingsPath()
+{
+	static const TCHAR* s_keyNames[] = {
+		TEXT("Software"),
+		TEXT("Synergy"),
+		TEXT("Synergy"),
+		NULL
+	};
+	return s_keyNames;
+}

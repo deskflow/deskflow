@@ -50,4 +50,6 @@ CString					getAppPath(const CString& appName);
 bool					loadConfig(CConfig& config);
 bool					saveConfig(const CConfig& config, bool sysOnly);
 
+const TCHAR* const*		getSettingsPath();
+
 #endif

@@ -16,6 +16,7 @@
 #include "ProtocolTypes.h"
 #include "CStringUtil.h"
 #include "CArch.h"
+#include "CArchMiscWindows.h"
 #include "CAdvancedOptions.h"
 #include "LaunchUtil.h"
 #include "resource.h"
@@ -96,6 +97,28 @@ CAdvancedOptions::getCommandLine(bool isClient, const CString& serverName) const
 void
 CAdvancedOptions::init(HWND hwnd)
 {
+	// get values from registry
+	HKEY key = CArchMiscWindows::openKey(HKEY_CURRENT_USER, getSettingsPath());
+	if (key != NULL) {
+		DWORD newPort   = CArchMiscWindows::readValueInt(key, "port");
+		CString newName = CArchMiscWindows::readValueString(key, "name");
+		if (newPort != 0) {
+			m_port = static_cast<int>(newPort);
+		}
+		if (!newName.empty()) {
+			m_screenName = newName;
+		}
+		CArchMiscWindows::closeKey(key);
+	}
+
+	// now set GUI
+	doInit(hwnd);
+}
+
+void
+CAdvancedOptions::doInit(HWND hwnd)
+{
+	// set values in GUI
 	HWND child;
 	char buffer[20];
 	sprintf(buffer, "%d", m_port);
@@ -144,7 +167,26 @@ CAdvancedOptions::save(HWND hwnd)
 	m_screenName = name;
 	m_port       = port;
 
+	// save values to registry
+	HKEY key = CArchMiscWindows::openKey(HKEY_CURRENT_USER, getSettingsPath());
+	if (key != NULL) {
+		CArchMiscWindows::setValue(key, "port", m_port);
+		CArchMiscWindows::setValue(key, "name", m_screenName);
+		CArchMiscWindows::closeKey(key);
+	}
+
 	return true;
+}
+
+void
+CAdvancedOptions::setDefaults(HWND hwnd)
+{
+	// restore defaults
+	m_screenName = ARCH->getHostName();
+	m_port       = kDefaultPort;
+
+	// update GUI
+	doInit(hwnd);
 }
 
 BOOL
@@ -165,6 +207,10 @@ CAdvancedOptions::doDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM)
 
 		case IDCANCEL:
 			EndDialog(hwnd, 0);
+			return TRUE;
+
+		case IDC_ADVANCED_DEFAULTS:
+			setDefaults(hwnd);
 			return TRUE;
 		}
 		break;

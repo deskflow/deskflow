@@ -93,10 +93,10 @@ CArchDaemonWindows::installDaemon(const char* name,
 		value += commandLine;
 
 		// install entry
-		setValue(key, name, value);
+		CArchMiscWindows::setValue(key, name, value);
 
 		// clean up
-		closeKey(key);
+		CArchMiscWindows::closeKey(key);
 	}
 
 	// windows NT family services
@@ -137,7 +137,7 @@ CArchDaemonWindows::installDaemon(const char* name,
 
 		// open the registry key for this service
 		HKEY key = openNTServicesKey();
-		key      = openKey(key, name);
+		key      = CArchMiscWindows::openKey(key, name);
 		if (key == NULL) {
 			// can't open key
 			DWORD err = GetLastError();
@@ -151,14 +151,14 @@ CArchDaemonWindows::installDaemon(const char* name,
 		}
 
 		// set the description
-		setValue(key, _T("Description"), description);
+		CArchMiscWindows::setValue(key, _T("Description"), description);
 
 		// set command line
-		key = openKey(key, _T("Parameters"));
+		key = CArchMiscWindows::openKey(key, _T("Parameters"));
 		if (key == NULL) {
 			// can't open key
 			DWORD err = GetLastError();
-			closeKey(key);
+			CArchMiscWindows::closeKey(key);
 			try {
 				uninstallDaemon(name, allUsers);
 			}
@@ -167,10 +167,10 @@ CArchDaemonWindows::installDaemon(const char* name,
 			}
 			throw XArchDaemonInstallFailed(new XArchEvalWindows(err));
 		}
-		setValue(key, _T("CommandLine"), commandLine);
+		CArchMiscWindows::setValue(key, _T("CommandLine"), commandLine);
 
 		// done with registry
-		closeKey(key);
+		CArchMiscWindows::closeKey(key);
 	}
 }
 
@@ -189,20 +189,20 @@ CArchDaemonWindows::uninstallDaemon(const char* name, bool allUsers)
 		}
 
 		// remove entry
-		deleteValue(key, name);
+		CArchMiscWindows::deleteValue(key, name);
 
 		// clean up
-		closeKey(key);
+		CArchMiscWindows::closeKey(key);
 	}
 
 	// windows NT family services
 	else {
 		// remove parameters for this service.  ignore failures.
 		HKEY key = openNTServicesKey();
-		key      = openKey(key, name);
+		key      = CArchMiscWindows::openKey(key, name);
 		if (key != NULL) {
-			deleteKey(key, _T("Parameters"));
-			closeKey(key);
+			CArchMiscWindows::deleteKey(key, _T("Parameters"));
+			CArchMiscWindows::closeKey(key);
 		}
 
 		// open service manager
@@ -314,7 +314,7 @@ CArchDaemonWindows::canInstallDaemon(const char* name, bool allUsers)
 		// check if we can open the registry key
 		HKEY key = CArchMiscWindows::isWindows95Family() ?
 							open95ServicesKey() : openUserStartupKey();
-		closeKey(key);
+		CArchMiscWindows::closeKey(key);
 		return (key != NULL);
 	}
 
@@ -329,9 +329,9 @@ CArchDaemonWindows::canInstallDaemon(const char* name, bool allUsers)
 
 		// check if we can open the registry key for this service
 		HKEY key = openNTServicesKey();
-		key      = openKey(key, name);
-		key      = openKey(key, _T("Parameters"));
-		closeKey(key);
+		key      = CArchMiscWindows::openKey(key, name);
+		key      = CArchMiscWindows::openKey(key, _T("Parameters"));
+		CArchMiscWindows::closeKey(key);
 
 		return (key != NULL);
 	}
@@ -351,10 +351,11 @@ CArchDaemonWindows::isDaemonInstalled(const char* name, bool allUsers)
 		}
 
 		// check for entry
-		const bool installed = !readValueString(key, name).empty();
+		const bool installed = !CArchMiscWindows::readValueString(key,
+															name).empty();
 
 		// clean up
-		closeKey(key);
+		CArchMiscWindows::closeKey(key);
 
 		return installed;
 	}
@@ -363,12 +364,12 @@ CArchDaemonWindows::isDaemonInstalled(const char* name, bool allUsers)
 	else {
 		// check parameters for this service
 		HKEY key = openNTServicesKey();
-		key      = openKey(key, name);
-		key      = openKey(key, _T("Parameters"));
+		key      = CArchMiscWindows::openKey(key, name);
+		key      = CArchMiscWindows::openKey(key, _T("Parameters"));
 		if (key != NULL) {
-			const bool installed = !readValueString(key,
+			const bool installed = !CArchMiscWindows::readValueString(key,
 										_T("CommandLine")).empty();
-			closeKey(key);
+			CArchMiscWindows::closeKey(key);
 			if (!installed) {
 				return false;
 			}
@@ -394,106 +395,6 @@ CArchDaemonWindows::isDaemonInstalled(const char* name, bool allUsers)
 }
 
 HKEY
-CArchDaemonWindows::openKey(HKEY key, const TCHAR* keyName)
-{
-	// ignore if parent is NULL
-	if (key == NULL) {
-		return NULL;
-	}
-
-	// open next key
-	HKEY newKey;
-	LONG result = RegOpenKeyEx(key, keyName, 0,
-								KEY_WRITE | KEY_QUERY_VALUE, &newKey);
-	if (result != ERROR_SUCCESS) {
-		DWORD disp;
-		result = RegCreateKeyEx(key, keyName, 0, _T(""),
-								0, KEY_WRITE | KEY_QUERY_VALUE,
-								NULL, &newKey, &disp);
-	}
-	if (result != ERROR_SUCCESS) {
-		RegCloseKey(key);
-		return NULL;
-	}
-
-	// switch to new key
-	RegCloseKey(key);
-	return newKey;
-}
-
-HKEY
-CArchDaemonWindows::openKey(HKEY key, const TCHAR** keyNames)
-{
-	for (size_t i = 0; key != NULL && keyNames[i] != NULL; ++i) {
-		// open next key
-		key = openKey(key, keyNames[i]);
-	}
-	return key;
-}
-
-void
-CArchDaemonWindows::closeKey(HKEY key)
-{
-	assert(key  != NULL);
-	RegCloseKey(key);
-}
-
-void
-CArchDaemonWindows::deleteKey(HKEY key, const TCHAR* name)
-{
-	assert(key  != NULL);
-	assert(name != NULL);
-	RegDeleteKey(key, name);
-}
-
-void
-CArchDaemonWindows::deleteValue(HKEY key, const TCHAR* name)
-{
-	assert(key  != NULL);
-	assert(name != NULL);
-	RegDeleteValue(key, name);
-}
-
-void
-CArchDaemonWindows::setValue(HKEY key,
-				const TCHAR* name, const std::string& value)
-{
-	assert(key  != NULL);
-	assert(name != NULL);
-	RegSetValueEx(key, name, 0, REG_SZ,
-								reinterpret_cast<const BYTE*>(value.c_str()),
-								value.size() + 1);
-}
-
-std::string
-CArchDaemonWindows::readValueString(HKEY key, const TCHAR* name)
-{
-	// get the size of the string
-	DWORD type;
-	DWORD size = 0;
-	LONG result = RegQueryValueEx(key, name, 0, &type, NULL, &size);
-	if (result != ERROR_SUCCESS || type != REG_SZ) {
-		return std::string();
-	}
-
-	// allocate space
-	char* buffer = new char[size];
-
-	// read it
-	result = RegQueryValueEx(key, name, 0, &type,
-								reinterpret_cast<BYTE*>(buffer), &size);
-	if (result != ERROR_SUCCESS || type != REG_SZ) {
-		delete[] buffer;
-		return std::string();
-	}
-
-	// clean up and return value
-	std::string value(buffer);
-	delete[] buffer;
-	return value;
-}
-
-HKEY
 CArchDaemonWindows::openNTServicesKey()
 {
 	static const char* s_keyNames[] = {
@@ -503,7 +404,7 @@ CArchDaemonWindows::openNTServicesKey()
 		NULL
 	};
 
-	return openKey(HKEY_LOCAL_MACHINE, s_keyNames);
+	return CArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
 
 HKEY
@@ -518,7 +419,7 @@ CArchDaemonWindows::open95ServicesKey()
 		NULL
 	};
 
-	return openKey(HKEY_LOCAL_MACHINE, s_keyNames);
+	return CArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
 
 HKEY
@@ -533,7 +434,7 @@ CArchDaemonWindows::openUserStartupKey()
 		NULL
 	};
 
-	return openKey(HKEY_CURRENT_USER, s_keyNames);
+	return CArchMiscWindows::openKey(HKEY_CURRENT_USER, s_keyNames);
 }
 
 int
@@ -730,10 +631,11 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 		// read command line
 		std::string commandLine;
 		HKEY key = openNTServicesKey();
-		key      = openKey(key, argvIn[0]);
-		key      = openKey(key, _T("Parameters"));
+		key      = CArchMiscWindows::openKey(key, argvIn[0]);
+		key      = CArchMiscWindows::openKey(key, _T("Parameters"));
 		if (key != NULL) {
-			commandLine = readValueString(key, _T("CommandLine"));
+			commandLine = CArchMiscWindows::readValueString(key,
+												_T("CommandLine"));
 		}
 
 		// if the command line isn't empty then parse and use it

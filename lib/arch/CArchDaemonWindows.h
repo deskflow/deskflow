@@ -75,14 +75,6 @@ public:
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
 
 private:
-	static HKEY			openKey(HKEY parent, const TCHAR*);
-	static HKEY			openKey(HKEY parent, const TCHAR**);
-	static void			closeKey(HKEY);
-	static void			deleteKey(HKEY, const TCHAR* name);
-	static void			deleteValue(HKEY, const TCHAR* name);
-	static void			setValue(HKEY, const TCHAR* name,
-							const std::string& value);
-	static std::string	readValueString(HKEY, const TCHAR* name);
 	static HKEY			openNTServicesKey();
 	static HKEY			open95ServicesKey();
 	static HKEY			openUserStartupKey();
