@@ -77,10 +77,12 @@ family, starting with NT 4 with service pack 3, is the best choice
 for the primary screen but Linux is good too.  (This is based on the
 known bugs;  see BUGS for more details.)
 
-Next you must install the software.  You must install the synergy
-server on the primary screen and the synergy client on all the
-secondary screens.  If it's easier just install both on all of the
-systems.
+Second, you install the software.  Choose the appropriate package
+and install it.  On Windows you should unzip the files into the
+`Program Files' directory;  all the files will be put into a new
+directory named `Synergy' under `Program Files'.  You must install
+the software on all the computers that will share the mouse and
+keyboard.
 
 Third, you configure and start the server.
   Windows
