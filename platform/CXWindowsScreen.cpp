@@ -387,7 +387,10 @@ CXWindowsScreen::processEvent(XEvent* xevent)
 	}
 
 	// let screen saver have a go
-	m_screenSaver->processEvent(xevent);
+	{
+		CLock lock(&m_mutex);
+		m_screenSaver->processEvent(xevent);
+	}
 
 	return false;
 }

@@ -16,7 +16,7 @@ class CXWindowsScreenSaver : public IScreenSaver {
 public:
 	// note -- the caller must ensure that Display* passed to c'tor isn't
 	// being used in another call to Xlib when calling any method on this
-	// object (including during the c'tor and d'tor) except processEvent().
+	// object (including during the c'tor and d'tor).
 	CXWindowsScreenSaver(CXWindowsScreen*, Display*);
 	virtual ~CXWindowsScreenSaver();
 
