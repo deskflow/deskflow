@@ -43,21 +43,22 @@ public:
 	CArchMultithreadWindows();
 	virtual ~CArchMultithreadWindows();
 
-	//
-	// manipulators
-	//
+	//! @name manipulators
+	//@{
 
 	void				setNetworkDataForCurrentThread(void*);
 
-	//
-	// accessors
-	//
+	//@}
+	//! @name accessors
+	//@{
 
 	HANDLE				getCancelEventForCurrentThread();
 
 	void*				getNetworkDataForThread(CArchThread);
 
 	static CArchMultithreadWindows*	getInstance();
+
+	//@}
 
 	// IArchMultithread overrides
 	virtual CArchCond	newCondVar();
