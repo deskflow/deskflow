@@ -1501,6 +1501,10 @@ CMSWindowsPrimaryScreen::updateKeys()
 
 	// we only care about the modifier key states.  other keys and the
 	// mouse buttons should be up.
+	// sometimes these seem to be out of date so, to avoid getting
+	// locked to a screen unexpectedly, just assume the non-toggle
+	// modifier keys are up.
+/*
 	m_keys[VK_LSHIFT]   = static_cast<BYTE>(GetKeyState(VK_LSHIFT) & 0x80);
 	m_keys[VK_RSHIFT]   = static_cast<BYTE>(GetKeyState(VK_RSHIFT) & 0x80);
 	m_keys[VK_SHIFT]    = static_cast<BYTE>(GetKeyState(VK_SHIFT) & 0x80);
@@ -1513,6 +1517,7 @@ CMSWindowsPrimaryScreen::updateKeys()
 	m_keys[VK_LWIN]     = static_cast<BYTE>(GetKeyState(VK_LWIN) & 0x80);
 	m_keys[VK_RWIN]     = static_cast<BYTE>(GetKeyState(VK_RWIN) & 0x80);
 	m_keys[VK_APPS]     = static_cast<BYTE>(GetKeyState(VK_APPS) & 0x80);
+*/
 	m_keys[VK_CAPITAL]  = static_cast<BYTE>(GetKeyState(VK_CAPITAL));
 	m_keys[VK_NUMLOCK]  = static_cast<BYTE>(GetKeyState(VK_NUMLOCK));
 	m_keys[VK_SCROLL]   = static_cast<BYTE>(GetKeyState(VK_SCROLL));
@@ -1523,6 +1528,13 @@ CMSWindowsPrimaryScreen::updateKey(UINT vkCode, bool press)
 {
 	if (press) {
 		switch (vkCode) {
+		case 0:
+		case VK_LBUTTON:
+		case VK_MBUTTON:
+		case VK_RBUTTON:
+			// ignore bogus key
+			break;
+
 		case VK_LSHIFT:
 		case VK_RSHIFT:
 		case VK_SHIFT:
@@ -1558,9 +1570,31 @@ CMSWindowsPrimaryScreen::updateKey(UINT vkCode, bool press)
 			m_keys[vkCode]     |= 0x80;
 			break;
 		}
+
+		// special case:  we detect ctrl+alt+del being pressed on some
+		// systems but we don't detect the release of those keys.  so
+		// if ctrl, alt, and del are down then mark them up.
+		if ((m_keys[VK_CONTROL] & 0x80) != 0 &&
+			(m_keys[VK_MENU]    & 0x80) != 0 &&
+			(m_keys[VK_DELETE]  & 0x80) != 0) {
+			m_keys[VK_LCONTROL] &= ~0x80;
+			m_keys[VK_RCONTROL] &= ~0x80;
+			m_keys[VK_CONTROL]  &= ~0x80;
+			m_keys[VK_LMENU]    &= ~0x80;
+			m_keys[VK_RMENU]    &= ~0x80;
+			m_keys[VK_MENU]     &= ~0x80;
+			m_keys[VK_DELETE]   &= ~0x80;
+		}
 	}
 	else {
 		switch (vkCode) {
+		case 0:
+		case VK_LBUTTON:
+		case VK_MBUTTON:
+		case VK_RBUTTON:
+			// ignore bogus key
+			break;
+
 		case VK_LSHIFT:
 		case VK_RSHIFT:
 		case VK_SHIFT:

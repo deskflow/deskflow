@@ -508,6 +508,7 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 					// if the desktop was inaccessible then notify the
 					// event handler of that.
 					if (m_inaccessibleDesktop) {
+						LOG((CLOG_INFO "desktop is now accessible"));
 						m_inaccessibleDesktop = false;
 						m_eventHandler->onAccessibleDesktop();
 					}
@@ -515,6 +516,7 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 				else if (!m_inaccessibleDesktop) {
 					// the desktop has become inaccessible
 					m_inaccessibleDesktop = true;
+					LOG((CLOG_INFO "desktop is now inaccessible"));
 				}
 			}
 
