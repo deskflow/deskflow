@@ -299,14 +299,14 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 	for (const char* scan = src.c_str(); n > 0 && *scan != 0; ) {
 		size_t mblen = mbrtowc(NULL, scan, n, &state);
 		switch (mblen) {
-		case (size_t)2:
+		case (size_t)-2:
 			// incomplete last character.  convert to unknown character.
 			setError(errors);
 			len += 1;
 			n    = 0;
 			break;
 
-		case (size_t)1:
+		case (size_t)-1:
 			// invalid character.  count one unknown character and
 			// start at the next byte.
 			setError(errors);
