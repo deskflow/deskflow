@@ -6,6 +6,7 @@
 #include <X11/X.h>
 #include <X11/Xutil.h>
 #define XK_MISCELLANY
+#define XK_XKB_KEYS
 #include <X11/keysymdef.h>
 #include <X11/extensions/XTest.h>
 
@@ -662,6 +663,10 @@ bool					CXWindowsSecondaryScreen::findKeyCode(
 
 		case XK_KP_Delete:
 			id = XK_Delete;
+			break;
+
+		case XK_ISO_Left_Tab:
+			id = XK_Tab;
 			break;
 
 		default:
