@@ -56,13 +56,13 @@ void					CStreamBuffer::pop(UInt32 n)
 		scan = m_chunks.erase(scan);
 		assert(scan != m_chunks.end());
 	}
-	assert(n > 0);
 
 	// remove left over bytes from the head chunk
-	scan->erase(scan->begin(), scan->begin() + n);
+	if (n > 0) {
+		scan->erase(scan->begin(), scan->begin() + n);
+	}
 }
 
-#include "CLog.h"
 void					CStreamBuffer::write(
 								const void* vdata, UInt32 n)
 {
@@ -72,28 +72,19 @@ void					CStreamBuffer::write(
 	if (n == 0) {
 		return;
 	}
-log((CLOG_DEBUG "### %p buffering %d bytes onto %d bytes", this, n, m_size));
 	m_size += n;
 
 	// cast data to bytes
 	const UInt8* data = reinterpret_cast<const UInt8*>(vdata);
-if (n > 1000)
-log((CLOG_DEBUG "### %p src: %u %u %u %u %u %u %u %u", this,
-data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]));
 
 	// point to last chunk if it has space, otherwise append an empty chunk
 	ChunkList::iterator scan = m_chunks.end();
 	if (scan != m_chunks.begin()) {
-log((CLOG_DEBUG "### %p at least one chunk", this));
 		--scan;
 		if (scan->size() >= kChunkSize)
-{
-log((CLOG_DEBUG "### %p last chunk full", this));
 			++scan;
-}
 	}
 	if (scan == m_chunks.end()) {
-log((CLOG_DEBUG "### %p append chunk", this));
 		scan = m_chunks.insert(scan, Chunk());
 	}
 
@@ -106,7 +97,6 @@ log((CLOG_DEBUG "### %p append chunk", this));
 			count = n;
 
 		// transfer data
-log((CLOG_DEBUG "### %p append %d bytes onto last chunk", this, count));
 		scan->insert(scan->end(), data, data + count);
 		n    -= count;
 		data += count;
@@ -115,7 +105,6 @@ log((CLOG_DEBUG "### %p append %d bytes onto last chunk", this, count));
 		if (n > 0) {
 			++scan;
 			scan = m_chunks.insert(scan, Chunk());
-log((CLOG_DEBUG "### %p append chunk2", this));
 		}
 	}
 }
@@ -124,4 +113,3 @@ UInt32					CStreamBuffer::getSize() const
 {
 	return m_size;
 }
-

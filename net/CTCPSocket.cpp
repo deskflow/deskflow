@@ -211,10 +211,6 @@ void					CTCPSocket::ioService()
 
 				// get amount of data to write
 				UInt32 n = m_output->getSize();
-				if (n > 4096) {
-					// limit write size
-					n = 4096;
-				}
 
 				// write data
 				const void* buffer = m_output->peek(n);
