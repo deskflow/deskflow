@@ -107,7 +107,6 @@ lib/base/Makefile
 lib/common/Makefile
 lib/mt/Makefile
 lib/io/Makefile
-lib/http/Makefile
 lib/net/Makefile
 lib/synergy/Makefile
 lib/platform/Makefile

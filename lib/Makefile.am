@@ -21,7 +21,6 @@ SUBDIRS =					\
 	base					\
 	mt						\
 	io						\
-	http					\
 	net						\
 	synergy 				\
 	platform				\
