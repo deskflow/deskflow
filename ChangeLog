@@ -1,3 +1,88 @@
+2004/11/12 15:50:04 crs
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+
+Now suppressing shift key when caps-lock is enabled on OSX.  This
+fixes handling of, say, Command+N with caps-lock enabled which
+was being synthesized as Command+Shift+N.
+
+----------
+2004/11/11 19:23:14 crs
+lib/arch/CArchMultithreadPosix.cpp
+
+Fixed a serious flaw in wrapper for posix condition variable wait
+function.  Because synergy doesn't use posix cancellation, it
+cannot wake up a thread waiting on a condition variable.  So
+the wrapper would wake up periodically to test if the thread was
+cancelled (according to synergy's cancellation state) then go
+back to waiting.  Well the condition could be signalled while
+we're testing and be lost and we'd never return from the wait.
+So now we wake up after a maximum timeout and return to the
+caller.  The caller must check for this spurious wakeup but all
+callers should do this anyway so we're okay there.
+
+----------
+2004/11/11 19:17:03 crs
+lib/net/CSocketMultiplexer.cpp
+lib/net/CSocketMultiplexer.h
+
+Changed scheme used to lock the socket multiplexer's job list.
+I think the new scheme is easier to understand.  It should have
+exactly the same behavior.
+
+----------
+2004/11/10 21:00:30 crs
+lib/mt/CCondVar.h
+
+Made condition variable data volatile.  This will hopefully fix
+an strange deadlock seen on OSX.  The CSocketMultiplexer deadlocks
+with two threads, one waiting for m_polling to become false and
+the other waiting for m_pollable to become true.  The weird part
+is that they're both false so the first thread should proceed.
+It either didn't receive the broadcast when m_polling went to
+false or it's not really checking the actual value of that flag.
+I can't see how the former is possible and this change fixes the
+latter.
+
+----------
+2004/11/10 19:11:33 crs
+lib/platform/CXWindowsUtil.cpp
+
+Fixed typo.
+
+----------
+2004/11/09 20:05:33 crs
+lib/platform/COSXKeyState.cpp
+lib/platform/COSXKeyState.h
+
+Fixed modifier handling on OSX client.  Had hardcoded one set of
+modifiers for all keys for testing purposes and forgotton to fix
+that.  Now choosing required modifiers per key.  This fixes
+shift+arrow keys suppressing the shift key and, i think, the
+option key not working.
+
+----------
+2004/11/09 18:42:47 crs
+lib/common/Version.h
+
+Changed version to 1.1.10.
+
+----------
+2004/11/09 18:38:14 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+
+Added synergy version number to first log message.
+
+----------
+2004/11/09 18:31:54 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+
+Moved log message that prints system info to after installation
+of user requested log level so it can be filtered.
+
+----------
 2004/11/06 16:29:06 crs
 lib/client/CServerProxy.cpp
 
