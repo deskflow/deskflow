@@ -1,0 +1,102 @@
+This file lists the known bugs in synergy.
+
+Report bugs to:  synergy@groundhog.pair.com
+
+When reporting bugs, please include the version of the operating
+system you're using and what locale you use.
+
+* Not all keystrokes are handled
+
+  Certain keystrokes are not captured by the synergy server and,
+  therefore, are not transmitted to secondary screens.  Which keys
+  depends on the primary screen's platform:
+
+  Linux:
+    * ctrl+alt+del
+    * ctrl+alt+backspace        (only if used by the X server)
+    * ctrl+alt+keypad_plus      (only if used by the X server)
+    * ctrl+alt+keypad_minus     (only if used by the X server)
+
+  Windows NT family (except NT prior to service pack 3)
+    * ctrl+alt+del
+    * accessibility shortcuts (e.g. pressing shift 5 times for sticky keys)
+
+  Windows 95 family (at NT prior to service pack 3)
+    * ctrl+alt+del
+    * ctrl+esc
+    * alt+[shift+]tab
+    * alt+[shift+]esc
+    * windows+E
+    * windows+[ctrl+]F
+    * windows+[shift+]M
+    * windows+R
+    * windows+F1
+    * windows+tab
+    * windows+break
+    * accessibility shortcuts (e.g. press shift 5 times for sticky keys)
+
+* Non-ASCII keystrokes unsupported
+
+  Only ASCII characters are decoded and transmitted by the server.
+  However, the clipboard does support Unicode.
+
+* Screen flashes (Windows)
+
+  On Windows, the primary screen flashes when the cursor enters it.
+  This is a consequence of how synergy captures input.
+
+* Slow console text entry (Windows 95 family)
+
+  Typing into a command prompt window on the Windows 95 family has
+  very slow visual feedback.
+
+* Event logs (Windows NT family)
+
+  Synergy doesn't support event logs properly on the Windows NT family.
+  In particular, the event message is reported in the extra data portion
+  of the event instead of the normal message portion.
+
+* NoInteractiveServices not handled (Windows NT family)
+
+  Synergy does not (cannot) work when the NoInteractiveServices registry
+  entry is set.  Synergy doesn't not gracefully handle it being set.
+
+* Incorrectly hiding screen savers in certain situations (Windows)
+
+  If turning off the screen saver on the primary screen requires a
+  password on Windows then all of the secondary screen screen savers
+  are deactivated when the password dialog appears.  If the password
+  is not entered only the primary screen's screen saver is activated.
+
+* Not handling strange keyboards (X11)
+
+  Synergy does not detect keyboards with unusual behavior and may
+  misbehave as a result.  Unusual behavior includes keyboards that
+  don't report KeyRelease events and toggle keys that report KeyPress
+  when toggled on and KeyRelease when toggled off (instead of KeyPress
+  and KeyRelease for each physical press and release).
+
+* Not handling mode-switch and shift-lock (X11)
+
+  Synergy neither handles the mode-switch key nor shift-lock behavior
+  (as opposed to caps-lock).
+
+* Large Motif clipboard items are truncated (X11)
+
+  Synergy doesn't yet fully implement Motif's protocol for large
+  clipboard items.  As a result it silently truncates those items.
+  Large depends on the X server but is probably around 256kB.
+
+  Synergy also doesn't support by-name Motif clipboard items.  It
+  will read no data at all for those items.
+
+* Automake isn't fully configured (Linux)
+
+  The automake configuration isn't complete so synergy won't build
+  properly on some (many) systems.
+
+* Only text is supported on the clipboard
+
+  The clipboard supports Unicode and current locale encoded text but
+  there are numerous other data types it should support, e.g. images,
+  sound, raw binary data, etc.

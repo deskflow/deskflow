@@ -1,427 +1,197 @@
-synergy
--------
+Synergy
+=======
+
 synergy: [noun] a mutually advantageous conjunction of distinct elements
 
-synergy lets you easily share a single mouse and keyboard between
-multiple computers, each with its own display, using software only.
-redirecting the mouse and keyboard is as simple as moving the mouse
-off the edge of your screen.  synergy merges the clipboards of all
-the systems into one, allowing cut-and-paste between systems.  it
-also synchronizes screensavers so they all start and stop together
-and, if screen locking is enabled, only one screen requires a
-password to unlock them all.
+Synergy lets you easily share a single mouse and keyboard between
+multiple computers with different operating systems, each with its
+own display, without special hardware.  It's intended for users
+with multiple computers on their desk since each system uses its
+own display.
+
+Redirecting the mouse and keyboard is as simple as moving the mouse
+off the edge of your screen.  Synergy also merges the clipboards of
+all the systems into one, allowing cut-and-paste between systems.
+Furthermore, it synchronizes screen savers so they all start and stop
+together and, if screen locking is enabled, only one screen requires
+a password to unlock them all.
+
+Synergy is open source and released under the GNU Public License (GPL).
+
+The synergy home page is:
+FIXME
+
+The synergy project page is:
+FIXME
+
+Report bugs to:
+synergy@groundhog.pair.com
 
 
-system requirements
+Please see the following files for more information:
+AUTHORS   -- The list of synergy's authors
+BUGS      -- A list of known bugs and limitations
+COPYING   -- The license synergy is release under
+INSTALL   -- Detailed build and installation instructions
+NEWS      -- News about the synergy project
+PORTING   -- Porting guide for developers
+
+
+System Requirements
 -------------------
-all systems:
-  keyboard
-  mouse
-  TCP/IP networking
 
-Microsoft Windows 95, Windows 98, Windows Me (the Windows 95 family):
-  ??? MB RAM
+* All operating systems:
+  keyboard,
+  mouse,
+  TCP/IP networking;
 
-Microsoft Windows NT, Windows 2000, Windows XP (the Windows NT family):
-  ??? MB RAM
+* Microsoft Windows 95, Windows 98, Windows Me (the Windows 96 family);
 
-Linux, Unix:
-  ??? MB RAM
-  X Windows, revision 4 or up with the XTEST extension
-    use `xdpyinfo | grep XTEST' to check
+* Microsoft Windows NT, Windows 2000, Windows XP (the Windows NT family);
+
+* Linux:
+  X Windows version 11 revision 4 or up with the XTEST extension
+    (use `xdpyinfo | grep XTEST' to check for XTEST).
 
 
-manifest
---------
-  linux               windows
-  -----               -------
-  README              README              this file
-  synergy             synergy.exe         the synergy client
-  synergyd            synergyd.exe        the synergy server
-                      synrgyhk.dll        the synergy hook dll
-  synergy.conf        synergy.conf        sample configuration file
+Installation
+------------
+
+See INSTALL for detailed build and installation instructions.
 
 
-running synergy
+Quick Start
+-----------
+Synergy lets you use one keyboard and mouse across multiple computers.
+To do so it requires that all the computers are connected to each other
+via TCP/IP networking.  Most systems come with this installed.
+
+The first step is to pick which keyboard and mouse you want to share.
+The computer with that keyboard and mouse is called the "primary
+screen" and it runs the synergy server.  All of the other computers
+are "secondary screens" and run the synergy client.  The Windows NT
+family, starting with NT 4 with service pack 3, is the best choice
+for the primary screen but Linux is good too.  (This is based on the
+known bugs;  see BUGS for more details.)
+
+Next you must install the software.  You must install the synergy
+server on the primary screen and the synergy client on all the
+secondary screens.  If it's easier just install both on all of the
+systems.
+
+Third, you create a configuration file for the server.  Only the
+server requires configuration.  Create a text file named
+synergy.conf with the following:
+
+	section: screens
+	   <screen1>:
+	   <screen2>:
+	end
+	section: links
+	   <screen1>:
+		   right = <screen2>
+	   <screen2>:
+		   left = <screen1>
+	end
+
+Replace each occurrence of `<screen1>' with the host name of the
+primary screen computer and `<screen2>' with the host name of a
+secondary screen computer.  In the above example, <screen2> is to
+the right of <screen1> and <screen1> is to the left of <screen2>.
+If necessary you should replace `right' and `left' with `left',
+`right', 'up', or `down'.  If you have more than two computers
+you can add those too:  add each computer's host name in the
+`screens' section and add the appropriate links.
+
+Finally, you start the server then all of the clients.  Normally
+synergy wants to run "in the background."  It detaches from the
+terminal and doesn't have a visible window, effectively
+disappearing from view.  Until you're sure your configuration
+works you should start synergy "in the foreground" using the `-f'
+command line option.
+
+To get a command line on Windows, choose Run... from the Start
+menu.  Type `cmd' if you're using the Windows NT family or
+`command' if you're using the Windows 95 family and press enter.
+
+To start the server, enter the following on the command line:
+
+  synergyd -f --config synergy.conf
+
+To start a client, enter the following:
+
+  synergy -f <server-host-name>
+
+where `<server-host-name>' is replaced by the name of the computer
+running the synergy server.
+
+Both the client and server should immediately report the connection
+or an error.  If successful, you should now be able to move the
+mouse off the appropriate edge of your server's screen and have it
+appear on the client's screen.  Use the mouse and keyboard normally
+except use the edge of the screens to jump to other screens.  You
+can also cut-and-paste across computers.  Currently, only text
+transfers between computers.  Start the remaining clients.
+
+Be aware that not all keystrokes can be handled by synergy.  In
+particular, ctrl+alt+del is not handled.  You cannot use synergy
+to log into a Windows NT family system that requires the user to
+press ctrl+alt+del to log on.  You'll need to keep that computer's
+keyboard handy in order to log on.
+
+Once the configuration is verified, see the instructions in INSTALL
+under `Starting Automatically' for details on running synergy in
+the background and on starting synergy automatically when you start
+your computers.
+
+
+Tips and Tricks
 ---------------
-synergy is simple to configure.  the server uses a configuration file
-and command line options while the client uses only command line
-options.  it's recommended that both the client and server be run in
-the foreground until the configuration is verified to work.
-
-step 1:  create a configuration file
-  edit the sample configuration file.  there are two sections you
-  must fill in and a third optional section.  you should delete
-  the existing lines inside the sections.
-
-  in the "screens" section, add a line for each computer you'll
-  be using (server and clients).  put the hostname of the computer
-  followed by a colon (with no space in between).  the computers
-  can be listed in any order.
-
-  in the "links" section you define how screens are connected.
-  each screen is listed as in the "screens" section except
-  following each screen is a list of links to other screens in
-  the form "<direction> = <screen>" where <direction> is "left",
-  "right", "up", or "down" and <screen> is a screen listed in
-  the "screens" section.
-
-  as an example, if we have "left=foo" under the "bar" screen
-  then screen "foo" is on the left of screen "bar".  the user
-  will be able to move the mouse off the left edge of "foo" and
-  will appear on the opposite (right) edge of "bar".  note that
-  it's entirely possible to have one-way (asymmetric) links and
-  screens with only links into them.  the latter should be
-  avoided since there's no way to move the mouse off those
-  screens.
-
-  in the "aliases" section you can list other names for each
-  screen.  this is especially useful for dealing with fully
-  qualified domain names versus simple hostnames.
-
-step 2:  start the server
-  the server is the system with the mouse and keyboard to be
-  shared.  each platform has its own tradeoffs when running as
-  the server.  see the release notes below for more information.
-
-  run the synergy server on the server system using the following
-  command line:
-
-    synergyd -f --config <config-pathname>
-
-  replacing <config-pathname> with the path to the configuration
-  file.  you can use `synergyd --help' for a list of command line
-  options.
-
-step 3:  start the clients
-  on each client system start the synergy client using the
-  following command line:
-
-    synergy -f --debug INFO --no-camp <server-hostname>
-
-  replacing <server-hostname> with the hostname or address of the
-  server system.
-
-  the client should quickly report `connected to server'.  if it
-  does not but doesn't print an error and exit immeditately then
-  it's trying to connect to the server but cannot.  it will time
-  out in 30 seconds and exit (use ctrl+c to exit earlier).  you
-  should check that the server is running and try again.
-
-  otherwise, if the client doesn't connect it should print an
-  error describing the problem.  here are typical problems and
-  possible solutions:
-
-    failed to open screen:
-      check permission to open the X display;
-      check that the DISPLAY environment variable is set.
-    already connected:
-      check that synergy isn't already running.
-    refused client:
-      add client to the server's configuration file.
-    connection failed:
-      check server-hostname;
-      the server cannot open the desired port, stop the
-      program using that port (24800) and restart the
-      server.
-
-step 4:  verify the configuration
-  once the clients are connected, use the mouse to check that
-  the screens are properly linked.  moving the mouse off the
-  edge of a screen with a link should cause it to appear on
-  the opposite edge of the linked-to screen.
-
-
-using synergy
--------------
-using synergy is very easy.  once clients have connected to the
-server all you do to redirect keyboard and mouse input to a screen
-(i.e. switch screens) is move the mouse cursor off the edge of the
-screen you're on.  which edges go to which screens depends on the
-configuration.
-
-clients can be connected and disconnected at any time.  until a
-client is connected, switching to it works as if you switched to
-it then moved all the way across it in the same direction and
-switched to the next screen.  this repeats until you reach a
-connected screen.  if there is no connected screen in that
-direction then the mouse will not leave the starting screen.
-
-disconnecting a client while the mouse is on it causes the mouse
-to instantly jump to the center of the server screen.
-
-the clipboard is automatically transferred between screens.  if
-you copy on one screen you just switch to another screen and paste.
-note that X Windows has two major clipboards:  the primary
-selection and the clipboard.  synergy supports both.  however,
-Microsoft Windows only supports the clipboard.  the Windows
-clipboard is transferred to both the X primary selection and the
-clipboard.  whichever X clipboard was changed last becomes the
-Windows clipboard.  end-of-line sequences (LF on linux and unix,
-CRLF on Windows) are automatically converted as necessary.  the
-clipboards are transferred using Unicode;  if your platforms and
-applications understand Unicode then you should be able to cut
-and paste any Unicode character.
-
-synergy synchronizes screensavers.  the screensavers on client
-screens are disabled when they connect to the server.  when the
-primary screen's screensaver starts, the screensaver on each
-secondary screen starts too.  all the secondary screensavers are
-stopped when the primary screensaver stops.  moving the mouse or
-pressing a key will stop the primary screensaver, regardless of
-which screen the mouse was on when the screensavers started.  if
-the primary screensaver requires a password to unlock then the
-user is prevented from switching to the secondary screens until
-the primary screen is unlocked.
-
-
-installing as a daemon/service
-------------------------------
-synergy can run in the foreground or as a daemon/service.  it's
-recommended that you run it in the foreground until you've sorted
-out your configuration.
-
-on the Windows NT family you cannot run a service directly.
-instead you install the service then run or stop it via the
-Services control panel.  on the Windows 95 family, you can use
-the `--daemon' command line option to start synergy as a service
-or you can install the service and restart your computer.
-
-in the text below, except where noted, synergy refers to the
-client and/or the server.
-
-windows:
-  to install synergy just run one of the following:
-
-    synergy --install [other command line options]
-    synergyd --install [other command line options]
-
-  the client/server is installed as a service and the command
-  line is saved and used when starting the service.  the system
-  will expect to find the program wherever it was when you used
-  the --install option so make sure it's not on a network share
-  from another system because the network share will not be
-  available at boot time.  synergyd will also try to load
-  synrgyhk.dll so that should be in the same directory as
-  synergyd.exe.
-
-  note that when installing the client you must provide the
-  server hostname argument.  to change the arguments you must
-  first uninstall then reinstall.
-
-  you must also install the configuration file along with the
-  server.  it's recommended that you put it in the windows
-  directory (e.g. C:\WINNT) and call it "synergy.sgc".  the
-  server will automatically find this file.  however, you can
-  also use the --config command line option and specify an
-  *absolute* path to the file.  remember that this file must be
-  accessible when the system starts up, before network shares
-  are mapped.
-
-  to uninstall use:
-
-    synergy --uninstall
-    synergyd --uninstall
-
-linux, unix:
-  before starting synergy as a daemon you should understand that
-  synergy requires an X server that it can connect to.  synergy
-  can start before the X server does and will repeatly attempt to
-  connect to the X server until it succeeds.  however, if the
-  server requires authorization then it's unlikely that synergy
-  will ever succeed.  so, in general, synergy should be (re)started
-  by the X display manager.
-
-  some display managers (xdm and kdm, but not gdm) grab the
-  keyboard and do not release it until the user logs in, also
-  for security reasons.  this prevents a synergy server from
-  sharing the mouse and keyboard until the user logs in but
-  it doesn't prevent a synergy client from synthesizing mouse
-  and keyboard input.
-
-  you should modify xdm's Xsetup script to start the synergy
-  client or server.  for example, somewhere near the bottom of
-  Xsetup (but someplace before anywhere the script calls exit)
-  you might add:
-    /usr/bin/killall synergy
-    /usr/sbin/synergy 192.168.1.101
-  this assumes synergy is installed in /usr/sbin.  these lines
-  make sure any already running synergy is terminated and starts
-  a fresh copy.  it's important to kill old copies so that you
-  don't end up with multiple synergy instances fighting each
-  other or, at the very least, using up system resources.
-
-  to start the synergy server you might use:
-    /usr/bin/killall synergyd
-    /usr/sbin/synergyd --config /root/synergy.conf
-  assuming synergyd is installed in /usr/sbin.  if you've put
-  the configuration data in /etc/synergy.conf then you don't
-  need the --config option.
-
-  another option is to put the synergy startup in .Xsession in
-  your home directory.  that allows users without root access to
-  start synergy when they login.  in this case synergy will not
-  be running while on the login screen.
-
-
-common command line options
----------------------------
-  -d, --debug <level>   use debugging level <level>
-      --daemon          run as a daemon (linux,unix) or background (windows)
-  -f, --no-daemon       run in the foreground
-  -n, --name <name>     use <name> instead of the hostname
-      --restart         automatically restart on failures
-  -1, --no-restart      do not restart on failure
-  -h, --help            print help and exit
-      --version         print version information and exit
-      --install         install as a service (windows)
-      --uninstall       uninstall service (windows)
-
-debug levels are from highest to lowest:  FATAL, ERROR, WARNING, NOTE,
-INFO, DEBUG, DEBUG1, and DEBUG2.  only messages at or above the given
-level are logged.  messages are logged to a terminal window when
-running in the foreground.  unix logs messages to syslog when running
-as a daemon.  the Windows NT family logs messages to the event log
-when running as a service.  the Windows 95 family shows FATAL log
-messages in a message box and others in a terminal window when running
-as a service.
-
-the `--name' option lets the client or server use a name other than
-its hostname for its screen.  this name is used when checking the
-configuration.
-
-neither the client nor server will automatically restart if an error
-occurs that is sure to happen every time.  for example, the server
-will exit immediately if it can't find itself in the screen
-configuration.  on X11 both the client and server will also terminate
-if the connection to the X server is lost.  since xdm will normally
-restart the server and then synergy this is the correct behavior.
-
-
-server command line options
----------------------------
-  -a, --address <address>  listen for connections on the given address
-  -c, --config <pathname>  read configuration from <pathname>
-
-<address> has one of the following forms:
-  <hostname>
-  :<port>
-  <hostname>:<port>
-<hostname> is a hostname or address of a network interface on the
-server system.  <port> is a port number from 1 to 65535.  <hostname>
-defaults to the system's hostname and <port> defaults to 24800.
-
-
-client command line options
----------------------------
-  --camp                   retry connection to server until successful
-  --no-camp                try connection to server only once
-  <address>                address of server
-
-see the "server command line options" for a description of <address>
-but note that there is no default <hostname> though there is a
-default <port>.
-
-
-release notes
--------------
-synergy does not yet fully capture all possible input or have full
-control over the mouse and keyboard on all platforms.  each platform
-has its own limitations and these limitations may influence your
-choice for the server.
-
-the following lists enumerate the limitations of each platform.  a
-key (combination) that cannot be captured is not detected by synergy.
-a key (combination) that cannot be blocked will be passed through to
-the server system even when the mouse is on a client system.  if a
-key cannot be captured then it also cannot be blocked.
-
-windows 95 family, windows NT prior to service pack 3:
-  * cannot capture:
-    * ctrl+alt+del
-    * ctrl+esc
-    * alt+[shift+]tab
-    * alt+[shift+]esc
-    * windows+E
-    * windows+[ctrl+]F
-    * windows+[shift+]M
-    * windows+R
-    * windows+F1
-    * windows+tab
-    * windows+break
-    * accessibility shortcuts (e.g. press shift 5 times for sticky keys)
-      * the individual keys are captured but the dialogs still appear
-  * cannot synthesize:
-    * accessibility shortcuts
-
-windows NT family (except NT prior to SP3):
-  * cannot block:
-    * ctrl+alt+del
-    * accessibility shortcuts (e.g. press shift 5 times for sticky keys)
-      * the individual keys are captured but the dialogs still appear
-  * cannot synthesize:
-    * accessibility shortcuts
-
-linux, unix:
-  * cannot capture:
-    * ctrl+alt+del
-    * ctrl+alt+backspace     (only if used by the X server)
-    * ctrl+alt+keypad_plus   (only if used by the X server)
-    * ctrl+alt+keypad_minus  (only if used by the X server)
-  * keyboard/mouse grabs prevent switching screens for their duration
-    * some display managers grab the keyboard until login
-
-currently, the windows NT family (except NT prior to SP3) makes the
-best server.
-
-
-known bugs
-----------
-all:
-  * non-ASCII keyboard characters are not supported
-
-windows:
-  * screen flashes when entering the screen
-  * synergy may interfere with desktop switcher programs.  however,
-    synergy understands and handles multiple desktops.
-  * there should be a control panel
-  * there should be a taskbar icon
-
-windows 95 family:
-  * typing into a console window can be slow
-
-windows NT family:
-  * the event viewer reports a message lookup error for synergy logs.
-    however, the full synergy message is in the extra data portion of
-    the event dialog.
-  * does not gracefully handle NoInteractiveServices being enabled
-
-linux:
-  * some keyboards have toggle keys that toggle on on key press and
-    toggle off on the key release after the next key press.  synergy
-    doesn't handle these properly.
-  * shift-lock (as opposed to caps-lock) is not supported
-  * large (~256k) motif clipboard items are not copied properly
-
-
-tips and tricks
----------------
-* a screen can be its own neighbor.  that allows a screen to "wrap".
-  for example, if a configuration linked the left and right sides of
+* A screen can be its own neighbor.  That allows a screen to "wrap".
+  For example, if a configuration linked the left and right sides of
   a screen to itself then moving off the left of the screen would put
   the mouse at the right of the screen and vice versa.
 
-* you cannot switch screens when a key or mouse button is pressed.
+* You cannot switch screens when a key or mouse button is pressed.
 
-* you cannot switch screens when the scroll lock it toggled on.  use
+* You cannot switch screens when the scroll lock it toggled on.  Use
   this to prevent unintentional switching.
 
-* turn off mouse driven virtual desktop switching on X windows.  it
-  will interfere with synergy.  use keyboard shortcuts instead.
+* Turn off mouse driven virtual desktop switching on X windows.  It
+  will interfere with synergy.  Use keyboard shortcuts instead.
 
-* synergy's screensaver synchronization works best with xscreensaver
-  under X windows.  synergy works better with xscreensaver if it is
-  using of the screensaver extensions.  prior to xscreensaver 4.0
+* Synergy's screen saver synchronization works best with xscreensaver
+  under X windows.  Synergy works better with xscreensaver if it is
+  using of the screen saver extensions.  Prior to xscreensaver 4.0
   you can use `-mit-extension', `-sgi-extension', or `-xidle-extension'
-  command line options to enable an extension.  starting with 4.0
-  you must enable the corresponding option in your .xscreensaver file.
+  command line options to enable an extension (assuming your server has
+  the extension).  Starting with 4.0 you must enable the corresponding
+  option in your .xscreensaver file.
+
+* To work around the lack of ctrl+alt+del, you can configure Windows
+  2000 and XP to not require ctrl+alt+del to log on using the System
+  control panel.  If you're the only user of an NT system you might
+  want to enable auto-logon.  In any case, you should keep each
+  computer's keyboard handy, perhaps under the desk or on top of the
+  computer itself.  If the system supports USB you should also be able
+  to attach/detach a keyboard as necessary.
+
+* Synergy automatically converts newlines in clipboard text (Linux
+  expects \n to end each line while Windows expects \r\n).
+
+* Clients can be started and stopped at any time.  When a screen is
+  not connected, the mouse will jump over that screen as if the mouse
+  had moved all the way across it and jumped to the next screen.
+
+* A client's keyboard and mouse are fully functional while synergy is
+  running.  You can use them in case synergy hangs.
+
+
+Bug Reports
+-----------
+
+Synergy is being improved all the time but we can only fix problems
+that we know about.  Please let us know of any problems you encounter,
+including confusing or unhelpful documentation.  Send reports to:
+
+    synergy@groundhog.pair.com

@@ -1,0 +1,352 @@
+Installation instructions for synergy.
+
+Prerequisites for building
+--------------------------
+
+To build synergy from the sources you'll need the following:
+
+  Windows:
+  * VC++ 6.0 or up
+
+  Linux:
+  * gcc 2.95 (or up?)
+  * X11R4 or up headers and libraries
+
+If building from CVS on Linux you'll also need:
+  * autoconf 2.52 (older versions may work)
+  * automake 1.5 (older versions may work)
+
+
+Configuring the build
+---------------------
+
+This step is only necessary when building on Linux.
+
+If you're building synergy from CVS you need to create the configure
+script and the Makefile.in files.  To do that:
+
+  % aclocal
+  % autoheader
+  % autoconf
+  % automake
+
+To configure the build for your platform use the configure script:
+
+  % ./configure
+
+For a list of options to configure use:
+
+  % ./configure --help
+
+
+Building
+--------
+
+Windows:
+  Start VC++ and open `synergy.dsw'.  Set the active configuration
+  (Build | Set Active Configuration) to `All - Debug' or `All - Release'.
+  Then build.
+
+  VC++ 6.0 cannot handle project files that lack \r\n newlines.  If you
+  retrieved synergy via CVS then the files should be fine.  But if the
+  workspace appears to be empty then close VC++ and add \r to each line.
+  A convenient way to do that is to get `fixcrlf.exe' from the Internet,
+  search the synergy files for `*.dsp' and drag-and-drop all the project
+  files onto fixcrlf.exe.
+
+  Binaries are built into ./Debug or ./Release.
+
+Linux:
+  Simply enter:
+
+  % make
+
+  This will build the client and server and leave them in their
+  respective source directories.
+
+
+Installing
+----------
+
+Windows:
+  There is no support for creating an installer for synergy or installing
+  the files in a particular location.  The only requirement for installed
+  files is that synrgyhk.dll is in the same directory as synergyd.exe or
+  in one of the system directories.
+
+Linux:
+  % make install
+
+  will install the client and server into /usr/local/bin unless you
+  specified a different directory when you ran configure.
+
+See `Starting Automatically' for details on how to have synergy start up
+automatically when the computer starts.
+
+
+Configuring the Server
+----------------------
+
+The synergy server requires configuration.  The configuration file is a
+plain text file broken into sections.  Each section has the form:
+
+  section: <name>
+    <args>
+  end
+
+Comments are introduced by `#' and continue to the end of the line.
+The file can have the following sections.
+
+  * screens
+    <args> is a list of screen names, one name per line, each
+    followed by a colon.  Names are arbitrary strings but they
+    must be unique.  The hostname of each computer is recommended.
+    There must be a screen name for the server and each client.
+
+	Example:
+
+      section: screens
+    	moe:
+    	larry:
+    	curly:
+      end
+
+    This declares three screens named:  moe, larry, and curly.
+
+  * links
+    <args> is a list of screen names just like in the `screens'
+    section except each screen is followed by a list of links.
+    Each link has the form `<left|right|up|down> = <name>'.
+    A link indicates which screen is adjacent in the given
+    direction.
+
+    Example:
+
+      section: links
+        moe:
+          right = larry
+          up    = curly
+        larry:
+          left  = moe
+          up    = curly
+        curly:
+          down  = larry
+      end
+
+    This indicates that screen `larry' is to the right of screen
+    `moe' (so moving the cursor off the right edge of moe would
+    make it appear at the left edge of larry), `curly' is above
+    'moe', `moe' is to the left of `larry', `curly' is above
+    `larry', and `larry' is below `curly'.  Note that links do
+    not have to be symmetrical;  moving up from moe then down
+    from curly lands the cursor on larry.
+
+  * aliases
+    <args> is a list of screen names just like in the `screens'
+    section except each screen is followed by a list of aliases,
+    one per line *not* followed by a colon.  An alias is a
+    screen name and must be unique.  During screen name lookup
+    each alias is equivalent to the screen name it aliases.  So
+    a client can connect using its canonical screen name or any
+    of its aliases.  
+
+    Example:
+
+      section: aliases
+        larry:
+          larry.stooges.com
+        curly:
+          shemp
+      end
+
+    Screen `larry' is also known as `larry.stooges.com' and can
+    connect as either name.  Screen `curly' is also known as
+    `shemp'.  (Hey, it's just an example.)
+
+The synergy server will try certain pathnames to load the configuration
+file if the user doesn't specify a path using the `--config' command
+line option.  `synergyd --help' reports those pathnames.
+
+
+Running the Server
+------------------
+
+Run the server on the computer that has the keyboard and mouse to
+be shared.  You must have prepared a configuration file before
+starting the server.  The server should be started before the
+clients but that's not required.
+
+Run the synergy server on the server system using the following
+command line:
+
+    synergyd -f --config <config-pathname>
+
+Replace <config-pathname> with the path to the configuration file.
+The `-f' option causes synergyd to run in the foreground.  This is
+recommended until you've verified that the configuration works.
+If you didn't include the system's hostname in the configuration
+file (either as a screen name or an alias) then you'll have to add
+`--name <screen-name>' to the command line, where <screen-name> is
+a name in the configuration file.  You can use `synergyd --help'
+for a list of command line options.
+
+
+Running the Client
+------------------
+
+Run the client on all computers that aren't the server using the
+following command line:
+
+    synergy -f --no-camp <server-hostname>
+
+Replace <server-hostname> with the hostname or address of the
+server system.  The `-f' option causes synergy to run in the
+foreground.  The `--no-camp' prevents synergy from retrying to
+connect to the server until it succeeds.  Both are recommended
+until you've verified that the configuration works.  If you
+didn't include the system's hostname in the configuration file
+(either as a screen name or an alias) then you'll have to add
+`--name <screen-name>' to the command line, where <screen-name>
+is a name in the configuration file.
+
+The client should quickly report `connected to server'.  If it
+does not but doesn't print an error and exit immediately then
+it's trying to connect to the server but cannot.  It will time
+out in 30 seconds and exit (use ctrl+c to exit earlier).  You
+should check that the server is running and is reachable over
+the network and try again.
+
+If the client fails and exits it should print an error describing
+the problem.  Here are typical problems and possible solutions:
+
+  * failed to open screen:
+      check permission to open the X display;
+      check that the DISPLAY environment variable is set.
+  * already connected:
+      check that synergy isn't already running.
+  * refused client:
+      add client to the server's configuration file.
+  * connection failed:
+      check <server-hostname>;
+      the server cannot open the desired port, stop the
+      program using that port (24800) and restart the
+      server.
+
+Once all the clients are running, try moving the mouse to each
+screen.  Be sure to check all the configured links. 
+
+
+Starting Automatically
+----------------------
+
+You can setup synergy to start automatically when your computer does.
+
+Windows:
+  Start the client or server normally except add `--install' as the
+  first option on the command line, followed by the usual options
+  except do not include `-f' or `--no-daemon'.  This will install
+  synergy as a service that will be started at system boot.
+
+  On the Windows NT family you can start and stop the service at any
+  time using the Services control panel (under Administrative Tools
+  on Windows 2000 and XP).  On the Windows 95 family you cannot
+  start or stop the service.
+
+  To uninstall the service, run the client or server with just the
+  `--uninstall' command line option.
+
+Linux:
+  Synergy requires an X server.  That means a server must be
+  running and synergy must be authorized to connect to that server.
+  It's best to have the display manager start synergy.  You'll need
+  the necessary (probably root) permission to modify the display
+  manager configuration files.  If you don't have that permission
+  you can start synergy after logging in via the .xsession file.
+
+  To have the display manager start synergy, edit the Xsetup script.
+  The location of this file depends on your installation.  It might
+  be /etc/X11/xdm/Xsetup.  Near the end of the file but before
+  anyplace the script calls exit, start the client with something
+  like:
+
+    /usr/bin/killall synergy
+    /usr/local/bin/synergy [<options>] <server-host-name>
+
+  <options> must not include `-f' or `--no-daemon'.  Change the
+  paths as necessary.  It's important to make sure no old copies
+  of synergy are running so they can't interfere with the new one.
+
+  To start the server use something like:
+
+    /usr/bin/killall synergyd
+    /usr/local/bin/synergyd [<options>] --config <config-pathname>
+
+  Again, <options> must not include `-f' or `--no-daemon'.  If
+  the configuration pathname is one of the default locations then
+  you don't need the `--config' option.
+
+  Note that some display managers (xdm and kdm, but not gdm) grab
+  the keyboard and do not release it until the user logs in, for
+  security reasons.  This prevents a synergy server from sharing
+  the mouse and keyboard until the user logs in.  It doesn't
+  prevent a synergy client from synthesizing mouse and keyboard
+  input, though.
+
+
+Common Command Line Options
+---------------------------
+  -d, --debug <level>   use debugging level <level>
+      --daemon          run as a daemon (Linux) or background (Windows)
+  -f, --no-daemon       run in the foreground
+  -n, --name <name>     use <name> instead of the hostname
+      --restart         automatically restart on failures
+  -1, --no-restart      do not restart on failure
+  -h, --help            print help and exit
+      --version         print version information and exit
+      --install         install as a service (Windows only)
+      --uninstall       uninstall service (Windows only)
+
+Debug levels are from highest to lowest:  FATAL, ERROR, WARNING, NOTE,
+INFO, DEBUG, DEBUG1, and DEBUG2.  Only messages at or above the given
+level are logged.  Messages are logged to a terminal window when
+running in the foreground.  Unix logs messages to syslog when running
+as a daemon.  The Windows NT family logs messages to the event log
+when running as a service.  The Windows 95 family shows FATAL log
+messages in a message box and others in a terminal window when running
+as a service.
+
+The `--name' option lets the client or server use a name other than
+its hostname for its screen.  This name is used when checking the
+configuration.
+
+Neither the client nor server will automatically restart if an error
+occurs that is sure to happen every time.  For example, the server
+will exit immediately if it can't find itself in the configuration.
+On X11 both the client and server will also terminate if the
+connection to the X server is lost.  Since xdm will normally restart
+the server and synergy, this is the correct behavior.
+
+
+Server Command Line Options
+---------------------------
+  -a, --address <address>  listen for connections on the given address
+  -c, --config <pathname>  read configuration from <pathname>
+
+<address> has one of the following forms:
+  <hostname>
+  :<port>
+  <hostname>:<port>
+<hostname> is a hostname or address of a network interface on the
+server system.  <port> is a port number from 1 to 65535.  <hostname>
+defaults to the system's hostname and <port> defaults to 24800.
+
+
+Client Command Line Options
+---------------------------
+  --camp                   retry connection to server until successful
+  --no-camp                try connection to server only once
+  <address>                address of server
+
+see the "server command line options" for a description of <address>
+but note that there is no default <hostname> though there is a
+default <port>.

@@ -1,0 +1,9 @@
+Frequently Asked Questions about synergy.
+
+This will be added to as questions come in.
+
+1.  ctrl+alt+del doesn't work on secondary screens.
+    Synergy isn't able to capture ctrl+alt+del on PC compatible
+    systems because it's handled completely differently than
+    other keystrokes.  If you need to use ctrl+alt+del you'll
+    have to keep your other keyboards handy just for that.
