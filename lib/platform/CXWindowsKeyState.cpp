@@ -584,6 +584,18 @@ CXWindowsKeyState::mapToModifierMask(unsigned int i, KeySym keysym)
 void
 CXWindowsKeyState::updateModifiers()
 {
+	struct CHandedModifiers {
+		KeySym m_left;
+		KeySym m_right;
+	};
+	static const CHandedModifiers s_handedModifiers[] = {
+		{ XK_Shift_L,   XK_Shift_R   },
+		{ XK_Control_L, XK_Control_R },
+		{ XK_Meta_L,    XK_Meta_R    },
+		{ XK_Alt_L,     XK_Alt_R     },
+		{ XK_Super_L,   XK_Super_R   },
+		{ XK_Hyper_L,   XK_Hyper_R   }
+	};
 	struct CModifierBitInfo {
 	public:
 		KeySym CXWindowsKeyState::*m_keysym;
@@ -594,6 +606,24 @@ CXWindowsKeyState::updateModifiers()
 	{ &CXWindowsKeyState::m_modeSwitchKeysym, XK_Mode_switch, NoSymbol },
 	{ &CXWindowsKeyState::m_modeSwitchKeysym, XK_ISO_Level3_Shift, NoSymbol },
 	};
+
+	// for any modifier with left/right versions that has one side but
+	// not the other mapped, map the missing side to the existing side.
+	// this will map, for example, Alt_R to Alt_L if Alt_L is mapped
+	// but Alt_R isn't.  this is almost always what the user wants
+	// since the user almost never cares about the difference between
+	// Alt_L and Alt_R.
+	for (size_t i = 0; i < sizeof(s_handedModifiers) /
+							sizeof(s_handedModifiers[0]); ++i) {
+		KeySymIndex lIndex = m_keysymMap.find(s_handedModifiers[i].m_left);
+		KeySymIndex rIndex = m_keysymMap.find(s_handedModifiers[i].m_right);
+		if (lIndex == m_keysymMap.end() && rIndex != m_keysymMap.end()) {
+			m_keysymMap[s_handedModifiers[i].m_left]  = rIndex->second;
+		}
+		else if (lIndex != m_keysymMap.end() && rIndex == m_keysymMap.end()) {
+			m_keysymMap[s_handedModifiers[i].m_right] = lIndex->second;
+		}
+	}
 
 	// choose the keysym to use for some modifiers.  if a modifier has
 	// both left and right versions then (arbitrarily) prefer the left.
