@@ -623,6 +623,7 @@ CMSWindowsDesks::deskLeave(CDesk* desk, HKL keyLayout)
 					EnableWindow(desk->m_window, TRUE);
 					SetActiveWindow(desk->m_window);
 				}
+				LOG((CLOG_DEBUG1 "active window class: %s", className));
 			}
 		}
 
