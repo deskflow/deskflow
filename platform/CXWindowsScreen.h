@@ -10,7 +10,9 @@
 #endif
 
 class IClipboard;
+class IScreenSaver;
 class CXWindowsClipboard;
+class CXWindowsScreenSaver;
 
 class CXWindowsScreen {
 public:
@@ -68,6 +70,10 @@ protected:
 	bool				getDisplayClipboard(ClipboardID,
 							IClipboard* clipboard) const;
 
+	// get the screen saver object
+	CXWindowsScreenSaver*
+						getScreenSaver() const;
+
 	// called by openDisplay() to allow subclasses to prepare the display.
 	// the display is locked and passed to the subclass.
 	virtual void		onOpenDisplay(Display*) = 0;
@@ -115,6 +121,9 @@ private:
 
 	// clipboards
 	CXWindowsClipboard*	m_clipboard[kClipboardEnd];
+
+	// screen saver
+	CXWindowsScreenSaver*	m_screenSaver;
 
 	// X is not thread safe
 	CMutex				m_mutex;

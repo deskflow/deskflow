@@ -1,5 +1,6 @@
 #include "CXWindowsScreen.h"
 #include "CXWindowsClipboard.h"
+#include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
 #include "CClipboard.h"
 #include "XScreen.h"
@@ -21,7 +22,8 @@ CXWindowsScreen::CXWindowsScreen() :
 	m_root(None),
 	m_x(0), m_y(0),
 	m_w(0), m_h(0),
-	m_stop(false)
+	m_stop(false),
+	m_screenSaver(NULL)
 {
 	assert(s_screen == NULL);
 	s_screen = this;
@@ -77,6 +79,9 @@ CXWindowsScreen::openDisplay()
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		m_clipboard[id] = createClipboard(id);
 	}
+
+	// initialize the screen saver
+	m_screenSaver = new CXWindowsScreenSaver(m_display);
 }
 
 void
@@ -87,9 +92,14 @@ CXWindowsScreen::closeDisplay()
 	// let subclass close down display
 	onCloseDisplay(m_display);
 
+	// done with screen saver
+	delete m_screenSaver;
+	m_screenSaver = NULL;
+
 	// destroy clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
+		m_clipboard[id] = NULL;
 	}
 
 	// close the display
@@ -285,7 +295,18 @@ CXWindowsScreen::processEvent(XEvent* xevent)
 		return true;
 	}
 
+	// let screen saver have a go
+	if (m_screenSaver->processEvent(xevent)) {
+		return true;
+	}
+
 	return false;
+}
+
+CXWindowsScreenSaver*
+CXWindowsScreen::getScreenSaver() const
+{
+	return m_screenSaver;
 }
 
 bool

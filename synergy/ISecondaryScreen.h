@@ -55,13 +55,11 @@ public:
 	// soon after an enter().
 	virtual void		setClipboard(ClipboardID, const IClipboard*) = 0;
 
-/*
-	// show or hide the screen saver
-	virtual void		screenSaver(bool show) = 0;
-*/
-
 	// take ownership of clipboard
 	virtual void		grabClipboard(ClipboardID) = 0;
+
+	// activate or deactivate the screen saver
+	virtual void		screenSaver(bool activate) = 0;
 
 	// accessors
 

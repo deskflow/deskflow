@@ -62,6 +62,9 @@ private:
 	bool				m_active;
 	Window				m_window;
 
+	// atom for screen saver messages
+	Atom				m_atomScreenSaver;
+
 	// note toggle keys that toggle on up/down (false) or on
 	// transition (true)
 	bool				m_numLockHalfDuplex;

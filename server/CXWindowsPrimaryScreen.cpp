@@ -1,6 +1,7 @@
 #include "CXWindowsPrimaryScreen.h"
 #include "CServer.h"
 #include "CXWindowsClipboard.h"
+#include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
 #include "CThread.h"
 #include "CLog.h"
@@ -57,6 +58,14 @@ CXWindowsPrimaryScreen::run()
 				CDisplayLock display(this);
 				XRefreshKeyboardMapping(&xevent.xmapping);
 				updateModifierMap(display);
+			}
+			break;
+
+		case ClientMessage:
+			if (xevent.xclient.message_type == m_atomScreenSaver ||
+				xevent.xclient.format       == 32) {
+				// screen saver activation/deactivation event
+				m_server->onScreenSaver(xevent.xclient.data.l[0] != 0);
 			}
 			break;
 
@@ -267,6 +276,10 @@ CXWindowsPrimaryScreen::open(CServer* server)
 	{
 		CDisplayLock display(this);
 
+		// get notified of screen saver activation/deactivation
+		m_atomScreenSaver = XInternAtom(display, "SCREENSAVER", False);
+		getScreenSaver()->setNotify(m_window);
+
 		// update key state
 		updateModifierMap(display);
 
@@ -297,6 +310,10 @@ void
 CXWindowsPrimaryScreen::close()
 {
 	assert(m_server != NULL);
+
+	// stop being notified of screen saver activation/deactivation
+	getScreenSaver()->setNotify(None);
+	m_atomScreenSaver = None;
 
 	// close the display
 	closeDisplay();

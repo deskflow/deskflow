@@ -551,7 +551,7 @@ CClient::onScreenSaver()
 		CProtocolUtil::readf(m_input, kMsgCScreenSaver + 4, &on);
 	}
 	log((CLOG_DEBUG1 "recv screen saver on=%d", on));
-	// FIXME
+	m_screen->screenSaver(on != 0);
 }
 
 void

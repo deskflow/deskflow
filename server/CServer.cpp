@@ -709,6 +709,66 @@ CServer::onMouseWheel(SInt32 delta)
 	}
 }
 
+void
+CServer::onScreenSaver(bool activated)
+{
+	log((CLOG_DEBUG "onScreenSaver %s", activated ? "activated" : "deactivated"));
+	CLock lock(&m_mutex);
+
+	if (activated) {
+		// save current screen and position
+		m_activeSaver = m_active;
+		m_xSaver      = m_x;
+		m_ySaver      = m_y;
+
+		// jump to primary screen
+		if (m_active != m_primaryInfo) {
+// FIXME -- should have separate "center" pixel reported by screen
+			m_x = m_primaryInfo->m_x + (m_primaryInfo->m_w >> 1);
+			m_y = m_primaryInfo->m_y + (m_primaryInfo->m_h >> 1);
+			m_active = m_primaryInfo;
+			m_primary->enter(m_x, m_y);
+		}
+	}
+	else {
+		// jump back to previous screen and position.  we must check
+		// that the position is still valid since the screen may have
+		// changed resolutions while the screen saver was running.
+		if (m_activeSaver != NULL && m_activeSaver != m_primaryInfo) {
+			// check position
+			CScreenInfo* screen = m_activeSaver;
+			if (m_xSaver < screen->m_x + screen->m_zoneSize) {
+				m_xSaver = screen->m_x + screen->m_zoneSize;
+			}
+			else if (m_xSaver >= screen->m_x +
+								screen->m_w - screen->m_zoneSize) {
+				m_xSaver = screen->m_x + screen->m_w - screen->m_zoneSize - 1;
+			}
+			if (m_ySaver < screen->m_y + screen->m_zoneSize) {
+				m_ySaver = screen->m_y + screen->m_zoneSize;
+			}
+			else if (m_ySaver >= screen->m_y +
+								screen->m_h - screen->m_zoneSize) {
+				m_ySaver = screen->m_y + screen->m_h - screen->m_zoneSize - 1;
+			}
+
+			// now jump
+			switchScreen(screen, m_xSaver, m_ySaver);
+		}
+
+		// reset state
+		m_activeSaver = NULL;
+	}
+
+	// send message to all secondary screens
+	for (CScreenList::const_iterator index = m_screens.begin();
+								index != m_screens.end(); ++index) {
+		if (index->second->m_protocol != NULL) {
+			index->second->m_protocol->sendScreenSaver(activated);
+		}
+	}
+}
+
 bool
 CServer::isLockedToScreen() const
 {
@@ -1557,6 +1617,7 @@ CServer::removeConnection(const CString& name)
 	// if this is active screen then we have to jump off of it
 	if (m_active == index->second && m_active != m_primaryInfo) {
 		// record new position (center of primary screen)
+// FIXME -- should have separate "center" pixel reported by screen
 		m_x = m_primaryInfo->m_x + (m_primaryInfo->m_w >> 1);
 		m_y = m_primaryInfo->m_y + (m_primaryInfo->m_h >> 1);
 
@@ -1568,6 +1629,13 @@ CServer::removeConnection(const CString& name)
 
 		// enter new screen
 		m_primary->enter(m_x, m_y);
+	}
+
+	// if this screen had the cursor when the screen saver activated
+	// then we can't switch back to it when the screen saver
+	// deactivates.
+	if (m_activeSaver == index->second) {
+		m_activeSaver = NULL;
 	}
 
 	// done with screen info

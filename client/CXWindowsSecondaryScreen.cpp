@@ -1,6 +1,7 @@
 #include "CXWindowsSecondaryScreen.h"
 #include "CClient.h"
 #include "CXWindowsClipboard.h"
+#include "CXWindowsScreenSaver.h"
 #include "CXWindowsUtil.h"
 #include "CThread.h"
 #include "CLog.h"
@@ -119,12 +120,18 @@ CXWindowsSecondaryScreen::open(CClient* client)
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		grabClipboard(id);
 	}
+
+	// disable the screen saver
+	getScreenSaver()->disable();
 }
 
 void
 CXWindowsSecondaryScreen::close()
 {
 	assert(m_client != NULL);
+
+	// restore the screen saver settings
+	getScreenSaver()->enable();
 
 	// close the display
 	closeDisplay();
@@ -285,6 +292,18 @@ void
 CXWindowsSecondaryScreen::grabClipboard(ClipboardID id)
 {
 	setDisplayClipboard(id, NULL);
+}
+
+void
+CXWindowsSecondaryScreen::screenSaver(bool activate)
+{
+	CDisplayLock display(this);
+	if (activate) {
+		getScreenSaver()->activate();
+	}
+	else {
+		getScreenSaver()->deactivate();
+	}
 }
 
 void

@@ -58,6 +58,7 @@ public:
 	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	void				onMouseWheel(SInt32 delta);
 	void				grabClipboard(ClipboardID);
+	void				onScreenSaver(bool activated);
 
 	// handle updates from primary
 	void				setInfo(SInt32 xScreen, SInt32 yScreen,
@@ -207,6 +208,7 @@ private:
 
 	CMutex				m_mutex;
 
+	// the name of the primary screen
 	CString				m_name;
 
 	double				m_bindTimeout;
@@ -214,8 +216,10 @@ private:
 	ISocketFactory*		m_socketFactory;
 	ISecurityFactory*	m_securityFactory;
 
+	// running threads
 	CThreadList			m_threads;
 
+	// the screens
 	IPrimaryScreen*		m_primary;
 	CScreenList			m_screens;
 	CScreenInfo*		m_active;
@@ -227,9 +231,15 @@ private:
 	// current mouse position (in absolute secondary screen coordinates)
 	SInt32				m_x, m_y;
 
+	// current configuration
 	CConfig				m_config;
 
+	// clipboard cache
 	CClipboardInfo		m_clipboards[kClipboardEnd];
+
+	// state saved when screen saver activates
+	CScreenInfo*		m_activeSaver;
+	SInt32				m_xSaver, m_ySaver;
 
 	// HTTP request processing stuff
 	CHTTPServer*		m_httpServer;

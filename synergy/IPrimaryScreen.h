@@ -62,22 +62,10 @@ public:
 	// soon after an enter().
 	virtual void		setClipboard(ClipboardID, const IClipboard*) = 0;
 
-/*
-	// show or hide the screen saver
-	virtual void		onScreenSaver(bool show) = 0;
-*/
-
 	// synergy should own the clipboard
 	virtual void		grabClipboard(ClipboardID) = 0;
 
 	// accessors
-
-/*
-	// get the screen's name.  all screens must have a name unique on
-	// the server they connect to.  the hostname is usually an
-	// appropriate name.
-	virtual CString		getName() const = 0;
-*/
 
 	// get the screen region
 	virtual void		getShape(SInt32& x, SInt32& y,
