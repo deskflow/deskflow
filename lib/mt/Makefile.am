@@ -25,17 +25,15 @@ MAINTAINERCLEANFILES =		\
 
 noinst_LIBRARIES = libmt.a
 libmt_a_SOURCES = 			\
+	CCondVar.cpp			\
 	CLock.cpp				\
 	CMutex.cpp				\
-	CCondVar.cpp			\
 	CThread.cpp				\
-	CTimerThread.cpp		\
 	XMT.cpp					\
 	CCondVar.h				\
 	CLock.h					\
 	CMutex.h				\
 	CThread.h				\
-	CTimerThread.h			\
 	XMT.h					\
 	XThread.h				\
 	$(NULL)

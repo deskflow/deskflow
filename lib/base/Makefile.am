@@ -29,7 +29,6 @@ libbase_a_SOURCES =				\
 	CEventQueue.cpp				\
 	CFunctionEventJob.cpp		\
 	CFunctionJob.cpp			\
-	CJobList.cpp				\
 	CLog.cpp					\
 	CSimpleEventQueueBuffer.cpp	\
 	CStopwatch.cpp				\
@@ -40,8 +39,8 @@ libbase_a_SOURCES =				\
 	XBase.cpp					\
 	CEvent.h					\
 	CEventQueue.h				\
+	CFunctionEventJob.h			\
 	CFunctionJob.h				\
-	CJobList.h					\
 	CLog.h						\
 	CPriorityQueue.h			\
 	CSimpleEventQueueBuffer.h	\
@@ -49,6 +48,7 @@ libbase_a_SOURCES =				\
 	CString.h					\
 	CStringUtil.h				\
 	CUnicode.h					\
+	IEventJob.h					\
 	IEventQueue.h				\
 	IEventQueueBuffer.h			\
 	IJob.h						\

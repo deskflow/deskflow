@@ -87,23 +87,15 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\CBufferedInputStream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CBufferedOutputStream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CInputStreamFilter.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\COutputStreamFilter.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\CStreamBuffer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CStreamFilter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IStream.cpp
 # End Source File
 # Begin Source File
 
@@ -115,31 +107,15 @@ SOURCE=.\XIO.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\CBufferedInputStream.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CBufferedOutputStream.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CInputStreamFilter.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\COutputStreamFilter.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\CStreamBuffer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IInputStream.h
+SOURCE=.\CStreamFilter.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IOutputStream.h
+SOURCE=.\IStream.h
 # End Source File
 # Begin Source File
 

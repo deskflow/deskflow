@@ -91,11 +91,7 @@ SOURCE=.\CClipboard.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CInputPacketStream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\COutputPacketStream.cpp
+SOURCE=.\CPacketStreamFilter.cpp
 # End Source File
 # Begin Source File
 
@@ -104,6 +100,18 @@ SOURCE=.\CProtocolUtil.cpp
 # Begin Source File
 
 SOURCE=.\CScreen.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IClipboard.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IPlatformScreen.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IScreen.cpp
 # End Source File
 # Begin Source File
 
@@ -123,15 +131,11 @@ SOURCE=.\CClipboard.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CInputPacketStream.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\ClipboardTypes.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\COutputPacketStream.h
+SOURCE=.\CPacketStreamFilter.h
 # End Source File
 # Begin Source File
 
@@ -163,15 +167,7 @@ SOURCE=.\IPrimaryScreen.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IPrimaryScreenReceiver.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\IScreenFactory.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\IScreenReceiver.h
+SOURCE=.\IScreen.h
 # End Source File
 # Begin Source File
 
@@ -180,10 +176,6 @@ SOURCE=.\IScreenSaver.h
 # Begin Source File
 
 SOURCE=.\ISecondaryScreen.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\IServer.h
 # End Source File
 # Begin Source File
 

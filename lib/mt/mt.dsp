@@ -103,10 +103,6 @@ SOURCE=.\CThread.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CTimerThread.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\XMT.cpp
 # End Source File
 # End Group
@@ -128,10 +124,6 @@ SOURCE=.\CMutex.h
 # Begin Source File
 
 SOURCE=.\CThread.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CTimerThread.h
 # End Source File
 # Begin Source File
 

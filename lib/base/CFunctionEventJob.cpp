@@ -15,7 +15,7 @@
 #include "CFunctionEventJob.h"
 
 //
-// CFunctionJob
+// CFunctionEventJob
 //
 
 CFunctionEventJob::CFunctionEventJob(

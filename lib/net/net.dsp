@@ -91,6 +91,10 @@ SOURCE=.\CNetworkAddress.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CSocketMultiplexer.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CTCPListenSocket.cpp
 # End Source File
 # Begin Source File
@@ -100,6 +104,18 @@ SOURCE=.\CTCPSocket.cpp
 # Begin Source File
 
 SOURCE=.\CTCPSocketFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IDataSocket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IListenSocket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ISocket.cpp
 # End Source File
 # Begin Source File
 
@@ -115,6 +131,10 @@ SOURCE=.\CNetworkAddress.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CSocketMultiplexer.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CTCPListenSocket.h
 # End Source File
 # Begin Source File
@@ -127,6 +147,10 @@ SOURCE=.\CTCPSocketFactory.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IDataSocket.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\IListenSocket.h
 # End Source File
 # Begin Source File
@@ -136,6 +160,14 @@ SOURCE=.\ISocket.h
 # Begin Source File
 
 SOURCE=.\ISocketFactory.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ISocketMultiplexerJob.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TSocketMultiplexerMethodJob.h
 # End Source File
 # Begin Source File
 

@@ -87,6 +87,10 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\CClientListener.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CClientProxy.cpp
 # End Source File
 # Begin Source File
@@ -99,11 +103,11 @@ SOURCE=.\CClientProxy1_1.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CConfig.cpp
+SOURCE=.\CClientProxyUnknown.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CHTTPServer.cpp
+SOURCE=.\CConfig.cpp
 # End Source File
 # Begin Source File
 
@@ -119,6 +123,10 @@ SOURCE=.\CServer.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\CClientListener.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CClientProxy.h
 # End Source File
 # Begin Source File
@@ -131,11 +139,11 @@ SOURCE=.\CClientProxy1_1.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CConfig.h
+SOURCE=.\CClientProxyUnknown.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CHTTPServer.h
+SOURCE=.\CConfig.h
 # End Source File
 # Begin Source File
 

@@ -87,15 +87,27 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\CEvent.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CEventQueue.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CFunctionEventJob.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CFunctionJob.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CJobList.cpp
+SOURCE=.\CLog.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CLog.cpp
+SOURCE=.\CSimpleEventQueueBuffer.cpp
 # End Source File
 # Begin Source File
 
@@ -111,6 +123,10 @@ SOURCE=.\CUnicode.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\IEventQueue.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LogOutputters.cpp
 # End Source File
 # Begin Source File
@@ -123,15 +139,31 @@ SOURCE=.\XBase.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\CEvent.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CEventQueue.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CFunctionEventJob.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CFunctionJob.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CJobList.h
+SOURCE=.\CLog.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CLog.h
+SOURCE=.\CPriorityQueue.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CSimpleEventQueueBuffer.h
 # End Source File
 # Begin Source File
 
@@ -151,6 +183,18 @@ SOURCE=.\CUnicode.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IEventJob.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IEventQueue.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IEventQueueBuffer.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\IJob.h
 # End Source File
 # Begin Source File
@@ -160,6 +204,10 @@ SOURCE=.\ILogOutputter.h
 # Begin Source File
 
 SOURCE=.\LogOutputters.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TMethodEventJob.h
 # End Source File
 # Begin Source File
 
