@@ -554,6 +554,7 @@ CXWindowsKeyState::mapToModifierMask(unsigned int i, KeySym keysym)
 			return KeyModifierSuper;
 
 		case XK_Mode_switch:
+		case XK_ISO_Level3_Shift:
 			m_modeSwitchMask = (1 << i);
 			return KeyModifierModeSwitch;
 
@@ -585,6 +586,7 @@ CXWindowsKeyState::updateModifiers()
 	};
 	static const CModifierBitInfo s_modifierBitTable[] = {
 	{ &CXWindowsKeyState::m_modeSwitchKeysym, XK_Mode_switch, NoSymbol },
+	{ &CXWindowsKeyState::m_modeSwitchKeysym, XK_ISO_Level3_Shift, NoSymbol },
 	};
 
 	// choose the keysym to use for some modifiers.  if a modifier has
