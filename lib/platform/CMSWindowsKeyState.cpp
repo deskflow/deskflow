@@ -1078,6 +1078,13 @@ CMSWindowsKeyState::doUpdateKeys()
 		m_scanCodeToVirtKey[button2] = i;
 		m_virtKeyToScanCode[i]       = button;
 
+		// if the virtual key is VK_DELETE then use the extended
+		// scan code.  this is important for simulating ctrl+alt+del
+		// which only works with the extended key.
+		if (i == VK_DELETE) {
+			m_virtKeyToScanCode[i] |= 0x100u;
+		}
+
 		// save the key state
 		if ((keyState[i] & 0x80) != 0) {
 			setKeyDown(button, true);
