@@ -157,6 +157,14 @@ protected:
 	*/
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
 
+	//! Exit event loop and note an error condition
+	/*!
+	Force mainLoop() to return by throwing an exception.  This call
+	can return before mainLoop() does (i.e. asynchronously).  This
+	may only be called between a successful open() and close().
+	*/
+	void				exitMainLoopWithError();
+
 private:
 	typedef std::list<CThread> CThreadList;
 
@@ -230,6 +238,12 @@ private:
 	void				removeConnection(const CString& name);
 
 private:
+	class XServerRethrow : public XBase {
+	protected:
+		// XBase overrides
+		virtual CString	getWhat() const throw();
+	};
+
 	class CClipboardInfo {
 	public:
 		CClipboardInfo();
@@ -245,6 +259,14 @@ private:
 
 	// the name of the primary screen
 	CString				m_name;
+
+	// true if we should exit the main loop by throwing an exception.
+	// this is used to propagate an exception from one of our threads
+	// to the mainLoop() thread.  but, since we can't make a copy of
+	// the original exception, we return an arbitrary, unique
+	// exception type.  the caller of mainLoop() cannot catch this
+	// exception except through XBase or ....
+	bool				m_error;
 
 	// how long to wait to bind our socket until we give up
 	double				m_bindTimeout;

@@ -46,6 +46,7 @@ const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
 
 CServer::CServer(const CString& serverName) :
 	m_name(serverName),
+	m_error(false),
 	m_bindTimeout(5.0 * 60.0),
 	m_screenFactory(NULL),
 	m_socketFactory(NULL),
@@ -161,12 +162,28 @@ CServer::mainLoop()
 		throw;
 	}
 #undef FINALLY
+
+	// throw if there was an error
+	if (m_error) {
+		LOG((CLOG_DEBUG "forwarding child thread exception"));
+		throw XServerRethrow();
+	}
 }
 
 void
 CServer::exitMainLoop()
 {
 	m_primaryClient->exitMainLoop();
+}
+
+void
+CServer::exitMainLoopWithError()
+{
+	{
+		CLock lock(&m_mutex);
+		m_error = true;
+	}
+	exitMainLoop();
 }
 
 void
@@ -1186,7 +1203,7 @@ CServer::acceptClients(void*)
 				listen->bind(m_config.getSynergyAddress());
 				break;
 			}
-			catch (XSocketBind& e) {
+			catch (XSocketAddressInUse& e) {
 				LOG((CLOG_WARN "bind failed: %s", e.getErrstr()));
 
 				// give up if we've waited too long
@@ -1220,7 +1237,7 @@ CServer::acceptClients(void*)
 	catch (XBase& e) {
 		LOG((CLOG_ERR "cannot listen for clients: %s", e.what()));
 		delete listen;
-		exitMainLoop();
+		exitMainLoopWithError();
 	}
 	catch (...) {
 		delete listen;
@@ -1505,7 +1522,7 @@ CServer::acceptHTTPClients(void*)
 	catch (XBase& e) {
 		LOG((CLOG_ERR "cannot listen for HTTP clients: %s", e.what()));
 		delete listen;
-		exitMainLoop();
+		exitMainLoopWithError();
 	}
 	catch (...) {
 		delete listen;
@@ -1688,6 +1705,17 @@ CServer::removeConnection(const CString& name)
 
 	// remove any thread for this client
 	m_clientThreads.erase(name);
+}
+
+
+//
+// CServer::CClipboardInfo
+//
+
+CString
+CServer::XServerRethrow::getWhat() const throw()
+{
+	return format("XServerRethrow", "child thread failed");
 }
 
 
