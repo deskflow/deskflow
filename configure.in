@@ -41,6 +41,9 @@ ac_ext=cpp
 dnl check compiler
 ACX_CHECK_CXX
 
+dnl macros we should do testing with
+CXXFLAGS="$CXXFLAGS -D_BSD_SOURCE -D_XOPEN_SOURCE=500"
+
 dnl checks for libraries
 ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
 ACX_CHECK_NANOSLEEP
@@ -98,7 +101,7 @@ ACX_CXX_WARNINGS
 ACX_CXX_WARNINGS_ARE_ERRORS
 
 dnl adjust variables for X11 and pthreads
-CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS -D_BSD_SOURCE -D_XOPEN_SOURCE=500"
+CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
 LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $PTHREAD_LIBS $LIBS"
 
 AC_OUTPUT([
@@ -119,6 +122,7 @@ cmd/launcher/Makefile
 cmd/synergyc/Makefile
 cmd/synergys/Makefile
 dist/Makefile
+dist/nullsoft/Makefile
 dist/rpm/Makefile
 dist/rpm/synergy.spec
 doc/doxygen.cfg
