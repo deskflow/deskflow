@@ -1,3 +1,151 @@
+2002/12/25 19:21:17 crs
+NEWS
+configure.in
+lib/base/Version.h
+
+Changed version number to 0.9.14.  Added NEWS item.
+
+----------
+2002/12/25 18:44:54 crs
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreenSaver.cpp
+
+Improved handling of screen saver handling when windows 2k is
+the client and the screen saver is password protected.  It used
+to immediately turn off the screen saver (unintentionally) in
+that case.
+
+----------
+2002/12/25 10:35:59 crs
+acinclude.m4
+config/config.guess
+config/config.sub
+configure.in
+lib/base/common.h
+lib/mt/CThreadRep.cpp
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/platform/CUnixPlatform.cpp
+
+Changes to support building on solaris, irix, and darwin.  Also
+removed test for working fork (AC_FORK).
+
+----------
+2002/12/23 14:47:44 crs
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+
+Added code to process set/reset options messages from server.
+
+----------
+2002/12/23 13:55:21 crs
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CMSWindowsSecondaryScreen.h
+lib/client/CSecondaryScreen.cpp
+lib/client/CSecondaryScreen.h
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CMSWindowsPrimaryScreen.h
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CPrimaryScreen.cpp
+lib/server/CPrimaryScreen.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/server/CXWindowsPrimaryScreen.h
+lib/synergy/CProtocolUtil.cpp
+lib/synergy/CProtocolUtil.h
+lib/synergy/IClient.h
+lib/synergy/Makefile.am
+lib/synergy/OptionTypes.h
+lib/synergy/ProtocolTypes.h
+
+Added support for per-screen options in the configuration file
+and sending those options to the appropriate client screens.
+Currently, two options are supported:  halfDuplexCapsLock and
+halfDuplexNumLock mark the caps lock and num lock keys,
+respectively, as being half-duplex.
+
+----------
+2002/12/22 14:51:41 crs
+configure.in
+doc/doxygen.cfg.in
+
+Doxygen config file now sets HAVE_DOT to YES only if dot is found
+by configure.
+
+----------
+2002/12/15 22:39:59 crs
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+
+Now handling any number of pointer buttons.
+
+----------
+2002/12/15 22:17:18 crs
+lib/server/CXWindowsPrimaryScreen.cpp
+
+Now ignoring half-duplex keys that are down when deciding if
+the mouse is locked to the screen.  We can't tell if a half-
+duplex key is physically down and logically down just means
+it's active so there's no point in letting it lock the mouse
+to the screen.
+
+----------
+2002/12/15 22:14:49 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CMSWindowsSecondaryScreen.h
+lib/client/CSecondaryScreen.cpp
+lib/client/CSecondaryScreen.h
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+
+Now restoring toggle key states on leaving a client screen to
+their state when the screen was entered.  Previously when
+leaving a client screen the toggle keys kept their state so,
+say, caps lock, would remain on.  This was inconvenient if
+you then used the client's keyboard directly.
+
+----------
+2002/12/15 20:00:52 crs
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+Fixed loss of ctrl+alt when transmitted to non-windows platforms
+from a windows server.  Was converting ctrl+alt on windows to
+mode switch on the server.  No longer doing that;  windows clients
+will interpret ctrl+alt as AltGr and other clients will just see
+ctrl+alt.  Also made the right alt key mode switch on windows
+servers in case the user wants to force a mode switch, but that
+means the right alt key no longer acts as alt on clients.
+
+----------
+2002/12/15 19:58:41 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Fixed client not reconnecting when server dies bug.
+
+----------
+2002/12/15 19:57:28 crs
+lib/client/CXWindowsSecondaryScreen.cpp
+
+Cleanup and changed some DEBUG1 messages to DEBUG2.
+
+----------
+2002/12/15 11:12:39 crs
+doc/doxygen.cfg.in
+
+Enabled using dot and class diagrams.
+
+----------
 2002/11/05 19:23:05 crs
 lib/platform/CXWindowsScreen.cpp
 lib/platform/CXWindowsScreenSaver.cpp
