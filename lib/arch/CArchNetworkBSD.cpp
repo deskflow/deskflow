@@ -274,7 +274,8 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 	}
 
 	// allocate space for translated query
-	struct pollfd* pfd = new struct pollfd[num];
+	struct pollfd* pfd = reinterpret_cast<struct pollfd*>(
+								alloca(num * sizeof(struct pollfd)));
 
 	// translate query
 	for (int i = 0; i < num; ++i) {
@@ -298,7 +299,6 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 				ARCH->testCancelThread();
 				continue;
 			}
-			delete[] pfd;
 			throwError(errno);
 		}
 	} while (false);
@@ -319,9 +319,6 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 			pe[i].m_revents |= kPOLLNVAL;
 		}
 	}
-
-	// done with translated query
-	delete[] pfd;
 
 	return n;
 }
