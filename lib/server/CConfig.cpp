@@ -244,42 +244,69 @@ CConfig::setHTTPAddress(const CNetworkAddress& addr)
 bool
 CConfig::addOption(const CString& name, OptionID option, OptionValue value)
 {
-	// find cell
-	CCellMap::iterator index = m_map.find(name);
-	if (index == m_map.end()) {
+	// find options
+	CScreenOptions* options = NULL;
+	if (name.empty()) {
+		options = &m_globalOptions;
+	}
+	else {
+		CCellMap::iterator index = m_map.find(name);
+		if (index != m_map.end()) {
+			options = &index->second.m_options;
+		}
+	}
+	if (options == NULL) {
 		return false;
 	}
 
 	// add option
-	index->second.m_options.insert(std::make_pair(option, value));
+	options->insert(std::make_pair(option, value));
 	return true;
 }
 
 bool
 CConfig::removeOption(const CString& name, OptionID option)
 {
-	// find cell
-	CCellMap::iterator index = m_map.find(name);
-	if (index == m_map.end()) {
+	// find options
+	CScreenOptions* options = NULL;
+	if (name.empty()) {
+		options = &m_globalOptions;
+	}
+	else {
+		CCellMap::iterator index = m_map.find(name);
+		if (index != m_map.end()) {
+			options = &index->second.m_options;
+		}
+	}
+	if (options == NULL) {
 		return false;
 	}
 
 	// remove option
-	index->second.m_options.erase(option);
+	options->erase(option);
 	return true;
 }
 
 bool
 CConfig::removeOptions(const CString& name)
 {
-	// find cell
-	CCellMap::iterator index = m_map.find(name);
-	if (index == m_map.end()) {
+	// find options
+	CScreenOptions* options = NULL;
+	if (name.empty()) {
+		options = &m_globalOptions;
+	}
+	else {
+		CCellMap::iterator index = m_map.find(name);
+		if (index != m_map.end()) {
+			options = &index->second.m_options;
+		}
+	}
+	if (options == NULL) {
 		return false;
 	}
 
-	// remove option
-	index->second.m_options.clear();
+	// remove options
+	options->clear();
 	return true;
 }
 
@@ -405,14 +432,20 @@ CConfig::getHTTPAddress() const
 const CConfig::CScreenOptions*
 CConfig::getOptions(const CString& name) const
 {
-	// find cell
-	CCellMap::const_iterator index = m_map.find(name);
-	if (index == m_map.end()) {
-		return NULL;
+	// find options
+	const CScreenOptions* options = NULL;
+	if (name.empty()) {
+		options = &m_globalOptions;
+	}
+	else {
+		CCellMap::const_iterator index = m_map.find(name);
+		if (index != m_map.end()) {
+			options = &index->second.m_options;
+		}
 	}
 
 	// return options
-	return &index->second.m_options;
+	return options;
 }
 
 bool
@@ -430,6 +463,11 @@ CConfig::operator==(const CConfig& x) const
 		return false;
 	}
 	if (m_nameToCanonicalName.size() != x.m_nameToCanonicalName.size()) {
+		return false;
+	}
+
+	// compare global options
+	if (m_globalOptions != x.m_globalOptions) {
 		return false;
 	}
 

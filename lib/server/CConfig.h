@@ -308,6 +308,7 @@ private:
 	CNameMap			m_nameToCanonicalName;
 	CNetworkAddress		m_synergyAddress;
 	CNetworkAddress		m_httpAddress;
+	CScreenOptions		m_globalOptions;
 };
 
 //! Configuration stream read exception
