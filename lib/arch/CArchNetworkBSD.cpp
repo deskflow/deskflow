@@ -34,6 +34,9 @@
 
 #if HAVE_POLL
 #	include <sys/poll.h>
+#	if HAVE_ALLOCA_H
+#		include <alloca.h>
+#	endif
 #else
 #	if HAVE_SYS_SELECT_H
 #		include <sys/select.h>
@@ -41,6 +44,13 @@
 #	if HAVE_SYS_TIME_H
 #		include <sys/time.h>
 #	endif
+#endif
+
+#if HAVE_ALLOCA_H
+#	define freea(x_)
+#else
+#	define alloca(x_) malloc(x_)
+#	define freea(x_) free(x_)
 #endif
 
 static const int s_family[] = {
@@ -327,8 +337,10 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 		if (errno == EINTR) {
 			// interrupted system call
 			ARCH->testCancelThread();
+			freea(pfd);
 			return 0;
 		}
+		freea(pfd);
 		throwError(errno);
 	}
 
@@ -349,6 +361,7 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 		}
 	}
 
+	freea(pfd);
 	return n;
 }
 

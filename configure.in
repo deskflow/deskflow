@@ -35,19 +35,17 @@ case $host in
 	*-*-mingw32* | *-*-windows*)
 	acx_host_arch="WIN32"
 	acx_host_winapi="MSWINDOWS"
-	ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_WIN32=1 -DWINAPI_MSWINDOWS=1"
 	;;
 	*-*-darwin*)
 	acx_host_arch="UNIX"
 	acx_host_winapi="CARBON"
-	ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_UNIX=1 -DWINAPI_CARBON=1"
 	;;
 	*)
 	acx_host_arch="UNIX"
 	acx_host_winapi="XWINDOWS"
-	ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_UNIX=1 -DWINAPI_XWINDOWS=1"
 	;;
 esac
+ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_$acx_host_arch=1 -DWINAPI_$acx_host_winapi=1"
 AM_CONDITIONAL(WIN32, test x$acx_host_arch = xWIN32)
 AM_CONDITIONAL(UNIX, test x$acx_host_arch = xUNIX)
 AM_CONDITIONAL(MSWINDOWS, test x$acx_host_winapi = xMSWINDOWS)
@@ -85,7 +83,7 @@ ACX_CHECK_INET_ATON
 
 dnl checks for header files
 AC_HEADER_STDC
-AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h wchar.h])
+AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h wchar.h alloca.h])
 AC_CHECK_HEADERS([sys/socket.h sys/select.h])
 AC_CHECK_HEADERS([istream ostream sstream])
 AC_HEADER_TIME

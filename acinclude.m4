@@ -515,12 +515,13 @@ else
 fi
 ])dnl ACX_PTHREAD
 
-dnl enable maximum compiler warnings
+dnl enable maximum compiler warnings.  must ignore unknown pragmas to
+dnl build on solaris.
 dnl we only know how to do this for g++
 AC_DEFUN([ACX_CXX_WARNINGS], [
 	AC_MSG_CHECKING([for C++ compiler warning flags])
 	if test "$GXX" = "yes"; then
-		acx_cxx_warnings="-Wall"
+		acx_cxx_warnings="-Wall -Wno-unknown-pragmas"
 	fi
 	if test -n "$acx_cxx_warnings"; then
 		CXXFLAGS="$CXXFLAGS $acx_cxx_warnings"
