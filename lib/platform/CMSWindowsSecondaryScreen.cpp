@@ -300,13 +300,13 @@ CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 void
 CMSWindowsSecondaryScreen::resetOptions()
 {
-	// no options
+	CSecondaryScreen::resetOptions();
 }
 
 void
-CMSWindowsSecondaryScreen::setOptions(const COptionsList& /*options*/)
+CMSWindowsSecondaryScreen::setOptions(const COptionsList& options)
 {
-	// no options
+	CSecondaryScreen::setOptions(options);
 }
 
 IScreen*

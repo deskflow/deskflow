@@ -53,6 +53,7 @@ static const OptionID	kOptionModifierMapForSuper   = OPTION_CODE("MMFR");
 static const OptionID	kOptionHeartbeat             = OPTION_CODE("HART");
 static const OptionID	kOptionScreenSwitchDelay     = OPTION_CODE("SSWT");
 static const OptionID	kOptionScreenSwitchTwoTap    = OPTION_CODE("SSTT");
+static const OptionID	kOptionScreenSaverSync       = OPTION_CODE("SSVR");
 //@}
 
 #undef OPTION_CODE

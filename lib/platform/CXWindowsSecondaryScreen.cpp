@@ -287,6 +287,7 @@ CXWindowsSecondaryScreen::resetOptions()
 {
 	m_numLockHalfDuplex  = false;
 	m_capsLockHalfDuplex = false;
+	CSecondaryScreen::resetOptions();
 }
 
 void
@@ -302,6 +303,7 @@ CXWindowsSecondaryScreen::setOptions(const COptionsList& options)
 			LOG((CLOG_DEBUG1 "half-duplex num-lock %s", m_numLockHalfDuplex ? "on" : "off"));
 		}
 	}
+	CSecondaryScreen::setOptions(options);
 }
 
 IScreen*

@@ -23,8 +23,10 @@
 //
 
 CSecondaryScreen::CSecondaryScreen() :
+	m_remoteReady(false),
 	m_active(false),
-	m_toggleKeys(0)
+	m_toggleKeys(0),
+	m_screenSaverSync(true)
 {
 	// do nothing
 }
@@ -106,14 +108,23 @@ CSecondaryScreen::remoteControl()
 	// update keyboard state
 	updateKeys();
 
-	// disable the screen saver
-	getScreen()->openScreensaver(false);
-
-	// hide the cursor
+	// now remote ready.  fake being active for call to leave().
+	bool screenSaverSync;
 	{
 		CLock lock(&m_mutex);
-		m_active = true;
+		m_remoteReady = true;
+		m_active      = true;
+
+		// copy screen saver synchronization state
+		screenSaverSync = m_screenSaverSync;
 	}
+
+	// disable the screen saver if synchronization is enabled
+	if (screenSaverSync) {
+		getScreen()->openScreensaver(false);
+	}
+
+	// hide the cursor
 	leave();
 }
 
@@ -121,6 +132,10 @@ void
 CSecondaryScreen::localControl()
 {
 	getScreen()->closeScreensaver();
+
+	// not remote ready anymore
+	CLock lock(&m_mutex);
+	m_remoteReady = false;
 }
 
 void
@@ -204,7 +219,71 @@ CSecondaryScreen::grabClipboard(ClipboardID id)
 void
 CSecondaryScreen::screensaver(bool activate)
 {
-	getScreen()->screensaver(activate);
+	// get screen saver synchronization flag
+	bool screenSaverSync;
+	{
+		CLock lock(&m_mutex);
+		screenSaverSync = m_screenSaverSync;
+	}
+
+	// activate/deactivation screen saver iff synchronization enabled
+	if (screenSaverSync) {
+LOG((CLOG_INFO "screensaver(%s)", activate ? "on" : "off"));
+		getScreen()->screensaver(activate);
+	}
+else {
+LOG((CLOG_INFO "screensaver(%s) ignored", activate ? "on" : "off"));
+}
+}
+
+void
+CSecondaryScreen::resetOptions()
+{
+	// set screen saver synchronization flag and see if we need to
+	// update the screen saver synchronization.
+	bool screenSaverSyncOn;
+	{
+		CLock lock(&m_mutex);
+		screenSaverSyncOn = (!m_screenSaverSync && m_remoteReady);
+		m_screenSaverSync = true;
+	}
+
+	// update screen saver synchronization
+	if (screenSaverSyncOn) {
+		getScreen()->openScreensaver(false);
+	}
+}
+
+void
+CSecondaryScreen::setOptions(const COptionsList& options)
+{
+	// update options
+	bool updateScreenSaverSync = false;
+	bool oldScreenSaverSync;
+	{
+		CLock lock(&m_mutex);
+		oldScreenSaverSync = m_screenSaverSync;
+		for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
+			if (options[i] == kOptionScreenSaverSync) {
+				updateScreenSaverSync = true;
+				m_screenSaverSync     = (options[i + 1] != 0);
+				LOG((CLOG_DEBUG1 "screen saver synchronization %s", m_screenSaverSync ? "on" : "off"));
+			}
+		}
+		if (!m_remoteReady || oldScreenSaverSync == m_screenSaverSync) {
+			updateScreenSaverSync = false;
+		}
+	}
+
+	// update screen saver synchronization
+	if (updateScreenSaverSync) {
+		if (oldScreenSaverSync) {
+			getScreen()->closeScreensaver();
+		}
+		else {
+			getScreen()->openScreensaver(false);
+		}
+	}
 }
 
 bool

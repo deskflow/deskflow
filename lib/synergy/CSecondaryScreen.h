@@ -177,16 +177,18 @@ public:
 
 	//! Notify of options changes
 	/*!
-	Reset all options to their default values.
+	Reset all options to their default values.  Overrides should call
+	the superclass's method.
 	*/
-	virtual void		resetOptions() = 0;
+	virtual void		resetOptions();
 
 	//! Notify of options changes
 	/*!
 	Set options to given values.  Ignore unknown options and don't
-	modify our options that aren't given in \c options.
+	modify our options that aren't given in \c options.  Overrides
+	should call the superclass's method.
 	*/
-	virtual void		setOptions(const COptionsList& options) = 0;
+	virtual void		setOptions(const COptionsList& options);
 
 	//@}
 	//! @name accessors
@@ -372,11 +374,17 @@ protected:
 private:
 	CMutex				m_mutex;
 
+	// true if ready for remote control
+	bool				m_remoteReady;
+
 	// m_active is true if this screen has been entered
 	bool				m_active;
 
 	// the toggle key state when this screen was last entered
 	KeyModifierMask		m_toggleKeys;
+
+	// true if screen saver should be synchronized to server
+	bool				m_screenSaverSync;
 };
 
 #endif

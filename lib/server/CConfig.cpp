@@ -640,6 +640,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionScreenSwitchTwoTap) {
 		return "switchDoubleTap";
 	}
+	if (id == kOptionScreenSaverSync) {
+		return "screenSaverSync";
+	}
 	return NULL;
 }
 
@@ -647,7 +650,8 @@ CString
 CConfig::getOptionValue(OptionID id, OptionValue value)
 {
 	if (id == kOptionHalfDuplexCapsLock ||
-		id == kOptionHalfDuplexNumLock) {
+		id == kOptionHalfDuplexNumLock ||
+		id == kOptionScreenSaverSync) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||
@@ -790,6 +794,9 @@ CConfig::readSectionOptions(std::istream& s)
 		}
 		else if (name == "switchDoubleTap") {
 			addOption("", kOptionScreenSwitchTwoTap, parseInt(value));
+		}
+		else if (name == "screenSaverSync") {
+			addOption("", kOptionScreenSaverSync, parseBoolean(value));
 		}
 		else {
 			throw XConfigRead("unknown argument");
