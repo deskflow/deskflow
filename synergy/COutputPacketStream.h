@@ -13,9 +13,9 @@ class COutputPacketStream : public COutputStreamFilter {
 	// accessors
 
 	// IOutputStream overrides
-	virtual void		close() throw(XIO);
-	virtual UInt32		write(const void*, UInt32 count) throw(XIO);
-	virtual void		flush() throw(XIO);
+	virtual void		close();
+	virtual UInt32		write(const void*, UInt32 count);
+	virtual void		flush();
 };
 
 #endif

@@ -10,12 +10,12 @@ class IInputStream : public IInterface {
 	// manipulators
 
 	// close the stream
-	virtual void		close() throw(XIO) = 0;
+	virtual void		close() = 0;
 
 	// read up to maxCount bytes into buffer, return number read.
 	// blocks if no data is currently available.  if buffer is NULL
 	// then the data is discarded.
-	virtual UInt32		read(void* buffer, UInt32 maxCount) throw(XIO) = 0;
+	virtual UInt32		read(void* buffer, UInt32 maxCount) = 0;
 
 	// accessors
 
@@ -23,7 +23,7 @@ class IInputStream : public IInterface {
 	// (i.e. a number not greater than the actual number of bytes).
 	// some streams may not be able to determine this and will always
 	// return zero.
-	virtual UInt32		getSize() const throw() = 0;
+	virtual UInt32		getSize() const = 0;
 };
 
 #endif

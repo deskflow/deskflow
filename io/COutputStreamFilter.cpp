@@ -19,7 +19,7 @@ COutputStreamFilter::~COutputStreamFilter()
 	}
 }
 
-IOutputStream*			COutputStreamFilter::getStream() const throw()
+IOutputStream*			COutputStreamFilter::getStream() const
 {
 	return m_stream;
 }

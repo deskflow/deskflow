@@ -11,7 +11,7 @@
 //
 
 void					CProtocolUtil::writef(IOutputStream* stream,
-								const char* fmt, ...) throw(XIO)
+								const char* fmt, ...)
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
@@ -48,7 +48,7 @@ void					CProtocolUtil::writef(IOutputStream* stream,
 }
 
 void					CProtocolUtil::readf(IInputStream* stream,
-								const char* fmt, ...) throw(XIO)
+								const char* fmt, ...)
 {
 	assert(stream != NULL);
 	assert(fmt != NULL);
@@ -171,7 +171,7 @@ void					CProtocolUtil::readf(IInputStream* stream,
 }
 
 UInt32					CProtocolUtil::getLength(
-								const char* fmt, va_list args) throw()
+								const char* fmt, va_list args)
 {
 	UInt32 n = 0;
 	while (*fmt) {
@@ -214,7 +214,7 @@ UInt32					CProtocolUtil::getLength(
 }
 
 void			 		CProtocolUtil::writef(void* buffer,
-								const char* fmt, va_list args) throw(XIO)
+								const char* fmt, va_list args)
 {
 	UInt8* dst = reinterpret_cast<UInt8*>(buffer);
 
@@ -285,7 +285,7 @@ void			 		CProtocolUtil::writef(void* buffer,
 	}
 }
 
-UInt32					CProtocolUtil::eatLength(const char** pfmt) throw()
+UInt32					CProtocolUtil::eatLength(const char** pfmt)
 {
 	const char* fmt = *pfmt;
 	UInt32 n = 0;
@@ -310,7 +310,7 @@ UInt32					CProtocolUtil::eatLength(const char** pfmt) throw()
 }
 
 void					CProtocolUtil::read(IInputStream* stream,
-								void* vbuffer, UInt32 count) throw(XIO)
+								void* vbuffer, UInt32 count)
 {
 	assert(stream != NULL);
 	assert(vbuffer != NULL);

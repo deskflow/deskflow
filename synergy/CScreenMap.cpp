@@ -76,7 +76,7 @@ void					CScreenMap::disconnect(const CString& srcName,
 }
 
 CString					CScreenMap::getNeighbor(const CString& srcName,
-								EDirection srcSide) const throw()
+								EDirection srcSide) const
 {
 	// find source cell
 	CCellMap::const_iterator index = m_map.find(srcName);

@@ -20,8 +20,8 @@ class CMutex {
 
 	// accessors
 
-	void				lock() const throw();
-	void				unlock() const throw();
+	void				lock() const;
+	void				unlock() const;
 
   private:
 	void				init();

@@ -13,25 +13,25 @@ class CServerProtocol1_0 : public CServerProtocol {
 	// accessors
 
 	// IServerProtocol overrides
-	virtual void		run() throw(XIO,XBadClient);
-	virtual void		queryInfo() throw(XIO,XBadClient);
-	virtual void		sendClose() throw(XIO);
-	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs) throw(XIO);
-	virtual void		sendLeave() throw(XIO);
-	virtual void		sendGrabClipboard() throw(XIO);
-	virtual void		sendQueryClipboard() throw(XIO);
-	virtual void		sendScreenSaver(bool on) throw(XIO);
-	virtual void		sendKeyDown(KeyID, KeyModifierMask) throw(XIO);
-	virtual void		sendKeyRepeat(KeyID, KeyModifierMask) throw(XIO);
-	virtual void		sendKeyUp(KeyID, KeyModifierMask) throw(XIO);
-	virtual void		sendMouseDown(ButtonID) throw(XIO);
-	virtual void		sendMouseUp(ButtonID) throw(XIO);
-	virtual void		sendMouseMove(SInt32 xAbs, SInt32 yAbs) throw(XIO);
-	virtual void		sendMouseWheel(SInt32 delta) throw(XIO);
+	virtual void		run();
+	virtual void		queryInfo();
+	virtual void		sendClose();
+	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs);
+	virtual void		sendLeave();
+	virtual void		sendGrabClipboard();
+	virtual void		sendQueryClipboard();
+	virtual void		sendScreenSaver(bool on);
+	virtual void		sendKeyDown(KeyID, KeyModifierMask);
+	virtual void		sendKeyRepeat(KeyID, KeyModifierMask);
+	virtual void		sendKeyUp(KeyID, KeyModifierMask);
+	virtual void		sendMouseDown(ButtonID);
+	virtual void		sendMouseUp(ButtonID);
+	virtual void		sendMouseMove(SInt32 xAbs, SInt32 yAbs);
+	virtual void		sendMouseWheel(SInt32 delta);
 
   protected:
 	// IServerProtocol overrides
-	virtual void		recvInfo() throw(XIO,XBadClient);
+	virtual void		recvInfo();
 };
 
 #endif

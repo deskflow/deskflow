@@ -17,13 +17,13 @@ class CCondVarBase {
 	// manipulators
 
 	// lock/unlock the mutex.  see CMutex.
-	void				lock() const throw();
-	void				unlock() const throw();
+	void				lock() const;
+	void				unlock() const;
 
 	// signal the condition.  Signal() wakes one waiting thread.
 	// Broadcast() wakes all waiting threads.
-	void				signal() throw();
-	void				broadcast() throw();
+	void				signal();
+	void				broadcast();
 
 	// accessors
 
@@ -43,7 +43,7 @@ class CCondVarBase {
 	bool				wait(CStopwatch&, double timeout) const;
 
 	// get the mutex passed to the c'tor
-	CMutex*				getMutex() const throw();
+	CMutex*				getMutex() const;
 
   private:
 	void				init();
@@ -83,7 +83,7 @@ class CCondVar : public CCondVarBase {
 
 	// get the const value.  this object should be locked before
 	// calling this method.
-						operator const T&() const throw();
+						operator const T&() const;
 
   private:
 	T					m_data;
@@ -131,7 +131,7 @@ CCondVar<T>&			CCondVar<T>::operator=(const T& data)
 
 template <class T>
 inline
-CCondVar<T>::operator const T&() const throw()
+CCondVar<T>::operator const T&() const
 {
 	return m_data;
 }

@@ -16,12 +16,12 @@ CTCPSocketFactory::~CTCPSocketFactory()
 	// do nothing
 }
 
-ISocket*				CTCPSocketFactory::create() const throw(XSocket)
+ISocket*				CTCPSocketFactory::create() const
 {
 	return new CTCPSocket;
 }
 
-IListenSocket*			CTCPSocketFactory::createListen() const throw(XSocket)
+IListenSocket*			CTCPSocketFactory::createListen() const
 {
 	return new CTCPListenSocket;
 }

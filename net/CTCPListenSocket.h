@@ -13,9 +13,9 @@ class CTCPListenSocket : public IListenSocket {
 	// accessors
 
 	// IListenSocket overrides
-	virtual void		bind(const CNetworkAddress&) throw(XSocket);
-	virtual ISocket*	accept() throw(XSocket);
-	virtual void		close() throw(XIO);
+	virtual void		bind(const CNetworkAddress&);
+	virtual ISocket*	accept();
+	virtual void		close();
 
   private:
 	int					m_fd;

@@ -41,7 +41,7 @@ class CServer {
 
 	// handle messages from clients
 	void				setInfo(const CString& clientName,
-								SInt32 w, SInt32 h, SInt32 zoneSize) throw();
+								SInt32 w, SInt32 h, SInt32 zoneSize);
 
 	// accessors
 
@@ -52,7 +52,7 @@ class CServer {
 
   protected:
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
-	void				quit() throw();
+	void				quit();
 
   private:
 	class CCleanupNote {
@@ -111,10 +111,10 @@ class CServer {
 
 	// open/close the primary screen
 	void				openPrimaryScreen();
-	void				closePrimaryScreen() throw();
+	void				closePrimaryScreen();
 
 	// cancel running threads
-	void				cleanupThreads() throw();
+	void				cleanupThreads();
 
 	// thread method to accept incoming client connections
 	void				acceptClients(void*);

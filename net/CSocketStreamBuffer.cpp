@@ -17,7 +17,7 @@ CSocketStreamBuffer::~CSocketStreamBuffer()
 	// do nothing
 }
 
-const void*				CSocketStreamBuffer::peek(UInt32 n) throw()
+const void*				CSocketStreamBuffer::peek(UInt32 n)
 {
 	assert(n <= m_size);
 
@@ -36,7 +36,7 @@ const void*				CSocketStreamBuffer::peek(UInt32 n) throw()
 	return reinterpret_cast<const void*>(head->begin());
 }
 
-void					CSocketStreamBuffer::pop(UInt32 n) throw()
+void					CSocketStreamBuffer::pop(UInt32 n)
 {
 	m_size -= n;
 
@@ -58,7 +58,7 @@ void					CSocketStreamBuffer::pop(UInt32 n) throw()
 }
 
 void					CSocketStreamBuffer::write(
-								const void* vdata, UInt32 n) throw()
+								const void* vdata, UInt32 n)
 {
 	assert(vdata != NULL);
 
@@ -100,7 +100,7 @@ void					CSocketStreamBuffer::write(
 	}
 }
 
-UInt32					CSocketStreamBuffer::getSize() const throw()
+UInt32					CSocketStreamBuffer::getSize() const
 {
 	return m_size;
 }

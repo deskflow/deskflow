@@ -26,22 +26,22 @@ CServerProtocol::~CServerProtocol()
 	// do nothing
 }
 
-CServer*				CServerProtocol::getServer() const throw()
+CServer*				CServerProtocol::getServer() const
 {
 	return m_server;
 }
 
-CString					CServerProtocol::getClient() const throw()
+CString					CServerProtocol::getClient() const
 {
 	return m_client;
 }
 
-IInputStream*			CServerProtocol::getInputStream() const throw()
+IInputStream*			CServerProtocol::getInputStream() const
 {
 	return m_input;
 }
 
-IOutputStream*			CServerProtocol::getOutputStream() const throw()
+IOutputStream*			CServerProtocol::getOutputStream() const
 {
 	return m_output;
 }

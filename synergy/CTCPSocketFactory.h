@@ -13,8 +13,8 @@ class CTCPSocketFactory : public ISocketFactory {
 	// accessors
 
 	// ISocketFactory overrides
-	virtual ISocket*	create() const throw(XSocket);
-	virtual IListenSocket*	createListen() const throw(XSocket);
+	virtual ISocket*	create() const;
+	virtual IListenSocket*	createListen() const;
 };
 
 #endif

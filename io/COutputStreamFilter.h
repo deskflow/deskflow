@@ -13,12 +13,12 @@ class COutputStreamFilter : public IOutputStream {
 	// accessors
 
 	// IOutputStream overrides
-	virtual void		close() throw(XIO) = 0;
-	virtual UInt32		write(const void*, UInt32 count) throw(XIO) = 0;
-	virtual void		flush() throw(XIO) = 0;
+	virtual void		close() = 0;
+	virtual UInt32		write(const void*, UInt32 count) = 0;
+	virtual void		flush() = 0;
 
   protected:
-	IOutputStream*		getStream() const throw();
+	IOutputStream*		getStream() const;
 
   private:
 	IOutputStream*		m_stream;

@@ -48,7 +48,7 @@ void					CMutex::fini()
 	delete mutex;
 }
 
-void					CMutex::lock() const throw()
+void					CMutex::lock() const
 {
 	pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(m_mutex);
 	int status = pthread_mutex_lock(mutex);
@@ -71,7 +71,7 @@ void					CMutex::lock() const throw()
 	}
 }
 
-void					CMutex::unlock() const throw()
+void					CMutex::unlock() const
 {
 	pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(m_mutex);
 	int status = pthread_mutex_unlock(mutex);
@@ -110,12 +110,12 @@ void					CMutex::fini()
 	delete mutex;
 }
 
-void					CMutex::lock() const throw()
+void					CMutex::lock() const
 {
 	::EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
 }
 
-void					CMutex::unlock() const throw()
+void					CMutex::unlock() const
 {
 	::LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(m_mutex));
 }

@@ -8,9 +8,9 @@ class CCondVarBase;
 
 class CLock {
   public:
-	CLock(const CMutex* mutex) throw();
-	CLock(const CCondVarBase* cv) throw();
-	~CLock() throw();
+	CLock(const CMutex* mutex);
+	CLock(const CCondVarBase* cv);
+	~CLock();
 
   private:
 	// not implemented

@@ -10,13 +10,13 @@ class IOutputStream : public IInterface {
 	// manipulators
 
 	// close the stream
-	virtual void		close() throw(XIO) = 0;
+	virtual void		close() = 0;
 
 	// write count bytes to stream
-	virtual UInt32		write(const void*, UInt32 count) throw(XIO) = 0;
+	virtual UInt32		write(const void*, UInt32 count) = 0;
 
 	// flush the stream
-	virtual void		flush() throw(XIO) = 0;
+	virtual void		flush() = 0;
 
 	// accessors
 };

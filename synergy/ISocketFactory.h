@@ -14,8 +14,8 @@ class ISocketFactory : public IInterface {
 	// accessors
 
 	// create sockets
-	virtual ISocket*	create() const throw(XSocket) = 0;
-	virtual IListenSocket*	createListen() const throw(XSocket) = 0;
+	virtual ISocket*	create() const = 0;
+	virtual IListenSocket*	createListen() const = 0;
 };
 
 #endif

@@ -23,22 +23,22 @@ CSocketOutputStream::~CSocketOutputStream()
 	delete m_closeCB;
 }
 
-const void*				CSocketOutputStream::peek(UInt32 n) throw()
+const void*				CSocketOutputStream::peek(UInt32 n)
 {
 	return m_buffer.peek(n);
 }
 
-void					CSocketOutputStream::pop(UInt32 n) throw()
+void					CSocketOutputStream::pop(UInt32 n)
 {
 	m_buffer.pop(n);
 }
 
-UInt32					CSocketOutputStream::getSize() const throw()
+UInt32					CSocketOutputStream::getSize() const
 {
 	return m_buffer.getSize();
 }
 
-void					CSocketOutputStream::close() throw(XIO)
+void					CSocketOutputStream::close()
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
@@ -52,7 +52,7 @@ void					CSocketOutputStream::close() throw(XIO)
 }
 
 UInt32					CSocketOutputStream::write(
-								const void* data, UInt32 n) throw(XIO)
+								const void* data, UInt32 n)
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
@@ -63,7 +63,7 @@ UInt32					CSocketOutputStream::write(
 	return n;
 }
 
-void					CSocketOutputStream::flush() throw(XIO)
+void					CSocketOutputStream::flush()
 {
 	// wait until all data is written
 	while (getSizeWithLock() > 0) {
@@ -71,7 +71,7 @@ void					CSocketOutputStream::flush() throw(XIO)
 	}
 }
 
-UInt32					CSocketOutputStream::getSizeWithLock() const throw()
+UInt32					CSocketOutputStream::getSizeWithLock() const
 {
 	CLock lock(m_mutex);
 	return m_buffer.getSize();

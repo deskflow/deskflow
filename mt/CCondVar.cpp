@@ -21,12 +21,12 @@ CCondVarBase::~CCondVarBase()
 	fini();
 }
 
-void					CCondVarBase::lock() const throw()
+void					CCondVarBase::lock() const
 {
 	m_mutex->lock();
 }
 
-void					CCondVarBase::unlock() const throw()
+void					CCondVarBase::unlock() const
 {
 	m_mutex->unlock();
 }
@@ -37,7 +37,7 @@ bool					CCondVarBase::wait(double timeout) const
 	return wait(timer, timeout);
 }
 
-CMutex*					CCondVarBase::getMutex() const throw()
+CMutex*					CCondVarBase::getMutex() const
 {
 	return m_mutex;
 }
@@ -65,14 +65,14 @@ void					CCondVarBase::fini()
 	delete cond;
 }
 
-void					CCondVarBase::signal() throw()
+void					CCondVarBase::signal()
 {
 	pthread_cond_t* cond = reinterpret_cast<pthread_cond_t*>(m_cond);
 	int status = pthread_cond_signal(cond);
 	assert(status == 0);
 }
 
-void					CCondVarBase::broadcast() throw()
+void					CCondVarBase::broadcast()
 {
 	pthread_cond_t* cond = reinterpret_cast<pthread_cond_t*>(m_cond);
 	int status = pthread_cond_broadcast(cond);
@@ -143,7 +143,7 @@ bool					CCondVarBase::wait(
 		CThread::testCancel();
 
 		// check wait status
-		if (status != ETIMEDOUT)
+		if (status != ETIMEDOUT && status != EINTR)
 			break;
 	}
 
@@ -199,7 +199,7 @@ void					CCondVarBase::fini()
 	delete[] events;
 }
 
-void					CCondVarBase::signal() throw()
+void					CCondVarBase::signal()
 {
 	// is anybody waiting?
 	bool hasWaiter;
@@ -213,7 +213,7 @@ void					CCondVarBase::signal() throw()
 	    SetEvent(reinterpret_cast<HANDLE*>(m_cond)[kSignal]);
 }
 
-void					CCondVarBase::broadcast() throw()
+void					CCondVarBase::broadcast()
 {
 	// is anybody waiting?
 	bool hasWaiter;

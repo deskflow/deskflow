@@ -13,13 +13,13 @@ class IListenSocket : public IInterface {
 	// manipulators
 
 	// bind the socket to a particular address
-	virtual void		bind(const CNetworkAddress&) throw(XSocket) = 0;
+	virtual void		bind(const CNetworkAddress&) = 0;
 
 	// wait for a connection
-	virtual ISocket*	accept() throw(XSocket) = 0;
+	virtual ISocket*	accept() = 0;
 						
 	// close the socket
-	virtual void		close() throw(XIO) = 0;
+	virtual void		close() = 0;
 
 	// accessors
 };

@@ -13,8 +13,8 @@ class CBufferedOutputStream;
 
 class CTCPSocket : public ISocket {
   public:
-	CTCPSocket() throw(XSocket);
-	CTCPSocket(int fd) throw();
+	CTCPSocket();
+	CTCPSocket(int fd);
 	~CTCPSocket();
 
 	// manipulators
@@ -22,17 +22,17 @@ class CTCPSocket : public ISocket {
 	// accessors
 
 	// ISocket overrides
-	virtual void		bind(const CNetworkAddress&) throw(XSocket);
-	virtual void		connect(const CNetworkAddress&) throw(XSocket);
-	virtual void		close() throw(XIO);
-	virtual IInputStream*	getInputStream() throw();
-	virtual IOutputStream*	getOutputStream() throw();
+	virtual void		bind(const CNetworkAddress&);
+	virtual void		connect(const CNetworkAddress&);
+	virtual void		close();
+	virtual IInputStream*	getInputStream();
+	virtual IOutputStream*	getOutputStream();
 
   private:
-	void				init() throw(XIO);
-	void				service(void*) throw(XThread);
-	void				closeInput(void*) throw();
-	void				closeOutput(void*) throw();
+	void				init();
+	void				service(void*);
+	void				closeInput(void*);
+	void				closeOutput(void*);
 
   private:
 	enum { kClosed = 0, kRead = 1, kWrite = 2, kReadWrite = 3 };

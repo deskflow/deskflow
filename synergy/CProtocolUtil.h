@@ -22,7 +22,7 @@ class CProtocolUtil {
 	//   %4i  -- converts integer argument to 4 byte integer in NBO
 	//   %s   -- converts integer N and const UInt8* to stream of N bytes
 	static void			writef(IOutputStream*,
-								const char* fmt, ...) throw(XIO);
+								const char* fmt, ...);
 
 	// read formatted binary data from a buffer.  this performs the
 	// reverse operation of writef().
@@ -34,13 +34,13 @@ class CProtocolUtil {
 	//   %4i  -- reads an NBO 4 byte integer;  arg is SInt32* or UInt32*
 	//   %s   -- reads bytes;  argument must be a CString*, *not* a char*
 	static void			readf(IInputStream*,
-								const char* fmt, ...) throw(XIO);
+								const char* fmt, ...);
 
   private:
-	static UInt32		getLength(const char* fmt, va_list) throw();
-	static void			writef(void*, const char* fmt, va_list) throw(XIO);
-	static UInt32		eatLength(const char** fmt) throw();
-	static void			read(IInputStream*, void*, UInt32) throw(XIO);
+	static UInt32		getLength(const char* fmt, va_list);
+	static void			writef(void*, const char* fmt, va_list);
+	static UInt32		eatLength(const char** fmt);
+	static void			read(IInputStream*, void*, UInt32);
 };
 
 class XIOReadMismatch : public XIO {

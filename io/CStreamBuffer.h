@@ -14,16 +14,16 @@ class CStreamBuffer {
 
 	// peek() returns a buffer of n bytes (which must be <= getSize()).
 	// pop() discards the next n bytes.
-	const void*			peek(UInt32 n) throw();
-	void				pop(UInt32 n) throw();
+	const void*			peek(UInt32 n);
+	void				pop(UInt32 n);
 
 	// write() appends n bytes to the buffer
-	void				write(const void*, UInt32 n) throw();
+	void				write(const void*, UInt32 n);
 
 	// accessors
 
 	// return the number of bytes in the buffer
-	UInt32				getSize() const throw();
+	UInt32				getSize() const;
 
   private:
 	static const UInt32	kChunkSize;

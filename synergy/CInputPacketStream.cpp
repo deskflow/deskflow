@@ -20,13 +20,13 @@ CInputPacketStream::~CInputPacketStream()
 	// do nothing
 }
 
-void					CInputPacketStream::close() throw(XIO)
+void					CInputPacketStream::close()
 {
 	getStream()->close();
 }
 
 UInt32					CInputPacketStream::read(
-								void* buffer, UInt32 n) throw(XIO)
+								void* buffer, UInt32 n)
 {
 	CLock lock(&m_mutex);
 
@@ -50,13 +50,13 @@ UInt32					CInputPacketStream::read(
 	return n;
 }
 
-UInt32					CInputPacketStream::getSize() const throw()
+UInt32					CInputPacketStream::getSize() const
 {
 	CLock lock(&m_mutex);
 	return getSizeNoLock();
 }
 
-UInt32					CInputPacketStream::getSizeNoLock() const throw()
+UInt32					CInputPacketStream::getSizeNoLock() const
 {
 	while (!hasFullMessage()) {
 		// read more data
@@ -76,7 +76,7 @@ UInt32					CInputPacketStream::getSizeNoLock() const throw()
 	return m_size;
 }
 
-bool					CInputPacketStream::hasFullMessage() const throw()
+bool					CInputPacketStream::hasFullMessage() const
 {
 	// get payload length if we don't have it yet
 	if (m_size == 0) {

@@ -27,7 +27,7 @@ CBufferedInputStream::~CBufferedInputStream()
 }
 
 void					CBufferedInputStream::write(
-								const void* data, UInt32 n) throw()
+								const void* data, UInt32 n)
 {
 	if (!m_hungup && n > 0) {
 		m_buffer.write(data, n);
@@ -36,14 +36,14 @@ void					CBufferedInputStream::write(
 	}
 }
 
-void					CBufferedInputStream::hangup() throw()
+void					CBufferedInputStream::hangup()
 {
 	m_hungup = true;
 	m_empty.broadcast();
 }
 
 UInt32					CBufferedInputStream::readNoLock(
-								void* dst, UInt32 n) throw(XIO)
+								void* dst, UInt32 n)
 {
 	if (m_closed) {
 		throw XIOClosed();
@@ -74,12 +74,12 @@ UInt32					CBufferedInputStream::readNoLock(
 	return n;
 }
 
-UInt32					CBufferedInputStream::getSizeNoLock() const throw()
+UInt32					CBufferedInputStream::getSizeNoLock() const
 {
 	return m_buffer.getSize();
 }
 
-void					CBufferedInputStream::close() throw(XIO)
+void					CBufferedInputStream::close()
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
@@ -93,13 +93,13 @@ void					CBufferedInputStream::close() throw(XIO)
 }
 
 UInt32					CBufferedInputStream::read(
-								void* dst, UInt32 n) throw(XIO)
+								void* dst, UInt32 n)
 {
 	CLock lock(m_mutex);
 	return readNoLock(dst, n);
 }
 
-UInt32					CBufferedInputStream::getSize() const throw()
+UInt32					CBufferedInputStream::getSize() const
 {
 	CLock lock(m_mutex);
 	return getSizeNoLock();

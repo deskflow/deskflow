@@ -20,7 +20,7 @@
 // CTCPSocket
 //
 
-CTCPSocket::CTCPSocket() throw(XSocket)
+CTCPSocket::CTCPSocket()
 {
 	m_fd = socket(PF_INET, SOCK_STREAM, 0);
 	if (m_fd == -1) {
@@ -29,7 +29,7 @@ CTCPSocket::CTCPSocket() throw(XSocket)
 	init();
 }
 
-CTCPSocket::CTCPSocket(int fd) throw() :
+CTCPSocket::CTCPSocket(int fd) :
 								m_fd(fd)
 {
 	assert(m_fd != -1);
@@ -60,7 +60,6 @@ CTCPSocket::~CTCPSocket()
 }
 
 void					CTCPSocket::bind(const CNetworkAddress& addr)
-								throw(XSocket)
 {
 	if (::bind(m_fd, addr.getAddress(), addr.getAddressLength()) == -1) {
 		if (errno == EADDRINUSE) {
@@ -71,7 +70,6 @@ void					CTCPSocket::bind(const CNetworkAddress& addr)
 }
 
 void					CTCPSocket::connect(const CNetworkAddress& addr)
-								throw(XSocket)
 {
 	CThread::testCancel();
 	if (::connect(m_fd, addr.getAddress(), addr.getAddressLength()) == -1) {
@@ -85,7 +83,7 @@ void					CTCPSocket::connect(const CNetworkAddress& addr)
 								this, &CTCPSocket::service));
 }
 
-void					CTCPSocket::close() throw(XIO)
+void					CTCPSocket::close()
 {
 	// shutdown I/O thread before close
 	if (m_thread != NULL) {
@@ -114,17 +112,17 @@ void					CTCPSocket::close() throw(XIO)
 	}
 }
 
-IInputStream*			CTCPSocket::getInputStream() throw()
+IInputStream*			CTCPSocket::getInputStream()
 {
 	return m_input;
 }
 
-IOutputStream*			CTCPSocket::getOutputStream() throw()
+IOutputStream*			CTCPSocket::getOutputStream()
 {
 	return m_output;
 }
 
-void					CTCPSocket::init() throw(XIO)
+void					CTCPSocket::init()
 {
 	m_mutex     = new CMutex;
 	m_thread    = NULL;
@@ -137,7 +135,7 @@ void					CTCPSocket::init() throw(XIO)
 									this, &CTCPSocket::closeOutput));
 }
 
-void					CTCPSocket::service(void*) throw(XThread)
+void					CTCPSocket::service(void*)
 {
 	assert(m_fd != -1);
 
@@ -211,14 +209,14 @@ void					CTCPSocket::service(void*) throw(XThread)
 	}
 }
 
-void					CTCPSocket::closeInput(void*) throw()
+void					CTCPSocket::closeInput(void*)
 {
 	// note -- m_mutex should already be locked
 	shutdown(m_fd, 0);
 	m_connected &= ~kRead;
 }
 
-void					CTCPSocket::closeOutput(void*) throw()
+void					CTCPSocket::closeOutput(void*)
 {
 	// note -- m_mutex should already be locked
 	shutdown(m_fd, 1);

@@ -27,7 +27,7 @@ CSocketInputStream::~CSocketInputStream()
 }
 
 void					CSocketInputStream::write(
-								const void* data, UInt32 n) throw()
+								const void* data, UInt32 n)
 {
 	if (!m_hungup && n > 0) {
 		m_buffer.write(data, n);
@@ -36,13 +36,13 @@ void					CSocketInputStream::write(
 	}
 }
 
-void					CSocketInputStream::hangup() throw()
+void					CSocketInputStream::hangup()
 {
 	m_hungup = true;
 	m_empty.broadcast();
 }
 
-void					CSocketInputStream::close() throw(XIO)
+void					CSocketInputStream::close()
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
@@ -56,7 +56,7 @@ void					CSocketInputStream::close() throw(XIO)
 }
 
 UInt32					CSocketInputStream::read(
-								void* dst, UInt32 n) throw(XIO)
+								void* dst, UInt32 n)
 {
 	CLock lock(m_mutex);
 	if (m_closed) {
@@ -86,7 +86,7 @@ UInt32					CSocketInputStream::read(
 	return n;
 }
 
-UInt32					CSocketInputStream::getSize() const throw()
+UInt32					CSocketInputStream::getSize() const
 {
 	CLock lock(m_mutex);
 	return m_buffer.getSize();

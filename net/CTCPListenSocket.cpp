@@ -31,7 +31,7 @@ CTCPListenSocket::~CTCPListenSocket()
 }
 
 void					CTCPListenSocket::bind(
-								const CNetworkAddress& addr) throw(XSocket)
+								const CNetworkAddress& addr)
 {
 	if (::bind(m_fd, addr.getAddress(), addr.getAddressLength()) == -1) {
 		if (errno == EADDRINUSE) {
@@ -44,7 +44,7 @@ void					CTCPListenSocket::bind(
 	}
 }
 
-ISocket*				CTCPListenSocket::accept() throw(XSocket)
+ISocket*				CTCPListenSocket::accept()
 {
 	for (;;) {
 		struct sockaddr addr;
@@ -60,7 +60,7 @@ ISocket*				CTCPListenSocket::accept() throw(XSocket)
 	}
 }
 
-void					CTCPListenSocket::close() throw(XIO)
+void					CTCPListenSocket::close()
 {
 	if (m_fd == -1) {
 		throw XIOClosed();

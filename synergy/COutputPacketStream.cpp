@@ -15,13 +15,13 @@ COutputPacketStream::~COutputPacketStream()
 	// do nothing
 }
 
-void					COutputPacketStream::close() throw(XIO)
+void					COutputPacketStream::close()
 {
 	getStream()->close();
 }
 
 UInt32					COutputPacketStream::write(
-								const void* buffer, UInt32 count) throw(XIO)
+								const void* buffer, UInt32 count)
 {
 	// write the length of the payload
 	UInt8 length[4];
@@ -49,7 +49,7 @@ UInt32					COutputPacketStream::write(
 	return count;
 }
 
-void					COutputPacketStream::flush() throw(XIO)
+void					COutputPacketStream::flush()
 {
 	getStream()->flush();
 }

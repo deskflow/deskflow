@@ -8,7 +8,7 @@
 // CNetworkAddress
 //
 
-CNetworkAddress::CNetworkAddress(UInt16 port) throw(XSocketAddress)
+CNetworkAddress::CNetworkAddress(UInt16 port)
 {
 	if (port == 0)
 		throw XSocketAddress(XSocketAddress::kBadPort, CString(), port);
@@ -21,7 +21,6 @@ CNetworkAddress::CNetworkAddress(UInt16 port) throw(XSocketAddress)
 }
 
 CNetworkAddress::CNetworkAddress(const CString& hostname, UInt16 port)
-								throw(XSocketAddress)
 {
 	if (port == 0)
 		throw XSocketAddress(XSocketAddress::kBadPort, hostname, port);
@@ -54,12 +53,12 @@ CNetworkAddress::~CNetworkAddress()
 	// do nothing
 }
 
-const struct sockaddr*	CNetworkAddress::getAddress() const throw()
+const struct sockaddr*	CNetworkAddress::getAddress() const
 {
 	return &m_address;
 }
 					
-int						CNetworkAddress::getAddressLength() const throw()
+int						CNetworkAddress::getAddressLength() const
 {
 	return sizeof(m_address);
 }

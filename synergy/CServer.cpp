@@ -96,7 +96,7 @@ void					CServer::getScreenMap(CScreenMap* screenMap) const
 }
 
 void					CServer::setInfo(const CString& client,
-								SInt32 w, SInt32 h, SInt32 zoneSize) throw()
+								SInt32 w, SInt32 h, SInt32 zoneSize)
 {
 	CLock lock(&m_mutex);
 
@@ -732,7 +732,7 @@ void					CServer::handshakeClient(void* vsocket)
 	}
 }
 
-void					CServer::quit() throw()
+void					CServer::quit()
 {
 	CLock lock(&m_mutex);
 	m_done = true;
@@ -761,7 +761,7 @@ void					CServer::openPrimaryScreen()
 	// FIXME -- need way for primary screen to call us back
 }
 
-void					CServer::closePrimaryScreen() throw()
+void					CServer::closePrimaryScreen()
 {
 	assert(m_primary != NULL);
 
@@ -802,7 +802,7 @@ void					CServer::removeCleanupThread(const CThread& thread)
 	}
 }
 
-void					CServer::cleanupThreads() throw()
+void					CServer::cleanupThreads()
 {
 	log((CLOG_DEBUG "cleaning up threads"));
 	m_mutex.lock();
@@ -839,7 +839,7 @@ void					CServer::removeConnection(const CString& name)
 	log((CLOG_DEBUG "removing connection \"%s\"", name.c_str()));
 	CLock lock(&m_mutex);
 	CScreenList::iterator index = m_screens.find(name);
-	assert(index == m_screens.end());
+	assert(index != m_screens.end());
 	delete index->second;
 	m_screens.erase(index);
 }

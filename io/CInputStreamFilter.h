@@ -13,12 +13,12 @@ class CInputStreamFilter : public IInputStream {
 	// accessors
 
 	// IInputStream overrides
-	virtual void		close() throw(XIO) = 0;
-	virtual UInt32		read(void*, UInt32 maxCount) throw(XIO) = 0;
-	virtual UInt32		getSize() const throw() = 0;
+	virtual void		close() = 0;
+	virtual UInt32		read(void*, UInt32 maxCount) = 0;
+	virtual UInt32		getSize() const = 0;
 
   protected:
-	IInputStream*		getStream() const throw();
+	IInputStream*		getStream() const;
 
   private:
 	IInputStream*		m_stream;

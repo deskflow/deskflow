@@ -9,16 +9,16 @@ class CString;
 
 class CNetworkAddress {
   public:
-	CNetworkAddress(UInt16 port) throw(XSocketAddress);
-	CNetworkAddress(const CString& hostname, UInt16 port) throw(XSocketAddress);
+	CNetworkAddress(UInt16 port);
+	CNetworkAddress(const CString& hostname, UInt16 port);
 	~CNetworkAddress();
 
 	// manipulators
 
 	// accessors
 
-	const struct sockaddr*	getAddress() const throw();
-	int					getAddressLength() const throw();
+	const struct sockaddr*	getAddress() const;
+	int					getAddressLength() const;
 
   private:
 	struct sockaddr		m_address;

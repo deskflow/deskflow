@@ -6,17 +6,17 @@
 // CLock
 //
 
-CLock::CLock(const CMutex* mutex) throw() : m_mutex(mutex)
+CLock::CLock(const CMutex* mutex) : m_mutex(mutex)
 {
 	m_mutex->lock();
 }
 
-CLock::CLock(const CCondVarBase* cv) throw() : m_mutex(cv->getMutex())
+CLock::CLock(const CCondVarBase* cv) : m_mutex(cv->getMutex())
 {
 	m_mutex->lock();
 }
 
-CLock::~CLock() throw()
+CLock::~CLock()
 {
 	m_mutex->unlock();
 }

@@ -22,7 +22,7 @@ CServerProtocol1_0::~CServerProtocol1_0()
 	// do nothing
 }
 
-void					CServerProtocol1_0::run() throw(XIO,XBadClient)
+void					CServerProtocol1_0::run()
 {
 	// handle messages until the client hangs up
 	for (;;) {
@@ -53,7 +53,7 @@ void					CServerProtocol1_0::run() throw(XIO,XBadClient)
 	}
 }
 
-void					CServerProtocol1_0::queryInfo() throw(XIO,XBadClient)
+void					CServerProtocol1_0::queryInfo()
 {
 	log((CLOG_INFO "querying client \"%s\" info", getClient().c_str()));
 
@@ -71,93 +71,93 @@ void					CServerProtocol1_0::queryInfo() throw(XIO,XBadClient)
 	recvInfo();
 }
 
-void					CServerProtocol1_0::sendClose() throw(XIO)
+void					CServerProtocol1_0::sendClose()
 {
 	log((CLOG_INFO "send close to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClose);
 }
 
 void					CServerProtocol1_0::sendEnter(
-								SInt32 xAbs, SInt32 yAbs) throw(XIO)
+								SInt32 xAbs, SInt32 yAbs)
 {
 	log((CLOG_INFO "send enter to \"%s\", %d,%d", getClient().c_str(), xAbs, yAbs));
 	CProtocolUtil::writef(getOutputStream(), kMsgCEnter, xAbs, yAbs);
 }
 
-void					CServerProtocol1_0::sendLeave() throw(XIO)
+void					CServerProtocol1_0::sendLeave()
 {
 	log((CLOG_INFO "send leave to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCLeave);
 }
 
-void					CServerProtocol1_0::sendGrabClipboard() throw(XIO)
+void					CServerProtocol1_0::sendGrabClipboard()
 {
 	log((CLOG_INFO "send grab clipboard to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard);
 }
 
-void					CServerProtocol1_0::sendQueryClipboard() throw(XIO)
+void					CServerProtocol1_0::sendQueryClipboard()
 {
 	log((CLOG_INFO "query clipboard to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgQClipboard);
 }
 
-void					CServerProtocol1_0::sendScreenSaver(bool on) throw(XIO)
+void					CServerProtocol1_0::sendScreenSaver(bool on)
 {
 	log((CLOG_INFO "send screen saver to \"%s\"", getClient().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
 
 void					CServerProtocol1_0::sendKeyDown(
-								KeyID key, KeyModifierMask mask) throw(XIO)
+								KeyID key, KeyModifierMask mask)
 {
 	log((CLOG_INFO "send key down to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyDown, key, mask);
 }
 
 void					CServerProtocol1_0::sendKeyRepeat(
-								KeyID key, KeyModifierMask mask) throw(XIO)
+								KeyID key, KeyModifierMask mask)
 {
 	log((CLOG_INFO "send key repeat to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask);
 }
 
 void					CServerProtocol1_0::sendKeyUp(
-								KeyID key, KeyModifierMask mask) throw(XIO)
+								KeyID key, KeyModifierMask mask)
 {
 	log((CLOG_INFO "send key up to \"%s\" id=%d, mask=0x%04x", getClient().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyUp, key, mask);
 }
 
 void					CServerProtocol1_0::sendMouseDown(
-								ButtonID button) throw(XIO)
+								ButtonID button)
 {
 	log((CLOG_INFO "send mouse down to \"%s\" id=%d", getClient().c_str(), button));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseDown, button);
 }
 
 void					CServerProtocol1_0::sendMouseUp(
-								ButtonID button) throw(XIO)
+								ButtonID button)
 {
 	log((CLOG_INFO "send mouse up to \"%s\" id=%d", getClient().c_str(), button));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseUp, button);
 }
 
 void					CServerProtocol1_0::sendMouseMove(
-								SInt32 xAbs, SInt32 yAbs) throw(XIO)
+								SInt32 xAbs, SInt32 yAbs)
 {
 	log((CLOG_INFO "send mouse move to \"%s\" %d,%d", getClient().c_str(), xAbs, yAbs));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseMove, xAbs, yAbs);
 }
 
 void					CServerProtocol1_0::sendMouseWheel(
-								SInt32 delta) throw(XIO)
+								SInt32 delta)
 {
 	log((CLOG_INFO "send mouse wheel to \"%s\" %+d", getClient().c_str(), delta));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseWheel, delta);
 }
 
-void					CServerProtocol1_0::recvInfo() throw(XIO,XBadClient)
+void					CServerProtocol1_0::recvInfo()
 {
 	// parse the message
 	SInt32 w, h, zoneInfo;

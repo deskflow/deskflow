@@ -15,13 +15,13 @@ class CInputPacketStream : public CInputStreamFilter {
 	// accessors
 
 	// IInputStream overrides
-	virtual void		close() throw(XIO);
-	virtual UInt32		read(void*, UInt32 maxCount) throw(XIO);
-	virtual UInt32		getSize() const throw();
+	virtual void		close();
+	virtual UInt32		read(void*, UInt32 maxCount);
+	virtual UInt32		getSize() const;
 
   private:
-	UInt32				getSizeNoLock() const throw();
-	bool				hasFullMessage() const throw();
+	UInt32				getSizeNoLock() const;
+	bool				hasFullMessage() const;
 
   private:
 	CMutex				m_mutex;

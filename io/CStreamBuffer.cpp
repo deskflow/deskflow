@@ -17,7 +17,7 @@ CStreamBuffer::~CStreamBuffer()
 	// do nothing
 }
 
-const void*				CStreamBuffer::peek(UInt32 n) throw()
+const void*				CStreamBuffer::peek(UInt32 n)
 {
 	assert(n <= m_size);
 
@@ -36,7 +36,7 @@ const void*				CStreamBuffer::peek(UInt32 n) throw()
 	return reinterpret_cast<const void*>(head->begin());
 }
 
-void					CStreamBuffer::pop(UInt32 n) throw()
+void					CStreamBuffer::pop(UInt32 n)
 {
 	m_size -= n;
 
@@ -58,7 +58,7 @@ void					CStreamBuffer::pop(UInt32 n) throw()
 }
 
 void					CStreamBuffer::write(
-								const void* vdata, UInt32 n) throw()
+								const void* vdata, UInt32 n)
 {
 	assert(vdata != NULL);
 
@@ -100,7 +100,7 @@ void					CStreamBuffer::write(
 	}
 }
 
-UInt32					CStreamBuffer::getSize() const throw()
+UInt32					CStreamBuffer::getSize() const
 {
 	return m_size;
 }
