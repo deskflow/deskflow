@@ -17,7 +17,6 @@
 
 #include "CSecondaryScreen.h"
 #include "IScreenEventHandler.h"
-#include "stdbitset.h"
 #include "stdmap.h"
 #include "stdvector.h"
 #if defined(X_DISPLAY_MISSING)
@@ -37,14 +36,6 @@ public:
 	virtual ~CXWindowsSecondaryScreen();
 
 	// CSecondaryScreen overrides
-	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);
-	virtual void		keyRepeat(KeyID, KeyModifierMask,
-							SInt32 count, KeyButton);
-	virtual void		keyUp(KeyID, KeyModifierMask, KeyButton);
-	virtual void		mouseDown(ButtonID);
-	virtual void		mouseUp(ButtonID);
-	virtual void		mouseMove(SInt32 x, SInt32 y);
-	virtual void		mouseWheel(SInt32 delta);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
 	virtual IScreen*	getScreen() const;
@@ -54,7 +45,6 @@ public:
 	virtual bool		onPreDispatch(const CEvent* event);
 	virtual bool		onEvent(CEvent* event);
 	virtual void		onOneShotTimerExpired(UInt32 id);
-	virtual SInt32		getJumpZoneSize() const;
 
 protected:
 	// CSecondaryScreen overrides
@@ -69,22 +59,24 @@ protected:
 	virtual void		destroyWindow();
 	virtual void		showWindow(SInt32 x, SInt32 y);
 	virtual void		hideWindow();
-	virtual void		warpCursor(SInt32 x, SInt32 y);
-	virtual void		updateKeys();
-	virtual void		releaseKeys();
-	virtual void		setToggleState(KeyModifierMask);
-	virtual KeyModifierMask	getToggleState() const;
+	virtual void		updateKeys(KeyState* sysKeyStates);
+	virtual KeyModifierMask	getModifiers() const;
+
+	virtual bool		isAutoRepeating(SysKeyID) const;
+	virtual KeyModifierMask	getModifierKeyMask(SysKeyID) const;
+	virtual bool		isModifierActive(SysKeyID) const;
+	virtual SysKeyID	getToggleSysKey(KeyID keyID) const;
+	virtual void		flush();
+	virtual KeyModifierMask
+						mapKey(Keystrokes&, SysKeyID& sysKeyID, KeyID,
+							KeyModifierMask, KeyModifierMask, EKeyAction) const;
+	virtual void		fakeKeyEvent(SysKeyID, bool press) const;
+	virtual void		fakeMouseButton(ButtonID, bool press) const;
+	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
+	virtual void		fakeMouseWheel(SInt32 delta) const;
 
 private:
-	enum EKeyAction { kPress, kRelease, kRepeat };
 	typedef unsigned int ModifierIndex;
-	typedef unsigned int ModifierMask;
-	class Keystroke {
-	public:
-		KeyCode			m_keycode;
-		Bool			m_press;
-		bool			m_repeat;
-	};
 	class KeyMapping {
 	public:
 		KeyMapping();
@@ -97,7 +89,7 @@ private:
 		bool			m_modeSwitchSensitive[4];
 
 		// the modifier mask of keysym or 0 if not a modifier
-		ModifierMask	m_modifierMask;
+		KeyModifierMask	m_modifierMask;
 
 		// whether keysym is sensitive to caps and num lock
 		bool			m_numLockSensitive;
@@ -108,50 +100,40 @@ private:
 	typedef std::map<KeyCode, ModifierIndex> KeyCodeToModifierMap;
 	typedef std::map<KeySym, KeyMapping> KeySymMap;
 	typedef KeySymMap::const_iterator KeySymIndex;
-	typedef std::vector<Keystroke> Keystrokes;
 	typedef std::vector<KeySym> KeySyms;
 	typedef std::map<KeySym, KeySyms> KeySymsMap;
-	typedef std::map<KeyButton, KeyCode> ServerKeyMap;
-
-	void				flush(Display*) const;
 
 	unsigned int		mapButton(ButtonID button) const;
 
-	ModifierMask		mapKey(Keystrokes&, KeyCode&, KeyID,
-							KeyModifierMask, EKeyAction) const;
-	ModifierMask		mapKeyRelease(Keystrokes&, KeyCode) const;
 	bool				mapToKeystrokes(Keystrokes& keys,
-							KeyCode& keycode,
-							ModifierMask& finalMask,
+							SysKeyID& keycode,
+							KeyModifierMask& finalMask,
 							KeySymIndex keyIndex,
-							ModifierMask currentMask,
-							EKeyAction action) const;
+							KeyModifierMask currentMask,
+							EKeyAction action,
+							bool isHalfDuplex) const;
 	bool				adjustModifiers(Keystrokes& keys,
 							Keystrokes& undo,
-							ModifierMask& inOutMask,
-							ModifierMask desiredMask) const;
+							KeyModifierMask& inOutMask,
+							KeyModifierMask desiredMask) const;
 	bool				adjustModifier(Keystrokes& keys,
 							Keystrokes& undo,
 							KeySym keysym,
 							bool desireActive) const;
-	void				doKeystrokes(const Keystrokes&, SInt32 count);
-	ModifierMask		maskToX(KeyModifierMask) const;
+	KeyModifierMask		mapToModifierMask(ModifierIndex, KeySym) const;
 
 	unsigned int		findBestKeyIndex(KeySymIndex keyIndex,
-							ModifierMask currentMask) const;
+							KeyModifierMask currentMask) const;
 	bool				isShiftInverted(KeySymIndex keyIndex,
-							ModifierMask currentMask) const;
-	ModifierMask		getModifierMask(KeySym) const;
+							KeyModifierMask currentMask) const;
 
 	void				doUpdateKeys(Display*);
-	void				doReleaseKeys(Display*);
 	void				updateKeysymMap(Display* display);
 	void				updateModifiers(Display* display);
 	ModifierIndex		keySymToModifierIndex(KeySym) const;
-	void				toggleKey(Display*, KeySym, ModifierMask mask);
 	static bool			isToggleKeysym(KeySym);
 
-	KeySym				keyIDToKeySym(KeyID id, ModifierMask mask) const;
+	KeySym				keyIDToKeySym(KeyID id, KeyModifierMask mask) const;
 	bool				adjustForNumLock(KeySym) const;
 	bool				adjustForCapsLock(KeySym) const;
 
@@ -163,37 +145,24 @@ private:
 	CXWindowsScreen*	m_screen;
 	Window				m_window;
 
-	// note toggle keys that toggles on up/down (false) or on
-	// transition (true)
-	bool				m_numLockHalfDuplex;
-	bool				m_capsLockHalfDuplex;
-
-	// set entries indicate keys that are pressed (by us or by the user).
-	// indexed by keycode.
-	std::bitset<256>	m_keys;
-
-	// set entries indicate keys that are synthetically pressed by us.
-	// this is normally the same as m_keys.
-	std::bitset<256>	m_fakeKeys;
-
 	// logical to physical button mapping.  m_buttons[i] gives the
 	// physical button for logical button i+1.
 	std::vector<unsigned char>	m_buttons;
 
-	// current active modifiers (X key masks)
-	ModifierMask		m_mask;
-
 	// the modifiers that have keys bound to them
-	ModifierMask		m_modifierMask;
+	KeyModifierMask		m_modifierMask;
 
 	// set bits indicate modifiers that toggle (e.g. caps-lock)
-	ModifierMask		m_toggleModifierMask;
+	KeyModifierMask		m_toggleModifierMask;
 
 	// keysym to keycode mapping
 	KeySymMap			m_keysymMap;
 
 	// modifier index to keycodes
 	KeyCodes			m_modifierKeycodes[8];
+
+	// modifier index to modifier mask
+	KeyModifierMask		m_modifierIndexToMask[8];
 
 	// keycode to modifier index
 	KeyCodeToModifierMap	m_keycodeToModifier;
@@ -208,20 +177,6 @@ private:
 	KeySym				m_numLockKeysym;
 	KeySym				m_capsLockKeysym;
 	KeySym				m_scrollLockKeysym;
-
-	// modifier masks
-	ModifierMask		m_shiftMask;
-	ModifierMask		m_ctrlMask;
-	ModifierMask		m_altMask;
-	ModifierMask		m_metaMask;
-	ModifierMask		m_superMask;
-	ModifierMask		m_modeSwitchMask;
-	ModifierMask		m_numLockMask;
-	ModifierMask		m_capsLockMask;
-	ModifierMask		m_scrollLockMask;
-
-	// map server key buttons to local keycodes
-	ServerKeyMap		m_serverKeyMap;
 
 	// the keyboard control state the last time this screen was entered
 	XKeyboardState		m_keyControl;

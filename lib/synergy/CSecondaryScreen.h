@@ -20,6 +20,8 @@
 #include "MouseTypes.h"
 #include "OptionTypes.h"
 #include "CMutex.h"
+#include "stdmap.h"
+#include "stdvector.h"
 
 class IClipboard;
 class IScreen;
@@ -130,41 +132,41 @@ public:
 	synthesize an up or repeat for the same client key synthesized by
 	keyDown().
 	*/
-	virtual void		keyDown(KeyID id, KeyModifierMask, KeyButton) = 0;
+	void				keyDown(KeyID id, KeyModifierMask, KeyButton);
 
 	//! Notify of key repeat
 	/*!
 	Synthesize key events to generate a press and release of key \c id
 	\c count times.  If possible match the given modifier mask.
 	*/
-	virtual void		keyRepeat(KeyID id, KeyModifierMask,
-							SInt32 count, KeyButton) = 0;
+	void				keyRepeat(KeyID id, KeyModifierMask,
+							SInt32 count, KeyButton);
 
 	//! Notify of key release
 	/*!
 	Synthesize key events to generate a release of key \c id.  If possible
 	match the given modifier mask.
 	*/
-	virtual void		keyUp(KeyID id, KeyModifierMask, KeyButton) = 0;
+	void				keyUp(KeyID id, KeyModifierMask, KeyButton);
 
 	//! Notify of mouse press
 	/*!
 	Synthesize mouse events to generate a press of mouse button \c id.
 	*/
-	virtual void		mouseDown(ButtonID id) = 0;
+	void				mouseDown(ButtonID id);
 
 	//! Notify of mouse release
 	/*!
 	Synthesize mouse events to generate a release of mouse button \c id.
 	*/
-	virtual void		mouseUp(ButtonID id) = 0;
+	void				mouseUp(ButtonID id);
 
 	//! Notify of mouse motion
 	/*!
 	Synthesize mouse events to generate mouse motion to the absolute
 	screen position \c xAbs,yAbs.
 	*/
-	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
+	void				mouseMove(SInt32 xAbs, SInt32 yAbs);
 
 	//! Notify of mouse wheel motion
 	/*!
@@ -173,7 +175,7 @@ public:
 	motion towards the user.  Each wheel click should generate a delta
 	of +/-120.
 	*/
-	virtual void		mouseWheel(SInt32 delta) = 0;
+	void				mouseWheel(SInt32 delta);
 
 	//! Notify of options changes
 	/*!
@@ -212,7 +214,7 @@ public:
 	Return the jump zone size, the size of the regions on the edges of
 	the screen that cause the cursor to jump to another screen.
 	*/
-	virtual SInt32		getJumpZoneSize() const = 0;
+	SInt32				getJumpZoneSize() const;
 
 	//! Get screen shape
 	/*!
@@ -237,6 +239,26 @@ public:
 	//@}
 
 protected:
+	typedef UInt8		KeyState;
+	typedef UInt32		SysKeyID;
+	enum EKeyState  { kDown = 0x01, kToggled = 0x80 };
+	enum EKeyAction { kPress, kRelease, kRepeat };
+	class Keystroke {
+	public:
+		SysKeyID		m_sysKeyID;
+		bool			m_press;
+		bool			m_repeat;
+	};
+	typedef std::vector<Keystroke> Keystrokes;
+	typedef std::map<KeyButton, SysKeyID> ServerKeyMap;
+
+	void				updateKeys();
+	void				releaseKeys();
+	void				doKeystrokes(const Keystrokes&, SInt32 count);
+	bool				isKeyDown(SysKeyID) const;
+	bool				isKeyToggled(SysKeyID) const;
+	bool				isKeyHalfDuplex(KeyID) const;
+
 	//! Pre-mainLoop() hook
 	/*!
 	Called on entry to mainLoop().  Override to perform platform specific
@@ -338,38 +360,54 @@ protected:
 	*/
 	virtual void		hideWindow() = 0;
 
+	//! Synchronize key state
+	/*!
+	Save the current keyboard state.  Normally a screen will save
+	the keyboard state in this method and use this shadow state,
+	available through isKeyDown() and getKeyState(), when
+	synthesizing events.
+	*/
+	virtual void		updateKeys(KeyState* sysKeyStates) = 0;
+
+	//! Get modifier key state
+	/*!
+	Return the current keyboard modifier state. 
+	*/
+	virtual KeyModifierMask	getModifiers() const = 0;
+
+	//! Synchronize toggle key state
+	/*!
+	Toggles modifiers that don't match the given state so that they do.
+	*/
+	void				setToggleState(KeyModifierMask);
+
+	virtual SysKeyID	getUnhanded(SysKeyID) const;
+	virtual SysKeyID	getOtherHanded(SysKeyID) const;
+	virtual bool		isAutoRepeating(SysKeyID) const = 0;
+	virtual KeyModifierMask	getModifierKeyMask(SysKeyID) const = 0;
+	virtual bool		isModifierActive(SysKeyID) const = 0;
+	virtual SysKeyID	getToggleSysKey(KeyID keyID) const = 0;
+	virtual bool		synthesizeCtrlAltDel(EKeyAction);
+	virtual void		sync() const;
+	virtual void		flush();
+
+	virtual KeyModifierMask
+						mapKey(Keystrokes&, SysKeyID& sysKeyID, KeyID,
+							KeyModifierMask currentMask,
+							KeyModifierMask desiredMask, EKeyAction) const = 0;
+	virtual void		fakeKeyEvent(SysKeyID, bool press) const = 0;
+	virtual void		fakeMouseButton(ButtonID, bool press) const = 0;
+
 	//! Warp cursor
 	/*!
 	Warp the cursor to the absolute coordinates \c x,y.
 	*/
-	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
+	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
 
-	//! Synchronize key state
-	/*!
-	Check the current keyboard state.  Normally a screen will save
-	the keyboard state in this method and use this shadow state
-	when synthesizing events.
-	*/
-	virtual void		updateKeys() = 0;
+	virtual void		fakeMouseWheel(SInt32 delta) const = 0;
 
-	//! Release keys
-	/*!
-	Synthesizes key release event for any key that our key state
-	says is down.
-	*/
-	virtual void		releaseKeys() = 0;
-
-	//! Synchronize toggle key state
-	/*!
-	Toggle modifiers that don't match the given state so that they do.
-	*/
-	virtual void		setToggleState(KeyModifierMask) = 0;
-
-	//! Get the toggle key state
-	/*!
-	Returns the current state of the toggle keys.
-	*/
-	virtual KeyModifierMask	getToggleState() const = 0;
+private:
+	void				toggleKey(KeyID, KeyModifierMask);
 
 private:
 	CMutex				m_mutex;
@@ -380,11 +418,29 @@ private:
 	// m_active is true if this screen has been entered
 	bool				m_active;
 
+	// true if screen saver should be synchronized to server
+	bool				m_screenSaverSync;
+
+	// map server key buttons to local system keys
+	ServerKeyMap		m_serverKeyMap;
+
+	// system key states as set by us or the user
+	KeyState			m_keys[256];
+
+	// system key states as set by us
+	KeyState			m_fakeKeys[256];
+
+	// current active modifiers
+// XXX -- subclasses still have and use this
+	KeyModifierMask		m_mask;
+
 	// the toggle key state when this screen was last entered
 	KeyModifierMask		m_toggleKeys;
 
-	// true if screen saver should be synchronized to server
-	bool				m_screenSaverSync;
+	// note toggle keys that toggles on up/down (false) or on
+	// transition (true)
+	bool				m_numLockHalfDuplex;
+	bool				m_capsLockHalfDuplex;
 };
 
 #endif

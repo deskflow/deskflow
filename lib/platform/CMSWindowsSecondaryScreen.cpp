@@ -86,8 +86,7 @@ const CMSWindowsSecondaryScreen::CModifierInfo
 CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen(
 				IScreenReceiver* receiver) :
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
-	m_window(NULL),
-	m_mask(0)
+	m_window(NULL)
 {
 	m_screen = new CMSWindowsScreen(receiver, this);
 }
@@ -99,246 +98,64 @@ CMSWindowsSecondaryScreen::~CMSWindowsSecondaryScreen()
 	delete m_screen;
 }
 
-void
-CMSWindowsSecondaryScreen::keyDown(KeyID key,
-				KeyModifierMask mask, KeyButton button)
+CSecondaryScreen::SysKeyID
+CMSWindowsSecondaryScreen::getUnhanded(SysKeyID sysKeyID) const
 {
-	CLock lock(&m_mutex);
-	m_screen->syncDesktop();
-
-	// check for ctrl+alt+del emulation
-	if (key == kKeyDelete &&
-		(mask & (KeyModifierControl | KeyModifierAlt)) ==
-				(KeyModifierControl | KeyModifierAlt)) {
-		synthesizeCtrlAltDel();
-		return;
-	}
-
-	// get the sequence of keys to simulate key press and the final
-	// modifier state.
-	Keystrokes keys;
-	UINT virtualKey;
-	m_mask = mapKey(keys, virtualKey, key, mask, kPress);
-	if (keys.empty()) {
-		// do nothing if there are no associated keys (i.e. lookup failed)
-		return;
-	}
-
-	// generate key events
-	doKeystrokes(keys, 1);
-
-	// do not record button down if button or virtual key is 0 (invalid)
-	if (button != 0 && virtualKey != 0) {
-		// note that key is now down
-		m_serverKeyMap[button]      = virtualKey;
-		m_keys[virtualKey]         |= 0x80;
-		m_fakeKeys[virtualKey]     |= 0x80;
-		switch (virtualKey) {
-		case VK_LSHIFT:
-		case VK_RSHIFT:
-			m_keys[VK_SHIFT]       |= 0x80;
-			m_fakeKeys[VK_SHIFT]   |= 0x80;
-			break;
-
-		case VK_LCONTROL:
-		case VK_RCONTROL:
-			m_keys[VK_CONTROL]     |= 0x80;
-			m_fakeKeys[VK_CONTROL] |= 0x80;
-			break;
-
-		case VK_LMENU:
-		case VK_RMENU:
-			m_keys[VK_MENU]        |= 0x80;
-			m_fakeKeys[VK_MENU]    |= 0x80;
-			break;
-		}
-	}
-}
-
-void
-CMSWindowsSecondaryScreen::keyRepeat(KeyID key,
-				KeyModifierMask mask, SInt32 count, KeyButton button)
-{
-	CLock lock(&m_mutex);
-	m_screen->syncDesktop();
-
-	// if we haven't seen this button go down then ignore it
-	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
-	if (index == m_serverKeyMap.end()) {
-		return;
-	}
-
-	// get the sequence of keys to simulate key repeat and the final
-	// modifier state.
-	Keystrokes keys;
-	UINT virtualKey;
-	m_mask = mapKey(keys, virtualKey, key, mask, kRepeat);
-	if (keys.empty()) {
-		return;
-	}
-
-	// if the keycode for the auto-repeat is not the same as for the
-	// initial press then mark the initial key as released and the new
-	// key as pressed.  this can happen when we auto-repeat after a
-	// dead key.  for example, a dead accent followed by 'a' will
-	// generate an 'a with accent' followed by a repeating 'a'.  the
-	// keycodes for the two keysyms might be different.
-	if (virtualKey != index->second) {
-		// replace key up with previous keycode but leave key down
-		// alone so it uses the new keycode and store that keycode
-		// in the server key map.
-		for (Keystrokes::iterator index2 = keys.begin();
-								index2 != keys.end(); ++index2) {
-			if (index2->m_virtualKey == virtualKey) {
-				index2->m_virtualKey = index->second;
-				break;
-			}
-		}
-
-		// note that old key is now up
-		m_keys[index->second]     = false;
-		m_fakeKeys[index->second] = false;
-
-		// map server key to new key
-		index->second = virtualKey;
-
-		// note that new key is now down
-		m_keys[index->second]     = true;
-		m_fakeKeys[index->second] = true;
-	}
-
-	// generate key events
-	doKeystrokes(keys, count);
-}
-
-void
-CMSWindowsSecondaryScreen::keyUp(KeyID, KeyModifierMask, KeyButton button)
-{
-	CLock lock(&m_mutex);
-	m_screen->syncDesktop();
-
-	// if we haven't seen this button go down then ignore it
-	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
-	if (index == m_serverKeyMap.end()) {
-		return;
-	}
-	UINT virtualKey = index->second;
-
-	// get the sequence of keys to simulate key release and the final
-	// modifier state.
-	Keystrokes keys;
-	m_mask = mapKeyRelease(keys, virtualKey);
-
-	// generate key events
-	doKeystrokes(keys, 1);
-
-	// note that key is now up
-	m_serverKeyMap.erase(index);
-	m_keys[virtualKey]             &= ~0x80;
-	m_fakeKeys[virtualKey]         &= ~0x80;
-	switch (virtualKey) {
+	switch (sysKeyID) {
 	case VK_LSHIFT:
-		if ((m_keys[VK_RSHIFT] & 0x80) == 0) {
-			m_keys[VK_SHIFT]       &= ~0x80;
-			m_fakeKeys[VK_SHIFT]   &= ~0x80;
-		}
-		break;
-
 	case VK_RSHIFT:
-		if ((m_keys[VK_LSHIFT] & 0x80) == 0) {
-			m_keys[VK_SHIFT]       &= ~0x80;
-			m_fakeKeys[VK_SHIFT]   &= ~0x80;
-		}
-		break;
+		return VK_SHIFT;
 
 	case VK_LCONTROL:
-		if ((m_keys[VK_RCONTROL] & 0x80) == 0) {
-			m_keys[VK_CONTROL]     &= ~0x80;
-			m_fakeKeys[VK_CONTROL] &= ~0x80;
-		}
-		break;
-
 	case VK_RCONTROL:
-		if ((m_keys[VK_LCONTROL] & 0x80) == 0) {
-			m_keys[VK_CONTROL]     &= ~0x80;
-			m_fakeKeys[VK_CONTROL] &= ~0x80;
-		}
-		break;
+		return VK_CONTROL;
 
 	case VK_LMENU:
-		if ((m_keys[VK_RMENU] & 0x80) == 0) {
-			m_keys[VK_MENU]        &= ~0x80;
-			m_fakeKeys[VK_MENU]    &= ~0x80;
-		}
-		break;
+	case VK_RMENU:
+		return VK_MENU;
+
+	default:
+		return 0;
+	}
+}
+
+CSecondaryScreen::SysKeyID
+CMSWindowsSecondaryScreen::getOtherHanded(SysKeyID sysKeyID) const
+{
+	switch (sysKeyID) {
+	case VK_LSHIFT:
+		return VK_RSHIFT;
+
+	case VK_RSHIFT:
+		return VK_LSHIFT;
+
+	case VK_LCONTROL:
+		return VK_RCONTROL;
+
+	case VK_RCONTROL:
+		return VK_LCONTROL;
+
+	case VK_LMENU:
+		return VK_RMENU;
 
 	case VK_RMENU:
-		if ((m_keys[VK_LMENU] & 0x80) == 0) {
-			m_keys[VK_MENU]        &= ~0x80;
-			m_fakeKeys[VK_MENU]    &= ~0x80;
-		}
-		break;
+		return VK_LMENU;
+
+	default:
+		return 0;
 	}
 }
 
-void
-CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
+bool
+CMSWindowsSecondaryScreen::isAutoRepeating(SysKeyID) const
 {
-	CLock lock(&m_mutex);
+	return true;
+}
+
+void
+CMSWindowsSecondaryScreen::sync() const
+{
 	m_screen->syncDesktop();
-
-	// map button id to button flag
-	DWORD data;
-	DWORD flags = mapButton(button, true, &data);
-
-	// send event
-	if (flags != 0) {
-		mouse_event(flags, 0, 0, data, 0);
-	}
-}
-
-void
-CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
-{
-	CLock lock(&m_mutex);
-	m_screen->syncDesktop();
-
-	// map button id to button flag
-	DWORD data;
-	DWORD flags = mapButton(button, false, &data);
-
-	// send event
-	if (flags != 0) {
-		mouse_event(flags, 0, 0, data, 0);
-	}
-}
-
-void
-CMSWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
-{
-	CLock lock(&m_mutex);
-	m_screen->syncDesktop();
-	warpCursor(x, y);
-}
-
-void
-CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
-{
-	CLock lock(&m_mutex);
-	m_screen->syncDesktop();
-	mouse_event(MOUSEEVENTF_WHEEL, 0, 0, delta, 0);
-}
-
-void
-CMSWindowsSecondaryScreen::resetOptions()
-{
-	CSecondaryScreen::resetOptions();
-}
-
-void
-CMSWindowsSecondaryScreen::setOptions(const COptionsList& options)
-{
-	CSecondaryScreen::setOptions(options);
 }
 
 IScreen*
@@ -381,12 +198,6 @@ void
 CMSWindowsSecondaryScreen::onOneShotTimerExpired(UInt32)
 {
 	// ignore
-}
-
-SInt32
-CMSWindowsSecondaryScreen::getJumpZoneSize() const
-{
-	return 0;
 }
 
 void
@@ -473,7 +284,7 @@ CMSWindowsSecondaryScreen::showWindow(SInt32 x, SInt32 y)
 	ShowWindow(m_window, SW_SHOWNA);
 
 	// now warp the mouse
-	warpCursor(x, y);
+	fakeMouseMove(x, y);
 }
 
 void
@@ -482,164 +293,70 @@ CMSWindowsSecondaryScreen::hideWindow()
 	ShowWindow(m_window, SW_HIDE);
 }
 
-void
-CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
+CSecondaryScreen::KeyState
+CMSWindowsSecondaryScreen::getKeyState(UINT virtualKey) const
 {
-	// motion is simple (i.e. it's on the primary monitor) if there
-	// is only one monitor.
-	bool simple = !m_screen->isMultimon();
-	if (!simple) {
-		// also simple if motion is within the primary monitor
-		simple = (x >= 0 && x < GetSystemMetrics(SM_CXSCREEN) &&
-				  y >= 0 && y < GetSystemMetrics(SM_CYSCREEN));
+	BYTE sysState  = static_cast<BYTE>(GetKeyState(virtualKey));
+	KeyState state = 0;
+	if (sysState & 0x01u) {
+		state |= kToggled;
 	}
-
-	// move the mouse directly to target position if motion is simple
-	if (simple) {
-		// when using absolute positioning with mouse_event(),
-		// the normalized device coordinates range over only
-		// the primary screen.
-		SInt32 w = GetSystemMetrics(SM_CXSCREEN);
-		SInt32 h = GetSystemMetrics(SM_CYSCREEN);
-		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
-								(DWORD)((65536.0 * x) / w),
-								(DWORD)((65536.0 * y) / h),
-								0, 0);
+	if (sysState & 0x80u) {
+		state |= kDown;
 	}
-
-	// windows 98 (and Me?) is broken.  you cannot set the absolute
-	// position of the mouse except on the primary monitor but you
-	// can do relative moves onto any monitor.  this is, in microsoft's
-	// words, "by design."  apparently the designers of windows 2000
-	// we're a little less lazy and did it right.
-	//
-	// microsoft recommends in Q193003 to absolute position the cursor
-	// somewhere on the primary monitor then relative move to the
-	// desired location.  this doesn't work for us because when the
-	// user drags a scrollbar, a window, etc. it causes the dragged
-	// item to jump back a forth between the position on the primary
-	// monitor and the desired position.  while it always ends up in
-	// the right place, the effect is disconcerting.
-	//
-	// instead we'll get the cursor's current position and do just a
-	// relative move from there to the desired position.  relative
-	// moves are subject to cursor acceleration which we don't want.
-	// so we disable acceleration, do the relative move, then restore
-	// acceleration.  there's a slight chance we'll end up in the
-	// wrong place if the user moves the cursor using this system's
-	// mouse while simultaneously moving the mouse on the server
-	// system.  that defeats the purpose of synergy so we'll assume
-	// that won't happen.  even if it does, the next mouse move will
-	// correct the position.
-	else {
-		// save mouse speed & acceleration
-		int oldSpeed[4];
-		bool accelChanged =
-					SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed, 0) &&
-					SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
-
-		// use 1:1 motion
-		if (accelChanged) {
-			int newSpeed[4] = { 0, 0, 0, 1 };
-			accelChanged =
-					SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
-					SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
-		}
-
-		// get current mouse position
-		POINT pos;
-		GetCursorPos(&pos);
-
-		// move relative to mouse position
-		mouse_event(MOUSEEVENTF_MOVE, x - pos.x, y - pos.y, 0, 0);
-
-		// restore mouse speed & acceleration
-		if (accelChanged) {
-			SystemParametersInfo(SPI_SETMOUSE, 0, oldSpeed, 0);
-			SystemParametersInfo(SPI_SETMOUSESPEED, 0, oldSpeed + 3, 0);
-		}
-	}
+	return state;
 }
 
 void
-CMSWindowsSecondaryScreen::updateKeys()
+CMSWindowsSecondaryScreen::updateKeys(KeyState* keys)
 {
-	// clear key state
-	memset(m_keys, 0, sizeof(m_keys));
-	memset(m_fakeKeys, 0, sizeof(m_keys));
-
 	// we only care about the modifier key states
-	m_keys[VK_LSHIFT]   = static_cast<BYTE>(GetKeyState(VK_LSHIFT));
-	m_keys[VK_RSHIFT]   = static_cast<BYTE>(GetKeyState(VK_RSHIFT));
-	m_keys[VK_SHIFT]    = static_cast<BYTE>(GetKeyState(VK_SHIFT));
-	m_keys[VK_LCONTROL] = static_cast<BYTE>(GetKeyState(VK_LCONTROL));
-	m_keys[VK_RCONTROL] = static_cast<BYTE>(GetKeyState(VK_RCONTROL));
-	m_keys[VK_CONTROL]  = static_cast<BYTE>(GetKeyState(VK_CONTROL));
-	m_keys[VK_LMENU]    = static_cast<BYTE>(GetKeyState(VK_LMENU));
-	m_keys[VK_RMENU]    = static_cast<BYTE>(GetKeyState(VK_RMENU));
-	m_keys[VK_MENU]     = static_cast<BYTE>(GetKeyState(VK_MENU));
-	m_keys[VK_LWIN]     = static_cast<BYTE>(GetKeyState(VK_LWIN));
-	m_keys[VK_RWIN]     = static_cast<BYTE>(GetKeyState(VK_RWIN));
-	m_keys[VK_APPS]     = static_cast<BYTE>(GetKeyState(VK_APPS));
-	m_keys[VK_CAPITAL]  = static_cast<BYTE>(GetKeyState(VK_CAPITAL));
-	m_keys[VK_NUMLOCK]  = static_cast<BYTE>(GetKeyState(VK_NUMLOCK));
-	m_keys[VK_SCROLL]   = static_cast<BYTE>(GetKeyState(VK_SCROLL));
-
-	// copy over lock states to m_fakeKeys
-	m_fakeKeys[VK_CAPITAL] = static_cast<BYTE>(m_keys[VK_CAPITAL] & 0x01);
-	m_fakeKeys[VK_NUMLOCK] = static_cast<BYTE>(m_keys[VK_NUMLOCK] & 0x01);
-	m_fakeKeys[VK_SCROLL]  = static_cast<BYTE>(m_keys[VK_SCROLL]  & 0x01);
-
-	// update active modifier mask
-	m_mask = 0;
-	if ((m_keys[VK_LSHIFT] & 0x80) != 0 || (m_keys[VK_RSHIFT] & 0x80) != 0) {
-		m_mask |= KeyModifierShift;
-	}
-	if ((m_keys[VK_LCONTROL] & 0x80) != 0 ||
-		(m_keys[VK_RCONTROL] & 0x80) != 0) {
-		m_mask |= KeyModifierControl;
-	}
-	if ((m_keys[VK_LMENU] & 0x80) != 0 || (m_keys[VK_RMENU] & 0x80) != 0) {
-		m_mask |= KeyModifierAlt;
-	}
-	// note -- no keys for KeyModifierMeta
-	if ((m_keys[VK_LWIN] & 0x80) != 0 || (m_keys[VK_RWIN] & 0x80) != 0) {
-		m_mask |= KeyModifierSuper;
-	}
-	if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
-		m_mask |= KeyModifierCapsLock;
-	}
-	if ((m_keys[VK_NUMLOCK] & 0x01) != 0) {
-		m_mask |= KeyModifierNumLock;
-	}
-	if ((m_keys[VK_SCROLL] & 0x01) != 0) {
-		m_mask |= KeyModifierScrollLock;
-	}
-	// note -- do not save KeyModifierModeSwitch in m_mask
-	LOG((CLOG_DEBUG2 "modifiers on update: 0x%04x", m_mask));
-}
-
-void
-CMSWindowsSecondaryScreen::setToggleState(KeyModifierMask mask)
-{
-	// toggle modifiers that don't match the desired state
-	if ((mask & KeyModifierCapsLock)   != (m_mask & KeyModifierCapsLock)) {
-		toggleKey(VK_CAPITAL, KeyModifierCapsLock);
-	}
-	if ((mask & KeyModifierNumLock)    != (m_mask & KeyModifierNumLock)) {
-		toggleKey(VK_NUMLOCK | 0x100, KeyModifierNumLock);
-	}
-	if ((mask & KeyModifierScrollLock) != (m_mask & KeyModifierScrollLock)) {
-		toggleKey(VK_SCROLL, KeyModifierScrollLock);
-	}
+	keys[VK_LSHIFT]   = getKeyState(VK_LSHIFT);
+	keys[VK_RSHIFT]   = getKeyState(VK_RSHIFT);
+	keys[VK_SHIFT]    = getKeyState(VK_SHIFT);
+	keys[VK_LCONTROL] = getKeyState(VK_LCONTROL);
+	keys[VK_RCONTROL] = getKeyState(VK_RCONTROL);
+	keys[VK_CONTROL]  = getKeyState(VK_CONTROL);
+	keys[VK_LMENU]    = getKeyState(VK_LMENU);
+	keys[VK_RMENU]    = getKeyState(VK_RMENU);
+	keys[VK_MENU]	  = getKeyState(VK_MENU);
+	keys[VK_LWIN]	  = getKeyState(VK_LWIN);
+	keys[VK_RWIN]	  = getKeyState(VK_RWIN);
+	keys[VK_APPS]	  = getKeyState(VK_APPS);
+	keys[VK_CAPITAL]  = getKeyState(VK_CAPITAL);
+	keys[VK_NUMLOCK]  = getKeyState(VK_NUMLOCK);
+	keys[VK_SCROLL]   = getKeyState(VK_SCROLL);
 }
 
 KeyModifierMask
-CMSWindowsSecondaryScreen::getToggleState() const
+CMSWindowsSecondaryScreen::getModifiers() const
 {
-	return (m_mask & (KeyModifierCapsLock |
-					  KeyModifierNumLock |
-					  KeyModifierScrollLock));
+	// update active modifier mask
+	KeyModifierMask mask = 0;
+	if (isKeyDown(VK_LSHIFT) || isKeyDown(VK_RSHIFT)) {
+		mask |= KeyModifierShift;
+	}
+	if (isKeyDown(VK_LCONTROL) || isKeyDown(VK_RCONTROL)) {
+		mask |= KeyModifierControl;
+	}
+	if (isKeyDown(VK_LMENU) || isKeyDown(VK_RMENU)) {
+		mask |= KeyModifierAlt;
+	}
+	// note -- no keys for KeyModifierMeta
+	if (isKeyDown(VK_LWIN) || isKeyDown(VK_RWIN)) {
+		mask |= KeyModifierSuper;
+	}
+	if (isKeyToggled(VK_CAPITAL)) {
+		mask |= KeyModifierCapsLock;
+	}
+	if (isKeyToggled(VK_NUMLOCK)) {
+		mask |= KeyModifierNumLock;
+	}
+	if (isKeyToggled(VK_SCROLL)) {
+		mask |= KeyModifierScrollLock;
+	}
+	// note -- do not save KeyModifierModeSwitch in mask
+	return mask;
 }
 
 // map special KeyID keys to virtual key codes. if the key is an
@@ -814,8 +531,10 @@ CMSWindowsSecondaryScreen::mapButton(ButtonID button,
 }
 
 KeyModifierMask
-CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
-				KeyID id, KeyModifierMask mask, EKeyAction action) const
+CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys,
+				SysKeyID& virtualKey, KeyID id,
+				KeyModifierMask currentMask,
+				KeyModifierMask desiredMask, EKeyAction action) const
 {
 	virtualKey = 0;
 
@@ -832,7 +551,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		}
 		if (virtualKey == 0) {
 			LOG((CLOG_DEBUG2 "unknown special key"));
-			return m_mask;
+			return currentMask;
 		}
 	}
 
@@ -851,14 +570,14 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 
 			// active window or fullscreen?
 			BYTE scan = 0;
-			if ((mask & KeyModifierAlt) == 0) {
+			if ((desiredMask & KeyModifierAlt) == 0) {
 				scan = 1;
 			}
 
 			// send event
 			keybd_event(static_cast<BYTE>(virtualKey & 0xff), scan, flags, 0);
 		}
-		return m_mask;
+		return currentMask;
 	}
 
 	// handle other special keys
@@ -866,11 +585,11 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		// compute the final desired modifier mask.  special keys use
 		// the desired modifiers as given except we keep the caps lock,
 		// num lock, and scroll lock as is.
-		KeyModifierMask outMask = (m_mask &
+		KeyModifierMask outMask = (currentMask &
 									(KeyModifierCapsLock |
 									KeyModifierNumLock |
 									KeyModifierScrollLock));
-		outMask                |= (mask &
+		outMask                |= (desiredMask &
 									(KeyModifierShift |
 									KeyModifierControl |
 									KeyModifierAlt |
@@ -889,7 +608,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		if (virtualKey2 >= VK_NUMPAD0 && virtualKey2 <= VK_DIVIDE) {
 			// set required shift state based on current numlock state
 			if ((outMask & KeyModifierNumLock) == 0) {
-				if ((m_mask & KeyModifierNumLock) == 0) {
+				if ((currentMask & KeyModifierNumLock) == 0) {
 					LOG((CLOG_DEBUG2 "turn on num lock for keypad key"));
 					outMask |= KeyModifierNumLock;
 				}
@@ -902,12 +621,13 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 
 		// check for left tab.  that requires the shift key.
 		if (id == kKeyLeftTab) {
-			mask |= KeyModifierShift;
+			// XXX -- this isn't used;  outMask meant instead?
+			desiredMask |= KeyModifierShift;
 		}
 
 		// now generate the keystrokes and return the resulting modifier mask
 		LOG((CLOG_DEBUG2 "KeyID 0x%08x to virtual key %d mask 0x%04x", id, virtualKey2, outMask));
-		return mapToKeystrokes(keys, virtualKey, m_mask, outMask, action);
+		return mapToKeystrokes(keys, virtualKey, currentMask, outMask, action);
 	}
 
 	// determine the thread that'll receive this event
@@ -951,9 +671,10 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 								NULL, &error);
 	if (nChars == 0 || error) {
 		LOG((CLOG_DEBUG2 "KeyID 0x%08x not in code page", id));
-		return m_mask;
+		return currentMask;
 	}
-	virtualKey = mapCharacter(keys, multiByte[0], hkl, m_mask, mask, action);
+	virtualKey = mapCharacter(keys, multiByte[0],
+								hkl, currentMask, desiredMask, action);
 	if (virtualKey != static_cast<UINT>(-1)) {
 		LOG((CLOG_DEBUG2 "KeyID 0x%08x maps to character %u", id, (unsigned char)multiByte[0]));
 		if ((MapVirtualKey(virtualKey, 2) & 0x80000000u) != 0) {
@@ -971,11 +692,11 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 				// character for real so send a space key afterwards.
 				LOG((CLOG_DEBUG2 "character mapped to dead key"));
 				Keystroke keystroke;
-				keystroke.m_virtualKey = VK_SPACE;
-				keystroke.m_press      = true;
-				keystroke.m_repeat     = false;
+				keystroke.m_sysKeyID = VK_SPACE;
+				keystroke.m_press    = true;
+				keystroke.m_repeat   = false;
 				keys.push_back(keystroke);
-				keystroke.m_press      = false;
+				keystroke.m_press    = false;
 				keys.push_back(keystroke);
 
 				// ignore the release of this key since we already
@@ -983,7 +704,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 				virtualKey = 0;
 			}
 		}
-		return m_mask;
+		return currentMask;
 	}
 	nChars = MultiByteToWideChar(codePage,
 							MB_COMPOSITE | MB_ERR_INVALID_CHARS,
@@ -991,7 +712,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 							unicode, 2);
 	if (nChars == 0) {
 		LOG((CLOG_DEBUG2 "KeyID 0x%08x mb->wc mapping failed", id));
-		return m_mask;
+		return currentMask;
 	}
 	nChars = WideCharToMultiByte(codePage,
 							0,
@@ -1000,7 +721,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 							NULL, &error);
 	if (nChars == 0 || error) {
 		LOG((CLOG_DEBUG2 "KeyID 0x%08x wc->mb mapping failed", id));
-		return m_mask;
+		return currentMask;
 	}
 
 	// we expect one or two characters in multiByte.  if there are two
@@ -1008,60 +729,54 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 	// FIXME -- we assume each character is one byte here
 	if (nChars > 2) {
 		LOG((CLOG_DEBUG2 "multibyte characters not supported for character 0x%04x", id));
-		return m_mask;
+		return currentMask;
 	}
 	if (nChars == 2) {
 		LOG((CLOG_DEBUG2 "KeyID 0x%08x needs dead key %u", id, (unsigned char)multiByte[1]));
-		mapCharacter(keys, multiByte[1], hkl, m_mask, mask, action);
+		mapCharacter(keys, multiByte[1],
+								hkl, currentMask, desiredMask, action);
 	}
 
 	// process character
 	LOG((CLOG_DEBUG2 "KeyID 0x%08x maps to character %u", id, (unsigned char)multiByte[0]));
-	virtualKey = mapCharacter(keys, multiByte[0], hkl, m_mask, mask, action);
+	virtualKey = mapCharacter(keys, multiByte[0],
+								hkl, currentMask, desiredMask, action);
 
 	// non-special key cannot modify the modifier mask
-	return m_mask;
+	return currentMask;
 }
 
 KeyModifierMask
-CMSWindowsSecondaryScreen::mapKeyRelease(Keystrokes& keys,
-				UINT virtualKey) const
+CMSWindowsSecondaryScreen::getModifierKeyMask(SysKeyID virtualKey) const
 {
-	// add key release
-	Keystroke keystroke;
-	keystroke.m_virtualKey = virtualKey;
-	keystroke.m_press      = false;
-	keystroke.m_repeat     = false;
-	keys.push_back(keystroke);
+	switch (virtualKey) {
+	case VK_CAPITAL:
+		return KeyModifierCapsLock;
 
-	// if this is a modifier keycode then update the current modifier mask
+	case VK_NUMLOCK:
+		return KeyModifierNumLock;
+
+	case VK_SCROLL:
+		return KeyModifierScrollLock;
+
+	default:
+		return 0;
+	}
+}
+
+bool
+CMSWindowsSecondaryScreen::isModifierActive(SysKeyID virtualKey) const
+{
+	// check if any virtual key for this modifier is down.  return false
+	// for toggle modifiers.
 	const CModifierInfo* modifier = getModifierInfo(virtualKey);
-	if (modifier != NULL) {
-		if (modifier->m_isToggle) {
-			// toggle keys modify the state on release
-			return (m_mask ^ modifier->m_mask);
-		}
-		else {
-			// can't reset bit until all keys that set it are released.
-			// scan those keys to see if any (except virtualKey) are
-			// pressed.
-			bool down = false;
-			if (virtualKey != (modifier->m_virtualKey & 0xff) &&
-				(m_keys[modifier->m_virtualKey & 0xff] & 0x80) != 0) {
-				down = true;
-			}
-			if (modifier->m_virtualKey2 != 0 &&
-				virtualKey != (modifier->m_virtualKey2 & 0xff) &&
-				(m_keys[modifier->m_virtualKey2 & 0xff] & 0x80) != 0) {
-				down = true;
-			}
-			if (!down) {
-				return (m_mask & ~modifier->m_mask);
-			}
+	if (modifier != NULL && !modifier->m_isToggle) {
+		if (isKeyDown(modifier->m_virtualKey & 0xff) ||
+			isKeyDown(modifier->m_virtualKey2 & 0xff)) {
+			return true;
 		}
 	}
-
-	return m_mask;
+	return false;
 }
 
 UINT
@@ -1186,9 +901,9 @@ CMSWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 					// modifier is a toggle then toggle it on with a
 					// press/release, otherwise activate it with a
 					// press.
-					keystroke.m_virtualKey = s_modifier[i].m_virtualKey;
-					keystroke.m_press      = true;
-					keystroke.m_repeat     = false;
+					keystroke.m_sysKeyID  = s_modifier[i].m_virtualKey;
+					keystroke.m_press     = true;
+					keystroke.m_repeat    = false;
 					keys.push_back(keystroke);
 					if (s_modifier[i].m_isToggle) {
 						keystroke.m_press = false;
@@ -1210,33 +925,33 @@ CMSWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 					// release.  we must check each keycode for the
 					// modifier if not a toggle.
 					if (s_modifier[i].m_isToggle) {
-						keystroke.m_virtualKey = s_modifier[i].m_virtualKey;
-						keystroke.m_press      = true;
-						keystroke.m_repeat     = false;
+						keystroke.m_sysKeyID = s_modifier[i].m_virtualKey;
+						keystroke.m_press    = true;
+						keystroke.m_repeat   = false;
 						keys.push_back(keystroke);
-						keystroke.m_press      = false;
+						keystroke.m_press    = false;
 						keys.push_back(keystroke);
 						undo.push_back(keystroke);
-						keystroke.m_press      = true;
+						keystroke.m_press    = true;
 						undo.push_back(keystroke);
 					}
 					else {
 						UINT key = s_modifier[i].m_virtualKey;
-						if ((m_keys[key & 0xff] & 0x80) != 0) {
-							keystroke.m_virtualKey = key;
-							keystroke.m_press      = false;
-							keystroke.m_repeat     = false;
+						if (isKeyDown(key & 0xff)) {
+							keystroke.m_sysKeyID = key;
+							keystroke.m_press    = false;
+							keystroke.m_repeat   = false;
 							keys.push_back(keystroke);
-							keystroke.m_press      = true;
+							keystroke.m_press    = true;
 							undo.push_back(keystroke);
 						}
 						key = s_modifier[i].m_virtualKey2;
-						if (key != 0 && (m_keys[key & 0xff] & 0x80) != 0) {
-							keystroke.m_virtualKey = key;
-							keystroke.m_press      = false;
-							keystroke.m_repeat     = false;
+						if (isKeyDown(key & 0xff)) {
+							keystroke.m_sysKeyID = key;
+							keystroke.m_press    = false;
+							keystroke.m_repeat   = false;
 							keys.push_back(keystroke);
-							keystroke.m_press      = true;
+							keystroke.m_press    = true;
 							undo.push_back(keystroke);
 						}
 					}
@@ -1246,7 +961,7 @@ CMSWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 	}
 
 	// add the key event
-	keystroke.m_virtualKey = virtualKey;
+	keystroke.m_sysKeyID   = virtualKey;
 	switch (action) {
 	case kPress:
 		keystroke.m_press  = true;
@@ -1297,46 +1012,13 @@ CMSWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 	return mask;
 }
 
-void
-CMSWindowsSecondaryScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
-{
-	// do nothing if no keys or no repeats
-	if (count < 1 || keys.empty()) {
-		return;
-	}
-
-	// generate key events
-	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ) {
-		if (k->m_repeat) {
-			// repeat from here up to but not including the next key
-			// with m_repeat == false count times.
-			Keystrokes::const_iterator start = k;
-			for (; count > 0; --count) {
-				// send repeating events
-				for (k = start; k != keys.end() && k->m_repeat; ++k) {
-					sendKeyEvent(k->m_virtualKey, k->m_press);
-				}
-			}
-
-			// note -- k is now on the first non-repeat key after the
-			// repeat keys, exactly where we'd like to continue from.
-		}
-		else {
-			// send event
-			sendKeyEvent(k->m_virtualKey, k->m_press);
-
-			// next key
-			++k;
-		}
-	}
-}
 
 const CMSWindowsSecondaryScreen::CModifierInfo*
 CMSWindowsSecondaryScreen::getModifierInfo(UINT virtualKey) const
 {
 	// note if the key is a modifier.  strip out extended key flag from
 	// virtual key before lookup.
-	switch (virtualKey & ~0x100) {
+	switch (virtualKey & 0xffu) {
 	case VK_SHIFT:
 	case VK_LSHIFT:
 	case VK_RSHIFT:
@@ -1370,72 +1052,22 @@ CMSWindowsSecondaryScreen::getModifierInfo(UINT virtualKey) const
 	}
 }
 
-void
-CMSWindowsSecondaryScreen::releaseKeys()
+CSecondaryScreen::SysKeyID
+CMSWindowsSecondaryScreen::getToggleSysKey(KeyID keyID) const
 {
-	// release keys that we've synthesized a press for and only those
-	// keys.  we don't want to synthesize a release on a key the user
-	// is still physically pressing.
+	switch (keyID) {
+	case kKeyNumLock:
+		return VK_NUMLOCK | 0x100;
 
-	CLock lock(&m_mutex);
+	case kKeyCapsLock:
+		return VK_CAPITAL;
 
-	m_screen->syncDesktop();
+	case kKeyScrollLock:
+		return VK_SCROLL;
 
-	// release left/right modifier keys first.  if the platform doesn't
-	// support them then they won't be set and the non-side-distinuishing
-	// key will retain its state.  if the platform does support them then
-	// the non-side-distinguishing will be reset.
-	if ((m_fakeKeys[VK_LSHIFT] & 0x80) != 0) {
-		sendKeyEvent(VK_LSHIFT, false);
-		m_fakeKeys[VK_SHIFT]    = 0;
-		m_fakeKeys[VK_LSHIFT]   = 0;
+	default:
+		return 0;
 	}
-	if ((m_fakeKeys[VK_RSHIFT] & 0x80) != 0) {
-		sendKeyEvent(VK_RSHIFT, false);
-		m_fakeKeys[VK_SHIFT]    = 0;
-		m_fakeKeys[VK_RSHIFT]   = 0;
-	}
-	if ((m_fakeKeys[VK_LCONTROL] & 0x80) != 0) {
-		sendKeyEvent(VK_LCONTROL, false);
-		m_fakeKeys[VK_CONTROL]  = 0;
-		m_fakeKeys[VK_LCONTROL] = 0;
-	}
-	if ((m_fakeKeys[VK_RCONTROL] & 0x80) != 0) {
-		sendKeyEvent(VK_RCONTROL, false);
-		m_fakeKeys[VK_CONTROL]  = 0;
-		m_fakeKeys[VK_RCONTROL] = 0;
-	}
-	if ((m_fakeKeys[VK_LMENU] & 0x80) != 0) {
-		sendKeyEvent(VK_LMENU, false);
-		m_fakeKeys[VK_MENU]     = 0;
-		m_fakeKeys[VK_LMENU]    = 0;
-	}
-	if ((m_fakeKeys[VK_RMENU] & 0x80) != 0) {
-		sendKeyEvent(VK_RMENU, false);
-		m_fakeKeys[VK_MENU]     = 0;
-		m_fakeKeys[VK_RMENU]    = 0;
-	}
-
-	// now check all the other keys
-	for (UInt32 i = 0; i < sizeof(m_fakeKeys) / sizeof(m_fakeKeys[0]); ++i) {
-		if ((m_fakeKeys[i] & 0x80) != 0) {
-			sendKeyEvent(i, false);
-			m_fakeKeys[i] = 0;
-		}
-	}
-}
-
-void
-CMSWindowsSecondaryScreen::toggleKey(UINT virtualKey, KeyModifierMask mask)
-{
-	// send key events to simulate a press and release
-	sendKeyEvent(virtualKey, true);
-	sendKeyEvent(virtualKey, false);
-
-	// toggle shadow state
-	m_mask                        ^= mask;
-	m_keys[virtualKey & 0xff]     ^= 0x01;
-	m_fakeKeys[virtualKey & 0xff] ^= 0x01;
 }
 
 UINT
@@ -1499,7 +1131,7 @@ CMSWindowsSecondaryScreen::isExtendedKey(UINT virtualKey) const
 	}
 
 	// check known virtual keys
-	switch (virtualKey & 0xff) {
+	switch (virtualKey & 0xffu) {
 	case VK_NUMLOCK:
 	case VK_RCONTROL:
 	case VK_RMENU:
@@ -1514,7 +1146,7 @@ CMSWindowsSecondaryScreen::isExtendedKey(UINT virtualKey) const
 }
 
 void
-CMSWindowsSecondaryScreen::sendKeyEvent(UINT virtualKey, bool press)
+CMSWindowsSecondaryScreen::fakeKeyEvent(UINT virtualKey, bool press) const
 {
 	DWORD flags = 0;
 	if (isExtendedKey(virtualKey)) {
@@ -1526,7 +1158,104 @@ CMSWindowsSecondaryScreen::sendKeyEvent(UINT virtualKey, bool press)
 	const UINT code = virtualKeyToScanCode(virtualKey);
 	keybd_event(static_cast<BYTE>(virtualKey & 0xff),
 								static_cast<BYTE>(code), flags, 0);
-	LOG((CLOG_DEBUG1 "send key %d, 0x%04x, %s%s", virtualKey & 0xff, code, ((flags & KEYEVENTF_KEYUP) ? "release" : "press"), ((flags & KEYEVENTF_EXTENDEDKEY) ? " extended" : "")));
+}
+
+void
+CMSWindowsSecondaryScreen::fakeMouseButton(ButtonID button, bool press) const
+{
+	// map button id to button flag
+	DWORD data;
+	DWORD flags = mapButton(button, press, &data);
+
+	// send event
+	if (flags != 0) {
+		mouse_event(flags, 0, 0, data, 0);
+	}
+}
+
+void
+CMSWindowsSecondaryScreen::fakeMouseMove(SInt32 x, SInt32 y) const
+{
+	// motion is simple (i.e. it's on the primary monitor) if there
+	// is only one monitor.
+	bool simple = !m_screen->isMultimon();
+	if (!simple) {
+		// also simple if motion is within the primary monitor
+		simple = (x >= 0 && x < GetSystemMetrics(SM_CXSCREEN) &&
+				  y >= 0 && y < GetSystemMetrics(SM_CYSCREEN));
+	}
+
+	// move the mouse directly to target position if motion is simple
+	if (simple) {
+		// when using absolute positioning with mouse_event(),
+		// the normalized device coordinates range over only
+		// the primary screen.
+		SInt32 w = GetSystemMetrics(SM_CXSCREEN);
+		SInt32 h = GetSystemMetrics(SM_CYSCREEN);
+		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
+								(DWORD)((65536.0 * x) / w),
+								(DWORD)((65536.0 * y) / h),
+								0, 0);
+	}
+
+	// windows 98 (and Me?) is broken.  you cannot set the absolute
+	// position of the mouse except on the primary monitor but you
+	// can do relative moves onto any monitor.  this is, in microsoft's
+	// words, "by design."  apparently the designers of windows 2000
+	// we're a little less lazy and did it right.
+	//
+	// microsoft recommends in Q193003 to absolute position the cursor
+	// somewhere on the primary monitor then relative move to the
+	// desired location.  this doesn't work for us because when the
+	// user drags a scrollbar, a window, etc. it causes the dragged
+	// item to jump back a forth between the position on the primary
+	// monitor and the desired position.  while it always ends up in
+	// the right place, the effect is disconcerting.
+	//
+	// instead we'll get the cursor's current position and do just a
+	// relative move from there to the desired position.  relative
+	// moves are subject to cursor acceleration which we don't want.
+	// so we disable acceleration, do the relative move, then restore
+	// acceleration.  there's a slight chance we'll end up in the
+	// wrong place if the user moves the cursor using this system's
+	// mouse while simultaneously moving the mouse on the server
+	// system.  that defeats the purpose of synergy so we'll assume
+	// that won't happen.  even if it does, the next mouse move will
+	// correct the position.
+	else {
+		// save mouse speed & acceleration
+		int oldSpeed[4];
+		bool accelChanged =
+					SystemParametersInfo(SPI_GETMOUSE,0, oldSpeed, 0) &&
+					SystemParametersInfo(SPI_GETMOUSESPEED, 0, oldSpeed + 3, 0);
+
+		// use 1:1 motion
+		if (accelChanged) {
+			int newSpeed[4] = { 0, 0, 0, 1 };
+			accelChanged =
+					SystemParametersInfo(SPI_SETMOUSE, 0, newSpeed, 0) ||
+					SystemParametersInfo(SPI_SETMOUSESPEED, 0, newSpeed + 3, 0);
+		}
+
+		// get current mouse position
+		POINT pos;
+		GetCursorPos(&pos);
+
+		// move relative to mouse position
+		mouse_event(MOUSEEVENTF_MOVE, x - pos.x, y - pos.y, 0, 0);
+
+		// restore mouse speed & acceleration
+		if (accelChanged) {
+			SystemParametersInfo(SPI_SETMOUSE, 0, oldSpeed, 0);
+			SystemParametersInfo(SPI_SETMOUSESPEED, 0, oldSpeed + 3, 0);
+		}
+	}
+}
+
+void
+CMSWindowsSecondaryScreen::fakeMouseWheel(SInt32 delta)
+{
+	mouse_event(MOUSEEVENTF_WHEEL, 0, 0, delta, 0);
 }
 
 UINT
@@ -1554,10 +1283,14 @@ CMSWindowsSecondaryScreen::getCodePageFromLangID(LANGID langid) const
 	return codePage;
 }
 
-void
-CMSWindowsSecondaryScreen::synthesizeCtrlAltDel()
+bool
+CMSWindowsSecondaryScreen::synthesizeCtrlAltDel(EKeyAction action)
 {
-	LOG((CLOG_DEBUG "emulating ctrl+alt+del"));
+	// ignore except for key press
+	if (action != kPress) {
+		return true;
+	}
+
 	if (!m_is95Family) {
 		// to fake ctrl+alt+del on the NT family we broadcast a suitable
 		// hotkey to all windows on the winlogon desktop.  however, we
@@ -1581,6 +1314,7 @@ CMSWindowsSecondaryScreen::synthesizeCtrlAltDel()
 			doKeystrokes(keys, 1);
 		}
 	}
+	return true;
 }
 
 void

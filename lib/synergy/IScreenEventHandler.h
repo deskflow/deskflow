@@ -64,16 +64,6 @@ public:
 	virtual void		onOneShotTimerExpired(UInt32 id) = 0;
 
 	//@}
-	//! @name accessors
-	//@{
-
-	//! Get jump zone size
-	/*!
-	Called to get the jump zone size.
-	*/
-	virtual SInt32		getJumpZoneSize() const = 0;
-
-	//@}
 };
 
 #endif

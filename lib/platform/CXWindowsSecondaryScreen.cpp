@@ -57,46 +57,6 @@
 #	endif
 #endif
 
-//
-// utility functions
-//
-
-inline
-static
-unsigned int			getBits(unsigned int src, unsigned int mask)
-{
-	return src & mask;
-}
-
-inline
-static
-unsigned int			setBits(unsigned int src, unsigned int mask)
-{
-	return src | mask;
-}
-
-inline
-static
-unsigned int			clearBits(unsigned int src, unsigned int mask)
-{
-	return src & ~mask;
-}
-
-inline
-static
-unsigned int			flipBits(unsigned int src, unsigned int mask)
-{
-	return src ^ mask;
-}
-
-inline
-static
-unsigned int			assignBits(unsigned int src,
-							unsigned int mask, unsigned int value)
-{
-	return setBits(clearBits(src, mask), clearBits(value, ~mask));
-}
-
 
 //
 // CXWindowsSecondaryScreen
@@ -122,220 +82,39 @@ CXWindowsSecondaryScreen::~CXWindowsSecondaryScreen()
 	delete m_screen;
 }
 
-void
-CXWindowsSecondaryScreen::keyDown(KeyID key,
-				KeyModifierMask mask, KeyButton button)
+bool
+CXWindowsSecondaryScreen::isAutoRepeating(SysKeyID sysKeyID) const
 {
-	// check for ctrl+alt+del emulation
-	if (key == kKeyDelete &&
-		(mask & (KeyModifierControl | KeyModifierAlt)) ==
-				(KeyModifierControl | KeyModifierAlt)) {
-		LOG((CLOG_DEBUG "ctrl+alt+del emulation"));
-		// just pass the key through
-	}
-
-	// get the sequence of keys to simulate key press and the final
-	// modifier state.
-	Keystrokes keys;
-	KeyCode keycode;
-	m_mask = mapKey(keys, keycode, key, mask, kPress);
-	if (keys.empty()) {
-		// do nothing if there are no associated keys (i.e. lookup failed)
-		return;
-	}
-
-	// generate key events
-	doKeystrokes(keys, 1);
-
-	// do not record button down if button is 0 (invalid)
-	if (button != 0) {
-		// note that key is now down
-		m_serverKeyMap[button] = keycode;
-		m_keys[keycode]        = true;
-		m_fakeKeys[keycode]    = true;
-	}
+	char bit = static_cast<char>(1 << (sysKeyID & 7));
+	return ((m_keyControl.auto_repeats[sysKeyID >> 3] & bit) != 0);
 }
 
 void
-CXWindowsSecondaryScreen::keyRepeat(KeyID key,
-				KeyModifierMask mask, SInt32 count, KeyButton button)
+CXWindowsSecondaryScreen::flush()
 {
-	// if we haven't seen this button go down then ignore it
-	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
-	if (index == m_serverKeyMap.end()) {
-		return;
-	}
-
-	// get the sequence of keys to simulate key repeat and the final
-	// modifier state.
-	Keystrokes keys;
-	KeyCode keycode;
-	m_mask = mapKey(keys, keycode, key, mask, kRepeat);
-	if (keys.empty()) {
-		return;
-	}
-
-	// if this keycode shouldn't auto-repeat then ignore
-	if ((m_keyControl.auto_repeats[keycode >> 3] & (1 << (keycode & 7))) == 0) {
-		return;
-	}
-
-	// if the keycode for the auto-repeat is not the same as for the
-	// initial press then mark the initial key as released and the new
-	// key as pressed.  this can happen when we auto-repeat after a
-	// dead key.  for example, a dead accent followed by 'a' will
-	// generate an 'a with accent' followed by a repeating 'a'.  the
-	// keycodes for the two keysyms might be different.
-	if (keycode != index->second) {
-		// replace key up with previous keycode but leave key down
-		// alone so it uses the new keycode and store that keycode
-		// in the server key map.  the key up is the first keystroke
-		// with the keycode returned by mapKey().
-		for (Keystrokes::iterator index2 = keys.begin();
-								index2 != keys.end(); ++index2) {
-			if (index2->m_keycode == keycode) {
-				index2->m_keycode = index->second;
-				break;
-			}
-		}
-
-		// note that old key is now up
-		m_keys[index->second]     = false;
-		m_fakeKeys[index->second] = false;
-
-		// map server key to new key
-		index->second = keycode;
-
-		// note that new key is now down
-		m_keys[index->second]     = true;
-		m_fakeKeys[index->second] = true;
-	}
-
-	// generate key events
-	doKeystrokes(keys, count);
-}
-
-void
-CXWindowsSecondaryScreen::keyUp(KeyID key,
-				KeyModifierMask mask, KeyButton button)
-{
-	// if we haven't seen this button go down then ignore it
-	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
-	if (index == m_serverKeyMap.end()) {
-		return;
-	}
-	KeyCode keycode = index->second;
-
-	// check for ctrl+alt+del emulation
-	if (key == kKeyDelete &&
-		(mask & (KeyModifierControl | KeyModifierAlt)) ==
-				(KeyModifierControl | KeyModifierAlt)) {
-		LOG((CLOG_DEBUG "ctrl+alt+del emulation"));
-		// just pass the key through
-	}
-
-	// get the sequence of keys to simulate key release and the final
-	// modifier state.
-	Keystrokes keys;
-	if (!((key == kKeyCapsLock && m_capsLockHalfDuplex) ||
-		(key == kKeyNumLock && m_numLockHalfDuplex))) {
-		m_mask = mapKeyRelease(keys, keycode);
-	}
-
-	// generate key events
-	doKeystrokes(keys, 1);
-
-	// note that key is now up
-	m_serverKeyMap.erase(index);
-	m_keys[keycode]     = false;
-	m_fakeKeys[keycode] = false;
-}
-
-void
-CXWindowsSecondaryScreen::flush(Display* display) const
-{
-	XFlush(display);
-}
-
-void
-CXWindowsSecondaryScreen::mouseDown(ButtonID button)
-{
-	const unsigned int xButton = mapButton(button);
-	if (xButton != 0) {
-		CDisplayLock display(m_screen);
-		XTestFakeButtonEvent(display, xButton, True, CurrentTime);
-		flush(display);
-	}
-}
-
-void
-CXWindowsSecondaryScreen::mouseUp(ButtonID button)
-{
-	const unsigned int xButton = mapButton(button);
-	if (xButton != 0) {
-		CDisplayLock display(m_screen);
-		XTestFakeButtonEvent(display, xButton, False, CurrentTime);
-		flush(display);
-	}
-}
-
-void
-CXWindowsSecondaryScreen::mouseMove(SInt32 x, SInt32 y)
-{
-	warpCursor(x, y);
-}
-
-void
-CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
-{
-	// choose button depending on rotation direction
-	const unsigned int xButton = mapButton(static_cast<ButtonID>(
-												(delta >= 0) ? -1 : -2));
-	if (xButton == 0) {
-		return;
-	}
-
-	// now use absolute value of delta
-	if (delta < 0) {
-		delta = -delta;
-	}
-
-	// send as many clicks as necessary
 	CDisplayLock display(m_screen);
-	for (; delta >= 120; delta -= 120) {
-		XTestFakeButtonEvent(display, xButton, True, CurrentTime);
-		XTestFakeButtonEvent(display, xButton, False, CurrentTime);
+	if (display != NULL) {
+		XFlush(display);
 	}
-	flush(display);
 }
 
 void
 CXWindowsSecondaryScreen::resetOptions()
 {
-	m_numLockHalfDuplex      = false;
-	m_capsLockHalfDuplex     = false;
-	m_xtestIsXineramaUnaware = true;
 	CSecondaryScreen::resetOptions();
+	m_xtestIsXineramaUnaware = true;
 }
 
 void
 CXWindowsSecondaryScreen::setOptions(const COptionsList& options)
 {
+	CSecondaryScreen::setOptions(options);
 	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
-		if (options[i] == kOptionHalfDuplexCapsLock) {
-			m_capsLockHalfDuplex = (options[i + 1] != 0);
-			LOG((CLOG_DEBUG1 "half-duplex caps-lock %s", m_capsLockHalfDuplex ? "on" : "off"));
-		}
-		else if (options[i] == kOptionHalfDuplexNumLock) {
-			m_numLockHalfDuplex = (options[i + 1] != 0);
-			LOG((CLOG_DEBUG1 "half-duplex num-lock %s", m_numLockHalfDuplex ? "on" : "off"));
-		}
-		else if (options[i] == kOptionXTestXineramaUnaware) {
+		if (options[i] == kOptionXTestXineramaUnaware) {
 			m_xtestIsXineramaUnaware = (options[i + 1] != 0);
 			LOG((CLOG_DEBUG1 "XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false"));
 		}
 	}
-	CSecondaryScreen::setOptions(options);
 }
 
 IScreen*
@@ -382,12 +161,6 @@ void
 CXWindowsSecondaryScreen::onOneShotTimerExpired(UInt32)
 {
 	// ignore
-}
-
-SInt32
-CXWindowsSecondaryScreen::getJumpZoneSize() const
-{
-	return 0;
 }
 
 void
@@ -523,16 +296,13 @@ void
 CXWindowsSecondaryScreen::destroyWindow()
 {
 	{
+		// release keys that are still pressed
+		releaseKeys();
+
 		CDisplayLock display(m_screen);
 		if (display != NULL) {
-			// release keys that are still pressed
-			doReleaseKeys(display);
-
 			// no longer impervious to server grabs
 			XTestGrabControl(display, False);
-
-			// update
-			flush(display);
 		}
 	}
 
@@ -564,7 +334,7 @@ CXWindowsSecondaryScreen::showWindow(SInt32 x, SInt32 y)
 	// now warp the mouse.  we warp after showing the window so we're
 	// guaranteed to get the mouse leave event and to prevent the
 	// keyboard focus from changing under point-to-focus policies.
-	warpCursor(x, y);
+	fakeMouseMove(x, y);
 }
 
 void
@@ -574,56 +344,6 @@ CXWindowsSecondaryScreen::hideWindow()
 
 	CDisplayLock display(m_screen);
 	XUnmapWindow(display, m_window);
-}
-
-void
-CXWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
-{
-	CDisplayLock display(m_screen);
-	Display* pDisplay = display;
-
-	if (m_xinerama && m_xtestIsXineramaUnaware) {
-		XWarpPointer(display, None, m_screen->getRoot(), 0, 0, 0, 0, x, y);
-	}
-	else {
-		XTestFakeMotionEvent(display, DefaultScreen(pDisplay),
-							x, y, CurrentTime);
-	}
-	flush(display);
-}
-
-void
-CXWindowsSecondaryScreen::setToggleState(KeyModifierMask mask)
-{
-	CDisplayLock display(m_screen);
-
-	// toggle modifiers that don't match the desired state
-	ModifierMask xMask = maskToX(mask);
-	if ((xMask & m_capsLockMask)   != (m_mask & m_capsLockMask)) {
-		toggleKey(display, m_capsLockKeysym, m_capsLockMask);
-	}
-	if ((xMask & m_numLockMask)    != (m_mask & m_numLockMask)) {
-		toggleKey(display, m_numLockKeysym, m_numLockMask);
-	}
-	if ((xMask & m_scrollLockMask) != (m_mask & m_scrollLockMask)) {
-		toggleKey(display, m_scrollLockKeysym, m_scrollLockMask);
-	}
-}
-
-KeyModifierMask
-CXWindowsSecondaryScreen::getToggleState() const
-{
-	KeyModifierMask mask = 0;
-	if ((m_mask & m_capsLockMask) != 0) {
-		mask |= KeyModifierCapsLock;
-	}
-	if ((m_mask & m_numLockMask) != 0) {
-		mask |= KeyModifierNumLock;
-	}
-	if ((m_mask & m_scrollLockMask) != 0) {
-		mask |= KeyModifierScrollLock;
-	}
-	return mask;
 }
 
 unsigned int
@@ -655,9 +375,11 @@ CXWindowsSecondaryScreen::mapButton(ButtonID id) const
 	return static_cast<unsigned int>(m_buttons[id - 1]);
 }
 
-CXWindowsSecondaryScreen::ModifierMask
-CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
-				KeyID id, KeyModifierMask mask, EKeyAction action) const
+KeyModifierMask
+CXWindowsSecondaryScreen::mapKey(Keystrokes& keys,
+				SysKeyID& keycode, KeyID id,
+				KeyModifierMask currentMask,
+				KeyModifierMask desiredMask, EKeyAction action) const
 {
 	// note -- must have display locked on entry
 
@@ -666,27 +388,23 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	// generate the right keysym we need to set the modifier key
 	// states appropriately.
 	//
-	// the mask passed by the caller is the desired mask.  however,
-	// there may not be a keycode mapping to generate the desired
-	// keysym with that mask.  we override the bits in the mask
-	// that cannot be accomodated.
+	// desiredMask is the mask desired by the caller.  however, there
+	// may not be a keycode mapping to generate the desired keysym
+	// with that mask.  we override the bits in the mask that cannot
+	// be accomodated.
 
 	// ignore releases and repeats for half-duplex keys
-	const bool isHalfDuplex = ((id == kKeyCapsLock && m_capsLockHalfDuplex) ||
-								(id == kKeyNumLock && m_numLockHalfDuplex));
+	const bool isHalfDuplex = isKeyHalfDuplex(id);
 	if (isHalfDuplex && action != kPress) {
-		return m_mask;
+		return currentMask;
 	}
 
-	// requested notes the modifiers requested by the server.
-	ModifierMask requested = maskToX(mask);
-
 	// convert KeyID to a KeySym
-	KeySym keysym = keyIDToKeySym(id, requested);
+	KeySym keysym = keyIDToKeySym(id, desiredMask);
 	if (keysym == NoSymbol) {
 		// unknown key
 		LOG((CLOG_DEBUG2 "no keysym for id 0x%08x", id));
-		return m_mask;
+		return currentMask;
 	}
 
 	// get the mapping for this keysym
@@ -712,28 +430,29 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 		// and that modifier is already in the desired state then
 		// ignore the request since there's nothing to do.  never
 		// ignore a toggle modifier on press or release, though.
-		const KeyMapping& keyMapping   = keyIndex->second;
-		const ModifierMask modifierBit = keyMapping.m_modifierMask;
+		const KeyMapping& keyMapping      = keyIndex->second;
+		const KeyModifierMask modifierBit = keyMapping.m_modifierMask;
 		if (modifierBit != 0) {
 			if (action == kRepeat) {
 				LOG((CLOG_DEBUG2 "ignore repeating modifier"));
-				return m_mask;
+				return currentMask;
 			}
-			if (getBits(m_toggleModifierMask, modifierBit) == 0) {
-				if ((action == kPress   && (m_mask & modifierBit) != 0) ||
-					(action == kRelease && (m_mask & modifierBit) == 0)) {
-					LOG((CLOG_DEBUG2 "modifier in proper state: 0x%04x", m_mask));
-					return m_mask;
+			if ((m_toggleModifierMask & modifierBit) == 0) {
+				if ((action == kPress   && (currentMask & modifierBit) != 0) ||
+					(action == kRelease && (currentMask & modifierBit) == 0)) {
+					LOG((CLOG_DEBUG2 "modifier in proper state: 0x%04x", currentMask));
+					return currentMask;
 				}
 			}
 		}
 
 		// create the keystrokes for this keysym
-		ModifierMask mask;
-		if (!mapToKeystrokes(keys, keycode, mask, keyIndex, m_mask, action)) {
+		KeyModifierMask mask;
+		if (!mapToKeystrokes(keys, keycode, mask,
+							keyIndex, currentMask, action, isHalfDuplex)) {
 			// failed to generate keystrokes
 			keys.clear();
-			return m_mask;
+			return currentMask;
 		}
 		else {
 			// success
@@ -754,7 +473,7 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 		// and the keycode from the last keysym (which should be the
 		// only non-dead key).  the dead keys are not sensitive to
 		// anything but shift and mode switch.
-		ModifierMask mask;
+		KeyModifierMask mask;
 		for (KeySyms::const_iterator i  = decomposition.begin();
 									 i != decomposition.end();) {
 			// increment the iterator
@@ -768,15 +487,15 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 				// missing a required keysym
 				LOG((CLOG_DEBUG2 "no keycode for decomposed keysym 0x%08x", keysym));
 				keys.clear();
-				return m_mask;
+				return currentMask;
 			}
 
 			// the keysym is mapped to some keycode
 			if (!mapToKeystrokes(keys, keycode, mask,
-								keyIndex, m_mask, action)) {
+								keyIndex, currentMask, action, isHalfDuplex)) {
 				// failed to generate keystrokes
 				keys.clear();
-				return m_mask;
+				return currentMask;
 			}
 
 			// on to the next keysym
@@ -787,50 +506,41 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	}
 
 	LOG((CLOG_DEBUG2 "no keycode for keysym"));
-	return m_mask;
+	return currentMask;
 }
 
-CXWindowsSecondaryScreen::ModifierMask
-CXWindowsSecondaryScreen::mapKeyRelease(Keystrokes& keys, KeyCode keycode) const
+KeyModifierMask
+CXWindowsSecondaryScreen::getModifierKeyMask(SysKeyID keycode) const
 {
-	// add key release
-	Keystroke keystroke;
-	keystroke.m_keycode = keycode;
-	keystroke.m_press   = False;
-	keystroke.m_repeat  = false;
-	keys.push_back(keystroke);
-
-	// if this is a modifier keycode then update the current modifier mask
 	KeyCodeToModifierMap::const_iterator i = m_keycodeToModifier.find(keycode);
-	if (i != m_keycodeToModifier.end()) {
-		ModifierMask bit = (1 << i->second);
-		if (getBits(m_toggleModifierMask, bit) != 0) {
-			// toggle keys modify the state on release
-			return flipBits(m_mask, bit);
-		}
-		else {
-			// can't reset bit until all keys that set it are released.
-			// scan those keys to see if any (except keycode) are pressed.
-			KeyCodes::const_iterator j;
-			const KeyCodes& keycodes = m_modifierKeycodes[i->second];
-			for (j = keycodes.begin(); j != keycodes.end(); ++j) {
-				KeyCode modKeycode = *j;
-				if (modKeycode != keycode && m_keys[modKeycode]) {
-					break;
-				}
-			}
-			if (j == keycodes.end()) {
-				return clearBits(m_mask, bit);
+	if (i == m_keycodeToModifier.end()) {
+		return 0;
+	}
+	return m_modifierIndexToMask[i->second];
+}
+
+bool
+CXWindowsSecondaryScreen::isModifierActive(SysKeyID keycode) const
+{
+	// check if any keycode for this modifier is down.  return false
+	// for toggle modifiers.
+	KeyCodeToModifierMap::const_iterator i = m_keycodeToModifier.find(keycode);
+	if (i != m_keycodeToModifier.end() &&
+		(m_modifierIndexToMask[i->second] & m_toggleModifierMask) != 0) {
+		const KeyCodes& keycodes = m_modifierKeycodes[i->second];
+		for (KeyCodes::const_iterator j = keycodes.begin();
+										j != keycodes.end(); ++j) {
+			if (isKeyDown(*j)) {
+				return true;
 			}
 		}
 	}
-
-	return m_mask;
+	return false;
 }
 
 unsigned int
 CXWindowsSecondaryScreen::findBestKeyIndex(KeySymIndex keyIndex,
-				ModifierMask /*currentMask*/) const
+				KeyModifierMask /*currentMask*/) const
 {
 	// there are up to 4 keycodes per keysym to choose from.  the
 	// best choice is the one that requires the fewest adjustments
@@ -856,7 +566,7 @@ CXWindowsSecondaryScreen::findBestKeyIndex(KeySymIndex keyIndex,
 
 bool
 CXWindowsSecondaryScreen::isShiftInverted(KeySymIndex keyIndex,
-				ModifierMask currentMask) const
+				KeyModifierMask currentMask) const
 {
 	// each keycode has up to 4 keysym associated with it, one each for:
 	// no modifiers, shift, mode switch, and shift and mode switch.  if
@@ -867,7 +577,7 @@ CXWindowsSecondaryScreen::isShiftInverted(KeySymIndex keyIndex,
 	// method returns true iff the sense of shift should be inverted
 	// for this key given a modifier state.
 	if (keyIndex->second.m_numLockSensitive) {
-		if (getBits(currentMask, m_numLockMask) != 0) {
+		if ((currentMask & KeyModifierNumLock) != 0) {
 			return true;
 		}
 	}
@@ -875,7 +585,7 @@ CXWindowsSecondaryScreen::isShiftInverted(KeySymIndex keyIndex,
 	// if a keysym is num lock sensitive it is never caps lock
 	// sensitive, thus the else here.
 	else if (keyIndex->second.m_capsLockSensitive) {
-		if (getBits(currentMask, m_capsLockMask) != 0) {
+		if ((currentMask & KeyModifierCapsLock) != 0) {
 			return true;
 		}
 	}
@@ -883,28 +593,14 @@ CXWindowsSecondaryScreen::isShiftInverted(KeySymIndex keyIndex,
 	return false;
 }
 
-CXWindowsSecondaryScreen::ModifierMask
-CXWindowsSecondaryScreen::getModifierMask(KeySym keysym) const
-{
-	// find the keysym mapping.  if it exists and there's a keycode
-	// for index 0 (the index we use for modifiers) then return the
-	// modifierMask, which might be 0.  otherwise return 0.
-	KeySymIndex keyIndex = m_keysymMap.find(keysym);
-	if (keyIndex != m_keysymMap.end() && keyIndex->second.m_keycode[0] != 0) {
-		return keyIndex->second.m_modifierMask;
-	}
-	else {
-		return 0;
-	}
-}
-
 bool
 CXWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
-				KeyCode& keycode,
-				ModifierMask& finalMask,
+				SysKeyID& keycode,
+				KeyModifierMask& finalMask,
 				KeySymIndex keyIndex,
-				ModifierMask currentMask,
-				EKeyAction action) const
+				KeyModifierMask currentMask,
+				EKeyAction action,
+				bool isHalfDuplex) const
 {
 	// keyIndex must be valid
 	assert(keyIndex != m_keysymMap.end());
@@ -948,23 +644,23 @@ CXWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 	// is not sensitive to shift then don't adjust it, otherwise
 	// something like shift+home would become just home.  similiarly
 	// for mode switch.
-	ModifierMask desiredMask = currentMask;
-	if (keyIndex->second.m_modifierMask != m_shiftMask) {
+	KeyModifierMask desiredMask = currentMask;
+	if (keyIndex->second.m_modifierMask != KeyModifierShift) {
 		if (keyIndex->second.m_shiftSensitive[bestIndex]) {
 			if ((bestIndex & 1) != 0) {
-				desiredMask = setBits(desiredMask, m_shiftMask);
+				desiredMask |= KeyModifierShift;
 			}
 			else {
-				desiredMask = clearBits(desiredMask, m_shiftMask);
+				desiredMask &= ~KeyModifierShift;
 			}
 		}
-		if (keyIndex->second.m_modifierMask != m_modeSwitchMask) {
+		if (keyIndex->second.m_modifierMask != KeyModifierModeSwitch) {
 			if (keyIndex->second.m_modeSwitchSensitive[bestIndex]) {
 				if ((bestIndex & 2) != 0) {
-					desiredMask = setBits(desiredMask, m_modeSwitchMask);
+					desiredMask |= KeyModifierModeSwitch;
 				}
 				else {
-					desiredMask = clearBits(desiredMask, m_modeSwitchMask);
+					desiredMask &= ~KeyModifierModeSwitch;
 				}
 			}
 		}
@@ -972,41 +668,38 @@ CXWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 
 	// adjust the modifiers to match the desired modifiers
 	Keystrokes undo;
-	ModifierMask tmpMask = currentMask;
+	KeyModifierMask tmpMask = currentMask;
 	if (!adjustModifiers(keys, undo, tmpMask, desiredMask)) {
 		LOG((CLOG_DEBUG2 "failed to adjust modifiers"));
 		return false;
 	}
 
 	// note if the press of a half-duplex key should be treated as a release
-	const bool isHalfDuplex =
-				((keysym == m_capsLockKeysym && m_capsLockHalfDuplex) ||
-				 (keysym == m_numLockKeysym  && m_numLockHalfDuplex));
-	if (isHalfDuplex && getBits(currentMask, mapping.m_modifierMask) != 0) {
+	if (isHalfDuplex && (currentMask & mapping.m_modifierMask) != 0) {
 		action = kRelease;
 	}
 
 	// add the key event
 	Keystroke keystroke;
-	keystroke.m_keycode = keycode;
+	keystroke.m_sysKeyID   = keycode;
 	switch (action) {
 	case kPress:
-		keystroke.m_press  = True;
+		keystroke.m_press  = true;
 		keystroke.m_repeat = false;
 		keys.push_back(keystroke);
 		break;
 
 	case kRelease:
-		keystroke.m_press  = False;
+		keystroke.m_press  = false;
 		keystroke.m_repeat = false;
 		keys.push_back(keystroke);
 		break;
 
 	case kRepeat:
-		keystroke.m_press  = False;
+		keystroke.m_press  = false;
 		keystroke.m_repeat = true;
 		keys.push_back(keystroke);
-		keystroke.m_press  = True;
+		keystroke.m_press  = true;
 		keys.push_back(keystroke);
 		break;
 	}
@@ -1027,13 +720,13 @@ CXWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 		// toggle keys modify the state on release.  other keys set the
 		// bit on press and clear the bit on release.  if half-duplex
 		// then toggle each time we get here.
-		if (getBits(m_toggleModifierMask, mapping.m_modifierMask) != 0) {
+		if ((m_toggleModifierMask & mapping.m_modifierMask) != 0) {
 			if (isHalfDuplex) {
-				finalMask = flipBits(finalMask, mapping.m_modifierMask);
+				finalMask ^= mapping.m_modifierMask;
 			}
 		}
 		else if (action == kPress) {
-			finalMask = setBits(finalMask, mapping.m_modifierMask);
+			finalMask |= mapping.m_modifierMask;
 		}
 	}
 
@@ -1043,14 +736,14 @@ CXWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 bool
 CXWindowsSecondaryScreen::adjustModifiers(Keystrokes& keys,
 				Keystrokes& undo,
-				ModifierMask& inOutMask,
-				ModifierMask desiredMask) const
+				KeyModifierMask& inOutMask,
+				KeyModifierMask desiredMask) const
 {
 	// get mode switch set correctly.  do this before shift because
 	// mode switch may be sensitive to the shift modifier and will
 	// set/reset it as necessary.
-	const bool wantModeSwitch = ((desiredMask & m_modeSwitchMask) != 0);
-	const bool haveModeSwitch = ((inOutMask   & m_modeSwitchMask) != 0);
+	const bool wantModeSwitch = ((desiredMask & KeyModifierModeSwitch) != 0);
+	const bool haveModeSwitch = ((inOutMask   & KeyModifierModeSwitch) != 0);
 	if (wantModeSwitch != haveModeSwitch) {
 		LOG((CLOG_DEBUG2 "fix mode switch"));
 
@@ -1059,14 +752,14 @@ CXWindowsSecondaryScreen::adjustModifiers(Keystrokes& keys,
 		assert(modeSwitchIndex != m_keysymMap.end());
 		if (modeSwitchIndex->second.m_shiftSensitive[0]) {
 			const bool wantShift = false;
-			const bool haveShift = ((inOutMask & m_shiftMask) != 0);
+			const bool haveShift = ((inOutMask & KeyModifierShift) != 0);
 			if (wantShift != haveShift) {
 				// add shift keystrokes
 				LOG((CLOG_DEBUG2 "fix shift for mode switch"));
 				if (!adjustModifier(keys, undo, m_shiftKeysym, wantShift)) {
 					return false;
 				}
-				inOutMask ^= m_shiftMask;
+				inOutMask ^= KeyModifierShift;
 			}
 		}
 
@@ -1074,19 +767,19 @@ CXWindowsSecondaryScreen::adjustModifiers(Keystrokes& keys,
 		if (!adjustModifier(keys, undo, m_modeSwitchKeysym, wantModeSwitch)) {
 			return false;
 		}
-		inOutMask ^= m_modeSwitchMask;
+		inOutMask ^= KeyModifierModeSwitch;
 	}
 
 	// get shift set correctly
-	const bool wantShift = ((desiredMask & m_shiftMask) != 0);
-	const bool haveShift = ((inOutMask   & m_shiftMask) != 0);
+	const bool wantShift = ((desiredMask & KeyModifierShift) != 0);
+	const bool haveShift = ((inOutMask   & KeyModifierShift) != 0);
 	if (wantShift != haveShift) {
 		// add shift keystrokes
 		LOG((CLOG_DEBUG2 "fix shift"));
 		if (!adjustModifier(keys, undo, m_shiftKeysym, wantShift)) {
 			return false;
 		}
-		inOutMask ^= m_shiftMask;
+		inOutMask ^= KeyModifierShift;
 	}
 
 	return true;
@@ -1121,7 +814,7 @@ CXWindowsSecondaryScreen::adjustModifier(Keystrokes& keys,
 
 	// initialize keystroke
 	Keystroke keystroke;
-	keystroke.m_repeat  = false;
+	keystroke.m_repeat = false;
 
 	// releasing a modifier is quite different from pressing one.
 	// when we release a modifier we have to release every keycode that
@@ -1130,10 +823,10 @@ CXWindowsSecondaryScreen::adjustModifier(Keystrokes& keys,
 	// press one of those keycodes.
 	if (desireActive) {
 		// press
-		keystroke.m_keycode = keyIndex->second.m_keycode[0];
-		keystroke.m_press   = True;
+		keystroke.m_sysKeyID = keyIndex->second.m_keycode[0];
+		keystroke.m_press    = true;
 		keys.push_back(keystroke);
-		keystroke.m_press   = False;
+		keystroke.m_press    = false;
 		undo.push_back(keystroke);
 	}
 	else {
@@ -1144,11 +837,11 @@ CXWindowsSecondaryScreen::adjustModifier(Keystrokes& keys,
 			const KeyCodes& keycodes = m_modifierKeycodes[index->second];
 			for (KeyCodes::const_iterator j = keycodes.begin();
 									j != keycodes.end(); ++j) {
-				if (m_keys[*j]) {
-					keystroke.m_keycode = *j;
-					keystroke.m_press   = False;
+				if (isKeyDown(*j)) {
+					keystroke.m_sysKeyID = *j;
+					keystroke.m_press    = false;
 					keys.push_back(keystroke);
-					keystroke.m_press   = True;
+					keystroke.m_press    = true;
 					undo.push_back(keystroke);
 				}
 			}
@@ -1159,94 +852,61 @@ CXWindowsSecondaryScreen::adjustModifier(Keystrokes& keys,
 }
 
 void
-CXWindowsSecondaryScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
+CXWindowsSecondaryScreen::fakeKeyEvent(SysKeyID keycode, bool press) const
 {
-	// do nothing if no keys or no repeats
-	if (count < 1 || keys.empty()) {
-		return;
-	}
-
-	// lock display
 	CDisplayLock display(m_screen);
-
-	// generate key events
-	for (Keystrokes::const_iterator k = keys.begin(); k != keys.end(); ) {
-		if (k->m_repeat) {
-			// repeat from here up to but not including the next key
-			// with m_repeat == false count times.
-			Keystrokes::const_iterator start = k;
-			for (; count > 0; --count) {
-				// send repeating events
-				for (k = start; k != keys.end() && k->m_repeat; ++k) {
-					XTestFakeKeyEvent(display,
-								k->m_keycode, k->m_press, CurrentTime);
-				}
-			}
-
-			// note -- k is now on the first non-repeat key after the
-			// repeat keys, exactly where we'd like to continue from.
-		}
-		else {
-			// send event
-			LOG((CLOG_DEBUG2 "keystrokes:"));
-			LOG((CLOG_DEBUG2 "  %d %s", k->m_keycode, k->m_press ? "down" : "up"));
-			XTestFakeKeyEvent(display, k->m_keycode, k->m_press, CurrentTime);
-
-			// next key
-			++k;
-		}
+	if (display != NULL) {
+		XTestFakeKeyEvent(display, keycode, press ? True : False, CurrentTime);
 	}
-
-	// update
-	flush(display);
-}
-
-CXWindowsSecondaryScreen::ModifierMask
-CXWindowsSecondaryScreen::maskToX(KeyModifierMask inMask) const
-{
-	ModifierMask outMask = 0;
-	if (inMask & KeyModifierShift) {
-		outMask |= m_shiftMask;
-	}
-	if (inMask & KeyModifierControl) {
-		outMask |= m_ctrlMask;
-	}
-	if (inMask & KeyModifierAlt) {
-		outMask |= m_altMask;
-	}
-	if (inMask & KeyModifierMeta) {
-		outMask |= m_metaMask;
-	}
-	if (inMask & KeyModifierSuper) {
-		outMask |= m_superMask;
-	}
-	if (inMask & KeyModifierModeSwitch) {
-		outMask |= m_modeSwitchMask;
-	}
-	if (inMask & KeyModifierCapsLock) {
-		outMask |= m_capsLockMask;
-	}
-	if (inMask & KeyModifierNumLock) {
-		outMask |= m_numLockMask;
-	}
-	if (inMask & KeyModifierScrollLock) {
-		outMask |= m_scrollLockMask;
-	}
-	return outMask;
 }
 
 void
-CXWindowsSecondaryScreen::doReleaseKeys(Display* display)
+CXWindowsSecondaryScreen::fakeMouseButton(ButtonID button, bool press) const
 {
-	assert(display != NULL);
-
-	// key release for each key that we faked a press for
-	for (UInt32 i = 0; i < 256; ++i) {
-		if (m_fakeKeys[i]) {
-			XTestFakeKeyEvent(display, i, False, CurrentTime);
-			m_fakeKeys[i] = false;
-			m_keys[i]     = false;
+	const unsigned int xButton = mapButton(button);
+	if (xButton != 0) {
+		CDisplayLock display(m_screen);
+		if (display != NULL) {
+			XTestFakeButtonEvent(display, xButton,
+							press ? True : False, CurrentTime);
 		}
+	}
+}
+
+void
+CXWindowsSecondaryScreen::fakeMouseMove(SInt32 x, SInt32 y) const
+{
+	CDisplayLock display(m_screen);
+	if (m_xinerama && m_xtestIsXineramaUnaware) {
+		XWarpPointer(display, None, m_screen->getRoot(), 0, 0, 0, 0, x, y);
+	}
+	else {
+		Display* pDisplay = display;
+		XTestFakeMotionEvent(display, DefaultScreen(pDisplay),
+							x, y, CurrentTime);
+	}
+}
+
+void
+CXWindowsSecondaryScreen::fakeMouseWheel(SInt32 delta) const
+{
+	// choose button depending on rotation direction
+	const unsigned int xButton = mapButton(static_cast<ButtonID>(
+												(delta >= 0) ? -1 : -2));
+	if (xButton == 0) {
+		return;
+	}
+
+	// now use absolute value of delta
+	if (delta < 0) {
+		delta = -delta;
+	}
+
+	// send as many clicks as necessary
+	CDisplayLock display(m_screen);
+	for (; delta >= 120; delta -= 120) {
+		XTestFakeButtonEvent(display, xButton, True, CurrentTime);
+		XTestFakeButtonEvent(display, xButton, False, CurrentTime);
 	}
 }
 
@@ -1281,46 +941,33 @@ CXWindowsSecondaryScreen::doUpdateKeys(Display* display)
 	// clean up
 	delete[] tmpButtons;
 
-	// update mappings and current modifiers
+	// update mappings
 	updateKeysymMap(display);
-	updateModifiers(display);
 }
 
 void
-CXWindowsSecondaryScreen::updateKeys()
+CXWindowsSecondaryScreen::updateKeys(KeyState* keys)
 {
 	CDisplayLock display(m_screen);
 
 	// ask server which keys are pressed
-	char keys[32];
-	XQueryKeymap(display, keys);
+	char xkeys[32];
+	XQueryKeymap(display, xkeys);
 
 	// transfer to our state
 	for (UInt32 i = 0, j = 0; i < 32; j += 8, ++i) {
-		m_keys[j + 0] = ((keys[i] & 0x01) != 0);
-		m_keys[j + 1] = ((keys[i] & 0x02) != 0);
-		m_keys[j + 2] = ((keys[i] & 0x04) != 0);
-		m_keys[j + 3] = ((keys[i] & 0x08) != 0);
-		m_keys[j + 4] = ((keys[i] & 0x10) != 0);
-		m_keys[j + 5] = ((keys[i] & 0x20) != 0);
-		m_keys[j + 6] = ((keys[i] & 0x40) != 0);
-		m_keys[j + 7] = ((keys[i] & 0x80) != 0);
+		keys[j + 0] = ((xkeys[i] & 0x01) != 0) ? kDown : 0;
+		keys[j + 1] = ((xkeys[i] & 0x02) != 0) ? kDown : 0;
+		keys[j + 2] = ((xkeys[i] & 0x04) != 0) ? kDown : 0;
+		keys[j + 3] = ((xkeys[i] & 0x08) != 0) ? kDown : 0;
+		keys[j + 4] = ((xkeys[i] & 0x10) != 0) ? kDown : 0;
+		keys[j + 5] = ((xkeys[i] & 0x20) != 0) ? kDown : 0;
+		keys[j + 6] = ((xkeys[i] & 0x40) != 0) ? kDown : 0;
+		keys[j + 7] = ((xkeys[i] & 0x80) != 0) ? kDown : 0;
 	}
-
-	// we've fake pressed no keys
-	m_fakeKeys.reset();
 
 	// update mappings and current modifiers and mouse buttons
 	doUpdateKeys(display);
-}
-
-void
-CXWindowsSecondaryScreen::releaseKeys()
-{
-	CDisplayLock display(m_screen);
-	if (display != NULL) {
-		doReleaseKeys(display);
-	}
 }
 
 void
@@ -1394,6 +1041,9 @@ CXWindowsSecondaryScreen::updateKeysymMap(Display* display)
 		// start with no keycodes for this modifier
 		m_modifierKeycodes[i].clear();
 
+		// no mask for this modifier
+		m_modifierIndexToMask[i] = 0;
+
 		// add each keycode for modifier
 		for (unsigned int j = 0; j < keysPerModifier; ++j) {
 			// get keycode and ignore unset keycodes
@@ -1417,11 +1067,14 @@ CXWindowsSecondaryScreen::updateKeysymMap(Display* display)
 				continue;
 			}
 
+			// save modifier mask
+			m_modifierIndexToMask[i]         = mapToModifierMask(i, keysym);
+
 			// fill in keysym info
 			mapping.m_keycode[0]             = keycode;
 			mapping.m_shiftSensitive[0]      = usesShift[keycodeIndex];
 			mapping.m_modeSwitchSensitive[0] = usesModeSwitch[keycodeIndex];
-			mapping.m_modifierMask           = (1 << i);
+			mapping.m_modifierMask           = m_modifierIndexToMask[i];
 			mapping.m_capsLockSensitive      = false;
 			mapping.m_numLockSensitive       = false;
 		}
@@ -1543,25 +1196,16 @@ CXWindowsSecondaryScreen::updateKeysymMap(Display* display)
 		}
 	}
 
-	// cache the bits for the modifier
-	m_shiftMask      = getModifierMask(m_shiftKeysym);
-	m_ctrlMask       = getModifierMask(m_ctrlKeysym);
-	m_altMask        = getModifierMask(m_altKeysym);
-	m_metaMask       = getModifierMask(m_metaKeysym);
-	m_superMask      = getModifierMask(m_superKeysym);
-	m_capsLockMask   = getModifierMask(m_capsLockKeysym);
-	m_numLockMask    = getModifierMask(m_numLockKeysym);
-	m_modeSwitchMask = getModifierMask(m_modeSwitchKeysym);
-	m_scrollLockMask = getModifierMask(m_scrollLockKeysym);
-
 	// clean up
 	XFree(keysyms);
 	XFreeModifiermap(modifiers);
 }
 
-void
-CXWindowsSecondaryScreen::updateModifiers(Display* display)
+KeyModifierMask
+CXWindowsSecondaryScreen::getModifiers() const
 {
+	CDisplayLock display(m_screen);
+
 	// query the pointer to get the keyboard state
 	Window root, window;
 	int xRoot, yRoot, xWindow, yWindow;
@@ -1572,50 +1216,56 @@ CXWindowsSecondaryScreen::updateModifiers(Display* display)
 	}
 
 	// update active modifier mask
-	m_mask = 0;
+	KeyModifierMask mask = 0;
 	for (ModifierIndex i = 0; i < 8; ++i) {
-		const ModifierMask bit = (1 << i);
+		const KeyModifierMask bit = m_modifierIndexToMask[i];
 		if ((bit & m_toggleModifierMask) == 0) {
 			for (KeyCodes::const_iterator j = m_modifierKeycodes[i].begin();
 								j != m_modifierKeycodes[i].end(); ++j) {
-				if (m_keys[*j]) {
-					m_mask |= bit;
+// XXX -- is this right?
+				if (isKeyDown(*j)) {
+					mask |= bit;
 					break;
 				}
 			}
 		}
 		else if ((bit & state) != 0) {
 			// toggle is on
-			m_mask |= bit;
+			mask |= bit;
 		}
 	}
+
+	return mask;
 }
 
-void
-CXWindowsSecondaryScreen::toggleKey(Display* display,
-				KeySym keysym, ModifierMask mask)
+CSecondaryScreen::SysKeyID
+CXWindowsSecondaryScreen::getToggleSysKey(KeyID keyID) const
 {
+	// convert KeyID to KeySym
+	KeySym keysym;
+	switch (keyID) {
+	case kKeyNumLock:
+		keysym = m_numLockKeysym;
+		break;
+
+	case kKeyCapsLock:
+		keysym = m_capsLockKeysym;
+		break;
+
+	case kKeyScrollLock:
+		keysym = m_scrollLockKeysym;
+		break;
+
+	default:
+		return 0;
+	}
+
 	// lookup the key mapping
 	KeySymIndex index = m_keysymMap.find(keysym);
 	if (index == m_keysymMap.end()) {
-		return;
+		return 0;
 	}
-	KeyCode keycode = index->second.m_keycode[0];
-
-	// toggle the key
-	if ((keysym == m_capsLockKeysym && m_capsLockHalfDuplex) ||
-		(keysym == m_numLockKeysym  && m_numLockHalfDuplex)) {
-		// "half-duplex" toggle
-		XTestFakeKeyEvent(display, keycode, (m_mask & mask) == 0, CurrentTime);
-	}
-	else {
-		// normal toggle
-		XTestFakeKeyEvent(display, keycode, True,  CurrentTime);
-		XTestFakeKeyEvent(display, keycode, False, CurrentTime);
-	}
-
-	// toggle shadow state
-	m_mask ^= mask;
+	return index->second.m_keycode[0];
 }
 
 bool
@@ -1630,6 +1280,62 @@ CXWindowsSecondaryScreen::isToggleKeysym(KeySym key)
 
 	default:
 		return false;
+	}
+}
+
+KeyModifierMask
+CXWindowsSecondaryScreen::mapToModifierMask(
+				ModifierIndex i, KeySym keysym) const
+{
+	// some modifier indices (0,1,2) are dedicated to particular uses,
+	// the rest depend on the keysyms bound.
+	switch (i) {
+	case 0:
+		return KeyModifierShift;
+
+	case 1:
+		return KeyModifierCapsLock;
+
+	case 2:
+		return KeyModifierControl;
+
+	default:
+		switch (keysym) {
+		case XK_Shift_L:
+		case XK_Shift_R:
+			return KeyModifierShift;
+
+		case XK_Control_L:
+		case XK_Control_R:
+			return KeyModifierControl;
+
+		case XK_Alt_L:
+		case XK_Alt_R:
+			return KeyModifierAlt;
+
+		case XK_Meta_L:
+		case XK_Meta_R:
+			return KeyModifierMeta;
+
+		case XK_Super_L:
+		case XK_Super_R:
+			return KeyModifierSuper;
+
+		case XK_Mode_switch:
+			return KeyModifierModeSwitch;
+
+		case XK_Caps_Lock:
+			return KeyModifierCapsLock;
+
+		case XK_Num_Lock:
+			return KeyModifierNumLock;
+
+		case XK_Scroll_Lock:
+			return KeyModifierScrollLock;
+
+		default:
+			return 0;
+		}
 	}
 }
 
@@ -1681,7 +1387,7 @@ static const KeySym		g_mapE000[] =
 #endif
 
 KeySym
-CXWindowsSecondaryScreen::keyIDToKeySym(KeyID id, ModifierMask mask) const
+CXWindowsSecondaryScreen::keyIDToKeySym(KeyID id, KeyModifierMask mask) const
 {
 	// convert id to keysym
 	KeySym keysym = NoSymbol;
@@ -1725,7 +1431,7 @@ CXWindowsSecondaryScreen::keyIDToKeySym(KeyID id, ModifierMask mask) const
 	// instead.  if that doesn't work, we'll fall back to XK_Tab with
 	// shift active.  this is to handle primary screens that don't map
 	// XK_ISO_Left_Tab sending events to secondary screens that do.
-	if (keysym == XK_Tab && (mask & ShiftMask) != 0) {
+	if (keysym == XK_Tab && (mask & KeyModifierShift) != 0) {
 		keysym = XK_ISO_Left_Tab;
 	}
 
@@ -2002,6 +1708,7 @@ CXWindowsSecondaryScreen::getDecomposedKeySymTable()
 		XK_umacron,      XK_dead_macron,      XK_u, 0,
 
 		// Latin-8 (ISO 8859-14)
+#if defined(XK_Babovedot)
 		XK_Babovedot,    XK_dead_abovedot,    XK_B, 0,
 		XK_babovedot,    XK_dead_abovedot,    XK_b, 0,
 		XK_Dabovedot,    XK_dead_abovedot,    XK_D, 0,
@@ -2028,9 +1735,12 @@ CXWindowsSecondaryScreen::getDecomposedKeySymTable()
 		XK_wcircumflex,  XK_dead_circumflex,  XK_w, 0,
 		XK_tabovedot,    XK_dead_abovedot,    XK_t, 0,
 		XK_ycircumflex,  XK_dead_circumflex,  XK_y, 0,
+#endif
 
 		// Latin-9 (ISO 8859-15)
+#if defined(XK_Ydiaeresis)
 		XK_Ydiaeresis,   XK_dead_diaeresis,   XK_Y, 0,
+#endif
 
 		// end of table
 		0
