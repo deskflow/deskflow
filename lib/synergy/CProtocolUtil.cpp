@@ -124,17 +124,18 @@ CProtocolUtil::readf(IInputStream* stream, const char* fmt, ...)
 				// read the vector length
 				UInt8 buffer[4];
 				read(stream, buffer, 4);
-				UInt32 len = (static_cast<UInt32>(buffer[0]) << 24) |
-							 (static_cast<UInt32>(buffer[1]) << 16) |
-							 (static_cast<UInt32>(buffer[2]) <<  8) |
-							  static_cast<UInt32>(buffer[3]);
+				UInt32 n = (static_cast<UInt32>(buffer[0]) << 24) |
+						   (static_cast<UInt32>(buffer[1]) << 16) |
+						   (static_cast<UInt32>(buffer[2]) <<  8) |
+							static_cast<UInt32>(buffer[3]);
 
 				// convert it
 				void* v = va_arg(args, void*);
 				switch (len) {
 				case 1:
 					// 1 byte integer
-					for (UInt32 i = 0; i < len; ++i) {
+					for (UInt32 i = 0; i < n; ++i) {
+						read(stream, buffer, 1);
 						reinterpret_cast<std::vector<UInt8>*>(v)->push_back(
 							buffer[0]);
 						LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, reinterpret_cast<std::vector<UInt8>*>(v)->back(), reinterpret_cast<std::vector<UInt8>*>(v)->back()));
@@ -143,7 +144,8 @@ CProtocolUtil::readf(IInputStream* stream, const char* fmt, ...)
 
 				case 2:
 					// 2 byte integer
-					for (UInt32 i = 0; i < len; ++i) {
+					for (UInt32 i = 0; i < n; ++i) {
+						read(stream, buffer, 2);
 						reinterpret_cast<std::vector<UInt16>*>(v)->push_back(
 							static_cast<UInt16>(
 							(static_cast<UInt16>(buffer[0]) << 8) |
@@ -154,7 +156,8 @@ CProtocolUtil::readf(IInputStream* stream, const char* fmt, ...)
 
 				case 4:
 					// 4 byte integer
-					for (UInt32 i = 0; i < len; ++i) {
+					for (UInt32 i = 0; i < n; ++i) {
+						read(stream, buffer, 4);
 						reinterpret_cast<std::vector<UInt32>*>(v)->push_back(
 							(static_cast<UInt32>(buffer[0]) << 24) |
 							(static_cast<UInt32>(buffer[1]) << 16) |
@@ -266,14 +269,13 @@ CProtocolUtil::getLength(const char* fmt, va_list args)
 					break;
 
 				case 2:
-					len = 2 * (va_arg(args, std::vector<UInt8>*))->size() + 4;
+					len = 2 * (va_arg(args, std::vector<UInt16>*))->size() + 4;
 					break;
 
 				case 4:
-					len = 4 * (va_arg(args, std::vector<UInt8>*))->size() + 4;
+					len = 4 * (va_arg(args, std::vector<UInt32>*))->size() + 4;
 					break;
 				}
-				(void)va_arg(args, void*);
 				break;
 
 			case 's':
@@ -351,13 +353,17 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 			}
 
 			case 'I': {
-				const UInt32 v = va_arg(args, UInt32);
 				switch (len) {
 				case 1: {
 					// 1 byte integers
 					const std::vector<UInt8>* list =
 						va_arg(args, const std::vector<UInt8>*);
-					for (UInt32 i = 0, n = list->size(); i < n; ++i) {
+					const UInt32 n = list->size();
+					*dst++ = static_cast<UInt8>((n >> 24) & 0xff);
+					*dst++ = static_cast<UInt8>((n >> 16) & 0xff);
+					*dst++ = static_cast<UInt8>((n >>  8) & 0xff);
+					*dst++ = static_cast<UInt8>( n        & 0xff);
+					for (UInt32 i = 0; i < n; ++i) {
 						*dst++ = (*list)[i];
 					}
 					break;
@@ -367,7 +373,12 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 					// 2 byte integers
 					const std::vector<UInt16>* list =
 						va_arg(args, const std::vector<UInt16>*);
-					for (UInt32 i = 0, n = list->size(); i < n; ++i) {
+					const UInt32 n = list->size();
+					*dst++ = static_cast<UInt8>((n >> 24) & 0xff);
+					*dst++ = static_cast<UInt8>((n >> 16) & 0xff);
+					*dst++ = static_cast<UInt8>((n >>  8) & 0xff);
+					*dst++ = static_cast<UInt8>( n        & 0xff);
+					for (UInt32 i = 0; i < n; ++i) {
 						const UInt16 v = (*list)[i];
 						*dst++ = static_cast<UInt8>((v >> 8) & 0xff);
 						*dst++ = static_cast<UInt8>( v       & 0xff);
@@ -379,7 +390,12 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 					// 4 byte integers
 					const std::vector<UInt32>* list =
 						va_arg(args, const std::vector<UInt32>*);
-					for (UInt32 i = 0, n = list->size(); i < n; ++i) {
+					const UInt32 n = list->size();
+					*dst++ = static_cast<UInt8>((n >> 24) & 0xff);
+					*dst++ = static_cast<UInt8>((n >> 16) & 0xff);
+					*dst++ = static_cast<UInt8>((n >>  8) & 0xff);
+					*dst++ = static_cast<UInt8>( n        & 0xff);
+					for (UInt32 i = 0; i < n; ++i) {
 						const UInt32 v = (*list)[i];
 						*dst++ = static_cast<UInt8>((v >> 24) & 0xff);
 						*dst++ = static_cast<UInt8>((v >> 16) & 0xff);
