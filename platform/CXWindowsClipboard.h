@@ -267,14 +267,9 @@ private:
 	Atom				m_atomTargets;
 	Atom				m_atomMultiple;
 	Atom				m_atomTimestamp;
-	Atom				m_atomAtom;
 	Atom				m_atomAtomPair;
-	Atom				m_atomInteger;
 	Atom				m_atomData;
 	Atom				m_atomINCR;
-	Atom				m_atomString;
-	Atom				m_atomText;
-	Atom				m_atomCompoundText;
 	Atom				m_atomMotifClipLock;
 	Atom				m_atomMotifClipHeader;
 	Atom				m_atomMotifClipAccess;

@@ -29,14 +29,9 @@ CXWindowsClipboard::CXWindowsClipboard(Display* display,
 	m_atomTargets         = XInternAtom(m_display, "TARGETS", False);
 	m_atomMultiple        = XInternAtom(m_display, "MULTIPLE", False);
 	m_atomTimestamp       = XInternAtom(m_display, "TIMESTAMP", False);
-	m_atomAtom            = XInternAtom(m_display, "ATOM", False);
 	m_atomAtomPair        = XInternAtom(m_display, "ATOM_PAIR", False);
-	m_atomInteger         = XInternAtom(m_display, "INTEGER", False);
 	m_atomData            = XInternAtom(m_display, "CLIP_TEMPORARY", False);
 	m_atomINCR            = XInternAtom(m_display, "INCR", False);
-	m_atomString          = XInternAtom(m_display, "STRING", False);
-	m_atomText            = XInternAtom(m_display, "TEXT", False);
-	m_atomCompoundText    = XInternAtom(m_display, "COMPOUND_TEXT", False);
 	m_atomMotifClipLock   = XInternAtom(m_display, "_MOTIF_CLIP_LOCK", False);
 	m_atomMotifClipHeader = XInternAtom(m_display, "_MOTIF_CLIP_HEADER", False);
 	m_atomMotifClipAccess = XInternAtom(m_display,
