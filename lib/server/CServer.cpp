@@ -117,6 +117,9 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	// add connection
 	addClient(m_primaryClient);
 
+	// process options locally
+	processOptions();
+
 	// tell primary client about its options
 	sendOptions(m_primaryClient);
 
