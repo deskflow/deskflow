@@ -14,6 +14,9 @@
 // CXWindowsScreen
 //
 
+static const Atom kClipboardSelection = XA_PRIMARY;
+static const UInt32 kMaxRequestSize = 4096;
+
 CXWindowsScreen::CXWindowsScreen() :
 								m_display(NULL),
 								m_root(None),
@@ -53,6 +56,10 @@ void					CXWindowsScreen::openDisplay()
 	// get some atoms
 	m_atomTargets      = XInternAtom(m_display, "TARGETS", False);
 	m_atomMultiple     = XInternAtom(m_display, "MULTIPLE", False);
+	m_atomTimestamp    = XInternAtom(m_display, "TIMESTAMP", False);
+	m_atomAtom         = XInternAtom(m_display, "ATOM", False);
+	m_atomAtomPair     = XInternAtom(m_display, "ATOM_PAIR", False);
+	m_atomInteger      = XInternAtom(m_display, "INTEGER", False);
 	m_atomData         = XInternAtom(m_display, "DESTINATION", False);
 	m_atomINCR         = XInternAtom(m_display, "INCR", False);
 	m_atomText         = XInternAtom(m_display, "TEXT", False);
@@ -159,16 +166,29 @@ void					CXWindowsScreen::doStop()
 	m_stop = true;
 }
 
+void					CXWindowsScreen::lostClipboard(
+								Atom selection, Time timestamp)
+{
+	if (selection == kClipboardSelection) {
+		// note the time
+		CLock lock(&m_mutex);
+		m_lostClipboard = timestamp;
+		return true;
+	}
+	return false;
+}
+
 bool					CXWindowsScreen::setDisplayClipboard(
 								const IClipboard* clipboard,
 								Window requestor, Time timestamp)
 {
 	CLock lock(&m_mutex);
 
-	XSetSelectionOwner(m_display, XA_PRIMARY, requestor, timestamp);
-	if (XGetSelectionOwner(m_display, XA_PRIMARY) == requestor) {
+	XSetSelectionOwner(m_display, kClipboardSelection, requestor, timestamp);
+	if (XGetSelectionOwner(m_display, kClipboardSelection) == requestor) {
 		// we got the selection
 		log((CLOG_DEBUG "grabbed clipboard"));
+		m_gotClipboard = timestamp;
 
 		if (clipboard != NULL) {
 			// save clipboard to serve requests
@@ -202,9 +222,7 @@ void					CXWindowsScreen::getDisplayClipboard(
 	// in particular, this prevents the event thread from stealing the
 	// selection notify event we're expecting.
 	CLock lock(&m_mutex);
-
-	// use PRIMARY selection as the "clipboard"
-	Atom selection = XA_PRIMARY;
+	Atom selection = kClipboardSelection;
 
 	// ask the selection for all the formats it has.  some owners return
 	// the TARGETS atom and some the ATOM atom when TARGETS is requested.
@@ -359,7 +377,7 @@ bool					CXWindowsScreen::getDisplayClipboard(
 		data.reserve(size);
 
 		// look for property notify events with the following
-		PropertyNotifyInfo filter;
+		CPropertyNotifyInfo filter;
 		filter.m_window   = requestor;
 		filter.m_property = property;
 
@@ -488,7 +506,7 @@ IClipboard::EFormat		CXWindowsScreen::getFormat(Atom src) const
 Bool					CXWindowsScreen::findSelectionNotify(
 								Display*, XEvent* xevent, XPointer arg)
 {
-	Window requestor = *((Window*)arg);
+	Window requestor = *static_cast<Window*>(arg);
 	return (xevent->type                 == SelectionNotify &&
 			xevent->xselection.requestor == requestor) ? True : False;
 }
@@ -496,7 +514,7 @@ Bool					CXWindowsScreen::findSelectionNotify(
 Bool					CXWindowsScreen::findPropertyNotify(
 								Display*, XEvent* xevent, XPointer arg)
 {
-	PropertyNotifyInfo* filter = (PropertyNotifyInfo*)arg;
+	CPropertyNotifyInfo* filter = static_cast<CPropertyNotifyInfo*>(arg);
 	return (xevent->type             == PropertyNotify &&
 			xevent->xproperty.window == filter->m_window &&
 			xevent->xproperty.atom   == filter->m_property &&
@@ -511,63 +529,139 @@ void					CXWindowsScreen::addClipboardRequest(
 	// mutex the display
 	CLock lock(&m_mutex);
 
-	// check the target
-	IClipboard::EFormat format = IClipboard::kNumFormats;
-	if (selection == XA_PRIMARY) {
-		if (target == m_atomTargets) {
-			// send the list of available targets
-			sendClipboardTargetsNotify(requestor, property, time);
-			return;
-		}
-		else if (target == m_atomMultiple) {
-			// add a multiple request
-			if (property != None) {
-				addClipboardMultipleRequest(requestor, property, time);
+	// we can only own kClipboardSelection
+	if (selection != kClipboardSelection) {
+		return;
+	}
+
+	// a request for multiple targets is special
+	if (target == m_atomMultiple) {
+		// add a multiple request
+		if (property != None) {
+			if (addClipboardMultipleRequest(requestor, property, time)) {
 				return;
 			}
 		}
-		else {
-			format = getFormat(target);
-		}
+
+		// bad request or couldn't satisfy request
+		sendNotify(requestor, target, None, time);
+		return;
 	}
 
-	// if we can't handle the format then send a failure notification
+	// handle remaining request formats
+	doAddClipboardRequest(requestor, target, property, time);
+}
+
+void					CXWindowsScreen::doAddClipboardRequest(
+								Window requestor, Atom target,
+								Atom property, Time time)
+{
+	// check the target.  if we can't handle the format then send
+	// a failure notification.
+	IClipboard::EFormat format = getFormat(target);
 	if (format == IClipboard::kNumFormats) {
-		XEvent event;
-		event.xselection.type      = SelectionNotify;
-		event.xselection.display   = m_display;
-		event.xselection.requestor = requestor;
-		event.xselection.selection = selection;
-		event.xselection.target    = target;
-		event.xselection.property  = None;
-		event.xselection.time      = time;
-		XSendEvent(m_display, requestor, False, 0, &event);
+		sendNotify(requestor, target, None, time);
 		return;
 	}
 
 	// we could process short requests without adding to the request
 	// queue but we'll keep things simple by doing all requests the
 	// same way.
-	// FIXME
+	addClipboardRequest(requestor, property, time, target);
 }
 
-void					CXWindowsScreen::sendClipboardTargetsNotify(
+bool					CXWindowsScreen::sendClipboardData(
+								Window requestor, Atom target,
+								Atom property, Time time)
+{
+	// FIXME -- caller must send notify event
+	if (target == m_atomTargets) {
+		return sendClipboardTargets(requestor, property, time);
+	}
+	else if (target == m_atomTimestamp) {
+		// FIXME -- handle Alloc errors (by returning false)
+		XChangeProperty(m_display, requestor, property,
+								m_atomInteger, sizeof(m_gotClipboard),
+								PropModeReplace,
+								reinterpret_cast<unsigned char*>(&m_gotClipboard),
+								1);
+		return true;
+	}
+	else if (getFormat(target) != IClipboard::kNumFormats) {
+		// convert clipboard to appropriate format
+		CString data;
+
+		if (data.size() > kMaxRequestSize) {
+			// FIXME -- handle Alloc errors (by returning false)
+			const UInt32 zero = 0;
+			XChangeProperty(m_display, requestor, property,
+								m_atomINCR, sizeof(zero),
+								PropModeReplace,
+								reinterpret_cast<unsigned char*>(&zero),
+								1);
+			// FIXME -- add to request list
+		}
+		else {
+			// FIXME -- handle Alloc errors (by returning false)
+			XChangeProperty(m_display, requestor, property,
+								/* FIXME -- use appropriate type */,
+								/* FIXME -- use appropriate size */,
+								PropModeReplace,
+								data.data(), data.size());
+		}
+		return true;
+	}
+	return false;
+}
+
+void					CXWindowsScreen::sendClipboardData(CRequestList* list)
+{
+	// send more data from the request at the head of the queue
+}
+
+bool					CXWindowsScreen::sendClipboardTargets(
 								Window requestor,
 								Atom property, Time time)
 {
+	// count the number of targets, plus TARGETS and MULTIPLE
+	SInt32 numTargets = 2;
+	if (m_clipboard.has(IClipboard::kText)) {
+		numTargets += 1;
+	}
+
 	// construct response
-	// FIXME
+	Atom* response = new Atom[numTargets];
+	SInt32 count = 0;
+	response[count++] = m_atomTargets;
+	response[count++] = m_atomMultiple;
+	if (m_clipboard.has(IClipboard::kText)) {
+		response[count++] = m_atomText;
+	}
 
-	// set property
-	// FIXME
+	// send response (we assume we can transfer the entire list at once)
+	// FIXME -- handle Alloc errors (by returning false)
+	XChangeProperty(m_display, requestor, property,
+								m_atomAtom, sizeof(Atom),
+								PropModeReplace,
+								reinterpret_cast<unsigned char*>(response),
+								count);
 
-	// send notification
+	// done with our response
+	delete[] response;
+
+	return true;
+}
+
+void					CXWindowsScreen::sendNotify(
+								Window requestor, Atom target,
+								Atom property, Time time)
+{
 	XEvent event;
 	event.xselection.type      = SelectionNotify;
 	event.xselection.display   = m_display;
 	event.xselection.requestor = requestor;
-	event.xselection.selection = XA_PRIMARY;
-	event.xselection.target    = m_atomTargets;
+	event.xselection.selection = kClipboardSelection;
+	event.xselection.target    = target;
 	event.xselection.property  = property;
 	event.xselection.time      = time;
 	XSendEvent(m_display, requestor, False, 0, &event);
@@ -581,18 +675,51 @@ void					CXWindowsScreen::processClipboardRequest(
 }
 
 void					CXWindowsScreen::addClipboardRequest(
-								Window requestor,
-								Atom property, Time time,
-								IClipboard::EFormat format)
+								Window requestor, Atom target,
+								Atom property, Time time);
 {
-	// FIXME
+	// FIXME -- add to queue.  send first part.
 }
 
-void					CXWindowsScreen::addClipboardMultipleRequest(
+bool					CXWindowsScreen::addClipboardMultipleRequest(
 								Window requestor,
 								Atom property, Time time)
 {
-	// FIXME
+	// get the list of requested formats
+	Atom type;
+	SInt32 size;
+	CString data;
+	getData(requestor, property, &type, &size, &data);
+	if (type != m_atomAtomPair) {
+		// unexpected data type
+		return false;
+	}
+
+	// check each format, replacing ones we can't do with None.  set
+	// the property for each to the requested data (for small requests)
+	// or INCR (for large requests).
+	bool updated = false;
+	const Atom none = None;
+	const Atom* request = static_cast<const Atom*>(data.data());
+	UInt32 numRequests = data.size() / (2 * sizeof(Atom));
+	for (UInt32 index = 0; index < numRequests; ++index) {
+		// get request info
+		const Atom target   = request[2 * index + 0];
+		const Atom property = request[2 * index + 1];
+
+		// handle target
+		if (property != None &&
+			!sendClipboardData(requestor, target, property, time)) {
+			// couldn't handle target.  change property to None.
+			data.replace((2 * index + 1) * sizeof(Atom), sizeof(Atom),
+								static_cast<const char*>(&none), sizeof(none));
+			updated = true;
+		}
+	}
+
+	// FIXME -- update property if updated is true
+	// FIXME -- send notify.  if no formats were allowed then send failure
+	// but return true.
 }
 
 

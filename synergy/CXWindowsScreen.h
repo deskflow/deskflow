@@ -5,6 +5,8 @@
 #include "CMutex.h"
 #include "BasicTypes.h"
 #include <X11/Xlib.h>
+#include <map>
+#include <list>
 
 class CString;
 
@@ -54,6 +56,12 @@ class CXWindowsScreen {
 	// cause getEvent() to return false immediately and forever after
 	void				doStop();
 
+	// call when we lose the clipboard ownership (i.e. when we receive
+	// a SelectionClear event).  returns true iff we've actually lost
+	// a selection we care about.
+	bool				lostClipboard(Atom selection, Time timestamp);
+
+	// set the contents of the clipboard (i.e. primary selection)
 	bool				setDisplayClipboard(const IClipboard* clipboard,
 								Window requestor, Time timestamp);
 
@@ -80,11 +88,22 @@ class CXWindowsScreen {
 	virtual void		onCloseDisplay() = 0;
 
   private:
-	struct PropertyNotifyInfo {
+	struct CPropertyNotifyInfo {
 	  public:
 		Window			m_window;
 		Atom			m_property;
 	};
+	struct CClipboardRequest {
+	  public:
+		CString			m_data;
+		UInt32			m_sent;
+		Window			m_requestor;
+		Atom			m_property;
+		Atom			m_type;
+		int				m_format;
+	};
+	typedef std::list<CClipboardRequest*> CRequestList;
+	typedef std::map<Window, CRequestList*> CRequestMap;
 
 	bool				getDisplayClipboard(Atom selection, Atom type,
 								Window requestor, Time timestamp,
@@ -98,12 +117,16 @@ class CXWindowsScreen {
 	static Bool			findPropertyNotify(Display*,
 								XEvent* xevent, XPointer arg);
 
-	void				sendClipboardTargetsNotify(Window requestor,
+	void				sendClipboardData(CRequestList*);
+	void				sendClipboardData(Window requestor, Atom target,
 								Atom property, Time time);
-	void				addClipboardRequest(Window requestor,
-								Atom property, Time time,
-								IClipboard::EFormat);
-	void				addClipboardMultipleRequest(Window requestor,
+	void				sendClipboardTargets(Window requestor,
+								Atom property, Time time);
+	void				sendNotify(Window requestor, Atom target,
+								Atom property, Time time);
+	void				addClipboardRequest(Window requestor, Atom target,
+								Atom property, Time time);
+	bool				addClipboardMultipleRequest(Window requestor,
 								Atom property, Time time);
 
   private:
@@ -116,6 +139,10 @@ class CXWindowsScreen {
 	// atoms we'll need
 	Atom				m_atomTargets;
 	Atom				m_atomMultiple;
+	Atom				m_atomTimestamp;
+	Atom				m_atomAtom;
+	Atom				m_atomAtomPair;
+	Atom				m_atomInteger;
 	Atom				m_atomData;
 	Atom				m_atomINCR;
 	Atom				m_atomText;
@@ -123,6 +150,13 @@ class CXWindowsScreen {
 
 	// the contents of our selection
 	CClipboard			m_clipboard;
+
+	// when we got the selection and when we lost it
+	Time				m_gotClipboard;
+	Time				m_lostClipboard;
+
+	// the request queues
+	CRequestMap			m_requests;
 
 	// X is not thread safe
 	CMutex				m_mutex;

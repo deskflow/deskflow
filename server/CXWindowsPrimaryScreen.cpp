@@ -121,7 +121,10 @@ void					CXWindowsPrimaryScreen::run()
 			// we just lost the selection.  that means someone else
 			// grabbed the selection so this screen is now the
 			// selection owner.  report that to the server.
-			m_server->grabClipboard();
+			if (lostClipboard(xevent.xselectionclear.selection,
+								xevent.xselectionclear.time)) {
+				m_server->grabClipboard();
+			}
 			break;
 
 		  case SelectionNotify:
