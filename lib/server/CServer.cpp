@@ -1582,7 +1582,7 @@ CServer::sendOptions(IClient* client) const
 	// look up options for client.  we're done if there aren't any.
 	const CConfig::CScreenOptions* options =
 						m_config.getOptions(client->getName());
-	if (options == NULL) {
+	if (options == NULL || options->size() == 0) {
 		return;
 	}
 
@@ -1596,7 +1596,6 @@ CServer::sendOptions(IClient* client) const
 	}
 
 	// send the options
-	client->resetOptions();
 	client->setOptions(optionsList);
 }
 
