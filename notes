@@ -13,10 +13,22 @@ query info			-->
 					<--		info (size)
 
 ---
+need config file and parser
+  remove hard coded debugging stuff (in server.cpp)
+
+---
 win32:
   need to support window stations
     login screen on NT is a separate window station
   handle display changes
+  provide taskbar icon
+
+win32 dll:
+  should make this as small as possible
+    don't use standard libraries
+    use custom _DllMainCRTStartup();  just call DllMain() from it.
+    use /MERGE linker switch to merge sections
+  should use mutex on all public functions
 
 ---
 not handling international characters
@@ -191,10 +203,9 @@ keyboard hook problems
     thinks the key is always down.
 
 ---
-server asserts if two clients with same name try to connect
-  should simply refuse second client
-also not reaping disconnects very fast
-  investigate slowness
+try to determine keyboard quirks automatically
+  in particular, set the half-duplex flags
+  maybe KBD extension will help determine this
 
 ---
 blown assert:
@@ -204,11 +215,6 @@ blown assert:
     m_protocol is NULL because we're on primary screen
   must flush queued events when jumping to primary
     check for other things to do when jumping to primary
-
----
-not detecting disconnect when remote side crashes
-  is there some socket flag to help with this?
-  should catch signal when closing console window and close nicely
 
 ---
 sending same clipboard repeatedly from win32 server
