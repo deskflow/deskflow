@@ -1,4 +1,6 @@
 #include "CMSWindowsClipboard.h"
+#include "CMSWindowsClipboardTextConverter.h"
+#include "CMSWindowsClipboardUTF16Converter.h"
 #include "CLog.h"
 
 //
@@ -9,12 +11,14 @@ CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
 	m_window(window),
 	m_time(0)
 {
-	// do nothing
+	// add converters, most desired first
+	m_converters.push_back(new CMSWindowsClipboardUTF16Converter);
+	m_converters.push_back(new CMSWindowsClipboardTextConverter);
 }
 
 CMSWindowsClipboard::~CMSWindowsClipboard()
 {
-	// do nothing
+	clearConverters();
 }
 
 bool
@@ -35,22 +39,23 @@ CMSWindowsClipboard::add(EFormat format, const CString& data)
 {
 	log((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
 
-	// convert data to win32 required form
-	const UINT win32Format = convertFormatToWin32(format);
-	HANDLE win32Data;
-	switch (win32Format) {
-	case CF_TEXT:
-		win32Data = convertTextToWin32(data);
-		break;
+	// convert data to win32 form
+	for (ConverterList::const_iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+		IMSWindowsClipboardConverter* converter = *index;
 
-	default:
-		win32Data = NULL;
-		break;
-	}
-
-	// put the data on the clipboard
-	if (win32Data != NULL) {
-		SetClipboardData(win32Format, win32Data);
+		// skip converters for other formats
+		if (converter->getFormat() == format) {
+			HANDLE win32Data = converter->fromIClipboard(data);
+			if (win32Data != NULL) {
+				UINT win32Format = converter->getWin32Format();
+				if (SetClipboardData(win32Format, win32Data) == NULL) {
+					// free converted data if we couldn't put it on
+					// the clipboard
+					GlobalFree(win32Data);
+				}
+			}
+		}
 	}
 }
 
@@ -85,124 +90,58 @@ CMSWindowsClipboard::getTime() const
 bool
 CMSWindowsClipboard::has(EFormat format) const
 {
-	const UINT win32Format = convertFormatToWin32(format);
-	return (win32Format != 0 && IsClipboardFormatAvailable(win32Format) != 0);
+	for (ConverterList::const_iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+		IMSWindowsClipboardConverter* converter = *index;
+		if (converter->getFormat() == format) {
+			if (IsClipboardFormatAvailable(converter->getWin32Format())) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 CString
 CMSWindowsClipboard::get(EFormat format) const
 {
-	// get the win32 format.  return empty data if unknown format.
-	const UINT win32Format = convertFormatToWin32(format);
-	if (win32Format == 0) {
+	// find the converter for the first clipboard format we can handle
+	IMSWindowsClipboardConverter* converter = NULL;
+	UINT win32Format = EnumClipboardFormats(0);
+	while (win32Format != 0) {
+		for (ConverterList::const_iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+			converter = *index;
+			if (converter->getWin32Format() == win32Format &&
+				converter->getFormat()      == format) {
+				break;
+			}
+			converter = NULL;
+		}
+		win32Format = EnumClipboardFormats(win32Format);
+	}
+
+	// if no converter then we don't recognize any formats
+	if (converter == NULL) {
 		return CString();
 	}
 
-	// get a handle to the clipboard data and convert it
-	HANDLE win32Data = GetClipboardData(win32Format);
-	CString data;
-	if (win32Data != NULL) {
-		// convert the data
-		switch (win32Format) {
-		case CF_TEXT:
-			data = convertTextFromWin32(win32Data);
-		}
-	}
-
-	return data;
-}
-
-UINT
-CMSWindowsClipboard::convertFormatToWin32(EFormat format) const
-{
-	switch (format) {
-	case kText:
-		return CF_TEXT;
-
-	default:
-		return 0;
-	}
-}
-
-HANDLE
-CMSWindowsClipboard::convertTextToWin32(const CString& data) const
-{
-	// compute size of converted text
-	UInt32 dstSize = 1;
-	const UInt32 srcSize = data.size();
-	const char* src = data.c_str();
-	for (UInt32 index = 0; index < srcSize; ++index) {
-		if (src[index] == '\n') {
-			// add \r
-			++dstSize;
-		}
-		++dstSize;
-	}
-
-	// allocate
-	HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, dstSize);
-	if (gData != NULL) {
-		// get a pointer to the allocated memory
-		char* dst = (char*)GlobalLock(gData);
-		if (dst != NULL) {
-			// convert text.  we change LF to CRLF.
-			dstSize = 0;
-			for (UInt32 index = 0; index < srcSize; ++index) {
-				if (src[index] == '\n') {
-					// add \r
-					dst[dstSize++] = '\r';
-				}
-				dst[dstSize++] = src[index];
-			}
-			dst[dstSize] = '\0';
-
-			// done converting
-			GlobalUnlock(gData);
-		}
-	}
-	return gData;
-}
-
-CString
-CMSWindowsClipboard::convertTextFromWin32(HANDLE handle) const
-{
-	// get source data and it's size
-	const char* src = (const char*)GlobalLock(handle);
-	UInt32 srcSize = (SInt32)GlobalSize(handle);
-	if (src == NULL || srcSize <= 1) {
+	// get a handle to the clipboard data
+	HANDLE win32Data = GetClipboardData(converter->getWin32Format());
+	if (win32Data == NULL) {
 		return CString();
 	}
 
-	// ignore trailing NUL
-	--srcSize;
+	// convert
+	return converter->toIClipboard(win32Data);
+}
 
-	// compute size of converted text
-	UInt32 dstSize = 0;
-	UInt32 index;
-	for (index = 0; index < srcSize; ++index) {
-		if (src[index] == '\r') {
-			// skip \r
-			if (index + 1 < srcSize && src[index + 1] == '\n') {
-				++index;
-			}
-		}
-		++dstSize;
+void
+CMSWindowsClipboard::clearConverters()
+{
+	for (ConverterList::iterator index = m_converters.begin();
+								index != m_converters.end(); ++index) {
+		delete *index;
 	}
-
-	// allocate
-	CString data;
-	data.reserve(dstSize);
-
-	// convert text.  we change CRLF to LF.
-	for (index = 0; index < srcSize; ++index) {
-		if (src[index] == '\r') {
-			// skip \r
-			if (index + 1 < srcSize && src[index + 1] == '\n') {
-				++index;
-			}
-		}
-		data += src[index];
-	}
-
-	return data;
+	m_converters.clear();
 }

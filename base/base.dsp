@@ -103,6 +103,10 @@ SOURCE=.\CString.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CUnicode.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\XBase.cpp
 # End Source File
 # End Group
@@ -132,6 +136,10 @@ SOURCE=.\CStopwatch.h
 # Begin Source File
 
 SOURCE=.\CString.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CUnicode.h
 # End Source File
 # Begin Source File
 

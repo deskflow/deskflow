@@ -91,6 +91,18 @@ SOURCE=.\CMSWindowsClipboard.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CMSWindowsClipboardAnyTextConverter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardTextConverter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardUTF16Converter.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CMSWindowsScreen.cpp
 # End Source File
 # Begin Source File
@@ -108,6 +120,18 @@ SOURCE=.\CPlatform.cpp
 # Begin Source File
 
 SOURCE=.\CMSWindowsClipboard.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardAnyTextConverter.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardTextConverter.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardUTF16Converter.h
 # End Source File
 # Begin Source File
 

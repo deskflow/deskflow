@@ -160,8 +160,8 @@ CUnicode::UTF8ToUTF16(const CString& src, bool* errors)
 		}
 		else {
 			c -= 0x00010000;
-			UInt16 utf16h = static_cast<UInt16>(c >> 10) + 0xd800;
-			UInt16 utf16l = (static_cast<UInt16>(c) & 0x03ff) + 0xdc00;
+			UInt16 utf16h = static_cast<UInt16>((c >> 10) + 0xd800);
+			UInt16 utf16l = static_cast<UInt16>((c & 0x03ff) + 0xdc00);
 			dst.append(reinterpret_cast<const char*>(&utf16h), 2);
 			dst.append(reinterpret_cast<const char*>(&utf16l), 2);
 		}
@@ -206,14 +206,16 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 	resetError(errors);
 
 	// convert to wide char
-	wchar_t* tmp = UTF8ToWideChar(src, errors);
+	UInt32 size;
+	wchar_t* tmp = UTF8ToWideChar(src, size, errors);
 
 	// get length of multibyte string
-	size_t len = 0;
 	char mbc[MB_LEN_MAX];
 	mbstate_t state;
 	memset(&state, 0, sizeof(state));
-	for (const wchar_t* scan = tmp; *scan != 0; ++scan) {
+	size_t len = 0;
+	UInt32 n   = size;
+	for (const wchar_t* scan = tmp; n > 0; ++scan, --n) {
 		size_t mblen = wcrtomb(mbc, *scan, &state);
 		if (mblen == -1) {
 			// unconvertable character
@@ -237,7 +239,8 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 
 	// convert to multibyte
 	char* dst = mbs;
-	for (const wchar_t* scan = tmp; *scan != 0; ++scan) {
+	n         = size;
+	for (const wchar_t* scan = tmp; n > 0; ++scan, --n) {
 		size_t mblen = wcrtomb(dst, *scan, &state);
 		if (mblen == -1) {
 			// unconvertable character
@@ -312,7 +315,7 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 	size_t len = 0;
 	mbstate_t state;
 	memset(&state, 0, sizeof(state));
-	for (const char* scan = src.c_str(); n > 0 && *scan != 0; ) {
+	for (const char* scan = src.c_str(); n > 0; ) {
 		size_t mblen = mbrtowc(NULL, scan, n, &state);
 		switch (mblen) {
 		case (size_t)-2:
@@ -331,6 +334,12 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 			n    -= 1;
 			break;
 
+		case 0:
+			len  += 1;
+			scan += 1;
+			n    -= 1;
+			break;
+
 		default:
 			// normal character
 			len  += 1;
@@ -342,12 +351,12 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 	memset(&state, 0, sizeof(state));
 
 	// allocate wide character string
-	wchar_t* wcs = new wchar_t[len + 1];
+	wchar_t* wcs = new wchar_t[len];
 
 	// convert multibyte to wide char
 	n = src.size();
 	wchar_t* dst = wcs;
-	for (const char* scan = src.c_str(); n > 0 && *scan != 0; ++dst) {
+	for (const char* scan = src.c_str(); n > 0; ++dst) {
 		size_t mblen = mbrtowc(dst, scan, n, &state);
 		switch (mblen) {
 		case (size_t)-2:
@@ -359,9 +368,15 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 		case (size_t)-1:
 			// invalid character.  count one unknown character and
 			// start at the next byte.
+			*dst = (wchar_t)0xfffd;
 			scan += 1;
 			n    -= 1;
-			*dst = (wchar_t)0xfffd;
+			break;
+
+		case 0:
+			*dst = (wchar_t)0x0000;
+			scan += 1;
+			n    -= 1;
 			break;
 
 		default:
@@ -371,10 +386,9 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 			break;
 		}
 	}
-	*dst = L'\0';
 
 	// convert to UTF8
-	CString utf8 = wideCharToUTF8(wcs, errors);
+	CString utf8 = wideCharToUTF8(wcs, len, errors);
 
 	// clean up
 	delete[] wcs;
@@ -383,17 +397,17 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 }
 
 wchar_t*
-CUnicode::UTF8ToWideChar(const CString& src, bool* errors)
+CUnicode::UTF8ToWideChar(const CString& src, UInt32& size, bool* errors)
 {
 	// convert to platform's wide character encoding.
 	// note -- this must include a wide nul character (independent of
 	// the CString's nul character).
 #if WINDOWS_LIKE
-	CString tmp = UTF8ToUCS16(src);
-	UInt32 size = tmp.size() >> 1;
+	CString tmp = UTF8ToUTF16(src, errors);
+	size = tmp.size() >> 1;
 #elif UNIX_LIKE
-	CString tmp = UTF8ToUCS4(src);
-	UInt32 size = tmp.size() >> 2;
+	CString tmp = UTF8ToUCS4(src, errors);
+	size = tmp.size() >> 2;
 #endif
 
 	// copy to a wchar_t array
@@ -403,17 +417,15 @@ CUnicode::UTF8ToWideChar(const CString& src, bool* errors)
 }
 
 CString
-CUnicode::wideCharToUTF8(const wchar_t* src, bool* errors)
+CUnicode::wideCharToUTF8(const wchar_t* src, UInt32 size, bool* errors)
 {
 	// convert from platform's wide character encoding.
 	// note -- this must include a wide nul character (independent of
 	// the CString's nul character).
 #if WINDOWS_LIKE
-	return doUCS16ToUTF8(reinterpret_cast<const UInt8*>(src),
-								wcslen(src), errors);
+	return doUTF16ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
 #elif UNIX_LIKE
-	return doUCS4ToUTF8(reinterpret_cast<const UInt8*>(src),
-								wcslen(src), errors);
+	return doUCS4ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
 #endif
 }
 
@@ -546,12 +558,10 @@ CUnicode::fromUTF8(const UInt8*& data, UInt32& n)
 		size = 1;
 	}
 	else if (data[0] < 0xc0) {
-		// 10xxxxxx -- in the middle of a multibyte character.  skip
-		// until we find a start byte and return error.
-		do {
-			--n;
-			++data;
-		} while (n > 0 && (data[0] & 0xc0) == 0x80);
+		// 10xxxxxx -- in the middle of a multibyte character.  counts
+		// as one invalid character.
+		--n;
+		++data;
 		return s_invalid;
 	}
 	else if (data[0] < 0xe0) {
@@ -632,6 +642,7 @@ CUnicode::fromUTF8(const UInt8*& data, UInt32& n)
 
 	default:
 		assert(0 && "invalid size");
+		return s_invalid;
 	}
 
 	// check that all bytes after the first have the pattern 10xxxxxx.
@@ -724,38 +735,38 @@ CUnicode::toUTF8(CString& dst, UInt32 c, bool* errors)
 		dst.append(reinterpret_cast<char*>(data), 1);
 	}
 	else if (c < 0x00000800) {
-		data[0] = static_cast<UInt8>((c >>  6) & 0x0000001f) + 0xc0;
-		data[1] = static_cast<UInt8>(c         & 0x0000003f) + 0x80;
+		data[0] = static_cast<UInt8>(((c >>  6) & 0x0000001f) + 0xc0);
+		data[1] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
 		dst.append(reinterpret_cast<char*>(data), 2);
 	}
 	else if (c < 0x00010000) {
-		data[0] = static_cast<UInt8>((c >> 12) & 0x0000000f) + 0xe0;
-		data[1] = static_cast<UInt8>((c >>  6) & 0x0000003f) + 0x80;
-		data[2] = static_cast<UInt8>(c         & 0x0000003f) + 0x80;
+		data[0] = static_cast<UInt8>(((c >> 12) & 0x0000000f) + 0xe0);
+		data[1] = static_cast<UInt8>(((c >>  6) & 0x0000003f) + 0x80);
+		data[2] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
 		dst.append(reinterpret_cast<char*>(data), 3);
 	}
 	else if (c < 0x00200000) {
-		data[0] = static_cast<UInt8>((c >> 18) & 0x00000007) + 0xf0;
-		data[1] = static_cast<UInt8>((c >> 12) & 0x0000003f) + 0x80;
-		data[2] = static_cast<UInt8>((c >>  6) & 0x0000003f) + 0x80;
-		data[3] = static_cast<UInt8>(c         & 0x0000003f) + 0x80;
+		data[0] = static_cast<UInt8>(((c >> 18) & 0x00000007) + 0xf0);
+		data[1] = static_cast<UInt8>(((c >> 12) & 0x0000003f) + 0x80);
+		data[2] = static_cast<UInt8>(((c >>  6) & 0x0000003f) + 0x80);
+		data[3] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
 		dst.append(reinterpret_cast<char*>(data), 4);
 	}
 	else if (c < 0x04000000) {
-		data[0] = static_cast<UInt8>((c >> 24) & 0x00000003) + 0xf8;
-		data[1] = static_cast<UInt8>((c >> 18) & 0x0000003f) + 0x80;
-		data[2] = static_cast<UInt8>((c >> 12) & 0x0000003f) + 0x80;
-		data[3] = static_cast<UInt8>((c >>  6) & 0x0000003f) + 0x80;
-		data[4] = static_cast<UInt8>(c         & 0x0000003f) + 0x80;
+		data[0] = static_cast<UInt8>(((c >> 24) & 0x00000003) + 0xf8);
+		data[1] = static_cast<UInt8>(((c >> 18) & 0x0000003f) + 0x80);
+		data[2] = static_cast<UInt8>(((c >> 12) & 0x0000003f) + 0x80);
+		data[3] = static_cast<UInt8>(((c >>  6) & 0x0000003f) + 0x80);
+		data[4] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
 		dst.append(reinterpret_cast<char*>(data), 5);
 	}
 	else if (c < 0x80000000) {
-		data[0] = static_cast<UInt8>((c >> 30) & 0x00000001) + 0xfc;
-		data[1] = static_cast<UInt8>((c >> 24) & 0x0000003f) + 0x80;
-		data[2] = static_cast<UInt8>((c >> 18) & 0x0000003f) + 0x80;
-		data[3] = static_cast<UInt8>((c >> 12) & 0x0000003f) + 0x80;
-		data[4] = static_cast<UInt8>((c >>  6) & 0x0000003f) + 0x80;
-		data[5] = static_cast<UInt8>(c         & 0x0000003f) + 0x80;
+		data[0] = static_cast<UInt8>(((c >> 30) & 0x00000001) + 0xfc);
+		data[1] = static_cast<UInt8>(((c >> 24) & 0x0000003f) + 0x80);
+		data[2] = static_cast<UInt8>(((c >> 18) & 0x0000003f) + 0x80);
+		data[3] = static_cast<UInt8>(((c >> 12) & 0x0000003f) + 0x80);
+		data[4] = static_cast<UInt8>(((c >>  6) & 0x0000003f) + 0x80);
+		data[5] = static_cast<UInt8>((c         & 0x0000003f) + 0x80);
 		dst.append(reinterpret_cast<char*>(data), 6);
 	}
 	else {
