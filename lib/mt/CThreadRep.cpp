@@ -389,7 +389,7 @@ void
 CThreadRep::cancel()
 {
 	CLock lock(s_mutex);
-	if (m_cancellable && !m_cancelling) {
+	if (!m_exit && m_cancellable && !m_cancelling) {
 		m_cancel = true;
 	}
 	else {
