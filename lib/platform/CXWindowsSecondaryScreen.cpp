@@ -1263,23 +1263,30 @@ CXWindowsSecondaryScreen::findKey(KeyID id, KeyModifierMask& mask) const
 {
 	// convert id to keysym
 	KeySym keysym = NoSymbol;
-	switch (id & 0xffffff00) {
-	case 0x0000:
-		// Latin-1
-		keysym = static_cast<KeySym>(id);
-		break;
+	if ((id & 0xfffff000) == 0xe000) {
+		// special character
+		switch (id & 0x0000ff00) {
+		case 0xee00:
+			// ISO 9995 Function and Modifier Keys
+			if (id == kKeyLeftTab) {
+				keysym = XK_ISO_Left_Tab;
+			}
+			break;
 
-	case 0xee00:
-		// ISO 9995 Function and Modifier Keys
-		if (id == kKeyLeftTab) {
-			keysym = XK_ISO_Left_Tab;
+		case 0xef00:
+			// MISCELLANY
+			keysym = static_cast<KeySym>(id - 0xef00 + 0xff00);
+			break;
 		}
-		break;
-
-	case 0xef00:
-		// MISCELLANY
-		keysym = static_cast<KeySym>(id - 0xef00 + 0xff00);
-		break;
+	}
+	else if ((id >= 0x0020 && id <= 0x007e) ||
+			(id >= 0x00a0 && id <= 0x00ff)) {
+		// Latin-1 maps directly
+		keysym = static_cast<KeySym>(id);
+	}
+	else {
+		// lookup keysym in table
+		keysym = CXWindowsUtil::mapUCS4ToKeySym(id);
 	}
 
 	// fail if unknown key

@@ -17,6 +17,7 @@
 
 #include "CString.h"
 #include "BasicTypes.h"
+#include "stdmap.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
@@ -54,6 +55,20 @@ public:
 	Returns the current X server time.
 	*/
 	static Time			getCurrentTime(Display*, Window);
+
+	//! Convert KeySym to UCS-4
+	/*!
+	Converts a KeySym to the equivalent UCS-4 character.  Returns
+	0x0000ffff if the KeySym cannot be mapped.
+	*/
+	static UInt32		mapKeySymToUCS4(KeySym);
+
+	//! Convert UCS-4 to KeySym
+	/*!
+	Converts a UCS-4 character to the equivalent KeySym.  Returns
+	NoSymbol (0) if the character cannot be mapped.
+	*/
+	static KeySym		mapUCS4ToKeySym(UInt32);
 
 	//! X11 error handler
 	/*!
@@ -112,6 +127,15 @@ private:
 
 	static Bool			propertyNotifyPredicate(Display*,
 							XEvent* xevent, XPointer arg);
+
+	static void			initKeyMaps();
+
+private:
+	typedef std::map<KeySym, UInt32> CKeySymMap;
+	typedef std::map<UInt32, KeySym> CUCS4Map;
+
+	static CKeySymMap	s_keySymToUCS4;
+	static CUCS4Map		s_UCS4ToKeySym;
 };
 
 #endif

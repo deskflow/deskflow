@@ -720,9 +720,16 @@ CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 		// MISCELLANY
 		return static_cast<KeyID>(keysym - 0xff00 + 0xef00);
 
-	default:
-		// FIXME -- support unicode characters
+	default: {
+		// lookup character in table
+		UInt32 key = CXWindowsUtil::mapKeySymToUCS4(keysym);
+		if (key != 0x0000ffff) {
+			return static_cast<KeyID>(key);
+		}
+
+		// unknown character
 		return kKeyNone;
+	}
 	}
 }
 
