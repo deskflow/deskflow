@@ -115,6 +115,10 @@ SOURCE=.\CTCPSocketFactory.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\XScreen.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\XSynergy.cpp
 # End Source File
 # End Group
@@ -184,6 +188,10 @@ SOURCE=.\MouseTypes.h
 # Begin Source File
 
 SOURCE=.\ProtocolTypes.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\XScreen.h
 # End Source File
 # Begin Source File
 

@@ -6,6 +6,8 @@
 #include "CLog.h"
 #include "CString.h"
 #include "CThread.h"
+#include "XScreen.h"
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
@@ -13,29 +15,38 @@
 // CXWindowsScreen
 //
 
+CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
+
 CXWindowsScreen::CXWindowsScreen() :
 								m_display(NULL),
 								m_root(None),
 								m_w(0), m_h(0),
 								m_stop(false)
 {
-	// do nothing
+	assert(s_screen == NULL);
+	s_screen = this;
 }
 
 CXWindowsScreen::~CXWindowsScreen()
 {
+	assert(s_screen  != NULL);
 	assert(m_display == NULL);
+
+	s_screen = NULL;
 }
 
 void					CXWindowsScreen::openDisplay()
 {
 	assert(m_display == NULL);
 
+	// set the X I/O error handler so we catch the display disconnecting
+	XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
+
 	// open the display
 	log((CLOG_DEBUG "XOpenDisplay(%s)", "NULL"));
 	m_display = XOpenDisplay(NULL);	// FIXME -- allow non-default
 	if (m_display == NULL)
-		throw int(5);	// FIXME -- make exception for this
+		throw XScreenOpenFailure();
 
 	// get default screen
 	m_screen = DefaultScreen(m_display);
@@ -50,7 +61,7 @@ void					CXWindowsScreen::openDisplay()
 	m_root = RootWindow(m_display, m_screen);
 
 	// let subclass prep display
-	onOpenDisplay();
+	onOpenDisplay(m_display);
 
 	// initialize clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
@@ -60,10 +71,10 @@ void					CXWindowsScreen::openDisplay()
 
 void					CXWindowsScreen::closeDisplay()
 {
-	assert(m_display != NULL);
+	CLock lock(&m_mutex);
 
 	// let subclass close down display
-	onCloseDisplay();
+	onCloseDisplay(m_display);
 
 	// destroy clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
@@ -71,9 +82,12 @@ void					CXWindowsScreen::closeDisplay()
 	}
 
 	// close the display
-	XCloseDisplay(m_display);
-	m_display = NULL;
-	log((CLOG_DEBUG "closed display"));
+	if (m_display != NULL) {
+		XCloseDisplay(m_display);
+		m_display = NULL;
+		log((CLOG_DEBUG "closed display"));
+	}
+	XSetIOErrorHandler(NULL);
 }
 
 int						CXWindowsScreen::getScreen() const
@@ -164,7 +178,7 @@ bool					CXWindowsScreen::getEvent(XEvent* xevent) const
 
 void					CXWindowsScreen::doStop()
 {
-	CLock lock(&m_mutex);
+	// caller must have locked display
 	m_stop = true;
 }
 
@@ -177,6 +191,11 @@ ClipboardID				CXWindowsScreen::getClipboardID(Atom selection) const
 		}
 	}
 	return kClipboardEnd;
+}
+
+void					CXWindowsScreen::onUnexpectedClose()
+{
+	// do nothing
 }
 
 bool					CXWindowsScreen::processEvent(XEvent* xevent)
@@ -324,6 +343,21 @@ void					CXWindowsScreen::destroyClipboardRequest(
 			break;
 		}
 	}
+}
+
+int						CXWindowsScreen::ioErrorHandler(Display*)
+{
+	// the display has disconnected, probably because X is shutting
+	// down.  X forces us to exit at this point.  that's arguably
+	// a flaw in X but, realistically, it's difficult to gracefully
+	// handle not having a Display* anymore.  we'll simply log the
+	// error, notify the subclass (which must not use the display
+	// so we set it to NULL), and exit.
+	log((CLOG_WARN "X display has unexpectedly disconnected"));
+	s_screen->m_display = NULL;
+	s_screen->onUnexpectedClose();
+	log((CLOG_CRIT "quiting due to X display disconnection"));
+	exit(1);
 }
 
 

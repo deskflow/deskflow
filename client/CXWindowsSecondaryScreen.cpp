@@ -290,11 +290,10 @@ void					CXWindowsSecondaryScreen::getClipboard(
 	getDisplayClipboard(id, clipboard);
 }
 
-void					CXWindowsSecondaryScreen::onOpenDisplay()
+void					CXWindowsSecondaryScreen::onOpenDisplay(
+								Display* display)
 {
 	assert(m_window == None);
-
-	CDisplayLock display(this);
 
 	// create the cursor hiding window.  this window is used to hide the
 	// cursor when it's not on the screen.  the window is hidden as soon
@@ -326,16 +325,18 @@ CXWindowsClipboard*		CXWindowsSecondaryScreen::createClipboard(
 	return new CXWindowsClipboard(display, m_window, id);
 }
 
-void					CXWindowsSecondaryScreen::onCloseDisplay()
+void					CXWindowsSecondaryScreen::onCloseDisplay(
+								Display* display)
 {
 	assert(m_window != None);
 
-	// no longer impervious to server grabs
-	CDisplayLock display(this);
-	XTestGrabControl(display, False);
+	if (display != NULL) {
+		// no longer impervious to server grabs
+		XTestGrabControl(display, False);
 
-	// destroy window
-	XDestroyWindow(display, m_window);
+		// destroy window
+		XDestroyWindow(display, m_window);
+	}
 	m_window = None;
 }
 

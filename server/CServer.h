@@ -34,6 +34,11 @@ public:
 	// tell server to exit gracefully
 	void				quit();
 
+	// tell the server to shutdown.  this is called in an emergency
+	// when we need to tell the server that we cannot continue.  the
+	// server will attempt to clean up.
+	void				shutdown();
+
 	// update screen map.  returns true iff the new configuration was
 	// accepted.
 	bool				setConfig(const CConfig&);
@@ -173,7 +178,7 @@ private:
 	void				updatePrimaryClipboard(ClipboardID);
 
 	// cancel running threads
-	void				cleanupThreads();
+	void				cleanupThreads(double timeout = -1.0);
 
 	// thread method to accept incoming client connections
 	void				acceptClients(void*);
@@ -220,6 +225,7 @@ private:
 	ISecurityFactory*	m_securityFactory;
 
 	CThreadList			m_cleanupList;
+	CCondVar<SInt32>	m_cleanupSize;
 
 	IPrimaryScreen*		m_primary;
 	CScreenList			m_screens;

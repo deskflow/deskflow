@@ -10,6 +10,7 @@
 #include "CThread.h"
 #include "CTimerThread.h"
 #include "TMethodJob.h"
+#include "XScreen.h"
 #include "XSynergy.h"
 #include "XThread.h"
 #include <assert.h>
@@ -51,7 +52,16 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 		log((CLOG_NOTE "starting client"));
 
 		// connect to secondary screen
-		openSecondaryScreen();
+		while (m_screen == NULL) {
+			try {
+				openSecondaryScreen();
+			}
+			catch (XScreenOpenFailure&) {
+				// can't open screen yet.  wait a few seconds to retry.
+				log((CLOG_INFO "failed to open screen.  waiting to retry."));
+				CThread::sleep(3.0);
+			}
+		}
 
 		// start server interactions
 		m_serverAddress = &serverAddress;
@@ -88,7 +98,9 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 			thread->wait();
 			delete thread;
 		}
-		closeSecondaryScreen();
+		if (m_screen != NULL) {
+			closeSecondaryScreen();
+		}
 		throw;
 	}
 	catch (...) {
@@ -101,7 +113,9 @@ void					CClient::run(const CNetworkAddress& serverAddress)
 			thread->wait();
 			delete thread;
 		}
-		closeSecondaryScreen();
+		if (m_screen != NULL) {
+			closeSecondaryScreen();
+		}
 		throw;
 	}
 }

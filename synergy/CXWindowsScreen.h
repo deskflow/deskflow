@@ -52,7 +52,8 @@ protected:
 	// wait for and get the next X event.  cancellable.
 	bool				getEvent(XEvent*) const;
 
-	// cause getEvent() to return false immediately and forever after
+	// cause getEvent() to return false immediately and forever after.
+	// the caller must have locked the display.
 	void				doStop();
 
 	// set the contents of the clipboard (i.e. primary selection)
@@ -63,15 +64,21 @@ protected:
 	bool				getDisplayClipboard(ClipboardID,
 								IClipboard* clipboard) const;
 
-	// called by openDisplay() to allow subclasses to prepare the display
-	virtual void		onOpenDisplay() = 0;
+	// called by openDisplay() to allow subclasses to prepare the display.
+	// the display is locked and passed to the subclass.
+	virtual void		onOpenDisplay(Display*) = 0;
 
 	// called by openDisplay() after onOpenDisplay() to create each clipboard
 	virtual CXWindowsClipboard*
 						createClipboard(ClipboardID) = 0;
 
-	// called by closeDisplay() to 
-	virtual void		onCloseDisplay() = 0;
+	// called by closeDisplay() to allow subclasses to clean up the display.
+	// the display is locked and passed to the subclass.  note that the
+	// display may be NULL if the display has unexpectedly disconnected.
+	virtual void		onCloseDisplay(Display*) = 0;
+
+	// called if the display is unexpectedly closing.  default does nothing.
+	virtual void		onUnexpectedClose();
 
 	// called when a clipboard is lost
 	virtual void		onLostClipboard(ClipboardID) = 0;
@@ -91,6 +98,9 @@ private:
 	// terminate a selection request
 	void				destroyClipboardRequest(Window window);
 
+	// X I/O error handler
+	static int			ioErrorHandler(Display*);
+
 private:
 	Display*			m_display;
 	int					m_screen;
@@ -103,6 +113,10 @@ private:
 
 	// X is not thread safe
 	CMutex				m_mutex;
+
+	// pointer to (singleton) screen.  this is only needed by
+	// ioErrorHandler().
+	static CXWindowsScreen*	s_screen;
 };
 
 #endif

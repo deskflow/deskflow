@@ -17,6 +17,7 @@
 #include "CStopwatch.h"
 #include "CFunctionJob.h"
 #include "TMethodJob.h"
+#include "XScreen.h"
 #include "XSocket.h"
 #include "XSynergy.h"
 #include "XThread.h"
@@ -46,7 +47,8 @@ else { wait(0); exit(1); }
 
 const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
 
-CServer::CServer() : m_primary(NULL),
+CServer::CServer() : m_cleanupSize(&m_mutex, 0),
+								m_primary(NULL),
 								m_active(NULL),
 								m_primaryInfo(NULL),
 								m_seqNum(0),
@@ -69,7 +71,16 @@ void					CServer::run()
 		log((CLOG_NOTE "starting server"));
 
 		// connect to primary screen
-		openPrimaryScreen();
+		while (m_primary == NULL) {
+			try {
+				openPrimaryScreen();
+			}
+			catch (XScreenOpenFailure&) {
+				// can't open screen yet.  wait a few seconds to retry.
+				log((CLOG_INFO "failed to open screen.  waiting to retry."));
+				CThread::sleep(3.0);
+			}
+		}
 
 		// start listening for HTTP requests
 		m_httpServer = new CHTTPServer(this);
@@ -84,9 +95,9 @@ void					CServer::run()
 
 		// clean up
 		log((CLOG_NOTE "stopping server"));
+		cleanupThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
-		cleanupThreads();
 		closePrimaryScreen();
 	}
 	catch (XBase& e) {
@@ -94,18 +105,20 @@ void					CServer::run()
 
 		// clean up
 		log((CLOG_NOTE "stopping server"));
+		cleanupThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
-		cleanupThreads();
 		closePrimaryScreen();
 	}
 	catch (XThread&) {
 		// clean up
 		log((CLOG_NOTE "stopping server"));
+		cleanupThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
-		cleanupThreads();
-		closePrimaryScreen();
+		if (m_primary != NULL) {
+			closePrimaryScreen();
+		}
 		throw;
 	}
 	catch (...) {
@@ -113,10 +126,12 @@ void					CServer::run()
 
 		// clean up
 		log((CLOG_NOTE "stopping server"));
+		cleanupThreads();
 		delete m_httpServer;
 		m_httpServer = NULL;
-		cleanupThreads();
-		closePrimaryScreen();
+		if (m_primary != NULL) {
+			closePrimaryScreen();
+		}
 		throw;
 	}
 }
@@ -124,6 +139,19 @@ void					CServer::run()
 void					CServer::quit()
 {
 	m_primary->stop();
+}
+
+void					CServer::shutdown()
+{
+	// stop all running threads but don't wait too long since some
+	// threads may be unable to proceed until this thread returns.
+	cleanupThreads(3.0);
+
+	// done with the HTTP server
+	delete m_httpServer;
+	m_httpServer = NULL;
+
+	// note -- we do not attempt to close down the primary screen
 }
 
 bool					CServer::setConfig(const CConfig& config)
@@ -1289,19 +1317,29 @@ void					CServer::openPrimaryScreen()
 	// reset sequence number
 	m_seqNum = 0;
 
-	// add connection
-	m_active = addConnection(CString("primary"/* FIXME */), NULL);
-	m_primaryInfo = m_active;
+	try {
+		// add connection
+		m_active      = addConnection(CString("primary"/* FIXME */), NULL);
+		m_primaryInfo = m_active;
 
-	// open screen
-	log((CLOG_DEBUG1 "creating primary screen"));
+		// open screen
+		log((CLOG_DEBUG1 "creating primary screen"));
 #if defined(CONFIG_PLATFORM_WIN32)
-	m_primary = new CMSWindowsPrimaryScreen;
+		m_primary = new CMSWindowsPrimaryScreen;
 #elif defined(CONFIG_PLATFORM_UNIX)
-	m_primary = new CXWindowsPrimaryScreen;
+		m_primary = new CXWindowsPrimaryScreen;
 #endif
-	log((CLOG_DEBUG1 "opening primary screen"));
-	m_primary->open(this);
+		log((CLOG_DEBUG1 "opening primary screen"));
+		m_primary->open(this);
+	}
+	catch (...) {
+		delete m_primary;
+		removeConnection(CString("primary"/* FIXME */));
+		m_primary     = NULL;
+		m_primaryInfo = NULL;
+		m_active      = NULL;
+		throw;
+	}
 
 	// set the clipboard owner to the primary screen and then get the
 	// current clipboard data.
@@ -1340,6 +1378,7 @@ void					CServer::addCleanupThread(const CThread& thread)
 {
 	CLock lock(&m_mutex);
 	m_cleanupList.insert(m_cleanupList.begin(), new CThread(thread));
+	m_cleanupSize = m_cleanupSize + 1;
 }
 
 void					CServer::removeCleanupThread(const CThread& thread)
@@ -1350,30 +1389,52 @@ void					CServer::removeCleanupThread(const CThread& thread)
 		if (**index == thread) {
 			CThread* thread = *index;
 			m_cleanupList.erase(index);
+			m_cleanupSize = m_cleanupSize - 1;
+			if (m_cleanupSize == 0) {
+				m_cleanupSize.broadcast();
+			}
 			delete thread;
 			return;
 		}
 	}
 }
 
-void					CServer::cleanupThreads()
+void					CServer::cleanupThreads(double timeout)
 {
 	log((CLOG_DEBUG1 "cleaning up threads"));
-	m_mutex.lock();
-	while (m_cleanupList.begin() != m_cleanupList.end()) {
-		// get the next thread and cancel it
-		CThread* thread = m_cleanupList.front();
-		thread->cancel();
 
-		// wait for thread to finish with cleanup list unlocked.  the
-		// thread will remove itself from the cleanup list.
-		m_mutex.unlock();
-		thread->wait();
-		m_mutex.lock();
+	// first cancel every thread except the current one (with mutex
+	// locked so the cleanup list won't change).
+	CLock lock(&m_mutex);
+	CThread current(CThread::getCurrentThread());
+	SInt32 minCount = 0;
+	for (CThreadList::iterator index = m_cleanupList.begin();
+								index != m_cleanupList.end(); ++index) {
+		CThread* thread = *index;
+		if (thread != &current) {
+			thread->cancel();
+		}
+		else {
+			minCount = 1;
+		}
 	}
 
-	// FIXME -- delete remaining threads from list
-	m_mutex.unlock();
+	// now wait for the threads (with mutex unlocked as each thread
+	// will remove itself from the list)
+	CStopwatch timer(true);
+	while (m_cleanupSize > minCount) {
+		m_cleanupSize.wait(timer, timeout);
+	}
+
+	// delete remaining threads
+	for (CThreadList::iterator index = m_cleanupList.begin();
+								index != m_cleanupList.end(); ++index) {
+		CThread* thread = *index;
+		delete thread;
+	}
+	m_cleanupList.clear();
+	m_cleanupSize = 0;
+
 	log((CLOG_DEBUG1 "cleaned up threads"));
 }
 

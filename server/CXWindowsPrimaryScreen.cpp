@@ -179,6 +179,7 @@ void					CXWindowsPrimaryScreen::run()
 
 void					CXWindowsPrimaryScreen::stop()
 {
+	CDisplayLock display(this);
 	doStop();
 }
 
@@ -187,11 +188,11 @@ void					CXWindowsPrimaryScreen::open(CServer* server)
 	assert(m_server == NULL);
 	assert(server   != NULL);
 
-	// set the server
-	m_server = server;
-
 	// open the display
 	openDisplay();
+
+	// set the server
+	m_server = server;
 
 	// check for peculiarities
 	// FIXME -- may have to get these from some database
@@ -419,11 +420,9 @@ bool					CXWindowsPrimaryScreen::isLockedToScreen() const
 	return false;
 }
 
-void					CXWindowsPrimaryScreen::onOpenDisplay()
+void					CXWindowsPrimaryScreen::onOpenDisplay(Display* display)
 {
 	assert(m_window == None);
-
-	CDisplayLock display(this);
 
 	// get size of screen
 	SInt32 w, h;
@@ -458,14 +457,23 @@ CXWindowsClipboard*		CXWindowsPrimaryScreen::createClipboard(
 	return new CXWindowsClipboard(display, m_window, id);
 }
 
-void					CXWindowsPrimaryScreen::onCloseDisplay()
+void					CXWindowsPrimaryScreen::onCloseDisplay(Display* display)
 {
 	assert(m_window != None);
 
 	// destroy window
-	CDisplayLock display(this);
-	XDestroyWindow(display, m_window);
+	if (display != NULL) {
+		XDestroyWindow(display, m_window);
+	}
 	m_window = None;
+}
+
+void					CXWindowsPrimaryScreen::onUnexpectedClose()
+{
+	// tell server to shutdown
+	if (m_server != NULL) {
+		m_server->shutdown();
+	}
 }
 
 void					CXWindowsPrimaryScreen::onLostClipboard(

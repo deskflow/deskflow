@@ -24,6 +24,7 @@ CXXFILES = 				\
 	CXWindowsClipboard.cpp		\
 	CXWindowsScreen.cpp		\
 	CXWindowsUtil.cpp		\
+	XScreen.cpp			\
 	XSynergy.cpp			\
 	$(NULL)
 
