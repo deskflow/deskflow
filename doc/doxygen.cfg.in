@@ -17,13 +17,13 @@
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = Synergy
+PROJECT_NAME           = @PACKAGE@
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. 
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = 1.0.0
+PROJECT_NUMBER         = @VERSION@
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -378,7 +378,7 @@ FILTER_SOURCE_FILES    = NO
 # If the SOURCE_BROWSER tag is set to YES then a list of source files will 
 # be generated. Documented entities will be cross-referenced with these sources.
 
-SOURCE_BROWSER         = NO
+SOURCE_BROWSER         = YES
 
 # Setting the INLINE_SOURCES tag to YES will include the body 
 # of functions and classes directly in the documentation.

@@ -26,8 +26,22 @@ MAINTAINERCLEANFILES =		\
 	configure				\
 	stamp-h.in				\
 	stamp-h1				\
+	doc/doxygen.cfg			\
+	doc/doxygen/html/*		\
 	$(NULL)
 
 # build doxygen documentation
 doxygen:
 	doxygen doc/doxygen.cfg
+
+# build RPMs
+RPMTOPDIR=/var/tmp/@PACKAGE@-@VERSION@
+dist-rpm: dist
+	rm -rf $(RPMTOPDIR)
+	mkdir $(RPMTOPDIR)
+	(cd $(RPMTOPDIR); mkdir BUILD SOURCES SPECS SRPMS RPMS)
+	cp @PACKAGE@-@VERSION@.tar.gz $(RPMTOPDIR)/SOURCES
+	rpm --define '_topdir $(RPMTOPDIR)' -ba dist/rpm/synergy.spec && \
+		mv -f $(RPMTOPDIR)/SRPMS/*.rpm . && \
+		mv -f $(RPMTOPDIR)/RPMS/*/*.rpm . && \
+		rm -rf $(RPMTOPDIR)

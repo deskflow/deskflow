@@ -2,16 +2,19 @@ Summary:   Mouse and keyboard sharing utility
 Name:      @PACKAGE@
 Version:   @VERSION@
 Release:   1
-Copyright: Copyright (C) 2002 Chris Schoeneman
+License:   GPL
 Packager:  Chris Schoeneman <crs23@bigfoot.com>
-Group:     FIXME
-Prefixes:  FIXME
+Group:     System Environment/Daemons
+Prefixes:  /usr/bin
 Source:    @PACKAGE@-@VERSION@.tar.gz
-URL:       FIXME
-BuildRoot: /var/tmp/@PACKAGE@-@VERSION@-root
+Buildroot: /var/tmp/@PACKAGE@-@VERSION@-root
 
 %description
-FIXME
+Synergy lets you easily share a single mouse and keyboard between
+multiple computers with different operating systems, each with its
+own display, without special hardware.  It's intended for users
+with multiple computers on their desk since each system uses its
+own display.
 
 %prep
 %setup
@@ -23,7 +26,6 @@ make
 %install
 # FIXME -- install should install doc files
 make install DESTDIR=$RPM_BUILD_ROOT
-# FIXME -- or maybe: make PREFIX=$RPM_BUILD_ROOT%{prefix} install
 
 strip $RPM_BUILD_ROOT/usr/bin/synergy
 strip $RPM_BUILD_ROOT/usr/bin/synergyd
@@ -32,6 +34,7 @@ strip $RPM_BUILD_ROOT/usr/bin/synergyd
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%attr(755, root, root) /usr/bin/synergy
-%attr(755, root, root) /usr/bin/synergyd
+%defattr(-, root, root)
+/usr/bin/synergy
+/usr/bin/synergyd
 # FIXME -- add doc files

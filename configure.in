@@ -83,5 +83,6 @@ cmd/synergyd/Makefile
 dist/Makefile
 dist/rpm/Makefile
 dist/rpm/synergy.spec
+doc/doxygen.cfg
 ])
 
