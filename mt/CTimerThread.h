@@ -7,6 +7,9 @@ class CThread;
 
 class CTimerThread {
 public:
+	// cancels the calling thread after timeout seconds unless destroyed
+	// before then.  if timeout is less than zero then it never times
+	// out and is a no-op.
 	CTimerThread(double timeout);
 	~CTimerThread();
 
