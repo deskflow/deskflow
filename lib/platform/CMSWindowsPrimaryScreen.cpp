@@ -540,16 +540,51 @@ CMSWindowsPrimaryScreen::showWindow()
 	m_lastForegroundWindow = GetForegroundWindow();
 	m_lastActiveThread     = GetWindowThreadProcessId(
 								m_lastForegroundWindow, NULL);
+	DWORD myThread         = GetCurrentThreadId();
 	if (m_lastActiveThread != 0) {
-		DWORD myThread = GetCurrentThreadId();
-		if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
-			m_lastActiveWindow = GetActiveWindow();
-			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
+		if (myThread != m_lastActiveThread) {
+			if (AttachThreadInput(myThread, m_lastActiveThread, TRUE)) {
+				m_lastActiveWindow = GetActiveWindow();
+				AttachThreadInput(myThread, m_lastActiveThread, FALSE);
+			}
 		}
 	}
 
 	// show our window
 	ShowWindow(m_window, SW_SHOW);
+
+	// force our window to the foreground.  this is necessary to
+	// capture input but is complicated by microsoft's misguided
+	// attempt to prevent applications from changing the
+	// foreground window.  (the user should be in control of that
+	// under normal circumstances but there are exceptions;  the
+	// good folks at microsoft, after abusing the previously
+	// available ability to switch foreground tasks in many of
+	// their apps, changed the behavior to prevent it.  maybe
+	// it was easier than fixing the applications.)
+	//
+	// anyway, simply calling SetForegroundWindow() doesn't work
+	// unless there is no foreground window or we already are the
+	// foreground window.  so we AttachThreadInput() to the
+	// foreground process then call SetForegroundWindow();  that
+	// makes Windows think the foreground process changed the
+	// foreground window which is allowed since the foreground
+	// is "voluntarily" yielding control.  then we unattach the
+	// thread input and go about our business.
+	//
+	// unfortunately, this still doesn't work for console windows
+	// on the windows 95 family.  if a console is the foreground
+	// app on the server when the user leaves the server screen
+	// then the keyboard will not be captured by synergy.
+	if (m_lastActiveThread != myThread) {
+		if (m_lastActiveThread != 0) {
+			AttachThreadInput(myThread, m_lastActiveThread, TRUE);
+		}
+		SetForegroundWindow(m_window);
+		if (m_lastActiveThread != 0) {
+			AttachThreadInput(myThread, m_lastActiveThread, FALSE);
+		}
+	}
 
 	// get keyboard input and capture mouse
 	SetActiveWindow(m_window);
