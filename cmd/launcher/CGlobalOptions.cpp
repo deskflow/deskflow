@@ -20,7 +20,8 @@
 #include "LaunchUtil.h"
 #include "resource.h"
 
-static const int	s_defaultDelay = 250;
+static const int	s_defaultDelay     = 250;
+static const int	s_defaultHeartbeat = 5000;
 
 //
 // CGlobalOptions
@@ -32,7 +33,8 @@ CGlobalOptions::CGlobalOptions(HWND parent, CConfig* config) :
 	m_parent(parent),
 	m_config(config),
 	m_delayTime(s_defaultDelay),
-	m_twoTapTime(s_defaultDelay)
+	m_twoTapTime(s_defaultDelay),
+	m_heartbeatTime(s_defaultHeartbeat)
 {
 	assert(s_singleton == NULL);
 	s_singleton = this;
@@ -68,6 +70,11 @@ CGlobalOptions::init(HWND hwnd)
 	setItemChecked(child, false);
 	child = getItem(hwnd, IDC_GLOBAL_TWO_TAP_TIME);
 	setWindowText(child, buffer);
+	sprintf(buffer, "%d", m_heartbeatTime);
+	child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_CHECK);
+	setItemChecked(child, false);
+	child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_TIME);
+	setWindowText(child, buffer);
 
 	// get the global options
 	const CConfig::CScreenOptions* options = m_config->getOptions("");
@@ -94,6 +101,15 @@ CGlobalOptions::init(HWND hwnd)
 					setWindowText(child, buffer);
 				}
 			}
+			else if (id == kOptionHeartbeat) {
+				if (value > 0) {
+					sprintf(buffer, "%d", value);
+					child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_CHECK);
+					setItemChecked(child, true);
+					child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_TIME);
+					setWindowText(child, buffer);
+				}
+			}
 		}
 	}
 }
@@ -102,8 +118,9 @@ bool
 CGlobalOptions::save(HWND hwnd)
 {
 	HWND child;
-	int newDelayTime  = 0;
-	int newTwoTapTime = 0;
+	int newDelayTime     = 0;
+	int newTwoTapTime    = 0;
+	int newHeartbeatTime = 0;
 
 	// get requested options
 	child = getItem(hwnd, IDC_GLOBAL_DELAY_CHECK);
@@ -136,10 +153,26 @@ CGlobalOptions::save(HWND hwnd)
 			newTwoTapTime = s_defaultDelay;
 		}
 	}
+	child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_CHECK);
+	if (isItemChecked(child)) {
+		child            = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_TIME);
+		newHeartbeatTime = getTime(hwnd, child, true);
+		if (newHeartbeatTime == 0) {
+			return false;
+		}
+	}
+	else {
+		child            = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_TIME);
+		newHeartbeatTime = getTime(hwnd, child, false);
+		if (newHeartbeatTime == 0) {
+			newHeartbeatTime = s_defaultHeartbeat;
+		}
+	}
 
 	// remove existing config options
 	m_config->removeOption("", kOptionScreenSwitchDelay);
 	m_config->removeOption("", kOptionScreenSwitchTwoTap);
+	m_config->removeOption("", kOptionHeartbeat);
 
 	// add requested options
 	child = getItem(hwnd, IDC_GLOBAL_DELAY_CHECK);
@@ -150,11 +183,15 @@ CGlobalOptions::save(HWND hwnd)
 	if (isItemChecked(child)) {
 		m_config->addOption("", kOptionScreenSwitchTwoTap, newTwoTapTime);
 	}
+	child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_CHECK);
+	if (isItemChecked(child)) {
+		m_config->addOption("", kOptionHeartbeat, newHeartbeatTime);
+	}
 
 	// save last values
-	m_delayTime  = newDelayTime;
-	m_twoTapTime = newTwoTapTime;
-
+	m_delayTime     = newDelayTime;
+	m_twoTapTime    = newTwoTapTime;
+	m_heartbeatTime = newHeartbeatTime;
 	return true;
 }
 

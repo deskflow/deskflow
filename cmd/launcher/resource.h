@@ -93,7 +93,9 @@
 #define IDC_GLOBAL_TWO_TAP_TIME         1044
 #define IDC_ADD_MOD_CTRL                1044
 #define IDC_ADD_MOD_ALT                 1045
+#define IDC_GLOBAL_HEARTBEAT_CHECK      1045
 #define IDC_ADD_MOD_META                1046
+#define IDC_GLOBAL_HEARTBEAT_TIME       1046
 #define IDC_ADD_MOD_SUPER               1047
 #define IDC_ADVANCED_DEFAULTS           1049
 
@@ -104,7 +106,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1052
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

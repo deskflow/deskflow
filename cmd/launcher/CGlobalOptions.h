@@ -61,6 +61,7 @@ private:
 	CConfig*			m_config;
 	int					m_delayTime;
 	int					m_twoTapTime;
+	int					m_heartbeatTime;
 };
 
 #endif
