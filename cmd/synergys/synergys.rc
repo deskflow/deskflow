@@ -70,6 +70,7 @@ BEGIN
     POPUP "Synergy"
     BEGIN
         MENUITEM "Show Status",                 IDC_TASKBAR_STATUS
+        MENUITEM "Copy Log To Clipboard",       IDC_TASKBAR_LOG
         MENUITEM SEPARATOR
         MENUITEM "Quit",                        IDC_TASKBAR_QUIT
     END

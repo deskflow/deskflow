@@ -91,6 +91,10 @@ CLog::~CLog()
 								  index != m_outputters.end(); ++index) {
 		delete *index;
 	}
+	for (COutputterList::iterator index  = m_alwaysOutputters.begin();
+								  index != m_alwaysOutputters.end(); ++index) {
+		delete *index;
+	}
 	ARCH->closeMutex(m_mutex);
 	s_log = NULL;
 }
@@ -189,13 +193,18 @@ CLog::printt(const char* file, int line, const char* fmt, ...) const
 }
 
 void
-CLog::insert(ILogOutputter* outputter)
+CLog::insert(ILogOutputter* outputter, bool alwaysAtHead)
 {
 	assert(outputter               != NULL);
 	assert(outputter->getNewline() != NULL);
 
 	CLogLock lock(m_mutex);
-	m_outputters.push_front(outputter);
+	if (alwaysAtHead) {
+		m_alwaysOutputters.push_front(outputter);
+	}
+	else {
+		m_outputters.push_front(outputter);
+	}
 	int newlineLength = strlen(outputter->getNewline());
 	if (newlineLength > m_maxNewlineLength) {
 		m_maxNewlineLength = newlineLength;
@@ -207,15 +216,17 @@ CLog::remove(ILogOutputter* outputter)
 {
 	CLogLock lock(m_mutex);
 	m_outputters.remove(outputter);
+	m_alwaysOutputters.remove(outputter);
 }
 
 void
-CLog::pop_front()
+CLog::pop_front(bool alwaysAtHead)
 {
 	CLogLock lock(m_mutex);
-	if (!m_outputters.empty()) {
-		delete m_outputters.front();
-		m_outputters.pop_front();
+	COutputterList* list = alwaysAtHead ? &m_alwaysOutputters : &m_outputters;
+	if (!list->empty()) {
+		delete list->front();
+		list->pop_front();
 	}
 }
 
@@ -266,6 +277,22 @@ CLog::output(int priority, char* msg) const
 
 	// write to each outputter
 	CLogLock lock(m_mutex);
+	for (COutputterList::const_iterator index  = m_alwaysOutputters.begin();
+										index != m_alwaysOutputters.end();
+										++index) {
+		// get outputter
+		ILogOutputter* outputter = *index;
+		
+		// put an appropriate newline at the end
+		strcat(msg + g_priorityPad, outputter->getNewline());
+
+		// open the outputter
+		outputter->open(kApplication);
+
+		// write message
+		outputter->write(static_cast<ILogOutputter::ELevel>(priority),
+							msg + g_maxPriorityLength - n);
+	}
 	for (COutputterList::const_iterator index  = m_outputters.begin();
 										index != m_outputters.end(); ++index) {
 		// get outputter

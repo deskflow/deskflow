@@ -782,9 +782,14 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	// send PRINT and FATAL output to a message box
 	CLOG->insert(new CMessageBoxOutputter);
 
+	// save log messages
+	CBufferedLogOutputter logBuffer(1000);
+	CLOG->insert(&logBuffer, true);
+
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
-	s_taskBarReceiver = new CMSWindowsServerTaskBarReceiver(instance);
+	s_taskBarReceiver = new CMSWindowsServerTaskBarReceiver(instance,
+															&logBuffer);
 	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
 
 	int result;
@@ -802,6 +807,9 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 	// done with task bar receiver
 	delete s_taskBarReceiver;
+
+	// done with log buffer
+	CLOG->remove(&logBuffer);
 
 	// let user examine any messages if we're running as a backend
 	// by putting up a dialog box before exiting.

@@ -179,3 +179,60 @@ CSystemLogger::~CSystemLogger()
 	delete m_stop;
 	delete m_syslog;
 }
+
+
+//
+// CBufferedLogOutputter
+//
+
+CBufferedLogOutputter::CBufferedLogOutputter(UInt32 maxBufferSize) :
+	m_maxBufferSize(maxBufferSize)
+{
+	// do nothing
+}
+
+CBufferedLogOutputter::~CBufferedLogOutputter()
+{
+	// do nothing
+}
+
+CBufferedLogOutputter::const_iterator
+CBufferedLogOutputter::begin() const
+{
+	return m_buffer.begin();
+}
+
+CBufferedLogOutputter::const_iterator
+CBufferedLogOutputter::end() const
+{
+	return m_buffer.end();
+}
+
+void
+CBufferedLogOutputter::open(const char*)
+{
+	// do nothing
+}
+
+void
+CBufferedLogOutputter::close()
+{
+	// remove all elements from the buffer
+	m_buffer.clear();
+}
+
+bool
+CBufferedLogOutputter::write(ELevel, const char* message)
+{
+	while (m_buffer.size() >= m_maxBufferSize) {
+		m_buffer.pop_front();
+	}
+	m_buffer.push_back(CString(message));
+	return true;
+}
+
+const char*
+CBufferedLogOutputter::getNewline() const
+{
+	return "";
+}

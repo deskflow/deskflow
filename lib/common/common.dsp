@@ -107,6 +107,10 @@ SOURCE=.\stdbitset.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\stddeque.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\stdfstream.h
 # End Source File
 # Begin Source File

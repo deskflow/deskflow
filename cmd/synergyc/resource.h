@@ -13,6 +13,7 @@
 #define IDC_TASKBAR_STATUS_STATUS       1000
 #define IDC_TASKBAR_QUIT                40003
 #define IDC_TASKBAR_STATUS              40004
+#define IDC_TASKBAR_LOG                 40005
 
 // Next default values for new objects
 // 

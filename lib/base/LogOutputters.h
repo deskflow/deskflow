@@ -15,7 +15,10 @@
 #ifndef LOGOUTPUTTERS_H
 #define LOGOUTPUTTERS_H
 
+#include "BasicTypes.h"
 #include "ILogOutputter.h"
+#include "CString.h"
+#include "stddeque.h"
 
 //! Stop traversing log chain outputter
 /*!
@@ -84,6 +87,42 @@ public:
 private:
 	ILogOutputter*		m_syslog;
 	ILogOutputter*		m_stop;
+};
+
+//! Save log history
+/*!
+This outputter records the last N log messages.
+*/
+class CBufferedLogOutputter : public ILogOutputter {
+private:
+	typedef std::deque<CString> CBuffer;
+
+public:
+	typedef CBuffer::const_iterator const_iterator;
+
+	CBufferedLogOutputter(UInt32 maxBufferSize);
+	virtual ~CBufferedLogOutputter();
+
+	//! @name accessors
+	//@{
+
+	//! Get start of buffer
+	const_iterator		begin() const;
+
+	//! Get end of buffer
+	const_iterator		end() const;
+
+	//@}
+
+	// ILogOutputter overrides
+	virtual void		open(const char* title);
+	virtual void		close();
+	virtual bool		write(ELevel level, const char* message);
+	virtual const char*	getNewline() const;
+
+private:
+	UInt32				m_maxBufferSize;
+	CBuffer				m_buffer;
 };
 
 #endif

@@ -61,12 +61,15 @@ public:
 	true then it also goes to the next outputter, as so on until an
 	outputter returns false or there are no more outputters.  Outputters
 	still in the outputter list when the log is destroyed will be
-	deleted.
+	deleted.  If \c alwaysAtHead is true then the outputter is always
+	called before all outputters with \c alwaysAtHead false and the
+	return value of the outputter is ignored.
 
 	By default, the logger has one outputter installed which writes to
 	the console.
 	*/
-	void				insert(ILogOutputter* adopted);
+	void				insert(ILogOutputter* adopted,
+							   bool alwaysAtHead = false);
 
 	//! Remove an outputter from the list
 	/*!
@@ -79,9 +82,10 @@ public:
 	//! Remove the outputter from the head of the list
 	/*!
 	Removes and deletes the outputter at the head of the outputter list.
-	This does nothing if the outputter list is empty.
+	This does nothing if the outputter list is empty.  Only removes
+	outputters that were inserted with the matching \c alwaysAtHead.
 	*/
-	void				pop_front();
+	void				pop_front(bool alwaysAtHead = false);
 
 	//! Set the minimum priority filter.
 	/*!
@@ -132,6 +136,7 @@ private:
 
 	CArchMutex			m_mutex;
 	COutputterList		m_outputters;
+	COutputterList		m_alwaysOutputters;
 	int					m_maxNewlineLength;
 	int					m_maxPriority;
 };

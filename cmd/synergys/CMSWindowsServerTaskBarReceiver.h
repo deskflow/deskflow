@@ -20,10 +20,12 @@
 #include "CServerTaskBarReceiver.h"
 #include <windows.h>
 
+class CBufferedLogOutputter;
+
 //! Implementation of CServerTaskBarReceiver for Microsoft Windows
 class CMSWindowsServerTaskBarReceiver : public CServerTaskBarReceiver {
 public:
-	CMSWindowsServerTaskBarReceiver(HINSTANCE);
+	CMSWindowsServerTaskBarReceiver(HINSTANCE, const CBufferedLogOutputter*);
 	virtual ~CMSWindowsServerTaskBarReceiver();
 
 	// IArchTaskBarReceiver overrides
@@ -33,6 +35,8 @@ public:
 	virtual const Icon	getIcon() const;
 
 protected:
+	void				copyLog() const;
+
 	// CServerTaskBarReceiver overrides
 	virtual void		onStatusChanged();
 
@@ -53,6 +57,7 @@ private:
 	HWND				m_window;
 	HMENU				m_menu;
 	HICON				m_icon[kMaxState];
+	const CBufferedLogOutputter*	m_logBuffer;
 };
 
 #endif

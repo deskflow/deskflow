@@ -14,6 +14,8 @@
 
 #include "CMSWindowsServerTaskBarReceiver.h"
 #include "CServer.h"
+#include "CMSWindowsClipboard.h"
+#include "LogOutputters.h"
 #include "BasicTypes.h"
 #include "CArch.h"
 #include "CArchTaskBarWindows.h"
@@ -32,10 +34,11 @@ static const UINT g_stateToIconID[CMSWindowsServerTaskBarReceiver::kMaxState] =
 //
 
 CMSWindowsServerTaskBarReceiver::CMSWindowsServerTaskBarReceiver(
-				HINSTANCE appInstance) :
+				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer) :
 	CServerTaskBarReceiver(),
 	m_appInstance(appInstance),
-	m_window(NULL)
+	m_window(NULL),
+	m_logBuffer(logBuffer)
 {
 	for (UInt32 i = 0; i < kMaxState; ++i) {
 		m_icon[i] = loadIcon(g_stateToIconID[i]);
@@ -169,6 +172,10 @@ CMSWindowsServerTaskBarReceiver::runMenu(int x, int y)
 		showStatus();
 		break;
 
+	case IDC_TASKBAR_LOG:
+		copyLog();
+		break;
+
 	case IDC_TASKBAR_QUIT:
 		quit();
 		break;
@@ -185,6 +192,29 @@ const IArchTaskBarReceiver::Icon
 CMSWindowsServerTaskBarReceiver::getIcon() const
 {
 	return reinterpret_cast<Icon>(m_icon[getState()]);
+}
+
+void
+CMSWindowsServerTaskBarReceiver::copyLog() const
+{
+	if (m_logBuffer != NULL) {
+		// collect log buffer
+		CString data;
+		for (CBufferedLogOutputter::const_iterator index = m_logBuffer->begin();
+								index != m_logBuffer->end(); ++index) {
+			data += *index;
+			data += "\n";
+		}
+
+		// copy log to clipboard
+		if (!data.empty()) {
+			CMSWindowsClipboard clipboard(m_window);
+			clipboard.open(0);
+			clipboard.empty();
+			clipboard.add(IClipboard::kText, data);
+			clipboard.close();
+		}
+	}
 }
 
 void
