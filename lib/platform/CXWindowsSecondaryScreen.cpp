@@ -126,9 +126,6 @@ void
 CXWindowsSecondaryScreen::keyDown(KeyID key,
 				KeyModifierMask mask, KeyButton button)
 {
-	Keystrokes keys;
-	KeyCode keycode;
-
 	// check for ctrl+alt+del emulation
 	if (key == kKeyDelete &&
 		(mask & (KeyModifierControl | KeyModifierAlt)) ==
@@ -139,29 +136,30 @@ CXWindowsSecondaryScreen::keyDown(KeyID key,
 
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
+	Keystrokes keys;
+	KeyCode keycode;
 	m_mask = mapKey(keys, keycode, key, mask, kPress);
 	if (keys.empty()) {
+		// do nothing if there are no associated keys (i.e. lookup failed)
 		return;
 	}
 
 	// generate key events
 	doKeystrokes(keys, 1);
 
-	// note that key is now down
-	m_keys[keycode]     = true;
-	m_fakeKeys[keycode] = true;
-
-	// note which server key generated this key
-	m_serverKeyMap[button] = keycode;
+	// do not record button down if button is 0 (invalid)
+	if (button != 0) {
+		// note that key is now down
+		m_serverKeyMap[button] = keycode;
+		m_keys[keycode]        = true;
+		m_fakeKeys[keycode]    = true;
+	}
 }
 
 void
 CXWindowsSecondaryScreen::keyRepeat(KeyID key,
 				KeyModifierMask mask, SInt32 count, KeyButton button)
 {
-	Keystrokes keys;
-	KeyCode keycode;
-
 	// if we haven't seen this button go down then ignore it
 	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
 	if (index == m_serverKeyMap.end()) {
@@ -170,6 +168,8 @@ CXWindowsSecondaryScreen::keyRepeat(KeyID key,
 
 	// get the sequence of keys to simulate key repeat and the final
 	// modifier state.
+	Keystrokes keys;
+	KeyCode keycode;
 	m_mask = mapKey(keys, keycode, key, mask, kRepeat);
 	if (keys.empty()) {
 		return;
@@ -180,15 +180,20 @@ CXWindowsSecondaryScreen::keyRepeat(KeyID key,
 		return;
 	}
 
-	// if we've seen this button (and we should have) then make sure
-	// we release the same key we pressed when we saw it.
-	if (index != m_serverKeyMap.end() && keycode != index->second) {
+	// if the keycode for the auto-repeat is not the same as for the
+	// initial press then mark the initial key as released and the new
+	// key as pressed.  this can happen when we auto-repeat after a
+	// dead key.  for example, a dead accent followed by 'a' will
+	// generate an 'a with accent' followed by a repeating 'a'.  the
+	// keycodes for the two keysyms might be different.
+	if (keycode != index->second) {
 		// replace key up with previous keycode but leave key down
 		// alone so it uses the new keycode and store that keycode
-		// in the server key map.
+		// in the server key map.  the key up is the first keystroke
+		// with the keycode returned by mapKey().
 		for (Keystrokes::iterator index2 = keys.begin();
 								index2 != keys.end(); ++index2) {
-			if (index2->m_keycode == index->second) {
+			if (index2->m_keycode == keycode) {
 				index2->m_keycode = index->second;
 				break;
 			}
@@ -214,15 +219,12 @@ void
 CXWindowsSecondaryScreen::keyUp(KeyID key,
 				KeyModifierMask mask, KeyButton button)
 {
-	Keystrokes keys;
-	KeyCode keycode;
-
 	// if we haven't seen this button go down then ignore it
 	ServerKeyMap::iterator index = m_serverKeyMap.find(button);
 	if (index == m_serverKeyMap.end()) {
 		return;
 	}
-	keycode = index->second;
+	KeyCode keycode = index->second;
 
 	// check for ctrl+alt+del emulation
 	if (key == kKeyDelete &&
@@ -232,6 +234,9 @@ CXWindowsSecondaryScreen::keyUp(KeyID key,
 		// just pass the key through
 	}
 
+	// get the sequence of keys to simulate key release and the final
+	// modifier state.
+	Keystrokes keys;
 	if (!((key == kKeyCapsLock && m_capsLockHalfDuplex) ||
 		(key == kKeyNumLock && m_numLockHalfDuplex))) {
 		m_mask = mapKeyRelease(keys, keycode);
@@ -241,13 +246,9 @@ CXWindowsSecondaryScreen::keyUp(KeyID key,
 	doKeystrokes(keys, 1);
 
 	// note that key is now up
+	m_serverKeyMap.erase(index);
 	m_keys[keycode]     = false;
 	m_fakeKeys[keycode] = false;
-
-	// remove server key from map
-	if (index != m_serverKeyMap.end()) {
-		m_serverKeyMap.erase(index);
-	}
 }
 
 void
@@ -798,6 +799,7 @@ CXWindowsSecondaryScreen::mapKeyRelease(Keystrokes& keys, KeyCode keycode) const
 	if (i != m_keycodeToModifier.end()) {
 		ModifierMask bit = (1 << i->second);
 		if (getBits(m_toggleModifierMask, bit) != 0) {
+			// toggle keys modify the state on release
 			return flipBits(m_mask, bit);
 		}
 		else {

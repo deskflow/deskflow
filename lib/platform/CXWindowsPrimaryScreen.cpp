@@ -42,7 +42,8 @@ CXWindowsPrimaryScreen::CXWindowsPrimaryScreen(
 	m_receiver(primaryReceiver),
 	m_window(None),
 	m_im(NULL),
-	m_ic(NULL)
+	m_ic(NULL),
+	m_lastKeycode(0)
 {
 	m_screen = new CXWindowsScreen(receiver, this);
 }
@@ -223,8 +224,28 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 	XEvent& xevent = event->m_event;
 
 	// let input methods try to handle event first
-	if (m_ic != NULL && XFilterEvent(&xevent, None)) {
-		return true;
+	if (m_ic != NULL) {
+		// XFilterEvent() may eat the event and generate a new KeyPress
+		// event with a keycode of 0 because there isn't an actual key
+		// associated with the keysym.  but the KeyRelease may pass
+		// through XFilterEvent() and keep its keycode.  this means
+		// there's a mismatch between KeyPress and KeyRelease keycodes.
+		// since we use the keycode on the client to detect when a key
+		// is released this won't do.  so we remember the keycode on
+		// the most recent KeyPress (and clear it on a matching
+		// KeyRelease) so we have a keycode for a synthesized KeyPress.
+		if (xevent.type == KeyPress && xevent.xkey.keycode != 0) {
+			m_lastKeycode = xevent.xkey.keycode;
+		}
+		else if (xevent.type == KeyRelease &&
+			xevent.xkey.keycode == m_lastKeycode) {
+			m_lastKeycode = 0;
+		}
+
+		// now filter the event
+		if (XFilterEvent(&xevent, None)) {
+			return true;
+		}
 	}
 
 	// handle event
@@ -257,16 +278,23 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 					key = kKeyDelete;
 				}
 
+				// get which button.  see call to XFilterEvent() above
+				// for more info.
+				KeyCode keycode = xevent.xkey.keycode;
+				if (keycode == 0) {
+					keycode = m_lastKeycode;
+				}
+
 				// handle key
 				m_receiver->onKeyDown(key, mask,
-								static_cast<KeyButton>(xevent.xkey.keycode));
+								static_cast<KeyButton>(keycode));
 				if (key == kKeyCapsLock && m_capsLockHalfDuplex) {
 					m_receiver->onKeyUp(key, mask | KeyModifierCapsLock,
-								static_cast<KeyButton>(xevent.xkey.keycode));
+								static_cast<KeyButton>(keycode));
 				}
 				else if (key == kKeyNumLock && m_numLockHalfDuplex) {
 					m_receiver->onKeyUp(key, mask | KeyModifierNumLock,
-								static_cast<KeyButton>(xevent.xkey.keycode));
+								static_cast<KeyButton>(keycode));
 				}
 			}
 		}
@@ -509,6 +537,9 @@ CXWindowsPrimaryScreen::onPostOpen()
 	XWindowAttributes attr;
 	XGetWindowAttributes(display, m_window, &attr);
 	XSelectInput(display, m_window, attr.your_event_mask | mask);
+
+	// no previous keycode
+	m_lastKeycode = 0;
 }
 
 void
@@ -523,6 +554,7 @@ CXWindowsPrimaryScreen::onPreClose()
 		XCloseIM(m_im);
 		m_im = NULL;
 	}
+	m_lastKeycode = 0;
 }
 
 void

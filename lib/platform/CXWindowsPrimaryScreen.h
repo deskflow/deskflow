@@ -117,8 +117,10 @@ private:
 	// position of center pixel of screen
 	SInt32				m_xCenter, m_yCenter;
 
-	XIM m_im;
-	XIC m_ic;
+	// input method stuff
+	XIM					m_im;
+	XIC					m_ic;
+	KeyCode				m_lastKeycode;
 };
 
 #endif
