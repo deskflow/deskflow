@@ -12,8 +12,6 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =					\
 	base.dsp					\
@@ -59,6 +57,6 @@ libbase_a_SOURCES =				\
 	XBase.h						\
 	$(NULL)
 INCLUDES =						\
-	-I$(VDEPTH)/lib/common		\
-	-I$(VDEPTH)/lib/arch		\
+	-I$(top_srcdir)/lib/common	\
+	-I$(top_srcdir)/lib/arch	\
 	$(NULL)

@@ -12,8 +12,6 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =					\
 	io.dsp						\
@@ -36,8 +34,8 @@ libio_a_SOURCES = 				\
 	XIO.h						\
 	$(NULL)
 INCLUDES =						\
-	-I$(VDEPTH)/lib/common		\
-	-I$(VDEPTH)/lib/arch		\
-	-I$(VDEPTH)/lib/base 		\
-	-I$(VDEPTH)/lib/mt	 		\
+	-I$(top_srcdir)/lib/common	\
+	-I$(top_srcdir)/lib/arch	\
+	-I$(top_srcdir)/lib/base 	\
+	-I$(top_srcdir)/lib/mt	 	\
 	$(NULL)
