@@ -14,7 +14,7 @@
 
 #include "CServer.h"
 #include "CConfig.h"
-#include "IPrimaryScreenFactory.h"
+#include "IScreenFactory.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
 #include "XScreen.h"
@@ -34,14 +34,13 @@
 #define DAEMON_RUNNING(running_)
 #if WINDOWS_LIKE
 #include "CMSWindowsScreen.h"
-#include "CMSWindowsPrimaryScreen.h"
 #include "CArchMiscWindows.h"
 #include "CMSWindowsServerTaskBarReceiver.h"
 #include "resource.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif UNIX_LIKE
-#include "CXWindowsPrimaryScreen.h"
+#include "CXWindowsScreen.h"
 #include "CXWindowsServerTaskBarReceiver.h"
 #endif
 
@@ -100,29 +99,28 @@ CArgs*					CArgs::s_instance = NULL;
 // platform dependent factories
 //
 
-//! Factory for creating primary screens
+//! Factory for creating screens
 /*!
-Objects of this type create primary screens appropriate for the
-platform.
+Objects of this type create screens appropriate for the platform.
 */
-class CPrimaryScreenFactory : public IPrimaryScreenFactory {
+class CScreenFactory : public IScreenFactory {
 public:
-	CPrimaryScreenFactory() { }
-	virtual ~CPrimaryScreenFactory() { }
+	CScreenFactory() { }
+	virtual ~CScreenFactory() { }
 
-	// IPrimaryScreenFactory overrides
-	virtual CPrimaryScreen*
+	// IScreenFactory overrides
+	virtual IPlatformScreen*
 						create(IScreenReceiver*, IPrimaryScreenReceiver*);
 };
 
-CPrimaryScreen*
-CPrimaryScreenFactory::create(IScreenReceiver* receiver,
+IPlatformScreen*
+CScreenFactory::create(IScreenReceiver* receiver,
 				IPrimaryScreenReceiver* primaryReceiver)
 {
 #if WINDOWS_LIKE
-	return new CMSWindowsPrimaryScreen(receiver, primaryReceiver);
+	return new CMSWindowsScreen(receiver, primaryReceiver);
 #elif UNIX_LIKE
-	return new CXWindowsPrimaryScreen(receiver, primaryReceiver);
+	return new CXWindowsScreen(receiver, primaryReceiver);
 #endif
 }
 
@@ -201,7 +199,7 @@ realMain(void)
 			// create server
 			s_server = new CServer(ARG->m_name);
 			s_server->setConfig(ARG->m_config);
-			s_server->setScreenFactory(new CPrimaryScreenFactory);
+			s_server->setScreenFactory(new CScreenFactory);
 			s_server->setSocketFactory(new CTCPSocketFactory);
 			s_server->setStreamFilterFactory(NULL);
 

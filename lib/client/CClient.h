@@ -22,12 +22,12 @@
 #include "CMutex.h"
 #include "CJobList.h"
 
-class CSecondaryScreen;
+class CScreen;
 class CServerProxy;
 class CThread;
 class IDataSocket;
 class IScreenReceiver;
-class ISecondaryScreenFactory;
+class IScreenFactory;
 class ISocketFactory;
 class IStreamFilterFactory;
 
@@ -60,13 +60,12 @@ public:
 	*/
 	void				setAddress(const CNetworkAddress& serverAddress);
 
-	//! Set secondary screen factory
+	//! Set screen factory
 	/*!
-	Sets the factory for creating secondary screens.  This must be
-	set before calling open().  This object takes ownership of the
-	factory.
+	Sets the factory for creating screens.  This must be set before
+	calling open().  This object takes ownership of the factory.
 	*/
-	void				setScreenFactory(ISecondaryScreenFactory*);
+	void				setScreenFactory(IScreenFactory*);
 
 	//! Set socket factory
 	/*!
@@ -184,12 +183,12 @@ private:
 private:
 	CMutex				m_mutex;
 	CString				m_name;
-	CSecondaryScreen*	m_screen;
+	CScreen*			m_screen;
 	IScreenReceiver*	m_server;
 	CNetworkAddress		m_serverAddress;
-	ISecondaryScreenFactory*	m_screenFactory;
-	ISocketFactory*				m_socketFactory;
-	IStreamFilterFactory*		m_streamFilterFactory;
+	IScreenFactory*		m_screenFactory;
+	ISocketFactory*		m_socketFactory;
+	IStreamFilterFactory*	m_streamFilterFactory;
 	CThread*			m_session;
 	bool				m_active;
 	bool				m_rejected;

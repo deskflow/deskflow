@@ -13,7 +13,7 @@
  */
 
 #include "CClient.h"
-#include "ISecondaryScreenFactory.h"
+#include "IScreenFactory.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
 #include "XScreen.h"
@@ -35,14 +35,13 @@
 #define DAEMON_RUNNING(running_)
 #if WINDOWS_LIKE
 #include "CMSWindowsScreen.h"
-#include "CMSWindowsSecondaryScreen.h"
 #include "CArchMiscWindows.h"
 #include "CMSWindowsClientTaskBarReceiver.h"
 #include "resource.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif UNIX_LIKE
-#include "CXWindowsSecondaryScreen.h"
+#include "CXWindowsScreen.h"
 #include "CXWindowsClientTaskBarReceiver.h"
 #endif
 
@@ -88,28 +87,28 @@ CArgs*					CArgs::s_instance = NULL;
 // platform dependent factories
 //
 
-//! Factory for creating secondary screens
+//! Factory for creating screens
 /*!
-Objects of this type create secondary screens appropriate for the
-platform.
+Objects of this type create screens appropriate for the platform.
 */
-class CSecondaryScreenFactory : public ISecondaryScreenFactory {
+class CScreenFactory : public IScreenFactory {
 public:
-	CSecondaryScreenFactory() { }
-	virtual ~CSecondaryScreenFactory() { }
+	CScreenFactory() { }
+	virtual ~CScreenFactory() { }
 
-	// ISecondaryScreenFactory overrides
-	virtual CSecondaryScreen*
-						create(IScreenReceiver*);
+	// IScreenFactory overrides
+	virtual IPlatformScreen*
+						create(IScreenReceiver*, IPrimaryScreenReceiver*);
 };
 
-CSecondaryScreen*
-CSecondaryScreenFactory::create(IScreenReceiver* receiver)
+IPlatformScreen*
+CScreenFactory::create(IScreenReceiver* receiver,
+				IPrimaryScreenReceiver* primaryReceiver)
 {
 #if WINDOWS_LIKE
-	return new CMSWindowsSecondaryScreen(receiver);
+	return new CMSWindowsScreen(receiver, primaryReceiver);
 #elif UNIX_LIKE
-	return new CXWindowsSecondaryScreen(receiver);
+	return new CXWindowsScreen(receiver, primaryReceiver);
 #endif
 }
 
@@ -167,7 +166,7 @@ realMain(void)
 			// create client
 			s_client = new CClient(ARG->m_name);
 			s_client->setAddress(ARG->m_serverAddress);
-			s_client->setScreenFactory(new CSecondaryScreenFactory);
+			s_client->setScreenFactory(new CScreenFactory);
 			s_client->setSocketFactory(new CTCPSocketFactory);
 			s_client->setStreamFilterFactory(NULL);
 

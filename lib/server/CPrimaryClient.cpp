@@ -13,11 +13,11 @@
  */
 
 #include "CPrimaryClient.h"
-#include "IPrimaryScreenFactory.h"
+#include "CScreen.h"
+#include "IScreenFactory.h"
 #include "IServer.h"
 #include "XScreen.h"
 #include "XSynergy.h"
-#include "CPrimaryScreen.h"
 #include "CClipboard.h"
 #include "CLog.h"
 
@@ -25,7 +25,7 @@
 // CPrimaryClient
 //
 
-CPrimaryClient::CPrimaryClient(IPrimaryScreenFactory* screenFactory,
+CPrimaryClient::CPrimaryClient(IScreenFactory* screenFactory,
 				IServer* server,
 				IPrimaryScreenReceiver* receiver,
 				const CString& name) :
@@ -38,7 +38,11 @@ CPrimaryClient::CPrimaryClient(IPrimaryScreenFactory* screenFactory,
 	// create screen
 	LOG((CLOG_DEBUG1 "creating primary screen"));
 	if (screenFactory != NULL) {
-		m_screen = screenFactory->create(this, receiver);
+		IPlatformScreen* platformScreen =
+							screenFactory->create(this, receiver);
+		if (platformScreen != NULL) {
+			m_screen = new CScreen(platformScreen, this);
+		}
 	}
 	if (m_screen == NULL) {
 		throw XScreenOpenFailure();
@@ -86,7 +90,7 @@ CPrimaryClient::isLockedToScreen() const
 KeyModifierMask
 CPrimaryClient::getToggleMask() const
 {
-	return m_screen->getToggleMask();
+	return m_screen->getActiveModifiers();
 }
 
 void
@@ -150,12 +154,27 @@ CPrimaryClient::close()
 }
 
 void
+CPrimaryClient::enable()
+{
+	m_screen->enable();
+}
+
+void
+CPrimaryClient::disable()
+{
+	m_screen->disable();
+}
+
+void
 CPrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
 				UInt32 seqNum, KeyModifierMask, bool screensaver)
 {
 	// note -- we must not call any server methods except onError().
 	m_seqNum = seqNum;
-	m_screen->enter(xAbs, yAbs, screensaver);
+	if (!screensaver) {
+		m_screen->warpCursor(xAbs, yAbs);
+	}
+	m_screen->enter();
 }
 
 bool

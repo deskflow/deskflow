@@ -32,6 +32,7 @@
 #	include "CArchDaemonWindows.h"
 #	include "CArchFileWindows.h"
 #	include "CArchLogWindows.h"
+#	include "CArchMiscWindows.h"
 #	include "CArchMultithreadWindows.h"
 #	include "CArchNetworkWinsock.h"
 #	include "CArchSleepWindows.h"
@@ -116,6 +117,10 @@ CArch::CArch(ARCH_ARGS* args)
 	m_console = new ARCH_CONSOLE;
 	m_daemon  = new ARCH_DAEMON;
 	m_taskbar = new ARCH_TASKBAR(args);
+
+#if WINDOWS_LIKE
+	CArchMiscWindows::init();
+#endif
 }
 
 CArch::~CArch()

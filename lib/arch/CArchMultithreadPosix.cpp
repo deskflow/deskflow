@@ -252,14 +252,12 @@ CArchMultithreadPosix::waitCondVar(CArchCond cond,
 CArchMutex
 CArchMultithreadPosix::newMutex()
 {
+	pthread_mutexattr_t attr;
+	int status = pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+	assert(status == 0);
 	CArchMutexImpl* mutex = new CArchMutexImpl;
-	int status = pthread_mutex_init(&mutex->m_mutex, NULL);
+	status = pthread_mutex_init(&mutex->m_mutex, &attr);
 	assert(status == 0);
-/*
-	status = pthread_mutexattr_settype(&mutex->m_mutex,
-							PTHREAD_MUTEX_RECURSIVE);
-	assert(status == 0);
-*/
 	return mutex;
 }
 

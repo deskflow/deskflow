@@ -19,9 +19,9 @@
 #include "IScreenReceiver.h"
 #include "ProtocolTypes.h"
 
+class CScreen;
 class IClipboard;
-class CPrimaryScreen;
-class IPrimaryScreenFactory;
+class IScreenFactory;
 class IPrimaryScreenReceiver;
 class IServer;
 
@@ -38,7 +38,7 @@ public:
 	\c factory.  Throws XScreenOpenFailure or whatever the factory can
 	throw if the screen cannot be created.
 	*/
-	CPrimaryClient(IPrimaryScreenFactory* factory, IServer*,
+	CPrimaryClient(IScreenFactory* factory, IServer*,
 							IPrimaryScreenReceiver*, const CString& name);
 	~CPrimaryClient();
 
@@ -96,6 +96,9 @@ public:
 	virtual bool		onGrabClipboard(ClipboardID);
 	virtual void		onClipboardChanged(ClipboardID, const CString&);
 
+// XXX -- these go in IClient
+	virtual void		enable();
+	virtual void		disable();
 	// IClient overrides
 	virtual void		open();
 	virtual void		mainLoop();
@@ -127,7 +130,7 @@ public:
 
 private:
 	IServer*			m_server;
-	CPrimaryScreen*		m_screen;
+	CScreen*			m_screen;
 	CString				m_name;
 	UInt32				m_seqNum;
 	CClientInfo			m_info;

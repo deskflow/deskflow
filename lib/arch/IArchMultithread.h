@@ -124,11 +124,11 @@ public:
 	// mutex methods
 	//
 
-	//! Create a non-recursive mutex
+	//! Create a recursive mutex
 	/*!
-	Creates a non-recursive mutex.  A thread must not lock a
-	non-recursive mutex when it already holds a lock on that mutex.
-	If it does it will deadlock.  The mutex is an opaque data type.
+	Creates a recursive mutex.  A thread may lock a recursive mutex
+	when it already holds a lock on that mutex.  The mutex is an
+	opaque data type.
 	*/
 	virtual CArchMutex	newMutex() = 0;
 

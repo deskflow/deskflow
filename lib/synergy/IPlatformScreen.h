@@ -12,21 +12,24 @@
  * GNU General Public License for more details.
  */
 
-#ifndef ISCREEN_H
-#define ISCREEN_H
+#ifndef IPLATFORMSCREEN_H
+#define IPLATFORMSCREEN_H
 
-#include "IInterface.h"
+#include "IPrimaryScreen.h"
+#include "ISecondaryScreen.h"
 #include "ClipboardTypes.h"
+#include "OptionTypes.h"
 
 class IClipboard;
+class IKeyState;
 
 //! Screen interface
 /*!
 This interface defines the methods common to all platform dependent
-screen implementations that are use by both primary and secondary
+screen implementations that are used by both primary and secondary
 screens.
 */
-class IScreen : public IInterface {
+class IPlatformScreen : public IPrimaryScreen, public ISecondaryScreen {
 public:
 	//! @name manipulators
 	//@{
@@ -37,7 +40,29 @@ public:
 	if the screen cannot be opened but retrying later may succeed.
 	Otherwise throw some other XScreenOpenFailure exception.
 	*/
-	virtual void		open() = 0;
+	virtual void		open(IKeyState*) = 0;
+
+	//! Close screen
+	/*!
+	Called to close the screen.  close() should quietly ignore calls
+	that don't have a matching successful call to open().
+	*/
+	virtual void		close() = 0;
+
+	//! Enable screen
+	/*!
+	Enable the screen, preparing it to report system and user events.
+	For a secondary screen it also means preparing to synthesize events
+	and hiding the cursor.
+	*/
+	virtual void		enable() = 0;
+
+	//! Disable screen
+	/*!
+	Undoes the operations in enable() and events should no longer
+	be reported.
+	*/
+	virtual void		disable() = 0;
 
 	//! Run event loop
 	/*!
@@ -54,12 +79,20 @@ public:
 	*/
 	virtual void		exitMainLoop() = 0;
 
-	//! Close screen
+	//! Enter screen
 	/*!
-	Called to close the screen.  close() should quietly ignore calls
-	that don't have a matching successful call to open().
+	Called when the user navigates to this screen.
 	*/
-	virtual void		close() = 0;
+	virtual void		enter() = 0;
+
+	//! Leave screen
+	/*!
+	Called when the user navigates off the screen.  Returns true on
+	success, false on failure.  A typical reason for failure is being
+	unable to install the keyboard and mouse snoopers on a primary
+	screen.  Secondary screens should not fail.
+	*/
+	virtual bool		leave() = 0;
 
 	//! Set clipboard
 	/*!
@@ -84,6 +117,7 @@ public:
 	it's closed.  If \c notify is false then the screen saver is
 	disabled on open and restored on close.
 	*/
+// XXX -- pass an interface pointer, not a notify flag
 	virtual void		openScreensaver(bool notify) = 0;
 
 	//! Close screen saver
@@ -101,19 +135,34 @@ public:
 	*/
 	virtual void		screensaver(bool activate) = 0;
 
-	//! Attach to desktop
+	//! Notify of options changes
 	/*!
-	Called to ensure that this thread is attached to the visible desktop.
-	This is mainly intended for microsoft windows which has an artificial
-	distinction between desktops where a thread cannot interact with the
-	visible desktop unless the thread is attached to that desktop.  Since
-	it doesn't report when the visible desktop changes we must poll.
+	Reset all options to their default values.
 	*/
-	virtual void		syncDesktop() = 0;
+	virtual void		resetOptions() = 0;
+
+	//! Notify of options changes
+	/*!
+	Set options to given values.  Ignore unknown options and don't
+	modify options that aren't given in \c options.
+	*/
+	virtual void		setOptions(const COptionsList& options) = 0;
+
+	//! Get keyboard state
+	/*!
+	Put the current keyboard state into the IKeyState passed to \c open().
+	*/
+	virtual void		updateKeys() = 0;
 
 	//@}
 	//! @name accessors
 	//@{
+
+	//! Test if is primary screen
+	/*!
+	Return true iff this screen is a primary screen.
+	*/
+	virtual bool		isPrimary() const = 0;
 
 	//! Get clipboard
 	/*!
@@ -136,15 +185,26 @@ public:
 	*/
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
 
-	//! Get cursor center position
-	/*!
-	Return the cursor center position which is where we park the
-	cursor to compute cursor motion deltas and should be far from
-	the edges of the screen, typically the center.
-	*/
-	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
-
 	//@}
+
+	// IPrimaryScreen overrides
+	virtual void		reconfigure(UInt32 activeSides) = 0;
+	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
+	virtual UInt32		addOneShotTimer(double timeout) = 0;
+	virtual SInt32		getJumpZoneSize() const = 0;
+	virtual bool		isAnyMouseButtonDown() const = 0;
+	virtual const char*	getKeyName(KeyButton) const = 0;
+
+	// ISecondaryScreen overrides
+	virtual void		fakeKeyEvent(KeyButton id, bool press) const = 0;
+	virtual bool		fakeCtrlAltDel() const = 0;
+	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;
+	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
+	virtual void		fakeMouseWheel(SInt32 delta) const = 0;
+	virtual KeyButton	mapKey(IKeyState::Keystrokes&,
+							const IKeyState& keyState, KeyID id,
+							KeyModifierMask desiredMask,
+							bool isAutoRepeat) const = 0;
 };
 
 #endif

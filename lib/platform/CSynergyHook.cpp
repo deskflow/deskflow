@@ -82,7 +82,7 @@ static HANDLE			g_hookEventLL     = NULL;
 static HHOOK			g_keyboardLL      = NULL;
 static HHOOK			g_mouseLL         = NULL;
 static bool				g_screenSaver     = false;
-static bool				g_relay           = false;
+static EHookMode		g_mode            = kHOOK_WATCH_JUMP_ZONE;
 static UInt32			g_zoneSides       = 0;
 static SInt32			g_zoneSize        = 0;
 static SInt32			g_xScreen         = 0;
@@ -151,7 +151,7 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	// the scroll lock toggle state.
 	PostThreadMessage(g_threadID, SYNERGY_MSG_KEY, wParam, lParam);
 
-	if (g_relay) {
+	if (g_mode == kHOOK_RELAY_EVENTS) {
 		// let certain keys pass through
 		switch (wParam) {
 		case VK_CAPITAL:
@@ -202,18 +202,18 @@ mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 	case WM_NCXBUTTONUP:
 		// always relay the event.  eat it if relaying.
 		PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_BUTTON, wParam, data);
-		return g_relay;
+		return (g_mode == kHOOK_RELAY_EVENTS);
 
 	case WM_MOUSEWHEEL:
-		if (g_relay) {
+		if (g_mode == kHOOK_RELAY_EVENTS) {
 			// relay event
 			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL, data, 0);
 		}
-		return g_relay;
+		return (g_mode == kHOOK_RELAY_EVENTS);
 
 	case WM_NCMOUSEMOVE:
 	case WM_MOUSEMOVE:
-		if (g_relay) {
+		if (g_mode == kHOOK_RELAY_EVENTS) {
 			// we want the cursor to be hidden at all times so we
 			// hide the cursor on whatever window has it.  but then
 			// we have to show the cursor whenever we leave that
@@ -329,7 +329,7 @@ getMessageHook(int code, WPARAM wParam, LPARAM lParam)
 								SYNERGY_MSG_SCREEN_SAVER, TRUE, 0);
 			}
 		}
-		if (g_relay) {
+		if (g_mode == kHOOK_RELAY_EVENTS) {
 			MSG* msg = reinterpret_cast<MSG*>(lParam);
 			if (msg->message == g_wmMouseWheel) {
 				// post message to our window
@@ -614,7 +614,7 @@ init(DWORD threadID)
 	g_threadID     = threadID;
 
 	// set defaults
-	g_relay        = false;
+	g_mode         = kHOOK_WATCH_JUMP_ZONE;
 	g_zoneSides    = 0;
 	g_zoneSize     = 0;
 	g_xScreen      = 0;
@@ -827,14 +827,14 @@ setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h, SInt32 jumpZoneSize)
 }
 
 void
-setRelay(int enable)
+setMode(EHookMode mode)
 {
-	if ((enable != 0) == g_relay) {
+	if (mode == g_mode) {
 		// no change
 		return;
 	}
-	g_relay = (enable != 0);
-	if (!g_relay) {
+	g_mode = mode;
+	if (g_mode != kHOOK_RELAY_EVENTS) {
 		restoreCursor();
 	}
 }

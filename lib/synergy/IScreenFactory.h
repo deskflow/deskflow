@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2002 Chris Schoeneman
+ * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,27 +12,30 @@
  * GNU General Public License for more details.
  */
 
-#ifndef ISECONDARYSCREENFACTORY_H
-#define ISECONDARYSCREENFACTORY_H
+#ifndef ISCREENFACTORY_H
+#define ISCREENFACTORY_H
 
 #include "IInterface.h"
 
-class CSecondaryScreen;
+class IPrimaryScreenReceiver;
+class IPlatformScreen;
 class IScreenReceiver;
 
-//! Secondary screen factory interface
+//! Primary screen factory interface
 /*!
-This interface provides factory methods to create secondary screens.
+This interface provides factory methods to create primary and
+secondary screens.
 */
-class ISecondaryScreenFactory : public IInterface {
+class IScreenFactory : public IInterface {
 public:
 	//! Create screen
 	/*!
-	Create and return a secondary screen.  The caller must delete the
-	returned object.
+	Create and return a screen.  The caller must delete the returned
+	object.  The screen is a primary screen iff the IPrimaryScreenReceiver
+	is not NULL.
 	*/
-	virtual CSecondaryScreen*
-						create(IScreenReceiver*) = 0;
+	virtual IPlatformScreen*
+						create(IScreenReceiver*, IPrimaryScreenReceiver*) = 0;
 };
 
 #endif

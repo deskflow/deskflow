@@ -14,12 +14,13 @@
 
 #include "CClient.h"
 #include "CServerProxy.h"
-#include "ISecondaryScreenFactory.h"
+#include "CScreen.h"
+#include "IScreenFactory.h"
 #include "CClipboard.h"
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
 #include "CProtocolUtil.h"
-#include "CSecondaryScreen.h"
+#include "IPlatformScreen.h"
 #include "IServer.h"
 #include "ProtocolTypes.h"
 #include "XScreen.h"
@@ -72,7 +73,7 @@ CClient::setAddress(const CNetworkAddress& serverAddress)
 }
 
 void
-CClient::setScreenFactory(ISecondaryScreenFactory* adopted)
+CClient::setScreenFactory(IScreenFactory* adopted)
 {
 	CLock lock(&m_mutex);
 	delete m_screenFactory;
@@ -305,8 +306,9 @@ CClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 		CLock lock(&m_mutex);
 		m_active = true;
 	}
-
-	m_screen->enter(xAbs, yAbs, mask);
+	m_screen->mouseMove(xAbs, yAbs);
+	m_screen->enter();
+	m_screen->setToggleState(mask);
 }
 
 bool
@@ -464,7 +466,10 @@ CClient::openSecondaryScreen()
 	// create screen
 	LOG((CLOG_DEBUG1 "creating secondary screen"));
 	if (m_screenFactory != NULL) {
-		m_screen = m_screenFactory->create(this);
+		IPlatformScreen* platformScreen = m_screenFactory->create(this, NULL);
+		if (platformScreen != NULL) {
+			m_screen = new CScreen(platformScreen, this);
+		}
 	}
 	if (m_screen == NULL) {
 		throw XScreenOpenFailure();
@@ -634,9 +639,11 @@ CClient::runServer()
 		m_server = proxy;
 	}
 
+	bool enabled = false;
 	try {
-		// prepare for remote control
-		m_screen->remoteControl();
+		// enable the screen
+		m_screen->enable();
+		enabled = true;
 
 		// process messages
 		bool rejected = true;
@@ -647,8 +654,8 @@ CClient::runServer()
 			setStatus(kNotRunning);
 		}
 
-		// prepare for local control
-		m_screen->localControl();
+		// disable the screen
+		m_screen->disable();
 
 		// clean up
 		CLock lock(&m_mutex);
@@ -661,7 +668,9 @@ CClient::runServer()
 	}
 	catch (...) {
 		setStatus(kNotRunning);
-		m_screen->localControl();
+		if (enabled) {
+			m_screen->disable();
+		}
 		CLock lock(&m_mutex);
 		m_rejected = false;
 		m_server   = NULL;

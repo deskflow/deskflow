@@ -26,6 +26,9 @@ class CArchMiscWindows {
 public:
 	typedef int			(*RunFunc)(void);
 
+	//! Initialize
+	static void			init();
+
 	//! Test if windows 95, et al.
 	/*!
 	Returns true iff the platform is win95/98/me.

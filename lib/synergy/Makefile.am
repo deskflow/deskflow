@@ -28,27 +28,26 @@ libsynergy_a_SOURCES = 			\
 	CClipboard.cpp				\
 	CInputPacketStream.cpp		\
 	COutputPacketStream.cpp		\
-	CPrimaryScreen.cpp			\
 	CProtocolUtil.cpp			\
-	CSecondaryScreen.cpp		\
+	CScreen.cpp					\
 	XScreen.cpp					\
 	XSynergy.cpp				\
 	CClipboard.h				\
 	CInputPacketStream.h		\
 	COutputPacketStream.h		\
-	CPrimaryScreen.h			\
 	CProtocolUtil.h				\
-	CSecondaryScreen.h			\
+	CScreen.h					\
 	ClipboardTypes.h			\
 	IClient.h					\
 	IClipboard.h				\
-	IPrimaryScreenFactory.h		\
+	IKeyState.h					\
+	IPlatformScreen.h			\
+	IPrimaryScreen.h			\
 	IPrimaryScreenReceiver.h	\
-	IScreen.h					\
-	IScreenEventHandler.h		\
+	IScreenFactory.h			\
 	IScreenReceiver.h			\
 	IScreenSaver.h				\
-	ISecondaryScreenFactory.h	\
+	ISecondaryScreen.h			\
 	IServer.h					\
 	KeyTypes.h					\
 	MouseTypes.h				\

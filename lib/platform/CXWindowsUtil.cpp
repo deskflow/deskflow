@@ -16,6 +16,14 @@
 #include "CThread.h"
 #include "CLog.h"
 #include <X11/Xatom.h>
+#define XK_XKB_KEYS
+#define XK_LATIN1
+#define XK_LATIN2
+#define XK_LATIN3
+#define XK_LATIN4
+#define XK_LATIN8
+#define XK_LATIN9
+#include <X11/keysymdef.h>
 
 /*
  * This table maps keysym values into the corresponding ISO 10646
@@ -805,6 +813,218 @@ struct codepair {
 { 0x20ac, 0x20ac }  /*                    EuroSign  EURO SIGN */
 };
 
+static const KeySym s_rawDecomposeTable[] = {
+	// non-dead version of dead keys
+	XK_grave,        XK_dead_grave,       XK_space, 0,
+	XK_acute,        XK_dead_acute,       XK_space, 0,
+	XK_asciicircum,  XK_dead_circumflex,  XK_space, 0,
+	XK_asciitilde,   XK_dead_tilde,       XK_space, 0,
+	XK_cedilla,      XK_dead_cedilla,     XK_space, 0,
+	XK_ogonek,       XK_dead_ogonek,      XK_space, 0,
+	XK_caron,        XK_dead_caron,       XK_space, 0,
+	XK_abovedot,     XK_dead_abovedot,    XK_space, 0,
+	XK_doubleacute,  XK_dead_doubleacute, XK_space, 0,
+	XK_breve,        XK_dead_breve,       XK_space, 0,
+	XK_macron,       XK_dead_macron,      XK_space, 0,
+
+	// Latin-1 (ISO 8859-1)
+	XK_Agrave,       XK_dead_grave,       XK_A, 0,
+	XK_Aacute,       XK_dead_acute,       XK_A, 0,
+	XK_Acircumflex,  XK_dead_circumflex,  XK_A, 0,
+	XK_Atilde,       XK_dead_tilde,       XK_A, 0,
+	XK_Adiaeresis,   XK_dead_diaeresis,   XK_A, 0,
+	XK_Aring,        XK_dead_abovering,   XK_A, 0,
+	XK_Ccedilla,     XK_dead_cedilla,     XK_C, 0,
+	XK_Egrave,       XK_dead_grave,       XK_E, 0,
+	XK_Eacute,       XK_dead_acute,       XK_E, 0,
+	XK_Ecircumflex,  XK_dead_circumflex,  XK_E, 0,
+	XK_Ediaeresis,   XK_dead_diaeresis,   XK_E, 0,
+	XK_Igrave,       XK_dead_grave,       XK_I, 0,
+	XK_Iacute,       XK_dead_acute,       XK_I, 0,
+	XK_Icircumflex,  XK_dead_circumflex,  XK_I, 0,
+	XK_Idiaeresis,   XK_dead_diaeresis,   XK_I, 0,
+	XK_Ntilde,       XK_dead_tilde,       XK_N, 0,
+	XK_Ograve,       XK_dead_grave,       XK_O, 0,
+	XK_Oacute,       XK_dead_acute,       XK_O, 0,
+	XK_Ocircumflex,  XK_dead_circumflex,  XK_O, 0,
+	XK_Otilde,       XK_dead_tilde,       XK_O, 0,
+	XK_Odiaeresis,   XK_dead_diaeresis,   XK_O, 0,
+	XK_Ugrave,       XK_dead_grave,       XK_U, 0,
+	XK_Uacute,       XK_dead_acute,       XK_U, 0,
+	XK_Ucircumflex,  XK_dead_circumflex,  XK_U, 0,
+	XK_Udiaeresis,   XK_dead_diaeresis,   XK_U, 0,
+	XK_Yacute,       XK_dead_acute,       XK_Y, 0,
+	XK_agrave,       XK_dead_grave,       XK_a, 0,
+	XK_aacute,       XK_dead_acute,       XK_a, 0,
+	XK_acircumflex,  XK_dead_circumflex,  XK_a, 0,
+	XK_atilde,       XK_dead_tilde,       XK_a, 0,
+	XK_adiaeresis,   XK_dead_diaeresis,   XK_a, 0,
+	XK_aring,        XK_dead_abovering,   XK_a, 0,
+	XK_ccedilla,     XK_dead_cedilla,     XK_c, 0,
+	XK_egrave,       XK_dead_grave,       XK_e, 0,
+	XK_eacute,       XK_dead_acute,       XK_e, 0,
+	XK_ecircumflex,  XK_dead_circumflex,  XK_e, 0,
+	XK_ediaeresis,   XK_dead_diaeresis,   XK_e, 0,
+	XK_igrave,       XK_dead_grave,       XK_i, 0,
+	XK_iacute,       XK_dead_acute,       XK_i, 0,
+	XK_icircumflex,  XK_dead_circumflex,  XK_i, 0,
+	XK_idiaeresis,   XK_dead_diaeresis,   XK_i, 0,
+	XK_ntilde,       XK_dead_tilde,       XK_n, 0,
+	XK_ograve,       XK_dead_grave,       XK_o, 0,
+	XK_oacute,       XK_dead_acute,       XK_o, 0,
+	XK_ocircumflex,  XK_dead_circumflex,  XK_o, 0,
+	XK_otilde,       XK_dead_tilde,       XK_o, 0,
+	XK_odiaeresis,   XK_dead_diaeresis,   XK_o, 0,
+	XK_ugrave,       XK_dead_grave,       XK_u, 0,
+	XK_uacute,       XK_dead_acute,       XK_u, 0,
+	XK_ucircumflex,  XK_dead_circumflex,  XK_u, 0,
+	XK_udiaeresis,   XK_dead_diaeresis,   XK_u, 0,
+	XK_yacute,       XK_dead_acute,       XK_y, 0,
+	XK_ydiaeresis,   XK_dead_diaeresis,   XK_y, 0,
+
+	// Latin-2 (ISO 8859-2)
+	XK_Aogonek,      XK_dead_ogonek,      XK_A, 0,
+	XK_Lcaron,       XK_dead_caron,       XK_L, 0,
+	XK_Sacute,       XK_dead_acute,       XK_S, 0,
+	XK_Scaron,       XK_dead_caron,       XK_S, 0,
+	XK_Scedilla,     XK_dead_cedilla,     XK_S, 0,
+	XK_Tcaron,       XK_dead_caron,       XK_T, 0,
+	XK_Zacute,       XK_dead_acute,       XK_Z, 0,
+	XK_Zcaron,       XK_dead_caron,       XK_Z, 0,
+	XK_Zabovedot,    XK_dead_abovedot,    XK_Z, 0,
+	XK_aogonek,      XK_dead_ogonek,      XK_a, 0,
+	XK_lcaron,       XK_dead_caron,       XK_l, 0,
+	XK_sacute,       XK_dead_acute,       XK_s, 0,
+	XK_scaron,       XK_dead_caron,       XK_s, 0,
+	XK_scedilla,     XK_dead_cedilla,     XK_s, 0,
+	XK_tcaron,       XK_dead_caron,       XK_t, 0,
+	XK_zacute,       XK_dead_acute,       XK_z, 0,
+	XK_zcaron,       XK_dead_caron,       XK_z, 0,
+	XK_zabovedot,    XK_dead_abovedot,    XK_z, 0,
+	XK_Racute,       XK_dead_acute,       XK_R, 0,
+	XK_Abreve,       XK_dead_breve,       XK_A, 0,
+	XK_Lacute,       XK_dead_acute,       XK_L, 0,
+	XK_Cacute,       XK_dead_acute,       XK_C, 0,
+	XK_Ccaron,       XK_dead_caron,       XK_C, 0,
+	XK_Eogonek,      XK_dead_ogonek,      XK_E, 0,
+	XK_Ecaron,       XK_dead_caron,       XK_E, 0,
+	XK_Dcaron,       XK_dead_caron,       XK_D, 0,
+	XK_Nacute,       XK_dead_acute,       XK_N, 0,
+	XK_Ncaron,       XK_dead_caron,       XK_N, 0,
+	XK_Odoubleacute, XK_dead_doubleacute, XK_O, 0,
+	XK_Rcaron,       XK_dead_caron,       XK_R, 0,
+	XK_Uring,        XK_dead_abovering,   XK_U, 0,
+	XK_Udoubleacute, XK_dead_doubleacute, XK_U, 0,
+	XK_Tcedilla,     XK_dead_cedilla,     XK_T, 0,
+	XK_racute,       XK_dead_acute,       XK_r, 0,
+	XK_abreve,       XK_dead_breve,       XK_a, 0,
+	XK_lacute,       XK_dead_acute,       XK_l, 0,
+	XK_cacute,       XK_dead_acute,       XK_c, 0,
+	XK_ccaron,       XK_dead_caron,       XK_c, 0,
+	XK_eogonek,      XK_dead_ogonek,      XK_e, 0,
+	XK_ecaron,       XK_dead_caron,       XK_e, 0,
+	XK_dcaron,       XK_dead_caron,       XK_d, 0,
+	XK_nacute,       XK_dead_acute,       XK_n, 0,
+	XK_ncaron,       XK_dead_caron,       XK_n, 0,
+	XK_odoubleacute, XK_dead_doubleacute, XK_o, 0,
+	XK_rcaron,       XK_dead_caron,       XK_r, 0,
+	XK_uring,        XK_dead_abovering,   XK_u, 0,
+	XK_udoubleacute, XK_dead_doubleacute, XK_u, 0,
+	XK_tcedilla,     XK_dead_cedilla,     XK_t, 0,
+
+	// Latin-3 (ISO 8859-3)
+	XK_Hcircumflex,  XK_dead_circumflex,  XK_H, 0,
+	XK_Iabovedot,    XK_dead_abovedot,    XK_I, 0,
+	XK_Gbreve,       XK_dead_breve,       XK_G, 0,
+	XK_Jcircumflex,  XK_dead_circumflex,  XK_J, 0,
+	XK_hcircumflex,  XK_dead_circumflex,  XK_h, 0,
+	XK_gbreve,       XK_dead_breve,       XK_g, 0,
+	XK_jcircumflex,  XK_dead_circumflex,  XK_j, 0,
+	XK_Cabovedot,    XK_dead_abovedot,    XK_C, 0,
+	XK_Ccircumflex,  XK_dead_circumflex,  XK_C, 0,
+	XK_Gabovedot,    XK_dead_abovedot,    XK_G, 0,
+	XK_Gcircumflex,  XK_dead_circumflex,  XK_G, 0,
+	XK_Ubreve,       XK_dead_breve,       XK_U, 0,
+	XK_Scircumflex,  XK_dead_circumflex,  XK_S, 0,
+	XK_cabovedot,    XK_dead_abovedot,    XK_c, 0,
+	XK_ccircumflex,  XK_dead_circumflex,  XK_c, 0,
+	XK_gabovedot,    XK_dead_abovedot,    XK_g, 0,
+	XK_gcircumflex,  XK_dead_circumflex,  XK_g, 0,
+	XK_ubreve,       XK_dead_breve,       XK_u, 0,
+	XK_scircumflex,  XK_dead_circumflex,  XK_s, 0,
+
+	// Latin-4 (ISO 8859-4)
+	XK_scircumflex,  XK_dead_circumflex,  XK_s, 0,
+	XK_Rcedilla,     XK_dead_cedilla,     XK_R, 0,
+	XK_Itilde,       XK_dead_tilde,       XK_I, 0,
+	XK_Lcedilla,     XK_dead_cedilla,     XK_L, 0,
+	XK_Emacron,      XK_dead_macron,      XK_E, 0,
+	XK_Gcedilla,     XK_dead_cedilla,     XK_G, 0,
+	XK_rcedilla,     XK_dead_cedilla,     XK_r, 0,
+	XK_itilde,       XK_dead_tilde,       XK_i, 0,
+	XK_lcedilla,     XK_dead_cedilla,     XK_l, 0,
+	XK_emacron,      XK_dead_macron,      XK_e, 0,
+	XK_gcedilla,     XK_dead_cedilla,     XK_g, 0,
+	XK_Amacron,      XK_dead_macron,      XK_A, 0,
+	XK_Iogonek,      XK_dead_ogonek,      XK_I, 0,
+	XK_Eabovedot,    XK_dead_abovedot,    XK_E, 0,
+	XK_Imacron,      XK_dead_macron,      XK_I, 0,
+	XK_Ncedilla,     XK_dead_cedilla,     XK_N, 0,
+	XK_Omacron,      XK_dead_macron,      XK_O, 0,
+	XK_Kcedilla,     XK_dead_cedilla,     XK_K, 0,
+	XK_Uogonek,      XK_dead_ogonek,      XK_U, 0,
+	XK_Utilde,       XK_dead_tilde,       XK_U, 0,
+	XK_Umacron,      XK_dead_macron,      XK_U, 0,
+	XK_amacron,      XK_dead_macron,      XK_a, 0,
+	XK_iogonek,      XK_dead_ogonek,      XK_i, 0,
+	XK_eabovedot,    XK_dead_abovedot,    XK_e, 0,
+	XK_imacron,      XK_dead_macron,      XK_i, 0,
+	XK_ncedilla,     XK_dead_cedilla,     XK_n, 0,
+	XK_omacron,      XK_dead_macron,      XK_o, 0,
+	XK_kcedilla,     XK_dead_cedilla,     XK_k, 0,
+	XK_uogonek,      XK_dead_ogonek,      XK_u, 0,
+	XK_utilde,       XK_dead_tilde,       XK_u, 0,
+	XK_umacron,      XK_dead_macron,      XK_u, 0,
+
+	// Latin-8 (ISO 8859-14)
+#if defined(XK_Babovedot)
+	XK_Babovedot,    XK_dead_abovedot,    XK_B, 0,
+	XK_babovedot,    XK_dead_abovedot,    XK_b, 0,
+	XK_Dabovedot,    XK_dead_abovedot,    XK_D, 0,
+	XK_Wgrave,       XK_dead_grave,       XK_W, 0,
+	XK_Wacute,       XK_dead_acute,       XK_W, 0,
+	XK_dabovedot,    XK_dead_abovedot,    XK_d, 0,
+	XK_Ygrave,       XK_dead_grave,       XK_Y, 0,
+	XK_Fabovedot,    XK_dead_abovedot,    XK_F, 0,
+	XK_fabovedot,    XK_dead_abovedot,    XK_f, 0,
+	XK_Mabovedot,    XK_dead_abovedot,    XK_M, 0,
+	XK_mabovedot,    XK_dead_abovedot,    XK_m, 0,
+	XK_Pabovedot,    XK_dead_abovedot,    XK_P, 0,
+	XK_wgrave,       XK_dead_grave,       XK_w, 0,
+	XK_pabovedot,    XK_dead_abovedot,    XK_p, 0,
+	XK_wacute,       XK_dead_acute,       XK_w, 0,
+	XK_Sabovedot,    XK_dead_abovedot,    XK_S, 0,
+	XK_ygrave,       XK_dead_grave,       XK_y, 0,
+	XK_Wdiaeresis,   XK_dead_diaeresis,   XK_W, 0,
+	XK_wdiaeresis,   XK_dead_diaeresis,   XK_w, 0,
+	XK_sabovedot,    XK_dead_abovedot,    XK_s, 0,
+	XK_Wcircumflex,  XK_dead_circumflex,  XK_W, 0,
+	XK_Tabovedot,    XK_dead_abovedot,    XK_T, 0,
+	XK_Ycircumflex,  XK_dead_circumflex,  XK_Y, 0,
+	XK_wcircumflex,  XK_dead_circumflex,  XK_w, 0,
+	XK_tabovedot,    XK_dead_abovedot,    XK_t, 0,
+	XK_ycircumflex,  XK_dead_circumflex,  XK_y, 0,
+#endif
+
+	// Latin-9 (ISO 8859-15)
+#if defined(XK_Ydiaeresis)
+	XK_Ydiaeresis,   XK_dead_diaeresis,   XK_Y, 0,
+#endif
+
+	// end of table
+	0
+};
+
 
 //
 // CXWindowsUtil
@@ -812,6 +1032,7 @@ struct codepair {
 
 CXWindowsUtil::CKeySymMap	CXWindowsUtil::s_keySymToUCS4;
 CXWindowsUtil::CUCS4Map		CXWindowsUtil::s_UCS4ToKeySym;
+CXWindowsUtil::CKeySymsMap	CXWindowsUtil::s_decomposedKeySyms;
 
 bool
 CXWindowsUtil::getWindowProperty(Display* display, Window window,
@@ -1008,6 +1229,21 @@ CXWindowsUtil::mapUCS4ToKeySym(UInt32 c)
 	}
 }
 
+bool
+CXWindowsUtil::decomposeKeySym(KeySym keysym, KeySyms& decomposed)
+{
+	// unfortunately, X11 doesn't appear to have any way of
+	// decomposing a keysym into its component keysyms.  we'll
+	// use a lookup table for certain character sets.
+	initKeyMaps();
+	CKeySymsMap::const_iterator i = s_decomposedKeySyms.find(keysym);
+	if (i == s_decomposedKeySyms.end()) {
+		return false;
+	}
+	decomposed = i->second;
+	return true;
+}
+
 Bool
 CXWindowsUtil::propertyNotifyPredicate(Display*, XEvent* xevent, XPointer arg)
 {
@@ -1029,6 +1265,19 @@ CXWindowsUtil::initKeyMaps()
 		for (size_t i =0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
 			s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
 			s_UCS4ToKeySym[s_keymap[i].ucs4]   = s_keymap[i].keysym;
+		}
+	}
+
+	// fill decomposed key table if not filled yet
+	if (s_decomposedKeySyms.empty()) {
+		for (const KeySym* scan = s_rawDecomposeTable; *scan != 0; ++scan) {
+			// add an entry for this keysym
+			KeySyms& entry = s_decomposedKeySyms[*scan];
+
+			// add the decomposed keysyms for the keysym
+			while (*++scan != 0) {
+				entry.push_back(*scan);
+			}
 		}
 	}
 }

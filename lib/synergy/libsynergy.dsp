@@ -99,15 +99,11 @@ SOURCE=.\COutputPacketStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CPrimaryScreen.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\CProtocolUtil.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CSecondaryScreen.cpp
+SOURCE=.\CScreen.cpp
 # End Source File
 # Begin Source File
 
@@ -139,15 +135,11 @@ SOURCE=.\COutputPacketStream.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CPrimaryScreen.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\CProtocolUtil.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CSecondaryScreen.h
+SOURCE=.\CScreen.h
 # End Source File
 # Begin Source File
 
@@ -159,7 +151,15 @@ SOURCE=.\IClipboard.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IPrimaryScreenFactory.h
+SOURCE=.\IKeyState.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IPlatformScreen.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IPrimaryScreen.h
 # End Source File
 # Begin Source File
 
@@ -167,11 +167,7 @@ SOURCE=.\IPrimaryScreenReceiver.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\IScreen.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\IScreenEventHandler.h
+SOURCE=.\IScreenFactory.h
 # End Source File
 # Begin Source File
 
@@ -183,7 +179,7 @@ SOURCE=.\IScreenSaver.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ISecondaryScreenFactory.h
+SOURCE=.\ISecondaryScreen.h
 # End Source File
 # Begin Source File
 

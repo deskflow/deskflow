@@ -15,7 +15,7 @@
 #include "CServer.h"
 #include "CHTTPServer.h"
 #include "CPrimaryClient.h"
-#include "IPrimaryScreenFactory.h"
+#include "IScreenFactory.h"
 #include "CInputPacketStream.h"
 #include "COutputPacketStream.h"
 #include "CProtocolUtil.h"
@@ -89,6 +89,7 @@ CServer::open()
 		LOG((CLOG_INFO "opening screen"));
 		openPrimaryScreen();
 		setStatus(kNotRunning);
+		m_primaryClient->enable();
 	}
 	catch (XScreen& e) {
 		// can't open screen
@@ -212,6 +213,7 @@ void
 CServer::close()
 {
 	if (m_primaryClient != NULL) {
+		m_primaryClient->disable();
 		closePrimaryScreen();
 	}
 	LOG((CLOG_INFO "closed screen"));
@@ -280,7 +282,7 @@ CServer::setConfig(const CConfig& config)
 }
 
 void
-CServer::setScreenFactory(IPrimaryScreenFactory* adopted)
+CServer::setScreenFactory(IScreenFactory* adopted)
 {
 	CLock lock(&m_mutex);
 	delete m_screenFactory;
@@ -1601,7 +1603,7 @@ CServer::runClient(void* vsocket)
 		try {
 			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBusy);
 		}
-		catch (XSocket&) {
+		catch (XIO&) {
 			// ignore
 		}
 		delete proxy;
@@ -1614,7 +1616,7 @@ CServer::runClient(void* vsocket)
 		try {
 			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEUnknown);
 		}
-		catch (XSocket&) {
+		catch (XIO&) {
 			// ignore
 		}
 		delete proxy;
@@ -1646,7 +1648,7 @@ CServer::runClient(void* vsocket)
 		try {
 			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBad);
 		}
-		catch (XSocket&) {
+		catch (XIO&) {
 			// ignore.  client probably aborted the connection.
 		}
 	}
@@ -1766,7 +1768,7 @@ CServer::handshakeClient(IDataSocket* socket)
 			CProtocolUtil::writef(output, kMsgEIncompatible,
 							kProtocolMajorVersion, kProtocolMinorVersion);
 		}
-		catch (XSocket&) {
+		catch (XIO&) {
 			// ignore
 		}
 	}
@@ -1776,7 +1778,7 @@ CServer::handshakeClient(IDataSocket* socket)
 		try {
 			CProtocolUtil::writef(output, kMsgEBad);
 		}
-		catch (XSocket&) {
+		catch (XIO&) {
 			// ignore.  client probably aborted the connection.
 		}
 	}

@@ -36,6 +36,7 @@ libbase_a_SOURCES =			\
 	CFunctionJob.h			\
 	CJobList.h				\
 	CLog.h					\
+	CPriorityQueue.h		\
 	CStopwatch.h			\
 	CString.h				\
 	CStringUtil.h			\

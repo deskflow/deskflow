@@ -18,6 +18,7 @@
 #include "CString.h"
 #include "BasicTypes.h"
 #include "stdmap.h"
+#include "stdvector.h"
 #if defined(X_DISPLAY_MISSING)
 #	error X11 is required to build synergy
 #else
@@ -27,6 +28,8 @@
 //! X11 utility functions
 class CXWindowsUtil {
 public:
+	typedef std::vector<KeySym> KeySyms;
+
 	//! Get property
 	/*!
 	Gets property \c property on \c window.  \b Appends the data to
@@ -69,6 +72,14 @@ public:
 	NoSymbol (0) if the character cannot be mapped.
 	*/
 	static KeySym		mapUCS4ToKeySym(UInt32);
+
+	//! Decompose a KeySym
+	/*!
+	Decomposes \c keysym into its component keysyms.  All but the last
+	decomposed KeySym are dead keys.  Returns true iff the decomposition
+	was successful.
+	*/
+	static bool			decomposeKeySym(KeySym keysym, KeySyms& decomposed);
 
 	//! X11 error handler
 	/*!
@@ -133,9 +144,11 @@ private:
 private:
 	typedef std::map<KeySym, UInt32> CKeySymMap;
 	typedef std::map<UInt32, KeySym> CUCS4Map;
+	typedef std::map<KeySym, KeySyms> CKeySymsMap;
 
 	static CKeySymMap	s_keySymToUCS4;
 	static CUCS4Map		s_UCS4ToKeySym;
+	static CKeySymsMap	s_decomposedKeySyms;
 };
 
 #endif

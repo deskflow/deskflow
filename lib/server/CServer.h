@@ -33,7 +33,7 @@ class CHTTPServer;
 class CPrimaryClient;
 class IClient;
 class IDataSocket;
-class IPrimaryScreenFactory;
+class IScreenFactory;
 class IServerProtocol;
 class ISocketFactory;
 class IStreamFilterFactory;
@@ -102,13 +102,12 @@ public:
 	*/
 	bool				setConfig(const CConfig&);
 
-	//! Set primary screen factory
+	//! Set screen factory
 	/*!
-	Sets the factory for creating primary screens.  This must be
-	set before calling open().  This object takes ownership of the
-	factory.
+	Sets the factory for creating screens.  This must be set before
+	calling open().  This object takes ownership of the factory.
 	*/
-	void				setScreenFactory(IPrimaryScreenFactory*);
+	void				setScreenFactory(IScreenFactory*);
 
 	//! Set socket factory
 	/*!
@@ -341,8 +340,8 @@ private:
 	double				m_bindTimeout;
 
 	// factories
-	IPrimaryScreenFactory*	m_screenFactory;
-	ISocketFactory*			m_socketFactory;
+	IScreenFactory*		m_screenFactory;
+	ISocketFactory*		m_socketFactory;
 	IStreamFilterFactory*	m_streamFilterFactory;
 
 	// running threads

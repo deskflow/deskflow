@@ -19,16 +19,31 @@
 // CArchMiscWindows
 //
 
+void
+CArchMiscWindows::init()
+{
+	isWindows95Family();
+}
+
 bool
 CArchMiscWindows::isWindows95Family()
 {
-	OSVERSIONINFO version;
-	version.dwOSVersionInfoSize = sizeof(version);
-	if (GetVersionEx(&version) == 0) {
-		// cannot determine OS;  assume windows 95 family
-		return true;
+	static bool init   = false;
+	static bool result = false;
+
+	if (!init) {
+		OSVERSIONINFO version;
+		version.dwOSVersionInfoSize = sizeof(version);
+		if (GetVersionEx(&version) == 0) {
+			// cannot determine OS;  assume windows 95 family
+			result = true;
+		}
+		else {
+			result = (version.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
+		}
+		init = true;
 	}
-	return (version.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
+	return result;
 }
 
 int

@@ -15,7 +15,8 @@
 #ifndef CMSWINDOWSSCREEN_H
 #define CMSWINDOWSSCREEN_H
 
-#include "IScreen.h"
+#include "IPlatformScreen.h"
+#include "CMSWindowsKeyMapper.h"
 #include "CSynergyHook.h"
 #include "CMutex.h"
 #include "CString.h"
@@ -23,22 +24,13 @@
 #include <windows.h>
 
 class CMSWindowsScreenSaver;
-class CThread;
-
-// Microsoft windows event
-class CEvent {
-public:
-	MSG					m_msg;
-	LRESULT				m_result;
-};
-
 class IScreenReceiver;
-class IMSWindowsScreenEventHandler;
+class IPrimaryScreenReceiver;
 
-//! Implementation of IScreen for Microsoft Windows
-class CMSWindowsScreen : public IScreen {
+//! Implementation of IPlatformScreen for Microsoft Windows
+class CMSWindowsScreen : public IPlatformScreen {
 public:
-	CMSWindowsScreen(IScreenReceiver*, IMSWindowsScreenEventHandler*);
+	CMSWindowsScreen(IScreenReceiver*, IPrimaryScreenReceiver*);
 	virtual ~CMSWindowsScreen();
 
 	//! @name manipulators
@@ -51,36 +43,9 @@ public:
 	*/
 	static void			init(HINSTANCE);
 
-	//! Open desktop
-	/*!
-	Open the desktop and create and return the window.  Returns NULL
-	on failure.
-	*/
-	HWND				openDesktop();
-
-	//! Close desktop
-	/*!
-	Close the window and desktop.
-	*/
-	void				closeDesktop();
-
-	//! Install a one-shot timer
-	/*!
-	Installs a one-shot timer for \c timeout seconds and returns the
-	id of the timer (which will be passed to the receiver's
-	\c onTimerExpired()).
-	*/
-	UInt32				addOneShotTimer(double timeout);
-
 	//@}
 	//! @name accessors
 	//@{
-
-	//! Test for multiple monitors
-	/*!
-	Returns true iff the system appears to have multiple monitors.
-	*/
-	bool				isMultimon() const;
 
 	//! Get instance
 	/*!
@@ -90,36 +55,50 @@ public:
 
 	//@}
 
-	// IScreen overrides
-	// note -- this class expects the hook DLL to have been loaded
-	// and initialized before open() is called.
-	void				open();
-	void				mainLoop();
-	void				exitMainLoop();
-	void				close();
-	bool				setClipboard(ClipboardID, const IClipboard*);
-	void				checkClipboards();
-	void				openScreensaver(bool notify);
-	void				closeScreensaver();
-	void				screensaver(bool activate);
-	void				syncDesktop();
-	bool				getClipboard(ClipboardID, IClipboard*) const;
-	void				getShape(SInt32&, SInt32&, SInt32&, SInt32&) const;
-	void				getCursorPos(SInt32&, SInt32&) const;
-	void				getCursorCenter(SInt32&, SInt32&) const;
+	// IPlatformScreen overrides
+	virtual void		open(IKeyState*);
+	virtual void		close();
+	virtual void		enable();
+	virtual void		disable();
+	virtual void		mainLoop();
+	virtual void		exitMainLoop();
+	virtual void		enter();
+	virtual bool		leave();
+	virtual bool		setClipboard(ClipboardID, const IClipboard*);
+	virtual void		checkClipboards();
+	virtual void		openScreensaver(bool notify);
+	virtual void		closeScreensaver();
+	virtual void		screensaver(bool activate);
+	virtual void		resetOptions();
+	virtual void		setOptions(const COptionsList& options);
+	virtual void		updateKeys();
+	virtual bool		isPrimary() const;
+	virtual bool		getClipboard(ClipboardID, IClipboard*) const;
+	virtual void		getShape(SInt32&, SInt32&, SInt32&, SInt32&) const;
+	virtual void		getCursorPos(SInt32&, SInt32&) const;
+
+	// IPrimaryScreen overrides
+	virtual void		reconfigure(UInt32 activeSides);
+	virtual void		warpCursor(SInt32 x, SInt32 y);
+	virtual UInt32		addOneShotTimer(double timeout);
+	virtual SInt32		getJumpZoneSize() const;
+	virtual bool		isAnyMouseButtonDown() const;
+	virtual const char*	getKeyName(KeyButton) const;
+
+	// ISecondaryScreen overrides
+	virtual void		fakeKeyEvent(KeyButton id, bool press) const;
+	virtual bool		fakeCtrlAltDel() const;
+	virtual void		fakeMouseButton(ButtonID id, bool press) const;
+	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
+	virtual void		fakeMouseWheel(SInt32 delta) const;
+	virtual KeyButton	mapKey(IKeyState::Keystrokes&,
+							const IKeyState& keyState, KeyID id,
+							KeyModifierMask desiredMask,
+							bool isAutoRepeat) const;
 
 private:
 	// update screen size cache
 	void				updateScreenShape();
-
-	// internal pre-dispatch event processing
-	bool				onPreDispatch(const CEvent* event);
-
-	// internal (post-dispatch) event processing
-	bool				onEvent(CEvent* event);
-
-	// create the transparent cursor
-	void				createBlankCursor();
 
 	// switch to the given desktop.  this destroys the window and unhooks
 	// all hooks, switches the desktop, then creates the window and rehooks
@@ -127,16 +106,65 @@ private:
 	// any windows or hooks).
 	bool				switchDesktop(HDESK desk);
 
-	// get the input desktop.  caller must CloseDesktop() the result.
-	// do not call under windows 95/98/me.
-	HDESK				openInputDesktop() const;
+	// make sure we're on the expected desktop
+	void				syncDesktop() const;
 
-	// get the desktop's name.  do not call under windows 95/98/me.
-	CString				getDesktopName(HDESK) const;
+	// handle message before it gets dispatched.  returns true iff
+	// the message should not be dispatched.
+	bool				onPreDispatch(HWND, UINT, WPARAM, LPARAM);
 
-	// returns true iff desk is the current desk.  do not call under
-	// windows 95/98/me.
-	bool				isCurrentDesktop(HDESK desk) const;
+	// handle message before it gets dispatched.  returns true iff
+	// the message should not be dispatched.
+	bool				onPreDispatchPrimary(HWND, UINT, WPARAM, LPARAM);
+
+	// handle message.  returns true iff handled and optionally sets
+	// \c *result (which defaults to 0).
+	bool				onEvent(HWND, UINT, WPARAM, LPARAM, LRESULT* result);
+
+	// message handlers
+	bool				onMark(UInt32 mark);
+	bool				onKey(WPARAM, LPARAM);
+	bool				onMouseButton(WPARAM, LPARAM);
+	bool				onMouseMove(SInt32 x, SInt32 y);
+	bool				onMouseWheel(SInt32 delta);
+	bool				onScreensaver(bool activated);
+	bool				onTimer(UINT timerID);
+	bool				onDisplayChange();
+	bool				onClipboardChange();
+	bool				onActivate(bool activated);
+
+// XXX
+	// warp cursor without discarding queued events
+	void				warpCursorNoFlush(SInt32 x, SInt32 y);
+
+	// discard posted messages
+	void				nextMark();
+
+	// test if event should be ignored
+	bool				ignore() const;
+// XXX
+
+	// create the transparent cursor
+	HCURSOR				createBlankCursor() const;
+
+	// show/hide the cursor
+	void				showCursor(bool) const;
+
+	// enable/disable special key combinations so we can catch/pass them
+	void				enableSpecialKeys(bool) const;
+
+	// map a button ID and action to a mouse event
+	DWORD				mapButtonToEvent(ButtonID button,
+							bool press, DWORD* inData) const;
+
+	// map a button event to a button ID
+	ButtonID			mapButtonFromEvent(WPARAM msg, LPARAM button) const;
+
+	// return true iff the given virtual key is a modifier
+	bool				isModifier(UINT vkCode) const;
+
+	// send ctrl+alt+del hotkey event
+	static void			ctrlAltDelThread(void*);
 
 	// our window proc
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
@@ -144,25 +172,38 @@ private:
 private:
 	static HINSTANCE	s_instance;
 
-	IScreenReceiver*	m_receiver;
-	IMSWindowsScreenEventHandler*	m_eventHandler;
-
-	ATOM				m_class;
-	HICON				m_icon;
-	HCURSOR				m_cursor;
+	// true if screen is being used as a primary screen, false otherwise
+	bool				m_isPrimary;
 
 	// true if windows 95/98/me
 	bool				m_is95Family;
 
-	// our window
+	// receivers
+	IScreenReceiver*		m_receiver;
+	IPrimaryScreenReceiver*	m_primaryReceiver;
+
+	// true if mouse has entered the screen
+	bool				m_isOnScreen;
+
+	// our resources
+	ATOM				m_class;
+	HCURSOR				m_cursor;
 	HWND				m_window;
 
-	// screen shape
+	// screen shape stuff
 	SInt32				m_x, m_y;
 	SInt32				m_w, m_h;
+	SInt32				m_xCenter, m_yCenter;
 
 	// true if system appears to have multiple monitors
 	bool				m_multimon;
+
+	// last mouse position
+	SInt32				m_xCursor, m_yCursor;
+
+	// used to discard queued messages that are no longer needed
+	UInt32				m_mark;
+	UInt32				m_markReceived;
 
 	// the main loop's thread id
 	DWORD				m_threadID;
@@ -170,26 +211,23 @@ private:
 	// the thread id of the last attached thread
 	DWORD				m_lastThreadID;
 
-	// clipboard stuff
-	HWND				m_nextClipboardWindow;
-	bool				m_ownClipboard;
-
 	// the timer used to check for desktop switching
 	UINT				m_timer;
 
 	// the one shot timer
 	UINT				m_oneShotTimer;
 
+	// screen saver stuff
+	CMSWindowsScreenSaver*	m_screensaver;
+	bool					m_screensaverNotify;
+
+	// clipboard stuff
+	HWND				m_nextClipboardWindow;
+	bool				m_ownClipboard;
+
 	// the current desk and it's name
 	HDESK				m_desk;
 	CString				m_deskName;
-
-	// screen saver stuff
-	HINSTANCE					m_hookLibrary;
-	InstallScreenSaverFunc		m_installScreensaver;
-	UninstallScreenSaverFunc	m_uninstallScreensaver;
-	CMSWindowsScreenSaver*		m_screensaver;
-	bool						m_screensaverNotify;
 
 	// true when the current desktop is inaccessible.  while
 	// the desktop is inaccessible we won't receive user input
@@ -197,6 +235,29 @@ private:
 	// desktop becomes accessible again we'll notify the event
 	// handler of that.
 	bool				m_inaccessibleDesktop;
+
+	// hook library stuff
+	HINSTANCE			m_hookLibrary;
+	InitFunc			m_init;
+	CleanupFunc			m_cleanup;
+	InstallFunc			m_install;
+	UninstallFunc		m_uninstall;
+	SetSidesFunc		m_setSides;
+	SetZoneFunc			m_setZone;
+	SetModeFunc			m_setMode;
+	InstallScreenSaverFunc		m_installScreensaver;
+	UninstallScreenSaverFunc	m_uninstallScreensaver;
+	bool				m_lowLevel;
+
+	// keyboard stuff
+	IKeyState*			m_keyState;
+	CMSWindowsKeyMapper	m_keyMapper;
+
+	// map of button state
+	BYTE				m_buttons[1 + kButtonExtra0 + 1];
+
+	// stuff for hiding the cursor
+	DWORD				m_cursorThread;
 
 	static CMSWindowsScreen*	s_screen;
 };
