@@ -35,7 +35,9 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	m_notify(None),
 	m_xscreensaver(None),
 	m_xscreensaverActive(false),
-	m_disabled(false)
+	m_disabled(false),
+	m_suppressDisable(false),
+	m_disableJobInstalled(false)
 {
 	// screen saver disable callback
 	m_disableJob = new TMethodJob<CXWindowsScreenSaver>(this,
@@ -184,7 +186,7 @@ CXWindowsScreenSaver::enable()
 {
 	// for xscreensaver
 	m_disabled = false;
-	m_screen->removeTimer(m_disableJob);
+	updateDisableJob();
 
 	// for built-in X screen saver
 	XSetScreenSaver(m_display, m_timeout, m_interval,
@@ -197,7 +199,7 @@ CXWindowsScreenSaver::disable()
 	// for xscreensaver.  5 seconds should be plenty often to
 	// suppress the screen saver.
 	m_disabled = true;
-	m_screen->addTimer(m_disableJob, 5.0);
+	updateDisableJob();
 
 	// use built-in X screen saver
 	XGetScreenSaver(m_display, &m_timeout, &m_interval,
@@ -211,9 +213,8 @@ void
 CXWindowsScreenSaver::activate()
 {
 	// remove disable job timer
-	if (m_disabled) {
-		m_screen->removeTimer(m_disableJob);
-	}
+	m_suppressDisable = true;
+	updateDisableJob();
 
 	// try xscreensaver
 	findXScreenSaver();
@@ -230,9 +231,8 @@ void
 CXWindowsScreenSaver::deactivate()
 {
 	// reinstall disable job timer
-	if (m_disabled) {
-		m_screen->addTimer(m_disableJob, 5.0);
-	}
+	m_suppressDisable = false;
+	updateDisableJob();
 
 	// try xscreensaver
 	findXScreenSaver();
@@ -346,6 +346,14 @@ CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
 	if (m_xscreensaverActive != activated) {
 		LOG((CLOG_DEBUG "xscreensaver %s on window 0x%08x", activated ? "activated" : "deactivated", m_xscreensaver));
 		m_xscreensaverActive = activated;
+
+		// if screen saver was activated forcefully (i.e. against
+		// our will) then just accept it.  don't try to keep it
+		// from activating since that'll just pop up the password
+		// dialog if locking is enabled.
+		m_suppressDisable = activated;
+		updateDisableJob();
+
 		sendNotify(activated);
 	}
 }
@@ -430,6 +438,21 @@ CXWindowsScreenSaver::addWatchXScreenSaver(Window window)
 			// if successful then add the window to our list
 			m_watchWindows.insert(std::make_pair(window, attr.your_event_mask));
 		}
+	}
+}
+
+void
+CXWindowsScreenSaver::updateDisableJob()
+{
+	assert(m_disableJob != NULL);
+
+	if (m_disabled && !m_suppressDisable && !m_disableJobInstalled) {
+		m_disableJobInstalled = true;
+		m_screen->addTimer(m_disableJob, 5.0);
+	}
+	else if ((!m_disabled || m_suppressDisable) && m_disableJobInstalled) {
+		m_disableJobInstalled = false;
+		m_screen->removeTimer(m_disableJob);
 	}
 }
 

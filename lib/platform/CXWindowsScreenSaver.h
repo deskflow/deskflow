@@ -97,6 +97,9 @@ private:
 	// add window to the watch list
 	void				addWatchXScreenSaver(Window window);
 
+	// install/uninstall the job used to suppress the screensaver
+	void				updateDisableJob();
+
 	// called periodically to prevent the screen saver from starting
 	void				disableCallback(void*);
 
@@ -140,8 +143,16 @@ private:
 	int					m_preferBlanking;
 	int					m_allowExposures;
 
-	// true iff the disabled job timer is installed
+	// true iff the client wants the screen saver suppressed
 	bool				m_disabled;
+
+	// true iff we're ignoring m_disabled.  this is true, for example,
+	// when the client has called activate() and so presumably wants
+	// to activate the screen saver even if disabled.
+	bool				m_suppressDisable;
+
+	// true iff the disabled job timer is installed
+	bool				m_disableJobInstalled;
 
 	// the job used to invoke disableCallback
 	IJob*				m_disableJob;
