@@ -27,7 +27,7 @@
 #endif
 
 static const TCHAR* g_isSecureNT = "ScreenSaverIsSecure";
-static const TCHAR* g_isSecure9x = "ScreenSaverUsePassword";
+static const TCHAR* g_isSecure9x = "ScreenSaveUsePassword";
 static const TCHAR* const g_pathScreenSaverIsSecure[] = {
 	"Control Panel",
 	"Desktop",
@@ -162,6 +162,7 @@ CMSWindowsScreenSaver::activate()
 {
 	// don't activate if already active
 	if (!isActive()) {
+		// activate
 		HWND hwnd = GetForegroundWindow();
 		if (hwnd != NULL) {
 			PostMessage(hwnd, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
@@ -451,12 +452,14 @@ CMSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
 	switch (CArchMiscWindows::typeOfValue(hkey, isSecure)) {
 	default:
 		result = false;
+		break;
 
 	case CArchMiscWindows::kUINT: {
 		DWORD value =
 			CArchMiscWindows::readValueInt(hkey, isSecure);
 		*wasSecureFlagAnInt = true;
 		result = (value != 0);
+		break;
 	}
 
 	case CArchMiscWindows::kSTRING: {
@@ -464,6 +467,7 @@ CMSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
 			CArchMiscWindows::readValueString(hkey, isSecure);
 		*wasSecureFlagAnInt = false;
 		result = (value != "0");
+		break;
 	}
 	}
 
