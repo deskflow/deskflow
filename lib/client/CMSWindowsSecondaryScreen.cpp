@@ -338,6 +338,10 @@ CMSWindowsSecondaryScreen::hideWindow()
 void
 CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 {
+	typedef UINT (WINAPI *SendInput_t)(UINT, LPINPUT, int);
+	static bool gotSendInput     = false;
+	static SendInput_t SendInput = NULL;
+
 	// move the mouse directly to target position on NT family or if
 	// not using multiple monitors.
 	if (m_screen->isMultimon() || !m_is95Family) {
@@ -362,7 +366,9 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 	// clicking the mouse or pressing a key between the absolute and
 	// relative move) we'll use SendInput() which guarantees that the
 	// events are delivered uninterrupted.  we cannot prevent changes
-	// to the mouse acceleration at inopportune times, though.
+	// to the mouse acceleration at inopportune times, though.  if
+	// SendInput() is unavailable then use mouse_event();  SendInput()
+	// is not available on Windows 95 and NT 4.0 prior to SP3.
 	//
 	// point-to-activate (x-mouse) doesn't seem to be bothered by the
 	// absolute/relative combination.  a window over the absolute
@@ -371,6 +377,17 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 	// app under the final mouse position does *not* get deactivated
 	// by the absolute move to 0,0.
 	else {
+		// lookup SendInput() function
+		if (!gotSendInput) {
+			gotSendInput = true;
+			HINSTANCE user32 = LoadLibrary("user32.dll");
+			if (user32 != NULL) {
+				SendInput = reinterpret_cast<SendInput_t>(
+								GetProcAddress(user32, "SendInput"));
+				FreeLibrary(user32);
+			}
+		}
+
 		// save mouse speed & acceleration
 		int oldSpeed[4];
 		bool accelChanged =
@@ -401,8 +418,22 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 		events[1].mi.dwFlags     = MOUSEEVENTF_MOVE;
 		events[1].mi.time        = events[0].mi.time;
 		events[1].mi.dwExtraInfo = 0;
-		SendInput(sizeof(events) / sizeof(events[0]),
+		if (SendInput != NULL) {
+			SendInput(sizeof(events) / sizeof(events[0]),
 								events, sizeof(events[0]));
+		}
+		else {
+			mouse_event(events[0].mi.dwFlags,
+								events[0].mi.dx,
+								events[0].mi.dy,
+								events[0].mi.mouseData,
+								events[0].mi.dwExtraInfo);
+			mouse_event(events[1].mi.dwFlags,
+								events[1].mi.dx,
+								events[1].mi.dy,
+								events[1].mi.mouseData,
+								events[1].mi.dwExtraInfo);
+		}
 
 		// restore mouse speed & acceleration
 		if (accelChanged) {
