@@ -71,6 +71,19 @@ public:
 	typedef void* (*ThreadFunc)(void*);
 	//! Type of thread identifier
 	typedef unsigned int ThreadID;
+	//! Types of signals
+	/*!
+	Not all platforms support all signals.  Unsupported signals are
+	ignored.
+	*/
+	enum ESignal {
+		kINTERRUPT,		//!< Interrupt (e.g. Ctrl+C)
+		kTERMINATE,		//!< Terminate (e.g. Ctrl+Break)
+		kHANGUP,		//!< Hangup (SIGHUP)
+		kNUM_SIGNALS
+	};
+	//! Type of signal handler function
+	typedef void		(*SignalFunc)(ESignal, void* userData);
 
 	//! @name manipulators
 	//@{
@@ -242,12 +255,16 @@ public:
 	Sets the function to call on receipt of an external interrupt.
 	By default and when \p func is NULL, the main thread is cancelled.
 	*/
-	typedef void		(*InterruptFunc)(void*);
-	virtual void		setInterruptHandler(InterruptFunc func,
+	virtual void		setSignalHandler(ESignal, SignalFunc func,
 							void* userData) = 0;
 
-	//! Invoke the interrupt handler
-	virtual void		interrupt() = 0;
+	//! Invoke the signal handler
+	/*!
+	Invokes the signal handler for \p signal, if any.  If no handler
+	cancels the main thread for \c kINTERRUPT and \c kTERMINATE and
+	ignores the call otherwise.
+	*/
+	virtual void		raiseSignal(ESignal signal) = 0;
 
 	//@}
 };

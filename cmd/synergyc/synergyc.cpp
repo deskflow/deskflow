@@ -358,6 +358,13 @@ static
 int
 mainLoop()
 {
+	// create socket multiplexer.  this must happen after daemonization
+	// on unix because threads evaporate across a fork().
+	CSocketMultiplexer multiplexer;
+
+	// create the event queue
+	CEventQueue eventQueue;
+
 	// start the client.  if this return false then we've failed and
 	// we shouldn't retry.
 	LOG((CLOG_DEBUG1 "starting client"));
@@ -416,8 +423,6 @@ int
 run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	// general initialization
-	CSocketMultiplexer multiplexer;
-	CEventQueue eventQueue;
 	ARG->m_serverAddress = new CNetworkAddress;
 	ARG->m_pname         = ARCH->getBasename(argv[0]);
 

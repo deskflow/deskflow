@@ -1,4 +1,4 @@
-/*
+;/*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2004 Chris Schoeneman
  * 
@@ -22,7 +22,7 @@
 // interrupt handler.  this just adds a quit event to the queue.
 static
 void
-interrupt(void*)
+interrupt(CArch::ESignal, void*)
 {
 	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 }
@@ -37,14 +37,16 @@ CEventQueue::CEventQueue() :
 {
 	setInstance(this);
 	m_mutex = ARCH->newMutex();
-	ARCH->setInterruptHandler(&interrupt, NULL);
+	ARCH->setSignalHandler(CArch::kINTERRUPT, &interrupt, NULL);
+	ARCH->setSignalHandler(CArch::kTERMINATE, &interrupt, NULL);
 	m_buffer = new CSimpleEventQueueBuffer;
 }
 
 CEventQueue::~CEventQueue()
 {
 	delete m_buffer;
-	ARCH->setInterruptHandler(NULL, NULL);
+	ARCH->setSignalHandler(CArch::kINTERRUPT, NULL, NULL);
+	ARCH->setSignalHandler(CArch::kTERMINATE, NULL, NULL);
 	ARCH->closeMutex(m_mutex);
 	setInstance(NULL);
 }

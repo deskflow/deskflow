@@ -108,9 +108,20 @@ CArchConsoleWindows::getNewlineForConsole()
 }
 
 BOOL WINAPI
-CArchConsoleWindows::signalHandler(DWORD)
+CArchConsoleWindows::signalHandler(DWORD ctrlType)
 {
 	// terminate app and skip remaining handlers
-	ARCH->interrupt();
-	return TRUE;
+	switch (ctrlType) {
+	case CTRL_C_EVENT:
+		ARCH->raiseSignal(CArch::kINTERRUPT);
+		return TRUE;
+
+	case CTRL_BREAK_EVENT:
+		ARCH->raiseSignal(CArch::kTERMINATE);
+		return TRUE;
+
+	default:
+		ARCH->raiseSignal(CArch::kINTERRUPT);
+		return TRUE;
+	}
 }

@@ -376,15 +376,15 @@ CArch::getIDOfThread(CArchThread thread)
 }
 
 void
-CArch::setInterruptHandler(InterruptFunc func, void* userData)
+CArch::setSignalHandler(ESignal signal, SignalFunc func, void* userData)
 {
-	m_mt->setInterruptHandler(func, userData);
+	m_mt->setSignalHandler(signal, func, userData);
 }
 
 void
-CArch::interrupt()
+CArch::raiseSignal(ESignal signal)
 {
-	m_mt->interrupt();
+	m_mt->raiseSignal(signal);
 }
 
 CArchSocket

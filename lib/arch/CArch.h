@@ -120,8 +120,8 @@ public:
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);
 	virtual ThreadID	getIDOfThread(CArchThread);
-	virtual void		setInterruptHandler(InterruptFunc, void*);
-	virtual void		interrupt();
+	virtual void		setSignalHandler(ESignal, SignalFunc, void*);
+	virtual void		raiseSignal(ESignal);
 
 	// IArchNetwork overrides
 	virtual CArchSocket	newSocket(EAddressFamily, ESocketType);

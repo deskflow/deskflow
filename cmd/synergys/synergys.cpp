@@ -68,6 +68,7 @@
 
 typedef int (*StartupFunc)(int, char**);
 static void parse(int argc, const char* const* argv);
+static bool loadConfig(const CString& pathname);
 static void loadConfig();
 
 //
@@ -83,7 +84,7 @@ public:
 		m_backend(false),
 		m_restartable(true),
 		m_daemon(true),
-		m_configFile(NULL),
+		m_configFile(),
 		m_logFilter(NULL)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
@@ -94,7 +95,7 @@ public:
 	bool				m_backend;
 	bool				m_restartable;
 	bool				m_daemon;
-	const char* 		m_configFile;
+	CString		 		m_configFile;
 	const char* 		m_logFilter;
 	CString 			m_name;
 	CNetworkAddress*	m_synergyAddress;
@@ -136,11 +137,12 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 // platform independent main
 //
 
-static CServer*					s_server          = NULL;
-static CScreen*					s_serverScreen    = NULL;
-static CPrimaryClient*			s_primaryClient   = NULL;
-static CClientListener*			s_listener        = NULL;
-static CServerTaskBarReceiver*	s_taskBarReceiver = NULL;
+static CServer*					s_server            = NULL;
+static CScreen*					s_serverScreen      = NULL;
+static CPrimaryClient*			s_primaryClient     = NULL;
+static CClientListener*			s_listener          = NULL;
+static CServerTaskBarReceiver*	s_taskBarReceiver   = NULL;
+static CEvent::Type				s_reloadConfigEvent = CEvent::kUnknown;
 
 static
 void
@@ -390,9 +392,37 @@ stopServer()
 }
 
 static
+void
+reloadSignalHandler(CArch::ESignal, void*)
+{
+	EVENTQUEUE->addEvent(CEvent(s_reloadConfigEvent,
+							IEventQueue::getSystemTarget()));
+}
+
+static
+void
+reloadConfig(const CEvent&, void*)
+{
+	LOG((CLOG_DEBUG "reload configuration"));
+	if (loadConfig(ARG->m_configFile)) {
+		if (s_server != NULL) {
+			s_server->setConfig(*ARG->m_config);
+		}
+		LOG((CLOG_NOTE "reloaded configuration"));
+	}
+}
+
+static
 int
 mainLoop()
 {
+	// create socket multiplexer.  this must happen after daemonization
+	// on unix because threads evaporate across a fork().
+	CSocketMultiplexer multiplexer;
+
+	// create the event queue
+	CEventQueue eventQueue;
+
 	// if configuration has no screens then add this system
 	// as the default
 	if (ARG->m_config->begin() == ARG->m_config->end()) {
@@ -423,6 +453,13 @@ mainLoop()
 		return kExitFailed;
 	}
 
+	// handle hangup signal by reloading the server's configuration
+	CEvent::registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
+	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);
+	EVENTQUEUE->adoptHandler(s_reloadConfigEvent,
+							IEventQueue::getSystemTarget(),
+							new CFunctionEventJob(&reloadConfig));
+
 	// run event loop.  if startServer() failed we're supposed to retry
 	// later.  the timer installed by startServer() will take care of
 	// that.
@@ -438,6 +475,8 @@ mainLoop()
 
 	// close down
 	LOG((CLOG_DEBUG1 "stopping server"));
+	EVENTQUEUE->removeHandler(s_reloadConfigEvent,
+							IEventQueue::getSystemTarget());
 	stopServer();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
@@ -477,8 +516,6 @@ int
 run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	// general initialization
-	CSocketMultiplexer multiplexer;
-	CEventQueue eventQueue;
 	ARG->m_synergyAddress = new CNetworkAddress;
 	ARG->m_config         = new CConfig;
 	ARG->m_pname          = ARCH->getBasename(argv[0]);
@@ -759,14 +796,12 @@ parse(int argc, const char* const* argv)
 
 static
 bool
-loadConfig(const char* pathname)
+loadConfig(const CString& pathname)
 {
-	assert(pathname != NULL);
-
 	try {
 		// load configuration
-		LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname));
-		std::ifstream configStream(pathname);
+		LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname.c_str()));
+		std::ifstream configStream(pathname.c_str());
 		if (!configStream) {
 			throw XConfigRead("cannot open file");
 		}
@@ -776,7 +811,7 @@ loadConfig(const char* pathname)
 	}
 	catch (XConfigRead& e) {
 		LOG((CLOG_DEBUG "cannot read configuration \"%s\": %s",
-								pathname, e.what()));
+								pathname.c_str(), e.what()));
 	}
 	return false;
 }
@@ -788,7 +823,7 @@ loadConfig()
 	bool loaded = false;
 
 	// load the config file, if specified
-	if (ARG->m_configFile != NULL) {
+	if (!ARG->m_configFile.empty()) {
 		loaded = loadConfig(ARG->m_configFile);
 	}
 
@@ -801,14 +836,20 @@ loadConfig()
 			path = ARCH->concatPath(path, USR_CONFIG_NAME);
 
 			// now try loading the user's configuration
-			loaded = loadConfig(path.c_str());
+			if (loadConfig(path)) {
+				loaded            = true;
+				ARG->m_configFile = path;
+			}
 		}
 		if (!loaded) {
 			// try the system-wide config file
 			path = ARCH->getSystemDirectory();
 			if (!path.empty()) {
 				path = ARCH->concatPath(path, SYS_CONFIG_NAME);
-				loaded = loadConfig(path.c_str());
+				if (loadConfig(path)) {
+					loaded            = true;
+					ARG->m_configFile = path;
+				}
 			}
 		}
 	}

@@ -80,12 +80,16 @@ CArchThreadImpl::~CArchThreadImpl()
 
 CArchMultithreadWindows*	CArchMultithreadWindows::s_instance = NULL;
 
-CArchMultithreadWindows::CArchMultithreadWindows() :
-	m_signalFunc(NULL),
-	m_signalUserData(NULL)
+CArchMultithreadWindows::CArchMultithreadWindows()
 {
 	assert(s_instance == NULL);
 	s_instance = this;
+
+	// no signal handlers
+	for (size_t i = 0; i < kNUM_SIGNALS; ++i) {
+		m_signalFunc[i]     = NULL;
+		m_signalUserData[i] = NULL;
+	}
 
 	// create mutex for thread list
 	m_threadMutex = newMutex();
@@ -529,23 +533,24 @@ CArchMultithreadWindows::getIDOfThread(CArchThread thread)
 }
 
 void
-CArchMultithreadWindows::setInterruptHandler(InterruptFunc func, void* userData)
+CArchMultithreadWindows::setSignalHandler(
+				ESignal signal, SignalFunc func, void* userData)
 {
 	lockMutex(m_threadMutex);
-	m_signalFunc     = func;
-	m_signalUserData = userData;
+	m_signalFunc[signal]     = func;
+	m_signalUserData[signal] = userData;
 	unlockMutex(m_threadMutex);
 }
 
 void
-CArchMultithreadWindows::interrupt() 
+CArchMultithreadWindows::raiseSignal(ESignal signal)
 {
 	lockMutex(m_threadMutex);
-	if (m_signalFunc != NULL) {
-		m_signalFunc(m_signalUserData);
+	if (m_signalFunc[signal] != NULL) {
+		m_signalFunc[signal](signal, m_signalUserData[signal]);
 		ARCH->unblockPollSocket(m_mainThread);
 	}
-	else {
+	else if (signal == kINTERRUPT || signal == kTERMINATE) {
 		ARCH->cancelThread(m_mainThread);
 	}
 	unlockMutex(m_threadMutex);

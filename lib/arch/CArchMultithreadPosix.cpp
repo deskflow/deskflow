@@ -41,6 +41,16 @@
 #	define HAVE_POSIX_SIGWAIT 1
 #endif
 
+static
+void
+setSignalSet(sigset_t* sigset)
+{
+	sigemptyset(sigset);
+	sigaddset(sigset, SIGHUP);
+	sigaddset(sigset, SIGINT);
+	sigaddset(sigset, SIGTERM);
+}
+
 //
 // CArchThreadImpl
 //
@@ -83,13 +93,17 @@ CArchMultithreadPosix*	CArchMultithreadPosix::s_instance = NULL;
 
 CArchMultithreadPosix::CArchMultithreadPosix() :
 	m_newThreadCalled(false),
-	m_nextID(0),
-	m_signalFunc(NULL),
-	m_signalUserData(NULL)
+	m_nextID(0)
 {
 	assert(s_instance == NULL);
 
 	s_instance = this;
+
+	// no signal handlers
+	for (size_t i = 0; i < kNUM_SIGNALS; ++i) {
+		m_signalFunc[i]     = NULL;
+		m_signalUserData[i] = NULL;
+	}
 
 	// create mutex for thread list
 	m_threadMutex = newMutex();
@@ -353,13 +367,6 @@ CArchMultithreadPosix::newThread(ThreadFunc func, void* data)
 	thread->m_func          = func;
 	thread->m_userData      = data;
 
-	// mask some signals in all threads except the main thread
-	sigset_t sigset, oldsigset;
-	sigemptyset(&sigset);
-	sigaddset(&sigset, SIGINT);
-	sigaddset(&sigset, SIGTERM);
-	pthread_sigmask(SIG_BLOCK, &sigset, &oldsigset);
-
 	// create the thread.  pthread_create() on RedHat 7.2 smp fails
 	// if passed a NULL attr so use a default attr.
 	pthread_attr_t attr;
@@ -369,9 +376,6 @@ CArchMultithreadPosix::newThread(ThreadFunc func, void* data)
 							&CArchMultithreadPosix::threadFunc, thread);
 		pthread_attr_destroy(&attr);
 	}
-
-	// restore signals
-	pthread_sigmask(SIG_SETMASK, &oldsigset, NULL);
 
 	// check if thread was started
 	if (status != 0) {
@@ -560,23 +564,24 @@ CArchMultithreadPosix::getIDOfThread(CArchThread thread)
 }
 
 void
-CArchMultithreadPosix::setInterruptHandler(InterruptFunc func, void* userData)
+CArchMultithreadPosix::setSignalHandler(
+				ESignal signal, SignalFunc func, void* userData)
 {
 	lockMutex(m_threadMutex);
-	m_signalFunc     = func;
-	m_signalUserData = userData;
+	m_signalFunc[signal]     = func;
+	m_signalUserData[signal] = userData;
 	unlockMutex(m_threadMutex);
 }
 
 void
-CArchMultithreadPosix::interrupt() 
+CArchMultithreadPosix::raiseSignal(ESignal signal) 
 {
 	lockMutex(m_threadMutex);
-	if (m_signalFunc != NULL) {
-		m_signalFunc(m_signalUserData);
+	if (m_signalFunc[signal] != NULL) {
+		m_signalFunc[signal](signal, m_signalUserData[signal]);
 		unblockThread(m_mainThread);
 	}
-	else {
+	else if (signal == kINTERRUPT || signal == kTERMINATE) {
 		ARCH->cancelThread(m_mainThread);
 	}
 	unlockMutex(m_threadMutex);
@@ -587,11 +592,9 @@ CArchMultithreadPosix::startSignalHandler()
 {
 	// set signal mask.  the main thread blocks these signals and
 	// the signal handler thread will listen for them.
-	sigset_t sigset;
-	sigemptyset(&sigset);
-	sigaddset(&sigset, SIGINT);
-	sigaddset(&sigset, SIGTERM);
-	pthread_sigmask(SIG_BLOCK, &sigset, NULL);
+	sigset_t sigset, oldsigset;
+	setSignalSet(&sigset);
+	pthread_sigmask(SIG_BLOCK, &sigset, &oldsigset);
 
 	// fire up the INT and TERM signal handler thread.  we could
 	// instead arrange to catch and handle these signals but
@@ -608,10 +611,7 @@ CArchMultithreadPosix::startSignalHandler()
 	if (status != 0) {
 		// can't create thread to wait for signal so don't block
 		// the signals.
-		sigemptyset(&sigset);
-		sigaddset(&sigset, SIGINT);
-		sigaddset(&sigset, SIGTERM);
-		pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
+		pthread_sigmask(SIG_UNBLOCK, &oldsigset, NULL);
 	}
 }
 
@@ -766,9 +766,7 @@ CArchMultithreadPosix::threadSignalHandler(void*)
 
 	// add signal to mask
 	sigset_t sigset;
-	sigemptyset(&sigset);
-	sigaddset(&sigset, SIGINT);
-	sigaddset(&sigset, SIGTERM);
+	setSignalSet(&sigset);
 
 	// also wait on SIGABRT.  on linux (others?) this thread (process)
 	// will persist after all the other threads evaporate due to an
@@ -791,6 +789,22 @@ CArchMultithreadPosix::threadSignalHandler(void*)
 #endif
 
 		// if we get here then the signal was raised
-		ARCH->interrupt();
+		switch (signal) {
+		case SIGINT:
+			ARCH->raiseSignal(kINTERRUPT);
+			break;
+
+		case SIGTERM:
+			ARCH->raiseSignal(kTERMINATE);
+			break;
+
+		case SIGHUP:
+			ARCH->raiseSignal(kHANGUP);
+			break;
+
+		default:
+			// ignore
+			break;
+		}
 	}
 }

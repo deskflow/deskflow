@@ -72,8 +72,8 @@ public:
 	virtual bool		isExitedThread(CArchThread);
 	virtual void*		getResultOfThread(CArchThread);
 	virtual ThreadID	getIDOfThread(CArchThread);
-	virtual void		setInterruptHandler(InterruptFunc, void*);
-	virtual void		interrupt();
+	virtual void		setSignalHandler(ESignal, SignalFunc, void*);
+	virtual void		raiseSignal(ESignal);
 
 private:
 	void				startSignalHandler();
@@ -104,8 +104,8 @@ private:
 	ThreadID			m_nextID;
 
 	pthread_t			m_signalThread;
-	InterruptFunc		m_signalFunc;
-	void*				m_signalUserData;
+	SignalFunc			m_signalFunc[kNUM_SIGNALS];
+	void*				m_signalUserData[kNUM_SIGNALS];
 };
 
 #endif
