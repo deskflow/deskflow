@@ -28,6 +28,9 @@ public:
 	CMSWindowsClipboard(HWND window);
 	virtual ~CMSWindowsClipboard();
 
+	//! Test if clipboard is owned by synergy
+	static bool			isOwnedBySynergy();
+
 	// IClipboard overrides
 	virtual bool		empty();
 	virtual void		add(EFormat, const CString& data);
@@ -44,12 +47,15 @@ private:
 	HANDLE				convertTextToWin32(const CString& data) const;
 	CString				convertTextFromWin32(HANDLE) const;
 
+	static UINT			getOwnershipFormat();
+
 private:
 	typedef std::vector<IMSWindowsClipboardConverter*> ConverterList;
 
 	HWND				m_window;
 	mutable Time		m_time;
 	ConverterList		m_converters;
+	static UINT			s_ownershipFormat;
 };
 
 //! Clipboard format converter interface

@@ -60,7 +60,7 @@ CMSWindowsScreen::CMSWindowsScreen(IScreenReceiver* receiver,
 	m_threadID(0),
 	m_lastThreadID(0),
 	m_nextClipboardWindow(NULL),
-	m_clipboardOwner(NULL),
+	m_ownClipboard(false),
 	m_timer(0),
 	m_desk(NULL),
 	m_deskName(),
@@ -107,11 +107,9 @@ CMSWindowsScreen::openDesktop()
 	}
 
 	// poll input desktop to see if it changes (onPreDispatch()
-	// handles WM_TIMER)
-	m_timer = 0;
-	if (!m_is95Family) {
-		m_timer = SetTimer(NULL, 0, 200, NULL);
-	}
+	// handles WM_TIMER).  this is also used for polling other
+	// stuff.
+	m_timer = SetTimer(NULL, 0, 200, NULL);
 
 	return m_window;
 }
@@ -321,13 +319,10 @@ CMSWindowsScreen::checkClipboards()
 	// next reboot we do this double check.  clipboard ownership
 	// won't be reflected on other screens until we leave but at
 	// least the clipboard itself will work.
-	HWND clipboardOwner = GetClipboardOwner();
-	if (m_clipboardOwner != clipboardOwner) {
-		m_clipboardOwner = clipboardOwner;
-		if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
-			m_receiver->onGrabClipboard(kClipboardClipboard);
-			m_receiver->onGrabClipboard(kClipboardSelection);
-		}
+	if (m_ownClipboard && !CMSWindowsClipboard::isOwnedBySynergy()) {
+		m_ownClipboard = false;
+		m_receiver->onGrabClipboard(kClipboardClipboard);
+		m_receiver->onGrabClipboard(kClipboardSelection);
 	}
 }
 
@@ -510,6 +505,10 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 					}
 				}
 			}
+
+			// let client do timer related stuff.  ignore the return
+			// value though since the event has been handled here.
+			m_eventHandler->onPreDispatch(event);
 		}
 		else if (msg->wParam == m_oneShotTimer) {
 			// one shot timer expired
@@ -517,9 +516,11 @@ CMSWindowsScreen::onPreDispatch(const CEvent* event)
 			m_oneShotTimer = 0;
 			m_eventHandler->onOneShotTimerExpired(0);
 		}
+
 		return true;
 	}
 
+	// let client handle the event
 	return m_eventHandler->onPreDispatch(event);
 }
 
@@ -560,14 +561,16 @@ CMSWindowsScreen::onEvent(CEvent* event)
 		}
 
 		// now notify client that somebody changed the clipboard (unless
-		// we're now the owner, in which case it's because we took
-		// ownership, or now it's owned by nobody, which will happen if
-		// we owned it and switched desktops because we destroy our
-		// window to do that).
-		m_clipboardOwner = GetClipboardOwner();
-		if (m_clipboardOwner != m_window && m_clipboardOwner != NULL) {
-			m_receiver->onGrabClipboard(kClipboardClipboard);
-			m_receiver->onGrabClipboard(kClipboardSelection);
+		// we're the owner).
+		if (!CMSWindowsClipboard::isOwnedBySynergy()) {
+			if (m_ownClipboard) {
+				m_ownClipboard = false;
+				m_receiver->onGrabClipboard(kClipboardClipboard);
+				m_receiver->onGrabClipboard(kClipboardSelection);
+			}
+		}
+		else {
+			m_ownClipboard = true;
 		}
 		return true;
 
@@ -631,19 +634,14 @@ CMSWindowsScreen::createBlankCursor()
 bool
 CMSWindowsScreen::switchDesktop(HDESK desk)
 {
-	// did we own the clipboard?
-	bool ownClipboard = (m_clipboardOwner == m_window && m_window != NULL);
+	// assume we don't own the clipboard until later
+	m_ownClipboard = false;
 
 	// destroy old window
 	if (m_window != NULL) {
 		// first remove clipboard snooper
 		ChangeClipboardChain(m_window, m_nextClipboardWindow);
 		m_nextClipboardWindow = NULL;
-
-		// we no longer own the clipboard
-		if (ownClipboard) {
-			m_clipboardOwner = NULL;
-		}
 
 		// let client clean up before we destroy the window
 		m_eventHandler->preDestroyWindow(m_window);
@@ -712,12 +710,8 @@ CMSWindowsScreen::switchDesktop(HDESK desk)
 	// install our clipboard snooper
 	m_nextClipboardWindow = SetClipboardViewer(m_window);
 
-	// reassert clipboard ownership
-	if (ownClipboard) {
-		// FIXME -- take clipboard ownership, but we should also set
-		// the clipboard data.
-	}
-	m_clipboardOwner = GetClipboardOwner();
+	// check if we own the clipboard
+	m_ownClipboard = CMSWindowsClipboard::isOwnedBySynergy();
 
 	// save new desktop
 	m_desk     = desk;

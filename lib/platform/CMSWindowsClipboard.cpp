@@ -21,6 +21,8 @@
 // CMSWindowsClipboard
 //
 
+UINT					CMSWindowsClipboard::s_ownershipFormat = 0;
+
 CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
 	m_window(window),
 	m_time(0)
@@ -40,10 +42,15 @@ CMSWindowsClipboard::empty()
 {
 	LOG((CLOG_DEBUG "empty clipboard"));
 
+	// empty the clipboard (and take ownership)
 	if (!EmptyClipboard()) {
 		LOG((CLOG_DEBUG "failed to grab clipboard"));
 		return false;
 	}
+
+	// mark clipboard as being owned by synergy
+	HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, 1);
+	SetClipboardData(getOwnershipFormat(), data);
 
 	return true;
 }
@@ -158,4 +165,26 @@ CMSWindowsClipboard::clearConverters()
 		delete *index;
 	}
 	m_converters.clear();
+}
+
+bool
+CMSWindowsClipboard::isOwnedBySynergy()
+{
+	// create ownership format if we haven't yet
+	if (s_ownershipFormat == 0) {
+		s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+	}
+	return (IsClipboardFormatAvailable(getOwnershipFormat()) != 0);
+}
+
+UINT
+CMSWindowsClipboard::getOwnershipFormat()
+{
+	// create ownership format if we haven't yet
+	if (s_ownershipFormat == 0) {
+		s_ownershipFormat = RegisterClipboardFormat(TEXT("SynergyOwnership"));
+	}
+
+	// return the format
+	return s_ownershipFormat;
 }

@@ -89,6 +89,7 @@ private:
 							KeyModifierMask* maskOut);
 	ButtonID			mapButton(WPARAM button) const;
 	void				updateKey(UINT vkCode, bool press);
+	bool				isModifier(UINT vkCode) const;
 
 private:
 	IPrimaryScreenReceiver*	m_receiver;

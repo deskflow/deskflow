@@ -172,7 +172,7 @@ private:
 
 	// clipboard stuff
 	HWND				m_nextClipboardWindow;
-	HWND				m_clipboardOwner;
+	bool				m_ownClipboard;
 
 	// the timer used to check for desktop switching
 	UINT				m_timer;

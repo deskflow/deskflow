@@ -254,7 +254,6 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			}
 			else {
 				PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
-				return 0;
 			}
 		}
 	}

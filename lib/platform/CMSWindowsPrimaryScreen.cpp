@@ -385,12 +385,45 @@ KeyModifierMask
 CMSWindowsPrimaryScreen::getToggleMask() const
 {
 	KeyModifierMask mask = 0;
-	if ((GetKeyState(VK_CAPITAL) & 0x01) != 0)
-		mask |= KeyModifierCapsLock;
-	if ((GetKeyState(VK_NUMLOCK) & 0x01) != 0)
-		mask |= KeyModifierNumLock;
-	if ((GetKeyState(VK_SCROLL) & 0x01) != 0)
-		mask |= KeyModifierScrollLock;
+	if (isActive()) {
+		// get key state
+		if ((m_keys[VK_CAPITAL] & 0x01) != 0)
+			mask |= KeyModifierCapsLock;
+		if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
+			mask |= KeyModifierNumLock;
+		if ((m_keys[VK_SCROLL] & 0x01) != 0)
+			mask |= KeyModifierScrollLock;
+	}
+	else {
+		// show the window, but make it very small.  we must do this
+		// because GetKeyState() reports the key state according to
+		// processed messages and until the window is visible the
+		// system won't update the state of the toggle keys reported
+		// by that function.  unfortunately, this slows this method
+		// down significantly and, for some reason i don't understand,
+		// causes everything on the screen to redraw.
+		if (m_window != NULL) {
+			MoveWindow(m_window, 1, 1, 1, 1, FALSE);
+			const_cast<CMSWindowsPrimaryScreen*>(this)->showWindow();
+		}
+
+		// get key state
+		if ((GetKeyState(VK_CAPITAL) & 0x01) != 0)
+			mask |= KeyModifierCapsLock;
+		if ((GetKeyState(VK_NUMLOCK) & 0x01) != 0)
+			mask |= KeyModifierNumLock;
+		if ((GetKeyState(VK_SCROLL) & 0x01) != 0)
+			mask |= KeyModifierScrollLock;
+
+		// make the window hidden again and restore its size
+		if (m_window != NULL) {
+			const_cast<CMSWindowsPrimaryScreen*>(this)->hideWindow();
+			SInt32 x, y, w, h;
+			m_screen->getShape(x, y, w, h);
+			MoveWindow(m_window, x, y, w, h, FALSE);
+		}
+	}
+
 	return mask;
 }
 
@@ -459,6 +492,57 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 {
 	assert(event != NULL);
 
+	const MSG* msg = &event->m_msg;
+
+	// check if windows key is up but we think it's down.  if so then
+	// synthesize a key release for it.  we have to do this because
+	// if the user presses and releases a windows key without pressing
+	// any other key when its down then windows will eat the key
+	// release.  if we don't detect that an synthesize the release
+	// then the user will be locked to the screen and the client won't
+	// take the usual windows key release action (which on windows is
+	// to show the start menu).
+	//
+	// we can use GetKeyState() to check the state of the windows keys
+	// because, event though the key release is not reported to us,
+	// the event is processed and the keyboard state updated by the
+	// system.  since the key could go up at any time we'll check the
+	// state on every event.  only check on windows 95 family since
+	// NT family reports the key release as usual.  obviously we skip
+	// this if the event is for the windows key itself.
+	if (m_is95Family) {
+		if ((m_keys[VK_LWIN] & 0x80) != 0 &&
+			(GetAsyncKeyState(VK_LWIN) & 0x8000) == 0 &&
+			!(msg->message == SYNERGY_MSG_KEY && msg->wParam == VK_LWIN)) {
+			// compute appropriate parameters for fake event
+			WPARAM wParam = VK_LWIN;
+			LPARAM lParam = 0xc1000000;
+			lParam |= (0x00ff0000 & (MapVirtualKey(wParam, 0) << 24));
+
+			// process as if it were a key up
+			KeyModifierMask mask;
+			const KeyID key = mapKey(wParam, lParam, &mask);
+			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x", key, mask));
+			m_receiver->onKeyUp(key, mask);
+			updateKey(wParam, false);
+		}
+		if ((m_keys[VK_RWIN] & 0x80) != 0 &&
+			(GetAsyncKeyState(VK_RWIN) & 0x8000) == 0 &&
+			!(msg->message == SYNERGY_MSG_KEY && msg->wParam == VK_RWIN)) {
+			// compute appropriate parameters for fake event
+			WPARAM wParam = VK_RWIN;
+			LPARAM lParam = 0xc1000000;
+			lParam |= (0x00ff0000 & (MapVirtualKey(wParam, 0) << 24));
+
+			// process as if it were a key up
+			KeyModifierMask mask;
+			const KeyID key = mapKey(wParam, lParam, &mask);
+			LOG((CLOG_DEBUG1 "event: fake key release key=%d mask=0x%04x", key, mask));
+			m_receiver->onKeyUp(key, mask);
+			updateKey(wParam, false);
+		}
+	}
+
 	// handle event
 	const MSG* msg = &event->m_msg;
 	switch (msg->message) {
@@ -474,8 +558,9 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			if (key != kKeyNone) {
 				if ((msg->lParam & 0x80000000) == 0) {
 					// key press
+					const bool wasDown  = ((msg->lParam & 0x40000000) != 0);
 					const SInt32 repeat = (SInt32)(msg->lParam & 0xffff);
-					if (repeat >= 2) {
+					if (repeat >= 2 || wasDown) {
 						LOG((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d", key, mask, repeat));
 						m_receiver->onKeyRepeat(key, mask, repeat);
 					}
@@ -488,7 +573,20 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 					updateKey(msg->wParam, true);
 				}
 				else {
-					// key release
+					// key release.  if the key isn't down according to
+					// our table then we never got the key press event
+					// for it.  if it's not a modifier key then we'll
+					// synthesize the press first.  only do this on
+					// the windows 95 family, which eats certain special
+					// keys like alt+tab, ctrl+esc, etc.
+					if (m_is95Family && !isModifier(msg->wParam) &&
+						(m_keys[msg->wParam] & 0x80) == 0) {
+						LOG((CLOG_DEBUG1 "event: fake key press key=%d mask=0x%04x", key, mask));
+						m_receiver->onKeyDown(key, mask);
+						updateKey(msg->wParam, true);
+					}
+
+					// do key up
 					LOG((CLOG_DEBUG1 "event: key release key=%d mask=0x%04x", key, mask));
 					m_receiver->onKeyUp(key, mask);
 
@@ -583,7 +681,9 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 
 			if (!isActive()) {
 				// motion on primary screen
-				m_receiver->onMouseMovePrimary(m_x, m_y);
+				if (x != 0 || y != 0) {
+					m_receiver->onMouseMovePrimary(m_x, m_y);
+				}
 			}
 			else {
 				// motion on secondary screen.  warp mouse back to
@@ -1271,7 +1371,7 @@ CMSWindowsPrimaryScreen::mapKey(
 	}
 	if (((m_keys[VK_LWIN] |
 		  m_keys[VK_RWIN]) & 0x80) != 0) {
-		mask |= KeyModifierMeta;
+		mask |= KeyModifierSuper;
 	}
 	if ((m_keys[VK_CAPITAL] & 0x01) != 0) {
 		mask |= KeyModifierCapsLock;
@@ -1521,5 +1621,31 @@ CMSWindowsPrimaryScreen::updateKey(UINT vkCode, bool press)
 			m_keys[vkCode]     &= ~0x80;
 			break;
 		}
+	}
+}
+
+bool
+CMSWindowsPrimaryScreen::isModifier(UINT vkCode) const
+
+{
+	switch (vkCode) {
+	case VK_LSHIFT:
+	case VK_RSHIFT:
+	case VK_SHIFT:
+	case VK_LCONTROL:
+	case VK_RCONTROL:
+	case VK_CONTROL:
+	case VK_LMENU:
+	case VK_RMENU:
+	case VK_MENU:
+	case VK_CAPITAL:
+	case VK_NUMLOCK:
+	case VK_SCROLL:
+	case VK_LWIN:
+	case VK_RWIN:
+		return true;
+
+	default:
+		return false;
 	}
 }
