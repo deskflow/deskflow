@@ -881,6 +881,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C7D7CDD066319560097CA11,
+				6887169B073EC03800C5ABE7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1274,15 +1275,6 @@
 			settings = {
 			};
 		};
-		4C5E86C00648C653003C637B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			name = CArchDaemonNone.cpp;
-			path = lib/arch/CArchDaemonNone.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4C5E86C10648C653003C637B = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -1292,44 +1284,8 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4C5E86C20648C653003C637B = {
-			fileRef = 4C5E86C00648C653003C637B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4C5E86C30648C653003C637B = {
 			fileRef = 4C5E86C10648C653003C637B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4C5E86C40648C6B7003C637B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			name = CArchTaskBarXWindows.cpp;
-			path = lib/arch/CArchTaskBarXWindows.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4C5E86C50648C6B7003C637B = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CArchTaskBarXWindows.h;
-			path = lib/arch/CArchTaskBarXWindows.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4C5E86C60648C6B7003C637B = {
-			fileRef = 4C5E86C40648C6B7003C637B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4C5E86C70648C6B7003C637B = {
-			fileRef = 4C5E86C50648C6B7003C637B;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1337,6 +1293,7 @@
 		4C5E86CA0648C6FB003C637B = {
 			children = (
 				4C7D7CD9066319560097CA11,
+				68871699073EC02100C5ABE7,
 				4C5E86CB0648C725003C637B,
 			);
 			isa = PBXGroup;
@@ -3410,10 +3367,10 @@
 			children = (
 				4C5E86920648C412003C637B,
 				4C5E86930648C412003C637B,
-				4C5E86C00648C653003C637B,
-				4C5E86C10648C653003C637B,
 				4C5E86940648C412003C637B,
 				4C5E86950648C412003C637B,
+				68968F5A073EC484004B2F9B,
+				4C5E86C10648C653003C637B,
 				4C5E86960648C412003C637B,
 				4C5E86970648C412003C637B,
 				4C5E86980648C412003C637B,
@@ -3428,10 +3385,25 @@
 				4C5E86A10648C412003C637B,
 				4C5E86A20648C412003C637B,
 				4C5E86A30648C412003C637B,
-				4C5E86C40648C6B7003C637B,
-				4C5E86C50648C6B7003C637B,
+				68871676073EBF6F00C5ABE7,
+				68871677073EBF6F00C5ABE7,
+				68968F5B073EC484004B2F9B,
+				68968F5C073EC484004B2F9B,
 				4C5E86A40648C412003C637B,
 				4C5E86A50648C412003C637B,
+				68871678073EBF6F00C5ABE7,
+				68871679073EBF6F00C5ABE7,
+				6887167A073EBF6F00C5ABE7,
+				6887167B073EBF6F00C5ABE7,
+				6887167C073EBF6F00C5ABE7,
+				6887167D073EBF6F00C5ABE7,
+				6887167E073EBF6F00C5ABE7,
+				6887167F073EBF6F00C5ABE7,
+				68871680073EBF6F00C5ABE7,
+				68871681073EBF7000C5ABE7,
+				68871682073EBF7000C5ABE7,
+				68871683073EBF7000C5ABE7,
+				68871684073EBF7000C5ABE7,
 				4C5E87D00648CA75003C637B,
 				4C5E86A70648C412003C637B,
 				4C5E86A80648C412003C637B,
@@ -3444,8 +3416,10 @@
 		4CB437B2063E443800969041 = {
 			buildActionMask = 2147483647;
 			files = (
+				4C7D7CDC066319560097CA11,
 				4C5E86AA0648C412003C637B,
 				4C5E86AC0648C412003C637B,
+				4C5E86C30648C653003C637B,
 				4C5E86AE0648C412003C637B,
 				4C5E86B00648C412003C637B,
 				4C5E86B20648C412003C637B,
@@ -3453,11 +3427,23 @@
 				4C5E86B60648C412003C637B,
 				4C5E86B80648C412003C637B,
 				4C5E86BA0648C412003C637B,
+				68871686073EBF7000C5ABE7,
+				68968F5F073EC484004B2F9B,
 				4C5E86BC0648C412003C637B,
+				68871687073EBF7000C5ABE7,
+				68871688073EBF7000C5ABE7,
+				68871689073EBF7000C5ABE7,
+				6887168A073EBF7000C5ABE7,
+				6887168B073EBF7000C5ABE7,
+				6887168C073EBF7000C5ABE7,
+				6887168D073EBF7000C5ABE7,
+				6887168E073EBF7000C5ABE7,
+				6887168F073EBF7000C5ABE7,
+				68871690073EBF7000C5ABE7,
+				68871691073EBF7000C5ABE7,
+				68871692073EBF7000C5ABE7,
+				68871693073EBF7000C5ABE7,
 				4C5E86BF0648C412003C637B,
-				4C5E86C30648C653003C637B,
-				4C5E86C70648C6B7003C637B,
-				4C7D7CDC066319560097CA11,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3467,6 +3453,7 @@
 			files = (
 				4C5E86A90648C412003C637B,
 				4C5E86AB0648C412003C637B,
+				68968F5D073EC484004B2F9B,
 				4C5E86AD0648C412003C637B,
 				4C5E86AF0648C412003C637B,
 				4C5E86B10648C412003C637B,
@@ -3474,11 +3461,11 @@
 				4C5E86B50648C412003C637B,
 				4C5E86B70648C412003C637B,
 				4C5E86B90648C412003C637B,
+				68871685073EBF7000C5ABE7,
+				68968F5E073EC484004B2F9B,
 				4C5E86BB0648C412003C637B,
-				4C5E86BE0648C412003C637B,
-				4C5E86C20648C653003C637B,
-				4C5E86C60648C6B7003C637B,
 				4C5E87D10648CA75003C637B,
+				4C5E86BE0648C412003C637B,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4585,6 +4572,301 @@
 		};
 		4CDF38A1063E561B007B20A1 = {
 			fileRef = 4CDF3899063E561B007B20A1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//4C0
+//4C1
+//4C2
+//4C3
+//4C4
+//680
+//681
+//682
+//683
+//684
+		68871676073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = CArchSystemUnix.cpp;
+			path = lib/arch/CArchSystemUnix.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871677073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CArchSystemUnix.h;
+			path = lib/arch/CArchSystemUnix.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871678073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchConsole.h;
+			path = lib/arch/IArchConsole.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871679073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchDaemon.h;
+			path = lib/arch/IArchDaemon.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6887167A073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchFile.h;
+			path = lib/arch/IArchFile.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6887167B073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchLog.h;
+			path = lib/arch/IArchLog.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6887167C073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchMultithread.h;
+			path = lib/arch/IArchMultithread.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6887167D073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchNetwork.h;
+			path = lib/arch/IArchNetwork.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6887167E073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchSleep.h;
+			path = lib/arch/IArchSleep.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6887167F073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchString.h;
+			path = lib/arch/IArchString.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871680073EBF6F00C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchSystem.h;
+			path = lib/arch/IArchSystem.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871681073EBF7000C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchTaskBar.h;
+			path = lib/arch/IArchTaskBar.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871682073EBF7000C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchTaskBarReceiver.h;
+			path = lib/arch/IArchTaskBarReceiver.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871683073EBF7000C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = IArchTime.h;
+			path = lib/arch/IArchTime.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871684073EBF7000C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = XArch.h;
+			path = lib/arch/XArch.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68871685073EBF7000C5ABE7 = {
+			fileRef = 68871676073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871686073EBF7000C5ABE7 = {
+			fileRef = 68871677073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871687073EBF7000C5ABE7 = {
+			fileRef = 68871678073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871688073EBF7000C5ABE7 = {
+			fileRef = 68871679073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871689073EBF7000C5ABE7 = {
+			fileRef = 6887167A073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6887168A073EBF7000C5ABE7 = {
+			fileRef = 6887167B073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6887168B073EBF7000C5ABE7 = {
+			fileRef = 6887167C073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6887168C073EBF7000C5ABE7 = {
+			fileRef = 6887167D073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6887168D073EBF7000C5ABE7 = {
+			fileRef = 6887167E073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6887168E073EBF7000C5ABE7 = {
+			fileRef = 6887167F073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6887168F073EBF7000C5ABE7 = {
+			fileRef = 68871680073EBF6F00C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871690073EBF7000C5ABE7 = {
+			fileRef = 68871681073EBF7000C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871691073EBF7000C5ABE7 = {
+			fileRef = 68871682073EBF7000C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871692073EBF7000C5ABE7 = {
+			fileRef = 68871683073EBF7000C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871693073EBF7000C5ABE7 = {
+			fileRef = 68871684073EBF7000C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68871699073EC02100C5ABE7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = MacOSXPrecomp.h;
+			path = lib/common/MacOSXPrecomp.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6887169B073EC03800C5ABE7 = {
+			fileRef = 68871699073EC02100C5ABE7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68968F5A073EC484004B2F9B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = CArchDaemonNone.cpp;
+			path = lib/arch/CArchDaemonNone.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68968F5B073EC484004B2F9B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = CArchTaskBarXWindows.cpp;
+			path = lib/arch/CArchTaskBarXWindows.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68968F5C073EC484004B2F9B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CArchTaskBarXWindows.h;
+			path = lib/arch/CArchTaskBarXWindows.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		68968F5D073EC484004B2F9B = {
+			fileRef = 68968F5A073EC484004B2F9B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68968F5E073EC484004B2F9B = {
+			fileRef = 68968F5B073EC484004B2F9B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		68968F5F073EC484004B2F9B = {
+			fileRef = 68968F5C073EC484004B2F9B;
 			isa = PBXBuildFile;
 			settings = {
 			};
