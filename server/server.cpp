@@ -39,6 +39,7 @@ static bool				s_install     = false;
 static bool				s_uninstall   = false;
 static const char*		s_configFile  = NULL;
 static const char*		s_logFilter   = NULL;
+static CString			s_name;
 static CNetworkAddress	s_synergyAddress;
 static CNetworkAddress	s_httpAddress;
 static CConfig			s_config;
@@ -69,7 +70,6 @@ static void				logLock(bool lock)
 
 static CServer*			s_server = NULL;
 
-#include <signal.h>
 static int				realMain(CMutex* mutex)
 {
 	// s_serverLock should have mutex locked on entry
@@ -88,7 +88,7 @@ static int				realMain(CMutex* mutex)
 			// if configuration has no screens then add this system
 			// as the default
 			if (s_config.begin() == s_config.end()) {
-				s_config.addScreen("primary");
+				s_config.addScreen(s_name);
 			}
 
 			// set the contact address, if provided, in the config.
@@ -107,7 +107,7 @@ static int				realMain(CMutex* mutex)
 			}
 
 			// create server
-			s_server = new CServer();
+			s_server = new CServer(s_name);
 
 			// run server (unlocked)
 			if (mutex != NULL) {
@@ -200,12 +200,14 @@ static void				help()
 
 	log((CLOG_PRINT
 "Usage: %s"
+" [--address <address>]"
 " [--config <pathname>]"
-" [--debug <level>]"
 " [--"DAEMON"|--no-"DAEMON"]"
+" [--debug <level>]"
+" [--name <screen-name>]"
 " [--restart|--no-restart]\n"
+" [--install]\n"
 "or\n"
-" --install\n"
 " --uninstall\n"
 "\n"
 "Start the synergy mouse/keyboard sharing server.\n"
@@ -218,6 +220,8 @@ static void				help()
 "                           DEBUG, DEBUG1, DEBUG2.\n"
 "  -f, --no-"DAEMON"          run the server in the foreground.\n"
 "*     --"DAEMON"             run the server as a "DAEMON".\n"
+"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
+"                           this screen in the configuration.\n"
 "  -1, --no-restart         do not try to restart the server if it fails for\n"
 "                           some reason.\n"
 "*     --restart            restart the server automatically if it fails.\n"
@@ -279,6 +283,12 @@ static void				parse(int argc, const char** argv)
 	assert(argv  != NULL);
 	assert(argc  >= 1);
 
+	// set defaults
+	char hostname[256];
+	if (CNetwork::gethostname(hostname, sizeof(hostname)) != CNetwork::Error) {
+		s_name = hostname;
+	}
+
 	// parse options
 	int i;
 	for (i = 1; i < argc; ++i) {
@@ -311,6 +321,11 @@ static void				parse(int argc, const char** argv)
 				bye(2);
 			}
 			++i;
+		}
+
+		else if (isArg(i, argc, argv, "-n", "--name", 1)) {
+			// save screen name
+			s_name = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, "-c", "--config", 1)) {

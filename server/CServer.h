@@ -24,7 +24,7 @@ class CHTTPServer;
 
 class CServer {
 public:
-	CServer();
+	CServer(const CString& serverName);
 	~CServer();
 
 	// manipulators
@@ -219,6 +219,8 @@ private:
 	};
 
 	CMutex				m_mutex;
+
+	CString				m_name;
 
 	double				m_bindTimeout;
 

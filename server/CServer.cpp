@@ -47,7 +47,9 @@ else { wait(0); exit(1); }
 
 const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
 
-CServer::CServer() : m_cleanupSize(&m_mutex, 0),
+CServer::CServer(const CString& serverName) :
+								m_name(serverName),
+								m_cleanupSize(&m_mutex, 0),
 								m_primary(NULL),
 								m_active(NULL),
 								m_primaryInfo(NULL),
@@ -80,6 +82,12 @@ void					CServer::run()
 				// can't open screen yet.  wait a few seconds to retry.
 				log((CLOG_INFO "failed to open screen.  waiting to retry."));
 				CThread::sleep(3.0);
+			}
+			catch (XUnknownClient& e) {
+				// can't open screen yet.  wait a few seconds to retry.
+				log((CLOG_CRIT "unknown screen name `%s'", e.getName().c_str()));
+				log((CLOG_NOTE "stopping server"));
+				return;
 			}
 		}
 
@@ -222,8 +230,7 @@ bool					CServer::setConfig(const CConfig& config)
 
 CString					CServer::getPrimaryScreenName() const
 {
-	CLock lock(&m_mutex);
-	return (m_primaryInfo == NULL) ? "" : m_primaryInfo->m_name;
+	return m_name;
 }
 
 void					CServer::getConfig(CConfig* config) const
@@ -1337,7 +1344,10 @@ void					CServer::openPrimaryScreen()
 	// reset sequence number
 	m_seqNum = 0;
 
-	CString primary = m_config.getCanonicalName("primary"); // FIXME
+	CString primary = m_config.getCanonicalName(m_name);
+	if (primary.empty()) {
+		throw XUnknownClient(m_name);
+	}
 	try {
 		// add connection
 		m_active        = addConnection(primary, NULL);
@@ -1380,7 +1390,7 @@ void					CServer::closePrimaryScreen()
 	assert(m_primary != NULL);
 
 	// remove connection
-	CString primary = m_config.getCanonicalName("primary"); // FIXME
+	CString primary = m_config.getCanonicalName(m_name);
 	removeConnection(primary);
 
 	// close the primary screen

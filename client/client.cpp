@@ -32,6 +32,7 @@ static bool				s_daemon      = true;
 static bool				s_install     = false;
 static bool				s_uninstall   = false;
 static const char*		s_logFilter   = NULL;
+static CString			s_name;
 static CNetworkAddress	s_serverAddress;
 
 
@@ -74,7 +75,7 @@ static int				realMain(CMutex* mutex)
 		bool locked = true;
 		try {
 			// create client
-			s_client = new CClient("secondary");	// FIXME
+			s_client = new CClient(s_name);
 
 			// run client
 			if (mutex != NULL) {
@@ -164,8 +165,9 @@ static void				help()
 {
 	log((CLOG_PRINT
 "Usage: %s"
-" [--debug <level>]"
 " [--"DAEMON"|--no-"DAEMON"]"
+" [--debug <level>]"
+" [--name <screen-name>]"
 " [--restart|--no-restart]"
 " [--install]"
 " <server-address>\n"
@@ -178,6 +180,8 @@ static void				help()
 "                           DEBUG, DEBUG1, DEBUG2.\n"
 "  -f, --no-"DAEMON"          run the client in the foreground.\n"
 "*     --"DAEMON"             run the client as a "DAEMON".\n"
+"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
+"                           ourself to the server.\n"
 "  -1, --no-restart         do not try to restart the client if it fails for\n"
 "                           some reason.\n"
 "*     --restart            restart the client automatically if it fails.\n"
@@ -225,12 +229,23 @@ static void				parse(int argc, const char** argv)
 	assert(argv  != NULL);
 	assert(argc  >= 1);
 
+	// set defaults
+	char hostname[256];
+	if (CNetwork::gethostname(hostname, sizeof(hostname)) != CNetwork::Error) {
+		s_name = hostname;
+	}
+
 	// parse options
 	int i;
 	for (i = 1; i < argc; ++i) {
 		if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 			// change logging level
 			s_logFilter = argv[++i];
+		}
+
+		else if (isArg(i, argc, argv, "-n", "--name", 1)) {
+			// save screen name
+			s_name = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, "-f", "--no-"DAEMON)) {
