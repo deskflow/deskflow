@@ -29,6 +29,22 @@
 extern "C" {
 #	include <X11/Xmd.h>
 #	include <X11/extensions/dpms.h>
+#	if !HAVE_DPMS_PROTOTYPES
+#		undef DPMSModeOn
+#		undef DPMSModeStandby
+#		undef DPMSModeSuspend
+#		undef DPMSModeOff
+#		define DPMSModeOn		0
+#		define DPMSModeStandby	1
+#		define DPMSModeSuspend	2
+#		define DPMSModeOff		3
+extern Bool DPMSQueryExtension(Display *, int *, int *);
+extern Bool DPMSCapable(Display *);
+extern Status DPMSEnable(Display *);
+extern Status DPMSDisable(Display *);
+extern Status DPMSForceLevel(Display *, CARD16);
+extern Status DPMSInfo(Display *, CARD16 *, BOOL *);
+#	endif
 }
 #endif
 

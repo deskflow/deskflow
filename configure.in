@@ -97,37 +97,75 @@ if test x"$acx_host_winapi" = xXWINDOWS; then
 	AC_PATH_XTRA
 	save_CPPFLAGS="$CPPFLAGS"
 	CPPFLAGS="$X_CFLAGS $CPPFLAGS"
+	XEXT_LDADD=
+
 	AC_CHECK_LIB(Xtst,
 		XTestQueryExtension,
-		[X_LIBS="$X_LIBS -lXtst"],
+		[XEXT_LDADD="$XEXT_LDADD -lXtst"],
 		AC_MSG_ERROR(You must have the XTest library to build synergy),
 		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
-	AC_CHECK_HEADERS([X11/extensions/XTest.h],,
+	AC_CHECK_HEADERS([X11/extensions/XTest.h],
+		,
 		AC_MSG_ERROR(You must have the XTest headers to compile synergy))
-	AC_CHECK_HEADERS([X11/extensions/Xinerama.h],
-		[acx_xinerama_lib_ok=yes],
-		[acx_xinerama_lib_ok=no],
-		[#include <X11/Xlib.h>])
-	if test x"$acx_xinerama_lib_ok" = xyes; then
-		AC_CHECK_LIB(Xinerama,
-			XineramaQueryExtension,
-			[X_LIBS="$X_LIBS -lXinerama"],
-			[AC_DEFINE(HAVE_X11_EXTENSIONS_XINERAMA_H, 0)],
-			[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+
+	acx_have_xinerama=yes
+	AC_CHECK_LIB(Xinerama,
+		XineramaQueryExtension,
+		[acx_have_xinerama=yes],
+		[acx_have_xinerama=no],
+		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+	if test x"$acx_have_xinerama" = xyes; then
+		AC_CHECK_HEADERS([X11/extensions/Xinerama.h],
+			[acx_have_xinerama=yes],
+			[acx_have_xinerama=no],
+			[#include <X11/Xlib.h>])
 	fi
-	AC_CHECK_HEADERS([X11/extensions/dpms.h],
-		[acx_dpms_lib_ok=yes],
-		[acx_dpms_lib_ok=no],
-		[#include <X11/Xlib.h>])
-	if test x"$acx_dpms_lib_ok" = xyes; then
-		AC_CHECK_LIB(Xext,
+	if test x"$acx_have_xinerama" = xyes; then
+		XEXT_LDADD="$XEXT_LDADD -lXinerama"
+	fi
+
+	X_DPMS_LDADD=
+	acx_have_dpms=no
+	AC_CHECK_LIB(Xext,
+		DPMSQueryExtension,
+		[acx_have_dpms=yes],
+		[acx_have_dpms=no],
+		[$X_LIBS -lX11 $X_EXTRA_LIBS])
+	if test x"$acx_have_dpms" != xyes; then
+		AC_CHECK_LIB(Xdpms,
 			DPMSQueryExtension,
-			[true],
-			[AC_DEFINE(HAVE_X11_EXTENSIONS_DPMS_H, 0)],
+			[acx_have_dpms=yes; XDPMS_LDADD=-lXdpms],
+			[acx_have_dpms=no],
 			[$X_LIBS -lX11 $X_EXTRA_LIBS])
 	fi
+	if test x"$acx_have_dpms" = xyes; then
+		AC_CHECK_HEADERS([X11/extensions/dpms.h],
+			[acx_have_dpms_h=yes],
+			[acx_have_dpms_h=no],
+			[#include <X11/Xlib.h>])
+		if test x"$acx_have_dpms_h" = xyes; then
+			XEXT_LDADD="$XEXT_LDADD $XDPMS_LDADD"
+			AC_MSG_CHECKING(for prototypes in X11/extensions/dpms.h)
+			acx_have_dpms_protos=no
+			AC_TRY_COMPILE([
+        	 		#include <X11/Xlib.h>
+					extern "C" {
+			  		#include <X11/extensions/dpms.h>
+					}
+				],[
+					int s = DPMSModeOn;
+					DPMSQueryExtension(0, 0, 0);
+				],
+        		[acx_have_dpms_protos=yes])
+			AC_MSG_RESULT($acx_have_dpms_protos)
+			if test x"$acx_have_dpms_protos" = xyes; then
+				AC_DEFINE(HAVE_DPMS_PROTOTYPES,1,[Define if the <X11/extensions/dpms.h> header file declares function prototypes.])
+			fi
+		fi
+	fi
+
 	CPPFLAGS="$save_CPPFLAGS"
-	ARCH_LIBS="$X_LIBS $X_PRE_LIBS -lXext -lX11 $X_EXTRA_LIBS $ARCH_LIBS"
+	ARCH_LIBS="$X_LIBS $X_PRE_LIBS $XEXT_LDADD -lXext -lX11 $X_EXTRA_LIBS $ARCH_LIBS"
 	ARCH_CFLAGS="$ARCH_CFLAGS $X_CFLAGS"
 fi
 
