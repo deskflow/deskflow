@@ -344,7 +344,7 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 
 	// move the mouse directly to target position on NT family or if
 	// not using multiple monitors.
-	if (m_screen->isMultimon() || !m_is95Family) {
+	if (!m_screen->isMultimon() || !m_is95Family) {
 		SInt32 x0, y0, w, h;
 		m_screen->getShape(x0, y0, w, h);
 		mouse_event(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE,
