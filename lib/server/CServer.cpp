@@ -1507,8 +1507,8 @@ bool
 CServer::removeClient(IClient* client)
 {
 	// return false if not in list
-	CClientList::iterator i = m_clients.find(getName(client));
-	if (i == m_clients.end()) {
+	CClientSet::iterator i = m_clientSet.find(client);
+	if (i == m_clientSet.end()) {
 		return false;
 	}
 
@@ -1521,8 +1521,8 @@ CServer::removeClient(IClient* client)
 							client->getEventTarget());
 
 	// remove from list
-	m_clients.erase(i);
-	m_clientSet.erase(client);
+	m_clients.erase(getName(client));
+	m_clientSet.erase(i);
 
 	return true;
 }
