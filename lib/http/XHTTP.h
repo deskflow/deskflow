@@ -62,6 +62,7 @@ private:
 	CString				m_reason;
 };
 
+//! HTTP exception indicating an unsupported method
 class XHTTPAllow : public XHTTP {
 public:
 	/*!

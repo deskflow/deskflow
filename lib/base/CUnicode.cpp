@@ -414,13 +414,31 @@ wchar_t*
 CUnicode::UTF8ToWideChar(const CString& src, UInt32& size, bool* errors)
 {
 	// convert to platform's wide character encoding
-#if WINDOWS_LIKE
-	CString tmp = UTF8ToUTF16(src, errors);
-	size = tmp.size() >> 1;
-#elif UNIX_LIKE
-	CString tmp = UTF8ToUCS4(src, errors);
-	size = tmp.size() >> 2;
-#endif
+	CString tmp;
+	switch (ARCH->getWideCharEncoding()) {
+	case IArchString::kUCS2:
+		tmp = UTF8ToUCS2(src, errors);
+		size = tmp.size() >> 1;
+		break;
+
+	case IArchString::kUCS4:
+		tmp = UTF8ToUCS4(src, errors);
+		size = tmp.size() >> 2;
+		break;
+
+	case IArchString::kUTF16:
+		tmp = UTF8ToUTF16(src, errors);
+		size = tmp.size() >> 1;
+		break;
+
+	case IArchString::kUTF32:
+		tmp = UTF8ToUTF32(src, errors);
+		size = tmp.size() >> 2;
+		break;
+
+	default:
+		assert(0 && "unknown wide character encoding");
+	}
 
 	// copy to a wchar_t array
 	wchar_t* dst = new wchar_t[size];
@@ -434,11 +452,23 @@ CUnicode::wideCharToUTF8(const wchar_t* src, UInt32 size, bool* errors)
 	// convert from platform's wide character encoding.
 	// note -- this must include a wide nul character (independent of
 	// the CString's nul character).
-#if WINDOWS_LIKE
-	return doUTF16ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
-#elif UNIX_LIKE
-	return doUCS4ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
-#endif
+	switch (ARCH->getWideCharEncoding()) {
+	case IArchString::kUCS2:
+		return doUCS2ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
+
+	case IArchString::kUCS4:
+		return doUCS4ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
+
+	case IArchString::kUTF16:
+		return doUTF16ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
+
+	case IArchString::kUTF32:
+		return doUTF32ToUTF8(reinterpret_cast<const UInt8*>(src), size, errors);
+
+	default:
+		assert(0 && "unknown wide character encoding");
+		return CString();
+	}
 }
 
 CString

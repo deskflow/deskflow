@@ -19,6 +19,7 @@
 
 #define ARCH_CONSOLE CArchConsoleUnix
 
+//! Unix implementation of IArchConsole
 class CArchConsoleUnix : public IArchConsole {
 public:
 	CArchConsoleUnix();

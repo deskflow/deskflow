@@ -54,12 +54,7 @@ static const int		g_prioritySuffixLength = 2;
 static const int		g_priorityPad = g_maxPriorityLength +
 										g_prioritySuffixLength;
 
-//
-// CLogLock
-//
-// Convenience object to lock/unlock a mutex.
-//
-
+//! Convenience object to lock/unlock a mutex
 class CLogLock {
 public:
 	CLogLock(CArchMutex mutex) : m_mutex(mutex) { ARCH->lockMutex(m_mutex); }

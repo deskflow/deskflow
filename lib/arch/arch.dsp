@@ -179,10 +179,6 @@ SOURCE=.\XArch.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\XArchImpl.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\XArchWindows.h
 # End Source File
 # End Group

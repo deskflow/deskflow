@@ -19,6 +19,7 @@
 
 #define ARCH_LOG CArchLogUnix
 
+//! Unix implementation of IArchLog
 class CArchLogUnix : public IArchLog {
 public:
 	CArchLogUnix();

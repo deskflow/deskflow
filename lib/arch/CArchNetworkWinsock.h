@@ -44,6 +44,7 @@ public:
 	int					m_len;
 };
 
+//! Win32 implementation of IArchNetwork
 class CArchNetworkWinsock : public IArchNetwork {
 public:
 	CArchNetworkWinsock();

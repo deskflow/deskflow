@@ -35,7 +35,7 @@ static int (PASCAL FAR *getsockopt_winsock)(SOCKET s, int level, int optname, vo
 static u_short (PASCAL FAR *htons_winsock)(u_short v);
 static char FAR * (PASCAL FAR *inet_ntoa_winsock)(struct in_addr in);
 static unsigned long (PASCAL FAR *inet_addr_winsock)(const char FAR * cp);
-static int (PASCAL FAR *ioctl_winsock)(SOCKET s, int cmd, void FAR *);
+static int (PASCAL FAR *ioctl_winsock)(SOCKET s, int cmd, void FAR * data);
 static int (PASCAL FAR *listen_winsock)(SOCKET s, int backlog);
 static u_short (PASCAL FAR *ntohs_winsock)(u_short v);
 static int (PASCAL FAR *recv_winsock)(SOCKET s, void FAR * buf, int len, int flags);
@@ -47,7 +47,7 @@ static SOCKET (PASCAL FAR *socket_winsock)(int af, int type, int protocol);
 static struct hostent FAR * (PASCAL FAR *gethostbyaddr_winsock)(const char FAR * addr, int len, int type);
 static struct hostent FAR * (PASCAL FAR *gethostbyname_winsock)(const char FAR * name);
 static int (PASCAL FAR *WSACleanup_winsock)(void);
-static int (PASCAL FAR *WSAFDIsSet_winsock)(SOCKET, fd_set FAR *);
+static int (PASCAL FAR *WSAFDIsSet_winsock)(SOCKET, fd_set FAR * fdset);
 
 #undef FD_ISSET
 #define FD_ISSET(fd, set) WSAFDIsSet_winsock((SOCKET)(fd), (fd_set FAR *)(set))

@@ -575,7 +575,7 @@ CArchMultithreadWindows::refThread(CArchThreadImpl* thread)
 }
 
 void
-CArchMultithreadWindows::testCancelThreadImpl(CArchThread thread)
+CArchMultithreadWindows::testCancelThreadImpl(CArchThreadImpl* thread)
 {
 	assert(thread != NULL);
 

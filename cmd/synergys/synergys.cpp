@@ -96,6 +96,11 @@ CArgs*					CArgs::s_instance = NULL;
 // platform dependent factories
 //
 
+//! Factory for creating primary screens
+/*!
+Objects of this type create primary screens appropriate for the
+platform.
+*/
 class CPrimaryScreenFactory : public IPrimaryScreenFactory {
 public:
 	CPrimaryScreenFactory() { }

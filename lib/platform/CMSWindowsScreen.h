@@ -35,7 +35,7 @@ public:
 class IScreenReceiver;
 class IMSWindowsScreenEventHandler;
 
-// Microsoft windows screen implementation
+//! Implementation of IScreen for Microsoft Windows
 class CMSWindowsScreen : public IScreen {
 public:
 	CMSWindowsScreen(IScreenReceiver*, IMSWindowsScreenEventHandler*);

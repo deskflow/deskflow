@@ -17,8 +17,6 @@ VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =						\
 	server.dsp						\
-	CMSWindowsPrimaryScreen.cpp		\
-	CMSWindowsPrimaryScreen.h		\
 	$(NULL)
 
 MAINTAINERCLEANFILES =				\
@@ -32,18 +30,13 @@ libserver_a_SOURCES = 				\
 	CConfig.cpp						\
 	CHTTPServer.cpp					\
 	CPrimaryClient.cpp				\
-	CPrimaryScreen.cpp				\
 	CServer.cpp						\
-	CXWindowsPrimaryScreen.cpp		\
 	CClientProxy.h					\
 	CClientProxy1_0.h				\
 	CConfig.h						\
 	CHTTPServer.h					\
 	CPrimaryClient.h				\
-	CPrimaryScreen.h				\
 	CServer.h						\
-	CXWindowsPrimaryScreen.h		\
-	IPrimaryScreenFactory.h			\
 	$(NULL)
 INCLUDES =							\
 	-I$(VDEPTH)/lib/common			\

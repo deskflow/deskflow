@@ -130,6 +130,8 @@ CArch::~CArch()
 CArch*
 CArch::getInstance()
 {
+	assert(s_instance != NULL);
+
 	return s_instance;
 }
 
@@ -567,6 +569,12 @@ int
 CArch::convWCToMB(char* dst, wchar_t src, CArchMBState state)
 {
 	return m_string->convWCToMB(dst, src, state);
+}
+
+IArchString::EWideCharEncoding
+CArch::getWideCharEncoding()
+{
+	return m_string->getWideCharEncoding();
 }
 
 double

@@ -19,6 +19,7 @@
 
 #define ARCH_SLEEP CArchSleepWindows
 
+//! Win32 implementation of IArchSleep
 class CArchSleepWindows : public IArchSleep {
 public:
 	CArchSleepWindows();

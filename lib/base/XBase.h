@@ -16,17 +16,12 @@
 #define XBASE_H
 
 #include "CString.h"
-/*
-#include "stdpre.h"
-#include <exception>
-#include "stdpost.h"
-*/
 
 //! Exception base class
 /*!
 This is the base class of most exception types.
 */
-class XBase /*: public std::exception*/ {
+class XBase {
 public:
 	//! Use getWhat() as the result of what()
 	XBase();
@@ -34,7 +29,7 @@ public:
 	XBase(const CString& msg);
 	virtual ~XBase();
 
-	// std::exception overrides
+	//! Reason for exception
 	virtual const char*	what() const;
 
 protected:

@@ -25,10 +25,24 @@
 #include "IArchString.h"
 #include "IArchTime.h"
 
+/*!
+\def ARCH
+This macro evaluates to the singleton CArch object.
+*/
 #define ARCH	(CArch::getInstance())
 
 #define ARCH_ARGS
 
+//! Delegating mplementation of architecture dependent interfaces
+/*!
+This class is a centralized interface to all architecture dependent
+interface implementations (except miscellaneous functions).  It
+instantiates an implementation of each interface and delegates calls
+to each method to those implementations.  Clients should use the
+\c ARCH macro to access this object.  Clients must also instantiate
+exactly one of these objects before attempting to call any method,
+typically at the beginning of \c main().
+*/
 class CArch : public IArchConsole,
 				public IArchDaemon,
 				public IArchFile,
@@ -46,6 +60,11 @@ public:
 	// accessors
 	//
 
+	//! Return the singleton instance
+	/*!
+	The client must have instantiated exactly once CArch object before
+	calling this function.
+	*/
 	static CArch*		getInstance();
 
 	// IArchConsole overrides
@@ -142,6 +161,8 @@ public:
 	virtual bool		isInitMBState(CArchMBState);
 	virtual int			convMBToWC(wchar_t*, const char*, int, CArchMBState);
 	virtual int			convWCToMB(char*, wchar_t, CArchMBState);
+	virtual EWideCharEncoding
+						getWideCharEncoding();
 
 	// IArchTime overrides
 	virtual double		time();

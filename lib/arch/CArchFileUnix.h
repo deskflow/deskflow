@@ -19,6 +19,7 @@
 
 #define ARCH_FILE CArchFileUnix
 
+//! Unix implementation of IArchFile
 class CArchFileUnix : public IArchFile {
 public:
 	CArchFileUnix();

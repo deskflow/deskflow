@@ -301,14 +301,26 @@ FIXME -- high level overview of class relationships
 Portability
 -----------
 
+Synergy is mostly platform independent code but necessarily has
+platform dependent parts.  The mundane platform dependent parts
+come from the usual suspects:  networking, multithreading, file
+system, high resolution clocks, system logging, etc.  Porting
+these parts is relatively straightforward.
+
+Synergy also has more esoteric platform dependent code.  The
+functions for low-level event interception and insertion,
+warping the cursor position, character to keyboard event
+translation, clipboard manipulation, and screen saver control
+are often obscure and poorly documented.  Unfortunately, these
+are exactly the functions synergy requires to do its magic.
+
 Porting synergy to a new platform requires the following steps:
 
 - Setting up the build
 - Adjusting lib/common/common.h
 - Implementing lib/arch
 - Implementing lib/platform
-- Implementing primary and secondary screens for the platform
-- Tweaking synergyc and synergys
+- Tweaks
 
 Setting up the build:
 
@@ -330,22 +342,49 @@ common.h.
 
 Implementing lib/arch:
 
-Most platform dependent code lives in lib/arch.  There are several
+Much platform dependent code lives in lib/arch.  There are several
 interface classes there and they must all be implemented for each
 platform.  See the interface header files for more information.
+
+Platforms requiring special functions should create a class named
+CArchMiscXXX where XXX is the platform name.  The class should have
+only static methods.  Clients can include the appropriate header
+file and make calls directly, surrounded by a suitable #ifdef/#endif.
 
 Implementing lib/platform:
 
 Most of the remaining platform dependent code lives in lib/platform.
 The code there implements platform dependent window, clipboard, and
-screen saver handling.  The following interfaces must be implemented:
+screen saver handling.  If a platform is named XXX then the following
+classes should be derived and implemented:
 
-FIXME
+  * CXXXClipboard : IClipboard
+    Provides clipboard operations.  Typically, this class will
+    have helper classes for converting between various clipboard
+    data formats.
 
-Implementing primary and secondary screens for the platform:
+  * CXXXScreen : IScreen
+    Provide screen operations common to the server and clients.
+    The CXXXPrimaryScreen and CXXXSecondaryScreen classes use a
+    CXXXScreen.
 
-FIXME
+  * CXXXPrimaryScreen : CPrimaryScreen, IScreenEventHandler
+    Provides server screen operations.
 
-Tweaking synergyc and synergys:
+  * CXXXSecondaryScreen : CSecondaryScreen, IScreenEventHandler
+    Provides client screen operations.
 
-FIXME
+  * CXXXScreenSaver : IScreenSaver
+	Provides screen saver operations.
+
+Tweaks:
+
+Finally, each platform typically requires various adjustments here
+and there.  In particular, synergyc.cpp and synergys.cpp usually
+require platform dependent code for the main entry point, parsing
+arguments, and reporting errors.  Also, some platforms may benefit
+from a graphical user interface front end.  These are generally
+not portable and synergy doesn't provide any infrastructure for
+the code common to any platform, though it may do so someday.
+There is, however, an implementation of a GUI front end for Windows
+that serves as an example.

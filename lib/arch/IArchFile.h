@@ -18,6 +18,11 @@
 #include "IInterface.h"
 #include "stdstring.h"
 
+//! Interface for architecture dependent file system operations
+/*!
+This interface defines the file system operations required by
+synergy.  Each architecture must implement this interface.
+*/
 class IArchFile : public IInterface {
 public:
 	//! @name manipulators

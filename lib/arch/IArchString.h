@@ -18,11 +18,39 @@
 #include "IInterface.h"
 #include <stdarg.h>
 
+/*!      
+\class CArchMBStateImpl
+\brief Internal multibyte conversion data.
+An architecture dependent type holding the necessary data for a
+multibyte to/from wide character conversion.
+*/
 class CArchMBStateImpl;
+
+/*!      
+\var CArchMBState
+\brief Opaque multibyte conversion state type.
+An opaque type representing multibyte conversion state.
+*/
 typedef CArchMBStateImpl* CArchMBState;
 
+//! Interface for architecture dependent string operations
+/*!
+This interface defines the string operations required by
+synergy.  Each architecture must implement this interface.
+*/
 class IArchString : public IInterface {
 public:
+	//! Wide character encodings
+	/*!
+	The known wide character encodings
+	*/
+	enum EWideCharEncoding {
+		kUCS2,		//!< The UCS-2 encoding
+		kUCS4,		//!< The UCS-4 encoding
+		kUTF16,		//!< The UTF-16 encoding
+		kUTF32		//!< The UTF-32 encoding
+	};
+
 	//! @name manipulators
 	//@{
 
@@ -54,6 +82,10 @@ public:
 
 	//! Convert wide character to multibyte
 	virtual int			convWCToMB(char*, wchar_t, CArchMBState) = 0;
+
+	//! Return the architecture's native wide character encoding
+	virtual EWideCharEncoding
+						getWideCharEncoding() = 0;
 
 	//@}
 };

@@ -36,3 +36,9 @@ CArchStringWindows::~CArchStringWindows()
 #define HAVE_VSNPRINTF 1
 #define ARCH_VSNPRINTF _vsnprintf
 #include "vsnprintf.cpp"
+
+IArchString::EWideCharEncoding
+CArchStringWindows::getWideCharEncoding()
+{
+	return kUTF16;
+}

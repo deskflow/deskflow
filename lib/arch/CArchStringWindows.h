@@ -19,6 +19,7 @@
 
 #define ARCH_STRING CArchStringWindows
 
+//! Win32 implementation of IArchString
 class CArchStringWindows : public IArchString {
 public:
 	CArchStringWindows();
@@ -33,6 +34,8 @@ public:
 	virtual bool		isInitMBState(CArchMBState);
 	virtual int			convMBToWC(wchar_t*, const char*, int, CArchMBState);
 	virtual int			convWCToMB(char*, wchar_t, CArchMBState);
+	virtual EWideCharEncoding
+						getWideCharEncoding();
 };
 
 #endif

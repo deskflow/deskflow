@@ -22,6 +22,7 @@
 
 #define ARCH_LOG CArchLogWindows
 
+//! Win32 implementation of IArchLog
 class CArchLogWindows : public IArchLog {
 public:
 	CArchLogWindows();

@@ -19,6 +19,7 @@
 
 #define ARCH_TIME CArchTimeUnix
 
+//! Generic Unix implementation of IArchTime
 class CArchTimeUnix : public IArchTime {
 public:
 	CArchTimeUnix();

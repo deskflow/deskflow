@@ -23,6 +23,7 @@
 
 #define ARCH_CONSOLE CArchConsoleWindows
 
+//! Win32 implementation of IArchConsole
 class CArchConsoleWindows : public IArchConsole {
 public:
 	CArchConsoleWindows();

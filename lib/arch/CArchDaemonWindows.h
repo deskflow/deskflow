@@ -25,6 +25,7 @@
 
 #define ARCH_DAEMON CArchDaemonWindows
 
+//! Win32 implementation of IArchDaemon
 class CArchDaemonWindows : public IArchDaemon {
 public:
 	typedef int			(*RunFunc)(void);

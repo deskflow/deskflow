@@ -103,11 +103,19 @@ SOURCE=.\CMSWindowsClipboardUTF16Converter.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CMSWindowsPrimaryScreen.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CMSWindowsScreen.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\CMSWindowsScreenSaver.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsSecondaryScreen.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -131,11 +139,19 @@ SOURCE=.\CMSWindowsClipboardUTF16Converter.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CMSWindowsPrimaryScreen.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CMSWindowsScreen.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\CMSWindowsScreenSaver.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsSecondaryScreen.h
 # End Source File
 # Begin Source File
 

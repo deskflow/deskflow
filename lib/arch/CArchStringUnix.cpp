@@ -32,3 +32,9 @@ CArchStringUnix::~CArchStringUnix()
 }
 
 #include "vsnprintf.cpp"
+
+IArchString::EWideCharEncoding
+CArchStringUnix::getWideCharEncoding()
+{
+	return kUCS4;
+}

@@ -31,6 +31,7 @@ public:
 	pthread_mutex_t		m_mutex;
 };
 
+//! Posix implementation of IArchMultithread
 class CArchMultithreadPosix : public IArchMultithread {
 public:
 	CArchMultithreadPosix();

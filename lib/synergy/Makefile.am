@@ -25,24 +25,30 @@ MAINTAINERCLEANFILES =			\
 
 noinst_LIBRARIES = libsynergy.a
 libsynergy_a_SOURCES = 			\
+	CClipboard.cpp				\
 	CInputPacketStream.cpp		\
 	COutputPacketStream.cpp		\
+	CPrimaryScreen.cpp			\
 	CProtocolUtil.cpp			\
-	CClipboard.cpp				\
+	CSecondaryScreen.cpp		\
 	XScreen.cpp					\
 	XSynergy.cpp				\
 	CClipboard.h				\
 	CInputPacketStream.h		\
 	COutputPacketStream.h		\
+	CPrimaryScreen.h			\
 	CProtocolUtil.h				\
+	CSecondaryScreen.h			\
 	ClipboardTypes.h			\
 	IClient.h					\
 	IClipboard.h				\
+	IPrimaryScreenFactory.h		\
 	IPrimaryScreenReceiver.h	\
 	IScreen.h					\
 	IScreenEventHandler.h		\
 	IScreenReceiver.h			\
 	IScreenSaver.h				\
+	ISecondaryScreenFactory.h	\
 	IServer.h					\
 	KeyTypes.h					\
 	MouseTypes.h				\

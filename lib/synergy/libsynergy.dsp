@@ -99,7 +99,15 @@ SOURCE=.\COutputPacketStream.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CPrimaryScreen.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CProtocolUtil.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CSecondaryScreen.cpp
 # End Source File
 # Begin Source File
 
@@ -131,7 +139,15 @@ SOURCE=.\COutputPacketStream.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CPrimaryScreen.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CProtocolUtil.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CSecondaryScreen.h
 # End Source File
 # Begin Source File
 
@@ -140,6 +156,10 @@ SOURCE=.\IClient.h
 # Begin Source File
 
 SOURCE=.\IClipboard.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IPrimaryScreenFactory.h
 # End Source File
 # Begin Source File
 
@@ -160,6 +180,10 @@ SOURCE=.\IScreenReceiver.h
 # Begin Source File
 
 SOURCE=.\IScreenSaver.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ISecondaryScreenFactory.h
 # End Source File
 # Begin Source File
 

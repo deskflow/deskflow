@@ -19,6 +19,13 @@
 
 #define ARCH_DAEMON CArchDaemonNone
 
+//! Dummy implementation of IArchDaemon
+/*!
+This class implements IArchDaemon for a platform that does not have
+daemons.  The install and uninstall functions do nothing, the query
+functions return false, and \c daemonize() simply calls the passed
+function and returns its result.
+*/
 class CArchDaemonNone : public IArchDaemon {
 public:
 	CArchDaemonNone();

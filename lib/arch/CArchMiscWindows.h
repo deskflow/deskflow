@@ -15,6 +15,7 @@
 #ifndef CARCHMISCWINDOWS_H
 #define CARCHMISCWINDOWS_H
 
+//! Miscellaneous win32 functions.
 class CArchMiscWindows {
 public:
 	typedef int			(*RunFunc)(void);

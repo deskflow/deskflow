@@ -23,15 +23,19 @@ EXTRA_DIST =								\
 	CMSWindowsClipboardAnyTextConverter.cpp	\
 	CMSWindowsClipboardTextConverter.cpp	\
 	CMSWindowsClipboardUTF16Converter.cpp	\
+	CMSWindowsPrimaryScreen.cpp				\
 	CMSWindowsScreen.cpp					\
 	CMSWindowsScreenSaver.cpp				\
+	CMSWindowsSecondaryScreen.cpp			\
 	CSynergyHook.cpp						\
 	CMSWindowsClipboard.h					\
 	CMSWindowsClipboardAnyTextConverter.h	\
 	CMSWindowsClipboardTextConverter.h		\
 	CMSWindowsClipboardUTF16Converter.h		\
+	CMSWindowsPrimaryScreen.h				\
 	CMSWindowsScreen.h						\
 	CMSWindowsScreenSaver.h					\
+	CMSWindowsSecondaryScreen.h				\
 	CSynergyHook.h							\
 	IMSWindowsScreenEventHandler.h			\
 	$(NULL)
@@ -46,15 +50,19 @@ libplatform_a_SOURCES = 					\
 	CXWindowsClipboardTextConverter.cpp		\
 	CXWindowsClipboardUCS2Converter.cpp		\
 	CXWindowsClipboardUTF8Converter.cpp		\
+	CXWindowsPrimaryScreen.cpp				\
 	CXWindowsScreen.cpp						\
 	CXWindowsScreenSaver.cpp				\
+	CXWindowsSecondaryScreen.cpp			\
 	CXWindowsUtil.cpp						\
 	CXWindowsClipboard.h					\
 	CXWindowsClipboardTextConverter.h		\
 	CXWindowsClipboardUCS2Converter.h		\
 	CXWindowsClipboardUTF8Converter.h		\
+	CXWindowsPrimaryScreen.h				\
 	CXWindowsScreen.h						\
 	CXWindowsScreenSaver.h					\
+	CXWindowsSecondaryScreen.h				\
 	CXWindowsUtil.h							\
 	$(NULL)
 INCLUDES =									\

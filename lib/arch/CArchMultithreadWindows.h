@@ -37,6 +37,7 @@ public:
 	CRITICAL_SECTION	m_mutex;
 };
 
+//! Win32 implementation of IArchMultithread
 class CArchMultithreadWindows : public IArchMultithread {
 public:
 	CArchMultithreadWindows();

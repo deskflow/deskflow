@@ -19,6 +19,7 @@
 
 #define ARCH_TIME CArchTimeWindows
 
+//! Win32 implementation of IArchTime
 class CArchTimeWindows : public IArchTime {
 public:
 	CArchTimeWindows();

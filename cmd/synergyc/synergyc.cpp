@@ -86,6 +86,11 @@ CArgs*					CArgs::s_instance = NULL;
 // platform dependent factories
 //
 
+//! Factory for creating secondary screens
+/*!
+Objects of this type create secondary screens appropriate for the
+platform.
+*/
 class CSecondaryScreenFactory : public ISecondaryScreenFactory {
 public:
 	CSecondaryScreenFactory() { }

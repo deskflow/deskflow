@@ -19,6 +19,7 @@
 
 #define ARCH_FILE CArchFileWindows
 
+//! Win32 implementation of IArchFile
 class CArchFileWindows : public IArchFile {
 public:
 	CArchFileWindows();

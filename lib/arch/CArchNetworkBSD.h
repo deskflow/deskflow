@@ -50,6 +50,7 @@ public:
 	socklen_t			m_len;
 };
 
+//! Berkeley (BSD) sockets implementation of IArchNetwork
 class CArchNetworkBSD : public IArchNetwork {
 public:
 	CArchNetworkBSD();

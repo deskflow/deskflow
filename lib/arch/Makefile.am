@@ -61,7 +61,6 @@ libarch_a_SOURCES =				\
 	IArchString.h				\
 	IArchTime.h					\
 	XArch.h						\
-	XArchImpl.h					\
 	$(NULL)
 EXTRA_libarch_a_SOURCES =		\
 	CArchConsoleUnix.cpp		\

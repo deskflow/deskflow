@@ -33,6 +33,11 @@ class IScreenReceiver;
 class CXWindowsClipboard;
 class CXWindowsScreenSaver;
 
+/*!
+\class CEvent
+\brief User event data
+An architecture dependent type holding user event data.
+*/
 // X11 event
 class CEvent {
 public:
@@ -40,7 +45,7 @@ public:
 	SInt32				m_result;
 };
 
-// X11 screen implementation
+//! Implementation of IScreen for X11
 class CXWindowsScreen : public IScreen {
 public:
 	CXWindowsScreen(IScreenReceiver*, IScreenEventHandler*);
@@ -279,6 +284,7 @@ private:
 	static CXWindowsScreen*	s_screen;
 };
 
+//! Convenience object to lock/unlock a CXWindowsScreen
 class CDisplayLock {
 public:
 	CDisplayLock(const CXWindowsScreen*);

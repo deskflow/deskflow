@@ -103,15 +103,7 @@ SOURCE=.\CHTTPServer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsPrimaryScreen.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\CPrimaryClient.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CPrimaryScreen.cpp
 # End Source File
 # Begin Source File
 
@@ -139,23 +131,11 @@ SOURCE=.\CHTTPServer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsPrimaryScreen.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\CPrimaryClient.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CPrimaryScreen.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\CServer.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\IPrimaryScreenFactory.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

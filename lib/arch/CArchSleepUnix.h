@@ -19,6 +19,7 @@
 
 #define ARCH_SLEEP CArchSleepUnix
 
+//! Unix implementation of IArchSleep
 class CArchSleepUnix : public IArchSleep {
 public:
 	CArchSleepUnix();

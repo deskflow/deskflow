@@ -17,6 +17,11 @@
 
 #include "IInterface.h"
 
+//! Interface for architecture dependent time operations
+/*!
+This interface defines the time operations required by
+synergy.  Each architecture must implement this interface.
+*/
 class IArchTime : public IInterface {
 public:
 	//! @name manipulators

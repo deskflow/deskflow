@@ -17,6 +17,11 @@
 
 #include "IInterface.h"
 
+//! Interface for architecture dependent console output
+/*!
+This interface defines the console operations required by
+synergy.  Each architecture must implement this interface.
+*/
 class IArchConsole : public IInterface {
 public:
 	//! @name manipulators

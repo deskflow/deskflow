@@ -17,30 +17,17 @@
 #include <cerrno>
 #include <cstdarg>
 
-// win32 wants a const char* argument to std::exception c'tor
-#if WINDOWS_LIKE
-#include <windows.h>
-#define STDEXCEPTARG ""
-#endif
-
-// default to no argument
-#ifndef STDEXCEPTARG
-#define STDEXCEPTARG
-#endif
-
 //
 // XBase
 //
 
 XBase::XBase() :
-//	exception(STDEXCEPTARG),
 	m_what()
 {
 	// do nothing
 }
 
 XBase::XBase(const CString& msg) :
-//	exception(STDEXCEPTARG),
 	m_what(msg)
 {
 	// do nothing

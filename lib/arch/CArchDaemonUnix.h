@@ -20,6 +20,7 @@
 #undef ARCH_DAEMON
 #define ARCH_DAEMON CArchDaemonUnix
 
+//! Unix implementation of IArchDaemon
 class CArchDaemonUnix : public CArchDaemonNone {
 public:
 	CArchDaemonUnix();
