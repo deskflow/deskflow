@@ -561,7 +561,8 @@ CXWindowsScreen::getCursorPos(SInt32& x, SInt32& y) const
 		y = my;
 	}
 	else {
-		getCursorCenter(x, y);
+		x = m_x + (m_w >> 1);
+		y = m_y + (m_h >> 1);
 	}
 }
 
