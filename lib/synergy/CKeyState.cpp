@@ -374,17 +374,19 @@ CKeyState::isModifierActive(KeyModifierMask mask) const
 {
 	const KeyButtons& buttons = m_maskToKeys[getIndexForModifier(mask)];
 	KeyButtons::const_iterator j = buttons.begin();
-	if (isToggle(mask)) {
-		// modifier is a toggle
-		if ((m_keys[*j] & kToggled) != 0) {
-			return true;
-		}
-	}
-	else {
-		// modifier is not a toggle
-		for (; j != buttons.end(); ++j) {
-			if ((m_keys[*j] & kDown) != 0) {
+	if (j != buttons.end()) {
+		if (isToggle(mask)) {
+			// modifier is a toggle
+			if ((m_keys[*j] & kToggled) != 0) {
 				return true;
+			}
+		}
+		else {
+			// modifier is not a toggle
+			for (; j != buttons.end(); ++j) {
+				if ((m_keys[*j] & kDown) != 0) {
+					return true;
+				}
 			}
 		}
 	}
