@@ -1,3 +1,42 @@
+2002/08/18 17:45:59 crs
+configure.in
+lib/base/Version.h
+
+Changed version number to 0.9.9.
+
+----------
+2002/08/18 17:40:10 crs
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+fixed win32 deadlock.  when a client disconnects the server will
+warp the mouse to the primary screen.  entering the primary
+screen causes the primary screen's window to be hidden.  the
+deadlock occurs because hiding the window seems to post a
+message then wait for it to be handled (or possibly it won't
+send a message while a posted message is being handled).
+thread A locks the mutex, warps the mouse, the hides the window.
+thread B begins processing the mouse warp then tries to lock
+the mutex.  thread A is waiting on the event loop owned by B
+while B is waiting on the mutex owned by A.  this fix simply
+hides the window asynchronously.  however, there may be other
+ways to cause a similar deadlock that have not been found.
+
+----------
+2002/08/18 17:35:10 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CMSWindowsSecondaryScreen.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+fixed PrintScrn handling;  it was being changed to keypad multiply.
+
+----------
+2002/08/18 17:31:48 crs
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+
+no longer sending fake events for unmapped logical buttons.
+
+----------
 2002/08/11 22:43:07 crs
 BUGS
 INSTALL
