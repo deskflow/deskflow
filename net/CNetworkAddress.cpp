@@ -99,6 +99,18 @@ CNetworkAddress::CNetworkAddress(const CString& hostname_, UInt16 port) :
 		return;
 	}
 
+	// convert dot notation to address
+	unsigned long addr = CNetwork::inet_addr(hostname.c_str());
+	if (addr != INADDR_NONE) {
+		struct sockaddr_in* inetAddress = reinterpret_cast<
+										struct sockaddr_in*>(&m_address);
+		inetAddress->sin_family      = AF_INET;
+		inetAddress->sin_port        = CNetwork::swaphtons(port);
+		inetAddress->sin_addr.s_addr = addr;
+		memset(inetAddress->sin_zero, 0, sizeof(inetAddress->sin_zero));
+		return;
+	}
+
 	// look up name
 	struct hostent* hent = CNetwork::gethostbyname(hostname.c_str());
 	if (hent == NULL) {
