@@ -137,7 +137,8 @@ private:
 	bool				isLockedToScreenNoLock() const;
 
 	// change the active screen
-	void				switchScreen(CScreenInfo*, SInt32 x, SInt32 y);
+	void				switchScreen(CScreenInfo*,
+							SInt32 x, SInt32 y, bool forScreenSaver);
 
 	// lookup neighboring screen
 	CScreenInfo*		getNeighbor(CScreenInfo*, CConfig::EDirection) const;

@@ -41,9 +41,11 @@ public:
 	// called when the user navigates back to the primary screen.
 	// warp the cursor to the given coordinates, unhide it, and
 	// ungrab the input devices.  every call to enter has a matching
-	// call to leave() which preceeds it, however the screen can
+	// call to leave() which preceeds it, however the screen should
 	// assume an implicit call to enter() in the call to open().
-	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute) = 0;
+	// if warpCursor is false then do not warp the mouse.
+	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute,
+							bool forScreenSaver) = 0;
 
 	// called when the user navigates off the primary screen.  hide
 	// the cursor and grab exclusive access to the input devices.

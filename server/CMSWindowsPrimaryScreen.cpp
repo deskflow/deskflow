@@ -165,7 +165,7 @@ CMSWindowsPrimaryScreen::close()
 }
 
 void
-CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
+CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreenSaver)
 {
 	log((CLOG_INFO "entering primary at %d,%d", x, y));
 	assert(m_active == true);
@@ -174,7 +174,9 @@ CMSWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
 	enterNoWarp();
 
 	// warp to requested location
-	warpCursor(x, y);
+	if (!forScreenSaver) {
+		warpCursor(x, y);
+	}
 }
 
 bool

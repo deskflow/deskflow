@@ -588,7 +588,7 @@ CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
 	}
 
 	// switch screen
-	switchScreen(newScreen, x, y);
+	switchScreen(newScreen, x, y, false);
 	return true;
 }
 
@@ -692,7 +692,7 @@ CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
 
 	// otherwise screen screens
 	else {
-		switchScreen(newScreen, m_x, m_y);
+		switchScreen(newScreen, m_x, m_y, false);
 	}
 }
 
@@ -723,11 +723,7 @@ CServer::onScreenSaver(bool activated)
 
 		// jump to primary screen
 		if (m_active != m_primaryInfo) {
-// FIXME -- should have separate "center" pixel reported by screen
-			m_x = m_primaryInfo->m_x + (m_primaryInfo->m_w >> 1);
-			m_y = m_primaryInfo->m_y + (m_primaryInfo->m_h >> 1);
-			m_active = m_primaryInfo;
-			m_primary->enter(m_x, m_y);
+			switchScreen(m_primaryInfo, 0, 0, true);
 		}
 	}
 	else {
@@ -752,8 +748,8 @@ CServer::onScreenSaver(bool activated)
 				m_ySaver = screen->m_y + screen->m_h - screen->m_zoneSize - 1;
 			}
 
-			// now jump
-			switchScreen(screen, m_xSaver, m_ySaver);
+			// jump
+			switchScreen(screen, m_xSaver, m_ySaver, false);
 		}
 
 		// reset state
@@ -794,7 +790,7 @@ CServer::isLockedToScreenNoLock() const
 }
 
 void
-CServer::switchScreen(CScreenInfo* dst, SInt32 x, SInt32 y)
+CServer::switchScreen(CScreenInfo* dst, SInt32 x, SInt32 y, bool screenSaver)
 {
 	assert(dst != NULL);
 	assert(x >= dst->m_x && y >= dst->m_y);
@@ -840,7 +836,7 @@ CServer::switchScreen(CScreenInfo* dst, SInt32 x, SInt32 y)
 
 		// enter new screen
 		if (m_active->m_protocol == NULL) {
-			m_primary->enter(x, y);
+			m_primary->enter(x, y, screenSaver);
 		}
 		else {
 			m_active->m_protocol->sendEnter(x, y, m_seqNum,
@@ -1621,20 +1617,24 @@ CServer::removeConnection(const CString& name)
 	assert(index != m_screens.end());
 
 	// if this is active screen then we have to jump off of it
-	if (m_active == index->second && m_active != m_primaryInfo) {
+	CScreenInfo* active = (m_activeSaver != NULL) ? m_activeSaver : m_active;
+	if (active == index->second && active != m_primaryInfo) {
 		// record new position (center of primary screen)
 // FIXME -- should have separate "center" pixel reported by screen
 		m_x = m_primaryInfo->m_x + (m_primaryInfo->m_w >> 1);
 		m_y = m_primaryInfo->m_y + (m_primaryInfo->m_h >> 1);
 
 		// don't notify active screen since it probably already disconnected
-		log((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", m_active->m_name.c_str(), m_primaryInfo->m_name.c_str(), m_x, m_y));
+		log((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", active->m_name.c_str(), m_primaryInfo->m_name.c_str(), m_x, m_y));
 
 		// cut over
 		m_active = m_primaryInfo;
 
-		// enter new screen
-		m_primary->enter(m_x, m_y);
+		// enter new screen (unless we already have because of the
+		// screen saver)
+		if (m_activeSaver == NULL) {
+			m_primary->enter(m_x, m_y, false);
+		}
 	}
 
 	// if this screen had the cursor when the screen saver activated

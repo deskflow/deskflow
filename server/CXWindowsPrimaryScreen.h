@@ -15,7 +15,7 @@ public:
 	virtual void		stop();
 	virtual void		open(CServer*);
 	virtual void		close();
-	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute);
+	virtual void		enter(SInt32 xAbsolute, SInt32 yAbsolute, bool);
 	virtual bool		leave();
 	virtual void		onConfigure();
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);

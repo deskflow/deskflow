@@ -323,19 +323,26 @@ CXWindowsPrimaryScreen::close()
 }
 
 void
-CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y)
+CXWindowsPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreenSaver)
 {
-	log((CLOG_INFO "entering primary at %d,%d", x, y));
+	log((CLOG_INFO "entering primary at %d,%d%s", x, y, forScreenSaver ? " for screen saver" : ""));
 	assert(m_active == true);
 	assert(m_window != None);
 
 	CDisplayLock display(this);
 
 	// warp to requested location
-	XWarpPointer(display, None, m_window, 0, 0, 0, 0, x, y);
+	if (!forScreenSaver) {
+		XWarpPointer(display, None, m_window, 0, 0, 0, 0, x, y);
+	}
 
 	// unmap the grab window.  this also ungrabs the mouse and keyboard.
 	XUnmapWindow(display, m_window);
+
+	// redirect input to root window
+	if (forScreenSaver) {
+		XSetInputFocus(display, PointerRoot, PointerRoot, CurrentTime);
+	}
 
 	// remove all input events for grab window
 	XEvent event;
