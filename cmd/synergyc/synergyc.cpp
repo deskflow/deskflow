@@ -725,7 +725,7 @@ parse(int argc, const char* const* argv)
 	}
 
 	// identify system
-	LOG((CLOG_INFO "Synergy client on %s", ARCH->getOSName().c_str()));
+	LOG((CLOG_INFO "Synergy client %s on %s", kVersion, ARCH->getOSName().c_str()));
 }
 
 
