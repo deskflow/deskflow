@@ -90,8 +90,8 @@ library to indicate various errors.
 */
 XARCH_SUBCLASS(XArchNetwork, XArch);
 
-//! Operation would block
-XARCH_SUBCLASS(XArchNetworkWouldBlock, XArchNetwork);
+//! Operation was interrupted
+XARCH_SUBCLASS(XArchNetworkInterrupted, XArchNetwork);
 
 //! Network insufficient permission
 XARCH_SUBCLASS(XArchNetworkAccess, XArchNetwork);
@@ -125,9 +125,6 @@ XARCH_SUBCLASS(XArchNetworkDisconnected, XArchNetwork);
 
 //! Remote end of socket refused connection
 XARCH_SUBCLASS(XArchNetworkConnectionRefused, XArchNetwork);
-
-//! Connection is in progress
-XARCH_SUBCLASS(XArchNetworkConnecting, XArchNetwork);
 
 //! Remote end of socket is not responding
 XARCH_SUBCLASS(XArchNetworkTimedOut, XArchNetwork);

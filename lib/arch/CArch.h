@@ -132,14 +132,13 @@ public:
 	virtual void		bindSocket(CArchSocket s, CArchNetAddress addr);
 	virtual void		listenOnSocket(CArchSocket s);
 	virtual CArchSocket	acceptSocket(CArchSocket s, CArchNetAddress* addr);
-	virtual void		connectSocket(CArchSocket s, CArchNetAddress name);
+	virtual bool		connectSocket(CArchSocket s, CArchNetAddress name);
 	virtual int			pollSocket(CPollEntry[], int num, double timeout);
 	virtual void		unblockPollSocket(CArchThread thread);
 	virtual size_t		readSocket(CArchSocket s, void* buf, size_t len);
 	virtual size_t		writeSocket(CArchSocket s,
 							const void* buf, size_t len);
 	virtual void		throwErrorOnSocket(CArchSocket);
-	virtual bool		setBlockingOnSocket(CArchSocket, bool blocking);
 	virtual bool		setNoDelayOnSocket(CArchSocket, bool noDelay);
 	virtual std::string		getHostName();
 	virtual CArchNetAddress	newAnyAddr(EAddressFamily);

@@ -69,18 +69,23 @@ CArchNetworkBSD::~CArchNetworkBSD()
 CArchSocket
 CArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
 {
-	// allocate socket object
-	CArchSocketImpl* newSocket = new CArchSocketImpl;
-
 	// create socket
 	int fd = socket(s_family[family], s_type[type], 0);
 	if (fd == -1) {
 		throwError(errno);
 	}
+	try {
+		setBlockingOnSocket(fd, false);
+	}
+	catch (...) {
+		close(fd);
+		throw;
+	}
 
-	newSocket->m_fd        = fd;
-	newSocket->m_connected = false;
-	newSocket->m_refCount  = 1;
+	// allocate socket object
+	CArchSocketImpl* newSocket = new CArchSocketImpl;
+	newSocket->m_fd            = fd;
+	newSocket->m_refCount      = 1;
 	return newSocket;
 }
 
@@ -108,23 +113,14 @@ CArchNetworkBSD::closeSocket(CArchSocket s)
 
 	// close the socket if necessary
 	if (doClose) {
-		do {
-			if (close(s->m_fd) == -1) {
-				// close failed
-				int err = errno;
-				if (err == EINTR) {
-					// interrupted system call
-					ARCH->testCancelThread();
-					continue;
-				}
-
-				// restore the last ref and throw
-				ARCH->lockMutex(m_mutex);
-				++s->m_refCount;
-				ARCH->unlockMutex(m_mutex);
-				throwError(err);
-			}
-		} while (false);
+		if (close(s->m_fd) == -1) {
+			// close failed.  restore the last ref and throw.
+			int err = errno;
+			ARCH->lockMutex(m_mutex);
+			++s->m_refCount;
+			ARCH->unlockMutex(m_mutex);
+			throwError(err);
+		}
 		delete s;
 	}
 }
@@ -191,27 +187,32 @@ CArchNetworkBSD::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 	*addr                      = new CArchNetAddressImpl;
 
 	// accept on socket
-	int fd;
-	do {
-		fd = accept(s->m_fd, &(*addr)->m_addr, &(*addr)->m_len);
-		if (fd == -1) {
-			int err = errno;
-			if (err == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			delete newSocket;
-			delete *addr;
-			*addr = NULL;
-			throwError(err);
+	int fd = accept(s->m_fd, &(*addr)->m_addr, &(*addr)->m_len);
+	if (fd == -1) {
+		int err = errno;
+		delete newSocket;
+		delete *addr;
+		*addr = NULL;
+		if (err == EAGAIN) {
+			return NULL;
 		}
-	} while (false);
+		throwError(err);
+	}
+
+	try {
+		setBlockingOnSocket(fd, false);
+	}
+	catch (...) {
+		close(fd);
+		delete newSocket;
+		delete *addr;
+		*addr = NULL;
+		throw;
+	}
 
 	// initialize socket
-	newSocket->m_fd        = fd;
-	newSocket->m_connected = true;
-	newSocket->m_refCount  = 1;
+	newSocket->m_fd       = fd;
+	newSocket->m_refCount = 1;
 
 	// discard address if not requested
 	if (addr == &dummy) {
@@ -221,32 +222,22 @@ CArchNetworkBSD::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 	return newSocket;
 }
 
-void
+bool
 CArchNetworkBSD::connectSocket(CArchSocket s, CArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
 
-	do {
-		if (connect(s->m_fd, &addr->m_addr, addr->m_len) == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-
-			if (errno == EISCONN) {
-				// already connected
-				break;
-			}
-
-			throwError(errno);
+	if (connect(s->m_fd, &addr->m_addr, addr->m_len) == -1) {
+		if (errno == EISCONN) {
+			return true;
 		}
-	} while (false);
-
-	ARCH->lockMutex(m_mutex);
-	s->m_connected = true;
-	ARCH->unlockMutex(m_mutex);
+		if (errno == EINPROGRESS) {
+			return false;
+		}
+		throwError(errno);
+	}
+	return true;
 }
 
 #if HAVE_POLL
@@ -435,23 +426,13 @@ CArchNetworkBSD::readSocket(CArchSocket s, void* buf, size_t len)
 {
 	assert(s != NULL);
 
-	ssize_t n;
-	do {
-		n = read(s->m_fd, buf, len);
-		if (n == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				n = 0;
-				break;
-			}
-			else if (errno == EAGAIN) {
-				n = 0;
-				break;
-			}
-			throwError(errno);
+	ssize_t n = read(s->m_fd, buf, len);
+	if (n == -1) {
+		if (errno == EINTR || errno == EAGAIN) {
+			return 0;
 		}
-	} while (false);
-	ARCH->testCancelThread();
+		throwError(errno);
+	}
 	return n;
 }
 
@@ -460,24 +441,13 @@ CArchNetworkBSD::writeSocket(CArchSocket s, const void* buf, size_t len)
 {
 	assert(s != NULL);
 
-	ssize_t n;
-	do {
-		n = write(s->m_fd, buf, len);
-		if (n == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				n = 0;
-				break;
-			}
-			else if (errno == EAGAIN) {
-				// no buffer space
-				n = 0;
-				break;
-			}
-			throwError(errno);
+	ssize_t n = write(s->m_fd, buf, len);
+	if (n == -1) {
+		if (errno == EINTR || errno == EAGAIN) {
+			return 0;
 		}
-	} while (false);
-	ARCH->testCancelThread();
+		throwError(errno);
+	}
 	return n;
 }
 
@@ -499,26 +469,24 @@ CArchNetworkBSD::throwErrorOnSocket(CArchSocket s)
 	}
 }
 
-bool
-CArchNetworkBSD::setBlockingOnSocket(CArchSocket s, bool blocking)
+void
+CArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
 {
-	assert(s != NULL);
+	assert(fd != -1);
 
-	int mode = fcntl(s->m_fd, F_GETFL, 0);
+	int mode = fcntl(fd, F_GETFL, 0);
 	if (mode == -1) {
 		throwError(errno);
 	}
-	bool old = ((mode & O_NDELAY) == 0);
 	if (blocking) {
 		mode &= ~O_NDELAY;
 	}
 	else {
 		mode |= O_NDELAY;
 	}
-	if (fcntl(s->m_fd, F_SETFL, mode) == -1) {
+	if (fcntl(fd, F_SETFL, mode) == -1) {
 		throwError(errno);
 	}
-	return old;
 }
 
 bool
@@ -775,8 +743,9 @@ void
 CArchNetworkBSD::throwError(int err)
 {
 	switch (err) {
-	case EAGAIN:
-		throw XArchNetworkWouldBlock(new XArchEvalUnix(err));
+	case EINTR:
+		ARCH->testCancelThread();
+		throw XArchNetworkInterrupted(new XArchEvalUnix(err));
 
 	case EACCES:
 	case EPERM:
@@ -832,10 +801,6 @@ CArchNetworkBSD::throwError(int err)
 
 	case ECONNREFUSED:
 		throw XArchNetworkConnectionRefused(new XArchEvalUnix(err));
-
-	case EINPROGRESS:
-	case EALREADY:
-		throw XArchNetworkConnecting(new XArchEvalUnix(err));
 
 	case EHOSTDOWN:
 	case ETIMEDOUT:

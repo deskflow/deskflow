@@ -435,10 +435,10 @@ CArch::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 	return m_net->acceptSocket(s, addr);
 }
 
-void
+bool
 CArch::connectSocket(CArchSocket s, CArchNetAddress name)
 {
-	m_net->connectSocket(s, name);
+	return m_net->connectSocket(s, name);
 }
 
 int
@@ -469,12 +469,6 @@ void
 CArch::throwErrorOnSocket(CArchSocket s)
 {
 	m_net->throwErrorOnSocket(s);
-}
-
-bool
-CArch::setBlockingOnSocket(CArchSocket s, bool blocking)
-{
-	return m_net->setBlockingOnSocket(s, blocking);
 }
 
 bool

@@ -61,7 +61,6 @@ CTCPListenSocket::bind(const CNetworkAddress& addr)
 		CLock lock(m_mutex);
 		ARCH->bindSocket(m_socket, addr.getAddress());
 		ARCH->listenOnSocket(m_socket);
-		ARCH->setBlockingOnSocket(m_socket, false);
 		CSocketMultiplexer::getInstance()->addSocket(this,
 							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
 								this, &CTCPListenSocket::serviceListening,
@@ -104,10 +103,12 @@ CTCPListenSocket::accept()
 	try {
 		IDataSocket* socket =
 			new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
-		CSocketMultiplexer::getInstance()->addSocket(this,
+		if (socket != NULL) {
+			CSocketMultiplexer::getInstance()->addSocket(this,
 							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
 								this, &CTCPListenSocket::serviceListening,
 								m_socket, true, false));
+		}
 		return socket;
 	}
 	catch (XArchNetwork&) {

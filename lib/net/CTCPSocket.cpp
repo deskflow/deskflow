@@ -275,13 +275,14 @@ CTCPSocket::connect(const CNetworkAddress& addr)
 		}
 
 		try {
-			ARCH->connectSocket(m_socket, addr.getAddress());
-			sendSocketEvent(getConnectedEvent());
-			onConnected();
-		}
-		catch (XArchNetworkConnecting&) {
-			// connection is in progress
-			m_writable = true;
+			if (ARCH->connectSocket(m_socket, addr.getAddress())) {
+				sendSocketEvent(getConnectedEvent());
+				onConnected();
+			}
+			else {
+				// connection is in progress
+				m_writable = true;
+			}
 		}
 		catch (XArchNetwork& e) {
 			throw XSocketConnect(e.what());
@@ -299,9 +300,6 @@ CTCPSocket::init()
 	m_writable  = false;
 
 	try {
-		// make socket non-blocking
-		ARCH->setBlockingOnSocket(m_socket, false);
-
 		// turn off Nagle algorithm.  we send lots of very short messages
 		// that should be sent without (much) delay.  for example, the
 		// mouse motion messages are much less useful if they're delayed.
