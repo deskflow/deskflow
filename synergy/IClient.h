@@ -33,13 +33,6 @@ public:
 	// client's screen.
 	virtual bool		leave() = 0;
 
-	// FIXME -- methods for setting clipboard.  on proxy side these
-	// will set/reset the gotClipboard flag and send the clipboard
-	// when not gotClipboard is false.  grabbing goes in here too.
-	// basically, figure out semantics of these methods.  note that
-	// ISecondaryScreen wants an IClipboard* passed to set not a
-	// string;  will that be a problem?
-
 	// update the client's clipboard.  this implies that the client's
 	// clipboard is now up to date.  if the client's clipboard was
 	// already known to be up to date then this can do nothing.
@@ -59,10 +52,6 @@ public:
 	virtual void		keyUp(KeyID, KeyModifierMask) = 0;
 	virtual void		mouseDown(ButtonID) = 0;
 	virtual void		mouseUp(ButtonID) = 0;
-	// FIXME -- if server uses IClient as interface to primary screen
-	// (should this class be renamed?) then be careful of absolute/relative
-	// coordinates here;  move on primary and move on secondary take
-	// different values.  probably not relevant, though.
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
 	virtual void		mouseWheel(SInt32 delta) = 0;
 	virtual void		screenSaver(bool activate) = 0;
@@ -73,7 +62,6 @@ public:
 	virtual CString		getName() const = 0;
 
 	// get the screen's shape
-	// FIXME -- may want center pixel too
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const = 0;
 
@@ -82,10 +70,6 @@ public:
 
 	// get the size of jump zone
 	virtual SInt32		getJumpZoneSize() const = 0;
-
-	// what about getClipboard()?  don't really want proxy to ask for it;
-	// it's a push data model.  screen info is cached in proxy so it's
-	// different.  will need to keep onClipboardChanged() in CClient.
 };
 
 #endif
