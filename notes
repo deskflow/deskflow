@@ -1,8 +1,59 @@
+final preparation for release:
+  create files:
+    INSTALL -- configuration, build, and installation instructions
+    NEWS -- recent project news
+    COPYING -- pointer to LICENSE
+    AUTHORS -- list of contributors
+    ChangeLog
+    LICENSE -- license
+    MANIFEST -- list of files in distribution (?)
+    FAQ -- frequently asked questions for project
+    HISTORY -- project history
+
+add copyright to every file
+
+change README:
+  should have:
+    A brief description of the project.
+    A pointer to the project website (if it has one)
+    Notes on the developer's build environment and potential portability problems.
+    A roadmap describing important files and subdirectories.
+    Either build/installation instructions or a pointer to a file containing same (usually INSTALL).
+    Either a maintainers/credits list or a pointer to a file containing same (usually CREDITS).
+    Either recent project news or a pointer to a file containing same (usually NEWS).
+
+make man pages
+  docbook?
+  should have makefile target to build these
+
+add make rules to install files
+
+custom make targets:
+  make doxygen documents
+  make binary and/or source rpm
+    should auto generate spec file, pulling in proper version number
+    source rpm should use BuildRoot to build in /tmp or /var/tmp
+  create tarball:
+	foobar-$(VERS).tar.gz:
+	  @ls $(SRC) | sed s:^:foobar-$(VERS)/: >MANIFEST
+	  @(cd ..; ln -s foobar foobar-$(VERS))
+	  (cd ..; tar -czvf foobar/foobar-$(VERS).tar.gz `cat foobar/MANIFEST`)
+	  @(cd ..; rm foobar-$(VERS))
+
+configure not caching results
+  is that normal or did we disable it unintentionally
+
+---
 not handling large motif selections
   don't know protocol for transfer
 
 ---
 not handling international characters
+
+---
+CServer::setConfig() should update network ports
+  if the server address or http address change then the old ports
+  should be closed and new ones opened.
 
 ---
 try to determine X11 keyboard quirks automatically
@@ -16,15 +67,6 @@ bug with half-duplex keys
   grace should ignore half duplex keys when seeing if locked to screen
 
 ---
-enable heartbeat disconnection or remove heartbeat sending in client
-  should either ship with it fully enabled or fully disabled
-  possibly make it part of startup negotiation
-
----
-use automake
-use doxygen
-
----
 HTTP stuff
   no way to save config using HTTP
     should have a button or a page to force save of config
@@ -33,6 +75,13 @@ HTTP stuff
   provide way to kill/restart server via HTTP
   provide way to query why locked to screen?
     handy for debugging at least
+
+  bug in updating screens
+	saw a goofy set of screens after update
+	i think the config was similar to:
+      A B
+      C
+      D E
 
 ---
 win32:
@@ -49,19 +98,9 @@ win32 dll:
 win32 service:
   need message table for proper event reporting
 
-clean up c:\winnt\synergy.sgc
-
 desktop switcher program failure when running synergy as service
   returns access denied from CreateDesktop()
   don't know why
-
----
-bug in updating screens
-  saw a goofy set of screens after update
-  i think the config was similar to:
-    A B
-    C
-    D E
 
 ---
 hot keys
@@ -137,11 +176,8 @@ adjust thread priorities on win32
     sometimes it goes normal speed but it's mostly very slow
     even a very high priority doesn't seem to help
       haven't tried real-time priority
-  a very high priority on client fixes delay when typeing into console
+  a very high priority on client fixes delay when typing into console
   is it the output console causing the slowness?
-  mouse motion compression seems to handle slow dragging on grace
-    pretty sure nothing else was wrong on grace
-    maybe same problem and solution on win32
 
 ---
 results:
@@ -317,12 +353,12 @@ non-functional on ctrl+alt+del screen in win2k (kurt)
 ---
 automake stuff
   rebuild:
-    * 'autoheader'    - creates config.h.in
     * 'touch NEWS README AUTHORS ChangeLog'
     * 'touch stamp-h'
-    * aclocal - adds aclocal.m4 to directory. Defines some m4 macros used by the auto tools.
-    * 'autoconf '- creates configure from configure.in
-    * 'automake' - Creates Makefile.in from Makefile.am
+    * 'aclocal'     - creates aclocal.m4
+    * 'autoconf'    - creates configure from configure.in
+    * 'autoheader'  - creates config.h.in
+    * 'automake'    - Creates Makefile.in from Makefile.am
     * './configure' - creates Makefile from Makefile.in
     * 'make'
 
