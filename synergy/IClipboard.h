@@ -17,9 +17,9 @@ public:
 	// data set via add() and retrieved via get() is in one of
 	// these formats.  platform dependent clipboard subclasses
 	// can and should present any suitable formats derivable
-	// from these formats (e.g. UCS-16 encoded unicode).
+	// from these formats (e.g. UTF-16 encoded unicode).
 	//
-	// kText:  UTF-8 encoded unicode (ISO-10646), newline is LF
+	// kText:  UTF-8 encoded unicode (ISO-10646), newline is LF.
 	enum EFormat { kText, kNumFormats };
 
 	// manipulators

@@ -146,9 +146,13 @@ CClipboard::unmarshall(const CString& data, Time time)
 		UInt32 size = readUInt32(index);
 		index += 4;
 
-		// save the data
-		m_added[format] = true;
-		m_data[format]  = CString(index, size);
+		// save the data if it's a known format.  if either the client
+		// or server supports more clipboard formats than the other
+		// then one of them will get a format >= kNumFormats here.
+		if (format < static_cast<UInt32>(IClipboard::kNumFormats)) {
+			m_added[format] = true;
+			m_data[format]  = CString(index, size);
+		}
 		index += size;
 	}
 
