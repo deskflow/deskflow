@@ -30,7 +30,9 @@ CClient::CClient(const CString& clientName) :
 								m_name(clientName),
 								m_input(NULL),
 								m_output(NULL),
-								m_screen(NULL)
+								m_screen(NULL),
+								m_active(false),
+								m_seqNum(0)
 {
 	// do nothing
 }
@@ -92,7 +94,29 @@ void					CClient::onClipboardChanged(ClipboardID id)
 	if (m_output != NULL) {
 		// m_output can be NULL if the screen calls this method
 		// before we've gotten around to connecting to the server.
-		CProtocolUtil::writef(m_output, kMsgCClipboard, id);
+		CProtocolUtil::writef(m_output, kMsgCClipboard, id, m_seqNum);
+	}
+
+	// we now own the clipboard and it has not been sent to the server
+	m_ownClipboard[id]  = true;
+	m_timeClipboard[id] = 0;
+
+	// if we're not the active screen then send the clipboard now,
+	// otherwise we'll until we leave.
+	if (!m_active) {
+		// get clipboard
+		CClipboard clipboard;
+		m_screen->getClipboard(id, &clipboard);
+
+		// save new time
+		m_timeClipboard[id] = clipboard.getTime();
+
+		// marshall the data
+		CString data = clipboard.marshall();
+
+		// send data
+		log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
+		CProtocolUtil::writef(m_output, kMsgDClipboard, id, m_seqNum, &data);
 	}
 }
 
@@ -230,9 +254,6 @@ void					CClient::runSession(void*)
 			else if (memcmp(code, kMsgQInfo, 4) == 0) {
 				onQueryInfo();
 			}
-			else if (memcmp(code, kMsgQClipboard, 4) == 0) {
-				onQueryClipboard();
-			}
 			else if (memcmp(code, kMsgDClipboard, 4) == 0) {
 				onSetClipboard();
 			}
@@ -271,6 +292,18 @@ void					CClient::openSecondaryScreen()
 {
 	assert(m_screen == NULL);
 
+	// not active
+	m_active = false;
+
+	// reset last sequence number
+	m_seqNum = 0;
+
+	// reset clipboard state
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		m_ownClipboard[id]  = false;
+		m_timeClipboard[id] = 0;
+	}
+
 	// open screen
 	log((CLOG_DEBUG1 "creating secondary screen"));
 #if defined(CONFIG_PLATFORM_WIN32)
@@ -306,22 +339,61 @@ void					CClient::onEnter()
 	SInt16 x, y;
 	{
 		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgCEnter + 4, &x, &y);
+		CProtocolUtil::readf(m_input, kMsgCEnter + 4, &x, &y, &m_seqNum);
+		m_active = true;
 	}
 	m_screen->enter(x, y);
 }
 
 void					CClient::onLeave()
 {
+	// tell screen we're leaving
 	m_screen->leave();
+
+	// no longer the active screen
+	CLock lock(&m_mutex);
+	m_active = false;
+
+	// send clipboards that we own and that have changed
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		if (m_ownClipboard[id]) {
+			// get clipboard data.  set the clipboard time to the last
+			// clipboard time before getting the data from the screen
+			// as the screen may detect an unchanged clipboard and
+			// avoid copying the data.
+			CClipboard clipboard;
+			if (clipboard.open(m_timeClipboard[id]))
+				clipboard.close();
+			m_screen->getClipboard(id, &clipboard);
+
+			// check time
+			if (m_timeClipboard[id] == 0 ||
+				clipboard.getTime() != m_timeClipboard[id]) {
+				// save new time
+				m_timeClipboard[id] = clipboard.getTime();
+
+				// marshall the data
+				CString data = clipboard.marshall();
+
+				// send data
+				log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
+				CProtocolUtil::writef(m_output,
+								kMsgDClipboard, id, m_seqNum, &data);
+			}
+		}
+	}
 }
 
 void					CClient::onGrabClipboard()
 {
 	ClipboardID id;
+	UInt32 seqNum;
 	{
 		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgCClipboard + 4, &id);
+		CProtocolUtil::readf(m_input, kMsgCClipboard + 4, &id, &seqNum);
+
+		// we no longer own the clipboard
+		m_ownClipboard[id] = false;
 	}
 	m_screen->grabClipboard(id);
 }
@@ -347,32 +419,6 @@ void					CClient::onQueryInfo()
 	CProtocolUtil::writef(m_output, kMsgDInfo, w, h, zoneSize);
 }
 
-void					CClient::onQueryClipboard()
-{
-	// parse message
-	ClipboardID id;
-	UInt32 seqNum;
-	CClipboard clipboard;
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::readf(m_input, kMsgQClipboard + 4, &id, &seqNum);
-	}
-	log((CLOG_DEBUG "received query clipboard %d seqnum=%d", id, seqNum));
-
-	// get screen's clipboard data
-	m_screen->getClipboard(id, &clipboard);
-
-	// marshall the data
-	CString data = clipboard.marshall();
-
-	// send it
-	log((CLOG_DEBUG "sending clipboard %d seqnum=%d, size=%d", id, seqNum, data.size()));
-	{
-		CLock lock(&m_mutex);
-		CProtocolUtil::writef(m_output, kMsgDClipboard, id, seqNum, &data);
-	}
-}
-
 void					CClient::onSetClipboard()
 {
 	ClipboardID id;
@@ -387,7 +433,7 @@ void					CClient::onSetClipboard()
 
 	// unmarshall
 	CClipboard clipboard;
-	clipboard.unmarshall(data);
+	clipboard.unmarshall(data, 0);
 
 	// set screen's clipboard
 	m_screen->setClipboard(id, &clipboard);

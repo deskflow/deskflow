@@ -75,7 +75,9 @@ class IPrimaryScreen : public IInterface {
 	// get the size of jump zone
 	virtual SInt32		getJumpZoneSize() const = 0;
 
-	// get the screen's clipboard contents
+	// get the screen's clipboard contents.  the implementation can
+	// and should avoid setting the clipboard object if the screen's
+	// clipboard hasn't changed.
 	virtual void		getClipboard(ClipboardID, IClipboard*) const = 0;
 };
 

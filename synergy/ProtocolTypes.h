@@ -22,17 +22,26 @@ static const char		kMsgCClose[] 		= "CBYE";
 
 // enter screen:  primary -> secondary
 // entering screen at screen position $1 = x, $2 = y.  x,y are
-// absolute screen coordinates.
-static const char		kMsgCEnter[] 		= "CINN%2i%2i";
+// absolute screen coordinates.  $3 = sequence number, which is
+// used to order messages between screens.  the secondary screen
+// must return this number with some messages.
+static const char		kMsgCEnter[] 		= "CINN%2i%2i%4i";
 
 // leave screen:  primary -> secondary
-// leaving screen
+// leaving screen.  the secondary screen should send clipboard
+// data in response to this message for those clipboards that
+// it has grabbed (i.e. has sent a kMsgCClipboard for and has
+// not received a kMsgCClipboard for with a greater sequence
+// number) and that were grabbed or have changed since the
+// last leave.
 static const char		kMsgCLeave[] 		= "COUT";
 
 // grab clipboard:  primary <-> secondary
 // sent by screen when some other app on that screen grabs a
-// clipboard.  $1 = the clipboard identifier.
-static const char		kMsgCClipboard[] 	= "CCLP%1i";
+// clipboard.  $1 = the clipboard identifier, $2 = sequence number.
+// secondary screens must use the sequence number passed in the
+// most recent kMsgCEnter.  the primary always sends 0.
+static const char		kMsgCClipboard[] 	= "CCLP%1i%4i";
 
 // screensaver change:  primary -> secondary
 // screensaver on primary has started ($1 == 1) or closed ($1 == 0)
@@ -73,9 +82,9 @@ static const char		kMsgDMouseWheel[]	= "DMWM%2i";
 
 // clipboard data:  primary <-> secondary
 // $2 = sequence number, $3 = clipboard data.  the sequence number
-// is 0 when sent by the primary.  the secondary sends this message
-// in response to a kMsgQClipboard and uses the sequence number from
-// that message.  $1 = clipboard identifier.
+// is 0 when sent by the primary.  secondary screens should use the
+// sequence number from the most recent kMsgCEnter.  $1 = clipboard
+// identifier.
 static const char		kMsgDClipboard[]	= "DCLP%1i%4i%s";
 
 // client data:  secondary -> primary
@@ -87,12 +96,6 @@ static const char		kMsgDInfo[]			= "DINF%2i%2i%2i";
 //
 // query codes
 //
-
-// query clipboard:  primary -> secondary
-// $2 = sequence number.  the sequence number is an arbitrary value
-// used by primary to identify the kMsgDClipboard response to a
-// query.  $1 = clipboard identifier.
-static const char		kMsgQClipboard[]	= "QCLP%1i%4i";
 
 // query screen info:  primary -> secondary
 // client should reply with a kMsgDInfo.

@@ -222,16 +222,15 @@ bool					CXWindowsScreen::setDisplayClipboard(
 	if (XGetSelectionOwner(m_display, m_atomClipboard[id]) == requestor) {
 		// we got the selection
 		log((CLOG_INFO "grabbed clipboard at %d", timestamp));
-		m_clipboards[id].m_gotClipboard = timestamp;
 		m_clipboards[id].m_lostClipboard = CurrentTime;
-
 		if (clipboard != NULL) {
 			// save clipboard to serve requests
-			CClipboard::copy(&m_clipboards[id].m_clipboard, clipboard);
+			CClipboard::copy(&m_clipboards[id].m_clipboard,
+								clipboard, timestamp);
 		}
 		else {
 			// clear clipboard
-			if (m_clipboards[id].m_clipboard.open()) {
+			if (m_clipboards[id].m_clipboard.open(timestamp)) {
 				m_clipboards[id].m_clipboard.close();
 			}
 		}
@@ -250,8 +249,10 @@ void					CXWindowsScreen::getDisplayClipboard(
 	assert(clipboard != NULL);
 	assert(requestor != None);
 
+	// FIXME -- don't update clipboard object if clipboard hasn't changed
+
 	// clear the clipboard object
-	if (!clipboard->open())
+	if (!clipboard->open(timestamp))
 		return;
 
 	// block others from using the display while we get the clipboard.
@@ -904,12 +905,12 @@ bool					CXWindowsScreen::sendClipboardTimestamp(
 	log((CLOG_DEBUG1 "handling clipboard request for TIMESTAMP"));
 
 	// FIXME -- handle Alloc errors (by returning false)
+	Time time = m_clipboards[id].m_clipboard.getTime();
 	XChangeProperty(m_display, requestor, property,
 								m_atomInteger,
-								8 * sizeof(m_clipboards[id].m_gotClipboard),
+								32,
 								PropModeReplace,
-								reinterpret_cast<unsigned char*>(
-									&m_clipboards[id].m_gotClipboard),
+								reinterpret_cast<unsigned char*>(time),
 								1);
 	return true;
 }
@@ -935,7 +936,7 @@ bool					CXWindowsScreen::wasOwnedAtTime(
 	const CClipboardInfo& clipboard = m_clipboards[id];
 
 	// not owned if we've never owned the selection
-	if (clipboard.m_gotClipboard == CurrentTime)
+	if (clipboard.m_clipboard.getTime() == CurrentTime)
 		return false;
 
 	// if time is CurrentTime then return true if we still own the
@@ -953,8 +954,8 @@ bool					CXWindowsScreen::wasOwnedAtTime(
 			return false;
 
 	// compare time to range
-	Time duration = clipboard.m_lostClipboard - clipboard.m_gotClipboard;
-	Time when     = time - clipboard.m_gotClipboard;
+	Time duration = clipboard.m_lostClipboard - clipboard.m_clipboard.getTime();
+	Time when     = time - clipboard.m_clipboard.getTime();
 	return (/*when >= 0 &&*/ when < duration);
 }
 
@@ -1001,7 +1002,6 @@ Time					CXWindowsScreen::getCurrentTimeNoLock(
 
 CXWindowsScreen::CClipboardInfo::CClipboardInfo() :
 								m_clipboard(),
-								m_gotClipboard(CurrentTime),
 								m_lostClipboard(CurrentTime),
 								m_requests()
 {

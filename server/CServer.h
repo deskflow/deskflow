@@ -49,7 +49,8 @@ class CServer {
 	// handle messages from clients
 	void				setInfo(const CString& clientName,
 								SInt32 w, SInt32 h, SInt32 zoneSize);
-	void				grabClipboard(ClipboardID, const CString& clientName);
+	void				grabClipboard(ClipboardID,
+								UInt32 seqNum, const CString& clientName);
 	void				setClipboard(ClipboardID,
 								UInt32 seqNum, const CString& data);
 
@@ -126,6 +127,15 @@ class CServer {
 	void				openPrimaryScreen();
 	void				closePrimaryScreen();
 
+	// clear gotClipboard flags in all screens
+	void				clearGotClipboard(ClipboardID);
+
+	// send clipboard to the active screen if it doesn't already have it
+	void				sendClipboard(ClipboardID);
+
+	// update the clipboard if owned by the primary screen
+	void				updatePrimaryClipboard(ClipboardID);
+
 	// cancel running threads
 	void				cleanupThreads();
 
@@ -148,9 +158,9 @@ class CServer {
   private:
 	typedef std::list<CThread*> CThreadList;
 	typedef std::map<CString, CScreenInfo*> CScreenList;
-	class ClipboardInfo {
+	class CClipboardInfo {
 	public:
-		ClipboardInfo();
+		CClipboardInfo();
 
 	public:
 		CClipboard		m_clipboard;
@@ -174,11 +184,14 @@ class CServer {
 	CScreenInfo*		m_active;
 	CScreenInfo*		m_primaryInfo;
 
+	// the sequence number of enter messages
+	UInt32				m_seqNum;
+
 	SInt32				m_x, m_y;
 
 	CScreenMap			m_screenMap;
 
-	ClipboardInfo		m_clipboards[kClipboardEnd];
+	CClipboardInfo		m_clipboards[kClipboardEnd];
 };
 
 #endif

@@ -1,10 +1,10 @@
 #ifndef CXWINDOWSSCREEN_H
 #define CXWINDOWSSCREEN_H
 
-#include "CClipboard.h"
-#include "CMutex.h"
 #include "BasicTypes.h"
 #include "ClipboardTypes.h"
+#include "CClipboard.h"
+#include "CMutex.h"
 #include <X11/Xlib.h>
 #include <map>
 #include <list>
@@ -74,6 +74,7 @@ class CXWindowsScreen {
 	// copy the clipboard contents to clipboard.  requestor must be a
 	// valid window;  it will be used to receive the transfer.  timestamp
 	// should be the timestamp of the provoking event and not CurrentTime.
+	// if force is false then only update clipboard
 	void				getDisplayClipboard(ClipboardID,
 								IClipboard* clipboard,
 								Window requestor, Time timestamp) const;
@@ -149,11 +150,10 @@ class CXWindowsScreen {
 		CClipboardInfo();
 
 	public:
-		// the contents of the clipboard
+		// the contents of the clipboard and the time we got it
 		CClipboard		m_clipboard;
 
-		// when we got the clipboard and when we lost it
-		Time			m_gotClipboard;
+		// when we lost the clipboard
 		Time			m_lostClipboard;
 
 		// the request queues

@@ -31,11 +31,10 @@ class CServerProtocol : public IServerProtocol {
 	virtual void		run() = 0;
 	virtual void		queryInfo() = 0;
 	virtual void		sendClose() = 0;
-	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs) = 0;
+	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum) = 0;
 	virtual void		sendLeave() = 0;
 	virtual void		sendClipboard(ClipboardID, const CString&) = 0;
 	virtual void		sendGrabClipboard(ClipboardID) = 0;
-	virtual void		sendQueryClipboard(ClipboardID, UInt32 seqNum) = 0;
 	virtual void		sendScreenSaver(bool on) = 0;
 	virtual void		sendKeyDown(KeyID, KeyModifierMask) = 0;
 	virtual void		sendKeyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;

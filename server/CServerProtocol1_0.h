@@ -16,11 +16,10 @@ class CServerProtocol1_0 : public CServerProtocol {
 	virtual void		run();
 	virtual void		queryInfo();
 	virtual void		sendClose();
-	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs);
+	virtual void		sendEnter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum);
 	virtual void		sendLeave();
 	virtual void		sendClipboard(ClipboardID, const CString&);
 	virtual void		sendGrabClipboard(ClipboardID);
-	virtual void		sendQueryClipboard(ClipboardID, UInt32 seqNum);
 	virtual void		sendScreenSaver(bool on);
 	virtual void		sendKeyDown(KeyID, KeyModifierMask);
 	virtual void		sendKeyRepeat(KeyID, KeyModifierMask, SInt32 count);

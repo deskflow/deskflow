@@ -43,7 +43,8 @@ else { wait(0); exit(1); }
 
 CServer::CServer() : m_primary(NULL),
 								m_active(NULL),
-								m_primaryInfo(NULL)
+								m_primaryInfo(NULL),
+								m_seqNum(0)
 {
 	m_socketFactory = NULL;
 	m_securityFactory = NULL;
@@ -92,6 +93,11 @@ void					CServer::run()
 		closePrimaryScreen();
 		throw;
 	}
+}
+
+void					CServer::quit()
+{
+	m_primary->stop();
 }
 
 void					CServer::setScreenMap(const CScreenMap& screenMap)
@@ -150,35 +156,43 @@ void					CServer::setInfo(const CString& client,
 
 void					CServer::grabClipboard(ClipboardID id)
 {
-	grabClipboard(id, m_primaryInfo->m_name);
+	grabClipboard(id, 0, m_primaryInfo->m_name);
 }
 
 void					CServer::grabClipboard(
-								ClipboardID id, const CString& client)
+								ClipboardID id, UInt32 seqNum,
+								const CString& client)
 {
 	CLock lock(&m_mutex);
-	ClipboardInfo& clipboard = m_clipboards[id];
+	CClipboardInfo& clipboard = m_clipboards[id];
 
-	// client must be connected
+	// screen must be connected
 	CScreenList::iterator index = m_screens.find(client);
 	if (index == m_screens.end()) {
 		throw XBadClient();
 	}
 
+	// ignore grab if sequence number is old.  always allow primary
+	// screen to grab.
+	if (client != m_primaryInfo->m_name &&
+		seqNum < clipboard.m_clipboardSeqNum) {
+		log((CLOG_INFO "ignored client \"%s\" grab of clipboard %d", client.c_str(), id));
+		return;
+	}
+
+	// mark screen as owning clipboard
 	log((CLOG_NOTE "client \"%s\" grabbed clipboard %d from \"%s\"", client.c_str(), id, clipboard.m_clipboardOwner.c_str()));
+	clipboard.m_clipboardOwner  = client;
+	clipboard.m_clipboardSeqNum = seqNum;
 
-	// save the clipboard owner
-	clipboard.m_clipboardOwner = client;
-
-	// mark client as having the clipboard data
+	// no screens have the new clipboard except the sender
+	clearGotClipboard(id);
 	index->second->m_gotClipboard[id] = true;
 
-	// tell all other clients to take ownership of clipboard and mark
-	// them as not having the data yet.
+	// tell all other screens to take ownership of clipboard
 	for (index = m_screens.begin(); index != m_screens.end(); ++index) {
 		if (index->first != client) {
 			CScreenInfo* info = index->second;
-			info->m_gotClipboard[id] = false;
 			if (info->m_protocol == NULL) {
 				m_primary->grabClipboard(id);
 			}
@@ -186,13 +200,10 @@ void					CServer::grabClipboard(
 				info->m_protocol->sendGrabClipboard(id);
 			}
 		}
-	}	
+	}
 
-	// increment the clipboard sequence number so we can identify the
-	// clipboard query's response.
-	++clipboard.m_clipboardSeqNum;
-
-	// begin getting the clipboard data
+	// get the clipboard data if primary has it, otherwise mark the
+	// clipboard data as unknown.
 	if (m_active->m_protocol == NULL) {
 		// get clipboard immediately from primary screen
 		m_primary->getClipboard(id, &clipboard.m_clipboard);
@@ -201,43 +212,42 @@ void					CServer::grabClipboard(
 	}
 	else {
 		// clear out the clipboard since existing data is now out of date.
-		if (clipboard.m_clipboard.open()) {
+		if (clipboard.m_clipboard.open(0)) {
 			clipboard.m_clipboard.close();
 		}
 		clipboard.m_clipboardReady = false;
-
-		// send request but don't wait for reply
-		m_active->m_protocol->sendQueryClipboard(id,
-								clipboard.m_clipboardSeqNum);
 	}
 }
 
 void					CServer::setClipboard(ClipboardID id,
 								UInt32 seqNum, const CString& data)
 {
-	// update the clipboard if the sequence number matches
 	CLock lock(&m_mutex);
-	ClipboardInfo& clipboard = m_clipboards[id];
-	if (seqNum == clipboard.m_clipboardSeqNum) {
-		// unmarshall into our clipboard buffer
-		clipboard.m_clipboardData = data;
-		clipboard.m_clipboard.unmarshall(clipboard.m_clipboardData);
-		clipboard.m_clipboardReady = true;
+	CClipboardInfo& clipboard = m_clipboards[id];
 
-		// if the active client doesn't have the clipboard data
-		// (and it won't unless the client is the one sending us
-		// the data) then send the data now.
-		if (!m_active->m_gotClipboard[id]) {
-			if (m_active->m_protocol == NULL) {
-				m_primary->setClipboard(id, &clipboard.m_clipboard);
-			}
-			else {
-				m_active->m_protocol->sendClipboard(id,
-								clipboard.m_clipboardData);
-			}
-			m_active->m_gotClipboard[id] = true;
-		}
+	// ignore update if sequence number is old
+	if (seqNum < clipboard.m_clipboardSeqNum) {
+		log((CLOG_INFO "ignored client \"%s\" update of clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
+		return;
 	}
+
+	// unmarshall into our clipboard buffer
+	log((CLOG_NOTE "client \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
+	clipboard.m_clipboardReady = true;
+	clipboard.m_clipboardData  = data;
+	clipboard.m_clipboard.unmarshall(clipboard.m_clipboardData, 0);
+
+	// all screens have an out-of-date clipboard except the sender
+	clearGotClipboard(id);
+	CScreenList::const_iterator index =
+								m_screens.find(clipboard.m_clipboardOwner);
+	if (index != m_screens.end()) {
+		index->second->m_gotClipboard[id] = true;
+	}
+
+	// send the new clipboard to the active screen (will do nothing if
+	// the active screen is the one sending the new clipboard)
+	sendClipboard(id);
 }
 
 bool					CServer::onCommandKey(KeyID /*id*/,
@@ -492,8 +502,19 @@ void					CServer::switchScreen(CScreenInfo* dst,
 	// since that's a waste of time we skip that and just warp the
 	// mouse.
 	if (m_active != dst) {
+		// note if we're leaving the primary screen
+		const bool leavingPrimary = (m_active->m_protocol == NULL);
+
+		// if leaving the primary screen then update the clipboards
+		// that it owns
+		if (leavingPrimary) {
+			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+				updatePrimaryClipboard(id);
+			}
+		}
+
 		// leave active screen
-		if (m_active->m_protocol == NULL) {
+		if (leavingPrimary) {
 			m_primary->leave();
 		}
 		else {
@@ -503,27 +524,20 @@ void					CServer::switchScreen(CScreenInfo* dst,
 		// cut over
 		m_active = dst;
 
+		// increment enter sequence number
+		++m_seqNum;
+
 		// enter new screen
 		if (m_active->m_protocol == NULL) {
 			m_primary->enter(x, y);
 		}
 		else {
-			m_active->m_protocol->sendEnter(x, y);
+			m_active->m_protocol->sendEnter(x, y, m_seqNum);
 		}
 
-		// send the clipboard data if we haven't done so yet
+		// send the clipboard data to new active screen
 		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			ClipboardInfo& clipboard = m_clipboards[id];
-			if (clipboard.m_clipboardReady && !m_active->m_gotClipboard[id]) {
-				if (m_active->m_protocol == NULL) {
-					m_primary->setClipboard(id, &clipboard.m_clipboard);
-				}
-				else {
-					m_active->m_protocol->sendClipboard(id,
-								clipboard.m_clipboardData);
-				}
-				m_active->m_gotClipboard[id] = true;
-			}
+			sendClipboard(id);
 		}
 	}
 	else {
@@ -889,9 +903,57 @@ void					CServer::handshakeClient(void* vsocket)
 	}
 }
 
-void					CServer::quit()
+void					CServer::clearGotClipboard(ClipboardID id)
 {
-	m_primary->stop();
+	for (CScreenList::const_iterator index = m_screens.begin();
+								index != m_screens.end(); ++index) {
+		index->second->m_gotClipboard[id] = false;
+	}
+}
+
+void					CServer::sendClipboard(ClipboardID id)
+{
+	// do nothing if clipboard was already sent
+	if (!m_active->m_gotClipboard[id]) {
+		CClipboardInfo& clipboard = m_clipboards[id];
+		if (clipboard.m_clipboardReady) {
+			// send it
+			if (m_active->m_protocol == NULL) {
+				m_primary->setClipboard(id, &clipboard.m_clipboard);
+			}
+			else {
+				m_active->m_protocol->sendClipboard(id,
+								clipboard.m_clipboardData);
+			}
+
+			// clipboard has been sent
+			m_active->m_gotClipboard[id] = true;
+		}
+	}
+}
+
+void					CServer::updatePrimaryClipboard(ClipboardID id)
+{
+	CClipboardInfo& clipboard = m_clipboards[id];
+
+	// if leaving primary and the primary owns the clipboard
+	// then update it.
+	if (clipboard.m_clipboardOwner == m_primaryInfo->m_name) {
+		assert(clipboard.m_clipboardReady == true);
+
+		// save clipboard time
+		IClipboard::Time time = clipboard.m_clipboard.getTime();
+
+		// update
+		m_primary->getClipboard(id, &clipboard.m_clipboard);
+
+		// if clipboard changed then other screens have an
+		// out-of-date clipboard.
+		if (time != clipboard.m_clipboard.getTime()) {
+			clearGotClipboard(id);
+			m_primaryInfo->m_gotClipboard[id] = true;
+		}
+	}
 }
 
 // FIXME -- use factory to create screen
@@ -903,6 +965,9 @@ void					CServer::quit()
 void					CServer::openPrimaryScreen()
 {
 	assert(m_primary == NULL);
+
+	// reset sequence number
+	m_seqNum = 0;
 
 	// open screen
 	log((CLOG_DEBUG1 "creating primary screen"));
@@ -927,7 +992,7 @@ void					CServer::openPrimaryScreen()
 	// set the clipboard owner to the primary screen and then get the
 	// current clipboard data.
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		ClipboardInfo& clipboard = m_clipboards[id];
+		CClipboardInfo& clipboard = m_clipboards[id];
 		m_primary->getClipboard(id, &clipboard.m_clipboard);
 		clipboard.m_clipboardData  = clipboard.m_clipboard.marshall();
 		clipboard.m_clipboardReady = true;
@@ -1098,10 +1163,10 @@ CServer::CScreenInfo::~CScreenInfo()
 
 
 //
-// CServer::ClipboardInfo
+// CServer::CClipboardInfo
 //
 
-CServer::ClipboardInfo::ClipboardInfo() :
+CServer::CClipboardInfo::CClipboardInfo() :
 								m_clipboard(),
 								m_clipboardData(),
 								m_clipboardOwner(),

@@ -91,10 +91,10 @@ void					CServerProtocol1_0::sendClose()
 }
 
 void					CServerProtocol1_0::sendEnter(
-								SInt32 xAbs, SInt32 yAbs)
+								SInt32 xAbs, SInt32 yAbs, UInt32 seqNum)
 {
-	log((CLOG_DEBUG1 "send enter to \"%s\", %d,%d", getClient().c_str(), xAbs, yAbs));
-	CProtocolUtil::writef(getOutputStream(), kMsgCEnter, xAbs, yAbs);
+	log((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d", getClient().c_str(), xAbs, yAbs, seqNum));
+	CProtocolUtil::writef(getOutputStream(), kMsgCEnter, xAbs, yAbs, seqNum);
 }
 
 void					CServerProtocol1_0::sendLeave()
@@ -113,14 +113,7 @@ void					CServerProtocol1_0::sendClipboard(
 void					CServerProtocol1_0::sendGrabClipboard(ClipboardID id)
 {
 	log((CLOG_DEBUG "send grab clipboard %d to \"%s\"", id, getClient().c_str()));
-	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id);
-}
-
-void					CServerProtocol1_0::sendQueryClipboard(
-								ClipboardID id, UInt32 seqNum)
-{
-	log((CLOG_DEBUG "query clipboard %d to \"%s\"", id, getClient().c_str()));
-	CProtocolUtil::writef(getOutputStream(), kMsgQClipboard, id, seqNum);
+	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id, 0);
 }
 
 void					CServerProtocol1_0::sendScreenSaver(bool on)
@@ -207,7 +200,8 @@ void					CServerProtocol1_0::recvClipboard()
 void					CServerProtocol1_0::recvGrabClipboard()
 {
 	ClipboardID id;
-	CProtocolUtil::readf(getInputStream(), kMsgCClipboard + 4, &id);
-	log((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d", getClient().c_str(), id));
-	getServer()->grabClipboard(id, getClient());
+	UInt32 seqNum;
+	CProtocolUtil::readf(getInputStream(), kMsgCClipboard + 4, &id, &seqNum);
+	log((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d", getClient().c_str(), id, seqNum));
+	getServer()->grabClipboard(id, seqNum, getClient());
 }

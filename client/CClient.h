@@ -5,6 +5,7 @@
 #include "CString.h"
 #include "BasicTypes.h"
 #include "ClipboardTypes.h"
+#include "IClipboard.h"
 
 class CNetworkAddress;
 class IInputStream;
@@ -39,7 +40,6 @@ class CClient {
 	void				onGrabClipboard();
 	void				onScreenSaver();
 	void				onQueryInfo();
-	void				onQueryClipboard();
 	void				onSetClipboard();
 	void				onKeyDown();
 	void				onKeyRepeat();
@@ -56,6 +56,10 @@ class CClient {
 	IOutputStream*		m_output;
 	ISecondaryScreen*	m_screen;
 	const CNetworkAddress*	m_serverAddress;
+	bool				m_active;
+	UInt32				m_seqNum;
+	bool				m_ownClipboard[kClipboardEnd];
+	IClipboard::Time	m_timeClipboard[kClipboardEnd];
 };
 
 #endif
