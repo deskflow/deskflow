@@ -45,6 +45,20 @@ typedef struct tagMOUSEHOOKSTRUCTWin2000 {
 #define SM_MOUSEWHEELPRESENT 75
 #endif
 
+// X button stuff
+#if !defined(WM_XBUTTONDOWN)
+#define WM_XBUTTONDOWN		0x020B
+#define WM_XBUTTONUP		0x020C
+#define WM_XBUTTONDBLCLK	0x020D
+#define WM_NCXBUTTONDOWN	0x00AB
+#define WM_NCXBUTTONUP		0x00AC
+#define WM_NCXBUTTONDBLCLK	0x00AD
+#define MOUSEEVENTF_XDOWN	0x0100
+#define MOUSEEVENTF_XUP		0x0200
+#define XBUTTON1			0x0001
+#define XBUTTON2			0x0002
+#endif
+
 
 //
 // globals
@@ -152,35 +166,41 @@ keyboardHookHandler(WPARAM wParam, LPARAM lParam)
 
 static
 bool
-mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 wheel)
+mouseHookHandler(WPARAM wParam, SInt32 x, SInt32 y, SInt32 data)
 {
 	switch (wParam) {
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
 	case WM_RBUTTONDOWN:
+	case WM_XBUTTONDOWN:
 	case WM_LBUTTONDBLCLK:
 	case WM_MBUTTONDBLCLK:
 	case WM_RBUTTONDBLCLK:
+	case WM_XBUTTONDBLCLK:
 	case WM_LBUTTONUP:
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
+	case WM_XBUTTONUP:
 	case WM_NCLBUTTONDOWN:
 	case WM_NCMBUTTONDOWN:
 	case WM_NCRBUTTONDOWN:
+	case WM_NCXBUTTONDOWN:
 	case WM_NCLBUTTONDBLCLK:
 	case WM_NCMBUTTONDBLCLK:
 	case WM_NCRBUTTONDBLCLK:
+	case WM_NCXBUTTONDBLCLK:
 	case WM_NCLBUTTONUP:
 	case WM_NCMBUTTONUP:
 	case WM_NCRBUTTONUP:
+	case WM_NCXBUTTONUP:
 		// always relay the event.  eat it if relaying.
-		PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_BUTTON, wParam, 0);
+		PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_BUTTON, wParam, data);
 		return g_relay;
 
 	case WM_MOUSEWHEEL:
 		if (g_relay) {
 			// relay event
-			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL, wheel, 0);
+			PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_WHEEL, data, 0);
 		}
 		return g_relay;
 
@@ -276,7 +296,10 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 			}
 		}
 
-		// handle the message
+		// handle the message.  note that we don't handle X buttons
+		// here.  that's okay because they're only supported on
+		// win2k and winxp and up and on those platforms we'll get
+		// get the mouse events through the low level hook.
 		if (mouseHookHandler(wParam, x, y, w)) {
 			return 1;
 		}

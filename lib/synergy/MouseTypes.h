@@ -29,6 +29,7 @@ static const ButtonID	kButtonNone   = 0;
 static const ButtonID	kButtonLeft   = 1;
 static const ButtonID	kButtonMiddle = 2;
 static const ButtonID	kButtonRight  = 3;
+static const ButtonID	kButtonExtra0 = 4;
 //@}
 
 #endif

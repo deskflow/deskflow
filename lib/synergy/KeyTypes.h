@@ -70,8 +70,8 @@ static const KeyModifierID		kKeyModifierIDLast     = 6;
 
 //! @name Key identifiers
 //@{
-// all identifiers except kKeyNone are equal to the corresponding
-// X11 keysym - 0x1000.
+// all identifiers except kKeyNone and those in 0xE000 to 0xE0FF
+// inclusive are equal to the corresponding X11 keysym - 0x1000.
 
 // no key
 static const KeyID		kKeyNone		= 0x0000;
@@ -211,6 +211,27 @@ static const KeyID		kKeyHyper_R		= 0xEFEE;	/* Right hyper */
 
 // more function and modifier keys
 static const KeyID		kKeyLeftTab		= 0xEE20;
+
+// extended keys
+static const KeyID		kKeyWWWBack			= 0xE0A6;
+static const KeyID		kKeyWWWForward		= 0xE0A7;
+static const KeyID		kKeyWWWRefresh		= 0xE0A8;
+static const KeyID		kKeyWWWStop			= 0xE0A9;
+static const KeyID		kKeyWWWSearch		= 0xE0AA;
+static const KeyID		kKeyWWWFavorites	= 0xE0AB;
+static const KeyID		kKeyWWWHome			= 0xE0AC;
+static const KeyID		kKeyAudioMute		= 0xE0AD;
+static const KeyID		kKeyAudioDown		= 0xE0AE;
+static const KeyID		kKeyAudioUp			= 0xE0AF;
+static const KeyID		kKeyAudioNext		= 0xE0B0;
+static const KeyID		kKeyAudioPrev		= 0xE0B1;
+static const KeyID		kKeyAudioStop		= 0xE0B2;
+static const KeyID		kKeyAudioPlay		= 0xE0B3;
+static const KeyID		kKeyAppMail			= 0xE0B4;
+static const KeyID		kKeyAppMedia		= 0xE0B5;
+static const KeyID		kKeyAppUser1		= 0xE0B6;
+static const KeyID		kKeyAppUser2		= 0xE0B7;
+
 //@}
 
 #endif

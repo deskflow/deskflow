@@ -87,7 +87,7 @@ private:
 	// key and button queries
 	KeyID				mapKey(WPARAM keycode, LPARAM info,
 							KeyModifierMask* maskOut);
-	ButtonID			mapButton(WPARAM button) const;
+	ButtonID			mapButton(WPARAM msg, LPARAM button) const;
 	void				updateKey(UINT vkCode, bool press);
 	bool				isModifier(UINT vkCode) const;
 
@@ -107,6 +107,9 @@ private:
 
 	// map of key state
 	BYTE				m_keys[256];
+
+	// map of button state
+	BYTE				m_buttons[1 + kButtonExtra0 + 1];
 
 	// last mouse position
 	SInt32				m_x, m_y;

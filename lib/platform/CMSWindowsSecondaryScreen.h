@@ -98,7 +98,8 @@ private:
 	bool				isMultimon() const;
 
 	// key and button queries and operations
-	DWORD				mapButton(ButtonID button, bool press) const;
+	DWORD				mapButton(ButtonID button,
+							bool press, DWORD* data) const;
 	KeyModifierMask		mapKey(Keystrokes&, UINT& virtualKey, KeyID,
 							KeyModifierMask, EKeyAction) const;
 	void				doKeystrokes(const Keystrokes&, SInt32 count);

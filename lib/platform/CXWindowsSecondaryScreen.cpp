@@ -34,6 +34,9 @@
 #	else
 #		error The XTest extension is required to build synergy
 #	endif
+#	if defined(HAVE_X11_XF86KEYSYM_H)
+#		include <X11/XF86keysym.h>
+#	endif
 #endif
 
 //
@@ -263,7 +266,8 @@ void
 CXWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 {
 	// choose button depending on rotation direction
-	const unsigned int xButton = mapButton((delta >= 0) ? 4 : 5);
+	const unsigned int xButton = mapButton(static_cast<ButtonID>(
+												(delta >= 0) ? -1 : -2));
 	if (xButton == 0) {
 		return;
 	}
@@ -573,17 +577,30 @@ CXWindowsSecondaryScreen::getToggleState() const
 unsigned int
 CXWindowsSecondaryScreen::mapButton(ButtonID id) const
 {
+	// map button -1 to button 4 (+wheel)
+	if (id == static_cast<ButtonID>(-1)) {
+		id = 4;
+	}
+
+	// map button -2 to button 5 (-wheel)
+	else if (id == static_cast<ButtonID>(-2)) {
+		id = 5;
+	}
+
+	// map buttons 4, 5, etc. to 6, 7, etc. to make room for buttons
+	// 4 and 5 used to simulate the mouse wheel.
+	else if (id >= 4) {
+		id += 2;
+	}
+
+	// check button is in legal range
 	if (id < 1 || id > m_buttons.size()) {
 		// out of range
 		return 0;
 	}
-	else if (m_buttons[id - 1] == 0) {
-		// button not mapped
-		return 0;
-	}
-	else {
-		return static_cast<unsigned int>(m_buttons[id - 1]);
-	}
+
+	// map button
+	return static_cast<unsigned int>(m_buttons[id - 1]);
 }
 
 KeyModifierMask
@@ -1380,6 +1397,53 @@ CXWindowsSecondaryScreen::isToggleKeysym(KeySym key)
 	}
 }
 
+// map special KeyID keys to KeySyms
+#if defined(HAVE_X11_XF86KEYSYM_H)
+static const KeySym		g_mapE000[] =
+{
+	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xa0 */ 0, 0, 0, 0,
+	/* 0xa4 */ 0, 0,
+	/* 0xa6 */ XF86XK_Back, XF86XK_Forward,
+	/* 0xa8 */ XF86XK_Refresh, XF86XK_Stop,
+	/* 0xaa */ XF86XK_Search, XF86XK_Favorites,
+	/* 0xac */ XF86XK_HomePage, XF86XK_AudioMute,
+	/* 0xae */ XF86XK_AudioLowerVolume, XF86XK_AudioRaiseVolume,
+	/* 0xb0 */ XF86XK_AudioNext, XF86XK_AudioPrev,
+	/* 0xb2 */ XF86XK_AudioStop, XF86XK_AudioPlay,
+	/* 0xb4 */ XF86XK_Mail, XF86XK_AudioMedia,
+	/* 0xb6 */ XF86XK_Launch0, XF86XK_Launch1,
+	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
+};
+#endif
+
 CXWindowsSecondaryScreen::KeyCodeIndex
 CXWindowsSecondaryScreen::findKey(KeyID id, KeyModifierMask& mask) const
 {
@@ -1388,6 +1452,12 @@ CXWindowsSecondaryScreen::findKey(KeyID id, KeyModifierMask& mask) const
 	if ((id & 0xfffff000) == 0xe000) {
 		// special character
 		switch (id & 0x0000ff00) {
+#if defined(HAVE_X11_XF86KEYSYM_H)
+		case 0xe000:
+			keysym = g_mapE000[id & 0xff];
+			break;
+#endif
+
 		case 0xee00:
 			// ISO 9995 Function and Modifier Keys
 			if (id == kKeyLeftTab) {

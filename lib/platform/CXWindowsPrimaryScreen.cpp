@@ -699,6 +699,44 @@ CXWindowsPrimaryScreen::mapModifier(unsigned int state) const
 	return mask;
 }
 
+// map "Internet" keys to KeyIDs
+static const KeySym		g_map1008FF[] =
+{
+	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x10 */ 0, kKeyAudioDown, kKeyAudioMute, kKeyAudioUp,
+	/* 0x14 */ kKeyAudioPlay, kKeyAudioStop, kKeyAudioPrev, kKeyAudioNext,
+	/* 0x18 */ kKeyWWWHome, kKeyAppMail, 0, kKeyWWWSearch, 0, 0, 0, 0,
+	/* 0x20 */ 0, 0, 0, 0, 0, 0, kKeyWWWBack, kKeyWWWForward,
+	/* 0x28 */ kKeyWWWStop, kKeyWWWRefresh, 0, 0, 0, 0, 0, 0,
+	/* 0x30 */ kKeyWWWFavorites, 0, kKeyAppMedia, 0, 0, 0, 0, 0,
+	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x40 */ kKeyAppUser1, kKeyAppUser2, 0, 0, 0, 0, 0, 0,
+	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xa0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xa8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xb0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
+};
+
 KeyID
 CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 {
@@ -727,6 +765,10 @@ CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 		// MISCELLANY
 		return static_cast<KeyID>(keysym - 0xff00 + 0xef00);
 
+	case 0x1008ff00:
+		// "Internet" keys
+		return g_map1008FF[keysym & 0xff];
+
 	default: {
 		// lookup character in table
 		UInt32 key = CXWindowsUtil::mapKeySymToUCS4(keysym);
@@ -743,10 +785,18 @@ CXWindowsPrimaryScreen::mapKey(XKeyEvent* event) const
 ButtonID
 CXWindowsPrimaryScreen::mapButton(unsigned int button) const
 {
-	// FIXME -- should use button mapping?
+	// first three buttons map to 1, 2, 3 (kButtonLeft, Middle, Right)
 	if (button >= 1 && button <= 3) {
 		return static_cast<ButtonID>(button);
 	}
+
+	// buttons 4 and 5 are ignored here.  they're used for the wheel.
+	// buttons 6, 7, etc and up map to 4, 5, etc.
+	else if (button >= 6) {
+		return static_cast<ButtonID>(button - 2);
+	}
+
+	// unknown button
 	else {
 		return kButtonNone;
 	}

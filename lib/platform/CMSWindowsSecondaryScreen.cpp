@@ -28,6 +28,42 @@
 #define SPI_SETMOUSESPEED 113
 #endif
 
+// X button stuff
+#if !defined(WM_XBUTTONDOWN)
+#define WM_XBUTTONDOWN		0x020B
+#define WM_XBUTTONUP		0x020C
+#define WM_XBUTTONDBLCLK	0x020D
+#define WM_NCXBUTTONDOWN	0x00AB
+#define WM_NCXBUTTONUP		0x00AC
+#define WM_NCXBUTTONDBLCLK	0x00AD
+#define MOUSEEVENTF_XDOWN	0x0100
+#define MOUSEEVENTF_XUP		0x0200
+#define XBUTTON1			0x0001
+#define XBUTTON2			0x0002
+#endif
+
+// multimedia keys
+#if !defined(VK_BROWSER_BACK)
+#define VK_BROWSER_BACK			0xA6
+#define VK_BROWSER_FORWARD		0xA7
+#define VK_BROWSER_REFRESH		0xA8
+#define VK_BROWSER_STOP			0xA9
+#define VK_BROWSER_SEARCH		0xAA
+#define VK_BROWSER_FAVORITES	0xAB
+#define VK_BROWSER_HOME			0xAC
+#define VK_VOLUME_MUTE			0xAD
+#define VK_VOLUME_DOWN			0xAE
+#define VK_VOLUME_UP			0xAF
+#define VK_MEDIA_NEXT_TRACK		0xB0
+#define VK_MEDIA_PREV_TRACK		0xB1
+#define VK_MEDIA_STOP			0xB2
+#define VK_MEDIA_PLAY_PAUSE		0xB3
+#define VK_LAUNCH_MAIL			0xB4
+#define VK_LAUNCH_MEDIA_SELECT	0xB5
+#define VK_LAUNCH_APP1			0xB6
+#define VK_LAUNCH_APP2			0xB7
+#endif
+
 //
 // CMSWindowsSecondaryScreen
 //
@@ -258,11 +294,12 @@ CMSWindowsSecondaryScreen::mouseDown(ButtonID button)
 	m_screen->syncDesktop();
 
 	// map button id to button flag
-	DWORD flags = mapButton(button, true);
+	DWORD data;
+	DWORD flags = mapButton(button, true, &data);
 
 	// send event
 	if (flags != 0) {
-		mouse_event(flags, 0, 0, 0, 0);
+		mouse_event(flags, 0, 0, data, 0);
 	}
 }
 
@@ -273,11 +310,12 @@ CMSWindowsSecondaryScreen::mouseUp(ButtonID button)
 	m_screen->syncDesktop();
 
 	// map button id to button flag
-	DWORD flags = mapButton(button, false);
+	DWORD data;
+	DWORD flags = mapButton(button, false, &data);
 
 	// send event
 	if (flags != 0) {
-		mouse_event(flags, 0, 0, 0, 0);
+		mouse_event(flags, 0, 0, data, 0);
 	}
 }
 
@@ -606,6 +644,48 @@ CMSWindowsSecondaryScreen::getToggleState() const
 // map special KeyID keys to virtual key codes. if the key is an
 // extended key then the entry is the virtual key code | 0x100.
 // unmapped keys have a 0 entry.
+static const UINT		g_mapE000[] =
+{
+	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xa0 */ 0, 0, 0, 0,
+	/* 0xa4 */ 0, 0, VK_BROWSER_BACK|0x100, VK_BROWSER_FORWARD|0x100,
+	/* 0xa8 */ VK_BROWSER_REFRESH|0x100, VK_BROWSER_STOP|0x100,
+	/* 0xaa */ VK_BROWSER_SEARCH|0x100, VK_BROWSER_FAVORITES|0x100,
+	/* 0xac */ VK_BROWSER_HOME|0x100, VK_VOLUME_MUTE|0x100,
+	/* 0xae */ VK_VOLUME_DOWN|0x100, VK_VOLUME_UP|0x100,
+	/* 0xb0 */ VK_MEDIA_NEXT_TRACK|0x100, VK_MEDIA_PREV_TRACK|0x100,
+	/* 0xb2 */ VK_MEDIA_STOP|0x100, VK_MEDIA_PLAY_PAUSE|0x100,
+	/* 0xb4 */ VK_LAUNCH_MAIL|0x100, VK_LAUNCH_MEDIA_SELECT|0x100,
+	/* 0xb6 */ VK_LAUNCH_APP1|0x100, VK_LAUNCH_APP2|0x100,
+	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
+};
 static const UINT		g_mapEE00[] =
 {
 	/* 0x00 */ 0, 0, 0, 0, 0, 0, 0, 0,
@@ -685,8 +765,12 @@ static const UINT		g_mapEF00[] =
 };
 
 DWORD
-CMSWindowsSecondaryScreen::mapButton(ButtonID button, bool press) const
+CMSWindowsSecondaryScreen::mapButton(ButtonID button,
+				bool press, DWORD* inData) const
 {
+	DWORD dummy;
+	DWORD* data = (inData != NULL) ? inData : &dummy;
+
 	// the system will swap the meaning of left/right for us if
 	// the user has configured a left-handed mouse but we don't
 	// want it to swap since we want the handedness of the
@@ -703,7 +787,8 @@ CMSWindowsSecondaryScreen::mapButton(ButtonID button, bool press) const
 		}
 	}
 
-	// map button id to button flag
+	// map button id to button flag and button data
+	*data = 0;
 	switch (button) {
 	case kButtonLeft:
 		return press ? MOUSEEVENTF_LEFTDOWN : MOUSEEVENTF_LEFTUP;
@@ -713,6 +798,14 @@ CMSWindowsSecondaryScreen::mapButton(ButtonID button, bool press) const
 
 	case kButtonRight:
 		return press ? MOUSEEVENTF_RIGHTDOWN : MOUSEEVENTF_RIGHTUP;
+
+	case kButtonExtra0 + 0:
+		*data = XBUTTON1;
+		return press ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
+
+	case kButtonExtra0 + 1:
+		*data = XBUTTON2;
+		return press ? MOUSEEVENTF_XDOWN : MOUSEEVENTF_XUP;
 
 	default:
 		return 0;
@@ -727,7 +820,10 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 
 	// check for special keys
 	if ((id & 0xfffff000) == 0xe000) {
-		if ((id & 0xff00) == 0xee00) {
+		if ((id & 0xff00) == 0xe000) {
+			virtualKey = g_mapE000[id & 0xff];
+		}
+		else if ((id & 0xff00) == 0xee00) {
 			virtualKey = g_mapEE00[id & 0xff];
 		}
 		else if ((id & 0xff00) == 0xef00) {

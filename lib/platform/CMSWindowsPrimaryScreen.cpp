@@ -21,16 +21,38 @@
 #include "CArchMiscWindows.h"
 #include <cstring>
 
+// X button stuff
+#if !defined(WM_XBUTTONDOWN)
+#define WM_XBUTTONDOWN		0x020B
+#define WM_XBUTTONUP		0x020C
+#define WM_XBUTTONDBLCLK	0x020D
+#define WM_NCXBUTTONDOWN	0x00AB
+#define WM_NCXBUTTONUP		0x00AC
+#define WM_NCXBUTTONDBLCLK	0x00AD
+#define MOUSEEVENTF_XDOWN	0x0100
+#define MOUSEEVENTF_XUP		0x0200
+#define XBUTTON1			0x0001
+#define XBUTTON2			0x0002
+#endif
+
 //
 // map virtual key id to a name
 //
 
+static const char* g_buttonToName[] = {
+	"button 0",
+	"Left Button",
+	"Middle Button",
+	"Right Button",
+	"X Button 1",
+	"X Button 2"
+};
 static const char* g_vkToName[] = {
 	"vk 0x00",
-	"VK_LBUTTON",
-	"VK_RBUTTON",
+	"Left Button",
+	"Right Button",
 	"VK_CANCEL",
-	"VK_MBUTTON",
+	"Middle Button",
 	"vk 0x05",
 	"vk 0x06",
 	"vk 0x07",
@@ -192,24 +214,24 @@ static const char* g_vkToName[] = {
 	"VK_RCONTROL",
 	"VK_LMENU",
 	"VK_RMENU",
-	"vk 0xa6",
-	"vk 0xa7",
-	"vk 0xa8",
-	"vk 0xa9",
-	"vk 0xaa",
-	"vk 0xab",
-	"vk 0xac",
-	"vk 0xad",
-	"vk 0xae",
-	"vk 0xaf",
-	"vk 0xb0",
-	"vk 0xb1",
-	"vk 0xb2",
-	"vk 0xb3",
-	"vk 0xb4",
-	"vk 0xb5",
-	"vk 0xb6",
-	"vk 0xb7",
+	"VK_BROWSER_BACK",
+	"VK_BROWSER_FORWARD",
+	"VK_BROWSER_REFRESH",
+	"VK_BROWSER_STOP",
+	"VK_BROWSER_SEARCH",
+	"VK_BROWSER_FAVORITES",
+	"VK_BROWSER_HOME",
+	"VK_VOLUME_MUTE",
+	"VK_VOLUME_DOWN",
+	"VK_VOLUME_UP",
+	"VK_MEDIA_NEXT_TRACK",
+	"VK_MEDIA_PREV_TRACK",
+	"VK_MEDIA_STOP",
+	"VK_MEDIA_PLAY_PAUSE",
+	"VK_LAUNCH_MAIL",
+	"VK_LAUNCH_MEDIA_SELECT",
+	"VK_LAUNCH_APP1",
+	"VK_LAUNCH_APP2",
 	"vk 0xb8",
 	"vk 0xb9",
 	"vk 0xba",
@@ -384,24 +406,14 @@ KeyModifierMask
 CMSWindowsPrimaryScreen::getToggleMask() const
 {
 	KeyModifierMask mask = 0;
-	if (!m_lowLevel) {
-		// get key state from our shadow state
-		if ((m_keys[VK_CAPITAL] & 0x01) != 0)
-			mask |= KeyModifierCapsLock;
-		if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
-			mask |= KeyModifierNumLock;
-		if ((m_keys[VK_SCROLL] & 0x01) != 0)
-			mask |= KeyModifierScrollLock;
-	}
-	else {
-		// get key state from the system when using low level hooks
-		if ((GetKeyState(VK_CAPITAL) & 0x01) != 0)
-			mask |= KeyModifierCapsLock;
-		if ((GetKeyState(VK_NUMLOCK) & 0x01) != 0)
-			mask |= KeyModifierNumLock;
-		if ((GetKeyState(VK_SCROLL) & 0x01) != 0)
-			mask |= KeyModifierScrollLock;
-	}
+
+	// get key state from our shadow state
+	if ((m_keys[VK_CAPITAL] & 0x01) != 0)
+		mask |= KeyModifierCapsLock;
+	if ((m_keys[VK_NUMLOCK] & 0x01) != 0)
+		mask |= KeyModifierNumLock;
+	if ((m_keys[VK_SCROLL] & 0x01) != 0)
+		mask |= KeyModifierScrollLock;
 
 	return mask;
 }
@@ -409,44 +421,17 @@ CMSWindowsPrimaryScreen::getToggleMask() const
 bool
 CMSWindowsPrimaryScreen::isLockedToScreen() const
 {
-	// virtual key table.  the table defines the virtual keys that are
-	// mapped to something (including mouse buttons, OEM and kanji keys
-	// but not unassigned or undefined keys).
-	static const UInt32 s_mappedKeys[] = {
-		0xfbff331e,
-		0x03ffffff,
-		0x3ffffffe,
-		0xffffffff,
-		0x000300ff,
-		0xfc000000,
-		0xf8000001,
-		0x7ffffe5f
-	};
-
-	// check each key.  if we're capturing events at a low level we
-	// can query the keyboard state using GetKeyState().  if not we
-	// resort to using our shadow keyboard state since the system's
-	// shadow state won't be in sync (because our window is not
-	// getting keyboard events).
-	if (!m_lowLevel) {
-		// use shadow keyboard state in m_keys
-		for (UInt32 i = 0; i < 256; ++i) {
-			if ((m_keys[i] & 0x80) != 0) {
-				LOG((CLOG_DEBUG "locked by \"%s\"", g_vkToName[i]));
-				return true;
-			}
+	// use shadow keyboard state in m_keys and m_buttons
+	for (UInt32 i = 0; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
+		if ((m_buttons[i] & 0x80) != 0) {
+			LOG((CLOG_DEBUG "locked by \"%s\"", g_buttonToName[i]));
+			return true;
 		}
 	}
-	else {
-		for (UInt32 i = 0; i < 256 / 32; ++i) {
-			for (UInt32 b = 1, j = 0; j < 32; b <<= 1, ++j) {
-				if ((s_mappedKeys[i] & b) != 0) {
-					if (GetKeyState(i * 32 + j) < 0) {
-						LOG((CLOG_DEBUG "locked by \"%s\"", g_vkToName[i * 32 + j]));
-						return true;
-					}
-				}
-			}
+	for (UInt32 i = 0; i < sizeof(m_keys) / sizeof(m_keys[0]); ++i) {
+		if ((m_keys[i] & 0x80) != 0) {
+			LOG((CLOG_DEBUG "locked by \"%s\"", g_vkToName[i]));
+			return true;
 		}
 	}
 
@@ -583,16 +568,9 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 		return true;
 
 	case SYNERGY_MSG_MOUSE_BUTTON: {
-		static const int s_vkButton[] = {
-			0,				// kButtonNone
-			VK_LBUTTON,		// kButtonLeft, etc.
-			VK_MBUTTON,
-			VK_RBUTTON
-		};
-
 		// get which button
 		bool pressed = false;
-		const ButtonID button = mapButton(msg->wParam);
+		const ButtonID button = mapButton(msg->wParam, msg->lParam);
 
 		// ignore message if posted prior to last mark change
 		if (!ignore()) {
@@ -600,19 +578,22 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			case WM_LBUTTONDOWN:
 			case WM_MBUTTONDOWN:
 			case WM_RBUTTONDOWN:
+			case WM_XBUTTONDOWN:
 			case WM_LBUTTONDBLCLK:
 			case WM_MBUTTONDBLCLK:
 			case WM_RBUTTONDBLCLK:
+			case WM_XBUTTONDBLCLK:
 			case WM_NCLBUTTONDOWN:
 			case WM_NCMBUTTONDOWN:
 			case WM_NCRBUTTONDOWN:
+			case WM_NCXBUTTONDOWN:
 			case WM_NCLBUTTONDBLCLK:
 			case WM_NCMBUTTONDBLCLK:
 			case WM_NCRBUTTONDBLCLK:
+			case WM_NCXBUTTONDBLCLK:
 				LOG((CLOG_DEBUG1 "event: button press button=%d", button));
 				if (button != kButtonNone) {
 					m_receiver->onMouseDown(button);
-					m_keys[s_vkButton[button]] |= 0x80;
 				}
 				pressed = true;
 				break;
@@ -620,13 +601,14 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			case WM_LBUTTONUP:
 			case WM_MBUTTONUP:
 			case WM_RBUTTONUP:
+			case WM_XBUTTONUP:
 			case WM_NCLBUTTONUP:
 			case WM_NCMBUTTONUP:
 			case WM_NCRBUTTONUP:
+			case WM_NCXBUTTONUP:
 				LOG((CLOG_DEBUG1 "event: button release button=%d", button));
 				if (button != kButtonNone) {
 					m_receiver->onMouseUp(button);
-					m_keys[s_vkButton[button]] &= ~0x80;
 				}
 				pressed = false;
 				break;
@@ -634,8 +616,13 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 		}
 
 		// keep our shadow key state up to date
-		if (button != kButtonNone) {
-			updateKey(s_vkButton[button], pressed);
+		if (button >= kButtonLeft && button <= kButtonExtra0 + 1) {
+			if (pressed) {
+				m_buttons[button] |= 0x80;
+			}
+			else {
+				m_buttons[button] &= ~0x80;
+			}
 		}
 
 		return true;
@@ -1139,24 +1126,24 @@ static const KeyID		g_virtualKey[][2] =
 	/* 0xa3 */ kKeyControl_R,	kKeyControl_R,	// VK_RCONTROL
 	/* 0xa4 */ kKeyAlt_L,		kKeyAlt_L,		// VK_LMENU
 	/* 0xa5 */ kKeyAlt_R,		kKeyAlt_R,		// VK_RMENU
-	/* 0xa6 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xa7 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xa8 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xa9 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xaa */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xab */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xac */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xad */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xae */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xaf */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb0 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb1 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb2 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb3 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb4 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb5 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb6 */ kKeyNone,		kKeyNone,		// unassigned
-	/* 0xb7 */ kKeyNone,		kKeyNone,		// unassigned
+	/* 0xa6 */ kKeyNone,		kKeyWWWBack,	// VK_BROWSER_BACK
+	/* 0xa7 */ kKeyNone,		kKeyWWWForward,	// VK_BROWSER_FORWARD
+	/* 0xa8 */ kKeyNone,		kKeyWWWRefresh,	// VK_BROWSER_REFRESH
+	/* 0xa9 */ kKeyNone,		kKeyWWWStop,	// VK_BROWSER_STOP
+	/* 0xaa */ kKeyNone,		kKeyWWWSearch,	// VK_BROWSER_SEARCH
+	/* 0xab */ kKeyNone,		kKeyWWWFavorites,	// VK_BROWSER_FAVORITES
+	/* 0xac */ kKeyNone,		kKeyWWWHome,	// VK_BROWSER_HOME
+	/* 0xad */ kKeyNone,		kKeyAudioMute,	// VK_VOLUME_MUTE
+	/* 0xae */ kKeyNone,		kKeyAudioDown,	// VK_VOLUME_DOWN
+	/* 0xaf */ kKeyNone,		kKeyAudioUp,	// VK_VOLUME_UP
+	/* 0xb0 */ kKeyNone,		kKeyAudioNext,	// VK_MEDIA_NEXT_TRACK
+	/* 0xb1 */ kKeyNone,		kKeyAudioPrev,	// VK_MEDIA_PREV_TRACK
+	/* 0xb2 */ kKeyNone,		kKeyAudioStop,	// VK_MEDIA_STOP
+	/* 0xb3 */ kKeyNone,		kKeyAudioPlay,	// VK_MEDIA_PLAY_PAUSE
+	/* 0xb4 */ kKeyNone,		kKeyAppMail,	// VK_LAUNCH_MAIL
+	/* 0xb5 */ kKeyNone,		kKeyAppMedia,	// VK_LAUNCH_MEDIA_SELECT
+	/* 0xb6 */ kKeyNone,		kKeyAppUser1,	// VK_LAUNCH_APP1
+	/* 0xb7 */ kKeyNone,		kKeyAppUser2,	// VK_LAUNCH_APP2
 	/* 0xb8 */ kKeyNone,		kKeyNone,		// unassigned
 	/* 0xb9 */ kKeyNone,		kKeyNone,		// unassigned
 	/* 0xba */ kKeyNone,		kKeyNone,		// OEM specific
@@ -1407,9 +1394,9 @@ CMSWindowsPrimaryScreen::mapKey(
 }
 
 ButtonID
-CMSWindowsPrimaryScreen::mapButton(WPARAM button) const
+CMSWindowsPrimaryScreen::mapButton(WPARAM msg, LPARAM button) const
 {
-	switch (button) {
+	switch (msg) {
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONDBLCLK:
 	case WM_LBUTTONUP:
@@ -1434,6 +1421,21 @@ CMSWindowsPrimaryScreen::mapButton(WPARAM button) const
 	case WM_NCRBUTTONUP:
 		return kButtonRight;
 
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONDBLCLK:
+	case WM_XBUTTONUP:
+	case WM_NCXBUTTONDOWN:
+	case WM_NCXBUTTONDBLCLK:
+	case WM_NCXBUTTONUP:
+		switch (button) {
+		case XBUTTON1:
+			return kButtonExtra0 + 0;
+
+		case XBUTTON2:
+			return kButtonExtra0 + 1;
+		}
+		return kButtonNone;
+
 	default:
 		return kButtonNone;
 	}
@@ -1446,8 +1448,9 @@ CMSWindowsPrimaryScreen::updateKeys()
 	// up-to-date results.  i don't know why that is or why GetKeyState()
 	// should give different results.
 
-	// clear key state
+	// clear key and button state
 	memset(m_keys, 0, sizeof(m_keys));
+	memset(m_buttons, 0, sizeof(m_buttons));
 
 	// we only care about the modifier key states.  other keys and the
 	// mouse buttons should be up.
