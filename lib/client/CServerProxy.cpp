@@ -538,7 +538,7 @@ CServerProxy::keyRepeat()
 								static_cast<KeyModifierMask>(mask));
 	if (id2   != static_cast<KeyID>(id) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
-		LOG((CLOG_DEBUG1 "key down translated to id=%d, mask=0x%04x", id2, mask2));
+		LOG((CLOG_DEBUG1 "key repeat translated to id=%d, mask=0x%04x", id2, mask2));
 
 	// forward
 	getClient()->keyRepeat(id2, mask2, count, button);
@@ -561,7 +561,7 @@ CServerProxy::keyUp()
 								static_cast<KeyModifierMask>(mask));
 	if (id2   != static_cast<KeyID>(id) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
-		LOG((CLOG_DEBUG1 "key down translated to id=%d, mask=0x%04x", id2, mask2));
+		LOG((CLOG_DEBUG1 "key up translated to id=%d, mask=0x%04x", id2, mask2));
 
 	// forward
 	getClient()->keyUp(id2, mask2, button);
