@@ -370,9 +370,14 @@ void
 CXWindowsScreen::mainLoop()
 {
 	// wait for an event in a cancellable way and don't lock the
-	// display while we're waiting.
+	// display while we're waiting.  we use CLock to ensure that
+	// we unlock on exit but we directly unlock/lock the mutex
+	// for certain sections when we mustn't hold the lock.  it's
+	// very important that these sections not return (even by
+	// exception or cancellation) without first reestablishing
+	// the lock.
 	XEvent event;
-	m_mutex.lock();
+	CLock lock(&m_mutex);
 
 	for (;;) {
 
@@ -418,8 +423,8 @@ CXWindowsScreen::mainLoop()
 		// wait for message from X server or for timeout.  also check
 		// if the thread has been cancelled.  poll() should return -1
 		// with EINTR when the thread is cancelled.
-		m_mutex.unlock();
 		CThread::testCancel();
+		m_mutex.unlock();
 #if HAVE_POLL
 		poll(pfds, 1, timeout);
 #else
@@ -429,8 +434,8 @@ CXWindowsScreen::mainLoop()
 							SELECT_TYPE_ARG234 NULL,
 							SELECT_TYPE_ARG5   timeoutPtr);
 #endif
-		CThread::testCancel();
 		m_mutex.lock();
+		CThread::testCancel();
 
 		// process timers
 		processTimers();
@@ -445,9 +450,15 @@ CXWindowsScreen::mainLoop()
 			}
 
 			// wait
-			m_mutex.unlock();
-			CThread::sleep(0.01);
-			m_mutex.lock();
+			try {
+				m_mutex.unlock();
+				CThread::sleep(0.01);
+				m_mutex.lock();
+			}
+			catch (...) {
+				m_mutex.lock();
+				throw;
+			}
 		}
 
 #endif // !UNIX_LIKE
