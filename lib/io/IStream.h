@@ -87,8 +87,6 @@ public:
 	virtual void		setEventFilter(IEventJob* filter) = 0;
 
 	//@}
-
-	//@}
 	//! @name accessors
 	//@{
 
