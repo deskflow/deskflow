@@ -104,8 +104,8 @@ CXWindowsSecondaryScreen::open(
 	// FIXME -- may have to get these from some database
 	m_numLockHalfDuplex  = false;
 	m_capsLockHalfDuplex = false;
-	m_numLockHalfDuplex  = true;
-	m_capsLockHalfDuplex = true;
+//	m_numLockHalfDuplex  = true;
+//	m_capsLockHalfDuplex = true;
 
 	// assume primary has all clipboards
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
