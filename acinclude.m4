@@ -1,3 +1,15 @@
+dnl synergy -- mouse and keyboard sharing utility
+dnl Copyright (C) 2002 Chris Schoeneman
+dnl 
+dnl This package is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU General Public License
+dnl found in the file COPYING that should have accompanied this file.
+dnl 
+dnl This package is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+
 dnl The following macros are from http://www.gnu.org/software/ac-archive/
 dnl which distributes them under the following license:
 dnl
