@@ -99,11 +99,11 @@ CXWindowsUtil::getWindowProperty(Display* display, Window window,
 	}
 
 	if (result == Success) {
-		log((CLOG_DEBUG1 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
+		LOG((CLOG_DEBUG1 "read property %d on window 0x%08x: bytes=%d", property, window, (data == NULL) ? 0 : data->size()));
 		return true;
 	}
 	else {
-		log((CLOG_DEBUG1 "can't read property %d on window 0x%08x", property, window));
+		LOG((CLOG_DEBUG1 "can't read property %d on window 0x%08x", property, window));
 		return false;
 	}
 }
@@ -265,12 +265,12 @@ CXWindowsUtil::CErrorLock::internalHandler(Display* display, XErrorEvent* event)
 void
 CXWindowsUtil::CErrorLock::ignoreHandler(Display*, XErrorEvent* e, void*)
 {
-	log((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
+	LOG((CLOG_DEBUG1 "ignoring X error: %d", e->error_code));
 }
 
 void
 CXWindowsUtil::CErrorLock::saveHandler(Display*, XErrorEvent* e, void* flag)
 {
-	log((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
+	LOG((CLOG_DEBUG1 "flagging X error: %d", e->error_code));
 	*reinterpret_cast<bool*>(flag) = true;
 }

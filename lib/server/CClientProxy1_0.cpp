@@ -47,7 +47,7 @@ void
 CClientProxy1_0::open()
 {
 	// send request
-	log((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
+	LOG((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgQInfo);
 	getOutputStream()->flush();
 
@@ -86,14 +86,14 @@ CClientProxy1_0::mainLoop()
 
 		// check if client hungup
 		if (n == 0) {
-			log((CLOG_NOTE "client \"%s\" disconnected", getName().c_str()));
+			LOG((CLOG_NOTE "client \"%s\" disconnected", getName().c_str()));
 			return;
 		}
 
 		// check if client has stopped sending heartbeats
 		if (n == (UInt32)-1) {
 			if (kHeartDeath >= 0.0 && heartTimer.getTime() > kHeartDeath) {
-				log((CLOG_NOTE "client \"%s\" is dead", getName().c_str()));
+				LOG((CLOG_NOTE "client \"%s\" is dead", getName().c_str()));
 				return;
 			}
 			continue;
@@ -104,14 +104,14 @@ CClientProxy1_0::mainLoop()
 
 		// verify we got an entire code
 		if (n != 4) {
-			log((CLOG_ERR "incomplete message from \"%s\": %d bytes", getName().c_str(), n));
+			LOG((CLOG_ERR "incomplete message from \"%s\": %d bytes", getName().c_str(), n));
 
 			// client sent an incomplete message
 			throw XBadClient();
 		}
 
 		// parse message
-		log((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
+		LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
 		if (memcmp(code, kMsgDInfo, 4) == 0) {
 			recvInfo(true);
 		}
@@ -127,7 +127,7 @@ CClientProxy1_0::mainLoop()
 		}
 		// note -- more message handlers go here
 		else {
-			log((CLOG_ERR "invalid message from client \"%s\"", getName().c_str()));
+			LOG((CLOG_ERR "invalid message from client \"%s\"", getName().c_str()));
 
 			// unknown message
 			throw XBadClient();
@@ -138,7 +138,7 @@ CClientProxy1_0::mainLoop()
 void
 CClientProxy1_0::close()
 {
-	log((CLOG_DEBUG1 "send close to \"%s\"", getName().c_str()));
+	LOG((CLOG_DEBUG1 "send close to \"%s\"", getName().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClose);
 
 	// force the close to be sent before we return
@@ -149,7 +149,7 @@ void
 CClientProxy1_0::enter(SInt32 xAbs, SInt32 yAbs,
 				UInt32 seqNum, KeyModifierMask mask, bool)
 {
-	log((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask));
+	LOG((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgCEnter,
 								xAbs, yAbs, seqNum, mask);
 }
@@ -157,7 +157,7 @@ CClientProxy1_0::enter(SInt32 xAbs, SInt32 yAbs,
 bool
 CClientProxy1_0::leave()
 {
-	log((CLOG_DEBUG1 "send leave to \"%s\"", getName().c_str()));
+	LOG((CLOG_DEBUG1 "send leave to \"%s\"", getName().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCLeave);
 
 	// we can never prevent the user from leaving
@@ -173,7 +173,7 @@ CClientProxy1_0::setClipboard(ClipboardID id, const CString& data)
 		// this clipboard is now clean
 		m_clipboardDirty[id] = false;
 
-		log((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getName().c_str(), data.size()));
+		LOG((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getName().c_str(), data.size()));
 		CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, id, 0, &data);
 	}
 }
@@ -181,7 +181,7 @@ CClientProxy1_0::setClipboard(ClipboardID id, const CString& data)
 void
 CClientProxy1_0::grabClipboard(ClipboardID id)
 {
-	log((CLOG_DEBUG "send grab clipboard %d to \"%s\"", id, getName().c_str()));
+	LOG((CLOG_DEBUG "send grab clipboard %d to \"%s\"", id, getName().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id, 0);
 
 	// this clipboard is now dirty
@@ -199,56 +199,56 @@ CClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty)
 void
 CClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask)
 {
-	log((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
+	LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyDown, key, mask);
 }
 
 void
 CClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count)
 {
-	log((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count));
+	LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask, count);
 }
 
 void
 CClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask)
 {
-	log((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
+	LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
 	CProtocolUtil::writef(getOutputStream(), kMsgDKeyUp, key, mask);
 }
 
 void
 CClientProxy1_0::mouseDown(ButtonID button)
 {
-	log((CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getName().c_str(), button));
+	LOG((CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getName().c_str(), button));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseDown, button);
 }
 
 void
 CClientProxy1_0::mouseUp(ButtonID button)
 {
-	log((CLOG_DEBUG1 "send mouse up to \"%s\" id=%d", getName().c_str(), button));
+	LOG((CLOG_DEBUG1 "send mouse up to \"%s\" id=%d", getName().c_str(), button));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseUp, button);
 }
 
 void
 CClientProxy1_0::mouseMove(SInt32 xAbs, SInt32 yAbs)
 {
-	log((CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs, yAbs));
+	LOG((CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs, yAbs));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseMove, xAbs, yAbs);
 }
 
 void
 CClientProxy1_0::mouseWheel(SInt32 delta)
 {
-	log((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), delta));
+	LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), delta));
 	CProtocolUtil::writef(getOutputStream(), kMsgDMouseWheel, delta);
 }
 
 void
 CClientProxy1_0::screensaver(bool on)
 {
-	log((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0));
+	LOG((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0));
 	CProtocolUtil::writef(getOutputStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
 
@@ -293,7 +293,7 @@ CClientProxy1_0::recvInfo(bool notify)
 		SInt16 x, y, w, h, zoneSize, mx, my;
 		CProtocolUtil::readf(getInputStream(), kMsgDInfo + 4,
 								&x, &y, &w, &h, &zoneSize, &mx, &my);
-		log((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d, zone=%d, pos=%d,%d", getName().c_str(), x, y, w, h, zoneSize, mx, my));
+		LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d, zone=%d, pos=%d,%d", getName().c_str(), x, y, w, h, zoneSize, mx, my));
 
 		// validate
 		if (w <= 0 || h <= 0 || zoneSize < 0) {
@@ -319,7 +319,7 @@ CClientProxy1_0::recvInfo(bool notify)
 	}
 
 	// acknowledge receipt
-	log((CLOG_DEBUG1 "send info ack to \"%s\"", getName().c_str()));
+	LOG((CLOG_DEBUG1 "send info ack to \"%s\"", getName().c_str()));
 	CProtocolUtil::writef(getOutputStream(), kMsgCInfoAck);
 }
 
@@ -331,7 +331,7 @@ CClientProxy1_0::recvClipboard()
 	UInt32 seqNum;
 	CString data;
 	CProtocolUtil::readf(getInputStream(), kMsgDClipboard + 4, &id, &seqNum, &data);
-	log((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seqNum, data.size()));
+	LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seqNum, data.size()));
 
 	// validate
 	if (id >= kClipboardEnd) {
@@ -350,7 +350,7 @@ CClientProxy1_0::recvGrabClipboard()
 	ClipboardID id;
 	UInt32 seqNum;
 	CProtocolUtil::readf(getInputStream(), kMsgCClipboard + 4, &id, &seqNum);
-	log((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d", getName().c_str(), id, seqNum));
+	LOG((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d", getName().c_str(), id, seqNum));
 
 	// validate
 	if (id >= kClipboardEnd) {

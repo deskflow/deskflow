@@ -40,15 +40,15 @@ CSecondaryScreen::mainLoop()
 
 	// run event loop
 	try {
-		log((CLOG_DEBUG "entering event loop"));
+		LOG((CLOG_DEBUG "entering event loop"));
 		onPreMainLoop();
 		getScreen()->mainLoop();
 		onPostMainLoop();
-		log((CLOG_DEBUG "exiting event loop"));
+		LOG((CLOG_DEBUG "exiting event loop"));
 	}
 	catch (...) {
 		onPostMainLoop();
-		log((CLOG_DEBUG "exiting event loop"));
+		LOG((CLOG_DEBUG "exiting event loop"));
 		throw;
 	}
 }
@@ -115,7 +115,7 @@ CSecondaryScreen::enter(SInt32 x, SInt32 y, KeyModifierMask mask)
 	CLock lock(&m_mutex);
 	assert(m_active == false);
 
-	log((CLOG_INFO "entering screen at %d,%d mask=%04x", x, y, mask));
+	LOG((CLOG_INFO "entering screen at %d,%d mask=%04x", x, y, mask));
 
 	getScreen()->syncDesktop();
 
@@ -144,7 +144,7 @@ CSecondaryScreen::enter(SInt32 x, SInt32 y, KeyModifierMask mask)
 void
 CSecondaryScreen::leave()
 {
-	log((CLOG_INFO "leaving screen"));
+	LOG((CLOG_INFO "leaving screen"));
 	CLock lock(&m_mutex);
 	assert(m_active == true);
 

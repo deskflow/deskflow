@@ -73,7 +73,7 @@ CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 	HWND hwnd = findScreenSaver();
 	if (hwnd == NULL) {
 		// didn't start
-		log((CLOG_DEBUG "can't find screen saver window"));
+		LOG((CLOG_DEBUG "can't find screen saver window"));
 		return false;
 	}
 
@@ -83,7 +83,7 @@ CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 	HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, processID);
 	if (process == NULL) {
 		// didn't start
-		log((CLOG_DEBUG "can't open screen saver process"));
+		LOG((CLOG_DEBUG "can't open screen saver process"));
 		return false;
 	}
 
@@ -273,7 +273,7 @@ CMSWindowsScreenSaver::watchProcess(HANDLE process)
 
 	// watch new process in another thread
 	if (process != NULL) {
-		log((CLOG_DEBUG "watching screen saver process"));
+		LOG((CLOG_DEBUG "watching screen saver process"));
 		m_process = process;
 		m_watch   = new CThread(new TMethodJob<CMSWindowsScreenSaver>(this,
 								&CMSWindowsScreenSaver::watchProcessThread));
@@ -284,7 +284,7 @@ void
 CMSWindowsScreenSaver::unwatchProcess()
 {
 	if (m_watch != NULL) {
-		log((CLOG_DEBUG "stopped watching screen saver process"));
+		LOG((CLOG_DEBUG "stopped watching screen saver process"));
 		m_watch->cancel();
 		m_watch->wait();
 		delete m_watch;
@@ -304,7 +304,7 @@ CMSWindowsScreenSaver::watchProcessThread(void*)
 		if (WaitForSingleObject(m_process, 50) == WAIT_OBJECT_0) {
 			// process terminated.  send screen saver deactivation
 			// message.
-			log((CLOG_DEBUG "screen saver died"));
+			LOG((CLOG_DEBUG "screen saver died"));
 			PostThreadMessage(m_threadID, m_msg, m_wParam, m_lParam);
 			return;
 		}

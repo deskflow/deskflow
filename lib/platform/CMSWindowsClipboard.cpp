@@ -38,10 +38,10 @@ CMSWindowsClipboard::~CMSWindowsClipboard()
 bool
 CMSWindowsClipboard::empty()
 {
-	log((CLOG_DEBUG "empty clipboard"));
+	LOG((CLOG_DEBUG "empty clipboard"));
 
 	if (!EmptyClipboard()) {
-		log((CLOG_DEBUG "failed to grab clipboard"));
+		LOG((CLOG_DEBUG "failed to grab clipboard"));
 		return false;
 	}
 
@@ -51,7 +51,7 @@ CMSWindowsClipboard::empty()
 void
 CMSWindowsClipboard::add(EFormat format, const CString& data)
 {
-	log((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
+	LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
 
 	// convert data to win32 form
 	for (ConverterList::const_iterator index = m_converters.begin();
@@ -76,10 +76,10 @@ CMSWindowsClipboard::add(EFormat format, const CString& data)
 bool
 CMSWindowsClipboard::open(Time time) const
 {
-	log((CLOG_DEBUG "open clipboard"));
+	LOG((CLOG_DEBUG "open clipboard"));
 
 	if (!OpenClipboard(m_window)) {
-		log((CLOG_WARN "failed to open clipboard"));
+		LOG((CLOG_WARN "failed to open clipboard"));
 		return false;
 	}
 
@@ -91,7 +91,7 @@ CMSWindowsClipboard::open(Time time) const
 void
 CMSWindowsClipboard::close() const
 {
-	log((CLOG_DEBUG "close clipboard"));
+	LOG((CLOG_DEBUG "close clipboard"));
 	CloseClipboard();
 }
 

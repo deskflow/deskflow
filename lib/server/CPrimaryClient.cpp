@@ -36,7 +36,7 @@ CPrimaryClient::CPrimaryClient(IPrimaryScreenFactory* screenFactory,
 	assert(m_server != NULL);
 
 	// create screen
-	log((CLOG_DEBUG1 "creating primary screen"));
+	LOG((CLOG_DEBUG1 "creating primary screen"));
 	if (screenFactory != NULL) {
 		m_screen = screenFactory->create(this, receiver);
 	}
@@ -47,7 +47,7 @@ CPrimaryClient::CPrimaryClient(IPrimaryScreenFactory* screenFactory,
 
 CPrimaryClient::~CPrimaryClient()
 {
-	log((CLOG_DEBUG1 "destroying primary screen"));
+	LOG((CLOG_DEBUG1 "destroying primary screen"));
 	delete m_screen;
 }
 

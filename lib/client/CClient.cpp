@@ -122,7 +122,7 @@ CClient::onError()
 void
 CClient::onInfoChanged(const CClientInfo& info)
 {
-	log((CLOG_DEBUG "resolution changed"));
+	LOG((CLOG_DEBUG "resolution changed"));
 
 	CLock lock(&m_mutex);
 	if (m_server != NULL) {
@@ -168,12 +168,12 @@ CClient::open()
 {
 	// open the screen
 	try {
-		log((CLOG_INFO "opening screen"));
+		LOG((CLOG_INFO "opening screen"));
 		openSecondaryScreen();
 	}
 	catch (XScreenOpenFailure&) {
 		// can't open screen
-		log((CLOG_INFO "failed to open screen"));
+		LOG((CLOG_INFO "failed to open screen"));
 		throw;
 	}
 }
@@ -193,7 +193,7 @@ CClient::mainLoop()
 	}
 
 	try {
-		log((CLOG_NOTE "starting client \"%s\"", m_name.c_str()));
+		LOG((CLOG_NOTE "starting client \"%s\"", m_name.c_str()));
 
 		// start server interactions
 		{
@@ -207,29 +207,29 @@ CClient::mainLoop()
 
 		// clean up
 		deleteSession();
-		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
+		LOG((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 	}
 	catch (XBase& e) {
-		log((CLOG_ERR "client error: %s", e.what()));
+		LOG((CLOG_ERR "client error: %s", e.what()));
 
 		// clean up
 		deleteSession();
-		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
+		LOG((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		CLock lock(&m_mutex);
 		m_rejected = false;
 	}
 	catch (XThread&) {
 		// clean up
 		deleteSession();
-		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
+		LOG((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		throw;
 	}
 	catch (...) {
-		log((CLOG_DEBUG "unknown client error"));
+		LOG((CLOG_DEBUG "unknown client error"));
 
 		// clean up
 		deleteSession();
-		log((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
+		LOG((CLOG_NOTE "stopping client \"%s\"", m_name.c_str()));
 		throw;
 	}
 }
@@ -238,7 +238,7 @@ void
 CClient::close()
 {
 	closeSecondaryScreen();
-	log((CLOG_INFO "closed screen"));
+	LOG((CLOG_INFO "closed screen"));
 }
 
 void
@@ -392,7 +392,7 @@ CClient::openSecondaryScreen()
 	}
 
 	// create screen
-	log((CLOG_DEBUG1 "creating secondary screen"));
+	LOG((CLOG_DEBUG1 "creating secondary screen"));
 	if (m_screenFactory != NULL) {
 		m_screen = m_screenFactory->create(this);
 	}
@@ -402,11 +402,11 @@ CClient::openSecondaryScreen()
 
 	// open screen
 	try {
-		log((CLOG_DEBUG1 "opening secondary screen"));
+		LOG((CLOG_DEBUG1 "opening secondary screen"));
 		m_screen->open();
 	}
 	catch (...) {
-		log((CLOG_DEBUG1 "destroying secondary screen"));
+		LOG((CLOG_DEBUG1 "destroying secondary screen"));
 		delete m_screen;
 		m_screen = NULL;
 		throw;
@@ -419,7 +419,7 @@ CClient::closeSecondaryScreen()
 	// close the secondary screen
 	try {
 		if (m_screen != NULL) {
-			log((CLOG_DEBUG1 "closing secondary screen"));
+			LOG((CLOG_DEBUG1 "closing secondary screen"));
 			m_screen->close();
 		}
 	}
@@ -428,7 +428,7 @@ CClient::closeSecondaryScreen()
 	}
 
 	// clean up
-	log((CLOG_DEBUG1 "destroying secondary screen"));
+	LOG((CLOG_DEBUG1 "destroying secondary screen"));
 	delete m_screen;
 	m_screen = NULL;
 }
@@ -471,14 +471,14 @@ void
 CClient::runSession(void*)
 {
 	try {
-		log((CLOG_DEBUG "starting server proxy"));
+		LOG((CLOG_DEBUG "starting server proxy"));
 		runServer();
 		m_screen->exitMainLoop();
-		log((CLOG_DEBUG "stopping server proxy"));
+		LOG((CLOG_DEBUG "stopping server proxy"));
 	}
 	catch (...) {
 		m_screen->exitMainLoop();
-		log((CLOG_DEBUG "stopping server proxy"));
+		LOG((CLOG_DEBUG "stopping server proxy"));
 		throw;
 	}
 }
@@ -514,17 +514,17 @@ CClient::runServer()
 				CTimerThread timer(15.0);
 
 				// create socket and attempt to connect to server
-				log((CLOG_DEBUG1 "connecting to server"));
+				LOG((CLOG_DEBUG1 "connecting to server"));
 				if (m_socketFactory != NULL) {
 					socket = m_socketFactory->create();
 				}
 				assert(socket != NULL);
 				socket->connect(m_serverAddress);
-				log((CLOG_INFO "connected to server"));
+				LOG((CLOG_INFO "connected to server"));
 				break;
 			}
 			catch (XSocketConnect& e) {
-				log((CLOG_DEBUG1 "failed to connect to server: %s", e.getErrstr()));
+				LOG((CLOG_DEBUG1 "failed to connect to server: %s", e.getErrstr()));
 
 				// failed to connect.  if not camping then rethrow.
 				if (!m_camp) {
@@ -537,25 +537,25 @@ CClient::runServer()
 		}
 
 		// create proxy
-		log((CLOG_DEBUG1 "negotiating with server"));
+		LOG((CLOG_DEBUG1 "negotiating with server"));
 		proxy = handshakeServer(socket);
 		CLock lock(&m_mutex);
 		m_server = proxy;
 	}
 	catch (XThread&) {
-		log((CLOG_ERR "connection timed out"));
+		LOG((CLOG_ERR "connection timed out"));
 		delete socket;
 		throw;
 	}
 	catch (XBase& e) {
-		log((CLOG_ERR "connection failed: %s", e.what()));
-		log((CLOG_DEBUG "disconnecting from server"));
+		LOG((CLOG_ERR "connection failed: %s", e.what()));
+		LOG((CLOG_DEBUG "disconnecting from server"));
 		delete socket;
 		return;
 	}
 	catch (...) {
-		log((CLOG_ERR "connection failed: <unknown error>"));
-		log((CLOG_DEBUG "disconnecting from server"));
+		LOG((CLOG_ERR "connection failed: <unknown error>"));
+		LOG((CLOG_DEBUG "disconnecting from server"));
 		delete socket;
 		return;
 	}
@@ -564,7 +564,7 @@ CClient::runServer()
 		// process messages
 		bool rejected = true;
 		if (proxy != NULL) {
-			log((CLOG_DEBUG1 "communicating with server"));
+			LOG((CLOG_DEBUG1 "communicating with server"));
 			rejected = !proxy->mainLoop();
 		}
 
@@ -573,7 +573,7 @@ CClient::runServer()
 		m_rejected = rejected;
 		m_server   = NULL;
 		delete proxy;
-		log((CLOG_DEBUG "disconnecting from server"));
+		LOG((CLOG_DEBUG "disconnecting from server"));
 		socket->close();
 		delete socket;
 	}
@@ -582,7 +582,7 @@ CClient::runServer()
 		m_rejected = false;
 		m_server   = NULL;
 		delete proxy;
-		log((CLOG_DEBUG "disconnecting from server"));
+		LOG((CLOG_DEBUG "disconnecting from server"));
 		socket->close();
 		delete socket;
 		throw;
@@ -615,19 +615,19 @@ CClient::handshakeServer(IDataSocket* socket)
 		CTimerThread timer(30.0);
 
 		// wait for hello from server
-		log((CLOG_DEBUG1 "wait for hello"));
+		LOG((CLOG_DEBUG1 "wait for hello"));
 		SInt16 major, minor;
 		CProtocolUtil::readf(input, kMsgHello, &major, &minor);
 
 		// check versions
-		log((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
+		LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
 		if (major < kProtocolMajorVersion ||
 			(major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
 			throw XIncompatibleClient(major, minor);
 		}
 
 		// say hello back
-		log((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
+		LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
 		CProtocolUtil::writef(output, kMsgHelloBack,
 								kProtocolMajorVersion,
 								kProtocolMinorVersion, &m_name);
@@ -641,10 +641,10 @@ CClient::handshakeServer(IDataSocket* socket)
 		return proxy;
 	}
 	catch (XIncompatibleClient& e) {
-		log((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
+		LOG((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
 	}
 	catch (XBase& e) {
-		log((CLOG_WARN "error communicating with server: %s", e.what()));
+		LOG((CLOG_WARN "error communicating with server: %s", e.what()));
 	}
 	catch (...) {
 		// probably timed out

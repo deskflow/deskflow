@@ -296,23 +296,23 @@ CThreadRep::doThreadFunc()
 	void* result = NULL;
 	try {
 		// go
-		log((CLOG_DEBUG1 "thread %p entry", this));
+		LOG((CLOG_DEBUG1 "thread %p entry", this));
 		m_job->run();
-		log((CLOG_DEBUG1 "thread %p exit", this));
+		LOG((CLOG_DEBUG1 "thread %p exit", this));
 	}
 
 	catch (XThreadCancel&) {
 		// client called cancel()
-		log((CLOG_DEBUG1 "caught cancel on thread %p", this));
+		LOG((CLOG_DEBUG1 "caught cancel on thread %p", this));
 	}
 
 	catch (XThreadExit& e) {
 		// client called exit()
 		result = e.m_result;
-		log((CLOG_DEBUG1 "caught exit on thread %p", this));
+		LOG((CLOG_DEBUG1 "caught exit on thread %p", this));
 	}
 	catch (...) {
-		log((CLOG_DEBUG1 "exception on thread %p", this));
+		LOG((CLOG_DEBUG1 "exception on thread %p", this));
 		// note -- don't catch (...) to avoid masking bugs
 		delete m_job;
 		throw;
@@ -385,7 +385,7 @@ CThreadRep::cancel()
 	}
 
 	// break out of system calls
-	log((CLOG_DEBUG1 "cancel thread %p", this));
+	LOG((CLOG_DEBUG1 "cancel thread %p", this));
 	pthread_kill(m_thread, SIGWAKEUP);
 }
 
@@ -406,7 +406,7 @@ CThreadRep::testCancel()
 	}
 
 	// start cancel
-	log((CLOG_DEBUG1 "throw cancel on thread %p", this));
+	LOG((CLOG_DEBUG1 "throw cancel on thread %p", this));
 	throw XThreadCancel();
 }
 
@@ -556,7 +556,7 @@ CThreadRep::sleep(
 void
 CThreadRep::cancel()
 {
-	log((CLOG_DEBUG1 "cancel thread %p", this));
+	LOG((CLOG_DEBUG1 "cancel thread %p", this));
 	SetEvent(m_cancel);
 }
 
@@ -581,7 +581,7 @@ CThreadRep::testCancel()
 	}
 
 	// start cancel
-	log((CLOG_DEBUG1 "throw cancel on thread %p", this));
+	LOG((CLOG_DEBUG1 "throw cancel on thread %p", this));
 	throw XThreadCancel();
 }
 

@@ -196,7 +196,7 @@ realMain(CMutex* mutex)
 #undef FINALLY
 		}
 		catch (XBase& e) {
-			log((CLOG_CRIT "failed: %s", e.what()));
+			LOG((CLOG_CRIT "failed: %s", e.what()));
 		}
 		catch (XThread&) {
 			// terminated
@@ -230,7 +230,7 @@ static
 void
 version()
 {
-	log((CLOG_PRINT
+	LOG((CLOG_PRINT
 "%s %s, protocol version %d.%d\n"
 "%s",
 								pname,
@@ -244,7 +244,7 @@ static
 void
 help()
 {
-	log((CLOG_PRINT
+	LOG((CLOG_PRINT
 "Usage: %s"
 " [--camp|--no-camp]"
 " [--daemon|--no-daemon]"
@@ -293,7 +293,7 @@ isArg(int argi, int argc, const char** argv,
 		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
 		// match.  check args left.
 		if (argi + minRequiredParameters >= argc) {
-			log((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
+			LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
 								pname, argv[argi], pname));
 			bye(kExitArgs);
 		}
@@ -382,7 +382,7 @@ parse(int argc, const char** argv)
 		}
 
 		else if (argv[i][0] == '-') {
-			log((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
+			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 								pname, argv[i], pname));
 			bye(kExitArgs);
 		}
@@ -395,12 +395,12 @@ parse(int argc, const char** argv)
 
 	// exactly one non-option argument (server-address)
 	if (i == argc) {
-		log((CLOG_PRINT "%s: a server address or name is required" BYE,
+		LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
 								pname, pname));
 		bye(kExitArgs);
 	}
 	if (i + 1 != argc) {
-		log((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
+		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 								pname, argv[i], pname));
 		bye(kExitArgs);
 	}
@@ -410,7 +410,7 @@ parse(int argc, const char** argv)
 		s_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
 	}
 	catch (XSocketAddress& e) {
-		log((CLOG_PRINT "%s: %s" BYE,
+		LOG((CLOG_PRINT "%s: %s" BYE,
 								pname, e.what(), pname));
 		bye(kExitFailed);
 	}
@@ -433,7 +433,7 @@ parse(int argc, const char** argv)
 
 	// set log filter
 	if (!CLog::setFilter(s_logFilter)) {
-		log((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
+		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
 								pname, s_logFilter, pname));
 		bye(kExitArgs);
 	}
@@ -537,7 +537,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	if (__argc <= 1 && !CWin32Platform::isWindows95Family()) {
 		int result = platform.daemonize(DAEMON_NAME, &daemonStartup);
 		if (result == -1) {
-			log((CLOG_CRIT "failed to start as a service" BYE, pname));
+			LOG((CLOG_CRIT "failed to start as a service" BYE, pname));
 			return kExitFailed;
 		}
 		return result;
@@ -556,7 +556,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		if (CWin32Platform::isWindows95Family()) {
 			result = platform.daemonize(DAEMON_NAME, &daemonStartup95);
 			if (result == -1) {
-				log((CLOG_CRIT "failed to start as a service" BYE, pname));
+				LOG((CLOG_CRIT "failed to start as a service" BYE, pname));
 				result = kExitFailed;
 			}
 		}
@@ -613,7 +613,7 @@ main(int argc, char** argv)
 	if (s_daemon) {
 		result = platform.daemonize(DAEMON_NAME, &daemonStartup);
 		if (result == -1) {
-			log((CLOG_CRIT "failed to daemonize"));
+			LOG((CLOG_CRIT "failed to daemonize"));
 			return kExitFailed;
 		}
 	}

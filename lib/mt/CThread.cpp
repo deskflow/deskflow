@@ -77,7 +77,7 @@ void
 CThread::exit(void* result)
 {
 	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
-	log((CLOG_DEBUG1 "throw exit on thread %p", currentRep.operator->()));
+	LOG((CLOG_DEBUG1 "throw exit on thread %p", currentRep.operator->()));
 	throw XThreadExit(result);
 }
 

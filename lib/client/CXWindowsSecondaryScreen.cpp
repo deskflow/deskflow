@@ -293,7 +293,7 @@ CXWindowsSecondaryScreen::createWindow()
 		int majorOpcode, firstEvent, firstError;
 		if (!XQueryExtension(display, XTestExtensionName,
 								&majorOpcode, &firstEvent, &firstError)) {
-			log((CLOG_ERR "XTEST extension not available"));
+			LOG((CLOG_ERR "XTEST extension not available"));
 			throw XScreenOpenFailure();
 		}
 
@@ -317,7 +317,7 @@ CXWindowsSecondaryScreen::createWindow()
 		if (m_window == None) {
 			throw XScreenOpenFailure();
 		}
-		log((CLOG_DEBUG "window is 0x%08x", m_window));
+		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 
 		// become impervious to server grabs
 		XTestGrabControl(display, True);
@@ -490,28 +490,28 @@ CXWindowsSecondaryScreen::mapKey(Keystrokes& keys, KeyCode& keycode,
 	// keys affected by CapsLock.
 	bool desireShift = (getBits(desired, ShiftMask) != 0);
 	bool invertShift = false;
-log((CLOG_DEBUG1 "desire shift 1: %s", desireShift?"yes":"no"));
+LOG((CLOG_DEBUG1 "desire shift 1: %s", desireShift?"yes":"no"));
 	if (adjustForNumLock(keysym)) {
-log((CLOG_DEBUG1 "num lock sensitive"));
+LOG((CLOG_DEBUG1 "num lock sensitive"));
 		if (m_numLockMask != 0) {
-log((CLOG_DEBUG1 "we have num lock"));
+LOG((CLOG_DEBUG1 "we have num lock"));
 			if (getBits(desired, m_numLockMask) != 0) {
-log((CLOG_DEBUG1 "num lock desired, invert shift"));
+LOG((CLOG_DEBUG1 "num lock desired, invert shift"));
 				invertShift = true;
 			}
 		}
 	}
 	else if (adjustForCapsLock(keysym)) {
-log((CLOG_DEBUG1 "caps lock sensitive"));
+LOG((CLOG_DEBUG1 "caps lock sensitive"));
 		if (m_capsLockMask != 0) {
-log((CLOG_DEBUG1 "we have caps lock"));
+LOG((CLOG_DEBUG1 "we have caps lock"));
 			if (getBits(desired, m_capsLockMask) != 0) {
-log((CLOG_DEBUG1 "caps lock desired, invert shift"));
+LOG((CLOG_DEBUG1 "caps lock desired, invert shift"));
 				invertShift = true;
 			}
 		}
 	}
-log((CLOG_DEBUG1 "desire shift 2: %s", desireShift?"yes":"no"));
+LOG((CLOG_DEBUG1 "desire shift 2: %s", desireShift?"yes":"no"));
 	if (desireShift != invertShift) {
 		index[0] ^= 1;
 		index[1] ^= 1;
@@ -538,7 +538,7 @@ log((CLOG_DEBUG1 "desire shift 2: %s", desireShift?"yes":"no"));
 
 	// get the keycode
 	keycode = entry.m_keycode[bestIndex];
-log((CLOG_DEBUG1 "bestIndex = %d, keycode = %d", bestIndex, keycode));
+LOG((CLOG_DEBUG1 "bestIndex = %d, keycode = %d", bestIndex, keycode));
 
 	// note if the key is a modifier
 	ModifierMap::const_iterator modIndex = m_keycodeToModifier.find(keycode);
@@ -553,13 +553,13 @@ log((CLOG_DEBUG1 "bestIndex = %d, keycode = %d", bestIndex, keycode));
 	// though.
 	if (modifierBit != 0) {
 		if (action == kRepeat) {
-log((CLOG_DEBUG1 "ignore repeating modifier"));
+LOG((CLOG_DEBUG1 "ignore repeating modifier"));
 			return m_mask;
 		}
 		if (getBits(m_toggleModifierMask, modifierBit) == 0) {
 			if ((action == kPress   && (m_mask & modifierBit) != 0) ||
 				(action == kRelease && (m_mask & modifierBit) == 0)) {
-log((CLOG_DEBUG1 "modifier in proper state: 0x%04x", m_mask));
+LOG((CLOG_DEBUG1 "modifier in proper state: 0x%04x", m_mask));
 				return m_mask;
 			}
 		}
@@ -594,7 +594,7 @@ log((CLOG_DEBUG1 "modifier in proper state: 0x%04x", m_mask));
 	// the same bit in m_mask, meaning it's already in the right state.
 	desired  = assignBits(desired, modifierBit, m_mask);
 	required = clearBits(required, modifierBit);
-log((CLOG_DEBUG1 "desired = 0x%04x, current = 0x%04x", desired, m_mask));
+LOG((CLOG_DEBUG1 "desired = 0x%04x, current = 0x%04x", desired, m_mask));
 
 	// add the key events required to get to the modifier state
 	// necessary to generate an event yielding id.  also save the
@@ -607,13 +607,13 @@ log((CLOG_DEBUG1 "desired = 0x%04x, current = 0x%04x", desired, m_mask));
 		for (unsigned int i = 0; i < 8; ++i) {
 			unsigned int bit = (1 << i);
 			if (getBits(desired, bit) != getBits(m_mask, bit)) {
-log((CLOG_DEBUG1 "fix modifier %d", i));
+LOG((CLOG_DEBUG1 "fix modifier %d", i));
 				// get the keycode we're using for this modifier.  if
 				// there isn't one then bail if the modifier is required
 				// or ignore it if not required.
 				KeyCode modifierKey = m_modifierToKeycode[i];
 				if (modifierKey == 0) {
-					log((CLOG_DEBUG1 "no key mapped to modifier 0x%04x", bit));
+					LOG((CLOG_DEBUG1 "no key mapped to modifier 0x%04x", bit));
 					if (getBits(required, bit) != 0) {
 						keys.clear();
 						return m_mask;
@@ -630,9 +630,9 @@ log((CLOG_DEBUG1 "fix modifier %d", i));
 					// modifier is a toggle then toggle it on with a
 					// press/release, otherwise activate it with a
 					// press.  use the first keycode for the modifier.
-					log((CLOG_DEBUG2 "modifier 0x%04x is not active", bit));
+					LOG((CLOG_DEBUG2 "modifier 0x%04x is not active", bit));
 					if (getBits(m_toggleModifierMask, bit) != 0) {
-						log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
+						LOG((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
 						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
 							(bit == m_numLockMask && m_numLockHalfDuplex)) {
 							keystroke.m_press = True;
@@ -664,9 +664,9 @@ log((CLOG_DEBUG1 "fix modifier %d", i));
 					// press/release, otherwise deactivate it with a
 					// release.  we must check each keycode for the
 					// modifier if not a toggle.
-					log((CLOG_DEBUG2 "modifier 0x%04x is active", bit));
+					LOG((CLOG_DEBUG2 "modifier 0x%04x is active", bit));
 					if (getBits(m_toggleModifierMask, bit) != 0) {
-						log((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
+						LOG((CLOG_DEBUG2 "modifier 0x%04x is a toggle", bit));
 						if ((bit == m_capsLockMask && m_capsLockHalfDuplex) ||
 							(bit == m_numLockMask && m_numLockHalfDuplex)) {
 							keystroke.m_press = False;
@@ -773,7 +773,7 @@ log((CLOG_DEBUG1 "fix modifier %d", i));
 		}
 	}
 
-log((CLOG_DEBUG1 "final mask: 0x%04x", mask));
+LOG((CLOG_DEBUG1 "final mask: 0x%04x", mask));
 	return mask;
 }
 
@@ -1308,7 +1308,7 @@ CXWindowsSecondaryScreen::adjustForNumLock(KeySym keysym) const
 {
 	if (IsKeypadKey(keysym) || IsPrivateKeypadKey(keysym)) {
 		// it's NumLock sensitive
-		log((CLOG_DEBUG2 "keypad key: NumLock %s", ((m_mask & m_numLockMask) != 0) ? "active" : "inactive"));
+		LOG((CLOG_DEBUG2 "keypad key: NumLock %s", ((m_mask & m_numLockMask) != 0) ? "active" : "inactive"));
 		return true;
 	}
 	return false;
@@ -1321,7 +1321,7 @@ CXWindowsSecondaryScreen::adjustForCapsLock(KeySym keysym) const
 	XConvertCase(keysym, &lKey, &uKey);
 	if (lKey != uKey) {
 		// it's CapsLock sensitive
-		log((CLOG_DEBUG2 "case convertible: CapsLock %s", ((m_mask & m_capsLockMask) != 0) ? "active" : "inactive"));
+		LOG((CLOG_DEBUG2 "case convertible: CapsLock %s", ((m_mask & m_capsLockMask) != 0) ? "active" : "inactive"));
 		return true;
 	}
 	return false;

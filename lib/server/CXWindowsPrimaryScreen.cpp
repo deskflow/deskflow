@@ -182,7 +182,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 
 	case KeyPress:
 		{
-			log((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+			LOG((CLOG_DEBUG1 "event: KeyPress code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 			const KeyModifierMask mask = mapModifier(xevent.xkey.state);
 			const KeyID key = mapKey(&xevent.xkey);
 			if (key != kKeyNone) {
@@ -223,7 +223,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 				}
 				if (!hasPress) {
 					// no press event follows so it's a plain release
-					log((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+					LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 					if (key == kKeyCapsLock && m_capsLockHalfDuplex) {
 						m_receiver->onKeyDown(key, mask);
 					}
@@ -237,7 +237,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 					// we could attempt to count the already queued
 					// repeats but we'll just send a repeat of 1.
 					// note that we discard the press event.
-					log((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
+					LOG((CLOG_DEBUG1 "event: repeat code=%d, state=0x%04x", xevent.xkey.keycode, xevent.xkey.state));
 					m_receiver->onKeyRepeat(key, mask, 1);
 				}
 			}
@@ -246,7 +246,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 
 	case ButtonPress:
 		{
-			log((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
+			LOG((CLOG_DEBUG1 "event: ButtonPress button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				m_receiver->onMouseDown(button);
@@ -256,7 +256,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 
 	case ButtonRelease:
 		{
-			log((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
+			LOG((CLOG_DEBUG1 "event: ButtonRelease button=%d", xevent.xbutton.button));
 			const ButtonID button = mapButton(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				m_receiver->onMouseUp(button);
@@ -274,7 +274,7 @@ CXWindowsPrimaryScreen::onEvent(CEvent* event)
 
 	case MotionNotify:
 		{
-			log((CLOG_DEBUG2 "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
+			LOG((CLOG_DEBUG2 "event: MotionNotify %d,%d", xevent.xmotion.x_root, xevent.xmotion.y_root));
 
 			// compute motion delta (relative to the last known
 			// mouse position)
@@ -427,7 +427,7 @@ CXWindowsPrimaryScreen::createWindow()
 		if (m_window == None) {
 			throw XScreenOpenFailure();
 		}
-		log((CLOG_DEBUG "window is 0x%08x", m_window));
+		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 
 		// start watching for events on other windows
 		selectEvents(display, m_screen->getRoot());
@@ -474,16 +474,16 @@ CXWindowsPrimaryScreen::showWindow()
 								GrabModeAsync, GrabModeAsync, CurrentTime);
 			assert(result != GrabNotViewable);
 			if (result != GrabSuccess) {
-				log((CLOG_DEBUG2 "waiting to grab keyboard"));
+				LOG((CLOG_DEBUG2 "waiting to grab keyboard"));
 				CThread::sleep(0.05);
 				if (timer.getTime() >= s_timeout) {
-					log((CLOG_DEBUG2 "grab keyboard timed out"));
+					LOG((CLOG_DEBUG2 "grab keyboard timed out"));
 					XUnmapWindow(display, m_window);
 					return false;
 				}
 			}
 		} while (result != GrabSuccess);
-		log((CLOG_DEBUG2 "grabbed keyboard"));
+		LOG((CLOG_DEBUG2 "grabbed keyboard"));
 
 		// now the mouse
 		result = XGrabPointer(display, m_window, True, 0,
@@ -493,16 +493,16 @@ CXWindowsPrimaryScreen::showWindow()
 		if (result != GrabSuccess) {
 			// back off to avoid grab deadlock
 			XUngrabKeyboard(display, CurrentTime);
-			log((CLOG_DEBUG2 "ungrabbed keyboard, waiting to grab pointer"));
+			LOG((CLOG_DEBUG2 "ungrabbed keyboard, waiting to grab pointer"));
 			CThread::sleep(0.05);
 			if (timer.getTime() >= s_timeout) {
-				log((CLOG_DEBUG2 "grab pointer timed out"));
+				LOG((CLOG_DEBUG2 "grab pointer timed out"));
 				XUnmapWindow(display, m_window);
 				return false;
 			}
 		}
 	} while (result != GrabSuccess);
-	log((CLOG_DEBUG1 "grabbed pointer and keyboard"));
+	LOG((CLOG_DEBUG1 "grabbed pointer and keyboard"));
 
 	return true;
 }
@@ -554,7 +554,7 @@ CXWindowsPrimaryScreen::warpCursorNoFlush(
 	XSendEvent(display, m_window, False, 0, &eventAfter);
 	XSync(display, False);
 
-	log((CLOG_DEBUG2 "warped to %d,%d", x, y));
+	LOG((CLOG_DEBUG2 "warped to %d,%d", x, y));
 }
 
 void

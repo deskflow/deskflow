@@ -85,7 +85,7 @@ CNetwork::init()
 	// try winsock 2
 	HMODULE module = (HMODULE)::LoadLibrary("ws2_32.dll");
 	if (module == NULL) {
-		log((CLOG_NOTE "ws2_32.dll not found"));
+		LOG((CLOG_NOTE "ws2_32.dll not found"));
 	}
 	else {
 		try {
@@ -93,14 +93,14 @@ CNetwork::init()
 			return;
 		}
 		catch (XNetwork& e) {
-			log((CLOG_NOTE "ws2_32.dll error: %s", e.what()));
+			LOG((CLOG_NOTE "ws2_32.dll error: %s", e.what()));
 		}
 	}
 
 	// try winsock 1
 	module = (HMODULE)::LoadLibrary("wsock32.dll");
 	if (module == NULL) {
-		log((CLOG_NOTE "wsock32.dll not found"));
+		LOG((CLOG_NOTE "wsock32.dll not found"));
 	}
 	else {
 		try {
@@ -108,7 +108,7 @@ CNetwork::init()
 			return;
 		}
 		catch (XNetwork& e) {
-			log((CLOG_NOTE "wsock32.dll error: %s", e.what()));
+			LOG((CLOG_NOTE "wsock32.dll error: %s", e.what()));
 		}
 	}
 

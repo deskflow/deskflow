@@ -208,7 +208,7 @@ CXWindowsScreen::open()
 	}
 
 	// open the display
-	log((CLOG_DEBUG "XOpenDisplay(\"%s\")", display));
+	LOG((CLOG_DEBUG "XOpenDisplay(\"%s\")", display));
 	m_display = XOpenDisplay(display);
 	if (m_display == NULL) {
 		throw XScreenUnavailable(60.0);
@@ -337,7 +337,7 @@ CXWindowsScreen::close()
 	if (m_display != NULL) {
 		XCloseDisplay(m_display);
 		m_display = NULL;
-		log((CLOG_DEBUG "closed display"));
+		LOG((CLOG_DEBUG "closed display"));
 	}
 	XSetIOErrorHandler(NULL);
 }
@@ -495,7 +495,7 @@ CXWindowsScreen::updateScreenShape()
 	m_y = 0;
 	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
 	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
-	log((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
+	LOG((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
 }
 
 bool
@@ -519,7 +519,7 @@ CXWindowsScreen::onPreDispatch(CEvent* event)
 			// selection owner.  report that to the receiver.
 			ClipboardID id = getClipboardID(xevent->xselectionclear.selection);
 			if (id != kClipboardEnd) {
-				log((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
+				LOG((CLOG_DEBUG "lost clipboard %d ownership at time %d", id, xevent->xselectionclear.time));
 				m_clipboard[id]->lost(xevent->xselectionclear.time);
 				m_receiver->onGrabClipboard(id);
 				return true;
@@ -724,10 +724,10 @@ CXWindowsScreen::ioErrorHandler(Display*)
 	// handle not having a Display* anymore.  we'll simply log the
 	// error, notify the subclass (which must not use the display
 	// so we set it to NULL), and exit.
-	log((CLOG_WARN "X display has unexpectedly disconnected"));
+	LOG((CLOG_WARN "X display has unexpectedly disconnected"));
 	s_screen->m_display = NULL;
 	s_screen->m_receiver->onError();
-	log((CLOG_CRIT "quiting due to X display disconnection"));
+	LOG((CLOG_CRIT "quiting due to X display disconnection"));
 	exit(17);
 }
 

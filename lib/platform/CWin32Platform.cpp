@@ -45,7 +45,7 @@ CWin32Platform::isWindows95Family()
 	OSVERSIONINFO version;
 	version.dwOSVersionInfoSize = sizeof(version);
 	if (GetVersionEx(&version) == 0) {
-		log((CLOG_WARN "cannot determine OS: %d", GetLastError()));
+		LOG((CLOG_WARN "cannot determine OS: %d", GetLastError()));
 		return true;
 	}
 	return (version.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
@@ -103,7 +103,7 @@ CWin32Platform::installDaemon(const char* name, const char* description,
 		HKEY key = isWindows95Family() ? open95ServicesKey() :
 										openUserStartupKey();
 		if (key == NULL) {
-			log((CLOG_ERR "cannot open registry key", GetLastError()));
+			LOG((CLOG_ERR "cannot open registry key", GetLastError()));
 			return false;
 		}
 
@@ -128,7 +128,7 @@ CWin32Platform::installDaemon(const char* name, const char* description,
 		// open service manager
 		SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
 		if (mgr == NULL) {
-			log((CLOG_ERR "OpenSCManager failed with %d", GetLastError()));
+			LOG((CLOG_ERR "OpenSCManager failed with %d", GetLastError()));
 			return false;
 		}
 
@@ -156,7 +156,7 @@ CWin32Platform::installDaemon(const char* name, const char* description,
 		else {
 // FIXME -- handle ERROR_SERVICE_EXISTS
 
-			log((CLOG_ERR "CreateService failed with %d", GetLastError()));
+			LOG((CLOG_ERR "CreateService failed with %d", GetLastError()));
 			CloseServiceHandle(mgr);
 			return false;
 		}
@@ -199,7 +199,7 @@ CWin32Platform::uninstallDaemon(const char* name, bool allUsers)
 		HKEY key = isWindows95Family() ? open95ServicesKey() :
 										openUserStartupKey();
 		if (key == NULL) {
-			log((CLOG_ERR "cannot open registry key", GetLastError()));
+			LOG((CLOG_ERR "cannot open registry key", GetLastError()));
 			return kAlready;
 		}
 
@@ -225,7 +225,7 @@ CWin32Platform::uninstallDaemon(const char* name, bool allUsers)
 		// open service manager
 		SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
 		if (mgr == NULL) {
-			log((CLOG_ERR "OpenSCManager failed with %d", GetLastError()));
+			LOG((CLOG_ERR "OpenSCManager failed with %d", GetLastError()));
 			return kFailed;
 		}
 
@@ -234,7 +234,7 @@ CWin32Platform::uninstallDaemon(const char* name, bool allUsers)
 		SC_HANDLE service = OpenService(mgr, name, DELETE);
 		if (service == NULL) {
 			const DWORD e = GetLastError();
-			log((CLOG_ERR "OpenService failed with %d", e));
+			LOG((CLOG_ERR "OpenService failed with %d", e));
 			result = (e == ERROR_SERVICE_DOES_NOT_EXIST) ? kAlready : kFailed;
 		}
 
@@ -278,7 +278,7 @@ CWin32Platform::daemonize(const char* name, DaemonFunc func)
 		// user logs off.
 		HINSTANCE kernel = LoadLibrary("kernel32.dll");
 		if (kernel == NULL) {
-			log((CLOG_ERR "LoadLibrary failed with %d", GetLastError()));
+			LOG((CLOG_ERR "LoadLibrary failed with %d", GetLastError()));
 			return -1;
 		}
 		RegisterServiceProcessT RegisterServiceProcess =
@@ -286,12 +286,12 @@ CWin32Platform::daemonize(const char* name, DaemonFunc func)
 									GetProcAddress(kernel,
 										_T("RegisterServiceProcess")));
 		if (RegisterServiceProcess == NULL) {
-			log((CLOG_ERR "can't lookup RegisterServiceProcess: %d", GetLastError()));
+			LOG((CLOG_ERR "can't lookup RegisterServiceProcess: %d", GetLastError()));
 			FreeLibrary(kernel);
 			return -1;
 		}
 		if (RegisterServiceProcess(NULL, 1) == 0) {
-			log((CLOG_ERR "RegisterServiceProcess failed with %d", GetLastError()));
+			LOG((CLOG_ERR "RegisterServiceProcess failed with %d", GetLastError()));
 			FreeLibrary(kernel);
 			return -1;
 		}
@@ -320,7 +320,7 @@ CWin32Platform::daemonize(const char* name, DaemonFunc func)
 			s_daemonPlatform = NULL;
 			return m_daemonResult;
 		}
-		log((CLOG_ERR "StartServiceCtrlDispatcher failed with %d", GetLastError()));
+		LOG((CLOG_ERR "StartServiceCtrlDispatcher failed with %d", GetLastError()));
 		s_daemonPlatform = NULL;
 		return -1;
 	}
@@ -943,7 +943,7 @@ CWin32Platform::serviceHandler(DWORD ctrl)
 		break;
 
 	default:
-		log((CLOG_WARN "unknown service command: %d", ctrl));
+		LOG((CLOG_WARN "unknown service command: %d", ctrl));
 		// fall through
 
 	case SERVICE_CONTROL_INTERROGATE:

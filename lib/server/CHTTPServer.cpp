@@ -80,13 +80,13 @@ CHTTPServer::processRequest(IDataSocket* socket)
 
 		// send reply
 		CHTTPProtocol::reply(socket->getOutputStream(), reply);
-		log((CLOG_INFO "HTTP reply %d for %s %s", reply.m_status, request->m_method.c_str(), request->m_uri.c_str()));
+		LOG((CLOG_INFO "HTTP reply %d for %s %s", reply.m_status, request->m_method.c_str(), request->m_uri.c_str()));
 
 		// clean up
 		delete request;
 	}
 	catch (XHTTP& e) {
-		log((CLOG_WARN "returning HTTP error %d %s for %s", e.getStatus(), e.getReason().c_str(), (request != NULL) ? request->m_uri.c_str() : "<unknown>"));
+		LOG((CLOG_WARN "returning HTTP error %d %s for %s", e.getStatus(), e.getReason().c_str(), (request != NULL) ? request->m_uri.c_str() : "<unknown>"));
 
 		// clean up
 		delete request;
@@ -256,7 +256,7 @@ CHTTPServer::doProcessPostEditMap(CHTTPRequest& request, CHTTPReply& reply)
 	// parse the result
 	CHTTPProtocol::CFormParts parts;
 	if (!CHTTPProtocol::parseFormData(request, parts)) {
-		log((CLOG_WARN "editmap: cannot parse form data"));
+		LOG((CLOG_WARN "editmap: cannot parse form data"));
 		throw XHTTP(400);
 	}
 
@@ -270,7 +270,7 @@ CHTTPServer::doProcessPostEditMap(CHTTPRequest& request, CHTTPReply& reply)
 		if (index == parts.end() ||
 			!parseXY(index->second, w, h) ||
 			w <= 0 || h <= 0) {
-			log((CLOG_WARN "editmap: cannot parse size or size is invalid"));
+			LOG((CLOG_WARN "editmap: cannot parse size or size is invalid"));
 			throw XHTTP(400);
 		}
 		ScreenSet screenNames;
@@ -297,7 +297,7 @@ CHTTPServer::doProcessPostEditMap(CHTTPRequest& request, CHTTPReply& reply)
 				// already been seen.
 				if (screenNames.count(name)) {
 					// FIXME -- better error message
-					log((CLOG_WARN "editmap: duplicate name %s", name.c_str()));
+					LOG((CLOG_WARN "editmap: duplicate name %s", name.c_str()));
 					throw XHTTP(400);
 				}
 				// FIXME -- check that name is legal
@@ -315,12 +315,12 @@ CHTTPServer::doProcessPostEditMap(CHTTPRequest& request, CHTTPReply& reply)
 		if (screenNames.empty()) {
 			// no screens
 			// FIXME -- need better no screens
-			log((CLOG_WARN "editmap: no screens"));
+			LOG((CLOG_WARN "editmap: no screens"));
 			throw XHTTP(400);
 		}
 		if (!screens.isValid()) {
 			// FIXME -- need better unconnected screens error
-			log((CLOG_WARN "editmap: unconnected screens"));
+			LOG((CLOG_WARN "editmap: unconnected screens"));
 			throw XHTTP(400);
 		}
 

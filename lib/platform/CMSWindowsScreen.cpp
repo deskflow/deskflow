@@ -149,7 +149,7 @@ CMSWindowsScreen::open()
 	assert(s_instance != NULL);
 	assert(m_class    == 0);
 
-	log((CLOG_DEBUG "opening display"));
+	LOG((CLOG_DEBUG "opening display"));
 
 	// create the transparent cursor
 	createBlankCursor();
@@ -253,7 +253,7 @@ CMSWindowsScreen::close()
 		m_cursor = NULL;
 	}
 
-	log((CLOG_DEBUG "closed display"));
+	LOG((CLOG_DEBUG "closed display"));
 }
 
 bool
@@ -349,7 +349,7 @@ CMSWindowsScreen::syncDesktop()
 	// change calling thread's desktop
 	if (!m_is95Family) {
 		if (SetThreadDesktop(m_desk) == 0) {
-//			log((CLOG_WARN "failed to set desktop: %d", GetLastError()));
+//			LOG((CLOG_WARN "failed to set desktop: %d", GetLastError()));
 		}
 	}
 
@@ -413,7 +413,7 @@ CMSWindowsScreen::updateScreenShape()
 	m_y = GetSystemMetrics(SM_YVIRTUALSCREEN);
 	m_w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
 	m_h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-	log((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
+	LOG((CLOG_INFO "screen shape: %d,%d %dx%d", m_x, m_y, m_w, m_h));
 
 	// check for multiple monitors
 	m_multimon = (m_w != GetSystemMetrics(SM_CXSCREEN) ||
@@ -504,7 +504,7 @@ CMSWindowsScreen::onEvent(CEvent* event)
 		return true;
 
 	case WM_DRAWCLIPBOARD:
-		log((CLOG_DEBUG "clipboard was taken"));
+		LOG((CLOG_DEBUG "clipboard was taken"));
 
 		// first pass it on
 		if (m_nextClipboardWindow != NULL) {
@@ -615,7 +615,7 @@ CMSWindowsScreen::switchDesktop(HDESK desk)
 
 	// if no new desktop then we're done
 	if (desk == NULL) {
-		log((CLOG_INFO "disconnecting desktop"));
+		LOG((CLOG_INFO "disconnecting desktop"));
 		return true;
 	}
 
@@ -629,7 +629,7 @@ CMSWindowsScreen::switchDesktop(HDESK desk)
 	// set the desktop.  can only do this when there are no windows
 	// and hooks on the current desktop owned by this thread.
 	if (SetThreadDesktop(desk) == 0) {
-		log((CLOG_ERR "failed to set desktop: %d", GetLastError()));
+		LOG((CLOG_ERR "failed to set desktop: %d", GetLastError()));
 		if (!m_is95Family) {
 			CloseDesktop(desk);
 		}
@@ -648,7 +648,7 @@ CMSWindowsScreen::switchDesktop(HDESK desk)
 								getInstance(),
 								NULL);
 	if (m_window == NULL) {
-		log((CLOG_ERR "failed to create window: %d", GetLastError()));
+		LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
 		if (!m_is95Family) {
 			CloseDesktop(desk);
 		}
@@ -675,7 +675,7 @@ CMSWindowsScreen::switchDesktop(HDESK desk)
 	// save new desktop
 	m_desk     = desk;
 	m_deskName = getDesktopName(m_desk);
-	log((CLOG_INFO "switched to desktop \"%s\"", m_deskName.c_str()));
+	LOG((CLOG_INFO "switched to desktop \"%s\"", m_deskName.c_str()));
 
 	// let client prepare the window
 	m_eventHandler->postCreateWindow(m_window);

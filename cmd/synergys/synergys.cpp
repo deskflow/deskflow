@@ -220,7 +220,7 @@ realMain(CMutex* mutex)
 #undef FINALLY
 		}
 		catch (XBase& e) {
-			log((CLOG_CRIT "failed: %s", e.what()));
+			LOG((CLOG_CRIT "failed: %s", e.what()));
 		}
 		catch (XThread&) {
 			// terminated
@@ -254,7 +254,7 @@ static
 void
 version()
 {
-	log((CLOG_PRINT
+	LOG((CLOG_PRINT
 "%s %s, protocol version %d.%d\n"
 "%s",
 								pname,
@@ -289,7 +289,7 @@ help()
 
 	CPlatform platform;
 
-	log((CLOG_PRINT
+	LOG((CLOG_PRINT
 "Usage: %s"
 " [--address <address>]"
 " [--config <pathname>]"
@@ -353,7 +353,7 @@ isArg(int argi, int argc, const char** argv,
 		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
 		// match.  check args left.
 		if (argi + minRequiredParameters >= argc) {
-			log((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
+			LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
 								pname, argv[argi], pname));
 			bye(kExitArgs);
 		}
@@ -392,7 +392,7 @@ parse(int argc, const char** argv)
 				s_synergyAddress = CNetworkAddress(argv[i + 1], kDefaultPort);
 			}
 			catch (XSocketAddress& e) {
-				log((CLOG_PRINT "%s: %s" BYE,
+				LOG((CLOG_PRINT "%s: %s" BYE,
 								pname, e.what(), pname));
 				bye(kExitArgs);
 			}
@@ -405,7 +405,7 @@ parse(int argc, const char** argv)
 				s_httpAddress = CNetworkAddress(argv[i + 1], kDefaultPort + 1);
 			}
 			catch (XSocketAddress& e) {
-				log((CLOG_PRINT "%s: %s" BYE,
+				LOG((CLOG_PRINT "%s: %s" BYE,
 								pname, e.what(), pname));
 				bye(kExitArgs);
 			}
@@ -463,7 +463,7 @@ parse(int argc, const char** argv)
 		}
 
 		else if (argv[i][0] == '-') {
-			log((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
+			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 								pname, argv[i], pname));
 			bye(kExitArgs);
 		}
@@ -476,7 +476,7 @@ parse(int argc, const char** argv)
 
 	// no non-option arguments are allowed
 	if (i != argc) {
-		log((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
+		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 								pname, argv[i], pname));
 		bye(kExitArgs);
 	}
@@ -499,7 +499,7 @@ parse(int argc, const char** argv)
 
 	// set log filter
 	if (!CLog::setFilter(s_logFilter)) {
-		log((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
+		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
 								pname, s_logFilter, pname));
 		bye(kExitArgs);
 	}
@@ -513,23 +513,23 @@ loadConfig(const char* pathname, bool require)
 
 	try {
 		// load configuration
-		log((CLOG_DEBUG "opening configuration \"%s\"", pathname));
+		LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname));
 		std::ifstream configStream(pathname);
 		if (!configStream) {
 			throw XConfigRead("cannot open configuration");
 		}
 		configStream >> s_config;
-		log((CLOG_DEBUG "configuration read successfully"));
+		LOG((CLOG_DEBUG "configuration read successfully"));
 		return true;
 	}
 	catch (XConfigRead& e) {
 		if (require) {
-			log((CLOG_PRINT "%s: cannot read configuration '%s': %s",
+			LOG((CLOG_PRINT "%s: cannot read configuration '%s': %s",
 								pname, pathname, e.what()));
 			bye(kExitConfig);
 		}
 		else {
-			log((CLOG_DEBUG "cannot read configuration \"%s\": %s",
+			LOG((CLOG_DEBUG "cannot read configuration \"%s\": %s",
 								pathname, e.what()));
 		}
 	}
@@ -672,7 +672,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	if (__argc <= 1 && !CWin32Platform::isWindows95Family()) {
 		int result = platform.daemonize(DAEMON_NAME, &daemonStartup);
 		if (result == -1) {
-			log((CLOG_CRIT "failed to start as a service" BYE, pname));
+			LOG((CLOG_CRIT "failed to start as a service" BYE, pname));
 			return kExitFailed;
 		}
 		return result;
@@ -694,7 +694,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		if (CWin32Platform::isWindows95Family()) {
 			result = platform.daemonize(DAEMON_NAME, &daemonStartup95);
 			if (result == -1) {
-				log((CLOG_CRIT "failed to start as a service" BYE, pname));
+				LOG((CLOG_CRIT "failed to start as a service" BYE, pname));
 				result = kExitFailed;
 			}
 		}
@@ -754,7 +754,7 @@ main(int argc, char** argv)
 	if (s_daemon) {
 		result = platform.daemonize(DAEMON_NAME, &daemonStartup);
 		if (result == -1) {
-			log((CLOG_CRIT "failed to daemonize"));
+			LOG((CLOG_CRIT "failed to daemonize"));
 			return kExitFailed;
 		}
 	}

@@ -65,7 +65,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 								CWDontPropagate | CWEventMask |
 								CWOverrideRedirect,
 								&attr);
-	log((CLOG_DEBUG "xscreensaver sink window is 0x%08x", m_xscreensaverSink));
+	LOG((CLOG_DEBUG "xscreensaver sink window is 0x%08x", m_xscreensaverSink));
 
 	// watch top-level windows for changes
 	{
@@ -77,7 +77,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 		m_rootEventMask = attr.your_event_mask;
 		XSelectInput(m_display, root, m_rootEventMask | SubstructureNotifyMask);
 		if (error) {
-			log((CLOG_DEBUG "didn't set root event mask"));
+			LOG((CLOG_DEBUG "didn't set root event mask"));
 			m_rootEventMask = 0;
 		}
 	}
@@ -136,7 +136,7 @@ CXWindowsScreenSaver::onPreDispatch(const XEvent* xevent)
 	case DestroyNotify:
 		if (xevent->xdestroywindow.window == m_xscreensaver) {
 			// xscreensaver is gone
-			log((CLOG_DEBUG "xscreensaver died"));
+			LOG((CLOG_DEBUG "xscreensaver died"));
 			setXScreenSaver(None);
 			return true;
 		}
@@ -302,7 +302,7 @@ CXWindowsScreenSaver::findXScreenSaver()
 void
 CXWindowsScreenSaver::setXScreenSaver(Window window)
 {
-	log((CLOG_DEBUG "xscreensaver window: 0x%08x", window));
+	LOG((CLOG_DEBUG "xscreensaver window: 0x%08x", window));
 
 	// save window
 	m_xscreensaver = window;
@@ -342,7 +342,7 @@ void
 CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
 {
 	if (m_xscreensaverActive != activated) {
-		log((CLOG_DEBUG "xscreensaver %s", activated ? "activated" : "deactivated"));
+		LOG((CLOG_DEBUG "xscreensaver %s", activated ? "activated" : "deactivated"));
 		m_xscreensaverActive = activated;
 		sendNotify(activated);
 	}
@@ -363,7 +363,7 @@ CXWindowsScreenSaver::sendXScreenSaverCommand(Atom cmd, long arg1, long arg2)
 	event.xclient.data.l[3]    = 0;
 	event.xclient.data.l[4]    = 0;
 
-	log((CLOG_DEBUG "send xscreensaver command: %d %d %d", (long)cmd, arg1, arg2));
+	LOG((CLOG_DEBUG "send xscreensaver command: %d %d %d", (long)cmd, arg1, arg2));
 	bool error = false;
 	CXWindowsUtil::CErrorLock lock(m_display, &error);
 	XSendEvent(m_display, m_xscreensaver, False, 0, &event);

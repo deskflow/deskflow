@@ -40,7 +40,7 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 	// load the hook library
 	m_hookLibrary = LoadLibrary("synrgyhk");
 	if (m_hookLibrary == NULL) {
-		log((CLOG_ERR "failed to load hook library"));
+		LOG((CLOG_ERR "failed to load hook library"));
 		throw XScreenOpenFailure();
 	}
 	m_setSides  = (SetSidesFunc)GetProcAddress(m_hookLibrary, "setSides");
@@ -57,7 +57,7 @@ CMSWindowsPrimaryScreen::CMSWindowsPrimaryScreen(
 		m_uninstall == NULL ||
 		m_init      == NULL ||
 		m_cleanup   == NULL) {
-		log((CLOG_ERR "invalid hook library"));
+		LOG((CLOG_ERR "invalid hook library"));
 		FreeLibrary(m_hookLibrary);
 		throw XScreenOpenFailure();
 	}
@@ -192,11 +192,11 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 					// key press
 					const SInt32 repeat = (SInt32)(msg->lParam & 0xffff);
 					if (repeat >= 2) {
-						log((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d", key, mask, repeat));
+						LOG((CLOG_DEBUG1 "event: key repeat key=%d mask=0x%04x count=%d", key, mask, repeat));
 						m_receiver->onKeyRepeat(key, mask, repeat);
 					}
 					else {
-						log((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x", key, mask));
+						LOG((CLOG_DEBUG1 "event: key press key=%d mask=0x%04x", key, mask));
 						m_receiver->onKeyDown(key, mask);
 					}
 
@@ -205,7 +205,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 				}
 				else {
 					// key release
-					log((CLOG_DEBUG1 "event: key release key=%d mask=0x%04x", key, mask));
+					LOG((CLOG_DEBUG1 "event: key release key=%d mask=0x%04x", key, mask));
 					m_receiver->onKeyUp(key, mask);
 
 					// update key state
@@ -213,7 +213,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 				}
 			}
 			else {
-				log((CLOG_DEBUG2 "event: cannot map key wParam=%d lParam=0x%08x", msg->wParam, msg->lParam));
+				LOG((CLOG_DEBUG2 "event: cannot map key wParam=%d lParam=0x%08x", msg->wParam, msg->lParam));
 			}
 		}
 		return true;
@@ -233,7 +233,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			case WM_LBUTTONDOWN:
 			case WM_MBUTTONDOWN:
 			case WM_RBUTTONDOWN:
-				log((CLOG_DEBUG1 "event: button press button=%d", button));
+				LOG((CLOG_DEBUG1 "event: button press button=%d", button));
 				if (button != kButtonNone) {
 					m_receiver->onMouseDown(button);
 					m_keys[s_vkButton[button]] |= 0x80;
@@ -243,7 +243,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 			case WM_LBUTTONUP:
 			case WM_MBUTTONUP:
 			case WM_RBUTTONUP:
-				log((CLOG_DEBUG1 "event: button release button=%d", button));
+				LOG((CLOG_DEBUG1 "event: button release button=%d", button));
 				if (button != kButtonNone) {
 					m_receiver->onMouseUp(button);
 					m_keys[s_vkButton[button]] &= ~0x80;
@@ -256,7 +256,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 	case SYNERGY_MSG_MOUSE_WHEEL:
 		// ignore message if posted prior to last mark change
 		if (!ignore()) {
-			log((CLOG_DEBUG1 "event: button wheel delta=%d %d", msg->wParam, msg->lParam));
+			LOG((CLOG_DEBUG1 "event: button wheel delta=%d %d", msg->wParam, msg->lParam));
 			m_receiver->onMouseWheel(msg->wParam);
 		}
 		return true;
@@ -282,7 +282,7 @@ CMSWindowsPrimaryScreen::onPreDispatch(const CEvent* event)
 		}
 
 	case SYNERGY_MSG_POST_WARP:
-		log((CLOG_WARN "unmatched post warp"));
+		LOG((CLOG_WARN "unmatched post warp"));
 		return true;
 
 	case SYNERGY_MSG_MOUSE_MOVE:
@@ -413,7 +413,7 @@ CMSWindowsPrimaryScreen::onPreOpen()
 	// initialize hook library
 	m_threadID = GetCurrentThreadId();
 	if (m_init(m_threadID) == 0) {
-		log((CLOG_ERR "cannot initialize hook library"));
+		LOG((CLOG_ERR "cannot initialize hook library"));
 		throw XScreenOpenFailure();
 	}
 }
@@ -927,12 +927,12 @@ CMSWindowsPrimaryScreen::mapKey(
 		mask &= ~(KeyModifierControl | KeyModifierAlt);
 	}
 	*maskOut = mask;
-	log((CLOG_DEBUG2 "key in vk=%d info=0x%08x mask=0x%04x", vkCode, info, mask));
+	LOG((CLOG_DEBUG2 "key in vk=%d info=0x%08x mask=0x%04x", vkCode, info, mask));
 
 	// get the scan code and the extended keyboard flag
 	UINT scanCode = static_cast<UINT>((info & 0x00ff0000u) >> 16);
 	int extended  = ((info & 0x01000000) == 0) ? 0 : 1;
-	log((CLOG_DEBUG1 "key vk=%d ext=%d scan=%d", vkCode, extended, scanCode));
+	LOG((CLOG_DEBUG1 "key vk=%d ext=%d scan=%d", vkCode, extended, scanCode));
 
 	// handle some keys via table lookup
 	KeyID id = g_virtualKey[vkCode][extended];

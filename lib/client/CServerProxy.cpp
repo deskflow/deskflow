@@ -69,13 +69,13 @@ CServerProxy::mainLoop()
 			}
 
 			// wait for a message
-			log((CLOG_DEBUG2 "waiting for message"));
+			LOG((CLOG_DEBUG2 "waiting for message"));
 			UInt8 code[4];
 			UInt32 n = getInputStream()->read(code, 4, kHeartRate);
 
 			// check if server hungup
 			if (n == 0) {
-				log((CLOG_NOTE "server disconnected"));
+				LOG((CLOG_NOTE "server disconnected"));
 				break;
 			}
 
@@ -95,12 +95,12 @@ CServerProxy::mainLoop()
 			// verify we got an entire code
 			if (n != 4) {
 				// client sent an incomplete message
-				log((CLOG_ERR "incomplete message from server"));
+				LOG((CLOG_ERR "incomplete message from server"));
 				break;
 			}
 
 			// parse message
-			log((CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
+			LOG((CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
 			if (memcmp(code, kMsgDMouseMove, 4) == 0) {
 				mouseMove();
 			}
@@ -163,7 +163,7 @@ CServerProxy::mainLoop()
 
 			else if (memcmp(code, kMsgCClose, 4) == 0) {
 				// server wants us to hangup
-				log((CLOG_DEBUG1 "recv close"));
+				LOG((CLOG_DEBUG1 "recv close"));
 				break;
 			}
 
@@ -171,39 +171,39 @@ CServerProxy::mainLoop()
 				SInt32 major, minor;
 				CProtocolUtil::readf(getInputStream(),
 								kMsgEIncompatible + 4, &major, &minor);
-				log((CLOG_ERR "server has incompatible version %d.%d", major, minor));
+				LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));
 				failedToConnect = true;
 				break;
 			}
 
 			else if (memcmp(code, kMsgEBusy, 4) == 0) {
-				log((CLOG_ERR "server already has a connected client with name \"%s\"", getName().c_str()));
+				LOG((CLOG_ERR "server already has a connected client with name \"%s\"", getName().c_str()));
 				failedToConnect = true;
 				break;
 			}
 
 			else if (memcmp(code, kMsgEUnknown, 4) == 0) {
-				log((CLOG_ERR "server refused client with name \"%s\"", getName().c_str()));
+				LOG((CLOG_ERR "server refused client with name \"%s\"", getName().c_str()));
 				failedToConnect = true;
 				break;
 			}
 
 			else if (memcmp(code, kMsgEBad, 4) == 0) {
-				log((CLOG_ERR "server disconnected due to a protocol error"));
+				LOG((CLOG_ERR "server disconnected due to a protocol error"));
 				failedToConnect = true;
 				break;
 			}
 
 			else {
 				// unknown message
-				log((CLOG_ERR "unknown message from server"));
+				LOG((CLOG_ERR "unknown message from server"));
 				failedToConnect = true;
 				break;
 			}
 		}
 	}
 	catch (XBase& e) {
-		log((CLOG_ERR "error: %s", e.what()));
+		LOG((CLOG_ERR "error: %s", e.what()));
 	}
 	catch (...) {
 		throw;
@@ -257,7 +257,7 @@ CServerProxy::onInfoChanged(const CClientInfo& info)
 bool
 CServerProxy::onGrabClipboard(ClipboardID id)
 {
-	log((CLOG_DEBUG1 "sending clipboard %d changed", id));
+	LOG((CLOG_DEBUG1 "sending clipboard %d changed", id));
 	CLock lock(&m_mutex);
 	CProtocolUtil::writef(getOutputStream(), kMsgCClipboard, id, m_seqNum);
 	return true;
@@ -267,7 +267,7 @@ void
 CServerProxy::onClipboardChanged(ClipboardID id, const CString& data)
 {
 	CLock lock(&m_mutex);
-	log((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
+	LOG((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
 	CProtocolUtil::writef(getOutputStream(), kMsgDClipboard, id, m_seqNum, &data);
 }
 
@@ -295,7 +295,7 @@ void
 CServerProxy::sendInfo(const CClientInfo& info)
 {
 	// note -- m_mutex should be locked on entry
-	log((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d zone=%d pos=%d,%d", info.m_x, info.m_y, info.m_w, info.m_h, info.m_zoneSize, info.m_mx, info.m_my));
+	LOG((CLOG_DEBUG1 "sending info shape=%d,%d %dx%d zone=%d pos=%d,%d", info.m_x, info.m_y, info.m_w, info.m_h, info.m_zoneSize, info.m_mx, info.m_my));
 	CProtocolUtil::writef(getOutputStream(), kMsgDInfo,
 								info.m_x, info.m_y,
 								info.m_w, info.m_h,
@@ -312,7 +312,7 @@ CServerProxy::enter()
 	UInt32 seqNum;
 	CProtocolUtil::readf(getInputStream(),
 								kMsgCEnter + 4, &x, &y, &seqNum, &mask);
-	log((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
+	LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
 
 	// discard old compressed mouse motion, if any
 	{
@@ -329,7 +329,7 @@ void
 CServerProxy::leave()
 {
 	// parse
-	log((CLOG_DEBUG1 "recv leave"));
+	LOG((CLOG_DEBUG1 "recv leave"));
 
 	// send last mouse motion
 	flushCompressedMouse();
@@ -347,7 +347,7 @@ CServerProxy::setClipboard()
 	CString data;
 	CProtocolUtil::readf(getInputStream(),
 								kMsgDClipboard + 4, &id, &seqNum, &data);
-	log((CLOG_DEBUG "recv clipboard %d size=%d", id, data.size()));
+	LOG((CLOG_DEBUG "recv clipboard %d size=%d", id, data.size()));
 
 	// validate
 	if (id >= kClipboardEnd) {
@@ -365,7 +365,7 @@ CServerProxy::grabClipboard()
 	ClipboardID id;
 	UInt32 seqNum;
 	CProtocolUtil::readf(getInputStream(), kMsgCClipboard + 4, &id, &seqNum);
-	log((CLOG_DEBUG "recv grab clipboard %d", id));
+	LOG((CLOG_DEBUG "recv grab clipboard %d", id));
 
 	// validate
 	if (id >= kClipboardEnd) {
@@ -385,7 +385,7 @@ CServerProxy::keyDown()
 	// parse
 	UInt16 id, mask;
 	CProtocolUtil::readf(getInputStream(), kMsgDKeyDown + 4, &id, &mask);
-	log((CLOG_DEBUG1 "recv key down id=%d, mask=0x%04x", id, mask));
+	LOG((CLOG_DEBUG1 "recv key down id=%d, mask=0x%04x", id, mask));
 
 	// forward
 	getClient()->keyDown(static_cast<KeyID>(id),
@@ -402,7 +402,7 @@ CServerProxy::keyRepeat()
 	UInt16 id, mask, count;
 	CProtocolUtil::readf(getInputStream(),
 								kMsgDKeyRepeat + 4, &id, &mask, &count);
-	log((CLOG_DEBUG1 "recv key repeat id=%d, mask=0x%04x, count=%d", id, mask, count));
+	LOG((CLOG_DEBUG1 "recv key repeat id=%d, mask=0x%04x, count=%d", id, mask, count));
 
 	// forward
 	getClient()->keyRepeat(static_cast<KeyID>(id),
@@ -419,7 +419,7 @@ CServerProxy::keyUp()
 	// parse
 	UInt16 id, mask;
 	CProtocolUtil::readf(getInputStream(), kMsgDKeyUp + 4, &id, &mask);
-	log((CLOG_DEBUG1 "recv key up id=%d, mask=0x%04x", id, mask));
+	LOG((CLOG_DEBUG1 "recv key up id=%d, mask=0x%04x", id, mask));
 
 	// forward
 	getClient()->keyUp(static_cast<KeyID>(id),
@@ -435,7 +435,7 @@ CServerProxy::mouseDown()
 	// parse
 	SInt8 id;
 	CProtocolUtil::readf(getInputStream(), kMsgDMouseDown + 4, &id);
-	log((CLOG_DEBUG1 "recv mouse down id=%d", id));
+	LOG((CLOG_DEBUG1 "recv mouse down id=%d", id));
 
 	// forward
 	getClient()->mouseDown(static_cast<ButtonID>(id));
@@ -450,7 +450,7 @@ CServerProxy::mouseUp()
 	// parse
 	SInt8 id;
 	CProtocolUtil::readf(getInputStream(), kMsgDMouseUp + 4, &id);
-	log((CLOG_DEBUG1 "recv mouse up id=%d", id));
+	LOG((CLOG_DEBUG1 "recv mouse up id=%d", id));
 
 	// forward
 	getClient()->mouseUp(static_cast<ButtonID>(id));
@@ -481,7 +481,7 @@ CServerProxy::mouseMove()
 			m_yMouse = y;
 		}
 	}
-	log((CLOG_DEBUG2 "recv mouse move %d,%d", x, y));
+	LOG((CLOG_DEBUG2 "recv mouse move %d,%d", x, y));
 
 	// forward
 	if (!ignore) {
@@ -498,7 +498,7 @@ CServerProxy::mouseWheel()
 	// parse
 	SInt16 delta;
 	CProtocolUtil::readf(getInputStream(), kMsgDMouseWheel + 4, &delta);
-	log((CLOG_DEBUG2 "recv mouse wheel %+d", delta));
+	LOG((CLOG_DEBUG2 "recv mouse wheel %+d", delta));
 
 	// forward
 	getClient()->mouseWheel(delta);
@@ -510,7 +510,7 @@ CServerProxy::screensaver()
 	// parse
 	SInt8 on;
 	CProtocolUtil::readf(getInputStream(), kMsgCScreenSaver + 4, &on);
-	log((CLOG_DEBUG1 "recv screen saver on=%d", on));
+	LOG((CLOG_DEBUG1 "recv screen saver on=%d", on));
 
 	// forward
 	getClient()->screensaver(on != 0);
@@ -534,7 +534,7 @@ void
 CServerProxy::infoAcknowledgment()
 {
 	// parse
-	log((CLOG_DEBUG1 "recv info acknowledgment"));
+	LOG((CLOG_DEBUG1 "recv info acknowledgment"));
 
 	// now allow mouse motion
 	CLock lock(&m_mutex);

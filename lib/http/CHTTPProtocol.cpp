@@ -128,7 +128,7 @@ CHTTPProtocol::readRequest(IInputStream* stream, UInt32 maxSize)
 			CString version;
 			s >> request->m_method >> request->m_uri >> version;
 			if (!s || request->m_uri.empty() || version.find("HTTP/") != 0) {
-				log((CLOG_DEBUG1 "failed to parse HTTP request line: %s", line.c_str()));
+				LOG((CLOG_DEBUG1 "failed to parse HTTP request line: %s", line.c_str()));
 				throw XHTTP(400);
 			}
 
@@ -141,16 +141,16 @@ CHTTPProtocol::readRequest(IInputStream* stream, UInt32 maxSize)
 			s.get(dot);
 			s >> request->m_minorVersion;
 			if (!s || dot != '.') {
-				log((CLOG_DEBUG1 "failed to parse HTTP request line: %s", line.c_str()));
+				LOG((CLOG_DEBUG1 "failed to parse HTTP request line: %s", line.c_str()));
 				throw XHTTP(400);
 			}
 		}
 		if (!isValidToken(request->m_method)) {
-			log((CLOG_DEBUG1 "invalid HTTP method: %s", line.c_str()));
+			LOG((CLOG_DEBUG1 "invalid HTTP method: %s", line.c_str()));
 			throw XHTTP(400);
 		}
 		if (request->m_majorVersion < 1 || request->m_minorVersion < 0) {
-			log((CLOG_DEBUG1 "invalid HTTP version: %s", line.c_str()));
+			LOG((CLOG_DEBUG1 "invalid HTTP version: %s", line.c_str()));
 			throw XHTTP(400);
 		}
 
@@ -162,7 +162,7 @@ CHTTPProtocol::readRequest(IInputStream* stream, UInt32 maxSize)
 		if (request->m_majorVersion > 1 ||
 			(request->m_majorVersion == 1 && request->m_minorVersion >= 1)) {
 			if (request->isHeader("Host") == 0) {
-				log((CLOG_DEBUG1 "Host header missing"));
+				LOG((CLOG_DEBUG1 "Host header missing"));
 				throw XHTTP(400);
 			}
 		}
@@ -174,7 +174,7 @@ CHTTPProtocol::readRequest(IInputStream* stream, UInt32 maxSize)
 			 request->isHeader("Content-Length")) ==
 			(request->m_method == "GET" ||
 			 request->m_method == "HEAD")) {
-			log((CLOG_DEBUG1 "HTTP method (%s)/body mismatch", request->m_method.c_str()));
+			LOG((CLOG_DEBUG1 "HTTP method (%s)/body mismatch", request->m_method.c_str()));
 			throw XHTTP(400);
 		}
 
@@ -187,7 +187,7 @@ CHTTPProtocol::readRequest(IInputStream* stream, UInt32 maxSize)
 		if (!(header = request->getHeader("Transfer-Encoding")).empty()) {
 			// we only understand "chunked" encodings
 			if (!CStringUtil::CaselessCmp::equal(header, "chunked")) {
-				log((CLOG_DEBUG1 "unsupported Transfer-Encoding %s", header.c_str()));
+				LOG((CLOG_DEBUG1 "unsupported Transfer-Encoding %s", header.c_str()));
 				throw XHTTP(501);
 			}
 
@@ -218,7 +218,7 @@ CHTTPProtocol::readRequest(IInputStream* stream, UInt32 maxSize)
 				s.exceptions(std::ios::goodbit);
 				s >> length;
 				if (!s) {
-					log((CLOG_DEBUG1 "cannot parse Content-Length", header.c_str()));
+					LOG((CLOG_DEBUG1 "cannot parse Content-Length", header.c_str()));
 					throw XHTTP(400);
 				}
 			}
@@ -232,7 +232,7 @@ CHTTPProtocol::readRequest(IInputStream* stream, UInt32 maxSize)
 			request->m_body = readBlock(stream, length, scratch);
 			if (request->m_body.size() != length) {
 				// length must match size of body
-				log((CLOG_DEBUG1 "Content-Length/actual length mismatch (%d vs %d)", length, request->m_body.size()));
+				LOG((CLOG_DEBUG1 "Content-Length/actual length mismatch (%d vs %d)", length, request->m_body.size()));
 				throw XHTTP(400);
 			}
 		}
@@ -559,7 +559,7 @@ CHTTPProtocol::readChunk(IInputStream* stream,
 		s.exceptions(std::ios::goodbit);
 		s >> std::hex >> size;
 		if (!s) {
-			log((CLOG_DEBUG1 "cannot parse chunk size", line.c_str()));
+			LOG((CLOG_DEBUG1 "cannot parse chunk size", line.c_str()));
 			throw XHTTP(400);
 		}
 	}
@@ -578,14 +578,14 @@ CHTTPProtocol::readChunk(IInputStream* stream,
 	// read size bytes
 	CString data = readBlock(stream, size, tmpBuffer);
 	if (data.size() != size) {
-		log((CLOG_DEBUG1 "expected/actual chunk size mismatch", size, data.size()));
+		LOG((CLOG_DEBUG1 "expected/actual chunk size mismatch", size, data.size()));
 		throw XHTTP(400);
 	}
 
 	// read an discard CRLF
 	line = readLine(stream, tmpBuffer);
 	if (!line.empty()) {
-		log((CLOG_DEBUG1 "missing CRLF after chunk"));
+		LOG((CLOG_DEBUG1 "missing CRLF after chunk"));
 		throw XHTTP(400);
 	}
 
@@ -614,7 +614,7 @@ CHTTPProtocol::readHeaders(IInputStream* stream,
 		// throw.
 		if (line[0] == ' ' || line[0] == '\t') {
 			if (name.empty()) {
-				log((CLOG_DEBUG1 "first header is a continuation"));
+				LOG((CLOG_DEBUG1 "first header is a continuation"));
 				throw XHTTP(400);
 			}
 			request->appendHeader(name, line);
@@ -628,7 +628,7 @@ CHTTPProtocol::readHeaders(IInputStream* stream,
 			s.exceptions(std::ios::goodbit);
 			std::getline(s, name, ':');
 			if (!s || !isValidToken(name)) {
-				log((CLOG_DEBUG1 "invalid header: %s", line.c_str()));
+				LOG((CLOG_DEBUG1 "invalid header: %s", line.c_str()));
 				throw XHTTP(400);
 			}
 			std::getline(s, value);

@@ -492,7 +492,7 @@ CMSWindowsSecondaryScreen::updateKeys()
 		m_mask |= KeyModifierScrollLock;
 	}
 	// note -- do not save KeyModifierModeSwitch in m_mask
-	log((CLOG_DEBUG2 "modifiers on update: 0x%04x", m_mask));
+	LOG((CLOG_DEBUG2 "modifiers on update: 0x%04x", m_mask));
 }
 
 void
@@ -625,7 +625,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 			virtualKey = g_mapEF00[id & 0xff];
 		}
 		if (virtualKey == 0) {
-			log((CLOG_DEBUG2 "unknown special key"));
+			LOG((CLOG_DEBUG2 "unknown special key"));
 			return m_mask;
 		}
 	}
@@ -685,7 +685,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		TCHAR ascii = static_cast<TCHAR>(id & 0x000000ff);
 		SHORT vk = VkKeyScan(ascii);
 		if (vk == 0xffff) {
-			log((CLOG_DEBUG2 "no virtual key for character %d", id));
+			LOG((CLOG_DEBUG2 "no virtual key for character %d", id));
 			return m_mask;
 		}
 
@@ -712,7 +712,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		// are subject to case conversion.
 		if ((outMask & KeyModifierCapsLock) != 0) {
 			if (tolower(ascii) != toupper(ascii)) {
-				log((CLOG_DEBUG2 "flip shift"));
+				LOG((CLOG_DEBUG2 "flip shift"));
 				outMask ^= KeyModifierShift;
 			}
 		}
@@ -734,11 +734,11 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 			// set required shift state based on current numlock state
 			if ((outMask & KeyModifierNumLock) == 0) {
 				if ((m_mask & KeyModifierNumLock) == 0) {
-					log((CLOG_DEBUG2 "turn on num lock for keypad key"));
+					LOG((CLOG_DEBUG2 "turn on num lock for keypad key"));
 					outMask |= KeyModifierNumLock;
 				}
 				else {
-					log((CLOG_DEBUG2 "turn on shift for keypad key"));
+					LOG((CLOG_DEBUG2 "turn on shift for keypad key"));
 					outMask |= KeyModifierShift;
 				}
 			}
@@ -749,7 +749,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 			outMask |= KeyModifierShift;
 		}
 	}
-	log((CLOG_DEBUG2 "KeyID %d to virtual key %d mask 0x%04x", id, virtualKey, outMask));
+	LOG((CLOG_DEBUG2 "KeyID %d to virtual key %d mask 0x%04x", id, virtualKey, outMask));
 
 	// a list of modifier key info
 	class CModifierInfo {
@@ -956,7 +956,7 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 		}
 	}
 
-	log((CLOG_DEBUG2 "previous modifiers 0x%04x, final modifiers 0x%04x", m_mask, mask));
+	LOG((CLOG_DEBUG2 "previous modifiers 0x%04x, final modifiers 0x%04x", m_mask, mask));
 	return mask;
 }
 
@@ -1145,5 +1145,5 @@ CMSWindowsSecondaryScreen::sendKeyEvent(UINT virtualKey, bool press)
 	const UINT code = virtualKeyToScanCode(virtualKey);
 	keybd_event(static_cast<BYTE>(virtualKey & 0xff),
 								static_cast<BYTE>(code), flags, 0);
-	log((CLOG_DEBUG1 "send key %d, 0x%04x, %s%s", virtualKey & 0xff, code, ((flags & KEYEVENTF_KEYUP) ? "release" : "press"), ((flags & KEYEVENTF_EXTENDEDKEY) ? " extended" : "")));
+	LOG((CLOG_DEBUG1 "send key %d, 0x%04x, %s%s", virtualKey & 0xff, code, ((flags & KEYEVENTF_KEYUP) ? "release" : "press"), ((flags & KEYEVENTF_EXTENDEDKEY) ? " extended" : "")));
 }

@@ -61,7 +61,7 @@ CMutex::fini()
 {
 	pthread_mutex_t* mutex = reinterpret_cast<pthread_mutex_t*>(m_mutex);
 	int status = pthread_mutex_destroy(mutex);
-	logc(status != 0, (CLOG_ERR "pthread_mutex_destroy status %d", status));
+	LOGC(status != 0, (CLOG_ERR "pthread_mutex_destroy status %d", status));
 	assert(status == 0);
 	delete mutex;
 }
@@ -86,7 +86,7 @@ CMutex::lock() const
 		break;
 
 	default:
-		log((CLOG_ERR "pthread_mutex_lock status %d", status));
+		LOG((CLOG_ERR "pthread_mutex_lock status %d", status));
 		assert(0 && "unexpected error");
 	}
 }
@@ -107,7 +107,7 @@ CMutex::unlock() const
 		break;
 
 	default:
-		log((CLOG_ERR "pthread_mutex_unlock status %d", status));
+		LOG((CLOG_ERR "pthread_mutex_unlock status %d", status));
 		assert(0 && "unexpected error");
 	}
 }

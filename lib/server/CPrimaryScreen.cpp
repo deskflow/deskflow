@@ -44,15 +44,15 @@ CPrimaryScreen::mainLoop()
 
 	// run event loop
 	try {
-		log((CLOG_DEBUG "entering event loop"));
+		LOG((CLOG_DEBUG "entering event loop"));
 		onPreMainLoop();
 		getScreen()->mainLoop();
 		onPostMainLoop();
-		log((CLOG_DEBUG "exiting event loop"));
+		LOG((CLOG_DEBUG "exiting event loop"));
 	}
 	catch (...) {
 		onPostMainLoop();
-		log((CLOG_DEBUG "exiting event loop"));
+		LOG((CLOG_DEBUG "exiting event loop"));
 		throw;
 	}
 }
@@ -119,7 +119,7 @@ CPrimaryScreen::close()
 void
 CPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreensaver)
 {
-	log((CLOG_INFO "entering primary at %d,%d%s", x, y, forScreensaver ? " for screen saver" : ""));
+	LOG((CLOG_INFO "entering primary at %d,%d%s", x, y, forScreensaver ? " for screen saver" : ""));
 	CLock lock(&m_mutex);
 	assert(m_active == true);
 
@@ -153,7 +153,7 @@ CPrimaryScreen::enterNoWarp()
 bool
 CPrimaryScreen::leave()
 {
-	log((CLOG_INFO "leaving primary"));
+	LOG((CLOG_INFO "leaving primary"));
 	CLock lock(&m_mutex);
 	assert(m_active == false);
 

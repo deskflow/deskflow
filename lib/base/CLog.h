@@ -22,8 +22,8 @@
 /*!
 The logging class;  all console output should go through this class.
 It supports multithread safe operation, several message priority levels,
-filtering by priority, and output redirection.  The macros log() and
-clog() provide convenient access.
+filtering by priority, and output redirection.  The macros LOG() and
+LOGC() provide convenient access.
 */
 class CLog {
 public:
@@ -150,11 +150,11 @@ private:
 };
 
 /*!
-\def log(arg)
+\def LOG(arg)
 Write to the log.  Because macros cannot accept variable arguments, this
 should be invoked like so:
 \code
-log((CLOG_XXX "%d and %d are %s", x, y, x == y ? "equal" : "not equal"));
+LOG((CLOG_XXX "%d and %d are %s", x, y, x == y ? "equal" : "not equal"));
 \endcode
 In particular, notice the double open and close parentheses.  Also note
 that there is no comma after the \c CLOG_XXX.  The \c XXX should be
@@ -169,11 +169,11 @@ which includes the filename and line number.
 */
 
 /*!
-\def logc(expr, arg)
+\def LOGC(expr, arg)
 Write to the log if and only if expr is true.  Because macros cannot accept
 variable arguments, this should be invoked like so:
 \code
-clog(x == y, (CLOG_XXX "%d and %d are equal", x, y));
+LOGC(x == y, (CLOG_XXX "%d and %d are equal", x, y));
 \endcode
 In particular, notice the parentheses around everything after the boolean
 expression.    Also note that there is no comma after the \c CLOG_XXX.
@@ -189,16 +189,16 @@ which includes the filename and line number.
 */
 
 #if defined(NOLOGGING)
-#define log(_a1)
-#define logc(_a1, _a2)
+#define LOG(_a1)
+#define LOGC(_a1, _a2)
 #define CLOG_TRACE
 #elif defined(NDEBUG)
-#define log(_a1)		CLog::print _a1
-#define logc(_a1, _a2)	if (_a1) CLog::print _a2
+#define LOG(_a1)		CLog::print _a1
+#define LOGC(_a1, _a2)	if (_a1) CLog::print _a2
 #define CLOG_TRACE
 #else
-#define log(_a1)		CLog::printt _a1
-#define logc(_a1, _a2)	if (_a1) CLog::printt _a2
+#define LOG(_a1)		CLog::printt _a1
+#define LOGC(_a1, _a2)	if (_a1) CLog::printt _a2
 #define CLOG_TRACE		__FILE__, __LINE__,
 #endif
 
