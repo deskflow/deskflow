@@ -18,10 +18,9 @@ class CScreenProxy : public IScreen {
 	virtual void		warpCursor(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		setClipboard(const IClipboard*);
 	virtual void		onScreenSaver(bool show);
-	virtual void		onKeyDown(KeyID);
-	virtual void		onKeyRepeat(KeyID, SInt32 count);
-	virtual void		onKeyUp(KeyID);
-	virtual void		onKeyToggle(KeyToggleMask);
+	virtual void		onKeyDown(KeyID, KeyModifierMask);
+	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count);
+	virtual void		onKeyUp(KeyID, KeyModifierMask);
 	virtual void		onMouseDown(ButtonID);
 	virtual void		onMouseUp(ButtonID);
 	virtual void		onMouseMove(SInt32 xAbsolute, SInt32 yAbsolute);

@@ -350,15 +350,16 @@ void					CServer::relayEvent(const CEvent* event)
 		break;
 
 	  case CEventBase::kKeyDown:
-		m_activeScreen->onKeyDown(event->m_key.m_key);
+		m_activeScreen->onKeyDown(event->m_key.m_key, event->m_key.m_mask);
 		break;
 
 	  case CEventBase::kKeyRepeat:
-		m_activeScreen->onKeyRepeat(event->m_key.m_key, event->m_key.m_count);
+		m_activeScreen->onKeyRepeat(event->m_key.m_key,
+								event->m_key.m_mask, event->m_key.m_count);
 		break;
 
 	  case CEventBase::kKeyUp:
-		m_activeScreen->onKeyUp(event->m_key.m_key);
+		m_activeScreen->onKeyUp(event->m_key.m_key, event->m_key.m_mask);
 		break;
 
 	  case CEventBase::kMouseDown:

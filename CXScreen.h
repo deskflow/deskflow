@@ -17,10 +17,9 @@ class CXScreen : public IScreen {
 	virtual void		warpCursor(SInt32 x, SInt32 y);
 	virtual void		setClipboard(const IClipboard*);
 	virtual void		onScreenSaver(bool);
-	virtual void		onKeyDown(KeyID);
-	virtual void		onKeyRepeat(KeyID, SInt32);
-	virtual void		onKeyUp(KeyID);
-	virtual void		onKeyToggle(KeyToggleMask);
+	virtual void		onKeyDown(KeyID, KeyModifierMask);
+	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32);
+	virtual void		onKeyUp(KeyID, KeyModifierMask);
 	virtual void		onMouseDown(ButtonID);
 	virtual void		onMouseUp(ButtonID);
 	virtual void		onMouseMove(SInt32, SInt32);
@@ -61,8 +60,12 @@ class CXScreen : public IScreen {
 
   private:
 	void				selectEvents(Window) const;
-	KeyID				mapKey(unsigned int keycode) const;
-	ButtonID			mapButton(unsigned int button) const;
+	KeyModifierMask		mapModifierFromX(unsigned int) const;
+	unsigned int		mapModifierToX(KeyModifierMask) const;
+	KeyID				mapKeyFromX(KeyCode, KeyModifierMask) const;
+	KeyCode				mapKeyToX(KeyID) const;
+	ButtonID			mapButtonFromX(unsigned int button) const;
+	unsigned int		mapButtonToX(ButtonID) const;
 	void				onPrimaryEvents();
 	void				onSecondaryEvents();
 

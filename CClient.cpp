@@ -154,8 +154,13 @@ void					CClient::onRead()
 								(static_cast<UInt32>(buf[2]) << 16) +
 								(static_cast<UInt32>(buf[3]) << 8) +
 								(static_cast<UInt32>(buf[4])     ));
-			TRACE(("  key down: %d", k));
-			m_screen->onKeyDown(k);
+			const KeyModifierMask m = static_cast<KeyModifierMask>(
+								(static_cast<UInt32>(buf[5]) << 24) +
+								(static_cast<UInt32>(buf[6]) << 16) +
+								(static_cast<UInt32>(buf[7]) << 8) +
+								(static_cast<UInt32>(buf[8])     ));
+			TRACE(("  key down: %d 0x%08x", k, m));
+			m_screen->onKeyDown(k, m);
 			break;
 		  }
 
@@ -165,13 +170,18 @@ void					CClient::onRead()
 								(static_cast<UInt32>(buf[2]) << 16) +
 								(static_cast<UInt32>(buf[3]) << 8) +
 								(static_cast<UInt32>(buf[4])     ));
-			const SInt32 n = static_cast<SInt32>(
+			const KeyModifierMask m = static_cast<KeyModifierMask>(
 								(static_cast<UInt32>(buf[5]) << 24) +
 								(static_cast<UInt32>(buf[6]) << 16) +
 								(static_cast<UInt32>(buf[7]) << 8) +
 								(static_cast<UInt32>(buf[8])     ));
-			TRACE(("  key repeat: %d x%d", k, n));
-			m_screen->onKeyRepeat(k, n);
+			const SInt32 n = static_cast<SInt32>(
+								(static_cast<UInt32>(buf[9]) << 24) +
+								(static_cast<UInt32>(buf[10]) << 16) +
+								(static_cast<UInt32>(buf[11]) << 8) +
+								(static_cast<UInt32>(buf[12])     ));
+			TRACE(("  key repeat: %d 0x%08x x%d", k, m, n));
+			m_screen->onKeyRepeat(k, m, n);
 			break;
 		  }
 
@@ -181,17 +191,13 @@ void					CClient::onRead()
 								(static_cast<UInt32>(buf[2]) << 16) +
 								(static_cast<UInt32>(buf[3]) << 8) +
 								(static_cast<UInt32>(buf[4])     ));
-			TRACE(("  key up: %d", k));
-			m_screen->onKeyUp(k);
-			break;
-		  }
-
-		  case '\012': {
-			const KeyToggleMask m = static_cast<KeyToggleMask>(
-								(static_cast<UInt32>(buf[1]) << 8) +
-								(static_cast<UInt32>(buf[2])     ));
-			TRACE(("  key toggle: 0x%04x", m));
-			m_screen->onKeyToggle(m);
+			const KeyModifierMask m = static_cast<KeyModifierMask>(
+								(static_cast<UInt32>(buf[5]) << 24) +
+								(static_cast<UInt32>(buf[6]) << 16) +
+								(static_cast<UInt32>(buf[7]) << 8) +
+								(static_cast<UInt32>(buf[8])     ));
+			TRACE(("  key up: %d 0x%08x", k, m));
+			m_screen->onKeyUp(k, m);
 			break;
 		  }
 

@@ -93,15 +93,13 @@ class IScreen {
 	// input simulation
 	//
 	// these methods must simulate the appropriate input event.
-	// these methods may only called on secondary screens.
+	// these methods are only called on secondary screens.
 	//
 
 	// keyboard input
-	// onKeyToggle() sets the keyboard toggle key states (e.g. num lock).
-	virtual void		onKeyDown(KeyID) = 0;
-	virtual void		onKeyRepeat(KeyID, SInt32 count) = 0;
-	virtual void		onKeyUp(KeyID) = 0;
-	virtual void		onKeyToggle(KeyToggleMask) = 0;
+	virtual void		onKeyDown(KeyID, KeyModifierMask) = 0;
+	virtual void		onKeyRepeat(KeyID, KeyModifierMask, SInt32 count) = 0;
+	virtual void		onKeyUp(KeyID, KeyModifierMask) = 0;
 
 	// mouse input
 	virtual void		onMouseDown(ButtonID) = 0;

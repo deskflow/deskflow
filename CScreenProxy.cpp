@@ -82,49 +82,53 @@ void					CScreenProxy::setClipboard(const IClipboard*)
 	// FIXME
 }
 
-void					CScreenProxy::onKeyDown(KeyID k)
+void					CScreenProxy::onKeyDown(KeyID k, KeyModifierMask m)
 {
-	char buf[5];
+	char buf[9];
 	memcpy(buf, "\007", 1);
 	buf[1] = static_cast<char>((k >> 24) & 0xff);
 	buf[2] = static_cast<char>((k >> 16) & 0xff);
 	buf[3] = static_cast<char>((k >> 8) & 0xff);
 	buf[4] = static_cast<char>(k & 0xff);
+	buf[5] = static_cast<char>((m >> 24) & 0xff);
+	buf[6] = static_cast<char>((m >> 16) & 0xff);
+	buf[7] = static_cast<char>((m >> 8) & 0xff);
+	buf[8] = static_cast<char>(m & 0xff);
 	m_socket->write(buf, sizeof(buf));
 }
 
-void					CScreenProxy::onKeyRepeat(KeyID k, SInt32 n)
+void					CScreenProxy::onKeyRepeat(
+								KeyID k, KeyModifierMask m, SInt32 n)
 {
-	char buf[9];
+	char buf[13];
 	memcpy(buf, "\010", 1);
 	buf[1] = static_cast<char>((k >> 24) & 0xff);
 	buf[2] = static_cast<char>((k >> 16) & 0xff);
 	buf[3] = static_cast<char>((k >> 8) & 0xff);
 	buf[4] = static_cast<char>(k & 0xff);
-	buf[5] = static_cast<char>((n >> 24) & 0xff);
-	buf[6] = static_cast<char>((n >> 16) & 0xff);
-	buf[7] = static_cast<char>((n >> 8) & 0xff);
-	buf[8] = static_cast<char>(n & 0xff);
+	buf[5] = static_cast<char>((m >> 24) & 0xff);
+	buf[6] = static_cast<char>((m >> 16) & 0xff);
+	buf[7] = static_cast<char>((m >> 8) & 0xff);
+	buf[8] = static_cast<char>(m & 0xff);
+	buf[9] = static_cast<char>((n >> 24) & 0xff);
+	buf[10] = static_cast<char>((n >> 16) & 0xff);
+	buf[11] = static_cast<char>((n >> 8) & 0xff);
+	buf[12] = static_cast<char>(n & 0xff);
 	m_socket->write(buf, sizeof(buf));
 }
 
-void					CScreenProxy::onKeyUp(KeyID k)
+void					CScreenProxy::onKeyUp(KeyID k, KeyModifierMask m)
 {
-	char buf[5];
+	char buf[9];
 	memcpy(buf, "\011", 1);
 	buf[1] = static_cast<char>((k >> 24) & 0xff);
 	buf[2] = static_cast<char>((k >> 16) & 0xff);
 	buf[3] = static_cast<char>((k >> 8) & 0xff);
 	buf[4] = static_cast<char>(k & 0xff);
-	m_socket->write(buf, sizeof(buf));
-}
-
-void					CScreenProxy::onKeyToggle(KeyToggleMask m)
-{
-	char buf[3];
-	memcpy(buf, "\012", 1);
-	buf[1] = static_cast<char>((m >> 8) & 0xff);
-	buf[2] = static_cast<char>(m & 0xff);
+	buf[5] = static_cast<char>((m >> 24) & 0xff);
+	buf[6] = static_cast<char>((m >> 16) & 0xff);
+	buf[7] = static_cast<char>((m >> 8) & 0xff);
+	buf[8] = static_cast<char>(m & 0xff);
 	m_socket->write(buf, sizeof(buf));
 }
 

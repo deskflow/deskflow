@@ -146,7 +146,17 @@ void					CXScreen::onScreenSaver(bool show)
 		onScreenSaverSecondary(show);
 }
 
-void					CXScreen::onKeyDown(KeyID)
+void					CXScreen::onKeyDown(KeyID key, KeyModifierMask)
+{
+	assert(m_display != NULL);
+	assert(m_primary == false);
+
+	// FIXME -- use mask
+	::XTestFakeKeyEvent(m_display, mapKeyToX(key), True, CurrentTime);
+	::XSync(m_display, False);
+}
+
+void					CXScreen::onKeyRepeat(KeyID, KeyModifierMask, SInt32)
 {
 	assert(m_display != NULL);
 	assert(m_primary == false);
@@ -154,44 +164,32 @@ void					CXScreen::onKeyDown(KeyID)
 	// FIXME
 }
 
-void					CXScreen::onKeyRepeat(KeyID, SInt32)
+void					CXScreen::onKeyUp(KeyID key, KeyModifierMask)
 {
 	assert(m_display != NULL);
 	assert(m_primary == false);
 
-	// FIXME
+	// FIXME -- use mask
+	::XTestFakeKeyEvent(m_display, mapKeyToX(key), False, CurrentTime);
+	::XSync(m_display, False);
 }
 
-void					CXScreen::onKeyUp(KeyID)
+void					CXScreen::onMouseDown(ButtonID button)
 {
 	assert(m_display != NULL);
 	assert(m_primary == false);
 
-	// FIXME
+	::XTestFakeButtonEvent(m_display, mapButtonToX(button), True, CurrentTime);
+	::XSync(m_display, False);
 }
 
-void					CXScreen::onKeyToggle(KeyToggleMask)
+void					CXScreen::onMouseUp(ButtonID button)
 {
 	assert(m_display != NULL);
 	assert(m_primary == false);
 
-	// FIXME
-}
-
-void					CXScreen::onMouseDown(ButtonID)
-{
-	assert(m_display != NULL);
-	assert(m_primary == false);
-
-	// FIXME
-}
-
-void					CXScreen::onMouseUp(ButtonID)
-{
-	assert(m_display != NULL);
-	assert(m_primary == false);
-
-	// FIXME
+	::XTestFakeButtonEvent(m_display, mapButtonToX(button), False, CurrentTime);
+	::XSync(m_display, False);
 }
 
 void					CXScreen::onMouseMove(SInt32 x, SInt32 y)
@@ -430,25 +428,77 @@ void					CXScreen::selectEvents(Window w) const
 	}
 }
 
-KeyID					CXScreen::mapKey(unsigned int keycode) const
+KeyModifierMask			CXScreen::mapModifierFromX(unsigned int state) const
 {
-	return keycode;
+	// FIXME -- should be configurable
+	KeyModifierMask mask = 0;
+	if (state & 1)
+		mask |= KeyModifierShift;
+	if (state & 2)
+		mask |= KeyModifierCapsLock;
+	if (state & 4)
+		mask |= KeyModifierControl;
+	if (state & 8)
+		mask |= KeyModifierAlt;
+	if (state & 16)
+		mask |= KeyModifierNumLock;
+	if (state & 32)
+		mask |= KeyModifierMeta;
+	if (state & 128)
+		mask |= KeyModifierScrollLock;
+	return mask;
 }
 
-ButtonID				CXScreen::mapButton(unsigned int button) const
+unsigned int			CXScreen::mapModifierToX(KeyModifierMask mask) const
 {
-	switch (button) {
-	  case 1:
-		return kButtonLeft;
+	// FIXME -- should be configurable
+	unsigned int state = 0;
+	if (mask & KeyModifierShift)
+		state |= 1;
+	if (mask & KeyModifierControl)
+		state |= 4;
+	if (mask & KeyModifierAlt)
+		state |= 8;
+	if (mask & KeyModifierMeta)
+		state |= 32;
+	if (mask & KeyModifierCapsLock)
+		state |= 2;
+	if (mask & KeyModifierNumLock)
+		state |= 16;
+	if (mask & KeyModifierScrollLock)
+		state |= 128;
+	return state;
+}
 
-	  case 2:
-		return kButtonMiddle;
+KeyID					CXScreen::mapKeyFromX(
+								KeyCode keycode, KeyModifierMask mask) const
+{
+	int index;
+	if (mask & KeyModifierShift)
+		index = 1;
+	else
+		index = 0;
+	return static_cast<KeyID>(::XKeycodeToKeysym(m_display, keycode, index));
+}
 
-	  case 3:
-		return kButtonRight;
-	}
+KeyCode					CXScreen::mapKeyToX(KeyID keyID) const
+{
+	return ::XKeysymToKeycode(m_display, static_cast<KeySym>(keyID));
+}
 
-	return kButtonNone;
+ButtonID				CXScreen::mapButtonFromX(unsigned int button) const
+{
+	// FIXME -- should use button mapping?
+	if (button >= 1 && button <= 3)
+		return static_cast<ButtonID>(button);
+	else
+		return kButtonNone;
+}
+
+unsigned int			CXScreen::mapButtonToX(ButtonID buttonID) const
+{
+	// FIXME -- should use button mapping?
+	return static_cast<unsigned int>(buttonID);
 }
 
 void					CXScreen::onPrimaryEvents()
@@ -459,11 +509,13 @@ void					CXScreen::onPrimaryEvents()
 
 		switch (xevent.type) {
 		  case KeyPress: {
-			const KeyID key = mapKey(xevent.xkey.keycode);
+			const KeyModifierMask mask = mapModifierFromX(xevent.xkey.state);
+			const KeyID key = mapKeyFromX(xevent.xkey.keycode, mask);
 			if (key != kKeyNone) {
 				CEvent event;
 				event.m_key.m_type  = CEventBase::kKeyDown;
 				event.m_key.m_key   = key;
+				event.m_key.m_mask  = mask;
 				event.m_key.m_count = 0;
 				CEQ->push(&event);
 			}
@@ -473,11 +525,13 @@ void					CXScreen::onPrimaryEvents()
 		  // FIXME -- simulate key repeat.  X sends press/release for
 		  // repeat.  must detect auto repeat and use kKeyRepeat.
 		  case KeyRelease: {
-			const KeyID key = mapKey(xevent.xkey.keycode);
+			const KeyModifierMask mask = mapModifierFromX(xevent.xkey.state);
+			const KeyID key = mapKeyFromX(xevent.xkey.keycode, mask);
 			if (key != kKeyNone) {
 				CEvent event;
 				event.m_key.m_type  = CEventBase::kKeyUp;
 				event.m_key.m_key   = key;
+				event.m_key.m_mask  = mask;
 				event.m_key.m_count = 0;
 				CEQ->push(&event);
 			}
@@ -485,7 +539,7 @@ void					CXScreen::onPrimaryEvents()
 		  }
 
 		  case ButtonPress: {
-			const ButtonID button = mapButton(xevent.xbutton.button);
+			const ButtonID button = mapButtonFromX(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				CEvent event;
 				event.m_mouse.m_type   = CEventBase::kMouseDown;
@@ -498,7 +552,7 @@ void					CXScreen::onPrimaryEvents()
 		  }
 
 		  case ButtonRelease: {
-			const ButtonID button = mapButton(xevent.xbutton.button);
+			const ButtonID button = mapButtonFromX(xevent.xbutton.button);
 			if (button != kButtonNone) {
 				CEvent event;
 				event.m_mouse.m_type   = CEventBase::kMouseUp;

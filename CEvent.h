@@ -27,6 +27,7 @@ class CEventBase {
 class CEventKey : public CEventBase {
   public:
 	KeyID				m_key;
+	KeyModifierMask			m_mask;
 	SInt32				m_count;
 };
 
