@@ -187,8 +187,20 @@ CXWindowsPrimaryScreen::run()
 						} while (!xevent.xmotion.send_event);
 					}
 
-					// warp mouse back to center
-					if (x != 0 || y != 0) {
+					// warp mouse back to center.  my lombard (powerbook
+					// g3) using the adbmouse driver has two problems:
+					// first, the driver only sends motions of +/-2
+					// pixels and, second, it seems to discard some
+					// physical input after a warp.  the former isn't a
+					// big deal (we're just limited to every other
+					// pixel) but the latter is a PITA.  to work around
+					// it we only warp when the mouse has moved more
+					// than s_size pixels from the center.
+					static const SInt32 s_size = 32;
+					if (xevent.xmotion.x_root - m_xCenter < -s_size ||
+						xevent.xmotion.x_root - m_xCenter >  s_size ||
+						xevent.xmotion.y_root - m_yCenter < -s_size ||
+						xevent.xmotion.y_root - m_yCenter >  s_size) {
 						CDisplayLock display(this);
 						// send an event that we can recognize before
 						// the mouse warp.
