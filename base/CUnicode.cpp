@@ -82,9 +82,8 @@ CUnicode::UTF8ToUCS2(const CString& src, bool* errors)
 	// default to success
 	resetError(errors);
 
-	// get size of input string and reserve some space in output.
-	// include UTF8's nul terminator.
-	UInt32 n = src.size() + 1;
+	// get size of input string and reserve some space in output
+	UInt32 n = src.size();
 	CString dst;
 	dst.reserve(2 * n);
 
@@ -112,9 +111,8 @@ CUnicode::UTF8ToUCS4(const CString& src, bool* errors)
 	// default to success
 	resetError(errors);
 
-	// get size of input string and reserve some space in output.
-	// include UTF8's nul terminator.
-	UInt32 n = src.size() + 1;
+	// get size of input string and reserve some space in output
+	UInt32 n = src.size();
 	CString dst;
 	dst.reserve(4 * n);
 
@@ -137,9 +135,8 @@ CUnicode::UTF8ToUTF16(const CString& src, bool* errors)
 	// default to success
 	resetError(errors);
 
-	// get size of input string and reserve some space in output.
-	// include UTF8's nul terminator.
-	UInt32 n = src.size() + 1;
+	// get size of input string and reserve some space in output
+	UInt32 n = src.size();
 	CString dst;
 	dst.reserve(2 * n);
 
@@ -176,9 +173,8 @@ CUnicode::UTF8ToUTF32(const CString& src, bool* errors)
 	// default to success
 	resetError(errors);
 
-	// get size of input string and reserve some space in output.
-	// include UTF8's nul terminator.
-	UInt32 n = src.size() + 1;
+	// get size of input string and reserve some space in output
+	UInt32 n = src.size();
 	CString dst;
 	dst.reserve(4 * n);
 
@@ -211,12 +207,13 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 
 	// get length of multibyte string
 	char mbc[MB_LEN_MAX];
+	size_t mblen;
 	mbstate_t state;
 	memset(&state, 0, sizeof(state));
 	size_t len = 0;
 	UInt32 n   = size;
 	for (const wchar_t* scan = tmp; n > 0; ++scan, --n) {
-		size_t mblen = wcrtomb(mbc, *scan, &state);
+		mblen = wcrtomb(mbc, *scan, &state);
 		if (mblen == -1) {
 			// unconvertable character
 			setError(errors);
@@ -227,21 +224,21 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 		}
 	}
 
-	// check if state is in initial state.  if not then count the
-	// bytes for returning it to the initial state.
-	if (mbsinit(&state) == 0) {
-		len += wcrtomb(mbc, L'\0', &state) - 1;
+	// handle nul terminator
+	mblen = wcrtomb(mbc, L'\0', &state);
+	if (mblen != -1) {
+		len += mblen - 1;
 	}
 	assert(mbsinit(&state) != 0);
 
 	// allocate multibyte string
-	char* mbs = new char[len + 1];
+	char* mbs = new char[len];
 
 	// convert to multibyte
 	char* dst = mbs;
 	n         = size;
 	for (const wchar_t* scan = tmp; n > 0; ++scan, --n) {
-		size_t mblen = wcrtomb(dst, *scan, &state);
+		mblen = wcrtomb(dst, *scan, &state);
 		if (mblen == -1) {
 			// unconvertable character
 			*dst++ = '?';
@@ -250,7 +247,11 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 			dst   += mblen;
 		}
 	}
-	*dst++ = '\0';
+	mblen = wcrtomb(dst, L'\0', &state);
+	if (mblen != -1) {
+		// don't include nul terminator
+		dst += mblen - 1;
+	}
 	CString text(mbs, dst - mbs);
 
 	// clean up
@@ -311,7 +312,7 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 	resetError(errors);
 
 	// get length of multibyte string
-	UInt32 n   = src.size();
+	UInt32 n   = src.size() + 1;
 	size_t len = 0;
 	mbstate_t state;
 	memset(&state, 0, sizeof(state));
@@ -399,9 +400,7 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 wchar_t*
 CUnicode::UTF8ToWideChar(const CString& src, UInt32& size, bool* errors)
 {
-	// convert to platform's wide character encoding.
-	// note -- this must include a wide nul character (independent of
-	// the CString's nul character).
+	// convert to platform's wide character encoding
 #if WINDOWS_LIKE
 	CString tmp = UTF8ToUTF16(src, errors);
 	size = tmp.size() >> 1;
@@ -442,11 +441,6 @@ CUnicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 		toUTF8(dst, c, errors);
 	}
 
-	// remove extra trailing nul
-	if (dst.size() > 0 && dst[dst.size() - 1] == '\0') {
-		dst.resize(dst.size() - 1);
-	}
-
 	return dst;
 }
 
@@ -461,11 +455,6 @@ CUnicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	for (; n > 0; data += 4, --n) {
 		UInt32 c = decode32(data);
 		toUTF8(dst, c, errors);
-	}
-
-	// remove extra trailing nul
-	if (dst.size() > 0 && dst[dst.size() - 1] == '\0') {
-		dst.resize(dst.size() - 1);
 	}
 
 	return dst;
@@ -510,11 +499,6 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 		}
 	}
 
-	// remove extra trailing nul
-	if (dst.size() > 0 && dst[dst.size() - 1] == '\0') {
-		dst.resize(dst.size() - 1);
-	}
-
 	return dst;
 }
 
@@ -533,11 +517,6 @@ CUnicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 			c = s_replacement;
 		}
 		toUTF8(dst, c, errors);
-	}
-
-	// remove extra trailing nul
-	if (dst.size() > 0 && dst[dst.size() - 1] == '\0') {
-		dst.resize(dst.size() - 1);
 	}
 
 	return dst;

@@ -24,11 +24,17 @@ CMSWindowsClipboardTextConverter::getWin32Format() const
 CString
 CMSWindowsClipboardTextConverter::doFromIClipboard(const CString& data) const
 {
-	return CUnicode::UTF8ToText(data);
+	// convert and add nul terminator
+	return CUnicode::UTF8ToText(data) += '\0';
 }
 
 CString
 CMSWindowsClipboardTextConverter::doToIClipboard(const CString& data) const
 {
-	return CUnicode::textToUTF8(data);
+	// convert and strip nul terminator
+	CString dst = CUnicode::textToUTF8(data);
+	if (dst.size() > 0 && dst[size() - 1] == '\0') {
+		dst.erase(dst.size() - 1);
+	}
+	return dst;
 }

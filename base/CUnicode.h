@@ -15,9 +15,7 @@ public:
 	// not NULL then it gets true if any characters could not be
 	// encoded in the target encoding and false otherwise.  note
 	// that decoding errors do not set errors to error.  UTF8ToText()
-	// converts to the current locale's (multibyte) encoding.  all of
-	// these methods include the nul terminator in the returned
-	// string (independent of the CString's own nul terminator).
+	// converts to the current locale's (multibyte) encoding.
 	static CString		UTF8ToUCS2(const CString&, bool* errors = NULL);
 	static CString		UTF8ToUCS4(const CString&, bool* errors = NULL);
 	static CString		UTF8ToUTF16(const CString&, bool* errors = NULL);
@@ -27,9 +25,7 @@ public:
 	// convert from some encoding to UTF-8.  if errors is not NULL
 	// then it gets true if any characters could not be decoded and
 	// false otherwise.  textToUTF8() converts from the current
-	// locale's (multibyte) encoding.  all of these methods strip
-	// a terminating nul so the returned UTF-8 string uses the
-	// CString's own nul terminator for termination.
+	// locale's (multibyte) encoding.
 	static CString		UCS2ToUTF8(const CString&, bool* errors = NULL);
 	static CString		UCS4ToUTF8(const CString&, bool* errors = NULL);
 	static CString		UTF16ToUTF8(const CString&, bool* errors = NULL);
@@ -37,9 +33,10 @@ public:
 	static CString		textToUTF8(const CString&, bool* errors = NULL);
 
 private:
-	// convert UTF8 to nul terminated wchar_t string (using whatever
-	// encoding is native to the platform).  caller must delete[]
-	// the returned string.
+	// convert UTF8 to wchar_t string (using whatever encoding is native
+	// to the platform).  caller must delete[] the returned string.  the
+	// string is *not* nul terminated;  the length (in characters) is
+	// returned in size.
 	static wchar_t*		UTF8ToWideChar(const CString&,
 							UInt32& size, bool* errors);
 
