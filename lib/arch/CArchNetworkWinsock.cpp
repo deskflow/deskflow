@@ -675,11 +675,21 @@ CArchNetworkWinsock::nameToAddr(const std::string& name)
 		// address lookup
 		struct hostent* info = gethostbyname_winsock(name.c_str());
 		if (info == NULL) {
-			delete addr;
 			throwNameError(getsockerror_winsock());
 		}
-		addr = CArchNetAddressImpl::alloc(info->h_length);
-		memcpy(TYPED_ADDR(void, addr), info->h_addr_list[0], info->h_length);
+
+		// copy over address (only IPv4 currently supported)
+		if (info->h_addrtype == AF_INET) {
+			addr = CArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
+			memcpy(&inaddr.sin_addr, info->h_addr_list[0],
+								sizeof(inaddr.sin_addr));
+			memcpy(TYPED_ADDR(void, addr), &inaddr, addr->m_len);
+		}
+		else {
+			throw XArchNetworkNameUnsupported(
+					"The requested name is valid but "
+					"does not have a supported address family");
+		}
 	}
 
 	return addr;
