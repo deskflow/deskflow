@@ -59,7 +59,9 @@ Section "Synergy (required)"
   File "${DEPTH}\build\synergyc.exe"
   File "${DEPTH}\build\synergys.exe"
   File "${DEPTH}\build\*.dll"
+  File COPYING.txt
   File ChangeLog.txt
+  File ${DEPTH}\doc\PORTING
   File ${DEPTH}\doc\authors.html
   File ${DEPTH}\doc\autostart.html
   File ${DEPTH}\doc\compiling.html
