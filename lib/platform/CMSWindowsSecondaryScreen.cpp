@@ -70,6 +70,19 @@
 // CMSWindowsSecondaryScreen
 //
 
+// a list of modifier key info
+const CMSWindowsSecondaryScreen::CModifierInfo
+						CMSWindowsSecondaryScreen::s_modifier[] = {
+	{ KeyModifierShift,		VK_LSHIFT,			VK_RSHIFT,			false },
+	{ KeyModifierControl,	VK_LCONTROL,		VK_RCONTROL | 0x100,false },
+	{ KeyModifierAlt,		VK_LMENU,			VK_RMENU | 0x100,	false },
+	// note -- no keys for KeyModifierMeta
+	{ KeyModifierSuper,		VK_LWIN | 0x100,	VK_RWIN | 0x100,	false },
+	{ KeyModifierCapsLock,	VK_CAPITAL,			0,					true },
+	{ KeyModifierNumLock,	VK_NUMLOCK | 0x100,	0,					true },
+	{ KeyModifierScrollLock,VK_SCROLL,			0,					true }
+};
+
 CMSWindowsSecondaryScreen::CMSWindowsSecondaryScreen(
 				IScreenReceiver* receiver) :
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
@@ -90,9 +103,6 @@ void
 CMSWindowsSecondaryScreen::keyDown(KeyID key,
 				KeyModifierMask mask, KeyButton button)
 {
-	Keystrokes keys;
-	UINT virtualKey;
-
 	CLock lock(&m_mutex);
 	m_screen->syncDesktop();
 
@@ -106,48 +116,49 @@ CMSWindowsSecondaryScreen::keyDown(KeyID key,
 
 	// get the sequence of keys to simulate key press and the final
 	// modifier state.
+	Keystrokes keys;
+	UINT virtualKey;
 	m_mask = mapKey(keys, virtualKey, key, mask, kPress);
 	if (keys.empty()) {
+		// do nothing if there are no associated keys (i.e. lookup failed)
 		return;
 	}
 
 	// generate key events
 	doKeystrokes(keys, 1);
 
-	// note that key is now down
-	m_keys[virtualKey]         |= 0x80;
-	m_fakeKeys[virtualKey]     |= 0x80;
-	switch (virtualKey) {
-	case VK_LSHIFT:
-	case VK_RSHIFT:
-		m_keys[VK_SHIFT]       |= 0x80;
-		m_fakeKeys[VK_SHIFT]   |= 0x80;
-		break;
+	// do not record button down if button is 0 (invalid)
+	if (button != 0) {
+		// note that key is now down
+		m_serverKeyMap[button]      = virtualKey;
+		m_keys[virtualKey]         |= 0x80;
+		m_fakeKeys[virtualKey]     |= 0x80;
+		switch (virtualKey) {
+		case VK_LSHIFT:
+		case VK_RSHIFT:
+			m_keys[VK_SHIFT]       |= 0x80;
+			m_fakeKeys[VK_SHIFT]   |= 0x80;
+			break;
 
-	case VK_LCONTROL:
-	case VK_RCONTROL:
-		m_keys[VK_CONTROL]     |= 0x80;
-		m_fakeKeys[VK_CONTROL] |= 0x80;
-		break;
+		case VK_LCONTROL:
+		case VK_RCONTROL:
+			m_keys[VK_CONTROL]     |= 0x80;
+			m_fakeKeys[VK_CONTROL] |= 0x80;
+			break;
 
-	case VK_LMENU:
-	case VK_RMENU:
-		m_keys[VK_MENU]        |= 0x80;
-		m_fakeKeys[VK_MENU]    |= 0x80;
-		break;
+		case VK_LMENU:
+		case VK_RMENU:
+			m_keys[VK_MENU]        |= 0x80;
+			m_fakeKeys[VK_MENU]    |= 0x80;
+			break;
+		}
 	}
-
-	// note which server key generated this key
-	m_serverKeyMap[button] = virtualKey;
 }
 
 void
 CMSWindowsSecondaryScreen::keyRepeat(KeyID key,
 				KeyModifierMask mask, SInt32 count, KeyButton button)
 {
-	Keystrokes keys;
-	UINT virtualKey;
-
 	CLock lock(&m_mutex);
 	m_screen->syncDesktop();
 
@@ -159,20 +170,26 @@ CMSWindowsSecondaryScreen::keyRepeat(KeyID key,
 
 	// get the sequence of keys to simulate key repeat and the final
 	// modifier state.
+	Keystrokes keys;
+	UINT virtualKey;
 	m_mask = mapKey(keys, virtualKey, key, mask, kRepeat);
 	if (keys.empty()) {
 		return;
 	}
 
-	// if we've seen this button (and we should have) then make sure
-	// we release the same key we pressed when we saw it.
-	if (index != m_serverKeyMap.end() && virtualKey != index->second) {
+	// if the keycode for the auto-repeat is not the same as for the
+	// initial press then mark the initial key as released and the new
+	// key as pressed.  this can happen when we auto-repeat after a
+	// dead key.  for example, a dead accent followed by 'a' will
+	// generate an 'a with accent' followed by a repeating 'a'.  the
+	// keycodes for the two keysyms might be different.
+	if (virtualKey != index->second) {
 		// replace key up with previous keycode but leave key down
 		// alone so it uses the new keycode and store that keycode
 		// in the server key map.
 		for (Keystrokes::iterator index2 = keys.begin();
 								index2 != keys.end(); ++index2) {
-			if (index2->m_virtualKey == index->second) {
+			if (index2->m_virtualKey == virtualKey) {
 				index2->m_virtualKey = index->second;
 				break;
 			}
@@ -195,12 +212,8 @@ CMSWindowsSecondaryScreen::keyRepeat(KeyID key,
 }
 
 void
-CMSWindowsSecondaryScreen::keyUp(KeyID key,
-				KeyModifierMask mask, KeyButton button)
+CMSWindowsSecondaryScreen::keyUp(KeyID, KeyModifierMask, KeyButton button)
 {
-	Keystrokes keys;
-	UINT virtualKey;
-
 	CLock lock(&m_mutex);
 	m_screen->syncDesktop();
 
@@ -209,42 +222,18 @@ CMSWindowsSecondaryScreen::keyUp(KeyID key,
 	if (index == m_serverKeyMap.end()) {
 		return;
 	}
+	UINT virtualKey = index->second;
 
 	// get the sequence of keys to simulate key release and the final
 	// modifier state.
-	m_mask = mapKey(keys, virtualKey, key, mask, kRelease);
-
-	// if there are no keys to generate then we should at least generate
-	// a key release for the key we pressed.
-	if (keys.empty()) {
-		Keystroke keystroke;
-		virtualKey             = index->second;
-		keystroke.m_virtualKey = virtualKey;
-		keystroke.m_press      = false;
-		keystroke.m_repeat     = false;
-		keys.push_back(keystroke);
-	}
-
-	// if we've seen this button (and we should have) then make sure
-	// we release the same key we pressed when we saw it.
-	if (index != m_serverKeyMap.end() && virtualKey != index->second) {
-		// replace key up with previous virtual key
-		for (Keystrokes::iterator index2 = keys.begin();
-								index2 != keys.end(); ++index2) {
-			if (index2->m_virtualKey == virtualKey) {
-				index2->m_virtualKey = index->second;
-				break;
-			}
-		}
-
-		// use old virtual key
-		virtualKey = index->second;
-	}
+	Keystrokes keys;
+	m_mask = mapKeyRelease(keys, virtualKey);
 
 	// generate key events
 	doKeystrokes(keys, 1);
 
 	// note that key is now up
+	m_serverKeyMap.erase(index);
 	m_keys[virtualKey]             &= ~0x80;
 	m_fakeKeys[virtualKey]         &= ~0x80;
 	switch (virtualKey) {
@@ -289,11 +278,6 @@ CMSWindowsSecondaryScreen::keyUp(KeyID key,
 			m_fakeKeys[VK_MENU]    &= ~0x80;
 		}
 		break;
-	}
-
-	// remove server key from map
-	if (index != m_serverKeyMap.end()) {
-		m_serverKeyMap.erase(index);
 	}
 }
 
@@ -1003,6 +987,47 @@ CMSWindowsSecondaryScreen::mapKey(Keystrokes& keys, UINT& virtualKey,
 	return m_mask;
 }
 
+KeyModifierMask
+CMSWindowsSecondaryScreen::mapKeyRelease(Keystrokes& keys,
+				UINT virtualKey) const
+{
+	// add key release
+	Keystroke keystroke;
+	keystroke.m_virtualKey = virtualKey;
+	keystroke.m_press      = false;
+	keystroke.m_repeat     = false;
+	keys.push_back(keystroke);
+
+	// if this is a modifier keycode then update the current modifier mask
+	const CModifierInfo* modifier = getModifierInfo(virtualKey);
+	if (modifier != NULL) {
+		if (modifier->m_isToggle) {
+			// toggle keys modify the state on release
+			return (m_mask ^ modifier->m_mask);
+		}
+		else {
+			// can't reset bit until all keys that set it are released.
+			// scan those keys to see if any (except virtualKey) are
+			// pressed.
+			bool down = false;
+			if (virtualKey != (modifier->m_virtualKey & 0xff) &&
+				(m_keys[modifier->m_virtualKey & 0xff] & 0x80) != 0) {
+				down = true;
+			}
+			if (modifier->m_virtualKey2 != 0 &&
+				virtualKey != (modifier->m_virtualKey2 & 0xff) &&
+				(m_keys[modifier->m_virtualKey2 & 0xff] & 0x80) != 0) {
+				down = true;
+			}
+			if (!down) {
+				return (m_mask & ~modifier->m_mask);
+			}
+		}
+	}
+
+	return m_mask;
+}
+
 UINT
 CMSWindowsSecondaryScreen::mapCharacter(Keystrokes& keys,
 				char c, HKL hkl,
@@ -1102,73 +1127,7 @@ CMSWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 				KeyModifierMask currentMask,
 				KeyModifierMask desiredMask, EKeyAction action) const
 {
-	// a list of modifier key info
-	class CModifierInfo {
-	public:
-		KeyModifierMask	m_mask;
-		UINT			m_virtualKey;
-		UINT			m_virtualKey2;
-		bool			m_isToggle;
-	};
-	static const CModifierInfo s_modifier[] = {
-		{ KeyModifierShift,		VK_LSHIFT,			VK_RSHIFT,			false },
-		{ KeyModifierControl,	VK_LCONTROL,		VK_RCONTROL | 0x100,false },
-		{ KeyModifierAlt,		VK_LMENU,			VK_RMENU | 0x100,	false },
-		// note -- no keys for KeyModifierMeta
-		{ KeyModifierSuper,		VK_LWIN | 0x100,	VK_RWIN | 0x100,	false },
-		{ KeyModifierCapsLock,	VK_CAPITAL,			0,					true },
-		{ KeyModifierNumLock,	VK_NUMLOCK | 0x100,	0,					true },
-		{ KeyModifierScrollLock,VK_SCROLL,			0,					true }
-	};
-	static const unsigned int s_numModifiers =
-								sizeof(s_modifier) / sizeof(s_modifier[0]);
-
-	// strip out extended key flag
-	UINT virtualKey2 = (virtualKey & ~0x100);
-
-	// note if the key is a modifier
-	unsigned int modifierIndex;
-	switch (virtualKey2) {
-	case VK_SHIFT:
-	case VK_LSHIFT:
-	case VK_RSHIFT:
-		modifierIndex = 0;
-		break;
-
-	case VK_CONTROL:
-	case VK_LCONTROL:
-	case VK_RCONTROL:
-		modifierIndex = 1;
-		break;
-
-	case VK_MENU:
-	case VK_LMENU:
-	case VK_RMENU:
-		modifierIndex = 2;
-		break;
-
-	case VK_LWIN:
-	case VK_RWIN:
-		modifierIndex = 3;
-		break;
-
-	case VK_CAPITAL:
-		modifierIndex = 4;
-		break;
-
-	case VK_NUMLOCK:
-		modifierIndex = 5;
-		break;
-
-	case VK_SCROLL:
-		modifierIndex = 6;
-		break;
-
-	default:
-		modifierIndex = s_numModifiers;
-		break;
-	}
-	const bool isModifier = (modifierIndex != s_numModifiers);
+	const CModifierInfo* modifier = getModifierInfo(virtualKey);
 
 	// add the key events required to get to the desired modifier state.
 	// also save the key events required to restore the current state.
@@ -1176,7 +1135,9 @@ CMSWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 	// should not modify modifiers.
 	Keystrokes undo;
 	Keystroke keystroke;
-	if (desiredMask != currentMask && !isModifier) {
+	if (desiredMask != currentMask && modifier == NULL) {
+		const unsigned int s_numModifiers = sizeof(s_modifier) /
+											sizeof(s_modifier[0]);
 		for (unsigned int i = 0; i < s_numModifiers; ++i) {
 			KeyModifierMask bit = s_modifier[i].m_mask;
 			if ((desiredMask & bit) != (currentMask & bit)) {
@@ -1274,35 +1235,12 @@ CMSWindowsSecondaryScreen::mapToKeystrokes(Keystrokes& keys,
 	}
 
 	// if the key is a modifier key then compute the modifier mask after
-	// this key is pressed.
+	// this key is pressed.  toggle keys modify the state on release.
+	// other keys set the modifier bit on press.
 	KeyModifierMask mask = currentMask;
-	if (isModifier && action != kRepeat) {
-		// toggle keys modify the state on release.  other keys set
-		// the bit on press and clear the bit on release.
-		const CModifierInfo& modifier = s_modifier[modifierIndex];
-		if (modifier.m_isToggle) {
-			if (action == kRelease) {
-				mask ^= modifier.m_mask;
-			}
-		}
-		else if (action == kPress) {
-			mask |= modifier.m_mask;
-		}
-		else {
-			// can't reset bit until all keys that set it are released.
-			// scan those keys to see if any are pressed.
-			bool down = false;
-			if (virtualKey2 != (modifier.m_virtualKey & 0xff) &&
-				(m_keys[modifier.m_virtualKey & 0xff] & 0x80) != 0) {
-				down = true;
-			}
-			if (modifier.m_virtualKey2 != 0 &&
-				virtualKey2 != (modifier.m_virtualKey2 & 0xff) &&
-				(m_keys[modifier.m_virtualKey2 & 0xff] & 0x80) != 0) {
-				down = true;
-			}
-			if (!down)
-				mask &= ~modifier.m_mask;
+	if (action == kPress) {
+		if (modifier != NULL && !modifier->m_isToggle) {
+			mask |= modifier->m_mask;
 		}
 	}
 
@@ -1341,6 +1279,45 @@ CMSWindowsSecondaryScreen::doKeystrokes(const Keystrokes& keys, SInt32 count)
 			// next key
 			++k;
 		}
+	}
+}
+
+const CMSWindowsSecondaryScreen::CModifierInfo*
+CMSWindowsSecondaryScreen::getModifierInfo(UINT virtualKey) const
+{
+	// note if the key is a modifier.  strip out extended key flag from
+	// virtual key before lookup.
+	switch (virtualKey & ~0x100) {
+	case VK_SHIFT:
+	case VK_LSHIFT:
+	case VK_RSHIFT:
+		return s_modifier + 0;
+
+	case VK_CONTROL:
+	case VK_LCONTROL:
+	case VK_RCONTROL:
+		return s_modifier + 1;
+
+	case VK_MENU:
+	case VK_LMENU:
+	case VK_RMENU:
+		return s_modifier + 2;
+
+	case VK_LWIN:
+	case VK_RWIN:
+		return s_modifier + 3;
+
+	case VK_CAPITAL:
+		return s_modifier + 4;
+
+	case VK_NUMLOCK:
+		return s_modifier + 5;
+
+	case VK_SCROLL:
+		return s_modifier + 6;
+
+	default:
+		return NULL;
 	}
 }
 

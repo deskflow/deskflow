@@ -85,6 +85,13 @@ private:
 		bool			m_press;
 		bool			m_repeat;
 	};
+	class CModifierInfo {
+	public:
+		KeyModifierMask	m_mask;
+		UINT			m_virtualKey;
+		UINT			m_virtualKey2;
+		bool			m_isToggle;
+	};
 	typedef std::vector<Keystroke> Keystrokes;
 	typedef std::map<KeyButton, UINT> ServerKeyMap;
 
@@ -103,6 +110,7 @@ private:
 							bool press, DWORD* data) const;
 	KeyModifierMask		mapKey(Keystrokes&, UINT& virtualKey, KeyID,
 							KeyModifierMask, EKeyAction) const;
+	KeyModifierMask		mapKeyRelease(Keystrokes& keys, UINT virtualKey) const;
 	UINT				mapCharacter(Keystrokes& keys,
 							char c, HKL hkl,
 							KeyModifierMask currentMask,
@@ -114,6 +122,7 @@ private:
 							KeyModifierMask desiredMask,
 							EKeyAction action) const;
 	void				doKeystrokes(const Keystrokes&, SInt32 count);
+	const CModifierInfo*	getModifierInfo(UINT virtualKey) const;
 
 	void				toggleKey(UINT virtualKey, KeyModifierMask mask);
 	UINT				virtualKeyToScanCode(UINT& virtualKey) const;
@@ -149,6 +158,9 @@ private:
 
 	// map server key buttons to local virtual keys
 	ServerKeyMap		m_serverKeyMap;
+
+	// modifier table
+	static const CModifierInfo	s_modifier[];
 };
 
 #endif
