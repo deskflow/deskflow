@@ -109,13 +109,13 @@ CPrimaryScreen::enter(SInt32 x, SInt32 y, bool forScreensaver)
 	CLock lock(&m_mutex);
 	assert(m_active == true);
 
-	enterNoWarp();
 	if (!forScreensaver) {
 		warpCursor(x, y);
 	}
 	else {
 		onEnterScreensaver();
 	}
+	enterNoWarp();
 }
 
 void
