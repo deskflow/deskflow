@@ -11,7 +11,10 @@ SUBDIRS = 				\
 	io				\
 	net				\
 	synergy 			\
+	client				\
+	server				\
 	$(NULL)
+
 #
 # targets
 #

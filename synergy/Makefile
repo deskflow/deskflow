@@ -2,6 +2,11 @@ DEPTH=..
 include $(DEPTH)/Makecommon
 
 #
+# target file
+#
+TARGET = synergy
+
+#
 # source files
 #
 LCXXINCS =				\
@@ -13,39 +18,16 @@ LCXXINCS =				\
 CXXFILES = 				\
 	CInputPacketStream.cpp		\
 	COutputPacketStream.cpp		\
-	CTCPSocketFactory.cpp		\
 	CProtocolUtil.cpp		\
-	CClient.cpp			\
-	CServerProtocol.cpp		\
-	CServerProtocol1_0.cpp		\
-	CScreenMap.cpp			\
-	CServer.cpp			\
-	CXWindowsScreen.cpp		\
-	CXWindowsPrimaryScreen.cpp	\
-	CXWindowsSecondaryScreen.cpp	\
+	CTCPSocketFactory.cpp		\
 	CXWindowsClipboard.cpp		\
+	CXWindowsScreen.cpp		\
 	XSynergy.cpp			\
 	$(NULL)
 
-#
-# libraries we depend on
-#
-DEPLIBS =				\
-	$(LIBDIR)/libnet.a		\
-	$(LIBDIR)/libio.a		\
-	$(LIBDIR)/libmt.a		\
-	$(LIBDIR)/libbase.a		\
-	$(NULL)
-LLDLIBS  =				\
-	$(DEPLIBS)			\
-	-lpthread			\
-	$(NULL)
+targets: $(LIBTARGET)
 
-targets: server client
-
-server: server.o $(OBJECTS) $(DEPLIBS)
-	$(CXX) $(CXXFLAGS) -o $@ server.o $(OBJECTS) $(LDFLAGS)
-
-client: client.o $(OBJECTS) $(DEPLIBS)
-	$(CXX) $(CXXFLAGS) -o $@ client.o $(OBJECTS) $(LDFLAGS)
+$(LIBTARGET): $(OBJECTS)
+	if test ! -d $(LIBDIR); then $(MKDIR) $(LIBDIR); fi
+	$(ARF) $(LIBTARGET) $(OBJECTS)
 
