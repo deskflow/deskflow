@@ -19,6 +19,7 @@
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
+#include "OptionTypes.h"
 #include "CString.h"
 
 //! Client interface
@@ -150,6 +151,19 @@ public:
 
 	//! Notify of screen saver change
 	virtual void		screensaver(bool activate) = 0;
+
+	//! Notify of options changes
+	/*!
+	Reset all options to their default values.
+	*/
+	virtual void		resetOptions() = 0;
+
+	//! Notify of options changes
+	/*!
+	Set options to given values.  Ignore unknown options and don't
+	modify our options that aren't given in \c options.
+	*/
+	virtual void		setOptions(const COptionsList& options) = 0;
 
 	//@}
 	//! @name accessors

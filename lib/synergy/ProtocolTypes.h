@@ -118,6 +118,10 @@ static const char		kMsgCClipboard[] 	= "CCLP%1i%4i";
 // screensaver on primary has started ($1 == 1) or closed ($1 == 0)
 static const char		kMsgCScreenSaver[] 	= "CSEC%1i";
 
+// reset options:  primary -> secondary
+// client should reset all of its options to their defaults.
+static const char		kMsgCResetOptions[]	= "CROP";
+
 // resolution change acknowledgment:  primary -> secondary
 // sent by primary in response to a secondary screen's kMsgDInfo.
 // this is sent for every kMsgDInfo, whether or not the primary
@@ -180,6 +184,11 @@ static const char		kMsgDClipboard[]	= "DCLP%1i%4i%s";
 // kMsgCInfoAck in order to prevent attempts to move the mouse off
 // the new screen area.
 static const char		kMsgDInfo[]			= "DINF%2i%2i%2i%2i%2i%2i%2i";
+
+// set options:  primary -> secondary
+// client should set the given option/value pairs.  $1 = option/value
+// pairs.
+static const char		kMsgDSetOptions[]	= "DSOP%4I";
 
 
 //

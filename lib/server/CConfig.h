@@ -15,6 +15,7 @@
 #ifndef CCONFIG_H
 #define CCONFIG_H
 
+#include "OptionTypes.h"
 #include "ProtocolTypes.h"
 #include "CNetworkAddress.h"
 #include "XBase.h"
@@ -45,10 +46,14 @@ comparing names.  Screen names and their aliases share a
 namespace and must be unique.
 */
 class CConfig {
+public:
+	typedef std::map<OptionID, OptionValue> CScreenOptions;
+
 private:
 	class CCell {
 	public:
 		CString			m_neighbor[kLastDirection - kFirstDirection + 1];
+		CScreenOptions	m_options;
 	};
 	typedef std::map<CString, CCell, CStringUtil::CaselessCmp> CCellMap;
 	typedef std::map<CString, CString, CStringUtil::CaselessCmp> CNameMap;
@@ -175,6 +180,23 @@ public:
 	*/
 	void				setHTTPAddress(const CNetworkAddress&);
 
+	//! Add a screen option
+	/*!
+	Adds an option and its value to the named screen.  Replaces the
+	existing option's value if there is one.  Returns true iff \c name
+	is a known screen.
+	*/
+	bool				addOption(const CString& name,
+							UInt32 option, SInt32 value);
+
+	//! Remove a screen option
+	/*!
+	Removes an option and its value from the named screen.  Does
+	nothing if the option doesn't exist on the screen.  Returns true
+	iff \c name is a known screen.
+	*/
+	bool				removeOption(const CString& name, UInt32 option);
+
 	//@}
 	//! @name accessors
 	//@{
@@ -227,6 +249,14 @@ public:
 	//! Get the HTTP server address
 	const CNetworkAddress&	getHTTPAddress() const;
 
+	//! Get the screen options
+	/*!
+	Returns all the added options for the named screen.  Returns NULL
+	if the screen is unknown and an empty collection if there are no
+	options.
+	*/
+	const CScreenOptions* getOptions(const CString& name) const;
+
 	//! Compare configurations
 	bool				operator==(const CConfig&) const;
 	//! Compare configurations
@@ -254,6 +284,9 @@ public:
 
 private:
 	static bool			readLine(std::istream&, CString&);
+	static bool			parseBoolean(const CString&);
+	static const char*	getOptionName(OptionID);
+	static const char*	getOptionValue(OptionID, OptionValue);
 	void				readSection(std::istream&);
 	void				readSectionNetwork(std::istream&);
 	void				readSectionScreens(std::istream&);

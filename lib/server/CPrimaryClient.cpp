@@ -242,6 +242,18 @@ CPrimaryClient::screensaver(bool)
 	// ignore
 }
 
+void
+CPrimaryClient::resetOptions()
+{
+	m_screen->resetOptions();
+}
+
+void
+CPrimaryClient::setOptions(const COptionsList& options)
+{
+	m_screen->setOptions(options);
+}
+
 CString
 CPrimaryClient::getName() const
 {

@@ -99,6 +99,18 @@ CMSWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 	m_y = y;
 }
 
+void
+CMSWindowsPrimaryScreen::resetOptions()
+{
+	// no options
+}
+
+void
+CMSWindowsPrimaryScreen::setOptions(const COptionsList& /*options*/)
+{
+	// no options
+}
+
 KeyModifierMask
 CMSWindowsPrimaryScreen::getToggleMask() const
 {

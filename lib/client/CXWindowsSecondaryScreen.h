@@ -43,6 +43,8 @@ public:
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 x, SInt32 y);
 	virtual void		mouseWheel(SInt32 delta);
+	virtual void		resetOptions();
+	virtual void		setOptions(const COptionsList& options);
 	virtual IScreen*	getScreen() const;
 
 	// IScreenEventHandler overrides

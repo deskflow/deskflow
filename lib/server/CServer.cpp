@@ -20,6 +20,7 @@
 #include "COutputPacketStream.h"
 #include "CProtocolUtil.h"
 #include "CClientProxy1_0.h"
+#include "OptionTypes.h"
 #include "ProtocolTypes.h"
 #include "XScreen.h"
 #include "XSynergy.h"
@@ -219,6 +220,8 @@ CServer::setConfig(const CConfig& config)
 	if (m_primaryClient != NULL) {
 		m_primaryClient->reconfigure(getActivePrimarySides());
 	}
+
+	// FIXME -- tell all (connected) clients about current options
 
 	return true;
 }
@@ -830,6 +833,8 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 IClient*
 CServer::getNeighbor(IClient* src, EDirection dir) const
 {
+	// note -- must be locked on entry
+
 	assert(src != NULL);
 
 	CString srcName = src->getName();
@@ -863,6 +868,8 @@ IClient*
 CServer::getNeighbor(IClient* src,
 				EDirection srcSide, SInt32& x, SInt32& y) const
 {
+	// note -- must be locked on entry
+
 	assert(src != NULL);
 
 	// get the first neighbor
@@ -1274,6 +1281,9 @@ CServer::runClient(void* vsocket)
 		CLock lock(&m_mutex);
 		m_clientThreads.insert(std::make_pair(proxy->getName(),
 								CThread::getCurrentThread()));
+
+		// send configuration options
+		sendOptions(proxy);
 	}
 	catch (XDuplicateClient& e) {
 		// client has duplicate name
@@ -1565,6 +1575,32 @@ CServer::processHTTPRequest(void* vsocket)
 }
 
 void
+CServer::sendOptions(IClient* client) const
+{
+	// note -- must be locked on entry
+
+	// look up options for client.  we're done if there aren't any.
+	const CConfig::CScreenOptions* options =
+						m_config.getOptions(client->getName());
+	if (options == NULL) {
+		return;
+	}
+
+	// convert options to a more convenient form for sending
+	COptionsList optionsList;
+	optionsList.reserve(2 * options->size());
+	for (CConfig::CScreenOptions::const_iterator index = options->begin();
+								index != options->end(); ++index) {
+		optionsList.push_back(index->first);
+		optionsList.push_back(static_cast<UInt32>(index->second));
+	}
+
+	// send the options
+	client->resetOptions();
+	client->setOptions(optionsList);
+}
+
+void
 CServer::openPrimaryScreen()
 {
 	assert(m_primaryClient == NULL);
@@ -1605,8 +1641,13 @@ CServer::openPrimaryScreen()
 
 		// tell it about the active sides
 		m_primaryClient->reconfigure(getActivePrimarySides());
+
+		// tell primary client about its options
+		sendOptions(m_primaryClient);
 	}
 	catch (...) {
+		// if m_active is NULL then we haven't added the connection
+		// for the primary client so we don't try to remove it.
 		if (m_active != NULL) {
 			removeConnection(primaryName);
 		}

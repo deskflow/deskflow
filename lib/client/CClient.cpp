@@ -356,6 +356,18 @@ CClient::screensaver(bool activate)
  	m_screen->screensaver(activate);
 }
 
+void
+CClient::resetOptions()
+{
+	m_screen->resetOptions();
+}
+
+void
+CClient::setOptions(const COptionsList& options)
+{
+	m_screen->setOptions(options);
+}
+
 CString
 CClient::getName() const
 {

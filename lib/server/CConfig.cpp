@@ -241,6 +241,34 @@ CConfig::setHTTPAddress(const CNetworkAddress& addr)
 }
 
 bool
+CConfig::addOption(const CString& name, UInt32 option, SInt32 value)
+{
+	// find cell
+	CCellMap::iterator index = m_map.find(name);
+	if (index == m_map.end()) {
+		return false;
+	}
+
+	// add option
+	index->second.m_options.insert(std::make_pair(option, value));
+	return true;
+}
+
+bool
+CConfig::removeOption(const CString& name, UInt32 option)
+{
+	// find cell
+	CCellMap::iterator index = m_map.find(name);
+	if (index == m_map.end()) {
+		return false;
+	}
+
+	// remove option
+	index->second.m_options.erase(option);
+	return true;
+}
+
+bool
 CConfig::isValidScreenName(const CString& name) const
 {
 	// name is valid if matches validname
@@ -359,6 +387,19 @@ CConfig::getHTTPAddress() const
 	return m_httpAddress;
 }
 
+const CConfig::CScreenOptions*
+CConfig::getOptions(const CString& name) const
+{
+	// find cell
+	CCellMap::const_iterator index = m_map.find(name);
+	if (index == m_map.end()) {
+		return NULL;
+	}
+
+	// return options
+	return &index->second.m_options;
+}
+
 bool
 CConfig::operator==(const CConfig& x) const
 {
@@ -436,6 +477,39 @@ CConfig::readLine(std::istream& s, CString& line)
 		s >> std::ws;
 	}
 	return false;
+}
+
+bool
+CConfig::parseBoolean(const CString& arg)
+{
+	if (CStringUtil::CaselessCmp::equal(arg, "true"))
+		return true;
+	if (CStringUtil::CaselessCmp::equal(arg, "false"))
+		return false;
+	throw XConfigRead("invalid argument");
+}
+
+const char*
+CConfig::getOptionName(OptionID id)
+{
+	if (id == kOptionHalfDuplexCapsLock) {
+		return "halfDuplexCapsLock";
+	}
+	if (id == kOptionHalfDuplexNumLock) {
+		return "halfDuplexNumLock";
+	}
+	return NULL;
+}
+
+const char*
+CConfig::getOptionValue(OptionID id, OptionValue value)
+{
+	if (id == kOptionHalfDuplexCapsLock ||
+		id == kOptionHalfDuplexNumLock) {
+		return (value != 0) ? "true" : "false";
+	}
+
+	return "";
 }
 
 void
@@ -547,7 +621,7 @@ void
 CConfig::readSectionScreens(std::istream& s)
 {
 	CString line;
-	CString name;
+	CString screen;
 	while (readLine(s, line)) {
 		// check for end of section
 		if (line == "end") {
@@ -557,23 +631,54 @@ CConfig::readSectionScreens(std::istream& s)
 		// see if it's the next screen
 		if (line[line.size() - 1] == ':') {
 			// strip :
-			name = line.substr(0, line.size() - 1);
+			screen = line.substr(0, line.size() - 1);
 
 			// verify validity of screen name
-			if (!isValidScreenName(name)) {
+			if (!isValidScreenName(screen)) {
 				throw XConfigRead("invalid screen name");
 			}
 
 			// add the screen to the configuration
-			if (!addScreen(name)) {
+			if (!addScreen(screen)) {
 				throw XConfigRead("duplicate screen name");
 			}
 		}
-		else if (name.empty()) {
+		else if (screen.empty()) {
 			throw XConfigRead("argument before first screen");
 		}
 		else {
-			throw XConfigRead("unknown argument");
+			// parse argument:  `<name>=<value>'
+			CString::size_type i = line.find_first_of(" \t=");
+			if (i == 0) {
+				throw XConfigRead("missing argument name");
+			}
+			if (i == CString::npos) {
+				throw XConfigRead("missing = in argument");
+			}
+			CString name = line.substr(0, i);
+			i = line.find_first_not_of(" \t", i);
+			if (i == CString::npos || line[i] != '=') {
+				throw XConfigRead("missing = in argument");
+			}
+			i = line.find_first_not_of(" \t", i + 1);
+			CString value;
+			if (i != CString::npos) {
+				value = line.substr(i);
+			}
+
+			// handle argument
+			if (name == "halfDuplexCapsLock") {
+				addOption(screen, kOptionHalfDuplexCapsLock,
+					parseBoolean(value));
+			}
+			else if (name == "halfDuplexNumLock") {
+				addOption(screen, kOptionHalfDuplexNumLock,
+					parseBoolean(value));
+			}
+			else {
+				// unknown argument
+				throw XConfigRead("unknown argument");
+			}
 		}
 	}
 	throw XConfigRead("unexpected end of screens section");
@@ -740,6 +845,19 @@ operator<<(std::ostream& s, const CConfig& config)
 	for (CConfig::const_iterator screen = config.begin();
 								screen != config.end(); ++screen) {
 		s << "\t" << screen->c_str() << ":" << std::endl;
+		const CConfig::CScreenOptions* options = config.getOptions(*screen);
+		if (options != NULL && options->size() > 0) {
+			for (CConfig::CScreenOptions::const_iterator
+								option  = options->begin();
+								option != options->end(); ++option) {
+				const char* name  = CConfig::getOptionName(option->first);
+				const char* value = CConfig::getOptionValue(option->first,
+															option->second);
+				if (name != NULL && value != NULL) {
+					s << "\t\t" << name << " = " << value << std::endl;
+				}
+			}
+		}
 	}
 	s << "end" << std::endl;
 

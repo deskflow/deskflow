@@ -214,6 +214,18 @@ CMSWindowsSecondaryScreen::mouseWheel(SInt32 delta)
 	mouse_event(MOUSEEVENTF_WHEEL, 0, 0, delta, 0);
 }
 
+void
+CMSWindowsSecondaryScreen::resetOptions()
+{
+	// no options
+}
+
+void
+CMSWindowsSecondaryScreen::setOptions(const COptionsList& /*options*/)
+{
+	// no options
+}
+
 IScreen*
 CMSWindowsSecondaryScreen::getScreen() const
 {

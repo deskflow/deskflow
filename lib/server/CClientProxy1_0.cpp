@@ -252,6 +252,20 @@ CClientProxy1_0::screensaver(bool on)
 	CProtocolUtil::writef(getOutputStream(), kMsgCScreenSaver, on ? 1 : 0);
 }
 
+void
+CClientProxy1_0::resetOptions()
+{
+	LOG((CLOG_DEBUG1 "send reset options to \"%s\"", getName().c_str()));
+	CProtocolUtil::writef(getOutputStream(), kMsgCResetOptions);
+}
+
+void
+CClientProxy1_0::setOptions(const COptionsList& options)
+{
+	LOG((CLOG_DEBUG1 "send set options to \"%s\" size=%d", getName().c_str(), options.size()));
+	CProtocolUtil::writef(getOutputStream(), kMsgDSetOptions, &options);
+}
+
 SInt32
 CClientProxy1_0::getJumpZoneSize() const
 {

@@ -46,6 +46,7 @@ libsynergy_a_SOURCES = 			\
 	IServer.h					\
 	KeyTypes.h					\
 	MouseTypes.h				\
+	OptionTypes.h				\
 	ProtocolTypes.h				\
 	XScreen.h					\
 	XSynergy.h					\

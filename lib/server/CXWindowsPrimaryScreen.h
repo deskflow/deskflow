@@ -38,6 +38,8 @@ public:
 	// CPrimaryScreen overrides
 	virtual void		reconfigure(UInt32 activeSides);
 	virtual void		warpCursor(SInt32 x, SInt32 y);
+	virtual void		resetOptions();
+	virtual void		setOptions(const COptionsList& options);
 	virtual KeyModifierMask	getToggleMask() const;
 	virtual bool		isLockedToScreen() const;
 	virtual IScreen*	getScreen() const;

@@ -197,6 +197,9 @@ private:
 	IClient*			getNeighbor(IClient*, EDirection,
 							SInt32& x, SInt32& y) const;
 
+	// send screen options to \c client
+	void				sendOptions(IClient* client) const;
+
 	// open/close the primary screen
 	void				openPrimaryScreen();
 	void				closePrimaryScreen();

@@ -45,6 +45,8 @@ public:
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbsolute, SInt32 yAbsolute);
 	virtual void		mouseWheel(SInt32 delta);
+	virtual void		resetOptions();
+	virtual void		setOptions(const COptionsList& options);
 	virtual IScreen*	getScreen() const;
 
 	// IMSWindowsScreenEventHandler overrides

@@ -46,6 +46,8 @@ public:
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs);
 	virtual void		mouseWheel(SInt32 delta);
 	virtual void		screensaver(bool activate);
+	virtual void		resetOptions();
+	virtual void		setOptions(const COptionsList& options);
 	virtual SInt32		getJumpZoneSize() const;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;

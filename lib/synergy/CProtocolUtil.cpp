@@ -16,6 +16,7 @@
 #include "IInputStream.h"
 #include "IOutputStream.h"
 #include "CLog.h"
+#include "stdvector.h"
 #include <cctype>
 #include <cstring>
 
@@ -116,6 +117,56 @@ CProtocolUtil::readf(IInputStream* stream, const char* fmt, ...)
 				break;
 			}
 
+			case 'I': {
+				// check for valid length
+				assert(len == 1 || len == 2 || len == 4);
+
+				// read the vector length
+				UInt8 buffer[4];
+				read(stream, buffer, 4);
+				UInt32 len = (static_cast<UInt32>(buffer[0]) << 24) |
+							 (static_cast<UInt32>(buffer[1]) << 16) |
+							 (static_cast<UInt32>(buffer[2]) <<  8) |
+							  static_cast<UInt32>(buffer[3]);
+
+				// convert it
+				void* v = va_arg(args, void*);
+				switch (len) {
+				case 1:
+					// 1 byte integer
+					for (UInt32 i = 0; i < len; ++i) {
+						reinterpret_cast<std::vector<UInt8>*>(v)->push_back(
+							buffer[0]);
+						LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, reinterpret_cast<std::vector<UInt8>*>(v)->back(), reinterpret_cast<std::vector<UInt8>*>(v)->back()));
+					}
+					break;
+
+				case 2:
+					// 2 byte integer
+					for (UInt32 i = 0; i < len; ++i) {
+						reinterpret_cast<std::vector<UInt16>*>(v)->push_back(
+							static_cast<UInt16>(
+							(static_cast<UInt16>(buffer[0]) << 8) |
+							 static_cast<UInt16>(buffer[1])));
+						LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, reinterpret_cast<std::vector<UInt16>*>(v)->back(), reinterpret_cast<std::vector<UInt16>*>(v)->back()));
+					}
+					break;
+
+				case 4:
+					// 4 byte integer
+					for (UInt32 i = 0; i < len; ++i) {
+						reinterpret_cast<std::vector<UInt32>*>(v)->push_back(
+							(static_cast<UInt32>(buffer[0]) << 24) |
+							(static_cast<UInt32>(buffer[1]) << 16) |
+							(static_cast<UInt32>(buffer[2]) <<  8) |
+							 static_cast<UInt32>(buffer[3]));
+						LOG((CLOG_DEBUG2 "readf: read %d byte integer[%d]: %d (0x%x)", len, i, reinterpret_cast<std::vector<UInt32>*>(v)->back(), reinterpret_cast<std::vector<UInt32>*>(v)->back()));
+					}
+					break;
+				}
+				break;
+			}
+
 			case 's': {
 				assert(len == 0);
 
@@ -207,6 +258,24 @@ CProtocolUtil::getLength(const char* fmt, va_list args)
 				(void)va_arg(args, UInt32);
 				break;
 
+			case 'I':
+				assert(len == 1 || len == 2 || len == 4);
+				switch (len) {
+				case 1:
+					len = (va_arg(args, std::vector<UInt8>*))->size() + 4;
+					break;
+
+				case 2:
+					len = 2 * (va_arg(args, std::vector<UInt8>*))->size() + 4;
+					break;
+
+				case 4:
+					len = 4 * (va_arg(args, std::vector<UInt8>*))->size() + 4;
+					break;
+				}
+				(void)va_arg(args, void*);
+				break;
+
 			case 's':
 				assert(len == 0);
 				len = (va_arg(args, CString*))->size() + 4;
@@ -276,6 +345,52 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 
 				default:
 					assert(0 && "invalid integer format length");
+					return;
+				}
+				break;
+			}
+
+			case 'I': {
+				const UInt32 v = va_arg(args, UInt32);
+				switch (len) {
+				case 1: {
+					// 1 byte integers
+					const std::vector<UInt8>* list =
+						va_arg(args, const std::vector<UInt8>*);
+					for (UInt32 i = 0, n = list->size(); i < n; ++i) {
+						*dst++ = (*list)[i];
+					}
+					break;
+				}
+
+				case 2: {
+					// 2 byte integers
+					const std::vector<UInt16>* list =
+						va_arg(args, const std::vector<UInt16>*);
+					for (UInt32 i = 0, n = list->size(); i < n; ++i) {
+						const UInt16 v = (*list)[i];
+						*dst++ = static_cast<UInt8>((v >> 8) & 0xff);
+						*dst++ = static_cast<UInt8>( v       & 0xff);
+					}
+					break;
+				}
+
+				case 4: {
+					// 4 byte integers
+					const std::vector<UInt32>* list =
+						va_arg(args, const std::vector<UInt32>*);
+					for (UInt32 i = 0, n = list->size(); i < n; ++i) {
+						const UInt32 v = (*list)[i];
+						*dst++ = static_cast<UInt8>((v >> 24) & 0xff);
+						*dst++ = static_cast<UInt8>((v >> 16) & 0xff);
+						*dst++ = static_cast<UInt8>((v >>  8) & 0xff);
+						*dst++ = static_cast<UInt8>( v        & 0xff);
+					}
+					break;
+				}
+
+				default:
+					assert(0 && "invalid integer vector format length");
 					return;
 				}
 				break;

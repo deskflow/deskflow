@@ -79,6 +79,28 @@ CXWindowsPrimaryScreen::warpCursor(SInt32 x, SInt32 y)
 	m_y = y;
 }
 
+void
+CXWindowsPrimaryScreen::resetOptions()
+{
+	m_numLockHalfDuplex  = false;
+	m_capsLockHalfDuplex = false;
+}
+
+void
+CXWindowsPrimaryScreen::setOptions(const COptionsList& options)
+{
+	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
+		if (options[i] == kOptionHalfDuplexCapsLock) {
+			m_capsLockHalfDuplex = (options[i + 1] != 0);
+			LOG((CLOG_DEBUG1 "half-duplex caps-lock %s", m_capsLockHalfDuplex ? "on" : "off"));
+		}
+		else if (options[i] == kOptionHalfDuplexNumLock) {
+			m_numLockHalfDuplex = (options[i + 1] != 0);
+			LOG((CLOG_DEBUG1 "half-duplex num-lock %s", m_numLockHalfDuplex ? "on" : "off"));
+		}
+	}
+}
+
 KeyModifierMask
 CXWindowsPrimaryScreen::getToggleMask() const
 {
@@ -385,16 +407,11 @@ CXWindowsPrimaryScreen::onPreOpen()
 void
 CXWindowsPrimaryScreen::onPostOpen()
 {
+	assert(m_window != None);
+
 	// get cursor info
 	m_screen->getCursorPos(m_x, m_y);
 	m_screen->getCursorCenter(m_xCenter, m_yCenter);
-
-	// check for peculiarities
-	// FIXME -- may have to get these from some database
-	m_numLockHalfDuplex  = false;
-	m_capsLockHalfDuplex = false;
-//	m_numLockHalfDuplex  = true;
-//	m_capsLockHalfDuplex = true;
 }
 
 void

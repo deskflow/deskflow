@@ -90,6 +90,9 @@ CPrimaryScreen::open()
 
 		// subclass hook
 		onPostOpen();
+
+		// reset options
+		resetOptions();
 	}
 	catch (...) {
 		close();

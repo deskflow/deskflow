@@ -17,6 +17,7 @@
 
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
+#include "OptionTypes.h"
 #include "CMutex.h"
 
 class IClipboard;
@@ -114,6 +115,19 @@ public:
 	Grabs (i.e. take ownership of) the system clipboard.
 	*/
 	void				grabClipboard(ClipboardID);
+
+	//! Notify of options changes
+	/*!
+	Reset all options to their default values.
+	*/
+	virtual void		resetOptions() = 0;
+
+	//! Notify of options changes
+	/*!
+	Set options to given values.  Ignore unknown options and don't
+	modify our options that aren't given in \c options.
+	*/
+	virtual void		setOptions(const COptionsList& options) = 0;
 
 	//@}
 	//! @name accessors
