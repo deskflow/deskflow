@@ -376,33 +376,41 @@ CMSWindowsScreenSaver::watchDesktopThread(void*)
 		// wait a bit
 		ARCH->sleep(0.2);
 
-		// get current desktop
-		HDESK desk = OpenInputDesktop(0, FALSE, GENERIC_READ);
-		if (desk == NULL) {
-			// can't open desktop so keep waiting
-			continue;
+		if (m_isNT) {
+			// get current desktop
+			HDESK desk = OpenInputDesktop(0, FALSE, GENERIC_READ);
+			if (desk == NULL) {
+				// can't open desktop so keep waiting
+				continue;
+			}
+
+			// get current desktop name length
+			DWORD size;
+			GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
+
+			// allocate more space for the name, if necessary
+			if (size > reserved) {
+				reserved = size;
+				name     = (TCHAR*)alloca(reserved + sizeof(TCHAR));
+			}
+
+			// get current desktop name
+			GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
+			CloseDesktop(desk);
+
+			// compare name to screen saver desktop name
+			if (_tcsicmp(name, TEXT("Screen-saver")) == 0) {
+				// still the screen saver desktop so keep waiting
+				continue;
+			}
 		}
-
-		// get current desktop name length
-		DWORD size;
-		GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
-
-		// allocate more space for the name, if necessary
-		if (size > reserved) {
-			reserved = size;
-			name     = (TCHAR*)alloca(reserved + sizeof(TCHAR));
-		}
-
-		// get current desktop name
-		GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
-
-		// compare name to screen saver desktop name
-		if (_tcsicmp(name, TEXT("Screen-saver")) == 0) {
-// XXX -- getting "Default" as desk when screen saver was running
-// before we started checking on it.  can it be "Default" at other
-// times to?  how do we properly detect a running screen saver?
-			// still the screen saver desktop so keep waiting
-			continue;
+		else {
+			// 2000/XP have a sane way to detect a runnin screensaver.
+			BOOL running;
+			SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, 0);
+			if (running) {
+				continue;
+			}
 		}
 
 		// send screen saver deactivation message
