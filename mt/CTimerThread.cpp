@@ -18,7 +18,10 @@ CTimerThread::CTimerThread(double timeout) : m_timeout(timeout)
 
 CTimerThread::~CTimerThread()
 {
+	log((CLOG_DEBUG "cancelling timeout"));
 	m_timingThread->cancel();
+	m_timingThread->wait();
+	log((CLOG_DEBUG "cancelled timeout"));
 	delete m_timingThread;
 	delete m_callingThread;
 }

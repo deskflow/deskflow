@@ -3,6 +3,7 @@
 #include "XThread.h"
 #include "CLock.h"
 #include "CStopwatch.h"
+#include "CLog.h"
 
 //
 // CThreadPtr
@@ -75,6 +76,8 @@ void					CThread::sleep(double timeout)
 
 void					CThread::exit(void* result)
 {
+	CThreadPtr currentRep(CThreadRep::getCurrentThreadRep());
+	log((CLOG_DEBUG "throw exit on thread %p", currentRep.operator->()));
 	throw XThreadExit(result);
 }
 

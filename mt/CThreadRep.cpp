@@ -3,6 +3,7 @@
 #include "CMutex.h"
 #include "CLock.h"
 #include "XThread.h"
+#include "CLog.h"
 #include "IJob.h"
 #include <assert.h>
 
@@ -229,14 +230,19 @@ void					CThreadRep::doThreadFunc()
 
 	catch (XThreadCancel&) {
 		// client called cancel()
+		log((CLOG_DEBUG "caught cancel on thread %p", this));
 	}
 
 	catch (XThreadExit& e) {
 		// client called exit()
 		result = e.m_result;
+		log((CLOG_DEBUG "caught exit on thread %p", this));
 	}
-
-	// note -- don't catch (...) to avoid masking bugs
+	catch (...) {
+		log((CLOG_DEBUG "caught exit on thread %p", this));
+		// note -- don't catch (...) to avoid masking bugs
+		throw;
+	}
 
 	// done with job
 	delete m_job;
@@ -286,6 +292,7 @@ void					CThreadRep::cancel()
 		m_cancel = true;
 
 		// break out of system calls
+		log((CLOG_DEBUG "cancel thread %p", this));
 		pthread_kill(m_thread, SIGALRM);
 	}
 }
@@ -304,6 +311,7 @@ void					CThreadRep::testCancel()
 	}
 
 	// start cancel
+	log((CLOG_DEBUG "throw cancel on thread %p", this));
 	throw XThreadCancel();
 }
 
@@ -401,6 +409,7 @@ void					CThreadRep::sleep(double timeout)
 
 void					CThreadRep::cancel()
 {
+	log((CLOG_DEBUG "cancel thread %p", this));
 	SetEvent(m_cancel);
 }
 
@@ -423,6 +432,7 @@ void					CThreadRep::testCancel()
 	}
 
 	// start cancel
+	log((CLOG_DEBUG "throw cancel on thread %p", this));
 	throw XThreadCancel();
 }
 
