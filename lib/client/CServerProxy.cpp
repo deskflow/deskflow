@@ -15,6 +15,7 @@
 #include "CServerProxy.h"
 #include "CProtocolUtil.h"
 #include "IClient.h"
+#include "OptionTypes.h"
 #include "ProtocolTypes.h"
 #include "IInputStream.h"
 #include "IOutputStream.h"
@@ -161,6 +162,14 @@ CServerProxy::mainLoop()
 				setClipboard();
 			}
 
+			else if (memcmp(code, kMsgCResetOptions, 4) == 0) {
+				resetOptions();
+			}
+
+			else if (memcmp(code, kMsgDSetOptions, 4) == 0) {
+				setOptions();
+			}
+
 			else if (memcmp(code, kMsgCClose, 4) == 0) {
 				// server wants us to hangup
 				LOG((CLOG_DEBUG1 "recv close"));
@@ -197,6 +206,7 @@ CServerProxy::mainLoop()
 			else {
 				// unknown message
 				LOG((CLOG_ERR "unknown message from server"));
+				LOG((CLOG_ERR "unknown message: %d %d %d %d [%c%c%c%c]", code[0], code[1], code[2], code[3], code[0], code[1], code[2], code[3]));
 				failedToConnect = true;
 				break;
 			}
@@ -514,6 +524,28 @@ CServerProxy::screensaver()
 
 	// forward
 	getClient()->screensaver(on != 0);
+}
+
+void
+CServerProxy::resetOptions()
+{
+	// parse
+	LOG((CLOG_DEBUG1 "recv reset options"));
+
+	// forward
+	getClient()->resetOptions();
+}
+
+void
+CServerProxy::setOptions()
+{
+	// parse
+	COptionsList options;
+	CProtocolUtil::readf(getInputStream(), kMsgDSetOptions + 4, &options);
+	LOG((CLOG_DEBUG1 "recv set options size=%d", options.size()));
+
+	// forward
+	getClient()->setOptions(options);
 }
 
 void

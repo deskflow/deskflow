@@ -105,6 +105,8 @@ private:
 	void				mouseMove();
 	void				mouseWheel();
 	void				screensaver();
+	void				resetOptions();
+	void				setOptions();
 	void				queryInfo();
 	void				infoAcknowledgment();
 
