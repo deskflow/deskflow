@@ -40,11 +40,13 @@ public:
 	//! @name manipulators
 	//@{
 
-	void				unblockThread(CArchThread thread);
+	void				setNetworkDataForCurrentThread(void*);
 
 	//@}
 	//! @name accessors
 	//@{
+
+	void*				getNetworkDataForThread(CArchThread);
 
 	static CArchMultithreadPosix*	getInstance();
 

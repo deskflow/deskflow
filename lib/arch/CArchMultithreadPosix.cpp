@@ -69,6 +69,7 @@ public:
 	bool				m_cancelling;
 	bool				m_exited;
 	void*				m_result;
+	void*				m_networkData;
 };
 
 CArchThreadImpl::CArchThreadImpl() :
@@ -79,7 +80,8 @@ CArchThreadImpl::CArchThreadImpl() :
 	m_cancel(false),
 	m_cancelling(false),
 	m_exited(false),
-	m_result(NULL)
+	m_result(NULL),
+	m_networkData(NULL)
 {
 	// do nothing
 }
@@ -149,9 +151,21 @@ CArchMultithreadPosix::~CArchMultithreadPosix()
 }
 
 void
-CArchMultithreadPosix::unblockThread(CArchThread thread)
+CArchMultithreadPosix::setNetworkDataForCurrentThread(void* data)
 {
-	pthread_kill(thread->m_thread, SIGWAKEUP);
+	lockMutex(m_threadMutex);
+	CArchThreadImpl* thread = find(pthread_self());
+	thread->m_networkData = data;
+	unlockMutex(m_threadMutex);
+}
+
+void*
+CArchMultithreadPosix::getNetworkDataForThread(CArchThread thread)
+{
+	lockMutex(m_threadMutex);
+	void* data = thread->m_networkData;
+	unlockMutex(m_threadMutex);
+	return data;
 }
 
 CArchMultithreadPosix*
@@ -579,7 +593,7 @@ CArchMultithreadPosix::raiseSignal(ESignal signal)
 	lockMutex(m_threadMutex);
 	if (m_signalFunc[signal] != NULL) {
 		m_signalFunc[signal](signal, m_signalUserData[signal]);
-		unblockThread(m_mainThread);
+		pthread_kill(m_mainThread->m_thread, SIGWAKEUP);
 	}
 	else if (signal == kINTERRUPT || signal == kTERMINATE) {
 		ARCH->cancelThread(m_mainThread);

@@ -79,6 +79,8 @@ public:
 	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress);
 
 private:
+	const int*			getUnblockPipe();
+	const int*			getUnblockPipeForThread(CArchThread);
 	void				setBlockingOnSocket(int fd, bool blocking);
 	void				throwError(int);
 	void				throwNameError(int);

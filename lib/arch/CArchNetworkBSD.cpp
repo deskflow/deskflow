@@ -257,7 +257,7 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 
 	// allocate space for translated query
 	struct pollfd* pfd = reinterpret_cast<struct pollfd*>(
-								alloca(num * sizeof(struct pollfd)));
+								alloca((1 + num) * sizeof(struct pollfd)));
 
 	// translate query
 	for (int i = 0; i < num; ++i) {
@@ -270,21 +270,43 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 			pfd[i].events |= POLLOUT;
 		}
 	}
+	int n = num;
+
+	// add the unblock pipe
+	const int* unblockPipe = getUnblockPipe();
+	if (unblockPipe != NULL) {
+		pfd[n].fd     = unblockPipe[0];
+		pfd[n].events = POLLIN;
+		++n;
+	}
+
+	// prepare timeout
+	int t = (timeout < 0.0) ? -1 : static_cast<int>(1000.0 * timeout);
 
 	// do the poll
-	int t = (timeout < 0.0) ? -1 : static_cast<int>(1000.0 * timeout);
-	int n;
-	do {
-		n = poll(pfd, num, t);
-		if (n == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				return 0;
-			}
-			throwError(errno);
+	n = poll(pfd, n, t);
+
+	// reset the unblock pipe
+	if (unblockPipe != NULL && (pfd[num].revents & POLLIN) != 0) {
+		// the unblock event was signalled.  flush the pipe.
+		char dummy[100];
+		do {
+			read(unblockPipe[0], dummy, sizeof(dummy));
+		} while (errno != EAGAIN);
+
+		// don't count this unblock pipe in return value
+		--n;
+	}
+
+	// handle results
+	if (n == -1) {
+		if (errno == EINTR) {
+			// interrupted system call
+			ARCH->testCancelThread();
+			return 0;
 		}
-	} while (false);
+		throwError(errno);
+	}
 
 	// translate back
 	for (int i = 0; i < num; ++i) {
@@ -313,102 +335,119 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 {
 	int i, n;
 
-	do {
-		// prepare sets for select
-		n = 0;
-		fd_set readSet, writeSet, errSet;
-		fd_set* readSetP  = NULL;
-		fd_set* writeSetP = NULL;
-		fd_set* errSetP   = NULL;
-		FD_ZERO(&readSet);
-		FD_ZERO(&writeSet);
-		FD_ZERO(&errSet);
-		for (i = 0; i < num; ++i) {
-			// reset return flags
-			pe[i].m_revents = 0;
+	// prepare sets for select
+	n = 0;
+	fd_set readSet, writeSet, errSet;
+	fd_set* readSetP  = NULL;
+	fd_set* writeSetP = NULL;
+	fd_set* errSetP   = NULL;
+	FD_ZERO(&readSet);
+	FD_ZERO(&writeSet);
+	FD_ZERO(&errSet);
+	for (i = 0; i < num; ++i) {
+		// reset return flags
+		pe[i].m_revents = 0;
 
-			// set invalid flag if socket is bogus then go to next socket
-			if (pe[i].m_socket == NULL) {
-				pe[i].m_revents |= kPOLLNVAL;
-				continue;
-			}
-
-			int fdi = pe[i].m_socket->m_fd;
-			if (pe[i].m_events & kPOLLIN) {
-				FD_SET(pe[i].m_socket->m_fd, &readSet);
-				readSetP = &readSet;
-				if (fdi > n) {
-					n = fdi;
-				}
-			}
-			if (pe[i].m_events & kPOLLOUT) {
-				FD_SET(pe[i].m_socket->m_fd, &writeSet);
-				writeSetP = &writeSet;
-				if (fdi > n) {
-					n = fdi;
-				}
-			}
-			if (true) {
-				FD_SET(pe[i].m_socket->m_fd, &errSet);
-				errSetP = &errSet;
-				if (fdi > n) {
-					n = fdi;
-				}
-			}
+		// set invalid flag if socket is bogus then go to next socket
+		if (pe[i].m_socket == NULL) {
+			pe[i].m_revents |= kPOLLNVAL;
+			continue;
 		}
 
-		// if there are no sockets then don't block forever
-		if (n == 0 && timeout < 0.0) {
-			timeout = 0.0;
-		}
-
-		// prepare timeout for select
-		struct timeval timeout2;
-		struct timeval* timeout2P;
-		if (timeout < 0.0) {
-			timeout2P = NULL;
-		}
-		else {
-			timeout2P = &timeout2;
-			timeout2.tv_sec  = static_cast<int>(timeout);
-			timeout2.tv_usec = static_cast<int>(1.0e+6 *
-											(timeout - timeout2.tv_sec));
-		}
-
-		// do the select
-		n = select((SELECT_TYPE_ARG1)  n + 1,
-					SELECT_TYPE_ARG234 readSetP,
-					SELECT_TYPE_ARG234 writeSetP,
-					SELECT_TYPE_ARG234 errSetP,
-					SELECT_TYPE_ARG5   timeout2P);
-
-		// handle results
-		if (n == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				return 0;
-			}
-			throwError(errno);
-		}
-		n = 0;
-		for (i = 0; i < num; ++i) {
-			if (pe[i].m_socket != NULL) {
-				if (FD_ISSET(pe[i].m_socket->m_fd, &readSet)) {
-					pe[i].m_revents |= kPOLLIN;
-				}
-				if (FD_ISSET(pe[i].m_socket->m_fd, &writeSet)) {
-					pe[i].m_revents |= kPOLLOUT;
-				}
-				if (FD_ISSET(pe[i].m_socket->m_fd, &errSet)) {
-					pe[i].m_revents |= kPOLLERR;
-				}
-			}
-			if (pe[i].m_revents != 0) {
-				++n;
+		int fdi = pe[i].m_socket->m_fd;
+		if (pe[i].m_events & kPOLLIN) {
+			FD_SET(pe[i].m_socket->m_fd, &readSet);
+			readSetP = &readSet;
+			if (fdi > n) {
+				n = fdi;
 			}
 		}
-	} while (false);
+		if (pe[i].m_events & kPOLLOUT) {
+			FD_SET(pe[i].m_socket->m_fd, &writeSet);
+			writeSetP = &writeSet;
+			if (fdi > n) {
+				n = fdi;
+			}
+		}
+		if (true) {
+			FD_SET(pe[i].m_socket->m_fd, &errSet);
+			errSetP = &errSet;
+			if (fdi > n) {
+				n = fdi;
+			}
+		}
+	}
+
+	// add the unblock pipe
+	const int* unblockPipe = getUnblockPipe();
+	if (unblockPipe != NULL) {
+		FD_SET(unblockPipe[0], &readSet);
+		readSetP = &readSet;
+		if (unblockPipe[0] > n) {
+			n = unblockPipe[0];
+		}
+	}
+
+	// if there are no sockets then don't block forever
+	if (n == 0 && timeout < 0.0) {
+		timeout = 0.0;
+	}
+
+	// prepare timeout for select
+	struct timeval timeout2;
+	struct timeval* timeout2P;
+	if (timeout < 0.0) {
+		timeout2P = NULL;
+	}
+	else {
+		timeout2P = &timeout2;
+		timeout2.tv_sec  = static_cast<int>(timeout);
+		timeout2.tv_usec = static_cast<int>(1.0e+6 *
+										(timeout - timeout2.tv_sec));
+	}
+
+	// do the select
+	n = select((SELECT_TYPE_ARG1)  n + 1,
+				SELECT_TYPE_ARG234 readSetP,
+				SELECT_TYPE_ARG234 writeSetP,
+				SELECT_TYPE_ARG234 errSetP,
+				SELECT_TYPE_ARG5   timeout2P);
+
+	// reset the unblock pipe
+	if (unblockPipe != NULL && FD_ISSET(unblockPipe[0], &readSet)) {
+		// the unblock event was signalled.  flush the pipe.
+		char dummy[100];
+		do {
+			read(unblockPipe[0], dummy, sizeof(dummy));
+		} while (errno != EAGAIN);
+	}
+
+	// handle results
+	if (n == -1) {
+		if (errno == EINTR) {
+			// interrupted system call
+			ARCH->testCancelThread();
+			return 0;
+		}
+		throwError(errno);
+	}
+	n = 0;
+	for (i = 0; i < num; ++i) {
+		if (pe[i].m_socket != NULL) {
+			if (FD_ISSET(pe[i].m_socket->m_fd, &readSet)) {
+				pe[i].m_revents |= kPOLLIN;
+			}
+			if (FD_ISSET(pe[i].m_socket->m_fd, &writeSet)) {
+				pe[i].m_revents |= kPOLLOUT;
+			}
+			if (FD_ISSET(pe[i].m_socket->m_fd, &errSet)) {
+				pe[i].m_revents |= kPOLLERR;
+			}
+		}
+		if (pe[i].m_revents != 0) {
+			++n;
+		}
+	}
 
 	return n;
 }
@@ -418,7 +457,11 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 void
 CArchNetworkBSD::unblockPollSocket(CArchThread thread)
 {
-	CArchMultithreadPosix::getInstance()->unblockThread(thread);
+	const int* unblockPipe = getUnblockPipeForThread(thread);
+	if (unblockPipe != NULL) {
+		char dummy = 0;
+		write(unblockPipe[1], &dummy, 1);
+	}
 }
 
 size_t
@@ -737,6 +780,38 @@ CArchNetworkBSD::isEqualAddr(CArchNetAddress a, CArchNetAddress b)
 {
 	return (a->m_len == b->m_len &&
 			memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
+}
+
+const int*
+CArchNetworkBSD::getUnblockPipe()
+{
+	CArchMultithreadPosix* mt = CArchMultithreadPosix::getInstance();
+	return getUnblockPipeForThread(mt->newCurrentThread());
+}
+
+const int*
+CArchNetworkBSD::getUnblockPipeForThread(CArchThread thread)
+{
+	CArchMultithreadPosix* mt = CArchMultithreadPosix::getInstance();
+	int* unblockPipe          = (int*)mt->getNetworkDataForThread(thread);
+	if (unblockPipe == NULL) {
+		unblockPipe = new int[2];
+		if (pipe(unblockPipe) != -1) {
+			try {
+				setBlockingOnSocket(unblockPipe[0], false);
+				mt->setNetworkDataForCurrentThread(unblockPipe);
+			}
+			catch (...) {
+				delete[] unblockPipe;
+				unblockPipe = NULL;
+			}
+		}
+		else {
+			delete[] unblockPipe;
+			unblockPipe = NULL;
+		}
+	}
+	return unblockPipe;
 }
 
 void
