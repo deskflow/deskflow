@@ -506,6 +506,13 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 	case SYNERGY_MSG_MOUSE_BUTTON:
 		// ignore message if posted prior to last mark change
 		if (m_markReceived == m_mark) {
+			static const int s_vkButton[] = {
+				0,				// kButtonNone
+				VK_LBUTTON,		// kButtonLeft, etc.
+				VK_MBUTTON,
+				VK_RBUTTON
+			};
+
 			const ButtonID button = mapButton(msg->wParam);
 			switch (msg->wParam) {
 			case WM_LBUTTONDOWN:
@@ -514,6 +521,7 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 				log((CLOG_DEBUG1 "event: button press button=%d", button));
 				if (button != kButtonNone) {
 					m_server->onMouseDown(button);
+					m_keys[s_vkButton[button]] |= 0x80;
 				}
 				break;
 
@@ -523,6 +531,7 @@ CMSWindowsPrimaryScreen::onPreTranslate(MSG* msg)
 				log((CLOG_DEBUG1 "event: button release button=%d", button));
 				if (button != kButtonNone) {
 					m_server->onMouseUp(button);
+					m_keys[s_vkButton[button]] &= ~0x80;
 				}
 				break;
 			}
@@ -1432,7 +1441,8 @@ CMSWindowsPrimaryScreen::updateKeys()
 	// clear key state
 	memset(m_keys, 0, sizeof(m_keys));
 
-	// we only care about the modifier key states
+	// we only care about the modifier key states.  other keys and the
+	// mouse buttons should be up.
 	m_keys[VK_LSHIFT]   = static_cast<BYTE>(GetKeyState(VK_LSHIFT));
 	m_keys[VK_RSHIFT]   = static_cast<BYTE>(GetKeyState(VK_RSHIFT));
 	m_keys[VK_SHIFT]    = static_cast<BYTE>(GetKeyState(VK_SHIFT));
