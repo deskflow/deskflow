@@ -406,8 +406,6 @@ CNetwork::setnodelay(CNetwork::Socket s, bool nodelay)
 #	include <netinet/tcp.h>
 #endif
 
-// FIXME -- use reentrant versions of non-reentrant functions
-
 const int				CNetwork::Error = -1;
 const CNetwork::Socket	CNetwork::Null = -1;
 
