@@ -74,6 +74,14 @@ CClient::connect()
 	}
 
 	try {
+		// resolve the server hostname.  do this every time we connect
+		// in case we couldn't resolve the address earlier or the address
+		// has changed (which can happen frequently if this is a laptop
+		// being shuttled between various networks).  patch by Brent
+		// Priddy.
+		m_serverAddress.resolve();
+
+		// create the socket
 		IDataSocket* socket = m_socketFactory->create();
 
 		// filter socket messages, including a packetizing filter

@@ -744,6 +744,7 @@ parse(int argc, const char* const* argv)
 			try {
 				*ARG->m_synergyAddress = CNetworkAddress(argv[i + 1],
 														kDefaultPort);
+				ARG->m_synergyAddress->resolve();
 			}
 			catch (XSocketAddress& e) {
 				LOG((CLOG_PRINT "%s: %s" BYE,

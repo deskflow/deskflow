@@ -780,6 +780,7 @@ CConfig::readSectionOptions(std::istream& s)
 		if (name == "address") {
 			try {
 				m_synergyAddress = CNetworkAddress(value, kDefaultPort);
+				m_synergyAddress.resolve();
 			}
 			catch (XSocketAddress& e) {
 				throw XConfigRead(CString("invalid address argument:  ") +

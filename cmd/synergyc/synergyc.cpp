@@ -694,11 +694,18 @@ parse(int argc, const char* const* argv)
 	// save server address
 	try {
 		*ARG->m_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
+		ARG->m_serverAddress->resolve();
 	}
 	catch (XSocketAddress& e) {
-		LOG((CLOG_PRINT "%s: %s" BYE,
+		// allow an address that we can't look up if we're restartable.
+		// we'll try to resolve the address each time we connect to the
+		// server.  a bad port will never get better.  patch by Brent
+		// Priddy.
+		if (!ARG->m_restartable || e.getError() == XSocketAddress::kBadPort) {
+			LOG((CLOG_PRINT "%s: %s" BYE,
 								ARG->m_pname, e.what(), ARG->m_pname));
-		bye(kExitFailed);
+			bye(kExitFailed);
+		}
 	}
 
 	// increase default filter level for daemon.  the user must

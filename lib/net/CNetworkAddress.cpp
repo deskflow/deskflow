@@ -22,54 +22,56 @@
 // CNetworkAddress
 //
 
+// name re-resolution adapted from a patch by Brent Priddy.
+
 CNetworkAddress::CNetworkAddress() :
-	m_address(NULL)
+	m_address(NULL),
+	m_hostname(),
+	m_port(0)
 {
 	// note -- make no calls to CNetwork socket interface here;
 	// we're often called prior to CNetwork::init().
 }
 
-CNetworkAddress::CNetworkAddress(int port)
+CNetworkAddress::CNetworkAddress(int port) :
+	m_address(NULL),
+	m_hostname(),
+	m_port(port)
 {
-	if (port == 0) {
-		throw XSocketAddress(XSocketAddress::kBadPort, "", port);
-	}
-
+	checkPort();
 	m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
-	ARCH->setAddrPort(m_address, port);
+	ARCH->setAddrPort(m_address, m_port);
 }
 
 CNetworkAddress::CNetworkAddress(const CNetworkAddress& addr) :
-	m_address(ARCH->copyAddr(addr.m_address)),
-	m_hostname(addr.m_hostname)
+	m_address(addr.m_address != NULL ? ARCH->copyAddr(addr.m_address) : NULL),
+	m_hostname(addr.m_hostname),
+	m_port(addr.m_port)
 {
 	// do nothing
 }
 
-CNetworkAddress::CNetworkAddress(const CString& hostname_, int port) :
-	m_hostname(hostname_)
+CNetworkAddress::CNetworkAddress(const CString& hostname, int port) :
+	m_address(NULL),
+	m_hostname(hostname),
+	m_port(port)
 {
-	if (port == 0) {
-		throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, port);
-	}
-
 	// check for port suffix
-	CString hostname(m_hostname);
-	CString::size_type i = hostname.rfind(':');
-	if (i != CString::npos && i + 1 < hostname.size()) {
+	CString::size_type i = m_hostname.rfind(':');
+	if (i != CString::npos && i + 1 < m_hostname.size()) {
 		// found a colon.  see if it looks like an IPv6 address.
 		bool colonNotation = false;
 		bool dotNotation   = false;
 		bool doubleColon   = false;
 		for (CString::size_type j = 0; j < i; ++j) {
-			if (hostname[j] == ':') {
+			if (m_hostname[j] == ':') {
 				colonNotation = true;
 				dotNotation   = false;
-				if (hostname[j + 1] == ':') {
+				if (m_hostname[j + 1] == ':') {
 					doubleColon = true;
 				}
 			}
-			else if (hostname[j] == '.' && colonNotation) {
+			else if (m_hostname[j] == '.' && colonNotation) {
 				dotNotation = true;
 			}
 		}
@@ -80,46 +82,25 @@ CNetworkAddress::CNetworkAddress(const CString& hostname_, int port) :
 		// the user can replace the double colon with zeros to
 		// disambiguate.
 		if ((!doubleColon || dotNotation) || !colonNotation) {
+			// parse port from hostname
 			char* end;
-			long suffixPort = strtol(hostname.c_str() + i + 1, &end, 10);
-			if (end == hostname.c_str() + i + 1 || *end != '\0' ||
-				suffixPort <= 0 || suffixPort > 65535) {
-				// bogus port
+			const char* chostname = m_hostname.c_str();
+			long suffixPort = strtol(chostname + i + 1, &end, 10);
+			if (end == chostname + i + 1 || *end != '\0') {
 				throw XSocketAddress(XSocketAddress::kBadPort,
-											m_hostname, port);
+											m_hostname, m_port);
 			}
-			else {
-				// good port
-				port = static_cast<int>(suffixPort);
-				hostname.erase(i);
-			}
+
+			// trim port from hostname
+			m_hostname.erase(i);
+
+			// save port
+			m_port = static_cast<int>(suffixPort);
 		}
 	}
 
-	// if hostname is empty then use wildcard address
-	if (hostname.empty()) {
-		m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
-		ARCH->setAddrPort(m_address, port);
-	}
-	else {
-		// look up name
-		try {
-			m_address = ARCH->nameToAddr(hostname);
-			ARCH->setAddrPort(m_address, port);
-		}
-		catch (XArchNetworkNameUnknown&) {
-			throw XSocketAddress(XSocketAddress::kNotFound, hostname, port);
-		}
-		catch (XArchNetworkNameNoAddress&) {
-			throw XSocketAddress(XSocketAddress::kNoAddress, hostname, port);
-		}
-		catch (XArchNetworkNameUnsupported&) {
-			throw XSocketAddress(XSocketAddress::kUnsupported, hostname, port);
-		}
-		catch (XArchNetworkName&) {
-			throw XSocketAddress(XSocketAddress::kUnknown, hostname, port);
-		}
-	}
+	// check port number
+	checkPort();
 }
 
 CNetworkAddress::~CNetworkAddress()
@@ -139,9 +120,46 @@ CNetworkAddress::operator=(const CNetworkAddress& addr)
 	if (m_address != NULL) {
 		ARCH->closeAddr(m_address);
 	}
-	m_hostname = addr.m_hostname;
 	m_address  = newAddr;
+	m_hostname = addr.m_hostname;
+	m_port     = addr.m_port;
 	return *this;
+}
+
+void
+CNetworkAddress::resolve()
+{
+	// discard previous address
+	if (m_address != NULL) {
+		ARCH->closeAddr(m_address);
+		m_address = NULL;
+	}
+
+	try {
+		// if hostname is empty then use wildcard address otherwise look
+		// up the name.
+		if (m_hostname.empty()) {
+			m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
+		}
+		else {
+			m_address = ARCH->nameToAddr(m_hostname);
+		}
+	}
+	catch (XArchNetworkNameUnknown&) {
+		throw XSocketAddress(XSocketAddress::kNotFound, m_hostname, m_port);
+	}
+	catch (XArchNetworkNameNoAddress&) {
+		throw XSocketAddress(XSocketAddress::kNoAddress, m_hostname, m_port);
+	}
+	catch (XArchNetworkNameUnsupported&) {
+		throw XSocketAddress(XSocketAddress::kUnsupported, m_hostname, m_port);
+	}
+	catch (XArchNetworkName&) {
+		throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
+	}
+
+	// set port in address
+	ARCH->setAddrPort(m_address, m_port);
 }
 
 bool
@@ -171,11 +189,20 @@ CNetworkAddress::getAddress() const
 int
 CNetworkAddress::getPort() const
 {
-	return (m_address == NULL) ? 0 : ARCH->getAddrPort(m_address);
+	return m_port;
 }
 
 CString
 CNetworkAddress::getHostname() const
 {
 	return m_hostname;
+}
+
+void
+CNetworkAddress::checkPort()
+{
+	// check port number
+	if (m_port <= 0 || m_port > 65535) {
+		throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+	}
 }
