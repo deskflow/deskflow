@@ -129,6 +129,14 @@ void					CXWindowsSecondaryScreen::leave()
 
 	CLock lock(&m_mutex);
 
+	// move hider window under the mouse
+	int x, y, dummy;
+	unsigned int dummyMask;
+	Window dummyWindow;
+	::XQueryPointer(m_display, m_root, &dummyWindow, &dummyWindow,
+								&x, &y, &dummy, &dummy, &dummyMask);
+	::XMoveWindow(m_display, m_window, x, y);
+
 	// raise and show the hider window
 	::XMapRaised(m_display, m_window);
 
