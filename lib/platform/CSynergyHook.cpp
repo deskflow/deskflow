@@ -209,20 +209,28 @@ mouseHook(int code, WPARAM wParam, LPARAM lParam)
 						hideCursor(thread);
 					}
 
+					// get position.  it seems the positions are not
+					// in virtual desktop coordinates but in a similar
+					// space with 0,0 at the upper-left.  translate
+					// into virtual desktop coordinates.
+					SInt32 x = (SInt32)info->pt.x + g_xScreen;
+					SInt32 y = (SInt32)info->pt.y + g_yScreen;
+
 					// relay the motion
-					SInt32 x = (SInt32)info->pt.x;
-					SInt32 y = (SInt32)info->pt.y;
 					PostThreadMessage(g_threadID, SYNERGY_MSG_MOUSE_MOVE, x, y);
 				}
 				return 1;
 			}
 		}
 		else {
-			// check for mouse inside jump zone
+			// check for mouse inside jump zone.  it seems the positions
+			// are not in virtual desktop coordinates but in a similar
+			// space with 0,0 at the upper-left.  translate into virtual
+			// desktop coordinates.
 			bool inside = false;
 			const MOUSEHOOKSTRUCT* info = (const MOUSEHOOKSTRUCT*)lParam;
-			SInt32 x = (SInt32)info->pt.x;
-			SInt32 y = (SInt32)info->pt.y;
+			SInt32 x = (SInt32)info->pt.x + g_xScreen;
+			SInt32 y = (SInt32)info->pt.y + g_yScreen;
 			if (!inside && (g_zoneSides & kLeftMask) != 0) {
 				inside = (x < g_xScreen + g_zoneSize);
 			}

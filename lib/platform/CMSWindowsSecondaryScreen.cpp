@@ -357,6 +357,7 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 	// motion is simple (i.e. it's on the primary monitor) if there
 	// is only one monitor.
 	bool simple = !m_screen->isMultimon();
+/* disable attempts to use simple motion with multiple monitors for now
 	if (!simple) {
 		// also simple if motion is within the primary monitor
 		simple = (x >= 0 && x < GetSystemMetrics(SM_CXSCREEN) &&
@@ -374,6 +375,7 @@ CMSWindowsSecondaryScreen::warpCursor(SInt32 x, SInt32 y)
 			simple = (x0 == 0 && y0 == 0);
 		}
 	}
+*/
 
 	// move the mouse directly to target position on NT family or if
 	// not using multiple monitors.
