@@ -43,11 +43,15 @@ else { wait(0); exit(1); }
 // CServer
 //
 
+const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
+
 CServer::CServer() : m_primary(NULL),
 								m_active(NULL),
 								m_primaryInfo(NULL),
 								m_seqNum(0),
-								m_httpServer(NULL)
+								m_httpServer(NULL),
+								m_httpAvailable(&m_mutex,
+										s_httpMaxSimultaneousRequests)
 {
 	m_socketFactory = NULL;
 	m_securityFactory = NULL;
@@ -1128,6 +1132,16 @@ void					CServer::acceptHTTPClients(void*)
 		// accept connections and begin processing them
 		log((CLOG_DEBUG1 "waiting for HTTP connections"));
 		for (;;) {
+			// limit the number of HTTP requests being handled at once
+			{
+				CLock lock(&m_httpAvailable);
+				while (m_httpAvailable == 0) {
+					m_httpAvailable.wait();
+				}
+				assert(m_httpAvailable > 0);
+				m_httpAvailable = m_httpAvailable - 1;
+			}
+
 			// accept connection
 			CThread::testCancel();
 			ISocket* socket = listen->accept();
@@ -1141,6 +1155,7 @@ void					CServer::acceptHTTPClients(void*)
 	}
 	catch (XBase& e) {
 		log((CLOG_ERR "cannot listen for HTTP clients: %s", e.what()));
+		// FIXME -- quit?
 		quit();
 	}
 }
@@ -1163,9 +1178,21 @@ void					CServer::processHTTPRequest(void* vsocket)
 		// clean up
 		socket->close();
 		delete socket;
+
+		// increment available HTTP handlers
+		{
+			CLock lock(&m_httpAvailable);
+			m_httpAvailable = m_httpAvailable + 1;
+			m_httpAvailable.signal();
+		}
 	}
 	catch (...) {
 		delete socket;
+		{
+			CLock lock(&m_httpAvailable);
+			m_httpAvailable = m_httpAvailable + 1;
+			m_httpAvailable.signal();
+		}
 		throw;
 	}
 }

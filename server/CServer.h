@@ -6,6 +6,7 @@
 #include "MouseTypes.h"
 #include "CConfig.h"
 #include "CClipboard.h"
+#include "CCondVar.h"
 #include "CMutex.h"
 #include "CString.h"
 #include "CThread.h"
@@ -235,8 +236,10 @@ private:
 
 	CClipboardInfo		m_clipboards[kClipboardEnd];
 
-	// server for processing HTTP requests
+	// HTTP request processing stuff
 	CHTTPServer*		m_httpServer;
+	CCondVar<SInt32>	m_httpAvailable;
+	static const SInt32	s_httpMaxSimultaneousRequests;
 };
 
 #endif

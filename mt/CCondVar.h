@@ -9,8 +9,7 @@ class CStopwatch;
 class CCondVarBase {
 public:
 	// mutex must be supplied.  all condition variables have an
-	// associated mutex.  the copy c'tor uses the same mutex as the
-	// argument and is otherwise like the default c'tor.
+	// associated mutex.
 	CCondVarBase(CMutex* mutex);
 	~CCondVarBase();
 
