@@ -637,6 +637,22 @@ static const UINT		g_mapEF00[] =
 DWORD
 CMSWindowsSecondaryScreen::mapButton(ButtonID button, bool press) const
 {
+	// the system will swap the meaning of left/right for us if
+	// the user has configured a left-handed mouse but we don't
+	// want it to swap since we want the handedness of the
+	// server's mouse.  so pre-swap for a left-handed mouse.
+	if (GetSystemMetrics(SM_SWAPBUTTON)) {
+		switch (button) {
+		case kButtonLeft:
+			button = kButtonRight;
+			break;
+
+		case kButtonRight:
+			button = kButtonLeft;
+			break;
+		}
+	}
+
 	// map button id to button flag
 	switch (button) {
 	case kButtonLeft:

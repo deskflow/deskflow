@@ -450,7 +450,7 @@ CXWindowsSecondaryScreen::mapButton(ButtonID id) const
 		return 0;
 	}
 	else {
-		return static_cast<unsigned int>(id);
+		return static_cast<unsigned int>(m_buttons[id - 1]);
 	}
 }
 
