@@ -35,7 +35,7 @@ dnl checks for libraries
 ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
 
 dnl do checks using C++
-AC_LANG(C++)
+AC_LANG_CPLUSPLUS
 
 dnl checks for header files
 AC_HEADER_STDC
