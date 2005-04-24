@@ -1,3 +1,47 @@
+2005/01/26 18:45:45 crs
+lib/common/Version.h
+
+Changed version to 1.2.2.
+
+----------
+2005/01/26 18:43:33 crs
+lib/platform/COSXKeyState.cpp
+
+Fixed bug in handling modifier keys on OS X clients.  Was applying
+modifiers to modifiers yielding, for example:  ctrl down, ctrl down,
+ctrl up for press of the control key.  The first down and the up were
+there because we were applying the control modifier to the control
+key.
+
+----------
+2005/01/26 18:41:28 crs
+lib/platform/CXWindowsKeyState.cpp
+
+Fixed handling of ISO_Level3_Shift.  We now prefer ISO_Level3_Shift
+over Mode_switch if it's mapped to any key.  ISO_Level3_Shift
+replaces Mode_switch in newer versions of X and Mode_switch does
+nothing, so we have to use ISO_Level3_Shift if it's there.
+
+----------
+2005/01/04 19:29:58 crs
+lib/platform/COSXKeyState.cpp
+
+Fixed bug in OS X server key translation which pretty much broke any
+keystroke with a modifier key.
+
+----------
+2005/01/01 20:52:43 crs
+doc/compiling.html
+
+Merged documentation fixes.
+
+----------
+2005/01/01 20:19:42 crs
+doc/running.html
+
+Merged documentation fix from mainline.
+
+----------
 2004/12/30 13:28:51 crs
 cmd/synergyc/synergyc.cpp
 cmd/synergys/synergys.cpp
