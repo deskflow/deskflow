@@ -22,12 +22,13 @@
 //! Unix implementation of IArchConsole
 class CArchConsoleUnix : public IArchConsole {
 public:
-	CArchConsoleUnix();
+	CArchConsoleUnix(void*);
 	virtual ~CArchConsoleUnix();
 
 	// IArchConsole overrides
 	virtual void		openConsole(const char* title);
 	virtual void		closeConsole();
+	virtual void		showConsole(bool);
 	virtual void		writeConsole(const char*);
 	virtual const char*	getNewlineForConsole();
 };

@@ -41,6 +41,12 @@ CStopLogOutputter::close()
 	// do nothing
 }
 
+void
+CStopLogOutputter::show(bool)
+{
+	// do nothing
+}
+
 bool
 CStopLogOutputter::write(ELevel, const char*)
 {
@@ -78,6 +84,12 @@ void
 CConsoleLogOutputter::close()
 {
 	ARCH->closeConsole();
+}
+
+void
+CConsoleLogOutputter::show(bool showIfEmpty)
+{
+	ARCH->showConsole(showIfEmpty);
 }
 
 bool
@@ -118,6 +130,12 @@ void
 CSystemLogOutputter::close()
 {
 	ARCH->closeLog();
+}
+
+void
+CSystemLogOutputter::show(bool showIfEmpty)
+{
+	ARCH->showLog(showIfEmpty);
 }
 
 bool
@@ -162,22 +180,27 @@ CSystemLogOutputter::getNewline() const
 // CSystemLogger
 //
 
-CSystemLogger::CSystemLogger(const char* title)
+CSystemLogger::CSystemLogger(const char* title, bool blockConsole) :
+	m_stop(NULL)
 {
 	// redirect log messages
+	if (blockConsole) {
+		m_stop = new CStopLogOutputter;
+		CLOG->insert(m_stop);
+	}
 	m_syslog = new CSystemLogOutputter;
-	m_stop   = new CStopLogOutputter;
 	m_syslog->open(title);
-	CLOG->insert(m_stop);
 	CLOG->insert(m_syslog);
 }
 
 CSystemLogger::~CSystemLogger()
 {
 	CLOG->remove(m_syslog);
-	CLOG->remove(m_stop);
-	delete m_stop;
 	delete m_syslog;
+	if (m_stop != NULL) {
+		CLOG->remove(m_stop);
+		delete m_stop;
+	}
 }
 
 
@@ -219,6 +242,12 @@ CBufferedLogOutputter::close()
 {
 	// remove all elements from the buffer
 	m_buffer.clear();
+}
+
+void
+CBufferedLogOutputter::show(bool)
+{
+	// do nothing
 }
 
 bool

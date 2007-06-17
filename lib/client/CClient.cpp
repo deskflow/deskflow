@@ -47,17 +47,32 @@ CClient::CClient(const CString& name, const CNetworkAddress& address,
 	m_stream(NULL),
 	m_timer(NULL),
 	m_server(NULL),
-	
-	m_active(false)
+	m_ready(false),
+	m_active(false),
+	m_suspended(false),
+	m_connectOnResume(false)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
 
-	// do nothing
+	// register suspend/resume event handlers
+	EVENTQUEUE->adoptHandler(IScreen::getSuspendEvent(),
+							getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleSuspend));
+	EVENTQUEUE->adoptHandler(IScreen::getResumeEvent(),
+							getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleResume));
 }
 
 CClient::~CClient()
 {
+	EVENTQUEUE->removeHandler(IScreen::getSuspendEvent(),
+							  getEventTarget());
+	EVENTQUEUE->removeHandler(IScreen::getResumeEvent(),
+							  getEventTarget());
+
 	cleanupTimer();
 	cleanupScreen();
 	cleanupConnecting();
@@ -70,6 +85,10 @@ void
 CClient::connect()
 {
 	if (m_stream != NULL) {
+		return;
+	}
+	if (m_suspended) {
+		m_connectOnResume = true;
 		return;
 	}
 
@@ -111,8 +130,10 @@ CClient::connect()
 void
 CClient::disconnect(const char* msg)
 {
+	m_connectOnResume = false;
 	cleanupTimer();
 	cleanupScreen();
+	cleanupConnecting();
 	cleanupConnection();
 	if (msg != NULL) {
 		sendConnectionFailedEvent(msg);
@@ -140,6 +161,12 @@ bool
 CClient::isConnecting() const
 {
 	return (m_timer != NULL);
+}
+
+CNetworkAddress
+CClient::getServerAddress() const
+{
+	return m_serverAddress;
 }
 
 CEvent::Type
@@ -216,13 +243,16 @@ void
 CClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
  	m_screen->setClipboard(id, clipboard);
+	m_ownClipboard[id]  = false;
+	m_sentClipboard[id] = false;
 }
 
 void
 CClient::grabClipboard(ClipboardID id)
 {
 	m_screen->grabClipboard(id);
-	m_ownClipboard[id] = false;
+	m_ownClipboard[id]  = false;
+	m_sentClipboard[id] = false;
 }
 
 void
@@ -275,9 +305,9 @@ CClient::mouseRelativeMove(SInt32 dx, SInt32 dy)
 }
 
 void
-CClient::mouseWheel(SInt32 delta)
+CClient::mouseWheel(SInt32 xDelta, SInt32 yDelta)
 {
-	m_screen->mouseWheel(delta);
+	m_screen->mouseWheel(xDelta, yDelta);
 }
 
 void
@@ -330,8 +360,9 @@ CClient::sendClipboard(ClipboardID id)
 		// marshall the data
 		CString data = clipboard.marshall();
 
-		// save and send data if different
-		if (data != m_dataClipboard[id]) {
+		// save and send data if different or not yet sent
+		if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
+			m_sentClipboard[id] = true;
 			m_dataClipboard[id] = data;
 			m_server->onClipboardChanged(id, &clipboard);
 		}
@@ -490,6 +521,7 @@ CClient::handleConnected(const CEvent&, void*)
 	// reset clipboard state
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		m_ownClipboard[id]  = false;
+		m_sentClipboard[id] = false;
 		m_timeClipboard[id] = 0;
 	}
 }
@@ -513,6 +545,7 @@ CClient::handleConnectTimeout(const CEvent&, void*)
 {
 	cleanupTimer();
 	cleanupConnecting();
+	cleanupConnection();
 	delete m_stream;
 	m_stream = NULL;
 	LOG((CLOG_DEBUG1 "connection timed out"));
@@ -557,6 +590,7 @@ CClient::handleClipboardGrabbed(const CEvent& event, void*)
 
 	// we now own the clipboard and it has not been sent to the server
 	m_ownClipboard[info->m_id]  = true;
+	m_sentClipboard[info->m_id] = false;
 	m_timeClipboard[info->m_id] = 0;
 
 	// if we're not the active screen then send the clipboard now,
@@ -603,5 +637,26 @@ CClient::handleHello(const CEvent&, void*)
 	if (m_stream->isReady()) {
 		EVENTQUEUE->addEvent(CEvent(IStream::getInputReadyEvent(),
 							m_stream->getEventTarget()));
+	}
+}
+
+void
+CClient::handleSuspend(const CEvent&, void*)
+{
+	LOG((CLOG_INFO "suspend"));
+	m_suspended       = true;
+	bool wasConnected = isConnected();
+	disconnect(NULL);
+	m_connectOnResume = wasConnected;
+}
+
+void
+CClient::handleResume(const CEvent&, void*)
+{
+	LOG((CLOG_INFO "resume"));
+	m_suspended = false;
+	if (m_connectOnResume) {
+		m_connectOnResume = false;
+		connect();
 	}
 }

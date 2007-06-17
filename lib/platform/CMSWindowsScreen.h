@@ -28,12 +28,11 @@ class CMSWindowsDesks;
 class CMSWindowsKeyState;
 class CMSWindowsScreenSaver;
 class CThread;
-class IJob;
 
 //! Implementation of IPlatformScreen for Microsoft Windows
 class CMSWindowsScreen : public CPlatformScreen {
 public:
-	CMSWindowsScreen(bool isPrimary, IJob* suspend, IJob* resume);
+	CMSWindowsScreen(bool isPrimary);
 	virtual ~CMSWindowsScreen();
 
 	//! @name manipulators
@@ -68,6 +67,11 @@ public:
 	// IPrimaryScreen overrides
 	virtual void		reconfigure(UInt32 activeSides);
 	virtual void		warpCursor(SInt32 x, SInt32 y);
+	virtual UInt32		registerHotKey(KeyID key,
+							KeyModifierMask mask);
+	virtual void		unregisterHotKey(UInt32 id);
+	virtual void		fakeInputBegin();
+	virtual void		fakeInputEnd();
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
@@ -76,7 +80,7 @@ public:
 	virtual void		fakeMouseButton(ButtonID id, bool press) const;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
-	virtual void		fakeMouseWheel(SInt32 delta) const;
+	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 
 	// IKeyState overrides
 	virtual void		updateKeys();
@@ -85,7 +89,7 @@ public:
 	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
 	virtual void		fakeKeyUp(KeyButton button);
-	virtual void		fakeToggle(KeyModifierMask modifier);
+	virtual void		fakeAllKeysUp();
 
 	// IPlatformScreen overrides
 	virtual void		enable();
@@ -139,9 +143,10 @@ private:
 	// message handlers
 	bool				onMark(UInt32 mark);
 	bool				onKey(WPARAM, LPARAM);
+	bool				onHotKey(WPARAM, LPARAM);
 	bool				onMouseButton(WPARAM, LPARAM);
 	bool				onMouseMove(SInt32 x, SInt32 y);
-	bool				onMouseWheel(SInt32 delta);
+	bool				onMouseWheel(SInt32 xDelta, SInt32 yDelta);
 	bool				onScreensaver(bool activated);
 	bool				onDisplayChange();
 	bool				onClipboardChange();
@@ -158,6 +163,12 @@ private:
 	// update screen size cache
 	void				updateScreenShape();
 
+	// fix timer callback
+	void				handleFixes(const CEvent&, void*);
+
+	// fix the clipboard viewer chain
+	void				fixClipboardViewer();
+
 	// enable/disable special key combinations so we can catch/pass them
 	void				enableSpecialKeys(bool) const;
 
@@ -166,16 +177,6 @@ private:
 
 	// map a button event to a press (true) or release (false)
 	bool				mapPressFromEvent(WPARAM msg, LPARAM button) const;
-
-	// fix the key state, synthesizing fake key releases for keys
-	// that aren't down anymore.
-	void				fixKeys();
-
-	// (un)schedule a later call to fixKeys
-	void				scheduleFixKeys();
-
-	// event handler to fix the key state
-	void				handleFixKeys(const CEvent&, void*);
 
 	// job to update the key state
 	void				updateKeysCB(void*);
@@ -194,6 +195,22 @@ private:
 	static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
 
 private:
+	struct CHotKeyItem {
+	public:
+		CHotKeyItem(UINT vk, UINT modifiers);
+
+		UINT			getVirtualKey() const;
+
+		bool			operator<(const CHotKeyItem&) const;
+
+	private:
+		UINT			m_keycode;
+		UINT			m_mask;
+	};
+	typedef std::map<UInt32, CHotKeyItem> HotKeyMap;
+	typedef std::vector<UInt32> HotKeyIDList;
+	typedef std::map<CHotKeyItem, UInt32> HotKeyToIDMap;
+
 	static HINSTANCE	s_instance;
 
 	// true if screen is being used as a primary screen, false otherwise
@@ -229,11 +246,11 @@ private:
 	// the main loop's thread id
 	DWORD				m_threadID;
 
+	// timer for periodically checking stuff that requires polling
+	CEventQueueTimer*	m_fixTimer;
+
 	// the keyboard layout to use when off primary screen
 	HKL					m_keyLayout;
-
-	// the timer used to check for fixing key state
-	CEventQueueTimer*	m_fixTimer;
 
 	// screen saver stuff
 	CMSWindowsScreenSaver*	m_screensaver;
@@ -260,12 +277,13 @@ private:
 	// keyboard stuff
 	CMSWindowsKeyState*	m_keyState;
 
+	// hot key stuff
+	HotKeyMap			m_hotKeys;
+	HotKeyIDList		m_oldHotKeyIDs;
+	HotKeyToIDMap		m_hotKeyToIDMap;
+
 	// map of button state
 	bool				m_buttons[1 + kButtonExtra0 + 1];
-
-	// suspend/resume callbacks
-	IJob*				m_suspend;
-	IJob*				m_resume;
 
 	// the system shows the mouse cursor when an internal display count
 	// is >= 0.  this count is maintained per application but there's

@@ -32,6 +32,28 @@ public:
 	COSXKeyState();
 	virtual ~COSXKeyState();
 
+	//! @name modifiers
+	//@{
+
+	//! Handle modifier key change
+	/*!
+	Determines which modifier keys have changed and updates the modifier
+	state and sends key events as appropriate.
+	*/
+	void				handleModifierKeys(void* target,
+							KeyModifierMask oldMask, KeyModifierMask newMask);
+
+	//@}
+	//! @name accessors
+	//@{
+
+	//! Convert OS X modifier mask to synergy mask
+	/*!
+	Returns the synergy modifier mask corresponding to the OS X modifier
+	mask in \p mask.
+	*/
+	KeyModifierMask		mapModifiersFromOSX(UInt32 mask) const;
+
 	//! Map key event to keys
 	/*!
 	Converts a key event into a sequence of KeyIDs and the shadow modifier
@@ -43,80 +65,64 @@ public:
 	KeyButton			mapKeyFromEvent(CKeyIDs& ids,
 							KeyModifierMask* maskOut, EventRef event) const;
 
-	//! Handle modifier key change
+	//! Map key and mask to native values
 	/*!
-	Determines which modifier keys have changed and updates the modifier
-	state and sends key events as appropriate.
+	Calculates mac virtual key and mask for a key \p key and modifiers
+	\p mask.  Returns \c true if the key can be mapped, \c false otherwise.
 	*/
-	void				handleModifierKeys(void* target,
-							KeyModifierMask oldMask, KeyModifierMask newMask);
+	bool				mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
+							UInt32& macVirtualKey,
+							UInt32& macModifierMask) const;
+
+	//@}
 
 	// IKeyState overrides
-	virtual void		setHalfDuplexMask(KeyModifierMask);
 	virtual bool		fakeCtrlAltDel();
-	virtual const char*	getKeyName(KeyButton) const;
-	virtual void		sendKeyEvent(void* target,
-							bool press, bool isAutoRepeat,
-							KeyID key, KeyModifierMask mask,
-							SInt32 count, KeyButton button);
+	virtual KeyModifierMask
+						pollActiveModifiers() const;
+	virtual SInt32		pollActiveGroup() const;
+	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
 protected:
-	// IKeyState overrides
-	virtual void		doUpdateKeys();
-	virtual void		doFakeKeyEvent(KeyButton button,
-							bool press, bool isAutoRepeat);
-	virtual KeyButton	mapKey(Keystrokes& keys, KeyID id,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
+	// CKeyState overrides
+	virtual void		getKeyMap(CKeyMap& keyMap);
+	virtual void		fakeKey(const Keystroke& keystroke);
 
 private:
-	struct CKeyEventInfo {
-	public:
-		KeyButton		m_button;
-		KeyModifierMask	m_requiredMask;
-		KeyModifierMask	m_requiredState;
-	};
-	typedef std::vector<CKeyEventInfo> CKeySequence;
-	typedef std::map<KeyID, CKeySequence> CKeyIDMap;
-	typedef std::map<UInt32, KeyID> CVirtualKeyMap;
-	typedef std::map<UInt16, std::pair<SInt32, KeyModifierMask> > CDeadKeyMap;
+	class CKeyResource;
+	typedef std::vector<KeyboardLayoutRef> GroupList;
 
-	KeyButton			addKeystrokes(Keystrokes& keys,
-							KeyButton keyButton,
-							KeyModifierMask desiredMask,
-							KeyModifierMask requiredMask,
-							bool isAutoRepeat) const;
-	bool				adjustModifiers(Keystrokes& keys,
-							Keystrokes& undo,
-							KeyModifierMask desiredMask,
-							KeyModifierMask requiredMask) const;
-	void				addKeyButton(KeyButtons& keys, KeyID id) const;
-	void				handleModifierKey(void* target, KeyID id, bool down);
+	// Add hard coded special keys to a CKeyMap.
+	void				getKeyMapForSpecialKeys(
+							CKeyMap& keyMap, SInt32 group) const;
 
-	// Check if the keyboard layout has changed and call doUpdateKeys
+	// Convert keyboard resource to a key map
+	bool				getKeyMap(CKeyMap& keyMap,
+							SInt32 group, const CKeyResource& r) const;
+
+	// Get the available keyboard groups
+	bool				getGroups(GroupList&) const;
+
+	// Change active keyboard group to group
+	void				setGroup(SInt32 group);
+
+	// Check if the keyboard layout has changed and update keyboard state
 	// if so.
 	void				checkKeyboardLayout();
 
-	// Switch to a new keyboard layout.
-	void				setKeyboardLayout(SInt16 keyboardLayoutID);
+	// Send an event for the given modifier key
+	void				handleModifierKey(void* target,
+							UInt32 virtualKey, KeyID id,
+							bool down, KeyModifierMask newMask);
 
-	// Insert KeyID to key sequences for non-printing characters, like
-	// delete, home, up arrow, etc. and the virtual key to KeyID mapping.
-	void				fillSpecialKeys(CKeyIDMap& keyMap,
-							CVirtualKeyMap& virtualKeyMap) const;
-
-	// Convert the KCHR resource to a KeyID to key sequence map.  the
-	// map maps each KeyID to the sequence of keys (with modifiers)
-	// that would have to be synthesized to generate the KeyID character.
-	// Returns false iff no KCHR resource was found.
-	bool				fillKCHRKeysMap(CKeyIDMap& keyMap) const;
-
-	// Convert the uchr resource to a KeyID to key sequence map.  the
-	// map maps each KeyID to the sequence of keys (with modifiers)
-	// that would have to be synthesized to generate the KeyID character.
-	// Returns false iff no uchr resource was found or it couldn't be
-	// mapped.
-	bool				filluchrKeysMap(CKeyIDMap& keyMap) const;
+	// Checks if any in \p ids is a glyph key and if \p isCommand is false.
+	// If so it adds the AltGr modifier to \p mask.  This allows OS X
+	// servers to use the option key both as AltGr and as a modifier.  If
+	// option is acting as AltGr (i.e. it generates a glyph and there are
+	// no command modifiers active) then we don't send the super modifier
+	// to clients because they'd try to match it as a command modifier.
+	void				adjustAltGrModifier(const CKeyIDs& ids,
+							KeyModifierMask* mask, bool isCommand) const;
 
 	// Maps an OS X virtual key id to a KeyButton.  This simply remaps
 	// the ids so we don't use KeyButton 0.
@@ -126,28 +132,89 @@ private:
 	// mapVirtualKeyToKeyButton.
 	static UInt32		mapKeyButtonToVirtualKey(KeyButton keyButton);
 
-	// Convert a character in the current script to the equivalent KeyID.
-	static KeyID		charToKeyID(UInt8);
-
-	// Convert a unicode character to the equivalent KeyID.
-	static KeyID		unicharToKeyID(UniChar);
-
-	// Choose the modifier mask with the fewest modifiers for character
-	// mapping table i.  The tableSelectors table has numEntries.  If
-	// no mapping is found for i, try mapping defaultIndex.
-	static KeyModifierMask
-						maskForTable(UInt8 i, UInt8* tableSelectors,
-							UInt32 numEntries, UInt8 defaultIndex);
-
-	// Save characters built from dead key sequences.
-	static void			mapDeadKeySequence(CKeyIDMap& keyMap,
-							CKeySequence& sequence,
-							UInt16 state, const UInt8* base,
-							const UCKeyStateRecordsIndex* sri,
-							const UCKeyStateTerminators* st,
-							CDeadKeyMap& dkMap);
-
 private:
+	class CKeyResource : public IInterface {
+	public:
+		virtual bool	isValid() const = 0;
+		virtual UInt32	getNumModifierCombinations() const = 0;
+		virtual UInt32	getNumTables() const = 0;
+		virtual UInt32	getNumButtons() const = 0;
+		virtual UInt32	getTableForModifier(UInt32 mask) const = 0;
+		virtual KeyID	getKey(UInt32 table, UInt32 button) const = 0;
+
+		// Convert a character in the current script to the equivalent KeyID
+		static KeyID	getKeyID(UInt8);
+
+		// Convert a unicode character to the equivalent KeyID.
+		static KeyID	unicharToKeyID(UniChar);
+	};
+
+	class CKCHRKeyResource : public CKeyResource {
+	public:
+		CKCHRKeyResource(const void*);
+
+		// CKeyResource overrides
+		virtual bool	isValid() const;
+		virtual UInt32	getNumModifierCombinations() const;
+		virtual UInt32	getNumTables() const;
+		virtual UInt32	getNumButtons() const;
+		virtual UInt32	getTableForModifier(UInt32 mask) const;
+		virtual KeyID	getKey(UInt32 table, UInt32 button) const;
+
+	private:
+		struct KCHRResource {
+		public:
+			SInt16		m_version;
+			UInt8		m_tableSelectionIndex[256];
+			SInt16		m_numTables;
+			UInt8		m_characterTables[1][128];
+		};
+		struct CKCHRDeadKeyRecord {
+		public:
+			UInt8		m_tableIndex;
+			UInt8		m_virtualKey;
+			SInt16		m_numCompletions;
+			UInt8		m_completion[1][2];
+		};
+		struct CKCHRDeadKeys {
+		public:
+			SInt16				m_numRecords;
+			CKCHRDeadKeyRecord	m_records[1];
+		};
+
+		const KCHRResource*	m_resource;
+	};
+
+	class CUCHRKeyResource : public CKeyResource {
+	public:
+		CUCHRKeyResource(const void*, UInt32 keyboardType);
+
+		// CKeyResource overrides
+		virtual bool	isValid() const;
+		virtual UInt32	getNumModifierCombinations() const;
+		virtual UInt32	getNumTables() const;
+		virtual UInt32	getNumButtons() const;
+		virtual UInt32	getTableForModifier(UInt32 mask) const;
+		virtual KeyID	getKey(UInt32 table, UInt32 button) const;
+
+	private:
+		typedef std::vector<KeyID> KeySequence;
+
+		bool			getDeadKey(KeySequence& keys, UInt16 index) const;
+		bool			getKeyRecord(KeySequence& keys,
+							UInt16 index, UInt16& state) const;
+		bool			addSequence(KeySequence& keys, UCKeyCharSeq c) const;
+
+	private:
+		const UCKeyboardLayout*			m_resource;
+		const UCKeyModifiersToTableNum*	m_m;
+		const UCKeyToCharTableIndex*	m_cti;
+		const UCKeySequenceDataIndex*	m_sdi;
+		const UCKeyStateRecordsIndex*	m_sri;
+		const UCKeyStateTerminators*	m_st;
+		UInt16							m_spaceOutput;
+	};
+
 	// OS X uses a physical key if 0 for the 'A' key.  synergy reserves
 	// KeyButton 0 so we offset all OS X physical key ids by this much
 	// when used as a KeyButton and by minus this much to map a KeyButton
@@ -156,25 +223,13 @@ private:
 		KeyButtonOffset = 1
 	};
 
-	// KCHR resource header
-	struct CKCHRResource {
-	public:
-    	SInt16              m_version;
-    	UInt8               m_tableSelectionIndex[256];
-    	SInt16              m_numTables;
-    	UInt8               m_characterTables[1][128];
-	};
+	typedef std::map<KeyboardLayoutRef, SInt32> GroupMap;
+	typedef std::map<UInt32, KeyID> CVirtualKeyMap;
 
-	SInt16				m_keyboardLayoutID;
-	UInt32				m_keyboardType;
-	mutable UInt32		m_deadKeyState;
-	Handle				m_KCHRHandle;
-	Handle				m_uchrHandle;
-	CKCHRResource*		m_KCHRResource;
-	UCKeyboardLayout*	m_uchrResource;
-	CKeyIDMap			m_keyMap;
 	CVirtualKeyMap		m_virtualKeyMap;
-	bool				m_uchrFound;
+	mutable UInt32		m_deadKeyState;
+	GroupList			m_groups;
+	GroupMap			m_groupMap;
 };
 
 #endif

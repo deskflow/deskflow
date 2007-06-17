@@ -67,6 +67,12 @@ synergyc_SOURCES =						\
 	$(COMMON_SOURCE_FILES)				\
 	$(CARBON_SOURCE_FILES)				\
 	$(NULL)
+synergyc_LDFLAGS =								\
+	-framework ScreenSaver						\
+	-framework IOKit							\
+	-framework ApplicationServices				\
+	-framework Foundation						\
+	$(NULL)
 endif
 synergyc_LDADD =								\
 	$(top_builddir)/lib/client/libclient.a		\

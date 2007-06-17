@@ -17,20 +17,29 @@ EXTRA_DIST =						\
 	PORTING							\
 	doxygen.cfg.in					\
 	synergy.css						\
+	about.html						\
 	authors.html					\
 	autostart.html					\
+	banner.html						\
+	border.html						\
 	compiling.html					\
 	configuration.html				\
+	contact.html					\
 	developer.html					\
 	faq.html						\
 	history.html					\
+	home.html						\
 	index.html						\
 	license.html					\
 	news.html						\
+	roadmap.html					\
 	running.html					\
 	security.html					\
 	tips.html						\
-	todo.html						\
+	toc.html						\
+	trouble.html					\
+	images/logo.gif					\
+	images/warp.gif					\
 	$(NULL)
 
 MAINTAINERCLEANFILES =				\

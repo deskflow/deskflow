@@ -50,7 +50,7 @@ public:
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs);
 	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel);
-	virtual void		mouseWheel(SInt32 delta);
+	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
@@ -59,11 +59,15 @@ protected:
 	virtual bool		parseHandshakeMessage(const UInt8* code);
 	virtual bool		parseMessage(const UInt8* code);
 
+	virtual void		resetHeartbeatRate();
+	virtual void		setHeartbeatRate(double rate, double alarm);
+	virtual void		resetHeartbeatTimer();
+	virtual void		addHeartbeatTimer();
+	virtual void		removeHeartbeatTimer();
+
 private:
 	void				disconnect();
 	void				removeHandlers();
-	void				addHeartbeatTimer();
-	void				removeHeartbeatTimer();
 
 	void				handleData(const CEvent&, void*);
 	void				handleDisconnect(const CEvent&, void*);

@@ -136,10 +136,11 @@ CArchDaemonWindows::installDaemon(const char* name,
 								NULL);
 		if (service == NULL) {
 			// can't create service
-			// FIXME -- handle ERROR_SERVICE_EXISTS
 			DWORD err = GetLastError();
-			CloseServiceHandle(mgr);
-			throw XArchDaemonInstallFailed(new XArchEvalWindows(err));
+			if (err != ERROR_SERVICE_EXISTS) {
+				CloseServiceHandle(mgr);
+				throw XArchDaemonInstallFailed(new XArchEvalWindows(err));
+			}
 		}
 
 		// done with service and manager
@@ -148,7 +149,7 @@ CArchDaemonWindows::installDaemon(const char* name,
 
 		// open the registry key for this service
 		HKEY key = openNTServicesKey();
-		key      = CArchMiscWindows::openKey(key, name);
+		key      = CArchMiscWindows::addKey(key, name);
 		if (key == NULL) {
 			// can't open key
 			DWORD err = GetLastError();
@@ -165,7 +166,7 @@ CArchDaemonWindows::installDaemon(const char* name,
 		CArchMiscWindows::setValue(key, _T("Description"), description);
 
 		// set command line
-		key = CArchMiscWindows::openKey(key, _T("Parameters"));
+		key = CArchMiscWindows::addKey(key, _T("Parameters"));
 		if (key == NULL) {
 			// can't open key
 			DWORD err = GetLastError();
@@ -224,7 +225,7 @@ CArchDaemonWindows::uninstallDaemon(const char* name, bool allUsers)
 		}
 
 		// open the service.  oddly, you must open a service to delete it.
-		SC_HANDLE service = OpenService(mgr, name, DELETE);
+		SC_HANDLE service = OpenService(mgr, name, DELETE | SERVICE_STOP);
 		if (service == NULL) {
 			DWORD err = GetLastError();
 			CloseServiceHandle(mgr);
@@ -233,6 +234,10 @@ CArchDaemonWindows::uninstallDaemon(const char* name, bool allUsers)
 			}
 			throw XArchDaemonUninstallNotInstalled(new XArchEvalWindows(err));
 		}
+
+		// stop the service.  we don't care if we fail.
+		SERVICE_STATUS status;
+		ControlService(service, SERVICE_CONTROL_STOP, &status);
 
 		// delete the service
 		const bool okay = (DeleteService(service) == 0);
@@ -244,6 +249,10 @@ CArchDaemonWindows::uninstallDaemon(const char* name, bool allUsers)
 
 		// handle failure.  ignore error if service isn't installed anymore.
 		if (!okay && isDaemonInstalled(name, allUsers)) {
+			if (err == ERROR_IO_PENDING) {
+				// this seems to be a spurious error
+				return;
+			}
 			if (err != ERROR_SERVICE_MARKED_FOR_DELETE) {
 				throw XArchDaemonUninstallFailed(new XArchEvalWindows(err));
 			}
@@ -317,7 +326,7 @@ CArchDaemonWindows::daemonize(const char* name, DaemonFunc func)
 }
 
 bool
-CArchDaemonWindows::canInstallDaemon(const char* name, bool allUsers)
+CArchDaemonWindows::canInstallDaemon(const char* /*name*/, bool allUsers)
 {
 	// if not for all users then use the user's autostart registry.
 	// key.  if windows 95 family then use windows 95 services key.
@@ -338,10 +347,10 @@ CArchDaemonWindows::canInstallDaemon(const char* name, bool allUsers)
 		}
 		CloseServiceHandle(mgr);
 
-		// check if we can open the registry key for this service
+		// check if we can open the registry key
 		HKEY key = openNTServicesKey();
-		key      = CArchMiscWindows::openKey(key, name);
-		key      = CArchMiscWindows::openKey(key, _T("Parameters"));
+//		key      = CArchMiscWindows::addKey(key, name);
+//		key      = CArchMiscWindows::addKey(key, _T("Parameters"));
 		CArchMiscWindows::closeKey(key);
 
 		return (key != NULL);
@@ -415,7 +424,7 @@ CArchDaemonWindows::openNTServicesKey()
 		NULL
 	};
 
-	return CArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_keyNames);
+	return CArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
 
 HKEY
@@ -430,7 +439,7 @@ CArchDaemonWindows::open95ServicesKey()
 		NULL
 	};
 
-	return CArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_keyNames);
+	return CArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
 
 HKEY
@@ -445,7 +454,7 @@ CArchDaemonWindows::openUserStartupKey()
 		NULL
 	};
 
-	return CArchMiscWindows::openKey(HKEY_CURRENT_USER, s_keyNames);
+	return CArchMiscWindows::addKey(HKEY_CURRENT_USER, s_keyNames);
 }
 
 bool

@@ -53,8 +53,9 @@ pre {
 	font-variant: small-caps;
 	font-size: 400%;
 	width: 100%;
-	padding: 0px 0px 0px 5px;
-	border-bottom: solid #6699ff 1px;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
 }
 .banner a {
 	color: #000000;
@@ -62,6 +63,15 @@ pre {
 .banner a:hover {
 	text-decoration: none;
 	color: #000000;
+}
+.bannerb {
+	color: #ffffff;
+	background-color: #ffffff;
+	width: 100%;
+	height: 1px;
+	padding: 0px;
+	margin: 0px;
+	border-bottom: solid #6699ff 1px;
 }
 
 .nav {
@@ -71,6 +81,7 @@ pre {
 
 	padding: 2px 0px 2px 0px;
 	margin: 0px;
+	border-bottom: solid #d4d4d4 300px;
 }
 .nav a:hover {
 	text-decoration: none;
@@ -82,7 +93,7 @@ pre {
 	text-indent: 1em;
 }
 .nav .section {
-	width: 100%;
+	width: 120px;
 	text-indent: 0em;
 	border-top: 0px;
 	border-left: 0px;

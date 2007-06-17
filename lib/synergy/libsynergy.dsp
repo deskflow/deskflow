@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\gen\build"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\io" /I "..\mt" /I "..\net" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\build\libsynergy.pdb" /FD /c
+# ADD CPP /nologo /MT /W4 /GR /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\io" /I "..\mt" /I "..\net" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\build\libsynergy.pdb" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\gen\debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\io" /I "..\mt" /I "..\net" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\debug\libsynergy.pdb" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GR /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\io" /I "..\mt" /I "..\net" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\debug\libsynergy.pdb" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -88,6 +88,10 @@ LIB32=link.exe -lib
 # Begin Source File
 
 SOURCE=.\CClipboard.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CKeyMap.cpp
 # End Source File
 # Begin Source File
 
@@ -127,6 +131,14 @@ SOURCE=.\IScreen.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\KeyTypes.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ProtocolTypes.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\XScreen.cpp
 # End Source File
 # Begin Source File
@@ -140,6 +152,10 @@ SOURCE=.\XSynergy.cpp
 # Begin Source File
 
 SOURCE=.\CClipboard.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CKeyMap.h
 # End Source File
 # Begin Source File
 

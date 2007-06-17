@@ -206,7 +206,7 @@ CAdvancedOptions::save(HWND hwnd)
 	m_interface  = iface;
 
 	// save values to registry
-	HKEY key = CArchMiscWindows::openKey(HKEY_CURRENT_USER, getSettingsPath());
+	HKEY key = CArchMiscWindows::addKey(HKEY_CURRENT_USER, getSettingsPath());
 	if (key != NULL) {
 		CArchMiscWindows::setValue(key, "port", m_port);
 		CArchMiscWindows::setValue(key, "name", m_screenName);

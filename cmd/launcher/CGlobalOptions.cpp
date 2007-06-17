@@ -79,6 +79,8 @@ CGlobalOptions::init(HWND hwnd)
 	setItemChecked(child, true);
 	child = getItem(hwnd, IDC_GLOBAL_RELATIVE_MOVES);
 	setItemChecked(child, false);
+	child = getItem(hwnd, IDC_GLOBAL_LEAVE_FOREGROUND);
+	setItemChecked(child, false);
 
 	// get the global options
 	const CConfig::CScreenOptions* options = m_config->getOptions("");
@@ -120,6 +122,10 @@ CGlobalOptions::init(HWND hwnd)
 			}
 			else if (id == kOptionRelativeMouseMoves) {
 				child = getItem(hwnd, IDC_GLOBAL_RELATIVE_MOVES);
+				setItemChecked(child, (value != 0));
+			}
+			else if (id == kOptionWin32KeepForeground) {
+				child = getItem(hwnd, IDC_GLOBAL_LEAVE_FOREGROUND);
 				setItemChecked(child, (value != 0));
 			}
 		}
@@ -187,6 +193,7 @@ CGlobalOptions::save(HWND hwnd)
 	m_config->removeOption("", kOptionHeartbeat);
 	m_config->removeOption("", kOptionScreenSaverSync);
 	m_config->removeOption("", kOptionRelativeMouseMoves);
+	m_config->removeOption("", kOptionWin32KeepForeground);
 
 	// add requested options
 	child = getItem(hwnd, IDC_GLOBAL_DELAY_CHECK);
@@ -208,6 +215,10 @@ CGlobalOptions::save(HWND hwnd)
 	child = getItem(hwnd, IDC_GLOBAL_RELATIVE_MOVES);
 	if (isItemChecked(child)) {
 		m_config->addOption("", kOptionRelativeMouseMoves, 1);
+	}
+	child = getItem(hwnd, IDC_GLOBAL_LEAVE_FOREGROUND);
+	if (isItemChecked(child)) {
+		m_config->addOption("", kOptionWin32KeepForeground, 1);
 	}
 
 	// save last values

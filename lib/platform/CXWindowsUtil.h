@@ -59,37 +59,19 @@ public:
 	*/
 	static Time			getCurrentTime(Display*, Window);
 
-	//! Convert KeySym to UCS-4
+	//! Convert KeySym to KeyID
 	/*!
-	Converts a KeySym to the equivalent UCS-4 character.  Returns
-	0x0000ffff if the KeySym cannot be mapped.
+	Converts a KeySym to the equivalent KeyID.  Returns kKeyNone if the
+	KeySym cannot be mapped.
 	*/
-	static UInt32		mapKeySymToUCS4(KeySym);
+	static UInt32		mapKeySymToKeyID(KeySym);
 
-	//! Convert UCS-4 to KeySym
+	//! Convert KeySym to corresponding KeyModifierMask
 	/*!
-	Converts a UCS-4 character to the equivalent KeySym.  Returns
-	NoSymbol (0) if the character cannot be mapped.
+	Converts a KeySym to the corresponding KeyModifierMask, or 0 if the
+	KeySym is not a modifier.
 	*/
-	static KeySym		mapUCS4ToKeySym(UInt32);
-
-	//! Decompose a KeySym using dead keys
-	/*!
-	Decomposes \c keysym into its component keysyms.  All but the last
-	decomposed KeySym are dead keys.  Returns true iff the decomposition
-	was successful.
-	*/
-	static bool			decomposeKeySymWithDeadKeys(KeySym keysym,
-							KeySyms& decomposed);
-
-	//! Decompose a KeySym using the compose key
-	/*!
-	Decomposes \c keysym into its component keysyms.  The first key is
-	Multi_key and the rest are normal (i.e. not dead) keys.  Returns
-	true iff the decomposition was successful.
-	*/
-	static bool			decomposeKeySymWithCompose(KeySym keysym,
-							KeySyms& decomposed);
+	static UInt32		getModifierBitForKeySym(KeySym keysym);
 
 	//! Convert Atom to its string
 	/*!
@@ -104,6 +86,35 @@ public:
 	*/
 	static CString		atomsToString(Display* display,
 							const Atom* atom, UInt32 num);
+
+	//! Prepare a property of atoms for use
+	/*!
+	64-bit systems may need to modify a property's data if it's a
+	list of Atoms before using it.
+	*/
+	static void			convertAtomProperty(CString& data);
+
+	//! Append an Atom to property data
+	/*!
+	Converts \p atom to a 32-bit on-the-wire format and appends it to
+	\p data.
+	*/
+	static void			appendAtomData(CString& data, Atom atom);
+
+	//! Replace an Atom in property data
+	/*!
+	Converts \p atom to a 32-bit on-the-wire format and replaces the atom
+	at index \p index in \p data.
+	*/
+	static void			replaceAtomData(CString& data,
+							UInt32 index, Atom atom);
+
+	//! Append an Time to property data
+	/*!
+	Converts \p time to a 32-bit on-the-wire format and appends it to
+	\p data.
+	*/
+	static void			appendTimeData(CString& data, Time time);
 
 	//! X11 error handler
 	/*!
@@ -167,13 +178,8 @@ private:
 
 private:
 	typedef std::map<KeySym, UInt32> CKeySymMap;
-	typedef std::map<UInt32, KeySym> CUCS4Map;
-	typedef std::map<KeySym, KeySyms> CKeySymsMap;
 
 	static CKeySymMap	s_keySymToUCS4;
-	static CUCS4Map		s_UCS4ToKeySym;
-	static CKeySymsMap	s_deadKeyDecomposedKeySyms;
-	static CKeySymsMap	s_composeDecomposedKeySyms;
 };
 
 #endif

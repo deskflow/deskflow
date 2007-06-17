@@ -154,6 +154,11 @@ private:
 
 	// the disable timer (NULL if not installed)
 	CEventQueueTimer*	m_disableTimer;
+
+	// fake mouse motion position for suppressing the screen saver.
+	// xscreensaver since 2.21 requires the mouse to move more than 10
+	// pixels to be considered significant.
+	SInt32				m_disablePos;
 };
 
 #endif

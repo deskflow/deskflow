@@ -612,6 +612,30 @@ CArchNetworkWinsock::setNoDelayOnSocket(CArchSocket s, bool noDelay)
 	return (oflag != 0);
 }
 
+bool
+CArchNetworkWinsock::setReuseAddrOnSocket(CArchSocket s, bool reuse)
+{
+	assert(s != NULL);
+
+	// get old state
+	BOOL oflag;
+	int size = sizeof(oflag);
+	if (getsockopt_winsock(s->m_socket, SOL_SOCKET,
+								SO_REUSEADDR, &oflag, &size) == SOCKET_ERROR) {
+		throwError(getsockerror_winsock());
+	}
+
+	// set new state
+	BOOL flag = reuse ? 1 : 0;
+	size     = sizeof(flag);
+	if (setsockopt_winsock(s->m_socket, SOL_SOCKET,
+								SO_REUSEADDR, &flag, size) == SOCKET_ERROR) {
+		throwError(getsockerror_winsock());
+	}
+
+	return (oflag != 0);
+}
+
 std::string
 CArchNetworkWinsock::getHostName()
 {

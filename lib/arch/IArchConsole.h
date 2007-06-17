@@ -43,6 +43,15 @@ public:
 	*/
 	virtual void		closeConsole() = 0;
 
+	//! Show the console
+	/*!
+	Causes the console to become visible.  This generally only makes sense
+	for a console in a graphical user interface.  Other implementations
+	will do nothing.  Iff \p showIfEmpty is \c false then the implementation
+	may optionally only show the console if it's not empty.
+	*/
+	virtual void		showConsole(bool showIfEmpty) = 0;
+
 	//! Write to the console
 	/*!
 	Writes the given string to the console, opening it if necessary.

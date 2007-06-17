@@ -42,6 +42,12 @@ CArchLogUnix::closeLog()
 }
 
 void
+CArchLogUnix::showLog(bool)
+{
+	// do nothing
+}
+
+void
 CArchLogUnix::writeLog(ELevel level, const char* msg)
 {
 	// convert level

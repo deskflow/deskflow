@@ -34,6 +34,7 @@ public:
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
 	virtual void		close();
+	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
 	virtual const char*	getNewline() const;
 };
@@ -51,6 +52,7 @@ public:
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
 	virtual void		close();
+	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
 	virtual const char*	getNewline() const;
 };
@@ -67,6 +69,7 @@ public:
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
 	virtual void		close();
+	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
 	virtual const char*	getNewline() const;
 };
@@ -81,7 +84,7 @@ the scope.
 */
 class CSystemLogger {
 public:
-	CSystemLogger(const char* title);
+	CSystemLogger(const char* title, bool blockConsole);
 	~CSystemLogger();
 
 private:
@@ -117,6 +120,7 @@ public:
 	// ILogOutputter overrides
 	virtual void		open(const char* title);
 	virtual void		close();
+	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
 	virtual const char*	getNewline() const;
 

@@ -15,8 +15,10 @@
 #include "CClientTaskBarReceiver.h"
 #include "CClient.h"
 #include "CLock.h"
+#include "CStringUtil.h"
 #include "IEventQueue.h"
 #include "CArch.h"
+#include "Version.h"
 
 //
 // CClientTaskBarReceiver
@@ -48,6 +50,8 @@ CClientTaskBarReceiver::updateStatus(CClient* client, const CString& errorMsg)
 			}
 		}
 		else {
+			m_server = client->getServerAddress().getHostname();
+
 			if (client->isConnected()) {
 				m_state = kConnected;
 			}
@@ -108,19 +112,23 @@ CClientTaskBarReceiver::getToolTip() const
 {
 	switch (m_state) {
 	case kNotRunning:
-		return "Synergy:  Not running";
+		return CStringUtil::print("%s:  Not running", kAppVersion);
 
 	case kNotWorking:
-		return CString("Synergy:  ") + m_errorMessage;
+		return CStringUtil::print("%s:  %s",
+								kAppVersion, m_errorMessage.c_str());
 
 	case kNotConnected:
-		return CString("Synergy:  Not connected:  ") + m_errorMessage;
+		return CStringUtil::print("%s:  Not connected:  %s",
+								kAppVersion, m_errorMessage.c_str());
 
 	case kConnecting:
-		return "Synergy:  Connecting...";
+		return CStringUtil::print("%s:  Connecting to %s...",
+								kAppVersion, m_server.c_str());
 
 	case kConnected:
-		return "Synergy:  Connected";
+		return CStringUtil::print("%s:  Connected to %s",
+								kAppVersion, m_server.c_str());
 
 	default:
 		return "";

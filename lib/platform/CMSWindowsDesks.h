@@ -18,6 +18,7 @@
 #include "CSynergyHook.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
+#include "OptionTypes.h"
 #include "CCondVar.h"
 #include "CMutex.h"
 #include "CString.h"
@@ -92,6 +93,19 @@ public:
 	*/
 	void				leave(HKL keyLayout);
 
+	//! Notify of options changes
+	/*!
+	Resets all options to their default values.
+	*/
+	void				resetOptions();
+
+	//! Notify of options changes
+	/*!
+	Set options to given values.  Ignores unknown options and doesn't
+	modify options that aren't given in \c options.
+	*/
+	void				setOptions(const COptionsList& options);
+
 	//! Update the key state
 	/*!
 	Causes the key state to get updated to reflect the physical keyboard
@@ -114,6 +128,18 @@ public:
 	\p install is false then the screensaver hooks are uninstalled.
 	*/
 	void				installScreensaverHooks(bool install);
+
+	//! Start ignoring user input
+	/*!
+	Starts ignoring user input so we don't pick up our own synthesized events.
+	*/
+	void				fakeInputBegin();
+
+	//! Stop ignoring user input
+	/*!
+	Undoes whatever \c fakeInputBegin() did.
+	*/
+	void				fakeInputEnd();
 
 	//@}
 	//! @name accessors
@@ -152,9 +178,9 @@ public:
 
 	//! Fake mouse wheel
 	/*!
-	Synthesize a mouse wheel event of amount \c delta.
+	Synthesize a mouse wheel event of amount \c delta in direction \c axis.
 	*/
-	void				fakeMouseWheel(SInt32 delta) const;
+	void				fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 
 	//@}
 
@@ -167,6 +193,7 @@ private:
 		DWORD			m_targetID;
 		HDESK			m_desk;
 		HWND			m_window;
+		HWND			m_foregroundWindow;
 		bool			m_lowLevel;
 	};
 	typedef std::map<CString, CDesk*> CDesks;
@@ -197,6 +224,9 @@ private:
 	// communication with desk threads
 	void				waitForDesk() const;
 	void				sendMessage(UINT, WPARAM, LPARAM) const;
+
+	// work around for messed up keyboard events from low-level hooks
+	HWND				getForegroundWindow() const;
 
 	// desk API wrappers
 	HDESK				openInputDesktop();
@@ -258,6 +288,9 @@ private:
 	// keyboard stuff
 	IJob*				m_updateKeys;
 	HKL					m_keyLayout;
+
+	// options
+	bool				m_leaveForegroundOption;
 };
 
 #endif

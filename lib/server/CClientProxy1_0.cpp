@@ -27,7 +27,6 @@
 
 CClientProxy1_0::CClientProxy1_0(const CString& name, IStream* stream) :
 	CClientProxy(name, stream),
-	m_heartbeatAlarm(kHeartRate * kHeartBeatsUntilDeath),
 	m_heartbeatTimer(NULL),
 	m_parser(&CClientProxy1_0::parseHandshakeMessage)
 {
@@ -51,6 +50,8 @@ CClientProxy1_0::CClientProxy1_0(const CString& name, IStream* stream) :
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleFlatline, NULL));
+
+	setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
 
 	LOG((CLOG_DEBUG1 "querying client \"%s\" info", getName().c_str()));
 	CProtocolUtil::writef(getStream(), kMsgQInfo);
@@ -105,6 +106,26 @@ CClientProxy1_0::removeHeartbeatTimer()
 }
 
 void
+CClientProxy1_0::resetHeartbeatTimer()
+{
+	// reset the alarm
+	removeHeartbeatTimer();
+	addHeartbeatTimer();
+}
+
+void
+CClientProxy1_0::resetHeartbeatRate()
+{
+	setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
+}
+
+void
+CClientProxy1_0::setHeartbeatRate(double, double alarm)
+{
+	m_heartbeatAlarm = alarm;
+}
+
+void
 CClientProxy1_0::handleData(const CEvent&, void*)
 {
 	// handle messages until there are no more.  first read message code.
@@ -121,7 +142,7 @@ CClientProxy1_0::handleData(const CEvent&, void*)
 		// parse message
 		LOG((CLOG_DEBUG2 "msg from \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
 		if (!(this->*m_parser)(code)) {
-			LOG((CLOG_ERR "invalid message from client \"%s\"", getName().c_str()));
+			LOG((CLOG_ERR "invalid message from client \"%s\": %c%c%c%c", getName().c_str(), code[0], code[1], code[2], code[3]));
 			disconnect();
 			return;
 		}
@@ -131,8 +152,7 @@ CClientProxy1_0::handleData(const CEvent&, void*)
 	}
 
 	// restart heartbeat timer
-	removeHeartbeatTimer();
-	addHeartbeatTimer();
+	resetHeartbeatTimer();
 }
 
 bool
@@ -148,6 +168,7 @@ CClientProxy1_0::parseHandshakeMessage(const UInt8* code)
 		m_parser = &CClientProxy1_0::parseMessage;
 		if (recvInfo()) {
 			EVENTQUEUE->addEvent(CEvent(getReadyEvent(), getEventTarget()));
+			addHeartbeatTimer();
 			return true;
 		}
 	}
@@ -325,10 +346,11 @@ CClientProxy1_0::mouseRelativeMove(SInt32, SInt32)
 }
 
 void
-CClientProxy1_0::mouseWheel(SInt32 delta)
+CClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
 {
-	LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), delta));
-	CProtocolUtil::writef(getStream(), kMsgDMouseWheel, delta);
+	// clients prior to 1.3 only support the y axis
+	LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), yDelta));
+	CProtocolUtil::writef(getStream(), kMsgDMouseWheel1_0, yDelta);
 }
 
 void
@@ -345,7 +367,7 @@ CClientProxy1_0::resetOptions()
 	CProtocolUtil::writef(getStream(), kMsgCResetOptions);
 
 	// reset heart rate and death
-	m_heartbeatAlarm = kHeartRate * kHeartBeatsUntilDeath;
+	resetHeartbeatRate();
 	removeHeartbeatTimer();
 	addHeartbeatTimer();
 }
@@ -363,7 +385,7 @@ CClientProxy1_0::setOptions(const COptionsList& options)
 			if (rate <= 0.0) {
 				rate = -1.0;
 			}
-			m_heartbeatAlarm = rate * kHeartBeatsUntilDeath;
+			setHeartbeatRate(rate, rate * kHeartBeatsUntilDeath);
 			removeHeartbeatTimer();
 			addHeartbeatTimer();
 		}

@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\..\lib\common" /I "..\..\lib\arch" /I "..\..\lib\base" /I "..\..\lib\mt" /I "..\..\lib\io" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fd"..\..\gen\build\synergys.pdb" /FD /c
+# ADD CPP /nologo /MT /W4 /GR /GX /O2 /I "..\..\lib\common" /I "..\..\lib\arch" /I "..\..\lib\base" /I "..\..\lib\mt" /I "..\..\lib\io" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\server" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fd"..\..\gen\build\synergys.pdb" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\..\lib\common" /I "..\..\lib\arch" /I "..\..\lib\base" /I "..\..\lib\mt" /I "..\..\lib\io" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\server" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fd"..\..\gen\debug\synergys.pdb" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GR /GX /ZI /Od /I "..\..\lib\common" /I "..\..\lib\arch" /I "..\..\lib\base" /I "..\..\lib\mt" /I "..\..\lib\io" /I "..\..\lib\net" /I "..\..\lib\synergy" /I "..\..\lib\platform" /I "..\..\lib\server" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fd"..\..\gen\debug\synergys.pdb" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32

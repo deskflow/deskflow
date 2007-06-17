@@ -17,9 +17,12 @@
 
 #include "CKeyState.h"
 #include "CString.h"
+#include "stdvector.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+class CEvent;
+class CEventQueueTimer;
 class CMSWindowsDesks;
 
 //! Microsoft Windows key mapper
@@ -28,11 +31,18 @@ This class maps KeyIDs to keystrokes.
 */
 class CMSWindowsKeyState : public CKeyState {
 public:
-	CMSWindowsKeyState(CMSWindowsDesks* desks);
+	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget);
 	virtual ~CMSWindowsKeyState();
 
-	//! @name accessors
+	//! @name manipulators
 	//@{
+
+	//! Handle screen disabling
+	/*!
+	Called when screen is disabled.  This is needed to deal with platform
+	brokenness.
+	*/
+	void				disable();
 
 	//! Set the active keyboard layout
 	/*!
@@ -40,12 +50,43 @@ public:
 	*/
 	void				setKeyLayout(HKL keyLayout);
 
-	//! Check the named virtual key for release
+	//! Test and set autorepeat state
 	/*!
-	If \p virtualKey isn't really pressed but we think it is then
-	update our state and post a key release event to \p eventTarget.
+	Returns true if the given button is autorepeating and updates internal
+	state.
 	*/
-	void				fixKey(void* eventTarget, UINT virtualKey);
+	bool				testAutoRepeat(bool press, bool isRepeat, KeyButton);
+
+	//! Remember modifier state
+	/*!
+	Records the current non-toggle modifier state.
+	*/
+	void				saveModifiers();
+
+	//! Set effective modifier state
+	/*!
+	Temporarily sets the non-toggle modifier state to those saved by the
+	last call to \c saveModifiers if \p enable is \c true.  Restores the
+	modifier state to the current modifier state if \p enable is \c false.
+	This is for synthesizing keystrokes on the primary screen when the
+	cursor is on a secondary screen.  When on a secondary screen we capture
+	all non-toggle modifier state, track the state internally and do not
+	pass it on.  So if Alt+F1 synthesizes Alt+X we need to synthesize
+	not just X but also Alt, despite the fact that our internal modifier
+	state indicates Alt is down, because local apps never saw the Alt down
+	event.
+	*/
+	void				useSavedModifiers(bool enable);
+
+	//@}
+	//! @name accessors
+	//@{
+
+	//! Map a virtual key to a button
+	/*!
+	Returns the button for the \p virtualKey.
+	*/
+	KeyButton			virtualKeyToButton(UINT virtualKey) const;
 
 	//! Map key event to a key
 	/*!
@@ -55,84 +96,121 @@ public:
 	KeyID				mapKeyFromEvent(WPARAM charAndVirtKey,
 							LPARAM info, KeyModifierMask* maskOut) const;
 
-	//! Map a virtual key to a button
+	//! Check if keyboard groups have changed
 	/*!
-	Returns the button for the \p virtualKey.
+	Returns true iff the number or order of the keyboard groups have
+	changed since the last call to updateKeys().
 	*/
-	KeyButton			virtualKeyToButton(UINT virtualKey) const;
+	bool				didGroupsChange() const;
+
+	//! Map key to virtual key
+	/*!
+	Returns the virtual key for key \p key or 0 if there's no such virtual
+	key.
+	*/
+	UINT				mapKeyToVirtualKey(KeyID key) const;
+
+	//! Map virtual key and button to KeyID
+	/*!
+	Returns the KeyID for virtual key \p virtualKey and button \p button
+	(button should include the extended key bit), or kKeyNone if there is
+	no such key.
+	*/
+	static KeyID		getKeyID(UINT virtualKey, KeyButton button);
 
 	//@}
 
 	// IKeyState overrides
+	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
+							KeyButton button);
+	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+							SInt32 count, KeyButton button);
+	virtual bool		fakeCtrlAltDel();
+	virtual KeyModifierMask
+						pollActiveModifiers() const;
+	virtual SInt32		pollActiveGroup() const;
+	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
+
+	// CKeyState overrides
+	virtual void		onKey(KeyButton button, bool down,
+							KeyModifierMask newState);
 	virtual void		sendKeyEvent(void* target,
 							bool press, bool isAutoRepeat,
 							KeyID key, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
-	virtual bool		fakeCtrlAltDel();
-	virtual const char*	getKeyName(KeyButton) const;
 
 protected:
-	// IKeyState overrides
-	virtual void		doUpdateKeys();
-	virtual void		doFakeKeyEvent(KeyButton button,
-							bool press, bool isAutoRepeat);
-	virtual KeyButton	mapKey(Keystrokes& keys, KeyID id,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
+	// CKeyState overrides
+	virtual void		getKeyMap(CKeyMap& keyMap);
+	virtual void		fakeKey(const Keystroke& keystroke);
+	virtual KeyModifierMask&
+						getActiveModifiersRValue();
 
 private:
+	typedef std::vector<HKL> GroupList;
+
 	// send ctrl+alt+del hotkey event on NT family
 	static void			ctrlAltDelThread(void*);
 
-	// convert a language ID to a code page
-	UINT				getCodePageFromLangID(LANGID langid) const;
+	bool				getGroups(GroupList&) const;
+	void				setWindowGroup(SInt32 group);
 
-	// map a virtual key to a button.  this tries to deal with the
-	// broken win32 API as best it can.
-	KeyButton			mapVirtKeyToButton(UINT virtualKey,
-							KeyButton& extended) const;
+	void				fixKeys();
+	void				handleFixKeys(const CEvent&, void*);
 
-	// same as above and discard extended
-	KeyButton			mapVirtKeyToButton(UINT virtualKey) const;
+	KeyID				getIDForKey(CKeyMap::KeyItem& item,
+							KeyButton button, UINT virtualKey,
+							PBYTE keyState, HKL hkl) const;
 
-	// map character \c c given keyboard layout \c hkl to the keystrokes
-	// to generate it.
-	KeyButton			mapCharacter(Keystrokes& keys,
-							char c, HKL hkl, bool isAutoRepeat) const;
-
-	// map \c virtualKey to the keystrokes to generate it, along with
-	// keystrokes to update and restore the modifier state.
-	KeyButton			mapToKeystrokes(Keystrokes& keys, KeyButton button,
-							KeyModifierMask desiredMask,
-							KeyModifierMask requiredMask,
-							bool isAutoRepeat) const;
-
-	// get keystrokes to get modifiers in a desired state
-	bool				adjustModifiers(Keystrokes& keys,
-							Keystrokes& undo,
-							KeyModifierMask desiredMask,
-							KeyModifierMask requiredMask) const;
-
-	// pass character to ToAsciiEx(), returning what it returns
-	int					toAscii(TCHAR c, HKL hkl, bool menu, WORD* chars) const;
-
-	// return true iff \c c is a dead character
-	bool				isDeadChar(TCHAR c, HKL hkl, bool menu) const;
+	void				addKeyEntry(CKeyMap& keyMap, CKeyMap::KeyItem& item);
 
 private:
+	// not implemented
+	CMSWindowsKeyState(const CMSWindowsKeyState&);
+	CMSWindowsKeyState& operator=(const CMSWindowsKeyState&);
+
+private:
+	typedef std::map<HKL, SInt32> GroupMap;
+	typedef std::map<KeyID, UINT> KeyToVKMap;
+
 	bool				m_is95Family;
+	void*				m_eventTarget;
 	CMSWindowsDesks*	m_desks;
 	HKL					m_keyLayout;
-	CString				m_keyName;
-	UINT				m_scanCodeToVirtKey[512];
-	UINT				m_scanCodeToVirtKeyNumLock[512];
-	KeyButton			m_virtKeyToScanCode[256];
+	UINT				m_buttonToVK[512];
+	UINT				m_buttonToNumpadVK[512];
+	KeyButton			m_virtualKeyToButton[256];
+	KeyToVKMap			m_keyToVKMap;
 
-	static const char*	s_vkToName[];
-	static const KeyID	s_virtualKey[][2];
-	static const UINT	s_mapE000[];
-	static const UINT	s_mapEE00[];
-	static const UINT	s_mapEF00[];
+	// the timer used to check for fixing key state
+	CEventQueueTimer*	m_fixTimer;
+
+	// the groups (keyboard layouts)
+	GroupList			m_groups;
+	GroupMap			m_groupMap;
+
+	// the last button that we generated a key down event for.  this
+	// is zero if the last key event was a key up.  we use this to
+	// synthesize key repeats since the low level keyboard hook can't
+	// tell us if an event is a key repeat.
+	KeyButton			m_lastDown;
+
+	// modifier tracking
+	bool				m_useSavedModifiers;
+	KeyModifierMask		m_savedModifiers;
+	KeyModifierMask		m_originalSavedModifiers;
+
+	// pointer to ToUnicodeEx.  on win95 family this will be NULL.
+	typedef int (WINAPI *ToUnicodeEx_t)(UINT wVirtKey,
+										UINT wScanCode,
+										PBYTE lpKeyState,
+										LPWSTR pwszBuff,
+										int cchBuff,
+										UINT wFlags,
+										HKL dwhkl);
+	ToUnicodeEx_t		m_ToUnicodeEx;
+
+	static const KeyID	s_virtualKey[];
 };
 
 #endif

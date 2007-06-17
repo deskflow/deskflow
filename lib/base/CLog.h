@@ -104,16 +104,11 @@ public:
 
 	//! Print a log message
 	/*!
-	Print a log message using the printf-like \c format and arguments.
-	*/
-	void				print(const char* format, ...) const;
-
-	//! Print a log message
-	/*!
 	Print a log message using the printf-like \c format and arguments
-	preceded by the filename and line number.
+	preceded by the filename and line number.  If \c file is NULL then
+	neither the file nor the line are printed.
 	*/
-	void				printt(const char* file, int line,
+	void				print(const char* file, int line,
 							const char* format, ...) const;
 
 	//! Get the minimum priority level.
@@ -175,9 +170,9 @@ without the leading \c k.  For example, \c CLOG_INFO.  The special
 filename and line number.
 
 If \c NOLOGGING is defined during the build then this macro expands to
-nothing.  If \c NDEBUG is defined during the build then it expands to a
-call to CLog::print.  Otherwise it expands to a call to CLog::printt,
-which includes the filename and line number.
+nothing.  If \c NDEBUG is not defined during the build then it expands
+to a call to CLog::print that prints the filename and line number,
+otherwise it expands to a call that doesn't.
 */
 
 #if defined(NOLOGGING)
@@ -187,10 +182,10 @@ which includes the filename and line number.
 #elif defined(NDEBUG)
 #define LOG(_a1)		CLOG->print _a1
 #define LOGC(_a1, _a2)	if (_a1) CLOG->print _a2
-#define CLOG_TRACE
+#define CLOG_TRACE		NULL, 0,
 #else
-#define LOG(_a1)		CLOG->printt _a1
-#define LOGC(_a1, _a2)	if (_a1) CLOG->printt _a2
+#define LOG(_a1)		CLOG->print _a1
+#define LOGC(_a1, _a2)	if (_a1) CLOG->print _a2
 #define CLOG_TRACE		__FILE__, __LINE__,
 #endif
 

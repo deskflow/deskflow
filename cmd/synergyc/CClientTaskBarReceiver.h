@@ -77,6 +77,7 @@ protected:
 private:
 	EState				m_state;
 	CString				m_errorMessage;
+	CString				m_server;
 };
 
 #endif

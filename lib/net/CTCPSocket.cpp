@@ -485,8 +485,9 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			sendEvent(getDisconnectedEvent());
 			needNewJob = true;
 		}
-		catch (XArchNetwork&) {
+		catch (XArchNetwork& e) {
 			// other write error
+			LOG((CLOG_WARN "error writing socket: %s", e.what().c_str()));
 			onDisconnected();
 			sendEvent(getOutputErrorEvent());
 			sendEvent(getDisconnectedEvent());
@@ -531,8 +532,9 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 			onDisconnected();
 			needNewJob = true;
 		}
-		catch (XArchNetwork&) {
+		catch (XArchNetwork& e) {
 			// ignore other read error
+			LOG((CLOG_WARN "error reading socket: %s", e.what().c_str()));
 		}
 	}
 

@@ -21,10 +21,10 @@
 #include "LaunchUtil.h"
 #include "resource.h"
 
-#define CLIENT_DAEMON_NAME "Synergy Client"
-#define SERVER_DAEMON_NAME "Synergy Server"
-#define CLIENT_DAEMON_INFO "Shares this system's mouse and keyboard with others."
-#define SERVER_DAEMON_INFO "Shares this system's mouse and keyboard with others."
+static const char* CLIENT_DAEMON_NAME = "Synergy Client";
+static const char* SERVER_DAEMON_NAME = "Synergy Server";
+static const char* CLIENT_DAEMON_INFO = "Uses a shared mouse and keyboard.";
+static const char* SERVER_DAEMON_INFO = "Shares this system's mouse and keyboard with others.";
 
 //
 // CAutoStartOutputter
@@ -40,6 +40,7 @@ public:
 	// ILogOutputter overrides
 	virtual void		open(const char*) { }
 	virtual void		close() { }
+	virtual void		show(bool) { }
 	virtual bool		write(ELevel level, const char* message);
 	virtual const char*	getNewline() const { return ""; }
 
@@ -63,14 +64,11 @@ CAutoStartOutputter::write(ELevel level, const char* message)
 
 CAutoStart*				CAutoStart::s_singleton = NULL;
 
-CAutoStart::CAutoStart(HWND parent, CConfig* config, const CString& cmdLine) :
+CAutoStart::CAutoStart(HWND parent, bool isServer, const CString& cmdLine) :
 	m_parent(parent),
-	m_config(config),
-	m_isServer(config != NULL),
+	m_isServer(isServer),
 	m_cmdLine(cmdLine),
-	m_name((config != NULL) ? SERVER_DAEMON_NAME : CLIENT_DAEMON_NAME),
-	m_userConfigSaved(false)
-
+	m_name(isServer ? SERVER_DAEMON_NAME : CLIENT_DAEMON_NAME)
 {
 	assert(s_singleton == NULL);
 	s_singleton = this;
@@ -87,9 +85,6 @@ CAutoStart::doModal()
 	// install our log outputter
 	CLOG->insert(new CAutoStartOutputter(&m_errorMessage));
 
-	// reset saved flag
-	m_userConfigSaved = false;
-
 	// do dialog
 	DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_AUTOSTART),
 								m_parent, dlgProc, (LPARAM)this);
@@ -98,10 +93,98 @@ CAutoStart::doModal()
 	CLOG->pop_front();
 }
 
-bool
-CAutoStart::wasUserConfigSaved() const
+void
+CAutoStart::reinstallDaemon(bool isClient, const CString& cmdLine)
 {
-	return m_userConfigSaved;
+	// get installation state
+	const char* name = (isClient ? CLIENT_DAEMON_NAME : SERVER_DAEMON_NAME);
+	bool installedSystem = ARCH->isDaemonInstalled(name, true);
+	bool installedUser   = ARCH->isDaemonInstalled(name, false);
+
+	// reinstall if anything is installed
+	if (installedSystem || installedUser) {
+		ARCH->installDaemon(name,
+					isClient ? CLIENT_DAEMON_INFO : SERVER_DAEMON_INFO,
+					getAppPath(isClient ? CLIENT_APP : SERVER_APP).c_str(),
+					cmdLine.c_str(),
+					NULL,
+					installedSystem);
+	}
+}
+
+void
+CAutoStart::uninstallDaemons(bool client)
+{
+	if (client) {
+		try {
+			ARCH->uninstallDaemon(CLIENT_DAEMON_NAME, true);
+		}
+		catch (...) {
+		}
+		try {
+			ARCH->uninstallDaemon(CLIENT_DAEMON_NAME, false);
+		}
+		catch (...) {
+		}
+	}
+	else {
+		try {
+			ARCH->uninstallDaemon(SERVER_DAEMON_NAME, true);
+		}
+		catch (...) {
+		}
+		try {
+			ARCH->uninstallDaemon(SERVER_DAEMON_NAME, false);
+		}
+		catch (...) {
+		}
+	}
+}
+
+bool
+CAutoStart::startDaemon()
+{
+	const char* name = NULL;
+	if (ARCH->isDaemonInstalled(CLIENT_DAEMON_NAME, true)) {
+		name = CLIENT_DAEMON_NAME;
+	}
+	else if (ARCH->isDaemonInstalled(SERVER_DAEMON_NAME, true)) {
+		name = SERVER_DAEMON_NAME;
+	}
+	if (name == NULL) {
+		return false;
+	}
+
+	// open service manager
+	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
+	if (mgr == NULL) {
+		return false;
+	}
+
+	// open the service
+	SC_HANDLE service = OpenService(mgr, name, SERVICE_START);
+	if (service == NULL) {
+		CloseServiceHandle(mgr);
+		return false;
+	}
+
+	// start the service
+	BOOL okay = StartService(service, 0, NULL);
+
+	// clean up
+	CloseServiceHandle(service);
+	CloseServiceHandle(mgr);
+
+	return (okay != 0);
+}
+
+bool
+CAutoStart::isDaemonInstalled()
+{
+	return (ARCH->isDaemonInstalled(CLIENT_DAEMON_NAME, false) ||
+			ARCH->isDaemonInstalled(CLIENT_DAEMON_NAME, true) ||
+			ARCH->isDaemonInstalled(SERVER_DAEMON_NAME, false) ||
+			ARCH->isDaemonInstalled(SERVER_DAEMON_NAME, true));
 }
 
 void
@@ -175,22 +258,6 @@ CAutoStart::onInstall(bool allUsers)
 {
 	if (!m_install) {
 		return onUninstall(allUsers);
-	}
-
-	// try saving configuration.  if we can't then don't try
-	// installing the daemon.
-	if (m_config != NULL) {
-		if (!saveConfig(*m_config, allUsers)) {
-			showError(m_hwnd, CStringUtil::format(
-								getString(IDS_SAVE_FAILED).c_str(),
-								getErrorString(GetLastError()).c_str()));
-			return false;
-		}
-
-		// note if we've saved the user's configuration
-		if (!allUsers) {
-			m_userConfigSaved = true;
-		}
 	}
 
 	// get the app path

@@ -25,9 +25,15 @@ CPlatformScreen::~CPlatformScreen()
 }
 
 void
-CPlatformScreen::updateKeys()
+CPlatformScreen::updateKeyMap()
 {
-	getKeyState()->updateKeys();
+	getKeyState()->updateKeyMap();
+}
+
+void
+CPlatformScreen::updateKeyState()
+{
+	getKeyState()->updateKeyState();
 	updateButtons();
 }
 
@@ -58,9 +64,9 @@ CPlatformScreen::fakeKeyUp(KeyButton button)
 }
 
 void
-CPlatformScreen::fakeToggle(KeyModifierMask modifier)
+CPlatformScreen::fakeAllKeysUp()
 {
-	getKeyState()->fakeToggle(modifier);
+	getKeyState()->fakeAllKeysUp();
 }
 
 bool
@@ -81,8 +87,20 @@ CPlatformScreen::getActiveModifiers() const
 	return getKeyState()->getActiveModifiers();
 }
 
-const char*
-CPlatformScreen::getKeyName(KeyButton button) const
+KeyModifierMask
+CPlatformScreen::pollActiveModifiers() const
 {
-	return getKeyState()->getKeyName(button);
+	return getKeyState()->pollActiveModifiers();
+}
+
+SInt32
+CPlatformScreen::pollActiveGroup() const
+{
+	return getKeyState()->pollActiveGroup();
+}
+
+void
+CPlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
+{
+	getKeyState()->pollPressedKeys(pressedKeys);
 }

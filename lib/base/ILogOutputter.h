@@ -45,6 +45,15 @@ public:
 	*/
 	virtual void		close() = 0;
 
+	//! Show the outputter
+	/*!
+	Causes the output to become visible.  This generally only makes sense
+	for a logger in a graphical user interface.  Other implementations
+	will do nothing.  Iff \p showIfEmpty is \c false then the implementation
+	may optionally only show the log if it's not empty.
+	*/
+	virtual void		show(bool showIfEmpty) = 0;
+
 	//! Write a message with level
 	/*!
 	Writes \c message, which has the given \c level, to a log.

@@ -3,7 +3,7 @@ Name:      @PACKAGE@
 Version:   @VERSION@
 Release:   1
 License:   GPL
-Packager:  Chris Schoeneman <crs23@bigfoot.com>
+Packager:  Chris Schoeneman <crs23@users.sourceforge.net>
 Group:     System Environment/Daemons
 Prefixes:  /usr/bin
 Source:    @PACKAGE@-@VERSION@.tar.gz
@@ -41,19 +41,26 @@ rm -rf $RPM_BUILD_ROOT
 %doc INSTALL
 %doc NEWS
 %doc README
+%doc doc/about.html
 %doc doc/authors.html
 %doc doc/autostart.html
+%doc doc/banner.html
+%doc doc/border.html
 %doc doc/compiling.html
 %doc doc/configuration.html
+%doc doc/contact.html
 %doc doc/developer.html
 %doc doc/faq.html
 %doc doc/history.html
+%doc doc/home.html
 %doc doc/index.html
 %doc doc/license.html
 %doc doc/news.html
+%doc doc/roadmap.html
 %doc doc/running.html
 %doc doc/security.html
 %doc doc/tips.html
-%doc doc/todo.html
+%doc doc/toc.html
+%doc doc/trouble.html
 %doc doc/synergy.css
 %doc examples/synergy.conf

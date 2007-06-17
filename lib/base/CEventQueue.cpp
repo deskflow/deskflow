@@ -206,17 +206,23 @@ CEventQueue::addEvent(const CEvent& event)
 	default:
 		break;
 	}
-
-	CArchMutexLock lock(m_mutex);
-
-	// store the event's data locally
-	UInt32 eventID = saveEvent(event);
-
-	// add it
-	if (!m_buffer->addEvent(eventID)) {
-		// failed to send event
-		removeEvent(eventID);
+	
+	if ((event.getFlags() & CEvent::kDeliverImmediately) != 0) {
+		dispatchEvent(event);
 		CEvent::deleteData(event);
+	}
+	else {
+		CArchMutexLock lock(m_mutex);
+		
+		// store the event's data locally
+		UInt32 eventID = saveEvent(event);
+		
+		// add it
+		if (!m_buffer->addEvent(eventID)) {
+			// failed to send event
+			removeEvent(eventID);
+			CEvent::deleteData(event);
+		}
 	}
 }
 

@@ -300,6 +300,8 @@ dnl version
 
 AC_DEFUN([ACX_PTHREAD], [
 AC_REQUIRE([AC_CANONICAL_HOST])
+AC_LANG_SAVE
+AC_LANG_C
 acx_pthread_ok=no
 
 # We used to check for pthread.h first, but this fails if pthread.h
@@ -310,11 +312,11 @@ acx_pthread_ok=no
 # etcetera environment variables, and if threads linking works using
 # them:
 if test x"$PTHREAD_LIBS$PTHREAD_CFLAGS" != x; then
-        save_CXXFLAGS="$CXXFLAGS"
-        CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+        save_CFLAGS="$CFLAGS"
+        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
         save_LIBS="$LIBS"
         LIBS="$PTHREAD_LIBS $LIBS"
-        AC_MSG_CHECKING([for pthread_join in LIBS=$PTHREAD_LIBS with CXXFLAGS=$PTHREAD_CFLAGS])
+        AC_MSG_CHECKING([for pthread_join in LIBS=$PTHREAD_LIBS with CFLAGS=$PTHREAD_CFLAGS])
         AC_TRY_LINK_FUNC(pthread_join, acx_pthread_ok=yes)
         AC_MSG_RESULT($acx_pthread_ok)
         if test x"$acx_pthread_ok" = xno; then
@@ -322,7 +324,7 @@ if test x"$PTHREAD_LIBS$PTHREAD_CFLAGS" != x; then
                 PTHREAD_CFLAGS=""
         fi
         LIBS="$save_LIBS"
-        CXXFLAGS="$save_CXXFLAGS"
+        CFLAGS="$save_CFLAGS"
 fi
 
 # We must check for the threads library under a number of different
@@ -332,9 +334,10 @@ fi
 
 # Create a list of thread flags to try.  Items starting with a "-" are
 # C compiler flags, and other items are library names, except for "none"
-# which indicates that we try without any flags at all.
+# which indicates that we try without any flags at all, and "pthread-config"
+# which is a program returning the flags for the Pth emulation library.
 
-acx_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -mthreads pthread --thread-safe -mt"
+acx_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -mthreads pthread --thread-safe -mt pthread-config"
 
 # The ordering *is* (sometimes) important.  Some notes on the
 # individual items follow:
@@ -353,6 +356,7 @@ acx_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -m
 #      also defines -D_REENTRANT)
 # pthread: Linux, etcetera
 # --thread-safe: KAI C++
+# pthread-config: use pthread-config program (for GNU Pth library)
 
 case "${host_cpu}-${host_os}" in
         *solaris*)
@@ -382,6 +386,13 @@ for flag in $acx_pthread_flags; do
                 PTHREAD_CFLAGS="$flag"
                 ;;
 
+                pthread-config)
+                AC_CHECK_PROG(acx_pthread_config, pthread-config, yes, no)
+                if test x"$acx_pthread_config" = xno; then continue; fi
+                PTHREAD_CFLAGS="`pthread-config --cflags`"
+                PTHREAD_LIBS="`pthread-config --ldflags` `pthread-config --libs`"
+                ;;
+
                 *)
                 AC_MSG_CHECKING([for the pthreads library -l$flag])
                 PTHREAD_LIBS="-l$flag"
@@ -389,9 +400,9 @@ for flag in $acx_pthread_flags; do
         esac
 
         save_LIBS="$LIBS"
-        save_CXXFLAGS="$CXXFLAGS"
+        save_CFLAGS="$CFLAGS"
         LIBS="$PTHREAD_LIBS $LIBS"
-        CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 
         # Check for various functions.  We must include pthread.h,
         # since some functions may be macros.  (On the Sequent, we
@@ -409,7 +420,7 @@ for flag in $acx_pthread_flags; do
                     [acx_pthread_ok=yes])
 
         LIBS="$save_LIBS"
-        CXXFLAGS="$save_CXXFLAGS"
+        CFLAGS="$save_CFLAGS"
 
         AC_MSG_RESULT($acx_pthread_ok)
         if test "x$acx_pthread_ok" = xyes; then
@@ -425,69 +436,61 @@ fi
 if test "x$acx_pthread_ok" = xyes; then
         save_LIBS="$LIBS"
         LIBS="$PTHREAD_LIBS $LIBS"
-        save_CXXFLAGS="$CXXFLAGS"
-        CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+        save_CFLAGS="$CFLAGS"
+        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 
-        # Detect AIX lossage: threads are created detached by default
-        # and the JOINABLE attribute has a nonstandard name (UNDETACHED).
+        # Detect AIX lossage: JOINABLE attribute is called UNDETACHED.
         AC_MSG_CHECKING([for joinable pthread attribute])
-        AC_TRY_LINK([#include <pthread.h>],
-                    [int attr=PTHREAD_CREATE_JOINABLE;],
-                    ok=PTHREAD_CREATE_JOINABLE, ok=unknown)
-        if test x"$ok" = xunknown; then
-                AC_TRY_LINK([#include <pthread.h>],
-                            [int attr=PTHREAD_CREATE_UNDETACHED;],
-                            ok=PTHREAD_CREATE_UNDETACHED, ok=unknown)
-        fi
-        if test x"$ok" != xPTHREAD_CREATE_JOINABLE; then
-                AC_DEFINE(PTHREAD_CREATE_JOINABLE, $ok,
-                          [Define to the necessary symbol if this constant
-                           uses a non-standard name on your system.])
-        fi
-        AC_MSG_RESULT(${ok})
-        if test x"$ok" = xunknown; then
-                AC_MSG_WARN([we do not know how to create joinable pthreads])
+        attr_name=unknown
+        for attr in PTHREAD_CREATE_JOINABLE PTHREAD_CREATE_UNDETACHED; do
+            AC_TRY_LINK([#include <pthread.h>], [int attr=$attr;],
+                        [attr_name=$attr; break])
+        done
+        AC_MSG_RESULT($attr_name)
+        if test "$attr_name" != PTHREAD_CREATE_JOINABLE; then
+            AC_DEFINE_UNQUOTED(PTHREAD_CREATE_JOINABLE, $attr_name,
+                               [Define to necessary symbol if this constant
+                                uses a non-standard name on your system.])
         fi
 
         AC_MSG_CHECKING([if more special flags are required for pthreads])
         flag=no
         case "${host_cpu}-${host_os}" in
-                *-aix* | *-freebsd*) flag="-D_THREAD_SAFE";;
-                alpha*-osf*)         flag="-D_REENTRANT";;
-                *solaris*)           flag="-D_REENTRANT";;
+            *-aix* | *-freebsd* | *-darwin*) flag="-D_THREAD_SAFE";;
+            *solaris* | *-osf* | *-hpux*) flag="-D_REENTRANT";;
         esac
         AC_MSG_RESULT(${flag})
         if test "x$flag" != xno; then
                 PTHREAD_CFLAGS="$flag $PTHREAD_CFLAGS"
         fi
 
-		# Detect POSIX sigwait()
+	# Detect POSIX sigwait()
         AC_MSG_CHECKING([for POSIX sigwait])
         AC_TRY_LINK([#include <pthread.h>
-					#include <signal.h>],
-                    [sigset_t sigset; int signal; sigwait(&sigset, &signal);],
+                     #include <signal.h>],
+		    [sigset_t sigset; int signal; sigwait(&sigset, &signal);],
                     ok=yes, ok=unknown)
         if test x"$ok" = xunknown; then
-        		save_CXXFLAGS2="$CXXFLAGS"
-		        CXXFLAGS="$CXXFLAGS -D_POSIX_PTHREAD_SEMANTICS"
+       		save_CFLAGS2="$CFLAGS"
+	        CFLAGS="$CFLAGS -D_POSIX_PTHREAD_SEMANTICS"
                 AC_TRY_LINK([#include <pthread.h>
-					#include <signal.h>],
-                    [sigset_t sigset; int signal; sigwait(&sigset, &signal);],
-                    ok=-D_POSIX_PTHREAD_SEMANTICS, ok=no)
-        		CXXFLAGS="$save_CXXFLAGS2"
+                             #include <signal.h>],
+                             [sigset_t sigset; int signal; sigwait(&sigset, &signal);],
+                             ok=-D_POSIX_PTHREAD_SEMANTICS, ok=no)
+       		CFLAGS="$save_CFLAGS2"
         fi
         AC_MSG_RESULT(${ok})
         if test x"$ok" != xno; then
         	AC_DEFINE(HAVE_POSIX_SIGWAIT,1,[Define if you have a POSIX \`sigwait\' function.])
         	if test x"$ok" != xyes; then
-                PTHREAD_CFLAGS="$ok $PTHREAD_CFLAGS"
-			fi
+			PTHREAD_CFLAGS="$ok $PTHREAD_CFLAGS"
+		fi
         fi
 
-		# Detect pthread signal functions
+	# Detect pthread signal functions
         AC_MSG_CHECKING([for pthread signal functions])
         AC_TRY_LINK([#include <pthread.h>
-					#include <signal.h>],
+                     #include <signal.h>],
                     [pthread_kill(pthread_self(), SIGTERM);],
                     ok=yes, ok=no)
         AC_MSG_RESULT(${ok})
@@ -496,7 +499,7 @@ if test "x$acx_pthread_ok" = xyes; then
         fi
 
         LIBS="$save_LIBS"
-        CXXFLAGS="$save_CXXFLAGS"
+        CFLAGS="$save_CFLAGS"
 
         # More AIX lossage: must compile with cc_r
         AC_CHECK_PROG(PTHREAD_CC, cc_r, cc_r, ${CC})
@@ -516,6 +519,7 @@ else
         acx_pthread_ok=no
         $2
 fi
+AC_LANG_RESTORE
 ])dnl ACX_PTHREAD
 
 dnl enable maximum compiler warnings.  must ignore unknown pragmas to

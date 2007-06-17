@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "..\..\gen\build"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\net" /I "..\synergy" /I "..\platform" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\build\server.pdb" /FD /c
+# ADD CPP /nologo /MT /W4 /GR /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\net" /I "..\synergy" /I "..\platform" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\build\server.pdb" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "..\..\gen\debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\net" /I "..\synergy" /I "..\platform" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\debug\server.pdb" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GR /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\net" /I "..\synergy" /I "..\platform" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\debug\server.pdb" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -85,6 +85,10 @@ LIB32=link.exe -lib
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\CBaseClientProxy.cpp
+# End Source File
 # Begin Source File
 
 SOURCE=.\CClientListener.cpp
@@ -107,11 +111,19 @@ SOURCE=.\CClientProxy1_2.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CClientProxy1_3.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CClientProxyUnknown.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\CConfig.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CInputFilter.cpp
 # End Source File
 # Begin Source File
 
@@ -125,6 +137,10 @@ SOURCE=.\CServer.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\CBaseClientProxy.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\CClientListener.h
@@ -147,11 +163,19 @@ SOURCE=.\CClientProxy1_2.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CClientProxy1_3.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CClientProxyUnknown.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\CConfig.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CInputFilter.h
 # End Source File
 # Begin Source File
 

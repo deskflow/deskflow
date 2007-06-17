@@ -89,6 +89,13 @@ public:
 	*/
 	bool				isConnecting() const;
 
+	//! Get address of server
+	/*!
+	Returns the address of the server the client is connected (or wants
+	to connect) to.
+	*/
+	CNetworkAddress		getServerAddress() const;
+
 	//! Get connected event type
 	/*!
 	Returns the connected event type.  This is sent when the client has
@@ -136,7 +143,7 @@ public:
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs);
 	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel);
-	virtual void		mouseWheel(SInt32 delta);
+	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
@@ -162,7 +169,9 @@ private:
 	void				handleShapeChanged(const CEvent&, void*);
 	void				handleClipboardGrabbed(const CEvent&, void*);
 	void				handleHello(const CEvent&, void*);
-
+	void				handleSuspend(const CEvent& event, void*);
+	void				handleResume(const CEvent& event, void*);
+	
 private:
 	CString					m_name;
 	CNetworkAddress			m_serverAddress;
@@ -174,7 +183,10 @@ private:
 	CServerProxy*			m_server;
 	bool					m_ready;
 	bool					m_active;
+	bool					m_suspended;
+	bool					m_connectOnResume;
 	bool				m_ownClipboard[kClipboardEnd];
+	bool				m_sentClipboard[kClipboardEnd];
 	IClipboard::Time	m_timeClipboard[kClipboardEnd];
 	CString				m_dataClipboard[kClipboardEnd];
 

@@ -15,7 +15,7 @@
 #ifndef CPRIMARYCLIENT_H
 #define CPRIMARYCLIENT_H
 
-#include "IClient.h"
+#include "CBaseClientProxy.h"
 #include "ProtocolTypes.h"
 
 class CScreen;
@@ -26,7 +26,7 @@ The primary screen does not have a client associated with it.  This
 class provides a pseudo-client to allow the primary screen to be
 treated as if it was a client.
 */
-class CPrimaryClient : public IClient {
+class CPrimaryClient : public CBaseClientProxy {
 public:
 	/*!
 	\c name is the name of the server and \p screen is primary screen.
@@ -42,6 +42,34 @@ public:
 	Handles reconfiguration of jump zones.
 	*/
 	void				reconfigure(UInt32 activeSides);
+
+	//! Register a system hotkey
+	/*!
+	Registers a system-wide hotkey for key \p key with modifiers \p mask.
+	Returns an id used to unregister the hotkey.
+	*/
+	UInt32				registerHotKey(KeyID key, KeyModifierMask mask);
+
+	//! Unregister a system hotkey
+	/*!
+	Unregisters a previously registered hot key.
+	*/
+	void				unregisterHotKey(UInt32 id);
+
+	//! Prepare to synthesize input on primary screen
+	/*!
+	Prepares the primary screen to receive synthesized input.  We do not
+	want to receive this synthesized input as user input so this method
+	ensures that we ignore it.  Calls to \c fakeInputBegin() and
+	\c fakeInputEnd() may be nested;  only the outermost have an effect.
+	*/
+	void				fakeInputBegin();
+
+	//! Done synthesizing input on primary screen
+	/*!
+	Undoes whatever \c fakeInputBegin() did.
+	*/
+	void				fakeInputEnd();
 
 	//@}
 	//! @name accessors
@@ -61,7 +89,7 @@ public:
 	the edges of the screen, typically the center.
 	*/
 	void				getCursorCenter(SInt32& x, SInt32& y) const;
-
+	
 	//! Get toggle key state
 	/*!
 	Returns the primary screen's current toggle modifier key state.
@@ -103,16 +131,15 @@ public:
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs);
 	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel);
-	virtual void		mouseWheel(SInt32 delta);
+	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
-	virtual CString		getName() const;
 
 private:
-	CString				m_name;
 	CScreen*			m_screen;
 	bool				m_clipboardDirty[kClipboardEnd];
+	SInt32				m_fakeInputCount;
 };
 
 #endif

@@ -16,11 +16,12 @@
 #define COSXSCREENSAVER_H
 
 #include "IScreenSaver.h"
+#include <Carbon/Carbon.h>
 
 //! OSX screen saver implementation
 class COSXScreenSaver : public IScreenSaver {
 public:
-	COSXScreenSaver();
+	COSXScreenSaver(void* eventTarget);
 	virtual ~COSXScreenSaver();
 
 	// IScreenSaver overrides
@@ -29,6 +30,25 @@ public:
 	virtual void		activate();
 	virtual void		deactivate();
 	virtual bool		isActive() const;
+	
+private:
+	void				processLaunched(ProcessSerialNumber psn);
+	void				processTerminated(ProcessSerialNumber psn);
+	
+	static pascal OSStatus
+						launchTerminationCallback(
+							EventHandlerCallRef nextHandler,
+							EventRef theEvent, void* userData);
+
+private:
+	// the target for the events we generate
+	void*				m_eventTarget;
+
+	bool				m_enabled;
+	void*				m_screenSaverController;
+	void*				m_autoReleasePool;
+	EventHandlerRef		m_launchTerminationEventHandlerRef;
+	ProcessSerialNumber	m_screenSaverPSN;
 };
 
 #endif

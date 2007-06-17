@@ -126,7 +126,13 @@ Package=<4>
     Project_Dep_Name base
     End Project Dependency
     Begin Project Dependency
+    Project_Dep_Name exec
+    End Project Dependency
+    Begin Project Dependency
     Project_Dep_Name io
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libsynergy
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name mt
@@ -139,9 +145,6 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name server
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name exec
     End Project Dependency
 }}}
 

@@ -26,9 +26,10 @@
 #include "stdset.h"
 #include "stdvector.h"
 
+class CBaseClientProxy;
 class CEventQueueTimer;
 class CPrimaryClient;
-class IClient;
+class CInputFilter;
 
 //! Synergy server
 /*!
@@ -36,6 +37,46 @@ This class implements the top-level server algorithms for synergy.
 */
 class CServer {
 public:
+	//! Lock cursor to screen data
+	class CLockCursorToScreenInfo {
+	public:
+		enum State { kOff, kOn, kToggle };
+
+		static CLockCursorToScreenInfo* alloc(State state = kToggle);
+
+	public:
+		State			m_state;
+	};
+
+	//! Switch to screen data
+	class CSwitchToScreenInfo {
+	public:
+		static CSwitchToScreenInfo* alloc(const CString& screen);
+
+	public:
+		// this is a C-string;  this type is a variable size structure
+		char			m_screen[1];
+	};
+
+	//! Switch in direction data
+	class CSwitchInDirectionInfo {
+	public:
+		static CSwitchInDirectionInfo* alloc(EDirection direction);
+
+	public:
+		EDirection		m_direction;
+	};
+
+	//! Screen connected data
+	class CScreenConnectedInfo {
+	public:
+		static CScreenConnectedInfo* alloc(const CString& screen);
+
+	public:
+		// this is a C-string;  this type is a variable size structure
+		char			m_screen[1];
+	};
+
 	/*!
 	Start the server with the configuration \p config and the primary
 	client (local screen) \p primaryClient.  The client retains
@@ -60,7 +101,7 @@ public:
 	Adds \p client to the server.  The client is adopted and will be
 	destroyed when the client disconnects or is disconnected.
 	*/
-	void				adoptClient(IClient* client);
+	void				adoptClient(CBaseClientProxy* client);
 
 	//! Disconnect clients
 	/*!
@@ -94,6 +135,14 @@ public:
 	*/
 	static CEvent::Type	getErrorEvent();
 
+	//! Get connected event type
+	/*!
+	Returns the connected event type.  This is sent when a client screen
+	has connected.  The event data is a \c CScreenConnectedInfo* that
+	indicates the connected screen.
+	*/
+	static CEvent::Type	getConnectedEvent();
+
 	//! Get disconnected event type
 	/*!
 	Returns the disconnected event type.  This is sent when all the
@@ -101,18 +150,35 @@ public:
 	*/
 	static CEvent::Type	getDisconnectedEvent();
 
-	//@}
-
-protected:
-	//! Handle special keys
+	//! Get switch to screen event type
 	/*!
-	Handles keys with special meaning.
+	Returns the switch to screen event type.  The server responds to this
+	by switching screens.  The event data is a \c CSwitchToScreenInfo*
+	that indicates the target screen.
 	*/
-	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
+	static CEvent::Type	getSwitchToScreenEvent();
+
+	//! Get switch in direction event type
+	/*!
+	Returns the switch in direction event type.  The server responds to this
+	by switching screens.  The event data is a \c CSwitchInDirectionInfo*
+	that indicates the target direction.
+	*/
+	static CEvent::Type	getSwitchInDirectionEvent();
+
+	//! Get lock cursor event type
+	/*!
+	Returns the lock cursor event type.  The server responds to this
+	by locking the cursor to the active screen or unlocking it.  The
+	event data is a \c CLockCursorToScreenInfo*.
+	*/
+	static CEvent::Type	getLockCursorToScreenEvent();
+
+	//@}
 
 private:
 	// get canonical name of client
-	CString				getName(const IClient*) const;
+	CString				getName(const CBaseClientProxy*) const;
 
 	// get the sides of the primary screen that have neighbors
 	UInt32				getActivePrimarySides() const;
@@ -127,28 +193,52 @@ private:
 	bool				isLockedToScreen() const;
 
 	// returns the jump zone of the client
-	SInt32				getJumpZoneSize(IClient*) const;
+	SInt32				getJumpZoneSize(CBaseClientProxy*) const;
 
 	// change the active screen
-	void				switchScreen(IClient*,
+	void				switchScreen(CBaseClientProxy*,
 							SInt32 x, SInt32 y, bool forScreenSaver);
 
-	// lookup neighboring screen
-	IClient*			getNeighbor(IClient*, EDirection) const;
+	// jump to screen
+	void				jumpToScreen(CBaseClientProxy*);
+
+	// convert pixel position to fraction, using x or y depending on the
+	// direction.
+	float				mapToFraction(CBaseClientProxy*, EDirection,
+							SInt32 x, SInt32 y) const;
+
+	// convert fraction to pixel position, writing only x or y depending
+	// on the direction.
+	void				mapToPixel(CBaseClientProxy*, EDirection, float f,
+							SInt32& x, SInt32& y) const;
+
+	// returns true if the client has a neighbor anywhere along the edge
+	// indicated by the direction.
+	bool				hasAnyNeighbor(CBaseClientProxy*, EDirection) const;
+
+	// lookup neighboring screen, mapping the coordinate independent of
+	// the direction to the neighbor's coordinate space.
+	CBaseClientProxy*	getNeighbor(CBaseClientProxy*, EDirection,
+							SInt32& x, SInt32& y) const;
 
 	// lookup neighboring screen.  given a position relative to the
 	// source screen, find the screen we should move onto and where.
 	// if the position is sufficiently far from the source then we
 	// cross multiple screens.  if there is no suitable screen then
 	// return NULL and x,y are not modified.
-	IClient*			getNeighbor(IClient*, EDirection,
+	CBaseClientProxy*	mapToNeighbor(CBaseClientProxy*, EDirection,
+							SInt32& x, SInt32& y) const;
+
+	// adjusts x and y or neither to avoid ending up in a jump zone
+	// after entering the client in the given direction.
+	void				avoidJumpZone(CBaseClientProxy*, EDirection,
 							SInt32& x, SInt32& y) const;
 
 	// test if a switch is permitted.  this includes testing user
 	// options like switch delay and tracking any state required to
 	// implement them.  returns true iff a switch is permitted.
-	bool				isSwitchOkay(IClient* dst, EDirection,
-							SInt32 x, SInt32 y);
+	bool				isSwitchOkay(CBaseClientProxy* dst, EDirection,
+							SInt32 x, SInt32 y, SInt32 xActive, SInt32 yActive);
 
 	// update switch state due to a mouse move at \p x, \p y that
 	// doesn't switch screens.
@@ -181,11 +271,16 @@ private:
 	// returns true iff the delay switch timer is started
 	bool				isSwitchWaitStarted() const;
 
+	// returns the corner (EScreenSwitchCornerMasks) where x,y is on the
+	// given client.  corners have the given size.
+	UInt32				getCorner(CBaseClientProxy*,
+							SInt32 x, SInt32 y, SInt32 size) const;
+
 	// stop relative mouse moves
 	void				stopRelativeMoves();
 
 	// send screen options to \c client
-	void				sendOptions(IClient* client) const;
+	void				sendOptions(CBaseClientProxy* client) const;
 
 	// process options from configuration
 	void				processOptions();
@@ -207,28 +302,35 @@ private:
 	void				handleSwitchWaitTimeout(const CEvent&, void*);
 	void				handleClientDisconnected(const CEvent&, void*);
 	void				handleClientCloseTimeout(const CEvent&, void*);
+	void				handleSwitchToScreenEvent(const CEvent&, void*);
+	void				handleSwitchInDirectionEvent(const CEvent&, void*);
+	void				handleLockCursorToScreenEvent(const CEvent&, void*);
+	void				handleFakeInputBeginEvent(const CEvent&, void*);
+	void				handleFakeInputEndEvent(const CEvent&, void*);
 
 	// event processing
-	void				onClipboardChanged(IClient* sender,
+	void				onClipboardChanged(CBaseClientProxy* sender,
 							ClipboardID id, UInt32 seqNum);
 	void				onScreensaver(bool activated);
-	void				onKeyDown(KeyID, KeyModifierMask, KeyButton);
-	void				onKeyUp(KeyID, KeyModifierMask, KeyButton);
+	void				onKeyDown(KeyID, KeyModifierMask, KeyButton,
+							const char* screens);
+	void				onKeyUp(KeyID, KeyModifierMask, KeyButton,
+							const char* screens);
 	void				onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton);
 	void				onMouseDown(ButtonID);
 	void				onMouseUp(ButtonID);
 	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
 	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
-	void				onMouseWheel(SInt32 delta);
+	void				onMouseWheel(SInt32 xDelta, SInt32 yDelta);
 
 	// add client to list and attach event handlers for client
-	bool				addClient(IClient*);
+	bool				addClient(CBaseClientProxy*);
 
 	// remove client from list and detach event handlers for client
-	bool				removeClient(IClient*);
+	bool				removeClient(CBaseClientProxy*);
 
 	// close a client
-	void				closeClient(IClient*, const char* msg);
+	void				closeClient(CBaseClientProxy*, const char* msg);
 
 	// close clients not in \p config
 	void				closeClients(const CConfig& config);
@@ -238,11 +340,11 @@ private:
 	void				closeAllClients();
 
 	// remove clients from internal state
-	void				removeActiveClient(IClient*);
-	void				removeOldClient(IClient*);
+	void				removeActiveClient(CBaseClientProxy*);
+	void				removeOldClient(CBaseClientProxy*);
 
 	// force the cursor off of \p client
-	void				forceLeaveClient(IClient* client);
+	void				forceLeaveClient(CBaseClientProxy* client);
 
 private:
 	class CClipboardInfo {
@@ -260,17 +362,17 @@ private:
 	CPrimaryClient*		m_primaryClient;
 
 	// all clients (including the primary client) indexed by name
-	typedef std::map<CString, IClient*> CClientList;
-	typedef std::set<IClient*> CClientSet;
+	typedef std::map<CString, CBaseClientProxy*> CClientList;
+	typedef std::set<CBaseClientProxy*> CClientSet;
 	CClientList			m_clients;
 	CClientSet			m_clientSet;
 
 	// all old connections that we're waiting to hangup
-	typedef std::map<IClient*, CEventQueueTimer*> COldClients;
+	typedef std::map<CBaseClientProxy*, CEventQueueTimer*> COldClients;
 	COldClients			m_oldClients;
 
 	// the client with focus
-	IClient*			m_active;
+	CBaseClientProxy*	m_active;
 
 	// the sequence number of enter messages
 	UInt32				m_seqNum;
@@ -289,17 +391,20 @@ private:
 	// current configuration
 	CConfig				m_config;
 
+	// input filter (from m_config);
+	CInputFilter*		m_inputFilter;
+
 	// clipboard cache
 	CClipboardInfo		m_clipboards[kClipboardEnd];
 
 	// state saved when screen saver activates
-	IClient*			m_activeSaver;
+	CBaseClientProxy*	m_activeSaver;
 	SInt32				m_xSaver, m_ySaver;
 
 	// common state for screen switch tests.  all tests are always
 	// trying to reach the same screen in the same direction.
 	EDirection			m_switchDir;
-	IClient*			m_switchScreen;
+	CBaseClientProxy*	m_switchScreen;
 
 	// state for delayed screen switching
 	double				m_switchWaitDelay;
@@ -316,8 +421,15 @@ private:
 	// relative mouse move option
 	bool				m_relativeMoves;
 
+	// screen locking (former scroll lock)
+	bool				m_lockedToScreen;
+
 	static CEvent::Type	s_errorEvent;
+	static CEvent::Type	s_connectedEvent;
 	static CEvent::Type	s_disconnectedEvent;
+	static CEvent::Type	s_switchToScreen;
+	static CEvent::Type	s_switchInDirection;
+	static CEvent::Type s_lockCursorToScreen;
 };
 
 #endif

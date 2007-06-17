@@ -53,9 +53,18 @@ AM_CONDITIONAL(CARBON, test x$acx_host_winapi = xCARBON)
 AM_CONDITIONAL(XWINDOWS, test x$acx_host_winapi = xXWINDOWS)
 
 dnl checks for programs
+AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_RANLIB
 AC_CHECK_PROG(HAVE_DOT, dot, YES, NO)
+
+dnl AC_PROG_OBJC doesn't exist.  Borrow some ideas from KDE.
+dnl AC_MSG_CHECKING(for an Objective-C compiler)
+OBJC="${CC}"
+OBJCFLAGS="${CFLAGS}"
+AC_SUBST(OBJC)
+AC_SUBST(OBJCFLAGS)
+_AM_DEPENDENCIES(OBJC)
 
 dnl do checks using C++
 AC_LANG_CPLUSPLUS
@@ -88,7 +97,7 @@ ACX_CHECK_INET_ATON
 
 dnl checks for header files
 AC_HEADER_STDC
-AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h wchar.h alloca.h])
+AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h locale.h wchar.h])
 AC_CHECK_HEADERS([sys/socket.h sys/select.h])
 AC_CHECK_HEADERS([sys/utsname.h])
 AC_CHECK_HEADERS([istream ostream sstream])
@@ -108,6 +117,33 @@ if test x"$acx_host_winapi" = xXWINDOWS; then
 	AC_CHECK_HEADERS([X11/extensions/XTest.h],
 		,
 		AC_MSG_ERROR(You must have the XTest headers to compile synergy))
+
+	acx_have_xkb=no
+	AC_CHECK_LIB(X11,
+		XkbQueryExtension,
+		[acx_have_xkb=yes],
+		[acx_have_xkb=no],
+		[$X_LIBS $X_EXTRA_LIBS])
+	if test x"$acx_have_xkb" = xyes; then
+		AC_CHECK_HEADERS([X11/XKBlib.h X11/extensions/XKBstr.h],
+			[acx_have_xkb=yes],
+			[acx_have_xkb=no],
+			[#include <X11/Xlib.h>])
+		if test x"$acx_have_xkb" = xyes; then
+			AC_TRY_COMPILE([
+        	 			#include <X11/Xlib.h>
+        	 			#include <X11/XKBlib.h>
+				],[
+					XkbQueryExtension(0, 0, 0, 0, 0, 0);
+				],
+        		[acx_have_xkb=yes],
+			[acx_have_xkb=no])
+		fi
+	fi
+	if test x"$acx_have_xkb" = xyes; then
+		AC_DEFINE(HAVE_XKB_EXTENSION, 1,
+			[Define this if the XKB extension is available.])
+	fi
 
 	acx_have_xinerama=yes
 	AC_CHECK_LIB(Xinerama,
@@ -149,7 +185,7 @@ if test x"$acx_host_winapi" = xXWINDOWS; then
 			AC_MSG_CHECKING(for prototypes in X11/extensions/dpms.h)
 			acx_have_dpms_protos=no
 			AC_TRY_COMPILE([
-        	 		#include <X11/Xlib.h>
+        	 			#include <X11/Xlib.h>
 					extern "C" {
 			  		#include <X11/extensions/dpms.h>
 					}
@@ -207,7 +243,24 @@ ACX_CXX_WARNINGS_ARE_ERRORS
 
 dnl adjust compiler and linker variables
 CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $ARCH_CFLAGS"
+OBJCXXFLAGS="$OBJCXXFLAGS $CXXFLAGS $ARCH_CFLAGS"
 LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $ARCH_LIBS $LIBS"
+
+dnl we need to have an environment variable set when building on OS X.
+dnl i'm not sure of the right way to do that.  writing 'export ...' to
+dnl the makefiles isn't portable.  here we'll hijack XXXDEPMODE (where
+dnl XXX depends on the language) to insert setting the environment
+dnl variable when running the compiler.  we'd like to put that in CC,
+dnl CXX and OBJC but that breaks depcomp.  let's hope this works.
+if test x"$acx_host_winapi" = xCARBON; then
+	MACOSX_DEPLOYMENT_TARGET="10.2"
+	CCDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $CCDEPMODE"
+	CXXDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $CXXDEPMODE"
+	OBJCDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $OBJCDEPMODE"
+else
+	MACOSX_DEPLOYMENT_TARGET="5"
+	CXXDEPMODE="FOO=$MACOSX_DEPLOYMENT_TARGET $CXXDEPMODE"
+fi
 
 AC_OUTPUT([
 Makefile

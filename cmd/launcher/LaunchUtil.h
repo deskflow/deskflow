@@ -19,9 +19,12 @@
 
 #define WINDOWS_LEAN_AND_MEAN
 #include <windows.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #define CLIENT_APP "synergyc.exe"
 #define SERVER_APP "synergys.exe"
+#define CONFIG_NAME "synergy.sgc"
 
 class CConfig;
 
@@ -35,6 +38,7 @@ void					showError(HWND hwnd, const CString& msg);
 void					askOkay(HWND hwnd, const CString& title,
 							const CString& msg);
 bool					askVerify(HWND hwnd, const CString& msg);
+bool					isShowingDialog();
 
 void					setWindowText(HWND hwnd, const CString& msg);
 CString					getWindowText(HWND hwnd);
@@ -47,8 +51,10 @@ bool					isItemChecked(HWND);
 
 CString					getAppPath(const CString& appName);
 
-bool					loadConfig(CConfig& config);
-bool					saveConfig(const CConfig& config, bool sysOnly);
+bool					isConfigNewer(time_t&, bool userConfig);
+bool					loadConfig(CConfig& config, time_t&, bool& userConfig);
+bool					saveConfig(const CConfig& config,
+							bool sysOnly, time_t&);
 
 const TCHAR* const*		getSettingsPath();
 

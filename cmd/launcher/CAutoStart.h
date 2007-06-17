@@ -20,14 +20,10 @@
 #define WINDOWS_LEAN_AND_MEAN
 #include <windows.h>
 
-class CConfig;
-
 //! Auto start dialog for Microsoft Windows launcher
 class CAutoStart {
 public:
-	// if config == NULL then it's assumed we're installing/uninstalling
-	// the client, otherwise the server.
-	CAutoStart(HWND parent, CConfig* config, const CString& cmdLine);
+	CAutoStart(HWND parent, bool isServer, const CString& cmdLine);
 	~CAutoStart();
 
 	//! @name manipulators
@@ -39,16 +35,34 @@ public:
 	*/
 	void				doModal();
 
+	//! Reinstall daemon
+	/*!
+	Reinstalls the currently installed daemon.
+	*/
+	static void			reinstallDaemon(bool isClient, const CString& cmdLine);
+
+	//! Uninstalls daemon
+	/*!
+	Uninstalls all installed client (\p client is \c true) or server daemons.
+	*/
+	static void			uninstallDaemons(bool client);
+
+	//! Starts an installed daemon
+	/*!
+	Returns \c true iff a daemon was started.  This will only start daemons
+	installed for all users.
+	*/
+	static bool			startDaemon();
+
 	//@}
 	//! @name accessors
 	//@{
 
-	//! Test if user configuration was saved
+	//! Tests if any daemons are installed
 	/*!
-	Returns true if the user's configuration (as opposed to the system-wide
-	configuration) was saved successfully while in doModal().
+	Returns \c true if any daemons are installed.
 	*/
-	bool				wasUserConfigSaved() const;
+	static bool			isDaemonInstalled();
 
 	//@}
 
@@ -65,14 +79,12 @@ private:
 	static CAutoStart*	s_singleton;
 
 	HWND				m_parent;
-	CConfig*			m_config;
 	bool				m_isServer;
 	CString				m_cmdLine;
 	CString				m_name;
 	HWND				m_hwnd;
 	bool				m_install;
 	CString				m_errorMessage;
-	bool				m_userConfigSaved;
 };
 
 #endif

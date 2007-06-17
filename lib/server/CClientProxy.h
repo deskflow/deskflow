@@ -15,14 +15,14 @@
 #ifndef CCLIENTPROXY_H
 #define CCLIENTPROXY_H
 
-#include "IClient.h"
+#include "CBaseClientProxy.h"
 #include "CEvent.h"
 #include "CString.h"
 
 class IStream;
 
 //! Generic proxy for client
-class CClientProxy : public IClient {
+class CClientProxy : public CBaseClientProxy {
 public:
 	/*!
 	\c name is the name of the client.
@@ -97,14 +97,12 @@ public:
 	virtual void		mouseUp(ButtonID) = 0;
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
 	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
-	virtual void		mouseWheel(SInt32 delta) = 0;
+	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;
 	virtual void		setOptions(const COptionsList& options) = 0;
-	virtual CString		getName() const;
 
 private:
-	CString				m_name;
 	IStream*			m_stream;
 
 	static CEvent::Type	s_readyEvent;

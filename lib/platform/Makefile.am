@@ -78,6 +78,7 @@ CARBON_SOURCE_FILES =						\
 	COSXKeyState.cpp						\
 	COSXScreen.cpp							\
 	COSXScreenSaver.cpp						\
+	COSXScreenSaverUtil.m					\
 	COSXClipboard.h							\
 	COSXClipboardAnyTextConverter.h			\
 	COSXClipboardTextConverter.h			\
@@ -86,6 +87,8 @@ CARBON_SOURCE_FILES =						\
 	COSXKeyState.h							\
 	COSXScreen.h							\
 	COSXScreenSaver.h						\
+	COSXScreenSaverUtil.h					\
+	OSXScreenSaverControl.h					\
 	$(NULL)
 
 EXTRA_DIST =								\

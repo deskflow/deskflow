@@ -14,6 +14,7 @@
 
 #include "CMSWindowsDesks.h"
 #include "CMSWindowsScreen.h"
+#include "CSynergyHook.h"
 #include "IScreenSaver.h"
 #include "XScreen.h"
 #include "CLock.h"
@@ -45,8 +46,8 @@
 #define WM_NCXBUTTONDOWN	0x00AB
 #define WM_NCXBUTTONUP		0x00AC
 #define WM_NCXBUTTONDBLCLK	0x00AD
-#define MOUSEEVENTF_XDOWN	0x0100
-#define MOUSEEVENTF_XUP		0x0200
+#define MOUSEEVENTF_XDOWN	0x0080
+#define MOUSEEVENTF_XUP		0x0100
 #define XBUTTON1			0x0001
 #define XBUTTON2			0x0002
 #endif
@@ -67,7 +68,7 @@
 #define SYNERGY_MSG_FAKE_BUTTON		SYNERGY_HOOK_LAST_MSG + 5
 // x; y
 #define SYNERGY_MSG_FAKE_MOVE		SYNERGY_HOOK_LAST_MSG + 6
-// delta; <unused>
+// xDelta; yDelta
 #define SYNERGY_MSG_FAKE_WHEEL		SYNERGY_HOOK_LAST_MSG + 7
 // POINT*; <unused>
 #define SYNERGY_MSG_CURSOR_POS		SYNERGY_HOOK_LAST_MSG + 8
@@ -77,6 +78,8 @@
 #define SYNERGY_MSG_SCREENSAVER		SYNERGY_HOOK_LAST_MSG + 10
 // dx; dy
 #define SYNERGY_MSG_FAKE_REL_MOVE	SYNERGY_HOOK_LAST_MSG + 11
+// enable; <unused>
+#define SYNERGY_MSG_FAKE_INPUT		SYNERGY_HOOK_LAST_MSG + 12
 
 //
 // CMSWindowsDesks
@@ -106,6 +109,7 @@ CMSWindowsDesks::CMSWindowsDesks(
 	m_cursor    = createBlankCursor();
 	m_deskClass = createDeskWindowClass(m_isPrimary);
 	m_keyLayout = GetKeyboardLayout(GetCurrentThreadId());
+	resetOptions();
 }
 
 CMSWindowsDesks::~CMSWindowsDesks()
@@ -165,6 +169,23 @@ CMSWindowsDesks::leave(HKL keyLayout)
 }
 
 void
+CMSWindowsDesks::resetOptions()
+{
+	m_leaveForegroundOption = false;
+}
+
+void
+CMSWindowsDesks::setOptions(const COptionsList& options)
+{
+	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
+		if (options[i] == kOptionWin32KeepForeground) {
+			m_leaveForegroundOption = (options[i + 1] != 0);
+			LOG((CLOG_DEBUG1 "%s the foreground window", m_leaveForegroundOption ? "Don\'t grab" : "Grab"));
+		}
+	}
+}
+
+void
 CMSWindowsDesks::updateKeys()
 {
 	sendMessage(SYNERGY_MSG_SYNC_KEYS, 0, 0);
@@ -191,6 +212,18 @@ CMSWindowsDesks::installScreensaverHooks(bool install)
 		m_screensaverNotify = install;
 		sendMessage(SYNERGY_MSG_SCREENSAVER, install, 0);
 	}
+}
+
+void
+CMSWindowsDesks::fakeInputBegin()
+{
+	sendMessage(SYNERGY_MSG_FAKE_INPUT, 1, 0);
+}
+
+void
+CMSWindowsDesks::fakeInputEnd()
+{
+	sendMessage(SYNERGY_MSG_FAKE_INPUT, 0, 0);
 }
 
 void
@@ -310,9 +343,9 @@ CMSWindowsDesks::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
 }
 
 void
-CMSWindowsDesks::fakeMouseWheel(SInt32 delta) const
+CMSWindowsDesks::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
-	sendMessage(SYNERGY_MSG_FAKE_WHEEL, delta, 0);
+	sendMessage(SYNERGY_MSG_FAKE_WHEEL, xDelta, yDelta);
 }
 
 void
@@ -565,9 +598,21 @@ CMSWindowsDesks::deskEnter(CDesk* desk)
 							SWP_NOMOVE | SWP_NOSIZE |
 							SWP_NOACTIVATE | SWP_HIDEWINDOW);
 
-	// this is here only because of the "ConsoleWindowClass" stuff in
-	// deskLeave.
+	// restore the foreground window
+	// XXX -- this raises the window to the top of the Z-order.  we
+	// want it to stay wherever it was to properly support X-mouse
+	// (mouse over activation) but i've no idea how to do that.
+	// the obvious workaround of using SetWindowPos() to move it back
+	// after being raised doesn't work.
+	DWORD thisThread =
+		GetWindowThreadProcessId(desk->m_window, NULL);
+	DWORD thatThread =
+		GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
+	AttachThreadInput(thatThread, thisThread, TRUE);
+	SetForegroundWindow(desk->m_foregroundWindow);
+	AttachThreadInput(thatThread, thisThread, FALSE);
 	EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
+	desk->m_foregroundWindow = NULL;
 }
 
 void
@@ -575,9 +620,6 @@ CMSWindowsDesks::deskLeave(CDesk* desk, HKL keyLayout)
 {
 	ShowCursor(FALSE);
 	if (m_isPrimary) {
-		// update key state
-		m_updateKeys->run();
-
 		// map a window to hide the cursor and to use whatever keyboard
 		// layout we choose rather than the keyboard layout of the last
 		// active window.
@@ -610,38 +652,26 @@ CMSWindowsDesks::deskLeave(CDesk* desk, HKL keyLayout)
 			SetActiveWindow(desk->m_window);
 		}
 
-		// if the active window is a console then activate our window.
-		// we do this because for some reason our hook reports unshifted
-		// characters when the shift is down and a console window is
-		// active.  interestingly we do see the shift key go down and up.
+		// if using low-level hooks then disable the foreground window
+		// so it can't mess up any of our keyboard events.  the console
+		// program, for example, will cause characters to be reported as
+		// unshifted, regardless of the shift key state.  interestingly
+		// we do see the shift key go down and up.
+		//
 		// note that we must enable the window to activate it and we
 		// need to disable the window on deskEnter.
-		// FIXME -- figure out the real problem here and solve it.
 		else {
-			HWND foreground = GetForegroundWindow();
-			if (foreground != NULL) {
-				char className[40];
-				if (GetClassName(foreground, className,
-								sizeof(className) / sizeof(className[0])) &&
-					strcmp(className, "ConsoleWindowClass") == 0) {
-					EnableWindow(desk->m_window, TRUE);
-					SetActiveWindow(desk->m_window);
-
-					// force our window to the foreground.  we can't
-					// simply call SetForegroundWindow() because that
-					// will only alert the user that the window wants
-					// to be the foreground as of windows 98/2000.  we
-					// have to attach to the thread of the current
-					// foreground window then call it on our window
-					// and finally detach the threads.
-					DWORD thisThread =
-						GetWindowThreadProcessId(desk->m_window, NULL);
-					DWORD thatThread =
-						GetWindowThreadProcessId(foreground, NULL);
-					AttachThreadInput(thatThread, thisThread, TRUE);
-					SetForegroundWindow(desk->m_window);
-					AttachThreadInput(thatThread, thisThread, FALSE);
-				}
+			desk->m_foregroundWindow = getForegroundWindow();
+			if (desk->m_foregroundWindow != NULL) {
+				EnableWindow(desk->m_window, TRUE);
+				SetActiveWindow(desk->m_window);
+				DWORD thisThread =
+					GetWindowThreadProcessId(desk->m_window, NULL);
+				DWORD thatThread =
+					GetWindowThreadProcessId(desk->m_foregroundWindow, NULL);
+				AttachThreadInput(thatThread, thisThread, TRUE);
+				SetForegroundWindow(desk->m_window);
+				AttachThreadInput(thatThread, thisThread, FALSE);
 			}
 		}
 
@@ -671,9 +701,10 @@ CMSWindowsDesks::deskThread(void* vdesk)
 	MSG msg;
 
 	// use given desktop for this thread
-	CDesk* desk      = reinterpret_cast<CDesk*>(vdesk);
-	desk->m_threadID = GetCurrentThreadId();
-	desk->m_window   = NULL;
+	CDesk* desk              = reinterpret_cast<CDesk*>(vdesk);
+	desk->m_threadID         = GetCurrentThreadId();
+	desk->m_window           = NULL;
+	desk->m_foregroundWindow = NULL;
 	if (desk->m_desk != NULL && SetThreadDesktop(desk->m_desk) != 0) {
 		// create a message queue
 		PeekMessage(&msg, NULL, 0,0, PM_NOREMOVE);
@@ -763,7 +794,10 @@ CMSWindowsDesks::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_FAKE_WHEEL:
-			mouse_event(MOUSEEVENTF_WHEEL, 0, 0, msg.wParam, 0);
+			// XXX -- add support for x-axis scrolling
+			if (msg.lParam != 0) {
+				mouse_event(MOUSEEVENTF_WHEEL, 0, 0, msg.lParam, 0);
+			}
 			break;
 
 		case SYNERGY_MSG_CURSOR_POS: {
@@ -786,6 +820,12 @@ CMSWindowsDesks::deskThread(void* vdesk)
 			else {
 				m_uninstallScreensaver();
 			}
+			break;
+
+		case SYNERGY_MSG_FAKE_INPUT:
+			keybd_event(SYNERGY_HOOK_FAKE_INPUT_VIRTUAL_KEY,
+								SYNERGY_HOOK_FAKE_INPUT_SCANCODE,
+								msg.wParam ? 0 : KEYEVENTF_KEYUP, 0);
 			break;
 		}
 
@@ -870,11 +910,12 @@ CMSWindowsDesks::checkDesk()
 		// inaccessible desktop to an accessible one we have to
 		// update the keyboard state.
 		LOG((CLOG_DEBUG "switched to desk \"%s\"", name.c_str()));
+		bool syncKeys = false;
 		bool isAccessible = isDeskAccessible(desk);
 		if (isDeskAccessible(m_activeDesk) != isAccessible) {
 			if (isAccessible) {
 				LOG((CLOG_DEBUG "desktop is now accessible"));
-				sendMessage(SYNERGY_MSG_SYNC_KEYS, 0, 0);
+				syncKeys = true;
 			}
 			else {
 				LOG((CLOG_DEBUG "desktop is now inaccessible"));
@@ -889,6 +930,11 @@ CMSWindowsDesks::checkDesk()
 		// hide cursor on new desk
 		if (!wasOnScreen) {
 			sendMessage(SYNERGY_MSG_LEAVE, (WPARAM)m_keyLayout, 0);
+		}
+
+		// update keys if necessary
+		if (syncKeys) {
+			updateKeys();
 		}
 	}
 	else if (name != m_activeDeskName) {
@@ -971,4 +1017,17 @@ CMSWindowsDesks::getDesktopName(HDESK desk)
 		CString result(name);
 		return result;
 	}
+}
+
+HWND
+CMSWindowsDesks::getForegroundWindow() const
+{
+	// Ideally we'd return NULL as much as possible, only returning
+	// the actual foreground window when we know it's going to mess
+	// up our keyboard input.  For now we'll just let the user
+	// decide.
+	if (m_leaveForegroundOption) {
+		return NULL;
+	}
+	return GetForegroundWindow();
 }

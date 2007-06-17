@@ -107,7 +107,7 @@ CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 		HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, processID);
 		if (process == NULL) {
 			// didn't start
-			LOG((CLOG_DEBUG "can't open screen saver process"));
+			LOG((CLOG_DEBUG2 "can't open screen saver process"));
 			return false;
 		}
 
@@ -123,7 +123,7 @@ CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 		// we first check that the screen saver is indeed active
 		// before watching for it to stop.
 		if (!isActive()) {
-			LOG((CLOG_DEBUG "can't open screen saver desktop"));
+			LOG((CLOG_DEBUG2 "can't open screen saver desktop"));
 			return false;
 		}
 
@@ -441,7 +441,7 @@ void
 CMSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt)
 {
 	HKEY hkey =
-		CArchMiscWindows::openKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
+		CArchMiscWindows::addKey(HKEY_CURRENT_USER, g_pathScreenSaverIsSecure);
 	if (hkey == NULL) {
 		return;
 	}

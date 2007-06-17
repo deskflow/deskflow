@@ -16,7 +16,7 @@
 #define CKEYSTATE_H
 
 #include "IKeyState.h"
-#include "stdvector.h"
+#include "CKeyMap.h"
 
 //! Core key state
 /*!
@@ -31,18 +31,15 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Mark key as being down
+	//! Handle key event
 	/*!
-	Sets the state of \p button to down or up.
+	Sets the state of \p button to down or up and updates the current
+	modifier state to \p newState.  This method should be called by
+	primary screens only in response to local events.  For auto-repeat
+	set \p down to \c true.  Overrides must forward to the superclass.
 	*/
-	void				setKeyDown(KeyButton button, bool down);
-
-	//! Mark modifier as being toggled on
-	/*!
-	Sets the state of the keys for the given (single) \p modifier to be
-	toggled on.
-	*/
-	void				setToggled(KeyModifierMask modifier);
+	virtual void		onKey(KeyButton button, bool down,
+							KeyModifierMask newState);
 
 	//! Post a key event
 	/*!
@@ -62,129 +59,158 @@ public:
 	//@}
 
 	// IKeyState overrides
-	virtual void		updateKeys();
+	virtual void		updateKeyMap();
+	virtual void		updateKeyState();
 	virtual void		setHalfDuplexMask(KeyModifierMask);
 	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
 							KeyButton button);
 	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
 	virtual void		fakeKeyUp(KeyButton button);
-	virtual void		fakeToggle(KeyModifierMask modifier);
+	virtual void		fakeAllKeysUp();
 	virtual bool		fakeCtrlAltDel() = 0;
 	virtual bool		isKeyDown(KeyButton) const;
 	virtual KeyModifierMask
 						getActiveModifiers() const;
-	virtual const char*	getKeyName(KeyButton) const = 0;
+	virtual KeyModifierMask
+						pollActiveModifiers() const = 0;
+	virtual SInt32		pollActiveGroup() const = 0;
+	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
 protected:
-	class Keystroke {
-	public:
-		KeyButton		m_key;
-		bool			m_press;
-		bool			m_repeat;
-	};
-	typedef std::vector<Keystroke> Keystrokes;
-	typedef std::vector<KeyButton> KeyButtons;
+	typedef CKeyMap::Keystroke Keystroke;
 
-	//! @name protocted manipulators
+	//! @name protected manipulators
 	//@{
 
-	//! Add keys for modifier
+	//! Get the keyboard map
 	/*!
-	Sets the buttons that are mapped to the given (single) \p modifier.  For
-	example, if buttons 5 and 23 were mapped to KeyModifierShift (perhaps
-	as left and right shift keys) then the mask would be KeyModifierShift
-	and \c buttons would contain 5 and 23.  A modifier with no keys is
-	ignored.  Buttons that are zero are ignored.
+	Fills \p keyMap with the current keyboard map.
 	*/
-	void				addModifier(KeyModifierMask modifier,
-							const KeyButtons& buttons);
-
-	//! Get key events to change modifier state
-	/*!
-	Retrieves the key events necessary to activate (\p desireActive is true)
-	or deactivate (\p desireActive is false) the modifier given by \p mask
-	by pushing them onto the back of \p keys.  \p mask must specify exactly
-	one modifier.  \p undo receives the key events necessary to restore the
-	modifier's previous state.  They're pushed onto \p undo in the reverse
-	order they should be executed.  If \p force is false then \p keys and
-	\p undo are only changed if the modifier is not currently in the
-	desired state.  If \p force is true then \p keys and \p undo are always
-	changed.  Returns true if the modifier can be adjusted, false otherwise.
-	*/
-	bool				mapModifier(Keystrokes& keys, Keystrokes& undo,
-							KeyModifierMask mask, bool desireActive,
-							bool force = false) const;
-
-	//! Update the key state
-	/*!
-	Update the key state to reflect the physical keyboard state and
-	current keyboard mapping.  This must call \c setKeyDown, \c setToggled,
-	and \c addModifier to set the current state.
-	*/
-	virtual void		doUpdateKeys() = 0;
+	virtual void		getKeyMap(CKeyMap& keyMap) = 0;
 
 	//! Fake a key event
 	/*!
-	Synthesize a key event for \p button.  If \p press is true then
-	synthesize a key press and, if false, a key release.  If
-	\p isAutoRepeat is true then the event is an auto-repeat.
+	Synthesize an event for \p keystroke.
 	*/
-	virtual void		doFakeKeyEvent(KeyButton button,
-							bool press, bool isAutoRepeat) = 0;
+	virtual void		fakeKey(const Keystroke& keystroke) = 0;
 
-	//! Map key press/repeat to keystrokes
+	//! Get the active modifiers
 	/*!
-	Converts a press/repeat of key \p id with the modifiers as given
-	in \p desiredMask into the keystrokes necessary to synthesize
-	that key event.  Returns the platform specific code of the key
-	being pressed, or 0 if the key cannot be mapped or \p isAutoRepeat
-	is true and the key does not auto-repeat.
+	Returns the modifiers that are currently active according to our
+	shadowed state.  The state may be modified.
 	*/
-	virtual KeyButton	mapKey(Keystrokes& keys, KeyID id,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const = 0;
+	virtual KeyModifierMask&
+						getActiveModifiersRValue();
+
+	//@}
+	//! @name protected accessors
+	//@{
+
+	//! Compute a group number
+	/*!
+	Returns the number of the group \p offset groups after group \p group.
+	*/
+	SInt32				getEffectiveGroup(SInt32 group, SInt32 offset) const;
+
+	//! Check if key is ignored
+	/*!
+	Returns \c true if and only if the key should always be ignored.
+	The default returns \c true only for the toggle keys.
+	*/
+	virtual bool		isIgnoredKey(KeyID key, KeyModifierMask mask) const;
+
+	//! Get button for a KeyID
+	/*!
+	Return the button mapped to key \p id in group \p group if any,
+	otherwise returns 0.
+	*/
+	KeyButton			getButton(KeyID id, SInt32 group) const;
 
 	//@}
 
 private:
-	bool				isHalfDuplex(KeyModifierMask) const;
-	bool				isToggle(KeyModifierMask) const;
-	bool				isModifierActive(KeyModifierMask) const;
-	UInt32				getIndexForModifier(KeyModifierMask) const;
-	void				fakeKeyEvents(const Keystrokes&, UInt32 count);
-	void				fakeKeyEvent(KeyButton, bool press, bool isAutoRepeat);
-	void				updateKeyState(KeyButton serverID,
-							KeyButton localID, bool press, bool fake);
+	typedef CKeyMap::Keystrokes Keystrokes;
+	typedef CKeyMap::ModifierToKeys ModifierToKeys;
+	struct CAddActiveModifierContext {
+	public:
+		CAddActiveModifierContext(SInt32 group, KeyModifierMask mask,
+							ModifierToKeys&	activeModifiers);
+
+	public:
+		SInt32			m_activeGroup;
+		KeyModifierMask	m_mask;
+		ModifierToKeys&	m_activeModifiers;
+
+	private:
+		// not implemented
+		CAddActiveModifierContext(const CAddActiveModifierContext&);
+		CAddActiveModifierContext& operator=(const CAddActiveModifierContext&);
+	};
+	
+	class ButtonToKeyLess {
+	public:
+		bool operator()(const CKeyMap::ButtonToKeyMap::value_type& a,
+						const CKeyMap::ButtonToKeyMap::value_type b) const
+		{
+			return (a.first < b.first);
+		}
+	};
+
+	// not implemented
+	CKeyState(const CKeyState&);
+	CKeyState& operator=(const CKeyState&);
+
+	// adds alias key sequences.  these are sequences that are equivalent
+	// to other sequences.
+	void				addAliasEntries();
+
+	// adds non-keypad key sequences for keypad KeyIDs
+	void				addKeypadEntries();
+
+	// adds key sequences for combination KeyIDs (those built using
+	// dead keys)
+	void				addCombinationEntries();
+
+	// synthesize key events.  synthesize auto-repeat events count times.
+	void				fakeKeys(const Keystrokes&, UInt32 count);
+
+	// update key state to match changes to modifiers
+	void				updateModifierKeyState(KeyButton button,
+							const ModifierToKeys& oldModifiers,
+							const ModifierToKeys& newModifiers);
+
+	// active modifiers collection callback
+	static void			addActiveModifierCB(KeyID id, SInt32 group,
+							CKeyMap::KeyItem& keyItem, void* vcontext);
 
 private:
-	enum {
-		kNumModifiers = 9,
-		kButtonMask   = kNumButtons - 1
-	};
-	typedef UInt8		KeyState;
-	enum EKeyState {
-		kDown = 0x01,		//!< Key is down
-		kToggled = 0x02		//!< Key is toggled on
-	};
-
-	// modifiers that are half-duplex
-	KeyModifierMask		m_halfDuplex;
+	// the keyboard map
+	CKeyMap				m_keyMap;
 
 	// current modifier state
 	KeyModifierMask		m_mask;
 
-	// current keyboard state
-	KeyState			m_keys[kNumButtons];
+	// the active modifiers and the buttons activating them
+	ModifierToKeys		m_activeModifiers;
 
-	// map from server button ID to local button ID for pressed keys
-	KeyButton			m_serverKeyMap[kNumButtons];
+	// current keyboard state (> 0 if pressed, 0 otherwise).  this is
+	// initialized to the keyboard state according to the system then
+	// it tracks synthesized events.
+	SInt32				m_keys[kNumButtons];
 
-	// map button to the modifier mask it represents
-	KeyModifierMask		m_keyToMask[kNumButtons];
+	// synthetic keyboard state (> 0 if pressed, 0 otherwise).  this
+	// tracks the synthesized keyboard state.  if m_keys[n] > 0 but
+	// m_syntheticKeys[n] == 0 then the key was pressed locally and
+	// not synthesized yet.
+	SInt32				m_syntheticKeys[kNumButtons];
 
-	// map modifier to buttons with that modifier
-	KeyButtons			m_maskToKeys[kNumModifiers];
+	// client data for each pressed key
+	UInt32				m_keyClientData[kNumButtons];
+
+	// server keyboard state.  an entry is 0 if not the key isn't pressed
+	// otherwise it's the local KeyButton synthesized for the server key.
+	KeyButton			m_serverKeys[kNumButtons];
 };
 
 #endif

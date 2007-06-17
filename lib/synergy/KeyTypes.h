@@ -53,10 +53,25 @@ static const KeyModifierMask	KeyModifierControl    = 0x0002;
 static const KeyModifierMask	KeyModifierAlt        = 0x0004;
 static const KeyModifierMask	KeyModifierMeta       = 0x0008;
 static const KeyModifierMask	KeyModifierSuper      = 0x0010;
-static const KeyModifierMask	KeyModifierModeSwitch = 0x0020;
+static const KeyModifierMask	KeyModifierAltGr      = 0x0020;
 static const KeyModifierMask	KeyModifierCapsLock   = 0x1000;
 static const KeyModifierMask	KeyModifierNumLock    = 0x2000;
 static const KeyModifierMask	KeyModifierScrollLock = 0x4000;
+//@}
+
+//! @name Modifier key bits
+//@{
+static const UInt32				kKeyModifierBitNone       = 16;
+static const UInt32				kKeyModifierBitShift      = 0;
+static const UInt32				kKeyModifierBitControl    = 1;
+static const UInt32				kKeyModifierBitAlt        = 2;
+static const UInt32				kKeyModifierBitMeta       = 3;
+static const UInt32				kKeyModifierBitSuper      = 4;
+static const UInt32				kKeyModifierBitAltGr      = 5;
+static const UInt32				kKeyModifierBitCapsLock   = 12;
+static const UInt32				kKeyModifierBitNumLock    = 13;
+static const UInt32				kKeyModifierBitScrollLock = 14;
+static const SInt32				kKeyModifierNumBits       = 16;
 //@}
 
 //! @name Modifier key identifiers
@@ -92,9 +107,6 @@ static const KeyID		kKeyHenkan		= 0xEF23;	/* Start/Stop Conversion */
 static const KeyID		kKeyZenkaku		= 0xEF2A;	/* Zenkaku/Hankaku */
 static const KeyID		kKeyDelete		= 0xEFFF;	/* Delete, rubout */
 
-// multi-key character composition
-static const KeyID		kKeyMultiKey	= 0xEF20;	/* Multi-key character compose */
-
 // cursor control
 static const KeyID		kKeyHome		= 0xEF50;
 static const KeyID		kKeyLeft		= 0xEF51;	/* Move left, left arrow */
@@ -118,7 +130,7 @@ static const KeyID		kKeyFind		= 0xEF68;	/* Find, search */
 static const KeyID		kKeyCancel		= 0xEF69;	/* Cancel, stop, abort, exit */
 static const KeyID		kKeyHelp		= 0xEF6A;	/* Help */
 static const KeyID		kKeyBreak		= 0xEF6B;
-static const KeyID		kKeyModeSwitch	= 0xEF7E;	/* Character set switch */
+static const KeyID		kKeyAltGr	 	= 0xEF7E;	/* Character set switch */
 static const KeyID		kKeyNumLock		= 0xEF7F;
 
 // keypad
@@ -134,9 +146,7 @@ static const KeyID		kKeyKP_Left		= 0xEF96;
 static const KeyID		kKeyKP_Up		= 0xEF97;
 static const KeyID		kKeyKP_Right	= 0xEF98;
 static const KeyID		kKeyKP_Down		= 0xEF99;
-static const KeyID		kKeyKP_Prior	= 0xEF9A;
 static const KeyID		kKeyKP_PageUp	= 0xEF9A;
-static const KeyID		kKeyKP_Next		= 0xEF9B;
 static const KeyID		kKeyKP_PageDown	= 0xEF9B;
 static const KeyID		kKeyKP_End		= 0xEF9C;
 static const KeyID		kKeyKP_Begin	= 0xEF9D;
@@ -213,8 +223,32 @@ static const KeyID		kKeySuper_R		= 0xEFEC;	/* Right super */
 static const KeyID		kKeyHyper_L		= 0xEFED;	/* Left hyper */
 static const KeyID		kKeyHyper_R		= 0xEFEE;	/* Right hyper */
 
+// multi-key character composition
+static const KeyID		kKeyCompose			= 0xEF20;
+static const KeyID		kKeyDeadGrave		= 0x0300;
+static const KeyID		kKeyDeadAcute		= 0x0301;
+static const KeyID		kKeyDeadCircumflex	= 0x0302;
+static const KeyID		kKeyDeadTilde		= 0x0303;
+static const KeyID		kKeyDeadMacron		= 0x0304;
+static const KeyID		kKeyDeadBreve		= 0x0306;
+static const KeyID		kKeyDeadAbovedot	= 0x0307;
+static const KeyID		kKeyDeadDiaeresis	= 0x0308;
+static const KeyID		kKeyDeadAbovering	= 0x030a;
+static const KeyID		kKeyDeadDoubleacute	= 0x030b;
+static const KeyID		kKeyDeadCaron		= 0x030c;
+static const KeyID		kKeyDeadCedilla		= 0x0327;
+static const KeyID		kKeyDeadOgonek		= 0x0328;
+
 // more function and modifier keys
-static const KeyID		kKeyLeftTab		= 0xEE20;
+static const KeyID		kKeyLeftTab			= 0xEE20;
+
+// update modifiers
+static const KeyID		kKeySetModifiers	= 0xEE06;
+static const KeyID		kKeyClearModifiers	= 0xEE07;
+
+// group change
+static const KeyID		kKeyNextGroup		= 0xEE08;
+static const KeyID		kKeyPrevGroup		= 0xEE0A;
 
 // extended keys
 static const KeyID		kKeyEject			= 0xE001;
@@ -239,5 +273,31 @@ static const KeyID		kKeyAppUser1		= 0xE0B6;
 static const KeyID		kKeyAppUser2		= 0xE0B7;
 
 //@}
+
+struct KeyNameMapEntry {
+public:
+	const char*			m_name;
+	KeyID			 	m_id;
+};
+struct KeyModifierNameMapEntry {
+public:
+	const char*			m_name;
+	KeyModifierMask 	m_mask;
+};
+
+//! Key name to KeyID table
+/*!
+A table of key names to the corresponding KeyID.  Only the keys listed
+above plus non-alphanumeric ASCII characters are in the table.  The end
+of the table is the first pair with a NULL m_name.
+*/
+extern const KeyNameMapEntry kKeyNameMap[];
+
+//! Modifier key name to KeyModifierMask table
+/*!
+A table of modifier key names to the corresponding KeyModifierMask.
+The end of the table is the first pair with a NULL m_name.
+*/
+extern const KeyModifierNameMapEntry kModifierNameMap[];
 
 #endif

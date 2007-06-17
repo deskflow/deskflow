@@ -18,6 +18,8 @@
 #include "IInterface.h"
 #include "KeyTypes.h"
 #include "CEvent.h"
+#include "CString.h"
+#include "stdset.h"
 
 //! Key state interface
 /*!
@@ -34,23 +36,41 @@ public:
 	class CKeyInfo {
 	public:
 		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
+		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count,
+							const std::set<CString>& destinations);
+		static CKeyInfo* alloc(const CKeyInfo&);
+
+		static bool isDefault(const char* screens);
+		static bool contains(const char* screens, const CString& name);
+		static bool equal(const CKeyInfo*, const CKeyInfo*);
+		static void split(const char* screens, std::set<CString>&);
 
 	public:
 		KeyID			m_key;
 		KeyModifierMask	m_mask;
 		KeyButton		m_button;
 		SInt32			m_count;
+		char			m_screens[1];
 	};
+
+	typedef std::set<KeyButton> KeyButtonSet;
 
 	//! @name manipulators
 	//@{
 
+	//! Update the keyboard map
+	/*!
+	Causes the key state to get updated to reflect the current keyboard
+	mapping.
+	*/
+	virtual void		updateKeyMap() = 0;
+
 	//! Update the key state
 	/*!
 	Causes the key state to get updated to reflect the physical keyboard
-	state and current keyboard mapping.
+	state.
 	*/
-	virtual void		updateKeys() = 0;
+	virtual void		updateKeyState() = 0;
 
 	//! Set half-duplex mask
 	/*!
@@ -80,12 +100,12 @@ public:
 	*/
 	virtual void		fakeKeyUp(KeyButton button) = 0;
 
-	//! Fake a modifier toggle
+	//! Fake key releases for all fake pressed keys
 	/*!
-	Synthesizes key press/release events to toggle the given \p modifier
-	and updates the key state.
+	Synthesizes a key release event for every key that is synthetically
+	pressed and updates the key state.
 	*/
-	virtual void		fakeToggle(KeyModifierMask modifier) = 0;
+	virtual void		fakeAllKeysUp() = 0;
 
 	//! Fake ctrl+alt+del
 	/*!
@@ -107,16 +127,32 @@ public:
 
 	//! Get the active modifiers
 	/*!
-	Returns the modifiers that are currently active.
+	Returns the modifiers that are currently active according to our
+	shadowed state.
 	*/
 	virtual KeyModifierMask
 						getActiveModifiers() const = 0;
 
-	//! Get name of key
+	//! Get the active modifiers from OS
 	/*!
-	Return a string describing the given key.
+	Returns the modifiers that are currently active according to the
+	operating system.
 	*/
-	virtual const char*	getKeyName(KeyButton) const = 0;
+	virtual KeyModifierMask
+						pollActiveModifiers() const = 0;
+
+	//! Get the active keyboard layout from OS
+	/*!
+	Returns the active keyboard layout according to the operating system.
+	*/
+	virtual SInt32		pollActiveGroup() const = 0;
+
+	//! Get the keys currently pressed from OS
+	/*!
+	Adds any keys that are currently pressed according to the operating
+	system to \p pressedKeys.
+	*/
+	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
 	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
 	static CEvent::Type	getKeyDownEvent();

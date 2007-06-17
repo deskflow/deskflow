@@ -19,6 +19,11 @@
 
 #if HAVE_CONFIG_H
 #	include "config.h"
+
+	// don't use poll() on mac
+#	if defined(__APPLE__)
+#		undef HAVE_POLL
+#	endif
 #else
 	// we may not have run configure on win32
 #	if defined(_WIN32)
@@ -31,7 +36,6 @@
 #		define SYSAPI_UNIX 1
 #		define WINAPI_CARBON 1
 
-#		define HAVE_ALLOCA_H 1
 #		define HAVE_CXX_BOOL 1
 #		define HAVE_CXX_CASTS 1
 #		define HAVE_CXX_EXCEPTIONS 1
@@ -48,20 +52,26 @@
 #		define HAVE_POSIX_SIGWAIT 1
 #		define HAVE_PTHREAD 1
 #		define HAVE_PTHREAD_SIGNAL 1
+#		include <sys/types.h>
+#		include <sys/socket.h>
+#		if defined(_SOCKLEN_T)
+#			define HAVE_SOCKLEN_T 1
+#		endif
 #		define HAVE_SSTREAM 1
 #		define HAVE_STDINT_H 1
 #		define HAVE_STDLIB_H 1
 #		define HAVE_STRINGS_H 1
 #		define HAVE_STRING_H 1
 #		define HAVE_SYS_SELECT_H 1
+#		define HAVE_SYS_SOCKET_H 1
 #		define HAVE_SYS_STAT_H 1
 #		define HAVE_SYS_TIME_H 1
 #		define HAVE_SYS_TYPES_H 1
 #		define HAVE_SYS_UTSNAME_H 1
 #		define HAVE_UNISTD_H 1
 #		define HAVE_VSNPRINTF 1
-#		define HAVE_WCHAR_H 1
-#		define HAVE_SYS_SOCKET_H 1
+/* disable this so we can build with the 10.2.8 SDK */
+/*#		define HAVE_WCHAR_H 1*/
 
 #		define SELECT_TYPE_ARG1 int
 #		define SELECT_TYPE_ARG234 (fd_set *)

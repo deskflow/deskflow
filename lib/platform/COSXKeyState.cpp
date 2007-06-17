@@ -15,27 +15,7 @@
 #include "COSXKeyState.h"
 #include "CLog.h"
 #include "CArch.h"
-#include <stdio.h>
 
-struct CKCHRDeadKeyRecord {
-public:
-    UInt8               m_tableIndex;
-    UInt8               m_virtualKey;
-    SInt16              m_numCompletions;
-    UInt8               m_completion[1][2];
-};
-
-struct CKCHRDeadKeys {
-public:
-    SInt16              m_numRecords;
-    CKCHRDeadKeyRecord  m_records[1];
-};
-
-struct CKeyEntry {
-public:
-	KeyID				m_keyID;
-	UInt32				m_virtualKey;
-};
 // Hardcoded virtual key table.  Oddly, Apple doesn't document the
 // meaning of virtual key codes.  The whole point of *virtual* key
 // codes is to make them hardware independent so these codes should
@@ -47,48 +27,28 @@ public:
 // first instance of a virtual key code maps to the KeyID that we
 // want to generate for that code.  The others are for mapping
 // different KeyIDs to a single key code.
+static const UInt32 s_shiftVK    = 56;
+static const UInt32 s_controlVK  = 59;
+static const UInt32 s_altVK      = 55;
+static const UInt32 s_superVK    = 58;
+static const UInt32 s_capsLockVK = 57;
+struct CKeyEntry {
+public:
+	KeyID				m_keyID;
+	UInt32				m_virtualKey;
+};
 static const CKeyEntry	s_controlKeys[] = {
-	// TTY functions
-	{ kKeyBackSpace,	51 },
-	{ kKeyTab,			48 },
-	{ kKeyLeftTab,		48 },
-	{ kKeyReturn,		36 },
-	{ kKeyLinefeed,		36 },
-//	{ kKeyClear,		0xFFFF }, /* no mapping on apple */
-//	{ kKeyPause,		0xFFFF }, /* no mapping on apple */
-//	{ kKeyScrollLock,	0xFFFF }, /* no mapping on apple */
-//	{ kKeySysReq,		0xFFFF }, /* no mapping on apple */
-	{ kKeyEscape,		53 },
-	{ kKeyDelete,		117 },
-
-	// cursor control
-	{ kKeyHome,			115 },
-	{ kKeyBegin,		115 },
+	// cursor keys.  if we don't do this we'll may still get these from
+	// the keyboard resource but they may not correspond to the arrow
+	// keys.
 	{ kKeyLeft,			123 },
-	{ kKeyUp,			126 },
 	{ kKeyRight,		124 },
+	{ kKeyUp,			126 },
 	{ kKeyDown,			125 },
+	{ kKeyHome,			115 },
+	{ kKeyEnd,			119 },
 	{ kKeyPageUp,		116 },
 	{ kKeyPageDown,		121 },
-	{ kKeyEnd,			119 },
-
-	// numeric keypad
-	{ kKeyKP_0,			82 },
-	{ kKeyKP_1,			83 },
-	{ kKeyKP_2,			84 },
-	{ kKeyKP_3,			85 },
-	{ kKeyKP_4,			86 },
-	{ kKeyKP_5,			87 },
-	{ kKeyKP_6,			88 },
-	{ kKeyKP_7,			89 },
-	{ kKeyKP_8,			91 },
-	{ kKeyKP_9,			92 },
-	{ kKeyKP_Enter,		76 },
-	{ kKeyKP_Decimal,	65 },
-	{ kKeyKP_Add,		69 },
-	{ kKeyKP_Subtract,	78 },
-	{ kKeyKP_Multiply,	67 },
-	{ kKeyKP_Divide,	75 },
 
 	// function keys
 	{ kKeyF1,			122 },
@@ -106,30 +66,29 @@ static const CKeyEntry	s_controlKeys[] = {
 	{ kKeyF13,			105 },
 	{ kKeyF14,			107 },
 	{ kKeyF15,			113 },
+	{ kKeyF16,			106 },
 
-	// misc keys
-	{ kKeyHelp,			114 },
+	// virtual key 110 is fn+enter and i have no idea what that's supposed
+	// to map to.  also the enter key with numlock on is a modifier but i
+	// don't know which.
 
-	// modifier keys.  i don't know how to make the mac properly
-	// interpret the right hand versions of modifier keys so they're
-	// currently mapped to the left hand version.
+	// modifier keys.  OS X doesn't seem to support right handed versions
+	// of modifier keys so we map them to the left handed versions.
+	{ kKeyShift_L,		s_shiftVK },
+	{ kKeyShift_R,		s_shiftVK }, // 60
+	{ kKeyControl_L,	s_controlVK },
+	{ kKeyControl_R,	s_controlVK }, // 62
+	{ kKeyAlt_L,		s_altVK },
+	{ kKeyAlt_R,		s_altVK },
+	{ kKeySuper_L,		s_superVK },
+	{ kKeySuper_R,		s_superVK }, // 61
+	{ kKeyMeta_L,		s_superVK },
+	{ kKeyMeta_R,		s_superVK }, // 61
+
+	// toggle modifiers
 //	{ kKeyNumLock,		71 },
-	{ kKeyShift_L,		56 },
-	{ kKeyShift_R,		56 /*60*/ },
-	{ kKeyControl_L,	59 },
-	{ kKeyControl_R,	59 /*62*/ },
-	{ kKeyAlt_L,		55 },
-	{ kKeyAlt_R,		55 },
-	{ kKeySuper_L,		58 },
-	{ kKeySuper_R,		58 /*61*/ },
-	{ kKeyMeta_L,		58 },
-	{ kKeyMeta_R,		58 /*61*/ },
-	{ kKeyCapsLock,		57 }
+	{ kKeyCapsLock,		s_capsLockVK }
 };
-
-// special key that synthesizes a delay.  see doFakeKeyEvent() and
-// mapKey().
-static const KeyButton kDelayKey = 510;
 
 
 //
@@ -137,12 +96,14 @@ static const KeyButton kDelayKey = 510;
 //
 
 COSXKeyState::COSXKeyState() :
-	m_uchrFound(false)
+	m_deadKeyState(0)
 {
-	setHalfDuplexMask(0);
-	SInt16 currentKeyScript = GetScriptManagerVariable(smKeyScript);
-	SInt16 keyboardLayoutID = GetScriptVariable(currentKeyScript, smScriptKeys);
-	setKeyboardLayout(keyboardLayoutID);
+	// build virtual key map
+	for (size_t i = 0; i < sizeof(s_controlKeys) /
+								sizeof(s_controlKeys[0]); ++i) {
+		m_virtualKeyMap[s_controlKeys[i].m_virtualKey] =
+			s_controlKeys[i].m_keyID;
+	}
 }
 
 COSXKeyState::~COSXKeyState()
@@ -150,252 +111,37 @@ COSXKeyState::~COSXKeyState()
 	// do nothing
 }
 
-void
-COSXKeyState::sendKeyEvent(void* target,
-				bool press, bool isAutoRepeat,
-				KeyID key, KeyModifierMask mask,
-				SInt32 count, KeyButton button)
+KeyModifierMask
+COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 {
-	if (press || isAutoRepeat) {
-		// send key
-		if (press) {
-			CKeyState::sendKeyEvent(target, true, false,
-							key, mask, 1, button);
-			if (count > 0) {
-				--count;
-			}
-		}
-
-		if (count >= 1) {
-			CKeyState::sendKeyEvent(target, true, true,
-							key, mask, count, button);
-		}
-
+	// convert
+	KeyModifierMask outMask = 0;
+	if ((mask & shiftKey) != 0) {
+		outMask |= KeyModifierShift;
 	}
-	else {
-		// do key up
-		CKeyState::sendKeyEvent(target, false, false, key, mask, 1, button);
+	if ((mask & rightShiftKey) != 0) {
+		outMask |= KeyModifierShift;
 	}
-}
-
-void
-COSXKeyState::setHalfDuplexMask(KeyModifierMask mask)
-{
-	CKeyState::setHalfDuplexMask(mask | KeyModifierCapsLock);
-}
-
-bool
-COSXKeyState::fakeCtrlAltDel()
-{
-	// pass keys through unchanged
-	return false;
-}
-
-const char*
-COSXKeyState::getKeyName(KeyButton button) const
-{
-	static char name[10];
-	sprintf(name, "vk 0x%02x", button);
-	return name;
-}
-
-void
-COSXKeyState::doUpdateKeys()
-{
-	// save key mapping
-	m_keyMap.clear();
-	m_uchrFound = false;
-	if (m_uchrResource != NULL) {
-		m_uchrFound = filluchrKeysMap(m_keyMap);
+	if ((mask & controlKey) != 0) {
+		outMask |= KeyModifierControl;
 	}
-	if (!m_uchrFound && m_KCHRResource != NULL) {
-		fillKCHRKeysMap(m_keyMap);
+	if ((mask & rightControlKey) != 0) {
+		outMask |= KeyModifierControl;
 	}
-	fillSpecialKeys(m_keyMap, m_virtualKeyMap);
-
-	// add modifiers
-	KeyButtons keys;
-	addKeyButton(keys, kKeyShift_L);
-	addKeyButton(keys, kKeyShift_R);
-	addModifier(KeyModifierShift, keys);
-	keys.clear();
-	addKeyButton(keys, kKeyControl_L);
-	addKeyButton(keys, kKeyControl_R);
-	addModifier(KeyModifierControl, keys);
-	keys.clear();
-	addKeyButton(keys, kKeyAlt_L);
-	addKeyButton(keys, kKeyAlt_R);
-	addModifier(KeyModifierAlt, keys);
-	keys.clear();
-	addKeyButton(keys, kKeySuper_L);
-	addKeyButton(keys, kKeySuper_R);
-	addModifier(KeyModifierSuper, keys);
-	keys.clear();
-	addKeyButton(keys, kKeyCapsLock);
-	addModifier(KeyModifierCapsLock, keys);
-	keys.clear();
-	addKeyButton(keys, kKeyNumLock);
-	addModifier(KeyModifierNumLock, keys);
-	keys.clear();
-
-	// FIXME -- get the current keyboard state.  call setKeyDown()
-	// and setToggled() as appropriate.
-}
-
-void
-COSXKeyState::doFakeKeyEvent(KeyButton button, bool press, bool)
-{
-	LOG((CLOG_DEBUG2 "doFakeKeyEvent button:%d, press:%d", button, press));
-
-	// if it's the special delay key then just pause briefly
-	if (button == kDelayKey) {
-		ARCH->sleep(0.01);
-		return;
+	if ((mask & cmdKey) != 0) {
+		outMask |= KeyModifierAlt;
+	}
+	if ((mask & optionKey) != 0) {
+		outMask |= KeyModifierSuper;
+	}
+	if ((mask & rightOptionKey) != 0) {
+		outMask |= KeyModifierSuper;
+	}
+	if ((mask & alphaLock) != 0) {
+		outMask |= KeyModifierCapsLock;
 	}
 
-	// let system figure out character for us
-	CGPostKeyboardEvent(0, mapKeyButtonToVirtualKey(button), press);
-}
-
-KeyButton
-COSXKeyState::mapKey(Keystrokes& keys, KeyID id,
-				KeyModifierMask desiredMask,
-				bool isAutoRepeat) const
-{
-	// see if the keyboard layout has changed since we last checked it.
-	// reload the keyboard info if so.
-	const_cast<COSXKeyState*>(this)->checkKeyboardLayout();
-
-	// look up virtual key
-	CKeyIDMap::const_iterator keyIndex = m_keyMap.find(id);
-	if (keyIndex == m_keyMap.end()) {
-		return 0;
-	}
-	const CKeySequence& sequence = keyIndex->second;
-	if (sequence.empty()) {
-		return 0;
-	}
-
-	// FIXME -- for both calls to addKeystrokes below we'd prefer to use
-	// a required mask that generates the same character but matches
-	// the desiredMask as closely as possible.
-	// FIXME -- would prefer to not restore the modifier keys after each
-	// dead key since it's unnecessary but we don't have a mechanism
-	// for tracking the modifier state without actually updating the
-	// internal keyboard state.  we'd have to track the state to
-	// ensure we adjust the right modifiers for remaining dead keys
-	// and the final key.
-
-	// add dead keys
-	for (size_t i = 0; i < sequence.size() - 1; ++i) {
-		// simulate press
-		KeyButton keyButton =
-			addKeystrokes(keys, sequence[i].m_button,
-							sequence[i].m_requiredState,
-							sequence[i].m_requiredMask, false);
-
-		// simulate release
-		Keystroke keystroke;
-		keystroke.m_key    = keyButton;
-		keystroke.m_press  = false;
-		keystroke.m_repeat = false;
-		keys.push_back(keystroke);
-
-		// pause briefly before sending the next key because some
-		// apps (e.g. TextEdit) seem to ignore dead keys that occur
-		// very shortly before the next key.  why they'd do that i
-		// don't know.
-		keystroke.m_key    = kDelayKey;
-		keystroke.m_press  = false;
-		keystroke.m_repeat = false;
-		keys.push_back(keystroke);
-	}
-
-	// add final key.
-	// if the desired mask includes Alt or Control then match the
-	// desired mask.  this ensures that combinations like
-	// Command+Shift+S use the Command and Shift modifiers and
-	// those like Command+S do not use the shift modifier.  do not
-	// do this if the key to synthesize is a modifier key, otherwise
-	// we'd apply modifiers to modifiers which breaks things (by
-	// say, putting a Control press and release around a Control
-	// press).
-	if ((desiredMask & (KeyModifierControl | KeyModifierAlt)) != 0 &&
-		id != kKeyShift_L   && id != kKeyShift_R   &&
-		id != kKeyControl_L && id != kKeyControl_R &&
-		id != kKeyAlt_L     && id != kKeyAlt_R     &&
-		id != kKeySuper_L   && id != kKeySuper_R   &&
-		id != kKeyMeta_L    && id != kKeyMeta_R) {
-		return addKeystrokes(keys, sequence.back().m_button,
-							desiredMask,
-							KeyModifierShift | KeyModifierSuper |
-							KeyModifierAlt | KeyModifierControl |
-							KeyModifierCapsLock,
-							isAutoRepeat);
-	}
-	else {
-		return addKeystrokes(keys, sequence.back().m_button,
-							sequence.back().m_requiredState,
-							sequence.back().m_requiredMask,
-							isAutoRepeat);
-	}
-}
-
-KeyButton
-COSXKeyState::addKeystrokes(Keystrokes& keys, KeyButton keyButton,
-				KeyModifierMask desiredMask, KeyModifierMask requiredMask,
-				bool isAutoRepeat) const
-{
-	// adjust the modifiers
-	Keystrokes undo;
-	if (!adjustModifiers(keys, undo, desiredMask, requiredMask)) {
-		LOG((CLOG_DEBUG2 "failed to adjust modifiers"));
-		return 0;
-	}
-
-	// add the key event
-	Keystroke keystroke;
-	keystroke.m_key        = keyButton;
-	if (!isAutoRepeat) {
-		keystroke.m_press  = true;
-		keystroke.m_repeat = false;
-		keys.push_back(keystroke);
-	}
-	else {
-		keystroke.m_press  = false;
-		keystroke.m_repeat = true;
-		keys.push_back(keystroke);
-		keystroke.m_press  = true;
-		keys.push_back(keystroke);
-	}
-
-	// put undo keystrokes at end of keystrokes in reverse order
-	while (!undo.empty()) {
-		keys.push_back(undo.back());
-		undo.pop_back();
-	}
-
-	return keyButton;
-}
-
-bool
-COSXKeyState::adjustModifiers(Keystrokes& keys,
-				Keystrokes& undo,
-				KeyModifierMask desiredMask,
-				KeyModifierMask requiredMask) const
-{
-	// for each modifier in requiredMask make sure the current state
-	// of that modifier matches the bit in desiredMask.
-	for (KeyModifierMask mask = 1u; requiredMask != 0; mask <<= 1) {
-		if ((mask & requiredMask) != 0) {
-			bool active = ((desiredMask & mask) != 0);
-			if (!mapModifier(keys, undo, mask, active)) {
-				return false;
-			}
-			requiredMask ^= mask;
-		}
-	}
-	return true;
+	return outMask;
 }
 
 KeyButton 
@@ -407,7 +153,7 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 	// map modifier key
 	if (maskOut != NULL) {
 		KeyModifierMask activeMask = getActiveModifiers();
-		activeMask &= ~KeyModifierModeSwitch;
+		activeMask &= ~KeyModifierAltGr;
 		*maskOut    = activeMask;
 	}
 
@@ -434,15 +180,33 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		return mapVirtualKeyToKeyButton(vkCode);
 	}
 
-	// check for character keys
-	if (m_uchrFound) {
-		// get the event modifiers and remove the command and control
-		// keys.
-		UInt32 modifiers;
-		GetEventParameter(event, kEventParamKeyModifiers, typeUInt32,
-							NULL, sizeof(modifiers), NULL, &modifiers);
-		modifiers = (modifiers & ~(cmdKey | controlKey | rightControlKey)) >> 8;
+	// get keyboard info
+	KeyboardLayoutRef keyboardLayout;
+	OSStatus status = KLGetCurrentKeyboardLayout(&keyboardLayout);
+	if (status != noErr) {
+		return kKeyNone;
+	}
 
+	// get the event modifiers and remove the command and control
+	// keys.  note if we used them though.
+	UInt32 modifiers;
+	GetEventParameter(event, kEventParamKeyModifiers, typeUInt32,
+								NULL, sizeof(modifiers), NULL, &modifiers);
+	static const UInt32 s_commandModifiers =
+		cmdKey | controlKey | rightControlKey;
+	bool isCommand = ((modifiers & s_commandModifiers) != 0);
+	modifiers &= ~s_commandModifiers;
+
+	// if we've used a command key then we want the glyph produced without
+	// the option key (i.e. the base glyph).
+	if (isCommand) {
+		modifiers &= ~optionKey;
+	}
+
+	// translate via uchr resource
+	const void* resource;
+	if (KLGetKeyboardLayoutProperty(keyboardLayout,
+								kKLuchrData, &resource) == noErr) {
 		// choose action
 		UInt16 action;
 		switch (eventKind) {
@@ -461,10 +225,10 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		// translate key
 		UniCharCount count;
 		UniChar chars[2];
-		OSStatus status = UCKeyTranslate(m_uchrResource,
+		OSStatus status = UCKeyTranslate((const UCKeyboardLayout*)resource,
 							vkCode & 0xffu, action,
-							modifiers & 0xffu,
-							m_keyboardType, 0, &m_deadKeyState,
+							(modifiers >> 8) & 0xffu,
+							LMGetKbdType(), 0, &m_deadKeyState,
 							sizeof(chars) / sizeof(chars[0]), &count, chars);
 
 		// get the characters
@@ -472,26 +236,24 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 			if (count != 0 || m_deadKeyState == 0) {
 				m_deadKeyState = 0;
 				for (UniCharCount i = 0; i < count; ++i) {
-					ids.push_back(unicharToKeyID(chars[i]));
+					ids.push_back(CKeyResource::unicharToKeyID(chars[i]));
 				}
+				adjustAltGrModifier(ids, maskOut, isCommand);
 				return mapVirtualKeyToKeyButton(vkCode);
 			}
+			return 0;
 		}
 	}
-	else if (m_KCHRResource != NULL) {
-		// get the event modifiers and remove the command and control
-		// keys.
-		UInt32 modifiers;
-		GetEventParameter(event, kEventParamKeyModifiers, typeUInt32,
-							NULL, sizeof(modifiers), NULL, &modifiers);
-		modifiers &= ~(cmdKey | controlKey | rightControlKey);
 
+	// translate via KCHR resource
+	if (KLGetKeyboardLayoutProperty(keyboardLayout,
+								kKLKCHRData, &resource) == noErr) {
 		// build keycode
 		UInt16 keycode =
 			static_cast<UInt16>((modifiers & 0xff00u) | (vkCode & 0x00ffu));
 
 		// translate key
-		UInt32 result = KeyTranslate(m_KCHRResource, keycode, &m_deadKeyState);
+		UInt32 result = KeyTranslate(resource, keycode, &m_deadKeyState);
 
 		// get the characters
 		UInt8 c1 = static_cast<UInt8>((result >> 16) & 0xffu);
@@ -499,9 +261,10 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		if (c2 != 0) {
 			m_deadKeyState = 0;
 			if (c1 != 0) {
-				ids.push_back(charToKeyID(c1));
+				ids.push_back(CKeyResource::getKeyID(c1));
 			}
-			ids.push_back(charToKeyID(c2));
+			ids.push_back(CKeyResource::getKeyID(c2));
+			adjustAltGrModifier(ids, maskOut, isCommand);
 			return mapVirtualKeyToKeyButton(vkCode);
 		}
 	}
@@ -509,16 +272,307 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 	return 0;
 }
 
-void
-COSXKeyState::addKeyButton(KeyButtons& keys, KeyID id) const
+bool
+COSXKeyState::fakeCtrlAltDel()
 {
-	CKeyIDMap::const_iterator keyIndex = m_keyMap.find(id);
-	if (keyIndex == m_keyMap.end()) {
-		return;
-	}
-	keys.push_back(keyIndex->second[0].m_button);
+	// pass keys through unchanged
+	return false;
 }
 
+KeyModifierMask
+COSXKeyState::pollActiveModifiers() const
+{
+	return mapModifiersFromOSX(GetCurrentKeyModifiers());
+}
+
+SInt32
+COSXKeyState::pollActiveGroup() const
+{
+	KeyboardLayoutRef keyboardLayout;
+	OSStatus status = KLGetCurrentKeyboardLayout(&keyboardLayout);
+	if (status == noErr) {
+		GroupMap::const_iterator i = m_groupMap.find(keyboardLayout);
+		if (i != m_groupMap.end()) {
+			return i->second;
+		}
+	}
+	return 0;
+}
+
+void
+COSXKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
+{
+	KeyMap km;
+	GetKeys(km);
+	const UInt8* m = reinterpret_cast<const UInt8*>(km);
+	for (UInt32 i = 0; i < 16; ++i) {
+		for (UInt32 j = 0; j < 8; ++j) {
+			if ((m[i] & (1u << j)) != 0) {
+				pressedKeys.insert(mapVirtualKeyToKeyButton(8 * i + j));
+			}
+		}
+	}
+}
+
+void
+COSXKeyState::getKeyMap(CKeyMap& keyMap)
+{
+	// update keyboard groups
+	if (getGroups(m_groups)) {
+		m_groupMap.clear();
+		SInt32 numGroups = (SInt32)m_groups.size();
+		for (SInt32 g = 0; g < numGroups; ++g) {
+			m_groupMap[m_groups[g]] = g;
+		}
+	}
+
+	UInt32 keyboardType = LMGetKbdType();
+	for (SInt32 g = 0, n = (SInt32)m_groups.size(); g < n; ++g) {
+		// add special keys
+		getKeyMapForSpecialKeys(keyMap, g);
+
+		// add regular keys
+
+		// try uchr resource first
+		const void* resource;
+		if (KLGetKeyboardLayoutProperty(m_groups[g],
+								kKLuchrData, &resource) == noErr) {
+			CUCHRKeyResource uchr(resource, keyboardType);
+			if (uchr.isValid()) {
+				LOG((CLOG_DEBUG1 "using uchr resource for group %d", g));
+				getKeyMap(keyMap, g, uchr);
+				continue;
+			}
+		}
+
+		// try KCHR resource
+		if (KLGetKeyboardLayoutProperty(m_groups[g],
+								kKLKCHRData, &resource) == noErr) {
+			CKCHRKeyResource kchr(resource);
+			if (kchr.isValid()) {
+				LOG((CLOG_DEBUG1 "using KCHR resource for group %d", g));
+				getKeyMap(keyMap, g, kchr);
+				continue;
+			}
+		}
+
+		LOG((CLOG_DEBUG1 "no keyboard resource for group %d", g));
+	}
+}
+
+void
+COSXKeyState::fakeKey(const Keystroke& keystroke)
+{
+	switch (keystroke.m_type) {
+	case Keystroke::kButton:
+		LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
+
+		// let system figure out character for us
+		CGPostKeyboardEvent(0, mapKeyButtonToVirtualKey(
+									keystroke.m_data.m_button.m_button),
+								keystroke.m_data.m_button.m_press);
+
+		// add a delay if client data isn't zero
+		if (keystroke.m_data.m_button.m_client) {
+			ARCH->sleep(0.01);
+		}
+		break;
+
+	case Keystroke::kGroup:
+		if (keystroke.m_data.m_group.m_absolute) {
+			LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
+			setGroup(keystroke.m_data.m_group.m_group);
+		}
+		else {
+			LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
+			setGroup(getEffectiveGroup(pollActiveGroup(),
+									keystroke.m_data.m_group.m_group));
+		}
+		break;
+	}
+}
+
+void
+COSXKeyState::getKeyMapForSpecialKeys(CKeyMap& keyMap, SInt32 group) const
+{
+	// special keys are insensitive to modifers and none are dead keys
+	CKeyMap::KeyItem item;
+	for (size_t i = 0; i < sizeof(s_controlKeys) /
+								sizeof(s_controlKeys[0]); ++i) {
+		const CKeyEntry& entry = s_controlKeys[i];
+		item.m_id        = entry.m_keyID;
+		item.m_group     = group;
+		item.m_button    = mapVirtualKeyToKeyButton(entry.m_virtualKey);
+		item.m_required  = 0;
+		item.m_sensitive = 0;
+		item.m_dead      = false;
+		item.m_client    = 0;
+		CKeyMap::initModifierKey(item);
+		keyMap.addKeyEntry(item);
+
+		if (item.m_lock) {
+			// all locking keys are half duplex on OS X
+			keyMap.addHalfDuplexButton(item.m_button);
+		}
+	}
+
+	// note:  we don't special case the number pad keys.  querying the
+	// mac keyboard returns the non-keypad version of those keys but
+	// a CKeyState always provides a mapping from keypad keys to
+	// non-keypad keys so we'll be able to generate the characters
+	// anyway.
+}
+
+bool
+COSXKeyState::getKeyMap(CKeyMap& keyMap,
+				SInt32 group, const CKeyResource& r) const
+{
+	if (!r.isValid()) {
+		return false;
+	}
+
+	// space for all possible modifier combinations
+	std::vector<bool> modifiers(r.getNumModifierCombinations());
+
+	// make space for the keys that any single button can synthesize
+	std::vector<std::pair<KeyID, bool> > buttonKeys(r.getNumTables());
+
+	// iterate over each button
+	CKeyMap::KeyItem item;
+	for (UInt32 i = 0; i < r.getNumButtons(); ++i) {
+		item.m_button = mapVirtualKeyToKeyButton(i);
+
+		// the KeyIDs we've already handled
+		std::set<KeyID> keys;
+
+		// convert the entry in each table for this button to a KeyID
+		for (UInt32 j = 0; j < r.getNumTables(); ++j) {
+			buttonKeys[j].first  = r.getKey(j, i);
+			buttonKeys[j].second = CKeyMap::isDeadKey(buttonKeys[j].first);
+		}
+
+		// iterate over each character table
+		for (UInt32 j = 0; j < r.getNumTables(); ++j) {
+			// get the KeyID for the button/table
+			KeyID id = buttonKeys[j].first;
+			if (id == kKeyNone) {
+				continue;
+			}
+
+			// if we've already handled the KeyID in the table then
+			// move on to the next table
+			if (keys.count(id) > 0) {
+				continue;
+			}
+			keys.insert(id);
+
+			// prepare item.  the client state is 1 for dead keys.
+			item.m_id     = id;
+			item.m_group  = group;
+			item.m_dead   = buttonKeys[j].second;
+			item.m_client = buttonKeys[j].second ? 1 : 0;
+			CKeyMap::initModifierKey(item);
+			if (item.m_lock) {
+				// all locking keys are half duplex on OS X
+				keyMap.addHalfDuplexButton(i);
+			}
+
+			// collect the tables that map to the same KeyID.  we know it
+			// can't be any earlier tables because of the check above.
+			std::set<UInt8> tables;
+			tables.insert(static_cast<UInt8>(j));
+			for (UInt32 k = j + 1; k < r.getNumTables(); ++k) {
+				if (buttonKeys[k].first == id) {
+					tables.insert(static_cast<UInt8>(k));
+				}
+			}
+
+			// collect the modifier combinations that map to any of the
+			// tables we just collected
+			for (UInt32 k = 0; k < r.getNumModifierCombinations(); ++k) {
+				modifiers[k] = (tables.count(r.getTableForModifier(k)) > 0);
+			}
+
+			// figure out which modifiers the key is sensitive to.  the
+			// key is insensitive to a modifier if for every modifier mask
+			// with the modifier bit unset in the modifiers we also find
+			// the same mask with the bit set.
+			//
+			// we ignore a few modifiers that we know aren't important
+			// for generating characters.  in fact, we want to ignore any
+			// characters generated by the control key.  we don't map
+			// those and instead expect the control modifier plus a key.
+			UInt32 sensitive = 0;
+			for (UInt32 k = 0; (1u << k) <
+								r.getNumModifierCombinations(); ++k) {
+				UInt32 bit = (1u << k);
+				if ((bit << 8) == cmdKey ||
+					(bit << 8) == controlKey ||
+					(bit << 8) == rightControlKey) {
+					continue;
+				}
+				for (UInt32 m = 0; m < r.getNumModifierCombinations(); ++m) {
+					if (modifiers[m] != modifiers[m ^ bit]) {
+						sensitive |= bit;
+						break;
+					}
+				}
+			}
+
+			// find each required modifier mask.  the key can be synthesized
+			// using any of the masks.
+			std::set<UInt32> required;
+			for (UInt32 k = 0; k < r.getNumModifierCombinations(); ++k) {
+				if ((k & sensitive) == k && modifiers[k & sensitive]) {
+					required.insert(k);
+				}
+			}
+
+			// now add a key entry for each key/required modifier pair.
+			item.m_sensitive = mapModifiersFromOSX(sensitive << 8);
+			for (std::set<UInt32>::iterator k = required.begin();
+											k != required.end(); ++k) {
+				item.m_required = mapModifiersFromOSX(*k << 8);
+				keyMap.addKeyEntry(item);
+			}
+		}
+	}
+
+	return true;
+}
+
+bool
+COSXKeyState::mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
+				UInt32 &macVirtualKey, UInt32 &macModifierMask) const
+{
+	// look up button for key
+	KeyButton button = getButton(key, pollActiveGroup());
+	if (button == 0 && key != kKeyNone) {
+		return false;
+	}
+	macVirtualKey = mapKeyButtonToVirtualKey(button);
+	
+	// calculate modifier mask
+	macModifierMask = 0;
+	if ((mask & KeyModifierShift) != 0) {
+		macModifierMask |= shiftKey;
+	}
+	if ((mask & KeyModifierControl) != 0) {
+		macModifierMask |= controlKey;
+	}
+	if ((mask & KeyModifierAlt) != 0) {
+		macModifierMask |= cmdKey;
+	}
+	if ((mask & KeyModifierSuper) != 0) {
+		macModifierMask |= optionKey;
+	}
+	if ((mask & KeyModifierCapsLock) != 0) {
+		macModifierMask |= alphaLock;
+	}
+	
+	return true;
+}
+						
 void
 COSXKeyState::handleModifierKeys(void* target,
 				KeyModifierMask oldMask, KeyModifierMask newMask)
@@ -528,399 +582,92 @@ COSXKeyState::handleModifierKeys(void* target,
 
 	// synthesize changed modifier keys
 	if ((changed & KeyModifierShift) != 0) {
-		handleModifierKey(target, kKeyShift_L,
-							(newMask & KeyModifierShift) != 0);
+		handleModifierKey(target, s_shiftVK, kKeyShift_L,
+							(newMask & KeyModifierShift) != 0, newMask);
 	}
 	if ((changed & KeyModifierControl) != 0) {
-		handleModifierKey(target, kKeyControl_L,
-							(newMask & KeyModifierControl) != 0);
+		handleModifierKey(target, s_controlVK, kKeyControl_L,
+							(newMask & KeyModifierControl) != 0, newMask);
 	}
 	if ((changed & KeyModifierAlt) != 0) {
-		handleModifierKey(target, kKeyAlt_L,
-							(newMask & KeyModifierAlt) != 0);
+		handleModifierKey(target, s_altVK, kKeyAlt_L,
+							(newMask & KeyModifierAlt) != 0, newMask);
 	}
 	if ((changed & KeyModifierSuper) != 0) {
-		handleModifierKey(target, kKeySuper_L,
-							(newMask & KeyModifierSuper) != 0);
+		handleModifierKey(target, s_superVK, kKeySuper_L,
+							(newMask & KeyModifierSuper) != 0, newMask);
 	}
 	if ((changed & KeyModifierCapsLock) != 0) {
-		handleModifierKey(target, kKeyCapsLock,
-							(newMask & KeyModifierCapsLock) != 0);
+		handleModifierKey(target, s_capsLockVK, kKeyCapsLock,
+							(newMask & KeyModifierCapsLock) != 0, newMask);
 	}
 }
 
 void
-COSXKeyState::handleModifierKey(void* target, KeyID id, bool down)
+COSXKeyState::handleModifierKey(void* target,
+				UInt32 virtualKey, KeyID id,
+				bool down, KeyModifierMask newMask)
 {
-	CKeyIDMap::const_iterator keyIndex = m_keyMap.find(id);
-	if (keyIndex == m_keyMap.end()) {
-		return;
+	KeyButton button = mapVirtualKeyToKeyButton(virtualKey);
+	onKey(button, down, newMask);
+	sendKeyEvent(target, down, false, id, newMask, 0, button);
+}
+
+bool
+COSXKeyState::getGroups(GroupList& groups) const
+{
+	// get number of layouts
+	CFIndex n;
+	OSStatus status = KLGetKeyboardLayoutCount(&n);
+	if (status != noErr) {
+		LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
+		return false;
 	}
-	KeyButton button = keyIndex->second[0].m_button;
-	setKeyDown(button, down);
-	sendKeyEvent(target, down, false, id, getActiveModifiers(), 0, button);
+
+	// get each layout
+	groups.clear();
+	for (CFIndex i = 0; i < n; ++i) {
+		KeyboardLayoutRef keyboardLayout;
+		status = KLGetKeyboardLayoutAtIndex(i, &keyboardLayout);
+		if (status == noErr) {
+			groups.push_back(keyboardLayout);
+		}
+	}
+	return true;
+}
+
+void
+COSXKeyState::setGroup(SInt32 group)
+{
+	KLSetCurrentKeyboardLayout(m_groups[group]);
 }
 
 void
 COSXKeyState::checkKeyboardLayout()
 {
-	SInt16 currentKeyScript = GetScriptManagerVariable(smKeyScript);
-	SInt16 keyboardLayoutID = GetScriptVariable(currentKeyScript, smScriptKeys);
-	UInt32 keyboardType     = LMGetKbdType();
-	if (keyboardLayoutID != m_keyboardLayoutID ||
-		keyboardType     != m_keyboardType) {
-		// layout changed
-		m_keyboardType = keyboardType;
-		setKeyboardLayout(keyboardLayoutID);
-		updateKeys();
+	// XXX -- should call this when notified that groups have changed.
+	// if no notification for that then we should poll.
+	GroupList groups;
+	if (getGroups(groups) && groups != m_groups) {
+		updateKeyMap();
+		updateKeyState();
 	}
 }
 
 void
-COSXKeyState::setKeyboardLayout(SInt16 keyboardLayoutID)
+COSXKeyState::adjustAltGrModifier(const CKeyIDs& ids,
+				KeyModifierMask* mask, bool isCommand) const
 {
-	m_keyboardLayoutID = keyboardLayoutID;
-	m_deadKeyState     = 0;
-	m_KCHRHandle       = GetResource('KCHR', m_keyboardLayoutID);
-	m_uchrHandle       = GetResource('uchr', m_keyboardLayoutID);
-	m_KCHRResource     = NULL;
-	m_uchrResource     = NULL;
-	if (m_uchrHandle != NULL) {
-		m_uchrResource = reinterpret_cast<UCKeyboardLayout*>(*m_uchrHandle);
-	}
-	if (m_KCHRHandle != NULL) {
-		m_KCHRResource = reinterpret_cast<CKCHRResource*>(*m_KCHRHandle);
-	}
-}
-
-void
-COSXKeyState::fillSpecialKeys(CKeyIDMap& keyMap,
-				CVirtualKeyMap& virtualKeyMap) const
-{
-	// FIXME -- would like to avoid hard coded tables
-	CKeyEventInfo info;
-	for (UInt32 i = 0; i < sizeof(s_controlKeys) /
-							sizeof(s_controlKeys[0]); ++i) {
-		const CKeyEntry& entry = s_controlKeys[i];
-		KeyID keyID            = entry.m_keyID;
-		info.m_button          = mapVirtualKeyToKeyButton(entry.m_virtualKey);
-		info.m_requiredMask    = 0;
-		info.m_requiredState   = 0;
-		if (keyMap.count(keyID) == 0) {
-			keyMap[keyID].push_back(info);
-		}
-		if (virtualKeyMap.count(entry.m_virtualKey) == 0) {
-			virtualKeyMap[entry.m_virtualKey] = entry.m_keyID;
-		}
-	}
-}
-
-bool
-COSXKeyState::fillKCHRKeysMap(CKeyIDMap& keyMap) const
-{
-	assert(m_KCHRResource != NULL);
-
-	CKCHRResource* r = m_KCHRResource;
-
-	// build non-composed keys to virtual keys mapping
-	std::map<UInt8, CKeyEventInfo> vkMap;
-	for (SInt32 i = 0; i < r->m_numTables; ++i) {
-		// determine the modifier keys for table i
-		KeyModifierMask mask =
-			maskForTable(static_cast<UInt8>(i), r->m_tableSelectionIndex,
-							256, static_cast<UInt8>(i));
-
-		// build the KeyID to virtual key map
-		for (SInt32 j = 0; j < 128; ++j) {
-			// get character
-			UInt8 c = r->m_characterTables[i][j];
-
-			// save key info
-			// FIXME -- should set only those bits in m_requiredMask that
-			// correspond to modifiers that are truly necessary to
-			// generate the character.  this mostly works as-is, though.
-			CKeyEventInfo info;
-			info.m_button        = mapVirtualKeyToKeyButton(j);
-			info.m_requiredMask  =
-							KeyModifierShift | KeyModifierSuper |
-							KeyModifierCapsLock;
-			info.m_requiredState = mask;
-
-			// save character to virtual key mapping
-			if (vkMap.count(c) == 0) {
-				vkMap[c] = info;
-			}
-
-			// skip non-glyph character
-			if (c < 32 || c == 127) {
-				continue;
-			}
-
-			// map character to KeyID
-			KeyID keyID = charToKeyID(c);
-
-			// if we've seen this character already then do nothing
-			if (keyMap.count(keyID) != 0) {
-				continue;
-			}
-
-			// save entry for character
-			keyMap[keyID].push_back(info);
-		}
-	}
-
-	// build composed keys to virtual keys mapping
-	CKCHRDeadKeys* dkp =
-		reinterpret_cast<CKCHRDeadKeys*>(r->m_characterTables[r->m_numTables]);
-	CKCHRDeadKeyRecord* dkr = dkp->m_records;
-	for (SInt32 i = 0; i < dkp->m_numRecords; ++i) {
-		// determine the modifier keys for table i
-		KeyModifierMask mask =
-			maskForTable(dkr->m_tableIndex, r->m_tableSelectionIndex,
-							256, dkr->m_tableIndex);
-
-		// map each completion
-		for (SInt32 j = 0; j < dkr->m_numCompletions; ++j) {
-			// get character
-			UInt8 c = dkr->m_completion[j][1];
-
-			// skip non-glyph character
-			if (c < 32 || c == 127) {
-				continue;
-			}
-
-			// map character to KeyID
-			KeyID keyID = charToKeyID(c);
-
-			// if we've seen this character already then do nothing
-			if (keyMap.count(keyID) != 0) {
-				continue;
-			}
-
-			// map keyID, first to the dead key then to uncomposed
-			// character.  we must find a virtual key that maps to
-			// to the uncomposed character.
-			if (vkMap.count(dkr->m_completion[j][0]) != 0) {
-				CKeySequence& sequence = keyMap[keyID];
-
-				// save key info
-				// FIXME -- should set only those bits in m_requiredMask that
-				// correspond to modifiers that are truly necessary to
-				// generate the character.  this mostly works as-is, though.
-				CKeyEventInfo info;
-				info.m_button        = mapVirtualKeyToKeyButton(
-											dkr->m_virtualKey);
-				info.m_requiredMask  =
-							KeyModifierShift | KeyModifierSuper |
-							KeyModifierAlt | KeyModifierControl |
- 							KeyModifierCapsLock;
-				info.m_requiredState = mask;
-				sequence.push_back(info);
-				sequence.push_back(vkMap[dkr->m_completion[j][0]]);
+	if (!isCommand) {
+		for (CKeyIDs::const_iterator i = ids.begin(); i != ids.end(); ++i) {
+			KeyID id = *i;
+			if (id != kKeyNone &&
+				((id < 0xe000u || id > 0xefffu) ||
+				(id >= kKeyKP_Equal && id <= kKeyKP_9))) {
+				*mask |= KeyModifierAltGr;
+				return;
 			}
 		}
-
-		// next table.  skip all the completions and the no match
-		// pair to get the next table.
-		dkr = reinterpret_cast<CKCHRDeadKeyRecord*>(
-							dkr->m_completion[dkr->m_numCompletions + 1]);
-	}
-
-	return true;
-}
-
-bool
-COSXKeyState::filluchrKeysMap(CKeyIDMap& keyMap) const
-{
-	assert(m_uchrResource != NULL);
-
-	UCKeyboardLayout* r = m_uchrResource;
-	UInt8* base         = reinterpret_cast<UInt8*>(r);
-
-	UCKeyLayoutFeatureInfo* fi = NULL;
-	if (r->keyLayoutFeatureInfoOffset != 0) {
-		fi = reinterpret_cast<UCKeyLayoutFeatureInfo*>(
-				base + r->keyLayoutFeatureInfoOffset);
-	}
-
-	// find the keyboard info for the current keyboard type
-	UCKeyboardTypeHeader* th = NULL;
-	for (ItemCount i = 0; i < r->keyboardTypeCount; ++i) {
-		if (m_keyboardType >= r->keyboardTypeList[i].keyboardTypeFirst &&
-			m_keyboardType <= r->keyboardTypeList[i].keyboardTypeLast) {
-			th = r->keyboardTypeList + i;
-			break;
-		}
-		if (r->keyboardTypeList[i].keyboardTypeFirst == 0) {
-			// found the default.  use it unless we find a match.
-			th = r->keyboardTypeList + i;
-		}
-	}
-	if (th == NULL) {
-		// cannot find a suitable keyboard type
-		return false;
-	}
-
-	// get tables for keyboard type
-	UCKeyModifiersToTableNum* m =
-		reinterpret_cast<UCKeyModifiersToTableNum*>(
-				base + th->keyModifiersToTableNumOffset);
-	UCKeyToCharTableIndex* cti  =
-		reinterpret_cast<UCKeyToCharTableIndex*>(
-				base + th->keyToCharTableIndexOffset);
-	UCKeySequenceDataIndex* sdi =
-		reinterpret_cast<UCKeySequenceDataIndex*>(
-				base + th->keySequenceDataIndexOffset);
-
-	// build non-composed keys to virtual keys mapping
-	CDeadKeyMap dkMap;
-	for (UInt32 i = 0; i < cti->keyToCharTableCount; ++i) {
-		// determine the modifier keys for table i
-		KeyModifierMask mask =
-			maskForTable(static_cast<UInt8>(i), m->tableNum,
-							m->modifiersCount, m->defaultTableNum);
-
-		// get the character table
-		UCKeyOutput* ct =
-			reinterpret_cast<UCKeyOutput*>(
-					base + cti->keyToCharTableOffsets[i]);
-
-		// build the KeyID to virtual key map
-		for (SInt32 j = 0; j < cti->keyToCharTableSize; ++j) {
-			// get character
-			UInt16 c = ct[j];
-
-			// ignore key sequence mappings
-			if ((c & 0xc000) == 0x8000) {
-				UInt16 index = (c & 0x3fff);
-				if (index < sdi->charSequenceCount &&
-					sdi->charSequenceOffsets[index] !=
-						sdi->charSequenceOffsets[index + 1]) {
-				continue;
-				}
-
-				// not a sequence mapping.  use character as-is.
-			}
-
-			// just record dead key mappings
-			else if ((c & 0xc000) == 0x4000) {
-				UInt16 index = (c & 0x3fff);
-				if (dkMap.count(index) == 0) {
-					dkMap[index] = std::make_pair(j, mask);
-				}
-				continue;
-			}
-
-			// skip non-glyph character
-			if (c < 32 || c == 127 || c == 0xfffe || c == 0xffff) {
-				continue;
-			}
-
-			// map character to KeyID
-			KeyID keyID = unicharToKeyID(c);
-
-			// if we've seen this character already then do nothing
-			if (keyMap.count(keyID) != 0) {
-				continue;
-			}
-
-			// save entry for character
-			// FIXME -- should set only those bits in m_requiredMask that
-			// correspond to modifiers that are truly necessary to
-			// generate the character.
-			CKeyEventInfo info;
-			info.m_button        = mapVirtualKeyToKeyButton(j);
-			info.m_requiredMask  =
-							KeyModifierShift | KeyModifierSuper |
-							KeyModifierCapsLock;
-			info.m_requiredState = mask;
-			keyMap[keyID].push_back(info);
-		}
-	}
-
-	// build composed keys to virtual keys mapping
-	UCKeyStateRecordsIndex* sri = NULL;
-	if (th->keyStateRecordsIndexOffset != NULL) {
-		sri = reinterpret_cast<UCKeyStateRecordsIndex*>(
-				base + th->keyStateRecordsIndexOffset);
-	}
-	UCKeyStateTerminators* st = NULL;
-	if (th->keyStateTerminatorsOffset != NULL) {
-		st = reinterpret_cast<UCKeyStateTerminators*>(
-				base + th->keyStateTerminatorsOffset);
-	}
-	CKeySequence sequence;
-	mapDeadKeySequence(keyMap, sequence, 0, base, sri, st, dkMap);
-
-	return true;
-}
-
-void
-COSXKeyState::mapDeadKeySequence(CKeyIDMap& keyMap,
-				CKeySequence& sequence,
-				UInt16 state, const UInt8* base,
-				const UCKeyStateRecordsIndex* sri,
-				const UCKeyStateTerminators* st,
-				CDeadKeyMap& dkMap)
-{
-	for (CDeadKeyMap::const_iterator i = dkMap.begin(); i != dkMap.end(); ++i) {
-		UInt16 index = i->first;
-		const UCKeyStateRecord* sr =
-			reinterpret_cast<const UCKeyStateRecord*>(
-					base + sri->keyStateRecordOffsets[index]);
-		const UCKeyStateEntryTerminal* kset =
-			reinterpret_cast<const UCKeyStateEntryTerminal*>(
-					sr->stateEntryData);
-
-		UInt16 c         = 0;
-		UInt16 nextState = 0;
-		if (state == 0) {
-			c         = sr->stateZeroCharData;
-			nextState = sr->stateZeroNextState;
-		}
-		else if (sr->stateEntryFormat == kUCKeyStateEntryTerminalFormat) {
-			for (UInt16 j = 0; j < sr->stateEntryCount; ++j) {
-				if (kset[j].curState == state) {
-					c = kset[j].charData;
-					break;
-				}
-			}
-			// XXX -- default state terminator not supported yet
-		}
-		else if (sr->stateEntryFormat == kUCKeyStateEntryRangeFormat) {
-			// XXX -- not supported yet
-		}
-
-		// push character onto sequence.  m_requiredMask should only
-		// have those modifiers that are truly necessary to generate
-		// the character.
-		CKeyEventInfo info;
-		info.m_button        = mapVirtualKeyToKeyButton(
-										i->second.first);
-		info.m_requiredMask  =
-							KeyModifierShift | KeyModifierSuper |
-							KeyModifierCapsLock;
-		info.m_requiredState = i->second.second;
-		sequence.push_back(info);
-
-		if (nextState != 0) {
-			// next in dead key sequence
-			mapDeadKeySequence(keyMap, sequence,
-							nextState, base, sri, st, dkMap);
-		}
-		else if (c >= 32 && c != 127 && c != 0xfffe && c != 0xffff) {
-			// terminate sequence
-			KeyID keyID = unicharToKeyID(c);
-	
-			// if we've seen this character already then do nothing,
-			// otherwise save it in the key map.
-			if (keyMap.count(keyID) == 0) {
-				keyMap[keyID] = sequence;
-			}
-		}
-
-		// pop character from sequence
-		sequence.pop_back();
 	}
 }
 
@@ -937,123 +684,513 @@ COSXKeyState::mapKeyButtonToVirtualKey(KeyButton keyButton)
 	return static_cast<UInt32>(keyButton - KeyButtonOffset);
 }
 
+
+//
+// COSXKeyState::CKeyResource
+//
+
 KeyID
-COSXKeyState::charToKeyID(UInt8 c)
+COSXKeyState::CKeyResource::getKeyID(UInt8 c)
 {
 	if (c == 0) {
 		return kKeyNone;
 	}
-    else if (c >= 32 && c < 127) {
+	else if (c >= 32 && c < 127) {
 		// ASCII
-        return static_cast<KeyID>(c);
-    }
-    else {
-        // create string with character
-        char str[2];
-        str[0] = static_cast<char>(c);
-        str[1] = 0;
+		return static_cast<KeyID>(c);
+	}
+	else {
+		// handle special keys
+		switch (c) {
+		case 0x01:
+			return kKeyHome;
 
-        // convert to unicode
-        CFStringRef cfString =
-            CFStringCreateWithCStringNoCopy(kCFAllocatorDefault,
-                            str, GetScriptManagerVariable(smKeyScript),
-                            kCFAllocatorNull);
+		case 0x02:
+			return kKeyKP_Enter;
 
-        // convert to precomposed
-        CFMutableStringRef mcfString =
-            CFStringCreateMutableCopy(kCFAllocatorDefault, 0, cfString);
-        CFRelease(cfString);
-        CFStringNormalize(mcfString, kCFStringNormalizationFormC);
+		case 0x03:
+			return kKeyKP_Enter;
 
-        // check result
-        int unicodeLength = CFStringGetLength(mcfString);
-        if (unicodeLength == 0) {
-            return kKeyNone;
-        }
-        if (unicodeLength > 1) {
+		case 0x04:
+			return kKeyEnd;
+
+		case 0x05:
+			return kKeyHelp;
+
+		case 0x08:
+			return kKeyBackSpace;
+
+		case 0x09:
+			return kKeyTab;
+
+		case 0x0b:
+			return kKeyPageUp;
+
+		case 0x0c:
+			return kKeyPageDown;
+
+		case 0x0d:
+			return kKeyReturn;
+
+		case 0x10:
+			// OS X maps all the function keys (F1, etc) to this one key.
+			// we can't determine the right key here so we have to do it
+			// some other way.
+			return kKeyNone;
+
+		case 0x1b:
+			return kKeyEscape;
+
+		case 0x1c:
+			return kKeyLeft;
+
+		case 0x1d:
+			return kKeyRight;
+
+		case 0x1e:
+			return kKeyUp;
+
+		case 0x1f:
+			return kKeyDown;
+
+		case 0x7f:
+			return kKeyDelete;
+
+		case 0x06:
+		case 0x07:
+		case 0x0a:
+		case 0x0e:
+		case 0x0f:
+		case 0x11:
+		case 0x12:
+		case 0x13:
+		case 0x14:
+		case 0x15:
+		case 0x16:
+		case 0x17:
+		case 0x18:
+		case 0x19:
+		case 0x1a:
+			// discard other control characters
+			return kKeyNone;
+
+		default:
+			// not special or unknown
+			break;
+		}
+
+		// create string with character
+		char str[2];
+		str[0] = static_cast<char>(c);
+		str[1] = 0;
+
+		// convert to unicode
+		CFStringRef cfString =
+			CFStringCreateWithCStringNoCopy(kCFAllocatorDefault,
+							str, GetScriptManagerVariable(smKeyScript),
+							kCFAllocatorNull);
+
+		// convert to precomposed
+		CFMutableStringRef mcfString =
+			CFStringCreateMutableCopy(kCFAllocatorDefault, 0, cfString);
+		CFRelease(cfString);
+		CFStringNormalize(mcfString, kCFStringNormalizationFormC);
+
+		// check result
+		int unicodeLength = CFStringGetLength(mcfString);
+		if (unicodeLength == 0) {
+			CFRelease(mcfString);
+			return kKeyNone;
+		}
+		if (unicodeLength > 1) {
 			// FIXME -- more than one character, we should handle this
-            return kKeyNone;
-        }
+			CFRelease(mcfString);
+			return kKeyNone;
+		}
 
-        // get unicode character
-        UniChar uc = CFStringGetCharacterAtIndex(mcfString, 0);
-        CFRelease(mcfString);
+		// get unicode character
+		UniChar uc = CFStringGetCharacterAtIndex(mcfString, 0);
+		CFRelease(mcfString);
 
-        // convert to KeyID
-        return static_cast<KeyID>(uc);
-    }
+		// convert to KeyID
+		return static_cast<KeyID>(uc);
+	}
 }
 
 KeyID
-COSXKeyState::unicharToKeyID(UniChar c)
+COSXKeyState::CKeyResource::unicharToKeyID(UniChar c)
 {
-	return static_cast<KeyID>(c);
+	switch (c) {
+	case 3:
+		return kKeyKP_Enter;
+
+	case 8:
+		return kKeyBackSpace;
+
+	case 9:
+		return kKeyTab;
+
+	case 13:
+		return kKeyReturn;
+
+	case 27:
+		return kKeyEscape;
+
+	case 127:
+		return kKeyDelete;
+
+	default:
+		if (c < 32) {
+			return kKeyNone;
+		}
+		return static_cast<KeyID>(c);
+	}
 }
 
-KeyModifierMask
-COSXKeyState::maskForTable(UInt8 i, UInt8* tableSelectors,
-				UInt32 numEntries, UInt8 defaultIndex)
+
+//
+// COSXKeyState::CKCHRKeyResource
+//
+
+COSXKeyState::CKCHRKeyResource::CKCHRKeyResource(const void* resource)
 {
-    // this is a table of 0 to 255 sorted by the number of 1 bits then
-	// numerical order.
-    static const UInt8 s_indexTable[] = {
-0, 1, 2, 4, 8, 16, 32, 64, 128, 3, 5, 6, 9, 10, 12, 17,
-18, 20, 24, 33, 34, 36, 40, 48, 65, 66, 68, 72, 80, 96, 129, 130,
-132, 136, 144, 160, 192, 7, 11, 13, 14, 19, 21, 22, 25, 26, 28, 35,
-37, 38, 41, 42, 44, 49, 50, 52, 56, 67, 69, 70, 73, 74, 76, 81,
-82, 84, 88, 97, 98, 100, 104, 112, 131, 133, 134, 137, 138, 140, 145, 146,
-148, 152, 161, 162, 164, 168, 176, 193, 194, 196, 200, 208, 224, 15, 23, 27,
-29, 30, 39, 43, 45, 46, 51, 53, 54, 57, 58, 60, 71, 75, 77, 78,
-83, 85, 86, 89, 90, 92, 99, 101, 102, 105, 106, 108, 113, 114, 116, 120,
-135, 139, 141, 142, 147, 149, 150, 153, 154, 156, 163, 165, 166, 169, 170, 172,
-177, 178, 180, 184, 195, 197, 198, 201, 202, 204, 209, 210, 212, 216, 225, 226,
-228, 232, 240, 31, 47, 55, 59, 61, 62, 79, 87, 91, 93, 94, 103, 107,
-109, 110, 115, 117, 118, 121, 122, 124, 143, 151, 155, 157, 158, 167, 171, 173,
-174, 179, 181, 182, 185, 186, 188, 199, 203, 205, 206, 211, 213, 214, 217, 218,
-220, 227, 229, 230, 233, 234, 236, 241, 242, 244, 248, 63, 95, 111, 119, 123,
-125, 126, 159, 175, 183, 187, 189, 190, 207, 215, 219, 221, 222, 231, 235, 237,
-238, 243, 245, 246, 249, 250, 252, 127, 191, 223, 239, 247, 251, 253, 254, 255
-    };
+	m_resource = reinterpret_cast<const KCHRResource*>(resource);
+}
 
-	while (true) {
-    	// find first entry in tableSelectors that maps to i.  this is the
-		// one that uses the fewest modifier keys.
-		UInt8 maxIndex = static_cast<UInt8>(numEntries - 1);
-    	for (UInt32 j = 0; j < 256; ++j) {
-        	if (s_indexTable[j] <= maxIndex &&
-				tableSelectors[s_indexTable[j]] == i) {
-				// convert our mask to a traditional mac modifier mask
-				// (which just means shifting it left 8 bits).
-				UInt16 macMask = (static_cast<UInt16>(s_indexTable[j]) << 8);
+bool
+COSXKeyState::CKCHRKeyResource::isValid() const
+{
+	return (m_resource != NULL);
+}
 
-				// convert the mac modifier mask to our mask.
-				KeyModifierMask mask = 0;
-				if ((macMask & (shiftKey | rightShiftKey)) != 0) {
-					mask |= KeyModifierShift;
-				}
-				if ((macMask & (controlKey | rightControlKey)) != 0) {
-					mask |= KeyModifierControl;
-				}
-				if ((macMask & cmdKey) != 0) {
-					mask |= KeyModifierAlt;
-				}
-				if ((macMask & (optionKey | rightOptionKey)) != 0) {
-					mask |= KeyModifierSuper;
-				}
-				if ((macMask & alphaLock) != 0) {
-					mask |= KeyModifierCapsLock;
-				}
-            	return mask;
-        	}
-    	}
+UInt32
+COSXKeyState::CKCHRKeyResource::getNumModifierCombinations() const
+{
+	// only 32 (not 256) because the righthanded modifier bits are ignored
+	return 32;
+}
 
-		// no match.  try defaultIndex.
-		if (i == defaultIndex) {
-			break;
+UInt32
+COSXKeyState::CKCHRKeyResource::getNumTables() const
+{
+	return m_resource->m_numTables;
+}
+
+UInt32
+COSXKeyState::CKCHRKeyResource::getNumButtons() const
+{
+	return 128;
+}
+
+UInt32
+COSXKeyState::CKCHRKeyResource::getTableForModifier(UInt32 mask) const
+{
+	assert(mask < getNumModifierCombinations());
+
+	return m_resource->m_tableSelectionIndex[mask];
+}
+
+KeyID
+COSXKeyState::CKCHRKeyResource::getKey(UInt32 table, UInt32 button) const
+{
+	assert(table < getNumTables());
+	assert(button < getNumButtons());
+
+	UInt8 c = m_resource->m_characterTables[table][button];
+	if (c == 0) {
+		// could be a dead key
+		const CKCHRDeadKeys* dkp =
+			reinterpret_cast<const CKCHRDeadKeys*>(
+				m_resource->m_characterTables[getNumTables()]);
+		const CKCHRDeadKeyRecord* dkr = dkp->m_records;
+		for (SInt16 i = 0; i < dkp->m_numRecords; ++i) {
+			if (dkr->m_tableIndex == table && dkr->m_virtualKey == button) {
+				// get the no completion entry
+				c = dkr->m_completion[dkr->m_numCompletions][1];
+				return CKeyMap::getDeadKey(getKeyID(c));
+			}
+
+			// next table.  skip all the completions and the no match
+			// pair to get the next table.
+			dkr = reinterpret_cast<const CKCHRDeadKeyRecord*>(
+							dkr->m_completion[dkr->m_numCompletions + 1]);
 		}
-		i = defaultIndex;
 	}
 
-    // should never get here.
-    return 0;
+	return getKeyID(c);
+}
+
+
+//
+// COSXKeyState::CUCHRKeyResource
+//
+
+COSXKeyState::CUCHRKeyResource::CUCHRKeyResource(const void* resource,
+				UInt32 keyboardType) :
+	m_m(NULL),
+	m_cti(NULL),
+	m_sdi(NULL),
+	m_sri(NULL),
+	m_st(NULL)
+{
+	m_resource = reinterpret_cast<const UCKeyboardLayout*>(resource);
+	if (m_resource == NULL) {
+		return;
+	}
+
+	// find the keyboard info for the current keyboard type
+	const UCKeyboardTypeHeader* th = NULL;
+	const UCKeyboardLayout* r = m_resource;
+	for (ItemCount i = 0; i < r->keyboardTypeCount; ++i) {
+		if (keyboardType >= r->keyboardTypeList[i].keyboardTypeFirst &&
+			keyboardType <= r->keyboardTypeList[i].keyboardTypeLast) {
+			th = r->keyboardTypeList + i;
+			break;
+		}
+		if (r->keyboardTypeList[i].keyboardTypeFirst == 0) {
+			// found the default.  use it unless we find a match.
+			th = r->keyboardTypeList + i;
+		}
+	}
+	if (th == NULL) {
+		// cannot find a suitable keyboard type
+		return;
+	}
+
+	// get tables for keyboard type
+	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
+	m_m   = reinterpret_cast<const UCKeyModifiersToTableNum*>(base +
+								th->keyModifiersToTableNumOffset);
+	m_cti = reinterpret_cast<const UCKeyToCharTableIndex*>(base +
+								th->keyToCharTableIndexOffset);
+	m_sdi = reinterpret_cast<const UCKeySequenceDataIndex*>(base +
+								th->keySequenceDataIndexOffset);
+	if (th->keyStateRecordsIndexOffset != 0) {
+		m_sri = reinterpret_cast<const UCKeyStateRecordsIndex*>(base +
+								th->keyStateRecordsIndexOffset);
+	}
+	if (th->keyStateTerminatorsOffset != 0) {
+		m_st = reinterpret_cast<const UCKeyStateTerminators*>(base +
+								th->keyStateTerminatorsOffset);
+	}
+
+	// find the space key, but only if it can combine with dead keys.
+	// a dead key followed by a space yields the non-dead version of
+	// the dead key.
+	m_spaceOutput = 0xffffu;
+	UInt32 table  = getTableForModifier(0);
+	for (UInt32 button = 0, n = getNumButtons(); button < n; ++button) {
+		KeyID id = getKey(table, button);
+		if (id == 0x20) {
+			UCKeyOutput c =
+				reinterpret_cast<const UCKeyOutput*>(base +
+								m_cti->keyToCharTableOffsets[table])[button];
+			if ((c & kUCKeyOutputTestForIndexMask) ==
+								kUCKeyOutputStateIndexMask) {
+				m_spaceOutput = (c & kUCKeyOutputGetIndexMask);
+				break;
+			}
+		}
+	}
+}
+
+bool
+COSXKeyState::CUCHRKeyResource::isValid() const
+{
+	return (m_m != NULL);
+}
+
+UInt32
+COSXKeyState::CUCHRKeyResource::getNumModifierCombinations() const
+{
+	// only 32 (not 256) because the righthanded modifier bits are ignored
+	return 32;
+}
+
+UInt32
+COSXKeyState::CUCHRKeyResource::getNumTables() const
+{
+	return m_cti->keyToCharTableCount;
+}
+
+UInt32
+COSXKeyState::CUCHRKeyResource::getNumButtons() const
+{
+	return m_cti->keyToCharTableSize;
+}
+
+UInt32
+COSXKeyState::CUCHRKeyResource::getTableForModifier(UInt32 mask) const
+{
+	if (mask >= m_m->modifiersCount) {
+		return m_m->defaultTableNum;
+	}
+	else {
+		return m_m->tableNum[mask];
+	}
+}
+
+KeyID
+COSXKeyState::CUCHRKeyResource::getKey(UInt32 table, UInt32 button) const
+{
+	assert(table < getNumTables());
+	assert(button < getNumButtons());
+
+	const UInt8* base   = reinterpret_cast<const UInt8*>(m_resource);
+	const UCKeyOutput c = reinterpret_cast<const UCKeyOutput*>(base +
+								m_cti->keyToCharTableOffsets[table])[button];
+
+	KeySequence keys;
+	switch (c & kUCKeyOutputTestForIndexMask) {
+	case kUCKeyOutputStateIndexMask:
+		if (!getDeadKey(keys, c & kUCKeyOutputGetIndexMask)) {
+			return kKeyNone;
+		}
+		break;
+
+	case kUCKeyOutputSequenceIndexMask:
+	default:
+		if (!addSequence(keys, c)) {
+			return kKeyNone;
+		}
+		break;
+	}
+
+	// XXX -- no support for multiple characters
+	if (keys.size() != 1) {
+		return kKeyNone;
+	}
+
+	return keys.front();
+}
+
+bool
+COSXKeyState::CUCHRKeyResource::getDeadKey(
+				KeySequence& keys, UInt16 index) const
+{
+	if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
+		// XXX -- should we be using some other fallback?
+		return false;
+	}
+
+	UInt16 state = 0;
+	if (!getKeyRecord(keys, index, state)) {
+		return false;
+	}
+	if (state == 0) {
+		// not a dead key
+		return true;
+	}
+
+	// no dead keys if we couldn't find the space key
+	if (m_spaceOutput == 0xffffu) {
+		return false;
+	}
+
+	// the dead key should not have put anything in the key list
+	if (!keys.empty()) {
+		return false;
+	}
+
+	// get the character generated by pressing the space key after the
+	// dead key.  if we're still in a compose state afterwards then we're
+	// confused so we bail.
+	if (!getKeyRecord(keys, m_spaceOutput, state) || state != 0) {
+		return false;
+	}
+
+	// convert keys to their dead counterparts
+	for (KeySequence::iterator i = keys.begin(); i != keys.end(); ++i) {
+		*i = CKeyMap::getDeadKey(*i);
+	}
+
+	return true;
+}
+
+bool
+COSXKeyState::CUCHRKeyResource::getKeyRecord(
+				KeySequence& keys, UInt16 index, UInt16& state) const
+{
+	const UInt8* base = reinterpret_cast<const UInt8*>(m_resource);
+	const UCKeyStateRecord* sr =
+		reinterpret_cast<const UCKeyStateRecord*>(base +
+								m_sri->keyStateRecordOffsets[index]);
+	const UCKeyStateEntryTerminal* kset =
+		reinterpret_cast<const UCKeyStateEntryTerminal*>(sr->stateEntryData);
+
+	UInt16 nextState = 0;
+	bool found       = false;
+	if (state == 0) {
+		found     = true;
+		nextState = sr->stateZeroNextState;
+		if (!addSequence(keys, sr->stateZeroCharData)) {
+			return false;
+		}
+	}
+	else {
+		// we have a next entry
+		switch (sr->stateEntryFormat) {
+		case kUCKeyStateEntryTerminalFormat:
+			for (UInt16 j = 0; j < sr->stateEntryCount; ++j) {
+				if (kset[j].curState == state) {
+					if (!addSequence(keys, kset[j].charData)) {
+						return false;
+					}
+					nextState = 0;
+					found     = true;
+					break;
+				}
+			}
+			break;
+
+		case kUCKeyStateEntryRangeFormat:
+			// XXX -- not supported yet
+			break;
+
+		default:
+			// XXX -- unknown format
+			return false;
+		}
+	}
+	if (!found) {
+		// use a terminator
+		if (m_st != NULL && state < m_st->keyStateTerminatorCount) {
+			if (!addSequence(keys, m_st->keyStateTerminators[state - 1])) {
+				return false;
+			}
+		}
+		nextState = sr->stateZeroNextState;
+		if (!addSequence(keys, sr->stateZeroCharData)) {
+			return false;
+		}
+	}
+
+	// next
+	state = nextState;
+
+	return true;
+}
+
+bool
+COSXKeyState::CUCHRKeyResource::addSequence(
+				KeySequence& keys, UCKeyCharSeq c) const
+{
+	if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
+		UInt16 index = (c & kUCKeyOutputGetIndexMask);
+		if (index < m_sdi->charSequenceCount &&
+			m_sdi->charSequenceOffsets[index] !=
+				m_sdi->charSequenceOffsets[index + 1]) {
+			// XXX -- sequences not supported yet
+			return false;
+		}
+	}
+
+	if (c != 0xfffe && c != 0xffff) {
+		KeyID id = unicharToKeyID(c);
+		if (id != kKeyNone) {
+			keys.push_back(id);
+		}
+	}
+
+	return true;
 }

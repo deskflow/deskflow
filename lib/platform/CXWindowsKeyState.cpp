@@ -16,6 +16,7 @@
 #include "CXWindowsUtil.h"
 #include "CLog.h"
 #include "CStringUtil.h"
+#include "stdmap.h"
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -24,154 +25,104 @@
 #	define XK_MISCELLANY
 #	define XK_XKB_KEYS
 #	include <X11/keysymdef.h>
-// these should be in XF86keysym.h but there are several versions of
-// that file floating around and not all have all symbols and none of
-// them provide any form of versioning so we just define 'em here.
-#define XF86XK_Standby		0x1008FF10
-#define XF86XK_AudioLowerVolume	0x1008FF11
-#define XF86XK_AudioMute	0x1008FF12
-#define XF86XK_AudioRaiseVolume	0x1008FF13
-#define XF86XK_AudioPlay	0x1008FF14
-#define XF86XK_AudioStop	0x1008FF15
-#define XF86XK_AudioPrev	0x1008FF16
-#define XF86XK_AudioNext	0x1008FF17
-#define XF86XK_HomePage		0x1008FF18
-#define XF86XK_Mail		0x1008FF19
-#define XF86XK_Start		0x1008FF1A
-#define XF86XK_Search		0x1008FF1B
-#define XF86XK_AudioRecord	0x1008FF1C
-#define XF86XK_Calculator	0x1008FF1D
-#define XF86XK_Memo		0x1008FF1E
-#define XF86XK_ToDoList		0x1008FF1F
-#define XF86XK_Calendar		0x1008FF20
-#define XF86XK_PowerDown	0x1008FF21
-#define XF86XK_ContrastAdjust	0x1008FF22
-#define XF86XK_RockerUp		0x1008FF23
-#define XF86XK_RockerDown	0x1008FF24
-#define XF86XK_RockerEnter	0x1008FF25
-#define XF86XK_Back		0x1008FF26
-#define XF86XK_Forward		0x1008FF27
-#define XF86XK_Stop		0x1008FF28
-#define XF86XK_Refresh		0x1008FF29
-#define XF86XK_PowerOff		0x1008FF2A
-#define XF86XK_WakeUp		0x1008FF2B
-#define XF86XK_Eject            0x1008FF2C
-#define XF86XK_ScreenSaver      0x1008FF2D
-#define XF86XK_WWW              0x1008FF2E
-#define XF86XK_Sleep            0x1008FF2F
-#define XF86XK_Favorites	0x1008FF30
-#define XF86XK_AudioPause	0x1008FF31
-#define XF86XK_AudioMedia	0x1008FF32
-#define XF86XK_MyComputer	0x1008FF33
-#define XF86XK_VendorHome	0x1008FF34
-#define XF86XK_LightBulb	0x1008FF35
-#define XF86XK_Shop		0x1008FF36
-#define XF86XK_History		0x1008FF37
-#define XF86XK_OpenURL		0x1008FF38
-#define XF86XK_AddFavorite	0x1008FF39
-#define XF86XK_HotLinks		0x1008FF3A
-#define XF86XK_BrightnessAdjust	0x1008FF3B
-#define XF86XK_Finance		0x1008FF3C
-#define XF86XK_Community	0x1008FF3D
-#define XF86XK_Launch0		0x1008FF40
-#define XF86XK_Launch1		0x1008FF41
-#define XF86XK_Launch2		0x1008FF42
-#define XF86XK_Launch3		0x1008FF43
-#define XF86XK_Launch4		0x1008FF44
-#define XF86XK_Launch5		0x1008FF45
-#define XF86XK_Launch6		0x1008FF46
-#define XF86XK_Launch7		0x1008FF47
-#define XF86XK_Launch8		0x1008FF48
-#define XF86XK_Launch9		0x1008FF49
-#define XF86XK_LaunchA		0x1008FF4A
-#define XF86XK_LaunchB		0x1008FF4B
-#define XF86XK_LaunchC		0x1008FF4C
-#define XF86XK_LaunchD		0x1008FF4D
-#define XF86XK_LaunchE		0x1008FF4E
-#define XF86XK_LaunchF		0x1008FF4F
+#if HAVE_XKB_EXTENSION
+#	include <X11/XKBlib.h>
+#endif
 #endif
 
-// map special KeyID keys to KeySyms
-#if HAVE_X11_XF86KEYSYM_H
-static const KeySym		g_mapE000[] =
-{
-	/* 0x00 */ 0, XF86XK_Eject, 0, 0, 0, 0, 0, 0,
-	/* 0x08 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x10 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x18 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x20 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x28 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x30 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x38 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x40 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x48 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x50 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x58 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x60 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x68 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x70 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x78 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x88 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0x98 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xa0 */ 0, 0, 0, 0,
-	/* 0xa4 */ 0, 0,
-	/* 0xa6 */ XF86XK_Back, XF86XK_Forward,
-	/* 0xa8 */ XF86XK_Refresh, XF86XK_Stop,
-	/* 0xaa */ XF86XK_Search, XF86XK_Favorites,
-	/* 0xac */ XF86XK_HomePage, XF86XK_AudioMute,
-	/* 0xae */ XF86XK_AudioLowerVolume, XF86XK_AudioRaiseVolume,
-	/* 0xb0 */ XF86XK_AudioNext, XF86XK_AudioPrev,
-	/* 0xb2 */ XF86XK_AudioStop, XF86XK_AudioPlay,
-	/* 0xb4 */ XF86XK_Mail, XF86XK_AudioMedia,
-	/* 0xb6 */ XF86XK_Launch0, XF86XK_Launch1,
-	/* 0xb8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xc8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xd8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xe8 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf0 */ 0, 0, 0, 0, 0, 0, 0, 0,
-	/* 0xf8 */ 0, 0, 0, 0, 0, 0, 0, 0
-};
-#endif
-
-CXWindowsKeyState::CXWindowsKeyState(Display* display) :
+CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
 	m_display(display)
 {
-	// do nothing
+	XGetKeyboardControl(m_display, &m_keyboardState);
+#if HAVE_XKB_EXTENSION
+	if (useXKB) {
+		m_xkb = XkbGetMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask |
+								XkbAllClientInfoMask, XkbUseCoreKbd);
+	}
+	else {
+		m_xkb = NULL;
+	}
+#endif
+	setActiveGroup(kGroupPollAndSet);
 }
 
 CXWindowsKeyState::~CXWindowsKeyState()
 {
-	// do nothing
+#if HAVE_XKB_EXTENSION
+	if (m_xkb != NULL) {
+		XkbFreeKeyboard(m_xkb, 0, True);
+	}
+#endif
+}
+
+void
+CXWindowsKeyState::setActiveGroup(SInt32 group)
+{
+	if (group == kGroupPollAndSet) {
+		m_group = -1;
+		m_group = pollActiveGroup();
+	}
+	else if (group == kGroupPoll) {
+		m_group = -1;
+	}
+	else {
+		assert(group >= 0);
+		m_group = group;
+	}
+}
+
+void
+CXWindowsKeyState::setAutoRepeat(const XKeyboardState& state)
+{
+	m_keyboardState = state;
 }
 
 KeyModifierMask
 CXWindowsKeyState::mapModifiersFromX(unsigned int state) const
 {
+	UInt32 offset = 8 * getGroupFromState(state);
 	KeyModifierMask mask = 0;
-	if (state & ShiftMask)
-		mask |= KeyModifierShift;
-	if (state & LockMask)
-		mask |= KeyModifierCapsLock;
-	if (state & ControlMask)
-		mask |= KeyModifierControl;
-	if (state & m_altMask)
-		mask |= KeyModifierAlt;
-	if (state & m_metaMask)
-		mask |= KeyModifierMeta;
-	if (state & m_superMask)
-		mask |= KeyModifierSuper;
-	if (state & m_modeSwitchMask)
-		mask |= KeyModifierModeSwitch;
-	if (state & m_numLockMask)
-		mask |= KeyModifierNumLock;
-	if (state & m_scrollLockMask)
-		mask |= KeyModifierScrollLock;
+	for (int i = 0; i < 8; ++i) {
+		if ((state & (1u << i)) != 0) {
+			mask |= m_modifierFromX[offset + i];
+		}
+	}
 	return mask;
+}
+
+bool
+CXWindowsKeyState::mapModifiersToX(KeyModifierMask mask,
+				unsigned int& modifiers) const
+{
+	modifiers = 0;
+
+	for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
+		KeyModifierMask bit = (1u << i);
+		if ((mask & bit) != 0) {
+			KeyModifierToXMask::const_iterator j = m_modifierToX.find(bit);
+			if (j == m_modifierToX.end()) {
+				return false;
+			}
+			else {
+				modifiers |= j->second;
+			}
+		}
+	}
+
+	return true;
+}
+
+void
+CXWindowsKeyState::mapKeyToKeycodes(KeyID key, CKeycodeList& keycodes) const
+{
+	keycodes.clear();
+	std::pair<KeyToKeyCodeMap::const_iterator,
+		KeyToKeyCodeMap::const_iterator> range =
+			m_keyCodeFromKey.equal_range(key);
+	for (KeyToKeyCodeMap::const_iterator i = range.first;
+								i != range.second; ++i) {
+		keycodes.push_back(i->second);
+	}
 }
 
 bool
@@ -181,32 +132,9 @@ CXWindowsKeyState::fakeCtrlAltDel()
 	return false;
 }
 
-const char*
-CXWindowsKeyState::getKeyName(KeyButton keycode) const
+KeyModifierMask
+CXWindowsKeyState::pollActiveModifiers() const
 {
-	KeySym keysym = XKeycodeToKeysym(m_display, keycode, 0);
-	char* name    = XKeysymToString(keysym);
-	if (name != NULL) {
-		return name;
-	}
-	else {
-		static char buffer[20];
-		return strcpy(buffer,
-					CStringUtil::print("keycode %d", keycode).c_str());
-	}
-}
-
-void
-CXWindowsKeyState::doUpdateKeys()
-{
-	// query which keys are pressed
-	char keys[32];
-	XQueryKeymap(m_display, keys);
-
-	// save the auto-repeat mask
-	XGetKeyboardControl(m_display, &m_keyControl);
-
-	// query the pointer to get the keyboard state
 	Window root = DefaultRootWindow(m_display), window;
 	int xRoot, yRoot, xWindow, yWindow;
 	unsigned int state;
@@ -214,901 +142,685 @@ CXWindowsKeyState::doUpdateKeys()
 								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
 		state = 0;
 	}
-
-	// update mappings
-	updateKeysymMap();
-	updateModifiers();
-
-	// transfer to our state
-	for (UInt32 i = 0, j = 0; i < 32; j += 8, ++i) {
-		if ((keys[i] & 0x01) != 0)
-			setKeyDown(j + 0, true);
-		if ((keys[i] & 0x02) != 0)
-			setKeyDown(j + 1, true);
-		if ((keys[i] & 0x04) != 0)
-			setKeyDown(j + 2, true);
-		if ((keys[i] & 0x08) != 0)
-			setKeyDown(j + 3, true);
-		if ((keys[i] & 0x10) != 0)
-			setKeyDown(j + 4, true);
-		if ((keys[i] & 0x20) != 0)
-			setKeyDown(j + 5, true);
-		if ((keys[i] & 0x40) != 0)
-			setKeyDown(j + 6, true);
-		if ((keys[i] & 0x80) != 0)
-			setKeyDown(j + 7, true);
-	}
-
-	// set toggle modifier states
-	if ((state & LockMask) != 0)
-		setToggled(KeyModifierCapsLock);
-	if ((state & m_numLockMask) != 0)
-		setToggled(KeyModifierNumLock);
-	if ((state & m_scrollLockMask) != 0)
-		setToggled(KeyModifierScrollLock);
+	return mapModifiersFromX(state);
 }
 
-void
-CXWindowsKeyState::doFakeKeyEvent(KeyButton keycode, bool press, bool)
+SInt32
+CXWindowsKeyState::pollActiveGroup() const
 {
-	XTestFakeKeyEvent(m_display, keycode, press ? True : False, CurrentTime);
-	XFlush(m_display);
-}
-
-KeyButton
-CXWindowsKeyState::mapKey(Keystrokes& keys, KeyID id,
-				KeyModifierMask desiredMask, bool isAutoRepeat) const
-{
-	// the system translates key events into characters depending
-	// on the modifier key state at the time of the event.  to
-	// generate the right keysym we need to set the modifier key
-	// states appropriately.
-	//
-	// desiredMask is the mask desired by the caller.  however, there
-	// may not be a keycode mapping to generate the desired keysym
-	// with that mask.  we override the bits in the mask that cannot
-	// be accomodated.
-
-	// convert KeyID to a KeySym
-	KeySym keysym = keyIDToKeySym(id, desiredMask);
-	if (keysym == NoSymbol) {
-		// unknown key
-		return 0;
+	if (m_group != -1) {
+		assert(m_group >= 0);
+		return m_group;
 	}
 
-	// get the mapping for this keysym
-	KeySymIndex keyIndex = m_keysymMap.find(keysym);
-	if (keyIndex != m_keysymMap.end()) {
-		// the keysym is mapped to some keycode.  create the keystrokes
-		// for this keysym.
-		return mapToKeystrokes(keys, keyIndex, isAutoRepeat, false);
-	}
-
-	// we can't find the keysym mapped to any keycode.  this doesn't
-	// necessarily mean we can't generate the keysym, though.  if the
-	// keysym can be created by combining keysyms then we may still
-	// be okay.
-	if (!isAutoRepeat) {
-		KeyButton keycode = mapDecompositionToKeystrokes(keys, keysym, true);
-		if (keycode != 0) {
-			return keycode;
-		}
-		keycode = mapDecompositionToKeystrokes(keys, keysym, false);
-		if (keycode != 0) {
-			// no key is left synthetically down when using the compose key
-			// so return 0 even though we succeeded.
-			return 0;
+#if HAVE_XKB_EXTENSION
+	if (m_xkb != NULL) {
+		XkbStateRec state;
+		if (XkbGetState(m_display, XkbUseCoreKbd, &state)) {
+			return state.group;
 		}
 	}
-
-	// if the keysym is caps lock sensitive then convert the case of
-	// the keysym and try again.
-	KeySym lKey, uKey;
-	XConvertCase(keysym, &lKey, &uKey);
-	if (lKey != uKey) {
-		if (lKey == keysym) {
-			keyIndex = m_keysymMap.find(uKey);
-		}
-		else {
-			keyIndex = m_keysymMap.find(lKey);
-		}
-		if (keyIndex != m_keysymMap.end()) {
-			// the keysym is mapped to some keycode.  create the keystrokes
-			// for this keysym.
-			return mapToKeystrokes(keys, keyIndex, isAutoRepeat, false);
-		}
-	}
-
+#endif
 	return 0;
 }
 
 void
-CXWindowsKeyState::updateKeysymMap()
+CXWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
+{
+	char keys[32];
+	XQueryKeymap(m_display, keys);
+	for (UInt32 i = 0; i < 32; ++i) {
+		for (UInt32 j = 0; j < 8; ++j) {
+			if ((keys[i] & (1u << j)) != 0) {
+				pressedKeys.insert(8 * i + j);
+			}
+		}
+	}
+}
+
+void
+CXWindowsKeyState::getKeyMap(CKeyMap& keyMap)
+{
+	// get autorepeat info.  we must use the global_auto_repeat told to
+	// us because it may have modified by synergy.
+	int oldGlobalAutoRepeat = m_keyboardState.global_auto_repeat;
+	XGetKeyboardControl(m_display, &m_keyboardState);
+	m_keyboardState.global_auto_repeat = oldGlobalAutoRepeat;
+
+#if HAVE_XKB_EXTENSION
+	if (m_xkb != NULL) {
+		XkbGetUpdatedMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask |
+								XkbAllClientInfoMask, m_xkb);
+		updateKeysymMapXKB(keyMap);
+	}
+	else
+#endif
+	{
+		updateKeysymMap(keyMap);
+	}
+}
+
+void
+CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
+{
+	switch (keystroke.m_type) {
+	case Keystroke::kButton:
+		LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
+		if (keystroke.m_data.m_button.m_repeat) {
+			int c = keystroke.m_data.m_button.m_button;
+			int i = (c >> 3);
+			int b = 1 << (c & 7);
+			if (m_keyboardState.global_auto_repeat == AutoRepeatModeOff ||
+				(m_keyboardState.auto_repeats[i] & b) == 0) {
+				LOG((CLOG_DEBUG1 "  discard autorepeat"));
+				break;
+			}
+		}
+		XTestFakeKeyEvent(m_display, keystroke.m_data.m_button.m_button,
+							keystroke.m_data.m_button.m_press ? True : False,
+							CurrentTime);
+		break;
+
+	case Keystroke::kGroup:
+		if (keystroke.m_data.m_group.m_absolute) {
+			LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
+#if HAVE_XKB_EXTENSION
+			if (m_xkb != NULL) {
+				XkbLockGroup(m_display, XkbUseCoreKbd,
+							keystroke.m_data.m_group.m_group);
+			}
+			else
+#endif
+			{
+				LOG((CLOG_DEBUG1 "  ignored"));
+			}
+		}
+		else {
+			LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
+#if HAVE_XKB_EXTENSION
+			if (m_xkb != NULL) {
+				XkbLockGroup(m_display, XkbUseCoreKbd,
+							getEffectiveGroup(pollActiveGroup(),
+								keystroke.m_data.m_group.m_group));
+			}
+			else
+#endif
+			{
+				LOG((CLOG_DEBUG1 "  ignored"));
+			}
+		}
+		break;
+	}
+	XFlush(m_display);
+}
+
+void
+CXWindowsKeyState::updateKeysymMap(CKeyMap& keyMap)
 {
 	// there are up to 4 keysyms per keycode
-	static const unsigned int maxKeysyms = 4;
+	static const int maxKeysyms = 4;
+
+	LOG((CLOG_DEBUG1 "non-XKB mapping"));
+
+	// prepare map from X modifier to KeyModifierMask.  certain bits
+	// are predefined.
+	m_modifierFromX.clear();
+	m_modifierFromX.resize(8);
+	m_modifierFromX[ShiftMapIndex]   = KeyModifierShift;
+	m_modifierFromX[LockMapIndex]    = KeyModifierCapsLock;
+	m_modifierFromX[ControlMapIndex] = KeyModifierControl;
+	m_modifierToX.clear();
+	m_modifierToX[KeyModifierShift]    = ShiftMask;
+	m_modifierToX[KeyModifierCapsLock] = LockMask;
+	m_modifierToX[KeyModifierControl]  = ControlMask;
+
+	// prepare map from KeyID to KeyCode
+	m_keyCodeFromKey.clear();
 
 	// get the number of keycodes
 	int minKeycode, maxKeycode;
 	XDisplayKeycodes(m_display, &minKeycode, &maxKeycode);
-	const int numKeycodes = maxKeycode - minKeycode + 1;
+	int numKeycodes = maxKeycode - minKeycode + 1;
 
 	// get the keyboard mapping for all keys
 	int keysymsPerKeycode;
-	KeySym* keysyms = XGetKeyboardMapping(m_display,
+	KeySym* allKeysyms = XGetKeyboardMapping(m_display,
 								minKeycode, numKeycodes,
 								&keysymsPerKeycode);
 
-	// we only understand up to maxKeysyms keysyms per keycodes
-	unsigned int numKeysyms = keysymsPerKeycode;
-	if (numKeysyms > maxKeysyms) {
-		numKeysyms = maxKeysyms;
+	// it's more convenient to always have maxKeysyms KeySyms per key
+	{
+		KeySym* tmpKeysyms = new KeySym[maxKeysyms * numKeycodes];
+		for (int i = 0; i < numKeycodes; ++i) {
+			for (int j = 0; j < maxKeysyms; ++j) {
+				if (j < keysymsPerKeycode) {
+					tmpKeysyms[maxKeysyms * i + j] =
+						allKeysyms[keysymsPerKeycode * i + j];
+				}
+				else {
+					tmpKeysyms[maxKeysyms * i + j] = NoSymbol;
+				}
+			}	
+		}
+		XFree(allKeysyms);
+		allKeysyms = tmpKeysyms;
 	}
 
-	// determine shift and mode switch sensitivity.  a keysym is shift
-	// or mode switch sensitive if its keycode is.  a keycode is mode
-	// mode switch sensitive if it has keysyms for indices 2 or 3.
-	// it's shift sensitive if the keysym for index 1 (if any) is
-	// different from the keysym for index 0 and, if the keysym for
-	// for index 3 (if any) is different from the keysym for index 2.
-	// that is, if shift changes the generated keysym for the keycode.
-	std::vector<bool> usesShift(numKeycodes);
-	std::vector<bool> usesModeSwitch(numKeycodes);
-	for (int i = 0; i < numKeycodes; ++i) {
-		// check mode switch first
-		if (numKeysyms > 2 &&
-			keysyms[i * keysymsPerKeycode + 2] != NoSymbol ||
-			keysyms[i * keysymsPerKeycode + 3] != NoSymbol) {
-			usesModeSwitch[i] = true;
-		}
-
-		// check index 0 with index 1 keysyms
-		if (keysyms[i * keysymsPerKeycode + 0] != NoSymbol &&
-			keysyms[i * keysymsPerKeycode + 1] != NoSymbol &&
-			keysyms[i * keysymsPerKeycode + 1] !=
-				keysyms[i * keysymsPerKeycode + 0]) {
-			usesShift[i] = true;
-		}
-
-		else if (numKeysyms >= 4 &&
-			keysyms[i * keysymsPerKeycode + 2] != NoSymbol &&
-			keysyms[i * keysymsPerKeycode + 3] != NoSymbol &&
-			keysyms[i * keysymsPerKeycode + 3] !=
-				keysyms[i * keysymsPerKeycode + 2]) {
-			usesShift[i] = true;
-		}
-	}
-
-	// get modifier map from server
-	XModifierKeymap* modifiers   = XGetModifierMapping(m_display);
-	unsigned int keysPerModifier = modifiers->max_keypermod;
-
-	// clear state
-	m_keysymMap.clear();
-	m_modeSwitchKeysym = NoSymbol;
-	m_altMask          = 0;
-	m_metaMask         = 0;
-	m_superMask        = 0;
-	m_modeSwitchMask   = 0;
-	m_numLockMask      = 0;
-	m_scrollLockMask   = 0;
-
-	// work around for my system, which reports this state bit when
-	// mode switch is down, instead of the appropriate modifier bit.
-	// should have no effect on other systems.  -crs 9/02.
-	m_modeSwitchMask |= (1 << 13);
-
-	// for each modifier keycode, get the index 0 keycode and add it to
-	// the keysym map.  also collect all keycodes for each modifier.
+	// get the buttons assigned to modifiers.  X11 does not predefine
+	// the meaning of any modifiers except shift, caps lock, and the
+	// control key.  the meaning of a modifier bit (other than those)
+	// depends entirely on the KeySyms mapped to that bit.  unfortunately
+	// you cannot map a bit back to the KeySym used to produce it.
+	// for example, let's say button 1 maps to Alt_L without shift and
+	// Meta_L with shift.  now if mod1 is mapped to button 1 that could
+	// mean the user used Alt or Meta to turn on that modifier and there's
+	// no way to know which.  it's also possible for one button to be
+	// mapped to multiple bits so both mod1 and mod2 could be generated
+	// by button 1.
+	//
+	// we're going to ignore any modifier for a button except the first.
+	// with the above example, that means we'll ignore the mod2 modifier
+	// bit unless it's also mapped to some other button.  we're also
+	// going to ignore all KeySyms except the first modifier KeySym,
+	// which means button 1 above won't map to Meta, just Alt.
+	std::map<KeyCode, unsigned int> modifierButtons;
+	XModifierKeymap* modifiers = XGetModifierMapping(m_display);
 	for (unsigned int i = 0; i < 8; ++i) {
-		// no keycodes for this modifier yet
-		KeyModifierMask mask = 0;
-		KeyButtons modifierKeys;
+		const KeyCode* buttons =
+			modifiers->modifiermap + i * modifiers->max_keypermod;
+		for (int j = 0; j < modifiers->max_keypermod; ++j) {
+			modifierButtons.insert(std::make_pair(buttons[j], i));
+		}
+	}
+	XFreeModifiermap(modifiers);
+	modifierButtons.erase(0);
 
-		// add each keycode for modifier
-		for (unsigned int j = 0; j < keysPerModifier; ++j) {
-			// get keycode and ignore unset keycodes
-			KeyCode keycode = modifiers->modifiermap[i * keysPerModifier + j];
-			if (keycode == 0) {
-				continue;
+	// Hack to deal with VMware.  When a VMware client grabs input the
+	// player clears out the X modifier map for whatever reason.  We're
+	// notified of the change and arrive here to discover that there
+	// are no modifiers at all.  Since this prevents the modifiers from
+	// working in the VMware client we'll use the last known good set
+	// of modifiers when there are no modifiers.  If there are modifiers
+	// we update the last known good set.
+	if (!modifierButtons.empty()) {
+		m_lastGoodNonXKBModifiers = modifierButtons;
+	}
+	else {
+		modifierButtons = m_lastGoodNonXKBModifiers;
+	}
+
+	// add entries for each keycode
+	CKeyMap::KeyItem item;
+	for (int i = 0; i < numKeycodes; ++i) {
+		KeySym* keysyms = allKeysyms + maxKeysyms * i;
+		KeyCode keycode = static_cast<KeyCode>(i + minKeycode);
+		item.m_button   = static_cast<KeyButton>(keycode);
+		item.m_client   = 0;
+
+		// determine modifier sensitivity
+		item.m_sensitive = 0;
+
+		// if the keysyms in levels 2 or 3 exist and differ from levels
+		// 0 and 1 then the key is sensitive AltGr (Mode_switch)
+		if ((keysyms[2] != NoSymbol && keysyms[2] != keysyms[0]) ||
+			(keysyms[3] != NoSymbol && keysyms[2] != keysyms[1])) {
+			item.m_sensitive |= KeyModifierAltGr;
+		}
+
+		// check if the key is caps-lock sensitive.  some systems only
+		// provide one keysym for keys sensitive to caps-lock.  if we
+		// find that then fill in the missing keysym.
+		if (keysyms[0] != NoSymbol && keysyms[1] == NoSymbol &&
+			keysyms[2] == NoSymbol && keysyms[3] == NoSymbol) {
+			KeySym lKeysym, uKeysym;
+			XConvertCase(keysyms[0], &lKeysym, &uKeysym);
+			if (lKeysym != uKeysym) {
+				keysyms[0] = lKeysym;
+				keysyms[1] = uKeysym;
+				item.m_sensitive |= KeyModifierCapsLock;
 			}
-
-			// get keysym and get/create key mapping
-			int keycodeIndex = keycode - minKeycode;
-			KeySym keysym    = keysyms[keycodeIndex *
-											keysymsPerKeycode + 0];
-
-			// prefer XK_ISO_Level3_Shift over XK_Mode_switch.  newer
-			// versions of X use the former only.  we assume here that
-			// if you have XK_ISO_Level3_Shift mapped then that's what
-			// you want to use even if XK_Mode_switch is also mapped.
-			if (j == 0 && keysym == XK_Mode_switch) {
-				// sort modifiers->modifiermap for this modifier so
-				// that a keycode mapped to XK_ISO_Level3_Shift appears
-				// before those mapped to anything else.  this one keycode
-				// is enough so long as it's first because mapModifier in
-				// CKeyState uses the first keycode in modifierKeys to
-				// generate the key event for this modifier.
-				KeyCode* keycodes = modifiers->modifiermap +
-										i * keysPerModifier + j;
-				for (unsigned int k = j + 1; k < keysPerModifier; ++k) {
-					KeySym keysym2 = keysyms[(keycodes[k] - minKeycode) *
-										keysymsPerKeycode + 0];
-					if (keysym2 == XK_ISO_Level3_Shift) {
-						// found an XK_ISO_Level3_Shift.  swap it with
-						// the keycode in index j.
-						keycodes[j] = keycodes[k];
-						keycodes[k] = keycode;
-
-						// now use the new first keycode
-						keycode      = keycodes[j];
-						keycodeIndex = keycode - minKeycode;
-						keysym       = keysym2;
-						break;
-					}
+		}
+		else if (keysyms[0] != NoSymbol && keysyms[1] != NoSymbol) {
+			KeySym lKeysym, uKeysym;
+			XConvertCase(keysyms[0], &lKeysym, &uKeysym);
+			if (lKeysym != uKeysym &&
+				lKeysym == keysyms[0] &&
+				uKeysym == keysyms[1]) {
+				item.m_sensitive |= KeyModifierCapsLock;
+			}
+			else if (keysyms[2] != NoSymbol && keysyms[3] != NoSymbol) {
+				XConvertCase(keysyms[2], &lKeysym, &uKeysym);
+				if (lKeysym != uKeysym &&
+					lKeysym == keysyms[2] &&
+					uKeysym == keysyms[3]) {
+					item.m_sensitive |= KeyModifierCapsLock;
 				}
 			}
+		}
 
-			// get modifier mask if we haven't yet.  this has the side
-			// effect of setting the m_*Mask members.
-			if (mask == 0) {
-				mask = mapToModifierMask(i, keysym);
-				if (mask == 0) {
+		// key is sensitive to shift if keysyms in levels 0 and 1 or
+		// levels 2 and 3 don't match.  it's also sensitive to shift
+		// if it's sensitive to caps-lock.
+		if ((item.m_sensitive & KeyModifierCapsLock) != 0) {
+			item.m_sensitive |= KeyModifierShift;
+		}
+		else if ((keysyms[0] != NoSymbol && keysyms[1] != NoSymbol &&
+				keysyms[0] != keysyms[1]) ||
+				(keysyms[2] != NoSymbol && keysyms[3] != NoSymbol &&
+				keysyms[2] != keysyms[3])) {
+			item.m_sensitive |= KeyModifierShift;
+		}
+
+		// key is sensitive to numlock if any keysym on it is
+		if (IsKeypadKey(keysyms[0]) || IsPrivateKeypadKey(keysyms[0]) ||
+			IsKeypadKey(keysyms[1]) || IsPrivateKeypadKey(keysyms[1]) ||
+			IsKeypadKey(keysyms[2]) || IsPrivateKeypadKey(keysyms[2]) ||
+			IsKeypadKey(keysyms[3]) || IsPrivateKeypadKey(keysyms[3])) {
+			item.m_sensitive |= KeyModifierNumLock;
+		}
+
+		// do each keysym (shift level)
+		for (int j = 0; j < maxKeysyms; ++j) {
+			item.m_id = CXWindowsUtil::mapKeySymToKeyID(keysyms[j]);
+			if (item.m_id == kKeyNone) {
+				if (j != 0 && modifierButtons.count(keycode) > 0) {
+					// pretend the modifier works in other shift levels
+					// because it probably does.
+					if (keysyms[1] == NoSymbol || j != 3) {
+						item.m_id = CXWindowsUtil::mapKeySymToKeyID(keysyms[0]);
+					}
+					else {
+						item.m_id = CXWindowsUtil::mapKeySymToKeyID(keysyms[1]);
+					}
+				}
+				if (item.m_id == kKeyNone) {
 					continue;
 				}
 			}
 
-			// save keycode for modifier
-			modifierKeys.push_back(keycode);
+			// group is 0 for levels 0 and 1 and 1 for levels 2 and 3
+			item.m_group = (j >= 2) ? 1 : 0;
 
-			// skip if we already have a keycode for this index
-			KeyMapping& mapping = m_keysymMap[keysym];
-			if (mapping.m_keycode[0] != 0) {
-				continue;
+			// compute required modifiers
+			item.m_required = 0;
+			if ((j & 1) != 0) {
+				item.m_required |= KeyModifierShift;
+			}
+			if ((j & 2) != 0) {
+				item.m_required |= KeyModifierAltGr;
 			}
 
-			// fill in keysym info
-			mapping.m_keycode[0]             = keycode;
-			mapping.m_shiftSensitive[0]      = usesShift[keycodeIndex];
-			mapping.m_modeSwitchSensitive[0] = usesModeSwitch[keycodeIndex];
-			mapping.m_modifierMask           = mask;
-			mapping.m_capsLockSensitive      = false;
-			mapping.m_numLockSensitive       = false;
-		}
+			item.m_generates = 0;
+			item.m_lock      = false;
+			if (modifierButtons.count(keycode) > 0) {
+				// get flags for modifier keys
+				CKeyMap::initModifierKey(item);
 
-		// note this modifier
-		if (mask != 0) {
-			addModifier(mask, modifierKeys);
-		}
-	}
-
-	// create a convenient NoSymbol entry (if it doesn't exist yet).
-	// sometimes it's useful to handle NoSymbol like a normal keysym.
-	// remove any entry for NoSymbol.  that keysym doesn't count.
-	{
-		KeyMapping& mapping = m_keysymMap[NoSymbol];
-		for (unsigned int i = 0; i < numKeysyms; ++i) {
-			mapping.m_keycode[i]             = 0;
-			mapping.m_shiftSensitive[i]      = false;
-			mapping.m_modeSwitchSensitive[i] = false;
-		}
-		mapping.m_modifierMask      = 0;
-		mapping.m_capsLockSensitive = false;
-		mapping.m_numLockSensitive  = false;
-	}
-
-	// add each keysym to the map, unless we've already inserted a key
-	// for that keysym index.
-	for (int i = 0; i < numKeycodes; ++i) {
-		for (unsigned int j = 0; j < numKeysyms; ++j) {
-			// lookup keysym
-			const KeySym keysym = keysyms[i * keysymsPerKeycode + j];
-			if (keysym == NoSymbol) {
-				continue;
-			}
-			KeyMapping& mapping = m_keysymMap[keysym];
-
-			// skip if we already have a keycode for this index
-			if (mapping.m_keycode[j] != 0) {
-				continue;
+				// add mapping from X (unless we already have)
+				if (item.m_generates != 0) {
+					unsigned int bit = modifierButtons[keycode];
+					if (m_modifierFromX[bit] == 0) {
+						m_modifierFromX[bit] = item.m_generates;
+						m_modifierToX[item.m_generates] = (1u << bit);
+					}
+				}
 			}
 
-			// fill in keysym info
-			if (mapping.m_keycode[0] == 0) {
-				mapping.m_modifierMask       = 0;
+			// add key
+			keyMap.addKeyEntry(item);
+			m_keyCodeFromKey.insert(std::make_pair(item.m_id, keycode));
+
+			// add other ways to synthesize the key
+			if ((j & 1) != 0) {
+				// add capslock version of key is sensitive to capslock
+				KeySym lKeysym, uKeysym;
+				XConvertCase(keysyms[j], &lKeysym, &uKeysym);
+				if (lKeysym != uKeysym &&
+					lKeysym == keysyms[j - 1] &&
+					uKeysym == keysyms[j]) {
+					item.m_required &= ~KeyModifierShift;
+					item.m_required |=  KeyModifierCapsLock;
+					keyMap.addKeyEntry(item);
+					item.m_required |=  KeyModifierShift;
+					item.m_required &= ~KeyModifierCapsLock;
+				}
+
+				// add numlock version of key if sensitive to numlock
+				if (IsKeypadKey(keysyms[j]) || IsPrivateKeypadKey(keysyms[j])) {
+					item.m_required &= ~KeyModifierShift;
+					item.m_required |=  KeyModifierNumLock;
+					keyMap.addKeyEntry(item);
+					item.m_required |=  KeyModifierShift;
+					item.m_required &= ~KeyModifierNumLock;
+				}
 			}
-			mapping.m_keycode[j]             = static_cast<KeyCode>(
-												minKeycode + i);
-			mapping.m_shiftSensitive[j]      = usesShift[i];
-			mapping.m_modeSwitchSensitive[j] = usesModeSwitch[i];
-			mapping.m_numLockSensitive       = isNumLockSensitive(keysym);
-			mapping.m_capsLockSensitive      = isCapsLockSensitive(keysym);
 		}
 	}
 
-	// clean up
-	XFreeModifiermap(modifiers);
-	XFree(keysyms);
+	delete[] allKeysyms;
 }
 
-KeyModifierMask
-CXWindowsKeyState::mapToModifierMask(unsigned int i, KeySym keysym)
-{
-	// some modifier indices (0,1,2) are dedicated to particular uses,
-	// the rest depend on the keysyms bound.
-	switch (i) {
-	case 0:
-		return KeyModifierShift;
-
-	case 1:
-		return KeyModifierCapsLock;
-
-	case 2:
-		return KeyModifierControl;
-
-	default:
-		switch (keysym) {
-		case XK_Shift_L:
-		case XK_Shift_R:
-			return KeyModifierShift;
-
-		case XK_Control_L:
-		case XK_Control_R:
-			return KeyModifierControl;
-
-		case XK_Alt_L:
-		case XK_Alt_R:
-			m_altMask = (1 << i);
-			return KeyModifierAlt;
-
-		case XK_Meta_L:
-		case XK_Meta_R:
-			m_metaMask = (1 << i);
-			return KeyModifierMeta;
-
-		case XK_Super_L:
-		case XK_Super_R:
-			m_superMask = (1 << i);
-			return KeyModifierSuper;
-
-		case XK_Mode_switch:
-		case XK_ISO_Level3_Shift:
-			m_modeSwitchMask = (1 << i);
-			return KeyModifierModeSwitch;
-
-		case XK_Caps_Lock:
-			return KeyModifierCapsLock;
-
-		case XK_Num_Lock:
-			m_numLockMask = (1 << i);
-			return KeyModifierNumLock;
-
-		case XK_Scroll_Lock:
-			m_scrollLockMask = (1 << i);
-			return KeyModifierScrollLock;
-
-		default:
-			return 0;
-		}
-	}
-}
-
+#if HAVE_XKB_EXTENSION
 void
-CXWindowsKeyState::updateModifiers()
+CXWindowsKeyState::updateKeysymMapXKB(CKeyMap& keyMap)
 {
-	struct CHandedModifiers {
-		KeySym m_left;
-		KeySym m_right;
-	};
-	static const CHandedModifiers s_handedModifiers[] = {
-		{ XK_Shift_L,   XK_Shift_R   },
-		{ XK_Control_L, XK_Control_R },
-		{ XK_Meta_L,    XK_Meta_R    },
-		{ XK_Alt_L,     XK_Alt_R     },
-		{ XK_Super_L,   XK_Super_R   },
-		{ XK_Hyper_L,   XK_Hyper_R   }
-	};
-	struct CModifierBitInfo {
-	public:
-		KeySym CXWindowsKeyState::*m_keysym;
-		KeySym m_left;
-		KeySym m_right;
-	};
-	static const CModifierBitInfo s_modifierBitTable[] = {
-	{ &CXWindowsKeyState::m_modeSwitchKeysym, XK_Mode_switch, NoSymbol },
-	{ &CXWindowsKeyState::m_modeSwitchKeysym, XK_ISO_Level3_Shift, NoSymbol },
+	static const XkbKTMapEntryRec defMapEntry = {
+		True,		// active
+		0,			// level
+		{
+			0,		// mods.mask
+			0,		// mods.real_mods
+			0		// mods.vmods
+		}
 	};
 
-	// for any modifier with left/right versions that has one side but
-	// not the other mapped, map the missing side to the existing side.
-	// this will map, for example, Alt_R to Alt_L if Alt_L is mapped
-	// but Alt_R isn't.  this is almost always what the user wants
-	// since the user almost never cares about the difference between
-	// Alt_L and Alt_R.
-	for (size_t i = 0; i < sizeof(s_handedModifiers) /
-							sizeof(s_handedModifiers[0]); ++i) {
-		KeySymIndex lIndex = m_keysymMap.find(s_handedModifiers[i].m_left);
-		KeySymIndex rIndex = m_keysymMap.find(s_handedModifiers[i].m_right);
-		if (lIndex == m_keysymMap.end() && rIndex != m_keysymMap.end()) {
-			m_keysymMap[s_handedModifiers[i].m_left]  = rIndex->second;
-		}
-		else if (lIndex != m_keysymMap.end() && rIndex == m_keysymMap.end()) {
-			m_keysymMap[s_handedModifiers[i].m_right] = lIndex->second;
+	LOG((CLOG_DEBUG1 "XKB mapping"));
+
+	// find the number of groups
+	int maxNumGroups = 0;
+	for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
+		int numGroups = XkbKeyNumGroups(m_xkb, static_cast<KeyCode>(i));
+		if (numGroups > maxNumGroups) {
+			maxNumGroups = numGroups;
 		}
 	}
 
-	// choose the keysym to use for some modifiers.  if a modifier has
-	// both left and right versions then (arbitrarily) prefer the left.
-	for (size_t i = 0; i < sizeof(s_modifierBitTable) /
-							sizeof(s_modifierBitTable[0]); ++i) {
-		const CModifierBitInfo& info = s_modifierBitTable[i];
+	// prepare map from X modifier to KeyModifierMask
+	std::vector<int> modifierLevel(maxNumGroups * 8, 4);
+	m_modifierFromX.clear();
+	m_modifierFromX.resize(maxNumGroups * 8);
+	m_modifierToX.clear();
 
-		// find available keysym
-		KeySymIndex keyIndex = m_keysymMap.find(info.m_left);
-		if (keyIndex == m_keysymMap.end() && info.m_right != NoSymbol) {
-			keyIndex = m_keysymMap.find(info.m_right);
-		}
+	// prepare map from KeyID to KeyCode
+	m_keyCodeFromKey.clear();
 
-		// save modifier info
-		if (keyIndex                        != m_keysymMap.end() &&
-			keyIndex->second.m_modifierMask != 0) {
-			this->*(info.m_keysym) = keyIndex->first;
-		}
+	// Hack to deal with VMware.  When a VMware client grabs input the
+	// player clears out the X modifier map for whatever reason.  We're
+	// notified of the change and arrive here to discover that there
+	// are no modifiers at all.  Since this prevents the modifiers from
+	// working in the VMware client we'll use the last known good set
+	// of modifiers when there are no modifiers.  If there are modifiers
+	// we update the last known good set.
+	bool useLastGoodModifiers = !hasModifiersXKB();
+	if (!useLastGoodModifiers) {
+		m_lastGoodXKBModifiers.clear();
 	}
 
-	// if there's no mode switch key mapped then remove all keycodes
-	// that depend on it and no keycode can be mode switch sensitive.
-	if (m_modeSwitchKeysym == NoSymbol) {
-		LOG((CLOG_DEBUG2 "no mode switch in keymap"));
-		for (KeySymMap::iterator i = m_keysymMap.begin();
-								i != m_keysymMap.end(); ) {
-			i->second.m_keycode[2]             = 0;
-			i->second.m_keycode[3]             = 0;
-			i->second.m_modeSwitchSensitive[0] = false;
-			i->second.m_modeSwitchSensitive[1] = false;
-			i->second.m_modeSwitchSensitive[2] = false;
-			i->second.m_modeSwitchSensitive[3] = false;
+	// check every button.  on this pass we save all modifiers as native
+	// X modifier masks.
+	CKeyMap::KeyItem item;
+	for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
+		KeyCode keycode = static_cast<KeyCode>(i);
+		item.m_button   = static_cast<KeyButton>(keycode);
+		item.m_client   = 0;
 
-			// if this keysym no has no keycodes then remove it
-			// except for the NoSymbol keysym mapping.
-			if (i->second.m_keycode[0] == 0 && i->second.m_keycode[1] == 0) {
-				m_keysymMap.erase(i++);
+		// skip keys with no groups (they generate no symbols)
+		if (XkbKeyNumGroups(m_xkb, keycode) == 0) {
+			continue;
+		}
+
+		// note half-duplex keys
+		const XkbBehavior& b = m_xkb->server->behaviors[keycode];
+		if ((b.type & XkbKB_OpMask) == XkbKB_Lock) {
+			keyMap.addHalfDuplexButton(item.m_button);
+		}
+
+		// iterate over all groups
+		for (int group = 0; group < maxNumGroups; ++group) {
+			item.m_group = group;
+			int eGroup   = getEffectiveGroup(keycode, group);
+
+			// get key info
+			XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, eGroup);
+
+			// set modifiers the item is sensitive to
+			item.m_sensitive = type->mods.mask;
+
+			// iterate over all shift levels for the button (including none)
+			for (int j = -1; j < type->map_count; ++j) {
+				const XkbKTMapEntryRec* mapEntry =
+					((j == -1) ? &defMapEntry : type->map + j);
+				if (!mapEntry->active) {
+					continue;
+				}
+				int level = mapEntry->level;
+
+				// set required modifiers for this item
+				item.m_required = mapEntry->mods.mask;
+				if ((item.m_required & LockMask) != 0 &&
+					j != -1 && type->preserve != NULL &&
+					(type->preserve[j].mask & LockMask) != 0) {
+					// sensitive caps lock and we preserve caps-lock.
+					// preserving caps-lock means we Xlib functions would
+					// yield the capitialized KeySym so we'll adjust the
+					// level accordingly.
+					if ((level ^ 1) < type->num_levels) {
+						level ^= 1;
+					}
+				}
+
+				// get the keysym for this item
+				KeySym keysym = XkbKeySymEntry(m_xkb, keycode, level, eGroup);
+
+				// check for group change actions, locking modifiers, and
+				// modifier masks.
+				item.m_lock         = false;
+				bool isModifier     = false;
+				UInt32 modifierMask = m_xkb->map->modmap[keycode];
+				if (XkbKeyHasActions(m_xkb, keycode)) {
+					XkbAction* action =
+						XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
+					if (action->type == XkbSA_SetMods ||
+						action->type == XkbSA_LockMods) {
+						isModifier  = true;
+
+						// note toggles
+						item.m_lock = (action->type == XkbSA_LockMods);
+
+						// maybe use action's mask
+						if ((action->mods.flags & XkbSA_UseModMapMods) == 0) {
+							modifierMask = action->mods.mask;
+						}
+					}
+					else if (action->type == XkbSA_SetGroup ||
+							action->type == XkbSA_LatchGroup ||
+							action->type == XkbSA_LockGroup) {
+						// ignore group change key
+						continue;
+					}
+				}
+				level = mapEntry->level;
+
+				// VMware modifier hack
+				if (useLastGoodModifiers) {
+					XKBModifierMap::const_iterator k =
+						m_lastGoodXKBModifiers.find(eGroup * 256 + keycode);
+					if (k != m_lastGoodXKBModifiers.end()) {
+						// Use last known good modifier
+						isModifier   = true;
+						level        = k->second.m_level;
+						modifierMask = k->second.m_mask;
+						item.m_lock  = k->second.m_lock;
+					}
+				}
+				else if (isModifier) {
+					// Save known good modifier
+					XKBModifierInfo& info =
+						m_lastGoodXKBModifiers[eGroup * 256 + keycode];
+					info.m_level = level;
+					info.m_mask  = modifierMask;
+					info.m_lock  = item.m_lock;
+				}
+
+				// record the modifier mask for this key.  don't bother
+				// for keys that change the group.
+				item.m_generates = 0;
+				UInt32 modifierBit =
+					CXWindowsUtil::getModifierBitForKeySym(keysym);
+				if (isModifier && modifierBit != kKeyModifierBitNone) {
+					item.m_generates = (1u << modifierBit);
+					for (SInt32 j = 0; j < 8; ++j) {
+						// skip modifiers this key doesn't generate
+						if ((modifierMask & (1u << j)) == 0) {
+							continue;
+						}
+
+						// skip keys that map to a modifier that we've
+						// already seen using fewer modifiers.  that is
+						// if this key must combine with other modifiers
+						// and we know of a key that combines with fewer
+						// modifiers (or no modifiers) then prefer the
+						// other key.
+						if (level >= modifierLevel[8 * group + j]) {
+							continue;
+						}
+						modifierLevel[8 * group + j] = level;
+
+						// save modifier
+						m_modifierFromX[8 * group + j] |= (1u << modifierBit);
+						m_modifierToX.insert(std::make_pair(
+								1u << modifierBit, 1u << j));
+					}
+				}
+
+				// handle special cases of just one keysym for the keycode
+				if (type->num_levels == 1) {
+					// if there are upper- and lowercase versions of the
+					// keysym then add both.
+					KeySym lKeysym, uKeysym;
+					XConvertCase(keysym, &lKeysym, &uKeysym);
+					if (lKeysym != uKeysym) {
+						if (j != -1) {
+							continue;
+						}
+
+						item.m_sensitive |= ShiftMask | LockMask;
+
+						KeyID lKeyID = CXWindowsUtil::mapKeySymToKeyID(lKeysym);
+						KeyID uKeyID = CXWindowsUtil::mapKeySymToKeyID(uKeysym);
+						if (lKeyID == kKeyNone || uKeyID == kKeyNone) {
+							continue;
+						}
+
+						item.m_id       = lKeyID;
+						item.m_required = 0;
+						keyMap.addKeyEntry(item);
+
+						item.m_id       = uKeyID;
+						item.m_required = ShiftMask;
+						keyMap.addKeyEntry(item);
+						item.m_required = LockMask;
+						keyMap.addKeyEntry(item);
+
+						if (group == 0) {
+							m_keyCodeFromKey.insert(
+									std::make_pair(lKeyID, keycode));
+							m_keyCodeFromKey.insert(
+									std::make_pair(uKeyID, keycode));
+						}
+						continue;
+					}
+				}
+
+				// add entry
+				item.m_id = CXWindowsUtil::mapKeySymToKeyID(keysym);
+				keyMap.addKeyEntry(item);
+				if (group == 0) {
+					m_keyCodeFromKey.insert(std::make_pair(item.m_id, keycode));
+				}
 			}
-			else {
-				++i;
-			}
 		}
 	}
+
+	// change all modifier masks to synergy masks from X masks
+	keyMap.foreachKey(&CXWindowsKeyState::remapKeyModifiers, this);
+
+	// allow composition across groups
+	keyMap.allowGroupSwitchDuringCompose();
 }
-
-KeySym
-CXWindowsKeyState::keyIDToKeySym(KeyID id, KeyModifierMask mask) const
-{
-	// convert id to keysym
-	KeySym keysym = NoSymbol;
-	if ((id & 0xfffff000) == 0xe000) {
-		// special character
-		switch (id & 0x0000ff00) {
-#if HAVE_X11_XF86KEYSYM_H
-		case 0xe000:
-			return g_mapE000[id & 0xff];
 #endif
 
-		case 0xee00:
-			// ISO 9995 Function and Modifier Keys
-			if (id == kKeyLeftTab) {
-				keysym = XK_ISO_Left_Tab;
-			}
-			break;
-
-		case 0xef00:
-			// MISCELLANY
-			keysym = static_cast<KeySym>(id - 0xef00 + 0xff00);
-			break;
-		}
-	}
-	else if ((id >= 0x0020 && id <= 0x007e) ||
-			(id >= 0x00a0 && id <= 0x00ff)) {
-		// Latin-1 maps directly
-		return static_cast<KeySym>(id);
-	}
-	else {
-		// lookup keysym in table
-		return CXWindowsUtil::mapUCS4ToKeySym(id);
-	}
-
-	// fail if unknown key
-	if (keysym == NoSymbol) {
-		return keysym;
-	}
-
-	// if kKeyTab is requested with shift active then try XK_ISO_Left_Tab
-	// instead.  if that doesn't work, we'll fall back to XK_Tab with
-	// shift active.  this is to handle primary screens that don't map
-	// XK_ISO_Left_Tab sending events to secondary screens that do.
-	if (keysym == XK_Tab && (mask & KeyModifierShift) != 0) {
-		keysym = XK_ISO_Left_Tab;
-	}
-
-	// some keysyms have emergency backups (particularly the numpad
-	// keys since most laptops don't have a separate numpad and the
-	// numpad overlaying the main keyboard may not have movement
-	// key bindings).  figure out the emergency backup.
-	KeySym backupKeysym;
-	switch (keysym) {
-	case XK_KP_Home:
-		backupKeysym = XK_Home;
-		break;
-
-	case XK_KP_Left:
-		backupKeysym = XK_Left;
-		break;
-
-	case XK_KP_Up:
-		backupKeysym = XK_Up;
-		break;
-
-	case XK_KP_Right:
-		backupKeysym = XK_Right;
-		break;
-
-	case XK_KP_Down:
-		backupKeysym = XK_Down;
-		break;
-
-	case XK_KP_Prior:
-		backupKeysym = XK_Prior;
-		break;
-
-	case XK_KP_Next:
-		backupKeysym = XK_Next;
-		break;
-
-	case XK_KP_End:
-		backupKeysym = XK_End;
-		break;
-
-	case XK_KP_Insert:
-		backupKeysym = XK_Insert;
-		break;
-
-	case XK_KP_Delete:
-		backupKeysym = XK_Delete;
-		break;
-
-	case XK_ISO_Left_Tab:
-		backupKeysym = XK_Tab;
-		break;
-
-	default:
-		backupKeysym = keysym;
-		break;
-	}
-
-	// see if the keysym is assigned to any keycode.  if not and the
-	// backup keysym is then use the backup keysym.
-	if (backupKeysym != keysym &&
-		m_keysymMap.find(keysym)       == m_keysymMap.end() &&
-		m_keysymMap.find(backupKeysym) != m_keysymMap.end()) {
-		keysym = backupKeysym;
-	}
-
-	return keysym;
-}
-
-KeyButton
-CXWindowsKeyState::mapToKeystrokes(Keystrokes& keys,
-				KeySymIndex keyIndex, bool isAutoRepeat,
-				bool pressAndRelease) const
+void
+CXWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
+							CKeyMap::KeyItem& item, void* vself)
 {
-	// keyIndex must be valid
-	assert(keyIndex != m_keysymMap.end());
-
-	KeyModifierMask currentMask = getActiveModifiers();
-
-	// get the keysym we're trying to generate and possible keycodes
-	const KeySym keysym       = keyIndex->first;
-	const KeyMapping& mapping = keyIndex->second;
-	LOG((CLOG_DEBUG2 "keysym = 0x%08x", keysym));
-
-	// get the best keycode index for the keysym and modifiers.  note
-	// that (bestIndex & 1) == 0 if the keycode is a shift modifier
-	// and (bestIndex & 2) == 0 if the keycode is a mode switch
-	// modifier.  this is important later because we don't want
-	// adjustModifiers() to adjust a modifier if that's the key we're
-	// mapping.
-	unsigned int bestIndex = findBestKeyIndex(keyIndex, currentMask);
-
-	// get the keycode
-	KeyButton keycode = mapping.m_keycode[bestIndex];
-
-	// flip low bit of bestIndex if shift is inverted.  if there's a
-	// keycode for this new index then use it.  otherwise use the old
-	// keycode.  you'd think we should fail if there isn't a keycode
-	// for the new index but some keymaps only include the upper case
-	// keysyms (notably those on Sun Solaris) so to handle the missing
-	// lower case keysyms we just use the old keycode.  note that
-	// isShiftInverted() will always return false for a shift modifier.
-	if (isShiftInverted(keyIndex, currentMask)) {
-		LOG((CLOG_DEBUG2 "shift is inverted"));
-		bestIndex ^= 1;
-		if (mapping.m_keycode[bestIndex] != 0) {
-			keycode = mapping.m_keycode[bestIndex];
-		}
-	}
-	LOG((CLOG_DEBUG2 "bestIndex = %d, keycode = %d", bestIndex, keycode));
-
-	// if this for auto-repeat and this key does not auto-repeat
-	// then return 0.
-	if (isAutoRepeat &&
-		(m_keyControl.auto_repeats[keycode >> 3] &
-							static_cast<char>(1 << (keycode & 7))) == 0) {
-		LOG((CLOG_DEBUG2 "non-autorepeating"));
-		return 0;
-	}
-
-	// compute desired mask.  the desired mask is the one that matches
-	// bestIndex, except if the key being synthesized is a shift key
-	// where we desire what we already have or if it's the mode switch
-	// key where we only desire to adjust shift.  also, if the keycode
-	// is not sensitive to shift then don't adjust it, otherwise
-	// something like shift+home would become just home.  similiarly
-	// for mode switch.
-	KeyModifierMask desiredMask = currentMask;
-	if (keyIndex->second.m_modifierMask != KeyModifierShift) {
-		if (keyIndex->second.m_shiftSensitive[bestIndex]) {
-			if ((bestIndex & 1) != 0) {
-				desiredMask |= KeyModifierShift;
-			}
-			else {
-				desiredMask &= ~KeyModifierShift;
-			}
-		}
-		if (keyIndex->second.m_modifierMask != KeyModifierModeSwitch) {
-			if (keyIndex->second.m_modeSwitchSensitive[bestIndex]) {
-				if ((bestIndex & 2) != 0) {
-					desiredMask |= KeyModifierModeSwitch;
-				}
-				else {
-					desiredMask &= ~KeyModifierModeSwitch;
-				}
-			}
-		}
-	}
-
-	// adjust the modifiers to match the desired modifiers
-	Keystrokes undo;
-	if (!adjustModifiers(keys, undo, desiredMask)) {
-		LOG((CLOG_DEBUG2 "failed to adjust modifiers"));
-		return 0;
-	}
-
-	// add the key event
-	Keystroke keystroke;
-	keystroke.m_key        = keycode;
-	if (pressAndRelease) {
-		keystroke.m_press  = true;
-		keystroke.m_repeat = false;
-		keys.push_back(keystroke);
-		keystroke.m_press  = false;
-		keys.push_back(keystroke);
-	}
-	else if (!isAutoRepeat) {
-		keystroke.m_press  = true;
-		keystroke.m_repeat = false;
-		keys.push_back(keystroke);
-	}
-	else {
-		keystroke.m_press  = false;
-		keystroke.m_repeat = true;
-		keys.push_back(keystroke);
-		keystroke.m_press  = true;
-		keys.push_back(keystroke);
-	}
-
-	// put undo keystrokes at end of keystrokes in reverse order
-	while (!undo.empty()) {
-		keys.push_back(undo.back());
-		undo.pop_back();
-	}
-
-	return keycode;
-}
-
-KeyButton
-CXWindowsKeyState::mapDecompositionToKeystrokes(
-				Keystrokes& keys, KeySym keysym, bool usingDeadKeys) const
-{
-	// decompose the keysym
-	CXWindowsUtil::KeySyms decomposed;
-	if (usingDeadKeys) {
-		if (!CXWindowsUtil::decomposeKeySymWithDeadKeys(keysym, decomposed)) {
-			// no decomposition
-			return 0;
-		}
-		LOG((CLOG_DEBUG2 "decomposed keysym 0x%08x into %d keysyms using dead keys", keysym, decomposed.size()));
-	}
-	else {
-		if (!CXWindowsUtil::decomposeKeySymWithCompose(keysym, decomposed)) {
-			// no decomposition
-			return 0;
-		}
-		LOG((CLOG_DEBUG2 "decomposed keysym 0x%08x into %d keysyms using compose key", keysym, decomposed.size()));
-	}
-	size_t n = decomposed.size();
-	if (n == 0) {
-		// nothing in the decomposition
-		return 0;
-	}
-
-	// map to keystrokes
-	Keystrokes keystrokes;
-	KeyButton keycode = 0;
-	for (size_t i = 0; i < n; ++i) {
-		// lookup the key
-		keysym               = decomposed[i];
-		KeySymIndex keyIndex = m_keysymMap.find(keysym);
-		if (keyIndex == m_keysymMap.end()) {
-			// missing a required keysym
-			LOG((CLOG_DEBUG2 "can't map keysym %d: 0x%04x", i, keysym));
-			return 0;
-		}
-
-		// the keysym is mapped to some keycode.  add press and
-		// release unless this is the last key and usingDeadKeys.
-		keycode = mapToKeystrokes(keystrokes, keyIndex,
-						false, (i + 1 < n || !usingDeadKeys));
-		if (keycode == 0) {
-			return 0;
-		}
-	}
-
-	// copy keystrokes
-	keys.insert(keys.end(), keystrokes.begin(), keystrokes.end());
-
-	return keycode;
-}
-
-unsigned int
-CXWindowsKeyState::findBestKeyIndex(KeySymIndex keyIndex,
-				KeyModifierMask /*currentMask*/) const
-{
-	// there are up to 4 keycodes per keysym to choose from.  the
-	// best choice is the one that requires the fewest adjustments
-	// to the modifier state.  for example, the letter A normally
-	// requires shift + a.  if shift isn't already down we'd have
-	// to synthesize a shift press before the a press.  however,
-	// if A could also be created with some other keycode without
-	// shift then we'd prefer that when shift wasn't down.
-	//
-	// if the action is an auto-repeat then we don't call this
-	// method since we just need to synthesize a key repeat on the
-	// same keycode that we pressed.
-	// FIXME -- do this right
-	for (unsigned int i = 0; i < 4; ++i) {
-		if (keyIndex->second.m_keycode[i] != 0) {
-			return i;
-		}
-	}
-
-	assert(0 && "no keycode found for keysym");
-	return 0;
+	CXWindowsKeyState* self = reinterpret_cast<CXWindowsKeyState*>(vself);
+	item.m_required  =
+		self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
+	item.m_sensitive =
+		self->mapModifiersFromX(XkbBuildCoreState(item.m_sensitive, group));
 }
 
 bool
-CXWindowsKeyState::isShiftInverted(KeySymIndex keyIndex,
-				KeyModifierMask currentMask) const
+CXWindowsKeyState::hasModifiersXKB() const
 {
-	// each keycode has up to 4 keysym associated with it, one each for:
-	// no modifiers, shift, mode switch, and shift and mode switch.  if
-	// a keysym is modified by num lock and num lock is active then you
-	// get the shifted keysym when shift is not down and the unshifted
-	// keysym when it is.  that is, num lock inverts the sense of the
-	// shift modifier when active.  similarly for caps lock.  this
-	// method returns true iff the sense of shift should be inverted
-	// for this key given a modifier state.
-	if (keyIndex->second.m_numLockSensitive) {
-		if ((currentMask & KeyModifierNumLock) != 0) {
-			return true;
+#if HAVE_XKB_EXTENSION
+	// iterate over all keycodes
+	for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
+		KeyCode keycode = static_cast<KeyCode>(i);
+		if (XkbKeyHasActions(m_xkb, keycode)) {
+			// iterate over all groups
+			int numGroups = XkbKeyNumGroups(m_xkb, keycode);
+			for (int group = 0; group < numGroups; ++group) {
+				// iterate over all shift levels for the button (including none)
+				XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, group);
+				for (int j = -1; j < type->map_count; ++j) {
+					if (j != -1 && !type->map[j].active) {
+						continue;
+					}
+					int level = ((j == -1) ? 0 : type->map[j].level);
+					XkbAction* action =
+						XkbKeyActionEntry(m_xkb, keycode, level, group);
+					if (action->type == XkbSA_SetMods ||
+						action->type == XkbSA_LockMods) {
+						return true;
+					}
+				}
+			}
 		}
 	}
-
-	// if a keysym is num lock sensitive it is never caps lock
-	// sensitive, thus the else here.
-	else if (keyIndex->second.m_capsLockSensitive) {
-		if ((currentMask & KeyModifierCapsLock) != 0) {
-			return true;
-		}
-	}
-
+#endif
 	return false;
 }
 
-bool
-CXWindowsKeyState::adjustModifiers(Keystrokes& keys,
-				Keystrokes& undo,
-				KeyModifierMask desiredMask) const
+int
+CXWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
 {
-	KeyModifierMask currentMask = getActiveModifiers();
+	(void)keycode;
+#if HAVE_XKB_EXTENSION
+	// get effective group for key
+	int numGroups = XkbKeyNumGroups(m_xkb, keycode);
+	if (group >= numGroups) {
+		unsigned char groupInfo = XkbKeyGroupInfo(m_xkb, keycode);
+		switch (XkbOutOfRangeGroupAction(groupInfo)) {
+		case XkbClampIntoRange:
+			group = numGroups - 1;
+			break;
 
-	// get mode switch set correctly.  do this before shift because
-	// mode switch may be sensitive to the shift modifier and will
-	// set/reset it as necessary.
-	bool forceShift     = false;
-	bool wantShift      = ((desiredMask & KeyModifierShift) != 0);
-	bool wantModeSwitch = ((desiredMask & KeyModifierModeSwitch) != 0);
-	bool haveModeSwitch = ((currentMask & KeyModifierModeSwitch) != 0);
-	if (wantModeSwitch != haveModeSwitch) {
-		LOG((CLOG_DEBUG2 "fix mode switch"));
-
-		// adjust shift if necessary (i.e. turn it off it's on and mode
-		// shift is sensitive to the shift key)
-		KeySymIndex modeSwitchIndex = m_keysymMap.find(m_modeSwitchKeysym);
-		assert(modeSwitchIndex != m_keysymMap.end());
-		if (modeSwitchIndex->second.m_shiftSensitive[0]) {
-			bool haveShift = ((currentMask & KeyModifierShift) != 0);
-			if (haveShift) {
-				// add shift keystrokes
-				LOG((CLOG_DEBUG2 "fix shift for mode switch"));
-				if (!mapModifier(keys, undo, KeyModifierShift, false, true)) {
-					return false;
-				}
-
-				// our local concept of shift has flipped
-				currentMask ^= KeyModifierShift;
-
-				// force shift to get turned on below if we had to turn
-				// off here and shift is desired.  if we didn't force it
-				// then mapModifier would think shift is already down
-				// and ignore the request.
-				forceShift   = wantShift;
+		case XkbRedirectIntoRange:
+			group = XkbOutOfRangeGroupNumber(groupInfo);
+			if (group >= numGroups) {
+				group = 0;
 			}
-		}
+			break;
 
-		// add mode switch keystrokes
-		if (!mapModifier(keys, undo, KeyModifierModeSwitch, wantModeSwitch)) {
-			return false;
+		default:
+			// wrap
+			group %= numGroups;
+			break;
 		}
-		currentMask ^= KeyModifierModeSwitch;
 	}
+#endif
+	return group;
+}
 
-	// get shift set correctly
-	bool haveShift = ((currentMask & KeyModifierShift) != 0);
-	if (wantShift != haveShift) {
-		// add shift keystrokes
-		LOG((CLOG_DEBUG2 "fix shift"));
-		if (!mapModifier(keys, undo, KeyModifierShift, wantShift, forceShift)) {
-			return false;
-		}
-		currentMask ^= KeyModifierShift;
+UInt32
+CXWindowsKeyState::getGroupFromState(unsigned int state) const
+{
+#if HAVE_XKB_EXTENSION
+	if (m_xkb != NULL) {
+		return XkbGroupForCoreState(state);
 	}
-
-	return true;
-}
-
-bool
-CXWindowsKeyState::isNumLockSensitive(KeySym keysym) const
-{
-	return (IsKeypadKey(keysym) || IsPrivateKeypadKey(keysym));
-}
-
-bool
-CXWindowsKeyState::isCapsLockSensitive(KeySym keysym) const
-{
-	KeySym lKey, uKey;
-	XConvertCase(keysym, &lKey, &uKey);
-	return (lKey != uKey);
-}
-
-
-//
-// CXWindowsKeyState::KeyMapping
-//
-
-CXWindowsKeyState::KeyMapping::KeyMapping()
-{
-	m_keycode[0] = 0;
-	m_keycode[1] = 0;
-	m_keycode[2] = 0;
-	m_keycode[3] = 0;
+#endif
+	return 0;
 }

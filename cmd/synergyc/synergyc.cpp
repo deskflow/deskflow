@@ -60,10 +60,6 @@
 typedef int (*StartupFunc)(int, char**);
 static bool startClient();
 static void parse(int argc, const char* const* argv);
-#if WINAPI_MSWINDOWS
-static void handleSystemSuspend(void*);
-static void handleSystemResume(void*);
-#endif
 
 //
 // program arguments
@@ -108,9 +104,7 @@ CScreen*
 createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new CScreen(new CMSWindowsScreen(false,
-							new CFunctionJob(&handleSystemSuspend),
-							new CFunctionJob(&handleSystemResume)));
+	return new CScreen(new CMSWindowsScreen(false));
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(ARG->m_display, false));
 #elif WINAPI_CARBON
@@ -199,26 +193,6 @@ handleScreenError(const CEvent&, void*)
 	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 }
 
-#if WINAPI_MSWINDOWS
-static
-void
-handleSystemSuspend(void*)
-{
-	LOG((CLOG_NOTE "system suspending"));
-	s_suspened = true;
-	s_client->disconnect(NULL);
-}
-
-static
-void
-handleSystemResume(void*)
-{
-	LOG((CLOG_NOTE "system resuming"));
-	s_suspened = false;
-	startClient();
-}
-#endif
-
 static
 CScreen*
 openClientScreen()
@@ -252,9 +226,7 @@ handleClientRestart(const CEvent&, void* vtimer)
 	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
 
 	// reconnect
-	if (!s_suspened) {
-		startClient();
-	}
+	startClient();
 }
 
 static
@@ -287,6 +259,7 @@ handleClientFailed(const CEvent& e, void*)
 	updateStatus(CString("Failed to connect to server: ") + info->m_what);
 	if (!ARG->m_restartable || !info->m_retry) {
 		LOG((CLOG_ERR "failed to connect to server: %s", info->m_what));
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 	}
 	else {
 		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what));
@@ -441,7 +414,11 @@ static
 int
 daemonMainLoop(int, const char**)
 {
-	CSystemLogger sysLogger(DAEMON_NAME);
+#if SYSAPI_WIN32
+	CSystemLogger sysLogger(DAEMON_NAME, false);
+#else
+	CSystemLogger sysLogger(DAEMON_NAME, true);
+#endif
 	return mainLoop();
 }
 
@@ -449,6 +426,10 @@ static
 int
 standardStartup(int argc, char** argv)
 {
+	if (!ARG->m_daemon) {
+		ARCH->showConsole(false);
+	}
+
 	// parse command line
 	parse(argc, argv);
 
@@ -758,6 +739,7 @@ public:
 	// ILogOutputter overrides
 	virtual void		open(const char*) { }
 	virtual void		close() { }
+	virtual void		show(bool) { }
 	virtual bool		write(ELevel level, const char* message);
 	virtual const char*	getNewline() const { return ""; }
 };
@@ -802,9 +784,22 @@ static
 int
 daemonNTStartup(int, char**)
 {
-	CSystemLogger sysLogger(DAEMON_NAME);
+	CSystemLogger sysLogger(DAEMON_NAME, false);
 	bye = &byeThrow;
 	return ARCH->daemonize(DAEMON_NAME, &daemonNTMainLoop);
+}
+
+static
+int
+foregroundStartup(int argc, char** argv)
+{
+	ARCH->showConsole(false);
+
+	// parse command line
+	parse(argc, argv);
+
+	// never daemonize
+	return mainLoop();
 }
 
 static
@@ -820,11 +815,22 @@ int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
 	try {
+		CArchMiscWindows::setIcons((HICON)LoadImage(instance,
+									MAKEINTRESOURCE(IDI_SYNERGY),
+									IMAGE_ICON,
+									32, 32, LR_SHARED),
+									(HICON)LoadImage(instance,
+									MAKEINTRESOURCE(IDI_SYNERGY),
+									IMAGE_ICON,
+									16, 16, LR_SHARED));
 		CArch arch(instance);
 		CMSWindowsScreen::init(instance);
 		CLOG;
 		CThread::getCurrentThread().setPriority(-14);
 		CArgs args;
+
+		// set title on log window
+		ARCH->openConsole((CString(kAppVersion) + " " + "Client").c_str());
 
 		// windows NT family starts services using no command line options.
 		// since i'm not sure how to tell the difference between that and
@@ -833,8 +839,13 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		// users on NT can use `--daemon' or `--no-daemon' to force us out
 		// of the service code path.
 		StartupFunc startup = &standardStartup;
-		if (__argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
-			startup = &daemonNTStartup;
+		if (!CArchMiscWindows::isWindows95Family()) {
+			if (__argc <= 1) {
+				startup = &daemonNTStartup;
+			}
+			else {
+				startup = &foregroundStartup;
+			}
 		}
 
 		// send PRINT and FATAL output to a message box

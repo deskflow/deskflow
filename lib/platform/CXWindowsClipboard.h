@@ -155,6 +155,10 @@ private:
 		bool			m_failed;
 		bool			m_done;
 
+		// atoms needed for the protocol
+		Atom			m_atomNone;		// NONE, not None
+		Atom			m_atomIncr;
+
 		// true iff we've received the selection notify
 		bool			m_reading;
 
@@ -182,7 +186,7 @@ private:
 		SInt32			m_pad2[4];
 		SInt32			m_numItems;
 		SInt32			m_pad3[3];
-		Window			m_selectionOwner;
+		SInt32			m_selectionOwner;	// a Window
 		SInt32			m_pad4[2];
 	};
 
@@ -204,9 +208,9 @@ private:
 		SInt32			m_pad1[6];
 		SInt32			m_length;
 		SInt32			m_data;
-		Atom			m_type;
+		SInt32			m_type;			// an Atom
 		SInt32			m_pad2[1];
-		int				m_deleted;
+		SInt32			m_deleted;
 		SInt32			m_pad3[4];
 	};
 

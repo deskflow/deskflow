@@ -100,42 +100,7 @@ CLog::getInstance()
 }
 
 void
-CLog::print(const char* fmt, ...) const
-{
-	// check if fmt begins with a priority argument
-	int priority = 4;
-	if (fmt[0] == '%' && fmt[1] == 'z') {
-		priority = fmt[2] - '\060';
-		fmt += 3;
-	}
-
-	// done if below priority threshold
-	if (priority > getFilter()) {
-		return;
-	}
-
-	// compute prefix padding length
-	int pad = g_priorityPad;
-
-	// print to buffer
-	char stack[1024];
-	va_list args;
-	va_start(args, fmt);
-	char* buffer = CStringUtil::vsprint(stack,
-								sizeof(stack) / sizeof(stack[0]),
-								pad, m_maxNewlineLength, fmt, args);
-	va_end(args);
-
-	// output buffer
-	output(priority, buffer);
-
-	// clean up
-	if (buffer != stack)
-		delete[] buffer;
-}
-
-void
-CLog::printt(const char* file, int line, const char* fmt, ...) const
+CLog::print(const char* file, int line, const char* fmt, ...) const
 {
 	// check if fmt begins with a priority argument
 	int priority = 4;
@@ -151,35 +116,61 @@ CLog::printt(const char* file, int line, const char* fmt, ...) const
 
 	// compute prefix padding length
 	char stack[1024];
-	sprintf(stack, "%d", line);
-	int pad = strlen(file) + 1 /* comma */ +
-				strlen(stack) + 1 /* colon */ + 1 /* space */ +
-				g_priorityPad;
+	int pPad = g_priorityPad;
+	if (file != NULL) {
+		sprintf(stack, "%d", line);
+		pPad += strlen(file) + 1 /* comma */ +
+				strlen(stack) + 1 /* colon */ + 1 /* space */;
+	}
 
-	// print to buffer, leaving space for a newline at the end
-	va_list args;
-	va_start(args, fmt);
-	char* buffer = CStringUtil::vsprint(stack,
-								sizeof(stack) / sizeof(stack[0]),
-								pad, m_maxNewlineLength, fmt, args);
-	va_end(args);
+	// compute suffix padding length
+	int sPad = m_maxNewlineLength;
+
+	// print to buffer, leaving space for a newline at the end and prefix
+	// at the beginning.
+	char* buffer = stack;
+	int len      = (int)(sizeof(stack) / sizeof(stack[0]));
+	while (true) {
+		// try printing into the buffer
+		va_list args;
+		va_start(args, fmt);
+		int n = ARCH->vsnprintf(buffer + pPad, len - pPad - sPad, fmt, args);
+		va_end(args);
+
+		// if the buffer wasn't big enough then make it bigger and try again
+		if (n < 0 || n > (int)len) {
+			if (buffer != stack) {
+				delete[] buffer;
+			}
+			len   *= 2;
+			buffer = new char[len];
+		}
+
+		// if the buffer was big enough then continue
+		else {
+			break;
+		}
+	}
 
 	// print the prefix to the buffer.  leave space for priority label.
-	sprintf(buffer + g_priorityPad, "%s,%d:", file, line);
-	buffer[pad - 1] = ' ';
-
-	// discard file and line if priority < 0
 	char* message = buffer;
-	if (priority < 0) {
-		message += pad - g_priorityPad;
+	if (file != NULL) {
+		sprintf(buffer + g_priorityPad, "%s,%d:", file, line);
+		buffer[pPad - 1] = ' ';
+
+		// discard file and line if priority < 0
+		if (priority < 0) {
+			message += pPad - g_priorityPad;
+		}
 	}
 
 	// output buffer
 	output(priority, message);
 
 	// clean up
-	if (buffer != stack)
+	if (buffer != stack) {
 		delete[] buffer;
+	}
 }
 
 void
@@ -199,6 +190,8 @@ CLog::insert(ILogOutputter* outputter, bool alwaysAtHead)
 	if (newlineLength > m_maxNewlineLength) {
 		m_maxNewlineLength = newlineLength;
 	}
+	outputter->open(kAppVersion);
+	outputter->show(false);
 }
 
 void
@@ -279,9 +272,6 @@ CLog::output(int priority, char* msg) const
 		// put an appropriate newline at the end
 		strcpy(end, outputter->getNewline());
 
-		// open the outputter
-		outputter->open(kApplication);
-
 		// write message
 		outputter->write(static_cast<ILogOutputter::ELevel>(priority),
 							msg + g_maxPriorityLength - n);
@@ -293,9 +283,6 @@ CLog::output(int priority, char* msg) const
 		
 		// put an appropriate newline at the end
 		strcpy(end, outputter->getNewline());
-
-		// open the outputter
-		outputter->open(kApplication);
 
 		// write message and break out of loop if it returns false
 		if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority),

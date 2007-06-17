@@ -85,12 +85,28 @@ public:
 	*/
 	static CEvent::Type	getClipboardGrabbedEvent();
 
+	//! Get suspend event type
+	/*!
+	Returns the suspend event type. This is sent whenever the system goes
+	to sleep or a user session is deactivated (fast user switching).
+	*/
+	static CEvent::Type	getSuspendEvent();
+	
+	//! Get resume event type
+	/*!
+	Returns the suspend event type. This is sent whenever the system wakes
+	up or a user session is activated (fast user switching).
+	*/
+	static CEvent::Type	getResumeEvent();
+	
 	//@}
 
 private:
 	static CEvent::Type	s_errorEvent;
 	static CEvent::Type	s_shapeChangedEvent;
 	static CEvent::Type	s_clipboardGrabbedEvent;
+	static CEvent::Type	s_suspendEvent;
+	static CEvent::Type	s_resumeEvent;
 };
 
 #endif

@@ -59,6 +59,7 @@ CTCPListenSocket::bind(const CNetworkAddress& addr)
 {
 	try {
 		CLock lock(m_mutex);
+		ARCH->setReuseAddrOnSocket(m_socket, true);
 		ARCH->bindSocket(m_socket, addr.getAddress());
 		ARCH->listenOnSocket(m_socket);
 		CSocketMultiplexer::getInstance()->addSocket(this,

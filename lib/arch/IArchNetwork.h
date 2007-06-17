@@ -226,6 +226,13 @@ public:
 	*/
 	virtual bool		setNoDelayOnSocket(CArchSocket, bool noDelay) = 0;
 
+	//! Turn address reuse on or off on socket
+	/*!
+	Allows the address this socket is bound to to be reused while in the
+	TIME_WAIT state.  Returns the previous state.
+	*/
+	virtual bool		setReuseAddrOnSocket(CArchSocket, bool reuse) = 0;
+
 	//! Return local host's name
 	virtual std::string		getHostName() = 0;
 

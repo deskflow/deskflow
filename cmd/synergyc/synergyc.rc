@@ -87,7 +87,25 @@ BEGIN
     POPUP "Synergy"
     BEGIN
         MENUITEM "Show Status",                 IDC_TASKBAR_STATUS
+        MENUITEM "Show Log",                    IDC_TASKBAR_SHOW_LOG
         MENUITEM "Copy Log To Clipboard",       IDC_TASKBAR_LOG
+        POPUP "Set Log Level"
+        BEGIN
+            MENUITEM "Error",                       IDC_TASKBAR_LOG_LEVEL_ERROR
+
+            MENUITEM "Warning",                     IDC_TASKBAR_LOG_LEVEL_WARNING
+
+            MENUITEM "Note",                        IDC_TASKBAR_LOG_LEVEL_NOTE
+
+            MENUITEM "Info",                        IDC_TASKBAR_LOG_LEVEL_INFO
+
+            MENUITEM "Debug",                       IDC_TASKBAR_LOG_LEVEL_DEBUG
+
+            MENUITEM "Debug1",                      IDC_TASKBAR_LOG_LEVEL_DEBUG1
+
+            MENUITEM "Debug2",                      IDC_TASKBAR_LOG_LEVEL_DEBUG2
+
+        END
         MENUITEM SEPARATOR
         MENUITEM "Quit",                        IDC_TASKBAR_QUIT
     END

@@ -122,7 +122,7 @@ CArch::CArch(ARCH_ARGS* args)
 	m_sleep   = new ARCH_SLEEP;
 	m_string  = new ARCH_STRING;
 	m_time    = new ARCH_TIME;
-	m_console = new ARCH_CONSOLE;
+	m_console = new ARCH_CONSOLE(args);
 	m_daemon  = new ARCH_DAEMON;
 	m_taskbar = new ARCH_TASKBAR(args);
 
@@ -168,6 +168,12 @@ void
 CArch::closeConsole()
 {
 	m_console->closeConsole();
+}
+
+void
+CArch::showConsole(bool showIfEmpty)
+{
+	m_console->showConsole(showIfEmpty);
 }
 
 void
@@ -252,6 +258,12 @@ void
 CArch::closeLog()
 {
 	m_log->closeLog();
+}
+
+void
+CArch::showLog(bool showIfEmpty)
+{
+	m_log->showLog(showIfEmpty);
 }
 
 void
@@ -486,6 +498,12 @@ bool
 CArch::setNoDelayOnSocket(CArchSocket s, bool noDelay)
 {
 	return m_net->setNoDelayOnSocket(s, noDelay);
+}
+
+bool
+CArch::setReuseAddrOnSocket(CArchSocket s, bool reuse)
+{
+	return m_net->setReuseAddrOnSocket(s, reuse);
 }
 
 std::string

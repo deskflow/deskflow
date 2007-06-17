@@ -73,6 +73,7 @@ public:
 							const void* buf, size_t len);
 	virtual void		throwErrorOnSocket(CArchSocket);
 	virtual bool		setNoDelayOnSocket(CArchSocket, bool noDelay);
+	virtual bool		setReuseAddrOnSocket(CArchSocket, bool reuse);
 	virtual std::string		getHostName();
 	virtual CArchNetAddress	newAnyAddr(EAddressFamily);
 	virtual CArchNetAddress	copyAddr(CArchNetAddress);

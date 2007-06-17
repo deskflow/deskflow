@@ -59,7 +59,8 @@ private:
 
 	void				sendInfo(const CClientInfo&);
 
-	void				installHeartBeat(double);
+	void				resetKeepAliveAlarm();
+	void				setKeepAliveRate(double);
 
 	// modifier key translation
 	KeyID				translateKey(KeyID) const;
@@ -67,7 +68,7 @@ private:
 
 	// event handlers
 	void				handleData(const CEvent&, void*);
-	void				handleHeartBeat(const CEvent&, void*);
+	void				handleKeepAliveAlarm(const CEvent&, void*);
 
 	// message handlers
 	void				enter();
@@ -93,7 +94,6 @@ private:
 
 	CClient*			m_client;
 	IStream*			m_stream;
-	CEventQueueTimer*	m_timer;
 
 	UInt32				m_seqNum;
 
@@ -105,7 +105,9 @@ private:
 	bool				m_ignoreMouse;
 
 	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
-	double				m_heartRate;
+
+	double				m_keepAliveAlarm;
+	CEventQueueTimer*	m_keepAliveAlarmTimer;
 
 	MessageParser		m_parser;
 };

@@ -67,6 +67,12 @@ synergys_SOURCES =						\
 	$(COMMON_SOURCE_FILES)				\
 	$(CARBON_SOURCE_FILES)				\
 	$(NULL)
+synergys_LDFLAGS =								\
+	-framework ScreenSaver						\
+	-framework IOKit							\
+	-framework ApplicationServices				\
+	-framework Foundation						\
+	$(NULL)
 endif
 synergys_LDADD =								\
 	$(top_builddir)/lib/server/libserver.a		\

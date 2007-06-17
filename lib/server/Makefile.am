@@ -23,22 +23,28 @@ MAINTAINERCLEANFILES =				\
 
 noinst_LIBRARIES = libserver.a
 libserver_a_SOURCES = 				\
+	CBaseClientProxy.cpp			\
 	CClientListener.cpp				\
 	CClientProxy.cpp				\
 	CClientProxy1_0.cpp				\
 	CClientProxy1_1.cpp				\
 	CClientProxy1_2.cpp				\
+	CClientProxy1_3.cpp				\
 	CClientProxyUnknown.cpp			\
 	CConfig.cpp						\
+	CInputFilter.cpp				\
 	CPrimaryClient.cpp				\
 	CServer.cpp						\
+	CBaseClientProxy.h				\
 	CClientListener.h				\
 	CClientProxy.h					\
 	CClientProxy1_0.h				\
 	CClientProxy1_1.h				\
 	CClientProxy1_2.h				\
+	CClientProxy1_3.h				\
 	CClientProxyUnknown.h			\
 	CConfig.h						\
+	CInputFilter.h					\
 	CPrimaryClient.h				\
 	CServer.h						\
 	$(NULL)

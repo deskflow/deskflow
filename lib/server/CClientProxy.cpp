@@ -26,7 +26,7 @@ CEvent::Type			CClientProxy::s_disconnectedEvent    = CEvent::kUnknown;
 CEvent::Type			CClientProxy::s_clipboardChangedEvent= CEvent::kUnknown;
 
 CClientProxy::CClientProxy(const CString& name, IStream* stream) :
-	m_name(name),
+	CBaseClientProxy(name),
 	m_stream(stream)
 {
 	// do nothing
@@ -51,12 +51,6 @@ IStream*
 CClientProxy::getStream() const
 {
 	return m_stream;
-}
-
-CString
-CClientProxy::getName() const
-{
-	return m_name;
 }
 
 CEvent::Type

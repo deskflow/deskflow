@@ -19,7 +19,7 @@
 // CArchConsoleUnix
 //
 
-CArchConsoleUnix::CArchConsoleUnix()
+CArchConsoleUnix::CArchConsoleUnix(void*)
 {
 	// do nothing
 }
@@ -37,6 +37,12 @@ CArchConsoleUnix::openConsole(const char*)
 
 void
 CArchConsoleUnix::closeConsole()
+{
+	// do nothing
+}
+
+void
+CArchConsoleUnix::showConsole(bool)
 {
 	// do nothing
 }

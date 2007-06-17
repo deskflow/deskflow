@@ -80,6 +80,7 @@ public:
 		kINTERRUPT,		//!< Interrupt (e.g. Ctrl+C)
 		kTERMINATE,		//!< Terminate (e.g. Ctrl+Break)
 		kHANGUP,		//!< Hangup (SIGHUP)
+		kUSER,			//!< User (SIGUSR2)
 		kNUM_SIGNALS
 	};
 	//! Type of signal handler function

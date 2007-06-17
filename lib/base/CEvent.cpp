@@ -22,15 +22,17 @@
 CEvent::CEvent() :
 	m_type(kUnknown),
 	m_target(NULL),
-	m_data(NULL)
+	m_data(NULL),
+	m_flags(0)
 {
 	// do nothing
 }
 
-CEvent::CEvent(Type type, void* target, void* data) :
+CEvent::CEvent(Type type, void* target, void* data, Flags flags) :
 	m_type(type),
 	m_target(target),
-	m_data(data)
+	m_data(data),
+	m_flags(flags)
 {
 	// do nothing
 }
@@ -51,6 +53,12 @@ void*
 CEvent::getData() const
 {
 	return m_data;
+}
+
+CEvent::Flags
+CEvent::getFlags() const
+{
+	return m_flags;
 }
 
 CEvent::Type
@@ -82,7 +90,9 @@ CEvent::deleteData(const CEvent& event)
 		break;
 
 	default:
-		free(event.getData());
+		if ((event.getFlags() & kDontFreeData) == 0) {
+			free(event.getData());
+		}
 		break;
 	}
 }

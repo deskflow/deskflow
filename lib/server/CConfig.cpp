@@ -13,6 +13,8 @@
  */
 
 #include "CConfig.h"
+#include "CServer.h"
+#include "CKeyMap.h"
 #include "KeyTypes.h"
 #include "XSocket.h"
 #include "stdistream.h"
@@ -23,7 +25,7 @@
 // CConfig
 //
 
-CConfig::CConfig()
+CConfig::CConfig() : m_hasLockToScreenAction(false)
 {
 	// do nothing
 }
@@ -78,13 +80,9 @@ CConfig::renameScreen(const CString& oldName,
 	m_nameToCanonicalName.insert(std::make_pair(newName, newName));
 
 	// update connections
+	CName oldNameObj(this, oldName);
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
-		for (UInt32 i = 0; i < kNumDirections; ++i) {
-			if (CStringUtil::CaselessCmp::equal(getCanonicalName(
-						index->second.m_neighbor[i]), oldCanonical)) {
-				index->second.m_neighbor[i] = newName;
-			}
-		}
+		index->second.rename(oldNameObj, newName);
 	}
 
 	// update alias targets
@@ -115,13 +113,9 @@ CConfig::removeScreen(const CString& name)
 	m_map.erase(index);
 
 	// disconnect
+	CName nameObj(this, name);
 	for (index = m_map.begin(); index != m_map.end(); ++index) {
-		CCell& cell = index->second;
-		for (UInt32 i = 0; i < kNumDirections; ++i) {
-			if (getCanonicalName(cell.m_neighbor[i]) == canonical) {
-				cell.m_neighbor[i].erase();
-			}
-		}
+		index->second.remove(nameObj);
 	}
 
 	// remove aliases (and canonical name)
@@ -182,6 +176,28 @@ CConfig::removeAlias(const CString& alias)
 	return true;
 }
 
+bool
+CConfig::removeAliases(const CString& canonical)
+{
+	// must be a canonical name
+	if (m_map.find(canonical) == m_map.end()) {
+		return false;
+	}
+
+	// find and removing matching aliases
+	for (CNameMap::iterator index = m_nameToCanonicalName.begin();
+							index != m_nameToCanonicalName.end(); ) {
+		if (index->second == canonical && index->first != canonical) {
+			m_nameToCanonicalName.erase(index++);
+		}
+		else {
+			++index;
+		}
+	}
+
+	return true;
+}
+
 void
 CConfig::removeAllAliases()
 {
@@ -198,7 +214,10 @@ CConfig::removeAllAliases()
 
 bool
 CConfig::connect(const CString& srcName,
-				EDirection srcSide, const CString& dstName)
+				EDirection srcSide,
+				float srcStart, float srcEnd,
+				const CString& dstName,
+				float dstStart, float dstEnd)
 {
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
@@ -208,12 +227,10 @@ CConfig::connect(const CString& srcName,
 		return false;
 	}
 
-	// connect side (overriding any previous connection).  we
-	// canonicalize in getNeighbor() instead of here because the
-	// destination name doesn't have to exist yet.
-	index->second.m_neighbor[srcSide - kFirstDirection] = dstName;
-
-	return true;
+	// add link
+	CCellEdge srcEdge(srcSide, CInterval(srcStart, srcEnd));
+	CCellEdge dstEdge(dstName, srcSide, CInterval(dstStart, dstEnd));
+	return index->second.add(srcEdge, dstEdge);
 }
 
 bool
@@ -228,7 +245,24 @@ CConfig::disconnect(const CString& srcName, EDirection srcSide)
 	}
 
 	// disconnect side
-	index->second.m_neighbor[srcSide - kFirstDirection].erase();
+	index->second.remove(srcSide);
+
+	return true;
+}
+
+bool
+CConfig::disconnect(const CString& srcName, EDirection srcSide, float position)
+{
+	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+
+	// find source cell
+	CCellMap::iterator index = m_map.find(srcName);
+	if (index == m_map.end()) {
+		return false;
+	}
+
+	// disconnect side
+	index->second.remove(srcSide, position);
 
 	return true;
 }
@@ -399,7 +433,8 @@ CConfig::isScreen(const CString& name) const
 bool
 CConfig::isCanonicalName(const CString& name) const
 {
-	return CStringUtil::CaselessCmp::equal(getCanonicalName(name), name);
+	return (!name.empty() &&
+			CStringUtil::CaselessCmp::equal(getCanonicalName(name), name));
 }
 
 CString
@@ -415,7 +450,8 @@ CConfig::getCanonicalName(const CString& name) const
 }
 
 CString
-CConfig::getNeighbor(const CString& srcName, EDirection srcSide) const
+CConfig::getNeighbor(const CString& srcName, EDirection srcSide,
+				float position, float* positionOut) const
 {
 	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
 
@@ -425,9 +461,59 @@ CConfig::getNeighbor(const CString& srcName, EDirection srcSide) const
 		return CString();
 	}
 
-	// return connection
-	return getCanonicalName(index->second.m_neighbor[
-								srcSide - kFirstDirection]);
+	// find edge
+	const CCellEdge* srcEdge, *dstEdge;
+	if (!index->second.getLink(srcSide, position, srcEdge, dstEdge)) {
+		// no neighbor
+		return "";
+	}
+	else {
+		// compute position on neighbor
+		if (positionOut != NULL) {
+			*positionOut =
+				dstEdge->inverseTransform(srcEdge->transform(position));
+		}
+
+		// return neighbor's name
+		return getCanonicalName(dstEdge->getName());
+	}
+}
+
+bool
+CConfig::hasNeighbor(const CString& srcName, EDirection srcSide) const
+{
+	return hasNeighbor(srcName, srcSide, 0.0f, 1.0f);
+}
+
+bool
+CConfig::hasNeighbor(const CString& srcName, EDirection srcSide,
+							float start, float end) const
+{
+	assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+
+	// find source cell
+	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+	if (index == m_map.end()) {
+		return false;
+	}
+
+	return index->second.overlaps(CCellEdge(srcSide, CInterval(start, end)));
+}
+
+CConfig::link_const_iterator
+CConfig::beginNeighbor(const CString& srcName) const
+{
+	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+	assert(index != m_map.end());
+	return index->second.begin();
+}
+
+CConfig::link_const_iterator
+CConfig::endNeighbor(const CString& srcName) const
+{
+	CCellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
+	assert(index != m_map.end());
+	return index->second.end();
 }
 
 const CNetworkAddress&
@@ -456,6 +542,12 @@ CConfig::getOptions(const CString& name) const
 }
 
 bool
+CConfig::hasLockToScreenAction() const
+{
+	return m_hasLockToScreenAction;
+}
+
+bool
 CConfig::operator==(const CConfig& x) const
 {
 	if (m_synergyAddress != x.m_synergyAddress) {
@@ -481,17 +573,9 @@ CConfig::operator==(const CConfig& x) const
 			return false;
 		}
 
-		// compare options
-		if (index1->second.m_options != index2->second.m_options) {
+		// compare cells
+		if (index1->second != index2->second) {
 			return false;
-		}
-
-		// compare neighbors
-		for (UInt32 i = 0; i < kNumDirections; ++i) {
-			if (!CStringUtil::CaselessCmp::equal(index1->second.m_neighbor[i],
-								index2->second.m_neighbor[i])) {
-				return false;
-			}
 		}
 	}
 
@@ -505,6 +589,11 @@ CConfig::operator==(const CConfig& x) const
 		}
 	}
 
+	// compare input filters
+	if (m_inputFilter != x.m_inputFilter) {
+		return false;
+	}
+
 	return true;
 }
 
@@ -514,92 +603,649 @@ CConfig::operator!=(const CConfig& x) const
 	return !operator==(x);
 }
 
+void
+CConfig::read(CConfigReadContext& context)
+{
+	CConfig tmp;
+	while (context) {
+		tmp.readSection(context);
+	}
+	*this = tmp;
+}
+
 const char*
 CConfig::dirName(EDirection dir)
 {
-	static const char* s_name[] = { "left", "right", "top", "bottom" };
+	static const char* s_name[] = { "left", "right", "up", "down" };
 
 	assert(dir >= kFirstDirection && dir <= kLastDirection);
 
 	return s_name[dir - kFirstDirection];
 }
 
-bool
-CConfig::readLine(std::istream& s, CString& line)
+CInputFilter*
+CConfig::getInputFilter()
 {
-	s >> std::ws;
-	while (std::getline(s, line)) {
-		// strip comments and then trailing whitespace
-		CString::size_type i = line.find('#');
-		if (i != CString::npos) {
-			line.erase(i);
-		}
-		i = line.find_last_not_of(" \r\t");
-		if (i != CString::npos) {
-			line.erase(i + 1);
-		}
-
-		// return non empty line
-		if (!line.empty()) {
-			return true;
-		}
-		s >> std::ws;
-	}
-	return false;
+	return &m_inputFilter;
 }
 
-OptionValue
-CConfig::parseBoolean(const CString& arg)
+CString
+CConfig::formatInterval(const CInterval& x)
 {
-	if (CStringUtil::CaselessCmp::equal(arg, "true")) {
-		return static_cast<OptionValue>(true);
+	if (x.first == 0.0f && x.second == 1.0f) {
+		return "";
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "false")) {
-		return static_cast<OptionValue>(false);
-	}
-	throw XConfigRead("invalid argument");
+	return CStringUtil::print("(%d,%d)", (int)(x.first * 100.0f + 0.5f),
+										(int)(x.second * 100.0f + 0.5f));
 }
 
-OptionValue
-CConfig::parseInt(const CString& arg)
+void
+CConfig::readSection(CConfigReadContext& s)
 {
-	const char* s = arg.c_str();
-	char* end;
-	long tmp      = strtol(s, &end, 10);
-	if (*end != '\0') {
-		// invalid characters
-		throw XConfigRead("invalid argument");
+	static const char s_section[] = "section:";
+	static const char s_options[] = "options";
+	static const char s_screens[] = "screens";
+	static const char s_links[]   = "links";
+	static const char s_aliases[] = "aliases";
+
+	CString line;
+	if (!s.readLine(line)) {
+		// no more sections
+		return;
 	}
-	OptionValue value = static_cast<OptionValue>(tmp);
-	if (value != tmp) {
-		// out of range
-		throw XConfigRead("argument out of range");
+
+	// should be a section header
+	if (line.find(s_section) != 0) {
+		throw XConfigRead(s, "found data outside section");
 	}
-	return value;
+
+	// get section name
+	CString::size_type i = line.find_first_not_of(" \t", sizeof(s_section) - 1);
+	if (i == CString::npos) {
+		throw XConfigRead(s, "section name is missing");
+	}
+	CString name = line.substr(i);
+	i = name.find_first_of(" \t");
+	if (i != CString::npos) {
+		throw XConfigRead(s, "unexpected data after section name");
+	}
+
+	// read section
+	if (name == s_options) {
+		readSectionOptions(s);
+	}
+	else if (name == s_screens) {
+		readSectionScreens(s);
+	}
+	else if (name == s_links) {
+		readSectionLinks(s);
+	}
+	else if (name == s_aliases) {
+		readSectionAliases(s);
+	}
+	else {
+		throw XConfigRead(s, "unknown section name \"%{1}\"", name);
+	}
 }
 
-OptionValue
-CConfig::parseModifierKey(const CString& arg)
+void
+CConfig::readSectionOptions(CConfigReadContext& s)
 {
-	if (CStringUtil::CaselessCmp::equal(arg, "shift")) {
-		return static_cast<OptionValue>(kKeyModifierIDShift);
+	CString line;
+	while (s.readLine(line)) {
+		// check for end of section
+		if (line == "end") {
+			return;
+		}
+
+		// parse argument:  `nameAndArgs = [values][;[values]]'
+		//   nameAndArgs  := <name>[(arg[,...])]
+		//   values       := valueAndArgs[,valueAndArgs]...
+		//   valueAndArgs := <value>[(arg[,...])]
+		CString::size_type i = 0;
+		CString name, value;
+		CConfigReadContext::ArgList nameArgs, valueArgs;
+		s.parseNameWithArgs("name", line, "=", i, name, nameArgs);
+		++i;
+		s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
+
+		bool handled = true;
+		if (name == "address") {
+			try {
+				m_synergyAddress = CNetworkAddress(value, kDefaultPort);
+				m_synergyAddress.resolve();
+			}
+			catch (XSocketAddress& e) {
+				throw XConfigRead(s,
+							CString("invalid address argument ") + e.what());
+			}
+		}
+		else if (name == "heartbeat") {
+			addOption("", kOptionHeartbeat, s.parseInt(value));
+		}
+		else if (name == "switchCorners") {
+			addOption("", kOptionScreenSwitchCorners, s.parseCorners(value));
+		}
+		else if (name == "switchCornerSize") {
+			addOption("", kOptionScreenSwitchCornerSize, s.parseInt(value));
+		}
+		else if (name == "switchDelay") {
+			addOption("", kOptionScreenSwitchDelay, s.parseInt(value));
+		}
+		else if (name == "switchDoubleTap") {
+			addOption("", kOptionScreenSwitchTwoTap, s.parseInt(value));
+		}
+		else if (name == "screenSaverSync") {
+			addOption("", kOptionScreenSaverSync, s.parseBoolean(value));
+		}
+		else if (name == "relativeMouseMoves") {
+			addOption("", kOptionRelativeMouseMoves, s.parseBoolean(value));
+		}
+		else if (name == "win32KeepForeground") {
+			addOption("", kOptionWin32KeepForeground, s.parseBoolean(value));
+		}
+		else {
+			handled = false;
+		}
+
+		if (handled) {
+			// make sure handled options aren't followed by more values
+			if (i < line.size() && (line[i] == ',' || line[i] == ';')) {
+				throw XConfigRead(s, "to many arguments to %s", name.c_str());
+			}
+		}
+		else {
+			// make filter rule
+			CInputFilter::CRule rule(parseCondition(s, name, nameArgs));
+
+			// save first action (if any)
+			if (!value.empty() || line[i] != ';') {
+				parseAction(s, value, valueArgs, rule, true);
+			}
+
+			// get remaining activate actions
+			while (i < line.length() && line[i] != ';') {
+				++i;
+				s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
+				parseAction(s, value, valueArgs, rule, true);
+			}
+
+			// get deactivate actions
+			if (i < line.length() && line[i] == ';') {
+				// allow trailing ';'
+				i = line.find_first_not_of(" \t", i + 1);
+				if (i == CString::npos) {
+					i = line.length();
+				}
+				else {
+					--i;
+				}
+
+				// get actions
+				while (i < line.length()) {
+					++i;
+					s.parseNameWithArgs("value", line, ",\n",
+								i, value, valueArgs);
+					parseAction(s, value, valueArgs, rule, false);
+				}
+			}
+
+			// add rule
+			m_inputFilter.addFilterRule(rule);
+		}
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "ctrl")) {
-		return static_cast<OptionValue>(kKeyModifierIDControl);
+	throw XConfigRead(s, "unexpected end of options section");
+}
+
+void
+CConfig::readSectionScreens(CConfigReadContext& s)
+{
+	CString line;
+	CString screen;
+	while (s.readLine(line)) {
+		// check for end of section
+		if (line == "end") {
+			return;
+		}
+
+		// see if it's the next screen
+		if (line[line.size() - 1] == ':') {
+			// strip :
+			screen = line.substr(0, line.size() - 1);
+
+			// verify validity of screen name
+			if (!isValidScreenName(screen)) {
+				throw XConfigRead(s, "invalid screen name \"%{1}\"", screen);
+			}
+
+			// add the screen to the configuration
+			if (!addScreen(screen)) {
+				throw XConfigRead(s, "duplicate screen name \"%{1}\"", screen);
+			}
+		}
+		else if (screen.empty()) {
+			throw XConfigRead(s, "argument before first screen");
+		}
+		else {
+			// parse argument:  `<name>=<value>'
+			CString::size_type i = line.find_first_of(" \t=");
+			if (i == 0) {
+				throw XConfigRead(s, "missing argument name");
+			}
+			if (i == CString::npos) {
+				throw XConfigRead(s, "missing =");
+			}
+			CString name = line.substr(0, i);
+			i = line.find_first_not_of(" \t", i);
+			if (i == CString::npos || line[i] != '=') {
+				throw XConfigRead(s, "missing =");
+			}
+			i = line.find_first_not_of(" \t", i + 1);
+			CString value;
+			if (i != CString::npos) {
+				value = line.substr(i);
+			}
+
+			// handle argument
+			if (name == "halfDuplexCapsLock") {
+				addOption(screen, kOptionHalfDuplexCapsLock,
+					s.parseBoolean(value));
+			}
+			else if (name == "halfDuplexNumLock") {
+				addOption(screen, kOptionHalfDuplexNumLock,
+					s.parseBoolean(value));
+			}
+			else if (name == "halfDuplexScrollLock") {
+				addOption(screen, kOptionHalfDuplexScrollLock,
+					s.parseBoolean(value));
+			}
+			else if (name == "shift") {
+				addOption(screen, kOptionModifierMapForShift,
+					s.parseModifierKey(value));
+			}
+			else if (name == "ctrl") {
+				addOption(screen, kOptionModifierMapForControl,
+					s.parseModifierKey(value));
+			}
+			else if (name == "alt") {
+				addOption(screen, kOptionModifierMapForAlt,
+					s.parseModifierKey(value));
+			}
+			else if (name == "meta") {
+				addOption(screen, kOptionModifierMapForMeta,
+					s.parseModifierKey(value));
+			}
+			else if (name == "super") {
+				addOption(screen, kOptionModifierMapForSuper,
+					s.parseModifierKey(value));
+			}
+			else if (name == "xtestIsXineramaUnaware") {
+				addOption(screen, kOptionXTestXineramaUnaware,
+					s.parseBoolean(value));
+			}
+			else if (name == "switchCorners") {
+				addOption(screen, kOptionScreenSwitchCorners,
+					s.parseCorners(value));
+			}
+			else if (name == "switchCornerSize") {
+				addOption(screen, kOptionScreenSwitchCornerSize,
+					s.parseInt(value));
+			}
+			else {
+				// unknown argument
+				throw XConfigRead(s, "unknown argument \"%{1}\"", name);
+			}
+		}
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "alt")) {
-		return static_cast<OptionValue>(kKeyModifierIDAlt);
+	throw XConfigRead(s, "unexpected end of screens section");
+}
+
+void
+CConfig::readSectionLinks(CConfigReadContext& s)
+{
+	CString line;
+	CString screen;
+	while (s.readLine(line)) {
+		// check for end of section
+		if (line == "end") {
+			return;
+		}
+
+		// see if it's the next screen
+		if (line[line.size() - 1] == ':') {
+			// strip :
+			screen = line.substr(0, line.size() - 1);
+
+			// verify we know about the screen
+			if (!isScreen(screen)) {
+				throw XConfigRead(s, "unknown screen name \"%{1}\"", screen);
+			}
+			if (!isCanonicalName(screen)) {
+				throw XConfigRead(s, "cannot use screen name alias here");
+			}
+		}
+		else if (screen.empty()) {
+			throw XConfigRead(s, "argument before first screen");
+		}
+		else {
+			// parse argument:  `<name>[(<s0>,<e0>)]=<value>[(<s1>,<e1>)]'
+			// the stuff in brackets is optional.  interval values must be
+			// in the range [0,100] and start < end.  if not given the
+			// interval is taken to be (0,100).
+			CString::size_type i = 0;
+			CString side, dstScreen, srcArgString, dstArgString;
+			CConfigReadContext::ArgList srcArgs, dstArgs;
+			s.parseNameWithArgs("link", line, "=", i, side, srcArgs);
+			++i;
+			s.parseNameWithArgs("screen", line, "", i, dstScreen, dstArgs);
+			CInterval srcInterval(s.parseInterval(srcArgs));
+			CInterval dstInterval(s.parseInterval(dstArgs));
+
+			// handle argument
+			EDirection dir;
+			if (side == "left") {
+				dir = kLeft;
+			}
+			else if (side == "right") {
+				dir = kRight;
+			}
+			else if (side == "up") {
+				dir = kTop;
+			}
+			else if (side == "down") {
+				dir = kBottom;
+			}
+			else {
+				// unknown argument
+				throw XConfigRead(s, "unknown side \"%{1}\" in link", side);
+			}
+			if (!isScreen(dstScreen)) {
+				throw XConfigRead(s, "unknown screen name \"%{1}\"", dstScreen);
+			}
+			if (!connect(screen, dir,
+						srcInterval.first, srcInterval.second,
+						dstScreen,
+						dstInterval.first, dstInterval.second)) {
+				throw XConfigRead(s, "overlapping range");
+			}
+		}
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "meta")) {
-		return static_cast<OptionValue>(kKeyModifierIDMeta);
+	throw XConfigRead(s, "unexpected end of links section");
+}
+
+void
+CConfig::readSectionAliases(CConfigReadContext& s)
+{
+	CString line;
+	CString screen;
+	while (s.readLine(line)) {
+		// check for end of section
+		if (line == "end") {
+			return;
+		}
+
+		// see if it's the next screen
+		if (line[line.size() - 1] == ':') {
+			// strip :
+			screen = line.substr(0, line.size() - 1);
+
+			// verify we know about the screen
+			if (!isScreen(screen)) {
+				throw XConfigRead(s, "unknown screen name \"%{1}\"", screen);
+			}
+			if (!isCanonicalName(screen)) {
+				throw XConfigRead(s, "cannot use screen name alias here");
+			}
+		}
+		else if (screen.empty()) {
+			throw XConfigRead(s, "argument before first screen");
+		}
+		else {
+			// verify validity of screen name
+			if (!isValidScreenName(line)) {
+				throw XConfigRead(s, "invalid screen alias \"%{1}\"", line);
+			}
+
+			// add alias
+			if (!addAlias(screen, line)) {
+				throw XConfigRead(s, "alias \"%{1}\" is already used", line);
+			}
+		}
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "super")) {
-		return static_cast<OptionValue>(kKeyModifierIDSuper);
+	throw XConfigRead(s, "unexpected end of aliases section");
+}
+
+
+CInputFilter::CCondition*
+CConfig::parseCondition(CConfigReadContext& s,
+				const CString& name, const std::vector<CString>& args)
+{
+	if (name == "keystroke") {
+		if (args.size() != 1) {
+			throw XConfigRead(s, "syntax for condition: keystroke(modifiers+key)");
+		}
+
+		IPlatformScreen::CKeyInfo* keyInfo = s.parseKeystroke(args[0]);
+
+		return new CInputFilter::CKeystrokeCondition(keyInfo);
 	}
-	if (CStringUtil::CaselessCmp::equal(arg, "none")) {
-		return static_cast<OptionValue>(kKeyModifierIDNull);
+
+	if (name == "mousebutton") {
+		if (args.size() != 1) {
+			throw XConfigRead(s, "syntax for condition: mousebutton(modifiers+button)");
+		}
+
+		IPlatformScreen::CButtonInfo* mouseInfo = s.parseMouse(args[0]);
+
+		return new CInputFilter::CMouseButtonCondition(mouseInfo);
 	}
-	throw XConfigRead("invalid argument");
+
+	if (name == "connect") {
+		if (args.size() != 1) {
+			throw XConfigRead(s, "syntax for condition: connect([screen])");
+		}
+
+		CString screen = args[0];
+		if (isScreen(screen)) {
+			screen = getCanonicalName(screen);
+		}
+		else if (!screen.empty()) {
+			throw XConfigRead(s, "unknown screen name \"%{1}\" in connect", screen);
+		}
+
+		return new CInputFilter::CScreenConnectedCondition(screen);
+	}
+
+	throw XConfigRead(s, "unknown argument \"%{1}\"", name);
+}
+
+void
+CConfig::parseAction(CConfigReadContext& s,
+				const CString& name, const std::vector<CString>& args,
+				CInputFilter::CRule& rule, bool activate)
+{
+	CInputFilter::CAction* action;
+
+	if (name == "keystroke" || name == "keyDown" || name == "keyUp") {
+		if (args.size() < 1 || args.size() > 2) {
+			throw XConfigRead(s, "syntax for action: keystroke(modifiers+key[,screens])");
+		}
+
+		IPlatformScreen::CKeyInfo* keyInfo;
+		if (args.size() == 1) {
+			keyInfo = s.parseKeystroke(args[0]);
+		}
+		else {
+			std::set<CString> screens;
+			parseScreens(s, args[1], screens);
+			keyInfo = s.parseKeystroke(args[0], screens);
+		}
+
+		if (name == "keystroke") {
+			IPlatformScreen::CKeyInfo* keyInfo2 =
+				IKeyState::CKeyInfo::alloc(*keyInfo);
+			action = new CInputFilter::CKeystrokeAction(keyInfo2, true);
+			rule.adoptAction(action, true);
+			action   = new CInputFilter::CKeystrokeAction(keyInfo, false);
+			activate = false;
+		}
+		else if (name == "keyDown") {
+			action = new CInputFilter::CKeystrokeAction(keyInfo, true);
+		}
+		else {
+			action = new CInputFilter::CKeystrokeAction(keyInfo, false);
+		}
+	}
+
+	else if (name == "mousebutton" ||
+				name == "mouseDown" || name == "mouseUp") {
+		if (args.size() != 1) {
+			throw XConfigRead(s, "syntax for action: mousebutton(modifiers+button)");
+		}
+
+		IPlatformScreen::CButtonInfo* mouseInfo = s.parseMouse(args[0]);
+
+		if (name == "mousebutton") {
+			IPlatformScreen::CButtonInfo* mouseInfo2 =
+				IPlatformScreen::CButtonInfo::alloc(*mouseInfo);
+			action = new CInputFilter::CMouseButtonAction(mouseInfo2, true);
+			rule.adoptAction(action, true);
+			action   = new CInputFilter::CMouseButtonAction(mouseInfo, false);
+			activate = false;
+		}
+		else if (name == "mouseDown") {
+			action = new CInputFilter::CMouseButtonAction(mouseInfo, true);
+		}
+		else {
+			action = new CInputFilter::CMouseButtonAction(mouseInfo, false);
+		}
+	}
+
+/* XXX -- not supported
+	else if (name == "modifier") {
+		if (args.size() != 1) {
+			throw XConfigRead(s, "syntax for action: modifier(modifiers)");
+		}
+
+		KeyModifierMask mask = s.parseModifier(args[0]);
+
+		action = new CInputFilter::CModifierAction(mask, ~mask);
+	}
+*/
+
+	else if (name == "switchToScreen") {
+		if (args.size() != 1) {
+			throw XConfigRead(s, "syntax for action: switchToScreen(name)");
+		}
+
+		CString screen = args[0];
+		if (isScreen(screen)) {
+			screen = getCanonicalName(screen);
+		}
+		else if (!screen.empty()) {
+			throw XConfigRead(s, "unknown screen name in switchToScreen");
+		}
+
+		action = new CInputFilter::CSwitchToScreenAction(screen);
+	}
+
+	else if (name == "switchInDirection") {
+		if (args.size() != 1) {
+			throw XConfigRead(s, "syntax for action: switchInDirection(<left|right|up|down>)");
+		}
+
+		EDirection direction;
+		if (args[0] == "left") {
+			direction = kLeft;
+		}
+		else if (args[0] == "right") {
+			direction = kRight;
+		}
+		else if (args[0] == "up") {
+			direction = kTop;
+		}
+		else if (args[0] == "down") {
+			direction = kBottom;
+		}
+		else {
+			throw XConfigRead(s, "unknown direction \"%{1}\" in switchToScreen", args[0]);
+		}
+
+		action = new CInputFilter::CSwitchInDirectionAction(direction);
+	}
+
+	else if (name == "lockCursorToScreen") {
+		if (args.size() > 1) {
+			throw XConfigRead(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
+		}
+
+		CInputFilter::CLockCursorToScreenAction::Mode mode =
+			CInputFilter::CLockCursorToScreenAction::kToggle;
+		if (args.size() == 1) {
+			if (args[0] == "off") {
+				mode = CInputFilter::CLockCursorToScreenAction::kOff;
+			}
+			else if (args[0] == "on") {
+				mode = CInputFilter::CLockCursorToScreenAction::kOn;
+			}
+			else if (args[0] == "toggle") {
+				mode = CInputFilter::CLockCursorToScreenAction::kToggle;
+			}
+			else {
+				throw XConfigRead(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
+			}
+		}
+
+		if (mode != CInputFilter::CLockCursorToScreenAction::kOff) {
+			m_hasLockToScreenAction = true;
+		}
+
+		action = new CInputFilter::CLockCursorToScreenAction(mode);
+	}
+
+	else {
+		throw XConfigRead(s, "unknown action argument \"%{1}\"", name);
+	}
+
+	rule.adoptAction(action, activate);
+}
+
+void
+CConfig::parseScreens(CConfigReadContext& c,
+				const CString& s, std::set<CString>& screens) const
+{
+	screens.clear();
+
+	CString::size_type i = 0;
+	while (i < s.size()) {
+		// find end of next screen name
+		CString::size_type j = s.find(':', i);
+		if (j == CString::npos) {
+			j = s.size();
+		}
+
+		// extract name
+		CString rawName;
+		i = s.find_first_not_of(" \t", i);
+		if (i < j) {
+			rawName = s.substr(i, s.find_last_not_of(" \t", j - 1) - i + 1);
+		}
+
+		// add name
+		if (rawName == "*") {
+			screens.insert("*");
+		}
+		else if (!rawName.empty()) {
+			CString name = getCanonicalName(rawName);
+			if (name.empty()) {
+				throw XConfigRead(c, "unknown screen name \"%{1}\"", rawName);
+			}
+			screens.insert(name);
+		}
+
+		// next
+		i = j + 1;
+	}
 }
 
 const char*
@@ -632,6 +1278,12 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionHeartbeat) {
 		return "heartbeat";
 	}
+	if (id == kOptionScreenSwitchCorners) {
+		return "switchCorners";
+	}
+	if (id == kOptionScreenSwitchCornerSize) {
+		return "switchCornerSize";
+	}
 	if (id == kOptionScreenSwitchDelay) {
 		return "switchDelay";
 	}
@@ -647,6 +1299,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionRelativeMouseMoves) {
 		return "relativeMouseMoves";
 	}
+	if (id == kOptionWin32KeepForeground) {
+		return "win32KeepForeground";
+	}
 	return NULL;
 }
 
@@ -658,7 +1313,8 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 		id == kOptionHalfDuplexScrollLock ||
 		id == kOptionScreenSaverSync ||
 		id == kOptionXTestXineramaUnaware ||
-		id == kOptionRelativeMouseMoves) {
+		id == kOptionRelativeMouseMoves ||
+		id == kOptionWin32KeepForeground) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||
@@ -687,344 +1343,333 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 		}
 	}
 	if (id == kOptionHeartbeat ||
+		id == kOptionScreenSwitchCornerSize ||
 		id == kOptionScreenSwitchDelay ||
 		id == kOptionScreenSwitchTwoTap) {
 		return CStringUtil::print("%d", value);
+	}
+	if (id == kOptionScreenSwitchCorners) {
+		std::string result("none");
+		if ((value & kTopLeftMask) != 0) {
+			result += " +top-left";
+		}
+		if ((value & kTopRightMask) != 0) {
+			result += " +top-right";
+		}
+		if ((value & kBottomLeftMask) != 0) {
+			result += " +bottom-left";
+		}
+		if ((value & kBottomRightMask) != 0) {
+			result += " +bottom-right";
+		}
+		return result;
 	}
 
 	return "";
 }
 
-void
-CConfig::readSection(std::istream& s)
+
+//
+// CConfig::CName
+//
+
+CConfig::CName::CName(CConfig* config, const CString& name) :
+	m_config(config),
+	m_name(config->getCanonicalName(name))
 {
-	static const char s_section[] = "section:";
-	static const char s_options[] = "options";
-	static const char s_screens[] = "screens";
-	static const char s_links[]   = "links";
-	static const char s_aliases[] = "aliases";
+	// do nothing
+}
 
-	CString line;
-	if (!readLine(s, line)) {
-		// no more sections
-		return;
+bool
+CConfig::CName::operator==(const CString& name) const
+{
+	CString canonical = m_config->getCanonicalName(name);
+	return CStringUtil::CaselessCmp::equal(canonical, m_name);
+}
+
+
+//
+// CConfig::CCellEdge
+//
+
+CConfig::CCellEdge::CCellEdge(EDirection side, float position)
+{
+	init("", side, CInterval(position, position));
+}
+
+CConfig::CCellEdge::CCellEdge(EDirection side, const CInterval& interval)
+{
+	assert(interval.first >= 0.0f);
+	assert(interval.second <= 1.0f);
+	assert(interval.first < interval.second);
+
+	init("", side, interval);
+}
+
+CConfig::CCellEdge::CCellEdge(const CString& name,
+				EDirection side, const CInterval& interval)
+{
+	assert(interval.first >= 0.0f);
+	assert(interval.second <= 1.0f);
+	assert(interval.first < interval.second);
+
+	init(name, side, interval);
+}
+
+CConfig::CCellEdge::~CCellEdge()
+{
+	// do nothing
+}
+
+void
+CConfig::CCellEdge::init(const CString& name, EDirection side,
+				const CInterval& interval)
+{
+	assert(side != kNoDirection);
+
+	m_name     = name;
+	m_side     = side;
+	m_interval = interval;
+}
+
+CConfig::CInterval
+CConfig::CCellEdge::getInterval() const
+{
+	return m_interval;
+}
+
+void
+CConfig::CCellEdge::setName(const CString& newName)
+{
+	m_name = newName;
+}
+
+CString
+CConfig::CCellEdge::getName() const
+{
+	return m_name;
+}
+
+EDirection
+CConfig::CCellEdge::getSide() const
+{
+	return m_side;
+}
+
+bool
+CConfig::CCellEdge::overlaps(const CCellEdge& edge) const
+{
+	const CInterval& x = m_interval;
+	const CInterval& y = edge.m_interval;
+	if (m_side != edge.m_side) {
+		return false;
+	}
+	return  (x.first  >= y.first && x.first  <  y.second) ||
+			(x.second >  y.first && x.second <= y.second) ||
+			(y.first  >= x.first && y.first  <  x.second) ||
+			(y.second >  x.first && y.second <= x.second);
+}
+
+bool
+CConfig::CCellEdge::isInside(float x) const
+{
+	return (x >= m_interval.first && x < m_interval.second);
+}
+
+float
+CConfig::CCellEdge::transform(float x) const
+{
+	return (x - m_interval.first) / (m_interval.second - m_interval.first);
+}
+
+
+float
+CConfig::CCellEdge::inverseTransform(float x) const
+{
+	return x * (m_interval.second - m_interval.first) + m_interval.first;
+}
+
+bool
+CConfig::CCellEdge::operator<(const CCellEdge& o) const
+{
+	if (static_cast<int>(m_side) < static_cast<int>(o.m_side)) {
+		return true;
+	}
+	else if (static_cast<int>(m_side) > static_cast<int>(o.m_side)) {
+		return false;
 	}
 
-	// should be a section header
-	if (line.find(s_section) != 0) {
-		throw XConfigRead("found data outside section");
+	return (m_interval.first < o.m_interval.first);
+}
+
+bool
+CConfig::CCellEdge::operator==(const CCellEdge& x) const
+{
+	return (m_side == x.m_side && m_interval == x.m_interval);
+}
+
+bool
+CConfig::CCellEdge::operator!=(const CCellEdge& x) const
+{
+	return !operator==(x);
+}
+
+
+//
+// CConfig::CCell
+//
+
+bool
+CConfig::CCell::add(const CCellEdge& src, const CCellEdge& dst)
+{
+	// cannot add an edge that overlaps other existing edges but we
+	// can exactly replace an edge.
+	if (!hasEdge(src) && overlaps(src)) {
+		return false;
 	}
 
-	// get section name
-	CString::size_type i = line.find_first_not_of(" \t", sizeof(s_section) - 1);
-	if (i == CString::npos) {
-		throw XConfigRead("section name is missing");
-	}
-	CString name = line.substr(i);
-	i = name.find_first_of(" \t");
-	if (i != CString::npos) {
-		throw XConfigRead("unexpected data after section name");
-	}
+	m_neighbors.erase(src);
+	m_neighbors.insert(std::make_pair(src, dst));
+	return true;
+}
 
-	// read section
-	if (name == s_options) {
-		readSectionOptions(s);
-	}
-	else if (name == s_screens) {
-		readSectionScreens(s);
-	}
-	else if (name == s_links) {
-		readSectionLinks(s);
-	}
-	else if (name == s_aliases) {
-		readSectionAliases(s);
-	}
-	else {
-		throw XConfigRead("unknown section name");
+void
+CConfig::CCell::remove(EDirection side)
+{
+	for (CEdgeLinks::iterator j = m_neighbors.begin();
+							j != m_neighbors.end(); ) {
+		if (j->first.getSide() == side) {
+			m_neighbors.erase(j++);
+		}
+		else {
+			++j;
+		}
 	}
 }
 
 void
-CConfig::readSectionOptions(std::istream& s)
+CConfig::CCell::remove(EDirection side, float position)
 {
-	CString line;
-	CString name;
-	while (readLine(s, line)) {
-		// check for end of section
-		if (line == "end") {
-			return;
-		}
-
-		// parse argument:  `<name>=<value>'
-		CString::size_type i = line.find_first_of(" \t=");
-		if (i == 0) {
-			throw XConfigRead("missing argument name");
-		}
-		if (i == CString::npos) {
-			throw XConfigRead("missing = in argument");
-		}
-		CString name = line.substr(0, i);
-		i = line.find_first_not_of(" \t", i);
-		if (i == CString::npos || line[i] != '=') {
-			throw XConfigRead("missing = in argument");
-		}
-		i = line.find_first_not_of(" \t", i + 1);
-		CString value;
-		if (i != CString::npos) {
-			value = line.substr(i);
-		}
-		if (value.empty()) {
-			throw XConfigRead("missing value after =");
-		}
-
-		if (name == "address") {
-			try {
-				m_synergyAddress = CNetworkAddress(value, kDefaultPort);
-				m_synergyAddress.resolve();
-			}
-			catch (XSocketAddress& e) {
-				throw XConfigRead(CString("invalid address argument:  ") +
-							e.what());
-			}
-		}
-		else if (name == "heartbeat") {
-			addOption("", kOptionHeartbeat, parseInt(value));
-		}
-		else if (name == "switchDelay") {
-			addOption("", kOptionScreenSwitchDelay, parseInt(value));
-		}
-		else if (name == "switchDoubleTap") {
-			addOption("", kOptionScreenSwitchTwoTap, parseInt(value));
-		}
-		else if (name == "screenSaverSync") {
-			addOption("", kOptionScreenSaverSync, parseBoolean(value));
-		}
-		else if (name == "relativeMouseMoves") {
-			addOption("", kOptionRelativeMouseMoves, parseBoolean(value));
-		}
-		else {
-			throw XConfigRead("unknown argument");
+	for (CEdgeLinks::iterator j = m_neighbors.begin();
+							j != m_neighbors.end(); ++j) {
+		if (j->first.getSide() == side && j->first.isInside(position)) {
+			m_neighbors.erase(j);
+			break;
 		}
 	}
-	throw XConfigRead("unexpected end of screens section");
+}
+void
+CConfig::CCell::remove(const CName& name)
+{
+	for (CEdgeLinks::iterator j = m_neighbors.begin();
+							j != m_neighbors.end(); ) {
+		if (name == j->second.getName()) {
+			m_neighbors.erase(j++);
+		}
+		else {
+			++j;
+		}
+	}
 }
 
 void
-CConfig::readSectionScreens(std::istream& s)
+CConfig::CCell::rename(const CName& oldName, const CString& newName)
 {
-	CString line;
-	CString screen;
-	while (readLine(s, line)) {
-		// check for end of section
-		if (line == "end") {
-			return;
-		}
-
-		// see if it's the next screen
-		if (line[line.size() - 1] == ':') {
-			// strip :
-			screen = line.substr(0, line.size() - 1);
-
-			// verify validity of screen name
-			if (!isValidScreenName(screen)) {
-				throw XConfigRead("invalid screen name");
-			}
-
-			// add the screen to the configuration
-			if (!addScreen(screen)) {
-				throw XConfigRead("duplicate screen name");
-			}
-		}
-		else if (screen.empty()) {
-			throw XConfigRead("argument before first screen");
-		}
-		else {
-			// parse argument:  `<name>=<value>'
-			CString::size_type i = line.find_first_of(" \t=");
-			if (i == 0) {
-				throw XConfigRead("missing argument name");
-			}
-			if (i == CString::npos) {
-				throw XConfigRead("missing = in argument");
-			}
-			CString name = line.substr(0, i);
-			i = line.find_first_not_of(" \t", i);
-			if (i == CString::npos || line[i] != '=') {
-				throw XConfigRead("missing = in argument");
-			}
-			i = line.find_first_not_of(" \t", i + 1);
-			CString value;
-			if (i != CString::npos) {
-				value = line.substr(i);
-			}
-
-			// handle argument
-			if (name == "halfDuplexCapsLock") {
-				addOption(screen, kOptionHalfDuplexCapsLock,
-					parseBoolean(value));
-			}
-			else if (name == "halfDuplexNumLock") {
-				addOption(screen, kOptionHalfDuplexNumLock,
-					parseBoolean(value));
-			}
-			else if (name == "halfDuplexScrollLock") {
-				addOption(screen, kOptionHalfDuplexScrollLock,
-					parseBoolean(value));
-			}
-			else if (name == "shift") {
-				addOption(screen, kOptionModifierMapForShift,
-					parseModifierKey(value));
-			}
-			else if (name == "ctrl") {
-				addOption(screen, kOptionModifierMapForControl,
-					parseModifierKey(value));
-			}
-			else if (name == "alt") {
-				addOption(screen, kOptionModifierMapForAlt,
-					parseModifierKey(value));
-			}
-			else if (name == "meta") {
-				addOption(screen, kOptionModifierMapForMeta,
-					parseModifierKey(value));
-			}
-			else if (name == "super") {
-				addOption(screen, kOptionModifierMapForSuper,
-					parseModifierKey(value));
-			}
-			else if (name == "xtestIsXineramaUnaware") {
-				addOption(screen, kOptionXTestXineramaUnaware,
-					parseBoolean(value));
-			}
-			else {
-				// unknown argument
-				throw XConfigRead("unknown argument");
-			}
+	for (CEdgeLinks::iterator j = m_neighbors.begin();
+							j != m_neighbors.end(); ++j) {
+		if (oldName == j->second.getName()) {
+			j->second.setName(newName);
 		}
 	}
-	throw XConfigRead("unexpected end of screens section");
 }
 
-void
-CConfig::readSectionLinks(std::istream& s)
+bool
+CConfig::CCell::hasEdge(const CCellEdge& edge) const
 {
-	CString line;
-	CString screen;
-	while (readLine(s, line)) {
-		// check for end of section
-		if (line == "end") {
-			return;
-		}
-
-		// see if it's the next screen
-		if (line[line.size() - 1] == ':') {
-			// strip :
-			screen = line.substr(0, line.size() - 1);
-
-			// verify we know about the screen
-			if (!isScreen(screen)) {
-				throw XConfigRead("unknown screen name");
-			}
-			if (!isCanonicalName(screen)) {
-				throw XConfigRead("cannot use screen name alias here");
-			}
-		}
-		else if (screen.empty()) {
-			throw XConfigRead("argument before first screen");
-		}
-		else {
-			// parse argument:  `<name>=<value>'
-			CString::size_type i = line.find_first_of(" \t=");
-			if (i == 0) {
-				throw XConfigRead("missing argument name");
-			}
-			if (i == CString::npos) {
-				throw XConfigRead("missing = in argument");
-			}
-			CString name = line.substr(0, i);
-			i = line.find_first_not_of(" \t", i);
-			if (i == CString::npos || line[i] != '=') {
-				throw XConfigRead("missing = in argument");
-			}
-			i = line.find_first_not_of(" \t", i + 1);
-			CString value;
-			if (i != CString::npos) {
-				value = line.substr(i);
-			}
-
-			// handle argument
-			if (name == "left") {
-				if (!isScreen(value)) {
-					throw XConfigRead("unknown screen");
-				}
-				connect(screen, kLeft, value);
-			}
-			else if (name == "right") {
-				if (!isScreen(value)) {
-					throw XConfigRead("unknown screen");
-				}
-				connect(screen, kRight, value);
-			}
-			else if (name == "up") {
-				if (!isScreen(value)) {
-					throw XConfigRead("unknown screen");
-				}
-				connect(screen, kTop, value);
-			}
-			else if (name == "down") {
-				if (!isScreen(value)) {
-					throw XConfigRead("unknown screen");
-				}
-				connect(screen, kBottom, value);
-			}
-			else {
-				// unknown argument
-				throw XConfigRead("unknown argument");
-			}
-		}
-	}
-	throw XConfigRead("unexpected end of links section");
+	CEdgeLinks::const_iterator i = m_neighbors.find(edge);
+	return (i != m_neighbors.end() && i->first == edge);
 }
 
-void
-CConfig::readSectionAliases(std::istream& s)
+bool
+CConfig::CCell::overlaps(const CCellEdge& edge) const
 {
-	CString line;
-	CString screen;
-	while (readLine(s, line)) {
-		// check for end of section
-		if (line == "end") {
-			return;
+	CEdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
+	if (i != m_neighbors.end() && i->first.overlaps(edge)) {
+		return true;
+	}
+	if (i != m_neighbors.begin() && (--i)->first.overlaps(edge)) {
+		return true;
+	}
+	return false;
+}
+
+bool
+CConfig::CCell::getLink(EDirection side, float position,
+				const CCellEdge*& src, const CCellEdge*& dst) const
+{
+	CCellEdge edge(side, position);
+	CEdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);
+	if (i == m_neighbors.begin()) {
+		return false;
+	}
+	--i;
+	if (i->first.getSide() == side && i->first.isInside(position)) {
+		src = &i->first;
+		dst = &i->second;
+		return true;
+	}
+	return false;
+}
+
+bool
+CConfig::CCell::operator==(const CCell& x) const
+{
+	// compare options
+	if (m_options != x.m_options) {
+		return false;
+	}
+
+	// compare links
+	if (m_neighbors.size() != x.m_neighbors.size()) {
+		return false;
+	}
+	for (CEdgeLinks::const_iterator index1 = m_neighbors.begin(),
+								index2 = x.m_neighbors.begin();
+								index1 != m_neighbors.end();
+								++index1, ++index2) {
+		if (index1->first != index2->first) {
+			return false;
+		}
+		if (index1->second != index2->second) {
+			return false;
 		}
 
-		// see if it's the next screen
-		if (line[line.size() - 1] == ':') {
-			// strip :
-			screen = line.substr(0, line.size() - 1);
-
-			// verify we know about the screen
-			if (!isScreen(screen)) {
-				throw XConfigRead("unknown screen name");
-			}
-			if (!isCanonicalName(screen)) {
-				throw XConfigRead("cannot use screen name alias here");
-			}
-		}
-		else if (screen.empty()) {
-			throw XConfigRead("argument before first screen");
-		}
-		else {
-			// verify validity of screen name
-			if (!isValidScreenName(line)) {
-				throw XConfigRead("invalid screen alias");
-			}
-
-			// add alias
-			if (!addAlias(screen, line)) {
-				throw XConfigRead("alias is duplicate screen name");
-			}
+		// operator== doesn't compare names.  only compare destination
+		// names.
+		if (!CStringUtil::CaselessCmp::equal(index1->second.getName(),
+								index2->second.getName())) {
+			return false;
 		}
 	}
-	throw XConfigRead("unexpected end of aliases section");
+	return true;
+}
+
+bool
+CConfig::CCell::operator!=(const CCell& x) const
+{
+	return !operator==(x);
+}
+
+CConfig::CCell::const_iterator
+CConfig::CCell::begin() const
+{
+	return m_neighbors.begin();
+}
+
+CConfig::CCell::const_iterator
+CConfig::CCell::end() const
+{
+	return m_neighbors.end();
 }
 
 
@@ -1035,40 +1680,14 @@ CConfig::readSectionAliases(std::istream& s)
 std::istream&
 operator>>(std::istream& s, CConfig& config)
 {
-	// FIXME -- should track line and column to improve error reporting
-
-	CConfig tmp;
-	while (s) {
-		tmp.readSection(s);
-	}
-	config = tmp;
+	CConfigReadContext context(s);
+	config.read(context);
 	return s;
 }
 
 std::ostream&
 operator<<(std::ostream& s, const CConfig& config)
 {
-	// options section
-	s << "section: options" << std::endl;
-	const CConfig::CScreenOptions* options = config.getOptions("");
-	if (options != NULL && options->size() > 0) {
-		for (CConfig::CScreenOptions::const_iterator
-							option  = options->begin();
-							option != options->end(); ++option) {
-			const char* name = CConfig::getOptionName(option->first);
-			CString value    = CConfig::getOptionValue(option->first,
-														option->second);
-			if (name != NULL && !value.empty()) {
-				s << "\t" << name << " = " << value << std::endl;
-			}
-		}
-	}
-	if (config.m_synergyAddress.isValid()) {
-		s << "\taddress = " <<
-			config.m_synergyAddress.getHostname().c_str() << std::endl;
-	}
-	s << "end" << std::endl;
-
 	// screens section
 	s << "section: screens" << std::endl;
 	for (CConfig::const_iterator screen = config.begin();
@@ -1097,24 +1716,14 @@ operator<<(std::ostream& s, const CConfig& config)
 								screen != config.end(); ++screen) {
 		s << "\t" << screen->c_str() << ":" << std::endl;
 
-		neighbor = config.getNeighbor(*screen, kLeft);
-		if (!neighbor.empty()) {
-			s << "\t\tleft=" << neighbor.c_str() << std::endl;
-		}
-
-		neighbor = config.getNeighbor(*screen, kRight);
-		if (!neighbor.empty()) {
-			s << "\t\tright=" << neighbor.c_str() << std::endl;
-		}
-
-		neighbor = config.getNeighbor(*screen, kTop);
-		if (!neighbor.empty()) {
-			s << "\t\tup=" << neighbor.c_str() << std::endl;
-		}
-
-		neighbor = config.getNeighbor(*screen, kBottom);
-		if (!neighbor.empty()) {
-			s << "\t\tdown=" << neighbor.c_str() << std::endl;
+		for (CConfig::link_const_iterator
+				link = config.beginNeighbor(*screen),
+				nend = config.endNeighbor(*screen); link != nend; ++link) {			
+			s << "\t\t" << CConfig::dirName(link->first.getSide()) <<
+				CConfig::formatInterval(link->first.getInterval()) <<
+				" = " << link->second.getName().c_str() <<
+				CConfig::formatInterval(link->second.getInterval()) <<
+				std::endl;
 		}
 	}
 	s << "end" << std::endl;
@@ -1148,6 +1757,460 @@ operator<<(std::ostream& s, const CConfig& config)
 		s << "end" << std::endl;
 	}
 
+	// options section
+	s << "section: options" << std::endl;
+	const CConfig::CScreenOptions* options = config.getOptions("");
+	if (options != NULL && options->size() > 0) {
+		for (CConfig::CScreenOptions::const_iterator
+							option  = options->begin();
+							option != options->end(); ++option) {
+			const char* name = CConfig::getOptionName(option->first);
+			CString value    = CConfig::getOptionValue(option->first,
+														option->second);
+			if (name != NULL && !value.empty()) {
+				s << "\t" << name << " = " << value << std::endl;
+			}
+		}
+	}
+	if (config.m_synergyAddress.isValid()) {
+		s << "\taddress = " <<
+			config.m_synergyAddress.getHostname().c_str() << std::endl;
+	}
+	s << config.m_inputFilter.format("\t");
+	s << "end" << std::endl;
+
+	return s;
+}
+
+
+//
+// CConfigReadContext
+//
+
+CConfigReadContext::CConfigReadContext(std::istream& s, SInt32 firstLine) :
+	m_stream(s),
+	m_line(firstLine - 1)
+{
+	// do nothing
+}
+
+CConfigReadContext::~CConfigReadContext()
+{
+	// do nothing
+}
+
+bool
+CConfigReadContext::readLine(CString& line)
+{
+	++m_line;
+	while (std::getline(m_stream, line)) {
+		// strip leading whitespace
+		CString::size_type i = line.find_first_not_of(" \t");
+		if (i != CString::npos) {
+			line.erase(0, i);
+		}
+
+		// strip comments and then trailing whitespace
+		i = line.find('#');
+		if (i != CString::npos) {
+			line.erase(i);
+		}
+		i = line.find_last_not_of(" \r\t");
+		if (i != CString::npos) {
+			line.erase(i + 1);
+		}
+
+		// return non empty line
+		if (!line.empty()) {
+			// make sure there are no invalid characters
+			for (i = 0; i < line.length(); ++i) {
+				if (!isgraph(line[i]) && line[i] != ' ' && line[i] != '\t') {
+					throw XConfigRead(*this,
+								"invalid character %{1}",
+								CStringUtil::print("%#2x", line[i]));
+				}
+			}
+
+			return true;
+		}
+
+		// next line
+		++m_line;
+	}
+	return false;
+}
+
+UInt32
+CConfigReadContext::getLineNumber() const
+{
+	return m_line;
+}
+
+CConfigReadContext::operator void*() const
+{
+	return m_stream;
+}
+
+bool
+CConfigReadContext::operator!() const
+{
+	return !m_stream;
+}
+
+OptionValue
+CConfigReadContext::parseBoolean(const CString& arg) const
+{
+	if (CStringUtil::CaselessCmp::equal(arg, "true")) {
+		return static_cast<OptionValue>(true);
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "false")) {
+		return static_cast<OptionValue>(false);
+	}
+	throw XConfigRead(*this, "invalid boolean argument \"%{1}\"", arg);
+}
+
+OptionValue
+CConfigReadContext::parseInt(const CString& arg) const
+{
+	const char* s = arg.c_str();
+	char* end;
+	long tmp      = strtol(s, &end, 10);
+	if (*end != '\0') {
+		// invalid characters
+		throw XConfigRead(*this, "invalid integer argument \"%{1}\"", arg);
+	}
+	OptionValue value = static_cast<OptionValue>(tmp);
+	if (value != tmp) {
+		// out of range
+		throw XConfigRead(*this, "integer argument \"%{1}\" out of range", arg);
+	}
+	return value;
+}
+
+OptionValue
+CConfigReadContext::parseModifierKey(const CString& arg) const
+{
+	if (CStringUtil::CaselessCmp::equal(arg, "shift")) {
+		return static_cast<OptionValue>(kKeyModifierIDShift);
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "ctrl")) {
+		return static_cast<OptionValue>(kKeyModifierIDControl);
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "alt")) {
+		return static_cast<OptionValue>(kKeyModifierIDAlt);
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "meta")) {
+		return static_cast<OptionValue>(kKeyModifierIDMeta);
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "super")) {
+		return static_cast<OptionValue>(kKeyModifierIDSuper);
+	}
+	if (CStringUtil::CaselessCmp::equal(arg, "none")) {
+		return static_cast<OptionValue>(kKeyModifierIDNull);
+	}
+	throw XConfigRead(*this, "invalid argument \"%{1}\"", arg);
+}
+
+OptionValue
+CConfigReadContext::parseCorner(const CString& arg) const
+{
+	if (CStringUtil::CaselessCmp::equal(arg, "left")) {
+		return kTopLeftMask | kBottomLeftMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "right")) {
+		return kTopRightMask | kBottomRightMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "top")) {
+		return kTopLeftMask | kTopRightMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "bottom")) {
+		return kBottomLeftMask | kBottomRightMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "top-left")) {
+		return kTopLeftMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "top-right")) {
+		return kTopRightMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "bottom-left")) {
+		return kBottomLeftMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "bottom-right")) {
+		return kBottomRightMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "none")) {
+		return kNoCornerMask;
+	}
+	else if (CStringUtil::CaselessCmp::equal(arg, "all")) {
+		return kAllCornersMask;
+	}
+	throw XConfigRead(*this, "invalid argument \"%{1}\"", arg);
+}
+
+OptionValue
+CConfigReadContext::parseCorners(const CString& args) const
+{
+	// find first token
+	CString::size_type i = args.find_first_not_of(" \t", 0);
+	if (i == CString::npos) {
+		throw XConfigRead(*this, "missing corner argument");
+	}
+	CString::size_type j = args.find_first_of(" \t", i);
+
+	// parse first corner token
+	OptionValue corners = parseCorner(args.substr(i, j - i));
+
+	// get +/-
+	i = args.find_first_not_of(" \t", j);
+	while (i != CString::npos) {
+		// parse +/-
+		bool add;
+		if (args[i] == '-') {
+			add = false;
+		}
+		else if (args[i] == '+') {
+			add = true;
+		}
+		else {
+			throw XConfigRead(*this,
+							"invalid corner operator \"%{1}\"",
+							CString(args.c_str() + i, 1));
+		}
+
+		// get next corner token
+		i = args.find_first_not_of(" \t", i + 1);
+		j = args.find_first_of(" \t", i);
+		if (i == CString::npos) {
+			throw XConfigRead(*this, "missing corner argument");
+		}
+
+		// parse next corner token
+		if (add) {
+			corners |= parseCorner(args.substr(i, j - i));
+		}
+		else {
+			corners &= ~parseCorner(args.substr(i, j - i));
+		}
+		i = args.find_first_not_of(" \t", j);
+	}
+
+	return corners;
+}
+
+CConfig::CInterval
+CConfigReadContext::parseInterval(const ArgList& args) const
+{
+	if (args.size() == 0) {
+		return CConfig::CInterval(0.0f, 1.0f);
+	}
+	if (args.size() != 2 || args[0].empty() || args[1].empty()) {
+		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
+	}
+
+	char* end;
+	long startValue = strtol(args[0].c_str(), &end, 10);
+	if (end[0] != '\0') {
+		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
+	}
+	long endValue = strtol(args[1].c_str(), &end, 10);
+	if (end[0] != '\0') {
+		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
+	}
+
+	if (startValue < 0 || startValue > 100 ||
+		endValue   < 0 || endValue   > 100 ||
+		startValue >= endValue) {
+		throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
+	}
+
+	return CConfig::CInterval(startValue / 100.0f, endValue / 100.0f);
+}
+
+void
+CConfigReadContext::parseNameWithArgs(
+				const CString& type, const CString& line,
+				const CString& delim, CString::size_type& index,
+				CString& name, ArgList& args) const
+{
+	// skip leading whitespace
+	CString::size_type i = line.find_first_not_of(" \t", index);
+	if (i == CString::npos) {
+		throw XConfigRead(*this, CString("missing ") + type);
+	}
+
+	// find end of name
+	CString::size_type j = line.find_first_of(" \t(" + delim, i);
+	if (j == CString::npos) {
+		j = line.length();
+	}
+
+	// save name
+	name = line.substr(i, j - i);
+	args.clear();
+
+	// is it okay to not find a delimiter?
+	bool needDelim = (!delim.empty() && delim.find('\n') == CString::npos);
+
+	// skip whitespace
+	i = line.find_first_not_of(" \t", j);
+	if (i == CString::npos && needDelim) {
+		// expected delimiter but didn't find it
+		throw XConfigRead(*this, CString("missing ") + delim[0]);
+	}
+	if (i == CString::npos) {
+		// no arguments
+		index = line.length();
+		return;
+	}
+	if (line[i] != '(') {
+		// no arguments
+		index = i;
+		return;
+	}
+
+	// eat '('
+	++i;
+
+	// parse arguments
+	j = line.find_first_of(",)", i);
+	while (j != CString::npos) {
+		// extract arg
+		CString arg(line.substr(i, j - i));
+		i = j;
+
+		// trim whitespace
+		j = arg.find_first_not_of(" \t");
+		if (j != CString::npos) {
+			arg.erase(0, j);
+		}
+		j = arg.find_last_not_of(" \t");
+		if (j != CString::npos) {
+			arg.erase(j + 1);
+		}
+
+		// save arg
+		args.push_back(arg);
+
+		// exit loop at end of arguments
+		if (line[i] == ')') {
+			break;
+		}
+
+		// eat ','
+		++i;
+
+		// next
+		j = line.find_first_of(",)", i);
+	}
+
+	// verify ')'
+	if (j == CString::npos) {
+		// expected )
+		throw XConfigRead(*this, "missing )");
+	}
+
+	// eat ')'
+	++i;
+
+	// skip whitespace
+	j = line.find_first_not_of(" \t", i);
+	if (j == CString::npos && needDelim) {
+		// expected delimiter but didn't find it
+		throw XConfigRead(*this, CString("missing ") + delim[0]);
+	}
+
+	// verify delimiter
+	if (needDelim && delim.find(line[j]) == CString::npos) {
+		throw XConfigRead(*this, CString("expected ") + delim[0]);
+	}
+
+	if (j == CString::npos) {
+		j = line.length();
+	}
+
+	index = j;
+	return;
+}
+
+IPlatformScreen::CKeyInfo*
+CConfigReadContext::parseKeystroke(const CString& keystroke) const
+{
+	return parseKeystroke(keystroke, std::set<CString>());
+}
+
+IPlatformScreen::CKeyInfo*
+CConfigReadContext::parseKeystroke(const CString& keystroke,
+				const std::set<CString>& screens) const
+{
+	CString s = keystroke;
+
+	KeyModifierMask mask;
+	if (!CKeyMap::parseModifiers(s, mask)) {
+		throw XConfigRead(*this, "unable to parse key modifiers");
+	}
+
+	KeyID key;
+	if (!CKeyMap::parseKey(s, key)) {
+		throw XConfigRead(*this, "unable to parse key");
+	}
+
+	if (key == kKeyNone && mask == 0) {
+		throw XConfigRead(*this, "missing key and/or modifiers in keystroke");
+	}
+
+	return IPlatformScreen::CKeyInfo::alloc(key, mask, 0, 0, screens);
+}
+
+IPlatformScreen::CButtonInfo*
+CConfigReadContext::parseMouse(const CString& mouse) const
+{
+	CString s = mouse;
+
+	KeyModifierMask mask;
+	if (!CKeyMap::parseModifiers(s, mask)) {
+		throw XConfigRead(*this, "unable to parse button modifiers");
+	}
+
+	char* end;
+	ButtonID button = (ButtonID)strtol(s.c_str(), &end, 10);
+	if (*end != '\0') {
+		throw XConfigRead(*this, "unable to parse button");
+	}
+	if (s.empty() || button <= 0) {
+		throw XConfigRead(*this, "invalid button");
+	}
+
+	return IPlatformScreen::CButtonInfo::alloc(button, mask);
+}
+
+KeyModifierMask
+CConfigReadContext::parseModifier(const CString& modifiers) const
+{
+	CString s = modifiers;
+
+	KeyModifierMask mask;
+	if (!CKeyMap::parseModifiers(s, mask)) {
+		throw XConfigRead(*this, "unable to parse modifiers");
+	}
+
+	if (mask == 0) {
+		throw XConfigRead(*this, "no modifiers specified");
+	}
+
+	return mask;
+}
+
+CString
+CConfigReadContext::concatArgs(const ArgList& args)
+{
+	CString s("(");
+	for (size_t i = 0; i < args.size(); ++i) {
+		if (i != 0) {
+			s += ",";
+		}
+		s += args[i];
+	}
+	s += ")";
 	return s;
 }
 
@@ -1156,8 +2219,18 @@ operator<<(std::ostream& s, const CConfig& config)
 // CConfig I/O exceptions
 //
 
-XConfigRead::XConfigRead(const CString& error) :
-	m_error(error)
+XConfigRead::XConfigRead(const CConfigReadContext& context,
+				const CString& error) :
+	m_error(CStringUtil::print("line %d: %s",
+							context.getLineNumber(), error.c_str()))
+{
+	// do nothing
+}
+
+XConfigRead::XConfigRead(const CConfigReadContext& context,
+				const char* errorFmt, const CString& arg) :
+	m_error(CStringUtil::print("line %d: ", context.getLineNumber()) +
+							CStringUtil::format(errorFmt, arg.c_str()))
 {
 	// do nothing
 }

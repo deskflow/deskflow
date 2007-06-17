@@ -62,20 +62,31 @@ Section "Synergy (required)"
   File COPYING.txt
   File ChangeLog.txt
   File ${DEPTH}\doc\PORTING
+  File ${DEPTH}\doc\about.html
   File ${DEPTH}\doc\authors.html
   File ${DEPTH}\doc\autostart.html
+  File ${DEPTH}\doc\banner.html
   File ${DEPTH}\doc\compiling.html
   File ${DEPTH}\doc\configuration.html
+  File ${DEPTH}\doc\contact.html
   File ${DEPTH}\doc\developer.html
   File ${DEPTH}\doc\faq.html
   File ${DEPTH}\doc\history.html
+  File ${DEPTH}\doc\home.html
   File ${DEPTH}\doc\index.html
   File ${DEPTH}\doc\license.html
   File ${DEPTH}\doc\news.html
+  File ${DEPTH}\doc\roadmap.html
   File ${DEPTH}\doc\running.html
   File ${DEPTH}\doc\security.html
+  File ${DEPTH}\doc\synergy.css
   File ${DEPTH}\doc\tips.html
-  File ${DEPTH}\doc\todo.html
+  File ${DEPTH}\doc\toc.html
+  File ${DEPTH}\doc\trouble.html
+
+  SetOutPath $INSTDIR\images
+  File ${DEPTH}\doc\images\logo.gif
+  File ${DEPTH}\doc\images\warp.gif
 
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\Synergy "Install_Dir" "$INSTDIR"
@@ -95,9 +106,15 @@ Section "Start Menu Shortcuts"
   CreateDirectory "$SMPROGRAMS\Synergy"
   CreateShortCut "$SMPROGRAMS\Synergy\Synergy.lnk" "$INSTDIR\synergy.exe" "" "$INSTDIR\synergy.exe" 0
   CreateShortCut "$SMPROGRAMS\Synergy\README.lnk" "$INSTDIR\index.html"
-  CreateShortCut "$SMPROGRAMS\Synergy\FAQ.lnk" "$INSTDIR\faq.html"
   CreateShortCut "$SMPROGRAMS\Synergy\Synergy Folder.lnk" "$INSTDIR"
   CreateShortCut "$SMPROGRAMS\Synergy\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+
+SectionEnd
+
+; Optional section (can be disabled by the user)
+Section "Desktop Icon"
+
+  CreateShortCut "$DESKTOP\Synergy.lnk" "$INSTDIR\synergy.exe" "" "$INSTDIR\synergy.exe" 0
 
 SectionEnd
 
@@ -106,7 +123,9 @@ SectionEnd
 ; Uninstaller
 
 Section "Uninstall"
-  
+  ; Stop and uninstall the daemons
+  ExecWait '"$INSTDIR\synergy.exe" /uninstall'
+
   ; Remove autorun registry keys for synergy
   DeleteRegKey HKLM "SYSTEM\CurrentControlSet\Services\Synergy Server"
   DeleteRegKey HKLM "SYSTEM\CurrentControlSet\Services\Synergy Client"
@@ -136,6 +155,7 @@ Section "Uninstall"
 
   ; Remove shortcuts, if any
   Delete "$SMPROGRAMS\Synergy\*.*"
+  Delete "$DESKTOP\Synergy.lnk"
 
   ; Remove directories used
   RMDir "$SMPROGRAMS\Synergy"

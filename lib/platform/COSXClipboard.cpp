@@ -42,15 +42,18 @@ COSXClipboard::empty()
 	assert(m_scrap != NULL);
 
 	OSStatus err = ClearScrap(&m_scrap);
-	// XXX -- check err?
+	if (err != noErr) {
+		LOG((CLOG_DEBUG "failed to grab clipboard"));
+		return false;
+	}
 
+	// we own the clipboard
 	err = PutScrapFlavor(
 				m_scrap,
 				getOwnershipFlavor(),
 				kScrapFlavorMaskNone,
 				0,
-				0); 
-
+				0);
 	if (err != noErr) {
 		LOG((CLOG_DEBUG "failed to grab clipboard"));
 		return false;

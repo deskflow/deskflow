@@ -33,6 +33,8 @@ typedef DWORD EXECUTION_STATE;
 CArchMiscWindows::CDialogs* CArchMiscWindows::s_dialogs   = NULL;
 DWORD						CArchMiscWindows::s_busyState = 0;
 CArchMiscWindows::STES_t	CArchMiscWindows::s_stes      = NULL;
+HICON						CArchMiscWindows::s_largeIcon = NULL;
+HICON						CArchMiscWindows::s_smallIcon = NULL;
 
 void
 CArchMiscWindows::init()
@@ -87,6 +89,20 @@ CArchMiscWindows::isWindowsModern()
 	return result;
 }
 
+void
+CArchMiscWindows::setIcons(HICON largeIcon, HICON smallIcon)
+{
+	s_largeIcon = largeIcon;
+	s_smallIcon = smallIcon;
+}
+
+void
+CArchMiscWindows::getIcons(HICON& largeIcon, HICON& smallIcon)
+{
+	largeIcon = s_largeIcon;
+	smallIcon = s_smallIcon;
+}
+
 int
 CArchMiscWindows::runDaemon(RunFunc runFunc)
 {
@@ -114,6 +130,30 @@ CArchMiscWindows::getDaemonQuitMessage()
 HKEY
 CArchMiscWindows::openKey(HKEY key, const TCHAR* keyName)
 {
+	return openKey(key, keyName, false);
+}
+
+HKEY
+CArchMiscWindows::openKey(HKEY key, const TCHAR* const* keyNames)
+{
+	return openKey(key, keyNames, false);
+}
+
+HKEY
+CArchMiscWindows::addKey(HKEY key, const TCHAR* keyName)
+{
+	return openKey(key, keyName, true);
+}
+
+HKEY
+CArchMiscWindows::addKey(HKEY key, const TCHAR* const* keyNames)
+{
+	return openKey(key, keyNames, true);
+}
+
+HKEY
+CArchMiscWindows::openKey(HKEY key, const TCHAR* keyName, bool create)
+{
 	// ignore if parent is NULL
 	if (key == NULL) {
 		return NULL;
@@ -123,7 +163,7 @@ CArchMiscWindows::openKey(HKEY key, const TCHAR* keyName)
 	HKEY newKey;
 	LONG result = RegOpenKeyEx(key, keyName, 0,
 								KEY_WRITE | KEY_QUERY_VALUE, &newKey);
-	if (result != ERROR_SUCCESS) {
+	if (result != ERROR_SUCCESS && create) {
 		DWORD disp;
 		result = RegCreateKeyEx(key, keyName, 0, TEXT(""),
 								0, KEY_WRITE | KEY_QUERY_VALUE,
@@ -140,11 +180,11 @@ CArchMiscWindows::openKey(HKEY key, const TCHAR* keyName)
 }
 
 HKEY
-CArchMiscWindows::openKey(HKEY key, const TCHAR* const* keyNames)
+CArchMiscWindows::openKey(HKEY key, const TCHAR* const* keyNames, bool create)
 {
 	for (size_t i = 0; key != NULL && keyNames[i] != NULL; ++i) {
 		// open next key
-		key = openKey(key, keyNames[i]);
+		key = openKey(key, keyNames[i], create);
 	}
 	return key;
 }

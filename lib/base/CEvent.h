@@ -33,6 +33,13 @@ public:
 		kLast		//!< Must be last
 	};
 
+	typedef UInt32 Flags;
+	enum {
+		kNone				= 0x00,	//!< No flags
+		kDeliverImmediately	= 0x01,	//!< Dispatch and free event immediately
+		kDontFreeData		= 0x02	//!< Don't free data in deleteData
+	};
+
 	CEvent();
 
 	//! Create \c CEvent with data
@@ -41,9 +48,10 @@ public:
 	The \p data must be POD (plain old data) allocated by malloc(),
 	which means it cannot have a constructor, destructor or be
 	composed of any types that do.  \p target is the intended
-	recipient of the event.
+	recipient of the event.  \p flags is any combination of \c Flags.
 	*/
-	CEvent(Type type, void* target = NULL, void* data = NULL);
+	CEvent(Type type, void* target = NULL, void* data = NULL,
+							 UInt32 flags = kNone);
 
 	//! @name manipulators
 	//@{
@@ -97,12 +105,19 @@ public:
 	*/
 	void*				getData() const;
 
+	//! Get event flags
+	/*!
+	Returns the event flags.
+	*/
+	Flags				getFlags() const;
+	
 	//@}
 
 private:
 	Type				m_type;
 	void*				m_target;
 	void*				m_data;
+	Flags				m_flags;
 };
 
 #endif

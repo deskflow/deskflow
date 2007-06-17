@@ -121,7 +121,7 @@ CScreen*
 createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new CScreen(new CMSWindowsScreen(true, NULL, NULL));
+	return new CScreen(new CMSWindowsScreen(true));
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(ARG->m_display, true));
 #elif WINAPI_CARBON
@@ -148,6 +148,16 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 // platform independent main
 //
 
+enum EServerState {
+	kUninitialized,
+	kInitializing,
+	kInitializingToStart,
+	kInitialized,
+	kStarting,
+	kStarted
+};
+
+static EServerState				s_serverState         = kUninitialized;
 static CServer*					s_server              = NULL;
 static CScreen*					s_serverScreen        = NULL;
 static CPrimaryClient*			s_primaryClient       = NULL;
@@ -155,6 +165,8 @@ static CClientListener*			s_listener            = NULL;
 static CServerTaskBarReceiver*	s_taskBarReceiver     = NULL;
 static CEvent::Type				s_reloadConfigEvent   = CEvent::kUnknown;
 static CEvent::Type				s_forceReconnectEvent = CEvent::kUnknown;
+static bool						s_suspended           = false;
+static CEventQueueTimer*		s_timer               = NULL;
 
 CEvent::Type
 getReloadConfigEvent()
@@ -224,6 +236,10 @@ handleScreenError(const CEvent&, void*)
 	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 }
 
+
+static void handleSuspend(const CEvent& event, void*);
+static void handleResume(const CEvent& event, void*);
+
 static
 CScreen*
 openServerScreen()
@@ -233,6 +249,14 @@ openServerScreen()
 							screen->getEventTarget(),
 							new CFunctionEventJob(
 								&handleScreenError));
+	EVENTQUEUE->adoptHandler(IScreen::getSuspendEvent(),
+							screen->getEventTarget(),
+							new CFunctionEventJob(
+								&handleSuspend));
+	EVENTQUEUE->adoptHandler(IScreen::getResumeEvent(),
+							screen->getEventTarget(),
+							new CFunctionEventJob(
+								&handleResume));
 	return screen;
 }
 
@@ -242,6 +266,10 @@ closeServerScreen(CScreen* screen)
 {
 	if (screen != NULL) {
 		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
+							screen->getEventTarget());
+		EVENTQUEUE->removeHandler(IScreen::getSuspendEvent(),
+							screen->getEventTarget());
+		EVENTQUEUE->removeHandler(IScreen::getResumeEvent(),
 							screen->getEventTarget());
 		delete screen;
 	}
@@ -319,80 +347,180 @@ closeServer(CServer* server)
 	delete server;
 }
 
+static bool initServer();
 static bool startServer();
 
 static
 void
-retryStartHandler(const CEvent&, void* vtimer)
+stopRetryTimer()
+{
+	if (s_timer != NULL) {
+		EVENTQUEUE->deleteTimer(s_timer);
+		EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
+		s_timer = NULL;
+	}
+}
+
+static
+void
+retryHandler(const CEvent&, void*)
 {
 	// discard old timer
-	CEventQueueTimer* timer = reinterpret_cast<CEventQueueTimer*>(vtimer);
-	EVENTQUEUE->deleteTimer(timer);
-	EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
+	assert(s_timer != NULL);
+	stopRetryTimer();
 
-	// try starting the server again
-	LOG((CLOG_DEBUG1 "retry starting server"));
-	startServer();
+	// try initializing/starting the server again
+	switch (s_serverState) {
+	case kUninitialized:
+	case kInitialized:
+	case kStarted:
+		assert(0 && "bad internal server state");
+		break;
+
+	case kInitializing:
+		LOG((CLOG_DEBUG1 "retry server initialization"));
+		s_serverState = kUninitialized;
+		if (!initServer()) {
+			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+		}
+		break;
+
+	case kInitializingToStart:
+		LOG((CLOG_DEBUG1 "retry server initialization"));
+		s_serverState = kUninitialized;
+		if (!initServer()) {
+			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+		}
+		else if (s_serverState == kInitialized) {
+			LOG((CLOG_DEBUG1 "starting server"));
+			if (!startServer()) {
+				EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+			}
+		}
+		break;
+
+	case kStarting:
+		LOG((CLOG_DEBUG1 "retry starting server"));
+		s_serverState = kInitialized;
+		if (!startServer()) {
+			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+		}
+		break;
+	}
 }
 
 static
 bool
-startServer()
+initServer()
 {
+	// skip if already initialized or initializing
+	if (s_serverState != kUninitialized) {
+		return true;
+	}
+
 	double retryTime;
 	CScreen* serverScreen         = NULL;
 	CPrimaryClient* primaryClient = NULL;
-	CClientListener* listener     = NULL;
 	try {
 		CString name    = ARG->m_config->getCanonicalName(ARG->m_name);
 		serverScreen    = openServerScreen();
 		primaryClient   = openPrimaryClient(name, serverScreen);
-		listener        = openClientListener(ARG->m_config->getSynergyAddress());
-		s_server        = openServer(*ARG->m_config, primaryClient);
 		s_serverScreen  = serverScreen;
 		s_primaryClient = primaryClient;
-		s_listener      = listener;
+		s_serverState   = kInitialized;
 		updateStatus();
-		LOG((CLOG_NOTE "started server"));
 		return true;
 	}
 	catch (XScreenUnavailable& e) {
 		LOG((CLOG_WARN "cannot open primary screen: %s", e.what()));
-		closeClientListener(listener);
 		closePrimaryClient(primaryClient);
 		closeServerScreen(serverScreen);
 		updateStatus(CString("cannot open primary screen: ") + e.what());
 		retryTime = e.getRetryTime();
 	}
-	catch (XSocketAddressInUse& e) {
-		LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
-		closeClientListener(listener);
-		closePrimaryClient(primaryClient);
-		closeServerScreen(serverScreen);
-		updateStatus(CString("cannot listen for clients: ") + e.what());
-		retryTime = 10.0;
-	}
 	catch (XScreenOpenFailure& e) {
 		LOG((CLOG_CRIT "cannot open primary screen: %s", e.what()));
-		closeClientListener(listener);
 		closePrimaryClient(primaryClient);
 		closeServerScreen(serverScreen);
 		return false;
 	}
 	catch (XBase& e) {
 		LOG((CLOG_CRIT "failed to start server: %s", e.what()));
-		closeClientListener(listener);
 		closePrimaryClient(primaryClient);
 		closeServerScreen(serverScreen);
+		return false;
+	}
+	
+	if (ARG->m_restartable) {
+		// install a timer and handler to retry later
+		assert(s_timer == NULL);
+		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
+							new CFunctionEventJob(&retryHandler, NULL));
+		s_serverState = kInitializing;
+		return true;
+	}
+	else {
+		// don't try again
+		return false;
+	}
+}
+
+static
+bool
+startServer()
+{
+	// skip if already started or starting
+	if (s_serverState == kStarting || s_serverState == kStarted) {
+		return true;
+	}
+
+	// initialize if necessary
+	if (s_serverState != kInitialized) {
+		if (!initServer()) {
+			// hard initialization failure
+			return false;
+		}
+		if (s_serverState == kInitializing) {
+			// not ready to start
+			s_serverState = kInitializingToStart;
+			return true;
+		}
+		assert(s_serverState == kInitialized);
+	}
+
+	double retryTime;
+	CClientListener* listener = NULL;
+	try {
+		listener   = openClientListener(ARG->m_config->getSynergyAddress());
+		s_server   = openServer(*ARG->m_config, s_primaryClient);
+		s_listener = listener;
+		updateStatus();
+		LOG((CLOG_NOTE "started server"));
+		s_serverState = kStarted;
+		return true;
+	}
+	catch (XSocketAddressInUse& e) {
+		LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
+		closeClientListener(listener);
+		updateStatus(CString("cannot listen for clients: ") + e.what());
+		retryTime = 10.0;
+	}
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "failed to start server: %s", e.what()));
+		closeClientListener(listener);
 		return false;
 	}
 
 	if (ARG->m_restartable) {
 		// install a timer and handler to retry later
+		assert(s_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-		CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
-							new CFunctionEventJob(&retryStartHandler, timer));
+		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
+							new CFunctionEventJob(&retryHandler, NULL));
+		s_serverState = kStarting;
 		return true;
 	}
 	else {
@@ -405,14 +533,63 @@ static
 void
 stopServer()
 {
-	closeClientListener(s_listener);
-	closeServer(s_server);
-	closePrimaryClient(s_primaryClient);
-	closeServerScreen(s_serverScreen);
-	s_server        = NULL;
-	s_listener      = NULL;
-	s_primaryClient = NULL;
-	s_serverScreen  = NULL;
+	if (s_serverState == kStarted) {
+		closeClientListener(s_listener);
+		closeServer(s_server);
+		s_server      = NULL;
+		s_listener    = NULL;
+		s_serverState = kInitialized;
+	}
+	else if (s_serverState == kStarting) {
+		stopRetryTimer();
+		s_serverState = kInitialized;
+	}
+	assert(s_server == NULL);
+	assert(s_listener == NULL);
+}
+
+static
+void
+cleanupServer()
+{
+	stopServer();
+	if (s_serverState == kInitialized) {
+		closePrimaryClient(s_primaryClient);
+		closeServerScreen(s_serverScreen);
+		s_primaryClient = NULL;
+		s_serverScreen  = NULL;
+		s_serverState   = kUninitialized;
+	}
+	else if (s_serverState == kInitializing ||
+			s_serverState == kInitializingToStart) {
+		stopRetryTimer();
+		s_serverState = kUninitialized;
+	}
+	assert(s_primaryClient == NULL);
+	assert(s_serverScreen == NULL);
+	assert(s_serverState == kUninitialized);
+}
+
+static
+void
+handleSuspend(const CEvent&, void*)
+{
+	if (!s_suspended) {
+		LOG((CLOG_INFO "suspend"));
+		stopServer();
+		s_suspended = true;
+	}
+}
+
+static
+void
+handleResume(const CEvent&, void*)
+{
+	if (s_suspended) {
+		LOG((CLOG_INFO "resume"));
+		startServer();
+		s_suspended = false;
+	}
 }
 
 static
@@ -517,7 +694,7 @@ mainLoop()
 							IEventQueue::getSystemTarget());
 	EVENTQUEUE->removeHandler(getReloadConfigEvent(),
 							IEventQueue::getSystemTarget());
-	stopServer();
+	cleanupServer();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
 
@@ -528,7 +705,11 @@ static
 int
 daemonMainLoop(int, const char**)
 {
-	CSystemLogger sysLogger(DAEMON_NAME);
+#if SYSAPI_WIN32
+	CSystemLogger sysLogger(DAEMON_NAME, false);
+#else
+	CSystemLogger sysLogger(DAEMON_NAME, true);
+#endif
 	return mainLoop();
 }
 
@@ -536,6 +717,10 @@ static
 int
 standardStartup(int argc, char** argv)
 {
+	if (!ARG->m_daemon) {
+		ARCH->showConsole(false);
+	}
+
 	// parse command line
 	parse(argc, argv);
 
@@ -952,6 +1137,7 @@ public:
 	// ILogOutputter overrides
 	virtual void		open(const char*) { }
 	virtual void		close() { }
+	virtual void		show(bool) { }
 	virtual bool		write(ELevel level, const char* message);
 	virtual const char*	getNewline() const { return ""; }
 };
@@ -997,9 +1183,25 @@ static
 int
 daemonNTStartup(int, char**)
 {
-	CSystemLogger sysLogger(DAEMON_NAME);
+	CSystemLogger sysLogger(DAEMON_NAME, false);
 	bye = &byeThrow;
 	return ARCH->daemonize(DAEMON_NAME, &daemonNTMainLoop);
+}
+
+static
+int
+foregroundStartup(int argc, char** argv)
+{
+	ARCH->showConsole(false);
+
+	// parse command line
+	parse(argc, argv);
+
+	// load configuration
+	loadConfig();
+
+	// never daemonize
+	return mainLoop();
 }
 
 static
@@ -1015,11 +1217,22 @@ int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
 	try {
+		CArchMiscWindows::setIcons((HICON)LoadImage(instance,
+									MAKEINTRESOURCE(IDI_SYNERGY),
+									IMAGE_ICON,
+									32, 32, LR_SHARED),
+									(HICON)LoadImage(instance,
+									MAKEINTRESOURCE(IDI_SYNERGY),
+									IMAGE_ICON,
+									16, 16, LR_SHARED));
 		CArch arch(instance);
 		CMSWindowsScreen::init(instance);
 		CLOG;
 		CThread::getCurrentThread().setPriority(-14);
 		CArgs args;
+
+		// set title on log window
+		ARCH->openConsole((CString(kAppVersion) + " " + "Server").c_str());
 
 		// windows NT family starts services using no command line options.
 		// since i'm not sure how to tell the difference between that and
@@ -1028,8 +1241,13 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		// users on NT can use `--daemon' or `--no-daemon' to force us out
 		// of the service code path.
 		StartupFunc startup = &standardStartup;
-		if (__argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
-			startup = &daemonNTStartup;
+		if (!CArchMiscWindows::isWindows95Family()) {
+			if (__argc <= 1) {
+				startup = &daemonNTStartup;
+			}
+			else {
+				startup = &foregroundStartup;
+			}
 		}
 
 		// send PRINT and FATAL output to a message box

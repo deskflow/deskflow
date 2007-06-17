@@ -48,6 +48,12 @@ CArchLogWindows::closeLog()
 }
 
 void
+CArchLogWindows::showLog(bool)
+{
+	// do nothing
+}
+
+void
 CArchLogWindows::writeLog(ELevel level, const char* msg)
 {
 	if (m_eventLog != NULL) {

@@ -22,8 +22,9 @@
 //
 
 CPrimaryClient::CPrimaryClient(const CString& name, CScreen* screen) :
-	m_name(name),
-	m_screen(screen)
+	CBaseClientProxy(name),
+	m_screen(screen),
+	m_fakeInputCount(0)
 {
 	// all clipboards are clean
 	for (UInt32 i = 0; i < kClipboardEnd; ++i) {
@@ -42,6 +43,34 @@ CPrimaryClient::reconfigure(UInt32 activeSides)
 	m_screen->reconfigure(activeSides);
 }
 
+UInt32
+CPrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
+{
+	return m_screen->registerHotKey(key, mask);
+}
+
+void
+CPrimaryClient::unregisterHotKey(UInt32 id)
+{
+	m_screen->unregisterHotKey(id);
+}
+
+void
+CPrimaryClient::fakeInputBegin()
+{
+	if (++m_fakeInputCount == 1) {
+		m_screen->fakeInputBegin();
+	}
+}
+
+void
+CPrimaryClient::fakeInputEnd()
+{
+	if (--m_fakeInputCount == 0) {
+		m_screen->fakeInputEnd();
+	}
+}
+
 SInt32
 CPrimaryClient::getJumpZoneSize() const
 {
@@ -57,7 +86,7 @@ CPrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
 KeyModifierMask
 CPrimaryClient::getToggleMask() const
 {
-	return m_screen->getActiveModifiers();
+	return m_screen->pollActiveModifiers();
 }
 
 bool
@@ -150,9 +179,15 @@ CPrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
 }
 
 void
-CPrimaryClient::keyDown(KeyID, KeyModifierMask, KeyButton)
+CPrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-	// ignore
+	if (m_fakeInputCount > 0) {
+// XXX -- don't forward keystrokes to primary screen for now
+		(void)key;
+		(void)mask;
+		(void)button;
+//		m_screen->keyDown(key, mask, button);
+	}
 }
 
 void
@@ -162,9 +197,15 @@ CPrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton)
 }
 
 void
-CPrimaryClient::keyUp(KeyID, KeyModifierMask, KeyButton)
+CPrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
-	// ignore
+	if (m_fakeInputCount > 0) {
+// XXX -- don't forward keystrokes to primary screen for now
+		(void)key;
+		(void)mask;
+		(void)button;
+//		m_screen->keyUp(key, mask, button);
+	}
 }
 
 void
@@ -192,7 +233,7 @@ CPrimaryClient::mouseRelativeMove(SInt32, SInt32)
 }
 
 void
-CPrimaryClient::mouseWheel(SInt32)
+CPrimaryClient::mouseWheel(SInt32, SInt32)
 {
 	// ignore
 }
@@ -213,10 +254,4 @@ void
 CPrimaryClient::setOptions(const COptionsList& options)
 {
 	m_screen->setOptions(options);
-}
-
-CString
-CPrimaryClient::getName() const
-{
-	return m_name;
 }

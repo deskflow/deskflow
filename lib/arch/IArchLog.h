@@ -52,6 +52,15 @@ public:
 	*/
 	virtual void		closeLog() = 0;
 
+	//! Show the log
+	/*!
+	Causes the log to become visible.  This generally only makes sense
+	for a log in a graphical user interface.  Other implementations
+	will do nothing.  Iff \p showIfEmpty is \c false then the implementation
+	may optionally only show the log if it's not empty.
+	*/
+	virtual void		showLog(bool showIfEmpty) = 0;
+
 	//! Write to the log
 	/*!
 	Writes the given string to the log with the given level.

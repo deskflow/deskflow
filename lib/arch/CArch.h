@@ -74,6 +74,7 @@ public:
 	// IArchConsole overrides
 	virtual void		openConsole(const char*);
 	virtual void		closeConsole();
+	virtual void		showConsole(bool showIfEmpty);
 	virtual void		writeConsole(const char*);
 	virtual const char*	getNewlineForConsole();
 
@@ -99,6 +100,7 @@ public:
 	// IArchLog overrides
 	virtual void		openLog(const char*);
 	virtual void		closeLog();
+	virtual void		showLog(bool showIfEmpty);
 	virtual void		writeLog(ELevel, const char*);
 
 	// IArchMultithread overrides
@@ -143,6 +145,7 @@ public:
 							const void* buf, size_t len);
 	virtual void		throwErrorOnSocket(CArchSocket);
 	virtual bool		setNoDelayOnSocket(CArchSocket, bool noDelay);
+	virtual bool		setReuseAddrOnSocket(CArchSocket, bool reuse);
 	virtual std::string		getHostName();
 	virtual CArchNetAddress	newAnyAddr(EAddressFamily);
 	virtual CArchNetAddress	copyAddr(CArchNetAddress);

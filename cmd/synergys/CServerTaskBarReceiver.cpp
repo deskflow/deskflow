@@ -15,8 +15,10 @@
 #include "CServerTaskBarReceiver.h"
 #include "CServer.h"
 #include "CLock.h"
+#include "CStringUtil.h"
 #include "IEventQueue.h"
 #include "CArch.h"
+#include "Version.h"
 
 //
 // CServerTaskBarReceiver
@@ -113,16 +115,17 @@ CServerTaskBarReceiver::getToolTip() const
 {
 	switch (m_state) {
 	case kNotRunning:
-		return "Synergy:  Not running";
+		return CStringUtil::print("%s:  Not running", kAppVersion);
 
 	case kNotWorking:
-		return std::string("Synergy:  ") + m_errorMessage;
-
+		return CStringUtil::print("%s:  %s",
+								kAppVersion, m_errorMessage.c_str());
+						
 	case kNotConnected:
-		return "Synergy:  Waiting for clients";
+		return CStringUtil::print("%s:  Waiting for clients", kAppVersion);
 
 	case kConnected:
-		return "Synergy:  Connected";
+		return CStringUtil::print("%s:  Connected", kAppVersion);
 
 	default:
 		return "";
