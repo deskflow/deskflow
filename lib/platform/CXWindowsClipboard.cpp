@@ -1188,7 +1188,7 @@ CXWindowsClipboard::wasOwnedAtTime(::Time time) const
 	// compare time to range
 	Time duration = lost - m_timeOwned;
 	Time when     = time - m_timeOwned;
-	return (/*when >= 0 &&*/ when < duration);
+	return (/*when >= 0 &&*/ when <= duration);
 }
 
 Atom
