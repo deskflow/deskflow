@@ -98,6 +98,9 @@ static const CKeyEntry	s_controlKeys[] = {
 COSXKeyState::COSXKeyState() :
 	m_deadKeyState(0)
 {
+	// enable input in scripts other that roman
+	KeyScript(smKeyEnableKybds);
+
 	// build virtual key map
 	for (size_t i = 0; i < sizeof(s_controlKeys) /
 								sizeof(s_controlKeys[0]); ++i) {
