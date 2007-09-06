@@ -21,7 +21,7 @@ SUBDIRS =							\
 	$(NULL)
 
 EXTRA_DIST =						\
-	nmake.mak						\
+	Makefile.win					\
 	examples/synergy.conf			\
 	win32util/autodep.cpp			\
 	$(NULL)

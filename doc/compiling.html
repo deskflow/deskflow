@@ -59,7 +59,7 @@ so synergy can find the X11 includes and libraries.
   search to find it.)  It's necessary to run the file if you didn't have
   the installer set up environment variables for you.  Then enter:
   <pre>
-  nmake /nologo /f nmake.mak
+  nmake /nologo /f Makefile.win
   </pre>
   This will build the programs into <span class="code">build\Release</span>.
 </p>
@@ -82,7 +82,7 @@ so synergy can find the X11 includes and libraries.
   the Nullsoft Scriptable Install System.  As in the building on Windows
   description above, enter:
   <pre>
-  nmake /nologo /f nmake.mak installer
+  nmake /nologo /f Makefile.win installer
   </pre>
   to build <span class="code">build\Release\SynergyInstaller.exe</span>.  Run
   this to install synergy.

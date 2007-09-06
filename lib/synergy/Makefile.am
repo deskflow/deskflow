@@ -14,7 +14,7 @@
 NULL =
 
 EXTRA_DIST =					\
-	nmake.mak					\
+	Makefile.win				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =			\

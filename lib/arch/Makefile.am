@@ -90,7 +90,7 @@ WIN32_SOURCE_FILES = 			\
 
 EXTRA_DIST =					\
 	CMultibyte.cpp				\
-	nmake.mak					\
+	Makefile.win				\
 	vsnprintf.cpp				\
 	$(UNIX_SOURCE_FILES)		\
 	$(WIN32_SOURCE_FILES)		\

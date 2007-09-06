@@ -11,7 +11,7 @@
 # GNU General Public License for more details.
 
 # Name of this file for recursive make
-MAKEFILE = nmake.mak
+MAKEFILE = Makefile.win
 
 # Default build is release is NODEBUG is defined, debug otherwise.
 !if !DEFINED(DEBUG)

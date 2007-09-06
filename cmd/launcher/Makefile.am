@@ -36,7 +36,7 @@ MSWINDOWS_SOURCE_FILES =	\
 	$(NULL)
 
 EXTRA_DIST =					\
-	nmake.mak					\
+	Makefile.win				\
 	synergy.ico					\
 	$(MSWINDOWS_SOURCE_FILES)	\
 	$(NULL)

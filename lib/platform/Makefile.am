@@ -92,7 +92,7 @@ CARBON_SOURCE_FILES =						\
 	$(NULL)
 
 EXTRA_DIST =								\
-	nmake.mak							\
+	Makefile.win							\
 	$(XWINDOWS_SOURCE_FILES)				\
 	$(MSWINDOWS_SOURCE_FILES)				\
 	$(MSWINDOWS_HOOK_SOURCE_FILES)			\

@@ -34,7 +34,7 @@ CARBON_SOURCE_FILES =					\
 	$(NULL)
 
 EXTRA_DIST =							\
-	nmake.mak							\
+	Makefile.win						\
 	synergys.ico						\
 	tb_error.ico						\
 	tb_idle.ico							\
