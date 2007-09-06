@@ -6,14 +6,15 @@
 # changes are written to stdout
 
 # location of perforce client
-P4=/home/perforce/bin/p4
+#P4=/home/perforce/bin/p4
+P4=/usr/local/bin/p4
 
-prefix=""
+prefix="//depot/project/synergy/"
 while [ -n "$1" ]; do
 	case "$1" in
 	-p)
-		# get depot filespec prefix to strip and escape slashes
-		prefix=`echo $2 | sed -e 's#/#\\\\/#g'`
+		# get depot filespec prefix to strip
+		prefix="$2"
 		shift
 		;;
 	*)
@@ -22,6 +23,9 @@ while [ -n "$1" ]; do
 	esac
 	shift
 done
+
+# escape slashes in prefix
+prefix=`echo $prefix | sed -e 's#/#\\\\/#g'`
 
 # get relevant changes
 changes=`$P4 changes $* | sed -e 's/Change \([0-9]*\).*/\1/'`
@@ -39,7 +43,7 @@ for change in $changes; do
 		sed -e 's/^[^ ]* \([^#]*\)#.*$/\1/' | sed -e "s/^$prefix//"
 	echo
 	$P4 describe -s $change | \
-		awk 'p==1 && !/$^/;/^$/{if (p==1) exit; else p=1}' | \
+		awk 'p==1 && !/^$/;/^$/{if (p==1) exit; else p=1}' | \
 		sed -e 's/^.//'
 	echo
 	echo "----------"
