@@ -1264,16 +1264,16 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	}
 	catch (XBase& e) {
 		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, e.what());
-		throw;
+		//throw;
 	}
 	catch (XArch& e) {
 		showError(instance, __argv[0], IDS_INIT_FAILED, e.what().c_str());
-		return kExitFailed;
 	}
 	catch (...) {
 		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, "<unknown>");
-		throw;
+		//throw;
 	}
+	return kExitFailed;
 }
 
 #elif SYSAPI_UNIX

@@ -1500,10 +1500,11 @@ CMSWindowsScreen::fixClipboardViewer()
 	// i'm not sure how that could happen.  the m_nextClipboardWindow = NULL
 	// was not in the code that infinite loops and may fix the bug but i
 	// doubt it.
-	return;
+/*
 	ChangeClipboardChain(m_window, m_nextClipboardWindow);
 	m_nextClipboardWindow = NULL;
 	m_nextClipboardWindow = SetClipboardViewer(m_window);
+*/
 }
 
 void

@@ -14,7 +14,7 @@
 NULL =
 
 EXTRA_DIST =					\
-	io.dsp						\
+	nmake.mak					\
 	$(NULL)
 
 MAINTAINERCLEANFILES =			\

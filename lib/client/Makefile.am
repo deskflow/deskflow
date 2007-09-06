@@ -14,7 +14,7 @@
 NULL =
 
 EXTRA_DIST =						\
-	client.dsp						\
+	nmake.mak						\
 	$(NULL)
 
 MAINTAINERCLEANFILES =				\

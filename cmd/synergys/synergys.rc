@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "winres.h"
+#include <winresrc.h>
 #if !defined(IDC_STATIC)
 #define IDC_STATIC (-1)
 #endif

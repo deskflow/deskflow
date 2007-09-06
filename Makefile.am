@@ -21,10 +21,9 @@ SUBDIRS =							\
 	$(NULL)
 
 EXTRA_DIST =						\
-	all.dsp							\
-	synergy.dsw						\
-	synergy.xcode/project.pbxproj	\
+	nmake.mak						\
 	examples/synergy.conf			\
+	win32util/autodep.cpp			\
 	$(NULL)
 
 MAINTAINERCLEANFILES =				\

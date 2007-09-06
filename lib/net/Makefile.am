@@ -14,7 +14,7 @@
 NULL =
 
 EXTRA_DIST =						\
-	net.dsp							\
+	nmake.mak						\
 	$(NULL)
 
 MAINTAINERCLEANFILES =				\

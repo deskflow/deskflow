@@ -7,14 +7,15 @@
 
 ;--------------------------------
 
-; Path to root of tree
-!define DEPTH "..\.."
+!ifndef OUTPUTDIR
+!define OUTPUTDIR "build\Release"
+!endif
 
 ; The name of the installer
 Name "Synergy"
 
 ; The file to write
-OutFile "${DEPTH}\build\SynergyInstaller.exe"
+OutFile "${OUTPUTFILE}"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\Synergy
@@ -42,7 +43,7 @@ ComponentText "This will install Synergy on your computer.  Select the optional 
 DirText "Choose a directory to install Synergy to:"
 UninstallText "This will uninstall Synergy from your computer."
 LicenseText "Synergy is distributed under the GNU GPL:"
-LicenseData "COPYING.txt"
+LicenseData ${OUTPUTDIR}\COPYING.txt
 
 ;--------------------------------
 
@@ -55,38 +56,38 @@ Section "Synergy (required)"
   SetOutPath $INSTDIR
   
   ; Put files there
-  File "${DEPTH}\build\synergy.exe"
-  File "${DEPTH}\build\synergyc.exe"
-  File "${DEPTH}\build\synergys.exe"
-  File "${DEPTH}\build\*.dll"
-  File COPYING.txt
-  File ChangeLog.txt
-  File ${DEPTH}\doc\PORTING
-  File ${DEPTH}\doc\about.html
-  File ${DEPTH}\doc\authors.html
-  File ${DEPTH}\doc\autostart.html
-  File ${DEPTH}\doc\banner.html
-  File ${DEPTH}\doc\compiling.html
-  File ${DEPTH}\doc\configuration.html
-  File ${DEPTH}\doc\contact.html
-  File ${DEPTH}\doc\developer.html
-  File ${DEPTH}\doc\faq.html
-  File ${DEPTH}\doc\history.html
-  File ${DEPTH}\doc\home.html
-  File ${DEPTH}\doc\index.html
-  File ${DEPTH}\doc\license.html
-  File ${DEPTH}\doc\news.html
-  File ${DEPTH}\doc\roadmap.html
-  File ${DEPTH}\doc\running.html
-  File ${DEPTH}\doc\security.html
-  File ${DEPTH}\doc\synergy.css
-  File ${DEPTH}\doc\tips.html
-  File ${DEPTH}\doc\toc.html
-  File ${DEPTH}\doc\trouble.html
+  File "${OUTPUTDIR}\synergy.exe"
+  File "${OUTPUTDIR}\synergyc.exe"
+  File "${OUTPUTDIR}\synergys.exe"
+  File "${OUTPUTDIR}\*.dll"
+  File "${OUTPUTDIR}\COPYING.txt"
+  File "${OUTPUTDIR}\ChangeLog.txt"
+  File doc\PORTING
+  File doc\about.html
+  File doc\authors.html
+  File doc\autostart.html
+  File doc\banner.html
+  File doc\compiling.html
+  File doc\configuration.html
+  File doc\contact.html
+  File doc\developer.html
+  File doc\faq.html
+  File doc\history.html
+  File doc\home.html
+  File doc\index.html
+  File doc\license.html
+  File doc\news.html
+  File doc\roadmap.html
+  File doc\running.html
+  File doc\security.html
+  File doc\synergy.css
+  File doc\tips.html
+  File doc\toc.html
+  File doc\trouble.html
 
   SetOutPath $INSTDIR\images
-  File ${DEPTH}\doc\images\logo.gif
-  File ${DEPTH}\doc\images\warp.gif
+  File doc\images\logo.gif
+  File doc\images\warp.gif
 
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\Synergy "Install_Dir" "$INSTDIR"

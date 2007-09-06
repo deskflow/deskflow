@@ -15,6 +15,20 @@
 #include "CSynergyHook.h"
 #include "ProtocolTypes.h"
 #include <zmouse.h>
+#include <tchar.h>
+ 
+#if _MSC_VER >= 1400
+// VS2005 hack - we don't use assert here because we don't want to link with the CRT.
+#undef assert
+#if _DEBUG
+#define assert(_X_) if (!(_X_)) __debugbreak()
+#else
+#define assert(_X_) __noop()
+#endif
+// VS2005 is a bit more smart than VC6 and optimize simple copy loop to
+// intrinsic memcpy.
+#pragma function(memcpy)
+#endif
 
 //
 // debugging compile flag.  when not zero the server doesn't grab
@@ -766,6 +780,79 @@ DllMain(HINSTANCE instance, DWORD reason, LPVOID)
 
 extern "C" {
 
+// VS2005 hack to not link with the CRT
+#if _MSC_VER >= 1400
+BOOL WINAPI _DllMainCRTStartup(
+		HINSTANCE instance, DWORD reason, LPVOID lpreserved)
+{
+  return DllMain(instance, reason, lpreserved);
+}
+
+// VS2005 is a bit more bright than VC6 and optimize simple copy loop to
+// intrinsic memcpy.
+void *  __cdecl memcpy(void * _Dst, const void * _Src, size_t _MaxCount)
+{
+  void * _DstBackup = _Dst;
+  switch (_MaxCount & 3) {
+  case 3:
+    ((char*)_Dst)[0] = ((char*)_Src)[0];
+    ++(char*&)_Dst;
+    ++(char*&)_Src;
+    --_MaxCount;
+  case 2:
+    ((char*)_Dst)[0] = ((char*)_Src)[0];
+    ++(char*&)_Dst;
+    ++(char*&)_Src;
+    --_MaxCount;
+  case 1:
+    ((char*)_Dst)[0] = ((char*)_Src)[0];
+    ++(char*&)_Dst;
+    ++(char*&)_Src;
+    --_MaxCount;
+    break;
+  case 0:
+    break;
+
+  default:
+    __assume(0);
+    break;
+  }
+
+  // I think it's faster on intel to deference than modify the pointer.
+  const size_t max = _MaxCount / sizeof(UINT_PTR);
+  for (size_t i = 0; i < max; ++i) {
+    ((UINT_PTR*)_Dst)[i] = ((UINT_PTR*)_Src)[i];
+  }
+
+  (UINT_PTR*&)_Dst += max;
+  (UINT_PTR*&)_Src += max;
+
+  switch (_MaxCount & 3) {
+  case 3:
+    ((char*)_Dst)[0] = ((char*)_Src)[0];
+    ++(char*&)_Dst;
+    ++(char*&)_Src;
+  case 2:
+    ((char*)_Dst)[0] = ((char*)_Src)[0];
+    ++(char*&)_Dst;
+    ++(char*&)_Src;
+  case 1:
+    ((char*)_Dst)[0] = ((char*)_Src)[0];
+    ++(char*&)_Dst;
+    ++(char*&)_Src;
+    break;
+  case 0:
+    break;
+
+  default:
+    __assume(0);
+    break;
+  }
+
+  return _DstBackup;
+}
+#endif
+
 int
 init(DWORD threadID)
 {
@@ -786,7 +873,7 @@ init(DWORD threadID)
 
 		// clean up after old process.  the system should've already
 		// removed the hooks so we just need to reset our state.
-		g_hinstance       = GetModuleHandle("synrgyhk");
+		g_hinstance       = GetModuleHandle(_T("synrgyhk"));
 		g_processID       = GetCurrentProcessId();
 		g_wheelSupport    = kWheelNone;
 		g_threadID        = 0;

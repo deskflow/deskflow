@@ -123,7 +123,7 @@ CTCPSocket::read(void* buffer, UInt32 n)
 	if (n > size) {
 		n = size;
 	}
-	if (buffer != NULL) {
+	if (buffer != NULL && n != 0) {
 		memcpy(buffer, m_inputBuffer.peek(n), n);
 	}
 	m_inputBuffer.pop(n);

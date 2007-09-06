@@ -14,8 +14,7 @@
 NULL =
 
 EXTRA_DIST =				\
-	installer.dsp			\
-	installer.mak			\
+	nmake.mak				\
 	synergy.nsi				\
 	dosify.c				\
 	$(NULL)

@@ -89,8 +89,8 @@ WIN32_SOURCE_FILES = 			\
 	$(NULL)
 
 EXTRA_DIST =					\
-	arch.dsp					\
 	CMultibyte.cpp				\
+	nmake.mak					\
 	vsnprintf.cpp				\
 	$(UNIX_SOURCE_FILES)		\
 	$(WIN32_SOURCE_FILES)		\

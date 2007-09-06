@@ -92,9 +92,7 @@ CARBON_SOURCE_FILES =						\
 	$(NULL)
 
 EXTRA_DIST =								\
-	makehook.dsp							\
-	platform.dsp							\
-	synrgyhk.dsp							\
+	nmake.mak							\
 	$(XWINDOWS_SOURCE_FILES)				\
 	$(MSWINDOWS_SOURCE_FILES)				\
 	$(MSWINDOWS_HOOK_SOURCE_FILES)			\

@@ -34,7 +34,7 @@ CARBON_SOURCE_FILES =					\
 	$(NULL)
 
 EXTRA_DIST =							\
-	synergyc.dsp						\
+	nmake.mak						\
 	synergyc.ico						\
 	tb_error.ico						\
 	tb_idle.ico							\

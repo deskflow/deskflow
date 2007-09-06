@@ -60,7 +60,7 @@ CArchDaemonNone::canInstallDaemon(const char*, bool)
 }
 
 bool
-CArchDaemonNone::isDaemonInstalled(const char* name, bool allUsers)
+CArchDaemonNone::isDaemonInstalled(const char*, bool)
 {
 	return false;
 }

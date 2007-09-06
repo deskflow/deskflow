@@ -14,7 +14,7 @@
 NULL =
 
 EXTRA_DIST =				\
-	common.dsp				\
+	nmake.mak				\
 	BasicTypes.h			\
 	IInterface.h			\
 	MacOSXPrecomp.h			\

@@ -1,3 +1,54 @@
+2007/07/01 crs
+*.vcproj
+*.vsprops
+synergy.sln
+dist/nullsoft/installer.mak
+dist/nullsoft/synergy.nsi
+lib/net/CSocketMultiplexer.cpp
+lib/net/CTCPSocket.cpp
+lib/platform/CSynergyHook.cpp
+
+Applied patch by maruel:
+- Fixed taking the address of begin() on an empty std::vector.
+- Fixed nsis makefile to use %ProgramFiles% environment variable.
+- Fixed nsis makefile to pass the output directory and file to makensis.
+- Fixed synergy.nsi to get the files from the output directory. That
+  enables a debug build of the installer.
+- Fixes to compile under VS2005.
+
+I did not apply VS2005 project files, instead adding nmake files.  nmake is
+pretty weak but the makefiles can be modified without having visual studio.
+Also modified the .rc files to not use winres.h.  This plus nmake means
+synergy can now be built using the freely downloadable Microsoft Windows
+SDK for Vista, available from microsoft's web site.  This change removes
+all of the old VC++6 project files in favor of the nmake files.  It also
+removes the XCode project in favor of ./configure and make.
+
+All of the nmake files are named nmake.mak.  Only the top level makefile
+is directly useful (the rest are included by it) so all builds are from
+the top level directory.  nmake knows the following targets:
+
+  all:  build synergy.exe, synergyc.exe and synergys.exe
+  clean:  remove all intermediate files, keep programs
+  clobber:  clean and remove programs
+  installer:  build programs and an installer
+  debug:  build a debug version of 'all'
+  release:  build a release version of 'all'
+  debug-installer:  build an installer of the debug build
+  release-installer:  build an installer of the release build
+
+The default build version is release so 'all' and 'installer' will build
+a release version.  The installer itself never has debug symbols, just
+the stuff it installs.  The default target is 'all'.  To build use:
+
+  nmake /nologo /f nmake.mak <target>
+
+VC++ and VisualStudio users may need to manually run vcvars.bat in a
+command.exe or cmd.exe window before invoking nmake.  The Window 98/Me
+command.exe may not handle potentially long command lines;  I haven't
+tried to verify if that works.
+
+----------
 2007/08/22 21:42:09 crs
 lib/platform/COSXKeyState.cpp
 

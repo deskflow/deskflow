@@ -14,7 +14,7 @@
 NULL =
 
 EXTRA_DIST =					\
-	libsynergy.dsp				\
+	nmake.mak					\
 	$(NULL)
 
 MAINTAINERCLEANFILES =			\

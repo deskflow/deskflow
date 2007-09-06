@@ -36,7 +36,7 @@ MSWINDOWS_SOURCE_FILES =	\
 	$(NULL)
 
 EXTRA_DIST =					\
-	launcher.dsp				\
+	nmake.mak					\
 	synergy.ico					\
 	$(MSWINDOWS_SOURCE_FILES)	\
 	$(NULL)

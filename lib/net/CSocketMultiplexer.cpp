@@ -201,7 +201,12 @@ CSocketMultiplexer::serviceThread(void*)
 		int status;
 		try {
 			// check for status
-			status = ARCH->pollSocket(&pfds[0], pfds.size(), -1);
+			if (!pfds.empty()) {
+				status = ARCH->pollSocket(&pfds[0], pfds.size(), -1);
+			}
+			else {
+				status = 0;
+			}
 		}
 		catch (XArchNetwork& e) {
 			LOG((CLOG_WARN "error in socket multiplexer: %s", e.what().c_str()));
