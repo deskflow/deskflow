@@ -37,7 +37,7 @@ END
 
 2 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "#include ""afxres.h""\r\n"
+    "#include <winresrc.h>\r\n"
     "\0"
 END
 
