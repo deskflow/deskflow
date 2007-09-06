@@ -1,3 +1,16 @@
+2007/08/22 21:42:09 crs
+lib/platform/COSXKeyState.cpp
+
+Allow input scripts other than roman on OS X.
+
+----------
+2007/06/22 19:17:24 crs
+lib/platform/CXWindowsClipboard.cpp
+
+Applied patch 1731039.  Fixes a bug in testing if X clipboard
+was owned at a given time.
+
+----------
 2006/04/02 12:16:23 crs
 lib/platform/CXWindowsKeyState.cpp
 
