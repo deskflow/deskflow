@@ -793,6 +793,13 @@ COSXKeyState::CKeyResource::getKeyID(UInt8 c)
 							str, GetScriptManagerVariable(smKeyScript),
 							kCFAllocatorNull);
 
+		// sometimes CFStringCreate...() returns NULL (e.g. Apple Korean
+		// encoding with char value 214).  if it did then make no key,
+		// otherwise CFStringCreateMutableCopy() will crash.
+		if (cfString == NULL) {
+			return kKeyNone; 
+		}
+
 		// convert to precomposed
 		CFMutableStringRef mcfString =
 			CFStringCreateMutableCopy(kCFAllocatorDefault, 0, cfString);
