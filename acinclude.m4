@@ -27,6 +27,23 @@ AC_DEFUN([ACX_CHECK_SOCKLEN_T], [
 	fi
 ])dnl ACX_CHECK_SOCKLEN_T
 
+# HP-UX defines socklen_t but doesn't use it in arg 3 for accept().
+AC_DEFUN([ACX_FUNC_ACCEPT], [
+	AC_MSG_CHECKING([for type of arg 3 for accept])
+	acx_accept_socklen_t_arg3=int
+	if test x"$acx_socklen_t_ok" = xyes; then
+		AC_TRY_COMPILE([
+			#include <unistd.h>
+			#include <sys/socket.h>
+			],
+			[struct sockaddr addr; socklen_t len; accept(0, &addr, &len);],
+			[acx_accept_socklen_t_arg3=socklen_t],
+			[acx_accept_socklen_t_arg3=int])
+	fi
+	AC_MSG_RESULT($acx_accept_socklen_t_arg3)
+       	AC_DEFINE_UNQUOTED(ACCEPT_TYPE_ARG3,$acx_accept_socklen_t_arg3,[Define to the base type of arg 3 for `accept'.])
+])dnl ACX_FUNC_ACCEPT
+
 AC_DEFUN([ACX_CHECK_CXX], [
 	AC_MSG_CHECKING([if g++ defines correct C++ macro])
 	AC_TRY_COMPILE(, [

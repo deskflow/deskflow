@@ -233,6 +233,7 @@ ACX_CHECK_GETPWUID_R
 AC_CHECK_FUNCS(vsnprintf)
 AC_FUNC_SELECT_ARGTYPES
 ACX_CHECK_POLL
+ACX_FUNC_ACCEPT
 dnl use AC_REPLACE_FUNCS() for stuff in string.h
 
 dnl checks for system services

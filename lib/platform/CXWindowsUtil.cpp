@@ -188,6 +188,7 @@ struct codepair {
 { XK_uogonek,                     0x0173 }, /* LATIN SMALL LETTER U WITH OGONEK */
 { XK_utilde,                      0x0169 }, /* LATIN SMALL LETTER U WITH TILDE */
 { XK_umacron,                     0x016b }, /* LATIN SMALL LETTER U WITH MACRON */
+#if defined(XK_Babovedot)
 { XK_Babovedot,                   0x1e02 }, /* LATIN CAPITAL LETTER B WITH DOT ABOVE */
 { XK_babovedot,                   0x1e03 }, /* LATIN SMALL LETTER B WITH DOT ABOVE */
 { XK_Dabovedot,                   0x1e0a }, /* LATIN CAPITAL LETTER D WITH DOT ABOVE */
@@ -214,6 +215,8 @@ struct codepair {
 { XK_wcircumflex,                 0x0175 }, /* LATIN SMALL LETTER W WITH CIRCUMFLEX */
 { XK_tabovedot,                   0x1e6b }, /* LATIN SMALL LETTER T WITH DOT ABOVE */
 { XK_ycircumflex,                 0x0177 }, /* LATIN SMALL LETTER Y WITH CIRCUMFLEX */
+#endif // defined(XK_Babovedot)
+#if defined(XK_overline)
 { XK_overline,                    0x203e }, /* OVERLINE */
 { XK_kana_fullstop,               0x3002 }, /* IDEOGRAPHIC FULL STOP */
 { XK_kana_openingbracket,         0x300c }, /* LEFT CORNER BRACKET */
@@ -278,6 +281,8 @@ struct codepair {
 { XK_kana_N,                      0x30f3 }, /* KATAKANA LETTER N */
 { XK_voicedsound,                 0x309b }, /* KATAKANA-HIRAGANA VOICED SOUND MARK */
 { XK_semivoicedsound,             0x309c }, /* KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK */
+#endif // defined(XK_overline)
+#if defined(XK_Farsi_0)
 { XK_Farsi_0,                     0x06f0 }, /* EXTENDED ARABIC-INDIC DIGIT 0 */
 { XK_Farsi_1,                     0x06f1 }, /* EXTENDED ARABIC-INDIC DIGIT 1 */
 { XK_Farsi_2,                     0x06f2 }, /* EXTENDED ARABIC-INDIC DIGIT 2 */
@@ -366,6 +371,8 @@ struct codepair {
 { XK_Arabic_farsi_yeh,            0x06cc }, /* ARABIC LETTER FARSI YEH */
 { XK_Arabic_yeh_baree,            0x06d2 }, /* ARABIC LETTER YEH BAREE */
 { XK_Arabic_heh_goal,             0x06c1 }, /* ARABIC LETTER HEH GOAL */
+#endif // defined(XK_Farsi_0)
+#if defined(XK_Serbian_dje)
 { XK_Serbian_dje,                 0x0452 }, /* CYRILLIC SMALL LETTER DJE */
 { XK_Macedonia_gje,               0x0453 }, /* CYRILLIC SMALL LETTER GJE */
 { XK_Cyrillic_io,                 0x0451 }, /* CYRILLIC SMALL LETTER IO */
@@ -378,7 +385,9 @@ struct codepair {
 { XK_Cyrillic_nje,                0x045a }, /* CYRILLIC SMALL LETTER NJE */
 { XK_Serbian_tshe,                0x045b }, /* CYRILLIC SMALL LETTER TSHE */
 { XK_Macedonia_kje,               0x045c }, /* CYRILLIC SMALL LETTER KJE */
+#if defined(XK_Ukrainian_ghe_with_upturn)
 { XK_Ukrainian_ghe_with_upturn,   0x0491 }, /* CYRILLIC SMALL LETTER GHE WITH UPTURN */
+#endif
 { XK_Byelorussian_shortu,         0x045e }, /* CYRILLIC SMALL LETTER SHORT U */
 { XK_Cyrillic_dzhe,               0x045f }, /* CYRILLIC SMALL LETTER DZHE */
 { XK_numerosign,                  0x2116 }, /* NUMERO SIGN */
@@ -394,7 +403,9 @@ struct codepair {
 { XK_Cyrillic_NJE,                0x040a }, /* CYRILLIC CAPITAL LETTER NJE */
 { XK_Serbian_TSHE,                0x040b }, /* CYRILLIC CAPITAL LETTER TSHE */
 { XK_Macedonia_KJE,               0x040c }, /* CYRILLIC CAPITAL LETTER KJE */
+#if defined(XK_Ukrainian_GHE_WITH_UPTURN)
 { XK_Ukrainian_GHE_WITH_UPTURN,   0x0490 }, /* CYRILLIC CAPITAL LETTER GHE WITH UPTURN */
+#endif
 { XK_Byelorussian_SHORTU,         0x040e }, /* CYRILLIC CAPITAL LETTER SHORT U */
 { XK_Cyrillic_DZHE,               0x040f }, /* CYRILLIC CAPITAL LETTER DZHE */
 { XK_Cyrillic_yu,                 0x044e }, /* CYRILLIC SMALL LETTER YU */
@@ -461,6 +472,8 @@ struct codepair {
 { XK_Cyrillic_SHCHA,              0x0429 }, /* CYRILLIC CAPITAL LETTER SHCHA */
 { XK_Cyrillic_CHE,                0x0427 }, /* CYRILLIC CAPITAL LETTER CHE */
 { XK_Cyrillic_HARDSIGN,           0x042a }, /* CYRILLIC CAPITAL LETTER HARD SIGN */
+#endif // defined(XK_Serbian_dje)
+#if defined(XK_Greek_ALPHAaccent)
 { XK_Greek_ALPHAaccent,           0x0386 }, /* GREEK CAPITAL LETTER ALPHA WITH TONOS */
 { XK_Greek_EPSILONaccent,         0x0388 }, /* GREEK CAPITAL LETTER EPSILON WITH TONOS */
 { XK_Greek_ETAaccent,             0x0389 }, /* GREEK CAPITAL LETTER ETA WITH TONOS */
@@ -532,6 +545,7 @@ struct codepair {
 { XK_Greek_chi,                   0x03c7 }, /* GREEK SMALL LETTER CHI */
 { XK_Greek_psi,                   0x03c8 }, /* GREEK SMALL LETTER PSI */
 { XK_Greek_omega,                 0x03c9 }, /* GREEK SMALL LETTER OMEGA */
+#endif // defined(XK_Greek_ALPHAaccent)
 { XK_leftradical,                 0x23b7 }, /* ??? */
 { XK_topleftradical,              0x250c }, /* BOX DRAWINGS LIGHT DOWN AND RIGHT */
 { XK_horizconnector,              0x2500 }, /* BOX DRAWINGS LIGHT HORIZONTAL */
@@ -700,6 +714,7 @@ struct codepair {
 { XK_leftshoe,                    0x2282 }, /* SUBSET OF */
 { XK_lefttack,                    0x22a2 }, /* RIGHT TACK */
 { XK_righttack,                   0x22a3 }, /* LEFT TACK */
+#if defined(XK_hebrew_doublelowline)
 { XK_hebrew_doublelowline,        0x2017 }, /* DOUBLE LOW LINE */
 { XK_hebrew_aleph,                0x05d0 }, /* HEBREW LETTER ALEF */
 { XK_hebrew_bet,                  0x05d1 }, /* HEBREW LETTER BET */
@@ -728,6 +743,8 @@ struct codepair {
 { XK_hebrew_resh,                 0x05e8 }, /* HEBREW LETTER RESH */
 { XK_hebrew_shin,                 0x05e9 }, /* HEBREW LETTER SHIN */
 { XK_hebrew_taw,                  0x05ea }, /* HEBREW LETTER TAV */
+#endif // defined(XK_hebrew_doublelowline)
+#if defined(XK_Thai_kokai)
 { XK_Thai_kokai,                  0x0e01 }, /* THAI CHARACTER KO KAI */
 { XK_Thai_khokhai,                0x0e02 }, /* THAI CHARACTER KHO KHAI */
 { XK_Thai_khokhuat,               0x0e03 }, /* THAI CHARACTER KHO KHUAT */
@@ -812,6 +829,8 @@ struct codepair {
 { XK_Thai_lekchet,                0x0e57 }, /* THAI DIGIT SEVEN */
 { XK_Thai_lekpaet,                0x0e58 }, /* THAI DIGIT EIGHT */
 { XK_Thai_lekkao,                 0x0e59 }, /* THAI DIGIT NINE */
+#endif // defined(XK_Thai_kokai)
+#if defined(XK_Hangul_Kiyeog)
 { XK_Hangul_Kiyeog,               0x3131 }, /* HANGUL LETTER KIYEOK */
 { XK_Hangul_SsangKiyeog,          0x3132 }, /* HANGUL LETTER SSANGKIYEOK */
 { XK_Hangul_KiyeogSios,           0x3133 }, /* HANGUL LETTER KIYEOK-SIOS */
@@ -903,6 +922,7 @@ struct codepair {
 { XK_Hangul_J_KkogjiDalrinIeung,  0x11f0 }, /* HANGUL JONGSEONG YESIEUNG */
 { XK_Hangul_J_YeorinHieuh,        0x11f9 }, /* HANGUL JONGSEONG YEORINHIEUH */
 { XK_Korean_Won,                  0x20a9 }, /* WON SIGN */
+#endif // defined(XK_Hangul_Kiyeog)
 { XK_OE,                          0x0152 }, /* LATIN CAPITAL LIGATURE OE */
 { XK_oe,                          0x0153 }, /* LATIN SMALL LIGATURE OE */
 { XK_Ydiaeresis,                  0x0178 }, /* LATIN CAPITAL LETTER Y WITH DIAERESIS */

@@ -401,11 +401,15 @@ CClientProxy1_0::recvInfo()
 							&x, &y, &w, &h, &dummy1, &mx, &my)) {
 		return false;
 	}
-	LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d", getName().c_str(), x, y, w, h));
+	LOG((CLOG_DEBUG "received client \"%s\" info shape=%d,%d %dx%d at %d,%d", getName().c_str(), x, y, w, h, mx, my));
 
 	// validate
 	if (w <= 0 || h <= 0) {
 		return false;
+	}
+	if (mx < x || mx >= x + w || my < y || my >= y + h) {
+		mx = x + w / 2;
+		my = y + h / 2;
 	}
 
 	// save

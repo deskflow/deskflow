@@ -127,9 +127,7 @@
 #endif
 
 // define NULL
-#ifndef NULL
-#define NULL 0
-#endif
+#include <stddef.h>
 
 // make assert available since we use it a lot
 #include <assert.h>

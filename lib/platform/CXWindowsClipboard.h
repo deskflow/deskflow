@@ -265,7 +265,7 @@ private:
 	bool				insertMultipleReply(Window, ::Time, Atom);
 	void				insertReply(CReply*);
 	void				pushReplies();
-	void				pushReplies(CReplyMap::iterator,
+	void				pushReplies(CReplyMap::iterator&,
 							CReplyList&, CReplyList::iterator);
 	bool				sendReply(CReply*);
 	void				clearReplies();

@@ -929,16 +929,19 @@ CXWindowsClipboard::pushReplies()
 	// send the first reply for each window if that reply hasn't
 	// been sent yet.
 	for (CReplyMap::iterator index = m_replies.begin();
-								index != m_replies.end(); ++index) {
+								index != m_replies.end(); ) {
 		assert(!index->second.empty());
 		if (!index->second.front()->m_replied) {
 			pushReplies(index, index->second, index->second.begin());
+		}
+		else {
+			++index;
 		}
 	}
 }
 
 void
-CXWindowsClipboard::pushReplies(CReplyMap::iterator mapIndex,
+CXWindowsClipboard::pushReplies(CReplyMap::iterator& mapIndex,
 				CReplyList& replies, CReplyList::iterator index)
 {
 	CReply* reply = *index;
@@ -959,8 +962,11 @@ CXWindowsClipboard::pushReplies(CReplyMap::iterator mapIndex,
 		CXWindowsUtil::CErrorLock lock(m_display);
 		Window requestor = mapIndex->first;
 		XSelectInput(m_display, requestor, m_eventMasks[requestor]);
-		m_replies.erase(mapIndex);
+		m_replies.erase(mapIndex++);
 		m_eventMasks.erase(requestor);
+	}
+	else {
+		++mapIndex;
 	}
 }
 
