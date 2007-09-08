@@ -56,11 +56,11 @@ const KeyID				CMSWindowsKeyState::s_virtualKey[] =
 	/* 0x012 */ { kKeyAlt_L },		// VK_MENU
 	/* 0x013 */ { kKeyPause },		// VK_PAUSE
 	/* 0x014 */ { kKeyCapsLock },	// VK_CAPITAL
-	/* 0x015 */ { kKeyNone },		// VK_KANA			
-	/* 0x016 */ { kKeyNone },		// VK_HANGUL		
-	/* 0x017 */ { kKeyNone },		// VK_JUNJA			
-	/* 0x018 */ { kKeyNone },		// VK_FINAL			
-	/* 0x019 */ { kKeyZenkaku },	// VK_KANJI			
+	/* 0x015 */ { kKeyHangulKana },	// VK_HANGUL, VK_KANA
+	/* 0x016 */ { kKeyNone },		// undefined
+	/* 0x017 */ { kKeyNone },		// VK_JUNJA
+	/* 0x018 */ { kKeyNone },		// VK_FINAL
+	/* 0x019 */ { kKeyHanjaKanzi },	// VK_KANJI
 	/* 0x01a */ { kKeyNone },		// undefined
 	/* 0x01b */ { kKeyEscape },		// VK_ESCAPE
 	/* 0x01c */ { kKeyHenkan },		// VK_CONVERT		

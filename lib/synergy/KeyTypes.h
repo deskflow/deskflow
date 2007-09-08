@@ -104,7 +104,9 @@ static const KeyID		kKeyScrollLock	= 0xEF14;
 static const KeyID		kKeySysReq		= 0xEF15;
 static const KeyID		kKeyEscape		= 0xEF1B;
 static const KeyID		kKeyHenkan		= 0xEF23;	/* Start/Stop Conversion */
+static const KeyID		kKeyHangulKana	= 0xEF26;	/* Hangul, Kana */
 static const KeyID		kKeyZenkaku		= 0xEF2A;	/* Zenkaku/Hankaku */
+static const KeyID		kKeyHanjaKanzi	= 0xEF2A;	/* Hanja, Kanzi */
 static const KeyID		kKeyDelete		= 0xEFFF;	/* Delete, rubout */
 
 // cursor control
