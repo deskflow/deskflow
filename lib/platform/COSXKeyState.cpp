@@ -32,6 +32,8 @@ static const UInt32 s_controlVK  = 59;
 static const UInt32 s_altVK      = 55;
 static const UInt32 s_superVK    = 58;
 static const UInt32 s_capsLockVK = 57;
+static const UInt32 s_numLockVK  = 71;
+static const UInt32 s_osxNumLock = 1 << 16;
 struct CKeyEntry {
 public:
 	KeyID				m_keyID;
@@ -68,6 +70,24 @@ static const CKeyEntry	s_controlKeys[] = {
 	{ kKeyF15,			113 },
 	{ kKeyF16,			106 },
 
+	{ kKeyKP_0,			82 },
+	{ kKeyKP_1,			83 },
+	{ kKeyKP_2,			84 },
+	{ kKeyKP_3,			85 },
+	{ kKeyKP_4,			86 },
+	{ kKeyKP_5,			87 },
+	{ kKeyKP_6,			88 },
+	{ kKeyKP_7,			89 },
+	{ kKeyKP_8,			91 },
+	{ kKeyKP_9,			92 },
+	{ kKeyKP_Decimal,	65 },
+	{ kKeyKP_Equal,		81 },
+	{ kKeyKP_Multiply,	67 },
+	{ kKeyKP_Add,		69 },
+	{ kKeyKP_Divide,	75 },
+	{ kKeyKP_Subtract,	79 },
+	{ kKeyKP_Enter,		76 },
+
 	// virtual key 110 is fn+enter and i have no idea what that's supposed
 	// to map to.  also the enter key with numlock on is a modifier but i
 	// don't know which.
@@ -86,7 +106,7 @@ static const CKeyEntry	s_controlKeys[] = {
 	{ kKeyMeta_R,		s_superVK }, // 61
 
 	// toggle modifiers
-//	{ kKeyNumLock,		71 },
+	{ kKeyNumLock,		s_numLockVK },
 	{ kKeyCapsLock,		s_capsLockVK }
 };
 
@@ -117,6 +137,7 @@ COSXKeyState::~COSXKeyState()
 KeyModifierMask
 COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 {
+LOG((CLOG_DEBUG1 "mask: %04x", mask));
 	// convert
 	KeyModifierMask outMask = 0;
 	if ((mask & shiftKey) != 0) {
@@ -142,6 +163,9 @@ COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 	}
 	if ((mask & alphaLock) != 0) {
 		outMask |= KeyModifierCapsLock;
+	}
+	if ((mask & s_osxNumLock) != 0) {
+		outMask |= KeyModifierNumLock;
 	}
 
 	return outMask;
@@ -572,6 +596,9 @@ COSXKeyState::mapSynergyHotKeyToMac(KeyID key, KeyModifierMask mask,
 	if ((mask & KeyModifierCapsLock) != 0) {
 		macModifierMask |= alphaLock;
 	}
+	if ((mask & KeyModifierNumLock) != 0) {
+		macModifierMask |= s_osxNumLock;
+	}
 	
 	return true;
 }
@@ -603,6 +630,10 @@ COSXKeyState::handleModifierKeys(void* target,
 	if ((changed & KeyModifierCapsLock) != 0) {
 		handleModifierKey(target, s_capsLockVK, kKeyCapsLock,
 							(newMask & KeyModifierCapsLock) != 0, newMask);
+	}
+	if ((changed & KeyModifierNumLock) != 0) {
+		handleModifierKey(target, s_numLockVK, kKeyNumLock,
+							(newMask & KeyModifierNumLock) != 0, newMask);
 	}
 }
 
