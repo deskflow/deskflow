@@ -54,7 +54,7 @@ CAdvancedOptions::doModal(bool isClient)
 
 	// do dialog
 	DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_ADVANCED_OPTIONS),
-								m_parent, dlgProc, (LPARAM)this);
+								m_parent, (DLGPROC)dlgProc, (LPARAM)this);
 }
 
 CString

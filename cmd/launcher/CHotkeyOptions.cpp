@@ -53,7 +53,7 @@ CHotkeyOptions::doModal()
 	// do dialog
 	m_inputFilter = m_config->getInputFilter();
 	DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_HOTKEY_OPTIONS),
-								m_parent, dlgProc, (LPARAM)this);
+								m_parent, (DLGPROC)dlgProc, (LPARAM)this);
 }
 
 void

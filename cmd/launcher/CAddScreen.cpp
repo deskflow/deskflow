@@ -70,7 +70,7 @@ CAddScreen::doModal()
 {
 	// do dialog
 	return (DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_ADD),
-								m_parent, dlgProc, (LPARAM)this) != 0);
+								m_parent, (DLGPROC)dlgProc, (LPARAM)this) != 0);
 }
 
 CString

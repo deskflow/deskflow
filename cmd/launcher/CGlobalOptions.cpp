@@ -50,7 +50,7 @@ CGlobalOptions::doModal()
 {
 	// do dialog
 	DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_GLOBAL_OPTIONS),
-								m_parent, dlgProc, (LPARAM)this);
+								m_parent, (DLGPROC)dlgProc, (LPARAM)this);
 }
 
 void

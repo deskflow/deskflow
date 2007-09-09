@@ -379,7 +379,7 @@ waitForChild(HWND hwnd, HANDLE thread, DWORD threadID)
 
 	// do dialog that let's the user terminate the test
 	DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_WAIT), hwnd,
-								waitDlgProc, (LPARAM)&info);
+								(DLGPROC)waitDlgProc, (LPARAM)&info);
 
 	// force the waiter thread to finish and wait for it
 	SetEvent(info.m_ready);

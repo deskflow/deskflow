@@ -300,15 +300,15 @@ CMSWindowsServerTaskBarReceiver::createWindow()
 	m_window = CreateDialogParam(m_appInstance,
 							MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
 							NULL,
-							&CMSWindowsServerTaskBarReceiver::staticDlgProc,
+							(DLGPROC)&CMSWindowsServerTaskBarReceiver::staticDlgProc,
 							reinterpret_cast<LPARAM>(
 								reinterpret_cast<void*>(this)));
 
 	// window should appear on top of everything, including (especially)
 	// the task bar.
-	DWORD style = GetWindowLong(m_window, GWL_EXSTYLE);
+	LONG_PTR style = GetWindowLongPtr(m_window, GWL_EXSTYLE);
 	style |= WS_EX_TOOLWINDOW | WS_EX_TOPMOST;
-	SetWindowLong(m_window, GWL_EXSTYLE, style);
+	SetWindowLongPtr(m_window, GWL_EXSTYLE, style);
 
 	// tell the task bar about this dialog
 	CArchTaskBarWindows::addDialog(m_window);
@@ -353,11 +353,11 @@ CMSWindowsServerTaskBarReceiver::staticDlgProc(HWND hwnd,
 	if (msg == WM_INITDIALOG) {
 		self = reinterpret_cast<CMSWindowsServerTaskBarReceiver*>(
 							reinterpret_cast<void*>(lParam));
-		SetWindowLong(hwnd, GWL_USERDATA, lParam);
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, lParam);
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = GetWindowLong(hwnd, GWL_USERDATA);
+		LONG data = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data != 0) {
 			self = reinterpret_cast<CMSWindowsServerTaskBarReceiver*>(
 							reinterpret_cast<void*>(data));

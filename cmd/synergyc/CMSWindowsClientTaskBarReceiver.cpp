@@ -272,15 +272,15 @@ CMSWindowsClientTaskBarReceiver::createWindow()
 	m_window = CreateDialogParam(m_appInstance,
 							MAKEINTRESOURCE(IDD_TASKBAR_STATUS),
 							NULL,
-							&CMSWindowsClientTaskBarReceiver::staticDlgProc,
+							(DLGPROC)&CMSWindowsClientTaskBarReceiver::staticDlgProc,
 							reinterpret_cast<LPARAM>(
 								reinterpret_cast<void*>(this)));
 
 	// window should appear on top of everything, including (especially)
 	// the task bar.
-	DWORD style = GetWindowLong(m_window, GWL_EXSTYLE);
+	LONG_PTR style = GetWindowLongPtr(m_window, GWL_EXSTYLE);
 	style |= WS_EX_TOOLWINDOW | WS_EX_TOPMOST;
-	SetWindowLong(m_window, GWL_EXSTYLE, style);
+	SetWindowLongPtr(m_window, GWL_EXSTYLE, style);
 
 	// tell the task bar about this dialog
 	CArchTaskBarWindows::addDialog(m_window);

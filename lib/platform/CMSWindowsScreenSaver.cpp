@@ -294,7 +294,7 @@ BOOL CALLBACK
 CMSWindowsScreenSaver::killScreenSaverFunc(HWND hwnd, LPARAM arg)
 {
 	if (IsWindowVisible(hwnd)) {
-		HINSTANCE instance = (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE);
+		HINSTANCE instance = (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE);
 		if (instance != CMSWindowsScreen::getInstance()) {
 			PostMessage(hwnd, WM_CLOSE, 0, 0);
 			*reinterpret_cast<bool*>(arg) = true;

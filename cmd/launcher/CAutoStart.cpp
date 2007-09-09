@@ -87,7 +87,7 @@ CAutoStart::doModal()
 
 	// do dialog
 	DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_AUTOSTART),
-								m_parent, dlgProc, (LPARAM)this);
+								m_parent, (DLGPROC)dlgProc, (LPARAM)this);
 
 	// remove log outputter
 	CLOG->pop_front();
