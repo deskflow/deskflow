@@ -277,9 +277,9 @@ const KeyID				CMSWindowsKeyState::s_virtualKey[] =
 	/* 0x0ef */ { kKeyNone },		// OEM specific
 	/* 0x0f0 */ { kKeyNone },		// OEM specific
 	/* 0x0f1 */ { kKeyNone },		// OEM specific
-	/* 0x0f2 */ { kKeyNone },		// OEM specific
-	/* 0x0f3 */ { kKeyNone },		// OEM specific
-	/* 0x0f4 */ { kKeyNone },		// OEM specific
+	/* 0x0f2 */ { kKeyHiraganaKatakana },	// VK_OEM_COPY
+	/* 0x0f3 */ { kKeyZenkaku },	// VK_OEM_AUTO
+	/* 0x0f4 */ { kKeyZenkaku },	// VK_OEM_ENLW
 	/* 0x0f5 */ { kKeyNone },		// OEM specific
 	/* 0x0f6 */ { kKeyNone },		// VK_ATTN			
 	/* 0x0f7 */ { kKeyNone },		// VK_CRSEL			
@@ -534,9 +534,9 @@ const KeyID				CMSWindowsKeyState::s_virtualKey[] =
 	/* 0x1ef */ { kKeyNone },		// OEM specific
 	/* 0x1f0 */ { kKeyNone },		// OEM specific
 	/* 0x1f1 */ { kKeyNone },		// OEM specific
-	/* 0x1f2 */ { kKeyNone },		// OEM specific
-	/* 0x1f3 */ { kKeyNone },		// OEM specific
-	/* 0x1f4 */ { kKeyNone },		// OEM specific
+	/* 0x1f2 */ { kKeyNone },		// VK_OEM_COPY
+	/* 0x1f3 */ { kKeyNone },		// VK_OEM_AUTO
+	/* 0x1f4 */ { kKeyNone },		// VK_OEM_ENLW
 	/* 0x1f5 */ { kKeyNone },		// OEM specific
 	/* 0x1f6 */ { kKeyNone },		// VK_ATTN			
 	/* 0x1f7 */ { kKeyNone },		// VK_CRSEL			
