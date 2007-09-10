@@ -53,12 +53,13 @@ IKeyState::CKeyInfo*
 IKeyState::CKeyInfo::alloc(KeyID id,
 				KeyModifierMask mask, KeyButton button, SInt32 count)
 {
-	CKeyInfo* info     = (CKeyInfo*)malloc(sizeof(CKeyInfo));
-	info->m_key        = id;
-	info->m_mask       = mask;
-	info->m_button     = button;
-	info->m_count      = count;
-	info->m_screens[0] = '\0';
+	CKeyInfo* info           = (CKeyInfo*)malloc(sizeof(CKeyInfo));
+	info->m_key              = id;
+	info->m_mask             = mask;
+	info->m_button           = button;
+	info->m_count            = count;
+	info->m_screens          = NULL;
+	info->m_screensBuffer[0] = '\0';
 	return info;
 }
 
@@ -67,44 +68,30 @@ IKeyState::CKeyInfo::alloc(KeyID id,
 				KeyModifierMask mask, KeyButton button, SInt32 count,
 				const std::set<CString>& destinations)
 {
-	// collect destinations into a string.  names are surrounded by ':'
-	// which makes searching easy later.  the string is empty if there
-	// are no destinations and "*" means all destinations.
-	CString screens;
-	for (std::set<CString>::const_iterator i = destinations.begin();
-								i != destinations.end(); ++i) {
-		if (*i == "*") {
-			screens = "*";
-			break;
-		}
-		else {
-			if (screens.empty()) {
-				screens = ":";
-			}
-			screens += *i;
-			screens += ":";
-		}
-	}
+	CString screens = join(destinations);
 
 	// build structure
-	CKeyInfo* info = (CKeyInfo*)malloc(sizeof(CKeyInfo) + screens.size());
-	info->m_key    = id;
-	info->m_mask   = mask;
-	info->m_button = button;
-	info->m_count  = count;
-	strcpy(info->m_screens, screens.c_str());
+	CKeyInfo* info  = (CKeyInfo*)malloc(sizeof(CKeyInfo) + screens.size());
+	info->m_key     = id;
+	info->m_mask    = mask;
+	info->m_button  = button;
+	info->m_count   = count;
+	info->m_screens = info->m_screensBuffer;
+	strcpy(info->m_screensBuffer, screens.c_str());
 	return info;
 }
 
 IKeyState::CKeyInfo*
 IKeyState::CKeyInfo::alloc(const CKeyInfo& x)
 {
-	CKeyInfo* info = (CKeyInfo*)malloc(sizeof(CKeyInfo) + strlen(x.m_screens));
-	info->m_key    = x.m_key;
-	info->m_mask   = x.m_mask;
-	info->m_button = x.m_button;
-	info->m_count  = x.m_count;
-	strcpy(info->m_screens, x.m_screens);
+	CKeyInfo* info  = (CKeyInfo*)malloc(sizeof(CKeyInfo) +
+										strlen(x.m_screensBuffer));
+	info->m_key     = x.m_key;
+	info->m_mask    = x.m_mask;
+	info->m_button  = x.m_button;
+	info->m_count   = x.m_count;
+	info->m_screens = x.m_screens ? info->m_screensBuffer : NULL;
+	strcpy(info->m_screensBuffer, x.m_screensBuffer);
 	return info;
 }
 
@@ -141,7 +128,31 @@ IKeyState::CKeyInfo::equal(const CKeyInfo* a, const CKeyInfo* b)
 			a->m_mask   == b->m_mask &&
 			a->m_button == b->m_button &&
 			a->m_count  == b->m_count &&
-			strcmp(a->m_screens, b->m_screens) == 0);
+			strcmp(a->m_screensBuffer, b->m_screensBuffer) == 0);
+}
+
+CString
+IKeyState::CKeyInfo::join(const std::set<CString>& destinations)
+{
+	// collect destinations into a string.  names are surrounded by ':'
+	// which makes searching easy.  the string is empty if there are no
+	// destinations and "*" means all destinations.
+	CString screens;
+	for (std::set<CString>::const_iterator i = destinations.begin();
+								i != destinations.end(); ++i) {
+		if (*i == "*") {
+			screens = "*";
+			break;
+		}
+		else {
+			if (screens.empty()) {
+				screens = ":";
+			}
+			screens += *i;
+			screens += ":";
+		}
+	}
+	return screens;
 }
 
 void

@@ -39,6 +39,7 @@ CEvent::Type			CServer::s_connectedEvent     = CEvent::kUnknown;
 CEvent::Type			CServer::s_disconnectedEvent  = CEvent::kUnknown;
 CEvent::Type			CServer::s_switchToScreen     = CEvent::kUnknown;
 CEvent::Type			CServer::s_switchInDirection  = CEvent::kUnknown;
+CEvent::Type			CServer::s_keyboardBroadcast  = CEvent::kUnknown;
 CEvent::Type			CServer::s_lockCursorToScreen = CEvent::kUnknown;
 
 CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
@@ -61,6 +62,7 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	m_switchTwoTapArmed(false),
 	m_switchTwoTapZone(3),
 	m_relativeMoves(false),
+	m_keyboardBroadcasting(false),
 	m_lockedToScreen(false)
 {
 	// must have a primary client and it must have a canonical name
@@ -133,6 +135,10 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleSwitchInDirectionEvent));
+	EVENTQUEUE->adoptHandler(getKeyboardBroadcastEvent(),
+							m_inputFilter,
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleKeyboardBroadcastEvent));
 	EVENTQUEUE->adoptHandler(getLockCursorToScreenEvent(),
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
@@ -353,6 +359,13 @@ CServer::getSwitchInDirectionEvent()
 {
 	return CEvent::registerTypeOnce(s_switchInDirection,
 							"CServer::switchInDirection");
+}
+
+CEvent::Type
+CServer::getKeyboardBroadcastEvent()
+{
+	return CEvent::registerTypeOnce(s_keyboardBroadcast,
+							"CServer:keyboardBroadcast");
 }
 
 CEvent::Type
@@ -1365,6 +1378,37 @@ CServer::handleSwitchInDirectionEvent(const CEvent& event, void*)
 }
 
 void
+CServer::handleKeyboardBroadcastEvent(const CEvent& event, void*)
+{
+	CKeyboardBroadcastInfo* info = (CKeyboardBroadcastInfo*)event.getData();
+
+	// choose new state
+	bool newState;
+	switch (info->m_state) {
+	case CKeyboardBroadcastInfo::kOff:
+		newState = false;
+		break;
+
+	default:
+	case CKeyboardBroadcastInfo::kOn:
+		newState = true;
+		break;
+
+	case CKeyboardBroadcastInfo::kToggle:
+		newState = !m_keyboardBroadcasting;
+		break;
+	}
+
+	// enter new state
+	if (newState != m_keyboardBroadcasting ||
+		info->m_screens != m_keyboardBroadcastingScreens) {
+		m_keyboardBroadcasting        = newState;
+		m_keyboardBroadcastingScreens = info->m_screens;
+		LOG((CLOG_DEBUG "keyboard broadcasting %s: %s", m_keyboardBroadcasting ? "on" : "off", m_keyboardBroadcastingScreens.c_str()));
+	}
+}
+
+void
 CServer::handleLockCursorToScreenEvent(const CEvent& event, void*)
 {
 	CLockCursorToScreenInfo* info = (CLockCursorToScreenInfo*)event.getData();
@@ -1513,10 +1557,17 @@ CServer::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button,
 	assert(m_active != NULL);
 
 	// relay
-	if (IKeyState::CKeyInfo::isDefault(screens)) {
+	if (!m_keyboardBroadcasting ||
+			(screens && IKeyState::CKeyInfo::isDefault(screens))) {
 		m_active->keyDown(id, mask, button);
 	}
 	else {
+		if (!screens && m_keyboardBroadcasting) {
+			screens = m_keyboardBroadcastingScreens.c_str();
+			if (IKeyState::CKeyInfo::isDefault(screens)) {
+				screens = "*";
+			}
+		}
 		for (CClientList::const_iterator index = m_clients.begin();
 								index != m_clients.end(); ++index) {
 			if (IKeyState::CKeyInfo::contains(screens, index->first)) {
@@ -1534,10 +1585,17 @@ CServer::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button,
 	assert(m_active != NULL);
 
 	// relay
-	if (IKeyState::CKeyInfo::isDefault(screens)) {
+	if (!m_keyboardBroadcasting ||
+			(screens && IKeyState::CKeyInfo::isDefault(screens))) {
 		m_active->keyUp(id, mask, button);
 	}
 	else {
+		if (!screens && m_keyboardBroadcasting) {
+			screens = m_keyboardBroadcastingScreens.c_str();
+			if (IKeyState::CKeyInfo::isDefault(screens)) {
+				screens = "*";
+			}
+		}
 		for (CClientList::const_iterator index = m_clients.begin();
 								index != m_clients.end(); ++index) {
 			if (IKeyState::CKeyInfo::contains(screens, index->first)) {
@@ -2088,5 +2146,31 @@ CServer::CScreenConnectedInfo::alloc(const CString& screen)
 		(CScreenConnectedInfo*)malloc(sizeof(CScreenConnectedInfo) +
 								screen.size());
 	strcpy(info->m_screen, screen.c_str());
+	return info;
+}
+
+
+//
+// CServer::CKeyboardBroadcastInfo
+//
+
+CServer::CKeyboardBroadcastInfo*
+CServer::CKeyboardBroadcastInfo::alloc(State state)
+{
+	CKeyboardBroadcastInfo* info =
+		(CKeyboardBroadcastInfo*)malloc(sizeof(CKeyboardBroadcastInfo));
+	info->m_state      = state;
+	info->m_screens[0] = '\0';
+	return info;
+}
+
+CServer::CKeyboardBroadcastInfo*
+CServer::CKeyboardBroadcastInfo::alloc(State state, const CString& screens)
+{
+	CKeyboardBroadcastInfo* info =
+		(CKeyboardBroadcastInfo*)malloc(sizeof(CKeyboardBroadcastInfo) +
+								screens.size());
+	info->m_state = state;
+	strcpy(info->m_screens, screens.c_str());
 	return info;
 }

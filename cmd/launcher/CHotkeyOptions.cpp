@@ -925,6 +925,8 @@ CInputFilter::CAction*
 				CHotkeyOptions::CActionDialog::s_action         = NULL;
 CInputFilter::CAction*
 				CHotkeyOptions::CActionDialog::s_lastGoodAction = NULL;
+std::set<CString>
+				CHotkeyOptions::CActionDialog::s_screens;
 WNDPROC			CHotkeyOptions::CActionDialog::s_editWndProc    = NULL;
 
 bool
@@ -995,11 +997,21 @@ CHotkeyOptions::CActionDialog::doInit(HWND hwnd)
 	// fill lock modes
 	child = getItem(hwnd, IDC_HOTKEY_ACTION_LOCK_LIST);
 	SendMessage(child, CB_ADDSTRING, 0,
-							(LPARAM)getString(IDS_LOCK_MODE_OFF).c_str());
+							(LPARAM)getString(IDS_MODE_OFF).c_str());
 	SendMessage(child, CB_ADDSTRING, 0,
-							(LPARAM)getString(IDS_LOCK_MODE_ON).c_str());
+							(LPARAM)getString(IDS_MODE_ON).c_str());
 	SendMessage(child, CB_ADDSTRING, 0,
-							(LPARAM)getString(IDS_LOCK_MODE_TOGGLE).c_str());
+							(LPARAM)getString(IDS_MODE_TOGGLE).c_str());
+	SendMessage(child, CB_SETCURSEL, 0, 0);
+
+	// fill keyboard broadcast modes
+	child = getItem(hwnd, IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_LIST);
+	SendMessage(child, CB_ADDSTRING, 0,
+							(LPARAM)getString(IDS_MODE_OFF).c_str());
+	SendMessage(child, CB_ADDSTRING, 0,
+							(LPARAM)getString(IDS_MODE_ON).c_str());
+	SendMessage(child, CB_ADDSTRING, 0,
+							(LPARAM)getString(IDS_MODE_TOGGLE).c_str());
 	SendMessage(child, CB_SETCURSEL, 0, 0);
 
 	// select when
@@ -1010,6 +1022,9 @@ CHotkeyOptions::CActionDialog::doInit(HWND hwnd)
 		child = getItem(hwnd, IDC_HOTKEY_ACTION_ON_DEACTIVATE);
 	}
 	setItemChecked(child, true);
+
+	// no screens by default
+	s_screens.clear();
 
 	// select mode
 	child = NULL;
@@ -1023,6 +1038,8 @@ CHotkeyOptions::CActionDialog::doInit(HWND hwnd)
 		dynamic_cast<CInputFilter::CSwitchToScreenAction*>(s_action);
 	CInputFilter::CSwitchInDirectionAction* switchInAction =
 		dynamic_cast<CInputFilter::CSwitchInDirectionAction*>(s_action);
+	CInputFilter::CKeyboardBroadcastAction* keyboardBroadcastAction=
+		dynamic_cast<CInputFilter::CKeyboardBroadcastAction*>(s_action);
 	if (keyAction != NULL) {
 		if (dynamic_cast<CKeystrokeDownUpAction*>(s_action) != NULL) {
 			child = getItem(hwnd, IDC_HOTKEY_ACTION_DOWNUP);
@@ -1065,6 +1082,14 @@ CHotkeyOptions::CActionDialog::doInit(HWND hwnd)
 		SendMessage(child, CB_SETCURSEL,
 							switchInAction->getDirection() - kLeft, 0);
 		child = getItem(hwnd, IDC_HOTKEY_ACTION_SWITCH_IN);
+	}
+	else if (keyboardBroadcastAction != NULL) {
+		// Save the screens we're broadcasting to
+		s_screens = keyboardBroadcastAction->getScreens();
+
+		child = getItem(hwnd, IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_LIST);
+		SendMessage(child, CB_SETCURSEL, keyboardBroadcastAction->getMode(), 0);
+		child = getItem(hwnd, IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST);
 	}
 	if (child != NULL) {
 		setItemChecked(child, true);
@@ -1111,12 +1136,18 @@ CHotkeyOptions::CActionDialog::updateControls(HWND hwnd)
 	else if (isItemChecked(getItem(hwnd, IDC_HOTKEY_ACTION_LOCK))) {
 		mode = 4;
 	}
+	else if (isItemChecked(getItem(hwnd,
+									IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST))) {
+		mode = 5;
+	}
 
 	// enable/disable all mode specific controls
 	enableItem(hwnd, IDC_HOTKEY_ACTION_HOTKEY, mode == 1);
 	enableItem(hwnd, IDC_HOTKEY_ACTION_SWITCH_TO_LIST, mode == 2);
 	enableItem(hwnd, IDC_HOTKEY_ACTION_SWITCH_IN_LIST, mode == 3);
 	enableItem(hwnd, IDC_HOTKEY_ACTION_LOCK_LIST, mode == 4);
+	enableItem(hwnd, IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_LIST, mode == 5);
+	enableItem(hwnd, IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_SCREENS, mode == 5);
 
 	// can only set screens in key actions
 	CInputFilter::CKeystrokeAction* keyAction =
@@ -1303,6 +1334,18 @@ CHotkeyOptions::CActionDialog::onSwitchInAction(HWND hwnd)
 		delete s_action;
 		s_action = new CInputFilter::CSwitchInDirectionAction(
 							(EDirection)(index + kLeft));
+	}
+}
+
+void
+CHotkeyOptions::CActionDialog::onKeyboardBroadcastAction(HWND hwnd)
+{
+	HWND child = getItem(hwnd, IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_LIST);
+	LRESULT index = SendMessage(child, CB_GETCURSEL, 0, 0);
+	if (index != CB_ERR) {
+		delete s_action;
+		s_action = new CInputFilter::CKeyboardBroadcastAction(
+			(CInputFilter::CKeyboardBroadcastAction::Mode)index, s_screens);
 	}
 }
 
@@ -1509,6 +1552,11 @@ CHotkeyOptions::CActionDialog::dlgProc(HWND hwnd,
 			updateControls(hwnd);
 			return TRUE;
 
+		case IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST:
+			onKeyboardBroadcastAction(hwnd);
+			updateControls(hwnd);
+			return TRUE;
+
 		case IDC_HOTKEY_ACTION_LOCK_LIST:
 			switch (HIWORD(wParam)) {
 			case LBN_SELCHANGE:
@@ -1533,11 +1581,37 @@ CHotkeyOptions::CActionDialog::dlgProc(HWND hwnd,
 			}
 			break;
 
+		case IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_LIST:
+			switch (HIWORD(wParam)) {
+			case LBN_SELCHANGE:
+				onKeyboardBroadcastAction(hwnd);
+				return TRUE;
+			}
+			break;
+
 		case IDC_HOTKEY_ACTION_SCREENS:
 			CScreensDialog::doModal(hwnd, s_config,
 				dynamic_cast<CInputFilter::CKeystrokeAction*>(s_action));
 			fillHotkey(hwnd);
 			return TRUE;
+
+		case IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_SCREENS: {
+			// convert screens to form that CScreenDialog::doModal() wants
+			IPlatformScreen::CKeyInfo* tmpInfo =
+				IPlatformScreen::CKeyInfo::alloc(0, 0, 0, 1, s_screens);
+			CInputFilter::CKeystrokeAction tmpAction(tmpInfo, true);
+
+			// get the screens
+			CScreensDialog::doModal(hwnd, s_config, &tmpAction);
+
+			// convert screens back
+			IPlatformScreen::CKeyInfo::split(
+								tmpAction.getInfo()->m_screens, s_screens);
+
+			// update
+			onKeyboardBroadcastAction(hwnd);
+			return TRUE;
+		}
 		}
 		break;
 

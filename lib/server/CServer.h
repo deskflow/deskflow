@@ -77,6 +77,20 @@ public:
 		char			m_screen[1];
 	};
 
+	//! Keyboard broadcast data
+	class CKeyboardBroadcastInfo {
+	public:
+		enum State { kOff, kOn, kToggle };
+
+		static CKeyboardBroadcastInfo* alloc(State state = kToggle);
+		static CKeyboardBroadcastInfo* alloc(State state,
+											const CString& screens);
+
+	public:
+		State			m_state;
+		char			m_screens[1];
+	};
+
 	/*!
 	Start the server with the configuration \p config and the primary
 	client (local screen) \p primaryClient.  The client retains
@@ -165,6 +179,14 @@ public:
 	that indicates the target direction.
 	*/
 	static CEvent::Type	getSwitchInDirectionEvent();
+
+	//! Get keyboard broadcast event type
+	/*!
+	Returns the keyboard broadcast event type.  The server responds
+	to this by turning on keyboard broadcasting or turning it off.  The
+	event data is a \c CKeyboardBroadcastInfo*.
+	*/
+	static CEvent::Type getKeyboardBroadcastEvent();
 
 	//! Get lock cursor event type
 	/*!
@@ -304,6 +326,7 @@ private:
 	void				handleClientCloseTimeout(const CEvent&, void*);
 	void				handleSwitchToScreenEvent(const CEvent&, void*);
 	void				handleSwitchInDirectionEvent(const CEvent&, void*);
+	void				handleKeyboardBroadcastEvent(const CEvent&,void*);
 	void				handleLockCursorToScreenEvent(const CEvent&, void*);
 	void				handleFakeInputBeginEvent(const CEvent&, void*);
 	void				handleFakeInputEndEvent(const CEvent&, void*);
@@ -421,6 +444,11 @@ private:
 	// relative mouse move option
 	bool				m_relativeMoves;
 
+	// flag whether or not we have broadcasting enabled and the screens to
+	// which we should send broadcasted keys.
+	bool				m_keyboardBroadcasting;
+	CString				m_keyboardBroadcastingScreens;
+
 	// screen locking (former scroll lock)
 	bool				m_lockedToScreen;
 
@@ -429,6 +457,7 @@ private:
 	static CEvent::Type	s_disconnectedEvent;
 	static CEvent::Type	s_switchToScreen;
 	static CEvent::Type	s_switchInDirection;
+	static CEvent::Type s_keyboardBroadcast;
 	static CEvent::Type s_lockCursorToScreen;
 };
 

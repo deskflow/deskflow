@@ -59,9 +59,9 @@
 #define IDS_AUTOSTART_SAVE_FAILED       54
 #define IDS_LOAD_FAILED                 55
 #define IDS_CONFIG_CHANGED              56
-#define IDS_LOCK_MODE_OFF               57
-#define IDS_LOCK_MODE_ON                58
-#define IDS_LOCK_MODE_TOGGLE            59
+#define IDS_MODE_OFF                    57
+#define IDS_MODE_ON                     58
+#define IDS_MODE_TOGGLE                 59
 #define IDS_ALL_SCREENS                 60
 #define IDS_ACTIVE_SCREEN               61
 #define IDD_MAIN                        101
@@ -169,6 +169,9 @@
 #define IDC_HOTKEY_SCREENS_DST          1096
 #define IDC_HOTKEY_SCREENS_ADD          1097
 #define IDC_HOTKEY_SCREENS_REMOVE       1098
+#define IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST 1099
+#define IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_LIST 1100
+#define IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_SCREENS 1101
 
 // Next default values for new objects
 // 
@@ -177,7 +180,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        116
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1098
+#define _APS_NEXT_CONTROL_VALUE         1102
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -268,12 +268,11 @@ CInputFilter::CAction::~CAction()
 	// do nothing
 }
 
-CInputFilter::CLockCursorToScreenAction::CLockCursorToScreenAction(Mode mode):
+CInputFilter::CLockCursorToScreenAction::CLockCursorToScreenAction(Mode mode) :
 	m_mode(mode)
 {
 	// do nothing
 }
-
 
 CInputFilter::CLockCursorToScreenAction::Mode
 CInputFilter::CLockCursorToScreenAction::getMode() const
@@ -396,6 +395,74 @@ CInputFilter::CSwitchInDirectionAction::perform(const CEvent& event)
 	CServer::CSwitchInDirectionInfo* info =
 		CServer::CSwitchInDirectionInfo::alloc(m_direction);
 	EVENTQUEUE->addEvent(CEvent(CServer::getSwitchInDirectionEvent(),
+								event.getTarget(), info,
+								CEvent::kDeliverImmediately));
+}
+
+CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(Mode mode) :
+	m_mode(mode)
+{
+	// do nothing
+}
+
+CInputFilter::CKeyboardBroadcastAction::CKeyboardBroadcastAction(
+		Mode mode,
+		const std::set<CString>& screens) :
+	m_mode(mode),
+	m_screens(IKeyState::CKeyInfo::join(screens))
+{
+	// do nothing
+}
+
+CInputFilter::CKeyboardBroadcastAction::Mode
+CInputFilter::CKeyboardBroadcastAction::getMode() const
+{
+	return m_mode;
+}
+
+std::set<CString>
+CInputFilter::CKeyboardBroadcastAction::getScreens() const
+{
+	std::set<CString> screens;
+	IKeyState::CKeyInfo::split(m_screens.c_str(), screens);
+	return screens;
+}
+
+CInputFilter::CAction*
+CInputFilter::CKeyboardBroadcastAction::clone() const
+{
+	return new CKeyboardBroadcastAction(*this);
+}
+
+CString
+CInputFilter::CKeyboardBroadcastAction::format() const
+{
+	static const char* s_mode[] = { "off", "on", "toggle" };
+	static const char* s_name = "keyboardBroadcast";
+
+	if (m_screens.empty() || m_screens[0] == '*') {
+		return CStringUtil::print("%s(%s)", s_name, s_mode[m_mode]);
+	}
+	else {
+		return CStringUtil::print("%s(%s,%.*s)", s_name, s_mode[m_mode],
+							m_screens.size() - 2,
+							m_screens.c_str() + 1);
+	}
+}
+
+void
+CInputFilter::CKeyboardBroadcastAction::perform(const CEvent& event)
+{
+	static const CServer::CKeyboardBroadcastInfo::State s_state[] = {
+		CServer::CKeyboardBroadcastInfo::kOff,
+		CServer::CKeyboardBroadcastInfo::kOn,
+		CServer::CKeyboardBroadcastInfo::kToggle
+	};
+
+	// send event
+	CServer::CKeyboardBroadcastInfo* info = 
+		CServer::CKeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
+	EVENTQUEUE->addEvent(CEvent(CServer::getKeyboardBroadcastEvent(),
 								event.getTarget(), info,
 								CEvent::kDeliverImmediately));
 }

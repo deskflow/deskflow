@@ -406,6 +406,8 @@ Allowed individual actions are:
   <span class="arg">screens</span> lists the screen or screens to
   direct the event to, regardless of the active screen.  If not
   given then the event is directed to the active screen only.
+  (Due to a bug, keys cannot be directed to the server while on a
+  client screen.)
 </p><p>
   <span class="code">keyDown</span> synthesizes a key press and
   <span class="code">keyUp</span> synthesizes a key release.
@@ -457,6 +459,30 @@ Allowed individual actions are:
   which may be one of <span class="code">left</span>,
   <span class="code">right</span>, <span class="code">up</span> or
   <span class="code">down</span>.
+</p><p>
+<li><a name="keyboardBroadcast"></a><span class="code">keyboardBroadcast(<span class="arg">mode</span>[,<span class="arg">screens</span>])</span>
+</p><p>
+  Turns broadcasting of keystrokes to multiple screens on and off.  When
+  turned on all key presses and releases are sent to all of the screens
+  listed in <span class="arg">screens</span>.  If not given, empty or
+  <span class="code">*</span> then keystrokes are broadcast to all screens.
+  (However, due to a bug, keys cannot be sent to the server while on a
+  client screen.)
+</p><p>
+  <span class="arg">mode</span> can be <span class="code">off</span>
+  to turn broadcasting off, <span class="code">on</span> to turn it
+  on, or <span class="code">toggle</span> to toggle the current
+  state.  The default is <span class="code">toggle</span>.
+</p><p>
+  <span class="arg">screens</span> is either <span class="code">*</span>
+  to indicate all screens or a colon (:) separated list of screen
+  names.  (Note that the screen name must have already been encountered
+  in the configuration file so you'll probably want to put actions at
+  the bottom of the file.)
+</p><p>
+  Multiple <span class="code">keyboardBroadcast</span> actions may be
+  configured with different <span class="arg">screens</span>.  The most
+  recently performed action defines the screens to broadcast to.
 </p><p>
 </ul>
 </p><p>

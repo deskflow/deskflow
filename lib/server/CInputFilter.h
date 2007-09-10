@@ -21,6 +21,7 @@
 #include "IPlatformScreen.h"
 #include "CString.h"
 #include "stdmap.h"
+#include "stdset.h"
 
 class CPrimaryClient;
 class CEvent;
@@ -173,6 +174,27 @@ public:
 		EDirection				m_direction;
 	};
 	
+	// CKeyboardBroadcastAction
+	class CKeyboardBroadcastAction : public CAction {
+	public:
+		enum Mode { kOff, kOn, kToggle };
+
+		CKeyboardBroadcastAction(Mode = kToggle);
+		CKeyboardBroadcastAction(Mode, const std::set<CString>& screens);
+
+		Mode					getMode() const;
+		std::set<CString>		getScreens() const;
+
+		// CAction overrides
+		virtual CAction*		clone() const;
+		virtual CString			format() const;
+		virtual void			perform(const CEvent&);
+
+	private:
+		Mode					m_mode;
+		CString					m_screens;
+	};
+
 	// CKeystrokeAction
 	class CKeystrokeAction : public CAction {
 	public:

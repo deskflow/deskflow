@@ -338,7 +338,7 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,126,37,50,14
 END
 
-IDD_HOTKEY_ACTION DIALOG DISCARDABLE  0, 0, 183, 202
+IDD_HOTKEY_ACTION DIALOG DISCARDABLE  0, 0, 183, 218
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Action"
 FONT 8, "MS Sans Serif"
@@ -356,6 +356,9 @@ BEGIN
                     "Button",BS_AUTORADIOBUTTON,7,101,77,10
     CONTROL         "Lock Cursor to Screen:",IDC_HOTKEY_ACTION_LOCK,"Button",
                     BS_AUTORADIOBUTTON,7,117,89,10
+    CONTROL         "Keyboard broadcasting:",
+                    IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST,"Button",
+                    BS_AUTORADIOBUTTON,7,133,89,10
     LTEXT           "&Hot key or mouse button:",IDC_STATIC,7,55,80,8
     EDITTEXT        IDC_HOTKEY_ACTION_HOTKEY,7,67,152,12,ES_WANTRETURN
     PUSHBUTTON      "...",IDC_HOTKEY_ACTION_SCREENS,162,67,14,12
@@ -365,13 +368,17 @@ BEGIN
                     CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     COMBOBOX        IDC_HOTKEY_ACTION_LOCK_LIST,106,115,70,58,
                     CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Action takes place &when:",IDC_STATIC,7,137,81,8
+    COMBOBOX        IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_LIST,106,131,53,58,
+                    CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "...",IDC_HOTKEY_ACTION_KEYBOARD_BROADCAST_SCREENS,
+                    162,131,14,12
+    LTEXT           "Action takes place &when:",IDC_STATIC,7,153,81,8
     CONTROL         "Hot key is pressed",IDC_HOTKEY_ACTION_ON_ACTIVATE,
-                    "Button",BS_AUTORADIOBUTTON | WS_TABSTOP,7,149,74,10
+                    "Button",BS_AUTORADIOBUTTON | WS_TABSTOP,7,165,74,10
     CONTROL         "Hot key is released",IDC_HOTKEY_ACTION_ON_DEACTIVATE,
-                    "Button",BS_AUTORADIOBUTTON,7,161,76,10
-    DEFPUSHBUTTON   "OK",IDOK,70,181,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,126,181,50,14
+                    "Button",BS_AUTORADIOBUTTON,7,177,76,10
+    DEFPUSHBUTTON   "OK",IDOK,70,197,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,126,197,50,14
 END
 
 IDD_HOTKEY_SCREENS DIALOG DISCARDABLE  0, 0, 237, 79
@@ -586,9 +593,9 @@ BEGIN
     IDS_AUTOSTART_SAVE_FAILED "Failed to save autostart configuration: %{1}"
     IDS_LOAD_FAILED         "Failed to load configuration."
     IDS_CONFIG_CHANGED      "Configuration changed on disk.  Reload?"
-    IDS_LOCK_MODE_OFF       "off"
-    IDS_LOCK_MODE_ON        "on"
-    IDS_LOCK_MODE_TOGGLE    "toggle"
+    IDS_MODE_OFF            "off"
+    IDS_MODE_ON             "on"
+    IDS_MODE_TOGGLE         "toggle"
     IDS_ALL_SCREENS         "All Screens"
     IDS_ACTIVE_SCREEN       "Active Screen"
 END

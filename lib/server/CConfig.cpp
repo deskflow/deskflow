@@ -1203,6 +1203,36 @@ CConfig::parseAction(CConfigReadContext& s,
 		action = new CInputFilter::CLockCursorToScreenAction(mode);
 	}
 
+	else if (name == "keyboardBroadcast") {
+		if (args.size() > 2) {
+			throw XConfigRead(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
+		}
+
+		CInputFilter::CKeyboardBroadcastAction::Mode mode =
+			CInputFilter::CKeyboardBroadcastAction::kToggle;
+		if (args.size() >= 1) {
+			if (args[0] == "off") {
+				mode = CInputFilter::CKeyboardBroadcastAction::kOff;
+			}
+			else if (args[0] == "on") {
+				mode = CInputFilter::CKeyboardBroadcastAction::kOn;
+			}
+			else if (args[0] == "toggle") {
+				mode = CInputFilter::CKeyboardBroadcastAction::kToggle;
+			}
+			else {
+				throw XConfigRead(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
+			}
+		}
+
+		std::set<CString> screens;
+		if (args.size() >= 2) {
+			parseScreens(s, args[1], screens);
+		}
+
+		action = new CInputFilter::CKeyboardBroadcastAction(mode, screens);
+	}
+
 	else {
 		throw XConfigRead(s, "unknown action argument \"%{1}\"", name);
 	}

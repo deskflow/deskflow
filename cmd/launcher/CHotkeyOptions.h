@@ -156,6 +156,7 @@ private:
 		static void		onLockAction(HWND hwnd);
 		static void		onSwitchToAction(HWND hwnd);
 		static void		onSwitchInAction(HWND hwnd);
+		static void		onKeyboardBroadcastAction(HWND hwnd);
 
 		static KeyID	getChar(WPARAM wParam, LPARAM lParam);
 		static KeyModifierMask
@@ -176,6 +177,7 @@ private:
 								s_action;
 		static CInputFilter::CAction*
 								s_lastGoodAction;
+		static std::set<CString>	s_screens;
 		static WNDPROC			s_editWndProc;
 	};
 
