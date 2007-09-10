@@ -44,7 +44,7 @@ b {
 pre {
 	display: block;
 	white-space: pre;
-	font-family: courier;
+	font-family: courier new;
 	font-size: 87.5%;
 }
 
@@ -124,19 +124,19 @@ pre {
 
 .arg {
 	font-style: italic;
-	font-family: courier;
+	font-family: courier new;
 }
 
 .userinput {
 	display: block;
 	white-space: pre;
-	font-family: courier;
+	font-family: courier new;
 	font-size: 87.5%;
 	font-weight: bold;
 }
 
 .code {
-	font-family: courier;
+	font-family: courier new;
 }
 
 .code table {
@@ -147,7 +147,7 @@ pre {
 .codeblock {
 	display: block;
 	white-space: pre;
-	font-family: courier;
+	font-family: courier new;
 	font-size: 87.5%;
 	border: 1px solid #000000;
 	padding: 1em;
