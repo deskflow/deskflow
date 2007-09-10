@@ -37,6 +37,12 @@ CStreamBuffer::peek(UInt32 n)
 {
 	assert(n <= m_size);
 
+	// if requesting no data then return NULL so we don't try to access
+	// an empty list.
+	if (n == 0) {
+		return NULL;
+	}
+
 	// reserve space in first chunk
 	ChunkList::iterator head = m_chunks.begin();
 	head->reserve(n + m_headUsed);
