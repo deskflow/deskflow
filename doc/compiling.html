@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+ <meta HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+ <meta name="keywords" content="Virtual Screen, Open Source, Software" />
+ <meta name="description" content="Mouse and Keyboard Sharing" />
+ <link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+ <title>Building and Installing Synergy</title>
+</head>
+<body class="main">
+<p>
+</p><h3>Prerequisites for building</h3><p>
+</p><p>
+To build synergy from the sources you'll need the following:
+<ul>
+<li>Windows
+ <ul>
+ <li>Microsoft Windows SDK for Vista; or
+ <li>VC++ 6.0 or up should work
+ </ul>
+</p><p>
+<li>Unix
+ <ul>
+ <li>gcc 2.95 or up
+ <li>X11R4 or up headers and libraries
+ </ul>
+</p><p>
+<li>Mac OS X
+ <ul>
+ <li>gcc 2.95 or up
+ <li>Carbon development headers and libraries
+ </ul>
+</ul>
+</p><p>
+</p><h3>Configuring the build</h3><p>
+</p><p>
+This step is not necessary on Windows.
+</p><p>
+To configure the build for your platform use the configure script:
+<pre>
+  ./configure
+</pre>
+For a list of options to configure use:
+<pre>
+  ./configure --help
+</pre>
+On Solaris you may need to use:
+<pre>
+  <nobr>./configure --x-includes=/usr/openwin/include --x-libraries=/usr/openwin/lib</nobr>
+</pre>
+so synergy can find the X11 includes and libraries.
+</p><p>
+</p><h3>Building</h3><p>
+<ul>
+<li>Windows
+<p>
+  Open a command prompt window (cmd.exe or command.exe).  If necessary
+  run vcvars.bat, created when VC++ or Visual Studio was installed.  (Use
+  search to find it.)  It's necessary to run the file if you didn't have
+  the installer set up environment variables for you.  Then enter:
+  <pre>
+  nmake /nologo /f Makefile.win
+  </pre>
+  This will build the programs into <span class="code">build\Release</span>.
+</p>
+<li>Unix or Mac OS X
+</p><p>
+  Simply enter:
+  <pre>
+  make
+  </pre>
+  This will build the client and server and leave them in their
+  respective source directories.
+</p>
+</ul>
+<p>
+</p><h3>Installing</h3><p>
+<ul>
+<li>Windows
+<p>
+  You'll need <a target="_top" href="http://nsis.sourceforge.net/">NSIS</a>,
+  the Nullsoft Scriptable Install System.  As in the building on Windows
+  description above, enter:
+  <pre>
+  nmake /nologo /f Makefile.win installer
+  </pre>
+  to build <span class="code">build\Release\SynergyInstaller.exe</span>.  Run
+  this to install synergy.
+</p><p>
+  Alternatively, you can simply copy the following files from the
+  <span class="code">build\Release</span>
+  directory to a directory you choose (perhaps under the
+  <span class="code">Program Files</span> directory):
+  <ul class="code">
+  <li>synergy.exe
+  <li>synergyc.exe
+  <li>synergys.exe
+  <li>synrgyhk.dll
+  </ul>
+</p>
+<li>Unix or Mac OS X
+<p>
+  <pre>
+  make install
+  </pre>
+  will install the client and server into
+  <span class="code">/usr/local/bin</span> unless you
+  specified a different directory when you ran configure.
+</p>
+</body>
+
+</html>

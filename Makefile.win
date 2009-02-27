@@ -1,0 +1,145 @@
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2007 Chris Schoeneman
+# 
+# This package is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# found in the file COPYING that should have accompanied this file.
+# 
+# This package is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# Name of this file for recursive make
+MAKEFILE = Makefile.win
+
+# Default build is release is NODEBUG is defined, debug otherwise.
+!if !DEFINED(DEBUG)
+NODEBUG = 1
+!else
+!undef NODEBUG
+!endif
+
+# Build all by default
+default: all
+
+# Redefine implicit rule suffixes
+.SUFFIXES:
+.SUFFIXES: .cpp .rc .obj
+
+# Shut up
+.SILENT:
+
+# Include system macros
+#APPVER = 5.0
+#TARGETOS = WINNT
+!include <win32.mak>
+
+# Be explicit about C++ compiler
+cpp = $(cc)
+cppdebug = $(cdebug)
+cppflags = $(cflags)
+cppvarsmt = $(cvarsmt)
+
+# Library tool options
+ildebug =
+ilflags = /nologo
+
+# Handy macro for defining list macros
+NULL =
+
+# System commands
+ECHO = echo
+MKDIR = mkdir
+RM = del /f
+RMR = rmdir /q /s
+
+# Local build utilities
+UTIL_DIR = win32util
+AUTODEP = "$(UTIL_DIR)\autodep.exe"
+
+# Destination for intermediate build targets
+BUILD_DIR = build
+BUILD_DEBUG_DIR = $(BUILD_DIR)\Debug
+BUILD_RELEASE_DIR = $(BUILD_DIR)\Release
+!if DEFINED(NODEBUG)
+BUILD_DST = $(BUILD_RELEASE_DIR)
+!else
+BUILD_DST = $(BUILD_DEBUG_DIR)
+!endif
+
+# Compiler argument changes
+cflags = $(cflags:-W3=-W4) /WX
+cflags = $(cflags) -D_CRT_SECURE_NO_DEPRECATE
+cflags = $(cflags) /GR
+!if !DEFINED(OLDCOMPILER)
+cflags = $(cflags) /EHsc
+!else
+cflags = $(cflags) /GX
+!endif
+!if !DEFINED(NODEBUG)
+!if !DEFINED(OLDCOMPILER)
+cdebug = $(cdebug) /RTC1
+!else
+cdebug = $(cdebug) /GZ
+!endif
+!endif
+
+# Initialize variables for library and program makefiles
+C_FILES =
+CPP_FILES =
+OBJ_FILES =
+LIB_FILES =
+PROGRAMS =
+OPTPROGRAMS = $(AUTODEP)
+
+# Include subdirectory makefiles
+!include lib\common\$(MAKEFILE)
+!include lib\arch\$(MAKEFILE)
+!include lib\base\$(MAKEFILE)
+!include lib\mt\$(MAKEFILE)
+!include lib\io\$(MAKEFILE)
+!include lib\net\$(MAKEFILE)
+!include lib\synergy\$(MAKEFILE)
+!include lib\platform\$(MAKEFILE)
+!include lib\client\$(MAKEFILE)
+!include lib\server\$(MAKEFILE)
+!include cmd\synergyc\$(MAKEFILE)
+!include cmd\synergys\$(MAKEFILE)
+!include cmd\launcher\$(MAKEFILE)
+!include dist\nullsoft\$(MAKEFILE)
+
+# Collect library and program variables
+INTERMEDIATES = $(OBJ_FILES) $(AUTODEP:.exe=.obj)
+TARGETS = $(LIB_FILES) $(PROGRAMS)
+OPTTARGETS = $(OPTPROGRAMS)
+
+# Build release by reinvoking make with NODEBUG defined
+release:
+	@$(MAKE) /nologo /f $(MAKEFILE) NODEBUG=1
+
+# Build debug by reinvoking make with DEBUG defined
+debug:
+	@$(MAKE) /nologo /f $(MAKEFILE) DEBUG=1
+
+# Build all targets
+all: $(TARGETS)
+
+# Clean intermediate targets
+clean:
+	-$(RMR) $(BUILD_DEBUG_DIR)
+	-$(RMR) $(BUILD_RELEASE_DIR)
+
+# Clean all targets
+clobber: clean
+	-$(RMR) $(BUILD_DIR)
+
+# Utility command build rules
+$(AUTODEP): $(AUTODEP:.exe=.cpp)
+!if DEFINED(NODEBUG)
+	@$(ECHO) Build $(@F)
+	$(cpp) $(cppdebug) $(cppflags) $(cppvars) /Fo"$(**:.cpp=.obj)" $**
+	$(link) $(ldebug) $(conflags) -out:$@ $(**:.cpp=.obj) $(conlibs)
+!else
+	@$(MAKE) /nologo /f $(MAKEFILE) NODEBUG=1 $@
+!endif
