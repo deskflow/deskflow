@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2002 Chris Schoeneman
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -19,7 +19,7 @@
 
 // set version macro if not set yet
 #if !defined(VERSION)
-#	define VERSION "1.3.2"
+# define VERSION "1.3.3"
 #endif
 
 // important strings
@@ -36,10 +36,10 @@ extern const char* kVersion;
 extern const char* kAppVersion;
 
 // exit codes
-static const int kExitSuccess		= 0;	// successful completion
-static const int kExitFailed		= 1;	// general failure
-static const int kExitTerminated	= 2;	// killed by signal
-static const int kExitArgs			= 3;	// bad arguments
-static const int kExitConfig		= 4;	// cannot read configuration
+static const int kExitSuccess   = 0;  // successful completion
+static const int kExitFailed    = 1;  // general failure
+static const int kExitTerminated  = 2;  // killed by signal
+static const int kExitArgs      = 3;  // bad arguments
+static const int kExitConfig    = 4;  // cannot read configuration
 
 #endif
