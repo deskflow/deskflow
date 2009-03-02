@@ -6,13 +6,18 @@
 ; It will install makensisw.exe into a directory that the user selects,
 
 ;--------------------------------
+!include "MUI2.nsh"
 
 !ifndef OUTPUTDIR
 !define OUTPUTDIR "build\Release"
 !endif
 
+SetDatablockOptimize 	on
+
 ; The name of the installer
-Name "Synergy"
+!define PRODUCT "Synergy+"
+Name "${PRODUCT} 1.3.3"
+BrandingText "${PRODUCT} 1.3.3"
 
 ; The file to write
 OutFile "${OUTPUTFILE}"
@@ -24,17 +29,38 @@ InstallDir $PROGRAMFILES\Synergy
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM "Software\Synergy" "Install_Dir"
 
+;Request application privileges for Windows Vista
+  RequestExecutionLevel admin
+
+!define MUI_ICON cmd\launcher\synergy.ico
+!define MUI_UNICON cmd\launcher\synergy.ico
+
 ;--------------------------------
 
 ; Pages
 
-Page components
-Page license
-Page directory
-Page instfiles
+;--------------------------------
+;Pages
+
+  !insertmacro MUI_PAGE_LICENSE "${OUTPUTDIR}\COPYING.txt"
+  !insertmacro MUI_PAGE_COMPONENTS
+  !insertmacro MUI_PAGE_DIRECTORY
+  !insertmacro MUI_PAGE_INSTFILES
+  
+  !insertmacro MUI_UNPAGE_CONFIRM
+  !insertmacro MUI_UNPAGE_INSTFILES
+
+;Page components
+;Page license
+;Page directory
+;Page instfiles
 
 UninstPage uninstConfirm
 UninstPage instfiles
+;--------------------------------
+;Languages
+ 
+  !insertmacro MUI_LANGUAGE "English"
 
 ;--------------------------------
 
@@ -48,7 +74,7 @@ LicenseData ${OUTPUTDIR}\COPYING.txt
 ;--------------------------------
 
 ; The stuff to install
-Section "Synergy (required)"
+Section "Synergy+ (required)"
 
   SectionIn RO
   
