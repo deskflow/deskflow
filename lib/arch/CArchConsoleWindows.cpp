@@ -23,6 +23,7 @@
 #define SYNERGY_MSG_CONSOLE_SHOW	WM_APP + 0x0023
 #define SYNERGY_MSG_CONSOLE_WRITE	WM_APP + 0x0024
 #define SYNERGY_MSG_CONSOLE_CLEAR	WM_APP + 0x0025
+#define TWIPS_PER_POINT		20
 
 //
 // CArchConsoleWindows
@@ -389,7 +390,7 @@ CArchConsoleWindows::threadMainLoop()
 								CFM_BOLD | CFM_ITALIC |
 								CFM_STRIKEOUT | CFM_UNDERLINE;
 	format.dwEffects       = 0;
-	format.yHeight         = metrics.tmHeight;
+	format.yHeight         = metrics.tmHeight * TWIPS_PER_POINT; // this is in 1/1440 in (twips)
 	format.yOffset         = 0;
 	format.crTextColor     = RGB(0, 0, 0);
 	format.bCharSet        = DEFAULT_CHARSET;
