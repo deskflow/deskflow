@@ -10,3 +10,7 @@ Sorin Sbarnea:
   * build (VC8/VC9) & test on Windows
   * build & test on OS X (less frequently)
   * release Windows installer
+
+Christian Masciulli:
+  * coding & tests on Windows
+  * coding & tests on Linux
