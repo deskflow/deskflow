@@ -1,0 +1,12 @@
+#summary List of project members and their area o expertise
+#labels Phase-Design
+= Introduction =
+Please add your name and the things you may help with.
+
+= Details =
+
+Sorin Sbarnea:
+  * Project admin
+  * build (VC8/VC9) & test on Windows
+  * build & test on OS X (less frequently)
+  * release Windows installer
