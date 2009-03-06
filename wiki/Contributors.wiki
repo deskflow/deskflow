@@ -14,3 +14,8 @@ Sorin Sbarnea:
 Christian Masciulli:
   * coding & tests on Windows
   * coding & tests on Linux
+
+Michael Bond:
+  * Merge in patches from sourceforge
+  * Tests on Windows & Archlinux
+  * Build up wiki
