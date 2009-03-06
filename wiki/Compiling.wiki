@@ -1,0 +1,74 @@
+#How to build synergy from the source
+
+= Prerequisites =
+
+To build synergy from the sources you'll need the following:
+
+  * Windows
+    * VC++ 6.0 or up 
+
+  * Unix
+    * gcc 2.95 or up
+    * X11R4 or up headers and libraries 
+
+  * Mac OS X
+    * XCode; or gcc 2.95 or up
+    * Carbon development headers and libraries 
+
+= Configuring =
+
+This step is not necessary when using VC++ or XCode.
+
+To configure the build for your platform use the configure script:
+
+  ./configure
+
+For a list of options to configure use:
+
+  ./configure --help
+
+On Solaris you may need to use:
+
+  ./configure --x-includes=/usr/openwin/include --x-libraries=/usr/openwin/lib
+
+so synergy can find the X11 includes and libraries.
+
+
+= Building =
+
+  * Windows
+
+      Start VC++ and open synergy.dsw. Set the active configuration (Build > Set Active Configuration) to All - Debug or All - Release then build. Binaries are built into ./debug or ./build.
+
+  * Unix or Mac OS X without XCode
+  To build the client and server and leave them in their respective source directories Simply enter:
+
+    make
+
+  * Mac OS X with XCode
+
+    Start XCode and open the synergy.xcode project. Build the all project using the Deployment flavor.
+
+= Installing =
+
+  * Windows
+
+    You'll need NSIS, the Nullsoft Scriptable Install System. Build All - Release then build Installer - Release. This creates SynergyInstaller.exe in the build directory. Run this to install synergy.
+
+    Alternatively, you can simply copy the following files from the debug or build directory to a directory you choose (perhaps under the Program Files directory):
+     synergy.exe
+     synergyc.exe
+     synergys.exe
+     synrgyhk.dll 
+
+  * Unix or Mac OS X without XCode
+
+     make install
+    
+    will install the client and server into /usr/local/bin unless you specified a different directory when you ran configure.
+
+  * Mac OS X with XCode
+
+    Copy the following files from ./build to a convenient location:
+     synergyc
+     synergys 
