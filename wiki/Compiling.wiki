@@ -1,4 +1,4 @@
-#How to build synergy from the source
+#summary How to build synergy from the source
 
 = Prerequisites =
 
