@@ -1,0 +1,23 @@
+#summary Details about supported operating systems.
+
+== Currently supported ==
+* Windows XP SP3
+* Windows 2003 Server
+* Windows Vista SP1
+* Windows 7
+
+=== Supported but without releasing binary builds yet ===
+* Mac OS 10.4 Tiger
+* Mac OS 10.5 Leopard
+* Mac OS 10.6 Snow-Leopard
+* SUSE Linux
+* Ubuntu
+* Fedora
+
+== What we are not going to support ==
+* Windows older than XP, like Windows 2000/NT or Windows 95/98/ME
+
+== Special cases ==
+Here are some possible future ports:
+* Windows Mobile (client)
+* Iphone controller-mode: impossible to use it as a client but could be used to emulate a keyboard and a mouse so it could run as a server.
