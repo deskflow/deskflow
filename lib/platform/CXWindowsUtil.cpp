@@ -1381,7 +1381,11 @@ CXWindowsUtil::setWindowProperty(Display* display, Window window,
 {
 	const UInt32 length       = 4 * XMaxRequestSize(display);
 	const unsigned char* data = reinterpret_cast<const unsigned char*>(vdata);
-	const UInt32 datumSize    = static_cast<UInt32>(format / 8);
+	UInt32 datumSize    = static_cast<UInt32>(format / 8);
+	// format 32 on 64bit systems is 8 bytes not 4.
+	if (format == 32) {
+		datumSize = sizeof(Atom);
+	}
 
 	// save errors
 	bool error = false;
