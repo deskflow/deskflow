@@ -263,6 +263,16 @@ CMSWindowsScreen::enter()
 
 		// all messages prior to now are invalid
 		nextMark();
+	} else {
+		// Entering a secondary screen. Ensure that no screensaver is active
+		// and that the screen is not in powersave mode.
+		CArchMiscWindows::wakeupDisplay();
+
+		if(m_screensaver != NULL && m_screensaverActive)
+		{
+			m_screensaver->deactivate();
+			m_screensaverActive = 0;
+		}
 	}
 
 	// now on screen
