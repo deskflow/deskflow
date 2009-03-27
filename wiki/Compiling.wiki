@@ -15,6 +15,9 @@ To build synergy from the sources you'll need the following:
     * XCode; or gcc 2.95 or up
     * Carbon development headers and libraries 
 
+Other requirements:
+  * automake
+
 = Configuring =
 
 This step is not necessary when using VC++ or XCode.
