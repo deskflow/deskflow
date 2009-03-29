@@ -36,6 +36,9 @@
 #	define XK_MISCELLANY
 #	define XK_XKB_KEYS
 #	include <X11/keysymdef.h>
+	extern "C" {
+#	include <X11/extensions/dpms.h>
+	}
 #	if HAVE_X11_EXTENSIONS_XTEST_H
 #		include <X11/extensions/XTest.h>
 #	else
@@ -228,6 +231,19 @@ CXWindowsScreen::enter()
 		// the window may not exist anymore so ignore errors
 		CXWindowsUtil::CErrorLock lock(m_display);
 		XSetInputFocus(m_display, m_lastFocus, m_lastFocusRevert, CurrentTime);
+	}
+
+	// Force the DPMS to turn screen back on since we don't
+	// actually cause physical hardware input to trigger it
+	int dummy;
+	CARD16 powerlevel;
+	BOOL enabled;
+	if (DPMSQueryExtension(m_display, &dummy, &dummy) &&
+	    DPMSCapable(m_display) &&
+	    DPMSInfo(m_display, &powerlevel, &enabled))
+	{
+		if (enabled && powerlevel != DPMSModeOn)
+			DPMSForceLevel(m_display, DPMSModeOn);
 	}
 
 	// unmap the hider/grab window.  this also ungrabs the mouse and
