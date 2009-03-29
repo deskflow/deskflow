@@ -26,6 +26,8 @@
 #include "CLog.h"
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
+#include <cstring>
+#include <cstdlib>
 
 //
 // CClient

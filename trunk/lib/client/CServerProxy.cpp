@@ -24,6 +24,7 @@
 #include "TMethodEventJob.h"
 #include "XBase.h"
 #include <memory>
+#include <cstring>
 
 //
 // CServerProxy

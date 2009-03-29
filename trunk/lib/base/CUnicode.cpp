@@ -14,7 +14,7 @@
 
 #include "CUnicode.h"
 #include "CArch.h"
-#include <string.h>
+#include <cstring>
 
 //
 // local utility functions

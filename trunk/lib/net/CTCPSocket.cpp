@@ -23,7 +23,9 @@
 #include "IEventJob.h"
 #include "CArch.h"
 #include "XArch.h"
-#include <string.h>
+#include <cstring>
+#include <cstdlib>
+#include <memory>
 
 //
 // CTCPSocket

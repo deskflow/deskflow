@@ -316,8 +316,10 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 	if (n > 0 && unblockPipe != NULL && (pfd[num].revents & POLLIN) != 0) {
 		// the unblock event was signalled.  flush the pipe.
 		char dummy[100];
+		int ignore;
+
 		do {
-			read(unblockPipe[0], dummy, sizeof(dummy));
+			ignore = read(unblockPipe[0], dummy, sizeof(dummy));
 		} while (errno != EAGAIN);
 
 		// don't count this unblock pipe in return value
@@ -489,7 +491,9 @@ CArchNetworkBSD::unblockPollSocket(CArchThread thread)
 	const int* unblockPipe = getUnblockPipeForThread(thread);
 	if (unblockPipe != NULL) {
 		char dummy = 0;
-		write(unblockPipe[1], &dummy, 1);
+		int ignore;
+
+		ignore = write(unblockPipe[1], &dummy, 1);
 	}
 }
 

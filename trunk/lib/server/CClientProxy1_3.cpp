@@ -17,6 +17,8 @@
 #include "CLog.h"
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
+#include <cstring>
+#include <memory>
 
 //
 // CClientProxy1_3

@@ -17,8 +17,9 @@
 
 #include "common.h"
 #include "CArch.h"
-#include <limits.h>
-#include <string.h>
+#include <climits>
+#include <cstring>
+#include <cstdlib>
 #if HAVE_LOCALE_H
 #	include <locale.h>
 #endif
@@ -26,7 +27,7 @@
 #	include <wchar.h>
 #elif __APPLE__
 	// wtf?  Darwin puts mbtowc() et al. in stdlib
-#	include <stdlib.h>
+#	include <cstdlib>
 #else
 	// platform apparently has no wchar_t support.  provide dummy
 	// implementations.  hopefully at least the C++ compiler has

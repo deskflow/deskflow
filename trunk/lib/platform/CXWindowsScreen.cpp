@@ -27,6 +27,7 @@
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
 #include <cstring>
+#include <cstdlib>
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else

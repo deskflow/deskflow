@@ -13,7 +13,7 @@
  */
 
 #include "XArchUnix.h"
-#include <string.h>
+#include <cstring>
 
 //
 // XArchEvalUnix

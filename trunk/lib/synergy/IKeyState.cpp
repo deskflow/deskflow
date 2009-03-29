@@ -13,7 +13,8 @@
  */
 
 #include "IKeyState.h"
-#include <string.h>
+#include <cstring>
+#include <cstdlib>
 
 //
 // IKeyState
