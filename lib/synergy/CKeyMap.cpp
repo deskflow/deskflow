@@ -16,8 +16,8 @@
 #include "KeyTypes.h"
 #include "CLog.h"
 #include <assert.h>
-#include <ctype.h>
-#include <stdlib.h>
+#include <cctype>
+#include <cstdlib>
 
 CKeyMap::CNameToKeyMap*			CKeyMap::s_nameToKeyMap      = NULL;
 CKeyMap::CNameToModifierMap*	CKeyMap::s_nameToModifierMap = NULL;

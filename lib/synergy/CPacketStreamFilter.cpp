@@ -16,6 +16,8 @@
 #include "IEventQueue.h"
 #include "CLock.h"
 #include "TMethodEventJob.h"
+#include <cstring>
+#include <memory>
 
 //
 // CPacketStreamFilter

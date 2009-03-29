@@ -28,7 +28,8 @@
 #include "CLog.h"
 #include "TMethodEventJob.h"
 #include "CArch.h"
-#include <string.h>
+#include <cstring>
+#include <cstdlib>
 
 //
 // CServer

@@ -13,6 +13,7 @@
  */
 
 #include "IPrimaryScreen.h"
+#include <cstdlib>
 
 //
 // IPrimaryScreen

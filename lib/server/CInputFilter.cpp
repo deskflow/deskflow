@@ -19,8 +19,8 @@
 #include "CEventQueue.h"
 #include "CLog.h"
 #include "TMethodEventJob.h"
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 
 // -----------------------------------------------------------------------------
 // Input Filter Condition Classes

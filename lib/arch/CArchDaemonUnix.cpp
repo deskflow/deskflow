@@ -19,6 +19,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <cstdlib>
 
 //
 // CArchDaemonUnix
@@ -37,6 +38,8 @@ CArchDaemonUnix::~CArchDaemonUnix()
 int
 CArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 {
+	int dummy;
+	
 	// fork so shell thinks we're done and so we're not a process
 	// group leader
 	switch (fork()) {
@@ -57,7 +60,7 @@ CArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 	setsid();
 
 	// chdir to root so we don't keep mounted filesystems points busy
-	chdir("/");
+	dummy = chdir("/");
 
 	// mask off permissions for any but owner
 	umask(077);
@@ -71,7 +74,7 @@ CArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 	// of standard I/O safely goes in the bit bucket.
 	open("/dev/null", O_RDONLY);
 	open("/dev/null", O_RDWR);
-	dup(1);
+	dummy = dup(1);
 
 	// invoke function
 	return func(1, &name);

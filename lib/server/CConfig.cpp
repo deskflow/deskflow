@@ -19,7 +19,7 @@
 #include "XSocket.h"
 #include "stdistream.h"
 #include "stdostream.h"
-#include <stdlib.h>
+#include <cstdlib>
 
 //
 // CConfig
