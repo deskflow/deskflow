@@ -1,0 +1,4 @@
+#summary Information regarding usage of synergy
+
+== How to prevent the switch to the other screen (lock) == 
+Scroll Lock Key on your Keyboard locks the Mouse and Keyboard on the current Screen.
