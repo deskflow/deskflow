@@ -18,5 +18,6 @@
   * Platform: Ubuntu
 
 == Others ==
-* https://sourceforge.net/projects/osxsynergygui/ (2005)
-* http://www.altuit.com/webs/altuit2/SynergyOSX/default.htm - Chipp Walters,  Chris Bohnert
+ * https://sourceforge.net/projects/osxsynergygui/ (2005)
+ * http://www.altuit.com/webs/altuit2/SynergyOSX/default.htm - Chipp Walters,  Chris Bohnert
+ * https://sourceforge.net/projects/synergykm
