@@ -1,14 +1,18 @@
 #summary This page will document other existing Synergy works and their status
 #labels Phase-Support
 
-* Synergy2 - original project 
+== Synergy2 - original project == 
   * Status: abandon-ware (no SVN change in 2+ years)
   * Relation: integrated
-* QuickSynergy
+== QSynergy - QT GUI for Synergy ==
+  * Homepage: http://www.volker-lanz.de/en/software/qsynergy/
+  * Platform: Windows, Mac OS X, Linux
+  * Author: Volker Lanz, agreed to help up integration QSynergy into Synergy+
+== QuickSynergy ==
   * Homepage: http://quicksynergy.sourceforge.net/
   * Last change: 2006
   * Platform: MacOS
-* Sinerji
+== Sinerji ==
   * Homepage: http://www.kde-apps.org/content/show.php?content=89732
   * Author: Farslan
   * Platform: Ubuntu
