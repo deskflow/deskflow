@@ -1040,6 +1040,12 @@ parse(int argc, const char* const* argv)
 
 	// identify system
 	LOG((CLOG_INFO "%s Server on %s %s", kAppVersion, ARCH->getOSName().c_str(), ARCH->getPlatformName().c_str()));
+
+#ifdef WIN32
+#ifdef _AMD64_
+	LOG((CLOG_WARN "This is an experimental x64 build of %s. Use it at your own risk.", kApplication));
+#endif
+#endif
 }
 
 static

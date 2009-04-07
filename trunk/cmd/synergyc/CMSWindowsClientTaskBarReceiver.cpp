@@ -325,14 +325,13 @@ CMSWindowsClientTaskBarReceiver::staticDlgProc(HWND hwnd,
 	if (msg == WM_INITDIALOG) {
 		self = reinterpret_cast<CMSWindowsClientTaskBarReceiver*>(
 							reinterpret_cast<void*>(lParam));
-		SetWindowLong(hwnd, GWL_USERDATA, lParam);
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR) lParam);
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = GetWindowLong(hwnd, GWL_USERDATA);
+		LONG_PTR data = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data != 0) {
-			self = reinterpret_cast<CMSWindowsClientTaskBarReceiver*>(
-							reinterpret_cast<void*>(data));
+			self = (CMSWindowsClientTaskBarReceiver*) data;
 		}
 	}
 
