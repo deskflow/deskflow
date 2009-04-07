@@ -33,6 +33,11 @@ public:
 	*/
 	virtual std::string	getOSName() const = 0;
 
+	//! Identify the platform
+	/*!
+	Returns a string identifying the platform this OS is running on.
+	*/
+	virtual std::string getPlatformName() const = 0;
 	//@}
 };
 

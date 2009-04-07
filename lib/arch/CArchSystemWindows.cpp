@@ -34,16 +34,39 @@ CArchSystemWindows::~CArchSystemWindows()
 std::string
 CArchSystemWindows::getOSName() const
 {
+#if WINVER >= _WIN32_WINNT_WIN2K
+	OSVERSIONINFOEX info;
+#else
 	OSVERSIONINFO info;
+#endif
+
 	info.dwOSVersionInfoSize = sizeof(info);
-	if (GetVersionEx(&info)) {
+	if (GetVersionEx((OSVERSIONINFO*) &info)) {
 		switch (info.dwPlatformId) {
 		case VER_PLATFORM_WIN32_NT:
+			#if WINVER >= _WIN32_WINNT_WIN2K
+			if (info.dwMajorVersion == 6) {
+				if(info.dwMinorVersion == 0) {
+					if (info.wProductType == VER_NT_WORKSTATION) {
+						return "Microsoft Windows Vista";
+					} else {
+						return "Microsoft Windows Server 2008";
+					}
+				} else if(info.dwMinorVersion == 1) {
+					if (info.wProductType == VER_NT_WORKSTATION) {
+						return "Microsoft Windows 7";
+					} else {
+						return "Microsoft Windows Server 2008 R2";
+					}
+				}
+			}
+			#endif
+
 			if (info.dwMajorVersion == 5 && info.dwMinorVersion == 2) {
 				return "Microsoft Windows Server 2003";
 			}
 			if (info.dwMajorVersion == 5 && info.dwMinorVersion == 1) {
-				return "Microsoft Windows Server XP";
+				return "Microsoft Windows XP";
 			}
 			if (info.dwMajorVersion == 5 && info.dwMinorVersion == 0) {
 				return "Microsoft Windows Server 2000";
@@ -83,4 +106,38 @@ CArchSystemWindows::getOSName() const
 		}
 	}
 	return "Microsoft Windows <unknown>";
+}
+
+std::string
+CArchSystemWindows::getPlatformName() const
+{
+#ifdef _X86_
+	if(isWOW64())
+		return "x86 (WOW64)";
+	else
+		return "x86";
+#endif
+#ifdef _AMD64_
+	return "x64";
+#endif
+	return "Unknown";
+}
+
+bool
+CArchSystemWindows::isWOW64() const
+{
+#if WINVER >= _WIN32_WINNT_WINXP
+	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+	LPFN_ISWOW64PROCESS fnIsWow64Process =
+		(LPFN_ISWOW64PROCESS) GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
+
+	BOOL bIsWow64 = FALSE;
+	if(NULL != fnIsWow64Process &&
+		fnIsWow64Process(GetCurrentProcess(), &bIsWow64) &&
+		bIsWow64)
+	{
+		return true;
+	}
+#endif
+	return false;
 }

@@ -27,6 +27,9 @@ public:
 
 	// IArchSystem overrides
 	virtual std::string	getOSName() const;
+	virtual std::string getPlatformName() const;
+
+	bool isWOW64() const;
 };
 
 #endif
