@@ -174,6 +174,7 @@ public:
 
 	// IArchSystem overrides
 	virtual std::string	getOSName() const;
+	virtual std::string getPlatformName() const;
 
 	// IArchTaskBar
 	virtual void		addReceiver(IArchTaskBarReceiver*);

@@ -566,7 +566,7 @@ BEGIN
     IDS_UNINSTALLED_SYSTEM  "Removed auto-start.  Synergy will not automatically start each time you start or reboot your computer."
     IDS_UNINSTALLED_USER    "Removed auto-start.  Synergy will not automatically start each time you log in."
     IDS_INVALID_SERVER_NAME "Server name `%{1}' is invalid."
-    IDS_TITLE               "Synergy - Version %{1}"
+	IDS_TITLE               "%{1} Version %{2}"
     IDS_SERVER_IS_CLIENT    "Please enter the name of the computer sharing a\nkeyboard and mouse, not the name of this computer,\nin the Other Computer's Host Name field."
     IDS_ADD_SCREEN          "Add Screen"
     IDS_EDIT_SCREEN         "Edit Screen %{1}"

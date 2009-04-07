@@ -51,7 +51,7 @@ CInfo::init(HWND hwnd)
 {
 	// collect info
 	CString version    =
-		CStringUtil::format(getString(IDS_TITLE).c_str(), VERSION);
+		CStringUtil::format(getString(IDS_TITLE).c_str(), kApplication, kVersion);
 	CString hostname   = ARCH->getHostName();
 	CString address    = ARCH->addrToString(ARCH->nameToAddr(hostname));
 	CString userConfig = ARCH->getUserDirectory();

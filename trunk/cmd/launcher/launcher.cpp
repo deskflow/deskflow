@@ -398,7 +398,7 @@ initMainWindow(HWND hwnd)
 {
 	// append version number to title
 	CString titleFormat = getString(IDS_TITLE);
-	setWindowText(hwnd, CStringUtil::format(titleFormat.c_str(), VERSION));
+	setWindowText(hwnd, CStringUtil::format(titleFormat.c_str(), kApplication, kVersion));
 
 	// load configuration
 	bool configLoaded =

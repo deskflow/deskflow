@@ -41,10 +41,20 @@ CArchSystemUnix::getOSName() const
 		msg += info.release;
 		msg += " ";
 		msg += info.version;
-		msg += " ";
-		msg += info.machine;
 		return msg;
 	}
 #endif
-	return "Unix <unknown>";
+	return "Unix";
+}
+
+std::string
+CArchSystemUnix::getPlatformName() const
+{
+#if defined(HAVE_SYS_UTSNAME_H)
+	struct utsname info;
+	if (uname(&info) == 0) {
+		return std::string(info.machine);
+	}
+#endif
+	return "unknown";
 }

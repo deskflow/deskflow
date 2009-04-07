@@ -1039,7 +1039,7 @@ parse(int argc, const char* const* argv)
 	}
 
 	// identify system
-	LOG((CLOG_INFO "Synergy server %s on %s", kVersion, ARCH->getOSName().c_str()));
+	LOG((CLOG_INFO "%s Server on %s %s", kAppVersion, ARCH->getOSName().c_str(), ARCH->getPlatformName().c_str()));
 }
 
 static

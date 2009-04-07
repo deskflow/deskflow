@@ -614,6 +614,12 @@ CArch::getOSName() const
 	return m_system->getOSName();
 }
 
+std::string
+CArch::getPlatformName() const
+{
+	return m_system->getPlatformName();
+}
+
 void
 CArch::addReceiver(IArchTaskBarReceiver* receiver)
 {
