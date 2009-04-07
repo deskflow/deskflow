@@ -117,11 +117,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\lib\arch;..\..\lib\base;..\..\lib\client;..\..\lib\common;..\..\lib\io;..\..\lib\mt;..\..\lib\net;..\..\lib\platform;..\..\lib\server;..\..\lib\synergy"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"

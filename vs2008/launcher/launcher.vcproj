@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\lib\arch;..\..\lib\base;..\..\lib\client;..\..\lib\common;..\..\lib\io;..\..\lib\mt;..\..\lib\net;..\..\lib\platform;..\..\lib\server;..\..\lib\synergy"
-				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -117,7 +117,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\lib\arch;..\..\lib\base;..\..\lib\client;..\..\lib\common;..\..\lib\io;..\..\lib\mt;..\..\lib\net;..\..\lib\platform;..\..\lib\server;..\..\lib\synergy"
-				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -170,6 +170,14 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{EC741F89-2FC8-46B5-9C0F-0F1A3089ED21}"
 			RelativePathToProject=".\libsynergy\libsynergy.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{18E611F5-A254-495B-BAC8-3322F827E7B3}"
+			RelativePathToProject=".\server\server.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{29F4C90F-33D2-4AD1-9E59-412DFA26FC29}"
+			RelativePathToProject=".\client\client.vcproj"
 		/>
 	</References>
 	<Files>

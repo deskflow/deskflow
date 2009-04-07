@@ -149,9 +149,8 @@ CLog::print(const char* file, int line, const char* fmt, ...) const
   }
 
   // print the prefix to the buffer.  leave space for priority label.
-  char message[2048];
   if (file != NULL) {
-    
+      char message[2048];
 	  struct tm *tm;
 	  char tmp[220];
 	  time_t t;
@@ -169,10 +168,11 @@ CLog::print(const char* file, int line, const char* fmt, ...) const
       message += pPad - g_priorityPad;
     }
 	*/
+	  // output buffer
+	  output(priority, message);
+  } else {
+	  output(priority, buffer);
   }
-
-  // output buffer
-  output(priority, message);
 
   // clean up
   if (buffer != stack) {
@@ -272,7 +272,10 @@ CLog::output(int priority, char* msg) const
 */
   // find end of message
   //char* end = msg + g_priorityPad + strlen(msg + g_priorityPad);
-  char* end = msg+strlen(msg)-1;
+  int len = strlen(msg);
+  char* tmp = new char[len+m_maxNewlineLength+1];
+  char* end = tmp + len;
+  strcpy(tmp, msg);
 
   // write to each outputter
   CArchMutexLock lock(m_mutex);
@@ -281,13 +284,13 @@ CLog::output(int priority, char* msg) const
                     ++index) {
     // get outputter
     ILogOutputter* outputter = *index;
-
-    // put an appropriate newline at the end
-    strcpy(end, outputter->getNewline());
+	
+	// put an appropriate newline at the end
+	strcpy(end, outputter->getNewline());
 
     // write message
     outputter->write(static_cast<ILogOutputter::ELevel>(priority),
-              msg /*+ g_maxPriorityLength - n*/);
+              tmp /*+ g_maxPriorityLength - n*/);
   }
   for (COutputterList::const_iterator index  = m_outputters.begin();
                     index != m_outputters.end(); ++index) {
@@ -299,8 +302,10 @@ CLog::output(int priority, char* msg) const
 
     // write message and break out of loop if it returns false
     if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority),
-              msg /*+ g_maxPriorityLength - n*/)) {
+              tmp /*+ g_maxPriorityLength - n*/)) {
       break;
     }
   }
+
+  delete[] tmp;
 }
