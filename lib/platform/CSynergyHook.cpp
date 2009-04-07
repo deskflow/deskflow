@@ -109,6 +109,7 @@ static SInt32			g_yScreen         = 0;
 static SInt32			g_wScreen         = 0;
 static SInt32			g_hScreen         = 0;
 static WPARAM			g_deadVirtKey     = 0;
+static WPARAM			g_deadRelease     = 0;
 static LPARAM			g_deadLParam      = 0;
 static BYTE				g_deadKeyState[256] = { 0 };
 static DWORD			g_hookThread      = 0;
@@ -234,8 +235,9 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG, wParam, lParam);
 
 	// ignore dead key release
-	if (g_deadVirtKey == wParam &&
+	if ((g_deadVirtKey == wParam || g_deadRelease == wParam) &&
 		(lParam & 0x80000000u) != 0) {
+		g_deadRelease = 0;
 		PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
 						wParam | 0x04000000, lParam);
 		return false;
@@ -290,14 +292,28 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		}
 	}
 
+	WORD c        = 0;
+
 	// map the key event to a character.  we have to put the dead
 	// key back first and this has the side effect of removing it.
 	if (g_deadVirtKey != 0) {
-		WORD c = 0;
-		ToAscii(g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
-								g_deadKeyState, &c, flags);
+		if(ToAscii(g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+					g_deadKeyState, &c, flags) == 2)
+		{
+			// If ToAscii returned 2, it means that we accidentally removed
+			// a double dead key instead of restoring it. Thus, we call
+			// ToAscii again with the same parameters to restore the
+			// internal dead key state.
+			ToAscii(g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+					g_deadKeyState, &c, flags);
+			
+			// We need to keep track of this because g_deadVirtKey will be
+			// cleared later on; this would cause the dead key release to
+			// incorrectly restore the dead key state.
+			g_deadRelease = g_deadVirtKey;
+		}
 	}
-	WORD c        = 0;
+	
 	UINT scanCode = ((lParam & 0x10ff0000u) >> 16);
 	int n         = ToAscii(wParam, scanCode, keys, &c, flags);
 
@@ -313,8 +329,13 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 		PostThreadMessage(g_threadID, SYNERGY_MSG_DEBUG,
 							wParam | 0x05000000, lParam);
 		if (g_deadVirtKey != 0) {
-			ToAscii(g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+			if(ToAscii(g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
+							g_deadKeyState, &c, flags) == 2)
+			{
+				ToAscii(g_deadVirtKey, (g_deadLParam & 0x10ff0000u) >> 16,
 							g_deadKeyState, &c, flags);
+				g_deadRelease = g_deadVirtKey;
+			}
 		}
 		BYTE keys2[256];
 		for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
