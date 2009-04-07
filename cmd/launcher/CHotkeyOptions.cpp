@@ -559,7 +559,7 @@ CHotkeyOptions::CConditionDialog::doModal(HWND parent,
 		s_lastGoodCondition = NULL;
 	}
 	int n = DialogBox(s_instance, MAKEINTRESOURCE(IDD_HOTKEY_CONDITION),
-								parent, dlgProc);
+								parent, (DLGPROC) dlgProc);
 
 	condition           = s_condition;
 	delete s_lastGoodCondition;
@@ -579,8 +579,8 @@ CHotkeyOptions::CConditionDialog::doInit(HWND hwnd)
 {
 	// subclass edit control
 	HWND child = getItem(hwnd, IDC_HOTKEY_CONDITION_HOTKEY);
-	s_editWndProc = (WNDPROC)GetWindowLong(child, GWL_WNDPROC);
-	SetWindowLong(child, GWL_WNDPROC, (LONG)editProc);
+	s_editWndProc = (WNDPROC)GetWindowLongPtr(child, GWLP_WNDPROC);
+	SetWindowLongPtr(child, GWLP_WNDPROC, (LONG_PTR) editProc);
 
 	// fill control
 	fillHotkey(hwnd);
@@ -944,7 +944,7 @@ CHotkeyOptions::CActionDialog::doModal(HWND parent, CConfig* config,
 	}
 
 	int n = DialogBox(s_instance, MAKEINTRESOURCE(IDD_HOTKEY_ACTION),
-								parent, dlgProc);
+								parent, (DLGPROC) dlgProc);
 
 	onActivate       = s_onActivate;
 	action           = s_action;
@@ -960,8 +960,8 @@ CHotkeyOptions::CActionDialog::doInit(HWND hwnd)
 {
 	// subclass edit control
 	HWND child = getItem(hwnd, IDC_HOTKEY_ACTION_HOTKEY);
-	s_editWndProc = (WNDPROC)GetWindowLong(child, GWL_WNDPROC);
-	SetWindowLong(child, GWL_WNDPROC, (LONG)editProc);
+	s_editWndProc = (WNDPROC)GetWindowLongPtr(child, GWLP_WNDPROC);
+	SetWindowLongPtr(child, GWLP_WNDPROC, (LONG_PTR)editProc);
 	setWindowText(getItem(hwnd, IDC_HOTKEY_ACTION_HOTKEY), "");
 	fillHotkey(hwnd);
 
@@ -1734,7 +1734,7 @@ CHotkeyOptions::CScreensDialog::doModal(HWND parent, CConfig* config,
 	s_config = config;
 	s_action = action;
 	DialogBox(s_instance, MAKEINTRESOURCE(IDD_HOTKEY_SCREENS),
-								parent, dlgProc);
+								parent, (DLGPROC) dlgProc);
 	s_config = NULL;
 	s_action = NULL;
 }
