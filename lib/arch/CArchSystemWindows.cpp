@@ -116,11 +116,13 @@ CArchSystemWindows::getPlatformName() const
 		return "x86 (WOW64)";
 	else
 		return "x86";
-#endif
+#else
 #ifdef _AMD64_
 	return "x64";
-#endif
+#else
 	return "Unknown";
+#endif
+#endif
 }
 
 bool
