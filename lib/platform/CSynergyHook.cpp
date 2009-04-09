@@ -359,6 +359,15 @@ doKeyboardHookHandler(WPARAM wParam, LPARAM lParam)
 	switch (n) {
 	default:
 		// key is a dead key
+
+		if(lParam & 0x80000000u)
+			// This handles the obscure situation where a key has been
+			// pressed which is both a dead key and a normal character
+			// depending on which modifiers have been pressed. We
+			// break here to prevent it from being considered a dead
+			// key.
+			break;
+
 		g_deadVirtKey = wParam;
 		g_deadLParam  = lParam;
 		for (size_t i = 0; i < sizeof(keys) / sizeof(keys[0]); ++i) {
