@@ -620,9 +620,8 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 						CloseHandle(thread);
 					}
 
-					// notify of success
-					askOkay(hwnd, getString(IDS_STARTED_TITLE),
-									getString(IDS_STARTED));
+					// notify of success: now disabled - it's silly to notify a success
+					//askOkay(hwnd, getString(IDS_STARTED_TITLE), getString(IDS_STARTED));
 
 					// quit
 					PostQuitMessage(0);
