@@ -77,7 +77,16 @@ LicenseData ${OUTPUTDIR}\COPYING.txt
 Section "Synergy+ (required)"
 
   SectionIn RO
-  
+
+  ; Install VC Redist fiiles
+  SetOutPath $TEMP
+  File "dist\nullsoft\files\vcredist_x86_2005sp1.exe"
+  File "dist\nullsoft\files\vcredist_x86_2008sp1.exe"
+    
+  Exec '$TEMP\vcredist_x86_2005sp1.exe /q:a /c:"VCREDI~1.EXE /q:a /c:""msiexec /i vcredist.msi /qn"" "'
+  Exec '$TEMP\vcredist_x86_2008sp1.exe /q:a /c:"VCREDI~1.EXE /q:a /c:""msiexec /i vcredist.msi /qn"" "'
+
+
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
   
