@@ -66,7 +66,7 @@ dist-rpm: dist
 	mkdir $(RPMTOPDIR)
 	(cd $(RPMTOPDIR); mkdir BUILD SOURCES SPECS SRPMS RPMS)
 	cp @PACKAGE@-@VERSION@.tar.gz $(RPMTOPDIR)/SOURCES
-	rpm --define '_topdir $(RPMTOPDIR)' -ba dist/rpm/synergy.spec && \
+	rpmbuild --define '_topdir $(RPMTOPDIR)' -ba dist/rpm/synergy.spec && \
 		mv -f $(RPMTOPDIR)/SRPMS/*.rpm . && \
 		mv -f $(RPMTOPDIR)/RPMS/*/*.rpm . && \
 		rm -rf $(RPMTOPDIR)
