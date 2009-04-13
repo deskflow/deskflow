@@ -99,6 +99,9 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary) :
 	assert(s_screen == NULL);
 
 	s_screen = this;
+	
+	// initializes Xlib support for concurrent threads.
+	XInitThreads();
 
 	// set the X I/O error handler so we catch the display disconnecting
 	XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
