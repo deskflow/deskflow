@@ -52,6 +52,7 @@ private:
 	XEvent				m_event;
 	CEventList			m_postedEvents;
 	bool				m_waiting;
+	int				m_pipefd[2];
 };
 
 #endif
