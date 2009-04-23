@@ -22,13 +22,13 @@ Other requirements:
 This step is not necessary when using VC++ or XCode.
 
 Run these commands:
-{{
+{{{
  aclocal
  autoconf
  autoheader
  automake 
  ./configure
-}}
+}}}
 
 For a list of options to configure use:
 
