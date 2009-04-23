@@ -21,15 +21,14 @@ Other requirements:
 = Configuring =
 This step is not necessary when using VC++ or XCode.
 
-First run:
+Run these commands:
+{{
  aclocal
  autoconf
  autoheader
  automake 
-
-To configure the build for your platform use the configure script:
-
-  ./configure
+ ./configure
+}}
 
 For a list of options to configure use:
 
