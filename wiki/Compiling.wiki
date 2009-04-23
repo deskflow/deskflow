@@ -22,10 +22,10 @@ Other requirements:
 This step is not necessary when using VC++ or XCode.
 
 First run:
-aclocal
-autoconf
-autoheader
-automake 
+ aclocal
+ autoconf
+ autoheader
+ automake 
 
 To configure the build for your platform use the configure script:
 
