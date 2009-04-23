@@ -44,7 +44,7 @@
 #	endif
 #endif
 
-//
+	//
 // verify existence of required types
 //
 
@@ -67,14 +67,15 @@
 // larger than indicated.
 //
 
+// Added this because it doesn't compile on OS X 10.6 because they are already defined in Carbon
+#if !defined(__MACTYPES__)
 typedef signed TYPE_OF_SIZE_1	SInt8;
 typedef signed TYPE_OF_SIZE_2	SInt16;
 typedef signed TYPE_OF_SIZE_4	SInt32;
-
 typedef unsigned TYPE_OF_SIZE_1	UInt8;
 typedef unsigned TYPE_OF_SIZE_2	UInt16;
 typedef unsigned TYPE_OF_SIZE_4	UInt32;
-
+#endif
 //
 // clean up
 //
@@ -84,3 +85,4 @@ typedef unsigned TYPE_OF_SIZE_4	UInt32;
 #undef TYPE_OF_SIZE_4
 
 #endif
+	
