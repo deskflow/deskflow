@@ -85,4 +85,3 @@ typedef unsigned TYPE_OF_SIZE_4	UInt32;
 #undef TYPE_OF_SIZE_4
 
 #endif
-	
