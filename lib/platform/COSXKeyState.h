@@ -15,11 +15,11 @@
 #ifndef COSXKEYSTATE_H
 #define COSXKEYSTATE_H
 
+#include <Carbon/Carbon.h>
 #include "CKeyState.h"
 #include "stdmap.h"
 #include "stdset.h"
 #include "stdvector.h"
-#include <Carbon/Carbon.h>
 
 //! OS X key state
 /*!

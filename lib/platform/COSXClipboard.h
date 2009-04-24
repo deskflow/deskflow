@@ -15,9 +15,9 @@
 #ifndef COSXCLIPBOARD_H
 #define COSXCLIPBOARD_H
 
+#include <Carbon/Carbon.h>
 #include "IClipboard.h"
 #include <vector>
-#include <Carbon/Carbon.h>
 
 class IOSXClipboardConverter;
 

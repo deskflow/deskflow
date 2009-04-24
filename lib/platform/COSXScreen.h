@@ -15,10 +15,10 @@
 #ifndef COSXSCREEN_H
 #define COSXSCREEN_H
 
+#include <Carbon/Carbon.h>
 #include "CPlatformScreen.h"
 #include "stdmap.h"
 #include "stdvector.h"
-#include <Carbon/Carbon.h>
 
 #include <mach/mach_port.h>
 #include <mach/mach_interface.h>

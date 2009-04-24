@@ -15,8 +15,8 @@
 #ifndef COSXEVENTQUEUEBUFFER_H
 #define COSXEVENTQUEUEBUFFER_H
 
-#include "IEventQueueBuffer.h"
 #include <Carbon/Carbon.h>
+#include "IEventQueueBuffer.h"
 
 //! Event queue buffer for OS X
 class COSXEventQueueBuffer : public IEventQueueBuffer {
