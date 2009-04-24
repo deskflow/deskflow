@@ -353,7 +353,7 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 		LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
 
 		// let system figure out character for us
-		CGPostKeyboardEvent(0, mapKeyButtonToVirtualKey(
+		CGEventCreateKeyboardEvent(0, mapKeyButtonToVirtualKey(
 									keystroke.m_data.m_button.m_button),
 								keystroke.m_data.m_button.m_press);
 
