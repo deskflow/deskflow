@@ -24,7 +24,7 @@
 
 COSXClipboard::COSXClipboard() :
 	m_time(0),
-	m_scrap(NULL)
+	m_pboard(NULL)
 {
 	m_converters.push_back(new COSXClipboardUTF16Converter);
 	m_converters.push_back(new COSXClipboardTextConverter);
@@ -39,23 +39,27 @@ bool
 COSXClipboard::empty()
 {
 	LOG((CLOG_DEBUG "empty clipboard"));
-	assert(m_scrap != NULL);
+	assert(m_pboard != NULL);
 
-	OSStatus err = ClearScrap(&m_scrap);
+	OSStatus err = PasteboardClear(m_pboard);
 	if (err != noErr) {
 		LOG((CLOG_DEBUG "failed to grab clipboard"));
 		return false;
 	}
 
+    
 	// we own the clipboard
-	err = PutScrapFlavor(
-				m_scrap,
+	UInt8 claimString[] = {'s', 'y', 'n', 'e'};
+	CFDataRef claimData = CFDataCreate(kCFAllocatorDefault, claimString, 4);
+
+	err = PasteboardPutItemFlavor(
+				m_pboard,
+                0,
 				getOwnershipFlavor(),
-				kScrapFlavorMaskNone,
-				0,
-				0);
+				claimData,
+				kPasteboardFlavorNoFlags);
 	if (err != noErr) {
-		LOG((CLOG_DEBUG "failed to grab clipboard"));
+		LOG((CLOG_DEBUG "failed to grab clipboard (%d)", err));
 		return false;
 	}
 
@@ -75,14 +79,16 @@ COSXClipboard::add(EFormat format, const CString & data)
 		// skip converters for other formats
 		if (converter->getFormat() == format) {
 			CString osXData = converter->fromIClipboard(data);
-			ScrapFlavorType flavorType = converter->getOSXFormat();
+			CFStringRef flavorType = converter->getOSXFormat();
+            CFDataRef data_ref = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
 
-			PutScrapFlavor(
-				m_scrap,
+			PasteboardPutItemFlavor(
+				m_pboard,
+                (PasteboardItemID) 1,
 				flavorType,
-				kScrapFlavorMaskNone,
-				osXData.size(),
-				osXData.data()); 
+				data_ref, 
+				kPasteboardFlavorNoFlags);
+            LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
 		}
 	}
 }
@@ -92,7 +98,7 @@ COSXClipboard::open(Time time) const
 {
 	LOG((CLOG_DEBUG "open clipboard"));
 	m_time = time;
-	OSStatus err = GetCurrentScrap(&m_scrap);
+	OSStatus err = PasteboardCreate(kPasteboardClipboard, &m_pboard);
 	return (err == noErr);
 }
 
@@ -100,7 +106,7 @@ void
 COSXClipboard::close() const
 {
 	LOG((CLOG_DEBUG "close clipboard"));
-	m_scrap = NULL;
+	m_pboard = NULL;
 }
 
 IClipboard::Time
@@ -112,16 +118,16 @@ COSXClipboard::getTime() const
 bool
 COSXClipboard::has(EFormat format) const
 {
-	assert(m_scrap != NULL);
+	assert(m_pboard != NULL);
 
 	for (ConverterList::const_iterator index = m_converters.begin();
 							index != m_converters.end(); ++index) {
 		IOSXClipboardConverter* converter = *index;
 		if (converter->getFormat() == format) {
-			ScrapFlavorFlags flags;
-			ScrapFlavorType type = converter->getOSXFormat();
+			PasteboardFlavorFlags* flags = NULL;
+			CFStringRef type = converter->getOSXFormat();
 
-			if (GetScrapFlavorFlags(m_scrap, type, &flags) == noErr) {
+			if (PasteboardGetItemFlavorFlags(m_pboard, (void *)1, type, flags) == noErr) {
 				return true;
 			}
 		}
@@ -134,6 +140,7 @@ CString
 COSXClipboard::get(EFormat format) const
 {
 	CString result;
+  CFStringRef type;
 
 	// find the converter for the first clipboard format we can handle
 	IOSXClipboardConverter* converter = NULL;
@@ -141,11 +148,11 @@ COSXClipboard::get(EFormat format) const
 							index != m_converters.end(); ++index) {
 		converter = *index;
 
-		ScrapFlavorFlags flags;
-		ScrapFlavorType type = converter->getOSXFormat();
+		PasteboardFlavorFlags* flags = NULL;
+		type = converter->getOSXFormat();
 
 		if (converter->getFormat() == format &&
-			GetScrapFlavorFlags(m_scrap, type, &flags) == noErr) {
+	    PasteboardGetItemFlavorFlags(m_pboard, (void *)1, type, flags) == noErr) {
 			break;
 		}
 		converter = NULL;
@@ -157,27 +164,16 @@ COSXClipboard::get(EFormat format) const
 	}
 
 	// get the clipboard data.
-	char* buffer = NULL;
+  CFDataRef buffer = NULL;
 	try {
-		Size flavorSize;
-		OSStatus err = GetScrapFlavorSize(m_scrap,
-							converter->getOSXFormat(), &flavorSize);
+		OSStatus err = PasteboardCopyItemFlavorData(m_pboard, (void *)1,
+							type, &buffer);
+    
 		if (err != noErr) {
 			throw err;
 		}
 
-		buffer = new char[flavorSize];
-		if (buffer == NULL) {
-			throw memFullErr;
-		}
-
-		err = GetScrapFlavorData(m_scrap,
-							converter->getOSXFormat(), &flavorSize, buffer);
-		if (err != noErr) {
-			throw err;
-		}
-
-		result = CString(buffer, flavorSize);
+		result = CString((char *) CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
 	}
 	catch (OSStatus err) {
 		LOG((CLOG_DEBUG "exception thrown in COSXClipboard::get MacError (%d)", err));
@@ -186,7 +182,9 @@ COSXClipboard::get(EFormat format) const
 		LOG((CLOG_DEBUG "unknown exception in COSXClipboard::get"));
 		RETHROW_XTHREAD
 	}
-	delete[] buffer;
+
+  if (buffer != NULL)
+    CFRelease(buffer);
 
 	return converter->toIClipboard(result);
 }
@@ -204,17 +202,18 @@ COSXClipboard::clearConverters()
 bool 
 COSXClipboard::isOwnedBySynergy()
 {
-	ScrapFlavorFlags flags;
-	ScrapRef scrap;
-	OSStatus err = GetCurrentScrap(&scrap);
+	PasteboardFlavorFlags flags;
+  PasteboardRef pboard;
+	OSStatus err = PasteboardCreate(kPasteboardClipboard, &pboard);
 	if (err == noErr) {
-		err = GetScrapFlavorFlags(scrap, getOwnershipFlavor() , &flags);
+		err = PasteboardGetItemFlavorFlags(pboard, 0, getOwnershipFlavor() , &flags);
 	}
 	return (err == noErr);
 }
 
-ScrapFlavorType 
+CFStringRef 
 COSXClipboard::getOwnershipFlavor()
 {
-	return 'Syne';
+	return CFSTR("Syne");
 }
+

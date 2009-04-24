@@ -86,7 +86,7 @@ protected:
 	virtual IKeyState*	getKeyState() const;
 
 private:
-	void				updateScreenShape();
+	void				updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags);
 	void				postMouseEvent(CGPoint&) const;
 	
 	// convenience function to send events
@@ -101,7 +101,7 @@ private:
 	bool				onMouseButton(bool pressed, UInt16 macButton);
 	bool				onMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 
-	bool				onDisplayChange();
+	bool				onDisplayChange(CGDirectDisplayID, CGDisplayChangeSummaryFlags);
 
 	bool				onKey(EventRef event);
 	bool				onHotKey(EventRef event) const;
@@ -131,8 +131,8 @@ private:
 	void				handleClipboardCheck(const CEvent&, void*);
 
 	// Resolution switch callback
-	static pascal void	displayManagerCallback(void* inUserData,
-							SInt16 inMessage, void* inNotifyData);
+	static void	displayReconfigurationCallback(CGDirectDisplayID,
+							CGDisplayChangeSummaryFlags, void*);
 	
 	// fast user switch callback
 	static pascal OSStatus
@@ -220,7 +220,6 @@ private:
 	WindowRef			m_userInputWindow;
 
 	// display manager stuff (to get screen resolution switches).
-	DMExtendedNotificationUPP   m_displayManagerNotificationUPP;
 	ProcessSerialNumber			m_PSN;
 
 	// fast user switching

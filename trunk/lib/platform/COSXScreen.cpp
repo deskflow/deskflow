@@ -73,7 +73,6 @@ COSXScreen::COSXScreen(bool isPrimary) :
 	m_clipboardTimer(NULL),
 	m_hiddenWindow(NULL),
 	m_userInputWindow(NULL),
-	m_displayManagerNotificationUPP(NULL),
 	m_switchEventHandlerRef(0),
 	m_pmMutex(new CMutex),
 	m_pmWatchThread(NULL),
@@ -83,7 +82,7 @@ COSXScreen::COSXScreen(bool isPrimary) :
 {
 	try {
 		m_displayID   = CGMainDisplayID();
-		updateScreenShape();
+		updateScreenShape(m_displayID, 0);
 		m_screensaver = new COSXScreenSaver(getEventTarget());
 		m_keyState	  = new COSXKeyState();
 
@@ -123,11 +122,8 @@ COSXScreen::COSXScreen(bool isPrimary) :
 		}
 		
 		// install display manager notification handler
-		m_displayManagerNotificationUPP =
-			NewDMExtendedNotificationUPP(displayManagerCallback);
-		OSStatus err = GetCurrentProcess(&m_PSN);
-		err = DMRegisterExtendedNotifyProc(m_displayManagerNotificationUPP,
-							this, 0, &m_PSN);
+		GetCurrentProcess(&m_PSN);
+    CGDisplayRegisterReconfigurationCallback(displayReconfigurationCallback, &m_PSN);
 
 		// install fast user switching event handler
 		EventTypeSpec switchEventTypes[2];
@@ -158,18 +154,15 @@ COSXScreen::COSXScreen(bool isPrimary) :
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
 		}
-		if (m_displayManagerNotificationUPP != NULL) {
-			DMRemoveExtendedNotifyProc(m_displayManagerNotificationUPP,
-							NULL, &m_PSN, 0);
-		}
+    CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, &m_PSN);
 
 		if (m_hiddenWindow) {
-			ReleaseWindow(m_hiddenWindow);
+			CFRelease(m_hiddenWindow);
 			m_hiddenWindow = NULL;
 		}
 
 		if (m_userInputWindow) {
-			ReleaseWindow(m_userInputWindow);
+			CFRelease(m_userInputWindow);
 			m_userInputWindow = NULL;
 		}
 		delete m_keyState;
@@ -216,16 +209,14 @@ COSXScreen::~COSXScreen()
 
 	RemoveEventHandler(m_switchEventHandlerRef);
 
-	DMRemoveExtendedNotifyProc(m_displayManagerNotificationUPP,
-							NULL, &m_PSN, 0);
-
+  CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, &m_PSN);
 	if (m_hiddenWindow) {
-		ReleaseWindow(m_hiddenWindow);
+		CFRelease(m_hiddenWindow);
 		m_hiddenWindow = NULL;
 	}
 
 	if (m_userInputWindow) {
-		ReleaseWindow(m_userInputWindow);
+		CFRelease(m_userInputWindow);
 		m_userInputWindow = NULL;
 	}
 
@@ -614,7 +605,7 @@ COSXScreen::enter()
 		CGSetLocalEventsSuppressionInterval(0.0);
 
 		// enable global hotkeys
-		setGlobalHotKeysEnabled(true);
+		//setGlobalHotKeysEnabled(true);
 	}
 	else {
 		// show cursor
@@ -664,7 +655,7 @@ COSXScreen::leave()
 		CGSetLocalEventsSuppressionInterval(0.0001);
 
 		// disable global hotkeys
-		setGlobalHotKeysEnabled(false);
+		//setGlobalHotKeysEnabled(false);
 	}
 	else {
 		// hide cursor
@@ -1061,26 +1052,24 @@ COSXScreen::handleClipboardCheck(const CEvent&, void*)
 }
 
 pascal void 
-COSXScreen::displayManagerCallback(void* inUserData, SInt16 inMessage, void*)
+COSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplayChangeSummaryFlags flags, void* inUserData)
 {
 	COSXScreen* screen = (COSXScreen*)inUserData;
 
-	if (inMessage == kDMNotifyEvent) {
-		screen->onDisplayChange();
+	if (flags & ~0x1 != 0) { /* Something actually did change */
+		screen->onDisplayChange(displayID, flags);
 	}
 }
 
 bool
-COSXScreen::onDisplayChange()
+COSXScreen::onDisplayChange(const CGDirectDisplayID dispID, const CGDisplayChangeSummaryFlags flags)
 {
-	// screen resolution may have changed.  save old shape.
-	SInt32 xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
 
 	// update shape
-	updateScreenShape();
+	updateScreenShape(dispID, flags);
 
 	// do nothing if resolution hasn't changed
-	if (xOld != m_x || yOld != m_y || wOld != m_w || hOld != m_h) {
+	if (flags | kCGDisplaySetModeFlag != 0) {
 		if (m_isPrimary) {
 			// warp mouse to center if off screen
 			if (!m_isOnScreen) {
@@ -1316,12 +1305,15 @@ COSXScreen::getScrollSpeedFactor() const
 void
 COSXScreen::enableDragTimer(bool enable)
 {
+  UInt32 modifiers;
+  MouseTrackingResult res; 
+
 	if (enable && m_dragTimer == NULL) {
 		m_dragTimer = EVENTQUEUE->newTimer(0.01, NULL);
 		EVENTQUEUE->adoptHandler(CEvent::kTimer, m_dragTimer,
 							new TMethodEventJob<COSXScreen>(this,
 								&COSXScreen::handleDrag));
-		GetMouse(&m_dragLastPoint);
+    TrackMouseLocationWithOptions(NULL, 0, 0, &m_dragLastPoint, &modifiers, &res);
 	}
 	else if (!enable && m_dragTimer != NULL) {
 		EVENTQUEUE->removeHandler(CEvent::kTimer, m_dragTimer);
@@ -1334,8 +1326,12 @@ void
 COSXScreen::handleDrag(const CEvent&, void*)
 {
 	Point p;
-	GetMouse(&p);
-	if (p.h != m_dragLastPoint.h || p.v != m_dragLastPoint.v) {
+  UInt32 modifiers;
+  MouseTrackingResult res; 
+
+	TrackMouseLocationWithOptions(NULL, 0, 0, &p, &modifiers, &res);
+
+	if (res != kMouseTrackingTimedOut && (p.h != m_dragLastPoint.h || p.v != m_dragLastPoint.v)) {
 		m_dragLastPoint = p;
 		onMouseMove((SInt32)p.h, (SInt32)p.v);
 	}
@@ -1357,7 +1353,7 @@ COSXScreen::getKeyState() const
 }
 
 void
-COSXScreen::updateScreenShape()
+COSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
 {
 	// get info for each display
 	CGDisplayCount displayCount = 0;
@@ -1395,16 +1391,10 @@ COSXScreen::updateScreenShape()
 	m_h = (SInt32)totalBounds.size.height;
 
 	// get center of default screen
-	GDHandle mainScreen = GetMainDevice();
-	if (mainScreen != NULL) {
-		const Rect& rect = (*mainScreen)->gdRect;
-		m_xCenter = (rect.left + rect.right) / 2;
-		m_yCenter = (rect.top + rect.bottom) / 2;
-	}
-	else {
-		m_xCenter = m_x + (m_w >> 1);
-		m_yCenter = m_y + (m_h >> 1);
-	}
+  CGDirectDisplayID main = CGMainDisplayID();
+  const CGRect rect = CGDisplayBounds(main);
+  m_xCenter = (rect.origin.x + rect.size.width) / 2;
+  m_yCenter = (rect.origin.y + rect.size.height) / 2;
 
 	delete[] displays;
 
@@ -1581,6 +1571,10 @@ COSXScreen::handleConfirmSleep(const CEvent& event, void*)
 // older SDKs to build an app that works on newer systems and older
 // SDKs will not provide the symbols.
 //
+// FIXME: This is hosed as of OS 10.5; patches to repair this are
+// a good thing.
+//
+#if 0
 
 #ifdef	__cplusplus
 extern "C" {
@@ -1663,6 +1657,7 @@ COSXScreen::getGlobalHotKeysEnabled()
 	return (mode == CGSGlobalHotKeyEnable);
 }
 
+#endif
 
 //
 // COSXScreen::CHotKeyItem

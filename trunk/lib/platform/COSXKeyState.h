@@ -90,7 +90,7 @@ protected:
 
 private:
 	class CKeyResource;
-	typedef std::vector<KeyboardLayoutRef> GroupList;
+	typedef std::vector<TISInputSourceRef> GroupList;
 
 	// Add hard coded special keys to a CKeyMap.
 	void				getKeyMapForSpecialKeys(
@@ -149,41 +149,6 @@ private:
 		static KeyID	unicharToKeyID(UniChar);
 	};
 
-	class CKCHRKeyResource : public CKeyResource {
-	public:
-		CKCHRKeyResource(const void*);
-
-		// CKeyResource overrides
-		virtual bool	isValid() const;
-		virtual UInt32	getNumModifierCombinations() const;
-		virtual UInt32	getNumTables() const;
-		virtual UInt32	getNumButtons() const;
-		virtual UInt32	getTableForModifier(UInt32 mask) const;
-		virtual KeyID	getKey(UInt32 table, UInt32 button) const;
-
-	private:
-		struct KCHRResource {
-		public:
-			SInt16		m_version;
-			UInt8		m_tableSelectionIndex[256];
-			SInt16		m_numTables;
-			UInt8		m_characterTables[1][128];
-		};
-		struct CKCHRDeadKeyRecord {
-		public:
-			UInt8		m_tableIndex;
-			UInt8		m_virtualKey;
-			SInt16		m_numCompletions;
-			UInt8		m_completion[1][2];
-		};
-		struct CKCHRDeadKeys {
-		public:
-			SInt16				m_numRecords;
-			CKCHRDeadKeyRecord	m_records[1];
-		};
-
-		const KCHRResource*	m_resource;
-	};
 
 	class CUCHRKeyResource : public CKeyResource {
 	public:
@@ -223,7 +188,7 @@ private:
 		KeyButtonOffset = 1
 	};
 
-	typedef std::map<KeyboardLayoutRef, SInt32> GroupMap;
+	typedef std::map<TISInputSourceRef, SInt32> GroupMap;
 	typedef std::map<UInt32, KeyID> CVirtualKeyMap;
 
 	CVirtualKeyMap		m_virtualKeyMap;

@@ -254,7 +254,7 @@ dnl XXX depends on the language) to insert setting the environment
 dnl variable when running the compiler.  we'd like to put that in CC,
 dnl CXX and OBJC but that breaks depcomp.  let's hope this works.
 if test x"$acx_host_winapi" = xCARBON; then
-	MACOSX_DEPLOYMENT_TARGET="10.2"
+	MACOSX_DEPLOYMENT_TARGET="10.5"
 	CCDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $CCDEPMODE"
 	CXXDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $CXXDEPMODE"
 	OBJCDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $OBJCDEPMODE"
