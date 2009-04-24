@@ -118,8 +118,6 @@ static const CKeyEntry	s_controlKeys[] = {
 COSXKeyState::COSXKeyState() :
 	m_deadKeyState(0)
 {
-	// enable input in scripts other that roman
-	KeyScript(smKeyEnableKybds);
 
 	// build virtual key map
 	for (size_t i = 0; i < sizeof(s_controlKeys) /
@@ -208,9 +206,9 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 	}
 
 	// get keyboard info
-	KeyboardLayoutRef keyboardLayout;
-	OSStatus status = KLGetCurrentKeyboardLayout(&keyboardLayout);
-	if (status != noErr) {
+
+  TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource(); 
+  if (currentKeyboardLayout != NULL) {
 		return kKeyNone;
 	}
 
@@ -231,9 +229,9 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 	}
 
 	// translate via uchr resource
-	const void* resource;
-	if (KLGetKeyboardLayoutProperty(keyboardLayout,
-								kKLuchrData, &resource) == noErr) {
+	CFDataRef resource;
+	if ((resource = (CFDataRef)TISGetInputSourceProperty(currentKeyboardLayout,
+								kTISPropertyUnicodeKeyLayoutData)) != NULL) {
 		// choose action
 		UInt16 action;
 		switch (eventKind) {
@@ -272,30 +270,6 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		}
 	}
 
-	// translate via KCHR resource
-	if (KLGetKeyboardLayoutProperty(keyboardLayout,
-								kKLKCHRData, &resource) == noErr) {
-		// build keycode
-		UInt16 keycode =
-			static_cast<UInt16>((modifiers & 0xff00u) | (vkCode & 0x00ffu));
-
-		// translate key
-		UInt32 result = KeyTranslate(resource, keycode, &m_deadKeyState);
-
-		// get the characters
-		UInt8 c1 = static_cast<UInt8>((result >> 16) & 0xffu);
-		UInt8 c2 = static_cast<UInt8>( result        & 0xffu);
-		if (c2 != 0) {
-			m_deadKeyState = 0;
-			if (c1 != 0) {
-				ids.push_back(CKeyResource::getKeyID(c1));
-			}
-			ids.push_back(CKeyResource::getKeyID(c2));
-			adjustAltGrModifier(ids, maskOut, isCommand);
-			return mapVirtualKeyToKeyButton(vkCode);
-		}
-	}
-
 	return 0;
 }
 
@@ -315,14 +289,11 @@ COSXKeyState::pollActiveModifiers() const
 SInt32
 COSXKeyState::pollActiveGroup() const
 {
-	KeyboardLayoutRef keyboardLayout;
-	OSStatus status = KLGetCurrentKeyboardLayout(&keyboardLayout);
-	if (status == noErr) {
-		GroupMap::const_iterator i = m_groupMap.find(keyboardLayout);
-		if (i != m_groupMap.end()) {
-			return i->second;
-		}
-	}
+	TISInputSourceRef inputSource = TISCopyCurrentKeyboardLayoutInputSource();
+  GroupMap::const_iterator i = m_groupMap.find(inputSource);
+  if (i != m_groupMap.end()) {
+    return i->second;
+  }
 	return 0;
 }
 
@@ -358,27 +329,14 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap)
 		// add special keys
 		getKeyMapForSpecialKeys(keyMap, g);
 
-		// add regular keys
-
-		// try uchr resource first
-		const void* resource;
-		if (KLGetKeyboardLayoutProperty(m_groups[g],
-								kKLuchrData, &resource) == noErr) {
+		CFDataRef resource_ref;
+		if ((resource_ref = (CFDataRef)TISGetInputSourceProperty(m_groups[g],
+								kTISPropertyUnicodeKeyLayoutData)) != NULL) {
+			const void* resource = CFDataGetBytePtr(resource_ref);
 			CUCHRKeyResource uchr(resource, keyboardType);
 			if (uchr.isValid()) {
 				LOG((CLOG_DEBUG1 "using uchr resource for group %d", g));
 				getKeyMap(keyMap, g, uchr);
-				continue;
-			}
-		}
-
-		// try KCHR resource
-		if (KLGetKeyboardLayoutProperty(m_groups[g],
-								kKLKCHRData, &resource) == noErr) {
-			CKCHRKeyResource kchr(resource);
-			if (kchr.isValid()) {
-				LOG((CLOG_DEBUG1 "using KCHR resource for group %d", g));
-				getKeyMap(keyMap, g, kchr);
 				continue;
 			}
 		}
@@ -651,21 +609,22 @@ bool
 COSXKeyState::getGroups(GroupList& groups) const
 {
 	// get number of layouts
-	CFIndex n;
-	OSStatus status = KLGetKeyboardLayoutCount(&n);
-	if (status != noErr) {
+  CFStringRef keys[] = { kTISPropertyInputSourceCategory };
+  CFStringRef values[] = { kTISCategoryKeyboardInputSource };
+  CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
+  CFArrayRef kbds = TISCreateInputSourceList(dict, false);
+  CFIndex n = CFArrayGetCount(kbds);
+	if (n == 0) {
 		LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
 		return false;
 	}
 
 	// get each layout
 	groups.clear();
+	TISInputSourceRef inputKeyboardLayout;
 	for (CFIndex i = 0; i < n; ++i) {
-		KeyboardLayoutRef keyboardLayout;
-		status = KLGetKeyboardLayoutAtIndex(i, &keyboardLayout);
-		if (status == noErr) {
-			groups.push_back(keyboardLayout);
-		}
+		inputKeyboardLayout = (TISInputSourceRef) CFArrayGetValueAtIndex(kbds, i);
+    groups.push_back(inputKeyboardLayout);
 	}
 	return true;
 }
@@ -673,7 +632,7 @@ COSXKeyState::getGroups(GroupList& groups) const
 void
 COSXKeyState::setGroup(SInt32 group)
 {
-	KLSetCurrentKeyboardLayout(m_groups[group]);
+	TISSetInputMethodKeyboardLayoutOverride(m_groups[group]);
 }
 
 void
@@ -818,10 +777,15 @@ COSXKeyState::CKeyResource::getKeyID(UInt8 c)
 		str[0] = static_cast<char>(c);
 		str[1] = 0;
 
+		// get current keyboard script
+
+    TISInputSourceRef isref = TISCopyCurrentKeyboardInputSource();
+    CFArrayRef langs = (CFArrayRef) TISGetInputSourceProperty(isref, kTISPropertyInputSourceLanguages);
+
 		// convert to unicode
 		CFStringRef cfString =
 			CFStringCreateWithCStringNoCopy(kCFAllocatorDefault,
-							str, GetScriptManagerVariable(smKeyScript),
+							str, CFStringConvertIANACharSetNameToEncoding((CFStringRef) CFArrayGetValueAtIndex(langs, 0)),
 							kCFAllocatorNull);
 
 		// sometimes CFStringCreate...() returns NULL (e.g. Apple Korean
@@ -886,79 +850,6 @@ COSXKeyState::CKeyResource::unicharToKeyID(UniChar c)
 		}
 		return static_cast<KeyID>(c);
 	}
-}
-
-
-//
-// COSXKeyState::CKCHRKeyResource
-//
-
-COSXKeyState::CKCHRKeyResource::CKCHRKeyResource(const void* resource)
-{
-	m_resource = reinterpret_cast<const KCHRResource*>(resource);
-}
-
-bool
-COSXKeyState::CKCHRKeyResource::isValid() const
-{
-	return (m_resource != NULL);
-}
-
-UInt32
-COSXKeyState::CKCHRKeyResource::getNumModifierCombinations() const
-{
-	// only 32 (not 256) because the righthanded modifier bits are ignored
-	return 32;
-}
-
-UInt32
-COSXKeyState::CKCHRKeyResource::getNumTables() const
-{
-	return m_resource->m_numTables;
-}
-
-UInt32
-COSXKeyState::CKCHRKeyResource::getNumButtons() const
-{
-	return 128;
-}
-
-UInt32
-COSXKeyState::CKCHRKeyResource::getTableForModifier(UInt32 mask) const
-{
-	assert(mask < getNumModifierCombinations());
-
-	return m_resource->m_tableSelectionIndex[mask];
-}
-
-KeyID
-COSXKeyState::CKCHRKeyResource::getKey(UInt32 table, UInt32 button) const
-{
-	assert(table < getNumTables());
-	assert(button < getNumButtons());
-
-	UInt8 c = m_resource->m_characterTables[table][button];
-	if (c == 0) {
-		// could be a dead key
-		const CKCHRDeadKeys* dkp =
-			reinterpret_cast<const CKCHRDeadKeys*>(
-				m_resource->m_characterTables[getNumTables()]);
-		const CKCHRDeadKeyRecord* dkr = dkp->m_records;
-		for (SInt16 i = 0; i < dkp->m_numRecords; ++i) {
-			if (dkr->m_tableIndex == table && dkr->m_virtualKey == button) {
-				// get the no completion entry
-				c = dkr->m_completion[dkr->m_numCompletions][1];
-				return CKeyMap::getDeadKey(getKeyID(c));
-			}
-
-			// next table.  skip all the completions and the no match
-			// pair to get the next table.
-			dkr = reinterpret_cast<const CKCHRDeadKeyRecord*>(
-							dkr->m_completion[dkr->m_numCompletions + 1]);
-		}
-	}
-
-	return getKeyID(c);
 }
 
 
@@ -1078,8 +969,10 @@ COSXKeyState::CUCHRKeyResource::getKey(UInt32 table, UInt32 button) const
 	assert(button < getNumButtons());
 
 	const UInt8* base   = reinterpret_cast<const UInt8*>(m_resource);
-	const UCKeyOutput c = reinterpret_cast<const UCKeyOutput*>(base +
-								m_cti->keyToCharTableOffsets[table])[button];
+	const UCKeyOutput* cPtr = reinterpret_cast<const UCKeyOutput*>(base +
+								m_cti->keyToCharTableOffsets[table]);
+
+  const UCKeyOutput c = cPtr[button];
 
 	KeySequence keys;
 	switch (c & kUCKeyOutputTestForIndexMask) {

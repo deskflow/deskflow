@@ -26,7 +26,7 @@ public:
 	// IOSXClipboardConverter overrides
 	virtual IClipboard::EFormat
 						getFormat() const;
-	virtual ScrapFlavorType
+	virtual CFStringRef
 						getOSXFormat() const = 0;
 	virtual CString		fromIClipboard(const CString &) const;
 	virtual CString		toIClipboard(const CString &) const;

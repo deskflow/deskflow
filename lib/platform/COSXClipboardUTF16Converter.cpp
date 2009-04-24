@@ -29,10 +29,10 @@ COSXClipboardUTF16Converter::~COSXClipboardUTF16Converter()
 	// do nothing
 }
 
-ScrapFlavorType
+CFStringRef
 COSXClipboardUTF16Converter::getOSXFormat() const
 {
-	return kScrapFlavorTypeUnicode;
+	return CFSTR("public.utf16-plain-text");
 }
 
 CString

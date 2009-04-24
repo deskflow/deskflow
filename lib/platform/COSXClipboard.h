@@ -41,7 +41,7 @@ public:
 
 private:
 	void				clearConverters();
-	static ScrapFlavorType
+	static CFStringRef
 						getOwnershipFlavor();
 
 private:
@@ -49,7 +49,7 @@ private:
 
 	mutable Time		m_time;
 	ConverterList		m_converters;
-	mutable ScrapRef	m_scrap;
+	mutable PasteboardRef	m_pboard;
 };
 
 //! Clipboard format converter interface
@@ -69,7 +69,7 @@ public:
 						getFormat() const = 0;
 
 	//! returns the scrap flavor type that this object converts from/to
-	virtual ScrapFlavorType
+	virtual CFStringRef
 						getOSXFormat() const = 0;
 
 	//! Convert from IClipboard format

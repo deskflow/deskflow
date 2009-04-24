@@ -24,7 +24,7 @@ public:
 	virtual ~COSXClipboardUTF16Converter();
 
 	// IOSXClipboardAnyTextConverter overrides
-	virtual ScrapFlavorType
+	virtual CFStringRef
 						getOSXFormat() const;
 
 protected:

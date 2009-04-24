@@ -29,10 +29,10 @@ COSXClipboardTextConverter::~COSXClipboardTextConverter()
 	// do nothing
 }
 
-ScrapFlavorType
+CFStringRef
 COSXClipboardTextConverter::getOSXFormat() const
 {
-	return kScrapFlavorTypeText;
+	return CFSTR("public.plain-text");
 }
 
 CString 
