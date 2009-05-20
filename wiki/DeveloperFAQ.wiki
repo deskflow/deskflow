@@ -1,6 +1,6 @@
 #labels Phase-Implementation
-Why do I get an XTest error when compiling on Ubuntu?
+*Why do I get an XTest error when compiling on Ubuntu?*
 Ensure that the libXtst-dev is installed.
 
-Why do I get "HTTP Error 405: Method Not Allowed" when using hg push?
+*Why do I get "HTTP Error 405: Method Not Allowed" when using hg push?*
 Use https instead of http.
