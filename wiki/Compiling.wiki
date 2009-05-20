@@ -41,6 +41,10 @@ On Solaris you may need to use:
 
 so synergy can find the X11 includes and libraries.
 
+On Arch Linux you may need to use:
+
+  ./configure --prefix=/usr
+
 
 = Building =
 
