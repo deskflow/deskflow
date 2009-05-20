@@ -9,7 +9,8 @@ To build synergy from the sources you'll need the following:
 
   * Unix
     * gcc 2.95 or up
-    * X11R4 or up headers and libraries 
+    * X11R4 or up headers and libraries
+    * libXtst-dev on Ubuntu
 
   * Mac OS X
     * XCode; or gcc 2.95 or up
