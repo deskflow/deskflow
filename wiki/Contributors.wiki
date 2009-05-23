@@ -19,3 +19,8 @@ Thermionix:
   * Merge in patches from sourceforge
   * Tests on Windows & Archlinux
   * Build up wiki
+
+Nick Bolton:
+  * Documentation
+  * Wiki maintainer
+  * Implementer
