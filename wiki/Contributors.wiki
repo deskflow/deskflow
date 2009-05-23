@@ -24,3 +24,4 @@ Nick Bolton:
   * Documentation
   * Wiki maintainer
   * Implementer
+  * Mailing list noise ;)
