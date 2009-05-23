@@ -1,6 +1,23 @@
-#labels Phase-Implementation
-*Why do I get an XTest error when compiling on Ubuntu?*
-Ensure that the libXtst-dev is installed.
+#summary Common questions and answers for new developers.
+#labels Phase-QA
 
-*Why do I get "HTTP Error 405: Method Not Allowed" when using hg push?*
-Use https instead of http.
+*Q: Why do I get an XTest error when compiling on Ubuntu?*
+
+A: Ensure that the libXtst-dev is installed.
+
+  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/75f1d29106a90b04/ee67a56d3240ed08?lnk=gst&q=xtest#ee67a56d3240ed08 Discuss 1]
+  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/97b7f2cacd5a4c3/3875900c14f136c0?lnk=gst&q=xtest#3875900c14f136c0 Discuss 2]
+
+----
+
+*Q: Why do I get "HTTP Error 405: Method Not Allowed" when using hg push?*
+
+A: Use https instead of http.
+
+----
+
+*Q: How do I submit patches?*
+
+A: If you don't yet have commit access, then `hg export` your changes, and then post them as [http://code.google.com/p/synergy-plus/issues/entry an issue], or the [http://groups.google.com/group/synergy-plus discussion group]. Rumor is that these are then easily applied using patch(1), so, .patch files are welcome!
+
+  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/b1dea506278ff7fc/8ff4d766fe442854?lnk=gst&q=patches#8ff4d766fe442854 Discuss]
