@@ -23,5 +23,5 @@ Thermionix:
 Nick Bolton:
   * Documentation
   * Wiki maintainer
-  * Implementer
+  * Win/Linux/Mac coder
   * Mailing list noise ;)
