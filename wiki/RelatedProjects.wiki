@@ -6,25 +6,30 @@
   * Latest commit: No SVN change in 2+ years
   * Latest release: April 2, 2006 (as of May 23, 2009)
   * Relation: Integrated/Fork-origin
+  * Website: http://synergy2.sourceforge.net/
 
 == QSynergy ==
   * About: QT GUI for Synergy
-  * Homepage: http://www.volker-lanz.de/en/software/qsynergy/
   * Platform: Windows, Mac OS X, Linux
   * Author: Volker Lanz, agreed to help up integration QSynergy into Synergy+
+  * Website: http://www.volker-lanz.de/en/software/qsynergy/
 
 == QuickSynergy ==
-  * Homepage: http://quicksynergy.sourceforge.net/
   * Last change: 2006
   * Platform: MacOS
+  * Homepage: http://quicksynergy.sourceforge.net/
 
 == Sinerji ==
-  * Homepage: http://www.kde-apps.org/content/show.php?content=89732
   * Author: Farslan
   * Platform: Ubuntu
+  * Website: http://www.kde-apps.org/content/show.php?content=89732
 
 == SynergyKM ==
- * https://sourceforge.net/projects/synergykm
+ * Detail: Unknown
+ * Developers: 1
+ * Status: abandon-ware
+ * Latest release: Sep 14, 2006 (as of May 23, 2009)
+ * Website: https://sourceforge.net/projects/synergykm
 
 == Others ==
  * https://sourceforge.net/projects/osxsynergygui/ (2005)
