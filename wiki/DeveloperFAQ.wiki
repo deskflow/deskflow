@@ -1,4 +1,4 @@
-#summary Common questions and answers for new developers.
+#summary Common questions and answers for new developers
 #labels Phase-QA
 
 *Q: Why do I get an XTest error when compiling on Ubuntu?*
