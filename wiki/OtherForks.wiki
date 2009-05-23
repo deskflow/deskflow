@@ -1,4 +1,4 @@
-#summary This page will document other existing Synergy works and their status
+#summary Forked versions of Synergy2, other than Synergy+
 #labels Phase-Support
 
 We are unaware of other forks, please see RelatedProjects.
