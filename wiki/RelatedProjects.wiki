@@ -1,4 +1,4 @@
-#summary Other existing Synergy projects and their status
+#summary Other existing projects that are similar to ours
 
 == Synergy2 == 
   * Detail: Original project
