@@ -1,10 +1,14 @@
 #summary Other existing Synergy projects and their status
 
-== Synergy2 - original project == 
-  * Status: abandon-ware (no SVN change in 2+ years)
-  * Relation: integrated
+== Synergy2 == 
+  * Detail: Original project
+  * Status: abandon-ware
+  * Latest commit: No SVN change in 2+ years
+  * Latest release: April 2, 2006 (as of May 23, 2009)
+  * Relation: Integrated/Fork-origin
 
-== QSynergy - QT GUI for Synergy ==
+== QSynergy ==
+  * About: QT GUI for Synergy
   * Homepage: http://www.volker-lanz.de/en/software/qsynergy/
   * Platform: Windows, Mac OS X, Linux
   * Author: Volker Lanz, agreed to help up integration QSynergy into Synergy+
