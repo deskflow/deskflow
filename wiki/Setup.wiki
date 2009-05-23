@@ -1,4 +1,4 @@
-#summary Guide to Setting up Synergy
+#summary Synergy+ setup and configuration guide
 #labels Phase-Deploy
 
 = Introduction =
