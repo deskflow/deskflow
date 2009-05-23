@@ -24,11 +24,9 @@
   * Platform: Ubuntu
 
 == SynergyKM ==
- * http://www.deftly.net/2009/02/12/synergykm-for-105/
  * https://sourceforge.net/projects/synergykm
 
 == Others ==
  * https://sourceforge.net/projects/osxsynergygui/ (2005)
  * http://www.altuit.com/webs/altuit2/SynergyOSX/default.htm - Chipp Walters,  Chris Bohnert
  * https://fsckyou.info/svn/synergy-bluetooth/ - Alistair Buxton - bluetooth sockets
- * http://www.deftly.net/2009/02/12/synergykm-for-105/
