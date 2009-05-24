@@ -1,0 +1,19 @@
+#summary Synergy use-cases - to be included in specification
+#labels Phase-Implementation
+
+== Network related cases ==
+* Many computers do have two network interfaces LAN/WLAN and I could be nice if we can define multiple address for the same client/server. The most common scenario is the one with the laptop docking stations.
+
+=== Case A ===
+ * two Windows computers on the same LAN
+
+=== Case B ===
+ * one laptop that is server having two configurations:
+  * work - where it has one client to the right
+  * home - where it has another client in the left.
+
+=== Case C ===
+* two computers one connected with trough LAN and one connected to WLAN (wireless). They are not in the same subnet even they are one near each other.
+
+=== Case D ===
+* one client having multiple possible servers. This can happen if you have an laptop that is shared inside your company. It should be very easy to switch the server on the client.
