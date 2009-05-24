@@ -1,8 +1,12 @@
-#summary Specification plan and guide to writing new pages.
+#summary Specification: Plan
 #labels Specification
+
+A specification plan and guide to writing new specification pages.
 
   * Each major section (Introduction, Design, etc.) is designated to one page.
   * If a section becomes longer than approx 5 screens full, it should be split in to two pages.
   * Specification page names must start with Spec, and must be short (e.g. SpecIntro).
-  * The specification should be written from the "we" and not the "I" perspective.
+  * Each page should start with "Synergy+ Specification" (style: Heading 1)
+  * The page summary should be in the format "Specification: {Title}"
+  * The specification should be written from the 'we' and not the 'I' perspective.
   * Each page should link back to the specification table of contents.
