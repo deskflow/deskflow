@@ -1,4 +1,4 @@
-#summary Specification: Plan
+#summary Specification: Plan & Guide
 #labels Specification
 
 A specification plan and guide to writing new specification pages.
