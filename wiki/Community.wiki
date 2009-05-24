@@ -13,3 +13,9 @@ Our most active communication channel is our [http://groups.google.com/group/syn
   * Community portal: http://code.google.com/p/synergy-plus/
   * Discussion group: http://groups.google.com/group/synergy-plus
   * IRC channel: #synergy-plus on irc.freenode.net:8001
+
+== Key People ==
+
+  * Project leader: Sorin Sbârnea
+  * Original creators: Chris Schoeneman, et al.
+  * Specification authors: Nick Bolton, et al.
