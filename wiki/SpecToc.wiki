@@ -1,0 +1,20 @@
+#summary Specification table of contents.
+
+=Synergy+ Specification=
+
+==Table of Contents==
+
+  # [SpecIntro Introduction]
+    * Features
+    * Objectives
+    * This Document
+    * Publishing
+    * Key People
+    * Community
+    * Terminology
+  # [SpecAnalysis Analysis]
+    * Key Issues
+    * Code Style
+  # [SpecDesign Design]
+    * Architecture
+    * Features
