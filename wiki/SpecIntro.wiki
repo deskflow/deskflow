@@ -33,12 +33,6 @@ This is a list of features we really don't think we should implement (at least w
 
 _If the community decides this section is not neccecary, it may be removed._
 
-=== Key People ===
-
-  * Project leader: Sorin Sbârnea
-  * Original creators: Chris Schoeneman, et al.
-  * Document authors: Nick Bolton, et al.
-
 === Community ===
 
 See the [Community] page.
