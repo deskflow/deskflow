@@ -3,9 +3,11 @@
 
 [SpecToc Table of Contents]
 
-= Introduction =
+= Synergy+ Specification =
 
-== Features ==
+== Introduction ==
+
+=== Features ===
 
 Synergy+ has a number of great features.
 
@@ -14,7 +16,7 @@ Synergy+ has a number of great features.
   * Free open source software
   * Online support community run by volunteers
 
-== Objectives ==
+=== Objectives ===
 
 The current objectives of the Synergy+ project, in order of importance.
 
@@ -23,7 +25,7 @@ The current objectives of the Synergy+ project, in order of importance.
   # A common user interface to all operating systems.
   # More intuitive setup/configuration and troubleshooting.
 
-== This Document ==
+=== This Document ===
 
 This specification contains:
 
@@ -35,13 +37,13 @@ This specification contains:
 
 This document is not an installation guide or user guide.
 
-== Key People ==
+=== Key People ===
 
   * Project leader: Sorin Sbârnea
   * Original creators: Chris Schoeneman, et al.
   * Document authors: Nick Bolton, et al.
 
-== Community ==
+=== Community ===
 
 Our community is a benevolent dictatorship, meaning that our project leader has the final say on all major decisions, however our leader will always do what is best for the community. The key word is, benevolent; meaning that, our dictator is not a tyrant. This is primarily because the project is very "forkable" (this project is it's self a fork); so if the majority disagree, they will fork into a new project.
 
@@ -55,7 +57,7 @@ Our most active communication channel is our [http://groups.google.com/group/syn
   * Discussion group: http://groups.google.com/group/synergy-plus
   * IRC channel: #synergy-plus on irc.freenode.net:8001
 
-== Terminology ==
+=== Terminology ===
 
 || *Term* || *Meaning* ||
 || Synergy	|| The original version of Synergy, replaced by Synergy2 ||
