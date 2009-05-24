@@ -20,7 +20,7 @@ Synergy+ has a number of great features.
 
 The current objectives of the Synergy+ project, in order of importance.
 
-  # Fix all outstanding bugs (http://code.google.com/p/synergy-plus/issues/list).
+  # Fix all important bugs (http://code.google.com/p/synergy-plus/issues/list).
   # Current operating system support (especially for Windows).
   # A common user interface to all operating systems.
   # More intuitive setup/configuration and troubleshooting.
