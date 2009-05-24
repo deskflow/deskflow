@@ -1,9 +1,9 @@
 #summary Specification: Analysis
 #labels Specification
 
-[SpecToc Table of Contents]
-
 = Synergy+ Specification =
+
+[SpecToc Table of Contents]
 
 == Analysis ==
 
