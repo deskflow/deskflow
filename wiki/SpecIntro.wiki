@@ -20,3 +20,15 @@ The current objectives of the Synergy+ project, in order of importance.
   # Current operating system support (especially for Windows).
   # A common user interface to all operating systems.
   # More intuitive setup/configuration and troubleshooting.
+
+== This Document ==
+
+This specification contains:
+
+  * The goals of this project
+  * How our community works
+  * Important current bugs
+  * System design and architecture
+  * Future features and enhancements
+
+This document is not an installation guide or user guide.
