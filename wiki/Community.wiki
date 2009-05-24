@@ -8,6 +8,8 @@ Having a dictator is great for a small project like ours, because it stops our a
 
 We do not currently have a website because our current goal is to make the application more easy to use before promoting it to our end users. Currently, most of our end users are fairly technical. For technical users, the best place to start is our [http://code.google.com/p/synergy-plus/ community portal].
 
+== Communication ==
+
 Our most active communication channel is our [http://groups.google.com/group/synergy-plus discussion group]; both users and developers should post questions there. We also have an IRC channel for quick questions, but this should not be used for in-depth discussion.
 
   * Community portal: http://code.google.com/p/synergy-plus/
