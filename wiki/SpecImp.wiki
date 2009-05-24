@@ -1,5 +1,5 @@
 #summary Specification: Implementation
-#labels Implementation
+#labels Specification
 
 = Synergy+ Specification =
 
