@@ -1,0 +1,29 @@
+#summary Specification: Analysis
+#labels Specification
+
+[SpecToc Table of Contents]
+
+= Synergy+ Specification =
+
+== Analysis ==
+
+This section details analysis of the existing system (based on Synergy2) and key issues surrounding the current code and design.
+
+== Key Issues ==
+
+These are highlighted issues from the online project issues list, and most are quite big and will take a lot of effort to fix. Any issues here which are not on the issues list must be created as soon as possible.
+
+=== All Platforms ===
+
+==== Issues with languages ====
+
+Synergy2 does not work well with languages (in terms of keyboard input). If for example, Russian keyboard layout is selected on a Windows Vista server, the characters sent to the client are question marks and slash characters, when they should be the raw key information. This would be a massive feature to implement, as its relatively easy to hook to the Windows API events, and very difficult (if not impossible) to get the raw key events.
+
+==== Windows (Vista and above) ==== 
+
+In terms of Windows support, Synergy2 was designed for Windows XP, and so does not work very well in Windows Vista or Windows 7. Major lack of support affects default Windows Vista installations in the following Windows features:
+
+  * UAC (User Account Control): when a UAC screen appears, user input is no longer received.
+  * Login Screen (on startup): Because Synergy2 can not run as a service in Windows Vista, the application is not auto-started until after the login screen.
+
+Because of these issues, Synergy2's Windows users are forced to have reduced security, meaning this cannot be used in most commercial environments. This is because the policy in business environments is normally to have UAC enabled, and to lock the screen after a period inactivity or on startup/resume.
