@@ -37,7 +37,7 @@ updateStatus()
 {
   // ...
 }
-
+ 
 int
 ExampleClass::exampleFunction(int a, int b)
 {
@@ -45,7 +45,7 @@ ExampleClass::exampleFunction(int a, int b)
     // do something
   }
 }
-
+ 
 enum ExampleEnum {
   kConstant1,
   kConstant2
