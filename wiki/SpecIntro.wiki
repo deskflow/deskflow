@@ -41,7 +41,7 @@ _If the community decides this section is not neccecary, it may be removed._
 
 === Community ===
 
-See Community.
+See the [Community] page.
 
 === This Document ===
 
