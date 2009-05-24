@@ -1,0 +1,8 @@
+#summary Specification plan and guide to writing new pages.
+#labels Phase-Design
+
+  * Each major section (Introduction, Design, etc.) is designated to one page.
+  * If a section becomes longer than approx 5 screens full, it should be split in to two pages.
+  * Specification page names must start with Spec, and must be short (e.g. SpecIntro).
+  * The specification should be written from the "we" and not the "I" perspective.
+  * Each page should link back to the specification table of contents.
