@@ -1,4 +1,5 @@
 #summary How our community works
+#labels Featured
 
 = Community =
 
