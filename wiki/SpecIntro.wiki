@@ -42,7 +42,6 @@ See the [Community] page.
 This specification contains:
 
   * The goals of this project
-  * How our community works
   * Important current bugs
   * System design and architecture
   * Future features and enhancements
