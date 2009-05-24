@@ -32,3 +32,23 @@ This specification contains:
   * Future features and enhancements
 
 This document is not an installation guide or user guide.
+
+== Key People ==
+
+  * Project leader: Sorin Sbârnea
+  * Original creators: Chris Schoeneman, et al.
+  * Document authors: Nick Bolton, et al.
+
+== Community ==
+
+Our community is a benevolent dictatorship, meaning that our project leader has the final say on all major decisions, however our leader will always do what is best for the community. The key word is, benevolent; meaning that, our dictator is not a tyrant. This is primarily because the project is very "forkable" (this project is it's self a fork); so if the majority disagree, they will fork into a new project.
+
+Having a dictator is great for a small project like ours, because it stops our aims from deviating off course, and helps to avoid limitless feature creep. Once our project expands and becomes very large, we may elect to have a consensus based democracy with voting and so on. However, this is not necessary for the time being.
+
+We do not currently have a website because our current goal is to make the application more easy to use before promoting it to our end users. Currently, most of our end users are fairly technical.
+
+Our most active communication channel is our [http://groups.google.com/group/synergy-plus discussion group]; both users and developers should post questions there. We also have an IRC channel for quick questions, but this should not be used for in-depth discussion.
+
+  * Community portal: http://code.google.com/p/synergy-plus/
+  * Discussion group: http://groups.google.com/group/synergy-plus
+  * IRC channel: #synergy-plus on irc.freenode.net:8001
