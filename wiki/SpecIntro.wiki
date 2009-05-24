@@ -5,9 +5,18 @@
 
 == Features ==
 
-Synergy+ has the following features:
+Synergy+ has a number of great features.
 
   * Sharing of mouse and keyboard over a local area network
   * Cross-platform support (Windows, Linux and Mac)
   * Free open source software
   * Online support community run by volunteers
+
+== Objectives ==
+
+The current objectives of the Synergy+ project, in order of importance.
+
+  # Fix all outstanding bugs (http://code.google.com/p/synergy-plus/issues/list).
+  # Current operating system support (especially for Windows).
+  # A common user interface to all operating systems.
+  # More intuitive setup/configuration and troubleshooting.
