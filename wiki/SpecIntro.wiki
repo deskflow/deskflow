@@ -1,6 +1,8 @@
 #summary Specification: Introduction
 #labels Specification
 
+[SpecToc Table of Contents]
+
 = Introduction =
 
 == Features ==
