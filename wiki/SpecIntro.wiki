@@ -45,7 +45,7 @@ Our community is a benevolent dictatorship, meaning that our project leader has 
 
 Having a dictator is great for a small project like ours, because it stops our aims from deviating off course, and helps to avoid limitless feature creep. Once our project expands and becomes very large, we may elect to have a consensus based democracy with voting and so on. However, this is not necessary for the time being.
 
-We do not currently have a website because our current goal is to make the application more easy to use before promoting it to our end users. Currently, most of our end users are fairly technical.
+We do not currently have a website because our current goal is to make the application more easy to use before promoting it to our end users. Currently, most of our end users are fairly technical. For technical users, the best place to start is our [http://code.google.com/p/synergy-plus/ community portal].
 
 Our most active communication channel is our [http://groups.google.com/group/synergy-plus discussion group]; both users and developers should post questions there. We also have an IRC channel for quick questions, but this should not be used for in-depth discussion.
 
