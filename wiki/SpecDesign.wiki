@@ -17,7 +17,7 @@ _This section is incomplete._
 
 === Features ===
 
-This section describes both features that already exist (and are to be improved), and features that are to be implemented. Architecture [sub:Architecture] should be consulted before hand.
+This section describes both features that already exist (and are to be improved), and features that are to be implemented. Architecture should be consulted before hand.
 
 ==== Configuration ====
 
