@@ -1,4 +1,5 @@
 #summary Specification table of contents.
+#labels Phase-Design
 
 =Synergy+ Specification=
 
