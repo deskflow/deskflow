@@ -30,7 +30,7 @@ The code style is based on the original style used by Chris Schoeneman. This ori
 
 {{{
 static Example s_exampleStatic = NULL;
-
+ 
 static
 void
 updateStatus()
