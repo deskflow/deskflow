@@ -1,5 +1,5 @@
 #summary Specification plan and guide to writing new pages.
-#labels Phase-Design
+#labels Specification
 
   * Each major section (Introduction, Design, etc.) is designated to one page.
   * If a section becomes longer than approx 5 screens full, it should be split in to two pages.
