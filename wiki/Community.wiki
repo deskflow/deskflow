@@ -1,4 +1,4 @@
-#summary How our community works.
+#summary How our community works
 
 = Community =
 
