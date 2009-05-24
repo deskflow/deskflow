@@ -25,17 +25,13 @@ The current objectives of the Synergy+ project, in order of importance.
   # A common user interface to all operating systems.
   # More intuitive setup/configuration and troubleshooting.
 
-=== This Document ===
+=== Limit of Scope ===
 
-This specification contains:
+This is a list of features we really don't think we should implement (at least within the near future). Any features added, changed or removed from here should be debated in the mailing list.
 
-  * The goals of this project
-  * How our community works
-  * Important current bugs
-  * System design and architecture
-  * Future features and enhancements
+  * Example: Warp engines.
 
-This document is not an installation guide or user guide.
+_If the community decides this section is not neccecary, it may be removed._
 
 === Key People ===
 
@@ -56,6 +52,18 @@ Our most active communication channel is our [http://groups.google.com/group/syn
   * Community portal: http://code.google.com/p/synergy-plus/
   * Discussion group: http://groups.google.com/group/synergy-plus
   * IRC channel: #synergy-plus on irc.freenode.net:8001
+
+=== This Document ===
+
+This specification contains:
+
+  * The goals of this project
+  * How our community works
+  * Important current bugs
+  * System design and architecture
+  * Future features and enhancements
+
+This document is not an installation guide or user guide.
 
 === Terminology ===
 
