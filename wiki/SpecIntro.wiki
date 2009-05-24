@@ -52,3 +52,14 @@ Our most active communication channel is our [http://groups.google.com/group/syn
   * Community portal: http://code.google.com/p/synergy-plus/
   * Discussion group: http://groups.google.com/group/synergy-plus
   * IRC channel: #synergy-plus on irc.freenode.net:8001
+
+== Terminology ==
+
+|| *Term* || *Meaning* ||
+|| Synergy	|| The original version of Synergy, replaced by Synergy2 ||
+|| Synergy2 || A fork of Synergy, which is now seen as the official version ||
+|| Synergy+ || A fork of of Synergy2, which we hope to merge with Synergy2 ||
+|| GPL || GNU General Public License ||
+|| FOSS || Free Open Source Software ||
+|| Client || An instance of synergyc (the Synergy Client) ||
+|| Server || An instance of synergys (the Synergy Server) ||
