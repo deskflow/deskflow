@@ -19,3 +19,11 @@ Our most active communication channel is our [http://groups.google.com/group/syn
   * Project leader: Sorin Sbârnea
   * Original creators: Chris Schoeneman, et al.
   * Specification authors: Nick Bolton, et al.
+
+== Newcomers ==
+
+Developers who are new to our project, should start by checking out the [http://code.google.com/p/synergy-plus/issues/list issues list], which is the best way to get familiar with the code.
+
+Before asking questions on the [http://groups.google.com/group/synergy-plus mailing list] it is often best to search the group before hand to avoid repeated questions. We also encourage that people quickly look over past threads in our mailing list, to become familiar with how questions are asked, and possibly to contribute to past discussions where new light may be useful.
+
+There is no formal procedure for becoming a project member; how soon the newcomer is added to the project, usually depends their interaction with the mailing list.
