@@ -1,9 +1,9 @@
-#summary Specification table of contents.
+#summary Specification: Table of Contents
 #labels Specification
 
-=Synergy+ Specification=
+= Synergy+ Specification =
 
-==Table of Contents==
+== Table of Contents ==
 
   # [SpecIntro Introduction]
     * Features
