@@ -1,4 +1,4 @@
 #summary Information regarding usage of synergy
 
-== How to prevent the switch to the other screen (lock) == 
-Scroll Lock Key on your Keyboard locks the Mouse and Keyboard on the current Screen.
+== Locking == 
+This feature is useful for computer games, where usually the mouse cursor must stay on a specific screen. The *Scroll Lock* key can be used to prevent the mouse switching input to another screen.
