@@ -15,7 +15,8 @@
     * Terminology
   # [SpecAnalysis Analysis]
     * Key Issues
-    * Code Style
   # [SpecDesign Design]
     * Architecture
     * Features
+  # [SpecImp Implementation]
+    * Code Style
