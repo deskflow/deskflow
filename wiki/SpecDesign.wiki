@@ -19,7 +19,7 @@ _This section is incomplete._
 
 This section describes both features that already exist (and are to be improved), and features that are to be implemented. Architecture [sub:Architecture] should be consulted before hand.
 
-=== Configuration ===
+==== Configuration ====
 
 There currently exists, a user configuration file for synergys which controls the screen layout. However, there should be a configuration file for the application it's self. This will be useful for implementing new features in a phased approach. While the feature is in alpha it will be disabled by default (but can be enabled by the user), and when in beta, it may be enabled during installation.
 
