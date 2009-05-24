@@ -7,6 +7,8 @@
 
 == Introduction ==
 
+Synergy+ is a fork of Synergy2. The initial revision of Synergy was created on May 13, 2009. Synergy+ allows users to share their mouse and keyboard between multiple computers over a network.
+
 === Features ===
 
 Synergy+ has a number of great features.
