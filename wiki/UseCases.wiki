@@ -1,6 +1,9 @@
 #summary Synergy use-cases - to be included in specification
 #labels Phase-Implementation
 
+== Deprecated ==
+The content of this page has been moved to SpecDesign.
+
 == Network related cases ==
 * Many computers do have two network interfaces LAN/WLAN and I could be nice if we can define multiple address for the same client/server. The most common scenario is the one with the laptop docking stations.
 
