@@ -15,26 +15,26 @@ This section describes the current architecture. It should be read by developers
 
 _This section is incomplete._
 
-=== Network Related Cases ==
+==== Network Related Cases ====
 
 Many computers do have two network interfaces LAN/WLAN and I could be nice if we can define multiple address for the same client/server. The most common scenario is the one with the laptop docking stations.
 
-==== Case A ====
+===== Case A =====
 
 Two Windows computers on the same LAN.
 
-==== Case B ====
+===== Case B =====
 
 One laptop that is server having two configurations:
 
   * Work - Where it has one client to the right
   * Home - Where it has another client in the left. 
 
-==== Case C ====
+===== Case C =====
 
 Two computers one connected with trough LAN and one connected to WLAN (wireless). They are not in the same subnet even they are one near each other.
 
-==== Case D ====
+===== Case D =====
 
 one client having multiple possible servers. This can happen if you have an laptop that is shared inside your company. It should be very easy to switch the server on the client.
 
