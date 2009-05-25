@@ -11,9 +11,7 @@ This section details analysis of the existing system (based on Synergy2) and key
 
 === Diagrams ===
 
-==== synergyc: Initialization ====
-
-http://synergy-plus.googlecode.com/hg/doc/diagrams/ClientInit.jpeg
+* [SpecDiagClientInit Client Initialization]
 
 === Key Issues ===
 
