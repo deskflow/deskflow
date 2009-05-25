@@ -12,6 +12,8 @@ A specification plan and guide to writing new specification pages.
   * The page summary should be in the format "Specification: {Title}"
   * The specification should be written from the 'we' and not the 'I' perspective.
   * Each page should link back to the specification table of contents.
+  * Diagrams must use their own page as not to heavily segment text.
+  * Diagram pages for the specification must be in the format of SpecDiag{diag-name}, for example: SpecDiagClientInit
 
 == TODO List ==
 
