@@ -11,7 +11,7 @@ This section details analysis of the existing system (based on Synergy2) and key
 
 === Diagrams ===
 
-* [SpecDiagClientInit Client Initialization]
+  * [SpecDiagClientInit Client Initialization]
 
 === Key Issues ===
 
