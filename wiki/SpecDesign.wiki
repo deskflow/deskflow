@@ -13,7 +13,7 @@ This section focuses on the existing architecture, code style, and features. Whe
 
 This section describes the current architecture. It should be read by developers who wish to plan new features, or improvements to existing features.
 
-==== [label:NetworkCases Network Cases] ====
+==== Network Cases ====
 
 Many computers do have two network interfaces LAN/WLAN and I could be nice if we can define multiple address for the same client/server. The most common scenario is the one with the laptop docking stations.
 
