@@ -25,8 +25,8 @@ Our most active communication channel is our [http://groups.google.com/group/syn
 
 == Newcomers ==
 
-Developers who are new to our project, should start by checking out the [http://code.google.com/p/synergy-plus/issues/list issues list], which is the best way to get familiar with the code.
+Developers who are new to our project, should start by checking out the [http://code.google.com/p/synergy-plus/issues/list issues list]; fixing minor bugs is a good way to get familiar with the code.
 
-Before asking questions on the [http://groups.google.com/group/synergy-plus mailing list] it is often best to search the group before hand to avoid repeated questions. We also encourage that people quickly look over past threads in our mailing list, to become familiar with how questions are asked, and possibly to contribute to past discussions where new light may be useful.
+Before asking questions on the [http://groups.google.com/group/synergy-plus mailing list] it is often best to _search_ the mailing list before hand to avoid repeated questions. We also encourage that people quickly look over past threads in our mailing list, to become familiar with how questions are asked, and possibly to contribute to past discussions where new light may be useful. However, we strongly encourage that old discussions are not opened up unless the person really knows what they're talking about.
 
-There is no formal procedure for becoming a project member; how soon the newcomer is added to the project, usually depends their interaction with the mailing list.
+There is no formal procedure for becoming a project member (getting commit access). The length of time before a newcomer is added to the project, usually depends their interaction with the mailing list. If the user looks to have a good understanding and we agree with their goals, then we may give commit access sooner. As our project grows, we may review patches initially and give commit access later.
