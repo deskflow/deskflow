@@ -36,3 +36,13 @@ There is no formal procedure for becoming a project member (getting commit acces
 We don't like poisonous people. Please watch this video.
 
 <wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
+
+== Hacking Guide ==
+
+  * Please read the coding syntax guide on the [SpecImp Implementation] page.
+  * Please do not put your name a the top of pages; the commit log will show your name.
+
+== Submitting Patches ==
+
+  * Submit patches to the issue list as an attachment. If an issue does not exist for your patch, please create one. If you submit to the mailing list, it may get missed.
+  * When you submit your patch, if you want it to be discussed, please open a new mailing list thread and link to the issue containing the patch.
