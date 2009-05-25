@@ -13,8 +13,21 @@ A specification plan and guide to writing new specification pages.
   * The specification should be written from the 'we' and not the 'I' perspective.
   * Each page should link back to the specification table of contents.
 
-== TODO List: ==
+== TODO List ==
 
   * The specification looks good in document form, but on a wiki it seems to be a little more chaotic than anticipated. It's hard to distinguish some header types from others:
     * Solution 1: Manually number the headings (con: hard to maintain).
     * Solution 2: Split the pages up even further (con: long winded).
+
+== Diagrams ==
+
+For creating diagrams:
+
+  * Linux: Dia
+  * Windows: Visio
+
+Both Dia and Visio are quite similar, but Dia is a little more robust.
+
+The .dia file or .visio file should be saved in the source control, so that others may edit it should the original author be hit by a bus.
+
+To publish, the file should be exported to JPEG and added to the Wiki under the relevant specification page (usually SpecDesign).
