@@ -15,6 +15,29 @@ This section describes the current architecture. It should be read by developers
 
 _This section is incomplete._
 
+=== Network Related Cases ==
+
+Many computers do have two network interfaces LAN/WLAN and I could be nice if we can define multiple address for the same client/server. The most common scenario is the one with the laptop docking stations.
+
+==== Case A ====
+
+Two Windows computers on the same LAN.
+
+==== Case B ====
+
+One laptop that is server having two configurations:
+
+  * Work - Where it has one client to the right
+  * Home - Where it has another client in the left. 
+
+==== Case C ====
+
+Two computers one connected with trough LAN and one connected to WLAN (wireless). They are not in the same subnet even they are one near each other.
+
+==== Case D ====
+
+one client having multiple possible servers. This can happen if you have an laptop that is shared inside your company. It should be very easy to switch the server on the client.
+
 === Features ===
 
 This section describes both features that already exist (and are to be improved), and features that are to be implemented. Architecture should be consulted before hand.
@@ -25,4 +48,4 @@ There currently exists, a user configuration file for synergys which controls th
 
 ==== User config path ====
 
-Currently, the user configuration file for windows is synergy.sgc (as defined in synergys.cpp). On Windows Vista and onward, the home directory is now browsable by the user. Windows users generally prefer that configuration files are not stored in this directory, but stored in a hidden place (such as the `AppData` directiory). However, because some users may prefer this, the user should have the option to choose during setup. The Unix configuration file name and path should be left how it is (.synergy.conf) but possibly drop the .conf extension, because this is generally preferred by `*`nix users, and files preceding with a period are hidden by default. This is a low priority improvement.
+Currently, the user configuration file for windows is synergy.sgc (as defined in synergys.cpp). On Windows Vista and onward, the home directory is now browsable by the user. Windows users generally prefer that configuration files are not stored in this directory, but stored in a hidden place (such as the `AppData` directiory). However, because some users may prefer this, the user should have the option to choose during setup. The Unix configuration file name and path should be left how it is (.synergy.conf) but possibly drop the .conf extension, because this is generally preferred by `*`nix users, and files preceding with a period are hidden by default. This is a low priority improvement. 
