@@ -7,7 +7,13 @@
 
 == Analysis ==
 
-This section details analysis of the existing system (based on Synergy2) and key issues surrounding the current code and design.
+This section details analysis of the existing system (based on Synergy2) and key issues surrounding the current code and design. Before making any major changes we must first analyze the existing Synergy2 source code, as none of us know exactly how it works.
+
+=== Diagrams ===
+
+==== synergyc: Initialization ====
+
+http://synergy-plus.googlecode.com/hg/doc/diagrams/ClientInit.jpeg
 
 === Key Issues ===
 
