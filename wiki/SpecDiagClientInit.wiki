@@ -1,0 +1,3 @@
+#summary Specification: Diagram: Client Initialization
+
+http://synergy-plus.googlecode.com/hg/doc/diagrams/ClientInit.jpeg
