@@ -21,13 +21,8 @@ A specification plan and guide to writing new specification pages.
 
 == Diagrams ==
 
-For creating diagrams:
+For creating diagrams, Dia is the recommended application.
 
-  * Linux: Dia - Available as Ubuntu package for *free*.
-  * Windows: Visio - Available from [http://www.amazon.co.uk/Microsoft-D86-02751-Visio-2007-PC/dp/B000HCZ8GC/ref=sr_1_1?ie=UTF8&s=software&qid=1243275919&sr=1-1 Amazon] for approx $350/£220/€250.
+Dia is available as Ubuntu package (Add/Remove) or for [http://dia-installer.de/index_en.html Windows]. For Windows users, Dia is fairly similar for Visio, but Dia is a little more robust and is cross-platform.
 
-Both Dia and Visio are quite similar, but Dia is a little more robust.
-
-The .dia file or .visio file should be saved in the source control, so that others may edit it should the original author be hit by a bus.
-
-To publish, the file should be exported to JPEG and added to the Wiki under the relevant specification page (usually SpecDesign).
+The .dia file should be saved in our source code repository, so that others may edit it should the original author be hit by a bus. To publish, the file should be exported to JPEG and added to the Wiki under the relevant specification page (usually SpecDesign).
