@@ -33,6 +33,6 @@ There is no formal procedure for becoming a project member (getting commit acces
 
 == Poisonous People ==
 
-Please watch this video.
+We don't like poisonous people. Please watch this video.
 
 <wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
