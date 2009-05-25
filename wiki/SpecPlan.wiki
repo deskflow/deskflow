@@ -23,8 +23,8 @@ A specification plan and guide to writing new specification pages.
 
 For creating diagrams:
 
-  * Linux: Dia
-  * Windows: Visio
+  * Linux: Dia - Available as Ubuntu package for free.
+  * Windows: Visio - Available from [http://www.amazon.co.uk/Microsoft-D86-02751-Visio-2007-PC/dp/B000HCZ8GC/ref=sr_1_1?ie=UTF8&s=software&qid=1243275919&sr=1-1 Amazon] for approx $350/£220.
 
 Both Dia and Visio are quite similar, but Dia is a little more robust.
 
