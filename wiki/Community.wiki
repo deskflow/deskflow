@@ -9,6 +9,12 @@ Having a dictator is great for a small project like ours, because it stops our a
 
 We do not currently have a website because our immediate goal is to make the application easier to use before promoting it to our end users. Currently, most of our end users are fairly technical. For technical users, the best place to start is our [http://code.google.com/p/synergy-plus/ community portal].
 
+== Poisonous People ==
+
+We don't like poisonous people. Please watch this video.
+
+<wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
+
 == Communication ==
 
 Our most active communication channel is our [http://groups.google.com/group/synergy-plus discussion group]; both users and developers should post questions there. We also have an IRC channel for quick questions, but this should not be used for in-depth discussion.
@@ -17,12 +23,6 @@ Our most active communication channel is our [http://groups.google.com/group/syn
   * Discussion group: http://groups.google.com/group/synergy-plus
   * IRC channel: #synergy-plus on irc.freenode.net:8001
 
-== Key People ==
-
-  * Project leader: Sorin Sbârnea
-  * Original creators: Chris Schoeneman, et al.
-  * Specification authors: Nick Bolton, et al.
-
 == Newcomers ==
 
 Developers who are new to our project, should start by checking out the [http://code.google.com/p/synergy-plus/issues/list issues list]; fixing minor bugs is a good way to get familiar with the code.
@@ -30,12 +30,6 @@ Developers who are new to our project, should start by checking out the [http://
 Before asking questions on the [http://groups.google.com/group/synergy-plus mailing list] it is often best to _search_ the mailing list before hand to avoid repeated questions. We also encourage that people quickly look over past threads in our mailing list, to become familiar with how questions are asked, and possibly to contribute to past discussions where new light may be useful. However, we strongly encourage that old discussions are not opened up unless the person really knows what they're talking about.
 
 There is no formal procedure for becoming a project member (getting commit access). The length of time before a newcomer is added to the project, usually depends their interaction with the mailing list. If the user looks to have a good understanding and we agree with their goals, then we may give commit access sooner. As our project grows, we may review patches initially and give commit access later.
-
-== Poisonous People ==
-
-We don't like poisonous people. Please watch this video.
-
-<wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
 
 == Hacking Guide ==
 
@@ -46,3 +40,9 @@ We don't like poisonous people. Please watch this video.
 
   * Submit patches to the issue list as an attachment. If an issue does not exist for your patch, please create one. If you submit to the mailing list, it may get missed.
   * When you submit your patch, if you want it to be discussed, please open a new mailing list thread and link to the issue containing the patch.
+
+== Key People ==
+
+  * Project leader: Sorin Sbârnea
+  * Original creators: Chris Schoeneman, et al.
+  * Specification authors: Nick Bolton, et al.
