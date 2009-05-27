@@ -3,7 +3,9 @@
 
 = Community =
 
-<wiki:toc max_depth="1" />
+<wiki:toc max_depth="2" />
+
+== About ==
 
 Our community is a benevolent dictatorship, meaning that our project leader has the final say on all major decisions, however our leader will always do what is best for the community. The key word is, benevolent; meaning that, our dictator is not a tyrant. This is primarily because the project is very "forkable" (this project is it's self a fork); so if the majority disagree, they will fork into a new project. This is common to most small open source communities.
 
