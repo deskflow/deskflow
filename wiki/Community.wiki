@@ -9,12 +9,6 @@ Having a dictator is great for a small project like ours, because it stops our a
 
 We do not currently have a website because our immediate goal is to make the application easier to use before promoting it to our end users. Currently, most of our end users are fairly technical. For technical users, the best place to start is our [http://code.google.com/p/synergy-plus/ community portal].
 
-== Poisonous People ==
-
-Poisonous people are bad. Please watch this video.
-
-<wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
-
 == Communication ==
 
 Our most active communication channel is our [http://groups.google.com/group/synergy-plus discussion group]; both users and developers should post questions there. We also have an IRC channel for quick questions, but this should not be used for in-depth discussion.
@@ -39,4 +33,9 @@ There is no formal procedure for becoming a project member (getting commit acces
 
   * Project leader: Sorin Sbârnea
   * Original creators: Chris Schoeneman, et al.
-  * Specification authors: Nick Bolton, et al.
+
+== Poisonous People ==
+
+Poisonous people are bad. Please watch this video.
+
+<wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
