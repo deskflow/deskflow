@@ -9,6 +9,12 @@
 
 This section focuses on the existing architecture, code style, and features. Where necessary, improvements on each feature will be suggested.
 
+=== Limit of Scope ===
+
+This is a list of features we really don't think we should implement (at least within the near future). Any features added, changed or removed from here should be debated in the mailing list.
+
+  * Dragging  windows between screens (Issue: 21)
+
 === Architecture ===
 
 This section describes the current architecture. It should be read by developers who wish to plan new features, or improvements to existing features.
