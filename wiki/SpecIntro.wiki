@@ -27,14 +27,6 @@ The current objectives of the Synergy+ project, in order of importance.
   # A common user interface to all operating systems.
   # More intuitive setup/configuration and troubleshooting.
 
-=== Limit of Scope ===
-
-This is a list of features we really don't think we should implement (at least within the near future). Any features added, changed or removed from here should be debated in the mailing list.
-
-  * Example: Warp engines.
-
-_If the community decides this section is not neccecary, it may be removed._
-
 === Community ===
 
 See the [Community] page.
