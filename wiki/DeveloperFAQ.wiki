@@ -1,6 +1,10 @@
 #summary Common questions and answers for new developers
 #labels Phase-QA
 
+Useful answers to questions that may be asked by developers. Our community is quite new, so these questions may not necessarily be frequently asked. As our community grows, this page will be refined to include actual frequently asked questions.
+
+<wiki:toc max_depth="1" />
+
 = General =
 
 *Q: Why do I get an XTest error when compiling on Ubuntu?*
