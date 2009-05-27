@@ -31,16 +31,9 @@ Before asking questions on the [http://groups.google.com/group/synergy-plus mail
 
 There is no formal procedure for becoming a project member (getting commit access). The length of time before a newcomer is added to the project, usually depends their interaction with the mailing list. If the user looks to have a good understanding and we agree with their goals, then we may give commit access sooner. As our project grows, we may review patches initially and give commit access later.
 
-== Hacking Guide ==
-
   * Read the coding syntax guide on the [SpecImp Implementation] page.
   * The [DeveloperFAQ Developer FAQ] may be useful.
   * Do not put your name at the top of source code files.
-
-== Submitting Patches ==
-
-  * Submit patches to the issue list as an attachment. If an issue does not exist for your patch, please create one. If you submit to the mailing list, it may get missed.
-  * When you submit your patch, if you want it to be discussed, please open a new mailing list thread and link to the issue containing the patch.
 
 == Key People ==
 
