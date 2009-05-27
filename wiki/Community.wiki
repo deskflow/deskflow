@@ -1,8 +1,6 @@
 #summary How our community works
 #labels Featured
 
-= Community =
-
 <wiki:toc max_depth="2" />
 
 == About ==
