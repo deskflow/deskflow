@@ -1,6 +1,8 @@
 #summary Common questions and answers for new developers
 #labels Phase-QA
 
+= General =
+
 *Q: Why do I get an XTest error when compiling on Ubuntu?*
 
 A: Ensure that the libXtst-dev is installed.
@@ -21,3 +23,9 @@ A: Use https instead of http.
 A: If you don't yet have commit access, then `hg export` your changes, and then post them as [http://code.google.com/p/synergy-plus/issues/entry an issue], or the [http://groups.google.com/group/synergy-plus discussion group]. Rumor is that these are then easily applied using patch(1), so, .patch files are welcome!
 
   * [http://groups.google.com/group/synergy-plus/browse_thread/thread/b1dea506278ff7fc/8ff4d766fe442854?lnk=gst&q=patches#8ff4d766fe442854 Discuss]
+
+= Coding =
+
+*Q: What is the `ARCH` macro for?*
+
+A: The `ARCH` macro is defined in `lib/arch/CArch.h` and accesses a static singleton pointer for the _architecture_ tools. For example, ARCH->addrToString(CArchNetAddress) will convert an address instance to an IP address as type std::string.
