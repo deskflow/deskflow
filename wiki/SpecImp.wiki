@@ -11,7 +11,8 @@
 
 The code style is based on the original style used by Chris Schoeneman. This original style will be followed for constancy, which will make it easier for the community to worth with.
 
-  * The const keyword is used
+  * Tabs are inserted with the tab character, not white space
+  * The const keyword is used regularly
   * Class, struct, and enum names are PascalCase
   * Member, and enum constant names are camelCase
   * Member variables (public and private) begin with m_
