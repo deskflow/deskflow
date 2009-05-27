@@ -1,5 +1,5 @@
 #summary Specification: Introduction
-#labels Specification
+#labels Specification,Featured
 
 = Synergy+ Specification =
 
