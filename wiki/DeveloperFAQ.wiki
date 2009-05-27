@@ -11,7 +11,7 @@ Useful answers to questions that may be asked by developers. Our community is qu
 
 *Q: Why do I get an XTest error when compiling on Ubuntu?*
 
-A: Ensure that the libXtst-dev is installed.
+Ensure that the libXtst-dev is installed.
 
   * [http://groups.google.com/group/synergy-plus/browse_thread/thread/75f1d29106a90b04/ee67a56d3240ed08?lnk=gst&q=xtest#ee67a56d3240ed08 Discuss 1]
   * [http://groups.google.com/group/synergy-plus/browse_thread/thread/97b7f2cacd5a4c3/3875900c14f136c0?lnk=gst&q=xtest#3875900c14f136c0 Discuss 2]
@@ -20,13 +20,13 @@ A: Ensure that the libXtst-dev is installed.
 
 *Q: Why do I get "HTTP Error 405: Method Not Allowed" when using hg push?*
 
-A: Use https instead of http.
+Use https instead of http.
 
 ----
 
 *Q: How do I submit patches?*
 
-A: If you don't yet have commit access, then `hg export` your changes, and then post them as [http://code.google.com/p/synergy-plus/issues/entry an issue], or the [http://groups.google.com/group/synergy-plus discussion group]. Rumor is that these are then easily applied using patch(1), so, .patch files are welcome!
+If you don't yet have commit access, then `hg export` your changes, and then post them as [http://code.google.com/p/synergy-plus/issues/entry an issue], or the [http://groups.google.com/group/synergy-plus discussion group]. Rumor is that these are then easily applied using patch(1), so, .patch files are welcome!
 
   * [http://groups.google.com/group/synergy-plus/browse_thread/thread/b1dea506278ff7fc/8ff4d766fe442854?lnk=gst&q=patches#8ff4d766fe442854 Discuss]
 
@@ -38,7 +38,7 @@ A: If you don't yet have commit access, then `hg export` your changes, and then 
 
 *Q: What is the `ARCH` macro for?*
 
-A: The `ARCH` macro is defined in `lib/arch/CArch.h` and accesses a static singleton pointer for the _architecture_ tools.
+The `ARCH` macro is defined in `lib/arch/CArch.h` and accesses a static singleton pointer for the _architecture_ tools.
 
 For example, ARCH->addrToString(CArchNetAddress) will convert an address instance to an IP address as type std::string.
 
