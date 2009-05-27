@@ -6,17 +6,6 @@
 == Table of Contents ==
 
   # [SpecIntro Introduction]
-    * Features
-    * Objectives
-    * This Document
-    * Publishing
-    * Key People
-    * Community
-    * Terminology
   # [SpecAnalysis Analysis]
-    * Key Issues
   # [SpecDesign Design]
-    * Architecture
-    * Features
   # [SpecImp Implementation]
-    * Code Style
