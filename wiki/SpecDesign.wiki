@@ -13,7 +13,7 @@ This section focuses on the existing architecture, code style, and features. Whe
 
 This is a list of features we really don't think we should implement (at least within the near future). Any features added, changed or removed from here should be debated in the mailing list.
 
-  * Dragging  windows between screens (Issue: 21)
+  * Dragging  windows between screens ([http://code.google.com/p/synergy-plus/issues/detail?id=21 Issue: 21])
 
 === Architecture ===
 
