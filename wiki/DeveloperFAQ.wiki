@@ -7,6 +7,8 @@ Useful answers to questions that may be asked by developers. Our community is qu
 
 = General =
 
+----
+
 *Q: Why do I get an XTest error when compiling on Ubuntu?*
 
 A: Ensure that the libXtst-dev is installed.
@@ -28,8 +30,18 @@ A: If you don't yet have commit access, then `hg export` your changes, and then 
 
   * [http://groups.google.com/group/synergy-plus/browse_thread/thread/b1dea506278ff7fc/8ff4d766fe442854?lnk=gst&q=patches#8ff4d766fe442854 Discuss]
 
+----
+
 = Coding =
+
+----
 
 *Q: What is the `ARCH` macro for?*
 
-A: The `ARCH` macro is defined in `lib/arch/CArch.h` and accesses a static singleton pointer for the _architecture_ tools. For example, ARCH->addrToString(CArchNetAddress) will convert an address instance to an IP address as type std::string.
+A: The `ARCH` macro is defined in `lib/arch/CArch.h` and accesses a static singleton pointer for the _architecture_ tools.
+
+For example, ARCH->addrToString(CArchNetAddress) will convert an address instance to an IP address as type std::string.
+
+To use the ARCH macro, `#include "CArch.h"`
+
+----
