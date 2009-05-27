@@ -32,7 +32,9 @@ Use https instead of http.
 
 == Q: How do I submit patches? ==
 
-If you don't yet have commit access, then `hg export` your changes, and then post them as [http://code.google.com/p/synergy-plus/issues/entry an issue], or the [http://groups.google.com/group/synergy-plus discussion group]. Rumor is that these are then easily applied using patch(1), so, .patch files are welcome!
+Use `hg export`, to export your changes. Rumor is that these are then easily applied using patch(1), so, .patch files are welcome!
+
+Submit patches to the [http://code.google.com/p/synergy-plus/issues/entry issue list] as an attachment. If an issue does not exist for your patch, please create one. If you submit to the mailing list, it may get missed. When you submit your patch, if you want it to be discussed, please open a new mailing list thread and link to the issue containing the patch.
 
   * [http://groups.google.com/group/synergy-plus/browse_thread/thread/b1dea506278ff7fc/8ff4d766fe442854?lnk=gst&q=patches#8ff4d766fe442854 Discuss: How do I create and submit patches?]
 
