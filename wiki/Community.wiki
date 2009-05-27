@@ -29,6 +29,18 @@ There is no formal procedure for becoming a project member (getting commit acces
   * The [DeveloperFAQ Developer FAQ] may be useful.
   * Do not put your name at the top of source code files.
 
+== Procedures ==
+
+=== Rejecting Features ===
+
+From time to time users will have a feature which they wish to have implemented. This may be a feature we do or do not want. If the feature is outside of the scope of the project, then the user should be politely told that the feature will not be implemented.
+
+  {user-name}, thank you for your feature request. We appreciate your support for our project, and hope you continue to give feedback. However, the feature you requested is outside the scope of our specification, and so have decided not to implement it.
+
+This avoids upsetting potentially useful people that could contribute valuable bug reports and bug fixes. Politeness should be used regardless of if many people have requested the same feature; the user may be unaware of the previous feature requests.
+
+After rejecting the feature, the project member who has done so should update the status to WontFix (and *not* Invalid). The suggested feature should then be added to the [SpecDesign Specification Design] page under _Limit of Scope_.
+
 == Key People ==
 
   * Project leader: Sorin Sbârnea
@@ -37,6 +49,6 @@ There is no formal procedure for becoming a project member (getting commit acces
 
 == Poisonous People ==
 
-Poisonous people are bad. Please watch this video.
+Here's an interesting video about poisonous people.
 
 <wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
