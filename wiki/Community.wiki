@@ -11,7 +11,7 @@ We do not currently have a website because our immediate goal is to make the app
 
 == Poisonous People ==
 
-We don't like poisonous people. Please watch this video.
+Poisonous people are bad. Please watch this video.
 
 <wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
 
@@ -33,8 +33,9 @@ There is no formal procedure for becoming a project member (getting commit acces
 
 == Hacking Guide ==
 
-  * Please read the coding syntax guide on the [SpecImp Implementation] page.
-  * Please do not put your name a the top of pages; the commit log will show your name.
+  * Read the coding syntax guide on the [SpecImp Implementation] page.
+  * The [DeveloperFAQ Developer FAQ] may be useful.
+  * Do not put your name at the top of source code files.
 
 == Submitting Patches ==
 
