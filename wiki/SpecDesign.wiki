@@ -11,7 +11,7 @@ This section focuses on the existing architecture, code style, and features. Whe
 
 === Limit of Scope ===
 
-This is a list of features we really don't think we should implement (at least within the near future). Any features added, changed or removed from here should be debated in the mailing list.
+This is a list of features we really don't think we should implement (at least within the near future). Any features added, changed or removed from here should be debated in the mailing list. If there is a related issue with the `WontFix` label, then this issue should be referenced here.
 
   * Dragging windows between screens (Issue 21), or any sort of RDP application sharing (Issue 32).
 
