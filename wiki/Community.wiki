@@ -33,6 +33,7 @@ There is no formal procedure for becoming a project member (getting commit acces
 
   * Project leader: Sorin Sbârnea
   * Original creators: Chris Schoeneman, et al.
+  * Specification authors: Nick Bolton, et al.
 
 == Poisonous People ==
 
