@@ -3,13 +3,11 @@
 
 Useful answers to questions that may be asked by developers. Our community is quite new, so these questions may not necessarily be frequently asked. As our community grows, this page will be refined to include actual frequently asked questions.
 
-<wiki:toc max_depth="1" />
+<wiki:toc max_depth="2" />
 
 = General =
 
-----
-
-*Q: How do I download the source code?*
+== Q: How do I download the source code? ==
 
 This is done with the Mercurial (hg); visit the [http://code.google.com/p/synergy-plus/source/checkout Source] page for further instructions.
 
@@ -21,41 +19,29 @@ Either visit the [http://www.selenic.com/mercurial/wiki/ Mercurial] website or d
 *Windows/Mac*
 Visit the "[http://mercurial.berkwood.com/ Mercurial binary packages for Windows and Mac OS X]" web page.
 
-----
-
-*Q: Why do I get an XTest error when compiling on Ubuntu?*
+== Q: Why do I get an XTest error when compiling on Ubuntu? ==
 
 Ensure that the libXtst-dev or libXtst-devel package is installed.
 
-  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/75f1d29106a90b04/ee67a56d3240ed08?lnk=gst&q=xtest#ee67a56d3240ed08 Discuss 1]
-  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/97b7f2cacd5a4c3/3875900c14f136c0?lnk=gst&q=xtest#3875900c14f136c0 Discuss 2]
+  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/75f1d29106a90b04/ee67a56d3240ed08?lnk=gst&q=xtest#ee67a56d3240ed08 Discuss: XTest library]
+  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/97b7f2cacd5a4c3/3875900c14f136c0?lnk=gst&q=xtest#3875900c14f136c0 Discuss: configure: error: You must have the XTest library to build synergy]
 
-----
-
-*Q: Why do I get "HTTP Error 405: Method Not Allowed" when using hg push?*
+== Q: Why do I get "HTTP Error 405: Method Not Allowed" when using hg push? ==
 
 Use https instead of http.
 
-----
-
-*Q: How do I submit patches?*
+== Q: How do I submit patches? ==
 
 If you don't yet have commit access, then `hg export` your changes, and then post them as [http://code.google.com/p/synergy-plus/issues/entry an issue], or the [http://groups.google.com/group/synergy-plus discussion group]. Rumor is that these are then easily applied using patch(1), so, .patch files are welcome!
 
-  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/b1dea506278ff7fc/8ff4d766fe442854?lnk=gst&q=patches#8ff4d766fe442854 Discuss]
-
-----
+  * [http://groups.google.com/group/synergy-plus/browse_thread/thread/b1dea506278ff7fc/8ff4d766fe442854?lnk=gst&q=patches#8ff4d766fe442854 Discuss: How do I create and submit patches?]
 
 = Coding =
 
-----
-
-*Q: What is the `ARCH` macro for?*
+== Q: What is the `ARCH` macro for? ==
 
 The `ARCH` macro is defined in `lib/arch/CArch.h` and accesses a static singleton pointer for the _architecture_ tools.
 
 For example, ARCH->addrToString(CArchNetAddress) will convert an address instance to an IP address as type std::string.
 
 To use the ARCH macro, `#include "CArch.h"`
-
-----
