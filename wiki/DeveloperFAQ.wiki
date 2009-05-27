@@ -9,9 +9,23 @@ Useful answers to questions that may be asked by developers. Our community is qu
 
 ----
 
+*Q: How do I download the source code?*
+
+This is done with the Mercurial (hg); visit the [http://code.google.com/p/synergy-plus/source/checkout Source] page for further instructions.
+
+Mercurial can be installed on Linux, Windows and Mac.
+
+*Linux*
+Either visit the [http://www.selenic.com/mercurial/wiki/ Mercurial] website or download using your package manager.
+
+*Windows/Mac*
+Visit the "[http://mercurial.berkwood.com/ Mercurial binary packages for Windows and Mac OS X]" web page.
+
+----
+
 *Q: Why do I get an XTest error when compiling on Ubuntu?*
 
-Ensure that the libXtst-dev is installed.
+Ensure that the libXtst-dev or libXtst-devel package is installed.
 
   * [http://groups.google.com/group/synergy-plus/browse_thread/thread/75f1d29106a90b04/ee67a56d3240ed08?lnk=gst&q=xtest#ee67a56d3240ed08 Discuss 1]
   * [http://groups.google.com/group/synergy-plus/browse_thread/thread/97b7f2cacd5a4c3/3875900c14f136c0?lnk=gst&q=xtest#3875900c14f136c0 Discuss 2]
