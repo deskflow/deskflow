@@ -15,13 +15,13 @@ This section details analysis of the existing system (based on Synergy2) and key
 
 === Logging ===
 
-The logging system works by having a static singleton instance of `CLog` (lib/base/CLog.h) to which, "log outputters" are added. The outputters are defined in lib/base/LogOutputters.h, and are all derived from `ILogOutputter`.
+The logging system works by having a static singleton instance of `CLog` (`lib/base/CLog.h`) to which, "log outputters" are added. The outputters are defined in `lib/base/LogOutputters.h`, and are all derived from `ILogOutputter`.
 
   * `CConsoleLogOutputter` writes to the console when the application is launched in foreground mode (all platforms).
 
   * `CBufferedLogOututter` sends output to a Microsoft Windows, xwindows, or Carbon task bar.
 
-  * `CMessageBoxOutputter` writes to the ms windows log message window; by default only on `FATAL` and similar. As a special case, this isn't defined in LogOutputters.h, but is defined in synergyc.cpp.
+  * `CMessageBoxOutputter` writes to the ms windows log message window; by default only on `FATAL` and similar. As a special case, this isn't defined in `LogOutputters.h`, but is defined in `synergyc.cpp`.
 
 === Key Issues ===
 
