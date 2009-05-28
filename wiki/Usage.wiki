@@ -2,3 +2,5 @@
 
 == Locking == 
 This feature is useful for computer games, where usually the mouse cursor must stay on a specific screen. The *Scroll Lock* key can be used to prevent the mouse switching input to another screen.
+
+*Note:* For users that don't have a scroll lock key, Issue 61 has been created.
