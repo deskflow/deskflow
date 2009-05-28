@@ -7,7 +7,9 @@
 
 == Introduction ==
 
-Synergy+ is a fork of Synergy2. The initial revision of Synergy was created on May 13, 2001. Synergy+ allows users to share their mouse and keyboard between multiple computers over a network.
+Synergy+ allows users to share their mouse and keyboard between multiple computers over a network. Synergy+ can be thought of as a _Software KVM_. A combination of operating systems can be used, such as Windows, Linux and Mac OS X. No special hardware is required to use Synergy+, just a local area network (LAN).
+
+Synergy+ is a fork of Synergy2, meaning that our code is based on Synergy2 but with enhancements introduced by our community. The initial revision of Synergy was created on May 13, 2001.
 
 === Features ===
 
