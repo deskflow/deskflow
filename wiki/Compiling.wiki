@@ -24,10 +24,7 @@ This step is not necessary when using VC++ or XCode.
 
 Run these commands:
 {{{
- aclocal
- autoconf
- autoheader
- automake 
+ autoreconf
  ./configure
 }}}
 
