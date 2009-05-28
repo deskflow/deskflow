@@ -15,7 +15,7 @@ These are supported without releasing binary builds (such as packages). We inten
   * Mac OS 10.4 Tiger
   * Mac OS 10.5 Leopard
   * Mac OS 10.6 Snow-Leopard
-  * SUSE Linux
+  * openSUSE
   * Ubuntu
   * Fedora
 
