@@ -15,17 +15,18 @@
   * Website: http://www.volker-lanz.de/en/software/qsynergy/
 
 == QuickSynergy ==
-  * Last change: 2006
+  * Last change: 2006 (as of May 28, 2009)
+  * Status: abandon-ware
   * Platform: MacOS
   * Homepage: http://quicksynergy.sourceforge.net/
 
 == Sinerji ==
   * Author: Farslan
-  * Platform: Ubuntu
+  * Last update: Sep 19 2008 (as of May 28, 2009)
+  * Dependencies: PyKDE/PyQt
   * Website: http://www.kde-apps.org/content/show.php?content=89732
 
 == SynergyKM ==
- * Detail: Unknown
  * Developers: 1
  * Status: abandon-ware
  * Latest release: Sep 14, 2006 (as of May 23, 2009)
