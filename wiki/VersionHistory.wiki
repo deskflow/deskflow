@@ -1,6 +1,6 @@
 #summary Details about major releases of Synergy+.
 
-Versions are listed in reverse order (latest version at top).
+Versions are listed in reverse order (latest version at top). For significant releases and planned features, refer to [Milestones].
 
 || *Version* || *Release Date* || *Milestone* || *Notes* ||
 || 1.4.0 || July 2009 || M1 || Next release to follow milestone M1 plan. ||
@@ -8,7 +8,7 @@ Versions are listed in reverse order (latest version at top).
 || 1.3.2 || February 2009 || || The first release of Synergy+ from our project. ||
 || 1.3.1 || April 2, 2006 || || Latest known release by the Synergy2 project. ||
 
-These are the versions we have released to our public user base. For significant releases and planned features, refer to [Milestones].
+The above versions we what have released, and what we intend to release to our public user base.
 
 = Details =
 
