@@ -4,10 +4,12 @@
 = Summary =
 
 || ID || Details || Version || Release Date ||
-|| M1 || Important defects fixed, and a few small enhancements. ||  2.0.0 || July 2009 ||
-|| M2 || Major new features to improve usability and performance. || 3.0.0 || Late 2009 ||
-|| M3 || GUI overhaul to make software easier to use, attracting new users. || 4.0.0 || Early 2010 ||
-|| Mx || Non-essential issues deferred to later milestones. || n/a || n/a ||
+|| M1 || Important defects fixed, and a few small enhancements. ||
+|| M2 || Major new features to improve usability and performance. ||
+|| M3 || GUI overhaul to make software easier to use, attracting new users. ||
+|| Mx || Non-essential issues deferred to later milestones. ||
+
+For version numbers and release dates, please refer to [VersionHistory version history].
 
 These milestones have been created to serve as targets for significant releases of Synergy+, once M3 has been released, we should work toward actively promoting Synergy+ by creating a professional looking website, looking a donations, sponsors, etc. At this stage, we expect to have seen significant growth in the project, and our user to developer ratio is expected to grow in favor of users.
 
