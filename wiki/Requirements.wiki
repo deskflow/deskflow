@@ -33,4 +33,4 @@ Possible future ports:
   * Windows Mobile (client)
   * iPhone (controller-mode)
 
-Note: iPhone mode is impossible to use it as a client but could be used to emulate a keyboard and a mouse so it could run as a server.
+*Note:* iPhone mode is impossible to use it as a client but could be used to emulate a keyboard and a mouse so it could run as a server.
