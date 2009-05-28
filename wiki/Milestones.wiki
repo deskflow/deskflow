@@ -5,7 +5,7 @@
 
 || ID || Details || Version || Release Date ||
 || M1 || Important defects fixed, and a few small enhancements. ||  2.0.0 || July 2009 ||
-|| M2 || New features to improve usability, but nothing too major. || 3.0.0 || Late 2009 ||
+|| M2 || Major new features to improve usability and performance. || 3.0.0 || Late 2009 ||
 || M3 || GUI overhaul to make software easier to use, attracting new users. || 4.0.0 || Early 2010 ||
 || Mx || Non-essential issues deferred to later milestones. || n/a || n/a ||
 
