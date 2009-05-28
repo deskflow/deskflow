@@ -1,4 +1,4 @@
-#summary How to build Synergy+ from the source
+#summary How to build Synergy+ from source on all platforms
 
 = Prerequisites =
 
