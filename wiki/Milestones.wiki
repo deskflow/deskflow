@@ -3,7 +3,7 @@
 
 = Summary =
 
-|| ID || Details || Version || Release Date ||
+|| ID || Details ||
 || M1 || Important defects fixed, and a few small enhancements. ||
 || M2 || Major new features to improve usability and performance. ||
 || M3 || GUI overhaul to make software easier to use, attracting new users. ||
