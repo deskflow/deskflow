@@ -1,4 +1,40 @@
 #summary Project milestones such as M1, M2, M3, Mx
 #labels Featured
 
-*TODO: Implement this page.*
+= Summary =
+
+|| ID || Details ||
+|| M1 || Important defects fixed, and a few small enhancements. ||
+|| M2 || New features to improve usability, but nothing too major. ||
+|| M3 || GUI overhaul to make software easier to use, attracting new users. ||
+|| Mx || Non-essential issues deferred to later milestones. ||
+
+= Details =
+
+== Milestone M1 ==
+
+Possibly the most significant issue is Issue 29. This is required to overcome the incomparability with new technologies in Windows Vista and versions of Windows thereafter. To solve this, a new branch will be created in the hg repository, and commits will be reviewed there, and once the best approach is discovered, this will be merged with the main trunk. Multiple people may be working on this feature.
+
+Other issues are those that don't necessarily affect Windows Vista, but just general bugs that have been discovered for all platforms over the 3 years since Synergy2 development stopped. However many seem to affect Mac OS X only, which will be difficult to resolve since most of our developers are Windows and Linux users.
+
+*Release date:* July 2009
+
+== Milestone M2 ==
+
+There have been suggestions in the mailing list regarding new feature enhancements, and one which stands out is for using different network topologies such as P2P or similar. Some believe that the client/server topology is not ideal, however, this is yet to be discussed in detail on the [http://groups.google.com/group/synergy-plus mailing list].
+
+*Release date:* Late 2009
+
+== Milestone M3 ==
+
+There are many [RelatedProjects existing GUIs] that have been written by developers outside of the Synergy2/Synergy+ development community. Notable projects are:
+
+  * [http://www.volker-lanz.de/en/software/qsynergy/ QSynergy] - A cross-platform GUI for Synergy2
+  * [http://www.kde-apps.org/content/show.php?content=89732 Sinerji] - A Linux KDE GUI for Synergy2
+  * [https://sourceforge.net/projects/synergykm SynergyKM] - A Mac OS X (fork?) of Synergy2
+
+Our aim is not to replace these GUIs, but to work with the authors to create a GUI that comes included with Synergy+ that works the same on all platforms (Windows, Mac, Linux).
+
+We should also consider creating a wizard for new users, that appears the first time that Synergy is started. This will stop new users from being overwhelmed with information presented by the GUI applications that existing users find useful.
+
+*Release date:* Early 2010
