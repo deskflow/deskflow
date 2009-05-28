@@ -21,7 +21,5 @@ Thermionix:
   * Build up wiki
 
 Nick Bolton:
-  * Documentation
-  * Wiki maintainer
-  * Win/Linux/Mac coder
-  * Mailing list noise ;)
+  * Documentation/Wiki maintainer
+  * Win/Linux/Mac programmer
