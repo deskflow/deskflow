@@ -3,11 +3,11 @@
 
 = Summary =
 
-|| ID || Details ||
-|| M1 || Important defects fixed, and a few small enhancements. ||
-|| M2 || New features to improve usability, but nothing too major. ||
-|| M3 || GUI overhaul to make software easier to use, attracting new users. ||
-|| Mx || Non-essential issues deferred to later milestones. ||
+|| ID || Details || Version || Release Date ||
+|| M1 || Important defects fixed, and a few small enhancements. ||  2.0.0 || July 2009 ||
+|| M2 || New features to improve usability, but nothing too major. || 3.0.0 || Late 2009 ||
+|| M3 || GUI overhaul to make software easier to use, attracting new users. || 4.0.0 || Early 2010 ||
+|| Mx || Non-essential issues deferred to later milestones. || n/a || n/a ||
 
 These milestones have been created to serve as targets for significant releases of Synergy+, once M3 has been released, we should work toward actively promoting Synergy+ by creating a professional looking website, looking a donations, sponsors, etc. At this stage, we expect to have seen significant growth in the project, and our user to developer ratio is expected to grow in favor of users.
 
@@ -19,15 +19,9 @@ Possibly the most significant issue is Issue 29. This is required to overcome th
 
 Other issues are those that don't necessarily affect Windows Vista, but just general bugs that have been discovered for all platforms over the 3 years since Synergy2 development stopped. However many seem to affect Mac OS X only, which will be difficult to resolve since most of our developers are Windows and Linux users.
 
-  * *Release date:* July 2009
-  * *Version number:* 2.0.0
-
 == Milestone M2 ==
 
 There have been suggestions in the mailing list regarding new feature enhancements, and one which stands out is for using different network topologies such as P2P or similar. Some believe that the client/server topology is not ideal, however, this is yet to be discussed in detail on the [http://groups.google.com/group/synergy-plus mailing list].
-
-  * *Release date:* Late 2009
-  * *Version number:* 3.0.0
 
 == Milestone M3 ==
 
@@ -40,6 +34,3 @@ There are many [RelatedProjects existing GUIs] that have been written by develop
 Our aim is not to replace these GUIs, but to work with the authors to create a GUI that comes included with Synergy+ that works the same on all platforms (Windows, Mac, Linux).
 
 We should also consider creating a wizard for new users, that appears the first time that Synergy is started. This will stop new users from being overwhelmed with information presented by the GUI applications that existing users find useful.
-
-  * *Release date:* Early 2010
-  * *Version number:* 4.0.0
