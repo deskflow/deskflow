@@ -191,4 +191,4 @@ hostname is a hostname or IP address of a network interface on the server system
 
     synergyc [options] address[:port]
 
-address is the hostname or IP address of the server and port is the optional network port on the server to connect to. The client accepts the common options. 
+address is the hostname or IP address of the server and port is the optional network port on the server to connect to. The client accepts the common options.
