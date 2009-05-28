@@ -4,11 +4,11 @@
 
 These are the versions we have released to our public user base. Versions are listed in reverse order (latest version at top).
 
-|| Version || Release Date || Notes ||
-|| 1.4.0 || July 2009 || Future release to follow milestone M1 plan. ||
-|| 1.3.3 || March 2, 2009 || Our 2nd release including some bug fixes. ||
-|| 1.3.2 || February 2009 || The first release of Synergy+ from our project. ||
-|| 1.3.1 || April 2, 2006 || Latest known release by the Synergy2 project. ||
+|| Version || Release Date || Milestone || Notes ||
+|| 1.4.0 || July 2009 || M1 || Future release to follow milestone M1 plan. ||
+|| 1.3.3 || March 2, 2009 || || Our 2nd release including some bug fixes. ||
+|| 1.3.2 || February 2009 || || The first release of Synergy+ from our project. ||
+|| 1.3.1 || April 2, 2006 || || Latest known release by the Synergy2 project. ||
 
 For significant releases and planned features, refer to [Milestones].
 
