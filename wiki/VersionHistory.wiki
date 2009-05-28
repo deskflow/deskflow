@@ -1,6 +1,6 @@
 #summary Details about major releases of Synergy+.
 
-= Summary =
+= Versions =
 
 These are the versions we have released to our public user base. Versions are listed in reverse order (latest version at top).
 
