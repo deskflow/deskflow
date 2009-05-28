@@ -1,15 +1,13 @@
 #summary Project milestones such as M1, M2, M3, Mx
 #labels Featured
 
-= Summary =
+For version numbers and release dates, please refer to [VersionHistory version history].
 
 || *ID* || *Details* ||
 || M1 || Important defects fixed, and a few small enhancements. ||
 || M2 || Major new features to improve usability and performance. ||
 || M3 || GUI overhaul to make software easier to use, attracting new users. ||
 || Mx || Non-essential issues deferred to later milestones. ||
-
-For version numbers and release dates, please refer to [VersionHistory version history].
 
 These milestones have been created to serve as targets for significant releases of Synergy+, once M3 has been released, we should work toward actively promoting Synergy+ by creating a professional looking website, looking a donations, sponsors, etc. At this stage, we expect to have seen significant growth in the project, and our user to developer ratio is expected to grow in favor of users.
 
