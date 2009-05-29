@@ -35,7 +35,9 @@ See the [Community] page.
 
 === This Document ===
 
-This specification contains:
+This document (the specification) was originally written for a PDF document, and was then converted in to wiki pages so all project members can make collaborative changes. The [SpecToctable of contents] can be used to find your away around the specification pages.
+
+The specification contains:
 
   * The goals of this project
   * Important current bugs
