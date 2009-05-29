@@ -44,7 +44,7 @@ The specification contains:
   * System design and architecture
   * Future features and enhancements
 
-This document is not an installation guide or user guide.
+This is not an installation guide or user guide, and is intended for the project's community members.
 
 === Terminology ===
 
