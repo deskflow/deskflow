@@ -28,6 +28,7 @@
 #include "TMethodEventJob.h"
 #include <cstring>
 #include <cstdlib>
+#include "CArch.h"
 
 //
 // CClient
@@ -101,6 +102,15 @@ CClient::connect()
 		// being shuttled between various networks).  patch by Brent
 		// Priddy.
 		m_serverAddress.resolve();
+		
+		// m_serverAddress will be null if the hostname address is not reolved
+		if (m_serverAddress.getAddress() != NULL) {
+		  // to help users troubleshoot, show server host name (issue: 60)
+		  LOG((CLOG_NOTE "connecting to '%s': %s:%i", 
+		  m_serverAddress.getHostname().c_str(),
+		  ARCH->addrToString(m_serverAddress.getAddress()).c_str(),
+		  m_serverAddress.getPort()));
+		}
 
 		// create the socket
 		IDataSocket* socket = m_socketFactory->create();

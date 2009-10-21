@@ -14,6 +14,7 @@
 
 #include "CArchConsoleUnix.h"
 #include <cstdio>
+#include <stdio.h>
 
 //
 // CArchConsoleUnix

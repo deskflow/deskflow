@@ -82,7 +82,13 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 	// clear out the pipe in preparation for waiting.
 
 	char buf[16];
-	read(m_pipefd[0], buf, 15);
+	ssize_t read_response = read(m_pipefd[0], buf, 15);
+	
+	// with linux automake, warnings are treated as errors by default
+	if (read_response < 0)
+	{
+		// todo: handle read response
+	}
 
 	{
 		CLock lock(&m_mutex);
@@ -153,7 +159,14 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 #if HAVE_POLL
 	retval = poll(pfds, 2, TIMEOUT_DELAY); //16ms = 60hz, but we make it > to play nicely with the cpu
  	if (pfds[1].revents & POLLIN) {
- 		read(m_pipefd[0], buf, 15);
+ 		ssize_t read_response = read(m_pipefd[0], buf, 15);
+		
+		// with linux automake, warnings are treated as errors by default
+		if (read_response < 0)
+		{
+			// todo: handle read response
+		}
+
  	}
 #else
 	retval = select(nfds,
@@ -226,7 +239,13 @@ CXWindowsEventQueueBuffer::addEvent(UInt32 dataID)
 		// that is waiting for a ConnectionNumber() socket to be readable.
 		// The flush call can read incoming data from the socket and put
 		// it in Xlib's input buffer.  That sneaks it past the other thread.
-		write(m_pipefd[1], "!", 1);
+		ssize_t write_response = write(m_pipefd[1], "!", 1);
+
+		// with linux automake, warnings are treated as errors by default
+		if (write_response < 0)
+		{
+			// todo: handle read response
+		}
 	}
 
 	return true;
@@ -236,7 +255,7 @@ bool
 CXWindowsEventQueueBuffer::isEmpty() const
 {
 	CLock lock(&m_mutex);
-	return (QLength(m_display) == 0 );
+	return (XPending(m_display) == 0 );
 }
 
 CEventQueueTimer*

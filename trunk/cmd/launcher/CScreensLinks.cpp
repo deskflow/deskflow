@@ -359,7 +359,7 @@ CScreensLinks::editLink(HWND hwnd)
 {
 	// get selection
 	HWND child = getItem(hwnd, IDC_SCREENS_LINKS);
-	DWORD i = SendMessage(child, LB_GETCURSEL, 0, 0);
+	DWORD i = (DWORD)SendMessage(child, LB_GETCURSEL, 0, 0);
 	if (i != LB_ERR && i != (DWORD)m_edgeLinks.size()) {
 		// existing link
 		m_selectedLink = (SInt32)SendMessage(child, LB_GETITEMDATA, i, 0);
@@ -405,7 +405,7 @@ CScreensLinks::updateScreens(HWND hwnd, const CString& selectName)
 
 	// find the named screen
 	if (!selectName.empty()) {
-		DWORD i = SendMessage(child, LB_FINDSTRINGEXACT,
+		DWORD i = (DWORD)SendMessage(child, LB_FINDSTRINGEXACT,
 							(UINT)-1, (LPARAM)selectName.c_str());
 		if (i != LB_ERR) {
 			SendMessage(child, LB_SETSEL, TRUE, i);
@@ -462,7 +462,7 @@ CScreensLinks::updateLinks(HWND hwnd)
 		for (CConfig::link_const_iterator j = m_config->beginNeighbor(name),
 										n = m_config->endNeighbor(name);
 							j != n; ++j) {
-			DWORD k = m_edgeLinks.size();
+			DWORD k = (DWORD)m_edgeLinks.size();
 			m_edgeLinks.push_back(CEdgeLink(name, *j));
 			SendMessage(links, LB_INSERTSTRING, (WPARAM)-1,
 							(LPARAM)formatLink(m_edgeLinks.back()).c_str());
@@ -474,7 +474,7 @@ CScreensLinks::updateLinks(HWND hwnd)
 	SendMessage(links, LB_ADDSTRING, 0, (LPARAM)m_newLinkLabel.c_str());
 
 	// remove the "new link" item then insert it on the end
-	DWORD i = SendMessage(links, LB_FINDSTRINGEXACT,
+	DWORD i = (DWORD)SendMessage(links, LB_FINDSTRINGEXACT,
 							(UINT)-1, (LPARAM)m_newLinkLabel.c_str());
 	if (i != LB_ERR) {
 		SendMessage(links, LB_DELETESTRING, i, 0);
@@ -488,11 +488,11 @@ CScreensLinks::updateLinks(HWND hwnd)
 	SendMessage(links, LB_SETCURSEL, (WPARAM)m_edgeLinks.size(), 0);
 	if (m_selectedLink != -1) {
 		m_selectedLink = -1;
-		for (size_t j = 0; j < m_edgeLinks.size(); ++j) {
+		for (SInt32 j = 0; j < (SInt32)m_edgeLinks.size(); ++j) {
 			if (m_edgeLinks[j] == oldLink) {
 				// found matching link
 				m_selectedLink = j;
-				for (size_t k = 0; k < m_edgeLinks.size(); ++k) {
+				for (UInt32 k = 0; k < (UInt32)m_edgeLinks.size(); ++k) {
 					if (SendMessage(links, LB_GETITEMDATA, k, 0) == (int)j) {
 						SendMessage(links, LB_SETCURSEL, k, 0);
 						break;
@@ -595,7 +595,7 @@ void
 CScreensLinks::selectScreen(HWND hwnd, int id, const CString& name)
 {
 	HWND child = getItem(hwnd, id);
-	DWORD i = SendMessage(child, CB_FINDSTRINGEXACT, (WPARAM)-1,
+	DWORD i = (DWORD)SendMessage(child, CB_FINDSTRINGEXACT, (WPARAM)-1,
 							(LPARAM)name.c_str());
 	if (i == CB_ERR) {
 		// no match, select no screen

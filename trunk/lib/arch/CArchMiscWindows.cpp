@@ -252,7 +252,7 @@ CArchMiscWindows::setValue(HKEY key,
 	assert(name != NULL);
 	RegSetValueEx(key, name, 0, REG_SZ,
 								reinterpret_cast<const BYTE*>(value.c_str()),
-								value.size() + 1);
+								(DWORD)value.size() + 1);
 }
 
 void
@@ -273,7 +273,7 @@ CArchMiscWindows::setValueBinary(HKEY key,
 	assert(name != NULL);
 	RegSetValueEx(key, name, 0, REG_BINARY,
 								reinterpret_cast<const BYTE*>(value.data()),
-								value.size());
+								(DWORD)value.size());
 }
 
 std::string

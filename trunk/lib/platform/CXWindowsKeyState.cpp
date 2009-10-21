@@ -211,7 +211,7 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 			int i = (c >> 3);
 			int b = 1 << (c & 7);
 			if (m_keyboardState.global_auto_repeat == AutoRepeatModeOff ||
-				(m_keyboardState.auto_repeats[i] & b) == 0) {
+				(c!=113 && c!=116 && (m_keyboardState.auto_repeats[i] & b) == 0)) {
 				LOG((CLOG_DEBUG1 "  discard autorepeat"));
 				break;
 			}

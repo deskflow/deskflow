@@ -558,7 +558,7 @@ CHotkeyOptions::CConditionDialog::doModal(HWND parent,
 	else {
 		s_lastGoodCondition = NULL;
 	}
-	int n = DialogBox(s_instance, MAKEINTRESOURCE(IDD_HOTKEY_CONDITION),
+	int n = (int)DialogBox(s_instance, MAKEINTRESOURCE(IDD_HOTKEY_CONDITION),
 								parent, (DLGPROC) dlgProc);
 
 	condition           = s_condition;
@@ -671,7 +671,7 @@ CHotkeyOptions::CConditionDialog::onKey(HWND hwnd, WPARAM wParam, LPARAM lParam)
 		// fall through
 
 	default:
-		key = CMSWindowsKeyState::getKeyID(wParam,
+		key = CMSWindowsKeyState::getKeyID((UINT)wParam,
 						static_cast<KeyButton>((lParam & 0x1ff0000u) >> 16));
 		switch (key) {
 		case kKeyNone:
@@ -943,7 +943,7 @@ CHotkeyOptions::CActionDialog::doModal(HWND parent, CConfig* config,
 		s_lastGoodAction = NULL;
 	}
 
-	int n = DialogBox(s_instance, MAKEINTRESOURCE(IDD_HOTKEY_ACTION),
+	int n = (int)DialogBox(s_instance, MAKEINTRESOURCE(IDD_HOTKEY_ACTION),
 								parent, (DLGPROC) dlgProc);
 
 	onActivate       = s_onActivate;
@@ -1069,7 +1069,7 @@ CHotkeyOptions::CActionDialog::doInit(HWND hwnd)
 	}
 	else if (switchToAction != NULL) {
 		child = getItem(hwnd, IDC_HOTKEY_ACTION_SWITCH_TO_LIST);
-		DWORD i = SendMessage(child, CB_FINDSTRINGEXACT, (WPARAM)-1,
+		DWORD i = (DWORD)SendMessage(child, CB_FINDSTRINGEXACT, (WPARAM)-1,
 								(LPARAM)switchToAction->getScreen().c_str());
 		if (i == CB_ERR) {
 			i = 0;
@@ -1241,7 +1241,7 @@ CHotkeyOptions::CActionDialog::onKey(HWND hwnd, WPARAM wParam, LPARAM lParam)
 		// fall through
 
 	default:
-		key = CMSWindowsKeyState::getKeyID(wParam,
+		key = CMSWindowsKeyState::getKeyID((UINT)wParam,
 						static_cast<KeyButton>((lParam & 0x1ff0000u) >> 16));
 		switch (key) {
 		case kKeyNone:

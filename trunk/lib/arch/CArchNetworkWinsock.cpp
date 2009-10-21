@@ -81,9 +81,9 @@ netGetProcAddress(HMODULE module, LPCSTR name)
 CArchNetAddressImpl*
 CArchNetAddressImpl::alloc(size_t size)
 {
-	size_t totalSize          = size + ADDR_HDR_SIZE;
+	size_t totalSize = size + ADDR_HDR_SIZE;
 	CArchNetAddressImpl* addr = (CArchNetAddressImpl*)malloc(totalSize);
-	addr->m_len               = size;
+	addr->m_len = (int)size;
 	return addr;
 }
 
@@ -527,7 +527,7 @@ CArchNetworkWinsock::readSocket(CArchSocket s, void* buf, size_t len)
 {
 	assert(s != NULL);
 
-	int n = recv_winsock(s->m_socket, buf, len, 0);
+	int n = recv_winsock(s->m_socket, buf, (int)len, 0);
 	if (n == SOCKET_ERROR) {
 		int err = getsockerror_winsock();
 		if (err == WSAEINTR || err == WSAEWOULDBLOCK) {
@@ -543,7 +543,7 @@ CArchNetworkWinsock::writeSocket(CArchSocket s, const void* buf, size_t len)
 {
 	assert(s != NULL);
 
-	int n = send_winsock(s->m_socket, buf, len, 0);
+	int n = send_winsock(s->m_socket, buf, (int)len, 0);
 	if (n == SOCKET_ERROR) {
 		int err = getsockerror_winsock();
 		if (err == WSAEINTR) {

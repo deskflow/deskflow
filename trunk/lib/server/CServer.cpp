@@ -314,7 +314,7 @@ CServer::disconnect()
 UInt32
 CServer::getNumClients() const
 {
-	return m_clients.size();
+	return (SInt32)m_clients.size();
 }
 
 void

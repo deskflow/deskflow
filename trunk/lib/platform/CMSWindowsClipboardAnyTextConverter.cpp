@@ -39,7 +39,7 @@ CMSWindowsClipboardAnyTextConverter::fromIClipboard(const CString& data) const
 {
 	// convert linefeeds and then convert to desired encoding
 	CString text = doFromIClipboard(convertLinefeedToWin32(data));
-	UInt32 size  = text.size();
+	UInt32 size  = (UInt32)text.size();
 
 	// copy to memory handle
 	HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, size);
@@ -87,7 +87,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
 
 	// count newlines in string
 	UInt32 numNewlines = 0;
-	UInt32 n           = src.size();
+	UInt32 n = (UInt32)src.size();
 	for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
 		if (*scan == '\n') {
 			++numNewlines;
@@ -102,7 +102,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToWin32(
 	dst.reserve(src.size() + numNewlines);
 
 	// copy string, converting newlines
-	n = src.size();
+	n = (UInt32)src.size();
 	for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
 		if (scan[0] == '\n') {
 			dst += '\r';
@@ -119,7 +119,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
 {
 	// count newlines in string
 	UInt32 numNewlines = 0;
-	UInt32 n           = src.size();
+	UInt32 n = (UInt32)src.size();
 	for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
 		if (scan[0] == '\r' && scan[1] == '\n') {
 			++numNewlines;
@@ -134,7 +134,7 @@ CMSWindowsClipboardAnyTextConverter::convertLinefeedToUnix(
 	dst.reserve(src.size());
 
 	// copy string, converting newlines
-	n = src.size();
+	n = (UInt32)src.size();
 	for (const char* scan = src.c_str(); n > 0; ++scan, --n) {
 		if (scan[0] != '\r' || scan[1] != '\n') {
 			dst += scan[0];

@@ -262,7 +262,7 @@ CScreen::setOptions(const COptionsList& options)
 {
 	// update options
 	bool oldScreenSaverSync = m_screenSaverSync;
-	for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
+	for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
 		if (options[i] == kOptionScreenSaverSync) {
 			m_screenSaverSync = (options[i + 1] != 0);
 			LOG((CLOG_DEBUG1 "screen saver synchronization %s", m_screenSaverSync ? "on" : "off"));

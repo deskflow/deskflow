@@ -89,6 +89,7 @@ public:
 		m_daemon(true),
 		m_configFile(),
 		m_logFilter(NULL),
+		m_logFile(NULL),
 		m_display(NULL),
 		m_synergyAddress(NULL),
 		m_config(NULL)
@@ -103,6 +104,7 @@ public:
 	bool				m_daemon;
 	CString		 		m_configFile;
 	const char* 		m_logFilter;
+	const char*			m_logFile;
 	const char*			m_display;
 	CString 			m_name;
 	CNetworkAddress*	m_synergyAddress;
@@ -165,6 +167,7 @@ static CClientListener*			s_listener            = NULL;
 static CServerTaskBarReceiver*	s_taskBarReceiver     = NULL;
 static CEvent::Type				s_reloadConfigEvent   = CEvent::kUnknown;
 static CEvent::Type				s_forceReconnectEvent = CEvent::kUnknown;
+static CEvent::Type				s_resetServerEvent	  = CEvent::kUnknown;
 static bool						s_suspended           = false;
 static CEventQueueTimer*		s_timer               = NULL;
 
@@ -178,6 +181,12 @@ CEvent::Type
 getForceReconnectEvent()
 {
 	return CEvent::registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
+}
+
+CEvent::Type
+getResetServerEvent()
+{
+	return CEvent::registerTypeOnce(s_resetServerEvent, "resetServer");
 }
 
 static
@@ -622,6 +631,18 @@ forceReconnect(const CEvent&, void*)
 	}
 }
 
+// simply stops and starts the server in order to try and
+// work around issues like the sticky meta keys problem, etc
+static
+void 
+resetServer(const CEvent&, void*)
+{
+	LOG((CLOG_DEBUG1 "resetting server"));
+	stopServer();
+	cleanupServer();
+	startServer();
+}
+
 static
 int
 mainLoop()
@@ -632,6 +653,17 @@ mainLoop()
 
 	// create the event queue
 	CEventQueue eventQueue;
+
+	// logging to files
+	CFileLogOutputter* fileLog = NULL;
+
+	if (ARG->m_logFile != NULL) {
+		fileLog = new CFileLogOutputter(ARG->m_logFile);
+
+		CLOG->insert(fileLog);
+
+		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", ARG->m_logFile));
+	}
 
 	// if configuration has no screens then add this system
 	// as the default
@@ -675,6 +707,12 @@ mainLoop()
 							IEventQueue::getSystemTarget(),
 							new CFunctionEventJob(&forceReconnect));
 
+	// to work around the sticky meta keys problem, we'll give users
+	// the option to reset the state of synergys
+	EVENTQUEUE->adoptHandler(getResetServerEvent(),
+							IEventQueue::getSystemTarget(),
+							new CFunctionEventJob(&resetServer));
+
 	// run event loop.  if startServer() failed we're supposed to retry
 	// later.  the timer installed by startServer() will take care of
 	// that.
@@ -698,6 +736,11 @@ mainLoop()
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
 
+	if (fileLog) {
+		CLOG->remove(fileLog);
+		delete fileLog;		
+	}
+
 	return kExitSuccess;
 }
 
@@ -717,9 +760,6 @@ static
 int
 standardStartup(int argc, char** argv)
 {
-	if (!ARG->m_daemon) {
-		ARCH->showConsole(false);
-	}
 
 	// parse command line
 	parse(argc, argv);
@@ -853,6 +893,7 @@ USAGE_DISPLAY_INFO
 "  -1, --no-restart         do not try to restart the server if it fails for\n"
 "                           some reason.\n"
 "*     --restart            restart the server automatically if it fails.\n"
+"  -l  --log <file>         write log messages to file.\n"
 PLATFORM_DESC
 "  -h, --help               display this help and exit.\n"
 "      --version            display version information and exit.\n"
@@ -964,6 +1005,10 @@ parse(int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, NULL, "--daemon")) {
 			// daemonize
 			ARG->m_daemon = true;
+		}
+		else if (isArg(i, argc, argv, "-l", "--log", 1)) {
+			// logging to file
+			ARG->m_logFile = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, "-1", "--no-restart")) {
@@ -1198,7 +1243,6 @@ static
 int
 foregroundStartup(int argc, char** argv)
 {
-	ARCH->showConsole(false);
 
 	// parse command line
 	parse(argc, argv);

@@ -202,7 +202,7 @@ CSocketMultiplexer::serviceThread(void*)
 		try {
 			// check for status
 			if (!pfds.empty()) {
-				status = ARCH->pollSocket(&pfds[0], pfds.size(), -1);
+				status = ARCH->pollSocket(&pfds[0], (int)pfds.size(), -1);
 			}
 			else {
 				status = 0;

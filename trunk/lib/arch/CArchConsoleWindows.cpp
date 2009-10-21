@@ -174,8 +174,8 @@ CArchConsoleWindows::appendBuffer(const char* msg)
 		SendMessage(m_hwnd, EM_EXLIMITTEXT, 0, m_maxCharacters);
 	}
 	CHARRANGE range;
-	range.cpMin = m_numCharacters;
-	range.cpMax = m_numCharacters;
+	range.cpMin = (LONG)m_numCharacters;
+	range.cpMax = (LONG)m_numCharacters;
 	SendMessage(m_hwnd, EM_EXSETSEL, 0, reinterpret_cast<LPARAM>(&range));
 	SendMessage(m_hwnd, EM_REPLACESEL, FALSE,
 							reinterpret_cast<LPARAM>(m_buffer.back().c_str()));

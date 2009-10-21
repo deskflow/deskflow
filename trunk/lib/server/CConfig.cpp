@@ -891,6 +891,10 @@ CConfig::readSectionScreens(CConfigReadContext& s)
 				addOption(screen, kOptionScreenSwitchCornerSize,
 					s.parseInt(value));
 			}
+			else if (name == "preserveFocus") {
+				addOption(screen, kOptionScreenPreserveFocus,
+					s.parseBoolean(value));
+			}
 			else {
 				// unknown argument
 				throw XConfigRead(s, "unknown argument \"%{1}\"", name);
@@ -1332,6 +1336,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionWin32KeepForeground) {
 		return "win32KeepForeground";
 	}
+	if (id == kOptionScreenPreserveFocus) {
+		return "preserveFocus";
+	}
 	return NULL;
 }
 
@@ -1344,7 +1351,8 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 		id == kOptionScreenSaverSync ||
 		id == kOptionXTestXineramaUnaware ||
 		id == kOptionRelativeMouseMoves ||
-		id == kOptionWin32KeepForeground) {
+		id == kOptionWin32KeepForeground ||
+		id == kOptionScreenPreserveFocus) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||

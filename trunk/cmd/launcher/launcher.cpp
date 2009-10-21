@@ -470,7 +470,7 @@ saveMainWindow(HWND hwnd, SaveMode mode, CString* cmdLineOut = NULL)
 		CArchMiscWindows::setValue(key, "server", getWindowText(child));
 		child = getItem(hwnd, IDC_MAIN_DEBUG);
 		CArchMiscWindows::setValue(key, "debug",
-								SendMessage(child, CB_GETCURSEL, 0, 0));
+								(DWORD)SendMessage(child, CB_GETCURSEL, 0, 0));
 		CArchMiscWindows::setValue(key, "isServer", isClient ? 0 : 1);
 		CArchMiscWindows::closeKey(key);
 	}
@@ -750,5 +750,5 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR cmdLine, int nCmdShow)
 		}
 	} while (!done);
 
-	return msg.wParam;
+	return (int)msg.wParam;
 }

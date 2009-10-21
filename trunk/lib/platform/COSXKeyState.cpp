@@ -207,8 +207,8 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 
 	// get keyboard info
 
-  TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource(); 
-  if (currentKeyboardLayout != NULL) {
+	TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource(); 
+	if (currentKeyboardLayout == NULL) {
 		return kKeyNone;
 	}
 
@@ -228,29 +228,30 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		modifiers &= ~optionKey;
 	}
 
+	// choose action
+	UInt16 action;
+	switch (eventKind) {
+	case kEventRawKeyDown:
+		action = kUCKeyActionDown;
+		break;
+
+	case kEventRawKeyRepeat:
+		action = kUCKeyActionAutoKey;
+		break;
+
+	default:
+		return 0;
+	}
 	// translate via uchr resource
-	CFDataRef resource;
-	if ((resource = (CFDataRef)TISGetInputSourceProperty(currentKeyboardLayout,
-								kTISPropertyUnicodeKeyLayoutData)) != NULL) {
-		// choose action
-		UInt16 action;
-		switch (eventKind) {
-		case kEventRawKeyDown:
-			action = kUCKeyActionDown;
-			break;
-
-		case kEventRawKeyRepeat:
-			action = kUCKeyActionAutoKey;
-			break;
-
-		default:
-			return 0;
-		}
+	CFDataRef ref = (CFDataRef) TISGetInputSourceProperty(currentKeyboardLayout,
+								kTISPropertyUnicodeKeyLayoutData);
+	const UCKeyboardLayout* layout = (const UCKeyboardLayout*) CFDataGetBytePtr(ref);
+	if (layout != NULL) {
 
 		// translate key
 		UniCharCount count;
 		UniChar chars[2];
-		OSStatus status = UCKeyTranslate((const UCKeyboardLayout*)resource,
+		OSStatus status = UCKeyTranslate(layout,
 							vkCode & 0xffu, action,
 							(modifiers >> 8) & 0xffu,
 							LMGetKbdType(), 0, &m_deadKeyState,
@@ -348,14 +349,21 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap)
 void
 COSXKeyState::fakeKey(const Keystroke& keystroke)
 {
+	CGEventRef ref;
+
 	switch (keystroke.m_type) {
 	case Keystroke::kButton:
 		LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
 
 		// let system figure out character for us
-		CGEventCreateKeyboardEvent(0, mapKeyButtonToVirtualKey(
+		ref = CGEventCreateKeyboardEvent(0, mapKeyButtonToVirtualKey(
 									keystroke.m_data.m_button.m_button),
 								keystroke.m_data.m_button.m_press);
+		if (ref == NULL) {
+			LOG((CLOG_CRIT "unable to create keyboard event for keystroke"));
+		}
+
+		CGEventPost(kCGHIDEventTap, ref);
 
 		// add a delay if client data isn't zero
 		if (keystroke.m_data.m_button.m_client) {

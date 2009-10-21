@@ -15,6 +15,7 @@
 #include "LogOutputters.h"
 #include "CArch.h"
 
+#include <fstream>
 //
 // CStopLogOutputter
 //
@@ -265,3 +266,51 @@ CBufferedLogOutputter::getNewline() const
 {
 	return "";
 }
+
+
+//
+// CFileLogOutputter
+//
+
+CFileLogOutputter::CFileLogOutputter(const char * logFile)
+{
+	assert(logFile != NULL);
+
+	m_handle.open(logFile, std::fstream::app);
+	// open file handle
+}
+
+CFileLogOutputter::~CFileLogOutputter()
+{
+	// close file handle
+	if (m_handle.is_open())
+		m_handle.close();
+}
+
+const char*
+CFileLogOutputter::getNewline() const
+{
+	return "\n";
+}
+
+bool
+CFileLogOutputter::write(ILogOutputter::ELevel level, const char *message)
+{
+	if (m_handle.is_open() && m_handle.fail() != true) {
+		m_handle << message;
+		
+		// write buffer to file
+		m_handle.flush();
+	}
+
+	return true;
+}
+
+void
+CFileLogOutputter::open(const char *title) {}
+
+void
+CFileLogOutputter::close() {}
+
+void
+CFileLogOutputter::show(bool showIfEmpty) {}

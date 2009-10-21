@@ -284,22 +284,22 @@ CProtocolUtil::getLength(const char* fmt, va_list args)
 				assert(len == 1 || len == 2 || len == 4);
 				switch (len) {
 				case 1:
-					len = (va_arg(args, std::vector<UInt8>*))->size() + 4;
+					len = (UInt32)(va_arg(args, std::vector<UInt8>*))->size() + 4;
 					break;
 
 				case 2:
-					len = 2 * (va_arg(args, std::vector<UInt16>*))->size() + 4;
+					len = 2 * (UInt32)(va_arg(args, std::vector<UInt16>*))->size() + 4;
 					break;
 
 				case 4:
-					len = 4 * (va_arg(args, std::vector<UInt32>*))->size() + 4;
+					len = 4 * (UInt32)(va_arg(args, std::vector<UInt32>*))->size() + 4;
 					break;
 				}
 				break;
 
 			case 's':
 				assert(len == 0);
-				len = (va_arg(args, CString*))->size() + 4;
+				len = (UInt32)(va_arg(args, CString*))->size() + 4;
 				(void)va_arg(args, UInt8*);
 				break;
 
@@ -377,7 +377,7 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 					// 1 byte integers
 					const std::vector<UInt8>* list =
 						va_arg(args, const std::vector<UInt8>*);
-					const UInt32 n = list->size();
+					const UInt32 n = (UInt32)list->size();
 					*dst++ = static_cast<UInt8>((n >> 24) & 0xff);
 					*dst++ = static_cast<UInt8>((n >> 16) & 0xff);
 					*dst++ = static_cast<UInt8>((n >>  8) & 0xff);
@@ -392,7 +392,7 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 					// 2 byte integers
 					const std::vector<UInt16>* list =
 						va_arg(args, const std::vector<UInt16>*);
-					const UInt32 n = list->size();
+					const UInt32 n = (UInt32)list->size();
 					*dst++ = static_cast<UInt8>((n >> 24) & 0xff);
 					*dst++ = static_cast<UInt8>((n >> 16) & 0xff);
 					*dst++ = static_cast<UInt8>((n >>  8) & 0xff);
@@ -409,7 +409,7 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 					// 4 byte integers
 					const std::vector<UInt32>* list =
 						va_arg(args, const std::vector<UInt32>*);
-					const UInt32 n = list->size();
+					const UInt32 n = (UInt32)list->size();
 					*dst++ = static_cast<UInt8>((n >> 24) & 0xff);
 					*dst++ = static_cast<UInt8>((n >> 16) & 0xff);
 					*dst++ = static_cast<UInt8>((n >>  8) & 0xff);
@@ -434,7 +434,7 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 			case 's': {
 				assert(len == 0);
 				const CString* src = va_arg(args, CString*);
-				const UInt32 len = (src != NULL) ? src->size() : 0;
+				const UInt32 len = (src != NULL) ? (UInt32)src->size() : 0;
 				*dst++ = static_cast<UInt8>((len >> 24) & 0xff);
 				*dst++ = static_cast<UInt8>((len >> 16) & 0xff);
 				*dst++ = static_cast<UInt8>((len >>  8) & 0xff);
