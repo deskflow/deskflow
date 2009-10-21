@@ -101,8 +101,6 @@ private:
 	bool				onMouseButton(bool pressed, UInt16 macButton);
 	bool				onMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 
-	bool				onDisplayChange(CGDirectDisplayID, CGDisplayChangeSummaryFlags);
-
 	bool				onKey(EventRef event);
 	bool				onHotKey(EventRef event) const;
 
@@ -218,9 +216,6 @@ private:
 	// window object that gets user input events when the server
 	// does not have focus.
 	WindowRef			m_userInputWindow;
-
-	// display manager stuff (to get screen resolution switches).
-	ProcessSerialNumber			m_PSN;
 
 	// fast user switching
 	EventHandlerRef			m_switchEventHandlerRef;

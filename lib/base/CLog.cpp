@@ -193,12 +193,20 @@ CLog::insert(ILogOutputter* outputter, bool alwaysAtHead)
   else {
     m_outputters.push_front(outputter);
   }
-  int newlineLength = strlen(outputter->getNewline());
+  int newlineLength = (int)strlen(outputter->getNewline());
   if (newlineLength > m_maxNewlineLength) {
     m_maxNewlineLength = newlineLength;
   }
   outputter->open(kAppVersion);
-  outputter->show(false);
+
+  // Issue 41
+  // don't show log unless user requests it, as some users find this
+  // feature irritating (i.e. when they lose network connectivity).
+  // in windows the log window can be displayed by selecting "show log"
+  // from the synergy system tray icon.
+  // if this causes problems for other architectures, then a different
+  // work around should be attempted.
+  //outputter->show(false);
 }
 
 void
@@ -272,7 +280,7 @@ CLog::output(int priority, char* msg) const
 */
   // find end of message
   //char* end = msg + g_priorityPad + strlen(msg + g_priorityPad);
-  int len = strlen(msg);
+  int len = (int)strlen(msg);
   char* tmp = new char[len+m_maxNewlineLength+1];
   char* end = tmp + len;
   strcpy(tmp, msg);

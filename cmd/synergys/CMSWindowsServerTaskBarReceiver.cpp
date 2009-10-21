@@ -24,6 +24,7 @@
 
 extern CEvent::Type		getReloadConfigEvent();
 extern CEvent::Type		getForceReconnectEvent();
+extern CEvent::Type		getResetServerEvent();
 
 //
 // CMSWindowsServerTaskBarReceiver
@@ -192,6 +193,11 @@ CMSWindowsServerTaskBarReceiver::runMenu(int x, int y)
 							IEventQueue::getSystemTarget()));
 		break;
 
+	case ID_SYNERGY_RESETSERVER:
+		EVENTQUEUE->addEvent(CEvent(getResetServerEvent(),
+							IEventQueue::getSystemTarget()));
+		break;
+
 	case IDC_TASKBAR_LOG_LEVEL_ERROR:
 		CLOG->setFilter(CLog::kERROR);
 		break;
@@ -357,7 +363,7 @@ CMSWindowsServerTaskBarReceiver::staticDlgProc(HWND hwnd,
 	}
 	else {
 		// get the extra window data and forward the call
-		LONG data = GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		LONG data = (LONG)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		if (data != 0) {
 			self = reinterpret_cast<CMSWindowsServerTaskBarReceiver*>(
 							reinterpret_cast<void*>(data));

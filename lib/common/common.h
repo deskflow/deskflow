@@ -131,5 +131,7 @@
 
 // make assert available since we use it a lot
 #include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 #endif

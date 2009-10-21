@@ -360,7 +360,7 @@ CArchTaskBarWindows::wndProc(HWND hwnd,
 	switch (msg) {
 	case kNotifyReceiver: {
 		// lookup receiver
-		CIDToReceiverMap::const_iterator index = m_idTable.find(wParam);
+		CIDToReceiverMap::const_iterator index = m_idTable.find((UINT)wParam);
 		if (index != m_idTable.end()) {
 			IArchTaskBarReceiver* receiver = index->second->first;
 			handleIconMessage(receiver, lParam);
@@ -370,15 +370,15 @@ CArchTaskBarWindows::wndProc(HWND hwnd,
 	}
 
 	case kAddReceiver:
-		addIcon(wParam);
+		addIcon((UINT)wParam);
 		break;
 
 	case kRemoveReceiver:
-		removeIcon(wParam);
+		removeIcon((UINT)wParam);
 		break;
 
 	case kUpdateReceiver:
-		updateIcon(wParam);
+		updateIcon((UINT)wParam);
 		break;
 
 	default:

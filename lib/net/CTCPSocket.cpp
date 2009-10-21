@@ -506,7 +506,7 @@ CTCPSocket::serviceConnected(ISocketMultiplexerJob* job,
 
 				// slurp up as much as possible
 				do {
-					m_inputBuffer.write(buffer, n);
+					m_inputBuffer.write(buffer, (UInt32)n);
 					n = ARCH->readSocket(m_socket, buffer, sizeof(buffer));
 				} while (n > 0);
 

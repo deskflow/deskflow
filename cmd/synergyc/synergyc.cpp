@@ -74,9 +74,11 @@ public:
 		m_backend(false),
 		m_restartable(true),
 		m_daemon(true),
+		m_yscroll(0),
 		m_logFilter(NULL),
 		m_display(NULL),
-		m_serverAddress(NULL)
+		m_serverAddress(NULL),
+		m_logFile(NULL)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
 
@@ -86,10 +88,13 @@ public:
 	bool				m_backend;
 	bool				m_restartable;
 	bool				m_daemon;
+	int 				m_yscroll;
 	const char* 		m_logFilter;
 	const char*			m_display;
 	CString 			m_name;
 	CNetworkAddress* 	m_serverAddress;
+	const char*			m_logFile;
+
 };
 
 CArgs*					CArgs::s_instance = NULL;
@@ -106,7 +111,7 @@ createScreen()
 #if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(false));
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(ARG->m_display, false));
+	return new CScreen(new CXWindowsScreen(ARG->m_display, false, ARG->m_yscroll));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(false));
 #endif
@@ -134,8 +139,10 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 static CClient*					s_client          = NULL;
 static CScreen*					s_clientScreen    = NULL;
 static CClientTaskBarReceiver*	s_taskBarReceiver = NULL;
-static double					s_retryTime       = 0.0;
+//static double					s_retryTime       = 0.0;
 static bool						s_suspened        = false;
+
+#define RETRY_TIME 1.0
 
 static
 void
@@ -155,13 +162,18 @@ static
 void
 resetRestartTimeout()
 {
-	s_retryTime = 0.0;
+	// retry time can nolonger be changed
+	//s_retryTime = 0.0;
 }
 
 static
 double
 nextRestartTimeout()
 {
+	// retry at a constant rate (Issue 52)
+	return RETRY_TIME;
+
+	/*
 	// choose next restart timeout.  we start with rapid retries
 	// then slow down.
 	if (s_retryTime < 1.0) {
@@ -170,19 +182,11 @@ nextRestartTimeout()
 	else if (s_retryTime < 3.0) {
 		s_retryTime = 3.0;
 	}
-	else if (s_retryTime < 5.0) {
+	else {
 		s_retryTime = 5.0;
 	}
-	else if (s_retryTime < 15.0) {
-		s_retryTime = 15.0;
-	}
-	else if (s_retryTime < 30.0) {
-		s_retryTime = 30.0;
-	}
-	else {
-		s_retryTime = 60.0;
-	}
 	return s_retryTime;
+	*/
 }
 
 static
@@ -374,6 +378,17 @@ static
 int
 mainLoop()
 {
+	// logging to files
+	CFileLogOutputter* fileLog = NULL;
+
+	if (ARG->m_logFile != NULL) {
+		fileLog = new CFileLogOutputter(ARG->m_logFile);
+
+		CLOG->insert(fileLog);
+
+		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", ARG->m_logFile));
+	}
+
 	// create socket multiplexer.  this must happen after daemonization
 	// on unix because threads evaporate across a fork().
 	CSocketMultiplexer multiplexer;
@@ -406,6 +421,11 @@ mainLoop()
 	stopClient();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped client"));
+
+	if (fileLog) {
+		CLOG->remove(fileLog);
+		delete fileLog;		
+	}
 
 	return kExitSuccess;
 }
@@ -517,6 +537,7 @@ help()
 " [--debug <level>]"
 USAGE_DISPLAY_ARG
 " [--name <screen-name>]"
+" [--yscroll <delta>]"
 " [--restart|--no-restart]"
 " <server-address>"
 "\n\n"
@@ -530,9 +551,12 @@ USAGE_DISPLAY_INFO
 "*     --daemon             run the client as a daemon.\n"
 "  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
 "                           ourself to the server.\n"
+"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
+"                           120 by default.\n"
 "  -1, --no-restart         do not try to restart the client if it fails for\n"
 "                           some reason.\n"
 "*     --restart            restart the client automatically if it fails.\n"
+"  -l  --log <file>         write log messages to file.\n"
 "  -h, --help               display this help and exit.\n"
 "      --version            display version information and exit.\n"
 "\n"
@@ -617,6 +641,15 @@ parse(int argc, const char* const* argv)
 			ARG->m_display = argv[++i];
 		}
 #endif
+
+		else if (isArg(i, argc, argv, NULL, "--yscroll", 1)) {
+			// define scroll 
+			ARG->m_yscroll = atoi(argv[++i]);
+		}
+		
+		else if (isArg(i, argc, argv, "-l", "--log", 1)) {
+			ARG->m_logFile = argv[++i];
+		}
 
 		else if (isArg(i, argc, argv, "-1", "--no-restart")) {
 			// don't try to restart
@@ -728,7 +761,6 @@ parse(int argc, const char* const* argv)
 //
 
 #if SYSAPI_WIN32
-
 static bool				s_hasImportantLogMessages = false;
 
 //

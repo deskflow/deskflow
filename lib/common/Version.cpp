@@ -18,5 +18,5 @@ const char* kApplication = "Synergy+";
 const char* kCopyright   = "Copyright (C) 2002 Chris Schoeneman";
 const char* kContact     = "Chris Schoeneman, crs23@bigfoot.com";
 const char* kWebsite     = "http://code.google.com/p/synergy-plus/";
-const char* kVersion   = VERSION;
+const char* kVersion     = VERSION;
 const char* kAppVersion  = "Synergy+ " VERSION;

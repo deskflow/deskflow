@@ -78,7 +78,7 @@ IClipboard::marshall(const IClipboard* clipboard)
 			++numFormats;
 			formatData[format] =
 				clipboard->get(static_cast<IClipboard::EFormat>(format));
-			size += 4 + 4 + formatData[format].size();
+			size += 4 + 4 + (UInt32)formatData[format].size();
 		}
 	}
 
@@ -90,7 +90,7 @@ IClipboard::marshall(const IClipboard* clipboard)
 	for (UInt32 format = 0; format != IClipboard::kNumFormats; ++format) {
 		if (clipboard->has(static_cast<IClipboard::EFormat>(format))) {
 			writeUInt32(&data, format);
-			writeUInt32(&data, formatData[format].size());
+			writeUInt32(&data, (UInt32)formatData[format].size());
 			data += formatData[format];
 		}
 	}

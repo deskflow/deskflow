@@ -122,8 +122,7 @@ COSXScreen::COSXScreen(bool isPrimary) :
 		}
 		
 		// install display manager notification handler
-		GetCurrentProcess(&m_PSN);
-    CGDisplayRegisterReconfigurationCallback(displayReconfigurationCallback, &m_PSN);
+		CGDisplayRegisterReconfigurationCallback(displayReconfigurationCallback, this);
 
 		// install fast user switching event handler
 		EventTypeSpec switchEventTypes[2];
@@ -154,7 +153,7 @@ COSXScreen::COSXScreen(bool isPrimary) :
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
 		}
-    CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, &m_PSN);
+		CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
 
 		if (m_hiddenWindow) {
 			CFRelease(m_hiddenWindow);
@@ -209,7 +208,7 @@ COSXScreen::~COSXScreen()
 
 	RemoveEventHandler(m_switchEventHandlerRef);
 
-  CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, &m_PSN);
+	CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
 	if (m_hiddenWindow) {
 		CFRelease(m_hiddenWindow);
 		m_hiddenWindow = NULL;
@@ -1051,37 +1050,24 @@ COSXScreen::handleClipboardCheck(const CEvent&, void*)
 	checkClipboards();
 }
 
-pascal void 
+void 
 COSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplayChangeSummaryFlags flags, void* inUserData)
 {
 	COSXScreen* screen = (COSXScreen*)inUserData;
 
-	if (flags & ~0x1 != 0) { /* Something actually did change */
-		screen->onDisplayChange(displayID, flags);
+	CGDisplayChangeSummaryFlags mask = kCGDisplayMovedFlag | 
+		kCGDisplaySetModeFlag | kCGDisplayAddFlag | kCGDisplayRemoveFlag | 
+		kCGDisplayEnabledFlag | kCGDisplayDisabledFlag | 
+		kCGDisplayMirrorFlag | kCGDisplayUnMirrorFlag | 
+		kCGDisplayDesktopShapeChangedFlag;
+ 
+	LOG((CLOG_DEBUG1 "event: display was reconfigured: %x %x %x", flags, mask, flags & mask));
+
+	if (flags & mask) { /* Something actually did change */
+        
+		LOG((CLOG_DEBUG1 "event: screen changed shape; refreshing dimensions"));
+		screen->updateScreenShape(displayID, flags);
 	}
-}
-
-bool
-COSXScreen::onDisplayChange(const CGDirectDisplayID dispID, const CGDisplayChangeSummaryFlags flags)
-{
-
-	// update shape
-	updateScreenShape(dispID, flags);
-
-	// do nothing if resolution hasn't changed
-	if (flags | kCGDisplaySetModeFlag != 0) {
-		if (m_isPrimary) {
-			// warp mouse to center if off screen
-			if (!m_isOnScreen) {
-				warpCursor(m_xCenter, m_yCenter);
-			}
-		}
-
-		// send new screen info
-		sendEvent(getShapeChangedEvent());
-	}
-
-	return true;
 }
 
 bool
@@ -1355,6 +1341,7 @@ COSXScreen::getKeyState() const
 void
 COSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
 {
+    
 	// get info for each display
 	CGDisplayCount displayCount = 0;
 
@@ -1397,6 +1384,9 @@ COSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSumm
   m_yCenter = (rect.origin.y + rect.size.height) / 2;
 
 	delete[] displays;
+    if (m_isPrimary && !m_isOnScreen) {
+        sendEvent(getShapeChangedEvent());
+    }
 
 	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount, (displayCount == 1) ? "display" : "displays"));
 }
@@ -1450,7 +1440,6 @@ COSXScreen::watchSystemPowerThread(void*)
 	CFRunLoopSourceRef		runloopSourceRef = 0;
 
 	m_pmRunloop = CFRunLoopGetCurrent();
-	
 	// install system power change callback
 	m_pmRootPort = IORegisterForSystemPower(this, &notificationPortRef,
 											powerChangeCallback, &notifier);

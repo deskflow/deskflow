@@ -677,7 +677,7 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 			}
 
 			// adjust argc/argv
-			argc = myArgv.size();
+			argc = (DWORD)myArgv.size();
 			argv = &myArgv[0];
 		}
 	}

@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by synergys.rc
 //
 #define IDS_FAILED                      1
@@ -27,13 +27,15 @@
 #define IDC_TASKBAR_LOG_LEVEL_DEBUG     40013
 #define IDC_TASKBAR_LOG_LEVEL_DEBUG1    40014
 #define IDC_TASKBAR_LOG_LEVEL_DEBUG2    40015
+#define ID_SYNERGY_RELOADSYSTEM         40016
+#define ID_SYNERGY_RESETSERVER          40017
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        109
-#define _APS_NEXT_COMMAND_VALUE         40016
+#define _APS_NEXT_COMMAND_VALUE         40018
 #define _APS_NEXT_CONTROL_VALUE         1003
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

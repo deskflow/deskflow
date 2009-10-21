@@ -527,7 +527,8 @@ CMSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 		m_oldHotKeyIDs.pop_back();
 	}
 	else {
-		id = m_hotKeys.size() + 1;
+		//id = m_hotKeys.size() + 1;
+		id = (UInt32)m_hotKeys.size() + 1;
 	}
 
 	// if this hot key has modifiers only then we'll handle it specially

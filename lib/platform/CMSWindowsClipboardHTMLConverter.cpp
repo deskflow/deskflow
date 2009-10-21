@@ -49,8 +49,8 @@ CMSWindowsClipboardHTMLConverter::doFromIClipboard(const CString& data) const
 					"StartFragment:XXXXXXXXXX\nEndFragment:YYYYYYYYYY\n"
 					"<!DOCTYPE><HTML><BODY><!--StartFragment-->");
 	CString suffix("<!--EndFragment--></BODY></HTML>\n");
-	UInt32 start = prefix.size();
-	UInt32 end   = start + data.size();
+	UInt32 start = (UInt32)prefix.size();
+	UInt32 end   = start + (UInt32)data.size();
 	prefix.replace(prefix.find("XXXXXXXXXX"), 10,
 							CStringUtil::print("%010u", start));
 	prefix.replace(prefix.find("YYYYYYYYYY"), 10,
