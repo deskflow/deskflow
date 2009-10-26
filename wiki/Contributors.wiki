@@ -1,25 +1,13 @@
-#summary List of project members and their area o expertise
-#labels Phase-Design
-= Introduction =
-Please add your name and the things you may help with.
+#summary List of contributors who are not project members
+#labels Deprecated
 
-= Details =
+*Attention!* For now, we have deprecated this page since we sadly don't have time to maintain it, and we don't want to offend those who are submitting patches, but are not being mentioned on this page.
 
-Sorin Sbarnea:
-  * Project admin
-  * build (VC8/VC9) & test on Windows
-  * build & test on OS X (less frequently)
-  * release Windows installer
+If you are looking for member information, please see the [Members] page.
 
-Christian Masciulli:
-  * coding & tests on Windows
-  * coding & tests on Linux
+*Thank you* to all those who have [PatchRecord submitted patches]. Those who's patches have been committed to our repository, have earnt a special mention on this page. If you have contributed and you're not on this page, please let us know either via the mailing list or the comments section at the bottom.
 
-Thermionix:
-  * Merge in patches from sourceforge
-  * Tests on Windows & Archlinux
-  * Build up wiki
+|| *Real Name* || *Alias* || *Contact* ||
+|| Edward Carrel || edw...@carrel.org, azanar, Ed || IRC || 
 
-Nick Bolton:
-  * Documentation/Wiki maintainer
-  * Win/Linux/Mac programmer
+For an up to date list of contributions, please see our [https://www.ohloh.net/p/synergy-plus/contributors Ohloh contributor list].

@@ -1,45 +1,4 @@
 #summary Specification: Analysis
-#labels Specification
+#labels Deprecated
 
-= Synergy+ Specification =
-
-[SpecToc Table of Contents]
-
-== Analysis ==
-
-This section details analysis of the existing system (based on Synergy2) and key issues surrounding the current code and design. Before making any major changes we must first analyze the existing Synergy2 source code, as none of us know exactly how it works.
-
-=== Diagrams ===
-
-  * [SpecDiagClientInit Client Initialization]
-
-=== Logging ===
-
-The logging system works by having a static singleton instance of `CLog` (`lib/base/CLog.h`) to which, "log outputters" are added. The outputters are defined in `lib/base/LogOutputters.h`, and are all derived from `ILogOutputter`.
-
-  * `CConsoleLogOutputter` writes to the console when the application is launched in foreground mode (all platforms).
-
-  * `CBufferedLogOututter` sends output to a Microsoft Windows, xwindows, or Carbon task bar. It writes to it's own internal buffer, which is displayed to the user on request.
-
-  * `CMessageBoxOutputter` writes to the ms windows log message window; by default only on `FATAL` and similar. As a special case, this isn't defined in `LogOutputters.h`, but is defined in `synergyc.cpp`.
-
-  * `CSystemLogOutputter` calls `ARCH->writeLog(...)` when the `write(...)` function is called.
-
-  * `CStopLogOutputter` can be inserted to the CLog instance to stop it from logging to any further outputters.
-
-=== Key Issues ===
-
-These are highlighted issues from the online project issues list, and most are quite big and will take a lot of effort to fix. Any issues here which are not on the issues list must be created as soon as possible.
-
-==== All Platforms ====
-
-Synergy2 does not work well with languages (in terms of keyboard input). If for example, Russian keyboard layout is selected on a Windows Vista server, the characters sent to the client are question marks and slash characters, when they should be the raw key information. This would be a massive feature to implement, as its relatively easy to hook to the Windows API events, and very difficult (if not impossible) to get the raw key events.
-
-==== Windows (Vista and above) ====
-
-In terms of Windows support, Synergy2 was designed for Windows XP, and so does not work very well in Windows Vista or Windows 7. Major lack of support affects default Windows Vista installations in the following Windows features:
-
-  * UAC (User Account Control): when a UAC screen appears, user input is no longer received.
-  * Login Screen (on startup): Because Synergy2 can not run as a service in Windows Vista, the application is not auto-started until after the login screen.
-
-Because of these issues, Synergy2's Windows users are forced to have reduced security, meaning this cannot be used in most commercial environments. This is because the policy in business environments is normally to have UAC enabled, and to lock the screen after a period inactivity or on startup/resume.
+The specification has been consolidated into one page: [Specification]

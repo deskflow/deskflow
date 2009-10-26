@@ -1,0 +1,16 @@
+#summary This pages presents some information regarding various ways of processing the keyboard messages
+
+There is poll open at http://selectricity.org/quickvote/synergypluskb/results regarding preferences regarding the way Synergy+ works with the keyboard.
+
+
+
+== Text level with fallback to virtual keys ==
+ * current implementation
+ * backward compatibility
+
+== RAW ==
+ * much better support for other keyboard layouts (no more i18n issues)
+ * games support / fullscreen
+ * should work in more cases (login screens, security popups)
+ * less likely to have sticky modifiers
+ * on Windows it is impossible to simulate a keyboard event that would produce a specific Unicode character if the current keyboard layouts is not able to produce it.

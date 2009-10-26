@@ -1,3 +1,4 @@
 #summary Specification: Diagram: Client Initialization
+#labels Deprecated
 
-http://synergy-plus.googlecode.com/hg/doc/diagrams/ClientInit.jpeg
+The specification has been consolidated into one page: [Specification]

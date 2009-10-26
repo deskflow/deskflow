@@ -1,5 +1,5 @@
-#summary Synergy+ setup and configuration guide
-#labels Phase-Deploy
+#summary Setup and configuration guide
+#labels Phase-Deploy,Featured
 
 = Introduction =
 
@@ -53,6 +53,7 @@ Now click Test. The server will start and you'll see a console window with log m
 *Unix or Mac OS X*
 Create a text file named synergy.conf with the following:
 
+{{{
     section: screens
        screen1:
        screen2:
@@ -63,6 +64,7 @@ Create a text file named synergy.conf with the following:
        screen2:
            left = screen1
     end
+}}}
 
 Replace each occurrence of screen1 with the host name of the primary screen computer (as reported by the hostname program) and screen2 with the host name of a secondary screen computer. In the above example, screen2 is to the right of screen1 and screen1 is to the left of screen2. If necessary you should replace right and left with left, right, up, or down. If you have more than two computers you can add those too: add each computer's host name in the screens section and add the appropriate links. See the configuration guide for more configuration possibilities.
 
@@ -70,11 +72,15 @@ Now start the server. Normally synergy wants to run "in the background." It deta
 
 On unix type the command below in a shell. If synergys is not in your PATH then use the full pathname.
 
+{{{
     synergys -f --config synergy.conf
+}}}
 
 On OS X open Terminal in the Utilities folder in the Applications folder. Drag the synergys program from the synergy folder onto the Terminal window. The path to the synergys program will appear. Add the following to the same line, type a space at the end of the line but don't press enter:
 
+{{{
     -f --config 
+}}}
 
 Now drag the synergy.conf file onto the Terminal window and press enter. Check the reported messages for errors. Use ctrl+c to stop synergy if it didn't stop automatically, correct any problems, and start it again.
 
@@ -98,13 +104,17 @@ Now click Test.
 *Unix or Mac OS X*
 To start a client on unix, enter the following:
 
+{{{
     synergyc -f server-host-name
+}}}
 
 where server-host-name is replaced by the host name of the computer running the synergy server. If synergyc is not in your PATH then use the full pathname.
 
 On OS X open Terminal in the Utilities folder in the Applications folder. Drag the synergyc program from the synergy folder onto the Terminal window. The path to the synergys program will appear. Add the following to the same line and press enter:
 
+{{{
     -f server-host-name
+}}}
 
 When you added the client to the server's configuration you chose a name for the client. If that name was not client's host name then you must tell the client the name you used. Instead of the above command use this instead:
 
@@ -153,6 +163,8 @@ You can also configure synergy to start automatically when your computer starts 
 Command Line Options Guide
 
 Common Command Line Options
+
+{{{
 The following options are supported by synergys and synergyc.
  	-d, 	--debug level 	  	use debugging level level
  		--daemon 		run as a daemon (Unix) or background (Windows)
@@ -163,6 +175,7 @@ The following options are supported by synergys and synergyc.
  	-1, 	--no-restart 		do not restart on failure
  	-h, 	--help 		print help and exit
  		--version 		print version information and exit
+}}}
 
 Debug levels are from highest to lowest: FATAL, ERROR, WARNING, NOTE, INFO, DEBUG, DEBUG1, and DEBUG2. Only messages at or above the given level are logged. Messages are logged to a terminal window when running in the foreground. Unix logs messages to syslog when running as a daemon. The Windows NT family logs messages to the event log when running as a service. The Windows 95 family shows FATAL log messages in a message box and others in a terminal window when running as a service.
 
@@ -172,6 +185,7 @@ Neither the client nor server will automatically restart if an error occurs that
 
 *Server Command Line Options*
 
+{{{
     synergys [options]
 
 The server accepts the common options and:
@@ -184,11 +198,14 @@ address has one of the following forms:
     hostname
     :port
     hostname:port
+}}}
 
-hostname is a hostname or IP address of a network interface on the server system (e.g. somehost or 192.168.1.100). port is a port number from 1 to 65535. hostname defaults to the system's hostname and port defaults to 24800.
+`hostname` is a hostname or IP address of a network interface on the server system (e.g. somehost or 192.168.1.100). `port` is a port number from 1 to 65535. `hostname` defaults to the system's hostname and port defaults to 24800.
 
 *Client Command Line Options*
 
+{{{
     synergyc [options] address[:port]
+}}}
 
-address is the hostname or IP address of the server and port is the optional network port on the server to connect to. The client accepts the common options.
+`address` is the hostname or IP address of the server and port is the optional network port on the server to connect to. The client accepts the common options.

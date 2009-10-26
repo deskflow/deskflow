@@ -1,30 +1,4 @@
 #summary Specification: Plan & Guide
-#labels Specification
+#labels Deprecated
 
-A specification plan and guide to writing new specification pages.
-
-== Guidelines ==
-
-  * Each major section (Introduction, Design, etc.) is designated to one page.
-  * If a section becomes longer than approx 5 screens full, it should be split in to two pages.
-  * Specification page names must start with Spec, and must be short (e.g. SpecIntro).
-  * Each page should start with "Synergy+ Specification" (style: Heading 1)
-  * The page summary should be in the format "Specification: {Title}"
-  * The specification should be written from the 'we' and not the 'I' perspective.
-  * Each page should link back to the specification table of contents.
-  * Diagrams must use their own page as not to heavily segment text.
-  * Diagram pages for the specification must be in the format of SpecDiag{diag-name}, for example: SpecDiagClientInit
-
-== TODO List ==
-
-  * The specification looks good in document form, but on a wiki it seems to be a little more chaotic than anticipated. It's hard to distinguish some header types from others:
-    * Solution 1: Manually number the headings (con: hard to maintain).
-    * Solution 2: Split the pages up even further (con: long winded).
-
-== Diagrams ==
-
-For creating diagrams, Dia is the recommended application.
-
-Dia is available as Ubuntu package (Add/Remove) or for [http://dia-installer.de/index_en.html Windows]. For Windows users, Dia is fairly similar for Visio, but Dia is a little more robust and is cross-platform.
-
-The .dia file should be saved in our source code repository, so that others may edit it should the original author be hit by a bus. To publish, the file should be exported to JPEG and added to the Wiki under the relevant specification page (usually SpecDesign).
+The specification has been consolidated into one page: [Specification]

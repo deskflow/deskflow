@@ -1,4 +1,5 @@
 #summary How to build Synergy using Visual C++ 2005 Express Edition
+#labels Deprecated
 
 Synergy+ can be compiled using either Visual C++ 2005 or [CompilingVC2008 Visual C++ 2008]. However, the 2005 version requires more effort to get ready for building, and it is recommended to use the latest version unless you need support for legacy systems.
 

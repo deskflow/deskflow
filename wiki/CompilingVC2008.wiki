@@ -1,4 +1,5 @@
 #summary How to build Synergy using Visual C++ 2008 Express Edition
+#labels Deprecated
 
 = Target Platforms =
 

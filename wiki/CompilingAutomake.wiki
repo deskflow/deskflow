@@ -1,0 +1,121 @@
+#summary How to build Synergy+ 1.3.4 (for Automake, and legacy Visual Studio projects)
+#labels Deprecated
+
+= Attention! =
+
+This guide is for Synergy+ version 1.3.4 - later version should use the [Compiling new compile guide].
+
+= Prerequisites =
+
+To build synergy from the sources you'll need to [SourceCode download the source code].
+
+And one of these:
+
+  * Windows
+    * VC++ 6.0 and up 
+
+  * Unix
+    * automake
+    * gcc 2.95 and up
+    * !X11R4 and up (headers and libraries)
+    * xorg-dev (on Debian)
+    * libXtst-dev (on Ubuntu and Debian)
+
+  * Mac OS X
+    * automake
+    * XCode; or gcc 2.95 and up
+    * Carbon development headers and libraries 
+
+= Configuring =
+
+This step is not necessary when using VC++ or XCode.
+
+{{{
+ ./configure
+}}}
+
+*Note:* When bulding source from the repository, use `autoreconf` before using `./configure`, since the configure script is not included in the repo. This isn't necessary when building from the `.tar.gz` package.
+
+For a list of options to configure use:
+
+{{{
+./configure --help
+}}}
+
+On Solaris you may need to use:
+
+{{{
+./configure --x-includes=/usr/openwin/include --x-libraries=/usr/openwin/lib
+}}}
+
+This allows Synergy+ to find the X11 includes and libraries.
+
+On Arch Linux you may need to use:
+
+{{{
+./configure --prefix=/usr
+}}}
+
+= Building =
+
+== Windows ==
+
+Start VC++ and open synergy.dsw. Set the active configuration (Build > Set Active Configuration) to All - Debug or All - Release then build. Binaries are built into ./debug or ./build.
+
+== Unix-based ==
+
+Including:
+  * Linux
+  * Mac OS X (without XCode)
+
+To build the client and server and leave them in their respective source directories Simply enter:
+
+{{{
+make
+}}}
+
+== Mac OS X (with XCode) ==
+
+Start XCode and open the synergy.xcode project. Build the all project using the Deployment flavor.
+
+= Installing =
+
+These install instructions apply to developers, and are meant as a continuation from the compile instructions above.
+
+== Windows ==
+
+You'll need NSIS, the Nullsoft Scriptable Install System. Build All - Release then build Installer - Release. This creates !SynergyInstaller.exe in the build directory. Run this to install synergy.
+
+Alternatively, you can simply copy the following files from the debug or build directory to a directory you choose (perhaps under the Program Files directory):
+
+  * synergy.exe
+  * synergyc.exe
+  * synergys.exe
+  * synrgyhk.dll 
+
+== Unix-based ==
+
+Including:
+  * Linux
+  * Mac OS X (without XCode)
+
+As root:
+
+{{{
+make install
+}}}
+
+Or, if non-root user (with `sudo` installed):
+
+{{{
+sudo make install
+}}}
+    
+This will install the client and server into /usr/local/bin unless you specified a different directory when you ran configure.
+
+== Mac OS X (with XCode) ==
+
+Copy the following files from ./build to a convenient location:
+
+  * synergyc
+  * synergys

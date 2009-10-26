@@ -1,0 +1,16 @@
+#summary End-user videos, images and blogs showing Synergy+ in action
+#labels Deprecated
+
+*Attention!* We have deprecated this page, since there isn't enough interest from members in submitting their own Synergy+ stuff. Plus, it serves no real functional purpose.
+
+= Images =
+  * [http://img12.imageshack.us/img12/4052/dscf0006p.jpg Nick's Linux/Windows/Mac setup]
+  * [http://img41.imageshack.us/img41/4827/rigwcr.jpg An impressive 10 screen setup]
+
+= Videos =
+  * [http://cnettv.cnet.com/using-synergy/9742-1_53-50003392.html Cnet - Another Synergy video] (features SynergyKM)
+  * [http://www.youtube.com/watch?v=UdP1Rei2muw Cnet - How to use Synergy]
+  * [http://www.youtube.com/watch?v=Id3GHAruhAk 7 Screen Synergy Mac/Windows/Linux]
+
+= Blogs =
+  * [http://multimonitor.net/2007/08/25-days-with-synergy/ 25 Days with Synergy]

@@ -1,0 +1,24 @@
+#summary Handy tips & tricks for using our software (such as auto start)
+
+= Run at Startup =
+
+== Ubuntu 9.04 (Gnome) ==
+  # From the system menu, click *System* > *Preferences* > *Startup Applications*
+  # Click *Add* and specify and name, and the command `synergyc my-host` or `synergys`
+  # Finally, click *Save*, then *Close* then log out and back in to test
+
+== Windows Vista SP1 ==
+  # Start Synergy+ by clicking *Start* > *All Programs* > *Synergy+*
+  # From the *Options* group, click *!AutoStart*
+  # From the *When you log in* groip, click *Install*
+  # Close Synergy+, then log out and back in to test
+
+== Mac OS X 10.5.7 ==
+  # In your home directory, create a new file named `synergy.command`
+  # Set the file contents to one of either:
+    * `synergyc -f my-host > /dev/null 2>&1 &`
+    * `synergys > /dev/null 2>&1 &`
+  # From the system menu, click the *Apple logo*, then click *System Preferences*
+  # Click *Accounts*, and select a user, then select *Login Items*
+  # Click the *Add symbol* button, and browse to the location of the `synergy.command` file
+  # Finally, click close and log out then back in to test

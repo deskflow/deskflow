@@ -1,11 +1,4 @@
 #summary Specification: Table of Contents
-#labels Specification
+#labels Deprecated
 
-= Synergy+ Specification =
-
-== Table of Contents ==
-
-  # [SpecIntro Introduction]
-  # [SpecAnalysis Analysis]
-  # [SpecDesign Design]
-  # [SpecImp Implementation]
+The specification has been consolidated into one page: [Specification]

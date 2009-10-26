@@ -1,17 +1,22 @@
-#summary How our community works
-#labels Featured
+#summary How our community works (with information for newcomers)
 
 <wiki:toc max_depth="2" />
 
 = About =
 
-Our community is a benevolent dictatorship, meaning that our project leader has the final say on all major decisions, however our leader will always do what is best for the community. The key word is, benevolent; meaning that, our dictator is not a tyrant. This is primarily because the project is very "forkable" (this project is it's self a fork); so if the majority disagree, they will fork into a new project. This is common to most small open source communities.
+Our community is a benevolent dictatorship, meaning that our project leader has the final say on all major decisions, but will always act in everyone's best interest.
 
-Having a dictator is great for a small project like ours, because it stops our aims from deviating off course, and helps to avoid limitless feature creep. Once our project expands and becomes very large, we may elect to have a consensus based democracy with voting and so on. However, this is not necessary for the time being.
+This project is very forkable, so should the vast majority of the important developers on our team disagree with our leader consistently, then they would create a new [http://en.wikipedia.org/wiki/Fork_(software_development) fork] project, for which they will elect a new leader. Because of this, it is in our leader's best interest to go in the direction of the majority.
 
-We do not currently have a website because our immediate goal is to make the application easier to use before promoting it to our end users. Currently, most of our end users are fairly technical. For technical users, the best place to start is our [http://code.google.com/p/synergy-plus/ community portal].
+Once our project expands and becomes very large, we will operate under a consensus based democracy based on voting. This is not necessary for the time being however.
 
-== Communication ==
+We do not currently have a traditional style website because our immediate goal is to simply fix Synergy, and not replace it. We hope that once we establish contact with the original creators, we can merge the two projects and so use the name Synergy. At this point we will formally promote the project.
+
+== People ==
+
+Please see the [Members] page for information and contact details of key people.
+ 
+= Communication =
 
 Our most active communication channel is our [http://groups.google.com/group/synergy-plus discussion group]; both users and developers should post questions there. We also have an IRC channel for quick questions, but this should not be used for in-depth discussion.
 
@@ -19,40 +24,25 @@ Our most active communication channel is our [http://groups.google.com/group/syn
   * Discussion group: http://groups.google.com/group/synergy-plus
   * IRC channel: #synergy-plus on irc.freenode.net:8001
 
-== Key People ==
-
-  * Project leader: Sorin Sbârnea
-  * Original creators: Chris Schoeneman, et al.
-  * Specification authors: Nick Bolton, et al.
-
 = Newcomers =
 
 Developers who are new to our project, should start by checking out the [http://code.google.com/p/synergy-plus/issues/list issues list]; fixing minor bugs is a good way to get familiar with the code.
 
 Before asking questions on the [http://groups.google.com/group/synergy-plus mailing list] it is often best to _search_ the mailing list before hand to avoid repeated questions. We also encourage that people quickly look over past threads in our mailing list, to become familiar with how questions are asked, and possibly to contribute to past discussions where new light may be useful. However, we strongly encourage that old discussions are not opened up unless the person really knows what they're talking about.
 
-There is no formal procedure for becoming a project member (getting commit access). The length of time before a newcomer is added to the project, usually depends their interaction with the mailing list. If the user looks to have a good understanding and we agree with their goals, then we may give commit access sooner. As our project grows, we may review patches initially and give commit access later.
+There is no formal procedure for becoming a project member (getting commit access). The length of time before a newcomer is added to the project, usually depends their interaction with the mailing list. If the user looks to have a good understanding of the code, and we agree with their goals, then we may give commit access sooner. When our project grows larger, we may review patches initially and give commit access later.
 
   * Read the coding syntax guide on the [SpecImp Implementation] page.
   * The [DeveloperFAQ Developer FAQ] may be useful.
-  * Do not put your name at the top of source code files.
 
 = Procedures =
 
-== Rejecting Features ==
+== Issues ==
 
-From time to time users will have a feature which they wish to have implemented. This may be a feature we do or do not want. If the feature is outside of the scope of the project, then the user should be politely told that the feature will not be implemented.
+See the [Issues] page.
 
-  {user-name}, thank you for your feature request. We appreciate your support for our project, and hope you continue to give feedback. However, the feature you requested is outside the scope of our specification, and so have decided not to implement it.
+== Voting ==
 
-This avoids upsetting potentially useful people that could contribute valuable bug reports and bug fixes. Politeness should be used regardless of if many people have requested the same feature; the user may be unaware of the previous feature requests.
+Even though our community is at present, a benevolent dictatorship, it may still be appropriate to vote. Voting should be done by means of the classic open source voting method; mailing list voting.
 
-After rejecting the feature, the project member who has done so should update the status to WontFix (and *not* Invalid). The suggested feature should then be added to the [SpecDesign Specification Design] page under _Limit of Scope_.
-
-= Resources =
-
-== Poisonous People ==
-
-Here's an interesting video about poisonous people.
-
-<wiki:video url="http://www.youtube.com/watch?v=-F-3E8pyjFo"/>
+First, the vote subject is posted in a new thread, then, each user replies with either +1 or -1 depending on if they agree or veto respectively. Veto votes are usually accompanied by an explanation. Discussion may also occur. Once a decision seems to have been reached, the votes will be tallied, and a conclusion will be reached.

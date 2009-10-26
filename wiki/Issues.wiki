@@ -1,0 +1,36 @@
+#summary Member guidelines for dealing with issues
+#labels Phase-Implementation
+
+= Creating Issues =
+
+If you discover an issue in Synergy+, please report it through our [http://code.google.com/p/synergy-plus/issues/list issue tracker]. Issues can be bug reports or feature requests. Please refrain from having lengthy discussions in the issue tracker, and instead [http://groups.google.com/group/synergy-plus/post create a new thread in the mailing list] as this will make it easier community members to contribute, making it more likely for the issue to be resolved effectively. Once creating a new mailing list thread, make sure the issue number is referenced.
+
+= Moderating Issues =
+
+These are guidelines for members who moderate issues.
+
+== Accepting ==
+
+Consider the following, or some variant:
+
+  Thanks for submitting a new issue. I have marked the issue as accepted, and we will keep you informed of it's progress.
+
+Then set the status to `Accepted`, and choose a milestone. Ensure that feature requests are marked as `Enhancement`, not `Defect`. It's OK to say you'll keep them informed, because the system will do this for them automatically when updates are added.
+
+== Rejecting ==
+
+Users will sometimes have a feature request, which may be outside the scope of our specification. In this case, we should politely tell the user that the feature will not be implemented.
+
+  Thanks for the feature request. Unfortunately, the feature you requested is outside the scope of our specification. Please feel free to suggest other ideas.
+
+Then set the status to `WontFix` (and *not* Invalid). This avoids upsetting people that could contribute valuable bug reports in future.
+
+== Duplicates ==
+
+New users don't have the experience we have. Therefore, its not their fault if they submit a duplicate bug report. This situation should be met with a polite message.
+
+  Thanks for submitting a new issue. Would you mind starring issue {issue-id}? It looks like the same problem.
+
+*Note:* {issue-id} is a number.
+
+Then set the status to duplicate.

@@ -1,4 +1,4 @@
-#summary Details about supported operating systems.
+#summary Details about supported operating systems
 #labels Phase-Requirements
 
 == Fully Supported ==

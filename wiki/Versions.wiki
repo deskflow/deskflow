@@ -1,0 +1,43 @@
+#summary Version schedule and history with feature summary
+#labels Deprecated
+
+*Attention!* We have deprecated this page since it's not worth the trouble to maintain right now.
+
+For significant releases and planned features, refer to [Milestones].
+
+Versions are listed in reverse order (latest version at top).
+
+|| *Version* || *State* || *Release Date* || *Milestone* || *Notes* ||
+|| 1.4.x || *Planning* || Late 2009 || M1 || Next major release to follow milestone M1 plan. ||
+|| 1.3.5 || *In development* || Sept 2009 || Pre-M1 || Primarily bug fixes, with no new releases. ||
+|| 1.3.4 || Released || July 25, 2009 || Pre-M1 || Release to install easily on Linux and Mac OS X. ||
+|| 1.3.3 || Released|| March 2, 2009 || _None_ || The second release, including some bug fixes. ||
+|| 1.3.2 || Released || February 2009 || _None_ || The first release of Synergy+. ||
+|| 1.3.1 || Released || April 2, 2006 || _None_ || Latest known release by the Synergy2 project. ||
+
+The above versions we what have released, and what we intend to release to our public user base.
+
+= Details =
+
+== 1.4.x ==
+
+Our targets for this release are:
+
+  * Sticky meta key problem affecting many users (Issue 9).
+  * Run as service under Windows Vista and Windows 7 (Issue 26).
+  * Get keyboard working with Mac OS X (10.5) as client (Issue 47).
+  * Fix issues with non-US keystrokes and languages (Issue 5).
+  * Fix various intermittent keyboard usability issues.
+  * Fix some instability issues on Windows and Linux.
+
+== 1.3.3 ==
+
+The second version of Synergy+, which included some bug fixes.
+
+== 1.3.2 ==
+
+The first release of Synergy+, to make the application available via our website.
+
+== 1.3.1 ==
+
+Latest version of Synergy2; at this point we forked to the Synergy+ project. It appears unlikely that Synergy2 will release any more updates, and so our version number will follow on from theirs.

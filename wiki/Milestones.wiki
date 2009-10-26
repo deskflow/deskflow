@@ -1,36 +1,41 @@
 #summary Project milestones such as M1, M2, M3, Mx
-#labels Featured
 
 For version numbers and release dates, please refer to [VersionHistory version history].
 
 || *ID* || *Details* ||
-|| M1 || Important defects fixed, and a few small enhancements. ||
-|| M2 || Major new features to improve usability and performance. ||
-|| M3 || GUI overhaul to make software easier to use, attracting new users. ||
-|| Mx || Non-essential issues deferred to later milestones. ||
+|| M1 || Critical bug fixes ||
+|| M2 || Low priority bug fixes ||
+|| M3 || Essential new features ||
+|| M4 || Low priority features ||
 
-These milestones have been created to serve as targets for significant releases of Synergy+, once M3 has been released, we should work toward actively promoting Synergy+ by creating a professional looking website, looking a donations, sponsors, etc. At this stage, we expect to have seen significant growth in the project, and our user to developer ratio is expected to grow in favor of users.
+These milestones have been created to serve as targets for significant releases. These will ensure that we have solid targets, which means better performance.
 
 = Details =
 
 == Milestone M1 ==
 
-Possibly the most significant issue is Issue 29. This is required to overcome the incomparability with new technologies in Windows Vista and versions of Windows thereafter. To solve this, a new branch will be created in the hg repository, and commits will be reviewed there, and once the best approach is discovered, this will be merged with the main trunk. Multiple people may be working on this feature.
+Due to new operating systems, the original Synergy is no longer fully compatible. In Vista, due to session isolation, Synergy can't be used at the login screen or when run as a service (issue 26). On Mac OS X, neither the client or server can be run in daemon mode (issue 46), and clipboard sharing has stopped working (issue 67).
 
-Other issues are those that don't necessarily affect Windows Vista, but just general bugs that have been discovered for all platforms over the 3 years since Synergy2 development stopped. However many seem to affect Mac OS X only, which will be difficult to resolve since most of our developers are Windows and Linux users; we should look to expand our number of Mac developers.
+For milestone M1, we're going to get Synergy+ back to a fully supporting standard, but we're not going to worry about new features. There are also some more involved bugs, that, if we were to assign to M1 would delay it substantially - these bugs are left to M2.
+
+[http://code.google.com/p/synergy-plus/issues/list?q=milestone=M1 Milestone M1 issues]
 
 == Milestone M2 ==
 
-There have been suggestions in the mailing list regarding new feature enhancements, and one which stands out is for using different network topologies such as P2P or similar. Some believe that the client/server topology is not ideal, however, this is yet to be discussed in detail on the [http://groups.google.com/group/synergy-plus mailing list].
+International keyboard support is quite bad at the moment (issue 5), this may be because the original Synergy was designed with only en-us keyboards in mind. For example, for some en-gb keyboards, the @ symbol does not appear when pressed (instead the omega Ω symbol appears). There are also issues with other non-us characters such as č, which appears as just c. This requires an overhaul of the key press detection system Because this is such an epic task, we have deferred this to M2, even though it is still a bug.
+
+Security enhancements are also a high priority; many users have expressed that the original Synergy is unsafe, and should be enhanced with use of SSL (issue 3).
+
+[http://code.google.com/p/synergy-plus/issues/list?q=milestone=M2 Milestone M2 issues]
 
 == Milestone M3 ==
 
-There are many [RelatedProjects existing GUIs] that have been written by developers outside of the Synergy2/Synergy+ development community. Notable projects are:
+Our aim here is to integrate an existing GUI with Synergy+ so that we have a common GUI for all platforms (instead of just one for Windows). We're hoping that the QSynergy authors will contribute directly to our repository, and we plan to have a specially modified version of QSynergy that is very closely integrated with Synergy+.
 
-  * [http://www.volker-lanz.de/en/software/qsynergy/ QSynergy] - A cross-platform GUI for Synergy2
-  * [http://www.kde-apps.org/content/show.php?content=89732 Sinerji] - A Linux KDE GUI for Synergy2
-  * [https://sourceforge.net/projects/synergykm SynergyKM] - A Mac OS X (fork?) of Synergy2
+[http://code.google.com/p/synergy-plus/issues/list?q=milestone=M3 Milestone M3 issues]
 
-Our aim is not to replace these GUIs, but to work with the authors to create a GUI that comes included with Synergy+ that works the same on all platforms (Windows, Mac, Linux).
+== Milestone M4 ==
 
-We should also consider creating a wizard for new users, that appears the first time that Synergy is started. This will stop new users from being overwhelmed with information presented by the GUI applications that existing users find useful.
+This is a new one. Anything that's lower priority than M3 will go here; but we're talking a long time before we get to this point, so nothing is set in stone.
+
+[http://code.google.com/p/synergy-plus/issues/list?q=milestone=M4 Milestone M4 issues]

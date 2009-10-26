@@ -1,0 +1,6 @@
+#summary Automated regression tests with result set to mailing list
+#labels Deprecated
+
+We should create a (or use an existing) [http://en.wikipedia.org/wiki/Regression_testing regression test] suite to run a scheduled weekly regression test on the Synergy+ code base from the repository.
+
+The result should be sent to a specific mailing list (e.g. synergy-plus-tests) to which any community member can subscribe.
