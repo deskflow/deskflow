@@ -276,12 +276,12 @@ def open_project():
 		return False
 	
 def update():
-	print "Running Mercurial pull and update..."
-	os.system('hg pull')
-	os.system('hg update')
+	print "Running Subversion update..."
+	os.system('svn update')
 	
 def revision():
-	os.system('hg identify')
+	# While this doesn't print out the revision specifically, it will do.
+	os.system('svn info')
 
 def destroy():
 	msg = "Are you sure you want to remove the ./bin/ directory? [y/N]"
