@@ -138,40 +138,57 @@ COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 LOG((CLOG_DEBUG1 "mask: %04x", mask));
 	// convert
 	KeyModifierMask outMask = 0;
-	if ((mask & shiftKey) != 0) {
+	if ((mask & kCGEventFlagMaskShift) != 0) {
 		outMask |= KeyModifierShift;
 	}
-	if ((mask & rightShiftKey) != 0) {
-		outMask |= KeyModifierShift;
-	}
-	if ((mask & controlKey) != 0) {
+	if ((mask & kCGEventFlagMaskControl) != 0) {
 		outMask |= KeyModifierControl;
 	}
-	if ((mask & rightControlKey) != 0) {
-		outMask |= KeyModifierControl;
-	}
-	if ((mask & cmdKey) != 0) {
+	if ((mask & kCGEventFlagMaskAlternate) != 0) {
 		outMask |= KeyModifierAlt;
 	}
-	if ((mask & optionKey) != 0) {
+	if ((mask & kCGEventFlagMaskCommand) != 0) {
 		outMask |= KeyModifierSuper;
 	}
-	if ((mask & rightOptionKey) != 0) {
-		outMask |= KeyModifierSuper;
-	}
-	if ((mask & alphaLock) != 0) {
+	if ((mask & kCGEventFlagMaskAlphaShift) != 0) {
 		outMask |= KeyModifierCapsLock;
 	}
-	if ((mask & s_osxNumLock) != 0) {
+	if ((mask & kCGEventFlagMaskNumericPad) != 0) {
 		outMask |= KeyModifierNumLock;
 	}
 
 	return outMask;
 }
 
+KeyModifierMask
+COSXKeyState::mapModifiersToCarbon(UInt32 mask) const
+{
+	KeyModifierMask outMask = 0;
+	if ((mask & kCGEventFlagMaskShift) != 0) {
+		outMask |= shiftKey;
+	}
+	if ((mask & kCGEventFlagMaskControl) != 0) {
+		outMask |= controlKey;
+	}
+	if ((mask & kCGEventFlagMaskCommand) != 0) {
+		outMask |= cmdKey;
+	}
+	if ((mask & kCGEventFlagMaskAlternate) != 0) {
+		outMask |= optionKey;
+	}
+	if ((mask & kCGEventFlagMaskAlphaShift) != 0) {
+		outMask |= alphaLock;
+	}
+	if ((mask & kCGEventFlagMaskNumericPad) != 0) {
+		outMask |= s_osxNumLock;
+	}
+	
+	return outMask;
+}
+
 KeyButton 
 COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
-				KeyModifierMask* maskOut, EventRef event) const
+				KeyModifierMask* maskOut, CGEventRef event) const
 {
 	ids.clear();
 
@@ -183,13 +200,11 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 	}
 
 	// get virtual key
-	UInt32 vkCode;
-	GetEventParameter(event, kEventParamKeyCode, typeUInt32,
-							NULL, sizeof(vkCode), NULL, &vkCode);
+	UInt32 vkCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
 
 	// handle up events
-	UInt32 eventKind = GetEventKind(event);
-	if (eventKind == kEventRawKeyUp) {
+	UInt32 eventKind = CGEventGetType(event);
+	if (eventKind == kCGEventKeyUp) {
 		// the id isn't used.  we just need the same button we used on
 		// the key press.  note that we don't use or reset the dead key
 		// state;  up events should not affect the dead key state.
@@ -214,9 +229,9 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 
 	// get the event modifiers and remove the command and control
 	// keys.  note if we used them though.
+	// UCKeyTranslate expects old-style Carbon modifiers, so convert.
 	UInt32 modifiers;
-	GetEventParameter(event, kEventParamKeyModifiers, typeUInt32,
-								NULL, sizeof(modifiers), NULL, &modifiers);
+	modifiers = mapModifiersToCarbon(CGEventGetFlags(event));
 	static const UInt32 s_commandModifiers =
 		cmdKey | controlKey | rightControlKey;
 	bool isCommand = ((modifiers & s_commandModifiers) != 0);
@@ -224,24 +239,22 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 
 	// if we've used a command key then we want the glyph produced without
 	// the option key (i.e. the base glyph).
-	if (isCommand) {
+	//if (isCommand) {
 		modifiers &= ~optionKey;
-	}
+	//}
 
 	// choose action
 	UInt16 action;
-	switch (eventKind) {
-	case kEventRawKeyDown:
+	if(eventKind==kCGEventKeyDown) {
 		action = kUCKeyActionDown;
-		break;
-
-	case kEventRawKeyRepeat:
+	}
+	else if(CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat)==1) {
 		action = kUCKeyActionAutoKey;
-		break;
-
-	default:
+	}
+	else {
 		return 0;
 	}
+
 	// translate via uchr resource
 	CFDataRef ref = (CFDataRef) TISGetInputSourceProperty(currentKeyboardLayout,
 								kTISPropertyUnicodeKeyLayoutData);
@@ -251,12 +264,13 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		// translate key
 		UniCharCount count;
 		UniChar chars[2];
+		//LOG((CLOG_DEBUG "modifiers: %08x", modifiers & 0xffu));
 		OSStatus status = UCKeyTranslate(layout,
 							vkCode & 0xffu, action,
 							(modifiers >> 8) & 0xffu,
 							LMGetKbdType(), 0, &m_deadKeyState,
 							sizeof(chars) / sizeof(chars[0]), &count, chars);
-
+		
 		// get the characters
 		if (status == 0) {
 			if (count != 0 || m_deadKeyState == 0) {
@@ -353,7 +367,8 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 
 	switch (keystroke.m_type) {
 	case Keystroke::kButton:
-		LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
+		{
+			LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
 
 		// let system figure out character for us
 		ref = CGEventCreateKeyboardEvent(0, mapKeyButtonToVirtualKey(
@@ -363,11 +378,12 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 			LOG((CLOG_CRIT "unable to create keyboard event for keystroke"));
 		}
 
-		CGEventPost(kCGHIDEventTap, ref);
+			CGEventPost(kCGHIDEventTap, ref);
 
-		// add a delay if client data isn't zero
-		if (keystroke.m_data.m_button.m_client) {
-			ARCH->sleep(0.01);
+			// add a delay if client data isn't zero
+			if (keystroke.m_data.m_button.m_client) {
+				ARCH->sleep(0.01);
+			}
 		}
 		break;
 
