@@ -130,9 +130,9 @@ def usage():
 		'Example: %s configure'
 		) % (this_cmd, this_cmd)
 
-def configure():
+def configure(generator = None):
 	
-	err = configure_internal()
+	err = configure_internal(generator)
 
 	if err == 0:
 		print ('Configure complete!\n\n'
@@ -143,9 +143,9 @@ def configure():
 	else:
 		return False
 
-def configure_internal():
+def configure_internal(generator = None):
 
-	ensure_setup_latest()
+	ensure_setup_latest(generator)
 	
 	generator = get_generator()
 	if generator != '':
@@ -299,7 +299,7 @@ def package(type):
 	# Package is supported by default.
 	package_unsupported = False
 
-	if type == '':
+	if type == None:
 		package_usage()
 	elif type == 'src-tgz':
 		if sys.platform in ['linux2', 'darwin']:
@@ -332,7 +332,7 @@ def package(type):
 		else:
 			package_unsupported = True
 	else:
-		print 'Not yet implemented: package %s' % package_type
+		print 'Not yet implemented: package %s' % type
 
 	if package_unsupported:
 		print ('Package type, %s is not '
@@ -407,7 +407,7 @@ def main(argv):
 		arg_1 = argv[1]
 		completions = complete_command(arg_1)
 
-	arg_2 = ''
+	arg_2 = None
 	if len(argv) > 2:
 		arg_2 = argv[2]
 
@@ -423,7 +423,7 @@ def main(argv):
 			if cmd in ['about', 'info']:
 				about()
 			elif cmd in ['configure', 'conf']:
-				configure()
+				configure(arg_2)
 			elif cmd in ['build']:
 				build(arg_2)
 			elif cmd in ['open']:
@@ -486,17 +486,19 @@ def open_project_internal(project_filename, application = ''):
 		os.system(path)
 		return True
 
-def setup():
+def setup(generator = None):
 	print "Running setup..."
 
-	if sys.platform == 'win32':
-		generator = setup_generator_get(win32_generators)
-	elif sys.platform in ['linux2', 'sunos5', 'freebsd7']:
-		generator = setup_generator_get(unix_generators)
-	elif sys.platform == 'darwin':
-		generator = setup_generator_get(darwin_generators)
-	else:
-		raise Exception('Unsupported platform: ' + sys.platform)
+	# If no generator specified, prompt the user.
+	if generator == None:
+		if sys.platform == 'win32':
+			generator = setup_generator_get(win32_generators)
+		elif sys.platform in ['linux2', 'sunos5', 'freebsd7']:
+			generator = setup_generator_get(unix_generators)
+		elif sys.platform == 'darwin':
+			generator = setup_generator_get(darwin_generators)
+		else:
+			raise Exception('Unsupported platform: ' + sys.platform)
 
 	# Create build dir, since config file resides there.
 	if not os.path.exists(bin_dir):
@@ -662,9 +664,9 @@ def run_vcbuild(generator, mode, args=''):
 
 	return os.system(temp_bat)
 
-def ensure_setup_latest():
+def ensure_setup_latest(generator = None):
 	if not has_setup_version(setup_version):
-		setup()
+		setup(generator)
 
 # Start the program.
 main(sys.argv)
