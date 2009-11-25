@@ -185,8 +185,7 @@ COSXScreen::getEventTarget() const
 bool
 COSXScreen::getClipboard(ClipboardID, IClipboard* dst) const
 {
-	COSXClipboard src;
-	CClipboard::copy(dst, &src);
+	CClipboard::copy(dst, &m_pasteboard);
 	return true;
 }
 
@@ -643,41 +642,22 @@ COSXScreen::leave()
 bool
 COSXScreen::setClipboard(ClipboardID, const IClipboard* src)
 {
-	COSXClipboard dst;
-	if (src != NULL) {
-		// save clipboard data
-		if (!CClipboard::copy(&dst, src)) {
-			return false;
-		}
-	}
-	else {
-		// assert clipboard ownership
-		if (!dst.open(0)) {
-			return false;
-		}
-		dst.empty();
-		dst.close();
-	}
-	checkClipboards();
-	return true;
+    if(src != NULL) {
+        LOG((CLOG_DEBUG "setting clipboard"));
+        CClipboard::copy(&m_pasteboard, src);    
+    }    
+    return true;
 }
 
 void
 COSXScreen::checkClipboards()
 {
-	// check if clipboard ownership changed
-	if (!COSXClipboard::isOwnedBySynergy()) {
-		if (m_ownClipboard) {
-			LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
-			m_ownClipboard = false;
-			sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardClipboard);
-			sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardSelection);
-		}
-	}
-	else if (!m_ownClipboard) {
-		LOG((CLOG_DEBUG "clipboard changed: synergy owned"));
-		m_ownClipboard = true;
-	}
+    LOG((CLOG_DEBUG1 "checking clipboard"));
+    if (m_pasteboard.synchronize()) {
+        LOG((CLOG_DEBUG "clipboard changed"));
+        sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardClipboard);
+        sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardSelection);
+    }
 }
 
 void

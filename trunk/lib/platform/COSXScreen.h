@@ -16,6 +16,7 @@
 #define COSXSCREEN_H
 
 #include <Carbon/Carbon.h>
+#include "COSXClipboard.h"
 #include "CPlatformScreen.h"
 #include "stdmap.h"
 #include "stdvector.h"
@@ -205,6 +206,7 @@ private:
 	COSXKeyState*		m_keyState;
 
 	// clipboards
+	COSXClipboard       m_pasteboard;
 	UInt32				m_sequenceNumber;
 
 	// screen saver stuff
