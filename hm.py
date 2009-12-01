@@ -56,24 +56,26 @@ commands = [
 ]
 
 win32_generators = {
-	'1' : 'Visual Studio 9 2008',
-	'2' : 'Visual Studio 9 2008 Win64',
-	'3' : 'Visual Studio 8 2005',
-	'4' : 'Visual Studio 8 2005 Win64',
-	'5' : 'Visual Studio 7',
-	'6' : 'Visual Studio 7 .NET 2003',
-	'7' : 'Visual Studio 6',
-	'8' : 'CodeBlocks - MinGW Makefiles',
-	'9' : 'CodeBlocks - Unix Makefiles',
-	'10': 'Eclipse CDT4 - MinGW Makefiles',
-	'11': 'Eclipse CDT4 - NMake Makefiles',
-	'12': 'Eclipse CDT4 - Unix Makefiles',
-	'13': 'MinGW Makefiles',
-	'14': 'NMake Makefiles',
-	'15': 'Unix Makefiles',
-	'16': 'Borland Makefiles',
-	'17': 'MSYS Makefiles',
-	'18': 'Watcom WMake',
+	'1' : 'Visual Studio 10 2010',
+	'2' : 'Visual Studio 10 2010 Win64',
+	'3' : 'Visual Studio 9 2008',
+	'4' : 'Visual Studio 9 2008 Win64',
+	'5' : 'Visual Studio 8 2005',
+	'6' : 'Visual Studio 8 2005 Win64',
+	'7' : 'Visual Studio 7',
+	'8' : 'Visual Studio 7 .NET 2003',
+	'9' : 'Visual Studio 6',
+	'10' : 'CodeBlocks - MinGW Makefiles',
+	'11' : 'CodeBlocks - Unix Makefiles',
+	'12': 'Eclipse CDT4 - MinGW Makefiles',
+	'13': 'Eclipse CDT4 - NMake Makefiles',
+	'14': 'Eclipse CDT4 - Unix Makefiles',
+	'15': 'MinGW Makefiles',
+	'16': 'NMake Makefiles',
+	'17': 'Unix Makefiles',
+	'18': 'Borland Makefiles',
+	'19': 'MSYS Makefiles',
+	'20': 'Watcom WMake',
 }
 
 unix_generators = {
@@ -199,7 +201,7 @@ def build(mode):
 			print 'GNU Make failed:', err
 			return False
 
-	elif generator.startswith('Visual Studio 8') or generator.startswith('Visual Studio 9'):
+	elif generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 8') or generator.startswith('Visual Studio 9'):
 		
 		ret = run_vcbuild(generator, mode)
 		
@@ -241,6 +243,16 @@ def clean(mode):
 			return True
 		else:
 			print 'GNU Make failed: %s' % err
+			return False
+
+	elif generator.startswith('Visual Studio 10'):
+
+		ret = run_vcbuild(generator, mode, '/target:clean')
+		
+		if ret == 0:
+			return True
+		else:
+			print 'VCBuild failed:', ret
 			return False
 
 	elif generator.startswith('Visual Studio 8') or generator.startswith('Visual Studio 9'):
@@ -619,6 +631,8 @@ def get_vcvarsall(generator):
 		value,type = _winreg.QueryValueEx(key, '8.0')
 	elif generator.startswith('Visual Studio 9'):
 		value,type = _winreg.QueryValueEx(key, '9.0')
+	elif generator.startswith('Visual Studio 10'):
+		value,type = _winreg.QueryValueEx(key, '10.0')
 	else:
 		raise Exception('Cannot determin vcvarsall.bat location for: ' + generator)
 	path = value + 'vcvarsall.bat'
@@ -649,14 +663,21 @@ def run_vcbuild(generator, mode, args=''):
 		vcvars_platform = 'x86' # 32/64bit OS building 32bit app
 		config_platform = 'Win32'
 	if mode == 'release':
-		config = 'Release|' + config_platform
+		config = 'Release'
 	else:
-		config = 'Debug|' + config_platform
+		config = 'Debug'
 			
-	cmd = ('@echo off\n'
-		'call "%s" %s \n'
-		'vcbuild /nologo %s "%s" "%s"'
-		) % (get_vcvarsall(generator), vcvars_platform, args, sln_filepath(), config)
+	if generator.startswith('Visual Studio 10'):
+		cmd = ('@echo off\n'
+			'call "%s" %s \n'
+			'msbuild /nologo %s /p:Configuration="%s" /p:Platform="%s" "%s"'
+			) % (get_vcvarsall(generator), vcvars_platform, args, config, config_platform, sln_filepath())
+	else:
+		config = config + '|' + config_platform
+		cmd = ('@echo off\n'
+			'call "%s" %s \n'
+			'vcbuild /nologo %s "%s" "%s"'
+			) % (get_vcvarsall(generator), vcvars_platform, args, sln_filepath(), config)
 	print cmd
 	# Generate a batch file, since we can't use environment variables directly.
 	temp_bat = bin_dir + r'\vcbuild.bat'
