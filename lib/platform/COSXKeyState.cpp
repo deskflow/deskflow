@@ -29,8 +29,8 @@
 // different KeyIDs to a single key code.
 static const UInt32 s_shiftVK    = 56;
 static const UInt32 s_controlVK  = 59;
-static const UInt32 s_altVK      = 55;
-static const UInt32 s_superVK    = 58;
+static const UInt32 s_altVK      = 58;
+static const UInt32 s_superVK    = 55;
 static const UInt32 s_capsLockVK = 57;
 static const UInt32 s_numLockVK  = 71;
 static const UInt32 s_osxNumLock = 1 << 16;
