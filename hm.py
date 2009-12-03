@@ -618,14 +618,18 @@ def complete_command(arg):
 			possible_completions.append(command)
 	return possible_completions
 
-def get_vcvarsall(generator):
-# This is the *only* valid way of detecting VC8/9 (may work for others also)
-# Remark: "VC7" key does not change between VC8/9
-# [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\SxS\VC7]
-# "9.0"="C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\"
-	value = None
-	type = None
-	key_name = r'SOFTWARE\Microsoft\VisualStudio\SxS\VC7'
+def get_vcvarsall(generator):	
+	import platform
+	
+	# os_bits should be loaded with '32bit' or '64bit'
+	(os_bits, other) = platform.architecture()
+	
+	# visual studio is a 32-bit app, so when we're on 64-bit, we need to check the WoW dungeon
+	if os_bits == '64bit':
+		key_name = r'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7'
+	else:
+		key_name = r'SOFTWARE\Microsoft\VisualStudio\SxS\VC7'
+	
 	key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, key_name)
 	if generator.startswith('Visual Studio 8'):
 		value,type = _winreg.QueryValueEx(key, '8.0')
@@ -635,9 +639,15 @@ def get_vcvarsall(generator):
 		value,type = _winreg.QueryValueEx(key, '10.0')
 	else:
 		raise Exception('Cannot determin vcvarsall.bat location for: ' + generator)
-	path = value + 'vcvarsall.bat'
+	
+	# not sure why, but the value on 64-bit differs slightly to the original
+	if os_bits == '64bit':
+		path = value + r'vc\vcvarsall.bat'
+	else:
+		path = value + r'vcvarsall.bat'		
+	
 	if not os.path.exists(path):
-		raise Exception("'%s' not found.")
+		raise Exception("'%s' not found." % path)
 	return path
 
 def run_vcbuild(generator, mode, args=''):
