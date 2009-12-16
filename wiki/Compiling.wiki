@@ -79,13 +79,13 @@ make
 
 == Visual Studio ==
 
-  # Open the `build` directory.
+  # Open the `bin` directory.
   # Double click: `synergy-plus.sln`
   # Click `Build` from the menu, then click `Build Solution`.
 
 == Xcode ==
 
-  # Open the `build` directory.
+  # Open the `bin` directory.
   # Double click: `synergy-plus.xcodeproj`
   # Click `Build` from the menu, then click `Build`.
 
@@ -97,7 +97,7 @@ Windows users can download a free version of [http://www.microsoft.com/express/v
 
 For Mac OS X users, although [http://developer.apple.com/technology/xcode.html Xcode] isn't necessary for compiling on Mac OS X (you can just use Unix Makefiles), it is a neat IDE and very widely used (and it's free). There others, such as [http://www.codeblocks.org/ Code::Blocks] and [http://www.eclipse.org/cdt/ Eclipse CDT] which (apparently) work on Mac OS X.
 
-The reason why the `build` directory is used, is so that CMake generated files do not contaminate the original source tree; this is known as an [http://www.cmake.org/Wiki/CMake_FAQ#Out-of-source_build_trees out-of-source build tree].
+The reason why the `bin` directory is used, is so that CMake generated files do not contaminate the original source tree; this is known as an [http://www.cmake.org/Wiki/CMake_FAQ#Out-of-source_build_trees out-of-source build tree].
 
 ----
 
@@ -122,10 +122,12 @@ You may need to add your Python install directory to the end of your PATH enviro
   * [http://developer.apple.com/technology/xcode.html XCode] or GCC 2.95 (and up)
   * Carbon headers and libraries
 
-Using [http://www.macports.org/install.php MacPorts], run:
+If you already have [http://www.macports.org/install.php MacPorts], run:
 {{{
 sudo port install cmake python
 }}}
+
+Otherwise, visit the [http://www.cmake.org/cmake/resources/software.html CMake] and [http://www.python.org/download/ Python] download pages.
 
 == Ubuntu 9.04 ==
 
