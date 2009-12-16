@@ -19,68 +19,20 @@ tar xfvz synergy-plus-1.3.4.tar.gz
 
 *Important!* If you download the source code for 1.3.4, then please follow the [http://code.google.com/p/synergy-plus/wiki/CompilingAutomake Automake compile instructions]. However, if you're contributing to our project, we advise that you download the latest version via our Mercurial repository (option 2).
 
-= Option 2 (Mercurial) =
+= Option 2 (Subversion) =
 
 Recommended for: *Developers (more advanced)*
 
-== Install Mercurial =
+== Install Subversion =
 
-Developers should access the source code via our Mercurial (hg) repository. Mercurial can be installed on Linux, Windows and Mac.
-
-=== Windows ===
-Download and install the Mercurial [http://mercurial.berkwood.com/ Windows installer]. There is also an optional GUI tool available ([http://bitbucket.org/tortoisehg/stable/wiki/install TortoiseHG]) which may make some tasks easier.
-
-=== Mac OS X 11.5.x ===
-
-The easiest way, is to install [http://www.macports.org/ macports], then run the following command from the terminal.
-{{{
-sudo port install mercurial
-}}}
-
-=== Ubuntu 9.04 ===
-{{{
-sudo apt-get install mercurial
-}}}
-
-=== Fedora 10 ===
-{{{
-sudo yum install mercurial
-}}}
-
-=== OpenSUSE 11.1 ===
-{{{
-su
-yast2 -i mercurial
-}}}
-
-=== Mandriva One 2009 ===
-{{{
-su
-urpmi mercurial
-}}}
-
-=== !OpenSolaris 2009.06 ===
-{{{
-su
-pkg install SUNWmercurial
-}}}
+Please see the [http://subversion.tigris.org/project_packages.html Subversion project packages], for instructions on installing for your OS.
 
 == Download the Code ==
 
-Once Mercurial is installed, run the following command to download the source code to a folder named `synergy-plus` (`hg` will create the directory for you).
+Once Subversion is installed, run the following command to download the source code to a folder named `synergy-plus` (`hg` will create the directory for you).
 
 {{{
-hg clone https://synergy-plus.googlecode.com/hg/ synergy-plus 
-}}}
-
-Project members with commit access may want update their `.hg/hgrc` file:
-
-{{{
-[paths]
-default = https://my-username:my-password@synergy-plus.googlecode.com/hg/
-
-[ui]
-username = my-username
+svn checkout http://synergy-plus.googlecode.com/svn/ synergy-plus
 }}}
 
 == Compile the Code ==
