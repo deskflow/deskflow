@@ -1,5 +1,4 @@
 #summary Frequently asked questions for our end-users
-#labels Featured
 
 *Page maintainer:* [Members FAQ Manager]
 
@@ -11,19 +10,15 @@ This FAQ is for end-users. If you are a developer, please refer to [DeveloperFAQ
 
 == Q. How do I install the application? ==
 
-Download and run the latest installer from the [http://code.google.com/p/synergy-plus/downloads/list downloads page].
-
-Advanced users can follow our [Compiling compile instructions].
+Download and run the latest installer from the [http://code.google.com/p/synergy-plus/downloads/list downloads page]. Advanced users can follow our [Compiling compile instructions].
 
 == Q. How do I configure the application? ==
 
-Windows users can use the Synergy GUI application which is installed by default. Linux and Mac OS X users should take a look at [RelatedProjects], which suggests some 3rd party applications that can be used to configure Synergy+.
+Windows users can use the Synergy GUI application which is installed by default. Linux and Mac OS X users should take a look at [RelatedProjects], which suggests some 3rd party applications that can be used to configure Synergy+. Advanced users can follow our [Setup setup instructions].
 
-Advanced users can follow our [Setup setup instructions].
+== Q. How do I get help with problems? ==
 
-== Q. Where can I find the Synergy+ !ChangeLog? ==
-
-Visit the [ChangeLog] page.
+If you're having problems, please either post a new message in our [http://groups.google.com/group/synergy-plus user mailing list], or if you think you've found a bug, please create a [http://code.google.com/p/synergy-plus/issues/entry new issue].
 
 == Q. How do I lock the mouse on one screen? ==
 
@@ -31,10 +26,10 @@ This is useful for when playing computer games or other full screen applications
 
 *Note:* For users that don't have a scroll lock key, Issue 61 has been created.
 
-== Q. How secure is your application? ==
-
-Well, not very, but we're working on it. One of our targets for milestone M2 is to make synergy run over an encrypted connection. You're safe to use Synergy+ if you're on a network you trust, such as a LAN which is protected from the internet using a firewall.
-
 == Q. What's the difference between Synergy+ and a KVM? ==
 
 The biggest difference is that a KVM handles video, and Synergy+ does not. To use our application, you must have a display for each computer. Other than that, Synergy+ is better because you don't need to press a button to change input focus (just move your mouse off the edge of your screen).
+
+== Q. How secure is your application? ==
+
+Well, not very, but we're working on it. One of our targets for milestone M2 is to make synergy run over an encrypted connection. You're safe to use Synergy+ if you're on a network you trust, such as a LAN which is protected from the internet using a firewall.
