@@ -556,8 +556,8 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			// see if the configuration changed
 			if (isConfigNewer(s_configTime, s_userConfig)) {
-				CString message = getString(IDS_CONFIG_CHANGED);
-				if (askVerify(hwnd, message)) {
+				CString message2 = getString(IDS_CONFIG_CHANGED);
+				if (askVerify(hwnd, message2)) {
 					time_t configTime;
 					bool userConfig;
 					CConfig newConfig;
@@ -567,8 +567,8 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 						s_lastConfig  = ARG->m_config;
 					}
 					else {
-						message = getString(IDS_LOAD_FAILED);
-						showError(hwnd, message);
+						message2 = getString(IDS_LOAD_FAILED);
+						showError(hwnd, message2);
 						s_lastConfig = CConfig();
 					}
 				}
