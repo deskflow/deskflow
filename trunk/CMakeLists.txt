@@ -4,6 +4,7 @@ SET(VERSION_MINOR 3)
 SET(VERSION_REV 5)
 SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
+
 # The check for 2.6 may be too strict (consider lowering).
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7)
 
@@ -39,3 +40,8 @@ INCLUDE(${cmake_dir}/CMakeLists_launcher.txt)
 
 # Setup the CPack config.
 INCLUDE(${cmake_dir}/CMakeLists_cpack.txt)
+
+# add /analyze in order to unconver potential bugs in the source code
+# Details: http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
+SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
+SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /analyze")
