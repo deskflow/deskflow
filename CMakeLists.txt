@@ -41,7 +41,13 @@ INCLUDE(${cmake_dir}/CMakeLists_launcher.txt)
 # Setup the CPack config.
 INCLUDE(${cmake_dir}/CMakeLists_cpack.txt)
 
-# add /analyze in order to unconver potential bugs in the source code
-# Details: http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
-SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /analyze")
+IF(WIN32)
+	# add /analyze in order to unconver potential bugs in the source code
+	# Details: http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
+	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
+	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /analyze")
+
+ENDIF(WIN32)
+
+# this line removes "/D NDEBUG" from release, we want them in order to find bugs even on release builds.
+SET(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2")
