@@ -56,8 +56,8 @@ commands = [
 ]
 
 win32_generators = {
-	'1' : 'Visual Studio 10 2010',
-	'2' : 'Visual Studio 10 2010 Win64',
+	'1' : 'Visual Studio 10',
+	'2' : 'Visual Studio 10 Win64',
 	'3' : 'Visual Studio 9 2008',
 	'4' : 'Visual Studio 9 2008 Win64',
 	'5' : 'Visual Studio 8 2005',
