@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+# test 1
+
 # hm.py: 'Help Me', is a simple wrapper for `cmake` and `hg`.
 # 
 # This script was created for the Synergy+ project.
