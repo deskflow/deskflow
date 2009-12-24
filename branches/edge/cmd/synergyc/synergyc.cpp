@@ -603,7 +603,7 @@ parse(int argc, const char* const* argv)
 
 	if(ARG->m_pname == NULL 
 		|| argv == NULL
-		|| argc <= 1) {
+		|| argc < 1) {
 		return;
 	}
 
