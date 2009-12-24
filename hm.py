@@ -1,7 +1,12 @@
 #! /usr/bin/env python
 
+<<<<<<< .working
 # test 2
 
+=======
+# test 1
+
+>>>>>>> .merge-right.r259
 # hm.py: 'Help Me', is a simple wrapper for `cmake` and `hg`.
 # 
 # This script was created for the Synergy+ project.
