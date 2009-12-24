@@ -684,24 +684,24 @@ keyboardLLHook(int code, WPARAM wParam, LPARAM lParam)
 	if (code >= 0) {
 		// decode the message
 		KBDLLHOOKSTRUCT* info = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
-		WPARAM wParam = info->vkCode;
-		LPARAM lParam = 1;							// repeat code
-		lParam      |= (info->scanCode << 16);		// scan code
+		WPARAM wParam2 = info->vkCode;
+		LPARAM lParam2 = 1;							// repeat code
+		lParam2      |= (info->scanCode << 16);		// scan code
 		if (info->flags & LLKHF_EXTENDED) {
-			lParam  |= (1lu << 24);					// extended key
+			lParam2  |= (1lu << 24);					// extended key
 		}
 		if (info->flags & LLKHF_ALTDOWN) {
-			lParam  |= (1lu << 29);					// context code
+			lParam2  |= (1lu << 29);					// context code
 		}
 		if (info->flags & LLKHF_UP) {
-			lParam  |= (1lu << 31);					// transition
+			lParam2  |= (1lu << 31);					// transition
 		}
 		// FIXME -- bit 30 should be set if key was already down but
 		// we don't know that info.  as a result we'll never generate
 		// key repeat events.
 
 		// handle the message
-		if (keyboardHookHandler(wParam, lParam)) {
+		if (keyboardHookHandler(wParam2, lParam2)) {
 			return 1;
 		}
 	}
@@ -822,6 +822,7 @@ BOOL WINAPI _DllMainCRTStartup(
 // intrinsic memcpy.
 void *  __cdecl memcpy(void * _Dst, const void * _Src, size_t _MaxCount)
 {
+	assert(_Dst);
   void * _DstBackup = _Dst;
   switch (_MaxCount & 3) {
   case 3:
@@ -835,6 +836,7 @@ void *  __cdecl memcpy(void * _Dst, const void * _Src, size_t _MaxCount)
     ++(char*&)_Src;
     --_MaxCount;
   case 1:
+	  assert(_Src);
     ((char*)_Dst)[0] = ((char*)_Src)[0];
     ++(char*&)_Dst;
     ++(char*&)_Src;
