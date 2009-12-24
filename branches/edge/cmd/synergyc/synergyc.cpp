@@ -601,9 +601,9 @@ parse(int argc, const char* const* argv)
 	assert(argv         != NULL);
 	assert(argc         >= 1);
 
-	if(ARG->m_pname != NULL 
-		|| argv != NULL
-		|| argc >= 1) {
+	if(ARG->m_pname == NULL 
+		|| argv == NULL
+		|| argc <= 1) {
 		return;
 	}
 
