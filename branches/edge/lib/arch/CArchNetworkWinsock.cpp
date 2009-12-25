@@ -214,6 +214,7 @@ CArchSocket
 CArchNetworkWinsock::copySocket(CArchSocket s)
 {
 	assert(s != NULL);
+	if(s==NULL) throw "CArchSocket is NULL";
 
 	// ref the socket and return it
 	ARCH->lockMutex(m_mutex);
@@ -226,6 +227,7 @@ void
 CArchNetworkWinsock::closeSocket(CArchSocket s)
 {
 	assert(s != NULL);
+	if(s==NULL) throw "CArchSocket is NULL";
 
 	// unref the socket and note if it should be released
 	ARCH->lockMutex(m_mutex);
@@ -251,6 +253,7 @@ void
 CArchNetworkWinsock::closeSocketForRead(CArchSocket s)
 {
 	assert(s != NULL);
+	if(s==NULL) throw "CArchSocket is NULL";
 
 	if (shutdown_winsock(s->m_socket, SD_RECEIVE) == SOCKET_ERROR) {
 		if (getsockerror_winsock() != WSAENOTCONN) {
@@ -263,6 +266,7 @@ void
 CArchNetworkWinsock::closeSocketForWrite(CArchSocket s)
 {
 	assert(s != NULL);
+	if(s==NULL) throw "CArchSocket is NULL";
 
 	if (shutdown_winsock(s->m_socket, SD_SEND) == SOCKET_ERROR) {
 		if (getsockerror_winsock() != WSAENOTCONN) {
@@ -276,6 +280,8 @@ CArchNetworkWinsock::bindSocket(CArchSocket s, CArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
+	if(s==NULL) throw "CArchSocket is NULL";
+	if(addr==NULL) throw "CArchNetAddress is NULL";
 
 	if (bind_winsock(s->m_socket, &addr->m_addr, addr->m_len) == SOCKET_ERROR) {
 		throwError(getsockerror_winsock());
@@ -286,6 +292,7 @@ void
 CArchNetworkWinsock::listenOnSocket(CArchSocket s)
 {
 	assert(s != NULL);
+	if(s==NULL) throw "CArchSocket is NULL";
 
 	// hardcoding backlog
 	if (listen_winsock(s->m_socket, 3) == SOCKET_ERROR) {
@@ -297,6 +304,7 @@ CArchSocket
 CArchNetworkWinsock::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 {
 	assert(s != NULL);
+	if(s==NULL) throw "CArchSocket is NULL";
 
 	// create new socket and temporary address
 	CArchSocketImpl* socket = new CArchSocketImpl;
@@ -346,6 +354,8 @@ CArchNetworkWinsock::connectSocket(CArchSocket s, CArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
+	if(addr==NULL) throw "CArchNetAddress is NULL";
+	if(s==NULL) throw "CArchSocket is NULL";
 
 	if (connect_winsock(s->m_socket, &addr->m_addr,
 							addr->m_len) == SOCKET_ERROR) {
@@ -673,6 +683,7 @@ CArchNetAddress
 CArchNetworkWinsock::copyAddr(CArchNetAddress addr)
 {
 	assert(addr != NULL);
+	if(addr==NULL) throw "CArchNetAddress is NULL";
 
 	CArchNetAddressImpl* copy = CArchNetAddressImpl::alloc(addr->m_len);
 	memcpy(TYPED_ADDR(void, copy), TYPED_ADDR(void, addr), addr->m_len);
@@ -733,6 +744,7 @@ std::string
 CArchNetworkWinsock::addrToName(CArchNetAddress addr)
 {
 	assert(addr != NULL);
+	if(addr==NULL) throw "CArchNetAddress is NULL";
 
 	// name lookup
 	struct hostent* info = gethostbyaddr_winsock(
@@ -750,6 +762,7 @@ std::string
 CArchNetworkWinsock::addrToString(CArchNetAddress addr)
 {
 	assert(addr != NULL);
+	if(addr==NULL) throw "CArchNetAddress is NULL";
 
 	switch (getAddrFamily(addr)) {
 	case kINET: {
@@ -768,6 +781,7 @@ IArchNetwork::EAddressFamily
 CArchNetworkWinsock::getAddrFamily(CArchNetAddress addr)
 {
 	assert(addr != NULL);
+	if(addr==NULL) throw "CArchNetAddress is NULL";
 
 	switch (addr->m_addr.sa_family) {
 	case AF_INET:
@@ -782,6 +796,7 @@ void
 CArchNetworkWinsock::setAddrPort(CArchNetAddress addr, int port)
 {
 	assert(addr != NULL);
+	if(addr==NULL) throw "CArchNetAddress is NULL";
 
 	switch (getAddrFamily(addr)) {
 	case kINET: {
@@ -801,6 +816,7 @@ int
 CArchNetworkWinsock::getAddrPort(CArchNetAddress addr)
 {
 	assert(addr != NULL);
+	if(addr==NULL) throw "CArchNetAddress is NULL";
 
 	switch (getAddrFamily(addr)) {
 	case kINET: {
@@ -819,6 +835,7 @@ bool
 CArchNetworkWinsock::isAnyAddr(CArchNetAddress addr)
 {
 	assert(addr != NULL);
+	if(addr==NULL) throw "CArchNetAddress is NULL";
 
 	switch (getAddrFamily(addr)) {
 	case kINET: {

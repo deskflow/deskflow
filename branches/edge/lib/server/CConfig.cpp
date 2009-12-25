@@ -1862,7 +1862,7 @@ CConfigReadContext::readLine(CString& line)
 		if (!line.empty()) {
 			// make sure there are no invalid characters
 			for (i = 0; i < line.length(); ++i) {
-				if (!isgraph(line[i]) && line[i] != ' ' && line[i] != '\t') {
+				if (!isgraph((unsigned char)line[i]) && line[i] != ' ' && line[i] != '\t') {
 					throw XConfigRead(*this,
 								"invalid character %{1}",
 								CStringUtil::print("%#2x", line[i]));

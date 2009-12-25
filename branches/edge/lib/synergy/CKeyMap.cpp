@@ -160,7 +160,7 @@ CKeyMap::addKeyCombinationEntry(KeyID id, SInt32 group,
 		if (gtIndex == m_keyIDMap.end()) {
 			return false;
 		}
-		const KeyGroupTable& groupTable = gtIndex->second;
+		groupTable = gtIndex->second;
 
 		// if we allow group switching during composition then search all
 		// groups for keys, otherwise search just the given group.
@@ -521,8 +521,8 @@ CKeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
 	for (SInt32 groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
 		SInt32 effectiveGroup = getEffectiveGroup(group, groupOffset);
 		const KeyEntryList& entryList = keyGroupTable[effectiveGroup];
-		for (size_t i = 0; i < entryList.size(); ++i) {
-			if (entryList[i].size() != 1) {
+		for (size_t j = 0; j < entryList.size(); ++j) {
+			if (entryList[j].size() != 1) {
 				// ignore multikey entries
 				continue;
 			}
@@ -531,7 +531,7 @@ CKeyMap::mapCommandKey(Keystrokes& keys, KeyID id, SInt32 group,
 			// not the right character.  we'll use desiredMask as-is,
 			// overriding the key's required modifiers, when synthesizing
 			// this button.
-			const KeyItem& item = entryList[i].back();
+			const KeyItem& item = entryList[j].back();
 			if ((item.m_required & KeyModifierShift & desiredMask) ==
 				(item.m_sensitive & KeyModifierShift & desiredMask)) {
 				LOG((CLOG_DEBUG1 "found key in group %d", effectiveGroup));
@@ -1184,7 +1184,7 @@ CKeyMap::parseKey(const CString& x, KeyID& key)
 	}
 	// XXX -- we're assuming ASCII encoding here
 	else if (x.size() == 1) {
-		if (!isgraph(x[0])) {
+		if (!isgraph((unsigned char)x[0])) {
 			// unknown key
 			return false;
 		}
@@ -1237,8 +1237,8 @@ CKeyMap::parseModifiers(CString& x, KeyModifierMask& mask)
 		else {
 			// unknown string
 			x.erase(0, tb);
-			CString::size_type tb = x.find_first_not_of(" \t");
-			CString::size_type te = x.find_last_not_of(" \t");
+			tb = x.find_first_not_of(" \t");
+			te = x.find_last_not_of(" \t");
 			if (tb == CString::npos) {
 				x = "";
 			}

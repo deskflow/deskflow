@@ -98,6 +98,10 @@
 	// this one's a little too aggressive
 #	pragma warning(disable: 4127) // conditional expression is constant
 
+	// Code Analysis
+#	pragma warning(disable: 6011)
+
+
 	// emitted incorrectly under release build in some circumstances
 #	if defined(NDEBUG)
 #		pragma warning(disable: 4702) // unreachable code

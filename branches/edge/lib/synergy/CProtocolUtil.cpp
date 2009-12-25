@@ -200,7 +200,7 @@ CProtocolUtil::vreadf(IStream* stream, const char* fmt, va_list args)
 				// read the string length
 				UInt8 buffer[128];
 				read(stream, buffer, 4);
-				UInt32 len = (static_cast<UInt32>(buffer[0]) << 24) |
+				len = (static_cast<UInt32>(buffer[0]) << 24) |
 							 (static_cast<UInt32>(buffer[1]) << 16) |
 							 (static_cast<UInt32>(buffer[2]) <<  8) |
 							  static_cast<UInt32>(buffer[3]);
@@ -434,7 +434,7 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 			case 's': {
 				assert(len == 0);
 				const CString* src = va_arg(args, CString*);
-				const UInt32 len = (src != NULL) ? (UInt32)src->size() : 0;
+				len = (src != NULL) ? (UInt32)src->size() : 0;
 				*dst++ = static_cast<UInt8>((len >> 24) & 0xff);
 				*dst++ = static_cast<UInt8>((len >> 16) & 0xff);
 				*dst++ = static_cast<UInt8>((len >>  8) & 0xff);
@@ -448,7 +448,7 @@ CProtocolUtil::writef(void* buffer, const char* fmt, va_list args)
 
 			case 'S': {
 				assert(len == 0);
-				const UInt32 len = va_arg(args, UInt32);
+				len = va_arg(args, UInt32);
 				const UInt8* src = va_arg(args, UInt8*);
 				*dst++ = static_cast<UInt8>((len >> 24) & 0xff);
 				*dst++ = static_cast<UInt8>((len >> 16) & 0xff);

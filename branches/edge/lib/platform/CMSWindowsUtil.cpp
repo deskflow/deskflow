@@ -40,7 +40,7 @@ CMSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 	do {
 		size <<= 1;
 		delete[] msg;
-		char* msg = new char[size];
+		msg = new char[size];
 		n = LoadString(instance, id, msg, size);
 	} while (n == size);
 	msg[n] = '\0';
