@@ -4,6 +4,7 @@ SET(src_lib_arch
 	${root_lib}/arch/CArch.cpp
 	${root_lib}/arch/CArchDaemonNone.cpp
 	${root_lib}/arch/XArch.cpp
+	${root_lib}/arch/CArchConsoleStd.cpp
 )
 
 SET(src_lib_arch_unix
@@ -51,6 +52,7 @@ SET(inc_lib_arch_windows
 	${root_lib}/arch/CArchTaskBarWindows.h
 	${root_lib}/arch/CArchTimeWindows.h
 	${root_lib}/arch/XArchWindows.h
+	${root_lib}/arch/CArchConsoleStd.h
 )
 
 SET(src_lib_base

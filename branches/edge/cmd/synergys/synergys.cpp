@@ -33,6 +33,8 @@
 #include "LogOutputters.h"
 #include "CArch.h"
 #include "XArch.h"
+#include "CArchConsoleStd.h"
+
 #include "stdfstream.h"
 #include <cstring>
 
@@ -318,8 +320,17 @@ CServer*
 openServer(const CConfig& config, CPrimaryClient* primaryClient)
 {
 	CServer* server = new CServer(config, primaryClient);
-	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
-						new CFunctionEventJob(handleNoClients));
+	
+	try {
+		EVENTQUEUE->adoptHandler(
+			CServer::getDisconnectedEvent(), server,
+			new CFunctionEventJob(handleNoClients));
+
+	} catch (std::bad_alloc &ba) {
+		delete server;
+		throw ba;
+	}
+	
 	return server;
 }
 
@@ -868,61 +879,61 @@ help()
 
 #endif
 
-	LOG((CLOG_PRINT
-"Usage: %s"
-" [--address <address>]"
-" [--config <pathname>]"
-" [--debug <level>]"
-USAGE_DISPLAY_ARG
-" [--name <screen-name>]"
-" [--restart|--no-restart]"
-PLATFORM_ARGS
-"\n\n"
-"Start the synergy mouse/keyboard sharing server.\n"
-"\n"
-"  -a, --address <address>  listen for clients on the given address.\n"
-"  -c, --config <pathname>  use the named configuration file instead.\n"
-"  -d, --debug <level>      filter out log messages with priorty below level.\n"
-"                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
-"                           DEBUG, DEBUG1, DEBUG2.\n"
-USAGE_DISPLAY_INFO
-"  -f, --no-daemon          run the server in the foreground.\n"
-"*     --daemon             run the server as a daemon.\n"
-"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
-"                           this screen in the configuration.\n"
-"  -1, --no-restart         do not try to restart the server if it fails for\n"
-"                           some reason.\n"
-"*     --restart            restart the server automatically if it fails.\n"
-"  -l  --log <file>         write log messages to file.\n"
-PLATFORM_DESC
-"  -h, --help               display this help and exit.\n"
-"      --version            display version information and exit.\n"
-"\n"
-"* marks defaults.\n"
-"\n"
-PLATFORM_EXTRA
-"The argument for --address is of the form: [<hostname>][:<port>].  The\n"
-"hostname must be the address or hostname of an interface on the system.\n"
-"The default is to listen on all interfaces.  The port overrides the\n"
-"default port, %d.\n"
-"\n"
-"If no configuration file pathname is provided then the first of the\n"
-"following to load successfully sets the configuration:\n"
-"  %s\n"
-"  %s\n"
-"If no configuration file can be loaded then the configuration uses its\n"
-"defaults with just the server screen.\n"
-"\n"
-"Where log messages go depends on the platform and whether or not the\n"
-"server is running as a daemon.",
-								ARG->m_pname,
-								kDefaultPort,
-								ARCH->concatPath(
-									ARCH->getUserDirectory(),
-									USR_CONFIG_NAME).c_str(),
-								ARCH->concatPath(
-									ARCH->getSystemDirectory(),
-									SYS_CONFIG_NAME).c_str()));
+	char buffer[2000];
+	sprintf(
+		buffer,
+		"Usage: %s"
+		" [--address <address>]"
+		" [--config <pathname>]"
+		" [--debug <level>]"
+		USAGE_DISPLAY_ARG
+		" [--name <screen-name>]"
+		" [--restart|--no-restart]"
+		PLATFORM_ARGS
+		"\n\n"
+		"Start the synergy mouse/keyboard sharing server.\n"
+		"\n"
+		"  -a, --address <address>  listen for clients on the given address.\n"
+		"  -c, --config <pathname>  use the named configuration file instead.\n"
+		"  -d, --debug <level>      filter out log messages with priorty below level.\n"
+		"                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
+		"                           DEBUG, DEBUG1, DEBUG2.\n"
+		USAGE_DISPLAY_INFO
+		"  -f, --no-daemon          run the server in the foreground.\n"
+		"*     --daemon             run the server as a daemon.\n"
+		"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
+		"                           this screen in the configuration.\n"
+		"  -1, --no-restart         do not try to restart the server if it fails for\n"
+		"                           some reason.\n"
+		"*     --restart            restart the server automatically if it fails.\n"
+		"  -l  --log <file>         write log messages to file.\n"
+		PLATFORM_DESC
+		"  -h, --help               display this help and exit.\n"
+		"      --version            display version information and exit.\n"
+		"\n"
+		"* marks defaults.\n"
+		"\n"
+		PLATFORM_EXTRA
+		"The argument for --address is of the form: [<hostname>][:<port>].  The\n"
+		"hostname must be the address or hostname of an interface on the system.\n"
+		"The default is to listen on all interfaces.  The port overrides the\n"
+		"default port, %d.\n"
+		"\n"
+		"If no configuration file pathname is provided then the first of the\n"
+		"following to load successfully sets the configuration:\n"
+		"  %s\n"
+		"  %s\n"
+		"If no configuration file can be loaded then the configuration uses its\n"
+		"defaults with just the server screen.\n"
+		"\n"
+		"Where log messages go depends on the platform and whether or not the\n"
+		"server is running as a daemon.",
+		ARG->m_pname, kDefaultPort,
+		ARCH->concatPath(ARCH->getUserDirectory(), USR_CONFIG_NAME).c_str(),
+		ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME).c_str()
+	);
+
+	std::cout << buffer << std::endl;
 }
 
 static
@@ -951,8 +962,13 @@ void
 parse(int argc, const char* const* argv)
 {
 	assert(ARG->m_pname != NULL);
-	assert(argv       != NULL);
-	assert(argc       >= 1);
+	assert(argc >= 1);
+	assert(argv);
+
+	// this return is just to avoid C6011 warning
+	if (!argv) {
+		return;
+	}
 
 	// set defaults
 	ARG->m_name = ARCH->getHostName();
@@ -1263,6 +1279,15 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 	MessageBox(NULL, msg.c_str(), title, MB_OK | MB_ICONWARNING);
 }
 
+int main(int argc, char** argv) {
+	HINSTANCE instance = GetModuleHandle(NULL);
+	if (instance) {
+		return WinMain(instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
+	} else {
+		return 1;
+	}
+}
+
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
@@ -1300,8 +1325,10 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			}
 		}
 
-		// send PRINT and FATAL output to a message box
-		int result = run(__argc, __argv, new CMessageBoxOutputter, startup);
+		// previously we'd send PRINT and FATAL output to a message box, but now
+		// that we're using an MS console window for Windows, there's no need really
+		//int result = run(__argc, __argv, new CMessageBoxOutputter, startup);
+		int result = run(__argc, __argv, NULL, startup);
 
 		// let user examine any messages if we're running as a backend
 		// by putting up a dialog box before exiting.

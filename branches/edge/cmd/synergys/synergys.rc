@@ -70,7 +70,6 @@ BEGIN
     POPUP "Synergy"
     BEGIN
         MENUITEM "Show Status",                 IDC_TASKBAR_STATUS
-        MENUITEM "Show Log",                    IDC_TASKBAR_SHOW_LOG
         MENUITEM "Copy Log To Clipboard",       IDC_TASKBAR_LOG
         POPUP "Set Log Level"
         BEGIN

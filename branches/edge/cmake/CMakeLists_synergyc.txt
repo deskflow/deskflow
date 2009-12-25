@@ -66,5 +66,5 @@ SET(inc_dirs_cmd_synergyc
 )
 
 INCLUDE_DIRECTORIES(${inc_dirs_cmd_synergyc})
-ADD_EXECUTABLE(synergyc WIN32 ${src_cmd_synergyc})
+ADD_EXECUTABLE(synergyc ${src_cmd_synergyc})
 TARGET_LINK_LIBRARIES(synergyc synergy ${libs})
