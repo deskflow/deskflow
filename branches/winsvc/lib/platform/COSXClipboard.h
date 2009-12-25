@@ -39,16 +39,17 @@ public:
 	virtual bool		has(EFormat) const;
 	virtual CString		get(EFormat) const;
 
-	bool				synchronize();
 private:
 	void				clearConverters();
+	static CFStringRef
+						getOwnershipFlavor();
 
 private:
 	typedef std::vector<IOSXClipboardConverter*> ConverterList;
 
 	mutable Time		m_time;
 	ConverterList		m_converters;
-	PasteboardRef		m_pboard;
+	mutable PasteboardRef	m_pboard;
 };
 
 //! Clipboard format converter interface

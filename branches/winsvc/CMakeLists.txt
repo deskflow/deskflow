@@ -4,13 +4,12 @@ SET(VERSION_MINOR 3)
 SET(VERSION_REV 5)
 SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
-
 # The check for 2.6 may be too strict (consider lowering).
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7)
 
 # CMake complains if we don't have this.
 IF(COMMAND cmake_policy)
-	CMAKE_POLICY(SET CMP0003 NEW)
+  CMAKE_POLICY(SET CMP0003 NEW)
 ENDIF(COMMAND cmake_policy)
 
 # We're escaping quotes in the Windows version number, because
@@ -18,7 +17,7 @@ ENDIF(COMMAND cmake_policy)
 # It seems that this restores the newer behaviour where define
 # args are not auto-escaped.
 IF(COMMAND cmake_policy)
-	CMAKE_POLICY(SET CMP0005 NEW)
+  CMAKE_POLICY(SET CMP0005 NEW)
 ENDIF(COMMAND cmake_policy)
 
 # First, declare project (important for prerequisite checks).
@@ -40,14 +39,3 @@ INCLUDE(${cmake_dir}/CMakeLists_launcher.txt)
 
 # Setup the CPack config.
 INCLUDE(${cmake_dir}/CMakeLists_cpack.txt)
-
-IF(WIN32)
-	# add /analyze in order to unconver potential bugs in the source code
-	# Details: http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx
-	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
-	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /analyze")
-
-ENDIF(WIN32)
-
-# this line removes "/D NDEBUG" from release, we want them in order to find bugs even on release builds.
-SET(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2")

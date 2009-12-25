@@ -868,10 +868,7 @@ void
 CMSWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
 	BYTE keyState[256];
-	if (!GetKeyboardState(keyState)) {
-		LOG((CLOG_ERR "GetKeyboardState returned false on pollPressedKeys"));
-		return;
-	}
+	GetKeyboardState(keyState);
 	for (KeyButton i = 1; i < 256; ++i) {
 		if ((keyState[i] & 0x80) != 0) {
 			pressedKeys.insert(i);

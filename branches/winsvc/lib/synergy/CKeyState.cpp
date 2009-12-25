@@ -17,8 +17,6 @@
 #include "CLog.h"
 #include <cstring>
 #include <algorithm>
-#include <iterator>
-#include <list>
 
 static const KeyButton kButtonMask = (KeyButton)(IKeyState::kNumButtons - 1);
 

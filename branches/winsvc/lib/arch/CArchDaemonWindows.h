@@ -82,6 +82,7 @@ public:
 	virtual int			daemonize(const char* name, DaemonFunc func);
 	virtual bool		canInstallDaemon(const char* name, bool allUsers);
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
+	static std::string	getArgs() { return s_daemon->m_commandLine; }
 
 private:
 	static HKEY			openNTServicesKey();
@@ -114,7 +115,7 @@ private:
 	};
 
 private:
-	static CArchDaemonWindows*	s_daemon;
+	static CArchDaemonWindows* s_daemon;
 
 	CArchMutex			m_serviceMutex;
 	CArchCond			m_serviceCondVar;
@@ -129,6 +130,7 @@ private:
 	SERVICE_STATUS_HANDLE m_statusHandle;
 
 	UINT				m_quitMessage;
+	std::string			m_commandLine;
 };
 
 #endif

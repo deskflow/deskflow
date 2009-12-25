@@ -9,13 +9,15 @@
 SET(cpack_targets synergys synergyc)
 
 IF(WIN32)
-	# Windows has an extra GUI and DLL.
-	LIST(APPEND cpack_targets launcher synrgyhk)
+
+  # Windows has an extra GUI and DLL.
+  LIST(APPEND cpack_targets launcher synrgyhk)
+
 ENDIF(WIN32)
 
 INSTALL(
-	TARGETS ${cpack_targets}
-	RUNTIME DESTINATION bin)
+  TARGETS ${cpack_targets}
+  RUNTIME DESTINATION bin)
 
 # The default CPack behaviour is not to append the system processor
 # type, which is undesirable in our case, since we want to support 
@@ -40,9 +42,9 @@ ENDIF(WIN32)
 
 # For source code, use .tar.gz on Unix, and .zip on Windows
 IF(UNIX)
-	SET(CPACK_SOURCE_GENERATOR TGZ)
+  SET(CPACK_SOURCE_GENERATOR TGZ)
 ELSE(UNIX)
-	SET(CPACK_SOURCE_GENERATOR ZIP)
+  SET(CPACK_SOURCE_GENERATOR ZIP)
 ENDIF(UNIX)
 
 SET(CPACK_PACKAGE_NAME "synergy-plus")
@@ -57,22 +59,22 @@ SET(CPACK_RESOURCE_FILE_LICENSE "${cmake_dir}/License.rtf")
 SET(CPACK_RESOURCE_FILE_README "${cmake_dir}/Readme.txt")
 
 IF(WIN32)
-	SET(WIN32_ICON "${root_dir}/cmd/launcher/synergy.ico")
-	SET(CPACK_NSIS_MUI_ICON ${WIN32_ICON})
-	SET(CPACK_NSIS_MUI_UNIICON ${WIN32_ICON})
-	SET(CPACK_NSIS_INSTALLED_ICON_NAME launcher)
-	SET(CPACK_PACKAGE_INSTALL_DIRECTORY "Synergy+")
-	SET(CPACK_PACKAGE_EXECUTABLES launcher;Synergy+)
+  SET(WIN32_ICON "${root_dir}/cmd/launcher/synergy.ico")
+  SET(CPACK_NSIS_MUI_ICON ${WIN32_ICON})
+  SET(CPACK_NSIS_MUI_UNIICON ${WIN32_ICON})
+  SET(CPACK_NSIS_INSTALLED_ICON_NAME launcher)
+  SET(CPACK_PACKAGE_INSTALL_DIRECTORY "Synergy+")
+  SET(CPACK_PACKAGE_EXECUTABLES launcher;Synergy+)
 ENDIF(WIN32)
 
 # For source package, leave out temp and Mercurial stuff.
 SET(CPACK_SOURCE_IGNORE_FILES
-	"/build/"		# Temp CMake build dir.
-	"/bin/"			# Temp binary output dir.
-	"/.hg/"			# Mercurial repo cache.
-	"/.hgignore"	# Mercurial ignore list (not neede by end-user).
-	".*~"			# Emacs temporary files.
-	"/config.h"		# The config.h file should be generated.
+  "/build/"	# Temp CMake build dir.
+  "/bin/" 	# Temp binary output dir.
+  "/.hg/" 	# Mercurial repo cache.
+  "/.hgignore"	# Mercurial ignore list (not neede by end-user).
+  ".*~" 	# Emacs temporary files.
+  "/config.h" 	# The config.h file should be generated.
 )
 
 # Must be last (since it relies of CPACK_ vars).

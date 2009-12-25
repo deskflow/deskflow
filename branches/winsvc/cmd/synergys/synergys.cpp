@@ -42,7 +42,13 @@
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsUtil.h"
 #include "CMSWindowsServerTaskBarReceiver.h"
+#include "CArchLogWindows.h"
 #include "resource.h"
+#include <Wtsapi32.h>
+#include <Tlhelp32.h>
+#pragma warning(disable: 4099)
+#include <Userenv.h>
+#pragma warning(default: 4099)
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif WINAPI_XWINDOWS
@@ -55,7 +61,7 @@
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
-#define DAEMON_NAME "Synergy Server"
+#define DAEMON_NAME "Synergy+ Server"
 #elif SYSAPI_UNIX
 #define DAEMON_NAME "synergys"
 #endif
@@ -70,6 +76,8 @@
 #endif
 
 typedef int (*StartupFunc)(int, char**);
+typedef std::list<ILogOutputter*> COutputterList;
+
 static void parse(int argc, const char* const* argv);
 static bool loadConfig(const CString& pathname);
 static void loadConfig();
@@ -89,7 +97,6 @@ public:
 		m_daemon(true),
 		m_configFile(),
 		m_logFilter(NULL),
-		m_logFile(NULL),
 		m_display(NULL),
 		m_synergyAddress(NULL),
 		m_config(NULL)
@@ -104,7 +111,6 @@ public:
 	bool				m_daemon;
 	CString		 		m_configFile;
 	const char* 		m_logFilter;
-	const char*			m_logFile;
 	const char*			m_display;
 	CString 			m_name;
 	CNetworkAddress*	m_synergyAddress;
@@ -654,17 +660,6 @@ mainLoop()
 	// create the event queue
 	CEventQueue eventQueue;
 
-	// logging to files
-	CFileLogOutputter* fileLog = NULL;
-
-	if (ARG->m_logFile != NULL) {
-		fileLog = new CFileLogOutputter(ARG->m_logFile);
-
-		CLOG->insert(fileLog);
-
-		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", ARG->m_logFile));
-	}
-
 	// if configuration has no screens then add this system
 	// as the default
 	if (ARG->m_config->begin() == ARG->m_config->end()) {
@@ -717,13 +712,21 @@ mainLoop()
 	// later.  the timer installed by startServer() will take care of
 	// that.
 	CEvent event;
+	
+	// on windows, tell the service controller the service has started
+	// but what we'll be doing from now on is re-launching process
+	// and just using the service as a means to re-launch when the
+	// active session changes (as per Session0_Vista.docx).
+	// so this is now probably useless (for Windows anyway).
 	DAEMON_RUNNING(true);
+
 	EVENTQUEUE->getEvent(event);
 	while (event.getType() != CEvent::kQuit) {
 		EVENTQUEUE->dispatchEvent(event);
 		CEvent::deleteData(event);
 		EVENTQUEUE->getEvent(event);
 	}
+
 	DAEMON_RUNNING(false);
 
 	// close down
@@ -735,11 +738,6 @@ mainLoop()
 	cleanupServer();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
-
-	if (fileLog) {
-		CLOG->remove(fileLog);
-		delete fileLog;		
-	}
 
 	return kExitSuccess;
 }
@@ -778,17 +776,25 @@ standardStartup(int argc, char** argv)
 
 static
 int
-run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+run(int argc, char** argv, const COutputterList outputterList, StartupFunc startup)
 {
 	// general initialization
 	ARG->m_synergyAddress = new CNetworkAddress;
 	ARG->m_config         = new CConfig;
 	ARG->m_pname          = ARCH->getBasename(argv[0]);
 
-	// install caller's output filter
-	if (outputter != NULL) {
-		CLOG->insert(outputter);
+	assert(outputterList.size() != 0);
+	
+	// allow us to add multiple log outputters into the logging system
+	for (COutputterList::const_iterator index = outputterList.begin();
+		index != outputterList.end(); ++index) {
+			CLOG->insert(*index);
 	}
+
+	//// install caller's output filter
+	//if (outputter != NULL) {
+	//	CLOG->insert(outputter);
+	//}
 
 	// save log messages
 	CBufferedLogOutputter logBuffer(1000);
@@ -812,6 +818,14 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 	return result;
 }
 
+static
+int
+run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+{
+	COutputterList outputterList;
+	outputterList.push_back(outputter);
+	return run(argc, argv, outputterList, startup);
+}
 
 //
 // command line parsing
@@ -893,7 +907,6 @@ USAGE_DISPLAY_INFO
 "  -1, --no-restart         do not try to restart the server if it fails for\n"
 "                           some reason.\n"
 "*     --restart            restart the server automatically if it fails.\n"
-"  -l  --log <file>         write log messages to file.\n"
 PLATFORM_DESC
 "  -h, --help               display this help and exit.\n"
 "      --version            display version information and exit.\n"
@@ -1005,10 +1018,6 @@ parse(int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, NULL, "--daemon")) {
 			// daemonize
 			ARG->m_daemon = true;
-		}
-		else if (isArg(i, argc, argv, "-l", "--log", 1)) {
-			// logging to file
-			ARG->m_logFile = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, "-1", "--no-restart")) {
@@ -1220,14 +1229,285 @@ byeThrow(int x)
 	CArchMiscWindows::daemonFailed(x);
 }
 
+// this still gets the physical session (the one the keyboard and 
+// mouse is connected to), sometimes this returns -1 but not sure why
+DWORD getSessionId()
+{
+	return WTSGetActiveConsoleSessionId();
+}
+
+BOOL
+winlogonInSession(DWORD sessionId, PHANDLE process)
+{
+	// first we need to take a snapshot of the running processes
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (snapshot == INVALID_HANDLE_VALUE) {
+		LOG((CLOG_ERR "could not get process snapshot (error: %i)", 
+			GetLastError()));
+		return 0;
+	}
+	
+	PROCESSENTRY32 entry;
+	entry.dwSize = sizeof(PROCESSENTRY32);
+	
+	// get the first process, and if we can't do that then it's 
+	// unlikely we can go any further
+	BOOL gotEntry = Process32First(snapshot, &entry);
+	if (!gotEntry) {
+		LOG((CLOG_ERR "could not get first process entry (error: %i)", 
+			GetLastError()));
+		return 0;
+	}
+
+	// used to record process names for debug info
+	std::list<std::string> nameList;
+
+	// now just iterate until we can find winlogon.exe pid
+	DWORD pid = 0;
+	while(gotEntry) {
+
+		// make sure we're not checking the system process
+		if (entry.th32ProcessID != 0) {
+
+			DWORD processSessionId;
+			BOOL pidToSidRet = ProcessIdToSessionId(
+				entry.th32ProcessID, &processSessionId);
+
+			if (!pidToSidRet) {
+				LOG((CLOG_ERR "could not get session id for process id %i (error: %i)",
+					entry.th32ProcessID, GetLastError()));
+				return 0;
+			}
+
+			// only pay attention to processes in the active session
+			if (processSessionId == sessionId) {
+
+				// store the names so we can record them for debug
+				nameList.push_back(entry.szExeFile);
+
+				if (_stricmp(entry.szExeFile, "winlogon.exe") == 0) {
+					pid = entry.th32ProcessID;
+					break;
+				}
+			}
+		}
+
+		// now move on to the next entry (if we're not at the end)
+		gotEntry = Process32Next(snapshot, &entry);
+		if (!gotEntry) {
+
+			DWORD err = GetLastError();
+			if (err != ERROR_NO_MORE_FILES) {
+
+				// only worry about error if it's not the end of the snapshot
+				LOG((CLOG_ERR "could not get subsiquent process entry (error: %i)", 
+					GetLastError()));
+				return 0;
+			}
+		}
+	}
+
+	std::string nameListJoin;
+	for(std::list<std::string>::iterator it = nameList.begin();
+		it != nameList.end(); it++) {
+			nameListJoin.append(*it);
+			nameListJoin.append(", ");
+	}
+
+	LOG((CLOG_DEBUG "checked processes while looking for winlogon.exe: %s",
+		nameListJoin.c_str()));
+
+	CloseHandle(snapshot);
+
+	if (pid) {
+		// now get the process so we can get the process, with which
+		// we'll use to get the process token.
+		*process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
+		return true;
+	}
+	else {
+		LOG((CLOG_DEBUG "could not find winlogon.exe in session %i", sessionId));
+		return false;
+	}
+}
+
+// gets the current user (so we can launch under their session)
+HANDLE 
+getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security)
+{
+	HANDLE currentToken;
+	HANDLE winlogonProcess;
+
+	if (winlogonInSession(sessionId, &winlogonProcess)) {
+	
+		LOG((CLOG_DEBUG "session %i has winlogon.exe", sessionId));
+
+		// get the token, so we can re-launch with this token
+		// -- do we really need all these access bits?
+		BOOL tokenRet = OpenProcessToken(
+			winlogonProcess,
+			TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY | 
+			TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY | 
+			TOKEN_ADJUST_SESSIONID | TOKEN_READ | TOKEN_WRITE,
+			&currentToken);
+	}
+	else {
+
+		LOG((CLOG_ERR "session %i does not have winlogon.exe "
+			"which is needed for re-launch", sessionId));
+		return 0;
+	}
+
+	HANDLE primaryToken;
+	BOOL duplicateRet = DuplicateTokenEx(
+		currentToken, MAXIMUM_ALLOWED, security,
+		SecurityImpersonation, TokenPrimary, &primaryToken);
+	
+	if (!duplicateRet) {
+		LOG((CLOG_ERR "could not duplicate token %i (error: %i)",
+			currentToken, GetLastError()));
+		return 0;
+	}
+	
+	return primaryToken;
+}
+
+static
+int
+daemonNTRelaunchLoop()
+{
+	DAEMON_RUNNING(true);
+	
+	// has to be a better way to trap debug when running as service
+	//while(true) { Sleep(100); }
+
+	// start with invalid id (gets re-assigned on first loop)
+	DWORD sessionId = -1;
+
+	// keep here so we can check if proc running
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+
+	// create the event queue
+	CEventQueue eventQueue;
+
+	CEvent event;
+	EVENTQUEUE->getEvent(event, 0);
+	int returnCode = kExitSuccess;
+	bool serviceRunning = false;
+
+	// TODO: why don't we get kQuit when the service requests stop?
+	while (event.getType() != CEvent::kQuit) {
+
+		DWORD newSessionId = getSessionId();
+
+		// only enters here when id changes, and the session isnt -1, which
+		// may mean that there is no active session.
+		if ((newSessionId != sessionId) && (newSessionId != -1)) {
+
+			// HACK: doesn't close process in a nice way
+			// TODO: use CloseMainWindow instead
+			if (serviceRunning) {
+				TerminateProcess(pi.hProcess, kExitSuccess);
+				LOG((CLOG_DEBUG "terminated existing process to make way for new one"));
+				serviceRunning = false;
+			}
+	
+			// ok, this is now the active session (forget the old one if any)
+			sessionId = newSessionId;
+
+			SECURITY_ATTRIBUTES sa;
+			ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
+
+			// get the token for the user in active session, which is the
+			// one recieveing input from mouse and keyboard.
+			HANDLE userToken = getCurrentUserToken(sessionId, &sa);
+
+			if (userToken != 0) {
+				LOG((CLOG_DEBUG "got user token to launch new process"));
+
+				// build up a full command line so we can launch it
+				std::string cmd;
+				cmd.append(ARG->m_pname);
+				cmd.append(" ");
+				cmd.append(CArchMiscWindows::getDaemonArgs());
+				
+				// incase reusing process info struct
+				ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+
+				STARTUPINFO si;
+				ZeroMemory(&si, sizeof(STARTUPINFO));
+				si.cb = sizeof(STARTUPINFO);
+				si.lpDesktop = "winsta0\\default";
+
+				LPVOID environment;
+				BOOL blockRet = CreateEnvironmentBlock(&environment, userToken, FALSE);
+				if (!blockRet) {
+					LOG((CLOG_ERR "could not create environment block (error: %i)", 
+						GetLastError()));
+
+					returnCode = kExitFailed;
+					EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+				}
+				else {
+
+					DWORD creationFlags = 
+						NORMAL_PRIORITY_CLASS |
+						CREATE_NEW_CONSOLE | 
+						CREATE_UNICODE_ENVIRONMENT;
+
+					// re-launch in current active user session
+					BOOL createRet = CreateProcessAsUser(
+						userToken, NULL, LPSTR(cmd.c_str()),
+						&sa, NULL, TRUE, creationFlags,
+						environment, NULL, &si, &pi);
+
+					DestroyEnvironmentBlock(environment);
+					CloseHandle(userToken);
+
+					if (!createRet) {
+						LOG((CLOG_ERR "could not re-launch (error: %i)", GetLastError()));
+						returnCode = kExitFailed;
+						
+						EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+					}
+					else {
+						LOG((CLOG_DEBUG "re-launched in session %i (cmd: %s)", 
+							sessionId, cmd.c_str()));
+						serviceRunning = true;
+					}
+				}
+			}
+		}
+
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event, 1);
+	}
+
+	if (serviceRunning) {
+		// HACK: kill just in case process it has survived
+		TerminateProcess(pi.hProcess, kExitSuccess);
+	}
+
+	DAEMON_RUNNING(false);
+	return kExitSuccess;
+}
+
+// this is only called once at the start
 static
 int
 daemonNTMainLoop(int argc, const char** argv)
 {
+	// has to be a better way to trap debug when running as service
+	//while(true) { Sleep(1000); }
+
 	parse(argc, argv);
 	ARG->m_backend = false;
+
 	loadConfig();
-	return CArchMiscWindows::runDaemon(mainLoop);
+	//return CArchMiscWindows::runDaemon(mainLoop);
+	return CArchMiscWindows::runDaemon(daemonNTRelaunchLoop);
 }
 
 static
@@ -1263,6 +1543,7 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 	MessageBox(NULL, msg.c_str(), title, MB_OK | MB_ICONWARNING);
 }
 
+// called only when running in foreground (not a service)
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
@@ -1300,8 +1581,14 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			}
 		}
 
+		COutputterList outputterList;
+		outputterList.push_back(new CMessageBoxOutputter);
+		
+		// maybe not for foreground (less useful) - better for service
+		//outputterList.push_back(new CSystemLogOutputter);
+
 		// send PRINT and FATAL output to a message box
-		int result = run(__argc, __argv, new CMessageBoxOutputter, startup);
+		int result = run(__argc, __argv, outputterList, startup);
 
 		// let user examine any messages if we're running as a backend
 		// by putting up a dialog box before exiting.

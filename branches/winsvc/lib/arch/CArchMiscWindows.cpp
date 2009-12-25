@@ -437,3 +437,9 @@ CArchMiscWindows::wakeupDisplay()
 	// restore the original execution states
 	setThreadExecutionState(s_busyState);
 }
+
+std::string
+CArchMiscWindows::getDaemonArgs()
+{
+	return CArchDaemonWindows::getArgs();
+}

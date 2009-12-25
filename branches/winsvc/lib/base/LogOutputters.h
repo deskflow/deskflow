@@ -20,7 +20,6 @@
 #include "CString.h"
 #include "stddeque.h"
 
-#include <fstream>
 //! Stop traversing log chain outputter
 /*!
 This outputter performs no output and returns false from \c write(),
@@ -66,7 +65,7 @@ message is ignored.
 
 class CFileLogOutputter : public ILogOutputter {
 public:
-	CFileLogOutputter(const char* logFile);
+	CFileLogOutputter();
 	virtual ~CFileLogOutputter();
 
 	// ILogOutputter overrides
@@ -75,8 +74,6 @@ public:
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
 	virtual const char*	getNewline() const;
-private:
-	std::ofstream		m_handle;
 };
 
 //! Write log to system log

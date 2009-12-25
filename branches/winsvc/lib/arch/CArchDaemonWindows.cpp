@@ -17,12 +17,13 @@
 #include "CArchMiscWindows.h"
 #include "XArchWindows.h"
 #include "stdvector.h"
+#include "CLog.h"
 
 //
 // CArchDaemonWindows
 //
 
-CArchDaemonWindows*		CArchDaemonWindows::s_daemon = NULL;
+CArchDaemonWindows*	CArchDaemonWindows::s_daemon = NULL;
 
 CArchDaemonWindows::CArchDaemonWindows()
 {
@@ -553,6 +554,8 @@ CArchDaemonWindows::setStatus(DWORD state, DWORD step, DWORD waitHint)
 {
 	assert(s_daemon != NULL);
 
+	LOG((CLOG_DEBUG "setting service status: %i", state));
+
 	SERVICE_STATUS status;
 	status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS |
 										SERVICE_INTERACTIVE_PROCESS;
@@ -618,62 +621,63 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 	ArgList myArgv;
 	if (argc <= 1) {
 		// read command line
-		std::string commandLine;
 		HKEY key = openNTServicesKey();
 		key      = CArchMiscWindows::openKey(key, argvIn[0]);
 		key      = CArchMiscWindows::openKey(key, _T("Parameters"));
+		
 		if (key != NULL) {
-			commandLine = CArchMiscWindows::readValueString(key,
+			// static value so we can access again for service re-launch
+			m_commandLine = CArchMiscWindows::readValueString(key,
 												_T("CommandLine"));
 		}
 
 		// if the command line isn't empty then parse and use it
-		if (!commandLine.empty()) {
+		if (!m_commandLine.empty()) {
 			// parse, honoring double quoted substrings
-			std::string::size_type i = commandLine.find_first_not_of(" \t");
-			while (i != std::string::npos && i != commandLine.size()) {
+			std::string::size_type i = m_commandLine.find_first_not_of(" \t");
+			while (i != std::string::npos && i != m_commandLine.size()) {
 				// find end of string
 				std::string::size_type e;
-				if (commandLine[i] == '\"') {
+				if (m_commandLine[i] == '\"') {
 					// quoted.  find closing quote.
 					++i;
-					e = commandLine.find("\"", i);
+					e = m_commandLine.find("\"", i);
 
 					// whitespace must follow closing quote
 					if (e == std::string::npos ||
-						(e + 1 != commandLine.size() &&
-						commandLine[e + 1] != ' ' &&
-						commandLine[e + 1] != '\t')) {
+						(e + 1 != m_commandLine.size() &&
+						m_commandLine[e + 1] != ' ' &&
+						m_commandLine[e + 1] != '\t')) {
 						args.clear();
 						break;
 					}
 
 					// extract
-					args.push_back(commandLine.substr(i, e - i));
+					args.push_back(m_commandLine.substr(i, e - i));
 					i = e + 1;
 				}
 				else {
 					// unquoted.  find next whitespace.
-					e = commandLine.find_first_of(" \t", i);
+					e = m_commandLine.find_first_of(" \t", i);
 					if (e == std::string::npos) {
-						e = commandLine.size();
+						e = m_commandLine.size();
 					}
 
 					// extract
-					args.push_back(commandLine.substr(i, e - i));
+					args.push_back(m_commandLine.substr(i, e - i));
 					i = e + 1;
 				}
 
 				// next argument
-				i = commandLine.find_first_not_of(" \t", i);
+				i = m_commandLine.find_first_not_of(" \t", i);
 			}
 
 			// service name goes first
 			myArgv.push_back(argv[0]);
 
 			// get pointers
-			for (size_t j = 0; j < args.size(); ++j) {
-				myArgv.push_back(args[j].c_str());
+			for (size_t i = 0; i < args.size(); ++i) {
+				myArgv.push_back(args[i].c_str());
 			}
 
 			// adjust argc/argv
@@ -700,6 +704,7 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 	ARCH->closeMutex(m_serviceMutex);
 }
 
+// here's pretty much where the service starts from on nt family
 void WINAPI
 CArchDaemonWindows::serviceMainEntry(DWORD argc, LPTSTR* argv)
 {

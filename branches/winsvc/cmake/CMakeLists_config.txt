@@ -82,19 +82,19 @@ IF(UNIX)
 	
 	IF(APPLE)
 
-		FIND_LIBRARY(lib_ScreenSaver ScreenSaver)
-		FIND_LIBRARY(lib_IOKit IOKit)
-		FIND_LIBRARY(lib_ApplicationServices ApplicationServices)
-		FIND_LIBRARY(lib_Foundation Foundation)
-		FIND_LIBRARY(lib_Carbon Carbon)
+	  FIND_LIBRARY(lib_ScreenSaver ScreenSaver)
+	  FIND_LIBRARY(lib_IOKit IOKit)
+	  FIND_LIBRARY(lib_ApplicationServices ApplicationServices)
+	  FIND_LIBRARY(lib_Foundation Foundation)
+	  FIND_LIBRARY(lib_Carbon Carbon)
 
-		LIST(APPEND libs
+	  LIST(APPEND libs
 		${lib_ScreenSaver}
 		${lib_IOKit}
 		${lib_ApplicationServices}
 		${lib_Foundation}
 		${lib_Carbon}
-		)
+	  )
 
 	ELSE(APPLE)
 
@@ -176,12 +176,14 @@ IF(UNIX)
 	ADD_DEFINITIONS(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
 
 	IF(APPLE)
-		ADD_DEFINITIONS(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
+	  ADD_DEFINITIONS(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
 	ELSE(APPLE)
-		ADD_DEFINITIONS(-DWINAPI_XWINDOWS=1)
+	  ADD_DEFINITIONS(-DWINAPI_XWINDOWS=1)
 	ENDIF(APPLE)
 
 ELSE(UNIX)
+
+	LIST(APPEND libs Wtsapi32 Userenv)
 
 	ADD_DEFINITIONS(
 		/DWIN32

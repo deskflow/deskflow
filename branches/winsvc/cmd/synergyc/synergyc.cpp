@@ -77,8 +77,7 @@ public:
 		m_yscroll(0),
 		m_logFilter(NULL),
 		m_display(NULL),
-		m_serverAddress(NULL),
-		m_logFile(NULL)
+		m_serverAddress(NULL)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
 
@@ -93,8 +92,6 @@ public:
 	const char*			m_display;
 	CString 			m_name;
 	CNetworkAddress* 	m_serverAddress;
-	const char*			m_logFile;
-
 };
 
 CArgs*					CArgs::s_instance = NULL;
@@ -378,17 +375,6 @@ static
 int
 mainLoop()
 {
-	// logging to files
-	CFileLogOutputter* fileLog = NULL;
-
-	if (ARG->m_logFile != NULL) {
-		fileLog = new CFileLogOutputter(ARG->m_logFile);
-
-		CLOG->insert(fileLog);
-
-		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", ARG->m_logFile));
-	}
-
 	// create socket multiplexer.  this must happen after daemonization
 	// on unix because threads evaporate across a fork().
 	CSocketMultiplexer multiplexer;
@@ -421,11 +407,6 @@ mainLoop()
 	stopClient();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped client"));
-
-	if (fileLog) {
-		CLOG->remove(fileLog);
-		delete fileLog;		
-	}
 
 	return kExitSuccess;
 }
@@ -556,7 +537,6 @@ USAGE_DISPLAY_INFO
 "  -1, --no-restart         do not try to restart the client if it fails for\n"
 "                           some reason.\n"
 "*     --restart            restart the client automatically if it fails.\n"
-"  -l  --log <file>         write log messages to file.\n"
 "  -h, --help               display this help and exit.\n"
 "      --version            display version information and exit.\n"
 "\n"
@@ -600,12 +580,6 @@ parse(int argc, const char* const* argv)
 	assert(ARG->m_pname != NULL);
 	assert(argv         != NULL);
 	assert(argc         >= 1);
-
-	if(ARG->m_pname == NULL 
-		|| argv == NULL
-		|| argc < 1) {
-		return;
-	}
 
 	// set defaults
 	ARG->m_name = ARCH->getHostName();
@@ -651,10 +625,6 @@ parse(int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, NULL, "--yscroll", 1)) {
 			// define scroll 
 			ARG->m_yscroll = atoi(argv[++i]);
-		}
-		
-		else if (isArg(i, argc, argv, "-l", "--log", 1)) {
-			ARG->m_logFile = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, "-1", "--no-restart")) {

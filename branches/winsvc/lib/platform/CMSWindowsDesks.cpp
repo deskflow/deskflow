@@ -758,8 +758,7 @@ CMSWindowsDesks::deskThread(void* vdesk)
 
 				// a window on the primary screen with low-level hooks
 				// should never activate.
-				if (desk->m_window)
-					EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
+				EnableWindow(desk->m_window, desk->m_lowLevel ? FALSE : TRUE);
 			}
 			break;
 
