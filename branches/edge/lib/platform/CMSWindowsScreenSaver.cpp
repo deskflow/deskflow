@@ -392,6 +392,8 @@ CMSWindowsScreenSaver::watchDesktopThread(void*)
 			if (size > reserved) {
 				reserved = size;
 				name     = (TCHAR*)alloca(reserved + sizeof(TCHAR));
+				assert(name);
+				if (!name) return; //TODO: throw exception
 			}
 
 			// get current desktop name

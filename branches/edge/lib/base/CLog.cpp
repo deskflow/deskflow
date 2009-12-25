@@ -262,6 +262,7 @@ CLog::output(int priority, char* msg) const
 {
   assert(priority >= -1 && priority < g_numPriority);
   assert(msg != NULL);
+  if (!msg) return;
 
   // insert priority label
   //int n = -g_prioritySuffixLength;

@@ -193,6 +193,7 @@ void
 CArchMiscWindows::closeKey(HKEY key)
 {
 	assert(key  != NULL);
+	if (key==NULL) return;
 	RegCloseKey(key);
 }
 
@@ -201,6 +202,7 @@ CArchMiscWindows::deleteKey(HKEY key, const TCHAR* name)
 {
 	assert(key  != NULL);
 	assert(name != NULL);
+	if (key==NULL || name==NULL) return;
 	RegDeleteKey(key, name);
 }
 
@@ -209,6 +211,7 @@ CArchMiscWindows::deleteValue(HKEY key, const TCHAR* name)
 {
 	assert(key  != NULL);
 	assert(name != NULL);
+	if (key==NULL || name==NULL) return;
 	RegDeleteValue(key, name);
 }
 
@@ -250,6 +253,7 @@ CArchMiscWindows::setValue(HKEY key,
 {
 	assert(key  != NULL);
 	assert(name != NULL);
+	if(key ==NULL || name==NULL) return; // TODO: throw exception
 	RegSetValueEx(key, name, 0, REG_SZ,
 								reinterpret_cast<const BYTE*>(value.c_str()),
 								(DWORD)value.size() + 1);
@@ -260,6 +264,7 @@ CArchMiscWindows::setValue(HKEY key, const TCHAR* name, DWORD value)
 {
 	assert(key  != NULL);
 	assert(name != NULL);
+	if(key ==NULL || name==NULL) return; // TODO: throw exception
 	RegSetValueEx(key, name, 0, REG_DWORD,
 								reinterpret_cast<CONST BYTE*>(&value),
 								sizeof(DWORD));
@@ -271,6 +276,7 @@ CArchMiscWindows::setValueBinary(HKEY key,
 {
 	assert(key  != NULL);
 	assert(name != NULL);
+	if(key ==NULL || name==NULL) return; // TODO: throw exception
 	RegSetValueEx(key, name, 0, REG_BINARY,
 								reinterpret_cast<const BYTE*>(value.data()),
 								(DWORD)value.size());

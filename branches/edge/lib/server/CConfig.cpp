@@ -377,14 +377,14 @@ CConfig::isValidScreenName(const CString& name) const
 		}
 
 		// check first and last characters
-		if (!(isalnum(name[b]) || name[b] == '_') ||
-			!(isalnum(name[e - 1]) || name[e - 1] == '_')) {
+		if (!(isalnum((unsigned char)name[b]) || name[b] == '_') ||
+			!(isalnum((unsigned char)name[e - 1]) || name[e - 1] == '_')) {
 			return false;
 		}
 
 		// check interior characters
 		for (CString::size_type i = b; i < e; ++i) {
-			if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-') {
+			if (!isalnum((unsigned char)name[i]) && name[i] != '_' && name[i] != '-') {
 				return false;
 			}
 		}
