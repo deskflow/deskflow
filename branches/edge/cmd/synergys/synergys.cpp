@@ -37,6 +37,7 @@
 
 #include "stdfstream.h"
 #include <cstring>
+#include <iostream>
 
 #define DAEMON_RUNNING(running_)
 #if WINAPI_MSWINDOWS

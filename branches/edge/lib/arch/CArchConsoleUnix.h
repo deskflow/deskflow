@@ -18,10 +18,11 @@
 
 #define ARCH_CONSOLE CArchConsoleUnix
 
-class CArchConsoleUnix : public IArchConsole {
+class CArchConsoleUnix : public CArchConsoleStd {
+public:
 	CArchConsoleUnix(void*);
 	virtual ~CArchConsoleUnix();
-}
+};
 
 //#ifndef CARCHCONSOLEUNIX_H
 //#define CARCHCONSOLEUNIX_H
