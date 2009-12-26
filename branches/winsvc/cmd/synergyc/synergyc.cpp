@@ -32,6 +32,7 @@
 #include "CArch.h"
 #include "XArch.h"
 #include <cstring>
+#include <fstream>
 
 #define DAEMON_RUNNING(running_)
 #if WINAPI_MSWINDOWS
@@ -39,6 +40,7 @@
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsUtil.h"
 #include "CMSWindowsClientTaskBarReceiver.h"
+#include "CArchDaemonWindows.h"
 #include "resource.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
@@ -52,7 +54,7 @@
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
-#define DAEMON_NAME "Synergy Client"
+#define DAEMON_NAME "Synergy+ Client"
 #elif SYSAPI_UNIX
 #define DAEMON_NAME "synergyc"
 #endif
@@ -460,6 +462,9 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 	CBufferedLogOutputter logBuffer(1000);
 	CLOG->insert(&logBuffer, true);
 
+	CFileLogOutputter* fileLog = new CFileLogOutputter("c:\\synergyc.log");
+	CLOG->insert(fileLog);
+
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
 	s_taskBarReceiver = createTaskBarReceiver(&logBuffer);
@@ -587,11 +592,15 @@ parse(int argc, const char* const* argv)
 	// parse options
 	int i;
 	for (i = 1; i < argc; ++i) {
-		if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+		
+		if (isArg(i, argc, argv, NULL, "--ignore-this-arg", 1)) {
+			// for debugging purposes
+			i++;
+		}
+		else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 			// change logging level
 			ARG->m_logFilter = argv[++i];
 		}
-
 		else if (isArg(i, argc, argv, "-n", "--name", 1)) {
 			// save screen name
 			ARG->m_name = argv[++i];
@@ -791,7 +800,14 @@ daemonNTMainLoop(int argc, const char** argv)
 {
 	parse(argc, argv);
 	ARG->m_backend = false;
-	return CArchMiscWindows::runDaemon(mainLoop);
+	//return CArchMiscWindows::runDaemon(mainLoop);
+
+	// copy process name to somewhere static that relaunch loop can access 
+	ARCH->m_pname = ARG->m_pname;
+
+	DAEMON_RUNNING(true);
+	return CArchMiscWindows::runDaemon(CArchDaemonWindows::relaunchLoop);
+	DAEMON_RUNNING(false);
 }
 
 static
@@ -828,6 +844,14 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
+	std::fstream f;
+	f.open("c:\\synergyc-run", std::ios::app);
+	for (int i = 0; i < __argc; i++) {
+		f << __argv[i] << " ";
+	}
+	f << std::endl;
+	f.close();
+
 	try {
 		CArchMiscWindows::setIcons((HICON)LoadImage(instance,
 									MAKEINTRESOURCE(IDI_SYNERGY),

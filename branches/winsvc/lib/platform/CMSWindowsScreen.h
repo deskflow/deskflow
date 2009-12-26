@@ -303,6 +303,9 @@ private:
 	MOUSEKEYS			m_oldMouseKeys;
 
 	static CMSWindowsScreen*	s_screen;
+
+	// save last position of mouse to compute next delta movement
+	void saveMousePosition(SInt32 x, SInt32 y);
 };
 
 #endif

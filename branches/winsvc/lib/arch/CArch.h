@@ -184,6 +184,8 @@ public:
 	// IArchTime overrides
 	virtual double		time();
 
+	const char* m_pname;
+
 private:
 	static CArch*		s_instance;
 

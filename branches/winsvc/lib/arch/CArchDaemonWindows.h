@@ -22,6 +22,12 @@
 #include "stdstring.h"
 #include <windows.h>
 #include <tchar.h>
+#include <Wtsapi32.h>
+#include <Tlhelp32.h>
+#pragma warning(disable: 4099)
+#include <Userenv.h>
+#pragma warning(default: 4099)
+#include "Version.h"
 
 #define ARCH_DAEMON CArchDaemonWindows
 
@@ -84,6 +90,8 @@ public:
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
 	static std::string	getArgs() { return s_daemon->m_commandLine; }
 
+	static int relaunchLoop();
+
 private:
 	static HKEY			openNTServicesKey();
 	static HKEY			open95ServicesKey();
@@ -104,7 +112,6 @@ private:
 
 	void				serviceHandler(DWORD ctrl);
 	static void WINAPI	serviceHandlerEntry(DWORD ctrl);
-
 private:
 	class XArchDaemonRunFailed {
 	public:
@@ -131,6 +138,10 @@ private:
 
 	UINT				m_quitMessage;
 	std::string			m_commandLine;
+
+	static DWORD getSessionId();
+	static BOOL winlogonInSession(DWORD sessionId, PHANDLE process);
+	static HANDLE getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
 };
 
 #endif
