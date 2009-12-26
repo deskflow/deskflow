@@ -1454,25 +1454,33 @@ CMSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 	// send an event that we can recognize before the mouse warp
 	PostThreadMessage(GetCurrentThreadId(), SYNERGY_MSG_PRE_WARP, x, y);
 
-	// warp mouse.  hopefully this inserts a mouse motion event
-	// between the previous message and the following message.
-	if (!SetCursorPos(x, y)) {
-		LOG((CLOG_DEBUG "unable to SetCursorPos(%+d,%+d), error: %i", x, y, GetLastError()));
-	}
+	// we need to use this synergy function instead of SetCursorPos(),
+	// because SetCursorPos does not work at the Vista/7 login screen 
+	// (maybe due to an MS "security feature"). this seems to work ok
+	// for Vista/7 - and hopefully it will for XP also. not sure why 
+	// this function was not used originally; perhaps it has some 
+	// adverse side effects?
+	fakeMouseMove(x, y);
 
-	// check to see if the mouse pos was set correctly
-	POINT cursorPos;
-	if (!GetCursorPos(&cursorPos)) {
-		LOG((CLOG_DEBUG "could not get cursor position, error: %i", GetLastError()));
-	} else {
-		if ((cursorPos.x == 0xFFFFFFFF) && (cursorPos.y == 0xFFFFFFFF)) {
-			LOG((CLOG_DEBUG "cursor coordinates are 0xFFFFFFFF, indicating access error"));
-		}
-		else if ((cursorPos.x != x) || (cursorPos.y != y)) {
-			LOG((CLOG_DEBUG "cursor position is %+d,%+d but was set to %+d,%+d", 
-				cursorPos.x, cursorPos.y, x, y));
-		}
-	}
+	//// warp mouse.  hopefully this inserts a mouse motion event
+	//// between the previous message and the following message.
+	//if (!SetCursorPos(x, y)) {
+	//	LOG((CLOG_DEBUG "unable to SetCursorPos(%+d,%+d), error: %i", x, y, GetLastError()));
+	//}
+
+	//// check to see if the mouse pos was set correctly
+	//POINT cursorPos;
+	//if (!GetCursorPos(&cursorPos)) {
+	//	LOG((CLOG_DEBUG "could not get cursor position, error: %i", GetLastError()));
+	//} else {
+	//	if ((cursorPos.x == 0xFFFFFFFF) && (cursorPos.y == 0xFFFFFFFF)) {
+	//		LOG((CLOG_DEBUG "cursor coordinates are 0xFFFFFFFF, indicating access error"));
+	//	}
+	//	else if ((cursorPos.x != x) || (cursorPos.y != y)) {
+	//		LOG((CLOG_DEBUG "cursor position is %+d,%+d but was set to %+d,%+d", 
+	//			cursorPos.x, cursorPos.y, x, y));
+	//	}
+	//}
 	
 	// yield the CPU.  there's a race condition when warping:
 	//   a hardware mouse event occurs
