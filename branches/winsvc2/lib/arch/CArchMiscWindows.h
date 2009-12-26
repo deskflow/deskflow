@@ -56,6 +56,12 @@ public:
 	*/
 	static bool			isWindowsModern();
 
+	//! Test if windows 95, et al.
+	/*!
+	Returns true iff the platform is vista or newer
+	*/
+	static bool			isWindowsNT6Plus();
+
 	//! Set the application icons
 	/*!
 	Set the application icons.
@@ -135,6 +141,9 @@ public:
 
 	//! Read a string value from the registry
 	static std::string	readValueString(HKEY, const TCHAR* name);
+
+	//! Read an expandable string value from the registry
+	static std::string	readValueExpandString(HKEY, const TCHAR* name);
 
 	//! Read a DWORD value from the registry
 	static DWORD		readValueInt(HKEY, const TCHAR* name);

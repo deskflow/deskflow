@@ -124,8 +124,7 @@ CArchDaemonWindows::installDaemon(const char* name,
 								name,
 								name,
 								0,
-								SERVICE_WIN32_OWN_PROCESS |
-									SERVICE_INTERACTIVE_PROCESS,
+								SERVICE_WIN32_OWN_PROCESS,
 								SERVICE_AUTO_START,
 								SERVICE_ERROR_NORMAL,
 								pathname,
@@ -496,7 +495,12 @@ CArchDaemonWindows::doRunDaemon(RunFunc run)
 		if (m_serviceState != SERVICE_STOP_PENDING) {
 			ARCH->unlockMutex(m_serviceMutex);
 			try {
-				result = run();
+				if (!CArchMiscWindows::isWindowsNT6Plus()) {
+					result = run();
+				}
+				else {
+					result = createProcessOnCurrentSession();
+				}
 			}
 			catch (...) {
 				ARCH->lockMutex(m_serviceMutex);
@@ -522,6 +526,110 @@ CArchDaemonWindows::doRunDaemon(RunFunc run)
 	}
 	ARCH->unlockMutex(m_serviceMutex);
 	return result;
+}
+
+int
+CArchDaemonWindows::createProcessOnCurrentSession()
+{
+	int err = -1;
+	
+	// Running as Service so create access token for LocalSystem
+	if (ImpersonateSelf(SecurityImpersonation)) {
+		HANDLE hToken = NULL;
+
+		// Access token is stored on this thread
+		if (OpenThreadToken(GetCurrentThread(),
+				TOKEN_ALL_ACCESS, FALSE, &hToken)) {
+
+			// Get Session ID of console, will most probably be 1 on Vista+
+			DWORD dwSessionId = WTSGetActiveConsoleSessionId();
+			if (-1 != dwSessionId) {
+
+				// Set Session ID on our token
+				if (SetTokenInformation(hToken, TokenSessionId,
+						&dwSessionId, sizeof(DWORD))) {
+
+					// Create Primary token for CreateProcessAsUser
+					HANDLE hTokenPrimary = NULL;
+					if (DuplicateTokenEx(hToken, MAXIMUM_ALLOWED, NULL,
+							SecurityImpersonation, TokenPrimary,
+							&hTokenPrimary)) {
+
+						// CreateProcessAsUser may edit lpCommandLine param,
+						// needs to be non-constant
+						LPSTR lpstrCmd = new CHAR[m_commandLine.length() + 1];
+						if (NULL != lpstrCmd) {
+							if (NULL != strcpy(lpstrCmd,
+									m_commandLine.c_str())) {
+
+								// Set the desktop to winlogon
+								STARTUPINFO stStartupInfo;
+								ZeroMemory(&stStartupInfo,
+									sizeof(STARTUPINFO));
+								stStartupInfo.cb = sizeof(STARTUPINFO);
+								stStartupInfo.lpDesktop = "winsta0\\winlogon";
+
+								PROCESS_INFORMATION stProcessInformation;
+								ZeroMemory(&stProcessInformation,
+									sizeof(stProcessInformation));
+
+								// Create the process
+								if (CreateProcessAsUser(
+									hTokenPrimary,
+									m_imagePath.c_str(),
+									lpstrCmd,
+									NULL,
+									NULL,
+									FALSE,
+									NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE,
+									NULL,
+									NULL,
+									&stStartupInfo,
+									&stProcessInformation)) {
+
+									// Successfully created process
+									err = 0;
+								}
+								else {
+									err = GetLastError();
+								}
+							}
+
+							delete [] lpstrCmd;
+						}
+						else {
+							// Alloc of lpstrCmd failed
+							err = ERROR_NOT_ENOUGH_MEMORY;
+						}
+
+						CloseHandle(hTokenPrimary);
+					}
+					else {
+						// DuplicateTokenEx failed
+						err = GetLastError();
+					}
+				}
+				else {
+					// SetTokenInformation failed
+					err = GetLastError();
+				}
+			}
+
+			CloseHandle(hToken);
+		}
+		else {
+			// OpenThreadToken failed
+			err = GetLastError();
+		}
+
+		RevertToSelf();
+	}
+	else {
+		// ImpersonateSelf failed
+		err = GetLastError();
+	}
+
+	return err;
 }
 
 void
@@ -554,8 +662,7 @@ CArchDaemonWindows::setStatus(DWORD state, DWORD step, DWORD waitHint)
 	assert(s_daemon != NULL);
 
 	SERVICE_STATUS status;
-	status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS |
-										SERVICE_INTERACTIVE_PROCESS;
+	status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS;
 	status.dwCurrentState            = state;
 	status.dwControlsAccepted        = SERVICE_ACCEPT_STOP |
 										SERVICE_ACCEPT_PAUSE_CONTINUE |
@@ -573,8 +680,7 @@ CArchDaemonWindows::setStatusError(DWORD error)
 	assert(s_daemon != NULL);
 
 	SERVICE_STATUS status;
-	status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS |
-										SERVICE_INTERACTIVE_PROCESS;
+	status.dwServiceType             = SERVICE_WIN32_OWN_PROCESS;
 	status.dwCurrentState            = SERVICE_STOPPED;
 	status.dwControlsAccepted        = SERVICE_ACCEPT_STOP |
 										SERVICE_ACCEPT_PAUSE_CONTINUE |
@@ -621,11 +727,19 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 		std::string commandLine;
 		HKEY key = openNTServicesKey();
 		key      = CArchMiscWindows::openKey(key, argvIn[0]);
+		if (key != NULL) {
+			// save ImagePath for possible future use
+			m_imagePath = CArchMiscWindows::readValueExpandString(key,
+												_T("ImagePath"));
+		}
 		key      = CArchMiscWindows::openKey(key, _T("Parameters"));
 		if (key != NULL) {
 			commandLine = CArchMiscWindows::readValueString(key,
 												_T("CommandLine"));
 		}
+
+		// save commandLine for possible future use
+		m_commandLine = std::string(commandLine);
 
 		// if the command line isn't empty then parse and use it
 		if (!commandLine.empty()) {
@@ -672,12 +786,12 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 			myArgv.push_back(argv[0]);
 
 			// get pointers
-			for (size_t j = 0; j < args.size(); ++j) {
-				myArgv.push_back(args[j].c_str());
+			for (size_t i = 0; i < args.size(); ++i) {
+				myArgv.push_back(args[i].c_str());
 			}
 
 			// adjust argc/argv
-			argc = (DWORD)myArgv.size();
+			argc = myArgv.size();
 			argv = &myArgv[0];
 		}
 	}

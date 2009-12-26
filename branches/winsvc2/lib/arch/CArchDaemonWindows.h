@@ -21,6 +21,7 @@
 #include "IArchMultithread.h"
 #include "stdstring.h"
 #include <windows.h>
+#include <winbase.h>
 #include <tchar.h>
 
 #define ARCH_DAEMON CArchDaemonWindows
@@ -92,6 +93,15 @@ private:
 	void				doDaemonRunning(bool running);
 	UINT				doGetDaemonQuitMessage();
 
+	//! Create new process
+	/*!
+	If Vista+ then the service needs to create a new process of synergyX
+	on the current session (most probably 1) instead of service session 0. This
+	is different from XP- when the first user session and services both used
+	session 0.  Returns 0 on success.
+	*/
+	int					createProcessOnCurrentSession();
+
 	static void			setStatus(DWORD state);
 	static void			setStatus(DWORD state, DWORD step, DWORD waitHint);
 	static void			setStatusError(DWORD error);
@@ -103,6 +113,9 @@ private:
 
 	void				serviceHandler(DWORD ctrl);
 	static void WINAPI	serviceHandlerEntry(DWORD ctrl);
+
+	std::string			m_commandLine;
+	std::string			m_imagePath;
 
 private:
 	class XArchDaemonRunFailed {

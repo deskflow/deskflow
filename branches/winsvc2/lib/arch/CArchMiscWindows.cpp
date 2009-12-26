@@ -89,6 +89,29 @@ CArchMiscWindows::isWindowsModern()
 	return result;
 }
 
+bool
+CArchMiscWindows::isWindowsNT6Plus()
+{
+	static bool init   = false;
+	static bool result = false;
+
+	if (!init) {
+		OSVERSIONINFO version;
+		version.dwOSVersionInfoSize = sizeof(version);
+		if (GetVersionEx(&version) == 0) {
+			// cannot determine OS;  assume not 6+
+			result = false;
+		}
+		else {
+			result = (version.dwPlatformId == VER_PLATFORM_WIN32_NT &&
+						version.dwMajorVersion >= 6);
+		}
+		init = true;
+	}
+	return result;
+}
+
+
 void
 CArchMiscWindows::setIcons(HICON largeIcon, HICON smallIcon)
 {
@@ -317,6 +340,12 @@ std::string
 CArchMiscWindows::readValueString(HKEY key, const TCHAR* name)
 {
 	return readBinaryOrString(key, name, REG_SZ);
+}
+
+std::string
+CArchMiscWindows::readValueExpandString(HKEY key, const TCHAR* name)
+{
+	return readBinaryOrString(key, name, REG_EXPAND_SZ);
 }
 
 std::string
