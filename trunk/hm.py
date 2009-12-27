@@ -46,6 +46,7 @@ commands = [
 	'dist',
 	'open',
 	'destroy',
+	'kill',
 	'usage',
 	'revision',
 	'help',
@@ -123,6 +124,7 @@ def usage():
 		'  build       Builds using the platform build chain\n'
 		'  clean       Cleans using the platform build chain\n'
 		'  destroy     Destroy all temporary files (bin and build)\n'
+		'  kill        Kills all synergy processes (run as admin)"\n'
 		'  update      Updates the source code from repository\n'
 		'  revision    Display the current source code revision\n'
 		'  package     Create a distribution package (e.g. tar.gz)\n'
@@ -313,6 +315,14 @@ def destroy():
 		except:
 			print "Warning: Could not remove ./bin/ directory."
 
+def kill():
+	if sys.platform == 'win32':
+		os.system('taskkill /F /FI "IMAGENAME eq synergy*"')
+		return True
+	else:
+		print 'kill: Error: Command not implemented for current platform'
+		return False
+			
 def package(type):
 
 	# Package is supported by default.
@@ -452,6 +462,8 @@ def main(argv):
 				usage()
 			elif cmd in ['destroy']:
 				destroy()
+			elif cmd in ['kill']:
+				kill()
 			elif cmd in ['setup']:
 				setup()
 			elif cmd in ['hammer']:
