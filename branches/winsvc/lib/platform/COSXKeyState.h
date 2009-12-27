@@ -54,6 +54,12 @@ public:
 	*/
 	KeyModifierMask		mapModifiersFromOSX(UInt32 mask) const;
 
+	//! Convert CG flags-style modifier mask to old-style Carbon
+	/*!
+	Still required in a few places for translation calls.
+	*/
+	KeyModifierMask		mapModifiersToCarbon(UInt32 mask) const;
+	
 	//! Map key event to keys
 	/*!
 	Converts a key event into a sequence of KeyIDs and the shadow modifier
@@ -63,7 +69,7 @@ public:
 	KeyID.
 	*/
 	KeyButton			mapKeyFromEvent(CKeyIDs& ids,
-							KeyModifierMask* maskOut, EventRef event) const;
+							KeyModifierMask* maskOut, CGEventRef event) const;
 
 	//! Map key and mask to native values
 	/*!

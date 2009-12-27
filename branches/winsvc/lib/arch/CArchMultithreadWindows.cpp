@@ -297,7 +297,7 @@ CArchMultithreadWindows::newThread(ThreadFunc func, void* data)
 	thread->m_userData      = data;
 
 	// create thread
-	unsigned int id;
+	unsigned int id = 0;
 	thread->m_thread = reinterpret_cast<HANDLE>(_beginthreadex(NULL, 0,
 								threadFunc, (void*)thread, 0, &id));
 	thread->m_id     = static_cast<DWORD>(id);

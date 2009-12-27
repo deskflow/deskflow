@@ -272,15 +272,19 @@ CBufferedLogOutputter::getNewline() const
 // CFileLogOutputter
 //
 
-CFileLogOutputter::CFileLogOutputter(const char * logFile) : m_logFile(logFile)
+CFileLogOutputter::CFileLogOutputter(const char * logFile)
 {
 	assert(logFile != NULL);
 
+	m_handle.open(logFile, std::fstream::app);
+	// open file handle
 }
 
 CFileLogOutputter::~CFileLogOutputter()
 {
-	
+	// close file handle
+	if (m_handle.is_open())
+		m_handle.close();
 }
 
 const char*
@@ -292,9 +296,6 @@ CFileLogOutputter::getNewline() const
 bool
 CFileLogOutputter::write(ILogOutputter::ELevel level, const char *message)
 {
-	// open file handle
-	m_handle.open(m_logFile, std::fstream::app);
-
 	if (m_handle.is_open() && m_handle.fail() != true) {
 		m_handle << message;
 		
@@ -302,21 +303,14 @@ CFileLogOutputter::write(ILogOutputter::ELevel level, const char *message)
 		m_handle.flush();
 	}
 
-	// close file handle
-	if (m_handle.is_open())
-		m_handle.close();
-
 	return true;
 }
 
 void
-CFileLogOutputter::open(const char *title) {
-
-}
+CFileLogOutputter::open(const char *title) {}
 
 void
-CFileLogOutputter::close() {
-}
+CFileLogOutputter::close() {}
 
 void
 CFileLogOutputter::show(bool showIfEmpty) {}

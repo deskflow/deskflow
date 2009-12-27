@@ -47,32 +47,36 @@ commands = [
 	'open',
 	'destroy',
 	'kill',
-	'usage', 
+	'usage',
+	'revision',
 	'help',
+	'hammer',
 	'--help',
 	'-h',
 	'/?'
 ]
 
 win32_generators = {
-	'1' : 'Visual Studio 9 2008',
-	'2' : 'Visual Studio 9 2008 Win64',
-	'3' : 'Visual Studio 8 2005',
-	'4' : 'Visual Studio 8 2005 Win64',
-	'5' : 'Visual Studio 7',
-	'6' : 'Visual Studio 7 .NET 2003',
-	'7' : 'Visual Studio 6',
-	'8' : 'CodeBlocks - MinGW Makefiles',
-	'9' : 'CodeBlocks - Unix Makefiles',
-	'10': 'Eclipse CDT4 - MinGW Makefiles',
-	'11': 'Eclipse CDT4 - NMake Makefiles',
-	'12': 'Eclipse CDT4 - Unix Makefiles',
-	'13': 'MinGW Makefiles',
-	'14': 'NMake Makefiles',
-	'15': 'Unix Makefiles',
-	'16': 'Borland Makefiles',
-	'17': 'MSYS Makefiles',
-	'18': 'Watcom WMake',
+	'1' : 'Visual Studio 10',
+	'2' : 'Visual Studio 10 Win64',
+	'3' : 'Visual Studio 9 2008',
+	'4' : 'Visual Studio 9 2008 Win64',
+	'5' : 'Visual Studio 8 2005',
+	'6' : 'Visual Studio 8 2005 Win64',
+	'7' : 'Visual Studio 7',
+	'8' : 'Visual Studio 7 .NET 2003',
+	'9' : 'Visual Studio 6',
+	'10' : 'CodeBlocks - MinGW Makefiles',
+	'11' : 'CodeBlocks - Unix Makefiles',
+	'12': 'Eclipse CDT4 - MinGW Makefiles',
+	'13': 'Eclipse CDT4 - NMake Makefiles',
+	'14': 'Eclipse CDT4 - Unix Makefiles',
+	'15': 'MinGW Makefiles',
+	'16': 'NMake Makefiles',
+	'17': 'Unix Makefiles',
+	'18': 'Borland Makefiles',
+	'19': 'MSYS Makefiles',
+	'20': 'Watcom WMake',
 }
 
 unix_generators = {
@@ -96,9 +100,14 @@ sln_filename = '%s.sln' % project
 xcodeproj_filename = '%s.xcodeproj' % project
 config_filename = '%s.cfg' % this_cmd
 
-config_filepath = '%s/%s' % (bin_dir, config_filename)
-sln_filepath = '%s\%s' % (bin_dir, sln_filename)
-xcodeproj_filepath= '%s/%s' % (bin_dir, xcodeproj_filename)
+def config_filepath():
+	return '%s/%s' % (bin_dir, config_filename)
+
+def sln_filepath():
+	return '%s\%s' % (bin_dir, sln_filename)
+
+def xcodeproj_filepath():
+	return '%s/%s' % (bin_dir, xcodeproj_filename)
 
 # try_chdir(...) and restore_chdir() will use this
 prevdir = ''
@@ -117,21 +126,24 @@ def usage():
 		'  destroy     Destroy all temporary files (bin and build)\n'
 		'  kill        Kills all synergy processes (run as admin)"\n'
 		'  update      Updates the source code from repository\n'
+		'  revision    Display the current source code revision\n'
 		'  package     Create a distribution package (e.g. tar.gz)\n'
 		'  install     Installs the program\n'
+		'  hammer      Golden hammer (config, build, package)\n'
 		'  usage       Shows the help screen\n'
 		'\n'
 		'Alias commands:\n'
 		'  conf        configure\n'
 		'  up          update\n'
 		'  dist        package\n'
+		'  rev         revision\n'
 		'\n'
 		'Example: %s configure'
 		) % (this_cmd, this_cmd)
 
-def configure():
+def configure(generator = None):
 	
-	err = configure_internal()
+	err = configure_internal(generator)
 
 	if err == 0:
 		print ('Configure complete!\n\n'
@@ -142,9 +154,9 @@ def configure():
 	else:
 		return False
 
-def configure_internal():
+def configure_internal(generator = None):
 
-	ensure_setup_latest()
+	ensure_setup_latest(generator)
 	
 	generator = get_generator()
 	if generator != '':
@@ -191,7 +203,7 @@ def build(mode):
 			print 'GNU Make failed:', err
 			return False
 
-	elif generator.startswith('Visual Studio 8') or generator.startswith('Visual Studio 9'):
+	elif generator.startswith('Visual Studio 10') or generator.startswith('Visual Studio 8') or generator.startswith('Visual Studio 9'):
 		
 		ret = run_vcbuild(generator, mode)
 		
@@ -235,6 +247,16 @@ def clean(mode):
 			print 'GNU Make failed: %s' % err
 			return False
 
+	elif generator.startswith('Visual Studio 10'):
+
+		ret = run_vcbuild(generator, mode, '/target:clean')
+		
+		if ret == 0:
+			return True
+		else:
+			print 'VCBuild failed:', ret
+			return False
+
 	elif generator.startswith('Visual Studio 8') or generator.startswith('Visual Studio 9'):
 
 		ret = run_vcbuild(generator, mode, '/clean')
@@ -265,19 +287,22 @@ def clean(mode):
 def open_project():
 	generator = get_generator()
 	if generator.startswith('Visual Studio'):
-		open_project_internal(sln_filepath)
+		open_project_internal(sln_filepath())
 		return True
 	elif generator.startswith('Xcode'):
-		open_project_internal(xcodeproj_filepath, 'open')
+		open_project_internal(xcodeproj_filepath(), 'open')
 		return True
 	else:
 		print 'Not supported with generator:',generator
 		return False
 	
 def update():
-	print "Running Mercurial pull and update..."
-	os.system('hg pull')
-	os.system('hg update')
+	print "Running Subversion update..."
+	os.system('svn update')
+	
+def revision():
+	# While this doesn't print out the revision specifically, it will do.
+	os.system('svn info')
 
 def destroy():
 	msg = "Are you sure you want to remove the ./bin/ directory? [y/N]"
@@ -303,16 +328,11 @@ def package(type):
 	# Package is supported by default.
 	package_unsupported = False
 
-	if type == '':
+	if type == None:
 		package_usage()
-	elif type == 'src-tgz':
+	elif type == 'src':
 		if sys.platform in ['linux2', 'darwin']:
-			package_src()
-		else:
-			package_unsupported = True
-	elif type == 'src-zip':
-		if sys.platform == 'win32':
-			package_src()
+			package_tgz()
 		else:
 			package_unsupported = True
 	elif type == 'rpm':
@@ -336,14 +356,13 @@ def package(type):
 		else:
 			package_unsupported = True
 	else:
-		print 'Not yet implemented: package %s' % package_type
+		print 'Not yet implemented: package %s' % type
 
 	if package_unsupported:
 		print ('Package type, %s is not '
 			'supported for platform, %s') % (type, sys.platform)
 
-def package_src():
-	# Enter the temp build dir, to preserve source tree.
+def package_tgz():
 	try_chdir(bin_dir)
 	os.system('make package_source')
 	restore_chdir()
@@ -372,12 +391,11 @@ def package_usage():
 	print ('Usage: %s package [package-type]\n'
 		'\n'
 		'Replace [package-type] with one of:\n'
-		'  src-tgz   Create a .tar.gz source distribution\n'
-		'  src-zip   Create a .zip source distribution\n'
-		'  rpm       Create a .rpm package (Red Hat)\n'
-		'  deb       Create a .deb paclage (Debian)\n'
-		'  win       Create a .exe installer (Windows)\n'
-		'  mac       Create a .dmg package (Mac OS X)\n'
+		'  src    .tar.gz source (Posix only)\n'
+		'  rpm    .rpm package (Red Hat)\n'
+		'  deb    .deb paclage (Debian)\n'
+		'  win    .exe installer (Windows)\n'
+		'  mac    .dmg package (Mac OS X)\n'
 		'\n'
 		'Example: %s package src-tgz') % (this_cmd, this_cmd)
 
@@ -411,7 +429,7 @@ def main(argv):
 		arg_1 = argv[1]
 		completions = complete_command(arg_1)
 
-	arg_2 = ''
+	arg_2 = None
 	if len(argv) > 2:
 		arg_2 = argv[2]
 
@@ -427,7 +445,7 @@ def main(argv):
 			if cmd in ['about', 'info']:
 				about()
 			elif cmd in ['configure', 'conf']:
-				configure()
+				configure(arg_2)
 			elif cmd in ['build']:
 				build(arg_2)
 			elif cmd in ['open']:
@@ -436,6 +454,8 @@ def main(argv):
 				clean(arg_2)
 			elif cmd in ['update', 'up']:
 				update()
+			elif cmd in ['rev', 'revision']:
+				revision()
 			elif cmd in ['package', 'dist']:
 				package(arg_2)
 			elif cmd in ['usage', 'help', '--help', '-h', '/?']:
@@ -446,6 +466,8 @@ def main(argv):
 				kill()
 			elif cmd in ['setup']:
 				setup()
+			elif cmd in ['hammer']:
+				hammer()
 			else:
 				print 'Command not yet implemented:',cmd
 
@@ -490,25 +512,27 @@ def open_project_internal(project_filename, application = ''):
 		os.system(path)
 		return True
 
-def setup():
+def setup(generator = None):
 	print "Running setup..."
 
-	if sys.platform == 'win32':
-		generator = setup_generator_get(win32_generators)
-	elif sys.platform in ['linux2', 'sunos5']:
-		generator = setup_generator_get(unix_generators)
-	elif sys.platform == 'darwin':
-		generator = setup_generator_get(darwin_generators)
-	else:
-		raise Exception('Unsupported platform: ' + sys.platform)
+	# If no generator specified, prompt the user.
+	if generator == None:
+		if sys.platform == 'win32':
+			generator = setup_generator_get(win32_generators)
+		elif sys.platform in ['linux2', 'sunos5', 'freebsd7']:
+			generator = setup_generator_get(unix_generators)
+		elif sys.platform == 'darwin':
+			generator = setup_generator_get(darwin_generators)
+		else:
+			raise Exception('Unsupported platform: ' + sys.platform)
 
 	# Create build dir, since config file resides there.
 	if not os.path.exists(bin_dir):
 		os.mkdir(bin_dir)
 
-	if os.path.exists(config_filepath):
+	if os.path.exists(config_filepath()):
 		config = ConfigParser.ConfigParser()
-		config.read(config_filepath)
+		config.read(config_filepath())
 	else:
 		config = ConfigParser.ConfigParser()
 
@@ -531,18 +555,18 @@ def setup():
 	print "\nSetup complete."
 
 def write_config(config):
-	configfile = open(config_filepath, 'wb')
+	configfile = open(config_filepath(), 'wb')
 	config.write(configfile)
 
 def get_generator():
 	config = ConfigParser.RawConfigParser()
-	config.read(config_filepath)
+	config.read(config_filepath())
 	return config.get('cmake', 'generator')
 
 def has_setup_version(version):
-	if os.path.exists(config_filepath):
+	if os.path.exists(config_filepath()):
 		config = ConfigParser.RawConfigParser()
-		config.read(config_filepath)
+		config.read(config_filepath())
 
 		try:
 			return config.getint('hm', 'setup_version') >= version
@@ -554,7 +578,7 @@ def has_setup_version(version):
 def has_conf_run():
 	if has_setup_version(2):
 		config = ConfigParser.RawConfigParser()
-		config.read(config_filepath)
+		config.read(config_filepath())
 		try:
 			return config.getboolean('hm', 'has_conf_run')
 		except:
@@ -565,7 +589,7 @@ def has_conf_run():
 def set_conf_run():
 	if has_setup_version(3):
 		config = ConfigParser.RawConfigParser()
-		config.read(config_filepath)
+		config.read(config_filepath())
 		config.set('hm', 'has_conf_run', True)
 		write_config(config)
 	else:
@@ -606,24 +630,36 @@ def complete_command(arg):
 			possible_completions.append(command)
 	return possible_completions
 
-def get_vcvarsall(generator):
-# This is the *only* valid way of detecting VC8/9 (may work for others also)
-# Remark: "VC7" key does not change between VC8/9
-# [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\SxS\VC7]
-# "9.0"="C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\VC\\"
-	value = None
-	type = None
-	key_name = r'SOFTWARE\Microsoft\VisualStudio\SxS\VC7'
+def get_vcvarsall(generator):	
+	import platform
+	
+	# os_bits should be loaded with '32bit' or '64bit'
+	(os_bits, other) = platform.architecture()
+	
+	# visual studio is a 32-bit app, so when we're on 64-bit, we need to check the WoW dungeon
+	if os_bits == '64bit':
+		key_name = r'SOFTWARE\Wow6432Node\Microsoft\VisualStudio\SxS\VS7'
+	else:
+		key_name = r'SOFTWARE\Microsoft\VisualStudio\SxS\VC7'
+	
 	key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, key_name)
 	if generator.startswith('Visual Studio 8'):
 		value,type = _winreg.QueryValueEx(key, '8.0')
 	elif generator.startswith('Visual Studio 9'):
 		value,type = _winreg.QueryValueEx(key, '9.0')
+	elif generator.startswith('Visual Studio 10'):
+		value,type = _winreg.QueryValueEx(key, '10.0')
 	else:
 		raise Exception('Cannot determin vcvarsall.bat location for: ' + generator)
-	path = value + 'vcvarsall.bat'
+	
+	# not sure why, but the value on 64-bit differs slightly to the original
+	if os_bits == '64bit':
+		path = value + r'vc\vcvarsall.bat'
+	else:
+		path = value + r'vcvarsall.bat'		
+	
 	if not os.path.exists(path):
-		raise Exception("'%s' not found.")
+		raise Exception("'%s' not found." % path)
 	return path
 
 def run_vcbuild(generator, mode, args=''):
@@ -649,14 +685,21 @@ def run_vcbuild(generator, mode, args=''):
 		vcvars_platform = 'x86' # 32/64bit OS building 32bit app
 		config_platform = 'Win32'
 	if mode == 'release':
-		config = 'Release|' + config_platform
+		config = 'Release'
 	else:
-		config = 'Debug|' + config_platform
+		config = 'Debug'
 			
-	cmd = ('@echo off\n'
-		'call "%s" %s \n'
-		'vcbuild /nologo %s "%s" "%s"'
-		) % (get_vcvarsall(generator), vcvars_platform, args, sln_filepath, config)
+	if generator.startswith('Visual Studio 10'):
+		cmd = ('@echo off\n'
+			'call "%s" %s \n'
+			'msbuild /nologo %s /p:Configuration="%s" /p:Platform="%s" "%s"'
+			) % (get_vcvarsall(generator), vcvars_platform, args, config, config_platform, sln_filepath())
+	else:
+		config = config + '|' + config_platform
+		cmd = ('@echo off\n'
+			'call "%s" %s \n'
+			'vcbuild /nologo %s "%s" "%s"'
+			) % (get_vcvarsall(generator), vcvars_platform, args, sln_filepath(), config)
 	print cmd
 	# Generate a batch file, since we can't use environment variables directly.
 	temp_bat = bin_dir + r'\vcbuild.bat'
@@ -666,9 +709,52 @@ def run_vcbuild(generator, mode, args=''):
 
 	return os.system(temp_bat)
 
-def ensure_setup_latest():
+def ensure_setup_latest(generator = None):
 	if not has_setup_version(setup_version):
-		setup()
+		setup(generator)
+
+class HammerBuild:
+	generator = None
+	target_dir = None
+	
+	def __init__(self, _generator, _target_dir):
+		self.generator = _generator
+		self.target_dir = _target_dir
+		
+	def run(self):
+		global bin_dir
+		bin_dir = self.target_dir
+		configure(self.generator)
+		build('debug')
+		build('release')
+
+def hammer():
+	
+	hammer_builds = []
+	if sys.platform == 'win32':
+		hammer_builds += [
+			HammerBuild('Visual Studio 9 2008', 'bin32'),
+			HammerBuild('Visual Studio 9 2008 Win64', 'bin64')]
+	elif sys.platform in ['linux2', 'sunos5', 'freebsd7']:
+		hammer_builds += [
+			HammerBuild('Unix Makefiles', 'bin')]
+	elif sys.platform == 'darwin':
+		hammer_builds += [
+			HammerBuild('Xcode', 'bin')]
+		
+	for hb in hammer_builds:
+		hb.run()
+		
+	package_types = []
+	if sys.platform == 'win32':
+		package_types += ['win']
+	elif sys.platform == 'linux2':
+		package_types += ['src', 'rpm', 'deb']
+	elif sys.platform == 'darwin':
+		package_types += ['mac']
+		
+	for pt in package_types:
+		package(pt)
 
 # Start the program.
 main(sys.argv)

@@ -77,7 +77,6 @@ public:
 	virtual const char*	getNewline() const;
 private:
 	std::ofstream		m_handle;
-	const char* m_logFile;
 };
 
 //! Write log to system log

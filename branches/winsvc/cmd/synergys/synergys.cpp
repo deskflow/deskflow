@@ -1,16 +1,16 @@
 /*
- * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2002 Chris Schoeneman
- * 
- * This package is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * found in the file COPYING that should have accompanied this file.
- * 
- * This package is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
+* synergy -- mouse and keyboard sharing utility
+* Copyright (C) 2002 Chris Schoeneman
+* 
+* This package is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* found in the file COPYING that should have accompanied this file.
+* 
+* This package is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*/
 
 #include "CClientListener.h"
 #include "CClientProxy.h"
@@ -42,7 +42,6 @@
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsUtil.h"
 #include "CMSWindowsServerTaskBarReceiver.h"
-#include "CArchLogWindows.h"
 #include "CArchDaemonWindows.h"
 #include "resource.h"
 #undef DAEMON_RUNNING
@@ -72,8 +71,6 @@
 #endif
 
 typedef int (*StartupFunc)(int, char**);
-typedef std::list<ILogOutputter*> COutputterList;
-
 static void parse(int argc, const char* const* argv);
 static bool loadConfig(const CString& pathname);
 static void loadConfig();
@@ -87,17 +84,18 @@ static void loadConfig();
 class CArgs {
 public:
 	CArgs() :
-		m_pname(NULL),
-		m_backend(false),
-		m_restartable(true),
-		m_daemon(true),
-		m_configFile(),
-		m_logFilter(NULL),
-		m_display(NULL),
-		m_synergyAddress(NULL),
-		m_config(NULL)
-		{ s_instance = this; }
-	~CArgs() { s_instance = NULL; }
+	  m_pname(NULL),
+		  m_backend(false),
+		  m_restartable(true),
+		  m_daemon(true),
+		  m_configFile(),
+		  m_logFilter(NULL),
+		  m_logFile(NULL),
+		  m_display(NULL),
+		  m_synergyAddress(NULL),
+		  m_config(NULL)
+	  { s_instance = this; }
+	  ~CArgs() { s_instance = NULL; }
 
 public:
 	static CArgs*		s_instance;
@@ -107,6 +105,7 @@ public:
 	bool				m_daemon;
 	CString		 		m_configFile;
 	const char* 		m_logFilter;
+	const char*			m_logFile;
 	const char*			m_display;
 	CString 			m_name;
 	CNetworkAddress*	m_synergyAddress;
@@ -139,7 +138,7 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 {
 #if WINAPI_MSWINDOWS
 	return new CMSWindowsServerTaskBarReceiver(
-							CMSWindowsScreen::getInstance(), logBuffer);
+		CMSWindowsScreen::getInstance(), logBuffer);
 #elif WINAPI_XWINDOWS
 	return new CXWindowsServerTaskBarReceiver(logBuffer);
 #elif WINAPI_CARBON
@@ -224,8 +223,8 @@ openClientListener(const CNetworkAddress& address)
 	CClientListener* listen =
 		new CClientListener(address, new CTCPSocketFactory, NULL);
 	EVENTQUEUE->adoptHandler(CClientListener::getConnectedEvent(), listen,
-							new CFunctionEventJob(
-								&handleClientConnected, listen));
+		new CFunctionEventJob(
+		&handleClientConnected, listen));
 	return listen;
 }
 
@@ -257,17 +256,17 @@ openServerScreen()
 {
 	CScreen* screen = createScreen();
 	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
-							screen->getEventTarget(),
-							new CFunctionEventJob(
-								&handleScreenError));
+		screen->getEventTarget(),
+		new CFunctionEventJob(
+		&handleScreenError));
 	EVENTQUEUE->adoptHandler(IScreen::getSuspendEvent(),
-							screen->getEventTarget(),
-							new CFunctionEventJob(
-								&handleSuspend));
+		screen->getEventTarget(),
+		new CFunctionEventJob(
+		&handleSuspend));
 	EVENTQUEUE->adoptHandler(IScreen::getResumeEvent(),
-							screen->getEventTarget(),
-							new CFunctionEventJob(
-								&handleResume));
+		screen->getEventTarget(),
+		new CFunctionEventJob(
+		&handleResume));
 	return screen;
 }
 
@@ -277,11 +276,11 @@ closeServerScreen(CScreen* screen)
 {
 	if (screen != NULL) {
 		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
-							screen->getEventTarget());
+			screen->getEventTarget());
 		EVENTQUEUE->removeHandler(IScreen::getSuspendEvent(),
-							screen->getEventTarget());
+			screen->getEventTarget());
 		EVENTQUEUE->removeHandler(IScreen::getResumeEvent(),
-							screen->getEventTarget());
+			screen->getEventTarget());
 		delete screen;
 	}
 }
@@ -321,7 +320,7 @@ openServer(const CConfig& config, CPrimaryClient* primaryClient)
 {
 	CServer* server = new CServer(config, primaryClient);
 	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
-						new CFunctionEventJob(handleNoClients));
+		new CFunctionEventJob(handleNoClients));
 	return server;
 }
 
@@ -340,9 +339,9 @@ closeServer(CServer* server)
 	double timeout = 3.0;
 	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
-						new CFunctionEventJob(handleClientsDisconnected));
+		new CFunctionEventJob(handleClientsDisconnected));
 	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
-						new CFunctionEventJob(handleClientsDisconnected));
+		new CFunctionEventJob(handleClientsDisconnected));
 	CEvent event;
 	EVENTQUEUE->getEvent(event);
 	while (event.getType() != CEvent::kQuit) {
@@ -382,41 +381,41 @@ retryHandler(const CEvent&, void*)
 
 	// try initializing/starting the server again
 	switch (s_serverState) {
-	case kUninitialized:
-	case kInitialized:
-	case kStarted:
-		assert(0 && "bad internal server state");
-		break;
+case kUninitialized:
+case kInitialized:
+case kStarted:
+	assert(0 && "bad internal server state");
+	break;
 
-	case kInitializing:
-		LOG((CLOG_DEBUG1 "retry server initialization"));
-		s_serverState = kUninitialized;
-		if (!initServer()) {
-			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
-		}
-		break;
+case kInitializing:
+	LOG((CLOG_DEBUG1 "retry server initialization"));
+	s_serverState = kUninitialized;
+	if (!initServer()) {
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	}
+	break;
 
-	case kInitializingToStart:
-		LOG((CLOG_DEBUG1 "retry server initialization"));
-		s_serverState = kUninitialized;
-		if (!initServer()) {
-			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
-		}
-		else if (s_serverState == kInitialized) {
-			LOG((CLOG_DEBUG1 "starting server"));
-			if (!startServer()) {
-				EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
-			}
-		}
-		break;
-
-	case kStarting:
-		LOG((CLOG_DEBUG1 "retry starting server"));
-		s_serverState = kInitialized;
+case kInitializingToStart:
+	LOG((CLOG_DEBUG1 "retry server initialization"));
+	s_serverState = kUninitialized;
+	if (!initServer()) {
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	}
+	else if (s_serverState == kInitialized) {
+		LOG((CLOG_DEBUG1 "starting server"));
 		if (!startServer()) {
 			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 		}
-		break;
+	}
+	break;
+
+case kStarting:
+	LOG((CLOG_DEBUG1 "retry starting server"));
+	s_serverState = kInitialized;
+	if (!startServer()) {
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	}
+	break;
 	}
 }
 
@@ -461,14 +460,14 @@ initServer()
 		closeServerScreen(serverScreen);
 		return false;
 	}
-	
+
 	if (ARG->m_restartable) {
 		// install a timer and handler to retry later
 		assert(s_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
 		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
 		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
-							new CFunctionEventJob(&retryHandler, NULL));
+			new CFunctionEventJob(&retryHandler, NULL));
 		s_serverState = kInitializing;
 		return true;
 	}
@@ -530,7 +529,7 @@ startServer()
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
 		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
 		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
-							new CFunctionEventJob(&retryHandler, NULL));
+			new CFunctionEventJob(&retryHandler, NULL));
 		s_serverState = kStarting;
 		return true;
 	}
@@ -572,9 +571,9 @@ cleanupServer()
 		s_serverState   = kUninitialized;
 	}
 	else if (s_serverState == kInitializing ||
-			s_serverState == kInitializingToStart) {
-		stopRetryTimer();
-		s_serverState = kUninitialized;
+		s_serverState == kInitializingToStart) {
+			stopRetryTimer();
+			s_serverState = kUninitialized;
 	}
 	assert(s_primaryClient == NULL);
 	assert(s_serverScreen == NULL);
@@ -608,7 +607,7 @@ void
 reloadSignalHandler(CArch::ESignal, void*)
 {
 	EVENTQUEUE->addEvent(CEvent(getReloadConfigEvent(),
-							IEventQueue::getSystemTarget()));
+		IEventQueue::getSystemTarget()));
 }
 
 static
@@ -656,6 +655,17 @@ mainLoop()
 	// create the event queue
 	CEventQueue eventQueue;
 
+	// logging to files
+	CFileLogOutputter* fileLog = NULL;
+
+	if (ARG->m_logFile != NULL) {
+		fileLog = new CFileLogOutputter(ARG->m_logFile);
+
+		CLOG->insert(fileLog);
+
+		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", ARG->m_logFile));
+	}
+
 	// if configuration has no screens then add this system
 	// as the default
 	if (ARG->m_config->begin() == ARG->m_config->end()) {
@@ -689,51 +699,48 @@ mainLoop()
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);
 	EVENTQUEUE->adoptHandler(getReloadConfigEvent(),
-							IEventQueue::getSystemTarget(),
-							new CFunctionEventJob(&reloadConfig));
+		IEventQueue::getSystemTarget(),
+		new CFunctionEventJob(&reloadConfig));
 
 	// handle force reconnect event by disconnecting clients.  they'll
 	// reconnect automatically.
 	EVENTQUEUE->adoptHandler(getForceReconnectEvent(),
-							IEventQueue::getSystemTarget(),
-							new CFunctionEventJob(&forceReconnect));
+		IEventQueue::getSystemTarget(),
+		new CFunctionEventJob(&forceReconnect));
 
 	// to work around the sticky meta keys problem, we'll give users
 	// the option to reset the state of synergys
 	EVENTQUEUE->adoptHandler(getResetServerEvent(),
-							IEventQueue::getSystemTarget(),
-							new CFunctionEventJob(&resetServer));
+		IEventQueue::getSystemTarget(),
+		new CFunctionEventJob(&resetServer));
 
 	// run event loop.  if startServer() failed we're supposed to retry
 	// later.  the timer installed by startServer() will take care of
 	// that.
 	CEvent event;
-	
-	// on windows, tell the service controller the service has started
-	// but what we'll be doing from now on is re-launching process
-	// and just using the service as a means to re-launch when the
-	// active session changes (as per Session0_Vista.docx).
-	// so this is now probably useless (for Windows anyway).
 	DAEMON_RUNNING(true);
-
 	EVENTQUEUE->getEvent(event);
 	while (event.getType() != CEvent::kQuit) {
 		EVENTQUEUE->dispatchEvent(event);
 		CEvent::deleteData(event);
 		EVENTQUEUE->getEvent(event);
 	}
-
 	DAEMON_RUNNING(false);
 
 	// close down
 	LOG((CLOG_DEBUG1 "stopping server"));
 	EVENTQUEUE->removeHandler(getForceReconnectEvent(),
-							IEventQueue::getSystemTarget());
+		IEventQueue::getSystemTarget());
 	EVENTQUEUE->removeHandler(getReloadConfigEvent(),
-							IEventQueue::getSystemTarget());
+		IEventQueue::getSystemTarget());
 	cleanupServer();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
+
+	if (fileLog) {
+		CLOG->remove(fileLog);
+		delete fileLog;		
+	}
 
 	return kExitSuccess;
 }
@@ -772,25 +779,17 @@ standardStartup(int argc, char** argv)
 
 static
 int
-run(int argc, char** argv, const COutputterList outputterList, StartupFunc startup)
+run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	// general initialization
 	ARG->m_synergyAddress = new CNetworkAddress;
 	ARG->m_config         = new CConfig;
 	ARG->m_pname          = ARCH->getBasename(argv[0]);
 
-	assert(outputterList.size() != 0);
-	
-	// allow us to add multiple log outputters into the logging system
-	for (COutputterList::const_iterator index = outputterList.begin();
-		index != outputterList.end(); ++index) {
-			CLOG->insert(*index);
+	// install caller's output filter
+	if (outputter != NULL) {
+		CLOG->insert(outputter);
 	}
-
-	//// install caller's output filter
-	//if (outputter != NULL) {
-	//	CLOG->insert(outputter);
-	//}
 
 	// save log messages
 	CBufferedLogOutputter logBuffer(1000);
@@ -814,14 +813,6 @@ run(int argc, char** argv, const COutputterList outputterList, StartupFunc start
 	return result;
 }
 
-static
-int
-run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
-{
-	COutputterList outputterList;
-	outputterList.push_back(outputter);
-	return run(argc, argv, outputterList, startup);
-}
 
 //
 // command line parsing
@@ -836,13 +827,13 @@ void
 version()
 {
 	LOG((CLOG_PRINT
-"%s %s, protocol version %d.%d\n"
-"%s",
-								ARG->m_pname,
-								kVersion,
-								kProtocolMajorVersion,
-								kProtocolMinorVersion,
-								kCopyright));
+		"%s %s, protocol version %d.%d\n"
+		"%s",
+		ARG->m_pname,
+		kVersion,
+		kProtocolMajorVersion,
+		kProtocolMinorVersion,
+		kCopyright));
 }
 
 static
@@ -851,9 +842,9 @@ help()
 {
 #if WINAPI_XWINDOWS
 #  define USAGE_DISPLAY_ARG		\
-" [--display <display>]"
+	" [--display <display>]"
 #  define USAGE_DISPLAY_INFO	\
-"      --display <display>  connect to the X server at <display>\n"
+	"      --display <display>  connect to the X server at <display>\n"
 #else
 #  define USAGE_DISPLAY_ARG
 #  define USAGE_DISPLAY_INFO
@@ -862,93 +853,94 @@ help()
 #if SYSAPI_WIN32
 
 #  define PLATFORM_ARGS														\
-" [--daemon|--no-daemon]"
+	" [--daemon|--no-daemon]"
 #  define PLATFORM_DESC
 #  define PLATFORM_EXTRA													\
-"At least one command line argument is required.  If you don't otherwise\n"	\
-"need an argument use `--daemon'.\n"										\
-"\n"
+	"At least one command line argument is required.  If you don't otherwise\n"	\
+	"need an argument use `--daemon'.\n"										\
+	"\n"
 
 #else
 
 #  define PLATFORM_ARGS														\
-" [--daemon|--no-daemon]"
+	" [--daemon|--no-daemon]"
 #  define PLATFORM_DESC
 #  define PLATFORM_EXTRA
 
 #endif
 
 	LOG((CLOG_PRINT
-"Usage: %s"
-" [--address <address>]"
-" [--config <pathname>]"
-" [--debug <level>]"
-USAGE_DISPLAY_ARG
-" [--name <screen-name>]"
-" [--restart|--no-restart]"
-PLATFORM_ARGS
-"\n\n"
-"Start the synergy mouse/keyboard sharing server.\n"
-"\n"
-"  -a, --address <address>  listen for clients on the given address.\n"
-"  -c, --config <pathname>  use the named configuration file instead.\n"
-"  -d, --debug <level>      filter out log messages with priorty below level.\n"
-"                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
-"                           DEBUG, DEBUG1, DEBUG2.\n"
-USAGE_DISPLAY_INFO
-"  -f, --no-daemon          run the server in the foreground.\n"
-"*     --daemon             run the server as a daemon.\n"
-"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
-"                           this screen in the configuration.\n"
-"  -1, --no-restart         do not try to restart the server if it fails for\n"
-"                           some reason.\n"
-"*     --restart            restart the server automatically if it fails.\n"
-PLATFORM_DESC
-"  -h, --help               display this help and exit.\n"
-"      --version            display version information and exit.\n"
-"\n"
-"* marks defaults.\n"
-"\n"
-PLATFORM_EXTRA
-"The argument for --address is of the form: [<hostname>][:<port>].  The\n"
-"hostname must be the address or hostname of an interface on the system.\n"
-"The default is to listen on all interfaces.  The port overrides the\n"
-"default port, %d.\n"
-"\n"
-"If no configuration file pathname is provided then the first of the\n"
-"following to load successfully sets the configuration:\n"
-"  %s\n"
-"  %s\n"
-"If no configuration file can be loaded then the configuration uses its\n"
-"defaults with just the server screen.\n"
-"\n"
-"Where log messages go depends on the platform and whether or not the\n"
-"server is running as a daemon.",
-								ARG->m_pname,
-								kDefaultPort,
-								ARCH->concatPath(
-									ARCH->getUserDirectory(),
-									USR_CONFIG_NAME).c_str(),
-								ARCH->concatPath(
-									ARCH->getSystemDirectory(),
-									SYS_CONFIG_NAME).c_str()));
+		"Usage: %s"
+		" [--address <address>]"
+		" [--config <pathname>]"
+		" [--debug <level>]"
+		USAGE_DISPLAY_ARG
+		" [--name <screen-name>]"
+		" [--restart|--no-restart]"
+		PLATFORM_ARGS
+		"\n\n"
+		"Start the synergy mouse/keyboard sharing server.\n"
+		"\n"
+		"  -a, --address <address>  listen for clients on the given address.\n"
+		"  -c, --config <pathname>  use the named configuration file instead.\n"
+		"  -d, --debug <level>      filter out log messages with priorty below level.\n"
+		"                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
+		"                           DEBUG, DEBUG1, DEBUG2.\n"
+		USAGE_DISPLAY_INFO
+		"  -f, --no-daemon          run the server in the foreground.\n"
+		"*     --daemon             run the server as a daemon.\n"
+		"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
+		"                           this screen in the configuration.\n"
+		"  -1, --no-restart         do not try to restart the server if it fails for\n"
+		"                           some reason.\n"
+		"*     --restart            restart the server automatically if it fails.\n"
+		"  -l  --log <file>         write log messages to file.\n"
+		PLATFORM_DESC
+		"  -h, --help               display this help and exit.\n"
+		"      --version            display version information and exit.\n"
+		"\n"
+		"* marks defaults.\n"
+		"\n"
+		PLATFORM_EXTRA
+		"The argument for --address is of the form: [<hostname>][:<port>].  The\n"
+		"hostname must be the address or hostname of an interface on the system.\n"
+		"The default is to listen on all interfaces.  The port overrides the\n"
+		"default port, %d.\n"
+		"\n"
+		"If no configuration file pathname is provided then the first of the\n"
+		"following to load successfully sets the configuration:\n"
+		"  %s\n"
+		"  %s\n"
+		"If no configuration file can be loaded then the configuration uses its\n"
+		"defaults with just the server screen.\n"
+		"\n"
+		"Where log messages go depends on the platform and whether or not the\n"
+		"server is running as a daemon.",
+		ARG->m_pname,
+		kDefaultPort,
+		ARCH->concatPath(
+		ARCH->getUserDirectory(),
+		USR_CONFIG_NAME).c_str(),
+		ARCH->concatPath(
+		ARCH->getSystemDirectory(),
+		SYS_CONFIG_NAME).c_str()));
 }
 
 static
 bool
 isArg(int argi, int argc, const char* const* argv,
-				const char* name1, const char* name2,
-				int minRequiredParameters = 0)
+	  const char* name1, const char* name2,
+	  int minRequiredParameters = 0)
 {
 	if ((name1 != NULL && strcmp(argv[argi], name1) == 0) ||
 		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
-		// match.  check args left.
-		if (argi + minRequiredParameters >= argc) {
-			LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
-								ARG->m_pname, argv[argi], ARG->m_pname));
-			bye(kExitArgs);
-		}
-		return true;
+			// match.  check args left.
+			if (argi + minRequiredParameters >= argc) {
+				LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
+					ARG->m_pname, argv[argi], ARG->m_pname));
+				bye(kExitArgs);
+			}
+			return true;
 	}
 
 	// no match
@@ -969,25 +961,21 @@ parse(int argc, const char* const* argv)
 	// parse options
 	int i = 1;
 	for (; i < argc; ++i) {
-		
-		if (isArg(i, argc, argv, NULL, "--ignore-this-arg", 1)) {
-			// for debugging purposes
-			i++;
-		}
-		else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+		if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 			// change logging level
 			ARG->m_logFilter = argv[++i];
 		}
+
 		else if (isArg(i, argc, argv, "-a", "--address", 1)) {
 			// save listen address
 			try {
 				*ARG->m_synergyAddress = CNetworkAddress(argv[i + 1],
-														kDefaultPort);
+					kDefaultPort);
 				ARG->m_synergyAddress->resolve();
 			}
 			catch (XSocketAddress& e) {
 				LOG((CLOG_PRINT "%s: %s" BYE,
-								ARG->m_pname, e.what(), ARG->m_pname));
+					ARG->m_pname, e.what(), ARG->m_pname));
 				bye(kExitArgs);
 			}
 			++i;
@@ -1018,6 +1006,10 @@ parse(int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, NULL, "--daemon")) {
 			// daemonize
 			ARG->m_daemon = true;
+		}
+		else if (isArg(i, argc, argv, "-l", "--log", 1)) {
+			// logging to file
+			ARG->m_logFile = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, "-1", "--no-restart")) {
@@ -1052,7 +1044,7 @@ parse(int argc, const char* const* argv)
 
 		else if (argv[i][0] == '-') {
 			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-								ARG->m_pname, argv[i], ARG->m_pname));
+				ARG->m_pname, argv[i], ARG->m_pname));
 			bye(kExitArgs);
 		}
 
@@ -1065,7 +1057,7 @@ parse(int argc, const char* const* argv)
 	// no non-option arguments are allowed
 	if (i != argc) {
 		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-								ARG->m_pname, argv[i], ARG->m_pname));
+			ARG->m_pname, argv[i], ARG->m_pname));
 		bye(kExitArgs);
 	}
 
@@ -1088,7 +1080,7 @@ parse(int argc, const char* const* argv)
 	// set log filter
 	if (!CLOG->setFilter(ARG->m_logFilter)) {
 		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-								ARG->m_pname, ARG->m_logFilter, ARG->m_pname));
+			ARG->m_pname, ARG->m_logFilter, ARG->m_pname));
 		bye(kExitArgs);
 	}
 
@@ -1115,7 +1107,7 @@ loadConfig(const CString& pathname)
 			// since we try several paths and we expect some to be
 			// missing.
 			LOG((CLOG_DEBUG "cannot open configuration \"%s\"",
-								pathname.c_str()));
+				pathname.c_str()));
 			return false;
 		}
 		configStream >> *ARG->m_config;
@@ -1125,7 +1117,7 @@ loadConfig(const CString& pathname)
 	catch (XConfigRead& e) {
 		// report error in configuration file
 		LOG((CLOG_ERR "cannot read configuration \"%s\": %s",
-								pathname.c_str(), e.what()));
+			pathname.c_str(), e.what()));
 	}
 	return false;
 }
@@ -1229,23 +1221,17 @@ byeThrow(int x)
 	CArchMiscWindows::daemonFailed(x);
 }
 
-// this is only called once at the start
 static
 int
 daemonNTMainLoop(int argc, const char** argv)
 {
-	// has to be a better way to trap debug when running as service
-	//while(true) { Sleep(1000); }
-
 	parse(argc, argv);
 	ARG->m_backend = false;
-
 	loadConfig();
-	//return CArchMiscWindows::runDaemon(mainLoop);
 
-	// copy process name to somewhere static that relaunch loop can access 
+	// copy process name to somewhere static that relaunch loop can access
 	ARCH->m_pname = ARG->m_pname;
-	
+
 	DAEMON_RUNNING(true);
 	return CArchMiscWindows::runDaemon(CArchDaemonWindows::relaunchLoop);
 	DAEMON_RUNNING(false);
@@ -1284,19 +1270,18 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 	MessageBox(NULL, msg.c_str(), title, MB_OK | MB_ICONWARNING);
 }
 
-// called only when running in foreground (not a service)
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
 	try {
 		CArchMiscWindows::setIcons((HICON)LoadImage(instance,
-									MAKEINTRESOURCE(IDI_SYNERGY),
-									IMAGE_ICON,
-									32, 32, LR_SHARED),
-									(HICON)LoadImage(instance,
-									MAKEINTRESOURCE(IDI_SYNERGY),
-									IMAGE_ICON,
-									16, 16, LR_SHARED));
+			MAKEINTRESOURCE(IDI_SYNERGY),
+			IMAGE_ICON,
+			32, 32, LR_SHARED),
+			(HICON)LoadImage(instance,
+			MAKEINTRESOURCE(IDI_SYNERGY),
+			IMAGE_ICON,
+			16, 16, LR_SHARED));
 		CArch arch(instance);
 		CMSWindowsScreen::init(instance);
 		CLOG;
@@ -1322,14 +1307,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			}
 		}
 
-		COutputterList outputterList;
-		outputterList.push_back(new CMessageBoxOutputter);
-		
-		// maybe not for foreground (less useful) - better for service
-		//outputterList.push_back(new CSystemLogOutputter);
-
 		// send PRINT and FATAL output to a message box
-		int result = run(__argc, __argv, outputterList, startup);
+		int result = run(__argc, __argv, new CMessageBoxOutputter, startup);
 
 		// let user examine any messages if we're running as a backend
 		// by putting up a dialog box before exiting.

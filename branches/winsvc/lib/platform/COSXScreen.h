@@ -16,6 +16,7 @@
 #define COSXSCREEN_H
 
 #include <Carbon/Carbon.h>
+#include "COSXClipboard.h"
 #include "CPlatformScreen.h"
 #include "stdmap.h"
 #include "stdvector.h"
@@ -94,14 +95,14 @@ private:
 	void				sendClipboardEvent(CEvent::Type type, ClipboardID id) const;
 
 	// message handlers
-	bool				onMouseMove(SInt32 x, SInt32 y);
+	bool				onMouseMove(SInt32 mx, SInt32 my);
 	// mouse button handler.  pressed is true if this is a mousedown
 	// event, false if it is a mouseup event.  macButton is the index
 	// of the button pressed using the mac button mapping.
 	bool				onMouseButton(bool pressed, UInt16 macButton);
 	bool				onMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
 
-	bool				onKey(EventRef event);
+	bool				onKey(CGEventRef event);
 	bool				onHotKey(EventRef event) const;
 
 	// map mac mouse button to synergy buttons
@@ -152,7 +153,12 @@ private:
 	static bool			isGlobalHotKeyOperatingModeAvailable();
 	static void			setGlobalHotKeysEnabled(bool enabled);
 	static bool			getGlobalHotKeysEnabled();
-
+	
+	// Quartz event tap support
+	static CGEventRef	handleCGInputEvent(CGEventTapProxy proxy,
+										   CGEventType type,
+										   CGEventRef event,
+										   void* refcon);
 private:
 	struct CHotKeyItem {
 	public:
@@ -200,6 +206,7 @@ private:
 	COSXKeyState*		m_keyState;
 
 	// clipboards
+	COSXClipboard       m_pasteboard;
 	UInt32				m_sequenceNumber;
 
 	// screen saver stuff
@@ -241,6 +248,10 @@ private:
 
 	// events
 	static CEvent::Type		s_confirmSleepEvent;
+	
+	// Quartz input event support
+	CFMachPortRef			m_eventTapPort;
+	CFRunLoopSourceRef		m_eventTapRLSR;
 };
 
 #endif

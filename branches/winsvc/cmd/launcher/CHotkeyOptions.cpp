@@ -17,6 +17,7 @@
 #include "CConfig.h"
 #include "CHotkeyOptions.h"
 #include "CStringUtil.h"
+#include "CLog.h"
 #include "LaunchUtil.h"
 #include "resource.h"
 
@@ -713,7 +714,10 @@ CHotkeyOptions::CConditionDialog::getChar(WPARAM wParam, LPARAM lParam)
 	BYTE keyState[256];
 	UINT virtualKey = (UINT)wParam;
 	UINT scanCode   = (UINT)((lParam & 0x0ff0000u) >> 16);
-	GetKeyboardState(keyState);
+	if (!GetKeyboardState(keyState)) {
+		LOG((CLOG_WARN "GetKeyboardState failed on CHotkeyOptions::CConditionDialog::getChar"));
+		return kKeyNone;
+	}
 
 	// reset modifier state
 	keyState[VK_SHIFT]    = 0;
@@ -730,7 +734,7 @@ CHotkeyOptions::CConditionDialog::getChar(WPARAM wParam, LPARAM lParam)
 
 	// translate virtual key to character
 	int n;
-	KeyID id;
+	KeyID id = kKeyNone;
 	if (CArchMiscWindows::isWindows95Family()) {
 		// XXX -- how do we get characters not in Latin-1?
 		WORD ascii;
@@ -747,6 +751,10 @@ CHotkeyOptions::CConditionDialog::getChar(WPARAM wParam, LPARAM lParam)
 		ToUnicode_t s_ToUnicode = NULL;
 		if (s_ToUnicode == NULL) {
 			HMODULE userModule = GetModuleHandle("user32.dll");
+			if(userModule == NULL) {
+				LOG((CLOG_ERR "GetModuleHandle(\"user32.dll\") returned NULL"));
+				return kKeyNone;
+			}
 			s_ToUnicode =
 				(ToUnicode_t)GetProcAddress(userModule, "ToUnicode");
 		}
@@ -1355,8 +1363,10 @@ CHotkeyOptions::CActionDialog::getChar(WPARAM wParam, LPARAM lParam)
 	BYTE keyState[256];
 	UINT virtualKey = (UINT)wParam;
 	UINT scanCode   = (UINT)((lParam & 0x0ff0000u) >> 16);
-	GetKeyboardState(keyState);
-
+	if (!GetKeyboardState(keyState)) {
+		LOG((CLOG_WARN "GetKeyboardState failed on CHotkeyOptions::CActionDialog::getChar"));
+		return kKeyNone;
+	}
 	// reset modifier state
 	keyState[VK_SHIFT]    = 0;
 	keyState[VK_LSHIFT]   = 0;
@@ -1389,6 +1399,10 @@ CHotkeyOptions::CActionDialog::getChar(WPARAM wParam, LPARAM lParam)
 		ToUnicode_t s_ToUnicode = NULL;
 		if (s_ToUnicode == NULL) {
 			HMODULE userModule = GetModuleHandle("user32.dll");
+			if(userModule==NULL) {
+				LOG((CLOG_ERR "GetModuleHandle(\"user32.dll\") returned NULL"));
+				return kKeyNone;
+			}
 			s_ToUnicode =
 				(ToUnicode_t)GetProcAddress(userModule, "ToUnicode");
 		}

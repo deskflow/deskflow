@@ -122,7 +122,7 @@ private:
 	};
 
 private:
-	static CArchDaemonWindows* s_daemon;
+	static CArchDaemonWindows*	s_daemon;
 
 	CArchMutex			m_serviceMutex;
 	CArchCond			m_serviceCondVar;

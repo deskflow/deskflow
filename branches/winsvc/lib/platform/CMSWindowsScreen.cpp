@@ -372,7 +372,7 @@ CMSWindowsScreen::openScreensaver(bool notify)
 	if (m_screensaverNotify) {
 		m_desks->installScreensaverHooks(true);
 	}
-	else {
+	else if (m_screensaver) {
 		m_screensaver->disable();
 	}
 }
@@ -395,6 +395,7 @@ void
 CMSWindowsScreen::screensaver(bool activate)
 {
 	assert(m_screensaver != NULL);
+	if (m_screensaver==NULL) return;
 
 	if (activate) {
 		m_screensaver->activate();
@@ -845,6 +846,10 @@ void
 CMSWindowsScreen::sendClipboardEvent(CEvent::Type type, ClipboardID id)
 {
 	CClipboardInfo* info   = (CClipboardInfo*)malloc(sizeof(CClipboardInfo));
+	if(info == NULL) {
+		LOG((CLOG_ERR "malloc failed on %s:%s", __FILE__, __LINE__ ));
+		return;
+	}
 	info->m_id             = id;
 	info->m_sequenceNumber = m_sequenceNumber;
 	sendEvent(type, info);

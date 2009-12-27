@@ -87,11 +87,11 @@ CConfig::renameScreen(const CString& oldName,
 
 	// update alias targets
 	if (CStringUtil::CaselessCmp::equal(oldName, oldCanonical)) {
-		for (CNameMap::iterator index = m_nameToCanonicalName.begin();
-							index != m_nameToCanonicalName.end(); ++index) {
+		for (CNameMap::iterator iter = m_nameToCanonicalName.begin();
+							iter != m_nameToCanonicalName.end(); ++iter) {
 			if (CStringUtil::CaselessCmp::equal(
-							index->second, oldCanonical)) {
-				index->second = newName;
+							iter->second, oldCanonical)) {
+				iter->second = newName;
 			}
 		}
 	}
@@ -119,10 +119,10 @@ CConfig::removeScreen(const CString& name)
 	}
 
 	// remove aliases (and canonical name)
-	for (CNameMap::iterator index = m_nameToCanonicalName.begin();
-								index != m_nameToCanonicalName.end(); ) {
-		if (index->second == canonical) {
-			m_nameToCanonicalName.erase(index++);
+	for (CNameMap::iterator iter = m_nameToCanonicalName.begin();
+								iter != m_nameToCanonicalName.end(); ) {
+		if (iter->second == canonical) {
+			m_nameToCanonicalName.erase(iter++);
 		}
 		else {
 			++index;

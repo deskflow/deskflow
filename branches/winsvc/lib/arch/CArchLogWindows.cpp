@@ -73,24 +73,18 @@ CArchLogWindows::writeLog(ELevel level, const char* msg)
 			break;
 		}
 
-		//// log it
-		//// FIXME -- win32 wants to use a message table to look up event
-		//// strings.  log messages aren't organized that way so we'll
-		//// just dump our string into the raw data section of the event
-		//// so users can at least see the message.  note that we use our
-		//// level as the event category.
-		//ReportEvent(m_eventLog, type, static_cast<WORD>(level),
-		//						0,					// event ID
-		//						NULL,
-		//						0,
-		//						(DWORD)strlen(msg) + 1,	// raw data size
-		//						NULL,
-		//						const_cast<char*>(msg));// raw data
-
-		// not sure why the code above passes as raw data; passing string
-		// seems to work just fine on vista - maybe pre-vist problem?
-		// would be nice to have this in it's own log (i.e. not applications)
-		// but maybe this would introduce backward compatability issues.
-		ReportEvent(m_eventLog, type, 0, 1, NULL, 1, 0, &LPCTSTR(msg), NULL);
+		// log it
+		// FIXME -- win32 wants to use a message table to look up event
+		// strings.  log messages aren't organized that way so we'll
+		// just dump our string into the raw data section of the event
+		// so users can at least see the message.  note that we use our
+		// level as the event category.
+		ReportEvent(m_eventLog, type, static_cast<WORD>(level),
+								0,					// event ID
+								NULL,
+								0,
+								(DWORD)strlen(msg) + 1,	// raw data size
+								NULL,
+								const_cast<char*>(msg));// raw data
 	}
 }

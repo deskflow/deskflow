@@ -164,8 +164,6 @@ public:
 	//! Briefly interrupt power saving
 	static void			wakeupDisplay();
 
-	static std::string	getDaemonArgs();
-
 private:
 	//! Open and return a registry key, closing the parent key
 	static HKEY			openKey(HKEY parent, const TCHAR* child, bool create);

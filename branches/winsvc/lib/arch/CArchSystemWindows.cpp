@@ -130,8 +130,11 @@ CArchSystemWindows::isWOW64() const
 {
 #if WINVER >= _WIN32_WINNT_WINXP
 	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+	HMODULE hModule = GetModuleHandle(TEXT("kernel32"));
+	if (!hModule) return FALSE;
+
 	LPFN_ISWOW64PROCESS fnIsWow64Process =
-		(LPFN_ISWOW64PROCESS) GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
+		(LPFN_ISWOW64PROCESS) GetProcAddress(hModule, "IsWow64Process");
 
 	BOOL bIsWow64 = FALSE;
 	if(NULL != fnIsWow64Process &&
