@@ -46,10 +46,12 @@ commands = [
 	'dist',
 	'open',
 	'destroy',
+	'kill',
 	'usage',
 	'revision',
 	'help',
 	'hammer',
+	'reformat',
 	'--help',
 	'-h',
 	'/?'
@@ -123,11 +125,13 @@ def usage():
 		'  build       Builds using the platform build chain\n'
 		'  clean       Cleans using the platform build chain\n'
 		'  destroy     Destroy all temporary files (bin and build)\n'
+		'  kill        Kills all synergy processes (run as admin)"\n'
 		'  update      Updates the source code from repository\n'
 		'  revision    Display the current source code revision\n'
 		'  package     Create a distribution package (e.g. tar.gz)\n'
 		'  install     Installs the program\n'
 		'  hammer      Golden hammer (config, build, package)\n'
+		'  reformat    Reformat .cpp and .h files using AStyle\n'
 		'  usage       Shows the help screen\n'
 		'\n'
 		'Alias commands:\n'
@@ -313,6 +317,14 @@ def destroy():
 		except:
 			print "Warning: Could not remove ./bin/ directory."
 
+def kill():
+	if sys.platform == 'win32':
+		os.system('taskkill /F /FI "IMAGENAME eq synergy*"')
+		return True
+	else:
+		print 'kill: Error: Command not implemented for current platform'
+		return False
+			
 def package(type):
 
 	# Package is supported by default.
@@ -452,10 +464,14 @@ def main(argv):
 				usage()
 			elif cmd in ['destroy']:
 				destroy()
+			elif cmd in ['kill']:
+				kill()
 			elif cmd in ['setup']:
 				setup()
 			elif cmd in ['hammer']:
 				hammer()
+			elif cmd in ['reformat']:
+				reformat()
 			else:
 				print 'Command not yet implemented:',cmd
 
@@ -743,6 +759,13 @@ def hammer():
 		
 	for pt in package_types:
 		package(pt)
+
+def reformat():
+	# TODO: error handling
+	os.system(
+		r'tool\astyle\AStyle.exe '
+		'--quiet --suffix=none --style=java --indent=force-tab=4 --recursive '
+		'lib/*.cpp lib/*.h cmd/*.cpp cmd/*.h')
 
 # Start the program.
 main(sys.argv)
