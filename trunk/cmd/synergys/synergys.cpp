@@ -55,7 +55,7 @@
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
-#define DAEMON_NAME "Synergy Server"
+#define DAEMON_NAME "Synergy+ Server"
 #elif SYSAPI_UNIX
 #define DAEMON_NAME "synergys"
 #endif

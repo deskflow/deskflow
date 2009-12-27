@@ -52,7 +52,7 @@
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
-#define DAEMON_NAME "Synergy Client"
+#define DAEMON_NAME "Synergy+ Client"
 #elif SYSAPI_UNIX
 #define DAEMON_NAME "synergyc"
 #endif
@@ -80,7 +80,7 @@ public:
 		m_serverAddress(NULL),
 		m_logFile(NULL)
 		{ s_instance = this; }
-	~CArgs() { s_instance = NULL; }
+	  ~CArgs() { s_instance = NULL; }
 
 public:
 	static CArgs*		s_instance;
