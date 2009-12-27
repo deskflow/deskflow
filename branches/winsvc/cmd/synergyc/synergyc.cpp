@@ -81,7 +81,7 @@ public:
 		m_serverAddress(NULL),
 		m_logFile(NULL),
 		m_debugData(NULL)
-	  { s_instance = this; }
+		{ s_instance = this; }
 	  ~CArgs() { s_instance = NULL; }
 
 public:
@@ -97,7 +97,6 @@ public:
 	CNetworkAddress* 	m_serverAddress;
 	const char*			m_logFile;
 	const char*			m_debugData;
-
 };
 
 CArgs*					CArgs::s_instance = NULL;
@@ -126,7 +125,7 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 {
 #if WINAPI_MSWINDOWS
 	return new CMSWindowsClientTaskBarReceiver(
-		CMSWindowsScreen::getInstance(), logBuffer);
+							CMSWindowsScreen::getInstance(), logBuffer);
 #elif WINAPI_XWINDOWS
 	return new CXWindowsClientTaskBarReceiver(logBuffer);
 #elif WINAPI_CARBON
@@ -180,13 +179,13 @@ nextRestartTimeout()
 	// choose next restart timeout.  we start with rapid retries
 	// then slow down.
 	if (s_retryTime < 1.0) {
-	s_retryTime = 1.0;
+		s_retryTime = 1.0;
 	}
 	else if (s_retryTime < 3.0) {
-	s_retryTime = 3.0;
+		s_retryTime = 3.0;
 	}
 	else {
-	s_retryTime = 5.0;
+		s_retryTime = 5.0;
 	}
 	return s_retryTime;
 	*/
@@ -206,9 +205,9 @@ openClientScreen()
 {
 	CScreen* screen = createScreen();
 	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
-		screen->getEventTarget(),
-		new CFunctionEventJob(
-		&handleScreenError));
+							screen->getEventTarget(),
+							new CFunctionEventJob(
+								&handleScreenError));
 	return screen;
 }
 
@@ -218,7 +217,7 @@ closeClientScreen(CScreen* screen)
 {
 	if (screen != NULL) {
 		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
-			screen->getEventTarget());
+							screen->getEventTarget());
 		delete screen;
 	}
 }
@@ -244,7 +243,7 @@ scheduleClientRestart(double retryTime)
 	LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
 	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
-		new CFunctionEventJob(&handleClientRestart, timer));
+							new CFunctionEventJob(&handleClientRestart, timer));
 }
 
 static
@@ -295,16 +294,16 @@ CClient*
 openClient(const CString& name, const CNetworkAddress& address, CScreen* screen)
 {
 	CClient* client = new CClient(name, address,
-		new CTCPSocketFactory, NULL, screen);
+						new CTCPSocketFactory, NULL, screen);
 	EVENTQUEUE->adoptHandler(CClient::getConnectedEvent(),
-		client->getEventTarget(),
-		new CFunctionEventJob(handleClientConnected));
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientConnected));
 	EVENTQUEUE->adoptHandler(CClient::getConnectionFailedEvent(),
-		client->getEventTarget(),
-		new CFunctionEventJob(handleClientFailed));
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientFailed));
 	EVENTQUEUE->adoptHandler(CClient::getDisconnectedEvent(),
-		client->getEventTarget(),
-		new CFunctionEventJob(handleClientDisconnected));
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientDisconnected));
 	return client;
 }
 
@@ -332,7 +331,7 @@ startClient()
 		if (s_clientScreen == NULL) {
 			clientScreen = openClientScreen();
 			s_client     = openClient(ARG->m_name,
-				*ARG->m_serverAddress, clientScreen);
+							*ARG->m_serverAddress, clientScreen);
 			s_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}
@@ -513,11 +512,11 @@ void
 version()
 {
 	LOG((CLOG_PRINT "%s %s, protocol version %d.%d\n%s",
-		ARG->m_pname,
-		kVersion,
-		kProtocolMajorVersion,
-		kProtocolMinorVersion,
-		kCopyright));
+							ARG->m_pname,
+							kVersion,
+							kProtocolMajorVersion,
+							kProtocolMinorVersion,
+							kCopyright));
 }
 
 static
@@ -526,70 +525,70 @@ help()
 {
 #if WINAPI_XWINDOWS
 #  define USAGE_DISPLAY_ARG		\
-	" [--display <display>]"
+" [--display <display>]"
 #  define USAGE_DISPLAY_INFO	\
-	"      --display <display>  connect to the X server at <display>\n"
+"      --display <display>  connect to the X server at <display>\n"
 #else
 #  define USAGE_DISPLAY_ARG
 #  define USAGE_DISPLAY_INFO
 #endif
 
 	LOG((CLOG_PRINT
-		"Usage: %s"
-		" [--daemon|--no-daemon]"
-		" [--debug <level>]"
-		USAGE_DISPLAY_ARG
-		" [--name <screen-name>]"
-		" [--yscroll <delta>]"
-		" [--restart|--no-restart]"
-		" <server-address>"
-		"\n\n"
-		"Start the synergy mouse/keyboard sharing server.\n"
-		"\n"
-		"  -d, --debug <level>      filter out log messages with priorty below level.\n"
-		"                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
-		"                           DEBUG, DEBUG1, DEBUG2.\n"
-		USAGE_DISPLAY_INFO
-		"  -f, --no-daemon          run the client in the foreground.\n"
-		"*     --daemon             run the client as a daemon.\n"
-		"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
-		"                           ourself to the server.\n"
-		"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
-		"                           120 by default.\n"
-		"  -1, --no-restart         do not try to restart the client if it fails for\n"
-		"                           some reason.\n"
-		"*     --restart            restart the client automatically if it fails.\n"
-		"  -l  --log <file>         write log messages to file.\n"
-		"  -h, --help               display this help and exit.\n"
-		"      --version            display version information and exit.\n"
-		"\n"
-		"* marks defaults.\n"
-		"\n"
-		"The server address is of the form: [<hostname>][:<port>].  The hostname\n"
-		"must be the address or hostname of the server.  The port overrides the\n"
-		"default port, %d.\n"
-		"\n"
-		"Where log messages go depends on the platform and whether or not the\n"
-		"client is running as a daemon.",
-		ARG->m_pname, kDefaultPort));
+"Usage: %s"
+" [--daemon|--no-daemon]"
+" [--debug <level>]"
+USAGE_DISPLAY_ARG
+" [--name <screen-name>]"
+" [--yscroll <delta>]"
+" [--restart|--no-restart]"
+" <server-address>"
+"\n\n"
+"Start the synergy mouse/keyboard sharing server.\n"
+"\n"
+"  -d, --debug <level>      filter out log messages with priorty below level.\n"
+"                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
+"                           DEBUG, DEBUG1, DEBUG2.\n"
+USAGE_DISPLAY_INFO
+"  -f, --no-daemon          run the client in the foreground.\n"
+"*     --daemon             run the client as a daemon.\n"
+"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
+"                           ourself to the server.\n"
+"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
+"                           120 by default.\n"
+"  -1, --no-restart         do not try to restart the client if it fails for\n"
+"                           some reason.\n"
+"*     --restart            restart the client automatically if it fails.\n"
+"  -l  --log <file>         write log messages to file.\n"
+"  -h, --help               display this help and exit.\n"
+"      --version            display version information and exit.\n"
+"\n"
+"* marks defaults.\n"
+"\n"
+"The server address is of the form: [<hostname>][:<port>].  The hostname\n"
+"must be the address or hostname of the server.  The port overrides the\n"
+"default port, %d.\n"
+"\n"
+"Where log messages go depends on the platform and whether or not the\n"
+"client is running as a daemon.",
+								ARG->m_pname, kDefaultPort));
 
 }
 
 static
 bool
 isArg(int argi, int argc, const char* const* argv,
-	  const char* name1, const char* name2,
-	  int minRequiredParameters = 0)
+				const char* name1, const char* name2,
+				int minRequiredParameters = 0)
 {
 	if ((name1 != NULL && strcmp(argv[argi], name1) == 0) ||
 		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
-			// match.  check args left.
-			if (argi + minRequiredParameters >= argc) {
-				LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
-					ARG->m_pname, argv[argi], ARG->m_pname));
-				bye(kExitArgs);
-			}
-			return true;
+		// match.  check args left.
+		if (argi + minRequiredParameters >= argc) {
+			LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
+								ARG->m_pname, argv[argi], ARG->m_pname));
+			bye(kExitArgs);
+		}
+		return true;
 	}
 
 	// no match
@@ -607,7 +606,7 @@ parse(int argc, const char* const* argv)
 	if(ARG->m_pname == NULL 
 		|| argv == NULL
 		|| argc < 1) {
-			return;
+		return;
 	}
 
 	// set defaults
@@ -620,7 +619,7 @@ parse(int argc, const char* const* argv)
 			// change logging level
 			ARG->m_logFilter = argv[++i];
 		}
-
+		
 		else if (isArg(i, argc, argv, NULL, "--debug-data", 1)) {
 			// generic debug info (used originally be relaunch service)
 			ARG->m_debugData = argv[++i];
@@ -660,7 +659,7 @@ parse(int argc, const char* const* argv)
 			// define scroll 
 			ARG->m_yscroll = atoi(argv[++i]);
 		}
-
+		
 		else if (isArg(i, argc, argv, "-l", "--log", 1)) {
 			ARG->m_logFile = argv[++i];
 		}
@@ -697,7 +696,7 @@ parse(int argc, const char* const* argv)
 
 		else if (argv[i][0] == '-') {
 			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-				ARG->m_pname, argv[i], ARG->m_pname));
+								ARG->m_pname, argv[i], ARG->m_pname));
 			bye(kExitArgs);
 		}
 
@@ -710,12 +709,12 @@ parse(int argc, const char* const* argv)
 	// exactly one non-option argument (server-address)
 	if (i == argc) {
 		LOG((CLOG_PRINT "%s: a server address or name is required" BYE,
-			ARG->m_pname, ARG->m_pname));
+								ARG->m_pname, ARG->m_pname));
 		bye(kExitArgs);
 	}
 	if (i + 1 != argc) {
 		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-			ARG->m_pname, argv[i], ARG->m_pname));
+								ARG->m_pname, argv[i], ARG->m_pname));
 		bye(kExitArgs);
 	}
 
@@ -731,7 +730,7 @@ parse(int argc, const char* const* argv)
 		// Priddy.
 		if (!ARG->m_restartable || e.getError() == XSocketAddress::kBadPort) {
 			LOG((CLOG_PRINT "%s: %s" BYE,
-				ARG->m_pname, e.what(), ARG->m_pname));
+								ARG->m_pname, e.what(), ARG->m_pname));
 			bye(kExitFailed);
 		}
 	}
@@ -755,7 +754,7 @@ parse(int argc, const char* const* argv)
 	// set log filter
 	if (!CLOG->setFilter(ARG->m_logFilter)) {
 		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-			ARG->m_pname, ARG->m_logFilter, ARG->m_pname));
+								ARG->m_pname, ARG->m_logFilter, ARG->m_pname));
 		bye(kExitArgs);
 	}
 
@@ -829,7 +828,7 @@ daemonNTMainLoop(int argc, const char** argv)
 {
 	parse(argc, argv);
 	ARG->m_backend = false;
-	
+
 	// copy process name to somewhere static that relaunch loop can access
 	ARCH->m_pname = ARG->m_pname;
 	
@@ -874,13 +873,13 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
 	try {
 		CArchMiscWindows::setIcons((HICON)LoadImage(instance,
-			MAKEINTRESOURCE(IDI_SYNERGY),
-			IMAGE_ICON,
-			32, 32, LR_SHARED),
-			(HICON)LoadImage(instance,
-			MAKEINTRESOURCE(IDI_SYNERGY),
-			IMAGE_ICON,
-			16, 16, LR_SHARED));
+									MAKEINTRESOURCE(IDI_SYNERGY),
+									IMAGE_ICON,
+									32, 32, LR_SHARED),
+									(HICON)LoadImage(instance,
+									MAKEINTRESOURCE(IDI_SYNERGY),
+									IMAGE_ICON,
+									16, 16, LR_SHARED));
 		CArch arch(instance);
 		CMSWindowsScreen::init(instance);
 		CLOG;
