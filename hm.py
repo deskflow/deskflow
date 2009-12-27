@@ -51,6 +51,7 @@ commands = [
 	'revision',
 	'help',
 	'hammer',
+	'reformat',
 	'--help',
 	'-h',
 	'/?'
@@ -130,6 +131,7 @@ def usage():
 		'  package     Create a distribution package (e.g. tar.gz)\n'
 		'  install     Installs the program\n'
 		'  hammer      Golden hammer (config, build, package)\n'
+		'  reformat    Reformat .cpp and .h files using AStyle\n'
 		'  usage       Shows the help screen\n'
 		'\n'
 		'Alias commands:\n'
@@ -468,6 +470,8 @@ def main(argv):
 				setup()
 			elif cmd in ['hammer']:
 				hammer()
+			elif cmd in ['reformat']:
+				reformat()
 			else:
 				print 'Command not yet implemented:',cmd
 
@@ -755,6 +759,13 @@ def hammer():
 		
 	for pt in package_types:
 		package(pt)
+
+def reformat():
+	# TODO: error handling
+	os.system(
+		r'tool\astyle\AStyle.exe '
+		'--quiet --suffix=none --style=java --indent=force-tab=4 --recursive '
+		'lib/*.cpp lib/*.h cmd/*.cpp cmd/*.h')
 
 # Start the program.
 main(sys.argv)
