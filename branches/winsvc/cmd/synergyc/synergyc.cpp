@@ -79,7 +79,8 @@ public:
 		  m_logFilter(NULL),
 		  m_display(NULL),
 		  m_serverAddress(NULL),
-		  m_logFile(NULL)
+		  m_logFile(NULL),
+		  m_debugData(NULL)
 	  { s_instance = this; }
 	  ~CArgs() { s_instance = NULL; }
 
@@ -95,6 +96,7 @@ public:
 	CString 			m_name;
 	CNetworkAddress* 	m_serverAddress;
 	const char*			m_logFile;
+	const char*			m_debugData;
 
 };
 
@@ -617,6 +619,11 @@ parse(int argc, const char* const* argv)
 		if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 			// change logging level
 			ARG->m_logFilter = argv[++i];
+		}
+
+		else if (isArg(i, argc, argv, NULL, "--debug-data", 1)) {
+			// generic debug info (used originally be relaunch service)
+			ARG->m_debugData = argv[++i];
 		}
 
 		else if (isArg(i, argc, argv, "-n", "--name", 1)) {

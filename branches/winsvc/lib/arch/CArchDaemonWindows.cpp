@@ -967,11 +967,9 @@ CArchDaemonWindows::relaunchLoop()
 			if (userToken != 0) {
 				LOG((CLOG_DEBUG "got user token to launch new process"));
 
-				// build up a full command line so we can launch it
+				// build up a full command line
 				std::stringstream cmdTemp;
-				cmdTemp << launchName;
-				cmdTemp << " --ignore-this-arg session-" << sessionId;
-				cmdTemp << getArgs();
+				cmdTemp << launchName << " --debug-data session-" << sessionId << getArgs();
 
 				std::string cmd = cmdTemp.str();
 
