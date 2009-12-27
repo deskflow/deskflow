@@ -462,9 +462,6 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 	CBufferedLogOutputter logBuffer(1000);
 	CLOG->insert(&logBuffer, true);
 
-	CFileLogOutputter* fileLog = new CFileLogOutputter("c:\\synergyc.log");
-	CLOG->insert(fileLog);
-
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
 	s_taskBarReceiver = createTaskBarReceiver(&logBuffer);
@@ -844,14 +841,6 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
-	std::fstream f;
-	f.open("c:\\synergyc-run", std::ios::app);
-	for (int i = 0; i < __argc; i++) {
-		f << __argv[i] << " ";
-	}
-	f << std::endl;
-	f.close();
-
 	try {
 		CArchMiscWindows::setIcons((HICON)LoadImage(instance,
 									MAKEINTRESOURCE(IDI_SYNERGY),

@@ -796,9 +796,6 @@ run(int argc, char** argv, const COutputterList outputterList, StartupFunc start
 	CBufferedLogOutputter logBuffer(1000);
 	CLOG->insert(&logBuffer, true);
 
-	CFileLogOutputter* fileLog = new CFileLogOutputter("c:\\synergys.log");
-	CLOG->insert(fileLog);
-
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
 	s_taskBarReceiver = createTaskBarReceiver(&logBuffer);
