@@ -34,8 +34,8 @@
 #include "CArch.h"
 #include "XArch.h"
 #include "CArchConsoleStd.h"
-
 #include "stdfstream.h"
+
 #include <cstring>
 #include <iostream>
 
@@ -58,7 +58,7 @@
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
-#define DAEMON_NAME "Synergy Server"
+#define DAEMON_NAME "Synergy+ Server"
 #elif SYSAPI_UNIX
 #define DAEMON_NAME "synergys"
 #endif
