@@ -22,7 +22,7 @@ If you're having problems, please either post a new message in our [http://group
 
 == Q. Why do I get "This application has failed to start..." error? ==
 
-The installer does not include the Microsoft Visual C++ 2008 Redistributable Package. Please download either the [http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf&displaylang=en x86] or [http://www.microsoft.com/downloads/details.aspx?familyid=BD2A6171-E2D6-4230-B809-9A8D7548C1B6&displaylang=en x64] version.
+The installer does not currently include the Microsoft Visual C++ 2008 Redistributable Package. Please download either the [http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf&displaylang=en x86] or [http://www.microsoft.com/downloads/details.aspx?familyid=BD2A6171-E2D6-4230-B809-9A8D7548C1B6&displaylang=en x64] version.
 
 == Q. How do I lock the mouse on one screen? ==
 
