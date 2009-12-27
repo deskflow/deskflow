@@ -296,7 +296,9 @@ CMSWindowsScreen::leave()
 	m_desks->leave(m_keyLayout);
 
 	if (m_isPrimary) {
+
 		// warp to center
+		LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
 		warpCursor(m_xCenter, m_yCenter);
 
 		// disable special key sequences on win95 family
@@ -480,9 +482,16 @@ CMSWindowsScreen::warpCursor(SInt32 x, SInt32 y)
 		// do nothing
 	}
 
-	// save position as last position
+	// save position to compute delta of next motion
+	saveMousePosition(x, y);
+}
+
+void CMSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
+
 	m_xCursor = x;
 	m_yCursor = y;
+
+	LOG((CLOG_DEBUG2 "saved mouse position for next delta: %+d,%+d", x,y));
 }
 
 UInt32
@@ -907,6 +916,8 @@ bool
 CMSWindowsScreen::onPreDispatchPrimary(HWND,
 				UINT message, WPARAM wParam, LPARAM lParam)
 {
+	LOG((CLOG_DEBUG2 "handling pre-dispatch primary"));
+
 	// handle event
 	switch (message) {
 	case SYNERGY_MSG_MARK:
@@ -929,8 +940,7 @@ CMSWindowsScreen::onPreDispatchPrimary(HWND,
 	case SYNERGY_MSG_PRE_WARP:
 		{
 			// save position to compute delta of next motion
-			m_xCursor = static_cast<SInt32>(wParam);
-			m_yCursor = static_cast<SInt32>(lParam);
+			saveMousePosition(static_cast<SInt32>(wParam), static_cast<SInt32>(lParam));
 
 			// we warped the mouse.  discard events until we find the
 			// matching post warp event.  see warpCursorNoFlush() for
@@ -1272,6 +1282,14 @@ CMSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
+// here's how mouse movements are sent across the network to a client:
+//   1. synergy checks the mouse position on server screen
+//   2. records the delta (current x,y minus last x,y)
+//   3. records the current x,y as "last" (so we can calc delta next time)
+//   4. on the server, puts the cursor back to the center of the screen
+//      - remember the cursor is hidden on the server at this point
+//      - this actually records the current x,y as "last" a second time (it seems)
+//   5. sends the delta movement to the client (could be +1,+1 or -1,+4 for example)
 bool
 CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 {
@@ -1280,6 +1298,10 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 	SInt32 x = mx - m_xCursor;
 	SInt32 y = my - m_yCursor;
 
+	LOG((CLOG_DEBUG2
+		"handling mouse move; delta motion calc: %+d=(%+d - %+d),%+d=(%+d - %+d)",
+		x, mx, m_xCursor, y, my, m_yCursor));
+
 	// ignore if the mouse didn't move or if message posted prior
 	// to last mark change.
 	if (ignore() || (x == 0 && y == 0)) {
@@ -1287,19 +1309,24 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 	}
 
 	// save position to compute delta of next motion
-	m_xCursor = mx;
-	m_yCursor = my;
+	saveMousePosition(mx, my);
 
 	if (m_isOnScreen) {
+		
 		// motion on primary screen
-		sendEvent(getMotionOnPrimaryEvent(),
-							CMotionInfo::alloc(m_xCursor, m_yCursor));
+		sendEvent(
+			getMotionOnPrimaryEvent(),
+			CMotionInfo::alloc(m_xCursor, m_yCursor));
 	}
-	else {
-		// motion on secondary screen.  warp mouse back to
-		// center.
+	else 
+	{
+		// the motion is on the secondary screen, so we warp mouse back to
+		// center on the server screen. if we don't do this, then the mouse 
+		// will always try to return to the original entry point on the 
+		// secondary screen.
+		LOG((CLOG_DEBUG2 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
 		warpCursorNoFlush(m_xCenter, m_yCenter);
-
+		
 		// examine the motion.  if it's about the distance
 		// from the center of the screen to an edge then
 		// it's probably a bogus motion that we want to
@@ -1310,7 +1337,8 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 			 x + bogusZoneSize > m_x + m_w - m_xCenter ||
 			-y + bogusZoneSize > m_yCenter - m_y ||
 			 y + bogusZoneSize > m_y + m_h - m_yCenter) {
-			LOG((CLOG_DEBUG "dropped bogus motion %+d,%+d", x, y));
+			
+			LOG((CLOG_DEBUG "dropped bogus delta motion: %+d,%+d", x, y));
 		}
 		else {
 			// send motion
@@ -1386,6 +1414,8 @@ CMSWindowsScreen::onDisplayChange()
 		if (m_isPrimary) {
 			// warp mouse to center if off screen
 			if (!m_isOnScreen) {
+
+				LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
 				warpCursor(m_xCenter, m_yCenter);
 			}
 
@@ -1435,6 +1465,24 @@ CMSWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
 	// between the previous message and the following message.
 	SetCursorPos(x, y);
 
+	// check to see if the mouse pos was set correctly
+	POINT cursorPos;
+	GetCursorPos(&cursorPos);
+
+	if ((cursorPos.x != x) && (cursorPos.y != y)) {
+		LOG((CLOG_DEBUG "SetCursorPos did not work; using fakeMouseMove instead"));
+		
+		// when at Vista/7 login screen, SetCursorPos does not work (which could be
+		// an MS security feature). instead we can use fakeMouseMove, which calls
+		// mouse_event.
+		// IMPORTANT: as of implementing this function, it has an annoying side 
+		// effect; instead of the mouse returning to the correct exit point, it
+		// returns to the center of the screen. this could have something to do with
+		// the center screen warping technique used (see comments for onMouseMove
+		// definition).
+		fakeMouseMove(x, y);
+	}
+	
 	// yield the CPU.  there's a race condition when warping:
 	//   a hardware mouse event occurs
 	//   the mouse hook is not called because that process doesn't have the CPU
