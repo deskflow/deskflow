@@ -150,6 +150,12 @@ su
 yast2 -i cmake python gcc-c++ xorg-x11-devel
 }}}
 
+== Gentoo ==
+{{{
+su
+emerge -av synergy-plus
+}}}
+
 == Mandriva One 2009 ==
 {{{
 su
