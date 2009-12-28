@@ -19,12 +19,12 @@ void
 CArchConsoleStd::writeConsole(const char* str)
 {
 	// TODO: we need to use cerr also somehow
-	std::cout << str;
+	std::cout << str << std::endl;
 	std::cout.flush();
 }
 
 const char*
 CArchConsoleStd::getNewlineForConsole()
 {
-	return "\n";
+	return "";
 }
