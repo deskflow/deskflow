@@ -70,11 +70,10 @@ public:
 	//! Screen connected data
 	class CScreenConnectedInfo {
 	public:
-		static CScreenConnectedInfo* alloc(const CString& screen);
+		CScreenConnectedInfo(CString screen) : m_screen(screen) { }
 
 	public:
-		// this is a C-string;  this type is a variable size structure
-		char			m_screen[1];
+		CString			m_screen; // was char[1]
 	};
 
 	//! Keyboard broadcast data

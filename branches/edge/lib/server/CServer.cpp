@@ -293,7 +293,7 @@ CServer::adoptClient(CBaseClientProxy* client)
 
 	// send notification
 	CServer::CScreenConnectedInfo* info =
-		CServer::CScreenConnectedInfo::alloc(getName(client));
+		new CServer::CScreenConnectedInfo(getName(client));
 	EVENTQUEUE->addEvent(CEvent(CServer::getConnectedEvent(),
 								m_primaryClient->getEventTarget(), info));
 }
@@ -2134,22 +2134,6 @@ CServer::CSwitchInDirectionInfo::alloc(EDirection direction)
 	info->m_direction = direction;
 	return info;
 }
-
-
-//
-// CServer::CScreenConnectedInfo
-//
-
-CServer::CScreenConnectedInfo*
-CServer::CScreenConnectedInfo::alloc(const CString& screen)
-{
-	CScreenConnectedInfo* info =
-		(CScreenConnectedInfo*)malloc(sizeof(CScreenConnectedInfo) +
-								screen.size());
-	strcpy(info->m_screen, screen.c_str());
-	return info;
-}
-
 
 //
 // CServer::CKeyboardBroadcastInfo
