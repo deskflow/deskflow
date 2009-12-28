@@ -142,9 +142,12 @@ CArchDaemonWindows::installDaemon(const char* name,
 				throw XArchDaemonInstallFailed(new XArchEvalWindows(err));
 			}
 		}
+		else {
+			// done with service (but only try to close if not null)
+			CloseServiceHandle(service);
+		}
 
-		// done with service and manager
-		CloseServiceHandle(service);
+		// done with manager
 		CloseServiceHandle(mgr);
 
 		// open the registry key for this service

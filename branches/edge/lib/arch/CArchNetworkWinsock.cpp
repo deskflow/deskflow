@@ -378,7 +378,7 @@ CArchNetworkWinsock::pollSocket(CPollEntry pe[], int num, double timeout)
 
 	// prepare sockets and wait list
 	bool canWrite = false;
-	WSAEVENT* events = (WSAEVENT*)alloca((num + 1) * sizeof(WSAEVENT));
+	WSAEVENT* events = (WSAEVENT*)_malloca((num + 1) * sizeof(WSAEVENT));
 	for (i = 0, n = 0; i < num; ++i) {
 		// reset return flags
 		pe[i].m_revents = 0;
