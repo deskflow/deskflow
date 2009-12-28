@@ -385,17 +385,43 @@ CHotkeyOptions::closeRule(HWND)
 
 			// expand
 			if (keyAction != NULL) {
-				const IPlatformScreen::CKeyInfo* oldInfo =
-					keyAction->getInfo();
-				IPlatformScreen::CKeyInfo* newInfo =
-					IKeyState::CKeyInfo::alloc(*oldInfo);
-				CInputFilter::CKeystrokeAction* downAction =
-					new CInputFilter::CKeystrokeAction(newInfo, true);
-				newInfo = IKeyState::CKeyInfo::alloc(*oldInfo);
-				CInputFilter::CKeystrokeAction* upAction =
-					new CInputFilter::CKeystrokeAction(newInfo, false);
-				m_activeRule.replaceAction(downAction, true, i);
-				m_activeRule.adoptAction(upAction, false);
+
+				// declare all before hand so we can delete on exception
+				const IPlatformScreen::CKeyInfo* oldInfo = NULL;
+				IPlatformScreen::CKeyInfo* newInfo = NULL;
+				CInputFilter::CKeystrokeAction* downAction = NULL;
+				CInputFilter::CKeystrokeAction* upAction = NULL;
+
+				try {
+					oldInfo = keyAction->getInfo();
+					newInfo = IKeyState::CKeyInfo::alloc(*oldInfo);
+					downAction = new CInputFilter::CKeystrokeAction(newInfo, true);
+					upAction = new CInputFilter::CKeystrokeAction(newInfo, false);
+
+					// call order may matter here, so we'll keep these together
+					m_activeRule.replaceAction(downAction, true, i);
+					m_activeRule.adoptAction(upAction, false);
+
+				} catch (std::exception &ex) {
+
+					if (oldInfo != NULL) {
+						delete oldInfo;
+					}
+
+					if (newInfo != NULL) {
+						delete newInfo;
+					}
+
+					if (downAction != NULL) {
+						delete downAction;
+					}
+
+					if (upAction != NULL) {
+						delete upAction;
+					}
+					
+					throw ex;
+				}
 			}
 			else if (mouseAction != NULL) {
 				const IPlatformScreen::CButtonInfo* oldInfo =
