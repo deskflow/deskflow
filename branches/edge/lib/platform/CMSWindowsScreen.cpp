@@ -763,10 +763,23 @@ CMSWindowsScreen::createBlankCursor() const
 	// create a transparent cursor
 	int cw = GetSystemMetrics(SM_CXCURSOR);
 	int ch = GetSystemMetrics(SM_CYCURSOR);
+
 	UInt8* cursorAND = new UInt8[ch * ((cw + 31) >> 2)];
+	try {
+		memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
+	} catch(std::bad_alloc &ex) {
+		delete[] cursorAND;
+		throw ex;
+	}
+
 	UInt8* cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
-	memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
-	memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
+	try {
+		memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
+	} catch(std::bad_alloc &ex) {
+		delete[] cursorXOR;
+		throw ex;
+	}
+
 	HCURSOR c = CreateCursor(s_instance, 0, 0, cw, ch, cursorAND, cursorXOR);
 	delete[] cursorXOR;
 	delete[] cursorAND;
@@ -859,7 +872,9 @@ void
 CMSWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 {
 	MSG* msg = reinterpret_cast<MSG*>(event.getData());
-	assert(msg != NULL);
+	if (!msg) {
+		throw std::exception("event data convert to MSG failed");
+	}
 
 	if (CArchMiscWindows::processDialog(msg)) {
 		return;

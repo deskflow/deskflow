@@ -174,8 +174,12 @@ CMSWindowsScreenSaver::activate()
 			PostMessage(hwnd, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
 		}
 		else {
-			// no foreground window.  pretend we got the event instead.
-			DefWindowProc(NULL, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
+			// HACK: for some reason we need to pretend that we got the event, 
+			// but passing NULL as argument 1 goes against the specification. 
+			// so, we use a function pointer to "hide" the C6309 warning.
+			WNDPROC dwp = DefWindowProc;
+			dwp(NULL, WM_SYSCOMMAND, SC_SCREENSAVE, 0);
+			LOG((CLOG_DEBUG "no foreground window (pretending we got the event instead)"));
 		}
 
 		// restore power save when screen saver activates
@@ -255,6 +259,10 @@ CMSWindowsScreenSaver::isActive() const
 		EnumDesktopWindows(desktop,
 								&CMSWindowsScreenSaver::findScreenSaverFunc,
 								reinterpret_cast<LPARAM>(&info));
+
+		if (!desktop) {
+			throw std::exception("cannot close uninitialized desktop");
+		}
 
 		// done with desktop
 		CloseDesktop(desktop);
@@ -391,7 +399,7 @@ CMSWindowsScreenSaver::watchDesktopThread(void*)
 			// allocate more space for the name, if necessary
 			if (size > reserved) {
 				reserved = size;
-				name     = (TCHAR*)alloca(reserved + sizeof(TCHAR));
+				name     = (TCHAR*)_malloca(reserved + sizeof(TCHAR));
 				assert(name);
 				if (!name) return; //TODO: throw exception
 			}
@@ -399,6 +407,10 @@ CMSWindowsScreenSaver::watchDesktopThread(void*)
 			// get current desktop name
 			GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
 			CloseDesktop(desk);
+
+			if (!name) {
+				throw std::exception("cannot compare null name");
+			}
 
 			// compare name to screen saver desktop name
 			if (_tcsicmp(name, TEXT("Screen-saver")) == 0) {
