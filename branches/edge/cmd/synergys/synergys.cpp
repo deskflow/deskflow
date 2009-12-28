@@ -962,13 +962,9 @@ static
 void
 parse(int argc, const char* const* argv)
 {
-	assert(ARG->m_pname != NULL);
-	assert(argc >= 1);
-	assert(argv);
-
-	// this return is just to avoid C6011 warning
-	if (!argv) {
-		return;
+	if((ARG->m_pname == NULL) || (argv == NULL) || (argc < 1)) {
+		// solves C6011 warnings, etc
+		throw std::exception("invalid args");
 	}
 
 	// set defaults
