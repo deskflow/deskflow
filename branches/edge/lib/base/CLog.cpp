@@ -15,6 +15,8 @@
 #include "CLog.h"
 #include "CString.h"
 #include "CStringUtil.h"
+#include "CThread.h"
+#include "TMethodJob.h"
 #include "LogOutputters.h"
 #include "CArch.h"
 #include "Version.h"
@@ -30,14 +32,16 @@ static const char*    g_priority[] = {
                 "WARNING",
                 "NOTE",
                 "INFO",
-                "DEBUG",
-                "DEBUG1",
-                "DEBUG2"
+				"DEBUG",
+				"DEBUG1",
+				"DEBUG2",
+				"DEBUG3",
+				"DEBUG4",
+				"DEBUG5"
               };
 
 // number of priorities
-static const int    g_numPriority = (int)(sizeof(g_priority) /
-                      sizeof(g_priority[0]));
+static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]));
 
 // the default priority
 #if defined(NDEBUG)
@@ -63,7 +67,7 @@ static const int    g_priorityPad = g_maxPriorityLength +
 
 CLog*         CLog::s_log = NULL;
 
-CLog::CLog()
+CLog::CLog() : m_bufferLoopActive(false)
 {
   assert(s_log == NULL);
 
@@ -74,10 +78,20 @@ CLog::CLog()
   m_maxPriority      = g_defaultMaxPriority;
   m_maxNewlineLength = 0;
   insert(new CConsoleLogOutputter);
+
+  // thread for sending to cpu intensive log outputters
+  m_bufferThread = new CThread(
+	  new TMethodJob<CLog>(this, &CLog::bufferLoop));
 }
 
 CLog::~CLog()
 {
+  // finish writing buffer to outputters
+  m_bufferLoopActive = false;
+  m_bufferThread->cancel();
+  m_bufferThread->wait();
+  delete m_bufferThread;
+
   // clean up
   for (COutputterList::iterator index  = m_outputters.begin();
                   index != m_outputters.end(); ++index) {
@@ -102,13 +116,19 @@ CLog::getInstance()
 }
 
 void
-CLog::print(const char* file, int line, const char* fmt, ...) const
+CLog::print(const char* file, int line, const char* fmt, ...)
 {
   // check if fmt begins with a priority argument
   int priority = 4;
   if (fmt[0] == '%' && fmt[1] == 'z') {
-    priority = fmt[2] - '\060';
-    fmt += 3;
+
+	  // 060 in octal is 0 (48 in decimal), so subtracting this converts ascii
+	  // number it a true number. we could use atoi instead, but this is how
+	  // it was done originally.
+	  priority = fmt[2] - '\060';
+
+	  // move the pointer on past the debug priority char
+	  fmt += 3;
   }
 
   // done if below priority threshold
@@ -258,7 +278,7 @@ CLog::getFilter() const
 }
 
 void
-CLog::output(int priority, char* msg) const
+CLog::output(int priority, char* msg)
 {
   assert(priority >= -1 && priority < g_numPriority);
   assert(msg != NULL);
@@ -286,35 +306,63 @@ CLog::output(int priority, char* msg) const
   char* end = tmp + len;
   strcpy(tmp, msg);
 
-  // write to each outputter
   CArchMutexLock lock(m_mutex);
-  for (COutputterList::const_iterator index  = m_alwaysOutputters.begin();
-                    index != m_alwaysOutputters.end();
-                    ++index) {
-    // get outputter
-    ILogOutputter* outputter = *index;
+
+  // queue a copy of each message, which is dequeued as it is sent to each 
+  // outputter (tmp is also deleted on Message destruction)
+  m_buffer.push_back(new Message(tmp, end, priority));
+}
+
+void
+CLog::bufferLoop(void*) {
+
+	// allows the loop to run, and stops more buffer threads from starting
+	m_bufferLoopActive = true;
+
+	COutputterList::const_iterator i;
 	
-	// put an appropriate newline at the end
-	strcpy(end, outputter->getNewline());
+	while(m_bufferLoopActive) {
+		
+		if (m_buffer.size() == 0) {
+			ARCH->sleep(0.1);
+			continue;
+		}
+		
+		// get the message from the top of the queue (new messages are added 
+		// to the back).
+		Message* message = m_buffer.front();
+		m_buffer.pop_front();
 
-    // write message
-    outputter->write(static_cast<ILogOutputter::ELevel>(priority),
-              tmp /*+ g_maxPriorityLength - n*/);
-  }
-  for (COutputterList::const_iterator index  = m_outputters.begin();
-                    index != m_outputters.end(); ++index) {
-    // get outputter
-    ILogOutputter* outputter = *index;
+		char* tmp = message->m_tmp;
+		char* end = message->m_end;
+		int priority = message->m_priority;
 
-    // put an appropriate newline at the end
-    strcpy(end, outputter->getNewline());
+		for (i = m_alwaysOutputters.begin(); i != m_alwaysOutputters.end(); ++i) {
+			
+			// get outputter
+			ILogOutputter* outputter = *i;
 
-    // write message and break out of loop if it returns false
-    if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority),
-              tmp /*+ g_maxPriorityLength - n*/)) {
-      break;
-    }
-  }
+			// put an appropriate newline at the end
+			strcpy(end, outputter->getNewline());
 
-  delete[] tmp;
+			// write message
+			outputter->write(static_cast<ILogOutputter::ELevel>(priority), tmp);
+		}
+
+		for (i = m_outputters.begin(); i != m_outputters.end(); ++i) {
+			
+			// get outputter
+			ILogOutputter* outputter = *i;
+
+			// put an appropriate newline at the end
+			strcpy(end, outputter->getNewline());
+
+			// write message and break out of loop if it returns false
+			if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority), tmp)) {
+				break;
+			}
+		}
+
+		delete message;
+	}
 }
