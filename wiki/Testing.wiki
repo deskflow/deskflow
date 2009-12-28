@@ -1,4 +1,4 @@
-#summary Informating regarding testing and debugging problem
+#summary Information regarding testing and debugging problem
 
 = Virtual Machines =
 == VirtualBox ==
