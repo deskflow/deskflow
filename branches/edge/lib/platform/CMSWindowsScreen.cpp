@@ -491,7 +491,7 @@ void CMSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
 	m_xCursor = x;
 	m_yCursor = y;
 
-	LOG((CLOG_DEBUG2 "saved mouse position for next delta: %+d,%+d", x,y));
+	LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x,y));
 }
 
 UInt32
@@ -931,7 +931,7 @@ bool
 CMSWindowsScreen::onPreDispatchPrimary(HWND,
 				UINT message, WPARAM wParam, LPARAM lParam)
 {
-	LOG((CLOG_DEBUG2 "handling pre-dispatch primary"));
+	LOG((CLOG_DEBUG5 "handling pre-dispatch primary"));
 
 	// handle event
 	switch (message) {
@@ -1313,8 +1313,8 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 	SInt32 x = mx - m_xCursor;
 	SInt32 y = my - m_yCursor;
 
-	LOG((CLOG_DEBUG2
-		"handling mouse move; delta motion calc: %+d=(%+d - %+d),%+d=(%+d - %+d)",
+	LOG((CLOG_DEBUG3
+		"mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
 		x, mx, m_xCursor, y, my, m_yCursor));
 
 	// ignore if the mouse didn't move or if message posted prior
@@ -1339,7 +1339,7 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// center on the server screen. if we don't do this, then the mouse 
 		// will always try to return to the original entry point on the 
 		// secondary screen.
-		LOG((CLOG_DEBUG2 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
+		LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
 		warpCursorNoFlush(m_xCenter, m_yCenter);
 		
 		// examine the motion.  if it's about the distance
