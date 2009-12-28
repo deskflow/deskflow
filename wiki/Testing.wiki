@@ -1,7 +1,7 @@
 #summary Information regarding testing and debugging problem
 
 = Virtual Machines =
-== VirtualBox ==
+== !VirtualBox ==
 If you have only one machine and using VirtualBox to run the client do not forget to deactivate the "Mouse Integration" option to the virtual machine because this option is incompatible with Synergy.
 
 If you do this you will be able to use synergy server on host and synergy client on guest. 
