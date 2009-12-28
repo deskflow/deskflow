@@ -620,6 +620,11 @@ CConfig::dirName(EDirection dir)
 
 	assert(dir >= kFirstDirection && dir <= kLastDirection);
 
+	SInt32 index = dir - kFirstDirection;
+	if (index > sizeof(s_name)) {
+		throw std::exception("index out of bounds");
+	}
+
 	return s_name[dir - kFirstDirection];
 }
 
