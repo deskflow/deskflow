@@ -42,6 +42,7 @@
 #include "CMSWindowsUtil.h"
 #include "CMSWindowsClientTaskBarReceiver.h"
 #include "resource.h"
+#include <conio.h>
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif WINAPI_XWINDOWS
@@ -517,7 +518,28 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 
 #define BYE "\nTry `%s --help' for more information."
 
-static void				(*bye)(int) = &exit;
+#if SYSAPI_WIN32
+static
+void 
+exitPause(int code) 
+{
+	CString name;
+	CArchMiscWindows::getParentProcessName(name);
+
+	// if the user did not launch from the command prompt (i.e. it was launched
+	// by double clicking, or through a debugger), allow user to read any error
+	// messages (instead of the window closing automatically).
+	if (name != "cmd.exe") {
+		std::cout << std::endl << "Press any key to exit...";
+		int c = _getch();
+	}
+
+	exit(code);
+}
+static void	(*bye)(int) = &exitPause;
+#else
+static void	(*bye)(int) = &exit;
+#endif
 
 static
 void
@@ -905,35 +927,30 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		CThread::getCurrentThread().setPriority(-14);
 		CArgs args;
 
-		// set title on log window
-		ARCH->openConsole((CString(kAppVersion) + " " + "Client").c_str());
-
-		// windows NT family starts services using no command line options.
-		// since i'm not sure how to tell the difference between that and
-		// a user providing no options we'll assume that if there are no
-		// arguments and we're on NT then we're being invoked as a service.
-		// users on NT can use `--daemon' or `--no-daemon' to force us out
-		// of the service code path.
-		StartupFunc startup = &standardStartup;
+		StartupFunc startup;
 		if (!CArchMiscWindows::isWindows95Family()) {
-			if (__argc <= 1) {
+
+			// WARNING: this may break backwards computability!
+			// previously, we were assuming that the process is launched from the
+			// service host when no arguments were passed. if we wanted to launch
+			// from console or debugger, we had to remember to pass -f which was
+			// always the first pitfall for new comitters. now, we are able to
+			// check using the new `wasLaunchedAsService` function, which is a
+			// more elegant solution.
+			if (CArchMiscWindows::wasLaunchedAsService()) {
 				startup = &daemonNTStartup;
-			}
-			else {
+			} else {
 				startup = &foregroundStartup;
+				ARG->m_daemon = false;
 			}
+		} else {
+			startup = &standardStartup;
 		}
 
 		// previously we'd send PRINT and FATAL output to a message box, but now
 		// that we're using an MS console window for Windows, there's no need really
 		//int result = run(__argc, __argv, new CMessageBoxOutputter, startup);
 		int result = run(__argc, __argv, NULL, startup);
-
-		// let user examine any messages if we're running as a backend
-		// by putting up a dialog box before exiting.
-		if (args.m_backend && s_hasImportantLogMessages) {
-			showError(instance, args.m_pname, IDS_FAILED, "");
-		}
 
 		delete CLOG;
 		return result;
