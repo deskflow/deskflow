@@ -35,8 +35,9 @@ class CClient : public IClient {
 public:
 	class CFailInfo {
 	public:
+		CFailInfo(const char* what) : m_retry(false), m_what(what) { }
 		bool			m_retry;
-		char			m_what[1];
+		CString			m_what;
 	};
 
 	/*!

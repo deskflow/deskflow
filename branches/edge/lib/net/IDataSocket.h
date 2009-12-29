@@ -17,6 +17,7 @@
 
 #include "ISocket.h"
 #include "IStream.h"
+#include "CString.h"
 
 //! Data stream socket interface
 /*!
@@ -27,8 +28,8 @@ class IDataSocket : public ISocket, public IStream {
 public:
 	class CConnectionFailedInfo {
 	public:
-		// pointer to a string describing the failure
-		char			m_what[1];
+		CConnectionFailedInfo(const char* what) : m_what(what) { }
+		CString			m_what;
 	};
 
 	//! @name manipulators
