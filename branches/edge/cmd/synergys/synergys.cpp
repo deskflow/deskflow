@@ -1347,7 +1347,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, c);
 	}
 	catch (...) {
-		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, "Unknown error.");
+		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, "<unknown exception>");
 	}
 	return kExitFailed;
 }
@@ -1374,6 +1374,12 @@ main(int argc, char** argv)
 	catch (XArch& e) {
 		LOG((CLOG_CRIT "Initialization failed: %s" BYE, e.what().c_str()));
 		return kExitFailed;
+	}
+	catch (std::exception& e) {
+		LOG((CLOG_CRIT "Uncaught exception: %s\n", e.what()));
+	}
+	catch (char* c) {
+		LOG((CLOG_CRIT "Uncaught exception: %s\n", c));
 	}
 	catch (...) {
 		LOG((CLOG_CRIT "Uncaught exception: <unknown exception>\n"));
