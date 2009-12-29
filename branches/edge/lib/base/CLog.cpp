@@ -119,13 +119,13 @@ void
 CLog::print(const char* file, int line, const char* fmt, ...)
 {
   // check if fmt begins with a priority argument
-  int priority = 4;
+  ELevel priority = kINFO;
   if (fmt[0] == '%' && fmt[1] == 'z') {
 
 	  // 060 in octal is 0 (48 in decimal), so subtracting this converts ascii
 	  // number it a true number. we could use atoi instead, but this is how
 	  // it was done originally.
-	  priority = fmt[2] - '\060';
+	  priority = (ELevel)(fmt[2] - '\060'); // TODO: fix this shit
 
 	  // move the pointer on past the debug priority char
 	  fmt += 3;
@@ -278,7 +278,7 @@ CLog::getFilter() const
 }
 
 void
-CLog::output(int priority, char* msg)
+CLog::output(ELevel priority, char* msg)
 {
   assert(priority >= -1 && priority < g_numPriority);
   assert(msg != NULL);
@@ -299,23 +299,15 @@ CLog::output(int priority, char* msg)
     
   }
 */
-  // find end of message
-  //char* end = msg + g_priorityPad + strlen(msg + g_priorityPad);
-  int len = (int)strlen(msg);
-  char* tmp = new char[len+m_maxNewlineLength+1];
-  char* end = tmp + len;
-  strcpy(tmp, msg);
-
   CArchMutexLock lock(m_mutex);
 
   // queue a copy of each message, which is dequeued as it is sent to each 
-  // outputter (tmp is also deleted on Message destruction)
-  m_buffer.push_back(new Message(tmp, end, priority));
+  // outputter
+  m_buffer.push_back(new Message(msg, priority));
 }
 
 void
 CLog::bufferLoop(void*) {
-
 	// allows the loop to run, and stops more buffer threads from starting
 	m_bufferLoopActive = true;
 
@@ -334,9 +326,7 @@ CLog::bufferLoop(void*) {
 		Message* message = m_buffer.front();
 		m_buffer.pop_front();
 
-		char* tmp = message->m_tmp;
-		char* end = message->m_end;
-		int priority = message->m_priority;
+		ILogOutputter::ELevel priority = message->m_priority;
 
 		for (i = m_alwaysOutputters.begin(); i != m_alwaysOutputters.end(); ++i) {
 			
@@ -344,10 +334,10 @@ CLog::bufferLoop(void*) {
 			ILogOutputter* outputter = *i;
 
 			// put an appropriate newline at the end
-			strcpy(end, outputter->getNewline());
+			//strcpy(end, outputter->getNewline());
 
 			// write message
-			outputter->write(static_cast<ILogOutputter::ELevel>(priority), tmp);
+			outputter->write(priority, message->m_tmp);
 		}
 
 		for (i = m_outputters.begin(); i != m_outputters.end(); ++i) {
@@ -356,10 +346,10 @@ CLog::bufferLoop(void*) {
 			ILogOutputter* outputter = *i;
 
 			// put an appropriate newline at the end
-			strcpy(end, outputter->getNewline());
+			//strcpy(end, outputter->getNewline());
 
 			// write message and break out of loop if it returns false
-			if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority), tmp)) {
+			if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority), message->m_tmp)) {
 				break;
 			}
 		}

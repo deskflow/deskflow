@@ -128,7 +128,7 @@ public:
 private:
 	CLog();
 
-	void				output(int priority, char* msg);
+	void				output(ELevel priority, char* msg);
 
 private:
 	typedef std::list<ILogOutputter*> COutputterList;
@@ -143,13 +143,15 @@ private:
 
 private:
 	struct Message {
-		Message(char* tmp, char* end, int priority) :
-			m_tmp(tmp), m_end(end), m_priority(priority) { }
-		virtual ~Message() { delete[] m_tmp; }
+		Message(char* msg, ELevel priority) :
+			m_priority(priority) { 
+			assert(msg);
+			char* m_tmp = _strdup(msg);
+		}
+		virtual ~Message() { free(m_tmp); }
 
 		char* m_tmp;
-		char* m_end;
-		int m_priority;
+		ELevel m_priority;
 	};
 
 	std::list<Message*> m_buffer;

@@ -53,8 +53,11 @@ IF(WIN32)
 	# next line replaced the previous 4 ones:
 	#define _BIND_TO_CURRENT_VCLIBS_VERSION 1;
 
-	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze /FR /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
-	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /analyze /FR /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
+	# compiler: /MP - use multi cores to compile
+	# added _SECURE_SCL=1 for finding bugs with iterators - http://msdn.microsoft.com/en-us/library/aa985965.aspx
+
+	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze /FR /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1 /D _SECURE_SCL=1")
+	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /analyze /FR /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1 /D _SECURE_SCL=1")
 
 ENDIF(WIN32)
 

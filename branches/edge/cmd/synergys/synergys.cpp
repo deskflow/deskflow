@@ -965,7 +965,8 @@ parse(int argc, const char* const* argv)
 
 	if (!argsValid) {
 		// fail silently for release (avoids compiler warning)
-		return;
+		help();
+		bye(kExitSuccess);
 	}
 
 	// set defaults
