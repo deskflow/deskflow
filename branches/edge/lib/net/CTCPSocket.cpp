@@ -348,7 +348,7 @@ CTCPSocket::sendConnectionFailedEvent(const char* msg)
 {
 	CConnectionFailedInfo* info = new CConnectionFailedInfo(msg);
 	EVENTQUEUE->addEvent(CEvent(getConnectionFailedEvent(),
-							getEventTarget(), info));
+							getEventTarget(), info, CEvent::kDontFreeData));
 }
 
 void

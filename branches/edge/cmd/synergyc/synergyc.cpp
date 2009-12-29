@@ -273,6 +273,7 @@ handleClientFailed(const CEvent& e, void*)
 			scheduleClientRestart(nextRestartTimeout());
 		}
 	}
+	delete info;
 }
 
 static
