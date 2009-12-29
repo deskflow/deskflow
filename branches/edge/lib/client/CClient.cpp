@@ -391,6 +391,7 @@ void
 CClient::sendConnectionFailedEvent(const char* msg)
 {
 	CFailInfo* info = new CFailInfo(msg);
+	info->m_retry = true;
 	CEvent event(getConnectionFailedEvent(), getEventTarget(), info, CEvent::kDontFreeData);
 	EVENTQUEUE->addEvent(event);
 }
