@@ -960,9 +960,12 @@ static
 void
 parse(int argc, const char* const* argv)
 {
-	if((ARG->m_pname == NULL) || (argv == NULL) || (argc < 1)) {
-		// solves C6011 warnings, etc
-		throw std::exception("invalid args");
+	bool argsValid = (ARG->m_pname == NULL) || (argv == NULL) || (argc < 1);
+	assert(argsValid);
+
+	if (!argsValid) {
+		// fail silently for release (avoids compiler warning)
+		return;
 	}
 
 	// set defaults
