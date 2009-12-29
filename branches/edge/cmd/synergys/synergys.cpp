@@ -960,7 +960,7 @@ static
 void
 parse(int argc, const char* const* argv)
 {
-	bool argsValid = (ARG->m_pname == NULL) || (argv == NULL) || (argc < 1);
+	bool argsValid = (ARG->m_pname != NULL) && (argv != NULL) && (argc >= 1);
 	assert(argsValid);
 
 	if (!argsValid) {
