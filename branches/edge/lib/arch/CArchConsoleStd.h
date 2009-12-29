@@ -27,5 +27,4 @@ public:
 	virtual void		closeConsole() { }
 	virtual void		showConsole(bool) { }
 	virtual void		writeConsole(const char*);
-	virtual const char*	getNewlineForConsole();
 };

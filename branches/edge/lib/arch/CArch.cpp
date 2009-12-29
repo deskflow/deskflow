@@ -191,12 +191,6 @@ CArch::writeConsole(const char* str)
 	m_console->writeConsole(str);
 }
 
-const char*
-CArch::getNewlineForConsole()
-{
-	return m_console->getNewlineForConsole();
-}
-
 void
 CArch::installDaemon(const char* name,
 				const char* description,

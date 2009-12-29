@@ -37,7 +37,6 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
-	virtual const char*	getNewline() const;
 };
 
 //! Write log to console
@@ -55,7 +54,6 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
-	virtual const char*	getNewline() const;
 };
 
 //! Write log to file
@@ -74,7 +72,6 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
-	virtual const char*	getNewline() const;
 private:
 	std::ofstream		m_handle;
 };
@@ -93,7 +90,6 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
-	virtual const char*	getNewline() const;
 };
 
 //! Write log to system log only
@@ -144,8 +140,6 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
-	virtual const char*	getNewline() const;
-
 private:
 	UInt32				m_maxBufferSize;
 	CBuffer				m_buffer;

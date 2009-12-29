@@ -15,8 +15,6 @@
 #include "CLog.h"
 #include "CString.h"
 #include "CStringUtil.h"
-#include "CThread.h"
-#include "TMethodJob.h"
 #include "LogOutputters.h"
 #include "CArch.h"
 #include "Version.h"
@@ -67,7 +65,7 @@ static const int    g_priorityPad = g_maxPriorityLength +
 
 CLog*         CLog::s_log = NULL;
 
-CLog::CLog() : m_bufferLoopActive(false)
+CLog::CLog()
 {
   assert(s_log == NULL);
 
@@ -78,20 +76,10 @@ CLog::CLog() : m_bufferLoopActive(false)
   m_maxPriority      = g_defaultMaxPriority;
   m_maxNewlineLength = 0;
   insert(new CConsoleLogOutputter);
-
-  // thread for sending to cpu intensive log outputters
-  m_bufferThread = new CThread(
-	  new TMethodJob<CLog>(this, &CLog::bufferLoop));
 }
 
 CLog::~CLog()
 {
-  // finish writing buffer to outputters
-  m_bufferLoopActive = false;
-  m_bufferThread->cancel();
-  m_bufferThread->wait();
-  delete m_bufferThread;
-
   // clean up
   for (COutputterList::iterator index  = m_outputters.begin();
                   index != m_outputters.end(); ++index) {
@@ -203,8 +191,7 @@ CLog::print(const char* file, int line, const char* fmt, ...)
 void
 CLog::insert(ILogOutputter* outputter, bool alwaysAtHead)
 {
-  assert(outputter               != NULL);
-  assert(outputter->getNewline() != NULL);
+  assert(outputter != NULL);
 
   CArchMutexLock lock(m_mutex);
   if (alwaysAtHead) {
@@ -213,10 +200,7 @@ CLog::insert(ILogOutputter* outputter, bool alwaysAtHead)
   else {
     m_outputters.push_front(outputter);
   }
-  int newlineLength = (int)strlen(outputter->getNewline());
-  if (newlineLength > m_maxNewlineLength) {
-    m_maxNewlineLength = newlineLength;
-  }
+
   outputter->open(kAppVersion);
 
   // Issue 41
@@ -284,76 +268,21 @@ CLog::output(ELevel priority, char* msg)
   assert(msg != NULL);
   if (!msg) return;
 
-  // insert priority label
-  //int n = -g_prioritySuffixLength;
-  /*
-  if (priority >= 0) {
-
-	  
-    n = strlen(g_priority[priority]);
-    strcpy(msg + g_maxPriorityLength - n, g_priority[priority]);
-    msg[g_maxPriorityLength + 0] = ':';
-    msg[g_maxPriorityLength + 1] = ' ';
-    msg[g_maxPriorityLength + 1] = ' ';
-
-    
-  }
-*/
   CArchMutexLock lock(m_mutex);
 
-  // queue a copy of each message, which is dequeued as it is sent to each 
-  // outputter
-  m_buffer.push_back(new Message(msg, priority));
-}
+  COutputterList::const_iterator i;
 
-void
-CLog::bufferLoop(void*) {
-	// allows the loop to run, and stops more buffer threads from starting
-	m_bufferLoopActive = true;
+  for (i = m_alwaysOutputters.begin(); i != m_alwaysOutputters.end(); ++i) {
 
-	COutputterList::const_iterator i;
-	
-	while(m_bufferLoopActive) {
-		
-		// if the buffer is empty, wait for more messages
-		if (m_buffer.size() == 0) {
-			ARCH->sleep(0.1);
-			continue;
-		}
-		
-		// get the message from the top of the queue (new messages are added 
-		// to the back).
-		Message* message = m_buffer.front();
-		m_buffer.pop_front();
+	  // write to outputter
+	  (*i)->write(priority, msg);
+  }
 
-		ILogOutputter::ELevel priority = message->m_priority;
+  for (i = m_outputters.begin(); i != m_outputters.end(); ++i) {
 
-		for (i = m_alwaysOutputters.begin(); i != m_alwaysOutputters.end(); ++i) {
-			
-			// get outputter
-			ILogOutputter* outputter = *i;
-
-			// put an appropriate newline at the end
-			//strcpy(end, outputter->getNewline());
-
-			// write message
-			outputter->write(priority, message->m_tmp);
-		}
-
-		for (i = m_outputters.begin(); i != m_outputters.end(); ++i) {
-			
-			// get outputter
-			ILogOutputter* outputter = *i;
-
-			// put an appropriate newline at the end
-			//strcpy(end, outputter->getNewline());
-
-			// write message and break out of loop if it returns false
-			if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority), message->m_tmp)) {
-				break;
-			}
-		}
-
-		delete message;
-	}
+	  // write to outputter and break out of loop if it returns false
+	  if (!(*i)->write(priority, msg)) {
+		  break;
+	  }
+  }
 }

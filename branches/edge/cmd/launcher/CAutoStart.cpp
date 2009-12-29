@@ -42,7 +42,6 @@ public:
 	virtual void		close() { }
 	virtual void		show(bool) { }
 	virtual bool		write(ELevel level, const char* message);
-	virtual const char*	getNewline() const { return ""; }
 
 private:
 	CString*			m_msg;

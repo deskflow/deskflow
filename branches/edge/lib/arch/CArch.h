@@ -76,7 +76,6 @@ public:
 	virtual void		closeConsole();
 	virtual void		showConsole(bool showIfEmpty);
 	virtual void		writeConsole(const char*);
-	virtual const char*	getNewlineForConsole();
 
 	// IArchDaemon overrides
 	virtual void		installDaemon(const char* name,

@@ -140,25 +140,6 @@ private:
 	COutputterList		m_alwaysOutputters;
 	int					m_maxNewlineLength;
 	int					m_maxPriority;
-
-private:
-	struct Message {
-		Message(char* msg, ELevel priority) :
-			m_priority(priority) { 
-			assert(msg);
-			char* m_tmp = _strdup(msg);
-		}
-		virtual ~Message() { free(m_tmp); }
-
-		char* m_tmp;
-		ELevel m_priority;
-	};
-
-	std::list<Message*> m_buffer;
-	bool m_bufferLoopActive;
-	CThread* m_bufferThread;
-
-	void bufferLoop(void*);
 };
 
 /*!

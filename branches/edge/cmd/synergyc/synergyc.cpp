@@ -264,11 +264,11 @@ handleClientFailed(const CEvent& e, void*)
 
 	updateStatus(CString("Failed to connect to server: ") + info->m_what);
 	if (!ARG->m_restartable || !info->m_retry) {
-		LOG((CLOG_ERR "failed to connect to server: %s", info->m_what));
+		LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
 		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 	}
 	else {
-		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what));
+		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
 		if (!s_suspened) {
 			scheduleClientRestart(nextRestartTimeout());
 		}
@@ -775,6 +775,14 @@ parse(int argc, const char* const* argv)
 	LOG((CLOG_WARN "This is an experimental x64 build of %s. Use it at your own risk.", kApplication));
 #endif
 #endif
+
+	if (CLOG->getFilter() > CLog::kDEBUG) {
+		if (ARG->m_logFile == NULL) {
+			LOG((CLOG_WARN "verbose debug messages will not be sent to the console (use file logging)"));
+		} else {
+			LOG((CLOG_INFO "verbose debug messages will be sent to file: %s", ARG->m_logFile));
+		}
+	}
 }
 
 
@@ -801,7 +809,6 @@ public:
 	virtual void		close() { }
 	virtual void		show(bool) { }
 	virtual bool		write(ELevel level, const char* message);
-	virtual const char*	getNewline() const { return ""; }
 };
 
 bool

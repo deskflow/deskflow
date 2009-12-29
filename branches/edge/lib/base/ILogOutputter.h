@@ -64,18 +64,6 @@ public:
 	virtual bool		write(ELevel level, const char* message) = 0;
 
 	//@}
-	//! @name accessors
-	//@{
-
-	//! Returns the newline sequence for the outputter
-	/*!
-	Different outputters use different character sequences for newlines.
-	This method returns the appropriate newline sequence for this
-	outputter.
-	*/
-	virtual const char*	getNewline() const = 0;
-
-	//@}
 };
 
 #endif

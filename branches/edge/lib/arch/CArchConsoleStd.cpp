@@ -22,9 +22,3 @@ CArchConsoleStd::writeConsole(const char* str)
 	std::cout << str << std::endl;
 	std::cout.flush();
 }
-
-const char*
-CArchConsoleStd::getNewlineForConsole()
-{
-	return "";
-}
