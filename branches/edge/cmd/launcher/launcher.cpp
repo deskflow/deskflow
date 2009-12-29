@@ -389,7 +389,7 @@ waitForChild(HWND hwnd, HANDLE thread, DWORD threadID)
 		SetEvent(info.m_ready);
 	}
 
-	if (!info.m_stop) {
+	if (info.m_stop) {
 		SetEvent(info.m_stop);
 	}
 
