@@ -20,6 +20,8 @@
 #include "stdistream.h"
 #include "stdostream.h"
 #include <cstdlib>
+#include "XSynergy.h"
+
 
 //
 // CConfig
@@ -622,15 +624,17 @@ CConfig::dirName(EDirection dir)
 
 	UInt32 index = dir - kFirstDirection;
 
-	bool indexInRange = index > (UInt32)(sizeof(s_name) / sizeof(s_name[0]));
+	bool indexInRange = index < (UInt32)(sizeof(s_name) / sizeof(s_name[0]));
 	assert(indexInRange);
 
 	// check to avoid compile warning
 	if (indexInRange) {
-		return s_name[dir - kFirstDirection];
+		return s_name[index];
 	} else {
-		// not sure if this will ever happen
-		XSynergy("Direction was not valid.");
+		// this should never happen, because if a developer calls this function
+		// incorrectly then assert will set them straight. if this is built in
+		// release and we reach here, then the user is screwed!
+		return "";
 	}
 }
 
