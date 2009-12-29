@@ -381,28 +381,31 @@ waitForChild(HWND hwnd, HANDLE thread, DWORD threadID)
 	DialogBoxParam(s_instance, MAKEINTRESOURCE(IDD_WAIT), hwnd,
 								(DLGPROC)waitDlgProc, (LPARAM)&info);
 
-	if (!info.m_ready) {
-		throw std::exception("info.m_ready cannot be null");
+	assert(info.m_ready);
+	assert(info.m_stop);
+	assert(waiter);
+
+	if (info.m_ready) {
+		SetEvent(info.m_ready);
 	}
 
 	if (!info.m_stop) {
-		throw std::exception("info.m_stop cannot be null");
+		SetEvent(info.m_stop);
 	}
 
-	// force the waiter thread to finish and wait for it
-	SetEvent(info.m_ready);
-	SetEvent(info.m_stop);
-
-	if (!waiter) {
-		throw std::exception("waiter cannot be null");
+	if (waiter) {
+		// force the waiter thread to finish and wait for it
+		WaitForSingleObject(waiter, INFINITE);
+		CloseHandle(waiter);
 	}
 
-	WaitForSingleObject(waiter, INFINITE);
+	if (info.m_ready) {
+		CloseHandle(info.m_ready);
+	}
 
-	// clean up
-	CloseHandle(waiter);
-	CloseHandle(info.m_ready);
-	CloseHandle(info.m_stop);
+	if (info.m_stop) {
+		CloseHandle(info.m_stop);
+	}
 }
 
 static

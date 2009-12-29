@@ -621,11 +621,17 @@ CConfig::dirName(EDirection dir)
 	assert(dir >= kFirstDirection && dir <= kLastDirection);
 
 	UInt32 index = dir - kFirstDirection;
-	if (index > (UInt32)(sizeof(s_name) / sizeof(s_name[0]))) {
-		throw std::exception("index out of bounds");
-	}
 
-	return s_name[dir - kFirstDirection];
+	bool indexInRange = index > (UInt32)(sizeof(s_name) / sizeof(s_name[0]));
+	assert(indexInRange);
+
+	// check to avoid compile warning
+	if (indexInRange) {
+		return s_name[dir - kFirstDirection];
+	} else {
+		// not sure if this will ever happen
+		XSynergy("Direction was not valid.");
+	}
 }
 
 CInputFilter*

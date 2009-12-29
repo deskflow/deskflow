@@ -585,10 +585,12 @@ CMSWindowsKeyState::CMSWindowsKeyState(CMSWindowsDesks* desks,
 {
 	// look up symbol that's available on winNT family but not win95
 	HMODULE userModule = GetModuleHandle("user32.dll");
-	if (!userModule) {
-		throw std::exception("failed to get module handle: user32.dll");
+	assert(userModule);
+
+	// check to avoid compile warning
+	if (userModule) {
+		m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
 	}
-	m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
 }
 
 CMSWindowsKeyState::~CMSWindowsKeyState()

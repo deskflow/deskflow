@@ -402,7 +402,7 @@ CHotkeyOptions::closeRule(HWND)
 					m_activeRule.replaceAction(downAction, true, i);
 					m_activeRule.adoptAction(upAction, false);
 
-				} catch (std::exception &ex) {
+				} catch (...) {
 
 					if (oldInfo != NULL) {
 						delete oldInfo;
@@ -420,7 +420,7 @@ CHotkeyOptions::closeRule(HWND)
 						delete upAction;
 					}
 					
-					throw ex;
+					throw;
 				}
 			}
 			else if (mouseAction != NULL) {

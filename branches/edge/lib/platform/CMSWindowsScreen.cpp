@@ -872,18 +872,20 @@ void
 CMSWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 {
 	MSG* msg = reinterpret_cast<MSG*>(event.getData());
-	if (!msg) {
-		throw std::exception("event data convert to MSG failed");
-	}
+	assert(msg);
 
-	if (CArchMiscWindows::processDialog(msg)) {
-		return;
+	// check to avoid compile warning
+	if (msg) {
+
+		if (CArchMiscWindows::processDialog(msg)) {
+			return;
+		}
+		if (onPreDispatch(msg->hwnd, msg->message, msg->wParam, msg->lParam)) {
+			return;
+		}
+		TranslateMessage(msg);
+		DispatchMessage(msg);
 	}
-	if (onPreDispatch(msg->hwnd, msg->message, msg->wParam, msg->lParam)) {
-		return;
-	}
-	TranslateMessage(msg);
-	DispatchMessage(msg);
 }
 
 void

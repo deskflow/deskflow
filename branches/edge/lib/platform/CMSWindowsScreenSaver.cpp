@@ -240,6 +240,9 @@ CMSWindowsScreenSaver::isActive() const
 			// desktop doesn't exist so screen saver is not running
 			return false;
 		}
+		
+		// desktop should exist at this point
+		assert(desktop);
 
 		// desktop exists.  this should indicate that the screen saver
 		// is running but an OS bug can cause a valid handle to be
@@ -260,12 +263,12 @@ CMSWindowsScreenSaver::isActive() const
 								&CMSWindowsScreenSaver::findScreenSaverFunc,
 								reinterpret_cast<LPARAM>(&info));
 
-		if (!desktop) {
-			throw std::exception("cannot close uninitialized desktop");
-		}
+		// check to avoid compile warning
+		if (desktop) {
 
-		// done with desktop
-		CloseDesktop(desktop);
+			// done with desktop
+			CloseDesktop(desktop);
+		}
 
 		// screen saver is running if a window was found
 		return (info.m_window != NULL);
@@ -404,18 +407,21 @@ CMSWindowsScreenSaver::watchDesktopThread(void*)
 				if (!name) return; //TODO: throw exception
 			}
 
+			// must exist at this point
+			assert(name);
+
 			// get current desktop name
 			GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
 			CloseDesktop(desk);
 
-			if (!name) {
-				throw std::exception("cannot compare null name");
-			}
+			// check to avoid compile warning
+			if (name) {
 
-			// compare name to screen saver desktop name
-			if (_tcsicmp(name, TEXT("Screen-saver")) == 0) {
-				// still the screen saver desktop so keep waiting
-				continue;
+				// compare name to screen saver desktop name
+				if (_tcsicmp(name, TEXT("Screen-saver")) == 0) {
+					// still the screen saver desktop so keep waiting
+					continue;
+				}
 			}
 		}
 		else {
