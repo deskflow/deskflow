@@ -34,7 +34,6 @@ filtering by priority, and output redirection.  The macros LOG() and
 LOGC() provide convenient access.
 */
 class CLog {
-	friend class CArch;
 public:
 	//! Log levels
 	/*!
