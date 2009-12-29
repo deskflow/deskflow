@@ -64,10 +64,9 @@ CArchTimeWindows::~CArchTimeWindows()
 	s_freq = 0.0;
 	if (s_mmInstance == NULL) {
 		HMODULE hLibModule = reinterpret_cast<HMODULE>(s_mmInstance);
-		if (!hLibModule) {
-			throw std::exception("Unable to convert HINSTANCE to HMODULE");
+		if (hLibModule) {
+			FreeLibrary(hLibModule);
 		}
-		FreeLibrary(hLibModule);
 		s_tgt        = NULL;
 		s_mmInstance = NULL;
 	}
