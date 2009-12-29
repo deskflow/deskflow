@@ -803,21 +803,19 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 	}
 
 	// save log messages
-	CBufferedLogOutputter logBuffer(1000);
-	CLOG->insert(&logBuffer, true);
+	// use heap memory because CLog deletes outputters on destruction
+	CBufferedLogOutputter* logBuffer = new CBufferedLogOutputter(1000);
+	CLOG->insert(logBuffer, true);
 
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
-	s_taskBarReceiver = createTaskBarReceiver(&logBuffer);
+	s_taskBarReceiver = createTaskBarReceiver(logBuffer);
 
 	// run
 	int result = startup(argc, argv);
 
 	// done with task bar receiver
 	delete s_taskBarReceiver;
-
-	// done with log buffer
-	CLOG->remove(&logBuffer);
 
 	delete ARG->m_config;
 	delete ARG->m_synergyAddress;
@@ -1338,14 +1336,18 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 	}
 	catch (XBase& e) {
 		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, e.what());
-		//throw;
 	}
 	catch (XArch& e) {
 		showError(instance, __argv[0], IDS_INIT_FAILED, e.what().c_str());
 	}
+	catch (std::exception& e) {
+		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, e.what());
+	}
+	catch (char* c) {
+		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, c);
+	}
 	catch (...) {
-		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, "<unknown>");
-		//throw;
+		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, "Unknown error.");
 	}
 	return kExitFailed;
 }

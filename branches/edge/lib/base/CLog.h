@@ -19,6 +19,7 @@
 #include "IArchMultithread.h"
 #include "stdlist.h"
 #include <stdarg.h>
+#include "CArch.h"
 
 #define CLOG (CLog::getInstance())
 
@@ -33,6 +34,7 @@ filtering by priority, and output redirection.  The macros LOG() and
 LOGC() provide convenient access.
 */
 class CLog {
+	friend class CArch;
 public:
 	//! Log levels
 	/*!

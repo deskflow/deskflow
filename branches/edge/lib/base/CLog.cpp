@@ -323,6 +323,7 @@ CLog::bufferLoop(void*) {
 	
 	while(m_bufferLoopActive) {
 		
+		// if the buffer is empty, wait for more messages
 		if (m_buffer.size() == 0) {
 			ARCH->sleep(0.1);
 			continue;

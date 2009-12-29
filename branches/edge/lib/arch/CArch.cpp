@@ -14,6 +14,7 @@
 
 #include "common.h"
 #include "CArch.h"
+#include "CLog.h"
 
 #undef ARCH_CONSOLE
 #undef ARCH_DAEMON
@@ -133,6 +134,14 @@ CArch::CArch(ARCH_ARGS* args)
 
 CArch::~CArch()
 {
+	// CArch and CLog are now symbiotic; CLog now has a long running 
+	// thread which continues even after CArch::s_instance destruction,
+	// creating a destructor race condition. therefore, we need to destroy 
+	// CLog::s_instance before the time and threading stuff is cleaned up. 
+	// this means we won't be able to log anything from here onward, and, 
+	// any attempts to log will cause assert error.
+	delete CLog::s_log;
+
 	// clean up
 	delete m_taskbar;
 	delete m_daemon;
