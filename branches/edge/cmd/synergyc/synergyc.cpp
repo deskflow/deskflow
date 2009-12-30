@@ -638,13 +638,19 @@ static
 void
 parse(int argc, const char* const* argv)
 {
-	bool argsValid = (ARG->m_pname != NULL) && (argv != NULL) && (argc >= 1);
-	assert(argsValid);
-
-	if (!argsValid) {
-		// fail silently for release (avoids compiler warning)
-		return;
-	}
+	// about these use of assert() here:
+	// previously an /analyze warning was displayed if we only used assert and
+	// did not return on failure. however, this warning does not appear to show
+	// any more (could be because new compiler args have been added).
+	// the asserts are programmer benefit only; the os should never pass 0 args,
+	// because the first is always the binary name. the only way assert would 
+	// evaluate to true, is if this parse function were implemented incorrectly,
+	// which is unlikely because it's old code and has a specific use.
+	// we should avoid using anything other than assert here, because it will
+	// look like important code, which it's not really.
+	assert(ARG->m_pname != NULL);
+	assert(argv != NULL);
+	assert(argc >= 1);
 
 	// set defaults
 	ARG->m_name = ARCH->getHostName();
