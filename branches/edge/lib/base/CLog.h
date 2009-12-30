@@ -119,9 +119,17 @@ public:
 	//! Get the minimum priority level.
 	int					getFilter() const;
 
+	//! Get the filter name of the current filter level.
+	const char*			getFilterName() const;
+
+	//! Get the filter name of a specified filter level.
+	const char*			getFilterName(int level) const;
+
 	//! Get the singleton instance of the log
 	static CLog*		getInstance();
 
+	//! Get the console filter level (messages above this are not sent to console).
+	int					getConsoleMaxLevel() const { return kDEBUG1; }
 	//@}
 
 private:

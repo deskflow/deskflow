@@ -103,6 +103,18 @@ CLog::getInstance()
   return s_log;
 }
 
+const char*
+CLog::getFilterName() const
+{
+	return getFilterName(getFilter());
+}
+
+const char*
+CLog::getFilterName(int level) const
+{
+	return g_priority[level];
+}
+
 void
 CLog::print(const char* file, int line, const char* fmt, ...)
 {

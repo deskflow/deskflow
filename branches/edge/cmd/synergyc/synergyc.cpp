@@ -56,6 +56,7 @@
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
 #define DAEMON_NAME "Synergy+ Client"
+#define DAEMON_INFO "Allows another computer to share it's keyboard and mouse with this computer."
 #elif SYSAPI_UNIX
 #define DAEMON_NAME "synergyc"
 #endif
@@ -798,11 +799,10 @@ parse(int argc, const char* const* argv)
 #endif
 #endif
 
-	if (CLOG->getFilter() > CLog::kDEBUG) {
+	if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
 		if (ARG->m_logFile == NULL) {
-			LOG((CLOG_WARN "verbose debug messages will not be sent to the console (use file logging)"));
-		} else {
-			LOG((CLOG_INFO "verbose debug messages will be sent to file: %s", ARG->m_logFile));
+			LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)", 
+				CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
 		}
 	}
 }

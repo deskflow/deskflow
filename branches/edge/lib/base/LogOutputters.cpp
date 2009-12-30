@@ -90,11 +90,10 @@ CConsoleLogOutputter::show(bool showIfEmpty)
 bool
 CConsoleLogOutputter::write(ELevel level, const char* msg)
 {
-	// we want to ignore messages above DEBUG (i.e. DEBUG1, DEBUG2, etc), since
+	// we want to ignore messages above CLOG->getConsoleMaxLevel(), since
 	// the console can use a lot of CPU time to display messages, and on windows
-	// this is done on the same thread. the user should be advised to use file
-	// logging if level is above DEBUG
-	if (level <= CLog::kDEBUG1) {
+	// this is done on the same thread.
+	if (level <= CLOG->getConsoleMaxLevel()) {
 		ARCH->writeConsole(msg);
 	}
 	return true;
