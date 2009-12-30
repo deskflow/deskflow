@@ -94,7 +94,7 @@ CConsoleLogOutputter::write(ELevel level, const char* msg)
 	// the console can use a lot of CPU time to display messages, and on windows
 	// this is done on the same thread. the user should be advised to use file
 	// logging if level is above DEBUG
-	if (level <= CLog::kDEBUG) {
+	if (level <= CLog::kDEBUG1) {
 		ARCH->writeConsole(msg);
 	}
 	return true;

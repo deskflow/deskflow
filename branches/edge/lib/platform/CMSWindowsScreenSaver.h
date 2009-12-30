@@ -70,8 +70,6 @@ private:
 	bool				isSecure(bool* wasSecureAnInt) const;
 
 private:
-	bool				m_is95Family;
-	bool				m_is95;
 	bool				m_isNT;
 	BOOL				m_wasEnabled;
 	bool				m_wasSecure;

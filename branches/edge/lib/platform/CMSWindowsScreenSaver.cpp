@@ -47,21 +47,13 @@ CMSWindowsScreenSaver::CMSWindowsScreenSaver() :
 	m_active(false)
 {
 	// detect OS
-	m_is95Family = false;
-	m_is95       = false;
 	m_isNT       = false;
 	OSVERSIONINFO info;
 	info.dwOSVersionInfoSize = sizeof(info);
 	if (GetVersionEx(&info)) {
-		m_is95Family = (info.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS);
 		if (info.dwPlatformId   == VER_PLATFORM_WIN32_NT &&
 			info.dwMajorVersion <= 4) {
 			m_isNT = true;
-		}
-		else if (info.dwPlatformId  == VER_PLATFORM_WIN32_WINDOWS &&
-				info.dwMajorVersion == 4 &&
-				info.dwMinorVersion == 0) {
-			m_is95 = true;
 		}
 	}
 
@@ -98,23 +90,6 @@ CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 	m_wParam   = wParam;
 	m_lParam   = lParam;
 
-	// we handle the screen saver differently for the windows
-	// 95 and nt families.
-	if (m_is95Family) {
-		// on windows 95 we wait for the screen saver process
-		// to terminate.  get the process.
-		DWORD processID = findScreenSaver();
-		HANDLE process = OpenProcess(SYNCHRONIZE, FALSE, processID);
-		if (process == NULL) {
-			// didn't start
-			LOG((CLOG_DEBUG2 "can't open screen saver process"));
-			return false;
-		}
-
-		// watch for the process to exit
-		watchProcess(process);
-	}
-	else {
 		// on the windows nt family we wait for the desktop to
 		// change until it's neither the Screen-Saver desktop
 		// nor a desktop we can't open (the login desktop).
@@ -128,7 +103,7 @@ CMSWindowsScreenSaver::checkStarted(UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 
 		watchDesktop();
-	}
+	
 
 	return true;
 }
@@ -191,7 +166,6 @@ void
 CMSWindowsScreenSaver::deactivate()
 {
 	bool killed = false;
-	if (!m_is95Family) {
 		// NT runs screen saver in another desktop
 		HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE,
 								DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
@@ -201,8 +175,7 @@ CMSWindowsScreenSaver::deactivate()
 								reinterpret_cast<LPARAM>(&killed));
 			CloseDesktop(desktop);
 		}
-	}
-
+	
 	// if above failed or wasn't tried, try the windows 95 way
 	if (!killed) {
 		// find screen saver window and close it
@@ -230,10 +203,7 @@ CMSWindowsScreenSaver::deactivate()
 bool
 CMSWindowsScreenSaver::isActive() const
 {
-	if (m_is95) {
-		return (FindWindow("WindowsScreenSaverClass", NULL) != NULL);
-	}
-	else if (m_isNT) {
+	if (m_isNT) {
 		// screen saver runs on a separate desktop
 		HDESK desktop = OpenDesktop("Screen-saver", 0, FALSE, MAXIMUM_ALLOWED);
 		if (desktop == NULL && GetLastError() != ERROR_ACCESS_DENIED) {
@@ -466,7 +436,7 @@ CMSWindowsScreenSaver::setSecure(bool secure, bool saveSecureAsInt)
 		return;
 	}
 
-	const TCHAR* isSecure = m_is95Family ? g_isSecure9x : g_isSecureNT;
+	const TCHAR* isSecure = g_isSecureNT;
 	if (saveSecureAsInt) {
 		CArchMiscWindows::setValue(hkey, isSecure, secure ? 1 : 0);
 	}
@@ -490,7 +460,7 @@ CMSWindowsScreenSaver::isSecure(bool* wasSecureFlagAnInt) const
 	// get the value.  the value may be an int or a string, depending
 	// on the version of windows.
 	bool result;
-	const TCHAR* isSecure = m_is95Family ? g_isSecure9x : g_isSecureNT;
+	const TCHAR* isSecure = g_isSecureNT;
 	switch (CArchMiscWindows::typeOfValue(hkey, isSecure)) {
 	default:
 		result = false;
