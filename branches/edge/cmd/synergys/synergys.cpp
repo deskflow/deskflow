@@ -89,6 +89,14 @@ static void loadConfig();
 
 class CArgs {
 public:
+	enum EWindowsServiceAction {
+		kWsaNone,
+		kWsaInstall,
+		kWsaUninstall,
+		kWsaStart,
+		kWsaStop
+	};
+
 	CArgs() :
 		m_pname(NULL),
 		m_backend(false),
@@ -100,8 +108,7 @@ public:
 		m_display(NULL),
 		m_synergyAddress(NULL),
 		m_config(NULL),
-		m_installService(false),
-		m_uninstallService(false)
+		m_windowsServiceAction(kWsaNone)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
 
@@ -118,10 +125,7 @@ public:
 	CString 			m_name;
 	CNetworkAddress*	m_synergyAddress;
 	CConfig*			m_config;
-	bool				m_installService;
-	bool				m_uninstallService;
-	bool				m_startService;
-	bool				m_stopService;
+	EWindowsServiceAction m_windowsServiceAction;
 };
 
 CArgs*					CArgs::s_instance = NULL;
@@ -1089,14 +1093,25 @@ parse(int argc, const char* const* argv)
 		}
 
 #if WINAPI_MSWINDOWS
-		else if (isArg(i, argc, argv, NULL, "--install-service")) {
-			// install windows service
-			ARG->m_installService = true;
-		}
+		else if (isArg(i, argc, argv, NULL, "--service")) {
+			const char* serviceAction = argv[++i];
 
-		else if (isArg(i, argc, argv, NULL, "--uninstall-service")) {
-			// uninstall windows service
-			ARG->m_uninstallService = true;
+			if (_stricmp(serviceAction, "install") == 0) {
+				ARG->m_windowsServiceAction = CArgs::kWsaInstall;
+			}
+			else if (_stricmp(serviceAction, "uninstall") == 0) {
+				ARG->m_windowsServiceAction = CArgs::kWsaUninstall;
+			}
+			else if (_stricmp(serviceAction, "start") == 0) {
+				ARG->m_windowsServiceAction = CArgs::kWsaStart;
+			}
+			else if (_stricmp(serviceAction, "stop") == 0) {
+				ARG->m_windowsServiceAction = CArgs::kWsaStop;
+			} 
+			else {
+				LOG((CLOG_ERR "unknown service action: %s", serviceAction));
+				bye(kExitArgs);
+			}
 		}
 #endif
 
@@ -1140,6 +1155,15 @@ parse(int argc, const char* const* argv)
 			ARG->m_logFilter = "NOTE";
 		}
 	}
+
+#if SYSAPI_WIN32
+	// if user wants to run as daemon, but process not launched from service launcher...
+	if (ARG->m_daemon && !CArchMiscWindows::wasLaunchedAsService()) {
+		LOG((CLOG_ERR "cannot launch as daemon if process not started through "
+			"service host (use '--service start' argument instead)"));
+		bye(kExitArgs);
+	}
+#endif
 
 	// set log filter
 	if (!CLOG->setFilter(ARG->m_logFilter)) {
@@ -1315,32 +1339,108 @@ static
 int
 manageService() 
 {
-	assert(ARG->m_installService || ARG->m_uninstallService);
+	assert(ARG->m_windowsServiceAction != CArgs::kWsaNone);
 
 	std::stringstream argBuf;
 	for (int i = 1; i < __argc; i++) {
-		char* arg = __argv[i];
+		const char* arg = __argv[i];
 
 		// ignore service setup args
-		if ((_stricmp(arg, "--install-service") != 0) &&
-			(_stricmp(arg, "--uninstall-service") != 0)) {
-
+		if (_stricmp(arg, "--service") == 0) {
+			// ignore and skip the next arg also (service action)
+			i++;
+		}
+		else {
 			argBuf << " " << __argv[i];
 		}
 	}
 
+	// get the path of this program
 	char thisPath[MAX_PATH];
 	GetModuleFileName(s_instance, thisPath, MAX_PATH);
 
-	if (ARG->m_installService) {
-		ARCH->installDaemon(DAEMON_NAME, DAEMON_INFO, thisPath, argBuf.str().c_str(), NULL, true);
-		LOG((CLOG_INFO "service '%s' installed with args: %s", DAEMON_NAME, argBuf.str().c_str()));
-		return kExitSuccess;
-	} else if (ARG->m_uninstallService) {
-		ARCH->uninstallDaemon(DAEMON_NAME, true);
-		LOG((CLOG_INFO, "service '%s' uninstalled", DAEMON_NAME));
-		return kExitSuccess;
+	switch(ARG->m_windowsServiceAction) {
+		case CArgs::kWsaInstall:
+		{
+			ARCH->installDaemon(DAEMON_NAME, DAEMON_INFO, thisPath, argBuf.str().c_str(), NULL, true);
+			LOG((CLOG_INFO "service '%s' installed with args: %s", 
+				DAEMON_NAME, argBuf.str() != "" ? argBuf.str().c_str() : "none" ));
+			return kExitSuccess;
+		}
+
+		case CArgs::kWsaUninstall:
+		{
+			ARCH->uninstallDaemon(DAEMON_NAME, true);
+			LOG((CLOG_INFO "service '%s' uninstalled", DAEMON_NAME));
+			return kExitSuccess;
+		}
+
+		case CArgs::kWsaStart:
+		{
+			// open service manager
+			SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
+
+			assert(mgr != NULL);
+			if (mgr == NULL) {
+				return kExitFailed;
+			}
+
+			// open the service
+			SC_HANDLE service = OpenService(
+				mgr, DAEMON_NAME, SERVICE_START);
+
+			assert(service != NULL);
+			if (service == NULL) {
+				CloseServiceHandle(mgr);
+				return kExitFailed;
+			}
+
+			// start the service
+			if (StartService(service, 0, NULL)) {
+				LOG((CLOG_INFO "service '%s' started", DAEMON_NAME));
+				return kExitSuccess;
+			}
+
+			return kExitFailed;
+		}
+
+		case CArgs::kWsaStop:
+		{
+			// open service manager
+			SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
+
+			assert(mgr != NULL);
+			if (mgr == NULL) {
+				return kExitFailed;
+			}
+
+			// open the service
+			SC_HANDLE service = OpenService(
+				mgr, DAEMON_NAME,
+				SERVICE_STOP | SERVICE_QUERY_STATUS);
+
+			assert(service != NULL);
+			if (service == NULL) {
+				CloseServiceHandle(mgr);
+				return kExitFailed;
+			}
+
+			// ask the service to stop, asynchronously
+			SERVICE_STATUS ss;
+			if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
+				DWORD dwErrCode = GetLastError(); 
+				if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
+					LOG((CLOG_ERR "cannot stop service '%s'", DAEMON_NAME));
+					return kExitFailed;
+				}
+			}
+
+			LOG((CLOG_INFO "service '%s' stopping asyncronously", DAEMON_NAME));
+			return kExitSuccess;
+		}
 	}
+
+	// code should never reach here
 	return kExitFailed;
 }
 
@@ -1352,7 +1452,7 @@ foregroundStartup(int argc, char** argv)
 	// parse command line
 	parse(argc, argv);
 
-	if (ARG->m_installService || ARG->m_uninstallService) {
+	if (ARG->m_windowsServiceAction != CArgs::kWsaNone) {
 		return manageService();
 	}
 
