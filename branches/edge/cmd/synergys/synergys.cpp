@@ -38,6 +38,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <sstream>
 
 #define DAEMON_RUNNING(running_)
 #if WINAPI_MSWINDOWS
@@ -47,6 +48,7 @@
 #include "CMSWindowsServerTaskBarReceiver.h"
 #include "resource.h"
 #include <conio.h>
+#include "CArchDaemonWindows.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif WINAPI_XWINDOWS
@@ -60,6 +62,7 @@
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
 #define DAEMON_NAME "Synergy+ Server"
+#define DAEMON_INFO "Shares this computers mouse and keyboard with other computers."
 #elif SYSAPI_UNIX
 #define DAEMON_NAME "synergys"
 #endif
@@ -96,7 +99,9 @@ public:
 		m_logFile(NULL),
 		m_display(NULL),
 		m_synergyAddress(NULL),
-		m_config(NULL)
+		m_config(NULL),
+		m_installService(false),
+		m_uninstallService(false)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
 
@@ -113,6 +118,8 @@ public:
 	CString 			m_name;
 	CNetworkAddress*	m_synergyAddress;
 	CConfig*			m_config;
+	bool				m_installService;
+	bool				m_uninstallService;
 };
 
 CArgs*					CArgs::s_instance = NULL;
@@ -757,6 +764,7 @@ mainLoop()
 	return kExitSuccess;
 }
 
+// used by windows nt (service mode)
 static
 int
 daemonMainLoop(int, const char**)
@@ -769,6 +777,7 @@ daemonMainLoop(int, const char**)
 	return mainLoop();
 }
 
+// used by unix and win95
 static
 int
 standardStartup(int argc, char** argv)
@@ -1072,6 +1081,18 @@ parse(int argc, const char* const* argv)
 			bye(kExitSuccess);
 		}
 
+#if WINAPI_MSWINDOWS
+		else if (isArg(i, argc, argv, NULL, "--install-service")) {
+			// install windows service
+			ARG->m_installService = true;
+		}
+
+		else if (isArg(i, argc, argv, NULL, "--uninstall-service")) {
+			// uninstall windows service
+			ARG->m_uninstallService = true;
+		}
+#endif
+
 		else if (isArg(i, argc, argv, "--", NULL)) {
 			// remaining arguments are not options
 			++i;
@@ -1218,6 +1239,7 @@ loadConfig()
 #if SYSAPI_WIN32
 
 static bool				s_hasImportantLogMessages = false;
+static HINSTANCE s_instance = NULL;
 
 //
 // CMessageBoxOutputter
@@ -1285,11 +1307,48 @@ daemonNTStartup(int, char**)
 
 static
 int
+manageService() 
+{
+	assert(ARG->m_installService || ARG->m_uninstallService);
+
+	std::stringstream argBuf;
+	for (int i = 1; i < __argc; i++) {
+		char* arg = __argv[i];
+
+		// ignore service setup args
+		if ((_stricmp(arg, "--install-service") != 0) &&
+			(_stricmp(arg, "--uninstall-service") != 0)) {
+
+			argBuf << " " << __argv[i];
+		}
+	}
+
+	char thisPath[MAX_PATH];
+	GetModuleFileName(s_instance, thisPath, MAX_PATH);
+
+	if (ARG->m_installService) {
+		ARCH->installDaemon(DAEMON_NAME, DAEMON_INFO, thisPath, argBuf.str().c_str(), NULL, true);
+		LOG((CLOG_INFO "service '%s' installed with args: %s", DAEMON_NAME, argBuf.str().c_str()));
+		return kExitSuccess;
+	} else if (ARG->m_uninstallService) {
+		ARCH->uninstallDaemon(DAEMON_NAME, true);
+		LOG((CLOG_INFO, "service '%s' uninstalled", DAEMON_NAME));
+		return kExitSuccess;
+	}
+	return kExitFailed;
+}
+
+// used by windows nt (foreground)
+static
+int
 foregroundStartup(int argc, char** argv)
 {
-
 	// parse command line
 	parse(argc, argv);
+
+	if (ARG->m_installService || ARG->m_uninstallService) {
+		return manageService();
+	}
 
 	// load configuration
 	loadConfig();
@@ -1308,11 +1367,11 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 }
 
 int main(int argc, char** argv) {
-	HINSTANCE instance = GetModuleHandle(NULL);
-	if (instance) {
-		return WinMain(instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
+	s_instance = GetModuleHandle(NULL);
+	if (s_instance) {
+		return WinMain(s_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
 	} else {
-		return 1;
+		return kExitFailed;
 	}
 }
 
