@@ -1469,7 +1469,8 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 {
 	CString fmt = CMSWindowsUtil::getString(instance, id);
 	CString msg = CStringUtil::format(fmt.c_str(), arg);
-	MessageBox(NULL, msg.c_str(), title, MB_OK | MB_ICONWARNING);
+	LOG((CLOG_ERR "%s", msg.c_str()));
+	bye(kExitFailed);
 }
 
 int main(int argc, char** argv) {
@@ -1484,6 +1485,12 @@ int main(int argc, char** argv) {
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
+	// instantiate before the try-catch block, so they are destroyed after the
+	// exception handling (we may need to log exception message). these should
+	// not throw exceptions at this stage, so this code should be pretty safe.
+	CArch arch(instance);
+	CLOG;
+
 	try {
 		CArchMiscWindows::setIcons((HICON)LoadImage(instance,
 									MAKEINTRESOURCE(IDI_SYNERGY),
@@ -1493,9 +1500,8 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 									MAKEINTRESOURCE(IDI_SYNERGY),
 									IMAGE_ICON,
 									16, 16, LR_SHARED));
-		CArch arch(instance);
+
 		CMSWindowsScreen::init(instance);
-		CLOG;
 		CThread::getCurrentThread().setPriority(-14);
 		CArgs args;
 		
