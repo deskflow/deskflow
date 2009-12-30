@@ -79,7 +79,6 @@ CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
 
 CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
 	m_isPrimary(isPrimary),
-	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_isOnScreen(m_isPrimary),
 	m_class(0),
 	m_x(0), m_y(0),
@@ -992,21 +991,6 @@ CMSWindowsScreen::onEvent(HWND, UINT msg,
 				WPARAM wParam, LPARAM lParam, LRESULT* result)
 {
 	switch (msg) {
-	case WM_QUERYENDSESSION:
-		if (m_is95Family) {
-			*result = TRUE;
-			return true;
-		}
-		break;
-
-	case WM_ENDSESSION:
-		if (m_is95Family) {
-			if (wParam == TRUE && lParam == 0) {
-				EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
-			}
-			return true;
-		}
-		break;
 
 	case WM_DRAWCLIPBOARD:
 		// first pass on the message
@@ -1168,37 +1152,6 @@ CMSWindowsScreen::onKey(WPARAM wParam, LPARAM lParam)
 		KeyID key = m_keyState->mapKeyFromEvent(wParam, lParam, &mask);
 		button    = static_cast<KeyButton>((lParam & 0x01ff0000u) >> 16);
 		if (key != kKeyNone) {
-			// fix key up.  if the key isn't down according to
-			// our table then we never got the key press event
-			// for it.  if it's not a modifier key then we'll
-			// synthesize the press first.  only do this on
-			// the windows 95 family, which eats certain special
-			// keys like alt+tab, ctrl+esc, etc.
-			if (m_is95Family && !wasDown && !down) {
-				switch (virtKey) {
-				case VK_SHIFT:
-				case VK_LSHIFT:
-				case VK_RSHIFT:
-				case VK_CONTROL:
-				case VK_LCONTROL:
-				case VK_RCONTROL:
-				case VK_MENU:
-				case VK_LMENU:
-				case VK_RMENU:
-				case VK_LWIN:
-				case VK_RWIN:
-				case VK_CAPITAL:
-				case VK_NUMLOCK:
-				case VK_SCROLL:
-					break;
-
-				default:
-					m_keyState->sendKeyEvent(getEventTarget(),
-							true, false, key, mask, 1, button);
-					break;
-				}
-			}
-
 			// do it
 			m_keyState->sendKeyEvent(getEventTarget(),
 							((lParam & 0x80000000u) == 0),
@@ -1591,15 +1544,6 @@ CMSWindowsScreen::fixClipboardViewer()
 void
 CMSWindowsScreen::enableSpecialKeys(bool enable) const
 {
-	// enable/disable ctrl+alt+del, alt+tab, etc on win95 family.
-	// since the win95 family doesn't support low-level hooks, we
-	// use this undocumented feature to suppress normal handling
-	// of certain key combinations.
-	if (m_is95Family) {
-		DWORD dummy = 0;
-		SystemParametersInfo(SPI_SETSCREENSAVERRUNNING,
-							enable ? FALSE : TRUE, &dummy, 0);
-	}
 }
 
 ButtonID
