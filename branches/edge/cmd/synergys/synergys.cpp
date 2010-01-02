@@ -1403,7 +1403,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			// previously, we were assuming that the process is launched from the
 			// service host when no arguments were passed. if we wanted to launch
 			// from console or debugger, we had to remember to pass -f which was
-			// always the first pitfall for new comitters. now, we are able to
+			// always the first pitfall for new committers. now, we are able to
 			// check using the new `wasLaunchedAsService` function, which is a
 			// more elegant solution.
 			if (CArchMiscWindows::wasLaunchedAsService()) {
