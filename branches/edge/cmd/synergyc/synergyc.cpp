@@ -43,14 +43,17 @@
 #include "CMSWindowsClientTaskBarReceiver.h"
 #include "resource.h"
 #include <conio.h>
+#include "CMSWindowsClientApp.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif WINAPI_XWINDOWS
 #include "CXWindowsScreen.h"
 #include "CXWindowsClientTaskBarReceiver.h"
+#include "CXWindowsClientApp.h"
 #elif WINAPI_CARBON
 #include "COSXScreen.h"
 #include "COSXClientTaskBarReceiver.h"
+#include "COSXClientApp.h"
 #endif
 
 // platform dependent name of a daemon
@@ -64,6 +67,14 @@
 typedef int (*StartupFunc)(int, char**);
 static bool startClient();
 static void parse(int argc, const char* const* argv);
+
+#if WINAPI_MSWINDOWS
+CMSWindowsClientApp app;
+#elif WINAPI_XWINDOWS
+CXWindowsClientApp app;
+#elif WINAPI_CARBON
+COSXClientApp app;
+#endif
 
 //
 // program arguments
@@ -726,6 +737,30 @@ parse(int argc, const char* const* argv)
 			bye(kExitSuccess);
 		}
 
+#if WINAPI_MSWINDOWS
+		else if (isArg(i, argc, argv, NULL, "--service")) {
+			const char* serviceAction = argv[++i];
+
+			if (_stricmp(serviceAction, "install") == 0) {
+				app.installService();
+			}
+			else if (_stricmp(serviceAction, "uninstall") == 0) {
+				app.uninstallService();
+			}
+			else if (_stricmp(serviceAction, "start") == 0) {
+				app.startService();
+			}
+			else if (_stricmp(serviceAction, "stop") == 0) {
+				app.stopService();
+			}
+			else {
+				LOG((CLOG_ERR "unknown service action: %s", serviceAction));
+				bye(kExitArgs);
+			}
+			bye(kExitSuccess);
+		}
+#endif
+
 		else if (isArg(i, argc, argv, "--", NULL)) {
 			// remaining arguments are not options
 			++i;
@@ -907,11 +942,15 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 }
 
 int main(int argc, char** argv) {
-	HINSTANCE instance = GetModuleHandle(NULL);
-	if (instance) {
-		return WinMain(instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
+
+	app.m_daemonName = DAEMON_NAME;
+	app.m_daemonInfo = DAEMON_INFO;
+	app.m_instance = GetModuleHandle(NULL);
+
+	if (app.m_instance) {
+		return WinMain(app.m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
 	} else {
-		return 1;
+		return kExitFailed;
 	}
 }
 
@@ -940,7 +979,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 			// previously, we were assuming that the process is launched from the
 			// service host when no arguments were passed. if we wanted to launch
 			// from console or debugger, we had to remember to pass -f which was
-			// always the first pitfall for new comitters. now, we are able to
+			// always the first pitfall for new committers. now, we are able to
 			// check using the new `wasLaunchedAsService` function, which is a
 			// more elegant solution.
 			if (CArchMiscWindows::wasLaunchedAsService()) {

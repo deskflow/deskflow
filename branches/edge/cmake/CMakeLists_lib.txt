@@ -183,6 +183,9 @@ SET(src_lib_platform_xwindows
 	${root_lib}/platform/CXWindowsScreen.cpp
 	${root_lib}/platform/CXWindowsScreenSaver.cpp
 	${root_lib}/platform/CXWindowsUtil.cpp
+	${root_lib}/platform/CXWindowsApp.h
+	${root_lib}/platform/CXWindowsClientApp.h
+	${root_lib}/platform/CXWindowsServerApp.h
 )
 
 SET(src_lib_platform_mswindows
@@ -198,6 +201,9 @@ SET(src_lib_platform_mswindows
 	${root_lib}/platform/CMSWindowsScreen.cpp
 	${root_lib}/platform/CMSWindowsScreenSaver.cpp
 	${root_lib}/platform/CMSWindowsUtil.cpp
+	${root_lib}/platform/CMSWindowsApp.cpp
+	${root_lib}/platform/CMSWindowsClientApp.cpp
+	${root_lib}/platform/CMSWindowsServerApp.cpp
 )
 
 SET(inc_lib_platform_mswindows
@@ -213,6 +219,9 @@ SET(inc_lib_platform_mswindows
 	${root_lib}/platform/CMSWindowsScreen.h
 	${root_lib}/platform/CMSWindowsScreenSaver.h
 	${root_lib}/platform/CMSWindowsUtil.h
+	${root_lib}/platform/CMSWindowsApp.h
+	${root_lib}/platform/CMSWindowsClientApp.h
+	${root_lib}/platform/CMSWindowsServerApp.h
 )
 
 SET(src_lib_platform_hook
@@ -233,6 +242,9 @@ SET(src_lib_platform_carbon
 	${root_lib}/platform/COSXScreen.cpp
 	${root_lib}/platform/COSXScreenSaver.cpp
 	${root_lib}/platform/COSXScreenSaverUtil.m
+	${root_lib}/platform/COSXApp.cpp
+	${root_lib}/platform/COSXClientApp.cpp
+	${root_lib}/platform/COSXServerApp.cpp
 )
 
 SET(src_lib_server
@@ -266,6 +278,9 @@ SET(inc_lib_server
 )
 
 SET(src_lib_synergy
+	${root_lib}/synergy/CApp.cpp
+	${root_lib}/synergy/CClientApp.cpp
+	${root_lib}/synergy/CServerApp.cpp
 	${root_lib}/synergy/CClipboard.cpp
 	${root_lib}/synergy/CKeyMap.cpp
 	${root_lib}/synergy/CKeyState.cpp
@@ -284,6 +299,9 @@ SET(src_lib_synergy
 )
 
 SET(inc_lib_synergy
+	${root_lib}/synergy/CApp.h
+	${root_lib}/synergy/CClientApp.h
+	${root_lib}/synergy/CServerApp.h
 	${root_lib}/synergy/CClipboard.h
 	${root_lib}/synergy/CKeyMap.h
 	${root_lib}/synergy/CKeyState.h
@@ -326,9 +344,17 @@ IF(UNIX)
 	LIST(APPEND src_lib ${src_lib_arch_unix})
 
 	IF(APPLE)
-	LIST(APPEND src_lib ${src_lib_platform_carbon})
+		LIST(APPEND src_lib
+			${src_lib_platform_carbon}
+			${inc_lib_synergy_carbon}
+			${src_lib_synergy_carbon}
+		)
 	ELSE(APPLE)
-	LIST(APPEND src_lib ${src_lib_platform_xwindows})
+		LIST(APPEND src_lib
+			${src_lib_platform_xwindows}
+			${inc_lib_synergy_xwindows}
+			${src_lib_synergy_xwindows}
+		)
 	ENDIF(APPLE)
 
 ENDIF(UNIX)
@@ -347,6 +373,8 @@ IF(WIN32)
 		${src_lib_arch_windows}
 		${inc_lib_platform_mswindows}
 		${src_lib_platform_mswindows}
+		${inc_lib_synergy_mswindows}
+		${src_lib_synergy_mswindows}
 	)
 ENDIF(WIN32)
 

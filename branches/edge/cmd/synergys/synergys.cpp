@@ -49,14 +49,17 @@
 #include "resource.h"
 #include <conio.h>
 #include "CArchDaemonWindows.h"
+#include "CMSWindowsServerApp.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif WINAPI_XWINDOWS
 #include "CXWindowsScreen.h"
 #include "CXWindowsServerTaskBarReceiver.h"
+#include "CXWindowsServerApp.h"
 #elif WINAPI_CARBON
 #include "COSXScreen.h"
 #include "COSXServerTaskBarReceiver.h"
+#include "COSXServerApp.h"
 #endif
 
 // platform dependent name of a daemon
@@ -81,6 +84,14 @@ static void parse(int argc, const char* const* argv);
 static bool loadConfig(const CString& pathname);
 static void loadConfig();
 
+#if WINAPI_MSWINDOWS
+CMSWindowsServerApp app;
+#elif WINAPI_XWINDOWS
+CXWindowsServerApp app;
+#elif WINAPI_CARBON
+COSXServerApp app;
+#endif
+
 //
 // program arguments
 //
@@ -89,14 +100,6 @@ static void loadConfig();
 
 class CArgs {
 public:
-	enum EWindowsServiceAction {
-		kWsaNone,
-		kWsaInstall,
-		kWsaUninstall,
-		kWsaStart,
-		kWsaStop
-	};
-
 	CArgs() :
 		m_pname(NULL),
 		m_backend(false),
@@ -107,8 +110,7 @@ public:
 		m_logFile(NULL),
 		m_display(NULL),
 		m_synergyAddress(NULL),
-		m_config(NULL),
-		m_windowsServiceAction(kWsaNone)
+		m_config(NULL)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
 
@@ -125,11 +127,9 @@ public:
 	CString 			m_name;
 	CNetworkAddress*	m_synergyAddress;
 	CConfig*			m_config;
-	EWindowsServiceAction m_windowsServiceAction;
 };
 
 CArgs*					CArgs::s_instance = NULL;
-
 
 //
 // platform dependent factories
@@ -1097,21 +1097,22 @@ parse(int argc, const char* const* argv)
 			const char* serviceAction = argv[++i];
 
 			if (_stricmp(serviceAction, "install") == 0) {
-				ARG->m_windowsServiceAction = CArgs::kWsaInstall;
+				app.installService();
 			}
 			else if (_stricmp(serviceAction, "uninstall") == 0) {
-				ARG->m_windowsServiceAction = CArgs::kWsaUninstall;
+				app.uninstallService();
 			}
 			else if (_stricmp(serviceAction, "start") == 0) {
-				ARG->m_windowsServiceAction = CArgs::kWsaStart;
+				app.startService();
 			}
 			else if (_stricmp(serviceAction, "stop") == 0) {
-				ARG->m_windowsServiceAction = CArgs::kWsaStop;
-			} 
+				app.stopService();
+			}
 			else {
 				LOG((CLOG_ERR "unknown service action: %s", serviceAction));
 				bye(kExitArgs);
 			}
+			bye(kExitSuccess);
 		}
 #endif
 
@@ -1269,7 +1270,6 @@ loadConfig()
 #if SYSAPI_WIN32
 
 static bool				s_hasImportantLogMessages = false;
-static HINSTANCE s_instance = NULL;
 
 //
 // CMessageBoxOutputter
@@ -1335,115 +1335,6 @@ daemonNTStartup(int, char**)
 	return ARCH->daemonize(DAEMON_NAME, &daemonNTMainLoop);
 }
 
-static
-int
-manageService() 
-{
-	assert(ARG->m_windowsServiceAction != CArgs::kWsaNone);
-
-	std::stringstream argBuf;
-	for (int i = 1; i < __argc; i++) {
-		const char* arg = __argv[i];
-
-		// ignore service setup args
-		if (_stricmp(arg, "--service") == 0) {
-			// ignore and skip the next arg also (service action)
-			i++;
-		}
-		else {
-			argBuf << " " << __argv[i];
-		}
-	}
-
-	// get the path of this program
-	char thisPath[MAX_PATH];
-	GetModuleFileName(s_instance, thisPath, MAX_PATH);
-
-	switch(ARG->m_windowsServiceAction) {
-		case CArgs::kWsaInstall:
-		{
-			ARCH->installDaemon(DAEMON_NAME, DAEMON_INFO, thisPath, argBuf.str().c_str(), NULL, true);
-			LOG((CLOG_INFO "service '%s' installed with args: %s", 
-				DAEMON_NAME, argBuf.str() != "" ? argBuf.str().c_str() : "none" ));
-			return kExitSuccess;
-		}
-
-		case CArgs::kWsaUninstall:
-		{
-			ARCH->uninstallDaemon(DAEMON_NAME, true);
-			LOG((CLOG_INFO "service '%s' uninstalled", DAEMON_NAME));
-			return kExitSuccess;
-		}
-
-		case CArgs::kWsaStart:
-		{
-			// open service manager
-			SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
-
-			assert(mgr != NULL);
-			if (mgr == NULL) {
-				return kExitFailed;
-			}
-
-			// open the service
-			SC_HANDLE service = OpenService(
-				mgr, DAEMON_NAME, SERVICE_START);
-
-			assert(service != NULL);
-			if (service == NULL) {
-				CloseServiceHandle(mgr);
-				return kExitFailed;
-			}
-
-			// start the service
-			if (StartService(service, 0, NULL)) {
-				LOG((CLOG_INFO "service '%s' started", DAEMON_NAME));
-				return kExitSuccess;
-			}
-
-			return kExitFailed;
-		}
-
-		case CArgs::kWsaStop:
-		{
-			// open service manager
-			SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
-
-			assert(mgr != NULL);
-			if (mgr == NULL) {
-				return kExitFailed;
-			}
-
-			// open the service
-			SC_HANDLE service = OpenService(
-				mgr, DAEMON_NAME,
-				SERVICE_STOP | SERVICE_QUERY_STATUS);
-
-			assert(service != NULL);
-			if (service == NULL) {
-				CloseServiceHandle(mgr);
-				return kExitFailed;
-			}
-
-			// ask the service to stop, asynchronously
-			SERVICE_STATUS ss;
-			if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
-				DWORD dwErrCode = GetLastError(); 
-				if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
-					LOG((CLOG_ERR "cannot stop service '%s'", DAEMON_NAME));
-					return kExitFailed;
-				}
-			}
-
-			LOG((CLOG_INFO "service '%s' stopping asyncronously", DAEMON_NAME));
-			return kExitSuccess;
-		}
-	}
-
-	// code should never reach here
-	return kExitFailed;
-}
-
 // used by windows nt (foreground)
 static
 int
@@ -1451,10 +1342,6 @@ foregroundStartup(int argc, char** argv)
 {
 	// parse command line
 	parse(argc, argv);
-
-	if (ARG->m_windowsServiceAction != CArgs::kWsaNone) {
-		return manageService();
-	}
 
 	// load configuration
 	loadConfig();
@@ -1474,9 +1361,13 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 }
 
 int main(int argc, char** argv) {
-	s_instance = GetModuleHandle(NULL);
-	if (s_instance) {
-		return WinMain(s_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
+	
+	app.m_daemonName = DAEMON_NAME;
+	app.m_daemonInfo = DAEMON_INFO;
+	app.m_instance = GetModuleHandle(NULL);
+
+	if (app.m_instance) {
+		return WinMain(app.m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
 	} else {
 		return kExitFailed;
 	}
