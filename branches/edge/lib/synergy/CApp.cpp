@@ -12,8 +12,6 @@
 * GNU General Public License for more details.
 */
 
-#pragma once
-
 #include "CApp.h"
 
 CApp::CApp()
