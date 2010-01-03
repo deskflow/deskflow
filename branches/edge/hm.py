@@ -198,7 +198,7 @@ def configure_internal(generator = None, vs_analyze = False):
 	# add any extra args to vs - and even if vs_args_extra has no value, we 
 	# still want to pass it, since CMake "cleverly" remembers the last arg
 	# passed to it (so we're kind of undoing this behaviour in this case)
-	cmake_args = '-D VS_ARGS_EXTRA="%s"' % vs_args_extra
+	cmake_args += '-D VS_ARGS_EXTRA="%s"' % vs_args_extra
 	
 	cmake_cmd_string = '%s %s "%s"' % (cmake_cmd, cmake_args, source_dir)
 
