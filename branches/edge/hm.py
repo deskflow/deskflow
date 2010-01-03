@@ -143,9 +143,18 @@ def usage():
 		'Example: %s configure'
 		) % (this_cmd, this_cmd)
 
-def configure(generator = None):
+def configure(generator = None, argv = None):
 	
-	err = configure_internal(generator)
+	vs_analyze = False
+	
+	if argv and len(argv) > 2:
+		for arg in argv[2:]:
+			if arg == "--analyze":
+				vs_analyze = True
+			elif generator == None:
+				generator = arg
+	
+	err = configure_internal(generator = generator, vs_analyze = vs_analyze)
 
 	if err == 0:
 		print ('Configure complete!\n\n'
@@ -156,17 +165,42 @@ def configure(generator = None):
 	else:
 		return False
 
-def configure_internal(generator = None):
+def delete_cmake_cache():
+	cmakecache_filename = '%s/CMakeCache.txt' % bin_dir
+	if os.path.exists(cmakecache_filename):
+		print "Removing %s, since generator changed." % cmakecache_filename
+		os.remove(cmakecache_filename)
+		
+def configure_internal(generator = None, vs_analyze = False):
 
 	ensure_setup_latest(generator)
 	
-	generator = get_generator()
-	if generator != '':
-		cmake_args = '%s -G "%s"' % (source_dir, generator)
+	if generator:
+		# has generator changed since `setup` was called?
+		if generator != get_generator():
+			# if so, delete cache so cmake doesn't complain
+			delete_cmake_cache()
 	else:
-		cmake_args = source_dir
+		# but if no generator was specific, use the one we chose earlier
+		generator = get_generator()
 	
-	cmake_cmd_string = '%s %s' % (cmake_cmd, cmake_args)
+	cmake_args = ''
+	if generator:
+		cmake_args = '-G "%s" ' % (generator)
+	
+	vs_args_extra = ''
+		
+	# if we want to enable vs analyze, tell cmake so we can configure the vs 
+	# solution to use the /analyze arg (only works in x86 team editions)
+	if vs_analyze:
+		vs_args_extra += '/analyze '		
+	
+	# add any extra args to vs - and even if vs_args_extra has no value, we 
+	# still want to pass it, since CMake "cleverly" remembers the last arg
+	# passed to it (so we're kind of undoing this behaviour in this case)
+	cmake_args = '-D VS_ARGS_EXTRA="%s"' % vs_args_extra
+	
+	cmake_cmd_string = '%s %s "%s"' % (cmake_cmd, cmake_args, source_dir)
 
 	print "Configuring with CMake (%s)..." % cmake_cmd_string
 
@@ -447,7 +481,7 @@ def main(argv):
 			if cmd in ['about', 'info']:
 				about()
 			elif cmd in ['configure', 'conf']:
-				configure(arg_2)
+				configure(argv = argv)
 			elif cmd in ['build']:
 				build(arg_2)
 			elif cmd in ['open']:
@@ -515,7 +549,7 @@ def open_project_internal(project_filename, application = ''):
 			path = application + ' ' + path
 		os.system(path)
 		return True
-
+		
 def setup(generator = None):
 	print "Running setup..."
 
@@ -551,10 +585,7 @@ def setup(generator = None):
 
 	write_config(config)
 
-	cmakecache_filename = '%s/CMakeCache.txt' % bin_dir
-	if os.path.exists(cmakecache_filename):
-		print "Removing %s, since generator changed." % cmakecache_filename
-		os.remove(cmakecache_filename)
+	delete_cmake_cache()
 
 	print "\nSetup complete."
 

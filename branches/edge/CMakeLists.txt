@@ -55,9 +55,15 @@ IF(WIN32)
 
 	# compiler: /MP - use multi cores to compile
 	# added _SECURE_SCL=1 for finding bugs with iterators - http://msdn.microsoft.com/en-us/library/aa985965.aspx
-
-	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze /FR /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1 /D _SECURE_SCL=1")
-	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /analyze /FR /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1 /D _SECURE_SCL=1")
+	
+	# common args between all vs builds
+	SET(VS_ARGS "/FR /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1 /D _SECURE_SCL=1 ${VS_ARGS_EXTRA}")
+	
+	# we may use `cmake -D VS_ARGS_EXTRA="/analyze"` for example to specify
+	# analyze mode (since we don't always want to use it; e.g. on non-team 
+	# or non-x86 compiler editions where there's no support)
+	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${VS_ARGS}")
+	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${VS_ARGS}")
 
 ENDIF(WIN32)
 
