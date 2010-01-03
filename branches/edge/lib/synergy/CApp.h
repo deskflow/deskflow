@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "common.h"
 #include "CString.h"
 
 class CApp {
