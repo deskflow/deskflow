@@ -12,12 +12,12 @@
 * GNU General Public License for more details.
 */
 
-#pragma once
+#include "COSXAppUtil.h"
 
-#include "CApp.h"
+COSXAppUtil::COSXAppUtil()
+{
+}
 
-class COSXApp : public IAppBridge {
-public:
-	COSXApp(CApp& parent);
-	virtual ~COSXApp();
-};
+COSXAppUtil::~COSXAppUtil()
+{
+}

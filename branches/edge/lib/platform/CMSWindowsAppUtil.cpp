@@ -12,33 +12,34 @@
 * GNU General Public License for more details.
 */
 
-#include "CMSWindowsApp.h"
+#include "CMSWindowsAppUtil.h"
 #include "Version.h"
 #include "CLog.h"
 #include "XArchWindows.h"
 #include "CArchMiscWindows.h"
+#include "CApp.h"
 
 #include <sstream>
 #include <iostream>
 #include <conio.h>
 
-CMSWindowsApp::CMSWindowsApp()
+CMSWindowsAppUtil::CMSWindowsAppUtil()
 {
 }
 
-CMSWindowsApp::~CMSWindowsApp()
+CMSWindowsAppUtil::~CMSWindowsAppUtil()
 {
 }
 
 void
-CMSWindowsApp::adoptParent(CApp* parent)
+CMSWindowsAppUtil::adoptApp(CApp* app)
 {
-	parent->m_bye = &exitPause;
-	CAppBridge::adoptParent(parent);
+	app->m_bye = &exitPause;
+	CAppUtil::adoptApp(app);
 }
 
 CString
-CMSWindowsApp::getServiceArgs() const
+CMSWindowsAppUtil::getServiceArgs() const
 {
 	std::stringstream argBuf;
 	for (int i = 1; i < __argc; i++) {
@@ -57,7 +58,7 @@ CMSWindowsApp::getServiceArgs() const
 }
 
 void
-CMSWindowsApp::handleServiceArg(const char* serviceAction)
+CMSWindowsAppUtil::handleServiceArg(const char* serviceAction)
 {
 	if (_stricmp(serviceAction, "install") == 0) {
 		installService();
@@ -73,13 +74,13 @@ CMSWindowsApp::handleServiceArg(const char* serviceAction)
 	}
 	else {
 		LOG((CLOG_ERR "unknown service action: %s", serviceAction));
-		parent().m_bye(kExitArgs);
+		app().m_bye(kExitArgs);
 	}
-	parent().m_bye(kExitSuccess);
+	app().m_bye(kExitSuccess);
 }
 
 void
-CMSWindowsApp::installService()
+CMSWindowsAppUtil::installService()
 {
 	CString args = getServiceArgs();
 
@@ -88,22 +89,22 @@ CMSWindowsApp::installService()
 	GetModuleFileName(m_instance, thisPath, MAX_PATH);
 
 	ARCH->installDaemon(
-		parent().m_daemonName.c_str(), parent().m_daemonInfo.c_str(), 
+		app().m_daemonName.c_str(), app().m_daemonInfo.c_str(), 
 		thisPath, args.c_str(), NULL, true);
 
 	LOG((CLOG_INFO "service '%s' installed with args: %s",
-		parent().m_daemonName.c_str(), args != "" ? args.c_str() : "none" ));
+		app().m_daemonName.c_str(), args != "" ? args.c_str() : "none" ));
 }
 
 void
-CMSWindowsApp::uninstallService()
+CMSWindowsAppUtil::uninstallService()
 {
-	ARCH->uninstallDaemon(parent().m_daemonName.c_str(), true);
-	LOG((CLOG_INFO "service '%s' uninstalled", parent().m_daemonName.c_str()));
+	ARCH->uninstallDaemon(app().m_daemonName.c_str(), true);
+	LOG((CLOG_INFO "service '%s' uninstalled", app().m_daemonName.c_str()));
 }
 
 void
-CMSWindowsApp::startService()
+CMSWindowsAppUtil::startService()
 {
 	// open service manager
 	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
@@ -113,7 +114,7 @@ CMSWindowsApp::startService()
 
 	// open the service
 	SC_HANDLE service = OpenService(
-		mgr, parent().m_daemonName.c_str(), SERVICE_START);
+		mgr, app().m_daemonName.c_str(), SERVICE_START);
 
 	if (service == NULL) {
 		CloseServiceHandle(mgr);
@@ -122,7 +123,7 @@ CMSWindowsApp::startService()
 
 	// start the service
 	if (StartService(service, 0, NULL)) {
-		LOG((CLOG_INFO "service '%s' started", parent().m_daemonName.c_str()));
+		LOG((CLOG_INFO "service '%s' started", app().m_daemonName.c_str()));
 	}
 	else {
 		throw XArchEvalWindows();
@@ -130,7 +131,7 @@ CMSWindowsApp::startService()
 }
 
 void
-CMSWindowsApp::stopService()
+CMSWindowsAppUtil::stopService()
 {
 	// open service manager
 	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
@@ -140,7 +141,7 @@ CMSWindowsApp::stopService()
 
 	// open the service
 	SC_HANDLE service = OpenService(
-		mgr, parent().m_daemonName.c_str(),
+		mgr, app().m_daemonName.c_str(),
 		SERVICE_STOP | SERVICE_QUERY_STATUS);
 
 	if (service == NULL) {
@@ -153,12 +154,12 @@ CMSWindowsApp::stopService()
 	if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
 		DWORD dwErrCode = GetLastError(); 
 		if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
-			LOG((CLOG_ERR "cannot stop service '%s'", parent().m_daemonName.c_str()));
+			LOG((CLOG_ERR "cannot stop service '%s'", app().m_daemonName.c_str()));
 			throw XArchEvalWindows();
 		}
 	}
 
-	LOG((CLOG_INFO "service '%s' stopping asyncronously", parent().m_daemonName.c_str()));
+	LOG((CLOG_INFO "service '%s' stopping asyncronously", app().m_daemonName.c_str()));
 }
 
 void

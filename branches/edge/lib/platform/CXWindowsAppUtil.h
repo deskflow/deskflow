@@ -12,13 +12,13 @@
 * GNU General Public License for more details.
 */
 
-#include "COSXApp.h"
+#pragma once
 
-COSXApp::COSXApp(CApp& parent) :
-m_parent(parent)
-{
-}
+#include "CApp.h"
+#include "CAppUtil.h"
 
-COSXApp::~COSXApp()
-{
-}
+class CXWindowsAppUtil : public CAppUtil {
+public:
+	CXWindowsAppUtil(CApp& app);
+	virtual ~CXWindowsAppUtil();
+};
