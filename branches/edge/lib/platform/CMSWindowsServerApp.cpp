@@ -13,8 +13,9 @@
 */
 
 #include "CMSWindowsServerApp.h"
+#include "CMSWindowsAppUtil.h"
 
-CMSWindowsServerApp::CMSWindowsServerApp() : CServerApp(new CMSWindowsApp())
+CMSWindowsServerApp::CMSWindowsServerApp() : CServerApp(new CMSWindowsAppUtil())
 {
 }
 

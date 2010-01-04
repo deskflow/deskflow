@@ -17,14 +17,17 @@
 #include "CArch.h"
 #include "XSocket.h"
 #include "Version.h"
-#include "CMSWindowsApp.h"
 #include "CArchMiscWindows.h"
 #include "ProtocolTypes.h"
 
+#if WINAPI_MSWINDOWS
+#include "CMSWindowsAppUtil.h"
+#endif
+
 #include <iostream>
 
-CClientApp::CClientApp(CAppBridge* bridge) :
-CApp(new CArgs(), bridge)
+CClientApp::CClientApp(CAppUtil* app) :
+CApp(new CArgs(), app)
 {
 }
 
@@ -126,7 +129,7 @@ CClientApp::parseArg(const int& argc, const char* const* argv, int& i)
 		// HACK: assume instance is an ms windows app, and call service
 		// arg handler.
 		// TODO: use inheritance model to fix this.
-		((CMSWindowsApp*)this)->handleServiceArg(argv[++i]);
+		((CMSWindowsAppUtil&)utilBase()).handleServiceArg(argv[++i]);
 	}
 #endif
 

@@ -19,6 +19,8 @@
 #include "CConfig.h"
 #include "CNetworkAddress.h"
 
+class CAppUtil;
+
 class CServerApp : public CApp {
 public:
 	class CArgs : public CApp::CArgsBase {
@@ -39,7 +41,7 @@ public:
 		CConfig*			m_config;
 	};
 
-	CServerApp(CAppBridge* bridge);
+	CServerApp(CAppUtil* util);
 	virtual ~CServerApp();
 	
 	void parse(int argc, const char* const* argv);

@@ -17,25 +17,7 @@
 #include "common.h"
 #include "CString.h"
 
-class CApp;
-
-// The CAppBridge is so we can avoid using diamond inheritance; instead of
-// both client and server platform implementations inheriting their platform
-// app type and CServer/CClient, we simply use a reference (so we don't need
-// to worry about virtual inheritance pitfalls).
-// NOTE: we may be over-normalizing here; if so, we should consider just 
-// passing variables to "platform app" classes instead.
-class CAppBridge {
-	friend class CApp;
-public:
-	CAppBridge() : m_parent(nullptr) { }
-	virtual ~CAppBridge() { }
-protected:
-	CApp& parent() const { assert(m_parent != nullptr); return *m_parent; }
-	virtual void adoptParent(CApp* parent) { m_parent = parent; }
-private:
-	CApp* m_parent;
-};
+class CAppUtil;
 
 class CApp {
 public:
@@ -46,11 +28,11 @@ public:
 		const char* m_pname;
 	};
 
-	CApp(CArgsBase* args, CAppBridge* bridge);
+	CApp(CArgsBase* args, CAppUtil* bridge);
 	virtual ~CApp();
 
 	CArgsBase& argsBase() const { return *m_args; }
-	CAppBridge& bridgeBase() const { return *m_bridge; }
+	CAppUtil& utilBase() const { return *m_util; }
 
 	CString m_daemonName;
 	CString m_daemonInfo;
@@ -64,7 +46,7 @@ protected:
 
 private:
 	CArgsBase* m_args;
-	CAppBridge* m_bridge;
+	CAppUtil* m_util;
 };
 
 #define BYE "\nTry `%s --help' for more information."

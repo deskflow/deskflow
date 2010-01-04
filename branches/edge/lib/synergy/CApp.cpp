@@ -15,18 +15,20 @@
 #include "CApp.h"
 #include "CLog.h"
 #include "Version.h"
+#include "CAppUtil.h"
 
-CApp::CApp(CArgsBase* args, CAppBridge* bridge) :
+CApp::CApp(CArgsBase* args, CAppUtil* util) :
 m_args(args),
 m_bye(&exit),
-m_bridge(bridge)
+m_util(util)
 {
-	bridge->adoptParent(this);
+	util->adoptApp(this);
 }
 
 CApp::~CApp()
 {
-	delete m_bridge;
+	delete m_util;
+	delete m_args;
 }
 
 bool

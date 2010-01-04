@@ -15,12 +15,13 @@
 #pragma once
 
 #include "CClientApp.h"
-#include "CMSWindowsApp.h"
+
+class CMSWindowsAppUtil;
 
 class CMSWindowsClientApp : public CClientApp {
 public:
 	CMSWindowsClientApp();
 	virtual ~CMSWindowsClientApp();
 
-	CMSWindowsApp& bridge() const { return (CMSWindowsApp&)bridgeBase(); }
+	CMSWindowsAppUtil& util() const { return (CMSWindowsAppUtil&)utilBase(); }
 };

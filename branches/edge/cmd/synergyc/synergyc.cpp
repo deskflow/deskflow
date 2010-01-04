@@ -44,16 +44,19 @@
 #include "resource.h"
 #include <conio.h>
 #include "CMSWindowsClientApp.h"
+#include "CMSWindowsAppUtil.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif WINAPI_XWINDOWS
 #include "CXWindowsScreen.h"
 #include "CXWindowsClientTaskBarReceiver.h"
 #include "CXWindowsClientApp.h"
+#include "CXWindowsAppUtil.h"
 #elif WINAPI_CARBON
 #include "COSXScreen.h"
 #include "COSXClientTaskBarReceiver.h"
 #include "COSXClientApp.h"
+#include "COSXAppUtil.h"
 #endif
 
 // platform dependent name of a daemon
@@ -581,10 +584,10 @@ int main(int argc, char** argv) {
 
 	app.m_daemonName = DAEMON_NAME;
 	app.m_daemonInfo = DAEMON_INFO;
-	app.bridge().m_instance = GetModuleHandle(NULL);
+	app.util().m_instance = GetModuleHandle(NULL);
 
-	if (app.bridge().m_instance) {
-		return WinMain(app.bridge().m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
+	if (app.util().m_instance) {
+		return WinMain(app.util().m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
 	} else {
 		return kExitFailed;
 	}

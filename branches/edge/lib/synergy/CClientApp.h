@@ -18,6 +18,8 @@
 #include "CString.h"
 #include "CNetworkAddress.h"
 
+class CAppUtil;
+
 class CClientApp : public CApp {
 public:
 	class CArgs : public CApp::CArgsBase {
@@ -38,7 +40,7 @@ public:
 		const char*			m_logFile;
 	};
 
-	CClientApp(CAppBridge* bridge);
+	CClientApp(CAppUtil* util);
 	virtual ~CClientApp();
 
 	void parse(int argc, const char* const* argv);

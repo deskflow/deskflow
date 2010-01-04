@@ -13,8 +13,9 @@
 */
 
 #include "CMSWindowsClientApp.h"
+#include "CMSWindowsAppUtil.h"
 
-CMSWindowsClientApp::CMSWindowsClientApp() : CClientApp(new CMSWindowsApp())
+CMSWindowsClientApp::CMSWindowsClientApp() : CClientApp(new CMSWindowsAppUtil())
 {
 }
 
