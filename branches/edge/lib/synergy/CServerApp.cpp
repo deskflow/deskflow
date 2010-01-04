@@ -21,3 +21,23 @@ CServerApp::CServerApp()
 CServerApp::~CServerApp()
 {
 }
+
+CServerApp::CArgs::CArgs() :
+m_pname(NULL),
+m_backend(false),
+m_restartable(true),
+m_daemon(true),
+m_configFile(),
+m_logFilter(NULL),
+m_logFile(NULL),
+m_display(NULL),
+m_synergyAddress(NULL),
+m_config(NULL)
+{
+	s_instance = this; 
+}
+
+CServerApp::CArgs::~CArgs()
+{
+	s_instance = NULL;
+}

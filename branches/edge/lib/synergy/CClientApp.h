@@ -15,9 +15,30 @@
 #pragma once
 
 #include "CApp.h"
+#include "CString.h"
+#include "CNetworkAddress.h"
 
 class CClientApp : virtual public CApp {
 public:
 	CClientApp();
 	virtual ~CClientApp();
+
+	class CArgs {
+	public:
+		CArgs();
+		~CArgs();
+
+	public:
+		static CArgs*		s_instance;
+		const char* 		m_pname;
+		bool				m_backend;
+		bool				m_restartable;
+		bool				m_daemon;
+		int 				m_yscroll;
+		const char* 		m_logFilter;
+		const char*			m_display;
+		CString 			m_name;
+		CNetworkAddress* 	m_serverAddress;
+		const char*			m_logFile;
+	};
 };

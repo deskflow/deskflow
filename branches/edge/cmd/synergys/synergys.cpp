@@ -96,40 +96,8 @@ COSXServerApp app;
 // program arguments
 //
 
-#define ARG CArgs::s_instance
-
-class CArgs {
-public:
-	CArgs() :
-		m_pname(NULL),
-		m_backend(false),
-		m_restartable(true),
-		m_daemon(true),
-		m_configFile(),
-		m_logFilter(NULL),
-		m_logFile(NULL),
-		m_display(NULL),
-		m_synergyAddress(NULL),
-		m_config(NULL)
-		{ s_instance = this; }
-	~CArgs() { s_instance = NULL; }
-
-public:
-	static CArgs*		s_instance;
-	const char* 		m_pname;
-	bool				m_backend;
-	bool				m_restartable;
-	bool				m_daemon;
-	CString		 		m_configFile;
-	const char* 		m_logFilter;
-	const char*			m_logFile;
-	const char*			m_display;
-	CString 			m_name;
-	CNetworkAddress*	m_synergyAddress;
-	CConfig*			m_config;
-};
-
-CArgs*					CArgs::s_instance = NULL;
+#define ARG CServerApp::CArgs::s_instance
+CServerApp::CArgs* CServerApp::CArgs::s_instance = NULL;
 
 //
 // platform dependent factories
@@ -1394,7 +1362,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 		CMSWindowsScreen::init(instance);
 		CThread::getCurrentThread().setPriority(-14);
-		CArgs args;
+		CServerApp::CArgs args;
 		
 		StartupFunc startup;
 		if (!CArchMiscWindows::isWindows95Family()) {

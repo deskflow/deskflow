@@ -80,39 +80,8 @@ COSXClientApp app;
 // program arguments
 //
 
-#define ARG CArgs::s_instance
-
-class CArgs {
-public:
-	CArgs() :
-		m_pname(NULL),
-		m_backend(false),
-		m_restartable(true),
-		m_daemon(true),
-		m_yscroll(0),
-		m_logFilter(NULL),
-		m_display(NULL),
-		m_serverAddress(NULL),
-		m_logFile(NULL)
-		{ s_instance = this; }
-	  ~CArgs() { s_instance = NULL; }
-
-public:
-	static CArgs*		s_instance;
-	const char* 		m_pname;
-	bool				m_backend;
-	bool				m_restartable;
-	bool				m_daemon;
-	int 				m_yscroll;
-	const char* 		m_logFilter;
-	const char*			m_display;
-	CString 			m_name;
-	CNetworkAddress* 	m_serverAddress;
-	const char*			m_logFile;
-
-};
-
-CArgs*					CArgs::s_instance = NULL;
+#define ARG CClientApp::CArgs::s_instance
+CClientApp::CArgs* CClientApp::CArgs::s_instance = NULL;
 
 
 //
@@ -970,7 +939,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 		CMSWindowsScreen::init(instance);
 		CLOG;
 		CThread::getCurrentThread().setPriority(-14);
-		CArgs args;
+		CClientApp::CArgs args;
 
 		StartupFunc startup;
 		if (!CArchMiscWindows::isWindows95Family()) {

@@ -21,3 +21,22 @@ CClientApp::CClientApp()
 CClientApp::~CClientApp()
 {
 }
+
+CClientApp::CArgs::CArgs() :
+m_pname(NULL),
+m_backend(false),
+m_restartable(true),
+m_daemon(true),
+m_yscroll(0),
+m_logFilter(NULL),
+m_display(NULL),
+m_serverAddress(NULL),
+m_logFile(NULL)
+{
+	s_instance = this;
+}
+
+CClientApp::CArgs::~CArgs()
+{
+	s_instance = NULL;
+}

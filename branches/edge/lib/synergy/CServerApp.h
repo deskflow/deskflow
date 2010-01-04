@@ -15,9 +15,32 @@
 #pragma once
 
 #include "CApp.h"
+#include "CString.h"
+#include "CConfig.h"
+#include "CNetworkAddress.h"
 
 class CServerApp : virtual public CApp {
 public:
 	CServerApp();
 	virtual ~CServerApp();
+
+	class CArgs {
+	public:
+		CArgs();
+		~CArgs();
+
+	public:
+		static CArgs*		s_instance;
+		const char* 		m_pname;
+		bool				m_backend;
+		bool				m_restartable;
+		bool				m_daemon;
+		CString		 		m_configFile;
+		const char* 		m_logFilter;
+		const char*			m_logFile;
+		const char*			m_display;
+		CString 			m_name;
+		CNetworkAddress*	m_synergyAddress;
+		CConfig*			m_config;
+	};
 };
