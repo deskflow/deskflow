@@ -77,14 +77,6 @@ COSXClientApp app;
 #endif
 
 //
-// program arguments
-//
-
-#define ARG CClientApp::CArgs::s_instance
-CClientApp::CArgs* CClientApp::CArgs::s_instance = NULL;
-
-
-//
 // platform dependent factories
 //
 

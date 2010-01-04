@@ -44,3 +44,5 @@ public:
 		CConfig*			m_config;
 	};
 };
+
+#define ARG CServerApp::CArgs::s_instance

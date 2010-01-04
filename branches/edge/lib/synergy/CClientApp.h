@@ -42,3 +42,5 @@ public:
 		const char*			m_logFile;
 	};
 };
+
+#define ARG CClientApp::CArgs::s_instance

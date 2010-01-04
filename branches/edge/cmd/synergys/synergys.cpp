@@ -93,13 +93,6 @@ COSXServerApp app;
 #endif
 
 //
-// program arguments
-//
-
-#define ARG CServerApp::CArgs::s_instance
-CServerApp::CArgs* CServerApp::CArgs::s_instance = NULL;
-
-//
 // platform dependent factories
 //
 

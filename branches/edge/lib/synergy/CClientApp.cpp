@@ -14,6 +14,8 @@
 
 #include "CClientApp.h"
 
+CClientApp::CArgs* CClientApp::CArgs::s_instance = NULL;
+
 CClientApp::CClientApp()
 {
 }

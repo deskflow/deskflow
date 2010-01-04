@@ -14,6 +14,8 @@
 
 #include "CServerApp.h"
 
+CServerApp::CArgs* CServerApp::CArgs::s_instance = NULL;
+
 CServerApp::CServerApp()
 {
 }
