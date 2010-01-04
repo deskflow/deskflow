@@ -23,6 +23,13 @@ public:
 	CClientApp();
 	virtual ~CClientApp();
 
+	void parse(int argc, const char* const* argv);
+	bool isArg(int argi, int argc, const char* const* argv,
+		const char* name1, const char* name2,
+		int minRequiredParameters = 0);
+	void help();
+	void version();
+
 	class CArgs {
 	public:
 		CArgs();

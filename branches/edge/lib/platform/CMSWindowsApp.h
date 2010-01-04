@@ -38,5 +38,13 @@ public:
 	// Stop a Windows service with matching daemon name.
 	void stopService();
 
+	// Will install, uninstall, start, or stop the service depending on arg.
+	void handleServiceArg(const char* serviceAction);
+
+	// Instance of MFC Windows application.
 	HINSTANCE m_instance;
 };
+
+// TODO: move to class
+void 
+exitPause(int code);

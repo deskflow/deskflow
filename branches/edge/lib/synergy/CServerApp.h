@@ -23,6 +23,13 @@ class CServerApp : virtual public CApp {
 public:
 	CServerApp();
 	virtual ~CServerApp();
+	
+	void parse(int argc, const char* const* argv);
+	bool isArg(int argi, int argc, const char* const* argv,
+		const char* name1, const char* name2,
+		int minRequiredParameters = 0);
+	void help();
+	void version();
 
 	class CArgs {
 	public:
@@ -46,3 +53,12 @@ public:
 };
 
 #define ARG CServerApp::CArgs::s_instance
+
+// configuration file name
+#if SYSAPI_WIN32
+#define USR_CONFIG_NAME "synergy.sgc"
+#define SYS_CONFIG_NAME "synergy.sgc"
+#elif SYSAPI_UNIX
+#define USR_CONFIG_NAME ".synergy.conf"
+#define SYS_CONFIG_NAME "synergy.conf"
+#endif

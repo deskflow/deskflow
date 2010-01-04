@@ -23,4 +23,7 @@ public:
 	virtual ~CApp();
 	CString m_daemonName;
 	CString m_daemonInfo;
+	void (*m_bye)(int);
 };
+
+#define BYE "\nTry `%s --help' for more information."

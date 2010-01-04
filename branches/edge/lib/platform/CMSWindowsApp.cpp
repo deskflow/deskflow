@@ -16,11 +16,15 @@
 #include "Version.h"
 #include "CLog.h"
 #include "XArchWindows.h"
+#include "CArchMiscWindows.h"
 
 #include <sstream>
+#include <iostream>
+#include <conio.h>
 
 CMSWindowsApp::CMSWindowsApp()
 {
+	m_bye = &exitPause;
 }
 
 CMSWindowsApp::~CMSWindowsApp()
@@ -44,6 +48,28 @@ CMSWindowsApp::getServiceArgs() const
 		}
 	}
 	return argBuf.str();
+}
+
+void
+CMSWindowsApp::handleServiceArg(const char* serviceAction)
+{
+	if (_stricmp(serviceAction, "install") == 0) {
+		installService();
+	}
+	else if (_stricmp(serviceAction, "uninstall") == 0) {
+		uninstallService();
+	}
+	else if (_stricmp(serviceAction, "start") == 0) {
+		startService();
+	}
+	else if (_stricmp(serviceAction, "stop") == 0) {
+		stopService();
+	}
+	else {
+		LOG((CLOG_ERR "unknown service action: %s", serviceAction));
+		m_bye(kExitArgs);
+	}
+	m_bye(kExitSuccess);
 }
 
 void
@@ -127,4 +153,21 @@ CMSWindowsApp::stopService()
 	}
 
 	LOG((CLOG_INFO "service '%s' stopping asyncronously", m_daemonName.c_str()));
+}
+
+void
+exitPause(int code)
+{
+	CString name;
+	CArchMiscWindows::getParentProcessName(name);
+
+	// if the user did not launch from the command prompt (i.e. it was launched
+	// by double clicking, or through a debugger), allow user to read any error
+	// messages (instead of the window closing automatically).
+	if (name != "cmd.exe") {
+		std::cout << std::endl << "Press any key to exit...";
+		int c = _getch();
+	}
+
+	exit(code);
 }

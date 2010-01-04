@@ -14,7 +14,7 @@
 
 #include "CApp.h"
 
-CApp::CApp()
+CApp::CApp() : m_bye(&exit)
 {
 }
 
