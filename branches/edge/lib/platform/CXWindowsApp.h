@@ -16,8 +16,8 @@
 
 #include "CApp.h"
 
-class CXWindowsApp : virtual public CApp {
+class CXWindowsApp : public IAppBridge {
 public:
-	CXWindowsApp();
+	CXWindowsApp(CApp& parent);
 	virtual ~CXWindowsApp();
 };

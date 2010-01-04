@@ -14,7 +14,7 @@
 
 #include "CMSWindowsClientApp.h"
 
-CMSWindowsClientApp::CMSWindowsClientApp()
+CMSWindowsClientApp::CMSWindowsClientApp() : CClientApp(new CMSWindowsApp())
 {
 }
 

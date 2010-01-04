@@ -14,7 +14,8 @@
 
 #include "CXWindowsApp.h"
 
-CXWindowsApp::CXWindowsApp()
+CXWindowsApp::CXWindowsApp(CApp& parent) :
+m_parent(parent)
 {
 }
 

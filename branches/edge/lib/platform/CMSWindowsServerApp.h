@@ -17,8 +17,10 @@
 #include "CServerApp.h"
 #include "CMSWindowsApp.h"
 
-class CMSWindowsServerApp : public CServerApp, public CMSWindowsApp {
+class CMSWindowsServerApp : public CServerApp {
 public:
 	CMSWindowsServerApp();
 	virtual ~CMSWindowsServerApp();
+
+	CMSWindowsApp& bridge() const { return (CMSWindowsApp&)bridgeBase(); }
 };

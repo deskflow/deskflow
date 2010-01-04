@@ -18,25 +18,14 @@
 #include "CString.h"
 #include "CNetworkAddress.h"
 
-class CClientApp : virtual public CApp {
+class CClientApp : public CApp {
 public:
-	CClientApp();
-	virtual ~CClientApp();
-
-	void parse(int argc, const char* const* argv);
-	bool isArg(int argi, int argc, const char* const* argv,
-		const char* name1, const char* name2,
-		int minRequiredParameters = 0);
-	void help();
-	void version();
-
-	class CArgs {
+	class CArgs : public CApp::CArgsBase {
 	public:
 		CArgs();
 		~CArgs();
 
 	public:
-		static CArgs*		s_instance;
 		const char* 		m_pname;
 		bool				m_backend;
 		bool				m_restartable;
@@ -48,6 +37,15 @@ public:
 		CNetworkAddress* 	m_serverAddress;
 		const char*			m_logFile;
 	};
-};
 
-#define ARG CClientApp::CArgs::s_instance
+	CClientApp(CAppBridge* bridge);
+	virtual ~CClientApp();
+
+	void parse(int argc, const char* const* argv);
+	void help();
+	void version();
+	CArgs& args() const { return (CArgs&)argsBase(); }
+
+private:
+	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+};

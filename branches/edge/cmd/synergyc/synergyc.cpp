@@ -75,6 +75,8 @@ CXWindowsClientApp app;
 COSXClientApp app;
 #endif
 
+#define ARG ((CClientApp::CArgs*)&app.args())
+
 //
 // platform dependent factories
 //
@@ -579,10 +581,10 @@ int main(int argc, char** argv) {
 
 	app.m_daemonName = DAEMON_NAME;
 	app.m_daemonInfo = DAEMON_INFO;
-	app.m_instance = GetModuleHandle(NULL);
+	app.bridge().m_instance = GetModuleHandle(NULL);
 
-	if (app.m_instance) {
-		return WinMain(app.m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
+	if (app.bridge().m_instance) {
+		return WinMain(app.bridge().m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
 	} else {
 		return kExitFailed;
 	}

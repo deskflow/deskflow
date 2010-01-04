@@ -18,7 +18,7 @@
 
 #include <Windows.h>
 
-class CMSWindowsApp : virtual public CApp {
+class CMSWindowsApp : public CAppBridge {
 public:
 	CMSWindowsApp();
 	virtual ~CMSWindowsApp();
@@ -43,6 +43,9 @@ public:
 
 	// Instance of MFC Windows application.
 	HINSTANCE m_instance;
+
+protected:
+	virtual void adoptParent(CApp* parent);
 };
 
 // TODO: move to class

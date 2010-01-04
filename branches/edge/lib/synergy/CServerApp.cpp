@@ -22,9 +22,8 @@
 
 #include <iostream>
 
-CServerApp::CArgs* CServerApp::CArgs::s_instance = NULL;
-
-CServerApp::CServerApp()
+CServerApp::CServerApp(CAppBridge* bridge) :
+CApp(new CArgs(), bridge)
 {
 }
 
@@ -33,7 +32,6 @@ CServerApp::~CServerApp()
 }
 
 CServerApp::CArgs::CArgs() :
-m_pname(NULL),
 m_backend(false),
 m_restartable(true),
 m_daemon(true),
@@ -44,33 +42,119 @@ m_display(NULL),
 m_synergyAddress(NULL),
 m_config(NULL)
 {
-	s_instance = this; 
 }
 
 CServerApp::CArgs::~CArgs()
 {
-	s_instance = NULL;
 }
 
 bool
-CServerApp::isArg(
-	int argi, int argc, const char* const* argv,
-	const char* name1, const char* name2,
-	int minRequiredParameters)
+CServerApp::parseArg(const int& argc, const char* const* argv, int& i)
 {
-	if ((name1 != NULL && strcmp(argv[argi], name1) == 0) ||
-		(name2 != NULL && strcmp(argv[argi], name2) == 0)) {
-			// match.  check args left.
-			if (argi + minRequiredParameters >= argc) {
-				LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE,
-					ARG->m_pname, argv[argi], ARG->m_pname));
-				m_bye(kExitArgs);
-			}
-			return true;
+	if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+		// change logging level
+		args().m_logFilter = argv[++i];
 	}
 
-	// no match
-	return false;
+	else if (isArg(i, argc, argv, "-a", "--address", 1)) {
+		// save listen address
+		try {
+			*args().m_synergyAddress = CNetworkAddress(argv[i + 1],
+				kDefaultPort);
+			args().m_synergyAddress->resolve();
+		}
+		catch (XSocketAddress& e) {
+			LOG((CLOG_PRINT "%s: %s" BYE,
+				args().m_pname, e.what(), args().m_pname));
+			m_bye(kExitArgs);
+		}
+		++i;
+	}
+
+	else if (isArg(i, argc, argv, "-n", "--name", 1)) {
+		// save screen name
+		args().m_name = argv[++i];
+	}
+
+	else if (isArg(i, argc, argv, "-c", "--config", 1)) {
+		// save configuration file path
+		args().m_configFile = argv[++i];
+	}
+
+#if WINAPI_XWINDOWS
+	else if (isArg(i, argc, argv, "-display", "--display", 1)) {
+		// use alternative display
+		args().m_display = argv[++i];
+	}
+#endif
+
+	else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
+		// not a daemon
+		args().m_daemon = false;
+	}
+
+	else if (isArg(i, argc, argv, NULL, "--daemon")) {
+		// daemonize
+		args().m_daemon = true;
+	}
+	else if (isArg(i, argc, argv, "-l", "--log", 1)) {
+		// logging to file
+		args().m_logFile = argv[++i];
+	}
+
+	else if (isArg(i, argc, argv, "-1", "--no-restart")) {
+		// don't try to restart
+		args().m_restartable = false;
+	}
+
+	else if (isArg(i, argc, argv, NULL, "--restart")) {
+		// try to restart
+		args().m_restartable = true;
+	}
+
+	else if (isArg(i, argc, argv, "-z", NULL)) {
+		args().m_backend = true;
+	}
+
+	else if (isArg(i, argc, argv, "-h", "--help")) {
+		help();
+		m_bye(kExitSuccess);
+	}
+
+	else if (isArg(i, argc, argv, NULL, "--version")) {
+		version();
+		m_bye(kExitSuccess);
+	}
+
+#if WINAPI_MSWINDOWS
+	else if (isArg(i, argc, argv, NULL, "--service")) {
+
+		// HACK: assume instance is an ms windows app, and call service
+		// arg handler.
+		// TODO: use inheritance model to fix this.
+		((CMSWindowsApp*)this)->handleServiceArg(argv[++i]);
+	}
+#endif
+
+	else if (isArg(i, argc, argv, "--", NULL)) {
+		// remaining arguments are not options
+		++i;
+		return false;
+	}
+
+	else if (argv[i][0] == '-') {
+		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
+			args().m_pname, argv[i], args().m_pname));
+		m_bye(kExitArgs);
+	}
+
+	else {
+		// this and remaining arguments are not options
+		return false;
+	}
+
+	// argument was valid
+	return true;
 }
 
 void
@@ -86,115 +170,17 @@ CServerApp::parse(int argc, const char* const* argv)
 	// which is unlikely because it's old code and has a specific use.
 	// we should avoid using anything other than assert here, because it will
 	// look like important code, which it's not really.
-	assert(ARG->m_pname != NULL);
+	assert(args().m_pname != NULL);
 	assert(argv != NULL);
 	assert(argc >= 1);
 
 	// set defaults
-	ARG->m_name = ARCH->getHostName();
+	args().m_name = ARCH->getHostName();
 
 	// parse options
 	int i = 1;
 	for (; i < argc; ++i) {
-		if (isArg(i, argc, argv, "-d", "--debug", 1)) {
-			// change logging level
-			ARG->m_logFilter = argv[++i];
-		}
-
-		else if (isArg(i, argc, argv, "-a", "--address", 1)) {
-			// save listen address
-			try {
-				*ARG->m_synergyAddress = CNetworkAddress(argv[i + 1],
-					kDefaultPort);
-				ARG->m_synergyAddress->resolve();
-			}
-			catch (XSocketAddress& e) {
-				LOG((CLOG_PRINT "%s: %s" BYE,
-					ARG->m_pname, e.what(), ARG->m_pname));
-				m_bye(kExitArgs);
-			}
-			++i;
-		}
-
-		else if (isArg(i, argc, argv, "-n", "--name", 1)) {
-			// save screen name
-			ARG->m_name = argv[++i];
-		}
-
-		else if (isArg(i, argc, argv, "-c", "--config", 1)) {
-			// save configuration file path
-			ARG->m_configFile = argv[++i];
-		}
-
-#if WINAPI_XWINDOWS
-		else if (isArg(i, argc, argv, "-display", "--display", 1)) {
-			// use alternative display
-			ARG->m_display = argv[++i];
-		}
-#endif
-
-		else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
-			// not a daemon
-			ARG->m_daemon = false;
-		}
-
-		else if (isArg(i, argc, argv, NULL, "--daemon")) {
-			// daemonize
-			ARG->m_daemon = true;
-		}
-		else if (isArg(i, argc, argv, "-l", "--log", 1)) {
-			// logging to file
-			ARG->m_logFile = argv[++i];
-		}
-
-		else if (isArg(i, argc, argv, "-1", "--no-restart")) {
-			// don't try to restart
-			ARG->m_restartable = false;
-		}
-
-		else if (isArg(i, argc, argv, NULL, "--restart")) {
-			// try to restart
-			ARG->m_restartable = true;
-		}
-
-		else if (isArg(i, argc, argv, "-z", NULL)) {
-			ARG->m_backend = true;
-		}
-
-		else if (isArg(i, argc, argv, "-h", "--help")) {
-			help();
-			m_bye(kExitSuccess);
-		}
-
-		else if (isArg(i, argc, argv, NULL, "--version")) {
-			version();
-			m_bye(kExitSuccess);
-		}
-
-#if WINAPI_MSWINDOWS
-		else if (isArg(i, argc, argv, NULL, "--service")) {
-
-			// HACK: assume instance is an ms windows app, and call service
-			// arg handler.
-			// TODO: use inheritance model to fix this.
-			((CMSWindowsApp*)this)->handleServiceArg(argv[++i]);
-		}
-#endif
-
-		else if (isArg(i, argc, argv, "--", NULL)) {
-			// remaining arguments are not options
-			++i;
-			break;
-		}
-
-		else if (argv[i][0] == '-') {
-			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-				ARG->m_pname, argv[i], ARG->m_pname));
-			m_bye(kExitArgs);
-		}
-
-		else {
-			// this and remaining arguments are not options
+		if (!parseArg(argc, argv, i)) {
 			break;
 		}
 	}
@@ -202,29 +188,29 @@ CServerApp::parse(int argc, const char* const* argv)
 	// no non-option arguments are allowed
 	if (i != argc) {
 		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-			ARG->m_pname, argv[i], ARG->m_pname));
+			args().m_pname, argv[i], args().m_pname));
 		m_bye(kExitArgs);
 	}
 
 	// increase default filter level for daemon.  the user must
 	// explicitly request another level for a daemon.
-	if (ARG->m_daemon && ARG->m_logFilter == NULL) {
+	if (args().m_daemon && args().m_logFilter == NULL) {
 #if SYSAPI_WIN32
 		if (CArchMiscWindows::isWindows95Family()) {
 			// windows 95 has no place for logging so avoid showing
 			// the log console window.
-			ARG->m_logFilter = "FATAL";
+			args().m_logFilter = "FATAL";
 		}
 		else
 #endif
 		{
-			ARG->m_logFilter = "NOTE";
+			args().m_logFilter = "NOTE";
 		}
 	}
 
 #if SYSAPI_WIN32
 	// if user wants to run as daemon, but process not launched from service launcher...
-	if (ARG->m_daemon && !CArchMiscWindows::wasLaunchedAsService()) {
+	if (args().m_daemon && !CArchMiscWindows::wasLaunchedAsService()) {
 		LOG((CLOG_ERR "cannot launch as daemon if process not started through "
 			"service host (use '--service start' argument instead)"));
 		m_bye(kExitArgs);
@@ -232,9 +218,9 @@ CServerApp::parse(int argc, const char* const* argv)
 #endif
 
 	// set log filter
-	if (!CLOG->setFilter(ARG->m_logFilter)) {
+	if (!CLOG->setFilter(args().m_logFilter)) {
 		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
-			ARG->m_pname, ARG->m_logFilter, ARG->m_pname));
+			args().m_pname, args().m_logFilter, args().m_pname));
 		m_bye(kExitArgs);
 	}
 
@@ -248,7 +234,7 @@ CServerApp::parse(int argc, const char* const* argv)
 #endif
 
 	if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
-		if (ARG->m_logFile == NULL) {
+		if (args().m_logFile == NULL) {
 			LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)", 
 				CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
 		}
@@ -262,7 +248,7 @@ CServerApp::version()
 	sprintf(
 		buffer,
 		"%s %s, protocol version %d.%d\n%s",
-		ARG->m_pname,
+		args().m_pname,
 		kVersion,
 		kProtocolMajorVersion,
 		kProtocolMinorVersion,
@@ -353,7 +339,7 @@ CServerApp::help()
 		"\n"
 		"Where log messages go depends on the platform and whether or not the\n"
 		"server is running as a daemon.",
-		ARG->m_pname, kDefaultPort,
+		args().m_pname, kDefaultPort,
 		ARCH->concatPath(ARCH->getUserDirectory(), USR_CONFIG_NAME).c_str(),
 		ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME).c_str()
 		);

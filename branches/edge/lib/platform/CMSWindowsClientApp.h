@@ -17,8 +17,10 @@
 #include "CClientApp.h"
 #include "CMSWindowsApp.h"
 
-class CMSWindowsClientApp : public CClientApp, public CMSWindowsApp {
+class CMSWindowsClientApp : public CClientApp {
 public:
 	CMSWindowsClientApp();
 	virtual ~CMSWindowsClientApp();
+
+	CMSWindowsApp& bridge() const { return (CMSWindowsApp&)bridgeBase(); }
 };

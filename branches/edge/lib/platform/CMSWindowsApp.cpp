@@ -24,11 +24,17 @@
 
 CMSWindowsApp::CMSWindowsApp()
 {
-	m_bye = &exitPause;
 }
 
 CMSWindowsApp::~CMSWindowsApp()
 {
+}
+
+void
+CMSWindowsApp::adoptParent(CApp* parent)
+{
+	parent->m_bye = &exitPause;
+	CAppBridge::adoptParent(parent);
 }
 
 CString
@@ -67,9 +73,9 @@ CMSWindowsApp::handleServiceArg(const char* serviceAction)
 	}
 	else {
 		LOG((CLOG_ERR "unknown service action: %s", serviceAction));
-		m_bye(kExitArgs);
+		parent().m_bye(kExitArgs);
 	}
-	m_bye(kExitSuccess);
+	parent().m_bye(kExitSuccess);
 }
 
 void
@@ -82,18 +88,18 @@ CMSWindowsApp::installService()
 	GetModuleFileName(m_instance, thisPath, MAX_PATH);
 
 	ARCH->installDaemon(
-		m_daemonName.c_str(), m_daemonInfo.c_str(), 
+		parent().m_daemonName.c_str(), parent().m_daemonInfo.c_str(), 
 		thisPath, args.c_str(), NULL, true);
 
 	LOG((CLOG_INFO "service '%s' installed with args: %s",
-		m_daemonName.c_str(), args != "" ? args.c_str() : "none" ));
+		parent().m_daemonName.c_str(), args != "" ? args.c_str() : "none" ));
 }
 
 void
 CMSWindowsApp::uninstallService()
 {
-	ARCH->uninstallDaemon(m_daemonName.c_str(), true);
-	LOG((CLOG_INFO "service '%s' uninstalled", m_daemonName.c_str()));
+	ARCH->uninstallDaemon(parent().m_daemonName.c_str(), true);
+	LOG((CLOG_INFO "service '%s' uninstalled", parent().m_daemonName.c_str()));
 }
 
 void
@@ -107,7 +113,7 @@ CMSWindowsApp::startService()
 
 	// open the service
 	SC_HANDLE service = OpenService(
-		mgr, m_daemonName.c_str(), SERVICE_START);
+		mgr, parent().m_daemonName.c_str(), SERVICE_START);
 
 	if (service == NULL) {
 		CloseServiceHandle(mgr);
@@ -116,7 +122,7 @@ CMSWindowsApp::startService()
 
 	// start the service
 	if (StartService(service, 0, NULL)) {
-		LOG((CLOG_INFO "service '%s' started", m_daemonName.c_str()));
+		LOG((CLOG_INFO "service '%s' started", parent().m_daemonName.c_str()));
 	}
 	else {
 		throw XArchEvalWindows();
@@ -134,7 +140,7 @@ CMSWindowsApp::stopService()
 
 	// open the service
 	SC_HANDLE service = OpenService(
-		mgr, m_daemonName.c_str(),
+		mgr, parent().m_daemonName.c_str(),
 		SERVICE_STOP | SERVICE_QUERY_STATUS);
 
 	if (service == NULL) {
@@ -147,12 +153,12 @@ CMSWindowsApp::stopService()
 	if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
 		DWORD dwErrCode = GetLastError(); 
 		if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
-			LOG((CLOG_ERR "cannot stop service '%s'", m_daemonName.c_str()));
+			LOG((CLOG_ERR "cannot stop service '%s'", parent().m_daemonName.c_str()));
 			throw XArchEvalWindows();
 		}
 	}
 
-	LOG((CLOG_INFO "service '%s' stopping asyncronously", m_daemonName.c_str()));
+	LOG((CLOG_INFO "service '%s' stopping asyncronously", parent().m_daemonName.c_str()));
 }
 
 void

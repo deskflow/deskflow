@@ -14,7 +14,8 @@
 
 #include "COSXApp.h"
 
-COSXApp::COSXApp()
+COSXApp::COSXApp(CApp& parent) :
+m_parent(parent)
 {
 }
 

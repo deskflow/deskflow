@@ -16,8 +16,8 @@
 
 #include "CApp.h"
 
-class COSXApp : virtual public CApp {
+class COSXApp : public IAppBridge {
 public:
-	COSXApp();
+	COSXApp(CApp& parent);
 	virtual ~COSXApp();
 };
