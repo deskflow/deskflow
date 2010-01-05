@@ -109,7 +109,7 @@ CMSWindowsAppUtil::startService()
 	// open service manager
 	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
 	if (mgr == NULL) {
-		throw XArchEvalWindows();
+		throw XArchDaemonFailed(new XArchEvalWindows());
 	}
 
 	// open the service
@@ -118,7 +118,7 @@ CMSWindowsAppUtil::startService()
 
 	if (service == NULL) {
 		CloseServiceHandle(mgr);
-		throw XArchEvalWindows();
+		throw XArchDaemonFailed(new XArchEvalWindows());
 	}
 
 	// start the service
@@ -126,7 +126,7 @@ CMSWindowsAppUtil::startService()
 		LOG((CLOG_INFO "service '%s' started", app().m_daemonName.c_str()));
 	}
 	else {
-		throw XArchEvalWindows();
+		throw XArchDaemonFailed(new XArchEvalWindows());
 	}
 }
 
@@ -136,7 +136,7 @@ CMSWindowsAppUtil::stopService()
 	// open service manager
 	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
 	if (mgr == NULL) {
-		throw XArchEvalWindows();
+		throw XArchDaemonFailed(new XArchEvalWindows());
 	}
 
 	// open the service
@@ -146,7 +146,7 @@ CMSWindowsAppUtil::stopService()
 
 	if (service == NULL) {
 		CloseServiceHandle(mgr);
-		throw XArchEvalWindows();
+		throw XArchDaemonFailed(new XArchEvalWindows());
 	}
 
 	// ask the service to stop, asynchronously
@@ -155,7 +155,7 @@ CMSWindowsAppUtil::stopService()
 		DWORD dwErrCode = GetLastError(); 
 		if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
 			LOG((CLOG_ERR "cannot stop service '%s'", app().m_daemonName.c_str()));
-			throw XArchEvalWindows();
+			throw XArchDaemonFailed(new XArchEvalWindows());
 		}
 	}
 
