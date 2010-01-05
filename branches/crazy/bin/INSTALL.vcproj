@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="9.00"
+	Name="INSTALL"
+	ProjectGUID="{335FA24A-09F9-4518-AABF-D435ABBA6E48}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="INSTALL.dir\Debug"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
+				ExceptionHandling="0"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Debug\&quot;"
+				AssemblerListingLocation="Debug"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Debug\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Debug\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="INSTALL.dir\Release"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
+				ExceptionHandling="0"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"
+				AssemblerListingLocation="Release"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake"/>
+		</Configuration>
+		<Configuration
+			Name="MinSizeRel|Win32"
+			OutputDirectory="MinSizeRel"
+			IntermediateDirectory="INSTALL.dir\MinSizeRel"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
+				ExceptionHandling="0"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
+				AssemblerListingLocation="MinSizeRel"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake"/>
+		</Configuration>
+		<Configuration
+			Name="RelWithDebInfo|Win32"
+			OutputDirectory="RelWithDebInfo"
+			IntermediateDirectory="INSTALL.dir\RelWithDebInfo"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
+				ExceptionHandling="0"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
+				AssemblerListingLocation="RelWithDebInfo"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -DBUILD_TYPE=$(OutDir) -P cmake_install.cmake"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+			<File
+				RelativePath="C:\dev\synergy-plus\branches\edge\CMakeLists.txt">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/dev/synergy-plus/branches/edge/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -HC:/dev/synergy-plus/branches/edge -BC:/dev/synergy-plus/branches/edge/bin --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\CMakeLists.txt;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeSystem.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCCompiler.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows-cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCPlatform.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXPlatform.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_config.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_lib.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergyc.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergys.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_launcher.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;C:\dev\synergy-plus\branches\edge\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/dev/synergy-plus/branches/edge/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -HC:/dev/synergy-plus/branches/edge -BC:/dev/synergy-plus/branches/edge/bin --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\CMakeLists.txt;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeSystem.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCCompiler.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows-cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCPlatform.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXPlatform.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_config.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_lib.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergyc.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergys.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_launcher.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;C:\dev\synergy-plus\branches\edge\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/dev/synergy-plus/branches/edge/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -HC:/dev/synergy-plus/branches/edge -BC:/dev/synergy-plus/branches/edge/bin --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\CMakeLists.txt;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeSystem.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCCompiler.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows-cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCPlatform.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXPlatform.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_config.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_lib.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergyc.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergys.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_launcher.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;C:\dev\synergy-plus\branches\edge\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/dev/synergy-plus/branches/edge/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -HC:/dev/synergy-plus/branches/edge -BC:/dev/synergy-plus/branches/edge/bin --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\CMakeLists.txt;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeSystem.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCCompiler.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows-cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCPlatform.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXPlatform.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_config.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_lib.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergyc.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergys.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_launcher.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;C:\dev\synergy-plus\branches\edge\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+			</File>
+		<Filter
+			Name="CMake Rules"
+			Filter="">
+			<File
+				RelativePath="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description=" "
+					CommandLine="cd ."
+					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force.rule"
+					Outputs="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description=" "
+					CommandLine="cd ."
+					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force.rule"
+					Outputs="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description=" "
+					CommandLine="cd ."
+					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force.rule"
+					Outputs="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description=" "
+					CommandLine="cd ."
+					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force.rule"
+					Outputs="C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\INSTALL_force"/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

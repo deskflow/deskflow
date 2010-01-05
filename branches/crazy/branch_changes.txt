@@ -1,0 +1,2 @@
+* (huge) removal of character based processing on keyboard events, we'll use only scan codes and virtual keys. The local OS will decide what character it should generate.
+* removed Win95 family code, from now we'll support on NT family on Windows
