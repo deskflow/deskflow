@@ -1002,7 +1002,6 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 
 		CMSWindowsScreen::init(instance);
 		CThread::getCurrentThread().setPriority(-14);
-		CServerApp::CArgs args;
 		
 		StartupFunc startup;
 		if (!CArchMiscWindows::isWindows95Family()) {
@@ -1049,12 +1048,10 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 int
 main(int argc, char** argv)
 {
-	CArgs args;
 	try {
 		int result;
 		CArch arch;
 		CLOG;
-		CArgs args;
 		result = run(argc, argv, NULL, &standardStartup);
 		delete CLOG;
 		return result;

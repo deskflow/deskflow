@@ -13,8 +13,9 @@
 */
 
 #include "COSXServerApp.h"
+#include "COSXAppUtil.h"
 
-COSXServerApp::COSXServerApp()
+COSXServerApp::COSXServerApp() : CServerApp(new COSXAppUtil())
 {
 }
 

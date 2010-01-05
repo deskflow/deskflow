@@ -17,7 +17,10 @@
 #include "CArch.h"
 #include "XSocket.h"
 #include "Version.h"
+
+#if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
+#endif
 
 #if WINAPI_MSWINDOWS
 #include "CMSWindowsAppUtil.h"

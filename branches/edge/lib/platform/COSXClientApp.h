@@ -15,9 +15,8 @@
 #pragma once
 
 #include "CClientApp.h"
-#include "COSXApp.h"
 
-class COSXClientApp : public CClientApp, public COSXApp {
+class COSXClientApp : public CClientApp {
 public:
 	COSXClientApp();
 	virtual ~COSXClientApp();

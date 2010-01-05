@@ -13,8 +13,9 @@
 */
 
 #include "COSXClientApp.h"
+#include "COSXAppUtil.h"
 
-COSXClientApp::COSXClientApp()
+COSXClientApp::COSXClientApp() : CClientApp(new COSXAppUtil())
 {
 }
 

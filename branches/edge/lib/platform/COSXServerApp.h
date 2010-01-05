@@ -15,9 +15,8 @@
 #pragma once
 
 #include "CServerApp.h"
-#include "COSXApp.h"
 
-class COSXServerApp : public CServerApp, public COSXApp {
+class COSXServerApp : public CServerApp {
 public:
 	COSXServerApp();
 	virtual ~COSXServerApp();
