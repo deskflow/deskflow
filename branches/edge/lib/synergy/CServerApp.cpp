@@ -22,10 +22,6 @@
 #include "CArchMiscWindows.h"
 #endif
 
-#if WINAPI_MSWINDOWS
-#include "CMSWindowsAppUtil.h"
-#endif
-
 #include <iostream>
 #include <stdio.h>
 
@@ -39,13 +35,6 @@ CServerApp::~CServerApp()
 }
 
 CServerApp::CArgs::CArgs() :
-m_backend(false),
-m_restartable(true),
-m_daemon(true),
-m_configFile(),
-m_logFilter(NULL),
-m_logFile(NULL),
-m_display(NULL),
 m_synergyAddress(NULL),
 m_config(NULL)
 {
@@ -58,9 +47,9 @@ CServerApp::CArgs::~CArgs()
 bool
 CServerApp::parseArg(const int& argc, const char* const* argv, int& i)
 {
-	if (isArg(i, argc, argv, "-d", "--debug", 1)) {
-		// change logging level
-		args().m_logFilter = argv[++i];
+	if (CApp::parseArg(argc, argv, i)) {
+		// found common arg
+		return true;
 	}
 
 	else if (isArg(i, argc, argv, "-a", "--address", 1)) {
@@ -78,81 +67,9 @@ CServerApp::parseArg(const int& argc, const char* const* argv, int& i)
 		++i;
 	}
 
-	else if (isArg(i, argc, argv, "-n", "--name", 1)) {
-		// save screen name
-		args().m_name = argv[++i];
-	}
-
 	else if (isArg(i, argc, argv, "-c", "--config", 1)) {
 		// save configuration file path
 		args().m_configFile = argv[++i];
-	}
-
-#if WINAPI_XWINDOWS
-	else if (isArg(i, argc, argv, "-display", "--display", 1)) {
-		// use alternative display
-		args().m_display = argv[++i];
-	}
-#endif
-
-	else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
-		// not a daemon
-		args().m_daemon = false;
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--daemon")) {
-		// daemonize
-		args().m_daemon = true;
-	}
-	else if (isArg(i, argc, argv, "-l", "--log", 1)) {
-		// logging to file
-		args().m_logFile = argv[++i];
-	}
-
-	else if (isArg(i, argc, argv, "-1", "--no-restart")) {
-		// don't try to restart
-		args().m_restartable = false;
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--restart")) {
-		// try to restart
-		args().m_restartable = true;
-	}
-
-	else if (isArg(i, argc, argv, "-z", NULL)) {
-		args().m_backend = true;
-	}
-
-	else if (isArg(i, argc, argv, "-h", "--help")) {
-		help();
-		m_bye(kExitSuccess);
-	}
-
-	else if (isArg(i, argc, argv, NULL, "--version")) {
-		version();
-		m_bye(kExitSuccess);
-	}
-
-#if WINAPI_MSWINDOWS
-	else if (isArg(i, argc, argv, NULL, "--service")) {
-
-		// HACK: assume instance is an ms windows app, and call service
-		// arg handler.
-		// TODO: use inheritance model to fix this.
-		((CMSWindowsAppUtil&)utilBase()).handleServiceArg(argv[++i]);
-	}
-#endif
-
-	else if (isArg(i, argc, argv, "--", NULL)) {
-		// remaining arguments are not options
-		++i;
-		return false;
-	}
-
-	else if (argv[i][0] == '-') {
-		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-			args().m_pname, argv[i], args().m_pname));
-		m_bye(kExitArgs);
 	}
 
 	else {
@@ -167,52 +84,15 @@ CServerApp::parseArg(const int& argc, const char* const* argv, int& i)
 void
 CServerApp::parse(int argc, const char* const* argv)
 {
-	// about these use of assert() here:
-	// previously an /analyze warning was displayed if we only used assert and
-	// did not return on failure. however, this warning does not appear to show
-	// any more (could be because new compiler args have been added).
-	// the asserts are programmer benefit only; the os should never pass 0 args,
-	// because the first is always the binary name. the only way assert would 
-	// evaluate to true, is if this parse function were implemented incorrectly,
-	// which is unlikely because it's old code and has a specific use.
-	// we should avoid using anything other than assert here, because it will
-	// look like important code, which it's not really.
-	assert(args().m_pname != NULL);
-	assert(argv != NULL);
-	assert(argc >= 1);
-
-	// set defaults
-	args().m_name = ARCH->getHostName();
-
-	// parse options
-	int i = 1;
-	for (; i < argc; ++i) {
-		if (!parseArg(argc, argv, i)) {
-			break;
-		}
-	}
+	// asserts values, sets defaults, and parses args
+	int i;
+	CApp::parse(argc, argv, i);
 
 	// no non-option arguments are allowed
 	if (i != argc) {
 		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
 			args().m_pname, argv[i], args().m_pname));
 		m_bye(kExitArgs);
-	}
-
-	// increase default filter level for daemon.  the user must
-	// explicitly request another level for a daemon.
-	if (args().m_daemon && args().m_logFilter == NULL) {
-#if SYSAPI_WIN32
-		if (CArchMiscWindows::isWindows95Family()) {
-			// windows 95 has no place for logging so avoid showing
-			// the log console window.
-			args().m_logFilter = "FATAL";
-		}
-		else
-#endif
-		{
-			args().m_logFilter = "NOTE";
-		}
 	}
 
 #if SYSAPI_WIN32
@@ -246,23 +126,6 @@ CServerApp::parse(int argc, const char* const* argv)
 				CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
 		}
 	}
-}
-
-void
-CServerApp::version()
-{
-	char buffer[500];
-	sprintf(
-		buffer,
-		"%s %s, protocol version %d.%d\n%s",
-		args().m_pname,
-		kVersion,
-		kProtocolMajorVersion,
-		kProtocolMinorVersion,
-		kCopyright
-		);
-
-	std::cout << buffer << std::endl;
 }
 
 void

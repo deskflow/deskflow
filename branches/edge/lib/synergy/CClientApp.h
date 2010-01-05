@@ -28,24 +28,20 @@ public:
 		~CArgs();
 
 	public:
-		const char* 		m_pname;
-		bool				m_backend;
-		bool				m_restartable;
-		bool				m_daemon;
-		int 				m_yscroll;
-		const char* 		m_logFilter;
-		const char*			m_display;
-		CString 			m_name;
-		CNetworkAddress* 	m_serverAddress;
-		const char*			m_logFile;
+		int m_yscroll;
+		CNetworkAddress* m_serverAddress;
 	};
 
 	CClientApp(CAppUtil* util);
 	virtual ~CClientApp();
 
+	// Parse client specific command line arguments.
 	void parse(int argc, const char* const* argv);
+
+	// Prints help specific to client.
 	void help();
-	void version();
+
+	// Returns arguments that are common and for client.
 	CArgs& args() const { return (CArgs&)argsBase(); }
 
 private:

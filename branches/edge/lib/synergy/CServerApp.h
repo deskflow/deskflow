@@ -29,24 +29,21 @@ public:
 		~CArgs();
 
 	public:
-		bool				m_backend;
-		bool				m_restartable;
-		bool				m_daemon;
-		CString		 		m_configFile;
-		const char* 		m_logFilter;
-		const char*			m_logFile;
-		const char*			m_display;
-		CString 			m_name;
-		CNetworkAddress*	m_synergyAddress;
-		CConfig*			m_config;
+		CString	m_configFile;
+		CNetworkAddress* m_synergyAddress;
+		CConfig* m_config;
 	};
 
 	CServerApp(CAppUtil* util);
 	virtual ~CServerApp();
 	
+	// Parse server specific command line arguments.
 	void parse(int argc, const char* const* argv);
+
+	// Prints help specific to server.
 	void help();
-	void version();
+
+	// Returns arguments that are common and for server.
 	CArgs& args() const { return (CArgs&)argsBase(); }
 
 private:
