@@ -1,0 +1,45 @@
+QSynergy for Unix build instructions
+====================================
+
+
+Requirements:
+-------------
+Qt 4.3 or newer. QSynergy can not be built or used with earlier versions. Get
+it from http://trolltech.com/downloads/opensource
+
+If you install from your distributions's package repository, don't forget to
+install the development packages as well. 
+
+
+Compilation:
+------------
+1. Unpack the sources to a directory.
+
+2. Run qmake for your Qt4 installtion in that directory (make sure you do not
+accidentally run the Qt3-qmake if your Linux distribution installs both, like
+Ubuntu seems to do). See the qmake documentation for available command line
+options. You might want to enable a release build by passing CONFIG="-debug
++release" to qmake.
+
+3. qmake will have generated a Makefile now, so just run make in that directory
+and wait for the build to finish.
+
+
+Installation:
+-------------
+There is no installation required. Just copy the qsynergy binary to somewhere
+in your path. The binary does not depend on any other files.
+
+
+Building a Debian package
+-------------------------
+The source tarball comes with a fully configured debian subdir, so it's easy to
+build a Debian package. A script is available in the dist subdir, deb.sh, that
+will do this automatically. Just run this script. If you have all the tools and
+helper programs installed to build a Debian package, you should get a package
+for your platform in tmp/debian. 
+
+Please contact QSynergy's author to contribute your newly built package for
+download on the QSynergy website: vl@fidra.de
+
+
