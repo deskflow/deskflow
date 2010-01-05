@@ -1,20 +1,14 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="synergy"
-	ProjectGUID="{3AE26EE0-EC85-4688-BF03-EBB0D68DBF5B}"
-	RootNamespace="synergy"
-	Keyword="Win32Proj"
-	TargetFrameworkVersion="0"
-	>
+	ProjectGUID="{3A78F676-6F2A-4E9A-B056-F0FE84093780}"
+	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32"/>
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
@@ -22,83 +16,54 @@
 			IntermediateDirectory="synergy.dir\Debug"
 			ConfigurationType="4"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000 /analyze /MP"
+				AdditionalIncludeDirectories="C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir};C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\server;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy;C:\Projects\Personal\synergy-plus\branches\crazy\lib;C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy\lib\server;"
+				BasicRuntimeChecks="3"
+				BrowseInformation="1"
+				CompileAs="2"
+				DebugInformationFormat="3"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="0"
+				Optimization="0"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,_BIND_TO_CURRENT_VCLIBS_VERSION=1,_SECURE_SCL=1,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Debug\&quot;"
+				AssemblerListingLocation="Debug"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="C:/Projects/Personal/synergy-plus/branches/crazy/bin/Debug/synergy.pdb"
+/>
 			<Tool
-				Name="VCCustomBuildTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir};C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\server;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy;C:\Projects\Personal\synergy-plus\branches\crazy\lib;C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy\lib\server;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,_BIND_TO_CURRENT_VCLIBS_VERSION=1,_SECURE_SCL=1,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Debug\&quot;"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,_BIND_TO_CURRENT_VCLIBS_VERSION=1,_SECURE_SCL=1,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Debug\&quot;"
-				MkTypLibCompatible="false"
+				MkTypLibCompatible="FALSE"
 				TargetEnvironment="1"
-				GenerateStublessProxies="true"
+				GenerateStublessProxies="TRUE"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"
-			/>
+				ProxyFileName="$(InputName)_p.c"/>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions=" /Zm1000 /analyze /MP"
-				Optimization="0"
-				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
-				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,_BIND_TO_CURRENT_VCLIBS_VERSION=1,_SECURE_SCL=1,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Debug\&quot;"
-				ExceptionHandling="1"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				RuntimeTypeInfo="true"
-				AssemblerListingLocation="Debug"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="C:\dev\synergy-plus\branches\edge\bin\Debug/synergy.pdb"
-				BrowseInformation="1"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-				CompileAs="2"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,_BIND_TO_CURRENT_VCLIBS_VERSION=1,_SECURE_SCL=1,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Debug\&quot;"
-				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="C:\dev\synergy-plus\branches\edge\bin\Debug\synergy.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				OutputFile="C:\Projects\Personal\synergy-plus\branches\crazy\bin\Debug\synergy.lib"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -106,80 +71,51 @@
 			IntermediateDirectory="synergy.dir\Release"
 			ConfigurationType="4"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories="C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir};C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\server;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy;C:\Projects\Personal\synergy-plus\branches\crazy\lib;C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy\lib\server;"
+				CompileAs="2"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="2"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"
+				AssemblerListingLocation="Release"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="C:/Projects/Personal/synergy-plus/branches/crazy/bin/Release/synergy.pdb"
+/>
 			<Tool
-				Name="VCCustomBuildTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir};C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\server;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy;C:\Projects\Personal\synergy-plus\branches\crazy\lib;C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy\lib\server;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="WIN32,_WINDOWS,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"
-				MkTypLibCompatible="false"
+				MkTypLibCompatible="FALSE"
 				TargetEnvironment="1"
-				GenerateStublessProxies="true"
+				GenerateStublessProxies="TRUE"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"
-			/>
+				ProxyFileName="$(InputName)_p.c"/>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions=" /Zm1000"
-				Optimization="2"
-				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
-				PreprocessorDefinitions="WIN32,_WINDOWS,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"
-				ExceptionHandling="1"
-				RuntimeLibrary="2"
-				RuntimeTypeInfo="true"
-				AssemblerListingLocation="Release"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="C:\dev\synergy-plus\branches\edge\bin\Release/synergy.pdb"
-				WarningLevel="3"
-				CompileAs="2"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32,_WINDOWS,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;Release\&quot;"
-				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="C:\dev\synergy-plus\branches\edge\bin\Release\synergy.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				OutputFile="C:\Projects\Personal\synergy-plus\branches\crazy\bin\Release\synergy.lib"/>
 		</Configuration>
 		<Configuration
 			Name="MinSizeRel|Win32"
@@ -187,80 +123,51 @@
 			IntermediateDirectory="synergy.dir\MinSizeRel"
 			ConfigurationType="4"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories="C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir};C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\server;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy;C:\Projects\Personal\synergy-plus\branches\crazy\lib;C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy\lib\server;"
+				CompileAs="2"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="1"
+				Optimization="1"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
+				AssemblerListingLocation="MinSizeRel"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="C:/Projects/Personal/synergy-plus/branches/crazy/bin/MinSizeRel/synergy.pdb"
+/>
 			<Tool
-				Name="VCCustomBuildTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir};C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\server;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy;C:\Projects\Personal\synergy-plus\branches\crazy\lib;C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy\lib\server;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
-				MkTypLibCompatible="false"
+				MkTypLibCompatible="FALSE"
 				TargetEnvironment="1"
-				GenerateStublessProxies="true"
+				GenerateStublessProxies="TRUE"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"
-			/>
+				ProxyFileName="$(InputName)_p.c"/>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions=" /Zm1000"
-				Optimization="1"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
-				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
-				ExceptionHandling="1"
-				RuntimeLibrary="2"
-				RuntimeTypeInfo="true"
-				AssemblerListingLocation="MinSizeRel"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="C:\dev\synergy-plus\branches\edge\bin\MinSizeRel/synergy.pdb"
-				WarningLevel="3"
-				CompileAs="2"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
-				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="C:\dev\synergy-plus\branches\edge\bin\MinSizeRel\synergy.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				OutputFile="C:\Projects\Personal\synergy-plus\branches\crazy\bin\MinSizeRel\synergy.lib"/>
 		</Configuration>
 		<Configuration
 			Name="RelWithDebInfo|Win32"
@@ -268,906 +175,675 @@
 			IntermediateDirectory="synergy.dir\RelWithDebInfo"
 			ConfigurationType="4"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories="C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir};C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\server;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy;C:\Projects\Personal\synergy-plus\branches\crazy\lib;C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy\lib\server;"
+				CompileAs="2"
+				DebugInformationFormat="3"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="1"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
+				AssemblerListingLocation="RelWithDebInfo"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="C:/Projects/Personal/synergy-plus/branches/crazy/bin/RelWithDebInfo/synergy.pdb"
+/>
 			<Tool
-				Name="VCCustomBuildTool"
-			/>
+				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir};C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\server;C:\Projects\Personal\synergy-plus\branches\crazy\{&quot;$&quot;root_dir}\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy;C:\Projects\Personal\synergy-plus\branches\crazy\lib;C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch;C:\Projects\Personal\synergy-plus\branches\crazy\lib\base;C:\Projects\Personal\synergy-plus\branches\crazy\lib\client;C:\Projects\Personal\synergy-plus\branches\crazy\lib\common;C:\Projects\Personal\synergy-plus\branches\crazy\lib\io;C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt;C:\Projects\Personal\synergy-plus\branches\crazy\lib\net;C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform;C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy;C:\Projects\Personal\synergy-plus\branches\crazy\lib\server;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
-				MkTypLibCompatible="false"
+				MkTypLibCompatible="FALSE"
 				TargetEnvironment="1"
-				GenerateStublessProxies="true"
+				GenerateStublessProxies="TRUE"
 				TypeLibraryName="$(InputName).tlb"
 				OutputDirectory="$(IntDir)"
 				HeaderFileName="$(InputName).h"
 				DLLDataFileName=""
 				InterfaceIdentifierFileName="$(InputName)_i.c"
-				ProxyFileName="$(InputName)_p.c"
-			/>
+				ProxyFileName="$(InputName)_p.c"/>
 			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions=" /Zm1000"
-				Optimization="2"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
-				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
-				ExceptionHandling="1"
-				RuntimeLibrary="2"
-				RuntimeTypeInfo="true"
-				AssemblerListingLocation="RelWithDebInfo"
-				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="C:\dev\synergy-plus\branches\edge\bin\RelWithDebInfo/synergy.pdb"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-				CompileAs="2"
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
+				Name="VCPreLinkEventTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,WIN32,_WINDOWS,_CRT_SECURE_NO_WARNINGS,_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES,VERSION=\&quot;1.3.5\&quot;,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
-				AdditionalIncludeDirectories="C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir};C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\arch;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\base;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\client;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\common;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\io;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\mt;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\net;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\platform;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\server;C:\dev\synergy-plus\branches\edge\{&quot;$&quot;root_dir}\lib\synergy;C:\dev\synergy-plus\branches\edge;C:\dev\synergy-plus\branches\edge\lib;C:\dev\synergy-plus\branches\edge\lib\arch;C:\dev\synergy-plus\branches\edge\lib\base;C:\dev\synergy-plus\branches\edge\lib\client;C:\dev\synergy-plus\branches\edge\lib\common;C:\dev\synergy-plus\branches\edge\lib\io;C:\dev\synergy-plus\branches\edge\lib\mt;C:\dev\synergy-plus\branches\edge\lib\net;C:\dev\synergy-plus\branches\edge\lib\platform;C:\dev\synergy-plus\branches\edge\lib\synergy;C:\dev\synergy-plus\branches\edge\lib\server;"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="C:\dev\synergy-plus\branches\edge\bin\RelWithDebInfo\synergy.lib"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				OutputFile="C:\Projects\Personal\synergy-plus\branches\crazy\bin\RelWithDebInfo\synergy.lib"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
+			<File
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/Projects/Personal/synergy-plus/branches/crazy/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -HC:/Projects/Personal/synergy-plus/branches/crazy -BC:/Projects/Personal/synergy-plus/branches/crazy/bin --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeVS9FindMake.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystem.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeSystem.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCXXCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\gcc.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCXXCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_config.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_lib.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_synergyc.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_synergys.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_launcher.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Templates\CPackConfig.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/Projects/Personal/synergy-plus/branches/crazy/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -HC:/Projects/Personal/synergy-plus/branches/crazy -BC:/Projects/Personal/synergy-plus/branches/crazy/bin --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeVS9FindMake.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystem.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeSystem.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCXXCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\gcc.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCXXCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_config.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_lib.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_synergyc.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_synergys.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_launcher.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Templates\CPackConfig.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/Projects/Personal/synergy-plus/branches/crazy/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -HC:/Projects/Personal/synergy-plus/branches/crazy -BC:/Projects/Personal/synergy-plus/branches/crazy/bin --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeVS9FindMake.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystem.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeSystem.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCXXCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\gcc.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCXXCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_config.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_lib.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_synergyc.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_synergys.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_launcher.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Templates\CPackConfig.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/Projects/Personal/synergy-plus/branches/crazy/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files (x86)\CMake 2.8\bin\cmake.exe&quot; -HC:/Projects/Personal/synergy-plus/branches/crazy -BC:/Projects/Personal/synergy-plus/branches/crazy/bin --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeVS9FindMake.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystem.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeSystem.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCXXCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeFindBinUtils.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\gcc.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestRCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompiler.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeTestCXXCompiler.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeDetermineCompilerABI.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeParseImplicitLinkInfo.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompiler.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_config.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_lib.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_synergyc.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_synergys.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_launcher.txt;C:\Projects\Personal\synergy-plus\branches\crazy\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Templates\CPackConfig.cmake.in&quot;;C:\Projects\Personal\synergy-plus\branches\crazy\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+			</File>
 		<Filter
 			Name="Source Files"
-			>
+			Filter="">
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArch.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArch.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchConsoleStd.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchDaemonNone.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchConsoleWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\XArch.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchDaemonNone.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchConsoleStd.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchDaemonWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CEvent.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchFileWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CEventQueue.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchLogWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CFunctionEventJob.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchMiscWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CFunctionJob.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchMultithreadWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CLog.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchNetworkWinsock.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CSimpleEventQueueBuffer.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchSleepWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CStopwatch.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchStringWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CStringUtil.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchSystemWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CUnicode.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchTaskBarWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\IEventQueue.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchTimeWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\LogOutputters.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CBaseClientProxy.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\XBase.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\client\CClient.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\client\CClient.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientListener.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\client\CServerProxy.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\common\Version.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy1_0.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\CStreamBuffer.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy1_1.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\CStreamFilter.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy1_2.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\IStream.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy1_3.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\XIO.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxyUnknown.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\CCondVar.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CClipboard.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\CLock.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\CCondVar.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\CMutex.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CConfig.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\CThread.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CEvent.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\XMT.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CEventQueue.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CNetworkAddress.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CFunctionEventJob.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CSocketMultiplexer.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CFunctionJob.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CTCPListenSocket.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CInputFilter.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CTCPSocket.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CKeyMap.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CTCPSocketFactory.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\CLock.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\IDataSocket.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CLog.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\IListenSocket.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboard.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\ISocket.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardAnyTextConverter.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\XSocket.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardBitmapConverter.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CBaseClientProxy.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardHTMLConverter.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientListener.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardTextConverter.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardUTF16Converter.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy1_0.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsDesks.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy1_1.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsEventQueueBuffer.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy1_2.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsScreen.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy1_3.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsScreenSaver.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxyUnknown.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsUtil.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CConfig.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\CMutex.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CInputFilter.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CNetworkAddress.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CPrimaryClient.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CPacketStreamFilter.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CServer.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CPlatformScreen.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CClipboard.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CPrimaryClient.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CKeyMap.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CProtocolUtil.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CPacketStreamFilter.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CScreen.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CPlatformScreen.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CServer.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CProtocolUtil.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\client\CServerProxy.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CScreen.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CSimpleEventQueueBuffer.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IClipboard.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CSocketMultiplexer.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IKeyState.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CStopwatch.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IPrimaryScreen.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\CStreamBuffer.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IScreen.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\CStreamFilter.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\KeyTypes.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CStringUtil.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\ProtocolTypes.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CTCPListenSocket.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\XScreen.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CTCPSocket.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\XSynergy.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CTCPSocketFactory.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchConsoleWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\CThread.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchDaemonWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CUnicode.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchFileWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IClipboard.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchLogWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\IDataSocket.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchMiscWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\IEventQueue.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchMultithreadWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IKeyState.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchNetworkWinsock.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\IListenSocket.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchSleepWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IPrimaryScreen.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchStringWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IScreen.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchSystemWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\ISocket.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchTaskBarWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\IStream.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchTimeWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\KeyTypes.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\XArchWindows.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\LogOutputters.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboard.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\ProtocolTypes.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardAnyTextConverter.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\common\Version.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardBitmapConverter.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\XArch.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardHTMLConverter.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\XArchWindows.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardTextConverter.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\XBase.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardUTF16Converter.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\XIO.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsDesks.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\XMT.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsEventQueueBuffer.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\XScreen.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsScreen.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\XSocket.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsScreenSaver.cpp">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\XSynergy.cpp"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsUtil.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			>
+			Filter="">
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchConsoleStd.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CEvent.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchConsoleWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CEventQueue.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchDaemonWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CFunctionEventJob.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchFileWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CFunctionJob.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchLogWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CLog.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchMiscWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CPriorityQueue.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchMultithreadWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CSimpleEventQueueBuffer.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchNetworkWinsock.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CStopwatch.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchSleepWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CString.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchStringWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CStringUtil.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchSystemWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\CUnicode.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchTaskBarWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\IEventJob.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\CArchTimeWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\IEventQueue.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CBaseClientProxy.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\IEventQueueBuffer.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\client\CClient.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\IJob.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientListener.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\ILogOutputter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\LogOutputters.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy1_0.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\TMethodEventJob.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy1_1.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\TMethodJob.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy1_2.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\base\XBase.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxy1_3.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\client\CClient.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CClientProxyUnknown.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\client\CServerProxy.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CClipboard.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\common\Version.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\CCondVar.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\CStreamBuffer.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CConfig.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\CStreamFilter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CEvent.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\IStream.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CEventQueue.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\IStreamFilterFactory.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CFunctionEventJob.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\io\XIO.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CFunctionJob.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\CCondVar.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CInputFilter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\CLock.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CKeyMap.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\CMutex.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\ClipboardTypes.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\CThread.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\CLock.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\XMT.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CLog.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\mt\XThread.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboard.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CNetworkAddress.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardAnyTextConverter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CSocketMultiplexer.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardBitmapConverter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CTCPListenSocket.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardHTMLConverter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CTCPSocket.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardTextConverter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\CTCPSocketFactory.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsClipboardUTF16Converter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\IDataSocket.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsDesks.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\IListenSocket.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsEventQueueBuffer.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\ISocket.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsScreen.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\ISocketFactory.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsScreenSaver.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\ISocketMultiplexerJob.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\platform\CMSWindowsUtil.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\TSocketMultiplexerMethodJob.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\CMutex.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\net\XSocket.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CNetworkAddress.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CBaseClientProxy.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CPacketStreamFilter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientListener.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CPlatformScreen.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CPrimaryClient.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy1_0.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CPriorityQueue.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy1_1.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CProtocolUtil.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy1_2.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\CScreen.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxy1_3.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\server\CServer.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CClientProxyUnknown.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\client\CServerProxy.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CConfig.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CSimpleEventQueueBuffer.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CInputFilter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CSocketMultiplexer.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CPrimaryClient.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CStopwatch.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\server\CServer.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\CStreamBuffer.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CClipboard.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\CStreamFilter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CKeyMap.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CString.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CPacketStreamFilter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CStringUtil.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CPlatformScreen.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CTCPListenSocket.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CProtocolUtil.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CTCPSocket.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\CScreen.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\CTCPSocketFactory.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\ClipboardTypes.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\CThread.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IClient.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\CUnicode.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IClipboard.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IClient.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IKeyState.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IClipboard.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IPlatformScreen.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\IDataSocket.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IPrimaryScreen.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\IEventJob.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IScreen.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\IEventQueue.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\IScreenSaver.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\IEventQueueBuffer.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\ISecondaryScreen.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\IJob.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\KeyTypes.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IKeyState.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\MouseTypes.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\IListenSocket.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\OptionTypes.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\ILogOutputter.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\ProtocolTypes.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IPlatformScreen.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\XScreen.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IPrimaryScreen.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\synergy\XSynergy.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IScreen.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchConsoleWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\IScreenSaver.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchDaemonWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\ISecondaryScreen.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchFileWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\ISocket.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchLogWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\ISocketFactory.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchMiscWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\ISocketMultiplexerJob.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchMultithreadWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\IStream.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchNetworkWinsock.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\IStreamFilterFactory.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchSleepWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\KeyTypes.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchStringWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\LogOutputters.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchSystemWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\MouseTypes.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchTaskBarWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\OptionTypes.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchTimeWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\ProtocolTypes.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\XArchWindows.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\TMethodEventJob.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\arch\CArchConsoleStd.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\TMethodJob.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboard.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\TSocketMultiplexerMethodJob.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardAnyTextConverter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\common\Version.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardBitmapConverter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\arch\XArchWindows.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardHTMLConverter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\base\XBase.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardTextConverter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\io\XIO.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsClipboardUTF16Converter.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\XMT.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsDesks.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\XScreen.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsEventQueueBuffer.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\net\XSocket.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsScreen.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\synergy\XSynergy.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsScreenSaver.h">
 			</File>
 			<File
-				RelativePath="C:\dev\synergy-plus\branches\edge\lib\mt\XThread.h"
-				>
+				RelativePath="C:\Projects\Personal\synergy-plus\branches\crazy\lib\platform\CMSWindowsUtil.h">
 			</File>
 		</Filter>
-		<File
-			RelativePath="C:\dev\synergy-plus\branches\edge\CMakeLists.txt"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Building Custom Rule C:/dev/synergy-plus/branches/edge/CMakeLists.txt"
-					CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -HC:/dev/synergy-plus/branches/edge -BC:/dev/synergy-plus/branches/edge/bin --check-stamp-file CMakeFiles/generate.stamp&#x0D;&#x0A;"
-					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\CMakeLists.txt;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeSystem.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCCompiler.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows-cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCPlatform.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXPlatform.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_config.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_lib.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergyc.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergys.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_launcher.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;C:\dev\synergy-plus\branches\edge\CMakeLists.txt;"
-					Outputs="CMakeFiles\generate.stamp"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Building Custom Rule C:/dev/synergy-plus/branches/edge/CMakeLists.txt"
-					CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -HC:/dev/synergy-plus/branches/edge -BC:/dev/synergy-plus/branches/edge/bin --check-stamp-file CMakeFiles/generate.stamp&#x0D;&#x0A;"
-					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\CMakeLists.txt;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeSystem.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCCompiler.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows-cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCPlatform.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXPlatform.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_config.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_lib.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergyc.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergys.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_launcher.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;C:\dev\synergy-plus\branches\edge\CMakeLists.txt;"
-					Outputs="CMakeFiles\generate.stamp"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="MinSizeRel|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Building Custom Rule C:/dev/synergy-plus/branches/edge/CMakeLists.txt"
-					CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -HC:/dev/synergy-plus/branches/edge -BC:/dev/synergy-plus/branches/edge/bin --check-stamp-file CMakeFiles/generate.stamp&#x0D;&#x0A;"
-					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\CMakeLists.txt;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeSystem.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCCompiler.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows-cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCPlatform.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXPlatform.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_config.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_lib.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergyc.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergys.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_launcher.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;C:\dev\synergy-plus\branches\edge\CMakeLists.txt;"
-					Outputs="CMakeFiles\generate.stamp"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="RelWithDebInfo|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					Description="Building Custom Rule C:/dev/synergy-plus/branches/edge/CMakeLists.txt"
-					CommandLine="&quot;C:\Program Files (x86)\CMake 2.6\bin\cmake.exe&quot; -HC:/dev/synergy-plus/branches/edge -BC:/dev/synergy-plus/branches/edge/bin --check-stamp-file CMakeFiles/generate.stamp&#x0D;&#x0A;"
-					AdditionalDependencies="C:\dev\synergy-plus\branches\edge\CMakeLists.txt;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeSystem.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCCompiler.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeSystemSpecificInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeGenericSystem.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\WindowsPaths.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\Windows-cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCPlatform.cmake;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeCXXPlatform.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\Platform\cl.cmake&quot;;C:\dev\synergy-plus\branches\edge\bin\CMakeFiles\CMakeRCCompiler.cmake;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeRCInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCXXInformation.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CMakeCommonLanguageInclude.cmake&quot;;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_config.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_lib.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergyc.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_synergys.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_launcher.txt;C:\dev\synergy-plus\branches\edge\cmake\CMakeLists_cpack.txt;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Modules\CPack.cmake&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;&quot;C:\Program Files (x86)\CMake 2.6\share\cmake-2.9\Templates\CPackConfig.cmake.in&quot;;C:\dev\synergy-plus\branches\edge\CMakeLists.txt;"
-					Outputs="CMakeFiles\generate.stamp"
-				/>
-			</FileConfiguration>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

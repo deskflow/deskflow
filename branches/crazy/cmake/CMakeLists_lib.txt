@@ -194,7 +194,6 @@ SET(src_lib_platform_mswindows
 	${root_lib}/platform/CMSWindowsClipboardUTF16Converter.cpp
 	${root_lib}/platform/CMSWindowsDesks.cpp
 	${root_lib}/platform/CMSWindowsEventQueueBuffer.cpp
-	${root_lib}/platform/CMSWindowsKeyState.cpp
 	${root_lib}/platform/CMSWindowsScreen.cpp
 	${root_lib}/platform/CMSWindowsScreenSaver.cpp
 	${root_lib}/platform/CMSWindowsUtil.cpp
@@ -209,7 +208,6 @@ SET(inc_lib_platform_mswindows
 	${root_lib}/platform/CMSWindowsClipboardUTF16Converter.h
 	${root_lib}/platform/CMSWindowsDesks.h
 	${root_lib}/platform/CMSWindowsEventQueueBuffer.h
-	${root_lib}/platform/CMSWindowsKeyState.h
 	${root_lib}/platform/CMSWindowsScreen.h
 	${root_lib}/platform/CMSWindowsScreenSaver.h
 	${root_lib}/platform/CMSWindowsUtil.h
@@ -268,7 +266,6 @@ SET(inc_lib_server
 SET(src_lib_synergy
 	${root_lib}/synergy/CClipboard.cpp
 	${root_lib}/synergy/CKeyMap.cpp
-	${root_lib}/synergy/CKeyState.cpp
 	${root_lib}/synergy/CPacketStreamFilter.cpp
 	${root_lib}/synergy/CPlatformScreen.cpp
 	${root_lib}/synergy/CProtocolUtil.cpp
@@ -286,7 +283,6 @@ SET(src_lib_synergy
 SET(inc_lib_synergy
 	${root_lib}/synergy/CClipboard.h
 	${root_lib}/synergy/CKeyMap.h
-	${root_lib}/synergy/CKeyState.h
 	${root_lib}/synergy/CPacketStreamFilter.h
 	${root_lib}/synergy/CPlatformScreen.h
 	${root_lib}/synergy/CProtocolUtil.h

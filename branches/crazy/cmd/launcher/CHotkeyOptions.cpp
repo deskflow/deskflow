@@ -696,35 +696,35 @@ CHotkeyOptions::CConditionDialog::onKey(HWND hwnd, WPARAM wParam, LPARAM lParam)
 		}
 		// fall through
 
-	default:
-		key = CMSWindowsKeyState::getKeyID((UINT)wParam,
-						static_cast<KeyButton>((lParam & 0x1ff0000u) >> 16));
-		switch (key) {
-		case kKeyNone:
-			// could be a character
-			key = getChar(wParam, lParam);
-			if (key == kKeyNone) {
-				return;
-			}
-			break;
-
-		case kKeyShift_L:
-		case kKeyShift_R:
-		case kKeyControl_L:
-		case kKeyControl_R:
-		case kKeyAlt_L:
-		case kKeyAlt_R:
-		case kKeyMeta_L:
-		case kKeyMeta_R:
-//		case kKeySuper_L:
-//		case kKeySuper_R:
-		case kKeyCapsLock:
-		case kKeyNumLock:
-		case kKeyScrollLock:
-			// bogus
-			return;
-		}
-		break;
+//	default:
+//		key = CMSWindowsKeyState::getKeyID((UINT)wParam,
+//						static_cast<KeyButton>((lParam & 0x1ff0000u) >> 16));
+//		switch (key) {
+//		case kKeyNone:
+//			// could be a character
+//			key = getChar(wParam, lParam);
+//			if (key == kKeyNone) {
+//				return;
+//			}
+//			break;
+//
+//		case kKeyShift_L:
+//		case kKeyShift_R:
+//		case kKeyControl_L:
+//		case kKeyControl_R:
+//		case kKeyAlt_L:
+//		case kKeyAlt_R:
+//		case kKeyMeta_L:
+//		case kKeyMeta_R:
+////		case kKeySuper_L:
+////		case kKeySuper_R:
+//		case kKeyCapsLock:
+//		case kKeyNumLock:
+//		case kKeyScrollLock:
+//			// bogus
+//			return;
+//		}
+//		break;
 	}
 
 	delete s_condition;
@@ -1273,35 +1273,35 @@ CHotkeyOptions::CActionDialog::onKey(HWND hwnd, WPARAM wParam, LPARAM lParam)
 		}
 		// fall through
 
-	default:
-		key = CMSWindowsKeyState::getKeyID((UINT)wParam,
-						static_cast<KeyButton>((lParam & 0x1ff0000u) >> 16));
-		switch (key) {
-		case kKeyNone:
-			// could be a character
-			key = getChar(wParam, lParam);
-			if (key == kKeyNone) {
-				return;
-			}
-			break;
-
-		case kKeyShift_L:
-		case kKeyShift_R:
-		case kKeyControl_L:
-		case kKeyControl_R:
-		case kKeyAlt_L:
-		case kKeyAlt_R:
-		case kKeyMeta_L:
-		case kKeyMeta_R:
-//		case kKeySuper_L:
-//		case kKeySuper_R:
-		case kKeyCapsLock:
-		case kKeyNumLock:
-		case kKeyScrollLock:
-			// bogus
-			return;
-		}
-		break;
+//	default:
+//		key = CMSWindowsKeyState::getKeyID((UINT)wParam,
+//						static_cast<KeyButton>((lParam & 0x1ff0000u) >> 16));
+//		switch (key) {
+//		case kKeyNone:
+//			// could be a character
+//			key = getChar(wParam, lParam);
+//			if (key == kKeyNone) {
+//				return;
+//			}
+//			break;
+//
+//		case kKeyShift_L:
+//		case kKeyShift_R:
+//		case kKeyControl_L:
+//		case kKeyControl_R:
+//		case kKeyAlt_L:
+//		case kKeyAlt_R:
+//		case kKeyMeta_L:
+//		case kKeyMeta_R:
+////		case kKeySuper_L:
+////		case kKeySuper_R:
+//		case kKeyCapsLock:
+//		case kKeyNumLock:
+//		case kKeyScrollLock:
+//			// bogus
+//			return;
+//		}
+//		break;
 	}
 
 	// get old screen list
