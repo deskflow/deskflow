@@ -29,8 +29,8 @@
 #include <iostream>
 #include <stdio.h>
 
-CServerApp::CServerApp(CAppUtil* app) :
-CApp(new CArgs(), app)
+CServerApp::CServerApp(CAppUtil* util) :
+CApp(new CArgs(), util)
 {
 }
 

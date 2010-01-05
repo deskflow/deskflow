@@ -30,8 +30,8 @@
 #include <iostream>
 #include <stdio.h>
 
-CClientApp::CClientApp(CAppUtil* app) :
-CApp(new CArgs(), app)
+CClientApp::CClientApp(CAppUtil* util) :
+CApp(new CArgs(), util)
 {
 }
 
