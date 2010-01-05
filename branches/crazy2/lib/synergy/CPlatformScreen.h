@@ -54,8 +54,6 @@ public:
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
 
 	// IKeyState overrides
-	virtual void		updateKeyMap();
-	virtual void		updateKeyState();
 	virtual void		setHalfDuplexMask(KeyModifierMask);
 	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
 							KeyButton button);
@@ -69,7 +67,6 @@ public:
 						getActiveModifiers() const;
 	virtual KeyModifierMask
 						pollActiveModifiers() const;
-	virtual SInt32		pollActiveGroup() const;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
 
 	// IPlatformScreen overrides
@@ -88,19 +85,6 @@ public:
 	virtual bool		isPrimary() const = 0;
 
 protected:
-	//! Update mouse buttons
-	/*!
-	Subclasses must implement this method to update their internal mouse
-	button mapping and, if desired, state tracking.
-	*/
-	virtual void		updateButtons() = 0;
-
-	//! Get the key state
-	/*!
-	Subclasses must implement this method to return the platform specific
-	key state object that each subclass must have.
-	*/
-	virtual IKeyState*	getKeyState() const = 0;
 
 	// IPlatformScreen overrides
 	virtual void		handleSystemEvent(const CEvent& event, void*) = 0;

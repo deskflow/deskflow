@@ -413,7 +413,7 @@ CServerProxy::translateKey(KeyID id) const
 		id2  = kKeyModifierIDAlt;
 		side = 1;
 		break;
-
+/*
 	case kKeyMeta_L:
 		id2  = kKeyModifierIDMeta;
 		side = 0;
@@ -422,7 +422,7 @@ CServerProxy::translateKey(KeyID id) const
 	case kKeyMeta_R:
 		id2  = kKeyModifierIDMeta;
 		side = 1;
-		break;
+		break;*/
 
 	case kKeySuper_L:
 		id2  = kKeyModifierIDSuper;

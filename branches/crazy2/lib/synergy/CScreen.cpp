@@ -54,8 +54,6 @@ CScreen::enable()
 {
 	assert(!m_enabled);
 
-	m_screen->updateKeyMap();
-	m_screen->updateKeyState();
 	m_screen->enable();
 	if (m_isPrimary) {
 		enablePrimary();
@@ -477,7 +475,7 @@ CScreen::leavePrimary()
 	// we don't track keys while on the primary screen so update our
 	// idea of them now.  this is particularly to update the state of
 	// the toggle modifiers.
-	m_screen->updateKeyState();
+	
 }
 
 void

@@ -25,82 +25,68 @@ CPlatformScreen::~CPlatformScreen()
 }
 
 void
-CPlatformScreen::updateKeyMap()
-{
-	getKeyState()->updateKeyMap();
-}
-
-void
-CPlatformScreen::updateKeyState()
-{
-	getKeyState()->updateKeyState();
-	updateButtons();
-}
-
-void
 CPlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
 {
-	getKeyState()->setHalfDuplexMask(mask);
+	//getKeyState()->setHalfDuplexMask(mask);
 }
 
 void
 CPlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
 				KeyButton button)
 {
-	getKeyState()->fakeKeyDown(id, mask, button);
+	//getKeyState()->fakeKeyDown(id, mask, button);
 }
 
 void
 CPlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
-	getKeyState()->fakeKeyRepeat(id, mask, count, button);
+	//getKeyState()->fakeKeyRepeat(id, mask, count, button);
 }
 
 void
 CPlatformScreen::fakeKeyUp(KeyButton button)
 {
-	getKeyState()->fakeKeyUp(button);
+	//getKeyState()->fakeKeyUp(button);
 }
 
 void
 CPlatformScreen::fakeAllKeysUp()
 {
-	getKeyState()->fakeAllKeysUp();
+	//getKeyState()->fakeAllKeysUp();
 }
 
 bool
 CPlatformScreen::fakeCtrlAltDel()
 {
-	return getKeyState()->fakeCtrlAltDel();
+	//return getKeyState()->fakeCtrlAltDel();
+	return true;
 }
 
 bool
 CPlatformScreen::isKeyDown(KeyButton button) const
 {
-	return getKeyState()->isKeyDown(button);
+	//return getKeyState()->isKeyDown(button);
+	return false;
+
 }
 
 KeyModifierMask
 CPlatformScreen::getActiveModifiers() const
 {
-	return getKeyState()->getActiveModifiers();
+	//return getKeyState()->getActiveModifiers();
+	return 0;
 }
 
 KeyModifierMask
 CPlatformScreen::pollActiveModifiers() const
 {
-	return getKeyState()->pollActiveModifiers();
-}
-
-SInt32
-CPlatformScreen::pollActiveGroup() const
-{
-	return getKeyState()->pollActiveGroup();
+	//return getKeyState()->pollActiveModifiers();
+	return 0;
 }
 
 void
 CPlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
 {
-	getKeyState()->pollPressedKeys(pressedKeys);
+	//getKeyState()->pollPressedKeys(pressedKeys);
 }

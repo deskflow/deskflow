@@ -91,7 +91,7 @@ public:
 	/*!
 	Prepares a desk for when the cursor leaves it.
 	*/
-	void				leave(HKL keyLayout);
+	void				leave();
 
 	//! Notify of options changes
 	/*!

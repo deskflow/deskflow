@@ -60,19 +60,6 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Update the keyboard map
-	/*!
-	Causes the key state to get updated to reflect the current keyboard
-	mapping.
-	*/
-	virtual void		updateKeyMap() = 0;
-
-	//! Update the key state
-	/*!
-	Causes the key state to get updated to reflect the physical keyboard
-	state.
-	*/
-	virtual void		updateKeyState() = 0;
 
 	//! Set half-duplex mask
 	/*!
@@ -142,12 +129,6 @@ public:
 	*/
 	virtual KeyModifierMask
 						pollActiveModifiers() const = 0;
-
-	//! Get the active keyboard layout from OS
-	/*!
-	Returns the active keyboard layout according to the operating system.
-	*/
-	virtual SInt32		pollActiveGroup() const = 0;
 
 	//! Get the keys currently pressed from OS
 	/*!

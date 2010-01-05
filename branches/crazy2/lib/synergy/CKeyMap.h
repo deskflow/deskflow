@@ -30,27 +30,30 @@ class CKeyMap {
 public:
 	CKeyMap();
 	~CKeyMap();
+	std::map<KeyID, KeyButton> map_key_to_button;
+	std::map<KeyButton, KeyID> map_button_to_key;
+	KeyID getKeyID(KeyButton button);
+	KeyButton getKeyButton(KeyID keyid);
 
 	//! KeyID synthesis info
 	/*!
-	This structure contains the information necessary to synthesize a
-	keystroke that generates a KeyID (stored elsewhere).  \c m_sensitive
-	lists the modifiers that the key is affected by and must therefore
-	be in the correct state, which is listed in \c m_required.  If the
-	key is mapped to a modifier, that modifier is in \c m_generates and
-	is not in \c m_sensitive.
-	*/
-	struct KeyItem {
-	public:
-		KeyID			m_id;			//!< KeyID
-		SInt32			m_group;		//!< Group for key
-		KeyButton		m_button;		//!< Button to generate KeyID
-		KeyModifierMask	m_required;		//!< Modifiers required for KeyID
-		KeyModifierMask	m_sensitive;	//!< Modifiers key is sensitive to
-		KeyModifierMask	m_generates;	//!< Modifiers key is mapped to
-		bool			m_dead;			//!< \c true if this is a dead KeyID
-		bool			m_lock;			//!< \c true if this locks a modifier
-		UInt32			m_client;		//!< Client data
+This structure contains the information necessary to synthesize a
+keystroke that generates a KeyID (stored elsewhere).  \c m_sensitive
+lists the modifiers that the key is affected by and must therefore
+be in the correct state, which is listed in \c m_required.  If the
+key is mapped to a modifier, that modifier is in \c m_generates and
+is not in \c m_sensitive.
+*/
+struct KeyItem {
+public:
+
+	KeyID			m_id;			//!< KeyID
+	KeyButton		m_button;		//!< Button to generate KeyID (platform dependent)
+	KeyModifierMask	m_required;		//!< Modifiers required for KeyID
+	KeyModifierMask	m_sensitive;	//!< Modifiers key is sensitive to
+	KeyModifierMask	m_generates;	//!< Modifiers key is mapped to
+	bool			m_lock;			//!< \c true if this locks a modifier
+	UInt32			m_client;		//!< Client data
 
 	public:
 		bool			operator==(const KeyItem&) const;
@@ -73,11 +76,10 @@ public:
 	public:
 		enum EType {
 			kButton,					//!< Synthesize button
-			kGroup						//!< Set new group
 		};
 
 		Keystroke(KeyButton, bool press, bool repeat, UInt32 clientData);
-		Keystroke(SInt32 group, bool absolute, bool restore);
+		Keystroke(bool absolute, bool restore);
 
 	public:
 		struct CButton {
@@ -87,22 +89,16 @@ public:
 			bool		m_repeat;		//!< \c true iff for an autorepeat
 			UInt32		m_client;		//!< Client data
 		};
-		struct CGroup {
-		public:
-			SInt32		m_group;		//!< Group/offset to change to/by
-			bool		m_absolute;		//!< \c true iff change to, else by
-			bool		m_restore;		//!< \c true iff for restoring state
-		};
 		union CData {
 		public:
 			CButton		m_button;
-			CGroup		m_group;
 		};
 
 		EType			m_type;
 		CData			m_data;
 	};
-
+	
+	
 	//! A sequence of keystrokes
 	typedef std::vector<Keystroke> Keystrokes;
 
@@ -119,33 +115,13 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Swap with another \c CKeyMap
-	void				swap(CKeyMap&);
-
 	//! Add a key entry
 	/*!
 	Adds \p item to the entries for the item's id and group.  The
 	\c m_dead member is set automatically.
 	*/
 	void				addKeyEntry(const KeyItem& item);
-
-	//! Add an alias key entry
-	/*!
-	If \p targetID with the modifiers given by \p targetRequired and
-	\p targetSensitive is not available in group \p group then find an
-	entry for \p sourceID with modifiers given by \p sourceRequired and
-	\p sourceSensitive in any group with exactly one item and, if found,
-	add a new item just like it except using id \p targetID.  This
-	effectively makes the \p sourceID an alias for \p targetID (i.e. we
-	can generate \p targetID using \p sourceID).
-	*/
-	void				addKeyAliasEntry(KeyID targetID, SInt32 group,
-							KeyModifierMask targetRequired,
-							KeyModifierMask targetSensitive,
-							KeyID sourceID,
-							KeyModifierMask sourceRequired,
-							KeyModifierMask sourceSensitive);
-
+	
 	//! Add a key sequence entry
 	/*!
 	Adds the sequence of keys \p keys (\p numKeys elements long) to
@@ -194,54 +170,11 @@ public:
 	*/
 	void				finish();
 
-	//! Iterate over all added keys items
-	/*!
-	Calls \p cb for every key item.
-	*/
-	void				foreachKey(ForeachKeyCallback cb, void* userData);
-
 	//@}
 	//! @name accessors
 	//@{
 
-	//! Map key press/repeat to keystrokes.
-	/*!
-	Converts press/repeat of key \p id in group \p group with current
-	modifiers as given in \p currentState and the desired modifiers in
-	\p desiredMask into the keystrokes necessary to synthesize that key
-	event in \p keys.  It returns the \c KeyItem of the key being
-	pressed/repeated, or NULL if the key cannot be mapped.
-	*/
-	const KeyItem*		mapKey(Keystrokes& keys, KeyID id, SInt32 group,
-							ModifierToKeys& activeModifiers,
-							KeyModifierMask& currentState,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
-
-	//! Get number of groups
-	/*!
-	Returns the number of keyboard groups (independent layouts) in the map.
-	*/
-	SInt32				getNumGroups() const;
-
-	//! Compute a group number
-	/*!
-	Returns the number of the group \p offset groups after group \p group.
-	*/
-	SInt32				getEffectiveGroup(SInt32 group, SInt32 offset) const;
-
-	//! Find key entry compatible with modifiers
-	/*!
-	Returns the \c KeyItemList for the first entry for \p id in group
-	\p group that is compatible with the given modifiers, or NULL
-	if there isn't one.  A button list is compatible with a modifiers
-	if it is either insensitive to all modifiers in \p sensitive or
-	it requires the modifiers to be in the state indicated by \p required
-	for every modifier indicated by \p sensitive.
-	*/
-	const KeyItemList*	findCompatibleKey(KeyID id, SInt32 group,
-							KeyModifierMask required,
-							KeyModifierMask sensitive) const;
+	
 
 	//! Test if modifier is half-duplex
 	/*!
@@ -282,19 +215,6 @@ public:
 	*/
 	static void			initModifierKey(KeyItem& item);
 
-	//! Test for a dead key
-	/*!
-	Returns \c true if \p key is a dead key.
-	*/
-	static bool			isDeadKey(KeyID key);
-
-	//! Get corresponding dead key
-	/*!
-	Returns the dead key corresponding to \p key if one exists, otherwise
-	return \c kKeyNone.  This returns \p key if it's already a dead key.
-	*/
-	static KeyID		getDeadKey(KeyID key);
-
 	//! Get string for a key and modifier mask
 	/*!
 	Converts a key and modifier mask into a string representing the
@@ -333,63 +253,13 @@ private:
 		
 	// A list of ways to synthesize a KeyID
 	typedef std::vector<KeyItemList> KeyEntryList;
-
-	// computes the number of groups
-	SInt32				findNumGroups() const;
-
-	// computes the map of modifiers to the keys that generate the modifiers
-	void				setModifierKeys();
-
-	// maps a command key.  a command key is a keyboard shortcut and we're
-	// trying to synthesize a button press with an exact sets of modifiers,
-	// not trying to synthesize a character.  so we just need to find the
-	// right button and synthesize the requested modifiers without regard
-	// to what character they would synthesize.  we disallow multikey
-	// entries since they don't make sense as hotkeys.
-	const KeyItem*		mapCommandKey(Keystrokes& keys,
-							KeyID id, SInt32 group,
-							ModifierToKeys& activeModifiers,
-							KeyModifierMask& currentState,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
-
-	// maps a character key.  a character key is trying to synthesize a
-	// particular KeyID and isn't entirely concerned with the modifiers
-	// used to do it.
-	const KeyItem*		mapCharacterKey(Keystrokes& keys,
-							KeyID id, SInt32 group,
-							ModifierToKeys& activeModifiers,
-							KeyModifierMask& currentState,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
-
-	// maps a modifier key
-	const KeyItem*		mapModifierKey(Keystrokes& keys,
-							KeyID id, SInt32 group,
-							ModifierToKeys& activeModifiers,
-							KeyModifierMask& currentState,
-							KeyModifierMask desiredMask,
-							bool isAutoRepeat) const;
-
-	// returns the index into \p entryList of the KeyItemList requiring
-	// the fewest modifier changes between \p currentState and
-	// \p desiredState.
-	SInt32				findBestKey(const KeyEntryList& entryList,
-							KeyModifierMask currentState,
-							KeyModifierMask desiredState) const;
-
-	// gets the \c KeyItem used to synthesize the modifier who's bit is
-	// given by \p modifierBit in group \p group and does not synthesize
-	// the key \p button.
-	const KeyItem*		keyForModifier(KeyButton button, SInt32 group,
-							SInt32 modifierBit) const;
+	KeyEntryList entries;
 
 	// fills \p keystrokes with the keys to synthesize the key in
 	// \p keyItem taking the modifiers into account.  returns \c true
 	// iff successful and sets \p currentState to the
 	// resulting modifier state.
 	bool				keysForKeyItem(const KeyItem& keyItem,
-							SInt32& group,
 							ModifierToKeys& activeModifiers,
 							KeyModifierMask& currentState,
 							KeyModifierMask desiredState,
@@ -406,19 +276,6 @@ private:
 							ModifierToKeys& activeModifiers,
 							KeyModifierMask& currentState,
 							const ModifierToKeys& desiredModifiers,
-							Keystrokes& keystrokes) const;
-
-	// fills \p keystrokes and \p undo with the keys to change the
-	// current modifier state in \p currentState to match the state in
-	// \p requiredState for each modifier indicated in \p sensitiveMask.
-	// returns \c true iff successful and sets \p currentState to the
-	// resulting modifier state.
-	bool				keysForModifierState(KeyButton button, SInt32 group,
-							ModifierToKeys& activeModifiers,
-							KeyModifierMask& currentState,
-							KeyModifierMask requiredState,
-							KeyModifierMask sensitiveMask,
-							KeyModifierMask notRequiredMask,
 							Keystrokes& keystrokes) const;
 
 	// Adds keystrokes to synthesize key \p keyItem in mode \p type to
@@ -468,11 +325,7 @@ private:
 
 	// KeyID info
 	KeyIDMap			m_keyIDMap;
-	SInt32				m_numGroups;
 	ModifierToKeyTable	m_modifierKeys;
-
-	// composition info
-	bool				m_composeAcrossGroups;
 
 	// half-duplex info
 	KeyButtonSet		m_halfDuplex;			// half-duplex set by synergy

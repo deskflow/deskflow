@@ -163,9 +163,9 @@ CMSWindowsDesks::enter()
 }
 
 void
-CMSWindowsDesks::leave(HKL keyLayout)
+CMSWindowsDesks::leave()
 {
-	sendMessage(SYNERGY_MSG_LEAVE, (WPARAM)keyLayout, 0);
+	sendMessage(SYNERGY_MSG_LEAVE, (WPARAM)0, 0);
 }
 
 void
@@ -240,7 +240,9 @@ CMSWindowsDesks::fakeKeyEvent(
 				KeyButton button, UINT virtualKey,
 				bool press, bool /*isAutoRepeat*/) const
 {
-	
+	// sorin: we rely only on scan codes for i18n compatibility
+	 virtualKey = MapVirtualKey(button, MAPVK_VSC_TO_VK_EX);
+
 
 	// synthesize event
 	DWORD flags = 0;
@@ -250,6 +252,10 @@ CMSWindowsDesks::fakeKeyEvent(
 	if (!press) {
 		flags |= KEYEVENTF_KEYUP;
 	}
+
+	((CLOG_DEBUG1 "### SYNERGY_MSG_FAKE_KEY: vVk=%02x bScan=%02x dwFlags=%04x ", flags,
+		MAKEWORD(static_cast<BYTE>(button & 0xffu),
+		static_cast<BYTE>(virtualKey & 0xffu))));
 	sendMessage(SYNERGY_MSG_FAKE_KEY, flags,
 							MAKEWORD(static_cast<BYTE>(button & 0xffu),
 								static_cast<BYTE>(virtualKey & 0xffu)));
@@ -740,6 +746,7 @@ CMSWindowsDesks::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_FAKE_KEY:
+			((CLOG_DEBUG1 "### keybd_event: vVk=%02x bScan=%02x dwFlags=%04x ", HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD)msg.wParam));
 			keybd_event(HIBYTE(msg.lParam), LOBYTE(msg.lParam), (DWORD)msg.wParam, 0);
 			break;
 

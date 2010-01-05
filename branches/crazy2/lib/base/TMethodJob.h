@@ -59,7 +59,7 @@ inline
 void
 TMethodJob<T>::run()
 {
-	if (m_object != NULL) {
+	if (m_object != NULL && m_arg !=NULL) {
 		(m_object->*m_method)(m_arg);
 	}
 }

@@ -15,6 +15,7 @@
 #include "KeyTypes.h"
 
 const KeyNameMapEntry kKeyNameMap[] = {
+	/*
 	{ "AltGr",			kKeyAltGr },
 	{ "Alt_L",			kKeyAlt_L },
 	{ "Alt_R",			kKeyAlt_R },
@@ -186,7 +187,7 @@ const KeyNameMapEntry kKeyNameMap[] = {
 	{ "BraceL",			0x007b },
 	{ "Bar",			0x007c },
 	{ "BraceR",			0x007d },
-	{ "Tilde",			0x007e },
+	{ "Tilde",			0x007e }, */
 	{ NULL, 0 },
 };
 

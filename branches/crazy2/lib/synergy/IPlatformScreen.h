@@ -161,8 +161,6 @@ public:
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
 
 	// IKeyState overrides
-	virtual void		updateKeyMap() = 0;
-	virtual void		updateKeyState() = 0;
 	virtual void		setHalfDuplexMask(KeyModifierMask) = 0;
 	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
 							KeyButton button) = 0;
@@ -176,7 +174,6 @@ public:
 						getActiveModifiers() const = 0;
 	virtual KeyModifierMask
 						pollActiveModifiers() const = 0;
-	virtual SInt32		pollActiveGroup() const = 0;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
 protected:
