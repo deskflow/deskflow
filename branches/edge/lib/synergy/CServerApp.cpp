@@ -27,6 +27,7 @@
 #endif
 
 #include <iostream>
+#include <stdio.h>
 
 CServerApp::CServerApp(CAppUtil* app) :
 CApp(new CArgs(), app)

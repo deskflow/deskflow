@@ -13,8 +13,9 @@
 */
 
 #include "CXWindowsServerApp.h"
+#include "CXWindowsAppUtil.h"
 
-CXWindowsServerApp::CXWindowsServerApp()
+CXWindowsServerApp::CXWindowsServerApp() : CServerApp(new CXWindowsAppUtil())
 {
 }
 

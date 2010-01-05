@@ -12,13 +12,12 @@
  * GNU General Public License for more details.
  */
  
- #include "CXWindowsAppUtil.h"
+#include "CXWindowsAppUtil.h"
  
- CXWindowsAppUtil::CXWindowsAppUtil()
- {
- }
+CXWindowsAppUtil::CXWindowsAppUtil()
+{
+}
  
- CXWindowsAppUtil::~CXWindowsAppUtil()
- {
- }
- 
+CXWindowsAppUtil::~CXWindowsAppUtil()
+{
+}

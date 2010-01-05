@@ -19,6 +19,6 @@
 
 class CXWindowsAppUtil : public CAppUtil {
 public:
-	CXWindowsAppUtil(CApp& app);
+	CXWindowsAppUtil();
 	virtual ~CXWindowsAppUtil();
 };

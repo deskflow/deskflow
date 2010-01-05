@@ -15,9 +15,8 @@
 #pragma once
 
 #include "CServerApp.h"
-#include "CXWindowsApp.h"
 
-class CXWindowsServerApp : public CServerApp, public CXWindowsApp {
+class CXWindowsServerApp : public CServerApp {
 public:
 	CXWindowsServerApp();
 	virtual ~CXWindowsServerApp();

@@ -28,6 +28,7 @@
 #endif
 
 #include <iostream>
+#include <stdio.h>
 
 CClientApp::CClientApp(CAppUtil* app) :
 CApp(new CArgs(), app)

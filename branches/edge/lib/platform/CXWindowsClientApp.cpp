@@ -13,8 +13,9 @@
 */
 
 #include "CXWindowsClientApp.h"
+#include "CXWindowsAppUtil.h"
 
-CXWindowsClientApp::CXWindowsClientApp()
+CXWindowsClientApp::CXWindowsClientApp() : CClientApp(new CXWindowsAppUtil())
 {
 }
 

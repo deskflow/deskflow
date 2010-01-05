@@ -183,7 +183,7 @@ SET(src_lib_platform_xwindows
 	${root_lib}/platform/CXWindowsScreen.cpp
 	${root_lib}/platform/CXWindowsScreenSaver.cpp
 	${root_lib}/platform/CXWindowsUtil.cpp
-	${root_lib}/platform/CXWindowsApp.cpp
+	${root_lib}/platform/CXWindowsAppUtil.cpp
 	${root_lib}/platform/CXWindowsClientApp.cpp
 	${root_lib}/platform/CXWindowsServerApp.cpp
 )
