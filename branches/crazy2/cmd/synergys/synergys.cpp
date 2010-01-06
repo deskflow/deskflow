@@ -95,7 +95,7 @@ CScreen*
 createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new CScreen(new CMSWindowsScreen(true));
+	return new CScreen(new CMSWindowsScreen(true, ARG->m_noHooks));
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(ARG->m_display, true));
 #elif WINAPI_CARBON

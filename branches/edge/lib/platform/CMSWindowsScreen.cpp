@@ -77,8 +77,9 @@
 HINSTANCE				CMSWindowsScreen::s_instance = NULL;
 CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
 
-CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
+CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	m_isPrimary(isPrimary),
+	m_noHooks(noHooks),
 	m_isOnScreen(m_isPrimary),
 	m_class(0),
 	m_x(0), m_y(0),
@@ -117,7 +118,8 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
 			m_hookLibrary = openHookLibrary("synrgyhk");
 		}
 		m_screensaver = new CMSWindowsScreenSaver();
-		m_desks       = new CMSWindowsDesks(m_isPrimary,
+		m_desks       = new CMSWindowsDesks(
+							m_isPrimary, m_noHooks,
 							m_hookLibrary, m_screensaver,
 							new TMethodJob<CMSWindowsScreen>(this,
 								&CMSWindowsScreen::updateKeysCB));

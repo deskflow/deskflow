@@ -43,6 +43,7 @@ CApp::CArgsBase::CArgsBase() :
 m_daemon(true),
 m_backend(false),
 m_restartable(true),
+m_noHooks(false),
 m_pname(NULL),
 m_logFilter(NULL),
 m_logFile(NULL),
@@ -116,6 +117,10 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		argsBase().m_backend = true;
 	}
 
+	else if (isArg(i, argc, argv, NULL, "--no-hooks")) {
+		argsBase().m_noHooks = true;
+	}
+
 	else if (isArg(i, argc, argv, "-h", "--help")) {
 		help();
 		m_bye(kExitSuccess);
@@ -176,8 +181,8 @@ CApp::parse(int argc, const char* const* argv, int& i)
 	// parse options
 	for (i = 1; i < argc; ++i) {
 
-		if (!parseArg(argc, argv, i)) {
-			break;
+		if (parseArg(argc, argv, i)) {
+			continue;
 		}
 
 		else if (isArg(i, argc, argv, "--", NULL)) {

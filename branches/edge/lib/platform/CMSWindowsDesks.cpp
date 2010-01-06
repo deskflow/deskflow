@@ -87,9 +87,10 @@
 //
 
 CMSWindowsDesks::CMSWindowsDesks(
-				bool isPrimary, HINSTANCE hookLibrary,
+				bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
 				const IScreenSaver* screensaver, IJob* updateKeys) :
 	m_isPrimary(isPrimary),
+	m_noHooks(noHooks),
 	m_isModernFamily(CArchMiscWindows::isWindowsModern()),
 	m_isOnScreen(m_isPrimary),
 	m_x(0), m_y(0),
@@ -343,7 +344,7 @@ void
 CMSWindowsDesks::queryHookLibrary(HINSTANCE hookLibrary)
 {
 	// look up functions
-	if (m_isPrimary) {
+	if (m_isPrimary && !m_noHooks) {
 		m_install   = (InstallFunc)GetProcAddress(hookLibrary, "install");
 		m_uninstall = (UninstallFunc)GetProcAddress(hookLibrary, "uninstall");
 		m_installScreensaver   =
@@ -700,12 +701,16 @@ CMSWindowsDesks::deskThread(void* vdesk)
 			continue;
 
 		case SYNERGY_MSG_SWITCH:
-			if (m_isPrimary) {
+			if (m_isPrimary && !m_noHooks) {
+				assert(m_uninstall);
 				m_uninstall();
 				if (m_screensaverNotify) {
+					assert(m_uninstallScreensaver);
 					m_uninstallScreensaver();
+					assert(m_installScreensaver);
 					m_installScreensaver();
 				}
+				assert(m_install);
 				switch (m_install()) {
 				case kHOOK_FAILED:
 					// we won't work on this desk
@@ -780,11 +785,15 @@ CMSWindowsDesks::deskThread(void* vdesk)
 			break;
 
 		case SYNERGY_MSG_SCREENSAVER:
-			if (msg.wParam != 0) {
-				m_installScreensaver();
-			}
-			else {
-				m_uninstallScreensaver();
+			if (!m_noHooks) {
+				if (msg.wParam != 0) {
+					assert(m_installScreensaver);
+					m_installScreensaver();
+				}
+				else {
+					assert(m_uninstallScreensaver);
+					m_uninstallScreensaver();
+				}
 			}
 			break;
 
