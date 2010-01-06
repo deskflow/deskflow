@@ -1,0 +1,10 @@
+section: screens
+	synergy-server:
+	synergy-client:
+end
+section: links
+	synergy-server:
+		left = synergy-client
+	synergy-client:
+		right = synergy-server
+end
