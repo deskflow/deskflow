@@ -47,7 +47,7 @@ TMethodEventJob<T>::TMethodEventJob(T* object,
 	m_method(method),
 	m_arg(arg)
 {
-	// do nothing
+	assert(method != NULL);
 }
 
 template <class T>
@@ -63,6 +63,7 @@ void
 TMethodEventJob<T>::run(const CEvent& event)
 {
 	if (m_object != NULL) {
+		// NOTE: allow null m_arg (ctor default value is null)
 		(m_object->*m_method)(event, m_arg);
 	}
 }

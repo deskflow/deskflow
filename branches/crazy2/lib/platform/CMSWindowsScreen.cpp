@@ -119,7 +119,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 							m_isPrimary, m_noHooks,
 							m_hookLibrary, m_screensaver,
 							new TMethodJob<CMSWindowsScreen>(this,
-								NULL));
+								&CMSWindowsScreen::updateKeysCB));
 		updateScreenShape();
 		m_class       = createWindowClass();
 		m_window      = createWindow(m_class, "Synergy");

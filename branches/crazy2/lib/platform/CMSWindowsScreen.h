@@ -175,6 +175,9 @@ private:
 	// map a button event to a press (true) or release (false)
 	bool				mapPressFromEvent(WPARAM msg, LPARAM button) const;
 
+	// dummy func for backwards compatibility
+	void				updateKeysCB(void*) { }
+
 	// determine whether the mouse is hidden by the system and force
 	// it to be displayed if user has entered this secondary screen.
 	void				forceShowCursor();

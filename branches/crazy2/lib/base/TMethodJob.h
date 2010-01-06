@@ -44,7 +44,7 @@ TMethodJob<T>::TMethodJob(T* object, void (T::*method)(void*), void* arg) :
 	m_method(method),
 	m_arg(arg)
 {
-	// do nothing
+	assert(method != NULL);
 }
 
 template <class T>
@@ -59,7 +59,8 @@ inline
 void
 TMethodJob<T>::run()
 {
-	if (m_object != NULL && m_arg !=NULL) {
+	if (m_object != NULL) {
+		// NOTE: allow null m_arg (ctor default value is null)
 		(m_object->*m_method)(m_arg);
 	}
 }
