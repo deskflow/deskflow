@@ -1,0 +1,103 @@
+#!/bin/sh
+
+# this is a sample shell script used for building a cmake
+# based project for a cygwin setup package.
+
+# get the current directory
+TOP_DIR=`cd \`echo "$0" | sed -n '/\//{s/\/[^\/]*$//;p;}'\`;pwd`
+
+# create build directory
+mkdirs()
+{
+  (
+  mkdir -p "$TOP_DIR/@CPACK_PACKAGE_FILE_NAME@/.build" 
+  )
+}
+
+# cd into 
+# untar source tree and apply patch
+prep()
+{
+  (
+  cd "$TOP_DIR" &&
+  tar xvfj @CPACK_PACKAGE_FILE_NAME@.tar.bz2
+  patch -p0 < "@CPACK_PACKAGE_FILE_NAME@-@CPACK_CYGWIN_PATCH_NUMBER@.patch" &&
+  mkdirs
+  )
+}
+
+# configure the build tree in .build directory
+# of the source tree
+conf()
+{
+  (
+  cd "$TOP_DIR/@CPACK_PACKAGE_FILE_NAME@/.build" && 
+  cmake ..
+  )
+}
+
+# build the package in the .build directory
+build()
+{
+  (
+  cd "$TOP_DIR/@CPACK_PACKAGE_FILE_NAME@/.build" &&
+  make &&
+  make test
+  )
+}
+
+# clean the build tree
+clean()
+{
+  (
+  cd "$TOP_DIR/@CPACK_PACKAGE_FILE_NAME@/.build" &&
+  make clean
+  )
+}
+
+# create the package
+pkg()
+{
+  (
+  cd "$TOP_DIR/@CPACK_PACKAGE_FILE_NAME@/.build" &&
+  cpack && 
+  mv @CPACK_PACKAGE_FILE_NAME@-@CPACK_CYGWIN_PATCH_NUMBER@.tar.bz2 "$TOP_DIR"     
+  )
+}
+
+# create the source package
+spkg()
+{
+ (
+  cd "$TOP_DIR/@CPACK_PACKAGE_FILE_NAME@/.build" &&
+  cpack --config  CPackSourceConfig.cmake &&
+  mv @CPACK_PACKAGE_FILE_NAME@-@CPACK_CYGWIN_PATCH_NUMBER@-src.tar.bz2 "$TOP_DIR" 
+  )
+}
+
+# clean up
+finish()
+{
+  (
+  rm -rf "@CPACK_PACKAGE_FILE_NAME@"
+  )
+}
+
+case $1 in
+  prep)         prep    ; STATUS=$? ;;
+  mkdirs)       mkdirs  ; STATUS=$? ;;
+  conf)         conf    ; STATUS=$? ;;
+  build)        build   ; STATUS=$? ;;
+  clean)        clean   ; STATUS=$? ;;
+  package)      pkg     ; STATUS=$? ;;
+  pkg)          pkg     ; STATUS=$? ;;
+  src-package)  spkg    ; STATUS=$? ;;
+  spkg)         spkg    ; STATUS=$? ;;
+  finish)       finish  ; STATUS=$? ;;
+  all) (
+       prep && conf && build && pkg && spkg && finish ;
+       STATUS=$?
+       ) ;;
+  *) echo "Error: bad argument (all or one of these: prep mkdirs conf build clean package pkg src-package spkg finish)" ; exit 1 ;;
+esac
+exit ${STATUS}

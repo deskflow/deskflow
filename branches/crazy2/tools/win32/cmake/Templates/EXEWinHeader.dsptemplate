@@ -1,0 +1,187 @@
+# Microsoft Developer Studio Project File - Name="pcbuilder" - Package Owner=<4>
+# Microsoft Developer Studio Generated Build File, Format Version 6.00
+# ** DO NOT EDIT **
+
+# CM DSP Header file
+# This file is read by the build system of cm, and is used as the top part of
+# a microsoft project dsp header file
+# IF this is in a dsp file, then it is not the header, but has
+# already been used, so do not edit here...
+
+# variables to REPLACE
+# 
+# BUILD_INCLUDES == include path
+# OUTPUT_DIRECTORY == override in output directory
+# EXTRA_DEFINES == compiler defines
+# OUTPUT_LIBNAME  == name of output library
+# CM_LIBRARIES == libraries linked in 
+# TARGTYPE "Win32 (x86) Application" 0x0101
+
+CFG=OUTPUT_LIBNAME - Win32 Debug
+!MESSAGE This is not a valid makefile. To build this project using NMAKE,
+!MESSAGE use the Export Makefile command and run
+!MESSAGE 
+!MESSAGE NMAKE /f "OUTPUT_LIBNAME.mak".
+!MESSAGE 
+!MESSAGE You can specify a configuration when running NMAKE
+!MESSAGE by defining the macro CFG on the command line. For example:
+!MESSAGE 
+!MESSAGE NMAKE /f "OUTPUT_LIBNAME.mak" CFG="OUTPUT_LIBNAME - Win32 Debug"
+!MESSAGE 
+!MESSAGE Possible choices for configuration are:
+!MESSAGE 
+!MESSAGE "OUTPUT_LIBNAME - Win32 MinSizeRel" (based on "Win32 (x86) Application")
+!MESSAGE "OUTPUT_LIBNAME - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "OUTPUT_LIBNAME - Win32 RelWithDebInfo" (based on "Win32 (x86) Application")
+!MESSAGE "OUTPUT_LIBNAME - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE 
+
+# Begin Project
+# PROP AllowPerConfigDependencies 0
+# PROP Scc_ProjName ""
+# PROP Scc_LocalPath ""
+CPP=cl.exe
+MTL=midl.exe
+RSC=rc.exe
+
+!IF  "$(CFG)" == "OUTPUT_LIBNAME - Win32 Release"
+
+# PROP BASE Use_MFC CMAKE_MFC_FLAG
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "Release"
+# PROP BASE Intermediate_Dir "Release"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC CMAKE_MFC_FLAG
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "OUTPUT_DIRECTORY_RELEASE"
+# PROP Intermediate_Dir "Release"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /FD /c
+# ADD CPP /nologo /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /FD /c
+# ADD CPP BUILD_INCLUDES EXTRA_DEFINES OUTPUT_LIBNAME_EXPORTS
+# ADD CPP CMAKE_CXX_FLAGS
+# ADD CPP CMAKE_CXX_FLAGS_RELEASE
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC BUILD_INCLUDES /l 0x409 /d "NDEBUG"
+# ADD RSC COMPILE_DEFINITIONS
+# ADD RSC COMPILE_DEFINITIONS_RELEASE
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 /nologo /subsystem:windows /machine:I386  /IGNORE:4089
+# ADD LINK32  /nologo /subsystem:windows /machine:I386  /IGNORE:4089 TARGET_VERSION_FLAG
+# ADD LINK32 /out:"OUTPUT_DIRECTORY_RELEASE\OUTPUT_NAME_RELEASE" TARGET_IMPLIB_FLAG_RELEASE
+CM_MULTILINE_OPTIONS_RELEASE
+
+CMAKE_CUSTOM_RULE_CODE_RELEASE
+
+!ELSEIF  "$(CFG)" == "OUTPUT_LIBNAME - Win32 Debug"
+
+# PROP BASE Use_MFC CMAKE_MFC_FLAG
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "Debug"
+# PROP BASE Intermediate_Dir "Debug"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC CMAKE_MFC_FLAG
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "OUTPUT_DIRECTORY_DEBUG"
+# PROP Intermediate_Dir "Debug"
+# PROP Target_Dir ""
+# ADD BASE CPP  /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /FD /c
+# ADD CPP /nologo  /D "WIN32"  /D "_DEBUG" /D "_WINDOWS" /FD /GZ /c
+# ADD CPP BUILD_INCLUDES EXTRA_DEFINES OUTPUT_LIBNAME_EXPORTS
+# ADD CPP CMAKE_CXX_FLAGS
+# ADD CPP CMAKE_CXX_FLAGS_DEBUG
+# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_DEBUG"
+# ADD RSC BUILD_INCLUDES /l 0x409 /d "_DEBUG"
+# ADD RSC COMPILE_DEFINITIONS
+# ADD RSC COMPILE_DEFINITIONS_DEBUG
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /IGNORE:4089
+# ADD LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /IGNORE:4089 TARGET_VERSION_FLAG
+# ADD LINK32 /out:"OUTPUT_DIRECTORY_DEBUG\OUTPUT_NAME_DEBUG" TARGET_IMPLIB_FLAG_DEBUG
+CM_MULTILINE_OPTIONS_DEBUG
+
+CMAKE_CUSTOM_RULE_CODE_DEBUG
+
+!ELSEIF  "$(CFG)" == "OUTPUT_LIBNAME - Win32 MinSizeRel"
+# PROP BASE Use_MFC CMAKE_MFC_FLAG
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "MinSizeRel"
+# PROP BASE Intermediate_Dir "MinSizeRel"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC CMAKE_MFC_FLAG
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "OUTPUT_DIRECTORY_MINSIZEREL"
+# PROP Intermediate_Dir "MinSizeRel"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /FD /c
+# ADD CPP /nologo  /D "WIN32"  /D "NDEBUG" /D "_WINDOWS" /FD /c
+# ADD CPP BUILD_INCLUDES EXTRA_DEFINES OUTPUT_LIBNAME_EXPORTS
+# ADD CPP CMAKE_CXX_FLAGS
+# ADD CPP CMAKE_CXX_FLAGS_MINSIZEREL
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC BUILD_INCLUDES /l 0x409 /d "NDEBUG"
+# ADD RSC COMPILE_DEFINITIONS
+# ADD RSC COMPILE_DEFINITIONS_MINSIZEREL
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 /nologo /subsystem:windows /machine:I386 /pdbtype:sept /IGNORE:4089
+# ADD LINK32 /nologo /subsystem:windows  /machine:I386 /pdbtype:sept /IGNORE:4089 TARGET_VERSION_FLAG
+# ADD LINK32 /out:"OUTPUT_DIRECTORY_MINSIZEREL\OUTPUT_NAME_MINSIZEREL" TARGET_IMPLIB_FLAG_MINSIZEREL
+CM_MULTILINE_OPTIONS_MINSIZEREL
+
+CMAKE_CUSTOM_RULE_CODE_MINSIZEREL
+
+!ELSEIF  "$(CFG)" == "OUTPUT_LIBNAME - Win32 RelWithDebInfo"
+
+# PROP BASE Use_MFC CMAKE_MFC_FLAG
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "RelWithDebInfo"
+# PROP BASE Intermediate_Dir "RelWithDebInfo"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC CMAKE_MFC_FLAG
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "OUTPUT_DIRECTORY_RELWITHDEBINFO"
+# PROP Intermediate_Dir "RelWithDebInfo"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /FD /c
+# ADD CPP /nologo /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /FD /c
+# ADD CPP BUILD_INCLUDES EXTRA_DEFINES OUTPUT_LIBNAME_EXPORTS
+# ADD CPP CMAKE_CXX_FLAGS
+# ADD CPP CMAKE_CXX_FLAGS_RELWITHDEBINFO
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC BUILD_INCLUDES /l 0x409 /d "NDEBUG"
+# ADD RSC COMPILE_DEFINITIONS
+# ADD RSC COMPILE_DEFINITIONS_RELWITHDEBINFO
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 /nologo /subsystem:windows /machine:I386  /IGNORE:4089
+# ADD LINK32 /nologo /subsystem:windows /debug /machine:I386  /IGNORE:4089 TARGET_VERSION_FLAG
+# ADD LINK32 /out:"OUTPUT_DIRECTORY_RELWITHDEBINFO\OUTPUT_NAME_RELWITHDEBINFO" TARGET_IMPLIB_FLAG_RELWITHDEBINFO
+CM_MULTILINE_OPTIONS_RELWITHDEBINFO
+
+CMAKE_CUSTOM_RULE_CODE_RELWITHDEBINFO
+
+!ENDIF 
+
+# Begin Target
+
+# Name "OUTPUT_LIBNAME - Win32 Release"
+# Name "OUTPUT_LIBNAME - Win32 Debug"
+# Name "OUTPUT_LIBNAME - Win32 MinSizeRel"
+# Name "OUTPUT_LIBNAME - Win32 RelWithDebInfo"

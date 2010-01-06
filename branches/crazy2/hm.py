@@ -24,7 +24,11 @@ setup_version = 3
 website_url = 'http://code.google.com/p/synergy-plus'
 
 this_cmd = 'hm'
-cmake_cmd = 'cmake'
+if sys.platform == 'win32':
+	cmake_cmd = '..\\tools\\win32\\cmake\\cmake.exe'
+else:
+	cmake_cmd = 'cmake'
+
 make_cmd = 'make'
 xcodebuild_cmd = 'xcodebuild'
 
