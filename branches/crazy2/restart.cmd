@@ -1,2 +1,2 @@
 taskkill /FI "IMAGENAME eq synergyc*"
-synergyc.exe synergy-server
+synergyc.exe --name synergy-client synergy-server
