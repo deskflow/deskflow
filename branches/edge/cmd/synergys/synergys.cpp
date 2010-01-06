@@ -974,11 +974,18 @@ int main(int argc, char** argv) {
 	app.m_daemonInfo = DAEMON_INFO;
 	app.util().m_instance = GetModuleHandle(NULL);
 
+	int code;
 	if (app.util().m_instance) {
-		return WinMain(app.util().m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
+		code = WinMain(app.util().m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
 	} else {
-		return kExitFailed;
+		code = kExitFailed;
 	}
+	
+	if (code != kExitSuccess) {
+		app.m_bye(code);
+	}
+
+	return kExitSuccess;
 }
 
 int WINAPI

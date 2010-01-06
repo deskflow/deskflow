@@ -145,18 +145,6 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 
 #endif
 
-	else if (isArg(i, argc, argv, "--", NULL)) {
-		// remaining arguments are not options
-		++i;
-		return false;
-	}
-
-	else if (argv[i][0] == '-') {
-		LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
-			argsBase().m_pname, argv[i], argsBase().m_pname));
-		m_bye(kExitArgs);
-	}
-
 	else {
 		// arg is not common to server and client
 		return false;
@@ -187,8 +175,21 @@ CApp::parse(int argc, const char* const* argv, int& i)
 
 	// parse options
 	for (i = 1; i < argc; ++i) {
+
 		if (!parseArg(argc, argv, i)) {
 			break;
+		}
+
+		else if (isArg(i, argc, argv, "--", NULL)) {
+			// remaining arguments are not options
+			++i;
+			break;
+		}
+
+		else if (argv[i][0] == '-') {
+			LOG((CLOG_PRINT "%s: unrecognized option `%s'" BYE,
+				argsBase().m_pname, argv[i], argsBase().m_pname));
+			m_bye(kExitArgs);
 		}
 	}
 
