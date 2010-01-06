@@ -196,6 +196,11 @@ CApp::parse(int argc, const char* const* argv, int& i)
 				argsBase().m_pname, argv[i], argsBase().m_pname));
 			m_bye(kExitArgs);
 		}
+
+		else {
+			// this and remaining arguments are not options
+			break;
+		}
 	}
 
 	// increase default filter level for daemon.  the user must
