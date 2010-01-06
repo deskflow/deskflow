@@ -31,6 +31,39 @@ CMSWindowsAppUtil::~CMSWindowsAppUtil()
 {
 }
 
+bool 
+CMSWindowsAppUtil::parseArg(const int& argc, const char* const* argv, int& i)
+{
+	if (app().isArg(i, argc, argv, NULL, "--service")) {
+
+		const char* action = argv[++i];
+
+		if (_stricmp(action, "install") == 0) {
+			installService();
+		}
+		else if (_stricmp(action, "uninstall") == 0) {
+			uninstallService();
+		}
+		else if (_stricmp(action, "start") == 0) {
+			startService();
+		}
+		else if (_stricmp(action, "stop") == 0) {
+			stopService();
+		}
+		else {
+			LOG((CLOG_ERR "unknown service action: %s", action));
+			app().m_bye(kExitArgs);
+		}
+		app().m_bye(kExitSuccess);
+	}
+	else {
+		// option not supported here
+		return false;
+	}
+
+	return true;
+}
+
 void
 CMSWindowsAppUtil::adoptApp(CApp* app)
 {
@@ -55,28 +88,6 @@ CMSWindowsAppUtil::getServiceArgs() const
 		}
 	}
 	return argBuf.str();
-}
-
-void
-CMSWindowsAppUtil::handleServiceArg(const char* serviceAction)
-{
-	if (_stricmp(serviceAction, "install") == 0) {
-		installService();
-	}
-	else if (_stricmp(serviceAction, "uninstall") == 0) {
-		uninstallService();
-	}
-	else if (_stricmp(serviceAction, "start") == 0) {
-		startService();
-	}
-	else if (_stricmp(serviceAction, "stop") == 0) {
-		stopService();
-	}
-	else {
-		LOG((CLOG_ERR "unknown service action: %s", serviceAction));
-		app().m_bye(kExitArgs);
-	}
-	app().m_bye(kExitSuccess);
 }
 
 void

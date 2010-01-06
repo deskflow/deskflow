@@ -20,6 +20,7 @@
 class CAppUtil;
 
 class CApp {
+	friend class CAppUtil;
 public:
 	class CArgsBase {
 	public:
@@ -64,12 +65,14 @@ public:
 	// TODO: this is old C code - use inheritance to normalize
 	void (*m_bye)(int);
 
-protected:
-	virtual void parseArgs(int argc, const char* const* argv, int &i);
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+	// Returns true if argv[argi] is equal to name1 or name2.
 	bool isArg(int argi, int argc, const char* const* argv,
 		const char* name1, const char* name2,
 		int minRequiredParameters = 0);
+
+protected:
+	virtual void parseArgs(int argc, const char* const* argv, int &i);
+	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 
 private:
 	CArgsBase* m_args;

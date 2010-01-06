@@ -21,4 +21,6 @@ class CXWindowsAppUtil : public CAppUtil {
 public:
 	CXWindowsAppUtil();
 	virtual ~CXWindowsAppUtil();
+private:
+	bool parseArg(const int& argc, const char* const* argv, int& i);
 };

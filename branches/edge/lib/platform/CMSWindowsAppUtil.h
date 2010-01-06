@@ -48,6 +48,7 @@ public:
 	void handleServiceArg(const char* serviceAction);
 
 protected:
+	bool parseArg(const int& argc, const char* const* argv, int& i);
 	void adoptApp(CApp* app);
 };
 

@@ -24,6 +24,7 @@ public:
 	CAppUtil();
 	virtual ~CAppUtil();
 protected:
+	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	virtual void adoptApp(CApp* app);
 	CApp& app() const;
 private:

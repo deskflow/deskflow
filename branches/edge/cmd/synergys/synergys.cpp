@@ -1058,10 +1058,11 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 int
 main(int argc, char** argv)
 {
+	CArch arch;
+	CLOG;
+
 	try {
 		int result;
-		CArch arch;
-		CLOG;
 		result = run(argc, argv, NULL, &standardStartup);
 		delete CLOG;
 		return result;

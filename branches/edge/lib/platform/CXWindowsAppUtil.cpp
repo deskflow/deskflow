@@ -21,3 +21,19 @@ CXWindowsAppUtil::CXWindowsAppUtil()
 CXWindowsAppUtil::~CXWindowsAppUtil()
 {
 }
+
+bool 
+CXWindowsAppUtil::parseArg(const int& argc, const char* const* argv, int& i)
+{
+	if (app().isArg(i, argc, argv, "-display", "--display", 1)) {
+		// use alternative display
+		app().argsBase().m_display = argv[++i];
+	}
+
+	else {
+		// option not supported here
+		return false;
+	}
+
+	return true;
+}

@@ -79,7 +79,12 @@ CApp::isArg(
 bool
 CApp::parseArg(const int& argc, const char* const* argv, int& i)
 {
-	if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+	if (utilBase().parseArg(argc, argv, i)) {
+		// handled by platform util
+		return true;
+	}
+	
+	else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
 		// change logging level
 		argsBase().m_logFilter = argv[++i];
 	}
@@ -131,27 +136,8 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		m_bye(kExitSuccess);
 	}
 
-#if WINAPI_MSWINDOWS
-
-	else if (isArg(i, argc, argv, NULL, "--service")) {
-
-		// HACK: assume instance is an ms windows app, and call service
-		// arg handler.
-		// TODO: use inheritance model to fix this.
-		((CMSWindowsAppUtil&)utilBase()).handleServiceArg(argv[++i]);
-	}
-
-#elif WINAPI_XWINDOWS
-
-	else if (isArg(i, argc, argv, "-display", "--display", 1)) {
-		// use alternative display
-		argsBase().m_display = argv[++i];
-	}
-
-#endif
-
 	else {
-		// arg is not common to server and client
+		// option not supported here
 		return false;
 	}
 

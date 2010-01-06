@@ -73,7 +73,7 @@ CServerApp::parseArg(const int& argc, const char* const* argv, int& i)
 	}
 
 	else {
-		// this and remaining arguments are not options
+		// option not supported here
 		return false;
 	}
 

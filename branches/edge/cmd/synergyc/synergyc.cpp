@@ -577,7 +577,8 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 {
 	CString fmt = CMSWindowsUtil::getString(instance, id);
 	CString msg = CStringUtil::format(fmt.c_str(), arg);
-	MessageBox(NULL, msg.c_str(), title, MB_OK | MB_ICONWARNING);
+	LOG((CLOG_ERR "%s", msg.c_str()));
+	app.m_bye(kExitFailed);
 }
 
 int main(int argc, char** argv) {
@@ -596,6 +597,9 @@ int main(int argc, char** argv) {
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
+	CArch arch(instance);
+	CLOG;
+
 	try {
 		CArchMiscWindows::setIcons((HICON)LoadImage(instance,
 									MAKEINTRESOURCE(IDI_SYNERGY),
@@ -605,9 +609,7 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 									MAKEINTRESOURCE(IDI_SYNERGY),
 									IMAGE_ICON,
 									16, 16, LR_SHARED));
-		CArch arch(instance);
 		CMSWindowsScreen::init(instance);
-		CLOG;
 		CThread::getCurrentThread().setPriority(-14);
 
 		StartupFunc startup;
@@ -659,10 +661,11 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 int
 main(int argc, char** argv)
 {
+	CArch arch;
+	CLOG;
+
 	try {
 		int result;
-		CArch arch;
-		CLOG;
 		result = run(argc, argv, NULL, &standardStartup);
 		delete CLOG;
 		return result;
