@@ -52,7 +52,7 @@ public:
 	virtual void help() = 0;
 
 	// Parse command line arguments.
-	virtual void parse(int argc, const char* const* argv) = 0;
+	virtual void parseArgs(int argc, const char* const* argv) = 0;
 
 	// Name of the daemon (used for Unix and Windows).
 	CString m_daemonName;
@@ -65,7 +65,7 @@ public:
 	void (*m_bye)(int);
 
 protected:
-	virtual void parse(int argc, const char* const* argv, int &i);
+	virtual void parseArgs(int argc, const char* const* argv, int &i);
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	bool isArg(int argi, int argc, const char* const* argv,
 		const char* name1, const char* name2,

@@ -445,7 +445,7 @@ standardStartup(int argc, char** argv)
 	}
 
 	// parse command line
-	app.parse(argc, argv);
+	app.parseArgs(argc, argv);
 
 	// daemonize if requested
 	if (ARG->m_daemon) {
@@ -544,7 +544,7 @@ static
 int
 daemonNTMainLoop(int argc, const char** argv)
 {
-	app.parse(argc, argv);
+	app.parseArgs(argc, argv);
 	ARG->m_backend = false;
 	return CArchMiscWindows::runDaemon(mainLoop);
 }
@@ -565,7 +565,7 @@ foregroundStartup(int argc, char** argv)
 	ARCH->showConsole(false);
 
 	// parse command line
-	app.parse(argc, argv);
+	app.parseArgs(argc, argv);
 
 	// never daemonize
 	return mainLoop();

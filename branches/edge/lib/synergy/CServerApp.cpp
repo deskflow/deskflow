@@ -82,11 +82,11 @@ CServerApp::parseArg(const int& argc, const char* const* argv, int& i)
 }
 
 void
-CServerApp::parse(int argc, const char* const* argv)
+CServerApp::parseArgs(int argc, const char* const* argv)
 {
 	// asserts values, sets defaults, and parses args
 	int i;
-	CApp::parse(argc, argv, i);
+	CApp::parseArgs(argc, argv, i);
 
 	// no non-option arguments are allowed
 	if (i != argc) {

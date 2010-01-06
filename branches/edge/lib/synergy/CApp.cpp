@@ -159,7 +159,7 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 }
 
 void
-CApp::parse(int argc, const char* const* argv, int& i)
+CApp::parseArgs(int argc, const char* const* argv, int& i)
 {
 	// about these use of assert() here:
 	// previously an /analyze warning was displayed if we only used assert and

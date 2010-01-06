@@ -36,7 +36,7 @@ public:
 	virtual ~CClientApp();
 
 	// Parse client specific command line arguments.
-	void parse(int argc, const char* const* argv);
+	void parseArgs(int argc, const char* const* argv);
 
 	// Prints help specific to client.
 	void help();

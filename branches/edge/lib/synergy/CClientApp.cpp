@@ -76,11 +76,11 @@ CClientApp::parseArg(const int& argc, const char* const* argv, int& i)
 }
 
 void
-CClientApp::parse(int argc, const char* const* argv)
+CClientApp::parseArgs(int argc, const char* const* argv)
 {
 	// asserts values, sets defaults, and parses args
 	int i;
-	CApp::parse(argc, argv, i);
+	CApp::parseArgs(argc, argv, i);
 
 	// exactly one non-option argument (server-address)
 	if (i == argc) {

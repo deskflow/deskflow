@@ -745,7 +745,7 @@ standardStartup(int argc, char** argv)
 {
 
 	// parse command line
-	app.parse(argc, argv);
+	app.parseArgs(argc, argv);
 
 	// load configuration
 	loadConfig();
@@ -928,7 +928,7 @@ static
 int
 daemonNTMainLoop(int argc, const char** argv)
 {
-	app.parse(argc, argv);
+	app.parseArgs(argc, argv);
 	ARG->m_backend = false;
 	loadConfig();
 	return CArchMiscWindows::runDaemon(mainLoop);
@@ -949,7 +949,7 @@ int
 foregroundStartup(int argc, char** argv)
 {
 	// parse command line
-	app.parse(argc, argv);
+	app.parseArgs(argc, argv);
 
 	// load configuration
 	loadConfig();
