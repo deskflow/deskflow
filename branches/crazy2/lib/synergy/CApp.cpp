@@ -23,6 +23,7 @@
 #endif
 
 #include <iostream>
+#include <stdio.h>
 
 CApp::CApp(CArgsBase* args, CAppUtil* util) :
 m_args(args),
