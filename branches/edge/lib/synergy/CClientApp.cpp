@@ -26,8 +26,8 @@
 #include <iostream>
 #include <stdio.h>
 
-CClientApp::CClientApp(CAppUtil* util) :
-CApp(new CArgs(), util)
+CClientApp::CClientApp() :
+CApp(new CArgs())
 {
 }
 

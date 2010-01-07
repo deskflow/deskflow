@@ -42,6 +42,7 @@
 #	include "CArchSystemWindows.h"
 #	include "CArchTaskBarWindows.h"
 #	include "CArchTimeWindows.h"
+#	include "CArchAppUtilWindows.h"
 #elif SYSAPI_UNIX
 #	include "CArchConsoleUnix.h"
 #	include "CArchDaemonUnix.h"
@@ -56,6 +57,7 @@
 #	include "CArchSystemUnix.h"
 #	include "CArchTaskBarXWindows.h"
 #	include "CArchTimeUnix.h"
+#	include "CArchAppUtilUnix.h"
 #endif
 
 #if !defined(ARCH_CONSOLE)
@@ -102,6 +104,10 @@
 #	error unsupported platform for time
 #endif
 
+#if !defined(ARCH_APPUTIL)
+#	error unsupported platform for app util
+#endif
+
 //
 // CArch
 //
@@ -126,6 +132,7 @@ CArch::CArch(ARCH_ARGS* args)
 	m_console = new ARCH_CONSOLE(args);
 	m_daemon  = new ARCH_DAEMON;
 	m_taskbar = new ARCH_TASKBAR(args);
+	m_appUtil = new ARCH_APPUTIL;
 
 #if SYSAPI_WIN32
 	CArchMiscWindows::init();
@@ -146,6 +153,7 @@ CArch::~CArch()
 	delete m_file;
 	delete m_system;
 	delete m_mt;
+	delete m_appUtil;
 
 	// no instance
 	s_instance = NULL;
@@ -637,4 +645,22 @@ double
 CArch::time()
 {
 	return m_time->time();
+}
+
+bool 
+CArch::parseArg(const int& argc, const char* const* argv, int& i)
+{
+	return m_appUtil->parseArg(argc, argv, i);
+}
+
+void
+CArch::adoptApp(CApp* app)
+{
+	m_appUtil->adoptApp(app);
+}
+
+CApp&
+CArch::app() const
+{
+	return m_appUtil->app();
 }

@@ -17,10 +17,7 @@
 #include "common.h"
 #include "CString.h"
 
-class CAppUtil;
-
 class CApp {
-	friend class CAppUtil;
 public:
 	class CArgsBase {
 	public:
@@ -37,14 +34,11 @@ public:
 		CString m_name;
 	};
 
-	CApp(CArgsBase* args, CAppUtil* bridge);
+	CApp(CArgsBase* args);
 	virtual ~CApp();
 
 	// Returns args that are common between server and client.
 	CArgsBase& argsBase() const { return *m_args; }
-
-	// Returns a platform specific utility (base type).
-	CAppUtil& utilBase() const { return *m_util; }
 
 	// Prints the current compiled version.
 	virtual void version();
@@ -76,7 +70,6 @@ protected:
 
 private:
 	CArgsBase* m_args;
-	CAppUtil* m_util;
 };
 
 #define BYE "\nTry `%s --help' for more information."

@@ -30,7 +30,6 @@ enum EServerState {
 	kStarted
 };
 
-class CAppUtil;
 class CServer;
 class CScreen;
 class CClientListener;
@@ -55,7 +54,7 @@ public:
 		CConfig* m_config;
 	};
 
-	CServerApp(CAppUtil* util);
+	CServerApp();
 	virtual ~CServerApp();
 	
 	// Parse server specific command line arguments.

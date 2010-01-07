@@ -18,8 +18,6 @@
 #include "CString.h"
 #include "CNetworkAddress.h"
 
-class CAppUtil;
-
 class CClientApp : public CApp {
 public:
 	class CArgs : public CApp::CArgsBase {
@@ -32,7 +30,7 @@ public:
 		CNetworkAddress* m_serverAddress;
 	};
 
-	CClientApp(CAppUtil* util);
+	CClientApp();
 	virtual ~CClientApp();
 
 	// Parse client specific command line arguments.
@@ -43,6 +41,9 @@ public:
 
 	// Returns arguments that are common and for client.
 	CArgs& args() const { return (CArgs&)argsBase(); }
+
+	// Static instance for backwards compat.
+	static CClientApp* s_instance;
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);

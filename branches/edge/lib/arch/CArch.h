@@ -26,6 +26,7 @@
 #include "IArchSystem.h"
 #include "IArchTaskBar.h"
 #include "IArchTime.h"
+#include "IArchAppUtil.h"
 
 /*!
 \def ARCH
@@ -55,7 +56,8 @@ class CArch : public IArchConsole,
 				public IArchString,
 				public IArchSystem,
 				public IArchTaskBar,
-				public IArchTime {
+				public IArchTime,
+				public IArchAppUtil {
 public:
 	CArch(ARCH_ARGS* args = NULL);
 	~CArch();
@@ -182,6 +184,11 @@ public:
 
 	// IArchTime overrides
 	virtual double		time();
+	
+	// IArchAppUtil overrides
+	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+	virtual void adoptApp(CApp* app);
+	virtual CApp& app() const;
 
 private:
 	static CArch*		s_instance;
@@ -197,6 +204,7 @@ private:
 	IArchSystem*		m_system;
 	IArchTaskBar*		m_taskbar;
 	IArchTime*			m_time;
+	IArchAppUtil*		m_appUtil;
 };
 
 //! Convenience object to lock/unlock an arch mutex

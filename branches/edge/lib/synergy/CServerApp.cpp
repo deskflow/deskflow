@@ -52,8 +52,8 @@
 
 CEvent::Type CServerApp::s_reloadConfigEvent = CEvent::kUnknown;
 
-CServerApp::CServerApp(CAppUtil* util) :
-CApp(new CArgs(), util),
+CServerApp::CServerApp() :
+CApp(new CArgs()),
 s_server(NULL),
 s_forceReconnectEvent(CEvent::kUnknown),
 s_resetServerEvent(CEvent::kUnknown),

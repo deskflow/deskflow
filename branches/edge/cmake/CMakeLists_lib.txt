@@ -1,6 +1,7 @@
 SET(root_lib ${root_dir}/lib)
 
 SET(src_lib_arch
+	${root_lib}/arch/CArchAppUtil.cpp
 	${root_lib}/arch/CArch.cpp
 	${root_lib}/arch/CArchDaemonNone.cpp
 	${root_lib}/arch/XArch.cpp
@@ -8,6 +9,7 @@ SET(src_lib_arch
 )
 
 SET(src_lib_arch_unix
+	${root_lib}/arch/CArchAppUtilUnix.cpp
 	${root_lib}/arch/CArchConsoleUnix.cpp
 	${root_lib}/arch/CArchDaemonUnix.cpp
 	${root_lib}/arch/CArchFileUnix.cpp
@@ -23,6 +25,7 @@ SET(src_lib_arch_unix
 )
 
 SET(src_lib_arch_windows
+	${root_lib}/arch/CArchAppUtilWindows.cpp
 	${root_lib}/arch/CArchConsoleWindows.cpp
 	${root_lib}/arch/CArchDaemonWindows.cpp
 	${root_lib}/arch/CArchFileWindows.cpp
@@ -39,6 +42,8 @@ SET(src_lib_arch_windows
 )
 
 SET(inc_lib_arch_windows
+	${root_lib}/arch/CArchAppUtil.h
+	${root_lib}/arch/CArchAppUtilWindows.h
 	${root_lib}/arch/CArchConsoleWindows.h
 	${root_lib}/arch/CArchDaemonWindows.h
 	${root_lib}/arch/CArchFileWindows.h
@@ -51,8 +56,9 @@ SET(inc_lib_arch_windows
 	${root_lib}/arch/CArchSystemWindows.h
 	${root_lib}/arch/CArchTaskBarWindows.h
 	${root_lib}/arch/CArchTimeWindows.h
-	${root_lib}/arch/XArchWindows.h
 	${root_lib}/arch/CArchConsoleStd.h
+	${root_lib}/arch/IArchAppUtil.h
+	${root_lib}/arch/XArchWindows.h
 )
 
 SET(src_lib_base
@@ -183,9 +189,6 @@ SET(src_lib_platform_xwindows
 	${root_lib}/platform/CXWindowsScreen.cpp
 	${root_lib}/platform/CXWindowsScreenSaver.cpp
 	${root_lib}/platform/CXWindowsUtil.cpp
-	${root_lib}/platform/CXWindowsAppUtil.cpp
-	${root_lib}/platform/CXWindowsClientApp.cpp
-	${root_lib}/platform/CXWindowsServerApp.cpp
 )
 
 SET(src_lib_platform_mswindows
@@ -201,9 +204,6 @@ SET(src_lib_platform_mswindows
 	${root_lib}/platform/CMSWindowsScreen.cpp
 	${root_lib}/platform/CMSWindowsScreenSaver.cpp
 	${root_lib}/platform/CMSWindowsUtil.cpp
-	${root_lib}/platform/CMSWindowsAppUtil.cpp
-	${root_lib}/platform/CMSWindowsClientApp.cpp
-	${root_lib}/platform/CMSWindowsServerApp.cpp
 )
 
 SET(inc_lib_platform_mswindows
@@ -219,9 +219,6 @@ SET(inc_lib_platform_mswindows
 	${root_lib}/platform/CMSWindowsScreen.h
 	${root_lib}/platform/CMSWindowsScreenSaver.h
 	${root_lib}/platform/CMSWindowsUtil.h
-	${root_lib}/platform/CMSWindowsAppUtil.h
-	${root_lib}/platform/CMSWindowsClientApp.h
-	${root_lib}/platform/CMSWindowsServerApp.h
 )
 
 SET(src_lib_platform_hook
@@ -280,7 +277,6 @@ SET(inc_lib_server
 SET(src_lib_synergy
 	${root_lib}/synergy/CClientTaskBarReceiver.cpp
 	${root_lib}/synergy/CServerTaskBarReceiver.cpp
-	${root_lib}/synergy/CAppUtil.cpp
 	${root_lib}/synergy/CApp.cpp
 	${root_lib}/synergy/CClientApp.cpp
 	${root_lib}/synergy/CServerApp.cpp
@@ -304,7 +300,6 @@ SET(src_lib_synergy
 SET(inc_lib_synergy
 	${root_lib}/synergy/CClientTaskBarReceiver.h
 	${root_lib}/synergy/CServerTaskBarReceiver.h
-	${root_lib}/synergy/CAppUtil.h
 	${root_lib}/synergy/CApp.h
 	${root_lib}/synergy/CClientApp.h
 	${root_lib}/synergy/CServerApp.h

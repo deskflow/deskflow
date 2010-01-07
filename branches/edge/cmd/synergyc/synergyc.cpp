@@ -12,6 +12,7 @@
  * GNU General Public License for more details.
  */
 
+#include "CClientApp.h"
 #include "CClient.h"
 #include "CScreen.h"
 #include "ProtocolTypes.h"
@@ -43,21 +44,19 @@
 #include "CMSWindowsClientTaskBarReceiver.h"
 #include "resource.h"
 #include <conio.h>
-#include "CMSWindowsClientApp.h"
-#include "CMSWindowsAppUtil.h"
+#include "CArchAppUtilWindows.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
 #elif WINAPI_XWINDOWS
 #include "CXWindowsScreen.h"
 #include "CXWindowsClientTaskBarReceiver.h"
-#include "CXWindowsClientApp.h"
-#include "CXWindowsAppUtil.h"
 #elif WINAPI_CARBON
 #include "COSXScreen.h"
 #include "COSXClientTaskBarReceiver.h"
-#include "COSXClientApp.h"
-#include "COSXAppUtil.h"
 #endif
+
+CClientApp* CClientApp::s_instance = new CClientApp();
+#define APP CClientApp::s_instance
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
@@ -70,15 +69,7 @@
 typedef int (*StartupFunc)(int, char**);
 static bool startClient();
 
-#if WINAPI_MSWINDOWS
-CMSWindowsClientApp app;
-#elif WINAPI_XWINDOWS
-CXWindowsClientApp app;
-#elif WINAPI_CARBON
-COSXClientApp app;
-#endif
-
-#define ARG ((CClientApp::CArgs*)&app.args())
+#define ARG ((CClientApp::CArgs*)&APP->args())
 
 //
 // platform dependent factories
@@ -445,7 +436,7 @@ standardStartup(int argc, char** argv)
 	}
 
 	// parse command line
-	app.parseArgs(argc, argv);
+	APP->parseArgs(argc, argv);
 
 	// daemonize if requested
 	if (ARG->m_daemon) {
@@ -544,7 +535,7 @@ static
 int
 daemonNTMainLoop(int argc, const char** argv)
 {
-	app.parseArgs(argc, argv);
+	APP->parseArgs(argc, argv);
 	ARG->m_backend = false;
 	return CArchMiscWindows::runDaemon(mainLoop);
 }
@@ -554,7 +545,7 @@ int
 daemonNTStartup(int, char**)
 {
 	CSystemLogger sysLogger(DAEMON_NAME, false);
-	app.m_bye = &byeThrow;
+	APP->m_bye = &byeThrow;
 	return ARCH->daemonize(DAEMON_NAME, &daemonNTMainLoop);
 }
 
@@ -565,7 +556,7 @@ foregroundStartup(int argc, char** argv)
 	ARCH->showConsole(false);
 
 	// parse command line
-	app.parseArgs(argc, argv);
+	APP->parseArgs(argc, argv);
 
 	// never daemonize
 	return mainLoop();
@@ -578,17 +569,19 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 	CString fmt = CMSWindowsUtil::getString(instance, id);
 	CString msg = CStringUtil::format(fmt.c_str(), arg);
 	LOG((CLOG_ERR "%s", msg.c_str()));
-	app.m_bye(kExitFailed);
+	APP->m_bye(kExitFailed);
 }
 
 int main(int argc, char** argv) {
 
-	app.m_daemonName = DAEMON_NAME;
-	app.m_daemonInfo = DAEMON_INFO;
-	app.util().m_instance = GetModuleHandle(NULL);
+	APP->m_daemonName = DAEMON_NAME;
+	APP->m_daemonInfo = DAEMON_INFO;
 
-	if (app.util().m_instance) {
-		return WinMain(app.util().m_instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
+	HINSTANCE instance = GetModuleHandle(NULL);
+	CArchAppUtilWindows::s_instanceWin32 = instance;
+
+	if (instance) {
+		return WinMain(instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
 	} else {
 		return kExitFailed;
 	}

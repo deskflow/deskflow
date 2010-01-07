@@ -11,6 +11,7 @@
  * GNU General Public License for more details.
  */
 
+#include "CServerApp.h"
 #include "CEvent.h"
 #include "CLog.h"
 #include "CArch.h"
@@ -19,38 +20,23 @@
 
 // platform dependant includes and app instances
 #if WINAPI_MSWINDOWS
-
-#include "CMSWindowsServerApp.h"
-#include "CMSWindowsAppUtil.h"
 #include "CMSWindowsServerTaskBarReceiver.h"
 #include "XArchWindows.h"
 #include "CMSWindowsScreen.h"
 #include "CArchMiscWindows.h"
 #include "resource.h"
-
-CServerApp* CServerApp::s_instance = new CMSWindowsServerApp();
-#define APP ((CMSWindowsServerApp*)CServerApp::s_instance)
-
+#include "CArchAppUtilWindows.h"
 #elif WINAPI_XWINDOWS
-
-#include "CXWindowsServerApp.h"
-#include "CXWindowsAppUtil.h"
 #include "CXWindowsServerTaskBarReceiver.h"
-
-CServerApp* CServerApp::s_instance = new CXWindowsServerApp();
-#define APP ((CXWindowsServerApp*)CServerApp::s_instance)
-
 #elif WINAPI_CARBON
-#include "COSXServerApp.h"
-#include "COSXAppUtil.h"
 #include "COSXServerTaskBarReceiver.h"
-
-CServerApp* CServerApp::s_instance = new COSXServerApp();
-#define APP ((COSXServerApp*)CServerApp::s_instance)
 
 #else
 #error Platform not supported.
 #endif
+
+CServerApp* CServerApp::s_instance = new CServerApp();
+#define APP CServerApp::s_instance
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
@@ -95,13 +81,15 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 int
 main(int argc, char** argv) 
 {
+	APP->m_daemonName = DAEMON_NAME;
+	
 #if SYSAPI_WIN32
 
 	APP->m_daemonInfo = DAEMON_INFO;
 
 	// get window instance for tray icon, etc
 	HINSTANCE instance = GetModuleHandle(NULL);
-	APP->util().m_instance = instance;
+	CArchAppUtilWindows::s_instanceWin32 = instance;
 
 	// creates arch singleton, with window instance
 	CArch arch(instance);
@@ -113,8 +101,9 @@ main(int argc, char** argv)
 
 #endif
 
+	arch.adoptApp(APP);
+
 	CLOG;
-	APP->m_daemonName = DAEMON_NAME;
 	int result;
 
 	try {

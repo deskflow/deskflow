@@ -15,27 +15,19 @@
 #include "CApp.h"
 #include "CLog.h"
 #include "Version.h"
-#include "CAppUtil.h"
 #include "ProtocolTypes.h"
-
-#if WINAPI_MSWINDOWS
-#include "CMSWindowsAppUtil.h"
-#endif
 
 #include <iostream>
 #include <stdio.h>
 
-CApp::CApp(CArgsBase* args, CAppUtil* util) :
+CApp::CApp(CArgsBase* args) :
 m_args(args),
-m_bye(&exit),
-m_util(util)
+m_bye(&exit)
 {
-	util->adoptApp(this);
 }
 
 CApp::~CApp()
 {
-	delete m_util;
 	delete m_args;
 }
 
@@ -79,7 +71,7 @@ CApp::isArg(
 bool
 CApp::parseArg(const int& argc, const char* const* argv, int& i)
 {
-	if (utilBase().parseArg(argc, argv, i)) {
+	if (ARCH->parseArg(argc, argv, i)) {
 		// handled by platform util
 		return true;
 	}
