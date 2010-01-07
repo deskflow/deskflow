@@ -14,6 +14,7 @@
 
 #include "LogOutputters.h"
 #include "CArch.h"
+#include "TMethodJob.h"
 
 #include <fstream>
 //
@@ -61,12 +62,14 @@ CStopLogOutputter::write(ELevel, const char*)
 
 CConsoleLogOutputter::CConsoleLogOutputter()
 {
-	// do nothing
+	m_writeThread = new CThread(new TMethodJob<CConsoleLogOutputter>(
+		this, &CConsoleLogOutputter::writeThread));
 }
 
 CConsoleLogOutputter::~CConsoleLogOutputter()
 {
-	// do nothing
+	m_writeThread->exit(NULL);
+	delete m_writeThread;
 }
 
 void
@@ -94,9 +97,30 @@ CConsoleLogOutputter::write(ELevel level, const char* msg)
 	// the console can use a lot of CPU time to display messages, and on windows
 	// this is done on the same thread.
 	if (level <= CLOG->getConsoleMaxLevel()) {
-		ARCH->writeConsole(msg);
+		m_buffer.push_back(msg);
 	}
 	return true;
+}
+
+void
+CConsoleLogOutputter::writeThread(void*)
+{
+	// in case our console is cpu hungry, buffer the log messages and dequeue 
+	// asynchronously in another thread. this way, if we hammer the console, 
+	// it won't cause the mouse to stutter.
+	while(true) {
+
+		if (m_buffer.empty()) {
+
+			// wait for some messages
+			ARCH->sleep(.1);
+			continue;
+		}
+
+		CString &s = m_buffer.front();
+		ARCH->writeConsole(s.c_str());
+		m_buffer.pop_front();
+	}
 }
 
 

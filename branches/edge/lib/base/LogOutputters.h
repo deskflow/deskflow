@@ -19,8 +19,11 @@
 #include "ILogOutputter.h"
 #include "CString.h"
 #include "stddeque.h"
+#include "CThread.h"
 
+#include <list>
 #include <fstream>
+
 //! Stop traversing log chain outputter
 /*!
 This outputter performs no output and returns false from \c write(),
@@ -54,6 +57,10 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
+private:
+	void writeThread(void*);
+	CThread* m_writeThread;
+	std::list<CString> m_buffer;
 };
 
 //! Write log to file
