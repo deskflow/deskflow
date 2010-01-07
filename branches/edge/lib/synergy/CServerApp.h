@@ -19,6 +19,7 @@
 #include "CConfig.h"
 #include "CNetworkAddress.h"
 #include "CArch.h"
+#include "IArchMultithread.h"
 
 enum EServerState {
 	kUninitialized,
@@ -62,11 +63,11 @@ public:
 	CArgs& args() const { return (CArgs&)argsBase(); }
 
 	// TODO: Document these functions.
-	void reloadSignalHandler(CArch::ESignal, void*);
+	static void reloadSignalHandler(CArch::ESignal, void*);
+	static CEvent::Type getReloadConfigEvent();
 	void reloadConfig(const CEvent&, void*);
 	void loadConfig();
 	bool loadConfig(const CString& pathname);
-	CEvent::Type getReloadConfigEvent();
 	void forceReconnect(const CEvent&, void*);
 	CEvent::Type getForceReconnectEvent();
 	void resetServer(const CEvent&, void*);
@@ -76,17 +77,29 @@ public:
 	void closeServer(CServer* server);
 	void stopRetryTimer();
 	void updateStatus();
+	void updateStatus(const CString& msg);
 	void closeClientListener(CClientListener* listen);
 	void stopServer();
 	void closePrimaryClient(CPrimaryClient* primaryClient);
 	void closeServerScreen(CScreen* screen);
 	void cleanupServer();
-
-	//int mainLoop();
+	bool initServer();
+	void retryHandler(const CEvent&, void*);
+	CScreen* openServerScreen();
+	CScreen* createScreen();
+	CPrimaryClient* openPrimaryClient(const CString& name, CScreen* screen);
+	void handleScreenError(const CEvent&, void*);
+	void handleSuspend(const CEvent&, void*);
+	void handleResume(const CEvent&, void*);
+	CClientListener* openClientListener(const CNetworkAddress& address);
+	CServer* openServer(const CConfig& config, CPrimaryClient* primaryClient);
+	void handleNoClients(const CEvent&, void*);
+	bool startServer();
+	int mainLoop();
 
 	// TODO: change s_ to m_
 	CServer* s_server;
-	CEvent::Type s_reloadConfigEvent;
+	static CEvent::Type s_reloadConfigEvent;
 	CEvent::Type s_forceReconnectEvent;
 	CEvent::Type s_resetServerEvent;
 	EServerState s_serverState;
@@ -111,3 +124,9 @@ private:
 #endif
 
 typedef int (*StartupFunc)(int, char**);
+
+#if WINAPI_MSWINDOWS
+#define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
+#else
+#define DAEMON_RUNNING(running_)
+#endif

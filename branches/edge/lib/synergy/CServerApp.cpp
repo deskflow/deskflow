@@ -25,21 +25,36 @@
 #include "CServerTaskBarReceiver.h"
 #include "CPrimaryClient.h"
 #include "CScreen.h"
+#include "CSocketMultiplexer.h"
+#include "CEventQueue.h"
+#include "LogOutputters.h"
+#include "CFunctionEventJob.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
 #endif
 
+#if WINAPI_MSWINDOWS
+#include "CMSWindowsScreen.h"
+#elif WINAPI_XWINDOWS
+#include "CXWindowsScreen.h"
+#elif WINAPI_CARBON
+#include "COSXScreen.h"
+#endif
+
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
+#include "XScreen.h"
+#include "CTCPSocketFactory.h"
 
 #define ARG (&args())
+
+CEvent::Type CServerApp::s_reloadConfigEvent = CEvent::kUnknown;
 
 CServerApp::CServerApp(CAppUtil* util) :
 CApp(new CArgs(), util),
 s_server(NULL),
-s_reloadConfigEvent(CEvent::kUnknown),
 s_forceReconnectEvent(CEvent::kUnknown),
 s_resetServerEvent(CEvent::kUnknown),
 s_serverState(kUninitialized),
@@ -419,6 +434,11 @@ CServerApp::updateStatus()
 	s_taskBarReceiver->updateStatus(s_server, "");
 }
 
+void CServerApp::updateStatus( const CString& msg )
+{
+	s_taskBarReceiver->updateStatus(s_server, msg);
+}
+
 void 
 CServerApp::closeClientListener(CClientListener* listen)
 {
@@ -484,4 +504,372 @@ void CServerApp::cleanupServer()
 	assert(s_primaryClient == NULL);
 	assert(s_serverScreen == NULL);
 	assert(s_serverState == kUninitialized);
+}
+
+void
+CServerApp::retryHandler(const CEvent&, void*)
+{
+	// discard old timer
+	assert(s_timer != NULL);
+	stopRetryTimer();
+
+	// try initializing/starting the server again
+	switch (s_serverState) {
+	case kUninitialized:
+	case kInitialized:
+	case kStarted:
+		assert(0 && "bad internal server state");
+		break;
+
+	case kInitializing:
+		LOG((CLOG_DEBUG1 "retry server initialization"));
+		s_serverState = kUninitialized;
+		if (!initServer()) {
+			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+		}
+		break;
+
+	case kInitializingToStart:
+		LOG((CLOG_DEBUG1 "retry server initialization"));
+		s_serverState = kUninitialized;
+		if (!initServer()) {
+			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+		}
+		else if (s_serverState == kInitialized) {
+			LOG((CLOG_DEBUG1 "starting server"));
+			if (!startServer()) {
+				EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+			}
+		}
+		break;
+
+	case kStarting:
+		LOG((CLOG_DEBUG1 "retry starting server"));
+		s_serverState = kInitialized;
+		if (!startServer()) {
+			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+		}
+		break;
+	}
+}
+
+bool CServerApp::initServer()
+{
+	// skip if already initialized or initializing
+	if (s_serverState != kUninitialized) {
+		return true;
+	}
+
+	double retryTime;
+	CScreen* serverScreen         = NULL;
+	CPrimaryClient* primaryClient = NULL;
+	try {
+		CString name    = ARG->m_config->getCanonicalName(ARG->m_name);
+		serverScreen    = openServerScreen();
+		primaryClient   = openPrimaryClient(name, serverScreen);
+		s_serverScreen  = serverScreen;
+		s_primaryClient = primaryClient;
+		s_serverState   = kInitialized;
+		updateStatus();
+		return true;
+	}
+	catch (XScreenUnavailable& e) {
+		LOG((CLOG_WARN "cannot open primary screen: %s", e.what()));
+		closePrimaryClient(primaryClient);
+		closeServerScreen(serverScreen);
+		updateStatus(CString("cannot open primary screen: ") + e.what());
+		retryTime = e.getRetryTime();
+	}
+	catch (XScreenOpenFailure& e) {
+		LOG((CLOG_CRIT "cannot open primary screen: %s", e.what()));
+		closePrimaryClient(primaryClient);
+		closeServerScreen(serverScreen);
+		return false;
+	}
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "failed to start server: %s", e.what()));
+		closePrimaryClient(primaryClient);
+		closeServerScreen(serverScreen);
+		return false;
+	}
+
+	if (ARG->m_restartable) {
+		// install a timer and handler to retry later
+		assert(s_timer == NULL);
+		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
+			new TMethodEventJob<CServerApp>(this, &CServerApp::retryHandler));
+		s_serverState = kInitializing;
+		return true;
+	}
+	else {
+		// don't try again
+		return false;
+	}
+}
+
+CScreen* CServerApp::openServerScreen()
+{
+	CScreen* screen = createScreen();
+	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
+		screen->getEventTarget(),
+		new TMethodEventJob<CServerApp>(
+		this, &CServerApp::handleScreenError));
+	EVENTQUEUE->adoptHandler(IScreen::getSuspendEvent(),
+		screen->getEventTarget(),
+		new TMethodEventJob<CServerApp>(
+		this, &CServerApp::handleSuspend));
+	EVENTQUEUE->adoptHandler(IScreen::getResumeEvent(),
+		screen->getEventTarget(),
+		new TMethodEventJob<CServerApp>(
+		this, &CServerApp::handleResume));
+	return screen;
+}
+
+bool 
+CServerApp::startServer()
+{
+	// skip if already started or starting
+	if (s_serverState == kStarting || s_serverState == kStarted) {
+		return true;
+	}
+
+	// initialize if necessary
+	if (s_serverState != kInitialized) {
+		if (!initServer()) {
+			// hard initialization failure
+			return false;
+		}
+		if (s_serverState == kInitializing) {
+			// not ready to start
+			s_serverState = kInitializingToStart;
+			return true;
+		}
+		assert(s_serverState == kInitialized);
+	}
+
+	double retryTime;
+	CClientListener* listener = NULL;
+	try {
+		listener   = openClientListener(ARG->m_config->getSynergyAddress());
+		s_server   = openServer(*ARG->m_config, s_primaryClient);
+		s_listener = listener;
+		updateStatus();
+		LOG((CLOG_NOTE "started server"));
+		s_serverState = kStarted;
+		return true;
+	}
+	catch (XSocketAddressInUse& e) {
+		LOG((CLOG_WARN "cannot listen for clients: %s", e.what()));
+		closeClientListener(listener);
+		updateStatus(CString("cannot listen for clients: ") + e.what());
+		retryTime = 10.0;
+	}
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "failed to start server: %s", e.what()));
+		closeClientListener(listener);
+		return false;
+	}
+
+	if (ARG->m_restartable) {
+		// install a timer and handler to retry later
+		assert(s_timer == NULL);
+		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
+			new TMethodEventJob<CServerApp>(this, &CServerApp::retryHandler));
+		s_serverState = kStarting;
+		return true;
+	}
+	else {
+		// don't try again
+		return false;
+	}
+}
+
+CScreen* 
+CServerApp::createScreen()
+{
+#if WINAPI_MSWINDOWS
+	return new CScreen(new CMSWindowsScreen(true, ARG->m_noHooks));
+#elif WINAPI_XWINDOWS
+	return new CScreen(new CXWindowsScreen(ARG->m_display, true));
+#elif WINAPI_CARBON
+	return new CScreen(new COSXScreen(true));
+#endif
+}
+
+CPrimaryClient* 
+CServerApp::openPrimaryClient(const CString& name, CScreen* screen)
+{
+	LOG((CLOG_DEBUG1 "creating primary screen"));
+	return new CPrimaryClient(name, screen);
+
+}
+
+void
+CServerApp::handleScreenError(const CEvent&, void*)
+{
+	LOG((CLOG_CRIT "error on screen"));
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+void CServerApp::handleSuspend( const CEvent&, void* )
+{
+	if (!s_suspended) {
+		LOG((CLOG_INFO "suspend"));
+		stopServer();
+		s_suspended = true;
+	}
+}
+
+void CServerApp::handleResume( const CEvent&, void* )
+{
+	if (s_suspended) {
+		LOG((CLOG_INFO "resume"));
+		startServer();
+		s_suspended = false;
+	}
+}
+
+CClientListener*
+CServerApp::openClientListener(const CNetworkAddress& address)
+{
+	CClientListener* listen =
+		new CClientListener(address, new CTCPSocketFactory, NULL);
+	EVENTQUEUE->adoptHandler(CClientListener::getConnectedEvent(), listen,
+		new TMethodEventJob<CServerApp>(
+		this, &CServerApp::handleClientConnected, listen));
+	return listen;
+}
+
+CServer* 
+CServerApp::openServer(const CConfig& config, CPrimaryClient* primaryClient)
+{
+	CServer* server = new CServer(config, primaryClient);
+
+	try {
+		EVENTQUEUE->adoptHandler(
+			CServer::getDisconnectedEvent(), server,
+			new TMethodEventJob<CServerApp>(this, &CServerApp::handleNoClients));
+
+	} catch (std::bad_alloc &ba) {
+		delete server;
+		throw ba;
+	}
+
+	return server;
+}
+
+void CServerApp::handleNoClients( const CEvent&, void* )
+{
+	updateStatus();
+}
+
+int CServerApp::mainLoop()
+{
+	// create socket multiplexer.  this must happen after daemonization
+	// on unix because threads evaporate across a fork().
+	CSocketMultiplexer multiplexer;
+
+	// create the event queue
+	CEventQueue eventQueue;
+
+	// logging to files
+	CFileLogOutputter* fileLog = NULL;
+
+	if (ARG->m_logFile != NULL) {
+		fileLog = new CFileLogOutputter(ARG->m_logFile);
+
+		CLOG->insert(fileLog);
+
+		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", ARG->m_logFile));
+	}
+
+	// if configuration has no screens then add this system
+	// as the default
+	if (ARG->m_config->begin() == ARG->m_config->end()) {
+		ARG->m_config->addScreen(ARG->m_name);
+	}
+
+	// set the contact address, if provided, in the config.
+	// otherwise, if the config doesn't have an address, use
+	// the default.
+	if (ARG->m_synergyAddress->isValid()) {
+		ARG->m_config->setSynergyAddress(*ARG->m_synergyAddress);
+	}
+	else if (!ARG->m_config->getSynergyAddress().isValid()) {
+		ARG->m_config->setSynergyAddress(CNetworkAddress(kDefaultPort));
+	}
+
+	// canonicalize the primary screen name
+	CString primaryName = ARG->m_config->getCanonicalName(ARG->m_name);
+	if (primaryName.empty()) {
+		LOG((CLOG_CRIT "unknown screen name `%s'", ARG->m_name.c_str()));
+		return kExitFailed;
+	}
+
+	// start the server.  if this return false then we've failed and
+	// we shouldn't retry.
+	LOG((CLOG_DEBUG1 "starting server"));
+	if (!startServer()) {
+		return kExitFailed;
+	}
+
+	// handle hangup signal by reloading the server's configuration
+	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);
+	EVENTQUEUE->adoptHandler(getReloadConfigEvent(),
+		IEventQueue::getSystemTarget(),
+		new TMethodEventJob<CServerApp>(this, &CServerApp::reloadConfig));
+
+	// handle force reconnect event by disconnecting clients.  they'll
+	// reconnect automatically.
+	EVENTQUEUE->adoptHandler(getForceReconnectEvent(),
+		IEventQueue::getSystemTarget(),
+		new TMethodEventJob<CServerApp>(this, &CServerApp::forceReconnect));
+
+	// to work around the sticky meta keys problem, we'll give users
+	// the option to reset the state of synergys
+	EVENTQUEUE->adoptHandler(getResetServerEvent(),
+		IEventQueue::getSystemTarget(),
+		new TMethodEventJob<CServerApp>(this, &CServerApp::resetServer));
+
+	// run event loop.  if startServer() failed we're supposed to retry
+	// later.  the timer installed by startServer() will take care of
+	// that.
+	CEvent event;
+	DAEMON_RUNNING(true);
+	EVENTQUEUE->getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event);
+	}
+	DAEMON_RUNNING(false);
+
+	// close down
+	LOG((CLOG_DEBUG1 "stopping server"));
+	EVENTQUEUE->removeHandler(getForceReconnectEvent(),
+		IEventQueue::getSystemTarget());
+	EVENTQUEUE->removeHandler(getReloadConfigEvent(),
+		IEventQueue::getSystemTarget());
+	cleanupServer();
+	updateStatus();
+	LOG((CLOG_NOTE "stopped server"));
+
+	if (fileLog) {
+		CLOG->remove(fileLog);
+		delete fileLog;		
+	}
+
+	return kExitSuccess;
+}
+
+void CServerApp::resetServer(const CEvent&, void*)
+{
+	LOG((CLOG_DEBUG1 "resetting server"));
+	stopServer();
+	cleanupServer();
+	startServer();
 }
