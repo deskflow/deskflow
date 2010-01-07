@@ -248,7 +248,8 @@ CApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver
 	delete CLOG;
 
 	// not sure i like what's going on here; m_bye could call exit, but it also does
-	// some other stuff
+	// some other stuff - if we don't return then we get compiler warning (and it's 
+	// not good practice anyway), but the return will never get hit.
 	m_bye(result);
 	return result;
 }

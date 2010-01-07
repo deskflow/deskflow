@@ -196,7 +196,7 @@ static
 int 
 mainLoopStatic() 
 {
-	return CArchAppUtil::s_instance->app().mainLoop();
+	return CArchAppUtil::instance().app().mainLoop();
 }
 
 int 
@@ -216,7 +216,7 @@ CArchAppUtilWindows::byeThrow(int x)
 
 int daemonNTMainLoopStatic(int argc, const char** argv)
 {
-	return CArchAppUtil::s_instance->app().daemonMainLoop(argc, argv);
+	return CArchAppUtil::instance().app().daemonMainLoop(argc, argv);
 }
 
 int 
@@ -238,7 +238,7 @@ static
 int
 foregroundStartupStatic(int argc, char** argv)
 {
-	return CArchAppUtil::s_instance->app().foregroundStartup(argc, argv);
+	return CArchAppUtil::instance().app().foregroundStartup(argc, argv);
 }
 
 int
@@ -261,5 +261,5 @@ CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc create
 CArchAppUtilWindows& 
 CArchAppUtilWindows::instance()
 {
-	return (CArchAppUtilWindows&)*s_instance;
+	return (CArchAppUtilWindows&)CArchAppUtil::instance();
 }

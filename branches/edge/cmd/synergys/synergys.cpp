@@ -12,21 +12,14 @@
  */
 
 #include "CServerApp.h"
-#include "CEvent.h"
-#include "CLog.h"
-#include "CArch.h"
-#include "Version.h"
-#include "CThread.h"
 #include "XArch.h"
 
 // platform dependent includes and app instances
 #if WINAPI_MSWINDOWS
 #include "CMSWindowsServerTaskBarReceiver.h"
-#include "XArchWindows.h"
 #include "CArchMiscWindows.h"
-#include "resource.h"
-#include "CArchAppUtilWindows.h"
 #include "CMSWindowsScreen.h"
+#include "resource.h"
 #elif WINAPI_XWINDOWS
 #include "CXWindowsServerTaskBarReceiver.h"
 #elif WINAPI_CARBON
@@ -53,6 +46,7 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 
 	return new CMSWindowsServerTaskBarReceiver(
 		CMSWindowsScreen::getInstance(), logBuffer);
+
 #elif WINAPI_XWINDOWS
 	return new CXWindowsServerTaskBarReceiver(logBuffer);
 #elif WINAPI_CARBON

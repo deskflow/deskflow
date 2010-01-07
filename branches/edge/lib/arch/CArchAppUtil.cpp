@@ -46,3 +46,10 @@ CArchAppUtil::app() const
 	assert(m_app != nullptr);
 	return *m_app;
 }
+
+CArchAppUtil&
+CArchAppUtil::instance()
+{
+	assert(s_instance != nullptr);
+	return *s_instance;
+}

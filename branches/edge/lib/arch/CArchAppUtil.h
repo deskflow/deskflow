@@ -25,8 +25,9 @@ public:
 	virtual void adoptApp(CApp* app);
 	CApp& app() const;
 
-	static CArchAppUtil* s_instance;
+	static CArchAppUtil& instance();
 	
 private:
 	CApp* m_app;
+	static CArchAppUtil* s_instance;
 };
