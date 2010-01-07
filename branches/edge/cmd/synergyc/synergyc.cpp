@@ -57,14 +57,6 @@
 
 #define APP (&CClientApp::instance())
 
-// platform dependent name of a daemon
-#if SYSAPI_WIN32
-#define DAEMON_NAME "Synergy+ Client"
-#define DAEMON_INFO "Allows another computer to share it's keyboard and mouse with this computer."
-#elif SYSAPI_UNIX
-#define DAEMON_NAME "synergyc"
-#endif
-
 typedef int (*StartupFunc)(int, char**);
 static bool startClient();
 
@@ -419,9 +411,9 @@ int
 daemonMainLoop(int, const char**)
 {
 #if SYSAPI_WIN32
-	CSystemLogger sysLogger(DAEMON_NAME, false);
+	CSystemLogger sysLogger(APP->daemonName(), false);
 #else
-	CSystemLogger sysLogger(DAEMON_NAME, true);
+	CSystemLogger sysLogger(APP->daemonName(), true);
 #endif
 	return mainLoop();
 }
@@ -439,7 +431,7 @@ standardStartup(int argc, char** argv)
 
 	// daemonize if requested
 	if (ARG->m_daemon) {
-		return ARCH->daemonize(DAEMON_NAME, &daemonMainLoop);
+		return ARCH->daemonize(APP->daemonName(), &daemonMainLoop);
 	}
 	else {
 		return mainLoop();
@@ -543,9 +535,9 @@ static
 int
 daemonNTStartup(int, char**)
 {
-	CSystemLogger sysLogger(DAEMON_NAME, false);
+	CSystemLogger sysLogger(APP->daemonName(), false);
 	APP->m_bye = &byeThrow;
-	return ARCH->daemonize(DAEMON_NAME, &daemonNTMainLoop);
+	return ARCH->daemonize(APP->daemonName(), &daemonNTMainLoop);
 }
 
 static
@@ -574,9 +566,6 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 int main(int argc, char** argv) {
 
 	CClientApp app;
-	APP->m_daemonName = DAEMON_NAME;
-	APP->m_daemonInfo = DAEMON_INFO;
-
 	HINSTANCE instance = GetModuleHandle(NULL);
 	CArchMiscWindows::setInstanceWin32(instance);
 

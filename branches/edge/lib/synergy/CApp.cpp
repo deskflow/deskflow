@@ -19,6 +19,7 @@
 #include "CArch.h"
 #include "XBase.h"
 #include "XArch.h"
+#include "CArchMiscWindows.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -216,6 +217,11 @@ CApp::version()
 int
 CApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
 {
+#if SYSAPI_WIN32
+	// record window instance for tray icon, etc
+	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+#endif
+
 	CArch arch;
 
 	// install application in to arch

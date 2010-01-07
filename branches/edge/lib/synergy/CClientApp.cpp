@@ -192,3 +192,23 @@ CClientApp::help()
 
 	std::cout << buffer << std::endl;
 }
+
+const char*
+CClientApp::daemonName() const
+{
+#if SYSAPI_WIN32
+	return "Synergy+ Client";
+#elif SYSAPI_UNIX
+	return "synergyc";
+#endif
+}
+
+const char*
+CClientApp::daemonInfo() const
+{
+#if SYSAPI_WIN32
+	return "Allows another computer to share it's keyboard and mouse with this computer.";
+#elif SYSAPI_UNIX
+	return "";
+#endif
+}

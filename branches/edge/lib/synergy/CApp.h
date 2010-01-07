@@ -67,10 +67,10 @@ public:
 	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) = 0;
 
 	// Name of the daemon (used for Unix and Windows).
-	CString m_daemonName;
+	virtual const char* daemonName() const = 0;
 
 	// A description of the daemon (used only on Windows).
-	CString m_daemonInfo;
+	virtual const char* daemonInfo() const = 0;
 
 	IArchTaskBarReceiver* s_taskBarReceiver;
 

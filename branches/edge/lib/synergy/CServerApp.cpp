@@ -921,7 +921,7 @@ CServerApp::standardStartup(int argc, char** argv)
 
 	// daemonize if requested
 	if (ARG->m_daemon) {
-		return ARCH->daemonize(m_daemonName.c_str(), daemonMainLoopStatic);
+		return ARCH->daemonize(daemonName(), daemonMainLoopStatic);
 	}
 	else {
 		return mainLoop();
@@ -952,10 +952,30 @@ int
 CServerApp::daemonMainLoop(int, const char**)
 {
 #if SYSAPI_WIN32
-	CSystemLogger sysLogger(m_daemonName.c_str(), false);
+	CSystemLogger sysLogger(daemonName(), false);
 #else
-	CSystemLogger sysLogger(m_daemonName.c_str(), true);
+	CSystemLogger sysLogger(daemonName(), true);
 #endif
 	return mainLoop();
+}
+
+const char* 
+CServerApp::daemonName() const
+{
+#if SYSAPI_WIN32
+	return "Synergy+ Server";
+#elif SYSAPI_UNIX
+	return "synergys";
+#endif
+}
+
+const char* 
+CServerApp::daemonInfo() const
+{
+#if SYSAPI_WIN32
+	return "Shares this computers mouse and keyboard with other computers.";
+#elif SYSAPI_UNIX
+	return "";
+#endif
 }
 

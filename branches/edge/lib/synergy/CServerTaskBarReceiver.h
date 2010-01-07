@@ -94,4 +94,6 @@ private:
 	CClients			m_clients;
 };
 
+IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer);
+
 #endif

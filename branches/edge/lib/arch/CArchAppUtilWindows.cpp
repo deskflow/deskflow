@@ -102,18 +102,18 @@ CArchAppUtilWindows::installService()
 	GetModuleFileName(CArchMiscWindows::instanceWin32(), thisPath, MAX_PATH);
 
 	ARCH->installDaemon(
-		app().m_daemonName.c_str(), app().m_daemonInfo.c_str(), 
+		app().daemonName(), app().daemonInfo(), 
 		thisPath, args.c_str(), NULL, true);
 
 	LOG((CLOG_INFO "service '%s' installed with args: %s",
-		app().m_daemonName.c_str(), args != "" ? args.c_str() : "none" ));
+		app().daemonName(), args != "" ? args.c_str() : "none" ));
 }
 
 void
 CArchAppUtilWindows::uninstallService()
 {
-	ARCH->uninstallDaemon(app().m_daemonName.c_str(), true);
-	LOG((CLOG_INFO "service '%s' uninstalled", app().m_daemonName.c_str()));
+	ARCH->uninstallDaemon(app().daemonName(), true);
+	LOG((CLOG_INFO "service '%s' uninstalled", app().daemonName()));
 }
 
 void
@@ -127,7 +127,7 @@ CArchAppUtilWindows::startService()
 
 	// open the service
 	SC_HANDLE service = OpenService(
-		mgr, app().m_daemonName.c_str(), SERVICE_START);
+		mgr, app().daemonName(), SERVICE_START);
 
 	if (service == NULL) {
 		CloseServiceHandle(mgr);
@@ -136,7 +136,7 @@ CArchAppUtilWindows::startService()
 
 	// start the service
 	if (StartService(service, 0, NULL)) {
-		LOG((CLOG_INFO "service '%s' started", app().m_daemonName.c_str()));
+		LOG((CLOG_INFO "service '%s' started", app().daemonName()));
 	}
 	else {
 		throw XArchDaemonFailed(new XArchEvalWindows());
@@ -154,7 +154,7 @@ CArchAppUtilWindows::stopService()
 
 	// open the service
 	SC_HANDLE service = OpenService(
-		mgr, app().m_daemonName.c_str(),
+		mgr, app().daemonName(),
 		SERVICE_STOP | SERVICE_QUERY_STATUS);
 
 	if (service == NULL) {
@@ -167,12 +167,12 @@ CArchAppUtilWindows::stopService()
 	if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
 		DWORD dwErrCode = GetLastError(); 
 		if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
-			LOG((CLOG_ERR "cannot stop service '%s'", app().m_daemonName.c_str()));
+			LOG((CLOG_ERR "cannot stop service '%s'", app().daemonName()));
 			throw XArchDaemonFailed(new XArchEvalWindows());
 		}
 	}
 
-	LOG((CLOG_INFO "service '%s' stopping asyncronously", app().m_daemonName.c_str()));
+	LOG((CLOG_INFO "service '%s' stopping asyncronously", app().daemonName()));
 }
 
 void
@@ -222,9 +222,9 @@ int daemonNTMainLoopStatic(int argc, const char** argv)
 int 
 CArchAppUtilWindows::daemonNTStartup(int, char**)
 {
-	CSystemLogger sysLogger(app().m_daemonName.c_str(), false);
+	CSystemLogger sysLogger(app().daemonName(), false);
 	app().m_bye = &byeThrow;
-	return ARCH->daemonize(app().m_daemonName.c_str(), daemonNTMainLoopStatic);
+	return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
 }
 
 static
@@ -244,6 +244,9 @@ foregroundStartupStatic(int argc, char** argv)
 int
 CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
 {
+	// record window instance for tray icon, etc
+	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+
 	CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
 	CThread::getCurrentThread().setPriority(-14);
 

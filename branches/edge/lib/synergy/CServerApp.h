@@ -61,6 +61,9 @@ public:
 	// Returns arguments that are common and for server.
 	CArgs& args() const { return (CArgs&)argsBase(); }
 
+	const char* daemonName() const;
+	const char* daemonInfo() const;
+
 	// TODO: Document these functions.
 	static void reloadSignalHandler(CArch::ESignal, void*);
 	static CEvent::Type getReloadConfigEvent();

@@ -42,6 +42,9 @@ public:
 	// Returns arguments that are common and for client.
 	CArgs& args() const { return (CArgs&)argsBase(); }
 
+	const char* daemonName() const;
+	const char* daemonInfo() const;
+
 	// TODO: implement these for client app
 	void loadConfig() { /* config not support for client */ }
 	bool loadConfig(const CString& pathname) { return false; /* config not support for client */ }
