@@ -46,7 +46,7 @@ CArchAppUtilUnix::parseArg(const int& argc, const char* const* argv, int& i)
 int
 standardStartupStatic(int argc, char** argv)
 {
-	return CServerApp::s_instance->standardStartup(argc, argv);
+	return CArchAppUtil::s_instance->app().standardStartup(argc, argv);
 }
 
 int

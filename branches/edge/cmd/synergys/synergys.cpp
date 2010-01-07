@@ -17,6 +17,7 @@
 #include "CArch.h"
 #include "Version.h"
 #include "CThread.h"
+#include "XArch.h"
 
 // platform dependant includes and app instances
 #if WINAPI_MSWINDOWS
@@ -30,7 +31,6 @@
 #include "CXWindowsServerTaskBarReceiver.h"
 #elif WINAPI_CARBON
 #include "COSXServerTaskBarReceiver.h"
-
 #else
 #error Platform not supported.
 #endif

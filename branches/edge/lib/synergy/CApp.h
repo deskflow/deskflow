@@ -61,6 +61,7 @@ public:
 	virtual int mainLoop() = 0;
 	virtual int foregroundStartup(int argc, char** argv) = 0;
 	virtual int daemonMainLoop(int, const char**) = 0;
+	virtual int standardStartup(int argc, char** argv) = 0;
 	virtual int run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) = 0;
 
 	// Name of the daemon (used for Unix and Windows).
