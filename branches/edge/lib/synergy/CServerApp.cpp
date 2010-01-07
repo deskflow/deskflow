@@ -873,3 +873,154 @@ void CServerApp::resetServer(const CEvent&, void*)
 	cleanupServer();
 	startServer();
 }
+
+int 
+CServerApp::run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver)
+{
+	// general initialization
+	ARG->m_synergyAddress = new CNetworkAddress;
+	ARG->m_config         = new CConfig;
+	ARG->m_pname          = ARCH->getBasename(argv[0]);
+
+	// install caller's output filter
+	if (outputter != NULL) {
+		CLOG->insert(outputter);
+	}
+
+	// save log messages
+	// use heap memory because CLog deletes outputters on destruction
+	CBufferedLogOutputter* logBuffer = new CBufferedLogOutputter(1000);
+	CLOG->insert(logBuffer, true);
+
+	// make the task bar receiver.  the user can control this app
+	// through the task bar.
+	s_taskBarReceiver = createTaskBarReceiver(logBuffer);
+
+	// run
+	int result = startup(argc, argv);
+
+	// done with task bar receiver
+	delete s_taskBarReceiver;
+
+	delete ARG->m_config;
+	delete ARG->m_synergyAddress;
+	return result;
+}
+
+int daemonMainLoopStatic(int argc, const char** argv) {
+	return CServerApp::s_instance->daemonNTMainLoop(argc, argv);
+}
+
+int 
+CServerApp::standardStartup(int argc, char** argv)
+{
+	// parse command line
+	parseArgs(argc, argv);
+
+	// load configuration
+	loadConfig();
+
+	// daemonize if requested
+	if (ARG->m_daemon) {
+		return ARCH->daemonize(m_daemonName.c_str(), daemonMainLoopStatic);
+	}
+	else {
+		return mainLoop();
+	}
+}
+
+int daemonNTMainLoopStatic(int argc, const char** argv)
+{
+	return CServerApp::s_instance->daemonMainLoop(argc, argv);
+}
+
+int 
+CServerApp::daemonNTStartup(int, char**)
+{
+	CSystemLogger sysLogger(m_daemonName.c_str(), false);
+	m_bye = &byeThrow;
+	return ARCH->daemonize(m_daemonName.c_str(), daemonNTMainLoopStatic);
+}
+
+int 
+CServerApp::foregroundStartup(int argc, char** argv)
+{
+	// parse command line
+	parseArgs(argc, argv);
+
+	// load configuration
+	loadConfig();
+
+	// never daemonize
+	return mainLoop();
+}
+
+int 
+mainLoopStatic() 
+{
+	return CServerApp::s_instance->mainLoop();
+}
+
+int 
+CServerApp::daemonNTMainLoop(int argc, const char** argv)
+{
+	parseArgs(argc, argv);
+	ARG->m_backend = false;
+	loadConfig();
+	return CArchMiscWindows::runDaemon(mainLoopStatic);
+}
+
+int 
+CServerApp::daemonMainLoop(int, const char**)
+{
+#if SYSAPI_WIN32
+	CSystemLogger sysLogger(m_daemonName.c_str(), false);
+#else
+	CSystemLogger sysLogger(m_daemonName.c_str(), true);
+#endif
+	return mainLoop();
+}
+
+void 
+CServerApp::byeThrow(int x)
+{
+	CArchMiscWindows::daemonFailed(x);
+}
+
+int
+daemonNTStartupStatic(int argc, char** argv)
+{
+	return CServerApp::s_instance->daemonNTStartup(argc, argv);
+}
+
+int
+foregroundStartupStatic(int argc, char** argv)
+{
+	return CServerApp::s_instance->foregroundStartup(argc, argv);
+}
+
+int
+standardStartupStatic(int argc, char** argv)
+{
+	return CServerApp::s_instance->standardStartup(argc, argv);
+}
+
+int
+CServerApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
+{
+#if SYSAPI_WIN32
+	StartupFunc startup;
+	if (CArchMiscWindows::wasLaunchedAsService()) {
+		startup = &daemonNTStartupStatic;
+	} else {
+		startup = &foregroundStartupStatic;
+		ARG->m_daemon = false;
+	}
+
+	return run(__argc, __argv, NULL, startup, createTaskBarReceiver);
+#elif SYSAPI_UNIX
+	return run(argc, argv, NULL, &standardStartupStatic, createTaskBarReceiver);
+#else
+#error Platform not supported.
+#endif
+}
