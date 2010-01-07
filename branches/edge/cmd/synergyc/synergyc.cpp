@@ -573,6 +573,7 @@ showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 
 int main(int argc, char** argv) {
 
+	CClientApp app;
 	APP->m_daemonName = DAEMON_NAME;
 	APP->m_daemonInfo = DAEMON_INFO;
 
@@ -653,8 +654,11 @@ WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 int
 main(int argc, char** argv)
 {
+	CClientApp app;
 	CArch arch;
 	CLOG;
+
+	arch.adoptApp(&app);
 
 	try {
 		int result;

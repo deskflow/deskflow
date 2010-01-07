@@ -14,6 +14,6 @@
 
 #include "CArchConsoleUnix.h"
 
-CArchConsoleUnix::CArchConsoleUnix(void*) { }
+CArchConsoleUnix::CArchConsoleUnix() { }
 
 CArchConsoleUnix::~CArchConsoleUnix() { }
