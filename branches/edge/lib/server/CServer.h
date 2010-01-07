@@ -25,6 +25,7 @@
 #include "stdmap.h"
 #include "stdset.h"
 #include "stdvector.h"
+#include "INode.h"
 
 class CBaseClientProxy;
 class CEventQueueTimer;
@@ -35,7 +36,7 @@ class CInputFilter;
 /*!
 This class implements the top-level server algorithms for synergy.
 */
-class CServer {
+class CServer : public INode {
 public:
 	//! Lock cursor to screen data
 	class CLockCursorToScreenInfo {

@@ -48,7 +48,18 @@ public:
 	void handleServiceArg(const char* serviceAction);
 
 	bool parseArg(const int& argc, const char* const* argv, int& i);
+	
 	void adoptApp(CApp* app);
+
+	int daemonNTStartup(int, char**);
+	
+	int daemonNTMainLoop(int argc, const char** argv);
+
+	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
+
+	static void byeThrow(int x);
+
+	static CArchAppUtilWindows& instance() { return (CArchAppUtilWindows&)*s_instance; }
 };
 
 // TODO: move to class

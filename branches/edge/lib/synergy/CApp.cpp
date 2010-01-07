@@ -22,7 +22,8 @@
 
 CApp::CApp(CArgsBase* args) :
 m_args(args),
-m_bye(&exit)
+m_bye(&exit),
+s_taskBarReceiver(NULL)
 {
 }
 

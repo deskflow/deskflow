@@ -35,8 +35,8 @@
 #error Platform not supported.
 #endif
 
-CServerApp* CServerApp::s_instance = new CServerApp();
-#define APP CServerApp::s_instance
+CApp* CApp::s_instance = new CServerApp();
+#define APP ((CServerApp*)CApp::s_instance)
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
@@ -65,7 +65,7 @@ getResetServerEvent()
 }
 
 static
-CServerTaskBarReceiver*
+IArchTaskBarReceiver*
 createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 {
 #if WINAPI_MSWINDOWS
@@ -127,7 +127,7 @@ main(int argc, char** argv)
 		CThread::getCurrentThread().setPriority(-14);
 #endif
 
-		result = APP->run(argc, argv, createTaskBarReceiver);
+		result = ARCH->run(argc, argv, createTaskBarReceiver);
 	}
 	catch (XBase& e) {
 		LOG((CLOG_CRIT "Uncaught exception: %s\n", e.what()));

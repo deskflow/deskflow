@@ -33,13 +33,8 @@ enum EServerState {
 class CServer;
 class CScreen;
 class CClientListener;
-class CServerTaskBarReceiver;
 class CEventQueueTimer;
 class ILogOutputter;
-class CBufferedLogOutputter;
-
-typedef int (*StartupFunc)(int, char**);
-typedef CServerTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*);
 
 class CServerApp : public CApp {
 public:
@@ -69,7 +64,6 @@ public:
 	// TODO: Document these functions.
 	static void reloadSignalHandler(CArch::ESignal, void*);
 	static CEvent::Type getReloadConfigEvent();
-	static void byeThrow(int x);
 
 	void reloadConfig(const CEvent&, void*);
 	void loadConfig();
@@ -104,11 +98,8 @@ public:
 	int mainLoop();
 	int run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	int standardStartup(int argc, char** argv);
-	int daemonNTStartup(int, char**);
 	int foregroundStartup(int argc, char** argv);
-	int daemonNTMainLoop(int argc, const char** argv);
 	int daemonMainLoop(int, const char**);
-	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
 
 	// TODO: change s_ to m_
 	CServer* s_server;
@@ -119,12 +110,8 @@ public:
 	CScreen* s_serverScreen;
 	CPrimaryClient* s_primaryClient;
 	CClientListener* s_listener;
-	CServerTaskBarReceiver* s_taskBarReceiver;
 	bool s_suspended;
 	CEventQueueTimer* s_timer;
-
-	// Static instance for backwards compat.
-	static CServerApp* s_instance;
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);

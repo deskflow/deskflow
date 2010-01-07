@@ -14,10 +14,13 @@
  
 #include "CArchAppUtil.h"
 #include "CApp.h"
+
+CArchAppUtil* CArchAppUtil::s_instance = nullptr;
  
 CArchAppUtil::CArchAppUtil() :
 m_app(nullptr)
 {
+	s_instance = this;
 }
 
 CArchAppUtil::~CArchAppUtil()

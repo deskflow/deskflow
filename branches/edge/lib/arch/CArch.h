@@ -189,6 +189,7 @@ public:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	virtual void adoptApp(CApp* app);
 	virtual CApp& app() const;
+	virtual int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
 
 private:
 	static CArch*		s_instance;

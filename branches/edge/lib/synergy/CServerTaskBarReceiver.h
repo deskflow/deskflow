@@ -36,6 +36,8 @@ public:
 	*/
 	void				updateStatus(CServer*, const CString& errorMsg);
 
+	void updateStatus(INode* n, const CString& errorMsg) { updateStatus((CServer*)n, errorMsg); }
+
 	//@}
 
 	// IArchTaskBarReceiver overrides

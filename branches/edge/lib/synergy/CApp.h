@@ -17,6 +17,13 @@
 #include "common.h"
 #include "CString.h"
 
+class IArchTaskBarReceiver;
+class CBufferedLogOutputter;
+class ILogOutputter;
+
+typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*);
+typedef int (*StartupFunc)(int, char**);
+
 class CApp {
 public:
 	class CArgsBase {
@@ -49,11 +56,20 @@ public:
 	// Parse command line arguments.
 	virtual void parseArgs(int argc, const char* const* argv) = 0;
 
+	virtual void loadConfig() = 0;
+	virtual bool loadConfig(const CString& pathname) = 0;
+	virtual int mainLoop() = 0;
+	virtual int foregroundStartup(int argc, char** argv) = 0;
+	virtual int daemonMainLoop(int, const char**) = 0;
+	virtual int run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) = 0;
+
 	// Name of the daemon (used for Unix and Windows).
 	CString m_daemonName;
 
 	// A description of the daemon (used only on Windows).
 	CString m_daemonInfo;
+
+	IArchTaskBarReceiver* s_taskBarReceiver;
 
 	// Function pointer for function to exit immediately.
 	// TODO: this is old C code - use inheritance to normalize
@@ -63,6 +79,9 @@ public:
 	bool isArg(int argi, int argc, const char* const* argv,
 		const char* name1, const char* name2,
 		int minRequiredParameters = 0);
+
+	// Static instance for backwards compat.
+	static CApp* s_instance;
 
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);

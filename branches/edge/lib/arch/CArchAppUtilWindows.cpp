@@ -18,6 +18,7 @@
 #include "XArchWindows.h"
 #include "CArchMiscWindows.h"
 #include "CApp.h"
+#include "LogOutputters.h"
 
 #include <sstream>
 #include <iostream>
@@ -190,4 +191,67 @@ exitPause(int code)
 	}
 
 	exit(code);
+}
+
+static
+int 
+mainLoopStatic() 
+{
+	return CArchAppUtil::s_instance->app().mainLoop();
+}
+
+int 
+CArchAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
+{
+	app().parseArgs(argc, argv);
+	app().argsBase().m_backend = false;
+	app().loadConfig();
+	return CArchMiscWindows::runDaemon(mainLoopStatic);
+}
+
+void 
+CArchAppUtilWindows::byeThrow(int x)
+{
+	CArchMiscWindows::daemonFailed(x);
+}
+
+int daemonNTMainLoopStatic(int argc, const char** argv)
+{
+	return CArchAppUtil::s_instance->app().daemonMainLoop(argc, argv);
+}
+
+int 
+CArchAppUtilWindows::daemonNTStartup(int, char**)
+{
+	CSystemLogger sysLogger(app().m_daemonName.c_str(), false);
+	app().m_bye = &byeThrow;
+	return ARCH->daemonize(app().m_daemonName.c_str(), daemonNTMainLoopStatic);
+}
+
+static
+int
+daemonNTStartupStatic(int argc, char** argv)
+{
+	return CArchAppUtilWindows::instance().daemonNTStartup(argc, argv);
+}
+
+static
+int
+foregroundStartupStatic(int argc, char** argv)
+{
+	return CArchAppUtil::s_instance->app().foregroundStartup(argc, argv);
+}
+
+int
+CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
+{
+	StartupFunc startup;
+	if (CArchMiscWindows::wasLaunchedAsService()) {
+		startup = &daemonNTStartupStatic;
+	} else {
+		startup = &foregroundStartupStatic;
+		app().argsBase().m_daemon = false;
+	}
+
+	return app().run(argc, argv, NULL, startup, createTaskBarReceiver);
 }

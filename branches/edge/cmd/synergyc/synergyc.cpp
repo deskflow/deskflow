@@ -55,8 +55,8 @@
 #include "COSXClientTaskBarReceiver.h"
 #endif
 
-CClientApp* CClientApp::s_instance = new CClientApp();
-#define APP CClientApp::s_instance
+CApp* CApp::s_instance = new CClientApp();
+#define APP ((CClientApp*)CApp::s_instance)
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32

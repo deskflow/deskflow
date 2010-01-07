@@ -61,7 +61,6 @@ s_serverState(kUninitialized),
 s_serverScreen(NULL),
 s_primaryClient(NULL),
 s_listener(NULL),
-s_taskBarReceiver(NULL),
 s_suspended(false),
 s_timer(NULL)
 {
@@ -908,7 +907,7 @@ CServerApp::run(int argc, char** argv, ILogOutputter* outputter, StartupFunc sta
 }
 
 int daemonMainLoopStatic(int argc, const char** argv) {
-	return CServerApp::s_instance->daemonNTMainLoop(argc, argv);
+	return CServerApp::s_instance->daemonMainLoop(argc, argv);
 }
 
 int 
@@ -929,19 +928,6 @@ CServerApp::standardStartup(int argc, char** argv)
 	}
 }
 
-int daemonNTMainLoopStatic(int argc, const char** argv)
-{
-	return CServerApp::s_instance->daemonMainLoop(argc, argv);
-}
-
-int 
-CServerApp::daemonNTStartup(int, char**)
-{
-	CSystemLogger sysLogger(m_daemonName.c_str(), false);
-	m_bye = &byeThrow;
-	return ARCH->daemonize(m_daemonName.c_str(), daemonNTMainLoopStatic);
-}
-
 int 
 CServerApp::foregroundStartup(int argc, char** argv)
 {
@@ -955,19 +941,11 @@ CServerApp::foregroundStartup(int argc, char** argv)
 	return mainLoop();
 }
 
+static
 int 
 mainLoopStatic() 
 {
 	return CServerApp::s_instance->mainLoop();
-}
-
-int 
-CServerApp::daemonNTMainLoop(int argc, const char** argv)
-{
-	parseArgs(argc, argv);
-	ARG->m_backend = false;
-	loadConfig();
-	return CArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
 int 
@@ -981,46 +959,3 @@ CServerApp::daemonMainLoop(int, const char**)
 	return mainLoop();
 }
 
-void 
-CServerApp::byeThrow(int x)
-{
-	CArchMiscWindows::daemonFailed(x);
-}
-
-int
-daemonNTStartupStatic(int argc, char** argv)
-{
-	return CServerApp::s_instance->daemonNTStartup(argc, argv);
-}
-
-int
-foregroundStartupStatic(int argc, char** argv)
-{
-	return CServerApp::s_instance->foregroundStartup(argc, argv);
-}
-
-int
-standardStartupStatic(int argc, char** argv)
-{
-	return CServerApp::s_instance->standardStartup(argc, argv);
-}
-
-int
-CServerApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
-{
-#if SYSAPI_WIN32
-	StartupFunc startup;
-	if (CArchMiscWindows::wasLaunchedAsService()) {
-		startup = &daemonNTStartupStatic;
-	} else {
-		startup = &foregroundStartupStatic;
-		ARG->m_daemon = false;
-	}
-
-	return run(__argc, __argv, NULL, startup, createTaskBarReceiver);
-#elif SYSAPI_UNIX
-	return run(argc, argv, NULL, &standardStartupStatic, createTaskBarReceiver);
-#else
-#error Platform not supported.
-#endif
-}

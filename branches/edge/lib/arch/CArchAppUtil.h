@@ -24,6 +24,8 @@ public:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	virtual void adoptApp(CApp* app);
 	CApp& app() const;
+
+	static CArchAppUtil* s_instance;
 	
 private:
 	CApp* m_app;

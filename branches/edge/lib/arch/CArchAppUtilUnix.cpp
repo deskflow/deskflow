@@ -42,3 +42,15 @@ CArchAppUtilUnix::parseArg(const int& argc, const char* const* argv, int& i)
 	return false;
 #endif
 }
+
+int
+standardStartupStatic(int argc, char** argv)
+{
+	return CServerApp::s_instance->standardStartup(argc, argv);
+}
+
+int
+CArchAppUtilUnix::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
+{
+	return app().run(argc, argv, NULL, &standardStartupStatic, createTaskBarReceiver);
+}

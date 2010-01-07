@@ -42,8 +42,13 @@ public:
 	// Returns arguments that are common and for client.
 	CArgs& args() const { return (CArgs&)argsBase(); }
 
-	// Static instance for backwards compat.
-	static CClientApp* s_instance;
+	// TODO: implement these for client app
+	void loadConfig() { /* config not support for client */ }
+	bool loadConfig(const CString& pathname) { return false; /* config not support for client */ }
+	int mainLoop() { return 0; }
+	int foregroundStartup(int argc, char** argv) { return 0; }
+	int daemonMainLoop(int, const char**) { return 0; }
+	int run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) { return 0; }
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
