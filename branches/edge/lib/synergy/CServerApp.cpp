@@ -19,6 +19,12 @@
 #include "Version.h"
 #include "IEventQueue.h"
 #include "CServer.h"
+#include "CClientListener.h"
+#include "CClientProxy.h"
+#include "TMethodEventJob.h"
+#include "CServerTaskBarReceiver.h"
+#include "CPrimaryClient.h"
+#include "CScreen.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
@@ -348,20 +354,134 @@ CServerApp::getResetServerEvent()
 	return CEvent::registerTypeOnce(s_resetServerEvent, "resetServer");
 }
 
-void
-CServerApp::cleanupServer()
+void 
+CServerApp::handleClientConnected(const CEvent&, void* vlistener)
 {
+	CClientListener* listener = reinterpret_cast<CClientListener*>(vlistener);
+	CClientProxy* client = listener->getNextClient();
+	if (client != NULL) {
+		s_server->adoptClient(client);
+		updateStatus();
+	}
+}
 
+void
+CServerApp::handleClientsDisconnected(const CEvent&, void*)
+{
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+void
+CServerApp::closeServer(CServer* server)
+{
+	if (server == NULL) {
+		return;
+	}
+
+	// tell all clients to disconnect
+	server->disconnect();
+
+	// wait for clients to disconnect for up to timeout seconds
+	double timeout = 3.0;
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+		new TMethodEventJob<CServerApp>(this, &CServerApp::handleClientsDisconnected));
+	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
+		new TMethodEventJob<CServerApp>(this, &CServerApp::handleClientsDisconnected));
+	CEvent event;
+	EVENTQUEUE->getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event);
+	}
+	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
+	EVENTQUEUE->deleteTimer(timer);
+	EVENTQUEUE->removeHandler(CServer::getDisconnectedEvent(), server);
+
+	// done with server
+	delete server;
+}
+
+void 
+CServerApp::stopRetryTimer()
+{
+	if (s_timer != NULL) {
+		EVENTQUEUE->deleteTimer(s_timer);
+		EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
+		s_timer = NULL;
+	}
 }
 
 void
 CServerApp::updateStatus()
 {
-
+	s_taskBarReceiver->updateStatus(s_server, "");
 }
 
-int
-CServerApp::mainLoop()
+void 
+CServerApp::closeClientListener(CClientListener* listen)
 {
-	return 0;
+	if (listen != NULL) {
+		EVENTQUEUE->removeHandler(CClientListener::getConnectedEvent(), listen);
+		delete listen;
+	}
+}
+
+void 
+CServerApp::stopServer()
+{
+	if (s_serverState == kStarted) {
+		closeClientListener(s_listener);
+		closeServer(s_server);
+		s_server      = NULL;
+		s_listener    = NULL;
+		s_serverState = kInitialized;
+	}
+	else if (s_serverState == kStarting) {
+		stopRetryTimer();
+		s_serverState = kInitialized;
+	}
+	assert(s_server == NULL);
+	assert(s_listener == NULL);
+}
+
+void
+CServerApp::closePrimaryClient(CPrimaryClient* primaryClient)
+{
+	delete primaryClient;
+}
+
+void 
+CServerApp::closeServerScreen(CScreen* screen)
+{
+	if (screen != NULL) {
+		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
+			screen->getEventTarget());
+		EVENTQUEUE->removeHandler(IScreen::getSuspendEvent(),
+			screen->getEventTarget());
+		EVENTQUEUE->removeHandler(IScreen::getResumeEvent(),
+			screen->getEventTarget());
+		delete screen;
+	}
+}
+
+void CServerApp::cleanupServer()
+{
+	stopServer();
+	if (s_serverState == kInitialized) {
+		closePrimaryClient(s_primaryClient);
+		closeServerScreen(s_serverScreen);
+		s_primaryClient = NULL;
+		s_serverScreen  = NULL;
+		s_serverState   = kUninitialized;
+	}
+	else if (s_serverState == kInitializing ||
+		s_serverState == kInitializingToStart) {
+			stopRetryTimer();
+			s_serverState = kUninitialized;
+	}
+	assert(s_primaryClient == NULL);
+	assert(s_serverScreen == NULL);
+	assert(s_serverState == kUninitialized);
 }

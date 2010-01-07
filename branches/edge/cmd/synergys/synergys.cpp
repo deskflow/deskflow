@@ -139,7 +139,7 @@ getResetServerEvent()
 void
 updateStatus()
 {
-	app.s_taskBarReceiver->updateStatus(app.s_server, "");
+	app.updateStatus();
 }
 
 static
@@ -151,14 +151,9 @@ updateStatus(const CString& msg)
 
 static
 void
-handleClientConnected(const CEvent&, void* vlistener)
+handleClientConnected(const CEvent& e, void* vlistener)
 {
-	CClientListener* listener = reinterpret_cast<CClientListener*>(vlistener);
-	CClientProxy* client = listener->getNextClient();
-	if (client != NULL) {
-		app.s_server->adoptClient(client);
-		updateStatus();
-	}
+	app.handleClientConnected(e, vlistener);
 }
 
 static
@@ -177,10 +172,7 @@ static
 void
 closeClientListener(CClientListener* listen)
 {
-	if (listen != NULL) {
-		EVENTQUEUE->removeHandler(CClientListener::getConnectedEvent(), listen);
-		delete listen;
-	}
+	app.closeClientListener(listen);
 }
 
 static
@@ -219,15 +211,7 @@ static
 void
 closeServerScreen(CScreen* screen)
 {
-	if (screen != NULL) {
-		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
-							screen->getEventTarget());
-		EVENTQUEUE->removeHandler(IScreen::getSuspendEvent(),
-							screen->getEventTarget());
-		EVENTQUEUE->removeHandler(IScreen::getResumeEvent(),
-							screen->getEventTarget());
-		delete screen;
-	}
+	app.closeServerScreen(screen);
 }
 
 static
@@ -242,7 +226,7 @@ static
 void
 closePrimaryClient(CPrimaryClient* primaryClient)
 {
-	delete primaryClient;
+	app.closePrimaryClient(primaryClient);
 }
 
 static
@@ -254,9 +238,9 @@ handleNoClients(const CEvent&, void*)
 
 static
 void
-handleClientsDisconnected(const CEvent&, void*)
+handleClientsDisconnected(const CEvent& e, void*)
 {
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	app.handleClientsDisconnected(e, NULL);
 }
 
 static
@@ -282,33 +266,7 @@ static
 void
 closeServer(CServer* server)
 {
-	if (server == NULL) {
-		return;
-	}
-
-	// tell all clients to disconnect
-	server->disconnect();
-
-	// wait for clients to disconnect for up to timeout seconds
-	double timeout = 3.0;
-	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
-						new CFunctionEventJob(handleClientsDisconnected));
-	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
-						new CFunctionEventJob(handleClientsDisconnected));
-	CEvent event;
-	EVENTQUEUE->getEvent(event);
-	while (event.getType() != CEvent::kQuit) {
-		EVENTQUEUE->dispatchEvent(event);
-		CEvent::deleteData(event);
-		EVENTQUEUE->getEvent(event);
-	}
-	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
-	EVENTQUEUE->deleteTimer(timer);
-	EVENTQUEUE->removeHandler(CServer::getDisconnectedEvent(), server);
-
-	// done with server
-	delete server;
+	app.closeServer(server);
 }
 
 static bool initServer();
@@ -318,11 +276,7 @@ static
 void
 stopRetryTimer()
 {
-	if (app.s_timer != NULL) {
-		EVENTQUEUE->deleteTimer(app.s_timer);
-		EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
-		app.s_timer = NULL;
-	}
+	app.stopRetryTimer();
 }
 
 static
@@ -497,40 +451,13 @@ static
 void
 stopServer()
 {
-	if (app.s_serverState == kStarted) {
-		closeClientListener(app.s_listener);
-		closeServer(app.s_server);
-		app.s_server      = NULL;
-		app.s_listener    = NULL;
-		app.s_serverState = kInitialized;
-	}
-	else if (app.s_serverState == kStarting) {
-		stopRetryTimer();
-		app.s_serverState = kInitialized;
-	}
-	assert(app.s_server == NULL);
-	assert(app.s_listener == NULL);
+	app.stopServer();
 }
 
 void
 cleanupServer()
 {
-	stopServer();
-	if (app.s_serverState == kInitialized) {
-		closePrimaryClient(app.s_primaryClient);
-		closeServerScreen(app.s_serverScreen);
-		app.s_primaryClient = NULL;
-		app.s_serverScreen  = NULL;
-		app.s_serverState   = kUninitialized;
-	}
-	else if (app.s_serverState == kInitializing ||
-			app.s_serverState == kInitializingToStart) {
-		stopRetryTimer();
-		app.s_serverState = kUninitialized;
-	}
-	assert(app.s_primaryClient == NULL);
-	assert(app.s_serverScreen == NULL);
-	assert(app.s_serverState == kUninitialized);
+	app.cleanupServer();
 }
 
 static

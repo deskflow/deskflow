@@ -71,10 +71,20 @@ public:
 	CEvent::Type getForceReconnectEvent();
 	void resetServer(const CEvent&, void*);
 	CEvent::Type getResetServerEvent();
-	void cleanupServer();
+	void handleClientConnected(const CEvent&, void* vlistener);
+	void handleClientsDisconnected(const CEvent&, void*);
+	void closeServer(CServer* server);
+	void stopRetryTimer();
 	void updateStatus();
-	int mainLoop();
+	void closeClientListener(CClientListener* listen);
+	void stopServer();
+	void closePrimaryClient(CPrimaryClient* primaryClient);
+	void closeServerScreen(CScreen* screen);
+	void cleanupServer();
 
+	//int mainLoop();
+
+	// TODO: change s_ to m_
 	CServer* s_server;
 	CEvent::Type s_reloadConfigEvent;
 	CEvent::Type s_forceReconnectEvent;
