@@ -278,6 +278,8 @@ SET(inc_lib_server
 )
 
 SET(src_lib_synergy
+	${root_lib}/synergy/CClientTaskBarReceiver.cpp
+	${root_lib}/synergy/CServerTaskBarReceiver.cpp
 	${root_lib}/synergy/CAppUtil.cpp
 	${root_lib}/synergy/CApp.cpp
 	${root_lib}/synergy/CClientApp.cpp
@@ -300,6 +302,8 @@ SET(src_lib_synergy
 )
 
 SET(inc_lib_synergy
+	${root_lib}/synergy/CClientTaskBarReceiver.h
+	${root_lib}/synergy/CServerTaskBarReceiver.h
 	${root_lib}/synergy/CAppUtil.h
 	${root_lib}/synergy/CApp.h
 	${root_lib}/synergy/CClientApp.h

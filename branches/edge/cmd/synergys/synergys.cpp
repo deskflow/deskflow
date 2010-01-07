@@ -118,23 +118,6 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 // platform independent main
 //
 
-enum EServerState {
-	kUninitialized,
-	kInitializing,
-	kInitializingToStart,
-	kInitialized,
-	kStarting,
-	kStarted
-};
-
-static EServerState				s_serverState         = kUninitialized;
-static CScreen*					s_serverScreen        = NULL;
-static CPrimaryClient*			s_primaryClient       = NULL;
-static CClientListener*			s_listener            = NULL;
-static CServerTaskBarReceiver*	s_taskBarReceiver     = NULL;
-static bool						s_suspended           = false;
-static CEventQueueTimer*		s_timer               = NULL;
-
 CEvent::Type
 getReloadConfigEvent()
 {
@@ -156,14 +139,14 @@ getResetServerEvent()
 void
 updateStatus()
 {
-	s_taskBarReceiver->updateStatus(app.s_server, "");
+	app.s_taskBarReceiver->updateStatus(app.s_server, "");
 }
 
 static
 void
 updateStatus(const CString& msg)
 {
-	s_taskBarReceiver->updateStatus(app.s_server, msg);
+	app.s_taskBarReceiver->updateStatus(app.s_server, msg);
 }
 
 static
@@ -335,10 +318,10 @@ static
 void
 stopRetryTimer()
 {
-	if (s_timer != NULL) {
-		EVENTQUEUE->deleteTimer(s_timer);
+	if (app.s_timer != NULL) {
+		EVENTQUEUE->deleteTimer(app.s_timer);
 		EVENTQUEUE->removeHandler(CEvent::kTimer, NULL);
-		s_timer = NULL;
+		app.s_timer = NULL;
 	}
 }
 
@@ -347,11 +330,11 @@ void
 retryHandler(const CEvent&, void*)
 {
 	// discard old timer
-	assert(s_timer != NULL);
+	assert(app.s_timer != NULL);
 	stopRetryTimer();
 
 	// try initializing/starting the server again
-	switch (s_serverState) {
+	switch (app.s_serverState) {
 	case kUninitialized:
 	case kInitialized:
 	case kStarted:
@@ -360,7 +343,7 @@ retryHandler(const CEvent&, void*)
 
 	case kInitializing:
 		LOG((CLOG_DEBUG1 "retry server initialization"));
-		s_serverState = kUninitialized;
+		app.s_serverState = kUninitialized;
 		if (!initServer()) {
 			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 		}
@@ -368,11 +351,11 @@ retryHandler(const CEvent&, void*)
 
 	case kInitializingToStart:
 		LOG((CLOG_DEBUG1 "retry server initialization"));
-		s_serverState = kUninitialized;
+		app.s_serverState = kUninitialized;
 		if (!initServer()) {
 			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 		}
-		else if (s_serverState == kInitialized) {
+		else if (app.s_serverState == kInitialized) {
 			LOG((CLOG_DEBUG1 "starting server"));
 			if (!startServer()) {
 				EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
@@ -382,7 +365,7 @@ retryHandler(const CEvent&, void*)
 
 	case kStarting:
 		LOG((CLOG_DEBUG1 "retry starting server"));
-		s_serverState = kInitialized;
+		app.s_serverState = kInitialized;
 		if (!startServer()) {
 			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 		}
@@ -395,7 +378,7 @@ bool
 initServer()
 {
 	// skip if already initialized or initializing
-	if (s_serverState != kUninitialized) {
+	if (app.s_serverState != kUninitialized) {
 		return true;
 	}
 
@@ -406,9 +389,9 @@ initServer()
 		CString name    = ARG->m_config->getCanonicalName(ARG->m_name);
 		serverScreen    = openServerScreen();
 		primaryClient   = openPrimaryClient(name, serverScreen);
-		s_serverScreen  = serverScreen;
-		s_primaryClient = primaryClient;
-		s_serverState   = kInitialized;
+		app.s_serverScreen  = serverScreen;
+		app.s_primaryClient = primaryClient;
+		app.s_serverState   = kInitialized;
 		updateStatus();
 		return true;
 	}
@@ -434,12 +417,12 @@ initServer()
 	
 	if (ARG->m_restartable) {
 		// install a timer and handler to retry later
-		assert(s_timer == NULL);
+		assert(app.s_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
+		app.s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+		EVENTQUEUE->adoptHandler(CEvent::kTimer, app.s_timer,
 							new CFunctionEventJob(&retryHandler, NULL));
-		s_serverState = kInitializing;
+		app.s_serverState = kInitializing;
 		return true;
 	}
 	else {
@@ -453,33 +436,33 @@ bool
 startServer()
 {
 	// skip if already started or starting
-	if (s_serverState == kStarting || s_serverState == kStarted) {
+	if (app.s_serverState == kStarting || app.s_serverState == kStarted) {
 		return true;
 	}
 
 	// initialize if necessary
-	if (s_serverState != kInitialized) {
+	if (app.s_serverState != kInitialized) {
 		if (!initServer()) {
 			// hard initialization failure
 			return false;
 		}
-		if (s_serverState == kInitializing) {
+		if (app.s_serverState == kInitializing) {
 			// not ready to start
-			s_serverState = kInitializingToStart;
+			app.s_serverState = kInitializingToStart;
 			return true;
 		}
-		assert(s_serverState == kInitialized);
+		assert(app.s_serverState == kInitialized);
 	}
 
 	double retryTime;
 	CClientListener* listener = NULL;
 	try {
 		listener   = openClientListener(ARG->m_config->getSynergyAddress());
-		app.s_server   = openServer(*ARG->m_config, s_primaryClient);
-		s_listener = listener;
+		app.s_server   = openServer(*ARG->m_config, app.s_primaryClient);
+		app.s_listener = listener;
 		updateStatus();
 		LOG((CLOG_NOTE "started server"));
-		s_serverState = kStarted;
+		app.s_serverState = kStarted;
 		return true;
 	}
 	catch (XSocketAddressInUse& e) {
@@ -496,12 +479,12 @@ startServer()
 
 	if (ARG->m_restartable) {
 		// install a timer and handler to retry later
-		assert(s_timer == NULL);
+		assert(app.s_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-		s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, s_timer,
+		app.s_timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+		EVENTQUEUE->adoptHandler(CEvent::kTimer, app.s_timer,
 							new CFunctionEventJob(&retryHandler, NULL));
-		s_serverState = kStarting;
+		app.s_serverState = kStarting;
 		return true;
 	}
 	else {
@@ -514,50 +497,50 @@ static
 void
 stopServer()
 {
-	if (s_serverState == kStarted) {
-		closeClientListener(s_listener);
+	if (app.s_serverState == kStarted) {
+		closeClientListener(app.s_listener);
 		closeServer(app.s_server);
 		app.s_server      = NULL;
-		s_listener    = NULL;
-		s_serverState = kInitialized;
+		app.s_listener    = NULL;
+		app.s_serverState = kInitialized;
 	}
-	else if (s_serverState == kStarting) {
+	else if (app.s_serverState == kStarting) {
 		stopRetryTimer();
-		s_serverState = kInitialized;
+		app.s_serverState = kInitialized;
 	}
 	assert(app.s_server == NULL);
-	assert(s_listener == NULL);
+	assert(app.s_listener == NULL);
 }
 
 void
 cleanupServer()
 {
 	stopServer();
-	if (s_serverState == kInitialized) {
-		closePrimaryClient(s_primaryClient);
-		closeServerScreen(s_serverScreen);
-		s_primaryClient = NULL;
-		s_serverScreen  = NULL;
-		s_serverState   = kUninitialized;
+	if (app.s_serverState == kInitialized) {
+		closePrimaryClient(app.s_primaryClient);
+		closeServerScreen(app.s_serverScreen);
+		app.s_primaryClient = NULL;
+		app.s_serverScreen  = NULL;
+		app.s_serverState   = kUninitialized;
 	}
-	else if (s_serverState == kInitializing ||
-			s_serverState == kInitializingToStart) {
+	else if (app.s_serverState == kInitializing ||
+			app.s_serverState == kInitializingToStart) {
 		stopRetryTimer();
-		s_serverState = kUninitialized;
+		app.s_serverState = kUninitialized;
 	}
-	assert(s_primaryClient == NULL);
-	assert(s_serverScreen == NULL);
-	assert(s_serverState == kUninitialized);
+	assert(app.s_primaryClient == NULL);
+	assert(app.s_serverScreen == NULL);
+	assert(app.s_serverState == kUninitialized);
 }
 
 static
 void
 handleSuspend(const CEvent&, void*)
 {
-	if (!s_suspended) {
+	if (!app.s_suspended) {
 		LOG((CLOG_INFO "suspend"));
 		stopServer();
-		s_suspended = true;
+		app.s_suspended = true;
 	}
 }
 
@@ -565,10 +548,10 @@ static
 void
 handleResume(const CEvent&, void*)
 {
-	if (s_suspended) {
+	if (app.s_suspended) {
 		LOG((CLOG_INFO "resume"));
 		startServer();
-		s_suspended = false;
+		app.s_suspended = false;
 	}
 }
 
@@ -756,13 +739,13 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 
 	// make the task bar receiver.  the user can control this app
 	// through the task bar.
-	s_taskBarReceiver = createTaskBarReceiver(logBuffer);
+	app.s_taskBarReceiver = createTaskBarReceiver(logBuffer);
 
 	// run
 	int result = startup(argc, argv);
 
 	// done with task bar receiver
-	delete s_taskBarReceiver;
+	delete app.s_taskBarReceiver;
 
 	delete ARG->m_config;
 	delete ARG->m_synergyAddress;

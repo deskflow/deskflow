@@ -1,7 +1,6 @@
 SET(root_cmd_synergyc ${root_dir}/cmd/synergyc)
 
 SET(src_cmd_synergyc_common
-	${root_cmd_synergyc}/CClientTaskBarReceiver.cpp
 	${root_cmd_synergyc}/synergyc.cpp
 )
 

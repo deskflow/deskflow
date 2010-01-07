@@ -1,7 +1,6 @@
 SET(root_cmd_synergys ${root_dir}/cmd/synergys)
 
 SET(src_cmd_synergys_common
-	${root_cmd_synergys}/CServerTaskBarReceiver.cpp
 	${root_cmd_synergys}/synergys.cpp
 )
 
@@ -14,7 +13,6 @@ SET(src_cmd_synergys_mswindows
 )
 
 SET(inc_cmd_synergys_mswindows
-	${root_cmd_synergys}/CServerTaskBarReceiver.h
 	${root_cmd_synergys}/CXWindowsServerTaskBarReceiver.h
 	${root_cmd_synergys}/resource.h
 	${root_cmd_synergys}/COSXServerTaskBarReceiver.h

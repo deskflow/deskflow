@@ -35,7 +35,14 @@ CApp(new CArgs(), util),
 s_server(NULL),
 s_reloadConfigEvent(CEvent::kUnknown),
 s_forceReconnectEvent(CEvent::kUnknown),
-s_resetServerEvent(CEvent::kUnknown)
+s_resetServerEvent(CEvent::kUnknown),
+s_serverState(kUninitialized),
+s_serverScreen(NULL),
+s_primaryClient(NULL),
+s_listener(NULL),
+s_taskBarReceiver(NULL),
+s_suspended(false),
+s_timer(NULL)
 {
 }
 

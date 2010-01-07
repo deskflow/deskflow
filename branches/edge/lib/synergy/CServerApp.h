@@ -20,8 +20,21 @@
 #include "CNetworkAddress.h"
 #include "CArch.h"
 
+enum EServerState {
+	kUninitialized,
+	kInitializing,
+	kInitializingToStart,
+	kInitialized,
+	kStarting,
+	kStarted
+};
+
 class CAppUtil;
 class CServer;
+class CScreen;
+class CClientListener;
+class CServerTaskBarReceiver;
+class CEventQueueTimer;
 
 class CServerApp : public CApp {
 public:
@@ -66,6 +79,13 @@ public:
 	CEvent::Type s_reloadConfigEvent;
 	CEvent::Type s_forceReconnectEvent;
 	CEvent::Type s_resetServerEvent;
+	EServerState s_serverState;
+	CScreen* s_serverScreen;
+	CPrimaryClient* s_primaryClient;
+	CClientListener* s_listener;
+	CServerTaskBarReceiver* s_taskBarReceiver;
+	bool s_suspended;
+	CEventQueueTimer* s_timer;
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
