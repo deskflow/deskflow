@@ -707,7 +707,7 @@ standardStartup(int argc, char** argv)
 	app.parseArgs(argc, argv);
 
 	// load configuration
-	loadConfig();
+	app.loadConfig();
 
 	// daemonize if requested
 	if (ARG->m_daemon) {

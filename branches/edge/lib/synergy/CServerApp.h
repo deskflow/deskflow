@@ -101,15 +101,3 @@ private:
 #endif
 
 typedef int (*StartupFunc)(int, char**);
-bool loadConfig(const CString& pathname);
-void loadConfig();
-void reloadSignalHandler(CArch::ESignal, void*);
-void reloadConfig(const CEvent&, void*);
-CEvent::Type getReloadConfigEvent();
-void forceReconnect(const CEvent&, void*);
-CEvent::Type getForceReconnectEvent();
-void resetServer(const CEvent&, void*);
-CEvent::Type getResetServerEvent();
-void cleanupServer();
-void updateStatus();
-int mainLoop();
