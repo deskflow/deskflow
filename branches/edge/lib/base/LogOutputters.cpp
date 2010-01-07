@@ -60,7 +60,8 @@ CStopLogOutputter::write(ELevel, const char*)
 // CConsoleLogOutputter
 //
 
-CConsoleLogOutputter::CConsoleLogOutputter()
+CConsoleLogOutputter::CConsoleLogOutputter() :
+m_threadCancel(false)
 {
 	m_writeThread = new CThread(new TMethodJob<CConsoleLogOutputter>(
 		this, &CConsoleLogOutputter::writeThread));
@@ -68,7 +69,9 @@ CConsoleLogOutputter::CConsoleLogOutputter()
 
 CConsoleLogOutputter::~CConsoleLogOutputter()
 {
-	m_writeThread->exit(NULL);
+	// queue cancel and wait for 3 seconds, then give up and delete
+	m_threadCancel = true;
+	m_writeThread->wait();
 	delete m_writeThread;
 }
 
@@ -102,13 +105,15 @@ CConsoleLogOutputter::write(ELevel level, const char* msg)
 	return true;
 }
 
+// in case our console is cpu hungry, buffer the log messages and dequeue 
+// asynchronously in another thread. this way, if we hammer the console, 
+// it won't cause the mouse to stutter.
 void
 CConsoleLogOutputter::writeThread(void*)
 {
-	// in case our console is cpu hungry, buffer the log messages and dequeue 
-	// asynchronously in another thread. this way, if we hammer the console, 
-	// it won't cause the mouse to stutter.
-	while(true) {
+	// keep writing until it's safe to stop
+	bool stop = false;
+	while(!stop) {
 
 		if (m_buffer.empty()) {
 
@@ -120,6 +125,9 @@ CConsoleLogOutputter::writeThread(void*)
 		CString &s = m_buffer.front();
 		ARCH->writeConsole(s.c_str());
 		m_buffer.pop_front();
+
+		// only cancel writer if all messages have been sent
+		stop = m_buffer.empty() && m_threadCancel;
 	}
 }
 

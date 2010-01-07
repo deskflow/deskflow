@@ -134,7 +134,7 @@ main(int argc, char** argv)
 		result = kExitFailed;
 	}
 	catch (XArch& e) {
-		LOG((CLOG_CRIT "Initialization failed: %s" BYE, e.what().c_str()));
+		LOG((CLOG_CRIT "Initialization failed: %s" BYE, e.what().c_str(), APP->args().m_pname));
 		result = kExitFailed;
 	}
 	catch (std::exception& e) {
