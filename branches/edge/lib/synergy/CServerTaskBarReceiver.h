@@ -18,6 +18,8 @@
 #include "CString.h"
 #include "IArchTaskBarReceiver.h"
 #include "stdvector.h"
+#include "CEvent.h"
+#include "CServerApp.h"
 
 class CServer;
 
@@ -80,6 +82,11 @@ protected:
 	nothing.
 	*/
 	virtual void		onStatusChanged(CServer* server);
+
+protected:
+	CEvent::Type getReloadConfigEvent();
+	CEvent::Type getForceReconnectEvent();
+	CEvent::Type getResetServerEvent();
 
 private:
 	EState				m_state;

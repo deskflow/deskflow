@@ -52,5 +52,5 @@ standardStartupStatic(int argc, char** argv)
 int
 CArchAppUtilUnix::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
 {
-	return app().run(argc, argv, NULL, &standardStartupStatic, createTaskBarReceiver);
+	return app().runInner(argc, argv, NULL, &standardStartupStatic, createTaskBarReceiver);
 }

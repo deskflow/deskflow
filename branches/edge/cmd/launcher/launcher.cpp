@@ -34,6 +34,7 @@
 #include "CHotkeyOptions.h"
 #include "CInfo.h"
 #include "CScreensLinks.h"
+#include "CArchAppUtilWindows.h"
 
 typedef std::vector<CString> CStringList;
 
@@ -691,7 +692,9 @@ mainWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR cmdLine, int nCmdShow)
 {
-	CArch arch(instance);
+	CArchMiscWindows::setInstanceWin32(instance);
+
+	CArch arch;
 	CLOG;
 	CArgs args;
 

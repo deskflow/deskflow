@@ -55,8 +55,7 @@
 #include "COSXClientTaskBarReceiver.h"
 #endif
 
-CApp* CApp::s_instance = new CClientApp();
-#define APP ((CClientApp*)CApp::s_instance)
+#define APP (&CClientApp::instance())
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
@@ -578,7 +577,7 @@ int main(int argc, char** argv) {
 	APP->m_daemonInfo = DAEMON_INFO;
 
 	HINSTANCE instance = GetModuleHandle(NULL);
-	CArchAppUtilWindows::s_instanceWin32 = instance;
+	CArchMiscWindows::setInstanceWin32(instance);
 
 	if (instance) {
 		return WinMain(instance, NULL, GetCommandLine(), SW_SHOWNORMAL);
@@ -590,7 +589,7 @@ int main(int argc, char** argv) {
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
-	CArch arch(instance);
+	CArch arch;
 	CLOG;
 
 	try {

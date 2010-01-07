@@ -19,14 +19,14 @@
 #include "CThread.h"
 #include "XArch.h"
 
-// platform dependant includes and app instances
+// platform dependent includes and app instances
 #if WINAPI_MSWINDOWS
 #include "CMSWindowsServerTaskBarReceiver.h"
 #include "XArchWindows.h"
-#include "CMSWindowsScreen.h"
 #include "CArchMiscWindows.h"
 #include "resource.h"
 #include "CArchAppUtilWindows.h"
+#include "CMSWindowsScreen.h"
 #elif WINAPI_XWINDOWS
 #include "CXWindowsServerTaskBarReceiver.h"
 #elif WINAPI_CARBON
@@ -35,40 +35,22 @@
 #error Platform not supported.
 #endif
 
-CApp* CApp::s_instance = new CServerApp();
-#define APP ((CServerApp*)CApp::s_instance)
-
-// platform dependent name of a daemon
-#if SYSAPI_WIN32
-#define DAEMON_NAME "Synergy+ Server"
-#define DAEMON_INFO "Shares this computers mouse and keyboard with other computers."
-#elif SYSAPI_UNIX
-#define DAEMON_NAME "synergys"
-#endif
-
-CEvent::Type
-getReloadConfigEvent()
-{
-	return APP->getReloadConfigEvent();
-}
-
-CEvent::Type
-getForceReconnectEvent()
-{
-	return APP->getForceReconnectEvent();
-}
-
-CEvent::Type
-getResetServerEvent()
-{
-	return APP->getResetServerEvent();
-}
-
 static
 IArchTaskBarReceiver*
 createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 {
 #if WINAPI_MSWINDOWS
+
+	CArchMiscWindows::setIcons(
+		(HICON)LoadImage(GetModuleHandle(NULL),
+		MAKEINTRESOURCE(IDI_SYNERGY),
+		IMAGE_ICON,
+		32, 32, LR_SHARED),
+		(HICON)LoadImage(GetModuleHandle(NULL),
+		MAKEINTRESOURCE(IDI_SYNERGY),
+		IMAGE_ICON,
+		16, 16, LR_SHARED));
+
 	return new CMSWindowsServerTaskBarReceiver(
 		CMSWindowsScreen::getInstance(), logBuffer);
 #elif WINAPI_XWINDOWS
@@ -81,71 +63,21 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 int
 main(int argc, char** argv) 
 {
-	APP->m_daemonName = DAEMON_NAME;
-	
+	CServerApp app;
+
 #if SYSAPI_WIN32
 
-	APP->m_daemonInfo = DAEMON_INFO;
+	app.m_daemonName = "Synergy+ Server";
+	app.m_daemonInfo = "Shares this computers mouse and keyboard with other computers.";
 
-	// get window instance for tray icon, etc
-	HINSTANCE instance = GetModuleHandle(NULL);
-	CArchAppUtilWindows::s_instanceWin32 = instance;
-
-	// creates arch singleton, with window instance
-	CArch arch(instance);
+	// record window instance for tray icon, etc
+	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 
 #elif SYSAPI_UNIX
 
-	// creates arch singleton
-	CArch arch;
+	app.m_daemonName = "synergys";
 
 #endif
 
-	arch.adoptApp(APP);
-
-	CLOG;
-	int result;
-
-	try {
-
-#if SYSAPI_WIN32
-		if (!instance) {
-			throw XArchDaemon(new XArchEvalWindows());
-		}
-
-		CArchMiscWindows::setIcons(
-			(HICON)LoadImage(instance,
-			MAKEINTRESOURCE(IDI_SYNERGY),
-			IMAGE_ICON,
-			32, 32, LR_SHARED),
-			(HICON)LoadImage(instance,
-			MAKEINTRESOURCE(IDI_SYNERGY),
-			IMAGE_ICON,
-			16, 16, LR_SHARED));
-
-		CMSWindowsScreen::init(instance);
-		CThread::getCurrentThread().setPriority(-14);
-#endif
-
-		result = ARCH->run(argc, argv, createTaskBarReceiver);
-	}
-	catch (XBase& e) {
-		LOG((CLOG_CRIT "Uncaught exception: %s\n", e.what()));
-		result = kExitFailed;
-	}
-	catch (XArch& e) {
-		LOG((CLOG_CRIT "Initialization failed: %s" BYE, e.what().c_str(), APP->args().m_pname));
-		result = kExitFailed;
-	}
-	catch (std::exception& e) {
-		LOG((CLOG_CRIT "Uncaught exception: %s\n", e.what()));
-		result = kExitFailed;
-	}
-	catch (...) {
-		LOG((CLOG_CRIT "Uncaught exception: <unknown exception>\n"));
-		result = kExitFailed;
-	}
-
-	delete CLOG;
-	APP->m_bye(result);
+	return app.run(argc, argv, createTaskBarReceiver);
 }

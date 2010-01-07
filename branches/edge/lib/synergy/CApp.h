@@ -55,6 +55,8 @@ public:
 
 	// Parse command line arguments.
 	virtual void parseArgs(int argc, const char* const* argv) = 0;
+	
+	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
 
 	virtual void loadConfig() = 0;
 	virtual bool loadConfig(const CString& pathname) = 0;
@@ -62,7 +64,7 @@ public:
 	virtual int foregroundStartup(int argc, char** argv) = 0;
 	virtual int daemonMainLoop(int, const char**) = 0;
 	virtual int standardStartup(int argc, char** argv) = 0;
-	virtual int run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) = 0;
+	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) = 0;
 
 	// Name of the daemon (used for Unix and Windows).
 	CString m_daemonName;
@@ -81,8 +83,7 @@ public:
 		const char* name1, const char* name2,
 		int minRequiredParameters = 0);
 
-	// Static instance for backwards compat.
-	static CApp* s_instance;
+	static CApp& instance() { assert(s_instance != nullptr); return *s_instance; }
 
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
@@ -90,6 +91,7 @@ protected:
 
 private:
 	CArgsBase* m_args;
+	static CApp* s_instance;
 };
 
 #define BYE "\nTry `%s --help' for more information."

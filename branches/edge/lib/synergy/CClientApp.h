@@ -49,7 +49,9 @@ public:
 	int foregroundStartup(int argc, char** argv) { return 0; }
 	int daemonMainLoop(int, const char**) { return 0; }
 	int standardStartup(int argc, char** argv) { return 0; }
-	int run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) { return 0; }
+	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) { return 0; }
+
+	static CClientApp& instance() { return (CClientApp&)CApp::instance(); }
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);

@@ -96,10 +96,12 @@ public:
 	void handleNoClients(const CEvent&, void*);
 	bool startServer();
 	int mainLoop();
-	int run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	int standardStartup(int argc, char** argv);
 	int foregroundStartup(int argc, char** argv);
 	int daemonMainLoop(int, const char**);
+
+	static CServerApp& instance() { return (CServerApp&)CApp::instance(); }
 
 	// TODO: change s_ to m_
 	CServer* s_server;

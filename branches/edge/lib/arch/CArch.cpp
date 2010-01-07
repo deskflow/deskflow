@@ -114,7 +114,7 @@
 
 CArch*					CArch::s_instance = NULL;
 
-CArch::CArch(ARCH_ARGS* args)
+CArch::CArch()
 {
 	// only once instance of CArch
 	assert(s_instance == NULL);
@@ -129,9 +129,9 @@ CArch::CArch(ARCH_ARGS* args)
 	m_sleep   = new ARCH_SLEEP;
 	m_string  = new ARCH_STRING;
 	m_time    = new ARCH_TIME;
-	m_console = new ARCH_CONSOLE(args);
+	m_console = new ARCH_CONSOLE;
 	m_daemon  = new ARCH_DAEMON;
-	m_taskbar = new ARCH_TASKBAR(args);
+	m_taskbar = new ARCH_TASKBAR;
 	m_appUtil = new ARCH_APPUTIL;
 
 #if SYSAPI_WIN32

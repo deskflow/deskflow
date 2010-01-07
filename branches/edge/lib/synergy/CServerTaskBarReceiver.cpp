@@ -131,3 +131,21 @@ CServerTaskBarReceiver::getToolTip() const
 		return "";
 	}
 }
+
+CEvent::Type
+CServerTaskBarReceiver::getReloadConfigEvent()
+{
+	return CServerApp::instance().getReloadConfigEvent();
+}
+
+CEvent::Type
+CServerTaskBarReceiver::getForceReconnectEvent()
+{
+	return CServerApp::instance().getForceReconnectEvent();
+}
+
+CEvent::Type
+CServerTaskBarReceiver::getResetServerEvent()
+{
+	return CServerApp::instance().getResetServerEvent();
+}

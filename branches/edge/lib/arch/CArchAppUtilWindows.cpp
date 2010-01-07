@@ -19,12 +19,11 @@
 #include "CArchMiscWindows.h"
 #include "CApp.h"
 #include "LogOutputters.h"
+#include "CMSWindowsScreen.h"
 
 #include <sstream>
 #include <iostream>
 #include <conio.h>
-
-HINSTANCE CArchAppUtilWindows::s_instanceWin32 = NULL;
 
 CArchAppUtilWindows::CArchAppUtilWindows()
 {
@@ -100,7 +99,7 @@ CArchAppUtilWindows::installService()
 
 	// get the path of this program
 	char thisPath[MAX_PATH];
-	GetModuleFileName(s_instanceWin32, thisPath, MAX_PATH);
+	GetModuleFileName(CArchMiscWindows::instanceWin32(), thisPath, MAX_PATH);
 
 	ARCH->installDaemon(
 		app().m_daemonName.c_str(), app().m_daemonInfo.c_str(), 
@@ -245,6 +244,9 @@ foregroundStartupStatic(int argc, char** argv)
 int
 CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
 {
+	CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
+	CThread::getCurrentThread().setPriority(-14);
+
 	StartupFunc startup;
 	if (CArchMiscWindows::wasLaunchedAsService()) {
 		startup = &daemonNTStartupStatic;
@@ -253,5 +255,11 @@ CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc create
 		app().argsBase().m_daemon = false;
 	}
 
-	return app().run(argc, argv, NULL, startup, createTaskBarReceiver);
+	return app().runInner(argc, argv, NULL, startup, createTaskBarReceiver);
+}
+
+CArchAppUtilWindows& 
+CArchAppUtilWindows::instance()
+{
+	return (CArchAppUtilWindows&)*s_instance;
 }

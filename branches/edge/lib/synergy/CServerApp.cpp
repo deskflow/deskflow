@@ -874,7 +874,7 @@ void CServerApp::resetServer(const CEvent&, void*)
 }
 
 int 
-CServerApp::run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver)
+CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver)
 {
 	// general initialization
 	ARG->m_synergyAddress = new CNetworkAddress;
@@ -907,7 +907,7 @@ CServerApp::run(int argc, char** argv, ILogOutputter* outputter, StartupFunc sta
 }
 
 int daemonMainLoopStatic(int argc, const char** argv) {
-	return CServerApp::s_instance->daemonMainLoop(argc, argv);
+	return CServerApp::instance().daemonMainLoop(argc, argv);
 }
 
 int 
@@ -945,7 +945,7 @@ static
 int 
 mainLoopStatic() 
 {
-	return CServerApp::s_instance->mainLoop();
+	return CServerApp::instance().mainLoop();
 }
 
 int 

@@ -22,10 +22,6 @@
 #include "CArchTaskBarWindows.h"
 #include "resource.h"
 
-extern CEvent::Type		getReloadConfigEvent();
-extern CEvent::Type		getForceReconnectEvent();
-extern CEvent::Type		getResetServerEvent();
-
 //
 // CMSWindowsServerTaskBarReceiver
 //

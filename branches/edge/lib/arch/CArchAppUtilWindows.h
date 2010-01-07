@@ -26,9 +26,6 @@ public:
 	CArchAppUtilWindows();
 	virtual ~CArchAppUtilWindows();
 
-	// Instance of MFC Windows application.
-	static HINSTANCE s_instanceWin32;
-
 	// Gets the arguments to be used with a service.
 	CString getServiceArgs() const;
 
@@ -59,7 +56,7 @@ public:
 
 	static void byeThrow(int x);
 
-	static CArchAppUtilWindows& instance() { return (CArchAppUtilWindows&)*s_instance; }
+	static CArchAppUtilWindows& instance();
 };
 
 // TODO: move to class

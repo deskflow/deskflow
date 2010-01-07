@@ -45,6 +45,7 @@ DWORD						CArchMiscWindows::s_busyState = 0;
 CArchMiscWindows::STES_t	CArchMiscWindows::s_stes      = NULL;
 HICON						CArchMiscWindows::s_largeIcon = NULL;
 HICON						CArchMiscWindows::s_smallIcon = NULL;
+HINSTANCE					CArchMiscWindows::s_instanceWin32 = NULL;
 
 void
 CArchMiscWindows::init()
@@ -533,4 +534,18 @@ CArchMiscWindows::getProcessEntry(PROCESSENTRY32& entry, DWORD processID)
 	}
 
 	return FALSE;
+}
+
+HINSTANCE
+CArchMiscWindows::instanceWin32()
+{
+	assert(s_instanceWin32 != NULL);
+	return s_instanceWin32;
+}
+
+void
+CArchMiscWindows::setInstanceWin32(HINSTANCE instance)
+{
+	assert(instance != NULL);
+	s_instanceWin32 = instance;
 }

@@ -24,7 +24,7 @@
 
 static const WORD MAX_CONSOLE_LINES = 500;
 
-CArchConsoleWindows::CArchConsoleWindows(void*) : m_consoleOpen(false) { }
+CArchConsoleWindows::CArchConsoleWindows() : m_consoleOpen(false) { }
 
 CArchConsoleWindows::~CArchConsoleWindows() { }
 

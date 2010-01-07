@@ -34,9 +34,7 @@ This macro evaluates to the singleton CArch object.
 */
 #define ARCH	(CArch::getInstance())
 
-#define ARCH_ARGS void
-
-//! Delegating mplementation of architecture dependent interfaces
+//! Delegating implementation of architecture dependent interfaces
 /*!
 This class is a centralized interface to all architecture dependent
 interface implementations (except miscellaneous functions).  It
@@ -59,7 +57,7 @@ class CArch : public IArchConsole,
 				public IArchTime,
 				public IArchAppUtil {
 public:
-	CArch(ARCH_ARGS* args = NULL);
+	CArch();
 	~CArch();
 
 	//
