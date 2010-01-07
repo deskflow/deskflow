@@ -72,10 +72,6 @@
 #define DAEMON_NAME "synergys"
 #endif
 
-typedef int (*StartupFunc)(int, char**);
-static bool loadConfig(const CString& pathname);
-static void loadConfig();
-
 #if WINAPI_MSWINDOWS
 CMSWindowsServerApp app;
 #elif WINAPI_XWINDOWS
@@ -161,7 +157,6 @@ getResetServerEvent()
 	return CEvent::registerTypeOnce(s_resetServerEvent, "resetServer");
 }
 
-static
 void
 updateStatus()
 {
@@ -538,7 +533,6 @@ stopServer()
 	assert(s_listener == NULL);
 }
 
-static
 void
 cleanupServer()
 {
@@ -582,28 +576,18 @@ handleResume(const CEvent&, void*)
 	}
 }
 
-static
 void
-reloadSignalHandler(CArch::ESignal, void*)
+reloadSignalHandler(CArch::ESignal s, void*)
 {
-	EVENTQUEUE->addEvent(CEvent(getReloadConfigEvent(),
-							IEventQueue::getSystemTarget()));
+	app.reloadSignalHandler(s, NULL);
 }
 
-static
 void
-reloadConfig(const CEvent&, void*)
+reloadConfig(const CEvent& e, void*)
 {
-	LOG((CLOG_DEBUG "reload configuration"));
-	if (loadConfig(ARG->m_configFile)) {
-		if (s_server != NULL) {
-			s_server->setConfig(*ARG->m_config);
-		}
-		LOG((CLOG_NOTE "reloaded configuration"));
-	}
+	app.reloadConfig(e, NULL);
 }
 
-static
 void
 forceReconnect(const CEvent&, void*)
 {
@@ -614,7 +598,6 @@ forceReconnect(const CEvent&, void*)
 
 // simply stops and starts the server in order to try and
 // work around issues like the sticky meta keys problem, etc
-static
 void 
 resetServer(const CEvent&, void*)
 {
@@ -624,7 +607,6 @@ resetServer(const CEvent&, void*)
 	startServer();
 }
 
-static
 int
 mainLoop()
 {
@@ -798,76 +780,16 @@ run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 // command line parsing
 //
 
-static
 bool
 loadConfig(const CString& pathname)
 {
-	try {
-		// load configuration
-		LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname.c_str()));
-		std::ifstream configStream(pathname.c_str());
-		if (!configStream.is_open()) {
-			// report failure to open configuration as a debug message
-			// since we try several paths and we expect some to be
-			// missing.
-			LOG((CLOG_DEBUG "cannot open configuration \"%s\"",
-								pathname.c_str()));
-			return false;
-		}
-		configStream >> *ARG->m_config;
-		LOG((CLOG_DEBUG "configuration read successfully"));
-		return true;
-	}
-	catch (XConfigRead& e) {
-		// report error in configuration file
-		LOG((CLOG_ERR "cannot read configuration \"%s\": %s",
-								pathname.c_str(), e.what()));
-	}
-	return false;
+	return app.loadConfig(pathname);
 }
 
-static
 void
 loadConfig()
 {
-	bool loaded = false;
-
-	// load the config file, if specified
-	if (!ARG->m_configFile.empty()) {
-		loaded = loadConfig(ARG->m_configFile);
-	}
-
-	// load the default configuration if no explicit file given
-	else {
-		// get the user's home directory
-		CString path = ARCH->getUserDirectory();
-		if (!path.empty()) {
-			// complete path
-			path = ARCH->concatPath(path, USR_CONFIG_NAME);
-
-			// now try loading the user's configuration
-			if (loadConfig(path)) {
-				loaded            = true;
-				ARG->m_configFile = path;
-			}
-		}
-		if (!loaded) {
-			// try the system-wide config file
-			path = ARCH->getSystemDirectory();
-			if (!path.empty()) {
-				path = ARCH->concatPath(path, SYS_CONFIG_NAME);
-				if (loadConfig(path)) {
-					loaded            = true;
-					ARG->m_configFile = path;
-				}
-			}
-		}
-	}
-
-	if (!loaded) {
-		LOG((CLOG_PRINT "%s: no configuration available", ARG->m_pname));
-		app.m_bye(kExitConfig);
-	}
+	app.loadConfig();
 }
 
 

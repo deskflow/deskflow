@@ -18,8 +18,10 @@
 #include "CString.h"
 #include "CConfig.h"
 #include "CNetworkAddress.h"
+#include "CArch.h"
 
 class CAppUtil;
+class CServer;
 
 class CServerApp : public CApp {
 public:
@@ -46,6 +48,14 @@ public:
 	// Returns arguments that are common and for server.
 	CArgs& args() const { return (CArgs&)argsBase(); }
 
+	// TODO: Document these functions.
+	void reloadSignalHandler(CArch::ESignal, void*);
+	void reloadConfig(const CEvent&, void*);
+	void loadConfig();
+	bool loadConfig(const CString& pathname);
+
+	CServer* s_server;
+
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 };
@@ -58,3 +68,17 @@ private:
 #define USR_CONFIG_NAME ".synergy.conf"
 #define SYS_CONFIG_NAME "synergy.conf"
 #endif
+
+typedef int (*StartupFunc)(int, char**);
+bool loadConfig(const CString& pathname);
+void loadConfig();
+void reloadSignalHandler(CArch::ESignal, void*);
+void reloadConfig(const CEvent&, void*);
+CEvent::Type getReloadConfigEvent();
+void forceReconnect(const CEvent&, void*);
+CEvent::Type getForceReconnectEvent();
+void resetServer(const CEvent&, void*);
+CEvent::Type getResetServerEvent();
+void cleanupServer();
+void updateStatus();
+int mainLoop();

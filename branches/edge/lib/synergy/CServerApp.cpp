@@ -17,6 +17,8 @@
 #include "CArch.h"
 #include "XSocket.h"
 #include "Version.h"
+#include "IEventQueue.h"
+#include "CServer.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
@@ -24,9 +26,13 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <fstream>
+
+#define ARG (&args())
 
 CServerApp::CServerApp(CAppUtil* util) :
-CApp(new CArgs(), util)
+CApp(new CArgs(), util),
+s_server(NULL)
 {
 }
 
@@ -215,4 +221,93 @@ CServerApp::help()
 		);
 
 	std::cout << buffer << std::endl;
+}
+
+void
+CServerApp::reloadSignalHandler(CArch::ESignal, void*)
+{
+	EVENTQUEUE->addEvent(CEvent(getReloadConfigEvent(),
+		IEventQueue::getSystemTarget()));
+}
+
+void
+CServerApp::reloadConfig(const CEvent&, void*)
+{
+	LOG((CLOG_DEBUG "reload configuration"));
+	if (loadConfig(ARG->m_configFile)) {
+		if (s_server != NULL) {
+			s_server->setConfig(*ARG->m_config);
+		}
+		LOG((CLOG_NOTE "reloaded configuration"));
+	}
+}
+
+void
+CServerApp::loadConfig()
+{
+	bool loaded = false;
+
+	// load the config file, if specified
+	if (!ARG->m_configFile.empty()) {
+		loaded = loadConfig(ARG->m_configFile);
+	}
+
+	// load the default configuration if no explicit file given
+	else {
+		// get the user's home directory
+		CString path = ARCH->getUserDirectory();
+		if (!path.empty()) {
+			// complete path
+			path = ARCH->concatPath(path, USR_CONFIG_NAME);
+
+			// now try loading the user's configuration
+			if (loadConfig(path)) {
+				loaded            = true;
+				ARG->m_configFile = path;
+			}
+		}
+		if (!loaded) {
+			// try the system-wide config file
+			path = ARCH->getSystemDirectory();
+			if (!path.empty()) {
+				path = ARCH->concatPath(path, SYS_CONFIG_NAME);
+				if (loadConfig(path)) {
+					loaded            = true;
+					ARG->m_configFile = path;
+				}
+			}
+		}
+	}
+
+	if (!loaded) {
+		LOG((CLOG_PRINT "%s: no configuration available", ARG->m_pname));
+		m_bye(kExitConfig);
+	}
+}
+
+bool
+CServerApp::loadConfig(const CString& pathname)
+{
+	try {
+		// load configuration
+		LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname.c_str()));
+		std::ifstream configStream(pathname.c_str());
+		if (!configStream.is_open()) {
+			// report failure to open configuration as a debug message
+			// since we try several paths and we expect some to be
+			// missing.
+			LOG((CLOG_DEBUG "cannot open configuration \"%s\"",
+				pathname.c_str()));
+			return false;
+		}
+		configStream >> *ARG->m_config;
+		LOG((CLOG_DEBUG "configuration read successfully"));
+		return true;
+	}
+	catch (XConfigRead& e) {
+		// report error in configuration file
+		LOG((CLOG_ERR "cannot read configuration \"%s\": %s",
+			pathname.c_str(), e.what()));
+	}
+	return false;
 }
