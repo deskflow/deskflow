@@ -128,46 +128,42 @@ enum EServerState {
 };
 
 static EServerState				s_serverState         = kUninitialized;
-static CServer*					s_server              = NULL;
 static CScreen*					s_serverScreen        = NULL;
 static CPrimaryClient*			s_primaryClient       = NULL;
 static CClientListener*			s_listener            = NULL;
 static CServerTaskBarReceiver*	s_taskBarReceiver     = NULL;
-static CEvent::Type				s_reloadConfigEvent   = CEvent::kUnknown;
-static CEvent::Type				s_forceReconnectEvent = CEvent::kUnknown;
-static CEvent::Type				s_resetServerEvent	  = CEvent::kUnknown;
 static bool						s_suspended           = false;
 static CEventQueueTimer*		s_timer               = NULL;
 
 CEvent::Type
 getReloadConfigEvent()
 {
-	return CEvent::registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
+	return app.getReloadConfigEvent();
 }
 
 CEvent::Type
 getForceReconnectEvent()
 {
-	return CEvent::registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
+	return app.getForceReconnectEvent();
 }
 
 CEvent::Type
 getResetServerEvent()
 {
-	return CEvent::registerTypeOnce(s_resetServerEvent, "resetServer");
+	return app.getResetServerEvent();
 }
 
 void
 updateStatus()
 {
-	s_taskBarReceiver->updateStatus(s_server, "");
+	s_taskBarReceiver->updateStatus(app.s_server, "");
 }
 
 static
 void
 updateStatus(const CString& msg)
 {
-	s_taskBarReceiver->updateStatus(s_server, msg);
+	s_taskBarReceiver->updateStatus(app.s_server, msg);
 }
 
 static
@@ -177,7 +173,7 @@ handleClientConnected(const CEvent&, void* vlistener)
 	CClientListener* listener = reinterpret_cast<CClientListener*>(vlistener);
 	CClientProxy* client = listener->getNextClient();
 	if (client != NULL) {
-		s_server->adoptClient(client);
+		app.s_server->adoptClient(client);
 		updateStatus();
 	}
 }
@@ -479,7 +475,7 @@ startServer()
 	CClientListener* listener = NULL;
 	try {
 		listener   = openClientListener(ARG->m_config->getSynergyAddress());
-		s_server   = openServer(*ARG->m_config, s_primaryClient);
+		app.s_server   = openServer(*ARG->m_config, s_primaryClient);
 		s_listener = listener;
 		updateStatus();
 		LOG((CLOG_NOTE "started server"));
@@ -520,8 +516,8 @@ stopServer()
 {
 	if (s_serverState == kStarted) {
 		closeClientListener(s_listener);
-		closeServer(s_server);
-		s_server      = NULL;
+		closeServer(app.s_server);
+		app.s_server      = NULL;
 		s_listener    = NULL;
 		s_serverState = kInitialized;
 	}
@@ -529,7 +525,7 @@ stopServer()
 		stopRetryTimer();
 		s_serverState = kInitialized;
 	}
-	assert(s_server == NULL);
+	assert(app.s_server == NULL);
 	assert(s_listener == NULL);
 }
 
@@ -589,11 +585,9 @@ reloadConfig(const CEvent& e, void*)
 }
 
 void
-forceReconnect(const CEvent&, void*)
+forceReconnect(const CEvent& e, void*)
 {
-	if (s_server != NULL) {
-		s_server->disconnect();
-	}
+	app.forceReconnect(e, NULL);
 }
 
 // simply stops and starts the server in order to try and

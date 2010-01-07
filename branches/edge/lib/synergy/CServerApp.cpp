@@ -32,7 +32,10 @@
 
 CServerApp::CServerApp(CAppUtil* util) :
 CApp(new CArgs(), util),
-s_server(NULL)
+s_server(NULL),
+s_reloadConfigEvent(CEvent::kUnknown),
+s_forceReconnectEvent(CEvent::kUnknown),
+s_resetServerEvent(CEvent::kUnknown)
 {
 }
 
@@ -310,4 +313,48 @@ CServerApp::loadConfig(const CString& pathname)
 			pathname.c_str(), e.what()));
 	}
 	return false;
+}
+
+CEvent::Type 
+CServerApp::getReloadConfigEvent()
+{
+	return CEvent::registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
+}
+
+void 
+CServerApp::forceReconnect(const CEvent&, void*)
+{
+	if (s_server != NULL) {
+		s_server->disconnect();
+	}
+}
+
+CEvent::Type 
+CServerApp::getForceReconnectEvent()
+{
+	return CEvent::registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
+}
+
+CEvent::Type
+CServerApp::getResetServerEvent()
+{
+	return CEvent::registerTypeOnce(s_resetServerEvent, "resetServer");
+}
+
+void
+CServerApp::cleanupServer()
+{
+
+}
+
+void
+CServerApp::updateStatus()
+{
+
+}
+
+int
+CServerApp::mainLoop()
+{
+	return 0;
 }

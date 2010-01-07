@@ -53,8 +53,19 @@ public:
 	void reloadConfig(const CEvent&, void*);
 	void loadConfig();
 	bool loadConfig(const CString& pathname);
+	CEvent::Type getReloadConfigEvent();
+	void forceReconnect(const CEvent&, void*);
+	CEvent::Type getForceReconnectEvent();
+	void resetServer(const CEvent&, void*);
+	CEvent::Type getResetServerEvent();
+	void cleanupServer();
+	void updateStatus();
+	int mainLoop();
 
 	CServer* s_server;
+	CEvent::Type s_reloadConfigEvent;
+	CEvent::Type s_forceReconnectEvent;
+	CEvent::Type s_resetServerEvent;
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
