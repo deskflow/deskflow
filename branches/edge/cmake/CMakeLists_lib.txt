@@ -239,9 +239,6 @@ SET(src_lib_platform_carbon
 	${root_lib}/platform/COSXScreen.cpp
 	${root_lib}/platform/COSXScreenSaver.cpp
 	${root_lib}/platform/COSXScreenSaverUtil.m
-	${root_lib}/platform/COSXAppUtil.cpp
-	${root_lib}/platform/COSXClientApp.cpp
-	${root_lib}/platform/COSXServerApp.cpp
 )
 
 SET(src_lib_server
