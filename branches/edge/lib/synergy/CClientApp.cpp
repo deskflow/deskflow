@@ -558,18 +558,6 @@ CClientApp::mainLoop()
 	return kExitSuccess;
 }
 
-
-int
-CClientApp::daemonMainLoop(int, const char**)
-{
-#if SYSAPI_WIN32
-	CSystemLogger sysLogger(daemonName(), false);
-#else
-	CSystemLogger sysLogger(daemonName(), true);
-#endif
-	return mainLoop();
-}
-
 static
 int
 daemonMainLoopStatic(int argc, const char** argv)

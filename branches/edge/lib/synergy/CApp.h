@@ -58,11 +58,12 @@ public:
 	
 	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
 
+	int daemonMainLoop(int, const char**);
+
 	virtual void loadConfig() = 0;
 	virtual bool loadConfig(const CString& pathname) = 0;
 	virtual int mainLoop() = 0;
 	virtual int foregroundStartup(int argc, char** argv) = 0;
-	virtual int daemonMainLoop(int, const char**) = 0;
 	virtual int standardStartup(int argc, char** argv) = 0;
 	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) = 0;
 

@@ -102,7 +102,6 @@ public:
 	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	int standardStartup(int argc, char** argv);
 	int foregroundStartup(int argc, char** argv);
-	int daemonMainLoop(int, const char**);
 
 	static CServerApp& instance() { return (CServerApp&)CApp::instance(); }
 

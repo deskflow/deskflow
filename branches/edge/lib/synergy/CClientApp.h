@@ -53,7 +53,6 @@ public:
 	bool loadConfig(const CString& pathname) { return false; }
 
 	int foregroundStartup(int argc, char** argv);
-	int daemonMainLoop(int, const char**);
 	int standardStartup(int argc, char** argv);
 	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	CScreen* createScreen();

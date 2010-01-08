@@ -48,8 +48,6 @@
 #include "XScreen.h"
 #include "CTCPSocketFactory.h"
 
-#define ARG (&args())
-
 CEvent::Type CServerApp::s_reloadConfigEvent = CEvent::kUnknown;
 
 CServerApp::CServerApp() :
@@ -263,9 +261,9 @@ void
 CServerApp::reloadConfig(const CEvent&, void*)
 {
 	LOG((CLOG_DEBUG "reload configuration"));
-	if (loadConfig(ARG->m_configFile)) {
+	if (loadConfig(args().m_configFile)) {
 		if (s_server != NULL) {
-			s_server->setConfig(*ARG->m_config);
+			s_server->setConfig(*args().m_config);
 		}
 		LOG((CLOG_NOTE "reloaded configuration"));
 	}
@@ -277,8 +275,8 @@ CServerApp::loadConfig()
 	bool loaded = false;
 
 	// load the config file, if specified
-	if (!ARG->m_configFile.empty()) {
-		loaded = loadConfig(ARG->m_configFile);
+	if (!args().m_configFile.empty()) {
+		loaded = loadConfig(args().m_configFile);
 	}
 
 	// load the default configuration if no explicit file given
@@ -292,7 +290,7 @@ CServerApp::loadConfig()
 			// now try loading the user's configuration
 			if (loadConfig(path)) {
 				loaded            = true;
-				ARG->m_configFile = path;
+				args().m_configFile = path;
 			}
 		}
 		if (!loaded) {
@@ -302,14 +300,14 @@ CServerApp::loadConfig()
 				path = ARCH->concatPath(path, SYS_CONFIG_NAME);
 				if (loadConfig(path)) {
 					loaded            = true;
-					ARG->m_configFile = path;
+					args().m_configFile = path;
 				}
 			}
 		}
 	}
 
 	if (!loaded) {
-		LOG((CLOG_PRINT "%s: no configuration available", ARG->m_pname));
+		LOG((CLOG_PRINT "%s: no configuration available", args().m_pname));
 		m_bye(kExitConfig);
 	}
 }
@@ -329,7 +327,7 @@ CServerApp::loadConfig(const CString& pathname)
 				pathname.c_str()));
 			return false;
 		}
-		configStream >> *ARG->m_config;
+		configStream >> *args().m_config;
 		LOG((CLOG_DEBUG "configuration read successfully"));
 		return true;
 	}
@@ -562,7 +560,7 @@ bool CServerApp::initServer()
 	CScreen* serverScreen         = NULL;
 	CPrimaryClient* primaryClient = NULL;
 	try {
-		CString name    = ARG->m_config->getCanonicalName(ARG->m_name);
+		CString name    = args().m_config->getCanonicalName(args().m_name);
 		serverScreen    = openServerScreen();
 		primaryClient   = openPrimaryClient(name, serverScreen);
 		s_serverScreen  = serverScreen;
@@ -591,7 +589,7 @@ bool CServerApp::initServer()
 		return false;
 	}
 
-	if (ARG->m_restartable) {
+	if (args().m_restartable) {
 		// install a timer and handler to retry later
 		assert(s_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
@@ -650,8 +648,8 @@ CServerApp::startServer()
 	double retryTime;
 	CClientListener* listener = NULL;
 	try {
-		listener   = openClientListener(ARG->m_config->getSynergyAddress());
-		s_server   = openServer(*ARG->m_config, s_primaryClient);
+		listener   = openClientListener(args().m_config->getSynergyAddress());
+		s_server   = openServer(*args().m_config, s_primaryClient);
 		s_listener = listener;
 		updateStatus();
 		LOG((CLOG_NOTE "started server"));
@@ -670,7 +668,7 @@ CServerApp::startServer()
 		return false;
 	}
 
-	if (ARG->m_restartable) {
+	if (args().m_restartable) {
 		// install a timer and handler to retry later
 		assert(s_timer == NULL);
 		LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
@@ -690,9 +688,9 @@ CScreen*
 CServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new CScreen(new CMSWindowsScreen(true, ARG->m_noHooks));
+	return new CScreen(new CMSWindowsScreen(true, args().m_noHooks));
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(ARG->m_display, true));
+	return new CScreen(new CXWindowsScreen(args().m_display, true));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(true));
 #endif
@@ -779,34 +777,34 @@ int CServerApp::mainLoop()
 	// logging to files
 	CFileLogOutputter* fileLog = NULL;
 
-	if (ARG->m_logFile != NULL) {
-		fileLog = new CFileLogOutputter(ARG->m_logFile);
+	if (args().m_logFile != NULL) {
+		fileLog = new CFileLogOutputter(args().m_logFile);
 
 		CLOG->insert(fileLog);
 
-		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", ARG->m_logFile));
+		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", args().m_logFile));
 	}
 
 	// if configuration has no screens then add this system
 	// as the default
-	if (ARG->m_config->begin() == ARG->m_config->end()) {
-		ARG->m_config->addScreen(ARG->m_name);
+	if (args().m_config->begin() == args().m_config->end()) {
+		args().m_config->addScreen(args().m_name);
 	}
 
 	// set the contact address, if provided, in the config.
 	// otherwise, if the config doesn't have an address, use
 	// the default.
-	if (ARG->m_synergyAddress->isValid()) {
-		ARG->m_config->setSynergyAddress(*ARG->m_synergyAddress);
+	if (args().m_synergyAddress->isValid()) {
+		args().m_config->setSynergyAddress(*args().m_synergyAddress);
 	}
-	else if (!ARG->m_config->getSynergyAddress().isValid()) {
-		ARG->m_config->setSynergyAddress(CNetworkAddress(kDefaultPort));
+	else if (!args().m_config->getSynergyAddress().isValid()) {
+		args().m_config->setSynergyAddress(CNetworkAddress(kDefaultPort));
 	}
 
 	// canonicalize the primary screen name
-	CString primaryName = ARG->m_config->getCanonicalName(ARG->m_name);
+	CString primaryName = args().m_config->getCanonicalName(args().m_name);
 	if (primaryName.empty()) {
-		LOG((CLOG_CRIT "unknown screen name `%s'", ARG->m_name.c_str()));
+		LOG((CLOG_CRIT "unknown screen name `%s'", args().m_name.c_str()));
 		return kExitFailed;
 	}
 
@@ -878,9 +876,9 @@ int
 CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver)
 {
 	// general initialization
-	ARG->m_synergyAddress = new CNetworkAddress;
-	ARG->m_config         = new CConfig;
-	ARG->m_pname          = ARCH->getBasename(argv[0]);
+	args().m_synergyAddress = new CNetworkAddress;
+	args().m_config         = new CConfig;
+	args().m_pname          = ARCH->getBasename(argv[0]);
 
 	// install caller's output filter
 	if (outputter != NULL) {
@@ -902,8 +900,8 @@ CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 	// done with task bar receiver
 	delete s_taskBarReceiver;
 
-	delete ARG->m_config;
-	delete ARG->m_synergyAddress;
+	delete args().m_config;
+	delete args().m_synergyAddress;
 	return result;
 }
 
@@ -921,7 +919,7 @@ CServerApp::standardStartup(int argc, char** argv)
 	loadConfig();
 
 	// daemonize if requested
-	if (ARG->m_daemon) {
+	if (args().m_daemon) {
 		return ARCH->daemonize(daemonName(), daemonMainLoopStatic);
 	}
 	else {
@@ -947,17 +945,6 @@ int
 mainLoopStatic() 
 {
 	return CServerApp::instance().mainLoop();
-}
-
-int 
-CServerApp::daemonMainLoop(int, const char**)
-{
-#if SYSAPI_WIN32
-	CSystemLogger sysLogger(daemonName(), false);
-#else
-	CSystemLogger sysLogger(daemonName(), true);
-#endif
-	return mainLoop();
 }
 
 const char* 
