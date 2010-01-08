@@ -19,10 +19,8 @@
 #include "CArch.h"
 #include "XBase.h"
 #include "XArch.h"
-
-#if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
-#endif
+#include "LogOutputters.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -262,4 +260,15 @@ CApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver
 	// not good practice anyway), but the return will never get hit.
 	m_bye(result);
 	return result;
+}
+
+int
+CApp::daemonMainLoop(int, const char**)
+{
+#if SYSAPI_WIN32
+	CSystemLogger sysLogger(daemonName(), false);
+#else
+	CSystemLogger sysLogger(daemonName(), true);
+#endif
+	return mainLoop();
 }
