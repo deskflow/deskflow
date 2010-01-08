@@ -33,8 +33,15 @@
 #include "CEventQueue.h"
 
 #if SYSAPI_WIN32
-#include "CMSWindowsScreen.h"
 #include "CArchMiscWindows.h"
+#endif
+
+#if WINAPI_MSWINDOWS
+#include "CMSWindowsScreen.h"
+#elif WINAPI_XWINDOWS
+#include "CXWindowsScreen.h"
+#elif WINAPI_CARBON
+#include "COSXScreen.h"
 #endif
 
 #include <iostream>
