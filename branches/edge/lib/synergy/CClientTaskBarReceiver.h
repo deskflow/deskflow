@@ -17,8 +17,8 @@
 
 #include "CString.h"
 #include "IArchTaskBarReceiver.h"
-
-class CClient;
+#include "LogOutputters.h"
+#include "CClient.h"
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
 class CClientTaskBarReceiver : public IArchTaskBarReceiver {
@@ -81,5 +81,7 @@ private:
 	CString				m_errorMessage;
 	CString				m_server;
 };
+
+IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer);
 
 #endif

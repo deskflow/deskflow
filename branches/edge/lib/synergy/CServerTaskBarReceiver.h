@@ -20,8 +20,7 @@
 #include "stdvector.h"
 #include "CEvent.h"
 #include "CServerApp.h"
-
-class CServer;
+#include "CServer.h"
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
 class CServerTaskBarReceiver : public IArchTaskBarReceiver {

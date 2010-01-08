@@ -15,8 +15,11 @@
 #pragma once
 
 #include "CApp.h"
-#include "CString.h"
-#include "CNetworkAddress.h"
+
+class CScreen;
+class CEvent;
+class CClient;
+class CNetworkAddress;
 
 class CClientApp : public CApp {
 public:
@@ -45,17 +48,38 @@ public:
 	const char* daemonName() const;
 	const char* daemonInfo() const;
 
-	// TODO: implement these for client app
-	void loadConfig() { /* config not support for client */ }
-	bool loadConfig(const CString& pathname) { return false; /* config not support for client */ }
-	int mainLoop() { return 0; }
-	int foregroundStartup(int argc, char** argv) { return 0; }
-	int daemonMainLoop(int, const char**) { return 0; }
-	int standardStartup(int argc, char** argv) { return 0; }
-	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) { return 0; }
+	// TODO: move to server only (not supported on client)
+	void loadConfig() { }
+	bool loadConfig(const CString& pathname) { return false; }
+
+	int foregroundStartup(int argc, char** argv);
+	int daemonMainLoop(int, const char**);
+	int standardStartup(int argc, char** argv);
+	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	CScreen* createScreen();
+	void updateStatus();
+	void updateStatus(const CString& msg);
+	void resetRestartTimeout();
+	double nextRestartTimeout();
+	void handleScreenError(const CEvent&, void*);
+	CScreen* openClientScreen();
+	void closeClientScreen(CScreen* screen);
+	void handleClientRestart(const CEvent&, void* vtimer);
+	void scheduleClientRestart(double retryTime);
+	void handleClientConnected(const CEvent&, void*);
+	void handleClientFailed(const CEvent& e, void*);
+	void handleClientDisconnected(const CEvent&, void*);
+	CClient* openClient(const CString& name, const CNetworkAddress& address, CScreen* screen);
+	void closeClient(CClient* client);
+	bool startClient();
+	void stopClient();
+	int mainLoop();
 
 	static CClientApp& instance() { return (CClientApp&)CApp::instance(); }
 
 private:
+	CClient* s_client;
+	CScreen* s_clientScreen;
+
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 };

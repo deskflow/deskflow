@@ -115,7 +115,6 @@ public:
 	CScreen* s_serverScreen;
 	CPrimaryClient* s_primaryClient;
 	CClientListener* s_listener;
-	bool s_suspended;
 	CEventQueueTimer* s_timer;
 
 private:
@@ -129,10 +128,4 @@ private:
 #elif SYSAPI_UNIX
 #define USR_CONFIG_NAME ".synergy.conf"
 #define SYS_CONFIG_NAME "synergy.conf"
-#endif
-
-#if WINAPI_MSWINDOWS
-#define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
-#else
-#define DAEMON_RUNNING(running_)
 #endif

@@ -61,7 +61,6 @@ s_serverState(kUninitialized),
 s_serverScreen(NULL),
 s_primaryClient(NULL),
 s_listener(NULL),
-s_suspended(false),
 s_timer(NULL)
 {
 }
@@ -714,7 +713,8 @@ CServerApp::handleScreenError(const CEvent&, void*)
 	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 }
 
-void CServerApp::handleSuspend( const CEvent&, void* )
+void 
+CServerApp::handleSuspend(const CEvent&, void*)
 {
 	if (!s_suspended) {
 		LOG((CLOG_INFO "suspend"));
@@ -723,7 +723,8 @@ void CServerApp::handleSuspend( const CEvent&, void* )
 	}
 }
 
-void CServerApp::handleResume( const CEvent&, void* )
+void 
+CServerApp::handleResume(const CEvent&, void*)
 {
 	if (s_suspended) {
 		LOG((CLOG_INFO "resume"));

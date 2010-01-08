@@ -72,8 +72,6 @@ public:
 	// A description of the daemon (used only on Windows).
 	virtual const char* daemonInfo() const = 0;
 
-	IArchTaskBarReceiver* s_taskBarReceiver;
-
 	// Function pointer for function to exit immediately.
 	// TODO: this is old C code - use inheritance to normalize
 	void (*m_bye)(int);
@@ -85,6 +83,9 @@ public:
 
 	static CApp& instance() { assert(s_instance != nullptr); return *s_instance; }
 
+	bool s_suspended;
+	IArchTaskBarReceiver* s_taskBarReceiver;
+
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
@@ -95,3 +96,9 @@ private:
 };
 
 #define BYE "\nTry `%s --help' for more information."
+
+#if WINAPI_MSWINDOWS
+#define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
+#else
+#define DAEMON_RUNNING(running_)
+#endif

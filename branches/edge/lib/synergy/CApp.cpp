@@ -29,7 +29,8 @@ CApp* CApp::s_instance = nullptr;
 CApp::CApp(CArgsBase* args) :
 m_args(args),
 m_bye(&exit),
-s_taskBarReceiver(NULL)
+s_taskBarReceiver(NULL),
+s_suspended(false)
 {
 	assert(s_instance == nullptr);
 	s_instance = this;

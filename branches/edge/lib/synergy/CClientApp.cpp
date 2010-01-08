@@ -18,16 +18,34 @@
 #include "XSocket.h"
 #include "Version.h"
 #include "ProtocolTypes.h"
+#include "CString.h"
+#include "CScreen.h"
+#include "CEvent.h"
+#include "CClient.h"
+#include "CNetworkAddress.h"
+#include "IArchTaskBarReceiver.h"
+#include "IEventQueue.h"
+#include "TMethodEventJob.h"
+#include "CTCPSocketFactory.h"
+#include "XScreen.h"
+#include "LogOutputters.h"
+#include "CSocketMultiplexer.h"
+#include "CEventQueue.h"
 
 #if SYSAPI_WIN32
+#include "CMSWindowsScreen.h"
 #include "CArchMiscWindows.h"
 #endif
 
 #include <iostream>
 #include <stdio.h>
 
+#define RETRY_TIME 1.0
+
 CClientApp::CClientApp() :
-CApp(new CArgs())
+CApp(new CArgs()),
+s_client(NULL),
+s_clientScreen(NULL)
 {
 }
 
@@ -211,4 +229,393 @@ CClientApp::daemonInfo() const
 #elif SYSAPI_UNIX
 	return "";
 #endif
+}
+
+CScreen*
+CClientApp::createScreen()
+{
+#if WINAPI_MSWINDOWS
+	return new CScreen(new CMSWindowsScreen(false, args().m_noHooks));
+#elif WINAPI_XWINDOWS
+	return new CScreen(new CXWindowsScreen(args().m_display, false, args().m_yscroll));
+#elif WINAPI_CARBON
+	return new CScreen(new COSXScreen(false));
+#endif
+}
+
+void
+CClientApp::updateStatus()
+{
+	s_taskBarReceiver->updateStatus(s_client, "");
+}
+
+
+void
+CClientApp::updateStatus(const CString& msg)
+{
+	s_taskBarReceiver->updateStatus(s_client, msg);
+}
+
+
+void
+CClientApp::resetRestartTimeout()
+{
+	// retry time can nolonger be changed
+	//s_retryTime = 0.0;
+}
+
+
+double
+CClientApp::nextRestartTimeout()
+{
+	// retry at a constant rate (Issue 52)
+	return RETRY_TIME;
+
+	/*
+	// choose next restart timeout.  we start with rapid retries
+	// then slow down.
+	if (s_retryTime < 1.0) {
+	s_retryTime = 1.0;
+	}
+	else if (s_retryTime < 3.0) {
+	s_retryTime = 3.0;
+	}
+	else {
+	s_retryTime = 5.0;
+	}
+	return s_retryTime;
+	*/
+}
+
+
+void
+CClientApp::handleScreenError(const CEvent&, void*)
+{
+	LOG((CLOG_CRIT "error on screen"));
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+
+CScreen*
+CClientApp::openClientScreen()
+{
+	CScreen* screen = createScreen();
+	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
+		screen->getEventTarget(),
+		new TMethodEventJob<CClientApp>(
+		this, &CClientApp::handleScreenError));
+	return screen;
+}
+
+
+void
+CClientApp::closeClientScreen(CScreen* screen)
+{
+	if (screen != NULL) {
+		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
+			screen->getEventTarget());
+		delete screen;
+	}
+}
+
+
+void
+CClientApp::handleClientRestart(const CEvent&, void* vtimer)
+{
+	// discard old timer
+	CEventQueueTimer* timer = reinterpret_cast<CEventQueueTimer*>(vtimer);
+	EVENTQUEUE->deleteTimer(timer);
+	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
+
+	// reconnect
+	startClient();
+}
+
+
+void
+CClientApp::scheduleClientRestart(double retryTime)
+{
+	// install a timer and handler to retry later
+	LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+		new TMethodEventJob<CClientApp>(this, &CClientApp::handleClientRestart, timer));
+}
+
+
+void
+CClientApp::handleClientConnected(const CEvent&, void*)
+{
+	LOG((CLOG_NOTE "connected to server"));
+	resetRestartTimeout();
+	updateStatus();
+}
+
+
+void
+CClientApp::handleClientFailed(const CEvent& e, void*)
+{
+	CClient::CFailInfo* info =
+		reinterpret_cast<CClient::CFailInfo*>(e.getData());
+
+	updateStatus(CString("Failed to connect to server: ") + info->m_what);
+	if (!args().m_restartable || !info->m_retry) {
+		LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	}
+	else {
+		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
+		if (!s_suspended) {
+			scheduleClientRestart(nextRestartTimeout());
+		}
+	}
+	delete info;
+}
+
+
+void
+CClientApp::handleClientDisconnected(const CEvent&, void*)
+{
+	LOG((CLOG_NOTE "disconnected from server"));
+	if (!args().m_restartable) {
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	}
+	else if (!s_suspended) {
+		s_client->connect();
+	}
+	updateStatus();
+}
+
+
+CClient*
+CClientApp::openClient(const CString& name, const CNetworkAddress& address, CScreen* screen)
+{
+	CClient* client = new CClient(
+		name, address, new CTCPSocketFactory, NULL, screen);
+
+	try {
+		EVENTQUEUE->adoptHandler(
+			CClient::getConnectedEvent(),
+			client->getEventTarget(),
+			new TMethodEventJob<CClientApp>(this, &CClientApp::handleClientConnected));
+
+		EVENTQUEUE->adoptHandler(
+			CClient::getConnectionFailedEvent(),
+			client->getEventTarget(),
+			new TMethodEventJob<CClientApp>(this, &CClientApp::handleClientFailed));
+
+		EVENTQUEUE->adoptHandler(
+			CClient::getDisconnectedEvent(),
+			client->getEventTarget(),
+			new TMethodEventJob<CClientApp>(this, &CClientApp::handleClientDisconnected));
+
+	} catch (std::bad_alloc &ba) {
+		delete client;
+		throw ba;
+	}
+
+	return client;
+}
+
+
+void
+CClientApp::closeClient(CClient* client)
+{
+	if (client == NULL) {
+		return;
+	}
+
+	EVENTQUEUE->removeHandler(CClient::getConnectedEvent(), client);
+	EVENTQUEUE->removeHandler(CClient::getConnectionFailedEvent(), client);
+	EVENTQUEUE->removeHandler(CClient::getDisconnectedEvent(), client);
+	delete client;
+}
+
+int
+CClientApp::foregroundStartup(int argc, char** argv)
+{
+	// parse command line
+	parseArgs(argc, argv);
+
+	// never daemonize
+	return mainLoop();
+}
+
+bool
+CClientApp::startClient()
+{
+	double retryTime;
+	CScreen* clientScreen = NULL;
+	try {
+		if (s_clientScreen == NULL) {
+			clientScreen = openClientScreen();
+			s_client     = openClient(args().m_name,
+				*args().m_serverAddress, clientScreen);
+			s_clientScreen  = clientScreen;
+			LOG((CLOG_NOTE "started client"));
+		}
+		s_client->connect();
+		updateStatus();
+		return true;
+	}
+	catch (XScreenUnavailable& e) {
+		LOG((CLOG_WARN "cannot open secondary screen: %s", e.what()));
+		closeClientScreen(clientScreen);
+		updateStatus(CString("Cannot open secondary screen: ") + e.what());
+		retryTime = e.getRetryTime();
+	}
+	catch (XScreenOpenFailure& e) {
+		LOG((CLOG_CRIT "cannot open secondary screen: %s", e.what()));
+		closeClientScreen(clientScreen);
+		return false;
+	}
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "failed to start client: %s", e.what()));
+		closeClientScreen(clientScreen);
+		return false;
+	}
+
+	if (args().m_restartable) {
+		scheduleClientRestart(retryTime);
+		return true;
+	}
+	else {
+		// don't try again
+		return false;
+	}
+}
+
+
+void
+CClientApp::stopClient()
+{
+	closeClient(s_client);
+	closeClientScreen(s_clientScreen);
+	s_client       = NULL;
+	s_clientScreen = NULL;
+}
+
+
+int
+CClientApp::mainLoop()
+{
+	// logging to files
+	CFileLogOutputter* fileLog = NULL;
+
+	if (args().m_logFile != NULL) {
+		fileLog = new CFileLogOutputter(args().m_logFile);
+
+		CLOG->insert(fileLog);
+
+		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", args().m_logFile));
+	}
+
+	// create socket multiplexer.  this must happen after daemonization
+	// on unix because threads evaporate across a fork().
+	CSocketMultiplexer multiplexer;
+
+	// create the event queue
+	CEventQueue eventQueue;
+
+	// start the client.  if this return false then we've failed and
+	// we shouldn't retry.
+	LOG((CLOG_DEBUG1 "starting client"));
+	if (!startClient()) {
+		return kExitFailed;
+	}
+
+	// run event loop.  if startClient() failed we're supposed to retry
+	// later.  the timer installed by startClient() will take care of
+	// that.
+	CEvent event;
+	DAEMON_RUNNING(true);
+	EVENTQUEUE->getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event);
+	}
+	DAEMON_RUNNING(false);
+
+	// close down
+	LOG((CLOG_DEBUG1 "stopping client"));
+	stopClient();
+	updateStatus();
+	LOG((CLOG_NOTE "stopped client"));
+
+	if (fileLog) {
+		CLOG->remove(fileLog);
+		delete fileLog;		
+	}
+
+	return kExitSuccess;
+}
+
+
+int
+CClientApp::daemonMainLoop(int, const char**)
+{
+#if SYSAPI_WIN32
+	CSystemLogger sysLogger(daemonName(), false);
+#else
+	CSystemLogger sysLogger(daemonName(), true);
+#endif
+	return mainLoop();
+}
+
+static
+int
+daemonMainLoopStatic(int argc, const char** argv)
+{
+	return CClientApp::instance().daemonMainLoop(argc, argv);
+}
+
+int
+CClientApp::standardStartup(int argc, char** argv)
+{
+	if (!args().m_daemon) {
+		ARCH->showConsole(false);
+	}
+
+	// parse command line
+	parseArgs(argc, argv);
+
+	// daemonize if requested
+	if (args().m_daemon) {
+		return ARCH->daemonize(daemonName(), &daemonMainLoopStatic);
+	}
+	else {
+		return mainLoop();
+	}
+}
+
+int
+CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver)
+{
+	// general initialization
+	args().m_serverAddress = new CNetworkAddress;
+	args().m_pname         = ARCH->getBasename(argv[0]);
+
+	// install caller's output filter
+	if (outputter != NULL) {
+		CLOG->insert(outputter);
+	}
+
+	// save log messages
+	// use heap memory because CLog deletes outputters on destruction
+	CBufferedLogOutputter* logBuffer = new CBufferedLogOutputter(1000);
+	CLOG->insert(logBuffer, true);
+
+	// make the task bar receiver.  the user can control this app
+	// through the task bar.
+	s_taskBarReceiver = createTaskBarReceiver(logBuffer);
+
+	// run
+	int result = startup(argc, argv);
+
+	// done with task bar receiver
+	delete s_taskBarReceiver;
+
+	delete args().m_serverAddress;
+	return result;
 }
