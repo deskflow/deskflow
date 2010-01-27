@@ -20,9 +20,11 @@ Windows users can use the Synergy GUI application which is installed by default.
 
 If you're having problems, please either post a new message in our [http://groups.google.com/group/synergy-plus user mailing list], or if you think you've found a bug, please create a [http://code.google.com/p/synergy-plus/issues/entry new issue].
 
-== Q. How do I send in debug output? ==
+== Q. How do I send you guys debug output? ==
 
 When reporting a bug or trying to solve a problem, it's always useful to attach debug output from `synergyc` or `synergys`. To do this, run the application from the command prompt and use the `--debug DEBUG1` argument (or `DEBUG2` for extra verbosity). On unix platform this will be sent to console, but on Windows you'll need to use the special console window (accessed via the system tray). Future versions support logging to file (not including v1.3.4), by using the `--log <file>` argument.
+
+Once you've got the debug output in a text file, please attach this to the appropriate issue, or [http://code.google.com/p/synergy-plus/issues/entry create a new one] if necessary.
  
 == Q. Why do I get "This application has failed to start..." error? ==
 
