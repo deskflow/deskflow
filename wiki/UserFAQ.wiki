@@ -25,7 +25,7 @@ If you're having problems, please either post a new message in our [http://group
 When reporting a bug or trying to solve a problem, it's always useful to attach debug output from `synergyc` or `synergys`. To do this, run the application from the command prompt and use the `--debug DEBUG1` argument (or `DEBUG2` for extra verbosity). On unix platform this will be sent to console, but on Windows you'll need to use the special console window (accessed via the system tray). Future versions support logging to file (not including v1.3.4), by using the `--log <file>` argument.
 
 Once you've got the debug output in a text file, please attach this to the appropriate issue, or [http://code.google.com/p/synergy-plus/issues/entry create a new one] if necessary.
- 
+
 == Q. Why do I get "This application has failed to start..." error? ==
 
 The installer does not currently include the Microsoft Visual C++ 2008 Redistributable Package. Please download either the [http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf&displaylang=en x86] or [http://www.microsoft.com/downloads/details.aspx?familyid=BD2A6171-E2D6-4230-B809-9A8D7548C1B6&displaylang=en x64] version.
@@ -35,6 +35,10 @@ The installer does not currently include the Microsoft Visual C++ 2008 Redistrib
 This is useful for when playing computer games or other full screen applications. The `Scroll Lock` key can be used to prevent the mouse switching input to another screen.
 
 *Note:* For users that don't have a scroll lock key, Issue 61 has been created.
+
+== Q. What's the difference between Synergy+ and original Synergy? ==
+
+Take a look at our [http://en.wikipedia.org/wiki/Synergy%2B wikipedia article]. This explains that "Synergy+ was created as a maintenance fork for the purpose of fixing bugs inherited from the original version." The article also goes into a little more detail on what happened to the original Synergy. We're hoping to merge the two projects, but we've had little luck getting in contact with the original author, Chris Schoeneman.
 
 == Q. What's the difference between Synergy+ and a KVM? ==
 
