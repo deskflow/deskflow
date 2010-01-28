@@ -103,15 +103,16 @@ The reason why the `bin` directory is used, is so that CMake generated files do 
 
 = Dependencies =
 
-== Windows XP/Vista/7 ==
+== Windows (x86) ==
 
+  * Windows XP, Vista or 7
   * VC++ 6.0 and above (e.g. [http://www.microsoft.com/express/vc/ Visual C++ Express 2008])
   * CMake ([http://www.cmake.org/cmake/resources/software.html downloads])
   * Python ([http://www.python.org/download/ downloads])
 
 You may need to add your Python install directory to the end of your PATH environment variable (System > Advanced System Settings > Environment Variables) so that `hm` can be called from the command prompt.
 
-== Windows 7 (x64) ==
+== Windows (x64) ==
 
   * All dependencies from Windows XP/Vista/7
   * Visual Studio 2008 (x64) *SP1* or Visual Studio 2005 (x64) *SP1*
