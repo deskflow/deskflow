@@ -114,7 +114,7 @@ You may need to add your Python install directory to the end of your PATH enviro
 
 == Windows (x64) ==
 
-  * All dependencies from Windows XP/Vista/7
+  * All dependencies required for Windows x86
   * Visual Studio 2008 (x64) *SP1* or Visual Studio 2005 (x64) *SP1*
   * 64-bit compiler extensions installed (you may need to re-run setup)
 
