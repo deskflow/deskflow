@@ -1,0 +1,95 @@
+# Microsoft Developer Studio Project File - Name="OUTPUT_LIBNAME" - Package Owner=<4>
+# Microsoft Developer Studio Generated Build File, Format Version 6.00
+# ** DO NOT EDIT **
+
+# TARGTYPE "Win32 (x86) Generic Project" 0x010a
+
+CFG=OUTPUT_LIBNAME - Win32 Debug
+!MESSAGE This is not a valid makefile. To build this project using NMAKE,
+!MESSAGE use the Export Makefile command and run
+!MESSAGE 
+!MESSAGE NMAKE /f "OUTPUT_LIBNAME.mak".
+!MESSAGE 
+!MESSAGE You can specify a configuration when running NMAKE
+!MESSAGE by defining the macro CFG on the command line. For example:
+!MESSAGE 
+!MESSAGE NMAKE /f "OUTPUT_LIBNAME.mak" CFG="OUTPUT_LIBNAME - Win32 Debug"
+!MESSAGE 
+!MESSAGE Possible choices for configuration are:
+!MESSAGE 
+!MESSAGE "OUTPUT_LIBNAME - Win32 MinSizeRel" (based on "Win32 (x86) Generic Project")
+!MESSAGE "OUTPUT_LIBNAME - Win32 Release" (based on "Win32 (x86) Generic Project")
+!MESSAGE "OUTPUT_LIBNAME - Win32 RelWithDebInfo" (based on "Win32 (x86) Generic Project")
+!MESSAGE "OUTPUT_LIBNAME - Win32 Debug" (based on "Win32 (x86) Generic Project")
+!MESSAGE 
+
+# Begin Project
+# PROP AllowPerConfigDependencies 0
+# PROP Scc_ProjName ""
+# PROP Scc_LocalPath ""
+MTL=midl.exe
+
+!IF  "$(CFG)" == "OUTPUT_LIBNAME - Win32 Release"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "Release"
+# PROP BASE Intermediate_Dir "Release"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Intermediate_Dir "Release"
+# PROP Target_Dir ""
+
+CMAKE_CUSTOM_RULE_CODE_RELEASE
+
+!ELSEIF  "$(CFG)" == "OUTPUT_LIBNAME - Win32 Debug"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "Debug"
+# PROP BASE Intermediate_Dir "Debug"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Intermediate_Dir "Debug"
+# PROP Target_Dir ""
+
+CMAKE_CUSTOM_RULE_CODE_DEBUG
+
+!ELSEIF  "$(CFG)" == "OUTPUT_LIBNAME - Win32 MinSizeRel"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "MinSizeRel"
+# PROP BASE Intermediate_Dir "MinSizeRel"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Intermediate_Dir "MinSizeRel"
+# PROP Target_Dir ""
+
+CMAKE_CUSTOM_RULE_CODE_MINSIZEREL
+
+!ELSEIF  "$(CFG)" == "OUTPUT_LIBNAME - Win32 RelWithDebInfo"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "RelWithDebInfo"
+# PROP BASE Intermediate_Dir "RelWithDebInfo"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Intermediate_Dir "RelWithDebInfo"
+# PROP Target_Dir ""
+
+CMAKE_CUSTOM_RULE_CODE_RELWITHDEBINFO
+
+!ENDIF 
+
+# Begin Target
+
+# Name "OUTPUT_LIBNAME - Win32 Release"
+# Name "OUTPUT_LIBNAME - Win32 Debug"
+# Name "OUTPUT_LIBNAME - Win32 MinSizeRel"
+# Name "OUTPUT_LIBNAME - Win32 RelWithDebInfo"
