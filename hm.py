@@ -25,6 +25,9 @@ website_url = 'http://code.google.com/p/synergy-plus'
 
 this_cmd = 'hm'
 cmake_cmd = 'cmake'
+if sys.platform == 'win32':
+	cmake_cmd = os.getcwd() + '\\tool\\win\\cmake\\bin\\'+ cmake_cmd
+
 make_cmd = 'make'
 xcodebuild_cmd = 'xcodebuild'
 
