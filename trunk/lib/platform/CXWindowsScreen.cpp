@@ -1488,9 +1488,15 @@ CXWindowsScreen::onMouseMove(const XMotionEvent& xmotion)
 		// sent.  we discard the matching sent event and
 		// can be sure we've skipped the warp event.
 		XEvent xevent;
+		char cntr = 0;
 		do {
 			XMaskEvent(m_display, PointerMotionMask, &xevent);
+			if (cntr++ > 10) {
+				LOG((CLOG_WARN "too many discarded events! %d", cntr));
+				break;
+			}
 		} while (!xevent.xany.send_event);
+		cntr = 0;
 	}
 	else if (m_isOnScreen) {
 		// motion on primary screen
