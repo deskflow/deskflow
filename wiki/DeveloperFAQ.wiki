@@ -46,7 +46,7 @@ Ensure that the libXtst-dev or libXtst-devel package is installed.
 
 == Q. How do I submit patches? ==
 
-Simply run `svn diff > foobar.patch`, and submit by attaching to a [http://code.google.com/p/synergy-plus/issues/entry new] or [http://code.google.com/p/synergy-plus/issues/list existing] issue.
+Simply run `svn diff > foobar.patch` and submit by attaching to a [http://code.google.com/p/synergy-plus/issues/entry new] or [http://code.google.com/p/synergy-plus/issues/list existing] issue.
 
 Once you submit your patch, our [Members patch manager] will review and apply the patch, then commit to the repository.
 
