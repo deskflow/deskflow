@@ -854,6 +854,14 @@ CMSWindowsKeyState::pollActiveGroup() const
 	// get keyboard layout for the thread
 	HKL hkl            = GetKeyboardLayout(targetThread);
 
+	if (!hkl) {
+		// GetKeyboardLayout failed. Maybe targetWindow is a console window.
+		// We're getting the keyboard layout of the desktop instead.
+		targetWindow = GetDesktopWindow();
+		targetThread = GetWindowThreadProcessId(targetWindow, NULL);
+		hkl          = GetKeyboardLayout(targetThread);
+	}
+
 	// get group
 	GroupMap::const_iterator i = m_groupMap.find(hkl);
 	if (i == m_groupMap.end()) {
