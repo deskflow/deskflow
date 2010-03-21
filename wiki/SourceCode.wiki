@@ -30,7 +30,7 @@ Please see the [http://subversion.tigris.org/project_packages.html Subversion pr
 Once Subversion is installed, run the following command to download the source code to a folder named `synergy-plus` (`hg` will create the directory for you).
 
 {{{
-svn checkout http://synergy-plus.googlecode.com/svn/ synergy-plus
+svn checkout http://synergy-plus.googlecode.com/svn/trunk/ synergy-plus-read-only
 }}}
 
 == Compile the Code ==
