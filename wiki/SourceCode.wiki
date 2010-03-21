@@ -17,8 +17,6 @@ wget http://synergy-plus.googlecode.com/files/synergy-plus-1.3.4.tar.gz
 tar xfvz synergy-plus-1.3.4.tar.gz
 }}}
 
-*Important!* If you download the source code for 1.3.4, then please follow the [http://code.google.com/p/synergy-plus/wiki/CompilingAutomake Automake compile instructions]. However, if you're contributing to our project, we advise that you download the latest version via our Mercurial repository (option 2).
-
 = Option 2 (Subversion) =
 
 Recommended for: *Developers (more advanced)*
