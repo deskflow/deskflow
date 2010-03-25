@@ -23,7 +23,7 @@ Recommended for: *Developers (more advanced)*
 
 == Install Subversion =
 
-Please see the [http://subversion.tigris.org/project_packages.html Subversion project packages], for instructions on installing for your OS.
+Please see the [http://subversion.apache.org/packages.html Subversion project packages], for instructions on installing for your OS.
 
 == Download the Code ==
 {{{
