@@ -47,7 +47,8 @@ IF(WIN32)
 	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
 	SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /analyze")
 
+	# this line removes "/D NDEBUG" from release, we want them in order to find bugs even on release builds.
+	SET(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2")
 ENDIF(WIN32)
 
-# this line removes "/D NDEBUG" from release, we want them in order to find bugs even on release builds.
-SET(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2")
+
