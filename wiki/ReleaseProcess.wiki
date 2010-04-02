@@ -13,3 +13,4 @@ The following steps should be followed for releasing a new version.
   # Stabilize the release branch to a point that it is suitable for end users.
   # Move the release branch from to the `branches` directory to the `tags` directory (at this point, no further changes should be made).
   # Create the Windows installer, Mac OS X installer, Linux packages, Source tar.gz.
+  # Send a message to synergy-plus mailing list informing them of the new release, and thank the contributors that helped.
