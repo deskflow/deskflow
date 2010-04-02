@@ -33,4 +33,4 @@ New users don't have the experience we have. Therefore, its not their fault if t
 
 *Note:* {issue-id} is a number.
 
-Then set the status to duplicate.
+Then set the status to duplicate. If the user is adamant that the issue is not a duplicate, then give them the benefit of the doubt.
