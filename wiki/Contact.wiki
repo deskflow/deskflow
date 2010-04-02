@@ -1,14 +1,4 @@
 #summary How to get in touch with the developers
-#labels Featured
+#labels Deprecated
 
-= Mailing List =
-
-This is our most common channel of communication. Just head on over to the [http://groups.google.com/group/synergy-plus mailing list] and post your question there and you'll usually get a reply within a day or so.
-
-= IRC =
-
-Head on over to #synergy-plus on [http://freenode.net/ irc.freenode.net:8001], and ask your question there. There's usually a developer monitoring the chat room, so you will usually get a pretty quick response.
-
-= Twitter =
-
-One of our developers uses twitter, so feel free to follow ([https://twitter.com/NickBoltonUK NickBoltonUK]).
+Please refer to the Members page.
