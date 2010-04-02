@@ -1,41 +1,27 @@
 #summary Project milestones such as M1, M2, M3, Mx
 
-For version numbers and release dates, please refer to [VersionHistory version history].
-
-|| *ID* || *Details* ||
-|| M1 || Critical bug fixes ||
-|| M2 || Low priority bug fixes ||
-|| M3 || Essential new features ||
-|| M4 || Low priority features ||
-
-These milestones have been created to serve as targets for significant releases. These will ensure that we have solid targets, which means better performance.
-
 = Details =
 
 == Milestone M1 ==
 
-Due to new operating systems, the original Synergy is no longer fully compatible. In Vista, due to session isolation, Synergy can't be used at the login screen or when run as a service (issue 26). On Mac OS X, neither the client or server can be run in daemon mode (issue 46), and clipboard sharing has stopped working (issue 67).
-
-For milestone M1, we're going to get Synergy+ back to a fully supporting standard, but we're not going to worry about new features. There are also some more involved bugs, that, if we were to assign to M1 would delay it substantially - these bugs are left to M2.
-
-[http://code.google.com/p/synergy-plus/issues/list?q=milestone=M1 Milestone M1 issues]
+M1 issues are our most critical bugs. Use this as sparingly as possible, so that we'll have a chance of actually finishing M1 some day.
 
 == Milestone M2 ==
 
-International keyboard support is quite bad at the moment (issue 5), this may be because the original Synergy was designed with only en-us keyboards in mind. For example, for some en-gb keyboards, the @ symbol does not appear when pressed (instead the omega Ω symbol appears). There are also issues with other non-us characters such as č, which appears as just c. This requires an overhaul of the key press detection system Because this is such an epic task, we have deferred this to M2, even though it is still a bug.
+M2 issues fall under the category of "important, but not that important". Like M1, please use this sparingly, as we don't want to have a never ending list.
 
-Security enhancements are also a high priority; many users have expressed that the original Synergy is unsafe, and should be enhanced with use of SSL (issue 3).
+== Milestone M2B ==
 
-[http://code.google.com/p/synergy-plus/issues/list?q=milestone=M2 Milestone M2 issues]
+M2B issues are all the other bugs. This will probably get split up at a later date in to M2C, M2D, etc. So don't worry about overloading it for now.
 
 == Milestone M3 ==
 
-Our aim here is to integrate an existing GUI with Synergy+ so that we have a common GUI for all platforms (instead of just one for Windows). We're hoping that the QSynergy authors will contribute directly to our repository, and we plan to have a specially modified version of QSynergy that is very closely integrated with Synergy+.
-
-[http://code.google.com/p/synergy-plus/issues/list?q=milestone=M3 Milestone M3 issues]
+Features that we absolutely must have go into this milestone. Remember though, that our priority is to fix all the bugs, so M3 won't be officially started until we kill most of the bugs.
 
 == Milestone M4 ==
 
-This is a new one. Anything that's lower priority than M3 will go here; but we're talking a long time before we get to this point, so nothing is set in stone.
+Features that we should have at some point, but they aren't necessarily as important as M3 features.
 
-[http://code.google.com/p/synergy-plus/issues/list?q=milestone=M4 Milestone M4 issues]
+== Milestone M4B ==
+
+This milestone is for features that are nice to have. Like M2B, this will probably become overloaded, and will need dividing up into M4C, M4D, etc.
