@@ -23,7 +23,7 @@ Users will sometimes have a feature request, which may be outside the scope of o
 
   Thanks for the feature request. Unfortunately, the feature you requested is outside the scope of our specification. Please feel free to suggest other ideas.
 
-Then set the status to `WontFix` (and *not* Invalid). This avoids upsetting people that could contribute valuable bug reports in future.
+Then set the status to `WontFix` (and *not* `Invalid`). Only set an issue to `invalid` if it's garbage or has empty text.
 
 == Duplicates ==
 
