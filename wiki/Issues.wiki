@@ -47,4 +47,4 @@ Clearly swearing is not acceptable in a professional community such as ours, how
 
 == Reviewing ==
 
-Some times it's not possible to determine if an issue is acceptable given the initial information; so in this case we ask the user for more details and set the status to `reviewed`. Make sure you set yourself as the owner so that you can update the status when they respond.
+Some times it's not possible to determine if an issue is acceptable given the initial information; so in this case we ask the user for more details and set the status to `Reviewed`. Make sure you set yourself as the owner so that you can update the status when they respond.
