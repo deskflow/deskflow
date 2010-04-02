@@ -7,7 +7,7 @@ The following steps should be followed for releasing a new version.
 
   # Appoint the release manager (the person that ensures these steps are followed).
   # Create a new branch with the version number (e.g. release-1.3.4)
-  # Inform mailing list that a new release branch is active.
+  # Inform the synergy-plus-dev mailing list that a new release branch is active, and point them to this page.
   # Decide what bug fixes and features go into this version by tagging them on the bug tracker.
   # *First*, implement the assigned bug fixes and features on the *trunk* then back-port them to the release branch (this is very important!).
   # Stabilize the release branch to a point that it is suitable for end users.
