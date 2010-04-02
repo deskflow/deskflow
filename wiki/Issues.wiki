@@ -25,6 +25,10 @@ Users will sometimes have a feature request, which may be outside the scope of o
 
 Then set the status to `WontFix` (and *not* `Invalid`). Only set an issue to `invalid` if it's garbage or has empty text. At this point, remove your username from the owner field.
 
+== Reviewing ==
+
+Some times it's not possible to determine if an issue is acceptable given the initial information; so in this case we ask the user for more details and set the status to `Reviewed`. Make sure you set yourself as the owner so that you can update the status when they respond.
+
 == Duplicates ==
 
 New users don't have the experience we have. Therefore, its not their fault if they submit a duplicate bug report. This situation should be met with a polite message.
@@ -44,7 +48,3 @@ If someone submits a patch (either with the original issue, or as a reply), then
 Clearly swearing is not acceptable in a professional community such as ours, however we should be fairly lenient and quickly "nip it in the bud" if it ever occurs, then move on to responding to what the user said.
 
   Please note that we don't allow swearing in our community. Now that that's out the way, you have some good points in your issue *(and so on...)*
-
-== Reviewing ==
-
-Some times it's not possible to determine if an issue is acceptable given the initial information; so in this case we ask the user for more details and set the status to `Reviewed`. Make sure you set yourself as the owner so that you can update the status when they respond.
