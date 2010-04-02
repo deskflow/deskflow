@@ -1,4 +1,5 @@
 #summary Information regarding testing and debugging problem
+#labels Deprecated
 
 = Virtual Machines =
 == !VirtualBox ==
