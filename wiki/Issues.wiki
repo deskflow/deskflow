@@ -15,7 +15,7 @@ Consider the following, or some variant:
 
   Thanks for submitting a new issue. I have marked the issue as accepted, and we will keep you informed of it's progress.
 
-Then set the status to `Accepted`, and choose a milestone. Ensure that feature requests are marked as `Enhancement`, not `Defect`. It's OK to say you'll keep them informed, because the system will do this for them automatically when updates are added.
+Then set the status to `Accepted`, and choose a milestone. Ensure that feature requests are marked as `Enhancement`, not `Defect`. It's OK to say you'll keep them informed, because the system will do this for them automatically when updates are added. At this point, remove your username from the owner field.
 
 == Rejecting ==
 
@@ -23,7 +23,7 @@ Users will sometimes have a feature request, which may be outside the scope of o
 
   Thanks for the feature request. Unfortunately, the feature you requested is outside the scope of our specification. Please feel free to suggest other ideas.
 
-Then set the status to `WontFix` (and *not* `Invalid`). Only set an issue to `invalid` if it's garbage or has empty text.
+Then set the status to `WontFix` (and *not* `Invalid`). Only set an issue to `invalid` if it's garbage or has empty text. At this point, remove your username from the owner field.
 
 == Duplicates ==
 
@@ -34,3 +34,17 @@ New users don't have the experience we have. Therefore, its not their fault if t
 *Note:* {issue-id} is a number.
 
 Then set the status to duplicate. If the user is adamant that the issue is not a duplicate, then give them the benefit of the doubt.
+
+== Patches ==
+
+If someone submits a patch (either with the original issue, or as a reply), then set the status to `GotPatch` and give ownership to the patch manager. This then prompts our patch manager to review the patch and commit it to the trunk if it's acceptable. Assuming this fixes the issue, the patch manager should set the status to `MaybeFixed`.
+
+== Swearing ==
+
+Clearly swearing is not acceptable in a professional community such as ours, however we should be fairly lenient and quickly "nip it in the bud" if it ever occurs, then move on to responding to what the user said.
+
+  Please note that we don't allow swearing in our community. Now that that's out the way, you have some good points in your issue *(and so on...)*
+
+== Reviewing ==
+
+Some times it's not possible to determine if an issue is acceptable given the initial information; so in this case we ask the user for more details and set the status to `reviewed`. Make sure you set yourself as the owner so that you can update the status when they respond.
