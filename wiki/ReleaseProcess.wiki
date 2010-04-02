@@ -5,12 +5,11 @@
 
 The following steps should be followed for releasing a new version.
 
-  # Create a new branch with the version number (e.g. version-1.3.4)
-  # Inform mailing list that a new release branch is active, which acts as an informal invitation to work on the release branch (not everyone will want to).
-  # Appoint a new branch owner, the person who drives the release of the branch and ensures that the appropriate steps are follows.
-  # Decide what features go into this version by tagging them on the bug tracker.
-  # Allow other developers to work on the main line (branch: default) unaffected by the release.
-  # Stabilize the release branch to a point that it is suitable for end users (i.e. no features are left incomplete).
-  # On the mailing list, declare that the release branch is no longer active.
+  # Appoint the release manager (the person that ensures these steps are followed).
+  # Create a new branch with the version number (e.g. release-1.3.4)
+  # Inform mailing list that a new release branch is active.
+  # Decide what bug fixes and features go into this version by tagging them on the bug tracker.
+  # *First*, implement the assigned bug fixes and features on the *trunk* then back-port them to the release branch (this is very important!).
+  # Stabilize the release branch to a point that it is suitable for end users.
+  # Move the release branch from to the `branches` directory to the `tags` directory (at this point, no further changes should be made).
   # Create the Windows installer, Mac OS X installer, Linux packages, Source tar.gz.
-  # Merge the code changes introduced in the release branch back into the main line.
