@@ -1,27 +1,10 @@
-#summary Project milestones such as M1, M2, M3, Mx
+#summary Project milestones such as M1, M2, etc
+#labels Phase-Requirements
 
-= Details =
-
-== Milestone M1 ==
-
-M1 issues are our most critical bugs. Use this as sparingly as possible, so that we'll have a chance of actually finishing M1 some day.
-
-== Milestone M2 ==
-
-M2 issues fall under the category of "important, but not that important". Like M1, please use this sparingly, as we don't want to have a never ending list.
-
-== Milestone M2B ==
-
-M2B issues are all the other bugs. This will probably get split up at a later date in to M2C, M2D, etc. So don't worry about overloading it for now.
-
-== Milestone M3 ==
-
-Features that we absolutely must have go into this milestone. Remember though, that our priority is to fix all the bugs, so M3 won't be officially started until we kill most of the bugs.
-
-== Milestone M4 ==
-
-Features that we should have at some point, but they aren't necessarily as important as M3 features.
-
-== Milestone M4B ==
-
-This milestone is for features that are nice to have. Like M2B, this will probably become overloaded, and will need dividing up into M4C, M4D, etc.
+|| *Milestone* || *Purpose* ||
+|| M1 || Our most critical bugs; use this as sparingly as possible, so that we'll have a chance of actually finishing M1 some day. ||
+|| M2 || Issues that fall under the category of "important, but not that important". Like M1, please use this sparingly, as we don't want to have a never ending list. ||
+|| M2B || All the other bugs; this will probably get split up at a later date in to M2C, M2D, etc. So don't worry about overloading it for now. ||
+|| M3 || Features that we absolutely must have go into this milestone. Remember though, that our priority is to fix all the bugs, so M3 won't be officially started until we kill most of the bugs. ||
+|| M4 || Features that we should have at some point, but they aren't necessarily as important as M3 features. ||
+|| M4B || This milestone is for features that are nice to have. Like M2B, this will probably become overloaded, and will need dividing up into M4C, M4D, etc. ||
