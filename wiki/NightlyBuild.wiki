@@ -1,5 +1,5 @@
 #summary Nightly build and source snapshot
-#labels Phase-Implementation
+#labels Deprecated
 
 Nightly builds are provided for testing purposes only. Use at your own risk. They are *unstable* and may not work at all. End-users should use the [http://code.google.com/p/synergy-plus/downloads/list downloads] page to obtain the latest stable version.
 
