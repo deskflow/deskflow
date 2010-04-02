@@ -1,4 +1,5 @@
 #summary About the development process, code style, etc
+#labels Featured
 
 <wiki:toc max_depth="2" />
 
