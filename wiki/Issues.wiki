@@ -1,9 +1,9 @@
 #summary Member guidelines for dealing with issues
-#labels Phase-Implementation
+#labels Phase-Design
 
 = Creating Issues =
 
-If you discover an issue in Synergy+, please report it through our [http://code.google.com/p/synergy-plus/issues/list issue tracker]. Issues can be bug reports or feature requests. Please refrain from having lengthy discussions in the issue tracker, and instead [create a new thread in the mailing list ([http://groups.google.com/group/synergy-plus user] or [http://groups.google.com/group/synergy-plus-dev developer] as appropriate) as this will make it easier community members to contribute, making it more likely for the issue to be resolved effectively. Once creating a new mailing list thread, make sure the issue number is referenced.
+If you discover an issue in Synergy+, please report it through our [http://code.google.com/p/synergy-plus/issues/list issue tracker]. Issues can be bug reports or feature requests. Please refrain from having lengthy discussions in the issue tracker, and instead create a new thread in the mailing list ([http://groups.google.com/group/synergy-plus user] or [http://groups.google.com/group/synergy-plus-dev developer] as appropriate) as this will make it easier community members to contribute, making it more likely for the issue to be resolved effectively. Once creating a new mailing list thread, make sure the issue number is referenced.
 
 = Moderating Issues =
 
