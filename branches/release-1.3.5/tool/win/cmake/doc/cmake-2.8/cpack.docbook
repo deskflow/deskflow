@@ -1,0 +1,143 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE"> ]>
+<article>
+<articleinfo>
+<title>cpack - cpack</title>
+</articleinfo>
+<sect1 id="section_Name">
+<title>
+Name</title>
+<itemizedlist>
+</itemizedlist>
+<literallayout>  cpack - Packaging driver provided by CMake.</literallayout>
+    
+</sect1>
+<sect1 id="section_Usage">
+<title>
+Usage</title>
+<itemizedlist>
+</itemizedlist>
+<literallayout>  cpack -G &lt;generator&gt; [options]</literallayout>
+    
+</sect1>
+<sect1 id="section_Description">
+<title>
+Description</title>
+<itemizedlist>
+</itemizedlist>
+<para>The "cpack" executable is the CMake packaging program.  CMake-generated build trees created for projects that use the INSTALL_* commands have packaging support.  This program will generate the package.</para>
+<para>CMake is a cross-platform build system generator.  Projects specify their build process with platform-independent CMake listfiles included in each directory of a source tree with the name CMakeLists.txt. Users build a project by using CMake to generate a build system for a native tool on their platform.</para>
+</sect1>
+<sect1 id="section_Options">
+<title>
+Options</title>
+<itemizedlist>
+    <listitem><link linkend="opt_-G &lt;generator&gt;"><emphasis><literal>-G &lt;generator&gt;</literal></emphasis></link></listitem>
+    <listitem><link linkend="opt_-C &lt;Configuration&gt;"><emphasis><literal>-C &lt;Configuration&gt;</literal></emphasis></link></listitem>
+    <listitem><link linkend="opt_-D &lt;var&gt;=&lt;value&gt;"><emphasis><literal>-D &lt;var&gt;=&lt;value&gt;</literal></emphasis></link></listitem>
+    <listitem><link linkend="opt_--config &lt;config file&gt;"><emphasis><literal>--config &lt;config file&gt;</literal></emphasis></link></listitem>
+</itemizedlist>
+    <para id="opt_-G &lt;generator&gt;"><sect2><title>-G &lt;generator&gt;</title></sect2> Use the specified generator to generate package.</para>
+
+    <para>CPack may support multiple native packaging systems on certain platforms. A generator is responsible for generating input files for particular system and invoking that systems. Possible generator names are specified in the Generators section.</para>
+    <para id="opt_-C &lt;Configuration&gt;"><sect2><title>-C &lt;Configuration&gt;</title></sect2> Specify the project configuration</para>
+
+    <para>This option specifies the configuration that the project was build with, for example 'Debug', 'Release'.</para>
+    <para id="opt_-D &lt;var&gt;=&lt;value&gt;"><sect2><title>-D &lt;var&gt;=&lt;value&gt;</title></sect2> Set a CPack variable.</para>
+
+    <para>Set a variable that can be used by the generator.</para>
+    <para id="opt_--config &lt;config file&gt;"><sect2><title>--config &lt;config file&gt;</title></sect2> Specify the config file.</para>
+
+    <para>Specify the config file to use to create the package. By default CPackConfig.cmake in the current directory will be used.</para>
+</sect1>
+<sect1 id="section_Generators">
+<title>
+Generators</title>
+<itemizedlist>
+    <listitem><link linkend="gen_NSIS"><emphasis><literal>NSIS</literal></emphasis></link></listitem>
+    <listitem><link linkend="gen_STGZ"><emphasis><literal>STGZ</literal></emphasis></link></listitem>
+    <listitem><link linkend="gen_TBZ2"><emphasis><literal>TBZ2</literal></emphasis></link></listitem>
+    <listitem><link linkend="gen_TGZ"><emphasis><literal>TGZ</literal></emphasis></link></listitem>
+    <listitem><link linkend="gen_TZ"><emphasis><literal>TZ</literal></emphasis></link></listitem>
+    <listitem><link linkend="gen_ZIP"><emphasis><literal>ZIP</literal></emphasis></link></listitem>
+</itemizedlist>
+    <para id="gen_NSIS"><sect2><title>NSIS</title></sect2> Null Soft Installer</para>
+
+    <para id="gen_STGZ"><sect2><title>STGZ</title></sect2> Self extracting Tar GZip compression</para>
+
+    <para id="gen_TBZ2"><sect2><title>TBZ2</title></sect2> Tar BZip2 compression</para>
+
+    <para id="gen_TGZ"><sect2><title>TGZ</title></sect2> Tar GZip compression</para>
+
+    <para id="gen_TZ"><sect2><title>TZ</title></sect2> Tar Compress compression</para>
+
+    <para id="gen_ZIP"><sect2><title>ZIP</title></sect2> ZIP file format</para>
+
+</sect1>
+<sect1 id="section_Properties">
+<title>
+Properties</title>
+<itemizedlist>
+</itemizedlist>
+<literallayout>  CMake Properties - Properties supported by CMake, the Cross-Platform Makefile Generator.</literallayout>
+    
+<para>This is the documentation for the properties supported by CMake. Properties can have different scopes. They can either be assigned to a source file, a directory, a target or globally to CMake. By modifying the values of properties the behaviour of the build system can be customized.</para>
+</sect1>
+<sect1 id="section_Compatibility Commands">
+<title>
+Compatibility Commands</title>
+<itemizedlist>
+</itemizedlist>
+<literallayout>  CMake Compatibility Listfile Commands - Obsolete commands supported by CMake for compatibility.</literallayout>
+    
+<para>This is the documentation for now obsolete listfile commands from previous CMake versions, which are still supported for compatibility reasons. You should instead use the newer, faster and shinier new commands. ;-)</para>
+</sect1>
+<sect1 id="section_Standard CMake Modules">
+<title>
+Standard CMake Modules</title>
+</sect1>
+<sect1 id="section_Copyright">
+<title>
+Copyright</title>
+<itemizedlist>
+</itemizedlist>
+<para>Copyright 2000-2009 Kitware, Inc., Insight Software Consortium.  All rights reserved.</para>
+<para>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</para>
+<para>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</para>
+<para>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</para>
+<para>Neither the names of Kitware, Inc., the Insight Software Consortium, nor the names of their contributors may be used to endorse or promote products derived from this software without specific prior written permission.</para>
+<para>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</para>
+</sect1>
+<sect1 id="section_See Also">
+<title>
+See Also</title>
+<itemizedlist>
+    <listitem><link linkend="see_Home Page"><emphasis><literal>Home Page</literal></emphasis></link></listitem>
+    <listitem><link linkend="see_Frequently Asked Questions"><emphasis><literal>Frequently Asked Questions</literal></emphasis></link></listitem>
+    <listitem><link linkend="see_Online Documentation"><emphasis><literal>Online Documentation</literal></emphasis></link></listitem>
+    <listitem><link linkend="see_Mailing List"><emphasis><literal>Mailing List</literal></emphasis></link></listitem>
+</itemizedlist>
+<para>The following resources are available to get help using CMake:</para>
+    <para id="see_Home Page"><sect2><title>Home Page</title></sect2> <ulink url="http://www.cmake.org" /></para>
+
+    <para>The primary starting point for learning about CMake.</para>
+    <para id="see_Frequently Asked Questions"><sect2><title>Frequently Asked Questions</title></sect2> <ulink url="http://www.cmake.org/Wiki/CMake_FAQ" /></para>
+
+    <para>A Wiki is provided containing answers to frequently asked questions. </para>
+    <para id="see_Online Documentation"><sect2><title>Online Documentation</title></sect2> <ulink url="http://www.cmake.org/HTML/Documentation.html" /></para>
+
+    <para>Links to available documentation may be found on this web page.</para>
+    <para id="see_Mailing List"><sect2><title>Mailing List</title></sect2> <ulink url="http://www.cmake.org/HTML/MailingLists.html" /></para>
+
+    <para>For help and discussion about using cmake, a mailing list is provided at cmake@cmake.org. The list is member-post-only but one may sign up on the CMake web page. Please first read the full documentation at <ulink url="http://www.cmake.org" /> before posting questions to the list.</para>
+<para>Summary of helpful links:
+</para><literallayout>  Home: <ulink url="http://www.cmake.org" />
+  Docs: <ulink url="http://www.cmake.org/HTML/Documentation.html" />
+  Mail: <ulink url="http://www.cmake.org/HTML/MailingLists.html" />
+  FAQ:  <ulink url="http://www.cmake.org/Wiki/CMake_FAQ" />
+</literallayout>
+    
+</sect1>
+</article>
