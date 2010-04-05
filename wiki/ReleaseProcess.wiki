@@ -5,12 +5,27 @@
 
 The following steps should be followed for releasing a new version.
 
-  # Appoint the release manager (the person that ensures these steps are followed).
-  # Create a new branch with the version number (e.g. release-1.3.4)
-  # Inform the synergy-plus-dev mailing list that a new release branch is active, and point them to this page.
-  # Decide what bug fixes and features go into this version by tagging them on the bug tracker.
-  # *First*, implement the assigned bug fixes and features on the *trunk* then back-port them to the release branch (this is very important!).
+  # Create a new *branch* with the version number (e.g. release-1.3.4).
+  # Inform the synergy-plus-dev mailing list that a new release branch is active.
+  # For each bug fix or feature for this release, ensure that it has the the correct version label in the issue tracker.
+  # Next, implement the assigned bug fixes and features on the *trunk* then back-port them to the release branch (this is very important!).
   # Stabilize the release branch to a point that it is suitable for end users.
   # Move the release branch from to the `branches` directory to the `tags` directory (at this point, no further changes should be made).
   # Create the Windows installer, Mac OS X installer, Linux packages, Source tar.gz.
   # Send a message to synergy-plus mailing list informing them of the new release, and thank the contributors that helped.
+
+== SVN commands ==
+
+Creating a release branch:
+{{{
+svn cp https://synergy-plus.googlecode.com/svn/trunk/ https://synergy-plus.googlecode.com/svn/branches/release-x.x.x 
+}}}
+
+Tagging the release branch:
+{{{
+svn mv https://synergy-plus.googlecode.com/svn/branches/release-x.x.x https://synergy-plus.googlecode.com/svn/tags/release-x.x.x
+}}}
+
+== Branch, tag, huh? ==
+
+Branches are for code that is in active development, and tags are *read only snapshots* of code that we have released in the past. This is usually considered the de-facto approach for releasing open source software. We tag releases so that in future, we can easily re-visit code from a specific version. This is useful for fixing a bug in (or back-porting a bug fix to) a specific version. Why not just tell the user to upgrade to the latest version? This isn't always an option for some users, as major versions often break compatibility (e.g. with configurations, network communication, etc).
