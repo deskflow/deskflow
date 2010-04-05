@@ -1,0 +1,16 @@
+Source: qsynergy
+Section: net
+Priority: optional
+Maintainer: Volker Lanz <vl@fidra.de>
+Build-Depends: debhelper (>= 5), qt4-dev-tools (>= 4.3.0), libqt4-dev (>= 4.3.0)
+Standards-Version: 3.7.2
+
+Package: qsynergy
+Architecture: any
+Depends: ${shlibs:Depends}, synergy (>= 1.3.1)
+Description: A comprehensive and easy to use graphical front end for synergy.
+ QSynergy is a comprehensive and easy to use graphical front end for synergy.
+ It allows you to configure synergy as a client or server and gives you
+ complete and painless access to all of synergy's options. Visit
+ http://www.volker-lanz.de/en/software/qsynergy/ for more information about
+ this program.
