@@ -1,0 +1,11 @@
+#summary Describes the purpose of each branch
+#labels Phase-Implementation
+
+|| *Branch* || *Owner* || *State* || *Purpose* ||
+|| release-x.x.x || _Release manager_ || Used || For each new version we create a branch, once we're done with the branch, we tag it. ||
+|| crazy2 || Sorin || Used || Trying out some crazy stuff with key mapping. ||
+|| edge || Sorin || Used || Bleeding _edge_ experimental code. ||
+|| josh || Josh? || Unknown || Created a branch for Josh, has it been used? ||
+|| rewrite || Nick || Unknown || A friend of mine wants to rewrite synergy. ||
+|| winsvc || Nick || Used || Some experimental code to fix issue 26. ||
+|| winsvc2 || Nick || Used || Needs merging with winsvc I think. ||
