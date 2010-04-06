@@ -1,4 +1,5 @@
 #summary Frequently asked questions for our end-users
+#labels Featured
 
 *Page maintainer:* [Members FAQ Manager]
 
