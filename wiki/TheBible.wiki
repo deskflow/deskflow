@@ -90,7 +90,7 @@ This section details analysis of the existing system (based on Synergy2) and key
 == 2.1. Diagrams ==
 
 || *Name* || *Detail* ||
-|| [http://synergy-plus.googlecode.com/svn/trunk/doc/diagrams/ClientInit.jpeg Initialization] || Shows how the client is initialized. ||
+|| [http://synergy-plus.googlecode.com/svn/web/diagrams/ClientInit.jpeg Initialization] || Shows how the client is initialized. ||
 
 The objective of creating these diagrams is to provide a clear map for use during development for all project members. Project members are encouraged to create their own diagrams and post them here. There is a [SpecPlan#Diagrams guide] on writing diagrams.
 
