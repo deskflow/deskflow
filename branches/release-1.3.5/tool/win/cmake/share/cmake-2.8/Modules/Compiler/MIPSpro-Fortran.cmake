@@ -1,1 +1,0 @@
-SET(CMAKE_Fortran_VERBOSE_FLAG "-v")
