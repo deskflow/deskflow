@@ -1,0 +1,48 @@
+#cmakedefine CHECK_TYPE_SIZE_TYPE @CHECK_TYPE_SIZE_TYPE@
+#ifdef CHECK_TYPE_SIZE_TYPE
+
+@CHECK_TYPE_SIZE_PREINCLUDE@
+#ifdef HAVE_SYS_TYPES_H
+#  include <sys/types.h>
+#endif /* HAVE_SYS_TYPES_H */
+
+#ifdef HAVE_STDINT_H
+#  include <stdint.h>
+#endif /* HAVE_STDINT_H */
+
+#ifdef HAVE_STDDEF_H
+#  include <stddef.h>
+#endif /* HAVE_STDDEF_H */
+
+@CHECK_TYPE_SIZE_PREMAIN@
+
+#ifdef __CLASSIC_C__
+# define const
+#endif
+
+#define SIZE (sizeof(@CHECK_TYPE_SIZE_TYPE@))
+const char info_sizeof[] =  {'I', 'N', 'F', 'O', ':', 's','i','z','e','o','f','[',
+  ('0' + ((SIZE / 10000)%10)),
+  ('0' + ((SIZE / 1000)%10)),
+  ('0' + ((SIZE / 100)%10)),
+  ('0' + ((SIZE / 10)%10)),
+  ('0' +  (SIZE    % 10)), 
+  ']','\0'};
+
+#ifdef __CLASSIC_C__
+int main(argc, argv) int argc; char *argv[];
+#else
+int main(int argc, char *argv[])
+#endif
+{
+  int require = 0;
+  require += info_sizeof[argc];
+  (void)argv;
+  return require;
+}
+
+#else  /* CHECK_TYPE_SIZE_TYPE */
+
+#  error "CHECK_TYPE_SIZE_TYPE has to specify the type"
+
+#endif /* CHECK_TYPE_SIZE_TYPE */
