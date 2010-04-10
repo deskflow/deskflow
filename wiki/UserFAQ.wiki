@@ -27,10 +27,6 @@ When reporting a bug or trying to solve a problem, it's always useful get the de
 
 Once you've got the debug output in a *text file*, please *attach( this to the appropriate issue, or [http://code.google.com/p/synergy-plus/issues/entry create a new one] if necessary.
 
-== Q. Why do I get "This application has failed to start..." error? ==
-
-The installer does not currently include the Microsoft Visual C++ 2008 Redistributable Package. Please download either the [http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf&displaylang=en x86] or [http://www.microsoft.com/downloads/details.aspx?familyid=BD2A6171-E2D6-4230-B809-9A8D7548C1B6&displaylang=en x64] version.
-
 == Q. How do I lock the mouse on one screen? ==
 
 This is useful for when playing computer games or other full screen applications. The `Scroll Lock` key can be used to prevent the mouse switching input to another screen.
@@ -47,4 +43,12 @@ The biggest difference is that a KVM handles video, and Synergy+ does not. To us
 
 == Q. How secure is your application? ==
 
-Well, not very, but we're working on it. One of our targets for milestone M2 is to make synergy run over an encrypted connection. You're safe to use Synergy+ if you're on a network you trust, such as a LAN which is protected from the internet using a firewall.
+Well, not very, but we're working on it. One of our targets is to make Synergy+ run over an encrypted connection. You're safe to use Synergy+ if you're on a network you trust, such as a LAN which is protected from the internet using a firewall. See issue 3 for more details.
+
+== Q. Are there any plans to improve the Windows GUI? ==
+
+Yes indeed! Take a look at issue 27. We're hoping to have this in place by version 1.4.0 on all platforms.
+
+== Q. Why do I get "This application has failed to start..." error? ==
+
+The installer does not currently include the Microsoft Visual C++ 2008 Redistributable Package. Please download either the [http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d-074b9f2bc1bf&displaylang=en x86] or [http://www.microsoft.com/downloads/details.aspx?familyid=BD2A6171-E2D6-4230-B809-9A8D7548C1B6&displaylang=en x64] version.
