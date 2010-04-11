@@ -17,29 +17,29 @@
 import sys, os
 from build import commands
 
-# Valid commands.
-cmd_list = [
-	'about',
-	'setup',
-	'configure',
-	'build',
-	'clean',
-	'update',
-	'install',
-	'package',
-	'dist',
-	'open',
-	'destroy',
-	'kill',
-	'usage',
-	'revision',
-	'hammer',
-	'reformat',
-]
+# list of valid commands as keys. the values are optarg strings, but most 
+# are None for now (this is mainly for extensibility)
+cmd_dict = {
+	'about' : [None, []],
+	'setup' : [None, []],
+	'configure' : [None, []],
+	'build' : ['dr', []],
+	'clean' : ['dr', []],
+	'update' : [None, []],
+	'install' : [None, []],
+	'package' : [None, []],
+	'destroy' : [None, []],
+	'kill' : [None, []],
+	'usage' : [None, []],
+	'revision' : [None, []],
+	'hammer' : [None, []],
+	'reformat' : [None, []],
+	'open'	: [None, []],
+}
 
+# aliases to valid commands
 cmd_alias_dict = {
-	'info'	: 'usage',
-	'about'	: 'usage',
+	'info'	: 'about',
 	'help'	: 'usage',
 	'dist'  : 'package',
 	'make'	: 'build',
@@ -49,7 +49,7 @@ cmd_alias_dict = {
 def complete_command(arg):
 	completions = []
 	
-	for cmd in cmd_list:
+	for cmd, optarg in cmd_dict.iteritems():
 		if cmd.startswith(arg):
 			completions.append(cmd)
 	
@@ -60,6 +60,7 @@ def complete_command(arg):
 	return completions
 
 def start_cmd(argv):
+	
 	cmd_arg = ''
 	if len(argv) > 1:
 		cmd_arg = argv[1]
@@ -70,18 +71,20 @@ def start_cmd(argv):
 
 	completions = complete_command(cmd_arg)
 	
-	if len(completions) > 0:
+	if cmd_arg and len(completions) > 0:
 
 		if len(completions) == 1:
 
 			# get the only completion (since in this case we have 1)
 			cmd = completions[0]
 
+			# build up the first part of the map (for illustrative purposes)
 			cmd_map = list()
 			if cmd_arg != cmd:
 				cmd_map.append(cmd_arg)
 				cmd_map.append(cmd)
 			
+			# map an alias to the command, and build up the map
 			if cmd in cmd_alias_dict.keys():
 				alias = cmd
 				if cmd_arg == cmd:
@@ -89,20 +92,23 @@ def start_cmd(argv):
 				cmd = cmd_alias_dict[cmd]
 				cmd_map.append(cmd)
 			
+			# show command map to avoid confusion
 			if len(cmd_map) != 0:
 				print 'Mapping command: %s' % ' -> '.join(cmd_map)
 			
-			# use reflection to get the function pointer
-			cmd_func = getattr(commands, cmd)
+			# pass args and optarg data to command handler, which figures out
+			# how to handle the arguments
+			optarg_data = cmd_dict[cmd]			
+			handler = commands.CommandHandler(argv[2:], optarg_data)
 			
-			if cmd_func:
-				# run the function with all of the remaining args
-				cmd_func(argv[2:])
-			else:
-				print 'Command not yet implemented:', cmd
+			# use reflection to get the function pointer
+			cmd_func = getattr(handler, cmd)
+			cmd_func()
+			return 0
 			
 		else:
-			print ('Command `%s` too ambiguous, '
+			print (
+				'Command `%s` too ambiguous, '
 				'could mean any of: %s'
 				) % (cmd_arg, ', '.join(completions))
 	else:
@@ -114,6 +120,9 @@ def start_cmd(argv):
 
 		commands.usage(argv[2:])
 	
+	# generic error code if not returned sooner
+	return 1
+	
 def main(argv):
 
 	if sys.version_info < (2, 4):
@@ -121,7 +130,7 @@ def main(argv):
 		sys.exit(1)
 
 	try:
-		start_cmd(argv)
+		sys.exit(start_cmd(argv))
 	except KeyboardInterrupt:
 		print '\n\nUser aborted, exiting.'
 
