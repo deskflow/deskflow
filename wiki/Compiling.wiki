@@ -44,7 +44,7 @@ To make sure everything is set up right, try running the `hm` script without any
 || *Linux* || `./hm.sh` ||
 || *Mac OS X* || `./hm.sh` ||
 
-If you get the usage/help screen, then you're good to go! If not, make sure you have Python installed correctly.
+If you get the usage/help screen, then you're good to go! If not, make sure you have Python installed correctly. (If you want to try without using python you can take a look at [http://twigstechtips.blogspot.com/2010/03/synergy-how-to-compile-source.html this blog post])
 
 *Attention!* From now on, this guide will refer to `./hm.sh` as `hm`, to save space. This can however be shortened using `alias`. Linux and Mac OS X users can use `alias hm='./hm.sh'` but other BSD Unix users may need to use `alias hm ./hm.sh` instead.
 
