@@ -6,7 +6,6 @@ Relevant pages:
 
   * [UserFAQ FAQ (User)]
   * [Setup]
-  * [Usage]
   * [Versions]
 
   * [DeveloperFAQ FAQ (Developer)]
