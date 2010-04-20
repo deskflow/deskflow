@@ -51,6 +51,7 @@ static const CKeyEntry	s_controlKeys[] = {
 	{ kKeyEnd,			119 },
 	{ kKeyPageUp,		116 },
 	{ kKeyPageDown,		121 },
+	{ kKeyInsert,		114 },
 
 	// function keys
 	{ kKeyF1,			122 },
