@@ -119,7 +119,7 @@ class InternalCommands:
 			version = '2.8.0'
 			found_cmd = ''
 			for test_cmd in (self.cmake_cmd, r'tool\cmake\bin\%s' % self.cmake_cmd):
-				print 'Testing for CMake version %s at `%s`...' % (version, test_cmd)
+				print 'Testing for CMake version %s by running `%s`...' % (version, test_cmd)
 				p = subprocess.Popen([test_cmd, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 				stdout, stderr = p.communicate()
 				if p.returncode == 0 and stdout == 'cmake version %s\r\n' % version:
@@ -143,7 +143,7 @@ class InternalCommands:
 					if not os.path.exists('tool'):
 						os.mkdir('tool')
 					os.system(r'svn checkout https://synergy-plus.googlecode.com/svn/tools/win/cmake tool\cmake')
-					found_cmd = r'tool\cmake\bin\%s' % found_cmd
+					found_cmd = r'..\tool\cmake\bin\%s' % self.cmake_cmd
 			
 			return found_cmd
 		else:
