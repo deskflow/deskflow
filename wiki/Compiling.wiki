@@ -10,7 +10,7 @@ This guide is for Synergy+ version 1.3.5 and above. For compiling instructions f
 
 = Quickstart =
 
-If you're too busy to read this page, and you have all the [#Prerequisites prerequisites], just run the `build` command using `hm`, from the project directory.
+If you're too busy to read this page, and you have all the [#Dependencies dependencies], just run the `build` command using `hm`, from the project directory.
 
 If either Visual Studio or Xcode is used, this will still generate the projects in the ./bin/ dir (which can be opened and used for compiling). The developer has the option of either compiling from the command line, or compiling via the IDE.
 
