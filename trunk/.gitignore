@@ -1,3 +1,9 @@
+#Vim backup files
+*~
+#Python compiled files
+*.pyc
+
+#Git-svn created .gitignore
 /Release
 /Debug
 /vc90.pdb
