@@ -1,7 +1,7 @@
 #summary A record of all patches, to ensure they are dealt with
 #labels Deprecated
 
-*Attention!* This page is deprecated because it's not a very efficient way of tracking patches. Instead we are planning to use [http://mercurial.selenic.com/wiki/MqExtension MqExtension].
+*Attention!* This page is deprecated because it's not a very efficient way of tracking patches. Instead we are planning to use [http://mercurial.selenic.com/wiki/MqExtension MqExtension]. Not anymore though since we aren't using Mercurial anymore.
 
 This page is maintained by the [Members patch manager].
 
