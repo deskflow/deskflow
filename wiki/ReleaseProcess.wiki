@@ -29,3 +29,16 @@ svn mv https://synergy-plus.googlecode.com/svn/branches/release-x.x.x https://sy
 == Branch, tag, huh? ==
 
 Branches are for code that is in active development, and tags are *read only snapshots* of code that we have released in the past. This is usually considered the de-facto approach for releasing open source software. We tag releases so that in future, we can easily re-visit code from a specific version. This is useful for fixing a bug in (or back-porting a bug fix to) a specific version. Why not just tell the user to upgrade to the latest version? This isn't always an option for some users, as major versions often break compatibility (e.g. with configurations, network communication, etc).
+
+== Build List ==
+
+For each release several builds should be made.
+
+* Source
+* Windows x86
+* Windows x64
+* Linux x86_64.rpm
+* Linux x86_64.deb
+* Linux i686.rpm
+* Linux i686.deb
+* Mac Darwin-Universal.dmg
