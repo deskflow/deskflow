@@ -34,11 +34,11 @@ Branches are for code that is in active development, and tags are *read only sna
 
 For each release several builds should be made.
 
-* Source
-* Windows x86
-* Windows x64
-* Linux x86_64.rpm
-* Linux x86_64.deb
-* Linux i686.rpm
-* Linux i686.deb
-* Mac Darwin-Universal.dmg
+ * Source
+ * Windows x86
+ * Windows x64
+ * Linux x86_64.rpm
+ * Linux x86_64.deb
+ * Linux i686.rpm
+ * Linux i686.deb
+ * Mac Darwin-Universal.dmg
