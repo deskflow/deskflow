@@ -89,6 +89,8 @@ make
   # Double click: `synergy-plus.xcodeproj`
   # Click `Build` from the menu, then click `Build`.
 
+*Tip:* To build for an OS version different than the one you are on, go to Project, Edit Project Settings, Build.  There you can change settings for Intel/PPC, 32/64-bit, and OS X version (scroll down for OS X version).
+
 == Tips and Tricks ==
 
 *Tip:* There's also a `hm build` command (that can be shortened to `hm b`), which will compile the project from the command line for certain projects.
