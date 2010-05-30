@@ -35,7 +35,7 @@ From the Windows config GUI, select the debug level (on the main screen) before 
 
 == Q. What is your C++ code style guide? ==
 
-This can be found in our [Specification#4.2._Code_style specification].
+This can be found in our [TheBible#4.2._Code_style specification].
 
 == Q. Why do I get an XTest error when compiling on Ubuntu? ==
 
