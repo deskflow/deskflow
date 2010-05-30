@@ -89,7 +89,7 @@ make
   # Double click: `synergy-plus.xcodeproj`
   # Click `Build` from the menu, then click `Build`.
 
-*Tip:* To build for an OS version different than the one you are on, go to Project, Edit Project Settings, Build.  There you can change settings for Intel/PPC, 32/64-bit, and OS X version (scroll down for OS X version).
+*Tip:* To build for a different version of OS X than the one you are on, go to Project, Edit Project Settings, Build.  There you can change settings for Intel/PPC, 32/64-bit, and OS X version (scroll down for OS X version).  Release builds should be 32-bit Universal, with base SDK 10.5.
 
 == Tips and Tricks ==
 
