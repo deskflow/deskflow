@@ -72,6 +72,10 @@ You could add this to the end of your `.emacs` file.
 }}}
 This will make your indentation style similar to that in Visual Studio.
 
+== Q. How do I make vim use your style guidelines? ==
+
+There is a [http://code.google.com/p/synergy-plus/source/browse/trunk/.lvimrc .lvimrc] included in Trunk. To use it install [http://www.vim.org/scripts/script.php?script_id=441 Vim script 411]
+
 == Q. What is the `ARCH` macro for? ==
 
 The `ARCH` macro is defined in `lib/arch/CArch.h` and accesses a static singleton pointer for the _architecture_ tools.
