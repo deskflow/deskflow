@@ -5,7 +5,8 @@
 
 = Important! =
 
-The source code for version 1.3.4 (on the downloads page) will *not* work with this tutorial! You need to download the source code via the [SourceCode repository] (option 2).
+The source code for [http://code.google.com/p/synergy-plus/downloads/detail?name=synergy-plus-1.3.4.tar.gz version 1.3.4] will *not* work with this tutorial! You need to download the source code via the [SourceCode repository] or download [http://code.google.com/p/synergy-plus/downloads/detail?name=synergy-plus-1.3.5-rc-Source.tar.gz version 1.3.5] directly.
+
 This guide is for Synergy+ version 1.3.5 and above. For compiling instructions for version 1.3.4 and below, please refer to the [CompilingAutomake old compile guide].
 
 = Quickstart =
