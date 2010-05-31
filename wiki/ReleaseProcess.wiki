@@ -8,7 +8,7 @@ The following steps should be followed for releasing a new version.
   # Ensure that all issues for the version have been fixed in the trunk.  
   # Create a new *branch* with the version number (e.g. release-1.3.4).
   # Inform the [http://groups.google.com/group/synergy-plus-dev synergy-plus-dev mailing list] that a new release branch is active.
-  # For any *new* issues that must be fixed in the release version, first fix them in the trunk, and then [http://en.wikipedia.org/wiki/Backporting backport] only that change to the release version.
+  # For each *new* issue that must be fixed in the release version, first fix it and test in the trunk, and then [http://en.wikipedia.org/wiki/Backporting backport] only that change to the release version, then test again for the release version.
   # Ensure that there are no unfinished features; if there are, then "hide" them. The objective here is ensure that the release version is stable for end users.
   # Move the release branch from to the `branches` directory to the `tags` directory (at this point, no further changes should be made).
   # Create [http://en.wikipedia.org/wiki/Software_release_life_cycle#Release_candidate RC] installers and send the links to the synergy-plus-dev mailing list for feedback.
