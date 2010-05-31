@@ -1,7 +1,7 @@
 #summary Our formal release process (release branches, etc)
 #labels Phase-Implementation
 
-= Release Processes =
+= Release processes =
 
 == Trunk (major release) ==
 
@@ -26,7 +26,7 @@ Sometimes, popular demand requires us to fix a series of bugs in an older versio
   # Over the course of days/weeks/months, implement the assigned issues.
   # Release the minor version just like a major version.
 
-== Installers ==
+== Installers/packages ==
 
 || *Filename* || *Description* ||
 || synergy-plus-x.x.x-Source.tar.gz || x.x.x Source Code ||
