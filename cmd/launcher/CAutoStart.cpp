@@ -21,8 +21,8 @@
 #include "LaunchUtil.h"
 #include "resource.h"
 
-static const char* CLIENT_DAEMON_NAME = "Synergy Client";
-static const char* SERVER_DAEMON_NAME = "Synergy Server";
+static const char* CLIENT_DAEMON_NAME = "Synergy+ Client";
+static const char* SERVER_DAEMON_NAME = "Synergy+ Server";
 static const char* CLIENT_DAEMON_INFO = "Uses a shared mouse and keyboard.";
 static const char* SERVER_DAEMON_INFO = "Shares this system's mouse and keyboard with others.";
 

@@ -1,7 +1,6 @@
 SET(root_cmd_synergyc ${root_dir}/cmd/synergyc)
 
 SET(src_cmd_synergyc_common
-	${root_cmd_synergyc}/CClientTaskBarReceiver.cpp
 	${root_cmd_synergyc}/synergyc.cpp
 )
 
@@ -66,5 +65,5 @@ SET(inc_dirs_cmd_synergyc
 )
 
 INCLUDE_DIRECTORIES(${inc_dirs_cmd_synergyc})
-ADD_EXECUTABLE(synergyc WIN32 ${src_cmd_synergyc})
+ADD_EXECUTABLE(synergyc ${src_cmd_synergyc})
 TARGET_LINK_LIBRARIES(synergyc synergy ${libs})

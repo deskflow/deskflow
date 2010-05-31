@@ -83,3 +83,5 @@ release {
 	RCC_DIR = tmp/release
 }
 
+Debug:DESTDIR = ../bin/Debug
+Release:DESTDIR = ../bin/Release

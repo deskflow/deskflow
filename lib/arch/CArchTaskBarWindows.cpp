@@ -19,6 +19,7 @@
 #include "XArch.h"
 #include <string.h>
 #include <shellapi.h>
+#include "CArchAppUtilWindows.h"
 
 static const UINT		kAddReceiver     = WM_USER + 10;
 static const UINT		kRemoveReceiver  = WM_USER + 11;
@@ -31,16 +32,12 @@ static const UINT		kFirstReceiverID = WM_USER + 14;
 //
 
 CArchTaskBarWindows*	CArchTaskBarWindows::s_instance    = NULL;
-HINSTANCE				CArchTaskBarWindows::s_appInstance = NULL;
 
-CArchTaskBarWindows::CArchTaskBarWindows(void* appInstance) :
+CArchTaskBarWindows::CArchTaskBarWindows() :
 	m_nextID(kFirstReceiverID)
 {
 	// save the singleton instance
 	s_instance    = this;
-
-	// save app instance
-	s_appInstance = reinterpret_cast<HINSTANCE>(appInstance);
 
 	// we need a mutex
 	m_mutex       = ARCH->newMutex();
@@ -437,7 +434,7 @@ CArchTaskBarWindows::threadMainLoop()
 	classInfo.lpfnWndProc   = &CArchTaskBarWindows::staticWndProc;
 	classInfo.cbClsExtra    = 0;
 	classInfo.cbWndExtra    = sizeof(CArchTaskBarWindows*);
-	classInfo.hInstance     = s_appInstance;
+	classInfo.hInstance     = instanceWin32();
 	classInfo.hIcon         = NULL;
 	classInfo.hCursor       = NULL;
 	classInfo.hbrBackground = NULL;
@@ -454,7 +451,7 @@ CArchTaskBarWindows::threadMainLoop()
 							0, 0, 1, 1,
 							NULL,
 							NULL,
-							s_appInstance,
+							instanceWin32(),
 							reinterpret_cast<void*>(this));
 
 	// signal ready
@@ -465,7 +462,7 @@ CArchTaskBarWindows::threadMainLoop()
 
 	// handle failure
 	if (m_hwnd == NULL) {
-		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_appInstance);
+		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), instanceWin32());
 		return;
 	}
 
@@ -481,7 +478,7 @@ CArchTaskBarWindows::threadMainLoop()
 	// clean up
 	removeAllIcons();
 	DestroyWindow(m_hwnd);
-	UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_appInstance);
+	UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), instanceWin32());
 }
 
 void*
@@ -489,4 +486,9 @@ CArchTaskBarWindows::threadEntry(void* self)
 {
 	reinterpret_cast<CArchTaskBarWindows*>(self)->threadMainLoop();
 	return NULL;
+}
+
+HINSTANCE CArchTaskBarWindows::instanceWin32()
+{
+	return CArchMiscWindows::instanceWin32();
 }

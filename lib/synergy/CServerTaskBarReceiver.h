@@ -12,28 +12,32 @@
  * GNU General Public License for more details.
  */
 
-#ifndef CCLIENTTASKBARRECEIVER_H
-#define CCLIENTTASKBARRECEIVER_H
+#ifndef CSERVERTASKBARRECEIVER_H
+#define CSERVERTASKBARRECEIVER_H
 
 #include "CString.h"
 #include "IArchTaskBarReceiver.h"
-
-class CClient;
+#include "stdvector.h"
+#include "CEvent.h"
+#include "CServerApp.h"
+#include "CServer.h"
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
-class CClientTaskBarReceiver : public IArchTaskBarReceiver {
+class CServerTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	CClientTaskBarReceiver();
-	virtual ~CClientTaskBarReceiver();
+	CServerTaskBarReceiver();
+	virtual ~CServerTaskBarReceiver();
 
 	//! @name manipulators
 	//@{
 
 	//! Update status
 	/*!
-	Determine the status and query required information from the client.
+	Determine the status and query required information from the server.
 	*/
-	void				updateStatus(CClient*, const CString& errorMsg);
+	void				updateStatus(CServer*, const CString& errorMsg);
+
+	void updateStatus(INode* n, const CString& errorMsg) { updateStatus((CServer*)n, errorMsg); }
 
 	//@}
 
@@ -47,11 +51,11 @@ public:
 	virtual std::string	getToolTip() const;
 
 protected:
+	typedef std::vector<CString> CClients;
 	enum EState {
 		kNotRunning,
 		kNotWorking,
 		kNotConnected,
-		kConnecting,
 		kConnected,
 		kMaxState
 	};
@@ -62,6 +66,9 @@ protected:
 	//! Get error message
 	const CString&		getErrorMessage() const;
 
+	//! Get connected clients
+	const CClients&		getClients() const;
+
 	//! Quit app
 	/*!
 	Causes the application to quit gracefully
@@ -70,14 +77,22 @@ protected:
 
 	//! Status change notification
 	/*!
-	Called when status changes.  The default implementation does nothing.
+	Called when status changes.  The default implementation does
+	nothing.
 	*/
-	virtual void		onStatusChanged(CClient* client);
+	virtual void		onStatusChanged(CServer* server);
+
+protected:
+	CEvent::Type getReloadConfigEvent();
+	CEvent::Type getForceReconnectEvent();
+	CEvent::Type getResetServerEvent();
 
 private:
 	EState				m_state;
 	CString				m_errorMessage;
-	CString				m_server;
+	CClients			m_clients;
 };
+
+IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer);
 
 #endif

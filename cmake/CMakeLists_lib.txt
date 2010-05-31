@@ -1,12 +1,15 @@
 SET(root_lib ${root_dir}/lib)
 
 SET(src_lib_arch
+	${root_lib}/arch/CArchAppUtil.cpp
 	${root_lib}/arch/CArch.cpp
 	${root_lib}/arch/CArchDaemonNone.cpp
 	${root_lib}/arch/XArch.cpp
+	${root_lib}/arch/CArchConsoleStd.cpp
 )
 
 SET(src_lib_arch_unix
+	${root_lib}/arch/CArchAppUtilUnix.cpp
 	${root_lib}/arch/CArchConsoleUnix.cpp
 	${root_lib}/arch/CArchDaemonUnix.cpp
 	${root_lib}/arch/CArchFileUnix.cpp
@@ -22,6 +25,7 @@ SET(src_lib_arch_unix
 )
 
 SET(src_lib_arch_windows
+	${root_lib}/arch/CArchAppUtilWindows.cpp
 	${root_lib}/arch/CArchConsoleWindows.cpp
 	${root_lib}/arch/CArchDaemonWindows.cpp
 	${root_lib}/arch/CArchFileWindows.cpp
@@ -38,6 +42,8 @@ SET(src_lib_arch_windows
 )
 
 SET(inc_lib_arch_windows
+	${root_lib}/arch/CArchAppUtil.h
+	${root_lib}/arch/CArchAppUtilWindows.h
 	${root_lib}/arch/CArchConsoleWindows.h
 	${root_lib}/arch/CArchDaemonWindows.h
 	${root_lib}/arch/CArchFileWindows.h
@@ -50,6 +56,8 @@ SET(inc_lib_arch_windows
 	${root_lib}/arch/CArchSystemWindows.h
 	${root_lib}/arch/CArchTaskBarWindows.h
 	${root_lib}/arch/CArchTimeWindows.h
+	${root_lib}/arch/CArchConsoleStd.h
+	${root_lib}/arch/IArchAppUtil.h
 	${root_lib}/arch/XArchWindows.h
 )
 
@@ -264,6 +272,11 @@ SET(inc_lib_server
 )
 
 SET(src_lib_synergy
+	${root_lib}/synergy/CClientTaskBarReceiver.cpp
+	${root_lib}/synergy/CServerTaskBarReceiver.cpp
+	${root_lib}/synergy/CApp.cpp
+	${root_lib}/synergy/CClientApp.cpp
+	${root_lib}/synergy/CServerApp.cpp
 	${root_lib}/synergy/CClipboard.cpp
 	${root_lib}/synergy/CKeyMap.cpp
 	${root_lib}/synergy/CKeyState.cpp
@@ -282,6 +295,11 @@ SET(src_lib_synergy
 )
 
 SET(inc_lib_synergy
+	${root_lib}/synergy/CClientTaskBarReceiver.h
+	${root_lib}/synergy/CServerTaskBarReceiver.h
+	${root_lib}/synergy/CApp.h
+	${root_lib}/synergy/CClientApp.h
+	${root_lib}/synergy/CServerApp.h
 	${root_lib}/synergy/CClipboard.h
 	${root_lib}/synergy/CKeyMap.h
 	${root_lib}/synergy/CKeyState.h
@@ -324,9 +342,17 @@ IF(UNIX)
 	LIST(APPEND src_lib ${src_lib_arch_unix})
 
 	IF(APPLE)
-	LIST(APPEND src_lib ${src_lib_platform_carbon})
+		LIST(APPEND src_lib
+			${src_lib_platform_carbon}
+			${inc_lib_synergy_carbon}
+			${src_lib_synergy_carbon}
+		)
 	ELSE(APPLE)
-	LIST(APPEND src_lib ${src_lib_platform_xwindows})
+		LIST(APPEND src_lib
+			${src_lib_platform_xwindows}
+			${inc_lib_synergy_xwindows}
+			${src_lib_synergy_xwindows}
+		)
 	ENDIF(APPLE)
 
 ENDIF(UNIX)
@@ -345,6 +371,8 @@ IF(WIN32)
 		${src_lib_arch_windows}
 		${inc_lib_platform_mswindows}
 		${src_lib_platform_mswindows}
+		${inc_lib_synergy_mswindows}
+		${src_lib_synergy_mswindows}
 	)
 ENDIF(WIN32)
 

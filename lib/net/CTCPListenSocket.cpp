@@ -101,9 +101,9 @@ CTCPListenSocket::getEventTarget() const
 IDataSocket*
 CTCPListenSocket::accept()
 {
+	IDataSocket* socket = NULL;
 	try {
-		IDataSocket* socket =
-			new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
+		socket = new CTCPSocket(ARCH->acceptSocket(m_socket, NULL));
 		if (socket != NULL) {
 			CSocketMultiplexer::getInstance()->addSocket(this,
 							new TSocketMultiplexerMethodJob<CTCPListenSocket>(
@@ -113,7 +113,16 @@ CTCPListenSocket::accept()
 		return socket;
 	}
 	catch (XArchNetwork&) {
+		if (socket != NULL) {
+			delete socket;
+		}
 		return NULL;
+	}
+	catch (std::exception &ex) {
+		if (socket != NULL) {
+			delete socket;
+		}
+		throw ex;
 	}
 }
 

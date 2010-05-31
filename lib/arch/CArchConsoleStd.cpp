@@ -12,8 +12,13 @@
  * GNU General Public License for more details.
  */
 
-#include "CArchConsoleWindows.h"
+#include "CArchConsoleStd.h"
+#include <iostream>
 
-CArchConsoleWindows::CArchConsoleWindows() { }
-
-CArchConsoleWindows::~CArchConsoleWindows() { }
+void
+CArchConsoleStd::writeConsole(const char* str)
+{
+	// TODO: we need to use cerr also somehow
+	std::cout << str << std::endl;
+	std::cout.flush();
+}
