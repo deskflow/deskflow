@@ -1,24 +1,35 @@
 #summary Our formal release process (release branches, etc)
 #labels Phase-Implementation
 
-= Release Process =
+= Release Processes =
 
-The following steps should be followed for releasing a new version.
+== Trunk (major release) ==
+
+The following steps should be followed for releasing a new major version.
 
   # Ensure that all issues for the version have been fixed in the trunk.  
-  # Create a new *branch* with the version number (e.g. release-1.3.4).
+  # Create a new *branch* with the version number (e.g. release-1.3.4), where the 2nd number is incremented, e.g. 1.3.4 -> 1.4.0 (a major release).
   # Inform the [http://groups.google.com/group/synergy-plus-dev synergy-plus-dev mailing list] that a new release branch is active.
   # For each *new* issue that must be fixed in the release version, first fix it and test in the trunk, and then [http://en.wikipedia.org/wiki/Backporting backport] only that change to the release version, then test again for the release version.
   # Ensure that there are no unfinished features; if there are, then "hide" them. The objective here is ensure that the release version is stable for end users.
-  # Move the release branch from to the `branches` directory to the `tags` directory (at this point, no further changes should be made).
   # Create [http://en.wikipedia.org/wiki/Software_release_life_cycle#Release_candidate RC] installers and send the links to the synergy-plus-dev mailing list for feedback.
   # After 1 week, assuming no negative feedback/new bugs are raised for the RC, create the [http://en.wikipedia.org/wiki/Software_release_life_cycle#General_availability GA] installers and upload to the downloads page (use the Featured label).
+  # Move (`svn move`) the release branch from to the `branches` directory to the `tags` directory.
   # Send a message to [http://groups.google.com/group/synergy-plus synergy-plus mailing list] announcing the new public release.
   # Decide what issues will be fixed for the next version, and ensure that they have the the correct version label.
+
+== Minor release ==
+
+Sometimes, popular demand requires us to fix a series of bugs in an older version that has been released already. This can happen when the end-user cannot upgrade to the newest version due to "breaking changes".
+
+  # Copy (`svn copy`) the `tag` directory (e.g. release-1.3.4) to `branches`, and increment the minor version number (the 3rd digit, e.g. 1.3.4 -> 1.3.5).
+  # Over the course of days/weeks/months, implement the assigned issues.
+  # Release the minor version just like a major version.
 
 == Installers ==
 
 || *Filename* || *Description* ||
+|| synergy-plus-x.x.x-Source.tar.gz || x.x.x Source Code ||
 || synergy-plus-x.x.x-Windows-x86.exe || x.x.x 32-bit Windows Installer ||
 || synergy-plus-x.x.x-Windows-x64.exe || x.x.x 64-bit Windows Installer ||
 || synergy-plus-x.x.x-Linux-x86_64.rpm || x.x.x 64-bit Linux RPM Package ||
@@ -42,16 +53,3 @@ svn mv https://synergy-plus.googlecode.com/svn/branches/release-x.x.x https://sy
 == Branch, tag, huh? ==
 
 Branches are for code that is in active development, and tags are *read only snapshots* of code that we have released in the past. This is usually considered the de-facto approach for releasing open source software. We tag releases so that in future, we can easily re-visit code from a specific version. This is useful for fixing a bug in (or back-porting a bug fix to) a specific version. Why not just tell the user to upgrade to the latest version? This isn't always an option for some users, as major versions often break compatibility (e.g. with configurations, network communication, etc).
-
-== Build List ==
-
-For each release several builds should be made.
-
- * Source
- * Windows x86
- * Windows x64
- * Linux x86_64.rpm
- * Linux x86_64.deb
- * Linux i686.rpm
- * Linux i686.deb
- * Mac Darwin-Universal.dmg
