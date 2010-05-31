@@ -12,25 +12,14 @@
  * GNU General Public License for more details.
  */
 
-#ifndef CARCHCONSOLEUNIX_H
-#define CARCHCONSOLEUNIX_H
+#pragma once
 
-#include "IArchConsole.h"
+#include "CArchConsoleStd.h"
 
 #define ARCH_CONSOLE CArchConsoleUnix
 
-//! Unix implementation of IArchConsole
-class CArchConsoleUnix : public IArchConsole {
+class CArchConsoleUnix : public CArchConsoleStd {
 public:
-	CArchConsoleUnix(void*);
+	CArchConsoleUnix();
 	virtual ~CArchConsoleUnix();
-
-	// IArchConsole overrides
-	virtual void		openConsole(const char* title);
-	virtual void		closeConsole();
-	virtual void		showConsole(bool);
-	virtual void		writeConsole(const char*);
-	virtual const char*	getNewlineForConsole();
 };
-
-#endif

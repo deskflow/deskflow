@@ -19,10 +19,12 @@
 #include "IArchMultithread.h"
 #include "stdlist.h"
 #include <stdarg.h>
+#include "CArch.h"
 
 #define CLOG (CLog::getInstance())
 
 class ILogOutputter;
+class CThread;
 
 //! Logging facility
 /*!
@@ -44,8 +46,11 @@ public:
 		kNOTE,			//!< For messages about notable events
 		kINFO,			//!< For informational messages
 		kDEBUG,			//!< For important debugging messages
-		kDEBUG1,		//!< For more detailed debugging messages
-		kDEBUG2			//!< For even more detailed debugging messages
+		kDEBUG1,		//!< For verbosity +1 debugging messages
+		kDEBUG2,		//!< For verbosity +2 debugging messages
+		kDEBUG3,		//!< For verbosity +3 debugging messages
+		kDEBUG4,		//!< For verbosity +4 debugging messages
+		kDEBUG5			//!< For verbosity +5 debugging messages
 	};
 
 	~CLog();
@@ -109,20 +114,28 @@ public:
 	neither the file nor the line are printed.
 	*/
 	void				print(const char* file, int line,
-							const char* format, ...) const;
+							const char* format, ...);
 
 	//! Get the minimum priority level.
 	int					getFilter() const;
 
+	//! Get the filter name of the current filter level.
+	const char*			getFilterName() const;
+
+	//! Get the filter name of a specified filter level.
+	const char*			getFilterName(int level) const;
+
 	//! Get the singleton instance of the log
 	static CLog*		getInstance();
 
+	//! Get the console filter level (messages above this are not sent to console).
+	int					getConsoleMaxLevel() const { return kDEBUG1; }
 	//@}
 
 private:
 	CLog();
 
-	void				output(int priority, char* msg) const;
+	void				output(ELevel priority, char* msg);
 
 private:
 	typedef std::list<ILogOutputter*> COutputterList;
@@ -189,8 +202,13 @@ otherwise it expands to a call that doesn't.
 #define CLOG_TRACE		__FILE__, __LINE__,
 #endif
 
-#define CLOG_PRINT		CLOG_TRACE "%z\057"
-#define CLOG_CRIT		CLOG_TRACE "%z\060"
+// the CLOG_* defines are line and file plus %z and an octal number (060=0, 
+// 071=9), but the limitation is that once we run out of numbers at either 
+// end, then we resort to using non-numerical chars. this still works (since 
+// to deduce the number we subtract octal \060, so '/' is -1, and ':' is 10
+
+#define CLOG_PRINT		CLOG_TRACE "%z\057" // char is '/'
+#define CLOG_CRIT		CLOG_TRACE "%z\060" // char is '0'
 #define CLOG_ERR		CLOG_TRACE "%z\061"
 #define CLOG_WARN		CLOG_TRACE "%z\062"
 #define CLOG_NOTE		CLOG_TRACE "%z\063"
@@ -198,5 +216,8 @@ otherwise it expands to a call that doesn't.
 #define CLOG_DEBUG		CLOG_TRACE "%z\065"
 #define CLOG_DEBUG1		CLOG_TRACE "%z\066"
 #define CLOG_DEBUG2		CLOG_TRACE "%z\067"
+#define CLOG_DEBUG3		CLOG_TRACE "%z\070"
+#define CLOG_DEBUG4		CLOG_TRACE "%z\071" // char is '9'
+#define CLOG_DEBUG5		CLOG_TRACE "%z\072" // char is ':'
 
 #endif

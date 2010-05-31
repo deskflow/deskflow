@@ -18,7 +18,7 @@
 // CArchTaskBarXWindows
 //
 
-CArchTaskBarXWindows::CArchTaskBarXWindows(void*)
+CArchTaskBarXWindows::CArchTaskBarXWindows()
 {
 	// do nothing
 }

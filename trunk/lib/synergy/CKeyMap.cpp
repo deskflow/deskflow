@@ -98,7 +98,7 @@ CKeyMap::addKeyEntry(const KeyItem& item)
 
 	// add item list
 	entries.push_back(items);
-	LOG((CLOG_DEBUG1 "add key: %04x %d %03x %04x (%04x %04x %04x)%s", newItem.m_id, newItem.m_group, newItem.m_button, newItem.m_client, newItem.m_required, newItem.m_sensitive, newItem.m_generates, newItem.m_dead ? " dead" : ""));
+	LOG((CLOG_DEBUG3 "add key: %04x %d %03x %04x (%04x %04x %04x)%s", newItem.m_id, newItem.m_group, newItem.m_button, newItem.m_client, newItem.m_required, newItem.m_sensitive, newItem.m_generates, newItem.m_dead ? " dead" : ""));
 }
 
 void

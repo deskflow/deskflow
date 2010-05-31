@@ -12,29 +12,30 @@
  * GNU General Public License for more details.
  */
 
-#ifndef CSERVERTASKBARRECEIVER_H
-#define CSERVERTASKBARRECEIVER_H
+#ifndef CCLIENTTASKBARRECEIVER_H
+#define CCLIENTTASKBARRECEIVER_H
 
 #include "CString.h"
 #include "IArchTaskBarReceiver.h"
-#include "stdvector.h"
-
-class CServer;
+#include "LogOutputters.h"
+#include "CClient.h"
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
-class CServerTaskBarReceiver : public IArchTaskBarReceiver {
+class CClientTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	CServerTaskBarReceiver();
-	virtual ~CServerTaskBarReceiver();
+	CClientTaskBarReceiver();
+	virtual ~CClientTaskBarReceiver();
 
 	//! @name manipulators
 	//@{
 
 	//! Update status
 	/*!
-	Determine the status and query required information from the server.
+	Determine the status and query required information from the client.
 	*/
-	void				updateStatus(CServer*, const CString& errorMsg);
+	void				updateStatus(CClient*, const CString& errorMsg);
+
+	void updateStatus(INode* n, const CString& errorMsg) { updateStatus((CClient*)n, errorMsg); }
 
 	//@}
 
@@ -48,11 +49,11 @@ public:
 	virtual std::string	getToolTip() const;
 
 protected:
-	typedef std::vector<CString> CClients;
 	enum EState {
 		kNotRunning,
 		kNotWorking,
 		kNotConnected,
+		kConnecting,
 		kConnected,
 		kMaxState
 	};
@@ -63,9 +64,6 @@ protected:
 	//! Get error message
 	const CString&		getErrorMessage() const;
 
-	//! Get connected clients
-	const CClients&		getClients() const;
-
 	//! Quit app
 	/*!
 	Causes the application to quit gracefully
@@ -74,15 +72,16 @@ protected:
 
 	//! Status change notification
 	/*!
-	Called when status changes.  The default implementation does
-	nothing.
+	Called when status changes.  The default implementation does nothing.
 	*/
-	virtual void		onStatusChanged(CServer* server);
+	virtual void		onStatusChanged(CClient* client);
 
 private:
 	EState				m_state;
 	CString				m_errorMessage;
-	CClients			m_clients;
+	CString				m_server;
 };
+
+IArchTaskBarReceiver* createTaskBarReceiver(const CBufferedLogOutputter* logBuffer);
 
 #endif

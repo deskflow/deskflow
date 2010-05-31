@@ -18,6 +18,9 @@
 #include "IInterface.h"
 #include "stdstring.h"
 
+class IScreen;
+class INode;
+
 //! Interface for architecture dependent task bar event handling
 /*!
 This interface defines the task bar icon event handlers required
@@ -83,6 +86,8 @@ public:
 	the icon must be thread safe.
 	*/
 	virtual std::string	getToolTip() const = 0;
+
+	virtual void updateStatus(INode*, const CString& errorMsg) = 0;
 
 	//@}
 };

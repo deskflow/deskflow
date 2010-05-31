@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2003 Chris Schoeneman
+ * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,23 +12,19 @@
  * GNU General Public License for more details.
  */
 
-#ifndef CARCHTASKBARXWINDOWS_H
-#define CARCHTASKBARXWINDOWS_H
+#pragma once
 
-#include "IArchTaskBar.h"
+#include "IArchConsole.h"
 
-#define ARCH_TASKBAR CArchTaskBarXWindows
-
-//! X11 implementation of IArchTaskBar
-class CArchTaskBarXWindows : public IArchTaskBar {
+//! Cross platform implementation of IArchConsole
+class CArchConsoleStd : public IArchConsole {
 public:
-	CArchTaskBarXWindows();
-	virtual ~CArchTaskBarXWindows();
+	CArchConsoleStd() { }
+	virtual ~CArchConsoleStd() { }
 
-	// IArchTaskBar overrides
-	virtual void		addReceiver(IArchTaskBarReceiver*);
-	virtual void		removeReceiver(IArchTaskBarReceiver*);
-	virtual void		updateReceiver(IArchTaskBarReceiver*);
+	// IArchConsole overrides
+	virtual void		openConsole(const char* title) { }
+	virtual void		closeConsole() { }
+	virtual void		showConsole(bool) { }
+	virtual void		writeConsole(const char*);
 };
-
-#endif

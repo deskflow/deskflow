@@ -13,49 +13,7 @@
  */
 
 #include "CArchConsoleUnix.h"
-#include <cstdio>
-#include <stdio.h>
 
-//
-// CArchConsoleUnix
-//
+CArchConsoleUnix::CArchConsoleUnix() { }
 
-CArchConsoleUnix::CArchConsoleUnix(void*)
-{
-	// do nothing
-}
-
-CArchConsoleUnix::~CArchConsoleUnix()
-{
-	// do nothing
-}
-
-void
-CArchConsoleUnix::openConsole(const char*)
-{
-	// do nothing
-}
-
-void
-CArchConsoleUnix::closeConsole()
-{
-	// do nothing
-}
-
-void
-CArchConsoleUnix::showConsole(bool)
-{
-	// do nothing
-}
-
-void
-CArchConsoleUnix::writeConsole(const char* str)
-{
-	fprintf(stderr, "%s", str);
-}
-
-const char*
-CArchConsoleUnix::getNewlineForConsole()
-{
-	return "\n";
-}
+CArchConsoleUnix::~CArchConsoleUnix() { }

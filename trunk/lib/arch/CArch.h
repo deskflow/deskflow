@@ -26,6 +26,7 @@
 #include "IArchSystem.h"
 #include "IArchTaskBar.h"
 #include "IArchTime.h"
+#include "IArchAppUtil.h"
 
 /*!
 \def ARCH
@@ -33,9 +34,7 @@ This macro evaluates to the singleton CArch object.
 */
 #define ARCH	(CArch::getInstance())
 
-#define ARCH_ARGS void
-
-//! Delegating mplementation of architecture dependent interfaces
+//! Delegating implementation of architecture dependent interfaces
 /*!
 This class is a centralized interface to all architecture dependent
 interface implementations (except miscellaneous functions).  It
@@ -55,9 +54,10 @@ class CArch : public IArchConsole,
 				public IArchString,
 				public IArchSystem,
 				public IArchTaskBar,
-				public IArchTime {
+				public IArchTime,
+				public IArchAppUtil {
 public:
-	CArch(ARCH_ARGS* args = NULL);
+	CArch();
 	~CArch();
 
 	//
@@ -76,7 +76,6 @@ public:
 	virtual void		closeConsole();
 	virtual void		showConsole(bool showIfEmpty);
 	virtual void		writeConsole(const char*);
-	virtual const char*	getNewlineForConsole();
 
 	// IArchDaemon overrides
 	virtual void		installDaemon(const char* name,
@@ -183,6 +182,12 @@ public:
 
 	// IArchTime overrides
 	virtual double		time();
+	
+	// IArchAppUtil overrides
+	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+	virtual void adoptApp(CApp* app);
+	virtual CApp& app() const;
+	virtual int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
 
 private:
 	static CArch*		s_instance;
@@ -198,6 +203,7 @@ private:
 	IArchSystem*		m_system;
 	IArchTaskBar*		m_taskbar;
 	IArchTime*			m_time;
+	IArchAppUtil*		m_appUtil;
 };
 
 //! Convenience object to lock/unlock an arch mutex

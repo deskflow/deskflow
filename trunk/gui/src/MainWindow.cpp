@@ -224,7 +224,7 @@ void MainWindow::startSynergy()
 	setSynergyProcess(new QProcess(this));
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
-			|| synergyType() == synergyServer && !serverArgs(args, app))
+			|| (synergyType() == synergyServer && !serverArgs(args, app)))
 	{
 		stopSynergy();
 		return;

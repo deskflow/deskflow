@@ -77,8 +77,9 @@
 HINSTANCE				CMSWindowsScreen::s_instance = NULL;
 CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
 
-CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
+CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	m_isPrimary(isPrimary),
+	m_noHooks(noHooks),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_isOnScreen(m_isPrimary),
 	m_class(0),
@@ -118,7 +119,8 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
 			m_hookLibrary = openHookLibrary("synrgyhk");
 		}
 		m_screensaver = new CMSWindowsScreenSaver();
-		m_desks       = new CMSWindowsDesks(m_isPrimary,
+		m_desks       = new CMSWindowsDesks(
+							m_isPrimary, m_noHooks,
 							m_hookLibrary, m_screensaver,
 							new TMethodJob<CMSWindowsScreen>(this,
 								&CMSWindowsScreen::updateKeysCB));
@@ -491,7 +493,7 @@ void CMSWindowsScreen::saveMousePosition(SInt32 x, SInt32 y) {
 	m_xCursor = x;
 	m_yCursor = y;
 
-	LOG((CLOG_DEBUG2 "saved mouse position for next delta: %+d,%+d", x,y));
+	LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x,y));
 }
 
 UInt32
@@ -763,6 +765,7 @@ CMSWindowsScreen::createBlankCursor() const
 	// create a transparent cursor
 	int cw = GetSystemMetrics(SM_CXCURSOR);
 	int ch = GetSystemMetrics(SM_CYCURSOR);
+
 	UInt8* cursorAND = new UInt8[ch * ((cw + 31) >> 2)];
 	UInt8* cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
 	memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
@@ -916,7 +919,7 @@ bool
 CMSWindowsScreen::onPreDispatchPrimary(HWND,
 				UINT message, WPARAM wParam, LPARAM lParam)
 {
-	LOG((CLOG_DEBUG2 "handling pre-dispatch primary"));
+	LOG((CLOG_DEBUG5 "handling pre-dispatch primary"));
 
 	// handle event
 	switch (message) {
@@ -1298,8 +1301,8 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 	SInt32 x = mx - m_xCursor;
 	SInt32 y = my - m_yCursor;
 
-	LOG((CLOG_DEBUG2
-		"handling mouse move; delta motion calc: %+d=(%+d - %+d),%+d=(%+d - %+d)",
+	LOG((CLOG_DEBUG3
+		"mouse move - motion delta: %+d=(%+d - %+d),%+d=(%+d - %+d)",
 		x, mx, m_xCursor, y, my, m_yCursor));
 
 	// ignore if the mouse didn't move or if message posted prior
@@ -1324,7 +1327,7 @@ CMSWindowsScreen::onMouseMove(SInt32 mx, SInt32 my)
 		// center on the server screen. if we don't do this, then the mouse 
 		// will always try to return to the original entry point on the 
 		// secondary screen.
-		LOG((CLOG_DEBUG2 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
+		LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
 		warpCursorNoFlush(m_xCenter, m_yCenter);
 		
 		// examine the motion.  if it's about the distance

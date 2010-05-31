@@ -6,7 +6,7 @@
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
-const char AppConfig::m_SynergyProgramDir[] = "c:/program files/synergy/";
+const char AppConfig::m_SynergyProgramDir[] = "./";
 #else
 const char AppConfig::m_SynergysName[] = "synergys";
 const char AppConfig::m_SynergycName[] = "synergyc";
