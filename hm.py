@@ -96,14 +96,8 @@ def start_cmd(argv):
 			if len(cmd_map) != 0:
 				print 'Mapping command: %s' % ' -> '.join(cmd_map)
 			
-			# pass args and optarg data to command handler, which figures out
-			# how to handle the arguments
-			optarg_data = cmd_dict[cmd]			
-			handler = commands.CommandHandler(argv[2:], optarg_data)
+			run_cmd(cmd, argv[2:])
 			
-			# use reflection to get the function pointer
-			cmd_func = getattr(handler, cmd)
-			cmd_func()
 			return 0
 			
 		else:
@@ -117,12 +111,22 @@ def start_cmd(argv):
 			print 'No command specified, showing usage.\n'
 		else:
 			print 'Command not recognised: %s\n' % cmd_arg
-
-		commands.usage(argv[2:])
+		
+		run_cmd('usage')
 	
 	# generic error code if not returned sooner
 	return 1
+
+def run_cmd(cmd, args = []):
+	# pass args and optarg data to command handler, which figures out
+	# how to handle the arguments
+	optarg_data = cmd_dict[cmd]
+	handler = commands.CommandHandler(args, optarg_data)
 	
+	# use reflection to get the function pointer
+	cmd_func = getattr(handler, cmd)
+	cmd_func()
+
 def main(argv):
 
 	if sys.version_info < (2, 4):
