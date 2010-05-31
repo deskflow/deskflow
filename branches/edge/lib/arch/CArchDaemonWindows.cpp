@@ -611,7 +611,7 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 		return;
 	}
 
-	// tell e manager that we're starting
+	// tell service control manager that we're starting
 	m_serviceState = SERVICE_START_PENDING;
 	setStatus(m_serviceState, 0, 10000);
 
