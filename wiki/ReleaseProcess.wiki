@@ -15,7 +15,7 @@ The following steps should be followed for releasing a new major version.
   # Create [http://en.wikipedia.org/wiki/Software_release_life_cycle#Release_candidate RC] installers and send the links to the synergy-plus-dev mailing list for feedback.
   # After 1 week, assuming no negative feedback/new bugs are raised for the RC, create the [http://en.wikipedia.org/wiki/Software_release_life_cycle#General_availability GA] installers and upload to the downloads page (use the Featured label).
   # Move (`svn move`) the release branch from to the `branches` directory to the `tags` directory.
-  # Send a message to [http://groups.google.com/group/synergy-plus synergy-plus mailing list] announcing the new public release.
+  # Send a message to [http://groups.google.com/group/synergy-plus synergy-plus mailing list] announcing the new public release, and update the version number in the IRC channel topic.
   # Decide what issues will be fixed for the next version, and ensure that they have the the correct version label.
 
 == Minor release ==
