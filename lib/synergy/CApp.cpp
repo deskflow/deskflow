@@ -255,6 +255,8 @@ CApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver
 	}
 
 	delete CLOG;
+
+	ARCH->beforeAppExit();
 	
 	return result;
 }

@@ -26,7 +26,8 @@
 #include <iostream>
 #include <conio.h>
 
-CArchAppUtilWindows::CArchAppUtilWindows()
+CArchAppUtilWindows::CArchAppUtilWindows() :
+m_exitMode(kExitModeNormal)
 {
 }
 
@@ -65,13 +66,6 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 	}
 
 	return true;
-}
-
-void
-CArchAppUtilWindows::adoptApp(CApp* app)
-{
-	app->m_bye = &exitPause;
-	CArchAppUtil::adoptApp(app);
 }
 
 CString
@@ -176,23 +170,6 @@ CArchAppUtilWindows::stopService()
 	LOG((CLOG_INFO "service '%s' stopping asyncronously", app().daemonName()));
 }
 
-void
-exitPause(int code)
-{
-	CString name;
-	CArchMiscWindows::getParentProcessName(name);
-
-	// if the user did not launch from the command prompt (i.e. it was launched
-	// by double clicking, or through a debugger), allow user to read any error
-	// messages (instead of the window closing automatically).
-	if (name != "cmd.exe") {
-		std::cout << std::endl << "Press any key to exit..." << std::endl;
-		int c = _getch();
-	}
-
-	throw XExitApp(code);
-}
-
 static
 int 
 mainLoopStatic() 
@@ -210,9 +187,17 @@ CArchAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 }
 
 void 
-CArchAppUtilWindows::byeThrow(int x)
+CArchAppUtilWindows::exitApp(int code)
 {
-	CArchMiscWindows::daemonFailed(x);
+	switch (m_exitMode) {
+
+		case kExitModeDaemon:
+			CArchMiscWindows::daemonFailed(code);
+			break;
+
+		default:
+			throw XExitApp(code);
+	}
 }
 
 int daemonNTMainLoopStatic(int argc, const char** argv)
@@ -224,7 +209,7 @@ int
 CArchAppUtilWindows::daemonNTStartup(int, char**)
 {
 	CSystemLogger sysLogger(app().daemonName(), false);
-	app().m_bye = &byeThrow;
+	m_exitMode = kExitModeDaemon;
 	return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
 }
 
@@ -240,6 +225,21 @@ int
 foregroundStartupStatic(int argc, char** argv)
 {
 	return CArchAppUtil::instance().app().foregroundStartup(argc, argv);
+}
+
+void
+CArchAppUtilWindows::beforeAppExit()
+{
+	CString name;
+	CArchMiscWindows::getParentProcessName(name);
+
+	// if the user did not launch from the command prompt (i.e. it was launched
+	// by double clicking, or through a debugger), allow user to read any error
+	// messages (instead of the window closing automatically).
+	if (name != "cmd.exe") {
+		std::cout << std::endl << "Press any key to exit..." << std::endl;
+		int c = _getch();
+	}
 }
 
 int
