@@ -102,4 +102,24 @@ private:
 	CString				m_name;
 };
 
+//! Generic exit eception
+/*!
+Thrown when we want to abort, with the opportunity to clean up. This is a 
+little bit of a hack, but it's a better way of exiting, than just calling 
+exit(int).
+*/
+class XExitApp : public XSynergy {
+public:
+	XExitApp(int code);
+
+	//! Get the exit code
+	int getCode() const throw();
+
+protected:
+	virtual CString	getWhat() const throw();
+	
+private:
+	int	m_code;
+};
+
 #endif

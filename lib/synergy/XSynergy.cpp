@@ -102,3 +102,28 @@ XUnknownClient::getWhat() const throw()
 {
 	return format("XUnknownClient", "unknown client %{1}", m_name.c_str());
 }
+
+
+//
+// XExitApp
+//
+
+XExitApp::XExitApp(int code) :
+	m_code(code)
+{
+	// do nothing
+}
+
+int
+XExitApp::getCode() const throw()
+{
+	return m_code;
+}
+
+CString
+XExitApp::getWhat() const throw()
+{
+	return format(
+		"XExitApp", "exiting with code %{1}", 
+		CStringUtil::print("%d", m_code).c_str());
+}

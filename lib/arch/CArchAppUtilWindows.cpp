@@ -20,6 +20,7 @@
 #include "CApp.h"
 #include "LogOutputters.h"
 #include "CMSWindowsScreen.h"
+#include "XSynergy.h"
 
 #include <sstream>
 #include <iostream>
@@ -189,7 +190,7 @@ exitPause(int code)
 		int c = _getch();
 	}
 
-	exit(code);
+	throw XExitApp(code);
 }
 
 static
