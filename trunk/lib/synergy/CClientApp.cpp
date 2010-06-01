@@ -605,12 +605,21 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 	// through the task bar.
 	s_taskBarReceiver = createTaskBarReceiver(logBuffer);
 
-	// run
-	int result = startup(argc, argv);
+	int result;
+	try
+	{
+		// run
+		result = startup(argc, argv);
+	}
+	catch (...)
+	{
+		// done with task bar receiver
+		delete s_taskBarReceiver;
 
-	// done with task bar receiver
-	delete s_taskBarReceiver;
+		delete args().m_serverAddress;
 
-	delete args().m_serverAddress;
+		throw;
+	}
+
 	return result;
 }

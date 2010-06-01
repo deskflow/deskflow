@@ -21,6 +21,11 @@
 
 #define ARCH_APPUTIL CArchAppUtilWindows
 
+enum AppExitMode {
+	kExitModeNormal,
+	kExitModeDaemon
+};
+
 class CArchAppUtilWindows : public CArchAppUtil {
 public:
 	CArchAppUtilWindows();
@@ -45,8 +50,6 @@ public:
 	void handleServiceArg(const char* serviceAction);
 
 	bool parseArg(const int& argc, const char* const* argv, int& i);
-	
-	void adoptApp(CApp* app);
 
 	int daemonNTStartup(int, char**);
 	
@@ -54,10 +57,12 @@ public:
 
 	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
 
-	static void byeThrow(int x);
+	void exitApp(int code);
+
+	void beforeAppExit();
 
 	static CArchAppUtilWindows& instance();
-};
 
-// TODO: move to class
-void exitPause(int code);
+private:
+	AppExitMode m_exitMode;
+};

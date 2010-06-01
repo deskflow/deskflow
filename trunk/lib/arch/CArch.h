@@ -188,6 +188,7 @@ public:
 	virtual void adoptApp(CApp* app);
 	virtual CApp& app() const;
 	virtual int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	virtual void beforeAppExit();
 
 private:
 	static CArch*		s_instance;

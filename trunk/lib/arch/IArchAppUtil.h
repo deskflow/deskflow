@@ -26,4 +26,5 @@ public:
 	virtual void adoptApp(CApp* app) = 0;
 	virtual CApp& app() const = 0;
 	virtual int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver) = 0;
+	virtual void beforeAppExit() = 0;
 };
