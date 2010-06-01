@@ -239,7 +239,10 @@ CApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver
 		result = ARCH->run(argc, argv, createTaskBarReceiver);
 	}
 	catch (XExitApp& e) {
-		LOG((CLOG_WARN "Forced exit: %s\n", e.what()));
+		// instead of showing a nasty error, just exit with the error code.
+		// not sure if i like this behaviour, but it's probably better than 
+		// using the exit(int) function!
+		result = e.getCode();
 	}
 	catch (XBase& e) {
 		LOG((CLOG_CRIT "Exception: %s\n", e.what()));
