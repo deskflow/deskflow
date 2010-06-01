@@ -57,7 +57,8 @@ CMSWindowsServerTaskBarReceiver::CMSWindowsServerTaskBarReceiver(
 	ARCH->addReceiver(this);
 }
 
-CMSWindowsServerTaskBarReceiver::~CMSWindowsServerTaskBarReceiver()
+void
+CMSWindowsServerTaskBarReceiver::cleanup()
 {
 	ARCH->removeReceiver(this);
 	for (UInt32 i = 0; i < kMaxState; ++i) {
@@ -65,6 +66,11 @@ CMSWindowsServerTaskBarReceiver::~CMSWindowsServerTaskBarReceiver()
 	}
 	DestroyMenu(m_menu);
 	destroyWindow();
+}
+
+CMSWindowsServerTaskBarReceiver::~CMSWindowsServerTaskBarReceiver()
+{
+	cleanup();
 }
 
 void

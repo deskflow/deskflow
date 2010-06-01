@@ -17,6 +17,7 @@
 #include "CArchAppUtil.h"
 #include "CString.h"
 
+#define WIN32_LEAN_AND_MEAN
 #include "Windows.h"
 
 #define ARCH_APPUTIL CArchAppUtilWindows
@@ -65,4 +66,5 @@ public:
 
 private:
 	AppExitMode m_exitMode;
+	static BOOL WINAPI consoleHandler(DWORD CEvent);
 };

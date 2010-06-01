@@ -89,6 +89,8 @@ public:
 
 	virtual void updateStatus(INode*, const CString& errorMsg) = 0;
 
+	virtual void cleanup() {}
+
 	//@}
 };
 
