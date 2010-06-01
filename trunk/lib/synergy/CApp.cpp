@@ -21,6 +21,7 @@
 #include "XArch.h"
 #include "CArchMiscWindows.h"
 #include "LogOutputters.h"
+#include "XSynergy.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -230,34 +231,31 @@ CApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver
 
 	// create an instance of log
 	CLOG;
+	
+	// HACK: fail by default (saves us setting result in each catch)
+	int result = kExitFailed;
 
-	int result;
 	try {
 		result = ARCH->run(argc, argv, createTaskBarReceiver);
 	}
+	catch (XExitApp& e) {
+		LOG((CLOG_WARN "Forced exit: %s\n", e.what()));
+	}
 	catch (XBase& e) {
-		LOG((CLOG_CRIT "Uncaught exception: %s\n", e.what()));
-		result = kExitFailed;
+		LOG((CLOG_CRIT "Exception: %s\n", e.what()));
 	}
 	catch (XArch& e) {
-		LOG((CLOG_CRIT "Initialization failed: %s" BYE, e.what().c_str(), argsBase().m_pname));
-		result = kExitFailed;
+		LOG((CLOG_CRIT "Init failed: %s" BYE, e.what().c_str(), argsBase().m_pname));
 	}
 	catch (std::exception& e) {
-		LOG((CLOG_CRIT "Uncaught exception: %s\n", e.what()));
-		result = kExitFailed;
+		LOG((CLOG_CRIT "Exception: %s\n", e.what()));
 	}
 	catch (...) {
-		LOG((CLOG_CRIT "Uncaught exception: <unknown exception>\n"));
-		result = kExitFailed;
+		LOG((CLOG_CRIT "An unexpected exception occurred.\n"));
 	}
 
 	delete CLOG;
-
-	// not sure i like what's going on here; m_bye could call exit, but it also does
-	// some other stuff - if we don't return then we get compiler warning (and it's 
-	// not good practice anyway), but the return will never get hit.
-	m_bye(result);
+	
 	return result;
 }
 
