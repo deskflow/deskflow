@@ -21,6 +21,7 @@
 #include "LogOutputters.h"
 #include "CMSWindowsScreen.h"
 #include "XSynergy.h"
+#include "IArchTaskBarReceiver.h"
 
 #include <sstream>
 #include <iostream>
@@ -29,10 +30,25 @@
 CArchAppUtilWindows::CArchAppUtilWindows() :
 m_exitMode(kExitModeNormal)
 {
+	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
+    {
+		throw XArchEvalWindows();
+    }
 }
 
 CArchAppUtilWindows::~CArchAppUtilWindows()
 {
+}
+
+BOOL WINAPI CArchAppUtilWindows::consoleHandler(DWORD CEvent)
+{
+	// HACK: it would be nice to delete the s_taskBarReceiver object, but 
+	// this is best done by the CApp destructor; however i don't feel like
+	// opening up that can of worms today... i need sleep.
+	instance().app().s_taskBarReceiver->cleanup();
+
+	ExitProcess(kExitTerminated);
+    return TRUE;
 }
 
 bool 

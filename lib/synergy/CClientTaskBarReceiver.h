@@ -47,6 +47,7 @@ public:
 	virtual void		unlock() const;
 	virtual const Icon	getIcon() const = 0;
 	virtual std::string	getToolTip() const;
+	virtual void cleanup() {}
 
 protected:
 	enum EState {
