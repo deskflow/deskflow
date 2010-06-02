@@ -16,11 +16,6 @@
 || Latest release || 2009-09-07 (as of 2009-09-08) ||
 || Website || http://sourceforge.net/projects/synergykm/ ||
 
-== synergy-nightly ==
-|| About || Synergy with some fixes ||
-|| Platform || Windows||
-|| Website || http://code.google.com/p/synergy-nightly/ ||
-
 == Sinerji ==
 || Author || Farslan ||
 || Last update || Sep 19 2008 (as of May 28, 2009) ||
@@ -56,6 +51,11 @@
 || Status || Abandoned ||
 || Platform || MacOS ||
 || Homepage || http://code.google.com/p/quicksynergy/ ||
+
+== synergy-nightly ==
+|| About || Synergy with some fixes ||
+|| Platform || Windows||
+|| Website || http://code.google.com/p/synergy-nightly/ ||
 
 == Mac OS X Synergy Configurator ==
 || Developers || 1 ||
