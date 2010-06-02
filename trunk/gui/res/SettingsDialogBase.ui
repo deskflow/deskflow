@@ -1,69 +1,70 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>SettingsDialogBase</class>
- <widget class="QDialog" name="SettingsDialogBase" >
-  <property name="geometry" >
+ <widget class="QDialog" name="SettingsDialogBase">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>372</width>
-    <height>390</height>
+    <height>325</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" colspan="2" >
-    <widget class="QGroupBox" name="m_pGroupBox_2" >
-     <property name="title" >
+  <layout class="QGridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QGroupBox" name="m_pGroupBox_2">
+     <property name="title">
       <string>&amp;Programs</string>
      </property>
-     <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="m_pLabel_17" >
-        <property name="whatsThis" >
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_pLabel_17">
+        <property name="whatsThis">
          <string>This is the synergy client program, usually called synergyc or synergyc.exe.</string>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>&amp;Client:</string>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>m_pLineEditSynergyc</cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QLineEdit" name="m_pLineEditSynergyc" />
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="m_pLineEditSynergyc"/>
       </item>
-      <item row="0" column="2" >
-       <widget class="QPushButton" name="m_pButtonBrowseSynergyc" >
-        <property name="text" >
+      <item row="0" column="2">
+       <widget class="QPushButton" name="m_pButtonBrowseSynergyc">
+        <property name="text">
          <string>&amp;Browse...</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="m_pLabel_18" >
-        <property name="toolTip" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_pLabel_18">
+        <property name="toolTip">
          <string/>
         </property>
-        <property name="whatsThis" >
+        <property name="whatsThis">
          <string>This is the synergy server program, usually called synergys or synergys.exe.</string>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>S&amp;erver:</string>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>m_pLineEditSynergys</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QLineEdit" name="m_pLineEditSynergys" />
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="m_pLineEditSynergys"/>
       </item>
-      <item row="1" column="2" >
-       <widget class="QPushButton" name="m_pButtonBrowseSynergys" >
-        <property name="text" >
+      <item row="1" column="2">
+       <widget class="QPushButton" name="m_pButtonBrowseSynergys">
+        <property name="text">
          <string>Bro&amp;wse...</string>
         </property>
        </widget>
@@ -71,65 +72,65 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2" >
-    <widget class="QGroupBox" name="m_pGroupBox_3" >
-     <property name="title" >
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="m_pGroupBox_3">
+     <property name="title">
       <string>&amp;Advanced</string>
      </property>
-     <layout class="QGridLayout" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="m_pLabel_19" >
-        <property name="text" >
+     <layout class="QGridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="m_pLabel_19">
+        <property name="text">
          <string>Sc&amp;reen name:</string>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>m_pLineEditScreenName</cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QLineEdit" name="m_pLineEditScreenName" >
-        <property name="enabled" >
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="m_pLineEditScreenName">
+        <property name="enabled">
          <bool>true</bool>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="m_pLabel_20" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="m_pLabel_20">
+        <property name="text">
          <string>P&amp;ort:</string>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>m_pSpinBoxPort</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QSpinBox" name="m_pSpinBoxPort" >
-        <property name="enabled" >
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="m_pSpinBoxPort">
+        <property name="enabled">
          <bool>true</bool>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>65535</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>24800</number>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="m_pLabel_21" >
-        <property name="text" >
+      <item row="2" column="0">
+       <widget class="QLabel" name="m_pLabel_21">
+        <property name="text">
          <string>&amp;Interface:</string>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>m_pLineEditInterface</cstring>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" >
-       <widget class="QLineEdit" name="m_pLineEditInterface" >
-        <property name="enabled" >
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="m_pLineEditInterface">
+        <property name="enabled">
          <bool>true</bool>
         </property>
        </widget>
@@ -137,15 +138,15 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2" >
-    <widget class="QGroupBox" name="m_pGroupRunOptions" >
-     <property name="title" >
+   <item row="2" column="0" colspan="2">
+    <widget class="QGroupBox" name="m_pGroupRunOptions">
+     <property name="title">
       <string>&amp;Start</string>
      </property>
-     <layout class="QVBoxLayout" >
+     <layout class="QVBoxLayout">
       <item>
-       <widget class="QCheckBox" name="m_pCheckBoxAutoConnect" >
-        <property name="text" >
+       <widget class="QCheckBox" name="m_pCheckBoxAutoConnect">
+        <property name="text">
          <string>A&amp;utomatically start synergy when QSynergy starts</string>
         </property>
        </widget>
@@ -153,62 +154,62 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0" >
-    <widget class="QLabel" name="m_pLabel_3" >
-     <property name="text" >
+   <item row="3" column="0">
+    <widget class="QLabel" name="m_pLabel_3">
+     <property name="text">
       <string>&amp;Logging level:</string>
      </property>
-     <property name="buddy" >
+     <property name="buddy">
       <cstring>m_pComboLogLevel</cstring>
      </property>
     </widget>
    </item>
-   <item row="3" column="1" >
-    <widget class="QComboBox" name="m_pComboLogLevel" >
+   <item row="3" column="1">
+    <widget class="QComboBox" name="m_pComboLogLevel">
      <item>
-      <property name="text" >
+      <property name="text">
        <string>Error</string>
       </property>
      </item>
      <item>
-      <property name="text" >
+      <property name="text">
        <string>Warning</string>
       </property>
      </item>
      <item>
-      <property name="text" >
+      <property name="text">
        <string>Note</string>
       </property>
      </item>
      <item>
-      <property name="text" >
+      <property name="text">
        <string>Info</string>
       </property>
      </item>
      <item>
-      <property name="text" >
+      <property name="text">
        <string>Debug</string>
       </property>
      </item>
      <item>
-      <property name="text" >
+      <property name="text">
        <string>Debug1</string>
       </property>
      </item>
      <item>
-      <property name="text" >
+      <property name="text">
        <string>Debug2</string>
       </property>
      </item>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2" >
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
+   <item row="4" column="0" colspan="2">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -222,11 +223,11 @@
    <receiver>SettingsDialogBase</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>257</x>
      <y>380</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>157</x>
      <y>274</y>
     </hint>
@@ -238,11 +239,11 @@
    <receiver>SettingsDialogBase</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>325</x>
      <y>380</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>

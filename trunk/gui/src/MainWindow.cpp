@@ -368,15 +368,15 @@ void MainWindow::setSynergyState(qSynergyState state)
 
 	if (state == synergyConnected)
 	{
-		disconnect (m_pButtonStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
-		connect (m_pButtonStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
-		m_pButtonStart->setText(tr("&Stop"));
+		disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
+		connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
+		m_pButtonToggleStart->setText(tr("&Stop"));
 	}
 	else
 	{
-		disconnect (m_pButtonStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
-		connect (m_pButtonStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
-		m_pButtonStart->setText(tr("&Start"));
+		disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
+		connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
+		m_pButtonToggleStart->setText(tr("&Start"));
 	}
 
 	m_pGroupClient->setEnabled(state == synergyDisconnected);
