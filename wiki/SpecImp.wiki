@@ -1,4 +1,4 @@
 #summary Specification: Implementation
 #labels Deprecated
 
-The specification has been consolidated into one page: [Specification]
+The specification has been consolidated into one page: [TheBible]
