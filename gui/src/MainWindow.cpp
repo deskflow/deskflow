@@ -54,6 +54,9 @@ MainWindow::MainWindow(QWidget* parent) :
 	loadSettings();
 	initConnections();
 
+	// HACK - surely window should be visible by default?
+	setVisible(true);
+
 	if (appConfig().autoConnect())
 		startSynergy();
 }
@@ -132,12 +135,6 @@ void MainWindow::loadSettings()
 	QRect rect = settings().value("windowGeometry", geometry()).toRect();
 	move(rect.x(), rect.y());
 	resize(rect.width(), rect.height());
-
-#if !defined(Q_OS_MAC)
-	setVisible(settings().value("windowVisible", true).toBool());
-#else
-	setVisible(true);
-#endif
 
 	// program settings
 
