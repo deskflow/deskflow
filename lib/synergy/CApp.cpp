@@ -19,7 +19,9 @@
 #include "CArch.h"
 #include "XBase.h"
 #include "XArch.h"
+#if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
+#endif
 #include "LogOutputters.h"
 #include "XSynergy.h"
 
