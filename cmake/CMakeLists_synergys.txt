@@ -13,10 +13,8 @@ SET(src_cmd_synergys_mswindows
 )
 
 SET(inc_cmd_synergys_mswindows
-	${root_cmd_synergys}/CXWindowsServerTaskBarReceiver.h
-	${root_cmd_synergys}/resource.h
-	${root_cmd_synergys}/COSXServerTaskBarReceiver.h
 	${root_cmd_synergys}/CMSWindowsServerTaskBarReceiver.h
+	${root_cmd_synergys}/resource.h
 )
 
 SET(res_cmd_synergys_mswindows
