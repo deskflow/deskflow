@@ -190,7 +190,7 @@ class InternalCommands:
 
 			print 'Building with GNU Make...'
 			self.try_chdir(self.bin_dir)
-			err = os.system(make_cmd)
+			err = os.system(self.make_cmd)
 			self.restore_chdir()
 
 			if err == 0:
@@ -234,7 +234,7 @@ class InternalCommands:
 
 			print 'Cleaning with GNU Make...'
 			self.try_chdir(self.bin_dir)
-			err = os.system(make_cmd + ' clean')
+			err = os.system(self.make_cmd + ' clean')
 			self.restore_chdir()
 
 			if err == 0:
