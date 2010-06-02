@@ -186,11 +186,6 @@ void MainWindow::saveSettings()
 
 void MainWindow::setIcon(qSynergyState state)
 {
-#if defined(Q_OS_WIN)
-	setVisible(state == synergyDisconnected);
-	m_pTrayIcon->setVisible(state == synergyDisconnected);
-#endif
-
 	QIcon icon;
 	icon.addFile(synergyIconFiles[state]);
 
