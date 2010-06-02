@@ -44,7 +44,6 @@ MainWindow::MainWindow(QWidget* parent) :
 	m_ServerConfig(&m_Settings, 5, 3),
 	m_pTempConfigFile(NULL),
 	m_pLogDialog(new LogDialog(this, synergyProcess())),
-	m_pLabelStatusBar(NULL),
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL)
 {
@@ -52,7 +51,6 @@ MainWindow::MainWindow(QWidget* parent) :
 
 	createTrayIcon();
 	createMenuBar();
-	createStatusBar();
 	loadSettings();
 	initConnections();
 
@@ -64,6 +62,11 @@ MainWindow::~MainWindow()
 {
 	stopSynergy();
 	saveSettings();
+}
+
+void MainWindow::setStatus(const QString &status)
+{
+	m_pStatusLabel->setText(status);
 }
 
 void MainWindow::createTrayIcon()
@@ -121,12 +124,6 @@ void MainWindow::createMenuBar()
 	pMenuHelp->addAction(m_pActionAbout);
 
 	setMenuBar(menubar);
-}
-
-void MainWindow::createStatusBar()
-{
-	m_pLabelStatusBar = new QLabel(tr("Synergy is not running."));
-	statusBar()->addPermanentWidget(m_pLabelStatusBar);
 }
 
 void MainWindow::loadSettings()
@@ -383,7 +380,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 	m_pGroupServer->setEnabled(state == synergyDisconnected);
 	m_pActionStartSynergy->setEnabled(state == synergyDisconnected);
 	m_pActionStopSynergy->setEnabled(state == synergyConnected);
-	m_pLabelStatusBar->setText(state == synergyConnected ? QString(tr("Synergy %1 is running.")).arg(synergyType() == synergyServer ? tr("server") : tr("client")) : tr("Synergy is not running."));
+	setStatus(state == synergyConnected ? QString(tr("Synergy %1 is running.")).arg(synergyType() == synergyServer ? tr("server") : tr("client")) : tr("Synergy is not running."));
 	setIcon(state);
 	m_SynergyState = state;
 }
