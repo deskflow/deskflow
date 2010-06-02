@@ -32,7 +32,7 @@ Before asking questions on the [http://groups.google.com/group/synergy-plus mail
 
 There is no formal procedure for becoming a project member (getting commit access). The length of time before a newcomer is added to the project, usually depends their interaction with the mailing list. If the user looks to have a good understanding of the code, and we agree with their goals, then we may give commit access sooner. When our project grows larger, we may review patches initially and give commit access later.
 
-  * Read the coding syntax guide on the [SpecImp Implementation] page.
+  * Read the coding syntax guide on the [TheBible#4._Implementation Implementation] page.
   * The [DeveloperFAQ Developer FAQ] may be useful.
 
 = Procedures =
