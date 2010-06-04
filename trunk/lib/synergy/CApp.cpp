@@ -173,7 +173,20 @@ CApp::parseArgs(int argc, const char* const* argv, int& i)
 	// parse options
 	for (i = 1; i < argc; ++i) {
 
-		if (parseArg(argc, argv, i)) {
+	#if SYSAPI_WIN32
+		// suggest that user installs as a windows service. when launched as 
+		// service, process should automatically detect that it should run in
+		// daemon mode.
+		if (argsBase().m_daemon) {
+			LOG((CLOG_ERR 
+				"The --daemon argument is not supported on Windows. "
+				"Instead, install %s as a service (--service install).", 
+				argsBase().m_pname));
+			m_bye(kExitArgs);
+		}
+	#endif
+
+		else if (parseArg(argc, argv, i)) {
 			continue;
 		}
 
