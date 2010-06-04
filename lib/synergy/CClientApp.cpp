@@ -164,45 +164,30 @@ void
 CClientApp::help()
 {
 #if WINAPI_XWINDOWS
-#  define USAGE_DISPLAY_ARG		\
+#  define WINAPI_ARG \
 	" [--display <display>]"
-#  define USAGE_DISPLAY_INFO	\
+#  define WINAPI_INFO \
 	"      --display <display>  connect to the X server at <display>\n"
 #else
-#  define USAGE_DISPLAY_ARG
-#  define USAGE_DISPLAY_INFO
+#  define WINAPI_ARG
+#  define WINAPI_INFO
 #endif
 
 	char buffer[2000];
 	sprintf(
 		buffer,
 		"Usage: %s"
-		" [--daemon|--no-daemon]"
-		" [--debug <level>]"
-		USAGE_DISPLAY_ARG
-		" [--name <screen-name>]"
 		" [--yscroll <delta>]"
-		" [--restart|--no-restart]"
+		WINAPI_ARG
+		HELP_COMMON_ARGS
 		" <server-address>"
 		"\n\n"
-		"Start the synergy mouse/keyboard sharing server.\n"
+		"Connect to a synergy mouse/keyboard sharing server.\n"
 		"\n"
-		"  -d, --debug <level>      filter out log messages with priorty below level.\n"
-		"                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
-		"                           DEBUG, DEBUG1, DEBUG2.\n"
-		USAGE_DISPLAY_INFO
-		"  -f, --no-daemon          run the client in the foreground.\n"
-		"*     --daemon             run the client as a daemon.\n"
-		"  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
-		"                           ourself to the server.\n"
+		HELP_COMMON_INFO_1
+		WINAPI_INFO
 		"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
-		"                           120 by default.\n"
-		"  -1, --no-restart         do not try to restart the client if it fails for\n"
-		"                           some reason.\n"
-		"*     --restart            restart the client automatically if it fails.\n"
-		"  -l  --log <file>         write log messages to file.\n"
-		"  -h, --help               display this help and exit.\n"
-		"      --version            display version information and exit.\n"
+		HELP_COMMON_INFO_2
 		"\n"
 		"* marks defaults.\n"
 		"\n"
@@ -211,7 +196,7 @@ CClientApp::help()
 		"default port, %d.\n"
 		"\n"
 		"Where log messages go depends on the platform and whether or not the\n"
-		"client is running as a daemon.",
+		"client is running as a daemon.", 
 		args().m_pname, kDefaultPort
 		);
 

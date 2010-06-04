@@ -103,3 +103,43 @@ private:
 #else
 #define DAEMON_RUNNING(running_)
 #endif
+
+#define HELP_COMMON_INFO_1 \
+	"  -d, --debug <level>      filter out log messages with priorty below level.\n" \
+	"                             level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n" \
+	"                             DEBUG, DEBUGn (1-5).\n" \
+	"  -n, --name <screen-name> use screen-name instead the hostname to identify\n" \
+	"                             this screen in the configuration.\n" \
+	"  -1, --no-restart         do not try to restart on failure.\n" \
+	"*     --restart            restart the server automatically if it fails.\n" \
+	"  -l  --log <file>         write log messages to file.\n"
+
+#define HELP_COMMON_INFO_2 \
+	"  -h, --help               display this help and exit.\n" \
+	"      --version            display version information and exit.\n"
+
+#define HELP_COMMON_ARGS \
+	" [--name <screen-name>]" \
+	" [--restart|--no-restart]" \
+	" [--debug <level>]"
+
+// system args (windows/unix)
+#if SYSAPI_UNIX
+
+// unix daemon mode args
+#  define HELP_SYS_ARGS \
+	" [--daemon|--no-daemon]"
+#  define HELP_SYS_INFO \
+    "  -f, --no-daemon          run in the foreground.\n" \
+    "*     --daemon             run as a daemon.\n"
+
+#elif SYSAPI_WIN32
+
+// windows service management args
+#  define HELP_SYS_ARGS \
+	" [--service <action>]"
+#  define HELP_SYS_INFO \
+	"      --service <action>   manage the windows service, valid options are:\n" \
+	"                             install/uninstall/start/stop\n"
+
+#endif
