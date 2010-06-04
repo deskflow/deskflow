@@ -128,15 +128,6 @@ CServerApp::parseArgs(int argc, const char* const* argv)
 		m_bye(kExitArgs);
 	}
 
-#if SYSAPI_WIN32
-	// if user wants to run as daemon, but process not launched from service launcher...
-	if (args().m_daemon && !CArchMiscWindows::wasLaunchedAsService()) {
-		LOG((CLOG_ERR "cannot launch as daemon if process not started through "
-			"service host (use '--service start' argument instead)"));
-		m_bye(kExitArgs);
-	}
-#endif
-
 	// set log filter
 	if (!CLOG->setFilter(args().m_logFilter)) {
 		LOG((CLOG_PRINT "%s: unrecognized log level `%s'" BYE,
