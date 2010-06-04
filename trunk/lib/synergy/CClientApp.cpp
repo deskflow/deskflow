@@ -194,9 +194,6 @@ CClientApp::help()
 		"The server address is of the form: [<hostname>][:<port>].  The hostname\n"
 		"must be the address or hostname of the server.  The port overrides the\n"
 		"default port, %d.\n"
-		"\n"
-		"Where log messages go depends on the platform and whether or not the\n"
-		"client is running as a daemon.", 
 		args().m_pname, kDefaultPort
 		);
 
