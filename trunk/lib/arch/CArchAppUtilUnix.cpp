@@ -54,3 +54,9 @@ CArchAppUtilUnix::run(int argc, char** argv, CreateTaskBarReceiverFunc createTas
 {
 	return app().runInner(argc, argv, NULL, &standardStartupStatic, createTaskBarReceiver);
 }
+
+void
+CArchAppUtilUnix::startNode()
+{
+	app().startNode();
+}
