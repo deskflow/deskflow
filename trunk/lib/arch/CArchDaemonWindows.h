@@ -83,6 +83,8 @@ public:
 	virtual bool		canInstallDaemon(const char* name, bool allUsers);
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
 
+	std::string commandLine() const { return m_commandLine; }
+
 private:
 	static HKEY			openNTServicesKey();
 	static HKEY			open95ServicesKey();
@@ -129,6 +131,8 @@ private:
 	SERVICE_STATUS_HANDLE m_statusHandle;
 
 	UINT				m_quitMessage;
+
+	std::string			m_commandLine;
 };
 
 #endif

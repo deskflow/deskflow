@@ -740,12 +740,8 @@ int CServerApp::mainLoop()
 		return kExitFailed;
 	}
 
-	// start the server.  if this return false then we've failed and
-	// we shouldn't retry.
-	LOG((CLOG_DEBUG1 "starting server"));
-	if (!startServer()) {
-		return kExitFailed;
-	}
+	// start server, etc
+	ARCH->util().startNode();
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);
@@ -839,7 +835,7 @@ int daemonMainLoopStatic(int argc, const char** argv) {
 int 
 CServerApp::standardStartup(int argc, char** argv)
 {
-	initialize(argc, argv);
+	initApp(argc, argv);
 
 	// daemonize if requested
 	if (args().m_daemon) {
@@ -853,7 +849,7 @@ CServerApp::standardStartup(int argc, char** argv)
 int 
 CServerApp::foregroundStartup(int argc, char** argv)
 {
-	initialize(argc, argv);
+	initApp(argc, argv);
 
 	// never daemonize
 	return mainLoop();
@@ -886,3 +882,13 @@ CServerApp::daemonInfo() const
 #endif
 }
 
+void
+CServerApp::startNode()
+{
+	// start the server.  if this return false then we've failed and
+	// we shouldn't retry.
+	LOG((CLOG_DEBUG1 "starting server"));
+	if (!startServer()) {
+		m_bye(kExitFailed);
+	}
+}

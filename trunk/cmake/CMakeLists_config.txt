@@ -183,6 +183,8 @@ IF(UNIX)
 
 ELSE(UNIX)
 
+	LIST(APPEND libs Wtsapi32 Userenv)
+
 	ADD_DEFINITIONS(
 		/DWIN32
 		/D_WINDOWS

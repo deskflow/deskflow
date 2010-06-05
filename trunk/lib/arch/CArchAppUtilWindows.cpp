@@ -22,6 +22,8 @@
 #include "CMSWindowsScreen.h"
 #include "XSynergy.h"
 #include "IArchTaskBarReceiver.h"
+#include "CMSWindowsRelauncher.h"
+#include "CScreen.h"
 
 #include <sstream>
 #include <iostream>
@@ -79,6 +81,9 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 	else if (app().isArg(i, argc, argv, NULL, "--debug-service-wait")) {
 
 		app().argsBase().m_debugServiceWait = true;
+	}
+	else if (app().isArg(i, argc, argv, NULL, "--relaunch")) {
+		app().argsBase().m_relaunchMode = true;
 	}
 	else {
 		// option not supported here
@@ -187,7 +192,7 @@ CArchAppUtilWindows::stopService()
 		}
 	}
 
-	LOG((CLOG_INFO "service '%s' stopping asyncronously", app().daemonName()));
+	LOG((CLOG_INFO "service '%s' stopping asynchronously", app().daemonName()));
 }
 
 static
@@ -200,10 +205,12 @@ mainLoopStatic()
 int 
 CArchAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
-	app().initialize(argc, argv);
+	app().initApp(argc, argv);
 	debugServiceWait();
+
+	// NB: what the hell does this do?!
 	app().argsBase().m_backend = false;
-	app().loadConfig();
+	
 	return CArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
@@ -303,5 +310,23 @@ CArchAppUtilWindows::debugServiceWait()
 			ARCH->sleep(1);
 			LOG((CLOG_INFO "waiting for debugger to attach"));
 		}
+	}
+}
+
+void 
+CArchAppUtilWindows::startNode()
+{
+	if (app().argsBase().m_relaunchMode) {
+
+		LOG((CLOG_DEBUG1 "entering relaunch mode"));
+		CMSWindowsRelauncher relauncher;
+		relauncher.startAsync();
+
+		// HACK: create a dummy screen, which can handle system events 
+		// (such as a stop request from the service controller).
+		CScreen* dummyScreen = app().createScreen();
+	}
+	else {
+		app().startNode();
 	}
 }
