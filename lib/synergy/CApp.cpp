@@ -186,7 +186,7 @@ CApp::parseArgs(int argc, const char* const* argv, int& i)
 		}
 	#endif
 
-		else if (parseArg(argc, argv, i)) {
+		if (parseArg(argc, argv, i)) {
 			continue;
 		}
 
