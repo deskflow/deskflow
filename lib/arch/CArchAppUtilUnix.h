@@ -25,4 +25,5 @@ public:
 	
 	bool parseArg(const int& argc, const char* const* argv, int& i);
 	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	void startNode();
 };
