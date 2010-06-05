@@ -89,6 +89,7 @@ CMSWindowsDesks::CMSWindowsDesks(
 				bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
 				const IScreenSaver* screensaver, IJob* updateKeys) :
 	m_isPrimary(isPrimary),
+	m_noHooks(noHooks),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_isModernFamily(CArchMiscWindows::isWindowsModern()),
 	m_isOnScreen(m_isPrimary),
