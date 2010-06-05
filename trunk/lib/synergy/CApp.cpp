@@ -43,6 +43,9 @@ s_suspended(false)
 CApp::~CApp()
 {
 	delete m_args;
+
+	CLOG->remove(m_fileLog);
+	delete m_fileLog;
 }
 
 CApp::CArgsBase::CArgsBase() :
@@ -293,4 +296,14 @@ CApp::daemonMainLoop(int, const char**)
 	CSystemLogger sysLogger(daemonName(), true);
 #endif
 	return mainLoop();
+}
+
+void 
+CApp::setupFileLogging()
+{
+	if (argsBase().m_logFile != NULL) {
+		m_fileLog = new CFileLogOutputter(argsBase().m_logFile);
+		CLOG->insert(m_fileLog);
+		LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
+	}
 }

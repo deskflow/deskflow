@@ -728,16 +728,7 @@ int CServerApp::mainLoop()
 	// create the event queue
 	CEventQueue eventQueue;
 
-	// logging to files
-	CFileLogOutputter* fileLog = NULL;
-
-	if (args().m_logFile != NULL) {
-		fileLog = new CFileLogOutputter(args().m_logFile);
-
-		CLOG->insert(fileLog);
-
-		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", args().m_logFile));
-	}
+	setupFileLogging();
 
 	// if configuration has no screens then add this system
 	// as the default
@@ -809,11 +800,6 @@ int CServerApp::mainLoop()
 	cleanupServer();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
-
-	if (fileLog) {
-		CLOG->remove(fileLog);
-		delete fileLog;		
-	}
 
 	return kExitSuccess;
 }
