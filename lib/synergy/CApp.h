@@ -20,6 +20,7 @@
 class IArchTaskBarReceiver;
 class CBufferedLogOutputter;
 class ILogOutputter;
+class CFileLogOutputter;
 
 typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*);
 typedef int (*StartupFunc)(int, char**);
@@ -90,6 +91,9 @@ public:
 	bool s_suspended;
 	IArchTaskBarReceiver* s_taskBarReceiver;
 
+	// If --log was specified in args, then add a file logger.
+	void setupFileLogging();
+
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
@@ -97,6 +101,7 @@ protected:
 private:
 	CArgsBase* m_args;
 	static CApp* s_instance;
+	CFileLogOutputter* m_fileLog;
 };
 
 #define BYE "\nTry `%s --help' for more information."

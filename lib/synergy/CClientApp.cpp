@@ -491,13 +491,7 @@ CClientApp::mainLoop()
 	// logging to files
 	CFileLogOutputter* fileLog = NULL;
 
-	if (args().m_logFile != NULL) {
-		fileLog = new CFileLogOutputter(args().m_logFile);
-
-		CLOG->insert(fileLog);
-
-		LOG((CLOG_DEBUG1 "Logging to file (%s) enabled", args().m_logFile));
-	}
+	setupFileLogging();
 
 	// create socket multiplexer.  this must happen after daemonization
 	// on unix because threads evaporate across a fork().
@@ -531,11 +525,6 @@ CClientApp::mainLoop()
 	stopClient();
 	updateStatus();
 	LOG((CLOG_NOTE "stopped client"));
-
-	if (fileLog) {
-		CLOG->remove(fileLog);
-		delete fileLog;		
-	}
 
 	return kExitSuccess;
 }
