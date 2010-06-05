@@ -136,7 +136,7 @@ Otherwise, visit the [http://www.cmake.org/cmake/resources/software.html CMake] 
 == Ubuntu 9.04 ==
 
 {{{
-sudo apt-get install cmake python g++ make xorg-dev
+sudo apt-get install cmake make g++ xorg-dev
 }}}
 
 *Note:* In some cases, `libXtst-dev` may need to be manually installed. However, since it's a dependency of `xorg-dev`, this shouldn't be the case.
