@@ -69,13 +69,3 @@ Some members have official roles which tie them to certain duties.
   * Programmer on Windows, Linux, and Mac OS X
   * IRC user: nbolton (freenode.net)
   * Google user: nick.bolton.uk
-
-== Christian Masciulli ==
-
-  * Coding and testing on Windows and Linux
-
-== Thermionix ==
-
-  * Merged in [http://sourceforge.net/tracker/?atid=490469&group_id=59275&func=browse patches from SourceForge]
-  * Testing on Windows & Archlinux
-  * Created the initial Wiki pages
