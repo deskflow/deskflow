@@ -156,7 +156,7 @@ Case D can happen if the user has a laptop that is shared inside one organizatio
 
 == 4.2. Code style ==
 
-The code style is based on the original style used by Chris Schoeneman. This original style will be followed for constancy, which will make it easier for the community to worth with.
+The code style is based on the original style used by Chris Schoeneman. This original style will be followed to help maintain a consistent level of readability.
 
 === Tabs are used for indentation not spaces ===
 {{{
@@ -165,16 +165,16 @@ The code style is based on the original style used by Chris Schoeneman. This ori
 }}}
 Some common sense required here: Where \s is a space, and \t is a tab. In this example, space after the \s and \t annotations, and the annotations themselves have been used for illustration; these should not be included in the actual code.
 
-=== Class, struct, and enum names are `PascalCase` ===
+=== Class, struct, and enum names are `PascalCase` and prefixed ===
 {{{
-class MyClass { };
-struct MyStruct { };
-enum MyEnum { };
+class CMyClass { }; // class prefix is C
+struct CMyStruct { }; // struct prefix is C
+enum EMyEnum { }; // enum prefix is E
 }}}
 
 === Member, and enum constant names are (lower) `camelCase` ===
 {{{
-class MyClass {
+class CMyClass {
 public:
     void helloWorld();
 };
@@ -182,17 +182,17 @@ public:
 
 === Member variables (public and private) begin with `m_` ===
 {{{
-class MyClass {
+class CMyClass {
 public:
-    MyClass* m_myClass1;
+    CMyClass* m_myClass1;
 private:
-    MyClass* m_myClass2;
+    CMyClass* m_myClass2;
 };
 }}}
 
 === Enum constants are prefixed with `k` ===
 {{{
-enum MyEnum {
+enum EMyEnum {
     kValue1,
     kValue2
 };
@@ -200,7 +200,7 @@ enum MyEnum {
 
 === Static variables are prefixed with `s_` ===
 {{{
-static MyClass* s_myClass;
+static CMyClass* s_myClass;
 }}}
 
 === Comments and debug messages need not be grammatically correct ===
@@ -219,12 +219,12 @@ DEBUG((CLOG_INFO "hello world"));
 {{{
 // correct
 int
-MyClass::helloWorld()
+CMyClass::helloWorld()
 {
 }
 
 // incorrect
-int MyClass::helloWorld()
+int CMyClass::helloWorld()
 {
 }
 }}}
@@ -233,14 +233,14 @@ int MyClass::helloWorld()
 {{{
 // correct
 int
-MyClass::helloWorld()
+CMyClass::helloWorld()
 {
     // ...
 }
 
 // incorrect
 int
-MyClass::helloWorld() {
+CMyClass::helloWorld() {
     // ...
 }
 }}}
@@ -307,12 +307,12 @@ void helloWorld(void);
 
 === The const keyword is used regularly ===
 {{{
-class MyClass {
+class CMyClass {
 public:
     const char* helloWorld();
 };
 
-MyClass::MyClass(const char* helloWorld)
+CMyClass::CMyClass(const char* helloWorld)
 {
 }
 }}}
@@ -353,16 +353,16 @@ char *helloWorld;
 === Pointers and references do not have prefixes ===
 {{{
 // correct
-MyClass* myClass1 = new MyClass();
-MyClass& myClass2 = *myClass1;
+CMyClass* myClass1 = new CMyClass();
+CMyClass& myClass2 = *myClass1;
 
 // incorrect
-MyClass* p_myClass1 = new MyClass();
-MyClass& p_myClass2 = *p_myClass1;
+CMyClass* p_myClass1 = new CMyClass();
+CMyClass& p_myClass2 = *p_myClass1;
 
 // incorrect
-MyClass* pMyClass1 = new MyClass();
-MyClass& pMyClass2 = *pMyClass1;
+CMyClass* pMyClass1 = new CMyClass();
+CMyClass& pMyClass2 = *pMyClass1;
 }}}
 
 === The left comparator operand is a variable ===
