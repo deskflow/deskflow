@@ -218,7 +218,7 @@ CArchAppUtilWindows::exitApp(int code)
 
 int daemonNTMainLoopStatic(int argc, const char** argv)
 {
-	return CArchAppUtil::instance().app().daemonMainLoop(argc, argv);
+	return CArchAppUtilWindows::instance().daemonNTMainLoop(argc, argv);
 }
 
 int 
