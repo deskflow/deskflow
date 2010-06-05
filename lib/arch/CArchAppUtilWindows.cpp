@@ -76,6 +76,10 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 		}
 		app().m_bye(kExitSuccess);
 	}
+	else if (app().isArg(i, argc, argv, NULL, "--debug-service-wait")) {
+
+		app().argsBase().m_debugServiceWait = true;
+	}
 	else {
 		// option not supported here
 		return false;
@@ -197,6 +201,20 @@ int
 CArchAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
 	app().parseArgs(argc, argv);
+
+	if (app().argsBase().m_debugServiceWait)
+	{
+		while(true)
+		{
+			// this code is only executed when the process is launched via the
+			// windows service controller (and --debug-service-wait arg is 
+			// used). to debug, set a breakpoint on this line so that 
+			// execution is delayed until the debugger is attached.
+			ARCH->sleep(1);
+			LOG((CLOG_INFO "waiting for debugger to attach"));
+		}
+	}
+
 	app().argsBase().m_backend = false;
 	app().loadConfig();
 	return CArchMiscWindows::runDaemon(mainLoopStatic);

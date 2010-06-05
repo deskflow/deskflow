@@ -39,6 +39,9 @@ public:
 		const char*	m_logFile;
 		const char*	m_display;
 		CString m_name;
+#if SYSAPI_WIN32
+		bool m_debugServiceWait;
+#endif
 	};
 
 	CApp(CArgsBase* args);
