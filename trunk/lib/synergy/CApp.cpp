@@ -43,9 +43,6 @@ s_suspended(false)
 CApp::~CApp()
 {
 	delete m_args;
-
-	CLOG->remove(m_fileLog);
-	delete m_fileLog;
 }
 
 CApp::CArgsBase::CArgsBase() :
@@ -214,12 +211,6 @@ CApp::parseArgs(int argc, const char* const* argv, int& i)
 			break;
 		}
 	}
-
-	// increase default filter level for daemon.  the user must
-	// explicitly request another level for a daemon.
-	if (argsBase().m_daemon && argsBase().m_logFilter == NULL) {
-		argsBase().m_logFilter = "NOTE";
-	}
 }
 
 void
@@ -317,4 +308,17 @@ CApp::loggingFilterWarning()
 				CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
 		}
 	}
+}
+
+void 
+CApp::initialize(int argc, const char** argv)
+{
+	// parse command line
+	parseArgs(argc, argv);
+
+	// setup file logging after parsing args
+	setupFileLogging();
+
+	// load configuration
+	loadConfig();
 }

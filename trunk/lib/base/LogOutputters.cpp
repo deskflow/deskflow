@@ -252,30 +252,25 @@ CBufferedLogOutputter::write(ELevel, const char* message)
 // CFileLogOutputter
 //
 
-CFileLogOutputter::CFileLogOutputter(const char * logFile)
+CFileLogOutputter::CFileLogOutputter(const char* logFile)
 {
 	assert(logFile != NULL);
-
-	m_handle.open(logFile, std::fstream::app);
-	// open file handle
+	m_fileName = logFile;
 }
 
 CFileLogOutputter::~CFileLogOutputter()
 {
-	// close file handle
-	if (m_handle.is_open())
-		m_handle.close();
 }
 
 bool
 CFileLogOutputter::write(ILogOutputter::ELevel level, const char *message)
 {
+	std::ofstream m_handle;
+	m_handle.open(m_fileName.c_str(), std::fstream::app);
 	if (m_handle.is_open() && m_handle.fail() != true) {
 		m_handle << message << std::endl;
-		
-		// write buffer to file
-		m_handle.flush();
 	}
+	m_handle.close();
 
 	return true;
 }

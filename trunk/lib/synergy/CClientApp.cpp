@@ -412,8 +412,7 @@ CClientApp::closeClient(CClient* client)
 int
 CClientApp::foregroundStartup(int argc, char** argv)
 {
-	// parse command line
-	parseArgs(argc, argv);
+	initialize(argc, argv);
 
 	// never daemonize
 	return mainLoop();
@@ -477,11 +476,6 @@ CClientApp::stopClient()
 int
 CClientApp::mainLoop()
 {
-	// logging to files
-	CFileLogOutputter* fileLog = NULL;
-
-	setupFileLogging();
-
 	// create socket multiplexer.  this must happen after daemonization
 	// on unix because threads evaporate across a fork().
 	CSocketMultiplexer multiplexer;
@@ -528,12 +522,7 @@ daemonMainLoopStatic(int argc, const char** argv)
 int
 CClientApp::standardStartup(int argc, char** argv)
 {
-	if (!args().m_daemon) {
-		ARCH->showConsole(false);
-	}
-
-	// parse command line
-	parseArgs(argc, argv);
+	initialize(argc, argv);
 
 	// daemonize if requested
 	if (args().m_daemon) {

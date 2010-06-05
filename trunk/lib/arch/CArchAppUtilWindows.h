@@ -56,6 +56,8 @@ public:
 	
 	int daemonNTMainLoop(int argc, const char** argv);
 
+	void debugServiceWait();
+
 	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
 
 	void exitApp(int code);
