@@ -701,6 +701,10 @@ CArchDaemonWindows::serviceMain(DWORD argc, LPTSTR* argvIn)
 	// clean up
 	ARCH->closeCondVar(m_serviceCondVar);
 	ARCH->closeMutex(m_serviceMutex);
+
+	// we're going to exit now, so set status to stopped
+	m_serviceState = SERVICE_STOPPED;
+	setStatus(m_serviceState, 0, 10000);
 }
 
 void WINAPI
