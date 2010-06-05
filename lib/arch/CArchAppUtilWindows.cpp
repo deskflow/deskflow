@@ -200,21 +200,8 @@ mainLoopStatic()
 int 
 CArchAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
-	app().parseArgs(argc, argv);
-
-	if (app().argsBase().m_debugServiceWait)
-	{
-		while(true)
-		{
-			// this code is only executed when the process is launched via the
-			// windows service controller (and --debug-service-wait arg is 
-			// used). to debug, set a breakpoint on this line so that 
-			// execution is delayed until the debugger is attached.
-			ARCH->sleep(1);
-			LOG((CLOG_INFO "waiting for debugger to attach"));
-		}
-	}
-
+	app().initialize(argc, argv);
+	debugServiceWait();
 	app().argsBase().m_backend = false;
 	app().loadConfig();
 	return CArchMiscWindows::runDaemon(mainLoopStatic);
@@ -300,4 +287,21 @@ CArchAppUtilWindows&
 CArchAppUtilWindows::instance()
 {
 	return (CArchAppUtilWindows&)CArchAppUtil::instance();
+}
+
+void 
+CArchAppUtilWindows::debugServiceWait()
+{
+	if (app().argsBase().m_debugServiceWait)
+	{
+		while(true)
+		{
+			// this code is only executed when the process is launched via the
+			// windows service controller (and --debug-service-wait arg is 
+			// used). to debug, set a breakpoint on this line so that 
+			// execution is delayed until the debugger is attached.
+			ARCH->sleep(1);
+			LOG((CLOG_INFO "waiting for debugger to attach"));
+		}
+	}
 }

@@ -717,8 +717,6 @@ int CServerApp::mainLoop()
 	// create the event queue
 	CEventQueue eventQueue;
 
-	setupFileLogging();
-
 	// if configuration has no screens then add this system
 	// as the default
 	if (args().m_config->begin() == args().m_config->end()) {
@@ -841,11 +839,7 @@ int daemonMainLoopStatic(int argc, const char** argv) {
 int 
 CServerApp::standardStartup(int argc, char** argv)
 {
-	// parse command line
-	parseArgs(argc, argv);
-
-	// load configuration
-	loadConfig();
+	initialize(argc, argv);
 
 	// daemonize if requested
 	if (args().m_daemon) {
@@ -859,11 +853,7 @@ CServerApp::standardStartup(int argc, char** argv)
 int 
 CServerApp::foregroundStartup(int argc, char** argv)
 {
-	// parse command line
-	parseArgs(argc, argv);
-
-	// load configuration
-	loadConfig();
+	initialize(argc, argv);
 
 	// never daemonize
 	return mainLoop();

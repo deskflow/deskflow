@@ -77,7 +77,7 @@ public:
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
 private:
-	std::ofstream		m_handle;
+	std::string m_fileName;
 };
 
 //! Write log to system log

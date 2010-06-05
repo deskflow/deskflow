@@ -97,6 +97,12 @@ public:
 	// If messages will be hidden (to improve performance), warn user.
 	void loggingFilterWarning();
 
+	// Parses args, sets up file logging, and loads the config.
+	void initialize(int argc, const char** argv);
+
+	// HACK: accept non-const, but make it const anyway
+	void initialize(int argc, char** argv) { initialize(argc, (const char**)argv); }
+
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
