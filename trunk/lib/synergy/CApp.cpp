@@ -307,3 +307,14 @@ CApp::setupFileLogging()
 		LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
 	}
 }
+
+void 
+CApp::loggingFilterWarning()
+{
+	if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
+		if (argsBase().m_logFile == NULL) {
+			LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)", 
+				CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
+		}
+	}
+}

@@ -138,18 +138,7 @@ CServerApp::parseArgs(int argc, const char* const* argv)
 	// identify system
 	LOG((CLOG_INFO "%s Server on %s %s", kAppVersion, ARCH->getOSName().c_str(), ARCH->getPlatformName().c_str()));
 
-#ifdef WIN32
-#ifdef _AMD64_
-	LOG((CLOG_WARN "This is an experimental x64 build of %s. Use it at your own risk.", kApplication));
-#endif
-#endif
-
-	if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
-		if (args().m_logFile == NULL) {
-			LOG((CLOG_WARN "log messages above %s are NOT sent to console (use file logging)", 
-				CLOG->getFilterName(CLOG->getConsoleMaxLevel())));
-		}
-	}
+	loggingFilterWarning();
 }
 
 void
