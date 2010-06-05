@@ -46,7 +46,11 @@ CApp::~CApp()
 }
 
 CApp::CArgsBase::CArgsBase() :
-m_daemon(true),
+#if SYSAPI_WIN32
+m_daemon(false), // daemon mode not supported on windows (use --service)
+#else
+m_daemon(true), // backward compatibility for unix (daemon by default)
+#endif
 m_backend(false),
 m_restartable(true),
 m_noHooks(false),
