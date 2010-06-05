@@ -193,7 +193,7 @@ CClientApp::help()
 		"\n"
 		"The server address is of the form: [<hostname>][:<port>].  The hostname\n"
 		"must be the address or hostname of the server.  The port overrides the\n"
-		"default port, %d.\n"
+		"default port, %d.\n",
 		args().m_pname, kDefaultPort
 		);
 
