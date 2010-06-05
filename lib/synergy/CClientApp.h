@@ -73,6 +73,7 @@ public:
 	bool startClient();
 	void stopClient();
 	int mainLoop();
+	void startNode();
 
 	static CClientApp& instance() { return (CClientApp&)CApp::instance(); }
 

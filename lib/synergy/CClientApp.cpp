@@ -412,7 +412,7 @@ CClientApp::closeClient(CClient* client)
 int
 CClientApp::foregroundStartup(int argc, char** argv)
 {
-	initialize(argc, argv);
+	initApp(argc, argv);
 
 	// never daemonize
 	return mainLoop();
@@ -483,12 +483,8 @@ CClientApp::mainLoop()
 	// create the event queue
 	CEventQueue eventQueue;
 
-	// start the client.  if this return false then we've failed and
-	// we shouldn't retry.
-	LOG((CLOG_DEBUG1 "starting client"));
-	if (!startClient()) {
-		return kExitFailed;
-	}
+	// start client, etc
+	ARCH->util().startNode();
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of
@@ -522,7 +518,7 @@ daemonMainLoopStatic(int argc, const char** argv)
 int
 CClientApp::standardStartup(int argc, char** argv)
 {
-	initialize(argc, argv);
+	initApp(argc, argv);
 
 	// daemonize if requested
 	if (args().m_daemon) {
@@ -571,4 +567,15 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 	}
 
 	return result;
+}
+
+void 
+CClientApp::startNode()
+{
+	// start the client.  if this return false then we've failed and
+	// we shouldn't retry.
+	LOG((CLOG_DEBUG1 "starting client"));
+	if (!startClient()) {
+		m_bye(kExitFailed);
+	}
 }

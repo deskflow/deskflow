@@ -49,6 +49,7 @@ CApp::CArgsBase::CArgsBase() :
 #if SYSAPI_WIN32
 m_daemon(false), // daemon mode not supported on windows (use --service)
 m_debugServiceWait(false),
+m_relaunchMode(false),
 #else
 m_daemon(true), // backward compatibility for unix (daemon by default)
 #endif
@@ -311,7 +312,7 @@ CApp::loggingFilterWarning()
 }
 
 void 
-CApp::initialize(int argc, const char** argv)
+CApp::initApp(int argc, const char** argv)
 {
 	// parse command line
 	parseArgs(argc, argv);

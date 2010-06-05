@@ -21,6 +21,7 @@ class IArchTaskBarReceiver;
 class CBufferedLogOutputter;
 class ILogOutputter;
 class CFileLogOutputter;
+class CScreen;
 
 typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*);
 typedef int (*StartupFunc)(int, char**);
@@ -41,6 +42,7 @@ public:
 		const char*	m_display;
 		CString m_name;
 #if SYSAPI_WIN32
+		bool m_relaunchMode;
 		bool m_debugServiceWait;
 #endif
 	};
@@ -98,10 +100,15 @@ public:
 	void loggingFilterWarning();
 
 	// Parses args, sets up file logging, and loads the config.
-	void initialize(int argc, const char** argv);
+	void initApp(int argc, const char** argv);
 
 	// HACK: accept non-const, but make it const anyway
-	void initialize(int argc, char** argv) { initialize(argc, (const char**)argv); }
+	void initApp(int argc, char** argv) { initApp(argc, (const char**)argv); }
+
+	// Start the server or client.
+	virtual void startNode() = 0;
+
+	virtual CScreen* createScreen() = 0;
 
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
@@ -157,6 +164,8 @@ private:
 	" [--service <action>]"
 #  define HELP_SYS_INFO \
 	"      --service <action>   manage the windows service, valid options are:\n" \
-	"                             install/uninstall/start/stop\n"
+	"                             install/uninstall/start/stop\n" \
+	"      --relaunch           persistently relaunches process in current user \n" \
+	"                             session (useful for vista and upward).\n"
 
 #endif

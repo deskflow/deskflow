@@ -54,8 +54,7 @@ class CArch : public IArchConsole,
 				public IArchString,
 				public IArchSystem,
 				public IArchTaskBar,
-				public IArchTime,
-				public IArchAppUtil {
+				public IArchTime {
 public:
 	CArch();
 	~CArch();
@@ -189,6 +188,10 @@ public:
 	virtual CApp& app() const;
 	virtual int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
 	virtual void beforeAppExit();
+
+	// expose util so we don't need to re-implement all the functions
+	IArchAppUtil& util() const { return *m_appUtil; }
+	IArchDaemon& daemon() const { return *m_daemon; }
 
 private:
 	static CArch*		s_instance;

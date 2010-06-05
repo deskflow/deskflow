@@ -66,6 +66,8 @@ public:
 
 	static CArchAppUtilWindows& instance();
 
+	void startNode();
+
 private:
 	AppExitMode m_exitMode;
 	static BOOL WINAPI consoleHandler(DWORD CEvent);
