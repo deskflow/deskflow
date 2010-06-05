@@ -213,7 +213,7 @@ class InternalCommands:
 
 			print 'Building with Xcode...'
 			self.try_chdir(self.bin_dir)
-			err = os.system(xcodebuild_cmd)
+			err = os.system(self.xcodebuild_cmd)
 			self.restore_chdir()
 
 			if err == 0:
