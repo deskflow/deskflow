@@ -1,9 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Name=QSynergy
-Comment=A graphical user interface for synergy.
-Exec=qsynergy
-Icon=qsynergy
-Terminal=false
-Type=Application
-Categories=Utility
