@@ -375,3 +375,20 @@ if (a == "hello world") {
 if ("hello world" == a) {
 }
 }}}
+
+=== The else statement always goes on a new line ===
+{{{
+// correct
+if (a == b) {
+  // ...
+}
+else {
+  // ...
+}
+
+// incorrect
+if (a == b) {
+  // ...
+} else {
+  // ...
+}
