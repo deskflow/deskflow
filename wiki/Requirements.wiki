@@ -25,12 +25,3 @@ Synergy+ may work on these platforms, as it was originally designed for them. Ho
 
   * Windows NT family (e.g. 2000, etc)
   * Windows 95 family (e.g. 98/ME)
-
-== Special Cases ==
-
-Possible future ports:
-
-  * Windows Mobile (client)
-  * iPhone (controller-mode)
-
-*Note:* iPhone mode is impossible to use it as a client but could be used to emulate a keyboard and a mouse so it could run as a server.
