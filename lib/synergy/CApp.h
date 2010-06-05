@@ -94,6 +94,9 @@ public:
 	// If --log was specified in args, then add a file logger.
 	void setupFileLogging();
 
+	// If messages will be hidden (to improve performance), warn user.
+	void loggingFilterWarning();
+
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
