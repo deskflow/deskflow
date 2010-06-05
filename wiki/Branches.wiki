@@ -7,5 +7,3 @@
 || jason || Jason || Used || Personal branch of Jason, don't base work on here ||
 || josh || Josh? || Unknown || Created a branch for Josh, has it been used? ||
 || rewrite || Nick || Unknown || A friend of mine wants to rewrite synergy. ||
-|| winsvc || Nick || Used || Some experimental code to fix issue 26. ||
-|| winsvc2 || Nick || Used || Needs merging with winsvc I think. ||
