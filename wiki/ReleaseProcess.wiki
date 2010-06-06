@@ -26,7 +26,7 @@ The following steps should be followed for releasing a new major version.
 || synergy-plus-x.x.x-Linux-x86_64.deb || x.x.x 64-bit Linux Debian Package ||
 || synergy-plus-x.x.x-Linux-i686.rpm || x.x.x 32-bit Linux RPM Package ||
 || synergy-plus-x.x.x-Linux-i686.deb || x.x.x 32-bit Linux Debian Package ||
-|| synergy-plus-x.x.x-Darwin-Universal.dmg || x.x.x 32-bit Universal Mac OS X Package ||
+|| synergy-plus-x.x.x-MacOSX.dmg || x.x.x 32-bit Universal Mac OS X Package ||
 
 == SVN commands ==
 
