@@ -3,8 +3,8 @@
 
 || *Branch* || *Owner* || *State* || *Purpose* ||
 || release-x.x.x || n/a || n/a || Versions in active development. ||
-|| crazy2 || Sorin || Used || Trying out some crazy stuff with key mapping. ||
-|| edge || Sorin || Used || Bleeding _edge_ experimental code. ||
+|| sorin1 || Sorin || Used || Experimental code (was called _edge_). ||
+|| sorin2 || Sorin || Used || Experimental key mapping code (was called _crazy2_). ||
 || jason || Jason || Used || Personal branch of Jason, don't base work on here ||
 || josh || Josh? || Unknown || Created a branch for Josh, has it been used? ||
 || rewrite || Nick || Unknown || A friend of mine wants to rewrite synergy. ||
