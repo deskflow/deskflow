@@ -7,24 +7,14 @@
 
 The following steps should be followed for releasing a new major version.
 
-  # Ensure that all issues for the version have been fixed in the trunk.  
-  # Create a new *branch* with the version number (e.g. release-1.3.4), where the 2nd number is incremented, e.g. 1.3.4 -> 1.4.0 (a major release).
+  # Create a new *branch* with the version number (e.g. release-1.3.4). For major releases (e.g. 1.3.4 -> 1.4.0), branch from trunk, and for minor releases (e.g. 1.4.0 -> 1.4.1), branch from the last release tag.
   # Inform the [http://groups.google.com/group/synergy-plus-dev synergy-plus-dev mailing list] that a new release branch is active.
-  # For each *new* issue that must be fixed in the release version, first fix it and test in the trunk, and then [http://en.wikipedia.org/wiki/Backporting backport] only that change to the release version, then test again for the release version.
-  # Ensure that there are no unfinished features; if there are, then "hide" them. The objective here is ensure that the release version is stable for end users.
-  # Create [http://en.wikipedia.org/wiki/Software_release_life_cycle#Release_candidate RC] installers and send the links to the synergy-plus-dev mailing list for feedback.
-  # After 1 week, assuming no negative feedback/new bugs are raised for the RC, create the [http://en.wikipedia.org/wiki/Software_release_life_cycle#General_availability GA] installers and upload to the downloads page (use the Featured label).
-  # Move (`svn move`) the release branch from to the `branches` directory to the `tags` directory.
-  # Send a message to [http://groups.google.com/group/synergy-plus synergy-plus mailing list] announcing the new public release, and update the version number in the IRC channel topic.
-  # Decide what issues will be fixed for the next version, and ensure that they have the the correct version label.
-
-== Minor release ==
-
-Sometimes, popular demand requires us to fix a series of bugs in an older version that has been released already. This can happen when the end-user cannot upgrade to the newest version due to "breaking changes".
-
-  # Copy (`svn copy`) the `tag` directory (e.g. release-1.3.4) to `branches`, and increment the minor version number (the 3rd digit, e.g. 1.3.4 -> 1.3.5).
-  # Over the course of days/weeks/months, implement the assigned issues.
-  # Release the minor version just like a major version.
+  # For each *new* issue that must be fixed in the release version, first fix it in the *release branch*, and then merge it into the trunk (this way, if we mess up the merge, the trunk is harmed, not the stable release).
+  # Ensure that there are no unfinished features in the release branch. The objective here is ensure that the release version is stable for end users.
+  # Tag the branch; `svn move` from to the `branches` directory to the `tags` directory.
+  # Create the installers for all platforms (see below for list), and upload to the downloads page.
+  # Send a message to [http://groups.google.com/group/synergy-plus synergy-plus mailing list] announcing the new release, and update the version number in the IRC channel topic.
+  # Decide what issues will be fixed for the next version, and ensure that they have the the correct milestone label.
 
 == Installers/packages ==
 
