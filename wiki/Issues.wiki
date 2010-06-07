@@ -5,11 +5,27 @@
 
 If you discover an issue in Synergy+, please report it through our [http://code.google.com/p/synergy-plus/issues/list issue tracker]. Issues can be bug reports or feature requests. Please refrain from having lengthy discussions in the issue tracker, and instead create a new thread in the mailing list ([http://groups.google.com/group/synergy-plus user] or [http://groups.google.com/group/synergy-plus-dev developer] as appropriate) as this will make it easier community members to contribute, making it more likely for the issue to be resolved effectively. Once creating a new mailing list thread, make sure the issue number is referenced.
 
+== Status flowchart ==
+
+http://synergy-plus.googlecode.com/svn-history/r573/web/diagrams/IssueStatusFlowchart.png
+
+For those who are triaging issues, I figured this would be quite helpful. Here's some basic rules to accompany the above flowchart:
+
+ * Nothing ever goes back to `New`; this status is reserved purely for issues that we have yet to triage (sort, review, etc).
+ * `Review` is something we might sometimes use when we need more feedback from the end-user, and it's not obvious whether we can accept/reject.
+ * `MaybeAccept` is used when the user has given a good amount of feedback, but we're not sure if it's possible or will be a popular feature.
+ * `NextUp` is for developers that want to queue up issues that they want intend to solve. This should be used sparingly however, since hogging issues could deter contributions.
+ * Issues that are `OnHold` could stay like this for some time, but if it looks like the author has given up, it's probably best to go to `PatchesWelcome`. In some cases, it may not be patchable, in which case, go back to Accepted (but never New).
+ * If someone attaches a patch to the thread (could be with the original message) then the issue should go to `GotPatch`, at which point, the patch manager (or someone with some free time) needs to apply this patch to the version that it affects (and then merge into the trunk). Once the patch is applied, set to `MaybeFixed`.
+ * `Fixed` is rarely used, but Google code insists on using this when we use commit message "Fixed issue 123", so we'll support it, but this commit comment should only be used when the developer is 99% sure it's fixed -- otherwise, immediately set to MaybeFixed, which prompts for confirmation.
+ * `ReallyFixed` is when more than one person has confirmed the fix has worked for them, as soon as someone says it doesn't work, then we may want to go back to `Started`.
+ * `UserFix` indicates that the user has fixed a configuration problem, and that there's no flaw in the product. However, this may be an indication that we need to make something more user friendly.
+
 = Moderating Issues =
 
-These are guidelines for members who moderate issues.
+Some guideline templates for responding to issues, if you feel like making a comment.
 
-== Accepting ==
+*Accepting*
 
 Consider the following, or some variant:
 
@@ -17,7 +33,7 @@ Consider the following, or some variant:
 
 Then set the status to `Accepted`, and choose a [Milestones milestone]. Ensure that feature requests are marked as `Enhancement`, not `Defect`. It's OK to say you'll keep them informed, because the system will do this for them automatically when updates are added. At this point, remove your username from the owner field.
 
-== Rejecting ==
+*Rejecting*
 
 Users will sometimes have a feature request, which may be outside the scope of our specification. In this case, we should politely tell the user that the feature will not be implemented.
 
@@ -25,26 +41,10 @@ Users will sometimes have a feature request, which may be outside the scope of o
 
 Then set the status to `WontFix` (and *not* `Invalid`). Only set an issue to `invalid` if it's garbage or has empty text. At this point, remove your username from the owner field.
 
-== Reviewing ==
-
-Some times it's not possible to determine if an issue is acceptable given the initial information; so in this case we ask the user for more details and set the status to `Reviewed`. Make sure you set yourself as the owner so that you can update the status when they respond.
-
-== Duplicates ==
+*Duplicates*
 
 New users don't have the experience we have. Therefore, its not their fault if they submit a duplicate bug report. This situation should be met with a polite message.
 
   Thanks for submitting a new issue. Would you mind starring issue {issue-id}? It looks like the same problem.
 
-*Note:* {issue-id} is a number.
-
 Then set the status to duplicate. If the user is adamant that the issue is not a duplicate, then give them the benefit of the doubt.
-
-== Patches ==
-
-If someone submits a patch (either with the original issue, or as a reply), then set the status to `GotPatch` and give ownership to the patch manager. This then prompts our patch manager to review the patch and commit it to the trunk if it's acceptable. Assuming this fixes the issue, the patch manager should set the status to `MaybeFixed`.
-
-== Swearing ==
-
-Clearly swearing is not acceptable in a professional community such as ours, however we should be fairly lenient and quickly "nip it in the bud" if it ever occurs, then move on to responding to what the user said.
-
-  Please note that we don't allow swearing in our community. Now that that's out the way, you have some good points in your issue *(and so on...)*
