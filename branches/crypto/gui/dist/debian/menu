@@ -1,0 +1,4 @@
+?package(qsynergy):needs="X11" section="Applications/System/Administration" \
+  title="QSynergy" command="/usr/bin/qsynergy" \
+  longtitle="Graphical interface to configure and run Synergy" \
+  icon="/usr/share/pixmaps/qsynergy.xpm"
