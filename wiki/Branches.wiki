@@ -8,3 +8,5 @@
 || jason || Jason || Used || Personal branch of Jason, don't base work on here ||
 || josh || Josh? || Unknown || Created a branch for Josh, has it been used? ||
 || rewrite || Nick || Unknown || A friend of mine wants to rewrite synergy. ||
+|| newgui || twig.nguyen || Used || Experimental GUI changes (issue 399) ||
+|| crypto || VeNoMouSNZ || Used || Experimental crypto stuff (issue 3) ||
