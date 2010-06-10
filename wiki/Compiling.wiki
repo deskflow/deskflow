@@ -86,7 +86,7 @@ make
 
 == Xcode ==
 
-Note: Synergy+ currently must be built 32-bit on OS X.
+Note: Synergy+ currently must be built as 32-bit on OS X.
 
   # Open the `bin` directory.
   # Double click: `synergy-plus.xcodeproj`
