@@ -22,6 +22,13 @@ Simply put, from now on we will fix bugs in the release branch, then merge the c
 
 http://www.javaworld.com/javaworld/jw-01-2008/images/svn1.jpg
 
+How to merge a bug fix into the trunk:
+{{{
+cd trunk
+svn merge -r 581:582 https://synergy-plus.googlecode.com/svn/branches/release-1.4.1
+}}}
+In the above example, r582 was the bug fix I had made in the release branch (581 was the previous release, which is not particularly relevant), and release-1.4.1 was the release branch in which I made the fix. The merge command will merge into the current directory if no target is specified.
+
 == Installers/packages ==
 
 || *Filename* || *Description* ||
