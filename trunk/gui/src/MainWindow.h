@@ -87,6 +87,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool clientArgs(QStringList& args, QString& app);
 		bool serverArgs(QStringList& args, QString& app);
 		void setStatus(const QString& status);
+		bool detectPath(const QString& name, QString& path);
 
 	private:
 		QSettings m_Settings;
