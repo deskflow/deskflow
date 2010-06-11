@@ -24,6 +24,7 @@ class AppConfig
 		int port() const { return m_Port; }
 		const QString& interface() const { return m_Interface; }
 		int logLevel() const { return m_LogLevel; }
+		bool autoDetectPaths() const { return m_AutoDetectPaths; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -38,6 +39,7 @@ class AppConfig
 		void setPort(int i) { m_Port = i; }
 		void setInterface(const QString& s) { m_Interface = s; }
 		void setLogLevel(int i) { m_LogLevel = i; }
+		void setAutoDetectPaths(bool b) { m_AutoDetectPaths = b; }
 
 		void loadSettings();
 		void saveSettings();
@@ -51,6 +53,7 @@ class AppConfig
 		int m_Port;
 		QString m_Interface;
 		int m_LogLevel;
+		bool m_AutoDetectPaths;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

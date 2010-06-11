@@ -21,6 +21,7 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 	protected slots:
 		bool on_m_pButtonBrowseSynergys_clicked();
 		bool on_m_pButtonBrowseSynergyc_clicked();
+		void on_m_pCheckBoxAutoDetectPaths_stateChanged(int i);
 
 	protected:
 		void accept();
