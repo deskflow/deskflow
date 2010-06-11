@@ -16,6 +16,12 @@ The following steps should be followed for releasing a new major version.
   # Send a message to [http://groups.google.com/group/synergy-plus synergy-plus mailing list] announcing the new release, and update the version number in the IRC channel topic.
   # Decide what issues will be fixed for the next version, and ensure that they have the the correct milestone label.
 
+== Fixing bugs ==
+
+Simply put, from now on we will fix bugs in the release branch, then merge the changes into the trunk. This is so that any mistakes made during the merge only affect the trunk code. This is new approach will replace the previous "back port" approach. [http://www.javaworld.com/javaworld/jw-01-2008/jw-01-svnmerging.html Merging and branching in Subversion 1.5].
+
+http://www.javaworld.com/javaworld/jw-01-2008/images/svn1.jpg
+
 == Installers/packages ==
 
 || *Filename* || *Description* ||
