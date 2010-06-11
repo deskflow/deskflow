@@ -19,6 +19,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pSpinBoxPort->setValue(appConfig().port());
 	m_pLineEditInterface->setText(appConfig().interface());
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
+	m_pCheckBoxAutoDetectPaths->setChecked(appConfig().autoDetectPaths());
 }
 
 QString SettingsDialog::browseForSynergyc(QWidget* parent, const QString& programDir, const QString& synergycName)
@@ -56,6 +57,15 @@ bool SettingsDialog::on_m_pButtonBrowseSynergyc_clicked()
 	return false;
 }
 
+void SettingsDialog::on_m_pCheckBoxAutoDetectPaths_stateChanged(int i)
+{
+	bool unchecked = i == 0;
+	m_pLineEditSynergyc->setEnabled(unchecked);
+	m_pLineEditSynergys->setEnabled(unchecked);
+	m_pButtonBrowseSynergyc->setEnabled(unchecked);
+	m_pButtonBrowseSynergys->setEnabled(unchecked);
+}
+
 void SettingsDialog::accept()
 {
 	appConfig().setAutoConnect(m_pCheckBoxAutoConnect->isChecked());
@@ -65,6 +75,7 @@ void SettingsDialog::accept()
 	appConfig().setPort(m_pSpinBoxPort->value());
 	appConfig().setInterface(m_pLineEditInterface->text());
 	appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
+	appConfig().setAutoDetectPaths(m_pCheckBoxAutoDetectPaths->isChecked());
 
 	QDialog::accept();
 }

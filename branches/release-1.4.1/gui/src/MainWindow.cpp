@@ -236,9 +236,39 @@ void MainWindow::startSynergy()
 	setSynergyState(synergyConnected);
 }
 
+bool MainWindow::detectPath(const QString& name, QString& path)
+{
+	// look in current working dir and default dir
+	QStringList searchDirs;
+	searchDirs.append("./");
+	searchDirs.append(appConfig().synergyProgramDir());
+
+	// use the first valid path we find
+	for (int i = 0; i < searchDirs.length(); i++)
+	{
+		QFile f(searchDirs[i] + name);
+		if (f.exists())
+		{
+			path = f.fileName();
+			return true;
+		}
+	}
+
+	// nothing found!
+	return false;
+}
+
 bool MainWindow::clientArgs(QStringList& args, QString& app)
 {
-	app = appConfig().synergyc();
+	if (appConfig().autoDetectPaths())
+	{
+		// actually returns bool, but ignore for now
+		detectPath(appConfig().synergycName(), app);
+	}
+	else
+	{
+		app = appConfig().synergyc();
+	}
 
 	if (!QFile::exists(app))
 	{
@@ -266,7 +296,15 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
-	app = appConfig().synergys();
+	if (appConfig().autoDetectPaths())
+	{
+		// actually returns bool, but ignore for now
+		detectPath(appConfig().synergysName(), app);
+	}
+	else
+	{
+		app = appConfig().synergys();
+	}
 
 	if (!QFile::exists(app))
 	{

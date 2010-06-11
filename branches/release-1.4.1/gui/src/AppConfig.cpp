@@ -6,7 +6,7 @@
 #if defined(Q_OS_WIN)
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
-const char AppConfig::m_SynergyProgramDir[] = "./";
+const char AppConfig::m_SynergyProgramDir[] = "bin/";
 #else
 const char AppConfig::m_SynergysName[] = "synergys";
 const char AppConfig::m_SynergycName[] = "synergyc";
@@ -43,6 +43,7 @@ void AppConfig::loadSettings()
 	m_Port = settings().value("port", 24800).toInt();
 	m_Interface = settings().value("interface").toString();
 	m_LogLevel = settings().value("logLevelIndex", 0).toInt();
+	m_AutoDetectPaths = settings().value("autoDetectPaths", true).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -54,5 +55,6 @@ void AppConfig::saveSettings()
 	settings().setValue("port", m_Port);
 	settings().setValue("interface", m_Interface);
 	settings().setValue("logLevelIndex", m_LogLevel);
+	settings().setValue("autoDetectPaths", m_AutoDetectPaths);
 }
 
