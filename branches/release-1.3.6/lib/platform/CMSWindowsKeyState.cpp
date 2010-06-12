@@ -925,12 +925,7 @@ CMSWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 			// deal with certain virtual keys specially
 			switch (vk) {
 			case VK_SHIFT:
-				if (MapVirtualKey(VK_RSHIFT, 0) == i) {
-					vk = VK_RSHIFT;
-				}
-				else {
-					vk = VK_LSHIFT;
-				}
+				vk = VK_LSHIFT;
 				break;
 
 			case VK_CONTROL:
