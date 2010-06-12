@@ -27,6 +27,6 @@
 int
 main(int argc, char** argv) 
 {
-	CClientApp app;
-	return app.run(argc, argv, createTaskBarReceiver);
+	CClientApp app(createTaskBarReceiver);
+	return app.run(argc, argv);
 }

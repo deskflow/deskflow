@@ -45,10 +45,11 @@ public:
 		bool m_relaunchMode;
 		bool m_debugServiceWait;
 		bool m_pauseOnExit;
+		bool m_disableTray;
 #endif
 	};
 
-	CApp(CArgsBase* args);
+	CApp(CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args);
 	virtual ~CApp();
 
 	// Returns args that are common between server and client.
@@ -63,7 +64,7 @@ public:
 	// Parse command line arguments.
 	virtual void parseArgs(int argc, const char* const* argv) = 0;
 	
-	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	int run(int argc, char** argv);
 
 	int daemonMainLoop(int, const char**);
 
@@ -72,7 +73,7 @@ public:
 	virtual int mainLoop() = 0;
 	virtual int foregroundStartup(int argc, char** argv) = 0;
 	virtual int standardStartup(int argc, char** argv) = 0;
-	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver) = 0;
+	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) = 0;
 
 	// Name of the daemon (used for Unix and Windows).
 	virtual const char* daemonName() const = 0;
@@ -91,8 +92,8 @@ public:
 
 	static CApp& instance() { assert(s_instance != nullptr); return *s_instance; }
 
-	bool s_suspended;
-	IArchTaskBarReceiver* s_taskBarReceiver;
+	bool m_suspended;
+	IArchTaskBarReceiver* m_taskBarReceiver;
 
 	// If --log was specified in args, then add a file logger.
 	void setupFileLogging();
@@ -119,6 +120,7 @@ private:
 	CArgsBase* m_args;
 	static CApp* s_instance;
 	CFileLogOutputter* m_fileLog;
+	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
 };
 
 #define BYE "\nTry `%s --help' for more information."
@@ -169,6 +171,7 @@ private:
 	"      --relaunch           persistently relaunches process in current user \n" \
 	"                             session (useful for vista and upward).\n" \
 	"      --exit-pause         wait for key press on exit, can be useful for\n" \
-	"                             reading error messages that occur on exit.\n"
+	"                             reading error messages that occur on exit.\n" \
+	"      --no-tray            disable the system tray icon.\n"
 
 #endif

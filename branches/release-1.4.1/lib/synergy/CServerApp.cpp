@@ -50,8 +50,8 @@
 
 CEvent::Type CServerApp::s_reloadConfigEvent = CEvent::kUnknown;
 
-CServerApp::CServerApp() :
-CApp(new CArgs()),
+CServerApp::CServerApp(CreateTaskBarReceiverFunc createTaskBarReceiver) :
+CApp(createTaskBarReceiver, new CArgs()),
 s_server(NULL),
 s_forceReconnectEvent(CEvent::kUnknown),
 s_resetServerEvent(CEvent::kUnknown),
@@ -370,12 +370,15 @@ CServerApp::stopRetryTimer()
 void
 CServerApp::updateStatus()
 {
-	s_taskBarReceiver->updateStatus(s_server, "");
+	updateStatus("");
 }
 
 void CServerApp::updateStatus( const CString& msg )
 {
-	s_taskBarReceiver->updateStatus(s_server, msg);
+	if (m_taskBarReceiver)
+	{
+		m_taskBarReceiver->updateStatus(s_server, msg);
+	}
 }
 
 void 
@@ -657,20 +660,20 @@ CServerApp::handleScreenError(const CEvent&, void*)
 void 
 CServerApp::handleSuspend(const CEvent&, void*)
 {
-	if (!s_suspended) {
+	if (!m_suspended) {
 		LOG((CLOG_INFO "suspend"));
 		stopServer();
-		s_suspended = true;
+		m_suspended = true;
 	}
 }
 
 void 
 CServerApp::handleResume(const CEvent&, void*)
 {
-	if (s_suspended) {
+	if (m_suspended) {
 		LOG((CLOG_INFO "resume"));
 		startServer();
-		s_suspended = false;
+		m_suspended = false;
 	}
 }
 
@@ -796,7 +799,7 @@ void CServerApp::resetServer(const CEvent&, void*)
 }
 
 int 
-CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver)
+CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	// general initialization
 	args().m_synergyAddress = new CNetworkAddress;
@@ -808,20 +811,14 @@ CServerApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 		CLOG->insert(outputter);
 	}
 
-	// save log messages
-	// use heap memory because CLog deletes outputters on destruction
-	CBufferedLogOutputter* logBuffer = new CBufferedLogOutputter(1000);
-	CLOG->insert(logBuffer, true);
-
-	// make the task bar receiver.  the user can control this app
-	// through the task bar.
-	s_taskBarReceiver = createTaskBarReceiver(logBuffer);
-
 	// run
 	int result = startup(argc, argv);
 
-	// done with task bar receiver
-	delete s_taskBarReceiver;
+	if (m_taskBarReceiver)
+	{
+		// done with task bar receiver
+		delete m_taskBarReceiver;
+	}
 
 	delete args().m_config;
 	delete args().m_synergyAddress;

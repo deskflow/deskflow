@@ -44,10 +44,13 @@ CArchAppUtilWindows::~CArchAppUtilWindows()
 
 BOOL WINAPI CArchAppUtilWindows::consoleHandler(DWORD CEvent)
 {
-	// HACK: it would be nice to delete the s_taskBarReceiver object, but 
-	// this is best done by the CApp destructor; however i don't feel like
-	// opening up that can of worms today... i need sleep.
-	instance().app().s_taskBarReceiver->cleanup();
+	if (instance().app().m_taskBarReceiver)
+	{
+		// HACK: it would be nice to delete the s_taskBarReceiver object, but 
+		// this is best done by the CApp destructor; however i don't feel like
+		// opening up that can of worms today... i need sleep.
+		instance().app().m_taskBarReceiver->cleanup();
+	}
 
 	ExitProcess(kExitTerminated);
     return TRUE;
@@ -83,11 +86,16 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 		app().argsBase().m_debugServiceWait = true;
 	}
 	else if (app().isArg(i, argc, argv, NULL, "--relaunch")) {
+
 		app().argsBase().m_relaunchMode = true;
 	}
-	else if (app().isArg(i, argc, argv, NULL, "--exit-pause"))
-	{
+	else if (app().isArg(i, argc, argv, NULL, "--exit-pause")) {
+
 		app().argsBase().m_pauseOnExit = true;
+	}
+	else if (app().isArg(i, argc, argv, NULL, "--no-tray")) {
+
+		app().argsBase().m_disableTray = true;
 	}
 	else {
 		// option not supported here
@@ -272,7 +280,7 @@ CArchAppUtilWindows::beforeAppExit()
 }
 
 int
-CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
+CArchAppUtilWindows::run(int argc, char** argv)
 {
 	// record window instance for tray icon, etc
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
@@ -288,7 +296,7 @@ CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc create
 		app().argsBase().m_daemon = false;
 	}
 
-	return app().runInner(argc, argv, NULL, startup, createTaskBarReceiver);
+	return app().runInner(argc, argv, NULL, startup);
 }
 
 CArchAppUtilWindows& 

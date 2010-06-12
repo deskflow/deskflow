@@ -49,7 +49,7 @@ public:
 		CConfig* m_config;
 	};
 
-	CServerApp();
+	CServerApp(CreateTaskBarReceiverFunc createTaskBarReceiver);
 	virtual ~CServerApp();
 	
 	// Parse server specific command line arguments.
@@ -99,7 +99,7 @@ public:
 	void handleNoClients(const CEvent&, void*);
 	bool startServer();
 	int mainLoop();
-	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
 	int standardStartup(int argc, char** argv);
 	int foregroundStartup(int argc, char** argv);
 	void startNode();

@@ -49,8 +49,8 @@
 
 #define RETRY_TIME 1.0
 
-CClientApp::CClientApp() :
-CApp(new CArgs()),
+CClientApp::CClientApp(CreateTaskBarReceiverFunc createTaskBarReceiver) :
+CApp(createTaskBarReceiver, new CArgs()),
 s_client(NULL),
 s_clientScreen(NULL)
 {
@@ -226,14 +226,17 @@ CClientApp::createScreen()
 void
 CClientApp::updateStatus()
 {
-	s_taskBarReceiver->updateStatus(s_client, "");
+	updateStatus("");
 }
 
 
 void
 CClientApp::updateStatus(const CString& msg)
 {
-	s_taskBarReceiver->updateStatus(s_client, msg);
+	if (m_taskBarReceiver)
+	{
+		m_taskBarReceiver->updateStatus(s_client, msg);
+	}
 }
 
 
@@ -345,7 +348,7 @@ CClientApp::handleClientFailed(const CEvent& e, void*)
 	}
 	else {
 		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
-		if (!s_suspended) {
+		if (!m_suspended) {
 			scheduleClientRestart(nextRestartTimeout());
 		}
 	}
@@ -360,7 +363,7 @@ CClientApp::handleClientDisconnected(const CEvent&, void*)
 	if (!args().m_restartable) {
 		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 	}
-	else if (!s_suspended) {
+	else if (!m_suspended) {
 		s_client->connect();
 	}
 	updateStatus();
@@ -532,7 +535,7 @@ CClientApp::standardStartup(int argc, char** argv)
 }
 
 int
-CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver)
+CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
 {
 	// general initialization
 	args().m_serverAddress = new CNetworkAddress;
@@ -543,15 +546,6 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 		CLOG->insert(outputter);
 	}
 
-	// save log messages
-	// use heap memory because CLog deletes outputters on destruction
-	CBufferedLogOutputter* logBuffer = new CBufferedLogOutputter(1000);
-	CLOG->insert(logBuffer, true);
-
-	// make the task bar receiver.  the user can control this app
-	// through the task bar.
-	s_taskBarReceiver = createTaskBarReceiver(logBuffer);
-
 	int result;
 	try
 	{
@@ -560,8 +554,11 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 	}
 	catch (...)
 	{
-		// done with task bar receiver
-		delete s_taskBarReceiver;
+		if (m_taskBarReceiver)
+		{
+			// done with task bar receiver
+			delete m_taskBarReceiver;
+		}
 
 		delete args().m_serverAddress;
 

@@ -666,9 +666,9 @@ CArch::app() const
 }
 
 int
-CArch::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
+CArch::run(int argc, char** argv)
 {
-	return m_appUtil->run(argc, argv, createTaskBarReceiver);
+	return m_appUtil->run(argc, argv);
 }
 
 void
