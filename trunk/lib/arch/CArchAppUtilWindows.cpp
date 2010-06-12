@@ -118,7 +118,12 @@ CArchAppUtilWindows::getServiceArgs() const
 			i++;
 		}
 		else {
-			argBuf << " " << __argv[i];
+			if (strchr(arg, ' ') != NULL) {
+				// surround argument with quotes if it contains a space
+				argBuf << " \"" << arg << "\"";
+			} else {
+				argBuf << " " << arg;
+			}
 		}
 	}
 	return argBuf.str();

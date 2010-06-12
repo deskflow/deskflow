@@ -83,7 +83,7 @@ void AppConfig::loadSettings()
 	m_Interface = settings().value("interface").toString();
 	m_LogLevel = settings().value("logLevel", 2).toInt();
 	m_AutoDetectPaths = settings().value("autoDetectPaths", true).toBool();
-	m_LogToFile = settings().value("logToFile", true).toBool();
+	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
 }
 
