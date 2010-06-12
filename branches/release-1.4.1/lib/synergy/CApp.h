@@ -169,6 +169,6 @@ private:
 	"      --relaunch           persistently relaunches process in current user \n" \
 	"                             session (useful for vista and upward).\n" \
 	"      --exit-pause         wait for key press on exit, can be useful for\n" \
-	"                             reading error messages that occur on exit\n"
+	"                             reading error messages that occur on exit.\n"
 
 #endif

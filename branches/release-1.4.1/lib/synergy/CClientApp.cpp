@@ -168,6 +168,7 @@ CClientApp::help()
 		"Usage: %s"
 		" [--yscroll <delta>]"
 		WINAPI_ARG
+		HELP_SYS_ARGS
 		HELP_COMMON_ARGS
 		" <server-address>"
 		"\n\n"
@@ -175,6 +176,7 @@ CClientApp::help()
 		"\n"
 		HELP_COMMON_INFO_1
 		WINAPI_INFO
+		HELP_SYS_INFO
 		"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
 		HELP_COMMON_INFO_2
 		"\n"
