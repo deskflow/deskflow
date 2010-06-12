@@ -13,15 +13,8 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 
 	public:
 		SettingsDialog(QWidget* parent, AppConfig& config);
-
-	public:
 		static QString browseForSynergyc(QWidget* parent, const QString& programDir, const QString& synergycName);
 		static QString browseForSynergys(QWidget* parent, const QString& programDir, const QString& synergysName);
-
-	protected slots:
-		bool on_m_pButtonBrowseSynergys_clicked();
-		bool on_m_pButtonBrowseSynergyc_clicked();
-		void on_m_pCheckBoxAutoDetectPaths_stateChanged(int i);
 
 	protected:
 		void accept();
@@ -29,6 +22,13 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 
 	private:
 		AppConfig& m_AppConfig;
+
+	private slots:
+		void on_m_pCheckBoxLogToFile_stateChanged(int );
+		bool on_m_pButtonBrowseSynergys_clicked();
+		bool on_m_pButtonBrowseSynergyc_clicked();
+		void on_m_pCheckBoxAutoDetectPaths_stateChanged(int i);
+		void on_m_pButtonBrowseLog_clicked();
 };
 
 #endif

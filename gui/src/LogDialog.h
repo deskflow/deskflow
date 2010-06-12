@@ -17,6 +17,7 @@ class LogDialog : public QDialog, public Ui::LogDialogBase
 
 	public:
 		void append(const QString& s);
+		void clear() { m_pLogOutput->clear(); }
 
 	public slots:
 		void readSynergyOutput();
