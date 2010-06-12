@@ -188,7 +188,7 @@
   </widget>
   <action name="m_pActionAbout">
    <property name="text">
-    <string>&amp;About QSynergy...</string>
+	<string>&amp;About Synergy+...</string>
    </property>
   </action>
   <action name="m_pActionQuit">
@@ -196,7 +196,7 @@
     <string>&amp;Quit</string>
    </property>
    <property name="statusTip">
-    <string>Quit QSynergy.</string>
+	<string>Quit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -204,10 +204,10 @@
   </action>
   <action name="m_pActionStartSynergy">
    <property name="text">
-    <string>&amp;Start Synergy</string>
+	<string>&amp;Start</string>
    </property>
    <property name="statusTip">
-    <string>Run synergy program.</string>
+	<string>Run</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -218,10 +218,10 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>S&amp;top Synergy</string>
+	<string>S&amp;top</string>
    </property>
    <property name="statusTip">
-    <string>Stop Synergy program.</string>
+	<string>Stop</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
@@ -261,7 +261,7 @@
     <string>Settings</string>
    </property>
    <property name="statusTip">
-    <string>Edit settings for QSynergy and synergy itself</string>
+	<string>Edit settings</string>
    </property>
   </action>
   <action name="m_pActionLogOutput">
@@ -269,7 +269,7 @@
     <string>Log output</string>
    </property>
    <property name="statusTip">
-    <string>Open a window with synergy's output</string>
+	<string>Open a window with output</string>
    </property>
   </action>
   <action name="m_pActionServices">
