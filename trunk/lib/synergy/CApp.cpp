@@ -30,11 +30,12 @@
 
 CApp* CApp::s_instance = nullptr;
 
-CApp::CApp(CArgsBase* args) :
+CApp::CApp(CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args) :
+m_createTaskBarReceiver(createTaskBarReceiver),
 m_args(args),
 m_bye(&exit),
-s_taskBarReceiver(NULL),
-s_suspended(false)
+m_taskBarReceiver(NULL),
+m_suspended(false)
 {
 	assert(s_instance == nullptr);
 	s_instance = this;
@@ -50,6 +51,8 @@ CApp::CArgsBase::CArgsBase() :
 m_daemon(false), // daemon mode not supported on windows (use --service)
 m_debugServiceWait(false),
 m_relaunchMode(false),
+m_pauseOnExit(false),
+m_disableTray(false),
 #else
 m_daemon(true), // backward compatibility for unix (daemon by default)
 #endif
@@ -232,7 +235,7 @@ CApp::version()
 }
 
 int
-CApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
+CApp::run(int argc, char** argv)
 {
 #if SYSAPI_WIN32
 	// record window instance for tray icon, etc
@@ -251,7 +254,7 @@ CApp::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver
 	int result = kExitFailed;
 
 	try {
-		result = ARCH->run(argc, argv, createTaskBarReceiver);
+		result = ARCH->run(argc, argv);
 	}
 	catch (XExitApp& e) {
 		// instead of showing a nasty error, just exit with the error code.
@@ -322,4 +325,16 @@ CApp::initApp(int argc, const char** argv)
 
 	// load configuration
 	loadConfig();
+
+	if (!argsBase().m_disableTray) {
+
+		// create a log buffer so we can show the latest message
+		// as a tray icon tooltip
+		CBufferedLogOutputter* logBuffer = new CBufferedLogOutputter(1000);
+		CLOG->insert(logBuffer, true);
+
+		// make the task bar receiver.  the user can control this app
+		// through the task bar.
+		m_taskBarReceiver = m_createTaskBarReceiver(logBuffer);
+	}
 }

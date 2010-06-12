@@ -44,10 +44,13 @@ CArchAppUtilWindows::~CArchAppUtilWindows()
 
 BOOL WINAPI CArchAppUtilWindows::consoleHandler(DWORD CEvent)
 {
-	// HACK: it would be nice to delete the s_taskBarReceiver object, but 
-	// this is best done by the CApp destructor; however i don't feel like
-	// opening up that can of worms today... i need sleep.
-	instance().app().s_taskBarReceiver->cleanup();
+	if (instance().app().m_taskBarReceiver)
+	{
+		// HACK: it would be nice to delete the s_taskBarReceiver object, but 
+		// this is best done by the CApp destructor; however i don't feel like
+		// opening up that can of worms today... i need sleep.
+		instance().app().m_taskBarReceiver->cleanup();
+	}
 
 	ExitProcess(kExitTerminated);
     return TRUE;
@@ -83,7 +86,16 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 		app().argsBase().m_debugServiceWait = true;
 	}
 	else if (app().isArg(i, argc, argv, NULL, "--relaunch")) {
+
 		app().argsBase().m_relaunchMode = true;
+	}
+	else if (app().isArg(i, argc, argv, NULL, "--exit-pause")) {
+
+		app().argsBase().m_pauseOnExit = true;
+	}
+	else if (app().isArg(i, argc, argv, NULL, "--no-tray")) {
+
+		app().argsBase().m_disableTray = true;
 	}
 	else {
 		// option not supported here
@@ -258,20 +270,17 @@ foregroundStartupStatic(int argc, char** argv)
 void
 CArchAppUtilWindows::beforeAppExit()
 {
-	CString name;
-	CArchMiscWindows::getParentProcessName(name);
-
-	// if the user did not launch from the command prompt (i.e. it was launched
-	// by double clicking, or through a debugger), allow user to read any error
-	// messages (instead of the window closing automatically).
-	if (name != "cmd.exe") {
+	// this can be handy for debugging, since the application is launched in
+	// a new console window, and will normally close on exit (making it so
+	// that we can't see error messages).
+	if (app().argsBase().m_pauseOnExit) {
 		std::cout << std::endl << "Press any key to exit..." << std::endl;
 		int c = _getch();
 	}
 }
 
 int
-CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver)
+CArchAppUtilWindows::run(int argc, char** argv)
 {
 	// record window instance for tray icon, etc
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
@@ -287,7 +296,7 @@ CArchAppUtilWindows::run(int argc, char** argv, CreateTaskBarReceiverFunc create
 		app().argsBase().m_daemon = false;
 	}
 
-	return app().runInner(argc, argv, NULL, startup, createTaskBarReceiver);
+	return app().runInner(argc, argv, NULL, startup);
 }
 
 CArchAppUtilWindows& 

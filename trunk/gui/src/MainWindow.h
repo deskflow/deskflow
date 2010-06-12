@@ -54,6 +54,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void setVisible(bool visible);
 		int synergyType() const { return m_pGroupClient->isChecked() ? synergyClient : synergyServer; }
 		int synergyState() const { return m_SynergyState; }
+		QString hostname() const { return m_pLineEditHostname->text(); }
+		QString configFilename();
+		QString address();
+		QString appPath(const QString& name, const QString& defaultPath);
 
 	protected slots:
 		void on_m_pGroupClient_toggled(bool on) { m_pGroupServer->setChecked(!on); }
@@ -63,6 +67,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool on_m_pActionSave_triggered();
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
+		void on_m_pActionServices_triggered();
 		void on_m_pActionLogOutput_triggered();
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void iconActivated(QSystemTrayIcon::ActivationReason reason);
@@ -87,7 +92,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool clientArgs(QStringList& args, QString& app);
 		bool serverArgs(QStringList& args, QString& app);
 		void setStatus(const QString& status);
-		bool detectPath(const QString& name, QString& path);
 
 	private:
 		QSettings m_Settings;

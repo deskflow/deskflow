@@ -27,6 +27,6 @@
 int
 main(int argc, char** argv) 
 {
-	CServerApp app;
-	return app.run(argc, argv, createTaskBarReceiver);
+	CServerApp app(createTaskBarReceiver);
+	return app.run(argc, argv);
 }

@@ -33,7 +33,7 @@ public:
 		CNetworkAddress* m_serverAddress;
 	};
 
-	CClientApp();
+	CClientApp(CreateTaskBarReceiverFunc createTaskBarReceiver);
 	virtual ~CClientApp();
 
 	// Parse client specific command line arguments.
@@ -54,7 +54,7 @@ public:
 
 	int foregroundStartup(int argc, char** argv);
 	int standardStartup(int argc, char** argv);
-	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup);
 	CScreen* createScreen();
 	void updateStatus();
 	void updateStatus(const CString& msg);

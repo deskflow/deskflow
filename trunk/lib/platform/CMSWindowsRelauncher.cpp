@@ -30,7 +30,7 @@ CMSWindowsRelauncher::startAsync()
 void 
 CMSWindowsRelauncher::startThread(void*)
 {
-	LOG((CLOG_DEBUG "starting relaunch loop"));
+	LOG((CLOG_NOTE "starting relaunch service"));
 	int ret = relaunchLoop();
 
 	// HACK: this actually throws an exception to exit with 0 (nasty)

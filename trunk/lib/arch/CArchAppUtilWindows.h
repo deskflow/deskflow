@@ -58,7 +58,7 @@ public:
 
 	void debugServiceWait();
 
-	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	int run(int argc, char** argv);
 
 	void exitApp(int code);
 

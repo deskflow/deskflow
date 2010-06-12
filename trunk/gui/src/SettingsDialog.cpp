@@ -20,6 +20,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pLineEditInterface->setText(appConfig().interface());
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
 	m_pCheckBoxAutoDetectPaths->setChecked(appConfig().autoDetectPaths());
+	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
+	m_pLineEditLogFilename->setText(appConfig().logFilename());
 }
 
 QString SettingsDialog::browseForSynergyc(QWidget* parent, const QString& programDir, const QString& synergycName)
@@ -76,7 +78,29 @@ void SettingsDialog::accept()
 	appConfig().setInterface(m_pLineEditInterface->text());
 	appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
 	appConfig().setAutoDetectPaths(m_pCheckBoxAutoDetectPaths->isChecked());
+	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
+	appConfig().setLogFilename(m_pLineEditLogFilename->text());
 
 	QDialog::accept();
 }
 
+void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
+{
+	bool checked = i == 2;
+
+	m_pLineEditLogFilename->setEnabled(checked);
+	m_pButtonBrowseLog->setEnabled(checked);
+}
+
+void SettingsDialog::on_m_pButtonBrowseLog_clicked()
+{
+	QString fileName = QFileDialog::getSaveFileName(
+		this, tr("Save log file to..."),
+		m_pLineEditLogFilename->text(),
+		"Logs (*.log *.txt)");
+
+	if (!fileName.isEmpty())
+	{
+		m_pLineEditLogFilename->setText(fileName);
+	}
+}
