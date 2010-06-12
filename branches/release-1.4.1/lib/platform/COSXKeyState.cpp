@@ -119,6 +119,12 @@ static const CKeyEntry	s_controlKeys[] = {
 COSXKeyState::COSXKeyState() :
 	m_deadKeyState(0)
 {
+	// initialize modifier key values
+	shiftPressed = false;
+	controlPressed = false;
+	altPressed = false;
+	superPressed = false;
+	capsPressed = false;
 
 	// build virtual key map
 	for (size_t i = 0; i < sizeof(s_controlKeys) /
@@ -379,6 +385,27 @@ COSXKeyState::fakeKey(const Keystroke& keystroke)
 			LOG((CLOG_CRIT "unable to create keyboard event for keystroke"));
 		}
 
+			UInt32 vk = mapKeyButtonToVirtualKey(keystroke.m_data.m_button.m_button);
+			UInt32 modifierDown = keystroke.m_data.m_button.m_press;
+
+			// check the key for specials and store the value (persistent until changed)
+			if (vk == s_shiftVK)    shiftPressed=modifierDown;
+			if (vk == s_controlVK)  controlPressed=modifierDown;
+			if (vk == s_altVK)      altPressed=modifierDown;
+			if (vk == s_superVK)    superPressed=modifierDown;
+			if (vk == s_capsLockVK) capsPressed=modifierDown;
+
+			//Set the event flags for special keys - see following link:
+			//http://stackoverflow.com/questions/2008126/cgeventpost-possible-bug-when-simulating-keyboard-events
+			CGEventFlags modifiers = 0;
+			if (shiftPressed)   modifiers |= kCGEventFlagMaskShift;
+			if (controlPressed) modifiers |= kCGEventFlagMaskControl;
+			if (altPressed)     modifiers |= kCGEventFlagMaskAlternate;
+			if (superPressed)   modifiers |= kCGEventFlagMaskCommand;
+			if (capsPressed)    modifiers |= kCGEventFlagMaskAlphaShift;
+			
+			CGEventSetFlags(ref, modifiers);
+			
 			CGEventPost(kCGHIDEventTap, ref);
 
 			// add a delay if client data isn't zero
