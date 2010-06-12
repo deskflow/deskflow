@@ -25,6 +25,7 @@ http://www.javaworld.com/javaworld/jw-01-2008/images/svn1.jpg
 How to merge a bug fix into the trunk:
 {{{
 cd trunk
+svn up
 svn merge -r 581:582 https://synergy-plus.googlecode.com/svn/branches/release-1.4.1
 svn ci -m "Merge 1.4.1 into trunk"
 }}}
