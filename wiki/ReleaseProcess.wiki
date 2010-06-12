@@ -31,6 +31,15 @@ svn ci -m "Merge 1.4.1 r581:582 into trunk"
 }}}
 In the above example, r582 was the bug fix I had made in the release branch (581 was the previous release, which is not particularly relevant), and release-1.4.1 was the release branch in which I made the fix. The merge command will merge into the current directory if no target is specified.
 
+== Creating installers ==
+
+For example, on Windows if the release is 1.4.1:
+{{{
+cd branches/release-1.4.1
+hm build -dr
+hm dist win
+}}}
+
 == Installers/packages ==
 
 || *Filename* || *Description* ||
