@@ -85,6 +85,10 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 	else if (app().isArg(i, argc, argv, NULL, "--relaunch")) {
 		app().argsBase().m_relaunchMode = true;
 	}
+	else if (app().isArg(i, argc, argv, NULL, "--exit-pause"))
+	{
+		app().argsBase().m_pauseOnExit = true;
+	}
 	else {
 		// option not supported here
 		return false;
@@ -258,13 +262,10 @@ foregroundStartupStatic(int argc, char** argv)
 void
 CArchAppUtilWindows::beforeAppExit()
 {
-	CString name;
-	CArchMiscWindows::getParentProcessName(name);
-
-	// if the user did not launch from the command prompt (i.e. it was launched
-	// by double clicking, or through a debugger), allow user to read any error
-	// messages (instead of the window closing automatically).
-	if (name != "cmd.exe") {
+	// this can be handy for debugging, since the application is launched in
+	// a new console window, and will normally close on exit (making it so
+	// that we can't see error messages).
+	if (app().argsBase().m_pauseOnExit) {
 		std::cout << std::endl << "Press any key to exit..." << std::endl;
 		int c = _getch();
 	}

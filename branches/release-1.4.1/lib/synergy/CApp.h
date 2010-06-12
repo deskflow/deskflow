@@ -44,6 +44,7 @@ public:
 #if SYSAPI_WIN32
 		bool m_relaunchMode;
 		bool m_debugServiceWait;
+		bool m_pauseOnExit;
 #endif
 	};
 
@@ -166,6 +167,8 @@ private:
 	"      --service <action>   manage the windows service, valid options are:\n" \
 	"                             install/uninstall/start/stop\n" \
 	"      --relaunch           persistently relaunches process in current user \n" \
-	"                             session (useful for vista and upward).\n"
+	"                             session (useful for vista and upward).\n" \
+	"      --exit-pause         wait for key press on exit, can be useful for\n" \
+	"                             reading error messages that occur on exit\n"
 
 #endif
