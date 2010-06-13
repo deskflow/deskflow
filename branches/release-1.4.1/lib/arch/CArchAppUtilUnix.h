@@ -24,6 +24,6 @@ public:
 	virtual ~CArchAppUtilUnix();
 	
 	bool parseArg(const int& argc, const char* const* argv, int& i);
-	int run(int argc, char** argv, CreateTaskBarReceiverFunc createTaskBarReceiver);
+	int run(int argc, char** argv);
 	void startNode();
 };
