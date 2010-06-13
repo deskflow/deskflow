@@ -12,6 +12,7 @@ apt-get install buildbot
 mkdir -p /srv/buildbot
 cd /srv/buildbot
 buildbot create-slave synergy-plus buildbot.synergy-plus.org:9989 <bot-name> <bot-password>
+buildbot start synergy-plus
 }}}
 
 == Windows XP 32-bit ==
@@ -41,4 +42,5 @@ Finally, setup the slave:
 mkdir C:\Buildbot
 cd C:\Buildbot
 buildbot create-slave synergy-plus buildbot.synergy-plus.org:9989 <bot-name> <bot-password>
+buildbot start synergy-plus
 }}}
