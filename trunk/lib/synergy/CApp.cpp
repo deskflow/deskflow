@@ -52,13 +52,13 @@ m_daemon(false), // daemon mode not supported on windows (use --service)
 m_debugServiceWait(false),
 m_relaunchMode(false),
 m_pauseOnExit(false),
-m_disableTray(false),
 #else
 m_daemon(true), // backward compatibility for unix (daemon by default)
 #endif
 m_backend(false),
 m_restartable(true),
 m_noHooks(false),
+m_disableTray(false),
 m_pname(NULL),
 m_logFilter(NULL),
 m_logFile(NULL),
