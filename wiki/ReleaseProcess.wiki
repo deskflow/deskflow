@@ -40,6 +40,8 @@ hm build -dr
 hm dist win
 }}}
 
+For other systems use the hm package command
+
 == Installers/packages ==
 
 || *Filename* || *Description* ||
