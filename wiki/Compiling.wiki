@@ -104,6 +104,9 @@ For Mac OS X users, although [http://developer.apple.com/technology/xcode.html X
 
 The reason why the `bin` directory is used, is so that CMake generated files do not contaminate the original source tree; this is known as an [http://www.cmake.org/Wiki/CMake_FAQ#Out-of-source_build_trees out-of-source build tree].
 
+=== Building installers ===
+Use the `hm package` command to build installers. Of course you can only build those that are applicable for your platform.
+
 ----
 
 = Dependencies =
