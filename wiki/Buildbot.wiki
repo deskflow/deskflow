@@ -25,7 +25,7 @@ Download and install:
 Append to the PATH environment variable:
 
 {{{
-C:\Python25;C:\Python25\Scripts
+;C:\Python25;C:\Python25\Scripts
 }}}
 
 Then download and extract [http://downloads.sourceforge.net/project/buildbot/buildbot/0.8.0/buildbot-0.8.0.zip?use_mirror=sunet buildbot-0.8.0.zip], and run:
