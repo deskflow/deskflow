@@ -37,7 +37,7 @@ For example, on Windows if the release is 1.4.1:
 {{{
 cd branches/release-1.4.1
 hm build -dr
-hm dist win
+hm package win
 }}}
 
 For other systems use the hm package command
