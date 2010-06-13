@@ -41,11 +41,11 @@ public:
 		const char*	m_logFile;
 		const char*	m_display;
 		CString m_name;
+		bool m_disableTray;
 #if SYSAPI_WIN32
 		bool m_relaunchMode;
 		bool m_debugServiceWait;
 		bool m_pauseOnExit;
-		bool m_disableTray;
 #endif
 	};
 
