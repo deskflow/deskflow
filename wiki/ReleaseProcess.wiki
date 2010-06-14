@@ -40,7 +40,7 @@ hm build -dr
 hm package win
 }}}
 
-For other systems use the hm package command
+For other platforms, replace "win" with the appropriate name (type `hm package` for a list of available options).
 
 == Installers/packages ==
 
