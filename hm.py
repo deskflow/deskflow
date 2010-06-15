@@ -155,6 +155,7 @@ def run_cmd(cmd, argv = []):
 		if not verbose:
 			# print friendly error for users
 			print 'Error:',ex
+			exit(1)
 		else:
 			# if user wants to be verbose let python do it's thing
 			raise
