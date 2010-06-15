@@ -26,7 +26,7 @@ class InternalCommands:
 	prevdir = ''
 	
 	# by default, no index specified as arg
-	generator_index = None
+	generator_id = None
 	
 	# by default, prompt user for input
 	no_prompts = False
@@ -482,9 +482,9 @@ class InternalCommands:
 		config.write(configfile)
 
 	def get_generator_from_config(self):
-		if self.generator_index:
+		if self.generator_id:
 			generators = self.get_generators()
-			return generators[self.generator_index]
+			return generators[self.generator_id]
 		else:
 			config = ConfigParser.RawConfigParser()
 			config.read(self.config_filepath())
@@ -537,8 +537,8 @@ class InternalCommands:
 		generators = self.get_generators()
 		
 		# if user has specified a generator as an argument
-		if self.generator_index:
-			return generators[self.generator_index]
+		if self.generator_id:
+			return generators[self.generator_id]
 		
 		# if we can accept user input
 		elif not self.no_prompts:
@@ -680,7 +680,7 @@ class CommandHandler:
 			if o == '--no-prompts':
 				self.ic.no_prompts = True
 			elif o in ('-g', '--generator'):
-				self.ic.generator_index = a
+				self.ic.generator_id = a
 
 	def get_build_mode(self):
 		mode = None
