@@ -533,7 +533,11 @@ class InternalCommands:
 		else:
 			key_name = r'SOFTWARE\Microsoft\VisualStudio\SxS\VC7'
 		
-		key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, key_name)
+		try:
+			key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, key_name)
+		except:
+			raise Exception('Unable to open Visual Studio registry key. Application may not be installed.')
+		
 		if generator.startswith('Visual Studio 8'):
 			value,type = _winreg.QueryValueEx(key, '8.0')
 		elif generator.startswith('Visual Studio 9'):
