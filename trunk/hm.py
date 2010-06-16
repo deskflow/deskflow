@@ -126,35 +126,35 @@ def start_cmd(argv):
 
 def run_cmd(cmd, argv = []):
 	
-	options_pair = cmd_opt_dict[cmd]
-	
-	options = global_options + options_pair[0]
-	
-	options_long = []
-	options_long.extend(global_options_long)
-	options_long.extend(options_pair[1])
-	
-	opts, args = getopt(argv, options, options_long)
-	
 	verbose = False
-	for o, a in opts:
-		if o in ('-v', '--verbose'):
-			verbose = True
-	
-	# pass args and optarg data to command handler, which figures out
-	# how to handle the arguments
-	handler = commands.CommandHandler(argv, opts, args)
-	handler.verbose = verbose
-	
-	# use reflection to get the function pointer
-	cmd_func = getattr(handler, cmd)
-	
 	try:
+		options_pair = cmd_opt_dict[cmd]
+		
+		options = global_options + options_pair[0]
+		
+		options_long = []
+		options_long.extend(global_options_long)
+		options_long.extend(options_pair[1])
+		
+		opts, args = getopt(argv, options, options_long)
+		
+		for o, a in opts:
+			if o in ('-v', '--verbose'):
+				verbose = True
+		
+		# pass args and optarg data to command handler, which figures out
+		# how to handle the arguments
+		handler = commands.CommandHandler(argv, opts, args)
+		handler.verbose = verbose
+		
+		# use reflection to get the function pointer
+		cmd_func = getattr(handler, cmd)
+	
 		cmd_func()
-	except Exception as ex:
+	except:
 		if not verbose:
 			# print friendly error for users
-			print 'Error:',ex
+			sys.stderr.write('Error: ' + sys.exc_info()[1].__str__())
 			exit(1)
 		else:
 			# if user wants to be verbose let python do it's thing
@@ -167,7 +167,7 @@ def main(argv):
 		sys.exit(1)
 
 	try:
-		sys.exit(start_cmd(argv))
+		start_cmd(argv)
 	except KeyboardInterrupt:
 		print '\n\nUser aborted, exiting.'
 
