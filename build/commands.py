@@ -100,19 +100,46 @@ class InternalCommands:
 			) % (app, app)
 	
 	def configure(self):
-		err = self.configure_internal()
+		self.configure_internal()
+		
+		print ('Configure complete!\n\n'
+			'Open project now: %s open\n'
+			'Command line build: %s build'
+			) % (self.this_cmd, self.this_cmd)
 
-		if err == 0:
-			print ('Configure complete!\n\n'
-				'Open project now: %s open\n'
-				'Command line build: %s build'
-				) % (self.this_cmd, self.this_cmd)
-			return True
+	def configure_internal(self):
+		
+		# ensure latest setup and do not ask config for generator (only fall 
+		# back to prompt if not specified as arg)
+		self.ensure_setup_latest()
+		
+		# ensure that we have access to cmake
+		_cmake_cmd = self.persist_cmake()
+		
+		# now that we know we've got the latest setup, we can ask the config
+		# file for the generator (but again, we only fall back to this if not 
+		# specified as arg).
+		generator = self.get_generator_from_config()
+		
+		if generator != '':
+			cmake_args = '%s -G "%s"' % (self.source_dir, generator)
 		else:
-			return False
-			
-	# TODO: handle svn not installed
-	# TODO: implement for other platforms
+			cmake_args = self.source_dir
+		
+		cmake_cmd_string = '%s %s' % (_cmake_cmd, cmake_args)
+
+		print "Configuring with CMake (%s)..." % cmake_cmd_string
+
+		# Run from build dir so we have an out-of-source build.
+		self.try_chdir(self.bin_dir)
+		err = os.system(cmake_cmd_string)
+		self.restore_chdir()
+
+		if err != 0:
+			raise Exception('CMake encountered error: ' + str(err))
+		
+		self.set_conf_run()
+
 	def persist_cmake(self):
 		if sys.platform == 'win32':
 		
@@ -146,61 +173,27 @@ class InternalCommands:
 						if not os.path.exists('tool'):
 							os.mkdir('tool')
 						
-						os.system(r'svn checkout https://synergy-plus.googlecode.com/svn/tools/win/cmake tool\cmake')
+						err = os.system(r'svn checkout https://synergy-plus.googlecode.com/svn/tools/win/cmake tool\cmake')
+						if err != 0:
+							raise Exception('Unable to get cmake from repository with error code code: ' + str(err))
+						
 						found_cmd = r'..\tool\cmake\bin\%s' % self.cmake_cmd
 						found_cmake = True
 				
 				# if cmake was not found
 				if not found_cmake:
-					print 'Cannot continue without CMake, exiting.'
-					sys.exit(1)
+					raise Exception('Cannot continue without CMake, exiting.')
 			
 			return found_cmd
 		else:
 			return self.cmake_cmd
-
-	def configure_internal(self):
-		
-		# ensure latest setup and do not ask config for generator (only fall 
-		# back to prompt if not specified as arg)
-		self.ensure_setup_latest()
-		
-		# ensure that we have access to cmake
-		_cmake_cmd = self.persist_cmake()
-		
-		# now that we know we've got the latest setup, we can ask the config
-		# file for the generator (but again, we only fall back to this if not 
-		# specified as arg).
-		generator = self.get_generator_from_config()
-		
-		if generator != '':
-			cmake_args = '%s -G "%s"' % (self.source_dir, generator)
-		else:
-			cmake_args = self.source_dir
-		
-		cmake_cmd_string = '%s %s' % (_cmake_cmd, cmake_args)
-
-		print "Configuring with CMake (%s)..." % cmake_cmd_string
-
-		# Run from build dir so we have an out-of-source build.
-		self.try_chdir(self.bin_dir)
-		err = os.system(cmake_cmd_string)
-		self.restore_chdir()
-
-		if err != 0:
-			print 'CMake encountered error:', err
-		else:
-			self.set_conf_run()
-
-		return err;
 
 	def build(self, mode = None):
 
 		self.ensure_setup_latest()
 
 		if not self.has_conf_run():
-			if self.configure_internal() != 0:
-				return False
+			self.configure_internal()
 		
 		generator = self.get_generator_from_config()
 
@@ -210,22 +203,13 @@ class InternalCommands:
 			self.try_chdir(self.bin_dir)
 			err = os.system(self.make_cmd)
 			self.restore_chdir()
-
-			if err == 0:
-				return True
-			else:
-				print 'GNU Make failed:', err
-				return False
+			
+			if err != 0:
+				raise Exception('GNU Make failed: ' + str(err))
 
 		elif generator.startswith('Visual Studio'):
 			
-			ret = self.run_vcbuild(generator, mode)
-			
-			if ret == 0:
-				return True
-			else:
-				print 'VCBuild failed:', ret
-				return False
+			self.run_vcbuild(generator, mode)
 
 		elif generator == 'Xcode':        
 
@@ -234,15 +218,11 @@ class InternalCommands:
 			err = os.system(self.xcodebuild_cmd)
 			self.restore_chdir()
 
-			if err == 0:
-				return True
-			else:
-				print 'Xcode failed:', err
-				return False
+			if err != 0:
+				raise Exception('Xcode failed:', err)
 			
 		else:
-			print 'Not supported with generator:',generator
-			return False
+			raise Exception('Not supported with generator: ' + generator)
 
 	def clean(self, mode = None):
 		
@@ -255,33 +235,18 @@ class InternalCommands:
 			err = os.system(self.make_cmd + ' clean')
 			self.restore_chdir()
 
-			if err == 0:
-				return True
-			else:
-				print 'GNU Make failed: %s' % err
-				return False
+			if err != 0:
+				raise Exception('GNU Make failed: ' + str(err))
 
 		# special case for version 10, use new /target:clean
 		elif generator.startswith('Visual Studio 10'):
 
-			ret = self.run_vcbuild(generator, mode, '/target:clean')
-			
-			if ret == 0:
-				return True
-			else:
-				print 'VCBuild failed:', ret
-				return False
+			self.run_vcbuild(generator, mode, '/target:clean')
 
 		# any other version of visual studio, use /clean
 		elif generator.startswith('Visual Studio'):
 
-			ret = self.run_vcbuild(generator, mode, '/clean')
-			
-			if ret == 0:
-				return True
-			else:
-				print 'VCBuild failed:', ret
-				return False
+			self.run_vcbuild(generator, mode, '/clean')
 
 		elif generator == 'Xcode':        
 
@@ -290,45 +255,42 @@ class InternalCommands:
 			err = os.system(xcodebuild_cmd + ' clean')
 			self.restore_chdir()
 
-			if err == 0:
-				return True
-			else:
-				print 'XCode failed:', err
-				return False
+			if err != 0:
+				raise Exception('Xcode failed:', err)
 			
 		else:
-			print 'clean: Not supported on platform:',sys.platform
-			return False
+			raise Exception('Not supported with generator: ' + generator)
 
 	def open(self):
 		generator = self.get_generator_from_config()
 		if generator.startswith('Visual Studio'):
 			print 'Opening with %s...' % generator
 			self.open_internal(self.sln_filepath())
-			return True
+			
 		elif generator.startswith('Xcode'):
 			print 'Opening with %s...' % generator
 			self.open_internal(xcodeproj_filepath(), 'open')
-			return True
+			
 		else:
-			print 'Not supported with generator:',generator
-			return False
+			raise Exception('Not supported with generator: ' + generator)
 		
 	def update(self):
 		print "Running Subversion update..."
-		os.system('svn update')
+		err = os.system('svn update')
+		if err != 0:
+			raise Exception('Could not update from repository with error code code: ' + str(err))
 		
 	def revision(self):
 		# While this doesn't print out the revision specifically, it will do.
-		os.system('svn info')
+		err = os.system('svn info')
+		if err != 0:
+			raise Exception('Could not get revision info with error code code: ' + str(err))
 
 	def kill(self):
 		if sys.platform == 'win32':
-			os.system('taskkill /F /FI "IMAGENAME eq synergy*"')
-			return True
+			return os.system('taskkill /F /FI "IMAGENAME eq synergy*"')
 		else:
-			print 'kill: Error: Command not implemented for current platform'
-			return False
+			raise Exception('Not implemented for platform: ' + sys.platform)
 				
 	def package(self, type):
 
@@ -339,60 +301,43 @@ class InternalCommands:
 			self.package_usage()
 		elif type == 'src':
 			if sys.platform in ['linux2', 'darwin']:
-				self.package_tgz()
+				self.package_run('make package_source')
 			else:
 				package_unsupported = True
 		elif type == 'rpm':
 			if sys.platform == 'linux2':
-				self.package_rpm()
+				self.package_run('cpack -G RPM')
 			else:
 				package_unsupported = True
 		elif type == 'deb':
 			if sys.platform == 'linux2':
-				self.package_deb()
+				self.package_run('cpack -G DEB')
 			else:
 				package_unsupported = True
 		elif type == 'win':
 			if sys.platform == 'win32':
-				self.package_win()
+				self.package_run('cpack -G NSIS')
 			else:
 				package_unsupported = True
 		elif type == 'mac':
 			if sys.platform == 'darwin':
-				self.package_mac()
+				self.package_run('cpack -G PackageMaker')
 			else:
 				package_unsupported = True
 		else:
 			print 'Not yet implemented: package %s' % type
 
 		if package_unsupported:
-			print ('Package type, %s is not '
-				'supported for platform, %s') % (type, sys.platform)
-
-	def package_tgz(self):
+			raise Exception(
+				("Package type, '%s' is not supported for platform, '%s'") 
+				% (type, sys.platform))
+	
+	def package_run(self, command):
 		self.try_chdir(self.bin_dir)
-		os.system('make package_source')
+		err = os.system(command)
 		self.restore_chdir()
-
-	def package_rpm(self):
-		self.try_chdir(self.bin_dir)
-		os.system('cpack -G RPM')
-		self.restore_chdir()
-
-	def package_deb(self):
-		self.try_chdir(self.bin_dir)
-		os.system('cpack -G DEB')
-		self.restore_chdir()
-
-	def package_win(self):
-		self.try_chdir(self.bin_dir)
-		os.system('cpack -G NSIS')
-		self.restore_chdir()
-
-	def package_mac(self):
-		self.try_chdir(self.bin_dir)
-		os.system('cpack -G PackageMaker')
-		self.restore_chdir()
+		if err != 0:
+			raise Exception('Package failed: ' + str(err))
 
 	def package_usage(self):
 		print ('Usage: %s package [package-type]\n'
@@ -431,14 +376,16 @@ class InternalCommands:
 	def open_internal(self, project_filename, application = ''):
 
 		if not os.path.exists(project_filename):
-			print 'Project file (%s) not found, run hm conf first.' % project_filename
-			return False
+			raise Exception('Project file (%s) not found, run hm conf first.' % project_filename)
 		else:
 			path = project_filename
+			
 			if application != '':
 				path = application + ' ' + path
-			os.system(path)
-			return True
+			
+			err = os.system(path)
+			if err != 0:
+				raise Exception('Could not open project with error code code: ' + str(err))
 
 	def setup(self):
 		print "Running setup..."
@@ -604,6 +551,7 @@ class InternalCommands:
 		
 		if not os.path.exists(path):
 			raise Exception("'%s' not found." % path)
+		
 		return path
 
 	def run_vcbuild(self, generator, mode, args=''):
@@ -651,18 +599,22 @@ class InternalCommands:
 		file.write(cmd)
 		file.close()
 
-		return os.system(temp_bat)
+		err = os.system(temp_bat)
+		if err != 0:
+			raise Exception('Microsoft compiler failed with error code: ' + str(err))
 
 	def ensure_setup_latest(self):
 		if not self.min_setup_version(self.setup_version):
 			self.setup()
 
 	def reformat(self):
-		# TODO: error handling
-		os.system(
+		err = os.system(
 			r'tool\astyle\AStyle.exe '
 			'--quiet --suffix=none --style=java --indent=force-tab=4 --recursive '
 			'lib/*.cpp lib/*.h cmd/*.cpp cmd/*.h')
+			
+		if err != 0:
+			raise Exception('Reformat failed with error code: ' + str(err))
 
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
