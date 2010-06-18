@@ -1,6 +1,6 @@
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, subprocess, shutil
+import sys, os, ConfigParser, subprocess, shutil, re
 
 class InternalCommands:
 
@@ -143,15 +143,16 @@ class InternalCommands:
 	def persist_cmake(self):
 		if sys.platform == 'win32':
 		
-			version = '2.8.0'
+			version = '>= 2.8.0'
 			found_cmd = ''
 			for test_cmd in (self.cmake_cmd, r'tool\cmake\bin\%s' % self.cmake_cmd):
 				print 'Testing for CMake version %s by running `%s`...' % (version, test_cmd)
 				p = subprocess.Popen([test_cmd, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 				stdout, stderr = p.communicate()
-				if p.returncode == 0 and stdout == 'cmake version %s\r\n' % version:
+				m = re.search('cmake version (2\.8\.\d+)', stdout)
+				if p.returncode == 0 and m:
 					# found one that works, hurrah!
-					print 'Found valid CMake version'
+					print 'Found valid CMake version %s' % m.group(1)
 					found_cmd = test_cmd
 					# HACK: gotta go out so just hacking this for now
 					if found_cmd == r'tool\cmake\bin\%s' % self.cmake_cmd:
