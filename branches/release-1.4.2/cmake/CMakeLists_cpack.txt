@@ -19,13 +19,13 @@ INSTALL(
 
 IF(WIN32)
 	INSTALL(
-		FILES 
-		bin/Release/QtNetwork4.dll
-		bin/Release/QtGui4.dll
-		bin/Release/QtCore4.dll
+		FILES
 		bin/Release/qsynergy.exe
-		bin/Release/mingwm10.dll
-		bin/Release/libgcc_s_dw2-1.dll
+		DESTINATION bin)
+ELSE(WIN32)
+	INSTALL(
+		FILES
+		bin/Release/qsynergy
 		DESTINATION bin)
 ENDIF(WIN32)
 

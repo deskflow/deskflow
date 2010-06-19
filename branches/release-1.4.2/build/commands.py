@@ -5,22 +5,25 @@ import sys, os, ConfigParser, subprocess, shutil, re
 class InternalCommands:
 
 	project = 'synergy-plus'
-	setup_version = 3
+	setup_version = 4 # increment to force setup/config
 	website_url = 'http://code.google.com/p/synergy-plus'
 
 	this_cmd = 'hm'
 	cmake_cmd = 'cmake'
-
+	qmake_cmd = 'qmake'
 	make_cmd = 'make'
 	xcodebuild_cmd = 'xcodebuild'
+	w32_make_cmd = 'mingw32-make'
 
 	source_dir = '..' # Source, relative to build.
 	cmake_dir = 'cmake'
 	bin_dir = 'bin'
+	gui_dir = 'gui'
 
 	sln_filename = '%s.sln' % project
 	xcodeproj_filename = '%s.xcodeproj' % project
 	config_filename = '%s.cfg' % this_cmd
+	qtpro_filename = 'qsynergy.pro'
 
 	# try_chdir(...) and restore_chdir() will use this
 	prevdir = ''
@@ -30,6 +33,9 @@ class InternalCommands:
 	
 	# by default, prompt user for input
 	no_prompts = False
+	
+	# by default, compile the gui (using qmake)
+	no_gui = False
 
 	win32_generators = {
 		'1' : 'Visual Studio 10',
@@ -138,6 +144,20 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('CMake encountered error: ' + str(err))
 		
+		# allow user to skip qui compile
+		if not self.no_gui:
+			
+			qmake_cmd_string = self.qmake_cmd + ' ' + self.qtpro_filename
+			print "Configuring with QMake (%s)..." % qmake_cmd_string
+			
+			# run qmake from the gui dir
+			self.try_chdir(self.gui_dir)
+			err = os.system(qmake_cmd_string)
+			self.restore_chdir()
+			
+			if err != 0:
+				raise Exception('QMake encountered error: ' + str(err))
+		
 		self.set_conf_run()
 
 	def persist_cmake(self):
@@ -189,8 +209,12 @@ class InternalCommands:
 		else:
 			return self.cmake_cmd
 
-	def build(self, mode = None):
+	def build(self, targets=[]):
 
+		# if no mode specified, default to debug
+		if len(targets) == 0:
+			targets += ['debug',]
+	
 		self.ensure_setup_latest()
 
 		if not self.has_conf_run():
@@ -210,7 +234,8 @@ class InternalCommands:
 
 		elif generator.startswith('Visual Studio'):
 			
-			self.run_vcbuild(generator, mode)
+			for target in targets:
+				self.run_vcbuild(generator, target)
 
 		elif generator == 'Xcode':        
 
@@ -220,12 +245,20 @@ class InternalCommands:
 			self.restore_chdir()
 
 			if err != 0:
-				raise Exception('Xcode failed:', err)
+				raise Exception('Xcode failed: ' + err)
 			
 		else:
 			raise Exception('Not supported with generator: ' + generator)
-
-	def clean(self, mode = None):
+		
+		# allow user to skip qui compile
+		if not self.no_gui:			
+			self.make_gui(targets)
+	
+	def clean(self, targets=[]):
+		
+		# if no mode specified, default to debug
+		if len(targets) == 0:
+			targets += ['debug',]
 		
 		generator = self.get_generator_from_config()
 
@@ -242,12 +275,14 @@ class InternalCommands:
 		# special case for version 10, use new /target:clean
 		elif generator.startswith('Visual Studio 10'):
 
-			self.run_vcbuild(generator, mode, '/target:clean')
+			for target in targets:
+				self.run_vcbuild(generator, target, '/target:clean')
 
 		# any other version of visual studio, use /clean
 		elif generator.startswith('Visual Studio'):
 
-			self.run_vcbuild(generator, mode, '/clean')
+			for target in targets:
+				self.run_vcbuild(generator, target, '/clean')
 
 		elif generator == 'Xcode':        
 
@@ -262,6 +297,32 @@ class InternalCommands:
 		else:
 			raise Exception('Not supported with generator: ' + generator)
 
+		# allow user to skip qui compile
+		clean_targets = []
+		if not self.no_gui:
+			for target in targets:
+				clean_targets.append(target + '-clean')
+			
+			self.make_gui(clean_targets)
+	
+	def make_gui(self, targets):
+		if sys.platform == 'win32':
+			gui_make_cmd = self.w32_make_cmd
+		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
+			gui_make_cmd = self.make_cmd
+		else:
+			raise Exception('Unsupported platform: ' + sys.platform)
+		
+		print 'Running %s...' % gui_make_cmd
+		
+		for target in targets:
+			self.try_chdir(self.gui_dir)
+			err = os.system(gui_make_cmd + ' ' + target)
+			self.restore_chdir()
+
+		if err != 0:
+			raise Exception(gui_make_cmd + ' failed with error:' + err)
+	
 	def open(self):
 		generator = self.get_generator_from_config()
 		if generator.startswith('Visual Studio'):
@@ -627,7 +688,8 @@ class InternalCommands:
 # commands class.
 class CommandHandler:
 	ic = InternalCommands()
-
+	build_targets = []
+	
 	def __init__(self, argv, opts, args):
 		
 		self.opts = opts
@@ -638,15 +700,12 @@ class CommandHandler:
 				self.ic.no_prompts = True
 			elif o in ('-g', '--generator'):
 				self.ic.generator_id = a
-
-	def get_build_mode(self):
-		mode = None
-		for o, a in self.opts:
-			if o in ('-d', '--debug'):
-				mode = 'debug'
+			elif o == '--no-gui':
+				self.ic.no_gui = True
+			elif o in ('-d', '--debug'):
+				self.build_targets += ['debug',]
 			elif o in ('-r', '--release'):
-				mode = 'release'
-		return mode
+				self.build_targets += ['release',]
 	
 	def about(self):
 		self.ic.about()
@@ -658,10 +717,10 @@ class CommandHandler:
 		self.ic.configure()
 	
 	def build(self):
-		self.ic.build(self.get_build_mode())
+		self.ic.build(self.build_targets)
 	
 	def clean(self):
-		self.ic.clean(self.get_build_mode())
+		self.ic.clean(self.build_targets)
 	
 	def update(self):
 		self.ic.update()
