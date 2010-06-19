@@ -642,9 +642,9 @@ class CommandHandler:
 	def get_build_mode(self):
 		mode = None
 		for o, a in self.opts:
-			if o == ('-d', '--debug'):
+			if o in ('-d', '--debug'):
 				mode = 'debug'
-			elif o == ('-r', '--release'):
+			elif o in ('-r', '--release'):
 				mode = 'release'
 		return mode
 	
