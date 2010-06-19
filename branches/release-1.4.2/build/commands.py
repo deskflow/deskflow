@@ -245,7 +245,7 @@ class InternalCommands:
 			self.restore_chdir()
 
 			if err != 0:
-				raise Exception('Xcode failed: ' + err)
+				raise Exception('Xcode failed: ' + str(err))
 			
 		else:
 			raise Exception('Not supported with generator: ' + generator)
@@ -292,7 +292,7 @@ class InternalCommands:
 			self.restore_chdir()
 
 			if err != 0:
-				raise Exception('Xcode failed:', err)
+				raise Exception('Xcode failed: ' + str(err))
 			
 		else:
 			raise Exception('Not supported with generator: ' + generator)
@@ -321,7 +321,7 @@ class InternalCommands:
 			self.restore_chdir()
 
 		if err != 0:
-			raise Exception(gui_make_cmd + ' failed with error:' + err)
+			raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
 	
 	def open(self):
 		generator = self.get_generator_from_config()
