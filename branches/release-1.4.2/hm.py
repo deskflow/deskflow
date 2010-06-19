@@ -16,25 +16,32 @@
 
 import sys, os
 from build import commands
+from getopt import getopt
+
+# options used by all commands
+global_options = 'g:v'
+global_options_long = ['no-prompts', 'generator=', 'verbose']
+
+# options used by build related commands
+build_options = 'dr'
+build_options_long = ['debug', 'release']
 
 # list of valid commands as keys. the values are optarg strings, but most 
 # are None for now (this is mainly for extensibility)
-cmd_dict = {
-	'about' : [None, []],
-	'setup' : [None, []],
-	'configure' : [None, []],
-	'build' : ['dr', []],
-	'clean' : ['dr', []],
-	'update' : [None, []],
-	'install' : [None, []],
-	'package' : [None, []],
-	'destroy' : [None, []],
-	'kill' : [None, []],
-	'usage' : [None, []],
-	'revision' : [None, []],
-	'hammer' : [None, []],
-	'reformat' : [None, []],
-	'open'	: [None, []],
+cmd_opt_dict = {
+	'about' 	: ['', []],
+	'setup' 	: ['', []],
+	'configure' : ['', []],
+	'build' 	: [build_options, build_options_long],
+	'clean' 	: [build_options, build_options_long],
+	'update' 	: ['', []],
+	'install' 	: ['', []],
+	'package' 	: ['', []],
+	'kill' 		: ['', []],
+	'usage' 	: ['', []],
+	'revision' 	: ['', []],
+	'reformat' 	: ['', []],
+	'open'		: ['', []],
 }
 
 # aliases to valid commands
@@ -49,7 +56,7 @@ cmd_alias_dict = {
 def complete_command(arg):
 	completions = []
 	
-	for cmd, optarg in cmd_dict.iteritems():
+	for cmd, optarg in cmd_opt_dict.iteritems():
 		if cmd.startswith(arg):
 			completions.append(cmd)
 	
@@ -117,15 +124,41 @@ def start_cmd(argv):
 	# generic error code if not returned sooner
 	return 1
 
-def run_cmd(cmd, args = []):
-	# pass args and optarg data to command handler, which figures out
-	# how to handle the arguments
-	optarg_data = cmd_dict[cmd]
-	handler = commands.CommandHandler(args, optarg_data)
+def run_cmd(cmd, argv = []):
 	
-	# use reflection to get the function pointer
-	cmd_func = getattr(handler, cmd)
-	cmd_func()
+	verbose = False
+	try:
+		options_pair = cmd_opt_dict[cmd]
+		
+		options = global_options + options_pair[0]
+		
+		options_long = []
+		options_long.extend(global_options_long)
+		options_long.extend(options_pair[1])
+		
+		opts, args = getopt(argv, options, options_long)
+		
+		for o, a in opts:
+			if o in ('-v', '--verbose'):
+				verbose = True
+		
+		# pass args and optarg data to command handler, which figures out
+		# how to handle the arguments
+		handler = commands.CommandHandler(argv, opts, args)
+		handler.verbose = verbose
+		
+		# use reflection to get the function pointer
+		cmd_func = getattr(handler, cmd)
+	
+		cmd_func()
+	except:
+		if not verbose:
+			# print friendly error for users
+			sys.stderr.write('Error: ' + sys.exc_info()[1].__str__())
+			exit(1)
+		else:
+			# if user wants to be verbose let python do it's thing
+			raise
 
 def main(argv):
 
@@ -134,7 +167,7 @@ def main(argv):
 		sys.exit(1)
 
 	try:
-		sys.exit(start_cmd(argv))
+		start_cmd(argv)
 	except KeyboardInterrupt:
 		print '\n\nUser aborted, exiting.'
 
