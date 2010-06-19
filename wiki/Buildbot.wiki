@@ -22,6 +22,7 @@ Download and install:
  * [http://www.python.org/ftp/python/2.5.4/python-2.5.4.msi python-2.5.4.msi]
  * [http://tmrc.mit.edu/mirror/twisted/Twisted/2.5/Twisted_NoDocs-2.5.0.win32-py2.5.exe Twisted_NoDocs-2.5.0.win32-py2.5.exe]
  * [http://pypi.python.org/packages/2.5/s/simplejson/simplejson-2.1.1.win32-py2.5.exe#md5=d51f6a4dff29eabf34054903d758f003 simplejson-2.1.1.win32-py2.5.exe]
+ * [http://downloads.sourceforge.net/project/pywin32/pywin32/Build%20214/pywin32-214.win32-py2.6.exe?use_mirror=mesh pywin32-214.win32-py2.6.exe]
 
 Append to the PATH environment variable:
 
