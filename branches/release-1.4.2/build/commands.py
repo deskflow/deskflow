@@ -34,8 +34,8 @@ class InternalCommands:
 	# by default, prompt user for input
 	no_prompts = False
 	
-	# by default, compile the gui (using qmake)
-	no_gui = False
+	# by default, don't compile the gui
+	enable_make_gui = False
 
 	win32_generators = {
 		'1' : 'Visual Studio 10',
@@ -145,7 +145,7 @@ class InternalCommands:
 			raise Exception('CMake encountered error: ' + str(err))
 		
 		# allow user to skip qui compile
-		if not self.no_gui:
+		if self.enable_make_gui:
 			
 			qmake_cmd_string = self.qmake_cmd + ' ' + self.qtpro_filename
 			print "Configuring with QMake (%s)..." % qmake_cmd_string
@@ -251,7 +251,7 @@ class InternalCommands:
 			raise Exception('Not supported with generator: ' + generator)
 		
 		# allow user to skip qui compile
-		if not self.no_gui:			
+		if self.enable_make_gui:
 			self.make_gui(targets)
 	
 	def clean(self, targets=[]):
@@ -299,7 +299,7 @@ class InternalCommands:
 
 		# allow user to skip qui compile
 		clean_targets = []
-		if not self.no_gui:
+		if self.enable_make_gui:
 			for target in targets:
 				clean_targets.append(target + '-clean')
 			
@@ -700,8 +700,8 @@ class CommandHandler:
 				self.ic.no_prompts = True
 			elif o in ('-g', '--generator'):
 				self.ic.generator_id = a
-			elif o == '--no-gui':
-				self.ic.no_gui = True
+			elif o == '--make-gui':
+				self.ic.enable_make_gui = True
 			elif o in ('-d', '--debug'):
 				self.build_targets += ['debug',]
 			elif o in ('-r', '--release'):
