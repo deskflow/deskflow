@@ -315,13 +315,20 @@ class InternalCommands:
 		
 		print 'Running %s...' % gui_make_cmd
 		
-		for target in targets:
+		# HACK: don't know how to build in either debug or release on unix; 
+		# always builds release!
+		if sys.platform == 'win32':
+			for target in targets:
+				self.try_chdir(self.gui_dir)
+				err = os.system(gui_make_cmd + ' ' + target)
+				self.restore_chdir()
+				
+				if err != 0:
+					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
+		else:
 			self.try_chdir(self.gui_dir)
-			err = os.system(gui_make_cmd + ' ' + target)
+			err = os.system(gui_make_cmd)
 			self.restore_chdir()
-
-		if err != 0:
-			raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
 	
 	def open(self):
 		generator = self.get_generator_from_config()
