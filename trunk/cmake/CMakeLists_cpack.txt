@@ -19,14 +19,22 @@ INSTALL(
 
 IF(WIN32)
 	INSTALL(
-		FILES 
-		bin/Release/QtNetwork4.dll
-		bin/Release/QtGui4.dll
-		bin/Release/QtCore4.dll
+		FILES
 		bin/Release/qsynergy.exe
-		bin/Release/mingwm10.dll
-		bin/Release/libgcc_s_dw2-1.dll
 		DESTINATION bin)
+ELSE(WIN32)
+	IF(APPLE)
+		# TODO: how the hell do we distribute mac apps?
+		#INSTALL(
+		#	MACOSX_BUNDLE
+		#	bin/QSynergy.app
+		#	DESTINATION bin)
+	ELSE(APPLE)
+		INSTALL(
+			FILES
+			bin/qsynergy
+			DESTINATION bin)
+	ENDIF(APPLE)
 ENDIF(WIN32)
 
 # The default CPack behaviour is not to append the system processor

@@ -20,7 +20,7 @@ from getopt import getopt
 
 # options used by all commands
 global_options = 'g:v'
-global_options_long = ['no-prompts', 'generator=', 'verbose']
+global_options_long = ['no-prompts', 'generator=', 'verbose', 'make-gui']
 
 # options used by build related commands
 build_options = 'dr'
