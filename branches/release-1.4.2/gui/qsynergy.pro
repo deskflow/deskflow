@@ -79,5 +79,9 @@ release {
     MOC_DIR = tmp/release
     RCC_DIR = tmp/release
 }
-Debug:DESTDIR = ../bin/Debug
-Release:DESTDIR = ../bin/Release
+win32 {
+	Debug:DESTDIR = ../bin/Debug
+	Release:DESTDIR = ../bin/Release
+} else {
+	DESTDIR = ../bin
+}
