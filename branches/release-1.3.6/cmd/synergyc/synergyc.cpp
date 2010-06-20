@@ -547,7 +547,7 @@ USAGE_DISPLAY_ARG
 "\n\n"
 "Start the synergy mouse/keyboard sharing server.\n"
 "\n"
-"  -d, --debug <level>      filter out log messages with priorty below level.\n"
+"  -d, --debug <level>      filter out log messages with priority below level.\n"
 "                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
 "                           DEBUG, DEBUG1, DEBUG2.\n"
 USAGE_DISPLAY_INFO

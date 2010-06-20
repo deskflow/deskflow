@@ -886,7 +886,7 @@ PLATFORM_ARGS
 "\n"
 "  -a, --address <address>  listen for clients on the given address.\n"
 "  -c, --config <pathname>  use the named configuration file instead.\n"
-"  -d, --debug <level>      filter out log messages with priorty below level.\n"
+"  -d, --debug <level>      filter out log messages with priority below level.\n"
 "                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
 "                           DEBUG, DEBUG1, DEBUG2.\n"
 USAGE_DISPLAY_INFO
