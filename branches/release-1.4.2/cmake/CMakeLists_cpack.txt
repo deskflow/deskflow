@@ -25,7 +25,7 @@ IF(WIN32)
 ELSE(WIN32)
 	INSTALL(
 		FILES
-		bin/Release/qsynergy
+		bin/qsynergy
 		DESTINATION bin)
 ENDIF(WIN32)
 
