@@ -136,7 +136,7 @@ private:
 #endif
 
 #define HELP_COMMON_INFO_1 \
-	"  -d, --debug <level>      filter out log messages with priorty below level.\n" \
+	"  -d, --debug <level>      filter out log messages with priority below level.\n" \
 	"                             level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n" \
 	"                             DEBUG, DEBUGn (1-5).\n" \
 	"  -n, --name <screen-name> use screen-name instead the hostname to identify\n" \
