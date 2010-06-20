@@ -308,8 +308,10 @@ class InternalCommands:
 	def make_gui(self, targets):
 		if sys.platform == 'win32':
 			gui_make_cmd = self.w32_make_cmd
-		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
+		elif sys.platform in ['linux2', 'sunos5', 'freebsd7']:
 			gui_make_cmd = self.make_cmd
+		elif sys.platform == 'darwin':
+			gui_make_cmd = self.xcodebuild_cmd
 		else:
 			raise Exception('Unsupported platform: ' + sys.platform)
 		
@@ -326,7 +328,12 @@ class InternalCommands:
 				if err != 0:
 					raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
 		else:
-			self.try_chdir(self.gui_dir)
+			if sys.platform == 'darwin':
+				make_dir = self.gui_dir + '/QSynergy.xcodeproj'
+			else:
+				make_dir = self.gui_dir
+
+			self.try_chdir(make_dir)
 			err = os.system(gui_make_cmd)
 			self.restore_chdir()
 	
