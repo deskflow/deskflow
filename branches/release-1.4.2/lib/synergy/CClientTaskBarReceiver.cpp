@@ -1,5 +1,6 @@
 /*
- * synergy -- mouse and keyboard sharing utility
+ * synergy-plus -- mouse and keyboard sharing utility
+ * Copyright (C) 2009 The Synergy+ Project
  * Copyright (C) 2003 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
@@ -10,6 +11,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "CClientTaskBarReceiver.h"
