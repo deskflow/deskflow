@@ -17,6 +17,26 @@ INSTALL(
 	TARGETS ${cpack_targets}
 	RUNTIME DESTINATION bin)
 
+IF(WIN32)
+	INSTALL(
+		FILES
+		bin/Release/qsynergy.exe
+		DESTINATION bin)
+ELSE(WIN32)
+	IF(APPLE)
+		# TODO: how the hell do we distribute mac apps?
+		#INSTALL(
+		#	MACOSX_BUNDLE
+		#	bin/QSynergy.app
+		#	DESTINATION bin)
+	ELSE(APPLE)
+		INSTALL(
+			FILES
+			bin/qsynergy
+			DESTINATION bin)
+	ENDIF(APPLE)
+ENDIF(WIN32)
+
 # The default CPack behaviour is not to append the system processor
 # type, which is undesirable in our case, since we want to support 
 # both 32-bit and 64-bit processors.
@@ -62,7 +82,7 @@ IF(WIN32)
 	SET(CPACK_NSIS_MUI_UNIICON ${WIN32_ICON})
 	SET(CPACK_NSIS_INSTALLED_ICON_NAME launcher)
 	SET(CPACK_PACKAGE_INSTALL_DIRECTORY "Synergy+")
-	SET(CPACK_PACKAGE_EXECUTABLES launcher;Synergy+)
+	SET(CPACK_PACKAGE_EXECUTABLES qsynergy;Synergy+)
 ENDIF(WIN32)
 
 # For source package, leave out temp and Mercurial stuff.
