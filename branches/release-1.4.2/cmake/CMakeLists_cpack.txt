@@ -23,10 +23,17 @@ IF(WIN32)
 		bin/Release/qsynergy.exe
 		DESTINATION bin)
 ELSE(WIN32)
-	INSTALL(
-		FILES
-		bin/qsynergy
-		DESTINATION bin)
+	IF(APPLE)
+		INSTALL(
+			MACOSX_BUNDLE
+			bin/QSynergy.app
+			DESTINATION bin)
+	ELSE(APPLE)
+		INSTALL(
+			FILES
+			bin/qsynergy
+			DESTINATION bin)
+	ENDIF(APPLE)
 ENDIF(WIN32)
 
 # The default CPack behaviour is not to append the system processor
