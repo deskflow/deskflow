@@ -76,6 +76,10 @@ ELSE(UNIX)
 	SET(CPACK_SOURCE_GENERATOR ZIP)
 ENDIF(UNIX)
 
+if(APPLE)
+    set(CPACK_SYSTEM_NAME "MacOSX-Univeral")
+endif(APPLE)
+
 SET(CPACK_PACKAGE_NAME "synergy-plus")
 SET(CPACK_PACKAGE_VENDOR "The Synergy+ Project")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Installs Synergy+ server and client")
