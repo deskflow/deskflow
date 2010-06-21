@@ -102,12 +102,11 @@ ENDIF(WIN32)
 
 # For source package, leave out temp and Mercurial stuff.
 SET(CPACK_SOURCE_IGNORE_FILES
-	"/build/"		# Temp CMake build dir.
 	"/bin/"			# Temp binary output dir.
 	"/.hg/"			# Mercurial repo cache.
 	"/.hgignore"	# Mercurial ignore list (not neede by end-user).
 	".*~"			# Emacs temporary files.
-	"/config.h"		# The config.h file should be generated.
+	"/config.h$"		# The config.h file should be generated.
 )
 
 # Must be last (since it relies of CPACK_ vars).
