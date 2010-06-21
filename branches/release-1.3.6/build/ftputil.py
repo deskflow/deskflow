@@ -1,5 +1,5 @@
 # synergy-plus -- mouse and keyboard sharing utility
-# Copyright (C) 2009 The Synergy+ Project
+# Copyright (C) 2010 The Synergy+ Project
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
