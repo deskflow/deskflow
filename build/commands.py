@@ -15,7 +15,7 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, subprocess, shutil, re
+import sys, os, ConfigParser, subprocess, shutil, re, ftputil
 
 class InternalCommands:
 
@@ -39,6 +39,7 @@ class InternalCommands:
 	xcodeproj_filename = '%s.xcodeproj' % project
 	config_filename = '%s.cfg' % this_cmd
 	qtpro_filename = 'qsynergy.pro'
+	package_filename_re = 'synergy-plus-\d\.\d\.\d-.*'
 
 	# try_chdir(...) and restore_chdir() will use this
 	prevdir = ''
@@ -372,18 +373,28 @@ class InternalCommands:
 			raise Exception('Could not update from repository with error code code: ' + str(err))
 		
 	def revision(self):
-		# While this doesn't print out the revision specifically, it will do.
-		err = os.system('svn info')
-		if err != 0:
-			raise Exception('Could not get revision info with error code code: ' + str(err))
+		print self.find_revision()
 
+	def find_revision(self):
+		p = subprocess.Popen(['svn', 'info'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+		stdout, stderr = p.communicate()
+		
+		if p.returncode != 0:
+			raise Exception('Could not get revision info with error code code: ' + str(p.returncode))
+		
+		m = re.search('.*Revision: (\d+).*', stdout)
+		if not m:
+			raise Exception('Could not find revision number in svn info output.')
+		
+		return m.group(1)
+		
 	def kill(self):
 		if sys.platform == 'win32':
 			return os.system('taskkill /F /FI "IMAGENAME eq synergy*"')
 		else:
 			raise Exception('Not implemented for platform: ' + sys.platform)
 				
-	def package(self, type):
+	def package(self, type, ftp=None):
 
 		# Package is supported by default.
 		package_unsupported = False
@@ -422,6 +433,23 @@ class InternalCommands:
 			raise Exception(
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
+		
+		if ftp:
+			print 'Uploading package to FTP...'
+			ftp.run('bin/' + self.dist_name(), self.dist_name_rev())
+	
+	def dist_name(self):
+		for filename in os.listdir(self.bin_dir):
+			if re.search(self.package_filename_re, filename):
+				return filename
+		
+		# still here? package probably not created yet.
+		raise Exception('Could not find package name.')
+	
+	def dist_name_rev(self):
+		pattern = '(.*\d+\.\d+\.\d+)(.*)'
+		replace = '\g<1>-r' + self.find_revision() + '\g<2>'
+		return re.sub(pattern, replace, self.dist_name())
 	
 	def package_run(self, command):
 		self.try_chdir(self.bin_dir)
@@ -758,16 +786,35 @@ class CommandHandler:
 		print 'Not yet implemented: install'
 	
 	def package(self):
-		self.ic.package()
-	
-	def destroy(self):
-		self.ic.destroy()
-	
-	def package(self):
+		
 		type = None
 		if len(self.args) > 0:
 			type = self.args[0]
-		self.ic.package(type)
+		
+		ftp_host = None
+		ftp_user = None
+		ftp_password = None
+		ftp_dir = None
+		
+		for o, a in self.opts:
+			if o == '--ftp-host':
+				ftp_host = a
+			elif o == '--ftp-user':
+				ftp_user = a
+			elif o == '--ftp-pass':
+				ftp_password = a
+			elif o == '--ftp-dir':
+				ftp_dir = a
+		
+		ftp = None
+		if ftp_host:
+			ftp = ftputil.FtpUploader(
+				ftp_host, ftp_user, ftp_password, ftp_dir)
+		
+		self.ic.package(type, ftp)
+	
+	def destroy(self):
+		self.ic.destroy()
 	
 	def kill(self):
 		self.ic.kill()

@@ -31,7 +31,7 @@
 
 import sys, os
 from build import commands
-from getopt import getopt
+from getopt import gnu_getopt
 
 # options used by all commands
 global_options = 'g:v'
@@ -51,7 +51,7 @@ cmd_opt_dict = {
 	'clean' 	: [build_options, build_options_long],
 	'update' 	: ['', []],
 	'install' 	: ['', []],
-	'package' 	: ['', []],
+	'package' 	: ['', ['ftp-host=', 'ftp-user=', 'ftp-pass=', 'ftp-dir=']],
 	'kill' 		: ['', []],
 	'usage' 	: ['', []],
 	'revision' 	: ['', []],
@@ -151,7 +151,7 @@ def run_cmd(cmd, argv = []):
 		options_long.extend(global_options_long)
 		options_long.extend(options_pair[1])
 		
-		opts, args = getopt(argv, options, options_long)
+		opts, args = gnu_getopt(argv, options, options_long)
 		
 		for o, a in opts:
 			if o in ('-v', '--verbose'):
