@@ -57,7 +57,7 @@ ELSE(UNIX)
 ENDIF(UNIX)
 
 if(APPLE)
-    set(CPACK_SYSTEM_NAME "MacOSX-Univeral")
+    set(CPACK_SYSTEM_NAME "MacOSX-Universal")
 endif(APPLE)
 
 SET(CPACK_PACKAGE_NAME "synergy-plus")
