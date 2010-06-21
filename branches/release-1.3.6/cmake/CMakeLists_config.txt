@@ -97,6 +97,18 @@ IF(UNIX)
 	
 	IF(APPLE)
 
+		# build mac os x universal
+		set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
+			CACHE STRING "Build architectures for OSX" FORCE)
+
+		# TODO: fix 64-bit failures
+		#set(CMAKE_OSX_ARCHITECTURES "ppc;i386;ppc64;x86_64"
+		#	CACHE STRING "Build architectures for OSX" FORCE)
+
+		# not sure this is a good idea
+		#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5" 
+		#	CACHE STRING "Flags used by the compiler during all build types." FORCE)
+
 		FIND_LIBRARY(lib_ScreenSaver ScreenSaver)
 		FIND_LIBRARY(lib_IOKit IOKit)
 		FIND_LIBRARY(lib_ApplicationServices ApplicationServices)
