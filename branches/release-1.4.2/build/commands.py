@@ -377,7 +377,7 @@ class InternalCommands:
 	def find_revision(self):
 		p = subprocess.Popen(['svn', 'info'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		stdout, stderr = p.communicate()
-		
+
 		if p.returncode != 0:
 			raise Exception('Could not get revision - svn info failed with code: ' + str(p.returncode))
 		
@@ -478,6 +478,7 @@ class InternalCommands:
 				platform = 'Windows-x86'
 			
 		elif type == 'mac':
+			ext = 'dmg'
 			platform = 'MacOSX-Universal'
 		
 		if not platform:
