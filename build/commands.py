@@ -39,7 +39,6 @@ class InternalCommands:
 	xcodeproj_filename = '%s.xcodeproj' % project
 	config_filename = '%s.cfg' % this_cmd
 	qtpro_filename = 'qsynergy.pro'
-	package_filename_re = 'synergy-plus-\d\.\d\.\d-.*'
 
 	# try_chdir(...) and restore_chdir() will use this
 	prevdir = ''
@@ -394,71 +393,119 @@ class InternalCommands:
 		else:
 			raise Exception('Not implemented for platform: ' + sys.platform)
 				
-	def package(self, type, ftp=None):
+	def dist(self, type, ftp=None):
 
 		# Package is supported by default.
 		package_unsupported = False
 
 		if type == None:
-			self.package_usage()
+			self.dist_usage()
+			return
+			
 		elif type == 'src':
 			if sys.platform in ['linux2', 'darwin']:
-				self.package_run('make package_source')
+				self.dist_run('make package_source')
 			else:
 				package_unsupported = True
+			
 		elif type == 'rpm':
 			if sys.platform == 'linux2':
-				self.package_run('cpack -G RPM')
+				self.dist_run('cpack -G RPM')
 			else:
 				package_unsupported = True
+			
 		elif type == 'deb':
 			if sys.platform == 'linux2':
-				self.package_run('cpack -G DEB')
+				self.dist_run('cpack -G DEB')
 			else:
 				package_unsupported = True
+			
 		elif type == 'win':
 			if sys.platform == 'win32':
-				self.package_run('cpack -G NSIS')
+				self.dist_run('cpack -G NSIS')
 			else:
 				package_unsupported = True
+			
 		elif type == 'mac':
 			if sys.platform == 'darwin':
-				self.package_run('cpack -G PackageMaker')
+				self.dist_run('cpack -G PackageMaker')
 			else:
 				package_unsupported = True
+			
 		else:
-			print 'Not yet implemented: package %s' % type
+			raise Exception('Package type not supported: ' + type)
 
 		if package_unsupported:
 			raise Exception(
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
 		
-		if ftp:
-			print 'Uploading package to FTP...'
-			ftp.run('bin/' + self.dist_name(), self.dist_name_rev())
+		if type and ftp:
+			name = self.dist_name(type)
+			print 'Uploading %s to FTP server %s...' % (name, ftp.host)
+			ftp.run('bin/' + name, self.dist_name_rev(type))
+			print 'Done'
 	
-	def dist_name(self):
+	def dist_name(self, type):
+		ext = None
+		platform = None
+		
+		if type == 'src':
+			ext = 'tar.gz'
+			platform = 'Source'
+			
+		elif type == 'rpm' or type == 'deb':
+		
+			# os_bits should be loaded with '32bit' or '64bit'
+			import platform
+			(os_bits, other) = platform.architecture()
+		
+			# get platform based on current platform
+			ext = type
+			if os_bits == '32bit':
+				platform = 'Linux-i686'
+			elif os_bits == '64bit':
+				platform = 'Linux-x86_64'
+			
+		elif type == 'win':
+			
+			# get platform based on last generator used
+			ext = 'exe'
+			generator = self.get_generator_from_config()
+			if generator.find('Win64') != -1:
+				platform = 'Windows-x64'
+			else:
+				platform = 'Windows-x86'
+			
+		elif type == 'mac':
+			platform = 'MacOSX-Universal'
+		
+		if not platform:
+			raise Exception('Unable to detect package platform.')
+		
+		pattern = re.escape('synergy-plus-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
+		
 		for filename in os.listdir(self.bin_dir):
-			if re.search(self.package_filename_re, filename):
+			if re.search(pattern, filename):
 				return filename
 		
 		# still here? package probably not created yet.
-		raise Exception('Could not find package name.')
+		raise Exception('Could not find package name with pattern: ' + pattern)
 	
-	def dist_name_rev(self):
+	def dist_name_rev(self, type):
+		# find the version number (we're puting the rev in after this)
 		pattern = '(.*\d+\.\d+\.\d+)(.*)'
 		replace = '\g<1>-r' + self.find_revision() + '\g<2>'
-		return re.sub(pattern, replace, self.dist_name())
+		return re.sub(pattern, replace, self.dist_name(type))
 	
-	def package_run(self, command):
+	def dist_run(self, command):
 		self.try_chdir(self.bin_dir)
 		err = os.system(command)
 		self.restore_chdir()
 		if err != 0:
 			raise Exception('Package failed: ' + str(err))
 
-	def package_usage(self):
+	def dist_usage(self):
 		print ('Usage: %s package [package-type]\n'
 			'\n'
 			'Replace [package-type] with one of:\n'
@@ -747,7 +794,9 @@ class CommandHandler:
 	ic = InternalCommands()
 	build_targets = []
 	
-	def __init__(self, argv, opts, args):
+	def __init__(self, argv, opts, args, verbose):
+		
+		self.ic.verbose = verbose
 		
 		self.opts = opts
 		self.args = args
@@ -785,7 +834,7 @@ class CommandHandler:
 	def install(self):
 		print 'Not yet implemented: install'
 	
-	def package(self):
+	def dist(self):
 		
 		type = None
 		if len(self.args) > 0:
@@ -811,7 +860,7 @@ class CommandHandler:
 			ftp = ftputil.FtpUploader(
 				ftp_host, ftp_user, ftp_password, ftp_dir)
 		
-		self.ic.package(type, ftp)
+		self.ic.dist(type, ftp)
 	
 	def destroy(self):
 		self.ic.destroy()
