@@ -51,7 +51,7 @@ cmd_opt_dict = {
 	'clean' 	: [build_options, build_options_long],
 	'update' 	: ['', []],
 	'install' 	: ['', []],
-	'package' 	: ['', ['ftp-host=', 'ftp-user=', 'ftp-pass=', 'ftp-dir=']],
+	'dist'		: ['', ['ftp-host=', 'ftp-user=', 'ftp-pass=', 'ftp-dir=']],
 	'kill' 		: ['', []],
 	'usage' 	: ['', []],
 	'revision' 	: ['', []],
@@ -61,11 +61,11 @@ cmd_opt_dict = {
 
 # aliases to valid commands
 cmd_alias_dict = {
-	'info'	: 'about',
-	'help'	: 'usage',
-	'dist'  : 'package',
-	'make'	: 'build',
-	'cmake'	: 'configure',
+	'info'		: 'about',
+	'help'		: 'usage',
+	'package'	: 'dist',
+	'make'		: 'build',
+	'cmake'		: 'configure',
 }
 
 def complete_command(arg):
@@ -159,8 +159,7 @@ def run_cmd(cmd, argv = []):
 		
 		# pass args and optarg data to command handler, which figures out
 		# how to handle the arguments
-		handler = commands.CommandHandler(argv, opts, args)
-		handler.verbose = verbose
+		handler = commands.CommandHandler(argv, opts, args, verbose)
 		
 		# use reflection to get the function pointer
 		cmd_func = getattr(handler, cmd)
