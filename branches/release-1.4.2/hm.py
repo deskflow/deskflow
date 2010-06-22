@@ -169,7 +169,7 @@ def run_cmd(cmd, argv = []):
 	except:
 		if not verbose:
 			# print friendly error for users
-			sys.stderr.write('Error: ' + sys.exc_info()[1].__str__())
+			sys.stderr.write('Error: ' + sys.exc_info()[1].__str__() + '\n')
 			exit(1)
 		else:
 			# if user wants to be verbose let python do it's thing
