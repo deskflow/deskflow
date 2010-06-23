@@ -80,16 +80,35 @@ IF(WIN32)
 	SET(CPACK_PACKAGE_EXECUTABLES launcher;Synergy+)
 ENDIF(WIN32)
 
-# For source package, leave out temp and Mercurial stuff.
+# files to exclude from src package (regex patterns)
+# to escape, use 4 backslashes (\\\\) -- yuck!
 SET(CPACK_SOURCE_IGNORE_FILES
-	"/bin/"			# temp output dir
-	"/.svn/"		# subversion cache
-	".*~"			# emacs temporary files
-	"/config.h$"		# generated config.h file
-	"/.buildbot-sourcedata"	# buildbot stuff
-	"/gui/tmp/"		# qt temp build dir
-	"/gui/Makefile"		# qt make file
-	"/gui/ui_*.h"		# qt generated ui headers
+	# temp output dir in root
+	"/bin/"
+
+	# generated config.h file
+	"/config\\\\.h$"
+
+	# buildbot stuff
+	"\\\\.buildbot\\\\-sourcedata$"
+
+	# qt temp build dir
+	"/gui/tmp/.*"
+
+	# qt make file
+	"/gui/Makefile$"
+
+	# qt generated ui headers
+	"/gui/ui_.*\\\\.h$"
+
+	# compiled python files
+	".*\\\\.pyc$"
+
+	# subversion caches (all dirs)
+	".*/\\\\.svn/.*"
+
+	# emacs temporary files
+	".*~$"
 )
 
 # Must be last (since it relies of CPACK_ vars).
