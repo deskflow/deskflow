@@ -27,9 +27,9 @@
 #include <UserEnv.h>
 #include <sstream>
 
-CMSWindowsRelauncher::CMSWindowsRelauncher()
+CMSWindowsRelauncher::CMSWindowsRelauncher() :
+	m_thread(NULL)
 {
-	
 }
 
 CMSWindowsRelauncher::~CMSWindowsRelauncher()
