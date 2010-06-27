@@ -17,8 +17,8 @@ buildbot start synergy-plus
 
 
 == OS X 10.5 or 10.6 ==
-* install [http://macports.org mac-ports]
-* {{{sudo port install buildbot}}}
+ * install [http://macports.org mac-ports]
+ * `sudo port install buildbot`
 
 == Windows XP 32-bit ==
 
