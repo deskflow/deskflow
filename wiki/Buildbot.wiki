@@ -15,6 +15,11 @@ buildbot create-slave synergy-plus buildbot.synergy-plus.org:9989 <bot-name> <bo
 buildbot start synergy-plus
 }}}
 
+
+== OS X 10.5 or 10.6 ==
+* install [http://macports.org mac-ports]
+* {{{sudo port install buildbot}}}
+
 == Windows XP 32-bit ==
 
 Download and install:
