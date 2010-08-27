@@ -1,5 +1,5 @@
 #summary Project members (contact details and positions)
-#labels Featured
+#labels Featured,Deprecated
 
 <wiki:toc max_depth="2" />
 
