@@ -1,4 +1,5 @@
 #summary Handy tips & tricks for using our software (such as auto start)
+#labels Deprecated
 
 = Run at Startup =
 
