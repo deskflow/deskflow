@@ -1,5 +1,5 @@
 #summary How to configure and compile using CMake and the `hm` script
-#labels Phase-Implementation,Featured
+#labels Phase-Implementation,Featured,Deprecated
 
 <wiki:toc max_depth="1" />
 
