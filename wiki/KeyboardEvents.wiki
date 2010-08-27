@@ -1,4 +1,5 @@
 #summary This pages presents some information regarding various ways of processing the keyboard messages
+#labels Deprecated
 
 There is poll open at http://selectricity.org/quickvote/synergypluskb/results regarding preferences regarding the way Synergy+ works with the keyboard.
 
