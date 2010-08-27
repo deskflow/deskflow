@@ -1,5 +1,5 @@
 #summary Setup and configuration guide
-#labels Phase-Deploy,Featured
+#labels Phase-Deploy,Featured,Deprecated
 
 = Introduction =
 
