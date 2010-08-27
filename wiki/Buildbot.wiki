@@ -1,5 +1,5 @@
 #summary How to setup and manage buildbot.
-#labels Phase-QA
+#labels Phase-QA,Deprecated
 
 = Setup =
 
