@@ -1,4 +1,2 @@
-#summary One-sentence summary of this page.
 #labels Featured
-
 Our downloads page has moved - [http://synergy-foss.org/pm/projects/synergy/tabs/download new downloads page].
