@@ -1,5 +1,5 @@
 #summary Our statement about accepting donations
-#labels Featured
+#labels Featured,Deprecated
 
 The Synergy+ Project is a non-profit organisation run by volunteers, and we produce free open source software that anyone can use.
 
