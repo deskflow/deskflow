@@ -1,5 +1,5 @@
 #summary Frequently asked questions for our end-users
-#labels Featured
+#labels Featured,Deprecated
 
 *Page maintainer:* [Members FAQ Manager]
 
