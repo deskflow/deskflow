@@ -1,5 +1,5 @@
 #summary Member guidelines for dealing with issues
-#labels Phase-Requirements
+#labels Phase-Requirements,Deprecated
 
 = Creating Issues =
 
