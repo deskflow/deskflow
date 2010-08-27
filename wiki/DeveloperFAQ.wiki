@@ -1,5 +1,5 @@
 #summary Common questions and answers for new developers
-#labels Phase-QA,Featured
+#labels Phase-QA,Featured,Deprecated
 
 *Page maintainer:* [Members FAQ Manager]
 
