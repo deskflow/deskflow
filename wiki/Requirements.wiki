@@ -1,5 +1,5 @@
 #summary Details about supported operating systems
-#labels Phase-Requirements
+#labels Phase-Requirements,Deprecated
 
 == Fully Supported ==
 
