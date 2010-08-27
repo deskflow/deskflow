@@ -1,5 +1,5 @@
 #summary Our formal release process (release branches, etc)
-#labels Phase-Implementation
+#labels Phase-Implementation,Deprecated
 
 = Release processes =
 
