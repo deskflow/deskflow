@@ -1,5 +1,5 @@
 #summary A guide on obtaining and extracting the source code.
-#labels Featured
+#labels Featured,Deprecated
 
 This page explains how to obtain and use the source code.
 
