@@ -1,5 +1,5 @@
 #summary Describes the purpose of each branch
-#labels Phase-Implementation
+#labels Phase-Implementation,Deprecated
 
 || *Branch* || *Owner* || *State* || *Purpose* ||
 || release-x.x.x || n/a || n/a || Versions in active development. ||
