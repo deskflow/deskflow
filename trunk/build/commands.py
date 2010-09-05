@@ -360,7 +360,7 @@ class InternalCommands:
 			
 		elif generator.startswith('Xcode'):
 			print 'Opening with %s...' % generator
-			self.open_internal(xcodeproj_filepath(), 'open')
+			self.open_internal(self.xcodeproj_filepath(), 'open')
 			
 		else:
 			raise Exception('Not supported with generator: ' + generator)
