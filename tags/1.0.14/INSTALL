@@ -1,0 +1,575 @@
+Synergy Installation Instructions
+=================================
+
+Prerequisites for building
+--------------------------
+
+To build synergy from the sources you'll need the following:
+
+  Windows:
+  * VC++ 6.0 or up
+
+  Unix:
+  * gcc 2.95 (or up)
+  * X11R4 or up headers and libraries
+
+In this document, "Unix" means any of the supported Unix or Unix-like
+(e.g. Linux) operating systems.
+
+
+Configuring the build
+---------------------
+
+This step is only necessary when building on Unix.
+
+To configure the build for your platform use the configure script:
+
+  ./configure
+
+For a list of options to configure use:
+
+  ./configure --help
+
+On Solaris you may need to use:
+
+  ./configure --x-includes=/usr/openwin/include --x-libraries=/usr/openwin/lib
+
+so synergy can find the X11 includes and libraries.
+
+
+Building
+--------
+
+Windows:
+  Start VC++ and open `synergy.dsw'.  Set the active configuration
+  (Build | Set Active Configuration) to `All - Debug' or `All - Release'
+  then build.  Binaries are built into ./Debug or ./Release.
+
+Unix:
+  Simply enter:
+
+    make
+
+  This will build the client and server and leave them in their
+  respective source directories.
+
+
+Installing
+----------
+
+Windows:
+  There is no support for creating an installer for synergy or installing
+  the files in a particular location.  Instead, just copy the following
+  files from the Debug or Release directory to a directory you choose
+  (perhaps under the Program Files directory):
+
+  * synergy.exe
+  * synergyc.exe
+  * synergys.exe
+  * synrgyhk.dll
+
+Unix:
+    make install
+
+  will install the client and server into /usr/local/bin unless you
+  specified a different directory when you ran configure.
+
+See `Starting Automatically on ...' below for details on how to have
+synergy start up automatically when the computer starts.
+
+
+Running on Windows
+------------------
+
+Double click `synergy' on the server computer.  The server is the
+computer who's mouse and keyboard will be shared.  This brings up a
+dialog that lets you configure the server then test out the
+configuration or start the server.
+
+First configure the server.  Click the `Server' radio button
+
+  * Click the `Server' radio button
+  * Click `Add' to add the server to the `Screens' list
+    * Enter the name of server (the computer name is recommended)
+    * Enter other names the server is known by
+    * Click OK
+  * Use `Add' to add your other computers
+    * Using a computer's name as its screen name is recommended
+    * Choose desired screen options on the `Add' dialog
+  * Use the controls under `Layout' to link screens together
+    * Click (once) on the server's name in the `Screens' list
+    * Choose the screen to the left of the server
+      * Use `---' if there is no screen to the left of the server
+    * Choose the screens to the right, above and below the server
+    * Repeat the above steps for all the other screens
+  * Use `Options...' to set desired options
+  * If the server's screen name is not the server's computer name:
+    * Click `Advanced...'
+    * Enter the server's screen name next to `Screen Name'
+    * Click `OK'
+  * Click `Test'
+
+The server will start and you'll see a console window with log messages
+telling you about synergy's progress.  If an error occurs you'll get one
+or more dialog boxes telling you what the errors are;  read the errors
+to determine the problem then correct them and try `Test' again.
+
+Now that the server is running, you'll need to start a client.  On any
+client computer, double click `synergy'.  Of course, you'll need to
+have installed the four files listed under `Installing' above on the
+client computer.  Then configure the client:
+
+  * Click the `Client' radio button
+  * Enter the server's computer name in `Server Host Name'
+    * Do not use any of the server's screen names, unless one of those
+      is also the computer name
+  * If the client's screen name is not the client's computer name:
+    * Click `Advanced...'
+    * Enter the client's screen name next to `Screen Name'
+    * Click `OK'
+  * Click `Test'
+
+If all goes well, the client connects to the server successfully and
+the mouse and keyboard are shared.  If an error occurs you'll get one
+or more dialog boxes telling you what the errors are;  read the errors
+to determine the problem then correct them and try `Test' again.  When
+everything is working correctly, install the software on the other
+client computers (if any) and repeat the steps for configuring the
+client on each.
+
+Once the clients and server are working you can stop the clients and
+server by clicking the `Stop' button on each computer or by right
+clicking on the tray icon (by the clock in the task bar) and choosing
+`Quit'.  Then click `Start' on the server computer then on each of
+the clients.  Synergy will start and the dialog window will close.
+You can stop synergy or check on its status using the tray icon.
+
+See `Starting Automatically on Windows' below for configuring synergy
+to start automatically when the computer starts.
+
+
+Configuring the Server on Unix
+------------------------------
+
+The synergy server requires configuration.  The configuration file is a
+plain text file broken into sections.  Each section has the form:
+
+  section: <name>
+    <args>
+  end
+
+Comments are introduced by `#' and continue to the end of the line.
+The file can have the following sections.  The `screens' section must
+appear before the `links' and `aliases' sections.
+
+  * screens
+    <args> is a list of screen names, one name per line, each
+    followed by a colon.  Names are arbitrary strings but they
+    must be unique.  The hostname of each computer is recommended.
+    There must be a screen name for the server and each client.
+    Each screen can specify a number of options.  Options have the
+    form `name = value' and a listed one per line after the screen
+    name.
+
+	Example:
+
+      section: screens
+    	moe:
+    	larry:
+          halfDuplexCapsLock = true
+          halfDuplexNumLock = true
+    	curly:
+          meta = alt
+      end
+
+    This declares three screens named:  moe, larry, and curly.
+    Screen `larry' has half-duplex caps lock and num lock keys
+    (see below) and screen `curly' converts the meta modifier key
+    to the alt key.
+
+    Screen can have the following options:
+
+      halfDuplexCapsLock = {true|false}
+        This computer has a caps lock key that doesn't report a
+        press and a release event when the user presses it but
+        instead reports a press event when it's turned on and a
+        release event when it's turned off.  If caps lock acts
+        strangely on all screens then you may need this option
+        on the server screen.  If it acts strangely on one
+        screen then that screen may need the option.
+
+      halfDuplexNumLock = {true|false}
+        This is identical to halfDuplexCapsLock except it
+        applies to the num lock key.
+
+      xtestIsXineramaUnaware = {true|false}
+        This option works around a bug in the XTest extension
+        when used in combination with Xinerama.  It affects
+        X11 clients only.  Not all versions of the XTest
+        extension are aware of the Xinerama extension.  As a
+        result, they do not move the mouse correctly when
+        using multiple Xinerama screens.  This option is
+        currently true by default.  If you know your XTest
+        extension is Xinerama aware then set this option to
+        false.
+
+      shift = {shift|ctrl|alt|meta|super|none}
+      ctrl  = {shift|ctrl|alt|meta|super|none}
+      alt   = {shift|ctrl|alt|meta|super|none}
+      meta  = {shift|ctrl|alt|meta|super|none}
+      super = {shift|ctrl|alt|meta|super|none}
+        Map a modifier key pressed on the server's keyboard to
+        a different modifier on this client.  This option only
+        has an effect on a client screen;  it's accepted and
+        ignored on the server screen.
+
+        You can map, say, the shift key to shift (the default),
+	    ctrl, alt, meta, super or nothing.  Normally, you
+        wouldn't remap shift or ctrl.  You might, however, have
+        an X11 server with meta bound to the Alt keys.  To use
+        this server effectively with a windows client, which
+        doesn't use meta but uses alt extensively, you'll want
+        the windows client to map meta to alt (using `meta =
+        alt').
+
+  * links
+    <args> is a list of screen names just like in the `screens'
+    section except each screen is followed by a list of links,
+    one per line.  Each link has the form `<left|right|up|down> =
+    <name>'.  A link indicates which screen is adjacent in the
+    given direction.
+    
+
+    Example:
+
+      section: links
+        moe:
+          right = larry
+          up    = curly
+        larry:
+          left  = moe
+          up    = curly
+        curly:
+          down  = larry
+      end
+
+    This indicates that screen `larry' is to the right of screen
+    `moe' (so moving the cursor off the right edge of moe would
+    make it appear at the left edge of larry), `curly' is above
+    'moe', `moe' is to the left of `larry', `curly' is above
+    `larry', and `larry' is below `curly'.  Note that links do
+    not have to be symmetrical;  moving up from moe then down
+    from curly lands the cursor on larry.
+
+  * aliases
+    <args> is a list of screen names just like in the `screens'
+    section except each screen is followed by a list of aliases,
+    one per line *not* followed by a colon.  An alias is a
+    screen name and must be unique.  During screen name lookup
+    each alias is equivalent to the screen name it aliases.  So
+    a client can connect using its canonical screen name or any
+    of its aliases.  
+
+    Example:
+
+      section: aliases
+        larry:
+          larry.stooges.com
+        curly:
+          shemp
+      end
+
+    Screen `larry' is also known as `larry.stooges.com' and can
+    connect as either name.  Screen `curly' is also known as
+    `shemp'.  (Hey, it's just an example.)
+
+  * options
+    <args> is a list of lines of the form `name = value'.  These
+    set the global options.
+
+    Example:
+
+      section: options
+        heatbeat = 5000
+        switchDelay = 500
+      end
+
+    You can use the following options:
+
+      heartbeat = N
+        The server will expect each client to send a message no
+        less than every N milliseconds.  If no message arrives
+        from a client within 3N seconds the server forces that
+        client to disconnect.
+
+        If synergy fails to detect clients disconnecting while
+        the server is sleeping or vice versa, try using this
+        option.
+
+      switchDelay = N
+        Synergy won't switch screens when the mouse reaches the
+        edge of a screen unless it stays on the edge for N
+        milliseconds.  This helps prevent unintentional
+        switching when working near the edge of a screen.
+
+      switchDoubleTap = N
+        Synergy won't switch screens when the mouse reaches the
+        edge of a screen unless it's moved away from the edge
+        and then back to the edge within N milliseconds.  With
+        the option you have to quickly tap the edge twice to
+        switch.  This helps prevent unintentional switching
+        when working near the edge of a screen.
+
+      screenSaverSync = {true|false}
+        If set to false then synergy won't synchronize screen
+        savers.  Client screen savers will start according to
+        their individual configurations.  The server screen
+        saver won't start if there is input, even if that input
+        is directed toward a client screen.
+
+    You can use both the switchDelay and switchDoubleTap options at
+    the same time.  Synergy will switch when either requirement is
+    satisfied.
+
+The synergy server will try certain pathnames to load the configuration
+file if the user doesn't specify a path using the `--config' command
+line option.  `synergys --help' reports those pathnames.
+
+
+Running the Server on Unix
+--------------------------
+
+Run the server on the computer that has the keyboard and mouse to
+be shared.  You must have prepared a configuration file before
+starting the server.  The server should be started before the
+clients but that's not required.
+
+Run the synergy server on the server system using the following
+command line:
+
+  synergys -f --config <config-pathname>
+
+Replace <config-pathname> with the path to the configuration file.
+The `-f' option causes synergys to run in the foreground.  This is
+recommended until you've verified that the configuration works.
+If you didn't include the system's hostname in the configuration
+file (either as a screen name or an alias) then you'll have to add
+`--name <screen-name>' to the command line, where <screen-name> is
+a name in the configuration file.  You can use `synergys --help'
+for a list of command line options.
+
+See `Starting Automatically on Unix' below for running synergy
+automatically when the X server starts.
+
+
+Running the Client on Unix
+--------------------------
+
+Run the client on all computers that aren't the server using the
+following command line:
+
+  synergyc -f --no-camp <server-hostname>
+
+Replace <server-hostname> with the hostname or address of the
+server system.  The `-f' option causes synergy to run in the
+foreground.  The `--no-camp' prevents synergy from retrying to
+connect to the server until it succeeds.  Both are recommended
+until you've verified that the configuration works.  If you
+didn't include the system's hostname in the configuration file
+(either as a screen name or an alias) then you'll have to add
+`--name <screen-name>' to the command line, where <screen-name>
+is a name in the configuration file.
+
+The client should quickly report `connected to server'.  If it
+does not but doesn't print an error and exit immediately then
+it's trying to connect to the server but cannot.  It will time
+out in 30 seconds and exit (use ctrl+c to exit earlier).  You
+should check that the server is running and is reachable over
+the network and try again.
+
+If the client fails and exits it should print an error describing
+the problem.  Here are typical problems and possible solutions:
+
+  * failed to open screen:
+      check permission to open the X display;
+      check that the DISPLAY environment variable is set.
+  * already connected:
+      check that the synergy client isn't already running.
+  * refused client:
+      add client to the server's configuration file.
+  * connection failed:
+      check <server-hostname>;
+      the server cannot open the desired port, stop the
+      program using that port (24800) and restart the
+      server.
+
+Once all the clients are running, try moving the mouse to each
+screen.  Be sure to check all the configured links. 
+
+See `Starting Automatically on Unix' below for running synergy
+automatically when the X server starts.
+
+
+Starting Automatically on Windows
+---------------------------------
+
+When all the clients work you're ready to have synergy start
+automatically each time the system (re)starts.  Click `Stop' on all
+the clients then on the server'.  Now click the `Configure...' button
+by the text `Automatic Startup'.  The `Auto Start' dialog will pop up.
+If an error occurs then correct the problem and click `Configure'
+again.
+
+On the `Auto Start' dialog you'll configure synergy to start
+automatically when the computer starts or when you log in.  You can
+also configure synergy to not start automatically.  You can only
+start synergy automatically when the computer starts if you have
+sufficient access rights.  The dialog will let you know if you have
+sufficient permission.
+
+If synergy is already configured to automatically start then there
+will be two `Uninstall' buttons, at most one of which is enabled.
+Click the enabled button, if any, to configure synergy to not start
+automatically.
+
+If synergy is not configured to start automatically then there will
+be two `Install' buttons.  If you have sufficient permission to
+have synergy start automatically when the computer does then the
+`Install' button in the `When Computer Starts' box will be enabled.
+Click it to have synergy start for all users when the computer starts.
+In this case, synergy will be available during the login screen.
+Otherwise, click the `Install' button in the `When You Log In' box
+to have synergy automatically start when you log in.
+
+
+Starting Automatically on Unix
+------------------------------
+
+Synergy requires an X server.  That means a server must be
+running and synergy must be authorized to connect to that server.
+It's best to have the display manager start synergy.  You'll need
+the necessary (probably root) permission to modify the display
+manager configuration files.  If you don't have that permission
+you can start synergy after logging in via the .xsession file.
+
+To have the display manager start synergy, edit the Xsetup script.
+The location of this file depends on your installation.  It might
+be /etc/X11/xdm/Xsetup.  Near the end of the file but before
+anyplace the script calls exit, start the client with something
+like:
+
+  /usr/bin/killall synergyc
+  /usr/local/bin/synergyc [<options>] <server-host-name>
+
+<options> must not include `-f' or `--no-daemon'.  Change the
+paths as necessary.  It's important to make sure no old copies
+of synergy are running so they can't interfere with the new one.
+
+To start the server use something like:
+
+  /usr/bin/killall synergys
+  /usr/local/bin/synergys [<options>] --config <config-pathname>
+
+Again, <options> must not include `-f' or `--no-daemon'.  If
+the configuration pathname is one of the default locations then
+you don't need the `--config' option.
+
+Note that some display managers (xdm and kdm, but not gdm) grab
+the keyboard and do not release it until the user logs in, for
+security reasons.  This prevents a synergy server from sharing
+the mouse and keyboard until the user logs in.  It doesn't
+prevent a synergy client from synthesizing mouse and keyboard
+input, though.
+
+
+Network Security
+----------------
+
+Synergy has no built-in support for encryption or authentication.
+The server accepts connections from any computer.  The server and
+clients send all data unencrypted which means the clipboard and
+mouse and keyboard events (e.g. typed passwords) are easily
+examined by anyone listening on the network.  Therefore, do not
+run synergy on untrusted networks except as follows.
+
+You can use SSH (secure shell) to provide strong authentication
+and encryption to synergy without modifying either SSH or synergy.
+On Linux and Unix a free implementation of SSH called OpenSSH is
+available at http://www.openssh.com/.  On Windows you can use the
+Cygwin version of OpenSSH.
+
+First, install the SSH server (sshd) on the computer running the
+synergy server.  Next, install the SSH client (ssh) on each
+synergy client computer.  Start the SSH and synergy servers
+normally. Then, for each client, start the SSH client with port
+forwarding:
+
+  ssh -f -N -L 24800:<server-hostname>:24800 <server-hostname>
+
+where <server-hostname> is the name or address of the SSH and
+synergy server host.  24800 is the default synergy port;  replace
+it with whichever port you use if you don't use the default.  Once
+ssh authenticates with the server, start the synergy client as
+usual except use `localhost' or `127.0.0.1' for the server
+address.  Synergy will then pass all communication through SSH
+which encrypts it, passes it over the network, decrypts it, and
+hands it back to synergy.  Authentication is provided by SSH's
+authentication.
+
+
+
+Common Command Line Options
+---------------------------
+  -d, --debug <level>   use debugging level <level>
+      --daemon          run as a daemon (Unix) or background (Windows)
+  -f, --no-daemon       run in the foreground
+  -n, --name <name>     use <name> instead of the hostname
+      --restart         automatically restart on failures
+  -1, --no-restart      do not restart on failure
+  -h, --help            print help and exit
+      --version         print version information and exit
+
+Debug levels are from highest to lowest:  FATAL, ERROR, WARNING, NOTE,
+INFO, DEBUG, DEBUG1, and DEBUG2.  Only messages at or above the given
+level are logged.  Messages are logged to a terminal window when
+running in the foreground.  Unix logs messages to syslog when running
+as a daemon.  The Windows NT family logs messages to the event log
+when running as a service.  The Windows 95 family shows FATAL log
+messages in a message box and others in a terminal window when running
+as a service.
+
+The `--name' option lets the client or server use a name other than
+its hostname for its screen.  This name is used when checking the
+configuration.
+
+Neither the client nor server will automatically restart if an error
+occurs that is sure to happen every time.  For example, the server
+will exit immediately if it can't find itself in the configuration.
+On X11 both the client and server will also terminate if the
+connection to the X server is lost.  Since xdm will normally restart
+the X server and synergy, this is the correct behavior.
+
+
+Server Command Line Options
+---------------------------
+  -a, --address <address>  listen for connections on the given address
+  -c, --config <pathname>  read configuration from <pathname>
+
+<address> has one of the following forms:
+  <hostname>
+  :<port>
+  <hostname>:<port>
+<hostname> is a hostname or address of a network interface on the
+server system.  <port> is a port number from 1 to 65535.  <hostname>
+defaults to the system's hostname and <port> defaults to 24800.
+
+
+Client Command Line Options
+---------------------------
+  --camp                   retry connection to server until successful
+  --no-camp                try connection to server only once
+  <address>                address of server
+
+see the "server command line options" for a description of <address>
+but note that there is no default <hostname> though there is a
+default <port>.
