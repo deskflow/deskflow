@@ -1,0 +1,419 @@
+Synergy Developer and Porting Guide
+===================================
+
+This document is under development.
+
+Code Organization
+-----------------
+
+The synergy source code organization is:
+
+.               -- root makefiles, some standard documentation
+cmd             -- program source code
+  launcher      -- synergy launcher for Windows
+  synergyc      -- synergy client
+  synergys      -- synergy server
+config          -- stuff for autoconf/automake
+dist            -- files for creating distributions
+  nullsoft      -- files for creating Nullsoft NSIS installer (Windows)
+  rpm           -- files for creating RPMs
+doc             -- placeholder for documentation
+examples        -- example files
+lib             -- library source code
+  arch          -- platform dependent utility library
+  base          -- simple utilities
+  client        -- synergy client library
+  common        -- commonly needed header files
+  io            -- I/O
+  mt            -- multithreading
+  net           -- networking
+  platform      -- platform dependent display/window/event stuff
+  server        -- synergy server library
+  synergy       -- synergy shared client/server code library
+
+Note how the utility code required by the programs is placed into
+separate library directories.  This makes the makefiles a little
+more awkward but makes for a cleaner organization.  The top level
+directory has only the standard documentation files and the files
+necessary to configure and build the rest of the project.
+
+
+Coding Style Guide
+------------------
+
+Synergy uses many coding conventions.  Contributed code should
+following these guidelines.
+
+- Symbol Naming
+  Names always begin with a letter (never an underscore).  The first
+  letter of interior names are always capitalized.  Acronyms should
+  be all uppercase.  For example: myTextAsASCII.
+
+  Names come it two flavors:  leading capital and leading lowercase.
+  The former have the first character capitalized and the latter
+  don't.  In the following table, leading capital names are indicated
+  by `Name' and leading lowercase names by `name'.
+
+  The naming convention for various things are:
+
+    * Exceptions       -- X + Name    XMyException
+    * Interfaces       -- I + Name    IMyInterface
+    * Template Classes -- T + Name    TMyTemplate<>
+    * Other Classes    -- C + Name    CMyClass
+    * Enumerations     -- E + Name    EMyEnumeration
+    * Constants        -- k + Name    kMyConstant
+    * Data Members     -- m_ + name   m_myDataMember
+    * Methods          -- name        myMethod
+    * Functions        -- name        myFunction
+    * Variables        -- name        myVariable
+
+  Exceptions are types that get thrown and are generally derived
+  (possibly indirectly) from XBase.  Interfaces are derived (possibly
+  indirectly) from IInterface and have only pure virtual functions.
+  Other classes are classes that aren't exceptions or interfaces.
+  Constants include global constants and enumerants.
+
+  Method names should usually have the form `verbObject'.  For example:
+    * isGameOn()
+    * getBeer()
+    * pressPowerButton()
+    * setChannel()
+  In general, use `get' and `set' to read and write state but use `is'
+  to read boolean state.  Note that classes that contain only `is',
+  `get', and `set' are probably plain old data;  you might want to
+  consider using public data members only or, better, refactor your
+  design to have classes that actually do something more than just
+  hold data.
+
+- File Naming
+  Each class should have one source and one header file.  If the
+  class is named `CMyClass' then the source file should be named
+  `CMyClass.cpp' and the header file `CMyClass.h'.
+
+  Headers files not containing a class should have some meaningful
+  name with a leading capital (e.g. `Version.h').
+
+  Source files without a header file have a leading lowercase name.
+  Only files containing the entry point for an application should
+  lack a header file.
+
+- Dependencies
+  * No circular library dependencies
+    Library dependencies form an acyclic graph.  Conceptually
+    libraries can be arranged in layers where each library only
+    references libraries in layers below it, not in the same layer
+    or layers above it.  The makefiles build the lowest layer
+    libraries first and work upwards.
+
+  * Avoid circular uses-a relationships
+    When possible, design classes with one-way uses-a relationships
+    and avoid cycles.  This makes it easier to understand the code.
+    However, sometimes it's not always practical so it is permitted.
+
+  * Included files in headers
+    Headers should #include only the necessary headers.  In
+    particular, if a class is referenced in a header file only as a
+    pointer or a reference then use `class COtherClass;' instead of
+    `#include "COtherClass.h".'
+
+  * #include syntax
+    Non-synergy header files must be included using angle brackets
+    while synergy header files must be included using double quotes.
+      #include "CSynergyHeader.h"
+      #include <systemheader.h>
+    The file name in a #include must not be a relative path unless
+    it's a system header file and it's customary to use a relative
+    path, e.g. `#include <sys/types.h>'.  Use compiler options to
+    add necessary directories to the include search path.
+
+  * Included file ordering
+    Files should be included in the following order:
+    * Header for source file
+      The first include for CMyClass.cpp must be CMyClass.h. 
+    * Other headers in directory, sorted alphabetically
+    * Headers for each library, sorted alphabetically per library
+      Include headers from the library closest in the dependency graph
+        first, then the next farthest, etc.  Sort alphabetically within
+        each library.
+    * System headers
+
+- C++
+  * C++ features
+    Synergy uses the following more recent C++ features:
+    * bool
+    * templates
+    * exceptions
+    * mutable
+    * new scoping rules
+    * the standard C++ library
+
+    Do not use the following C++ features:
+    * dynamic_cast
+    * run time type information
+    * namespaces and using (use std:: where necessary)
+
+    The new scoping rules say that the scope of a variable declared
+    in a for statement is limited to the for loop.  For example:
+
+      for (int i = 0; i < 10; ++i) {
+        // i is in scope here
+      }
+      // i is not in scope here
+
+      for (int i = -10; i < 0; ++i) {
+        // an entirely new i is in scope here
+      }
+      // i is not in scope here
+
+    This is used routinely in synergy, but only in for loops.  There
+    is a macro for `for' in lib/base/common.h when building under
+    Microsoft Visual C++ that works around the fact that that compiler
+    doesn't follow the new scoping rules.  Use the macro if your
+    compiler uses the old scoping rules.
+
+  * Standard C++ library
+    The standard C++ library containers should always be used in favor
+    of custom containers wherever reasonable.  std::string is used
+    throughout synergy but only as the CString typedef;  always use
+    CString, never std::string except in the arch library.  Synergy
+    avoids using auto_ptr due to some portability problems.  Synergy
+    makes limited use of standard algorithms and streams but they can
+    be freely used in new code.
+
+  * Limited multiple inheritance
+    Classes should inherit implementation from at most one superclass. 
+    Inheriting implementation from multiple classes can have unpleasant
+    consequences in C++ due to it's limited capabilities.  Classes can
+    inherit	from any number of interface classes.  An interface class
+    provides only pure virtual methods.  Synergy breaks this rule in
+	IInterface which implements the virtual destructor for convenience.
+
+  * No globals
+	Avoid global variables.  All global variables must be static, making
+    it visible only with its source file.  Most uses of global variables
+    are better served by static data members of a class.  Global
+    constants are permitted in some circumstances.
+
+    Also avoid global functions.  Use public static member functions in
+    a class instead.
+
+    These rules are violated by the main source file for each program
+    (except that the globals are still static).  They could easily be
+    rewritten to put all the variables and functions into a class but
+    there's little to be gained by that.
+
+  * Private data only
+    If a class is plain-old-data (i.e. it has no methods) all of its
+    data members should be public.  Otherwise all of its data members
+    should be private, not public or protected.  This makes it much
+    easier to track the use of a member when reading code.  Protected
+    data is not allowed because `protected' is a synonym for `public
+    to my subclasses' and public data is a Bad Thing.  While it might
+    seem okay in this limited situation, the situation is not at all
+    limited since an arbitrary number of classes can be derived,
+    directly or indirectly, from the class and any of those classes
+    have full access to the protected data.
+
+  * Plain old data
+    A class that merely contains data and doesn't perform operations
+    on that data (other than reads and writes) is plain old data (POD).
+    POD should have only public data members and non-copy constructors.
+    It must not have any methods other than constructors, not even a
+    destructor or assignment operators, nor protected or private data.
+    Note that this definition of POD is not the definition used in the
+    C++ standard, which limits the contained data types to types that
+    have no constructors, destructors, or methods.
+
+  * Avoid using friend
+    Avoid declaring friend functions or classes.  They're sometimes
+    necessary for operator overloading.  If you find it necessary to
+    add friends to some class C, consider creating a utility class U.
+    A utility class is declared as the only friend of C and provides
+    only static methods.  Each method forwards to a private method on
+    an object of C type (passed as a parameter to the U's method).
+    This makes maintenance easier since only U has friend access to C
+    and finding any call to U is trivial (they're prefixed by U::).
+
+  * Don't test for NULL when using `delete' or `delete[]'
+    It's unnecessary since delete does it anyway.
+
+- Makefiles
+  Automake's makefiles (named Makefile.am) have a few requirements:
+  * Define the following macro at the top of the file:
+      NULL =
+  * Lists should have one item per line and end in $(NULL).  For
+    example:
+      EXTRA_DIST =     \
+          kiwi.txt     \
+          mango.cpp    \
+          papaya.h     \
+          $(NULL)
+    Indentation must use tabs in a makefile.  Line continuations
+    (backslashes) should be aligned using tabs.
+  * Lists of files should be sorted alphabetically in groups (e..g
+    source files, header files, then other files).  Lists of
+    subdirectories must be in the desired build order.
+
+- Source Formatting
+  Every project has its own formatting style and no style satisfies
+  everyone.  New code should be consistent with existing code:
+
+  * All files should include the copyright and license notice
+  * Use tabs to indent
+  * Tabs are 4 columns
+  * Lines should not extend past the 80th column
+  * Open braces ({) go on same line as introducing statement
+    `for (i = 0; i < 10; ++i) {' not
+     for (i = 0; i < 10; ++i)
+     {
+  * Close braces line up with introducing statement
+  * Open brace for function is on a line by itself in first column
+  * Close brace for function lines up with open brace
+  * Always use braces on: if, else, for, while, do, switch
+  * `else {' goes on its own line
+  * Always explicitly test pointers against NULL
+    e.g. `if (ptr == NULL)' not `if (ptr)'
+  * Always explicitly test integral values against 0
+    e.g. `if (i == 0)' not `if (i)'
+  * Put spaces around binary operators and after statements
+    e.g. `if (a == b) {' not `if(a==b){'
+  * C'tor initializers are one per line, indented one tab stop
+  * Other indentation should follow existing practice
+  * Use Qt style comments for extraction by doxygen (i.e. //! and /*!)
+  * Mark incomplete or buggy code with `FIXME'
+
+- Other
+  * calls to LOG() should always be all on one line (even past column 80)
+
+
+Class Relationships
+-------------------
+
+The doxygen documentation can help in understanding the relationships
+between objects.  Use `make doxygen' in the top level directory to
+create the doxygen documentation into doc/doxygen/html.  You must have
+doxygen installed, of course.
+
+FIXME -- high level overview of class relationships
+
+
+Portability
+-----------
+
+Synergy is mostly platform independent code but necessarily has
+platform dependent parts.  The mundane platform dependent parts
+come from the usual suspects:  networking, multithreading, file
+system, high resolution clocks, system logging, etc.  Porting
+these parts is relatively straightforward.
+
+Synergy also has more esoteric platform dependent code.  The
+functions for low-level event interception and insertion,
+warping the cursor position, character to keyboard event
+translation, clipboard manipulation, and screen saver control
+are often obscure and poorly documented.  Unfortunately, these
+are exactly the functions synergy requires to do its magic.
+
+Porting synergy to a new platform requires the following steps:
+
+- Setting up the build
+- Adjusting lib/common/common.h
+- Implementing lib/arch
+- Implementing lib/platform
+- Tweaks
+
+Setting up the build:
+
+The first phase is simply to create the files necessary to build the
+other files.  On Unix, synergy uses autoconf/automake which produces
+a `configure' script that generates makefiles.  On Windows, synergy
+uses Visual C++ workspace and project files.  If you're porting to
+another Unix variant, you may need to adjust `configure.in',
+`acinclude.m4', and Unix flavor dependent code in lib/arch.  Note
+especially the SYSAPI_* and WINAPI_* macro definitions in
+ARCH_CFLAGS.  Exactly one of each must be defined.  It should also
+add AM_CONDITIONALs if a new SYSAPI_* or WINAPI_* was added.
+
+Adjusting lib/common/common.h:
+
+The lib/common/common.h header file is included directly or indirectly
+by every other file.  Its primary job is to include config.h, which
+defines macros depending on what the 'configure' script discovered
+about the system.  If the platform does not use the 'configure' script
+it must define the appropriate SYSAPI_* and WINAPI_* macro.  It may
+also do other platform specific setup.
+
+Adjusting lib/common/BasicTypes.h:
+
+No changes should be necessary in BasicTypes.h.  However, if the
+platform's system header files define SInt8, et al. you may need
+to adjust the typedefs to match the system's definitions.
+
+Implementing lib/arch:
+
+Much platform dependent code lives in lib/arch.  There are several
+interface classes there and they must all be implemented for each
+platform.  See the interface header files for more information.
+
+Platforms requiring special functions should create a class named
+CArchMiscXXX where XXX is the platform name.  The class should have
+only static methods.  Clients can include the appropriate header
+file and make calls directly, surrounded by a suitable #ifdef/#endif.
+
+If using automake, the Makefile.am should list the system specific
+files in a XXX_SOURCE_FILES macro where XXX matches the appropriate
+AM_CONDITIONAL symbol.  XXX_SOURCE_FILES must be added to EXTRA_DIST
+and the following added above the INCLUDES macro:
+
+	if XXX
+	libarch_a_SOURCES =			\
+		$(COMMON_SOURCE_FILES)	\
+		$(XXX_SOURCE_FILES)		\
+		$(NULL)
+	endif
+
+Implementing lib/platform:
+
+Most of the remaining platform dependent code lives in lib/platform.
+The code there implements platform dependent window, clipboard, keyboard
+and screen saver handling.  If a platform is named XXX then the following
+classes should be derived and implemented:
+
+  * CXXXClipboard : IClipboard
+    Provides clipboard operations.  Typically, this class will
+    have helper classes for converting between various clipboard
+    data formats.
+
+  * CXXXEventQueueBuffer : IEventQueueBuffer
+    Provides operations for waiting for, posting and retrieving events.
+	Also provides operations for creating and deleting timers.
+
+  * CXXXKeyState : CKeyState
+    Provides operations for synthesizing key events and for mapping a
+	key ID to a sequence of events to generate that key.
+
+  * CXXXScreen : IScreen, IPrimaryScreen, ISecondaryScreen, IPlatformScreen
+    Provides screen operations.
+
+  * CXXXScreenSaver : IScreenSaver
+	Provides screen saver operations.
+
+If using automake, the Makefile.am should list the window system
+specific files in a XXX_SOURCE_FILES macro where XXX matches the
+appropriate AM_CONDITIONAL symbol.  XXX_SOURCE_FILES must be added
+to EXTRA_DIST and the following added above the INCLUDES macro:
+
+	if XXX
+	libplatform_a_SOURCES = $(XXX_SOURCE_FILES)
+	endif
+
+Tweaks:
+
+Finally, each platform typically requires various adjustments here
+and there.  In particular, synergyc.cpp and synergys.cpp usually
+require platform dependent code for the main entry point, parsing
+arguments, and reporting errors.  Also, some platforms may benefit
+from a graphical user interface front end.  These are generally
+not portable and synergy doesn't provide any infrastructure for
+the code common to any platform, though it may do so someday.
+There is, however, an implementation of a GUI front end for Windows
+that serves as an example.

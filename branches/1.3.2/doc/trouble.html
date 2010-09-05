@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+ <meta HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+ <meta name="keywords" content="Virtual Screen, Open Source, Software" />
+ <meta name="description" content="Mouse and Keyboard Sharing" />
+ <link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+ <title>Synergy Troubleshooting</title>
+</head>
+<body class="main">
+<p> </p>
+<h3>Synergy Troubleshooting</h3>
+<h4>Problems</h4>
+<ol>
+<li><a href="#problem1">Cannot read configuration</a>
+<li><a href="#problem2">Connection forcefully rejected</a>
+<li><a href="#problem3">Connection timed out</a>
+<li><a href="#problem4">Cannot listen for clients</a>
+<li><a href="#problem5">Unknown screen name "XXX"</a>
+<li><a href="#problem6">Server refused client with name "XXX"</a>
+<br><a href="#problem6">A client with name "XXX" is not in the map</a>
+<li><a href="#problem7">Server already has a connected client with name "XXX"</a>
+<br><a href="#problem7">A client with name "XXX" is already connected</a>
+<li><a href="#problem8">Server has incompatible version</a>
+<li><a href="#problem9">The cursor goes to secondary screen but won't come back</a>
+</ol>
+<h4>Solutions</h4>
+<ol>
+<li><a name="problem1"></a><span class="fakelink">Cannot read configuration</span>
+<p>
+There's an error in the configuration file.  This error is always
+accompanied by another message describing the problem.  Use that
+message and the <a href="configuration.html">configuration documentation</a>
+to determine the fix.
+</p>
+<li><a name="problem2"></a><span class="fakelink">Connection forcefully rejected</span>
+<p>
+The client was able to contact the server computer but the server was
+not listening for clients.  Possible reasons are:
+</p>
+<ul>
+<li>The client is using the wrong server
+<p>
+Make sure the client is using the hostname or IP address of the computer
+running the synergy server.
+</p>
+<li>Synergy isn't running on the server
+<p>
+Make sure the synergy server is running on the server computer.  Make
+sure the server is ready to accept connections.  If another program is
+using synergy's port (24800 by default) then synergy can't start unless
+you specify a different port.
+</p>
+<li>The client is using the wrong port
+<p>
+Synergy uses port 24800 by default but you can specify a different port.
+If you do use a different port you must use that port on the server and
+all clients.
+</p>
+</ul>
+<li><a name="problem3"></a><span class="fakelink">Connection timed out</span>
+<p>
+The most likely reasons for this are:
+</p>
+<ul>
+<li>A firewall
+<p>
+A firewall is a program or device that deliberately blocks network
+connections for security reasons.  Typically, they'll silently drop
+packets they don't want rather than sending a rejection to the sender.
+This makes it more difficult for intruders to break in.
+</p><p>
+When synergy traffic hits a firewall and gets dropped, eventually the
+synergy client will give up waiting for a response and time out.  To
+allow synergy traffic through first find all the firewalls on the
+network between and on the synergy client and server computers.
+</p><p>
+A firewall on the server or any network device between the server and
+any client should allow packets to TCP port 24800.  (Port 24800 is the
+default;  use whichever port you've selected.)  You'll have to consult
+the manual for your operating system, device, or firewall software to
+find out how to do this.
+</p><p>
+Usually you'll won't need to adjust a firewall on client machines.
+That's because firewalls normally allow incoming traffic on any port
+they've initiated a connection on.  The reasoning is, of course, if
+you started a conversation you probably want to hear the reply.
+</p>
+<li>The network is down or busy
+<p>
+Correct the network problem and try again.  You might try
+<span class="code">ping</span> to see if the two computers can see
+each other on the network.
+</p>
+<li>The server is frozen
+<p>
+If the synergy server is running but locked up or very busy then the
+client may get this message.  If the server is locked up then you'll
+probably have to restart it.  If it's just very busy then the client
+should successfully connect automatically once the server settles down.
+</p>
+</ul>
+<li><a name="problem4"></a><span class="fakelink">Cannot listen for clients</span>
+<p>
+Synergy tried to start listening for clients but the network port is
+unavailable for some reason.  Typical reasons are:
+</p>
+<ul>
+<li>No network devices
+<p>
+You must have a TCP/IP network device installed and enabled to use
+synergy.
+</p>
+<li>A synergy server is already running
+<p>
+Check that a synergy server isn't already running.
+</p>
+<li>Another program is using synergy's port
+<p>
+Only one program at a time can listen for connections on a given port.
+If the specific error is that the address is already in use and you've
+ruled out the other causes, then it's likely another program is already
+using synergy's port.  By default synergy uses port 24800.  Try having
+synergy use a different port number, like 24801 or 24900.  Note that
+the server and all clients must use the same port number.  Alternatively,
+find the other program and stop it or have it use another port.
+</p>
+</ul>
+<li><a name="problem5"></a><span class="fakelink">Unknown screen name "XXX"</span>
+<p>
+This error can be reported when reading the configuration;  see
+<a href="#problem1">cannot read configuration</a>.  If the configuration
+was read successfully and you get this error then it means that the
+server's screen is not in the configuration.  All screens must be listed
+in the configuration.
+</p><p>
+A common reason for this is when you haven't used the system's hostname
+as its screen name.  By default, synergy uses the hostname as the screen
+name.  If you used a different screen name in the configuration then you
+must tell synergy what that name is.  Let's say the hostname is
+<span class="code">frederick</span> but the configuration defines a screen
+named <span class="code">fred</span>.  Then you must tell the server
+that its screen name is <span class="code">fred</span> by using the
+<span class="code">--name fred</span> command line option or setting
+the screen name in the advanced options dialog to
+<span class="code">fred</span>.
+</p><p>
+Alternatively, you can specify one name as an alias of another.  See
+the <a href="configuration.html#aliases">configuration documentation</a>
+for details.
+</p><p>
+Another common reason for this is a mismatch between what you think the
+hostname is and what synergy thinks it is.  Typically this is a problem
+with fully qualified domain names (FQDN).  Perhaps you think your system
+is named <span class="code">fred</span> but synergy thinks it's
+<span class="code">fred.nowhere.com</span> or
+<span class="code">fred.local</span>.  You can use either solution above
+to fix this.
+</p>
+<li><a name="problem6"></a><span class="fakelink">Server refused client with name "XXX"</span>
+<br><span class="fakelink">A client with name "XXX" is not in the map</span>
+<p>
+The client is using a screen name not in the server's configuration.
+This is essentially the same problem as <a href="#problem5">Unknown
+screen name "XXX"</a> and has the same solutions:  specify another
+screen name or add an alias.
+</p>
+<li><a name="problem7"></a><span class="fakelink">Server already has a connected client with name "XXX"</span>
+<br><span class="fakelink">A client with name "XXX" is already connected</span>
+<p>
+This happens when:
+</p>
+<ul>
+<li>Two clients try use the same screen name
+<p>
+Each client must have a unique screen name.  Configure at least one
+client to use a different screen name.
+</p>
+<li>One client reconnects without cleanly disconnecting
+<p>
+It's possible for a client to disconnect without the server knowing,
+usually by being disconnected from the network or possibly by going
+to sleep or even crashing.  The server is left thinking the client is
+still connected so when the client reconnects the server will think
+this is a different client using the same name.  Synergy will usually
+detect and correct this problem within a few seconds.  If it doesn't
+then restart the server.
+</p>
+</ul>
+<li><a name="problem8"></a><span class="fakelink">Server has incompatible version</span>
+<p>
+You're using different versions of synergy on the client and server.
+You should use the same version on all systems.
+</p>
+<li><a name="problem9"></a><span class="fakelink">The cursor goes to secondary screen but won't come back</span>
+<p>
+This is <a href="faq.html#faq17">FAQ #17</a> and is also mentioned in
+the documentation for <a href="running.html#asymmetric">using synergy</a>
+and <a href="configuration.html#asymmetric">configuration</a>.
+</p>
+</ol>
+</body>
+
+</html>
