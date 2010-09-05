@@ -43,6 +43,7 @@ PROJECT(synergy-plus C CXX)
 SET(root_dir ${CMAKE_SOURCE_DIR})
 SET(cmake_dir ${root_dir}/cmake)
 SET(bin_dir ${root_dir}/bin)
+SET(doc_dir ${root_dir}/doc)
 
 # Now for the stuff to generate config.h (and setup defines).
 INCLUDE(${cmake_dir}/CMakeLists_config.txt)
@@ -55,6 +56,9 @@ INCLUDE(${cmake_dir}/CMakeLists_launcher.txt)
 
 # Setup the CPack config.
 INCLUDE(${cmake_dir}/CMakeLists_cpack.txt)
+
+# Setup doxygen
+INCLUDE(${cmake_dir}/CMakeLists_doxygen.txt)
 
 IF(WIN32)
 	# add /analyze in order to unconver potential bugs in the source code

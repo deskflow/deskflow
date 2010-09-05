@@ -51,6 +51,7 @@ cmd_opt_dict = {
 	'clean' 	: [build_options, build_options_long],
 	'update' 	: ['', []],
 	'install' 	: ['', []],
+	'doxygen'   : ['', []],
 	'dist'		: ['', ['ftp-host=', 'ftp-user=', 'ftp-pass=', 'ftp-dir=']],
 	'kill' 		: ['', []],
 	'usage' 	: ['', []],
@@ -64,6 +65,7 @@ cmd_alias_dict = {
 	'info'		: 'about',
 	'help'		: 'usage',
 	'package'	: 'dist',
+	'docs'		: 'doxygen',
 	'make'		: 'build',
 	'cmake'		: 'configure',
 }

@@ -34,11 +34,13 @@ class InternalCommands:
 	cmake_dir = 'cmake'
 	bin_dir = 'bin'
 	gui_dir = 'gui'
+	doc_dir = 'doc'
 
 	sln_filename = '%s.sln' % project
 	xcodeproj_filename = '%s.xcodeproj' % project
 	config_filename = '%s.cfg' % this_cmd
 	qtpro_filename = 'qsynergy.pro'
+	doxygen_filename = 'doxygen.cfg'
 
 	# try_chdir(...) and restore_chdir() will use this
 	prevdir = ''
@@ -114,6 +116,7 @@ class InternalCommands:
 			'  revision    Display the current source code revision\n'
 			'  package     Create a distribution package (e.g. tar.gz)\n'
 			'  install     Installs the program\n'
+			'  doxygen	 Builds doxygen documentation\n'
 			'  reformat    Reformat .cpp and .h files using AStyle\n'
 			'  usage       Shows the help screen\n'
 			'\n'
@@ -392,6 +395,16 @@ class InternalCommands:
 			return os.system('taskkill /F /FI "IMAGENAME eq synergy*"')
 		else:
 			raise Exception('Not implemented for platform: ' + sys.platform)
+		
+	def doxygen(self):
+		# The conf generates doc/doxygen.cfg from cmake/doxygen.cfg.in
+		if not self.has_conf_run():
+			self.configure_internal()
+
+		err = os.system('doxygen %s/%s' % (self.doc_dir, self.doxygen_filename))
+			
+		if err != 0:
+			raise Exception('doxygen failed with error code: ' + str(err))
 				
 	def dist(self, type, ftp=None):
 
@@ -834,6 +847,9 @@ class CommandHandler:
 	
 	def install(self):
 		print 'Not yet implemented: install'
+	
+	def doxygen(self):
+		self.ic.doxygen ()
 	
 	def dist(self):
 		
