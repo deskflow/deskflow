@@ -1,0 +1,180 @@
+Synergy News
+============
+
+* Aug-24-2003 - Synergy 1.0.14 released
+
+  Made following changes:
+  * Fixed bugs in setting win32 process/thread priority
+  * Fixed resource leak in opening win32 system log
+  * Fixed win32 launcher not getting non-default advanced options
+  * Synergy log copied to clipboard now transferred to other screens
+  * Hack to work around lesstif clipboard removed (fixes pasting on X)
+
+* Jul-20-2003 - Synergy 1.0.12 released
+
+  This release finally completes support for non-ASCII characters,
+  fully supporting most (all?) European keyboard layouts including
+  dead key composition.  This release includes changes from several
+  experimental versions (1.0.9, 1.0.11, 1.1.0, 1.1.1, 1.1.2, and
+  1.1.3).
+
+  Made following changes:
+  * Added non-ASCII support to win32 and X11
+  * Added dead key support to win32 and X11
+  * Fixed AltGr handling
+  * Added ctrl+alt+del simulation using ctrl+alt+pause
+  * Fixed loss of key event when user releases ctrl+alt+del
+  * Fixed incorrect synthesis of pointer-keys event on X11
+  * Fixed Xinerama support
+  * Made some clipboard fixes on win32 and X11
+  * Add tray icon menu item to copy log to clipboard
+  * Fixed mouse warping on unconnected client
+  * Stopped unconnected client from filling up event logs
+
+* May-10-2003 - Synergy 1.0.8 released
+
+  Made following changes:
+  * Fixed hook forwarding (fixing interaction with objectbar)
+  * Fixed "Windows" key handling and added support Win+E, Win+F, etc
+  * Added win 95/98/me support for Alt+Tab, Alt+Esc, Ctrl+Esc
+  * Fixed scroll lock locking to server screen
+  * Fixed screen flashing on X11 and Windows
+  * Fixed compile problem on 64 bit systems
+  * Fixed Xinerama support
+  * Now allowing screen names that include underscores
+  * Improved non-ASCII key handling on Windows
+  * Fixed lagginess
+  * Fixed failure to capture all mouse input on Windows
+  * Fixed auto-repeat bugs on X11
+  * Added option to disable screen saver synchronization
+  * Added support for 4th and 5th mouse buttons on Windows
+  * Added support for "Internet" and "Multimedia" keys
+  * Fixed jumping from client to itself (mouse wrapping)
+
+* Mar-27-2003 - Synergy 1.0.6 released
+
+  Made following changes:
+  * Added tray icon on win32
+  * Fixed multi-monitor support on win32
+  * Fixed win32 screen saver detection on NT/2k/XP
+  * Added per-screen options to remap modifier keys
+  * Added global options for restricting screen jumping
+  * Added global option for detecting unresponsive clients
+  * Added more logging for why screen jump won't happen
+  * Fixed problem sending the CLIPBOARD to motif/lesstif apps
+  * Win32 launcher now remembers non-config-file state
+
+* Feb-18-2003 - Synergy 1.0.3 released
+
+  Made following changes:
+  * Support for X11 keymaps with only uppercase letters
+  * Fixed memory leaks
+  * Added documentation on using synergy with SSH
+  * Fixed unnecessary left-handed mouse button swapping
+  * Fixed debug build error on win32
+  * Reduced frequency of large cursor jumps when leaving win32 server
+  * Changed cursor motion on win32 multimon to relative moves only
+
+
+* Jan-25-2003 - Synergy 1.0.2 released
+
+  Made following changes:
+  * Fixed out-of-bounds array lookup in the BSD and Windows network code
+  * Added ability to set screen options from Windows launch dialog
+
+
+* Jan-22-2003 - Synergy 1.0.1 released
+
+  Made following changes:
+  * Fixed running as a service on Windows NT family
+
+
+* Jan-20-2003 - Synergy 1.0.0 released
+
+  Made following changes:
+  * Refactored to centralize platform dependent code
+  * Added support for mouse wheel on Windows NT (SP3 and up)
+  * Portability improvements
+  * Added more documentation
+  * Fixes for working with xscreensaver
+  * Fixes for circular screen links
+
+  This release has been tested on Linux and Windows.  It builds and
+  is believed to run on Solaris and FreeBSD.  It is believed to
+  build and run on Irix and AIX.  It builds but does not work on
+  MacOS X.
+
+
+* Dec-25-2002 - Synergy 0.9.14 released
+
+  Made following changes:
+  * Fixed solaris compile problems (untested)
+  * Fixed irix compile problems (untested)
+  * Fixed windows client not reconnecting when server dies bug
+  * Fixed loss of ctrl+alt from windows server to non-windows clients
+  * Fixed handling of password protected windows client screen saver
+  * Now handling any number of pointer buttons on X11
+  * Toggle key states now restored when leaving clients
+  * Added support for per-screen config options
+  * Added config options for half-duplex toggle keys on X11
+  * Enabled class diagrams in doxygen documentation
+
+
+* Nov-05-2002 - Synergy 0.9.13 released
+
+  Made following changes:
+  * Fixed solaris compile problems (untested)
+  * Fixed MacOS X compile problems (semi-functional)
+  * Fixed gcc-3.2 compile problems
+  * Fixed some thread startup and shutdown bugs
+  * Server now quits if bind() fails with an error other than in use
+  * Fixed bug in moving mouse on Win98 without multiple monitors
+  * Fixed bug in handling TCP socket errors on read and write
+  * Fixed spurious screen saver activation on X11
+  * Unix platforms can now read Win32 configuration files
+  * Minor error reporting fixes
+
+
+* Sep-14-2002 - Synergy 0.9.12 released
+
+  Made following changes:
+  * Win32 was not reporting log messages properly when run from synergy.exe
+  * Network error messages weren't reporting useful information
+  * Synergy won't build on gcc 3.2; added workaround for known problem
+  * X11 wasn't handling some keys/key combinations correctly
+  * Added option to change logging level when testing from synergy.exe
+
+
+* Sep-04-2002 - Synergy 0.9.11 released
+
+  Fixed following bugs:
+  * Worked around missing SendInput() on windows 95/NT 4 prior to SP3
+  * Fixed keyboard mapping on X11 synergy client
+
+
+* Sep-02-2002 - Synergy 0.9.10 released
+
+  Fixed following bugs:
+  * The Pause/Break and KP_Enter buttons were not working correctly on windows
+  * Configuration options were being lost on windows after a reboot
+  * Added support for AltGr/ModeSwitch keys
+  * Added support for auto-start on windows when not administrator
+  * Improved autoconf
+  * Added workaround for lack of sstream header on g++ 2.95.
+
+
+* Aug-18-2002 - Synergy 0.9.9 released
+
+  Fixed three bugs:
+  * The PrintScrn button was not working correctly on windows
+  * The Win32 server could hang when a client disconnected
+  * Using the mouse wheel could hang the X server
+
+
+* Aug-11-2002 - Synergy 0.9.8 released
+
+  Supports any number of clients under Linux or Windows 95 or NT4
+  or later.  Includes mouse and keyboard sharing, clipboard
+  synchronization and screen saver synchronization.  Supports ASCII
+  keystrokes, 5 button mouse with wheel, and Unicode text clipboard
+  format.

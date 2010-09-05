@@ -1,0 +1,96 @@
+#!/bin/sh
+# add header to file.  intended to add copyright info to files.
+#
+# usage: addheader <file-with-header> <file-to-modify>
+
+# choose comment character
+ext=`echo $2 | sed -e 's/.*\.\([^.]*\)$/\1/'`
+case $ext in
+	c|cpp|h)
+		openComment='/*'
+		closeComment=' */'
+		innerComment=' * '
+		;;
+	am)
+		openComment=''
+		closeComment=''
+		innerComment='# '
+		;;
+	m4)
+		openComment=''
+		closeComment=''
+		innerComment='dnl '
+		;;
+	in)
+		if test $2 = "configure.in"; then
+			openComment=''
+			closeComment=''
+			innerComment='dnl '
+		fi
+		;;
+	*)
+		;;
+esac
+if test -z "$innerComment"; then
+	echo Unrecognized extension $ext.  Exiting.
+	exit 1
+fi
+
+# create awk program to strip old header.  we have to use a heuristic
+# to determine what's a header.  we'll strip any continuous comment
+# at the start of a file that includes a line with `Copyright'.
+body=".$$.ahb"
+ocMatch=`echo "$openComment" | sed -e 's/\*/\\\\*/g' -e 's#/#\\\\/#g'`
+ccMatch=`echo "$closeComment" | sed -e 's/\*/\\\\*/g' -e 's/^ +/ */' -e 's#/#\\\\/#g'`
+icMatch=`echo "$innerComment" | sed -e 's/\*/\\\\*/g' -e 's#/#\\\\/#g'`
+awkGetHeader="m==4"
+if test -n "$ocMatch"; then
+	awkGetHeader="$awkGetHeader;m==0 && /${ocMatch}/{m=1}"
+else
+	awkGetHeader="BEGIN{m=1};$awkGetHeader"
+fi
+if test -n "$ccMatch"; then
+	awkGetHeader="$awkGetHeader;m==1 && /^${icMatch}/{m=2}"
+	awkGetHeader="$awkGetHeader;/${ccMatch}/{m=4}"
+else
+	awkGetHeader="m==3 && !/^${icMatch}/{m=4};$awkGetHeader"
+	awkGetHeader="$awkGetHeader;m==1 && /^${icMatch}/{m=3}"
+fi
+
+# strip old header
+awk "$awkGetHeader" $2 > $body
+if test $? -ne 0; then
+	rm -f $body
+	echo "can't parse file"
+fi
+
+# if body is empty then there was no header
+if test ! -s $body; then
+	cp $2 $body
+else
+	fLength=`cat $2 | wc -l`
+	bLength=`cat $body | wc -l`
+	hLength=`expr $fLength - $bLength`
+	crLine=`grep -n -i "copyright" $2 | sed -e 's/:.*//'`
+	test -z "$crLine" && crLine=`expr $hLength + 1`
+	if test $crLine -gt $hLength; then
+		# no copyright in header
+		cp $2 $body
+	fi
+fi
+
+# add new header
+echo -n "" > $2
+if test -n "$openComment"; then
+	echo "$openComment" >> $2
+fi
+cat $1 | sed -e "s/^/$innerComment/" >> $2
+if test -n "$closeComment"; then
+	echo "$closeComment" >> $2
+fi
+head -1 $body | tr '\t' ' ' | grep "^ *$" > /dev/null
+if test $? -eq 1; then
+	echo "" >> $2
+fi
+cat $body >> $2
+rm -f $body

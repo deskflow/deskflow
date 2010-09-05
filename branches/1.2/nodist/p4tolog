@@ -1,0 +1,46 @@
+#!/bin/sh
+# convert p4 logs to ChangeLog
+#
+# usage: p4tolog [file[revRange] ...]
+#
+# changes are written to stdout
+
+# location of perforce client
+P4=/home/perforce/bin/p4
+
+prefix=""
+while [ -n "$1" ]; do
+	case "$1" in
+	-p)
+		# get depot filespec prefix to strip and escape slashes
+		prefix=`echo $2 | sed -e 's#/#\\\\/#g'`
+		shift
+		;;
+	*)
+		break
+		;;
+	esac
+	shift
+done
+
+# get relevant changes
+changes=`$P4 changes $* | sed -e 's/Change \([0-9]*\).*/\1/'`
+if test -z "$changes"; then
+	echo "No changes"
+	exit 0
+fi
+
+# convert each change
+for change in $changes; do
+	$P4 describe -s $change | head -1 | \
+		sed -e 's/.*by \([^ @]*\)[^ ]* on \([^ ]*\) \([^ ]*\)/\2 \3 \1/'
+	$P4 describe -s $change | \
+		awk 'p==1 && !/^$/;/^Affected/{p=1}' | \
+		sed -e 's/^[^ ]* \([^#]*\)#.*$/\1/' | sed -e "s/^$prefix//"
+	echo
+	$P4 describe -s $change | \
+		awk 'p==1 && !/$^/;/^$/{if (p==1) exit; else p=1}' | \
+		sed -e 's/^.//'
+	echo
+	echo "----------"
+done
