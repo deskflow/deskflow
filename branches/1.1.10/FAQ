@@ -1,0 +1,187 @@
+Synergy Frequently Asked Questions
+==================================
+
+Questions
+---------
+1.  Why doesn't ctrl+alt+del work on secondary screens?
+2.  Can the server and client be using different operating systems?
+3.  What's the difference between synergy and x2x, x2vnc, etc?
+4.  What does "Cannot initialize hook library" mean?
+5.  What security/encryption does synergy provide?
+6.  What should I call my screens in the configuration?
+7.  Why do my CapsLock and NumLock keys act funny?
+8.  Can synergy share the display in addition to the mouse and keyboard?
+9.  Can synergy do drag and drop between computers?
+10. Do AltGr or Mode-Switch work?
+11. Why isn't synergy ported to platform XYZ?
+12. My client can't connect.  What's wrong?
+13. Linking fails on Solaris.  What's wrong?
+14. The screen saver never starts.  Why not?
+15. I can't switch screens anymore for no apparent reason.  Why?
+
+Answers
+-------
+1.  Why doesn't ctrl+alt+del work on secondary screens?
+
+    Synergy isn't able to capture ctrl+alt+del on PC compatible
+    systems because it's handled completely differently than
+    other keystrokes.  However, when the mouse is on a client
+    screen, pressing ctrl+alt+pause will simulate ctrl+alt+del
+    on the client.  (A client running on Windows NT, 2000, or XP
+    must be running as a service for this to work.)
+
+2.  Can the server and client be using different operating systems?
+
+    Yes.  The synergy network protocol is platform neutral so
+    synergy doesn't care what operating systems are running on
+    the server and clients.
+
+3.  What's the difference between synergy and x2x, x2vnc, etc?
+
+    Unlike x2x, synergy supports any number of computers and
+    it doesn't require X on Microsoft Windows platforms.  It
+    also has more advanced clipboard support and synchronizes
+    screensavers.  x2vnc is also limited to two computers,
+    requires the separate vnc package, and is really only
+    appropriate for using an X system to control a non-X system.
+    However, the right tool for the job is whatever tool works
+    best for you.
+
+4.  What does "Cannot initialize hook library" mean?
+
+    This error can occur on a synergy server running on a
+    Microsoft Windows operating system.  It means that synergy
+    is already running or possibly was not shut down properly.
+    If it's running then first end the synergy task.  If it's
+    not then try logging off and back on or rebooting then
+    starting synergy again.
+
+5.  What security/encryption does synergy provide?
+
+    Synergy provides no built-in encryption or authentication.
+    Given that, synergy should not be used on or over any untrusted
+    network, especially the Internet.  It's generally fine for home
+    networks.  Future versions may provide built-in encryption and
+    authentication.
+
+    Strong encryption and authentication is available through SSH
+    (secure shell).  Run the SSH daemon (i.e. server) on the same
+    computer that you run the synergy server.  It requires no
+    special configuration to support synergy.  On each synergy
+    client system, run SSH with port forwarding:
+
+        ssh -f -N -L 24800:<server-hostname>:24800 <server-hostname>
+
+    where <server-hostname> is the name of the SSH/synergy server.
+    Once ssh authenticates itself, start the synergy client
+    normally except use `localhost' or `127.0.0.1' as the server's
+    address.  SSH will then encrypt all communication on behalf of
+    synergy.  Authentication is handled by the SSH authentication.
+
+    A free implementation of SSH for Linux and many Unix systems
+    called OpenSSH is available from http://www.openssh.com/.  For
+    Windows there's a port of OpenSSH using Cygwin
+    (http://www.cygwin.com/).
+
+6.  What should I call my screens in the configuration?
+
+    You can use any unique name in the configuration file for each
+    screen but it's easiest to use the hostname of the computer.
+    That's the computer name not including the domain.  For example,
+    a computer with the fully qualified domain name `xyz.foo.com' has
+    the hostname `xyz'.  There should also be an alias for `xyz' to
+    `xyz.foo.com'.  If you don't use the computer's hostname, you
+    have to tell synergy the name of the screen using a command line
+    option, or the startup dialog on Windows.
+
+7.  Why do my CapsLock and NumLock keys act funny?
+
+    Some systems treat the Caps-Lock and Num-Lock keys differently
+    than all the others.  Whereas most keys report going down when
+    physically pressed and going up when physically released, on
+    these systems the Caps-Lock and Num-Lock keys report going down
+    when being activated and going up when being deactivated.  That
+    is, when you press and release, say, Caps-Lock to activate it, it
+    only reports going down, and when you press and release to
+    deactivate it, it only reports going up.  This confuses synergy.
+
+    You can solve the problem by changing your configuration file.
+    In the screens section, following each screen that has the
+    problem, add either or both of these lines as appropriate:
+
+        halfDuplexCapsLock = true
+        halfDuplexNumLock = true
+
+    Then restart synergy on the server.
+
+8.  Can synergy share the display in addition to the mouse and keyboard?
+
+    No.  Synergy is a KM solution not a KVM (keyboard, video, mouse)
+    solution.  However, future versions will probably support KVM.
+    Hopefully, this will make synergy suitable for managing large
+    numbers of headless servers.
+
+9.  Can synergy do drag and drop between computers?
+
+    No.  That's a very cool idea and it'll be explored.  However, it's
+    also clearly difficult and may take a long time to implement.
+
+10. Does AltGr/Mode-Switch work?
+
+    Yes, as of 1.0.12 synergy has full support for AltGr/Mode-switch.
+    That includes support for most (all?) European keyboard layouts.
+    All systems should be using the same keyboard layout, though, for
+    all characters to work.  (Any character missing from a client's
+    layout cannot be generated by synergy.)
+
+11. Why isn't synergy ported to platform XYZ?
+
+    Probably because the developers don't have access to platform XYZ
+    and/or are unfamiliar with development on XYZ.  Also, synergy has
+    inherently non-portable aspects so there's a not insignificant
+    effort involved in porting.
+
+12. My client can't connect.  What's wrong?
+
+    A common mistake when starting the client is to give the wrong
+    server host name.  The last synergyc command line option (Unix)
+    or the "Server Host Name" edit field (Windows) should be the
+    host name (or IP address) of the server *not* the client's host
+    name.  If you get the error "connection failed: cannot connect
+    socket" followed by "the attempt to connect was forcefully
+    rejected" or "connection refused" then the server isn't started,
+    can't bind the address, or the client is connecting to the wrong
+    host name/address or port.
+
+13. Linking fails on Solaris.  What's wrong?
+
+	Did you add `--x-includes=/usr/openwin/include
+    --x-libraries=/usr/openwin/lib' (without the linebreak) to the
+    `configure' command line?  Solaris puts the X11 includes and
+    libraries in an unusual place and the above lets synergy find
+    them.
+
+14. The screen saver never starts.  Why not?
+
+    If the synergy server is on X Windows then the screen saver will
+    not start while the mouse is on a client screen.  This is a
+    consequence of how X Windows, synergy and xscreensaver work.
+
+15. I can't switch screens anymore for no apparent reason.  Why?
+
+    This sometimes happens but all the causes aren't yet known.  One
+    known cause is if the synergy server in running on Windows
+    95/98/Me and a 16-bit application is in the foreground when the
+    screen saver starts.  Windows fails to notify synergy that the
+    screen saver has started in this situation (which is a bug in
+    Windows, not synergy) and synergy may intercept some keyboard
+    input and divert it to a client when the screen saver is running.
+    As a result, it's possible for the server system to believe a key
+    is pressed when it really isn't.  Typically, it's the return key
+    and simply tapping it will allow synergy to switch screens again.
+    
+    If this problem happens to you, try tapping the enter key to see
+    if that solves the problem.  If not, you can try running with
+    debug logging (--debug DEBUG) and synergy will report exactly why
+    it refuses to switch screens.  If it claims a key is down then
+    try tapping that key and see if that solves the problem.

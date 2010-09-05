@@ -1,0 +1,124 @@
+dnl synergy -- mouse and keyboard sharing utility
+dnl Copyright (C) 2002 Chris Schoeneman
+dnl 
+dnl This package is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU General Public License
+dnl found in the file COPYING that should have accompanied this file.
+dnl 
+dnl This package is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+
+dnl Process this file with autoconf to produce a configure script.
+
+dnl initialize
+AC_INIT(lib/common/common.h)
+AC_CONFIG_AUX_DIR(config)
+
+dnl current version
+MAJOR_VERSION=1
+MINOR_VERSION=0
+RELEASE_VERSION=14
+
+dnl initialize automake
+AM_INIT_AUTOMAKE(synergy, $MAJOR_VERSION.$MINOR_VERSION.$RELEASE_VERSION)
+AM_CONFIG_HEADER(config.h)
+
+dnl information on the package
+
+dnl checks for programs
+AC_PROG_CXX
+AC_PROG_RANLIB
+AC_CHECK_PROG(HAVE_DOT, dot, YES, NO)
+
+dnl do checks using C++
+AC_LANG_CPLUSPLUS
+
+dnl our files end in .cpp not .C so tests should also end in .cpp
+ac_ext=cpp
+
+dnl check compiler
+ACX_CHECK_CXX
+
+dnl checks for libraries
+ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
+ACX_CHECK_NANOSLEEP
+ACX_CHECK_INET_ATON
+
+dnl checks for header files
+AC_HEADER_STDC
+AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h wchar.h])
+AC_CHECK_HEADERS([sys/socket.h sys/select.h])
+AC_CHECK_HEADERS([istream ostream sstream])
+AC_HEADER_TIME
+AC_PATH_X
+AC_PATH_XTRA
+save_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$X_CFLAGS $CPPFLAGS"
+AC_CHECK_HEADERS([X11/extensions/XTest.h])
+AC_CHECK_HEADERS([X11/XF86keysym.h])
+
+AC_CHECK_LIB(Xinerama, XineramaQueryExtension, AC_CHECK_HEADERS([X11/extensions/Xinerama.h]) [X_LIBS="$X_LIBS -lXinerama"], , [$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+CPPFLAGS="$save_CPPFLAGS"
+
+dnl checks for types
+AC_TYPE_SIZE_T
+ACX_CHECK_SOCKLEN_T
+
+dnl checks for structures
+AC_STRUCT_TM
+
+dnl checks for compiler characteristics
+AC_CHECK_SIZEOF(char, 1)
+AC_CHECK_SIZEOF(short, 2)
+AC_CHECK_SIZEOF(int, 2)
+AC_CHECK_SIZEOF(long, 4)
+ACX_CHECK_CXX_BOOL(,AC_MSG_ERROR(Your compiler must support bool to compile synergy))
+ACX_CHECK_CXX_EXCEPTIONS(,AC_MSG_ERROR(Your compiler must support exceptions to compile synergy))
+ACX_CHECK_CXX_CASTS(,AC_MSG_ERROR(Your compiler must support C++ casts to compile synergy))
+ACX_CHECK_CXX_MUTABLE(,AC_MSG_ERROR(Your compiler must support mutable to compile synergy))
+ACX_CHECK_CXX_STDLIB(,AC_MSG_ERROR(Your compiler must support the C++ standard library to compile synergy))
+
+dnl checks for library functions
+dnl AC_TYPE_SIGNAL
+AC_FUNC_MEMCMP
+AC_FUNC_STRFTIME
+AC_CHECK_FUNCS(gmtime_r)
+ACX_CHECK_GETPWUID_R
+AC_CHECK_FUNCS(vsnprintf)
+AC_CHECK_FUNCS(wcrtomb mbrtowc mbsinit)
+AC_FUNC_SELECT_ARGTYPES
+ACX_CHECK_POLL
+dnl use AC_REPLACE_FUNCS() for stuff in string.h
+
+dnl checks for system services
+
+
+dnl adjust variables for X11 and pthreads
+CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $X_CFLAGS $PTHREAD_CFLAGS"
+LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $PTHREAD_LIBS $LIBS"
+
+AC_OUTPUT([
+Makefile
+lib/Makefile
+lib/arch/Makefile
+lib/base/Makefile
+lib/common/Makefile
+lib/mt/Makefile
+lib/io/Makefile
+lib/http/Makefile
+lib/net/Makefile
+lib/synergy/Makefile
+lib/platform/Makefile
+lib/client/Makefile
+lib/server/Makefile
+cmd/Makefile
+cmd/launcher/Makefile
+cmd/synergyc/Makefile
+cmd/synergys/Makefile
+dist/Makefile
+dist/rpm/Makefile
+dist/rpm/synergy.spec
+doc/doxygen.cfg
+])
