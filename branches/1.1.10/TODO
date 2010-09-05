@@ -1,0 +1,61 @@
+Synergy To Do List
+==================
+
+Things to do to synergy, in no particular order:
+
+* Provide GUI configuration
+
+  There's a GUI tool on win32 but no other platforms.  Also, it'd be
+  nice if the tool allowed users to drag screen icons around to set
+  the links between them (though this assumes links are symmetrical
+  and synergy supports asymmetrical links).
+
+* Provide taskbar feedback
+
+  There's a tray icon on win32 for checking synergy's current status
+  and to quit synergy.  It'd be nice to have something similar on
+  X11.
+
+* Port to other platforms
+
+  Most desired is MacOS X.
+
+* Write man/html pages
+
+* Provide a win32 installer/uninstaller
+
+  Synergy doesn't have any special needs so even just unzipping is
+  satisfactory, but a proper installer would be nice.  And, more
+  importantly, it should provide an uninstaller.
+
+* Add more clipboard formats
+
+  Synergy currently supports only text on the clipboard.  It should
+  support more formats, such as images and sound.  For each format,
+  some canonical type must be chosen.  For text, that's UTF-8 with
+  \n for newlines.  For images, it might be BMP or PNG.  Whatever it
+  is it should losslessly support any type it might be converted to.
+  The type is converted to each platform's native type.  For example,
+  BMP for images on win32.
+
+Then there are major new features:
+
+* Provide a KVM mode
+
+  In this mode synergy would share the monitor in addition to the
+  keyboard and mouse.
+
+* Support for limited drag and drop between systems
+
+* Support for (virtual) terminals on unix
+
+  This would be useful in KVM mode to administer several remote
+  headless systems that you don't want running X just so synergy
+  can work.
+
+* Configurable keys
+
+  This includes shortcuts to jump to different screens, always
+  directing certain keystrokes to the same system, never sending
+  certain keystrokes to some systems, and remapping keys on the
+  server to other keys on the clients.

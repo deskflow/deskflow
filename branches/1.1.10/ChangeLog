@@ -1,0 +1,7045 @@
+2003/08/24 14:52:02 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.14.
+
+----------
+2003/08/23 11:41:03 crs
+lib/platform/CXWindowsClipboard.cpp
+
+Removed hack to work around apparent lesstif bug.  I'm not seeing
+the bug manifest itself and the hack breaks pasting into lesstif
+programs that don't have the bug.  Added DEBUG2 level logging of
+the requestor window's properties in case some users run into
+problems.
+
+----------
+2003/08/06 21:00:57 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Added more debugging log messages to clipboard handling.
+
+----------
+2003/08/06 21:00:17 crs
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.cpp
+cmd/synergys/CMSWindowsServerTaskBarReceiver.cpp
+lib/platform/CMSWindowsClipboard.cpp
+lib/platform/CMSWindowsClipboard.h
+
+Fixed failure to treat log copied to clipboard as subject to
+transfer to clients/server.  This prevented copying the log
+to the clipboard then pasting it on another screen.
+
+----------
+2003/08/06 20:59:01 crs
+cmd/launcher/CAdvancedOptions.cpp
+cmd/launcher/CAdvancedOptions.h
+
+Fixed failure to get non-default settings from advanced options
+dialog in launcher when the dialog hadn't been opened.
+
+----------
+2003/08/06 20:57:41 crs
+lib/arch/CArchLogWindows.cpp
+
+Fixed memory leak in win32 system log open() call.
+
+----------
+2003/08/06 20:56:52 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.13.
+
+----------
+2003/08/03 21:23:29 crs
+lib/arch/CArchMultithreadWindows.cpp
+
+Fixed bugs in setting thread priority.
+
+----------
+2003/07/19 22:07:13 crs
+configure.in
+Version.h
+
+Changed version to 1.0.12.
+
+----------
+2003/07/19 17:22:06 crs
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+cmd/synergyc/synergyc.cpp
+configure.in
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+lib/common/Version.h
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/server/CConfig.cpp
+lib/synergy/OptionTypes.h
+
+Merge synergy 1.1 fixes into 1.0 branch.
+
+----------
+2003/07/19 17:19:26 crs
+
+Branched synergy 1.0 from 1.0.11.
+
+----------
+2003/07/17 21:16:58 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Fixed handling of a dead key followed by space on win32 and X11.
+A dead key followed by space should convert the dead key to a
+regular character.
+
+----------
+2003/07/16 22:38:43 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+
+Fixed handling of some non-ASCII but directly mapped characters
+on win32.  The o, a, and u with diaeresis in the german keyboard
+mapping are examples.
+
+----------
+2003/07/16 21:40:57 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+
+Fixed handling of shift/ctrl/alt on special keys on win32 server.
+
+----------
+2003/07/13 20:42:11 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+
+Fixed handling of some keystrokes on win32.  Pressing a dead key
+and then space should convert the dead key to a non-dead key but
+previous the key was discarded.  Fixed that but VkKeyScan() fails
+in this case so added special case to fix that (assuming AltGr is
+required).  VkKeyScan() can return the wrong result for characters
+that have more than one virtual key mapped to them.  AltGr+9 (^)
+on the French layout has this problem.  Now detecting that problem
+and using the current keyboard state to decide if AltGr is
+required.
+
+----------
+2003/07/13 17:03:41 crs
+cmd/synergyc/synergyc.cpp
+
+Forgot to remove --camp and --no-camp from brief usage message.
+
+----------
+2003/07/13 16:57:08 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Changed XSync() to XFlush() in X windows secondary screen.  This
+doesn't appear to have any negative consequences and may prevent
+synergy from freezing when some X client (probably the window
+manager) grabs the server.
+
+----------
+2003/07/12 17:57:31 crs
+cmd/synergyc/synergyc.cpp
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CXWindowsScreen.cpp
+
+Prevent INFO level log messages when client is repeatedly trying
+to connect.  This prevents a log from filling up while the client
+can't connect for no useful reason.  Also removed --camp option
+and cleaned up handling of client connection.  Users must now use
+--restart instead of --camp.
+
+----------
+2003/07/08 18:40:46 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+
+Changed windows server to release ctrl and alt keys when it's
+sending a key that requires AltGr.  That's because AltGr *is*
+ctrl and alt but AltGr should be seen on clients as mode
+switch without the ctrl and alt.  I can't think of a better
+way to do this other than to not send modifier keystrokes to
+the clients at all.
+
+----------
+2003/07/05 17:06:18 crs
+configure.in
+lib/common/Version.h
+
+Change version to 1.0.11.  Skipping version 1.0.10 because there
+have been too many major changes since 1.0.8.  A new experimental
+release will provide a stable starting point for testing.
+
+----------
+2003/07/05 17:05:12 crs
+lib/synergy/CSecondaryScreen.cpp
+
+Fix to avoid warping mouse until client successfully connects to
+the server.
+
+----------
+2003/07/05 17:04:26 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+
+Keyboard fixes on win32.
+
+----------
+2003/07/05 17:04:06 crs
+lib/server/CConfig.h
+
+Fix for new template syntax.
+
+----------
+2003/07/05 14:49:08 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsPrimaryScreen.h
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Minor X11 keyboard code cleanup.  Also now handling KeyPress with
+keycode == 0 generated by XFilterEvent() by using the keycode from
+the previous KeyPress.
+
+----------
+2003/07/05 14:47:41 crs
+lib/platform/CXWindowsScreen.cpp
+
+Compress sequential MappingNotify events into one.
+
+----------
+2003/07/01 19:35:28 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Rewrote key handling on X11 client.  This should fix problems
+with applying the incorrect shift and mode switch modifiers to
+some keycodes, such as getting Pointer_EnableKeys when pressing
+shift with NumLock enabled.
+
+----------
+2003/06/22 21:27:38 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsPrimaryScreen.h
+
+Added support for input methods.  Only handling IMs that don't
+need a precompose area or status area.  This includes IMs that
+do simple dead key composition.  This only changes the server.
+The client still does not decompose a character it cannot
+generate directly into the keysyms to compose the character.
+
+----------
+2003/06/22 16:39:25 crs
+lib/client/CServerProxy.cpp
+
+More fixes for X11 client keyboard handling.
+
+----------
+2003/06/22 16:39:02 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+More fixes for X11 client keyboard handling.
+
+----------
+2003/06/22 15:01:44 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Checkpoint for improving X11 client key handling.  Should prevent
+unintentional Pointer_EnableKeys (i.e. generating NumLock press
+and release around a shift press).
+
+----------
+2003/06/08 22:20:01 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Another ctrl+alt+del checkpoint.
+
+----------
+2003/06/08 22:12:12 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+ctrl+alt+del emulation checkpoint.
+
+----------
+2003/06/08 16:31:52 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+More DEBUG2 level debugging of keyboard handling.
+
+----------
+2003/06/08 15:42:05 crs
+lib/common/Makefile.am
+
+Added new file to Makefile.
+
+----------
+2003/06/02 20:07:16 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+
+Fixed ctrl and alt keys on win32 clients.  Was broken by a recent
+fix to character handling.
+
+----------
+2003/06/02 20:06:20 crs
+lib/client/CServerProxy.cpp
+
+Fixed errors in log strings.
+
+----------
+2003/06/02 20:06:03 crs
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.cpp
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.h
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.rc
+cmd/synergys/CMSWindowsServerTaskBarReceiver.cpp
+cmd/synergys/CMSWindowsServerTaskBarReceiver.h
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.rc
+lib/base/CLog.cpp
+lib/base/CLog.h
+lib/base/LogOutputters.cpp
+lib/base/LogOutputters.h
+lib/common/common.dsp
+lib/common/stddeque.h
+
+Added menu item on win32 tray icon to copy the last 1000 lines from
+the log to the clipboard.
+
+----------
+2003/05/26 09:50:35 crs
+lib/platform/CXWindowsClipboard.cpp
+
+Added workaround for broken clipboard owners that report the
+type of TARGETS as TARGETS instead of ATOM.
+
+----------
+2003/05/26 09:49:38 crs
+lib/platform/CMSWindowsClipboard.cpp
+
+No longer installing clibboard format for plain text on windows nt
+family because nt automatically converts to and from the unicode
+format.  This may fix text encoding errors when synergy puts
+non-ascii text on the clipboard and other clients prefer CF_TEXT
+to CF_UNICODE (which they should not because synergy lists
+CF_UNICODE first).
+
+----------
+2003/05/26 09:46:52 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsScreen.cpp
+
+Fixed loss of ctrl+alt+del key releases when the Winlogin desktop
+is accessible (was already fixed when inaccessible).  This change
+also ignores press and release of virtual key 0, which should never
+happen but does according to one user.
+
+----------
+2003/05/21 21:22:14 crs
+lib/arch/CArchMultithreadWindows.cpp
+lib/synergy/CPrimaryScreen.cpp
+lib/synergy/CSecondaryScreen.cpp
+
+Fixed unsigned compare against zero.  Changed win32 priority to
+maximum.
+
+----------
+2003/05/21 19:38:11 crs
+lib/server/CServer.cpp
+lib/server/CServer.h
+
+Made double tap require moving farther away from the tapped edge
+before arming.  This should reduce spurious double taps.
+
+----------
+2003/05/20 19:15:58 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+
+Attempt to improve key event synthesis.  This change adds support
+for dead keys and attempts to choose the correct code page for the
+thread that will (probably) receive synthesized events.
+
+----------
+2003/05/20 19:14:40 crs
+lib/platform/CSynergyHook.cpp
+
+Minor thread ID compare fix.
+
+----------
+2003/05/20 19:14:24 crs
+lib/arch/CArchMultithreadWindows.cpp
+
+Reduced maximum priority in debug build.
+
+----------
+2003/05/17 20:58:27 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/IMSWindowsScreenEventHandler.h
+lib/synergy/CPrimaryScreen.cpp
+
+Fixed getting locked to screen after ctrl+alt+del.  Also fixed
+cursor not being hidden on win32 server when on client screens
+(which happened when using low-level hooks).
+
+----------
+2003/05/17 14:10:11 crs
+INSTALL
+
+Added documentation for xtestIsXineramaUnaware option.
+
+----------
+2003/05/17 14:03:32 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Fixed previous fix.  Was trying to avoid using XWarpPointer() when
+warping on screen 0.  That just doesn't work if screen 0 is not at
+0,0.  So now always use XWarpPointer() if there are multiple
+xinerama screens and the appropriate option is enabled.
+
+----------
+2003/05/17 13:44:24 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/server/CConfig.cpp
+lib/synergy/OptionTypes.h
+
+Added workaround for when XTest is unaware of Xinerama.  When that's
+true, faking a mouse motion outside screen 0 is clamped onto screen 0.
+When the workaround is enabled, we use XWarpPointer() instead of an
+XTest fake motion.  This isn't perfect but the only real fix requires
+patching XTest.
+
+----------
+2003/05/17 12:48:32 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Added support for old versions of XF86keysym.h that are missing
+some expected #defines.
+
+----------
+2003/05/10 17:27:05 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.8.
+
+----------
+2003/05/10 17:26:42 crs
+INSTALL
+README
+
+Updated documentation.
+
+----------
+2003/05/08 21:59:35 crs
+lib/server/CServer.cpp
+
+Fixed jumping to same client screen.  It was broken by an earlier
+change (probably double tap).  Jumping to the same server screen
+worked correctly.
+
+----------
+2003/05/04 21:40:42 crs
+configure.in
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/synergy/KeyTypes.h
+lib/synergy/MouseTypes.h
+
+Added support for 4th and 5th (non-mouse-wheel) buttons and
+"Internet" keyboard keys.
+
+----------
+2003/05/03 15:16:30 crs
+cmd/launcher/CGlobalOptions.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added screen saver synchronization option to win32 launcher dialog.
+
+----------
+2003/05/03 14:54:03 crs
+lib/synergy/CSecondaryScreen.cpp
+
+Removed accidental debugging code.
+
+----------
+2003/05/03 14:38:36 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/server/CConfig.cpp
+lib/synergy/CSecondaryScreen.cpp
+lib/synergy/CSecondaryScreen.h
+lib/synergy/OptionTypes.h
+
+Added global configuration option to disable screen saver
+synchronization.
+
+----------
+2003/05/03 13:57:52 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Forgot to restore global auto-repeat configuration on exit.
+
+----------
+2003/05/03 13:50:06 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/synergy/CSecondaryScreen.cpp
+lib/synergy/CSecondaryScreen.h
+
+Now warping mouse to center of screen when leaving client screens.
+Some users requested this.  Also, the hider window is mapped before
+warping the mouse so the active window shouldn't change if the focus
+policy is point-to-focus.  Showing the window first can also reduce
+the likelihood of seeing the cursor briefly in its hidden position.
+
+----------
+2003/05/03 13:28:21 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Now turning off auto-repeat when on an X11 client.  This prevents
+the server from auto-repeating fake events, which is undesired
+since synergy will do the auto-repeating itself.  This also
+disables auto-repeat on any keys locally configured on X11 to not
+auto-repeat.  That's mainly to suppress auto-repeat on modifier
+keys, which auto-repeat on win32 but not X11.
+
+----------
+2003/05/03 12:54:22 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CSynergyHook.h
+
+Fixed a few win32 keyboard/mouse problems.  First, the mouse hook
+now captures non-client area mouse messages.  Previously, these
+were ignored (because i forgot about them) and they caused all
+kinds of problems because they weren't forwarded.  For example,
+clicking on a window border would cause the window to start
+resizing when the mouse came back to the server screen.  Moving
+inside a title bar meant that the mouse wouldn't move on the
+client screen.
+
+Second, because non-client messages are now handled, the full
+screen transparent window is no longer necessary to capture
+input so it's never displayed.  (The window is still necessary
+for clipboard ownership so it's still created.)  No transparent
+window means no screen flashing.  It also means we don't have to
+become the foreground and active window.  This plays better with
+apps that minimize or restore when they're no longer the
+foreground application/active window.
+
+Third, fixed the low level keyboard hook to forward toggle key
+updates, which it was neglecting to do.
+
+Finally, keyboard and mouse input is always forwarded from the hook
+to the primary screen handler which then shadows the current key
+and mouse button state.  If we're using low level hooks then this
+isn't really necessary and GetKeyState() always returns the right
+info but without low level hooks it means we can just use the
+shadow state.  It also means we don't have to show our window in
+order to get the system's key state table up to date, fixing the
+screen flash when checking for the scroll lock state.
+
+----------
+2003/05/03 12:37:03 crs
+lib/arch/CArchMultithreadWindows.cpp
+lib/synergy/CPrimaryScreen.cpp
+lib/synergy/CSecondaryScreen.cpp
+
+Boosted priority of main synergy threads to be very high (highest
+realtime priority).  After some testing it appears that anything
+less than this can starve synergy in some circumstances, preventing
+it from forwarding messages to clients.  This is a rather risky
+change since synergy can now virtually take over a system if it
+behaves badly.  This change only affects windows systems since
+lib/arch of other platforms don't yet attempt to boost priority.
+
+----------
+2003/04/27 18:05:32 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/server/Makefile.am
+lib/server/server.dsp
+
+Fixes to previous checkpoint.  Non-ascii keys seem to work correctly.
+Still not supporting key composition on X11.
+
+----------
+2003/04/27 17:01:14 crs
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CServerProxy.cpp
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CClientProxy1_1.cpp
+lib/server/CClientProxy1_1.h
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/Makefile.am
+lib/synergy/CSecondaryScreen.h
+lib/synergy/IClient.h
+lib/synergy/IPrimaryScreenReceiver.h
+lib/synergy/KeyTypes.h
+lib/synergy/ProtocolTypes.h
+
+Checkpointing improved key handling.  This change adds non-ASCII
+key handling to win32 on both client and server.  It also changes
+the protocol and adds code to ensure every key pressed also gets
+released and that that doesn't get confused when the KeyID for
+the press is different from the KeyID of the release (or repeat).
+
+----------
+2003/04/24 20:11:38 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsUtil.cpp
+lib/platform/CXWindowsUtil.h
+
+Added KeySym <-> Unicode mappings.  Changed code to use those
+mappings to better support Unicode key events.
+
+----------
+2003/04/24 20:10:13 crs
+cmd/Makefile.am
+
+Added exec.dsp to EXTRA_DIST.
+
+----------
+2003/04/16 20:59:25 crs
+all.dsp
+cmd/exec.dsp
+lib/platform/makehook.dsp
+lib/platform/synrgyhk.dsp
+synergy.dsw
+
+Win32 project configuration fixes.
+
+----------
+2003/04/16 20:59:14 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/platform/CMSWindowsPrimaryScreen.cpp
+
+Minor win32 fixes.
+
+----------
+2003/04/16 20:05:00 crs
+lib/server/CConfig.cpp
+
+Now allowing screen names with underscores.
+
+----------
+2003/04/14 22:16:21 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+
+Fixed incorrect initialization of an XMotionEvent.
+
+----------
+2003/04/14 22:15:56 crs
+configure.in
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+
+Added workaround for apparent Xinerama bug when warping the pointer.
+This should allow synergy to be used on a system using Xinerama to
+create a single logical screen from multiple physical screens.
+
+----------
+2003/04/13 18:14:01 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+
+Fixed problem with type casting void* to int.
+
+----------
+2003/04/13 17:13:27 crs
+lib/platform/CXWindowsScreenSaver.cpp
+
+Removed periodic call to XForceScreenSaver() to prevent the built-in
+screen saver from activating.  It was unnecessary since the built-in
+screen saver is disabled as appropriate;  this call was just to
+ensure that the screen saver wouldn't start if an external program
+reactivated the screen saver after synergy disabled it.
+
+It's possible that this was causing screen flicker under gnome, though
+i don't know why.  It's also possible that periodically sending events
+to xscreensaver is causing the flicker but removing that code is more
+difficult because xscreensaver can't be disabled, only deactivated or
+killed.
+
+----------
+2003/04/13 14:59:53 crs
+lib/platform/CMSWindowsClipboard.cpp
+lib/platform/CMSWindowsClipboard.h
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CSynergyHook.cpp
+
+Fixed several win32 bugs.  First, synergy wasn't forwarding mouse
+events to other hook functions, which broke some tools like objectbar.
+Second, windows key processing was fixed.  Previously pressing and
+release the key would only send a press event, locking the user onto
+the client window;  also, the win32 server treated as a Meta modifier
+instead of a Super modifier, which broke any use of it as any kind of
+modifier key.  Third, added hacks to support several key combinations
+on windows 95/98/me that are treated specially by windows, including
+Alt+Tab, Alt+Shift+Tab, Alt+Esc, Alt+Shift+Esc, Ctrl+Esc, and any
+combination using the windows key like Win+E and Win+F but not
+Ctrl+Alt+Del.  Fourth, scroll lock only locking to the client (which
+only happened when using a synergy server on windows) has been fixed;
+unfortunately the solution causes a lot of screen redraws for some
+reason.  Finally, there's been a fix to clipboard handling that may
+or may not fix a problem where the clipboard would stop transferring
+between systems after a little while.  I can't be sure if it fixes
+the problem because I can't reproduce the problem.
+
+----------
+2003/04/13 14:39:17 crs
+cmd/launcher/launcher.rc
+
+Added mention of tray icon to launcher start message box.
+
+----------
+2003/03/26 21:03:58 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.6.
+
+----------
+2003/03/25 21:31:39 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CSynergyHook.cpp
+
+This should fix multimon support on win32.
+
+----------
+2003/03/22 11:49:23 crs
+FAQ
+INSTALL
+PORTING
+README
+TODO
+
+Documentation updates.
+
+----------
+2003/03/22 11:49:13 crs
+cmd/launcher/CGlobalOptions.cpp
+cmd/launcher/CGlobalOptions.h
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added key modifier and heartbeat options to GUI.
+
+----------
+2003/03/21 19:34:08 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+
+Oops, included a windows only header in non-windows builds.
+
+----------
+2003/03/21 19:16:37 crs
+lib/platform/CMSWindowsScreenSaver.cpp
+
+Added check for the screen saver actually being active before
+entering the loop waiting for it to deactivate.  The failure
+to check was causing the screen saver code to kick in when
+the screen saver timeout occurred, even if the screen saver
+wasn't enabled (because Windows still sends the screen saver
+activating message for no good reason when the screen saver
+is disabled).
+
+----------
+2003/03/21 19:14:32 crs
+lib/arch/CArchMiscWindows.cpp
+
+Fixed errors in merge causing infinite loops.
+
+----------
+2003/03/21 19:14:10 crs
+cmd/synergyc/tb_idle.ico
+cmd/synergyc/tb_run.ico
+cmd/synergyc/tb_wait.ico
+cmd/synergys/tb_idle.ico
+cmd/synergys/tb_run.ico
+cmd/synergys/tb_wait.ico
+
+Fixed icons.
+
+----------
+2003/03/21 19:13:15 crs
+lib/platform/CXWindowsUtil.cpp
+
+Fixed getWindowProperty().  It wasn't catching all failure
+cases correctly.
+
+----------
+2003/03/17 22:32:10 crs
+cmd/launcher/CAdvancedOptions.cpp
+cmd/launcher/CAdvancedOptions.h
+cmd/launcher/LaunchUtil.cpp
+cmd/launcher/LaunchUtil.h
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+lib/arch/CArchDaemonWindows.cpp
+lib/arch/CArchDaemonWindows.h
+lib/arch/CArchMiscWindows.cpp
+lib/arch/CArchMiscWindows.h
+
+Added options and advanced options dialogs which should've been
+part of an earlier checkin.  Also now saving and restoring
+options that aren't in the configuration file to/from the
+registry.
+
+----------
+2003/03/17 22:32:01 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/server/CServer.cpp
+lib/synergy/CPrimaryScreen.h
+
+Added a log message why the user is locked to the screen.
+
+----------
+2003/03/17 22:31:59 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+
+Added type casts to avoid warning.
+
+----------
+2003/03/16 17:40:57 crs
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CMSWindowsScreenSaver.h
+
+Fixed detection of screen saver shutdown on windows nt.
+
+----------
+2003/03/16 17:40:56 crs
+lib/common/Makefile.am
+lib/common/common.dsp
+lib/common/stdbitset.h
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+
+Made releaseKeys() only synthesize key releases for those keys
+that synergy synthesized a press for, not keys that the user
+is physically pressing.
+
+----------
+2003/03/16 17:40:47 crs
+lib/platform/CSynergyHook.cpp
+
+Minor hook fixes.
+
+----------
+2003/03/16 17:40:25 crs
+cmd/synergyc/synergyc.rc
+cmd/synergys/synergys.rc
+
+Added resources missing from previous checkin.
+
+----------
+2003/03/13 20:24:45 crs
+lib/platform/CXWindowsScreenSaver.cpp
+
+Moved comment to more relevant location.
+
+----------
+2003/03/13 19:20:55 crs
+lib/platform/CXWindowsScreen.cpp
+
+Fixed double locking of mutex.
+
+----------
+2003/03/12 22:34:07 crs
+cmd/launcher/CAdvancedOptions.cpp
+cmd/launcher/CAdvancedOptions.h
+cmd/launcher/CGlobalOptions.cpp
+cmd/launcher/CGlobalOptions.h
+cmd/launcher/LaunchUtil.cpp
+cmd/launcher/LaunchUtil.h
+cmd/launcher/Makefile.am
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.dsp
+cmd/launcher/resource.h
+cmd/synergyc/CClientTaskBarReceiver.cpp
+cmd/synergyc/CClientTaskBarReceiver.h
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.cpp
+cmd/synergyc/CMSWindowsClientTaskBarReceiver.h
+cmd/synergyc/CXWindowsClientTaskBarReceiver.cpp
+cmd/synergyc/CXWindowsClientTaskBarReceiver.h
+cmd/synergyc/Makefile.am
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.dsp
+cmd/synergyc/tb_error.ico
+cmd/synergyc/tb_idle.ico
+cmd/synergyc/tb_run.ico
+cmd/synergyc/tb_wait.ico
+cmd/synergys/CMSWindowsServerTaskBarReceiver.cpp
+cmd/synergys/CMSWindowsServerTaskBarReceiver.h
+cmd/synergys/CServerTaskBarReceiver.cpp
+cmd/synergys/CServerTaskBarReceiver.h
+cmd/synergys/CXWindowsServerTaskBarReceiver.cpp
+cmd/synergys/CXWindowsServerTaskBarReceiver.h
+cmd/synergys/Makefile.am
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.dsp
+cmd/synergys/tb_error.ico
+cmd/synergys/tb_idle.ico
+cmd/synergys/tb_run.ico
+cmd/synergys/tb_wait.ico
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchConsoleWindows.cpp
+lib/arch/CArchConsoleWindows.h
+lib/arch/CArchImpl.cpp
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchMultithreadWindows.h
+lib/arch/CArchTaskBarWindows.cpp
+lib/arch/CArchTaskBarWindows.h
+lib/arch/CArchTaskBarXWindows.cpp
+lib/arch/CArchTaskBarXWindows.h
+lib/arch/IArchMultithread.h
+lib/arch/IArchTaskBar.h
+lib/arch/IArchTaskBarReceiver.h
+lib/arch/Makefile.am
+lib/arch/arch.dsp
+lib/base/CJobList.cpp
+lib/base/CJobList.h
+lib/base/LogOutputters.cpp
+lib/base/LogOutputters.h
+lib/base/Makefile.am
+lib/base/base.dsp
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CServerProxy.cpp
+lib/mt/CThread.cpp
+lib/mt/CThread.h
+lib/mt/CTimerThread.cpp
+lib/mt/CTimerThread.h
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/synergy/CSecondaryScreen.cpp
+lib/synergy/CSecondaryScreen.h
+
+Added switch delay and double-tap options to win32 and added a
+tray icon to the client and server that gives status feedback to
+the user and allows the user to kill the app.
+
+----------
+2003/02/23 19:29:08 crs
+lib/server/CConfig.cpp
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/synergy/OptionTypes.h
+lib/synergy/ProtocolTypes.h
+
+Added support for a user option to require hitting the edge of a
+screen twice within a specified amount of time in order to switch
+screens.  This can help prevent unintended switching.
+
+----------
+2003/02/22 21:53:25 crs
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsPrimaryScreen.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/server/CConfig.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/synergy/CPrimaryScreen.h
+lib/synergy/IPrimaryScreenReceiver.h
+lib/synergy/IScreenEventHandler.h
+lib/synergy/OptionTypes.h
+
+Added support on X11 for a global option to delay switching screens
+when the mouse reaches a jump zone.
+
+----------
+2003/02/22 16:41:03 crs
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+
+Added global options to CConfig (needed for heartbeat option).
+
+----------
+2003/02/22 16:20:23 crs
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+lib/server/CClientProxy.cpp
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/server/CServer.cpp
+lib/synergy/OptionTypes.h
+lib/synergy/ProtocolTypes.h
+
+Added support for heartbeat global option.
+
+----------
+2003/02/22 15:04:09 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.5.
+
+----------
+2003/02/22 15:03:31 crs
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/synergy/KeyTypes.h
+lib/synergy/OptionTypes.h
+
+Changes to support remapping modifier keys on clients.
+
+----------
+2003/02/17 12:44:37 crs
+configure.in
+lib/common/Version.h
+
+Changed version to 1.0.3.
+
+----------
+2003/02/16 19:55:54 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+
+Changed win32 client side cursor warping to be all relative motion
+when not on the primary monitor.  This should eliminate the flicker
+between virtual display 0,0 and the correct position.  While this
+allows the user to confuse synergy by using the client's mouse,
+synergy recovers quickly and easily from any confusion.
+
+----------
+2003/02/16 19:53:56 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+
+Added hack to heuristically detect bogus mouse motion caused by
+a race condition where the synergy server updates the mouse
+position but the synergy hook later receives a mouse update from
+before the position change (i.e. out of order).
+
+----------
+2003/02/16 19:51:46 crs
+lib/platform/CSynergyHook.cpp
+
+Commented out an unnecessary hook and added a compile time
+switch to disable grabbing of keyboard on win32 to facilitate
+debugging.
+
+----------
+2003/02/16 19:50:36 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Changed heap to stack allocation in an oft-called function for
+data that's never used outside the function.
+
+----------
+2003/02/16 19:49:44 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/arch/CArchMultithreadWindows.cpp
+lib/base/CUnicode.cpp
+
+Fixed memory leaks.
+
+----------
+2003/02/12 20:59:25 crs
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Fixed incorrect mouse button swapping on client screens.
+
+----------
+2003/02/12 20:59:08 crs
+lib/arch/CArchDaemonWindows.cpp
+
+Fixed error in debug build on win32.
+
+----------
+2003/02/12 19:50:22 crs
+lib/arch/vsnprintf.cpp
+
+Added a simple implementation of vsnprintf for unix platforms
+without it using /dev/null, vfprintf(), and vsprintf().
+
+----------
+2003/02/12 19:38:39 crs
+lib/arch/CArchMiscWindows.h
+lib/arch/XArch.h
+lib/base/CLog.h
+lib/base/CString.h
+lib/base/ILogOutputter.h
+lib/mt/CCondVar.h
+lib/mt/CLock.h
+lib/mt/CThread.h
+lib/mt/CTimerThread.h
+
+Made sure every file includes common.h directly or indirectly.
+Also made sure common.h is included before any system headers.
+
+----------
+2003/02/01 18:10:43 crs
+FAQ
+INSTALL
+README
+TODO
+
+Added info about using SSH for authentication and encryption.
+
+----------
+2003/01/29 22:16:40 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+To support keymaps with only upper (or lower) case keysyms we now
+use Xlib to convert an unmatched keysym to upper and lower case and
+use whichever, if any, is not the same as the original keysym.
+This supports case conversion in any language that Xlib supports
+it in.
+
+----------
+2003/01/29 19:32:25 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Applied patch from grmcdorman at users dot sourceforge dot net to
+support keymaps that have only uppercase letters, which is the case
+by default on the Sun X server (for US keyboards anyway).
+
+----------
+2003/01/25 13:39:26 crs
+NEWS
+configure.in
+lib/common/Version.h
+
+Changed version number to 1.0.2.
+
+----------
+2003/01/25 13:34:51 crs
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+
+Added ability to set screen options from the windows launch dialog.
+
+----------
+2003/01/25 13:34:17 crs
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkWinsock.cpp
+
+Added missing entry in a socket family table.  This was a serious
+bug and should've failed on all platforms but just happened to
+work on linux and windows.
+
+----------
+2003/01/22 08:37:32 crs
+NEWS
+configure.in
+lib/common/Version.h
+
+Changed version number to 1.0.1.
+
+----------
+2003/01/22 08:36:43 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/arch/CArchDaemonWindows.cpp
+lib/arch/CArchDaemonWindows.h
+lib/arch/CArchLogWindows.cpp
+lib/arch/CArchMiscWindows.cpp
+lib/arch/CArchMiscWindows.h
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchMultithreadWindows.h
+
+Fixed running as a service on Windows NT family.
+
+----------
+2003/01/18 14:36:19 crs
+lib/arch/CArchSleepWindows.cpp
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CSynergyHook.cpp
+
+Fixed stupid errors introduced by last attempt to fix broken
+mouse behavior on multimonitor windows systems.  Those errors
+broke synergy on all windows systems running as a server.
+Also added an attempt to reduce the occasional jump that can
+occur when switching screens when windows is the server.
+
+----------
+2003/01/18 14:31:54 crs
+lib/platform/CXWindowsSecondaryScreen.cpp
+
+Was forcing modifier keys that have no effect on the keysym
+lookup to be up when synthesizing key events.  Now leaving
+those modifiers in their current state.
+
+----------
+2003/01/18 10:49:13 crs
+Makefile.am
+
+Added a dist-pkg target to put the binary distribution files into
+a tar gzip file.  This is to ease distribution of the binaries on
+systems without a packaging system supported by synergy (which
+currently supports only RPM).
+
+----------
+2003/01/16 21:28:15 crs
+lib/server/CServer.cpp
+
+Fixed lookup of neighbor screens.  The first problem was an old
+code in a conditional for moving left that blew an assert verifying
+that the mouse position was really on the screen if the neighbor
+screen wasn't connected.
+
+After that was fixed there was another problem when one screen
+linked to another which then linked (in the same direction) to
+itself.  If the latter screen wasn't connected then it'd get into
+an infinite loop.
+
+----------
+2003/01/14 19:46:41 crs
+lib/server/CServer.cpp
+
+Moved log message into conditionals so it only appears when the
+conditions are true.
+
+----------
+2003/01/14 19:46:17 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CSynergyHook.cpp
+
+Another try at fixing broken mouse behavior when a windows system
+has multiple monitors with 0,0 of the virtual desktop not at the
+upper-left.
+
+----------
+2003/01/12 16:35:54 crs
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added test of using the client's own name as the server name
+with an appropriate error message.
+
+----------
+2003/01/12 16:08:45 crs
+lib/server/CServer.cpp
+
+Now catching and ignoring errors when writing to a socket in those
+cases where errors were not being caught, typically when responding
+to some other socket or protocol error.
+
+----------
+2003/01/11 21:06:21 crs
+acinclude.m4
+configure.in
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+lib/arch/CArchSleepUnix.cpp
+lib/arch/CMultibyteEmu.cpp
+lib/common/Makefile.am
+
+Fixes to support FreeBSD and Darwin.
+
+----------
+2003/01/11 15:16:41 crs
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsScreenSaver.h
+
+Synergy no longer tries to suppress the screen saver once it starts.
+It was doing that already if started through synergy but not if
+started by something outside of synergy.  In particular, if you
+use `xscreensaver-command --activate' synergy used to send fake
+mouse motion events every 5 seconds to deactivate it.  That's
+unlikely to be what the user wanted, especially if the locking is
+enabled since it would force the password dialog to appear.
+
+As before, it's recommended that client screens not use locking
+because xscreensaver will not deactivate without getting a
+password even if we make the request through a programmatic
+interface.  Presumably that's for security reasons but it makes
+life harder for synergy.
+
+----------
+2003/01/11 14:01:44 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.cpp
+
+Attempt to fix problems with multimon windows.  The mouse position
+reported by the synergy hook dll is in a space with 0,0 in the
+upper-left which is not necessarily the same as the virtual desktop
+space.  So the windows primary screen now accounts for that.  On
+the secondary screen, mouse_event() doesn't seem to accept negative
+coordinates even on the windows NT family, making monitors with
+negative coordinates inaccessible via absolute moves.  So if the
+move will be to negative coordinates, use the windows 95 family
+fallback of absolute moving to 0,0 then relative moving to the
+final position.
+
+----------
+2003/01/08 22:17:44 crs
+FAQ
+INSTALL
+
+Added bit about configuring on Solaris, which requires some
+options to find the X11 includes and libraries.
+
+----------
+2003/01/08 21:36:14 crs
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchNetworkBSD.cpp
+
+Portability fixes.  Now builds on Linux 2.2 and 2.4 and solaris.
+Also builds on i386, alpha, G3/G4, and sparc.
+
+----------
+2003/01/08 21:36:13 crs
+lib/client/CClient.cpp
+lib/platform/CXWindowsUtil.cpp
+
+Changed log level of two messages.  Now won't spew about reading
+window properties and will report connection failure at DEBUG
+instead of DEBUG1.
+
+----------
+2003/01/08 21:36:10 crs
+FAQ
+
+Added a FAQ entry for client being rejected.  User probably didn't
+start the server or told the client the wrong server host name.
+
+----------
+2003/01/07 21:47:27 crs
+ChangeLog
+configure.in
+lib/common/Version.h
+
+Changed version number to 0.9.15.  Added 0.9.15 log entries.
+
+----------
+2003/01/07 21:12:51 crs
+lib/platform/CMSWindowsPrimaryScreen.cpp
+
+Attempts to improve forcing synergy window to foreground.  These
+changes don't seem to improve the situation but don't seem to
+hurt either.
+
+----------
+2003/01/07 21:11:54 crs
+lib/platform/CSynergyHook.cpp
+
+Added low-level mouse hook to support mouse wheel on NT (>=SP3).
+Thanks to karsten for the patch used as a starting point.
+
+----------
+2003/01/05 21:52:28 crs
+lib/base/LogOutputters.cpp
+lib/base/LogOutputters.h
+
+Added missing files.
+
+----------
+2003/01/05 21:48:54 crs
+PORTING
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+doc/doxygen.cfg.in
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchConsoleUnix.h
+lib/arch/CArchConsoleWindows.h
+lib/arch/CArchDaemonNone.h
+lib/arch/CArchDaemonUnix.h
+lib/arch/CArchDaemonWindows.h
+lib/arch/CArchFileUnix.h
+lib/arch/CArchFileWindows.h
+lib/arch/CArchLogUnix.h
+lib/arch/CArchLogWindows.h
+lib/arch/CArchMiscWindows.h
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchMultithreadWindows.h
+lib/arch/CArchNetworkBSD.h
+lib/arch/CArchNetworkWinsock.cpp
+lib/arch/CArchNetworkWinsock.h
+lib/arch/CArchSleepUnix.h
+lib/arch/CArchSleepWindows.h
+lib/arch/CArchStringUnix.cpp
+lib/arch/CArchStringUnix.h
+lib/arch/CArchStringWindows.cpp
+lib/arch/CArchStringWindows.h
+lib/arch/CArchTimeUnix.h
+lib/arch/CArchTimeWindows.h
+lib/arch/IArchConsole.h
+lib/arch/IArchFile.h
+lib/arch/IArchLog.h
+lib/arch/IArchMultithread.h
+lib/arch/IArchNetwork.h
+lib/arch/IArchSleep.h
+lib/arch/IArchString.h
+lib/arch/IArchTime.h
+lib/arch/Makefile.am
+lib/arch/XArchImpl.h
+lib/arch/arch.dsp
+lib/base/CLog.cpp
+lib/base/CUnicode.cpp
+lib/base/XBase.cpp
+lib/base/XBase.h
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CMSWindowsSecondaryScreen.h
+lib/client/CSecondaryScreen.cpp
+lib/client/CSecondaryScreen.h
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+lib/client/ISecondaryScreenFactory.h
+lib/client/Makefile.am
+lib/client/client.dsp
+lib/http/XHTTP.h
+lib/platform/CMSWindowsPrimaryScreen.cpp
+lib/platform/CMSWindowsPrimaryScreen.h
+lib/platform/CMSWindowsScreen.h
+lib/platform/CMSWindowsSecondaryScreen.cpp
+lib/platform/CMSWindowsSecondaryScreen.h
+lib/platform/CXWindowsPrimaryScreen.cpp
+lib/platform/CXWindowsPrimaryScreen.h
+lib/platform/CXWindowsScreen.h
+lib/platform/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsSecondaryScreen.h
+lib/platform/Makefile.am
+lib/platform/platform.dsp
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CMSWindowsPrimaryScreen.h
+lib/server/CPrimaryScreen.cpp
+lib/server/CPrimaryScreen.h
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/server/CXWindowsPrimaryScreen.h
+lib/server/IPrimaryScreenFactory.h
+lib/server/Makefile.am
+lib/server/server.dsp
+lib/synergy/CPrimaryScreen.cpp
+lib/synergy/CPrimaryScreen.h
+lib/synergy/CSecondaryScreen.cpp
+lib/synergy/CSecondaryScreen.h
+lib/synergy/IPrimaryScreenFactory.h
+lib/synergy/ISecondaryScreenFactory.h
+lib/synergy/Makefile.am
+lib/synergy/libsynergy.dsp
+
+Moved CPrimaryScreen and CSecondaryScreen to the lib/synergy
+and the platform specific implementations to lib/platform.
+Added an lib/arch method to query the platform's native wide
+character encoding and changed CUnicode to use it.  All
+platform dependent code is now in lib/arch, lib/platform,
+and the programs under cmd.  Also added more documentation.
+
+----------
+2003/01/04 22:01:32 crs
+PORTING
+cmd/launcher/CAutoStart.cpp
+cmd/launcher/CAutoStart.h
+cmd/launcher/LaunchUtil.cpp
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.dsp
+cmd/launcher/launcher.rc
+cmd/synergyc/Makefile.am
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.dsp
+cmd/synergys/Makefile.am
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.dsp
+configure.in
+lib/Makefile.am
+lib/arch/CArch.cpp
+lib/arch/CArch.h
+lib/arch/CArchConsoleUnix.cpp
+lib/arch/CArchConsoleUnix.h
+lib/arch/CArchConsoleWindows.cpp
+lib/arch/CArchConsoleWindows.h
+lib/arch/CArchDaemonNone.cpp
+lib/arch/CArchDaemonNone.h
+lib/arch/CArchDaemonUnix.cpp
+lib/arch/CArchDaemonUnix.h
+lib/arch/CArchDaemonWindows.cpp
+lib/arch/CArchDaemonWindows.h
+lib/arch/CArchFileUnix.cpp
+lib/arch/CArchFileUnix.h
+lib/arch/CArchFileWindows.cpp
+lib/arch/CArchFileWindows.h
+lib/arch/CArchImpl.cpp
+lib/arch/CArchLogUnix.cpp
+lib/arch/CArchLogUnix.h
+lib/arch/CArchLogWindows.cpp
+lib/arch/CArchLogWindows.h
+lib/arch/CArchMiscWindows.cpp
+lib/arch/CArchMiscWindows.h
+lib/arch/CArchMultithreadPosix.cpp
+lib/arch/CArchMultithreadPosix.h
+lib/arch/CArchMultithreadWindows.cpp
+lib/arch/CArchMultithreadWindows.h
+lib/arch/CArchNetworkBSD.cpp
+lib/arch/CArchNetworkBSD.h
+lib/arch/CArchNetworkWinsock.cpp
+lib/arch/CArchNetworkWinsock.h
+lib/arch/CArchSleepUnix.cpp
+lib/arch/CArchSleepUnix.h
+lib/arch/CArchSleepWindows.cpp
+lib/arch/CArchSleepWindows.h
+lib/arch/CArchStringUnix.cpp
+lib/arch/CArchStringUnix.h
+lib/arch/CArchStringWindows.cpp
+lib/arch/CArchStringWindows.h
+lib/arch/CArchTimeUnix.cpp
+lib/arch/CArchTimeUnix.h
+lib/arch/CArchTimeWindows.cpp
+lib/arch/CArchTimeWindows.h
+lib/arch/CMultibyte.cpp
+lib/arch/CMultibyteEmu.cpp
+lib/arch/CMultibyteOS.cpp
+lib/arch/IArchConsole.h
+lib/arch/IArchDaemon.h
+lib/arch/IArchFile.h
+lib/arch/IArchLog.h
+lib/arch/IArchMultithread.h
+lib/arch/IArchNetwork.h
+lib/arch/IArchSleep.h
+lib/arch/IArchString.h
+lib/arch/IArchTime.h
+lib/arch/Makefile.am
+lib/arch/XArch.cpp
+lib/arch/XArch.h
+lib/arch/XArchImpl.h
+lib/arch/XArchUnix.cpp
+lib/arch/XArchUnix.h
+lib/arch/XArchWindows.cpp
+lib/arch/XArchWindows.h
+lib/arch/arch.dsp
+lib/arch/vsnprintf.cpp
+lib/base/BasicTypes.h
+lib/base/CLog.cpp
+lib/base/CLog.h
+lib/base/CStopwatch.cpp
+lib/base/CString.cpp
+lib/base/CString.h
+lib/base/CStringUtil.cpp
+lib/base/CStringUtil.h
+lib/base/CUnicode.cpp
+lib/base/CUnicode.h
+lib/base/IInterface.h
+lib/base/ILogOutputter.h
+lib/base/Makefile.am
+lib/base/Version.h
+lib/base/XBase.cpp
+lib/base/XBase.h
+lib/base/base.dsp
+lib/base/common.h
+lib/base/stdfstream.h
+lib/base/stdistream.h
+lib/base/stdlist.h
+lib/base/stdmap.h
+lib/base/stdostream.h
+lib/base/stdpost.h
+lib/base/stdpre.h
+lib/base/stdset.h
+lib/base/stdsstream.h
+lib/base/stdvector.h
+lib/client/CClient.cpp
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/Makefile.am
+lib/client/client.dsp
+lib/common/BasicTypes.h
+lib/common/IInterface.h
+lib/common/Makefile.am
+lib/common/Version.h
+lib/common/common.dsp
+lib/common/common.h
+lib/common/stdfstream.h
+lib/common/stdistream.h
+lib/common/stdlist.h
+lib/common/stdmap.h
+lib/common/stdostream.h
+lib/common/stdpost.h
+lib/common/stdpre.h
+lib/common/stdset.h
+lib/common/stdsstream.h
+lib/common/stdstring.h
+lib/common/stdvector.h
+lib/http/CHTTPProtocol.h
+lib/http/Makefile.am
+lib/http/XHTTP.cpp
+lib/http/http.dsp
+lib/io/CUnicode.cpp
+lib/io/CUnicode.h
+lib/io/Makefile.am
+lib/io/XIO.cpp
+lib/io/XIO.h
+lib/io/io.dsp
+lib/mt/CCondVar.cpp
+lib/mt/CCondVar.h
+lib/mt/CMutex.cpp
+lib/mt/CMutex.h
+lib/mt/CThread.cpp
+lib/mt/CThread.h
+lib/mt/CThreadRep.cpp
+lib/mt/CThreadRep.h
+lib/mt/CTimerThread.cpp
+lib/mt/Makefile.am
+lib/mt/XMT.cpp
+lib/mt/XMT.h
+lib/mt/XThread.h
+lib/mt/mt.dsp
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/CNetworkAddress.cpp
+lib/net/CNetworkAddress.h
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPListenSocket.h
+lib/net/CTCPSocket.cpp
+lib/net/CTCPSocket.h
+lib/net/Makefile.am
+lib/net/XNetwork.cpp
+lib/net/XNetwork.h
+lib/net/XSocket.cpp
+lib/net/XSocket.h
+lib/net/net.dsp
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CPlatform.cpp
+lib/platform/CPlatform.h
+lib/platform/CUnixPlatform.cpp
+lib/platform/CUnixPlatform.h
+lib/platform/CWin32Platform.cpp
+lib/platform/CWin32Platform.h
+lib/platform/CXWindowsClipboard.cpp
+lib/platform/IPlatform.h
+lib/platform/Makefile.am
+lib/platform/platform.dsp
+lib/platform/synrgyhk.dsp
+lib/server/CConfig.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CServer.cpp
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/server/Makefile.am
+lib/server/server.dsp
+lib/synergy/Makefile.am
+lib/synergy/XScreen.cpp
+lib/synergy/XScreen.h
+lib/synergy/XSynergy.cpp
+lib/synergy/XSynergy.h
+lib/synergy/libsynergy.dsp
+synergy.dsw
+
+Refactored some platform dependent code into a new library,
+lib/arch.  This should make porting easier.  Will probably
+continue to refactor a little more, moving platform dependent
+event handling stuff into lib/platform.
+
+----------
+2002/12/26 18:40:22 crs
+FAQ
+
+More FAQs.
+
+----------
+2002/12/25 23:49:42 crs
+BUGS
+FAQ
+INSTALL
+README
+TODO
+
+Documentation update.
+
+----------
+2002/12/25 22:56:09 crs
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+Made synrgyhk.dll error messages less cryptic.
+
+----------
+2002/12/25 19:21:17 crs
+NEWS
+configure.in
+lib/base/Version.h
+
+Changed version number to 0.9.14.  Added NEWS item.
+
+----------
+2002/12/25 18:44:54 crs
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreenSaver.cpp
+
+Improved handling of screen saver handling when windows 2k is
+the client and the screen saver is password protected.  It used
+to immediately turn off the screen saver (unintentionally) in
+that case.
+
+----------
+2002/12/25 10:35:59 crs
+acinclude.m4
+config/config.guess
+config/config.sub
+configure.in
+lib/base/common.h
+lib/mt/CThreadRep.cpp
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/platform/CUnixPlatform.cpp
+
+Changes to support building on solaris, irix, and darwin.  Also
+removed test for working fork (AC_FORK).
+
+----------
+2002/12/23 14:47:44 crs
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+
+Added code to process set/reset options messages from server.
+
+----------
+2002/12/23 13:55:21 crs
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CMSWindowsSecondaryScreen.h
+lib/client/CSecondaryScreen.cpp
+lib/client/CSecondaryScreen.h
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CMSWindowsPrimaryScreen.h
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CPrimaryScreen.cpp
+lib/server/CPrimaryScreen.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/server/CXWindowsPrimaryScreen.h
+lib/synergy/CProtocolUtil.cpp
+lib/synergy/CProtocolUtil.h
+lib/synergy/IClient.h
+lib/synergy/Makefile.am
+lib/synergy/OptionTypes.h
+lib/synergy/ProtocolTypes.h
+
+Added support for per-screen options in the configuration file
+and sending those options to the appropriate client screens.
+Currently, two options are supported:  halfDuplexCapsLock and
+halfDuplexNumLock mark the caps lock and num lock keys,
+respectively, as being half-duplex.
+
+----------
+2002/12/22 14:51:41 crs
+configure.in
+doc/doxygen.cfg.in
+
+Doxygen config file now sets HAVE_DOT to YES only if dot is found
+by configure.
+
+----------
+2002/12/15 22:39:59 crs
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+
+Now handling any number of pointer buttons.
+
+----------
+2002/12/15 22:17:18 crs
+lib/server/CXWindowsPrimaryScreen.cpp
+
+Now ignoring half-duplex keys that are down when deciding if
+the mouse is locked to the screen.  We can't tell if a half-
+duplex key is physically down and logically down just means
+it's active so there's no point in letting it lock the mouse
+to the screen.
+
+----------
+2002/12/15 22:14:49 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CMSWindowsSecondaryScreen.h
+lib/client/CSecondaryScreen.cpp
+lib/client/CSecondaryScreen.h
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+
+Now restoring toggle key states on leaving a client screen to
+their state when the screen was entered.  Previously when
+leaving a client screen the toggle keys kept their state so,
+say, caps lock, would remain on.  This was inconvenient if
+you then used the client's keyboard directly.
+
+----------
+2002/12/15 20:00:52 crs
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+Fixed loss of ctrl+alt when transmitted to non-windows platforms
+from a windows server.  Was converting ctrl+alt on windows to
+mode switch on the server.  No longer doing that;  windows clients
+will interpret ctrl+alt as AltGr and other clients will just see
+ctrl+alt.  Also made the right alt key mode switch on windows
+servers in case the user wants to force a mode switch, but that
+means the right alt key no longer acts as alt on clients.
+
+----------
+2002/12/15 19:58:41 crs
+lib/platform/CMSWindowsScreen.cpp
+
+Fixed client not reconnecting when server dies bug.
+
+----------
+2002/12/15 19:57:28 crs
+lib/client/CXWindowsSecondaryScreen.cpp
+
+Cleanup and changed some DEBUG1 messages to DEBUG2.
+
+----------
+2002/12/15 11:12:39 crs
+doc/doxygen.cfg.in
+
+Enabled using dot and class diagrams.
+
+----------
+2002/11/05 19:23:05 crs
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsScreenSaver.h
+
+Fixed bug in detecting screen saver activation.  Was using || instead
+of && in conditional.
+
+----------
+2002/11/03 18:09:28 crs
+acinclude.m4
+configure.in
+lib/io/CUnicode.h
+lib/net/CNetwork.h
+lib/platform/CUnixPlatform.cpp
+
+Merged fixes for building on MacOS X.  It dies on one file with
+an internal compiler error;  building that file without
+optimization works around the compiler bug.  Sadly, synergy can
+only interact with X windows, not native MacOS windows.
+
+----------
+2002/10/30 22:22:16 crs
+acinclude.m4
+
+Escaped quotes to satisfy older autoheader versions.
+
+----------
+2002/10/30 22:16:30 crs
+lib/net/CNetwork.h
+lib/net/CTCPSocket.cpp
+
+Fixed bugs in error handling in CTCPSocket;  previously was not
+handling read errors at all and error handling for writes was
+never being used.  Now the socket disconnects if a read or write
+fails on the socket for any reason except EINTR.  Also added
+<netinet/in.h> to includes in CNetwork.h because it's needed on
+some platforms.
+
+----------
+2002/10/29 22:07:55 crs
+all.dsp
+lib/base/base.dsp
+lib/client/client.dsp
+lib/http/http.dsp
+lib/io/CUnicode.cpp
+lib/io/io.dsp
+lib/mt/mt.dsp
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/net.dsp
+lib/platform/makehook.dsp
+lib/platform/platform.dsp
+lib/platform/synrgyhk.dsp
+lib/server/server.dsp
+lib/synergy/libsynergy.dsp
+
+Ported recent changes to win32 and fixed CRLF problems with project
+files (most had CRCRCRLF).
+
+----------
+2002/10/28 22:49:21 crs
+acinclude.m4
+configure.in
+lib/mt/CThreadRep.cpp
+
+solaris configure and build fixes.  without having solaris i
+can only hope that these changes actually work.
+
+----------
+2002/10/22 22:35:13 crs
+configure.in
+lib/io/CUnicode.cpp
+
+Added workarounds for missing reentrant versions of wide char
+to/from multi-byte conversion functions.
+
+----------
+2002/10/22 21:30:48 crs
+lib/base/CUnicode.cpp
+lib/base/CUnicode.h
+lib/base/Makefile.am
+lib/io/CUnicode.cpp
+lib/io/CUnicode.h
+lib/io/Makefile.am
+lib/platform/Makefile.am
+
+Moved CUnicode to lib/io.  That's a reasonable place for it
+that's after lib/mt.  It needs to be after lib/mt in preparation
+for supporting platforms without the reentrant wide char and
+multi-byte functions.
+
+----------
+2002/10/20 22:39:54 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+
+Fixed conditional to test for multimon to do nasty win32 mouse
+positioning hack.  Was doing hack if *not* a multiple monitor
+system but should've been doing it if is *is* a multimon system.
+
+----------
+2002/10/20 22:36:24 crs
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/CNetworkAddress.cpp
+
+Replaced inet_addr() with inet_aton(), which is a better function
+anyway but isn't implemented in winsock, removed use of INADDR_NONE
+which some platforms don't define except on winsock which does
+define it, and changed SOL_TCP to IPPROTO_TCP which should work on
+more platforms.
+
+----------
+2002/10/17 21:37:41 crs
+lib/platform/CXWindowsScreen.cpp
+
+Fixed CXWindowsScreen to force the event loop to wake up when
+exitMainLoop() is called.
+
+----------
+2002/10/17 21:37:37 crs
+lib/mt/CThreadRep.cpp
+
+Fixed CThreadRep to not raise a signal on the thread if it's
+already dead.  Otherwise the signal could propagate to the
+parent thread (at least on linux threads) and cause havoc.
+
+----------
+2002/10/17 21:37:31 crs
+lib/server/CServer.cpp
+lib/server/CServer.h
+
+Changed server to fail with an error if in can't bind() the listen
+socket for any reason other than it's in use.
+
+----------
+2002/10/17 20:56:28 crs
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/CNetworkAddress.cpp
+
+Changed non-reentrant network functions to be reentrant and
+thread safe.
+
+----------
+2002/10/16 22:01:50 crs
+acinclude.m4
+configure.in
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/CTCPSocket.cpp
+lib/platform/CXWindowsScreen.cpp
+
+Added support for using select() instead of poll().
+
+----------
+2002/10/15 22:17:41 crs
+lib/server/CConfig.cpp
+
+CConfig now accepts and discards \r at the end of a line.  This
+allows the unix server to read configuration files created on
+microsoft windows platforms.
+
+----------
+2002/10/15 22:08:10 crs
+cmd/synergys/synergys.cpp
+lib/server/CConfig.cpp
+
+Fixed use of %s instead of %{1} in format() call.
+
+----------
+2002/10/15 22:01:41 crs
+lib/client/CClient.cpp
+lib/mt/CThreadRep.cpp
+lib/mt/Makefile.am
+lib/mt/XMT.cpp
+lib/mt/XMT.h
+lib/mt/XThread.h
+lib/server/CServer.cpp
+
+Renamed XThreadUnavailable to XMTThreadUnavailable and derived it
+from XBase so it can be caught normally.  Changed client and server
+to handle unavailable threads (in main loop, anyway).
+
+----------
+2002/10/15 21:35:12 crs
+lib/mt/CThreadRep.cpp
+
+Workaround for pthread bug on RedHat 7.2 on multiprocessor
+systems.
+
+----------
+2002/10/15 21:29:44 crs
+cmd/synergyc/synergyc.cpp
+cmd/synergys/synergys.cpp
+lib/base/CLog.h
+lib/client/CClient.cpp
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CSecondaryScreen.cpp
+lib/client/CServerProxy.cpp
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/http/CHTTPProtocol.cpp
+lib/mt/CMutex.cpp
+lib/mt/CThread.cpp
+lib/mt/CThreadRep.cpp
+lib/mt/CTimerThread.cpp
+lib/net/CNetwork.cpp
+lib/platform/CMSWindowsClipboard.cpp
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CWin32Platform.cpp
+lib/platform/CXWindowsClipboard.cpp
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsUtil.cpp
+lib/server/CClientProxy1_0.cpp
+lib/server/CHTTPServer.cpp
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryScreen.cpp
+lib/server/CServer.cpp
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/synergy/CProtocolUtil.cpp
+
+Changed log() and logc() macros to LOG() and LOGC(), respectively.
+This avoids a conflict with the standard math library log()
+function.
+
+----------
+2002/09/14 21:31:35 crs
+lib/base/XBase.cpp
+lib/base/XBase.h
+
+removed std::exception from base class list of XBase.  this
+is a workaround for gcc 3.2 until everything necessary has
+throw() specifiers.
+
+----------
+2002/09/14 20:56:50 crs
+lib/server/CServer.cpp
+
+now logging bind failures as warnings.
+
+----------
+2002/09/14 20:56:28 crs
+lib/base/XBase.cpp
+lib/base/XBase.h
+lib/io/XIO.cpp
+lib/io/XIO.h
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPSocket.cpp
+lib/net/XSocket.cpp
+lib/net/XSocket.h
+
+added better network error message support.
+
+----------
+2002/09/14 12:07:02 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/server/CXWindowsPrimaryScreen.h
+lib/synergy/KeyTypes.h
+
+Rewrote handling of key press on X11 client;  it should be much
+more robust now.  Also added handling of Super modifier key and
+changed windows keys to map to Super instead of Meta, which is
+the default on my keyboard.
+
+----------
+2002/09/14 12:05:06 crs
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+
+Added debug level combo box and version number to title bar of win32
+launcher.
+
+----------
+2002/09/14 12:03:43 crs
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.rc
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.rc
+
+Fixed backend mode.  Now reports log messages and, if any are
+serious, shows a message box before exiting.
+
+----------
+2002/09/04 21:17:01 crs
+NEWS
+configure.in
+lib/base/Version.h
+
+Changed version number to 0.9.11.  Added NEWS item.
+
+----------
+2002/09/04 21:14:18 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+
+now looking up SendEvent() using GetProcAddress() so win95
+systems can run the synergy client.
+
+----------
+2002/09/04 20:17:54 crs
+lib/client/CXWindowsSecondaryScreen.cpp
+
+fixed bug that caused the wrong keycode to be used for most,
+possibly all, keysyms.  was reading past the end of an array
+of keysyms.
+
+----------
+2002/09/02 17:36:25 crs
+configure.in
+lib/base/Version.h
+
+Changed version number to 0.9.10.
+
+----------
+2002/09/02 17:30:04 crs
+BUGS
+INSTALL
+cmd/launcher/CAutoStart.cpp
+cmd/launcher/CAutoStart.h
+cmd/launcher/LaunchUtil.cpp
+cmd/launcher/LaunchUtil.h
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.dsp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.rc
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+lib/client/CClient.cpp
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/platform/CUnixPlatform.cpp
+lib/platform/CUnixPlatform.h
+lib/platform/CWin32Platform.cpp
+lib/platform/CWin32Platform.h
+lib/platform/IPlatform.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+Fixed win32 config saving, keyboard mapping, and AltGr bugs.
+Made extensive changes to the launcher to provide more control
+over setting up auto-start and it now saves configuration to
+the user's documents directory if auto-starting at login and
+saves to the system directory if auto-starting at boot.
+Replaced MapVirtualKey() with table lookup to work around that
+function's lack of support for extended keyboard scan codes.
+Added first cut at support for AltGr.
+
+----------
+2002/09/01 15:30:00 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/KeyTypes.h
+
+Added support for mode switch key to X11 screens.
+
+----------
+2002/09/01 10:31:10 crs
+acinclude.m4
+configure.in
+lib/base/stdsstream.h
+
+added more tests to autoconf.  also now handling missing sstream
+header in gcc 2.95 by including sstream header backported from v3.
+
+----------
+2002/09/01 09:28:54 crs
+lib/platform/CXWindowsUtil.cpp
+
+lowered severity of some debug messages.
+
+----------
+2002/08/18 17:45:59 crs
+configure.in
+lib/base/Version.h
+
+Changed version number to 0.9.9.
+
+----------
+2002/08/18 17:40:10 crs
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+fixed win32 deadlock.  when a client disconnects the server will
+warp the mouse to the primary screen.  entering the primary
+screen causes the primary screen's window to be hidden.  the
+deadlock occurs because hiding the window seems to post a
+message then wait for it to be handled (or possibly it won't
+send a message while a posted message is being handled).
+thread A locks the mutex, warps the mouse, the hides the window.
+thread B begins processing the mouse warp then tries to lock
+the mutex.  thread A is waiting on the event loop owned by B
+while B is waiting on the mutex owned by A.  this fix simply
+hides the window asynchronously.  however, there may be other
+ways to cause a similar deadlock that have not been found.
+
+----------
+2002/08/18 17:35:10 crs
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CMSWindowsSecondaryScreen.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+
+fixed PrintScrn handling;  it was being changed to keypad multiply.
+
+----------
+2002/08/18 17:31:48 crs
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+
+no longer sending fake events for unmapped logical buttons.
+
+----------
+2002/08/11 22:43:07 crs
+BUGS
+INSTALL
+NEWS
+PORTING
+README
+cmd/Makefile.am
+cmd/launcher/launcher.cpp
+cmd/synergy/Makefile.am
+cmd/synergy/resource.h
+cmd/synergy/synergy.cpp
+cmd/synergy/synergy.dsp
+cmd/synergy/synergy.ico
+cmd/synergy/synergy.rc
+cmd/synergyc/Makefile.am
+cmd/synergyc/resource.h
+cmd/synergyc/synergyc.cpp
+cmd/synergyc/synergyc.dsp
+cmd/synergyc/synergyc.ico
+cmd/synergyc/synergyc.rc
+cmd/synergyd/Makefile.am
+cmd/synergyd/resource.h
+cmd/synergyd/synergy.ico
+cmd/synergyd/synergyd.cpp
+cmd/synergyd/synergyd.dsp
+cmd/synergyd/synergyd.rc
+cmd/synergys/Makefile.am
+cmd/synergys/resource.h
+cmd/synergys/synergys.cpp
+cmd/synergys/synergys.dsp
+cmd/synergys/synergys.ico
+cmd/synergys/synergys.rc
+configure.in
+dist/rpm/synergy.spec.in
+synergy.dsw
+
+Moved synergy client to cmd/synergyc and renamed it synergyc.
+Moved synergy server to cmd/synergys and renamed it synergys.
+Updated documentation to reflect that and the win32 launcher.
+
+----------
+2002/08/11 11:50:49 crs
+Makefile.am
+TODO
+
+added TODO file and top-level rule to make zip file of distribution
+files.
+
+----------
+2002/08/03 11:50:07 crs
+lib/mt/CCondVar.h
+
+removed pre-instantiation of templates in header file.
+
+----------
+2002/08/03 11:49:36 crs
+all.dsp
+cmd/Makefile.am
+cmd/launcher/Makefile.am
+cmd/launcher/launcher.cpp
+cmd/launcher/launcher.dsp
+cmd/launcher/launcher.rc
+cmd/launcher/resource.h
+cmd/launcher/synergy.ico
+cmd/synergy/Makefile.am
+cmd/synergy/resource.h
+cmd/synergy/synergy.cpp
+cmd/synergy/synergy.dsp
+cmd/synergy/synergy.ico
+cmd/synergy/synergy.rc
+cmd/synergyd/Makefile.am
+cmd/synergyd/resource.h
+cmd/synergyd/synergy.ico
+cmd/synergyd/synergyd.cpp
+cmd/synergyd/synergyd.dsp
+cmd/synergyd/synergyd.rc
+configure.in
+lib/base/CString.cpp
+lib/base/Version.h
+lib/base/base.dsp
+lib/client/client.dsp
+lib/http/http.dsp
+lib/io/io.dsp
+lib/mt/mt.dsp
+lib/net/net.dsp
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/makehook.dsp
+lib/platform/platform.dsp
+lib/platform/synrgyhk.dsp
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/server/server.dsp
+lib/synergy/libsynergy.dsp
+synergy.dsw
+
+added win32 launcher program.  also changed VC++ dsp and dsw
+files to binary form so \r\n aren't converted.  added icons
+to client and server apps on win32.
+
+----------
+2002/08/02 17:57:54 crs
+Makefile.am
+configure.in
+dist/Makefile.am
+dist/rpm/Makefile.am
+dist/rpm/synergy.spec.in
+
+added build rule to create RPMs.
+
+----------
+2002/08/02 17:53:23 crs
+AUTHORS
+BUGS
+FAQ
+HISTORY
+INSTALL
+NEWS
+PORTING
+README
+
+minor documentation updates.  added HISTORY and PORTING.
+
+----------
+2002/08/01 18:07:32 crs
+AUTHORS
+BUGS
+COPYING
+ChangeLog
+FAQ
+INSTALL
+NEWS
+README
+
+added files for release.
+
+----------
+2002/08/01 11:45:21 crs
+configure.in
+lib/base/CStopwatch.cpp
+lib/mt/CCondVar.cpp
+lib/platform/CUnixPlatform.cpp
+
+minor automake fixes.
+
+----------
+2002/07/31 17:40:36 crs
+Makefile.am
+
+added simple rule to build doxygen.
+
+----------
+2002/07/31 17:40:21 crs
+lib/synergy/XSynergy.h
+
+fixed comment.
+
+----------
+2002/07/31 17:35:43 crs
+Makefile.am
+
+removed two programs from files to clean.
+
+----------
+2002/07/31 17:34:05 crs
+Makefile.am
+cmd/Makefile.am
+cmd/synergy/Makefile.am
+cmd/synergyd/Makefile.am
+lib/Makefile.am
+lib/base/Makefile.am
+lib/client/Makefile.am
+lib/http/Makefile.am
+lib/io/Makefile.am
+lib/mt/Makefile.am
+lib/net/Makefile.am
+lib/platform/Makefile.am
+lib/server/Makefile.am
+lib/synergy/Makefile.am
+
+fixes to get vpath builds working (necessary for `make distcheck').
+
+----------
+2002/07/31 16:57:26 crs
+Makefile.am
+cmd/Makefile.am
+cmd/synergy/Makefile.am
+cmd/synergy/synergy.cpp
+cmd/synergyd/Makefile.am
+cmd/synergyd/synergyd.cpp
+configure.in
+lib/Makefile.am
+lib/base/Makefile.am
+lib/base/Version.h
+lib/client/Makefile.am
+lib/http/Makefile.am
+lib/io/Makefile.am
+lib/mt/Makefile.am
+lib/net/Makefile.am
+lib/platform/Makefile.am
+lib/server/Makefile.am
+lib/synergy/Makefile.am
+lib/synergy/ProtocolTypes.h
+lib/synergy/Version.h
+
+Moved version header to base and it now uses VERSION macro
+from config.h if available (which means version is now a
+string, not three integers).  Changed version to 1.0.0 and
+protocol version to 1.0.  And added MAINTAINERCLEANFILES
+to makefiles to remove generated files.
+
+----------
+2002/07/31 16:27:06 crs
+Makefile.am
+cmd/synergy/Makefile.am
+cmd/synergyd/Makefile.am
+examples/synergy.linux.init
+examples/synergyd.linux.init
+lib/base/Makefile.am
+lib/client/Makefile.am
+lib/http/Makefile.am
+lib/io/Makefile.am
+lib/mt/Makefile.am
+lib/net/Makefile.am
+lib/platform/Makefile.am
+lib/server/Makefile.am
+lib/synergy/Makefile.am
+nodist/notes
+notes
+
+added EXTRA_* files to get `make dist' doing the right thing.
+
+----------
+2002/07/31 16:24:45 crs
+notes
+
+checkpoint notes.
+
+----------
+2002/07/31 13:56:59 crs
+lib/base/CLog.cpp
+
+removed now unnecssary #define.
+
+----------
+2002/07/31 13:41:58 crs
+lib/http/http.dsp
+lib/platform/CMSWindowsClipboardAnyTextConverter.cpp
+lib/platform/CMSWindowsClipboardAnyTextConverter.h
+lib/platform/CMSWindowsClipboardTextConverter.cpp
+lib/platform/CMSWindowsClipboardTextConverter.h
+lib/platform/CMSWindowsClipboardUTF16Converter.cpp
+lib/platform/CMSWindowsClipboardUTF16Converter.h
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CMSWindowsScreenSaver.h
+lib/platform/IMSWindowsScreenEventHandler.h
+
+okay, now the files should no longer be executable.
+
+----------
+2002/07/31 13:34:18 crs
+lib/http/http.dsp
+lib/platform/CMSWindowsClipboardAnyTextConverter.cpp
+lib/platform/CMSWindowsClipboardAnyTextConverter.h
+lib/platform/CMSWindowsClipboardTextConverter.cpp
+lib/platform/CMSWindowsClipboardTextConverter.h
+lib/platform/CMSWindowsClipboardUTF16Converter.cpp
+lib/platform/CMSWindowsClipboardUTF16Converter.h
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CMSWindowsScreenSaver.h
+lib/platform/IMSWindowsScreenEventHandler.h
+notes
+
+removed unintentional executable flag.
+
+----------
+2002/07/31 13:29:33 crs
+notes
+
+checkpoint notes.
+
+----------
+2002/07/31 13:18:27 crs
+README
+
+added comment about large motif clipboard items to README.
+
+----------
+2002/07/31 13:10:15 crs
+README
+
+updated README.
+
+----------
+2002/07/31 12:40:41 crs
+lib/platform/CSynergyHook.cpp
+lib/platform/synrgyhk.dsp
+
+now building hook dll for release without linking in standard
+C runtime.  need C runtime for debug build for asserts.
+
+----------
+2002/07/31 12:39:34 crs
+cmd/synergy/synergy.cpp
+cmd/synergyd/synergyd.cpp
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/platform/CXWindowsScreen.cpp
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/synergy/IClient.h
+lib/synergy/IScreen.h
+lib/synergy/XScreen.cpp
+lib/synergy/XScreen.h
+
+fixed problem with opening client and server.  in some cases it
+would fail to open in such a way that it could never succeed
+but it'd never stop retrying.  now terminating when open fails
+such that it'll never succeed.
+
+----------
+2002/07/30 19:03:40 crs
+lib/client/client.dsp
+lib/io/io.dsp
+lib/net/net.dsp
+lib/server/server.dsp
+lib/synergy/libsynergy.dsp
+
+added new files to projects and added two project files that
+should've been adding in change 530.
+
+----------
+2002/07/30 18:49:31 crs
+lib/client/CServerProxy.cpp
+lib/server/CClientProxy1_0.cpp
+lib/synergy/ProtocolTypes.h
+
+made it so a negative kHeartRate disables heartbeats and set
+kHeartRate to -1.
+
+----------
+2002/07/30 18:31:21 crs
+lib/mt/CThreadRep.cpp
+lib/mt/XThread.h
+
+moved exception definition to header file.
+
+----------
+2002/07/30 18:31:00 crs
+cmd/synergy/synergy.cpp
+cmd/synergyd/synergyd.cpp
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/ISecondaryScreenFactory.h
+lib/client/Makefile.am
+lib/io/IStreamFilterFactory.h
+lib/io/Makefile.am
+lib/net/CTCPSocketFactory.cpp
+lib/net/CTCPSocketFactory.h
+lib/net/ISocketFactory.h
+lib/net/Makefile.am
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/IPrimaryScreenFactory.h
+lib/server/Makefile.am
+lib/synergy/CTCPSocketFactory.cpp
+lib/synergy/CTCPSocketFactory.h
+lib/synergy/ISocketFactory.h
+lib/synergy/Makefile.am
+lib/synergy/ProtocolTypes.h
+
+now using class factories to move some decisions from the libraries
+into the application.
+
+----------
+2002/07/30 16:52:46 crs
+Makefile.am
+base/BasicTypes.h
+base/CFunctionJob.cpp
+base/CFunctionJob.h
+base/CLog.cpp
+base/CLog.h
+base/CStopwatch.cpp
+base/CStopwatch.h
+base/CString.cpp
+base/CString.h
+base/CUnicode.cpp
+base/CUnicode.h
+base/IInterface.h
+base/IJob.h
+base/Makefile.am
+base/TMethodJob.h
+base/XBase.cpp
+base/XBase.h
+base/base.dsp
+base/common.h
+base/stdfstream.h
+base/stdistream.h
+base/stdlist.h
+base/stdmap.h
+base/stdostream.h
+base/stdpost.h
+base/stdpre.h
+base/stdset.h
+base/stdsstream.h
+base/stdvector.h
+client/CClient.cpp
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CSecondaryScreen.cpp
+client/CSecondaryScreen.h
+client/CServerProxy.cpp
+client/CServerProxy.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/Makefile.am
+client/client.cpp
+client/client.dsp
+client/client.rc
+client/resource.h
+cmd/Makefile.am
+cmd/synergy/Makefile.am
+cmd/synergy/resource.h
+cmd/synergy/synergy.cpp
+cmd/synergy/synergy.dsp
+cmd/synergy/synergy.rc
+cmd/synergyd/Makefile.am
+cmd/synergyd/resource.h
+cmd/synergyd/synergyd.cpp
+cmd/synergyd/synergyd.dsp
+cmd/synergyd/synergyd.rc
+configure.in
+http/CHTTPProtocol.cpp
+http/CHTTPProtocol.h
+http/Makefile.am
+http/XHTTP.cpp
+http/XHTTP.h
+http/http.dsp
+io/CBufferedInputStream.cpp
+io/CBufferedInputStream.h
+io/CBufferedOutputStream.cpp
+io/CBufferedOutputStream.h
+io/CInputStreamFilter.cpp
+io/CInputStreamFilter.h
+io/COutputStreamFilter.cpp
+io/COutputStreamFilter.h
+io/CStreamBuffer.cpp
+io/CStreamBuffer.h
+io/IInputStream.h
+io/IOutputStream.h
+io/Makefile.am
+io/XIO.cpp
+io/XIO.h
+io/io.dsp
+lib/Makefile.am
+lib/base/BasicTypes.h
+lib/base/CFunctionJob.cpp
+lib/base/CFunctionJob.h
+lib/base/CLog.cpp
+lib/base/CLog.h
+lib/base/CStopwatch.cpp
+lib/base/CStopwatch.h
+lib/base/CString.cpp
+lib/base/CString.h
+lib/base/CUnicode.cpp
+lib/base/CUnicode.h
+lib/base/IInterface.h
+lib/base/IJob.h
+lib/base/Makefile.am
+lib/base/TMethodJob.h
+lib/base/XBase.cpp
+lib/base/XBase.h
+lib/base/base.dsp
+lib/base/common.h
+lib/base/stdfstream.h
+lib/base/stdistream.h
+lib/base/stdlist.h
+lib/base/stdmap.h
+lib/base/stdostream.h
+lib/base/stdpost.h
+lib/base/stdpre.h
+lib/base/stdset.h
+lib/base/stdsstream.h
+lib/base/stdvector.h
+lib/client/CClient.cpp
+lib/client/CClient.h
+lib/client/CMSWindowsSecondaryScreen.cpp
+lib/client/CMSWindowsSecondaryScreen.h
+lib/client/CSecondaryScreen.cpp
+lib/client/CSecondaryScreen.h
+lib/client/CServerProxy.cpp
+lib/client/CServerProxy.h
+lib/client/CXWindowsSecondaryScreen.cpp
+lib/client/CXWindowsSecondaryScreen.h
+lib/client/Makefile.am
+lib/http/CHTTPProtocol.cpp
+lib/http/CHTTPProtocol.h
+lib/http/Makefile.am
+lib/http/XHTTP.cpp
+lib/http/XHTTP.h
+lib/http/http.dsp
+lib/io/CBufferedInputStream.cpp
+lib/io/CBufferedInputStream.h
+lib/io/CBufferedOutputStream.cpp
+lib/io/CBufferedOutputStream.h
+lib/io/CInputStreamFilter.cpp
+lib/io/CInputStreamFilter.h
+lib/io/COutputStreamFilter.cpp
+lib/io/COutputStreamFilter.h
+lib/io/CStreamBuffer.cpp
+lib/io/CStreamBuffer.h
+lib/io/IInputStream.h
+lib/io/IOutputStream.h
+lib/io/Makefile.am
+lib/io/XIO.cpp
+lib/io/XIO.h
+lib/io/io.dsp
+lib/mt/CCondVar.cpp
+lib/mt/CCondVar.h
+lib/mt/CLock.cpp
+lib/mt/CLock.h
+lib/mt/CMutex.cpp
+lib/mt/CMutex.h
+lib/mt/CThread.cpp
+lib/mt/CThread.h
+lib/mt/CThreadRep.cpp
+lib/mt/CThreadRep.h
+lib/mt/CTimerThread.cpp
+lib/mt/CTimerThread.h
+lib/mt/Makefile.am
+lib/mt/XThread.h
+lib/mt/mt.dsp
+lib/net/CNetwork.cpp
+lib/net/CNetwork.h
+lib/net/CNetworkAddress.cpp
+lib/net/CNetworkAddress.h
+lib/net/CTCPListenSocket.cpp
+lib/net/CTCPListenSocket.h
+lib/net/CTCPSocket.cpp
+lib/net/CTCPSocket.h
+lib/net/IDataSocket.h
+lib/net/IListenSocket.h
+lib/net/ISocket.h
+lib/net/Makefile.am
+lib/net/XNetwork.cpp
+lib/net/XNetwork.h
+lib/net/XSocket.cpp
+lib/net/XSocket.h
+lib/net/net.dsp
+lib/platform/CMSWindowsClipboard.cpp
+lib/platform/CMSWindowsClipboard.h
+lib/platform/CMSWindowsClipboardAnyTextConverter.cpp
+lib/platform/CMSWindowsClipboardAnyTextConverter.h
+lib/platform/CMSWindowsClipboardTextConverter.cpp
+lib/platform/CMSWindowsClipboardTextConverter.h
+lib/platform/CMSWindowsClipboardUTF16Converter.cpp
+lib/platform/CMSWindowsClipboardUTF16Converter.h
+lib/platform/CMSWindowsScreen.cpp
+lib/platform/CMSWindowsScreen.h
+lib/platform/CMSWindowsScreenSaver.cpp
+lib/platform/CMSWindowsScreenSaver.h
+lib/platform/CPlatform.cpp
+lib/platform/CPlatform.h
+lib/platform/CSynergyHook.cpp
+lib/platform/CSynergyHook.h
+lib/platform/CUnixPlatform.cpp
+lib/platform/CUnixPlatform.h
+lib/platform/CWin32Platform.cpp
+lib/platform/CWin32Platform.h
+lib/platform/CXWindowsClipboard.cpp
+lib/platform/CXWindowsClipboard.h
+lib/platform/CXWindowsClipboardTextConverter.cpp
+lib/platform/CXWindowsClipboardTextConverter.h
+lib/platform/CXWindowsClipboardUCS2Converter.cpp
+lib/platform/CXWindowsClipboardUCS2Converter.h
+lib/platform/CXWindowsClipboardUTF8Converter.cpp
+lib/platform/CXWindowsClipboardUTF8Converter.h
+lib/platform/CXWindowsScreen.cpp
+lib/platform/CXWindowsScreen.h
+lib/platform/CXWindowsScreenSaver.cpp
+lib/platform/CXWindowsScreenSaver.h
+lib/platform/CXWindowsUtil.cpp
+lib/platform/CXWindowsUtil.h
+lib/platform/IMSWindowsScreenEventHandler.h
+lib/platform/IPlatform.h
+lib/platform/Makefile.am
+lib/platform/makehook.dsp
+lib/platform/platform.dsp
+lib/platform/synrgyhk.dsp
+lib/server/CClientProxy.cpp
+lib/server/CClientProxy.h
+lib/server/CClientProxy1_0.cpp
+lib/server/CClientProxy1_0.h
+lib/server/CConfig.cpp
+lib/server/CConfig.h
+lib/server/CHTTPServer.cpp
+lib/server/CHTTPServer.h
+lib/server/CMSWindowsPrimaryScreen.cpp
+lib/server/CMSWindowsPrimaryScreen.h
+lib/server/CPrimaryClient.cpp
+lib/server/CPrimaryClient.h
+lib/server/CPrimaryScreen.cpp
+lib/server/CPrimaryScreen.h
+lib/server/CServer.cpp
+lib/server/CServer.h
+lib/server/CXWindowsPrimaryScreen.cpp
+lib/server/CXWindowsPrimaryScreen.h
+lib/server/Makefile.am
+lib/synergy/CClipboard.cpp
+lib/synergy/CClipboard.h
+lib/synergy/CInputPacketStream.cpp
+lib/synergy/CInputPacketStream.h
+lib/synergy/COutputPacketStream.cpp
+lib/synergy/COutputPacketStream.h
+lib/synergy/CProtocolUtil.cpp
+lib/synergy/CProtocolUtil.h
+lib/synergy/CTCPSocketFactory.cpp
+lib/synergy/CTCPSocketFactory.h
+lib/synergy/ClipboardTypes.h
+lib/synergy/IClient.h
+lib/synergy/IClipboard.h
+lib/synergy/IPrimaryScreenReceiver.h
+lib/synergy/IScreen.h
+lib/synergy/IScreenEventHandler.h
+lib/synergy/IScreenReceiver.h
+lib/synergy/IScreenSaver.h
+lib/synergy/IServer.h
+lib/synergy/ISocketFactory.h
+lib/synergy/KeyTypes.h
+lib/synergy/Makefile.am
+lib/synergy/MouseTypes.h
+lib/synergy/ProtocolTypes.h
+lib/synergy/Version.h
+lib/synergy/XScreen.cpp
+lib/synergy/XScreen.h
+lib/synergy/XSynergy.cpp
+lib/synergy/XSynergy.h
+lib/synergy/libsynergy.dsp
+mt/CCondVar.cpp
+mt/CCondVar.h
+mt/CLock.cpp
+mt/CLock.h
+mt/CMutex.cpp
+mt/CMutex.h
+mt/CThread.cpp
+mt/CThread.h
+mt/CThreadRep.cpp
+mt/CThreadRep.h
+mt/CTimerThread.cpp
+mt/CTimerThread.h
+mt/Makefile.am
+mt/XThread.h
+mt/mt.dsp
+net/CNetwork.cpp
+net/CNetwork.h
+net/CNetworkAddress.cpp
+net/CNetworkAddress.h
+net/CTCPListenSocket.cpp
+net/CTCPListenSocket.h
+net/CTCPSocket.cpp
+net/CTCPSocket.h
+net/IDataSocket.h
+net/IListenSocket.h
+net/ISocket.h
+net/Makefile.am
+net/XNetwork.cpp
+net/XNetwork.h
+net/XSocket.cpp
+net/XSocket.h
+net/net.dsp
+platform/CMSWindowsClipboard.cpp
+platform/CMSWindowsClipboard.h
+platform/CMSWindowsClipboardAnyTextConverter.cpp
+platform/CMSWindowsClipboardAnyTextConverter.h
+platform/CMSWindowsClipboardTextConverter.cpp
+platform/CMSWindowsClipboardTextConverter.h
+platform/CMSWindowsClipboardUTF16Converter.cpp
+platform/CMSWindowsClipboardUTF16Converter.h
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/CMSWindowsScreenSaver.cpp
+platform/CMSWindowsScreenSaver.h
+platform/CPlatform.cpp
+platform/CPlatform.h
+platform/CSynergyHook.cpp
+platform/CSynergyHook.h
+platform/CUnixPlatform.cpp
+platform/CUnixPlatform.h
+platform/CWin32Platform.cpp
+platform/CWin32Platform.h
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+platform/CXWindowsClipboardTextConverter.cpp
+platform/CXWindowsClipboardTextConverter.h
+platform/CXWindowsClipboardUCS2Converter.cpp
+platform/CXWindowsClipboardUCS2Converter.h
+platform/CXWindowsClipboardUTF8Converter.cpp
+platform/CXWindowsClipboardUTF8Converter.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+platform/CXWindowsScreenSaver.cpp
+platform/CXWindowsScreenSaver.h
+platform/CXWindowsUtil.cpp
+platform/CXWindowsUtil.h
+platform/IMSWindowsScreenEventHandler.h
+platform/IPlatform.h
+platform/Makefile.am
+platform/makehook.dsp
+platform/platform.dsp
+platform/synrgyhk.dsp
+server/CClientProxy.cpp
+server/CClientProxy.h
+server/CClientProxy1_0.cpp
+server/CClientProxy1_0.h
+server/CConfig.cpp
+server/CConfig.h
+server/CHTTPServer.cpp
+server/CHTTPServer.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CPrimaryScreen.cpp
+server/CPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/Makefile.am
+server/resource.h
+server/server.cpp
+server/server.dsp
+server/server.rc
+synergy.dsw
+synergy/CClipboard.cpp
+synergy/CClipboard.h
+synergy/CInputPacketStream.cpp
+synergy/CInputPacketStream.h
+synergy/COutputPacketStream.cpp
+synergy/COutputPacketStream.h
+synergy/CProtocolUtil.cpp
+synergy/CProtocolUtil.h
+synergy/CTCPSocketFactory.cpp
+synergy/CTCPSocketFactory.h
+synergy/ClipboardTypes.h
+synergy/IClient.h
+synergy/IClipboard.h
+synergy/IPrimaryScreenReceiver.h
+synergy/IScreen.h
+synergy/IScreenEventHandler.h
+synergy/IScreenReceiver.h
+synergy/IScreenSaver.h
+synergy/IServer.h
+synergy/ISocketFactory.h
+synergy/KeyTypes.h
+synergy/Makefile.am
+synergy/MouseTypes.h
+synergy/ProtocolTypes.h
+synergy/Version.h
+synergy/XScreen.cpp
+synergy/XScreen.h
+synergy/XSynergy.cpp
+synergy/XSynergy.h
+synergy/synergy.dsp
+
+Reorganized source tree.  Moved client.cpp into cmd/synergy as
+synergy.cpp and server.cpp into cmd/synergyd as synergyd.cpp.
+Moved and renamed related files.  Moved remaining source files
+into lib/....  Modified and added makefiles as appropriate.
+Result is that library files are under lib with each library
+in its own directory and program files are under cmd with each
+command in its own directory.
+
+----------
+2002/07/30 15:17:44 crs
+client/CClient.cpp
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CSecondaryScreen.cpp
+client/CSecondaryScreen.h
+client/CServerProxy.cpp
+client/CServerProxy.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/client.cpp
+server/CClientProxy.h
+server/CClientProxy1_0.cpp
+server/CClientProxy1_0.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CPrimaryScreen.cpp
+server/CPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/server.cpp
+synergy/IClient.h
+
+Replaced method name `run' with `mainLoop', and `stop' and `quit'
+with `exitMainLoop' in most places.
+
+----------
+2002/07/30 14:59:36 crs
+client/CClient.h
+client/CMSWindowsSecondaryScreen.h
+client/CSecondaryScreen.h
+client/CServerProxy.cpp
+client/CServerProxy.h
+client/CXWindowsSecondaryScreen.h
+server/CClientProxy.h
+server/CClientProxy1_0.h
+server/CConfig.h
+server/CHTTPServer.cpp
+server/CHTTPServer.h
+server/CMSWindowsPrimaryScreen.h
+server/CPrimaryClient.h
+server/CPrimaryScreen.h
+server/CServer.h
+server/CXWindowsPrimaryScreen.h
+synergy/IClient.h
+synergy/IScreen.h
+synergy/IScreenReceiver.h
+synergy/IServer.h
+
+Added doxygen comments for all relevant headers in client and server.
+
+----------
+2002/07/29 17:03:55 crs
+platform/CMSWindowsClipboard.h
+platform/CMSWindowsClipboardAnyTextConverter.h
+platform/CMSWindowsClipboardTextConverter.h
+platform/CMSWindowsClipboardUTF16Converter.h
+platform/CMSWindowsScreen.h
+platform/CMSWindowsScreenSaver.h
+platform/CPlatform.h
+platform/CSynergyHook.h
+platform/CUnixPlatform.h
+platform/CWin32Platform.h
+platform/CXWindowsClipboard.h
+platform/CXWindowsClipboardTextConverter.h
+platform/CXWindowsClipboardUCS2Converter.h
+platform/CXWindowsClipboardUTF8Converter.h
+platform/CXWindowsScreen.h
+platform/CXWindowsScreenSaver.h
+platform/CXWindowsUtil.h
+platform/IMSWindowsScreenEventHandler.h
+platform/IPlatform.h
+
+Added doxygen comments for all relevant headers in platform.
+
+----------
+2002/07/29 16:07:26 crs
+synergy/CClipboard.h
+synergy/CInputPacketStream.h
+synergy/COutputPacketStream.h
+synergy/CProtocolUtil.h
+synergy/CTCPSocketFactory.h
+synergy/ClipboardTypes.h
+synergy/IClient.h
+synergy/IClipboard.h
+synergy/IPrimaryScreenReceiver.h
+synergy/IScreen.h
+synergy/IScreenEventHandler.h
+synergy/IScreenReceiver.h
+synergy/IScreenSaver.h
+synergy/IServer.h
+synergy/ISocketFactory.h
+synergy/KeyTypes.h
+synergy/MouseTypes.h
+synergy/ProtocolTypes.h
+synergy/Version.h
+synergy/XScreen.h
+synergy/XSynergy.h
+
+Added doxygen comments for all relevant headers in synergy.
+
+----------
+2002/07/29 16:06:52 crs
+platform/CMSWindowsScreen.cpp
+server/CPrimaryClient.cpp
+
+moved try/catch block from CMSWindowsScreen to CPrimaryClient.
+this means CMSWindowsScreen doesn't need to include XSynergy.h.
+
+----------
+2002/07/29 16:05:59 crs
+doc/doxygen.cfg
+
+changed doxygen configuration.
+
+----------
+2002/07/28 19:06:52 crs
+net/CNetwork.h
+net/CNetworkAddress.h
+net/CTCPListenSocket.h
+net/CTCPSocket.h
+net/IDataSocket.h
+net/IListenSocket.h
+net/ISocket.h
+net/XNetwork.h
+net/XSocket.cpp
+net/XSocket.h
+
+Added doxygen comments for all relevant headers in net.
+
+----------
+2002/07/28 17:55:59 crs
+http/CHTTPProtocol.h
+http/XHTTP.cpp
+http/XHTTP.h
+
+Added doxygen comments for all relevant headers in http.
+
+----------
+2002/07/28 17:25:13 crs
+io/CBufferedInputStream.cpp
+io/CBufferedInputStream.h
+io/CBufferedOutputStream.cpp
+io/CBufferedOutputStream.h
+io/CInputStreamFilter.h
+io/COutputStreamFilter.h
+io/CStreamBuffer.h
+io/IInputStream.h
+io/IOutputStream.h
+io/XIO.h
+
+Added doxygen comments for all relevant headers in io.
+
+----------
+2002/07/28 13:34:19 crs
+mt/CCondVar.h
+mt/CLock.h
+mt/CMutex.h
+mt/CThread.h
+mt/CThreadRep.h
+mt/CTimerThread.h
+mt/XThread.h
+
+Added doxygen comments for all relevant headers in mt.
+
+----------
+2002/07/26 18:28:18 crs
+base/CFunctionJob.h
+base/CLog.h
+base/CStopwatch.h
+base/CString.h
+base/CUnicode.h
+base/IInterface.h
+base/IJob.h
+base/TMethodJob.h
+base/XBase.h
+base/common.h
+
+added doxygen comments for all relevant headers in base.
+
+----------
+2002/07/26 18:27:31 crs
+platform/CXWindowsUtil.cpp
+
+fixed type mismatch (SInt32 vs int) in definition of
+getWindowProperty().
+
+----------
+2002/07/26 16:05:59 crs
+doc/doxygen.cfg
+
+added configuration file for building doxygen documentation.
+the code is not yet doxygen documented, though.
+
+----------
+2002/07/26 15:22:25 crs
+platform/CXWindowsUtil.cpp
+
+now deleting property when so requested even if read failed.
+
+----------
+2002/07/25 18:08:00 crs
+notes
+
+checkpoint.
+
+----------
+2002/07/25 17:58:01 crs
+client/client.cpp
+net/XSocket.cpp
+server/server.cpp
+
+improved error messages for bad addresses.
+
+----------
+2002/07/25 17:52:40 crs
+base/XBase.cpp
+http/XHTTP.cpp
+io/XIO.cpp
+net/XNetwork.cpp
+net/XSocket.cpp
+server/CConfig.cpp
+server/server.cpp
+synergy/CProtocolUtil.cpp
+synergy/XScreen.cpp
+synergy/XSynergy.cpp
+
+made all getWhat() methods on exceptions consistent.  they now
+all use format() the same way.  also changed format() to actually
+do formatting.  however, it doesn't try looking up formatting
+strings by id, it just uses the fallback format string.
+
+----------
+2002/07/25 17:23:35 crs
+base/CLog.cpp
+base/CLog.h
+base/CString.cpp
+base/CString.h
+
+moved string formatting into CStringUtil from CLog and added
+methods for format positional string arguments.
+
+----------
+2002/07/25 09:55:01 crs
+platform/CXWindowsScreen.cpp
+
+added unix specific implementation of CXWindowsScreen::mainLoop()
+that uses poll() to process events more efficiently.  it won't
+wake up nor sleep any more than necessary, unlike the platform
+independent implementation that polls and sleeps.
+
+----------
+2002/07/25 09:23:24 crs
+platform/CXWindowsClipboard.cpp
+
+finished INCR transfer changes.  also made motifGetTime() return
+icccmGetTime() because it seems motif does TIMESTAMP like ICCCM.
+
+----------
+2002/07/25 08:57:46 crs
+platform/CXWindowsClipboard.cpp
+
+checkpoint.  working on INCR transfers.
+
+----------
+2002/07/24 19:26:18 crs
+platform/CMSWindowsScreen.cpp
+platform/CWin32Platform.cpp
+platform/CWin32Platform.h
+
+fixes for win32 due to changes in how s_restartable is handled.
+the main change is that WM_QUIT now causes the thread to be
+cancelled instead of mainLoop() just returning.  this also
+requires runDaemon() to call the run function in a new thread
+each time it calls it because it could can cancelled.
+
+----------
+2002/07/24 19:24:21 crs
+platform/CMSWindowsClipboardTextConverter.cpp
+platform/CMSWindowsClipboardUTF16Converter.cpp
+
+fixes for win32 clipboard due to CUnicode nul terminator changes.
+
+----------
+2002/07/24 19:23:46 crs
+base/CUnicode.cpp
+
+fixed an off-by-one error in UTF8ToText().
+
+----------
+2002/07/24 17:39:52 crs
+base/CUnicode.cpp
+
+fixed an off-by-one error in textToUTF8().
+
+----------
+2002/07/24 17:30:32 crs
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+
+fixed type of TARGETS target.
+
+----------
+2002/07/24 17:22:01 crs
+base/CUnicode.cpp
+base/CUnicode.h
+platform/CMSWindowsClipboardTextConverter.cpp
+platform/CMSWindowsClipboardUTF16Converter.cpp
+
+made handling of nul terminators in CUnicode more sane.
+
+----------
+2002/07/24 17:07:52 crs
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+
+some fixes for motif clipboard.  still not handling incremental
+transfer through root window property because not sure of the
+protocol.
+
+----------
+2002/07/24 13:01:18 crs
+client/CClient.cpp
+client/client.cpp
+net/CTCPSocket.cpp
+net/XSocket.h
+platform/CUnixPlatform.cpp
+platform/CUnixPlatform.h
+platform/CWin32Platform.cpp
+platform/CWin32Platform.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsUtil.cpp
+platform/IPlatform.h
+server/CPrimaryClient.cpp
+server/CServer.cpp
+server/server.cpp
+synergy/ProtocolTypes.h
+synergy/Version.h
+
+removed restart function from platform.  no longer trying to
+restart if the X server connection was lost;  since synergy
+is likely to be started by xdm or the user's xsession, it's
+better for synergy to simply terminate when the connection
+is lost.  synergy will still restart due to other errors.
+also fixed numerous other minor bugs and cleaned some stuff
+up (like app error codes are now consistent and enumerated
+in Version.h, for lack of a better place).  and boosted
+version and protocol numbers.
+
+----------
+2002/07/23 19:00:01 crs
+notes
+
+checkpoint.
+
+----------
+2002/07/23 18:59:44 crs
+platform/CMSWindowsClipboard.cpp
+
+fixed a bug in clipboard conversion (was using wrong converter or
+no converter when one was available).
+
+----------
+2002/07/23 18:59:15 crs
+client/CMSWindowsSecondaryScreen.cpp
+server/CMSWindowsPrimaryScreen.cpp
+synergy/KeyTypes.h
+
+converted win32 to use unicode based KeyID.
+
+----------
+2002/07/23 17:04:41 crs
+client/CXWindowsSecondaryScreen.cpp
+server/CXWindowsPrimaryScreen.cpp
+synergy/KeyTypes.h
+
+checkpoint.  converting KeyID to use UTF-32 encoding instead of
+X11 keysyms.
+
+----------
+2002/07/23 15:34:05 crs
+synergy/CClipboard.cpp
+synergy/IClipboard.h
+
+no longer attempting to unmarshall clipboard formats that aren't
+known to the caller.  if the client supports more formats than
+the server then the server could get a clipboard format greater
+than kNumFormats.  with this change the server discards the
+extra formats instead of crashing.
+
+----------
+2002/07/23 15:26:40 crs
+base/CUnicode.cpp
+base/CUnicode.h
+base/base.dsp
+platform/CMSWindowsClipboard.cpp
+platform/CMSWindowsClipboard.h
+platform/CMSWindowsClipboardAnyTextConverter.cpp
+platform/CMSWindowsClipboardAnyTextConverter.h
+platform/CMSWindowsClipboardTextConverter.cpp
+platform/CMSWindowsClipboardTextConverter.h
+platform/CMSWindowsClipboardUTF16Converter.cpp
+platform/CMSWindowsClipboardUTF16Converter.h
+platform/platform.dsp
+
+unicode clipboard changes for win32 plus some bug fixes.
+
+----------
+2002/07/23 12:35:36 crs
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+
+removed unnecessary atoms from X clipboard object.
+
+----------
+2002/07/23 12:08:30 crs
+base/CUnicode.cpp
+
+checkpoint.  more CUnicode fixes.
+
+----------
+2002/07/23 11:51:13 crs
+base/CUnicode.cpp
+
+checkpoint.  fixed the other cases in the same function as the
+previous checkin.  also prevented the errors flag from getting
+reset after the multibyte to wide character conversion.
+
+----------
+2002/07/23 11:42:54 crs
+base/CUnicode.cpp
+
+checkpoint.  fixed cases for mbrtowc (was using 1 and 2 instead
+of -1 and -2).
+
+----------
+2002/07/23 11:36:18 crs
+base/CUnicode.cpp
+base/CUnicode.h
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboardTextConverter.cpp
+
+checkpoint.  more UTF8 clipboard stuff.
+
+----------
+2002/07/23 09:33:50 crs
+base/CUnicode.cpp
+base/CUnicode.h
+platform/CXWindowsClipboard.cpp
+
+checkpoint.  more UTF8 clipboard testing.
+
+----------
+2002/07/22 18:46:57 crs
+base/CUnicode.cpp
+platform/CXWindowsClipboard.cpp
+
+checkpoint.  more UTF8 clipboard stuff.
+
+----------
+2002/07/22 18:17:21 crs
+platform/CXWindowsClipboard.cpp
+
+checkpoint.  more UTF8 clipboard stuff.
+
+----------
+2002/07/22 18:03:44 crs
+platform/CXWindowsClipboard.cpp
+
+checkpoint.  working on UTF8 clipboard transfer.
+
+----------
+2002/07/22 17:32:51 crs
+base/CUnicode.cpp
+base/CUnicode.h
+base/Makefile.am
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+platform/CXWindowsClipboardTextConverter.cpp
+platform/CXWindowsClipboardTextConverter.h
+platform/CXWindowsClipboardUCS2Converter.cpp
+platform/CXWindowsClipboardUCS2Converter.h
+platform/CXWindowsClipboardUTF8Converter.cpp
+platform/CXWindowsClipboardUTF8Converter.h
+platform/Makefile.am
+synergy/IClipboard.h
+
+checkpoint.  adding support for unicode in clipboard.
+
+----------
+2002/07/19 21:27:59 crs
+README
+
+changed notes about how to startup configure synergy.  it now
+discourages using boot scripts, which can't handle X servers
+requiring authorization, and suggests modifying xdm's Xsetup.
+
+----------
+2002/07/19 20:44:57 crs
+examples/synergy.linux.init
+examples/synergyd.linux.init
+
+updated init.d scripts to work with SuSE.  however, it looks as
+if they cannot be used on an X server using authentication
+because the daemons they start are not authorized to connect to
+the X server.  X users should modify Xsetup or Xsession.
+
+----------
+2002/07/19 18:12:41 crs
+server/CXWindowsPrimaryScreen.cpp
+
+formatting.
+
+----------
+2002/07/19 17:39:45 crs
+server/CPrimaryScreen.cpp
+
+removed <CR> from previous change.
+
+----------
+2002/07/19 17:38:34 crs
+server/CPrimaryScreen.cpp
+
+reordered operations to reduce cursor flashing when entering
+primary screen.
+
+----------
+2002/07/18 17:03:10 crs
+platform/CSynergyHook.cpp
+server/CMSWindowsPrimaryScreen.cpp
+
+fixed handling of calling init() when a previous process did not
+call cleanup().  if that process still appears to exist then the
+init() fails.  otherwise some cleanup is performed and the init()
+proceeds.  a synergy server started while another is running will
+now exit immediately without interfering the original server.
+
+----------
+2002/07/18 17:00:48 crs
+server/CServer.cpp
+server/CServer.h
+
+now cancelling and waiting for the accept client thread before
+cancelling any other threads.  this prevents a race condition
+where we disconnect a client but it reconnects before we
+manage to shutdown.  that might leave a thread running and
+the connection won't be closed down properly.
+
+----------
+2002/07/18 16:58:08 crs
+mt/CThreadRep.cpp
+platform/CMSWindowsScreen.cpp
+
+changed waitForEvent() to handle a peculiar feature of
+MsgWaitForMultipleObjects():  it will not return immediately
+if an event already in the queue when it's called was already
+in the queue during the last call to GetMessage()/PeekMessage().
+also now discarding screen saver events if there are any other
+screen saver events in the queue already.  this prevents these
+events from piling up in the queue, which they'd do because we
+sleep for 250ms when handling each one.
+
+----------
+2002/07/18 08:54:17 crs
+synergy.dsw
+
+fixed incorrect paths to makehook and synrgyhk project files.
+
+----------
+2002/07/17 17:27:41 crs
+platform/CMSWindowsScreen.cpp
+platform/CSynergyHook.cpp
+platform/CSynergyHook.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CPrimaryScreen.cpp
+server/CPrimaryScreen.h
+
+attempt to fix stuttering when leaving win32 screen.  seems to
+work but will let testers make the final call.  also fixed
+desktop synchronization by setting a variable that was
+mistakenly left unset.  and tried to work around an apparent
+bug in MsgWaitForMultipleObjects() that prevented the service
+from closing down properly.  start/pause/continue/stop
+sequence still doesn't shut down correctly.  start/pause/stop
+and start/stop work fine.
+
+----------
+2002/07/17 17:24:44 crs
+client/CClient.cpp
+
+removed unnecessary local variable.
+
+----------
+2002/07/16 19:07:15 crs
+base/stdistream.h
+io/CStreamBuffer.cpp
+
+fixes to get it compiling on .NET.
+
+----------
+2002/07/16 16:52:26 crs
+client/CClient.cpp
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CSecondaryScreen.cpp
+client/CServerProxy.cpp
+client/CServerProxy.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+platform/CXWindowsScreen.cpp
+platform/IMSWindowsScreenEventHandler.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CPrimaryScreen.cpp
+server/CPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/IPrimaryScreenReceiver.h
+synergy/IScreen.h
+synergy/IScreenEventHandler.h
+synergy/IScreenReceiver.h
+synergy/IServer.h
+
+moved onError() method to IScreenReceiver from IPrimaryScreenReceiver.
+also implemented onError in CClient which previously did not have
+any way to handle display disconnection.
+
+----------
+2002/07/15 15:03:04 crs
+platform/CSynergyHook.cpp
+platform/synrgyhk.dsp
+
+completing previous checkin.
+
+----------
+2002/07/15 15:01:36 crs
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CSecondaryScreen.cpp
+client/CSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/client.dsp
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/CSynergyHook.cpp
+platform/CSynergyHook.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+platform/IMSWindowsScreenEventHandler.h
+platform/makehook.dsp
+platform/platform.dsp
+platform/synrgyhk.dsp
+server/CConfig.cpp
+server/CConfig.h
+server/CHTTPServer.cpp
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CPrimaryScreen.cpp
+server/CPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/makehook.dsp
+server/server.dsp
+server/synrgyhk.dsp
+synergy/IScreen.h
+synergy/IScreenEventHandler.h
+synergy/ProtocolTypes.h
+synergy/synergy.dsp
+
+checkpoint.  refactored win32 code.  had to edit and rename some
+files so this is only a checkpoint.
+
+----------
+2002/07/13 22:00:38 crs
+client/CClient.cpp
+client/CClient.h
+client/CSecondaryScreen.cpp
+client/CSecondaryScreen.h
+client/CServerProxy.cpp
+client/CServerProxy.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/ISecondaryScreen.h
+client/Makefile.am
+client/client.cpp
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+server/CClientProxy.h
+server/CClientProxy1_0.cpp
+server/CClientProxy1_0.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CPrimaryScreen.cpp
+server/CPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/IPrimaryScreen.h
+server/Makefile.am
+server/server.cpp
+synergy/IClient.h
+synergy/IPrimaryScreenReceiver.h
+synergy/IScreen.h
+synergy/IScreenEventHandler.h
+synergy/IScreenReceiver.h
+synergy/IServer.h
+synergy/Makefile.am
+
+checkpoint.  still refactoring.  merged common code from primary
+screens into CPrimaryScreen and merged common code from secondary
+screens into CSecondaryScreen.  changed is-a relationship to a
+has-a between the primary and secondary screen classes and the
+generic platform dependent screen class to avoid multiple
+inheritance of implementation.  also standardized the interface
+for those generic screen classes.  adding a platform now involves
+implementing simpler interfaces:  IScreen for the generic screen,
+IScreenEventHandler and some methods of CPrimaryScreen for the
+primary screen, and IScreenEventHandler and some methods of
+CSecondaryScreen for the secondary screen.  did X11 platform
+but not win32 platform.
+
+----------
+2002/07/12 20:41:23 crs
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+platform/CXWindowsScreenSaver.cpp
+platform/CXWindowsScreenSaver.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+
+refactoring.  refactored stuff in client (with changes to server
+as necessary).
+
+----------
+2002/07/11 18:58:49 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+
+checkpoint.  making win32 and X primary screen code more similar
+in order to share code later.
+
+----------
+2002/07/11 13:13:37 crs
+client/CClient.cpp
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CServerProxy.cpp
+client/client.dsp
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CServer.cpp
+server/CServer.h
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/IPrimaryScreen.h
+server/server.dsp
+synergy/synergy.dsp
+
+applied refactoring to win32 code.
+
+----------
+2002/07/10 21:22:28 crs
+client/CClient.cpp
+client/CClient.h
+client/CServerProxy.cpp
+client/CServerProxy.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/ISecondaryScreen.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/IPrimaryScreenReceiver.h
+synergy/IScreenReceiver.h
+synergy/IServer.h
+synergy/Makefile.am
+
+more refactoring.
+
+----------
+2002/07/10 20:18:32 crs
+client/CClient.cpp
+client/CClient.h
+client/CServerProxy.cpp
+client/CServerProxy.h
+client/ISecondaryScreen.h
+client/Makefile.am
+client/client.cpp
+server/CClientProxy.h
+server/CClientProxy1_0.cpp
+server/CClientProxy1_0.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CServer.cpp
+synergy/IClient.h
+synergy/ISecondaryScreen.h
+synergy/Makefile.am
+
+refactored client code.  it now uses IClient and IServer and
+has a CServerProxy, making it's design similar to the server
+code.
+
+----------
+2002/07/10 14:29:50 crs
+synergy/IClient.h
+
+removed some obsolete comments.
+
+----------
+2002/07/10 14:15:17 crs
+server/CClientProxy1_0.cpp
+server/CClientProxy1_0.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CServer.cpp
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/IPrimaryReceiver.h
+server/Makefile.am
+synergy/IServer.h
+synergy/ProtocolTypes.h
+
+removed IPrimaryReceiver in favor of IServer, which required a few
+minor changes to support IPrimaryReciever's functionality.  this
+does mean that the IPrimaryScreen class will be calling some
+methods with dummy arguments.  those are documented in
+CPrimaryClient.
+
+----------
+2002/07/09 21:22:31 crs
+acinclude.m4
+acsite.m4
+config/depcomp
+config/install-sh
+config/missing
+config/mkinstalldirs
+mt/CThread.cpp
+mt/CThread.h
+notes
+platform/CXWindowsClipboard.cpp
+server/CClientProxy.cpp
+server/CClientProxy.h
+server/CClientProxy1_0.cpp
+server/CClientProxy1_0.h
+server/CPrimaryClient.cpp
+server/CPrimaryClient.h
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol.cpp
+server/CServerProtocol.h
+server/CServerProtocol1_0.cpp
+server/CServerProtocol1_0.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/IPrimaryReceiver.h
+server/IPrimaryScreen.h
+server/IServerProtocol.h
+server/Makefile.am
+synergy/IClient.h
+synergy/IServer.h
+synergy/Makefile.am
+
+updated to new automake and refactored server stuff.  the server
+now speaks to the primary screen and secondary screens almost
+everywhere the same way through an IClient interface;  only
+special primary screen calls are accessed through a different
+interface, the CPrimaryClient interface.  this simplifies the
+server since it no longer needs to test whether the active screen
+is the primary or a secondary in most cases.
+
+the server no longer speaks directly to the primary screen;  all
+that goes through the CPrimaryClient, which often just forwards
+the call.  the primary screen no longer speaks directly to the
+server either, again going through the CPrimaryClient via a
+IPrimaryReceiver interface.
+
+CServerProtocol classes have been replaced by CClientProxy
+classes which are very similar.  the name makes more sense
+though.
+
+----------
+2002/07/09 17:31:45 crs
+server/IPrimaryScreen.h
+synergy/IPrimaryScreen.h
+synergy/Makefile.am
+
+checkpoint.  moved IPrimaryScreen.h.
+
+----------
+2002/07/07 15:15:34 crs
+server/IServerProtocol.h
+synergy/IServerProtocol.h
+
+moved IServerProtocol to server from synergy directory.
+
+----------
+2002/07/03 16:25:36 crs
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+
+fixed spurious mouse motions when entering/leaving primary
+screen on X11.
+
+----------
+2002/07/01 15:05:49 crs
+server/CMSWindowsPrimaryScreen.cpp
+
+mistakenly removed mouse button checks when on secondary screens
+from isLockedToScreen() in earlier checkin.
+
+----------
+2002/07/01 14:01:23 crs
+README
+notes
+
+checkpoint.
+
+----------
+2002/07/01 13:03:16 crs
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+synergy/ISecondaryScreen.h
+
+now synthesizing key release events for each pressed key when
+the client screen is closed.  this fixes the bug where the
+client's keyboard was left with some keys logically pressed
+when the client died (e.g. using ctrl+c on the client program
+from the server's keyboard would leave the ctrl key logically
+pressed).
+
+----------
+2002/07/01 13:01:16 crs
+server/CServerProtocol1_0.cpp
+
+disabled removing client if no heartbeat is received.  we don't
+want that while testing because it might hide bugs.
+
+----------
+2002/07/01 13:00:12 crs
+server/CMSWindowsPrimaryScreen.cpp
+
+fixed locking to screen on win32.  was using GetKeyboardState()
+to query keys but that doesn't give us up-to-date information.
+now using GetAsyncKeyState() if on primary and m_keys if on
+secondary.
+
+----------
+2002/07/01 12:58:52 crs
+platform/CMSWindowsScreenSaver.cpp
+platform/CMSWindowsScreenSaver.h
+
+added win32 screen saver class forgotten in previous checkins.
+
+----------
+2002/06/26 16:31:48 crs
+client/CClient.cpp
+http/CHTTPProtocol.cpp
+io/CBufferedInputStream.cpp
+io/CBufferedInputStream.h
+io/CInputStreamFilter.h
+io/IInputStream.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CServer.cpp
+server/CServerProtocol1_0.cpp
+server/CSynergyHook.cpp
+synergy/CInputPacketStream.cpp
+synergy/CInputPacketStream.h
+synergy/CProtocolUtil.cpp
+synergy/ProtocolTypes.h
+
+synergy hook DLL will now restart itself if a client tries to
+init() it while it's already running.  fixed an uninitialized
+pointer bug in CServer and some cleanup-on-error code in
+CMSWindowsPrimaryScreen.  also added timeout to read() on
+IInputStream and a heartbeat sent by clients so the server
+can disconnect clients that are dead but never reset the TCP
+connection.  previously the server would keep these dead
+clients around forever and if the user was locked on the
+client screen for some reason then the server would have to
+be rebooted (or the server would have to be killed via a
+remote login).
+
+----------
+2002/06/26 13:48:08 crs
+client/CClient.cpp
+client/CClient.h
+
+client now compresses mouse motion events.  this fixes slow
+dragging on grace, possibly on win32 too.
+
+----------
+2002/06/26 13:31:06 crs
+synergy/CInputPacketStream.cpp
+synergy/CInputPacketStream.h
+
+fixed getSize() to be non-blocking in CInputPacketStream.
+
+----------
+2002/06/26 12:44:52 crs
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreenSaver.h
+
+fixed re-entrant calls to X bug.
+
+----------
+2002/06/23 23:24:22 crs
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/IPrimaryScreen.h
+
+fixed handling of jumping to primary when screen saver starts
+and back to secondary when it stops.  also now redirecting
+keyboard input to root window when screen saver starts;  this
+allows the user to type in the lock dialog and also effectively
+discards any input used to deactivate the screen saver.
+
+----------
+2002/06/23 21:54:05 crs
+notes
+
+checkpoint.
+
+----------
+2002/06/23 21:53:31 crs
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/platform.dsp
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+
+win32 screen saver now handled.
+
+----------
+2002/06/23 21:48:33 crs
+platform/CXWindowsScreenSaver.cpp
+platform/CXWindowsScreenSaver.h
+
+now disabling disable job timer when forcing screen saver
+activation.  previously the timer would deactivate the screen
+saver shortly after activation.  job timer is restored when
+the screen saver is deactivated.
+
+----------
+2002/06/23 15:43:40 crs
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+platform/CXWindowsScreenSaver.cpp
+platform/CXWindowsScreenSaver.h
+platform/CXWindowsUtil.cpp
+server/CServer.cpp
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/Makefile.am
+synergy/IPrimaryScreen.h
+
+checkpoint screensaver changes.  now handling xscreensaver
+dying and restarting or starting after synergy does.  also
+now disabling the screen saver on the client.  next step:
+win32 support.
+
+----------
+2002/06/22 20:29:59 crs
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreenSaver.cpp
+platform/CXWindowsScreenSaver.h
+
+fixes to get xscreensaver integration working.
+
+----------
+2002/06/22 19:47:27 crs
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsScreenSaver.cpp
+platform/CXWindowsUtil.cpp
+platform/CXWindowsUtil.h
+server/CXWindowsPrimaryScreen.cpp
+
+CXWindowsUtil::CErrorLock wasn't XSync()'ing the display before
+installing and uninstalling the new error handler, causing
+errors before the lock to be caught and errors during the lock
+to not be caught.  had to add Display* as argument to c'tor.
+
+----------
+2002/06/22 19:20:21 crs
+client/CClient.cpp
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+platform/CXWindowsScreenSaver.cpp
+platform/CXWindowsScreenSaver.h
+platform/Makefile.am
+server/CServer.cpp
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/IPrimaryScreen.h
+synergy/IScreenSaver.h
+synergy/ISecondaryScreen.h
+synergy/Makefile.am
+
+checkpoint.  adding screen saver support.  only on X so far
+and untested.  also some known problems:  not detecting an
+xscreensaver started after us and not detecting built-in
+screen saver activation (not sure if we can without using
+ugly extensions).
+
+----------
+2002/06/22 17:31:24 crs
+client/Makefile.am
+http/Makefile.am
+io/Makefile.am
+mt/Makefile.am
+net/Makefile.am
+platform/Makefile.am
+server/Makefile.am
+synergy/Makefile.am
+
+added header files to _SOURCES.
+
+----------
+2002/06/22 13:55:45 crs
+server/CXWindowsPrimaryScreen.cpp
+
+added comments.
+
+----------
+2002/06/22 12:09:49 crs
+client/CXWindowsSecondaryScreen.cpp
+
+cleanup.
+
+----------
+2002/06/21 17:55:47 crs
+client/CClient.cpp
+client/CClient.h
+client/CXWindowsSecondaryScreen.cpp
+client/client.cpp
+server/CServer.cpp
+server/CServer.h
+server/server.cpp
+
+cleaned up some minor bugs.
+
+----------
+2002/06/21 17:54:22 crs
+net/CNetwork.cpp
+net/CNetwork.h
+
+ported network changes to win32.
+
+----------
+2002/06/21 16:29:35 crs
+net/CNetworkAddress.cpp
+
+now trying to convert hostname as a dot notation address before
+trying name lookup.  not all platforms will do this for us in
+gethostbyname().
+
+----------
+2002/06/21 16:19:08 crs
+net/CNetwork.cpp
+net/CNetwork.h
+net/CTCPListenSocket.cpp
+net/CTCPSocket.cpp
+
+fixed CTCPSocket::connect() to allow cancellation.
+
+----------
+2002/06/21 15:18:01 crs
+server/CServer.cpp
+server/CServer.h
+
+some cleanup.  also fixed a race condition when adding threads
+to the thread list:  the child thread would add itself to the
+list which means there could be a time interval in the parent
+where the child thread exists but isn't on the list.  the
+parent now does the adding and removing.
+
+----------
+2002/06/21 15:15:34 crs
+platform/CUnixPlatform.cpp
+
+now blocking SIGINT and SIGTERM in restart function.  the child
+should handle the signal and terminate.  then the restart
+function will exit.
+
+----------
+2002/06/21 15:14:32 crs
+mt/CThreadRep.cpp
+
+signal handler thread now dies when SIGABRT is raised.  ignoring
+SIGABRT in sigwait() seems to be a bug in the linux pthread
+library.
+
+----------
+2002/06/20 16:27:49 crs
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+
+fixed bug introduced by previous checkin.  calling XCheckIfEvent()
+multiple times is *not* the same as calling XIfEvent() because the
+former will re-encounter events that it didn't process previously.
+to make things simple it now pulls events off the queue and saves
+them if not processed for selection transfer and puts them back
+afterwards.
+
+----------
+2002/06/20 14:01:44 crs
+platform/CXWindowsClipboard.cpp
+
+speeded up clipboard transfer by avoiding a selection request
+when it wasn't necessary.  (in particular, we were getting the
+clipboard update time from the owner then emptying the clipboard,
+so we didn't need to get the time.  worse, most owners don't
+support getting the time and we often timed out.)
+
+also fixed a multithread bug using the X display.  we were using
+a CThread to send an event after a timeout while we were waiting
+in XIfEvent().  this necessarily involved two threads calling
+into Xlib at once, which is not allowed.  now using polling to
+do the timeout because Xlib doesn't have a function to get
+events with a timeout.
+
+----------
+2002/06/20 13:35:28 crs
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+
+checkpoint.  trying to fix a delay when sending clipboards on X.
+
+----------
+2002/06/20 11:13:37 crs
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+
+added workaround for bug windows 98 (Me?) and multiple displays:
+absolute mouse_event() moves don't work except for primary
+display.
+
+----------
+2002/06/20 09:19:55 crs
+server/CXWindowsPrimaryScreen.cpp
+
+work around for bug with mouse driver on lombard powerbook.
+
+----------
+2002/06/19 20:24:35 crs
+client/CMSWindowsSecondaryScreen.cpp
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+
+fixed bugs in mouse motion.  wasn't taking care to capture all
+motion events relative to the previous mouse position.  for
+example, if two mouse events arrive, the first at x+1,y and
+the second at x+2,y, we used to compute deltas of 1,0 and 2,0
+instead of 1,0 and 1,0.  that's fixed.  also worked around a
+bug (probably) in windows that caused a motion event after a
+SetCursorPos() to be lost or reported one pixel off from the
+correct position.  now using mouse_event() which doesn't
+have that problem.  also fixed calculation of normalized
+coordinates for mouse_event() when there are multiple
+displays.
+
+----------
+2002/06/19 17:03:29 crs
+client/CClient.cpp
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol1_0.cpp
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/ProtocolTypes.h
+
+checkpoint.  initial support for multiple displays on win32.
+
+----------
+2002/06/19 14:45:22 crs
+client/Makefile.am
+configure.in
+server/Makefile.am
+
+fixed addition of X11 -L and -l options on link lines.
+
+----------
+2002/06/19 12:21:26 crs
+configure.in
+platform/CUnixPlatform.cpp
+
+checkpoint.  automake changes for wait().
+
+----------
+2002/06/19 11:58:48 crs
+configure.in
+http/CHTTPProtocol.cpp
+platform/CUnixPlatform.cpp
+
+checkpoint.  automake changes for reentrant functions.
+
+----------
+2002/06/19 11:23:49 crs
+base/BasicTypes.h
+base/CLog.cpp
+base/CLog.h
+base/CStopwatch.cpp
+base/XBase.cpp
+base/common.h
+base/stdistream.h
+base/stdostream.h
+client/CClient.cpp
+client/CXWindowsSecondaryScreen.cpp
+client/client.cpp
+configure.in
+mt/CCondVar.cpp
+mt/CCondVar.h
+mt/CMutex.cpp
+mt/CThread.cpp
+mt/CThread.h
+mt/CThreadRep.cpp
+mt/CThreadRep.h
+net/CNetwork.cpp
+net/CNetwork.h
+platform/CPlatform.cpp
+platform/CPlatform.h
+platform/CXWindowsClipboard.h
+platform/CXWindowsScreen.h
+platform/CXWindowsUtil.h
+server/CServer.cpp
+server/CSynergyHook.h
+server/CXWindowsPrimaryScreen.cpp
+server/server.cpp
+synergy/CProtocolUtil.h
+
+checkpoint.  more conversion to automake.
+
+----------
+2002/06/19 08:23:08 crs
+config/install-sh
+config/missing
+config/mkinstalldirs
+configure.in
+install-sh
+missing
+mkinstalldirs
+
+moved auxillary automake files into config directory.
+
+----------
+2002/06/18 19:47:52 crs
+install-sh
+missing
+mkinstalldirs
+
+added automake required tools.
+
+----------
+2002/06/18 19:44:34 crs
+Make-linux
+Make-solaris
+Makecommon
+Makefile
+Makefile.am
+acsite.m4
+base/Makefile
+base/Makefile.am
+client/Makefile
+client/Makefile.am
+configure.in
+http/Makefile
+http/Makefile.am
+io/Makefile
+io/Makefile.am
+mt/Makefile
+mt/Makefile.am
+net/Makefile
+net/Makefile.am
+platform/Makefile
+platform/Makefile.am
+server/Makefile
+server/Makefile.am
+synergy/Makefile
+synergy/Makefile.am
+tools/depconv
+
+started to convert to autoconf/automake.
+
+----------
+2002/06/18 18:34:55 crs
+base/CLog.cpp
+
+now checking vsnprintf result against < 0 instead of == -1
+for portability.
+
+----------
+2002/06/18 18:33:59 crs
+net/XSocket.cpp
+
+added FIXME to commented out code.
+
+----------
+2002/06/17 15:44:45 crs
+README
+client/client.cpp
+server/server.cpp
+
+made command line parsing a little more sane with respect to
+windows NT services.
+
+----------
+2002/06/17 14:10:25 crs
+README
+
+updates
+
+----------
+2002/06/17 13:31:21 crs
+base/CLog.cpp
+base/CString.cpp
+base/XBase.cpp
+client/CClient.cpp
+client/CMSWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.cpp
+client/client.cpp
+http/CHTTPProtocol.cpp
+http/XHTTP.cpp
+io/CBufferedInputStream.cpp
+io/CBufferedOutputStream.cpp
+io/CInputStreamFilter.cpp
+io/COutputStreamFilter.cpp
+io/CStreamBuffer.cpp
+mt/CCondVar.cpp
+mt/CMutex.cpp
+mt/CThread.cpp
+mt/CThreadRep.cpp
+mt/CTimerThread.cpp
+net/CNetwork.cpp
+net/CNetworkAddress.cpp
+net/CTCPListenSocket.cpp
+net/CTCPSocket.cpp
+net/XNetwork.cpp
+net/XSocket.cpp
+platform/CMSWindowsClipboard.cpp
+platform/CMSWindowsScreen.cpp
+platform/CUnixPlatform.cpp
+platform/CWin32Platform.cpp
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsScreen.cpp
+platform/CXWindowsUtil.cpp
+server/CConfig.cpp
+server/CHTTPServer.cpp
+server/CMSWindowsPrimaryScreen.cpp
+server/CServer.cpp
+server/CServerProtocol.cpp
+server/CServerProtocol1_0.cpp
+server/CSynergyHook.cpp
+server/CXWindowsPrimaryScreen.cpp
+server/server.cpp
+synergy/CClipboard.cpp
+synergy/CInputPacketStream.cpp
+synergy/COutputPacketStream.cpp
+synergy/CProtocolUtil.cpp
+synergy/XSynergy.cpp
+
+formatting changes.
+
+----------
+2002/06/17 12:02:26 crs
+client/CClient.cpp
+net/CTCPListenSocket.cpp
+net/CTCPListenSocket.h
+net/CTCPSocket.cpp
+net/CTCPSocket.h
+net/IDataSocket.h
+net/IListenSocket.h
+net/ISocket.h
+server/CHTTPServer.cpp
+server/CHTTPServer.h
+server/CServer.cpp
+synergy/CTCPSocketFactory.cpp
+synergy/CTCPSocketFactory.h
+synergy/ISocketFactory.h
+
+refactored ISocket into IDataSocket.  the latter and IListenSocket
+now derive from ISocket.
+
+----------
+2002/06/14 18:08:20 crs
+base/CFunctionJob.cpp
+base/CFunctionJob.h
+base/CLog.cpp
+base/TMethodJob.h
+base/common.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/client.cpp
+io/CStreamBuffer.cpp
+io/CStreamBuffer.h
+mt/CThread.cpp
+mt/CThread.h
+mt/CThreadRep.cpp
+mt/CThreadRep.h
+platform/CMSWindowsScreen.cpp
+platform/CUnixPlatform.cpp
+platform/CUnixPlatform.h
+platform/CWin32Platform.cpp
+platform/CWin32Platform.h
+platform/IPlatform.h
+server/server.cpp
+
+performance fixes on win32 plus clean up of some warnings.  also
+improved error messages when uninstalling service.
+
+----------
+2002/06/11 20:10:49 crs
+README
+
+added a blurb about synrgyhk.dll and that the service manager
+will look for the binary wherever it was when --install was
+used.
+
+----------
+2002/06/11 20:09:59 crs
+base/stdpre.h
+platform/CMSWindowsScreen.h
+
+windows fixes needed for formatting changes.
+
+----------
+2002/06/11 18:33:03 crs
+client/CXWindowsSecondaryScreen.cpp
+
+commented out half-duplex flags that should never have been
+uncommented.
+
+----------
+2002/06/11 18:31:06 crs
+server/CServer.cpp
+
+fixed bug with switching screens on primary when there's no
+link in that direction (it would assert).  introduced bug
+when adding support for wrapping.  now ignores attempts to
+move in a direction with no link.
+
+----------
+2002/06/11 18:30:08 crs
+platform/CUnixPlatform.cpp
+
+added missing #include <signal.h>.
+
+----------
+2002/06/10 22:06:45 crs
+base/BasicTypes.h
+base/CFunctionJob.cpp
+base/CLog.cpp
+base/CLog.h
+base/CString.cpp
+base/CString.h
+base/TMethodJob.h
+base/XBase.cpp
+base/XBase.h
+base/common.h
+base/stdistream.h
+base/stdostream.h
+client/CClient.cpp
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/client.cpp
+http/CHTTPProtocol.cpp
+http/CHTTPProtocol.h
+http/XHTTP.cpp
+http/XHTTP.h
+io/CBufferedInputStream.cpp
+io/CBufferedInputStream.h
+io/CBufferedOutputStream.cpp
+io/CBufferedOutputStream.h
+io/CInputStreamFilter.cpp
+io/COutputStreamFilter.cpp
+io/CStreamBuffer.cpp
+io/IInputStream.h
+io/IOutputStream.h
+io/XIO.cpp
+io/XIO.h
+mt/CCondVar.cpp
+mt/CCondVar.h
+mt/CLock.cpp
+mt/CLock.h
+mt/CMutex.cpp
+mt/CMutex.h
+mt/CThread.cpp
+mt/CThread.h
+mt/CThreadRep.cpp
+mt/CTimerThread.cpp
+mt/CTimerThread.h
+mt/XThread.h
+net/CNetwork.cpp
+net/CNetworkAddress.cpp
+net/CNetworkAddress.h
+net/CTCPListenSocket.cpp
+net/CTCPSocket.cpp
+net/CTCPSocket.h
+net/IListenSocket.h
+net/ISocket.h
+net/Makefile
+net/XNetwork.cpp
+net/XNetwork.h
+net/XSocket.cpp
+net/XSocket.h
+platform/CMSWindowsClipboard.cpp
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/CPlatform.cpp
+platform/CUnixPlatform.cpp
+platform/CUnixPlatform.h
+platform/CWin32Platform.cpp
+platform/CWin32Platform.h
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+platform/CXWindowsUtil.cpp
+platform/CXWindowsUtil.h
+platform/IPlatform.h
+server/CConfig.cpp
+server/CConfig.h
+server/CHTTPServer.cpp
+server/CHTTPServer.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol.cpp
+server/CServerProtocol.h
+server/CServerProtocol1_0.cpp
+server/CServerProtocol1_0.h
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/server.cpp
+synergy/CClipboard.cpp
+synergy/CClipboard.h
+synergy/CInputPacketStream.cpp
+synergy/COutputPacketStream.cpp
+synergy/CProtocolUtil.cpp
+synergy/CProtocolUtil.h
+synergy/CTCPSocketFactory.cpp
+synergy/IClipboard.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/IServerProtocol.h
+synergy/ISocketFactory.h
+synergy/XScreen.cpp
+synergy/XSynergy.cpp
+
+indentation and other formatting changes.  also cleaned up
+#includes.
+
+----------
+2002/06/10 16:49:46 crs
+base/CLog.cpp
+base/CStopwatch.cpp
+mt/CCondVar.cpp
+mt/CMutex.cpp
+mt/CThreadRep.h
+net/CNetwork.cpp
+net/CNetwork.h
+platform/CMSWindowsClipboard.h
+platform/CMSWindowsScreen.h
+platform/CWin32Platform.h
+server/CSynergyHook.h
+server/synrgyhk.dsp
+
+win32 changes.  now including windows.h with WIN32_LEAN_AND_MEAN
+to avoid including some stuff we don't want (like winsock).
+
+----------
+2002/06/10 11:09:02 crs
+README
+
+fixes.
+
+----------
+2002/06/10 11:08:02 crs
+README
+
+updates.
+
+----------
+2002/06/10 11:00:55 crs
+README
+examples/synergy.conf
+examples/synergy.linux.init
+examples/synergyd.linux.init
+
+added example files and a README.
+
+----------
+2002/06/10 10:08:36 crs
+server/CMSWindowsPrimaryScreen.cpp
+server/CServer.cpp
+server/CXWindowsPrimaryScreen.cpp
+
+now allowing a screen to be its own neighbor to allow wrapping.
+also no longer warping mouse to 0,0 when setting server screen
+info.  that was causing the mouse to jump if the server screen
+had itself as its left or top neighbor (directly or indirectly)
+once a screen could be its own neighbor.
+
+----------
+2002/06/10 09:49:21 crs
+server/CConfig.cpp
+
+fixed stripping of comments from configuration streams.
+
+----------
+2002/06/10 09:49:03 crs
+client/client.cpp
+server/server.cpp
+
+changed "permitted" to "supported" in error messages.
+
+----------
+2002/06/09 23:08:18 crs
+client/CClient.cpp
+
+no longer camps if the server sends an error message.
+
+----------
+2002/06/09 22:20:28 crs
+client/CClient.cpp
+client/CClient.h
+client/client.cpp
+
+added support for camping, i.e. repeatly trying to connect to the
+server until we succeed.
+
+----------
+2002/06/09 22:20:01 crs
+mt/CTimerThread.cpp
+mt/CTimerThread.h
+
+CTimerThread now allows zero and negative timeouts.  a negative
+timeout never times out and CTimerThread is a no-op.
+
+----------
+2002/06/09 18:03:32 crs
+platform/CXWindowsScreen.cpp
+
+now using ":0.0" as the display if DISPLAY isn't set.
+
+----------
+2002/06/09 18:00:03 crs
+notes
+
+checkpoint.
+
+----------
+2002/06/09 17:59:32 crs
+client/client.cpp
+server/CServer.cpp
+server/CServer.h
+server/server.cpp
+
+added command line option to choose the screen name.  also now
+using the hostname as the default name.  this is on both client
+and server.
+
+----------
+2002/06/09 17:35:28 crs
+mt/CThreadRep.cpp
+
+added FIXME comment.
+
+----------
+2002/06/09 17:21:33 crs
+server/CServer.cpp
+
+fixed problem with setConfig().  if the new config didn't
+include a screen that was already connected under an alias
+then that screen wouldn't be disconnected and removed from
+the screen list until the screen voluntarily disconnected.
+at that time removeConnection() would assert because the
+screen name would not be found.  now using the canonical
+name in the protocol object as well as CServer.  this
+allows setConfig() to always detect removed screens and
+disconnect them.
+
+----------
+2002/06/09 16:53:57 crs
+platform/CUnixPlatform.cpp
+
+now exits instead of restarting if child dies due to an
+unexpected signal.
+
+----------
+2002/06/09 16:53:25 crs
+client/client.cpp
+net/CNetwork.cpp
+net/CNetwork.h
+net/CNetworkAddress.cpp
+net/CNetworkAddress.h
+net/XSocket.cpp
+net/XSocket.h
+server/CConfig.cpp
+server/CConfig.h
+server/CHTTPServer.cpp
+server/CServer.cpp
+server/CServer.h
+server/server.cpp
+synergy/ProtocolTypes.h
+
+added command line and configuration file arguments to choose
+the address and port to listen on or connect to.  changed the
+default port and put it in ProtocolTypes.h.  the HTTP port is
+now no longer opened unless the --http argument is supplied
+or the config file includes it.
+
+----------
+2002/06/08 23:24:40 crs
+server/CConfig.cpp
+server/CConfig.h
+server/CServer.cpp
+server/server.cpp
+
+added aliases to configuration.  an alias is another name for
+a screen.  it's expected that the server will want to accept
+a given client under several names (e.g. the hostname and the
+FQDN).
+
+----------
+2002/06/08 21:48:16 crs
+notes
+
+checkpoint.
+
+----------
+2002/06/08 21:48:00 crs
+all.dsp
+base/CLog.cpp
+base/CLog.h
+base/base.dsp
+base/common.h
+base/stdpre.h
+client/CClient.cpp
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/client.cpp
+client/client.dsp
+http/http.dsp
+io/io.dsp
+mt/CThreadRep.cpp
+mt/mt.dsp
+net/net.dsp
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/CUnixPlatform.cpp
+platform/CUnixPlatform.h
+platform/CWin32Platform.cpp
+platform/CWin32Platform.h
+platform/IPlatform.h
+platform/platform.dsp
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+server/makehook.dsp
+server/server.cpp
+server/server.dsp
+server/synrgyhk.dsp
+synergy/IPrimaryScreen.h
+synergy/synergy.dsp
+
+win32 changes.  changed names of binaries.  added support for
+running as (and installing/installing) a service.  added
+support for multiple desktops (NT only, 95 doesn't support
+multiple desktops).
+
+----------
+2002/06/04 12:26:23 crs
+Makefile
+client/Makefile
+client/client.cpp
+client/client.dsp
+platform/CMSWindowsClipboard.cpp
+platform/CMSWindowsClipboard.h
+platform/CMSWindowsScreen.cpp
+platform/CMSWindowsScreen.h
+platform/CPlatform.cpp
+platform/CPlatform.h
+platform/CUnixPlatform.cpp
+platform/CUnixPlatform.h
+platform/CWin32Platform.cpp
+platform/CWin32Platform.h
+platform/CXWindowsClipboard.cpp
+platform/CXWindowsClipboard.h
+platform/CXWindowsScreen.cpp
+platform/CXWindowsScreen.h
+platform/CXWindowsUtil.cpp
+platform/CXWindowsUtil.h
+platform/IPlatform.h
+platform/Makefile
+server/Makefile
+server/server.cpp
+server/server.dsp
+synergy.dsw
+synergy/CMSWindowsClipboard.cpp
+synergy/CMSWindowsClipboard.h
+synergy/CMSWindowsScreen.cpp
+synergy/CMSWindowsScreen.h
+synergy/CXWindowsClipboard.cpp
+synergy/CXWindowsClipboard.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/CXWindowsUtil.cpp
+synergy/CXWindowsUtil.h
+synergy/Makefile
+synergy/synergy.dsp
+test.cpp
+
+refactored some common platform dependent stuff into a new
+library:  platform.  also removed test.cpp.
+
+----------
+2002/06/04 11:06:26 crs
+client/CClient.cpp
+client/client.cpp
+server/CServer.cpp
+server/CServerProtocol.cpp
+server/server.cpp
+synergy/ProtocolTypes.h
+synergy/Version.h
+
+added command line parsing, restartability, and daemonizing to
+client.  broke win32 stuff though.  also moved version and
+copyright constants into a new file and renamed protocol
+version constants.
+
+----------
+2002/06/04 11:03:34 crs
+base/CLog.cpp
+
+fixed delete bug in printt -- when skipping file and line the
+deleted pointer was wrong.
+
+----------
+2002/06/04 11:02:33 crs
+synergy/CXWindowsClipboard.cpp
+
+fixed timeout when getting selection -- forgot to set flag to
+terminate event loop.
+
+----------
+2002/06/03 18:53:18 crs
+base/CLog.cpp
+base/CLog.h
+server/CConfig.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/server.cpp
+synergy/CXWindowsScreen.cpp
+synergy/IPrimaryScreen.h
+
+changes to add command line arguments.  also added automatic
+restarting and daemonizing on unix.  daemon sends log messages
+to syslog.  unix now reads config file from file named on
+command line;  if no command line arg then uses effective
+user's config file and if that's not there it finally tries
+/etc/synergy.conf.  if there are no screens configured then
+one is added for the primary screen.  broke some startup
+stuff on win32.
+
+also now timing out if X primary screen can't grab the mouse
+and keyboard.  the server will just give up trying to switch
+screens.  the grabs will fail is some other app has a grab
+and won't release it.  note that kdm grabs the keyboard for
+the duration that the login window is displayed, effectively
+disabling synergy.
+
+----------
+2002/06/03 16:36:45 crs
+base/CLog.cpp
+base/CLog.h
+
+added a method to set the filter given a priority string (instead
+of a number).  fixed a comment related to what those priority
+strings are.  added a CLOG_PRINT priority which is never filtered
+and suppresses the trace info and the priority level message.
+it's intended as a way to output a message through the logger
+without getting extra output.
+
+----------
+2002/06/03 16:34:22 crs
+base/CString.cpp
+base/CString.h
+base/Makefile
+base/base.dsp
+http/CHTTPProtocol.cpp
+http/CHTTPProtocol.h
+
+moved case insensitive comparison utility functions into CString
+from CHTTPProtocol.
+
+----------
+2002/06/03 13:45:30 crs
+client/CClient.cpp
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/Makefile
+synergy/XScreen.cpp
+synergy/XScreen.h
+synergy/synergy.dsp
+
+added better handling of X server disconnecting unexpectedly.
+the apps still exit but they do it in a mostly controlled
+manner.  in particular, the server threads except the one
+processing primary screen events will terminate gracefully.
+this will be important should the server ever allow HTTP
+clients to rewrite the configuration file.
+
+note that X makes it effectively impossible to continue once
+the X server disconnects.  even if it didn't it would be
+difficult for synergy to recover.  users will have to add
+synergy to the X display manager's startup script if they
+expect the server to be restarted.  alternatively, we could
+add code to fork synergy at startup;  the child would do
+the normal work while the parent would simply wait for the
+child to exit and restart it.
+
+----------
+2002/06/02 23:07:57 crs
+net/CTCPListenSocket.cpp
+
+shortened poll() timeout.
+
+----------
+2002/06/02 22:57:50 crs
+io/CBufferedOutputStream.cpp
+io/CBufferedOutputStream.h
+net/CTCPSocket.cpp
+
+changed buffered output stream to wait() when flush()ing instead
+of polling/sleeping.  changed CTCPSocket to not use thread
+cancellation but to instead use m_connected to exit the thread.
+also shortened poll timeout.
+
+----------
+2002/06/02 21:35:20 crs
+synergy/CMSWindowsScreen.cpp
+synergy/CXWindowsScreen.cpp
+
+make sleep shorter in poll/sleep getEvent() loops.
+
+----------
+2002/06/02 21:03:38 crs
+synergy/CXWindowsClipboard.cpp
+synergy/CXWindowsClipboard.h
+synergy/CXWindowsUtil.cpp
+
+removed poll/sleep code to improve performance.
+
+----------
+2002/06/02 19:04:24 crs
+client/CXWindowsSecondaryScreen.cpp
+
+now ignores key if there's no key mapped for a required modifier.
+was asserting (on the wrong expression).
+
+----------
+2002/06/02 18:49:35 crs
+client/CClient.cpp
+client/client.cpp
+mt/CThread.cpp
+mt/CThread.h
+mt/CThreadRep.cpp
+mt/CThreadRep.h
+server/CServer.cpp
+server/server.cpp
+
+added SIGINT and SIGTERM handling to unix client and server.
+either signal causes the main thread to be cancelled.  added
+necessary code to make main thread cancellation clean up
+nicely.
+
+----------
+2002/06/02 13:34:35 crs
+http/CHTTPProtocol.cpp
+http/CHTTPProtocol.h
+server/CHTTPServer.cpp
+server/CHTTPServer.h
+
+added a maximum request size to CHTTPProtocol so we can bail
+on clients that cause us to use too much memory.  also put
+methods in CHTTPRequest to get/set headers and changed the
+data structure used to store them.  fixed a couple of other
+miscellaneous bugs in CHTTPProtocol.cpp.
+
+----------
+2002/06/02 11:49:46 crs
+mt/CCondVar.h
+server/CServer.cpp
+server/CServer.h
+
+now limiting number of simultaneous HTTP requests being handled
+at once.  this is to prevent denial of service.
+
+----------
+2002/06/01 19:26:11 crs
+base/CLog.cpp
+base/CLog.h
+base/CString.h
+base/XBase.h
+base/base.dsp
+base/common.h
+base/stdfstream.h
+base/stdistream.h
+base/stdlist.h
+base/stdmap.h
+base/stdostream.h
+base/stdpost.h
+base/stdpre.h
+base/stdset.h
+base/stdsstream.h
+base/stdvector.h
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.h
+client/client.cpp
+client/client.dsp
+http/CHTTPProtocol.cpp
+http/CHTTPProtocol.h
+http/XHTTP.cpp
+http/http.dsp
+io/CStreamBuffer.h
+io/io.dsp
+mt/mt.dsp
+net/net.dsp
+server/CConfig.cpp
+server/CConfig.h
+server/CHTTPServer.cpp
+server/CHTTPServer.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CSynergyHook.cpp
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/makehook.dsp
+server/server.cpp
+server/server.dsp
+server/synrgyhk.dsp
+synergy.dsw
+synergy/CXWindowsClipboard.h
+synergy/IPrimaryScreen.h
+synergy/synergy.dsp
+
+fixes, mainly for windows.  first, had to add a notification from
+CServer to the primary screen when the configuration changes so it
+can make necessary adjustments (the win32 primary screen must tell
+the hook dll about the new jump zones).
+
+changed includes of some std c++ library files to go through
+our own include files.  these wrap the include with stuff to
+keep vc++ quiet when compiling at warning level 4, which is
+what it does now.  it also works around missing <istream> and
+<ostream> on g++2.96.
+
+added missing std:: where necessary.  g++ doesn't really support
+namespaces so it lets references without the namespace slip
+through.
+
+added workaround or fix.  not sure if istringstream::str(string)
+should reset eofbit.  it does on g++ but does not on vc++.
+added clear() after str() so it works either way.
+
+added low-level keyboard hook to win32.  if available (it's only
+available on NT SP3 and up) it allows us to catch and handle
+alt+tab, alt+esc, ctrl+esc, and windows key hot keys.  i think
+that leaves only ctrl+alt+del and accessibility functions
+uncaught on those systems.
+
+----------
+2002/06/01 10:52:02 crs
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol1_0.cpp
+
+added mutex to all public methods that didn't already have it.
+fixed two blown assertions.  first, if user tried to switch to
+a client that had connected but hadn't yet sent the first info
+message it would assert on the zero size screen.  second, if
+the primary screen was handling a mouse motion on behalf of a
+secondary screen when that secondary screen disconnected then
+an assert would blow because the primary screen would call
+onMouseMoveSecondary() but m_protocol on the active screen is
+NULL because disconnecting the active secondary screen caused
+the mouse to jump to the primary screen.
+
+----------
+2002/05/31 18:35:53 crs
+server/CConfig.h
+
+changed iterator to use iterator_traits directly instead of
+std::iterator to support the old STL on grace.
+
+----------
+2002/05/31 18:18:29 crs
+client/CClient.cpp
+client/CClient.h
+server/CServer.cpp
+synergy/ProtocolTypes.h
+synergy/XSynergy.cpp
+synergy/XSynergy.h
+
+server now rejects clients that are not in the configuration.
+added a protocol message to indicate this.
+
+----------
+2002/05/31 18:09:43 crs
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol1_0.cpp
+
+fixed setConfig() to disconnect secondary screens that aren't
+in the new configuration.
+
+----------
+2002/05/31 18:08:08 crs
+server/CConfig.cpp
+server/CConfig.h
+
+made isScreen() a const method.
+
+----------
+2002/05/31 17:32:26 crs
+server/CConfig.cpp
+server/CConfig.h
+server/server.cpp
+
+added I/O for configuration files and changed the server to use
+an external file for its configuration (was hard coding a config
+for testing).
+
+----------
+2002/05/31 14:44:54 crs
+server/CConfig.cpp
+server/CScreenMap.cpp
+server/Makefile
+server/server.dsp
+
+finished renaming CScreenMap to CConfig.
+
+----------
+2002/05/31 14:43:23 crs
+server/CConfig.h
+server/CHTTPServer.cpp
+server/CHTTPServer.h
+server/CScreenMap.cpp
+server/CServer.cpp
+server/CServer.h
+server/CSynergyHook.cpp
+server/server.cpp
+
+checkpoint.  changed CScreenMap to CConfig.  must still change
+CScreenMap.cpp to CConfig.cpp.
+
+----------
+2002/05/31 14:34:16 crs
+server/CConfig.h
+server/CHTTPServer.cpp
+server/CScreenMap.cpp
+server/CScreenMap.h
+server/CServer.h
+server/CSynergyHook.cpp
+server/server.cpp
+
+checkpoint.  renamed CScreenMap.h to CConfig.h.  will be
+changing CScreenMap to CConfig everywhere.
+
+----------
+2002/05/31 14:25:26 crs
+base/CLog.cpp
+base/CLog.h
+client/client.cpp
+server/server.cpp
+
+added methods to CLog for getting the outputter, getting and
+setting the priority filter, and added code for thread safety.
+added code to apps to enable thread safety in CLog.
+
+----------
+2002/05/30 16:13:16 crs
+Makefile
+base/common.h
+http/CHTTPProtocol.cpp
+http/CHTTPProtocol.h
+http/Makefile
+http/XHTTP.cpp
+http/XHTTP.h
+server/CHTTPServer.cpp
+server/CHTTPServer.h
+server/CScreenMap.cpp
+server/CScreenMap.h
+server/CServer.cpp
+server/CServer.h
+server/Makefile
+
+added basic support for an embedded HTTP server.  server
+currently supports editing the screen map but changing
+the map won't behave correctly if there are connected
+screens.
+
+----------
+2002/05/30 16:11:59 crs
+net/CTCPSocket.cpp
+net/CTCPSocket.h
+
+fixed bug in closing down a socket.
+
+----------
+2002/05/27 18:55:51 crs
+synergy/CMSWindowsClipboard.cpp
+synergy/CMSWindowsClipboard.h
+
+updated win32 clipboard to match new model.
+
+----------
+2002/05/27 18:35:14 crs
+notes
+
+checkpoint
+
+----------
+2002/05/27 18:30:13 crs
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/CXWindowsClipboard.cpp
+synergy/CXWindowsScreen.h
+synergy/CXWindowsUtil.cpp
+synergy/CXWindowsUtil.h
+
+removed getEventMask() from primary screen.  added a class to
+CXWindowsUtil that installs/uninstalls an X error hander.
+using that in primary screen, clipboard, and util to ensure
+that certain errors don't kill the app.
+
+----------
+2002/05/27 18:28:06 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+
+removed getEventMask() and fixed some comments.  also now using
+toggle key states in updateModifiers().
+
+----------
+2002/05/27 17:05:34 crs
+synergy/CXWindowsClipboard.cpp
+
+changed lesstif hack to only apply to the CLIPBOARD selection.
+apprently the PRIMARY selection must follow the ICCCM protocol
+correctly.
+
+----------
+2002/05/27 16:51:07 crs
+synergy/CXWindowsUtil.cpp
+synergy/CXWindowsUtil.h
+
+added missing files from previous submit.
+
+----------
+2002/05/27 16:22:59 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/CClipboard.cpp
+synergy/CClipboard.h
+synergy/CXWindowsClipboard.cpp
+synergy/CXWindowsClipboard.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/IClipboard.h
+synergy/Makefile
+
+checkpoint.  changed clipboard model.  the clipboard can only
+be accessed now between open()/close().  ownership of the
+clipboard is asserted via the empty() method.  this parallels
+the win32 model (but the win32 code hasn't been updated yet).
+
+refactored X11 clipboard code.  moved the bulk of it into
+CXWindowsClipboard and moved some comment event handling into
+CXWindowsScreen.  changed how requests are processed into a
+hopefully easier to understand model.  added support for getting
+clipboard from and sending clipboard to motif (or at least
+lesstif) clients.  sending to lesstif required a hack to work
+around an apparent bug in lesstif.
+
+----------
+2002/05/24 17:54:34 crs
+notes
+
+checkpoint
+
+----------
+2002/05/24 17:54:28 crs
+client/CClient.cpp
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol.h
+server/CServerProtocol1_0.cpp
+server/CServerProtocol1_0.h
+server/CXWindowsPrimaryScreen.cpp
+synergy/CMSWindowsScreen.cpp
+synergy/CMSWindowsScreen.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/IServerProtocol.h
+synergy/ProtocolTypes.h
+
+added screen locking support to win32.  added support for
+resolution changing (only semi-supported on X because that
+has no means for resizing screen anyway).  also fixed some
+clipboard problems on win32.
+
+----------
+2002/05/24 14:37:12 crs
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/IPrimaryScreen.h
+
+added support for locking to a screen when the sroll lock is
+toggled on or when any key or button is pressed.  fully
+implemented on X but stubbed out for now on win32.
+
+----------
+2002/05/23 18:35:15 crs
+notes
+
+checkpoint
+
+----------
+2002/05/23 18:35:08 crs
+server/CMSWindowsPrimaryScreen.cpp
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+
+added support for mouse wheel on win32.
+
+----------
+2002/05/23 15:50:38 crs
+client/CXWindowsSecondaryScreen.cpp
+server/CXWindowsPrimaryScreen.cpp
+
+added support for mouse wheel on X.
+
+----------
+2002/05/23 15:00:39 crs
+server/server.cpp
+
+added a third screen to hard coded map for testing purposes.
+
+----------
+2002/05/23 15:00:13 crs
+server/CServer.cpp
+
+fixed log message.
+
+----------
+2002/05/23 14:56:03 crs
+client/CClient.cpp
+client/CClient.h
+server/CServer.cpp
+server/CServerProtocol.cpp
+server/CServerProtocol1_0.cpp
+synergy/ProtocolTypes.h
+synergy/XSynergy.cpp
+synergy/XSynergy.h
+
+server no longer asserts when a client connects with a name that's
+already in use by another client.  also added reporting of errors
+from the server to clients so clients can report meaningful
+messages to users.
+
+----------
+2002/05/23 14:04:43 crs
+notes
+
+checkpoint
+
+----------
+2002/05/23 14:04:35 crs
+net/CNetwork.h
+synergy/CXWindowsScreen.h
+
+changed structs to classes.  there should be no more structs now.
+
+----------
+2002/05/22 17:09:08 crs
+notes
+
+checkpoint.
+
+----------
+2002/05/22 17:08:37 crs
+synergy/CMSWindowsClipboard.cpp
+synergy/CMSWindowsScreen.cpp
+synergy/CMSWindowsScreen.h
+synergy/CProtocolUtil.cpp
+
+removed unnecessary call in screen class, added logging calls
+in clipboard class, and added another cast in protocol util
+to avoid warning on win32.
+
+----------
+2002/05/22 17:05:26 crs
+server/CSynergyHook.cpp
+
+now letting some key events filter through.  this allows the
+keyboard lights to track toggle changes.  however, it also
+seems to let through keyboard events that shouldn't get
+through.
+
+----------
+2002/05/22 17:02:58 crs
+server/CScreenMap.cpp
+
+fixed incorrect for-loop over directions conditional.
+
+----------
+2002/05/22 17:01:17 crs
+base/CLog.cpp
+base/CLog.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+
+win32 changes.  replaced log dialog hack with a windows console
+window.  now attaching thread input queues as necessary. shifted
+code around so toggling toggle keys is immediately reflected by
+secondary screen's keyboard.  now setting extended key flag for
+keys that need it.  fixed handling of shift + caps-lock.  added
+handling of keys that should distinguish between left and right
+but don't.  fixed get/set of active window on leave/enter of
+primary screen.  replaced 1x1 primary window with a full screen
+window to work around a problem with losing key events.  changed
+calculation of mouse move deltas.
+
+----------
+2002/05/22 16:56:06 crs
+net/CTCPListenSocket.cpp
+
+fixed type of socket handle (from int to CNetwork::Socket).
+
+----------
+2002/05/22 16:55:19 crs
+mt/CTimerThread.cpp
+
+removed blank line.
+
+----------
+2002/05/22 16:55:05 crs
+mt/CThread.cpp
+mt/CThread.h
+mt/CThreadRep.cpp
+
+changed un-inlined code to avoid bogus VC++ level 4 warnings.
+added support for more win32 thread priorities.
+
+----------
+2002/05/22 16:51:59 crs
+client/client.cpp
+
+fixed parameter type for socket port.
+
+----------
+2002/05/22 16:43:14 crs
+base/common.h
+
+changed set of disabled win32 warnings.
+
+----------
+2002/05/22 16:42:48 crs
+client/CClient.cpp
+
+fixed NULL dereference.
+
+----------
+2002/05/22 16:41:24 crs
+base/common.h
+
+changed set of disabled win32 warnings.
+
+----------
+2002/05/22 16:40:51 crs
+base/CLog.cpp
+base/CLog.h
+
+replaced logging dialog hack with a windows console window.
+
+----------
+2002/05/22 16:40:38 crs
+client/CClient.cpp
+
+fixed NULL dereference.
+
+----------
+2002/05/05 23:37:12 crs
+net/CTCPSocket.cpp
+
+removed setting send buffer to zero size.  it just reduced
+performance.
+
+----------
+2002/05/05 19:52:03 crs
+client/CXWindowsSecondaryScreen.cpp
+
+replaced True/False with true/false when assigning to m_repeat.
+also should now work if the first element of a modifier
+keymapping is 0.  that won't normally be the case but xmodmap
+was doing weird things on grace.  if the first element is 0
+it'll try the second element.  if that's also zero then that
+modifier will be ignored.
+
+----------
+2002/05/05 19:38:09 crs
+client/CMSWindowsSecondaryScreen.cpp
+server/CMSWindowsPrimaryScreen.cpp
+
+fixes for win32 keyboard.
+
+----------
+2002/05/04 19:43:20 crs
+client/CXWindowsSecondaryScreen.cpp
+
+fixed caps-lock handling.
+
+----------
+2002/05/04 18:33:48 crs
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+
+checkpoint.  added half duplex for num lock.
+
+----------
+2002/05/04 18:31:54 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+
+checkpoint.  fixing up handling of half-duplex num-lock.
+
+----------
+2002/05/04 18:09:02 crs
+client/CXWindowsSecondaryScreen.cpp
+
+checkpoint.  changed when toggle keys toggle (now always on
+release).  must see if this works.
+
+----------
+2002/05/04 18:08:22 crs
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+net/CTCPSocket.cpp
+server/CMSWindowsPrimaryScreen.cpp
+
+Fixes for win32 key handling.
+
+----------
+2002/05/04 11:23:11 crs
+client/CXWindowsSecondaryScreen.cpp
+
+fixed handling of shift + caps-lock.  those two modifiers should
+cancel out if the keysym is subject to case conversion, but not
+otherwise.  also added logging of key lookup code.
+
+----------
+2002/05/03 12:23:48 crs
+client/CXWindowsSecondaryScreen.cpp
+
+fixed handling of shift+tab on a system that can map ISO_Left_Tab.
+now tries to map ISO_Left_Tab without shift first then falls back
+to Tab (note that if ISO_Left_Tab can be mapped but requires a
+modifier then the modifier will be added).  also changed attempt
+to map ISO_Left_Tab as a backup to Tab to request the shift
+modifier whether or not the primary screen requested it.
+
+----------
+2002/05/03 12:14:55 crs
+client/CXWindowsSecondaryScreen.cpp
+
+fixed handling of ISO_Left_Tab when that is not mapped to a
+keycode by mapping it to tab with shift pressed.
+
+----------
+2002/05/03 11:49:30 crs
+client/CXWindowsSecondaryScreen.cpp
+
+removed attempt to make release/press of a repeating key use
+the same server time.  was getting what appears to be deadlock
+but not sure why.
+
+----------
+2002/05/03 11:26:44 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+
+checkpoint.  made changes to support key autorepeats on X.
+
+----------
+2002/05/02 11:44:21 crs
+synergy/COutputPacketStream.cpp
+
+Indentation change.
+
+----------
+2002/05/02 11:43:52 crs
+io/CStreamBuffer.cpp
+net/CTCPSocket.cpp
+
+Fixed bug in stream buffer that could cause data to be
+inserted out of order.  Also removed unnecessary limit
+on writes to the TCP socket.
+
+----------
+2002/05/02 11:33:34 crs
+io/CStreamBuffer.cpp
+
+checkpoint debugging of stream buffer.
+
+----------
+2002/05/01 16:30:20 crs
+synergy/CXWindowsScreen.cpp
+
+Was trying to avoid sending clipboard if timestamp wasn't
+changed but clipboard owners may not update that timestamp
+when the selection is changed.  Disabled the timestamp check.
+
+----------
+2002/05/01 16:17:57 crs
+server/CServer.cpp
+synergy/CXWindowsScreen.cpp
+
+Added more checks to avoid sending unchanged clipboard data.
+Still takes too long to query the clipboard owner for info
+(maybe 1/10th second) but not sure why or if that can be
+improved.
+
+----------
+2002/05/01 15:31:47 crs
+Make-linux
+net/CNetwork.h
+net/CTCPSocket.cpp
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+
+checkpoint.  turned off nagle and send buffering.  also
+added test to skip clipboard conversion if a previous
+conversion from that owner failed.
+
+----------
+2002/05/01 14:36:52 crs
+server/CServer.cpp
+server/CXWindowsPrimaryScreen.cpp
+
+Fixed uninitialized variable when computing toggle mask.  Also
+reduced priority of some mouse motion log messages.
+
+----------
+2002/05/01 14:35:55 crs
+net/CSocketInputStream.cpp
+net/CSocketInputStream.h
+net/CSocketOutputStream.cpp
+net/CSocketOutputStream.h
+net/CSocketStreamBuffer.cpp
+net/CSocketStreamBuffer.h
+net/net.dsp
+
+removed obsolete files.
+
+----------
+2002/04/30 18:30:05 crs
+client/CXWindowsSecondaryScreen.cpp
+
+added fallback for missing numpad movement keys (if there's no
+mapping for those keys then the non-keypad versions are tried).
+
+----------
+2002/04/30 17:48:11 crs
+client/CClient.cpp
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CServerProtocol.h
+server/CServerProtocol1_0.cpp
+server/CServerProtocol1_0.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/IServerProtocol.h
+synergy/ProtocolTypes.h
+
+checkpoint.  now sending toggle modifier state when entering
+a screen.  this allows the secondary screen to set it's
+modifier state to match the primary screen's state.  this is
+not strictly necessary since each keystroke should adjust the
+modifier state as needed to get the right result.
+
+----------
+2002/04/30 16:25:29 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+
+Added logging and handling of "half-duplex" caps-lock key.
+
+----------
+2002/04/30 16:23:30 crs
+Make-linux
+Make-solaris
+
+Changed name for auto-generated dependency files from
+Makedepend to .depend.
+
+----------
+2002/04/30 16:23:03 crs
+client/CClient.cpp
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServerProtocol1_0.cpp
+server/server.rc
+synergy/CClipboard.cpp
+synergy/CMSWindowsClipboard.cpp
+synergy/CMSWindowsClipboard.h
+synergy/synergy.dsp
+
+Fixes to get win32 client and server up to date.
+
+----------
+2002/04/29 14:40:01 crs
+base/CFunctionJob.h
+base/CLog.h
+base/CStopwatch.cpp
+base/CStopwatch.h
+base/CString.h
+base/IInterface.h
+base/IJob.h
+base/TMethodJob.h
+base/XBase.h
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+io/CBufferedInputStream.h
+io/CBufferedOutputStream.h
+io/CInputStreamFilter.h
+io/COutputStreamFilter.h
+io/CStreamBuffer.h
+io/IInputStream.h
+io/IOutputStream.h
+io/XIO.h
+mt/CCondVar.cpp
+mt/CCondVar.h
+mt/CLock.h
+mt/CMutex.cpp
+mt/CMutex.h
+mt/CThread.h
+mt/CThreadRep.cpp
+mt/CThreadRep.h
+mt/CTimerThread.h
+mt/XThread.h
+net/CNetwork.h
+net/CNetworkAddress.cpp
+net/CNetworkAddress.h
+net/CSocketInputStream.h
+net/CSocketOutputStream.h
+net/CSocketStreamBuffer.h
+net/CTCPListenSocket.h
+net/CTCPSocket.h
+net/IListenSocket.h
+net/ISocket.h
+net/XNetwork.h
+net/XSocket.h
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CScreenMap.h
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol.h
+server/CServerProtocol1_0.h
+server/CSynergyHook.cpp
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/CClipboard.h
+synergy/CInputPacketStream.cpp
+synergy/CInputPacketStream.h
+synergy/CMSWindowsClipboard.cpp
+synergy/CMSWindowsClipboard.h
+synergy/CMSWindowsScreen.h
+synergy/COutputPacketStream.h
+synergy/CProtocolUtil.cpp
+synergy/CProtocolUtil.h
+synergy/CTCPSocketFactory.h
+synergy/CXWindowsClipboard.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/IClipboard.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/IServerProtocol.h
+synergy/ISocketFactory.h
+synergy/XSynergy.h
+
+Indentation changes.
+
+----------
+2002/04/29 14:25:24 crs
+client/CClient.cpp
+server/CServer.cpp
+server/CServerProtocol1_0.cpp
+
+Added some validation of protocol message parameters.
+
+----------
+2002/04/29 14:12:48 crs
+synergy/CXWindowsScreen.cpp
+
+Shortened timeout on waiting for clipboard response.
+
+----------
+2002/04/29 14:08:48 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CServer.cpp
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+
+Made event selection a little more robust.  Also fixed failure
+to marshall clipboard data when updating primary clipboards.
+
+----------
+2002/04/29 13:49:56 crs
+client/CXWindowsSecondaryScreen.cpp
+
+Added missing event mask.
+
+----------
+2002/04/29 13:31:44 crs
+client/CClient.cpp
+client/CClient.h
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol.h
+server/CServerProtocol1_0.cpp
+server/CServerProtocol1_0.h
+synergy/CClipboard.cpp
+synergy/CClipboard.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/IClipboard.h
+synergy/IPrimaryScreen.h
+synergy/IServerProtocol.h
+synergy/ProtocolTypes.h
+
+checkpoint.  changed protocol to better handle clipboards.  now
+sending a sequence number with enter messages.  screens use that
+sequence number in clipboard grab and data messages.  the server
+uses the sequence number to order messages across clients.  also
+changed secondary screens to send clipboard updates on leaving
+(or when grab occurs when not active) instead of on a query from
+the server.  primary effectively does the same.  the query
+message has been removed.
+
+----------
+2002/04/29 11:58:17 crs
+client/CClient.cpp
+
+changed logging levels.
+
+----------
+2002/04/28 00:46:15 crs
+client/CXWindowsSecondaryScreen.cpp
+server/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+
+Clipboard improvements.  Still not working right.  Nedit
+doesn't work at all but at least now there's a timeout to
+prevent synergy from hanging waiting on a reply.
+
+----------
+2002/04/27 18:49:03 crs
+base/CLog.cpp
+base/CLog.h
+client/CClient.cpp
+mt/CThread.cpp
+mt/CThreadRep.cpp
+mt/CTimerThread.cpp
+net/CNetwork.cpp
+server/CServer.cpp
+server/CServerProtocol1_0.cpp
+server/CXWindowsPrimaryScreen.cpp
+synergy/CProtocolUtil.cpp
+synergy/CXWindowsScreen.cpp
+
+Added more debug levels and moved some annoying debug messages
+to those levels.  Default log level is now DEBUG for debug
+builds and INFO for release builds.
+
+----------
+2002/04/27 18:06:40 crs
+client/CClient.cpp
+client/CXWindowsSecondaryScreen.cpp
+server/CServer.cpp
+server/CServerProtocol1_0.cpp
+server/CXWindowsPrimaryScreen.cpp
+synergy/CProtocolUtil.cpp
+synergy/CXWindowsScreen.cpp
+synergy/ProtocolTypes.h
+
+checkpoint.  changed CProtocolUtil::readf() to store 1 and 2
+byte integers into pointers to 1 and 2 byte integers.  was
+always assuming pointers to 4 byte integers.
+
+----------
+2002/04/27 14:19:53 crs
+client/CClient.cpp
+client/CClient.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol.h
+server/CServerProtocol1_0.cpp
+server/CServerProtocol1_0.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/ClipboardTypes.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/IServerProtocol.h
+synergy/ProtocolTypes.h
+
+Added support for multiple clipboards.  This is mainly to
+support both PRIMARY and CLIPBOARD selections on X windows.
+
+----------
+2002/04/27 14:19:19 crs
+Makecommon
+
+set TARGETS macro to BIN and LIB targets.
+
+----------
+2002/04/26 20:15:59 crs
+notes
+
+updated
+
+----------
+2002/04/26 20:14:46 crs
+client/CXWindowsSecondaryScreen.cpp
+
+Fixed caps-lock and num-lock behavior.  It seems to work okay
+now but did notice one problem:  when powerbook is primary and
+num-lock is on the keypad works fine until shift is pressed
+(and released);  after that the keypad only works while the
+shift key is down.
+
+----------
+2002/04/26 20:12:55 crs
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+
+Added hack to handle "half-duplex" caps-lock key on powerbook.
+That key only reports press when pressed and released when
+caps-lock is activated and only reports release when pressed
+and released when caps-lock is deactivated.  I don't know of a
+way to detect this behavior so it may have to be configured by
+the user.  The code assumes normal behavior;  will have to add
+code to set the flag (perhaps from a user configuration).
+
+----------
+2002/04/26 17:38:01 crs
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+synergy/KeyTypes.h
+
+changed processing of key events in X.  secondary screen now
+activates/deactivates modifiers as necessary to get a keycode
+interpreted as the expected keysym.  still some work and
+testing to do on this.
+
+----------
+2002/04/25 10:44:01 crs
+notes
+
+Added notes on keyboard handling.
+
+----------
+2002/04/25 10:43:53 crs
+client/CXWindowsSecondaryScreen.cpp
+server/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+
+added handling for DestroyNotify of clipboard requestors.
+
+----------
+2001/11/26 22:36:51 crs
+synergy/CXWindowsScreen.cpp
+
+checkpoint.  improvements to clipboard transfer on X windows.
+not detecting a change to clipboard when synergy window isn't
+the owner (since there's no event for this;  we'll have to
+check when we leave the screen i guess).  large transfers
+don't seem to work.
+
+----------
+2001/11/26 22:09:53 crs
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+
+checkpoint.  testing clipboard transfer on X windows.
+
+----------
+2001/11/25 22:20:41 crs
+client/CXWindowsSecondaryScreen.cpp
+server/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+
+checkpoint.  implementing clipboard owner in x windows.
+
+----------
+2001/11/25 18:44:13 crs
+synergy/CXWindowsClipboard.cpp
+synergy/CXWindowsClipboard.h
+
+fixed function signature.
+
+----------
+2001/11/25 18:42:13 crs
+Make-linux
+Make-solaris
+Makecommon
+client/Makefile
+server/Makefile
+
+executables are now built into a common area on unix (and they
+already were on win32).
+
+----------
+2001/11/25 18:32:41 crs
+client/CClient.cpp
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/client.cpp
+client/client.dsp
+net/CNetwork.cpp
+notes
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol.h
+server/CServerProtocol1_0.cpp
+server/CServerProtocol1_0.h
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/makehook.dsp
+server/server.cpp
+server/server.dsp
+server/synrgyhk.dsp
+synergy.dsw
+synergy/CClipboard.cpp
+synergy/CClipboard.h
+synergy/CMSWindowsClipboard.cpp
+synergy/CMSWindowsClipboard.h
+synergy/CMSWindowsScreen.cpp
+synergy/CMSWindowsScreen.h
+synergy/CProtocolUtil.cpp
+synergy/CProtocolUtil.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/IClipboard.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/IServerProtocol.h
+synergy/Makefile
+synergy/ProtocolTypes.h
+synergy/synergy.dsp
+
+added platform independent clipboard transfer stuff
+clipboard owner support (MS windows done, X windows partial)
+added key transfer on ms windows
+mutex fixes in CClient (had race conditions)
+faster debug output in ms windows
+changed temporary screen name to "secondary"
+network fixes on ms windows (poll returned wrong result)
+fixed transparent cursor on ms windows
+
+----------
+2001/11/19 00:33:36 crs
+Make-linux
+all.dsp
+base/BasicTypes.h
+base/CLog.cpp
+base/CLog.h
+base/XBase.cpp
+base/base.dsp
+base/common.h
+client/CClient.cpp
+client/CClient.h
+client/CMSWindowsSecondaryScreen.cpp
+client/CMSWindowsSecondaryScreen.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/Makefile
+client/client.cpp
+client/client.dsp
+client/client.rc
+client/resource.h
+io/io.dsp
+mt/CCondVar.cpp
+mt/CThread.cpp
+mt/CThreadRep.cpp
+mt/CThreadRep.h
+mt/mt.dsp
+net/CNetwork.cpp
+net/CNetwork.h
+net/CNetworkAddress.cpp
+net/CNetworkAddress.h
+net/CTCPListenSocket.cpp
+net/CTCPListenSocket.h
+net/CTCPSocket.cpp
+net/CTCPSocket.h
+net/Makefile
+net/XNetwork.cpp
+net/XNetwork.h
+net/net.dsp
+notes
+server/CMSWindowsPrimaryScreen.cpp
+server/CMSWindowsPrimaryScreen.h
+server/CScreenMap.h
+server/CServer.cpp
+server/CServer.h
+server/CSynergyHook.cpp
+server/CSynergyHook.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/Makefile
+server/makehook.dsp
+server/resource.h
+server/server.cpp
+server/server.dsp
+server/server.rc
+server/synrgyhk.dsp
+synergy.dsw
+synergy/CMSWindowsClipboard.cpp
+synergy/CMSWindowsClipboard.h
+synergy/CMSWindowsScreen.cpp
+synergy/CMSWindowsScreen.h
+synergy/CXWindowsClipboard.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/IClipboard.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/synergy.dsp
+
+checkpoint.  merging win32 code.  server on X is currently broken
+and client probably is.
+
+----------
+2001/11/18 23:14:28 crs
+Makefile
+client/CClient.cpp
+client/CClient.h
+client/CXWindowsSecondaryScreen.cpp
+client/CXWindowsSecondaryScreen.h
+client/Makefile
+client/client.cpp
+server/CScreenMap.cpp
+server/CScreenMap.h
+server/CServer.cpp
+server/CServer.h
+server/CServerProtocol.cpp
+server/CServerProtocol.h
+server/CServerProtocol1_0.cpp
+server/CServerProtocol1_0.h
+server/CXWindowsPrimaryScreen.cpp
+server/CXWindowsPrimaryScreen.h
+server/Makefile
+server/server.cpp
+synergy/CClient.cpp
+synergy/CClient.h
+synergy/CScreenMap.cpp
+synergy/CScreenMap.h
+synergy/CServer.cpp
+synergy/CServer.h
+synergy/CServerProtocol.cpp
+synergy/CServerProtocol.h
+synergy/CServerProtocol1_0.cpp
+synergy/CServerProtocol1_0.h
+synergy/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsPrimaryScreen.h
+synergy/CXWindowsSecondaryScreen.cpp
+synergy/CXWindowsSecondaryScreen.h
+synergy/Makefile
+synergy/client.cpp
+synergy/server.cpp
+
+moved client and server files into their own respective
+directories.
+
+----------
+2001/11/13 23:34:12 crs
+synergy/CServer.cpp
+synergy/CXWindowsClipboard.cpp
+synergy/CXWindowsClipboard.h
+synergy/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsPrimaryScreen.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/IClipboard.h
+synergy/IPrimaryScreen.h
+synergy/Makefile
+
+added preliminary support for getting the X selection.
+
+----------
+2001/11/11 21:27:36 crs
+synergy/CServer.cpp
+
+fixed clamping when mapping to a different screen when beyond
+bottom or right of source screen.
+
+----------
+2001/11/11 21:15:30 crs
+synergy/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsPrimaryScreen.h
+synergy/CXWindowsScreen.cpp
+synergy/CXWindowsScreen.h
+synergy/CXWindowsSecondaryScreen.cpp
+synergy/CXWindowsSecondaryScreen.h
+synergy/Makefile
+
+factored common X windows screen stuff into a common base class.
+
+----------
+2001/11/10 22:28:37 crs
+notes
+
+updated notes.
+
+----------
+2001/11/10 22:28:30 crs
+Makefile
+
+added main app directory to build.
+
+----------
+2001/10/25 22:17:17 crs
+io/CBufferedInputStream.cpp
+mt/CCondVar.cpp
+mt/CMutex.cpp
+mt/CThreadRep.cpp
+net/CNetworkAddress.cpp
+net/CSocketInputStream.cpp
+net/CTCPListenSocket.cpp
+net/CTCPSocket.cpp
+synergy/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsSecondaryScreen.cpp
+
+removed unnecessary global scoping operators.
+
+----------
+2001/10/25 22:09:27 crs
+synergy/CXWindowsSecondaryScreen.cpp
+
+changed hider window to move underneath mouse when leaving the
+screen.  this makes it so if the mouse is moved locally, it'll
+reappear where it was last seen.
+
+----------
+2001/10/25 21:40:29 crs
+synergy/CClient.cpp
+synergy/CXWindowsSecondaryScreen.cpp
+synergy/CXWindowsSecondaryScreen.h
+synergy/ISecondaryScreen.h
+
+changed some method names and removed warpCursor() from
+secondary screen interface.
+
+----------
+2001/10/24 23:29:29 crs
+synergy/CServer.cpp
+synergy/CServer.h
+
+now handling disconnect of secondary screen that has the cursor
+by jumping back to the primary screen (without trying to notify
+the now disconnected secondary screen).  also fixed blown assert
+in mapPosition().
+
+----------
+2001/10/24 22:33:24 crs
+synergy/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsPrimaryScreen.h
+synergy/CXWindowsSecondaryScreen.cpp
+synergy/CXWindowsSecondaryScreen.h
+
+made calls to X thread safe.
+
+----------
+2001/10/23 22:45:59 crs
+notes
+
+more notes.
+
+----------
+2001/10/23 22:41:46 crs
+synergy/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsPrimaryScreen.h
+synergy/CXWindowsSecondaryScreen.cpp
+synergy/CXWindowsSecondaryScreen.h
+
+added cursor hiding.
+
+----------
+2001/10/23 21:23:29 crs
+base/CLog.cpp
+
+can now filter logging by level.
+
+----------
+2001/10/23 21:13:08 crs
+synergy/CServer.cpp
+
+fixed blown assert trying to find neighbor when there was none.
+
+----------
+2001/10/21 00:21:21 crs
+synergy/CClient.cpp
+
+fixed handling of stream ownership.
+
+----------
+2001/10/21 00:21:02 crs
+io/CBufferedInputStream.cpp
+io/CBufferedOutputStream.cpp
+mt/CThreadRep.cpp
+net/CTCPSocket.cpp
+net/CTCPSocket.h
+synergy/CServer.cpp
+synergy/server.cpp
+
+fixed bugs in handling streams.
+
+----------
+2001/10/20 20:43:31 crs
+Make-linux
+mt/CThreadRep.cpp
+
+threading fixes.  had sigmask set in wrong place.  was setting
+m_exit flag potentially after the object had been destroyed.
+most importantly, RTTI must be enabled on PPC to avoid SIGILL.
+
+----------
+2001/10/14 19:16:54 crs
+mt/CThread.cpp
+mt/CThreadRep.cpp
+mt/CTimerThread.cpp
+
+some debugging code.
+
+----------
+2001/10/14 18:29:43 crs
+base/CLog.h
+mt/CMutex.cpp
+mt/CThread.cpp
+mt/CThread.h
+mt/CThreadRep.cpp
+mt/CThreadRep.h
+mt/CTimerThread.cpp
+synergy/CClient.cpp
+synergy/CClient.h
+synergy/CProtocolUtil.cpp
+synergy/CServerProtocol1_0.cpp
+synergy/client.cpp
+synergy/server.cpp
+
+fixed timeout bug in CThreadRep::wait() (negative timeout wouldn't
+wait forever).  also fixed early return from sleep due to signal.
+now forcing client to initialize CThread to ensure global mutex
+gets initialized before threads are used.
+
+----------
+2001/10/14 16:58:01 crs
+io/CBufferedInputStream.cpp
+io/CBufferedInputStream.h
+io/CBufferedOutputStream.cpp
+io/CBufferedOutputStream.h
+io/CInputStreamFilter.cpp
+io/CInputStreamFilter.h
+io/COutputStreamFilter.cpp
+io/COutputStreamFilter.h
+io/CStreamBuffer.cpp
+io/CStreamBuffer.h
+io/IInputStream.h
+io/IOutputStream.h
+mt/CCondVar.cpp
+mt/CCondVar.h
+mt/CLock.cpp
+mt/CLock.h
+mt/CMutex.cpp
+mt/CMutex.h
+net/CNetworkAddress.cpp
+net/CNetworkAddress.h
+net/CSocketInputStream.cpp
+net/CSocketInputStream.h
+net/CSocketOutputStream.cpp
+net/CSocketOutputStream.h
+net/CSocketStreamBuffer.cpp
+net/CSocketStreamBuffer.h
+net/CTCPListenSocket.cpp
+net/CTCPListenSocket.h
+net/CTCPSocket.cpp
+net/CTCPSocket.h
+net/IListenSocket.h
+net/ISocket.h
+synergy/CInputPacketStream.cpp
+synergy/CInputPacketStream.h
+synergy/COutputPacketStream.cpp
+synergy/COutputPacketStream.h
+synergy/CProtocolUtil.cpp
+synergy/CProtocolUtil.h
+synergy/CScreenMap.cpp
+synergy/CScreenMap.h
+synergy/CServer.cpp
+synergy/CServer.h
+synergy/CServerProtocol.cpp
+synergy/CServerProtocol.h
+synergy/CServerProtocol1_0.cpp
+synergy/CServerProtocol1_0.h
+synergy/CTCPSocketFactory.cpp
+synergy/CTCPSocketFactory.h
+synergy/IServerProtocol.h
+synergy/ISocketFactory.h
+
+removed exception specifications.  thread exceptions weren't
+being listed and they'd have to be added to every one.  just
+doesn't seem worth the trouble.
+
+----------
+2001/10/14 14:56:06 crs
+synergy/CProtocolUtil.cpp
+
+stupid bug fixes.  writef() used the wrong variable as the number
+of bytes to write.  readf() forgot to prepare the va_list.
+
+----------
+2001/10/14 14:38:45 crs
+base/CLog.cpp
+base/CLog.h
+
+forgot to add the logger files.
+
+----------
+2001/10/14 14:37:41 crs
+Make-linux
+base/Makefile
+synergy/CClient.cpp
+synergy/CScreenMap.cpp
+synergy/CScreenMap.h
+synergy/CServer.cpp
+synergy/CServerProtocol1_0.cpp
+synergy/CXWindowsPrimaryScreen.cpp
+
+added logging facility and added a bunch of log messages.
+
+----------
+2001/10/08 19:24:46 crs
+Makefile
+notes
+synergy/CClient.cpp
+synergy/CClient.h
+synergy/CServer.cpp
+synergy/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsSecondaryScreen.cpp
+synergy/CXWindowsSecondaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/Makefile
+synergy/client.cpp
+synergy/server.cpp
+
+checkpoint.  first cut of client and server apps.  not tested
+yet but they compile and *should* work as is.
+
+----------
+2001/10/06 14:18:01 crs
+Make-linux
+Makefile
+
+updated old files to new implementation
+
+----------
+2001/10/06 14:13:28 crs
+BasicTypes.h
+CClient.cpp
+CClient.h
+CEvent.h
+CEventQueue.cpp
+CEventQueue.h
+CMessageSocket.cpp
+CMessageSocket.h
+CProtocol.h
+CScreenProxy.cpp
+CScreenProxy.h
+CServer.cpp
+CServer.h
+CSocket.cpp
+CSocket.h
+CSocketFactory.cpp
+CSocketFactory.h
+CString.h
+CTrace.cpp
+CTrace.h
+CUnixEventQueue.cpp
+CUnixEventQueue.h
+CUnixTCPSocket.cpp
+CUnixTCPSocket.h
+CUnixXScreen.cpp
+CUnixXScreen.h
+CXScreen.cpp
+CXScreen.h
+IClient.h
+IClipboard.h
+IEventQueue.h
+IJob.h
+IScreen.h
+IServer.h
+ISocket.h
+KeyTypes.h
+Make-linux
+Make-solaris
+Makecommon
+Makefile
+MouseTypes.h
+TMethodJob.h
+XBase.cpp
+XBase.h
+XSocket.h
+base/BasicTypes.h
+base/CFunctionJob.cpp
+base/CFunctionJob.h
+base/CStopwatch.cpp
+base/CStopwatch.h
+base/CString.h
+base/IInterface.h
+base/IJob.h
+base/Makefile
+base/TMethodJob.h
+base/XBase.cpp
+base/XBase.h
+base/common.h
+io/CBufferedInputStream.cpp
+io/CBufferedInputStream.h
+io/CBufferedOutputStream.cpp
+io/CBufferedOutputStream.h
+io/CInputStreamFilter.cpp
+io/CInputStreamFilter.h
+io/COutputStreamFilter.cpp
+io/COutputStreamFilter.h
+io/CStreamBuffer.cpp
+io/CStreamBuffer.h
+io/IInputStream.h
+io/IOutputStream.h
+io/Makefile
+io/XIO.cpp
+io/XIO.h
+main.cpp
+mt/CCondVar.cpp
+mt/CCondVar.h
+mt/CLock.cpp
+mt/CLock.h
+mt/CMutex.cpp
+mt/CMutex.h
+mt/CThread.cpp
+mt/CThread.h
+mt/CThreadRep.cpp
+mt/CThreadRep.h
+mt/CTimerThread.cpp
+mt/CTimerThread.h
+mt/Makefile
+mt/XThread.h
+net/CNetworkAddress.cpp
+net/CNetworkAddress.h
+net/CSocketInputStream.cpp
+net/CSocketInputStream.h
+net/CSocketOutputStream.cpp
+net/CSocketOutputStream.h
+net/CSocketStreamBuffer.cpp
+net/CSocketStreamBuffer.h
+net/CTCPListenSocket.cpp
+net/CTCPListenSocket.h
+net/CTCPSocket.cpp
+net/CTCPSocket.h
+net/IListenSocket.h
+net/ISocket.h
+net/Makefile
+net/XSocket.cpp
+net/XSocket.h
+notes
+synergy/CClient.cpp
+synergy/CClient.h
+synergy/CInputPacketStream.cpp
+synergy/CInputPacketStream.h
+synergy/COutputPacketStream.cpp
+synergy/COutputPacketStream.h
+synergy/CProtocolUtil.cpp
+synergy/CProtocolUtil.h
+synergy/CScreenMap.cpp
+synergy/CScreenMap.h
+synergy/CServer.cpp
+synergy/CServer.h
+synergy/CServerProtocol.cpp
+synergy/CServerProtocol.h
+synergy/CServerProtocol1_0.cpp
+synergy/CServerProtocol1_0.h
+synergy/CTCPSocketFactory.cpp
+synergy/CTCPSocketFactory.h
+synergy/CXWindowsPrimaryScreen.cpp
+synergy/CXWindowsPrimaryScreen.h
+synergy/IPrimaryScreen.h
+synergy/ISecondaryScreen.h
+synergy/IServerProtocol.h
+synergy/ISocketFactory.h
+synergy/KeyTypes.h
+synergy/Makefile
+synergy/MouseTypes.h
+synergy/ProtocolTypes.h
+synergy/XSynergy.cpp
+synergy/XSynergy.h
+test.cpp
+
+Started over.
+
+----------
+2001/05/14 21:14:49 crs
+MouseTypes.h
+
+flipped order of buttons to match default X setup.
+
+----------
+2001/05/14 21:14:25 crs
+CClient.cpp
+CEvent.h
+CScreenProxy.cpp
+CScreenProxy.h
+CServer.cpp
+CXScreen.cpp
+CXScreen.h
+IScreen.h
+KeyTypes.h
+
+added other mouse and key event handling to CXScreen.  key repeat
+isn't implemented and modifier masks are ignored.  modifier masks
+are new;  they indicate the modifier key (shift, ctrl, etc) state
+at the time of the key event.
+
+----------
+2001/05/13 12:43:16 crs
+CUnixTCPSocket.cpp
+CUnixTCPSocket.h
+
+more fixes to reduce latency.  nagle agorithm doesn't seem to
+stay off on a socket on linux because a connection clearly
+doesn't send data as often as possible.  will have to implement
+a UDP socket to reduce overhead and avoid these delays.  wanted
+to do that anyway.
+
+----------
+2001/05/13 12:21:11 crs
+CUnixTCPSocket.cpp
+CXScreen.cpp
+
+fixes to avoid update delays.
+
+----------
+2001/05/13 12:07:32 crs
+CMessageSocket.cpp
+
+fixed bug in read() that miscalculated the message length.
+
+----------
+2001/05/13 11:40:29 crs
+BasicTypes.h
+CClient.cpp
+CClient.h
+CEvent.h
+CEventQueue.cpp
+CEventQueue.h
+CMessageSocket.cpp
+CMessageSocket.h
+CProtocol.h
+CScreenProxy.cpp
+CScreenProxy.h
+CServer.cpp
+CServer.h
+CSocket.cpp
+CSocket.h
+CSocketFactory.cpp
+CSocketFactory.h
+CString.h
+CTrace.cpp
+CTrace.h
+CUnixEventQueue.cpp
+CUnixEventQueue.h
+CUnixTCPSocket.cpp
+CUnixTCPSocket.h
+CUnixXScreen.cpp
+CUnixXScreen.h
+CXScreen.cpp
+CXScreen.h
+IClient.h
+IClipboard.h
+IEventQueue.h
+IJob.h
+IScreen.h
+IServer.h
+ISocket.h
+KeyTypes.h
+Make-linux
+Makefile
+MouseTypes.h
+TMethodJob.h
+XBase.cpp
+XBase.h
+XSocket.h
+main.cpp
+tools/depconv
+
+initial revision of synergy.  currently semi-supports X windows
+on unix, but client screens don't simulate events other than
+mouse move.  also not supporting clipboard at all yet and the
+main app is just a temporary framework to test with.  must
+clean up protocol and communication.
+
+----------
