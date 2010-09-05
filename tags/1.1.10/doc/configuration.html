@@ -1,0 +1,283 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+	<title>Synergy Configuration Guide</title>
+</head>
+<body class="main">
+<h3>Synergy Configuration File Format</h3>
+<p>
+The synergy server requires configuration.  It will try certain
+pathnames to load the configuration file if you don't specify a
+path using the <span class="code">--config</span> command line
+option.  <span class="code">synergys --help</span> reports those
+pathnames.
+</p>
+<p>
+The configuration file is a plain text file.  Use any text editor
+to create the configuration file.  The file is broken into sections
+and each section has the form:
+<pre>
+  section: <span class="arg">name</span>
+    <span class="arg">args</span>
+  end
+</pre>
+Comments are introduced by <span class="code">#</span> and continue to
+the end of the line.  <span class="arg">name</span> must be one of the
+following:
+<ul class="code">
+<li>screens
+<li>aliases
+<li>links
+<li>options
+</ul>
+See below for further explanation of each section type.  The
+configuration file is case-sensitive so <span class="code">Section</span>,
+<span class="code">SECTION</span>, and <span class="code">section</span>
+are all different and only the last is valid.  Screen names are the
+exception;  screen names are case-insensitive.
+</p>
+<p>
+The file is parsed top to bottom and names cannot be used before
+they've been defined in the <span class="code">screens</span> or
+<span class="code">aliases</span> sections.  So the
+<span class="code">links</span> and <span class="code">aliases</span>
+must appear after the <span class="code">screens</span> and links
+cannot refer to aliases unless the <span class="code">aliases</span>
+appear before the <span class="code">links</span>.
+</p>
+<h4>screens</h4>
+<p>
+<span class="arg">args</span> is a list of screen names, one name per
+line, each followed by a colon.  Names are arbitrary strings but they
+must be unique.  The hostname of each computer is recommended.  (This
+is the computer's network name on win32 and the name reported by the
+program <span class="code">hostname</span> on Unix and OS X.  Note
+that OS X may append <span class="code">.local</span> to the name you
+gave your computer; e.g. <span class="code">somehost.local</span>.)
+There must be a screen name for the server and each client.  Each
+screen can specify a number of options.  Options have the form
+<span class="code"><span class="arg">name</span> =
+<span class="arg">value</span></span> and are listed one per line
+after the screen name.
+</p>
+<p>
+Example:
+<pre>
+    section: screens
+    	moe:
+    	larry:
+            halfDuplexCapsLock = true
+            halfDuplexNumLock = true
+    	curly:
+            meta = alt
+    end
+</pre>
+This declares three screens named <span class="code">moe</span>,
+<span class="code">larry</span>, and <span class="code">curly</span>.
+Screen <span class="code">larry</span> has half-duplex Caps Lock and
+Num Lock keys (see below) and screen <span class="code">curly</span>
+converts the meta modifier key to the alt modifier key.
+</p>
+<p>
+A screen can have the following options:
+<ul>
+<li><span class="code">halfDuplexCapsLock = {true|false}</span>
+<p>
+        This computer has a Caps Lock key that doesn't report a
+        press and a release event when the user presses it but
+        instead reports a press event when it's turned on and a
+        release event when it's turned off.  If Caps Lock acts
+        strangely on all screens then you may need to set this
+        option to <span class="code">true</span>
+        on the server screen.  If it acts strangely on one
+        screen then that screen may need the option set to
+        <span class="code">true</span>.
+</p>
+<li><span class="code">halfDuplexNumLock = {true|false}</span>
+<p>
+        This is identical to <span class="code">halfDuplexCapsLock</span>
+        except it applies to the Num Lock key.
+</p>
+<li><span class="code">halfDuplexScrollLock = {true|false}</span>
+<p>
+        This is identical to <span class="code">halfDuplexCapsLock</span>
+        except it applies to the Scroll Lock key.  Note that synergy uses
+		Scroll Lock to keep the cursor on the current screen.  That is,
+		when Scroll Lock is toggled on, the cursor is locked to the screen
+		that it's currently on.  Use it to prevent accidental switching.
+</p>
+<li><span class="code">xtestIsXineramaUnaware = {true|false}</span>
+<p>
+        This option works around a bug in the XTest extension
+        when used in combination with Xinerama.  It affects
+        X11 clients only.  Not all versions of the XTest
+        extension are aware of the Xinerama extension.  As a
+        result, they do not move the mouse correctly when
+        using multiple Xinerama screens.  This option is
+        currently <span class="code">true</span> by default.  If
+        you know your XTest extension is Xinerama aware then set
+        this option to <span class="code">false</span>.
+</p>
+<li><span class="code">shift = {shift|ctrl|alt|meta|super|none}<br>
+      ctrl  = {shift|ctrl|alt|meta|super|none}<br>
+      alt   = {shift|ctrl|alt|meta|super|none}<br>
+      meta  = {shift|ctrl|alt|meta|super|none}<br>
+      super = {shift|ctrl|alt|meta|super|none}</span>
+<p>
+        Map a modifier key pressed on the server's keyboard to
+        a different modifier on this client.  This option only
+        has an effect on a client screen;  it's accepted and
+        ignored on the server screen.
+</p>
+<p>
+        You can map, say, the shift key to shift (the default),
+	    ctrl, alt, meta, super or nothing.  Normally, you
+        wouldn't remap shift or ctrl.  You might, however, have
+        an X11 server with meta bound to the Alt keys.  To use
+        this server effectively with a windows client, which
+        doesn't use meta but uses alt extensively, you'll want
+        the windows client to map meta to alt (using
+        <span class="code">meta = alt</span>).
+</p>
+</ul>
+</p>
+
+<h4>aliases</h4>
+<p>
+    <span class="arg">args</span> is a list of screen names just like
+    in the <span class="code">screens</span> section except each screen
+    is followed by a list of aliases, one per line, <b>not</b> followed
+    by a colon.  An alias is a screen name and must be unique.  During
+    screen name lookup each alias is equivalent to the screen name it
+    aliases.  So a client can connect using its canonical screen name
+    or any of its aliases.  
+</p>
+<p>
+    Example:
+<pre>
+    section: aliases
+        larry:
+            larry.stooges.com
+        curly:
+            shemp
+    end
+</pre>
+    Screen <span class="code">larry</span> is also known as
+	<span class="code">larry.stooges.com</span> and can connect as
+    either name.  Screen <span class="code">curly</span> is also
+    known as <span class="code">shemp</span> (hey, it's just an example).
+</p>
+
+<h4>links</h4>
+<p>
+    <span class="arg">args</span> is a list of screen names just like
+    in the <span class="code">screens</span> section except each screen
+    is followed by a list of links, one per line.  Each link has the
+    form <span class="code">{left|right|up|down}</span> =
+    <span class="code">name</span>.  A link indicates which screen is
+    adjacent in the given direction.
+</p>
+<p> 
+    Example:
+<pre>
+    section: links
+        moe:
+            right = larry
+            up    = curly
+        larry:
+            left  = moe
+            up    = curly
+        curly:
+            down  = larry
+    end
+</pre>
+    This indicates that screen <span class="code">larry</span> is to
+    the right of screen <span class="code">moe</span> (so moving the
+    cursor off the right edge of <span class="code">moe</span> would
+    make it appear at the left edge of <span class="code">larry</span>),
+    <span class="code">curly</span> is above <span class="code">moe</span>,
+    <span class="code">moe</span> is to the left of
+    <span class="code">larry</span>, <span class="code">curly</span> is
+    above <span class="code">larry</span>, and
+    <span class="code">larry</span> is below
+    <span class="code">curly</span>.  Note that links do not have to be
+    symmetrical;  moving up from <span class="code">moe</span> then down
+    from <span class="code">curly</span> lands the cursor on
+    <span class="code">larry</span>.
+</p>
+
+<h4>options</h4>
+<p>
+    <span class="arg">args</span> is a list of lines of the form
+    <span class="code">name = value</span>.  These set the global
+    options.
+</p>
+<p>
+    Example:
+<pre>
+    section: options
+        heartbeat = 5000
+        switchDelay = 500
+    end
+</pre>
+</p>
+<p>
+    You can use the following options:
+<ul>
+<li><span class="code">heartbeat = N</span>
+<p>
+        The server will expect each client to send a message no
+        less than every <span class="code">N</span> milliseconds.
+        If no message arrives from a client within
+        <span class="code">3N</span> seconds the server forces that
+        client to disconnect.
+</p>
+<p>
+        If synergy fails to detect clients disconnecting while
+        the server is sleeping or vice versa, try using this
+        option.
+</p>
+<li><span class="code">switchDelay = N</span>
+<p>
+        Synergy won't switch screens when the mouse reaches the
+        edge of a screen unless it stays on the edge for
+        <span class="code">N</span>
+        milliseconds.  This helps prevent unintentional
+        switching when working near the edge of a screen.
+</p>
+<li><span class="code">switchDoubleTap = N</span>
+<p>
+        Synergy won't switch screens when the mouse reaches the
+        edge of a screen unless it's moved away from the edge
+        and then back to the edge within <span class="code">N</span>
+        milliseconds.  With
+        the option you have to quickly tap the edge twice to
+        switch.  This helps prevent unintentional switching
+        when working near the edge of a screen.
+</p>
+<li><span class="code">screenSaverSync = {true|false}</span>
+<p>
+		If set to <span class="code">false</span> then synergy
+		won't synchronize screen savers.  Client screen savers
+		will start according to their individual configurations. 
+		The server screen saver won't start if there is input,
+		even if that input is directed toward a client screen.
+</p>
+<li><span class="code">relativeMouseMoves = {true|false}</span>
+<p>
+		If set to <span class="code">true</span> then secondary
+		screens move the mouse using relative rather than
+		absolute mouse moves when and only when Scroll Lock is
+		toggled on (i.e. the cursor is locked to the screen). 
+		This is intended to make synergy work better with certain
+		games.  If set to <span class="code">false</span> or not
+		set then all mouse moves are absolute.
+</p>
+</ul>
+    You can use both the <span class="code">switchDelay</span> and
+    <span class="code">switchDoubleTap</span> options at the same
+    time.  Synergy will switch when either requirement is satisfied.
+</p>
+</body>
+</html>

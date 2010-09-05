@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+	<title>Synergy FAQ</title>
+</head>
+<body class="main">
+<h3>Synergy Frequently Asked Questions</h3>
+
+<h4>Questions</h4>
+<ol class="faq">
+<li><a href="#faq1">Why doesn't ctrl+alt+del work on secondary screens?</a>
+<li><a href="#faq2">Can the server and client be using different operating systems?</a>
+<li><a href="#faq3">What's the difference between synergy and x2x, x2vnc, etc?</a>
+<li><a href="#faq4">What does "Cannot initialize hook library" mean?</a>
+<li><a href="#faq5">What security/encryption does synergy provide?</a>
+<li><a href="#faq6">What should I call my screens in the configuration?</a>
+<li><a href="#faq7">Why do my Caps-Lock, Num-Lock, Scroll-Lock keys act funny?</a>
+<li><a href="#faq8">Can synergy share the display in addition to the mouse and keyboard?</a>
+<li><a href="#faq9">Can synergy do drag and drop between computers?</a>
+<li><a href="#faq10">Do AltGr or Mode-Switch or ISO_Level3_Shift work?</a>
+<li><a href="#faq11">Why isn't synergy ported to platform XYZ?</a>
+<li><a href="#faq12">My client can't connect.  What's wrong?</a>
+<li><a href="#faq13">Linking fails on Solaris.  What's wrong?</a>
+<li><a href="#faq14">The screen saver never starts.  Why not?</a>
+<li><a href="#faq15">I can't switch screens anymore for no apparent reason.  Why?</a>
+<li><a href="#faq16">I get the error 'Xlib: No protocol specified'.  Why?</a>
+<li><a href="#faq17">The cursor goes to secondary screen but won't come back.  Why?</a>
+<li><a href="#faq18">The cursor wraps from one edge of the screen to the opposite.  Why?</a>
+<li><a href="#faq19">How do I stop my game from minimizing when I leave the screen?</a>
+</ol>
+
+<h4>Answers</h4>
+<ol class="faq">
+<li><a name="faq1"></a><span class="fakelink">Why doesn't ctrl+alt+del work on secondary screens?</span>
+<p>
+    Synergy isn't able to capture ctrl+alt+del on PC compatible
+    systems because it's handled completely differently than
+    other keystrokes.  However, when the mouse is on a client
+    screen, pressing ctrl+alt+pause will simulate ctrl+alt+del
+    on the client.  (A client running on Windows NT, 2000, or XP
+    must be configured to autostart when the computer starts for
+    this to work.)
+</p>
+
+<li><a name="faq2"></a><span class="fakelink">Can the server and client be using different operating systems?</span>
+<p>
+    Yes.  The synergy network protocol is platform neutral so
+    synergy doesn't care what operating systems are running on
+    the server and clients.
+</p>
+
+<li><a name="faq3"></a><span class="fakelink">What's the difference between synergy and
+<span class="code">x2x</span>, <span class="code">x2vnc</span>, etc?</span>
+<p>
+    Unlike <span class="code">x2x</span>, synergy supports any number of computers and
+    it doesn't require X on Microsoft Windows platforms.  It
+    also has more advanced clipboard support and synchronizes
+    screensavers.  <span class="code">x2vnc</span> is also limited to two computers,
+    requires the separate vnc package, and is really only
+    appropriate for using an X system to control a non-X system.
+    However, the right tool for the job is whatever tool works
+    best for you.
+</p>
+
+<li><a name="faq4"></a><span class="fakelink">What does "Cannot initialize hook library" mean?</span>
+<p>
+    This error can occur on a synergy server running on a
+    Microsoft Windows operating system.  It means that synergy
+    is already running or possibly was not shut down properly.
+    If it's running then first end the synergy task.  If it's
+    not then try logging off and back on or rebooting then
+    starting synergy again.
+</p>
+
+<li><a name="faq5"></a><span class="fakelink">What security/encryption does synergy provide?</span>
+<p>
+    Synergy provides no built-in encryption or authentication.
+    Given that, synergy should not be used on or over any untrusted
+    network, especially the Internet.  It's generally fine for home
+    networks.  Future versions may provide built-in encryption and
+    authentication.
+</p>
+<p>
+    Strong encryption and authentication is available through SSH
+    (secure shell).  Run the SSH daemon (i.e. server) on the same
+    computer that you run the synergy server.  It requires no
+    special configuration to support synergy.  On each synergy
+    client system, run SSH with port forwarding:
+</p>
+<pre>
+        ssh -f -N -L 24800:<span class="arg">server-hostname</span>:24800 <span class="arg">server-hostname</span>
+</pre>
+<p>
+    where <span class="arg">server-hostname</span> is the name of the
+	SSH/synergy server.
+    Once ssh authenticates itself, start the synergy client
+    normally except use <span class="code">localhost</span> or 
+    <span class="code">127.0.0.1</span> as the server's
+    address.  SSH will then encrypt all communication on behalf of
+    synergy.  Authentication is handled by the SSH authentication.
+</p>
+<p>
+    A free implementation of SSH for Linux and many Unix systems is
+    <a href="http://www.openssh.com/">OpenSSH</a>.  For
+    Windows there's a port of OpenSSH using
+    <a href="http://www.cygwin.com/">Cygwin<a>.
+</p>
+
+<li><a name="faq6"></a><span class="fakelink">What should I call my screens in the configuration?</span>
+<p>
+    You can use any unique name in the configuration file for each
+    screen but it's easiest to use the hostname of the computer.
+    That's the computer name not including the domain.  For example,
+    a computer with the fully qualified domain name <span class="code">xyz.foo.com</span> has
+    the hostname <span class="code">xyz</span>.  There should also be an alias for <span class="code">xyz</span> to
+    <span class="code">xyz.foo.com</span>.  If you don't use the computer's hostname, you
+    have to tell synergy the name of the screen using a command line
+    option, or the startup dialog on Windows.
+</p>
+<p>
+    Some systems are configured to report the fully qualified domain
+    name as the hostname.  For those systems it will be easier to use
+    the FQDN as the screen name.  Also note that a Mac OS X system
+    named <span class="code">xyz</span> may report its hostname as
+    <span class="code">xyz.local</span>.  If that's the case for you
+    then use <span class="code">xyz.local</span> as the screen name.
+</p>
+
+<li><a name="faq7"></a><span class="fakelink">Why do my Caps-Lock, Num-Lock, Scroll-Lock keys act funny?</span>
+<p>
+    Some systems treat the Caps-Lock, Num-Lock, and Scroll-Lock keys
+	differently than all the others.  Whereas most keys report going down
+	when physically pressed and going up when physically released, on
+    these systems the keys report going down when being activated and
+	going up when being deactivated.  That is, when you press and release,
+	say, Caps-Lock to activate it, it only reports going down, and when
+	you press and release to deactivate it, it only reports going up.
+	This confuses synergy.
+</p>
+<p>
+    You can solve the problem by changing your configuration file.
+    In the screens section, following each screen that has the
+    problem, add any or all of these lines as appropriate:
+</p>
+<pre>
+        halfDuplexCapsLock = true
+        halfDuplexNumLock = true
+        halfDuplexScrollLock = true
+</pre>
+<p>
+    Then restart synergy on the server or reload the configuration.
+</p>
+
+<li><a name="faq8"></a><span class="fakelink">Can synergy share the display in addition to the mouse and keyboard?</span>
+<p>
+    No.  Synergy is a KM solution not a KVM (keyboard, video, mouse)
+    solution.  However, future versions will probably support KVM.
+    Hopefully, this will make synergy suitable for managing large
+    numbers of headless servers.
+</p>
+
+<li><a name="faq9"></a><span class="fakelink">Can synergy do drag and drop between computers?</span>
+<p>
+    No.  That's a very cool idea and it'll be explored.  However, it's
+    also clearly difficult and may take a long time to implement.
+</p>
+
+<li><a name="faq10"></a><span class="fakelink">Does AltGr/Mode-Switch/ISO_Level3_Shift work?</span>
+<p>
+    Yes, as of 1.0.12 synergy has full support for AltGr/Mode-switch.
+    That includes support for most (all?) European keyboard layouts.
+    All systems should be using the same keyboard layout, though, for
+    all characters to work.  (Any character missing from a client's
+    layout cannot be generated by synergy.)  There is experimental
+    support for ISO_Level3_Shift in 1.1.3.
+</p>
+
+<li><a name="faq11"></a><span class="fakelink">Why isn't synergy ported to platform XYZ?</span>
+<p>
+    Probably because the developers don't have access to platform XYZ
+    and/or are unfamiliar with development on XYZ.  Also, synergy has
+    inherently non-portable aspects so there's a not insignificant
+    effort involved in porting.
+</p>
+
+<li><a name="faq12"></a><span class="fakelink">My client can't connect.  What's wrong?</span>
+<p>
+    A common mistake when starting the client is to give the wrong
+    server host name.  The last synergyc command line option (Unix)
+    or the "Server Host Name" edit field (Windows) should be the
+    host name (or IP address) of the server <b>not</b> the client's host
+    name.  If you get the error <span class="code">connection failed: cannot connect
+    socket</span> followed by <span class="code">the attempt to connect was forcefully
+    rejected</span> or <span class="code">connection refused</span> then the server isn't started,
+    can't bind the address, or the client is connecting to the wrong
+    host name/address or port.
+</p>
+<p>
+    If the client instead says <span class="code">timed out</span> then you
+    probably have a firewall on the server or a router on the network.  You
+    must allow connections to the server on port 24800 (or whichever port
+    you're using).  Note that OS X, Windows XP and many Unix/Linux variants
+	come with a firewall preinstalled and turned on by default.
+</p>
+
+<li><a name="faq13"></a><span class="fakelink">Linking fails on Solaris.  What's wrong?</span>
+<p>
+	Did you add
+</p>
+<pre>
+        <nobr>--x-includes=/usr/openwin/include --x-libraries=/usr/openwin/lib</nobr>
+</pre>
+<p>
+    to the <span class="code">configure</span> command line?  Solaris puts
+    the X11 includes and libraries in an unusual place and the above lets
+    synergy find them.
+</p>
+
+<li><a name="faq14"></a><span class="fakelink">The screen saver never starts.  Why not?</span>
+<p>
+    If the synergy server is on X Windows then the screen saver will
+    not start while the mouse is on a client screen.  This is a
+    consequence of how X Windows, synergy and xscreensaver work.
+</p>
+
+<li><a name="faq15"></a><span class="fakelink">I can't switch screens anymore for no apparent reason.  Why?</span>
+<p>
+    This should not happen with 1.1.3 and up.  Earlier versions of
+    synergy would not allow switching screens when a key was down and
+    sometimes it would believe a key was down when it was not.
+</p>
+
+<li><a name="faq16"></a><span class="fakelink">I get the error 'Xlib: No protocol specified'.  Why?</span>
+<p>
+    You're running synergy without authorization to connect to the
+    X display.  Typically the reason is running synergy as root when
+    logged in as non-root.  Just run synergy as the same user that's
+    logged in.
+</p>
+
+<li><a name="faq17"></a><span class="fakelink">The cursor goes to secondary screen but won't come back.  Why?</span>
+<p>
+    Your configuration is incorrect.  You must indicate the neighbors
+    of every screen.  Just because you've configured 'Apple' to be to
+    the left of 'Orange' does not mean that 'Orange' is to the right
+    of 'Apple'.  You must provide both in the configuration.
+</p>
+
+<li><a name="faq18"></a><span class="fakelink">The cursor wraps from one edge of the screen to the opposite.  Why?</span>
+<p>
+    Because you told it to.  If you list 'Orange' to be to the left of
+    'Orange' then moving the mouse off the left edge of 'Orange' will
+    make it jump to the right edge.  Remove the offending line from the
+    configuration if you don't want that behavior.
+</p>
+
+<li><a name="faq19"></a><span class="fakelink">How do I stop my game from minimizing when I leave the screen?</span>
+<p>
+    Many full screen applications, particularly games, automatically
+	minimize when they're no longer the active (foreground) application
+	on Microsoft Windows.  The synergy server normally becomes the foreground
+	when you switch to another screen in order to more reliably capture all
+	user input causing those full screen applications to minimize.  To
+	prevent synergy from stealing the foreground just click "Options..."
+	and check "Don't take foreground window on Windows servers."  If you
+	turn this on then be aware that synergy may not function correctly when
+	certain programs, particularly the command prompt, are the foreground
+	when you switch to other screens.  Simply make a different program the
+	foreground before switching to work around that.
+</p>
+
+</body>
+</html>

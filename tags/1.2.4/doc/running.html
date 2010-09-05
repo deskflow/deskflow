@@ -1,0 +1,354 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+	<title>Guide to Running Synergy</title>
+</head>
+<body class="main">
+<h3>Running Synergy</h3>
+<p>
+Synergy lets you use one keyboard and mouse across multiple computers.
+To do so it requires that all the computers are connected to each other
+via TCP/IP networking.  Most systems come with this installed.
+</p>
+
+<h4>Step 1 - Choose a server</h4>
+<p>
+The first step is to pick which keyboard and mouse you want to share.
+The computer with that keyboard and mouse is called the "primary
+screen" and it runs the synergy server.  All of the other computers
+are "secondary screens" and run the synergy client.
+</p>
+
+<h4>Step 2 - Install the software</h4>
+<p>
+Second, you install the software.  Choose the appropriate package
+and install it.  For example, on Windows you would run
+<span class="code">SynergyInstaller</span>.  You must install the
+software on all the computers that will share the mouse and keyboard.
+</p>
+
+<h4>Step 3 - Configure and start the server</h4>
+<p>
+Next you configure the server.  You'll tell synergy the name of
+the primary and secondary screens, which screens are next to which,
+and choose desired options.  On Windows there's a dialog box for
+setting the configuration.  On other systems you'll create a simple
+text file.
+</p>
+<p>
+Note that when you tell synergy that screen <span class="code">A</span>
+is to the left of screen <span class="code">B</span> this does <b>not</b>
+imply that <span class="code">B</span> is to the right of
+<span class="code">A</span>.  You must explicitly indicate both
+relations.  If you don't do both then when you're running synergy you'll
+find you're unable to leave one of the screens.
+</p>
+<p>
+<b>Windows</b><br>
+On Windows run synergy by double clicking on the
+<span class="code">synergy</span> file.  This brings up a dialog.
+Configure the server:
+<ul>
+<li>Click the <span class="code">Server</span> radio button
+<li>Click <span class="code">Add</span> to add the server to the
+  <span class="code">Screens</span> list
+  <ul>
+  <li>Enter the name of server (the computer's name is the recommended name)
+  <li>Optionally enter other names the server is known by
+  <li>Click <span class="code">OK</span>
+  </ul>
+<li>Use <span class="code">Add</span> to add your other computers
+  <ul>
+  <li>Using a computer's name as its screen name is recommended
+  <li>Choose desired screen options on the <span class="code">Add</span> dialog
+  </ul>
+<li>Use the controls under <span class="code">Layout</span> to link screens together
+  <ul>
+  <li>Click (once) on the server's name in the <span class="code">Screens</span> list
+  <li>Choose the screen to the left of the server;  use <span class="code">---</span>
+      if there is no screen to the left of the server
+  <li>Choose the screens to the right, above and below the server
+  <li>Repeat the above steps for all the other screens
+  </ul>
+<li>Use <span class="code">Options...</span> to set desired options
+<li>If the server's screen name is not the server's computer name:
+  <ul>
+  <li>Click <span class="code">Advanced...</span>
+  <li>Enter the server's screen name next to
+      <span class="code">Screen Name</span>
+  <li>Click <span class="code">OK</span>
+  </ul>
+</ul>
+</p>
+<p>
+Now click <span class="code">Test</span>.  The server will start and
+you'll see a console window with log messages telling you about synergy's
+progress.  If an error occurs you'll get one or more dialog boxes telling
+you what the errors are; read the errors to determine the problem then
+correct them and try <span class="code">Test</span> again.
+</p>
+
+<p>
+<b>Unix or Mac OS X</b><br>
+Create a text file named <span class="code">synergy.conf</span> with the
+following:
+<pre>
+    section: screens
+       <span class="arg">screen1</span>:
+       <span class="arg">screen2</span>:
+    end
+    section: links
+       <span class="arg">screen1</span>:
+           right = <span class="arg">screen2</span>
+       <span class="arg">screen2</span>:
+           left = <span class="arg">screen1</span>
+    end
+</pre>
+Replace each occurrence of <span class="arg">screen1</span> with the host name
+of the primary screen computer (as reported by the
+<span class="code">hostname</span> program) and <span class="arg">screen2</span>
+with the host name of a secondary screen computer.  In the above example,
+<span class="arg">screen2</span> is to the right of
+<span class="arg">screen1</span> and <span class="arg">screen1</span> is to the
+left of <span class="arg">screen2</span>. If necessary you should replace
+<span class="code">right</span> and <span class="code">left</span> with
+<span class="code">left</span>, <span class="code">right</span>,
+<span class="code">up</span>, or <span class="code">down</span>.  If you
+have more than two computers you can add those too:  add each computer's host
+name in the <span class="code">screens</span> section and add the
+appropriate links.  See the <a href="configuration.html">configuration
+guide</a> for more configuration possibilities.
+</p>
+<p>
+Now start the server.  Normally synergy wants to run "in the background."
+It detaches from the terminal and doesn't have a visible window, effectively
+disappearing from view.  Until you're sure your configuration works, you
+should start synergy "in the foreground" using the <span class="code">-f</span>
+command line option.
+<pre>
+    synergys -f --config synergy.conf
+</pre>
+Check the reported messages for errors.  Use ctrl+c to stop synergy if
+it didn't stop automatically, correct any problems, and start it again.
+</p>
+
+<h4>Step 4 - Start the clients</h4>
+<p>
+Next you start the client on each computer that will share the server's
+keyboard and mouse.
+</p>
+<p>
+<b>Windows</b><br>
+On Windows run synergy by double clicking on the
+<span class="code">synergy</span> file.  This brings up a dialog.
+Configure the client:
+
+<ul>
+<li>Click the <span class="code">Client</span> radio button
+<li>Enter the server's computer name in <span class="code">Server Host Name</span>
+  <ul>
+  <li>This is not the server's screen name, unless you made that the
+      server's host name as recommended
+  </ul>
+<li>If the client's screen name is not the client's computer name:
+  <ul>
+  <li>Click <span class="code">Advanced...</span>
+  <li>Enter the client's screen name next to <span class="code">Screen Name</span>
+  <li>Click <span class="code">OK</span>
+  </ul>
+</ul>
+</p>
+<p>
+Now click <span class="code">Test</span>.
+</p>
+<p>
+<b>Unix or Mac OS X</b><br>
+To start a client, enter the following:
+<pre>
+    synergyc -f <span class="arg">server-host-name</span>
+</pre>
+where <span class="arg">server-host-name</span> is replaced by the host
+name of the computer running the synergy server.
+</p>
+<h4>Step 5 - Test</h4>
+<p>
+Clients should immediately report a successful connection or one or
+more error messages.  Here are the typical problems and possible
+solutions:
+<ul>
+<li>failed to open screen (X11 only)
+<p>
+      Check permission to open the X display;<br>
+      check that the DISPLAY environment variable is set;<br>
+      use the <span class="code">--display</span> command line option.
+</p>
+<li>already connected
+<p>
+      Check that the synergy client isn't already running.
+</p>
+<li>refused client
+<p>
+      Add the client to the server's configuration file.
+</p>
+<li>connection failed
+<p>
+      check that <span class="arg">server-host-name</span> is
+      correct;<br>the server cannot open the desired port, stop
+      the program using that port (24800) and restart the server.
+</p>
+</ul>
+If you get the error "<span class="code">Xlib: No protocol specified</span>"
+you're probably running synergy as root while logged in as another user.
+X11 may prevent this for security reasons.  Either run synergy as the same
+user that's logged in or (not recommended) use
+<nobr>"<span class="code">xhost +</span>"</nobr> to allow anyone to connect
+to the display.
+</p>
+<p>
+When successful you should be able to move the mouse off the appropriate
+edges of your server's screen and have it appear on a client screen.
+Try to move the mouse to each screen and check all the configured links.
+Check the mouse buttons and wheel and try the keyboard on each client.
+You can also cut-and-paste text, HTML, and images across computers (HTML
+and images are not supported on OS X yet).
+</p>
+<h4>Step 6 - Run</h4>
+<p>
+Once everything works correctly, stop all the clients then the server.
+Then start the server with the <span class="code">Start</span> button
+on Windows and without the <span class="code">-f</span> option on Unix
+and Mac OS X.  Finally start the clients similarly.
+</p>
+<p>
+You can also configure synergy to start automatically when your computer
+starts or when you log in.  See the <a href="autostart.html">autostart
+guide</a> for more information.
+</p>
+<h4><a name="options"></a>Command Line Options Guide</h4>
+<p>
+<b><a name="commonOptions"></a>Common Command Line Options</b><br>
+The following options are supported by <span class="code">synergys</span>
+and <span class="code">synergyc</span>.
+</p>
+<table>
+  <tr>
+    <td>&nbsp;</td><td><span class="code">-d,</span></td>
+    <td><span class="code">--debug <span class="arg">level</span></span></td>
+    <td>&nbsp;&nbsp;</td><td>use debugging level <span class="arg">level</span></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code"></span></td>
+    <td><span class="code">--daemon</span></td>
+    <td></td><td>run as a daemon (Unix) or background (Windows)</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code">&nbsp;</span></td>
+    <td><span class="code">--display <span class="arg">display</span></span></td>
+    <td>&nbsp;&nbsp;</td><td>connect to X server at <span class="arg">display</span> (X11 only)</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code">-f,</span></td>
+    <td><span class="code">--no-daemon</span></td>
+    <td></td><td>run in the foreground</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code">-n,</span></td>
+    <td><span class="code">--name <span class="arg">name</span></span></td>
+    <td></td><td>use <span class="arg">name</span> instead of the hostname</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code"></span></td>
+    <td><span class="code">--restart</span></td>
+    <td></td><td>automatically restart on failures</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code">-1,</span></td>
+    <td><span class="code">--no-restart</span></td>
+    <td></td><td>do not restart on failure</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code">-h,</span></td>
+    <td><span class="code">--help</span></td>
+    <td></td><td>print help and exit</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code"></span></td>
+    <td><span class="code">--version</span></td>
+    <td></td><td>print version information and exit</td>
+  </tr>
+</table>
+</p>
+<p>
+Debug levels are from highest to lowest:  <span class="code">FATAL</span>,
+<span class="code">ERROR</span>, <span class="code">WARNING</span>,
+<span class="code">NOTE</span>, <span class="code">INFO</span>,
+<span class="code">DEBUG</span>, <span class="code">DEBUG1</span>, and
+<span class="code">DEBUG2</span>.  Only messages at or above the given
+level are logged.  Messages are logged to a terminal window when
+running in the foreground.  Unix logs messages to syslog when running
+as a daemon.  The Windows NT family logs messages to the event log
+when running as a service.  The Windows 95 family shows FATAL log
+messages in a message box and others in a terminal window when running
+as a service.
+</p>
+<p>
+The <span class="code">--name</span> option lets the client or server
+use a name other than its hostname for its screen.  This name is used
+when checking the configuration.
+</p>
+<p>
+Neither the client nor server will automatically restart if an error
+occurs that is sure to happen every time.  For example, the server
+will exit immediately if it can't find itself in the configuration.
+On X11 both the client and server will also terminate if the
+connection to the X server is lost (usually because it died).
+</p>
+<p>
+<b>Server Command Line Options</b><br>
+<p>
+<pre>
+    synergys [options]
+</pre>
+The server accepts the <a href="#commonOptions">common options</a> and:
+</p>
+<p>
+<table>
+  <tr>
+    <td>&nbsp;</td><td><span class="code">-a,</span></td>
+    <td><span class="code">--address <span class="arg">address</span></span></td>
+    <td>&nbsp;&nbsp;</td><td>listen for connections on address <span class="arg">address</span></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td><td><span class="code">-c,</span></td>
+    <td><span class="code">--config <span class="arg">pathname</span></span></td>
+    <td>&nbsp;&nbsp;</td><td>read configuration from <span class="arg">pathname</span></td>
+  </tr>
+</table>
+</p>
+<p>
+<span class="arg">address</span> has one of the following forms:
+<pre>
+    <span class="arg">hostname</span>
+    :<span class="arg">port</span>
+    <span class="arg">hostname</span>:<span class="arg">port</span>
+</pre>
+<span class="arg">hostname</span> is a hostname or IP address of a network
+interface on the server system (e.g. <span class="code">somehost</span>
+or <span class="code">192.168.1.100</span>).  <span class="arg">port</span>
+is a port number from 1 to 65535.  <span class="arg">hostname</span> defaults to
+the system's hostname and <span class="arg">port</span> defaults to 24800.
+</p>
+<p>
+<b>Client Command Line Options</b><br>
+<p>
+<pre>
+    synergyc [options] <span class="arg">address</span>[:<span class="arg">port</span>]
+</pre>
+<span class="arg">address</span> is the hostname or IP address of
+the server and <span class="arg">port</span> is the optional network
+port on the server to connect to.  The client accepts the
+<a href="#commonOptions">common options</a>.
+</p>
+</body>
+</html>

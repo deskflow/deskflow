@@ -1,0 +1,468 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+	<title>Synergy Autostart Guide</title>
+</head>
+<body class="main">
+<h3>Starting synergy automatically</h3>
+<p>
+You can configure synergy to start automatically when the computer
+starts or when you log in.  The steps to do that are different on
+each platform.  Note that changing these configurations doesn't
+actually start or stop synergy.  The changes take effect the next
+time you start your computer or log in.
+</p>
+
+<h4>Windows</h4>
+<p>
+Start synergy and click the <span class="code">Configure...</span> button
+by the text <span class="code">Automatic Startup</span>.  The
+<span class="code">Auto Start</span> dialog will pop up.
+If an error occurs then correct the problem and click
+<span class="code">Configure</span> again.
+</p>
+<p>
+On the <span class="code">Auto Start</span> dialog you'll configure
+synergy to start or not start automatically when the computer starts
+or when you log in.  You need Administrator access rights to start
+synergy automatically when the computer starts.  The dialog will let
+you know if you have sufficient permission.
+</p>
+<p>
+If synergy is already configured to automatically start then there
+will be two <span class="code">Uninstall</span> buttons, at most one
+of which is enabled.  Click the enabled button, if any, to tell
+synergy to not start automatically.
+</p>
+<p>
+If synergy is not configured to start automatically then there will
+be two <span class="code">Install</span> buttons.  If you have
+sufficient permission to have synergy start automatically when the
+computer does then the <span class="code">Install</span> button in the
+<span class="code">When Computer Starts</span> box will be enabled.
+Click it to have synergy start for all users when the computer starts.
+In this case, synergy will be available during the login screen.
+Otherwise, click the <span class="code">Install</span> button in the
+<span class="code">When You Log In</span> box to have synergy
+automatically start when you log in.
+</p>
+
+<h4>Unix</h4>
+<p>
+Synergy requires an X server.  That means a server must be
+running and synergy must be authorized to connect to that server.
+It's best to have the display manager start synergy.  You'll need
+the necessary (probably root) permission to modify the display
+manager configuration files.  If you don't have that permission
+you can start synergy after logging in via the
+<span class="code">.xsession</span> file.
+</p>
+<p>
+Typically, you need to edit three script files.  The first file
+will start synergy before a user logs in, the second will kill
+that copy of synergy, and the third will start it again after
+the user logs in.
+</p>
+<p>
+The contents of the scripts varies greatly between systems so
+there's no one definite place where you should insert your edits.
+However, these scripts often exit before reaching the bottom so
+put the edits near the top of the script.
+</p>
+<p>
+The location and names of these files depend on the operating
+system and display manager you're using.  A good guess for the
+location is <span class="code">/etc/X11</span>.  Typical file names
+are:
+</p>
+<p class="code">
+<table>
+<tr><td>&nbsp;&nbsp;</td>  <td>&nbsp;&nbsp;</td> <td>xdm</td> <td>&nbsp;&nbsp;</td> <td>gdm</td></tr>
+<tr><td>1</td> <td></td> <td>xdm/Xsetup</td>   <td></td> <td>gdm/Init/Default (*)</td></tr>
+<tr><td>2</td> <td></td> <td>xdm/Xstartup</td> <td></td> <td>gdm/PostLogin/Default (*)</td></tr>
+<tr><td>3</td> <td></td> <td>xdm/Xsession</td> <td></td> <td>gdm/Sessions/Default (*, **)</td></tr>
+</table>
+</p>
+<p>
+*) The <span class="code">Default</span> file is used if no other
+suitable file is found.  <span class="code">gdm</span> will try
+<span class="arg">displayname</span> (e.g. <span class="code">:0</span>)
+and <span class="arg">hostname</span> (e.g. <span class="code">somehost</span>),
+in that order, before and instead of <span class="code">Default</span>.
+<br>
+**) gdm may use <span class="code">gdm/Xsession</span>,
+<span class="code">xdm/Xsession</span> or
+<span class="code">dm/Xsession</span> if
+<span class="code">gdm/Sessions/Default</span> doesn't exist.
+</p>
+<p>
+For a synergy client, add the following to the first file:
+<span class="codeblock">
+  /usr/bin/killall synergyc
+  sleep 1
+  /usr/bin/synergyc [&lt;options&gt;] <span class="arg">synergy-server-hostname</span>
+</span>
+Of course, the path to synergyc depends on where you installed it
+so adjust as necessary.
+</p>
+<p>
+Add to the second file:
+<span class="codeblock">
+  /usr/bin/killall synergyc
+  sleep 1
+</span>
+</p>
+<p>
+And to the third file:
+<span class="codeblock">
+  /usr/bin/killall synergyc
+  sleep 1
+  /usr/bin/synergyc <span class="arg">[&lt;options&gt;]</span> <span class="arg">synergy-server-hostname</span>
+</span>
+Note that <a href="running.html#options"><span class="arg">&lt;options&gt;</span></a>
+must not include
+<span class="code">-f</span> or <span class="code">--no-daemon</span> or
+the script will never exit and you won't be able to log in.
+</p>
+<p>
+The changes are the same for the synergy server except replace
+<span class="code">synergyc</span> with <span class="code">synergys</span>
+and use the appropriate synergys <a href="running.html#options">command
+line options</a>.  Note that the
+first script is run as root so synergys will look for the configuration
+file in root's home directory then in <span class="code">/etc</span>.
+Make sure it exists in one of those places or use the
+<span class="code">--config <span class="arg">config-pathname</span></span>
+option to specify its location.
+</p>
+<p>
+Note that some display managers (xdm and kdm, but not gdm) grab
+the keyboard and do not release it until the user logs in for
+security reasons.  This prevents a synergy server from sharing
+the mouse and keyboard until the user logs in.  It doesn't
+prevent a synergy client from synthesizing mouse and keyboard
+input, though.
+</p>
+<p>
+If you're configuring synergy to start only after you log in then edit
+your <span class="code">.xsession</span> file.  Add just what you
+would add to the third file above.
+</p>
+
+<h4>Mac OS X</h4>
+<p>
+[By Tor Slettnes]
+</p>
+<p>
+There are three different ways to automatically start Synergy
+(client or server) on Mac OS X:
+</p>
+<p>
+<ol>
+<li>
+  The first method involves creating a <span class="code">StartupItem</span>
+  at the system level, which is executed when the machine starts up
+  or shuts down.  This script will run in the background, and
+  relaunch synergy as needed.
+</p>
+<p>
+  <dl>
+ <dt><b>Pros:</b></dt>
+ <dd>
+ Synergy is persistent, so this allows for a multi-user
+ setup and interactive logins.
+ </dd>
+ <dt><b>Cons:</b></dt>
+ <dd>
+ The synergy process does not have access to the clipboard
+ of the logged-in user.
+ </dd>
+  </dl>
+</li>
+</p>
+<p>
+<li>
+  The second method will launch Synergy from the
+  <span class="code">LoginWindow</span> application, once a particular
+  user has logged in.
+</p>
+<p>
+  <dl>
+ <dt><b>Pros:</b></dt>
+ <dd>
+ The synergy process inherits the
+ <span class="code">$SECURITYSESSIONID</span> environment variable,
+    and therefore copy/paste works.
+ </dd>
+ <dt><b>Cons:</b></dt>
+ <dd>
+ Once the user logs out, synergy dies, and no remote
+ control is possible.
+ </dd>
+  </dl>
+</li>
+</p>
+<p>
+<li>
+  The third method is to launch a startup script from the
+  "Startup Items" tab under System Preferences -> Accounts.
+</p>
+<p>
+  <dl>
+ <dt><b>Pros:</b></dt>
+ <dd>
+ Does not require root (Administrator) access
+ </dd>
+ <dt><b>Cons:</b></dt>
+ <dd>
+ Once the user logs out, synergy dies, and no remote
+ control is possible.
+ </dd>
+  </dl>
+</li>
+</ol>
+</p>
+<p>
+The text below describes how to implement a Synergy client using
+the first two methods simultaneously.  This way, Synergy is
+always running, and the clipboard is available when someone is
+logged in.  A Mac OS X Synergy server setup will be quite similar. 
+</p>
+<p>
+<b>1. Create a System Level Startup Item</b>
+</p>
+<p>
+<ul>
+<li>
+  Open a <span class="code">Terminal</span> window, and become root:
+  <span class="userinput">
+  $ sudo su -
+  </span>
+</li>
+<li>
+  Create a folder for this item:
+  <span class="userinput">
+  # mkdir -p /Library/StartupItems/Synergy
+  </span>
+</li>
+<li>
+  In this folder, create a new script file by the same name as
+  the directory itself, <span class="code">Synergy</span>.  This script
+  should contain the following text:
+</p>
+<p>
+<span class="codeblock">
+#!/bin/sh
+. /etc/rc.common
+&nbsp;
+run=(/usr/local/bin/synergyc -n $(hostname -s) -1 -f <span class="arg">synergy-server</span>)
+&nbsp;
+KeepAlive ()
+{
+    proc=${1##*/}
+&nbsp;
+    while [ -x "$1" ]
+    do
+        if ! ps axco command | grep -q "^${proc}\$"
+        then
+           "$@"
+        fi
+&nbsp;
+        sleep 3
+    done
+}
+&nbsp;
+StartService ()
+{
+    ConsoleMessage "Starting Synergy"
+    KeepAlive "${run[@]}" &
+}
+&nbsp;
+StopService ()
+{
+    return 0
+}
+&nbsp;
+RestartService ()
+{
+    return 0
+}
+&nbsp;
+RunService "$1"
+</span>
+</p>
+<p>
+  However, replace <span class="arg">synergy-server</span> with the actual 
+  name or IP address of your Synergy server.
+</p>
+<p>
+  Note that this scripts takes care <em>not</em> to start
+  Synergy if another instance is currently running.  This
+  allows it to run in the background even when synergy is also
+  started independently, e.g. from the <span class="code">LoginWindow</span>
+  application as described below.
+</li>
+<li>
+  Make this script executable:
+  <span class="userinput">
+  # chmod 755 /Library/StartupItems/Synergy/Synergy
+  </span>
+</li>
+<li>
+  In the same folder, create a file named
+  <span class="code">StartupParameters.plist</span> containing:
+</p>
+<p>
+<span class="codeblock">
+{
+    Description      = "Synergy Client";
+    Provides         = ("synergy-client");
+    Requires         = "Network";
+    OrderPreference  = "None";
+}
+</span>
+</li>
+</ul>
+</p>
+<p>
+That's it!  If you want to test this setup, you can run the
+startup script as follow:
+</p>
+<p>
+<span class="userinput">
+  # /Library/StartupItems/Synergy/Synergy start
+</span>
+</p>
+<p>
+Any errors, as well as output from Synergy, will be shown in
+your terminal window.
+</p>
+<p>
+Next time you reboot, Synergy should start automatically.
+</p>
+<p>
+<b>2. Run Synergy When a User Logs In</b>
+</p>
+<p>
+Each time a user successfully logs in via the console, the
+<span class="code">LoginWindow</span> application creates a unique session
+cookie and stores it in the environment variable
+<span class="code">$SECURITYSESSIONID</span>.  For copy and paste operations
+to work, Synergy needs access to this environment variable.  In
+other words, Synergy needs to be launched (directly or
+indirectly) via the <span class="code">LoginWindow</span> application.
+</p>
+<p>
+However, in order to kill any synergy processes started at the
+system level (as described above), we need root access.  Thus,
+launching Synergy within the User's environment (e.g. via the
+Startup Items tab in System Preferences -> Accounts) is not an
+option that work in conjunction with the method above.
+</p>
+<p>
+Fortunately, the <span class="code">LoginWindow</span> application provides
+a "hook" for running a custom program (as root, with the username provided as
+the first and only argument) once a user has authenticated, but
+before the user is logged in.
+</p>
+<p>
+Unfortunately, only one such hook is available.  If you have
+already installed a Login Hook, you may need to add the text
+from below to your existing script, rather than creating a new
+one.
+</p>
+<p>
+<ul>
+<li>
+  Launch a Terminal window, and become root:
+  <span class="userinput">
+  $ sudo su -
+</li>
+</p>
+<p>
+<li>
+  Find out if a LoginHook already exists:
+  <span class="userinput">
+  # defaults read /Library/Preferences/com.apple.loginwindow LoginHook
+  </span>
+</p>
+<p>
+  This will either show the full path to a script or
+  executable file, or the text:
+  <span class="userinput">
+  The domain/default pair of (/Library/Preferences/com.apple.loginwindow, LoginHook) does not exist
+  </span>
+  In the former case, you need to modify your existing script,
+  and/or create a "superscript" which in turn calls your
+  existing script plus the one we will create here.
+</p>
+<p>
+  The rest of this text assumes that this item did not already
+  exist, and that we will create a new script.
+</li>
+</p>
+<p>
+<li>
+  Create a folder in which we will store our custom startup
+  script:
+  <span class="userinput">
+  # mkdir -p /Library/LoginWindow
+  </span>
+</li>
+</p>
+<p>
+<li>
+  In this folder, create a new script file (let's name it
+  <span class="code">LoginHook.sh</span>), containing the following text:
+</p>
+<p>
+<span class="codeblock">
+#!/bin/sh
+prog=(/usr/local/bin/synergyc -n $(hostname -s) --camp <span class="arg">ip-address-of-server</span>)
+&nbsp;
+### Stop any currently running Synergy client
+killall ${prog[0]##*/}
+&nbsp;
+### Start the new client
+exec "${prog[@]}"
+</span>
+</li>
+</p>
+<p>
+<li>
+  Create a login hook to call the script you just created:
+  <span class="userinput">
+  # defaults write /Library/Preferences/com.apple.loginwindow \
+    LoginHook /Library/LoginWindow/LoginHook.sh
+  </span>
+  You can instead type the above all on one line but remove the backslash.
+</li>
+</ul>
+</p>
+<p>
+When running the Synergy client, you may need to use the IP
+address of the Synergy server rather than its host name.
+Specifically, unless you have listed the server in your
+local <span class="code">/etc/hosts</span> file or in your local NetInfo
+database, name services (i.e. DNS) may not yet be available by the
+time you log in after power-up.  <span class="code">synergyc</span> will
+quit if it cannot resolve the server name.
+</p>
+<p>
+(This is not an issue with the previous method, because the
+<span class="code">StartupItems.plist</span> file specifies that this
+script should not be run until "network" is available).
+</p>
+<p>
+<b>3. Good Luck!</b>
+</p>
+<p>
+Remember to look in your system log on both your server and your
+client(s) for clues to any problems you may have
+(<span class="code">/var/log/system.log</span> on your OS X box, typically
+<span class="code">/var/log/syslog</span> on Linux boxes).
+</p>
+
+</body>
+</html>

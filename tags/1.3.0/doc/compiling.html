@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+ <meta HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+ <meta name="keywords" content="Virtual Screen, Open Source, Software" />
+ <meta name="description" content="Mouse and Keyboard Sharing" />
+ <link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+ <title>Building and Installing Synergy</title>
+</head>
+<body class="main">
+<p>
+</p><h3>Prerequisites for building</h3><p>
+</p><p>
+To build synergy from the sources you'll need the following:
+<ul>
+<li>Windows
+ <ul>
+ <li>VC++ 6.0 or up
+ </ul>
+</p><p>
+<li>Unix
+ <ul>
+ <li>gcc 2.95 or up
+ <li>X11R4 or up headers and libraries
+ </ul>
+</p><p>
+<li>Mac OS X
+ <ul>
+ <li>XCode;  or gcc 2.95 or up
+ <li>Carbon development headers and libraries
+ </ul>
+</ul>
+</p><p>
+</p><h3>Configuring the build</h3><p>
+</p><p>
+This step is not necessary when using VC++ or XCode.
+</p><p>
+To configure the build for your platform use the configure script:
+<pre>
+  ./configure
+</pre>
+For a list of options to configure use:
+<pre>
+  ./configure --help
+</pre>
+On Solaris you may need to use:
+<pre>
+  <nobr>./configure --x-includes=/usr/openwin/include --x-libraries=/usr/openwin/lib</nobr>
+</pre>
+so synergy can find the X11 includes and libraries.
+</p><p>
+</p><h3>Building</h3><p>
+<ul>
+<li>Windows
+</p><p>
+  Start VC++ and open <span class="code">synergy.dsw</span>.  Set the
+  active configuration (Build &gt; Set Active Configuration) to
+  <span class="code">All - Debug</span> or <span class="code">All -
+  Release</span> then build.  Binaries are built into
+  <span class="code">./debug</span> or <span class="code">./build</span>.
+</p><p>
+<li>Unix or Mac OS X without XCode
+</p><p>
+  Simply enter:
+  <pre>
+  make
+  </pre>
+  This will build the client and server and leave them in their
+  respective source directories.
+</p><p>
+<li>Mac OS X with XCode
+</p><p>
+  Start XCode and open the <span class="code">synergy.xcode</span>
+  project.  Build the <span class="code">all</span> project using
+  the <span class="code">Deployment</span> flavor.
+</p><p>
+</ul>
+</p><p>
+</p><h3>Installing</h3><p>
+<ul>
+<li>Windows
+</p><p>
+  You'll need <a target="_top" href="http://nsis.sourceforge.net/">NSIS</a>, the
+  Nullsoft Scriptable Install System.  Build <span class="code">All -
+  Release</span> then build <span class="code">Installer - Release</span>.
+  This creates <span class="code">SynergyInstaller.exe</span> in the
+  <span class="code">build</span> directory.  Run this to install synergy.
+</p><p>
+  Alternatively, you can simply copy the following files from the
+  <span class="code">debug</span> or <span class="code">build</span>
+  directory to a directory you choose (perhaps under the
+  <span class="code">Program Files</span> directory):
+  <ul class="code">
+  <li>synergy.exe
+  <li>synergyc.exe
+  <li>synergys.exe
+  <li>synrgyhk.dll
+  </ul>
+</p><p>
+<li>Unix or Mac OS X without XCode
+</p><p>
+  <pre>
+  make install
+  </pre>
+  will install the client and server into
+  <span class="code">/usr/local/bin</span> unless you
+  specified a different directory when you ran configure.
+</p><p>
+<li>Mac OS X with XCode
+</p><p>
+  Copy the following files from ./build to a convenient location:
+</p><p>
+  <ul class="code">
+  <li>synergyc
+  <li>synergys
+  </ul>
+</p>
+</body>
+
+</html>

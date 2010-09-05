@@ -1,0 +1,529 @@
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
+
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
+# Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+@SET_MAKE@
+
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2002 Chris Schoeneman
+# 
+# This package is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# found in the file COPYING that should have accompanied this file.
+# 
+# This package is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+top_builddir = ../..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_HEADER = $(INSTALL_DATA)
+transform = @program_transform_name@
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AMTAR = @AMTAR@
+AWK = @AWK@
+CXX = @CXX@
+DEPDIR = @DEPDIR@
+EXEEXT = @EXEEXT@
+HAVE_DOT = @HAVE_DOT@
+INET_ATON_LIBS = @INET_ATON_LIBS@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+NANOSLEEP_LIBS = @NANOSLEEP_LIBS@
+OBJEXT = @OBJEXT@
+PACKAGE = @PACKAGE@
+PTHREAD_CC = @PTHREAD_CC@
+PTHREAD_CFLAGS = @PTHREAD_CFLAGS@
+PTHREAD_LIBS = @PTHREAD_LIBS@
+RANLIB = @RANLIB@
+VERSION = @VERSION@
+X_CFLAGS = @X_CFLAGS@
+X_EXTRA_LIBS = @X_EXTRA_LIBS@
+X_LIBS = @X_LIBS@
+X_PRE_LIBS = @X_PRE_LIBS@
+am__include = @am__include@
+am__quote = @am__quote@
+install_sh = @install_sh@
+
+NULL = 
+
+COMMON_SOURCE_FILES = \
+	CArch.cpp					\
+	CArchDaemonNone.cpp			\
+	CArchDaemonNone.h			\
+	XArch.cpp					\
+	CArch.h						\
+	IArchConsole.h				\
+	IArchDaemon.h				\
+	IArchFile.h					\
+	IArchLog.h					\
+	IArchMultithread.h			\
+	IArchNetwork.h				\
+	IArchSleep.h				\
+	IArchString.h				\
+	IArchSystem.h				\
+	IArchTaskBar.h				\
+	IArchTaskBarReceiver.h		\
+	IArchTime.h					\
+	XArch.h						\
+	$(NULL)
+
+UNIX_SOURCE_FILES = \
+	CArchConsoleUnix.cpp		\
+	CArchDaemonUnix.cpp			\
+	CArchFileUnix.cpp			\
+	CArchLogUnix.cpp			\
+	CArchMultithreadPosix.cpp	\
+	CArchNetworkBSD.cpp			\
+	CArchSleepUnix.cpp			\
+	CArchStringUnix.cpp			\
+	CArchSystemUnix.cpp			\
+	CArchTaskBarXWindows.cpp	\
+	CArchTimeUnix.cpp			\
+	XArchUnix.cpp				\
+	CArchConsoleUnix.h			\
+	CArchDaemonUnix.h			\
+	CArchFileUnix.h				\
+	CArchLogUnix.h				\
+	CArchMultithreadPosix.h		\
+	CArchNetworkBSD.h			\
+	CArchSleepUnix.h			\
+	CArchStringUnix.h			\
+	CArchSystemUnix.h			\
+	CArchTaskBarXWindows.h		\
+	CArchTimeUnix.h				\
+	XArchUnix.h					\
+	$(NULL)
+
+WIN32_SOURCE_FILES = \
+	CArchConsoleWindows.cpp		\
+	CArchDaemonWindows.cpp		\
+	CArchFileWindows.cpp		\
+	CArchLogWindows.cpp			\
+	CArchMiscWindows.cpp		\
+	CArchMultithreadWindows.cpp	\
+	CArchNetworkWinsock.cpp		\
+	CArchSleepWindows.cpp		\
+	CArchStringWindows.cpp		\
+	CArchSystemWindows.cpp		\
+	CArchTaskBarWindows.cpp		\
+	CArchTimeWindows.cpp		\
+	XArchWindows.cpp			\
+	CArchConsoleWindows.h		\
+	CArchDaemonWindows.h		\
+	CArchFileWindows.h			\
+	CArchLogWindows.h			\
+	CArchMiscWindows.h			\
+	CArchMultithreadWindows.h	\
+	CArchNetworkWinsock.h		\
+	CArchSleepWindows.h			\
+	CArchStringWindows.h		\
+	CArchSystemWindows.h		\
+	CArchTaskBarWindows.h		\
+	CArchTimeWindows.h			\
+	XArchWindows.h				\
+	$(NULL)
+
+
+EXTRA_DIST = \
+	arch.dsp					\
+	CMultibyte.cpp				\
+	vsnprintf.cpp				\
+	$(UNIX_SOURCE_FILES)		\
+	$(WIN32_SOURCE_FILES)		\
+	$(NULL)
+
+
+MAINTAINERCLEANFILES = \
+	Makefile.in					\
+	$(NULL)
+
+
+noinst_LIBRARIES = libarch.a
+@UNIX_TRUE@libarch_a_SOURCES = \
+@UNIX_TRUE@	$(COMMON_SOURCE_FILES)		\
+@UNIX_TRUE@	$(UNIX_SOURCE_FILES)		\
+@UNIX_TRUE@	$(NULL)
+
+@WIN32_TRUE@libarch_a_SOURCES = \
+@WIN32_TRUE@	$(COMMON_SOURCE_FILES)		\
+@WIN32_TRUE@	$(WIN32_SOURCE_FILES)		\
+@WIN32_TRUE@	$(NULL)
+
+INCLUDES = \
+	-I$(top_srcdir)/lib/common	\
+	$(NULL)
+
+subdir = lib/arch
+mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
+CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_CLEAN_FILES =
+LIBRARIES = $(noinst_LIBRARIES)
+
+libarch_a_AR = $(AR) cru
+libarch_a_LIBADD =
+@UNIX_FALSE@@WIN32_TRUE@am_libarch_a_OBJECTS = CArch.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchDaemonNone.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	XArch.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchConsoleWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchDaemonWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchFileWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchLogWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchMiscWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchMultithreadWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchNetworkWinsock.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchSleepWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchStringWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchSystemWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchTaskBarWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchTimeWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	XArchWindows.$(OBJEXT)
+@UNIX_FALSE@@WIN32_FALSE@am_libarch_a_OBJECTS =
+@UNIX_TRUE@@WIN32_TRUE@am_libarch_a_OBJECTS = CArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchDaemonNone.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	XArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchConsoleUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchDaemonUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchFileUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchLogUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchMultithreadPosix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchNetworkBSD.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchSleepUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchStringUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchSystemUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchTaskBarXWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchTimeUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	XArchUnix.$(OBJEXT) CArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchDaemonNone.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	XArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchConsoleWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchDaemonWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchFileWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchLogWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchMiscWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchMultithreadWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchNetworkWinsock.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchSleepWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchStringWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchSystemWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchTaskBarWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchTimeWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	XArchWindows.$(OBJEXT)
+@UNIX_TRUE@@WIN32_FALSE@am_libarch_a_OBJECTS = CArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchDaemonNone.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	XArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchConsoleUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchDaemonUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchFileUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchLogUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchMultithreadPosix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchNetworkBSD.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchSleepUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchStringUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchSystemUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchTaskBarXWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchTimeUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	XArchUnix.$(OBJEXT)
+libarch_a_OBJECTS = $(am_libarch_a_OBJECTS)
+
+DEFS = @DEFS@
+DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+depcomp = $(SHELL) $(top_srcdir)/config/depcomp
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CArch.Po $(DEPDIR)/CArchConsoleUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchConsoleWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchDaemonNone.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchDaemonUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchDaemonWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchFileUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchFileWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchLogUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchLogWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchMiscWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchMultithreadPosix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchMultithreadWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchNetworkBSD.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchNetworkWinsock.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchSleepUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchSleepWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchStringUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchStringWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchSystemUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchSystemWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchTaskBarWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchTaskBarXWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchTimeUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchTimeWindows.Po $(DEPDIR)/XArch.Po \
+@AMDEP_TRUE@	$(DEPDIR)/XArchUnix.Po $(DEPDIR)/XArchWindows.Po
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
+CXXFLAGS = @CXXFLAGS@
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES = $(libarch_a_SOURCES)
+DIST_COMMON = Makefile.am Makefile.in
+SOURCES = $(libarch_a_SOURCES)
+
+all: all-am
+
+.SUFFIXES:
+.SUFFIXES: .cpp .o .obj
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  lib/arch/Makefile
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
+
+AR = ar
+
+clean-noinstLIBRARIES:
+	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
+libarch.a: $(libarch_a_OBJECTS) $(libarch_a_DEPENDENCIES) 
+	-rm -f libarch.a
+	$(libarch_a_AR) libarch.a $(libarch_a_OBJECTS) $(libarch_a_LIBADD)
+	$(RANLIB) libarch.a
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT) core *.core
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchConsoleUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchConsoleWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchDaemonNone.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchDaemonUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchDaemonWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchFileUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchFileWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchLogUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchLogWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchMiscWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchMultithreadPosix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchMultithreadWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchNetworkBSD.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchNetworkWinsock.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchSleepUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchSleepWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchStringUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchStringWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchSystemUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchSystemWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchTaskBarWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchTaskBarXWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchTimeUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchTimeWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XArch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XArchUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XArchWindows.Po@am__quote@
+
+distclean-depend:
+	-rm -rf $(DEPDIR)
+
+.cpp.o:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+.cpp.obj:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+CXXDEPMODE = @CXXDEPMODE@
+uninstall-info-am:
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	mkid -fID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
+
+GTAGS:
+	here=`CDPATH=: && cd $(top_builddir) && pwd` \
+	  && cd $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) $$here
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
+
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+top_distdir = ../..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+check-am: all-am
+check: check-am
+all-am: Makefile $(LIBRARIES)
+
+installdirs:
+
+install: install-am
+install-exec: install-exec-am
+install-data: install-data-am
+uninstall: uninstall-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+
+installcheck: installcheck-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+clean: clean-am
+
+clean-am: clean-generic clean-noinstLIBRARIES mostlyclean-am
+
+distclean: distclean-am
+
+distclean-am: clean-am distclean-compile distclean-depend \
+	distclean-generic distclean-tags
+
+dvi: dvi-am
+
+dvi-am:
+
+info: info-am
+
+info-am:
+
+install-data-am:
+
+install-exec-am:
+
+install-info: install-info-am
+
+install-man:
+
+installcheck-am:
+
+maintainer-clean: maintainer-clean-am
+
+maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-am
+
+mostlyclean-am: mostlyclean-compile mostlyclean-generic
+
+uninstall-am: uninstall-info-am
+
+.PHONY: GTAGS all all-am check check-am clean clean-generic \
+	clean-noinstLIBRARIES distclean distclean-compile \
+	distclean-depend distclean-generic distclean-tags distdir dvi \
+	dvi-am info info-am install install-am install-data \
+	install-data-am install-exec install-exec-am install-info \
+	install-info-am install-man install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic tags uninstall uninstall-am \
+	uninstall-info-am
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

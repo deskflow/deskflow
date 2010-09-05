@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+	<title>Synergy Developer's Guide</title>
+</head>
+<body class="main">
+<h3>Developer's Guide</h3>
+<p>
+Synergy is reasonably well commented so reading the source code
+should be enough to understand particular pieces.  See the
+<a href="PORTING"><span class="code">doc/PORTING</span></a>
+file in the synergy source code for more high-level information.
+</p>
+
+<h4>How it works</h4>
+<p>
+The theory behind synergy is simple:  the server captures mouse,
+keyboard, clipboard, and screen saver events and forwards them to
+one or more clients.  If input is directed to the server itself
+then the input is delivered normally.  In practice, however, many
+complications arise.
+</p>
+<p>
+First, different keyboard mappings can produce different characters.
+Synergy attempts to generate the same character on the client as
+would've been generated on the server, including appropriate modifier
+keys (like Control and Alt).  Non-character keys like Shift are also
+synthesized if possible.  Sometimes the client simply cannot create
+the character or doesn't have a corresponding non-character key and
+synergy must discard the event.  Note that synergy won't necessarily
+synthesize an event for the corresponding key on the client's
+keyboard.  For example, if the client or server can't distinguish
+between the left and right shift keys then synergy can't be certain
+to synthesize the shift on the same side of the keyboard as the user
+pressed.
+</p>
+<p>
+Second, different systems have different clipboards and clipboard
+formats.  The X window system has a system-wide selection and
+clipboard (and yet other buffers) while Microsoft Windows has only
+a system-wide clipboard.  Synergy has to choose which of these
+buffers correspond to one another.  Furthermore, different systems
+use different text encodings and line breaks.  Synergy mediates and
+converts between them.
+</p>
+<p>
+Finally, there are no standards across operating systems for some
+operations that synergy requires.  Among these are:  intercepting
+and synthesizing events;  enabling, disabling, starting and stopping
+the screen saver;  detecting when the screen saver starts;  reading
+and writing the clipboard(s).
+</p>
+<p>
+All this means that synergy must be customized to each operating
+system (or windowing system in the case of X windows).  Synergy
+breaks platform differences into two groups.  The first includes
+the mundane platform dependent things:  file system stuff,
+multithreading, network I/O, multi-byte and wide character
+conversion, time and sleeping, message display and logging, and
+running a process detached from a terminal.  This code lives in
+<span class="code">lib/arch</span>.
+</p>
+<p>
+The second includes screen and window management handling, user
+event handling, event synthesis, the clipboards, and the screen
+saver.  This code lives in <span class="code">lib/platform</span>.
+</p>
+<p>
+For both groups, there are particular classes or interfaces that
+must be inherited and implemented for each platform.  See the
+<a href="PORTING"><span class="code">doc/PORTING</span></a> file in
+the synergy source code for more information.
+</p>
+<h4>Auto-generated Documentation</h4>
+<p>
+Synergy can automatically generate documentation from the comments
+in the code using <a href="http://www.doxygen.org/">doxygen</a>.
+Use "<span class="code">make doxygen</span>" to build it yourself
+from the source code into the <span class="code">doc/doxygen/html</span>
+directory.
+</p>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+	<title>Synergy Tips and Tricks</title>
+</head>
+<body class="main">
+<h3>Tips and Tricks</h3>
+<ul>
+<li>
+<p>
+  Be aware that not all keystrokes can be handled by synergy.  In
+  particular, ctrl+alt+del is not handled.  However, synergy can
+  convert ctrl+alt+pause into ctrl+alt+del on the client side.
+  (Synergy must be installed as a service on the client for this to
+  work on the Windows NT family.)  Some non-standard keys may not
+  work, especially "multimedia" buttons, though several are
+  correctly handled.
+</p>
+
+<li>
+<p>
+  A screen can be its own neighbor.  That allows a screen to "wrap".
+  For example, if a configuration linked the left and right sides of
+  a screen to itself then moving off the left of the screen would put
+  the mouse at the right of the screen and vice versa.
+</p>
+
+<li>
+<p>
+  You cannot switch screens when the Scroll Lock is toggled on.  Use
+  this to prevent unintentional switching.
+</p>
+
+<li>
+<p>
+  Turn off mouse driven virtual desktop switching on X windows.  It
+  will interfere with synergy.  Use keyboard shortcuts instead.
+</p>
+
+<li>
+<p>
+  Synergy's screen saver synchronization works best with xscreensaver
+  under X windows.  Synergy works better with xscreensaver if it is
+  using one of the screen saver extensions.  Prior to xscreensaver 4.0
+  you can use <span class="code">-mit-extension</span>,
+  <span class="code">-sgi-extension</span>, or
+  <span class="code">-xidle-extension</span>
+  command line options to enable an extension (assuming your server has
+  the extension).  Starting with 4.0 you must enable the corresponding
+  option in your <span class="code">.xscreensaver</span> file.
+</p>
+
+<li>
+<p>
+  Synergy automatically converts newlines in clipboard text (Unix
+  expects <span class="code">\n</span> to end each line while Windows
+  expects <span class="code">\r\n</span>).
+</p>
+
+<li>
+<p>
+  Clients can be started and stopped at any time.  When a screen is
+  not connected, the mouse will jump over that screen as if the mouse
+  had moved all the way across it and jumped to the next screen.
+</p>
+
+<li>
+<p>
+  A client's keyboard and mouse are fully functional while synergy is
+  running.  You can use them in case synergy locks up.
+</p>
+
+<li>
+<p>
+  Strong authentication and encryption is available by using SSH.  See
+  the <a href="security.html">security guide</a> for more information.
+  Synergy does not otherwise provide secure communications and it should
+  not be used on or over untrusted networks.
+</p>
+
+<li>
+<p>
+  Synergy doesn't work if a 16-bit Windows application has the focus
+  on Windows 95/98/Me.  This is due to limitations of Windows.  One
+  commonly used 16-bit application is the command prompt
+  (<span class="code">command.exe</span>)
+  and this includes synergy's log window when running in test mode.
+</p>
+</ul>
+
+</body>
+</html>

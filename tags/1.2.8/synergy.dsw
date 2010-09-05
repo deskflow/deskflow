@@ -1,0 +1,332 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "all"=".\all.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name launcher
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "arch"=".\lib\arch\arch.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "base"=".\lib\base\base.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "client"=".\lib\client\client.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "common"=".\lib\common\common.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "exec"=".\cmd\exec.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name synergyc
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name synergys
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "installer"=".\DIST\NULLSOFT\installer.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "io"=".\lib\io\io.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "launcher"=".\cmd\launcher\launcher.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name common
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name arch
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name base
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name exec
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name io
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libsynergy
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name mt
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name net
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name platform
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name server
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "libsynergy"=".\lib\synergy\libsynergy.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "makehook"=".\lib\platform\makehook.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name synrgyhk
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "mt"=".\lib\mt\mt.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "net"=".\lib\net\net.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "platform"=".\lib\platform\platform.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "server"=".\lib\server\server.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "synergyc"=".\cmd\synergyc\synergyc.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name common
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name arch
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name base
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name io
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name mt
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name net
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libsynergy
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name platform
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name client
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "synergys"=".\cmd\synergys\synergys.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name common
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name arch
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name base
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name io
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name mt
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name net
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name libsynergy
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name platform
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name makehook
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name server
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "synrgyhk"=".\lib\platform\synrgyhk.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

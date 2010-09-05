@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+	<title>Synergy Autostart Guide</title>
+</head>
+<body class="main">
+<h3>Starting synergy automatically</h3>
+<p>
+You can configure synergy to start automatically when the computer
+starts or when you log in.  The steps to do that are different on
+each platform.  Note that changing these configurations doesn't
+actually start or stop synergy.  The changes take effect the next
+time you start your computer or log in.
+</p>
+
+<h4>Windows</h4>
+<p>
+Start synergy and click the <span class="code">Configure...</span> button
+by the text <span class="code">Automatic Startup</span>.  The
+<span class="code">Auto Start</span> dialog will pop up.
+If an error occurs then correct the problem and click
+<span class="code">Configure</span> again.
+</p>
+<p>
+On the <span class="code">Auto Start</span> dialog you'll configure
+synergy to start or not start automatically when the computer starts
+or when you log in.  You need Administrator access rights to start
+synergy automatically when the computer starts.  The dialog will let
+you know if you have sufficient permission.
+</p>
+<p>
+If synergy is already configured to automatically start then there
+will be two <span class="code">Uninstall</span> buttons, at most one
+of which is enabled.  Click the enabled button, if any, to tell
+synergy to not start automatically.
+</p>
+<p>
+If synergy is not configured to start automatically then there will
+be two <span class="code">Install</span> buttons.  If you have
+sufficient permission to have synergy start automatically when the
+computer does then the <span class="code">Install</span> button in the
+<span class="code">When Computer Starts</span> box will be enabled.
+Click it to have synergy start for all users when the computer starts.
+In this case, synergy will be available during the login screen.
+Otherwise, click the <span class="code">Install</span> button in the
+<span class="code">When You Log In</span> box to have synergy
+automatically start when you log in.
+</p>
+
+<h4>Unix</h4>
+<p>
+Synergy requires an X server.  That means a server must be
+running and synergy must be authorized to connect to that server.
+It's best to have the display manager start synergy.  You'll need
+the necessary (probably root) permission to modify the display
+manager configuration files.  If you don't have that permission
+you can start synergy after logging in via the
+<span class="code">.xsession</span> file.
+</p>
+<p>
+Typically, you need to edit three script files.  The first file
+will start synergy before a user logs in, the second will kill
+that copy of synergy, and the third will start it again after
+the user logs in.
+</p>
+<p>
+The contents of the scripts varies greatly between systems so
+there's no one definite place where you should insert your edits.
+However, these scripts often exit before reaching the bottom so
+put the edits near the top of the script.
+</p>
+<p>
+The location and names of these files depend on the operating
+system and display manager you're using.  A good guess for the
+location is <span class="code">/etc/X11</span>.  Typical file names
+are:
+</p>
+<p class="code">
+<table>
+<tr><td>&nbsp;&nbsp;</td>  <td>&nbsp;&nbsp;</td> <td>xdm</td> <td>&nbsp;&nbsp;</td> <td>gdm</td></tr>
+<tr><td>1</td> <td></td> <td>xdm/Xsetup</td>   <td></td> <td>gdm/Init/Default (*)</td></tr>
+<tr><td>2</td> <td></td> <td>xdm/Xstartup</td> <td></td> <td>gdm/PostLogin/Default (*)</td></tr>
+<tr><td>3</td> <td></td> <td>xdm/Xsession</td> <td></td> <td>gdm/Sessions/Default (*, **)</td></tr>
+</table>
+</p>
+<p>
+*) The <span class="code">Default</span> file is used if no other
+suitable file is found.  <span class="code">gdm</span> will try
+<span class="arg">displayname</span> (e.g. <span class="code">:0</span>)
+and <span class="arg">hostname</span> (e.g. <span class="code">somehost</span>),
+in that order, before and instead of <span class="code">Default</span>.
+<br>
+**) gdm may use <span class="code">gdm/Xsession</span>,
+<span class="code">xdm/Xsession</span> or
+<span class="code">dm/Xsession</span> if
+<span class="code">gdm/Sessions/Default</span> doesn't exist.
+</p>
+<p>
+For a synergy client, add the following to the first file:
+<pre>
+  /usr/bin/killall synergyc
+  sleep 1
+  /usr/bin/synergyc [&lt;options&gt;] <span class="arg">synergy-server-hostname</span>
+</pre>
+Of course, the path to synergyc depends on where you installed it
+so adjust as necessary.
+</p>
+<p>
+Add to the second file:
+<pre>
+  /usr/bin/killall synergyc
+  sleep 1
+</pre>
+</p>
+<p>
+And to the third file:
+<pre>
+  /usr/bin/killall synergyc
+  sleep 1
+  /usr/bin/synergyc <span class="arg">[&lt;options&gt;]</span> <span class="arg">synergy-server-hostname</span>
+</pre>
+Note that <a href="running.html#options"><span class="arg">&lt;options&gt;</span></a>
+must not include
+<span class="code">-f</span> or <span class="code">--no-daemon</span> or
+the script will never exit and you won't be able to log in.
+</p>
+<p>
+The changes are the same for the synergy server except replace
+<span class="code">synergyc</span> with <span class="code">synergys</span>
+and use the appropriate synergys <a href="running.html#options">command
+line options</a>.  Note that the
+first script is run as root so synergys will look for the configuration
+file in root's home directory then in <span class="code">/etc</span>.
+Make sure it exists in one of those places or use the
+<span class="code">--config <span class="arg">config-pathname</span></span>
+option to specify its location.
+</p>
+<p>
+Note that some display managers (xdm and kdm, but not gdm) grab
+the keyboard and do not release it until the user logs in for
+security reasons.  This prevents a synergy server from sharing
+the mouse and keyboard until the user logs in.  It doesn't
+prevent a synergy client from synthesizing mouse and keyboard
+input, though.
+</p>
+<p>
+If you're configuring synergy to start only after you log in then edit
+your <span class="code">.xsession</span> file.  Add just what you
+would add to the third file above.
+</p>
+
+<h4>Mac OS X</h4>
+<p>
+TBD
+</p>
+
+</body>
+</html>
