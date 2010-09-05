@@ -28,7 +28,9 @@ typedef UInt32			KeyID;
 //! Key Code
 /*!
 Type to hold a physical key identifier.  That is, it identifies a
-physical key on the keyboard.
+physical key on the keyboard.  KeyButton 0 is reserved to be an
+invalid key;  platforms that use 0 as a physical key identifier
+will have to remap that value to some arbitrary unused id.
 */
 typedef UInt16			KeyButton;
 
@@ -86,6 +88,7 @@ static const KeyID		kKeyPause		= 0xEF13;	/* Pause, hold */
 static const KeyID		kKeyScrollLock	= 0xEF14;
 static const KeyID		kKeySysReq		= 0xEF15;
 static const KeyID		kKeyEscape		= 0xEF1B;
+static const KeyID		kKeyZenkaku		= 0xEF2A;	/* Zenkaku/Hankaku */
 static const KeyID		kKeyDelete		= 0xEFFF;	/* Delete, rubout */
 
 // multi-key character composition
@@ -213,6 +216,8 @@ static const KeyID		kKeyHyper_R		= 0xEFEE;	/* Right hyper */
 static const KeyID		kKeyLeftTab		= 0xEE20;
 
 // extended keys
+static const KeyID		kKeyEject			= 0xE001;
+static const KeyID		kKeySleep			= 0xE05F;
 static const KeyID		kKeyWWWBack			= 0xE0A6;
 static const KeyID		kKeyWWWForward		= 0xE0A7;
 static const KeyID		kKeyWWWRefresh		= 0xE0A8;

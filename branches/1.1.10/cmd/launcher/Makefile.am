@@ -12,25 +12,56 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
-EXTRA_DIST =				\
+MSWINDOWS_SOURCE_FILES =	\
 	CAdvancedOptions.cpp	\
-	CAdvancedOptions.h		\
 	CAutoStart.cpp			\
-	CAutoStart.h			\
 	CGlobalOptions.cpp		\
-	CGlobalOptions.h		\
 	LaunchUtil.cpp			\
-	LaunchUtil.h			\
 	launcher.cpp			\
-	launcher.dsp			\
-	launcher.rc				\
+	CAdvancedOptions.h		\
+	CAutoStart.h			\
+	CGlobalOptions.h		\
+	LaunchUtil.h			\
 	resource.h				\
-	synergy.ico				\
+	launcher.rc				\
 	$(NULL)
 
-MAINTAINERCLEANFILES =		\
-	Makefile.in				\
+EXTRA_DIST =					\
+	launcher.dsp				\
+	synergy.ico					\
+	$(MSWINDOWS_SOURCE_FILES)	\
+	$(NULL)
+
+MAINTAINERCLEANFILES =			\
+	Makefile.in					\
+	$(NULL)
+
+if MSWINDOWS
+bin_PROGRAMS = synergy
+synergy_SOURCES =				\
+	$(MSWINDOWS_SOURCE_FILES)	\
+	$(NULL)
+endif
+synergy_LDADD =									\
+	$(top_builddir)/lib/server/libserver.a		\
+	$(top_builddir)/lib/platform/libplatform.a	\
+	$(top_builddir)/lib/synergy/libsynergy.a	\
+	$(top_builddir)/lib/net/libnet.a			\
+	$(top_builddir)/lib/io/libio.a				\
+	$(top_builddir)/lib/mt/libmt.a				\
+	$(top_builddir)/lib/base/libbase.a			\
+	$(top_builddir)/lib/common/libcommon.a		\
+	$(top_builddir)/lib/arch/libarch.a			\
+	$(NULL)
+INCLUDES =								\
+	-I$(top_srcdir)/lib/common			\
+	-I$(top_srcdir)/lib/arch			\
+	-I$(top_srcdir)/lib/base 			\
+	-I$(top_srcdir)/lib/mt	 			\
+	-I$(top_srcdir)/lib/io	 			\
+	-I$(top_srcdir)/lib/net	 			\
+	-I$(top_srcdir)/lib/synergy			\
+	-I$(top_srcdir)/lib/platform 		\
+	-I$(top_srcdir)/lib/server 			\
 	$(NULL)

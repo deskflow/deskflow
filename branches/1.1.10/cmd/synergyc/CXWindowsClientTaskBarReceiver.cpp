@@ -19,7 +19,8 @@
 // CXWindowsClientTaskBarReceiver
 //
 
-CXWindowsClientTaskBarReceiver::CXWindowsClientTaskBarReceiver()
+CXWindowsClientTaskBarReceiver::CXWindowsClientTaskBarReceiver(
+				const CBufferedLogOutputter*)
 {
 	// add ourself to the task bar
 	ARCH->addReceiver(this);
@@ -52,10 +53,4 @@ const IArchTaskBarReceiver::Icon
 CXWindowsClientTaskBarReceiver::getIcon() const
 {
 	return NULL;
-}
-
-void
-CXWindowsClientTaskBarReceiver::onStatusChanged()
-{
-	// do nothing
 }

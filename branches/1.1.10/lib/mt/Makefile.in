@@ -94,8 +94,6 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST = \
 	mt.dsp					\
@@ -109,25 +107,23 @@ MAINTAINERCLEANFILES = \
 
 noinst_LIBRARIES = libmt.a
 libmt_a_SOURCES = \
+	CCondVar.cpp			\
 	CLock.cpp				\
 	CMutex.cpp				\
-	CCondVar.cpp			\
 	CThread.cpp				\
-	CTimerThread.cpp		\
 	XMT.cpp					\
 	CCondVar.h				\
 	CLock.h					\
 	CMutex.h				\
 	CThread.h				\
-	CTimerThread.h			\
 	XMT.h					\
 	XThread.h				\
 	$(NULL)
 
 INCLUDES = \
-	-I$(VDEPTH)/lib/common	\
-	-I$(VDEPTH)/lib/arch	\
-	-I$(VDEPTH)/lib/base 	\
+	-I$(top_srcdir)/lib/common	\
+	-I$(top_srcdir)/lib/arch	\
+	-I$(top_srcdir)/lib/base 	\
 	$(NULL)
 
 subdir = lib/mt
@@ -138,8 +134,8 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libmt_a_AR = $(AR) cru
 libmt_a_LIBADD =
-am_libmt_a_OBJECTS = CLock.$(OBJEXT) CMutex.$(OBJEXT) CCondVar.$(OBJEXT) \
-	CThread.$(OBJEXT) CTimerThread.$(OBJEXT) XMT.$(OBJEXT)
+am_libmt_a_OBJECTS = CCondVar.$(OBJEXT) CLock.$(OBJEXT) CMutex.$(OBJEXT) \
+	CThread.$(OBJEXT) XMT.$(OBJEXT)
 libmt_a_OBJECTS = $(am_libmt_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -150,7 +146,7 @@ LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CCondVar.Po $(DEPDIR)/CLock.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CMutex.Po $(DEPDIR)/CThread.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CTimerThread.Po $(DEPDIR)/XMT.Po
+@AMDEP_TRUE@	$(DEPDIR)/XMT.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -197,7 +193,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CLock.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMutex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CThread.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CTimerThread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XMT.Po@am__quote@
 
 distclean-depend:

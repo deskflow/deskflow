@@ -14,10 +14,8 @@
 
 #include "CArchNetworkBSD.h"
 #include "CArch.h"
+#include "CArchMultithreadPosix.h"
 #include "XArchUnix.h"
-#if HAVE_SYS_TYPES_H
-#	include <sys/types.h>
-#endif
 #if HAVE_UNISTD_H
 #	include <unistd.h>
 #endif
@@ -29,9 +27,13 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <string.h>
 
 #if HAVE_POLL
-#	include <sys/poll.h>
+#	include <poll.h>
+#	if HAVE_ALLOCA_H
+#		include <alloca.h>
+#	endif
 #else
 #	if HAVE_SYS_SELECT_H
 #		include <sys/select.h>
@@ -39,6 +41,17 @@
 #	if HAVE_SYS_TIME_H
 #		include <sys/time.h>
 #	endif
+#endif
+
+#if !HAVE_INET_ATON
+#	include <stdio.h>
+#endif
+
+#if HAVE_ALLOCA_H
+#	define freea(x_)
+#else
+#	define alloca(x_) malloc(x_)
+#	define freea(x_) free(x_)
 #endif
 
 static const int s_family[] = {
@@ -49,6 +62,29 @@ static const int s_type[] = {
 	SOCK_DGRAM,
 	SOCK_STREAM
 };
+
+#if !HAVE_INET_ATON
+// parse dotted quad addresses.  we don't bother with the weird BSD'ism
+// of handling octal and hex and partial forms.
+static
+in_addr_t
+inet_aton(const char* cp, struct in_addr* inp)
+{
+	unsigned int a, b, c, d;
+	if (sscanf(cp, "%u.%u.%u.%u", &a, &b, &c, &d) != 4) {
+		return 0;
+	}
+	if (a >= 256 || b >= 256 || c >= 256 || d >= 256) {
+		return 0;
+	}
+	unsigned char* incp = (unsigned char*)inp;
+	incp[0] = (unsigned char)(a & 0xffu);
+	incp[1] = (unsigned char)(b & 0xffu);
+	incp[2] = (unsigned char)(c & 0xffu);
+	incp[3] = (unsigned char)(d & 0xffu);
+	return inp->s_addr;
+}
+#endif
 
 //
 // CArchNetworkBSD
@@ -68,18 +104,23 @@ CArchNetworkBSD::~CArchNetworkBSD()
 CArchSocket
 CArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
 {
-	// allocate socket object
-	CArchSocketImpl* newSocket = new CArchSocketImpl;
-
 	// create socket
 	int fd = socket(s_family[family], s_type[type], 0);
 	if (fd == -1) {
 		throwError(errno);
 	}
+	try {
+		setBlockingOnSocket(fd, false);
+	}
+	catch (...) {
+		close(fd);
+		throw;
+	}
 
-	newSocket->m_fd        = fd;
-	newSocket->m_connected = false;
-	newSocket->m_refCount  = 1;
+	// allocate socket object
+	CArchSocketImpl* newSocket = new CArchSocketImpl;
+	newSocket->m_fd            = fd;
+	newSocket->m_refCount      = 1;
 	return newSocket;
 }
 
@@ -107,23 +148,14 @@ CArchNetworkBSD::closeSocket(CArchSocket s)
 
 	// close the socket if necessary
 	if (doClose) {
-		do {
-			if (close(s->m_fd) == -1) {
-				// close failed
-				int err = errno;
-				if (err == EINTR) {
-					// interrupted system call
-					ARCH->testCancelThread();
-					continue;
-				}
-
-				// restore the last ref and throw
-				ARCH->lockMutex(m_mutex);
-				++s->m_refCount;
-				ARCH->unlockMutex(m_mutex);
-				throwError(err);
-			}
-		} while (false);
+		if (close(s->m_fd) == -1) {
+			// close failed.  restore the last ref and throw.
+			int err = errno;
+			ARCH->lockMutex(m_mutex);
+			++s->m_refCount;
+			ARCH->unlockMutex(m_mutex);
+			throwError(err);
+		}
 		delete s;
 	}
 }
@@ -190,32 +222,32 @@ CArchNetworkBSD::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 	*addr                      = new CArchNetAddressImpl;
 
 	// accept on socket
-	int fd;
-	do {
-		fd = accept(s->m_fd, &(*addr)->m_addr, &(*addr)->m_len);
-		if (fd == -1) {
-			int err = errno;
-			if (err == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			if (err == ECONNABORTED) {
-				// connection was aborted;  try again
-				ARCH->testCancelThread();
-				continue;
-			}
-			delete newSocket;
-			delete *addr;
-			*addr = NULL;
-			throwError(err);
+	int fd = accept(s->m_fd, &(*addr)->m_addr, &(*addr)->m_len);
+	if (fd == -1) {
+		int err = errno;
+		delete newSocket;
+		delete *addr;
+		*addr = NULL;
+		if (err == EAGAIN) {
+			return NULL;
 		}
-	} while (false);
+		throwError(err);
+	}
+
+	try {
+		setBlockingOnSocket(fd, false);
+	}
+	catch (...) {
+		close(fd);
+		delete newSocket;
+		delete *addr;
+		*addr = NULL;
+		throw;
+	}
 
 	// initialize socket
-	newSocket->m_fd        = fd;
-	newSocket->m_connected = true;
-	newSocket->m_refCount  = 1;
+	newSocket->m_fd       = fd;
+	newSocket->m_refCount = 1;
 
 	// discard address if not requested
 	if (addr == &dummy) {
@@ -225,37 +257,22 @@ CArchNetworkBSD::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 	return newSocket;
 }
 
-void
+bool
 CArchNetworkBSD::connectSocket(CArchSocket s, CArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
 
-	do {
-		if (connect(s->m_fd, &addr->m_addr, addr->m_len) == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-
-			if (errno == EISCONN) {
-				// already connected
-				break;
-			}
-
-			if (errno == EAGAIN) {
-				// connecting
-				throw XArchNetworkConnecting(new XArchEvalUnix(errno));
-			}
-
-			throwError(errno);
+	if (connect(s->m_fd, &addr->m_addr, addr->m_len) == -1) {
+		if (errno == EISCONN) {
+			return true;
 		}
-	} while (false);
-
-	ARCH->lockMutex(m_mutex);
-	s->m_connected = true;
-	ARCH->unlockMutex(m_mutex);
+		if (errno == EINPROGRESS) {
+			return false;
+		}
+		throwError(errno);
+	}
+	return true;
 }
 
 #if HAVE_POLL
@@ -274,7 +291,8 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 	}
 
 	// allocate space for translated query
-	struct pollfd* pfd = new struct pollfd[num];
+	struct pollfd* pfd = reinterpret_cast<struct pollfd*>(
+								alloca((1 + num) * sizeof(struct pollfd)));
 
 	// translate query
 	for (int i = 0; i < num; ++i) {
@@ -287,21 +305,45 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 			pfd[i].events |= POLLOUT;
 		}
 	}
+	int n = num;
+
+	// add the unblock pipe
+	const int* unblockPipe = getUnblockPipe();
+	if (unblockPipe != NULL) {
+		pfd[n].fd     = unblockPipe[0];
+		pfd[n].events = POLLIN;
+		++n;
+	}
+
+	// prepare timeout
+	int t = (timeout < 0.0) ? -1 : static_cast<int>(1000.0 * timeout);
 
 	// do the poll
-	int n;
-	do {
-		n = poll(pfd, num, static_cast<int>(1000.0 * timeout));
-		if (n == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			delete[] pfd;
-			throwError(errno);
+	n = poll(pfd, n, t);
+
+	// reset the unblock pipe
+	if (unblockPipe != NULL && (pfd[num].revents & POLLIN) != 0) {
+		// the unblock event was signalled.  flush the pipe.
+		char dummy[100];
+		do {
+			read(unblockPipe[0], dummy, sizeof(dummy));
+		} while (errno != EAGAIN);
+
+		// don't count this unblock pipe in return value
+		--n;
+	}
+
+	// handle results
+	if (n == -1) {
+		if (errno == EINTR) {
+			// interrupted system call
+			ARCH->testCancelThread();
+			freea(pfd);
+			return 0;
 		}
-	} while (false);
+		freea(pfd);
+		throwError(errno);
+	}
 
 	// translate back
 	for (int i = 0; i < num; ++i) {
@@ -320,9 +362,7 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 		}
 	}
 
-	// done with translated query
-	delete[] pfd;
-
+	freea(pfd);
 	return n;
 }
 
@@ -333,126 +373,147 @@ CArchNetworkBSD::pollSocket(CPollEntry pe[], int num, double timeout)
 {
 	int i, n;
 
-	do {
-		// prepare sets for select
-		n = 0;
-		fd_set readSet, writeSet, errSet;
-		fd_set* readSetP  = NULL;
-		fd_set* writeSetP = NULL;
-		fd_set* errSetP   = NULL;
-		FD_ZERO(&readSet);
-		FD_ZERO(&writeSet);
-		FD_ZERO(&errSet);
-		for (i = 0; i < num; ++i) {
-			// reset return flags
-			pe[i].m_revents = 0;
+	// prepare sets for select
+	n = 0;
+	fd_set readSet, writeSet, errSet;
+	fd_set* readSetP  = NULL;
+	fd_set* writeSetP = NULL;
+	fd_set* errSetP   = NULL;
+	FD_ZERO(&readSet);
+	FD_ZERO(&writeSet);
+	FD_ZERO(&errSet);
+	for (i = 0; i < num; ++i) {
+		// reset return flags
+		pe[i].m_revents = 0;
 
-			// set invalid flag if socket is bogus then go to next socket
-			if (pe[i].m_socket == NULL) {
-				pe[i].m_revents |= kPOLLNVAL;
-				continue;
-			}
-
-			int fdi = pe[i].m_socket->m_fd;
-			if (pe[i].m_events & kPOLLIN) {
-				FD_SET(pe[i].m_socket->m_fd, &readSet);
-				readSetP = &readSet;
-				if (fdi > n) {
-					n = fdi;
-				}
-			}
-			if (pe[i].m_events & kPOLLOUT) {
-				FD_SET(pe[i].m_socket->m_fd, &writeSet);
-				writeSetP = &writeSet;
-				if (fdi > n) {
-					n = fdi;
-				}
-			}
-			if (true) {
-				FD_SET(pe[i].m_socket->m_fd, &errSet);
-				errSetP = &errSet;
-				if (fdi > n) {
-					n = fdi;
-				}
-			}
+		// set invalid flag if socket is bogus then go to next socket
+		if (pe[i].m_socket == NULL) {
+			pe[i].m_revents |= kPOLLNVAL;
+			continue;
 		}
 
-		// if there are no sockets then don't block forever
-		if (n == 0 && timeout < 0.0) {
-			timeout = 0.0;
-		}
-
-		// prepare timeout for select
-		struct timeval timeout2;
-		struct timeval* timeout2P;
-		if (timeout < 0) {
-			timeout2P = NULL;
-		}
-		else {
-			timeout2P = &timeout2;
-			timeout2.tv_sec  = static_cast<int>(timeout);
-			timeout2.tv_usec = static_cast<int>(1.0e+6 *
-											(timeout - timeout2.tv_sec));
-		}
-
-		// do the select
-		n = select((SELECT_TYPE_ARG1)  n + 1,
-					SELECT_TYPE_ARG234 readSetP,
-					SELECT_TYPE_ARG234 writeSetP,
-					SELECT_TYPE_ARG234 errSetP,
-					SELECT_TYPE_ARG5   timeout2P);
-
-		// handle results
-		if (n == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			throwError(errno);
-		}
-		n = 0;
-		for (i = 0; i < num; ++i) {
-			if (pe[i].m_socket != NULL) {
-				if (FD_ISSET(pe[i].m_socket->m_fd, &readSet)) {
-					pe[i].m_revents |= kPOLLIN;
-				}
-				if (FD_ISSET(pe[i].m_socket->m_fd, &writeSet)) {
-					pe[i].m_revents |= kPOLLOUT;
-				}
-				if (FD_ISSET(pe[i].m_socket->m_fd, &errSet)) {
-					pe[i].m_revents |= kPOLLERR;
-				}
-			}
-			if (pe[i].m_revents != 0) {
-				++n;
+		int fdi = pe[i].m_socket->m_fd;
+		if (pe[i].m_events & kPOLLIN) {
+			FD_SET(pe[i].m_socket->m_fd, &readSet);
+			readSetP = &readSet;
+			if (fdi > n) {
+				n = fdi;
 			}
 		}
-	} while (false);
+		if (pe[i].m_events & kPOLLOUT) {
+			FD_SET(pe[i].m_socket->m_fd, &writeSet);
+			writeSetP = &writeSet;
+			if (fdi > n) {
+				n = fdi;
+			}
+		}
+		if (true) {
+			FD_SET(pe[i].m_socket->m_fd, &errSet);
+			errSetP = &errSet;
+			if (fdi > n) {
+				n = fdi;
+			}
+		}
+	}
+
+	// add the unblock pipe
+	const int* unblockPipe = getUnblockPipe();
+	if (unblockPipe != NULL) {
+		FD_SET(unblockPipe[0], &readSet);
+		readSetP = &readSet;
+		if (unblockPipe[0] > n) {
+			n = unblockPipe[0];
+		}
+	}
+
+	// if there are no sockets then don't block forever
+	if (n == 0 && timeout < 0.0) {
+		timeout = 0.0;
+	}
+
+	// prepare timeout for select
+	struct timeval timeout2;
+	struct timeval* timeout2P;
+	if (timeout < 0.0) {
+		timeout2P = NULL;
+	}
+	else {
+		timeout2P = &timeout2;
+		timeout2.tv_sec  = static_cast<int>(timeout);
+		timeout2.tv_usec = static_cast<int>(1.0e+6 *
+										(timeout - timeout2.tv_sec));
+	}
+
+	// do the select
+	n = select((SELECT_TYPE_ARG1)  n + 1,
+				SELECT_TYPE_ARG234 readSetP,
+				SELECT_TYPE_ARG234 writeSetP,
+				SELECT_TYPE_ARG234 errSetP,
+				SELECT_TYPE_ARG5   timeout2P);
+
+	// reset the unblock pipe
+	if (unblockPipe != NULL && FD_ISSET(unblockPipe[0], &readSet)) {
+		// the unblock event was signalled.  flush the pipe.
+		char dummy[100];
+		do {
+			read(unblockPipe[0], dummy, sizeof(dummy));
+		} while (errno != EAGAIN);
+	}
+
+	// handle results
+	if (n == -1) {
+		if (errno == EINTR) {
+			// interrupted system call
+			ARCH->testCancelThread();
+			return 0;
+		}
+		throwError(errno);
+	}
+	n = 0;
+	for (i = 0; i < num; ++i) {
+		if (pe[i].m_socket != NULL) {
+			if (FD_ISSET(pe[i].m_socket->m_fd, &readSet)) {
+				pe[i].m_revents |= kPOLLIN;
+			}
+			if (FD_ISSET(pe[i].m_socket->m_fd, &writeSet)) {
+				pe[i].m_revents |= kPOLLOUT;
+			}
+			if (FD_ISSET(pe[i].m_socket->m_fd, &errSet)) {
+				pe[i].m_revents |= kPOLLERR;
+			}
+		}
+		if (pe[i].m_revents != 0) {
+			++n;
+		}
+	}
 
 	return n;
 }
 
 #endif
 
+void
+CArchNetworkBSD::unblockPollSocket(CArchThread thread)
+{
+	const int* unblockPipe = getUnblockPipeForThread(thread);
+	if (unblockPipe != NULL) {
+		char dummy = 0;
+		write(unblockPipe[1], &dummy, 1);
+	}
+}
+
 size_t
 CArchNetworkBSD::readSocket(CArchSocket s, void* buf, size_t len)
 {
 	assert(s != NULL);
 
-	ssize_t n;
-	do {
-		n = read(s->m_fd, buf, len);
-		if (n == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			throwError(errno);
+	ssize_t n = read(s->m_fd, buf, len);
+	if (n == -1) {
+		if (errno == EINTR || errno == EAGAIN) {
+			return 0;
 		}
-	} while (false);
-	ARCH->testCancelThread();
+		throwError(errno);
+	}
 	return n;
 }
 
@@ -461,19 +522,13 @@ CArchNetworkBSD::writeSocket(CArchSocket s, const void* buf, size_t len)
 {
 	assert(s != NULL);
 
-	ssize_t n;
-	do {
-		n = write(s->m_fd, buf, len);
-		if (n == -1) {
-			if (errno == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			throwError(errno);
+	ssize_t n = write(s->m_fd, buf, len);
+	if (n == -1) {
+		if (errno == EINTR || errno == EAGAIN) {
+			return 0;
 		}
-	} while (false);
-	ARCH->testCancelThread();
+		throwError(errno);
+	}
 	return n;
 }
 
@@ -485,7 +540,8 @@ CArchNetworkBSD::throwErrorOnSocket(CArchSocket s)
 	// get the error from the socket layer
 	int err        = 0;
 	socklen_t size = sizeof(err);
-	if (getsockopt(s->m_fd, SOL_SOCKET, SO_ERROR, &err, &size) == -1) {
+	if (getsockopt(s->m_fd, SOL_SOCKET, SO_ERROR,
+							(optval_t*)&err, &size) == -1) {
 		err = errno;
 	}
 
@@ -495,26 +551,24 @@ CArchNetworkBSD::throwErrorOnSocket(CArchSocket s)
 	}
 }
 
-bool
-CArchNetworkBSD::setBlockingOnSocket(CArchSocket s, bool blocking)
+void
+CArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
 {
-	assert(s != NULL);
+	assert(fd != -1);
 
-	int mode = fcntl(s->m_fd, F_GETFL, 0);
+	int mode = fcntl(fd, F_GETFL, 0);
 	if (mode == -1) {
 		throwError(errno);
 	}
-	bool old = ((mode & O_NDELAY) == 0);
 	if (blocking) {
-		mode &= ~O_NDELAY;
+		mode &= ~O_NONBLOCK;
 	}
 	else {
-		mode |= O_NDELAY;
+		mode |= O_NONBLOCK;
 	}
-	if (fcntl(s->m_fd, F_SETFL, mode) == -1) {
+	if (fcntl(fd, F_SETFL, mode) == -1) {
 		throwError(errno);
 	}
-	return old;
 }
 
 bool
@@ -525,13 +579,15 @@ CArchNetworkBSD::setNoDelayOnSocket(CArchSocket s, bool noDelay)
 	// get old state
 	int oflag;
 	socklen_t size = sizeof(oflag);
-	if (getsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY, &oflag, &size) == -1) {
+	if (getsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY,
+							(optval_t*)&oflag, &size) == -1) {
 		throwError(errno);
 	}
 
 	int flag = noDelay ? 1 : 0;
 	size     = sizeof(flag);
-	if (setsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY, &flag, size) == -1) {
+	if (setsockopt(s->m_fd, IPPROTO_TCP, TCP_NODELAY,
+							(optval_t*)&flag, size) == -1) {
 		throwError(errno);
 	}
 
@@ -614,11 +670,21 @@ CArchNetworkBSD::nameToAddr(const std::string& name)
 		}
 
 		// copy over address (only IPv4 currently supported)
-		addr->m_len       = sizeof(struct sockaddr_in);
-		inaddr.sin_family = info->h_addrtype;
-		inaddr.sin_port   = 0;
-		memcpy(&inaddr.sin_addr, info->h_addr_list[0], info->h_length);
-		memcpy(&addr->m_addr, &inaddr, addr->m_len);
+		if (info->h_addrtype == AF_INET) {
+			addr->m_len       = sizeof(struct sockaddr_in);
+			inaddr.sin_family = info->h_addrtype;
+			inaddr.sin_port   = 0;
+			memcpy(&inaddr.sin_addr, info->h_addr_list[0],
+								sizeof(inaddr.sin_addr));
+			memcpy(&addr->m_addr, &inaddr, addr->m_len);
+		}
+		else {
+			ARCH->unlockMutex(m_mutex);
+			delete addr;
+			throw XArchNetworkNameUnsupported(
+					"The requested name is valid but "
+					"does not have a supported address family");
+		}
 
 		// done with static buffer
 		ARCH->unlockMutex(m_mutex);
@@ -750,12 +816,55 @@ CArchNetworkBSD::isAnyAddr(CArchNetAddress addr)
 	}
 }
 
+bool
+CArchNetworkBSD::isEqualAddr(CArchNetAddress a, CArchNetAddress b)
+{
+	return (a->m_len == b->m_len &&
+			memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0);
+}
+
+const int*
+CArchNetworkBSD::getUnblockPipe()
+{
+	CArchMultithreadPosix* mt = CArchMultithreadPosix::getInstance();
+	CArchThread thread        = mt->newCurrentThread();
+	const int* p              = getUnblockPipeForThread(thread);
+	ARCH->closeThread(thread);
+	return p;
+}
+
+const int*
+CArchNetworkBSD::getUnblockPipeForThread(CArchThread thread)
+{
+	CArchMultithreadPosix* mt = CArchMultithreadPosix::getInstance();
+	int* unblockPipe          = (int*)mt->getNetworkDataForThread(thread);
+	if (unblockPipe == NULL) {
+		unblockPipe = new int[2];
+		if (pipe(unblockPipe) != -1) {
+			try {
+				setBlockingOnSocket(unblockPipe[0], false);
+				mt->setNetworkDataForCurrentThread(unblockPipe);
+			}
+			catch (...) {
+				delete[] unblockPipe;
+				unblockPipe = NULL;
+			}
+		}
+		else {
+			delete[] unblockPipe;
+			unblockPipe = NULL;
+		}
+	}
+	return unblockPipe;
+}
+
 void
 CArchNetworkBSD::throwError(int err)
 {
 	switch (err) {
-	case EAGAIN:
-		throw XArchNetworkWouldBlock(new XArchEvalUnix(err));
+	case EINTR:
+		ARCH->testCancelThread();
+		throw XArchNetworkInterrupted(new XArchEvalUnix(err));
 
 	case EACCES:
 	case EPERM:
@@ -803,16 +912,14 @@ CArchNetworkBSD::throwError(int err)
 		throw XArchNetworkNotConnected(new XArchEvalUnix(err));
 
 	case EPIPE:
+		throw XArchNetworkShutdown(new XArchEvalUnix(err));
+
 	case ECONNABORTED:
 	case ECONNRESET:
 		throw XArchNetworkDisconnected(new XArchEvalUnix(err));
 
 	case ECONNREFUSED:
 		throw XArchNetworkConnectionRefused(new XArchEvalUnix(err));
-
-	case EINPROGRESS:
-	case EALREADY:
-		throw XArchNetworkConnecting(new XArchEvalUnix(err));
 
 	case EHOSTDOWN:
 	case ETIMEDOUT:

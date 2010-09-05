@@ -40,9 +40,22 @@ public:
 	via add() and retrieved via get() must be in one of these formats.
 	Platform dependent clipboard subclasses can and should present any
 	suitable formats derivable from these formats.
+
+	\c kText is a text format encoded in UTF-8.  Newlines are LF (not
+	CR or LF/CR).
+
+	\k kBitmap is an image format.  The data is a BMP file without the
+	14 byte header (i.e. starting at the INFOHEADER) and with the image
+	data immediately following the 40 byte INFOHEADER.
+
+	\k kHTML is a text format encoded in UTF-8 and containing a valid
+	HTML fragment (but not necessarily a complete HTML document).
+	Newlines are LF.
 	*/
 	enum EFormat {
 		kText,			//!< Text format, UTF-8, newline is LF
+		kBitmap,		//!< Bitmap format, BMP 24/32bpp, BI_RGB
+		kHTML,			//!< HTML format, HTML fragment, UTF-8, newline is LF
 		kNumFormats		//!< The number of clipboard formats
 	};
 
@@ -111,7 +124,45 @@ public:
 	*/
 	virtual CString		get(EFormat) const = 0;
 
+	//! Marshall clipboard data
+	/*!
+	Merge \p clipboard's data into a single buffer that can be later
+	unmarshalled to restore the clipboard and return the buffer.
+	*/
+	static CString		marshall(const IClipboard* clipboard);
+
+	//! Unmarshall clipboard data
+	/*!
+	Extract marshalled clipboard data and store it in \p clipboard.
+	Sets the clipboard time to \c time.
+	*/
+	static void			unmarshall(IClipboard* clipboard,
+							const CString& data, Time time);
+
+	//! Copy clipboard
+	/*!
+	Transfers all the data in one clipboard to another.  The
+	clipboards can be of any concrete clipboard type (and
+	they don't have to be the same type).  This also sets
+	the destination clipboard's timestamp to source clipboard's
+	timestamp.  Returns true iff the copy succeeded.
+	*/
+	static bool			copy(IClipboard* dst, const IClipboard* src);
+
+	//! Copy clipboard
+	/*!
+	Transfers all the data in one clipboard to another.  The
+	clipboards can be of any concrete clipboard type (and they
+	don't have to be the same type).  This also sets the
+	timestamp to \c time.  Returns true iff the copy succeeded.
+	*/
+	static bool			copy(IClipboard* dst, const IClipboard* src, Time);
+
 	//@}
+
+private:
+	static UInt32		readUInt32(const char*);
+	static void			writeUInt32(CString*, UInt32);
 };
 
 #endif

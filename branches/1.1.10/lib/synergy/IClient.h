@@ -15,7 +15,7 @@
 #ifndef ICLIENT_H
 #define ICLIENT_H
 
-#include "IInterface.h"
+#include "IScreen.h"
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
@@ -27,43 +27,18 @@
 This interface defines the methods necessary for the server to
 communicate with a client.
 */
-class IClient : public IInterface {
+class IClient : public IScreen {
 public:
 	//! @name manipulators
 	//@{
 
-	//! Open client
-	/*!
-	Open the client.  Throw if the client cannot be opened.  If the
-	screen cannot be opened but retrying later may succeed then throw
-	XScreenUnavailable.
-	*/
-	virtual void		open() = 0;
-
-	//! Client main loop
-	/*!
-	Run client's event loop.  This method is typically called in a
-	separate thread and is exited by cancelling the thread.  This
-	must be called between a successful open() and close().
-
-	(cancellation point)
-	*/
-	virtual void		mainLoop() = 0;
-
-	//! Close client
-	/*!
-	Close the client.
-	*/
-	virtual void		close() = 0;
-
 	//! Enter screen
 	/*!
-	Enter the screen.  The cursor should be warped to \c xAbs,yAbs.
-	The client should record seqNum for future reporting of
-	clipboard changes.  \c mask is the expected toggle button state
-	and the client should update its state to match.  \c forScreensaver
-	is true iff the screen is being entered because the screen saver is
-	starting.
+	Enter the screen.  The cursor should be warped to \p xAbs,yAbs.
+	\p mask is the expected toggle button state and the client should
+	update its state to match.  \p forScreensaver is true iff the
+	screen is being entered because the screen saver is starting.
+	Subsequent clipboard events should report \p seqNum.
 	*/
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
@@ -83,7 +58,7 @@ public:
 	already known to be up to date then this may do nothing.  \c data
 	has marshalled clipboard data.
 	*/
-	virtual void		setClipboard(ClipboardID, const CString& data) = 0;
+	virtual void		setClipboard(ClipboardID, const IClipboard*) = 0;
 
 	//! Grab clipboard
 	/*!
@@ -145,6 +120,13 @@ public:
 	*/
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
 
+	//! Notify of mouse motion
+	/*!
+	Synthesize mouse events to generate mouse motion by the relative
+	amount \c xRel,yRel.
+	*/
+	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
+
 	//! Notify of mouse wheel motion
 	/*!
 	Synthesize mouse events to generate mouse wheel motion of \c delta.
@@ -180,35 +162,14 @@ public:
 	*/
 	virtual CString		getName() const = 0;
 
-	//! Get jump zone size
-	/*!
-	Called to get the jump zone size.
-	*/
-	virtual SInt32		getJumpZoneSize() const = 0;
+	//@}
 
-	//! Get screen shape
-	/*!
-	Return the position of the upper-left corner of the screen in \c x and
-	\c y and the size of the screen in \c width and \c height.
-	*/
+	// IScreen overrides
+	virtual void*		getEventTarget() const = 0;
+	virtual bool		getClipboard(ClipboardID id, IClipboard*) const = 0;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const = 0;
-
-	//! Get cursor position
-	/*!
-	Return the current position of the cursor in \c x and \c y.
-	*/
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
-
-	//! Get cursor center position
-	/*!
-	Return the cursor center position which is where we park the
-	cursor to compute cursor motion deltas and should be far from
-	the edges of the screen, typically the center.
-	*/
-	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
-
-	//@}
 };
 
 #endif

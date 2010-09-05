@@ -38,12 +38,12 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "../../Release"
-# PROP Intermediate_Dir "ReleaseHook"
+# PROP Output_Dir "..\..\build"
+# PROP Intermediate_Dir "..\..\gen\build"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "SYNRGYHK_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O1 /I "..\common" /I "..\arch" /I "..\base" /I "..\net" /I "..\synergy" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "SYNRGYHK_EXPORTS" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O1 /I "..\common" /I "..\arch" /I "..\base" /I "..\net" /I "..\synergy" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "SYNRGYHK_EXPORTS" /FD /c /Fd..\..\gen\build\synrgyhk.pdb
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -66,12 +66,12 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "../../Debug"
-# PROP Intermediate_Dir "DebugHook"
+# PROP Output_Dir "..\..\debug"
+# PROP Intermediate_Dir "..\..\gen\debug"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "SYNRGYHK_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\net" /I "..\synergy" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "SYNRGYHK_EXPORTS" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\net" /I "..\synergy" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "SYNRGYHK_EXPORTS" /FD /GZ /c /Fd..\..\gen\debug\synrgyhk.pdb
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32

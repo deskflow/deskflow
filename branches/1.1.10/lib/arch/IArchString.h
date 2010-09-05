@@ -16,22 +16,8 @@
 #define IARCHSTRING_H
 
 #include "IInterface.h"
+#include "BasicTypes.h"
 #include <stdarg.h>
-
-/*!      
-\class CArchMBStateImpl
-\brief Internal multibyte conversion data.
-An architecture dependent type holding the necessary data for a
-multibyte to/from wide character conversion.
-*/
-class CArchMBStateImpl;
-
-/*!      
-\var CArchMBState
-\brief Opaque multibyte conversion state type.
-An opaque type representing multibyte conversion state.
-*/
-typedef CArchMBStateImpl* CArchMBState;
 
 //! Interface for architecture dependent string operations
 /*!
@@ -64,24 +50,13 @@ public:
 	virtual int			vsnprintf(char* str,
 							int size, const char* fmt, va_list ap) = 0;
 
-	//! Create a new multibyte conversion state
-	virtual CArchMBState	newMBState() = 0;
+	//! Convert multibyte string to wide character string
+	virtual int			convStringMBToWC(wchar_t*,
+							const char*, UInt32 n, bool* errors) = 0;
 
-	//! Destroy a multibyte conversion state
-	virtual void		closeMBState(CArchMBState) = 0;
-
-	//! Initialize a multibyte conversion state
-	virtual void		initMBState(CArchMBState) = 0;
-
-	//! Test a multibyte conversion state
-	virtual bool		isInitMBState(CArchMBState) = 0;
-
-	//! Convert multibyte to wide character
-	virtual int			convMBToWC(wchar_t*,
-							const char*, int, CArchMBState) = 0;
-
-	//! Convert wide character to multibyte
-	virtual int			convWCToMB(char*, wchar_t, CArchMBState) = 0;
+	//! Convert wide character string to multibyte string
+	virtual int			convStringWCToMB(char*,
+							const wchar_t*, UInt32 n, bool* errors) = 0;
 
 	//! Return the architecture's native wide character encoding
 	virtual EWideCharEncoding

@@ -175,13 +175,6 @@ public:
 	*/
 	void				setSynergyAddress(const CNetworkAddress&);
 
-	//! Set HTTP server address
-	/*!
-	Set the HTTP listen addresses.  There is no default address so
-	this must be called to run an HTTP server using this configuration.
-	*/
-	void				setHTTPAddress(const CNetworkAddress&);
-
 	//! Add a screen option
 	/*!
 	Adds an option and its value to the named screen.  Replaces the
@@ -255,8 +248,6 @@ public:
 
 	//! Get the server address
 	const CNetworkAddress&	getSynergyAddress() const;
-	//! Get the HTTP server address
-	const CNetworkAddress&	getHTTPAddress() const;
 
 	//! Get the screen options
 	/*!
@@ -308,7 +299,6 @@ private:
 	CCellMap			m_map;
 	CNameMap			m_nameToCanonicalName;
 	CNetworkAddress		m_synergyAddress;
-	CNetworkAddress		m_httpAddress;
 	CScreenOptions		m_globalOptions;
 };
 

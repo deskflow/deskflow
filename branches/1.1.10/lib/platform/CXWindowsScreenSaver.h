@@ -17,22 +17,19 @@
 
 #include "IScreenSaver.h"
 #include "stdmap.h"
-#if defined(X_DISPLAY_MISSING)
+#if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
 #endif
 
-class IJob;
-class CXWindowsScreen;
+class CEvent;
+class CEventQueueTimer;
 
 //! X11 screen saver implementation
 class CXWindowsScreenSaver : public IScreenSaver {
 public:
-	// note -- the caller must ensure that Display* passed to c'tor isn't
-	// being used in another call to Xlib when calling any method on this
-	// object (including during the c'tor and d'tor).
-	CXWindowsScreenSaver(CXWindowsScreen*, Display*);
+	CXWindowsScreenSaver(Display*, Window, void* eventTarget);
 	virtual ~CXWindowsScreenSaver();
 
 	//! @name manipulators
@@ -40,22 +37,17 @@ public:
 
 	//! Event filtering
 	/*!
-	Called for each event before event translation and dispatch.  Return
-	true to skip translation and dispatch.  Subclasses should call the
-	superclass's version first and return true if it returns true.
+	Should be called for each system event before event translation and
+	dispatch.  Returns true to skip translation and dispatch.
 	*/
-	bool				onPreDispatch(const XEvent*);
+	bool				handleXEvent(const XEvent*);
 
-	//! Set notify target
+	//! Destroy without the display
 	/*!
-	Tells this object to send a ClientMessage to the given window
-	when the screen saver activates or deactivates.  Only one window
-	can be notified at a time.  The message type is the "SCREENSAVER"
-	atom, the format is 32, and the data.l[0] member is non-zero
-	if activated, zero if deactivated.  Pass None to disable
-	notification.
+	Tells this object to delete itself without using the X11 display.
+	It may leak some resources as a result.
 	*/
-	void				setNotify(Window);
+	void				destroy();
 
 	//@}
 
@@ -67,9 +59,6 @@ public:
 	virtual bool		isActive() const;
 
 private:
-	// send a notification
-	void				sendNotify(bool activated);
-
 	// find and set the running xscreensaver's window.  returns true iff
 	// found.
 	bool				findXScreenSaver();
@@ -98,25 +87,34 @@ private:
 	void				addWatchXScreenSaver(Window window);
 
 	// install/uninstall the job used to suppress the screensaver
-	void				updateDisableJob();
+	void				updateDisableTimer();
 
 	// called periodically to prevent the screen saver from starting
-	void				disableCallback(void*);
+	void				handleDisableTimer(const CEvent&, void*);
+
+	// force DPMS to activate or deactivate
+	void				activateDPMS(bool activate);
+
+	// enable/disable DPMS screen saver
+	void				enableDPMS(bool);
+
+	// check if DPMS is enabled
+	bool				isDPMSEnabled() const;
+
+	// check if DPMS is activate
+	bool				isDPMSActivated() const;
 
 private:
 	typedef std::map<Window, long> CWatchList;
 
-	// the event loop object
-	CXWindowsScreen*	m_screen;
-
 	// the X display
 	Display*			m_display;
 
-	// old event mask on root window
-	long				m_rootEventMask;
+	// window to receive xscreensaver repsonses
+	Window				m_xscreensaverSink;
 
-	// window to notify on screen saver activation/deactivation
-	Window				m_notify;
+	// the target for the events we generate
+	void*				m_eventTarget;
 
 	// xscreensaver's window
 	Window				m_xscreensaver;
@@ -124,8 +122,8 @@ private:
 	// xscreensaver activation state
 	bool				m_xscreensaverActive;
 
-	// dummy window to receive xscreensaver repsonses
-	Window				m_xscreensaverSink;
+	// old event mask on root window
+	long				m_rootEventMask;
 
 	// potential xscreensaver windows being watched
 	CWatchList			m_watchWindows;
@@ -135,13 +133,16 @@ private:
 	Atom				m_atomScreenSaverVersion;
 	Atom				m_atomScreenSaverActivate;
 	Atom				m_atomScreenSaverDeactivate;
-	Atom				m_atomSynergyScreenSaver;
 
 	// built-in screen saver settings
 	int					m_timeout;
 	int					m_interval;
 	int					m_preferBlanking;
 	int					m_allowExposures;
+
+	// DPMS screen saver settings
+	bool				m_dpms;
+	bool				m_dpmsEnabled;
 
 	// true iff the client wants the screen saver suppressed
 	bool				m_disabled;
@@ -151,11 +152,8 @@ private:
 	// to activate the screen saver even if disabled.
 	bool				m_suppressDisable;
 
-	// true iff the disabled job timer is installed
-	bool				m_disableJobInstalled;
-
-	// the job used to invoke disableCallback
-	IJob*				m_disableJob;
+	// the disable timer (NULL if not installed)
+	CEventQueueTimer*	m_disableTimer;
 };
 
 #endif

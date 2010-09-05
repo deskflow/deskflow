@@ -94,11 +94,56 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
-EXTRA_DIST = \
-	arch.dsp					\
+COMMON_SOURCE_FILES = \
+	CArch.cpp					\
+	CArchDaemonNone.cpp			\
+	CArchDaemonNone.h			\
+	XArch.cpp					\
+	CArch.h						\
+	IArchConsole.h				\
+	IArchDaemon.h				\
+	IArchFile.h					\
+	IArchLog.h					\
+	IArchMultithread.h			\
+	IArchNetwork.h				\
+	IArchSleep.h				\
+	IArchString.h				\
+	IArchSystem.h				\
+	IArchTaskBar.h				\
+	IArchTaskBarReceiver.h		\
+	IArchTime.h					\
+	XArch.h						\
+	$(NULL)
+
+UNIX_SOURCE_FILES = \
+	CArchConsoleUnix.cpp		\
+	CArchDaemonUnix.cpp			\
+	CArchFileUnix.cpp			\
+	CArchLogUnix.cpp			\
+	CArchMultithreadPosix.cpp	\
+	CArchNetworkBSD.cpp			\
+	CArchSleepUnix.cpp			\
+	CArchStringUnix.cpp			\
+	CArchSystemUnix.cpp			\
+	CArchTaskBarXWindows.cpp	\
+	CArchTimeUnix.cpp			\
+	XArchUnix.cpp				\
+	CArchConsoleUnix.h			\
+	CArchDaemonUnix.h			\
+	CArchFileUnix.h				\
+	CArchLogUnix.h				\
+	CArchMultithreadPosix.h		\
+	CArchNetworkBSD.h			\
+	CArchSleepUnix.h			\
+	CArchStringUnix.h			\
+	CArchSystemUnix.h			\
+	CArchTaskBarXWindows.h		\
+	CArchTimeUnix.h				\
+	XArchUnix.h					\
+	$(NULL)
+
+WIN32_SOURCE_FILES = \
 	CArchConsoleWindows.cpp		\
 	CArchDaemonWindows.cpp		\
 	CArchFileWindows.cpp		\
@@ -108,6 +153,7 @@ EXTRA_DIST = \
 	CArchNetworkWinsock.cpp		\
 	CArchSleepWindows.cpp		\
 	CArchStringWindows.cpp		\
+	CArchSystemWindows.cpp		\
 	CArchTaskBarWindows.cpp		\
 	CArchTimeWindows.cpp		\
 	XArchWindows.cpp			\
@@ -120,9 +166,19 @@ EXTRA_DIST = \
 	CArchNetworkWinsock.h		\
 	CArchSleepWindows.h			\
 	CArchStringWindows.h		\
+	CArchSystemWindows.h		\
 	CArchTaskBarWindows.h		\
 	CArchTimeWindows.h			\
 	XArchWindows.h				\
+	$(NULL)
+
+
+EXTRA_DIST = \
+	arch.dsp					\
+	CMultibyte.cpp				\
+	vsnprintf.cpp				\
+	$(UNIX_SOURCE_FILES)		\
+	$(WIN32_SOURCE_FILES)		\
 	$(NULL)
 
 
@@ -132,58 +188,18 @@ MAINTAINERCLEANFILES = \
 
 
 noinst_LIBRARIES = libarch.a
-libarch_a_SOURCES = \
-	CArch.cpp					\
-	CArchImpl.cpp				\
-	XArch.cpp					\
-	CArch.h						\
-	IArchConsole.h				\
-	IArchDaemon.h				\
-	IArchFile.h					\
-	IArchLog.h					\
-	IArchMultithread.h			\
-	IArchNetwork.h				\
-	IArchSleep.h				\
-	IArchString.h				\
-	IArchTaskBar.h				\
-	IArchTaskBarReceiver.h		\
-	IArchTime.h					\
-	XArch.h						\
-	$(NULL)
+@UNIX_TRUE@libarch_a_SOURCES = \
+@UNIX_TRUE@	$(COMMON_SOURCE_FILES)		\
+@UNIX_TRUE@	$(UNIX_SOURCE_FILES)		\
+@UNIX_TRUE@	$(NULL)
 
-EXTRA_libarch_a_SOURCES = \
-	CArchConsoleUnix.cpp		\
-	CArchDaemonNone.cpp			\
-	CArchDaemonUnix.cpp			\
-	CArchFileUnix.cpp			\
-	CArchLogUnix.cpp			\
-	CArchMultithreadPosix.cpp	\
-	CArchNetworkBSD.cpp			\
-	CArchSleepUnix.cpp			\
-	CArchStringUnix.cpp			\
-	CArchTaskBarXWindows.cpp	\
-	CArchTimeUnix.cpp			\
-	CMultibyte.cpp				\
-	CMultibyteOS.cpp			\
-	CMultibyteEmu.cpp			\
-	XArchUnix.cpp				\
-	vsnprintf.cpp				\
-	CArchConsoleUnix.h			\
-	CArchDaemonNone.h			\
-	CArchDaemonUnix.h			\
-	CArchFileUnix.h				\
-	CArchLogUnix.h				\
-	CArchMultithreadPosix.h		\
-	CArchNetworkBSD.h			\
-	CArchSleepUnix.h			\
-	CArchStringUnix.h			\
-	CArchTaskBarXWindows.h		\
-	CArchTimeUnix.h				\
-	XArchUnix.h					\
-	$(NULL)
+@WIN32_TRUE@libarch_a_SOURCES = \
+@WIN32_TRUE@	$(COMMON_SOURCE_FILES)		\
+@WIN32_TRUE@	$(WIN32_SOURCE_FILES)		\
+@WIN32_TRUE@	$(NULL)
 
 INCLUDES = \
-	-I$(VDEPTH)/lib/common		\
+	-I$(top_srcdir)/lib/common	\
 	$(NULL)
 
 subdir = lib/arch
@@ -194,8 +210,68 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libarch_a_AR = $(AR) cru
 libarch_a_LIBADD =
-am_libarch_a_OBJECTS = CArch.$(OBJEXT) CArchImpl.$(OBJEXT) \
-	XArch.$(OBJEXT)
+@UNIX_FALSE@@WIN32_TRUE@am_libarch_a_OBJECTS = CArch.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchDaemonNone.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	XArch.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchConsoleWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchDaemonWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchFileWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchLogWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchMiscWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchMultithreadWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchNetworkWinsock.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchSleepWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchStringWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchSystemWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchTaskBarWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	CArchTimeWindows.$(OBJEXT) \
+@UNIX_FALSE@@WIN32_TRUE@	XArchWindows.$(OBJEXT)
+@UNIX_FALSE@@WIN32_FALSE@am_libarch_a_OBJECTS =
+@UNIX_TRUE@@WIN32_TRUE@am_libarch_a_OBJECTS = CArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchDaemonNone.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	XArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchConsoleUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchDaemonUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchFileUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchLogUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchMultithreadPosix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchNetworkBSD.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchSleepUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchStringUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchSystemUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchTaskBarXWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchTimeUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	XArchUnix.$(OBJEXT) CArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchDaemonNone.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	XArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchConsoleWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchDaemonWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchFileWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchLogWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchMiscWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchMultithreadWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchNetworkWinsock.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchSleepWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchStringWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchSystemWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchTaskBarWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	CArchTimeWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_TRUE@	XArchWindows.$(OBJEXT)
+@UNIX_TRUE@@WIN32_FALSE@am_libarch_a_OBJECTS = CArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchDaemonNone.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	XArch.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchConsoleUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchDaemonUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchFileUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchLogUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchMultithreadPosix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchNetworkBSD.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchSleepUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchStringUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchSystemUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchTaskBarXWindows.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	CArchTimeUnix.$(OBJEXT) \
+@UNIX_TRUE@@WIN32_FALSE@	XArchUnix.$(OBJEXT)
 libarch_a_OBJECTS = $(am_libarch_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -205,19 +281,30 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CArch.Po $(DEPDIR)/CArchConsoleUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchConsoleWindows.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CArchDaemonNone.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CArchDaemonUnix.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CArchFileUnix.Po $(DEPDIR)/CArchImpl.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchDaemonWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchFileUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchFileWindows.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CArchLogUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchLogWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchMiscWindows.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CArchMultithreadPosix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchMultithreadWindows.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CArchNetworkBSD.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchNetworkWinsock.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CArchSleepUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchSleepWindows.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CArchStringUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchStringWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchSystemUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchSystemWindows.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchTaskBarWindows.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CArchTaskBarXWindows.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CArchTimeUnix.Po $(DEPDIR)/CMultibyte.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CMultibyteEmu.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CMultibyteOS.Po $(DEPDIR)/XArch.Po \
-@AMDEP_TRUE@	$(DEPDIR)/XArchUnix.Po $(DEPDIR)/vsnprintf.Po
+@AMDEP_TRUE@	$(DEPDIR)/CArchTimeUnix.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CArchTimeWindows.Po $(DEPDIR)/XArch.Po \
+@AMDEP_TRUE@	$(DEPDIR)/XArchUnix.Po $(DEPDIR)/XArchWindows.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -229,9 +316,9 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES = $(libarch_a_SOURCES) $(EXTRA_libarch_a_SOURCES)
+DIST_SOURCES = $(libarch_a_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(libarch_a_SOURCES) $(EXTRA_libarch_a_SOURCES)
+SOURCES = $(libarch_a_SOURCES)
 
 all: all-am
 
@@ -262,23 +349,32 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchConsoleUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchConsoleWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchDaemonNone.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchDaemonUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchDaemonWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchFileUnix.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchImpl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchFileWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchLogUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchLogWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchMiscWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchMultithreadPosix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchMultithreadWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchNetworkBSD.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchNetworkWinsock.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchSleepUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchSleepWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchStringUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchStringWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchSystemUnix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchSystemWindows.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchTaskBarWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchTaskBarXWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchTimeUnix.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMultibyte.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMultibyteEmu.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMultibyteOS.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CArchTimeWindows.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XArch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XArchUnix.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vsnprintf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XArchWindows.Po@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

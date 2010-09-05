@@ -17,20 +17,27 @@
 
 #include "IArchNetwork.h"
 #include "IArchMultithread.h"
+#if HAVE_SYS_TYPES_H
+#	include <sys/types.h>
+#endif
 #if HAVE_SYS_SOCKET_H
 #	include <sys/socket.h>
 #endif
 
-#if !defined(HAVE_SOCKLEN_T)
+#if !HAVE_SOCKLEN_T
 typedef int socklen_t;
 #endif
+
+// old systems may use char* for [gs]etsockopt()'s optval argument.
+// this should be void on modern systems but char is forwards
+// compatible so we always use it.
+typedef char optval_t;
 
 #define ARCH_NETWORK CArchNetworkBSD
 
 class CArchSocketImpl {
 public:
 	int					m_fd;
-	bool				m_connected;
 	int					m_refCount;
 };
 
@@ -58,13 +65,13 @@ public:
 	virtual void		bindSocket(CArchSocket s, CArchNetAddress addr);
 	virtual void		listenOnSocket(CArchSocket s);
 	virtual CArchSocket	acceptSocket(CArchSocket s, CArchNetAddress* addr);
-	virtual void		connectSocket(CArchSocket s, CArchNetAddress name);
+	virtual bool		connectSocket(CArchSocket s, CArchNetAddress name);
 	virtual int			pollSocket(CPollEntry[], int num, double timeout);
+	virtual void		unblockPollSocket(CArchThread thread);
 	virtual size_t		readSocket(CArchSocket s, void* buf, size_t len);
 	virtual size_t		writeSocket(CArchSocket s,
 							const void* buf, size_t len);
 	virtual void		throwErrorOnSocket(CArchSocket);
-	virtual bool		setBlockingOnSocket(CArchSocket, bool blocking);
 	virtual bool		setNoDelayOnSocket(CArchSocket, bool noDelay);
 	virtual std::string		getHostName();
 	virtual CArchNetAddress	newAnyAddr(EAddressFamily);
@@ -77,8 +84,12 @@ public:
 	virtual void			setAddrPort(CArchNetAddress, int port);
 	virtual int				getAddrPort(CArchNetAddress);
 	virtual bool			isAnyAddr(CArchNetAddress);
+	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress);
 
 private:
+	const int*			getUnblockPipe();
+	const int*			getUnblockPipeForThread(CArchThread);
+	void				setBlockingOnSocket(int fd, bool blocking);
 	void				throwError(int);
 	void				throwNameError(int);
 

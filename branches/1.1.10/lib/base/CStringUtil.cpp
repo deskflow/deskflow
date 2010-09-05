@@ -176,7 +176,7 @@ CStringUtil::CaselessCmp::cmpEqual(
 				const CString::value_type& a,
 				const CString::value_type& b)
 {
-	// FIXME -- use std::tolower but not in all versions of libstdc++ have it
+	// should use std::tolower but not in all versions of libstdc++ have it
 	return tolower(a) == tolower(b);
 }
 
@@ -185,7 +185,7 @@ CStringUtil::CaselessCmp::cmpLess(
 				const CString::value_type& a,
 				const CString::value_type& b)
 {
-	// FIXME -- use std::tolower but not in all versions of libstdc++ have it
+	// should use std::tolower but not in all versions of libstdc++ have it
 	return tolower(a) < tolower(b);
 }
 

@@ -130,8 +130,11 @@ AC_DEFUN([ACX_CHECK_GETPWUID_R], [
 
 AC_DEFUN([ACX_CHECK_POLL], [
     AC_MSG_CHECKING([for poll])
-    AC_TRY_LINK([#include <sys/poll.h>],
-            	[struct pollfd ufds[] = { 0, POLLIN, 0 }; poll(ufds, 1, 10);],
+    AC_TRY_LINK([#include <poll.h>],
+				[#if defined(_POLL_EMUL_H_)
+				#error emulated poll
+				#endif
+            	struct pollfd ufds[] = { 0, POLLIN, 0 }; poll(ufds, 1, 10);],
             	acx_poll_ok=yes, acx_poll_ok=no)
 	AC_MSG_RESULT($acx_poll_ok)
 	if test x"$acx_poll_ok" = xyes; then
@@ -243,6 +246,7 @@ AC_DEFUN([ACX_CHECK_INET_ATON], [
 		LIBS="$save_LIBS"
         AC_MSG_RESULT($acx_inet_aton_ok)
         if test x"$acx_inet_aton_ok" = xyes; then
+        	AC_DEFINE(HAVE_INET_ATON,1,[Define if you have the \`inet_aton\' function.])
             break;
         fi
         INET_ATON_LIBS=""
@@ -513,3 +517,34 @@ else
         $2
 fi
 ])dnl ACX_PTHREAD
+
+dnl enable maximum compiler warnings.  must ignore unknown pragmas to
+dnl build on solaris.
+dnl we only know how to do this for g++
+AC_DEFUN([ACX_CXX_WARNINGS], [
+	AC_MSG_CHECKING([for C++ compiler warning flags])
+	if test "$GXX" = "yes"; then
+		acx_cxx_warnings="-Wall -Wno-unknown-pragmas"
+	fi
+	if test -n "$acx_cxx_warnings"; then
+		CXXFLAGS="$CXXFLAGS $acx_cxx_warnings"
+	else
+		acx_cxx_warnings="unknown"
+	fi
+	AC_MSG_RESULT($acx_cxx_warnings)
+])dnl ACX_CXX_WARNINGS
+
+dnl enable compiler warnings are errors
+dnl we only know how to do this for g++
+AC_DEFUN([ACX_CXX_WARNINGS_ARE_ERRORS], [
+	AC_MSG_CHECKING([for C++ compiler warning are errors flags])
+	if test "$GXX" = "yes"; then
+		acx_cxx_warnings_are_errors="-Werror"
+	fi
+	if test -n "$acx_cxx_warnings_are_errors"; then
+		CXXFLAGS="$CXXFLAGS $acx_cxx_warnings_are_errors"
+	else
+		acx_cxx_warnings_are_errors="unknown"
+	fi
+	AC_MSG_RESULT($acx_cxx_warnings_are_errors)
+])dnl ACX_CXX_WARNINGS_ARE_ERRORS

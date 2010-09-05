@@ -12,8 +12,6 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =					\
 	libsynergy.dsp				\
@@ -26,30 +24,32 @@ MAINTAINERCLEANFILES =			\
 noinst_LIBRARIES = libsynergy.a
 libsynergy_a_SOURCES = 			\
 	CClipboard.cpp				\
-	CInputPacketStream.cpp		\
-	COutputPacketStream.cpp		\
-	CPrimaryScreen.cpp			\
+	CKeyState.cpp				\
+	CPacketStreamFilter.cpp		\
+	CPlatformScreen.cpp			\
 	CProtocolUtil.cpp			\
-	CSecondaryScreen.cpp		\
+	CScreen.cpp					\
+	IClipboard.cpp				\
+	IKeyState.cpp				\
+	IPrimaryScreen.cpp			\
+	IScreen.cpp					\
 	XScreen.cpp					\
 	XSynergy.cpp				\
 	CClipboard.h				\
-	CInputPacketStream.h		\
-	COutputPacketStream.h		\
-	CPrimaryScreen.h			\
+	CKeyState.h					\
+	CPacketStreamFilter.h		\
+	CPlatformScreen.h			\
 	CProtocolUtil.h				\
-	CSecondaryScreen.h			\
+	CScreen.h					\
 	ClipboardTypes.h			\
 	IClient.h					\
 	IClipboard.h				\
-	IPrimaryScreenFactory.h		\
-	IPrimaryScreenReceiver.h	\
+	IKeyState.h					\
+	IPlatformScreen.h			\
+	IPrimaryScreen.h			\
 	IScreen.h					\
-	IScreenEventHandler.h		\
-	IScreenReceiver.h			\
 	IScreenSaver.h				\
-	ISecondaryScreenFactory.h	\
-	IServer.h					\
+	ISecondaryScreen.h			\
 	KeyTypes.h					\
 	MouseTypes.h				\
 	OptionTypes.h				\
@@ -58,10 +58,10 @@ libsynergy_a_SOURCES = 			\
 	XSynergy.h					\
 	$(NULL)
 INCLUDES =						\
-	-I$(VDEPTH)/lib/common		\
-	-I$(VDEPTH)/lib/arch		\
-	-I$(VDEPTH)/lib/base 		\
-	-I$(VDEPTH)/lib/mt	 		\
-	-I$(VDEPTH)/lib/io	 		\
-	-I$(VDEPTH)/lib/net	 		\
+	-I$(top_srcdir)/lib/common	\
+	-I$(top_srcdir)/lib/arch	\
+	-I$(top_srcdir)/lib/base 	\
+	-I$(top_srcdir)/lib/mt	 	\
+	-I$(top_srcdir)/lib/io	 	\
+	-I$(top_srcdir)/lib/net	 	\
 	$(NULL)

@@ -12,38 +12,43 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
-EXTRA_DIST =				\
-	net.dsp					\
+EXTRA_DIST =						\
+	net.dsp							\
 	$(NULL)
 
-MAINTAINERCLEANFILES =		\
-	Makefile.in				\
+MAINTAINERCLEANFILES =				\
+	Makefile.in						\
 	$(NULL)
 
 noinst_LIBRARIES = libnet.a
-libnet_a_SOURCES = 			\
-	CNetworkAddress.cpp		\
-	CTCPListenSocket.cpp	\
-	CTCPSocket.cpp			\
-	CTCPSocketFactory.cpp	\
-	XSocket.cpp				\
-	CNetworkAddress.h		\
-	CTCPListenSocket.h		\
-	CTCPSocket.h			\
-	CTCPSocketFactory.h		\
-	IDataSocket.h			\
-	IListenSocket.h			\
-	ISocket.h				\
-	ISocketFactory.h		\
-	XSocket.h				\
+libnet_a_SOURCES = 					\
+	CNetworkAddress.cpp				\
+	CSocketMultiplexer.cpp			\
+	CTCPListenSocket.cpp			\
+	CTCPSocket.cpp					\
+	CTCPSocketFactory.cpp			\
+	IDataSocket.cpp					\
+	IListenSocket.cpp				\
+	ISocket.cpp						\
+	XSocket.cpp						\
+	CNetworkAddress.h				\
+	CSocketMultiplexer.h			\
+	CTCPListenSocket.h				\
+	CTCPSocket.h					\
+	CTCPSocketFactory.h				\
+	IDataSocket.h					\
+	IListenSocket.h					\
+	ISocket.h						\
+	ISocketFactory.h				\
+	ISocketMultiplexerJob.h			\
+	TSocketMultiplexerMethodJob.h	\
+	XSocket.h						\
 	$(NULL)
-INCLUDES =					\
-	-I$(VDEPTH)/lib/common	\
-	-I$(VDEPTH)/lib/arch	\
-	-I$(VDEPTH)/lib/base 	\
-	-I$(VDEPTH)/lib/mt	 	\
-	-I$(VDEPTH)/lib/io	 	\
+INCLUDES =							\
+	-I$(top_srcdir)/lib/common		\
+	-I$(top_srcdir)/lib/arch		\
+	-I$(top_srcdir)/lib/base 		\
+	-I$(top_srcdir)/lib/mt	 		\
+	-I$(top_srcdir)/lib/io	 		\
 	$(NULL)

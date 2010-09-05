@@ -67,17 +67,23 @@ synergy.  Each architecture must implement this interface.
 */
 class IArchMultithread : public IInterface {
 public:
-	//! Result of waitForEvent()
-	enum EWaitResult {
-		kEvent,				//!< An event is pending
-		kExit,				//!< Thread exited
-		kTimeout			//!< Wait timed out
-	};
-
 	//! Type of thread entry point
 	typedef void* (*ThreadFunc)(void*);
 	//! Type of thread identifier
 	typedef unsigned int ThreadID;
+	//! Types of signals
+	/*!
+	Not all platforms support all signals.  Unsupported signals are
+	ignored.
+	*/
+	enum ESignal {
+		kINTERRUPT,		//!< Interrupt (e.g. Ctrl+C)
+		kTERMINATE,		//!< Terminate (e.g. Ctrl+Break)
+		kHANGUP,		//!< Hangup (SIGHUP)
+		kNUM_SIGNALS
+	};
+	//! Type of signal handler function
+	typedef void		(*SignalFunc)(ESignal, void* userData);
 
 	//! @name manipulators
 	//@{
@@ -124,11 +130,11 @@ public:
 	// mutex methods
 	//
 
-	//! Create a non-recursive mutex
+	//! Create a recursive mutex
 	/*!
-	Creates a non-recursive mutex.  A thread must not lock a
-	non-recursive mutex when it already holds a lock on that mutex.
-	If it does it will deadlock.  The mutex is an opaque data type.
+	Creates a recursive mutex.  A thread may lock a recursive mutex
+	when it already holds a lock on that mutex.  The mutex is an
+	opaque data type.
 	*/
 	virtual CArchMutex	newMutex() = 0;
 
@@ -136,9 +142,6 @@ public:
 	virtual void		closeMutex(CArchMutex) = 0;
 
 	//! Lock a mutex
-	/*!
-	(Cancellation point)
-	*/
 	virtual void		lockMutex(CArchMutex) = 0;
 
 	//! Unlock a mutex
@@ -199,6 +202,8 @@ public:
 	This method does nothing but is a cancellation point.  Clients
 	can make their own functions cancellation points by calling this
 	method at appropriate times.
+
+	(Cancellation point)
 	*/
 	virtual void		testCancelThread() = 0;
 
@@ -212,21 +217,6 @@ public:
 	(Cancellation point)
 	*/
 	virtual bool		wait(CArchThread thread, double timeout) = 0;
-
-	//! Wait for a user event
-	/*!
-	Waits for up to \c timeout seconds for a pending user event or
-	\c thread to exit (normally or by cancellation).  Waits forever
-	if \c timeout < 0.  Returns kEvent if an event occurred, kExit
-	if \c thread exited, or kTimeout if the timeout expired.  If
-	\c thread is NULL then it doesn't wait for any thread to exit
-	and it will not return kExit.
-
-	This method is not required by all platforms.
-
-	(Cancellation point)
-	*/
-	virtual EWaitResult	waitForEvent(CArchThread thread, double timeout) = 0;
 
 	//! Compare threads
 	/*!
@@ -258,6 +248,22 @@ public:
 	instead of comparing IDs.
 	*/
 	virtual ThreadID	getIDOfThread(CArchThread thread) = 0;
+
+	//! Set the interrupt handler
+	/*!
+	Sets the function to call on receipt of an external interrupt.
+	By default and when \p func is NULL, the main thread is cancelled.
+	*/
+	virtual void		setSignalHandler(ESignal, SignalFunc func,
+							void* userData) = 0;
+
+	//! Invoke the signal handler
+	/*!
+	Invokes the signal handler for \p signal, if any.  If no handler
+	cancels the main thread for \c kINTERRUPT and \c kTERMINATE and
+	ignores the call otherwise.
+	*/
+	virtual void		raiseSignal(ESignal signal) = 0;
 
 	//@}
 };

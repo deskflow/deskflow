@@ -77,6 +77,8 @@ CGlobalOptions::init(HWND hwnd)
 	setWindowText(child, buffer);
 	child = getItem(hwnd, IDC_GLOBAL_SCREENSAVER_SYNC);
 	setItemChecked(child, true);
+	child = getItem(hwnd, IDC_GLOBAL_RELATIVE_MOVES);
+	setItemChecked(child, false);
 
 	// get the global options
 	const CConfig::CScreenOptions* options = m_config->getOptions("");
@@ -114,6 +116,10 @@ CGlobalOptions::init(HWND hwnd)
 			}
 			else if (id == kOptionScreenSaverSync) {
 				child = getItem(hwnd, IDC_GLOBAL_SCREENSAVER_SYNC);
+				setItemChecked(child, (value != 0));
+			}
+			else if (id == kOptionRelativeMouseMoves) {
+				child = getItem(hwnd, IDC_GLOBAL_RELATIVE_MOVES);
 				setItemChecked(child, (value != 0));
 			}
 		}
@@ -180,6 +186,7 @@ CGlobalOptions::save(HWND hwnd)
 	m_config->removeOption("", kOptionScreenSwitchTwoTap);
 	m_config->removeOption("", kOptionHeartbeat);
 	m_config->removeOption("", kOptionScreenSaverSync);
+	m_config->removeOption("", kOptionRelativeMouseMoves);
 
 	// add requested options
 	child = getItem(hwnd, IDC_GLOBAL_DELAY_CHECK);
@@ -197,6 +204,10 @@ CGlobalOptions::save(HWND hwnd)
 	child = getItem(hwnd, IDC_GLOBAL_SCREENSAVER_SYNC);
 	if (!isItemChecked(child)) {
 		m_config->addOption("", kOptionScreenSaverSync, 0);
+	}
+	child = getItem(hwnd, IDC_GLOBAL_RELATIVE_MOVES);
+	if (isItemChecked(child)) {
+		m_config->addOption("", kOptionRelativeMouseMoves, 1);
 	}
 
 	// save last values

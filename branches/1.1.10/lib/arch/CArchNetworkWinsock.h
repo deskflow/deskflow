@@ -31,18 +31,21 @@
 class CArchSocketImpl {
 public:
 	SOCKET				m_socket;
-	bool				m_connected;
 	int					m_refCount;
+	WSAEVENT			m_event;
+	bool				m_pollWrite;
 };
 
 class CArchNetAddressImpl {
 public:
-	CArchNetAddressImpl() : m_len(sizeof(m_addr)) { }
+	static CArchNetAddressImpl* alloc(size_t);
 
 public:
-	struct sockaddr		m_addr;
 	int					m_len;
+	struct sockaddr		m_addr;
 };
+#define ADDR_HDR_SIZE	offsetof(CArchNetAddressImpl, m_addr)
+#define TYPED_ADDR(type_, addr_) (reinterpret_cast<type_*>(&addr_->m_addr))
 
 //! Win32 implementation of IArchNetwork
 class CArchNetworkWinsock : public IArchNetwork {
@@ -59,13 +62,13 @@ public:
 	virtual void		bindSocket(CArchSocket s, CArchNetAddress addr);
 	virtual void		listenOnSocket(CArchSocket s);
 	virtual CArchSocket	acceptSocket(CArchSocket s, CArchNetAddress* addr);
-	virtual void		connectSocket(CArchSocket s, CArchNetAddress name);
+	virtual bool		connectSocket(CArchSocket s, CArchNetAddress name);
 	virtual int			pollSocket(CPollEntry[], int num, double timeout);
+	virtual void		unblockPollSocket(CArchThread thread);
 	virtual size_t		readSocket(CArchSocket s, void* buf, size_t len);
 	virtual size_t		writeSocket(CArchSocket s,
 							const void* buf, size_t len);
 	virtual void		throwErrorOnSocket(CArchSocket);
-	virtual bool		setBlockingOnSocket(CArchSocket, bool blocking);
 	virtual bool		setNoDelayOnSocket(CArchSocket, bool noDelay);
 	virtual std::string		getHostName();
 	virtual CArchNetAddress	newAnyAddr(EAddressFamily);
@@ -78,9 +81,12 @@ public:
 	virtual void			setAddrPort(CArchNetAddress, int port);
 	virtual int				getAddrPort(CArchNetAddress);
 	virtual bool			isAnyAddr(CArchNetAddress);
+	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress);
 
 private:
 	void				init(HMODULE);
+
+	void				setBlockingOnSocket(SOCKET, bool blocking);
 
 	void				throwError(int);
 	void				throwNameError(int);

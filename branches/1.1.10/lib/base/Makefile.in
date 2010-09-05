@@ -94,46 +94,56 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST = \
-	base.dsp				\
+	base.dsp					\
 	$(NULL)
 
 
 MAINTAINERCLEANFILES = \
-	Makefile.in				\
+	Makefile.in					\
 	$(NULL)
 
 
 noinst_LIBRARIES = libbase.a
 libbase_a_SOURCES = \
-	CFunctionJob.cpp		\
-	CJobList.cpp			\
-	CLog.cpp				\
-	CStopwatch.cpp			\
-	CStringUtil.cpp			\
-	CUnicode.cpp			\
-	LogOutputters.cpp		\
-	XBase.cpp				\
-	CFunctionJob.h			\
-	CJobList.h				\
-	CLog.h					\
-	CStopwatch.h			\
-	CString.h				\
-	CStringUtil.h			\
-	CUnicode.h				\
-	IJob.h					\
-	ILogOutputter.h			\
-	LogOutputters.h			\
-	TMethodJob.h			\
-	XBase.h					\
+	CEvent.cpp					\
+	CEventQueue.cpp				\
+	CFunctionEventJob.cpp		\
+	CFunctionJob.cpp			\
+	CLog.cpp					\
+	CSimpleEventQueueBuffer.cpp	\
+	CStopwatch.cpp				\
+	CStringUtil.cpp				\
+	CUnicode.cpp				\
+	IEventQueue.cpp				\
+	LogOutputters.cpp			\
+	XBase.cpp					\
+	CEvent.h					\
+	CEventQueue.h				\
+	CFunctionEventJob.h			\
+	CFunctionJob.h				\
+	CLog.h						\
+	CPriorityQueue.h			\
+	CSimpleEventQueueBuffer.h	\
+	CStopwatch.h				\
+	CString.h					\
+	CStringUtil.h				\
+	CUnicode.h					\
+	IEventJob.h					\
+	IEventQueue.h				\
+	IEventQueueBuffer.h			\
+	IJob.h						\
+	ILogOutputter.h				\
+	LogOutputters.h				\
+	TMethodEventJob.h			\
+	TMethodJob.h				\
+	XBase.h						\
 	$(NULL)
 
 INCLUDES = \
-	-I$(VDEPTH)/lib/common	\
-	-I$(VDEPTH)/lib/arch	\
+	-I$(top_srcdir)/lib/common	\
+	-I$(top_srcdir)/lib/arch	\
 	$(NULL)
 
 subdir = lib/base
@@ -144,9 +154,11 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libbase_a_AR = $(AR) cru
 libbase_a_LIBADD =
-am_libbase_a_OBJECTS = CFunctionJob.$(OBJEXT) CJobList.$(OBJEXT) \
-	CLog.$(OBJEXT) CStopwatch.$(OBJEXT) CStringUtil.$(OBJEXT) \
-	CUnicode.$(OBJEXT) LogOutputters.$(OBJEXT) XBase.$(OBJEXT)
+am_libbase_a_OBJECTS = CEvent.$(OBJEXT) CEventQueue.$(OBJEXT) \
+	CFunctionEventJob.$(OBJEXT) CFunctionJob.$(OBJEXT) \
+	CLog.$(OBJEXT) CSimpleEventQueueBuffer.$(OBJEXT) \
+	CStopwatch.$(OBJEXT) CStringUtil.$(OBJEXT) CUnicode.$(OBJEXT) \
+	IEventQueue.$(OBJEXT) LogOutputters.$(OBJEXT) XBase.$(OBJEXT)
 libbase_a_OBJECTS = $(am_libbase_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -155,9 +167,12 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CFunctionJob.Po $(DEPDIR)/CJobList.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CLog.Po $(DEPDIR)/CStopwatch.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CStringUtil.Po $(DEPDIR)/CUnicode.Po \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CEvent.Po $(DEPDIR)/CEventQueue.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CFunctionEventJob.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CFunctionJob.Po $(DEPDIR)/CLog.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CSimpleEventQueueBuffer.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CStopwatch.Po $(DEPDIR)/CStringUtil.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CUnicode.Po $(DEPDIR)/IEventQueue.Po \
 @AMDEP_TRUE@	$(DEPDIR)/LogOutputters.Po $(DEPDIR)/XBase.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -201,12 +216,16 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CEvent.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CEventQueue.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CFunctionEventJob.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CFunctionJob.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CJobList.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CLog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CSimpleEventQueueBuffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CStopwatch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CStringUtil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CUnicode.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/IEventQueue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/LogOutputters.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XBase.Po@am__quote@
 

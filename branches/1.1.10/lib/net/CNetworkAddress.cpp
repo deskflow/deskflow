@@ -113,6 +113,9 @@ CNetworkAddress::CNetworkAddress(const CString& hostname_, int port) :
 		catch (XArchNetworkNameNoAddress&) {
 			throw XSocketAddress(XSocketAddress::kNoAddress, hostname, port);
 		}
+		catch (XArchNetworkNameUnsupported&) {
+			throw XSocketAddress(XSocketAddress::kUnsupported, hostname, port);
+		}
 		catch (XArchNetworkName&) {
 			throw XSocketAddress(XSocketAddress::kUnknown, hostname, port);
 		}
@@ -139,6 +142,18 @@ CNetworkAddress::operator=(const CNetworkAddress& addr)
 	m_hostname = addr.m_hostname;
 	m_address  = newAddr;
 	return *this;
+}
+
+bool
+CNetworkAddress::operator==(const CNetworkAddress& addr) const
+{
+	return ARCH->isEqualAddr(m_address, addr.m_address);
+}
+
+bool
+CNetworkAddress::operator!=(const CNetworkAddress& addr) const
+{
+	return !operator==(addr);
 }
 
 bool

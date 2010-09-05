@@ -12,20 +12,37 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
-EXTRA_DIST =							\
+COMMON_SOURCE_FILES =					\
+	CClientTaskBarReceiver.cpp			\
+	CClientTaskBarReceiver.h			\
+	synergyc.cpp						\
+	$(NULL)
+XWINDOWS_SOURCE_FILES =					\
+	CXWindowsClientTaskBarReceiver.cpp	\
+	CXWindowsClientTaskBarReceiver.h	\
+	$(NULL)
+MSWINDOWS_SOURCE_FILES =				\
 	CMSWindowsClientTaskBarReceiver.cpp	\
 	CMSWindowsClientTaskBarReceiver.h	\
 	resource.h							\
+	synergyc.rc							\
+	$(NULL)
+CARBON_SOURCE_FILES =					\
+	COSXClientTaskBarReceiver.cpp		\
+	COSXClientTaskBarReceiver.h			\
+	$(NULL)
+
+EXTRA_DIST =							\
 	synergyc.dsp						\
 	synergyc.ico						\
-	synergyc.rc							\
 	tb_error.ico						\
 	tb_idle.ico							\
 	tb_run.ico							\
 	tb_wait.ico							\
+	$(XWINDOWS_SOURCE_FILES)			\
+	$(MSWINDOWS_SOURCE_FILES)			\
+	$(CARBON_SOURCE_FILES)				\
 	$(NULL)
 
 MAINTAINERCLEANFILES =					\
@@ -33,37 +50,43 @@ MAINTAINERCLEANFILES =					\
 	$(NULL)
 
 bin_PROGRAMS = synergyc
-synergyc_SOURCES = 						\
-	CClientTaskBarReceiver.cpp			\
-	CClientTaskBarReceiver.h			\
-	CXWindowsClientTaskBarReceiver.cpp	\
-	CXWindowsClientTaskBarReceiver.h	\
-	synergyc.cpp						\
+if XWINDOWS
+synergyc_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(XWINDOWS_SOURCE_FILES)			\
 	$(NULL)
-synergyc_LDADD =						\
-	$(DEPTH)/lib/client/libclient.a		\
-	$(DEPTH)/lib/platform/libplatform.a	\
-	$(DEPTH)/lib/synergy/libsynergy.a	\
-	$(DEPTH)/lib/net/libnet.a			\
-	$(DEPTH)/lib/io/libio.a				\
-	$(DEPTH)/lib/mt/libmt.a				\
-	$(DEPTH)/lib/base/libbase.a			\
-	$(DEPTH)/lib/arch/libarch.a			\
-	$(X_LIBS)							\
-	$(X_PRE_LIBS)						\
-	-lXtst								\
-	-lXext								\
-	-lX11								\
-	$(X_EXTRA_LIBS)						\
+endif
+if MSWINDOWS
+synergyc_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(MSWINDOWS_SOURCE_FILES)			\
+	$(NULL)
+endif
+if CARBON
+synergyc_SOURCES =						\
+	$(COMMON_SOURCE_FILES)				\
+	$(CARBON_SOURCE_FILES)				\
+	$(NULL)
+endif
+synergyc_LDADD =								\
+	$(top_builddir)/lib/client/libclient.a		\
+	$(top_builddir)/lib/platform/libplatform.a	\
+	$(top_builddir)/lib/synergy/libsynergy.a	\
+	$(top_builddir)/lib/net/libnet.a			\
+	$(top_builddir)/lib/io/libio.a				\
+	$(top_builddir)/lib/mt/libmt.a				\
+	$(top_builddir)/lib/base/libbase.a			\
+	$(top_builddir)/lib/common/libcommon.a		\
+	$(top_builddir)/lib/arch/libarch.a			\
 	$(NULL)
 INCLUDES =								\
-	-I$(VDEPTH)/lib/common				\
-	-I$(VDEPTH)/lib/arch				\
-	-I$(VDEPTH)/lib/base 				\
-	-I$(VDEPTH)/lib/mt	 				\
-	-I$(VDEPTH)/lib/io	 				\
-	-I$(VDEPTH)/lib/net	 				\
-	-I$(VDEPTH)/lib/synergy				\
-	-I$(VDEPTH)/lib/platform 			\
-	-I$(VDEPTH)/lib/client 				\
+	-I$(top_srcdir)/lib/common			\
+	-I$(top_srcdir)/lib/arch			\
+	-I$(top_srcdir)/lib/base 			\
+	-I$(top_srcdir)/lib/mt	 			\
+	-I$(top_srcdir)/lib/io	 			\
+	-I$(top_srcdir)/lib/net	 			\
+	-I$(top_srcdir)/lib/synergy			\
+	-I$(top_srcdir)/lib/platform 		\
+	-I$(top_srcdir)/lib/client 			\
 	$(NULL)

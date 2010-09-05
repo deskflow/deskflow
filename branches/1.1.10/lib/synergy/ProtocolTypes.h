@@ -21,7 +21,7 @@
 // 1.0:  initial protocol
 // 1.1:  adds KeyCode to key press, release, and repeat
 static const SInt16		kProtocolMajorVersion = 1;
-static const SInt16		kProtocolMinorVersion = 1;
+static const SInt16		kProtocolMinorVersion = 2;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
@@ -180,6 +180,10 @@ static const char		kMsgDMouseUp[]		= "DMUP%1i";
 // $1 = x, $2 = y.  x,y are absolute screen coordinates.
 static const char		kMsgDMouseMove[]	= "DMMV%2i%2i";
 
+// relative mouse move:  primary -> secondary
+// $1 = dx, $2 = dy.  dx,dy are motion deltas.
+static const char		kMsgDMouseRelMove[]	= "DMRM%2i%2i";
+
 // mouse button pressed:  primary -> secondary
 // $1 = delta.  the delta should be +120 for one tick forward (away
 // from the user) and -120 for one tick backward (toward the user).
@@ -197,7 +201,7 @@ static const char		kMsgDClipboard[]	= "DCLP%1i%4i%s";
 // $2 = coordinate of topmost pixel on secondary screen,
 // $3 = width of secondary screen in pixels,
 // $4 = height of secondary screen in pixels,
-// $5 = size of warp zone,
+// $5 = size of warp zone, (obsolete)
 // $6, $7 = the x,y position of the mouse on the secondary screen.
 //
 // the secondary screen must send this message in response to the
@@ -267,17 +271,12 @@ public:
 	*/
 	SInt32				m_w, m_h;
 
-	//! Jump zone size
-	/*!
-	This is the size of the jump zone.  The cursor jumps to the adjacent
-	screen when it comes within this many pixels of the edge of the screen.
-	*/
-	SInt32				m_zoneSize;
+	//! Obsolete (jump zone size)
+	SInt32				obsolete1;
 
 	//! Mouse position
 	/*!
-	The position of the cursor.  This is not kept up-to-date so it's
-	only meaningful when receiving an update.
+	The current location of the mouse cursor.
 	*/
 	SInt32				m_mx, m_my;
 };

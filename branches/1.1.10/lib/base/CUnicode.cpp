@@ -23,30 +23,44 @@
 inline
 static
 UInt16
-decode16(const UInt8* n)
+decode16(const UInt8* n, bool byteSwapped)
 {
 	union x16 {
 		UInt8	n8[2];
 		UInt16	n16;
 	} c;
-	c.n8[0] = n[0];
-	c.n8[1] = n[1];
+	if (byteSwapped) {
+		c.n8[0] = n[1];
+		c.n8[1] = n[0];
+	}
+	else {
+		c.n8[0] = n[0];
+		c.n8[1] = n[1];
+	}
 	return c.n16;
 }
 
 inline
 static
 UInt32
-decode32(const UInt8* n)
+decode32(const UInt8* n, bool byteSwapped)
 {
 	union x32 {
 		UInt8	n8[4];
 		UInt32	n32;
 	} c;
-	c.n8[0] = n[0];
-	c.n8[1] = n[1];
-	c.n8[2] = n[2];
-	c.n8[3] = n[3];
+	if (byteSwapped) {
+		c.n8[0] = n[3];
+		c.n8[1] = n[2];
+		c.n8[2] = n[1];
+		c.n8[3] = n[0];
+	}
+	else {
+		c.n8[0] = n[0];
+		c.n8[1] = n[1];
+		c.n8[2] = n[2];
+		c.n8[3] = n[3];
+	}
 	return c.n32;
 }
 
@@ -220,57 +234,15 @@ CUnicode::UTF8ToText(const CString& src, bool* errors)
 	UInt32 size;
 	wchar_t* tmp = UTF8ToWideChar(src, size, errors);
 
-	// get length of multibyte string
-	int mblen;
-	CArchMBState state = ARCH->newMBState();
-	size_t len = 0;
-	UInt32 n   = size;
-	for (const wchar_t* scan = tmp; n > 0; ++scan, --n) {
-		mblen = ARCH->convWCToMB(NULL, *scan, state);
-		if (mblen == -1) {
-			// unconvertable character
-			setError(errors);
-			len += 1;
-		}
-		else {
-			len += mblen;
-		}
-	}
-
-	// handle nul terminator
-	mblen = ARCH->convWCToMB(NULL, L'\0', state);
-	if (mblen != -1) {
-		len += mblen;
-	}
-	assert(ARCH->isInitMBState(state) != 0);
-
-	// allocate multibyte string
-	char* mbs = new char[len];
-
-	// convert to multibyte
-	char* dst = mbs;
-	n         = size;
-	for (const wchar_t* scan = tmp; n > 0; ++scan, --n) {
-		mblen = ARCH->convWCToMB(dst, *scan, state);
-		if (mblen == -1) {
-			// unconvertable character
-			*dst++ = '?';
-		}
-		else {
-			dst   += mblen;
-		}
-	}
-	mblen = ARCH->convWCToMB(dst, L'\0', state);
-	if (mblen != -1) {
-		// don't include nul terminator
-		dst += mblen - 1;
-	}
-	CString text(mbs, dst - mbs);
+	// convert string to multibyte
+	int len   = ARCH->convStringWCToMB(NULL, tmp, size, errors);
+	char* mbs = new char[len + 1];
+	ARCH->convStringWCToMB(mbs, tmp, size, errors);
+	CString text(mbs, len);
 
 	// clean up
 	delete[] mbs;
 	delete[] tmp;
-	ARCH->closeMBState(state);
 
 	return text;
 }
@@ -325,88 +297,17 @@ CUnicode::textToUTF8(const CString& src, bool* errors)
 	// default to success
 	resetError(errors);
 
-	// get length of multibyte string
-	UInt32 n   = src.size();
-	size_t len = 0;
-	CArchMBState state = ARCH->newMBState();
-	for (const char* scan = src.c_str(); n > 0; ) {
-		int mblen = ARCH->convMBToWC(NULL, scan, n, state);
-		switch (mblen) {
-		case -2:
-			// incomplete last character.  convert to unknown character.
-			setError(errors);
-			len += 1;
-			n    = 0;
-			break;
-
-		case -1:
-			// invalid character.  count one unknown character and
-			// start at the next byte.
-			setError(errors);
-			len  += 1;
-			scan += 1;
-			n    -= 1;
-			break;
-
-		case 0:
-			len  += 1;
-			scan += 1;
-			n    -= 1;
-			break;
-
-		default:
-			// normal character
-			len  += 1;
-			scan += mblen;
-			n    -= mblen;
-			break;
-		}
-	}
-	ARCH->initMBState(state);
-
-	// allocate wide character string
-	wchar_t* wcs = new wchar_t[len];
-
-	// convert multibyte to wide char
-	n = src.size();
-	wchar_t* dst = wcs;
-	for (const char* scan = src.c_str(); n > 0; ++dst) {
-		int mblen = ARCH->convMBToWC(dst, scan, n, state);
-		switch (mblen) {
-		case -2:
-			// incomplete character.  convert to unknown character.
-			*dst = (wchar_t)0xfffd;
-			n    = 0;
-			break;
-
-		case -1:
-			// invalid character.  count one unknown character and
-			// start at the next byte.
-			*dst = (wchar_t)0xfffd;
-			scan += 1;
-			n    -= 1;
-			break;
-
-		case 0:
-			*dst = (wchar_t)0x0000;
-			scan += 1;
-			n    -= 1;
-			break;
-
-		default:
-			// normal character
-			scan += mblen;
-			n    -= mblen;
-			break;
-		}
-	}
+	// convert string to wide characters
+	UInt32 n     = src.size();
+	int len      = ARCH->convStringMBToWC(NULL, src.c_str(), n, errors);
+	wchar_t* wcs = new wchar_t[len + 1];
+	ARCH->convStringMBToWC(wcs, src.c_str(), n, errors);
 
 	// convert to UTF8
 	CString utf8 = wideCharToUTF8(wcs, len, errors);
 
 	// clean up
 	delete[] wcs;
-	ARCH->closeMBState(state);
 
 	return utf8;
 }
@@ -479,9 +380,29 @@ CUnicode::doUCS2ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	CString dst;
 	dst.reserve(n);
 
+	// check if first character is 0xfffe or 0xfeff
+	bool byteSwapped = false;
+	if (n >= 1) {
+		switch (decode16(data, false)) {
+		case 0x0000feff:
+			data += 2;
+			--n;
+			break;
+
+		case 0x0000fffe:
+			byteSwapped = true;
+			data += 2;
+			--n;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	// convert each character
 	for (; n > 0; data += 2, --n) {
-		UInt32 c = decode16(data);
+		UInt32 c = decode16(data, byteSwapped);
 		toUTF8(dst, c, errors);
 	}
 
@@ -495,9 +416,29 @@ CUnicode::doUCS4ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	CString dst;
 	dst.reserve(n);
 
+	// check if first character is 0xfffe or 0xfeff
+	bool byteSwapped = false;
+	if (n >= 1) {
+		switch (decode32(data, false)) {
+		case 0x0000feff:
+			data += 4;
+			--n;
+			break;
+
+		case 0x0000fffe:
+			byteSwapped = true;
+			data += 4;
+			--n;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	// convert each character
 	for (; n > 0; data += 4, --n) {
-		UInt32 c = decode32(data);
+		UInt32 c = decode32(data, byteSwapped);
 		toUTF8(dst, c, errors);
 	}
 
@@ -511,9 +452,29 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	CString dst;
 	dst.reserve(n);
 
+	// check if first character is 0xfffe or 0xfeff
+	bool byteSwapped = false;
+	if (n >= 1) {
+		switch (decode16(data, false)) {
+		case 0x0000feff:
+			data += 2;
+			--n;
+			break;
+
+		case 0x0000fffe:
+			byteSwapped = true;
+			data += 2;
+			--n;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	// convert each character
 	for (; n > 0; data += 2, --n) {
-		UInt32 c = decode16(data);
+		UInt32 c = decode16(data, byteSwapped);
 		if (c < 0x0000d800 || c > 0x0000dfff) {
 			toUTF8(dst, c, errors);
 		}
@@ -523,7 +484,7 @@ CUnicode::doUTF16ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 			toUTF8(dst, s_replacement, NULL);
 		}
 		else if (c >= 0x0000d800 && c <= 0x0000dbff) {
-			UInt32 c2 = decode16(data);
+			UInt32 c2 = decode16(data, byteSwapped);
 			data += 2;
 			--n;
 			if (c2 < 0x0000dc00 || c2 > 0x0000dfff) {
@@ -553,9 +514,29 @@ CUnicode::doUTF32ToUTF8(const UInt8* data, UInt32 n, bool* errors)
 	CString dst;
 	dst.reserve(n);
 
+	// check if first character is 0xfffe or 0xfeff
+	bool byteSwapped = false;
+	if (n >= 1) {
+		switch (decode32(data, false)) {
+		case 0x0000feff:
+			data += 4;
+			--n;
+			break;
+
+		case 0x0000fffe:
+			byteSwapped = true;
+			data += 4;
+			--n;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	// convert each character
 	for (; n > 0; data += 4, --n) {
-		UInt32 c = decode32(data);
+		UInt32 c = decode32(data, byteSwapped);
 		if (c >= 0x00110000) {
 			setError(errors);
 			c = s_replacement;

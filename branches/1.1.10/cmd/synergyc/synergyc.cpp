@@ -13,44 +13,56 @@
  */
 
 #include "CClient.h"
-#include "ISecondaryScreenFactory.h"
+#include "CScreen.h"
 #include "ProtocolTypes.h"
 #include "Version.h"
 #include "XScreen.h"
 #include "CNetworkAddress.h"
+#include "CSocketMultiplexer.h"
 #include "CTCPSocketFactory.h"
 #include "XSocket.h"
-#include "CCondVar.h"
-#include "CLock.h"
-#include "CMutex.h"
 #include "CThread.h"
-#include "XThread.h"
+#include "CEventQueue.h"
+#include "CFunctionEventJob.h"
 #include "CFunctionJob.h"
 #include "CLog.h"
-#include "LogOutputters.h"
 #include "CString.h"
+#include "CStringUtil.h"
+#include "LogOutputters.h"
 #include "CArch.h"
+#include "XArch.h"
 #include <cstring>
 
 #define DAEMON_RUNNING(running_)
-#if WINDOWS_LIKE
-#include "CMSWindowsScreen.h"
-#include "CMSWindowsSecondaryScreen.h"
+#if WINAPI_MSWINDOWS
 #include "CArchMiscWindows.h"
+#include "CMSWindowsScreen.h"
+#include "CMSWindowsUtil.h"
 #include "CMSWindowsClientTaskBarReceiver.h"
 #include "resource.h"
 #undef DAEMON_RUNNING
 #define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
-#elif UNIX_LIKE
-#include "CXWindowsSecondaryScreen.h"
+#elif WINAPI_XWINDOWS
+#include "CXWindowsScreen.h"
 #include "CXWindowsClientTaskBarReceiver.h"
+#elif WINAPI_CARBON
+#include "COSXScreen.h"
+#include "COSXClientTaskBarReceiver.h"
 #endif
 
 // platform dependent name of a daemon
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 #define DAEMON_NAME "Synergy Client"
-#elif UNIX_LIKE
+#elif SYSAPI_UNIX
 #define DAEMON_NAME "synergyc"
+#endif
+
+typedef int (*StartupFunc)(int, char**);
+static bool startClient();
+static void parse(int argc, const char* const* argv);
+#if WINAPI_MSWINDOWS
+static void handleSystemSuspend(void*);
+static void handleSystemResume(void*);
 #endif
 
 //
@@ -66,7 +78,9 @@ public:
 		m_backend(false),
 		m_restartable(true),
 		m_daemon(true),
-		m_logFilter(NULL)
+		m_logFilter(NULL),
+		m_display(NULL),
+		m_serverAddress(NULL)
 		{ s_instance = this; }
 	~CArgs() { s_instance = NULL; }
 
@@ -77,8 +91,9 @@ public:
 	bool				m_restartable;
 	bool				m_daemon;
 	const char* 		m_logFilter;
+	const char*			m_display;
 	CString 			m_name;
-	CNetworkAddress 	m_serverAddress;
+	CNetworkAddress* 	m_serverAddress;
 };
 
 CArgs*					CArgs::s_instance = NULL;
@@ -88,63 +103,33 @@ CArgs*					CArgs::s_instance = NULL;
 // platform dependent factories
 //
 
-//! Factory for creating secondary screens
-/*!
-Objects of this type create secondary screens appropriate for the
-platform.
-*/
-class CSecondaryScreenFactory : public ISecondaryScreenFactory {
-public:
-	CSecondaryScreenFactory() { }
-	virtual ~CSecondaryScreenFactory() { }
-
-	// ISecondaryScreenFactory overrides
-	virtual CSecondaryScreen*
-						create(IScreenReceiver*);
-};
-
-CSecondaryScreen*
-CSecondaryScreenFactory::create(IScreenReceiver* receiver)
+static
+CScreen*
+createScreen()
 {
-#if WINDOWS_LIKE
-	return new CMSWindowsSecondaryScreen(receiver);
-#elif UNIX_LIKE
-	return new CXWindowsSecondaryScreen(receiver);
+#if WINAPI_MSWINDOWS
+	return new CScreen(new CMSWindowsScreen(false,
+							new CFunctionJob(&handleSystemSuspend),
+							new CFunctionJob(&handleSystemResume)));
+#elif WINAPI_XWINDOWS
+	return new CScreen(new CXWindowsScreen(ARG->m_display, false));
+#elif WINAPI_CARBON
+	return new CScreen(new COSXScreen(false));
 #endif
 }
 
-
-//! CQuitJob
-/*!
-A job that cancels a given thread.
-*/
-class CQuitJob : public IJob {
-public:
-	CQuitJob(const CThread& thread);
-	~CQuitJob();
-
-	// IJob overrides
-	virtual void		run();
-
-private:
-	CThread				m_thread;
-};
-
-CQuitJob::CQuitJob(const CThread& thread) :
-	m_thread(thread)
+static
+CClientTaskBarReceiver*
+createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 {
-	// do nothing
-}
-
-CQuitJob::~CQuitJob()
-{
-	// do nothing
-}
-
-void
-CQuitJob::run()
-{
-	m_thread.cancel();
+#if WINAPI_MSWINDOWS
+	return new CMSWindowsClientTaskBarReceiver(
+							CMSWindowsScreen::getInstance(), logBuffer);
+#elif WINAPI_XWINDOWS
+	return new CXWindowsClientTaskBarReceiver(logBuffer);
+#elif WINAPI_CARBON
+	return new COSXClientTaskBarReceiver(logBuffer);
+#endif
 }
 
 
@@ -152,132 +137,362 @@ CQuitJob::run()
 // platform independent main
 //
 
-static CClient*					s_client = NULL;
+static CClient*					s_client          = NULL;
+static CScreen*					s_clientScreen    = NULL;
 static CClientTaskBarReceiver*	s_taskBarReceiver = NULL;
+static double					s_retryTime       = 0.0;
+static bool						s_suspened        = false;
 
 static
-int
-realMain(void)
+void
+updateStatus()
 {
-	int result = kExitSuccess;
-	do {
-		bool opened = false;
-		bool locked = true;
-		try {
-			// create client
-			s_client = new CClient(ARG->m_name);
-			s_client->setAddress(ARG->m_serverAddress);
-			s_client->setScreenFactory(new CSecondaryScreenFactory);
-			s_client->setSocketFactory(new CTCPSocketFactory);
-			s_client->setStreamFilterFactory(NULL);
-
-			// open client
-			try {
-				s_taskBarReceiver->setClient(s_client);
-				s_client->open();
-				opened = true;
-
-				// run client
-				DAEMON_RUNNING(true);
-				locked = false;
-				s_client->mainLoop();
-				locked = true;
-				DAEMON_RUNNING(false);
-
-				// get client status
-				if (s_client->wasRejected()) {
-					// try again later.  we don't want to bother
-					// the server very often if it doesn't want us.
-					throw XScreenUnavailable(60.0);
-				}
-
-				// clean up
-#define FINALLY do {								\
-				if (!locked) {						\
-					DAEMON_RUNNING(false);			\
-					locked = true;					\
-				}									\
-				if (opened) {						\
-					s_client->close();				\
-				}									\
-				s_taskBarReceiver->setClient(NULL);	\
-				delete s_client;					\
-				s_client = NULL;					\
-				} while (false)
-				FINALLY;
-			}
-			catch (XScreenUnavailable& e) {
-				// wait before retrying if we're going to retry
-				if (ARG->m_restartable) {
-					LOG((CLOG_DEBUG "waiting %.0f seconds to retry", e.getRetryTime()));
-					ARCH->sleep(e.getRetryTime());
-				}
-				else {
-					result = kExitFailed;
-				}
-				FINALLY;
-			}
-			catch (XThread&) {
-				FINALLY;
-				throw;
-			}
-			catch (...) {
-				// don't try to restart and fail
-				ARG->m_restartable = false;
-				result             = kExitFailed;
-				FINALLY;
-			}
-#undef FINALLY
-		}
-		catch (XBase& e) {
-			LOG((CLOG_CRIT "failed: %s", e.what()));
-		}
-		catch (XThread&) {
-			// terminated
-			ARG->m_restartable = false;
-			result             = kExitTerminated;
-		}
-	} while (ARG->m_restartable);
-
-	return result;
+	s_taskBarReceiver->updateStatus(s_client, "");
 }
 
 static
 void
-realMainEntry(void* vresult)
+updateStatus(const CString& msg)
 {
-	*reinterpret_cast<int*>(vresult) = realMain();
+	s_taskBarReceiver->updateStatus(s_client, msg);
+}
+
+static
+void
+resetRestartTimeout()
+{
+	s_retryTime = 0.0;
+}
+
+static
+double
+nextRestartTimeout()
+{
+	// choose next restart timeout.  we start with rapid retries
+	// then slow down.
+	if (s_retryTime < 1.0) {
+		s_retryTime = 1.0;
+	}
+	else if (s_retryTime < 3.0) {
+		s_retryTime = 3.0;
+	}
+	else if (s_retryTime < 5.0) {
+		s_retryTime = 5.0;
+	}
+	else if (s_retryTime < 15.0) {
+		s_retryTime = 15.0;
+	}
+	else if (s_retryTime < 30.0) {
+		s_retryTime = 30.0;
+	}
+	else {
+		s_retryTime = 60.0;
+	}
+	return s_retryTime;
+}
+
+static
+void
+handleScreenError(const CEvent&, void*)
+{
+	LOG((CLOG_CRIT "error on screen"));
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+#if WINAPI_MSWINDOWS
+static
+void
+handleSystemSuspend(void*)
+{
+	LOG((CLOG_NOTE "system suspending"));
+	s_suspened = true;
+	s_client->disconnect(NULL);
+}
+
+static
+void
+handleSystemResume(void*)
+{
+	LOG((CLOG_NOTE "system resuming"));
+	s_suspened = false;
+	startClient();
+}
+#endif
+
+static
+CScreen*
+openClientScreen()
+{
+	CScreen* screen = createScreen();
+	EVENTQUEUE->adoptHandler(IScreen::getErrorEvent(),
+							screen->getEventTarget(),
+							new CFunctionEventJob(
+								&handleScreenError));
+	return screen;
+}
+
+static
+void
+closeClientScreen(CScreen* screen)
+{
+	if (screen != NULL) {
+		EVENTQUEUE->removeHandler(IScreen::getErrorEvent(),
+							screen->getEventTarget());
+		delete screen;
+	}
+}
+
+static
+void
+handleClientRestart(const CEvent&, void* vtimer)
+{
+	// discard old timer
+	CEventQueueTimer* timer = reinterpret_cast<CEventQueueTimer*>(vtimer);
+	EVENTQUEUE->deleteTimer(timer);
+	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
+
+	// reconnect
+	if (!s_suspened) {
+		startClient();
+	}
+}
+
+static
+void
+scheduleClientRestart(double retryTime)
+{
+	// install a timer and handler to retry later
+	LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(retryTime, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+							new CFunctionEventJob(&handleClientRestart, timer));
+}
+
+static
+void
+handleClientConnected(const CEvent&, void*)
+{
+	LOG((CLOG_NOTE "connected to server"));
+	resetRestartTimeout();
+	updateStatus();
+}
+
+static
+void
+handleClientFailed(const CEvent& e, void*)
+{
+	CClient::CFailInfo* info =
+		reinterpret_cast<CClient::CFailInfo*>(e.getData());
+
+	updateStatus(CString("Failed to connect to server: ") + info->m_what);
+	if (!ARG->m_restartable || !info->m_retry) {
+		LOG((CLOG_ERR "failed to connect to server: %s", info->m_what));
+	}
+	else {
+		LOG((CLOG_WARN "failed to connect to server: %s", info->m_what));
+		if (!s_suspened) {
+			scheduleClientRestart(nextRestartTimeout());
+		}
+	}
+}
+
+static
+void
+handleClientDisconnected(const CEvent&, void*)
+{
+	LOG((CLOG_NOTE "disconnected from server"));
+	if (!ARG->m_restartable) {
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+	}
+	else if (!s_suspened) {
+		s_client->connect();
+	}
+	updateStatus();
+}
+
+static
+CClient*
+openClient(const CString& name, const CNetworkAddress& address, CScreen* screen)
+{
+	CClient* client = new CClient(name, address,
+						new CTCPSocketFactory, NULL, screen);
+	EVENTQUEUE->adoptHandler(CClient::getConnectedEvent(),
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientConnected));
+	EVENTQUEUE->adoptHandler(CClient::getConnectionFailedEvent(),
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientFailed));
+	EVENTQUEUE->adoptHandler(CClient::getDisconnectedEvent(),
+						client->getEventTarget(),
+						new CFunctionEventJob(handleClientDisconnected));
+	return client;
+}
+
+static
+void
+closeClient(CClient* client)
+{
+	if (client == NULL) {
+		return;
+	}
+
+	EVENTQUEUE->removeHandler(CClient::getConnectedEvent(), client);
+	EVENTQUEUE->removeHandler(CClient::getConnectionFailedEvent(), client);
+	EVENTQUEUE->removeHandler(CClient::getDisconnectedEvent(), client);
+	delete client;
+}
+
+static
+bool
+startClient()
+{
+	double retryTime;
+	CScreen* clientScreen = NULL;
+	try {
+		if (s_clientScreen == NULL) {
+			clientScreen = openClientScreen();
+			s_client     = openClient(ARG->m_name,
+							*ARG->m_serverAddress, clientScreen);
+			s_clientScreen  = clientScreen;
+			LOG((CLOG_NOTE "started client"));
+		}
+		s_client->connect();
+		updateStatus();
+		return true;
+	}
+	catch (XScreenUnavailable& e) {
+		LOG((CLOG_WARN "cannot open secondary screen: %s", e.what()));
+		closeClientScreen(clientScreen);
+		updateStatus(CString("Cannot open secondary screen: ") + e.what());
+		retryTime = e.getRetryTime();
+	}
+	catch (XScreenOpenFailure& e) {
+		LOG((CLOG_CRIT "cannot open secondary screen: %s", e.what()));
+		closeClientScreen(clientScreen);
+		return false;
+	}
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "failed to start client: %s", e.what()));
+		closeClientScreen(clientScreen);
+		return false;
+	}
+
+	if (ARG->m_restartable) {
+		scheduleClientRestart(retryTime);
+		return true;
+	}
+	else {
+		// don't try again
+		return false;
+	}
+}
+
+static
+void
+stopClient()
+{
+	closeClient(s_client);
+	closeClientScreen(s_clientScreen);
+	s_client       = NULL;
+	s_clientScreen = NULL;
 }
 
 static
 int
-runMainInThread(void)
+mainLoop()
 {
-	int result = 0;
-	CThread appThread(new CFunctionJob(&realMainEntry, &result));
-	try {
-#if WINDOWS_LIKE
-		MSG msg;
-		while (appThread.waitForEvent(-1.0) == CThread::kEvent) {
-			// check for a quit event
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-				if (msg.message == WM_QUIT) {
-					CThread::getCurrentThread().cancel();
-				}
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-		}
-#else
-		appThread.wait(-1.0);
-#endif
-		return result;
+	// create socket multiplexer.  this must happen after daemonization
+	// on unix because threads evaporate across a fork().
+	CSocketMultiplexer multiplexer;
+
+	// create the event queue
+	CEventQueue eventQueue;
+
+	// start the client.  if this return false then we've failed and
+	// we shouldn't retry.
+	LOG((CLOG_DEBUG1 "starting client"));
+	if (!startClient()) {
+		return kExitFailed;
 	}
-	catch (XThread&) {
-		appThread.cancel();
-		appThread.wait(-1.0);
-		throw;
+
+	// run event loop.  if startClient() failed we're supposed to retry
+	// later.  the timer installed by startClient() will take care of
+	// that.
+	CEvent event;
+	DAEMON_RUNNING(true);
+	EVENTQUEUE->getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event);
 	}
+	DAEMON_RUNNING(false);
+
+	// close down
+	LOG((CLOG_DEBUG1 "stopping client"));
+	stopClient();
+	updateStatus();
+	LOG((CLOG_NOTE "stopped client"));
+
+	return kExitSuccess;
+}
+
+static
+int
+daemonMainLoop(int, const char**)
+{
+	CSystemLogger sysLogger(DAEMON_NAME);
+	return mainLoop();
+}
+
+static
+int
+standardStartup(int argc, char** argv)
+{
+	// parse command line
+	parse(argc, argv);
+
+	// daemonize if requested
+	if (ARG->m_daemon) {
+		return ARCH->daemonize(DAEMON_NAME, &daemonMainLoop);
+	}
+	else {
+		return mainLoop();
+	}
+}
+
+static
+int
+run(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup)
+{
+	// general initialization
+	ARG->m_serverAddress = new CNetworkAddress;
+	ARG->m_pname         = ARCH->getBasename(argv[0]);
+
+	// install caller's output filter
+	if (outputter != NULL) {
+		CLOG->insert(outputter);
+	}
+
+	// save log messages
+	CBufferedLogOutputter logBuffer(1000);
+	CLOG->insert(&logBuffer, true);
+
+	// make the task bar receiver.  the user can control this app
+	// through the task bar.
+	s_taskBarReceiver = createTaskBarReceiver(&logBuffer);
+
+	// run
+	int result = startup(argc, argv);
+
+	// done with task bar receiver
+	delete s_taskBarReceiver;
+
+	// done with log buffer
+	CLOG->remove(&logBuffer);
+
+	delete ARG->m_serverAddress;
+	return result;
 }
 
 
@@ -293,33 +508,43 @@ static
 void
 version()
 {
-	LOG((CLOG_PRINT
-"%s %s, protocol version %d.%d\n"
-"%s",
-								ARG->m_pname,
-								kVersion,
-								kProtocolMajorVersion,
-								kProtocolMinorVersion,
-								kCopyright));
+	LOG((CLOG_PRINT "%s %s, protocol version %d.%d\n%s",
+							ARG->m_pname,
+							kVersion,
+							kProtocolMajorVersion,
+							kProtocolMinorVersion,
+							kCopyright));
 }
 
 static
 void
 help()
 {
+#if WINAPI_XWINDOWS
+#  define USAGE_DISPLAY_ARG		\
+" [--display <display>]"
+#  define USAGE_DISPLAY_INFO	\
+"      --display <display>  connect to the X server at <display>\n"
+#else
+#  define USAGE_DISPLAY_ARG
+#  define USAGE_DISPLAY_INFO
+#endif
+
 	LOG((CLOG_PRINT
 "Usage: %s"
 " [--daemon|--no-daemon]"
 " [--debug <level>]"
+USAGE_DISPLAY_ARG
 " [--name <screen-name>]"
 " [--restart|--no-restart]"
-" <server-address>\n"
-"\n"
+" <server-address>"
+"\n\n"
 "Start the synergy mouse/keyboard sharing server.\n"
 "\n"
 "  -d, --debug <level>      filter out log messages with priorty below level.\n"
 "                           level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
 "                           DEBUG, DEBUG1, DEBUG2.\n"
+USAGE_DISPLAY_INFO
 "  -f, --no-daemon          run the client in the foreground.\n"
 "*     --daemon             run the client as a daemon.\n"
 "  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
@@ -405,6 +630,13 @@ parse(int argc, const char* const* argv)
 			ARG->m_daemon = true;
 		}
 
+#if WINAPI_XWINDOWS
+		else if (isArg(i, argc, argv, "-display", "--display", 1)) {
+			// use alternative display
+			ARG->m_display = argv[++i];
+		}
+#endif
+
 		else if (isArg(i, argc, argv, "-1", "--no-restart")) {
 			// don't try to restart
 			ARG->m_restartable = false;
@@ -461,7 +693,7 @@ parse(int argc, const char* const* argv)
 
 	// save server address
 	try {
-		ARG->m_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
+		*ARG->m_serverAddress = CNetworkAddress(argv[i], kDefaultPort);
 	}
 	catch (XSocketAddress& e) {
 		LOG((CLOG_PRINT "%s: %s" BYE,
@@ -472,7 +704,7 @@ parse(int argc, const char* const* argv)
 	// increase default filter level for daemon.  the user must
 	// explicitly request another level for a daemon.
 	if (ARG->m_daemon && ARG->m_logFilter == NULL) {
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 		if (CArchMiscWindows::isWindows95Family()) {
 			// windows 95 has no place for logging so avoid showing
 			// the log console window.
@@ -491,6 +723,9 @@ parse(int argc, const char* const* argv)
 								ARG->m_pname, ARG->m_logFilter, ARG->m_pname));
 		bye(kExitArgs);
 	}
+
+	// identify system
+	LOG((CLOG_INFO "Synergy client %s on %s", kVersion, ARCH->getOSName().c_str()));
 }
 
 
@@ -498,7 +733,7 @@ parse(int argc, const char* const* argv)
 // platform dependent entry points
 //
 
-#if WINDOWS_LIKE
+#if SYSAPI_WIN32
 
 static bool				s_hasImportantLogMessages = false;
 
@@ -549,187 +784,105 @@ byeThrow(int x)
 
 static
 int
-daemonStartup(int argc, const char** argv)
+daemonNTMainLoop(int argc, const char** argv)
 {
-	CSystemLogger sysLogger(DAEMON_NAME);
-
-	// have to cancel this thread to quit
-	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
-
-	// catch errors that would normally exit
-	bye = &byeThrow;
-
-	// parse command line
 	parse(argc, argv);
-
-	// cannot run as backend if running as a service
 	ARG->m_backend = false;
-
-	// run as a service
-	return CArchMiscWindows::runDaemon(realMain);
+	return CArchMiscWindows::runDaemon(mainLoop);
 }
 
 static
 int
-daemonStartup95(int, const char**)
+daemonNTStartup(int, char**)
 {
 	CSystemLogger sysLogger(DAEMON_NAME);
-	return runMainInThread();
+	bye = &byeThrow;
+	return ARCH->daemonize(DAEMON_NAME, &daemonNTMainLoop);
 }
 
 static
-int
-run(int argc, char** argv)
+void
+showError(HINSTANCE instance, const char* title, UINT id, const char* arg)
 {
-	// windows NT family starts services using no command line options.
-	// since i'm not sure how to tell the difference between that and
-	// a user providing no options we'll assume that if there are no
-	// arguments and we're on NT then we're being invoked as a service.
-	// users on NT can use `--daemon' or `--no-daemon' to force us out
-	// of the service code path.
-	if (argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
-		try {
-			return ARCH->daemonize(DAEMON_NAME, &daemonStartup);
-		}
-		catch (XArchDaemon& e) {
-			LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
-		}
-		return kExitFailed;
-	}
-
-	// parse command line
-	parse(argc, argv);
-
-	// daemonize if requested
-	if (ARG->m_daemon) {
-		// start as a daemon
-		if (CArchMiscWindows::isWindows95Family()) {
-			try {
-				return ARCH->daemonize(DAEMON_NAME, &daemonStartup95);
-			}
-			catch (XArchDaemon& e) {
-				LOG((CLOG_CRIT "failed to start as a service: %s" BYE, e.what().c_str(), ARG->m_pname));
-			}
-			return kExitFailed;
-		}
-		else {
-			// cannot start a service from the command line so just
-			// run normally (except with log messages redirected).
-			CSystemLogger sysLogger(DAEMON_NAME);
-			return runMainInThread();
-		}
-	}
-	else {
-		// run
-		return runMainInThread();
-	}
+	CString fmt = CMSWindowsUtil::getString(instance, id);
+	CString msg = CStringUtil::format(fmt.c_str(), arg);
+	MessageBox(NULL, msg.c_str(), title, MB_OK | MB_ICONWARNING);
 }
 
 int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int)
 {
-	CArch arch(instance);
-	CLOG;
-	CArgs args;
-
-	// save instance
-	CMSWindowsScreen::init(instance);
-
-	// get program name
-	ARG->m_pname = ARCH->getBasename(__argv[0]);
-
-	// send PRINT and FATAL output to a message box
-	CLOG->insert(new CMessageBoxOutputter);
-
-	// save log messages
-	CBufferedLogOutputter logBuffer(1000);
-	CLOG->insert(&logBuffer, true);
-
-	// make the task bar receiver.  the user can control this app
-	// through the task bar.
-	s_taskBarReceiver = new CMSWindowsClientTaskBarReceiver(instance,
-															&logBuffer);
-	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
-
-	int result;
 	try {
-		// run in foreground or as a daemon
-		result = run(__argc, __argv);
+		CArch arch(instance);
+		CMSWindowsScreen::init(instance);
+		CLOG;
+		CThread::getCurrentThread().setPriority(-14);
+		CArgs args;
+
+		// windows NT family starts services using no command line options.
+		// since i'm not sure how to tell the difference between that and
+		// a user providing no options we'll assume that if there are no
+		// arguments and we're on NT then we're being invoked as a service.
+		// users on NT can use `--daemon' or `--no-daemon' to force us out
+		// of the service code path.
+		StartupFunc startup = &standardStartup;
+		if (__argc <= 1 && !CArchMiscWindows::isWindows95Family()) {
+			startup = &daemonNTStartup;
+		}
+
+		// send PRINT and FATAL output to a message box
+		int result = run(__argc, __argv, new CMessageBoxOutputter, startup);
+
+		// let user examine any messages if we're running as a backend
+		// by putting up a dialog box before exiting.
+		if (args.m_backend && s_hasImportantLogMessages) {
+			showError(instance, args.m_pname, IDS_FAILED, "");
+		}
+
+		delete CLOG;
+		return result;
+	}
+	catch (XBase& e) {
+		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, e.what());
+		throw;
+	}
+	catch (XArch& e) {
+		showError(instance, __argv[0], IDS_INIT_FAILED, e.what().c_str());
+		return kExitFailed;
 	}
 	catch (...) {
-		// note that we don't rethrow thread cancellation.  we'll
-		// be exiting soon so it doesn't matter.  what we'd like
-		// is for everything after this try/catch to be in a
-		// finally block.
-		result = kExitFailed;
+		showError(instance, __argv[0], IDS_UNCAUGHT_EXCEPTION, "<unknown>");
+		throw;
 	}
-
-	// done with task bar receiver
-	delete s_taskBarReceiver;
-
-	// done with log buffer
-	CLOG->remove(&logBuffer);
-
-	// let user examine any messages if we're running as a backend
-	// by putting up a dialog box before exiting.
-	if (ARG->m_backend && s_hasImportantLogMessages) {
-		char msg[1024];
-		msg[0] = '\0';
-		LoadString(instance, IDS_FAILED, msg, sizeof(msg) / sizeof(msg[0]));
-		MessageBox(NULL, msg, ARG->m_pname, MB_OK | MB_ICONWARNING);
-	}
-
-	delete CLOG;
-	return result;
 }
 
-#elif UNIX_LIKE
-
-static
-int
-daemonStartup(int, const char**)
-{
-	CSystemLogger sysLogger(DAEMON_NAME);
-	return realMain();
-}
+#elif SYSAPI_UNIX
 
 int
 main(int argc, char** argv)
 {
-	CArch arch;
-	CLOG;
 	CArgs args;
-
-	// get program name
-	ARG->m_pname = ARCH->getBasename(argv[0]);
-
-	// make the task bar receiver.  the user can control this app
-	// through the task bar.
-	s_taskBarReceiver = new CXWindowsClientTaskBarReceiver;
-	s_taskBarReceiver->setQuitJob(new CQuitJob(CThread::getCurrentThread()));
-
-	// parse command line
-	parse(argc, argv);
-
-	// daemonize if requested
-	int result;
-	if (ARG->m_daemon) {
-		try {
-			result = ARCH->daemonize(DAEMON_NAME, &daemonStartup);
-		}
-		catch (XArchDaemon&) {
-			LOG((CLOG_CRIT "failed to daemonize"));
-			result = kExitFailed;
-		}
+	try {
+		int result;
+		CArch arch;
+		CLOG;
+		CArgs args;
+		result = run(argc, argv, NULL, &standardStartup);
+		delete CLOG;
+		return result;
 	}
-	else {
-		result = realMain();
+	catch (XBase& e) {
+		LOG((CLOG_CRIT "Uncaught exception: %s\n", e.what()));
+		throw;
 	}
-
-	// done with task bar receiver
-	delete s_taskBarReceiver;
-
-	return result;
+	catch (XArch& e) {
+		LOG((CLOG_CRIT "Initialization failed: %s" BYE, e.what().c_str()));
+		return kExitFailed;
+	}
+	catch (...) {
+		LOG((CLOG_CRIT "Uncaught exception: <unknown exception>\n"));
+		throw;
+	}
 }
 
 #else

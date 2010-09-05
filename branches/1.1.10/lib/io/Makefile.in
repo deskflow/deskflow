@@ -94,8 +94,6 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST = \
 	io.dsp						\
@@ -109,28 +107,22 @@ MAINTAINERCLEANFILES = \
 
 noinst_LIBRARIES = libio.a
 libio_a_SOURCES = \
-	CBufferedInputStream.cpp	\
-	CBufferedOutputStream.cpp	\
-	CInputStreamFilter.cpp		\
-	COutputStreamFilter.cpp		\
 	CStreamBuffer.cpp			\
+	CStreamFilter.cpp			\
+	IStream.cpp					\
 	XIO.cpp						\
-	CBufferedInputStream.h		\
-	CBufferedOutputStream.h		\
-	CInputStreamFilter.h		\
-	COutputStreamFilter.h		\
 	CStreamBuffer.h				\
-	IInputStream.h				\
-	IOutputStream.h				\
+	CStreamFilter.h				\
+	IStream.h					\
 	IStreamFilterFactory.h		\
 	XIO.h						\
 	$(NULL)
 
 INCLUDES = \
-	-I$(VDEPTH)/lib/common		\
-	-I$(VDEPTH)/lib/arch		\
-	-I$(VDEPTH)/lib/base 		\
-	-I$(VDEPTH)/lib/mt	 		\
+	-I$(top_srcdir)/lib/common	\
+	-I$(top_srcdir)/lib/arch	\
+	-I$(top_srcdir)/lib/base 	\
+	-I$(top_srcdir)/lib/mt	 	\
 	$(NULL)
 
 subdir = lib/io
@@ -141,10 +133,8 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libio_a_AR = $(AR) cru
 libio_a_LIBADD =
-am_libio_a_OBJECTS = CBufferedInputStream.$(OBJEXT) \
-	CBufferedOutputStream.$(OBJEXT) CInputStreamFilter.$(OBJEXT) \
-	COutputStreamFilter.$(OBJEXT) CStreamBuffer.$(OBJEXT) \
-	XIO.$(OBJEXT)
+am_libio_a_OBJECTS = CStreamBuffer.$(OBJEXT) CStreamFilter.$(OBJEXT) \
+	IStream.$(OBJEXT) XIO.$(OBJEXT)
 libio_a_OBJECTS = $(am_libio_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -153,11 +143,9 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CBufferedInputStream.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CBufferedOutputStream.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CInputStreamFilter.Po \
-@AMDEP_TRUE@	$(DEPDIR)/COutputStreamFilter.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CStreamBuffer.Po $(DEPDIR)/XIO.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CStreamBuffer.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CStreamFilter.Po $(DEPDIR)/IStream.Po \
+@AMDEP_TRUE@	$(DEPDIR)/XIO.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -200,11 +188,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CBufferedInputStream.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CBufferedOutputStream.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CInputStreamFilter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COutputStreamFilter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CStreamBuffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CStreamFilter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/IStream.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XIO.Po@am__quote@
 
 distclean-depend:

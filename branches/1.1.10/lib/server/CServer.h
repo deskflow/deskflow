@@ -15,84 +15,37 @@
 #ifndef CSERVER_H
 #define CSERVER_H
 
-#include "IServer.h"
-#include "IPrimaryScreenReceiver.h"
 #include "CConfig.h"
 #include "CClipboard.h"
-#include "CCondVar.h"
-#include "CMutex.h"
-#include "CThread.h"
-#include "CJobList.h"
+#include "ClipboardTypes.h"
+#include "KeyTypes.h"
+#include "MouseTypes.h"
+#include "CEvent.h"
 #include "CStopwatch.h"
-#include "stdlist.h"
 #include "stdmap.h"
+#include "stdset.h"
 #include "stdvector.h"
 
-class CClientProxy;
-class CHTTPServer;
+class CEventQueueTimer;
 class CPrimaryClient;
 class IClient;
-class IDataSocket;
-class IPrimaryScreenFactory;
-class IServerProtocol;
-class ISocketFactory;
-class IStreamFilterFactory;
 
 //! Synergy server
 /*!
 This class implements the top-level server algorithms for synergy.
 */
-class CServer : public IServer, public IPrimaryScreenReceiver {
+class CServer {
 public:
-	enum EStatus {
-		kNotRunning,
-		kRunning,
-		kServerNameUnknown,
-		kError,
-		kMaxStatus
-	};
-
 	/*!
-	The server will look itself up in the configuration using \c serverName
-	as its name.
+	Start the server with the configuration \p config and the primary
+	client (local screen) \p primaryClient.  The client retains
+	ownership of \p primaryClient.
 	*/
-	CServer(const CString& serverName);
+	CServer(const CConfig& config, CPrimaryClient* primaryClient);
 	~CServer();
 
 	//! @name manipulators
 	//@{
-
-	//! Open server
-	/*!
-	Open the server.  Throws XScreenUnavailable if the server's
-	screen cannot be opened but might be available after some time.
-	Otherwise throws some other exception if the server's screen or
-	the server cannot be opened and retrying won't help.
-	*/
-	void				open();
-
-	//! Server main loop
-	/*!
-	Run server's event loop and return when exitMainLoop() is called.
-	This must be called between a successful open() and close().
-
-	(cancellation point)
-	*/
-	void				mainLoop();
-
-	//! Exit event loop
-	/*!
-	Force mainLoop() to return.  This call can return before
-	mainLoop() does (i.e. asynchronously).  This may only be
-	called between a successful open() and close().
-	*/
-	void				exitMainLoop();
-
-	//! Close server
-	/*!
-	Close the server.
-	*/
-	void				close();
 
 	//! Set configuration
 	/*!
@@ -102,61 +55,25 @@ public:
 	*/
 	bool				setConfig(const CConfig&);
 
-	//! Set primary screen factory
+	//! Add a client
 	/*!
-	Sets the factory for creating primary screens.  This must be
-	set before calling open().  This object takes ownership of the
-	factory.
+	Adds \p client to the server.  The client is adopted and will be
+	destroyed when the client disconnects or is disconnected.
 	*/
-	void				setScreenFactory(IPrimaryScreenFactory*);
+	void				adoptClient(IClient* client);
 
-	//! Set socket factory
+	//! Disconnect clients
 	/*!
-	Sets the factory used to create a socket to connect to the server.
-	This must be set before calling mainLoop().  This object takes
-	ownership of the factory.
+	Disconnect clients.  This tells them to disconnect but does not wait
+	for them to actually do so.  The server sends the disconnected event
+	when they're all disconnected (or immediately if none are connected).
+	The caller can also just destroy this object to force the disconnection.
 	*/
-	void				setSocketFactory(ISocketFactory*);
-
-	//! Set stream filter factory
-	/*!
-	Sets the factory used to filter the socket streams used to
-	communicate with the server.  This object takes ownership
-	of the factory.
-	*/
-	void				setStreamFilterFactory(IStreamFilterFactory*);
-
-	//! Add a job to notify of status changes
-	/*!
-	The added job is run whenever the server's status changes in
-	certain externally visible ways.  The client keeps ownership
-	of the job.
-	*/
-	void				addStatusJob(IJob*);
-
-	//! Remove a job to notify of status changes
-	/*!
-	Removes a previously added status notification job.  A job can
-	remove itself when called but must not remove any other jobs.
-	The client keeps ownership of the job.
-	*/
-	void				removeStatusJob(IJob*);
+	void				disconnect();
 
 	//@}
 	//! @name accessors
 	//@{
-
-	//! Get configuration
-	/*!
-	Returns the current configuration.
-	*/
-	void				getConfig(CConfig*) const;
-
-	//! Get name
-	/*!
-	Returns the server's name passed to the c'tor
-	*/
-	CString				getPrimaryScreenName() const;
 
 	//! Get number of connected clients
 	/*!
@@ -170,32 +87,21 @@ public:
 	*/
 	void				getClients(std::vector<CString>& list) const;
 
-	//! Get the status
+	//! Get error event type
 	/*!
-	Returns the current status and status message.
+	Returns the error event type.  This is sent when the server fails
+	for some reason.
 	*/
-	EStatus				getStatus(CString* = NULL) const;
+	static CEvent::Type	getErrorEvent();
+
+	//! Get disconnected event type
+	/*!
+	Returns the disconnected event type.  This is sent when all the
+	clients have disconnected.
+	*/
+	static CEvent::Type	getDisconnectedEvent();
 
 	//@}
-
-	// IServer overrides
-	virtual void		onError();
-	virtual void		onInfoChanged(const CString&, const CClientInfo&);
-	virtual bool		onGrabClipboard(const CString&, ClipboardID, UInt32);
-	virtual void		onClipboardChanged(ClipboardID, UInt32, const CString&);
-
-	// IPrimaryScreenReceiver overrides
-	virtual void		onScreensaver(bool activated);
-	virtual void		onOneShotTimerExpired(UInt32 id);
-	virtual void		onKeyDown(KeyID, KeyModifierMask, KeyButton);
-	virtual void		onKeyUp(KeyID, KeyModifierMask, KeyButton);
-	virtual void		onKeyRepeat(KeyID, KeyModifierMask,
-							SInt32 count, KeyButton);
-	virtual void		onMouseDown(ButtonID);
-	virtual void		onMouseUp(ButtonID);
-	virtual bool		onMouseMovePrimary(SInt32 x, SInt32 y);
-	virtual void		onMouseMoveSecondary(SInt32 dx, SInt32 dy);
-	virtual void		onMouseWheel(SInt32 delta);
 
 protected:
 	//! Handle special keys
@@ -204,36 +110,24 @@ protected:
 	*/
 	bool				onCommandKey(KeyID, KeyModifierMask, bool down);
 
-	//! Exit event loop and note an error condition
-	/*!
-	Force mainLoop() to return by throwing an exception.  This call
-	can return before mainLoop() does (i.e. asynchronously).  This
-	may only be called between a successful open() and close().
-	*/
-	void				exitMainLoopWithError();
-
 private:
-	typedef std::list<CThread> CThreadList;
-
-	// notify status jobs of a change
-	void				runStatusJobs() const;
-
-	// set new status
-	void				setStatus(EStatus, const char* msg = NULL);
+	// get canonical name of client
+	CString				getName(const IClient*) const;
 
 	// get the sides of the primary screen that have neighbors
 	UInt32				getActivePrimarySides() const;
 
-	// handle mouse motion
-	bool				onMouseMovePrimaryNoLock(SInt32 x, SInt32 y);
-	void				onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy);
-
-	// set the clipboard
-	void				onClipboardChangedNoLock(ClipboardID,
-							UInt32 seqNum, const CString& data);
+	// returns true iff mouse should be locked to the current screen
+	// according to this object only, ignoring what the primary client
+	// says.
+	bool				isLockedToScreenServer() const;
 
 	// returns true iff mouse should be locked to the current screen
-	bool				isLockedToScreenNoLock() const;
+	// according to this object or the primary client.
+	bool				isLockedToScreen() const;
+
+	// returns the jump zone of the client
+	SInt32				getJumpZoneSize(IClient*) const;
 
 	// change the active screen
 	void				switchScreen(IClient*,
@@ -256,63 +150,101 @@ private:
 	bool				isSwitchOkay(IClient* dst, EDirection,
 							SInt32 x, SInt32 y);
 
-	// update switch state due to a mouse move that doesn't try to
-	// switch screens.
-	void				onNoSwitch(bool inTapZone);
+	// update switch state due to a mouse move at \p x, \p y that
+	// doesn't switch screens.
+	void				noSwitch(SInt32 x, SInt32 y);
 
-	// reset switch wait state
-	void				clearSwitchState();
+	// stop switch timers
+	void				stopSwitch();
+
+	// start two tap switch timer
+	void				startSwitchTwoTap();
+
+	// arm the two tap switch timer if \p x, \p y is outside the tap zone
+	void				armSwitchTwoTap(SInt32 x, SInt32 y);
+
+	// stop the two tap switch timer
+	void				stopSwitchTwoTap();
+
+	// returns true iff the two tap switch timer is started
+	bool				isSwitchTwoTapStarted() const;
+
+	// returns true iff should switch because of two tap
+	bool				shouldSwitchTwoTap() const;
+
+	// start delay switch timer
+	void				startSwitchWait(SInt32 x, SInt32 y);
+
+	// stop delay switch timer
+	void				stopSwitchWait();
+
+	// returns true iff the delay switch timer is started
+	bool				isSwitchWaitStarted() const;
+
+	// stop relative mouse moves
+	void				stopRelativeMoves();
 
 	// send screen options to \c client
 	void				sendOptions(IClient* client) const;
 
-	// open/close the primary screen
-	void				openPrimaryScreen();
-	void				closePrimaryScreen();
+	// process options from configuration
+	void				processOptions();
 
-	// update the clipboard if owned by the primary screen
-	void				updatePrimaryClipboard(ClipboardID);
+	// event handlers
+	void				handleShapeChanged(const CEvent&, void*);
+	void				handleClipboardGrabbed(const CEvent&, void*);
+	void				handleClipboardChanged(const CEvent&, void*);
+	void				handleKeyDownEvent(const CEvent&, void*);
+	void				handleKeyUpEvent(const CEvent&, void*);
+	void				handleKeyRepeatEvent(const CEvent&, void*);
+	void				handleButtonDownEvent(const CEvent&, void*);
+	void				handleButtonUpEvent(const CEvent&, void*);
+	void				handleMotionPrimaryEvent(const CEvent&, void*);
+	void				handleMotionSecondaryEvent(const CEvent&, void*);
+	void				handleWheelEvent(const CEvent&, void*);
+	void				handleScreensaverActivatedEvent(const CEvent&, void*);
+	void				handleScreensaverDeactivatedEvent(const CEvent&, void*);
+	void				handleSwitchWaitTimeout(const CEvent&, void*);
+	void				handleClientDisconnected(const CEvent&, void*);
+	void				handleClientCloseTimeout(const CEvent&, void*);
 
-	// close all clients that are *not* in config, not including the
-	// primary client.
+	// event processing
+	void				onClipboardChanged(IClient* sender,
+							ClipboardID id, UInt32 seqNum);
+	void				onScreensaver(bool activated);
+	void				onKeyDown(KeyID, KeyModifierMask, KeyButton);
+	void				onKeyUp(KeyID, KeyModifierMask, KeyButton);
+	void				onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton);
+	void				onMouseDown(ButtonID);
+	void				onMouseUp(ButtonID);
+	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
+	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
+	void				onMouseWheel(SInt32 delta);
+
+	// add client to list and attach event handlers for client
+	bool				addClient(IClient*);
+
+	// remove client from list and detach event handlers for client
+	bool				removeClient(IClient*);
+
+	// close a client
+	void				closeClient(IClient*, const char* msg);
+
+	// close clients not in \p config
 	void				closeClients(const CConfig& config);
 
-	// start a thread, adding it to the list of threads
-	CThread				startThread(IJob* adopted);
+	// close all clients whether they've completed the handshake or not,
+	// except the primary client
+	void				closeAllClients();
 
-	// cancel running threads, waiting at most timeout seconds for
-	// them to finish.
-	void				stopThreads(double timeout = -1.0);
+	// remove clients from internal state
+	void				removeActiveClient(IClient*);
+	void				removeOldClient(IClient*);
 
-	// reap threads, clearing finished threads from the thread list.
-	// doReapThreads does the work on the given thread list.
-	void				reapThreads();
-	void				doReapThreads(CThreadList&);
-
-	// thread method to accept incoming client connections
-	void				acceptClients(void*);
-
-	// thread method to do client interaction
-	void				runClient(void*);
-	CClientProxy*		handshakeClient(IDataSocket*);
-
-	// thread method to accept incoming HTTP connections
-	void				acceptHTTPClients(void*);
-
-	// thread method to process HTTP requests
-	void				processHTTPRequest(void*);
-
-	// connection list maintenance
-	void				addConnection(IClient*);
-	void				removeConnection(const CString& name);
+	// force the cursor off of \p client
+	void				forceLeaveClient(IClient* client);
 
 private:
-	class XServerRethrow : public XBase {
-	protected:
-		// XBase overrides
-		virtual CString	getWhat() const throw();
-	};
-
 	class CClipboardInfo {
 	public:
 		CClipboardInfo();
@@ -324,44 +256,18 @@ private:
 		UInt32			m_clipboardSeqNum;
 	};
 
-	CMutex				m_mutex;
-
-	// the name of the primary screen
-	CString				m_name;
-
-	// true if we should exit the main loop by throwing an exception.
-	// this is used to propagate an exception from one of our threads
-	// to the mainLoop() thread.  but, since we can't make a copy of
-	// the original exception, we return an arbitrary, unique
-	// exception type.  the caller of mainLoop() cannot catch this
-	// exception except through XBase or ....
-	bool				m_error;
-
-	// how long to wait to bind our socket until we give up
-	double				m_bindTimeout;
-
-	// factories
-	IPrimaryScreenFactory*	m_screenFactory;
-	ISocketFactory*			m_socketFactory;
-	IStreamFilterFactory*	m_streamFilterFactory;
-
-	// running threads
-	CThreadList			m_threads;
-	CThread*			m_acceptClientThread;
-
-	// the screens
-	typedef std::map<CString, IClient*> CClientList;
-	typedef std::map<CString, CThread> CClientThreadList;
-
-	// all clients indexed by name
-	CClientList			m_clients;
-
-	// run thread of all secondary screen clients.  does not include the
-	// primary screen's run thread.
-	CClientThreadList	m_clientThreads;
-
 	// the primary screen client
 	CPrimaryClient*		m_primaryClient;
+
+	// all clients (including the primary client) indexed by name
+	typedef std::map<CString, IClient*> CClientList;
+	typedef std::set<IClient*> CClientSet;
+	CClientList			m_clients;
+	CClientSet			m_clientSet;
+
+	// all old connections that we're waiting to hangup
+	typedef std::map<IClient*, CEventQueueTimer*> COldClients;
+	COldClients			m_oldClients;
 
 	// the client with focus
 	IClient*			m_active;
@@ -369,8 +275,16 @@ private:
 	// the sequence number of enter messages
 	UInt32				m_seqNum;
 
-	// current mouse position (in absolute secondary screen coordinates)
+	// current mouse position (in absolute screen coordinates) on
+	// whichever screen is active
 	SInt32				m_x, m_y;
+
+	// last mouse deltas.  this is needed to smooth out double tap
+	// on win32 which reports bogus mouse motion at the edge of
+	// the screen when using low level hooks, synthesizing motion
+	// in the opposite direction the mouse actually moved.
+	SInt32				m_xDelta, m_yDelta;
+	SInt32				m_xDelta2, m_yDelta2;
 
 	// current configuration
 	CConfig				m_config;
@@ -382,11 +296,6 @@ private:
 	IClient*			m_activeSaver;
 	SInt32				m_xSaver, m_ySaver;
 
-	// HTTP request processing stuff
-	CHTTPServer*		m_httpServer;
-	CCondVar<SInt32>	m_httpAvailable;
-	static const SInt32	s_httpMaxSimultaneousRequests;
-
 	// common state for screen switch tests.  all tests are always
 	// trying to reach the same screen in the same direction.
 	EDirection			m_switchDir;
@@ -394,8 +303,7 @@ private:
 
 	// state for delayed screen switching
 	double				m_switchWaitDelay;
-	UInt32				m_switchWaitTimer;
-	bool				m_switchWaitEngaged;
+	CEventQueueTimer*	m_switchWaitTimer;
 	SInt32				m_switchWaitX, m_switchWaitY;
 
 	// state for double-tap screen switching
@@ -405,10 +313,11 @@ private:
 	bool				m_switchTwoTapArmed;
 	SInt32				m_switchTwoTapZone;
 
-	// the status change jobs and status
-	CJobList			m_statusJobs;
-	EStatus				m_status;
-	CString				m_statusMessage;
+	// relative mouse move option
+	bool				m_relativeMoves;
+
+	static CEvent::Type	s_errorEvent;
+	static CEvent::Type	s_disconnectedEvent;
 };
 
 #endif

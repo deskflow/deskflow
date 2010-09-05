@@ -37,11 +37,11 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release"
-# PROP Intermediate_Dir "Release"
+# PROP Output_Dir "..\..\gen\build"
+# PROP Intermediate_Dir "..\..\gen\build"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\build\arch.pdb" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -61,11 +61,11 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug"
-# PROP Intermediate_Dir "Debug"
+# PROP Output_Dir "..\..\gen\debug"
+# PROP Intermediate_Dir "..\..\gen\debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\base" /I "..\mt" /I "..\common" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\base" /I "..\mt" /I "..\common" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\debug\arch.pdb" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -91,11 +91,69 @@ SOURCE=.\CArch.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CArchImpl.cpp
+SOURCE=.\CArchConsoleWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchDaemonWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchFileWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchLogWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchMiscWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchMultithreadWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchNetworkWinsock.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchSleepWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchStringWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchSystemWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchTaskBarWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchTimeWindows.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMultibyte.cpp
+# PROP Exclude_From_Build 1
+# End Source File
+# Begin Source File
+
+SOURCE=.\vsnprintf.cpp
+# PROP Exclude_From_Build 1
 # End Source File
 # Begin Source File
 
 SOURCE=.\XArch.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\XArchWindows.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -116,10 +174,6 @@ SOURCE=.\CArchDaemonWindows.h
 # Begin Source File
 
 SOURCE=.\CArchFileWindows.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchImpl.h
 # End Source File
 # Begin Source File
 
@@ -144,6 +198,10 @@ SOURCE=.\CArchSleepWindows.h
 # Begin Source File
 
 SOURCE=.\CArchStringWindows.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CArchSystemWindows.h
 # End Source File
 # Begin Source File
 
@@ -187,6 +245,10 @@ SOURCE=.\IArchString.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IArchSystem.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\IArchTaskBar.h
 # End Source File
 # Begin Source File
@@ -204,90 +266,6 @@ SOURCE=.\XArch.h
 # Begin Source File
 
 SOURCE=.\XArchWindows.h
-# End Source File
-# End Group
-# Begin Group "Included Files"
-
-# PROP Default_Filter "inc"
-# Begin Source File
-
-SOURCE=.\CArchConsoleWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchDaemonWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchFileWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchLogWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchMiscWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchMultithreadWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchNetworkWinsock.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchSleepWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchStringWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchTaskBarWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CArchTimeWindows.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMultibyte.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMultibyteEmu.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\CMultibyteOS.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\vsnprintf.cpp
-# PROP Exclude_From_Build 1
-# End Source File
-# Begin Source File
-
-SOURCE=.\XArchWindows.cpp
-# PROP Exclude_From_Build 1
 # End Source File
 # End Group
 # End Target

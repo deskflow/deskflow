@@ -14,299 +14,177 @@
 
 #include "CClient.h"
 #include "CServerProxy.h"
-#include "ISecondaryScreenFactory.h"
+#include "CScreen.h"
 #include "CClipboard.h"
-#include "CInputPacketStream.h"
-#include "COutputPacketStream.h"
+#include "CPacketStreamFilter.h"
 #include "CProtocolUtil.h"
-#include "CSecondaryScreen.h"
-#include "IServer.h"
 #include "ProtocolTypes.h"
-#include "XScreen.h"
 #include "XSynergy.h"
 #include "IDataSocket.h"
 #include "ISocketFactory.h"
-#include "XSocket.h"
 #include "IStreamFilterFactory.h"
-#include "CLock.h"
-#include "CThread.h"
-#include "CTimerThread.h"
-#include "XMT.h"
-#include "XThread.h"
 #include "CLog.h"
-#include "CStopwatch.h"
-#include "TMethodJob.h"
-#include "CArch.h"
+#include "IEventQueue.h"
+#include "TMethodEventJob.h"
 
 //
 // CClient
 //
 
-CClient::CClient(const CString& clientName) :
-	m_name(clientName),
-	m_screen(NULL),
+CEvent::Type			CClient::s_connectedEvent        = CEvent::kUnknown;
+CEvent::Type			CClient::s_connectionFailedEvent = CEvent::kUnknown;
+CEvent::Type			CClient::s_disconnectedEvent     = CEvent::kUnknown;
+
+CClient::CClient(const CString& name, const CNetworkAddress& address,
+				ISocketFactory* socketFactory,
+				IStreamFilterFactory* streamFilterFactory,
+				CScreen* screen) :
+	m_name(name),
+	m_serverAddress(address),
+	m_socketFactory(socketFactory),
+	m_streamFilterFactory(streamFilterFactory),
+	m_screen(screen),
+	m_stream(NULL),
+	m_timer(NULL),
 	m_server(NULL),
-	m_screenFactory(NULL),
-	m_socketFactory(NULL),
-	m_streamFilterFactory(NULL),
-	m_session(NULL),
-	m_active(false),
-	m_rejected(true),
-	m_status(kNotRunning)
+	
+	m_active(false)
 {
+	assert(m_socketFactory != NULL);
+	assert(m_screen        != NULL);
+
 	// do nothing
 }
 
 CClient::~CClient()
 {
-	delete m_screenFactory;
+	cleanupTimer();
+	cleanupScreen();
+	cleanupConnecting();
+	cleanupConnection();
 	delete m_socketFactory;
 	delete m_streamFilterFactory;
 }
 
 void
-CClient::setAddress(const CNetworkAddress& serverAddress)
+CClient::connect()
 {
-	CLock lock(&m_mutex);
-	m_serverAddress = serverAddress;
-}
-
-void
-CClient::setScreenFactory(ISecondaryScreenFactory* adopted)
-{
-	CLock lock(&m_mutex);
-	delete m_screenFactory;
-	m_screenFactory = adopted;
-}
-
-void
-CClient::setSocketFactory(ISocketFactory* adopted)
-{
-	CLock lock(&m_mutex);
-	delete m_socketFactory;
-	m_socketFactory = adopted;
-}
-
-void
-CClient::setStreamFilterFactory(IStreamFilterFactory* adopted)
-{
-	CLock lock(&m_mutex);
-	delete m_streamFilterFactory;
-	m_streamFilterFactory = adopted;
-}
-
-void
-CClient::exitMainLoop()
-{
-	m_screen->exitMainLoop();
-}
-
-void
-CClient::addStatusJob(IJob* job)
-{
-	m_statusJobs.addJob(job);
-}
-
-void
-CClient::removeStatusJob(IJob* job)
-{
-	m_statusJobs.removeJob(job);
-}
-
-bool
-CClient::wasRejected() const
-{
-	return m_rejected;
-}
-
-CClient::EStatus
-CClient::getStatus(CString* msg) const
-{
-	CLock lock(&m_mutex);
-	if (msg != NULL) {
-		*msg = m_statusMessage;
-	}
-	return m_status;
-}
-
-void
-CClient::runStatusJobs() const
-{
-	m_statusJobs.runJobs();
-}
-
-void
-CClient::setStatus(EStatus status, const char* msg)
-{
-	{
-		CLock lock(&m_mutex);
-		m_status = status;
-		if (m_status == kError) {
-			m_statusMessage = (msg == NULL) ? "Error" : msg;
-		}
-		else {
-			m_statusMessage = (msg == NULL) ? "" : msg;
-		}
-	}
-	runStatusJobs();
-}
-
-void
-CClient::onError()
-{
-	setStatus(kError);
-
-	// close down session but don't wait too long
-	deleteSession(3.0);
-}
-
-void
-CClient::onInfoChanged(const CClientInfo& info)
-{
-	LOG((CLOG_DEBUG "resolution changed"));
-
-	CLock lock(&m_mutex);
-	if (m_server != NULL) {
-		m_server->onInfoChanged(info);
-	}
-}
-
-bool
-CClient::onGrabClipboard(ClipboardID id)
-{
-	CLock lock(&m_mutex);
-	if (m_server == NULL) {
-		// m_server can be NULL if the screen calls this method
-		// before we've gotten around to connecting to the server.
-		// we simply ignore the clipboard change in that case.
-		return false;
-	}
-
-	// grab ownership
-	m_server->onGrabClipboard(id);
-
-	// we now own the clipboard and it has not been sent to the server
-	m_ownClipboard[id]  = true;
-	m_timeClipboard[id] = 0;
-
-	// if we're not the active screen then send the clipboard now,
-	// otherwise we'll wait until we leave.
-	if (!m_active) {
-		sendClipboard(id);
-	}
-
-	return true;
-}
-
-void
-CClient::onClipboardChanged(ClipboardID, const CString&)
-{
-	// ignore -- we'll check the clipboard when we leave
-}
-
-void
-CClient::open()
-{
-	// open the screen
-	try {
-		LOG((CLOG_DEBUG "opening screen"));
-		openSecondaryScreen();
-		setStatus(kNotRunning);
-	}
-	catch (XScreenOpenFailure& e) {
-		// can't open screen
-		setStatus(kError, e.what());
-		LOG((CLOG_DEBUG "failed to open screen"));
-		throw;
-	}
-}
-
-void
-CClient::mainLoop()
-{
-	{
-		CLock lock(&m_mutex);
-
-		// check preconditions
-		assert(m_screen != NULL);
-		assert(m_server == NULL);
-
-		// connection starts as unsuccessful
-		m_rejected = true;
+	if (m_stream != NULL) {
+		return;
 	}
 
 	try {
-		setStatus(kNotRunning);
-		LOG((CLOG_DEBUG "starting client \"%s\"", m_name.c_str()));
+		IDataSocket* socket = m_socketFactory->create();
 
-		// start server interactions
-		{
-			CLock lock(&m_mutex);
-			m_session = new CThread(new TMethodJob<CClient>(
-								this, &CClient::runSession));
+		// filter socket messages, including a packetizing filter
+		m_stream = socket;
+		if (m_streamFilterFactory != NULL) {
+			m_stream = m_streamFilterFactory->create(m_stream, true);
 		}
+		m_stream = new CPacketStreamFilter(m_stream, true);
 
-		// handle events
-		m_screen->mainLoop();
-
-		// clean up
-		deleteSession();
-		LOG((CLOG_DEBUG "stopping client \"%s\"", m_name.c_str()));
-	}
-	catch (XMT& e) {
-		LOG((CLOG_ERR "client error: %s", e.what()));
-		setStatus(kError, e.what());
-
-		// clean up
-		deleteSession();
-		LOG((CLOG_DEBUG "stopping client \"%s\"", m_name.c_str()));
-		throw;
+		// connect
+		LOG((CLOG_DEBUG1 "connecting to server"));
+		setupConnecting();
+		setupTimer();
+		socket->connect(m_serverAddress);
 	}
 	catch (XBase& e) {
-		LOG((CLOG_ERR "client error: %s", e.what()));
-		setStatus(kError, e.what());
-
-		// clean up
-		deleteSession();
-		LOG((CLOG_DEBUG "stopping client \"%s\"", m_name.c_str()));
-		CLock lock(&m_mutex);
-		m_rejected = false;
-	}
-	catch (XThread&) {
-		setStatus(kNotRunning);
-
-		// clean up
-		deleteSession();
-		LOG((CLOG_DEBUG "stopping client \"%s\"", m_name.c_str()));
-		throw;
-	}
-	catch (...) {
-		LOG((CLOG_ERR "client error: <unknown error>"));
-		setStatus(kError);
-
-		// clean up
-		deleteSession();
-		LOG((CLOG_DEBUG "stopping client \"%s\"", m_name.c_str()));
-		throw;
+		cleanupTimer();
+		cleanupConnecting();
+		delete m_stream;
+		m_stream = NULL;
+		LOG((CLOG_DEBUG1 "connection failed"));
+		sendConnectionFailedEvent(e.what());
+		return;
 	}
 }
 
 void
-CClient::close()
+CClient::disconnect(const char* msg)
 {
-	closeSecondaryScreen();
-	LOG((CLOG_DEBUG "closed screen"));
+	cleanupTimer();
+	cleanupScreen();
+	cleanupConnection();
+	if (msg != NULL) {
+		sendConnectionFailedEvent(msg);
+	}
+	else {
+		sendEvent(getDisconnectedEvent(), NULL);
+	}
+}
+
+void
+CClient::handshakeComplete()
+{
+	m_ready = true;
+	m_screen->enable();
+	sendEvent(getConnectedEvent(), NULL);
+}
+
+bool
+CClient::isConnected() const
+{
+	return (m_server != NULL);
+}
+
+bool
+CClient::isConnecting() const
+{
+	return (m_timer != NULL);
+}
+
+CEvent::Type
+CClient::getConnectedEvent()
+{
+	return CEvent::registerTypeOnce(s_connectedEvent,
+							"CClient::connected");
+}
+
+CEvent::Type
+CClient::getConnectionFailedEvent()
+{
+	return CEvent::registerTypeOnce(s_connectionFailedEvent,
+							"CClient::failed");
+}
+
+CEvent::Type
+CClient::getDisconnectedEvent()
+{
+	return CEvent::registerTypeOnce(s_disconnectedEvent,
+							"CClient::disconnected");
+}
+
+void*
+CClient::getEventTarget() const
+{
+	return m_screen->getEventTarget();
+}
+
+bool
+CClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
+{
+	return m_screen->getClipboard(id, clipboard);
+}
+
+void
+CClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
+{
+	m_screen->getShape(x, y, w, h);
+}
+
+void
+CClient::getCursorPos(SInt32& x, SInt32& y) const
+{
+	m_screen->getCursorPos(x, y);
 }
 
 void
 CClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
 {
-	{
-		CLock lock(&m_mutex);
-		m_active = true;
-	}
-
-	m_screen->enter(xAbs, yAbs, mask);
+	m_active = true;
+	m_screen->mouseMove(xAbs, yAbs);
+	m_screen->enter(mask);
 }
 
 bool
@@ -314,7 +192,6 @@ CClient::leave()
 {
 	m_screen->leave();
 
-	CLock lock(&m_mutex);
 	m_active = false;
 
 	// send clipboards that we own and that have changed
@@ -328,26 +205,16 @@ CClient::leave()
 }
 
 void
-CClient::setClipboard(ClipboardID id, const CString& data)
+CClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
 {
- 	// unmarshall
- 	CClipboard clipboard;
- 	clipboard.unmarshall(data, 0);
- 
- 	// set screen's clipboard
- 	m_screen->setClipboard(id, &clipboard);
+ 	m_screen->setClipboard(id, clipboard);
 }
 
 void
 CClient::grabClipboard(ClipboardID id)
 {
-	// we no longer own the clipboard
-	{
-		CLock lock(&m_mutex);
-		m_ownClipboard[id] = false;
-	}
-
 	m_screen->grabClipboard(id);
+	m_ownClipboard[id] = false;
 }
 
 void
@@ -394,6 +261,12 @@ CClient::mouseMove(SInt32 x, SInt32 y)
 }
 
 void
+CClient::mouseRelativeMove(SInt32 dx, SInt32 dy)
+{
+	m_screen->mouseRelativeMove(dx, dy);
+}
+
+void
 CClient::mouseWheel(SInt32 delta)
 {
 	m_screen->mouseWheel(delta);
@@ -421,86 +294,6 @@ CString
 CClient::getName() const
 {
 	return m_name;
-}
-
-SInt32
-CClient::getJumpZoneSize() const
-{
-	return m_screen->getJumpZoneSize();
-}
-
-void
-CClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
-{
-	m_screen->getShape(x, y, w, h);
-}
-
-void
-CClient::getCursorPos(SInt32& x, SInt32& y) const
-{
-	m_screen->getCursorPos(x, y);
-}
-
-void
-CClient::getCursorCenter(SInt32&, SInt32&) const
-{
-	assert(0 && "shouldn't be called");
-}
-
-void
-CClient::openSecondaryScreen()
-{
-	assert(m_screen == NULL);
-
-	// not active
-	m_active = false;
-
-	// reset clipboard state
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		m_ownClipboard[id]  = false;
-		m_timeClipboard[id] = 0;
-	}
-
-	// create screen
-	LOG((CLOG_DEBUG1 "creating secondary screen"));
-	if (m_screenFactory != NULL) {
-		m_screen = m_screenFactory->create(this);
-	}
-	if (m_screen == NULL) {
-		throw XScreenOpenFailure();
-	}
-
-	// open screen
-	try {
-		LOG((CLOG_DEBUG1 "opening secondary screen"));
-		m_screen->open();
-	}
-	catch (...) {
-		LOG((CLOG_DEBUG1 "destroying secondary screen"));
-		delete m_screen;
-		m_screen = NULL;
-		throw;
-	}
-}
-
-void
-CClient::closeSecondaryScreen()
-{
-	// close the secondary screen
-	try {
-		if (m_screen != NULL) {
-			LOG((CLOG_DEBUG1 "closing secondary screen"));
-			m_screen->close();
-		}
-	}
-	catch (...) {
-		// ignore
-	}
-
-	// clean up
-	LOG((CLOG_DEBUG1 "destroying secondary screen"));
-	delete m_screen;
-	m_screen = NULL;
 }
 
 void
@@ -532,223 +325,275 @@ CClient::sendClipboard(ClipboardID id)
 		// save and send data if different
 		if (data != m_dataClipboard[id]) {
 			m_dataClipboard[id] = data;
-			m_server->onClipboardChanged(id, data);
+			m_server->onClipboardChanged(id, &clipboard);
 		}
 	}
 }
 
 void
-CClient::runSession(void*)
+CClient::sendEvent(CEvent::Type type, void* data)
 {
-	try {
-		LOG((CLOG_DEBUG "starting server proxy"));
-		runServer();
-		m_screen->exitMainLoop();
-		LOG((CLOG_DEBUG "stopping server proxy"));
-	}
-	catch (...) {
-		m_screen->exitMainLoop();
-		LOG((CLOG_DEBUG "stopping server proxy"));
-		throw;
+	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), data));
+}
+
+void
+CClient::sendConnectionFailedEvent(const char* msg)
+{
+	CFailInfo* info = (CFailInfo*)malloc(sizeof(CFailInfo) + strlen(msg));
+	info->m_retry   = true;
+	strcpy(info->m_what, msg);
+	sendEvent(getConnectionFailedEvent(), info);
+}
+
+void
+CClient::setupConnecting()
+{
+	assert(m_stream != NULL);
+
+	EVENTQUEUE->adoptHandler(IDataSocket::getConnectedEvent(),
+							m_stream->getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleConnected));
+	EVENTQUEUE->adoptHandler(IDataSocket::getConnectionFailedEvent(),
+							m_stream->getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleConnectionFailed));
+}
+
+void
+CClient::setupConnection()
+{
+	assert(m_stream != NULL);
+
+	EVENTQUEUE->adoptHandler(ISocket::getDisconnectedEvent(),
+							m_stream->getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleDisconnected));
+	EVENTQUEUE->adoptHandler(IStream::getInputReadyEvent(),
+							m_stream->getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleHello));
+	EVENTQUEUE->adoptHandler(IStream::getOutputErrorEvent(),
+							m_stream->getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleOutputError));
+	EVENTQUEUE->adoptHandler(IStream::getInputShutdownEvent(),
+							m_stream->getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleDisconnected));
+	EVENTQUEUE->adoptHandler(IStream::getOutputShutdownEvent(),
+							m_stream->getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleDisconnected));
+}
+
+void
+CClient::setupScreen()
+{
+	assert(m_server == NULL);
+
+	m_ready  = false;
+	m_server = new CServerProxy(this, m_stream);
+	EVENTQUEUE->adoptHandler(IScreen::getShapeChangedEvent(),
+							getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleShapeChanged));
+	EVENTQUEUE->adoptHandler(IScreen::getClipboardGrabbedEvent(),
+							getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleClipboardGrabbed));
+}
+
+void
+CClient::setupTimer()
+{
+	assert(m_timer == NULL);
+
+	m_timer = EVENTQUEUE->newOneShotTimer(15.0, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, m_timer,
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleConnectTimeout));
+}
+
+void
+CClient::cleanupConnecting()
+{
+	if (m_stream != NULL) {
+		EVENTQUEUE->removeHandler(IDataSocket::getConnectedEvent(),
+							m_stream->getEventTarget());
+		EVENTQUEUE->removeHandler(IDataSocket::getConnectionFailedEvent(),
+							m_stream->getEventTarget());
 	}
 }
 
 void
-CClient::deleteSession(double timeout)
+CClient::cleanupConnection()
 {
-	// get session thread object
-	CThread* thread;
-	{
-		CLock lock(&m_mutex);
-		thread    = m_session;
-		m_session = NULL;
-	}
-
-	// shut it down
-	if (thread != NULL) {
-		thread->cancel();
-		thread->wait(timeout);
-		delete thread;
+	if (m_stream != NULL) {
+		EVENTQUEUE->removeHandler(IStream::getInputReadyEvent(),
+							m_stream->getEventTarget());
+		EVENTQUEUE->removeHandler(IStream::getOutputErrorEvent(),
+							m_stream->getEventTarget());
+		EVENTQUEUE->removeHandler(IStream::getInputShutdownEvent(),
+							m_stream->getEventTarget());
+		EVENTQUEUE->removeHandler(IStream::getOutputShutdownEvent(),
+							m_stream->getEventTarget());
+		EVENTQUEUE->removeHandler(ISocket::getDisconnectedEvent(),
+							m_stream->getEventTarget());
+		delete m_stream;
+		m_stream = NULL;
 	}
 }
 
 void
-CClient::runServer()
+CClient::cleanupScreen()
 {
-	IDataSocket* socket = NULL;
-	CServerProxy* proxy = NULL;
-	bool timedOut;
-	try {
-		// allow connect and handshake this much time to succeed
-		CTimerThread timer(15.0, &timedOut);
-
-		// create socket and attempt to connect to server
-		LOG((CLOG_DEBUG1 "connecting to server"));
-		if (m_socketFactory != NULL) {
-			socket = m_socketFactory->create();
+	if (m_server != NULL) {
+		if (m_ready) {
+			m_screen->disable();
+			m_ready = false;
 		}
-		assert(socket != NULL);
-		socket->connect(m_serverAddress);
-
-		// create proxy
-		LOG((CLOG_INFO "connected to server"));
-		LOG((CLOG_DEBUG1 "negotiating with server"));
-		proxy = handshakeServer(socket);
-	}
-	catch (XThread&) {
-		if (timedOut) {
-			LOG((CLOG_ERR "connection timed out"));
-			setStatus(kError, "connection timed out");
-		}
-		else {
-			// cancelled by some thread other than the timer
-		}
-		delete proxy;
-		delete socket;
-		throw;
-	}
-	catch (XSocketConnect& e) {
-		LOG((CLOG_ERR "connection failed: %s", e.what()));
-		setStatus(kError, e.what());
-		delete socket;
-		return;
-	}
-	catch (XBase& e) {
-		LOG((CLOG_ERR "connection failed: %s", e.what()));
-		setStatus(kError, e.what());
-		LOG((CLOG_INFO "disconnecting from server"));
-		delete socket;
-		return;
-	}
-	catch (...) {
-		LOG((CLOG_ERR "connection failed: <unknown error>"));
-		setStatus(kError);
-		LOG((CLOG_INFO "disconnecting from server"));
-		delete socket;
-		return;
-	}
-
-	// saver server proxy object
-	{
-		CLock lock(&m_mutex);
-		m_server = proxy;
-	}
-
-	try {
-		// prepare for remote control
-		m_screen->remoteControl();
-
-		// process messages
-		bool rejected = true;
-		if (proxy != NULL) {
-			LOG((CLOG_DEBUG1 "communicating with server"));
-			setStatus(kRunning);
-			rejected = !proxy->mainLoop();
-			setStatus(kNotRunning);
-		}
-
-		// prepare for local control
-		m_screen->localControl();
-
-		// clean up
-		CLock lock(&m_mutex);
-		m_rejected = rejected;
-		m_server   = NULL;
-		delete proxy;
-		LOG((CLOG_DEBUG "disconnecting from server"));
-		socket->close();
-		delete socket;
-	}
-	catch (...) {
-		setStatus(kNotRunning);
-		m_screen->localControl();
-		CLock lock(&m_mutex);
-		m_rejected = false;
-		m_server   = NULL;
-		delete proxy;
-		LOG((CLOG_DEBUG "disconnecting from server"));
-		socket->close();
-		delete socket;
-		throw;
+		EVENTQUEUE->removeHandler(IScreen::getShapeChangedEvent(),
+							getEventTarget());
+		EVENTQUEUE->removeHandler(IScreen::getClipboardGrabbedEvent(),
+							getEventTarget());
+		delete m_server;
+		m_server = NULL;
 	}
 }
 
-CServerProxy*
-CClient::handshakeServer(IDataSocket* socket)
+void
+CClient::cleanupTimer()
 {
-	// get the input and output streams
-	IInputStream*  input  = socket->getInputStream();
-	IOutputStream* output = socket->getOutputStream();
-	bool own              = false;
+	if (m_timer != NULL) {
+		EVENTQUEUE->removeHandler(CEvent::kTimer, m_timer);
+		EVENTQUEUE->deleteTimer(m_timer);
+		m_timer = NULL;
+	}
+}
 
-	// attach filters
-	if (m_streamFilterFactory != NULL) {
-		input  = m_streamFilterFactory->createInput(input, own);
-		output = m_streamFilterFactory->createOutput(output, own);
-		own    = true;
+void
+CClient::handleConnected(const CEvent&, void*)
+{
+	LOG((CLOG_DEBUG1 "connected;  wait for hello"));
+	cleanupConnecting();
+	setupConnection();
+
+	// reset clipboard state
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		m_ownClipboard[id]  = false;
+		m_timeClipboard[id] = 0;
+	}
+}
+
+void
+CClient::handleConnectionFailed(const CEvent& event, void*)
+{
+	IDataSocket::CConnectionFailedInfo* info =
+		reinterpret_cast<IDataSocket::CConnectionFailedInfo*>(event.getData());
+
+	cleanupTimer();
+	cleanupConnecting();
+	delete m_stream;
+	m_stream = NULL;
+	LOG((CLOG_DEBUG1 "connection failed"));
+	sendConnectionFailedEvent(info->m_what);
+}
+
+void
+CClient::handleConnectTimeout(const CEvent&, void*)
+{
+	cleanupTimer();
+	cleanupConnecting();
+	delete m_stream;
+	m_stream = NULL;
+	LOG((CLOG_DEBUG1 "connection timed out"));
+	sendConnectionFailedEvent("Timed out");
+}
+
+void
+CClient::handleOutputError(const CEvent&, void*)
+{
+	cleanupTimer();
+	cleanupScreen();
+	cleanupConnection();
+	LOG((CLOG_WARN "error sending to server"));
+	sendEvent(getDisconnectedEvent(), NULL);
+}
+
+void
+CClient::handleDisconnected(const CEvent&, void*)
+{
+	cleanupTimer();
+	cleanupScreen();
+	cleanupConnection();
+	LOG((CLOG_DEBUG1 "disconnected"));
+	sendEvent(getDisconnectedEvent(), NULL);
+}
+
+void
+CClient::handleShapeChanged(const CEvent&, void*)
+{
+	LOG((CLOG_DEBUG "resolution changed"));
+	m_server->onInfoChanged();
+}
+
+void
+CClient::handleClipboardGrabbed(const CEvent& event, void*)
+{
+	const IScreen::CClipboardInfo* info =
+		reinterpret_cast<const IScreen::CClipboardInfo*>(event.getData());
+
+	// grab ownership
+	m_server->onGrabClipboard(info->m_id);
+
+	// we now own the clipboard and it has not been sent to the server
+	m_ownClipboard[info->m_id]  = true;
+	m_timeClipboard[info->m_id] = 0;
+
+	// if we're not the active screen then send the clipboard now,
+	// otherwise we'll wait until we leave.
+	if (!m_active) {
+		sendClipboard(info->m_id);
+	}
+}
+
+void
+CClient::handleHello(const CEvent&, void*)
+{
+	SInt16 major, minor;
+	if (!CProtocolUtil::readf(m_stream, kMsgHello, &major, &minor)) {
+		sendConnectionFailedEvent("Protocol error from server");
+		cleanupTimer();
+		cleanupConnection();
+		return;
 	}
 
-	// attach the packetizing filters
-	input  = new CInputPacketStream(input, own);
-	output = new COutputPacketStream(output, own);
-	own    = true;
-
-	CServerProxy* proxy = NULL;
-	try {
-		// wait for hello from server
-		LOG((CLOG_DEBUG1 "wait for hello"));
-		SInt16 major, minor;
-		CProtocolUtil::readf(input, kMsgHello, &major, &minor);
-
-		// check versions
-		LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
-		if (major < kProtocolMajorVersion ||
-			(major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
-			throw XIncompatibleClient(major, minor);
-		}
-
-		// say hello back
-		LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
-		CProtocolUtil::writef(output, kMsgHelloBack,
-								kProtocolMajorVersion,
-								kProtocolMinorVersion, &m_name);
-
-		// create server proxy
-		proxy = new CServerProxy(this, input, output);
-
-		// negotiate
-		// FIXME
-
-		return proxy;
-	}
-	catch (XIncompatibleClient& e) {
-		LOG((CLOG_ERR "server has incompatible version %d.%d", e.getMajor(), e.getMinor()));
-		setStatus(kError, e.what());
-	}
-	catch (XBase& e) {
-		LOG((CLOG_WARN "error communicating with server: %s", e.what()));
-		setStatus(kError, e.what());
-	}
-	catch (...) {
-		// probably timed out
-		if (proxy != NULL) {
-			delete proxy;
-		}
-		else if (own) {
-			delete input;
-			delete output;
-		}
-		throw;
+	// check versions
+	LOG((CLOG_DEBUG1 "got hello version %d.%d", major, minor));
+	if (major < kProtocolMajorVersion ||
+		(major == kProtocolMajorVersion && minor < kProtocolMinorVersion)) {
+		sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
+		cleanupTimer();
+		cleanupConnection();
+		return;
 	}
 
-	// failed
-	if (proxy != NULL) {
-		delete proxy;
-	}
-	else if (own) {
-		delete input;
-		delete output;
-	}
+	// say hello back
+	LOG((CLOG_DEBUG1 "say hello version %d.%d", kProtocolMajorVersion, kProtocolMinorVersion));
+	CProtocolUtil::writef(m_stream, kMsgHelloBack,
+							kProtocolMajorVersion,
+							kProtocolMinorVersion, &m_name);
 
-	return NULL;
+	// now connected but waiting to complete handshake
+	setupScreen();
+	cleanupTimer();
+
+	// make sure we process any remaining messages later.  we won't
+	// receive another event for already pending messages so we fake
+	// one.
+	if (m_stream->isReady()) {
+		EVENTQUEUE->addEvent(CEvent(IStream::getInputReadyEvent(),
+							m_stream->getEventTarget()));
+	}
 }

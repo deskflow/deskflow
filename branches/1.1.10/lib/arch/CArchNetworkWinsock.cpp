@@ -15,7 +15,10 @@
 
 #include "CArchNetworkWinsock.h"
 #include "CArch.h"
+#include "CArchMultithreadWindows.h"
+#include "IArchMultithread.h"
 #include "XArchWindows.h"
+#include <malloc.h>
 
 static const int s_family[] = {
 	PF_UNSPEC,
@@ -49,6 +52,13 @@ static struct hostent FAR * (PASCAL FAR *gethostbyaddr_winsock)(const char FAR *
 static struct hostent FAR * (PASCAL FAR *gethostbyname_winsock)(const char FAR * name);
 static int (PASCAL FAR *WSACleanup_winsock)(void);
 static int (PASCAL FAR *WSAFDIsSet_winsock)(SOCKET, fd_set FAR * fdset);
+static WSAEVENT (PASCAL FAR *WSACreateEvent_winsock)(void);
+static BOOL (PASCAL FAR *WSACloseEvent_winsock)(WSAEVENT);
+static BOOL (PASCAL FAR *WSASetEvent_winsock)(WSAEVENT);
+static BOOL (PASCAL FAR *WSAResetEvent_winsock)(WSAEVENT);
+static int (PASCAL FAR *WSAEventSelect_winsock)(SOCKET, WSAEVENT, long);
+static DWORD (PASCAL FAR *WSAWaitForMultipleEvents_winsock)(DWORD, const WSAEVENT FAR*, BOOL, DWORD, BOOL);
+static int (PASCAL FAR *WSAEnumNetworkEvents_winsock)(SOCKET, WSAEVENT, LPWSANETWORKEVENTS);
 
 #undef FD_ISSET
 #define FD_ISSET(fd, set) WSAFDIsSet_winsock((SOCKET)(fd), (fd_set FAR *)(set))
@@ -68,13 +78,23 @@ netGetProcAddress(HMODULE module, LPCSTR name)
 	return func;
 }
 
+CArchNetAddressImpl*
+CArchNetAddressImpl::alloc(size_t size)
+{
+	size_t totalSize          = size + ADDR_HDR_SIZE;
+	CArchNetAddressImpl* addr = (CArchNetAddressImpl*)malloc(totalSize);
+	addr->m_len               = size;
+	return addr;
+}
+
+
 //
 // CArchNetworkWinsock
 //
 
 CArchNetworkWinsock::CArchNetworkWinsock()
 {
-	static const char* s_library[] = { "ws2_32.dll", "wsock32.dll" };
+	static const char* s_library[] = { "ws2_32.dll" };
 
 	assert(WSACleanup_winsock == NULL);
 	assert(s_networkModule    == NULL);
@@ -110,14 +130,16 @@ CArchNetworkWinsock::~CArchNetworkWinsock()
 void
 CArchNetworkWinsock::init(HMODULE module)
 {
-	assert(module != NULL);
+	if (module == NULL) {
+		throw XArchNetworkSupport("");
+	}
 
 	// get startup function address
 	int (PASCAL FAR *startup)(WORD, LPWSADATA);
 	setfunc(startup, WSAStartup, int(PASCAL FAR*)(WORD, LPWSADATA));
 
 	// startup network library
-	WORD version = MAKEWORD(1 /*major*/, 1 /*minor*/);
+	WORD version = MAKEWORD(2 /*major*/, 0 /*minor*/);
 	WSADATA data;
 	int err = startup(version, &data);
 	if (data.wVersion != version) {
@@ -152,6 +174,13 @@ CArchNetworkWinsock::init(HMODULE module)
 	setfunc(gethostbyname_winsock, gethostbyname, struct hostent FAR * (PASCAL FAR *)(const char FAR * name));
 	setfunc(WSACleanup_winsock, WSACleanup, int (PASCAL FAR *)(void));
 	setfunc(WSAFDIsSet_winsock, __WSAFDIsSet, int (PASCAL FAR *)(SOCKET, fd_set FAR *));
+	setfunc(WSACreateEvent_winsock, WSACreateEvent, WSAEVENT (PASCAL FAR *)(void));
+	setfunc(WSACloseEvent_winsock, WSACloseEvent, BOOL (PASCAL FAR *)(WSAEVENT));
+	setfunc(WSASetEvent_winsock, WSASetEvent, BOOL (PASCAL FAR *)(WSAEVENT));
+	setfunc(WSAResetEvent_winsock, WSAResetEvent, BOOL (PASCAL FAR *)(WSAEVENT));
+	setfunc(WSAEventSelect_winsock, WSAEventSelect, int (PASCAL FAR *)(SOCKET, WSAEVENT, long));
+	setfunc(WSAWaitForMultipleEvents_winsock, WSAWaitForMultipleEvents, DWORD (PASCAL FAR *)(DWORD, const WSAEVENT FAR*, BOOL, DWORD, BOOL));
+	setfunc(WSAEnumNetworkEvents_winsock, WSAEnumNetworkEvents, int (PASCAL FAR *)(SOCKET, WSAEVENT, LPWSANETWORKEVENTS));
 
 	s_networkModule = module;
 }
@@ -159,18 +188,25 @@ CArchNetworkWinsock::init(HMODULE module)
 CArchSocket
 CArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
 {
-	// allocate socket object
-	CArchSocketImpl* socket = new CArchSocketImpl;
-
 	// create socket
 	SOCKET fd = socket_winsock(s_family[family], s_type[type], 0);
 	if (fd == INVALID_SOCKET) {
 		throwError(getsockerror_winsock());
 	}
+	try {
+		setBlockingOnSocket(fd, false);
+	}
+	catch (...) {
+		close_winsock(fd);
+		throw;
+	}
 
-	socket->m_socket    = fd;
-	socket->m_connected = false;
-	socket->m_refCount  = 1;
+	// allocate socket object
+	CArchSocketImpl* socket = new CArchSocketImpl;
+	socket->m_socket        = fd;
+	socket->m_refCount      = 1;
+	socket->m_event         = WSACreateEvent_winsock();
+	socket->m_pollWrite     = true;
 	return socket;
 }
 
@@ -198,23 +234,15 @@ CArchNetworkWinsock::closeSocket(CArchSocket s)
 
 	// close the socket if necessary
 	if (doClose) {
-		do {
-			if (close_winsock(s->m_socket) == SOCKET_ERROR) {
-				// close failed
-				int err = getsockerror_winsock();
-				if (err == EINTR) {
-					// interrupted system call
-					ARCH->testCancelThread();
-					continue;
-				}
-
-				// restore the last ref and throw
-				ARCH->lockMutex(m_mutex);
-				++s->m_refCount;
-				ARCH->unlockMutex(m_mutex);
-				throwError(err);
-			}
-		} while (false);
+		if (close_winsock(s->m_socket) == SOCKET_ERROR) {
+			// close failed.  restore the last ref and throw.
+			int err = getsockerror_winsock();
+			ARCH->lockMutex(m_mutex);
+			++s->m_refCount;
+			ARCH->unlockMutex(m_mutex);
+			throwError(err);
+		}
+		WSACloseEvent_winsock(s->m_event);
 		delete s;
 	}
 }
@@ -270,179 +298,228 @@ CArchNetworkWinsock::acceptSocket(CArchSocket s, CArchNetAddress* addr)
 {
 	assert(s != NULL);
 
-	// if user passed NULL in addr then use scratch space
-	CArchNetAddress dummy;
-	if (addr == NULL) {
-		addr = &dummy;
-	}
-
-	// create new socket and address
+	// create new socket and temporary address
 	CArchSocketImpl* socket = new CArchSocketImpl;
-	*addr                   = new CArchNetAddressImpl;
+	CArchNetAddress tmp = CArchNetAddressImpl::alloc(sizeof(struct sockaddr));
 
 	// accept on socket
-	SOCKET fd;
-	do {
-		fd = accept_winsock(s->m_socket, &(*addr)->m_addr, &(*addr)->m_len);
-		if (fd == INVALID_SOCKET) {
-			int err = getsockerror_winsock();
-			if (err == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			if (err == WSAECONNABORTED) {
-				// connection was aborted;  try again
-				ARCH->testCancelThread();
-				continue;
-			}
-			delete socket;
-			delete *addr;
-			*addr = NULL;
-			throwError(err);
+	SOCKET fd = accept_winsock(s->m_socket, &tmp->m_addr, &tmp->m_len);
+	if (fd == INVALID_SOCKET) {
+		int err = getsockerror_winsock();
+		delete socket;
+		free(tmp);
+		*addr = NULL;
+		if (err == WSAEWOULDBLOCK) {
+			return NULL;
 		}
-	} while (false);
+		throwError(err);
+	}
+
+	try {
+		setBlockingOnSocket(fd, false);
+	}
+	catch (...) {
+		close_winsock(fd);
+		delete socket;
+		free(tmp);
+		*addr = NULL;
+		throw;
+	}
 
 	// initialize socket
 	socket->m_socket    = fd;
-	socket->m_connected = true;
 	socket->m_refCount  = 1;
+	socket->m_event     = WSACreateEvent_winsock();
+	socket->m_pollWrite = true;
 
-	// discard address if not requested
-	if (addr == &dummy) {
-		ARCH->closeAddr(dummy);
+	// copy address if requested
+	if (addr != NULL) {
+		*addr = ARCH->copyAddr(tmp);
 	}
 
+	free(tmp);
 	return socket;
 }
 
-void
+bool
 CArchNetworkWinsock::connectSocket(CArchSocket s, CArchNetAddress addr)
 {
 	assert(s    != NULL);
 	assert(addr != NULL);
 
-	do {
-		if (connect_winsock(s->m_socket, &addr->m_addr,
-										addr->m_len) == SOCKET_ERROR) {
-			if (getsockerror_winsock() == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-
-			if (getsockerror_winsock() == WSAEISCONN) {
-				// already connected
-				break;
-			}
-
-			if (getsockerror_winsock() == WSAEWOULDBLOCK) {
-				// connecting
-				throw XArchNetworkConnecting(new XArchEvalWinsock(
-													getsockerror_winsock()));
-			}
-
-			throwError(getsockerror_winsock());
+	if (connect_winsock(s->m_socket, &addr->m_addr,
+							addr->m_len) == SOCKET_ERROR) {
+		if (getsockerror_winsock() == WSAEISCONN) {
+			return true;
 		}
-	} while (false);
-
-	ARCH->lockMutex(m_mutex);
-	s->m_connected = true;
-	ARCH->unlockMutex(m_mutex);
+		if (getsockerror_winsock() == WSAEWOULDBLOCK) {
+			return false;
+		}
+		throwError(getsockerror_winsock());
+	}
+	return true;
 }
 
 int
 CArchNetworkWinsock::pollSocket(CPollEntry pe[], int num, double timeout)
 {
-	int i, n;
+	int i;
+	DWORD n;
 
-	do {
-		// prepare sets for select
-		n = 0;
-		fd_set readSet, writeSet, errSet;
-		fd_set* readSetP  = NULL;
-		fd_set* writeSetP = NULL;
-		fd_set* errSetP   = NULL;
-		FD_ZERO(&readSet);
-		FD_ZERO(&writeSet);
-		FD_ZERO(&errSet);
-		for (i = 0; i < num; ++i) {
-			// reset return flags
-			pe[i].m_revents = 0;
+	// prepare sockets and wait list
+	bool canWrite = false;
+	WSAEVENT* events = (WSAEVENT*)alloca((num + 1) * sizeof(WSAEVENT));
+	for (i = 0, n = 0; i < num; ++i) {
+		// reset return flags
+		pe[i].m_revents = 0;
 
-			// set invalid flag if socket is bogus then go to next socket
-			if (pe[i].m_socket == NULL) {
-				pe[i].m_revents |= kPOLLNVAL;
-				continue;
-			}
+		// set invalid flag if socket is bogus then go to next socket
+		if (pe[i].m_socket == NULL) {
+			pe[i].m_revents |= kPOLLNVAL;
+			continue;
+		}
 
-			if (pe[i].m_events & kPOLLIN) {
-				FD_SET(pe[i].m_socket->m_socket, &readSet);
-				readSetP = &readSet;
-				n = 1;
-			}
-			if (pe[i].m_events & kPOLLOUT) {
-				FD_SET(pe[i].m_socket->m_socket, &writeSet);
-				writeSetP = &writeSet;
-				n = 1;
-			}
-			if (true) {
-				FD_SET(pe[i].m_socket->m_socket, &errSet);
-				errSetP = &errSet;
-				n = 1;
+		// select desired events
+		long socketEvents = 0;
+		if ((pe[i].m_events & kPOLLIN) != 0) {
+			socketEvents |= FD_READ | FD_ACCEPT | FD_CLOSE;
+		}
+		if ((pe[i].m_events & kPOLLOUT) != 0) {
+			socketEvents |= FD_WRITE | FD_CONNECT | FD_CLOSE;
+
+			// if m_pollWrite is false then we assume the socket is
+			// writable.  winsock doesn't signal writability except
+			// when the state changes from unwritable.
+			if (!pe[i].m_socket->m_pollWrite) {
+				canWrite         = true;
+				pe[i].m_revents |= kPOLLOUT;
 			}
 		}
 
-		// if there are no sockets then don't block forever
-		if (n == 0 && timeout < 0.0) {
-			timeout = 0.0;
+		// if no events then ignore socket
+		if (socketEvents == 0) {
+			continue;
 		}
 
-		// prepare timeout for select
-		struct timeval timeout2;
-		struct timeval* timeout2P;
-		if (timeout < 0) {
-			timeout2P = NULL;
+		// select socket for desired events
+		WSAEventSelect_winsock(pe[i].m_socket->m_socket,
+							pe[i].m_socket->m_event, socketEvents);
+
+		// add socket event to wait list
+		events[n++] = pe[i].m_socket->m_event;
+	}
+
+	// if no sockets then return immediately
+	if (n == 0) {
+		return 0;
+	}
+
+	// add the unblock event
+	CArchMultithreadWindows* mt = CArchMultithreadWindows::getInstance();
+	CArchThread thread     = mt->newCurrentThread();
+	WSAEVENT* unblockEvent = (WSAEVENT*)mt->getNetworkDataForThread(thread);
+	ARCH->closeThread(thread);
+	if (unblockEvent == NULL) {
+		unblockEvent  = new WSAEVENT;
+		*unblockEvent = WSACreateEvent_winsock();
+		mt->setNetworkDataForCurrentThread(unblockEvent);
+	}
+	events[n++] = *unblockEvent;
+
+	// prepare timeout
+	DWORD t = (timeout < 0.0) ? INFINITE : (DWORD)(1000.0 * timeout);
+	if (canWrite) {
+		// if we know we can write then don't block
+		t = 0;
+	}
+
+	// wait
+	DWORD result = WSAWaitForMultipleEvents_winsock(n, events, FALSE, t, FALSE);
+
+	// reset the unblock event
+	WSAResetEvent_winsock(*unblockEvent);
+
+	// handle results
+	if (result == WSA_WAIT_FAILED) {
+		if (getsockerror_winsock() == WSAEINTR) {
+			// interrupted system call
+			ARCH->testCancelThread();
+			return 0;
 		}
-		else {
-			timeout2P = &timeout2;
-			timeout2.tv_sec  = static_cast<int>(timeout);
-			timeout2.tv_usec = static_cast<int>(1.0e+6 *
-											(timeout - timeout2.tv_sec));
+		throwError(getsockerror_winsock());
+	}
+	if (result == WSA_WAIT_TIMEOUT && !canWrite) {
+		return 0;
+	}
+	if (result == WSA_WAIT_EVENT_0 + n - 1) {
+		// the unblock event was signalled
+		return 0;
+	}
+	for (i = 0, n = 0; i < num; ++i) {
+		// skip events we didn't check
+		if (pe[i].m_socket == NULL ||
+			(pe[i].m_events & (kPOLLIN | kPOLLOUT)) == 0) {
+			continue;
 		}
 
-		// do the select
-		n = select_winsock(0, readSetP, writeSetP, errSetP, timeout2P);
+		// get events
+		WSANETWORKEVENTS info;
+		if (WSAEnumNetworkEvents_winsock(pe[i].m_socket->m_socket,
+							pe[i].m_socket->m_event, &info) == SOCKET_ERROR) {
+			continue;
+		}
+		if ((info.lNetworkEvents & FD_READ) != 0) {
+			pe[i].m_revents |= kPOLLIN;
+		}
+		if ((info.lNetworkEvents & FD_ACCEPT) != 0) {
+			pe[i].m_revents |= kPOLLIN;
+		}
+		if ((info.lNetworkEvents & FD_WRITE) != 0) {
+			pe[i].m_revents |= kPOLLOUT;
 
-		// handle results
-		if (n == SOCKET_ERROR) {
-			if (getsockerror_winsock() == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
+			// socket is now writable so don't bothing polling for
+			// writable until it becomes unwritable.
+			pe[i].m_socket->m_pollWrite = false;
+		}
+		if ((info.lNetworkEvents & FD_CONNECT) != 0) {
+			if (info.iErrorCode[FD_CONNECT_BIT] != 0) {
+				pe[i].m_revents |= kPOLLERR;
 			}
-			throwError(getsockerror_winsock());
+			else {
+				pe[i].m_revents |= kPOLLOUT;
+				pe[i].m_socket->m_pollWrite = false;
+			}
 		}
-		n = 0;
-		for (i = 0; i < num; ++i) {
-			if (pe[i].m_socket != NULL) {
-				if (FD_ISSET(pe[i].m_socket->m_socket, &readSet)) {
+		if ((info.lNetworkEvents & FD_CLOSE) != 0) {
+			if (info.iErrorCode[FD_CLOSE_BIT] != 0) {
+				pe[i].m_revents |= kPOLLERR;
+			}
+			else {
+				if ((pe[i].m_events & kPOLLIN) != 0) {
 					pe[i].m_revents |= kPOLLIN;
 				}
-				if (FD_ISSET(pe[i].m_socket->m_socket, &writeSet)) {
+				if ((pe[i].m_events & kPOLLOUT) != 0) {
 					pe[i].m_revents |= kPOLLOUT;
 				}
-				if (FD_ISSET(pe[i].m_socket->m_socket, &errSet)) {
-					pe[i].m_revents |= kPOLLERR;
-				}
-			}
-			if (pe[i].m_revents != 0) {
-				++n;
 			}
 		}
-	} while (false);
+		if (pe[i].m_revents != 0) {
+			++n;
+		}
+	}
 
-	return n;
+	return (int)n;
+}
+
+void
+CArchNetworkWinsock::unblockPollSocket(CArchThread thread)
+{
+	// set the unblock event
+	CArchMultithreadWindows* mt = CArchMultithreadWindows::getInstance();
+	WSAEVENT* unblockEvent = (WSAEVENT*)mt->getNetworkDataForThread(thread);
+	if (unblockEvent != NULL) {
+		WSASetEvent_winsock(*unblockEvent);
+	}
 }
 
 size_t
@@ -450,19 +527,14 @@ CArchNetworkWinsock::readSocket(CArchSocket s, void* buf, size_t len)
 {
 	assert(s != NULL);
 
-	int n;
-	do {
-		n = recv_winsock(s->m_socket, buf, len, 0);
-		if (n == SOCKET_ERROR) {
-			if (getsockerror_winsock() == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			throwError(getsockerror_winsock());
+	int n = recv_winsock(s->m_socket, buf, len, 0);
+	if (n == SOCKET_ERROR) {
+		int err = getsockerror_winsock();
+		if (err == WSAEINTR || err == WSAEWOULDBLOCK) {
+			return 0;
 		}
-	} while (false);
-	ARCH->testCancelThread();
+		throwError(err);
+	}
 	return static_cast<size_t>(n);
 }
 
@@ -471,19 +543,18 @@ CArchNetworkWinsock::writeSocket(CArchSocket s, const void* buf, size_t len)
 {
 	assert(s != NULL);
 
-	int n;
-	do {
-		n = send_winsock(s->m_socket, buf, len, 0);
-		if (n == SOCKET_ERROR) {
-			if (getsockerror_winsock() == EINTR) {
-				// interrupted system call
-				ARCH->testCancelThread();
-				continue;
-			}
-			throwError(getsockerror_winsock());
+	int n = send_winsock(s->m_socket, buf, len, 0);
+	if (n == SOCKET_ERROR) {
+		int err = getsockerror_winsock();
+		if (err == WSAEINTR) {
+			return 0;
 		}
-	} while (false);
-	ARCH->testCancelThread();
+		if (err == WSAEWOULDBLOCK) {
+			s->m_pollWrite = true;
+			return 0;
+		}
+		throwError(err);
+	}
 	return static_cast<size_t>(n);
 }
 
@@ -506,17 +577,15 @@ CArchNetworkWinsock::throwErrorOnSocket(CArchSocket s)
 	}
 }
 
-bool
-CArchNetworkWinsock::setBlockingOnSocket(CArchSocket s, bool blocking)
+void
+CArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking)
 {
-	assert(s != NULL);
+	assert(s != 0);
 
 	int flag = blocking ? 0 : 1;
-	if (ioctl_winsock(s->m_socket, FIONBIO, &flag) == SOCKET_ERROR) {
+	if (ioctl_winsock(s, FIONBIO, &flag) == SOCKET_ERROR) {
 		throwError(getsockerror_winsock());
 	}
-	// FIXME -- can't get the current blocking state of socket?
-	return true;
 }
 
 bool
@@ -559,26 +628,20 @@ CArchNetworkWinsock::getHostName()
 CArchNetAddress
 CArchNetworkWinsock::newAnyAddr(EAddressFamily family)
 {
-	// allocate address
-	CArchNetAddressImpl* addr = new CArchNetAddressImpl;
-
-	// fill it in
+	CArchNetAddressImpl* addr = NULL;
 	switch (family) {
 	case kINET: {
-		struct sockaddr_in* ipAddr =
-			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
+		addr = CArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
+		struct sockaddr_in* ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
 		ipAddr->sin_family         = AF_INET;
 		ipAddr->sin_port           = 0;
 		ipAddr->sin_addr.s_addr    = INADDR_ANY;
-		addr->m_len                = sizeof(struct sockaddr_in);
 		break;
 	}
 
 	default:
-		delete addr;
 		assert(0 && "invalid family");
 	}
-
 	return addr;
 }
 
@@ -587,42 +650,48 @@ CArchNetworkWinsock::copyAddr(CArchNetAddress addr)
 {
 	assert(addr != NULL);
 
-	// allocate and copy address
-	return new CArchNetAddressImpl(*addr);
+	CArchNetAddressImpl* copy = CArchNetAddressImpl::alloc(addr->m_len);
+	memcpy(TYPED_ADDR(void, copy), TYPED_ADDR(void, addr), addr->m_len);
+	return copy;
 }
 
 CArchNetAddress
 CArchNetworkWinsock::nameToAddr(const std::string& name)
 {
 	// allocate address
-	CArchNetAddressImpl* addr = new CArchNetAddressImpl;
+	CArchNetAddressImpl* addr = NULL;
 
 	// try to convert assuming an IPv4 dot notation address
 	struct sockaddr_in inaddr;
 	memset(&inaddr, 0, sizeof(inaddr));
+	inaddr.sin_family      = AF_INET;
+	inaddr.sin_port        = 0;
 	inaddr.sin_addr.s_addr = inet_addr_winsock(name.c_str());
 	if (inaddr.sin_addr.s_addr != INADDR_NONE) {
 		// it's a dot notation address
-		addr->m_len       = sizeof(struct sockaddr_in);
-		inaddr.sin_family = AF_INET;
-		inaddr.sin_port   = 0;
-		memcpy(&addr->m_addr, &inaddr, addr->m_len);
+		addr = CArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
+		memcpy(TYPED_ADDR(void, addr), &inaddr, addr->m_len);
 	}
 
 	else {
 		// address lookup
 		struct hostent* info = gethostbyname_winsock(name.c_str());
 		if (info == NULL) {
-			delete addr;
 			throwNameError(getsockerror_winsock());
 		}
 
 		// copy over address (only IPv4 currently supported)
-		addr->m_len       = sizeof(struct sockaddr_in);
-		inaddr.sin_family = info->h_addrtype;
-		inaddr.sin_port   = 0;
-		memcpy(&inaddr.sin_addr, info->h_addr_list[0], info->h_length);
-		memcpy(&addr->m_addr, &inaddr, addr->m_len);
+		if (info->h_addrtype == AF_INET) {
+			addr = CArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
+			memcpy(&inaddr.sin_addr, info->h_addr_list[0],
+								sizeof(inaddr.sin_addr));
+			memcpy(TYPED_ADDR(void, addr), &inaddr, addr->m_len);
+		}
+		else {
+			throw XArchNetworkNameUnsupported(
+					"The requested name is valid but "
+					"does not have a supported address family");
+		}
 	}
 
 	return addr;
@@ -633,7 +702,7 @@ CArchNetworkWinsock::closeAddr(CArchNetAddress addr)
 {
 	assert(addr != NULL);
 
-	delete addr;
+	free(addr);
 }
 
 std::string
@@ -731,8 +800,8 @@ CArchNetworkWinsock::isAnyAddr(CArchNetAddress addr)
 	case kINET: {
 		struct sockaddr_in* ipAddr =
 			reinterpret_cast<struct sockaddr_in*>(&addr->m_addr);
-		return (ipAddr->sin_addr.s_addr == INADDR_ANY &&
-				addr->m_len == sizeof(struct sockaddr_in));
+		return (addr->m_len == sizeof(struct sockaddr_in) &&
+				ipAddr->sin_addr.s_addr == INADDR_ANY);
 	}
 
 	default:
@@ -741,13 +810,17 @@ CArchNetworkWinsock::isAnyAddr(CArchNetAddress addr)
 	}
 }
 
+bool
+CArchNetworkWinsock::isEqualAddr(CArchNetAddress a, CArchNetAddress b)
+{
+	return (a == b || (a->m_len == b->m_len &&
+			memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0));
+}
+
 void
 CArchNetworkWinsock::throwError(int err)
 {
 	switch (err) {
-	case WSAEWOULDBLOCK:
-		throw XArchNetworkWouldBlock(new XArchEvalWinsock(err));
-
 	case WSAEACCES:
 		throw XArchNetworkAccess(new XArchEvalWinsock(err));
 
@@ -783,18 +856,16 @@ CArchNetworkWinsock::throwError(int err)
 	case WSAENOTCONN:
 		throw XArchNetworkNotConnected(new XArchEvalWinsock(err));
 
-	case WSAENETRESET:
 	case WSAEDISCON:
+		throw XArchNetworkShutdown(new XArchEvalWinsock(err));
+
+	case WSAENETRESET:
 	case WSAECONNABORTED:
 	case WSAECONNRESET:
 		throw XArchNetworkDisconnected(new XArchEvalWinsock(err));
 
 	case WSAECONNREFUSED:
 		throw XArchNetworkConnectionRefused(new XArchEvalWinsock(err));
-
-	case WSAEINPROGRESS:
-	case WSAEALREADY:
-		throw XArchNetworkConnecting(new XArchEvalWinsock(err));
 
 	case WSAEHOSTDOWN:
 	case WSAETIMEDOUT:

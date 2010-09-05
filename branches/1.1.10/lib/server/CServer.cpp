@@ -13,220 +13,171 @@
  */
 
 #include "CServer.h"
-#include "CHTTPServer.h"
+#include "CClientProxy.h"
+#include "CClientProxyUnknown.h"
 #include "CPrimaryClient.h"
-#include "IPrimaryScreenFactory.h"
-#include "CInputPacketStream.h"
-#include "COutputPacketStream.h"
-#include "CProtocolUtil.h"
-#include "CClientProxy1_0.h"
-#include "CClientProxy1_1.h"
+#include "IPlatformScreen.h"
 #include "OptionTypes.h"
 #include "ProtocolTypes.h"
 #include "XScreen.h"
 #include "XSynergy.h"
-#include "CTCPListenSocket.h"
 #include "IDataSocket.h"
-#include "ISocketFactory.h"
+#include "IListenSocket.h"
 #include "XSocket.h"
-#include "IStreamFilterFactory.h"
-#include "CLock.h"
-#include "CThread.h"
-#include "CTimerThread.h"
-#include "XMT.h"
-#include "XThread.h"
-#include "CFunctionJob.h"
+#include "IEventQueue.h"
 #include "CLog.h"
-#include "CStopwatch.h"
-#include "TMethodJob.h"
+#include "TMethodEventJob.h"
 #include "CArch.h"
 
 //
 // CServer
 //
 
-const SInt32			CServer::s_httpMaxSimultaneousRequests = 3;
+CEvent::Type			CServer::s_errorEvent        = CEvent::kUnknown;
+CEvent::Type			CServer::s_disconnectedEvent = CEvent::kUnknown;
 
-CServer::CServer(const CString& serverName) :
-	m_name(serverName),
-	m_error(false),
-	m_bindTimeout(5.0 * 60.0),
-	m_screenFactory(NULL),
-	m_socketFactory(NULL),
-	m_streamFilterFactory(NULL),
-	m_acceptClientThread(NULL),
-	m_active(NULL),
-	m_primaryClient(NULL),
+CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
+	m_primaryClient(primaryClient),
+	m_active(primaryClient),
 	m_seqNum(0),
+	m_xDelta(0),
+	m_yDelta(0),
+	m_xDelta2(0),
+	m_yDelta2(0),
+	m_config(config),
 	m_activeSaver(NULL),
-	m_httpServer(NULL),
-	m_httpAvailable(&m_mutex, s_httpMaxSimultaneousRequests),
 	m_switchDir(kNoDirection),
 	m_switchScreen(NULL),
 	m_switchWaitDelay(0.0),
-	m_switchWaitEngaged(false),
+	m_switchWaitTimer(NULL),
 	m_switchTwoTapDelay(0.0),
 	m_switchTwoTapEngaged(false),
 	m_switchTwoTapArmed(false),
 	m_switchTwoTapZone(3),
-	m_status(kNotRunning)
+	m_relativeMoves(false)
 {
-	// do nothing
+	// must have a primary client and it must have a canonical name
+	assert(m_primaryClient != NULL);
+	assert(m_config.isScreen(primaryClient->getName()));
+
+	CString primaryName = getName(primaryClient);
+
+	// clear clipboards
+	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+		CClipboardInfo& clipboard   = m_clipboards[id];
+		clipboard.m_clipboardOwner  = primaryName;
+		clipboard.m_clipboardSeqNum = m_seqNum;
+		if (clipboard.m_clipboard.open(0)) {
+			clipboard.m_clipboard.empty();
+			clipboard.m_clipboard.close();
+		}
+		clipboard.m_clipboardData   = clipboard.m_clipboard.marshall();
+	}
+
+	// install event handlers
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleSwitchWaitTimeout));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyDownEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleKeyDownEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyUpEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleKeyUpEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyRepeatEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleKeyRepeatEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getButtonDownEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleButtonDownEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getButtonUpEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleButtonUpEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getMotionOnPrimaryEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleMotionPrimaryEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getMotionOnSecondaryEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleMotionSecondaryEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getWheelEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleWheelEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getScreensaverActivatedEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleScreensaverActivatedEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getScreensaverDeactivatedEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleScreensaverDeactivatedEvent));
+
+	// add connection
+	addClient(m_primaryClient);
+
+	// process options locally
+	processOptions();
+
+	// tell primary client about its options
+	sendOptions(m_primaryClient);
+
+	m_primaryClient->enable();
 }
 
 CServer::~CServer()
 {
-	delete m_screenFactory;
-	delete m_socketFactory;
-	delete m_streamFilterFactory;
-}
+	// remove event handlers and timers
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyDownEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyUpEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyRepeatEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getButtonDownEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getButtonUpEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getMotionOnPrimaryEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getMotionOnSecondaryEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getWheelEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getScreensaverActivatedEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(IPlatformScreen::getScreensaverDeactivatedEvent(),
+							m_primaryClient->getEventTarget());
+	EVENTQUEUE->removeHandler(CEvent::kTimer, this);
+	stopSwitch();
 
-void
-CServer::open()
-{
-	// open the screen
-	try {
-		LOG((CLOG_INFO "opening screen"));
-		openPrimaryScreen();
-		setStatus(kNotRunning);
-	}
-	catch (XScreen& e) {
-		// can't open screen
-		setStatus(kError, e.what());
-		LOG((CLOG_INFO "failed to open screen"));
-		throw;
-	}
-	catch (XUnknownClient& e) {
-		// can't open screen
-		setStatus(kServerNameUnknown);
-		LOG((CLOG_CRIT "unknown screen name `%s'", e.getName().c_str()));
-		throw;
-	}
-}
-
-void
-CServer::mainLoop()
-{
-	// check preconditions
-	{
-		CLock lock(&m_mutex);
-		assert(m_primaryClient != NULL);
+	// force immediate disconnection of secondary clients
+	disconnect();
+	for (COldClients::iterator index = m_oldClients.begin();
+							index != m_oldClients.begin(); ++index) {
+		IClient* client = index->first;
+		EVENTQUEUE->deleteTimer(index->second);
+		EVENTQUEUE->removeHandler(CEvent::kTimer, client);
+		EVENTQUEUE->removeHandler(CClientProxy::getDisconnectedEvent(), client);
+		delete client;
 	}
 
-	try {
-		setStatus(kNotRunning);
-		LOG((CLOG_NOTE "starting server"));
-
-		// start listening for new clients
-		m_acceptClientThread = new CThread(startThread(
-								new TMethodJob<CServer>(this,
-									&CServer::acceptClients)));
-
-		// start listening for HTTP requests
-		if (m_config.getHTTPAddress().isValid()) {
-			m_httpServer = new CHTTPServer(this);
-			startThread(new TMethodJob<CServer>(this,
-								&CServer::acceptHTTPClients));
-		}
-
-		// handle events
-		m_primaryClient->mainLoop();
-
-		// clean up
-		LOG((CLOG_NOTE "stopping server"));
-
-		// use a macro to write the stuff that should go into a finally
-		// block so we can repeat it easily.  stroustrup's view that
-		// "resource acquistion is initialization" is a better solution
-		// than a finally block is parochial.  they both have their
-		// place.  adding finally to C++ would've been a drop in a big
-		// bucket.
-#define FINALLY do {					\
-		stopThreads();					\
-		delete m_httpServer;			\
-		m_httpServer = NULL;			\
-		runStatusJobs();				\
-		} while (false)
-		FINALLY;
-	}
-	catch (XMT& e) {
-		LOG((CLOG_ERR "server error: %s", e.what()));
-		setStatus(kError, e.what());
-
-		// clean up
-		LOG((CLOG_NOTE "stopping server"));
-		FINALLY;
-		throw;
-	}
-	catch (XBase& e) {
-		LOG((CLOG_ERR "server error: %s", e.what()));
-		setStatus(kError, e.what());
-
-		// clean up
-		LOG((CLOG_NOTE "stopping server"));
-		FINALLY;
-	}
-	catch (XThread&) {
-		setStatus(kNotRunning);
-
-		// clean up
-		LOG((CLOG_NOTE "stopping server"));
-		FINALLY;
-		throw;
-	}
-	catch (...) {
-		LOG((CLOG_DEBUG "unknown server error"));
-		setStatus(kError);
-
-		// clean up
-		LOG((CLOG_NOTE "stopping server"));
-		FINALLY;
-		throw;
-	}
-#undef FINALLY
-
-	// throw if there was an error
-	if (m_error) {
-		LOG((CLOG_DEBUG "forwarding child thread exception"));
-		throw XServerRethrow();
-	}
-}
-
-void
-CServer::exitMainLoop()
-{
-	m_primaryClient->exitMainLoop();
-}
-
-void
-CServer::exitMainLoopWithError()
-{
-	{
-		CLock lock(&m_mutex);
-		m_error = true;
-	}
-	exitMainLoop();
-}
-
-void
-CServer::close()
-{
-	if (m_primaryClient != NULL) {
-		closePrimaryScreen();
-	}
-	LOG((CLOG_INFO "closed screen"));
+	// disconnect primary client
+	removeClient(m_primaryClient);
 }
 
 bool
 CServer::setConfig(const CConfig& config)
 {
 	// refuse configuration if it doesn't include the primary screen
-	{
-		CLock lock(&m_mutex);
-		if (m_primaryClient != NULL &&
-			!config.isScreen(m_primaryClient->getName())) {
-			return false;
-		}
+	if (!config.isScreen(m_primaryClient->getName())) {
+		return false;
 	}
 
 	// close clients that are connected but being dropped from the
@@ -234,37 +185,11 @@ CServer::setConfig(const CConfig& config)
 	closeClients(config);
 
 	// cut over
-	CLock lock(&m_mutex);
 	m_config = config;
-
-	// process global options
-	const CConfig::CScreenOptions* options = m_config.getOptions("");
-	if (options != NULL && options->size() > 0) {
-		for (CConfig::CScreenOptions::const_iterator index = options->begin();
-									index != options->end(); ++index) {
-			const OptionID id       = index->first;
-			const OptionValue value = index->second;
-			if (id == kOptionScreenSwitchDelay) {
-				m_switchWaitDelay = 1.0e-3 * static_cast<double>(value);
-				if (m_switchWaitDelay < 0.0) {
-					m_switchWaitDelay = 0.0;
-				}
-				m_switchWaitEngaged = false;
-			}
-			else if (id == kOptionScreenSwitchTwoTap) {
-				m_switchTwoTapDelay = 1.0e-3 * static_cast<double>(value);
-				if (m_switchTwoTapDelay < 0.0) {
-					m_switchTwoTapDelay = 0.0;
-				}
-				m_switchTwoTapEngaged = false;
-			}
-		}
-	}
+	processOptions();
 
 	// tell primary screen about reconfiguration
-	if (m_primaryClient != NULL) {
-		m_primaryClient->reconfigure(getActivePrimarySides());
-	}
+	m_primaryClient->reconfigure(getActivePrimarySides());
 
 	// tell all (connected) clients about current options
 	for (CClientList::const_iterator index = m_clients.begin();
@@ -273,65 +198,66 @@ CServer::setConfig(const CConfig& config)
 		sendOptions(client);
 	}
 
-	// notify of status
-	runStatusJobs();
-
 	return true;
 }
 
 void
-CServer::setScreenFactory(IPrimaryScreenFactory* adopted)
+CServer::adoptClient(IClient* client)
 {
-	CLock lock(&m_mutex);
-	delete m_screenFactory;
-	m_screenFactory = adopted;
+	assert(client != NULL);
+
+	// watch for client disconnection
+	EVENTQUEUE->adoptHandler(CClientProxy::getDisconnectedEvent(), client,
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleClientDisconnected, client));
+
+	// name must be in our configuration
+	if (!m_config.isScreen(client->getName())) {
+		LOG((CLOG_WARN "a client with name \"%s\" is not in the map", client->getName().c_str()));
+		closeClient(client, kMsgEUnknown);
+		return;
+	}
+
+	// add client to client list
+	if (!addClient(client)) {
+		// can only have one screen with a given name at any given time
+		LOG((CLOG_WARN "a client with name \"%s\" is already connected", getName(client).c_str()));
+		closeClient(client, kMsgEBusy);
+		return;
+	}
+	LOG((CLOG_NOTE "client \"%s\" has connected", getName(client).c_str()));
+
+	// send configuration options to client
+	sendOptions(client);
+
+	// activate screen saver on new client if active on the primary screen
+	if (m_activeSaver != NULL) {
+		client->screensaver(true);
+	}
 }
 
 void
-CServer::setSocketFactory(ISocketFactory* adopted)
+CServer::disconnect()
 {
-	CLock lock(&m_mutex);
-	delete m_socketFactory;
-	m_socketFactory = adopted;
-}
-
-void
-CServer::setStreamFilterFactory(IStreamFilterFactory* adopted)
-{
-	CLock lock(&m_mutex);
-	delete m_streamFilterFactory;
-	m_streamFilterFactory = adopted;
-}
-
-void
-CServer::addStatusJob(IJob* job)
-{
-	m_statusJobs.addJob(job);
-}
-
-void
-CServer::removeStatusJob(IJob* job)
-{
-	m_statusJobs.removeJob(job);
-}
-
-CString
-CServer::getPrimaryScreenName() const
-{
-	return m_name;
+	// close all secondary clients
+	if (m_clients.size() > 1 || !m_oldClients.empty()) {
+		CConfig emptyConfig;
+		closeClients(emptyConfig);
+	}
+	else {
+		EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
+	}
 }
 
 UInt32
 CServer::getNumClients() const
 {
-	CLock lock(&m_mutex);
 	return m_clients.size();
 }
 
 void
 CServer::getClients(std::vector<CString>& list) const
 {
-	CLock lock(&m_mutex);
 	list.clear();
 	for (CClientList::const_iterator index = m_clients.begin();
 							index != m_clients.end(); ++index) {
@@ -339,590 +265,75 @@ CServer::getClients(std::vector<CString>& list) const
 	}
 }
 
-CServer::EStatus
-CServer::getStatus(CString* msg) const
+CEvent::Type
+CServer::getErrorEvent()
 {
-	CLock lock(&m_mutex);
-	if (msg != NULL) {
-		*msg = m_statusMessage;
-	}
-	return m_status;
+	return CEvent::registerTypeOnce(s_errorEvent,
+							"CServer::error");
 }
 
-void
-CServer::getConfig(CConfig* config) const
+CEvent::Type
+CServer::getDisconnectedEvent()
 {
-	assert(config != NULL);
-
-	CLock lock(&m_mutex);
-	*config = m_config;
+	return CEvent::registerTypeOnce(s_disconnectedEvent,
+							"CServer::disconnected");
 }
 
-void
-CServer::runStatusJobs() const
+bool
+CServer::onCommandKey(KeyID id, KeyModifierMask /*mask*/, bool /*down*/)
 {
-	m_statusJobs.runJobs();
-}
-
-void
-CServer::setStatus(EStatus status, const char* msg)
-{
-	{
-		CLock lock(&m_mutex);
-		m_status = status;
-		if (m_status == kError) {
-			m_statusMessage = (msg == NULL) ? "Error" : msg;
-		}
-		else {
-			m_statusMessage = (msg == NULL) ? "" : msg;
+	if (id == kKeyScrollLock) {
+		m_primaryClient->reconfigure(getActivePrimarySides());
+		if (!isLockedToScreenServer()) {
+			stopRelativeMoves();
 		}
 	}
-	runStatusJobs();
+	return false;
+}
+
+CString
+CServer::getName(const IClient* client) const
+{
+	CString name = m_config.getCanonicalName(client->getName());
+	if (name.empty()) {
+		name = client->getName();
+	}
+	return name;
 }
 
 UInt32
 CServer::getActivePrimarySides() const
 {
-	// note -- m_mutex must be locked on entry
 	UInt32 sides = 0;
-	if (!m_config.getNeighbor(getPrimaryScreenName(), kLeft).empty()) {
-		sides |= kLeftMask;
-	}
-	if (!m_config.getNeighbor(getPrimaryScreenName(), kRight).empty()) {
-		sides |= kRightMask;
-	}
-	if (!m_config.getNeighbor(getPrimaryScreenName(), kTop).empty()) {
-		sides |= kTopMask;
-	}
-	if (!m_config.getNeighbor(getPrimaryScreenName(), kBottom).empty()) {
-		sides |= kBottomMask;
+	if (!isLockedToScreenServer()) {
+		if (getNeighbor(m_primaryClient, kLeft) != NULL) {
+			sides |= kLeftMask;
+		}
+		if (getNeighbor(m_primaryClient, kRight) != NULL) {
+			sides |= kRightMask;
+		}
+		if (getNeighbor(m_primaryClient, kTop) != NULL) {
+			sides |= kTopMask;
+		}
+		if (getNeighbor(m_primaryClient, kBottom) != NULL) {
+			sides |= kBottomMask;
+		}
 	}
 	return sides;
 }
 
-void
-CServer::onError()
-{
-	setStatus(kError);
-
-	// stop all running threads but don't wait too long since some
-	// threads may be unable to proceed until this thread returns.
-	stopThreads(3.0);
-
-	// done with the HTTP server
-	CLock lock(&m_mutex);
-	delete m_httpServer;
-	m_httpServer = NULL;
-
-	// note -- we do not attempt to close down the primary screen
-}
-
-void
-CServer::onInfoChanged(const CString& name, const CClientInfo& info)
-{
-	CLock lock(&m_mutex);
-
-	// look up client
-	CClientList::iterator index = m_clients.find(name);
-	if (index == m_clients.end()) {
-		throw XBadClient();
-	}
-	IClient* client = index->second;
-	assert(client != NULL);
-
-	// update the remote mouse coordinates
-	if (client == m_active) {
-		m_x = info.m_mx;
-		m_y = info.m_my;
-	}
-	LOG((CLOG_INFO "screen \"%s\" shape=%d,%d %dx%d zone=%d pos=%d,%d", name.c_str(), info.m_x, info.m_y, info.m_w, info.m_h, info.m_zoneSize, info.m_mx, info.m_my));
-
-	// handle resolution change to primary screen
-	if (client == m_primaryClient) {
-		if (client == m_active) {
-			onMouseMovePrimaryNoLock(m_x, m_y);
-		}
-		else {
-			onMouseMoveSecondaryNoLock(0, 0);
-		}
-	}
-}
-
 bool
-CServer::onGrabClipboard(const CString& name, ClipboardID id, UInt32 seqNum)
-{
-	CLock lock(&m_mutex);
-
-	// screen must be connected
-	CClientList::iterator grabber = m_clients.find(name);
-	if (grabber == m_clients.end()) {
-		throw XBadClient();
-	}
-
-	// ignore grab if sequence number is old.  always allow primary
-	// screen to grab.
-	CClipboardInfo& clipboard = m_clipboards[id];
-	if (name != m_primaryClient->getName() &&
-		seqNum < clipboard.m_clipboardSeqNum) {
-		LOG((CLOG_INFO "ignored screen \"%s\" grab of clipboard %d", name.c_str(), id));
-		return false;
-	}
-
-	// mark screen as owning clipboard
-	LOG((CLOG_INFO "screen \"%s\" grabbed clipboard %d from \"%s\"", name.c_str(), id, clipboard.m_clipboardOwner.c_str()));
-	clipboard.m_clipboardOwner  = name;
-	clipboard.m_clipboardSeqNum = seqNum;
-
-	// clear the clipboard data (since it's not known at this point)
-	if (clipboard.m_clipboard.open(0)) {
-		clipboard.m_clipboard.empty();
-		clipboard.m_clipboard.close();
-	}
-	clipboard.m_clipboardData = clipboard.m_clipboard.marshall();
-
-	// tell all other screens to take ownership of clipboard.  tell the
-	// grabber that it's clipboard isn't dirty.
-	for (CClientList::iterator index = m_clients.begin();
-								index != m_clients.end(); ++index) {
-		IClient* client = index->second;
-		if (index == grabber) {
-			client->setClipboardDirty(id, false);
-		}
-		else {
-			client->grabClipboard(id);
-		}
-	}
-
-	return true;
-}
-
-void
-CServer::onClipboardChanged(ClipboardID id, UInt32 seqNum, const CString& data)
-{
-	CLock lock(&m_mutex);
-	onClipboardChangedNoLock(id, seqNum, data);
-}
-
-void
-CServer::onClipboardChangedNoLock(ClipboardID id,
-				UInt32 seqNum, const CString& data)
-{
-	CClipboardInfo& clipboard = m_clipboards[id];
-
-	// ignore update if sequence number is old
-	if (seqNum < clipboard.m_clipboardSeqNum) {
-		LOG((CLOG_INFO "ignored screen \"%s\" update of clipboard %d (missequenced)", clipboard.m_clipboardOwner.c_str(), id));
-		return;
-	}
-
-	// ignore if data hasn't changed
-	if (data == clipboard.m_clipboardData) {
-		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
-		return;
-	}
-
-	// unmarshall into our clipboard buffer
-	LOG((CLOG_INFO "screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
-	clipboard.m_clipboardData = data;
-	clipboard.m_clipboard.unmarshall(clipboard.m_clipboardData, 0);
-
-	// tell all clients except the sender that the clipboard is dirty
-	CClientList::const_iterator sender =
-								m_clients.find(clipboard.m_clipboardOwner);
-	for (CClientList::const_iterator index = m_clients.begin();
-								index != m_clients.end(); ++index) {
-		IClient* client = index->second;
-		client->setClipboardDirty(id, index != sender);
-	}
-
-	// send the new clipboard to the active screen
-	m_active->setClipboard(id, m_clipboards[id].m_clipboardData);
-}
-
-void
-CServer::onScreensaver(bool activated)
-{
-	LOG((CLOG_DEBUG "onScreenSaver %s", activated ? "activated" : "deactivated"));
-	CLock lock(&m_mutex);
-
-	if (activated) {
-		// save current screen and position
-		m_activeSaver = m_active;
-		m_xSaver      = m_x;
-		m_ySaver      = m_y;
-
-		// jump to primary screen
-		if (m_active != m_primaryClient) {
-			switchScreen(m_primaryClient, 0, 0, true);
-		}
-	}
-	else {
-		// jump back to previous screen and position.  we must check
-		// that the position is still valid since the screen may have
-		// changed resolutions while the screen saver was running.
-		if (m_activeSaver != NULL && m_activeSaver != m_primaryClient) {
-			// check position
-			IClient* screen = m_activeSaver;
-			SInt32 x, y, w, h;
-			screen->getShape(x, y, w, h);
-			SInt32 zoneSize = screen->getJumpZoneSize();
-			if (m_xSaver < x + zoneSize) {
-				m_xSaver = x + zoneSize;
-			}
-			else if (m_xSaver >= x + w - zoneSize) {
-				m_xSaver = x + w - zoneSize - 1;
-			}
-			if (m_ySaver < y + zoneSize) {
-				m_ySaver = y + zoneSize;
-			}
-			else if (m_ySaver >= y + h - zoneSize) {
-				m_ySaver = y + h - zoneSize - 1;
-			}
-
-			// jump
-			switchScreen(screen, m_xSaver, m_ySaver, false);
-		}
-
-		// reset state
-		m_activeSaver = NULL;
-	}
-
-	// send message to all clients
-	for (CClientList::const_iterator index = m_clients.begin();
-								index != m_clients.end(); ++index) {
-		IClient* client = index->second;
-		client->screensaver(activated);
-	}
-}
-
-void
-CServer::onOneShotTimerExpired(UInt32 id)
-{
-	CLock lock(&m_mutex);
-
-	// ignore if it's an old timer or if switch wait isn't engaged anymore
-	if (!m_switchWaitEngaged || id != m_switchWaitTimer) {
-		return;
-	}
-
-	// ignore if mouse is locked to screen
-	if (isLockedToScreenNoLock()) {
-		LOG((CLOG_DEBUG1 "locked to screen"));
-		clearSwitchState();
-		return;
-	}
-
-	// switch screen
-	switchScreen(m_switchScreen, m_switchWaitX, m_switchWaitY, false);
-}
-
-void
-CServer::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
-{
-	LOG((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x button=0x%04x", id, mask, button));
-	CLock lock(&m_mutex);
-	assert(m_active != NULL);
-
-	// handle command keys
-	if (onCommandKey(id, mask, true)) {
-		return;
-	}
-
-	// relay
-	m_active->keyDown(id, mask, button);
-}
-
-void
-CServer::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button)
-{
-	LOG((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button));
-	CLock lock(&m_mutex);
-	assert(m_active != NULL);
-
-	// handle command keys
-	if (onCommandKey(id, mask, false)) {
-		return;
-	}
-
-	// relay
-	m_active->keyUp(id, mask, button);
-}
-
-void
-CServer::onKeyRepeat(KeyID id, KeyModifierMask mask,
-				SInt32 count, KeyButton button)
-{
-	LOG((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x", id, mask, count, button));
-	CLock lock(&m_mutex);
-	assert(m_active != NULL);
-
-	// handle command keys
-	if (onCommandKey(id, mask, false)) {
-		onCommandKey(id, mask, true);
-		return;
-	}
-
-	// relay
-	m_active->keyRepeat(id, mask, count, button);
-}
-
-void
-CServer::onMouseDown(ButtonID id)
-{
-	LOG((CLOG_DEBUG1 "onMouseDown id=%d", id));
-	CLock lock(&m_mutex);
-	assert(m_active != NULL);
-
-	// relay
-	m_active->mouseDown(id);
-}
-
-void
-CServer::onMouseUp(ButtonID id)
-{
-	LOG((CLOG_DEBUG1 "onMouseUp id=%d", id));
-	CLock lock(&m_mutex);
-	assert(m_active != NULL);
-
-	// relay
-	m_active->mouseUp(id);
-}
-
-bool
-CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
-{
-	LOG((CLOG_DEBUG2 "onMouseMovePrimary %d,%d", x, y));
-	CLock lock(&m_mutex);
-	return onMouseMovePrimaryNoLock(x, y);
-}
-
-bool
-CServer::onMouseMovePrimaryNoLock(SInt32 x, SInt32 y)
-{
-	// mouse move on primary (server's) screen
-	assert(m_primaryClient != NULL);
-	assert(m_active == m_primaryClient);
-
-	// get screen shape
-	SInt32 ax, ay, aw, ah;
-	m_active->getShape(ax, ay, aw, ah);
-	SInt32 zoneSize = m_active->getJumpZoneSize();
-
-	// see if we should change screens
-	EDirection dir;
-	if (x < ax + zoneSize) {
-		x  -= zoneSize;
-		dir = kLeft;
-	}
-	else if (x >= ax + aw - zoneSize) {
-		x  += zoneSize;
-		dir = kRight;
-	}
-	else if (y < ay + zoneSize) {
-		y  -= zoneSize;
-		dir = kTop;
-	}
-	else if (y >= ay + ah - zoneSize) {
-		y  += zoneSize;
-		dir = kBottom;
-	}
-	else {
-		// still on local screen.  check if we're inside the tap region.
-		SInt32 tapZone = (zoneSize < m_switchTwoTapZone) ?
-							m_switchTwoTapZone : zoneSize;
-		bool inTapZone = (x <  ax + tapZone ||
-						  x >= ax + aw - tapZone ||
-						  y <  ay + tapZone ||
-						  y >= ay + ah - tapZone);
-
-		// failed to switch
-		onNoSwitch(inTapZone);
-		return false;
-	}
-
-	// get jump destination
-	IClient* newScreen = getNeighbor(m_active, dir, x, y);
-
-	// should we switch or not?
-	if (isSwitchOkay(newScreen, dir, x, y)) {
-		// switch screen
-		switchScreen(newScreen, x, y, false);
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-void
-CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
-{
-	LOG((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
-	CLock lock(&m_mutex);
-	onMouseMoveSecondaryNoLock(dx, dy);
-}
-
-void
-CServer::onMouseMoveSecondaryNoLock(SInt32 dx, SInt32 dy)
-{
-	// mouse move on secondary (client's) screen
-	assert(m_active != NULL);
-	if (m_active == m_primaryClient) {
-		// we're actually on the primary screen.  this can happen
-		// when the primary screen begins processing a mouse move
-		// for a secondary screen, then the active (secondary)
-		// screen disconnects causing us to jump to the primary
-		// screen, and finally the primary screen finishes
-		// processing the mouse move, still thinking it's for
-		// a secondary screen.  we just ignore the motion.
-		return;
-	}
-
-	// save old position
-	const SInt32 xOld = m_x;
-	const SInt32 yOld = m_y;
-
-	// accumulate motion
-	m_x += dx;
-	m_y += dy;
-
-	// get screen shape
-	SInt32 ax, ay, aw, ah;
-	m_active->getShape(ax, ay, aw, ah);
-
-	// find direction of neighbor and get the neighbor
-	bool jump = true;
-	IClient* newScreen;
-	do {
-		EDirection dir;
-		if (m_x < ax) {
-			dir = kLeft;
-		}
-		else if (m_x > ax + aw - 1) {
-			dir = kRight;
-		}
-		else if (m_y < ay) {
-			dir = kTop;
-		}
-		else if (m_y > ay + ah - 1) {
-			dir = kBottom;
-		}
-		else {
-			// we haven't left the screen
-			newScreen = m_active;
-			jump      = false;
-
-			// if waiting and mouse is not on the border we're waiting
-			// on then stop waiting.  also if it's not on the border
-			// then arm the double tap.
-			if (m_switchScreen != NULL) {
-				bool clearWait;
-				SInt32 zoneSize = m_primaryClient->getJumpZoneSize();
-				switch (m_switchDir) {
-				case kLeft:
-					clearWait = (m_x >= ax + zoneSize);
-					break;
-
-				case kRight:
-					clearWait = (m_x <= ax + aw - 1 - zoneSize);
-					break;
-
-				case kTop:
-					clearWait = (m_y >= ay + zoneSize);
-					break;
-
-				case kBottom:
-					clearWait = (m_y <= ay + ah - 1 + zoneSize);
-					break;
-
-				default:
-					clearWait = false;
-					break;
-				}
-				if (clearWait) {
-					// still on local screen.  check if we're inside the
-					// tap region.
-					SInt32 tapZone = (zoneSize < m_switchTwoTapZone) ?
-										m_switchTwoTapZone : zoneSize;
-					bool inTapZone = (m_x <  ax + tapZone ||
-									  m_x >= ax + aw - tapZone ||
-									  m_y <  ay + tapZone ||
-									  m_y >= ay + ah - tapZone);
-
-					// failed to switch
-					onNoSwitch(inTapZone);
-				}
-			}
-
-			// skip rest of block
-			break;
-		}
-
-		// try to switch screen.  get the neighbor.
-		newScreen = getNeighbor(m_active, dir, m_x, m_y);
-
-		// see if we should switch
-		if (!isSwitchOkay(newScreen, dir, m_x, m_y)) {
-			newScreen = m_active;
-			jump      = false;
-		}
-	} while (false);
-
-	if (jump) {
-		// switch screens
-		switchScreen(newScreen, m_x, m_y, false);
-	}
-	else {
-		// same screen.  clamp mouse to edge.
-		m_x = xOld + dx;
-		m_y = yOld + dy;
-		if (m_x < ax) {
-			m_x = ax;
-			LOG((CLOG_DEBUG2 "clamp to left of \"%s\"", m_active->getName().c_str()));
-		}
-		else if (m_x > ax + aw - 1) {
-			m_x = ax + aw - 1;
-			LOG((CLOG_DEBUG2 "clamp to right of \"%s\"", m_active->getName().c_str()));
-		}
-		if (m_y < ay) {
-			m_y = ay;
-			LOG((CLOG_DEBUG2 "clamp to top of \"%s\"", m_active->getName().c_str()));
-		}
-		else if (m_y > ay + ah - 1) {
-			m_y = ay + ah - 1;
-			LOG((CLOG_DEBUG2 "clamp to bottom of \"%s\"", m_active->getName().c_str()));
-		}
-
-		// warp cursor if it moved.
-		if (m_x != xOld || m_y != yOld) {
-			LOG((CLOG_DEBUG2 "move on %s to %d,%d", m_active->getName().c_str(), m_x, m_y));
-			m_active->mouseMove(m_x, m_y);
-		}
-	}
-}
-
-void
-CServer::onMouseWheel(SInt32 delta)
-{
-	LOG((CLOG_DEBUG1 "onMouseWheel %+d", delta));
-	CLock lock(&m_mutex);
-	assert(m_active != NULL);
-
-	// relay
-	m_active->mouseWheel(delta);
-}
-
-bool
-CServer::onCommandKey(KeyID /*id*/, KeyModifierMask /*mask*/, bool /*down*/)
-{
-	return false;
-}
-
-bool
-CServer::isLockedToScreenNoLock() const
+CServer::isLockedToScreenServer() const
 {
 	// locked if scroll-lock is toggled on
-	if ((m_primaryClient->getToggleMask() & KeyModifierScrollLock) != 0) {
+	return ((m_primaryClient->getToggleMask() & KeyModifierScrollLock) != 0);
+}
+
+bool
+CServer::isLockedToScreen() const
+{
+	// locked if we say we're locked
+	if (isLockedToScreenServer()) {
 		LOG((CLOG_DEBUG "locked by ScrollLock"));
 		return true;
 	}
@@ -936,11 +347,20 @@ CServer::isLockedToScreenNoLock() const
 	return false;
 }
 
+SInt32
+CServer::getJumpZoneSize(IClient* client) const
+{
+	if (client == m_primaryClient) {
+		return m_primaryClient->getJumpZoneSize();
+	}
+	else {
+		return 0;
+	}
+}
+
 void
 CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 {
-	// note -- must be locked on entry
-
 	assert(dst != NULL);
 #ifndef NDEBUG
 	{
@@ -951,14 +371,18 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 #endif
 	assert(m_active != NULL);
 
-	LOG((CLOG_INFO "switch from \"%s\" to \"%s\" at %d,%d", m_active->getName().c_str(), dst->getName().c_str(), x, y));
+	LOG((CLOG_INFO "switch from \"%s\" to \"%s\" at %d,%d", getName(m_active).c_str(), getName(dst).c_str(), x, y));
 
 	// stop waiting to switch
-	clearSwitchState();
+	stopSwitch();
 
 	// record new position
-	m_x = x;
-	m_y = y;
+	m_x       = x;
+	m_y       = y;
+	m_xDelta  = 0;
+	m_yDelta  = 0;
+	m_xDelta2 = 0;
+	m_yDelta2 = 0;
 
 	// wrapping means leaving the active screen and entering it again.
 	// since that's a waste of time we skip that and just warp the
@@ -976,11 +400,9 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 		if (m_active == m_primaryClient) {
 			for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 				CClipboardInfo& clipboard = m_clipboards[id];
-				if (clipboard.m_clipboardOwner == m_primaryClient->getName()) {
-					CString clipboardData;
-					m_primaryClient->getClipboard(id, clipboardData);
-					onClipboardChangedNoLock(id,
-								clipboard.m_clipboardSeqNum, clipboardData);
+				if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
+					onClipboardChanged(m_primaryClient,
+						id, clipboard.m_clipboardSeqNum);
 				}
 			}
 		}
@@ -998,7 +420,7 @@ CServer::switchScreen(IClient* dst, SInt32 x, SInt32 y, bool forScreensaver)
 
 		// send the clipboard data to new active screen
 		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-			m_active->setClipboard(id, m_clipboards[id].m_clipboardData);
+			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 		}
 	}
 	else {
@@ -1014,7 +436,7 @@ CServer::getNeighbor(IClient* src, EDirection dir) const
 	assert(src != NULL);
 
 	// get source screen name
-	CString srcName = src->getName();
+	CString srcName = getName(src);
 	assert(!srcName.empty());
 	LOG((CLOG_DEBUG2 "find neighbor on %s of \"%s\"", CConfig::dirName(dir), srcName.c_str()));
 
@@ -1090,7 +512,7 @@ CServer::getNeighbor(IClient* src,
 			if (x >= 0) {
 				break;
 			}
-			LOG((CLOG_DEBUG2 "skipping over screen %s", dst->getName().c_str()));
+			LOG((CLOG_DEBUG2 "skipping over screen %s", getName(dst).c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
 		assert(lastGoodScreen != NULL);
@@ -1106,7 +528,7 @@ CServer::getNeighbor(IClient* src,
 			if (x < dw) {
 				break;
 			}
-			LOG((CLOG_DEBUG2 "skipping over screen %s", dst->getName().c_str()));
+			LOG((CLOG_DEBUG2 "skipping over screen %s", getName(dst).c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
 		assert(lastGoodScreen != NULL);
@@ -1122,7 +544,7 @@ CServer::getNeighbor(IClient* src,
 			if (y >= 0) {
 				break;
 			}
-			LOG((CLOG_DEBUG2 "skipping over screen %s", dst->getName().c_str()));
+			LOG((CLOG_DEBUG2 "skipping over screen %s", getName(dst).c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
 		assert(lastGoodScreen != NULL);
@@ -1138,12 +560,16 @@ CServer::getNeighbor(IClient* src,
 			if (y < sh) {
 				break;
 			}
-			LOG((CLOG_DEBUG2 "skipping over screen %s", dst->getName().c_str()));
+			LOG((CLOG_DEBUG2 "skipping over screen %s", getName(dst).c_str()));
 			dst = getNeighbor(lastGoodScreen, srcSide);
 		}
 		assert(lastGoodScreen != NULL);
 		y += dy;
 		break;
+
+	case kNoDirection:
+		assert(0 && "bad direction");
+		return NULL;
 	}
 
 	// save destination screen
@@ -1155,31 +581,35 @@ CServer::getNeighbor(IClient* src,
 	// a neighbor (i.e. an asymmetrical side) then we don't need to
 	// move inwards because that side can't provoke a jump.
 	if (dst == m_primaryClient) {
-		const CString dstName(dst->getName());
+		const CString dstName(getName(dst));
 		switch (srcSide) {
 		case kLeft:
 			if (!m_config.getNeighbor(dstName, kRight).empty() &&
-				x > dx + dw - 1 - dst->getJumpZoneSize())
-				x = dx + dw - 1 - dst->getJumpZoneSize();
+				x > dx + dw - 1 - getJumpZoneSize(dst))
+				x = dx + dw - 1 - getJumpZoneSize(dst);
 			break;
 
 		case kRight:
 			if (!m_config.getNeighbor(dstName, kLeft).empty() &&
-				x < dx + dst->getJumpZoneSize())
-				x = dx + dst->getJumpZoneSize();
+				x < dx + getJumpZoneSize(dst))
+				x = dx + getJumpZoneSize(dst);
 			break;
 
 		case kTop:
 			if (!m_config.getNeighbor(dstName, kBottom).empty() &&
-				y > dy + dh - 1 - dst->getJumpZoneSize())
-				y = dy + dh - 1 - dst->getJumpZoneSize();
+				y > dy + dh - 1 - getJumpZoneSize(dst))
+				y = dy + dh - 1 - getJumpZoneSize(dst);
 			break;
 
 		case kBottom:
 			if (!m_config.getNeighbor(dstName, kTop).empty() &&
-				y < dy + dst->getJumpZoneSize())
-				y = dy + dst->getJumpZoneSize();
+				y < dy + getJumpZoneSize(dst))
+				y = dy + getJumpZoneSize(dst);
 			break;
+
+		case kNoDirection:
+			assert(0 && "bad direction");
+			return NULL;
 		}
 	}
 
@@ -1221,6 +651,10 @@ CServer::getNeighbor(IClient* src,
 		}
 		x += dx;
 		break;
+
+	case kNoDirection:
+		assert(0 && "bad direction");
+		return NULL;
 	}
 
 	return dst;
@@ -1229,14 +663,14 @@ CServer::getNeighbor(IClient* src,
 bool
 CServer::isSwitchOkay(IClient* newScreen, EDirection dir, SInt32 x, SInt32 y)
 {
-	LOG((CLOG_DEBUG1 "try to leave \"%s\" on %s", m_active->getName().c_str(), CConfig::dirName(dir)));
+	LOG((CLOG_DEBUG1 "try to leave \"%s\" on %s", getName(m_active).c_str(), CConfig::dirName(dir)));
 
 	// is there a neighbor?
 	if (newScreen == NULL) {
 		// there's no neighbor.  we don't want to switch and we don't
 		// want to try to switch later.
 		LOG((CLOG_DEBUG1 "no neighbor %s", CConfig::dirName(dir)));
-		clearSwitchState();
+		stopSwitch();
 		return false;
 	}
 
@@ -1254,676 +688,185 @@ CServer::isSwitchOkay(IClient* newScreen, EDirection dir, SInt32 x, SInt32 y)
 
 	// is this a double tap and do we care?
 	if (!allowSwitch && m_switchTwoTapDelay > 0.0) {
-		if (isNewDirection || !m_switchTwoTapEngaged) {
-			// tapping a different or new edge.  prepare for second tap.
-			preventSwitch         = true;
-			m_switchTwoTapEngaged = true;
-			m_switchTwoTapArmed   = false;
-			m_switchTwoTapTimer.reset();
-			LOG((CLOG_DEBUG1 "waiting for second tap"));
+		if (isNewDirection ||
+			!isSwitchTwoTapStarted() || !shouldSwitchTwoTap()) {
+			// tapping a different or new edge or second tap not
+			// fast enough.  prepare for second tap.
+			preventSwitch = true;
+			startSwitchTwoTap();
 		}
 		else {
-			// second tap if we were armed.  if soon enough then switch.
-			if (m_switchTwoTapArmed &&
-				m_switchTwoTapTimer.getTime() <= m_switchTwoTapDelay) {
-				allowSwitch = true;
-			}
-			else {
-				// not fast enough.  reset the clock.
-				preventSwitch         = true;
-				m_switchTwoTapEngaged = true;
-				m_switchTwoTapArmed   = false;
-				m_switchTwoTapTimer.reset();
-				LOG((CLOG_DEBUG1 "waiting for second tap"));
-			}
+			// got second tap
+			allowSwitch = true;
 		}
 	}
 
 	// if waiting before a switch then prepare to switch later
 	if (!allowSwitch && m_switchWaitDelay > 0.0) {
-		if (isNewDirection || !m_switchWaitEngaged) {
-			m_switchWaitEngaged = true;
-			m_switchWaitX       = x;
-			m_switchWaitY       = y;
-			m_switchWaitTimer   = m_primaryClient->addOneShotTimer(
-													m_switchWaitDelay);
-			LOG((CLOG_DEBUG1 "waiting to switch"));
+		if (isNewDirection || !isSwitchWaitStarted()) {
+			startSwitchWait(x, y);
 		}
 		preventSwitch = true;
 	}
 
-	// ignore if mouse is locked to screen
-	if (!preventSwitch && isLockedToScreenNoLock()) {
+	// ignore if mouse is locked to screen and don't try to switch later
+	if (!preventSwitch && isLockedToScreen()) {
 		LOG((CLOG_DEBUG1 "locked to screen"));
 		preventSwitch = true;
-
-		// don't try to switch later.  it's possible that we might
-		// not be locked to the screen when the wait delay expires
-		// and could switch then but we'll base the decision on
-		// when the user first attempts the switch.  this also
-		// ensures that all switch tests are using the same
-		clearSwitchState();
+		stopSwitch();
 	}
 
 	return !preventSwitch;
 }
 
 void
-CServer::onNoSwitch(bool inTapZone)
+CServer::noSwitch(SInt32 x, SInt32 y)
+{
+	armSwitchTwoTap(x, y);
+	stopSwitchWait();
+}
+
+void
+CServer::stopSwitch()
+{
+	if (m_switchScreen != NULL) {
+		m_switchScreen = NULL;
+		m_switchDir    = kNoDirection;
+		stopSwitchTwoTap();
+		stopSwitchWait();
+	}
+}
+
+void
+CServer::startSwitchTwoTap()
+{
+	m_switchTwoTapEngaged = true;
+	m_switchTwoTapArmed   = false;
+	m_switchTwoTapTimer.reset();
+	LOG((CLOG_DEBUG1 "waiting for second tap"));
+}
+
+void
+CServer::armSwitchTwoTap(SInt32 x, SInt32 y)
 {
 	if (m_switchTwoTapEngaged) {
 		if (m_switchTwoTapTimer.getTime() > m_switchTwoTapDelay) {
 			// second tap took too long.  disengage.
-			m_switchTwoTapEngaged = false;
-			m_switchTwoTapArmed   = false;
+			stopSwitchTwoTap();
 		}
-		else if (!inTapZone) {
-			// we've moved away from the edge and there's still
-			// time to get back for a double tap.
-			m_switchTwoTapArmed = true;
-		}
-	}
+		else if (!m_switchTwoTapArmed) {
+			// still time for a double tap.  see if we left the tap
+			// zone and, if so, arm the two tap.
+			SInt32 ax, ay, aw, ah;
+			m_active->getShape(ax, ay, aw, ah);
+			SInt32 tapZone = m_primaryClient->getJumpZoneSize();
+			if (tapZone < m_switchTwoTapZone) {
+				tapZone = m_switchTwoTapZone;
+			}
+			if (x >= ax + tapZone && x < ax + aw - tapZone &&
+				y >= ay + tapZone && y < ay + ah - tapZone) {
+				// win32 can generate bogus mouse events that appear to
+				// move in the opposite direction that the mouse actually
+				// moved.  try to ignore that crap here.
+				switch (m_switchDir) {
+				case kLeft:
+					m_switchTwoTapArmed = (m_xDelta > 0 && m_xDelta2 > 0);
+					break;
 
-	// once the mouse moves away from the edge we no longer want to
-	// switch after a delay.
-	m_switchWaitEngaged = false;
-}
+				case kRight:
+					m_switchTwoTapArmed = (m_xDelta < 0 && m_xDelta2 < 0);
+					break;
 
-void
-CServer::clearSwitchState()
-{
-	if (m_switchScreen != NULL) {
-		m_switchDir           = kNoDirection;
-		m_switchScreen        = NULL;
-		m_switchWaitEngaged   = false;
-		m_switchTwoTapEngaged = false;
-	}
-}
+				case kTop:
+					m_switchTwoTapArmed = (m_yDelta > 0 && m_yDelta2 > 0);
+					break;
 
-void
-CServer::closeClients(const CConfig& config)
-{
-	CThreadList threads;
-	{
-		CLock lock(&m_mutex);
+				case kBottom:
+					m_switchTwoTapArmed = (m_yDelta < 0 && m_yDelta2 < 0);
+					break;
 
-		// get the set of clients that are connected but are being
-		// dropped from the configuration (or who's canonical name
-		// is changing) and tell them to disconnect.  note that
-		// since m_clientThreads doesn't include a thread for the
-		// primary client we will not close it.
-		for (CClientThreadList::iterator
-								index  = m_clientThreads.begin();
-								index != m_clientThreads.end(); ) {
-			const CString& name = index->first;
-			if (!config.isCanonicalName(name)) {
-				// lookup IClient with name
-				CClientList::const_iterator index2 = m_clients.find(name);
-				assert(index2 != m_clients.end());
-
-				// save the thread and remove it from m_clientThreads
-				threads.push_back(index->second);
-				m_clientThreads.erase(index++);
-
-				// close that client
-				assert(index2->second != m_primaryClient);
-				index2->second->close();
-
-				// don't switch to it if we planned to
-				if (index2->second == m_switchScreen) {
-					clearSwitchState();
+				default:
+					break;
 				}
 			}
-			else {
-				++index;
-			}
-		}
-	}
-
-	// wait a moment to allow each client to close its connection
-	// before we close it (to avoid having our socket enter TIME_WAIT).
-	if (threads.size() > 0) {
-		ARCH->sleep(1.0);
-	}
-
-	// cancel the old client threads
-	for (CThreadList::iterator index = threads.begin();
-								index != threads.end(); ++index) {
-		index->cancel();
-	}
-
-	// wait for old client threads to terminate.  we must not hold
-	// the lock while we do this so those threads can finish any
-	// calls to this object.
-	for (CThreadList::iterator index = threads.begin();
-								index != threads.end(); ++index) {
-		index->wait();
-	}
-
-	// clean up thread list
-	reapThreads();
-}
-
-CThread
-CServer::startThread(IJob* job)
-{
-	CLock lock(&m_mutex);
-
-	// reap completed threads
-	doReapThreads(m_threads);
-
-	// add new thread to list
-	CThread thread(job);
-	m_threads.push_back(thread);
-	LOG((CLOG_DEBUG1 "started thread 0x%08x", thread.getID()));
-	return thread;
-}
-
-void
-CServer::stopThreads(double timeout)
-{
-	LOG((CLOG_DEBUG1 "stopping threads"));
-
-	// cancel the accept client thread to prevent more clients from
-	// connecting while we're shutting down.
-	CThread* acceptClientThread;
-	{
-		CLock lock(&m_mutex);
-		acceptClientThread   = m_acceptClientThread;
-		m_acceptClientThread = NULL;
-	}
-	if (acceptClientThread != NULL) {
-		acceptClientThread->cancel();
-		acceptClientThread->wait(timeout);
-		delete acceptClientThread;
-	}
-
-	// close all clients (except the primary)
-	{
-		CConfig emptyConfig;
-		closeClients(emptyConfig);
-	}
-
-	// swap thread list so nobody can mess with it
-	CThreadList threads;
-	{
-		CLock lock(&m_mutex);
-		threads.swap(m_threads);
-	}
-
-	// cancel every thread
-	for (CThreadList::iterator index = threads.begin();
-								index != threads.end(); ++index) {
-		index->cancel();
-	}
-
-	// now wait for the threads
-	CStopwatch timer(true);
-	while (threads.size() > 0 && (timeout < 0.0 || timer.getTime() < timeout)) {
-		doReapThreads(threads);
-		ARCH->sleep(0.01);
-	}
-
-	// delete remaining threads
-	for (CThreadList::iterator index = threads.begin();
-								index != threads.end(); ++index) {
-		LOG((CLOG_DEBUG1 "reaped running thread 0x%08x", index->getID()));
-	}
-
-	LOG((CLOG_DEBUG1 "stopped threads"));
-}
-
-void
-CServer::reapThreads()
-{
-	CLock lock(&m_mutex);
-	doReapThreads(m_threads);
-}
-
-void
-CServer::doReapThreads(CThreadList& threads)
-{
-	for (CThreadList::iterator index = threads.begin();
-								index != threads.end(); ) {
-		if (index->wait(0.0)) {
-			// thread terminated
-			LOG((CLOG_DEBUG1 "reaped thread 0x%08x", index->getID()));
-			index = threads.erase(index);
-		}
-		else {
-			// thread is running
-			++index;
 		}
 	}
 }
 
 void
-CServer::acceptClients(void*)
+CServer::stopSwitchTwoTap()
 {
-	LOG((CLOG_DEBUG1 "starting to wait for clients"));
+	m_switchTwoTapEngaged = false;
+	m_switchTwoTapArmed   = false;
+}
 
-	IListenSocket* listen = NULL;
-	try {
-		// create socket listener
-		if (m_socketFactory != NULL) {
-			listen = m_socketFactory->createListen();
-		}
-		assert(listen != NULL);
+bool
+CServer::isSwitchTwoTapStarted() const
+{
+	return m_switchTwoTapEngaged;
+}
 
-		// bind to the desired port.  keep retrying if we can't bind
-		// the address immediately.
-		CStopwatch timer;
-		for (;;) {
-			try {
-				LOG((CLOG_DEBUG1 "binding listen socket"));
-				listen->bind(m_config.getSynergyAddress());
-				break;
-			}
-			catch (XSocketAddressInUse& e) {
-				setStatus(kError, e.what());
-				LOG((CLOG_WARN "bind failed: %s", e.what()));
-
-				// give up if we've waited too long
-				if (timer.getTime() >= m_bindTimeout) {
-					LOG((CLOG_ERR "waited too long to bind, giving up"));
-					throw;
-				}
-
-				// wait a bit before retrying
-				ARCH->sleep(5.0);
-			}
-		}
-
-		// accept connections and begin processing them
-		setStatus(kRunning);
-		LOG((CLOG_DEBUG1 "waiting for client connections"));
-		for (;;) {
-			// accept connection
-			CThread::testCancel();
-			IDataSocket* socket = listen->accept();
-			LOG((CLOG_NOTE "accepted client connection"));
-			CThread::testCancel();
-
-			// start handshake thread
-			startThread(new TMethodJob<CServer>(
-								this, &CServer::runClient, socket));
-		}
-	}
-	catch (XBase& e) {
-		setStatus(kError, e.what());
-		LOG((CLOG_ERR "cannot listen for clients: %s", e.what()));
-		delete listen;
-		exitMainLoopWithError();
-	}
-	catch (...) {
-		setStatus(kNotRunning);
-		delete listen;
-		throw;
-	}
+bool
+CServer::shouldSwitchTwoTap() const
+{
+	// this is the second tap if two-tap is armed and this tap
+	// came fast enough
+	return (m_switchTwoTapArmed &&
+			m_switchTwoTapTimer.getTime() <= m_switchTwoTapDelay);
 }
 
 void
-CServer::runClient(void* vsocket)
+CServer::startSwitchWait(SInt32 x, SInt32 y)
 {
-	// get the socket pointer from the argument
-	assert(vsocket != NULL);
-	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
-
-	// create proxy
-	CClientProxy* proxy = NULL;
-	try {
-		proxy = handshakeClient(socket);
-		if (proxy == NULL) {
-			delete socket;
-			return;
-		}
-	}
-	catch (...) {
-		delete socket;
-		throw;
-	}
-
-	// add the connection
-	try {
-		addConnection(proxy);
-
-		// save this client's thread
-		CLock lock(&m_mutex);
-		m_clientThreads.insert(std::make_pair(proxy->getName(),
-								CThread::getCurrentThread()));
-
-		// send configuration options
-		sendOptions(proxy);
-	}
-	catch (XDuplicateClient& e) {
-		// client has duplicate name
-		LOG((CLOG_WARN "a client with name \"%s\" is already connected", e.getName().c_str()));
-		try {
-			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBusy);
-		}
-		catch (XSocket&) {
-			// ignore
-		}
-		delete proxy;
-		delete socket;
-		return;
-	}
-	catch (XUnknownClient& e) {
-		// client has unknown name
-		LOG((CLOG_WARN "a client with name \"%s\" is not in the map", e.getName().c_str()));
-		try {
-			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEUnknown);
-		}
-		catch (XSocket&) {
-			// ignore
-		}
-		delete proxy;
-		delete socket;
-		return;
-	}
-	catch (...) {
-		delete proxy;
-		delete socket;
-		throw;
-	}
-
-	// activate screen saver on new client if active on the primary screen
-	{
-		CLock lock(&m_mutex);
-		if (m_activeSaver != NULL) {
-			proxy->screensaver(true);
-		}
-	}
-
-	// handle client messages
-	try {
-		LOG((CLOG_NOTE "client \"%s\" has connected", proxy->getName().c_str()));
-		proxy->mainLoop();
-	}
-	catch (XBadClient&) {
-		// client not behaving
-		LOG((CLOG_WARN "protocol error from client \"%s\"", proxy->getName().c_str()));
-		try {
-			CProtocolUtil::writef(proxy->getOutputStream(), kMsgEBad);
-		}
-		catch (XSocket&) {
-			// ignore.  client probably aborted the connection.
-		}
-	}
-	catch (XBase& e) {
-		// misc error
-		LOG((CLOG_WARN "error communicating with client \"%s\": %s", proxy->getName().c_str(), e.what()));
-	}
-	catch (...) {
-		// mainLoop() was probably cancelled
-		removeConnection(proxy->getName());
-		delete socket;
-		throw;
-	}
-
-	// clean up
-	removeConnection(proxy->getName());
-	delete socket;
-}
-
-CClientProxy*
-CServer::handshakeClient(IDataSocket* socket)
-{
-	LOG((CLOG_DEBUG1 "negotiating with new client"));
-
-	// get the input and output streams
-	IInputStream*  input  = socket->getInputStream();
-	IOutputStream* output = socket->getOutputStream();
-	bool own              = false;
-
-	// attach filters
-	if (m_streamFilterFactory != NULL) {
-		input  = m_streamFilterFactory->createInput(input, own);
-		output = m_streamFilterFactory->createOutput(output, own);
-		own    = true;
-	}
-
-	// attach the packetizing filters
-	input  = new CInputPacketStream(input, own);
-	output = new COutputPacketStream(output, own);
-	own    = true;
-
-	CClientProxy* proxy = NULL;
-	CString name("<unknown>");
-	try {
-		// give the client a limited time to complete the handshake
-		CTimerThread timer(30.0);
-
-		// say hello
-		LOG((CLOG_DEBUG1 "saying hello"));
-		CProtocolUtil::writef(output, kMsgHello,
-										kProtocolMajorVersion,
-										kProtocolMinorVersion);
-		output->flush();
-
-		// wait for the reply
-		LOG((CLOG_DEBUG1 "waiting for hello reply"));
-		UInt32 n = input->getSize();
-
-		// limit the maximum length of the hello
-		if (n > kMaxHelloLength) {
-			throw XBadClient();
-		}
-
-		// get and parse the reply to hello
-		SInt16 major, minor;
-		try {
-			LOG((CLOG_DEBUG1 "parsing hello reply"));
-			CProtocolUtil::readf(input, kMsgHelloBack,
-										&major, &minor, &name);
-		}
-		catch (XIO&) {
-			throw XBadClient();
-		}
-
-		// disallow invalid version numbers
-		if (major <= 0 || minor < 0) {
-			throw XIncompatibleClient(major, minor);
-		}
-
-		// convert name to canonical form (if any)
-		if (m_config.isScreen(name)) {
-			name = m_config.getCanonicalName(name);
-		}
-
-		// create client proxy for highest version supported by the client
-		LOG((CLOG_DEBUG1 "creating proxy for client \"%s\" version %d.%d", name.c_str(), major, minor));
-		if (major == 1) {
-			switch (minor) {
-			case 0:
-				proxy = new CClientProxy1_0(this, name, input, output);
-				break;
-
-			case 1:
-				proxy = new CClientProxy1_1(this, name, input, output);
-				break;
-			}
-		}
-
-		// hangup (with error) if version isn't supported
-		if (proxy == NULL) {
-			throw XIncompatibleClient(major, minor);
-		}
-
-		// negotiate
-		// FIXME
-
-		// ask and wait for the client's info
-		LOG((CLOG_DEBUG1 "waiting for info for client \"%s\"", name.c_str()));
-		proxy->open();
-
-		return proxy;
-	}
-	catch (XIncompatibleClient& e) {
-		// client is incompatible
-		LOG((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
-		try {
-			CProtocolUtil::writef(output, kMsgEIncompatible,
-							kProtocolMajorVersion, kProtocolMinorVersion);
-		}
-		catch (XSocket&) {
-			// ignore
-		}
-	}
-	catch (XBadClient&) {
-		// client not behaving
-		LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
-		try {
-			CProtocolUtil::writef(output, kMsgEBad);
-		}
-		catch (XSocket&) {
-			// ignore.  client probably aborted the connection.
-		}
-	}
-	catch (XBase& e) {
-		// misc error
-		LOG((CLOG_WARN "error communicating with client \"%s\": %s", name.c_str(), e.what()));
-	}
-	catch (...) {
-		// probably timed out
-		if (proxy != NULL) {
-			delete proxy;
-		}
-		else if (own) {
-			delete input;
-			delete output;
-		}
-		throw;
-	}
-
-	// failed
-	if (proxy != NULL) {
-		delete proxy;
-	}
-	else if (own) {
-		delete input;
-		delete output;
-	}
-
-	return NULL;
+	stopSwitchWait();
+	m_switchWaitX     = x;
+	m_switchWaitY     = y;
+	m_switchWaitTimer = EVENTQUEUE->newOneShotTimer(m_switchWaitDelay, this);
+	LOG((CLOG_DEBUG1 "waiting to switch"));
 }
 
 void
-CServer::acceptHTTPClients(void*)
+CServer::stopSwitchWait()
 {
-	LOG((CLOG_DEBUG1 "starting to wait for HTTP clients"));
-
-	IListenSocket* listen = NULL;
-	try {
-		// create socket listener
-		listen = new CTCPListenSocket;
-
-		// bind to the desired port.  keep retrying if we can't bind
-		// the address immediately.
-		CStopwatch timer;
-		for (;;) {
-			try {
-				LOG((CLOG_DEBUG1 "binding HTTP listen socket"));
-				listen->bind(m_config.getHTTPAddress());
-				break;
-			}
-			catch (XSocketBind& e) {
-				LOG((CLOG_DEBUG1 "bind HTTP failed: %s", e.what()));
-
-				// give up if we've waited too long
-				if (timer.getTime() >= m_bindTimeout) {
-					LOG((CLOG_DEBUG1 "waited too long to bind HTTP, giving up"));
-					throw;
-				}
-
-				// wait a bit before retrying
-				ARCH->sleep(5.0);
-			}
-		}
-
-		// accept connections and begin processing them
-		LOG((CLOG_DEBUG1 "waiting for HTTP connections"));
-		for (;;) {
-			// limit the number of HTTP requests being handled at once
-			{
-				CLock lock(&m_httpAvailable);
-				while (m_httpAvailable == 0) {
-					m_httpAvailable.wait();
-				}
-				assert(m_httpAvailable > 0);
-				m_httpAvailable = m_httpAvailable - 1;
-			}
-
-			// accept connection
-			CThread::testCancel();
-			IDataSocket* socket = listen->accept();
-			LOG((CLOG_NOTE "accepted HTTP connection"));
-			CThread::testCancel();
-
-			// handle HTTP request
-			startThread(new TMethodJob<CServer>(
-								this, &CServer::processHTTPRequest, socket));
-		}
-
-		// clean up
-		delete listen;
-	}
-	catch (XBase& e) {
-		LOG((CLOG_ERR "cannot listen for HTTP clients: %s", e.what()));
-		delete listen;
-		exitMainLoopWithError();
-	}
-	catch (...) {
-		delete listen;
-		throw;
+	if (m_switchWaitTimer != NULL) {
+		EVENTQUEUE->deleteTimer(m_switchWaitTimer);
+		m_switchWaitTimer = NULL;
 	}
 }
 
-void
-CServer::processHTTPRequest(void* vsocket)
+bool
+CServer::isSwitchWaitStarted() const
 {
-	IDataSocket* socket = reinterpret_cast<IDataSocket*>(vsocket);
-	try {
-		// process the request and force delivery
-		m_httpServer->processRequest(socket);
-		socket->getOutputStream()->flush();
+	return (m_switchWaitTimer != NULL);
+}
 
-		// wait a moment to give the client a chance to hangup first
-		ARCH->sleep(3.0);
-
-		// clean up
-		socket->close();
-		delete socket;
-
-		// increment available HTTP handlers
-		{
-			CLock lock(&m_httpAvailable);
-			m_httpAvailable = m_httpAvailable + 1;
-			m_httpAvailable.signal();
-		}
-	}
-	catch (...) {
-		delete socket;
-		{
-			CLock lock(&m_httpAvailable);
-			m_httpAvailable = m_httpAvailable + 1;
-			m_httpAvailable.signal();
-		}
-		throw;
+void
+CServer::stopRelativeMoves()
+{
+	if (m_relativeMoves && m_active != m_primaryClient) {
+		// warp to the center of the active client so we know where we are
+		SInt32 ax, ay, aw, ah;
+		m_active->getShape(ax, ay, aw, ah);
+		m_x       = ax + (aw >> 1);
+		m_y       = ay + (ah >> 1);
+		m_xDelta  = 0;
+		m_yDelta  = 0;
+		m_xDelta2 = 0;
+		m_yDelta2 = 0;
+		LOG((CLOG_DEBUG2 "synchronize move on %s by %d,%d", getName(m_active).c_str(), m_x, m_y));
+		m_active->mouseMove(m_x, m_y);
 	}
 }
 
 void
 CServer::sendOptions(IClient* client) const
 {
-	// note -- must be locked on entry
-
 	COptionsList optionsList;
 
 	// look up options for client
 	const CConfig::CScreenOptions* options =
-						m_config.getOptions(client->getName());
-	if (options != NULL && options->size() > 0) {
+						m_config.getOptions(getName(client));
+	if (options != NULL) {
 		// convert options to a more convenient form for sending
 		optionsList.reserve(2 * options->size());
 		for (CConfig::CScreenOptions::const_iterator index = options->begin();
@@ -1935,7 +878,7 @@ CServer::sendOptions(IClient* client) const
 
 	// look up global options
 	options = m_config.getOptions("");
-	if (options != NULL && options->size() > 0) {
+	if (options != NULL) {
 		// convert options to a more convenient form for sending
 		optionsList.reserve(optionsList.size() + 2 * options->size());
 		for (CConfig::CScreenOptions::const_iterator index = options->begin();
@@ -1950,180 +893,803 @@ CServer::sendOptions(IClient* client) const
 }
 
 void
-CServer::openPrimaryScreen()
+CServer::processOptions()
 {
-	assert(m_primaryClient == NULL);
-
-	// reset sequence number
-	m_seqNum = 0;
-
-	// canonicalize the primary screen name
-	CString primaryName = m_config.getCanonicalName(getPrimaryScreenName());
-	if (primaryName.empty()) {
-		throw XUnknownClient(getPrimaryScreenName());
+	const CConfig::CScreenOptions* options = m_config.getOptions("");
+	if (options == NULL) {
+		return;
 	}
 
-	// clear clipboards
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		CClipboardInfo& clipboard   = m_clipboards[id];
-		clipboard.m_clipboardOwner  = primaryName;
-		clipboard.m_clipboardSeqNum = m_seqNum;
-		if (clipboard.m_clipboard.open(0)) {
-			clipboard.m_clipboard.empty();
-			clipboard.m_clipboard.close();
+	bool newRelativeMoves = m_relativeMoves;
+	for (CConfig::CScreenOptions::const_iterator index = options->begin();
+								index != options->end(); ++index) {
+		const OptionID id       = index->first;
+		const OptionValue value = index->second;
+		if (id == kOptionScreenSwitchDelay) {
+			m_switchWaitDelay = 1.0e-3 * static_cast<double>(value);
+			if (m_switchWaitDelay < 0.0) {
+				m_switchWaitDelay = 0.0;
+			}
+			stopSwitchWait();
 		}
-		clipboard.m_clipboardData   = clipboard.m_clipboard.marshall();
+		else if (id == kOptionScreenSwitchTwoTap) {
+			m_switchTwoTapDelay = 1.0e-3 * static_cast<double>(value);
+			if (m_switchTwoTapDelay < 0.0) {
+				m_switchTwoTapDelay = 0.0;
+			}
+			stopSwitchTwoTap();
+		}
+		else if (id == kOptionRelativeMouseMoves) {
+			newRelativeMoves = (value != 0);
+		}
 	}
 
-	try {
-		// create the primary client
-		m_primaryClient = new CPrimaryClient(m_screenFactory,
-								this, this, primaryName);
-
-		// add connection
-		addConnection(m_primaryClient);
-		m_active = m_primaryClient;
-
-		// open the screen
-		LOG((CLOG_DEBUG1 "opening primary screen"));
-		m_primaryClient->open();
-
-		// tell it about the active sides
-		m_primaryClient->reconfigure(getActivePrimarySides());
-
-		// tell primary client about its options
-		sendOptions(m_primaryClient);
+	if (m_relativeMoves && !newRelativeMoves) {
+		stopRelativeMoves();
 	}
-	catch (...) {
-		// if m_active is NULL then we haven't added the connection
-		// for the primary client so we don't try to remove it.
-		if (m_active != NULL) {
-			removeConnection(primaryName);
+	m_relativeMoves = newRelativeMoves;
+}
+
+void
+CServer::handleShapeChanged(const CEvent&, void* vclient)
+{
+	// ignore events from unknown clients
+	IClient* client = reinterpret_cast<IClient*>(vclient);
+	if (m_clientSet.count(client) == 0) {
+		return;
+	}
+
+	// update the mouse coordinates
+	if (client == m_active) {
+		client->getCursorPos(m_x, m_y);
+	}
+	LOG((CLOG_INFO "screen \"%s\" shape changed", getName(client).c_str()));
+
+	// handle resolution change to primary screen
+	if (client == m_primaryClient) {
+		if (client == m_active) {
+			onMouseMovePrimary(m_x, m_y);
 		}
 		else {
-			delete m_primaryClient;
+			onMouseMoveSecondary(0, 0);
 		}
-		m_active        = NULL;
-		m_primaryClient = NULL;
-		throw;
 	}
 }
 
 void
-CServer::closePrimaryScreen()
+CServer::handleClipboardGrabbed(const CEvent& event, void* vclient)
 {
-	assert(m_primaryClient != NULL);
-
-	// close the primary screen
-	try {
-		LOG((CLOG_DEBUG1 "closing primary screen"));
-		m_primaryClient->close();
+	// ignore events from unknown clients
+	IClient* grabber = reinterpret_cast<IClient*>(vclient);
+	if (m_clientSet.count(grabber) == 0) {
+		return;
 	}
-	catch (...) {
-		// ignore
+	const IScreen::CClipboardInfo* info =
+		reinterpret_cast<const IScreen::CClipboardInfo*>(event.getData());
+
+	// ignore grab if sequence number is old.  always allow primary
+	// screen to grab.
+	CClipboardInfo& clipboard = m_clipboards[info->m_id];
+	if (grabber != m_primaryClient &&
+		info->m_sequenceNumber < clipboard.m_clipboardSeqNum) {
+		LOG((CLOG_INFO "ignored screen \"%s\" grab of clipboard %d", getName(grabber).c_str(), info->m_id));
+		return;
 	}
 
-	// remove connection
-	removeConnection(m_primaryClient->getName());
-	m_primaryClient = NULL;
+	// mark screen as owning clipboard
+	LOG((CLOG_INFO "screen \"%s\" grabbed clipboard %d from \"%s\"", getName(grabber).c_str(), info->m_id, clipboard.m_clipboardOwner.c_str()));
+	clipboard.m_clipboardOwner  = getName(grabber);
+	clipboard.m_clipboardSeqNum = info->m_sequenceNumber;
+
+	// clear the clipboard data (since it's not known at this point)
+	if (clipboard.m_clipboard.open(0)) {
+		clipboard.m_clipboard.empty();
+		clipboard.m_clipboard.close();
+	}
+	clipboard.m_clipboardData = clipboard.m_clipboard.marshall();
+
+	// tell all other screens to take ownership of clipboard.  tell the
+	// grabber that it's clipboard isn't dirty.
+	for (CClientList::iterator index = m_clients.begin();
+								index != m_clients.end(); ++index) {
+		IClient* client = index->second;
+		if (client == grabber) {
+			client->setClipboardDirty(info->m_id, false);
+		}
+		else {
+			client->grabClipboard(info->m_id);
+		}
+	}
 }
 
 void
-CServer::addConnection(IClient* client)
+CServer::handleClipboardChanged(const CEvent& event, void* vclient)
 {
-	assert(client != NULL);
-
-	LOG((CLOG_DEBUG "adding connection \"%s\"", client->getName().c_str()));
-
-	{
-		CLock lock(&m_mutex);
-
-		// name must be in our configuration
-		if (!m_config.isScreen(client->getName())) {
-			throw XUnknownClient(client->getName());
-		}
-
-		// can only have one screen with a given name at any given time
-		if (m_clients.count(client->getName()) != 0) {
-			throw XDuplicateClient(client->getName());
-		}
-
-		// save screen info
-		m_clients.insert(std::make_pair(client->getName(), client));
-		LOG((CLOG_DEBUG "added connection \"%s\"", client->getName().c_str()));
+	// ignore events from unknown clients
+	IClient* sender = reinterpret_cast<IClient*>(vclient);
+	if (m_clientSet.count(sender) == 0) {
+		return;
 	}
-	runStatusJobs();
+	const IScreen::CClipboardInfo* info =
+		reinterpret_cast<const IScreen::CClipboardInfo*>(event.getData());
+	onClipboardChanged(sender, info->m_id, info->m_sequenceNumber);
 }
 
 void
-CServer::removeConnection(const CString& name)
+CServer::handleKeyDownEvent(const CEvent& event, void*)
 {
-	LOG((CLOG_DEBUG "removing connection \"%s\"", name.c_str()));
-	bool updateStatus;
-	{
-		CLock lock(&m_mutex);
+	IPlatformScreen::CKeyInfo* info =
+		reinterpret_cast<IPlatformScreen::CKeyInfo*>(event.getData());
+	onKeyDown(info->m_key, info->m_mask, info->m_button);
+}
 
-		// find client
-		CClientList::iterator index = m_clients.find(name);
-		assert(index != m_clients.end());
+void
+CServer::handleKeyUpEvent(const CEvent& event, void*)
+{
+	IPlatformScreen::CKeyInfo* info =
+		 reinterpret_cast<IPlatformScreen::CKeyInfo*>(event.getData());
+	onKeyUp(info->m_key, info->m_mask, info->m_button);
+}
 
-		// if this is active screen then we have to jump off of it
-		IClient* active = (m_activeSaver != NULL) ? m_activeSaver : m_active;
-		if (active == index->second && active != m_primaryClient) {
-			// record new position (center of primary screen)
-			m_primaryClient->getCursorCenter(m_x, m_y);
+void
+CServer::handleKeyRepeatEvent(const CEvent& event, void*)
+{
+	IPlatformScreen::CKeyInfo* info =
+		reinterpret_cast<IPlatformScreen::CKeyInfo*>(event.getData());
+	onKeyRepeat(info->m_key, info->m_mask, info->m_count, info->m_button);
+}
 
-			// stop waiting to switch if we were
-			if (active == m_switchScreen) {
-				clearSwitchState();
+void
+CServer::handleButtonDownEvent(const CEvent& event, void*)
+{
+	IPlatformScreen::CButtonInfo* info =
+		reinterpret_cast<IPlatformScreen::CButtonInfo*>(event.getData());
+	onMouseDown(info->m_button);
+}
+
+void
+CServer::handleButtonUpEvent(const CEvent& event, void*)
+{
+	IPlatformScreen::CButtonInfo* info =
+		reinterpret_cast<IPlatformScreen::CButtonInfo*>(event.getData());
+	onMouseUp(info->m_button);
+}
+
+void
+CServer::handleMotionPrimaryEvent(const CEvent& event, void*)
+{
+	IPlatformScreen::CMotionInfo* info =
+		reinterpret_cast<IPlatformScreen::CMotionInfo*>(event.getData());
+	onMouseMovePrimary(info->m_x, info->m_y);
+}
+
+void
+CServer::handleMotionSecondaryEvent(const CEvent& event, void*)
+{
+	IPlatformScreen::CMotionInfo* info =
+		reinterpret_cast<IPlatformScreen::CMotionInfo*>(event.getData());
+	onMouseMoveSecondary(info->m_x, info->m_y);
+}
+
+void
+CServer::handleWheelEvent(const CEvent& event, void*)
+{
+	IPlatformScreen::CWheelInfo* info =
+		reinterpret_cast<IPlatformScreen::CWheelInfo*>(event.getData());
+	onMouseWheel(info->m_wheel);
+}
+
+void
+CServer::handleScreensaverActivatedEvent(const CEvent&, void*)
+{
+	onScreensaver(true);
+}
+
+void
+CServer::handleScreensaverDeactivatedEvent(const CEvent&, void*)
+{
+	onScreensaver(false);
+}
+
+void
+CServer::handleSwitchWaitTimeout(const CEvent&, void*)
+{
+	// ignore if mouse is locked to screen
+	if (isLockedToScreen()) {
+		LOG((CLOG_DEBUG1 "locked to screen"));
+		stopSwitch();
+		return;
+	}
+
+	// switch screen
+	switchScreen(m_switchScreen, m_switchWaitX, m_switchWaitY, false);
+}
+
+void
+CServer::handleClientDisconnected(const CEvent&, void* vclient)
+{
+	// client has disconnected.  it might be an old client or an
+	// active client.  we don't care so just handle it both ways.
+	IClient* client = reinterpret_cast<IClient*>(vclient);
+	removeActiveClient(client);
+	removeOldClient(client);
+	delete client;
+}
+
+void
+CServer::handleClientCloseTimeout(const CEvent&, void* vclient)
+{
+	// client took too long to disconnect.  just dump it.
+	IClient* client = reinterpret_cast<IClient*>(vclient);
+	LOG((CLOG_NOTE "forced disconnection of client \"%s\"", getName(client).c_str()));
+	removeOldClient(client);
+	delete client;
+}
+
+void
+CServer::onClipboardChanged(IClient* sender, ClipboardID id, UInt32 seqNum)
+{
+	CClipboardInfo& clipboard = m_clipboards[id];
+
+	// ignore update if sequence number is old
+	if (seqNum < clipboard.m_clipboardSeqNum) {
+		LOG((CLOG_INFO "ignored screen \"%s\" update of clipboard %d (missequenced)", clipboard.m_clipboardOwner.c_str(), id));
+		return;
+	}
+
+	// should be the expected client
+	assert(sender == m_clients.find(clipboard.m_clipboardOwner)->second);
+
+	// get data
+	sender->getClipboard(id, &clipboard.m_clipboard);
+
+	// ignore if data hasn't changed
+	CString data = clipboard.m_clipboard.marshall();
+	if (data == clipboard.m_clipboardData) {
+		LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id));
+		return;
+	}
+
+	// got new data
+	LOG((CLOG_INFO "screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
+	clipboard.m_clipboardData = data;
+
+	// tell all clients except the sender that the clipboard is dirty
+	for (CClientList::const_iterator index = m_clients.begin();
+								index != m_clients.end(); ++index) {
+		IClient* client = index->second;
+		client->setClipboardDirty(id, client != sender);
+	}
+
+	// send the new clipboard to the active screen
+	m_active->setClipboard(id, &clipboard.m_clipboard);
+}
+
+void
+CServer::onScreensaver(bool activated)
+{
+	LOG((CLOG_DEBUG "onScreenSaver %s", activated ? "activated" : "deactivated"));
+
+	if (activated) {
+		// save current screen and position
+		m_activeSaver = m_active;
+		m_xSaver      = m_x;
+		m_ySaver      = m_y;
+
+		// jump to primary screen
+		if (m_active != m_primaryClient) {
+			switchScreen(m_primaryClient, 0, 0, true);
+		}
+	}
+	else {
+		// jump back to previous screen and position.  we must check
+		// that the position is still valid since the screen may have
+		// changed resolutions while the screen saver was running.
+		if (m_activeSaver != NULL && m_activeSaver != m_primaryClient) {
+			// check position
+			IClient* screen = m_activeSaver;
+			SInt32 x, y, w, h;
+			screen->getShape(x, y, w, h);
+			SInt32 zoneSize = getJumpZoneSize(screen);
+			if (m_xSaver < x + zoneSize) {
+				m_xSaver = x + zoneSize;
+			}
+			else if (m_xSaver >= x + w - zoneSize) {
+				m_xSaver = x + w - zoneSize - 1;
+			}
+			if (m_ySaver < y + zoneSize) {
+				m_ySaver = y + zoneSize;
+			}
+			else if (m_ySaver >= y + h - zoneSize) {
+				m_ySaver = y + h - zoneSize - 1;
 			}
 
-			// don't notify active screen since it probably already
-			// disconnected.
-			LOG((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", active->getName().c_str(), m_primaryClient->getName().c_str(), m_x, m_y));
-
-			// cut over
-			m_active = m_primaryClient;
-
-			// enter new screen (unless we already have because of the
-			// screen saver)
-			if (m_activeSaver == NULL) {
-				m_primaryClient->enter(m_x, m_y, m_seqNum,
-									m_primaryClient->getToggleMask(), false);
-			}
+			// jump
+			switchScreen(screen, m_xSaver, m_ySaver, false);
 		}
 
-		// if this screen had the cursor when the screen saver activated
-		// then we can't switch back to it when the screen saver
-		// deactivates.
-		if (m_activeSaver == index->second) {
-			m_activeSaver = NULL;
-		}
-
-		// done with client
-		delete index->second;
-		m_clients.erase(index);
-
-		// remove any thread for this client
-		m_clientThreads.erase(name);
-
-		updateStatus = (m_clients.size() <= 1);
+		// reset state
+		m_activeSaver = NULL;
 	}
 
-	if (updateStatus) {
-		runStatusJobs();
+	// send message to all clients
+	for (CClientList::const_iterator index = m_clients.begin();
+								index != m_clients.end(); ++index) {
+		IClient* client = index->second;
+		client->screensaver(activated);
 	}
 }
 
-
-//
-// CServer::CClipboardInfo
-//
-
-CString
-CServer::XServerRethrow::getWhat() const throw()
+void
+CServer::onKeyDown(KeyID id, KeyModifierMask mask, KeyButton button)
 {
-	return format("XServerRethrow", "child thread failed");
+	LOG((CLOG_DEBUG1 "onKeyDown id=%d mask=0x%04x button=0x%04x", id, mask, button));
+	assert(m_active != NULL);
+
+	// handle command keys
+	if (onCommandKey(id, mask, true)) {
+		return;
+	}
+
+	// relay
+	m_active->keyDown(id, mask, button);
+}
+
+void
+CServer::onKeyUp(KeyID id, KeyModifierMask mask, KeyButton button)
+{
+	LOG((CLOG_DEBUG1 "onKeyUp id=%d mask=0x%04x button=0x%04x", id, mask, button));
+	assert(m_active != NULL);
+
+	// handle command keys
+	if (onCommandKey(id, mask, false)) {
+		return;
+	}
+
+	// relay
+	m_active->keyUp(id, mask, button);
+}
+
+void
+CServer::onKeyRepeat(KeyID id, KeyModifierMask mask,
+				SInt32 count, KeyButton button)
+{
+	LOG((CLOG_DEBUG1 "onKeyRepeat id=%d mask=0x%04x count=%d button=0x%04x", id, mask, count, button));
+	assert(m_active != NULL);
+
+	// handle command keys
+	if (onCommandKey(id, mask, false)) {
+		onCommandKey(id, mask, true);
+		return;
+	}
+
+	// relay
+	m_active->keyRepeat(id, mask, count, button);
+}
+
+void
+CServer::onMouseDown(ButtonID id)
+{
+	LOG((CLOG_DEBUG1 "onMouseDown id=%d", id));
+	assert(m_active != NULL);
+
+	// relay
+	m_active->mouseDown(id);
+}
+
+void
+CServer::onMouseUp(ButtonID id)
+{
+	LOG((CLOG_DEBUG1 "onMouseUp id=%d", id));
+	assert(m_active != NULL);
+
+	// relay
+	m_active->mouseUp(id);
+}
+
+bool
+CServer::onMouseMovePrimary(SInt32 x, SInt32 y)
+{
+	LOG((CLOG_DEBUG2 "onMouseMovePrimary %d,%d", x, y));
+
+	// mouse move on primary (server's) screen
+	if (m_active != m_primaryClient) {
+		// stale event -- we're actually on a secondary screen
+		return false;
+	}
+
+	// save last delta
+	m_xDelta2 = m_xDelta;
+	m_yDelta2 = m_yDelta;
+
+	// save current delta
+	m_xDelta  = x - m_x;
+	m_yDelta  = y - m_y;
+
+	// save position
+	m_x       = x;
+	m_y       = y;
+
+	// get screen shape
+	SInt32 ax, ay, aw, ah;
+	m_active->getShape(ax, ay, aw, ah);
+	SInt32 zoneSize = getJumpZoneSize(m_active);
+
+	// see if we should change screens
+	EDirection dir;
+	if (x < ax + zoneSize) {
+		x  -= zoneSize;
+		dir = kLeft;
+	}
+	else if (x >= ax + aw - zoneSize) {
+		x  += zoneSize;
+		dir = kRight;
+	}
+	else if (y < ay + zoneSize) {
+		y  -= zoneSize;
+		dir = kTop;
+	}
+	else if (y >= ay + ah - zoneSize) {
+		y  += zoneSize;
+		dir = kBottom;
+	}
+	else {
+		// still on local screen
+		noSwitch(x, y);
+		return false;
+	}
+
+	// get jump destination
+	IClient* newScreen = getNeighbor(m_active, dir, x, y);
+
+	// should we switch or not?
+	if (isSwitchOkay(newScreen, dir, x, y)) {
+		// switch screen
+		switchScreen(newScreen, x, y, false);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void
+CServer::onMouseMoveSecondary(SInt32 dx, SInt32 dy)
+{
+	LOG((CLOG_DEBUG2 "onMouseMoveSecondary %+d,%+d", dx, dy));
+
+	// mouse move on secondary (client's) screen
+	assert(m_active != NULL);
+	if (m_active == m_primaryClient) {
+		// stale event -- we're actually on the primary screen
+		return;
+	}
+
+	// if doing relative motion on secondary screens and we're locked
+	// to the screen (which activates relative moves) then send a
+	// relative mouse motion.  when we're doing this we pretend as if
+	// the mouse isn't actually moving because we're expecting some
+	// program on the secondary screen to warp the mouse on us, so we
+	// have no idea where it really is.
+	if (m_relativeMoves && isLockedToScreenServer()) {
+		LOG((CLOG_DEBUG2 "relative move on %s by %d,%d", getName(m_active).c_str(), dx, dy));
+		m_active->mouseRelativeMove(dx, dy);
+		return;
+	}
+
+	// save old position
+	const SInt32 xOld = m_x;
+	const SInt32 yOld = m_y;
+
+	// save last delta
+	m_xDelta2 = m_xDelta;
+	m_yDelta2 = m_yDelta;
+
+	// save current delta
+	m_xDelta  = dx;
+	m_yDelta  = dy;
+
+	// accumulate motion
+	m_x      += dx;
+	m_y      += dy;
+
+	// get screen shape
+	SInt32 ax, ay, aw, ah;
+	m_active->getShape(ax, ay, aw, ah);
+
+	// find direction of neighbor and get the neighbor
+	bool jump = true;
+	IClient* newScreen;
+	do {
+		EDirection dir;
+		if (m_x < ax) {
+			dir = kLeft;
+		}
+		else if (m_x > ax + aw - 1) {
+			dir = kRight;
+		}
+		else if (m_y < ay) {
+			dir = kTop;
+		}
+		else if (m_y > ay + ah - 1) {
+			dir = kBottom;
+		}
+		else {
+			// we haven't left the screen
+			newScreen = m_active;
+			jump      = false;
+
+			// if waiting and mouse is not on the border we're waiting
+			// on then stop waiting.  also if it's not on the border
+			// then arm the double tap.
+			if (m_switchScreen != NULL) {
+				bool clearWait;
+				SInt32 zoneSize = m_primaryClient->getJumpZoneSize();
+				switch (m_switchDir) {
+				case kLeft:
+					clearWait = (m_x >= ax + zoneSize);
+					break;
+
+				case kRight:
+					clearWait = (m_x <= ax + aw - 1 - zoneSize);
+					break;
+
+				case kTop:
+					clearWait = (m_y >= ay + zoneSize);
+					break;
+
+				case kBottom:
+					clearWait = (m_y <= ay + ah - 1 + zoneSize);
+					break;
+
+				default:
+					clearWait = false;
+					break;
+				}
+				if (clearWait) {
+					// still on local screen
+					noSwitch(m_x, m_y);
+				}
+			}
+
+			// skip rest of block
+			break;
+		}
+
+		// try to switch screen.  get the neighbor.
+		newScreen = getNeighbor(m_active, dir, m_x, m_y);
+
+		// see if we should switch
+		if (!isSwitchOkay(newScreen, dir, m_x, m_y)) {
+			newScreen = m_active;
+			jump      = false;
+		}
+	} while (false);
+
+	if (jump) {
+		// switch screens
+		switchScreen(newScreen, m_x, m_y, false);
+	}
+	else {
+		// same screen.  clamp mouse to edge.
+		m_x = xOld + dx;
+		m_y = yOld + dy;
+		if (m_x < ax) {
+			m_x = ax;
+			LOG((CLOG_DEBUG2 "clamp to left of \"%s\"", getName(m_active).c_str()));
+		}
+		else if (m_x > ax + aw - 1) {
+			m_x = ax + aw - 1;
+			LOG((CLOG_DEBUG2 "clamp to right of \"%s\"", getName(m_active).c_str()));
+		}
+		if (m_y < ay) {
+			m_y = ay;
+			LOG((CLOG_DEBUG2 "clamp to top of \"%s\"", getName(m_active).c_str()));
+		}
+		else if (m_y > ay + ah - 1) {
+			m_y = ay + ah - 1;
+			LOG((CLOG_DEBUG2 "clamp to bottom of \"%s\"", getName(m_active).c_str()));
+		}
+
+		// warp cursor if it moved.
+		if (m_x != xOld || m_y != yOld) {
+			LOG((CLOG_DEBUG2 "move on %s to %d,%d", getName(m_active).c_str(), m_x, m_y));
+			m_active->mouseMove(m_x, m_y);
+		}
+	}
+}
+
+void
+CServer::onMouseWheel(SInt32 delta)
+{
+	LOG((CLOG_DEBUG1 "onMouseWheel %+d", delta));
+	assert(m_active != NULL);
+
+	// relay
+	m_active->mouseWheel(delta);
+}
+
+bool
+CServer::addClient(IClient* client)
+{
+	CString name = getName(client);
+	if (m_clients.count(name) != 0) {
+		return false;
+	}
+
+	// add event handlers
+	EVENTQUEUE->adoptHandler(IScreen::getShapeChangedEvent(),
+							client->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleShapeChanged, client));
+	EVENTQUEUE->adoptHandler(IScreen::getClipboardGrabbedEvent(),
+							client->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleClipboardGrabbed, client));
+	EVENTQUEUE->adoptHandler(CClientProxy::getClipboardChangedEvent(),
+							client->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleClipboardChanged, client));
+
+	// add to list
+	m_clientSet.insert(client);
+	m_clients.insert(std::make_pair(name, client));
+
+	// tell primary client about the active sides
+	m_primaryClient->reconfigure(getActivePrimarySides());
+
+	return true;
+}
+
+bool
+CServer::removeClient(IClient* client)
+{
+	// return false if not in list
+	CClientSet::iterator i = m_clientSet.find(client);
+	if (i == m_clientSet.end()) {
+		return false;
+	}
+
+	// remove event handlers
+	EVENTQUEUE->removeHandler(IScreen::getShapeChangedEvent(),
+							client->getEventTarget());
+	EVENTQUEUE->removeHandler(IScreen::getClipboardGrabbedEvent(),
+							client->getEventTarget());
+	EVENTQUEUE->removeHandler(CClientProxy::getClipboardChangedEvent(),
+							client->getEventTarget());
+
+	// remove from list
+	m_clients.erase(getName(client));
+	m_clientSet.erase(i);
+
+	return true;
+}
+
+void
+CServer::closeClient(IClient* client, const char* msg)
+{
+	assert(client != m_primaryClient);
+	assert(msg != NULL);
+
+	// send message to client.  this message should cause the client
+	// to disconnect.  we add this client to the closed client list
+	// and install a timer to remove the client if it doesn't respond
+	// quickly enough.  we also remove the client from the active
+	// client list since we're not going to listen to it anymore.
+	// note that this method also works on clients that are not in
+	// the m_clients list.  adoptClient() may call us with such a
+	// client.
+	LOG((CLOG_NOTE "disconnecting client \"%s\"", getName(client).c_str()));
+
+	// send message
+	// FIXME -- avoid type cast (kinda hard, though)
+	((CClientProxy*)client)->close(msg);
+
+	// install timer.  wait timeout seconds for client to close.
+	double timeout = 5.0;
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleClientCloseTimeout, client));
+
+	// move client to closing list
+	removeClient(client);
+	m_oldClients.insert(std::make_pair(client, timer));
+
+	// if this client is the active screen then we have to
+	// jump off of it
+	forceLeaveClient(client);
+}
+
+void
+CServer::closeClients(const CConfig& config)
+{
+	// collect the clients that are connected but are being dropped
+	// from the configuration (or who's canonical name is changing).
+	typedef std::set<IClient*> CRemovedClients;
+	CRemovedClients removed;
+	for (CClientList::iterator index = m_clients.begin();
+								index != m_clients.end(); ++index) {
+		if (!config.isCanonicalName(index->first)) {
+			removed.insert(index->second);
+		}
+	}
+
+	// don't close the primary client
+	removed.erase(m_primaryClient);
+
+	// now close them.  we collect the list then close in two steps
+	// because closeClient() modifies the collection we iterate over.
+	for (CRemovedClients::iterator index = removed.begin();
+								index != removed.end(); ++index) {
+		closeClient(*index, kMsgCClose);
+	}
+}
+
+void
+CServer::removeActiveClient(IClient* client)
+{
+	if (removeClient(client)) {
+		forceLeaveClient(client);
+		EVENTQUEUE->removeHandler(CClientProxy::getDisconnectedEvent(), client);
+		if (m_clients.size() == 1 && m_oldClients.empty()) {
+			EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
+		}
+	}
+}
+
+void
+CServer::removeOldClient(IClient* client)
+{
+	COldClients::iterator i = m_oldClients.find(client);
+	if (i != m_oldClients.end()) {
+		EVENTQUEUE->removeHandler(CClientProxy::getDisconnectedEvent(), client);
+		EVENTQUEUE->removeHandler(CEvent::kTimer, i->second);
+		EVENTQUEUE->deleteTimer(i->second);
+		m_oldClients.erase(i);
+		if (m_clients.size() == 1 && m_oldClients.empty()) {
+			EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
+		}
+	}
+}
+
+void
+CServer::forceLeaveClient(IClient* client)
+{
+	IClient* active = (m_activeSaver != NULL) ? m_activeSaver : m_active;
+	if (active == client) {
+		// record new position (center of primary screen)
+		m_primaryClient->getCursorCenter(m_x, m_y);
+
+		// stop waiting to switch to this client
+		if (active == m_switchScreen) {
+			stopSwitch();
+		}
+
+		// don't notify active screen since it has probably already
+		// disconnected.
+		LOG((CLOG_INFO "jump from \"%s\" to \"%s\" at %d,%d", getName(active).c_str(), getName(m_primaryClient).c_str(), m_x, m_y));
+
+		// cut over
+		m_active = m_primaryClient;
+
+		// enter new screen (unless we already have because of the
+		// screen saver)
+		if (m_activeSaver == NULL) {
+			m_primaryClient->enter(m_x, m_y, m_seqNum,
+								m_primaryClient->getToggleMask(), false);
+		}
+	}
+
+	// if this screen had the cursor when the screen saver activated
+	// then we can't switch back to it when the screen saver
+	// deactivates.
+	if (m_activeSaver == client) {
+		m_activeSaver = NULL;
+	}
+
+	// tell primary client about the active sides
+	m_primaryClient->reconfigure(getActivePrimarySides());
 }
 
 

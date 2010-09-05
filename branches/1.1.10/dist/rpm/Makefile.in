@@ -94,10 +94,9 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST = \
+	synergy.spec.in			\
 	$(NULL)
 
 

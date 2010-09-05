@@ -18,6 +18,9 @@
 #include "IInterface.h"
 #include "stdstring.h"
 
+class CArchThreadImpl;
+typedef CArchThreadImpl* CArchThread;
+
 /*!      
 \class CArchSocketImpl
 \brief Internal socket data.
@@ -149,25 +152,21 @@ public:
 	end.  \c addr may be NULL if the remote address isn't required.
 	The original socket \c s is unaffected and remains in the listening
 	state.  The new socket shares most of the properties of \c s except
-	it's not in the listening state, it's connected, and is not
-	non-blocking even is \c s is.
-
-	This call blocks if \c s is not non-blocking and there are no
-	pending connection requests.
-
-	(Cancellation point)
+	it's not in the listening state and it's connected.  Returns NULL
+	if there are no pending connection requests.
 	*/
 	virtual CArchSocket	acceptSocket(CArchSocket s, CArchNetAddress* addr) = 0;
 
 	//! Connect socket
 	/*!
-	Connects the socket \c s to the remote address \c addr.  This call
-	blocks if \c s is not non-blocking.  If \c s is non-blocking then
-	the client can \c poll() for writability to detect a connection.
-
-	(Cancellation point)
+	Connects the socket \c s to the remote address \c addr.  Returns
+	true if the connection succeed immediately, false if the connection
+	is in progress, and throws if the connection failed	immediately.
+	If it returns false, \c pollSocket() can be used to wait on the
+	socket for writing to detect when the connection finally succeeds
+	or fails.
 	*/
-	virtual void		connectSocket(CArchSocket s, CArchNetAddress addr) = 0;
+	virtual bool		connectSocket(CArchSocket s, CArchNetAddress addr) = 0;
 
 	//! Check socket state
 	/*!
@@ -179,23 +178,27 @@ public:
 	the \c m_revents members of the entries.  \c kPOLLERR and \c kPOLLNVAL
 	are set in \c m_revents as appropriate.  If a socket indicates
 	\c kPOLLERR then \c throwErrorOnSocket() can be used to determine
-	the type of error.
+	the type of error.  Returns 0 immediately regardless of the \c timeout
+	if no valid sockets are selected for testing.
 
 	(Cancellation point)
 	*/
 	virtual int			pollSocket(CPollEntry[], int num, double timeout) = 0;
+
+	//! Unblock thread in pollSocket()
+	/*!
+	Cause a thread that's in a pollSocket() call to return.  This
+	call may return before the thread is unblocked.  If the thread is
+	not in a pollSocket() call this call has no effect.
+	*/
+	virtual void		unblockPollSocket(CArchThread thread) = 0;
 
 	//! Read data from socket
 	/*!
 	Read up to \c len bytes from socket \c s in \c buf and return the
 	number of bytes read.  The number of bytes can be less than \c len
 	if not enough data is available.  Returns 0 if the remote end has
-	disconnected and there is no more queued received data.  Blocks if
-	the socket is not non-blocking and there is no queued received data.
-	If non-blocking and there is no queued received data then throws
-	XArchNetworkWouldBlock.
-
-	(Cancellation point)
+	disconnected and/or there is no more queued received data.
 	*/
 	virtual size_t		readSocket(CArchSocket s, void* buf, size_t len) = 0;
 
@@ -203,12 +206,8 @@ public:
 	/*!
 	Write up to \c len bytes to socket \c s from \c buf and return the
 	number of bytes written.  The number of bytes can be less than
-	\c len if the remote end disconnected or the socket is non-blocking
-	and the internal buffers are full.  If non-blocking and the internal
-	buffers are full before any data is written then throws
-	XArchNetworkWouldBlock.
-
-	(Cancellation point)
+	\c len if the remote end disconnected or the internal buffers fill
+	up.
 	*/
 	virtual size_t		writeSocket(CArchSocket s,
 							const void* buf, size_t len) = 0;
@@ -219,14 +218,6 @@ public:
 	XArchNetwork exception.
 	*/
 	virtual void		throwErrorOnSocket(CArchSocket s) = 0;
-
-	//! Set socket to (non-)blocking operation
-	/*!
-	Set socket to block or not block on accept, connect, poll, read and
-	write (i.e. calls that may take an arbitrary amount of time).
-	Returns the previous state.
-	*/
-	virtual bool		setBlockingOnSocket(CArchSocket, bool blocking) = 0;
 
 	//! Turn Nagle algorithm on or off on socket
 	/*!
@@ -264,6 +255,9 @@ public:
 
 	//! Get the port of an address
 	virtual int				getAddrPort(CArchNetAddress) = 0;
+
+	//! Test addresses for equality
+	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress) = 0;
 
 	//! Test for the "any" address
 	/*!

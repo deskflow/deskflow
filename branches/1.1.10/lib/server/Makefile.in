@@ -94,8 +94,6 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST = \
 	server.dsp						\
@@ -109,32 +107,35 @@ MAINTAINERCLEANFILES = \
 
 noinst_LIBRARIES = libserver.a
 libserver_a_SOURCES = \
+	CClientListener.cpp				\
 	CClientProxy.cpp				\
 	CClientProxy1_0.cpp				\
 	CClientProxy1_1.cpp				\
+	CClientProxy1_2.cpp				\
+	CClientProxyUnknown.cpp			\
 	CConfig.cpp						\
-	CHTTPServer.cpp					\
 	CPrimaryClient.cpp				\
 	CServer.cpp						\
+	CClientListener.h				\
 	CClientProxy.h					\
 	CClientProxy1_0.h				\
 	CClientProxy1_1.h				\
+	CClientProxy1_2.h				\
+	CClientProxyUnknown.h			\
 	CConfig.h						\
-	CHTTPServer.h					\
 	CPrimaryClient.h				\
 	CServer.h						\
 	$(NULL)
 
 INCLUDES = \
-	-I$(VDEPTH)/lib/common			\
-	-I$(VDEPTH)/lib/arch			\
-	-I$(VDEPTH)/lib/base 			\
-	-I$(VDEPTH)/lib/mt	 			\
-	-I$(VDEPTH)/lib/io	 			\
-	-I$(VDEPTH)/lib/http 			\
-	-I$(VDEPTH)/lib/net	 			\
-	-I$(VDEPTH)/lib/synergy			\
-	-I$(VDEPTH)/lib/platform 		\
+	-I$(top_srcdir)/lib/common		\
+	-I$(top_srcdir)/lib/arch		\
+	-I$(top_srcdir)/lib/base 		\
+	-I$(top_srcdir)/lib/mt	 		\
+	-I$(top_srcdir)/lib/io	 		\
+	-I$(top_srcdir)/lib/net	 		\
+	-I$(top_srcdir)/lib/synergy		\
+	-I$(top_srcdir)/lib/platform 	\
 	$(NULL)
 
 subdir = lib/server
@@ -145,9 +146,10 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libserver_a_AR = $(AR) cru
 libserver_a_LIBADD =
-am_libserver_a_OBJECTS = CClientProxy.$(OBJEXT) \
-	CClientProxy1_0.$(OBJEXT) CClientProxy1_1.$(OBJEXT) \
-	CConfig.$(OBJEXT) CHTTPServer.$(OBJEXT) \
+am_libserver_a_OBJECTS = CClientListener.$(OBJEXT) \
+	CClientProxy.$(OBJEXT) CClientProxy1_0.$(OBJEXT) \
+	CClientProxy1_1.$(OBJEXT) CClientProxy1_2.$(OBJEXT) \
+	CClientProxyUnknown.$(OBJEXT) CConfig.$(OBJEXT) \
 	CPrimaryClient.$(OBJEXT) CServer.$(OBJEXT)
 libserver_a_OBJECTS = $(am_libserver_a_OBJECTS)
 
@@ -157,11 +159,14 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CClientProxy.Po \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CClientListener.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CClientProxy.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CClientProxy1_0.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CClientProxy1_1.Po $(DEPDIR)/CConfig.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CHTTPServer.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CPrimaryClient.Po $(DEPDIR)/CServer.Po
+@AMDEP_TRUE@	$(DEPDIR)/CClientProxy1_1.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CClientProxy1_2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CClientProxyUnknown.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CConfig.Po $(DEPDIR)/CPrimaryClient.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CServer.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -204,11 +209,13 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CClientListener.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CClientProxy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CClientProxy1_0.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CClientProxy1_1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CClientProxy1_2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CClientProxyUnknown.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CConfig.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CHTTPServer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CPrimaryClient.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CServer.Po@am__quote@
 

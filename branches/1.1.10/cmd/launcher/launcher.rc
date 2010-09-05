@@ -7,7 +7,10 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#include "winres.h"
+#if !defined(IDC_STATIC)
+#define IDC_STATIC (-1)
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -79,16 +82,16 @@ BEGIN
     PUSHBUTTON      "&Remove",IDC_MAIN_SERVER_REMOVE_BUTTON,12,150,50,14
     LTEXT           "&Layout:",IDC_MAIN_SERVER_LAYOUT_LABEL,138,79,24,8
     LTEXT           "Left:",IDC_MAIN_SERVER_LEFT_LABEL,144,93,15,8
-    COMBOBOX        IDC_MAIN_SERVER_LEFT_COMBO,175,91,111,46,
+    COMBOBOX        IDC_MAIN_SERVER_LEFT_COMBO,175,91,111,75,
                     CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Right:",IDC_MAIN_SERVER_RIGHT_LABEL,144,109,20,8
-    COMBOBOX        IDC_MAIN_SERVER_RIGHT_COMBO,175,107,112,46,
+    COMBOBOX        IDC_MAIN_SERVER_RIGHT_COMBO,175,107,112,75,
                     CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Above:",IDC_MAIN_SERVER_TOP_LABEL,144,125,24,8
-    COMBOBOX        IDC_MAIN_SERVER_TOP_COMBO,175,123,112,46,
+    COMBOBOX        IDC_MAIN_SERVER_TOP_COMBO,175,123,112,75,
                     CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Below:",IDC_MAIN_SERVER_BOTTOM_LABEL,144,141,22,8
-    COMBOBOX        IDC_MAIN_SERVER_BOTTOM_COMBO,175,139,112,46,
+    COMBOBOX        IDC_MAIN_SERVER_BOTTOM_COMBO,175,139,112,75,
                     CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "&Options...",IDC_MAIN_OPTIONS,12,191,50,14
     PUSHBUTTON      "Adva&nced...",IDC_MAIN_ADVANCED,68,191,50,14
@@ -103,7 +106,7 @@ BEGIN
     PUSHBUTTON      "Quit",IDCANCEL,243,241,50,14
 END
 
-IDD_ADD DIALOG DISCARDABLE  0, 0, 192, 236
+IDD_ADD DIALOG DISCARDABLE  0, 0, 192, 254
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION
 CAPTION "Add Screen"
 FONT 8, "MS Sans Serif"
@@ -113,31 +116,33 @@ BEGIN
     LTEXT           "&Aliases:",IDC_STATIC,7,25,25,8
     EDITTEXT        IDC_ADD_ALIASES_EDIT,79,26,106,40,ES_MULTILINE | 
                     ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN
-    GROUPBOX        "Options",IDC_STATIC,7,72,178,64
-    LTEXT           "If your Caps Lock or Num Lock keys behave strangely on this client screen then try turning the half-duplex options on and reconnect the client.",
+    GROUPBOX        "Options",IDC_STATIC,7,72,178,80
+    LTEXT           "If your Caps, Num, or Scroll Lock keys behave strangely on this client screen then try turning the half-duplex options on and reconnect the client.",
                     IDC_STATIC,13,82,165,25
     CONTROL         "Half-duplex &Caps Lock",IDC_ADD_HD_CAPS_CHECK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,13,110,165,10
     CONTROL         "Half-duplex &Num Lock",IDC_ADD_HD_NUM_CHECK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,13,122,165,10
-    GROUPBOX        "Modifiers",IDC_STATIC,7,139,178,65
-    LTEXT           "Shift",IDC_STATIC,13,155,15,8
-    COMBOBOX        IDC_ADD_MOD_SHIFT,37,152,48,60,CBS_DROPDOWNLIST | 
+    CONTROL         "Half-duplex Sc&roll Lock",IDC_ADD_HD_SCROLL_CHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,13,134,165,10
+    GROUPBOX        "Modifiers",IDC_STATIC,7,155,178,65
+    LTEXT           "Shift",IDC_STATIC,13,171,15,8
+    COMBOBOX        IDC_ADD_MOD_SHIFT,37,168,48,60,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Ctrl",IDC_STATIC,13,170,11,8
-    COMBOBOX        IDC_ADD_MOD_CTRL,37,168,48,60,CBS_DROPDOWNLIST | 
+    LTEXT           "Ctrl",IDC_STATIC,13,186,11,8
+    COMBOBOX        IDC_ADD_MOD_CTRL,37,184,48,60,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Alt",IDC_STATIC,13,186,9,8
-    COMBOBOX        IDC_ADD_MOD_ALT,37,184,48,60,CBS_DROPDOWNLIST | 
+    LTEXT           "Alt",IDC_STATIC,13,202,9,8
+    COMBOBOX        IDC_ADD_MOD_ALT,37,200,48,60,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Meta",IDC_STATIC,101,154,17,8
-    COMBOBOX        IDC_ADD_MOD_META,125,152,48,60,CBS_DROPDOWNLIST | 
+    LTEXT           "Meta",IDC_STATIC,101,170,17,8
+    COMBOBOX        IDC_ADD_MOD_META,125,168,48,60,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Super",IDC_STATIC,101,170,20,8
-    COMBOBOX        IDC_ADD_MOD_SUPER,125,168,48,60,CBS_DROPDOWNLIST | 
+    LTEXT           "Super",IDC_STATIC,101,186,20,8
+    COMBOBOX        IDC_ADD_MOD_SUPER,125,184,48,60,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    DEFPUSHBUTTON   "OK",IDOK,79,215,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,135,215,50,14
+    DEFPUSHBUTTON   "OK",IDOK,79,233,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,135,233,50,14
 END
 
 IDD_WAIT DIALOG DISCARDABLE  0, 0, 186, 54
@@ -170,7 +175,7 @@ BEGIN
                     IDC_STATIC,7,43,181,17
 END
 
-IDD_GLOBAL_OPTIONS DIALOG DISCARDABLE  0, 0, 207, 233
+IDD_GLOBAL_OPTIONS DIALOG DISCARDABLE  0, 0, 207, 269
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Options"
 FONT 8, "MS Sans Serif"
@@ -202,11 +207,15 @@ BEGIN
                     IDC_STATIC,7,176,193,8
     CONTROL         "Synchronize screen savers",IDC_GLOBAL_SCREENSAVER_SYNC,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,192,101,10
-    DEFPUSHBUTTON   "OK",IDOK,94,212,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,150,212,50,14
+    LTEXT           "Experimental: Relative mouse moves on secondary screens.",
+                    IDC_STATIC,7,213,193,8
+    CONTROL         "Use relative mouse moves",IDC_GLOBAL_RELATIVE_MOVES,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,229,99,10
+    DEFPUSHBUTTON   "OK",IDOK,94,248,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,150,248,50,14
 END
 
-IDD_ADVANCED_OPTIONS DIALOG DISCARDABLE  0, 0, 230, 133
+IDD_ADVANCED_OPTIONS DIALOG DISCARDABLE  0, 0, 230, 186
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Advanced Options"
 FONT 8, "MS Sans Serif"
@@ -220,9 +229,13 @@ BEGIN
     LTEXT           "&Port:",IDC_STATIC,7,90,16,8
     EDITTEXT        IDC_ADVANCED_PORT_EDIT,63,88,40,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
-    PUSHBUTTON      "&Defaults",IDC_ADVANCED_DEFAULTS,7,112,50,14
-    DEFPUSHBUTTON   "OK",IDOK,118,112,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,173,112,50,14
+    LTEXT           "The server normally listens for client connections on all network interfaces.  Enter the address of a particular interface to listen on just that interface.",
+                    IDC_STATIC,7,110,216,26
+    LTEXT           "&Interface:",IDC_STATIC,7,144,31,8
+    EDITTEXT        IDC_ADVANCED_INTERFACE_EDIT,63,142,81,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Defaults",IDC_ADVANCED_DEFAULTS,7,165,50,14
+    DEFPUSHBUTTON   "OK",IDOK,118,165,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,173,165,50,14
 END
 
 
@@ -247,7 +260,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 185
         TOPMARGIN, 7
-        BOTTOMMARGIN, 229
+        BOTTOMMARGIN, 247
     END
 
     IDD_WAIT, DIALOG
@@ -271,7 +284,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 200
         TOPMARGIN, 7
-        BOTTOMMARGIN, 226
+        BOTTOMMARGIN, 262
     END
 
     IDD_ADVANCED_OPTIONS, DIALOG
@@ -279,7 +292,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 223
         TOPMARGIN, 7
-        BOTTOMMARGIN, 126
+        BOTTOMMARGIN, 179
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -319,7 +332,7 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_AUTOSTART_PERMISSION_SYSTEM 
-                            "You have sufficient access rights to install and uninstall Auto Start for all users or for just yourself."
+                            "You have sufficient access rights to install and uninstall Auto Start for all users."
     IDS_AUTOSTART_PERMISSION_USER 
                             "You have sufficient access rights to install and uninstall Auto Start for just yourself."
     IDS_AUTOSTART_PERMISSION_NONE 
@@ -332,11 +345,11 @@ BEGIN
                             "Synergy is not configured to start automatically."
     IDS_INSTALL_LABEL       "Install"
     IDS_UNINSTALL_LABEL     "Uninstall"
-    IDS_INSTALL_GENERIC_ERROR "Install failed: %{1}."
-    IDS_UNINSTALL_GENERIC_ERROR "Uninstall failed: %{1}."
+    IDS_INSTALL_GENERIC_ERROR "Install failed: %{1}"
+    IDS_UNINSTALL_GENERIC_ERROR "Uninstall failed: %{1}"
     IDS_INSTALL_TITLE       "Installed Auto-Start"
-    IDS_INSTALLED_SYSTEM    "Installed auto-start.  Synergy will now automatically start each time you start your computer."
-    IDS_INSTALLED_USER      "Installed auto-start.  Synergy will now automatically start each time you log in."
+    IDS_INSTALLED_SYSTEM    "Installed auto-start.  Synergy will automatically start each time you start your computer."
+    IDS_INSTALLED_USER      "Installed auto-start.  Synergy will automatically start each time you log in."
 END
 
 STRINGTABLE DISCARDABLE 
@@ -348,6 +361,10 @@ BEGIN
     IDS_SERVER_IS_CLIENT    "Please enter the computer name of the synergy server, not\nthe name of this computer, in the Server Host Name field."
     IDS_ADD_SCREEN          "Add Screen"
     IDS_EDIT_SCREEN         "Edit Screen %{1}"
+    IDS_ERROR_CODE          "Error code: %{1}"
+    IDS_AUTOSTART_PERMISSION_ALL 
+                            "You have sufficient access rights to install and uninstall Auto Start for all users or for just yourself."
+    IDS_INVALID_INTERFACE_NAME "The interface '%{1}' is invalid: %{2}"
 END
 
 #endif    // English (U.S.) resources

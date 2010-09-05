@@ -94,8 +94,6 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 SUBDIRS = \
 	launcher				\

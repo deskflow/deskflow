@@ -42,7 +42,7 @@ public:
 	(i.e. after initialization) and \c daemonRunning(false) when it leaves
 	the main loop.  The \c runFunc is called in a new thread and when the
 	daemon must exit the main loop due to some external control the
-	thread is cancelled on behalf of the client.  This function returns
+	getDaemonQuitMessage() is posted to the thread.  This function returns
 	what \c runFunc returns.  \c runFunc should call \c daemonFailed() if
 	the daemon fails.
 	*/
@@ -63,11 +63,20 @@ public:
 	*/
 	static void			daemonFailed(int result);
 
+	//! Get daemon quit message
+	/*!
+	The windows NT daemon tells daemon thread to exit by posting this
+	message to it.  The thread must, of course, have a message queue
+	for this to work.
+	*/
+	static UINT			getDaemonQuitMessage();
+
 	// IArchDaemon overrides
 	virtual void		installDaemon(const char* name,
 							const char* description,
 							const char* pathname,
 							const char* commandLine,
+							const char* dependencies,
 							bool allUsers);
 	virtual void		uninstallDaemon(const char* name, bool allUsers);
 	virtual int			daemonize(const char* name, DaemonFunc func);
@@ -81,13 +90,13 @@ private:
 
 	int					doRunDaemon(RunFunc runFunc);
 	void				doDaemonRunning(bool running);
+	UINT				doGetDaemonQuitMessage();
 
 	static void			setStatus(DWORD state);
 	static void			setStatus(DWORD state, DWORD step, DWORD waitHint);
 	static void			setStatusError(DWORD error);
 
-	void*				runDaemonThread(RunFunc);
-	static void*		runDaemonThreadEntry(void*);
+	static bool			isRunState(DWORD state);
 
 	void				serviceMain(DWORD, LPTSTR*);
 	static void WINAPI	serviceMainEntry(DWORD, LPTSTR*);
@@ -113,11 +122,13 @@ private:
 	bool				m_serviceHandlerWaiting;
 	bool				m_serviceRunning;
 
-	CArchThread			m_daemonThread;
+	DWORD				m_daemonThreadID;
 	DaemonFunc			m_daemonFunc;
 	int					m_daemonResult;
 
 	SERVICE_STATUS_HANDLE m_statusHandle;
+
+	UINT				m_quitMessage;
 };
 
 #endif

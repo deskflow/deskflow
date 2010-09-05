@@ -15,134 +15,119 @@
 #ifndef CCLIENT_H
 #define CCLIENT_H
 
-#include "IScreenReceiver.h"
 #include "IClient.h"
 #include "IClipboard.h"
 #include "CNetworkAddress.h"
-#include "CMutex.h"
-#include "CJobList.h"
 
-class CSecondaryScreen;
+class CEventQueueTimer;
+class CScreen;
 class CServerProxy;
-class CThread;
 class IDataSocket;
-class IScreenReceiver;
-class ISecondaryScreenFactory;
 class ISocketFactory;
+class IStream;
 class IStreamFilterFactory;
 
 //! Synergy client
 /*!
 This class implements the top-level client algorithms for synergy.
 */
-class CClient : public IScreenReceiver, public IClient {
+class CClient : public IClient {
 public:
-	enum EStatus {
-		kNotRunning,
-		kRunning,
-		kError,
-		kMaxStatus
+	class CFailInfo {
+	public:
+		bool			m_retry;
+		char			m_what[1];
 	};
 
 	/*!
-	This client will attempt to connect the server using \c clientName
-	as its name.
+	This client will attempt to connect to the server using \p name
+	as its name and \p address as the server's address and \p factory
+	to create the socket.  \p screen is	the local screen.
 	*/
-	CClient(const CString& clientName);
+	CClient(const CString& name, const CNetworkAddress& address,
+							ISocketFactory* socketFactory,
+							IStreamFilterFactory* streamFilterFactory,
+							CScreen* screen);
 	~CClient();
 
 	//! @name manipulators
 	//@{
 
-	//! Set server address
+	//! Connect to server
 	/*!
-	Sets the server's address that the client should connect to.
+	Starts an attempt to connect to the server.  This is ignored if
+	the client is trying to connect or is already connected.
 	*/
-	void				setAddress(const CNetworkAddress& serverAddress);
+	void				connect();
 
-	//! Set secondary screen factory
+	//! Disconnect
 	/*!
-	Sets the factory for creating secondary screens.  This must be
-	set before calling open().  This object takes ownership of the
-	factory.
+	Disconnects from the server with an optional error message.
 	*/
-	void				setScreenFactory(ISecondaryScreenFactory*);
+	void				disconnect(const char* msg);
 
-	//! Set socket factory
+	//! Notify of handshake complete
 	/*!
-	Sets the factory used to create a socket to connect to the server.
-	This must be set before calling mainLoop().  This object takes
-	ownership of the factory.
+	Notifies the client that the connection handshake has completed.
 	*/
-	void				setSocketFactory(ISocketFactory*);
-
-	//! Set stream filter factory
-	/*!
-	Sets the factory used to filter the socket streams used to
-	communicate with the server.  This object takes ownership
-	of the factory.
-	*/
-	void				setStreamFilterFactory(IStreamFilterFactory*);
-
-	//! Exit event loop
-	/*!
-	Force mainLoop() to return.  This call can return before
-	mainLoop() does (i.e. asynchronously).  This may only be
-	called between a successful open() and close().
-	*/
-	void				exitMainLoop();
-
-	//! Add a job to notify of status changes
-	/*!
-	The added job is run whenever the server's status changes in
-	certain externally visible ways.  The client keeps ownership
-	of the job.
-	*/
-	void				addStatusJob(IJob*);
-
-	//! Remove a job to notify of status changes
-	/*!
-	Removes a previously added status notification job.  A job can
-	remove itself when called but must not remove any other jobs.
-	The client keeps ownership of the job.
-	*/
-	void				removeStatusJob(IJob*);
+	void				handshakeComplete();
 
 	//@}
 	//! @name accessors
 	//@{
 
-	//!
+	//! Test if connected
 	/*!
-	Returns true if the server rejected our connection.
+	Returns true iff the client is successfully connected to the server.
 	*/
-	bool 				wasRejected() const;
+	bool				isConnected() const;
 
-	//! Get the status
+	//! Test if connecting
 	/*!
-	Returns the current status and status message.
+	Returns true iff the client is currently attempting to connect to
+	the server.
 	*/
-	EStatus				getStatus(CString* = NULL) const;
+	bool				isConnecting() const;
+
+	//! Get connected event type
+	/*!
+	Returns the connected event type.  This is sent when the client has
+	successfully connected to the server.
+	*/
+	static CEvent::Type	getConnectedEvent();
+
+	//! Get connection failed event type
+	/*!
+	Returns the connection failed event type.  This is sent when the
+	server fails for some reason.  The event data is a CFailInfo*.
+	*/
+	static CEvent::Type	getConnectionFailedEvent();
+
+	//! Get disconnected event type
+	/*!
+	Returns the disconnected event type.  This is sent when the client
+	has disconnected from the server (and only after having successfully
+	connected).
+	*/
+	static CEvent::Type	getDisconnectedEvent();
 
 	//@}
 
-	// IScreenReceiver overrides
-	virtual void		onError();
-	virtual void		onInfoChanged(const CClientInfo&);
-	virtual bool		onGrabClipboard(ClipboardID);
-	virtual void		onClipboardChanged(ClipboardID, const CString&);
+	// IScreen overrides
+	virtual void*		getEventTarget() const;
+	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
+	virtual void		getShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const;
+	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
 
 	// IClient overrides
-	virtual void		open();
-	virtual void		mainLoop();
-	virtual void		close();
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
 							bool forScreensaver);
 	virtual bool		leave();
-	virtual void		setClipboard(ClipboardID, const CString&);
+	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);
-	virtual void		setClipboardDirty(ClipboardID, bool dirty);
+	virtual void		setClipboardDirty(ClipboardID, bool);
 	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);
 	virtual void		keyRepeat(KeyID, KeyModifierMask,
 							SInt32 count, KeyButton);
@@ -150,57 +135,52 @@ public:
 	virtual void		mouseDown(ButtonID);
 	virtual void		mouseUp(ButtonID);
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs);
+	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel);
 	virtual void		mouseWheel(SInt32 delta);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
 	virtual CString		getName() const;
-	virtual SInt32		getJumpZoneSize() const;
-	virtual void		getShape(SInt32& x, SInt32& y,
-							SInt32& width, SInt32& height) const;
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
-	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 
 private:
-	// notify status jobs of a change
-	void				runStatusJobs() const;
-
-	// set new status
-	void				setStatus(EStatus, const char* msg = NULL);
-
-	// open/close the secondary screen
-	void				openSecondaryScreen();
-	void				closeSecondaryScreen();
-
-	// send the clipboard to the server
 	void				sendClipboard(ClipboardID);
-
-	// handle server messaging
-	void				runSession(void*);
-	void				deleteSession(double timeout = -1.0);
-	void				runServer();
-	CServerProxy*		handshakeServer(IDataSocket*);
+	void				sendEvent(CEvent::Type, void*);
+	void				sendConnectionFailedEvent(const char* msg);
+	void				setupConnecting();
+	void				setupConnection();
+	void				setupScreen();
+	void				setupTimer();
+	void				cleanupConnecting();
+	void				cleanupConnection();
+	void				cleanupScreen();
+	void				cleanupTimer();
+	void				handleConnected(const CEvent&, void*);
+	void				handleConnectionFailed(const CEvent&, void*);
+	void				handleConnectTimeout(const CEvent&, void*);
+	void				handleOutputError(const CEvent&, void*);
+	void				handleDisconnected(const CEvent&, void*);
+	void				handleShapeChanged(const CEvent&, void*);
+	void				handleClipboardGrabbed(const CEvent&, void*);
+	void				handleHello(const CEvent&, void*);
 
 private:
-	CMutex				m_mutex;
-	CString				m_name;
-	CSecondaryScreen*	m_screen;
-	IScreenReceiver*	m_server;
-	CNetworkAddress		m_serverAddress;
-	ISecondaryScreenFactory*	m_screenFactory;
-	ISocketFactory*				m_socketFactory;
-	IStreamFilterFactory*		m_streamFilterFactory;
-	CThread*			m_session;
-	bool				m_active;
-	bool				m_rejected;
+	CString					m_name;
+	CNetworkAddress			m_serverAddress;
+	ISocketFactory*			m_socketFactory;
+	IStreamFilterFactory*	m_streamFilterFactory;
+	CScreen*				m_screen;
+	IStream*				m_stream;
+	CEventQueueTimer*		m_timer;
+	CServerProxy*			m_server;
+	bool					m_ready;
+	bool					m_active;
 	bool				m_ownClipboard[kClipboardEnd];
 	IClipboard::Time	m_timeClipboard[kClipboardEnd];
 	CString				m_dataClipboard[kClipboardEnd];
 
-	// the status change jobs and status
-	CJobList			m_statusJobs;
-	EStatus				m_status;
-	CString				m_statusMessage;
+	static CEvent::Type	s_connectedEvent;
+	static CEvent::Type	s_connectionFailedEvent;
+	static CEvent::Type	s_disconnectedEvent;
 };
 
 #endif

@@ -16,13 +16,8 @@
 #define CSYNERGYHOOK_H
 
 #include "BasicTypes.h"
-
-#if WINDOWS_LIKE
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#else
-#error CSynergyHook is a win32 specific file
-#endif
 
 #if defined(SYNRGYHK_EXPORTS)
 #define CSYNERGYHOOK_API __declspec(dllexport)
@@ -38,8 +33,10 @@
 #define SYNERGY_MSG_POST_WARP		WM_APP + 0x0016	// <unused>; <unused>
 #define SYNERGY_MSG_PRE_WARP		WM_APP + 0x0017	// x; y
 #define SYNERGY_MSG_SCREEN_SAVER	WM_APP + 0x0018	// activated; <unused>
+#define SYNERGY_MSG_DEBUG			WM_APP + 0x0019	// data, data
 #define SYNERGY_MSG_INPUT_FIRST		SYNERGY_MSG_KEY
 #define SYNERGY_MSG_INPUT_LAST		SYNERGY_MSG_PRE_WARP
+#define SYNERGY_HOOK_LAST_MSG		SYNERGY_MSG_DEBUG
 
 extern "C" {
 
@@ -47,6 +44,12 @@ enum EHookResult {
 	kHOOK_FAILED,
 	kHOOK_OKAY,
 	kHOOK_OKAY_LL
+};
+
+enum EHookMode {
+	kHOOK_DISABLE,
+	kHOOK_WATCH_JUMP_ZONE,
+	kHOOK_RELAY_EVENTS
 };
 
 typedef int				(*InitFunc)(DWORD targetQueueThreadID);
@@ -57,7 +60,7 @@ typedef int				(*InstallScreenSaverFunc)(void);
 typedef int				(*UninstallScreenSaverFunc)(void);
 typedef void			(*SetSidesFunc)(UInt32);
 typedef void			(*SetZoneFunc)(SInt32, SInt32, SInt32, SInt32, SInt32);
-typedef void			(*SetRelayFunc)(int);
+typedef void			(*SetModeFunc)(int);
 
 CSYNERGYHOOK_API int	init(DWORD);
 CSYNERGYHOOK_API int	cleanup(void);
@@ -68,7 +71,7 @@ CSYNERGYHOOK_API int	uninstallScreenSaver(void);
 CSYNERGYHOOK_API void	setSides(UInt32 sides);
 CSYNERGYHOOK_API void	setZone(SInt32 x, SInt32 y, SInt32 w, SInt32 h,
 							SInt32 jumpZoneSize);
-CSYNERGYHOOK_API void	setRelay(int enable);	// relay iff enable != 0
+CSYNERGYHOOK_API void	setMode(EHookMode mode);
 
 }
 

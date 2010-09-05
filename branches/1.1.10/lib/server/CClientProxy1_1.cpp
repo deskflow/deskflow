@@ -21,9 +21,8 @@
 // CClientProxy1_1
 //
 
-CClientProxy1_1::CClientProxy1_1(IServer* server, const CString& name,
-				IInputStream* input, IOutputStream* output) :
-	CClientProxy1_0(server, name, input, output)
+CClientProxy1_1::CClientProxy1_1(const CString& name, IStream* stream) :
+	CClientProxy1_0(name, stream)
 {
 	// do nothing
 }
@@ -37,7 +36,7 @@ void
 CClientProxy1_1::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button));
-	CProtocolUtil::writef(getOutputStream(), kMsgDKeyDown, key, mask, button);
+	CProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button);
 }
 
 void
@@ -45,12 +44,12 @@ CClientProxy1_1::keyRepeat(KeyID key, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, button=0x%04x", getName().c_str(), key, mask, count, button));
-	CProtocolUtil::writef(getOutputStream(), kMsgDKeyRepeat, key, mask, count, button);
+	CProtocolUtil::writef(getStream(), kMsgDKeyRepeat, key, mask, count, button);
 }
 
 void
 CClientProxy1_1::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 {
 	LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x, button=0x%04x", getName().c_str(), key, mask, button));
-	CProtocolUtil::writef(getOutputStream(), kMsgDKeyUp, key, mask, button);
+	CProtocolUtil::writef(getStream(), kMsgDKeyUp, key, mask, button);
 }

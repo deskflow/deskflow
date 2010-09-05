@@ -239,12 +239,6 @@ CConfig::setSynergyAddress(const CNetworkAddress& addr)
 	m_synergyAddress = addr;
 }
 
-void
-CConfig::setHTTPAddress(const CNetworkAddress& addr)
-{
-	m_httpAddress = addr;
-}
-
 bool
 CConfig::addOption(const CString& name, OptionID option, OptionValue value)
 {
@@ -321,10 +315,22 @@ CConfig::isValidScreenName(const CString& name) const
 	//  name      ::= [_A-Za-z0-9] | [_A-Za-z0-9][-_A-Za-z0-9]*[_A-Za-z0-9]
 	//  domain    ::= . name
 	//  validname ::= name domain*
+	// we also accept names ending in . because many OS X users have
+	// so misconfigured their systems.
+
+	// empty name is invalid
+	if (name.empty()) {
+		return false;
+	}
 
 	// check each dot separated part
 	CString::size_type b = 0;
 	for (;;) {
+		// accept trailing .
+		if (b == name.size()) {
+			break;
+		}
+
 		// find end of part
 		CString::size_type e = name.find('.', b);
 		if (e == CString::npos) {
@@ -430,12 +436,6 @@ CConfig::getSynergyAddress() const
 	return m_synergyAddress;
 }
 
-const CNetworkAddress&
-CConfig::getHTTPAddress() const
-{
-	return m_httpAddress;
-}
-
 const CConfig::CScreenOptions*
 CConfig::getOptions(const CString& name) const
 {
@@ -458,14 +458,9 @@ CConfig::getOptions(const CString& name) const
 bool
 CConfig::operator==(const CConfig& x) const
 {
-/* FIXME -- no compare available for CNetworkAddress
 	if (m_synergyAddress != x.m_synergyAddress) {
 		return false;
 	}
-	if (m_httpAddress != x.m_httpAddress) {
-		return false;
-	}
-*/
 	if (m_map.size() != x.m_map.size()) {
 		return false;
 	}
@@ -616,6 +611,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionHalfDuplexNumLock) {
 		return "halfDuplexNumLock";
 	}
+	if (id == kOptionHalfDuplexScrollLock) {
+		return "halfDuplexScrollLock";
+	}
 	if (id == kOptionModifierMapForShift) {
 		return "shift";
 	}
@@ -646,6 +644,9 @@ CConfig::getOptionName(OptionID id)
 	if (id == kOptionXTestXineramaUnaware) {
 		return "xtestIsXineramaUnaware";
 	}
+	if (id == kOptionRelativeMouseMoves) {
+		return "relativeMouseMoves";
+	}
 	return NULL;
 }
 
@@ -654,8 +655,10 @@ CConfig::getOptionValue(OptionID id, OptionValue value)
 {
 	if (id == kOptionHalfDuplexCapsLock ||
 		id == kOptionHalfDuplexNumLock ||
+		id == kOptionHalfDuplexScrollLock ||
 		id == kOptionScreenSaverSync ||
-		id == kOptionXTestXineramaUnaware) {
+		id == kOptionXTestXineramaUnaware ||
+		id == kOptionRelativeMouseMoves) {
 		return (value != 0) ? "true" : "false";
 	}
 	if (id == kOptionModifierMapForShift ||
@@ -778,16 +781,9 @@ CConfig::readSectionOptions(std::istream& s)
 			try {
 				m_synergyAddress = CNetworkAddress(value, kDefaultPort);
 			}
-			catch (XSocketAddress&) {
-				throw XConfigRead("invalid address argument");
-			}
-		}
-		else if (name == "http") {
-			try {
-				m_httpAddress = CNetworkAddress(value, kDefaultPort + 1);
-			}
-			catch (XSocketAddress&) {
-				throw XConfigRead("invalid http argument");
+			catch (XSocketAddress& e) {
+				throw XConfigRead(CString("invalid address argument:  ") +
+							e.what());
 			}
 		}
 		else if (name == "heartbeat") {
@@ -801,6 +797,9 @@ CConfig::readSectionOptions(std::istream& s)
 		}
 		else if (name == "screenSaverSync") {
 			addOption("", kOptionScreenSaverSync, parseBoolean(value));
+		}
+		else if (name == "relativeMouseMoves") {
+			addOption("", kOptionRelativeMouseMoves, parseBoolean(value));
 		}
 		else {
 			throw XConfigRead("unknown argument");
@@ -865,6 +864,10 @@ CConfig::readSectionScreens(std::istream& s)
 			}
 			else if (name == "halfDuplexNumLock") {
 				addOption(screen, kOptionHalfDuplexNumLock,
+					parseBoolean(value));
+			}
+			else if (name == "halfDuplexScrollLock") {
+				addOption(screen, kOptionHalfDuplexScrollLock,
 					parseBoolean(value));
 			}
 			else if (name == "shift") {
@@ -1062,10 +1065,6 @@ operator<<(std::ostream& s, const CConfig& config)
 	if (config.m_synergyAddress.isValid()) {
 		s << "\taddress = " <<
 			config.m_synergyAddress.getHostname().c_str() << std::endl;
-	}
-	if (config.m_httpAddress.isValid()) {
-		s << "\thttp = " <<
-			config.m_httpAddress.getHostname().c_str() << std::endl;
 	}
 	s << "end" << std::endl;
 

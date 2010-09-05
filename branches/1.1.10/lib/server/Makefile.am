@@ -12,8 +12,6 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST =						\
 	server.dsp						\
@@ -25,29 +23,32 @@ MAINTAINERCLEANFILES =				\
 
 noinst_LIBRARIES = libserver.a
 libserver_a_SOURCES = 				\
+	CClientListener.cpp				\
 	CClientProxy.cpp				\
 	CClientProxy1_0.cpp				\
 	CClientProxy1_1.cpp				\
+	CClientProxy1_2.cpp				\
+	CClientProxyUnknown.cpp			\
 	CConfig.cpp						\
-	CHTTPServer.cpp					\
 	CPrimaryClient.cpp				\
 	CServer.cpp						\
+	CClientListener.h				\
 	CClientProxy.h					\
 	CClientProxy1_0.h				\
 	CClientProxy1_1.h				\
+	CClientProxy1_2.h				\
+	CClientProxyUnknown.h			\
 	CConfig.h						\
-	CHTTPServer.h					\
 	CPrimaryClient.h				\
 	CServer.h						\
 	$(NULL)
 INCLUDES =							\
-	-I$(VDEPTH)/lib/common			\
-	-I$(VDEPTH)/lib/arch			\
-	-I$(VDEPTH)/lib/base 			\
-	-I$(VDEPTH)/lib/mt	 			\
-	-I$(VDEPTH)/lib/io	 			\
-	-I$(VDEPTH)/lib/http 			\
-	-I$(VDEPTH)/lib/net	 			\
-	-I$(VDEPTH)/lib/synergy			\
-	-I$(VDEPTH)/lib/platform 		\
+	-I$(top_srcdir)/lib/common		\
+	-I$(top_srcdir)/lib/arch		\
+	-I$(top_srcdir)/lib/base 		\
+	-I$(top_srcdir)/lib/mt	 		\
+	-I$(top_srcdir)/lib/io	 		\
+	-I$(top_srcdir)/lib/net	 		\
+	-I$(top_srcdir)/lib/synergy		\
+	-I$(top_srcdir)/lib/platform 	\
 	$(NULL)

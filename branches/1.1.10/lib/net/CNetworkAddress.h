@@ -55,6 +55,18 @@ public:
 	//! @name accessors
 	//@{
 
+	//! Check address equality
+	/*!
+	Returns true if this address is equal to \p address.
+	*/
+	bool				operator==(const CNetworkAddress&) const;
+
+	//! Check address inequality
+	/*!
+	Returns true if this address is not equal to \p address.
+	*/
+	bool				operator!=(const CNetworkAddress&) const;
+
 	//! Check address validity
 	/*!
 	Returns true if this is not the invalid address.

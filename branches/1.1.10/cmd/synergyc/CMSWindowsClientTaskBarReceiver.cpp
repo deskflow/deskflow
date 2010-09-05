@@ -21,17 +21,18 @@
 #include "CArchTaskBarWindows.h"
 #include "resource.h"
 
-static const UINT g_stateToIconID[CMSWindowsClientTaskBarReceiver::kMaxState] =
+//
+// CMSWindowsClientTaskBarReceiver
+//
+
+const UINT CMSWindowsClientTaskBarReceiver::s_stateToIconID[kMaxState] =
 {
 	IDI_TASKBAR_NOT_RUNNING,
 	IDI_TASKBAR_NOT_WORKING,
 	IDI_TASKBAR_NOT_CONNECTED,
+	IDI_TASKBAR_NOT_CONNECTED,
 	IDI_TASKBAR_CONNECTED
 };
-
-//
-// CMSWindowsClientTaskBarReceiver
-//
 
 CMSWindowsClientTaskBarReceiver::CMSWindowsClientTaskBarReceiver(
 				HINSTANCE appInstance, const CBufferedLogOutputter* logBuffer) :
@@ -41,7 +42,7 @@ CMSWindowsClientTaskBarReceiver::CMSWindowsClientTaskBarReceiver(
 	m_logBuffer(logBuffer)
 {
 	for (UInt32 i = 0; i < kMaxState; ++i) {
-		m_icon[i] = loadIcon(g_stateToIconID[i]);
+		m_icon[i] = loadIcon(s_stateToIconID[i]);
 	}
 	m_menu = LoadMenu(m_appInstance, MAKEINTRESOURCE(IDR_TASKBAR));
 
@@ -171,7 +172,7 @@ CMSWindowsClientTaskBarReceiver::primaryAction()
 const IArchTaskBarReceiver::Icon
 CMSWindowsClientTaskBarReceiver::getIcon() const
 {
-	return reinterpret_cast<Icon>(m_icon[getState()]);
+	return reinterpret_cast<Icon>(m_icon[getStatus()]);
 }
 
 void

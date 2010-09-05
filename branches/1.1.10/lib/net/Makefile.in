@@ -94,43 +94,48 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST = \
-	net.dsp					\
+	net.dsp							\
 	$(NULL)
 
 
 MAINTAINERCLEANFILES = \
-	Makefile.in				\
+	Makefile.in						\
 	$(NULL)
 
 
 noinst_LIBRARIES = libnet.a
 libnet_a_SOURCES = \
-	CNetworkAddress.cpp		\
-	CTCPListenSocket.cpp	\
-	CTCPSocket.cpp			\
-	CTCPSocketFactory.cpp	\
-	XSocket.cpp				\
-	CNetworkAddress.h		\
-	CTCPListenSocket.h		\
-	CTCPSocket.h			\
-	CTCPSocketFactory.h		\
-	IDataSocket.h			\
-	IListenSocket.h			\
-	ISocket.h				\
-	ISocketFactory.h		\
-	XSocket.h				\
+	CNetworkAddress.cpp				\
+	CSocketMultiplexer.cpp			\
+	CTCPListenSocket.cpp			\
+	CTCPSocket.cpp					\
+	CTCPSocketFactory.cpp			\
+	IDataSocket.cpp					\
+	IListenSocket.cpp				\
+	ISocket.cpp						\
+	XSocket.cpp						\
+	CNetworkAddress.h				\
+	CSocketMultiplexer.h			\
+	CTCPListenSocket.h				\
+	CTCPSocket.h					\
+	CTCPSocketFactory.h				\
+	IDataSocket.h					\
+	IListenSocket.h					\
+	ISocket.h						\
+	ISocketFactory.h				\
+	ISocketMultiplexerJob.h			\
+	TSocketMultiplexerMethodJob.h	\
+	XSocket.h						\
 	$(NULL)
 
 INCLUDES = \
-	-I$(VDEPTH)/lib/common	\
-	-I$(VDEPTH)/lib/arch	\
-	-I$(VDEPTH)/lib/base 	\
-	-I$(VDEPTH)/lib/mt	 	\
-	-I$(VDEPTH)/lib/io	 	\
+	-I$(top_srcdir)/lib/common		\
+	-I$(top_srcdir)/lib/arch		\
+	-I$(top_srcdir)/lib/base 		\
+	-I$(top_srcdir)/lib/mt	 		\
+	-I$(top_srcdir)/lib/io	 		\
 	$(NULL)
 
 subdir = lib/net
@@ -142,8 +147,10 @@ LIBRARIES = $(noinst_LIBRARIES)
 libnet_a_AR = $(AR) cru
 libnet_a_LIBADD =
 am_libnet_a_OBJECTS = CNetworkAddress.$(OBJEXT) \
-	CTCPListenSocket.$(OBJEXT) CTCPSocket.$(OBJEXT) \
-	CTCPSocketFactory.$(OBJEXT) XSocket.$(OBJEXT)
+	CSocketMultiplexer.$(OBJEXT) CTCPListenSocket.$(OBJEXT) \
+	CTCPSocket.$(OBJEXT) CTCPSocketFactory.$(OBJEXT) \
+	IDataSocket.$(OBJEXT) IListenSocket.$(OBJEXT) ISocket.$(OBJEXT) \
+	XSocket.$(OBJEXT)
 libnet_a_OBJECTS = $(am_libnet_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -153,9 +160,12 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CNetworkAddress.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CSocketMultiplexer.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CTCPListenSocket.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CTCPSocket.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CTCPSocketFactory.Po $(DEPDIR)/XSocket.Po
+@AMDEP_TRUE@	$(DEPDIR)/CTCPSocketFactory.Po \
+@AMDEP_TRUE@	$(DEPDIR)/IDataSocket.Po $(DEPDIR)/IListenSocket.Po \
+@AMDEP_TRUE@	$(DEPDIR)/ISocket.Po $(DEPDIR)/XSocket.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -199,9 +209,13 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CNetworkAddress.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CSocketMultiplexer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CTCPListenSocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CTCPSocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CTCPSocketFactory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/IDataSocket.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/IListenSocket.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ISocket.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XSocket.Po@am__quote@
 
 distclean-depend:

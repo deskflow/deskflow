@@ -15,64 +15,25 @@
 #ifndef CCLIENTTASKBARRECEIVER_H
 #define CCLIENTTASKBARRECEIVER_H
 
-#include "CMutex.h"
 #include "CString.h"
 #include "IArchTaskBarReceiver.h"
 
 class CClient;
-class IJob;
 
 //! Implementation of IArchTaskBarReceiver for the synergy server
 class CClientTaskBarReceiver : public IArchTaskBarReceiver {
 public:
-	enum EState {
-		kNotRunning,
-		kNotWorking,
-		kNotConnected,
-		kConnected,
-		kMaxState
-	};
-
 	CClientTaskBarReceiver();
 	virtual ~CClientTaskBarReceiver();
 
 	//! @name manipulators
 	//@{
 
-	//! Set server
+	//! Update status
 	/*!
-	Sets the server.  The receiver will query state from this server.
+	Determine the status and query required information from the client.
 	*/
-	void				setClient(CClient*);
-
-	//! Set state
-	/*!
-	Sets the current server state.
-	*/
-	void				setState(EState);
-
-	//! Set the quit job that causes the server to quit
-	/*!
-	Set the job that causes the server to quit.
-	*/
-	void				setQuitJob(IJob* adopted);
-
-	//@}
-	//! @name accessors
-	//@{
-
-	//! Get state
-	/*!
-	Returns the current server state.  The receiver is not locked
-	by this call;  the caller must do the locking.
-	*/
-	EState				getState() const;
-
-	//! Get server
-	/*!
-	Returns the server set by \c setClient().
-	*/
-	CClient*			getClient() const;
+	void				updateStatus(CClient*, const CString& errorMsg);
 
 	//@}
 
@@ -86,24 +47,35 @@ public:
 	virtual std::string	getToolTip() const;
 
 protected:
+	enum EState {
+		kNotRunning,
+		kNotWorking,
+		kNotConnected,
+		kConnecting,
+		kConnected,
+		kMaxState
+	};
+
+	//! Get status
+	EState				getStatus() const;
+
+	//! Get error message
+	const CString&		getErrorMessage() const;
+
+	//! Quit app
+	/*!
+	Causes the application to quit gracefully
+	*/
 	void				quit();
 
 	//! Status change notification
 	/*!
-	Called when status changes.  The default implementation does
-	nothing.
+	Called when status changes.  The default implementation does nothing.
 	*/
-	virtual void		onStatusChanged();
+	virtual void		onStatusChanged(CClient* client);
 
 private:
-	void				statusChanged(void*);
-
-private:
-	CMutex				m_mutex;
-	IJob*				m_quit;
 	EState				m_state;
-	CClient*			m_client;
-	IJob*				m_job;
 	CString				m_errorMessage;
 };
 

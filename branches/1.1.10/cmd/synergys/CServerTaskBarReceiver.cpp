@@ -15,7 +15,7 @@
 #include "CServerTaskBarReceiver.h"
 #include "CServer.h"
 #include "CLock.h"
-#include "TMethodJob.h"
+#include "IEventQueue.h"
 #include "CArch.h"
 
 //
@@ -23,83 +23,89 @@
 //
 
 CServerTaskBarReceiver::CServerTaskBarReceiver() :
-	m_quit(NULL),
-	m_state(kNotRunning),
-	m_server(NULL)
+	m_state(kNotRunning)
 {
-	// create a job for getting notification when the server's
-	// status changes.
-	m_job = new TMethodJob<CServerTaskBarReceiver>(this,
-							&CServerTaskBarReceiver::statusChanged, NULL);
+	// do nothing
 }
 
 CServerTaskBarReceiver::~CServerTaskBarReceiver()
 {
-	if (m_server != NULL) {
-		m_server->removeStatusJob(m_job);
-	}
-	delete m_job;
-	delete m_quit;
+	// do nothing
 }
 
 void
-CServerTaskBarReceiver::setServer(CServer* server)
+CServerTaskBarReceiver::updateStatus(CServer* server, const CString& errorMsg)
 {
 	{
-		CLock lock(&m_mutex);
-		if (m_server != server) {
-			if (m_server != NULL) {
-				m_server->removeStatusJob(m_job);
+		// update our status
+		m_errorMessage = errorMsg;
+		if (server == NULL) {
+			if (m_errorMessage.empty()) {
+				m_state = kNotRunning;
 			}
-			m_server = server;
-			if (m_server != NULL) {
-				m_server->addStatusJob(m_job);
+			else {
+				m_state = kNotWorking;
 			}
 		}
-	}
-	ARCH->updateReceiver(this);
-}
+		else {
+			m_clients.clear();
+			server->getClients(m_clients);
+			if (m_clients.size() <= 1) {
+				m_state = kNotConnected;
+			}
+			else {
+				m_state = kConnected;
+			}
+		}
 
-void
-CServerTaskBarReceiver::setState(EState state)
-{
-	{
-		CLock lock(&m_mutex);
-		m_state = state;
+		// let subclasses have a go
+		onStatusChanged(server);
 	}
-	ARCH->updateReceiver(this);
-}
 
-void
-CServerTaskBarReceiver::setQuitJob(IJob* job)
-{
-	CLock lock(&m_mutex);
-	delete m_quit;
-	m_quit = job;
+	// tell task bar
+	ARCH->updateReceiver(this);
 }
 
 CServerTaskBarReceiver::EState
-CServerTaskBarReceiver::getState() const
+CServerTaskBarReceiver::getStatus() const
 {
 	return m_state;
 }
 
-CServer*
-CServerTaskBarReceiver::getServer() const
+const CString&
+CServerTaskBarReceiver::getErrorMessage() const
 {
-	return m_server;
+	return m_errorMessage;
+}
+
+const CServerTaskBarReceiver::CClients&
+CServerTaskBarReceiver::getClients() const
+{
+	return m_clients;
+}
+
+void
+CServerTaskBarReceiver::quit()
+{
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+}
+
+void
+CServerTaskBarReceiver::onStatusChanged(CServer*)
+{
+	// do nothing
 }
 
 void
 CServerTaskBarReceiver::lock() const
 {
-	m_mutex.lock();
+	// do nothing
 }
 
 void
 CServerTaskBarReceiver::unlock() const
 {
-	m_mutex.unlock();
+	// do nothing
 }
 
 std::string
@@ -110,7 +116,7 @@ CServerTaskBarReceiver::getToolTip() const
 		return "Synergy:  Not running";
 
 	case kNotWorking:
-		return CString("Synergy:  ") + m_errorMessage;
+		return std::string("Synergy:  ") + m_errorMessage;
 
 	case kNotConnected:
 		return "Synergy:  Waiting for clients";
@@ -121,51 +127,4 @@ CServerTaskBarReceiver::getToolTip() const
 	default:
 		return "";
 	}
-}
-
-void
-CServerTaskBarReceiver::quit()
-{
-	if (m_quit != NULL) {
-		m_quit->run();
-	}
-}
-
-void
-CServerTaskBarReceiver::onStatusChanged()
-{
-	// do nothing
-}
-
-void
-CServerTaskBarReceiver::statusChanged(void*)
-{
-	// update our status
-	switch (m_server->getStatus(&m_errorMessage)) {
-	case CServer::kNotRunning:
-		setState(kNotRunning);
-		break;
-
-	case CServer::kRunning:
-		if (m_server->getNumClients() > 1)
-			setState(kConnected);
-		else
-			setState(kNotConnected);
-		break;
-
-	case CServer::kServerNameUnknown:
-		m_errorMessage = "Server name is not in configuration";
-		setState(kNotWorking);
-		break;
-
-	case CServer::kError:
-		setState(kNotWorking);
-		break;
-
-	default:
-		break;
-	}
-
-	// let subclasses have a go
-	onStatusChanged();
 }

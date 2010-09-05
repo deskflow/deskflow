@@ -16,25 +16,192 @@
 #define CMULTIBYTE_H
 
 #include "common.h"
-
-#if (HAVE_MBSINIT && HAVE_MBRTOWC && HAVE_WCRTOMB) || WINDOWS_LIKE
-#include "CMultibyteOS.cpp"
+#include "CArch.h"
+#include <limits.h>
+#include <string.h>
+#if HAVE_WCHAR_H || defined(_MSC_VER)
+#	include <wchar.h>
+#elif __APPLE__
+	// wtf?  Darwin puts mbtowc() et al. in stdlib
+#	include <stdlib.h>
 #else
-#include "CMultibyteEmu.cpp"
-#endif
+	// platform apparently has no wchar_t support.  provide dummy
+	// implementations.  hopefully at least the C++ compiler has
+	// a built-in wchar_t type.
 
-CArchMBState
-ARCH_STRING::newMBState()
+static inline
+int
+mbtowc(wchar_t* dst, const char* src, int n)
 {
-	CArchMBState state = new CArchMBStateImpl;
-	initMBState(state);
-	return state;
+	*dst = static_cast<wchar_t>(*src);
+	return 1;
 }
 
-void
-ARCH_STRING::closeMBState(CArchMBState state)
+static inline
+int
+wctomb(char* dst, wchar_t src)
 {
-	delete state;
+	*dst = static_cast<char>(src);
+	return 1;
+}
+
+#endif
+
+//
+// use C library non-reentrant multibyte conversion with mutex
+//
+
+static CArchMutex		s_mutex = NULL;
+
+ARCH_STRING::ARCH_STRING()
+{
+	s_mutex = ARCH->newMutex();
+}
+
+ARCH_STRING::~ARCH_STRING()
+{
+	ARCH->closeMutex(s_mutex);
+	s_mutex = NULL;
+}
+
+int
+ARCH_STRING::convStringWCToMB(char* dst,
+				const wchar_t* src, UInt32 n, bool* errors)
+{
+	int len = 0;
+
+	bool dummyErrors;
+	if (errors == NULL) {
+		errors = &dummyErrors;
+	}
+
+	ARCH->lockMutex(s_mutex);
+	if (dst == NULL) {
+		char dummy[MB_LEN_MAX];
+		for (const wchar_t* scan = src; n > 0; ++scan, --n) {
+			int mblen = wctomb(dummy, *scan);
+			if (mblen == -1) {
+				*errors = true;
+				mblen   = 1;
+			}
+			len += mblen;
+		}
+		int mblen = wctomb(dummy, L'\0');
+		if (mblen != -1) {
+			len += mblen - 1;
+		}
+	}
+	else {
+		char* dst0 = dst;
+		for (const wchar_t* scan = src; n > 0; ++scan, --n) {
+			int mblen = wctomb(dst, *scan);
+			if (mblen == -1) {
+				*errors = true;
+				*dst++  = '?';
+			}
+			else {
+				dst    += mblen;
+			}
+		}
+		int mblen = wctomb(dst, L'\0');
+		if (mblen != -1) {
+			// don't include nul terminator
+			dst += mblen - 1;
+		}
+		len = (int)(dst - dst0);
+	}
+	ARCH->unlockMutex(s_mutex);
+
+	return len;
+}
+
+int
+ARCH_STRING::convStringMBToWC(wchar_t* dst,
+				const char* src, UInt32 n, bool* errors)
+{
+	int len = 0;
+	wchar_t dummy;
+
+	bool dummyErrors;
+	if (errors == NULL) {
+		errors = &dummyErrors;
+	}
+
+	ARCH->lockMutex(s_mutex);
+	if (dst == NULL) {
+		for (const char* scan = src; n > 0; ) {
+			int mblen = mbtowc(&dummy, scan, n);
+			switch (mblen) {
+			case -2:
+				// incomplete last character.  convert to unknown character.
+				*errors = true;
+				len    += 1;
+				n       = 0;
+				break;
+
+			case -1:
+				// invalid character.  count one unknown character and
+				// start at the next byte.
+				*errors = true;
+				len    += 1;
+				scan   += 1;
+				n      -= 1;
+				break;
+
+			case 0:
+				len    += 1;
+				scan   += 1;
+				n      -= 1;
+				break;
+
+			default:
+				// normal character
+				len    += 1;
+				scan   += mblen;
+				n      -= mblen;
+				break;
+			}
+		}
+	}
+	else {
+		wchar_t* dst0 = dst;
+		for (const char* scan = src; n > 0; ++dst) {
+			int mblen = mbtowc(dst, scan, n);
+			switch (mblen) {
+			case -2:
+				// incomplete character.  convert to unknown character.
+				*errors = true;
+				*dst    = (wchar_t)0xfffd;
+				n       = 0;
+				break;
+
+			case -1:
+				// invalid character.  count one unknown character and
+				// start at the next byte.
+				*errors = true;
+				*dst    = (wchar_t)0xfffd;
+				scan   += 1;
+				n      -= 1;
+				break;
+
+			case 0:
+				*dst    = (wchar_t)0x0000;
+				scan   += 1;
+				n      -= 1;
+				break;
+
+			default:
+				// normal character
+				scan   += mblen;
+				n      -= mblen;
+				break;
+			}
+		}
+		len = (int)(dst - dst0);
+	}
+	ARCH->unlockMutex(s_mutex);
+
+	return len;
 }
 
 #endif

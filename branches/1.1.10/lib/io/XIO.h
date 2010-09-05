@@ -39,4 +39,10 @@ Thrown when attempting to read beyond the end of a stream.
 */
 XBASE_SUBCLASS_WHAT(XIOEndOfStream, XIO);
 
+//! I/O would block exception
+/*!
+Thrown if an operation on a stream would block.
+*/
+XBASE_SUBCLASS_WHAT(XIOWouldBlock, XIO);
+
 #endif

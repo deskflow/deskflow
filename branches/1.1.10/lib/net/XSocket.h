@@ -34,6 +34,7 @@ public:
 		kUnknown,		//!< Unknown error
 		kNotFound,		//!< The hostname is unknown
 		kNoAddress,		//!< The hostname is valid but has no IP address
+		kUnsupported,	//!< The hostname is valid but has no supported address
 		kBadPort		//!< The port is invalid
 	};
 

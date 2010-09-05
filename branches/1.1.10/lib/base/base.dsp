@@ -37,11 +37,11 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release"
-# PROP Intermediate_Dir "Release"
+# PROP Output_Dir "..\..\gen\build"
+# PROP Intermediate_Dir "..\..\gen\build"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\build\base.pdb" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -61,11 +61,11 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug"
-# PROP Intermediate_Dir "Debug"
+# PROP Output_Dir "..\..\gen\debug"
+# PROP Intermediate_Dir "..\..\gen\debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\debug\base.pdb" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -87,15 +87,27 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\CEvent.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CEventQueue.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CFunctionEventJob.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CFunctionJob.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CJobList.cpp
+SOURCE=.\CLog.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CLog.cpp
+SOURCE=.\CSimpleEventQueueBuffer.cpp
 # End Source File
 # Begin Source File
 
@@ -111,6 +123,10 @@ SOURCE=.\CUnicode.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\IEventQueue.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LogOutputters.cpp
 # End Source File
 # Begin Source File
@@ -123,15 +139,31 @@ SOURCE=.\XBase.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\CEvent.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CEventQueue.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CFunctionEventJob.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CFunctionJob.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CJobList.h
+SOURCE=.\CLog.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CLog.h
+SOURCE=.\CPriorityQueue.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CSimpleEventQueueBuffer.h
 # End Source File
 # Begin Source File
 
@@ -151,6 +183,18 @@ SOURCE=.\CUnicode.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IEventJob.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IEventQueue.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\IEventQueueBuffer.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\IJob.h
 # End Source File
 # Begin Source File
@@ -160,6 +204,10 @@ SOURCE=.\ILogOutputter.h
 # Begin Source File
 
 SOURCE=.\LogOutputters.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TMethodEventJob.h
 # End Source File
 # Begin Source File
 

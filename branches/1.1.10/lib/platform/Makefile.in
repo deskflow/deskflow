@@ -94,32 +94,94 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
+
+XWINDOWS_SOURCE_FILES = \
+	CXWindowsClipboard.cpp					\
+	CXWindowsClipboardAnyBitmapConverter.cpp\
+	CXWindowsClipboardBMPConverter.cpp		\
+	CXWindowsClipboardHTMLConverter.cpp		\
+	CXWindowsClipboardTextConverter.cpp		\
+	CXWindowsClipboardUCS2Converter.cpp		\
+	CXWindowsClipboardUTF8Converter.cpp		\
+	CXWindowsEventQueueBuffer.cpp			\
+	CXWindowsKeyState.cpp					\
+	CXWindowsScreen.cpp						\
+	CXWindowsScreenSaver.cpp				\
+	CXWindowsUtil.cpp						\
+	CXWindowsClipboard.h					\
+	CXWindowsClipboardAnyBitmapConverter.h	\
+	CXWindowsClipboardBMPConverter.h		\
+	CXWindowsClipboardHTMLConverter.h		\
+	CXWindowsClipboardTextConverter.h		\
+	CXWindowsClipboardUCS2Converter.h		\
+	CXWindowsClipboardUTF8Converter.h		\
+	CXWindowsEventQueueBuffer.h				\
+	CXWindowsKeyState.h						\
+	CXWindowsScreen.h						\
+	CXWindowsScreenSaver.h					\
+	CXWindowsUtil.h							\
+	$(NULL)
+
+MSWINDOWS_SOURCE_FILES = \
+	CMSWindowsClipboard.cpp					\
+	CMSWindowsClipboardAnyTextConverter.cpp	\
+	CMSWindowsClipboardBitmapConverter.cpp	\
+	CMSWindowsClipboardHTMLConverter.cpp	\
+	CMSWindowsClipboardTextConverter.cpp	\
+	CMSWindowsClipboardUTF16Converter.cpp	\
+	CMSWindowsDesks.cpp						\
+	CMSWindowsEventQueueBuffer.cpp			\
+	CMSWindowsKeyState.cpp					\
+	CMSWindowsScreen.cpp					\
+	CMSWindowsScreenSaver.cpp				\
+	CMSWindowsUtil.cpp						\
+	CMSWindowsClipboard.h					\
+	CMSWindowsClipboardAnyTextConverter.h	\
+	CMSWindowsClipboardBitmapConverter.h	\
+	CMSWindowsClipboardHTMLConverter.h		\
+	CMSWindowsClipboardTextConverter.h		\
+	CMSWindowsClipboardUTF16Converter.h		\
+	CMSWindowsDesks.h						\
+	CMSWindowsEventQueueBuffer.h			\
+	CMSWindowsKeyState.h					\
+	CMSWindowsScreen.h						\
+	CMSWindowsScreenSaver.h					\
+	CMSWindowsUtil.h						\
+	$(NULL)
+
+MSWINDOWS_HOOK_SOURCE_FILES = \
+	CSynergyHook.cpp						\
+	CSynergyHook.h							\
+	$(NULL)
+
+CARBON_SOURCE_FILES = \
+	COSXClipboard.cpp						\
+	COSXClipboardAnyTextConverter.cpp		\
+	COSXClipboardTextConverter.cpp			\
+	COSXClipboardUTF16Converter.cpp			\
+	COSXEventQueueBuffer.cpp				\
+	COSXKeyState.cpp						\
+	COSXScreen.cpp							\
+	COSXScreenSaver.cpp						\
+	COSXClipboard.h							\
+	COSXClipboardAnyTextConverter.h			\
+	COSXClipboardTextConverter.h			\
+	COSXClipboardUTF16Converter.h			\
+	COSXEventQueueBuffer.h					\
+	COSXKeyState.h							\
+	COSXScreen.h							\
+	COSXScreenSaver.h						\
+	$(NULL)
+
 
 EXTRA_DIST = \
 	makehook.dsp							\
 	platform.dsp							\
 	synrgyhk.dsp							\
-	CMSWindowsClipboard.cpp					\
-	CMSWindowsClipboardAnyTextConverter.cpp	\
-	CMSWindowsClipboardTextConverter.cpp	\
-	CMSWindowsClipboardUTF16Converter.cpp	\
-	CMSWindowsPrimaryScreen.cpp				\
-	CMSWindowsScreen.cpp					\
-	CMSWindowsScreenSaver.cpp				\
-	CMSWindowsSecondaryScreen.cpp			\
-	CSynergyHook.cpp						\
-	CMSWindowsClipboard.h					\
-	CMSWindowsClipboardAnyTextConverter.h	\
-	CMSWindowsClipboardTextConverter.h		\
-	CMSWindowsClipboardUTF16Converter.h		\
-	CMSWindowsPrimaryScreen.h				\
-	CMSWindowsScreen.h						\
-	CMSWindowsScreenSaver.h					\
-	CMSWindowsSecondaryScreen.h				\
-	CSynergyHook.h							\
-	IMSWindowsScreenEventHandler.h			\
+	$(XWINDOWS_SOURCE_FILES)				\
+	$(MSWINDOWS_SOURCE_FILES)				\
+	$(MSWINDOWS_HOOK_SOURCE_FILES)			\
+	$(CARBON_SOURCE_FILES)					\
 	$(NULL)
 
 
@@ -129,34 +191,16 @@ MAINTAINERCLEANFILES = \
 
 
 noinst_LIBRARIES = libplatform.a
-libplatform_a_SOURCES = \
-	CXWindowsClipboard.cpp					\
-	CXWindowsClipboardTextConverter.cpp		\
-	CXWindowsClipboardUCS2Converter.cpp		\
-	CXWindowsClipboardUTF8Converter.cpp		\
-	CXWindowsPrimaryScreen.cpp				\
-	CXWindowsScreen.cpp						\
-	CXWindowsScreenSaver.cpp				\
-	CXWindowsSecondaryScreen.cpp			\
-	CXWindowsUtil.cpp						\
-	CXWindowsClipboard.h					\
-	CXWindowsClipboardTextConverter.h		\
-	CXWindowsClipboardUCS2Converter.h		\
-	CXWindowsClipboardUTF8Converter.h		\
-	CXWindowsPrimaryScreen.h				\
-	CXWindowsScreen.h						\
-	CXWindowsScreenSaver.h					\
-	CXWindowsSecondaryScreen.h				\
-	CXWindowsUtil.h							\
-	$(NULL)
-
+@CARBON_TRUE@libplatform_a_SOURCES = $(CARBON_SOURCE_FILES)
+@MSWINDOWS_TRUE@libplatform_a_SOURCES = $(MSWINDOWS_SOURCE_FILES)
+@XWINDOWS_TRUE@libplatform_a_SOURCES = $(XWINDOWS_SOURCE_FILES)
 INCLUDES = \
-	-I$(VDEPTH)/lib/common					\
-	-I$(VDEPTH)/lib/arch					\
-	-I$(VDEPTH)/lib/base 					\
-	-I$(VDEPTH)/lib/mt	 					\
-	-I$(VDEPTH)/lib/io	 					\
-	-I$(VDEPTH)/lib/synergy 				\
+	-I$(top_srcdir)/lib/common				\
+	-I$(top_srcdir)/lib/arch				\
+	-I$(top_srcdir)/lib/base 				\
+	-I$(top_srcdir)/lib/mt	 				\
+	-I$(top_srcdir)/lib/io	 				\
+	-I$(top_srcdir)/lib/synergy 			\
 	$(NULL)
 
 subdir = lib/platform
@@ -167,13 +211,142 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libplatform_a_AR = $(AR) cru
 libplatform_a_LIBADD =
-am_libplatform_a_OBJECTS = CXWindowsClipboard.$(OBJEXT) \
-	CXWindowsClipboardTextConverter.$(OBJEXT) \
-	CXWindowsClipboardUCS2Converter.$(OBJEXT) \
-	CXWindowsClipboardUTF8Converter.$(OBJEXT) \
-	CXWindowsPrimaryScreen.$(OBJEXT) CXWindowsScreen.$(OBJEXT) \
-	CXWindowsScreenSaver.$(OBJEXT) \
-	CXWindowsSecondaryScreen.$(OBJEXT) CXWindowsUtil.$(OBJEXT)
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@am_libplatform_a_OBJECTS = \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboard.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardAnyBitmapConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardBMPConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardHTMLConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardTextConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardUCS2Converter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardUTF8Converter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsEventQueueBuffer.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsKeyState.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsScreen.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsScreenSaver.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsUtil.$(OBJEXT)
+@CARBON_FALSE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@am_libplatform_a_OBJECTS =
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@am_libplatform_a_OBJECTS = \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboard.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardAnyTextConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardBitmapConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardHTMLConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardTextConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardUTF16Converter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsDesks.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsEventQueueBuffer.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsKeyState.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsScreen.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsScreenSaver.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsUtil.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboard.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardAnyBitmapConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardBMPConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardHTMLConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardTextConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardUCS2Converter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardUTF8Converter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsEventQueueBuffer.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsKeyState.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsScreen.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsScreenSaver.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsUtil.$(OBJEXT)
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@am_libplatform_a_OBJECTS = \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboard.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardAnyTextConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardBitmapConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardHTMLConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardTextConverter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardUTF16Converter.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsDesks.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsEventQueueBuffer.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsKeyState.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsScreen.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsScreenSaver.$(OBJEXT) \
+@CARBON_FALSE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsUtil.$(OBJEXT)
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@am_libplatform_a_OBJECTS = \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboard.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardAnyBitmapConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardBMPConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardHTMLConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardUCS2Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsClipboardUTF8Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsEventQueueBuffer.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsKeyState.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsScreen.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsScreenSaver.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	CXWindowsUtil.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	COSXClipboard.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	COSXClipboardAnyTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	COSXClipboardTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	COSXClipboardUTF16Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	COSXEventQueueBuffer.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	COSXKeyState.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	COSXScreen.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_TRUE@	COSXScreenSaver.$(OBJEXT)
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@am_libplatform_a_OBJECTS = \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@	COSXClipboard.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@	COSXClipboardAnyTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@	COSXClipboardTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@	COSXClipboardUTF16Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@	COSXEventQueueBuffer.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@	COSXKeyState.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@	COSXScreen.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_FALSE@@XWINDOWS_FALSE@	COSXScreenSaver.$(OBJEXT)
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@am_libplatform_a_OBJECTS = \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboard.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardAnyTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardBitmapConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardHTMLConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsClipboardUTF16Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsDesks.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsEventQueueBuffer.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsKeyState.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsScreen.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsScreenSaver.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CMSWindowsUtil.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboard.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardAnyBitmapConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardBMPConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardHTMLConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardUCS2Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsClipboardUTF8Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsEventQueueBuffer.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsKeyState.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsScreen.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsScreenSaver.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	CXWindowsUtil.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	COSXClipboard.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	COSXClipboardAnyTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	COSXClipboardTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	COSXClipboardUTF16Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	COSXEventQueueBuffer.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	COSXKeyState.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	COSXScreen.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_TRUE@	COSXScreenSaver.$(OBJEXT)
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@am_libplatform_a_OBJECTS = \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboard.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardAnyTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardBitmapConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardHTMLConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsClipboardUTF16Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsDesks.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsEventQueueBuffer.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsKeyState.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsScreen.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsScreenSaver.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	CMSWindowsUtil.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	COSXClipboard.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	COSXClipboardAnyTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	COSXClipboardTextConverter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	COSXClipboardUTF16Converter.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	COSXEventQueueBuffer.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	COSXKeyState.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	COSXScreen.$(OBJEXT) \
+@CARBON_TRUE@@MSWINDOWS_TRUE@@XWINDOWS_FALSE@	COSXScreenSaver.$(OBJEXT)
 libplatform_a_OBJECTS = $(am_libplatform_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -182,14 +355,36 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CXWindowsClipboard.Po \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CMSWindowsClipboard.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsClipboardAnyTextConverter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsClipboardBitmapConverter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsClipboardHTMLConverter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsClipboardTextConverter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsClipboardUTF16Converter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsDesks.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsEventQueueBuffer.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsKeyState.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsScreen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsScreenSaver.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CMSWindowsUtil.Po \
+@AMDEP_TRUE@	$(DEPDIR)/COSXClipboard.Po \
+@AMDEP_TRUE@	$(DEPDIR)/COSXClipboardAnyTextConverter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/COSXClipboardTextConverter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/COSXClipboardUTF16Converter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/COSXEventQueueBuffer.Po \
+@AMDEP_TRUE@	$(DEPDIR)/COSXKeyState.Po $(DEPDIR)/COSXScreen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/COSXScreenSaver.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CXWindowsClipboard.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CXWindowsClipboardAnyBitmapConverter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CXWindowsClipboardBMPConverter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CXWindowsClipboardHTMLConverter.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CXWindowsClipboardTextConverter.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CXWindowsClipboardUCS2Converter.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CXWindowsClipboardUTF8Converter.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CXWindowsPrimaryScreen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CXWindowsEventQueueBuffer.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CXWindowsKeyState.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CXWindowsScreen.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CXWindowsScreenSaver.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CXWindowsSecondaryScreen.Po \
 @AMDEP_TRUE@	$(DEPDIR)/CXWindowsUtil.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -233,14 +428,37 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsClipboard.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsClipboardAnyTextConverter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsClipboardBitmapConverter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsClipboardHTMLConverter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsClipboardTextConverter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsClipboardUTF16Converter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsDesks.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsEventQueueBuffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsKeyState.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsScreen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsScreenSaver.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CMSWindowsUtil.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COSXClipboard.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COSXClipboardAnyTextConverter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COSXClipboardTextConverter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COSXClipboardUTF16Converter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COSXEventQueueBuffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COSXKeyState.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COSXScreen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COSXScreenSaver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsClipboard.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsClipboardAnyBitmapConverter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsClipboardBMPConverter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsClipboardHTMLConverter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsClipboardTextConverter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsClipboardUCS2Converter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsClipboardUTF8Converter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsPrimaryScreen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsEventQueueBuffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsKeyState.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsScreen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsScreenSaver.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsSecondaryScreen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CXWindowsUtil.Po@am__quote@
 
 distclean-depend:

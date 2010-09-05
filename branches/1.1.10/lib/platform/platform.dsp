@@ -37,11 +37,11 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release"
-# PROP Intermediate_Dir "Release"
+# PROP Output_Dir "..\..\gen\build"
+# PROP Intermediate_Dir "..\..\gen\build"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\synergy" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\synergy" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\build\platform.pdb" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -61,11 +61,11 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug"
-# PROP Intermediate_Dir "Debug"
+# PROP Output_Dir "..\..\gen\debug"
+# PROP Intermediate_Dir "..\..\gen\debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\synergy" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\mt" /I "..\io" /I "..\synergy" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\debug\platform.pdb" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -95,6 +95,14 @@ SOURCE=.\CMSWindowsClipboardAnyTextConverter.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CMSWindowsClipboardBitmapConverter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardHTMLConverter.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CMSWindowsClipboardTextConverter.cpp
 # End Source File
 # Begin Source File
@@ -103,7 +111,15 @@ SOURCE=.\CMSWindowsClipboardUTF16Converter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsPrimaryScreen.cpp
+SOURCE=.\CMSWindowsDesks.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsEventQueueBuffer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsKeyState.cpp
 # End Source File
 # Begin Source File
 
@@ -115,7 +131,7 @@ SOURCE=.\CMSWindowsScreenSaver.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsSecondaryScreen.cpp
+SOURCE=.\CMSWindowsUtil.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -131,6 +147,14 @@ SOURCE=.\CMSWindowsClipboardAnyTextConverter.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CMSWindowsClipboardBitmapConverter.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsClipboardHTMLConverter.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CMSWindowsClipboardTextConverter.h
 # End Source File
 # Begin Source File
@@ -139,7 +163,15 @@ SOURCE=.\CMSWindowsClipboardUTF16Converter.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsPrimaryScreen.h
+SOURCE=.\CMSWindowsDesks.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsEventQueueBuffer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CMSWindowsKeyState.h
 # End Source File
 # Begin Source File
 
@@ -151,11 +183,7 @@ SOURCE=.\CMSWindowsScreenSaver.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CMSWindowsSecondaryScreen.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\IMSWindowsScreenEventHandler.h
+SOURCE=.\CMSWindowsUtil.h
 # End Source File
 # End Group
 # End Target

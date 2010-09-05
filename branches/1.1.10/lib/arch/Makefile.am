@@ -12,11 +12,54 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
-EXTRA_DIST =					\
-	arch.dsp					\
+COMMON_SOURCE_FILES =			\
+	CArch.cpp					\
+	CArchDaemonNone.cpp			\
+	CArchDaemonNone.h			\
+	XArch.cpp					\
+	CArch.h						\
+	IArchConsole.h				\
+	IArchDaemon.h				\
+	IArchFile.h					\
+	IArchLog.h					\
+	IArchMultithread.h			\
+	IArchNetwork.h				\
+	IArchSleep.h				\
+	IArchString.h				\
+	IArchSystem.h				\
+	IArchTaskBar.h				\
+	IArchTaskBarReceiver.h		\
+	IArchTime.h					\
+	XArch.h						\
+	$(NULL)
+UNIX_SOURCE_FILES =				\
+	CArchConsoleUnix.cpp		\
+	CArchDaemonUnix.cpp			\
+	CArchFileUnix.cpp			\
+	CArchLogUnix.cpp			\
+	CArchMultithreadPosix.cpp	\
+	CArchNetworkBSD.cpp			\
+	CArchSleepUnix.cpp			\
+	CArchStringUnix.cpp			\
+	CArchSystemUnix.cpp			\
+	CArchTaskBarXWindows.cpp	\
+	CArchTimeUnix.cpp			\
+	XArchUnix.cpp				\
+	CArchConsoleUnix.h			\
+	CArchDaemonUnix.h			\
+	CArchFileUnix.h				\
+	CArchLogUnix.h				\
+	CArchMultithreadPosix.h		\
+	CArchNetworkBSD.h			\
+	CArchSleepUnix.h			\
+	CArchStringUnix.h			\
+	CArchSystemUnix.h			\
+	CArchTaskBarXWindows.h		\
+	CArchTimeUnix.h				\
+	XArchUnix.h					\
+	$(NULL)
+WIN32_SOURCE_FILES = 			\
 	CArchConsoleWindows.cpp		\
 	CArchDaemonWindows.cpp		\
 	CArchFileWindows.cpp		\
@@ -26,6 +69,7 @@ EXTRA_DIST =					\
 	CArchNetworkWinsock.cpp		\
 	CArchSleepWindows.cpp		\
 	CArchStringWindows.cpp		\
+	CArchSystemWindows.cpp		\
 	CArchTaskBarWindows.cpp		\
 	CArchTimeWindows.cpp		\
 	XArchWindows.cpp			\
@@ -38,9 +82,18 @@ EXTRA_DIST =					\
 	CArchNetworkWinsock.h		\
 	CArchSleepWindows.h			\
 	CArchStringWindows.h		\
+	CArchSystemWindows.h		\
 	CArchTaskBarWindows.h		\
 	CArchTimeWindows.h			\
 	XArchWindows.h				\
+	$(NULL)
+
+EXTRA_DIST =					\
+	arch.dsp					\
+	CMultibyte.cpp				\
+	vsnprintf.cpp				\
+	$(UNIX_SOURCE_FILES)		\
+	$(WIN32_SOURCE_FILES)		\
 	$(NULL)
 
 MAINTAINERCLEANFILES =			\
@@ -48,54 +101,18 @@ MAINTAINERCLEANFILES =			\
 	$(NULL)
 
 noinst_LIBRARIES = libarch.a
+if UNIX
 libarch_a_SOURCES =				\
-	CArch.cpp					\
-	CArchImpl.cpp				\
-	XArch.cpp					\
-	CArch.h						\
-	IArchConsole.h				\
-	IArchDaemon.h				\
-	IArchFile.h					\
-	IArchLog.h					\
-	IArchMultithread.h			\
-	IArchNetwork.h				\
-	IArchSleep.h				\
-	IArchString.h				\
-	IArchTaskBar.h				\
-	IArchTaskBarReceiver.h		\
-	IArchTime.h					\
-	XArch.h						\
+	$(COMMON_SOURCE_FILES)		\
+	$(UNIX_SOURCE_FILES)		\
 	$(NULL)
-EXTRA_libarch_a_SOURCES =		\
-	CArchConsoleUnix.cpp		\
-	CArchDaemonNone.cpp			\
-	CArchDaemonUnix.cpp			\
-	CArchFileUnix.cpp			\
-	CArchLogUnix.cpp			\
-	CArchMultithreadPosix.cpp	\
-	CArchNetworkBSD.cpp			\
-	CArchSleepUnix.cpp			\
-	CArchStringUnix.cpp			\
-	CArchTaskBarXWindows.cpp	\
-	CArchTimeUnix.cpp			\
-	CMultibyte.cpp				\
-	CMultibyteOS.cpp			\
-	CMultibyteEmu.cpp			\
-	XArchUnix.cpp				\
-	vsnprintf.cpp				\
-	CArchConsoleUnix.h			\
-	CArchDaemonNone.h			\
-	CArchDaemonUnix.h			\
-	CArchFileUnix.h				\
-	CArchLogUnix.h				\
-	CArchMultithreadPosix.h		\
-	CArchNetworkBSD.h			\
-	CArchSleepUnix.h			\
-	CArchStringUnix.h			\
-	CArchTaskBarXWindows.h		\
-	CArchTimeUnix.h				\
-	XArchUnix.h					\
+endif
+if WIN32
+libarch_a_SOURCES =				\
+	$(COMMON_SOURCE_FILES)		\
+	$(WIN32_SOURCE_FILES)		\
 	$(NULL)
+endif
 INCLUDES =						\
-	-I$(VDEPTH)/lib/common		\
+	-I$(top_srcdir)/lib/common	\
 	$(NULL)

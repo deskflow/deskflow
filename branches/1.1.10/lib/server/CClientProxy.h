@@ -16,12 +16,10 @@
 #define CCLIENTPROXY_H
 
 #include "IClient.h"
-#include "CMutex.h"
+#include "CEvent.h"
 #include "CString.h"
 
-class IInputStream;
-class IOutputStream;
-class IServer;
+class IStream;
 
 //! Generic proxy for client
 class CClientProxy : public IClient {
@@ -29,43 +27,66 @@ public:
 	/*!
 	\c name is the name of the client.
 	*/
-	CClientProxy(IServer* server, const CString& name,
-							IInputStream* adoptedInput,
-							IOutputStream* adoptedOutput);
+	CClientProxy(const CString& name, IStream* adoptedStream);
 	~CClientProxy();
 
+	//! @name manipulators
+	//@{
+
+	//! Disconnect
+	/*!
+	Ask the client to disconnect, using \p msg as the reason.
+	*/
+	void				close(const char* msg);
+
+	//@}
 	//! @name accessors
 	//@{
 
-	//! Get server
+	//! Get stream
 	/*!
-	Returns the server passed to the c'tor.
+	Returns the stream passed to the c'tor.
 	*/
-	IServer*			getServer() const;
+	IStream*			getStream() const;
 
-	//! Get input stream
+	//! Get ready event type
 	/*!
-	Returns the input stream passed to the c'tor.
+	Returns the ready event type.  This is sent when the client has
+	completed the initial handshake.  Until it is sent, the client is
+	not fully connected.
 	*/
-	IInputStream*		getInputStream() const;
+	static CEvent::Type	getReadyEvent();
 
-	//! Get output stream
+	//! Get disconnect event type
 	/*!
-	Returns the output stream passed to the c'tor.
+	Returns the disconnect event type.  This is sent when the client
+	disconnects or is disconnected.  The target is getEventTarget().
 	*/
-	IOutputStream*		getOutputStream() const;
+	static CEvent::Type	getDisconnectedEvent();
+
+	//! Get clipboard changed event type
+	/*!
+	Returns the clipboard changed event type.  This is sent whenever the
+	contents of the clipboard has changed.  The data is a pointer to a
+	IScreen::CClipboardInfo.
+	*/
+	static CEvent::Type	getClipboardChangedEvent();
 
 	//@}
 
+	// IScreen
+	virtual void*		getEventTarget() const;
+	virtual bool		getClipboard(ClipboardID id, IClipboard*) const = 0;
+	virtual void		getShape(SInt32& x, SInt32& y,
+							SInt32& width, SInt32& height) const = 0;
+	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
+
 	// IClient overrides
-	virtual void		open() = 0;
-	virtual void		mainLoop() = 0;
-	virtual void		close() = 0;
 	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
 							UInt32 seqNum, KeyModifierMask mask,
 							bool forScreensaver) = 0;
 	virtual bool		leave() = 0;
-	virtual void		setClipboard(ClipboardID, const CString&) = 0;
+	virtual void		setClipboard(ClipboardID, const IClipboard*) = 0;
 	virtual void		grabClipboard(ClipboardID) = 0;
 	virtual void		setClipboardDirty(ClipboardID, bool) = 0;
 	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton) = 0;
@@ -75,31 +96,20 @@ public:
 	virtual void		mouseDown(ButtonID) = 0;
 	virtual void		mouseUp(ButtonID) = 0;
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
+	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
 	virtual void		mouseWheel(SInt32 delta) = 0;
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;
 	virtual void		setOptions(const COptionsList& options) = 0;
 	virtual CString		getName() const;
-	virtual SInt32		getJumpZoneSize() const = 0;
-	virtual void		getShape(SInt32& x, SInt32& y,
-							SInt32& width, SInt32& height) const = 0;
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
-	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
-
-protected:
-	//! Get mutex
-	/*!
-	Returns the mutex for this object.  Subclasses should use this
-	mutex to protect their data.
-	*/
-	const CMutex*		getMutex() const;
 
 private:
-	CMutex				m_mutex;
-	IServer*			m_server;
 	CString				m_name;
-	IInputStream*		m_input;
-	IOutputStream*		m_output;
+	IStream*			m_stream;
+
+	static CEvent::Type	s_readyEvent;
+	static CEvent::Type	s_disconnectedEvent;
+	static CEvent::Type	s_clipboardChangedEvent;
 };
 
 #endif

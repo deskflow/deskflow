@@ -47,6 +47,9 @@ public:
 	//! Get the port
 	int					getPort() const;
 
+	//! Get the interface
+	CString				getInterface() const;
+
 	//! Convert options to command line string
 	CString				getCommandLine(bool isClient,
 							const CString& serverName) const;
@@ -71,6 +74,7 @@ private:
 	bool				m_isClient;
 	CString				m_screenName;
 	int					m_port;
+	CString				m_interface;
 };
 
 #endif

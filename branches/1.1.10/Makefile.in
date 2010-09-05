@@ -94,63 +94,53 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = .
-VDEPTH = ./$(VPATH)
 
 SUBDIRS = \
-	lib						\
-	cmd						\
-	dist					\
+	lib								\
+	cmd								\
+	doc								\
+	dist							\
 	$(NULL)
 
 
 EXTRA_DIST = \
-	BUGS					\
-	FAQ						\
-	HISTORY					\
-	PORTING					\
-	TODO					\
-	all.dsp					\
-	synergy.dsw				\
-	doc/doxygen.cfg.in		\
-	examples/synergy.conf	\
+	all.dsp							\
+	synergy.dsw						\
+	synergy.xcode/project.pbxproj	\
+	examples/synergy.conf			\
 	$(NULL)
 
 
 MAINTAINERCLEANFILES = \
-	Makefile.in				\
-	aclocal.m4				\
-	config.h				\
-	config.h.in				\
-	config.log				\
-	config.status			\
-	configure				\
-	stamp-h.in				\
-	stamp-h1				\
-	doc/doxygen.cfg			\
-	doc/doxygen/html/*		\
+	Makefile.in						\
+	aclocal.m4						\
+	config.h						\
+	config.h.in						\
+	config.log						\
+	config.status					\
+	configure						\
+	stamp-h.in						\
+	stamp-h1						\
 	$(NULL)
 
 
 PKG_FILES = \
-	AUTHORS					\
-	BUGS					\
-	COPYING					\
-	ChangeLog				\
-	FAQ						\
-	HISTORY					\
-	INSTALL					\
-	NEWS					\
-	README					\
-	TODO					\
-	cmd/synergyc/synergyc	\
-	cmd/synergys/synergys	\
-	examples/synergy.conf	\
+	ChangeLog						\
+	README							\
+	cmd/synergyc/synergyc			\
+	cmd/synergys/synergys			\
+	examples/synergy.conf			\
+	$(NULL)
+
+PKG_DOC_FILES = \
+	doc/PORTING						\
+	doc/*.html						\
+	doc/*.css						\
 	$(NULL)
 
 PKG_PROG_FILES = \
-	synergyc				\
-	synergys				\
+	synergyc						\
+	synergys						\
 	$(NULL)
 
 
@@ -164,7 +154,7 @@ subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = doc/doxygen.cfg
+CONFIG_CLEAN_FILES =
 DIST_SOURCES =
 
 RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
@@ -172,7 +162,7 @@ RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
 	install-exec-recursive installdirs-recursive install-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = README ./stamp-h.in AUTHORS COPYING ChangeLog INSTALL \
-	Makefile.am Makefile.in NEWS TODO acinclude.m4 aclocal.m4 \
+	Makefile.am Makefile.in NEWS acinclude.m4 aclocal.m4 \
 	config.h.in config/config.guess config/config.sub \
 	config/depcomp config/install-sh config/missing \
 	config/mkinstalldirs configure configure.in
@@ -221,8 +211,6 @@ $(srcdir)/./stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4)
 
 distclean-hdr:
 	-rm -f config.h
-doc/doxygen.cfg: $(top_builddir)/config.status $(top_srcdir)/doc/doxygen.cfg.in
-	cd $(top_builddir) && CONFIG_FILES=$@ CONFIG_HEADERS= CONFIG_LINKS= $(SHELL) ./config.status
 uninstall-info-am:
 
 # This directory's subdirectories are mostly independent; you can cd
@@ -328,7 +316,7 @@ GZIP_ENV = --best
 distdir: $(DISTFILES)
 	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
 	mkdir $(distdir)
-	$(mkinstalldirs) $(distdir)/config $(distdir)/dist/rpm $(distdir)/doc $(distdir)/examples
+	$(mkinstalldirs) $(distdir)/config $(distdir)/dist/rpm $(distdir)/doc $(distdir)/examples $(distdir)/synergy.xcode
 	@for file in $(DISTFILES); do \
 	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
 	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
@@ -506,10 +494,12 @@ dist-pkg: all
 	rm -rf $(PKGTOPDIR)
 	mkdir $(PKGTOPDIR)
 	mkdir $(PKGTOPDIR)/@PACKAGE@-@VERSION@
+	mkdir $(PKGTOPDIR)/@PACKAGE@-@VERSION@/doc
 	cp $(PKG_FILES) $(PKGTOPDIR)/@PACKAGE@-@VERSION@
+	cp $(PKG_DOC_FILES) $(PKGTOPDIR)/@PACKAGE@-@VERSION@/doc
 	(cd $(PKGTOPDIR)/@PACKAGE@-@VERSION@; \
 		chmod 644 *; \
-		chmod 755 $(PKG_PROG_FILES); \
+		chmod 755 doc $(PKG_PROG_FILES); \
 		strip $(PKG_PROG_FILES) )
 	type=`uname -s -m | tr '[A-Z] ' '[a-z].'`; \
 	(cd $(PKGTOPDIR); tar cf - @PACKAGE@-@VERSION@ | \

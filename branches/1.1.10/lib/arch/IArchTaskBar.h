@@ -27,9 +27,6 @@ though each operation can be a no-op.
 */
 class IArchTaskBar : public IInterface {
 public:
-	// Event data is architecture dependent
-	typedef void* Event;
-
 	//! @name manipulators
 	//@{
 

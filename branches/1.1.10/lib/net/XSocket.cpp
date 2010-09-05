@@ -53,12 +53,14 @@ XSocketAddress::getWhat() const throw()
 		"XSocketAddressUnknown",
 		"XSocketAddressNotFound",
 		"XSocketAddressNoAddress",
+		"XSocketAddressUnsupported",
 		"XSocketAddressBadPort"
 	};
 	static const char* s_errorMsg[] = {
 		"unknown error for: %{1}:%{2}",
 		"address not found for: %{1}",
 		"no address for: %{1}",
+		"unsupported address for: %{1}",
 		"invalid port"				// m_port may not be set to the bad port
 	};
 	return format(s_errorID[m_error], s_errorMsg[m_error],

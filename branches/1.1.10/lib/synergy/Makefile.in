@@ -94,8 +94,6 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 NULL = 
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
 EXTRA_DIST = \
 	libsynergy.dsp				\
@@ -110,30 +108,32 @@ MAINTAINERCLEANFILES = \
 noinst_LIBRARIES = libsynergy.a
 libsynergy_a_SOURCES = \
 	CClipboard.cpp				\
-	CInputPacketStream.cpp		\
-	COutputPacketStream.cpp		\
-	CPrimaryScreen.cpp			\
+	CKeyState.cpp				\
+	CPacketStreamFilter.cpp		\
+	CPlatformScreen.cpp			\
 	CProtocolUtil.cpp			\
-	CSecondaryScreen.cpp		\
+	CScreen.cpp					\
+	IClipboard.cpp				\
+	IKeyState.cpp				\
+	IPrimaryScreen.cpp			\
+	IScreen.cpp					\
 	XScreen.cpp					\
 	XSynergy.cpp				\
 	CClipboard.h				\
-	CInputPacketStream.h		\
-	COutputPacketStream.h		\
-	CPrimaryScreen.h			\
+	CKeyState.h					\
+	CPacketStreamFilter.h		\
+	CPlatformScreen.h			\
 	CProtocolUtil.h				\
-	CSecondaryScreen.h			\
+	CScreen.h					\
 	ClipboardTypes.h			\
 	IClient.h					\
 	IClipboard.h				\
-	IPrimaryScreenFactory.h		\
-	IPrimaryScreenReceiver.h	\
+	IKeyState.h					\
+	IPlatformScreen.h			\
+	IPrimaryScreen.h			\
 	IScreen.h					\
-	IScreenEventHandler.h		\
-	IScreenReceiver.h			\
 	IScreenSaver.h				\
-	ISecondaryScreenFactory.h	\
-	IServer.h					\
+	ISecondaryScreen.h			\
 	KeyTypes.h					\
 	MouseTypes.h				\
 	OptionTypes.h				\
@@ -143,12 +143,12 @@ libsynergy_a_SOURCES = \
 	$(NULL)
 
 INCLUDES = \
-	-I$(VDEPTH)/lib/common		\
-	-I$(VDEPTH)/lib/arch		\
-	-I$(VDEPTH)/lib/base 		\
-	-I$(VDEPTH)/lib/mt	 		\
-	-I$(VDEPTH)/lib/io	 		\
-	-I$(VDEPTH)/lib/net	 		\
+	-I$(top_srcdir)/lib/common	\
+	-I$(top_srcdir)/lib/arch	\
+	-I$(top_srcdir)/lib/base 	\
+	-I$(top_srcdir)/lib/mt	 	\
+	-I$(top_srcdir)/lib/io	 	\
+	-I$(top_srcdir)/lib/net	 	\
 	$(NULL)
 
 subdir = lib/synergy
@@ -159,10 +159,11 @@ LIBRARIES = $(noinst_LIBRARIES)
 
 libsynergy_a_AR = $(AR) cru
 libsynergy_a_LIBADD =
-am_libsynergy_a_OBJECTS = CClipboard.$(OBJEXT) \
-	CInputPacketStream.$(OBJEXT) COutputPacketStream.$(OBJEXT) \
-	CPrimaryScreen.$(OBJEXT) CProtocolUtil.$(OBJEXT) \
-	CSecondaryScreen.$(OBJEXT) XScreen.$(OBJEXT) XSynergy.$(OBJEXT)
+am_libsynergy_a_OBJECTS = CClipboard.$(OBJEXT) CKeyState.$(OBJEXT) \
+	CPacketStreamFilter.$(OBJEXT) CPlatformScreen.$(OBJEXT) \
+	CProtocolUtil.$(OBJEXT) CScreen.$(OBJEXT) IClipboard.$(OBJEXT) \
+	IKeyState.$(OBJEXT) IPrimaryScreen.$(OBJEXT) IScreen.$(OBJEXT) \
+	XScreen.$(OBJEXT) XSynergy.$(OBJEXT)
 libsynergy_a_OBJECTS = $(am_libsynergy_a_OBJECTS)
 
 DEFS = @DEFS@
@@ -171,13 +172,13 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CClipboard.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CInputPacketStream.Po \
-@AMDEP_TRUE@	$(DEPDIR)/COutputPacketStream.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CPrimaryScreen.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CProtocolUtil.Po \
-@AMDEP_TRUE@	$(DEPDIR)/CSecondaryScreen.Po $(DEPDIR)/XScreen.Po \
-@AMDEP_TRUE@	$(DEPDIR)/XSynergy.Po
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CClipboard.Po $(DEPDIR)/CKeyState.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CPacketStreamFilter.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CPlatformScreen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/CProtocolUtil.Po $(DEPDIR)/CScreen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/IClipboard.Po $(DEPDIR)/IKeyState.Po \
+@AMDEP_TRUE@	$(DEPDIR)/IPrimaryScreen.Po $(DEPDIR)/IScreen.Po \
+@AMDEP_TRUE@	$(DEPDIR)/XScreen.Po $(DEPDIR)/XSynergy.Po
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
@@ -221,11 +222,15 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CClipboard.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CInputPacketStream.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/COutputPacketStream.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CPrimaryScreen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CKeyState.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CPacketStreamFilter.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CPlatformScreen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CProtocolUtil.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CSecondaryScreen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/CScreen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/IClipboard.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/IKeyState.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/IPrimaryScreen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/IScreen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XScreen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/XSynergy.Po@am__quote@
 

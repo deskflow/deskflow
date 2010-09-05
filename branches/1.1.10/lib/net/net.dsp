@@ -37,11 +37,11 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release"
-# PROP Intermediate_Dir "Release"
+# PROP Output_Dir "..\..\gen\build"
+# PROP Intermediate_Dir "..\..\gen\build"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\io" /I "..\mt" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /I "..\common" /I "..\arch" /I "..\base" /I "..\io" /I "..\mt" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\build\net.pdb" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -61,11 +61,11 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug"
-# PROP Intermediate_Dir "Debug"
+# PROP Output_Dir "..\..\gen\debug"
+# PROP Intermediate_Dir "..\..\gen\debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\io" /I "..\mt" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "..\common" /I "..\arch" /I "..\base" /I "..\io" /I "..\mt" /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fd"..\..\gen\debug\net.pdb" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -91,6 +91,10 @@ SOURCE=.\CNetworkAddress.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CSocketMultiplexer.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CTCPListenSocket.cpp
 # End Source File
 # Begin Source File
@@ -100,6 +104,18 @@ SOURCE=.\CTCPSocket.cpp
 # Begin Source File
 
 SOURCE=.\CTCPSocketFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IDataSocket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\IListenSocket.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ISocket.cpp
 # End Source File
 # Begin Source File
 
@@ -115,6 +131,10 @@ SOURCE=.\CNetworkAddress.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CSocketMultiplexer.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CTCPListenSocket.h
 # End Source File
 # Begin Source File
@@ -127,6 +147,10 @@ SOURCE=.\CTCPSocketFactory.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\IDataSocket.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\IListenSocket.h
 # End Source File
 # Begin Source File
@@ -136,6 +160,14 @@ SOURCE=.\ISocket.h
 # Begin Source File
 
 SOURCE=.\ISocketFactory.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ISocketMultiplexerJob.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TSocketMultiplexerMethodJob.h
 # End Source File
 # Begin Source File
 

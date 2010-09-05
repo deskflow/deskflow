@@ -13,45 +13,44 @@
  */
 
 #include "CClientProxy.h"
-#include "IInputStream.h"
-#include "IOutputStream.h"
+#include "CProtocolUtil.h"
+#include "IStream.h"
+#include "CLog.h"
 
 //
 // CClientProxy
 //
 
-CClientProxy::CClientProxy(IServer* server, const CString& name,
-				IInputStream* input, IOutputStream* output) :
-	m_server(server),
+CEvent::Type			CClientProxy::s_readyEvent           = CEvent::kUnknown;
+CEvent::Type			CClientProxy::s_disconnectedEvent    = CEvent::kUnknown;
+CEvent::Type			CClientProxy::s_clipboardChangedEvent= CEvent::kUnknown;
+
+CClientProxy::CClientProxy(const CString& name, IStream* stream) :
 	m_name(name),
-	m_input(input),
-	m_output(output)
+	m_stream(stream)
 {
 	// do nothing
 }
 
 CClientProxy::~CClientProxy()
 {
-	delete m_output;
-	delete m_input;
+	delete m_stream;
 }
 
-IServer*
-CClientProxy::getServer() const
+void
+CClientProxy::close(const char* msg)
 {
-	return m_server;
+	LOG((CLOG_DEBUG1 "send close \"%s\" to \"%s\"", msg, getName().c_str()));
+	CProtocolUtil::writef(getStream(), msg);
+
+	// force the close to be sent before we return
+	getStream()->flush();
 }
 
-IInputStream*
-CClientProxy::getInputStream() const
+IStream*
+CClientProxy::getStream() const
 {
-	return m_input;
-}
-
-IOutputStream*
-CClientProxy::getOutputStream() const
-{
-	return m_output;
+	return m_stream;
 }
 
 CString
@@ -60,8 +59,29 @@ CClientProxy::getName() const
 	return m_name;
 }
 
-const CMutex*
-CClientProxy::getMutex() const
+CEvent::Type
+CClientProxy::getReadyEvent()
 {
-	return &m_mutex;
+	return CEvent::registerTypeOnce(s_readyEvent,
+							"CClientProxy::ready");
+}
+
+CEvent::Type
+CClientProxy::getDisconnectedEvent()
+{
+	return CEvent::registerTypeOnce(s_disconnectedEvent,
+							"CClientProxy::disconnected");
+}
+
+CEvent::Type
+CClientProxy::getClipboardChangedEvent()
+{
+	return CEvent::registerTypeOnce(s_clipboardChangedEvent,
+							"CClientProxy::clipboardChanged");
+}
+
+void*
+CClientProxy::getEventTarget() const
+{
+	return static_cast<IScreen*>(const_cast<CClientProxy*>(this));
 }

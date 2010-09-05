@@ -7,7 +7,10 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#include "winres.h"
+#if !defined(IDC_STATIC)
+#define IDC_STATIC (-1)
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -99,6 +102,8 @@ END
 STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_FAILED              "Synergy is about to quit with errors or warnings.  Please check the log then click OK."
+    IDS_INIT_FAILED         "Synergy failed to initialize: %{1}"
+    IDS_UNCAUGHT_EXCEPTION  "Uncaught exception: %{1}"
 END
 
 #endif    // English (U.S.) resources

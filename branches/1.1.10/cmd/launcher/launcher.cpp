@@ -514,6 +514,11 @@ getCommandLine(HWND hwnd, bool testing)
 		cmdLine += " -z --no-restart --no-daemon";
 	}
 
+	// can't start as service on NT
+	else if (!CArchMiscWindows::isWindows95Family()) {
+		cmdLine += " --no-daemon";
+	}
+
 	// get the server name
 	CString server;
 	bool isClient = isClientChecked(hwnd);
@@ -826,6 +831,10 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		index = info->m_options.find(kOptionHalfDuplexNumLock);
 		setItemChecked(child, (index != info->m_options.end() &&
 											index->second != 0));
+		child = getItem(hwnd, IDC_ADD_HD_SCROLL_CHECK);
+		index = info->m_options.find(kOptionHalfDuplexScrollLock);
+		setItemChecked(child, (index != info->m_options.end() &&
+											index->second != 0));
 
 		// modifier options
 		for (UInt32 i = 0; i < sizeof(s_modifiers) /
@@ -935,9 +944,15 @@ addDlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			else {
 				info->m_options.erase(kOptionHalfDuplexNumLock);
 			}
+			child = getItem(hwnd, IDC_ADD_HD_SCROLL_CHECK);
+			if (isItemChecked(child)) {
+				info->m_options[kOptionHalfDuplexScrollLock] = 1;
+			}
+			else {
+				info->m_options.erase(kOptionHalfDuplexScrollLock);
+			}
 
 			// save modifier options
-			child = getItem(hwnd, IDC_ADD_HD_CAPS_CHECK);
 			for (UInt32 i = 0; i < sizeof(s_modifiers) /
 										sizeof(s_modifiers[0]); ++i) {
 				child            = getItem(hwnd, s_modifiers[i].m_ctrlID);

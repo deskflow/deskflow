@@ -12,41 +12,51 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = ../..
-VDEPTH = ./$(VPATH)/$(DEPTH)
 
-EXTRA_DIST =				\
-	base.dsp				\
+EXTRA_DIST =					\
+	base.dsp					\
 	$(NULL)
 
-MAINTAINERCLEANFILES =		\
-	Makefile.in				\
+MAINTAINERCLEANFILES =			\
+	Makefile.in					\
 	$(NULL)
 
 noinst_LIBRARIES = libbase.a
-libbase_a_SOURCES =			\
-	CFunctionJob.cpp		\
-	CJobList.cpp			\
-	CLog.cpp				\
-	CStopwatch.cpp			\
-	CStringUtil.cpp			\
-	CUnicode.cpp			\
-	LogOutputters.cpp		\
-	XBase.cpp				\
-	CFunctionJob.h			\
-	CJobList.h				\
-	CLog.h					\
-	CStopwatch.h			\
-	CString.h				\
-	CStringUtil.h			\
-	CUnicode.h				\
-	IJob.h					\
-	ILogOutputter.h			\
-	LogOutputters.h			\
-	TMethodJob.h			\
-	XBase.h					\
+libbase_a_SOURCES =				\
+	CEvent.cpp					\
+	CEventQueue.cpp				\
+	CFunctionEventJob.cpp		\
+	CFunctionJob.cpp			\
+	CLog.cpp					\
+	CSimpleEventQueueBuffer.cpp	\
+	CStopwatch.cpp				\
+	CStringUtil.cpp				\
+	CUnicode.cpp				\
+	IEventQueue.cpp				\
+	LogOutputters.cpp			\
+	XBase.cpp					\
+	CEvent.h					\
+	CEventQueue.h				\
+	CFunctionEventJob.h			\
+	CFunctionJob.h				\
+	CLog.h						\
+	CPriorityQueue.h			\
+	CSimpleEventQueueBuffer.h	\
+	CStopwatch.h				\
+	CString.h					\
+	CStringUtil.h				\
+	CUnicode.h					\
+	IEventJob.h					\
+	IEventQueue.h				\
+	IEventQueueBuffer.h			\
+	IJob.h						\
+	ILogOutputter.h				\
+	LogOutputters.h				\
+	TMethodEventJob.h			\
+	TMethodJob.h				\
+	XBase.h						\
 	$(NULL)
-INCLUDES =					\
-	-I$(VDEPTH)/lib/common	\
-	-I$(VDEPTH)/lib/arch	\
+INCLUDES =						\
+	-I$(top_srcdir)/lib/common	\
+	-I$(top_srcdir)/lib/arch	\
 	$(NULL)

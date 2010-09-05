@@ -18,7 +18,8 @@
 #include "CString.h"
 #include "BasicTypes.h"
 #include "stdmap.h"
-#if defined(X_DISPLAY_MISSING)
+#include "stdvector.h"
+#if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
@@ -27,6 +28,8 @@
 //! X11 utility functions
 class CXWindowsUtil {
 public:
+	typedef std::vector<KeySym> KeySyms;
+
 	//! Get property
 	/*!
 	Gets property \c property on \c window.  \b Appends the data to
@@ -69,6 +72,38 @@ public:
 	NoSymbol (0) if the character cannot be mapped.
 	*/
 	static KeySym		mapUCS4ToKeySym(UInt32);
+
+	//! Decompose a KeySym using dead keys
+	/*!
+	Decomposes \c keysym into its component keysyms.  All but the last
+	decomposed KeySym are dead keys.  Returns true iff the decomposition
+	was successful.
+	*/
+	static bool			decomposeKeySymWithDeadKeys(KeySym keysym,
+							KeySyms& decomposed);
+
+	//! Decompose a KeySym using the compose key
+	/*!
+	Decomposes \c keysym into its component keysyms.  The first key is
+	Multi_key and the rest are normal (i.e. not dead) keys.  Returns
+	true iff the decomposition was successful.
+	*/
+	static bool			decomposeKeySymWithCompose(KeySym keysym,
+							KeySyms& decomposed);
+
+	//! Convert Atom to its string
+	/*!
+	Converts \p atom to its string representation.
+	*/
+	static CString		atomToString(Display*, Atom atom);
+
+	//! Convert several Atoms to a string
+	/*!
+	Converts each atom in \p atoms to its string representation and
+	concatenates the results.
+	*/
+	static CString		atomsToString(Display* display,
+							const Atom* atom, UInt32 num);
 
 	//! X11 error handler
 	/*!
@@ -133,9 +168,12 @@ private:
 private:
 	typedef std::map<KeySym, UInt32> CKeySymMap;
 	typedef std::map<UInt32, KeySym> CUCS4Map;
+	typedef std::map<KeySym, KeySyms> CKeySymsMap;
 
 	static CKeySymMap	s_keySymToUCS4;
 	static CUCS4Map		s_UCS4ToKeySym;
+	static CKeySymsMap	s_deadKeyDecomposedKeySyms;
+	static CKeySymsMap	s_composeDecomposedKeySyms;
 };
 
 #endif

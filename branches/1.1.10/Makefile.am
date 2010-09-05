@@ -12,59 +12,48 @@
 
 ## Process this file with automake to produce Makefile.in
 NULL =
-DEPTH = .
-VDEPTH = ./$(VPATH)
 
-SUBDIRS =					\
-	lib						\
-	cmd						\
-	dist					\
+SUBDIRS =							\
+	lib								\
+	cmd								\
+	doc								\
+	dist							\
 	$(NULL)
 
-EXTRA_DIST =				\
-	BUGS					\
-	FAQ						\
-	HISTORY					\
-	PORTING					\
-	TODO					\
-	all.dsp					\
-	synergy.dsw				\
-	doc/doxygen.cfg.in		\
-	examples/synergy.conf	\
+EXTRA_DIST =						\
+	all.dsp							\
+	synergy.dsw						\
+	synergy.xcode/project.pbxproj	\
+	examples/synergy.conf			\
 	$(NULL)
 
-MAINTAINERCLEANFILES =		\
-	Makefile.in				\
-	aclocal.m4				\
-	config.h				\
-	config.h.in				\
-	config.log				\
-	config.status			\
-	configure				\
-	stamp-h.in				\
-	stamp-h1				\
-	doc/doxygen.cfg			\
-	doc/doxygen/html/*		\
+MAINTAINERCLEANFILES =				\
+	Makefile.in						\
+	aclocal.m4						\
+	config.h						\
+	config.h.in						\
+	config.log						\
+	config.status					\
+	configure						\
+	stamp-h.in						\
+	stamp-h1						\
 	$(NULL)
 
-PKG_FILES =					\
-	AUTHORS					\
-	BUGS					\
-	COPYING					\
-	ChangeLog				\
-	FAQ						\
-	HISTORY					\
-	INSTALL					\
-	NEWS					\
-	README					\
-	TODO					\
-	cmd/synergyc/synergyc	\
-	cmd/synergys/synergys	\
-	examples/synergy.conf	\
+PKG_FILES =							\
+	ChangeLog						\
+	README							\
+	cmd/synergyc/synergyc			\
+	cmd/synergys/synergys			\
+	examples/synergy.conf			\
 	$(NULL)
-PKG_PROG_FILES =			\
-	synergyc				\
-	synergys				\
+PKG_DOC_FILES =						\
+	doc/PORTING						\
+	doc/*.html						\
+	doc/*.css						\
+	$(NULL)
+PKG_PROG_FILES =					\
+	synergyc						\
+	synergys						\
 	$(NULL)
 
 # build doxygen documentation
@@ -96,10 +85,12 @@ dist-pkg: all
 	rm -rf $(PKGTOPDIR)
 	mkdir $(PKGTOPDIR)
 	mkdir $(PKGTOPDIR)/@PACKAGE@-@VERSION@
+	mkdir $(PKGTOPDIR)/@PACKAGE@-@VERSION@/doc
 	cp $(PKG_FILES) $(PKGTOPDIR)/@PACKAGE@-@VERSION@
+	cp $(PKG_DOC_FILES) $(PKGTOPDIR)/@PACKAGE@-@VERSION@/doc
 	(cd $(PKGTOPDIR)/@PACKAGE@-@VERSION@; \
 		chmod 644 *; \
-		chmod 755 $(PKG_PROG_FILES); \
+		chmod 755 doc $(PKG_PROG_FILES); \
 		strip $(PKG_PROG_FILES) )
 	type=`uname -s -m | tr '[A-Z] ' '[a-z].'`; \
 	(cd $(PKGTOPDIR); tar cf - @PACKAGE@-@VERSION@ | \
