@@ -1,0 +1,21 @@
+Synergy
+=======
+
+synergy: [noun] a mutually advantageous conjunction of distinct elements
+
+Synergy lets you easily share a single mouse and keyboard between
+multiple computers with different operating systems, each with its
+own display, without special hardware.  It's intended for users
+with multiple computers on their desk since each system uses its
+own display.
+
+Redirecting the mouse and keyboard is as simple as moving the mouse
+off the edge of your screen.  Synergy also merges the clipboards of
+all the systems into one, allowing cut-and-paste between systems.
+Furthermore, it synchronizes screen savers so they all start and stop
+together and, if screen locking is enabled, only one screen requires
+a password to unlock them all.
+
+Synergy is open source and released under the GNU Public License (GPL).
+
+Please see doc/index.html for more information.
