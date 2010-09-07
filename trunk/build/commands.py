@@ -183,15 +183,9 @@ class InternalCommands:
 	def persist_cmake(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
 		# code; we don't care about the version, since CMakeLists worrys about this for us.
-		p = subprocess.Popen(
-			[self.cmake_cmd, '--version'],
-			stdout=subprocess.PIPE,
-			stderr=subprocess.PIPE,
-			shell=True)		
-
-		stdout, stderr = p.communicate()
+		err = os.system('%s --version' % self.cmake_cmd)
 		
-		if p.returncode != 0:
+		if err != 0:
 			# if return code from cmake is not 0, then either something has
 			# gone terribly wrong with --version, or it genuinely doesn't exist.
 			print ('Could not find `%s` in system path.\n'
