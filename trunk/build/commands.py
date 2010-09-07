@@ -42,6 +42,8 @@ class InternalCommands:
 	qtpro_filename = 'qsynergy.pro'
 	doxygen_filename = 'doxygen.cfg'
 
+	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
+
 	# try_chdir(...) and restore_chdir() will use this
 	prevdir = ''
 	
@@ -179,52 +181,25 @@ class InternalCommands:
 		self.set_conf_run()
 
 	def persist_cmake(self):
-		if sys.platform == 'win32':
+		# even though we're running `cmake --version`, we're only doing this for the 0 return
+		# code; we don't care about the version, since CMakeLists worrys about this for us.
+		p = subprocess.Popen(
+			[self.cmake_cmd, '--version'],
+			stdout=subprocess.PIPE,
+			stderr=subprocess.PIPE,
+			shell=True)		
+
+		stdout, stderr = p.communicate()
 		
-			version = '>= 2.8.0'
-			found_cmd = ''
-			for test_cmd in (self.cmake_cmd, r'tool\cmake\bin\%s' % self.cmake_cmd):
-				print 'Testing for CMake version %s by running `%s`...' % (version, test_cmd)
-				p = subprocess.Popen([test_cmd, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-				stdout, stderr = p.communicate()
-				m = re.search('cmake version (2\.8\.\d+)', stdout)
-				if p.returncode == 0 and m:
-					# found one that works, hurrah!
-					print 'Found valid CMake version %s' % m.group(1)
-					found_cmd = test_cmd
-					# HACK: gotta go out so just hacking this for now
-					if found_cmd == r'tool\cmake\bin\%s' % self.cmake_cmd:
-						found_cmd = r'..\tool\cmake\bin\%s' % self.cmake_cmd
-					break
-			
-			if not found_cmd:
-				
-				found_cmake = False
-				
-				# if prompting allowed
-				if not self.no_prompts:
-					msg = 'CMake 2.8.0 not installed. Auto download now? [Y/n]'
-					print msg,
-					yn = raw_input()
-					
-					# if response was anyting but no
-					if yn not in ['n', 'N']:
-						if not os.path.exists('tool'):
-							os.mkdir('tool')
-						
-						err = os.system(r'svn checkout https://synergy-plus.googlecode.com/svn/tools/win/cmake tool\cmake')
-						if err != 0:
-							raise Exception('Unable to get cmake from repository with error code code: ' + str(err))
-						
-						found_cmd = r'..\tool\cmake\bin\%s' % self.cmake_cmd
-						found_cmake = True
-				
-				# if cmake was not found
-				if not found_cmake:
-					raise Exception('Cannot continue without CMake, exiting.')
-			
-			return found_cmd
-		else:
+		# we don't need to worry about the version; CmakeLists.txt does this for us!
+		if p.returncode != 0:
+			# if return code from cmake is not 0, then either something has
+			# gone terribly wrong with --version, or it genuinely doesn't exist.
+			print ('Could not find `%s` in system path.\n'
+			       'Download the latest version from:\n  %s') % (
+				self.cmake_cmd, self.cmake_url)
+			raise Exception('Cannot continue without CMake.')
+		else:	
 			return self.cmake_cmd
 
 	def build(self, targets=[]):
