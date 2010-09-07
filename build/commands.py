@@ -191,7 +191,6 @@ class InternalCommands:
 
 		stdout, stderr = p.communicate()
 		
-		# we don't need to worry about the version; CmakeLists.txt does this for us!
 		if p.returncode != 0:
 			# if return code from cmake is not 0, then either something has
 			# gone terribly wrong with --version, or it genuinely doesn't exist.
