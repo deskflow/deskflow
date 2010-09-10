@@ -22,10 +22,18 @@ class FtpUploader:
 		self.password = password
 		self.dir = dir
 
-	def run(self, src, dest):
+	def run(self, src, dest, replace=False):
 		
 		ftp = FTP(self.host, self.user, self.password)
 		ftp.cwd(self.dir)
+
+		# check to see if we should stop here
+		if not replace:
+			files = ftp.nlst()
+			if dest in files:
+				print 'Already exists, skipping.'
+				ftp.close()
+				return
 		
 		f = open(src, 'rb')
 		ftp.storbinary('STOR ' + dest, f)
