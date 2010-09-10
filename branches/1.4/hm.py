@@ -51,8 +51,7 @@ cmd_opt_dict = {
 	'clean' 	: [build_options, build_options_long],
 	'update' 	: ['', []],
 	'install' 	: ['', []],
-	'dist'		: ['', []],
-	'distftp'       : ['', ['host=', 'user=', 'pass=', 'dir=']],
+	'dist'		: ['', ['ftp-host=', 'ftp-user=', 'ftp-pass=', 'ftp-dir=']],
 	'kill' 		: ['', []],
 	'usage' 	: ['', []],
 	'revision' 	: ['', []],
@@ -73,19 +72,10 @@ def complete_command(arg):
 	completions = []
 	
 	for cmd, optarg in cmd_opt_dict.iteritems():
-		# if command was matched fully, return only this, so that
-		# if `dist` is typed, it will return only `dist` and not
-		# `dist` and `distftp` for example.
-		if cmd == arg:
-			return [cmd,]
 		if cmd.startswith(arg):
 			completions.append(cmd)
 	
 	for alias, cmd in cmd_alias_dict.iteritems():
-		# don't know if this will work just like above, but it's
-		# probably worth adding.
-		if alias == arg:
-			return [alias,]
 		if alias.startswith(arg):
 			completions.append(alias)
 	
