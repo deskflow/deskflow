@@ -1,4 +1,0 @@
-#summary Synergy use cases, to be included in specification
-#labels Deprecated
-
-The content of this page has been moved to [SpecDesign#Network_Cases SpecDesign].

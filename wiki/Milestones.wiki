@@ -1,4 +1,0 @@
-#summary Project milestones assigned to issues
-#labels Deprecated
-
-We no longer use the original format of M1, M2, etc. Instead we now use version numbers so that we can be more organised.

@@ -1,4 +1,0 @@
-#summary Specification: Introduction
-#labels Deprecated
-
-The specification has been consolidated into one page: [Specification]

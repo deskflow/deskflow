@@ -1,4 +1,0 @@
-#summary Forked versions of Synergy2, other than Synergy+
-#labels Deprecated
-
-Please see RelatedProjects.

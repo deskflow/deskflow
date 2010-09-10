@@ -1,4 +1,0 @@
-#summary Specification: Plan & Guide
-#labels Deprecated
-
-The specification has been consolidated into one page: [Specification]

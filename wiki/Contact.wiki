@@ -1,4 +1,0 @@
-#summary How to get in touch with the developers
-#labels Deprecated
-
-Please refer to the [Members] wiki page.

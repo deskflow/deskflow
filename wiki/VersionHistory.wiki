@@ -1,4 +1,0 @@
-#summary Details about major releases of Synergy+
-#labels Deprecated
-
-This page has moved to [Versions].

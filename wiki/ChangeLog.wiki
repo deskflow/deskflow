@@ -1,8 +1,0 @@
-#summary Changes made to Synergy+ since the fork began
-#labels Deprecated
-
-We don't have a !ChangeLog right now since we're busy with other stuff. However, you can take a look at these pages which will give you an idea of what we've fixed.
-
-  * The list of [http://code.google.com/p/synergy-plus/issues/list?can=1&q=status%3AFixed%2CVerified fixed and verified issues]
-  * The list of [http://code.google.com/p/synergy-plus/source/list changes to the source code]
-  * The [Versions versions wiki page] (what we intend on to fixing)

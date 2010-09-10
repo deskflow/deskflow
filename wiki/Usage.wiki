@@ -1,4 +1,0 @@
-#summary Tips and tricks for Synergy+ usage
-#labels Deprecated
-
-The content of this page has been moved to [UserFAQ].
