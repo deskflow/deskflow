@@ -429,9 +429,10 @@ class InternalCommands:
 		if not ftp:
 			raise Exception('FTP info not defined.')
 		
-		name = self.dist_name(type)
-		print 'Uploading %s to FTP server %s...' % (name, ftp.host)
-		ftp.run('bin/' + name, self.dist_name_rev(type))
+		src = self.dist_name(type)
+		dest = self.dist_name_rev(type)
+		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
+		ftp.run('bin/' + src, dest)
 		print 'Done'
 	
 	def dist_name(self, type):

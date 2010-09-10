@@ -18,7 +18,7 @@
 import sys, os, ConfigParser, subprocess, shutil, re, ftputil
 
 class InternalCommands:
-
+	
 	project = 'synergy-plus'
 	setup_version = 4 # increment to force setup/config
 	website_url = 'http://code.google.com/p/synergy-plus'
@@ -361,7 +361,7 @@ class InternalCommands:
 		else:
 			raise Exception('Not implemented for platform: ' + sys.platform)
 				
-	def dist(self, type, ftp=None):
+	def dist(self, type):
 
 		# Package is supported by default.
 		package_unsupported = False
@@ -408,11 +408,18 @@ class InternalCommands:
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
 		
-		if type and ftp:
-			name = self.dist_name(type)
-			print 'Uploading %s to FTP server %s...' % (name, ftp.host)
-			ftp.run('bin/' + name, self.dist_name_rev(type))
-			print 'Done'
+
+	def distftp(self, type, ftp):
+		if not type:
+			raise Exception('Type not specified.')
+		
+		if not ftp:
+			raise Exception('FTP info not defined.')
+		
+		name = self.dist_name(type)
+		print 'Uploading %s to FTP server %s...' % (name, ftp.host)
+		ftp.run('bin/' + name, self.dist_name_rev(type))
+		print 'Done'
 	
 	def dist_name(self, type):
 		ext = None
@@ -808,28 +815,35 @@ class CommandHandler:
 		type = None
 		if len(self.args) > 0:
 			type = self.args[0]
+				
+		self.ic.dist(type)
+
+	def distftp(self):
+		type = None
+		host = None
+		user = None
+		password = None
+		dir = None
 		
-		ftp_host = None
-		ftp_user = None
-		ftp_password = None
-		ftp_dir = None
+		if len(self.args) > 0:
+			type = self.args[0]
 		
 		for o, a in self.opts:
-			if o == '--ftp-host':
-				ftp_host = a
-			elif o == '--ftp-user':
-				ftp_user = a
-			elif o == '--ftp-pass':
-				ftp_password = a
-			elif o == '--ftp-dir':
-				ftp_dir = a
+			if o == '--host':
+				host = a
+			elif o == '--user':
+				user = a
+			elif o == '--pass':
+				password = a
+			elif o == '--dir':
+				dir = a
 		
 		ftp = None
-		if ftp_host:
+		if host:
 			ftp = ftputil.FtpUploader(
-				ftp_host, ftp_user, ftp_password, ftp_dir)
+				host, user, password, dir)
 		
-		self.ic.dist(type, ftp)
+		self.ic.distftp(type, ftp)
 	
 	def destroy(self):
 		self.ic.destroy()
