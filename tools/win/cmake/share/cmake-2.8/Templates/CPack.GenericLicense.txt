@@ -1,5 +1,0 @@
-LICENSE
-=======
-
-This is an installer created using CPack (http://www.cmake.org). No license provided.
-

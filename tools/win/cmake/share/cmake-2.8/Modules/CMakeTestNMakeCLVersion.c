@@ -1,2 +1,0 @@
-VERSION=_MSC_VER
-
