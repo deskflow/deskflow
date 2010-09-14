@@ -29,6 +29,7 @@ class InternalCommands:
 	make_cmd = 'make'
 	xcodebuild_cmd = 'xcodebuild'
 	w32_make_cmd = 'mingw32-make'
+	w32_qt_version = '4.6.2'
 
 	source_dir = '..' # Source, relative to build.
 	cmake_dir = 'cmake'
@@ -164,6 +165,9 @@ class InternalCommands:
 		# allow user to skip qui compile
 		if self.enable_make_gui:
 			
+			# make sure we have qmake
+			self.persist_qmake()
+			
 			qmake_cmd_string = self.qmake_cmd + ' ' + self.qtpro_filename
 			print "Configuring with QMake (%s)..." % qmake_cmd_string
 			
@@ -191,6 +195,49 @@ class InternalCommands:
 			raise Exception('Cannot continue without CMake.')
 		else:	
 			return self.cmake_cmd
+
+	def persist_qt(self):
+		self.persist_qmake()
+		if sys.platform == 'win32':
+			self.persist_w32_make()
+
+	def persist_qmake(self):
+		try:
+			p = subprocess.Popen(
+				[self.qmake_cmd, '--version'], 
+				stdout=subprocess.PIPE, 
+				stderr=subprocess.PIPE)
+		except:
+			print >> sys.stderr, 'Error: Could not find qmake.'
+			if sys.platform == 'win32': # windows devs usually need hints ;)
+				print (
+					'Suggestions:\n'
+					'1. Ensure that qmake.exe exists in your system path.\n'
+					'2. Try to download Qt (check our dev FAQ for links):\n'
+					'  qt-sdk-win-opensource-2010.02.exe')
+			raise Exception('Cannot continue without qmake.')
+		
+		stdout, stderr = p.communicate()
+		if p.returncode != 0:
+			raise Exception('Could not test for cmake: %s' % stderr)
+		else:
+			m = re.search('.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
+			if m:
+				if sys.platform == 'win32':
+					ver = m.group(1)
+					if ver != self.w32_qt_version: # TODO: test properly
+						print >> sys.stderr, (
+							'Warning: Not using supported Qt version %s'
+							' (your version is %s).'
+							) % (self.w32_qt_version, ver)
+				else:
+					pass # any version should be ok for other platforms
+			else:
+				raise Exception('Could not find qmake version.')
+
+	def persist_w32_make():
+		# TODO
+		pass
 
 	def build(self, targets=[]):
 
