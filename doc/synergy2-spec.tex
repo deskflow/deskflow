@@ -1,0 +1,57 @@
+\documentclass{article}
+\title{Synergy 2 Specification}
+\author{Nick Bolton}
+
+\begin{document}
+
+\maketitle
+
+\section{Synopsis}
+
+Synergy needs rewriting from scratch in order to provide a long term fix for 
+bugs such as the ``sticky keys'' issue. It is difficult to fix bugs in the
+current version of Synergy without causing regressions.
+
+\subsection{Work in Progress}
+
+This document is our first step towards designing version 2 of Synergy, so it's
+very much a work in progress, and might take some time to complete (that is, 
+if we ever run with it). Also, please feel free to correct my bad spelling. 
+
+\section{Methodology}
+
+Many developers before now have vowed to rewrite Synergy. Unfortunately though,
+this has never materialised due to lack of motivation and momentum. To solve 
+this problem, we need to use an Agile development methodology (such as Scrum).
+
+By assigning a very small number of user stories to 1 month sprints, we can
+ensure that releases are being constantly pushed out.
+
+\subsection{Unit Testing}
+
+Open source software should be easy for new developers to modify without too
+much risk of breaking everything. Currently, applying patches is very risky, 
+since it usually cause regressions. This problem can be solved by using TDD 
+(test driven development), which will help us to spot instabilities early and
+establish blame.
+
+\subsection{User Stores}
+
+The problem with defining features for Synergy is that on the surface it appears
+to be a very simple tool with one primary requirement; to move the cursor 
+between the screens of independant computers. This is a problem in more than one
+way:
+
+\begin{enumerate}
+\item It makes people feel that there should be more features (there seldom
+ should!).
+\item It's difficult to split that one requirement into many user stories.
+\end{enumerate}
+
+In Scrum, the primary requirement as described above, would be called an
+ ``Epic'', because it will absolutely have to span multiple iterations. This
+document will attempt to carve up this Epic in to deliverable features. One
+strategy would be to divide by operating system; i.e. first we support only
+Windows.
+
+\end{document}
