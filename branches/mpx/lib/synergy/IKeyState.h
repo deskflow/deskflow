@@ -35,9 +35,9 @@ public:
 	//! Key event data
 	class CKeyInfo {
 	public:
-		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
+		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count, UInt8 id);
 		static CKeyInfo* alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count,
-							const std::set<CString>& destinations);
+							const std::set<CString>& destinations, UInt8 id);
 		static CKeyInfo* alloc(const CKeyInfo&);
 
 		static bool isDefault(const char* screens);
@@ -53,6 +53,7 @@ public:
 		SInt32			m_count;
 		char*			m_screens;
 		char			m_screensBuffer[1];
+		UInt8			m_id;
 	};
 
 	typedef std::set<KeyButton> KeyButtonSet;
@@ -65,14 +66,14 @@ public:
 	Causes the key state to get updated to reflect the current keyboard
 	mapping.
 	*/
-	virtual void		updateKeyMap() = 0;
+	virtual void		updateKeyMap(UInt8 id) = 0;
 
 	//! Update the key state
 	/*!
 	Causes the key state to get updated to reflect the physical keyboard
 	state.
 	*/
-	virtual void		updateKeyState() = 0;
+	virtual void		updateKeyState(UInt8 id) = 0;
 
 	//! Set half-duplex mask
 	/*!
@@ -80,41 +81,41 @@ public:
 	toggle key doesn't report a key release when toggled on and
 	doesn't report a key press when toggled off.
 	*/
-	virtual void		setHalfDuplexMask(KeyModifierMask) = 0;
+	virtual void		setHalfDuplexMask(KeyModifierMask, UInt8 id) = 0;
 
 	//! Fake a key press
 	/*!
 	Synthesizes a key press event and updates the key state.
 	*/
-	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
-							KeyButton button) = 0;
+	virtual void		fakeKeyDown(KeyID kId, KeyModifierMask mask,
+							KeyButton button, UInt8 id) = 0;
 
 	//! Fake a key repeat
 	/*!
 	Synthesizes a key repeat event and updates the key state.
 	*/
-	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-							SInt32 count, KeyButton button) = 0;
+	virtual void		fakeKeyRepeat(KeyID kId, KeyModifierMask mask,
+							SInt32 count, KeyButton button, UInt8 id) = 0;
 
 	//! Fake a key release
 	/*!
 	Synthesizes a key release event and updates the key state.
 	*/
-	virtual void		fakeKeyUp(KeyButton button) = 0;
+	virtual void		fakeKeyUp(KeyButton button, UInt8 id) = 0;
 
 	//! Fake key releases for all fake pressed keys
 	/*!
 	Synthesizes a key release event for every key that is synthetically
 	pressed and updates the key state.
 	*/
-	virtual void		fakeAllKeysUp() = 0;
+	virtual void		fakeAllKeysUp(UInt8 id) = 0;
 
 	//! Fake ctrl+alt+del
 	/*!
 	Synthesize a press of ctrl+alt+del.  Return true if processing is
 	complete and false if normal key processing should continue.
 	*/
-	virtual bool		fakeCtrlAltDel() = 0;
+	virtual bool		fakeCtrlAltDel(UInt8 id) = 0;
 
 	//@}
 	//! @name accessors
@@ -125,7 +126,7 @@ public:
 	Returns true iff the given key is down.  Half-duplex toggles
 	always return false.
 	*/
-	virtual bool		isKeyDown(KeyButton) const = 0;
+	virtual bool		isKeyDown(KeyButton, UInt8 id) const = 0;
 
 	//! Get the active modifiers
 	/*!
@@ -133,7 +134,7 @@ public:
 	shadowed state.
 	*/
 	virtual KeyModifierMask
-						getActiveModifiers() const = 0;
+						getActiveModifiers(UInt8 id) const = 0;
 
 	//! Get the active modifiers from OS
 	/*!
@@ -141,20 +142,20 @@ public:
 	operating system.
 	*/
 	virtual KeyModifierMask
-						pollActiveModifiers() const = 0;
+						pollActiveModifiers(UInt8 id) const = 0;
 
 	//! Get the active keyboard layout from OS
 	/*!
 	Returns the active keyboard layout according to the operating system.
 	*/
-	virtual SInt32		pollActiveGroup() const = 0;
+	virtual SInt32		pollActiveGroup(UInt8 id) const = 0;
 
 	//! Get the keys currently pressed from OS
 	/*!
 	Adds any keys that are currently pressed according to the operating
 	system to \p pressedKeys.
 	*/
-	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
+	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys, UInt8 id) const = 0;
 
 	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
 	static CEvent::Type	getKeyDownEvent();

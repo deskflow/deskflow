@@ -40,16 +40,16 @@ public:
 	screen is being entered because the screen saver is starting.
 	Subsequent clipboard events should report \p seqNum.
 	*/
-	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
-							UInt32 seqNum, KeyModifierMask mask,
-							bool forScreensaver) = 0;
+	virtual void		enter(SInt32 xAbs, SInt32 yAbs,	UInt32 seqNum, 
+				      KeyModifierMask mask, bool forScreensaver,
+				      UInt8 kId, UInt8 pId) = 0;
 
 	//! Leave screen
 	/*!
 	Leave the screen.  Return false iff the user may not leave the
 	client's screen (because, for example, a button is down).
 	*/
-	virtual bool		leave() = 0;
+	virtual bool		leave(UInt8 id) = 0;
 
 	//! Set clipboard
 	/*!
@@ -84,48 +84,48 @@ public:
 	synthesize an up or repeat for the same client key synthesized by
 	keyDown().
 	*/
-	virtual void		keyDown(KeyID id, KeyModifierMask, KeyButton) = 0;
+	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton, UInt8) = 0;
 
 	//! Notify of key repeat
 	/*!
 	Synthesize key events to generate a press and release of key \c id
 	\c count times.  If possible match the given modifier mask.
 	*/
-	virtual void		keyRepeat(KeyID id, KeyModifierMask,
-							SInt32 count, KeyButton) = 0;
+	virtual void		keyRepeat(KeyID, KeyModifierMask,
+							SInt32 count, KeyButton, UInt8) = 0;
 
 	//! Notify of key release
 	/*!
 	Synthesize key events to generate a release of key \c id.  If possible
 	match the given modifier mask.
 	*/
-	virtual void		keyUp(KeyID id, KeyModifierMask, KeyButton) = 0;
+	virtual void keyUp(KeyID, KeyModifierMask, KeyButton, UInt8) = 0;
 
 	//! Notify of mouse press
 	/*!
 	Synthesize mouse events to generate a press of mouse button \c id.
 	*/
-	virtual void		mouseDown(ButtonID id) = 0;
+	virtual void mouseDown(ButtonID button, UInt8 id) = 0;
 
 	//! Notify of mouse release
 	/*!
 	Synthesize mouse events to generate a release of mouse button \c id.
 	*/
-	virtual void		mouseUp(ButtonID id) = 0;
+	virtual void mouseUp(ButtonID button, UInt8 id) = 0;
 
 	//! Notify of mouse motion
 	/*!
 	Synthesize mouse events to generate mouse motion to the absolute
 	screen position \c xAbs,yAbs.
 	*/
-	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
+	virtual void mouseMove(SInt32 xAbs, SInt32 yAbs, UInt8 id) = 0;
 
 	//! Notify of mouse motion
 	/*!
 	Synthesize mouse events to generate mouse motion by the relative
 	amount \c xRel,yRel.
 	*/
-	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
+	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel, UInt8 id) = 0;
 
 	//! Notify of mouse wheel motion
 	/*!
@@ -134,7 +134,7 @@ public:
 	to the right and negative for motion towards the user or to the left.
 	Each wheel click should generate a delta of +/-120.
 	*/
-	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
+	virtual void mouseWheel(SInt32 xDelta, SInt32 yDelta, UInt8 id) = 0;
 
 	//! Notify of screen saver change
 	virtual void		screensaver(bool activate) = 0;
@@ -169,7 +169,8 @@ public:
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const = 0;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const = 0;
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
+	virtual void		getCursorPos(SInt32& x, SInt32& y, UInt8 id) const = 0;
+
 };
 
 #endif

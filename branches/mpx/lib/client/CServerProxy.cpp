@@ -32,6 +32,7 @@
 
 CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 	m_client(client),
+	m_dev(CDeviceManager::getInstance()),
 	m_stream(stream),
 	m_seqNum(0),
 	m_compressMouse(false),
@@ -49,8 +50,8 @@ CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 	assert(m_stream != NULL);
 
 	// initialize modifier translation table
-	for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id)
-		m_modifierTranslationTable[id] = id;
+	for (KeyModifierID kId = 0; kId < kKeyModifierIDLast; ++kId)
+		m_modifierTranslationTable[kId] = kId;
 
 	// handle data on stream
 	EVENTQUEUE->adoptHandler(IStream::getInputReadyEvent(),
@@ -329,19 +330,19 @@ CServerProxy::onInfoChanged()
 }
 
 bool
-CServerProxy::onGrabClipboard(ClipboardID id)
+CServerProxy::onGrabClipboard(ClipboardID cId)
 {
-	LOG((CLOG_DEBUG1 "sending clipboard %d changed", id));
-	CProtocolUtil::writef(m_stream, kMsgCClipboard, id, m_seqNum);
+	LOG((CLOG_DEBUG1 "sending clipboard %d changed", cId));
+	CProtocolUtil::writef(m_stream, kMsgCClipboard, cId, m_seqNum);
 	return true;
 }
 
 void
-CServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
+CServerProxy::onClipboardChanged(ClipboardID cId, const IClipboard* clipboard)
 {
 	CString data = IClipboard::marshall(clipboard);
-	LOG((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
-	CProtocolUtil::writef(m_stream, kMsgDClipboard, id, m_seqNum, &data);
+	LOG((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", cId, m_seqNum, data.size()));
+	CProtocolUtil::writef(m_stream, kMsgDClipboard, cId, m_seqNum, &data);
 }
 
 void
@@ -349,11 +350,11 @@ CServerProxy::flushCompressedMouse()
 {
 	if (m_compressMouse) {
 		m_compressMouse = false;
-		m_client->mouseMove(m_xMouse, m_yMouse);
+//FIXXME		m_client->mouseMove(m_xMouse, m_yMouse);
 	}
 	if (m_compressMouseRelative) {
 		m_compressMouseRelative = false;
-		m_client->mouseRelativeMove(m_dxMouse, m_dyMouse);
+//FIXXME		m_client->mouseRelativeMove(m_dxMouse, m_dyMouse);
 		m_dxMouse = 0;
 		m_dyMouse = 0;
 	}
@@ -366,11 +367,11 @@ CServerProxy::sendInfo(const CClientInfo& info)
 	CProtocolUtil::writef(m_stream, kMsgDInfo,
 								info.m_x, info.m_y,
 								info.m_w, info.m_h, 0,
-								info.m_mx, info.m_my);
+								info.m_mx, info.m_my, info.m_id);
 }
 
 KeyID
-CServerProxy::translateKey(KeyID id) const
+CServerProxy::translateKey(KeyID kId) const
 {
 	static const KeyID s_translationTable[kKeyModifierIDLast][2] = {
 		{ kKeyNone,      kKeyNone },
@@ -381,65 +382,65 @@ CServerProxy::translateKey(KeyID id) const
 		{ kKeySuper_L,   kKeySuper_R }
 	};
 
-	KeyModifierID id2 = kKeyModifierIDNull;
+	KeyModifierID kId2 = kKeyModifierIDNull;
 	UInt32 side      = 0;
-	switch (id) {
+	switch (kId) {
 	case kKeyShift_L:
-		id2  = kKeyModifierIDShift;
+		kId2  = kKeyModifierIDShift;
 		side = 0;
 		break;
 
 	case kKeyShift_R:
-		id2  = kKeyModifierIDShift;
+		kId2  = kKeyModifierIDShift;
 		side = 1;
 		break;
 
 	case kKeyControl_L:
-		id2  = kKeyModifierIDControl;
+		kId2  = kKeyModifierIDControl;
 		side = 0;
 		break;
 
 	case kKeyControl_R:
-		id2  = kKeyModifierIDControl;
+		kId2  = kKeyModifierIDControl;
 		side = 1;
 		break;
 
 	case kKeyAlt_L:
-		id2  = kKeyModifierIDAlt;
+		kId2  = kKeyModifierIDAlt;
 		side = 0;
 		break;
 
 	case kKeyAlt_R:
-		id2  = kKeyModifierIDAlt;
+		kId2  = kKeyModifierIDAlt;
 		side = 1;
 		break;
 
 	case kKeyMeta_L:
-		id2  = kKeyModifierIDMeta;
+		kId2  = kKeyModifierIDMeta;
 		side = 0;
 		break;
 
 	case kKeyMeta_R:
-		id2  = kKeyModifierIDMeta;
+		kId2  = kKeyModifierIDMeta;
 		side = 1;
 		break;
 
 	case kKeySuper_L:
-		id2  = kKeyModifierIDSuper;
+		kId2  = kKeyModifierIDSuper;
 		side = 0;
 		break;
 
 	case kKeySuper_R:
-		id2  = kKeyModifierIDSuper;
+		kId2  = kKeyModifierIDSuper;
 		side = 1;
 		break;
 	}
 
-	if (id2 != kKeyModifierIDNull) {
-		return s_translationTable[m_modifierTranslationTable[id2]][side];
+	if (kId2 != kKeyModifierIDNull) {
+		return s_translationTable[m_modifierTranslationTable[kId2]][side];
 	}
 	else {
-		return id;
+		return kId;
 	}
 }
 
@@ -483,10 +484,12 @@ CServerProxy::enter()
 {
 	// parse
 	SInt16 x, y;
+	UInt8 kId = 0;
+	UInt8 pId = 0;
 	UInt16 mask;
 	UInt32 seqNum;
-	CProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
-	LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
+	CProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask, &kId, &pId);
+	LOG((CLOG_DEBUG1 "recv enter(k:%d,p:%d), %d,%d %d %04x", kId, pId, x, y, seqNum, mask));
 
 	// discard old compressed mouse motion, if any
 	m_compressMouse         = false;
@@ -496,59 +499,61 @@ CServerProxy::enter()
 	m_seqNum                = seqNum;
 
 	// forward
-	m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false);
+	m_client->enter(x, y, seqNum, static_cast<KeyModifierMask>(mask), false, kId, pId);
 }
 
 void
 CServerProxy::leave()
 {
+	UInt8 id = 0;
 	// parse
-	LOG((CLOG_DEBUG1 "recv leave"));
+	CProtocolUtil::readf(m_stream, kMsgCLeave + 4, &id);
+	LOG((CLOG_DEBUG1 "recv leave, %d", id));
 
 	// send last mouse motion
 	flushCompressedMouse();
 
 	// forward
-	m_client->leave();
+	m_client->leave(id);
 }
 
 void
 CServerProxy::setClipboard()
 {
 	// parse
-	ClipboardID id;
+	ClipboardID cId;
 	UInt32 seqNum;
 	CString data;
-	CProtocolUtil::readf(m_stream, kMsgDClipboard + 4, &id, &seqNum, &data);
-	LOG((CLOG_DEBUG "recv clipboard %d size=%d", id, data.size()));
+	CProtocolUtil::readf(m_stream, kMsgDClipboard + 4, &cId, &seqNum, &data);
+	LOG((CLOG_DEBUG "recv clipboard %d size=%d", cId, data.size()));
 
 	// validate
-	if (id >= kClipboardEnd) {
+	if (cId >= kClipboardEnd) {
 		return;
 	}
 
 	// forward
 	CClipboard clipboard;
 	clipboard.unmarshall(data, 0);
-	m_client->setClipboard(id, &clipboard);
+	m_client->setClipboard(cId, &clipboard);
 }
 
 void
 CServerProxy::grabClipboard()
 {
 	// parse
-	ClipboardID id;
+	ClipboardID cId;
 	UInt32 seqNum;
-	CProtocolUtil::readf(m_stream, kMsgCClipboard + 4, &id, &seqNum);
-	LOG((CLOG_DEBUG "recv grab clipboard %d", id));
+	CProtocolUtil::readf(m_stream, kMsgCClipboard + 4, &cId, &seqNum);
+	LOG((CLOG_DEBUG "recv grab clipboard %d", cId));
 
 	// validate
-	if (id >= kClipboardEnd) {
+	if (cId >= kClipboardEnd) {
 		return;
 	}
 
 	// forward
-	m_client->grabClipboard(id);
+	m_client->grabClipboard(cId);
 }
 
 void
@@ -558,20 +563,21 @@ CServerProxy::keyDown()
 	flushCompressedMouse();
 
 	// parse
-	UInt16 id, mask, button;
-	CProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
-	LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
+	UInt16 kId, mask, button;
+	UInt8 id;
+	CProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &kId, &mask, &button, &id);
+	LOG((CLOG_DEBUG1 "recv key down dev=%d, kId=0x%08x, mask=0x%04x, button=0x%04x"
+	, id, kId, mask, button));
 
 	// translate
-	KeyID id2             = translateKey(static_cast<KeyID>(id));
-	KeyModifierMask mask2 = translateModifierMask(
-								static_cast<KeyModifierMask>(mask));
-	if (id2   != static_cast<KeyID>(id) ||
+	KeyID kId2             = translateKey(static_cast<KeyID>(kId));
+	KeyModifierMask mask2 = translateModifierMask(static_cast<KeyModifierMask>(mask));
+	if (kId2   != static_cast<KeyID>(kId) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
-		LOG((CLOG_DEBUG1 "key down translated to id=0x%08x, mask=0x%04x", id2, mask2));
+		LOG((CLOG_DEBUG1 "key down translated to kId=0x%08x, mask=0x%04x", kId2, mask2));
 
 	// forward
-	m_client->keyDown(id2, mask2, button);
+	m_client->keyDown(kId2, mask2, button, id);
 }
 
 void
@@ -581,21 +587,23 @@ CServerProxy::keyRepeat()
 	flushCompressedMouse();
 
 	// parse
-	UInt16 id, mask, count, button;
+	UInt16 kId, mask, count, button;
+	UInt8 id;
 	CProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4,
-								&id, &mask, &count, &button);
-	LOG((CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, button=0x%04x", id, mask, count, button));
+								&kId, &mask, &count, &button, &id);
+	LOG((CLOG_DEBUG1 "recv key repeat dev=%d,kId=0x%08x, mask=0x%04x, count=%d, button=0x%04x"
+	, id, kId, mask, count, button));
 
 	// translate
-	KeyID id2             = translateKey(static_cast<KeyID>(id));
+	KeyID kId2             = translateKey(static_cast<KeyID>(kId));
 	KeyModifierMask mask2 = translateModifierMask(
 								static_cast<KeyModifierMask>(mask));
-	if (id2   != static_cast<KeyID>(id) ||
+	if (kId2   != static_cast<KeyID>(kId) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
-		LOG((CLOG_DEBUG1 "key repeat translated to id=0x%08x, mask=0x%04x", id2, mask2));
+		LOG((CLOG_DEBUG1 "key repeat translated to kId=0x%08x, mask=0x%04x", kId2, mask2));
 
 	// forward
-	m_client->keyRepeat(id2, mask2, count, button);
+	m_client->keyRepeat(kId2, mask2, count, button, id);
 }
 
 void
@@ -605,20 +613,22 @@ CServerProxy::keyUp()
 	flushCompressedMouse();
 
 	// parse
-	UInt16 id, mask, button;
-	CProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
-	LOG((CLOG_DEBUG1 "recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
+	UInt16 kId, mask, button;
+	UInt8 id;
+	CProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &kId, &mask, &button, &id);
+	LOG((CLOG_DEBUG1 "recv key up dev=%d, kId=0x%08x, mask=0x%04x, button=0x%04x"
+	, id, kId, mask, button));
 
 	// translate
-	KeyID id2             = translateKey(static_cast<KeyID>(id));
+	KeyID kId2             = translateKey(static_cast<KeyID>(kId));
 	KeyModifierMask mask2 = translateModifierMask(
 								static_cast<KeyModifierMask>(mask));
-	if (id2   != static_cast<KeyID>(id) ||
+	if (kId2   != static_cast<KeyID>(kId) ||
 		mask2 != static_cast<KeyModifierMask>(mask))
-		LOG((CLOG_DEBUG1 "key up translated to id=0x%08x, mask=0x%04x", id2, mask2));
+		LOG((CLOG_DEBUG1 "key up translated to kId=0x%08x, mask=0x%04x", kId2, mask2));
 
 	// forward
-	m_client->keyUp(id2, mask2, button);
+	m_client->keyUp(kId2, mask2, button, id);
 }
 
 void
@@ -628,12 +638,13 @@ CServerProxy::mouseDown()
 	flushCompressedMouse();
 
 	// parse
-	SInt8 id;
-	CProtocolUtil::readf(m_stream, kMsgDMouseDown + 4, &id);
-	LOG((CLOG_DEBUG1 "recv mouse down id=%d", id));
+	SInt8 button;
+	UInt8 id;
+	CProtocolUtil::readf(m_stream, kMsgDMouseDown + 4, &button, &id);
+	LOG((CLOG_DEBUG1 "recv mouse down dev=%d, button=%d", id, button));
 
 	// forward
-	m_client->mouseDown(static_cast<ButtonID>(id));
+	m_client->mouseDown(static_cast<ButtonID>(button), id);
 }
 
 void
@@ -643,12 +654,13 @@ CServerProxy::mouseUp()
 	flushCompressedMouse();
 
 	// parse
-	SInt8 id;
-	CProtocolUtil::readf(m_stream, kMsgDMouseUp + 4, &id);
-	LOG((CLOG_DEBUG1 "recv mouse up id=%d", id));
+	SInt8 button;
+	UInt8 id;
+	CProtocolUtil::readf(m_stream, kMsgDMouseUp + 4, &button, &id);
+	LOG((CLOG_DEBUG1 "recv mouse up dev=%d, id=%d", id, button));
 
 	// forward
-	m_client->mouseUp(static_cast<ButtonID>(id));
+	m_client->mouseUp(static_cast<ButtonID>(button), id);
 }
 
 void
@@ -657,7 +669,8 @@ CServerProxy::mouseMove()
 	// parse
 	bool ignore;
 	SInt16 x, y;
-	CProtocolUtil::readf(m_stream, kMsgDMouseMove + 4, &x, &y);
+	UInt8 id;
+	CProtocolUtil::readf(m_stream, kMsgDMouseMove + 4, &x, &y, &id);
 
 	// note if we should ignore the move
 	ignore = m_ignoreMouse;
@@ -676,11 +689,11 @@ CServerProxy::mouseMove()
 		m_dxMouse = 0;
 		m_dyMouse = 0;
 	}
-	LOG((CLOG_DEBUG2 "recv mouse move %d,%d", x, y));
+	LOG((CLOG_DEBUG2 "recv mouse move dev=%d, %d,%d", id, x, y));
 
 	// forward
 	if (!ignore) {
-		m_client->mouseMove(x, y);
+		m_client->mouseMove(x, y,id);
 	}
 }
 
@@ -690,7 +703,8 @@ CServerProxy::mouseRelativeMove()
 	// parse
 	bool ignore;
 	SInt16 dx, dy;
-	CProtocolUtil::readf(m_stream, kMsgDMouseRelMove + 4, &dx, &dy);
+	UInt8 id;
+	CProtocolUtil::readf(m_stream, kMsgDMouseRelMove + 4, &dx, &dy, &id);
 
 	// note if we should ignore the move
 	ignore = m_ignoreMouse;
@@ -706,11 +720,11 @@ CServerProxy::mouseRelativeMove()
 		m_dxMouse += dx;
 		m_dyMouse += dy;
 	}
-	LOG((CLOG_DEBUG2 "recv mouse relative move %d,%d", dx, dy));
+	LOG((CLOG_DEBUG2 "recv mouse relative move dev=%d, %d,%d", dx, dy, id));
 
 	// forward
 	if (!ignore) {
-		m_client->mouseRelativeMove(dx, dy);
+	    m_client->mouseRelativeMove(dx, dy, id);
 	}
 }
 
@@ -722,11 +736,12 @@ CServerProxy::mouseWheel()
 
 	// parse
 	SInt16 xDelta, yDelta;
-	CProtocolUtil::readf(m_stream, kMsgDMouseWheel + 4, &xDelta, &yDelta);
-	LOG((CLOG_DEBUG2 "recv mouse wheel %+d,%+d", xDelta, yDelta));
+	UInt8 id;
+	CProtocolUtil::readf(m_stream, kMsgDMouseWheel + 4, &xDelta, &yDelta, &id);
+	LOG((CLOG_DEBUG2 "recv mouse wheel dev=%d, %+d,%+d", id, xDelta, yDelta));
 
 	// forward
-	m_client->mouseWheel(xDelta, yDelta);
+	m_client->mouseWheel(xDelta, yDelta, id);
 }
 
 void
@@ -754,8 +769,8 @@ CServerProxy::resetOptions()
 	setKeepAliveRate(kKeepAliveRate);
 
 	// reset modifier translation table
-	for (KeyModifierID id = 0; id < kKeyModifierIDLast; ++id) {
-		m_modifierTranslationTable[id] = id;
+	for (KeyModifierID kId = 0; kId < kKeyModifierIDLast; ++kId) {
+		m_modifierTranslationTable[kId] = kId;
 	}
 }
 
@@ -772,30 +787,30 @@ CServerProxy::setOptions()
 
 	// update modifier table
 	for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
-		KeyModifierID id = kKeyModifierIDNull;
+		KeyModifierID kId = kKeyModifierIDNull;
 		if (options[i] == kOptionModifierMapForShift) {
-			id = kKeyModifierIDShift;
+			kId = kKeyModifierIDShift;
 		}
 		else if (options[i] == kOptionModifierMapForControl) {
-			id = kKeyModifierIDControl;
+			kId = kKeyModifierIDControl;
 		}
 		else if (options[i] == kOptionModifierMapForAlt) {
-			id = kKeyModifierIDAlt;
+			kId = kKeyModifierIDAlt;
 		}
 		else if (options[i] == kOptionModifierMapForMeta) {
-			id = kKeyModifierIDMeta;
+			kId = kKeyModifierIDMeta;
 		}
 		else if (options[i] == kOptionModifierMapForSuper) {
-			id = kKeyModifierIDSuper;
+			kId = kKeyModifierIDSuper;
 		}
 		else if (options[i] == kOptionHeartbeat) {
 			// update keep alive
 			setKeepAliveRate(1.0e-3 * static_cast<double>(options[i + 1]));
 		}
-		if (id != kKeyModifierIDNull) {
-			m_modifierTranslationTable[id] =
+		if (kId != kKeyModifierIDNull) {
+			m_modifierTranslationTable[kId] =
 				static_cast<KeyModifierID>(options[i + 1]);
-			LOG((CLOG_DEBUG1 "modifier %d mapped to %d", id, m_modifierTranslationTable[id]));
+			LOG((CLOG_DEBUG1 "modifier %d mapped to %d", kId, m_modifierTranslationTable[kId]));
 		}
 	}
 }
@@ -804,8 +819,10 @@ void
 CServerProxy::queryInfo()
 {
 	CClientInfo info;
+	//FIXXME queryinfo id
+	//UInt8 id = 2;
 	m_client->getShape(info.m_x, info.m_y, info.m_w, info.m_h);
-	m_client->getCursorPos(info.m_mx, info.m_my);
+	//m_client->getCursorPos(info.m_mx, info.m_my, id);
 	sendInfo(info);
 }
 

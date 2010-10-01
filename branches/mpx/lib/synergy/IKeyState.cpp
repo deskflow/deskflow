@@ -51,33 +51,35 @@ IKeyState::getKeyRepeatEvent()
 //
 
 IKeyState::CKeyInfo*
-IKeyState::CKeyInfo::alloc(KeyID id,
-				KeyModifierMask mask, KeyButton button, SInt32 count)
+IKeyState::CKeyInfo::alloc(KeyID kId,
+				KeyModifierMask mask, KeyButton button, SInt32 count, UInt8 id)
 {
 	CKeyInfo* info           = (CKeyInfo*)malloc(sizeof(CKeyInfo));
-	info->m_key              = id;
+	info->m_key              = kId;
 	info->m_mask             = mask;
 	info->m_button           = button;
 	info->m_count            = count;
 	info->m_screens          = NULL;
+	info->m_id		 = id;
 	info->m_screensBuffer[0] = '\0';
 	return info;
 }
 
 IKeyState::CKeyInfo*
-IKeyState::CKeyInfo::alloc(KeyID id,
+IKeyState::CKeyInfo::alloc(KeyID kId,
 				KeyModifierMask mask, KeyButton button, SInt32 count,
-				const std::set<CString>& destinations)
+				const std::set<CString>& destinations, UInt8 id)
 {
 	CString screens = join(destinations);
 
 	// build structure
 	CKeyInfo* info  = (CKeyInfo*)malloc(sizeof(CKeyInfo) + screens.size());
-	info->m_key     = id;
+	info->m_key     = kId;
 	info->m_mask    = mask;
 	info->m_button  = button;
 	info->m_count   = count;
 	info->m_screens = info->m_screensBuffer;
+	info->m_id	= id;
 	strcpy(info->m_screensBuffer, screens.c_str());
 	return info;
 }

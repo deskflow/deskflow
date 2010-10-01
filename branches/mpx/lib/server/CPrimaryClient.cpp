@@ -44,9 +44,9 @@ CPrimaryClient::reconfigure(UInt32 activeSides)
 }
 
 UInt32
-CPrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
+CPrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask, UInt8 id)
 {
-	return m_screen->registerHotKey(key, mask);
+	return m_screen->registerHotKey(key, mask, id);
 }
 
 void
@@ -84,15 +84,15 @@ CPrimaryClient::getCursorCenter(SInt32& x, SInt32& y) const
 }
 
 KeyModifierMask
-CPrimaryClient::getToggleMask() const
+CPrimaryClient::getToggleMask(UInt8 id) const
 {
-	return m_screen->pollActiveModifiers();
+	return m_screen->pollActiveModifiers(id);
 }
 
 bool
-CPrimaryClient::isLockedToScreen() const
+CPrimaryClient::isLockedToScreen(UInt8 id) const
 {
-	return m_screen->isLockedToScreen();
+	return m_screen->isLockedToScreen(id);
 }
 
 void*
@@ -115,9 +115,9 @@ CPrimaryClient::getShape(SInt32& x, SInt32& y,
 }
 
 void
-CPrimaryClient::getCursorPos(SInt32& x, SInt32& y) const
+CPrimaryClient::getCursorPos(SInt32& x, SInt32& y, UInt8 id) const
 {
-	m_screen->getCursorPos(x, y);
+	m_screen->getCursorPos(x, y, id);
 }
 
 void
@@ -133,20 +133,21 @@ CPrimaryClient::disable()
 }
 
 void
-CPrimaryClient::enter(SInt32 xAbs, SInt32 yAbs,
-				UInt32 seqNum, KeyModifierMask mask, bool screensaver)
+CPrimaryClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, 
+		      KeyModifierMask mask, bool screensaver, UInt8 kId, UInt8 pId)
 {
 	m_screen->setSequenceNumber(seqNum);
+
+	m_screen->enter(mask, kId, pId);
 	if (!screensaver) {
-		m_screen->warpCursor(xAbs, yAbs);
+	    m_screen->warpCursor(xAbs, yAbs, pId);
 	}
-	m_screen->enter(mask);
 }
 
 bool
-CPrimaryClient::leave()
+CPrimaryClient::leave(UInt8 id)
 {
-	return m_screen->leave();
+	return m_screen->leave(id);
 }
 
 void
@@ -179,7 +180,7 @@ CPrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
 }
 
 void
-CPrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+CPrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, UInt8 id)
 {
 	if (m_fakeInputCount > 0) {
 // XXX -- don't forward keystrokes to primary screen for now
@@ -191,13 +192,13 @@ CPrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
 }
 
 void
-CPrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton)
+CPrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, UInt8 id)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
+CPrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button, UInt8 id)
 {
 	if (m_fakeInputCount > 0) {
 // XXX -- don't forward keystrokes to primary screen for now
@@ -209,31 +210,31 @@ CPrimaryClient::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
 }
 
 void
-CPrimaryClient::mouseDown(ButtonID)
+CPrimaryClient::mouseDown(ButtonID, UInt8 id)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::mouseUp(ButtonID)
+CPrimaryClient::mouseUp(ButtonID, UInt8 id)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::mouseMove(SInt32 x, SInt32 y)
+CPrimaryClient::mouseMove(SInt32 x, SInt32 y, UInt8 id)
 {
-	m_screen->warpCursor(x, y);
+	m_screen->warpCursor(x, y, id);
 }
 
 void
-CPrimaryClient::mouseRelativeMove(SInt32, SInt32)
+CPrimaryClient::mouseRelativeMove(SInt32, SInt32, UInt8 id)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::mouseWheel(SInt32, SInt32)
+CPrimaryClient::mouseWheel(SInt32, SInt32, UInt8 id)
 {
 	// ignore
 }

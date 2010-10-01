@@ -123,9 +123,9 @@ CInputFilter::CKeystrokeCondition::match(const CEvent& event)
 }
 
 void
-CInputFilter::CKeystrokeCondition::enablePrimary(CPrimaryClient* primary)
+CInputFilter::CKeystrokeCondition::enablePrimary(CPrimaryClient* primary, UInt8 id)
 {
-	m_id = primary->registerHotKey(m_key, m_mask);
+	m_id = primary->registerHotKey(m_key, m_mask, id);
 }
 
 void
@@ -600,12 +600,15 @@ void
 CInputFilter::CMouseButtonAction::perform(const CEvent& event)
 
 {
+  
+  // FIXXME CInputFilter::CMouseButtonAction::perform: id
+  UInt8 id = 3;
 	// send modifiers
 	IPlatformScreen::CKeyInfo* modifierInfo = NULL;
 	if (m_buttonInfo->m_mask != 0) {
 		KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
 		modifierInfo =
-			IKeyState::CKeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
+			IKeyState::CKeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1, id);
 		EVENTQUEUE->addEvent(CEvent(IPlatformScreen::getKeyDownEvent(),
 								event.getTarget(), modifierInfo,
 								CEvent::kDeliverImmediately));

@@ -25,82 +25,82 @@ CPlatformScreen::~CPlatformScreen()
 }
 
 void
-CPlatformScreen::updateKeyMap()
+CPlatformScreen::updateKeyMap(UInt8 id)
 {
-	getKeyState()->updateKeyMap();
+	getKeyState(id)->updateKeyMap(id);
 }
 
 void
-CPlatformScreen::updateKeyState()
+CPlatformScreen::updateKeyState(UInt8 id)
 {
-	getKeyState()->updateKeyState();
+	getKeyState(id)->updateKeyState(id);
 	updateButtons();
 }
 
 void
-CPlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
+CPlatformScreen::setHalfDuplexMask(KeyModifierMask mask, UInt8 id)
 {
-	getKeyState()->setHalfDuplexMask(mask);
+	getKeyState(id)->setHalfDuplexMask(mask, id);
 }
 
 void
-CPlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
-				KeyButton button)
+CPlatformScreen::fakeKeyDown(KeyID kId, KeyModifierMask mask,
+				KeyButton button, UInt8 id)
 {
-	getKeyState()->fakeKeyDown(id, mask, button);
+	getKeyState(id)->fakeKeyDown(kId, mask, button, id);
 }
 
 void
-CPlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-				SInt32 count, KeyButton button)
+CPlatformScreen::fakeKeyRepeat(KeyID kId, KeyModifierMask mask,
+				SInt32 count, KeyButton button, UInt8 id)
 {
-	getKeyState()->fakeKeyRepeat(id, mask, count, button);
+	getKeyState(id)->fakeKeyRepeat(kId, mask, count, button, id);
 }
 
 void
-CPlatformScreen::fakeKeyUp(KeyButton button)
+CPlatformScreen::fakeKeyUp(KeyButton button, UInt8 id)
 {
-	getKeyState()->fakeKeyUp(button);
+	getKeyState(id)->fakeKeyUp(button, id);
 }
 
 void
-CPlatformScreen::fakeAllKeysUp()
-{
-	getKeyState()->fakeAllKeysUp();
+CPlatformScreen::fakeAllKeysUp(UInt8 id)
+{  
+	getKeyState(id)->fakeAllKeysUp(id);
 }
 
 bool
-CPlatformScreen::fakeCtrlAltDel()
+CPlatformScreen::fakeCtrlAltDel(UInt8 id)
 {
-	return getKeyState()->fakeCtrlAltDel();
+	return getKeyState(id)->fakeCtrlAltDel(id);
 }
 
 bool
-CPlatformScreen::isKeyDown(KeyButton button) const
+CPlatformScreen::isKeyDown(KeyButton button, UInt8 id) const
 {
-	return getKeyState()->isKeyDown(button);
+	return getKeyState(id)->isKeyDown(button, id);
 }
 
 KeyModifierMask
-CPlatformScreen::getActiveModifiers() const
+CPlatformScreen::getActiveModifiers(UInt8 id) const
 {
-	return getKeyState()->getActiveModifiers();
+	return getKeyState(id)->getActiveModifiers(id);
 }
 
 KeyModifierMask
-CPlatformScreen::pollActiveModifiers() const
+CPlatformScreen::pollActiveModifiers(UInt8 id) const
 {
-	return getKeyState()->pollActiveModifiers();
+	return getKeyState(id)->pollActiveModifiers(id);
 }
 
 SInt32
-CPlatformScreen::pollActiveGroup() const
+CPlatformScreen::pollActiveGroup(UInt8 id) const
 {
-	return getKeyState()->pollActiveGroup();
+	return getKeyState(id)->pollActiveGroup(id);
 }
 
 void
-CPlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys) const
+CPlatformScreen::pollPressedKeys(KeyButtonSet& pressedKeys, UInt8 id) const
 {
-	getKeyState()->pollPressedKeys(pressedKeys);
+	getKeyState(id)->pollPressedKeys(pressedKeys, id);
 }

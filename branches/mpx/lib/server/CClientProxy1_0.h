@@ -32,25 +32,25 @@ public:
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
+	virtual void		getCursorPos(SInt32& x, SInt32& y, UInt8) const;
 
 	// IClient overrides
-	virtual void		enter(SInt32 xAbs, SInt32 yAbs,
-							UInt32 seqNum, KeyModifierMask mask,
-							bool forScreensaver);
-	virtual bool		leave();
+	virtual void		enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, 
+				      KeyModifierMask mask, bool forScreensaver, UInt8, UInt8);
+	virtual bool		leave(UInt8);
 	virtual void		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		grabClipboard(ClipboardID);
 	virtual void		setClipboardDirty(ClipboardID, bool);
-	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton);
+
+	virtual void		keyDown(KeyID, KeyModifierMask, KeyButton, UInt8);
 	virtual void		keyRepeat(KeyID, KeyModifierMask,
-							SInt32 count, KeyButton);
-	virtual void		keyUp(KeyID, KeyModifierMask, KeyButton);
-	virtual void		mouseDown(ButtonID);
-	virtual void		mouseUp(ButtonID);
-	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs);
-	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel);
-	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
+							SInt32 count, KeyButton, UInt8);
+	virtual void		keyUp(KeyID, KeyModifierMask, KeyButton, UInt8);
+	virtual void 		mouseDown(ButtonID button, UInt8 id);
+	virtual void 		mouseUp(ButtonID button, UInt8 id);
+	virtual void 		mouseMove(SInt32 xAbs, SInt32 yAbs, UInt8);
+	virtual void 		mouseRelativeMove(SInt32 xRel, SInt32 yRel, UInt8);
+	virtual void 		mouseWheel(SInt32 xDelta, SInt32 yDelta, UInt8);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);

@@ -17,8 +17,6 @@
 #include "CLog.h"
 #include <cstring>
 #include <algorithm>
-#include <iterator>
-#include <list>
 
 static const KeyButton kButtonMask = (KeyButton)(IKeyState::kNumButtons - 1);
 
@@ -423,42 +421,44 @@ CKeyState::sendKeyEvent(
 				KeyID key, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
+  
+	UInt8 id = m_id;
 	if (m_keyMap.isHalfDuplex(key, button)) {
 		if (isAutoRepeat) {
 			// ignore auto-repeat on half-duplex keys
 		}
 		else {
 			EVENTQUEUE->addEvent(CEvent(getKeyDownEvent(), target,
-							CKeyInfo::alloc(key, mask, button, 1)));
+							CKeyInfo::alloc(key, mask, button, 1, id)));
 			EVENTQUEUE->addEvent(CEvent(getKeyUpEvent(), target,
-							CKeyInfo::alloc(key, mask, button, 1)));
+							CKeyInfo::alloc(key, mask, button, 1, id)));
 		}
 	}
 	else {
 		if (isAutoRepeat) {
 			EVENTQUEUE->addEvent(CEvent(getKeyRepeatEvent(), target,
-							 CKeyInfo::alloc(key, mask, button, count)));
+							 CKeyInfo::alloc(key, mask, button, count, id)));
 		}
 		else if (press) {
 			EVENTQUEUE->addEvent(CEvent(getKeyDownEvent(), target,
-							CKeyInfo::alloc(key, mask, button, 1)));
+							CKeyInfo::alloc(key, mask, button, 1, id)));
 		}
 		else {
 			EVENTQUEUE->addEvent(CEvent(getKeyUpEvent(), target,
-							CKeyInfo::alloc(key, mask, button, 1)));
+							CKeyInfo::alloc(key, mask, button, 1, id)));
 		}
 	}
 }
 
 void
-CKeyState::updateKeyMap()
+CKeyState::updateKeyMap(UInt8 id)
 {
 	// get the current keyboard map
 	CKeyMap keyMap;
 	getKeyMap(keyMap);
 	m_keyMap.swap(keyMap);
 	m_keyMap.finish();
-
+	LOG((CLOG_DEBUG "keyboard map for id: %d updated", id));
 	// add special keys
 	addCombinationEntries();
 	addKeypadEntries();
@@ -466,7 +466,7 @@ CKeyState::updateKeyMap()
 }
 
 void
-CKeyState::updateKeyState()
+CKeyState::updateKeyState(UInt8 id)
 {
 	// reset our state
 	memset(&m_keys, 0, sizeof(m_keys));
@@ -477,17 +477,17 @@ CKeyState::updateKeyState()
 
 	// get the current keyboard state
 	KeyButtonSet keysDown;
-	pollPressedKeys(keysDown);
+	pollPressedKeys(keysDown, id);
 	for (KeyButtonSet::const_iterator i = keysDown.begin();
 								i != keysDown.end(); ++i) {
 		m_keys[*i] = 1;
 	}
 
 	// get the current modifier state
-	m_mask = pollActiveModifiers();
+	m_mask = pollActiveModifiers(id);
 
 	// set active modifiers
-	CAddActiveModifierContext addModifierContext(pollActiveGroup(), m_mask,
+	CAddActiveModifierContext addModifierContext(pollActiveGroup(id), m_mask,
 												m_activeModifiers);
 	m_keyMap.foreachKey(&CKeyState::addActiveModifierCB, &addModifierContext);
 
@@ -508,7 +508,7 @@ CKeyState::addActiveModifierCB(KeyID, SInt32 group,
 }
 
 void
-CKeyState::setHalfDuplexMask(KeyModifierMask mask)
+CKeyState::setHalfDuplexMask(KeyModifierMask mask, UInt8 id)
 {
 	m_keyMap.clearHalfDuplexModifiers();
 	if ((mask & KeyModifierCapsLock) != 0) {
@@ -523,19 +523,19 @@ CKeyState::setHalfDuplexMask(KeyModifierMask mask)
 }
 
 void
-CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
+CKeyState::fakeKeyDown(KeyID kId, KeyModifierMask mask, KeyButton serverID, UInt8 id)
 {
 	// if this server key is already down then this is probably a
 	// mis-reported autorepeat.
 	serverID &= kButtonMask;
 	if (m_serverKeys[serverID] != 0) {
-		fakeKeyRepeat(id, mask, 1, serverID);
+		fakeKeyRepeat(kId, mask, 1, serverID, id);
 		return;
 	}
 
 	// ignore certain keys
-	if (isIgnoredKey(id, mask)) {
-		LOG((CLOG_DEBUG1 "ignored key %04x %04x", id, mask));
+	if (isIgnoredKey(kId, mask)) {
+		LOG((CLOG_DEBUG1 "ignored key %04x %04x", kId, mask));
 		return;
 	}
 
@@ -543,7 +543,7 @@ CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 	Keystrokes keys;
 	ModifierToKeys oldActiveModifiers = m_activeModifiers;
 	const CKeyMap::KeyItem* keyItem =
-		m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
+	m_keyMap.mapKey(keys, kId, pollActiveGroup(id), m_activeModifiers,
 								getActiveModifiersRValue(), mask, false);
 	if (keyItem == NULL) {
 		return;
@@ -559,13 +559,12 @@ CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 	}
 
 	// generate key events
-	fakeKeys(keys, 1);
+	fakeKeys(keys, 1, id);
 }
 
 void
-CKeyState::fakeKeyRepeat(
-				KeyID id, KeyModifierMask mask,
-				SInt32 count, KeyButton serverID)
+CKeyState::fakeKeyRepeat(KeyID kId, KeyModifierMask mask,
+			SInt32 count, KeyButton serverID, UInt8 id)
 {
 	serverID &= kButtonMask;
 
@@ -579,7 +578,7 @@ CKeyState::fakeKeyRepeat(
 	Keystrokes keys;
 	ModifierToKeys oldActiveModifiers = m_activeModifiers;
 	const CKeyMap::KeyItem* keyItem =
-		m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
+		m_keyMap.mapKey(keys, kId, pollActiveGroup(id), m_activeModifiers,
 								getActiveModifiersRValue(), mask, true);
 	if (keyItem == NULL) {
 		return;
@@ -620,11 +619,11 @@ CKeyState::fakeKeyRepeat(
 	}
 
 	// generate key events
-	fakeKeys(keys, count);
+	fakeKeys(keys, count, id);
 }
 
 void
-CKeyState::fakeKeyUp(KeyButton serverID)
+CKeyState::fakeKeyUp(KeyButton serverID, UInt8 id)
 {
 	// if we haven't seen this button go down then ignore it
 	KeyButton localID = m_serverKeys[serverID & kButtonMask];
@@ -660,12 +659,14 @@ CKeyState::fakeKeyUp(KeyButton serverID)
 	}
 
 	// generate key events
-	fakeKeys(keys, 1);
+	fakeKeys(keys, 1, id);
 }
 
 void
-CKeyState::fakeAllKeysUp()
+CKeyState::fakeAllKeysUp(UInt8 id)
 {
+  	LOG((CLOG_DEBUG1 "fakeAllKeysUp dev(%d)", id));
+
 	Keystrokes keys;
 	for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
 		if (m_syntheticKeys[i] > 0) {
@@ -674,20 +675,20 @@ CKeyState::fakeAllKeysUp()
 			m_syntheticKeys[i] = 0;
 		}
 	}
-	fakeKeys(keys, 1);
+	fakeKeys(keys, 1, id);
 	memset(&m_serverKeys, 0, sizeof(m_serverKeys));
 	m_activeModifiers.clear();
-	m_mask = pollActiveModifiers();
+	m_mask = pollActiveModifiers(id);
 }
 
 bool
-CKeyState::isKeyDown(KeyButton button) const
+CKeyState::isKeyDown(KeyButton button, UInt8 id) const
 {
 	return (m_keys[button & kButtonMask] > 0);
 }
 
 KeyModifierMask
-CKeyState::getActiveModifiers() const
+CKeyState::getActiveModifiers(UInt8 id) const
 {
 	return m_mask;
 }
@@ -719,10 +720,10 @@ CKeyState::isIgnoredKey(KeyID key, KeyModifierMask) const
 }
 
 KeyButton
-CKeyState::getButton(KeyID id, SInt32 group) const
+CKeyState::getButton(KeyID kId, SInt32 group) const
 {
 	const CKeyMap::KeyItemList* items =
-		m_keyMap.findCompatibleKey(id, group, 0, 0);
+		m_keyMap.findCompatibleKey(kId, group, 0, 0);
 	if (items == NULL) {
 		return 0;
 	}
@@ -791,7 +792,7 @@ CKeyState::addCombinationEntries()
 }
 
 void
-CKeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
+CKeyState::fakeKeys(const Keystrokes& keys, UInt32 count, UInt8 id)
 {
 	// do nothing if no keys or no repeats
 	if (count == 0 || keys.empty()) {
@@ -810,7 +811,7 @@ CKeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
 				for (k = start; k != keys.end() &&
 								k->m_type == Keystroke::kButton &&
 								k->m_data.m_button.m_repeat; ++k) {
-					fakeKey(*k);
+					fakeKey(*k, id);
 				}
 			}
 
@@ -819,7 +820,7 @@ CKeyState::fakeKeys(const Keystrokes& keys, UInt32 count)
 		}
 		else {
 			// send event
-			fakeKey(*k);
+			fakeKey(*k, id);
 
 			// next key
 			++k;

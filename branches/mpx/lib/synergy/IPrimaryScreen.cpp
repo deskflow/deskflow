@@ -114,11 +114,12 @@ IPrimaryScreen::getFakeInputEndEvent()
 //
 
 IPrimaryScreen::CButtonInfo*
-IPrimaryScreen::CButtonInfo::alloc(ButtonID id, KeyModifierMask mask)
+IPrimaryScreen::CButtonInfo::alloc(ButtonID bId, UInt8 id, KeyModifierMask mask)
 {
 	CButtonInfo* info = (CButtonInfo*)malloc(sizeof(CButtonInfo));
-	info->m_button = id;
-	info->m_mask   = mask;
+	info->m_button 	= bId;
+	info->m_id 	= id;
+	info->m_mask   	= mask;
 	return info;
 }
 
@@ -126,8 +127,9 @@ IPrimaryScreen::CButtonInfo*
 IPrimaryScreen::CButtonInfo::alloc(const CButtonInfo& x)
 {
 	CButtonInfo* info = (CButtonInfo*)malloc(sizeof(CButtonInfo));
-	info->m_button = x.m_button;
-	info->m_mask   = x.m_mask;
+	info->m_button 	= x.m_button;
+	info->m_id	= x.m_id;
+	info->m_mask	= x.m_mask;
 	return info;
 }
 
@@ -143,11 +145,12 @@ IPrimaryScreen::CButtonInfo::equal(const CButtonInfo* a, const CButtonInfo* b)
 //
 
 IPrimaryScreen::CMotionInfo*
-IPrimaryScreen::CMotionInfo::alloc(SInt32 x, SInt32 y)
+IPrimaryScreen::CMotionInfo::alloc(SInt32 x, SInt32 y, UInt8 id)
 {
 	CMotionInfo* info = (CMotionInfo*)malloc(sizeof(CMotionInfo));
-	info->m_x = x;
-	info->m_y = y;
+	info->m_x  = x;
+	info->m_y  = y;
+	info->m_id = id;
 	return info;
 }
 
@@ -157,11 +160,12 @@ IPrimaryScreen::CMotionInfo::alloc(SInt32 x, SInt32 y)
 //
 
 IPrimaryScreen::CWheelInfo*
-IPrimaryScreen::CWheelInfo::alloc(SInt32 xDelta, SInt32 yDelta)
+IPrimaryScreen::CWheelInfo::alloc(SInt32 xDelta, SInt32 yDelta, UInt8 id)
 {
 	CWheelInfo* info = (CWheelInfo*)malloc(sizeof(CWheelInfo));
 	info->m_xDelta = xDelta;
 	info->m_yDelta = yDelta;
+	info->m_id = id;
 	return info;
 }
 

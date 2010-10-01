@@ -16,6 +16,7 @@
 #define CSCREEN_H
 
 #include "IScreen.h"
+#include "CDeviceManager.h"
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "MouseTypes.h"
@@ -57,13 +58,13 @@ public:
 	Called when the user navigates to this screen.  \p toggleMask has the
 	toggle keys that should be turned on on the secondary screen.
 	*/
-	void				enter(KeyModifierMask toggleMask);
+	void				enter(KeyModifierMask toggleMask, UInt8 kId, UInt8 pId);
 
 	//! Leave screen
 	/*!
 	Called when the user navigates off this screen.
 	*/
-	bool				leave();
+	bool				leave(UInt8 id);
 
 	//! Update configuration
 	/*!
@@ -79,8 +80,8 @@ public:
 	discards input events up to and including the warp before
 	returning.
 	*/
-	void				warpCursor(SInt32 x, SInt32 y);
-
+	void				warpCursor(SInt32 x, SInt32 y, UInt8 id);
+	
 	//! Set clipboard
 	/*!
 	Sets the system's clipboard contents.  This is usually called
@@ -110,48 +111,48 @@ public:
 	synthesize an up or repeat for the same client key synthesized by
 	keyDown().
 	*/
-	void				keyDown(KeyID id, KeyModifierMask, KeyButton);
+	void				keyDown(KeyID kId, KeyModifierMask, KeyButton, UInt8 id);
 
 	//! Notify of key repeat
 	/*!
 	Synthesize key events to generate a press and release of key \c id
 	\c count times.  If possible match the given modifier mask.
 	*/
-	void				keyRepeat(KeyID id, KeyModifierMask,
-							SInt32 count, KeyButton);
+	void				keyRepeat(KeyID kId, KeyModifierMask,
+							SInt32 count, KeyButton, UInt8 id);
 
 	//! Notify of key release
 	/*!
 	Synthesize key events to generate a release of key \c id.  If possible
 	match the given modifier mask.
 	*/
-	void				keyUp(KeyID id, KeyModifierMask, KeyButton);
+	void				keyUp(KeyID kId, KeyModifierMask, KeyButton, UInt8 id);
 
 	//! Notify of mouse press
 	/*!
 	Synthesize mouse events to generate a press of mouse button \c id.
 	*/
-	void				mouseDown(ButtonID id);
+	void mouseDown(ButtonID button, UInt8 id);
 
 	//! Notify of mouse release
 	/*!
 	Synthesize mouse events to generate a release of mouse button \c id.
 	*/
-	void				mouseUp(ButtonID id);
+	void mouseUp(ButtonID button, UInt8 id);
 
 	//! Notify of mouse motion
 	/*!
 	Synthesize mouse events to generate mouse motion to the absolute
 	screen position \c xAbs,yAbs.
 	*/
-	void				mouseMove(SInt32 xAbs, SInt32 yAbs);
+	void mouseMove(SInt32 xAbs, SInt32 yAbs, UInt8 id);
 
 	//! Notify of mouse motion
 	/*!
 	Synthesize mouse events to generate mouse motion by the relative
 	amount \c xRel,yRel.
 	*/
-	void				mouseRelativeMove(SInt32 xRel, SInt32 yRel);
+	void				mouseRelativeMove(SInt32 xRel, SInt32 yRel, UInt8 id);
 
 	//! Notify of mouse wheel motion
 	/*!
@@ -160,7 +161,7 @@ public:
 	to the right and negative for motion towards the user or to the left.
 	Each wheel click should generate a delta of +/-120.
 	*/
-	void				mouseWheel(SInt32 xDelta, SInt32 yDelta);
+	void mouseWheel(SInt32 xDelta, SInt32 yDelta, UInt8 id);
 
 	//! Notify of options changes
 	/*!
@@ -186,7 +187,7 @@ public:
 	Registers a system-wide hotkey for key \p key with modifiers \p mask.
 	Returns an id used to unregister the hotkey.
 	*/
-	UInt32				registerHotKey(KeyID key, KeyModifierMask mask);
+	UInt32				registerHotKey(KeyID key, KeyModifierMask mask, UInt8 id);
 
 	//! Unregister a system hotkey
 	/*!
@@ -217,7 +218,7 @@ public:
 	/*!
 	Returns true iff the cursor is on the screen.
 	*/
-	bool				isOnScreen() const;
+	bool				isOnScreen(UInt8 id) const;
 
 	//! Get screen lock state
 	/*!
@@ -226,7 +227,7 @@ public:
 	pressed).  If this method returns true it logs a message as to
 	why at the CLOG_DEBUG level.
 	*/
-	bool				isLockedToScreen() const;
+	bool				isLockedToScreen(UInt8 id) const;
 
 	//! Get jump zone size
 	/*!
@@ -248,14 +249,14 @@ public:
 	Returns the modifiers that are currently active according to our
 	shadowed state.
 	*/
-	KeyModifierMask		getActiveModifiers() const;
+	KeyModifierMask		getActiveModifiers(UInt8 id) const;
 
 	//! Get the active modifiers from OS
 	/*!
 	Returns the modifiers that are currently active according to the
 	operating system.
 	*/
-	KeyModifierMask		pollActiveModifiers() const;
+	KeyModifierMask		pollActiveModifiers(UInt8 id) const;
 
 	//@}
 
@@ -264,7 +265,7 @@ public:
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
+	virtual void		getCursorPos(SInt32& x, SInt32& y, UInt8 id) const;
 
 protected:
 	void				enablePrimary();
@@ -274,13 +275,16 @@ protected:
 
 	void				enterPrimary();
 	void				enterSecondary(KeyModifierMask toggleMask);
-	void				leavePrimary();
-	void				leaveSecondary();
+	void				leavePrimary(UInt8 id);
+	void				leaveSecondary(UInt8 id);
 
 private:
 	// our platform dependent screen
 	IPlatformScreen*	m_screen;
 
+	// our platform dependent device manager
+	IDeviceManager*			m_dev;
+	
 	// true if screen is being used as a primary screen, false otherwise
 	bool				m_isPrimary;
 
@@ -288,14 +292,15 @@ private:
 	bool				m_enabled;
 
 	// true if the cursor is on this screen
-	bool				m_entered;
+	// FIXXME: obsolete with MPX ?
+	// bool				m_entered;
 
 	// true if screen saver should be synchronized to server
 	bool				m_screenSaverSync;
 
 	// note toggle keys that toggles on up/down (false) or on
 	// transition (true)
-	KeyModifierMask		m_halfDuplex;
+	KeyModifierMask			m_halfDuplex;
 
 	// true if we're faking input on a primary screen
 	bool				m_fakeInput;

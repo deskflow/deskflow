@@ -34,6 +34,9 @@ class IPlatformScreen : public IScreen,
 				public IPrimaryScreen, public ISecondaryScreen,
 				public IKeyState {
 public:
+  
+	static IPlatformScreen* getInstance();
+	
 	//! @name manipulators
 	//@{
 
@@ -56,7 +59,7 @@ public:
 	/*!
 	Called when the user navigates to this screen.
 	*/
-	virtual void		enter() = 0;
+	virtual void		enter(UInt8 kId, UInt8 pId) = 0;
 
 	//! Leave screen
 	/*!
@@ -65,7 +68,7 @@ public:
 	unable to install the keyboard and mouse snoopers on a primary
 	screen.  Secondary screens should not fail.
 	*/
-	virtual bool		leave() = 0;
+	virtual bool		leave(UInt8 id) = 0;
 
 	//! Set clipboard
 	/*!
@@ -141,43 +144,51 @@ public:
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const = 0;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const = 0;
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
+	virtual void		getCursorPos(SInt32& x, SInt32& y, UInt8 id) const = 0;
 
 	// IPrimaryScreen overrides
 	virtual void		reconfigure(UInt32 activeSides) = 0;
-	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
-	virtual UInt32		registerHotKey(KeyID key, KeyModifierMask mask) = 0;
+	virtual void		warpCursor(SInt32 x, SInt32 y, UInt8 id) = 0;
+	virtual UInt32		registerHotKey(KeyID key, KeyModifierMask mask, UInt8 id) = 0;
 	virtual void		unregisterHotKey(UInt32 id) = 0;
 	virtual void		fakeInputBegin() = 0;
 	virtual void		fakeInputEnd() = 0;
 	virtual SInt32		getJumpZoneSize() const = 0;
-	virtual bool		isAnyMouseButtonDown() const = 0;
-	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
+	virtual bool		isAnyMouseButtonDown(UInt8 id) const = 0;
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
+	
+	// ISecondaryScreen overrides (MPX version)
+	virtual void		 fakeMotionEvent(SInt32 x, SInt32 y, UInt8 id) const = 0;
+	virtual void          	 fakeRelativeMotionEvent(SInt32 dx, SInt32 dy, UInt8 id) const = 0;
+	virtual void   	         fakeButtonEvent(ButtonID button, bool press, UInt8 id) const = 0;
+	virtual void           	 fakeMouseWheelEvent(SInt32, SInt32 yDelta, UInt8 id) const = 0;
 
 	// IKeyState overrides
-	virtual void		updateKeyMap() = 0;
-	virtual void		updateKeyState() = 0;
-	virtual void		setHalfDuplexMask(KeyModifierMask) = 0;
-	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
-							KeyButton button) = 0;
-	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-							SInt32 count, KeyButton button) = 0;
-	virtual void		fakeKeyUp(KeyButton button) = 0;
-	virtual void		fakeAllKeysUp() = 0;
-	virtual bool		fakeCtrlAltDel() = 0;
-	virtual bool		isKeyDown(KeyButton) const = 0;
+	virtual void		updateKeyMap(UInt8 id) = 0;
+	virtual void		updateKeyState(UInt8 id) = 0;
+	virtual void		setHalfDuplexMask(KeyModifierMask, UInt8 id) = 0;
+	virtual void		fakeKeyDown(KeyID kId, KeyModifierMask mask,
+							KeyButton button, UInt8 id) = 0;
+	virtual void		fakeKeyRepeat(KeyID kId, KeyModifierMask mask,
+							SInt32 count, KeyButton button, UInt8 id) = 0;
+	virtual void		fakeKeyUp(KeyButton button, UInt8 id) = 0;
+	virtual void		fakeAllKeysUp(UInt8 id) = 0;
+	virtual bool		fakeCtrlAltDel(UInt8 id) = 0;
+	virtual bool		isKeyDown(KeyButton, UInt8 id) const = 0;
 	virtual KeyModifierMask
-						getActiveModifiers() const = 0;
+						getActiveModifiers(UInt8 id) const = 0;
 	virtual KeyModifierMask
-						pollActiveModifiers() const = 0;
-	virtual SInt32		pollActiveGroup() const = 0;
-	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
+						pollActiveModifiers(UInt8 id) const = 0;
+	virtual SInt32		pollActiveGroup(UInt8 id) const = 0;
+	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys, UInt8 id) const = 0;
+    
+	// clean up platform devices when all synergy device stuff is finished
+	virtual void 		cleanUp(UInt8 id) = 0;
 
 protected:
 	//! Handle system event

@@ -16,6 +16,7 @@
 #define CXWINDOWSKEYSTATE_H
 
 #include "CKeyState.h"
+#include "CXWindowsScreen.h"
 #include "stdmap.h"
 #include "stdvector.h"
 #if X_DISPLAY_MISSING
@@ -29,6 +30,9 @@
 #	endif
 #	if HAVE_XKB_EXTENSION
 #		include <X11/extensions/XKBstr.h>
+#	endif
+#	if HAVE_X11_EXTENSIONS_XINPUT2_H
+#		include <X11/extensions/XInput2.h>
 #	endif
 #endif
 
@@ -44,7 +48,8 @@ public:
 		kGroupPollAndSet = -2
 	};
 
-	CXWindowsKeyState(Display*, bool useXKB);
+	CXWindowsKeyState(Display*, bool useXKB, UInt8 id);
+	CXWindowsKeyState(Display*, bool useXKB, CXWindowsScreen *screen, UInt8 id);
 	~CXWindowsKeyState();
 
 	//! @name modifiers
@@ -58,7 +63,7 @@ public:
 	on X11.  If \p group is \c kGroupPollAndSet then this will poll the
 	active group now and use it for future calls to \c pollActiveGroup().
 	*/
-	void				setActiveGroup(SInt32 group);
+	void				setActiveGroup(SInt32 group, UInt8 id);
 
 	//! Set the auto-repeat state
 	/*!
@@ -75,7 +80,13 @@ public:
 	Returns the synergy modifier mask corresponding to the X modifier
 	mask in \p state.
 	*/
-	KeyModifierMask		mapModifiersFromX(unsigned int state) const;
+		
+// 	#if HAVE_X11_EXTENSIONS_XINPUT2_H
+// 	  KeyModifierMask		mapModifiersFromX(const XIDeviceEvent& event) const;
+// 	#else
+	  KeyModifierMask		mapModifiersFromX(unsigned int state) const;
+// 	#endif
+	
 
 	//! Convert synergy modifier mask to X mask
 	/*!
@@ -96,16 +107,15 @@ public:
 	//@}
 
 	// IKeyState overrides
-	virtual bool		fakeCtrlAltDel();
-	virtual KeyModifierMask
-						pollActiveModifiers() const;
-	virtual SInt32		pollActiveGroup() const;
-	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const;
+	virtual bool		fakeCtrlAltDel(UInt8 id);
+	virtual KeyModifierMask	pollActiveModifiers(UInt8 id) const;
+	virtual SInt32		pollActiveGroup(UInt8 id) const;
+	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys, UInt8 id) const;
 
 protected:
 	// CKeyState overrides
 	virtual void		getKeyMap(CKeyMap& keyMap);
-	virtual void		fakeKey(const Keystroke& keystroke);
+	virtual void		fakeKey(const Keystroke& keystroke, UInt8 id);
 
 private:
 	void				updateKeysymMap(CKeyMap&);
@@ -132,6 +142,10 @@ private:
 	typedef std::map<UInt32, XKBModifierInfo> XKBModifierMap;
 
 	Display*			m_display;
+		
+	IDeviceManager*			m_dev;
+
+		
 #if HAVE_XKB_EXTENSION
 	XkbDescPtr			m_xkb;
 #endif
@@ -150,6 +164,14 @@ private:
 
 	// autorepeat state
 	XKeyboardState		m_keyboardState;
+	
+#if	HAVE_X11_EXTENSIONS_XINPUT2_H
+private:
+        CXWindowsScreen*                m_screen;
+
+private:
+        void                    fakeKeyEvent(const Keystroke& keystroke, UInt8 id);
+#endif
 };
 
 #endif

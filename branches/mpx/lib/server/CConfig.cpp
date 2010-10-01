@@ -2181,6 +2181,8 @@ CConfigReadContext::parseKeystroke(const CString& keystroke,
 				const std::set<CString>& screens) const
 {
 	CString s = keystroke;
+// FIXXME parseKeystroke id
+UInt8 id = 3;
 
 	KeyModifierMask mask;
 	if (!CKeyMap::parseModifiers(s, mask)) {
@@ -2196,14 +2198,15 @@ CConfigReadContext::parseKeystroke(const CString& keystroke,
 		throw XConfigRead(*this, "missing key and/or modifiers in keystroke");
 	}
 
-	return IPlatformScreen::CKeyInfo::alloc(key, mask, 0, 0, screens);
+	return IPlatformScreen::CKeyInfo::alloc(key, mask, 0, 0, screens, id);
 }
 
 IPlatformScreen::CButtonInfo*
 CConfigReadContext::parseMouse(const CString& mouse) const
 {
 	CString s = mouse;
-
+	// FIXXME CConfigReadContext::parseMouse: id
+	UInt8 id = 2;
 	KeyModifierMask mask;
 	if (!CKeyMap::parseModifiers(s, mask)) {
 		throw XConfigRead(*this, "unable to parse button modifiers");
@@ -2218,7 +2221,7 @@ CConfigReadContext::parseMouse(const CString& mouse) const
 		throw XConfigRead(*this, "invalid button");
 	}
 
-	return IPlatformScreen::CButtonInfo::alloc(button, mask);
+	return IPlatformScreen::CButtonInfo::alloc(button, id, mask);
 }
 
 KeyModifierMask

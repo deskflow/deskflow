@@ -159,9 +159,9 @@ bool
 CClientProxy1_0::parseHandshakeMessage(const UInt8* code)
 {
 	if (memcmp(code, kMsgCNoop, 4) == 0) {
-		// discard no-ops
-		LOG((CLOG_DEBUG2 "no-op from", getName().c_str()));
-		return true;
+	    // discard no-ops
+	    LOG((CLOG_DEBUG2 "no-op from \"%s\"", getName().c_str()));
+	    return true;
 	}
 	else if (memcmp(code, kMsgDInfo, 4) == 0) {
 		// future messages get parsed by parseMessage
@@ -188,7 +188,7 @@ CClientProxy1_0::parseMessage(const UInt8* code)
 	}
 	else if (memcmp(code, kMsgCNoop, 4) == 0) {
 		// discard no-ops
-		LOG((CLOG_DEBUG2 "no-op from", getName().c_str()));
+		LOG((CLOG_DEBUG2 "no-op from \"%s\"", getName().c_str()));
 		return true;
 	}
 	else if (memcmp(code, kMsgCClipboard, 4) == 0) {
@@ -223,9 +223,9 @@ CClientProxy1_0::handleFlatline(const CEvent&, void*)
 }
 
 bool
-CClientProxy1_0::getClipboard(ClipboardID id, IClipboard* clipboard) const
+CClientProxy1_0::getClipboard(ClipboardID cId, IClipboard* clipboard) const
 {
-	CClipboard::copy(clipboard, &m_clipboard[id].m_clipboard);
+	CClipboard::copy(clipboard, &m_clipboard[cId].m_clipboard);
 	return true;
 }
 
@@ -239,24 +239,24 @@ CClientProxy1_0::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-CClientProxy1_0::getCursorPos(SInt32& x, SInt32& y) const
-{
+CClientProxy1_0::getCursorPos(SInt32& x, SInt32& y, UInt8) const
+{	
 	// note -- this returns the cursor pos from when we last got client info
 	x = m_info.m_mx;
 	y = m_info.m_my;
+	LOG((CLOG_DEBUG1 "returning ClientInfo: x(%d),y(%d)", getName().c_str(), x, y));
 }
 
 void
 CClientProxy1_0::enter(SInt32 xAbs, SInt32 yAbs,
-				UInt32 seqNum, KeyModifierMask mask, bool)
+				UInt32 seqNum, KeyModifierMask mask, bool, UInt8, UInt8)
 {
-	LOG((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask));
-	CProtocolUtil::writef(getStream(), kMsgCEnter,
-								xAbs, yAbs, seqNum, mask);
+	LOG((CLOG_DEBUG1 "send enter by to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask));
+	CProtocolUtil::writef(getStream(), kMsgCEnter, xAbs, yAbs, seqNum, mask);
 }
 
 bool
-CClientProxy1_0::leave()
+CClientProxy1_0::leave(UInt8)
 {
 	LOG((CLOG_DEBUG1 "send leave to \"%s\"", getName().c_str()));
 	CProtocolUtil::writef(getStream(), kMsgCLeave);
@@ -266,38 +266,38 @@ CClientProxy1_0::leave()
 }
 
 void
-CClientProxy1_0::setClipboard(ClipboardID id, const IClipboard* clipboard)
+CClientProxy1_0::setClipboard(ClipboardID cId, const IClipboard* clipboard)
 {
 	// ignore if this clipboard is already clean
-	if (m_clipboard[id].m_dirty) {
+	if (m_clipboard[cId].m_dirty) {
 		// this clipboard is now clean
-		m_clipboard[id].m_dirty = false;
-		CClipboard::copy(&m_clipboard[id].m_clipboard, clipboard);
+		m_clipboard[cId].m_dirty = false;
+		CClipboard::copy(&m_clipboard[cId].m_clipboard, clipboard);
 
-		CString data = m_clipboard[id].m_clipboard.marshall();
-		LOG((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", id, getName().c_str(), data.size()));
-		CProtocolUtil::writef(getStream(), kMsgDClipboard, id, 0, &data);
+		CString data = m_clipboard[cId].m_clipboard.marshall();
+		LOG((CLOG_DEBUG "send clipboard %d to \"%s\" size=%d", cId, getName().c_str(), data.size()));
+		CProtocolUtil::writef(getStream(), kMsgDClipboard, cId, 0, &data);
 	}
 }
 
 void
-CClientProxy1_0::grabClipboard(ClipboardID id)
+CClientProxy1_0::grabClipboard(ClipboardID cId)
 {
-	LOG((CLOG_DEBUG "send grab clipboard %d to \"%s\"", id, getName().c_str()));
-	CProtocolUtil::writef(getStream(), kMsgCClipboard, id, 0);
+	LOG((CLOG_DEBUG "send grab clipboard %d to \"%s\"", cId, getName().c_str()));
+	CProtocolUtil::writef(getStream(), kMsgCClipboard, cId, 0);
 
 	// this clipboard is now dirty
-	m_clipboard[id].m_dirty = true;
+	m_clipboard[cId].m_dirty = true;
 }
 
 void
-CClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty)
+CClientProxy1_0::setClipboardDirty(ClipboardID cId, bool dirty)
 {
-	m_clipboard[id].m_dirty = dirty;
+	m_clipboard[cId].m_dirty = dirty;
 }
 
 void
-CClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton)
+CClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton, UInt8)
 {
 	LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
 	CProtocolUtil::writef(getStream(), kMsgDKeyDown1_0, key, mask);
@@ -305,48 +305,48 @@ CClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton)
 
 void
 CClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask,
-				SInt32 count, KeyButton)
+				SInt32 count, KeyButton, UInt8)
 {
 	LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count));
 	CProtocolUtil::writef(getStream(), kMsgDKeyRepeat1_0, key, mask, count);
 }
 
 void
-CClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask, KeyButton)
+CClientProxy1_0::keyUp(KeyID key, KeyModifierMask mask, KeyButton, UInt8)
 {
 	LOG((CLOG_DEBUG1 "send key up to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
 	CProtocolUtil::writef(getStream(), kMsgDKeyUp1_0, key, mask);
 }
 
 void
-CClientProxy1_0::mouseDown(ButtonID button)
+CClientProxy1_0::mouseDown(ButtonID button, UInt8 id)
 {
 	LOG((CLOG_DEBUG1 "send mouse down to \"%s\" id=%d", getName().c_str(), button));
-	CProtocolUtil::writef(getStream(), kMsgDMouseDown, button);
+	CProtocolUtil::writef(getStream(), kMsgDMouseDown1_0, button);
 }
 
 void
-CClientProxy1_0::mouseUp(ButtonID button)
+CClientProxy1_0::mouseUp(ButtonID button, UInt8 id)
 {
 	LOG((CLOG_DEBUG1 "send mouse up to \"%s\" id=%d", getName().c_str(), button));
-	CProtocolUtil::writef(getStream(), kMsgDMouseUp, button);
+	CProtocolUtil::writef(getStream(), kMsgDMouseUp1_0, button);
 }
 
 void
-CClientProxy1_0::mouseMove(SInt32 xAbs, SInt32 yAbs)
+CClientProxy1_0::mouseMove(SInt32 xAbs, SInt32 yAbs, UInt8)
 {
 	LOG((CLOG_DEBUG2 "send mouse move to \"%s\" %d,%d", getName().c_str(), xAbs, yAbs));
-	CProtocolUtil::writef(getStream(), kMsgDMouseMove, xAbs, yAbs);
+	CProtocolUtil::writef(getStream(), kMsgDMouseMove1_0, xAbs, yAbs);
 }
 
 void
-CClientProxy1_0::mouseRelativeMove(SInt32, SInt32)
+CClientProxy1_0::mouseRelativeMove(SInt32, SInt32, UInt8)
 {
 	// ignore -- not supported in protocol 1.0
 }
 
 void
-CClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
+CClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta, UInt8)
 {
 	// clients prior to 1.3 only support the y axis
 	LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d", getName().c_str(), yDelta));
@@ -430,27 +430,27 @@ bool
 CClientProxy1_0::recvClipboard()
 {
 	// parse message
-	ClipboardID id;
+	ClipboardID cId;
 	UInt32 seqNum;
 	CString data;
 	if (!CProtocolUtil::readf(getStream(),
-							kMsgDClipboard + 4, &id, &seqNum, &data)) {
+							kMsgDClipboard + 4, &cId, &seqNum, &data)) {
 		return false;
 	}
-	LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seqNum, data.size()));
+	LOG((CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), cId, seqNum, data.size()));
 
 	// validate
-	if (id >= kClipboardEnd) {
+	if (cId >= kClipboardEnd) {
 		return false;
 	}
 
 	// save clipboard
-	m_clipboard[id].m_clipboard.unmarshall(data, 0);
-	m_clipboard[id].m_sequenceNumber = seqNum;
+	m_clipboard[cId].m_clipboard.unmarshall(data, 0);
+	m_clipboard[cId].m_sequenceNumber = seqNum;
 
 	// notify
 	CClipboardInfo* info   = new CClipboardInfo;
-	info->m_id             = id;
+	info->m_cId             = cId;
 	info->m_sequenceNumber = seqNum;
 	EVENTQUEUE->addEvent(CEvent(getClipboardChangedEvent(),
 							getEventTarget(), info));
@@ -462,21 +462,21 @@ bool
 CClientProxy1_0::recvGrabClipboard()
 {
 	// parse message
-	ClipboardID id;
+	ClipboardID cId;
 	UInt32 seqNum;
-	if (!CProtocolUtil::readf(getStream(), kMsgCClipboard + 4, &id, &seqNum)) {
+	if (!CProtocolUtil::readf(getStream(), kMsgCClipboard + 4, &cId, &seqNum)) {
 		return false;
 	}
-	LOG((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d", getName().c_str(), id, seqNum));
+	LOG((CLOG_DEBUG "received client \"%s\" grabbed clipboard %d seqnum=%d", getName().c_str(), cId, seqNum));
 
 	// validate
-	if (id >= kClipboardEnd) {
+	if (cId >= kClipboardEnd) {
 		return false;
 	}
 
 	// notify
 	CClipboardInfo* info   = new CClipboardInfo;
-	info->m_id             = id;
+	info->m_cId             = cId;
 	info->m_sequenceNumber = seqNum;
 	EVENTQUEUE->addEvent(CEvent(getClipboardGrabbedEvent(),
 							getEventTarget(), info));

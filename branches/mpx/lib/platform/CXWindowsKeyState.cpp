@@ -30,9 +30,11 @@
 #endif
 #endif
 
-CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
-	m_display(display)
+CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB, UInt8 id) :
+	m_display(display),
+	m_dev(CDeviceManager::getInstance())
 {
+  m_id = id;
 	XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
 	if (useXKB) {
@@ -43,7 +45,7 @@ CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
 		m_xkb = NULL;
 	}
 #endif
-	setActiveGroup(kGroupPollAndSet);
+	setActiveGroup(kGroupPollAndSet, id);
 }
 
 CXWindowsKeyState::~CXWindowsKeyState()
@@ -56,11 +58,11 @@ CXWindowsKeyState::~CXWindowsKeyState()
 }
 
 void
-CXWindowsKeyState::setActiveGroup(SInt32 group)
+CXWindowsKeyState::setActiveGroup(SInt32 group, UInt8 id)
 {
 	if (group == kGroupPollAndSet) {
 		m_group = -1;
-		m_group = pollActiveGroup();
+		m_group = pollActiveGroup(id);
 	}
 	else if (group == kGroupPoll) {
 		m_group = -1;
@@ -126,15 +128,17 @@ CXWindowsKeyState::mapKeyToKeycodes(KeyID key, CKeycodeList& keycodes) const
 }
 
 bool
-CXWindowsKeyState::fakeCtrlAltDel()
+CXWindowsKeyState::fakeCtrlAltDel(UInt8 id)
 {
 	// pass keys through unchanged
 	return false;
 }
 
 KeyModifierMask
-CXWindowsKeyState::pollActiveModifiers() const
+CXWindowsKeyState::pollActiveModifiers(UInt8 id) const
 {
+  	LOG((CLOG_DEBUG1 "pollActiveModifiers %d",id));
+
 	Window root = DefaultRootWindow(m_display), window;
 	int xRoot, yRoot, xWindow, yWindow;
 	unsigned int state;
@@ -146,7 +150,7 @@ CXWindowsKeyState::pollActiveModifiers() const
 }
 
 SInt32
-CXWindowsKeyState::pollActiveGroup() const
+CXWindowsKeyState::pollActiveGroup(UInt8 id) const
 {
 	if (m_group != -1) {
 		assert(m_group >= 0);
@@ -165,7 +169,7 @@ CXWindowsKeyState::pollActiveGroup() const
 }
 
 void
-CXWindowsKeyState::pollPressedKeys(KeyButtonSet& pressedKeys) const
+CXWindowsKeyState::pollPressedKeys(IKeyState::KeyButtonSet& pressedKeys, UInt8 id) const
 {
 	char keys[32];
 	XQueryKeymap(m_display, keys);
@@ -201,11 +205,15 @@ CXWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 }
 
 void
-CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
+CXWindowsKeyState::fakeKey(const Keystroke& keystroke, UInt8 id)
 {
+  // FIXXME CXWindowsKeyState::fakeKey: assume XTEST device is master id + 2
+  	LOG((CLOG_DEBUG1 "opening device %d for fake key event", id + 2)); 
+	XDevice *my_kbd = XOpenDevice(m_display, id + 2);
+	int axes[2] = {0,0};
 	switch (keystroke.m_type) {
 	case Keystroke::kButton:
-		LOG((CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
+		LOG((CLOG_DEBUG1 "fakekey:  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client, keystroke.m_data.m_button.m_press ? "down" : "up"));
 		if (keystroke.m_data.m_button.m_repeat) {
 			int c = keystroke.m_data.m_button.m_button;
 			int i = (c >> 3);
@@ -216,9 +224,14 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 				break;
 			}
 		}
-		XTestFakeKeyEvent(m_display, keystroke.m_data.m_button.m_button,
+		XTestFakeDeviceKeyEvent(m_display, my_kbd, keystroke.m_data.m_button.m_button,
 							keystroke.m_data.m_button.m_press ? True : False,
-							CurrentTime);
+							axes, 0, CurrentTime);
+							
+		//XTestFakeKeyEvent(m_display, keystroke.m_data.m_button.m_button,
+		//					keystroke.m_data.m_button.m_press ? True : False,
+		//					CurrentTime);
+							
 		break;
 
 	case Keystroke::kGroup:
@@ -240,7 +253,7 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 #if HAVE_XKB_EXTENSION
 			if (m_xkb != NULL) {
 				XkbLockGroup(m_display, XkbUseCoreKbd,
-							getEffectiveGroup(pollActiveGroup(),
+							getEffectiveGroup(pollActiveGroup(id),
 								keystroke.m_data.m_group.m_group));
 			}
 			else
@@ -252,6 +265,7 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 		break;
 	}
 	XFlush(m_display);
+	XCloseDevice(m_display, my_kbd);
 }
 
 void
@@ -741,7 +755,7 @@ CXWindowsKeyState::updateKeysymMapXKB(CKeyMap& keyMap)
 #endif
 
 void
-CXWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group,
+CXWindowsKeyState::remapKeyModifiers(KeyID kId, SInt32 group,
 							CKeyMap::KeyItem& item, void* vself)
 {
 	CXWindowsKeyState* self = reinterpret_cast<CXWindowsKeyState*>(vself);

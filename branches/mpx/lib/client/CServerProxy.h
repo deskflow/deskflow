@@ -15,6 +15,7 @@
 #ifndef CSERVERPROXY_H
 #define CSERVERPROXY_H
 
+#include "IDeviceManager.h"
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "CEvent.h"
@@ -93,6 +94,7 @@ private:
 	typedef EResult (CServerProxy::*MessageParser)(const UInt8*);
 
 	CClient*			m_client;
+	IDeviceManager*			m_dev;
 	IStream*			m_stream;
 
 	UInt32				m_seqNum;

@@ -42,6 +42,7 @@ CClient::CClient(const CString& name, const CNetworkAddress& address,
 				ISocketFactory* socketFactory,
 				IStreamFilterFactory* streamFilterFactory,
 				CScreen* screen) :
+	m_dev(CDeviceManager::getInstance()),
 	m_name(name),
 	m_serverAddress(address),
 	m_socketFactory(socketFactory),
@@ -209,9 +210,9 @@ CClient::getEventTarget() const
 }
 
 bool
-CClient::getClipboard(ClipboardID id, IClipboard* clipboard) const
+CClient::getClipboard(ClipboardID cId, IClipboard* clipboard) const
 {
-	return m_screen->getClipboard(id, clipboard);
+	return m_screen->getClipboard(cId, clipboard);
 }
 
 void
@@ -221,30 +222,30 @@ CClient::getShape(SInt32& x, SInt32& y, SInt32& w, SInt32& h) const
 }
 
 void
-CClient::getCursorPos(SInt32& x, SInt32& y) const
+CClient::getCursorPos(SInt32& x, SInt32& y, UInt8 id) const
 {
-	m_screen->getCursorPos(x, y);
+	m_screen->getCursorPos(x, y, m_dev->getIdFromSid(id));
 }
 
 void
-CClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
+CClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool, UInt8 kId, UInt8 pId)
 {
-	m_active = true;
-	m_screen->mouseMove(xAbs, yAbs);
-	m_screen->enter(mask);
+	m_active = true;	
+	m_screen->enter(mask, kId, pId);
+	m_screen->mouseMove(xAbs, yAbs, m_dev->getIdFromSid(pId));
 }
 
 bool
-CClient::leave()
+CClient::leave(UInt8 id)
 {
-	m_screen->leave();
+	m_screen->leave(m_dev->getIdFromSid(id));
 
 	m_active = false;
 
 	// send clipboards that we own and that have changed
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		if (m_ownClipboard[id]) {
-			sendClipboard(id);
+	for (ClipboardID cId = 0; cId < kClipboardEnd; ++cId) {
+		if (m_ownClipboard[cId]) {
+			sendClipboard(cId);
 		}
 	}
 
@@ -252,19 +253,20 @@ CClient::leave()
 }
 
 void
-CClient::setClipboard(ClipboardID id, const IClipboard* clipboard)
+CClient::setClipboard(ClipboardID cId, const IClipboard* clipboard)
 {
- 	m_screen->setClipboard(id, clipboard);
-	m_ownClipboard[id]  = false;
-	m_sentClipboard[id] = false;
+ 	m_screen->setClipboard(cId, clipboard);
+	m_ownClipboard[cId]  = false;
+	m_sentClipboard[cId] = false;
 }
 
 void
-CClient::grabClipboard(ClipboardID id)
+
+CClient::grabClipboard(ClipboardID cId)
 {
-	m_screen->grabClipboard(id);
-	m_ownClipboard[id]  = false;
-	m_sentClipboard[id] = false;
+	m_screen->grabClipboard(cId);
+	m_ownClipboard[cId]  = false;
+	m_sentClipboard[cId] = false;
 }
 
 void
@@ -274,52 +276,52 @@ CClient::setClipboardDirty(ClipboardID, bool)
 }
 
 void
-CClient::keyDown(KeyID id, KeyModifierMask mask, KeyButton button)
+CClient::keyDown(KeyID kId, KeyModifierMask mask, KeyButton button, UInt8 id)
 {
- 	m_screen->keyDown(id, mask, button);
+ 	m_screen->keyDown(kId, mask, button, m_dev->getIdFromSid(id));
 }
 
 void
-CClient::keyRepeat(KeyID id, KeyModifierMask mask,
-				SInt32 count, KeyButton button)
+CClient::keyRepeat(KeyID kId, KeyModifierMask mask,
+				SInt32 count, KeyButton button, UInt8 id)
 {
- 	m_screen->keyRepeat(id, mask, count, button);
+ 	m_screen->keyRepeat(kId, mask, count, button, m_dev->getIdFromSid(id));
 }
 
 void
-CClient::keyUp(KeyID id, KeyModifierMask mask, KeyButton button)
+CClient::keyUp(KeyID kId, KeyModifierMask mask, KeyButton button, UInt8 id)
 {
- 	m_screen->keyUp(id, mask, button);
+ 	m_screen->keyUp(kId, mask, button, m_dev->getIdFromSid(id));
 }
 
 void
-CClient::mouseDown(ButtonID id)
+CClient::mouseDown(ButtonID button, UInt8 id)
 {
- 	m_screen->mouseDown(id);
+ 	m_screen->mouseDown(button, m_dev->getIdFromSid(id));
 }
 
 void
-CClient::mouseUp(ButtonID id)
+CClient::mouseUp(ButtonID button, UInt8 id)
 {
- 	m_screen->mouseUp(id);
+ 	m_screen->mouseUp(button, m_dev->getIdFromSid(id));
 }
 
 void
-CClient::mouseMove(SInt32 x, SInt32 y)
+CClient::mouseMove(SInt32 x, SInt32 y, UInt8 id)
 {
-	m_screen->mouseMove(x, y);
+	m_screen->mouseMove(x, y, m_dev->getIdFromSid(id));
 }
 
 void
-CClient::mouseRelativeMove(SInt32 dx, SInt32 dy)
+CClient::mouseRelativeMove(SInt32 dx, SInt32 dy, UInt8 id)
 {
-	m_screen->mouseRelativeMove(dx, dy);
+	m_screen->mouseRelativeMove(dx, dy, m_dev->getIdFromSid(id));
 }
 
 void
-CClient::mouseWheel(SInt32 xDelta, SInt32 yDelta)
+CClient::mouseWheel(SInt32 xDelta, SInt32 yDelta, UInt8 id)
 {
-	m_screen->mouseWheel(xDelta, yDelta);
+	m_screen->mouseWheel(xDelta, yDelta, m_dev->getIdFromSid(id));
 }
 
 void
@@ -347,7 +349,7 @@ CClient::getName() const
 }
 
 void
-CClient::sendClipboard(ClipboardID id)
+CClient::sendClipboard(ClipboardID cId)
 {
 	// note -- m_mutex must be locked on entry
 	assert(m_screen != NULL);
@@ -358,25 +360,25 @@ CClient::sendClipboard(ClipboardID id)
 	// as the screen may detect an unchanged clipboard and
 	// avoid copying the data.
 	CClipboard clipboard;
-	if (clipboard.open(m_timeClipboard[id])) {
+	if (clipboard.open(m_timeClipboard[cId])) {
 		clipboard.close();
 	}
-	m_screen->getClipboard(id, &clipboard);
+	m_screen->getClipboard(cId, &clipboard);
 
 	// check time
-	if (m_timeClipboard[id] == 0 ||
-		clipboard.getTime() != m_timeClipboard[id]) {
+	if (m_timeClipboard[cId] == 0 ||
+		clipboard.getTime() != m_timeClipboard[cId]) {
 		// save new time
-		m_timeClipboard[id] = clipboard.getTime();
+		m_timeClipboard[cId] = clipboard.getTime();
 
 		// marshall the data
 		CString data = clipboard.marshall();
 
 		// save and send data if different or not yet sent
-		if (!m_sentClipboard[id] || data != m_dataClipboard[id]) {
-			m_sentClipboard[id] = true;
-			m_dataClipboard[id] = data;
-			m_server->onClipboardChanged(id, &clipboard);
+		if (!m_sentClipboard[cId] || data != m_dataClipboard[cId]) {
+			m_sentClipboard[cId] = true;
+			m_dataClipboard[cId] = data;
+			m_server->onClipboardChanged(cId, &clipboard);
 		}
 	}
 }
@@ -531,10 +533,10 @@ CClient::handleConnected(const CEvent&, void*)
 	setupConnection();
 
 	// reset clipboard state
-	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-		m_ownClipboard[id]  = false;
-		m_sentClipboard[id] = false;
-		m_timeClipboard[id] = 0;
+	for (ClipboardID cId = 0; cId < kClipboardEnd; ++cId) {
+		m_ownClipboard[cId]  = false;
+		m_sentClipboard[cId] = false;
+		m_timeClipboard[cId] = 0;
 	}
 }
 
@@ -598,17 +600,17 @@ CClient::handleClipboardGrabbed(const CEvent& event, void*)
 		reinterpret_cast<const IScreen::CClipboardInfo*>(event.getData());
 
 	// grab ownership
-	m_server->onGrabClipboard(info->m_id);
+	m_server->onGrabClipboard(info->m_cId);
 
 	// we now own the clipboard and it has not been sent to the server
-	m_ownClipboard[info->m_id]  = true;
-	m_sentClipboard[info->m_id] = false;
-	m_timeClipboard[info->m_id] = 0;
+	m_ownClipboard[info->m_cId]  = true;
+	m_sentClipboard[info->m_cId] = false;
+	m_timeClipboard[info->m_cId] = 0;
 
 	// if we're not the active screen then send the clipboard now,
 	// otherwise we'll wait until we leave.
 	if (!m_active) {
-		sendClipboard(info->m_id);
+		sendClipboard(info->m_cId);
 	}
 }
 

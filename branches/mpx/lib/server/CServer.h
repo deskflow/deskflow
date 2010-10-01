@@ -22,6 +22,7 @@
 #include "MouseTypes.h"
 #include "CEvent.h"
 #include "CStopwatch.h"
+#include "CDeviceManager.h"
 #include "stdmap.h"
 #include "stdset.h"
 #include "stdvector.h"
@@ -208,21 +209,21 @@ private:
 	// returns true iff mouse should be locked to the current screen
 	// according to this object only, ignoring what the primary client
 	// says.
-	bool				isLockedToScreenServer() const;
+	bool				isLockedToScreenServer(UInt8 id) const;
 
 	// returns true iff mouse should be locked to the current screen
 	// according to this object or the primary client.
-	bool				isLockedToScreen() const;
+	bool				isLockedToScreen(UInt8 id) const;
 
 	// returns the jump zone of the client
 	SInt32				getJumpZoneSize(CBaseClientProxy*) const;
 
 	// change the active screen
 	void				switchScreen(CBaseClientProxy*,
-							SInt32 x, SInt32 y, bool forScreenSaver);
+							SInt32 x, SInt32 y, UInt8 id, bool forScreenSaver);
 
 	// jump to screen
-	void				jumpToScreen(CBaseClientProxy*);
+	void				jumpToScreen(CBaseClientProxy*, UInt8 id);
 
 	// convert pixel position to fraction, using x or y depending on the
 	// direction.
@@ -249,7 +250,7 @@ private:
 	// cross multiple screens.  if there is no suitable screen then
 	// return NULL and x,y are not modified.
 	CBaseClientProxy*	mapToNeighbor(CBaseClientProxy*, EDirection,
-							SInt32& x, SInt32& y) const;
+							SInt32& x, SInt32& y, UInt8 id) const;
 
 	// adjusts x and y or neither to avoid ending up in a jump zone
 	// after entering the client in the given direction.
@@ -260,11 +261,12 @@ private:
 	// options like switch delay and tracking any state required to
 	// implement them.  returns true iff a switch is permitted.
 	bool				isSwitchOkay(CBaseClientProxy* dst, EDirection,
-							SInt32 x, SInt32 y, SInt32 xActive, SInt32 yActive);
+							SInt32 x, SInt32 y, UInt8 id, 
+						        SInt32 xActive, SInt32 yActive);
 
 	// update switch state due to a mouse move at \p x, \p y that
 	// doesn't switch screens.
-	void				noSwitch(SInt32 x, SInt32 y);
+	void				noSwitch(SInt32 x, SInt32 y, UInt8 id);
 
 	// stop switch timers
 	void				stopSwitch();
@@ -273,7 +275,7 @@ private:
 	void				startSwitchTwoTap();
 
 	// arm the two tap switch timer if \p x, \p y is outside the tap zone
-	void				armSwitchTwoTap(SInt32 x, SInt32 y);
+	void				armSwitchTwoTap(SInt32 x, SInt32 y, UInt8 id);
 
 	// stop the two tap switch timer
 	void				stopSwitchTwoTap();
@@ -299,7 +301,7 @@ private:
 							SInt32 x, SInt32 y, SInt32 size) const;
 
 	// stop relative mouse moves
-	void				stopRelativeMoves();
+	void				stopRelativeMoves(UInt8 id);
 
 	// send screen options to \c client
 	void				sendOptions(CBaseClientProxy* client) const;
@@ -333,18 +335,18 @@ private:
 
 	// event processing
 	void				onClipboardChanged(CBaseClientProxy* sender,
-							ClipboardID id, UInt32 seqNum);
+							ClipboardID cId, UInt32 seqNum);
 	void				onScreensaver(bool activated);
 	void				onKeyDown(KeyID, KeyModifierMask, KeyButton,
-							const char* screens);
+							const char* screens, UInt8 id);
 	void				onKeyUp(KeyID, KeyModifierMask, KeyButton,
-							const char* screens);
-	void				onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton);
-	void				onMouseDown(ButtonID);
-	void				onMouseUp(ButtonID);
-	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
-	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
-	void				onMouseWheel(SInt32 xDelta, SInt32 yDelta);
+							const char* screens, UInt8 id);
+	void				onKeyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, UInt8 id);
+	void				onMouseDown(ButtonID bId, UInt8 id);
+	void				onMouseUp(ButtonID bId, UInt8 id);
+	bool				onMouseMovePrimary(SInt32 x, SInt32 y, UInt8 id);
+	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy, UInt8 id);
+	void				onMouseWheel(SInt32 xDelta, SInt32 yDelta, UInt8 id);
 
 	// add client to list and attach event handlers for client
 	bool				addClient(CBaseClientProxy*);
@@ -384,6 +386,9 @@ private:
 	// the primary screen client
 	CPrimaryClient*		m_primaryClient;
 
+	IDeviceManager* m_dev;
+		//char			m_screen[1];
+	
 	// all clients (including the primary client) indexed by name
 	typedef std::map<CString, CBaseClientProxy*> CClientList;
 	typedef std::set<CBaseClientProxy*> CClientSet;
@@ -395,6 +400,7 @@ private:
 	COldClients			m_oldClients;
 
 	// the client with focus
+	// FIXXME m_active is obsolete since we have multiple foci
 	CBaseClientProxy*	m_active;
 
 	// the sequence number of enter messages
@@ -402,14 +408,14 @@ private:
 
 	// current mouse position (in absolute screen coordinates) on
 	// whichever screen is active
-	SInt32				m_x, m_y;
+	//SInt32				m_x, m_y;
 
 	// last mouse deltas.  this is needed to smooth out double tap
 	// on win32 which reports bogus mouse motion at the edge of
 	// the screen when using low level hooks, synthesizing motion
 	// in the opposite direction the mouse actually moved.
-	SInt32				m_xDelta, m_yDelta;
-	SInt32				m_xDelta2, m_yDelta2;
+	//SInt32				m_xDelta, m_yDelta;
+	//SInt32				m_xDelta2, m_yDelta2;
 
 	// current configuration
 	CConfig				m_config;
@@ -421,6 +427,7 @@ private:
 	CClipboardInfo		m_clipboards[kClipboardEnd];
 
 	// state saved when screen saver activates
+	//FIXXME activeSaver x/y ???
 	CBaseClientProxy*	m_activeSaver;
 	SInt32				m_xSaver, m_ySaver;
 
@@ -441,8 +448,8 @@ private:
 	bool				m_switchTwoTapArmed;
 	SInt32				m_switchTwoTapZone;
 
-	// relative mouse move option
-	bool				m_relativeMoves;
+// 	// relative mouse move option
+// 	bool				m_relativeMoves;
 
 	// flag whether or not we have broadcasting enabled and the screens to
 	// which we should send broadcasted keys.

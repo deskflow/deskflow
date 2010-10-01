@@ -51,7 +51,33 @@ public:
 	Synthesize a mouse wheel event of amount \c xDelta and \c yDelta.
 	*/
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
+	
+	
+	//! Fake mouse press/release (MPX version)
+	/*!
+	Synthesize a press or release of mouse button \c id.
+	*/
+	virtual void   	         fakeButtonEvent(ButtonID button, bool press, UInt8 id) const = 0;
 
+	//! Fake mouse move
+	/*!
+	Synthesize a mouse move to the absolute coordinates \c x,y.
+	*/
+	virtual void		 fakeMotionEvent(SInt32 x, SInt32 y, UInt8 id) const = 0;
+
+	//! Fake mouse move
+	/*!
+	Synthesize a mouse move to the relative coordinates \c dx,dy.
+	*/
+	virtual void          	 fakeRelativeMotionEvent(SInt32 dx, SInt32 dy, UInt8 id) const = 0;
+
+	//! Fake mouse wheel
+	/*!
+	Synthesize a mouse wheel event of amount \c xDelta and \c yDelta.
+	*/
+	virtual void           	 fakeMouseWheelEvent(SInt32, SInt32 yDelta, UInt8 id) const = 0;
+
+	
 	//@}
 };
 

@@ -65,11 +65,11 @@ public:
 		virtual CCondition*		clone() const;
 		virtual CString			format() const;
 		virtual EFilterStatus	match(const CEvent&);
-		virtual void			enablePrimary(CPrimaryClient*);
+		virtual void			enablePrimary(CPrimaryClient*, UInt8 id);
 		virtual void			disablePrimary(CPrimaryClient*);
 
 	private:
-		UInt32					m_id;
+		UInt8					m_id;
 		KeyID					m_key;
 		KeyModifierMask			m_mask;
 	};
@@ -223,11 +223,10 @@ public:
 	class CMouseButtonAction : public CAction {
 	public:
 		CMouseButtonAction(IPlatformScreen::CButtonInfo* adoptedInfo,
-									bool press);
+								bool press);
 		~CMouseButtonAction();
 
-		const IPlatformScreen::CButtonInfo*
-								getInfo() const;
+		const IPlatformScreen::CButtonInfo*	getInfo() const;
 		bool					isOnPress() const;
 
 		// CAction overrides

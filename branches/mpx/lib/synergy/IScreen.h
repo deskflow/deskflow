@@ -29,7 +29,7 @@ class IScreen : public IInterface {
 public:
 	struct CClipboardInfo {
 	public:
-		ClipboardID		m_id;
+		ClipboardID		m_cId;
 		UInt32			m_sequenceNumber;
 	};
 
@@ -61,8 +61,8 @@ public:
 	/*!
 	Return the current position of the cursor in \c x and \c y.
 	*/
-	virtual void		getCursorPos(SInt32& x, SInt32& y) const = 0;
-
+	virtual void		getCursorPos(SInt32& x, SInt32& y, UInt8 id) const = 0;
+	
 	//! Get error event type
 	/*!
 	Returns the error event type.  This is sent whenever the screen has

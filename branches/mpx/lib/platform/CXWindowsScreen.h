@@ -16,12 +16,18 @@
 #define CXWINDOWSSCREEN_H
 
 #include "CPlatformScreen.h"
+#include "CDeviceManager.h"
+
 #include "stdset.h"
 #include "stdvector.h"
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
 #	include <X11/Xlib.h>
+#	if HAVE_X11_EXTENSIONS_XINPUT2_H
+#		include <X11/extensions/XInput2.h>
+#		include <X11/extensions/Xfixes.h>
+#	endif
 #endif
 
 class CXWindowsClipboard;
@@ -31,9 +37,12 @@ class CXWindowsScreenSaver;
 //! Implementation of IPlatformScreen for X11
 class CXWindowsScreen : public CPlatformScreen {
 public:
-	CXWindowsScreen(const char* displayName, bool isPrimary, int mouseScrollDelta=0);
+  	CXWindowsScreen(const char* displayName, bool isPrimary, int mouseScrollDelta=0);
+	CXWindowsScreen(const char* displayName, bool isPrimary, CString serverName, int mouseScrollDelta = 0);
 	virtual ~CXWindowsScreen();
 
+	static IPlatformScreen* getInstance(const char* displayName, bool isPrimary, CString serverName, int mouseScrollDelta = 0);
+		
 	//! @name manipulators
 	//@{
 
@@ -44,30 +53,33 @@ public:
 	virtual bool		getClipboard(ClipboardID id, IClipboard*) const;
 	virtual void		getShape(SInt32& x, SInt32& y,
 							SInt32& width, SInt32& height) const;
+#ifndef HAVE_X11_EXTENSIONS_XINPUT2_H
 	virtual void		getCursorPos(SInt32& x, SInt32& y) const;
+#endif
 
 	// IPrimaryScreen overrides
 	virtual void		reconfigure(UInt32 activeSides);
-	virtual void		warpCursor(SInt32 x, SInt32 y);
-	virtual UInt32		registerHotKey(KeyID key, KeyModifierMask mask);
+	virtual void		warpCursor(SInt32 x, SInt32 y, UInt8 id);
+	virtual bool		isAnyMouseButtonDown(UInt8 id) const;
+	virtual UInt32		registerHotKey(KeyID key, KeyModifierMask mask, UInt8 id);
 	virtual void		unregisterHotKey(UInt32 id);
 	virtual void		fakeInputBegin();
 	virtual void		fakeInputEnd();
 	virtual SInt32		getJumpZoneSize() const;
-	virtual bool		isAnyMouseButtonDown() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 
 	// ISecondaryScreen overrides
+//#ifndef HAVE_X11_EXTENSIONS_XINPUT2_H
 	virtual void		fakeMouseButton(ButtonID id, bool press) const;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
-
+//#endif
 	// IPlatformScreen overrides
 	virtual void		enable();
 	virtual void		disable();
-	virtual void		enter();
-	virtual bool		leave();
+	virtual void		enter(UInt8 kId, UInt8 pId);
+	virtual bool		leave(UInt8 id);
 	virtual bool		setClipboard(ClipboardID, const IClipboard*);
 	virtual void		checkClipboards();
 	virtual void		openScreensaver(bool notify);
@@ -82,7 +94,7 @@ protected:
 	// IPlatformScreen overrides
 	virtual void		handleSystemEvent(const CEvent&, void*);
 	virtual void		updateButtons();
-	virtual IKeyState*	getKeyState() const;
+	virtual IKeyState*	getKeyState(UInt8 id) const;
 
 private:
 	// event sending
@@ -121,25 +133,34 @@ private:
 	Window				openWindow() const;
 	void				openIM();
 
-	bool				grabMouseAndKeyboard();
+	bool				onHotKey(XKeyEvent&, bool isRepeat);
+
+	bool				grabMouseAndKeyboard(UInt8 id);
+#ifndef HAVE_X11_EXTENSIONS_XINPUT2_H
 	void				onKeyPress(XKeyEvent&);
 	void				onKeyRelease(XKeyEvent&, bool isRepeat);
-	bool				onHotKey(XKeyEvent&, bool isRepeat);
 	void				onMousePress(const XButtonEvent&);
 	void				onMouseRelease(const XButtonEvent&);
 	void				onMouseMove(const XMotionEvent&);
+#endif
 
 	void				selectEvents(Window) const;
 	void				doSelectEvents(Window) const;
+	void				hideCursor(Window w, Cursor c, UInt8 id) const;
+	void 				doHide(Window w, Cursor c, UInt8 id) const;
+#if HAVE_X11_EXTENSIONS_XINPUT2_H
+	KeyID  				mapKeyFromX(const XIDeviceEvent& event) const;
+	ButtonID			mapButtonFromX(const UInt8 xbutton) const;
+	unsigned int         		mapButtonToX(ButtonID id) const;
 
+#else
 	KeyID				mapKeyFromX(XKeyEvent*) const;
 	ButtonID			mapButtonFromX(const XButtonEvent*) const;
 	unsigned int		mapButtonToX(ButtonID id) const;
 
 	void				warpCursorNoFlush(SInt32 x, SInt32 y);
-
-	void				refreshKeyboard(XEvent*);
-
+#endif
+	void				refreshKeyboard(XEvent*, UInt8 id);
 	static Bool			findKeyEvent(Display*, XEvent* xevent, XPointer arg);
 
 private:
@@ -179,7 +200,7 @@ private:
 	SInt32				m_xCursor, m_yCursor;
 
 	// keyboard stuff
-	CXWindowsKeyState*	m_keyState;
+	//CXWindowsKeyState*		m_keyState;
 
 	// hot key stuff
 	HotKeyMap			m_hotKeys;
@@ -188,7 +209,7 @@ private:
 
 	// input focus stuff
 	Window				m_lastFocus;
-	int					m_lastFocusRevert;
+	int				m_lastFocusRevert;
 
 	// input method stuff
 	XIM					m_im;
@@ -224,11 +245,47 @@ private:
 
 	// XKB extension stuff
 	bool				m_xkb;
-	int					m_xkbEventBase;
+	int				m_xkbEventBase;
 
+protected:
 	// pointer to (singleton) screen.  this is only needed by
 	// ioErrorHandler().
-	static CXWindowsScreen*	s_screen;
+	static CXWindowsScreen*		s_screen;
+	static bool			instanceFlag;
+	IDeviceManager*			m_dev;
+	CString				m_serverName;
+
+#if	HAVE_X11_EXTENSIONS_XINPUT2_H
+
+public:
+    void		 fakeMotionEvent(SInt32 x, SInt32 y, UInt8 id) const;
+    void          	 fakeRelativeMotionEvent(SInt32 dx, SInt32 dy, UInt8 id) const;
+    void   	         fakeButtonEvent(ButtonID button, bool press, UInt8 id) const;
+    void           	 fakeMouseWheelEvent(SInt32, SInt32 yDelta, UInt8 id) const;
+    void   	         getCursorPos(SInt32& x, SInt32& y, UInt8 id) const;
+    void           	 warpCursorNoFlush(SInt32 x, SInt32 y, UInt8 id);
+
+    KeyModifierMask	 mapModifiersFromX(const XIDeviceEvent& event) const;
+
+    void		cleanUp(UInt8 id);
+    //testing xfixes
+    bool m_hidden;
+private:
+
+    void           onKeyPress(const XIDeviceEvent& press);
+    void           onKeyRelease(const XIDeviceEvent& release, bool isRepeat);
+    void           onMousePress(const XIDeviceEvent& press);
+    void           onMouseRelease(const XIDeviceEvent& release);
+    void           onMouseMove(const XIRawEvent& motion);
+    void	   initDevices();
+    void	   createMaster(CString name, UInt8 sKbdId, UInt8 sPtrId);
+    void	   removeMaster(UInt8 id);
+    UInt8         findDeviceId(CString name) const;
+private:
+    UInt32 m_xiOpCode;
+    
+    
+#endif
 };
 
 #endif

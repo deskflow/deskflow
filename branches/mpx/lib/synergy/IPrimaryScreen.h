@@ -30,32 +30,35 @@ public:
 	//! Button event data
 	class CButtonInfo {
 	public:
-		static CButtonInfo* alloc(ButtonID, KeyModifierMask);
-		static CButtonInfo* alloc(const CButtonInfo&);
+		static CButtonInfo* 	alloc(ButtonID, UInt8, KeyModifierMask);
+		static CButtonInfo* 	alloc(const CButtonInfo&);
 
-		static bool			equal(const CButtonInfo*, const CButtonInfo*);
+		static bool	    	equal(const CButtonInfo*, const CButtonInfo*);
 
 	public:
 		ButtonID		m_button;
-		KeyModifierMask	m_mask;
+		UInt8			m_id;
+		KeyModifierMask		m_mask;
 	};
 	//! Motion event data
 	class CMotionInfo {
 	public:
-		static CMotionInfo* alloc(SInt32 x, SInt32 y);
+		static CMotionInfo* alloc(SInt32 x, SInt32 y, UInt8 id);
 
 	public:
 		SInt32			m_x;
 		SInt32			m_y;
+		UInt8			m_id;
 	};
 	//! Wheel motion event data
 	class CWheelInfo {
 	public:
-		static CWheelInfo* alloc(SInt32 xDelta, SInt32 yDelta);
+		static CWheelInfo* alloc(SInt32 xDelta, SInt32 yDelta, UInt8 id);
 
 	public:
 		SInt32			m_xDelta;
 		SInt32			m_yDelta;
+		UInt8			m_id;
 	};
 	//! Hot key event data
 	class CHotKeyInfo {
@@ -84,7 +87,7 @@ public:
 	discard input events up to and including the warp before
 	returning.
 	*/
-	virtual void		warpCursor(SInt32 x, SInt32 y) = 0;
+	virtual void		warpCursor(SInt32 x, SInt32 y, UInt8 id) = 0;
 
 	//! Register a system hotkey
 	/*!
@@ -107,7 +110,7 @@ public:
 	the modifiers in any order or to require the user to press the given key
 	last.
 	*/
-	virtual UInt32		registerHotKey(KeyID key, KeyModifierMask mask) = 0;
+	virtual UInt32		registerHotKey(KeyID key, KeyModifierMask mask, UInt8 id) = 0;
 
 	//! Unregister a system hotkey
 	/*!
@@ -147,7 +150,7 @@ public:
 	"current" means up to the last processed event but it can mean
 	the current physical mouse button state.
 	*/
-	virtual bool		isAnyMouseButtonDown() const = 0;
+	virtual bool		isAnyMouseButtonDown(UInt8 id) const = 0;
 
 	//! Get cursor center position
 	/*!

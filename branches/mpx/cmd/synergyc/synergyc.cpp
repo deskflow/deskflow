@@ -111,7 +111,8 @@ createScreen()
 #if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(false));
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(ARG->m_display, false, ARG->m_yscroll));
+//	return new CScreen(new CXWindowsScreen(ARG->m_display, false, ARG->m_yscroll));
+	return new CScreen(new CXWindowsScreen(ARG->m_display, false, ARG->m_serverAddress->getHostname(), ARG->m_yscroll));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(false));
 #endif

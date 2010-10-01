@@ -59,23 +59,23 @@ public:
 	//@}
 
 	// IKeyState overrides
-	virtual void		updateKeyMap();
-	virtual void		updateKeyState();
-	virtual void		setHalfDuplexMask(KeyModifierMask);
-	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
-							KeyButton button);
-	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
-							SInt32 count, KeyButton button);
-	virtual void		fakeKeyUp(KeyButton button);
-	virtual void		fakeAllKeysUp();
-	virtual bool		fakeCtrlAltDel() = 0;
-	virtual bool		isKeyDown(KeyButton) const;
+	virtual void		updateKeyMap(UInt8 id);
+	virtual void		updateKeyState(UInt8 id);
+	virtual void		setHalfDuplexMask(KeyModifierMask, UInt8 id);
+	virtual void		fakeKeyDown(KeyID kId, KeyModifierMask mask,
+							KeyButton button, UInt8 id);
+	virtual void		fakeKeyRepeat(KeyID kId, KeyModifierMask mask,
+							SInt32 count, KeyButton button, UInt8 id);
+	virtual void		fakeKeyUp(KeyButton button, UInt8 id);
+	virtual void		fakeAllKeysUp(UInt8 id);
+	virtual bool		fakeCtrlAltDel(UInt8 id) = 0;
+	virtual bool		isKeyDown(KeyButton, UInt8 id) const;
 	virtual KeyModifierMask
-						getActiveModifiers() const;
+						getActiveModifiers(UInt8 id) const;
 	virtual KeyModifierMask
-						pollActiveModifiers() const = 0;
-	virtual SInt32		pollActiveGroup() const = 0;
-	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
+						pollActiveModifiers(UInt8 id) const = 0;
+	virtual SInt32		pollActiveGroup(UInt8 id) const = 0;
+	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys, UInt8 id) const = 0;
 
 protected:
 	typedef CKeyMap::Keystroke Keystroke;
@@ -93,7 +93,7 @@ protected:
 	/*!
 	Synthesize an event for \p keystroke.
 	*/
-	virtual void		fakeKey(const Keystroke& keystroke) = 0;
+	virtual void		fakeKey(const Keystroke& keystroke, UInt8 id) = 0;
 
 	//! Get the active modifiers
 	/*!
@@ -173,7 +173,7 @@ private:
 	void				addCombinationEntries();
 
 	// synthesize key events.  synthesize auto-repeat events count times.
-	void				fakeKeys(const Keystrokes&, UInt32 count);
+	void				fakeKeys(const Keystrokes&, UInt32 count, UInt8 id);
 
 	// update key state to match changes to modifiers
 	void				updateModifierKeyState(KeyButton button,
@@ -183,7 +183,8 @@ private:
 	// active modifiers collection callback
 	static void			addActiveModifierCB(KeyID id, SInt32 group,
 							CKeyMap::KeyItem& keyItem, void* vcontext);
-
+protected:
+	UInt8 m_id;
 private:
 	// the keyboard map
 	CKeyMap				m_keyMap;

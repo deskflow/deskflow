@@ -99,6 +99,8 @@ SET(src_lib_client
 SET(inc_lib_client
 	${root_lib}/client/CClient.h
 	${root_lib}/client/CServerProxy.h
+	${root_lib}/synergy/CDeviceManager.h
+	${root_lib}/synergy/IDeviceManager.h
 )
 
 SET(src_lib_common
@@ -241,6 +243,7 @@ SET(src_lib_server
 	${root_lib}/server/CClientProxy1_1.cpp
 	${root_lib}/server/CClientProxy1_2.cpp
 	${root_lib}/server/CClientProxy1_3.cpp
+	${root_lib}/server/CClientProxy1_4.cpp
 	${root_lib}/server/CClientProxyUnknown.cpp
 	${root_lib}/server/CConfig.cpp
 	${root_lib}/server/CInputFilter.cpp
@@ -256,15 +259,19 @@ SET(inc_lib_server
 	${root_lib}/server/CClientProxy1_1.h
 	${root_lib}/server/CClientProxy1_2.h
 	${root_lib}/server/CClientProxy1_3.h
+	${root_lib}/server/CClientProxy1_4.h
 	${root_lib}/server/CClientProxyUnknown.h
 	${root_lib}/server/CConfig.h
 	${root_lib}/server/CInputFilter.h
 	${root_lib}/server/CPrimaryClient.h
 	${root_lib}/server/CServer.h
+	${root_lib}/synergy/CDeviceManager.h
+	${root_lib}/synergy/IDeviceManager.h
 )
 
 SET(src_lib_synergy
 	${root_lib}/synergy/CClipboard.cpp
+	${root_lib}/synergy/CDeviceManager.cpp
 	${root_lib}/synergy/CKeyMap.cpp
 	${root_lib}/synergy/CKeyState.cpp
 	${root_lib}/synergy/CPacketStreamFilter.cpp
@@ -292,6 +299,8 @@ SET(inc_lib_synergy
 	${root_lib}/synergy/ClipboardTypes.h
 	${root_lib}/synergy/IClient.h
 	${root_lib}/synergy/IClipboard.h
+	${root_lib}/synergy/CDeviceManager.h
+	${root_lib}/synergy/IDeviceManager.h
 	${root_lib}/synergy/IKeyState.h
 	${root_lib}/synergy/IPlatformScreen.h
 	${root_lib}/synergy/IPrimaryScreen.h

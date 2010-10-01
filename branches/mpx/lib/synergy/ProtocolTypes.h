@@ -23,8 +23,10 @@
 // 1.2:  adds mouse relative motion
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
+// 1.4:  add device IDs for MPX
+
 static const SInt16		kProtocolMajorVersion = 1;
-static const SInt16		kProtocolMinorVersion = 3;
+static const SInt16		kProtocolMinorVersion = 4;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
@@ -111,6 +113,9 @@ extern const char*		kMsgCClose;
 // should adjust its toggle modifiers to reflect that state.
 extern const char*		kMsgCEnter;
 
+// same as above without device id
+extern const char*		kMsgCEnter1_0;
+
 // leave screen:  primary -> secondary
 // leaving screen.  the secondary screen should send clipboard
 // data in response to this message for those clipboards that
@@ -119,6 +124,9 @@ extern const char*		kMsgCEnter;
 // number) and that were grabbed or have changed since the
 // last leave.
 extern const char*		kMsgCLeave;
+
+// same as above without device id
+extern const char*		kMsgCLeave1_0;
 
 // grab clipboard:  primary <-> secondary
 // sent by screen when some other app on that screen grabs a
@@ -169,12 +177,18 @@ extern const char*		kMsgCKeepAlive;
 // a modifier key before releasing the modified key.
 extern const char*		kMsgDKeyDown;
 
+// no device id here...
+extern const char*		kMsgDKeyDown1_1;
+
 // key pressed 1.0:  same as above but without KeyButton
 extern const char*		kMsgDKeyDown1_0;
 
 // key auto-repeat:  primary -> secondary
 // $1 = KeyID, $2 = KeyModifierMask, $3 = number of repeats, $4 = KeyButton
 extern const char*		kMsgDKeyRepeat;
+
+// no device id here...
+extern const char*		kMsgDKeyRepeat1_1;
 
 // key auto-repeat 1.0:  same as above but without KeyButton
 extern const char*		kMsgDKeyRepeat1_0;
@@ -183,6 +197,9 @@ extern const char*		kMsgDKeyRepeat1_0;
 // $1 = KeyID, $2 = KeyModifierMask, $3 = KeyButton
 extern const char*		kMsgDKeyUp;
 
+// no device id here...
+extern const char*		kMsgDKeyUp1_1;
+
 // key released 1.0:  same as above but without KeyButton
 extern const char*		kMsgDKeyUp1_0;
 
@@ -190,23 +207,38 @@ extern const char*		kMsgDKeyUp1_0;
 // $1 = ButtonID
 extern const char*		kMsgDMouseDown;
 
+// no device id here...
+extern const char*		kMsgDMouseDown1_0;
+
 // mouse button released:  primary -> secondary
 // $1 = ButtonID
 extern const char*		kMsgDMouseUp;
+
+// no device id here...
+extern const char*		kMsgDMouseUp1_0;
 
 // mouse moved:  primary -> secondary
 // $1 = x, $2 = y.  x,y are absolute screen coordinates.
 extern const char*		kMsgDMouseMove;
 
+// same as above without device id
+extern const char*		kMsgDMouseMove1_0;
+
 // relative mouse move:  primary -> secondary
 // $1 = dx, $2 = dy.  dx,dy are motion deltas.
 extern const char*		kMsgDMouseRelMove;
+
+// no device id here...
+extern const char*		kMsgDMouseRelMove1_2;
 
 // mouse scroll:  primary -> secondary
 // $1 = xDelta, $2 = yDelta.  the delta should be +120 for one tick forward
 // (away from the user) or right and -120 for one tick backward (toward
 // the user) or left.
 extern const char*		kMsgDMouseWheel;
+
+// no device id here...
+extern const char*		kMsgDMouseWheel1_3;
 
 // mouse vertical scroll:  primary -> secondary
 // like as kMsgDMouseWheel except only sends $1 = yDelta.
@@ -301,7 +333,11 @@ public:
 	/*!
 	The current location of the mouse cursor.
 	*/
-	SInt32				m_mx, m_my;
+	SInt32				m_mx, m_my,m_mid;
+	
+	//! Device ID (needed for MPX)
+	
+	UInt8 m_id;
 };
 
 #endif
