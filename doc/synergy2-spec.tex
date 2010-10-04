@@ -15,14 +15,12 @@
 
 Synergy needs rewriting from scratch in order to provide a long term fix for 
 bugs such as the ``sticky keys'' issue. It is difficult to fix bugs in the
-current version of Synergy without causing regressions.
-
-This document is our first step toward designing version 2 of Synergy, so it's
-very much a work in progress.
+current version of Synergy without causing regressions. With this rewrite, we
+will use a specific methodology in order to make the software more robust.
 
 \section{License}
 
-We should use a license that allows companies to include Synergy as part of an 
+We will use a license that allows companies to include Synergy as part of an 
 existing product, but not on it's own (if there is such a license). This might
 be the New BSD License (or GPLv3 if it allows commercial redistribution).
 
@@ -31,16 +29,16 @@ be the New BSD License (or GPLv3 if it allows commercial redistribution).
 \subsection{Fully Supported}
 
 \begin{itemize}
-  \item Windows XP SP3
-  \item Windows Vista SP1
   \item Windows 7
+  \item Windows Vista SP1
+  \item Windows XP SP3
   \item Windows 2003 Server
   \item Ubuntu 10.04
   \item Fedora 13
   \item openSUSE 11.3
-  \item Mac OS 10.4 Tiger
+  \item Mac OS 10.6 Snow Leopard
   \item Mac OS 10.5 Leopard
-  \item Mac OS 10.6 Snow-Leopard
+  \item Mac OS 10.4 Tiger
 \end{itemize}
 
 \section{Unsupported}
@@ -48,41 +46,87 @@ be the New BSD License (or GPLv3 if it allows commercial redistribution).
 These systems are explicitly not supported.
 
 \begin{itemize}
-  \item Windows NT family (e.g. 2000, etc)
-  \item Windows 95 family (e.g. 98/ME)
+  \item Windows NT family (inc. 2000, etc)
+  \item Windows 95 family (inc. 98, ME, etc)
 \end{itemize}
 
 \section{Methodology}
 
 Many developers before now have vowed to rewrite Synergy. Unfortunately though,
-it has never materialized due to lack of motivation and momentum. To solve 
-this problem, we should use Scrum which will allow us to deliver features in
-small bursts.
+the intention has never materialized due to lack of motivation, involvement from
+the community, and momentum.
+To solve this problem, we should plan the new version thoroughly and use the
+Scrum Agile methodology which will allow us to deliver features in small 
+bursts (which will maintain momentum and community interest).
+
+In version 1, we use Buildbot for the nightly build, so this can be used to run
+the integration tests (as explained later in this section) as well as standard 
+unit tests (which are also run by developers).
 
 \subsection{Unit Testing}
 
 Open source software should be easy for new developers to modify without too
-much risk of breaking things. Currently, applying patches is very risky, since 
-this usually causes regressions. Unit testing would help us identify regressions
-before the end-user does.
+much risk of breaking the existing functionality. Currently, applying patches 
+is very risky, since this usually causes regressions. Unit testing will help 
+developers identify regressions before we check code in.
 
 However, some aspects of Synergy are difficult to test, since it always requires
-more than one machine to function. We can emulate this behavior on a single 
-machine by running both the server and client (so that they communicate 
+more than one machine to function. We \textit{could} emulate this behavior on a 
+single machine by running both the server and client (so that they communicate 
 locally), but this only allows us to test the network layer (not the mouse,
-keyboard, clipboard, and so on).
+keyboard, clipboard, and so on). The solution is to use integration testing
+\ldots
 
-\textbf{Nightly integration testing} (as unit tests) on a build machine can 
+\subsection{Integration Testing}
+
+Nightly integration testing (in the form of unit tests) will be run on on the 
+Buildbot build machines, and will
 simulate a fully fledged environment involving many \textit{real} machines. The 
 contributor would never run these tests before committing (it wouldn't be 
 practical), but it will help detect problems early enough.
+
+In each test environment, there will be 3 Buildbot slaves (1 server, 2 clients).
+To run a test, the Buildbot slaves must make some assumptions; that the clients
+can communicate with the server via LAN, and that they are all turned on at the 
+same time (we will have to do this via a Buildbot schedule). Since we'd be 
+making timing assumptions, there is a large margin for error, so the test node
+sync operation must produce helpful errors (and check the environment fully).
+
+All integration test cases must be implemented \textbf{before} we start 
+implementing any functionality (otherwise they might never get set up).
+
+Each unit test should do the following:
+
+\begin{enumerate}
+  \item Synchronize with all other nodes.
+  \item Start either a client or server.
+  \item Either wait for client connections, or connect to the server.
+  \item Have the server test node move the mouse ``off the screen''.
+  \item Pass or fail depending on whether or not client mouse pointer has
+    actually moved to the expected coordinates.
+\end{enumerate}
+
+We must design this test each time for testing the clipboard, keyboard input,
+screensaver sync, and all other major features.
+
+Each test should run once for every possible combination of platform. For 
+example:
+
+\begin{itemize}
+  \item Windows server, Linux client, Mac OS X client.
+  \item Windows server, 2 Windows clients.
+  \item Linux server, Windows client, Mac OS X client.
+  \item \ldots
+\end{itemize}
 
 \subsection{User Stores}
 
 The problem with defining stories for multi-platform, client-server software
 is that most features must be implemented once for each platform, then for both
 client and server (even more so when the software is integrated tightly with
-each platform). This means we need to implement many stories 6 times.
+each platform). This means we need to implement many stories up to 6 times.
+
+\textit{Note: This is not an exhaustive list of features.}
 
 \textbf{As a user:}
 
@@ -93,8 +137,9 @@ each platform). This means we need to implement many stories 6 times.
     mouse cursor so that I only need one keyboard.
   \item I want data copied to my clipboard to replicate to the computer which
     I move my cursor to, so that I can copy data between computers.
-  \item I want screen savers on all connected computers to start at the same time
-    so that all screens stay on while I'm working.
+  \item I want screen savers on all connected computers to start at the same
+    time so that all screens stay on while I'm working.
+  \item \ldots
 \end{itemize}
 
 \textbf{For each:}
@@ -109,36 +154,40 @@ each platform). This means we need to implement many stories 6 times.
 \end{itemize}
 
 With these very simple looking user stories, we should be able to make a good 
-start.
+start, but even the first release must work (if only with little platform
+support).
 
-\section{Language}
+\section{Implementation}
 
-Our language of choice will be C++. However, we might want to consider writing
-the GUI in Python (Chris's idea).
+\subsection{Language}
 
-Regardless, we should separate the core system layer and the GUI layer via IPC,
-so that we can use either C++ or Python.
+Our language of choice will be C++ as with version 1. However, we might want to
+consider writing the GUI in Python (Chris's idea). Regardless, we should 
+separate the core system layer and the GUI layer via IPC, so that we can use
+any language to write the GUI.
 
 \subsection{Libraries}
 
 We should use Boost to increase productivity; typically an application would
 take longer to write in C++ because the standard library has less functionality
-available to the developer - so they spend more time reinventing-the-wheel.
+available to the developer - so we spend more time reinventing-the-wheel.
 
 \subsection{Toolchain}
 
-Historically, automake was used before Synergy+ came along and started using
+Historically, Automake was used before Synergy+ came along and started using
 CMake (each have pros and cons). Because CMake is a little limited, a hm.py 
 script was created to extend the toolchain so that less input from the developer
 was required.
 
+\textbf{TODO:} Should we stick with the Synergy+ way?
+
 \subsection{Code Style}
 
-We'll use the code style from version 1, with a few modifications. We should 
-drop the C-prefix class naming convention (adopted from MFC). See appendix A 
-for full guide.
+We'll use the code style from version 1, with a few modifications. For example 
+we will drop the C-prefix class naming convention (adopted from MFC). See 
+appendix A for the full guide.
 
-\section{Debugging}
+\subsection{Debugging}
 
 Debugging Synergy is quite difficult, since doing so requires the use of the 
 same mouse and keyboard that Synergy is using. Let's say we break in the 
@@ -150,14 +199,16 @@ might be that the existing code runs the HID input handling in a separate
 thread -- in this case, we need to make it obvious in our documentation not to 
 break all threads (and how to do this in various debuggers).
 
-\section{Logging}
+\subsection{Logging}
 
 Logging is very important for post-mortem analysis, but is also useful during
 development since it can be so difficult to debug. File logging should be 
-enabled by default, with only warnings and errors, with some form of log 
-rotation to conserve user disk space.
+enabled by default for the end-user, with only warnings and errors, with some
+form of log  rotation to conserve user disk space.
 
-\section{Design Scope}
+\section{Design}
+
+\subsection{Scope}
 
 With a tool as conceptually simple as Synergy, it's very easy to get carried
 away with feature requests. Some features we should not plan to include:
@@ -170,7 +221,7 @@ away with feature requests. Some features we should not plan to include:
   \item Remote desktop integration.
 \end{enumerate}
 
-\section{GUI Design}
+\subsection{GUI}
 
 While version 1 is simple to setup, it can be a little difficult to
 troubleshoot. As command-line tools go, the existing version is great, but
@@ -191,7 +242,7 @@ While we should support the existing config file format, some would prefer a
 setup wizard to simplify the process. The wizard should display immediately
 after installation on all platforms (with the option to skip the wizard). When
 the wizard starts, the user should choose whether the machine is a client or a
-server (the wizard should explain the difference).
+server (the wizard should explain the difference with a simple diagram).
 
 \subsubsection{Server steps}
 \begin{enumerate}
@@ -236,7 +287,7 @@ to know:
 \t printf("hello world"); // incorrect
 \end{verbatim}
 
-\subsection{Class, struct, and enum names are PascalCase}
+\subsection{Class, struct, and enum names are upper camel case}
 
 \begin{verbatim}
 class MyClass { };
@@ -244,7 +295,7 @@ struct MyStruct { };
 enum MyEnum { };
 \end{verbatim}
 
-\subsection{Member, and enum constant names are lower camelCase}
+\subsection{Member, and enum constant names are lower camel case}
 
 \begin{verbatim}
 class MyClass {
@@ -286,7 +337,7 @@ static MyClass* s_myClass;
 DEBUG((CLOG_INFO "hello world"));
 \end{verbatim}
 
-\subsection{Multiline comments use single-line commenting (//)}
+\subsection{Multi-line comments use single-line commenting (//)}
 
 \begin{verbatim}
 // for long block comments, instead of using the slash asterisk
