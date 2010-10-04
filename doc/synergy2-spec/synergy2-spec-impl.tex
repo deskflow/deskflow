@@ -1,0 +1,48 @@
+\section{Implementation}
+
+\subsection{Language}
+
+Our language of choice will be C++ as with version 1. However, we might want to
+consider writing the GUI in Python (Chris's idea). Regardless, we should 
+separate the core system layer and the GUI layer via IPC, so that we can use
+any language to write the GUI.
+
+\subsection{Libraries}
+
+We should use Boost to increase productivity; typically an application would
+take longer to write in C++ because the standard library has less functionality
+available to the developer - so we spend more time reinventing-the-wheel.
+
+\subsection{Toolchain}
+
+Historically, Automake was used before Synergy+ came along and started using
+CMake (each have pros and cons). Because CMake is a little limited, a hm.py 
+script was created to extend the toolchain so that less input from the developer
+was required.
+
+\textbf{TODO:} Should we stick with the Synergy+ way?
+
+\subsection{Code Style}
+
+We'll use the code style from version 1, with a few modifications. For example 
+we will drop the C-prefix class naming convention (adopted from MFC). See 
+appendix A for the full guide.
+
+\subsection{Debugging}
+
+Debugging Synergy is quite difficult, since doing so requires the use of the 
+same mouse and keyboard that Synergy is using. Let's say we break in the 
+function that handles cursor movements, often doing so will cause the mouse
+to freeze for a while until the hook is released automatically.
+
+We should design version 2 so that it is easy to debug and test features. It
+might be that the existing code runs the HID input handling in a separate 
+thread -- in this case, we need to make it obvious in our documentation not to 
+break all threads (and how to do this in various debuggers).
+
+\subsection{Logging}
+
+Logging is very important for post-mortem analysis, but is also useful during
+development since it can be so difficult to debug. File logging should be 
+enabled by default for the end-user, with only warnings and errors, with some
+form of log  rotation to conserve user disk space.

@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage{hyperref}
+
+\setlength{\parindent}{0pt} 
+\setlength{\parskip}{2ex}
+
+\title{Synergy 2 Specification}
+\author{Nick Bolton}
+
+\begin{document}
+
+\maketitle
+
+\section{Synopsis}
+
+Synergy needs rewriting from scratch in order to provide a long term fix for 
+bugs such as the ``sticky keys'' issue. It is difficult to fix bugs in the
+current version of Synergy without causing regressions. With this rewrite, we
+will use a specific methodology in order to make the software more robust.
+
+\section{License}
+
+We will use a license that allows companies to include Synergy as part of an 
+existing product, but not on it's own (if there is such a license). This might
+be the New BSD License (or GPLv3 if it allows commercial redistribution).
+
+\input synergy2-spec-req.tex
+\input synergy2-spec-meth.tex
+\input synergy2-spec-impl.tex
+\input synergy2-spec-design.tex
+
+\appendix
+\input synergy2-spec-style.tex
+
+\end{document}

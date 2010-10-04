@@ -1,0 +1,106 @@
+\section{Methodology}
+
+Many developers before now have vowed to rewrite Synergy. Unfortunately though,
+the intention has never materialized due to lack of motivation, involvement from
+the community, and momentum.
+To solve this problem, we should plan the new version thoroughly and use the
+Scrum Agile methodology which will allow us to deliver features in small 
+bursts (which will maintain momentum and community interest).
+
+In version 1, we use Buildbot for the nightly build, so this can be used to run
+the integration tests (as explained later in this section) as well as standard 
+unit tests (which are also run by developers).
+
+\subsection{Unit Testing}
+
+Open source software should be easy for new developers to modify without too
+much risk of breaking the existing functionality. Currently, applying patches 
+is very risky, since this usually causes regressions. Unit testing will help 
+developers identify regressions before we check code in.
+
+However, some aspects of Synergy are difficult to test, since it always requires
+more than one machine to function. We \textit{could} emulate this behavior on a 
+single machine by running both the server and client (so that they communicate 
+locally), but this only allows us to test the network layer (not the mouse,
+keyboard, clipboard, and so on). The solution is to use integration testing
+\ldots
+
+\subsection{Integration Testing}
+
+Nightly integration testing (in the form of unit tests) will be run on on the 
+Buildbot build machines, and will
+simulate a fully fledged environment involving many \textit{real} machines. The 
+contributor would never run these tests before committing (it wouldn't be 
+practical), but it will help detect problems early enough.
+
+In each test environment, there will be 3 Buildbot slaves (1 server, 2 clients).
+To run a test, the Buildbot slaves must make some assumptions; that the clients
+can communicate with the server via LAN, and that they are all turned on at the 
+same time (we will have to do this via a Buildbot schedule). Since we'd be 
+making timing assumptions, there is a large margin for error, so the test node
+sync operation must produce helpful errors (and check the environment fully).
+
+All integration test cases must be implemented \textbf{before} we start 
+implementing any functionality (otherwise they might never get set up).
+
+Each unit test should do the following:
+
+\begin{enumerate}
+  \item Synchronize with all other nodes.
+  \item Start either a client or server.
+  \item Either wait for client connections, or connect to the server.
+  \item Have the server test node move the mouse ``off the screen''.
+  \item Pass or fail depending on whether or not client mouse pointer has
+    actually moved to the expected coordinates.
+\end{enumerate}
+
+We must design this test each time for testing the clipboard, keyboard input,
+screensaver sync, and all other major features.
+
+Each test should run once for every possible combination of platform. For 
+example:
+
+\begin{itemize}
+  \item Windows server, Linux client, Mac OS X client.
+  \item Windows server, 2 Windows clients.
+  \item Linux server, Windows client, Mac OS X client.
+  \item \ldots
+\end{itemize}
+
+\subsection{User Stores}
+
+The problem with defining stories for multi-platform, client-server software
+is that most features must be implemented once for each platform, then for both
+client and server (even more so when the software is integrated tightly with
+each platform). This means we need to implement many stories up to 6 times.
+
+\textit{Note: This is not an exhaustive list of features.}
+
+\textbf{As a user:}
+
+\begin{itemize}
+  \item I want to move my server mouse to a client computer (and back) so that 
+    I only need one mouse.
+  \item I want keys pressed on the server to go to the same computer as the
+    mouse cursor so that I only need one keyboard.
+  \item I want data copied to my clipboard to replicate to the computer which
+    I move my cursor to, so that I can copy data between computers.
+  \item I want screen savers on all connected computers to start at the same
+    time so that all screens stay on while I'm working.
+  \item \ldots
+\end{itemize}
+
+\textbf{For each:}
+
+\begin{itemize}
+  \item Windows server
+  \item Windows client
+  \item Linux server
+  \item Linux client
+  \item Mac OS X server
+  \item Mac OS X client
+\end{itemize}
+
+With these very simple looking user stories, we should be able to make a good 
+start, but even the first release must work (if only with little platform
+support).

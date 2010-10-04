@@ -1,0 +1,59 @@
+\section{Design}
+
+\subsection{Scope}
+
+With a tool as conceptually simple as Synergy, it's very easy to get carried
+away with feature requests. Some features we should not plan to include:
+
+\begin{enumerate}
+  \item Dragging windows between screens.
+  \item Remote audio sharing.
+  \item Connecting over the Internet.
+  \item Smart phone or tablet as server.
+  \item Remote desktop integration.
+\end{enumerate}
+
+\subsection{GUI}
+
+While version 1 is simple to setup, it can be a little difficult to
+troubleshoot. As command-line tools go, the existing version is great, but
+can be a little involved for some users. Often these users are from a Windows
+or Mac background where tool configuration is usually done with an intuitive
+GUI.
+
+Version 1 was originally designed as a command line tool, then later on, several
+GUI applications were invented to try and make configuration easier. QSynergy is
+one of those GUIs that found a good balance of cross-platform support and user 
+friendliness. However, like all Synergy GUIs, it is limited by the lack of 
+interoperability with the underlying command line utility. So we should design 
+version 2 with IPC to the GUI firmly in mind.
+
+\subsection{Wizard}
+
+While we should support the existing config file format, some would prefer a
+setup wizard to simplify the process. The wizard should display immediately
+after installation on all platforms (with the option to skip the wizard). When
+the wizard starts, the user should choose whether the machine is a client or a
+server (the wizard should explain the difference with a simple diagram).
+
+\subsubsection{Server steps}
+\begin{enumerate}
+  \item Show instructions for starting client wizard(s).
+  \item Show connected clients in a status list (as they connect).
+  \item Allow user to advance once all clients have connected.
+  \item Allow user to drag and drop clients on a grid.
+  \item Save config to file (at custom location) when complete.
+\end{enumerate}
+
+Often, the user's hostname will not be found on their DNS server, and in such
+a case we should detect this, and ask the user to use an IP instead.
+
+\subsubsection{Client steps}
+\begin{enumerate}
+  \item Prompt the user for the server hostname or IP (shown in server wizard).
+  \item If unable to connect, show troubleshooting tips.
+\end{enumerate}
+
+Troubleshooting steps might include asking the user to temporarily turn off
+their firewall, try pinging, etc. This will reduce the number of troubleshooting
+requests coming into the website and mailing list.

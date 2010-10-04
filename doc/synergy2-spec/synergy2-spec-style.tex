@@ -1,0 +1,273 @@
+\section{Code Style}
+
+\subsection{Major differences in version 2}
+
+If you're already familiar with the version 1 syntax, then here's all you need
+to know:
+
+\begin{enumerate}
+  \item No C prefix on classes.
+  \item 2 space indentation, not tabs.
+  \item Put function modifiers on the same line.
+\end{enumerate}
+
+\subsection{Space indentation}
+
+\begin{verbatim}
+\s\s printf("hello world"); // correct
+\t printf("hello world"); // incorrect
+\end{verbatim}
+
+\subsection{Class, struct, and enum names are upper camel case}
+
+\begin{verbatim}
+class MyClass { };
+struct MyStruct { };
+enum MyEnum { };
+\end{verbatim}
+
+\subsection{Member, and enum constant names are lower camel case}
+
+\begin{verbatim}
+class MyClass {
+public:
+    void helloWorld();
+};
+\end{verbatim}
+
+\subsection{Member variable prefix}
+
+\begin{verbatim}
+class MyClass {
+public:
+    MyClass* m_myClass1;
+private:
+    MyClass* m_myClass2;
+};
+\end{verbatim}
+
+\subsection{Enum constants are prefixed with k}
+
+\begin{verbatim}
+enum MyEnum {
+    Value1,
+    Value2
+};
+\end{verbatim}
+
+\subsection{Static variable prefix}
+
+\begin{verbatim}
+static MyClass* s_myClass;
+\end{verbatim}
+
+\subsection{Comments and debug messages need not be grammatically correct}
+
+\begin{verbatim}
+// i'm using bad grammar. but i like to use full stops
+DEBUG((CLOG_INFO "hello world"));
+\end{verbatim}
+
+\subsection{Multi-line comments use single-line commenting (//)}
+
+\begin{verbatim}
+// for long block comments, instead of using the slash asterisk
+// comments, we use the two-slash comments
+\end{verbatim}
+
+\subsection{Function return types must go on the line above the function name}
+
+\begin{verbatim}
+// correct
+int MyClass::helloWorld() {
+  // ...
+}
+
+// incorrect
+int
+MyClass::helloWorld() {
+  // ...
+}
+\end{verbatim}
+
+\subsection{Curly braces start on the same line as the function}
+
+\begin{verbatim}
+// correct
+int MyClass::helloWorld() {
+  // ...
+}
+
+// incorrect
+int MyClass::helloWorld()
+{
+  // ...
+}
+\end{verbatim}
+
+\subsection{Curly braces start on the same line for statements}
+
+\begin{verbatim}
+// correct
+if (a == b) {
+    // ...
+}
+
+// correct
+for (int i = 0; i < a; i++) {
+    // ...
+}
+
+// incorrect
+if (a == b)
+{
+    // ...
+}
+
+// incorrect
+for (int i = 0; i < a; i++)
+{
+    // ...
+}
+\end{verbatim}
+
+\subsection{A space is used between operators and operands}
+
+\begin{verbatim}
+// correct
+a == b;
+if (c == d) {
+  // ...
+}
+
+// incorrect
+a=b;
+if (c==d) {
+  // ...
+}
+\end{verbatim}
+
+\subsection{No space is inserted after or before conditions within parenthesis}
+
+\begin{verbatim}
+// correct
+if (a == b) {
+    // ...
+}
+
+// incorrect
+if ( a == b ) {
+    // ...
+}
+\end{verbatim}
+
+\subsection{Don't use void keyword for functions with no parameters}
+
+\begin{verbatim}
+// correct
+void helloWorld();
+
+// incorrect
+void helloWorld(void);
+\end{verbatim}
+
+\subsection{The const keyword is used regularly}
+
+\begin{verbatim}
+class MyClass {
+public:
+    const char* helloWorld();
+};
+
+MyClass::MyClass(const char* helloWorld)
+{
+  // ...
+}
+\end{verbatim}
+
+\subsection{Space between statement parenthesis and the keyword}
+
+\begin{verbatim}
+// correct
+if (a == b) {
+  // ...
+}
+
+// incorrect
+if(a == b) {
+  // ...
+}
+\end{verbatim}
+
+\subsection{No spaces between type and reference and pointer operator}
+
+\begin{verbatim}
+// correct
+char* helloWorld;
+
+// incorrect
+char *helloWorld;
+\end{verbatim}
+
+\subsection{Pre-processor command indentation}
+
+\begin{verbatim}
+// correct
+#if HELLO_WORLD
+#include "HellWorld.h"
+#endif
+
+// incorrect
+#if HELLO_WORLD
+#  include "HellWorld.h"
+#endif
+\end{verbatim}
+
+\subsection{Pointers and references do not have prefixes}
+
+\begin{verbatim}
+// correct
+MyClass* myClass1 = new MyClass();
+MyClass& myClass2 = *myClass1;
+
+// incorrect
+MyClass* p_myClass1 = new MyClass();
+MyClass& p_myClass2 = *p_myClass1;
+
+// incorrect
+MyClass* pMyClass1 = new MyClass();
+MyClass& pMyClass2 = *pMyClass1;
+\end{verbatim}
+
+\subsection{The left comparator operand is a variable}
+
+\begin{verbatim}
+// correct
+if (a == "hello world") {
+  // ...
+}
+
+// incorrect
+if ("hello world" == a) {
+  // ...
+}
+\end{verbatim}
+
+\subsection{The else statement on the same line as the curly brace}
+
+\begin{verbatim}
+// correct
+if (a == b) {
+  // ...
+} else {
+  // ...
+}
+
+// incorrect
+if (a == b) {
+  // ...
+}
+else {
+  // ...
+}
+\end{verbatim}
