@@ -1,6 +1,6 @@
 \section{Code Style}
 
-\subsection{Major differences in version 2}
+\subsection{New in version 2}
 
 If you're already familiar with the version 1 syntax, then here's all you need
 to know:
@@ -11,14 +11,16 @@ to know:
   \item Put function modifiers on the same line.
 \end{enumerate}
 
-\subsection{Space indentation}
+\subsection{Style rules}
+
+\subsubsection{Space indentation}
 
 \begin{verbatim}
 \s\s printf("hello world"); // correct
 \t printf("hello world"); // incorrect
 \end{verbatim}
 
-\subsection{Class, struct, and enum names are upper camel case}
+\subsubsection{Class, struct, and enum names are upper camel case}
 
 \begin{verbatim}
 class MyClass { };
@@ -26,7 +28,7 @@ struct MyStruct { };
 enum MyEnum { };
 \end{verbatim}
 
-\subsection{Member, and enum constant names are lower camel case}
+\subsubsection{Member, and enum constant names are lower camel case}
 
 \begin{verbatim}
 class MyClass {
@@ -35,7 +37,7 @@ public:
 };
 \end{verbatim}
 
-\subsection{Member variable prefix}
+\subsubsection{Member variable prefix}
 
 \begin{verbatim}
 class MyClass {
@@ -46,7 +48,7 @@ private:
 };
 \end{verbatim}
 
-\subsection{Enum constants are prefixed with k}
+\subsubsection{Enum constants are prefixed with k}
 
 \begin{verbatim}
 enum MyEnum {
@@ -55,27 +57,27 @@ enum MyEnum {
 };
 \end{verbatim}
 
-\subsection{Static variable prefix}
+\subsubsection{Static variable prefix}
 
 \begin{verbatim}
 static MyClass* s_myClass;
 \end{verbatim}
 
-\subsection{Comments and debug messages need not be grammatically correct}
+\subsubsection{Comments and debug messages need not be grammatically correct}
 
 \begin{verbatim}
 // i'm using bad grammar. but i like to use full stops
 DEBUG((CLOG_INFO "hello world"));
 \end{verbatim}
 
-\subsection{Multi-line comments use single-line commenting (//)}
+\subsubsection{Multi-line comments use single-line commenting (//)}
 
 \begin{verbatim}
 // for long block comments, instead of using the slash asterisk
 // comments, we use the two-slash comments
 \end{verbatim}
 
-\subsection{Function return types must go on the line above the function name}
+\subsubsection{Function return types must go on the line above the function name}
 
 \begin{verbatim}
 // correct
@@ -90,7 +92,7 @@ MyClass::helloWorld() {
 }
 \end{verbatim}
 
-\subsection{Curly braces start on the same line as the function}
+\subsubsection{Curly braces start on the same line as the function}
 
 \begin{verbatim}
 // correct
@@ -105,7 +107,7 @@ int MyClass::helloWorld()
 }
 \end{verbatim}
 
-\subsection{Curly braces start on the same line for statements}
+\subsubsection{Curly braces start on the same line for statements}
 
 \begin{verbatim}
 // correct
@@ -131,7 +133,7 @@ for (int i = 0; i < a; i++)
 }
 \end{verbatim}
 
-\subsection{A space is used between operators and operands}
+\subsubsection{A space is used between operators and operands}
 
 \begin{verbatim}
 // correct
@@ -147,7 +149,7 @@ if (c==d) {
 }
 \end{verbatim}
 
-\subsection{No space is inserted after or before conditions within parenthesis}
+\subsubsection{No space is inserted after or before conditions within parenthesis}
 
 \begin{verbatim}
 // correct
@@ -161,7 +163,7 @@ if ( a == b ) {
 }
 \end{verbatim}
 
-\subsection{Don't use void keyword for functions with no parameters}
+\subsubsection{Don't use void keyword for functions with no parameters}
 
 \begin{verbatim}
 // correct
@@ -171,7 +173,7 @@ void helloWorld();
 void helloWorld(void);
 \end{verbatim}
 
-\subsection{The const keyword is used regularly}
+\subsubsection{The const keyword is used regularly}
 
 \begin{verbatim}
 class MyClass {
@@ -185,7 +187,7 @@ MyClass::MyClass(const char* helloWorld)
 }
 \end{verbatim}
 
-\subsection{Space between statement parenthesis and the keyword}
+\subsubsection{Space between statement parenthesis and the keyword}
 
 \begin{verbatim}
 // correct
@@ -199,7 +201,7 @@ if(a == b) {
 }
 \end{verbatim}
 
-\subsection{No spaces between type and reference and pointer operator}
+\subsubsection{No spaces between type and reference and pointer operator}
 
 \begin{verbatim}
 // correct
@@ -209,7 +211,7 @@ char* helloWorld;
 char *helloWorld;
 \end{verbatim}
 
-\subsection{Pre-processor command indentation}
+\subsubsection{Pre-processor command indentation}
 
 \begin{verbatim}
 // correct
@@ -223,7 +225,7 @@ char *helloWorld;
 #endif
 \end{verbatim}
 
-\subsection{Pointers and references do not have prefixes}
+\subsubsection{Pointers and references do not have prefixes}
 
 \begin{verbatim}
 // correct
@@ -239,7 +241,7 @@ MyClass* pMyClass1 = new MyClass();
 MyClass& pMyClass2 = *pMyClass1;
 \end{verbatim}
 
-\subsection{The left comparator operand is a variable}
+\subsubsection{The left comparator operand is a variable}
 
 \begin{verbatim}
 // correct
@@ -253,7 +255,7 @@ if ("hello world" == a) {
 }
 \end{verbatim}
 
-\subsection{The else statement on the same line as the curly brace}
+\subsubsection{The else statement on the same line as the curly brace}
 
 \begin{verbatim}
 // correct

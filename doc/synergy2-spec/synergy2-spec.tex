@@ -10,6 +10,7 @@
 \begin{document}
 
 \maketitle
+\clearpage
 
 \section{Synopsis}
 
@@ -24,10 +25,26 @@ We will use a license that allows companies to include Synergy as part of an
 existing product, but not on it's own (if there is such a license). This might
 be the New BSD License (or GPLv3 if it allows commercial redistribution).
 
+\clearpage
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
+
+% seems to add everything to contents (TODO: remove appendix headers)
+\addtocontents{toc}
+
 \input synergy2-spec-req.tex
+\clearpage
+
 \input synergy2-spec-meth.tex
+\clearpage
+
 \input synergy2-spec-design.tex
+\clearpage
+
 \input synergy2-spec-impl.tex
+\clearpage
 
 \appendix
 \input synergy2-spec-style.tex
