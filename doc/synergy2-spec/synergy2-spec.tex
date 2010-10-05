@@ -1,8 +1,17 @@
 \documentclass{article}
-\usepackage{hyperref}
-
 \setlength{\parindent}{0pt} 
 \setlength{\parskip}{2ex}
+
+% use links in content headers
+\usepackage{hyperref}
+
+% use correct package for Metapost
+\ifx\pdftexversion\undefined
+  \usepackage[dvips]{graphicx}
+\else
+  \usepackage[pdftex]{graphicx}
+  \DeclareGraphicsRule{*}{mps}{*}{}
+\fi
 
 \title{Synergy 2 Specification}
 \author{Nick Bolton}
@@ -12,14 +21,14 @@
 \maketitle
 \clearpage
 
-\section{Synopsis}
+\section*{Synopsis}
 
 Synergy needs rewriting from scratch in order to provide a long term fix for 
 bugs such as the ``sticky keys'' issue. It is difficult to fix bugs in the
 current version of Synergy without causing regressions. With this rewrite, we
 will use a specific methodology in order to make the software more robust.
 
-\section{License}
+\section*{License}
 
 We will use a license that allows companies to include Synergy as part of an 
 existing product, but not on it's own (if there is such a license). This might
@@ -31,23 +40,19 @@ be the New BSD License (or GPLv3 if it allows commercial redistribution).
 \tableofcontents
 \clearpage
 
-% seems to add everything to contents
-% TODO: remove titles before contents page
-\addtocontents{toc}
-
-\input synergy2-spec-req.tex
+\input req.tex
 \clearpage
 
-\input synergy2-spec-meth.tex
+\input meth.tex
 \clearpage
 
-\input synergy2-spec-design.tex
+\input design.tex
 \clearpage
 
-\input synergy2-spec-impl.tex
+\input impl.tex
 \clearpage
 
 \appendix
-\input synergy2-spec-style.tex
+\input style.tex
 
 \end{document}
