@@ -27,11 +27,18 @@ keyboard, clipboard, and so on). The solution is to use integration testing
 
 \subsection{Integration Testing}
 
+Actually having to fix regressions is not usually a problem -- the problem is
+finding them in the bug in first place, which often falls on the end user. 
+Often, the regression will be caused way outside of the developer's capable 
+testing scope (e.g. on another platform). The solution is to delegate cross-
+platform testing to an automated process.
+
 Nightly integration testing (in the form of unit tests) will be run on on the 
 Buildbot build machines, and will
 simulate a fully fledged environment involving many \textit{real} machines. The 
 contributor would never run these tests before committing (it wouldn't be 
-practical), but it will help detect problems early enough.
+practical), but it will help detect problems early enough for us to establish
+blame on a particular source code change.
 
 In each test environment, there will be 3 Buildbot slaves (1 server, 2 clients).
 To run a test, the Buildbot slaves must make some assumptions; that the clients
@@ -41,9 +48,12 @@ making timing assumptions, there is a large margin for error, so the test node
 sync operation must produce helpful errors (and check the environment fully).
 
 All integration test cases must be implemented \textbf{before} we start 
-implementing any functionality (otherwise they might never get set up).
+implementing any functionality (otherwise they might never get round to writing
+them). Because the integration testing is so important, it is effectively our 
+Achilles Heel. We must understand that the success of the project (and future 
+maintenance) depends very heavily on the build system.
 
-Each unit test should do the following:
+Each integration unit test should do the following:
 
 \begin{enumerate}
   \item Synchronize with all other nodes.

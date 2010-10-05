@@ -61,16 +61,16 @@ requests coming into the website and mailing list.
 \subsection{Keyboard}
 
 We should support both key chars (same as version 1) and key codes (new and
-experimental). If it turns out that there are unforseen problems with the
+experimental). If it turns out that there are unforeseen problems with the
 new experimental approach, then we can release with the traditional approach.
 
 The advantage of using key codes instead of chars is that each computer manages
 it's own internationalization - which is best practice, since most operating
 systems manage language per application. Using key codes, you could for example 
-use one computer for Engilish and the other for Russian.
+use one computer for English and the other for Russian.
 
-There is a complication with key coes however; each operating system has it's
-own set of key codes - so we need to map each keycode to our own set, so that
+There is a complication with key codes however; each operating system has it's
+own set of key codes - so we need to map each key code to our own set, so that
 key codes sent over the network are generic and can be translated to any 
 platform.
 
@@ -89,9 +89,9 @@ stream. The version 2 message format is constructed like so:
 \textbf{Type} &
 \textbf{Comment} \\
 \hline
-0 & Size & 4 bytes & uint32\_t & The total messgae size in bytes (max 4GB). \\
+0 & Size & 4 bytes & uint32\_t & The total message size in bytes (max 4GB). \\
 1 & Type & 2 bytes & uint16\_t & Message type enum (see next table). \\
-2 & Data & Any & char[] & An array of arbitary data. \\
+2 & Data & Any & char[] & An array of arbitrary data. \\
 \hline
 \end{tabular}
 
