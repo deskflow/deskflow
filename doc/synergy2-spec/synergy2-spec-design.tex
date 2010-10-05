@@ -78,24 +78,36 @@ platform.
 
 \textbf{TODO:} Support encryption from the start?
 
-Each key press and mouse delta will trigger a message send over a simple TCP 
+Each key press and mouse delta will trigger a message sent over a simple TCP 
 stream. The version 2 message format is constructed like so:
 
-\begin{tabular}
-# & Part && Size && Type && Comment
-1 & Size && 4 bytes && uint32\_t && The total messgae size in bytes (4GB).
-2 & Type && 2 bytes && uint16\_t && Message type enum.
-3 & Data && Any && char[] && An array of arbitary data.
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Pos} &
+\textbf{Part} &
+\textbf{Size} &
+\textbf{Type} &
+\textbf{Comment} \\
+\hline
+0 & Size & 4 bytes & uint32\_t & The total messgae size in bytes (max 4GB). \\
+1 & Type & 2 bytes & uint16\_t & Message type enum (see next table). \\
+2 & Data & Any & char[] & An array of arbitary data. \\
+\hline
 \end{tabular}
 
 The type enumeration is as follows (\textit{incomplete}):
 
-\begin{tabular}
-Type && Data && Detail
-HelloServer && Client key && Client message to server on connect.
-HelloClient && Access allowed? && Response to key authentication.
-KeyCodeDown && Key code && Generic HID key code (from keyboard).
-KeyCharDown && Unicode char && Actual character the user would see.
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Type} &
+\textbf{Data} &
+\textbf{Detail} \\
+\hline
+HelloServer & Client key & Client message to server on connect. \\
+HelloClient & Access allowed? & Response to key authentication. \\
+KeyCodeDown & Key code & Generic HID key code (from keyboard). \\
+KeyCharDown & Unicode char & Actual character the user would see. \\
+\hline
 \end{tabular}
 
 As discussed in the keyboard section, the protocol layer should support both
