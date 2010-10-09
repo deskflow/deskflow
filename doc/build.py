@@ -1,13 +1,13 @@
 import sys, getopt, subprocess, traceback, os, re
 
 def main():
+	verbose = False
 	try:
 		opts, args = getopt.gnu_getopt(sys.argv[1:], "pl:m:v")
 
 		latex_file = None
 		metapost_file = None
 		preview = False
-		verbose = True
 
 		for o, a in opts:
 			if o == "-p":
@@ -25,6 +25,8 @@ def main():
 			latex(latex_file, preview)
 		elif metapost_file:
 			metapost(metapost_file, preview)
+		else:
+			usage()
 		
 	except Exception, err:
 		print >> sys.stderr, "error: " + str(err)
