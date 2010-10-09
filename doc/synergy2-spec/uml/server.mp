@@ -2,20 +2,41 @@ input metauml;
 
 beginfig(1);
   
-  Class.Server("Server")()();
-  Class.Keyboard("Keyboard")()();
-  Class.Mouse("Mouse")()();
-  Class.Screen("Screen")()();
+  Class.Server("Server")(
+      "-screen:Screen", "-devices:vector<Device>")();
+  
+  Class.Screen("Screen")(
+      "-virtualScreens:vector<VirtualScreen>")();
 
-  Screen.n = Server.s + (-50, -20);
-  Keyboard.n = Server.s + (0, -20);
-  Mouse.n = Server.s + (+50, -20);
+  Class.Device("Device")()();
   
-  drawObjects(Server, Keyboard, Mouse, Screen);
+  Class.Mouse("Mouse")(
+      "-axes::map<char, int32>", "-buttons:map<char, int32>")();
+
+  Class.Keyboard("Keyboard")(
+      "-layout:KeyboardLayout")();
+
+  Class.VirtualScreen("VirtualScreen")(
+      "-width:int32", "-height:int32", "-x:int32", "-y:int32")();
+
+  Group.ServerAssoc(Screen, Device);
+  leftToRight(40)(Screen, Device);
+
+  Group.Devices(Mouse, Keyboard);
+  leftToRight(20)(Mouse, Keyboard);
+
+  topToBottom(20)(Server, ServerAssoc);
+  topToBottom(40)(Device, Devices);
+  topToBottom.left(20)(Screen, VirtualScreen);
   
-  link(inheritance)(Screen.n -- Server.s);
-  link(inheritance)(Mouse.n -- Server.s);
-  link(inheritance)(Keyboard.n -- Server.s);
+  drawObjects(Server, ServerAssoc, Devices, VirtualScreen);
+  
+  clink(associationUni)(Server, Screen);
+  clink(associationUni)(Server, Device);
+  clink(associationUni)(Screen, VirtualScreen);
+
+  clink(inheritance)(Keyboard, Device);
+  clink(inheritance)(Mouse, Device);
   
 endfig;
 
