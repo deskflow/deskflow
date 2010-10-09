@@ -31,4 +31,7 @@ beginfig(1);
 
   item(iGuard)("still hungry")(obj.sw = enough.e + (20, 0));
   item(iGuard)("had enough")(obj.nw = enough.s + (0, -4));
+
 endfig;
+
+end;

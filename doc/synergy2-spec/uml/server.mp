@@ -1,6 +1,7 @@
 input metauml;
 
 beginfig(1);
+  
   Class.Server("Server")()();
   Class.Keyboard("Keyboard")()();
   Class.Mouse("Mouse")()();
@@ -15,4 +16,7 @@ beginfig(1);
   link(inheritance)(Screen.n -- Server.s);
   link(inheritance)(Mouse.n -- Server.s);
   link(inheritance)(Keyboard.n -- Server.s);
+  
 endfig;
+
+end;
