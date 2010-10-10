@@ -1,13 +1,13 @@
 input metauml;
 
 beginfig(1);
+
+  Class.System("System")()();
   
   Class.Server("Server")(
-      "-screen:Screen", "-devices:vector<Device>")();
+      "-devices:vector<Device>")(
+      "+listen()");
   
-  Class.Screen("Screen")(
-      "-virtualScreens:vector<VirtualScreen>")();
-
   Class.Device("Device")()();
   
   Class.Mouse("Mouse")(
@@ -15,28 +15,20 @@ beginfig(1);
 
   Class.Keyboard("Keyboard")(
       "-layout:KeyboardLayout")();
-
-  Class.VirtualScreen("VirtualScreen")(
-      "-width:int32", "-height:int32", "-x:int32", "-y:int32")();
-
-  Group.ServerAssoc(Screen, Device);
-  leftToRight(40)(Screen, Device);
-
+  
   Group.Devices(Mouse, Keyboard);
-  leftToRight(20)(Mouse, Keyboard);
+  leftToRight.top(20)(Mouse, Keyboard);
 
-  topToBottom(20)(Server, ServerAssoc);
-  topToBottom(40)(Device, Devices);
-  topToBottom.left(20)(Screen, VirtualScreen);
+  topToBottom(20)(System, Server, Device);
+  topToBottom(20)(Device, Devices);
   
-  drawObjects(Server, ServerAssoc, Devices, VirtualScreen);
-  
-  clink(associationUni)(Server, Screen);
-  clink(associationUni)(Server, Device);
-  clink(associationUni)(Screen, VirtualScreen);
+  drawObjects(System, Server, Device, Devices);
 
+  clink(inheritance)(Server, System);
   clink(inheritance)(Keyboard, Device);
   clink(inheritance)(Mouse, Device);
+
+  clink(associationUni)(Server, Device);
   
 endfig;
 
