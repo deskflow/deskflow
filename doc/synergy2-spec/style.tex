@@ -48,7 +48,7 @@ private:
 };
 \end{verbatim}
 
-\subsubsection{Enum constants are prefixed with k}
+\subsubsection{Enum constants (no prefix)}
 
 \begin{verbatim}
 enum MyEnum {
@@ -77,7 +77,7 @@ DEBUG((CLOG_INFO "hello world"));
 // comments, we use the two-slash comments
 \end{verbatim}
 
-\subsubsection{Function return types must go on the line above the function name}
+\subsubsection{Function return type and modifier placement}
 
 \begin{verbatim}
 // correct
@@ -201,17 +201,19 @@ if(a == b) {
 }
 \end{verbatim}
 
-\subsubsection{No spaces between type and reference and pointer operator}
+\subsubsection{Space placement around pointer and reference operators}
 
 \begin{verbatim}
 // correct
 char* helloWorld;
+char& helloWorld;
 
 // incorrect
 char *helloWorld;
+char &helloWorld;
 \end{verbatim}
 
-\subsubsection{Pre-processor command indentation}
+\subsubsection{No pre-processor command indentation}
 
 \begin{verbatim}
 // correct
