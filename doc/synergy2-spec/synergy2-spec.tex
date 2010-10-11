@@ -5,11 +5,15 @@
 % use links in content headers
 \usepackage{hyperref}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows,shadows} % for pgf-umlsd
+\usepackage[underline=true,rounded corners=false]{pgf-umlsd}
+
 % use correct package for Metapost
 \ifx\pdftexversion\undefined
   \usepackage[dvips]{graphicx}
 \else
-  \usepackage[pdftex]{graphicx}
+  \usepackage{graphicx}
   \DeclareGraphicsRule{*}{mps}{*}{}
 \fi
 

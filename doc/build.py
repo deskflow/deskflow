@@ -40,7 +40,11 @@ def main():
 def latex(filename, preview, build_twice = True, build_mp_files = True):
 	dir = os.path.dirname(filename)
 	no_ext = ".".join(filename.split('.')[:-1])
-	build_time = os.path.getmtime(no_ext + ".log")
+	
+	build_time = None
+	log = no_ext + ".log"
+	if os.path.exists(log):
+		build_time = os.path.getmtime(log)
 
 	if build_mp_files:
 		# build all metapost files first

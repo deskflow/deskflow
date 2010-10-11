@@ -1,0 +1,23 @@
+\begin{sequencediagram}
+  
+  \newthread{mr}{:MouseRelay}
+  \newthread{c}{:Client}
+  \newthread{s}{:Server}
+  \newthread{m}{:Mouse}
+  
+  \begin{callself}{s}{listen()}{}
+    \begin{call}{c}{connect()}{s}{}
+  
+      \begin{sdloop}{Mouse move}
+        \begin{call}{m}{onMove()}{s}{}
+          \begin{call}{s}{sendMessage()}{c}{}
+            \begin{call}{c}{move()}{mr}{}
+            \end{call}
+          \end{call}
+        \end{call}
+      \end{sdloop}
+
+    \end{call}
+  \end{callself}
+
+\end{sequencediagram}
