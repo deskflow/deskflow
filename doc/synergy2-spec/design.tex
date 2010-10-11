@@ -150,3 +150,25 @@ as the protocol goes, it should easily support either.
     \label{fig:clientClassDiagram}
   \end{center}
 \end{figure}
+
+\begin{table}[ht!]
+  \begin{tabular}{|l|l|}
+    \hline
+    \textbf{Class} & \textbf{Purpose} \\
+    \hline
+    System & Common functionality between Client and Server. \\
+    Server & Contains server-side code. \\
+    Client & Contains client-side code. \\
+    Screen & The entire viewable area, which could span many monitors. \\
+    VirtualScreen & Represents what is displayed on each monitor. \\
+    Device & A human input device (e.g. Mouse, Keyboard, Joystick). \\
+    Mouse & Captures mouse input, representing the current state. \\
+    Keyboard & Caputes keyboard input, representing key states. \\
+    DeviceRelay & Relays recieved human input from server to the OS. \\
+    MouseRelay & Relays mouse movement to the OS. \\
+    KeyboardRelay & Relays pressed keys to the OS. \\
+    \hline
+  \end{tabular}
+  \caption{Class purpose definition}
+  \label{tab:classes}
+\end{table}
