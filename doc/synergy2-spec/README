@@ -1,0 +1,32 @@
+Synergy 2 Specification README
+==============================
+
+Build document
+--------------
+
+build.py -pl synergy2-spec\synergy2-spec.tex
+
+Requirements
+------------
+
+Windows: MiKTeX
+  http://miktex.org/
+
+Reccomended viewer
+------------------
+
+Windows: Sumatra PDF
+  http://blog.kowalczyk.info/software/sumatrapdf/
+
+Troubleshooting
+---------------
+
+Error:
+  ! LaTeX Error: Environment sdloop undefined.
+
+Solution:
+  Downgrade pgf-umlsd to version 0.2:
+    http://code.google.com/p/pgf-umlsd/downloads/detail?name=pgf-umlsd-0.2.tar.gz
+
+  Install to directory:
+    tex\latex\pgf-umlsd
