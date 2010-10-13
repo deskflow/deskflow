@@ -1,20 +1,27 @@
 \begin{sequencediagram}
-  
-  \newthread{mr}{:MouseRelay}
-  \newthread{c}{:Client}
-  \newthread{s}{:Server}
+
   \newthread{m}{:Mouse}
+  \newthread{s}{:Server}
+  \newthread{c}{:Client}
+  \newinst[1]{mr}{:MouseRelay}
   
-  \begin{callself}{s}{listen()}{}
-    \begin{call}{c}{connect()}{s}{}
+  \begin{callself}{s}{listen()}{closeSocket()}
+    \begin{call}{c}{connect()}{s}{disconnect()}
   
       \begin{sdloop}{Mouse move}
+        
         \begin{call}{m}{onMove()}{s}{}
-          \begin{call}{s}{sendMessage()}{c}{}
+          \begin{callself}{s}{[mouseOffScreen] queueMoveMouse()}{}
+          \end{callself}
+        \end{call}
+        
+        \begin{callself}{s}{dequeueMoveMouse()}{}
+          \begin{call}{s}{sendMessage(mouseData)}{c}{}
             \begin{call}{c}{move()}{mr}{}
             \end{call}
           \end{call}
-        \end{call}
+        \end{callself}
+        
       \end{sdloop}
 
     \end{call}

@@ -1,0 +1,24 @@
+\begin{sequencediagram}
+
+  \newthread{m}{:Mouse}
+  \newthread{s}{:Server}
+  \newthread{c}{:Client}
+  \newinst[1]{cb}{:Clipboard}
+
+  \begin{sdloop}{Mouse move (partial)}
+    \begin{call}{m}{onMove()}{s}{}
+      \begin{callself}{s}{[isOffScreen] leaveScreen()}{}
+      \end{callself}
+    \end{call}
+  \end{sdloop}
+
+  \begin{sdloop}{Clipboard share}
+    \begin{callself}{s}{[clipboardOutOfSync] shareClipboard()}{}
+      \begin{call}{s}{sendMessage(clipboardData)}{c}{}
+        \begin{call}{c}{writeClipboardData()}{cb}{}
+        \end{call}
+      \end{call}
+    \end{callself}
+  \end{sdloop}
+
+\end{sequencediagram}
