@@ -9,9 +9,14 @@ bursts (which will maintain momentum and community interest).
 
 In version 1, we use Buildbot for the nightly build, so this can be used to run
 the integration tests (as explained later in this section) as well as standard 
-unit tests (which are also run by developers).
+unit tests (which are also run by developers). See Figure \ref{fig:devTesting}.
 
-\includegraphics{uml/ad-testing.1}
+\begin{figure}[ht!]
+  \centering
+  \includegraphics{uml/ad-testing.1}
+  \caption{Developer testing cycle}
+  \label{fig:devTesting}
+\end{figure}
 
 \subsection{Unit Testing}
 
@@ -48,29 +53,24 @@ can communicate with the server via LAN, and that they are all turned on at the
 same time (we will have to do this via a Buildbot schedule). Since we'd be 
 making timing assumptions, there is a large margin for error, so the test node
 sync operation must produce helpful errors (and check the environment fully).
+See Figure \ref{fig:integrationTesting}.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics{uml/ad-int-test.1}
+  \caption{Integration testing for mouse movement}
+  \label{fig:integrationTesting}
+\end{figure}
 
 All integration test cases must be implemented \textbf{before} we start 
-implementing any functionality (otherwise they might never get round to writing
-them). Because the integration testing is so important, it is effectively our 
+implementing any functionality (so that it does not get postponed). Because the
+integration testing is so important, it is effectively our 
 Achilles Heel. We must understand that the success of the project (and future 
 maintenance) depends very heavily on the build system.
 
-Each integration unit test should do the following:
-
-\begin{enumerate}
-  \item Synchronize with all other nodes.
-  \item Start either a client or server.
-  \item Either wait for client connections, or connect to the server.
-  \item Have the server test node move the mouse ``off the screen''.
-  \item Pass or fail depending on whether or not client mouse pointer has
-    actually moved to the expected coordinates.
-\end{enumerate}
-
 We must design this test each time for testing the clipboard, keyboard input,
-screensaver sync, and all other major features.
-
-Each test should run once for every possible combination of platform. For 
-example:
+screensaver sync, and all other major features. Each test should run once for 
+every combination of platform that we support. For example:
 
 \begin{itemize}
   \item Windows server, Linux client, Mac OS X client.
