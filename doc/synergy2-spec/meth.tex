@@ -37,8 +37,8 @@ keyboard, clipboard, and so on). The solution is to use integration testing
 Actually having to fix regressions is not usually a problem -- the problem is
 finding them in the bug in first place, which often falls on the end user. 
 Often, the regression will be caused way outside of the developer's capable 
-testing scope (e.g. on another platform). The solution is to delegate cross-
-platform testing to an automated process.
+testing scope (e.g. on another platform). The solution is to delegate 
+cross-platform testing to an automated process.
 
 Nightly integration testing (in the form of unit tests) will be run on on the 
 Buildbot build machines, and will
@@ -47,20 +47,24 @@ contributor would never run these tests before committing (it wouldn't be
 practical), but it will help detect problems early enough for us to establish
 blame on a particular source code change.
 
-In each test environment, there will be 3 Buildbot slaves (1 server, 2 clients).
-To run a test, the Buildbot slaves must make some assumptions; that the clients
+In each test environment, there will be 2 Buildbot slaves (1 server, 1 client).
+We could have 3 slaves involved, but this may be too complex for now.
+To run a test, the Buildbot slaves must make some assumptions; that the client
 can communicate with the server via LAN, and that they are all turned on at the 
-same time (we will have to do this via a Buildbot schedule). Since we'd be 
-making timing assumptions, there is a large margin for error, so the test node
-sync operation must produce helpful errors (and check the environment fully).
-See Figure \ref{fig:integrationTesting}.
+same time (we will have to do this via a Buildbot schedule). The server and 
+client test harnesses depend on each other to be running, which introduces a
+risk (i.e. one may have failed to start) -- to solve this, we must synchronize
+the two processes.
 
-\begin{figure}[ht!]
-  \centering
-  \includegraphics{uml/ad-int-test.1}
-  \caption{Integration testing for mouse movement}
-  \label{fig:integrationTesting}
-\end{figure}
+Figure \ref{fig:integrationTesting} illustrates at which point we synchronize
+the client and server test harnesses. If both processes do not meet at the same
+sync point in a timely fashion, then we should declare the test a failure (in
+this case, maybe one of the Buildbot slaves failed to start). The sync point
+``meet'' will occur over the network; the simplest approach is to have one 
+master (listening), to which one or more slaves will connect. The processes are
+considered synchronized when all clients involved connect to the server, and
+the sync will fail if the server does not hear from all clients within a 
+specific time window (e.g. 1 minute).
 
 All integration test cases must be implemented \textbf{before} we start 
 implementing any functionality (so that it does not get postponed). Because the
@@ -70,14 +74,15 @@ maintenance) depends very heavily on the build system.
 
 We must design this test each time for testing the clipboard, keyboard input,
 screensaver sync, and all other major features. Each test should run once for 
-every combination of platform that we support. For example:
+every combination of platform that we support. For example: Windows/Windows,
+Windows/Linux, Mac/Linux, etc.
 
-\begin{itemize}
-  \item Windows server, Linux client, Mac OS X client.
-  \item Windows server, 2 Windows clients.
-  \item Linux server, Windows client, Mac OS X client.
-  \item \ldots
-\end{itemize}
+\begin{figure}[ht!]
+  \centering
+  \includegraphics{uml/ad-int-test.1}
+  \caption{Integration testing for mouse movement}
+  \label{fig:integrationTesting}
+\end{figure}
 
 \subsection{User Stores}
 
