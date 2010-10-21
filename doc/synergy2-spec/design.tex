@@ -26,7 +26,8 @@ GUI applications were invented to try and make configuration easier. QSynergy is
 one of those GUIs that found a good balance of cross-platform support and user 
 friendliness. However, like all Synergy GUIs, it is limited by the lack of 
 interoperability with the underlying command line utility. So we should design 
-version 2 with IPC to the GUI firmly in mind.
+version 2 with inter-process communication (IPC) to the GUI firmly in mind. 
+Security is also an issue.
 
 \subsection{Wizard}
 
@@ -35,6 +36,8 @@ setup wizard to simplify the process. The wizard should display immediately
 after installation on all platforms (with the option to skip the wizard). When
 the wizard starts, the user should choose whether the machine is a client or a
 server (the wizard should explain the difference with a simple diagram).
+
+\textbf{TODO:} Replace steps with an activity/sequence diagram.
 
 \subsubsection{Server steps}
 \begin{enumerate}
@@ -78,6 +81,11 @@ platform.
 
 \textbf{TODO:} Support encryption from the start?
 
+\textbf{TODO:} Chris says to only support key codes, not both chars and codes!
+
+\textbf{TODO:} Talk about TCP multiplexing (for priority; where clipboard data 
+is lowest priority, and mouse is highest).
+
 Each key press and mouse delta will trigger a message sent over a simple TCP 
 stream (see Table \ref{tab:messageFormat}).
 
@@ -91,8 +99,8 @@ stream (see Table \ref{tab:messageFormat}).
     \textbf{Comment} \\
     \hline
     0 & Size & 4B & uint32\_t & The total message size in bytes. \\
-    1 & Type & 2B & uint16\_t & See Table \ref{tab:messageTypes} for enum. \\
-    2 & Data & $\leq$4GB & char[] & An array of arbitrary binary data. \\
+    4 & Type & 2B & uint16\_t & See Table \ref{tab:messageTypes} for enum. \\
+    6 & Data & $\leq$4GB & char[] & An array of arbitrary binary data. \\
     \hline
   \end{tabular}
   \caption{TCP message format}
