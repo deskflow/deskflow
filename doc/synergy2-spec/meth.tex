@@ -38,6 +38,15 @@ keyboard, clipboard, and so on). The solution is to use integration testing
 some unit tests that actually run within those 3D platforms. How cool would that
 be?! Not sure if the functions we need will be there (e.g. getMousePos(), etc).
 
+\textbf{TODO:} Discuss: Mac licensing and hardware support makes it very 
+diffcult to properly test OS X. So to start with (until we can afford more
+hardware), we'll only be able to test Mac + other, and not Mac + Mac. Also,
+Nick only has 1 Mac, so if it's being used for integration testing (i.e. the
+mouse gets moved around every night at 8pm), then it can't really be used 
+properly as a dev machine. Actually, Nick needs 3 Mac Minis to have full
+integration testing (one of which is for dev). Virtualizing Macs is not
+very easy, has bad performance, and can be tricky to maintain.
+
 Actually having to fix regressions is not usually a problem -- the problem is
 finding them in the bug in first place, which often falls on the end user. 
 Often, the regression will be caused way outside of the developer's capable 
