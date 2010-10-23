@@ -23,7 +23,15 @@ unit tests (which are also run by developers). See Figure \ref{fig:devTesting}.
 Open source software should be easy for new developers to modify without too
 much risk of breaking the existing functionality. Currently, applying patches 
 is very risky, since this usually causes regressions. Unit testing will help 
-developers identify regressions before we check code in.
+developers identify regressions before we check code in. All planned unit tests
+will be written \textbf{before} the actual software.
+
+Many users find problems using computer games. These are usually problems with
+the mouse - e.g. it might skip, stall, or do crazy things. So to solve this 
+problem, we will have a set of unit tests that actually run within DirectX and
+OpenGL (depending on platform support). And since these will be written before
+the actual code, it will force us to either solve the problem early, or 
+officailly declare DirectX and/or OpenGL as unsupported.
 
 However, some aspects of Synergy are difficult to test, since it always requires
 more than one machine to function. We \textit{could} emulate this behavior on a 
@@ -34,18 +42,12 @@ keyboard, clipboard, and so on). The solution is to use integration testing
 
 \subsection{Integration Testing}
 
-\textbf{TODO:} Many users find problems using DirectX/OpenGL, so we should have
-some unit tests that actually run within those 3D platforms. How cool would that
-be?! Not sure if the functions we need will be there (e.g. getMousePos(), etc).
-
-\textbf{TODO:} Discuss: Mac licensing and hardware support makes it very 
-diffcult to properly test OS X. So to start with (until we can afford more
-hardware), we'll only be able to test Mac + other, and not Mac + Mac. Also,
-Nick only has 1 Mac, so if it's being used for integration testing (i.e. the
-mouse gets moved around every night at 8pm), then it can't really be used 
-properly as a dev machine. Actually, Nick needs 3 Mac Minis to have full
-integration testing (one of which is for dev). Virtualizing Macs is not
-very easy, has bad performance, and can be tricky to maintain.
+\begin{figure}[ht!]
+  \centering
+  \includegraphics{uml/ad-int-test.1}
+  \caption{Integration testing for mouse movement}
+  \label{fig:integrationTesting}
+\end{figure}
 
 Actually having to fix regressions is not usually a problem -- the problem is
 finding them in the bug in first place, which often falls on the end user. 
@@ -54,11 +56,10 @@ testing scope (e.g. on another platform). The solution is to delegate
 cross-platform testing to an automated process.
 
 Nightly integration testing (in the form of unit tests) will be run on on the 
-Buildbot build machines, and will
-simulate a fully fledged environment involving many \textit{real} machines. The 
-contributor would never run these tests before committing (it wouldn't be 
-practical), but it will help detect problems early enough for us to establish
-blame on a particular source code change.
+Buildbot build machines, and will simulate a fully fledged environment involving
+many \textit{real} machines. The contributor would never run these tests before
+committing (it wouldn't be  practical), but it will help detect problems early
+enough for us to establish blame on a particular source code change.
 
 In each test environment, there will be 2 Buildbot slaves (1 server, 1 client).
 We could have 3 slaves involved, but this may be too complex for now.
@@ -67,7 +68,11 @@ can communicate with the server via LAN, and that they are all turned on at the
 same time (we will have to do this via a Buildbot schedule). The server and 
 client test harnesses depend on each other to be running, which introduces a
 risk (i.e. one may have failed to start) -- to solve this, we must synchronize
-the two processes.
+the two processes. We must design this test each time for testing the clipboard,
+keyboard input, screensaver sync, and all other major features. Each test should
+run once for every combination of platform that we support, except for 
+homogenerous platform configurations (e.g. Windows on Windows) since this is
+pointless (the communication protocol is common).
 
 Figure \ref{fig:integrationTesting} illustrates at which point we synchronize
 the client and server test harnesses. If both processes do not meet at the same
@@ -79,23 +84,28 @@ considered synchronized when all clients involved connect to the server, and
 the sync will fail if the server does not hear from all clients within a 
 specific time window (e.g. 1 minute).
 
-All integration test cases must be implemented \textbf{before} we start 
-implementing any functionality (so that it does not get postponed). Because the
-integration testing is so important, it is effectively our 
-Achilles Heel. We must understand that the success of the project (and future 
-maintenance) depends very heavily on the build system.
+Like normal unit tests, all integration test cases must be implemented 
+\textbf{before} we start implementing any functionality (so that the integration
+testing does not get postponed). Because the integration testing is so 
+important, it is effectively a weakness - if it goes away, then the project will
+start to become unstable; the success of the project (and future maintenance) 
+depends very heavily on the build system. Another limitation is that because
+all integration test communication must be done over LAN, all machines involved
+must be hosted on a single build farm. In future, we should consider having two
+build farms, hosted in geographically dispersed locations (given that the build
+farm is key to our success).
 
-We must design this test each time for testing the clipboard, keyboard input,
-screensaver sync, and all other major features. Each test should run once for 
-every combination of platform that we support. For example: Windows/Windows,
-Windows/Linux, Mac/Linux, etc.
-
-\begin{figure}[ht!]
-  \centering
-  \includegraphics{uml/ad-int-test.1}
-  \caption{Integration testing for mouse movement}
-  \label{fig:integrationTesting}
-\end{figure}
+Apple licensing and hardware support makes it very diffcult to test software on
+Mac OS X automatically. Before we can start work on this version, the build farm
+must have a dedicated Apple Mac computer. This is because it will boot in round
+robin fashion (\textbf{TODO:} prove this is actually possible!) between all 
+supported versions of Mac OS X. Realistically, you couldn't use this machine 
+for active development. The version 1 build farm currently has a Mac Mini, but
+this is used for part-time development, making the round-robin booting
+inpractical. We could virtualize the Mac OS X machines using VMware, but often
+Mac OS X does not play nice with virtualization. However, virtualization this 
+might be something to consider if we can use VMware Server (the build machine
+will be headless).
 
 \subsection{User Stores}
 
