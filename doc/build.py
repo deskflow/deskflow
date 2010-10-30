@@ -63,11 +63,19 @@ def latex(filename, preview, build_twice = True, build_mp_files = True):
 	
 def build_latex(filename):
 	dir = os.path.dirname(filename)
-	p = subprocess.Popen(["pdflatex", filename, "--output-directory=" + dir])
-	p.wait()
-	print # pdflatex output does not end with \n
-	if p.returncode != 0:
-		raise Exception("could not build latex file: " + filename)
+	head, tail = os.path.split(filename)
+
+	enter_dir(dir)
+
+	try:
+		p = subprocess.Popen(["pdflatex", tail])
+		p.wait()
+		print # pdflatex output does not end with \n
+	
+		if p.returncode != 0:
+			raise Exception("could not build latex file: " + filename)
+	finally:
+		restore_dir()
 
 def start_pdf_preview(filename):
 	print "launching preview for: " + filename
@@ -103,13 +111,31 @@ def mp_to_pdf(filename):
 		# always delete the wrapper
 		os.remove(tex_tmp)
 
+def enter_dir(dir):
+	global pwd
+	pwd = os.getcwd()
+	print 'Entering: ' + dir
+	os.chdir(dir)
+
+def restore_dir():
+	print 'Restoring: ' + pwd
+	os.chdir(pwd)
+
 def build_metapost(filename):
 	dir = os.path.dirname(filename)
-	p = subprocess.Popen(["mpost", filename, "--output-directory=" + dir])
-	p.wait()
-	print # mpost output does not end with \n
-	if p.returncode != 0:
-		raise Exception("could not build metapost file: " + filename)
+	head, tail = os.path.split(filename)
+
+	enter_dir(dir)
+
+	try:
+		p = subprocess.Popen(["mpost", tail])
+		p.wait()
+		print # mpost output does not end with \n
+		
+		if p.returncode != 0:
+			raise Exception("could not build metapost file: " + filename)
+	finally:
+		restore_dir()
 
 def get_files(dir, after_time, regex, recursive):
 	files = os.listdir(dir)

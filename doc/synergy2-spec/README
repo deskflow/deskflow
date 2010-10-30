@@ -9,8 +9,19 @@ build.py -pl synergy2-spec\synergy2-spec.tex
 Requirements
 ------------
 
-Windows: MiKTeX
-  http://miktex.org/
+All:
+  pgf-umlsd 0.2 (http://code.google.com/p/pgf-umlsd/)
+
+Windows:
+  MiKTeX (miktex.org)
+  Install package: pgf-umlsd
+  - See troubleshooting section to downgrade to 0.2
+
+Ubuntu:
+  Run: sudo apt-get install texlive texlive-metapost
+  Download pgf-umlsd-0.2.tar.gz
+    - Extract to: /usr/share/texmf-texlive/tex/late/pgf-umlsd
+    - Run: mktexlsr
 
 Reccomended viewer
 ------------------
