@@ -78,14 +78,20 @@ manager starts, so that the user can use the login screen remotely.
 
 \subsection{Keyboard}
 
-We should support both key chars (same as version 1) and key codes (new and
-experimental). If it turns out that there are unforeseen problems with the
-new experimental approach, then we can release with the traditional approach.
+% Chris says to only support key codes, not both chars and codes!
+ 
+In version 1, key chars are sent over the network. This poses a nightmare when
+it comes to multilingual support, or even just supporting new keys (e.g. media
+keys, etc). It's easy to read key chars, and it's tempting to re-use this 
+approach in version 2; however, it will only give us problems and bugs to fix,
+when what we really need to do is support key codes.
 
-The advantage of using key codes instead of chars is that each computer manages
-it's own internationalization - which is best practice, since most operating
-systems manage language per application. Using key codes, you could for example 
-use one computer for English and the other for Russian.
+What's so good about key codes? Instead of relaying the char that the user would
+see typed in any other application, we relay the code of the key that is 
+pressed, which is not be tied to any particular language. This means that a user
+can type in English on computer A, and Russian on computer B without needing to
+switch the language on the master. Instead, the user chooses the language on
+the receiver.
 
 There is a complication with key codes however; each operating system has it's
 own set of key codes - so we need to map each key code to our own set, so that
@@ -94,22 +100,135 @@ platform.
 
 \subsection{Network model}
 
-% TODO: Decide to use server-model or P2P, or both (some users may not like 
-% P2P).
+We will support both server-client (traditional) and a new P2P model, as
+described in this section.
 
-% TODO: Finalize this section.
+\subsubsection{Server-client}
 
-% TODO: Write based on discussion from
-%   http://groups.google.com/group/synergy-plus-dev/browse_thread/thread/5a09353d55fc1364}
+Historically, Synergy has always used a server-client model, where the server's
+mouse and keyboard control the clients (figure \ref{fig:serverClient}). This is
+actually the opposite to how remote access applications work, where the computer
+being controlled is the server (not a client).
+
+\begin{figure}[ht!]
+  \centering
+  \input diag/nd-serverclient.tex
+  \caption{Server-client network model}
+  \label{fig:serverClient}
+\end{figure}
+
+The computer with the mouse and keyboard must be online at all other times to
+make the other computers useful (laptops excluded). To some degree, it makes 
+sense to have this computer as the server, since the server should be online
+at all times.
+
+The disadvantage is that when the server computer goes offline, all other 
+computers become somewhat redundent (until you physically plug a keyboard
+and mouse into each of them). One solution is to allow any computer to be a 
+aster or a slave...
+
+\subsubsection{Peer-to-peer}
+
+% this section is heavily based on this mailing list thread:
+%   http://groups.google.com/group/synergy-plus-dev/browse_thread/thread/5a09353d55fc1364
+
+Allowing any computer to be a master implies that any computer can control
+any other computer. So you could have two computers with a mouse (e.g. a 
+desktop and a laptop) and two without. See Figure \ref{fig:p2p}.
+
+\begin{figure}[ht!]
+  \centering
+  \input diag/nd-p2p.tex
+  \caption{P2P ``daisy-chain'' network model}
+  \label{fig:p2p}
+\end{figure}
+
+% TODO: decide whether this anicdotal example should stay - is it helpful?
+
+Why might this be useful? Let's say you've just arrived at the
+office, with your laptop resumed from sleep - you sit down just in time to see
+a 30 second restart countdown on your ``mouseless'' computer. Uh-oh, looks like
+that new sys admin has decided to restart your workstation, great! No problem, 
+just fire up your Synergy server machine and use Synergy to hit the abort 
+button - but oh no, your server machine is running Windows and has decided to 
+blue screen today. Your 2nd computer restarts and you've lost an entire night's
+work because you forgot to hit save at 3am. Ok, so it's a bit of an edge-case
+but you get the picture; some times it's a chore to turn your server on in
+order to use your other computers.
+
+We might be tempted to have each computer connect to every other computer, but
+unfortunately this doesn't scale too well; the more connections you have, the
+more that can go wrong making troubleshooting more difficult. Instead, we will
+daisy chain all nodes together. Each node both listens to and connects to 
+another node in the configuration, and messages are relayed around the daisy
+chain to reach their final destination.
+
+\subsubsection{The master mode}
+
+So when does a node switch to master mode? One option might be to make this
+automatic and triggered by mouse movement. The problem with this sort of
+deteciton is that it's not always possible (depending on the platform) to
+detect real (by a human) or ``fake'' (by Synergy) input. It might be the
+case that some OSs can distinguish between real and fake input, but we cannot
+always guarentee this to be the case. So, we should make master/slave switching
+manual at the user's descretion. For example, if the user wishes for their
+laptop to become the master, they can just use their laptop touchpad to
+select master from their system tray icon (or command line, etc). It is
+important that the user can do this while Synergy is running; having to restart
+the program may make things complicated for the user.
+
+\subsubsection{Introducing new nodes}
+
+Setting up a daisy chain will probably be too much hassle for most users,
+since they will first have to understand why, and then decide which computers
+connect to what, and so on. It's much better to have this done automatically,
+where the user has no knowledge of what the configuration really looks like.
+We must however make the user aware that to use this ``automatic'' mode, all
+computers must be on the same network. This means that a node must somehow
+introduce it's self to the Synergy network (either when the user is setting 
+up Synergy for the first time, or afterward when the node is established
+as part of the network). We will use Bonjour to broadcast the node's IP address
+and a port to which one other node can connect.
+
+Each time a new node joins the Synergy network, all other nodes will be informed
+of it's presence, and their internal IP-to-node mappings will be updated (in 
+case they loose connection to a peer and need to connect to a new one).
+
+Since we're using a daisy chain, this poses an interesting problem. How does
+the sender know which hops to use? We might say that the IP-to-node mapping
+also knows something abount routes; each node in the mapping will also have two
+peers (incoming and outgoing) -- think of a linked list. Using this graph,
+the sender can figure out which route to take.
+
+\subsubsection{Security concerns}
+
+Allowing any Synergy node to say ``Hey, I'm here, connect to me!'' introduces
+a security dilema. A malicious program could easily broadcast using Bonjour
+pretending to be a real Synergy client. We should do two things to help prevent
+this: first, have a configurable option to turn remote control on or off for
+a particular node (we might turn this off by default, and allow users to turn
+it on during configuration); seconly, messages can be encrypted (on by default).
+
+If a node looses contact with it's peer, it will attempt to automatically fix
+the problem in one of two ways (depending on whether the incoming or outgoing 
+connection was lost). If the outgoing connection was dropped (i.e. the 
+connection that the node has initiated) then it will attempt to connect each 
+of the other known nodes in round-robin fashion until it finds a new peer. It 
+will keep trying forever, or until the incoming connection drops (if this 
+happens then we can assume that the IP-to-node mapping may be stale). If
+the incomming connection drops, then the node will re-announce (and will keep
+doing so forever), hoping that another Synergy node will eventually connect.
+
+\subsubsection{Legacy support}
+
+The disadvantage of P2P is that some users may have their server on one network
+(behind a firewall) and a client on a restricted network (e.g. corporate wifi).
+For this reason, we must still support client-server for such users who are 
+less fortunate. Another reason to still support client-server is that users may
+want to upgrade straight from version 1 to version 2 and use the same config 
+file.
 
 \subsection{Protocol}
-
-% TODO: Support encryption from the start?
-
-% TODO: Chris says to only support key codes, not both chars and codes!
-
-% TODO: Talk about TCP multiplexing (for priority; where clipboard data 
-% is lowest priority, and mouse is highest).
 
 Each key press and mouse delta will trigger a message sent over a simple TCP 
 stream (see Table \ref{tab:messageFormat}).
@@ -125,12 +244,20 @@ stream (see Table \ref{tab:messageFormat}).
     \hline
     0 & Size & 4B & uint32\_t & The total message size in bytes. \\
     4 & Type & 2B & uint16\_t & See Table \ref{tab:messageTypes} for enum. \\
-    6 & Data & $\leq$4GB & char[] & An array of arbitrary binary data. \\
+    6 & From & 2B & uint16\_t & Well known sender node ID. \\
+    8 & To & 2B & uint16\_t & Well known receipient node ID. \\
+    10 & Data & $\leq$4GB & char[] & An array of arbitrary binary data. \\
     \hline
   \end{tabular}
   \caption{TCP message format}
   \label{tab:messageFormat}
 \end{table}
+
+Encryption will be supported, and will be enabled by default. Cryptography may 
+put a noticable load on the CPU, so we must allow this to be turned on and off
+(but on by default). The message as defined in Table \ref{tab:messageFormat}
+can be wrapped in an encrypted message, but will have no knwoeldge of encryption
+it's self.
 
 \begin{table}
   \begin{tabular}{|l|l|l|}
@@ -142,27 +269,55 @@ stream (see Table \ref{tab:messageFormat}).
     HelloServer & Client key & Client message to server on connect. \\
     HelloClient & Access allowed? & Response to key authentication. \\
     KeyCodeDown & Key code & Generic HID key code (from keyboard). \\
-    KeyCharDown & Unicode char & Actual character the user would see. \\
     \hline
   \end{tabular}
   \caption{Message type enumeration (incomplete)}
   \label{tab:messageTypes}
 \end{table}
 
-As discussed in the keyboard section, the protocol layer should support both
-chars and key codes, but the message should make a clear distinction for the
-mode used.
+\subsubsection{TCP multiplexing}
 
-The most discussed aspect of the protocol is keyboard input; more specifically
-whether to send chars or key codes over the network. The reality is, that as far
-as the protocol goes, it should easily support either.
+Clipboard data must also be sent over the same connection as mouse and
+keyboard input. This is fine if the user has copied a small amount of data
+such as a block of text; but what about images? Big problem! If Synergy is busy
+sending a picture of of fluffy kittens, then user input relaying will suffer.
+We could open a new connection specifically for clipboard data, but this idea
+doesn't scale too well (more connections gives us a higher margin of error).
+That said, having a sepearate connection, may work out as a cheap option
+should we need one.
+
+The best-practice solution is to implement TCP multiplexing, which will allow 
+us to prioritize the messages that we send over a single connection. We
+might achieve this by chunking messages and adding them to a prioritized queue,
+where HID messages are immediately sent to the front. The reciever will then
+be responsible for re-constructing the chunks into real messages. However,
+we might want to be careful of chunking HID messages, since these need to be
+more performant (the speed of sending clipboard data doesn't really matter).
+
+\subsection{Configuration}
+
+In server-client mode, the configuration will live on the server, just like in
+version 1. We will also entirely support version 1 configurations. In fact, 
+version 2 configuration file will be almost identical, but with a few added
+options (e.g. to state whether or not the setup is client-server or P2P). We 
+will not make version 2 configurations backward-compatible.
+
+In P2P mode however, things get complicated. Each node must be aware of it's
+neighbour in terms of physical screen location and network peering
+(incidentally, there will be no corellation between the two, since network 
+peering will be based on availability and network time proximity). So, in the
+case of P2P, the configuration file will be shared. Since there can only be
+one master active at a time, this machine is responsible for distributing
+changes to the configuration file. Now that the configuration file is shared,
+any machine can assume command of the ship, since it'll already know the layout
+of the screens.
 
 \clearpage
 \subsection{UML}
 
 \begin{figure}[ht!]
   \begin{center}
-    \includegraphics{uml/cd-system.1}
+    \includegraphics{diag/cd-system.1}
     \caption{System class diagram, for server and client}
     \label{fig:systemClassDiagram}
   \end{center}
@@ -170,7 +325,7 @@ as the protocol goes, it should easily support either.
 
 \begin{figure}[ht!]
   \begin{center}
-    \includegraphics{uml/cd-server.1}
+    \includegraphics{diag/cd-server.1}
     \caption{Server class diagram}
     \label{fig:serverClassDiagram}
   \end{center}
@@ -178,7 +333,7 @@ as the protocol goes, it should easily support either.
 
 \begin{figure}[ht!]
   \begin{center}
-    \includegraphics{uml/cd-client.1}
+    \includegraphics{diag/cd-client.1}
     \caption{Client class diagram}
     \label{fig:clientClassDiagram}
   \end{center}
@@ -208,12 +363,12 @@ as the protocol goes, it should easily support either.
 
 \begin{figure}
   \centering
-  \input uml/sd-system.tex
+  \input diag/sd-system.tex
   \caption{Server and client sequence diagram}
 \end{figure}
 
 \begin{figure}
   \centering
-  \input uml/sd-clipboard.tex
+  \input diag/sd-clipboard.tex
   \caption{Clipboard sharing sequence diagram}
 \end{figure}
