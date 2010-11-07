@@ -31,7 +31,7 @@ the mouse - e.g. it might skip, stall, or do crazy things. So to solve this
 problem, we will have a set of unit tests that actually run within DirectX and
 OpenGL (depending on platform support). And since these will be written before
 the actual code, it will force us to either solve the problem early, or 
-officailly declare DirectX and/or OpenGL as unsupported.
+officially declare DirectX and/or OpenGL as unsupported.
 
 However, some aspects of Synergy are difficult to test, since it always requires
 more than one machine to function. We \textit{could} emulate this behavior on a 
@@ -71,7 +71,7 @@ risk (i.e. one may have failed to start) -- to solve this, we must synchronize
 the two processes. We must design this test each time for testing the clipboard,
 keyboard input, screensaver sync, and all other major features. Each test should
 run once for every combination of platform that we support, except for 
-homogenerous platform configurations (e.g. Windows on Windows) since this is
+homogeneous platform configurations (e.g. Windows on Windows) since this is
 pointless (the communication protocol is common).
 
 Figure \ref{fig:integrationTesting} illustrates at which point we synchronize
@@ -95,14 +95,14 @@ must be hosted on a single build farm. In future, we should consider having two
 build farms, hosted in geographically dispersed locations (given that the build
 farm is key to our success).
 
-Apple licensing and hardware support makes it very diffcult to test software on
+Apple licensing and hardware support makes it very difficult to test software on
 Mac OS X automatically. Before we can start work on this version, the build farm
 must have a dedicated Apple Mac computer. This is because it will boot in round
 robin fashion (\textbf{TODO:} prove this is actually possible!) between all 
 supported versions of Mac OS X. Realistically, you couldn't use this machine 
 for active development. The version 1 build farm currently has a Mac Mini, but
 this is used for part-time development, making the round-robin booting
-inpractical. We could virtualize the Mac OS X machines using VMware, but often
+impractical. We could virtualize the Mac OS X machines using VMware, but often
 Mac OS X does not play nice with virtualization. However, virtualization this 
 might be something to consider if we can use VMware Server (the build machine
 will be headless).

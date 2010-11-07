@@ -123,7 +123,7 @@ sense to have this computer as the server, since the server should be online
 at all times.
 
 The disadvantage is that when the server computer goes offline, all other 
-computers become somewhat redundent (until you physically plug a keyboard
+computers become somewhat redundant (until you physically plug a keyboard
 and mouse into each of them). One solution is to allow any computer to be a 
 aster or a slave...
 
@@ -156,7 +156,7 @@ work because you forgot to hit save at 3am. Ok, so it's a bit of an edge-case
 but you get the picture; some times it's a chore to turn your server on in
 order to use your other computers.
 
-We might be tempted to have each computer connect to every other computer, but
+We might be tempted to have each node connect to every other node, but
 unfortunately this doesn't scale too well; the more connections you have, the
 more that can go wrong making troubleshooting more difficult. Instead, we will
 daisy chain all nodes together. Each node both listens to and connects to 
@@ -167,12 +167,12 @@ chain to reach their final destination.
 
 So when does a node switch to master mode? One option might be to make this
 automatic and triggered by mouse movement. The problem with this sort of
-deteciton is that it's not always possible (depending on the platform) to
+detection is that it's not always possible (depending on the platform) to
 detect real (by a human) or ``fake'' (by Synergy) input. It might be the
 case that some OSs can distinguish between real and fake input, but we cannot
-always guarentee this to be the case. So, we should make master/slave switching
-manual at the user's descretion. For example, if the user wishes for their
-laptop to become the master, they can just use their laptop touchpad to
+always guarantee this to be the case. So, we should make master/slave switching
+manual at the user's discretion. For example, if the user wishes for their
+laptop to become the master, they can just use their laptop touch pad to
 select master from their system tray icon (or command line, etc). It is
 important that the user can do this while Synergy is running; having to restart
 the program may make things complicated for the user.
@@ -196,18 +196,27 @@ case they loose connection to a peer and need to connect to a new one).
 
 Since we're using a daisy chain, this poses an interesting problem. How does
 the sender know which hops to use? We might say that the IP-to-node mapping
-also knows something abount routes; each node in the mapping will also have two
+also knows something about routes; each node in the mapping will also have two
 peers (incoming and outgoing) -- think of a linked list. Using this graph,
 the sender can figure out which route to take.
+
+An automatically configured P2P network will work well on DHCP networks where
+each computer could potentially have a new IP each time it reconnects (though
+the rate at which IPs change is quite slow/predictable). Even so, this also 
+means that the user need not have a valid DNS setup (which is a fairly common
+problem). Many first-time users attempt to use only the hostname (which actually
+resolves to nothing at all), then complain when they cannot connect. The answer
+is always ``Use IP addresses instead,'' which needless to say, is very tiering.
 
 \subsubsection{Security concerns}
 
 Allowing any Synergy node to say ``Hey, I'm here, connect to me!'' introduces
-a security dilema. A malicious program could easily broadcast using Bonjour
+a security dilemma. A malicious program could easily broadcast using Bonjour
 pretending to be a real Synergy client. We should do two things to help prevent
 this: first, have a configurable option to turn remote control on or off for
 a particular node (we might turn this off by default, and allow users to turn
-it on during configuration); seconly, messages can be encrypted (on by default).
+it on during configuration); secondly, messages can be encrypted (on by 
+default).
 
 If a node looses contact with it's peer, it will attempt to automatically fix
 the problem in one of two ways (depending on whether the incoming or outgoing 
@@ -216,7 +225,7 @@ connection that the node has initiated) then it will attempt to connect each
 of the other known nodes in round-robin fashion until it finds a new peer. It 
 will keep trying forever, or until the incoming connection drops (if this 
 happens then we can assume that the IP-to-node mapping may be stale). If
-the incomming connection drops, then the node will re-announce (and will keep
+the incoming connection drops, then the node will re-announce (and will keep
 doing so forever), hoping that another Synergy node will eventually connect.
 
 \subsubsection{Legacy support}
@@ -245,7 +254,7 @@ stream (see Table \ref{tab:messageFormat}).
     0 & Size & 4B & uint32\_t & The total message size in bytes. \\
     4 & Type & 2B & uint16\_t & See Table \ref{tab:messageTypes} for enum. \\
     6 & From & 2B & uint16\_t & Well known sender node ID. \\
-    8 & To & 2B & uint16\_t & Well known receipient node ID. \\
+    8 & To & 2B & uint16\_t & Well known recipient node ID. \\
     10 & Data & $\leq$4GB & char[] & An array of arbitrary binary data. \\
     \hline
   \end{tabular}
@@ -254,9 +263,9 @@ stream (see Table \ref{tab:messageFormat}).
 \end{table}
 
 Encryption will be supported, and will be enabled by default. Cryptography may 
-put a noticable load on the CPU, so we must allow this to be turned on and off
+put a noticeable load on the CPU, so we must allow this to be turned on and off
 (but on by default). The message as defined in Table \ref{tab:messageFormat}
-can be wrapped in an encrypted message, but will have no knwoeldge of encryption
+can be wrapped in an encrypted message, but will have no knowledge of encryption
 it's self.
 
 \begin{table}
@@ -283,13 +292,13 @@ such as a block of text; but what about images? Big problem! If Synergy is busy
 sending a picture of of fluffy kittens, then user input relaying will suffer.
 We could open a new connection specifically for clipboard data, but this idea
 doesn't scale too well (more connections gives us a higher margin of error).
-That said, having a sepearate connection, may work out as a cheap option
+That said, having a separate connection, may work out as a cheap option
 should we need one.
 
 The best-practice solution is to implement TCP multiplexing, which will allow 
 us to prioritize the messages that we send over a single connection. We
 might achieve this by chunking messages and adding them to a prioritized queue,
-where HID messages are immediately sent to the front. The reciever will then
+where HID messages are immediately sent to the front. The receiver will then
 be responsible for re-constructing the chunks into real messages. However,
 we might want to be careful of chunking HID messages, since these need to be
 more performant (the speed of sending clipboard data doesn't really matter).
@@ -303,8 +312,8 @@ options (e.g. to state whether or not the setup is client-server or P2P). We
 will not make version 2 configurations backward-compatible.
 
 In P2P mode however, things get complicated. Each node must be aware of it's
-neighbour in terms of physical screen location and network peering
-(incidentally, there will be no corellation between the two, since network 
+neighbor in terms of physical screen location and network peering
+(incidentally, there will be no correlation between the two, since network 
 peering will be based on availability and network time proximity). So, in the
 case of P2P, the configuration file will be shared. Since there can only be
 one master active at a time, this machine is responsible for distributing
@@ -351,8 +360,8 @@ of the screens.
     VirtualScreen & Represents what is displayed on each monitor. \\
     Device & A human input device (e.g. Mouse, Keyboard, Joystick). \\
     Mouse & Captures mouse input, representing the current state. \\
-    Keyboard & Caputes keyboard input, representing key states. \\
-    DeviceRelay & Relays recieved human input from server to the OS. \\
+    Keyboard & Captures keyboard input, representing key states. \\
+    DeviceRelay & Relays received human input from server to the OS. \\
     MouseRelay & Relays mouse movement to the OS. \\
     KeyboardRelay & Relays pressed keys to the OS. \\
     \hline
