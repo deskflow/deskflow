@@ -34,37 +34,29 @@ interoperability with the underlying command line utility. So we should design
 version 2 with inter-process communication (IPC) to the GUI firmly in mind. 
 Security is also an issue.
 
-\subsection{Wizard}
-
-While we should support the existing config file format, some would prefer a
-setup wizard to simplify the process. The wizard should display immediately
-after installation on all platforms (with the option to skip the wizard). When
-the wizard starts, the user should choose whether the machine is a client or a
-server (the wizard should explain the difference with a simple diagram).
-
-% TODO: Replace steps with an activity/sequence diagram.
-
-\subsubsection{Server steps}
-\begin{enumerate}
-  \item Show instructions for starting client wizard(s).
-  \item Show connected clients in a status list (as they connect).
-  \item Allow user to advance once all clients have connected.
-  \item Allow user to drag and drop clients on a grid.
-  \item Save config to file (at custom location) when complete.
-\end{enumerate}
-
-Often, the user's hostname will not be found on their DNS server, and in such
-a case we should detect this, and ask the user to use an IP instead.
-
-\subsubsection{Client steps}
-\begin{enumerate}
-  \item Prompt the user for the server hostname or IP (shown in server wizard).
-  \item If unable to connect, show troubleshooting tips.
-\end{enumerate}
+With this version, we aim to make configuration extremely simple so that anyone
+can use Synergy without having to know anything about IPs or which machine is a
+server or a client. One setup option will be that the user can use a wizard (see
+Figure \ref{fig:setupWizard}).
 
 Troubleshooting steps might include asking the user to temporarily turn off
 their firewall, try pinging, etc. This will reduce the number of troubleshooting
 requests coming into the website and mailing list.
+
+\clearpage
+\begin{figure}[ht!]
+  \centering
+  \includegraphics{diag/ad-wizard.1}
+  \caption{Setup wizard}
+  \label{fig:setupWizard}
+\end{figure}
+
+\subsubsection{Place screens anywhere}
+
+Version 1 assumes that the user's monitors are always the same size. In version
+2 we will allow the user to drag screens anywhere (on the layout designer) so
+that you can have (for example) two small screens stacked next to a large 
+screen.
 
 \subsection{Auto Start}
 
@@ -242,7 +234,7 @@ file.
 Each key press and mouse delta will trigger a message sent over a simple TCP 
 stream (see Table \ref{tab:messageFormat}).
 
-\begin{table}
+\begin{table}[ht!]
   \begin{tabular}{|l|l|l|l|l|}
     \hline
     \textbf{Pos} &
@@ -268,7 +260,7 @@ put a noticeable load on the CPU, so we must allow this to be turned on and off
 can be wrapped in an encrypted message, but will have no knowledge of encryption
 it's self.
 
-\begin{table}
+\begin{table}[ht!]
   \begin{tabular}{|l|l|l|}
     \hline
     \textbf{Type} &
