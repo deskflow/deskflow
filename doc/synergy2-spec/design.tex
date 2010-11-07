@@ -15,16 +15,10 @@ away with feature requests. Some features we will \textbf{not include}:
 
 \subsection{GUI}
 
-% TODO: Allow alternative config options:
-% 1. chris' screen edge auto-config
-% 2. manual drag and drop (there's been a lot of +1's for this)
-% 3. load from file (so users can load v1, v2, or their own custom configs)
-
 While version 1 is simple to setup, it can be a little difficult to
 troubleshoot. As command-line tools go, the existing version is great, but
 can be a little involved for some users. Often these users are from a Windows
-or Mac background where tool configuration is usually done with an intuitive
-GUI.
+or Mac background where tool configuration is usually done with a GUI.
 
 Version 1 was originally designed as a command line tool, then later on, several
 GUI applications were invented to try and make configuration easier. QSynergy is
@@ -32,16 +26,24 @@ one of those GUIs that found a good balance of cross-platform support and user
 friendliness. However, like all Synergy GUIs, it is limited by the lack of 
 interoperability with the underlying command line utility. So we should design 
 version 2 with inter-process communication (IPC) to the GUI firmly in mind. 
-Security is also an issue.
+Security is also an issue; we need to make sure a malicious program can't
+connect to Synergy via the IPC layer (perhaps a shared key will be sufficient).
 
 With this version, we aim to make configuration extremely simple so that anyone
 can use Synergy without having to know anything about IPs or which machine is a
 server or a client. One setup option will be that the user can use a wizard (see
-Figure \ref{fig:setupWizard}).
+Figure \ref{fig:setupWizard}). The wizard should include an ``online'' manual 
+with a troubleshooting section. Troubleshooting steps might include asking the 
+user to temporarily turn off their firewall, try pinging, etc. This will reduce
+the number of troubleshooting requests coming into the website and mailing list.
+The user will can always drag and drop screens into the designer (instead of
+using the edge-hit feature) just in case the edge-hit feature fails to work
+correctly.
 
-Troubleshooting steps might include asking the user to temporarily turn off
-their firewall, try pinging, etc. This will reduce the number of troubleshooting
-requests coming into the website and mailing list.
+When starting the wizard, the user will choose between two options: Simple (a
+guided process, which is very easy to use, and creates a P2P network); and
+Advanced, which allows the user to load a config file -- this makes it possible
+to setup a sever-client configuration, or lead a version 1 config.
 
 \clearpage
 \begin{figure}[ht!]
@@ -70,8 +72,6 @@ manager starts, so that the user can use the login screen remotely.
 
 \subsection{Keyboard}
 
-% Chris says to only support key codes, not both chars and codes!
- 
 In version 1, key chars are sent over the network. This poses a nightmare when
 it comes to multilingual support, or even just supporting new keys (e.g. media
 keys, etc). It's easy to read key chars, and it's tempting to re-use this 
@@ -134,8 +134,6 @@ desktop and a laptop) and two without. See Figure \ref{fig:p2p}.
   \caption{P2P ``daisy-chain'' network model}
   \label{fig:p2p}
 \end{figure}
-
-% TODO: decide whether this anicdotal example should stay - is it helpful?
 
 Why might this be useful? Let's say you've just arrived at the
 office, with your laptop resumed from sleep - you sit down just in time to see

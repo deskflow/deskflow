@@ -3,9 +3,9 @@
 \subsection{Language}
 
 Our language of choice will be C++ as with version 1. However, we might want to
-consider writing the GUI in Python (Chris's idea). Regardless, we should 
-separate the core system layer and the GUI layer via IPC, so that we can use
-any language to write the GUI.
+consider writing the GUI in Python. Regardless, we should separate the core 
+system layer and the GUI layer via IPC, so that we can use any language to 
+write the GUI.
 
 \subsection{Libraries}
 
@@ -13,20 +13,24 @@ We should use Boost to increase productivity; typically an application would
 take longer to write in C++ because the standard library has less functionality
 available to the developer - so we spend more time reinventing-the-wheel.
 
-\subsection{Toolchain}
-
-Historically, Automake was used before Synergy+ came along and started using
-CMake (each have pros and cons). Because CMake is a little limited, a hm.py 
-script was created to extend the toolchain so that less input from the developer
-was required.
-
-% TODO: Should we stick with the Synergy+ way?
-
 \subsection{Code Style}
 
 We'll use the code style from version 1, with a few modifications. For example 
 we will drop the C-prefix class naming convention (adopted from MFC). See 
 appendix A for the full guide.
+
+\subsection{Toolchain}
+
+Historically, Automake was used before Synergy+ came along and started using
+CMake (each toolchain has pros and cons). Because CMake is a little limited, a 
+wrapper script (hm.py) was created to extend the toolchain so that less input 
+from the developer was required.
+
+We will continue to use a Python toolchain script as a wrapper for CMake which
+takes the same commands as the old hm.py script -- but this time we will design 
+the toolchain script it a little better. Many developers prefer to use only
+CMake (without the toolchain script), so we should attempt to ensure that CMake
+can work independently (much like in Synergy+).
 
 \subsection{Debugging}
 
