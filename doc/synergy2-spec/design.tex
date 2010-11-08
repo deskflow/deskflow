@@ -55,20 +55,22 @@ to setup a sever-client configuration, or lead a version 1 config.
 
 \subsubsection{Place screens anywhere}
 
-Version 1 assumes that the user's monitors are always the same size. In version
-2 we will allow the user to drag screens anywhere (on the layout designer) so
-that you can have (for example) two small screens stacked next to a large 
-screen.
+While the version 1 configuration syntax does allow for screens to be placed at
+positions relative to each other, most (if not all) GUIs so far have not 
+considered this. In version 2 we will allow the user to drag screens anywhere
+(on the layout designer) so that you can have (for example) two small screens
+stacked next to a large screen.
 
-\subsection{Auto Start}
+\subsection{Run at startup}
 
 With version 1, most users need to have some technical knowledge of their OS
 in order to start synergy when their computer boots. This new version must
 take care of starting at boot automatically in order to be more seamless.
 
-As an example, in Linux Synergy 
-must start at the init.d process, or at least immediately when the window 
-manager starts, so that the user can use the login screen remotely.
+Autostart on linux is exceptionally difficult because different versions linux 
+require different configurations. In particular autostarting after the X server
+starts requires editing shell scripts. Maybe we can start via init.d and poll 
+for a running X server.
 
 \subsection{Keyboard}
 
@@ -85,7 +87,7 @@ can type in English on computer A, and Russian on computer B without needing to
 switch the language on the master. Instead, the user chooses the language on
 the receiver.
 
-There is a complication with key codes however; each operating system has it's
+There is a complication with key codes however; each operating system has its
 own set of key codes - so we need to map each key code to our own set, so that
 key codes sent over the network are generic and can be translated to any 
 platform.
@@ -120,6 +122,8 @@ and mouse into each of them). One solution is to allow any computer to be a
 aster or a slave...
 
 \subsubsection{Peer-to-peer}
+
+% TODO: drop ``daisy chain'' idea in favour of ``hub'' approach.
 
 % this section is heavily based on this mailing list thread:
 %   http://groups.google.com/group/synergy-plus-dev/browse_thread/thread/5a09353d55fc1364
@@ -175,14 +179,14 @@ connect to what, and so on. It's much better to have this done automatically,
 where the user has no knowledge of what the configuration really looks like.
 We must however make the user aware that to use this ``automatic'' mode, all
 computers must be on the same network. This means that a node must somehow
-introduce it's self to the Synergy network (either when the user is setting 
+introduce itself to the Synergy network (either when the user is setting 
 up Synergy for the first time, or afterward when the node is established
 as part of the network). We will use Bonjour to broadcast the node's IP address
 and a port to which one other node can connect.
 
 Each time a new node joins the Synergy network, all other nodes will be informed
-of it's presence, and their internal IP-to-node mappings will be updated (in 
-case they loose connection to a peer and need to connect to a new one).
+of its presence, and their internal IP-to-node mappings will be updated (in 
+case they lose connection to a peer and need to connect to a new one).
 
 Since we're using a daisy chain, this poses an interesting problem. How does
 the sender know which hops to use? We might say that the IP-to-node mapping
@@ -208,7 +212,7 @@ a particular node (we might turn this off by default, and allow users to turn
 it on during configuration); secondly, messages can be encrypted (on by 
 default).
 
-If a node looses contact with it's peer, it will attempt to automatically fix
+If a node loses contact with its peer, it will attempt to automatically fix
 the problem in one of two ways (depending on whether the incoming or outgoing 
 connection was lost). If the outgoing connection was dropped (i.e. the 
 connection that the node has initiated) then it will attempt to connect each 
@@ -241,22 +245,32 @@ stream (see Table \ref{tab:messageFormat}).
     \textbf{Type} &
     \textbf{Comment} \\
     \hline
-    0 & Size & 4B & uint32\_t & The total message size in bytes. \\
+    0 & Size & 4B & uint32\_t & The total message size in bytes (inc header). \\
     4 & Type & 2B & uint16\_t & See Table \ref{tab:messageTypes} for enum. \\
-    6 & From & 2B & uint16\_t & Well known sender node ID. \\
-    8 & To & 2B & uint16\_t & Well known recipient node ID. \\
-    10 & Data & $\leq$4GB & char[] & An array of arbitrary binary data. \\
+    6 & From & 2B & uint16\_t & Runtime enerated sender node ID. \\
+    8 & To & 2B & uint16\_t & Runtime generated recipient node ID. \\
+    10 & Mux ch. & 1B & uint8\_t & TCP multiplex channel. \\
+    12 & Payload & $<$4GB & char[] & The payload (a mux chunk). \\
     \hline
   \end{tabular}
   \caption{TCP message format}
   \label{tab:messageFormat}
 \end{table}
 
+Initially we will have 4 TCP multiplex channels (each of different priority), 
+but this protocol allows us to have up to 255. We could use an unsigned nibble 
+instead of a unsigned byte, but for the sake of saving 4 bits, this seems risky.
+
 Encryption will be supported, and will be enabled by default. Cryptography may 
 put a noticeable load on the CPU, so we must allow this to be turned on and off
 (but on by default). The message as defined in Table \ref{tab:messageFormat}
 can be wrapped in an encrypted message, but will have no knowledge of encryption
-it's self.
+itself.
+
+% TODO: turn question into statement!
+Security requires not just encryption but also authentication. We should choose
+or suggest appropriate standards for these. Do we allow various encryption and
+authentication schemes? If so we must define a handshake to negotiate them.
 
 \begin{table}[ht!]
   \begin{tabular}{|l|l|l|}
@@ -267,12 +281,15 @@ it's self.
     \hline
     HelloServer & Client key & Client message to server on connect. \\
     HelloClient & Access allowed? & Response to key authentication. \\
-    KeyCodeDown & Key code & Generic HID key code (from keyboard). \\
+    KeyCodeDown & Key code & Generic HID\footnotemark key code (from 
+    keyboard). \\
     \hline
   \end{tabular}
   \caption{Message type enumeration (incomplete)}
   \label{tab:messageTypes}
 \end{table}
+
+\footnotetext{Human input device}
 
 \subsubsection{TCP multiplexing}
 
@@ -288,10 +305,40 @@ should we need one.
 The best-practice solution is to implement TCP multiplexing, which will allow 
 us to prioritize the messages that we send over a single connection. We
 might achieve this by chunking messages and adding them to a prioritized queue,
-where HID messages are immediately sent to the front. The receiver will then
-be responsible for re-constructing the chunks into real messages. However,
-we might want to be careful of chunking HID messages, since these need to be
-more performant (the speed of sending clipboard data doesn't really matter).
+where human input device (HID) messages are immediately sent to the front. The
+receiver will then be responsible for re-constructing the chunks into real 
+messages. However, we might want to be careful of chunking HID messages, since 
+these need to be more performant (the speed of sending clipboard data doesn't 
+really matter).
+
+\begin{table}[ht!]
+  \begin{tabular}{|1|1|1|}
+    \textbf{Pos} &
+    \textbf{Part} &
+    \textbf{Size} &
+    \textbf{Type} &
+    \textbf{Comment} \\
+    \hline
+    0 & Size & 2B & uint16\_t & The chunk size in bytes (inc header). \\
+    2 & ID & 2B & uint16\_t & The chunk ID (sequential number). \\
+    4 & Payload & $<$64KB & char[] & The chunk payload (binary data). \\
+    \hline
+  \end{tabular}
+  \caption{TCP multiplex chunk}
+  \label{tab:muxChunkFormat}
+\end{table}
+
+Each TCP multiplex chunk (see Table \ref{tab:muxChunkFormat}) will be 
+encapsulated within a standard TCP message (see Table \ref{tab:messageFormat})
+as the payload. Because there is maximum of 65535 chunks, each of 64KB in
+size, a multiplexed message can be up to 4GB (which ties in nicely with
+the maximum payload size).
+
+We could define the TCP multiplex chunk format as part of the primary message
+format (Table \ref{tab:messageFomrat}) but it might be a good idea to keep these
+separate for two reasons: so that the protocol is more extensible; and so that
+we can send a whole TCP message to the multiplexer component, which takes care
+of chunking for us. Some further discussion may be needed here.
 
 \subsection{Configuration}
 
@@ -301,7 +348,7 @@ version 2 configuration file will be almost identical, but with a few added
 options (e.g. to state whether or not the setup is client-server or P2P). We 
 will not make version 2 configurations backward-compatible.
 
-In P2P mode however, things get complicated. Each node must be aware of it's
+In P2P mode however, things get complicated. Each node must be aware of its
 neighbor in terms of physical screen location and network peering
 (incidentally, there will be no correlation between the two, since network 
 peering will be based on availability and network time proximity). So, in the
