@@ -245,21 +245,18 @@ stream (see Table \ref{tab:messageFormat}).
     \textbf{Type} &
     \textbf{Comment} \\
     \hline
-    0 & Size & 4B & uint32\_t & The total message size in bytes (inc header). \\
+    0 & Size & 2B & uint16\_t & Total message size in bytes (inc header). \\
     4 & Type & 2B & uint16\_t & See Table \ref{tab:messageTypes} for enum. \\
-    6 & From & 2B & uint16\_t & Runtime enerated sender node ID. \\
-    8 & To & 2B & uint16\_t & Runtime generated recipient node ID. \\
-    10 & Mux ch. & 1B & uint8\_t & TCP multiplex channel. \\
-    12 & Payload & $<$4GB & char[] & The payload (a mux chunk). \\
+    8 & To ID & 2B & uint16\_t & Runtime generated recipient node ID. \\
+    6 & From ID & 2B & uint16\_t & Runtime generated sender node ID. \\
+    8 & Mux ID & 4B & uint32\_t & Runtime generated TCP mux ID (recycled). \\
+    12 & Chunk ID & 2B & uint16\_t & Sequential ID of the TCP mux chunk. \\
+    14 & Payload & $<$64KB & char[] & The chunk payload (binary data). \\
     \hline
   \end{tabular}
   \caption{TCP message format}
   \label{tab:messageFormat}
 \end{table}
-
-Initially we will have 4 TCP multiplex channels (each of different priority), 
-but this protocol allows us to have up to 255. We could use an unsigned nibble 
-instead of a unsigned byte, but for the sake of saving 4 bits, this seems risky.
 
 Encryption will be supported, and will be enabled by default. Cryptography may 
 put a noticeable load on the CPU, so we must allow this to be turned on and off
@@ -298,12 +295,11 @@ keyboard input. This is fine if the user has copied a small amount of data
 such as a block of text; but what about images? Big problem! If Synergy is busy
 sending a picture of of fluffy kittens, then user input relaying will suffer.
 We could open a new connection specifically for clipboard data, but this idea
-doesn't scale too well (more connections gives us a higher margin of error).
-That said, having a separate connection, may work out as a cheap option
-should we need one.
+doesn't scale too well and we would need to open more ports. That said, having
+a separate connection, may work out as a cheap option should we need one.
 
-The best-practice solution is to implement TCP multiplexing, which will allow 
-us to prioritize the messages that we send over a single connection. We
+The best-practice solution is to implement TCP multiplexing (mux), which will 
+allow us to prioritize the messages that we send over a single connection. We
 might achieve this by chunking messages and adding them to a prioritized queue,
 where human input device (HID) messages are immediately sent to the front. The
 receiver will then be responsible for re-constructing the chunks into real 
@@ -311,34 +307,22 @@ messages. However, we might want to be careful of chunking HID messages, since
 these need to be more performant (the speed of sending clipboard data doesn't 
 really matter).
 
-\begin{table}[ht!]
-  \begin{tabular}{|1|1|1|}
-    \textbf{Pos} &
-    \textbf{Part} &
-    \textbf{Size} &
-    \textbf{Type} &
-    \textbf{Comment} \\
-    \hline
-    0 & Size & 2B & uint16\_t & The chunk size in bytes (inc header). \\
-    2 & ID & 2B & uint16\_t & The chunk ID (sequential number). \\
-    4 & Payload & $<$64KB & char[] & The chunk payload (binary data). \\
-    \hline
-  \end{tabular}
-  \caption{TCP multiplex chunk}
-  \label{tab:muxChunkFormat}
-\end{table}
+We could prioritise whole messages, but what if 4GB of clipboard data enters
+the queue? The solution is to ``chunk'' the message payload so that high 
+priority message chunks are sent inbetween low priority message chunks. Each TCP
+message describes one chunk, the maximum size of the chunk is 64KB minus the 
+header (approx 65522 bytes). There will be a slight performance hit for large
+data, since each chunk has a 10 byte overhead, and the message needs to be 
+serialized and deserialized. This is not really a problem though, because the
+user will often favour the convenience of copy and pasting files, over the 
+performance of a file sharing protocol.
 
-Each TCP multiplex chunk (see Table \ref{tab:muxChunkFormat}) will be 
-encapsulated within a standard TCP message (see Table \ref{tab:messageFormat})
-as the payload. Because there is maximum of 65535 chunks, each of 64KB in
-size, a multiplexed message can be up to 4GB (which ties in nicely with
-the maximum payload size).
-
-We could define the TCP multiplex chunk format as part of the primary message
-format (Table \ref{tab:messageFomrat}) but it might be a good idea to keep these
-separate for two reasons: so that the protocol is more extensible; and so that
-we can send a whole TCP message to the multiplexer component, which takes care
-of chunking for us. Some further discussion may be needed here.
+Each TCP mux chunk has a seqential ID, which is unique to the mux message
+(a collection of mux chunks). The maximum value of the sequential chunk ID is
+$2^{16}-1$, and a chunk can be at most ~64KB, therefore the maximum mux message
+size is approx 4GB. The Mux ID is a seqnential number with a maximum value of 
+$2^{32}-1$, meaning that we can have a maximum of $~4GB \times 2^{32}-1$ (
+approx 16GB) of data in the TCP mux queue at any given time.
 
 \subsection{Configuration}
 
