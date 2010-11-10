@@ -45,7 +45,6 @@ guided process, which is very easy to use, and creates a P2P network); and
 Advanced, which allows the user to load a config file -- this makes it possible
 to setup a sever-client configuration, or lead a version 1 config.
 
-\clearpage
 \begin{figure}[ht!]
   \centering
   \includegraphics{diag/ad-wizard.1}
@@ -67,8 +66,8 @@ With version 1, most users need to have some technical knowledge of their OS
 in order to start synergy when their computer boots. This new version must
 take care of starting at boot automatically in order to be more seamless.
 
-Autostart on linux is exceptionally difficult because different versions linux 
-require different configurations. In particular autostarting after the X server
+Autostart on Linux is exceptionally difficult because different versions Linux 
+require different configurations. In particular auto starting after the X server
 starts requires editing shell scripts. Maybe we can start via init.d and poll 
 for a running X server.
 
@@ -102,7 +101,8 @@ described in this section.
 Historically, Synergy has always used a server-client model, where the server's
 mouse and keyboard control the clients (figure \ref{fig:serverClient}). This is
 actually the opposite to how remote access applications work, where the computer
-being controlled is the server (not a client).
+being controlled is the server (not a client). We will use the same port as 
+version 1 (24800), though the protocols will not be compatible.
 
 \begin{figure}[ht!]
   \centering
@@ -119,23 +119,31 @@ at all times.
 The disadvantage is that when the server computer goes offline, all other 
 computers become somewhat redundant (until you physically plug a keyboard
 and mouse into each of them). One solution is to allow any computer to be a 
-aster or a slave...
+master (to have control over the other computers)...
 
-\subsubsection{Peer-to-peer}
-
-% TODO: drop ``daisy chain'' idea in favour of ``hub'' approach.
+\subsubsection{Peer-to-peer (P2P)}
 
 % this section is heavily based on this mailing list thread:
 %   http://groups.google.com/group/synergy-plus-dev/browse_thread/thread/5a09353d55fc1364
 
 Allowing any computer to be a master implies that any computer can control
 any other computer. So you could have two computers with a mouse (e.g. a 
-desktop and a laptop) and two without. See Figure \ref{fig:p2p}.
+desktop and a laptop) and two without. Figure \ref{fig:p2p} shows 3 networks;
+each show 3 nodes listening for TCP connections, and one (the hub) making the
+outgoing connections. This figure also illustrates that any node can be either
+a master, or a hub, or both (the terms ``hub'' and ``master'' are not to be 
+confused with each other).
+
+Given that
+all nodes could potentially be listening; each node must always adjust it's
+firewall setup to accept traffic on the 24800 port. Though this port is the
+same one as is used by both version 1, and version 2 server-client, it will
+not work with either of these.
 
 \begin{figure}[ht!]
   \centering
   \input diag/nd-p2p.tex
-  \caption{P2P ``daisy-chain'' network model}
+  \caption{P2P ``hub'' network model}
   \label{fig:p2p}
 \end{figure}
 
@@ -143,19 +151,25 @@ Why might this be useful? Let's say you've just arrived at the
 office, with your laptop resumed from sleep - you sit down just in time to see
 a 30 second restart countdown on your ``mouseless'' computer. Uh-oh, looks like
 that new sys admin has decided to restart your workstation, great! No problem, 
-just fire up your Synergy server machine and use Synergy to hit the abort 
-button - but oh no, your server machine is running Windows and has decided to 
-blue screen today. Your 2nd computer restarts and you've lost an entire night's
-work because you forgot to hit save at 3am. Ok, so it's a bit of an edge-case
-but you get the picture; some times it's a chore to turn your server on in
-order to use your other computers.
+just fire up your Synergy server machine, move the mouse over and hit the 
+``Abort'' button - but oh no, your server machine is running Windows and has 
+decided to blue screen today. Your 2nd computer restarts and you've lost an 
+entire night's work because you forgot to hit save at 3am. Ok, so it's a bit 
+of an edge-case but you get the picture; some times it's a chore to turn your
+server on in order to use your other computers.
 
 We might be tempted to have each node connect to every other node, but
-unfortunately this doesn't scale too well; the more connections you have, the
-more that can go wrong making troubleshooting more difficult. Instead, we will
-daisy chain all nodes together. Each node both listens to and connects to 
-another node in the configuration, and messages are relayed around the daisy
-chain to reach their final destination.
+unfortunately this doesn't scale too well; it's always better to have less
+connections if it can be helped. The hub topology is well suited for this,
+since it will make the smallest number of connections.
+
+This topology will work well on DHCP networks where
+each computer could potentially have a new IP each time it reconnects (though
+the rate at which IPs change is quite slow/predictable). Even so, this also 
+means that the user need not have a valid DNS setup (which is a fairly common
+problem). Many first-time users attempt to use only the hostname (which actually
+resolves to nothing at all), then complain when they cannot connect. The answer
+is always ``Use IP addresses instead,'' which needless to say, is very tiring.
 
 \subsubsection{The master mode}
 
@@ -169,38 +183,50 @@ manual at the user's discretion. For example, if the user wishes for their
 laptop to become the master, they can just use their laptop touch pad to
 select master from their system tray icon (or command line, etc). It is
 important that the user can do this while Synergy is running; having to restart
-the program may make things complicated for the user.
+the program may make things complicated for the user. We may decide to 
+introduce an automatic master mode at some point in the future, but this is
+certainly not essential for the meantime.
 
 \subsubsection{Introducing new nodes}
 
-Setting up a daisy chain will probably be too much hassle for most users,
-since they will first have to understand why, and then decide which computers
-connect to what, and so on. It's much better to have this done automatically,
-where the user has no knowledge of what the configuration really looks like.
-We must however make the user aware that to use this ``automatic'' mode, all
-computers must be on the same network. This means that a node must somehow
-introduce itself to the Synergy network (either when the user is setting 
-up Synergy for the first time, or afterward when the node is established
-as part of the network). We will use Bonjour to broadcast the node's IP address
-and a port to which one other node can connect.
+Each time a new node joins the configuration, the hub node will connect to 
+it. If the node announces but does not get any incoming connections from an
+existing hub node, then it will assume the hub role. A non-hub will always send
+messages through the hub node (which is a TCP client), since all other nodes 
+are always connected via the hub. All nodes will attempt to configure 
+themselves automatically without requiring any intervention from the user. This
+does require some degree of guesswork; we will need to make the program 
+``smart'' enough to figure out which node to use as the hub, and so on. This of
+course introduces a very large margin for error. So as a backup, we should 
+allow the user to manually force a particular node to be the hub, in case the
+automatic configuration does not work correctly.
 
-Each time a new node joins the Synergy network, all other nodes will be informed
-of its presence, and their internal IP-to-node mappings will be updated (in 
-case they lose connection to a peer and need to connect to a new one).
+If a non-hub node looses connection with the hub, it will send an announce (just
+like it did when it first came online). This may have happened for one of two
+reasons: either the hub has gone offline; or the connection between the node
+and the hub has been interrupted (maybe the node's firewall was reconfigured).
+For the former case (hub went offline), all nodes will be affected by this, so
+eventually one of them will announce (just like when it first came online).
+Since none of the nodes are hubs, none can respond, therefore the first node
+to disconnect becomes the new hub, and will respond to further announces.
+For the latter case (connection interrupted), the node will still announce,
+but it's likely that even if the hub is online, it probably can't communicate
+with the non-hub node. In this case, the orphaned node will make a special
+kind of announcement, to say ``I'm the new hub!'' -- in this case, all other
+nodes (both hub and non-hub) will drop their connections and announce. The
+new hub will then pick up all other nodes. If none respond, then we can assume
+that either there is a serious network error, or there genuinely are no more
+nodes. In the event that two nodes attempt to become the hub at nearly the same
+time, there will always be one that does so a little later than the other; in
+this case, the latest node will become the hub (we may want to introduce a time
+delay based on node ID to prevent this from happening).
 
-Since we're using a daisy chain, this poses an interesting problem. How does
-the sender know which hops to use? We might say that the IP-to-node mapping
-also knows something about routes; each node in the mapping will also have two
-peers (incoming and outgoing) -- think of a linked list. Using this graph,
-the sender can figure out which route to take.
-
-An automatically configured P2P network will work well on DHCP networks where
-each computer could potentially have a new IP each time it reconnects (though
-the rate at which IPs change is quite slow/predictable). Even so, this also 
-means that the user need not have a valid DNS setup (which is a fairly common
-problem). Many first-time users attempt to use only the hostname (which actually
-resolves to nothing at all), then complain when they cannot connect. The answer
-is always ``Use IP addresses instead,'' which needless to say, is very tiring.
+The hub node will be aware of all other non-hub nodes by IP address, and will
+associate each one with a sequential 16-bit node ID. The non-hub nodes themselves
+do not need to know the IP addresses of other non-hub nodes, since the hub node
+will route messages based on node ID. The full set of node IDs are maintained
+on every node, and are pushed out from the hub each time a new node leaves or
+joins.
 
 \subsubsection{Security concerns}
 
@@ -246,7 +272,7 @@ stream (see Table \ref{tab:messageFormat}).
     \textbf{Comment} \\
     \hline
     0 & Size & 2B & uint16\_t & Total message size in bytes (inc header). \\
-    4 & Type & 2B & uint16\_t & See Table \ref{tab:messageTypes} for enum. \\
+    4 & Type & 2B & uint16\_t & Bitmask (see Table \ref{tab:messageTypes}) \\
     8 & To ID & 2B & uint16\_t & Runtime generated recipient node ID. \\
     6 & From ID & 2B & uint16\_t & Runtime generated sender node ID. \\
     8 & Mux ID & 4B & uint32\_t & Runtime generated TCP mux ID (recycled). \\
@@ -276,6 +302,8 @@ authentication schemes? If so we must define a handshake to negotiate them.
     \textbf{Data} &
     \textbf{Detail} \\
     \hline
+    ServerClient & Use the server-client topology. \\
+    PeerToPeer & Use the peer-to-peer (P2P) topology. \\
     HelloServer & Client key & Client message to server on connect. \\
     HelloClient & Access allowed? & Response to key authentication. \\
     KeyCodeDown & Key code & Generic HID\footnotemark key code (from 
@@ -285,6 +313,10 @@ authentication schemes? If so we must define a handshake to negotiate them.
   \caption{Message type enumeration (incomplete)}
   \label{tab:messageTypes}
 \end{table}
+
+The Type bitmask must be compatible with a \textit{bitwise and} operation on
+the values of either ServerClient or PeerToPeer (in other words, the bitmask
+must include one of these flags) otherwise the message will be discarded.
 
 \footnotetext{Human input device}
 
@@ -307,20 +339,20 @@ messages. However, we might want to be careful of chunking HID messages, since
 these need to be more performant (the speed of sending clipboard data doesn't 
 really matter).
 
-We could prioritise whole messages, but what if 4GB of clipboard data enters
+We could prioritize whole messages, but what if 4GB of clipboard data enters
 the queue? The solution is to ``chunk'' the message payload so that high 
-priority message chunks are sent inbetween low priority message chunks. Each TCP
+priority message chunks are sent in between low priority message chunks. Each TCP
 message describes one chunk, the maximum size of the chunk is 64KB minus the 
 header (approx 65522 bytes). There will be a slight performance hit for large
 data, since each chunk has a 10 byte overhead, and the message needs to be 
 serialized and deserialized. This is not really a problem though, because the
-user will often favour the convenience of copy and pasting files, over the 
+user will often favor the convenience of copy and pasting files, over the 
 performance of a file sharing protocol.
 
-Each TCP mux chunk has a seqential ID, which is unique to the mux message
+Each TCP mux chunk has a sequential ID, which is unique to the mux message
 (a collection of mux chunks). The maximum value of the sequential chunk ID is
 $2^{16}-1$, and a chunk can be at most ~64KB, therefore the maximum mux message
-size is approx 4GB. The Mux ID is a seqnential number with a maximum value of 
+size is approx 4GB. The Mux ID is a sequential number with a maximum value of 
 $2^{32}-1$, meaning that we can have a maximum of $~4GB \times 2^{32}-1$ (
 approx 16GB) of data in the TCP mux queue at any given time.
 
@@ -341,6 +373,19 @@ one master active at a time, this machine is responsible for distributing
 changes to the configuration file. Now that the configuration file is shared,
 any machine can assume command of the ship, since it'll already know the layout
 of the screens.
+
+\subsubsection{Screen stacking}
+
+Using version 1, if the user adds a node to a Synergy configuration which has
+multiple operating systems install (sometimes known as dual-boot if there are
+two operating systems), then they have a problem, since you cannot have two
+screens directly adjacent to a particular screen (TODO: prove this!). A quick
+fix for this would be to give the machine the same hostname or IP, but this
+might not always be convenient for the user (depending on their network setup).
+
+One solution is to allow users to add nodes to a stack, which can be placed
+adjacent to another screen or stack. This way we can allow one of the screens
+in a stack to be active at any given time.
 
 \clearpage
 \subsection{UML}
