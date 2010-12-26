@@ -134,12 +134,6 @@ outgoing connections. This figure also illustrates that any node can be either
 a master, or a hub, or both (the terms ``hub'' and ``master'' are not to be 
 confused with each other).
 
-Given that
-all nodes could potentially be listening; each node must always adjust it's
-firewall setup to accept traffic on the 24800 port. Though this port is the
-same one as is used by both version 1, and version 2 server-client, it will
-not work with either of these.
-
 \begin{figure}[ht!]
   \centering
   \input diag/nd-p2p.tex
@@ -189,44 +183,79 @@ certainly not essential for the meantime.
 
 \subsubsection{Introducing new nodes}
 
-Each time a new node joins the configuration, the hub node will connect to 
-it. If the node announces but does not get any incoming connections from an
-existing hub node, then it will assume the hub role. A non-hub will always send
-messages through the hub node (which is a TCP client), since all other nodes 
-are always connected via the hub. All nodes will attempt to configure 
-themselves automatically without requiring any intervention from the user. This
-does require some degree of guesswork; we will need to make the program 
-``smart'' enough to figure out which node to use as the hub, and so on. This of
-course introduces a very large margin for error. So as a backup, we should 
-allow the user to manually force a particular node to be the hub, in case the
-automatic configuration does not work correctly.
+% nb: hmm, chris's idea seems to replace this
+%Each time a new node joins the configuration, the hub node will connect to 
+%it. If the node announces but does not get any incoming connections from an
+%existing hub node, then it will assume the hub role. A non-hub will always send
+%messages through the hub node (which is a TCP client), since all other nodes 
+%are always connected via the hub. All nodes will attempt to configure 
+%themselves automatically without requiring any intervention from the user. This
+%does require some degree of guesswork; we will need to make the program 
+%``smart'' enough to figure out which node to use as the hub, and so on. This of
+%course introduces a very large margin for error. So as a backup, we should 
+%allow the user to manually force a particular node to be the hub, in case the
+%automatic configuration does not work correctly.
 
-If a non-hub node looses connection with the hub, it will send an announce (just
-like it did when it first came online). This may have happened for one of two
-reasons: either the hub has gone offline; or the connection between the node
-and the hub has been interrupted (maybe the node's firewall was reconfigured).
-For the former case (hub went offline), all nodes will be affected by this, so
-eventually one of them will announce (just like when it first came online).
-Since none of the nodes are hubs, none can respond, therefore the first node
-to disconnect becomes the new hub, and will respond to further announces.
-For the latter case (connection interrupted), the node will still announce,
-but it's likely that even if the hub is online, it probably can't communicate
-with the non-hub node. In this case, the orphaned node will make a special
-kind of announcement, to say ``I'm the new hub!'' -- in this case, all other
-nodes (both hub and non-hub) will drop their connections and announce. The
-new hub will then pick up all other nodes. If none respond, then we can assume
-that either there is a serious network error, or there genuinely are no more
-nodes. In the event that two nodes attempt to become the hub at nearly the same
-time, there will always be one that does so a little later than the other; in
-this case, the latest node will become the hub (we may want to introduce a time
-delay based on node ID to prevent this from happening).
+% chris has seen a flaw in this design:
+%  ``if two nodes, A and B, each announce it's the new hub then a third node, C, 
+%  might see A's announcement before B's but a fourth node, D, might see B's first.
+%  the algorithm for choosing a hub must be robust against this.  this is where 
+% research into other P2P software might yield some quick solutions.
+%If a non-hub node looses connection with the hub, it will send an announce (just
+%like it did when it first came online). This may have happened for one of two
+%%reasons: either the hub has gone offline; or the connection between the node
+%and the hub has been interrupted (maybe the node's firewall was reconfigured).
+%For the former case (hub went offline), all nodes will be affected by this, so
+%eventually one of them will announce (just like when it first came online).
+%Since none of the nodes are hubs, none can respond, therefore the first node
+%to disconnect becomes the new hub, and will respond to further announces.
+%For the latter case (connection interrupted), the node will still announce,
+%but it's likely that even if the hub is online, it probably can't communicate
+%with the non-hub node. In this case, the orphaned node will make a special
+%kind of announcement, to say ``I'm the new hub!'' -- in this case, all other
+%nodes (both hub and non-hub) will drop their connections and announce. The
+%new hub will then pick up all other nodes. If none respond, then we can assume
+%that either there is a serious network error, or there genuinely are no more
+%nodes. In the event that two nodes attempt to become the hub at nearly the same
+%time, there will always be one that does so a little later than the other; in
+%this case, the latest node will become the hub (we may want to introduce a time
+%delay based on node ID to prevent this from happening).
 
-The hub node will be aware of all other non-hub nodes by IP address, and will
-associate each one with a sequential 16-bit node ID. The non-hub nodes themselves
-do not need to know the IP addresses of other non-hub nodes, since the hub node
-will route messages based on node ID. The full set of node IDs are maintained
-on every node, and are pushed out from the hub each time a new node leaves or
-joins.
+% TODO: diagram would make this easier to visualise
+% ... instead, chris has proposed this approach (seems to be the opposite):
+What if a node looses connection? One approach is for every node to claim to 
+be the hub when it starts (or gets disconnected). Nodes with an already 
+established connection to a hub will ignore the claim. Any existing hub
+(including newly started nodes) will evaluate the claim. If the claimant node,
+H, has, say, an IP or MAC address that's smaller than that of local node, L,
+then L will authenticate with H. If that succeeds then L will disconnect from 
+all other nodes and use H as its hub. The newly disconnected nodes will then 
+look for a new hub; they may get another claim from H, remember recent claims, 
+or L can tell them about H before disconnecting. Note that L must authenticate 
+with H to prevent a DoS, otherwise any node on the network could claim to have 
+the lowest IP/MAC address and discard messages.
+
+% nb: chris says node ids don't need to be sequential. so do they need to be random?
+%The hub node will be aware of all other non-hub nodes by IP address, and will
+%associate each one with a sequential 16-bit node ID. The non-hub nodes themselves
+%do not need to know the IP addresses of other non-hub nodes, since the hub node
+%will route messages based on node ID. The full set of node IDs are maintained
+%on every node, and are pushed out from the hub each time a new node leaves or
+%joins.
+
+Node IDs are held only on the hub node. When a new hub comes online, it will
+start it's own new list of IDs and IP addresses.
+
+% nb: seems to be incorrect now
+%If a node loses contact with its peer, it will attempt to automatically fix
+%the problem in one of two ways (depending on whether the incoming or outgoing 
+%connection was lost). If the outgoing connection was dropped (i.e. the 
+%connection that the node has initiated) then it will attempt to connect each 
+%of the other known nodes in round-robin fashion until it finds a new peer. It 
+%will keep trying forever, or until the incoming connection drops (if this 
+%happens then we can assume that the IP-to-node mapping may be stale). If
+%the incoming connection drops, then the node will re-announce (and will keep
+%doing so forever), hoping that another Synergy node will eventually connect.
 
 \subsubsection{Security concerns}
 
@@ -237,16 +266,6 @@ this: first, have a configurable option to turn remote control on or off for
 a particular node (we might turn this off by default, and allow users to turn
 it on during configuration); secondly, messages can be encrypted (on by 
 default).
-
-If a node loses contact with its peer, it will attempt to automatically fix
-the problem in one of two ways (depending on whether the incoming or outgoing 
-connection was lost). If the outgoing connection was dropped (i.e. the 
-connection that the node has initiated) then it will attempt to connect each 
-of the other known nodes in round-robin fashion until it finds a new peer. It 
-will keep trying forever, or until the incoming connection drops (if this 
-happens then we can assume that the IP-to-node mapping may be stale). If
-the incoming connection drops, then the node will re-announce (and will keep
-doing so forever), hoping that another Synergy node will eventually connect.
 
 \subsubsection{Legacy support}
 
@@ -272,16 +291,32 @@ stream (see Table \ref{tab:messageFormat}).
     \textbf{Comment} \\
     \hline
     0 & Size & 2B & uint16\_t & Total message size in bytes (inc header). \\
-    4 & Type & 2B & uint16\_t & Bitmask (see Table \ref{tab:messageTypes}) \\
-    8 & To ID & 2B & uint16\_t & Runtime generated recipient node ID. \\
+    2 & Type & 2B & uint16\_t & Bitmask (see Table \ref{tab:messageTypes}) \\
+    4 & To ID & 2B & uint16\_t & Runtime generated recipient node ID. \\
     6 & From ID & 2B & uint16\_t & Runtime generated sender node ID. \\
-    8 & Mux ID & 4B & uint32\_t & Runtime generated TCP mux ID (recycled). \\
-    12 & Chunk ID & 2B & uint16\_t & Sequential ID of the TCP mux chunk. \\
-    14 & Payload & $<$64KB & char[] & The chunk payload (binary data). \\
+    8 & Payload & $<$64KB & char[] & The message payload (e.g. chunks). \\
     \hline
   \end{tabular}
   \caption{TCP message format}
   \label{tab:messageFormat}
+\end{table}
+
+\begin{table}[ht!]
+  \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    \textbf{Pos} &
+    \textbf{Part} &
+    \textbf{Size} &
+    \textbf{Type} &
+    \textbf{Comment} \\
+    \hline
+    0 & Size & 2B & uint16\_t & Total chunk size in bytes (inc header). \\
+    2 & Mux ch. & 2B & uint16\_t & TCP mux channel number (priority). \\
+    4 & Payload & $<$64KB & char[] & The chunk payload (binary data). \\
+    \hline
+  \end{tabular}
+  \caption{TCP mux chunk format}
+  \label{tab:chunkFormat}
 \end{table}
 
 Encryption will be supported, and will be enabled by default. Cryptography may 
