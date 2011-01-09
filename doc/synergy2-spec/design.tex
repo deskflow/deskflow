@@ -301,7 +301,7 @@ are appended to the correct channel buffer. We will assume that chunks always
 arrive in the correct order, and given this, we can easily reconstruct full
 messages when all chunks are received. We will take a full message when the
 chunk buffer reaches the correct message size (as indicated by the current
-message header). If a new header is recieved before a full message is taken
+message header). If a new header is received before a full message is taken
 from the chunk buffer, then the current buffer is discarded (this should be
 logged).
 
@@ -328,7 +328,7 @@ to a configurable limit (default of 1GB) so that memory use is sensible.
   \begin{tabular}{|l|l|l|l|l|}
     \hline
     \textbf{Pos (B)} &
-    \textbf{Bitfield} &
+    \textbf{Bit field} &
     \textbf{Part} &
     \textbf{Size} &
     \textbf{Comment} \\
@@ -402,7 +402,7 @@ options (e.g. to state whether or not the setup is client-server or P2P). We
 will not make version 2 configurations backward-compatible.
 
 In P2P mode however, things get complicated. Each node must be aware of its
-neighbor in terms of physical screen location and network peering
+neighbour in terms of physical screen location and network peering
 (incidentally, there will be no correlation between the two, since network 
 peering will be based on availability and network time proximity). So, in the
 case of P2P, the configuration file will be shared. Since there can only be
