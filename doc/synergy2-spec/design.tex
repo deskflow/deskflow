@@ -315,8 +315,8 @@ message will be used for real time data (e.g. mouse movement deltas), and the
 mux message will be used for any other data (e.g. clipboard).
 
 We need to identify whether a message is lightweight or mux. Since all
-messages are small we only need 2 bytes to indicate sizes up to 65535 bytes.
-If the first byte of the message (the high byte of the size) is 0xff then 
+messages are small we only need 7 bits to indicate size (up to 127 bytes).
+If the first bit of the message (the high bit of the size) is 0xff then 
 it's a lightweight message. You can't express message sizes $\geq$ 0xff000000.
 
 The total mux buffer (to which all chunks are appended) can be 4GB to allow 
