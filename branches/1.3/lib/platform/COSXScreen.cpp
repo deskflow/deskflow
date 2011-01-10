@@ -490,28 +490,6 @@ COSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 }
 
 void
-COSXScreen::showCursor()
-{
-    CGDisplayShowCursor(m_displayID);
-    CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
-    CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanFalse);
-    CFRelease(propertyString);
-	
-    LOG((CLOG_DEBUG "Trying to show cursor."));
-}
-
-void
-COSXScreen::hideCursor()
-{
-    CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
-    CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
-    CFRelease(propertyString);
-
-    CGDisplayHideCursor(m_displayID);
-    LOG((CLOG_DEBUG "Trying to hide cursor."));
-}
-
-void
 COSXScreen::enable()
 {
 	// watch the clipboard
@@ -528,57 +506,55 @@ COSXScreen::enable()
 										kCGEventMaskForAllEvents, 
 										handleCGInputEvent, 
 										this);
+		if(!m_eventTapPort) {
+			LOG((CLOG_ERR "Failed to create quartz event tap."));
+		}
+		m_eventTapRLSR=CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
+		if(!m_eventTapRLSR) {
+			LOG((CLOG_ERR "Failed to create a CFRunLoopSourceRef for the quartz event tap."));
+		}
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 	}
 	else {
 		// FIXME -- prevent system from entering power save mode
 
 		// hide cursor
 		if (!m_cursorHidden) {
-	                hideCursor();
+//			CGDisplayHideCursor(m_displayID);
 			m_cursorHidden = true;
 		}
 
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
 
-                // there may be a better way to do this, but we register an event handler even if we're
-                // not on the primary display (acting as a client). This way, if a local event comes in
-                // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it. 
-		m_eventTapPort=CGEventTapCreate(kCGHIDEventTap, kCGHIDEventTap, 0, 
-										kCGEventMaskForAllEvents, 
-										handleCGInputEventSecondary, 
-										this);
+		// FIXME -- prepare to show cursor if it moves
 	}
-	if(!m_eventTapPort) {
-		LOG((CLOG_ERR "Failed to create quartz event tap."));
-	}
-	m_eventTapRLSR=CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
-	if(!m_eventTapRLSR) {
-		LOG((CLOG_ERR "Failed to create a CFRunLoopSourceRef for the quartz event tap."));
-	}
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 }
 
 void
 COSXScreen::disable()
 {
-        // show cursor if hidden
-        if (m_cursorHidden) {
-                showCursor();
-		m_cursorHidden = false;
+	if (m_isPrimary) {
+		// FIXME -- stop watching jump zones, stop capturing input
+		
+		if(m_eventTapRLSR) {
+			CFRelease(m_eventTapRLSR);
+			m_eventTapRLSR=NULL;
+		}		
+		if(m_eventTapPort) {
+			CFRelease(m_eventTapPort);
+			m_eventTapPort=NULL;
+		}
 	}
-    
-        // FIXME -- stop watching jump zones, stop capturing input
-	
-	if(m_eventTapRLSR) {
-		CFRelease(m_eventTapRLSR);
-		m_eventTapRLSR=NULL;
-	}		
-	if(m_eventTapPort) {
-		CFRelease(m_eventTapPort);
-		m_eventTapPort=NULL;
+	else {
+		// show cursor
+		if (m_cursorHidden) {
+//			CGDisplayShowCursor(m_displayID);
+			m_cursorHidden = false;
+		}
+
+		// FIXME -- allow system to enter power saving mode
 	}
-	// FIXME -- allow system to enter power saving mode
 
 	// disable drag handling
 	m_dragNumButtonsDown = 0;
@@ -597,11 +573,6 @@ COSXScreen::disable()
 void
 COSXScreen::enter()
 {
-    // show cursor
-	if (m_cursorHidden) {
-                showCursor();
-		m_cursorHidden = false;
-	}
 	if (m_isPrimary) {
 		CGSetLocalEventsSuppressionInterval(0.0);
 		
@@ -609,6 +580,12 @@ COSXScreen::enter()
 		//setGlobalHotKeysEnabled(true);
 	}
 	else {
+		// show cursor
+		if (m_cursorHidden) {
+//			CGDisplayShowCursor(m_displayID);
+			m_cursorHidden = false;
+		}
+
 		// reset buttons
 		for (UInt32 i = 0; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
 			m_buttons[i] = false;
@@ -632,12 +609,6 @@ COSXScreen::enter()
 bool
 COSXScreen::leave()
 {
-    // hide cursor
-	if (!m_cursorHidden) {
-        hideCursor();
-		m_cursorHidden = true;
-	}
-    
 	if (m_isPrimary) {
 		// warp to center
 		warpCursor(m_xCenter, m_yCenter);
@@ -651,6 +622,12 @@ COSXScreen::leave()
 		//setGlobalHotKeysEnabled(false);
 	}
 	else {
+		// hide cursor
+		if (!m_cursorHidden) {
+//			CGDisplayHideCursor(m_displayID);
+			m_cursorHidden = true;
+		}
+
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
 
@@ -1568,34 +1545,6 @@ COSXScreen::CHotKeyItem::operator<(const CHotKeyItem& x) const
 			(m_keycode == x.m_keycode && m_mask < x.m_mask));
 }
 
-// Quartz event tap support for the secondary display. This make sure that we 
-// will show the cursor if a local event comes in while synergy has the cursor off the screen.
-CGEventRef
-COSXScreen::handleCGInputEventSecondary(CGEventTapProxy proxy,
-							   CGEventType type,
-							   CGEventRef event,
-							   void* refcon)
-{
-       COSXScreen* screen = (COSXScreen*)refcon;
-       if (screen->m_cursorHidden) {
-                CGPoint pos;
-                bool showCursor = true;
-                if (type == kCGEventMouseMoved) {
-                        pos = CGEventGetLocation(event);
-                        if (pos.x == screen->m_xCenter && pos.y == screen->m_yCenter) {
-                                showCursor = false;
-                        }
-                }
-                if (showCursor) {
-                        LOG((CLOG_DEBUG "Trying to show cursor from local event. (type = %d)", type));
-                        screen->showCursor();
-                        screen->m_cursorHidden = false;
-                }
-        }
-        LOG((CLOG_DEBUG2 "Local event? (type = %d)", type));
-        return event;
-}
-
 // Quartz event tap support
 CGEventRef
 COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
@@ -1654,8 +1603,6 @@ COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 		case NX_SYSDEFINED:
 			// Unknown, forward it
 			return event;
-			break;
-		case NX_NUMPROCS:
 			break;
 		default:
 			LOG((CLOG_NOTE "Unknown Quartz Event type: 0x%02x", type));
