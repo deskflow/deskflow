@@ -34,6 +34,13 @@
 #include <IOKit/pwr_mgt/IOPMLib.h>
 #include <IOKit/IOMessage.h>
 
+extern "C" {
+    typedef int CGSConnectionID;
+    CGError CGSSetConnectionProperty(CGSConnectionID cid, CGSConnectionID targetCID, CFStringRef key, CFTypeRef value);
+    int _CGSDefaultConnection();
+}    
+
+
 template <class T>
 class CCondVar;
 class CEventQueueTimer;
@@ -113,6 +120,10 @@ private:
 
 	bool				onKey(CGEventRef event);
 	bool				onHotKey(EventRef event) const;
+	
+	// Added here to allow the carbon cursor hack to be called. 
+	void                showCursor();
+	void                hideCursor();
 
 	// map mac mouse button to synergy buttons
 	ButtonID			mapMacButtonToSynergy(UInt16) const;
@@ -168,6 +179,10 @@ private:
 										   CGEventType type,
 										   CGEventRef event,
 										   void* refcon);
+        static CGEventRef	handleCGInputEventSecondary(CGEventTapProxy proxy,
+                                                                   		   CGEventType type,
+                                                                   		   CGEventRef event,
+                                                                   		   void* refcon);
 private:
 	struct CHotKeyItem {
 	public:
