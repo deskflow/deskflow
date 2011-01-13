@@ -24,9 +24,6 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <ctime>
 #include "CLog.h"
 
 //
