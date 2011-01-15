@@ -54,4 +54,4 @@ following to load successfully sets the configuration:
 $HOME/.synergy.conf
 /etc/synergy.conf
 .SH COPYRIGHT
-Copyright \(co 2010 The Synergy Project
+Copyright \(co 2010 Chris Schoeneman, Nick Bolton, Sorin Sbarnea

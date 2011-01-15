@@ -18,8 +18,8 @@
 #include "Version.h"
 
 const char* kApplication = "Synergy";
-const char* kCopyright   = "Copyright (C) 2010 The Synergy Project";
-const char* kContact     = "Synergy Developers, synergy@googlegroups.com";
+const char* kCopyright   = "Copyright (C) 2011 Chris Schoeneman, Nick Bolton, Sorin Sbarnea";
+const char* kContact     = "Synergy Mailing List, synergy-plus@googlegroups.com";
 const char* kWebsite     = "http://synergy-foss.org/";
 const char* kVersion     = VERSION;
 const char* kAppVersion  = "Synergy " VERSION;
