@@ -1,7 +1,6 @@
 /*
- * synergy-plus -- mouse and keyboard sharing utility
- * Copyright (C) 2009 The Synergy+ Project
- * Copyright (C) 2002 Chris Schoeneman
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2002 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -59,7 +58,7 @@
 
 // platform dependent name of a daemon
 #if SYSAPI_WIN32
-#define DAEMON_NAME "Synergy+ Server"
+#define DAEMON_NAME "Synergy Server"
 #elif SYSAPI_UNIX
 #define DAEMON_NAME "synergys"
 #endif
