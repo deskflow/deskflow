@@ -50,9 +50,8 @@ p, li { white-space: pre-wrap; }
      <property name="text">
       <string>The Synergy GUI is based on QSynergy by Volker Lanz
 
-Copyright © 2010 The Synergy Project
 Copyright © 2008 Volker Lanz (vl@fidra.de)
-Copyright © 2002 Chris Schoeneman</string>
+Copyright © 2010 Chris Schoeneman, Nick Bolton, Sorin Sbarnea</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
