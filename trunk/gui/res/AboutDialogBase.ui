@@ -20,7 +20,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>About Synergy+</string>
+   <string>About Synergy</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -32,7 +32,7 @@
       <string>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;Synergy+&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:x-large; font-weight:600;&quot;&gt;&lt;span style=&quot; font-size:x-large;&quot;&gt;Synergy&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -48,9 +48,9 @@ p, li { white-space: pre-wrap; }
    <item row="1" column="0" rowspan="2" colspan="2">
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>The Synergy+ GUI is based on QSynergy by Volker Lanz
+      <string>The Synergy GUI is based on QSynergy by Volker Lanz
 
-Copyright © 2010 The Synergy+ Project
+Copyright © 2010 The Synergy Project
 Copyright © 2008 Volker Lanz (vl@fidra.de)
 Copyright © 2002 Chris Schoeneman</string>
      </property>
