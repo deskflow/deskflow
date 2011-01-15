@@ -1,6 +1,5 @@
 /*
- * synergy-plus -- mouse and keyboard sharing utility
- * Copyright (C) 2009 The Synergy+ Project
+ * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -24,16 +23,16 @@
 
 int main(int argc, char* argv[])
 {
-	QCoreApplication::setOrganizationName("The Synergy+ Project");
-	QCoreApplication::setOrganizationDomain("http://code.google.com/p/synergy-plus/");
-	QCoreApplication::setApplicationName("Synergy+");
+	QCoreApplication::setOrganizationName("The Synergy Project");
+	QCoreApplication::setOrganizationDomain("http://synergy-foss.org/");
+	QCoreApplication::setApplicationName("Synergy");
 
 	QSynergyApplication app(argc, argv);
 
 #if !defined(Q_OS_MAC)
 	if (!QSystemTrayIcon::isSystemTrayAvailable())
 	{
-		QMessageBox::critical(NULL, "Synergy+", QObject::tr("There doesn't seem to be a system tray available. Quitting."));
+		QMessageBox::critical(NULL, "Synergy", QObject::tr("There doesn't seem to be a system tray available. Quitting."));
 		return -1;
 	}
 
