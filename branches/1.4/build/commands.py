@@ -1,5 +1,5 @@
-# synergy-plus -- mouse and keyboard sharing utility
-# Copyright (C) 2009 The Synergy+ Project
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2009 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,9 +19,9 @@ import sys, os, ConfigParser, subprocess, shutil, re, ftputil
 
 class InternalCommands:
 	
-	project = 'synergy-plus'
+	project = 'synergy'
 	setup_version = 4 # increment to force setup/config
-	website_url = 'http://code.google.com/p/synergy-plus'
+	website_url = 'http://synergy-foss.org/'
 
 	this_cmd = 'hm'
 	cmake_cmd = 'cmake'
@@ -507,7 +507,7 @@ class InternalCommands:
 		if not platform:
 			raise Exception('Unable to detect package platform.')
 		
-		pattern = re.escape('synergy-plus-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
+		pattern = re.escape('synergy-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
 		
 		for filename in os.listdir(self.bin_dir):
 			if re.search(pattern, filename):
@@ -542,7 +542,7 @@ class InternalCommands:
 			'Example: %s package src-tgz') % (self.this_cmd, self.this_cmd)
 
 	def about(self):
-		print ('Help Me script, from the Synergy+ project.\n'
+		print ('Help Me script, from the Synergy project.\n'
 			'%s\n'
 			'\n'
 			'For help, run: %s help') % (self.website_url, self.this_cmd)

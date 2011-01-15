@@ -1,5 +1,5 @@
-# synergy-plus -- mouse and keyboard sharing utility
-# Copyright (C) 2009 The Synergy+ Project
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2009 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -57,7 +57,7 @@ SET(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
 # CMAKE_SYSTEM_PROCESSOR always seems to be x86, regardless of if the
 # CMake build is 32-bit or 64-bit. As a work around, we will prefix either
 # x86 or x64 (in the same style as Microsoft do with their installers).
-# However, some confusion may be caused when the user sees that Synergy+
+# However, some confusion may be caused when the user sees that Synergy
 # is installed in the x86 Program Files directory (even though it's a 
 # 64-bit build). This is caused by NSIS only supporting the 32-bit 
 # installs structure (also uses 32-bit registry key locations).
@@ -80,14 +80,14 @@ if(APPLE)
     set(CPACK_SYSTEM_NAME "MacOSX-Universal")
 endif(APPLE)
 
-SET(CPACK_PACKAGE_NAME "synergy-plus")
-SET(CPACK_PACKAGE_VENDOR "The Synergy+ Project")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Installs Synergy+ server and client")
+SET(CPACK_PACKAGE_NAME "synergy")
+SET(CPACK_PACKAGE_VENDOR "The Synergy Project")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Installs Synergy server and client")
 SET(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${VERSION_REV})
 SET(CPACK_PACKAGE_VERSION ${VERSION})
-SET(CPACK_PACKAGE_CONTACT http://code.google.com/p/synergy-plus/)
+SET(CPACK_PACKAGE_CONTACT http://synergy-foss.org/)
 SET(CPACK_RESOURCE_FILE_LICENSE "${cmake_dir}/License.rtf")
 SET(CPACK_RESOURCE_FILE_README "${cmake_dir}/Readme.txt")
 
@@ -96,8 +96,8 @@ IF(WIN32)
 	SET(CPACK_NSIS_MUI_ICON ${WIN32_ICON})
 	SET(CPACK_NSIS_MUI_UNIICON ${WIN32_ICON})
 	SET(CPACK_NSIS_INSTALLED_ICON_NAME launcher)
-	SET(CPACK_PACKAGE_INSTALL_DIRECTORY "Synergy+")
-	SET(CPACK_PACKAGE_EXECUTABLES qsynergy;Synergy+)
+	SET(CPACK_PACKAGE_INSTALL_DIRECTORY "Synergy")
+	SET(CPACK_PACKAGE_EXECUTABLES qsynergy;Synergy)
 ENDIF(WIN32)
 
 # files to exclude from src package (regex patterns)

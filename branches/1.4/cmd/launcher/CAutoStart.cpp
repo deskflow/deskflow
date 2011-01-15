@@ -1,7 +1,6 @@
 /*
- * synergy-plus -- mouse and keyboard sharing utility
- * Copyright (C) 2009 The Synergy+ Project
- * Copyright (C) 2002 Chris Schoeneman
+ * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2002 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,8 +24,8 @@
 #include "LaunchUtil.h"
 #include "resource.h"
 
-static const char* CLIENT_DAEMON_NAME = "Synergy+ Client";
-static const char* SERVER_DAEMON_NAME = "Synergy+ Server";
+static const char* CLIENT_DAEMON_NAME = "Synergy Client";
+static const char* SERVER_DAEMON_NAME = "Synergy Server";
 static const char* CLIENT_DAEMON_INFO = "Uses a shared mouse and keyboard.";
 static const char* SERVER_DAEMON_INFO = "Shares this system's mouse and keyboard with others.";
 

@@ -1,5 +1,5 @@
-# synergy-plus -- mouse and keyboard sharing utility
-# Copyright (C) 2009 The Synergy+ Project
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2009 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Version number for Synergy+
+# Version number for Synergy
 SET(VERSION_MAJOR 1)
 SET(VERSION_MINOR 4)
 SET(VERSION_REV 2)
@@ -37,7 +37,7 @@ IF(COMMAND cmake_policy)
 ENDIF(COMMAND cmake_policy)
 
 # First, declare project (important for prerequisite checks).
-PROJECT(synergy-plus C CXX)
+PROJECT(synergy C CXX)
 
 # Set some easy to type variables.
 SET(root_dir ${CMAKE_SOURCE_DIR})

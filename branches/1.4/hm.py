@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
-# synergy-plus -- mouse and keyboard sharing utility
-# Copyright (C) 2009 The Synergy+ Project
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2009 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,11 +17,11 @@
 
 # hm.py: 'Help Me', is a simple wrapper for all build tools.
 # 
-# This script was created for the Synergy+ project.
-# http://code.google.com/p/synergy-plus
+# This script was created for the Synergy project.
+# http://synergy-foss.org/
 #
 # The idea behind this is to simplify the build system,
-# however, it's not a dependancy of building Synergy+.
+# however, it's not a dependancy of building Synergy.
 # In other words, you don't need to use this script!
 #
 # If you don't wish to run this script, simply run:

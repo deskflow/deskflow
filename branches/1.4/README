@@ -1,10 +1,10 @@
-See: http://code.google.com/p/synergy-plus/wiki/Readme
+See: http://synergy-foss.org/pm/projects/synergy/wiki/Readme
 
 Announcement | 2009-08-04
 =========================
 We have recently switched to CMake, to replace Automake.
 Plese read the Compiling wiki page for help with CMake:
-http://code.google.com/p/synergy-plus/wiki/Compiling
+http://synergy-foss.org/pm/projects/synergy/wiki/Compiling
 
 Linux/Mac
 ---------

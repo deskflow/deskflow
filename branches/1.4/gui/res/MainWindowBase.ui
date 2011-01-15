@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Synergy+</string>
+   <string>Synergy</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout">
@@ -188,7 +188,7 @@
   </widget>
   <action name="m_pActionAbout">
    <property name="text">
-	<string>&amp;About Synergy+...</string>
+	<string>&amp;About Synergy...</string>
    </property>
   </action>
   <action name="m_pActionQuit">
