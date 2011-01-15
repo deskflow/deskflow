@@ -2,8 +2,8 @@
 
 # hm.py: 'Help Me', is a simple wrapper for `cmake` and `hg`.
 # 
-# This script was created for the Synergy+ project.
-# http://code.google.com/p/synergy-plus
+# This script was created for the Synergy project.
+# http://synergy-foss.org/
 #
 # The idea behind this is to simplify the usage of CMake,
 # while still making cmake independant of this script. In
@@ -19,9 +19,9 @@ import sys, os, ConfigParser, subprocess, shutil
 if sys.platform == 'win32':
 	import _winreg
 
-project = 'synergy-plus'
+project = 'synergy'
 setup_version = 3
-website_url = 'http://code.google.com/p/synergy-plus'
+website_url = 'http://synergy-foss.org/'
 
 this_cmd = 'hm'
 cmake_cmd = 'cmake'
@@ -405,7 +405,7 @@ def package_usage():
 		'Example: %s package src-tgz') % (this_cmd, this_cmd)
 
 def about():
-	print ('Help Me script, from the Synergy+ project.\n'
+	print ('Help Me script, from the Synergy project.\n'
 		'%s\n'
 		'\n'
 		'For help, run: %s help') % (website_url, this_cmd)

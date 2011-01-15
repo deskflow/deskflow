@@ -1,4 +1,4 @@
-# Version number for Synergy+
+# Version number for Synergy
 SET(VERSION_MAJOR 1)
 SET(VERSION_MINOR 3)
 SET(VERSION_REV 5)
@@ -22,7 +22,7 @@ IF(COMMAND cmake_policy)
 ENDIF(COMMAND cmake_policy)
 
 # First, declare project (important for prerequisite checks).
-PROJECT(synergy-plus C CXX)
+PROJECT(synergy C CXX)
 
 # Set some easy to type variables.
 SET(root_dir ${CMAKE_SOURCE_DIR})

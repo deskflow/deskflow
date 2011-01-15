@@ -89,7 +89,7 @@
         <dia:composite type="text">
           <dia:attribute name="string">
             <dia:string>#Start synergyc
-Synergy+ Client#</dia:string>
+Synergy Client#</dia:string>
           </dia:attribute>
           <dia:attribute name="font">
             <dia:font family="sans" style="0" name="Helvetica"/>
