@@ -44,6 +44,7 @@ SET(root_dir ${CMAKE_SOURCE_DIR})
 SET(cmake_dir ${root_dir}/cmake)
 SET(bin_dir ${root_dir}/bin)
 SET(doc_dir ${root_dir}/doc)
+SET(doc_dir ${root_dir}/doc)
 
 # Now for the stuff to generate config.h (and setup defines).
 INCLUDE(${cmake_dir}/CMakeLists_config.txt)

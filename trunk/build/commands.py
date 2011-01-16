@@ -64,34 +64,34 @@ class InternalCommands:
 		'4' : 'Visual Studio 9 2008 Win64',
 		'5' : 'Visual Studio 8 2005',
 		'6' : 'Visual Studio 8 2005 Win64',
-		'10' : 'CodeBlocks - MinGW Makefiles',
-		'11' : 'CodeBlocks - Unix Makefiles',
-		'12': 'Eclipse CDT4 - MinGW Makefiles',
-		'13': 'Eclipse CDT4 - NMake Makefiles',
-		'14': 'Eclipse CDT4 - Unix Makefiles',
-		'15': 'MinGW Makefiles',
-		'16': 'NMake Makefiles',
-		'17': 'Unix Makefiles',
-		'18': 'Borland Makefiles',
-		'19': 'MSYS Makefiles',
-		'20': 'Watcom WMake',
+#		'10' : 'CodeBlocks - MinGW Makefiles',
+#		'11' : 'CodeBlocks - Unix Makefiles',
+#		'12': 'Eclipse CDT4 - MinGW Makefiles',
+#		'13': 'Eclipse CDT4 - NMake Makefiles',
+#		'14': 'Eclipse CDT4 - Unix Makefiles',
+#		'15': 'MinGW Makefiles',
+#		'16': 'NMake Makefiles',
+#		'17': 'Unix Makefiles',
+#		'18': 'Borland Makefiles',
+#		'19': 'MSYS Makefiles',
+#		'20': 'Watcom WMake',
 	}
 
 	unix_generators = {
 		'1' : 'Unix Makefiles',
-		'2' : 'CodeBlocks - Unix Makefiles',
-		'3' : 'Eclipse CDT4 - Unix Makefiles',
-		'4' : 'KDevelop3',
-		'5' : 'KDevelop3 - Unix Makefiles',
+#		'2' : 'CodeBlocks - Unix Makefiles',
+#		'3' : 'Eclipse CDT4 - Unix Makefiles',
+#		'4' : 'KDevelop3',
+#		'5' : 'KDevelop3 - Unix Makefiles',
 	}
 
 	darwin_generators = {
 		'1' : 'Xcode',
 		'2' : 'Unix Makefiles',
-		'3' : 'CodeBlocks - Unix Makefiles',
-		'4' : 'Eclipse CDT4 - Unix Makefiles',
-		'5' : 'KDevelop3',
-		'6' : 'KDevelop3 - Unix Makefiles',
+#		'3' : 'CodeBlocks - Unix Makefiles',
+#		'4' : 'Eclipse CDT4 - Unix Makefiles',
+#		'5' : 'KDevelop3',
+#		'6' : 'KDevelop3 - Unix Makefiles',
 	}
 
 	def getBinDir(self, target=''):
@@ -125,7 +125,7 @@ class InternalCommands:
 			'  revision    Display the current source code revision\n'
 			'  package     Create a distribution package (e.g. tar.gz)\n'
 			'  install     Installs the program\n'
-			'  doxygen	 Builds doxygen documentation\n'
+			'  doxygen     Builds doxygen documentation\n'
 			'  reformat    Reformat .cpp and .h files using AStyle\n'
 			'  usage       Shows the help screen\n'
 			'\n'
@@ -159,8 +159,9 @@ class InternalCommands:
 		if generator != '':
 			cmake_args += ' -G "' + generator + '"'
 		
-		# always specify a build type (debug, release, etc)
-		cmake_args = ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
+		# for non-vs always specify a build type (debug, release, etc)
+		if not generator.startswith('Visual Studio'):
+			cmake_args = ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 		
 		# if not visual studio, use parent dir
 		sourceDir = self.source_dir
@@ -869,7 +870,7 @@ class CommandHandler:
 	
 	def configure(self):
 		target = ''
-		if (len(build_targets) > 0):
+		if (len(self.build_targets) > 0):
 			target = self.build_targets[0]
 		self.ic.configure(target)
 	

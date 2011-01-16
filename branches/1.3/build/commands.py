@@ -29,16 +29,19 @@ class InternalCommands:
 	make_cmd = 'make'
 	xcodebuild_cmd = 'xcodebuild'
 	w32_make_cmd = 'mingw32-make'
+	w32_qt_version = '4.6.2'
 
 	source_dir = '..' # Source, relative to build.
 	cmake_dir = 'cmake'
 	_bin_dir = 'bin'
 	gui_dir = 'gui'
+	doc_dir = 'doc'
 
 	sln_filename = '%s.sln' % project
 	xcodeproj_filename = '%s.xcodeproj' % project
 	config_filename = '%s.cfg' % this_cmd
 	qtpro_filename = 'qsynergy.pro'
+	doxygen_filename = 'doxygen.cfg'
 
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
 
@@ -61,34 +64,34 @@ class InternalCommands:
 		'4' : 'Visual Studio 9 2008 Win64',
 		'5' : 'Visual Studio 8 2005',
 		'6' : 'Visual Studio 8 2005 Win64',
-		'10' : 'CodeBlocks - MinGW Makefiles',
-		'11' : 'CodeBlocks - Unix Makefiles',
-		'12': 'Eclipse CDT4 - MinGW Makefiles',
-		'13': 'Eclipse CDT4 - NMake Makefiles',
-		'14': 'Eclipse CDT4 - Unix Makefiles',
-		'15': 'MinGW Makefiles',
-		'16': 'NMake Makefiles',
-		'17': 'Unix Makefiles',
-		'18': 'Borland Makefiles',
-		'19': 'MSYS Makefiles',
-		'20': 'Watcom WMake',
+#		'10' : 'CodeBlocks - MinGW Makefiles',
+#		'11' : 'CodeBlocks - Unix Makefiles',
+#		'12': 'Eclipse CDT4 - MinGW Makefiles',
+#		'13': 'Eclipse CDT4 - NMake Makefiles',
+#		'14': 'Eclipse CDT4 - Unix Makefiles',
+#		'15': 'MinGW Makefiles',
+#		'16': 'NMake Makefiles',
+#		'17': 'Unix Makefiles',
+#		'18': 'Borland Makefiles',
+#		'19': 'MSYS Makefiles',
+#		'20': 'Watcom WMake',
 	}
 
 	unix_generators = {
 		'1' : 'Unix Makefiles',
-		'2' : 'CodeBlocks - Unix Makefiles',
-		'3' : 'Eclipse CDT4 - Unix Makefiles',
-		'4' : 'KDevelop3',
-		'5' : 'KDevelop3 - Unix Makefiles',
+#		'2' : 'CodeBlocks - Unix Makefiles',
+#		'3' : 'Eclipse CDT4 - Unix Makefiles',
+#		'4' : 'KDevelop3',
+#		'5' : 'KDevelop3 - Unix Makefiles',
 	}
 
 	darwin_generators = {
 		'1' : 'Xcode',
 		'2' : 'Unix Makefiles',
-		'3' : 'CodeBlocks - Unix Makefiles',
-		'4' : 'Eclipse CDT4 - Unix Makefiles',
-		'5' : 'KDevelop3',
-		'6' : 'KDevelop3 - Unix Makefiles',
+#		'3' : 'CodeBlocks - Unix Makefiles',
+#		'4' : 'Eclipse CDT4 - Unix Makefiles',
+#		'5' : 'KDevelop3',
+#		'6' : 'KDevelop3 - Unix Makefiles',
 	}
 
 	def getBinDir(self, target=''):
@@ -122,6 +125,7 @@ class InternalCommands:
 			'  revision    Display the current source code revision\n'
 			'  package     Create a distribution package (e.g. tar.gz)\n'
 			'  install     Installs the program\n'
+			'  doxygen     Builds doxygen documentation\n'
 			'  reformat    Reformat .cpp and .h files using AStyle\n'
 			'  usage       Shows the help screen\n'
 			'\n'
@@ -155,8 +159,9 @@ class InternalCommands:
 		if generator != '':
 			cmake_args += ' -G "' + generator + '"'
 		
-		# always specify a build type (debug, release, etc)
-		cmake_args = ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
+		# for non-vs always specify a build type (debug, release, etc)
+		if not generator.startswith('Visual Studio'):
+			cmake_args = ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 		
 		# if not visual studio, use parent dir
 		sourceDir = self.source_dir
@@ -177,6 +182,9 @@ class InternalCommands:
 		
 		# allow user to skip qui compile
 		if self.enable_make_gui:
+			
+			# make sure we have qmake
+			self.persist_qmake()
 			
 			qmake_cmd_string = self.qmake_cmd + ' ' + self.qtpro_filename
 			print "Configuring with QMake (%s)..." % qmake_cmd_string
@@ -205,6 +213,49 @@ class InternalCommands:
 			raise Exception('Cannot continue without CMake.')
 		else:	
 			return self.cmake_cmd
+
+	def persist_qt(self):
+		self.persist_qmake()
+		if sys.platform == 'win32':
+			self.persist_w32_make()
+
+	def persist_qmake(self):
+		try:
+			p = subprocess.Popen(
+				[self.qmake_cmd, '--version'], 
+				stdout=subprocess.PIPE, 
+				stderr=subprocess.PIPE)
+		except:
+			print >> sys.stderr, 'Error: Could not find qmake.'
+			if sys.platform == 'win32': # windows devs usually need hints ;)
+				print (
+					'Suggestions:\n'
+					'1. Ensure that qmake.exe exists in your system path.\n'
+					'2. Try to download Qt (check our dev FAQ for links):\n'
+					'  qt-sdk-win-opensource-2010.02.exe')
+			raise Exception('Cannot continue without qmake.')
+		
+		stdout, stderr = p.communicate()
+		if p.returncode != 0:
+			raise Exception('Could not test for cmake: %s' % stderr)
+		else:
+			m = re.search('.*Using Qt version (\d+\.\d+\.\d+).*', stdout)
+			if m:
+				if sys.platform == 'win32':
+					ver = m.group(1)
+					if ver != self.w32_qt_version: # TODO: test properly
+						print >> sys.stderr, (
+							'Warning: Not using supported Qt version %s'
+							' (your version is %s).'
+							) % (self.w32_qt_version, ver)
+				else:
+					pass # any version should be ok for other platforms
+			else:
+				raise Exception('Could not find qmake version.')
+
+	def persist_w32_make():
+		# TODO
+		pass
 
 	def build(self, targets=[]):
 
@@ -371,6 +422,16 @@ class InternalCommands:
 			return os.system('taskkill /F /FI "IMAGENAME eq synergy*"')
 		else:
 			raise Exception('Not implemented for platform: ' + sys.platform)
+		
+	def doxygen(self):
+		# The conf generates doc/doxygen.cfg from cmake/doxygen.cfg.in
+		if not self.has_conf_run():
+			self.configure_internal()
+
+		err = os.system('doxygen %s/%s' % (self.doc_dir, self.doxygen_filename))
+			
+		if err != 0:
+			raise Exception('doxygen failed with error code: ' + str(err))
 				
 	def dist(self, type):
 
@@ -809,7 +870,7 @@ class CommandHandler:
 	
 	def configure(self):
 		target = ''
-		if (len(build_targets) > 0):
+		if (len(self.build_targets) > 0):
 			target = self.build_targets[0]
 		self.ic.configure(target)
 	
@@ -824,6 +885,9 @@ class CommandHandler:
 	
 	def install(self):
 		print 'Not yet implemented: install'
+	
+	def doxygen(self):
+		self.ic.doxygen ()
 	
 	def dist(self):
 		

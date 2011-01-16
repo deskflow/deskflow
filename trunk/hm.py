@@ -44,31 +44,31 @@ build_options_long = ['debug', 'release']
 # list of valid commands as keys. the values are optarg strings, but most 
 # are None for now (this is mainly for extensibility)
 cmd_opt_dict = {
-	'about' 	: ['', []],
-	'setup' 	: ['', []],
+	'about'     : ['', []],
+	'setup'     : ['', []],
 	'configure' : ['', []],
-	'build' 	: [build_options, build_options_long],
-	'clean' 	: [build_options, build_options_long],
-	'update' 	: ['', []],
-	'install' 	: ['', []],
+	'build'     : [build_options, build_options_long],
+	'clean'     : [build_options, build_options_long],
+	'update'    : ['', []],
+	'install'   : ['', []],
 	'doxygen'   : ['', []],
-	'dist'		: ['', []],
-	'distftp'       : ['', ['host=', 'user=', 'pass=', 'dir=']],
-	'kill' 		: ['', []],
-	'usage' 	: ['', []],
-	'revision' 	: ['', []],
-	'reformat' 	: ['', []],
-	'open'		: ['', []],
+	'dist'      : ['', []],
+	'distftp'   : ['', ['host=', 'user=', 'pass=', 'dir=']],
+	'kill'      : ['', []],
+	'usage'     : ['', []],
+	'revision'  : ['', []],
+	'reformat'  : ['', []],
+	'open'      : ['', []],
 }
 
 # aliases to valid commands
 cmd_alias_dict = {
-	'info'		: 'about',
-	'help'		: 'usage',
-	'package'	: 'dist',
-	'docs'		: 'doxygen',
-	'make'		: 'build',
-	'cmake'		: 'configure',
+	'info'	    : 'about',
+	'help'      : 'usage',
+	'package'   : 'dist',
+	'docs'      : 'doxygen',
+	'make'      : 'build',
+	'cmake'     : 'configure',
 }
 
 def complete_command(arg):
