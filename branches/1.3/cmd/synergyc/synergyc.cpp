@@ -81,7 +81,8 @@ public:
 		m_logFilter(NULL),
 		m_display(NULL),
 		m_serverAddress(NULL),
-		m_logFile(NULL)
+		m_logFile(NULL),
+		m_disableXInitThreads(false)
 		{ s_instance = this; }
 	  ~CArgs() { s_instance = NULL; }
 
@@ -97,7 +98,7 @@ public:
 	CString 			m_name;
 	CNetworkAddress* 	m_serverAddress;
 	const char*			m_logFile;
-
+	bool				m_disableXInitThreads;
 };
 
 CArgs*					CArgs::s_instance = NULL;
@@ -114,7 +115,8 @@ createScreen()
 #if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(false));
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(ARG->m_display, false, ARG->m_yscroll));
+	return new CScreen(new CXWindowsScreen(
+		ARG->m_display, false, ARG->m_disableXInitThreads, ARG->m_yscroll));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(false));
 #endif
@@ -682,6 +684,10 @@ parse(int argc, const char* const* argv)
 		else if (isArg(i, argc, argv, NULL, "--version")) {
 			version();
 			bye(kExitSuccess);
+		}
+
+		else if (isArg(i, argc, argv, NULL, "--disable-xinitthreads")) {
+			ARG->m_disableXInitThreads = true;
 		}
 
 		else if (isArg(i, argc, argv, "--", NULL)) {
