@@ -161,6 +161,9 @@ class InternalCommands:
 		
 		# for non-vs always specify a build type (debug, release, etc)
 		if not generator.startswith('Visual Studio'):
+			# default is default for non-vs
+			if target == '':
+				target = 'debug'
 			cmake_args = ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 		
 		# if not visual studio, use parent dir
