@@ -33,7 +33,7 @@ class InternalCommands:
 
 	source_dir = '..' # Source, relative to build.
 	cmake_dir = 'cmake'
-	bin_dir = 'bin'
+	_bin_dir = 'bin'
 	gui_dir = 'gui'
 	doc_dir = 'doc'
 
@@ -94,14 +94,20 @@ class InternalCommands:
 		'6' : 'KDevelop3 - Unix Makefiles',
 	}
 
-	def config_filepath(self):
-		return '%s/%s' % (self.bin_dir, self.config_filename)
+	def getBinDir(self, target=''):
+		workingDir = self._bin_dir
+		if target != '':
+			workingDir += '/' + target
+		return workingDir
+
+	def config_filepath(self, target=''):
+		return '%s/%s' % (self.getBinDir(target), self.config_filename)
 
 	def sln_filepath(self):
-		return '%s\%s' % (self.bin_dir, self.sln_filename)
+		return '%s\%s' % (self.getBinDir(), self.sln_filename)
 
-	def xcodeproj_filepath(self):
-		return '%s/%s' % (self.bin_dir, self.xcodeproj_filename)
+	def xcodeproj_filepath(self, target=''):
+		return '%s/%s' % (self.getBinDir(target), self.xcodeproj_filename)
 		
 	def usage(self):
 		app = sys.argv[0]
@@ -126,16 +132,18 @@ class InternalCommands:
 			'Example: %s build -g 3'
 			) % (app, app)
 	
-	def configure(self):
-		self.configure_internal()
+	def configure(self, target):
+		self.configure_internal(target)
 		
 		print ('Configure complete!\n\n'
 			'Open project now: %s open\n'
 			'Command line build: %s build'
 			) % (self.this_cmd, self.this_cmd)
 
-	def configure_internal(self):
+	def configure_internal(self, target=''):
 		
+		cmake_args = ''
+
 		# ensure latest setup and do not ask config for generator (only fall 
 		# back to prompt if not specified as arg)
 		self.ensure_setup_latest()
@@ -149,16 +157,22 @@ class InternalCommands:
 		generator = self.get_generator_from_config()
 		
 		if generator != '':
-			cmake_args = '%s -G "%s"' % (self.source_dir, generator)
-		else:
-			cmake_args = self.source_dir
+			cmake_args += ' -G "' + generator + '"'
 		
-		cmake_cmd_string = '%s %s' % (_cmake_cmd, cmake_args)
-
+		# always specify a build type (debug, release, etc)
+		cmake_args = ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
+		
+		# if not visual studio, use parent dir
+		sourceDir = self.source_dir
+		if not generator.startswith('Visual Studio'):
+			sourceDir += '/..'
+		
+		cmake_cmd_string = _cmake_cmd + cmake_args + ' ' + sourceDir
+		
 		print "Configuring with CMake (%s)..." % cmake_cmd_string
-
+		
 		# Run from build dir so we have an out-of-source build.
-		self.try_chdir(self.bin_dir)
+		self.try_chdir(self.getBinDir(target))
 		err = os.system(cmake_cmd_string)
 		self.restore_chdir()
 
@@ -250,39 +264,41 @@ class InternalCommands:
 	
 		self.ensure_setup_latest()
 
-		if not self.has_conf_run():
-			self.configure_internal()
-		
 		generator = self.get_generator_from_config()
 
-		if generator == "Unix Makefiles":
-
-			print 'Building with GNU Make...'
-			self.try_chdir(self.bin_dir)
-			err = os.system(self.make_cmd)
-			self.restore_chdir()
+		if generator.startswith('Visual Studio'):
 			
-			if err != 0:
-				raise Exception('GNU Make failed: ' + str(err))
-
-		elif generator.startswith('Visual Studio'):
-			
+			# only need to configure once for vs
+			if not self.has_conf_run():
+				self.configure_internal()
+		
 			for target in targets:
 				self.run_vcbuild(generator, target)
-
-		elif generator == 'Xcode':        
-
-			print 'Building with Xcode...'
-			self.try_chdir(self.bin_dir)
-			err = os.system(self.xcodebuild_cmd)
-			self.restore_chdir()
-
-			if err != 0:
-				raise Exception('Xcode failed: ' + str(err))
-			
-		else:
-			raise Exception('Not supported with generator: ' + generator)
 		
+		else:
+			
+			cmd = ''
+			if generator == "Unix Makefiles":
+				print 'Building with GNU Make...'
+				cmd = self.make_cmd
+			elif generator == 'Xcode':
+				print 'Building with Xcode...'
+				cmd = self.xcodebuild_cmd
+			else:
+				raise Exception('Not supported with generator: ' + generator)
+
+			for target in targets:
+					
+				if not self.has_conf_run(target):
+					self.configure_internal(target)
+					
+				self.try_chdir(self.getBinDir(target))
+				err = os.system(cmd)
+				self.restore_chdir()
+				
+				if err != 0:
+					raise Exception(cmd + ' failed: ' + str(err))
+
 		# allow user to skip qui compile
 		if self.enable_make_gui:
 			self.make_gui(targets)
@@ -295,40 +311,35 @@ class InternalCommands:
 		
 		generator = self.get_generator_from_config()
 
-		if generator == "Unix Makefiles":
+		if generator.startswith('Visual Studio'):
+			# special case for version 10, use new /target:clean
+			if generator.startswith('Visual Studio 10'):
+				for target in targets:
+					self.run_vcbuild(generator, target, '/target:clean')
+				
+			# any other version of visual studio, use /clean
+			elif generator.startswith('Visual Studio'):
+				for target in targets:
+					self.run_vcbuild(generator, target, '/clean')
 
-			print 'Cleaning with GNU Make...'
-			self.try_chdir(self.bin_dir)
-			err = os.system(self.make_cmd + ' clean')
-			self.restore_chdir()
-
-			if err != 0:
-				raise Exception('GNU Make failed: ' + str(err))
-
-		# special case for version 10, use new /target:clean
-		elif generator.startswith('Visual Studio 10'):
-
-			for target in targets:
-				self.run_vcbuild(generator, target, '/target:clean')
-
-		# any other version of visual studio, use /clean
-		elif generator.startswith('Visual Studio'):
-
-			for target in targets:
-				self.run_vcbuild(generator, target, '/clean')
-
-		elif generator == 'Xcode':        
-
-			print 'Cleaning with Xcode...'
-			self.try_chdir(self.bin_dir)
-			err = os.system(xcodebuild_cmd + ' clean')
-			self.restore_chdir()
-
-			if err != 0:
-				raise Exception('Xcode failed: ' + str(err))
-			
 		else:
-			raise Exception('Not supported with generator: ' + generator)
+			cmd = ''
+			if generator == "Unix Makefiles":
+				print 'Cleaning with GNU Make...'
+				cmd = self.make_cmd
+			elif generator == 'Xcode':
+				print 'Cleaning with Xcode...'
+				cmd = self.xcodebuild_cmd
+			else:
+				raise Exception('Not supported with generator: ' + generator)
+
+			for target in targets:
+				self.try_chdir(self.getBinDir(target))
+				err = os.system(cmd + ' clean')
+				self.restore_chdir()
+
+				if err != 0:
+					raise Exception('Clean failed: ' + str(err))
 
 		# allow user to skip qui compile
 		clean_targets = []
@@ -522,7 +533,7 @@ class InternalCommands:
 		
 		pattern = re.escape('synergy-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
 		
-		for filename in os.listdir(self.bin_dir):
+		for filename in os.listdir(self.getBinDir('release')):
 			if re.search(pattern, filename):
 				return filename
 		
@@ -536,7 +547,7 @@ class InternalCommands:
 		return re.sub(pattern, replace, self.dist_name(type))
 	
 	def dist_run(self, command):
-		self.try_chdir(self.bin_dir)
+		self.try_chdir(self.getBinDir('release'))
 		err = os.system(command)
 		self.restore_chdir()
 		if err != 0:
@@ -590,7 +601,7 @@ class InternalCommands:
 			if err != 0:
 				raise Exception('Could not open project with error code code: ' + str(err))
 
-	def setup(self):
+	def setup(self, target=''):
 		print "Running setup..."
 
 		# always either get generator from args, or prompt user when 
@@ -598,8 +609,8 @@ class InternalCommands:
 		generator = self.get_generator_from_prompt()
 
 		# Create build dir, since config file resides there.
-		if not os.path.exists(self.bin_dir):
-			os.mkdir(self.bin_dir)
+		if not os.path.exists(self.getBinDir(target)):
+			os.mkdir(self.getBinDir(target))
 
 		if os.path.exists(self.config_filepath()):
 			config = ConfigParser.ConfigParser()
@@ -620,15 +631,15 @@ class InternalCommands:
 
 		self.write_config(config)
 
-		cmakecache_filename = '%s/CMakeCache.txt' % self.bin_dir
+		cmakecache_filename = '%s/CMakeCache.txt' % self.getBinDir(target)
 		if os.path.exists(cmakecache_filename):
 			print "Removing %s, since generator changed." % cmakecache_filename
 			os.remove(cmakecache_filename)
 
 		print "\nSetup complete."
 
-	def write_config(self, config):
-		configfile = open(self.config_filepath(), 'wb')
+	def write_config(self, config, target=''):
+		configfile = open(self.config_filepath(target), 'wb')
 		config.write(configfile)
 
 	def get_generator_from_config(self):
@@ -652,10 +663,10 @@ class InternalCommands:
 		else:
 			return False
 
-	def has_conf_run(self):
+	def has_conf_run(self, target=''):
 		if self.min_setup_version(2):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.config_filepath())
+			config.read(self.config_filepath(target))
 			try:
 				return config.getboolean('hm', 'has_conf_run')
 			except:
@@ -801,7 +812,7 @@ class InternalCommands:
 				) % (self.get_vcvarsall(generator), vcvars_platform, args, self.sln_filepath(), config)
 		
 		# Generate a batch file, since we can't use environment variables directly.
-		temp_bat = self.bin_dir + r'\vcbuild.bat'
+		temp_bat = self.getBinDir() + r'\vcbuild.bat'
 		file = open(temp_bat, 'w')
 		file.write(cmd)
 		file.close()
@@ -857,7 +868,10 @@ class CommandHandler:
 		self.ic.setup()
 	
 	def configure(self):
-		self.ic.configure()
+		target = ''
+		if (len(build_targets) > 0):
+			target = self.build_targets[0]
+		self.ic.configure(target)
 	
 	def build(self):
 		self.ic.build(self.build_targets)
