@@ -34,7 +34,7 @@ CArchAppUtilUnix::parseArg(const int& argc, const char* const* argv, int& i)
 		app().argsBase().m_display = argv[++i];
 	}
 
-	else if (app().isArg(i, argc, argv, NULL, "--disable-xinitthreads")) {
+	else if (app().isArg(i, argc, argv, NULL, "--no-xinitthreads")) {
 		app().argsBase().m_disableXInitThreads = true;
 	}
 

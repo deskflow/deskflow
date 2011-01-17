@@ -150,9 +150,10 @@ CServerApp::help()
 	// window api args (windows/x-windows/carbon)
 #if WINAPI_XWINDOWS
 #  define WINAPI_ARGS \
-	" [--display <display>]"
+	" [--display <display>] [--no-xinitthreads]"
 #  define WINAPI_INFO \
-	"      --display <display>  connect to the X server at <display>\n"
+	"      --display <display>  connect to the X server at <display>\n" \
+	"      --no-xinitthreads    do not call XInitThreads()\n"
 #else
 #  define WINAPI_ARGS
 #  define WINAPI_INFO

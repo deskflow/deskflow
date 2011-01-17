@@ -113,6 +113,8 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 	  // initializes Xlib support for concurrent threads.
 	  if (XInitThreads() == 0)
 	    throw XArch("XInitThreads() returned zero");
+	} else {
+		LOG((CLOG_DEBUG "skipping XInitThreads()"));
 	}
 
 	// set the X I/O error handler so we catch the display disconnecting

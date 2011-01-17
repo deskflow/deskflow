@@ -157,9 +157,10 @@ CClientApp::help()
 {
 #if WINAPI_XWINDOWS
 #  define WINAPI_ARG \
-	" [--display <display>]"
+	" [--display <display>] [--no-xinitthreads]"
 #  define WINAPI_INFO \
-	"      --display <display>  connect to the X server at <display>\n"
+	"      --display <display>  connect to the X server at <display>\n" \
+	"      --no-xinitthreads    do not call XInitThreads()\n"
 #else
 #  define WINAPI_ARG
 #  define WINAPI_INFO
@@ -181,6 +182,7 @@ CClientApp::help()
 		WINAPI_INFO
 		HELP_SYS_INFO
 		"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
+		"                           120 by default.\n"
 		HELP_COMMON_INFO_2
 		"\n"
 		"* marks defaults.\n"

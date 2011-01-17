@@ -528,9 +528,10 @@ help()
 {
 #if WINAPI_XWINDOWS
 #  define USAGE_DISPLAY_ARG		\
-" [--display <display>]"
+" [--display <display>] [--no-xinitthreads]"
 #  define USAGE_DISPLAY_INFO	\
-"      --display <display>  connect to the X server at <display>\n"
+"      --display <display>  connect to the X server at <display>\n" \
+"      --no-xinitthreads    do not call XInitThreads()\n"
 #else
 #  define USAGE_DISPLAY_ARG
 #  define USAGE_DISPLAY_INFO
@@ -686,7 +687,7 @@ parse(int argc, const char* const* argv)
 			bye(kExitSuccess);
 		}
 
-		else if (isArg(i, argc, argv, NULL, "--disable-xinitthreads")) {
+		else if (isArg(i, argc, argv, NULL, "--no-xinitthreads")) {
 			ARG->m_disableXInitThreads = true;
 		}
 
