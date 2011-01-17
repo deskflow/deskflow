@@ -163,8 +163,8 @@ private:
 #  define HELP_SYS_ARGS \
 	" [--daemon|--no-daemon]"
 #  define HELP_SYS_INFO \
-    "  -f, --no-daemon          run in the foreground.\n" \
-    "*     --daemon             run as a daemon.\n"
+	"  -f, --no-daemon          run in the foreground.\n"	\
+	"*     --daemon             run as a daemon.\n"
 
 #elif SYSAPI_WIN32
 
