@@ -50,6 +50,9 @@ public:
 		bool m_debugServiceWait;
 		bool m_pauseOnExit;
 #endif
+#if WINAPI_XWINDOWS
+		bool m_disableXInitThreads;
+#endif
 	};
 
 	CApp(CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args);

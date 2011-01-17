@@ -639,7 +639,8 @@ CServerApp::createScreen()
 #if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(true, args().m_noHooks));
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(args().m_display, true));
+	return new CScreen(new CXWindowsScreen(
+		args().m_display, true, args().m_disableXInitThreads));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(true));
 #endif

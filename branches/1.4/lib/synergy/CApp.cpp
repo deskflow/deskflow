@@ -58,6 +58,9 @@ m_pauseOnExit(false),
 #else
 m_daemon(true), // backward compatibility for unix (daemon by default)
 #endif
+#if WINAPI_XWINDOWS
+m_disableXInitThreads(false),
+#endif
 m_backend(false),
 m_restartable(true),
 m_noHooks(false),

@@ -220,7 +220,9 @@ CClientApp::createScreen()
 #if WINAPI_MSWINDOWS
 	return new CScreen(new CMSWindowsScreen(false, args().m_noHooks));
 #elif WINAPI_XWINDOWS
-	return new CScreen(new CXWindowsScreen(args().m_display, false, args().m_yscroll));
+	return new CScreen(new CXWindowsScreen(
+		args().m_display, false, args().m_disableXInitThreads,
+		args().m_yscroll));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(false));
 #endif

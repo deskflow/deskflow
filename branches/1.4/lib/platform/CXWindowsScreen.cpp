@@ -80,7 +80,7 @@
 
 CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 
-CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, int mouseScrollDelta) :
+CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta) :
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
 	m_display(NULL),
@@ -109,13 +109,11 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, int mo
 	if (mouseScrollDelta==0) m_mouseScrollDelta=120;
 	s_screen = this;
 	
-	// initializes Xlib support for concurrent threads.
-	// ...which breaks badly on RHEL for some reason, upstream #194
-	//if (XInitThreads() == 0)
-	//{
-	//	throw XArch("XInitThreads() returned zero");
-	//}
-	
+	if (!disableXInitThreads) {
+	  // initializes Xlib support for concurrent threads.
+	  if (XInitThreads() == 0)
+	    throw XArch("XInitThreads() returned zero");
+	}
 
 	// set the X I/O error handler so we catch the display disconnecting
 	XSetIOErrorHandler(&CXWindowsScreen::ioErrorHandler);
