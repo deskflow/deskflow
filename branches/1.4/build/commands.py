@@ -140,7 +140,7 @@ class InternalCommands:
 			'Command line build: %s build'
 			) % (self.this_cmd, self.this_cmd)
 
-	def configure_internal(self, target=''):
+	def configure_internal(self, target='', extraArgs=''):
 		
 		cmake_args = ''
 
@@ -171,9 +171,12 @@ class InternalCommands:
 		if not generator.startswith('Visual Studio'):
 			sourceDir += '/..'
 		
+		if extraArgs != '':
+			cmake_args += ' ' + extraArgs
+
 		cmake_cmd_string = _cmake_cmd + cmake_args + ' ' + sourceDir
 		
-		print "Configuring with CMake (%s)..." % cmake_cmd_string
+		print "CMake command: " + cmake_cmd_string
 		
 		# Run from build dir so we have an out-of-source build.
 		self.try_chdir(self.getBinDir(target))
@@ -190,7 +193,7 @@ class InternalCommands:
 			self.persist_qmake()
 			
 			qmake_cmd_string = self.qmake_cmd + ' ' + self.qtpro_filename
-			print "Configuring with QMake (%s)..." % qmake_cmd_string
+			print "QMake command: " + qmake_cmd_string
 			
 			# run qmake from the gui dir
 			self.try_chdir(self.gui_dir)
@@ -363,7 +366,7 @@ class InternalCommands:
 		else:
 			raise Exception('Unsupported platform: ' + sys.platform)
 		
-		print 'Running %s...' % gui_make_cmd
+		print 'Make GUI command: ' + gui_make_cmd
 		
 		# HACK: don't know how to build in either debug or release on unix; 
 		# always builds release!
@@ -436,10 +439,39 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('doxygen failed with error code: ' + str(err))
 				
-	def dist(self, type):
+	def dist(self, type, vcRedistDir, qtDir):
 
 		# Package is supported by default.
 		package_unsupported = False
+		unixTarget = 'release'
+		confArgs = '-DCONF_CPACK:BOOL=TRUE'
+		
+		generator = self.get_generator_from_config()
+		if generator.startswith('Visual Studio'):
+
+			if vcRedistDir =='':
+				raise Exception(
+					'VC++ redist dir path not specified (--vcredist-dir).')
+
+			# forward slashes are easier in cmake
+			vcRedistDir = vcRedistDir.replace('\\', '/')
+
+			vcRedistArch = 'x86'
+			if generator.endswith('Win64'):
+				vcRedistArch = 'x64'
+			
+			vcRedistFile = 'vcredist_' + vcRedistArch + '.exe'
+
+			confArgs += (' -DVCREDIST_DIR:STRING=' + vcRedistDir +
+						 ' -DVCREDIST_FILE:STRING=' + vcRedistFile)
+			
+			if (qtDir != ''):
+				# forward slashes are easier in cmake
+				confArgs += ' -DQT_DIR:STRING=' + qtDir.replace('\\', '/')
+
+			self.configure_internal('', confArgs)
+		else:
+			self.configure_internal(unixTarget, confArgs)
 
 		if type == None:
 			self.dist_usage()
@@ -447,19 +479,19 @@ class InternalCommands:
 			
 		elif type == 'src':
 			if sys.platform in ['linux2', 'darwin']:
-				self.dist_run('make package_source')
+				self.dist_run('make package_source', unixTarget)
 			else:
 				package_unsupported = True
 			
 		elif type == 'rpm':
 			if sys.platform == 'linux2':
-				self.dist_run('cpack -G RPM')
+				self.dist_run('cpack -G RPM', unixTarget)
 			else:
 				package_unsupported = True
 			
 		elif type == 'deb':
 			if sys.platform == 'linux2':
-				self.dist_run('cpack -G DEB')
+				self.dist_run('cpack -G DEB', unixTarget)
 			else:
 				package_unsupported = True
 			
@@ -471,7 +503,7 @@ class InternalCommands:
 			
 		elif type == 'mac':
 			if sys.platform == 'darwin':
-				self.dist_run('cpack -G PackageMaker')
+				self.dist_run('cpack -G PackageMaker', unixTarget)
 			else:
 				package_unsupported = True
 			
@@ -550,8 +582,9 @@ class InternalCommands:
 		replace = '\g<1>-r' + self.find_revision() + '\g<2>'
 		return re.sub(pattern, replace, self.dist_name(type))
 	
-	def dist_run(self, command):
-		self.try_chdir(self.getBinDir('release'))
+	def dist_run(self, command, target=''):
+		self.try_chdir(self.getBinDir(target))
+		print 'CPack command: ' + command
 		err = os.system(command)
 		self.restore_chdir()
 		if err != 0:
@@ -579,16 +612,19 @@ class InternalCommands:
 
 		# Ensure temp build dir exists.
 		if not os.path.exists(dir):
+			print 'Creating dir: ' + dir
 			os.mkdir(dir)
 
 		global prevdir    
 		prevdir = os.path.abspath(os.curdir)
 
 		# It will exist by this point, so it's safe to chdir.
+		print 'Entering dir: ' + dir
 		os.chdir(dir)
 
 	def restore_chdir(self):
 		global prevdir
+		print 'Going back to: ' + prevdir
 		os.chdir(prevdir)
 
 	def open_internal(self, project_filename, application = ''):
@@ -845,6 +881,8 @@ class InternalCommands:
 class CommandHandler:
 	ic = InternalCommands()
 	build_targets = []
+	vcRedistDir = ''
+	qtDir = ''
 	
 	def __init__(self, argv, opts, args, verbose):
 		
@@ -864,6 +902,10 @@ class CommandHandler:
 				self.build_targets += ['debug',]
 			elif o in ('-r', '--release'):
 				self.build_targets += ['release',]
+			elif o == '--vcredist-dir':
+				self.vcRedistDir = a
+			elif o == '--qt-dir':
+				self.qtDir = a
 	
 	def about(self):
 		self.ic.about()
@@ -896,9 +938,9 @@ class CommandHandler:
 		
 		type = None
 		if len(self.args) > 0:
-			type = self.args[0]
+			type = self.args[0]		
 				
-		self.ic.dist(type)
+		self.ic.dist(type, self.vcRedistDir, self.qtDir)
 
 	def distftp(self):
 		type = None
