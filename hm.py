@@ -52,7 +52,7 @@ cmd_opt_dict = {
 	'update'    : ['', []],
 	'install'   : ['', []],
 	'doxygen'   : ['', []],
-	'dist'      : ['', ['vcredist-dir=',]],
+	'dist'      : ['', ['vcredist-dir=', 'qt-dir=']],
 	'distftp'   : ['', ['host=', 'user=', 'pass=', 'dir=']],
 	'kill'      : ['', []],
 	'usage'     : ['', []],
