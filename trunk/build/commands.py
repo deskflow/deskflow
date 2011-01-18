@@ -439,7 +439,7 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('doxygen failed with error code: ' + str(err))
 				
-	def dist(self, type, vcRedistDir):
+	def dist(self, type, vcRedistDir, qtDir):
 
 		# Package is supported by default.
 		package_unsupported = False
@@ -453,8 +453,8 @@ class InternalCommands:
 				raise Exception(
 					'VC++ redist dir path not specified (--vcredist-dir).')
 
-			# escape path separators for cmake
-			vcRedistDir = vcRedistDir.replace('\\', '\\\\')
+			# forward slashes are easier in cmake
+			vcRedistDir = vcRedistDir.replace('\\', '/')
 
 			vcRedistArch = 'x86'
 			if generator.endswith('Win64'):
@@ -465,6 +465,10 @@ class InternalCommands:
 			confArgs += (' -DVCREDIST_DIR:STRING=' + vcRedistDir +
 						 ' -DVCREDIST_FILE:STRING=' + vcRedistFile)
 			
+			if (qtDir != ''):
+				# forward slashes are easier in cmake
+				confArgs += ' -DQT_DIR:STRING=' + qtDir.replace('\\', '/')
+
 			self.configure_internal('', confArgs)
 		else:
 			self.configure_internal(unixTarget, confArgs)
@@ -878,6 +882,7 @@ class CommandHandler:
 	ic = InternalCommands()
 	build_targets = []
 	vcRedistDir = ''
+	qtDir = ''
 	
 	def __init__(self, argv, opts, args, verbose):
 		
@@ -899,6 +904,8 @@ class CommandHandler:
 				self.build_targets += ['release',]
 			elif o == '--vcredist-dir':
 				self.vcRedistDir = a
+			elif o == '--qt-dir':
+				self.qtDir = a
 	
 	def about(self):
 		self.ic.about()
@@ -933,7 +940,7 @@ class CommandHandler:
 		if len(self.args) > 0:
 			type = self.args[0]		
 				
-		self.ic.dist(type, self.vcRedistDir)
+		self.ic.dist(type, self.vcRedistDir, self.qtDir)
 
 	def distftp(self):
 		type = None
