@@ -28,6 +28,21 @@ INSTALL(
 	TARGETS ${cpack_targets}
 	RUNTIME DESTINATION bin)
 
+if (WIN32)
+	set(VCREDIST_PATH "${VCREDIST_DIR}/${VCREDIST_FILE}")
+	
+	install(
+		PROGRAMS
+		${VCREDIST_PATH}
+		COMPONENT vcredist
+		DESTINATION redist)
+	
+	set(CPACK_COMPONENT_VCREDIST_DISPLAY_NAME "Visual C++ 2008 Redistributable")
+
+	set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+	  ExecWait '\\\"$INSTDIR\\\\redist\\\\${VCREDIST_FILE}\\\" /install /q'")
+endif()
+
 # The default CPack behaviour is not to append the system processor
 # type, which is undesirable in our case, since we want to support 
 # both 32-bit and 64-bit processors.

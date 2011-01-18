@@ -32,7 +32,29 @@ IF(WIN32)
 	INSTALL(
 		FILES
 		bin/Release/qsynergy.exe
+		${QT_DIR}/qt/bin/libgcc_s_dw2-1.dll
+		${QT_DIR}/qt/bin/mingwm10.dll
+		${QT_DIR}/qt/bin/QtGui4.dll
+		${QT_DIR}/qt/bin/QtCore4.dll
+		${QT_DIR}/qt/bin/QtNetwork4.dll
+		COMPONENT qsynergy
 		DESTINATION bin)
+
+	set(CPACK_COMPONENT_QSYNERGY_DISPLAY_NAME "Graphical User Interface")
+	
+	set(VCREDIST_PATH "${VCREDIST_DIR}/${VCREDIST_FILE}")
+	
+	install(
+		PROGRAMS
+		${VCREDIST_PATH}
+		COMPONENT vcredist
+		DESTINATION redist)
+	
+	set(CPACK_COMPONENT_VCREDIST_DISPLAY_NAME "Visual C++ 2008 Redistributable")
+
+	set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+	  ExecWait '\\\"$INSTDIR\\\\redist\\\\${VCREDIST_FILE}\\\" /install /q'")
+
 ELSE(WIN32)
 	IF(APPLE)
 		# TODO: how the hell do we distribute mac apps?
