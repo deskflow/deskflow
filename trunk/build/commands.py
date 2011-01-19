@@ -528,6 +528,7 @@ class InternalCommands:
 		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
 
 		srcDir = 'bin/'
+		generator = self.get_generator_from_config()
 		if not generator.startswith('Visual Studio'):
 			srcDir += '/release'
 
@@ -575,6 +576,7 @@ class InternalCommands:
 		pattern = re.escape('synergy-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
 		
 		target = ''
+		generator = self.get_generator_from_config()
 		if not generator.startswith('Visual Studio'):
 			target = 'release'
 
