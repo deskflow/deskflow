@@ -530,7 +530,7 @@ class InternalCommands:
 		srcDir = 'bin/'
 		generator = self.get_generator_from_config()
 		if not generator.startswith('Visual Studio'):
-			srcDir += '/release'
+			srcDir += 'release/'
 
 		ftp.run(srcDir + src, dest) 
 		print 'Done'
