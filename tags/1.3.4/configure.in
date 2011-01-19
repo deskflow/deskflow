@@ -1,0 +1,289 @@
+dnl synergy -- mouse and keyboard sharing utility
+dnl Copyright (C) 2002 Chris Schoeneman
+dnl 
+dnl This package is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU General Public License
+dnl found in the file COPYING that should have accompanied this file.
+dnl 
+dnl This package is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+
+dnl Process this file with autoconf to produce a configure script.
+
+dnl initialize
+AC_INIT(lib/common/common.h)
+AC_CONFIG_AUX_DIR(config)
+
+dnl current version, extracted from $srcdir/lib/common/Version.h
+MAJOR_VERSION=`grep '#.*define VERSION "' $srcdir/lib/common/Version.h | sed -e 's/.*"\([0-9]*\)\.[0-9]*\.[0-9]*".*/\1/'`
+MINOR_VERSION=`grep '#.*define VERSION "' $srcdir/lib/common/Version.h | sed -e 's/.*"[0-9]*\.\([0-9]*\)\.[0-9]*".*/\1/'`
+RELEASE_VERSION=`grep '#.*define VERSION "' $srcdir/lib/common/Version.h | sed -e 's/.*"[0-9]*\.[0-9]*\.\([0-9]*\)".*/\1/'`
+
+dnl initialize automake
+AM_INIT_AUTOMAKE(synergy-plus, $MAJOR_VERSION.$MINOR_VERSION.$RELEASE_VERSION)
+AM_CONFIG_HEADER(config.h)
+
+dnl information on the package
+
+dnl decide on platform
+ARCH_LIBS=""
+ARCH_CFLAGS=""
+AC_CANONICAL_HOST
+case $host in
+*-*-mingw32* | *-*-windows*)
+	acx_host_arch="WIN32"
+	acx_host_winapi="MSWINDOWS"
+	;;
+*-*-darwin*)
+	acx_host_arch="UNIX"
+	acx_host_winapi="CARBON"
+	;;
+*)
+	acx_host_arch="UNIX"
+	acx_host_winapi="XWINDOWS"
+	;;
+esac
+ARCH_CFLAGS="$ARCH_CFLAGS -DSYSAPI_$acx_host_arch=1 -DWINAPI_$acx_host_winapi=1"
+AM_CONDITIONAL(WIN32, test x$acx_host_arch = xWIN32)
+AM_CONDITIONAL(UNIX, test x$acx_host_arch = xUNIX)
+AM_CONDITIONAL(MSWINDOWS, test x$acx_host_winapi = xMSWINDOWS)
+AM_CONDITIONAL(CARBON, test x$acx_host_winapi = xCARBON)
+AM_CONDITIONAL(XWINDOWS, test x$acx_host_winapi = xXWINDOWS)
+
+dnl checks for programs
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
+AC_CHECK_PROG(HAVE_DOT, dot, YES, NO)
+
+dnl AC_PROG_OBJC doesn't exist.  Borrow some ideas from KDE.
+dnl AC_MSG_CHECKING(for an Objective-C compiler)
+OBJC="${CC}"
+OBJCFLAGS="${CFLAGS}"
+AC_SUBST(OBJC)
+AC_SUBST(OBJCFLAGS)
+_AM_DEPENDENCIES(OBJC)
+
+dnl do checks using C++
+AC_LANG_CPLUSPLUS
+
+dnl our files end in .cpp not .C so tests should also end in .cpp
+ac_ext=cpp
+
+dnl enable debugging or disable asserts
+AC_ARG_ENABLE([debug], [  --enable-debug          enable debugging])
+if test "x$enable_debug" != xno; then
+	CXXFLAGS="$CXXFLAGS -g"
+else
+	CXXFLAGS="$CXXFLAGS -DNDEBUG"
+fi
+
+dnl check compiler
+ACX_CHECK_CXX
+
+dnl checks for libraries
+if test x"$acx_host_arch" = xUNIX; then
+	ACX_PTHREAD(,AC_MSG_ERROR(You must have pthreads to compile synergy))
+	ARCH_LIBS="$PTHREAD_LIBS $ARCH_LIBS"
+	ARCH_CFLAGS="$ARCH_CFLAGS $PTHREAD_CFLAGS"
+fi
+if test x"$acx_host_winapi" = xCARBON; then
+	ARCH_LIBS="-framework Carbon $ARCH_LIBS"
+fi
+ACX_CHECK_NANOSLEEP
+ACX_CHECK_INET_ATON
+
+dnl checks for header files
+AC_HEADER_STDC
+AC_CHECK_HEADERS([unistd.h sys/time.h sys/types.h locale.h wchar.h])
+AC_CHECK_HEADERS([sys/socket.h sys/select.h])
+AC_CHECK_HEADERS([sys/utsname.h])
+AC_CHECK_HEADERS([istream ostream sstream])
+AC_HEADER_TIME
+if test x"$acx_host_winapi" = xXWINDOWS; then
+	AC_PATH_X
+	AC_PATH_XTRA
+	save_CPPFLAGS="$CPPFLAGS"
+	CPPFLAGS="$X_CFLAGS $CPPFLAGS"
+	XEXT_LDADD=
+
+	AC_CHECK_LIB(Xtst,
+		XTestQueryExtension,
+		[XEXT_LDADD="$XEXT_LDADD -lXtst"],
+		AC_MSG_ERROR(You must have the XTest library to build synergy),
+		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+	AC_CHECK_HEADERS([X11/extensions/XTest.h],
+		,
+		AC_MSG_ERROR(You must have the XTest headers to compile synergy))
+
+	acx_have_xkb=no
+	AC_CHECK_LIB(X11,
+		XkbQueryExtension,
+		[acx_have_xkb=yes],
+		[acx_have_xkb=no],
+		[$X_LIBS $X_EXTRA_LIBS])
+	if test x"$acx_have_xkb" = xyes; then
+		AC_CHECK_HEADERS([X11/XKBlib.h X11/extensions/XKBstr.h],
+			[acx_have_xkb=yes],
+			[acx_have_xkb=no],
+			[#include <X11/Xlib.h>])
+		if test x"$acx_have_xkb" = xyes; then
+			AC_TRY_COMPILE([
+        	 			#include <X11/Xlib.h>
+        	 			#include <X11/XKBlib.h>
+				],[
+					XkbQueryExtension(0, 0, 0, 0, 0, 0);
+				],
+        		[acx_have_xkb=yes],
+			[acx_have_xkb=no])
+		fi
+	fi
+	if test x"$acx_have_xkb" = xyes; then
+		AC_DEFINE(HAVE_XKB_EXTENSION, 1,
+			[Define this if the XKB extension is available.])
+	fi
+
+	acx_have_xinerama=yes
+	AC_CHECK_LIB(Xinerama,
+		XineramaQueryExtension,
+		[acx_have_xinerama=yes],
+		[acx_have_xinerama=no],
+		[$X_LIBS -lXext -lX11 $X_EXTRA_LIBS])
+	if test x"$acx_have_xinerama" = xyes; then
+		AC_CHECK_HEADERS([X11/extensions/Xinerama.h],
+			[acx_have_xinerama=yes],
+			[acx_have_xinerama=no],
+			[#include <X11/Xlib.h>])
+	fi
+	if test x"$acx_have_xinerama" = xyes; then
+		XEXT_LDADD="$XEXT_LDADD -lXinerama"
+	fi
+
+	X_DPMS_LDADD=
+	acx_have_dpms=no
+	AC_CHECK_LIB(Xext,
+		DPMSQueryExtension,
+		[acx_have_dpms=yes],
+		[acx_have_dpms=no],
+		[$X_LIBS -lX11 $X_EXTRA_LIBS])
+	if test x"$acx_have_dpms" != xyes; then
+		AC_CHECK_LIB(Xdpms,
+			DPMSQueryExtension,
+			[acx_have_dpms=yes; XDPMS_LDADD=-lXdpms],
+			[acx_have_dpms=no],
+			[$X_LIBS -lX11 $X_EXTRA_LIBS])
+	fi
+	if test x"$acx_have_dpms" = xyes; then
+		AC_CHECK_HEADERS([X11/extensions/dpms.h],
+			[acx_have_dpms_h=yes],
+			[acx_have_dpms_h=no],
+			[#include <X11/Xlib.h>])
+		if test x"$acx_have_dpms_h" = xyes; then
+			XEXT_LDADD="$XEXT_LDADD $XDPMS_LDADD"
+			AC_MSG_CHECKING(for prototypes in X11/extensions/dpms.h)
+			acx_have_dpms_protos=no
+			AC_TRY_COMPILE([
+        	 			#include <X11/Xlib.h>
+					extern "C" {
+			  		#include <X11/extensions/dpms.h>
+					}
+				],[
+					int s = DPMSModeOn;
+					DPMSQueryExtension(0, 0, 0);
+				],
+        		[acx_have_dpms_protos=yes])
+			AC_MSG_RESULT($acx_have_dpms_protos)
+			if test x"$acx_have_dpms_protos" = xyes; then
+				AC_DEFINE(HAVE_DPMS_PROTOTYPES,1,[Define if the <X11/extensions/dpms.h> header file declares function prototypes.])
+			fi
+		fi
+	fi
+
+	CPPFLAGS="$save_CPPFLAGS"
+	ARCH_LIBS="$X_LIBS $X_PRE_LIBS $XEXT_LDADD -lXext -lX11 $X_EXTRA_LIBS $ARCH_LIBS"
+	ARCH_CFLAGS="$ARCH_CFLAGS $X_CFLAGS"
+fi
+
+dnl checks for types
+AC_TYPE_SIZE_T
+ACX_CHECK_SOCKLEN_T
+
+dnl checks for structures
+AC_STRUCT_TM
+
+dnl checks for compiler characteristics
+AC_CHECK_SIZEOF(char, 1)
+AC_CHECK_SIZEOF(short, 2)
+AC_CHECK_SIZEOF(int, 2)
+AC_CHECK_SIZEOF(long, 4)
+ACX_CHECK_CXX_BOOL(,AC_MSG_ERROR(Your compiler must support bool to compile synergy))
+ACX_CHECK_CXX_EXCEPTIONS(,AC_MSG_ERROR(Your compiler must support exceptions to compile synergy))
+ACX_CHECK_CXX_CASTS(,AC_MSG_ERROR(Your compiler must support C++ casts to compile synergy))
+ACX_CHECK_CXX_MUTABLE(,AC_MSG_ERROR(Your compiler must support mutable to compile synergy))
+ACX_CHECK_CXX_STDLIB(,AC_MSG_ERROR(Your compiler must support the C++ standard library to compile synergy))
+
+dnl checks for library functions
+dnl AC_TYPE_SIGNAL
+AC_FUNC_MEMCMP
+AC_FUNC_STRFTIME
+AC_CHECK_FUNCS(gmtime_r)
+ACX_CHECK_GETPWUID_R
+AC_CHECK_FUNCS(vsnprintf)
+AC_FUNC_SELECT_ARGTYPES
+ACX_CHECK_POLL
+ACX_FUNC_ACCEPT
+dnl use AC_REPLACE_FUNCS() for stuff in string.h
+
+dnl checks for system services
+
+dnl enable maximum compiler warnings and warnings are errors.
+ACX_CXX_WARNINGS
+ACX_CXX_WARNINGS_ARE_ERRORS
+
+dnl adjust compiler and linker variables
+CXXFLAGS="$CXXFLAGS $SYNERGY_CXXFLAGS $ARCH_CFLAGS"
+OBJCXXFLAGS="$OBJCXXFLAGS $CXXFLAGS $ARCH_CFLAGS"
+LIBS="$NANOSLEEP_LIBS $INET_ATON_LIBS $ARCH_LIBS $LIBS"
+
+dnl we need to have an environment variable set when building on OS X.
+dnl i'm not sure of the right way to do that.  writing 'export ...' to
+dnl the makefiles isn't portable.  here we'll hijack XXXDEPMODE (where
+dnl XXX depends on the language) to insert setting the environment
+dnl variable when running the compiler.  we'd like to put that in CC,
+dnl CXX and OBJC but that breaks depcomp.  let's hope this works.
+if test x"$acx_host_winapi" = xCARBON; then
+	MACOSX_DEPLOYMENT_TARGET="10.5"
+	CCDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $CCDEPMODE"
+	CXXDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $CXXDEPMODE"
+	OBJCDEPMODE="MACOSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET $OBJCDEPMODE"
+else
+	MACOSX_DEPLOYMENT_TARGET="5"
+	CXXDEPMODE="FOO=$MACOSX_DEPLOYMENT_TARGET $CXXDEPMODE"
+fi
+
+AC_OUTPUT([
+Makefile
+cmd/Makefile
+cmd/launcher/Makefile
+cmd/synergyc/Makefile
+cmd/synergys/Makefile
+dist/Makefile
+dist/nullsoft/Makefile
+dist/rpm/Makefile
+dist/rpm/synergy.spec
+doc/Makefile
+doc/doxygen.cfg
+lib/Makefile
+lib/arch/Makefile
+lib/base/Makefile
+lib/client/Makefile
+lib/common/Makefile
+lib/io/Makefile
+lib/mt/Makefile
+lib/net/Makefile
+lib/platform/Makefile
+lib/server/Makefile
+lib/synergy/Makefile
+])

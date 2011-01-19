@@ -1,0 +1,696 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+ <meta HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+ <meta name="keywords" content="Virtual Screen, Open Source, Software" />
+ <meta name="description" content="Mouse and Keyboard Sharing" />
+ <link rel="stylesheet" type="text/css" href="synergy.css" media="screen" />
+ <title>Synergy Configuration Guide</title>
+</head>
+<body class="main">
+<p>
+</p><h3>Synergy Configuration File Format</h3><p>
+</p><p>
+The synergy server requires configuration.  It will try certain
+pathnames to load the configuration file if you don't specify a
+path using the <span class="code">--config</span> command line
+option.  <span class="code">synergys --help</span> reports those
+pathnames.
+</p><p>
+The configuration file is a plain text file.  Use any text editor
+to create the configuration file.  The file is broken into sections
+and each section has the form:
+<span class="codeblock">
+  section: <span class="arg">name</span>
+    <span class="arg">args</span>
+  end
+</span>
+Comments are introduced by <span class="code">#</span> and continue to
+the end of the line.  <span class="arg">name</span> must be one of the
+following:
+<ul class="code">
+<li>screens
+<li>aliases
+<li>links
+<li>options
+</ul>
+See below for further explanation of each section type.  The
+configuration file is case-sensitive so <span class="code">Section</span>,
+<span class="code">SECTION</span>, and <span class="code">section</span>
+are all different and only the last is valid.  Screen names are the
+exception;  screen names are case-insensitive.
+</p><p>
+The file is parsed top to bottom and names cannot be used before
+they've been defined in the <span class="code">screens</span> or
+<span class="code">aliases</span> sections.  So the
+<span class="code">links</span> and <span class="code">aliases</span>
+must appear after the <span class="code">screens</span> and links
+cannot refer to aliases unless the <span class="code">aliases</span>
+appear before the <span class="code">links</span>.
+</p><p>
+</p><h4>screens</h4><p>
+</p><p>
+<span class="arg">args</span> is a list of screen names, one name per
+line, each followed by a colon.  Names are arbitrary strings but they
+must be unique.  The hostname of each computer is recommended.  (This
+is the computer's network name on win32 and the name reported by the
+program <span class="code">hostname</span> on Unix and OS X.  Note
+that OS X may append <span class="code">.local</span> to the name you
+gave your computer; e.g. <span class="code">somehost.local</span>.)
+There must be a screen name for the server and each client.  Each
+screen can specify a number of options.  Options have the form
+<span class="code"><span class="arg">name</span> =
+<span class="arg">value</span></span> and are listed one per line
+after the screen name.
+</p><p>
+Example:
+<span class="codeblock">
+    section: screens
+     moe:
+     larry:
+            halfDuplexCapsLock = true
+            halfDuplexNumLock = true
+     curly:
+            meta = alt
+    end
+</span>
+This declares three screens named <span class="code">moe</span>,
+<span class="code">larry</span>, and <span class="code">curly</span>.
+Screen <span class="code">larry</span> has half-duplex Caps Lock and
+Num Lock keys (see below) and screen <span class="code">curly</span>
+converts the meta modifier key to the alt modifier key.
+</p><p>
+A screen can have the following options:
+<ul>
+<li><span class="code">halfDuplexCapsLock = {true|false}</span>
+</p><p>
+        This computer has a Caps Lock key that doesn't report a
+        press and a release event when the user presses it but
+        instead reports a press event when it's turned on and a
+        release event when it's turned off.  If Caps Lock acts
+        strangely on all screens then you may need to set this
+        option to <span class="code">true</span>
+        on the server screen.  If it acts strangely on one
+        screen then that screen may need the option set to
+        <span class="code">true</span>.
+</p><p>
+<li><span class="code">halfDuplexNumLock = {true|false}</span>
+</p><p>
+        This is identical to <span class="code">halfDuplexCapsLock</span>
+        except it applies to the Num Lock key.
+</p><p>
+<li><span class="code">halfDuplexScrollLock = {true|false}</span>
+</p><p>
+        This is identical to <span class="code">halfDuplexCapsLock</span>
+        except it applies to the Scroll Lock key.  Note that, by default,
+  synergy uses Scroll Lock to keep the cursor on the current screen.  That
+  is, when Scroll Lock is toggled on, the cursor is locked to the screen
+  that it's currently on.  You can use that to prevent accidental switching.
+  You can also configure other hot keys to do that; see <a href="#lockCursor">
+  lockCursorToScreen</a>.
+</p><p>
+<li><span class="code">switchCorners = &lt;corners&gt;</span>
+</p><p>
+  See <a href="#corners">switchCorners</a> below.
+</p><p>
+<li><span class="code">switchCornerSize = N</span>
+</p><p>
+  See <a href="#cornerSize">switchCornerSize</a> below.
+</p><p>
+<li><span class="code">xtestIsXineramaUnaware = {true|false}</span>
+</p><p>
+        This option works around a bug in the XTest extension
+        when used in combination with Xinerama.  It affects
+        X11 clients only.  Not all versions of the XTest
+        extension are aware of the Xinerama extension.  As a
+        result, they do not move the mouse correctly when
+        using multiple Xinerama screens.  This option is
+        currently <span class="code">true</span> by default.  If
+        you know your XTest extension is Xinerama aware then set
+        this option to <span class="code">false</span>.
+</p><p>
+<li><span class="code">shift = {shift|ctrl|alt|meta|super|none}<br>
+      ctrl  = {shift|ctrl|alt|meta|super|none}<br>
+      alt   = {shift|ctrl|alt|meta|super|none}<br>
+      meta  = {shift|ctrl|alt|meta|super|none}<br>
+      super = {shift|ctrl|alt|meta|super|none}</span>
+</p><p>
+        Map a modifier key pressed on the server's keyboard to
+        a different modifier on this client.  This option only
+        has an effect on a client screen;  it's accepted and
+        ignored on the server screen.
+</p><p>
+        You can map, say, the shift key to shift (the default),
+     ctrl, alt, meta, super or nothing.  Normally, you
+        wouldn't remap shift or ctrl.  You might, however, have
+        an X11 server with meta bound to the Alt keys.  To use
+        this server effectively with a windows client, which
+        doesn't use meta but uses alt extensively, you'll want
+        the windows client to map meta to alt (using
+        <span class="code">meta = alt</span>).
+</p><p>
+<li><span class="code">preserveFocus = {true|false}</span>
+</p><p>
+        Setting this to true forces the given screen to always preserve
+        its focus, rather than having the focus forcibly removed when
+        the cursor is moved to another screen.  This gets around problems
+        whereby secondary input methods no longer work on that screen
+        after the focus has been removed (like mythfrontend, for example).
+        This option is currently <span class="code">false</span> by default.
+        This option only affects secondary screens.
+</p><p>
+</ul>
+</p><p>
+</p><a name="aliases"></a><h4>aliases</h4><p>
+</p><p>
+    <span class="arg">args</span> is a list of screen names just like
+    in the <span class="code">screens</span> section except each screen
+    is followed by a list of aliases, one per line, <b>not</b> followed
+    by a colon.  An alias is a screen name and must be unique.  During
+    screen name lookup each alias is equivalent to the screen name it
+    aliases.  So a client can connect using its canonical screen name
+    or any of its aliases.  
+</p><p>
+    Example:
+<span class="codeblock">
+    section: aliases
+        larry:
+            larry.stooges.com
+        curly:
+            shemp
+    end
+</span>
+    Screen <span class="code">larry</span> is also known as
+ <span class="code">larry.stooges.com</span> and can connect as
+    either name.  Screen <span class="code">curly</span> is also
+    known as <span class="code">shemp</span> (hey, it's just an example).
+</p><p>
+</p><h4>links</h4><p>
+</p><p>
+    <span class="arg">args</span> is a list of screen names just like
+    in the <span class="code">screens</span> section except each screen
+    is followed by a list of links, one per line.  Each link has the
+    form <span class="code">{left|right|up|down}[&lt;range&gt;]</span> =
+    <span class="code">name[&lt;range&gt;]</span>.  A link indicates which
+    screen is adjacent in the given direction.
+</p><p>
+    Each side of a link can specify a range which defines a portion
+    of an edge.  A range on the direction is the portion of edge you can
+    leave from while a range on the screen is the portion of edge you'll
+    enter into.  Ranges are optional and default to the entire edge.  All
+    ranges on a particular direction of a particular screen must not
+    overlap.
+</p><p>
+    A &lt;range&gt; is written as <span class="code">(&lt;start&gt;,&lt;end&gt;)</span>.
+    Both <span class="code">start</span> and <span class="code">end</span>
+    are percentages in the range 0 to 100, inclusive.  The start must be
+    less than the end.  0 is the left or top of an edge and 100 is the
+    right or bottom.
+</p><p>
+    Example:
+<span class="codeblock">
+    section: links
+        moe:
+            right        = larry
+            up(50,100)   = curly(0,50)
+        larry:
+            left         = moe
+            up(0,50)     = curly(50,100)
+        curly:
+            down(0,50)   = moe
+            down(50,100) = larry(0,50)
+    end
+</span>
+    This indicates that screen <span class="code">larry</span> is to
+    the right of screen <span class="code">moe</span> (so moving the
+    cursor off the right edge of <span class="code">moe</span> would
+    make it appear at the left edge of <span class="code">larry</span>),
+    the left half of
+    <span class="code">curly</span> is above the right half of
+    <span class="code">moe</span>,
+    <span class="code">moe</span> is to the left of
+    <span class="code">larry</span> (edges are not necessarily symmetric
+    so you have to provide both directions), the right half of
+    <span class="code">curly</span> is above the left half of
+    <span class="code">larry</span>, all of <span class="code">moe</span>
+    is below the left half of <span class="code">curly</span>, and the
+    left half of <span class="code">larry</span> is below the right half of
+    <span class="code">curly</span>.
+</p><p>
+    <a name="asymmetric"></a>Note that links do not have to be
+    symmetrical;  for instance, here the edge between
+    <span class="code">moe</span> and <span class="code">curly</span>
+    maps to different ranges depending on if you're going up or down.
+    In fact links don't have to be bidirectional.  You can configure
+    the right of <span class="code">moe</span> to go to
+    <span class="code">larry</span> without a link from the left of
+    <span class="code">larry</span> to <span class="code">moe</span>.
+    It's possible to configure a screen with no outgoing links;  the
+    cursor will get stuck on that screen unless you have a hot key
+    configured to switch off of that screen.
+</p><p>
+</p><h4>options</h4><p>
+</p><p>
+    <span class="arg">args</span> is a list of lines of the form
+    <span class="code">name = value</span>.  These set the global
+    options.
+</p><p>
+    Example:
+<span class="codeblock">
+    section: options
+        heartbeat = 5000
+        switchDelay = 500
+    end
+</span>
+</p><p>
+    You can use the following options:
+<ul>
+<li><span class="code">heartbeat = N</span>
+</p><p>
+        The server will expect each client to send a message no
+        less than every <span class="code">N</span> milliseconds.
+        If no message arrives from a client within
+        <span class="code">3N</span> seconds the server forces that
+        client to disconnect.
+</p><p>
+        If synergy fails to detect clients disconnecting while
+        the server is sleeping or vice versa, try using this
+        option.
+</p><p>
+<li><span class="code"><a name="corners"></a>switchCorners = &lt;corners&gt;</span>
+</p><p>
+  Synergy won't switch screens when the mouse reaches the edge of
+  the screen if it's in a listed corner.  The size of all corners
+  is given by the <span class="code">switchCornerSize</span>
+  option.
+</p><p>
+  Corners are specified by a list using the following names:
+  <ul>
+  <li><span class="code">none</span> -- no corners
+  <li><span class="code">top-left</span> -- the top left corner
+  <li><span class="code">top-right</span> -- the top right corner
+  <li><span class="code">bottom-left</span> -- the bottom left corner
+  <li><span class="code">bottom-right</span> -- the bottom right corner
+  <li><span class="code">left</span> -- top and bottom left corners
+  <li><span class="code">right</span> -- top and bottom right corners
+  <li><span class="code">top</span> -- left and right top corners
+  <li><span class="code">bottom</span> -- left and right bottom corners
+  <li><span class="code">all</span> -- all corners
+  </ul>
+</p><p>
+  The first name in the list is one of the above names and defines
+  the initial set of corners.  Subsequent names are prefixed with
+  + or - to add the corner to or remove the corner from the set,
+  respectively.  For example:
+</p><p>
+  <span class="code">
+   all -left +top-left
+  </span>
+</p><p>
+  starts will all corners, removes the left corners (top and bottom)
+  then adds the top-left back in, resulting in the top-left,
+  bottom-left and bottom-right corners.
+</p><p>
+<li><span class="code"><a name="cornerSize"></a>switchCornerSize = N</span>
+</p><p>
+  Sets the size of all corners in pixels.  The cursor must be within
+  <span class="code">N</span> pixels of the corner to be considered
+  to be in the corner.
+</p><p>
+<li><span class="code">switchDelay = N</span>
+</p><p>
+        Synergy won't switch screens when the mouse reaches the
+        edge of a screen unless it stays on the edge for
+        <span class="code">N</span>
+        milliseconds.  This helps prevent unintentional
+        switching when working near the edge of a screen.
+</p><p>
+<li><span class="code">switchDoubleTap = N</span>
+</p><p>
+        Synergy won't switch screens when the mouse reaches the
+        edge of a screen unless it's moved away from the edge
+        and then back to the edge within <span class="code">N</span>
+        milliseconds.  With
+        the option you have to quickly tap the edge twice to
+        switch.  This helps prevent unintentional switching
+        when working near the edge of a screen.
+</p><p>
+<li><span class="code">screenSaverSync = {true|false}</span>
+</p><p>
+  If set to <span class="code">false</span> then synergy
+  won't synchronize screen savers.  Client screen savers
+  will start according to their individual configurations. 
+  The server screen saver won't start if there is input,
+  even if that input is directed toward a client screen.
+</p><p>
+<li><span class="code">relativeMouseMoves = {true|false}</span>
+</p><p>
+  If set to <span class="code">true</span> then secondary
+  screens move the mouse using relative rather than absolute
+  mouse moves when and only when the cursor is locked to the
+  screen (by Scroll Lock or a <a href="#lockCursor">configured
+  hot key</a>).
+  This is intended to make synergy work better with certain
+  games.  If set to <span class="code">false</span> or not
+  set then all mouse moves are absolute.
+</p><p>
+<li><span class="code">keystroke(<span class="arg">key</span>) = <span class="arg">actions</span></span>
+</p><p>
+  Binds the key combination <span class="arg">key</span> to the
+  given <span class="arg">actions</span>.  <span class="arg">key</span>
+  is an optional list of modifiers (<span class="code">shift</span>,
+  <span class="code">control</span>, <span class="code">alt</span>,
+  <span class="code">meta</span> or <span class="code">super</span>)
+  optionally followed by a character or a key name, all separated by
+  <span class="code">+</span> (plus signs).  You must have either
+  modifiers or a character/key name or both.  See below for
+  <a href="#keynames">valid key names</a>.
+</p><p>
+  Actions are described <a href="#actions">below</a>.
+</p><p>
+  Keyboard hot keys are handled while the cursor is on the primary
+  screen and secondary screens.  Separate actions can be assigned
+  to press and release.
+</p><p>
+<li><span class="code">mousebutton(<span class="arg">button</span>) = <span class="arg">actions</span></span>
+</p><p>
+  Binds the modifier and mouse button combination
+  <span class="arg">button</span> to the given
+  <span class="arg">actions</span>.  <span class="arg">button</span>
+  is an optional list of modifiers (<span class="code">shift</span>,
+  <span class="code">control</span>, <span class="code">alt</span>,
+  <span class="code">meta</span> or <span class="code">super</span>)
+  followed by a button number.  The primary button (the
+  left button for right handed users) is button 1, the middle button
+  is 2, etc.
+</p><p>
+  Actions are described <a href="#actions">below</a>.
+</p><p>
+  Mouse button actions are not handled while the cursor is on the
+  primary screen.  You cannot use these to perform an action while
+  on the primary screen.  Separate actions can be assigned to press
+  and release.
+</p><p>
+</ul>
+    You can use both the <span class="code">switchDelay</span> and
+    <span class="code">switchDoubleTap</span> options at the same
+    time.  Synergy will switch when either requirement is satisfied.
+</p><p>
+<a name="actions">Actions</a> are two lists of individual actions separated
+by commas.  The two lists are separated by a semicolon.  Either list can be
+empty and if the second list is empty then the semicolon is optional.  The
+first list lists actions to take when the condition becomes true (e.g. the
+hot key or mouse button is pressed) and the second lists actions to take
+when the condition becomes false (e.g. the hot key or button is released).
+The condition becoming true is called activation and becoming false is
+called deactivation.
+Allowed individual actions are:
+<ul>
+<li><span class="code">keystroke(<span class="arg">key</span>[,<span class="arg">screens</span>])</span>
+<li><span class="code">keyDown(<span class="arg">key</span>[,<span class="arg">screens</span>])</span>
+<li><span class="code">keyUp(<span class="arg">key</span>[,<span class="arg">screens</span>])</span>
+</p><p>
+  Synthesizes the modifiers and key given in <span class="arg">key</span>
+  which has the same form as described in the
+  <span class="code">keystroke</span> option.  If given,
+  <span class="arg">screens</span> lists the screen or screens to
+  direct the event to, regardless of the active screen.  If not
+  given then the event is directed to the active screen only.
+  (Due to a bug, keys cannot be directed to the server while on a
+  client screen.)
+</p><p>
+  <span class="code">keyDown</span> synthesizes a key press and
+  <span class="code">keyUp</span> synthesizes a key release.
+  <span class="code">keystroke</span> synthesizes a key press on
+  activation and a release on deactivation and is equivalent to
+  a <span class="code">keyDown</span> on activation and
+  <span class="code">keyUp</span> on deactivation.
+</p><p>
+  <span class="arg">screens</span> is either <span class="code">*</span>
+  to indicate all screens or a colon (:) separated list of screen
+  names.  (Note that the screen name must have already been encountered
+  in the configuration file so you'll probably want to put actions at
+  the bottom of the file.)
+</p><p>
+<li><span class="code">mousebutton(<span class="arg">button</span>)</span>
+<li><span class="code">mouseDown(<span class="arg">button</span>)</span>
+<li><span class="code">mouseUp(<span class="arg">button</span>)</span>
+</p><p>
+  Synthesizes the modifiers and mouse button given in
+  <span class="arg">button</span>
+  which has the same form as described in the
+  <span class="code">mousebutton</span> option.
+</p><p>
+  <span class="code">mouseDown</span> synthesizes a mouse press and
+  <span class="code">mouseUp</span> synthesizes a mouse release.
+  <span class="code">mousebutton</span> synthesizes a mouse press on
+  activation and a release on deactivation and is equivalent to
+  a <span class="code">mouseDown</span> on activation and
+  <span class="code">mouseUp</span> on deactivation.
+</p><p>
+<li><a name="lockCursor"></a><span class="code">lockCursorToScreen(<span class="arg">mode</span>)</span>
+</p><p>
+  Locks the cursor to or unlocks the cursor from the active screen.
+  <span class="arg">mode</span> can be <span class="code">off</span>
+  to unlock the cursor, <span class="code">on</span> to lock the
+  cursor, or <span class="code">toggle</span> to toggle the current
+  state.  The default is <span class="code">toggle</span>.  If the
+  configuration has no <span class="code">lockCursorToScreen</span>
+  action and Scroll Lock is not used as a hot key then Scroll Lock
+  toggles cursor locking.
+</p><p>
+<li><span class="code">switchToScreen(<span class="arg">screen</span>)</span>
+</p><p>
+  Jump to screen with name or alias <span class="arg">screen</span>.
+</p><p>
+<li><span class="code">switchInDirection(<span class="arg">dir</span>)</span>
+</p><p>
+  Switch to the screen in the direction <span class="arg">dir</span>,
+  which may be one of <span class="code">left</span>,
+  <span class="code">right</span>, <span class="code">up</span> or
+  <span class="code">down</span>.
+</p><p>
+<li><a name="keyboardBroadcast"></a><span class="code">keyboardBroadcast(<span class="arg">mode</span>[,<span class="arg">screens</span>])</span>
+</p><p>
+  Turns broadcasting of keystrokes to multiple screens on and off.  When
+  turned on all key presses and releases are sent to all of the screens
+  listed in <span class="arg">screens</span>.  If not given, empty or
+  <span class="code">*</span> then keystrokes are broadcast to all screens.
+  (However, due to a bug, keys cannot be sent to the server while on a
+  client screen.)
+</p><p>
+  <span class="arg">mode</span> can be <span class="code">off</span>
+  to turn broadcasting off, <span class="code">on</span> to turn it
+  on, or <span class="code">toggle</span> to toggle the current
+  state.  The default is <span class="code">toggle</span>.
+</p><p>
+  <span class="arg">screens</span> is either <span class="code">*</span>
+  to indicate all screens or a colon (:) separated list of screen
+  names.  (Note that the screen name must have already been encountered
+  in the configuration file so you'll probably want to put actions at
+  the bottom of the file.)
+</p><p>
+  Multiple <span class="code">keyboardBroadcast</span> actions may be
+  configured with different <span class="arg">screens</span>.  The most
+  recently performed action defines the screens to broadcast to.
+</p><p>
+</ul>
+</p><p>
+Examples:
+<ul>
+<li><span class="code">keystroke(alt+left) = switchInDirection(left)</span>
+</p><p>
+ Switches to the screen to left when the left arrow key is pressed
+ in combination with the Alt key.
+</p><p>
+<li><span class="code">keystroke(shift+control+alt+super) = switchToScreen(moe)</span>
+</p><p>
+ Switches to screen <span class="code">moe</span> when all of the
+ Shift, Control, Alt, and Super modifier keys are pressed together.
+</p><p>
+<li><span class="code">keystroke(alt+f1) = ; lockCursorToScreen(toggle)</span>
+</p><p>
+ Toggles locking the cursor to the screen when Alt+F1 is released.
+</p><p>
+<li><span class="code">mousebutton(2) = mouseDown(control+1) ; mouseUp(control+1)</span>
+</p><p>
+ While on a secondary screen clicking the middle mouse button will
+ become a Control click of the primary button.
+</p><p>
+<li><span class="code">keystroke(super+f1) = keystroke(super+L,larry), keystroke(control+alt+delete,curly)</span>
+</p><p>
+ Pressing Super+F1 (on any screen) will synthesize Super+L on screen
+ <span class="code">larry</span> and Control+Alt+Delete on screen
+ <span class="code">curly</span>.
+</p><p>
+</ul></span>
+</p><p>
+<a name="keynames">Valid key names</a> are:
+<span class="code"><ul>
+<li>AppMail
+<li>AppMedia
+<li>AppUser1
+<li>AppUser2
+<li>AudioDown
+<li>AudioMute
+<li>AudioNext
+<li>AudioPlay
+<li>AudioPrev
+<li>AudioStop
+<li>AudioUp
+<li>BackSpace
+<li>Begin
+<li>Break
+<li>Cancel
+<li>CapsLock
+<li>Clear
+<li>Delete
+<li>Down
+<li>Eject
+<li>End
+<li>Escape
+<li>Execute
+<li>F1
+<li>F2
+<li>F3
+<li>F4
+<li>F5
+<li>F6
+<li>F7
+<li>F8
+<li>F9
+<li>F10
+<li>F11
+<li>F12
+<li>F13
+<li>F14
+<li>F15
+<li>F16
+<li>F17
+<li>F18
+<li>F19
+<li>F20
+<li>F21
+<li>F22
+<li>F23
+<li>F24
+<li>F25
+<li>F26
+<li>F27
+<li>F28
+<li>F29
+<li>F30
+<li>F31
+<li>F32
+<li>F33
+<li>F34
+<li>F35
+<li>Find
+<li>Help
+<li>Home
+<li>Insert
+<li>KP_0
+<li>KP_1
+<li>KP_2
+<li>KP_3
+<li>KP_4
+<li>KP_5
+<li>KP_6
+<li>KP_7
+<li>KP_8
+<li>KP_9
+<li>KP_Add
+<li>KP_Begin
+<li>KP_Decimal
+<li>KP_Delete
+<li>KP_Divide
+<li>KP_Down
+<li>KP_End
+<li>KP_Enter
+<li>KP_Equal
+<li>KP_F1
+<li>KP_F2
+<li>KP_F3
+<li>KP_F4
+<li>KP_Home
+<li>KP_Insert
+<li>KP_Left
+<li>KP_Multiply
+<li>KP_PageDown
+<li>KP_PageUp
+<li>KP_Right
+<li>KP_Separator
+<li>KP_Space
+<li>KP_Subtract
+<li>KP_Tab
+<li>KP_Up
+<li>Left
+<li>LeftTab
+<li>Linefeed
+<li>Menu
+<li>NumLock
+<li>PageDown
+<li>PageUp
+<li>Pause
+<li>Print
+<li>Redo
+<li>Return
+<li>Right
+<li>ScrollLock
+<li>Select
+<li>Sleep
+<li>Space
+<li>SysReq
+<li>Tab
+<li>Undo
+<li>Up
+<li>WWWBack
+<li>WWWFavorites
+<li>WWWForward
+<li>WWWHome
+<li>WWWRefresh
+<li>WWWSearch
+<li>WWWStop
+<li>Space
+<li>Exclaim
+<li>DoubleQuote
+<li>Number
+<li>Dollar
+<li>Percent
+<li>Ampersand
+<li>Apostrophe
+<li>ParenthesisL
+<li>ParenthesisR
+<li>Asterisk
+<li>Plus
+<li>Comma
+<li>Minus
+<li>Period
+<li>Slash
+<li>Colon
+<li>Semicolon
+<li>Less
+<li>Equal
+<li>Greater
+<li>Question
+<li>At
+<li>BracketL
+<li>Backslash
+<li>BracketR
+<li>Circumflex
+<li>Underscore
+<li>Grave
+<li>BraceL
+<li>Bar
+<li>BraceR
+<li>Tilde
+</ul></span>
+Additionally, a name of the form <span class="code">\uXXXX</span> where
+<span class="code">XXXX</span> is a hexadecimal number is interpreted as
+a unicode character code.
+Key and modifier names are case-insensitive.  Keys that don't exist on
+the keyboard or in the default keyboard layout will not work.
+</p>
+</body>
+
+</html>
