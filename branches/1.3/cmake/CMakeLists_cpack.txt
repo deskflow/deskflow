@@ -16,19 +16,18 @@
 # List of CPack variables:
 # http://www.vtk.org/Wiki/CMake:CPackConfiguration
 
-# CPack files common to all platforms.
-SET(cpack_targets synergys synergyc)
+if(WIN32)
+	
+	install(TARGETS
+		synergys
+		synergyc
+		synrgyhk
+		COMPONENT core
+		DESTINATION bin)
 
-IF(WIN32)
-	# Windows has an extra GUI and DLL.
-	LIST(APPEND cpack_targets launcher synrgyhk)
-ENDIF(WIN32)
+	set(CPACK_COMPONENT_CORE_REQUIRED true)
+	set(CPACK_COMPONENT_CORE_DISPLAY_NAME "Server and Client")
 
-INSTALL(
-	TARGETS ${cpack_targets}
-	RUNTIME DESTINATION bin)
-
-if (WIN32)
 	set(VCREDIST_PATH "${VCREDIST_DIR}/${VCREDIST_FILE}")
 	
 	install(
@@ -37,7 +36,7 @@ if (WIN32)
 		COMPONENT vcredist
 		DESTINATION redist)
 	
-	set(CPACK_COMPONENT_VCREDIST_DISPLAY_NAME "Visual C++ 2008 Redistributable")
+	set(CPACK_COMPONENT_VCREDIST_DISPLAY_NAME "Visual C++ Redistributable")
 
 	set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
 	  ExecWait '\\\"$INSTDIR\\\\redist\\\\${VCREDIST_FILE}\\\" /install /q'")
@@ -88,10 +87,13 @@ SET(CPACK_RESOURCE_FILE_README "${cmake_dir}/Readme.txt")
 
 IF(WIN32)
 	SET(WIN32_ICON "${root_dir}/cmd/launcher/synergy.ico")
+	set(CPACK_NSIS_URL_INFO_ABOUT "http://synergy-foss.org")
+	set(CPACK_NSIS_HELP_LINK "http://synergy-foss.org/support")
 	SET(CPACK_NSIS_MUI_ICON ${WIN32_ICON})
 	SET(CPACK_NSIS_MUI_UNIICON ${WIN32_ICON})
-	SET(CPACK_NSIS_INSTALLED_ICON_NAME launcher)
+	SET(CPACK_NSIS_INSTALLED_ICON_NAME "bin/launcher.exe")
 	SET(CPACK_PACKAGE_INSTALL_DIRECTORY "Synergy")
+	set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "Synergy")	
 	SET(CPACK_PACKAGE_EXECUTABLES launcher;Synergy)
 ENDIF(WIN32)
 
