@@ -526,7 +526,7 @@ class InternalCommands:
 		src = self.dist_name(type)
 		dest = self.dist_name_rev(type)
 		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
-		ftp.run('bin/' + src, dest) 
+		ftp.run('bin/release/' + src, dest) 
 		print 'Done'
 	
 	def dist_name(self, type):
