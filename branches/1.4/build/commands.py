@@ -526,7 +526,12 @@ class InternalCommands:
 		src = self.dist_name(type)
 		dest = self.dist_name_rev(type)
 		print 'Uploading %s to FTP server %s...' % (dest, ftp.host)
-		ftp.run('bin/release/' + src, dest) 
+
+		srcDir = 'bin/'
+		if not generator.startswith('Visual Studio'):
+			srcDir += '/release'
+
+		ftp.run(srcDir + src, dest) 
 		print 'Done'
 	
 	def dist_name(self, type):
@@ -569,7 +574,11 @@ class InternalCommands:
 		
 		pattern = re.escape('synergy-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
 		
-		for filename in os.listdir(self.getBinDir('release')):
+		target = ''
+		if not generator.startswith('Visual Studio'):
+			target = 'release'
+
+		for filename in os.listdir(self.getBinDir(target)):
 			if re.search(pattern, filename):
 				return filename
 		
