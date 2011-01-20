@@ -9,8 +9,10 @@
 !define product "Synergy"
 !define productOld "Synergy+"
 !define packageName "synergy"
+!define packageNameOld "synergy-plus"
 !define platform "Windows"
 !define publisher "The Synergy Project"
+!define publisherOld "The Synergy+ Project"
 !define helpUrl "http://synergy-foss.org/support"
 !define vcRedistFile "vcredist_${arch}.exe"
 !define startMenuApp "qsynergy.exe"
@@ -38,41 +40,64 @@ OutFile "${packageName}-${version}-${platform}-${arch}.exe"
 InstallDir "${installDirVar}\${product}"
 InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
 
+; delete files we installed, and then dir if it's empty
+!macro DeleteFiles dir
+
+  Delete "${dir}\synergyc.exe"
+  Delete "${dir}\synergys.exe"
+  Delete "${dir}\launcher.exe"
+  Delete "${dir}\synrgyhk.dll"
+  Delete "${dir}\synrgyhk.lib"
+  Delete "${dir}\libgcc_s_dw2-1.dll"
+  Delete "${dir}\mingwm10.dll"
+  Delete "${dir}\qsynergy.exe"
+  Delete "${dir}\QtCore4.dll"
+  Delete "${dir}\QtGui4.dll"
+  Delete "${dir}\QtNetwork4.dll"
+  Delete "${dir}\Uninstall.exe"
+  Delete "${dir}\uninstall.exe"
+  RMDir "${dir}"
+
+!macroend
+
 Section
 
   SetShellVarContext all
   SetOutPath "$INSTDIR"
-  WriteUninstaller "$INSTDIR\${uninstall}"
 
-  ; kill all synergy processes (force kill gui)
+  ; force kill all synergy processes
   nsExec::Exec "taskkill /f /im qsynergy.exe"
-  nsExec::Exec "taskkill /im launcher.exe"
-  nsExec::Exec "taskkill /im synergys.exe"
-  nsExec::Exec "taskkill /im synergyc.exe"
+  nsExec::Exec "taskkill /f /im launcher.exe"
+  nsExec::Exec "taskkill /f /im synergys.exe"
+  nsExec::Exec "taskkill /f /im synergyc.exe"
 
-  ; delete dirs from older installers
-  RMDir /r "$INSTDIR\..\${productOld}"
-  RMDir /r "$INSTDIR\bin"
-  RMDir /r "$INSTDIR\redist"
-  
-  ; delete start menu dir from older installers
-  RMDir /r "$SMPROGRAMS\${product}"
-  RMDir /r "$SMPROGRAMS\${productOld}"
+  ; clean up legacy files that may exist (but leave user files)
+  !insertmacro DeleteFiles "$PROGRAMFILES32\${product}\bin"
+  !insertmacro DeleteFiles "$PROGRAMFILES64\${product}\bin"
+  !insertmacro DeleteFiles "$PROGRAMFILES32\${productOld}\bin"
+  !insertmacro DeleteFiles "$PROGRAMFILES64\${productOld}\bin"
+  !insertmacro DeleteFiles "$PROGRAMFILES32\${product}"
+  !insertmacro DeleteFiles "$PROGRAMFILES64\${product}"
+  !insertmacro DeleteFiles "$PROGRAMFILES32\${productOld}"
+  !insertmacro DeleteFiles "$PROGRAMFILES64\${productOld}"
+
+  ; clean up legacy start menu entries
+  RMDir /R "$SMPROGRAMS\${product}"
+  RMDir /R "$SMPROGRAMS\${productOld}"
 
   ; always delete any existing uninstall info
   DeleteRegKey HKLM "${controlPanelReg}\${product}"
+  DeleteRegKey HKLM "${controlPanelReg}\${productOld}"
+  DeleteRegKey HKLM "${controlPanelReg}\${publisher}"
+  DeleteRegKey HKLM "${controlPanelReg}\${publisherOld}"
+  DeleteRegKey HKLM "${controlPanelReg}\${packageNameOld}"
+  DeleteRegKey HKLM "SOFTWARE\${product}"
+  DeleteRegKey HKLM "SOFTWARE\${productOld}"
+  DeleteRegKey HKLM "SOFTWARE\${publisher}"
+  DeleteRegKey HKLM "SOFTWARE\${publisherOld}"
 
-  ; always remove 1.3 gui
-  Delete "$INSTDIR\launcher.exe"
-
-SectionEnd
-
-Section "Server and Client" core
-
-  ; client and server files
-  File "${binDir}\synergys.exe"
-  File "${binDir}\synergyc.exe"
-  File "${binDir}\synrgyhk.dll"
+  ; create uninstaller (used for control panel icon)
+  WriteUninstaller "$INSTDIR\${uninstall}"
 
   ; add new uninstall info
   WriteRegStr HKLM "${controlPanelReg}\${product}" "" $INSTDIR
@@ -82,6 +107,15 @@ Section "Server and Client" core
   WriteRegStr HKLM "${controlPanelReg}\${product}" "Publisher" "${publisher}"
   WriteRegStr HKLM "${controlPanelReg}\${product}" "UninstallString" "$INSTDIR\uninstall.exe"
   WriteRegStr HKLM "${controlPanelReg}\${product}" "URLInfoAbout" "${helpUrl}"
+
+SectionEnd
+
+Section "Server and Client" core
+
+  ; client and server files
+  File "${binDir}\synergys.exe"
+  File "${binDir}\synergyc.exe"
+  File "${binDir}\synrgyhk.dll"
 
 SectionEnd
 
@@ -114,11 +148,11 @@ Section Uninstall
 
   SetShellVarContext all
 
-  ; kill all synergy processes (force kill gui)
+  ; force kill all synergy processes
   nsExec::Exec "taskkill /f /im qsynergy.exe"
-  nsExec::Exec "taskkill /im launcher.exe"
-  nsExec::Exec "taskkill /im synergys.exe"
-  nsExec::Exec "taskkill /im synergyc.exe"
+  nsExec::Exec "taskkill /f /im launcher.exe"
+  nsExec::Exec "taskkill /f /im synergys.exe"
+  nsExec::Exec "taskkill /f /im synergyc.exe"
 
   ; delete start menu shortcut
   Delete "$SMPROGRAMS\${product}.lnk"
@@ -127,17 +161,8 @@ Section Uninstall
   DeleteRegKey HKLM "SOFTWARE\${product}"
   DeleteRegKey HKLM "${controlPanelReg}\${product}"
 
-  ; delete the files that we put there
-  Delete "$INSTDIR\synergyc.exe"
-  Delete "$INSTDIR\synergys.exe"
-  Delete "$INSTDIR\synrgyhk.dll"
-  Delete "$INSTDIR\synrgyhk.lib"
-  Delete "$INSTDIR\libgcc_s_dw2-1.dll"
-  Delete "$INSTDIR\mingwm10.dll"
-  Delete "$INSTDIR\qsynergy.exe"
-  Delete "$INSTDIR\QtCore4.dll"
-  Delete "$INSTDIR\QtGui4.dll"
-  Delete "$INSTDIR\QtNetwork4.dll"
+  ; delete only the files that we put there
+  !insertmacro DeleteFiles $INSTDIR
   Delete "$INSTDIR\${uninstall}"
 
   ; delete (only if empty, so we don't delete user files)
