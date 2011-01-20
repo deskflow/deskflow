@@ -54,11 +54,15 @@ INCLUDE(${cmake_dir}/CMakeLists_synergyc.txt)
 INCLUDE(${cmake_dir}/CMakeLists_synergys.txt)
 INCLUDE(${cmake_dir}/CMakeLists_launcher.txt)
 
-# Setup the CPack config.
-INCLUDE(${cmake_dir}/CMakeLists_cpack.txt)
+if (CONF_CPACK)
+   # Setup the CPack config.
+   INCLUDE(${cmake_dir}/CMakeLists_cpack.txt)
+endif()
 
-# Setup doxygen
-INCLUDE(${cmake_dir}/CMakeLists_doxygen.txt)
+if (CONF_DOXYGEN)
+   # Setup doxygen
+   INCLUDE(${cmake_dir}/CMakeLists_doxygen.txt)
+endif()
 
 IF(WIN32)
 	# add /analyze in order to unconver potential bugs in the source code
