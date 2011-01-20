@@ -604,9 +604,9 @@ class InternalCommands:
 		
 		pattern = re.escape('synergy-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
 		
+		# only use release dir if not windows
 		target = ''
-		generator = self.get_generator_from_config()
-		if not generator.startswith('Visual Studio'):
+		if type != 'win':
 			target = 'release'
 
 		for filename in os.listdir(self.getBinDir(target)):
