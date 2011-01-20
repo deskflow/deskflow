@@ -444,34 +444,9 @@ class InternalCommands:
 		# Package is supported by default.
 		package_unsupported = False
 		unixTarget = 'release'
-		confArgs = '-DCONF_CPACK:BOOL=TRUE'
 		
-		generator = self.get_generator_from_config()
-		if generator.startswith('Visual Studio'):
-
-			if vcRedistDir =='':
-				raise Exception(
-					'VC++ redist dir path not specified (--vcredist-dir).')
-
-			# forward slashes are easier in cmake
-			vcRedistDir = vcRedistDir.replace('\\', '/')
-
-			vcRedistArch = 'x86'
-			if generator.endswith('Win64'):
-				vcRedistArch = 'x64'
-			
-			vcRedistFile = 'vcredist_' + vcRedistArch + '.exe'
-
-			confArgs += (' -DVCREDIST_DIR:STRING=' + vcRedistDir +
-						 ' -DVCREDIST_FILE:STRING=' + vcRedistFile)
-			
-			if (qtDir != ''):
-				# forward slashes are easier in cmake
-				confArgs += ' -DQT_DIR:STRING=' + qtDir.replace('\\', '/')
-
-			self.configure_internal('', confArgs)
-		else:
-			self.configure_internal(unixTarget, confArgs)
+		if type != 'win':
+			self.configure_internal(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
 
 		if type == None:
 			self.dist_usage()
@@ -497,7 +472,7 @@ class InternalCommands:
 			
 		elif type == 'win':
 			if sys.platform == 'win32':
-				self.dist_run('cpack -G NSIS')
+				self.distNsis(vcRedistDir, qtDir)
 			else:
 				package_unsupported = True
 			
@@ -515,6 +490,60 @@ class InternalCommands:
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
 		
+
+	def distNsis(self, vcRedistDir, qtDir):
+		
+		if vcRedistDir == '':
+			raise Exception(
+				'VC++ redist dir path not specified (--vcredist-dir).')
+
+		if qtDir == '':
+			raise Exception(
+				'QT SDK dir path not specified (--qt-dir).')
+
+		generator = self.get_generator_from_config()
+
+		arch = 'x86'
+		installDirVar = '$PROGRAMFILES32'
+
+		if generator.endswith('Win64'):
+			arch = 'x64'
+			installDirVar = '$PROGRAMFILES64'			
+		
+		templateFile = open('cmake\Installer.nsi.in')
+		template = templateFile.read()
+
+		template = template.replace('${in:version}', self.getVersionFromCmake())
+		template = template.replace('${in:arch}', arch)
+		template = template.replace('${in:vcRedistDir}', vcRedistDir)
+		template = template.replace('${in:qtDir}', qtDir)
+		template = template.replace('${in:installDirVar}', installDirVar)
+
+		nsiPath = 'bin\Installer.nsi'
+		nsiFile = open(nsiPath, 'w')
+		nsiFile.write(template)
+		nsiFile.close()
+
+		command = 'makensis ' + nsiPath
+		print 'NSIS command: ' + command
+		err = os.system(command)
+		if err != 0:
+			raise Exception('Package failed: ' + str(err))
+
+	def getVersionFromCmake(self):
+		cmakeFile = open('CMakeLists.txt')
+		cmake = cmakeFile.read()
+
+		majorRe = re.search('VERSION_MAJOR (\d+)', cmake)
+		major = majorRe.group(1)
+
+		minorRe = re.search('VERSION_MINOR (\d+)', cmake)
+		minor = minorRe.group(1)
+
+		revRe = re.search('VERSION_REV (\d+)', cmake)
+		rev = revRe.group(1)
+
+		return major + '.' + minor + '.' + rev
 
 	def distftp(self, type, ftp):
 		if not type:
