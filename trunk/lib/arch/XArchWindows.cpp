@@ -89,7 +89,7 @@ XArchEvalWinsock::eval() const throw()
 		/* 10048 */{WSAEADDRINUSE,		"The specified address is already in use"},
 		/* 10049 */{WSAEADDRNOTAVAIL,	"The specified address is not available from the local machine"},
 		/* 10050 */{WSAENETDOWN,		"The Windows Sockets implementation has detected that the network subsystem has failed"},
-		/* 10051 */{WSAENETUNREACH,		"The network can't be reached from this hos at this time"},
+		/* 10051 */{WSAENETUNREACH,		"The network can't be reached from this host at this time"},
 		/* 10052 */{WSAENETRESET,		"The connection must be reset because the Windows Sockets implementation dropped it"},
 		/* 10053 */{WSAECONNABORTED,	"The virtual circuit was aborted due to timeout or other failure"},
 		/* 10054 */{WSAECONNRESET,		"The virtual circuit was reset by the remote side"},
