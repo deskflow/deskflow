@@ -169,6 +169,14 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	// enable primary client
 	m_primaryClient->enable();
 	m_inputFilter->setPrimaryClient(m_primaryClient);
+
+	// Determine if scroll lock is already set. If so, lock the cursor to the primary screen
+	int keyValue = m_primaryClient->getToggleMask ();
+	if (m_primaryClient->getToggleMask () & KeyModifierScrollLock) {
+		LOG((CLOG_DEBUG "scroll lock on initially. locked to screen"));
+		m_lockedToScreen = true;
+	}
+
 }
 
 CServer::~CServer()
