@@ -31,6 +31,7 @@
 #include "CLog.h"
 #include "TMethodEventJob.h"
 #include "CArch.h"
+#include "CKeyState.h"
 #include <cstring>
 #include <cstdlib>
 
@@ -65,6 +66,9 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	m_switchTwoTapEngaged(false),
 	m_switchTwoTapArmed(false),
 	m_switchTwoTapZone(3),
+	m_switchNeedsShift(false),
+	m_switchNeedsControl(false),
+	m_switchNeedsAlt(false),
 	m_relativeMoves(false),
 	m_keyboardBroadcasting(false),
 	m_lockedToScreen(false)
@@ -873,6 +877,19 @@ CServer::isSwitchOkay(CBaseClientProxy* newScreen,
 		stopSwitch();
 	}
 
+	// check for optional needed modifiers
+	KeyModifierMask mods = this->m_primaryClient->getToggleMask( );
+
+	if (!preventSwitch && (
+			(this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||
+        	(this->m_switchNeedsControl && ((mods & KeyModifierControl) != KeyModifierControl)) ||
+			(this->m_switchNeedsAlt && ((mods & KeyModifierAlt) != KeyModifierAlt))
+		)) {
+		LOG((CLOG_DEBUG1 "need modifiers to switch"));
+		preventSwitch = true;
+		stopSwitch();
+	} 
+	
 	return !preventSwitch;
 }
 
@@ -1115,6 +1132,10 @@ CServer::processOptions()
 		return;
 	}
 
+	m_switchNeedsShift = false;		// it seems if i don't add these
+	m_switchNeedsControl = false;	// lines, the 'reload config' option
+	m_switchNeedsAlt = false;		// doesnt' work correct.
+
 	bool newRelativeMoves = m_relativeMoves;
 	for (CConfig::CScreenOptions::const_iterator index = options->begin();
 								index != options->end(); ++index) {
@@ -1134,11 +1155,19 @@ CServer::processOptions()
 			}
 			stopSwitchTwoTap();
 		}
+		else if (id == kOptionScreenSwitchNeedsControl) {
+			m_switchNeedsControl = (value != 0);
+		}
+		else if (id == kOptionScreenSwitchNeedsShift) {
+			m_switchNeedsShift = (value != 0);
+		}
+		else if (id == kOptionScreenSwitchNeedsAlt) {
+			m_switchNeedsAlt = (value != 0);
+		}
 		else if (id == kOptionRelativeMouseMoves) {
 			newRelativeMoves = (value != 0);
 		}
 	}
-
 	if (m_relativeMoves && !newRelativeMoves) {
 		stopRelativeMoves();
 	}

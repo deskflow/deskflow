@@ -73,6 +73,12 @@ CGlobalOptions::init(HWND hwnd)
 	setItemChecked(child, false);
 	child = getItem(hwnd, IDC_GLOBAL_TWO_TAP_TIME);
 	setWindowText(child, buffer);
+	child = getItem(hwnd, IDC_GLOBAL_NEEDS_SHIFT);
+	setItemChecked(child, false);
+	child = getItem(hwnd, IDC_GLOBAL_NEEDS_CONTROL);
+	setItemChecked(child, false);
+	child = getItem(hwnd, IDC_GLOBAL_NEEDS_ALT);
+	setItemChecked(child, false);
 	sprintf(buffer, "%d", m_heartbeatTime);
 	child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_CHECK);
 	setItemChecked(child, false);
@@ -109,6 +115,18 @@ CGlobalOptions::init(HWND hwnd)
 					child = getItem(hwnd, IDC_GLOBAL_TWO_TAP_TIME);
 					setWindowText(child, buffer);
 				}
+			}
+			else if (id == kOptionScreenSwitchNeedsShift) {
+				child = getItem(hwnd, IDC_GLOBAL_NEEDS_SHIFT);
+				setItemChecked(child, (value != 0));
+			}
+			else if (id == kOptionScreenSwitchNeedsControl) {
+				child = getItem(hwnd, IDC_GLOBAL_NEEDS_CONTROL);
+				setItemChecked(child, (value != 0));
+			}
+			else if (id == kOptionScreenSwitchNeedsAlt) {
+				child = getItem(hwnd, IDC_GLOBAL_NEEDS_ALT);
+				setItemChecked(child, (value != 0));
 			}
 			else if (id == kOptionHeartbeat) {
 				if (value > 0) {
@@ -197,6 +215,9 @@ CGlobalOptions::save(HWND hwnd)
 	m_config->removeOption("", kOptionScreenSaverSync);
 	m_config->removeOption("", kOptionRelativeMouseMoves);
 	m_config->removeOption("", kOptionWin32KeepForeground);
+	m_config->removeOption("", kOptionScreenSwitchNeedsAlt);
+	m_config->removeOption("", kOptionScreenSwitchNeedsShift);
+	m_config->removeOption("", kOptionScreenSwitchNeedsControl);
 
 	// add requested options
 	child = getItem(hwnd, IDC_GLOBAL_DELAY_CHECK);
@@ -206,6 +227,18 @@ CGlobalOptions::save(HWND hwnd)
 	child = getItem(hwnd, IDC_GLOBAL_TWO_TAP_CHECK);
 	if (isItemChecked(child)) {
 		m_config->addOption("", kOptionScreenSwitchTwoTap, newTwoTapTime);
+	}
+	child = getItem(hwnd, IDC_GLOBAL_NEEDS_SHIFT);
+	if (isItemChecked(child)) {
+		m_config->addOption("", kOptionScreenSwitchNeedsShift, 1);
+	}
+	child = getItem(hwnd, IDC_GLOBAL_NEEDS_CONTROL);
+	if (isItemChecked(child)) {
+		m_config->addOption("", kOptionScreenSwitchNeedsControl, 1);
+	}
+	child = getItem(hwnd, IDC_GLOBAL_NEEDS_ALT);
+	if (isItemChecked(child)) {
+		m_config->addOption("", kOptionScreenSwitchNeedsAlt, 1);
 	}
 	child = getItem(hwnd, IDC_GLOBAL_HEARTBEAT_CHECK);
 	if (isItemChecked(child)) {
