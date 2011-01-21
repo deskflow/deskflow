@@ -174,7 +174,7 @@ BEGIN
                     IDC_STATIC,7,43,181,17
 END
 
-IDD_GLOBAL_OPTIONS DIALOG DISCARDABLE  0, 0, 207, 290
+IDD_GLOBAL_OPTIONS DIALOG DISCARDABLE  0, 0, 207, 354
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Options"
 FONT 8, "MS Sans Serif"
@@ -195,26 +195,35 @@ BEGIN
     EDITTEXT        IDC_GLOBAL_TWO_TAP_TIME,112,98,45,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
     LTEXT           "ms",IDC_STATIC,159,100,10,8
-    LTEXT           "Synergy can periodically check that clients are still alive and connected.  Use this only if synergy doesn't detect when clients disconnect.",
-                    IDC_STATIC,7,122,193,24
+    LTEXT           "Synergy can be restricted to switch only if certain modifiers are pressed.",
+                    IDC_STATIC,7,119,193,19
     CONTROL         "Check clients every",IDC_GLOBAL_HEARTBEAT_CHECK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,153,78,10
-    EDITTEXT        IDC_GLOBAL_HEARTBEAT_TIME,112,152,45,12,ES_AUTOHSCROLL | 
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,220,78,10
+    EDITTEXT        IDC_GLOBAL_HEARTBEAT_TIME,112,219,45,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
-    LTEXT           "ms",IDC_STATIC,159,154,10,8
+    LTEXT           "ms",IDC_STATIC,159,221,10,8
     LTEXT           "Synergy can synchronize screen savers across all screens.",
-                    IDC_STATIC,7,176,193,8
+                    IDC_STATIC,7,243,193,8
     CONTROL         "Synchronize screen savers",IDC_GLOBAL_SCREENSAVER_SYNC,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,192,101,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,259,101,10
     LTEXT           "Relative mouse moves on secondary screens.",IDC_STATIC,
-                    7,213,193,8
+                    7,280,193,8
     CONTROL         "Use relative mouse moves",IDC_GLOBAL_RELATIVE_MOVES,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,229,99,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,296,99,10
     CONTROL         "Don't take foreground window on Windows servers",
                     IDC_GLOBAL_LEAVE_FOREGROUND,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,250,177,10
-    DEFPUSHBUTTON   "OK",IDOK,94,269,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,150,269,50,14
+                    WS_TABSTOP,7,317,177,10
+    DEFPUSHBUTTON   "OK",IDOK,94,333,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,150,333,50,14
+    LTEXT           "Synergy can periodically check that clients are still alive and connected.  Use this only if synergy doesn't detect when clients disconnect.",
+                    IDC_STATIC,7,189,193,24
+    CONTROL         "Only switch when shift pressed.",IDC_GLOBAL_NEEDS_SHIFT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,143,115,10
+    CONTROL         "Only switch when control pressed.",
+                    IDC_GLOBAL_NEEDS_CONTROL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,155,123,10
+    CONTROL         "Only switch when alt pressed.",IDC_GLOBAL_NEEDS_ALT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,167,109,10
 END
 
 IDD_ADVANCED_OPTIONS DIALOG DISCARDABLE  0, 0, 230, 186
@@ -445,7 +454,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 200
         TOPMARGIN, 7
-        BOTTOMMARGIN, 283
+        BOTTOMMARGIN, 347
     END
 
     IDD_ADVANCED_OPTIONS, DIALOG

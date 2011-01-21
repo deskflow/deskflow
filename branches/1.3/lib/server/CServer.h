@@ -444,6 +444,11 @@ private:
 	bool				m_switchTwoTapArmed;
 	SInt32				m_switchTwoTapZone;
 
+	// modifiers needed before switching
+	bool				m_switchNeedsShift;
+	bool				m_switchNeedsControl;
+	bool				m_switchNeedsAlt;
+	
 	// relative mouse move option
 	bool				m_relativeMoves;
 
