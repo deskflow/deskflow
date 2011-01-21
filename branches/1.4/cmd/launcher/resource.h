@@ -117,7 +117,10 @@
 #define IDC_GLOBAL_RELATIVE_MOVES       1048
 #define IDC_ADVANCED_DEFAULTS           1049
 #define IDC_GLOBAL_LEAVE_FOREGROUND     1049
+#define IDC_GLOBAL_NEEDS_SHIFT          1050
+#define IDC_GLOBAL_NEEDS_CONTROL        1051
 #define IDC_ADD_DC_SIZE                 1052
+#define IDC_GLOBAL_NEEDS_ALT            1052
 #define IDC_ADD_DC_TOP_LEFT             1053
 #define IDC_ADD_DC_TOP_RIGHT            1054
 #define IDC_ADD_DC_BOTTOM_LEFT          1055
