@@ -164,7 +164,7 @@ class InternalCommands:
 			# default is default for non-vs
 			if target == '':
 				target = 'debug'
-			cmake_args = ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
+			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 		
 		# if not visual studio, use parent dir
 		sourceDir = self.source_dir

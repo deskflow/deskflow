@@ -46,7 +46,7 @@ build_options_long = ['debug', 'release']
 cmd_opt_dict = {
 	'about'     : ['', []],
 	'setup'     : ['', []],
-	'configure' : ['', []],
+	'configure' : [build_options, build_options_long],
 	'build'     : [build_options, build_options_long],
 	'clean'     : [build_options, build_options_long],
 	'update'    : ['', []],
