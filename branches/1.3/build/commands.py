@@ -42,6 +42,7 @@ class InternalCommands:
 	config_filename = '%s.cfg' % this_cmd
 	qtpro_filename = 'qsynergy.pro'
 	doxygen_filename = 'doxygen.cfg'
+	macPackageName = 'MacOSX-Universal'
 
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
 
@@ -478,7 +479,27 @@ class InternalCommands:
 			
 		elif type == 'mac':
 			if sys.platform == 'darwin':
-				self.dist_run('cpack -G PackageMaker', unixTarget)
+				# nb: disabling package maker, as it doesn't
+				# work too well (screws with permissions).
+				#self.dist_run('cpack -G PackageMaker', unixTarget)
+				
+				# nb: temporary fix (just distribute a zip)
+				bin = self.getBinDir(unixTarget)
+				version = self.getVersionFromCmake()
+				zipFile = (self.project + '-' +
+					   version + '-' +
+					   self.macPackageName + '.zip')
+
+				zipCmd = ('zip ' + zipFile + ' ' +
+					  'synergyc synergys');
+				
+				print 'Creating package: ' + zipCmd
+				self.try_chdir(self.getBinDir(unixTarget))
+				err = os.system(zipCmd)
+				self.restore_chdir()
+				if err != 0:
+					raise Exception(
+						'Zip failed, code: ' + err)
 			else:
 				package_unsupported = True
 			
@@ -596,13 +617,14 @@ class InternalCommands:
 				platform = 'Windows-x86'
 			
 		elif type == 'mac':
-			ext = 'dmg'
-			platform = 'MacOSX-Universal'
+			#ext = 'dmg'
+			ext = 'zip'
+			platform = self.macPackageName
 		
 		if not platform:
 			raise Exception('Unable to detect package platform.')
 		
-		pattern = re.escape('synergy-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
+		pattern = re.escape(self.project + '-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
 		
 		# only use release dir if not windows
 		target = ''
