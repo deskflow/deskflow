@@ -15,7 +15,10 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, subprocess, shutil, re, ftputil
+import sys, os, ConfigParser, shutil, re, ftputil
+
+if sys.version_info >= (2, 4):
+	import subprocess
 
 class InternalCommands:
 	
@@ -59,40 +62,21 @@ class InternalCommands:
 	enable_make_gui = False
 
 	win32_generators = {
-		'1' : 'Visual Studio 10',
-		'2' : 'Visual Studio 10 Win64',
-		'3' : 'Visual Studio 9 2008',
-		'4' : 'Visual Studio 9 2008 Win64',
-		'5' : 'Visual Studio 8 2005',
-		'6' : 'Visual Studio 8 2005 Win64',
-#		'10' : 'CodeBlocks - MinGW Makefiles',
-#		'11' : 'CodeBlocks - Unix Makefiles',
-#		'12': 'Eclipse CDT4 - MinGW Makefiles',
-#		'13': 'Eclipse CDT4 - NMake Makefiles',
-#		'14': 'Eclipse CDT4 - Unix Makefiles',
-#		'15': 'MinGW Makefiles',
-#		'16': 'NMake Makefiles',
-#		'17': 'Unix Makefiles',
-#		'18': 'Borland Makefiles',
-#		'19': 'MSYS Makefiles',
-#		'20': 'Watcom WMake',
+		1 : 'Visual Studio 10',
+		2 : 'Visual Studio 10 Win64',
+		3 : 'Visual Studio 9 2008',
+		4 : 'Visual Studio 9 2008 Win64',
+		5 : 'Visual Studio 8 2005',
+		6 : 'Visual Studio 8 2005 Win64',
 	}
 
 	unix_generators = {
-		'1' : 'Unix Makefiles',
-#		'2' : 'CodeBlocks - Unix Makefiles',
-#		'3' : 'Eclipse CDT4 - Unix Makefiles',
-#		'4' : 'KDevelop3',
-#		'5' : 'KDevelop3 - Unix Makefiles',
+		1 : 'Unix Makefiles',
 	}
 
 	darwin_generators = {
-		'1' : 'Xcode',
-		'2' : 'Unix Makefiles',
-#		'3' : 'CodeBlocks - Unix Makefiles',
-#		'4' : 'Eclipse CDT4 - Unix Makefiles',
-#		'5' : 'KDevelop3',
-#		'6' : 'KDevelop3 - Unix Makefiles',
+		1 : 'Unix Makefiles',
+		2 : 'Xcode',
 	}
 
 	def getBinDir(self, target=''):
@@ -746,8 +730,7 @@ class InternalCommands:
 
 	def get_generator_from_config(self):
 		if self.generator_id:
-			generators = self.get_generators()
-			return generators[self.generator_id]
+			return self.getGenerator()
 		else:
 			config = ConfigParser.RawConfigParser()
 			config.read(self.config_filepath())
@@ -796,28 +779,20 @@ class InternalCommands:
 			raise Exception('Unsupported platform: ' + sys.platform)
 			
 	def get_generator_from_prompt(self):
-		
+		return self.getGenerator()
+
+	def getGenerator(self):
 		generators = self.get_generators()
+		if len(generators.keys()) == 1:
+			return generators[generators.keys()[0]]
 		
 		# if user has specified a generator as an argument
 		if self.generator_id:
-			return generators[self.generator_id]
-		
-		# if we can accept user input
-		elif not self.no_prompts:
-			generator_options = ''
-			generators_sorted = sorted(generators.iteritems(), key=lambda t: int(t[0]))
-			
-			for id, generator in generators_sorted:
-				generator_options += '\n  ' + id + ': ' + generator
-
-			print ('\nChoose a CMake generator:%s'
-				) % generator_options
-
-			return self.setup_generator_prompt(generators)
-			
+			return generators[int(self.generator_id)]
 		else:
-			raise Exception('No generator specified, and cannot prompt user.')
+			raise Exception(
+				'Generator not specified, use -g arg ' + 
+				'(use `hm genlist` for a list of generators).')
 
 	def setup_generator_prompt(self, generators):
 
@@ -936,6 +911,13 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('Reformat failed with error code: ' + str(err))
 
+	def printGeneratorList(self):
+		generators = self.get_generators()
+		keys = generators.keys()
+		keys.sort()
+		for k in keys:
+			print str(k) + ': ' + generators[k]
+
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
 # don't need to do argument handling all over the place in the internal
@@ -1051,3 +1033,6 @@ class CommandHandler:
 	
 	def open(self):
 		self.ic.open()
+
+	def genlist(self):
+		self.ic.printGeneratorList()

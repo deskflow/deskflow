@@ -33,6 +33,10 @@ import sys, os
 from build import commands
 from getopt import gnu_getopt
 
+# minimum required version
+requiredMajor = 2
+requiredMinor = 3
+
 # options used by all commands
 global_options = 'g:v'
 global_options_long = ['no-prompts', 'generator=', 'verbose', 'make-gui']
@@ -59,6 +63,7 @@ cmd_opt_dict = {
 	'revision'  : ['', []],
 	'reformat'  : ['', []],
 	'open'      : ['', []],
+	'genlist'   : ['', []]
 }
 
 # aliases to valid commands
@@ -181,15 +186,17 @@ def run_cmd(cmd, argv = []):
 		if not verbose:
 			# print friendly error for users
 			sys.stderr.write('Error: ' + sys.exc_info()[1].__str__() + '\n')
-			exit(1)
+			sys.exit(1)
 		else:
 			# if user wants to be verbose let python do it's thing
 			raise
 
 def main(argv):
 
-	if sys.version_info < (2, 4):
-		print 'Python version must be at least: 2.4'
+	if sys.version_info < (requiredMajor, requiredMinor):
+		print ('Python version must be at least ' +
+			   str(requiredMajor) + '.' + str(requiredMinor) + ', but is ' +
+			   str(sys.version_info[0]) + '.' + str(sys.version_info[1]))
 		sys.exit(1)
 
 	try:
