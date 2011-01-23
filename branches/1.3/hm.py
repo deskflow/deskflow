@@ -30,7 +30,7 @@
 # This will create an in-source UNIX Makefile.
 
 import sys, os
-from build import commands
+from build import toolchain
 from getopt import gnu_getopt
 
 # minimum required version
@@ -176,7 +176,7 @@ def run_cmd(cmd, argv = []):
 		
 		# pass args and optarg data to command handler, which figures out
 		# how to handle the arguments
-		handler = commands.CommandHandler(argv, opts, args, verbose)
+		handler = toolchain.CommandHandler(argv, opts, args, verbose)
 		
 		# use reflection to get the function pointer
 		cmd_func = getattr(handler, cmd)
