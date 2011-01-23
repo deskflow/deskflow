@@ -918,15 +918,12 @@ class InternalCommands:
 			print str(k) + ': ' + generators[k]
 
 	def getMacPackageName(self):
-		import commands
-		versions = cmds.getoutput('/usr/bin/sw_vers')
-		result = re.search('ProductVersion: (\d+)\.(d+\)')
-		if not result:
-			raise Exception(
-				'Could not find Mac OS X version in sw_vers output.')
+		import platform
+		v, _, _ = platform.mac_ver()
+		v = float('.'.join(v.split('.')[:2]))
 		
 		# version is major and minor with no dots (e.g. 106)
-		return 'MacOSX' + result.groups(1) + result.groups(2) + '-Universal';
+		return 'MacOSX' + str(v[0]) + str(v[1]) + '-Universal';
 
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
