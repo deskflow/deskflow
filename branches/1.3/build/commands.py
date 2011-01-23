@@ -45,7 +45,6 @@ class InternalCommands:
 	config_filename = '%s.cfg' % this_cmd
 	qtpro_filename = 'qsynergy.pro'
 	doxygen_filename = 'doxygen.cfg'
-	macPackageName = 'MacOSX-Universal'
 
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
 
@@ -472,7 +471,7 @@ class InternalCommands:
 				version = self.getVersionFromCmake()
 				zipFile = (self.project + '-' +
 					   version + '-' +
-					   self.macPackageName + '.zip')
+					   self.getMacPackageName() + '.zip')
 
 				zipCmd = ('zip ' + zipFile + ' ' +
 					  'synergyc synergys');
@@ -917,6 +916,14 @@ class InternalCommands:
 		keys.sort()
 		for k in keys:
 			print str(k) + ': ' + generators[k]
+
+	def getMacPackageName(self):
+		import platform
+		v, _, _ = platform.mac_ver()
+		v = float('.'.join(v.split('.')[:2]))
+		
+		# version is major and minor with no dots (e.g. 106)
+		return 'MacOSX' + str(v[0]) + str(v[1]) + '-Universal';
 
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
