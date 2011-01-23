@@ -15,7 +15,10 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, subprocess, shutil, re, ftputil
+import sys, os, ConfigParser, shutil, re, ftputil
+
+if sys.version_info >= (2, 4):
+	import subprocess
 
 class InternalCommands:
 	
@@ -42,7 +45,11 @@ class InternalCommands:
 	config_filename = '%s.cfg' % this_cmd
 	qtpro_filename = 'qsynergy.pro'
 	doxygen_filename = 'doxygen.cfg'
-	macPackageName = 'MacOSX-Universal'
+	
+	macZipFiles = [
+		'synergyc', 'synergys',
+		'../../doc/synergy.conf.example',
+		'../../doc/MacReadme.txt']
 
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
 
@@ -59,40 +66,21 @@ class InternalCommands:
 	enable_make_gui = False
 
 	win32_generators = {
-		'1' : 'Visual Studio 10',
-		'2' : 'Visual Studio 10 Win64',
-		'3' : 'Visual Studio 9 2008',
-		'4' : 'Visual Studio 9 2008 Win64',
-		'5' : 'Visual Studio 8 2005',
-		'6' : 'Visual Studio 8 2005 Win64',
-#		'10' : 'CodeBlocks - MinGW Makefiles',
-#		'11' : 'CodeBlocks - Unix Makefiles',
-#		'12': 'Eclipse CDT4 - MinGW Makefiles',
-#		'13': 'Eclipse CDT4 - NMake Makefiles',
-#		'14': 'Eclipse CDT4 - Unix Makefiles',
-#		'15': 'MinGW Makefiles',
-#		'16': 'NMake Makefiles',
-#		'17': 'Unix Makefiles',
-#		'18': 'Borland Makefiles',
-#		'19': 'MSYS Makefiles',
-#		'20': 'Watcom WMake',
+		1 : 'Visual Studio 10',
+		2 : 'Visual Studio 10 Win64',
+		3 : 'Visual Studio 9 2008',
+		4 : 'Visual Studio 9 2008 Win64',
+		5 : 'Visual Studio 8 2005',
+		6 : 'Visual Studio 8 2005 Win64',
 	}
 
 	unix_generators = {
-		'1' : 'Unix Makefiles',
-#		'2' : 'CodeBlocks - Unix Makefiles',
-#		'3' : 'Eclipse CDT4 - Unix Makefiles',
-#		'4' : 'KDevelop3',
-#		'5' : 'KDevelop3 - Unix Makefiles',
+		1 : 'Unix Makefiles',
 	}
 
 	darwin_generators = {
-		'1' : 'Xcode',
-		'2' : 'Unix Makefiles',
-#		'3' : 'CodeBlocks - Unix Makefiles',
-#		'4' : 'Eclipse CDT4 - Unix Makefiles',
-#		'5' : 'KDevelop3',
-#		'6' : 'KDevelop3 - Unix Makefiles',
+		1 : 'Unix Makefiles',
+		2 : 'Xcode',
 	}
 
 	def getBinDir(self, target=''):
@@ -264,7 +252,7 @@ class InternalCommands:
 		# TODO
 		pass
 
-	def build(self, targets=[]):
+	def build(self, targets=[], skipConfig=False):
 
 		# if no mode specified, default to debug
 		if len(targets) == 0:
@@ -277,7 +265,7 @@ class InternalCommands:
 		if generator.startswith('Visual Studio'):
 			
 			# only need to configure once for vs
-			if not self.has_conf_run():
+			if not self.has_conf_run() and not skipConfig:
 				self.configure_internal()
 		
 			for target in targets:
@@ -297,7 +285,7 @@ class InternalCommands:
 
 			for target in targets:
 					
-				if not self.has_conf_run(target):
+				if not self.has_conf_run(target) and not skipConfig:
 					self.configure_internal(target)
 					
 				self.try_chdir(self.getBinDir(target))
@@ -449,6 +437,9 @@ class InternalCommands:
 		if type != 'win':
 			self.configure_internal(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
 
+		# make sure we have a release build to package
+		self.build(['release'], skipConfig=True)
+
 		if type == None:
 			self.dist_usage()
 			return
@@ -479,27 +470,7 @@ class InternalCommands:
 			
 		elif type == 'mac':
 			if sys.platform == 'darwin':
-				# nb: disabling package maker, as it doesn't
-				# work too well (screws with permissions).
-				#self.dist_run('cpack -G PackageMaker', unixTarget)
-				
-				# nb: temporary fix (just distribute a zip)
-				bin = self.getBinDir(unixTarget)
-				version = self.getVersionFromCmake()
-				zipFile = (self.project + '-' +
-					   version + '-' +
-					   self.macPackageName + '.zip')
-
-				zipCmd = ('zip ' + zipFile + ' ' +
-					  'synergyc synergys');
-				
-				print 'Creating package: ' + zipCmd
-				self.try_chdir(self.getBinDir(unixTarget))
-				err = os.system(zipCmd)
-				self.restore_chdir()
-				if err != 0:
-					raise Exception(
-						'Zip failed, code: ' + err)
+				self.distMac(unixTarget)
 			else:
 				package_unsupported = True
 			
@@ -511,6 +482,34 @@ class InternalCommands:
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
 		
+
+	def distMac(self, unixTarget):
+		# nb: disabling package maker, as it doesn't
+		# work too well (screws with permissions and causes boot to fail).
+		#self.dist_run('cpack -G PackageMaker', unixTarget)
+
+		version = self.getVersionFromCmake()
+		zipFile = (self.project + '-' + version + '-' +
+				   self.getMacPackageName() + '.zip')
+
+		# nb: temporary fix (just distribute a zip)
+		bin = self.getBinDir(unixTarget)
+		self.try_chdir(bin)
+
+		try:
+			for f in self.macZipFiles:
+				if not os.path.exists(f):
+					raise Exception('File does not exist: ' + f)
+
+			zipCmd = ('zip ' + zipFile + ' ' + ' '.join(self.macZipFiles));
+			
+			print 'Creating package: ' + zipCmd
+			err = os.system(zipCmd)
+			if err != 0:
+				raise Exception('Zip failed, code: ' + err)
+			
+		finally:
+			self.restore_chdir()
 
 	def distNsis(self, vcRedistDir, qtDir):
 		
@@ -746,8 +745,7 @@ class InternalCommands:
 
 	def get_generator_from_config(self):
 		if self.generator_id:
-			generators = self.get_generators()
-			return generators[self.generator_id]
+			return self.getGenerator()
 		else:
 			config = ConfigParser.RawConfigParser()
 			config.read(self.config_filepath())
@@ -796,28 +794,20 @@ class InternalCommands:
 			raise Exception('Unsupported platform: ' + sys.platform)
 			
 	def get_generator_from_prompt(self):
-		
+		return self.getGenerator()
+
+	def getGenerator(self):
 		generators = self.get_generators()
+		if len(generators.keys()) == 1:
+			return generators[generators.keys()[0]]
 		
 		# if user has specified a generator as an argument
 		if self.generator_id:
-			return generators[self.generator_id]
-		
-		# if we can accept user input
-		elif not self.no_prompts:
-			generator_options = ''
-			generators_sorted = sorted(generators.iteritems(), key=lambda t: int(t[0]))
-			
-			for id, generator in generators_sorted:
-				generator_options += '\n  ' + id + ': ' + generator
-
-			print ('\nChoose a CMake generator:%s'
-				) % generator_options
-
-			return self.setup_generator_prompt(generators)
-			
+			return generators[int(self.generator_id)]
 		else:
-			raise Exception('No generator specified, and cannot prompt user.')
+			raise Exception(
+				'Generator not specified, use -g arg ' + 
+				'(use `hm genlist` for a list of generators).')
 
 	def setup_generator_prompt(self, generators):
 
@@ -936,6 +926,27 @@ class InternalCommands:
 		if err != 0:
 			raise Exception('Reformat failed with error code: ' + str(err))
 
+	def printGeneratorList(self):
+		generators = self.get_generators()
+		keys = generators.keys()
+		keys.sort()
+		for k in keys:
+			print str(k) + ': ' + generators[k]
+
+	def getMacPackageName(self):
+		import commands
+		versions = commands.getoutput('/usr/bin/sw_vers')
+		result = re.search('ProductVersion:\t(\d+)\.(\d+)', versions)
+
+		if not result:
+			print versions
+			raise Exception(
+				'Could not find Mac OS X version in sw_vers output.')
+
+		# version is major and minor with no dots (e.g. 106)
+		return ('MacOSX' + str(result.group(1)) +
+				str(result.group(2)) + '-Universal');
+
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
 # don't need to do argument handling all over the place in the internal
@@ -1051,3 +1062,6 @@ class CommandHandler:
 	
 	def open(self):
 		self.ic.open()
+
+	def genlist(self):
+		self.ic.printGeneratorList()
