@@ -404,11 +404,15 @@ class InternalCommands:
 		print self.find_revision()
 
 	def find_revision(self):
-		p = subprocess.Popen(['svn', 'info'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		stdout, stderr = p.communicate()
+		if sys.version_info < (2, 4):
+			import commands
+			stdout = commands.getoutput('svn info')
+		else:
+			p = subprocess.Popen(['svn', 'info'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			stdout, stderr = p.communicate()
 
-		if p.returncode != 0:
-			raise Exception('Could not get revision - svn info failed with code: ' + str(p.returncode))
+			if p.returncode != 0:
+				raise Exception('Could not get revision - svn info failed with code: ' + str(p.returncode))
 		
 		m = re.search('.*Revision: (\d+).*', stdout)
 		if not m:
@@ -622,7 +626,7 @@ class InternalCommands:
 		elif type == 'mac':
 			#ext = 'dmg'
 			ext = 'zip'
-			platform = self.macPackageName
+			platform = self.getMacPackageName()
 		
 		if not platform:
 			raise Exception('Unable to detect package platform.')
