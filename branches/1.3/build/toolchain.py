@@ -215,6 +215,10 @@ class InternalCommands:
 			self.persist_w32_make()
 
 	def persist_qmake(self):
+		# cannot use subprocess on < python 2.4
+		if sys.version_info < (2, 4):
+			return
+		
 		try:
 			p = subprocess.Popen(
 				[self.qmake_cmd, '--version'], 
