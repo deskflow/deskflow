@@ -30,8 +30,12 @@
 # This will create an in-source UNIX Makefile.
 
 import sys, os
-from build import commands
+from build import toolchain
 from getopt import gnu_getopt
+
+# minimum required version
+requiredMajor = 2
+requiredMinor = 3
 
 # options used by all commands
 global_options = 'g:v'
@@ -59,6 +63,7 @@ cmd_opt_dict = {
 	'revision'  : ['', []],
 	'reformat'  : ['', []],
 	'open'      : ['', []],
+	'genlist'   : ['', []]
 }
 
 # aliases to valid commands
@@ -171,7 +176,7 @@ def run_cmd(cmd, argv = []):
 		
 		# pass args and optarg data to command handler, which figures out
 		# how to handle the arguments
-		handler = commands.CommandHandler(argv, opts, args, verbose)
+		handler = toolchain.CommandHandler(argv, opts, args, verbose)
 		
 		# use reflection to get the function pointer
 		cmd_func = getattr(handler, cmd)
@@ -181,15 +186,17 @@ def run_cmd(cmd, argv = []):
 		if not verbose:
 			# print friendly error for users
 			sys.stderr.write('Error: ' + sys.exc_info()[1].__str__() + '\n')
-			exit(1)
+			sys.exit(1)
 		else:
 			# if user wants to be verbose let python do it's thing
 			raise
 
 def main(argv):
 
-	if sys.version_info < (2, 4):
-		print 'Python version must be at least: 2.4'
+	if sys.version_info < (requiredMajor, requiredMinor):
+		print ('Python version must be at least ' +
+			   str(requiredMajor) + '.' + str(requiredMinor) + ', but is ' +
+			   str(sys.version_info[0]) + '.' + str(sys.version_info[1]))
 		sys.exit(1)
 
 	try:
