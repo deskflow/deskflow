@@ -24,6 +24,12 @@
 #include "stdset.h"
 #include "stdvector.h"
 
+#if defined(MAC_OS_X_VERSION_10_5)
+	typedef TISInputSourceRef KeyLayout;
+#else
+	typedef KeyboardLayoutRef KeyLayout;
+#endif
+
 //! OS X key state
 /*!
 A key state for OS X.
@@ -99,7 +105,7 @@ protected:
 
 private:
 	class CKeyResource;
-	typedef std::vector<TISInputSourceRef> GroupList;
+	typedef std::vector<KeyLayout> GroupList;
 
 	// Add hard coded special keys to a CKeyMap.
 	void				getKeyMapForSpecialKeys(
@@ -197,7 +203,7 @@ private:
 		KeyButtonOffset = 1
 	};
 
-	typedef std::map<TISInputSourceRef, SInt32> GroupMap;
+	typedef std::map<KeyLayout, SInt32> GroupMap;
 	typedef std::map<UInt32, KeyID> CVirtualKeyMap;
 
 	CVirtualKeyMap		m_virtualKeyMap;
