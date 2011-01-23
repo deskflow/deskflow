@@ -45,6 +45,11 @@ class InternalCommands:
 	config_filename = '%s.cfg' % this_cmd
 	qtpro_filename = 'qsynergy.pro'
 	doxygen_filename = 'doxygen.cfg'
+	
+	macZipFiles = [
+		'synergyc', 'synergys',
+		'../../doc/synergy.conf.example',
+		'../../doc/MacReadme.txt']
 
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
 
@@ -247,7 +252,7 @@ class InternalCommands:
 		# TODO
 		pass
 
-	def build(self, targets=[]):
+	def build(self, targets=[], skipConfig=False):
 
 		# if no mode specified, default to debug
 		if len(targets) == 0:
@@ -260,7 +265,7 @@ class InternalCommands:
 		if generator.startswith('Visual Studio'):
 			
 			# only need to configure once for vs
-			if not self.has_conf_run():
+			if not self.has_conf_run() and not skipConfig:
 				self.configure_internal()
 		
 			for target in targets:
@@ -280,7 +285,7 @@ class InternalCommands:
 
 			for target in targets:
 					
-				if not self.has_conf_run(target):
+				if not self.has_conf_run(target) and not skipConfig:
 					self.configure_internal(target)
 					
 				self.try_chdir(self.getBinDir(target))
@@ -432,6 +437,9 @@ class InternalCommands:
 		if type != 'win':
 			self.configure_internal(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
 
+		# make sure we have a release build to package
+		self.build(['release'], skipConfig=True)
+
 		if type == None:
 			self.dist_usage()
 			return
@@ -462,27 +470,7 @@ class InternalCommands:
 			
 		elif type == 'mac':
 			if sys.platform == 'darwin':
-				# nb: disabling package maker, as it doesn't
-				# work too well (screws with permissions).
-				#self.dist_run('cpack -G PackageMaker', unixTarget)
-				
-				# nb: temporary fix (just distribute a zip)
-				bin = self.getBinDir(unixTarget)
-				version = self.getVersionFromCmake()
-				zipFile = (self.project + '-' +
-					   version + '-' +
-					   self.getMacPackageName() + '.zip')
-
-				zipCmd = ('zip ' + zipFile + ' ' +
-					  'synergyc synergys');
-				
-				print 'Creating package: ' + zipCmd
-				self.try_chdir(self.getBinDir(unixTarget))
-				err = os.system(zipCmd)
-				self.restore_chdir()
-				if err != 0:
-					raise Exception(
-						'Zip failed, code: ' + err)
+				self.distMac(unixTarget)
 			else:
 				package_unsupported = True
 			
@@ -494,6 +482,34 @@ class InternalCommands:
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
 		
+
+	def distMac(self, unixTarget):
+		# nb: disabling package maker, as it doesn't
+		# work too well (screws with permissions and causes boot to fail).
+		#self.dist_run('cpack -G PackageMaker', unixTarget)
+
+		version = self.getVersionFromCmake()
+		zipFile = (self.project + '-' + version + '-' +
+				   self.getMacPackageName() + '.zip')
+
+		# nb: temporary fix (just distribute a zip)
+		bin = self.getBinDir(unixTarget)
+		self.try_chdir(bin)
+
+		try:
+			for f in self.macZipFiles:
+				if not os.path.exists(f):
+					raise Exception('File does not exist: ' + f)
+
+			zipCmd = ('zip ' + zipFile + ' ' + ' '.join(self.macZipFiles));
+			
+			print 'Creating package: ' + zipCmd
+			err = os.system(zipCmd)
+			if err != 0:
+				raise Exception('Zip failed, code: ' + err)
+			
+		finally:
+			self.restore_chdir()
 
 	def distNsis(self, vcRedistDir, qtDir):
 		
@@ -918,12 +934,18 @@ class InternalCommands:
 			print str(k) + ': ' + generators[k]
 
 	def getMacPackageName(self):
-		import platform
-		v, _, _ = platform.mac_ver()
-		v = float('.'.join(v.split('.')[:2]))
-		
+		import commands
+		versions = commands.getoutput('/usr/bin/sw_vers')
+		result = re.search('ProductVersion:\t(\d+)\.(\d+)', versions)
+
+		if not result:
+			print versions
+			raise Exception(
+				'Could not find Mac OS X version in sw_vers output.')
+
 		# version is major and minor with no dots (e.g. 106)
-		return 'MacOSX' + str(v[0]) + str(v[1]) + '-Universal';
+		return ('MacOSX' + str(result.group(1)) +
+				str(result.group(2)) + '-Universal');
 
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
