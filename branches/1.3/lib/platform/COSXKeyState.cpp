@@ -231,7 +231,12 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 
 	// get keyboard info
 
+#if defined(MAC_OS_X_VERSION_10_5)
 	TISInputSourceRef currentKeyboardLayout = TISCopyCurrentKeyboardLayoutInputSource(); 
+#else
+	KeyboardLayoutRef currentKeyboardLayout;
+	OSStatus status = KLGetCurrentKeyboardLayout(&currentKeyboardLayout);
+#endif
 	if (currentKeyboardLayout == NULL) {
 		return kKeyNone;
 	}
@@ -264,22 +269,49 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		return 0;
 	}
 
+	const bool layoutValid = false;
+	const UCKeyboardLayout* layout;
+	
 	// translate via uchr resource
+#if defined(MAC_OS_X_VERSION_10_5)
 	CFDataRef ref = (CFDataRef) TISGetInputSourceProperty(currentKeyboardLayout,
 								kTISPropertyUnicodeKeyLayoutData);
-	const UCKeyboardLayout* layout = (const UCKeyboardLayout*) CFDataGetBytePtr(ref);
-	if (layout != NULL) {
+	layout = (const UCKeyboardLayout*) CFDataGetBytePtr(ref);
+	layoutValid = (layout != null);
+#else
+	const void* resource;
+	int err = KLGetKeyboardLayoutProperty(currentKeyboardLayout, kKLuchrData, &resource);
+	layoutValid == (err == noErr);
+	layout = (const UCKeyboardLayout*)resource;
+#endif
+
+	if (layoutValid) {
+
+		// choose action
+		UInt16 action;
+		switch (eventKind) {
+		case kEventRawKeyDown:
+			action = kUCKeyActionDown;
+			break;
+
+		case kEventRawKeyRepeat:
+			action = kUCKeyActionAutoKey;
+			break;
+
+		default:
+			return 0;
+		}
 
 		// translate key
 		UniCharCount count;
 		UniChar chars[2];
-		//LOG((CLOG_DEBUG "modifiers: %08x", modifiers & 0xffu));
+		LOG((CLOG_DEBUG2 "modifiers: %08x", modifiers & 0xffu));
 		OSStatus status = UCKeyTranslate(layout,
 							vkCode & 0xffu, action,
 							(modifiers >> 8) & 0xffu,
 							LMGetKbdType(), 0, &m_deadKeyState,
 							sizeof(chars) / sizeof(chars[0]), &count, chars);
-		
+
 		// get the characters
 		if (status == 0) {
 			if (count != 0 || m_deadKeyState == 0) {
@@ -313,11 +345,21 @@ COSXKeyState::pollActiveModifiers() const
 SInt32
 COSXKeyState::pollActiveGroup() const
 {
-	TISInputSourceRef inputSource = TISCopyCurrentKeyboardLayoutInputSource();
-  GroupMap::const_iterator i = m_groupMap.find(inputSource);
-  if (i != m_groupMap.end()) {
-    return i->second;
-  }
+	bool layoutValid = true;
+#if defined(MAC_OS_X_VERSION_10_5)
+	TISInputSourceRef keyboardLayout = TISCopyCurrentKeyboardLayoutInputSource();
+#else
+	KeyboardLayoutRef keyboardLayout;
+	OSStatus status = KLGetCurrentKeyboardLayout(&keyboardLayout);
+	layoutValid = (status == noErr);
+#endif
+	
+	if (layoutValid) {
+		GroupMap::const_iterator i = m_groupMap.find(keyboardLayout);
+		if (i != m_groupMap.end()) {
+			return i->second;
+		}
+	}
 	return 0;
 }
 
@@ -353,10 +395,23 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap)
 		// add special keys
 		getKeyMapForSpecialKeys(keyMap, g);
 
-		CFDataRef resource_ref;
-		if ((resource_ref = (CFDataRef)TISGetInputSourceProperty(m_groups[g],
-								kTISPropertyUnicodeKeyLayoutData)) != NULL) {
-			const void* resource = CFDataGetBytePtr(resource_ref);
+		const void* resource;
+		bool layoutValid = false;
+		
+		// add regular keys
+		// try uchr resource first
+		#if defined(MAC_OS_X_VERSION_10_5)
+		CFDataRef resourceRef = (CFDataRef)TISGetInputSourceProperty(
+			m_groups[g], kTISPropertyUnicodeKeyLayoutData);
+		layoutValid = resourceRef != NULL;
+		if (layoutValid)
+			resource = CFDataGetBytePtr(resourceRef);
+		#else
+		layoutValid = KLGetKeyboardLayoutProperty(
+			m_groups[g], kKLuchrData, &resource);
+		#endif
+
+		if (layoutValid) {
 			CUCHRKeyResource uchr(resource, keyboardType);
 			if (uchr.isValid()) {
 				LOG((CLOG_DEBUG1 "using uchr resource for group %d", g));
@@ -364,6 +419,21 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap)
 				continue;
 			}
 		}
+
+		// NB: not sure why support for KCHR was
+		// remvoed in 10.5 version?
+		#if defined(MAC_OS_X_VERSION_10_5)
+		// try KCHR resource
+		if (KLGetKeyboardLayoutProperty(m_groups[g],
+								kKLKCHRData, &resource) == noErr) {
+			CKCHRKeyResource kchr(resource);
+			if (kchr.isValid()) {
+				LOG((CLOG_DEBUG1 "using KCHR resource for group %d", g));
+				getKeyMap(keyMap, g, kchr);
+				continue;
+			}
+		}
+		#endif
 
 		LOG((CLOG_DEBUG1 "no keyboard resource for group %d", g));
 	}
@@ -662,23 +732,41 @@ COSXKeyState::handleModifierKey(void* target,
 bool
 COSXKeyState::getGroups(GroupList& groups) const
 {
+	CFIndex n;
+	bool gotLayouts = false;
+
+#if defined(MAC_OS_X_VERSION_10_5)
 	// get number of layouts
-  CFStringRef keys[] = { kTISPropertyInputSourceCategory };
-  CFStringRef values[] = { kTISCategoryKeyboardInputSource };
-  CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
-  CFArrayRef kbds = TISCreateInputSourceList(dict, false);
-  CFIndex n = CFArrayGetCount(kbds);
-	if (n == 0) {
+	CFStringRef keys[] = { kTISPropertyInputSourceCategory };
+	CFStringRef values[] = { kTISCategoryKeyboardInputSource };
+	CFDictionaryRef dict = CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL);
+	CFArrayRef kbds = TISCreateInputSourceList(dict, false);
+	n = CFArrayGetCount(kbds);
+	gotLayouts = (n != 0);
+#else
+	OSStatus status = KLGetKeyboardLayoutCount(&n);
+	gotLayouts = (status == noErr);
+#endif
+
+	if (!gotLayouts) {
 		LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
 		return false;
 	}
 
 	// get each layout
 	groups.clear();
-	TISInputSourceRef inputKeyboardLayout;
 	for (CFIndex i = 0; i < n; ++i) {
-		inputKeyboardLayout = (TISInputSourceRef) CFArrayGetValueAtIndex(kbds, i);
-    groups.push_back(inputKeyboardLayout);
+		bool addToGroups = true;
+#if defined(MAC_OS_X_VERSION_10_5)
+		TISInputSourceRef keyboardLayout = 
+			(TISInputSourceRef)CFArrayGetValueAtIndex(kbds, i);
+#else
+		KeyboardLayoutRef keyboardLayout;
+		status = KLGetKeyboardLayoutAtIndex(i, &keyboardLayout);
+		addToGroups == (status == noErr);
+#endif
+		if (addToGroups)
+    		groups.push_back(keyboardLayout);
 	}
 	return true;
 }
@@ -686,7 +774,11 @@ COSXKeyState::getGroups(GroupList& groups) const
 void
 COSXKeyState::setGroup(SInt32 group)
 {
+#if defined(MAC_OS_X_VERSION_10_5)
 	TISSetInputMethodKeyboardLayoutOverride(m_groups[group]);
+#else
+	KLSetCurrentKeyboardLayout(m_groups[group]);
+#endif
 }
 
 void
@@ -831,16 +923,18 @@ COSXKeyState::CKeyResource::getKeyID(UInt8 c)
 		str[0] = static_cast<char>(c);
 		str[1] = 0;
 
+#if defined(MAC_OS_X_VERSION_10_5)
 		// get current keyboard script
-
-    TISInputSourceRef isref = TISCopyCurrentKeyboardInputSource();
-    CFArrayRef langs = (CFArrayRef) TISGetInputSourceProperty(isref, kTISPropertyInputSourceLanguages);
-
+		TISInputSourceRef isref = TISCopyCurrentKeyboardInputSource();
+		CFArrayRef langs = (CFArrayRef) TISGetInputSourceProperty(isref, kTISPropertyInputSourceLanguages);
+		CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((CFStringRef)CFArrayGetValueAtIndex(langs, 0));
+#else
+		CFStringEncoding encoding = GetScriptManagerVariable(smKeyScript);
+#endif
 		// convert to unicode
 		CFStringRef cfString =
-			CFStringCreateWithCStringNoCopy(kCFAllocatorDefault,
-							str, CFStringConvertIANACharSetNameToEncoding((CFStringRef) CFArrayGetValueAtIndex(langs, 0)),
-							kCFAllocatorNull);
+			CFStringCreateWithCStringNoCopy(
+				kCFAllocatorDefault, str, encoding, kCFAllocatorNull);
 
 		// sometimes CFStringCreate...() returns NULL (e.g. Apple Korean
 		// encoding with char value 214).  if it did then make no key,

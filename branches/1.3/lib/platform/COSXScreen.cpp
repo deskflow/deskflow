@@ -94,9 +94,17 @@ COSXScreen::COSXScreen(bool isPrimary) :
 				LOG((CLOG_ERR "Synergy server requires accessibility API enabled. Please check the option for \"Enable access for assistive devices\" in the Universal Access System Preferences panel. Unintentional key-replication will occur until this is fixed."));
 			}
 		}
-
+		
 		// install display manager notification handler
+#if defined(MAC_OS_X_VERSION_10_5)
 		CGDisplayRegisterReconfigurationCallback(displayReconfigurationCallback, this);
+#else
+		m_displayManagerNotificationUPP =
+			NewDMExtendedNotificationUPP(displayManagerCallback);
+		OSStatus err = GetCurrentProcess(&m_PSN);
+		err = DMRegisterExtendedNotifyProc(m_displayManagerNotificationUPP,
+							this, 0, &m_PSN);
+#endif
 
 		// install fast user switching event handler
 		EventTypeSpec switchEventTypes[2];
@@ -127,7 +135,24 @@ COSXScreen::COSXScreen(bool isPrimary) :
 		if (m_switchEventHandlerRef != 0) {
 			RemoveEventHandler(m_switchEventHandlerRef);
 		}
+#if defined(MAC_OS_X_VERSION_10_5)
 		CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
+#else
+		if (m_displayManagerNotificationUPP != NULL) {
+			DMRemoveExtendedNotifyProc(m_displayManagerNotificationUPP,
+							NULL, &m_PSN, 0);
+		}
+
+		if (m_hiddenWindow) {
+			ReleaseWindow(m_hiddenWindow);
+			m_hiddenWindow = NULL;
+		}
+
+		if (m_userInputWindow) {
+			ReleaseWindow(m_userInputWindow);
+			m_userInputWindow = NULL;
+		}
+#endif
 
 		delete m_keyState;
 		delete m_screensaver;
@@ -173,7 +198,22 @@ COSXScreen::~COSXScreen()
 
 	RemoveEventHandler(m_switchEventHandlerRef);
 
+#if defined(MAC_OS_X_VERSION_10_5)
 	CGDisplayRemoveReconfigurationCallback(displayReconfigurationCallback, this);
+#else
+	DMRemoveExtendedNotifyProc(m_displayManagerNotificationUPP,
+							NULL, &m_PSN, 0);
+
+	if (m_hiddenWindow) {
+		ReleaseWindow(m_hiddenWindow);
+		m_hiddenWindow = NULL;
+	}
+
+	if (m_userInputWindow) {
+		ReleaseWindow(m_userInputWindow);
+		m_userInputWindow = NULL;
+	}
+#endif
 
 	delete m_keyState;
 	delete m_screensaver;
@@ -938,6 +978,42 @@ COSXScreen::handleClipboardCheck(const CEvent&, void*)
 	checkClipboards();
 }
 
+#if !defined(MAC_OS_X_VERSION_10_5)
+pascal void 
+COSXScreen::displayManagerCallback(void* inUserData, SInt16 inMessage, void*)
+{
+	COSXScreen* screen = (COSXScreen*)inUserData;
+
+	if (inMessage == kDMNotifyEvent) {
+		screen->onDisplayChange();
+	}
+}
+
+bool
+COSXScreen::onDisplayChange()
+{
+	// screen resolution may have changed.  save old shape.
+	SInt32 xOld = m_x, yOld = m_y, wOld = m_w, hOld = m_h;
+
+	// update shape
+	updateScreenShape();
+
+	// do nothing if resolution hasn't changed
+	if (xOld != m_x || yOld != m_y || wOld != m_w || hOld != m_h) {
+		if (m_isPrimary) {
+			// warp mouse to center if off screen
+			if (!m_isOnScreen) {
+				warpCursor(m_xCenter, m_yCenter);
+			}
+		}
+
+		// send new screen info
+		sendEvent(getShapeChangedEvent());
+	}
+
+	return true;
+}
+#else
 void 
 COSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDisplayChangeSummaryFlags flags, void* inUserData)
 {
@@ -957,6 +1033,7 @@ COSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDispla
 		screen->updateScreenShape(displayID, flags);
 	}
 }
+#endif
 
 bool
 COSXScreen::onKey(CGEventRef event)
@@ -1226,7 +1303,12 @@ COSXScreen::getKeyState() const
 void
 COSXScreen::updateScreenShape(const CGDirectDisplayID, const CGDisplayChangeSummaryFlags flags)
 {
-    
+	updateScreenShape();
+}
+
+void
+COSXScreen::updateScreenShape()
+{
 	// get info for each display
 	CGDisplayCount displayCount = 0;
 
