@@ -270,20 +270,17 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 		return 0;
 	}
 
-	const bool layoutValid = false;
-	const UCKeyboardLayout* layout;
-	
 	// translate via uchr resource
 #if defined(MAC_OS_X_VERSION_10_5)
 	CFDataRef ref = (CFDataRef) TISGetInputSourceProperty(currentKeyboardLayout,
 								kTISPropertyUnicodeKeyLayoutData);
-	layout = (const UCKeyboardLayout*) CFDataGetBytePtr(ref);
-	layoutValid = (layout != null);
+	const UCKeyboardLayout* layout = (const UCKeyboardLayout*) CFDataGetBytePtr(ref);
+	const bool layoutValid = (layout != NULL);
 #else
 	const void* resource;
 	int err = KLGetKeyboardLayoutProperty(currentKeyboardLayout, kKLuchrData, &resource);
-	layoutValid == (err == noErr);
-	layout = (const UCKeyboardLayout*)resource;
+	const bool layoutValid == (err == noErr);
+	const UCKeyboardLayout* layout = (const UCKeyboardLayout*)resource;
 #endif
 
 	if (layoutValid) {
@@ -423,7 +420,7 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap)
 
 		// NB: not sure why support for KCHR was
 		// remvoed in 10.5 version?
-		#if defined(MAC_OS_X_VERSION_10_5)
+		#if !defined(MAC_OS_X_VERSION_10_5)
 		// try KCHR resource
 		if (KLGetKeyboardLayoutProperty(m_groups[g],
 								kKLKCHRData, &resource) == noErr) {
