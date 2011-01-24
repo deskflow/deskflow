@@ -279,7 +279,7 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 #else
 	const void* resource;
 	int err = KLGetKeyboardLayoutProperty(currentKeyboardLayout, kKLuchrData, &resource);
-	const bool layoutValid == (err == noErr);
+	const bool layoutValid = (err == noErr);
 	const UCKeyboardLayout* layout = (const UCKeyboardLayout*)resource;
 #endif
 
@@ -417,21 +417,6 @@ COSXKeyState::getKeyMap(CKeyMap& keyMap)
 				continue;
 			}
 		}
-
-		// NB: not sure why support for KCHR was
-		// remvoed in 10.5 version?
-		#if !defined(MAC_OS_X_VERSION_10_5)
-		// try KCHR resource
-		if (KLGetKeyboardLayoutProperty(m_groups[g],
-								kKLKCHRData, &resource) == noErr) {
-			CKCHRKeyResource kchr(resource);
-			if (kchr.isValid()) {
-				LOG((CLOG_DEBUG1 "using KCHR resource for group %d", g));
-				getKeyMap(keyMap, g, kchr);
-				continue;
-			}
-		}
-		#endif
 
 		LOG((CLOG_DEBUG1 "no keyboard resource for group %d", g));
 	}
