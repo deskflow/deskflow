@@ -396,17 +396,19 @@ IF(WIN32)
 ENDIF(WIN32)
 
 SET(inc_lib_dirs
-	{$root_dir}
-	{$root_dir}/lib/arch
-	{$root_dir}/lib/base
-	{$root_dir}/lib/client
-	{$root_dir}/lib/common
-	{$root_dir}/lib/io
-	{$root_dir}/lib/mt
-	{$root_dir}/lib/net
-	{$root_dir}/lib/platform
-	{$root_dir}/lib/server
-	{$root_dir}/lib/synergy
+	${root_dir}
+	${root_dir}/lib/arch
+	${root_dir}/lib/base
+	${root_dir}/lib/client
+	${root_dir}/lib/common
+	${root_dir}/lib/io
+	${root_dir}/lib/mt
+	${root_dir}/lib/net
+	${root_dir}/lib/platform
+	${root_dir}/lib/server
+	${root_dir}/lib/synergy
+	${root_dir}/third_party/gtest
+	${root_dir}/third_party/gtest/include
 )
 
 INCLUDE_DIRECTORIES(${inc_lib_dirs})
