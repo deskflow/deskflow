@@ -28,16 +28,20 @@ install(TARGETS
 
 if (UNIX)
 	if (APPLE)
-		# TODO: how the hell do we distribute mac apps?
-		#install(
-		#	MACOSX_BUNDLE
-		#	bin/QSynergy.app
-		#	DESTINATION bin)
+		# no cpack support for apple
 	else()
-		install(
-			FILES
-			bin/qsynergy
-			DESTINATION bin)
+		install(FILES bin/qsynergy
+			DESTINATION bin
+			PERMISSIONS
+			OWNER_READ OWNER_WRITE OWNER_EXECUTE
+			GROUP_READ GROUP_EXECUTE
+			WORLD_READ WORLD_EXECUTE)
+
+		# install gnome menu item
+		install(FILES cmake/synergy.desktop
+			DESTINATION share/applications)
+		install(FILES cmd/launcher/synergy.ico
+			DESTINATION share/icons)
 	endif()
 endif()
 
@@ -59,7 +63,7 @@ endif(APPLE)
 
 SET(CPACK_PACKAGE_NAME "synergy")
 SET(CPACK_PACKAGE_VENDOR "The Synergy Project")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Installs Synergy server and client")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Synergy server and client")
 SET(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${VERSION_REV})
