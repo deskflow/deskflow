@@ -54,9 +54,10 @@ INCLUDE(${cmake_dir}/CMakeLists_lib.txt)
 INCLUDE(${cmake_dir}/CMakeLists_synergyc.txt)
 INCLUDE(${cmake_dir}/CMakeLists_synergys.txt)
 INCLUDE(${cmake_dir}/CMakeLists_launcher.txt)
+INCLUDE(${cmake_dir}/CMakeLists_gtest.txt)
 INCLUDE(${cmake_dir}/CMakeLists_test.txt)
 
-add_subdirectory(third_party/gtest)
+#add_subdirectory(third_party/gtest)
 
 if (CONF_CPACK)
    # Setup the CPack config.
