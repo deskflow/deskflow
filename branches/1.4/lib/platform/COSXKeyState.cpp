@@ -284,22 +284,6 @@ COSXKeyState::mapKeyFromEvent(CKeyIDs& ids,
 #endif
 
 	if (layoutValid) {
-
-		// choose action
-		UInt16 action;
-		switch (eventKind) {
-		case kEventRawKeyDown:
-			action = kUCKeyActionDown;
-			break;
-
-		case kEventRawKeyRepeat:
-			action = kUCKeyActionAutoKey;
-			break;
-
-		default:
-			return 0;
-		}
-
 		// translate key
 		UniCharCount count;
 		UniChar chars[2];

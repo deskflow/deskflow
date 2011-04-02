@@ -620,7 +620,7 @@ COSXScreen::enable()
 		// FIXME -- start watching jump zones
 		
 		// kCGEventTapOptionDefault = 0x00000000 (Missing in 10.4, so specified literally)
-		m_eventTapPort=CGEventTapCreate(kCGHIDEventTap, kCGHIDEventTap, 0, 
+		m_eventTapPort=CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0, 
 										kCGEventMaskForAllEvents, 
 										handleCGInputEvent, 
 										this);
@@ -640,7 +640,7 @@ COSXScreen::enable()
                 // there may be a better way to do this, but we register an event handler even if we're
                 // not on the primary display (acting as a client). This way, if a local event comes in
                 // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it. 
-		m_eventTapPort=CGEventTapCreate(kCGHIDEventTap, kCGHIDEventTap, 0, 
+		m_eventTapPort=CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0, 
 										kCGEventMaskForAllEvents, 
 										handleCGInputEventSecondary, 
 										this);
