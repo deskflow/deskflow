@@ -44,7 +44,7 @@
 //
 // </TechnicalDetails>
 
-TEST(ProtocolUntilTest, HelloWorld) {
+TEST(HelloWorldTests, helloWorld) {
 	EXPECT_EQ(1, 1);
 }
 

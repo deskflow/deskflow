@@ -13,66 +13,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SET(root_cmd_synergyc ${root_dir}/cmd/synergyc)
-
-SET(src_cmd_synergyc_common
-	${root_dir}/lib/synergy/CProtocolUtilTest.cpp
-	${root_dir}/third_party/gtest/src/gtest-all.cc
-	#${root_cmd_synergyc}/synergyc.cpp
-)
-
-SET(src_cmd_synergyc_xwindows
-	${root_cmd_synergyc}/CXWindowsClientTaskBarReceiver.cpp
-)
-
-SET(src_cmd_synergyc_mswindows
-	${root_cmd_synergyc}/CMSWindowsClientTaskBarReceiver.cpp
-)
-
-SET(inc_cmd_synergyc_mswindows
-	${root_cmd_synergyc}/CMSWindowsClientTaskBarReceiver.h
-	${root_cmd_synergyc}/resource.h
-)
-
-SET(res_cmd_synergyc_mswindows
-	${root_cmd_synergyc}/synergyc.ico
-	${root_cmd_synergyc}/synergyc.rc
-	${root_cmd_synergyc}/tb_error.ico
-	${root_cmd_synergyc}/tb_idle.ico
-	${root_cmd_synergyc}/tb_run.ico
-	${root_cmd_synergyc}/tb_wait.ico
-)
-
-SET(src_cmd_synergyc_carbon
-	${root_cmd_synergyc}/COSXClientTaskBarReceiver.cpp
-)
-
-SET(src_cmd_synergyc ${src_cmd_synergyc_common})
-
-IF(UNIX)
-
-	IF(APPLE)
-	LIST(APPEND src_cmd_synergyc ${src_cmd_synergyc_carbon})
-	ELSE(APPLE)
-	LIST(APPEND src_cmd_synergyc ${src_cmd_synergyc_xwindows})
-	ENDIF(APPLE)
-	
-ELSE(UNIX)
-
-	LIST(APPEND src_cmd_synergyc 
-		${inc_cmd_synergyc_mswindows}
-		${res_cmd_synergyc_mswindows}
-		${src_cmd_synergyc_mswindows}
-	)
-	
-ENDIF(UNIX)
-
 # Include all files that have unit tests
-SET(inc_dirs_tests
-	${root_dir}/lib/synergy/CProtocolUtilTest.cpp
+SET(tests
+	${root_dir}/src/unittest/synergy/CClipboardTests.cpp
+	${root_dir}/src/unittest/synergy/HelloWorldTests.cpp
 )
 
-SET(inc_dirs_test
+SET(inc
 	${root_dir}
 	${root_dir}/lib
 	${root_dir}/lib/arch
@@ -88,6 +35,6 @@ SET(inc_dirs_test
 	${root_dir}/third_party/gtest/include
 )
 
-INCLUDE_DIRECTORIES(${inc_dirs_test})
-ADD_EXECUTABLE(tests ${root_dir}/third_party/gtest/src/gtest_main.cc ${inc_dirs_tests})
+INCLUDE_DIRECTORIES(${inc})
+ADD_EXECUTABLE(tests ${root_dir}/third_party/gtest/src/gtest_main.cc ${tests})
 TARGET_LINK_LIBRARIES(tests synergy gtest ${libs})
