@@ -300,7 +300,6 @@ SET(src_lib_synergy
 	${root_lib}/synergy/CPacketStreamFilter.cpp
 	${root_lib}/synergy/CPlatformScreen.cpp
 	${root_lib}/synergy/CProtocolUtil.cpp
-	${root_lib}/synergy/CProtocolUtilTest.cpp
 	${root_lib}/synergy/CScreen.cpp
 	${root_lib}/synergy/IClipboard.cpp
 	${root_lib}/synergy/IKeyState.cpp
