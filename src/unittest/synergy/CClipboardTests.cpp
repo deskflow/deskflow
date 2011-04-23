@@ -18,15 +18,56 @@
 #include <gtest/gtest.h>
 #include "CClipboard.h"
 
-TEST(CClipboardTests, getTime_defaultState_returnsZero)
+TEST(CClipboardTests, empty_wasOpened_returnsTrue)
 {
-	// arrange
+	CClipboard clipboard;
+	clipboard.open(true);
+
+	bool actual = clipboard.empty();
+
+	EXPECT_EQ(true, actual);
+}
+
+TEST(CClipboardTests, add_newValue_valueWasStored)
+{
+	CClipboard clipboard;
+	clipboard.open(true);
+	IClipboard::EFormat format(IClipboard::kText);
+
+	clipboard.add(format, "Hello world!");
+
+	CString actual = clipboard.get(format);
+	EXPECT_EQ("Hello world!", actual);
+}
+
+TEST(CClipboardTests, add_replaceValue_valueWasStored)
+{
+	CClipboard clipboard;
+	clipboard.open(true);
+	IClipboard::EFormat format(IClipboard::kText);
+
+	clipboard.add(format, "Hello world!");
+	clipboard.add(format, "Goodbye world!");
+
+	CString actual = clipboard.get(format);
+	EXPECT_EQ("Goodbye world!", actual);
+}
+
+TEST(CClipboardTests, open_defaultState_returnsTrue)
+{
 	CClipboard clipboard;
 
-	// act
+	bool actual = clipboard.open(true);
+
+	EXPECT_EQ(true, actual);
+}
+
+TEST(CClipboardTests, getTime_defaultState_returnsZero)
+{
+	CClipboard clipboard;
+
 	CClipboard::Time actual = clipboard.getTime();
 
-	// assert
 	CClipboard::Time expected(0);
 	EXPECT_EQ(expected, actual);
 }
