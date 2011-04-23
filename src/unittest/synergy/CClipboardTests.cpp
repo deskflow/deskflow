@@ -28,7 +28,7 @@ TEST(CClipboardTests, empty_openCalled_returnsTrue)
 	EXPECT_EQ(true, actual);
 }
 
-TEST(CClipboardTests, empty_startWithFormats_hasReturnsFalse)
+TEST(CClipboardTests, empty_singleFormat_hasReturnsFalse)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -51,7 +51,7 @@ TEST(CClipboardTests, add_newValue_valueWasStored)
 	EXPECT_EQ("synergy rocks!", actual);
 }
 
-TEST(CClipboardTests, add_replaceValue_valueWasStored)
+TEST(CClipboardTests, add_replaceValue_valueWasReplaced)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -112,7 +112,7 @@ TEST(CClipboardTests, getTime_openAndEmpty_returnsOne)
 	EXPECT_EQ(1, actual);
 }
 
-TEST(CClipboardTests, has_formatAdded_returnsTrue)
+TEST(CClipboardTests, has_withFormatAdded_returnsTrue)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -123,7 +123,7 @@ TEST(CClipboardTests, has_formatAdded_returnsTrue)
 	EXPECT_EQ(true, actual);
 }
 
-TEST(CClipboardTests, has_noFormatAdded_returnsFalse)
+TEST(CClipboardTests, has_withNoFormats_returnsFalse)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -133,7 +133,7 @@ TEST(CClipboardTests, has_noFormatAdded_returnsFalse)
 	EXPECT_EQ(false, actual);
 }
 
-TEST(CClipboardTests, get_formatNotAdded_returnsEmpty)
+TEST(CClipboardTests, get_withNoFormats_returnsEmpty)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -143,7 +143,7 @@ TEST(CClipboardTests, get_formatNotAdded_returnsEmpty)
 	EXPECT_EQ("", actual);
 }
 
-TEST(CClipboardTests, get_formatAdded_returnsExpected)
+TEST(CClipboardTests, get_withFormatAdded_returnsExpected)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -165,7 +165,7 @@ TEST(CClipboardTests, marshall_addNotCalled_firstCharIsZero)
 	EXPECT_EQ(0, (int)actual[0]);
 }
 
-TEST(CClipboardTests, marshall_addText_typeCharIsText)
+TEST(CClipboardTests, marshall_withTextAdded_typeCharIsText)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -178,7 +178,7 @@ TEST(CClipboardTests, marshall_addText_typeCharIsText)
 	EXPECT_EQ(IClipboard::kText, (int)actual[7]);
 }
 
-TEST(CClipboardTests, marshall_addTextSize14_sizeChar3Is14)
+TEST(CClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -193,7 +193,7 @@ TEST(CClipboardTests, marshall_addTextSize14_sizeChar3Is14)
 // TODO: there's some integer -> char encoding going on here. i find it 
 // hard to believe that the clipboard is the only thing doing this. maybe
 // we should refactor this stuff out of the clipboard.
-TEST(CClipboardTests, marshall_addTextSizeOver255_sizeCharsAreValid)
+TEST(CClipboardTests, marshall_withTextSize285_sizeCharsValid)
 {
 	// 285 chars
 	CString data;
@@ -223,7 +223,7 @@ TEST(CClipboardTests, marshall_addTextSizeOver255_sizeCharsAreValid)
 	EXPECT_EQ(29, actual[11]); // 285 - 256 = 29
 }
 
-TEST(CClipboardTests, marshall_addHtml_typeCharIsHtml)
+TEST(CClipboardTests, marshall_withHtmlAdded_typeCharIsHtml)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -236,7 +236,7 @@ TEST(CClipboardTests, marshall_addHtml_typeCharIsHtml)
 	EXPECT_EQ(IClipboard::kHTML, (int)actual[7]);
 }
 
-TEST(CClipboardTests, marshall_addHtmlAndText_has2Formats)
+TEST(CClipboardTests, marshall_withHtmlAndText_has2Formats)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -254,7 +254,7 @@ TEST(CClipboardTests, marshall_addHtmlAndText_has2Formats)
 	EXPECT_EQ(2, (int)actual[3]);
 }
 
-TEST(CClipboardTests, marshall_addText_endsWithAdded)
+TEST(CClipboardTests, marshall_withTextAdded_endsWithAdded)
 {
 	CClipboard clipboard;
 	clipboard.open(0);
@@ -284,7 +284,7 @@ TEST(CClipboardTests, unmarshall_emptyData_hasTextIsFalse)
 	EXPECT_EQ(false, actual);
 }
 
-TEST(CClipboardTests, unmarshall_textSizeOver255_getTextIsValid)
+TEST(CClipboardTests, unmarshall_withTextSize285_getTextIsValid)
 {
 	CClipboard clipboard;
 
@@ -318,7 +318,7 @@ TEST(CClipboardTests, unmarshall_textSizeOver255_getTextIsValid)
 	EXPECT_EQ(text, actual);
 }
 
-TEST(CClipboardTests, unmarshall_textAndHtml_getTextIsValid)
+TEST(CClipboardTests, unmarshall_withTextAndHtml_getTextIsValid)
 {
 	CClipboard clipboard;
 	CString data;
@@ -352,7 +352,7 @@ TEST(CClipboardTests, unmarshall_textAndHtml_getTextIsValid)
 	EXPECT_EQ("synergy rocks!", actual);
 }
 
-TEST(CClipboardTests, unmarshall_textAndHtml_getHtmlIsValid)
+TEST(CClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid)
 {
 	CClipboard clipboard;
 	CString data;
@@ -386,7 +386,7 @@ TEST(CClipboardTests, unmarshall_textAndHtml_getHtmlIsValid)
 	EXPECT_EQ("html sucks", actual);
 }
 
-TEST(CClipboardTests, copy_singleText_clipboardsAreEqual)
+TEST(CClipboardTests, copy_withSingleText_clipboardsAreEqual)
 {
 	CClipboard clipboard1;
 	clipboard1.open(0);
