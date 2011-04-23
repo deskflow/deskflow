@@ -14,12 +14,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Include all files that have unit tests
-SET(tests
+set(unittests
+	${root_dir}/third_party/gtest/src/gtest_main.cc
 	${root_dir}/src/unittest/synergy/CClipboardTests.cpp
 	${root_dir}/src/unittest/synergy/HelloWorldTests.cpp
 )
 
-SET(inc
+set(integtests
+	${root_dir}/src/integtest/IntegTestMain.cpp
+)
+
+if(WIN32)
+	list(APPEND integtests
+		${root_dir}/src/integtest/platform/CMSWindowsClipboardTests.cpp
+	)
+endif()
+
+set(inc
 	${root_dir}
 	${root_dir}/lib
 	${root_dir}/lib/arch
@@ -35,6 +46,10 @@ SET(inc
 	${root_dir}/third_party/gtest/include
 )
 
-INCLUDE_DIRECTORIES(${inc})
-ADD_EXECUTABLE(tests ${root_dir}/third_party/gtest/src/gtest_main.cc ${tests})
-TARGET_LINK_LIBRARIES(tests synergy gtest ${libs})
+include_directories(${inc})
+
+add_executable(unittests ${unittests})
+target_link_libraries(unittests synergy gtest ${libs})
+
+add_executable(integtests ${integtests})
+target_link_libraries(integtests synergy gtest ${libs})
