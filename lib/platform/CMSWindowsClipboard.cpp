@@ -56,6 +56,8 @@ CMSWindowsClipboard::emptyUnowned()
 
 	// empty the clipboard (and take ownership)
 	if (!EmptyClipboard()) {
+		// unable to cause this in integ tests, but this error has never 
+		// actually been reported by users.
 		LOG((CLOG_DEBUG "failed to grab clipboard"));
 		return false;
 	}
@@ -94,7 +96,8 @@ CMSWindowsClipboard::add(EFormat format, const CString& data)
 				UINT win32Format = converter->getWin32Format();
 				if (SetClipboardData(win32Format, win32Data) == NULL) {
 					// free converted data if we couldn't put it on
-					// the clipboard
+					// the clipboard.
+					// nb: couldn't cause this in integ tests.
 					GlobalFree(win32Data);
 				}
 			}
@@ -108,7 +111,11 @@ CMSWindowsClipboard::open(Time time) const
 	LOG((CLOG_DEBUG "open clipboard"));
 
 	if (!OpenClipboard(m_window)) {
-		LOG((CLOG_WARN "failed to open clipboard"));
+		// unable to cause this in integ tests; but this can happen!
+		// * http://synergy-foss.org/pm/issues/86
+		// * http://synergy-foss.org/pm/issues/1256
+		// logging improved to see if we can catch more info next time.
+		LOG((CLOG_WARN "failed to open clipboard: %d", GetLastError()));
 		return false;
 	}
 
@@ -172,6 +179,9 @@ CMSWindowsClipboard::get(EFormat format) const
 	// get a handle to the clipboard data
 	HANDLE win32Data = GetClipboardData(converter->getWin32Format());
 	if (win32Data == NULL) {
+		// nb: can't cause this using integ tests; this is only caused when
+		// the selected converter returns an invalid format -- which you
+		// cannot cause using public functions.
 		return CString();
 	}
 
