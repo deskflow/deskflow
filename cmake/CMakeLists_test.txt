@@ -17,7 +17,6 @@
 set(unittests
 	${root_dir}/third_party/gtest/src/gtest_main.cc
 	${root_dir}/src/unittest/synergy/CClipboardTests.cpp
-	${root_dir}/src/unittest/synergy/HelloWorldTests.cpp
 )
 
 set(integtests
