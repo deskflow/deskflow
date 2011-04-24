@@ -17,7 +17,9 @@
 
 #include <iostream>
 #include <gtest/gtest.h>
+#if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
+#endif
 #include "CArch.h"
 
 int
