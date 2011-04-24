@@ -102,7 +102,12 @@ COSXClipboard::add(EFormat format, const CString & data)
 			CString osXData = converter->fromIClipboard(data);
 			CFStringRef flavorType = converter->getOSXFormat();
 			CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
-
+			
+			// integ tests showed that if you call add(...) twice, then the
+			// second call will actually fail to set clipboard data. calling
+			// empty() seems to solve this problem.
+			empty();
+			
 			PasteboardPutItemFlavor(
 					m_pboard,
 					(PasteboardItemID) 0,

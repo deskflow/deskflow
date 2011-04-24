@@ -29,6 +29,12 @@ if(WIN32)
 	)
 endif()
 
+if(APPLE)
+	list(APPEND integtests
+		${root_dir}/src/integtest/platform/COSXClipboardTests.cpp
+	)
+endif()
+
 set(inc
 	${root_dir}
 	${root_dir}/lib
