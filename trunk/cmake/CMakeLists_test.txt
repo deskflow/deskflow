@@ -20,7 +20,7 @@ set(unittests
 )
 
 set(integtests
-	${root_dir}/src/integtest/IntegTestMain.cpp
+	${root_dir}/src/integtest/Main.cpp
 )
 
 if(WIN32)
