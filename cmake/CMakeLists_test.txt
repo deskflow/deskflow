@@ -29,10 +29,16 @@ if(WIN32)
 	)
 endif()
 
-if(APPLE)
-	list(APPEND integtests
-		${root_dir}/src/integtest/platform/COSXClipboardTests.cpp
-	)
+if(UNIX)
+	if(APPLE)
+		list(APPEND integtests
+			    ${root_dir}/src/integtest/platform/COSXClipboardTests.cpp
+		)
+	else()
+		list(APPEND integtests
+			    ${root_dir}/src/integtest/platform/CXWindowsClipboardTests.cpp
+		)
+	endif()
 endif()
 
 set(inc
