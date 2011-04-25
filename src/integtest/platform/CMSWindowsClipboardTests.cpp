@@ -101,6 +101,8 @@ TEST(CMSWindowsClipboardTests, close_isOpen_noErrors)
 	// can't assert anything
 }
 
+// looks like this test may fail intermittently:
+// * http://buildbot.synergy-foss.org:8000/builders/trunk-win32/builds/246/steps/shell_3/logs/stdio
 TEST(CMSWindowsClipboardTests, getTime_openWithNoEmpty_returnsOne)
 {
 	CMSWindowsClipboard clipboard(NULL);
