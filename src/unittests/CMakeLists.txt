@@ -31,6 +31,12 @@ set(inc
 	../../tools/gtest/include
 )
 
+if (UNIX)
+	list(APPEND inc
+		../..
+	)
+endif()
+
 include_directories(${inc})
 add_executable(unittests ${src})
 target_link_libraries(unittests

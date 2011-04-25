@@ -89,5 +89,12 @@ set(inc
 	../synergy
 )
 
+if (UNIX)
+	list(APPEND inc
+		../../..
+		../arch
+	)
+endif()
+
 include_directories(${inc})
 add_library(libarch STATIC ${src})

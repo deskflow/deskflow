@@ -53,5 +53,16 @@ set(inc
 	../synergy
 )
 
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+endif()
+
 include_directories(${inc})
 add_library(libnet STATIC ${src})
+
+if (UNIX)
+	target_link_libraries(libnet
+		libmt libio)
+endif()

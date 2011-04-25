@@ -97,9 +97,20 @@ set(inc
 	../synergy
 )
 
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+endif()
+
 include_directories(${inc})
 add_library(libplatform STATIC ${src})
 
 if (WIN32)
 	add_library(synrgyhk SHARED ${inc_hook} ${src_hook})
+endif()
+
+if (UNIX)
+	target_link_libraries(libplatform
+		libsynergy)
 endif()

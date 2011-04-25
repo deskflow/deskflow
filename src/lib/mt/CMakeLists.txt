@@ -41,5 +41,11 @@ set(inc
 	../synergy
 )
 
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+endif()
+
 include_directories(${inc})
 add_library(libmt STATIC ${src})
