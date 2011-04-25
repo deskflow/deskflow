@@ -30,11 +30,9 @@ if (WIN32)
 		tb_wait.ico
 	)
 elseif (APPLE)
-	list(APPEND src_cmd_synergys
-		COSXServerTaskBarReceiver.cpp)	
+	list(APPEND src COSXServerTaskBarReceiver.cpp)	
 elseif (UNIX)
-	list(APPEND src
-		CXWindowsServerTaskBarReceiver.cpp)
+	list(APPEND src CXWindowsServerTaskBarReceiver.cpp)
 endif()
 
 set(inc
