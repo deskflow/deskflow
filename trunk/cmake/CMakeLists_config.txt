@@ -16,207 +16,199 @@
 # Declare libs, so we can use list in linker later. There's probably 
 # a more elegant way of doing this; with SCons, when you check for the
 # lib, it is automatically passed to the linker.
-SET(libs)
+set(libs)
 
 # Depending on the platform, pass in the required defines.
-IF(UNIX)
+if (UNIX)
 
 	# For config.h, detect the libraries, functions, etc.
-	INCLUDE(CheckIncludeFiles)
-	INCLUDE(CheckLibraryExists)
-	INCLUDE(CheckFunctionExists)
-	INCLUDE(CheckTypeSize)
-	INCLUDE(CheckIncludeFileCXX)
-	INCLUDE(CheckSymbolExists)
-	INCLUDE(CheckCSourceCompiles)
+	include(CheckIncludeFiles)
+	include(CheckLibraryExists)
+	include(CheckFunctionExists)
+	include(CheckTypeSize)
+	include(CheckIncludeFileCXX)
+	include(CheckSymbolExists)
+	include(CheckCSourceCompiles)
 
-	CHECK_INCLUDE_FILE_CXX(istream HAVE_ISTREAM)
-	CHECK_INCLUDE_FILE_CXX(ostream HAVE_OSTREAM)
-	CHECK_INCLUDE_FILE_CXX(sstream HAVE_SSTREAM)
+	check_include_file_cxx(istream HAVE_ISTREAM)
+	check_include_file_cxx(ostream HAVE_OSTREAM)
+	check_include_file_cxx(sstream HAVE_SSTREAM)
 
-	CHECK_INCLUDE_FILES(inttypes.h HAVE_INTTYPES_H)
-	CHECK_INCLUDE_FILES(locale.h HAVE_LOCALE_H)
-	CHECK_INCLUDE_FILES(memory.h HAVE_MEMORY_H)
-	CHECK_INCLUDE_FILES(stdlib.h HAVE_STDLIB_H)
-	CHECK_INCLUDE_FILES(strings.h HAVE_STRINGS_H)
-	CHECK_INCLUDE_FILES(string.h HAVE_STRING_H)
-	CHECK_INCLUDE_FILES(sys/select.h HAVE_SYS_SELECT_H)
-	CHECK_INCLUDE_FILES(sys/socket.h HAVE_SYS_SOCKET_H)
-	CHECK_INCLUDE_FILES(sys/stat.h HAVE_SYS_STAT_H)
-	CHECK_INCLUDE_FILES(sys/time.h HAVE_SYS_TIME_H)
-	CHECK_INCLUDE_FILES(sys/utsname.h HAVE_SYS_UTSNAME_H)
-	CHECK_INCLUDE_FILES(unistd.h HAVE_UNISTD_H)
-	CHECK_INCLUDE_FILES(wchar.h HAVE_WCHAR_H)
+	check_include_files(inttypes.h HAVE_INTTYPES_H)
+	check_include_files(locale.h HAVE_LOCALE_H)
+	check_include_files(memory.h HAVE_MEMORY_H)
+	check_include_files(stdlib.h HAVE_STDLIB_H)
+	check_include_files(strings.h HAVE_STRINGS_H)
+	check_include_files(string.h HAVE_STRING_H)
+	check_include_files(sys/select.h HAVE_SYS_SELECT_H)
+	check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
+	check_include_files(sys/stat.h HAVE_SYS_STAT_H)
+	check_include_files(sys/time.h HAVE_SYS_TIME_H)
+	check_include_files(sys/utsname.h HAVE_SYS_UTSNAME_H)
+	check_include_files(unistd.h HAVE_UNISTD_H)
+	check_include_files(wchar.h HAVE_WCHAR_H)
 
-	CHECK_FUNCTION_EXISTS(getpwuid_r HAVE_GETPWUID_R)
-	CHECK_FUNCTION_EXISTS(gmtime_r HAVE_GMTIME_R)
-	CHECK_FUNCTION_EXISTS(nanosleep HAVE_NANOSLEEP)
-	CHECK_FUNCTION_EXISTS(poll HAVE_POLL)
-	CHECK_FUNCTION_EXISTS(sigwait HAVE_POSIX_SIGWAIT)
-	CHECK_FUNCTION_EXISTS(strftime HAVE_STRFTIME)
-	CHECK_FUNCTION_EXISTS(vsnprintf HAVE_VSNPRINTF)
-	CHECK_FUNCTION_EXISTS(inet_aton HAVE_INET_ATON)
+	check_function_exists(getpwuid_r HAVE_GETPWUID_R)
+	check_function_exists(gmtime_r HAVE_GMTIME_R)
+	check_function_exists(nanosleep HAVE_NANOSLEEP)
+	check_function_exists(poll HAVE_POLL)
+	check_function_exists(sigwait HAVE_POSIX_SIGWAIT)
+	check_function_exists(strftime HAVE_STRFTIME)
+	check_function_exists(vsnprintf HAVE_VSNPRINTF)
+	check_function_exists(inet_aton HAVE_INET_ATON)
 	
-	# For some reason, the CHECK_FUNCTION_EXISTS macro doesn't detect
+	# For some reason, the check_function_exists macro doesn't detect
 	# the inet_aton on some pure Unix platforms (e.g. sunos5). So we
 	# need to do a more detailed check and also include some extra libs.
-	IF(NOT HAVE_INET_ATON)
+	if (NOT HAVE_INET_ATON)
 
-		SET(CMAKE_REQUIRED_LIBRARIES nsl)
-		CHECK_C_SOURCE_COMPILES(
+		set(CMAKE_REQUIRED_LIBRARIES nsl)
+		check_c_source_compiles(
 			"#include <arpa/inet.h>\n int main() { inet_aton(0, 0); }" 
 			HAVE_INET_ATON_ADV)
-		SET(CMAKE_REQUIRED_LIBRARIES)
+		set(CMAKE_REQUIRED_LIBRARIES)
 
-		IF(HAVE_INET_ATON_ADV)
+		if (HAVE_INET_ATON_ADV)
 			
 			# Override the previous fail.
-			SET(HAVE_INET_ATON 1)
+			set(HAVE_INET_ATON 1)
 
 			# Assume that both nsl and socket will be needed,
 			# it seems safe to add socket on the back of nsl,
 			# since socket only ever needed when nsl is needed.
-			LIST(APPEND libs nsl socket)
+			list(APPEND libs nsl socket)
 
-		ENDIF(HAVE_INET_ATON_ADV)
+		endif()
 
-	ENDIF(NOT HAVE_INET_ATON)
+	endif()
 
-	CHECK_TYPE_SIZE(char SIZEOF_CHAR)
-	CHECK_TYPE_SIZE(int SIZEOF_INT)
-	CHECK_TYPE_SIZE(long SIZEOF_LONG)
-	CHECK_TYPE_SIZE(short SIZEOF_SHORT)
+	check_type_size(char SIZEOF_CHAR)
+	check_type_size(int SIZEOF_INT)
+	check_type_size(long SIZEOF_LONG)
+	check_type_size(short SIZEOF_SHORT)
 
 	# pthread is used on both Linux and Mac
-	CHECK_LIBRARY_EXISTS("pthread" pthread_create "" HAVE_PTHREAD)
-	IF(HAVE_PTHREAD)
-		LIST(APPEND libs pthread)
-	ELSE(HAVE_PTHREAD)
-		MESSAGE(FATAL_ERROR "Missing library: pthread")
-	ENDIF(HAVE_PTHREAD)
+	check_library_exists("pthread" pthread_create "" HAVE_PTHREAD)
+	if (HAVE_PTHREAD)
+		list(APPEND libs pthread)
+	else (HAVE_PTHREAD)
+		message(FATAL_ERROR "Missing library: pthread")
+	endif()
 	
-	IF(APPLE)
+	if (APPLE)
 
 		# build mac os x universal
 		set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
 			CACHE STRING "Build architectures for OSX" FORCE)
 
-		# TODO: fix 64-bit failures
-		#set(CMAKE_OSX_ARCHITECTURES "ppc;i386;ppc64;x86_64"
-		#	CACHE STRING "Build architectures for OSX" FORCE)
+		find_library(lib_ScreenSaver ScreenSaver)
+		find_library(lib_IOKit IOKit)
+		find_library(lib_ApplicationServices ApplicationServices)
+		find_library(lib_Foundation Foundation)
+		find_library(lib_Carbon Carbon)
 
-		# not sure this is a good idea
-		#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mmacosx-version-min=10.5" 
-		#	CACHE STRING "Flags used by the compiler during all build types." FORCE)
-
-		FIND_LIBRARY(lib_ScreenSaver ScreenSaver)
-		FIND_LIBRARY(lib_IOKit IOKit)
-		FIND_LIBRARY(lib_ApplicationServices ApplicationServices)
-		FIND_LIBRARY(lib_Foundation Foundation)
-		FIND_LIBRARY(lib_Carbon Carbon)
-
-		LIST(APPEND libs
-		${lib_ScreenSaver}
-		${lib_IOKit}
-		${lib_ApplicationServices}
-		${lib_Foundation}
-		${lib_Carbon}
+		list(APPEND libs
+			${lib_ScreenSaver}
+			${lib_IOKit}
+			${lib_ApplicationServices}
+			${lib_Foundation}
+			${lib_Carbon}
 		)
 
-	ELSE(APPLE)
+	else (APPLE)
 
-		SET(XKBlib "X11/XKBlib.h")
-		CHECK_INCLUDE_FILES("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
-		CHECK_INCLUDE_FILES("X11/extensions/Xinerama.h" HAVE_X11_EXTENSIONS_XINERAMA_H)
-		CHECK_INCLUDE_FILES("${XKBlib};X11/extensions/XKBstr.h" HAVE_X11_EXTENSIONS_XKBSTR_H)
-		CHECK_INCLUDE_FILES("X11/extensions/XKB.h" HAVE_XKB_EXTENSION)
-		CHECK_INCLUDE_FILES("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
-		CHECK_INCLUDE_FILES(${XKBlib} HAVE_X11_XKBLIB_H)
+		set(XKBlib "X11/XKBlib.h")
+		check_include_files("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
+		check_include_files("X11/extensions/Xinerama.h" HAVE_X11_EXTENSIONS_XINERAMA_H)
+		check_include_files("${XKBlib};X11/extensions/XKBstr.h" HAVE_X11_EXTENSIONS_XKBSTR_H)
+		check_include_files("X11/extensions/XKB.h" HAVE_XKB_EXTENSION)
+		check_include_files("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
+		check_include_files(${XKBlib} HAVE_X11_XKBLIB_H)
 
-		IF(HAVE_X11_EXTENSIONS_DPMS_H)
+		if (HAVE_X11_EXTENSIONS_DPMS_H)
 			# Assume that function prototypes declared, when include exists.
-			SET(HAVE_DPMS_PROTOTYPES 1)
-		ENDIF(HAVE_X11_EXTENSIONS_DPMS_H)
+			set(HAVE_DPMS_PROTOTYPES 1)
+		endif()
 
-		IF(NOT HAVE_X11_XKBLIB_H)
-			MESSAGE(FATAL_ERROR "Missing header: " ${XKBlib})
-		ENDIF(NOT HAVE_X11_XKBLIB_H)
+		if (NOT HAVE_X11_XKBLIB_H)
+			message(FATAL_ERROR "Missing header: " ${XKBlib})
+		endif()
 
-		CHECK_LIBRARY_EXISTS("SM;ICE" IceConnectionNumber "" HAVE_ICE)
-		CHECK_LIBRARY_EXISTS("X11;Xext" DPMSQueryExtension "" HAVE_Xext)
-		CHECK_LIBRARY_EXISTS("X11;Xext;Xtst" XTestQueryExtension "" HAVE_Xtst)
-		CHECK_LIBRARY_EXISTS("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
+		check_library_exists("SM;ICE" IceConnectionNumber "" HAVE_ICE)
+		check_library_exists("X11;Xext" DPMSQueryExtension "" HAVE_Xext)
+		check_library_exists("X11;Xext;Xtst" XTestQueryExtension "" HAVE_Xtst)
+		check_library_exists("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
 
-		IF(HAVE_ICE)
+		if (HAVE_ICE)
 
 			# Assume we have SM if we have ICE.
-			SET(HAVE_SM 1)
-			LIST(APPEND libs SM ICE)
+			set(HAVE_SM 1)
+			list(APPEND libs SM ICE)
 
-		ENDIF(HAVE_ICE)
+		endif()
 
-		IF(HAVE_Xtst)
+		if (HAVE_Xtst)
 
 			# Xtxt depends on X11.
-			SET(HAVE_X11)
-			LIST(APPEND libs X11 Xtst)
+			set(HAVE_X11)
+			list(APPEND libs X11 Xtst)
 
-		ELSE(HAVE_Xtst)
+		else (HAVE_Xtst)
 
-			MESSAGE(FATAL_ERROR "Missing library: Xtst")
+			message(FATAL_ERROR "Missing library: Xtst")
 
-		ENDIF(HAVE_Xtst)
+		endif()
 
-		IF(HAVE_Xext)
-			LIST(APPEND libs Xext)
-		ENDIF(HAVE_Xext)
+		if (HAVE_Xext)
+			list(APPEND libs Xext)
+		endif()
 
-		IF(HAVE_Xinerama)
-			LIST(APPEND libs Xinerama)
-		ELSE(HAVE_Xinerama)
-			IF(HAVE_X11_EXTENSIONS_XINERAMA_H)
-			MESSAGE(FATAL_ERROR "Missing library: Xinerama")
-			ENDIF(HAVE_X11_EXTENSIONS_XINERAMA_H)
-		ENDIF(HAVE_Xinerama)
+		if (HAVE_Xinerama)
+			list(APPEND libs Xinerama)
+		else (HAVE_Xinerama)
+			if (HAVE_X11_EXTENSIONS_XINERAMA_H)
+				message(FATAL_ERROR "Missing library: Xinerama")
+			endif()
+		endif()
 
-	ENDIF(APPLE)
+	endif()
 
 	# For config.h, set some static values; it may be a good idea to make
 	# these values dynamic for non-standard UNIX compilers.
-	SET(ACCEPT_TYPE_ARG3 socklen_t)
-	SET(HAVE_CXX_BOOL 1)
-	SET(HAVE_CXX_CASTS 1)
-	SET(HAVE_CXX_EXCEPTIONS 1)
-	SET(HAVE_CXX_MUTABLE 1)
-	SET(HAVE_CXX_STDLIB 1)
-	SET(HAVE_PTHREAD_SIGNAL 1)
-	SET(SELECT_TYPE_ARG1 int)
-	SET(SELECT_TYPE_ARG234 "(fd_set *)")
-	SET(SELECT_TYPE_ARG5 "(struct timeval *)")
-	SET(STDC_HEADERS 1)
-	SET(TIME_WITH_SYS_TIME 1)
-	SET(HAVE_SOCKLEN_T 1)
+	set(ACCEPT_TYPE_ARG3 socklen_t)
+	set(HAVE_CXX_BOOL 1)
+	set(HAVE_CXX_CASTS 1)
+	set(HAVE_CXX_EXCEPTIONS 1)
+	set(HAVE_CXX_MUTABLE 1)
+	set(HAVE_CXX_STDLIB 1)
+	set(HAVE_PTHREAD_SIGNAL 1)
+	set(SELECT_TYPE_ARG1 int)
+	set(SELECT_TYPE_ARG234 "(fd_set *)")
+	set(SELECT_TYPE_ARG5 "(struct timeval *)")
+	set(STDC_HEADERS 1)
+	set(TIME_WITH_SYS_TIME 1)
+	set(HAVE_SOCKLEN_T 1)
 
 	# For config.h, save the results based on a template (config.h.in).
-	CONFIGURE_FILE(${cmake_dir}/config.h.in ${root_dir}/config.h)
+	configure_file(${cmake_dir}/config.h.in ${root_dir}/config.h)
 
-	ADD_DEFINITIONS(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
+	add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
 
-	IF(APPLE)
-		ADD_DEFINITIONS(-DWINAPI_CARBON=1 -D_THREAD_SAFE -DMACOSX_DEPLOYMENT_TARGET=10.4)
-	ELSE(APPLE)
-		ADD_DEFINITIONS(-DWINAPI_XWINDOWS=1)
-	ENDIF(APPLE)
+	if (APPLE)
+		add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE -DMACOSX_DEPLOYMENT_TARGET=10.4)
+	else (APPLE)
+		add_definitions(-DWINAPI_XWINDOWS=1)
+	endif()
 
-ELSE(UNIX)
+else (UNIX)
 
-	LIST(APPEND libs Wtsapi32 Userenv)
+	list(APPEND libs Wtsapi32 Userenv)
 
-	ADD_DEFINITIONS(
+	add_definitions(
 		/DWIN32
 		/D_WINDOWS
 		/D_CRT_SECURE_NO_WARNINGS
 		/DVERSION=\"${VERSION}\"
 	)
 
-ENDIF(UNIX)
+endif()

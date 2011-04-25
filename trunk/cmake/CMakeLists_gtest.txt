@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SET(inc_gtest_dirs
+set(inc_gtest_dirs
 	${root_dir}/tools/gtest
 	${root_dir}/tools/gtest/include
 )
 
-INCLUDE_DIRECTORIES(${inc_gtest_dirs})
-ADD_LIBRARY(gtest STATIC ${root_dir}/tools/gtest/src/gtest-all.cc)
+include_directories(${inc_gtest_dirs})
+add_library(gtest STATIC ${root_dir}/tools/gtest/src/gtest-all.cc)

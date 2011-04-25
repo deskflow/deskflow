@@ -23,18 +23,18 @@ set(integtests
 	${root_dir}/src/integtest/Main.cpp
 )
 
-if(WIN32)
+if (WIN32)
 	list(APPEND integtests
 		${root_dir}/src/integtest/platform/CMSWindowsClipboardTests.cpp
 	)
 endif()
 
-if(UNIX)
-	if(APPLE)
+if (UNIX)
+	if (APPLE)
 		list(APPEND integtests
 			    ${root_dir}/src/integtest/platform/COSXClipboardTests.cpp
 		)
-	else()
+	else ()
 		list(APPEND integtests
 			    ${root_dir}/src/integtest/platform/CXWindowsClipboardTests.cpp
 		)
