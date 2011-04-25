@@ -104,13 +104,12 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libplatform STATIC ${src})
+add_library(platform STATIC ${src})
 
 if (WIN32)
 	add_library(synrgyhk SHARED ${inc_hook} ${src_hook})
 endif()
 
 if (UNIX)
-	target_link_libraries(libplatform
-		libsynergy)
+	target_link_libraries(platform synergy)
 endif()

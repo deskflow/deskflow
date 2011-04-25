@@ -44,4 +44,4 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libio STATIC ${src})
+add_library(io STATIC ${src})

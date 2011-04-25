@@ -56,5 +56,4 @@ endif()
 include_directories(${inc})
 add_executable(synergyc ${src})
 target_link_libraries(synergyc
-	libarch libbase libclient libcommon libio libmt libnet libplatform 
-	libserver libsynergy ${libs})
+	arch base client common io mt net platform server synergy ${libs})

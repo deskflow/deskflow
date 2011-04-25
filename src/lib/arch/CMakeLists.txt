@@ -97,4 +97,4 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libarch STATIC ${src})
+add_library(arch STATIC ${src})

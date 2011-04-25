@@ -45,9 +45,8 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libclient STATIC ${src})
+add_library(client STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(libclient
-		libsynergy libio)
+	target_link_libraries(client synergy io)
 endif()

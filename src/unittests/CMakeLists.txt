@@ -40,5 +40,4 @@ endif()
 include_directories(${inc})
 add_executable(unittests ${src})
 target_link_libraries(unittests
-	libarch libbase libclient libcommon libio libmt libnet libplatform 
-	libserver libsynergy gtest ${libs})
+	arch base client common io mt net platform server synergy gtest ${libs})

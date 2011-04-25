@@ -31,4 +31,4 @@ if (UNIX)
 	)
 endif()
 
-add_library(libcommon STATIC ${src})
+add_library(common STATIC ${src})

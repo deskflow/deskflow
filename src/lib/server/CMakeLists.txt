@@ -64,9 +64,8 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libserver STATIC ${src})
+add_library(server STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(libserver
-		libsynergy)
+	target_link_libraries(server synergy)
 endif()

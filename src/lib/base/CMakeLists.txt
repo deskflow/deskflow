@@ -70,4 +70,4 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libbase STATIC ${src})
+add_library(base STATIC ${src})

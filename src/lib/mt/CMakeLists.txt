@@ -48,4 +48,4 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libmt STATIC ${src})
+add_library(mt STATIC ${src})

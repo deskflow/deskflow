@@ -90,9 +90,8 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libsynergy STATIC ${src})
+add_library(synergy STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(libsynergy
-		libarch libclient libnet libbase libplatform libmt libserver)
+	target_link_libraries(synergy arch client net base platform mt server)
 endif()
