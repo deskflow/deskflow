@@ -57,8 +57,6 @@ INCLUDE(${cmake_dir}/CMakeLists_launcher.txt)
 INCLUDE(${cmake_dir}/CMakeLists_gtest.txt)
 INCLUDE(${cmake_dir}/CMakeLists_test.txt)
 
-#add_subdirectory(third_party/gtest)
-
 if (CONF_CPACK)
    # Setup the CPack config.
    INCLUDE(${cmake_dir}/CMakeLists_cpack.txt)

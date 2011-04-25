@@ -15,7 +15,7 @@
 
 # Include all files that have unit tests
 set(unittests
-	${root_dir}/third_party/gtest/src/gtest_main.cc
+	${root_dir}/tools/gtest/src/gtest_main.cc
 	${root_dir}/src/unittest/synergy/CClipboardTests.cpp
 )
 
@@ -40,24 +40,6 @@ if(UNIX)
 		)
 	endif()
 endif()
-
-set(inc
-	${root_dir}
-	${root_dir}/lib
-	${root_dir}/lib/arch
-	${root_dir}/lib/base
-	${root_dir}/lib/client
-	${root_dir}/lib/common
-	${root_dir}/lib/io
-	${root_dir}/lib/mt
-	${root_dir}/lib/net
-	${root_dir}/lib/platform
-	${root_dir}/lib/synergy
-	${root_dir}/third_party/gtest
-	${root_dir}/third_party/gtest/include
-)
-
-include_directories(${inc})
 
 add_executable(unittests ${unittests})
 target_link_libraries(unittests synergy gtest ${libs})
