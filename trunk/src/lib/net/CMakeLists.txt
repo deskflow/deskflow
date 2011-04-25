@@ -60,9 +60,8 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_library(libnet STATIC ${src})
+add_library(net STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(libnet
-		libmt libio)
+	target_link_libraries(net mt io)
 endif()
