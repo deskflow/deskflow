@@ -83,5 +83,16 @@ set(inc
 	../synergy
 )
 
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+endif()
+
 include_directories(${inc})
 add_library(libsynergy STATIC ${src})
+
+if (UNIX)
+	target_link_libraries(libsynergy
+		libarch libclient libnet libbase libplatform libmt libserver)
+endif()

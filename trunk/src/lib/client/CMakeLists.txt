@@ -37,5 +37,17 @@ set(inc
 	../synergy
 )
 
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+
+endif()
+
 include_directories(${inc})
 add_library(libclient STATIC ${src})
+
+if (UNIX)
+	target_link_libraries(libclient
+		libsynergy libio)
+endif()

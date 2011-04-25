@@ -37,5 +37,11 @@ set(inc
 	../common
 )
 
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+endif()
+
 include_directories(${inc})
 add_library(libio STATIC ${src})

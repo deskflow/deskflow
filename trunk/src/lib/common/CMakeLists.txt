@@ -25,4 +25,10 @@ if (WIN32)
 	list(APPEND src ${inc})
 endif()
 
+if (UNIX)
+	include_directories(
+		../../..
+	)
+endif()
+
 add_library(libcommon STATIC ${src})

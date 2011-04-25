@@ -62,5 +62,12 @@ set(inc
 	../synergy
 )
 
+if (UNIX)
+	list(APPEND inc
+		../../..
+		../base
+	)
+endif()
+
 include_directories(${inc})
 add_library(libbase STATIC ${src})

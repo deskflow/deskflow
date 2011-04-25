@@ -38,8 +38,6 @@ elseif (UNIX)
 endif()
 
 set(inc
-	../..
-	../../lib
 	../../lib/arch
 	../../lib/base
 	../../lib/common
@@ -50,6 +48,12 @@ set(inc
 	../../lib/synergy
 	../../lib/server
 )
+
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+endif()
 
 include_directories(${inc})
 add_executable(synergys ${src})
