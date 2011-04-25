@@ -30,6 +30,8 @@
 # This will create an in-source UNIX Makefile.
 
 import sys, os
+sys.path.append('tools')
+
 from build import toolchain
 from getopt import gnu_getopt
 
