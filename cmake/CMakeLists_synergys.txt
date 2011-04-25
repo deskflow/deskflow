@@ -13,26 +13,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SET(root_cmd_synergys ${root_dir}/cmd/synergys)
+set(root_cmd_synergys ${root_dir}/cmd/synergys)
 
-SET(src_cmd_synergys_common
+set(src_cmd_synergys_common
 	${root_cmd_synergys}/synergys.cpp
 )
 
-SET(src_cmd_synergys_xwindows
+set(src_cmd_synergys_xwindows
 	${root_cmd_synergys}/CXWindowsServerTaskBarReceiver.cpp
 )
 
-SET(src_cmd_synergys_mswindows
+set(src_cmd_synergys_mswindows
 	${root_cmd_synergys}/CMSWindowsServerTaskBarReceiver.cpp
 )
 
-SET(inc_cmd_synergys_mswindows
+set(inc_cmd_synergys_mswindows
 	${root_cmd_synergys}/CMSWindowsServerTaskBarReceiver.h
 	${root_cmd_synergys}/resource.h
 )
 
-SET(res_cmd_synergys_mswindows
+set(res_cmd_synergys_mswindows
 	${root_cmd_synergys}/synergys.ico
 	${root_cmd_synergys}/synergys.rc
 	${root_cmd_synergys}/tb_error.ico
@@ -41,31 +41,31 @@ SET(res_cmd_synergys_mswindows
 	${root_cmd_synergys}/tb_wait.ico
 )
 
-SET(src_cmd_synergys_carbon
+set(src_cmd_synergys_carbon
 	${root_cmd_synergys}/COSXServerTaskBarReceiver.cpp
 )
 
-SET(src_cmd_synergys ${src_cmd_synergys_common})
+set(src_cmd_synergys ${src_cmd_synergys_common})
 
-IF(UNIX)
+if (UNIX)
 
-	IF(APPLE)
-	LIST(APPEND src_cmd_synergys ${src_cmd_synergys_carbon})
-	ELSE(APPLE)
-	LIST(APPEND src_cmd_synergys ${src_cmd_synergys_xwindows})
-	ENDIF(APPLE)
+	if (APPLE)
+	list(APPEND src_cmd_synergys ${src_cmd_synergys_carbon})
+	else (APPLE)
+	list(APPEND src_cmd_synergys ${src_cmd_synergys_xwindows})
+	endif()
 	
-ELSE(UNIX)
+else (UNIX)
 
-	LIST(APPEND src_cmd_synergys
+	list(APPEND src_cmd_synergys
 		${inc_cmd_synergys_mswindows}
 		${res_cmd_synergys_mswindows}
 		${src_cmd_synergys_mswindows}
 	)
 	
-ENDIF(UNIX)
+endif()
 
-SET(inc_dirs_cmd_synergys
+set(inc_dirs_cmd_synergys
 	${root_dir}
 	${root_dir}/lib
 	${root_dir}/lib/arch
@@ -79,6 +79,6 @@ SET(inc_dirs_cmd_synergys
 	${root_dir}/lib/server
 )
 
-INCLUDE_DIRECTORIES(${inc_dirs_cmd_synergys})
-ADD_EXECUTABLE(synergys ${src_cmd_synergys})
-TARGET_LINK_LIBRARIES(synergys synergy ${libs})
+include_directories(${inc_dirs_cmd_synergys})
+add_executable(synergys ${src_cmd_synergys})
+target_link_libraries(synergys synergy ${libs})

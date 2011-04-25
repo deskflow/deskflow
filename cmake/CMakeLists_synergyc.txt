@@ -13,26 +13,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SET(root_cmd_synergyc ${root_dir}/cmd/synergyc)
+set(root_cmd_synergyc ${root_dir}/cmd/synergyc)
 
-SET(src_cmd_synergyc_common
+set(src_cmd_synergyc_common
 	${root_cmd_synergyc}/synergyc.cpp
 )
 
-SET(src_cmd_synergyc_xwindows
+set(src_cmd_synergyc_xwindows
 	${root_cmd_synergyc}/CXWindowsClientTaskBarReceiver.cpp
 )
 
-SET(src_cmd_synergyc_mswindows
+set(src_cmd_synergyc_mswindows
 	${root_cmd_synergyc}/CMSWindowsClientTaskBarReceiver.cpp
 )
 
-SET(inc_cmd_synergyc_mswindows
+set(inc_cmd_synergyc_mswindows
 	${root_cmd_synergyc}/CMSWindowsClientTaskBarReceiver.h
 	${root_cmd_synergyc}/resource.h
 )
 
-SET(res_cmd_synergyc_mswindows
+set(res_cmd_synergyc_mswindows
 	${root_cmd_synergyc}/synergyc.ico
 	${root_cmd_synergyc}/synergyc.rc
 	${root_cmd_synergyc}/tb_error.ico
@@ -41,31 +41,31 @@ SET(res_cmd_synergyc_mswindows
 	${root_cmd_synergyc}/tb_wait.ico
 )
 
-SET(src_cmd_synergyc_carbon
+set(src_cmd_synergyc_carbon
 	${root_cmd_synergyc}/COSXClientTaskBarReceiver.cpp
 )
 
-SET(src_cmd_synergyc ${src_cmd_synergyc_common})
+set(src_cmd_synergyc ${src_cmd_synergyc_common})
 
-IF(UNIX)
+if (UNIX)
 
-	IF(APPLE)
-	LIST(APPEND src_cmd_synergyc ${src_cmd_synergyc_carbon})
-	ELSE(APPLE)
-	LIST(APPEND src_cmd_synergyc ${src_cmd_synergyc_xwindows})
-	ENDIF(APPLE)
+	if (APPLE)
+		list(APPEND src_cmd_synergyc ${src_cmd_synergyc_carbon})
+	else (APPLE)
+		list(APPEND src_cmd_synergyc ${src_cmd_synergyc_xwindows})
+	endif()
 	
-ELSE(UNIX)
+else (UNIX)
 
-	LIST(APPEND src_cmd_synergyc 
+	list(APPEND src_cmd_synergyc 
 		${inc_cmd_synergyc_mswindows}
 		${res_cmd_synergyc_mswindows}
 		${src_cmd_synergyc_mswindows}
 	)
 	
-ENDIF(UNIX)
+endif()
 
-SET(inc_dirs_cmd_synergyc
+set(inc_dirs_cmd_synergyc
 	${root_dir}
 	${root_dir}/lib
 	${root_dir}/lib/arch
@@ -79,6 +79,6 @@ SET(inc_dirs_cmd_synergyc
 	${root_dir}/lib/synergy
 )
 
-INCLUDE_DIRECTORIES(${inc_dirs_cmd_synergyc})
-ADD_EXECUTABLE(synergyc ${src_cmd_synergyc})
-TARGET_LINK_LIBRARIES(synergyc synergy ${libs})
+include_directories(${inc_dirs_cmd_synergyc})
+add_executable(synergyc ${src_cmd_synergyc})
+target_link_libraries(synergyc synergy ${libs})

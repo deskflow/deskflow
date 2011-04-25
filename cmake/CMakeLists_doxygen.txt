@@ -13,8 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SET(VERSION, "${VERSION}")
+set(VERSION, "${VERSION}")
 
 # For doxygen.cfg, save the results based on a template (doxygen.cfg.in).
-CONFIGURE_FILE(${cmake_dir}/doxygen.cfg.in ${doc_dir}/doxygen.cfg)
-
+configure_file(${cmake_dir}/doxygen.cfg.in ${doc_dir}/doxygen.cfg)

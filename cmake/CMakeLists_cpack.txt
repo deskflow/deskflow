@@ -29,7 +29,7 @@ install(TARGETS
 if (UNIX)
 	if (APPLE)
 		# no cpack support for apple
-	else()
+	else ()
 		install(FILES bin/qsynergy
 			DESTINATION bin
 			PERMISSIONS
@@ -48,33 +48,33 @@ endif()
 # The default CPack behaviour is not to append the system processor
 # type, which is undesirable in our case, since we want to support 
 # both 32-bit and 64-bit processors.
-SET(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
+set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
 
 # For source code, use .tar.gz on Unix, and .zip on Windows
-IF(UNIX)
-	SET(CPACK_SOURCE_GENERATOR TGZ)
-ELSE(UNIX)
-	SET(CPACK_SOURCE_GENERATOR ZIP)
-ENDIF(UNIX)
+if (UNIX)
+	set(CPACK_SOURCE_GENERATOR TGZ)
+else (UNIX)
+	set(CPACK_SOURCE_GENERATOR ZIP)
+endif()
 
-if(APPLE)
+if (APPLE)
     set(CPACK_SYSTEM_NAME "MacOSX-Universal")
-endif(APPLE)
+endif()
 
-SET(CPACK_PACKAGE_NAME "synergy")
-SET(CPACK_PACKAGE_VENDOR "The Synergy Project")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Synergy server and client")
-SET(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
-SET(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
-SET(CPACK_PACKAGE_VERSION_PATCH ${VERSION_REV})
-SET(CPACK_PACKAGE_VERSION ${VERSION})
-SET(CPACK_PACKAGE_CONTACT http://synergy-foss.org/)
-SET(CPACK_RESOURCE_FILE_LICENSE "${cmake_dir}/License.rtf")
-SET(CPACK_RESOURCE_FILE_README "${cmake_dir}/Readme.txt")
+set(CPACK_PACKAGE_NAME "synergy")
+set(CPACK_PACKAGE_VENDOR "The Synergy Project")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Synergy server and client")
+set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_REV})
+set(CPACK_PACKAGE_VERSION ${VERSION})
+set(CPACK_PACKAGE_CONTACT http://synergy-foss.org/)
+set(CPACK_RESOURCE_FILE_LICENSE "${cmake_dir}/License.rtf")
+set(CPACK_RESOURCE_FILE_README "${cmake_dir}/Readme.txt")
 
 # files to exclude from src package (regex patterns)
 # to escape, use 4 backslashes (\\\\) -- yuck!
-SET(CPACK_SOURCE_IGNORE_FILES
+set(CPACK_SOURCE_IGNORE_FILES
 	# temp output dir in root
 	"/bin/"
 
@@ -104,4 +104,4 @@ SET(CPACK_SOURCE_IGNORE_FILES
 )
 
 # Must be last (since it relies of CPACK_ vars).
-INCLUDE(CPack)
+include(CPack)
