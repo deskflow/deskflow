@@ -47,7 +47,9 @@ class InternalCommands:
 	doxygen_filename = 'doxygen.cfg'
 	
 	macZipFiles = [
-		'synergyc', 'synergys',
+		'src/cmd/synergyc/synergyc',
+		'src/cmd/synergys/synergys',
+		'../QSynergy.app',
 		'../../doc/synergy.conf.example',
 		'../../doc/MacReadme.txt']
 
@@ -498,18 +500,30 @@ class InternalCommands:
 
 		version = self.getVersionFromCmake()
 		zipFile = (self.project + '-' + version + '-' +
-				   self.getMacPackageName() + '.zip')
+				   self.getMacPackageName())
 
 		# nb: temporary fix (just distribute a zip)
 		bin = self.getBinDir(unixTarget)
 		self.try_chdir(bin)
 
 		try:
+			import shutil
+			if os.path.exists(zipFile):
+				shutil.rmtree(zipFile)
+
+			os.makedirs(zipFile)
+
 			for f in self.macZipFiles:
 				if not os.path.exists(f):
 					raise Exception('File does not exist: ' + f)
+				elif os.path.isdir(f):
+					dirLastSplit = f.split('/')
+					dirLast = dirLastSplit[len(dirLastSplit) - 1]
+					shutil.copytree(f, zipFile + '/' + dirLast)
+				else:
+					shutil.copy2(f, zipFile + '/')
 
-			zipCmd = ('zip ' + zipFile + ' ' + ' '.join(self.macZipFiles));
+			zipCmd = ('zip -r ' + zipFile + '.zip ' + zipFile);
 			
 			print 'Creating package: ' + zipCmd
 			err = os.system(zipCmd)
