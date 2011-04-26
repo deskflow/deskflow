@@ -538,7 +538,7 @@ class InternalCommands:
 			arch = 'x64'
 			installDirVar = '$PROGRAMFILES64'			
 		
-		templateFile = open('cmake\Installer.nsi.in')
+		templateFile = open(self.cmake_dir + '\Installer.nsi.in')
 		template = templateFile.read()
 
 		template = template.replace('${in:version}', self.getVersionFromCmake())
