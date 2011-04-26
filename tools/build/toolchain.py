@@ -35,9 +35,9 @@ class InternalCommands:
 	w32_qt_version = '4.6.2'
 
 	source_dir = '..' # Source, relative to build.
-	cmake_dir = 'cmake'
+	cmake_dir = 'res'
 	_bin_dir = 'bin'
-	gui_dir = 'gui'
+	gui_dir = 'src/gui'
 	doc_dir = 'doc'
 
 	sln_filename = '%s.sln' % project

@@ -80,8 +80,8 @@ release {
     RCC_DIR = tmp/release
 }
 win32 {
-	Debug:DESTDIR = ../bin/Debug
-	Release:DESTDIR = ../bin/Release
+	Debug:DESTDIR = ../../bin/Debug
+	Release:DESTDIR = ../../bin/Release
 } else {
-	DESTDIR = ../bin
+	DESTDIR = ../../bin
 }
