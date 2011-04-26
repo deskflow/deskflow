@@ -32,6 +32,10 @@
 import sys, os
 sys.path.append('tools')
 
+if os.path.exists('build'):
+	print "Removing legacy build dir."
+	os.rename('build', 'build.old')
+
 from build import toolchain
 from getopt import gnu_getopt
 
