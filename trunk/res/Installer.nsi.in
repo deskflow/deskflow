@@ -16,9 +16,9 @@
 !define helpUrl "http://synergy-foss.org/support"
 !define vcRedistFile "vcredist_${arch}.exe"
 !define startMenuApp "qsynergy.exe"
-!define binDir "..\bin\Release"
+!define binDir "..\bin"
 !define uninstall "uninstall.exe"
-!define icon "..\gui\res\win\QSynergy.ico"
+!define icon "..\src\gui\res\win\QSynergy.ico"
 !define controlPanelReg "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
 
 !define MUI_ICON ${icon}
@@ -26,7 +26,7 @@
 
 !include "MUI2.nsh"
 
-!insertmacro MUI_PAGE_LICENSE "..\\cmake\\License.rtf"
+!insertmacro MUI_PAGE_LICENSE "..\\res\\License.rtf"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 
@@ -112,16 +112,16 @@ SectionEnd
 Section "Server and Client" core
 
   ; client and server files
-  File "${binDir}\synergys.exe"
-  File "${binDir}\synergyc.exe"
-  File "${binDir}\synrgyhk.dll"
+  File "${binDir}\src\cmd\synergys\Release\synergys.exe"
+  File "${binDir}\src\cmd\synergyc\Release\synergyc.exe"
+  File "${binDir}\src\lib\platform\Release\synrgyhk.dll"
 
 SectionEnd
 
 Section "Graphical User Interface" gui
 
   ; gui and qt libs
-  File "${binDir}\qsynergy.exe"
+  File "${binDir}\Release\qsynergy.exe"
   File "${qtDir}\qt\bin\libgcc_s_dw2-1.dll"
   File "${qtDir}\qt\bin\mingwm10.dll"
   File "${qtDir}\qt\bin\QtGui4.dll"
