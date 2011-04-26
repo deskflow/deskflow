@@ -57,3 +57,10 @@ include_directories(${inc})
 add_executable(synergys ${src})
 target_link_libraries(synergys
 	arch base client common io mt net platform server synergy ${libs})
+
+if (CONF_CPACK)
+	install(TARGETS
+		synergys
+		COMPONENT core
+		DESTINATION bin)
+endif()

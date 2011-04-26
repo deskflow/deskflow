@@ -40,7 +40,7 @@ project(synergy C CXX)
 
 # Set some easy to type variables.
 set(root_dir ${CMAKE_SOURCE_DIR})
-set(cmake_dir ${root_dir}/cmake)
+set(cmake_dir ${root_dir}/res)
 set(bin_dir ${root_dir}/bin)
 set(doc_dir ${root_dir}/doc)
 set(doc_dir ${root_dir}/doc)
@@ -283,12 +283,6 @@ if (CONF_CPACK)
 	   message(FATAL_ERROR "CPack support for Windows has been removed.")
 	endif()
 
-	install(TARGETS
-		synergys
-		synergyc
-		COMPONENT core
-		DESTINATION bin)
-
 	if (UNIX)
 		if (APPLE)
 			# no cpack support for apple
@@ -301,9 +295,9 @@ if (CONF_CPACK)
 				WORLD_READ WORLD_EXECUTE)
 
 			# install gnome menu item
-			install(FILES cmake/synergy.desktop
+			install(FILES res/synergy.desktop
 				DESTINATION share/applications)
-			install(FILES cmd/launcher/synergy.ico
+			install(FILES res/synergy.ico
 				DESTINATION share/icons)
 		endif()
 	endif()
