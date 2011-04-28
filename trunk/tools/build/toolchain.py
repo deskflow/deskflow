@@ -36,7 +36,8 @@ class InternalCommands:
 
 	source_dir = '..' # Source, relative to build.
 	cmake_dir = 'res'
-	_bin_dir = 'build'
+	build_dir = 'build'
+	bin_dir = 'bin'
 	gui_dir = 'src/gui'
 	doc_dir = 'doc'
 
@@ -85,20 +86,20 @@ class InternalCommands:
 		2 : 'Xcode',
 	}
 
-	def getBinDir(self, target=''):
-		workingDir = self._bin_dir
+	def getBuildDir(self, target=''):
+		workingDir = self.build_dir
 		if target != '':
 			workingDir += '/' + target
 		return workingDir
 
 	def config_filepath(self, target=''):
-		return '%s/%s' % (self.getBinDir(target), self.config_filename)
+		return '%s/%s' % (self.getBuildDir(target), self.config_filename)
 
 	def sln_filepath(self):
-		return '%s\%s' % (self.getBinDir(), self.sln_filename)
+		return '%s\%s' % (self.getBuildDir(), self.sln_filename)
 
 	def xcodeproj_filepath(self, target=''):
-		return '%s/%s' % (self.getBinDir(target), self.xcodeproj_filename)
+		return '%s/%s' % (self.getBuildDir(target), self.xcodeproj_filename)
 		
 	def usage(self):
 		app = sys.argv[0]
@@ -170,7 +171,7 @@ class InternalCommands:
 		print "CMake command: " + cmake_cmd_string
 		
 		# Run from build dir so we have an out-of-source build.
-		self.try_chdir(self.getBinDir(target))
+		self.try_chdir(self.getBuildDir(target))
 		err = os.system(cmake_cmd_string)
 		self.restore_chdir()
 
@@ -294,7 +295,7 @@ class InternalCommands:
 				if not self.has_conf_run(target) and not skipConfig:
 					self.configure_internal(target)
 					
-				self.try_chdir(self.getBinDir(target))
+				self.try_chdir(self.getBuildDir(target))
 				err = os.system(cmd)
 				self.restore_chdir()
 				
@@ -336,7 +337,7 @@ class InternalCommands:
 				raise Exception('Not supported with generator: ' + generator)
 
 			for target in targets:
-				self.try_chdir(self.getBinDir(target))
+				self.try_chdir(self.getBuildDir(target))
 				err = os.system(cmd + ' clean')
 				self.restore_chdir()
 
@@ -450,6 +451,8 @@ class InternalCommands:
 		# make sure we have a release build to package
 		self.build(['release'], skipConfig=True)
 
+		moveExt = ''
+
 		if type == None:
 			self.dist_usage()
 			return
@@ -457,18 +460,21 @@ class InternalCommands:
 		elif type == 'src':
 			if sys.platform in ['linux2', 'darwin']:
 				self.dist_run('make package_source', unixTarget)
+				moveExt = 'tar.gz'
 			else:
 				package_unsupported = True
 			
 		elif type == 'rpm':
 			if sys.platform == 'linux2':
 				self.dist_run('cpack -G RPM', unixTarget)
+				moveExt = 'rpm'
 			else:
 				package_unsupported = True
 			
 		elif type == 'deb':
 			if sys.platform == 'linux2':
 				self.dist_run('cpack -G DEB', unixTarget)
+				moveExt = 'deb'
 			else:
 				package_unsupported = True
 			
@@ -487,11 +493,21 @@ class InternalCommands:
 		else:
 			raise Exception('Package type not supported: ' + type)
 
+		if moveExt != '':
+			self.unixMove(
+				self.build_dir + '/release/*.' + moveExt,
+				self.bin_dir)
+
 		if package_unsupported:
 			raise Exception(
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
 		
+	def unixMove(self, source, dest):
+		print 'Moving ' + source + ' to ' + dest
+		err = os.system('mv ' + source + ' ' + dest)
+		if err != 0:
+			raise Exception('Package failed: ' + str(err))
 
 	def distMac(self, unixTarget):
 		# nb: disabling package maker, as it doesn't
@@ -503,7 +519,7 @@ class InternalCommands:
 				   self.getMacPackageName())
 
 		# nb: temporary fix (just distribute a zip)
-		bin = self.getBinDir(unixTarget)
+		bin = self.getBuildDir(unixTarget)
 		self.try_chdir(bin)
 
 		try:
@@ -561,7 +577,7 @@ class InternalCommands:
 		template = template.replace('${in:qtDir}', qtDir)
 		template = template.replace('${in:installDirVar}', installDirVar)
 
-		nsiPath = self._bin_dir + '\Installer.nsi'
+		nsiPath = self.build_dir + '\Installer.nsi'
 		nsiFile = open(nsiPath, 'w')
 		nsiFile.write(template)
 		nsiFile.close()
@@ -652,7 +668,7 @@ class InternalCommands:
 		if type != 'win':
 			target = 'release'
 
-		for filename in os.listdir(self.getBinDir(target)):
+		for filename in os.listdir(self.getBuildDir(target)):
 			if re.search(pattern, filename):
 				return filename
 		
@@ -666,7 +682,7 @@ class InternalCommands:
 		return re.sub(pattern, replace, self.dist_name(type))
 	
 	def dist_run(self, command, target=''):
-		self.try_chdir(self.getBinDir(target))
+		self.try_chdir(self.getBuildDir(target))
 		print 'CPack command: ' + command
 		err = os.system(command)
 		self.restore_chdir()
@@ -732,8 +748,8 @@ class InternalCommands:
 		generator = self.get_generator_from_prompt()
 
 		# Create build dir, since config file resides there.
-		if not os.path.exists(self.getBinDir(target)):
-			os.mkdir(self.getBinDir(target))
+		if not os.path.exists(self.getBuildDir(target)):
+			os.mkdir(self.getBuildDir(target))
 
 		if os.path.exists(self.config_filepath()):
 			config = ConfigParser.ConfigParser()
@@ -754,7 +770,7 @@ class InternalCommands:
 
 		self.write_config(config)
 
-		cmakecache_filename = '%s/CMakeCache.txt' % self.getBinDir(target)
+		cmakecache_filename = '%s/CMakeCache.txt' % self.getBuildDir(target)
 		if os.path.exists(cmakecache_filename):
 			print "Removing %s, since generator changed." % cmakecache_filename
 			os.remove(cmakecache_filename)
@@ -926,7 +942,7 @@ class InternalCommands:
 				) % (self.get_vcvarsall(generator), vcvars_platform, args, self.sln_filepath(), config)
 		
 		# Generate a batch file, since we can't use environment variables directly.
-		temp_bat = self.getBinDir() + r'\vcbuild.bat'
+		temp_bat = self.getBuildDir() + r'\vcbuild.bat'
 		file = open(temp_bat, 'w')
 		file.write(cmd)
 		file.close()
