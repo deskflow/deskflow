@@ -48,9 +48,9 @@ class InternalCommands:
 	doxygen_filename = 'doxygen.cfg'
 	
 	macZipFiles = [
-		'src/cmd/synergyc/synergyc',
-		'src/cmd/synergys/synergys',
-		'../QSynergy.app',
+		'../../bin/release/synergyc',
+		'../../bin/release/synergys',
+		'../../bin/QSynergy.app',
 		'../../doc/synergy.conf.example',
 		'../../doc/MacReadme.txt']
 
@@ -445,7 +445,7 @@ class InternalCommands:
 		package_unsupported = False
 		unixTarget = 'release'
 		
-		if type != 'win':
+		if type != 'win' and type != 'mac':
 			self.configure_internal(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
 
 		# make sure we have a release build to package
@@ -539,7 +539,7 @@ class InternalCommands:
 				else:
 					shutil.copy2(f, zipFile + '/')
 
-			zipCmd = ('zip -r ' + zipFile + '.zip ' + zipFile);
+			zipCmd = ('zip -r ../../' + self.bin_dir + '/' + zipFile + '.zip ' + zipFile);
 			
 			print 'Creating package: ' + zipCmd
 			err = os.system(zipCmd)
