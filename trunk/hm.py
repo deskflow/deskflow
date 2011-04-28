@@ -32,7 +32,9 @@
 import sys, os
 sys.path.append('tools')
 
-if os.path.exists('build'):
+# if old build src dir exists, move it, as this will now be used for build 
+# output.
+if os.path.exists('build/toolchain.py'):
 	print "Removing legacy build dir."
 	os.rename('build', 'build.old')
 

@@ -36,7 +36,7 @@ class InternalCommands:
 
 	source_dir = '..' # Source, relative to build.
 	cmake_dir = 'res'
-	_bin_dir = 'bin'
+	_bin_dir = 'build'
 	gui_dir = 'src/gui'
 	doc_dir = 'doc'
 

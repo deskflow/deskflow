@@ -41,21 +41,21 @@ elseif (UNIX)
 endif()
 
 set(inc
-	../lib/arch
-	../lib/base
-	../lib/client
-	../lib/common
-	../lib/io
-	../lib/mt
-	../lib/net
-	../lib/platform
-	../lib/synergy
-	../../tools/gtest/include
+	../../lib/arch
+	../../lib/base
+	../../lib/client
+	../../lib/common
+	../../lib/io
+	../../lib/mt
+	../../lib/net
+	../../lib/platform
+	../../lib/synergy
+	../../../../tools/gtest/include
 )
 
 if (UNIX)
 	list(APPEND inc
-		../..
+		../../..
 	)
 endif()
 

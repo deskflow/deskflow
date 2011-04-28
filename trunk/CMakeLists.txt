@@ -38,6 +38,10 @@ endif()
 # First, declare project (important for prerequisite checks).
 project(synergy C CXX)
 
+# put binaries in a different dir to make them easier to find.
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
 # Set some easy to type variables.
 set(root_dir ${CMAKE_SOURCE_DIR})
 set(cmake_dir ${root_dir}/res)
@@ -332,8 +336,10 @@ if (CONF_CPACK)
 	# files to exclude from src package (regex patterns)
 	# to escape, use 4 backslashes (\\\\) -- yuck!
 	set(CPACK_SOURCE_IGNORE_FILES
-		# temp output dir in root
+		# temp output dirs in root
+		"/build/"
 		"/bin/"
+		"/lib/"
 
 		# generated config.h file
 		"/config\\\\.h$"
