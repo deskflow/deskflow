@@ -561,7 +561,7 @@ class InternalCommands:
 		template = template.replace('${in:qtDir}', qtDir)
 		template = template.replace('${in:installDirVar}', installDirVar)
 
-		nsiPath = 'bin\Installer.nsi'
+		nsiPath = self._bin_dir + '\Installer.nsi'
 		nsiFile = open(nsiPath, 'w')
 		nsiFile.write(template)
 		nsiFile.close()
