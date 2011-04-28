@@ -13,13 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-include_directories(
-	../tools/gtest
-	../tools/gtest/include)
-
-add_library(gtest STATIC ../tools/gtest/src/gtest-all.cc)
-
 add_subdirectory(lib)
 add_subdirectory(cmd)
-add_subdirectory(unittests)
-add_subdirectory(integtests)
+add_subdirectory(test)
