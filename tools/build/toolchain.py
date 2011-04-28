@@ -622,8 +622,8 @@ class InternalCommands:
 
 		srcDir = 'bin/'
 		generator = self.get_generator_from_config()
-		if not generator.startswith('Visual Studio'):
-			srcDir += 'release/'
+		#if not generator.startswith('Visual Studio'):
+		#	srcDir += 'release/'
 
 		ftp.run(srcDir + src, dest) 
 		print 'Done'
@@ -671,8 +671,8 @@ class InternalCommands:
 		
 		# only use release dir if not windows
 		target = ''
-		if type != 'win':
-			target = 'release'
+		#if type != 'win':
+		#	target = 'release'
 
 		for filename in os.listdir(self.getBinDir(target)):
 			if re.search(pattern, filename):
