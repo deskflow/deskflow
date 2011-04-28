@@ -39,8 +39,18 @@ endif()
 project(synergy C CXX)
 
 # put binaries in a different dir to make them easier to find.
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+if (WIN32)
+  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+  set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+elseif (UNIX)
+  if (CMAKE_BUILD_TYPE STREQUAL Debug)
+    set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/debug)
+    set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/debug)
+  elseif (CMAKE_BUILD_TYPE STREQUAL Release)
+    set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/release)
+    set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/release)
+  endif()
+endif()
 
 # Set some easy to type variables.
 set(root_dir ${CMAKE_SOURCE_DIR})
@@ -289,7 +299,7 @@ if (CONF_CPACK)
 
 	if (UNIX)
 		if (APPLE)
-			# no cpack support for apple
+			message(FATAL_ERROR "CPack support for Apple has been removed.")
 		else ()
 			install(FILES bin/qsynergy
 				DESTINATION bin
@@ -316,10 +326,6 @@ if (CONF_CPACK)
 		set(CPACK_SOURCE_GENERATOR TGZ)
 	else (UNIX)
 		set(CPACK_SOURCE_GENERATOR ZIP)
-	endif()
-
-	if (APPLE)
-		set(CPACK_SYSTEM_NAME "MacOSX-Universal")
 	endif()
 
 	set(CPACK_PACKAGE_NAME "synergy")
