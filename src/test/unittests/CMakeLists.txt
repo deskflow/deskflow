@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(src
-	../../../../tools/gtest/src/gtest_main.cc
+	../../../tools/gtest/src/gtest_main.cc
 	synergy/CClipboardTests.cpp
 )
 
@@ -28,7 +28,7 @@ set(inc
 	../../lib/net
 	../../lib/platform
 	../../lib/synergy
-	../../../../tools/gtest/include
+	../../../tools/gtest/include
 )
 
 if (UNIX)
