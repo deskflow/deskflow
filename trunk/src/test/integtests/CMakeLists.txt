@@ -50,7 +50,7 @@ set(inc
 	../../lib/net
 	../../lib/platform
 	../../lib/synergy
-	../../../../tools/gtest/include
+	../../../tools/gtest/include
 )
 
 if (UNIX)
