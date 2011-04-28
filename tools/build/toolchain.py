@@ -92,6 +92,12 @@ class InternalCommands:
 			workingDir += '/' + target
 		return workingDir
 
+	def getBinDir(self, target=''):
+		workingDir = self.bin_dir
+		if target != '':
+			workingDir += '/' + target
+		return workingDir
+
 	def config_filepath(self, target=''):
 		return '%s/%s' % (self.getBuildDir(target), self.config_filename)
 
@@ -668,7 +674,7 @@ class InternalCommands:
 		if type != 'win':
 			target = 'release'
 
-		for filename in os.listdir(self.getBuildDir(target)):
+		for filename in os.listdir(self.getBinDir(target)):
 			if re.search(pattern, filename):
 				return filename
 		
