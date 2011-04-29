@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SET(root_lib ${root_dir}/lib)
-
+MESSAGE(STATUS ${root_dir})
 SET(src_lib_arch
 	${root_lib}/arch/CArchAppUtil.cpp
 	${root_lib}/arch/CArch.cpp
