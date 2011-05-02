@@ -161,7 +161,7 @@ if (UNIX)
 			${lib_Carbon}
 		)
 
-	else (APPLE)
+	else()
 
 		set(XKBlib "X11/XKBlib.h")
 		check_include_files("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
@@ -199,7 +199,7 @@ if (UNIX)
 			set(HAVE_X11)
 			list(APPEND libs X11 Xtst)
 
-		else (HAVE_Xtst)
+		else()
 
 			message(FATAL_ERROR "Missing library: Xtst")
 
