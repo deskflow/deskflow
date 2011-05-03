@@ -15,10 +15,12 @@
 
 set(src
 	synergyc.cpp
+	CClientTaskBarReceiver.cpp
 )
 
 if (WIN32)
 	list(APPEND src
+		CClientTaskBarReceiver.h
 		CMSWindowsClientTaskBarReceiver.cpp
 		CMSWindowsClientTaskBarReceiver.h
 		resource.h
@@ -54,7 +56,7 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_executable(synergyc ${src})
+add_executable(synergyc WIN32 ${src})
 target_link_libraries(synergyc
 	arch base client common io mt net platform server synergy ${libs})
 
