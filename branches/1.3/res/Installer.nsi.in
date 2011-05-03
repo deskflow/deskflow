@@ -114,7 +114,7 @@ SectionEnd
 
 Section "Graphical User Interface" gui
 
-  File "${binDir}\launcher.exe"
+  File "${binDir}\Release\launcher.exe"
 
   ; gui start menu shortcut
   SetShellVarContext all
