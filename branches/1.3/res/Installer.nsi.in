@@ -19,7 +19,7 @@
 !define binDir "..\bin"
 !define libDir "..\lib"
 !define uninstall "uninstall.exe"
-!define icon "..\cmd\launcher\synergy.ico"
+!define icon "..\src\cmd\launcher\synergy.ico"
 !define controlPanelReg "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
 
 !define MUI_ICON ${icon}
