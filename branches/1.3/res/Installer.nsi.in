@@ -106,9 +106,9 @@ SectionEnd
 Section "Server and Client" core
 
   ; client and server files
-  File "${binDir}\synergys.exe"
-  File "${binDir}\synergyc.exe"
-  File "${binDir}\synrgyhk.dll"
+  File "${binDir}\Release\synergys.exe"
+  File "${binDir}\Release\synergyc.exe"
+  File "${libDir}\Release\synrgyhk.dll"
 
 SectionEnd
 
