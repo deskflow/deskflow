@@ -23,12 +23,30 @@
 #include "CArchMiscWindows.h"
 #endif
 
+#if SYSAPI_UNIX
+#include <fstream>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <signal.h>
+#define LOCK_FILE "/tmp/integtests.lock"
+#endif
+
 #define ERROR_ALREADY_RUNNING 1
 
 using namespace std;
 
-void
+int
 ensureSingleInstance();
+
+#if SYSAPI_UNIX
+
+void
+signalHandler(int signal);
+
+void
+removeLock();
+
+#endif
 
 int
 main(int argc, char **argv)
@@ -37,6 +55,12 @@ main(int argc, char **argv)
 	int err = ensureSingleInstance();
 	if (err != 0)
 		return err;
+
+#if SYSAPI_UNIX
+	// register SIGINT handling (to delete lock file)
+	signal(SIGINT, signalHandler);
+	atexit(removeLock);
+#endif
 
 #if SYSAPI_WIN32
 	// record window instance for tray icon, etc
@@ -90,9 +114,46 @@ ensureSingleInstance()
 
 		gotEntry = Process32Next(snapshot, &entry);
 	}
+
 #elif SYSAPI_UNIX
-	// TODO
+
+	// fail if lock file exists
+	struct stat info;
+	int statResult = stat(LOCK_FILE, &info);
+	if (statResult == 0)
+	{
+		cerr << "error: lock file exists: " << LOCK_FILE << endl;
+		return ERROR_ALREADY_RUNNING;
+	}
+
+	// write an empty lock file
+	cout << "creating lock: " << LOCK_FILE << endl;
+
+	ofstream stream;
+	stream.open(LOCK_FILE);
+	if (!stream.is_open())
+		cerr << "error: could not create lock" << endl;
+
+	stream << "";
+	stream.close();
+
 #endif
 
 	return 0;
 }
+
+#if SYSAPI_UNIX
+void
+signalHandler(int signal)
+{
+	removeLock();
+}
+
+void
+removeLock()
+{
+	// remove lock file so other instances can run.
+	cout << "removing lock: " << LOCK_FILE << endl;
+	unlink(LOCK_FILE);
+}
+#endif
