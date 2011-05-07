@@ -308,13 +308,6 @@ if (CONF_CPACK)
 	# both 32-bit and 64-bit processors.
 	set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
 
-	# For source code, use .tar.gz on Unix, and .zip on Windows
-	if (UNIX)
-		set(CPACK_SOURCE_GENERATOR TGZ)
-	else (UNIX)
-		set(CPACK_SOURCE_GENERATOR ZIP)
-	endif()
-
 	set(CPACK_PACKAGE_NAME "synergy")
 	set(CPACK_PACKAGE_VENDOR "The Synergy Project")
 	set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Synergy server and client")
@@ -325,39 +318,6 @@ if (CONF_CPACK)
 	set(CPACK_PACKAGE_CONTACT http://synergy-foss.org/)
 	set(CPACK_RESOURCE_FILE_LICENSE "${cmake_dir}/License.rtf")
 	set(CPACK_RESOURCE_FILE_README "${cmake_dir}/Readme.txt")
-
-	# files to exclude from src package (regex patterns)
-	# to escape, use 4 backslashes (\\\\) -- yuck!
-	set(CPACK_SOURCE_IGNORE_FILES
-		# temp output dirs in root
-		"/build/"
-		"/bin/"
-		"/lib/"
-
-		# generated config.h file
-		"/config\\\\.h$"
-
-		# buildbot stuff
-		"\\\\.buildbot\\\\-sourcedata$"
-
-		# qt temp build dir
-		"/gui/tmp/.*"
-
-		# qt make file
-		"/gui/Makefile$"
-
-		# qt generated ui headers
-		"/gui/ui_.*\\\\.h$"
-
-		# compiled python files
-		".*\\\\.pyc$"
-
-		# subversion caches (all dirs)
-		".*/\\\\.svn/.*"
-
-		# emacs temporary files
-		".*~$"
-	)
 
 	# Must be last (since it relies of CPACK_ vars).
 	include(CPack)
