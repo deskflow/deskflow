@@ -28,11 +28,13 @@ if (WIN32)
 		CMSWindowsScreen.h
 		CMSWindowsScreenSaver.h
 		CMSWindowsUtil.h
+		IMSWindowsClipboardFacade.h
 	)
 
 	set(src
 		${inc}
 		CMSWindowsClipboard.cpp
+		CMSWindowsClipboardFacade.cpp
 		CMSWindowsClipboardAnyTextConverter.cpp
 		CMSWindowsClipboardBitmapConverter.cpp
 		CMSWindowsClipboardHTMLConverter.cpp

@@ -50,7 +50,8 @@ set(inc
 	../../lib/net
 	../../lib/platform
 	../../lib/synergy
-	../../../tools/gtest/include
+	../../../tools/gtest-1.6.0/include
+	../../../tools/gmock-1.6.0/include
 )
 
 if (UNIX)
@@ -62,4 +63,4 @@ endif()
 include_directories(${inc})
 add_executable(integtests ${src})
 target_link_libraries(integtests
-	arch base client common io mt net platform server synergy gtest ${libs})
+	arch base client common io mt net platform server synergy gtest gmock ${libs})

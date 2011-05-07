@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(src
-	../../../tools/gtest/src/gtest_main.cc
+	../../../tools/gtest-1.6.0/src/gtest_main.cc
 	synergy/CClipboardTests.cpp
 )
 
@@ -28,7 +28,8 @@ set(inc
 	../../lib/net
 	../../lib/platform
 	../../lib/synergy
-	../../../tools/gtest/include
+	../../../tools/gtest-1.6.0/include
+	../../../tools/gmock-1.6.0/include
 )
 
 if (UNIX)
@@ -40,4 +41,4 @@ endif()
 include_directories(${inc})
 add_executable(unittests ${src})
 target_link_libraries(unittests
-	arch base client common io mt net platform server synergy gtest ${libs})
+	arch base client common io mt net platform server synergy gtest gmock ${libs})

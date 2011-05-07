@@ -19,16 +19,19 @@
 #define CMSWINDOWSCLIPBOARD_H
 
 #include "IClipboard.h"
+#include "CMSWindowsClipboardFacade.h"
 #include "stdvector.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 class IMSWindowsClipboardConverter;
+class IMSWindowsClipboardFacade;
 
 //! Microsoft windows clipboard implementation
 class CMSWindowsClipboard : public IClipboard {
 public:
 	CMSWindowsClipboard(HWND window);
+	CMSWindowsClipboard(HWND window, IMSWindowsClipboardFacade &facade);
 	virtual ~CMSWindowsClipboard();
 
 	//! Empty clipboard without ownership
@@ -58,6 +61,8 @@ public:
 	virtual bool		has(EFormat) const;
 	virtual CString		get(EFormat) const;
 
+	void setFacade(IMSWindowsClipboardFacade& facade) { m_facade = &facade; m_deleteFacade = false; }
+
 private:
 	void				clearConverters();
 
@@ -74,6 +79,8 @@ private:
 	mutable Time		m_time;
 	ConverterList		m_converters;
 	static UINT			s_ownershipFormat;
+	IMSWindowsClipboardFacade* m_facade;
+	bool m_deleteFacade;
 };
 
 //! Clipboard format converter interface
