@@ -180,7 +180,6 @@ public:
 	static void setInstanceWin32(HINSTANCE instance);
 	
 	static BOOL WINAPI getProcessEntry(PROCESSENTRY32& entry, DWORD processID);
-	static BOOL WINAPI getProcessEntry(PROCESSENTRY32& entry, std::string processName);
 	static BOOL WINAPI getSelfProcessEntry(PROCESSENTRY32& entry);
 	static BOOL WINAPI getParentProcessEntry(PROCESSENTRY32& entry);
 
