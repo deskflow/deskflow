@@ -17,6 +17,7 @@
 
 #include "CArchMiscWindows.h"
 #include "CArchDaemonWindows.h"
+#include "CLog.h"
 
 #ifndef ES_SYSTEM_REQUIRED
 #define ES_SYSTEM_REQUIRED  ((DWORD)0x00000001)
@@ -439,4 +440,47 @@ CArchMiscWindows::wakeupDisplay()
 
 	// restore the original execution states
 	setThreadExecutionState(s_busyState);
+}
+
+BOOL WINAPI 
+CArchMiscWindows::getSelfProcessEntry(PROCESSENTRY32& entry)
+{
+	// get entry from current PID
+	return getProcessEntry(entry, GetCurrentProcessId());
+}
+
+BOOL WINAPI 
+CArchMiscWindows::getProcessEntry(PROCESSENTRY32& entry, DWORD processID)
+{
+	// first we need to take a snapshot of the running processes
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (snapshot == INVALID_HANDLE_VALUE) {
+		LOG((CLOG_ERR "could not get process snapshot (error: %i)", 
+			GetLastError()));
+		return FALSE;
+	}
+
+	entry.dwSize = sizeof(PROCESSENTRY32);
+
+	// get the first process, and if we can't do that then it's 
+	// unlikely we can go any further
+	BOOL gotEntry = Process32First(snapshot, &entry);
+	if (!gotEntry) {
+		LOG((CLOG_ERR "could not get first process entry (error: %i)", 
+			GetLastError()));
+		return FALSE;
+	}
+
+	while(gotEntry) {
+
+		if (entry.th32ProcessID == processID) {
+			// found current process
+			return TRUE;
+		}
+
+		// now move on to the next entry (when we reach end, loop will stop)
+		gotEntry = Process32Next(snapshot, &entry);
+	}
+
+	return FALSE;
 }

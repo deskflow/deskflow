@@ -24,6 +24,7 @@
 #include "stdstring.h"
 #include "stdset.h"
 #include <windows.h>
+#include <Tlhelp32.h>
 
 //! Miscellaneous win32 functions.
 class CArchMiscWindows {
@@ -166,6 +167,9 @@ public:
 
 	//! Briefly interrupt power saving
 	static void			wakeupDisplay();
+
+	static BOOL WINAPI getProcessEntry(PROCESSENTRY32& entry, DWORD processID);
+	static BOOL WINAPI getSelfProcessEntry(PROCESSENTRY32& entry);
 
 private:
 	//! Open and return a registry key, closing the parent key

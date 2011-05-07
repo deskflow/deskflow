@@ -23,10 +23,44 @@
 #include "CArchMiscWindows.h"
 #endif
 
+#if SYSAPI_UNIX
+#include <fstream>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <signal.h>
+#define LOCK_FILE "/tmp/integtests.lock"
+#endif
+
+#define ERROR_ALREADY_RUNNING 1
+
+using namespace std;
+
+int
+ensureSingleInstance();
+
+#if SYSAPI_UNIX
+
+void
+signalHandler(int signal);
+
+void
+removeLock();
+
+#endif
+
 int
 main(int argc, char **argv)
 {
-	std::cout << "Synergy integration tests\n";
+	// make sure integ tests don't run in parallel.
+	int err = ensureSingleInstance();
+	if (err != 0)
+		return err;
+
+#if SYSAPI_UNIX
+	// register SIGINT handling (to delete lock file)
+	signal(SIGINT, signalHandler);
+	atexit(removeLock);
+#endif
 
 	CArch arch;
 
@@ -34,3 +68,87 @@ main(int argc, char **argv)
 
 	return RUN_ALL_TESTS();
 }
+
+int
+ensureSingleInstance()
+{
+#if SYSAPI_WIN32
+
+	// get info for current process (we'll use the name later).
+	PROCESSENTRY32 selfEntry;
+	if (!CArchMiscWindows::getSelfProcessEntry(selfEntry))
+		cerr << "could not process info for self "
+		<< "(error: " << GetLastError() << ")" << endl;
+
+	// get current task list.
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (snapshot == INVALID_HANDLE_VALUE)
+		cerr << "could not get process snapshot "
+			<< "(error: " << GetLastError() << ")" << endl;
+
+	PROCESSENTRY32 entry;
+	BOOL gotEntry = Process32First(snapshot, &entry);
+	if (!gotEntry)
+		cerr << "could not get first process entry "
+		<< "(error: " << GetLastError() << ")" << endl;
+
+	while (gotEntry)
+	{
+		string checkName(entry.szExeFile);
+
+		// if entry has the same name as this process, but is not
+		// the current process...
+		if ((checkName.find(selfEntry.szExeFile) != string::npos) &&
+			(entry.th32ProcessID != selfEntry.th32ProcessID))
+		{
+			cerr << "error: process already running: " 
+				<< entry.th32ProcessID << " -> " << entry.szExeFile << endl;
+
+			return ERROR_ALREADY_RUNNING;
+		}
+
+		gotEntry = Process32Next(snapshot, &entry);
+	}
+
+#elif SYSAPI_UNIX
+
+	// fail if lock file exists
+	struct stat info;
+	int statResult = stat(LOCK_FILE, &info);
+	if (statResult == 0)
+	{
+		cerr << "error: lock file exists: " << LOCK_FILE << endl;
+		return ERROR_ALREADY_RUNNING;
+	}
+
+	// write an empty lock file
+	cout << "creating lock: " << LOCK_FILE << endl;
+
+	ofstream stream;
+	stream.open(LOCK_FILE);
+	if (!stream.is_open())
+		cerr << "error: could not create lock" << endl;
+
+	stream << "";
+	stream.close();
+
+#endif
+
+	return 0;
+}
+
+#if SYSAPI_UNIX
+void
+signalHandler(int signal)
+{
+	removeLock();
+}
+
+void
+removeLock()
+{
+	// remove lock file so other instances can run.
+	cout << "removing lock: " << LOCK_FILE << endl;
+	unlink(LOCK_FILE);
+}
+#endif
