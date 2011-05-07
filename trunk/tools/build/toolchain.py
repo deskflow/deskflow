@@ -465,8 +465,7 @@ class InternalCommands:
 			
 		elif type == 'src':
 			if sys.platform in ['linux2', 'darwin']:
-				self.dist_run('make package_source', unixTarget)
-				moveExt = 'tar.gz'
+				self.distSrc()
 			else:
 				package_unsupported = True
 			
@@ -509,6 +508,32 @@ class InternalCommands:
 				("Package type, '%s' is not supported for platform, '%s'") 
 				% (type, sys.platform))
 		
+	def distSrc(self):
+		version = self.getVersionFromCmake()
+		name = (self.project + '-' + version + '-Source')
+		exportPath = self.build_dir + '/' + name
+
+		if os.path.exists(exportPath):
+			print "Removing existing export..."
+			import shutil
+			shutil.rmtree(exportPath)
+
+		print 'Exporting repository to: ' + exportPath
+		err = os.system('svn export . ' + exportPath)
+		if err != 0:
+			raise Exception('Repository export failed: ' + str(err))		
+
+		packagePath = '../' + self.bin_dir + '/' + name + '.tar.gz'
+
+		try:
+			self.try_chdir(self.build_dir)
+			print 'Packaging to: ' + packagePath
+			err = os.system('tar cfvz ' + packagePath + ' ' + name)
+			if err != 0:
+				raise Exception('Package failed: ' + str(err))
+		finally:
+			self.restore_chdir()
+
 	def unixMove(self, source, dest):
 		print 'Moving ' + source + ' to ' + dest
 		err = os.system('mv ' + source + ' ' + dest)
