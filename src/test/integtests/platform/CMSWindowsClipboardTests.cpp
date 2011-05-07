@@ -16,8 +16,9 @@
  */
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include "CMSWindowsClipboard.h"
-
+#include "IMSWindowsClipboardFacade.h"
 
 class CMSWindowsClipboardTests : public ::testing::Test
 {
@@ -39,6 +40,12 @@ private:
 		clipboard.open(0);
 		clipboard.empty();
 	}
+};
+
+class MockFacade : public IMSWindowsClipboardFacade
+{
+public:
+	MOCK_METHOD2(write, void(HANDLE, UINT));
 };
 
 TEST_F(CMSWindowsClipboardTests, emptyUnowned_openCalled_returnsTrue)
@@ -82,6 +89,18 @@ TEST_F(CMSWindowsClipboardTests, add_newValue_valueWasStored)
 
 	CString actual = clipboard.get(IClipboard::kText);
 	EXPECT_EQ("synergy rocks!", actual);
+}
+
+TEST_F(CMSWindowsClipboardTests, add_newValue_writeWasCalled)
+{
+	MockFacade facade;
+	EXPECT_CALL(facade, write(testing::_, testing::_));
+
+	CMSWindowsClipboard clipboard(NULL);
+	clipboard.setFacade(facade);
+	clipboard.open(0);
+
+	clipboard.add(IClipboard::kText, "synergy rocks!");
 }
 
 TEST_F(CMSWindowsClipboardTests, add_replaceValue_valueWasReplaced)
