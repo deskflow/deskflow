@@ -22,6 +22,7 @@
 #include "CMSWindowsClipboardHTMLConverter.h"
 #include "CLog.h"
 #include "CArchMiscWindows.h"
+#include "CMSWindowsClipboardFacade.h"
 
 //
 // CMSWindowsClipboard
@@ -31,7 +32,9 @@ UINT					CMSWindowsClipboard::s_ownershipFormat = 0;
 
 CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
 	m_window(window),
-	m_time(0)
+	m_time(0),
+	m_facade(new CMSWindowsClipboardFacade()),
+	m_deleteFacade(true)
 {
 	// add converters, most desired first
 	m_converters.push_back(new CMSWindowsClipboardUTF16Converter);
@@ -47,6 +50,12 @@ CMSWindowsClipboard::CMSWindowsClipboard(HWND window) :
 CMSWindowsClipboard::~CMSWindowsClipboard()
 {
 	clearConverters();
+
+	// dependency injection causes confusion over ownership, so we need
+	// logic to decide whether or not we delete the facade. there must
+	// be a more elegant way of doing this.
+	if (m_deleteFacade)
+		delete m_facade;
 }
 
 bool
@@ -94,12 +103,7 @@ CMSWindowsClipboard::add(EFormat format, const CString& data)
 			HANDLE win32Data = converter->fromIClipboard(data);
 			if (win32Data != NULL) {
 				UINT win32Format = converter->getWin32Format();
-				if (SetClipboardData(win32Format, win32Data) == NULL) {
-					// free converted data if we couldn't put it on
-					// the clipboard.
-					// nb: couldn't cause this in integ tests.
-					GlobalFree(win32Data);
-				}
+				m_facade->write(win32Data, win32Format);
 			}
 		}
 	}
