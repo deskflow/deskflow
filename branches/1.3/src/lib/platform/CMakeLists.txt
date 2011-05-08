@@ -108,6 +108,19 @@ add_library(platform STATIC ${src})
 
 if (WIN32)
 	add_library(synrgyhk SHARED ${inc_hook} ${src_hook})
+	
+	# move the synrgyhk.dll (and supporting files) from the lib dir to 
+	# the bin dir, so that synergyc and synergys can easily find it.
+	# we should leave the other libraries compiling to the lib dir,
+	# so that the bin dir remains tidy. the path is relative to the
+	# build dir (in this case, that's: build\src\lib\platform).
+	add_custom_command(
+		TARGET synrgyhk 
+		POST_BUILD
+		COMMAND move
+			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\synrgyhk.*
+			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
+			1> NUL)
 endif()
 
 if (UNIX)
