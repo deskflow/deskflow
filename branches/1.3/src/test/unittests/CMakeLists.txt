@@ -14,8 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(src
-	../../../tools/gtest-1.6.0/src/gtest_main.cc
+	Main.cpp
 	synergy/CClipboardTests.cpp
+	synergy/CKeyStateTests.cpp
 )
 
 set(inc

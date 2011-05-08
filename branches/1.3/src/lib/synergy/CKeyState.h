@@ -80,6 +80,8 @@ public:
 	virtual SInt32		pollActiveGroup() const = 0;
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
+	SInt32 getKeyState(KeyButton keyButton) { return m_keys[keyButton]; }
+
 protected:
 	typedef CKeyMap::Keystroke Keystroke;
 

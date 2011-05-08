@@ -61,6 +61,23 @@ public:
 	virtual const char*	getNewline() const;
 };
 
+//! Write log to standard streams
+/*!
+This outputter writes output to std::cout and std::cerr.
+*/
+class CStdLogOutputter : public ILogOutputter {
+public:
+	CStdLogOutputter();
+	virtual ~CStdLogOutputter();
+
+	// ILogOutputter overrides
+	virtual void		open(const char* title);
+	virtual void		close();
+	virtual void		show(bool showIfEmpty);
+	virtual bool		write(ELevel level, const char* message);
+	virtual const char*	getNewline() const;
+};
+
 //! Write log to file
 /*!
 This outputter writes output to the file.  The level for each

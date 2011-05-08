@@ -18,6 +18,8 @@
 #include <iostream>
 #include <gtest/gtest.h>
 #include "CArch.h"
+#include "CLog.h"
+#include "LogOutputters.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
@@ -63,6 +65,10 @@ main(int argc, char **argv)
 #endif
 
 	CArch arch;
+
+	CStdLogOutputter stdLogOutputter;
+	CLOG->insert(&stdLogOutputter, true);
+	CLOG->setFilter(CLog::kDEBUG2);
 
 	testing::InitGoogleTest(&argc, argv);
 

@@ -19,6 +19,8 @@
 #include "CArch.h"
 
 #include <fstream>
+#include <iostream>
+
 //
 // CStopLogOutputter
 //
@@ -317,3 +319,43 @@ CFileLogOutputter::close() {}
 
 void
 CFileLogOutputter::show(bool showIfEmpty) {}
+
+CStdLogOutputter::CStdLogOutputter()
+{
+}
+
+CStdLogOutputter::~CStdLogOutputter()
+{
+}
+
+bool
+CStdLogOutputter::write(ELevel level, const char* message)
+{
+	if ((level >= CLog::kFATAL) && (level <= CLog::kWARNING))
+		std::cerr << message << std::endl;
+	else
+		std::cout << message << std::endl;
+
+	return true;
+}
+
+void
+CStdLogOutputter::close()
+{
+}
+
+void
+CStdLogOutputter::open(const char* title)
+{
+}
+
+void
+CStdLogOutputter::show(bool showIfEmpty)
+{
+}
+
+const char*
+CStdLogOutputter::getNewline() const
+{
+	return "";
+}
