@@ -17,7 +17,6 @@
 !define vcRedistFile "vcredist_${arch}.exe"
 !define startMenuApp "qsynergy.exe"
 !define binDir "..\bin"
-!define libDir "..\lib"
 !define uninstall "uninstall.exe"
 !define icon "..\src\gui\res\win\QSynergy.ico"
 !define controlPanelReg "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
@@ -115,7 +114,7 @@ Section "Server and Client" core
   ; client and server files
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
-  File "${libDir}\Release\synrgyhk.dll"
+  File "${binDir}\Release\synrgyhk.dll"
 
 SectionEnd
 
