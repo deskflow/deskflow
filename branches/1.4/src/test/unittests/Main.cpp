@@ -1,6 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2002 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
+ * Copyright (C) 2011 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,19 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <gtest/gtest.h>
+#include "CArch.h"
+#include "CLog.h"
 
-#include "IArchConsole.h"
+#if SYSAPI_WIN32
+#include "CArchMiscWindows.h"
+#endif
 
-//! Cross platform implementation of IArchConsole
-class CArchConsoleStd : public IArchConsole {
-public:
-	CArchConsoleStd() { }
-	virtual ~CArchConsoleStd() { }
+int
+main(int argc, char **argv)
+{
+#if SYSAPI_WIN32
+	// HACK: shouldn't be needed, but logging fails without this.
+	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+#endif
 
-	// IArchConsole overrides
-	virtual void		openConsole(const char* title) { }
-	virtual void		closeConsole() { }
-	virtual void		showConsole(bool) { }
-	virtual void		writeConsole(ELevel level, const char*);
-};
+	CArch arch;
+
+	CLOG->setFilter(kDEBUG2);
+
+	testing::InitGoogleTest(&argc, argv);
+
+	return RUN_ALL_TESTS();
+}
