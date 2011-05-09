@@ -189,9 +189,9 @@ CArch::showConsole(bool showIfEmpty)
 }
 
 void
-CArch::writeConsole(const char* str)
+CArch::writeConsole(ELevel level, const char* str)
 {
-	m_console->writeConsole(str);
+	m_console->writeConsole(level, str);
 }
 
 void

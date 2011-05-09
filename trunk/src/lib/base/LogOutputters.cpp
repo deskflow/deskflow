@@ -92,8 +92,8 @@ CConsoleLogOutputter::show(bool showIfEmpty)
 bool
 CConsoleLogOutputter::write(ELevel level, const char* msg)
 {
-	ARCH->writeConsole(msg);
-	return true; // wtf?
+	ARCH->writeConsole(level, msg);
+	return true;
 }
 
 void
@@ -138,31 +138,7 @@ CSystemLogOutputter::show(bool showIfEmpty)
 bool
 CSystemLogOutputter::write(ELevel level, const char* msg)
 {
-	IArchLog::ELevel archLogLevel;
-	switch (level) {
-	case CLog::kFATAL:
-	case CLog::kERROR:
-		archLogLevel = IArchLog::kERROR;
-		break;
-
-	case CLog::kWARNING:
-		archLogLevel = IArchLog::kWARNING;
-		break;
-
-	case CLog::kNOTE:
-		archLogLevel = IArchLog::kNOTE;
-		break;
-
-	case CLog::kINFO:
-		archLogLevel = IArchLog::kINFO;
-		break;
-
-	default:
-		archLogLevel = IArchLog::kDEBUG;
-		break;
-
-	};
-	ARCH->writeLog(archLogLevel, msg);
+	ARCH->writeLog(level, msg);
 	return true;
 }
 
@@ -266,7 +242,7 @@ CFileLogOutputter::~CFileLogOutputter()
 }
 
 bool
-CFileLogOutputter::write(ILogOutputter::ELevel level, const char *message)
+CFileLogOutputter::write(ELevel level, const char *message)
 {
 	std::ofstream m_handle;
 	m_handle.open(m_fileName.c_str(), std::fstream::app);

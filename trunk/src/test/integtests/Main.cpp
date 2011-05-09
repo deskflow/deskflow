@@ -18,6 +18,7 @@
 #include <iostream>
 #include <gtest/gtest.h>
 #include "CArch.h"
+#include "CLog.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
@@ -68,6 +69,8 @@ main(int argc, char **argv)
 #endif
 
 	CArch arch;
+
+	CLOG->setFilter(kDEBUG2);
 
 	testing::InitGoogleTest(&argc, argv);
 
