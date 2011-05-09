@@ -19,6 +19,7 @@
 #define IARCHLOG_H
 
 #include "IInterface.h"
+#include "ELevel.h"
 
 //! Interface for architecture dependent logging
 /*!
@@ -27,18 +28,6 @@ synergy.  Each architecture must implement this interface.
 */
 class IArchLog : public IInterface {
 public:
-	//! Log levels
-	/*!
-	The logging priority levels in order of highest to lowest priority.
-	*/
-	enum ELevel {
-		kERROR,			//!< For serious or fatal errors
-		kWARNING,		//!< For minor errors and warnings
-		kNOTE,			//!< For messages about notable events
-		kINFO,			//!< For informational messages
-		kDEBUG			//!< For debugging messages
-	};
-
 	//! @name manipulators
 	//@{
 

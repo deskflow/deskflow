@@ -152,7 +152,7 @@ CMSWindowsClientTaskBarReceiver::runMenu(int x, int y)
 	SetMenuDefaultItem(menu, IDC_TASKBAR_STATUS, FALSE);
 	HMENU logLevelMenu = GetSubMenu(menu, 3);
 	CheckMenuRadioItem(logLevelMenu, 0, 6,
-							CLOG->getFilter() - CLog::kERROR, MF_BYPOSITION);
+							CLOG->getFilter() - kERROR, MF_BYPOSITION);
 	int n = TrackPopupMenu(menu,
 							TPM_NONOTIFY |
 							TPM_RETURNCMD |
@@ -176,31 +176,31 @@ CMSWindowsClientTaskBarReceiver::runMenu(int x, int y)
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_ERROR:
-		CLOG->setFilter(CLog::kERROR);
+		CLOG->setFilter(kERROR);
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_WARNING:
-		CLOG->setFilter(CLog::kWARNING);
+		CLOG->setFilter(kWARNING);
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_NOTE:
-		CLOG->setFilter(CLog::kNOTE);
+		CLOG->setFilter(kNOTE);
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_INFO:
-		CLOG->setFilter(CLog::kINFO);
+		CLOG->setFilter(kINFO);
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_DEBUG:
-		CLOG->setFilter(CLog::kDEBUG);
+		CLOG->setFilter(kDEBUG);
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_DEBUG1:
-		CLOG->setFilter(CLog::kDEBUG1);
+		CLOG->setFilter(kDEBUG1);
 		break;
 
 	case IDC_TASKBAR_LOG_LEVEL_DEBUG2:
-		CLOG->setFilter(CLog::kDEBUG2);
+		CLOG->setFilter(kDEBUG2);
 		break;
 
 	case IDC_TASKBAR_QUIT:

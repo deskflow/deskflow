@@ -20,6 +20,7 @@
 
 #include "IInterface.h"
 #include "CLog.h"
+#include "ELevel.h"
 
 //! Outputter interface
 /*!
@@ -29,8 +30,6 @@ directly or indirectly.
 */
 class ILogOutputter : public IInterface {
 public:
-	typedef CLog::ELevel ELevel;
-
 	//! @name manipulators
 	//@{
 
