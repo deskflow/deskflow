@@ -27,32 +27,29 @@ class CKeyStateImpl : public CKeyState
 protected:
 	virtual SInt32 pollActiveGroup() const
 	{
-		throw std::exception("The method or operation is not implemented.");
+		return 0;
 	}
 
 	virtual KeyModifierMask pollActiveModifiers() const
 	{
-		throw std::exception("The method or operation is not implemented.");
+		return 0;
 	}
 
 	virtual bool fakeCtrlAltDel() 
 	{
-		throw std::exception("The method or operation is not implemented.");
+		return false;
 	}
 
-	virtual void getKeyMap( CKeyMap& keyMap ) 
+	virtual void getKeyMap(CKeyMap& keyMap)
 	{
-		throw std::exception("The method or operation is not implemented.");
 	}
 
-	virtual void fakeKey( const Keystroke& keystroke ) 
+	virtual void fakeKey(const Keystroke& keystroke)
 	{
-		throw std::exception("The method or operation is not implemented.");
 	}
 
-	virtual void pollPressedKeys( KeyButtonSet& pressedKeys ) const
+	virtual void pollPressedKeys(KeyButtonSet& pressedKeys) const
 	{
-		throw std::exception("The method or operation is not implemented.");
 	}
 };
 
