@@ -36,10 +36,7 @@ protected:
 		
 		m_window = XCreateWindow(
 			m_display, root, 0, 0, 1, 1, 0, 0,
-			InputOnly, CopyFromParent,
-			CWDontPropagate | CWEventMask |
-			CWOverrideRedirect | CWCursor,
-			&attr);
+			InputOnly, CopyFromParent, 0, &attr);
 	}
 
 	virtual void
