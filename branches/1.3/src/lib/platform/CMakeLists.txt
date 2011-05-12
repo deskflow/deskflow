@@ -117,10 +117,10 @@ if (WIN32)
 	add_custom_command(
 		TARGET synrgyhk 
 		POST_BUILD
-		COMMAND move
+		COMMAND xcopy
 			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\synrgyhk.*
-			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}
-			1> NUL)
+			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
+	)
 endif()
 
 if (UNIX)
