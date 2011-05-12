@@ -66,8 +66,13 @@ main(int argc, char **argv)
 
 	CArch arch;
 
+#if SYSAPI_WIN32
+	// only add std output logger for windows (unix
+	// already outputs to standard streams).
 	CStdLogOutputter stdLogOutputter;
 	CLOG->insert(&stdLogOutputter, true);
+#endif
+
 	CLOG->setFilter(CLog::kDEBUG2);
 
 	testing::InitGoogleTest(&argc, argv);
