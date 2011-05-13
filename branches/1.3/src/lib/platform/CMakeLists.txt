@@ -117,7 +117,7 @@ if (WIN32)
 	add_custom_command(
 		TARGET synrgyhk 
 		POST_BUILD
-		COMMAND xcopy
+		COMMAND xcopy /Y /Q
 			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\synrgyhk.*
 			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 	)
