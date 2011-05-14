@@ -41,4 +41,4 @@ public:
 	MOCK_METHOD1(deleteTimer, void(CEventQueueTimer*));
 };
 
-#endif CMOCKEVENTQUEUE_H
+#endif

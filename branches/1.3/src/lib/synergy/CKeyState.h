@@ -168,7 +168,7 @@ private:
 	CKeyState& operator=(const CKeyState&);
 
 	// called by all ctors.
-	void				CKeyState::init();
+	void				init();
 
 	// adds alias key sequences.  these are sequences that are equivalent
 	// to other sequences.

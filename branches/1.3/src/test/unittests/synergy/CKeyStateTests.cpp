@@ -29,7 +29,8 @@ enum {
 
 TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 {
-	CKeyStateImpl keyState(&CMockEventQueue());
+	CMockEventQueue mockEventQueue;
+	CKeyStateImpl keyState(&mockEventQueue);
 
 	keyState.onKey(kAKey, true, KeyModifierAlt);
 
@@ -38,7 +39,8 @@ TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 
 TEST(CKeyStateTests, onKey_aKeyUp_keyStateZero)
 {
-	CKeyStateImpl keyState(&CMockEventQueue());
+	CMockEventQueue mockEventQueue;
+	CKeyStateImpl keyState(&mockEventQueue);
 
 	keyState.onKey(kAKey, false, KeyModifierAlt);
 
@@ -47,7 +49,8 @@ TEST(CKeyStateTests, onKey_aKeyUp_keyStateZero)
 
 TEST(CKeyStateTests, onKey_invalidKey_keyStateZero)
 {
-	CKeyStateImpl keyState(&CMockEventQueue());
+	CMockEventQueue mockEventQueue;
+	CKeyStateImpl keyState(&mockEventQueue);
 
 	keyState.onKey(0, true, KeyModifierAlt);
 

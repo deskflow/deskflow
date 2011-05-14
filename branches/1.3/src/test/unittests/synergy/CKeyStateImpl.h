@@ -60,4 +60,4 @@ protected:
 	}
 };
 
-#endif CKEYSTATEIMPL_H
+#endif
