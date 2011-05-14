@@ -16,6 +16,7 @@
  */
 
 #include "ISocket.h"
+#include "CEventQueue.h"
 
 //
 // ISocket
@@ -26,6 +27,6 @@ CEvent::Type			ISocket::s_disconnectedEvent = CEvent::kUnknown;
 CEvent::Type
 ISocket::getDisconnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_disconnectedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_disconnectedEvent,
 							"ISocket::disconnected");
 }

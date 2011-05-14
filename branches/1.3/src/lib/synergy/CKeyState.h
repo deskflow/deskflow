@@ -29,6 +29,7 @@ platform specific methods.
 class CKeyState : public IKeyState {
 public:
 	CKeyState();
+	CKeyState(IEventQueue* eventQueue);
 	virtual ~CKeyState();
 
 	//! @name manipulators
@@ -165,6 +166,9 @@ private:
 	// not implemented
 	CKeyState(const CKeyState&);
 	CKeyState& operator=(const CKeyState&);
+
+	// called by all ctors.
+	void				CKeyState::init();
 
 	// adds alias key sequences.  these are sequences that are equivalent
 	// to other sequences.

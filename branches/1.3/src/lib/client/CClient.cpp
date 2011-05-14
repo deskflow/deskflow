@@ -187,21 +187,21 @@ CClient::getServerAddress() const
 CEvent::Type
 CClient::getConnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_connectedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_connectedEvent,
 							"CClient::connected");
 }
 
 CEvent::Type
 CClient::getConnectionFailedEvent()
 {
-	return CEvent::registerTypeOnce(s_connectionFailedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_connectionFailedEvent,
 							"CClient::failed");
 }
 
 CEvent::Type
 CClient::getDisconnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_disconnectedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_disconnectedEvent,
 							"CClient::disconnected");
 }
 

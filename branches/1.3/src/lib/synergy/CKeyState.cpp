@@ -16,7 +16,6 @@
  */
 
 #include "CKeyState.h"
-#include "IEventQueue.h"
 #include "CLog.h"
 #include <cstring>
 #include <algorithm>
@@ -383,17 +382,31 @@ static const KeyID s_numpadTable[] = {
 //
 
 CKeyState::CKeyState() :
+	IKeyState(),
 	m_mask(0)
 {
-	memset(&m_keys, 0, sizeof(m_keys));
-	memset(&m_syntheticKeys, 0, sizeof(m_syntheticKeys));
-	memset(&m_keyClientData, 0, sizeof(m_keyClientData));
-	memset(&m_serverKeys, 0, sizeof(m_serverKeys));
+	init();
+}
+
+CKeyState::CKeyState(IEventQueue* eventQueue) :
+	IKeyState(eventQueue),
+	m_mask(0)
+{
+	init();
 }
 
 CKeyState::~CKeyState()
 {
 	// do nothing
+}
+
+void
+CKeyState::init()
+{
+	memset(&m_keys, 0, sizeof(m_keys));
+	memset(&m_syntheticKeys, 0, sizeof(m_syntheticKeys));
+	memset(&m_keyClientData, 0, sizeof(m_keyClientData));
+	memset(&m_serverKeys, 0, sizeof(m_serverKeys));
 }
 
 void
@@ -431,23 +444,23 @@ CKeyState::sendKeyEvent(
 			// ignore auto-repeat on half-duplex keys
 		}
 		else {
-			EVENTQUEUE->addEvent(CEvent(getKeyDownEvent(), target,
+			getEventQueue()->addEvent(CEvent(getKeyDownEvent(), target,
 							CKeyInfo::alloc(key, mask, button, 1)));
-			EVENTQUEUE->addEvent(CEvent(getKeyUpEvent(), target,
+			getEventQueue()->addEvent(CEvent(getKeyUpEvent(), target,
 							CKeyInfo::alloc(key, mask, button, 1)));
 		}
 	}
 	else {
 		if (isAutoRepeat) {
-			EVENTQUEUE->addEvent(CEvent(getKeyRepeatEvent(), target,
+			getEventQueue()->addEvent(CEvent(getKeyRepeatEvent(), target,
 							 CKeyInfo::alloc(key, mask, button, count)));
 		}
 		else if (press) {
-			EVENTQUEUE->addEvent(CEvent(getKeyDownEvent(), target,
+			getEventQueue()->addEvent(CEvent(getKeyDownEvent(), target,
 							CKeyInfo::alloc(key, mask, button, 1)));
 		}
 		else {
-			EVENTQUEUE->addEvent(CEvent(getKeyUpEvent(), target,
+			getEventQueue()->addEvent(CEvent(getKeyUpEvent(), target,
 							CKeyInfo::alloc(key, mask, button, 1)));
 		}
 	}

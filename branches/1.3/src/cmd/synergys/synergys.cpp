@@ -180,19 +180,19 @@ static CEventQueueTimer*		s_timer               = NULL;
 CEvent::Type
 getReloadConfigEvent()
 {
-	return CEvent::registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
+	return EVENTQUEUE->registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
 }
 
 CEvent::Type
 getForceReconnectEvent()
 {
-	return CEvent::registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
+	return EVENTQUEUE->registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
 }
 
 CEvent::Type
 getResetServerEvent()
 {
-	return CEvent::registerTypeOnce(s_resetServerEvent, "resetServer");
+	return EVENTQUEUE->registerTypeOnce(s_resetServerEvent, "resetServer");
 }
 
 static

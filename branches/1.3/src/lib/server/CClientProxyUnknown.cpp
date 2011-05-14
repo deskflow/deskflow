@@ -79,14 +79,14 @@ CClientProxyUnknown::orphanClientProxy()
 CEvent::Type
 CClientProxyUnknown::getSuccessEvent()
 {
-	return CEvent::registerTypeOnce(s_successEvent,
+	return EVENTQUEUE->registerTypeOnce(s_successEvent,
 							"CClientProxy::success");
 }
 
 CEvent::Type
 CClientProxyUnknown::getFailureEvent()
 {
-	return CEvent::registerTypeOnce(s_failureEvent,
+	return EVENTQUEUE->registerTypeOnce(s_failureEvent,
 							"CClientProxy::failure");
 }
 

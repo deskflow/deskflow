@@ -15,6 +15,8 @@
 
 set(src
 	Main.cpp
+	synergy/CKeyStateImpl.h
+	synergy/CMockEventQueue.h
 	synergy/CClipboardTests.cpp
 	synergy/CKeyStateTests.cpp
 )

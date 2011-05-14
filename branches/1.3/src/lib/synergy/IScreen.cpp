@@ -16,6 +16,7 @@
  */
 
 #include "IScreen.h"
+#include "CEventQueue.h"
 
 //
 // IScreen
@@ -30,34 +31,34 @@ CEvent::Type			IScreen::s_resumeEvent           = CEvent::kUnknown;
 CEvent::Type
 IScreen::getErrorEvent()
 {
-	return CEvent::registerTypeOnce(s_errorEvent,
+	return EVENTQUEUE->registerTypeOnce(s_errorEvent,
 							"IScreen::error");
 }
 
 CEvent::Type
 IScreen::getShapeChangedEvent()
 {
-	return CEvent::registerTypeOnce(s_shapeChangedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_shapeChangedEvent,
 							"IScreen::shapeChanged");
 }
 
 CEvent::Type
 IScreen::getClipboardGrabbedEvent()
 {
-	return CEvent::registerTypeOnce(s_clipboardGrabbedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_clipboardGrabbedEvent,
 							"IScreen::clipboardGrabbed");
 }
 
 CEvent::Type
 IScreen::getSuspendEvent()
 {
-	return CEvent::registerTypeOnce(s_suspendEvent,
+	return EVENTQUEUE->registerTypeOnce(s_suspendEvent,
 									"IScreen::suspend");
 }
 
 CEvent::Type
 IScreen::getResumeEvent()
 {
-	return CEvent::registerTypeOnce(s_resumeEvent,
+	return EVENTQUEUE->registerTypeOnce(s_resumeEvent,
 									"IScreen::resume");
 }

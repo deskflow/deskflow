@@ -95,15 +95,15 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleSwitchWaitTimeout));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyDownEvent(),
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyDownEvent(EVENTQUEUE),
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleKeyDownEvent));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyUpEvent(),
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyUpEvent(EVENTQUEUE),
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleKeyUpEvent));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyRepeatEvent(),
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyRepeatEvent(EVENTQUEUE),
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleKeyRepeatEvent));
@@ -182,11 +182,11 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 CServer::~CServer()
 {
 	// remove event handlers and timers
-	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyDownEvent(),
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyDownEvent(EVENTQUEUE),
 							m_inputFilter);
-	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyUpEvent(),
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyUpEvent(EVENTQUEUE),
 							m_inputFilter);
-	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyRepeatEvent(),
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyRepeatEvent(EVENTQUEUE),
 							m_inputFilter);
 	EVENTQUEUE->removeHandler(IPlatformScreen::getButtonDownEvent(),
 							m_inputFilter);
@@ -345,49 +345,49 @@ CServer::getClients(std::vector<CString>& list) const
 CEvent::Type
 CServer::getErrorEvent()
 {
-	return CEvent::registerTypeOnce(s_errorEvent,
+	return EVENTQUEUE->registerTypeOnce(s_errorEvent,
 							"CServer::error");
 }
 
 CEvent::Type
 CServer::getConnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_connectedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_connectedEvent,
 							"CServer::connected");
 }
 
 CEvent::Type
 CServer::getDisconnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_disconnectedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_disconnectedEvent,
 							"CServer::disconnected");
 }
 
 CEvent::Type
 CServer::getSwitchToScreenEvent()
 {
-	return CEvent::registerTypeOnce(s_switchToScreen,
+	return EVENTQUEUE->registerTypeOnce(s_switchToScreen,
 							"CServer::switchToScreen");
 }
 
 CEvent::Type
 CServer::getSwitchInDirectionEvent()
 {
-	return CEvent::registerTypeOnce(s_switchInDirection,
+	return EVENTQUEUE->registerTypeOnce(s_switchInDirection,
 							"CServer::switchInDirection");
 }
 
 CEvent::Type
 CServer::getKeyboardBroadcastEvent()
 {
-	return CEvent::registerTypeOnce(s_keyboardBroadcast,
+	return EVENTQUEUE->registerTypeOnce(s_keyboardBroadcast,
 							"CServer:keyboardBroadcast");
 }
 
 CEvent::Type
 CServer::getLockCursorToScreenEvent()
 {
-	return CEvent::registerTypeOnce(s_lockCursorToScreen,
+	return EVENTQUEUE->registerTypeOnce(s_lockCursorToScreen,
 							"CServer::lockCursorToScreen");
 }
 

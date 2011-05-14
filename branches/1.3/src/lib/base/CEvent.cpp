@@ -64,24 +64,6 @@ CEvent::getFlags() const
 	return m_flags;
 }
 
-CEvent::Type
-CEvent::registerType(const char* name)
-{
-	return EVENTQUEUE->registerType(name);
-}
-
-CEvent::Type
-CEvent::registerTypeOnce(Type& type, const char* name)
-{
-	return EVENTQUEUE->registerTypeOnce(type, name);
-}
-
-const char*
-CEvent::getTypeName(Type type)
-{
-	return EVENTQUEUE->getTypeName(type);
-}
-
 void
 CEvent::deleteData(const CEvent& event)
 {

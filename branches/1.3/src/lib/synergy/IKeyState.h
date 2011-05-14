@@ -23,6 +23,7 @@
 #include "CEvent.h"
 #include "CString.h"
 #include "stdset.h"
+#include "IEventQueue.h"
 
 //! Key state interface
 /*!
@@ -31,6 +32,9 @@ to synthesize key events.
 */
 class IKeyState : public IInterface {
 public:
+	IKeyState();
+	IKeyState(IEventQueue* eventQueue);
+
 	enum {
 		kNumButtons = 0x200
 	};
@@ -160,18 +164,33 @@ public:
 	virtual void		pollPressedKeys(KeyButtonSet& pressedKeys) const = 0;
 
 	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
-	static CEvent::Type	getKeyDownEvent();
+	CEvent::Type		getKeyDownEvent() { return getKeyDownEvent(m_eventQueue); }
+
 	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
-	static CEvent::Type	getKeyUpEvent();
+	CEvent::Type		getKeyUpEvent() { return getKeyUpEvent(m_eventQueue); }
+
 	//! Get key repeat event type.  Event data is CKeyInfo*.
-	static CEvent::Type	getKeyRepeatEvent();
+	CEvent::Type		getKeyRepeatEvent() { return getKeyRepeatEvent(m_eventQueue); }
+
+	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
+	static CEvent::Type	getKeyDownEvent(IEventQueue* eventQueue);
+
+	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
+	static CEvent::Type	getKeyUpEvent(IEventQueue* eventQueue);
+
+	//! Get key repeat event type.  Event data is CKeyInfo*.
+	static CEvent::Type	getKeyRepeatEvent(IEventQueue* eventQueue);
 
 	//@}
+
+protected:
+	IEventQueue* getEventQueue() const { return m_eventQueue; }
 
 private:
 	static CEvent::Type	s_keyDownEvent;
 	static CEvent::Type	s_keyUpEvent;
 	static CEvent::Type	s_keyRepeatEvent;
+	IEventQueue* m_eventQueue;
 };
 
 #endif
