@@ -29,33 +29,33 @@ CEvent::Type		IKeyState::s_keyUpEvent     = CEvent::kUnknown;
 CEvent::Type		IKeyState::s_keyRepeatEvent = CEvent::kUnknown;
 
 IKeyState::IKeyState() :
-	m_eventQueue(EVENTQUEUE)
+	m_eventQueue(*EVENTQUEUE)
 {
 }
 
-IKeyState::IKeyState(IEventQueue* eventQueue) :
+IKeyState::IKeyState(IEventQueue& eventQueue) :
 	m_eventQueue(eventQueue)
 {
 }
 
 CEvent::Type
-IKeyState::getKeyDownEvent(IEventQueue* eventQueue)
+IKeyState::getKeyDownEvent(IEventQueue& eventQueue)
 {
-	return eventQueue->registerTypeOnce(s_keyDownEvent,
+	return eventQueue.registerTypeOnce(s_keyDownEvent,
 							"IKeyState::keyDown");
 }
 
 CEvent::Type
-IKeyState::getKeyUpEvent(IEventQueue* eventQueue)
+IKeyState::getKeyUpEvent(IEventQueue& eventQueue)
 {
-	return eventQueue->registerTypeOnce(s_keyUpEvent,
+	return eventQueue.registerTypeOnce(s_keyUpEvent,
 							"IKeyState::keyUp");
 }
 
 CEvent::Type
-IKeyState::getKeyRepeatEvent(IEventQueue* eventQueue)
+IKeyState::getKeyRepeatEvent(IEventQueue& eventQueue)
 {
-	return eventQueue->registerTypeOnce(s_keyRepeatEvent,
+	return eventQueue.registerTypeOnce(s_keyRepeatEvent,
 							"IKeyState::keyRepeat");
 }
 

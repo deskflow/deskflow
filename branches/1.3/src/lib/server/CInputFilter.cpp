@@ -536,8 +536,8 @@ CInputFilter::CKeystrokeAction::format() const
 void
 CInputFilter::CKeystrokeAction::perform(const CEvent& event)
 {
-	CEvent::Type type = m_press ? IPlatformScreen::getKeyDownEvent(EVENTQUEUE) :
-								IPlatformScreen::getKeyUpEvent(EVENTQUEUE);
+	CEvent::Type type = m_press ? IPlatformScreen::getKeyDownEvent(*EVENTQUEUE) :
+								IPlatformScreen::getKeyUpEvent(*EVENTQUEUE);
 	EVENTQUEUE->addEvent(CEvent(IPlatformScreen::getFakeInputBeginEvent(),
 								event.getTarget(), NULL,
 								CEvent::kDeliverImmediately));
@@ -609,7 +609,7 @@ CInputFilter::CMouseButtonAction::perform(const CEvent& event)
 		KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
 		modifierInfo =
 			IKeyState::CKeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
-		EVENTQUEUE->addEvent(CEvent(IPlatformScreen::getKeyDownEvent(EVENTQUEUE),
+		EVENTQUEUE->addEvent(CEvent(IPlatformScreen::getKeyDownEvent(*EVENTQUEUE),
 								event.getTarget(), modifierInfo,
 								CEvent::kDeliverImmediately));
 	}
@@ -937,11 +937,11 @@ CInputFilter::setPrimaryClient(CPrimaryClient* client)
 			rule->disable(m_primaryClient);
 		}
 
-		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyDownEvent(EVENTQUEUE),
+		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyDownEvent(*EVENTQUEUE),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyUpEvent(EVENTQUEUE),
+		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyUpEvent(*EVENTQUEUE),
 							m_primaryClient->getEventTarget());
-		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyRepeatEvent(EVENTQUEUE),
+		EVENTQUEUE->removeHandler(IPlatformScreen::getKeyRepeatEvent(*EVENTQUEUE),
 							m_primaryClient->getEventTarget());
 		EVENTQUEUE->removeHandler(IPlatformScreen::getButtonDownEvent(),
 							m_primaryClient->getEventTarget());
@@ -958,15 +958,15 @@ CInputFilter::setPrimaryClient(CPrimaryClient* client)
 	m_primaryClient = client;
 
 	if (m_primaryClient != NULL) {
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyDownEvent(EVENTQUEUE),
+		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyDownEvent(*EVENTQUEUE),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyUpEvent(EVENTQUEUE),
+		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyUpEvent(*EVENTQUEUE),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));
-		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyRepeatEvent(EVENTQUEUE),
+		EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyRepeatEvent(*EVENTQUEUE),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CInputFilter>(this,
 								&CInputFilter::handleEvent));

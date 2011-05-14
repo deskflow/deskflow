@@ -29,7 +29,7 @@ platform specific methods.
 class CKeyState : public IKeyState {
 public:
 	CKeyState();
-	CKeyState(IEventQueue* eventQueue);
+	CKeyState(IEventQueue& eventQueue, CKeyMap& keyMap);
 	virtual ~CKeyState();
 
 	//! @name manipulators
@@ -194,8 +194,11 @@ private:
 							CKeyMap::KeyItem& keyItem, void* vcontext);
 
 private:
+	// must be declared before m_keyMap. used when this class owns the key map.
+	CKeyMap*			m_keyMapPtr;
+
 	// the keyboard map
-	CKeyMap				m_keyMap;
+	CKeyMap&			m_keyMap;
 
 	// current modifier state
 	KeyModifierMask		m_mask;

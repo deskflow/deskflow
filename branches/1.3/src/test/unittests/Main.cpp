@@ -34,8 +34,6 @@ main(int argc, char **argv)
 
 	CLOG->setFilter(CLog::kDEBUG2);
 
-	LOG((CLOG_DEBUG2 "test"));
-
 	testing::InitGoogleTest(&argc, argv);
 
 	return RUN_ALL_TESTS();

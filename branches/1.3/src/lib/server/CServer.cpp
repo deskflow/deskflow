@@ -95,15 +95,15 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleSwitchWaitTimeout));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyDownEvent(EVENTQUEUE),
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyDownEvent(*EVENTQUEUE),
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleKeyDownEvent));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyUpEvent(EVENTQUEUE),
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyUpEvent(*EVENTQUEUE),
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleKeyUpEvent));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyRepeatEvent(EVENTQUEUE),
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getKeyRepeatEvent(* EVENTQUEUE),
 							m_inputFilter,
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleKeyRepeatEvent));
@@ -182,11 +182,11 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 CServer::~CServer()
 {
 	// remove event handlers and timers
-	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyDownEvent(EVENTQUEUE),
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyDownEvent(*EVENTQUEUE),
 							m_inputFilter);
-	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyUpEvent(EVENTQUEUE),
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyUpEvent(*EVENTQUEUE),
 							m_inputFilter);
-	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyRepeatEvent(EVENTQUEUE),
+	EVENTQUEUE->removeHandler(IPlatformScreen::getKeyRepeatEvent(*EVENTQUEUE),
 							m_inputFilter);
 	EVENTQUEUE->removeHandler(IPlatformScreen::getButtonDownEvent(),
 							m_inputFilter);

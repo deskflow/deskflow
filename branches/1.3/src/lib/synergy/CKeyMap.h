@@ -123,7 +123,7 @@ public:
 	//@{
 
 	//! Swap with another \c CKeyMap
-	void				swap(CKeyMap&);
+	virtual void		swap(CKeyMap&);
 
 	//! Add a key entry
 	/*!
@@ -195,7 +195,7 @@ public:
 	/*!
 	Called after adding entries, this does some internal housekeeping.
 	*/
-	void				finish();
+	virtual void		finish();
 
 	//! Iterate over all added keys items
 	/*!

@@ -33,7 +33,7 @@ to synthesize key events.
 class IKeyState : public IInterface {
 public:
 	IKeyState();
-	IKeyState(IEventQueue* eventQueue);
+	IKeyState(IEventQueue& eventQueue);
 
 	enum {
 		kNumButtons = 0x200
@@ -173,24 +173,24 @@ public:
 	CEvent::Type		getKeyRepeatEvent() { return getKeyRepeatEvent(m_eventQueue); }
 
 	//! Get key down event type.  Event data is CKeyInfo*, count == 1.
-	static CEvent::Type	getKeyDownEvent(IEventQueue* eventQueue);
+	static CEvent::Type	getKeyDownEvent(IEventQueue& eventQueue);
 
 	//! Get key up event type.  Event data is CKeyInfo*, count == 1.
-	static CEvent::Type	getKeyUpEvent(IEventQueue* eventQueue);
+	static CEvent::Type	getKeyUpEvent(IEventQueue& eventQueue);
 
 	//! Get key repeat event type.  Event data is CKeyInfo*.
-	static CEvent::Type	getKeyRepeatEvent(IEventQueue* eventQueue);
+	static CEvent::Type	getKeyRepeatEvent(IEventQueue& eventQueue);
 
 	//@}
 
 protected:
-	IEventQueue* getEventQueue() const { return m_eventQueue; }
+	IEventQueue& getEventQueue() const { return m_eventQueue; }
 
 private:
 	static CEvent::Type	s_keyDownEvent;
 	static CEvent::Type	s_keyUpEvent;
 	static CEvent::Type	s_keyRepeatEvent;
-	IEventQueue* m_eventQueue;
+	IEventQueue& m_eventQueue;
 };
 
 #endif
