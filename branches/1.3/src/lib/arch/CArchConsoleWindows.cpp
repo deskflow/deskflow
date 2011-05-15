@@ -109,7 +109,7 @@ CArchConsoleWindows::showConsole(bool showIfEmpty)
 }
 
 void
-CArchConsoleWindows::writeConsole(const char* str)
+CArchConsoleWindows::writeConsole(ELevel level, const char* str)
 {
 	SendMessage(m_frame, SYNERGY_MSG_CONSOLE_WRITE,
 								reinterpret_cast<WPARAM>(str), 0);

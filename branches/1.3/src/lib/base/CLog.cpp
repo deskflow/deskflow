@@ -302,7 +302,7 @@ CLog::output(int priority, char* msg) const
 	strcpy(end, outputter->getNewline());
 
     // write message
-    outputter->write(static_cast<ILogOutputter::ELevel>(priority),
+    outputter->write(static_cast<ELevel>(priority),
               tmp /*+ g_maxPriorityLength - n*/);
   }
   for (COutputterList::const_iterator index  = m_outputters.begin();
@@ -314,7 +314,7 @@ CLog::output(int priority, char* msg) const
     strcpy(end, outputter->getNewline());
 
     // write message and break out of loop if it returns false
-    if (!outputter->write(static_cast<ILogOutputter::ELevel>(priority),
+    if (!outputter->write(static_cast<ELevel>(priority),
               tmp /*+ g_maxPriorityLength - n*/)) {
       break;
     }

@@ -22,6 +22,7 @@
 #include "IArchMultithread.h"
 #include "stdlist.h"
 #include <stdarg.h>
+#include "ELevel.h"
 
 #define CLOG (CLog::getInstance())
 
@@ -36,22 +37,6 @@ LOGC() provide convenient access.
 */
 class CLog {
 public:
-	//! Log levels
-	/*!
-	The logging priority levels in order of highest to lowest priority.
-	*/
-	enum ELevel {
-		kPRINT = -1,	//!< For print only (no file or time)
-		kFATAL,			//!< For fatal errors
-		kERROR,			//!< For serious errors
-		kWARNING,		//!< For minor errors and warnings
-		kNOTE,			//!< For messages about notable events
-		kINFO,			//!< For informational messages
-		kDEBUG,			//!< For important debugging messages
-		kDEBUG1,		//!< For more detailed debugging messages
-		kDEBUG2			//!< For even more detailed debugging messages
-	};
-
 	~CLog();
 
 	//! @name manipulators
@@ -149,7 +134,7 @@ LOG((CLOG_XXX "%d and %d are %s", x, y, x == y ? "equal" : "not equal"));
 \endcode
 In particular, notice the double open and close parentheses.  Also note
 that there is no comma after the \c CLOG_XXX.  The \c XXX should be
-replaced by one of enumerants in \c CLog::ELevel without the leading
+replaced by one of enumerants in \c ELevel without the leading
 \c k.  For example, \c CLOG_INFO.  The special \c CLOG_PRINT level will
 not be filtered and is never prefixed by the filename and line number.
 
@@ -168,7 +153,7 @@ LOGC(x == y, (CLOG_XXX "%d and %d are equal", x, y));
 \endcode
 In particular, notice the parentheses around everything after the boolean
 expression.    Also note that there is no comma after the \c CLOG_XXX.
-The \c XXX should be replaced by one of enumerants in \c CLog::ELevel
+The \c XXX should be replaced by one of enumerants in \c ELevel
 without the leading \c k.  For example, \c CLOG_INFO.  The special
 \c CLOG_PRINT level will not be filtered and is never prefixed by the
 filename and line number.

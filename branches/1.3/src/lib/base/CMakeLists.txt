@@ -34,6 +34,7 @@ set(inc
 	TMethodEventJob.h
 	TMethodJob.h
 	XBase.h
+	ELevel.h
 )
 
 set(src

@@ -19,6 +19,7 @@
 #define IARCHCONSOLE_H
 
 #include "IInterface.h"
+#include "ELevel.h"
 
 //! Interface for architecture dependent console output
 /*!
@@ -59,7 +60,7 @@ public:
 	/*!
 	Writes the given string to the console, opening it if necessary.
 	*/
-	virtual void		writeConsole(const char*) = 0;
+	virtual void		writeConsole(ELevel level, const char*) = 0;
 
 	//! Returns the newline sequence for the console
 	/*!

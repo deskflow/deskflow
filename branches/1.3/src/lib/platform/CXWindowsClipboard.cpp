@@ -1073,7 +1073,7 @@ CXWindowsClipboard::sendReply(CReply* reply)
 		// log.  we've seen what appears to be a bug in lesstif and
 		// knowing the properties may help design a workaround, if
 		// it becomes necessary.
-		if (CLOG->getFilter() >= CLog::kDEBUG2) {
+		if (CLOG->getFilter() >= kDEBUG2) {
 			CXWindowsUtil::CErrorLock lock(m_display);
 			int n;
 			Atom* props = XListProperties(m_display, reply->m_requestor, &n);

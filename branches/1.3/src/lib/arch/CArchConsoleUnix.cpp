@@ -52,9 +52,12 @@ CArchConsoleUnix::showConsole(bool)
 }
 
 void
-CArchConsoleUnix::writeConsole(const char* str)
+CArchConsoleUnix::writeConsole(ELevel level, const char* str)
 {
-	fprintf(stderr, "%s", str);
+	if ((level >= kFATAL) && (level <= kWARNING))
+		fprintf(stderr, "%s", str);
+	else
+		fprintf(stdout, "%s", str);
 }
 
 const char*

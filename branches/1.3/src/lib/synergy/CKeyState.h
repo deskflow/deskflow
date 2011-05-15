@@ -138,6 +138,7 @@ protected:
 private:
 	typedef CKeyMap::Keystrokes Keystrokes;
 	typedef CKeyMap::ModifierToKeys ModifierToKeys;
+public:
 	struct CAddActiveModifierContext {
 	public:
 		CAddActiveModifierContext(SInt32 group, KeyModifierMask mask,
@@ -153,6 +154,7 @@ private:
 		CAddActiveModifierContext(const CAddActiveModifierContext&);
 		CAddActiveModifierContext& operator=(const CAddActiveModifierContext&);
 	};
+private:
 	
 	class ButtonToKeyLess {
 	public:

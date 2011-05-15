@@ -99,9 +99,9 @@ CConsoleLogOutputter::show(bool showIfEmpty)
 }
 
 bool
-CConsoleLogOutputter::write(ELevel, const char* msg)
+CConsoleLogOutputter::write(ELevel level, const char* msg)
 {
-	ARCH->writeConsole(msg);
+	ARCH->writeConsole(level, msg);
 	return true;
 }
 
@@ -147,31 +147,7 @@ CSystemLogOutputter::show(bool showIfEmpty)
 bool
 CSystemLogOutputter::write(ELevel level, const char* msg)
 {
-	IArchLog::ELevel archLogLevel;
-	switch (level) {
-	case CLog::kFATAL:
-	case CLog::kERROR:
-		archLogLevel = IArchLog::kERROR;
-		break;
-
-	case CLog::kWARNING:
-		archLogLevel = IArchLog::kWARNING;
-		break;
-
-	case CLog::kNOTE:
-		archLogLevel = IArchLog::kNOTE;
-		break;
-
-	case CLog::kINFO:
-		archLogLevel = IArchLog::kINFO;
-		break;
-
-	default:
-		archLogLevel = IArchLog::kDEBUG;
-		break;
-
-	};
-	ARCH->writeLog(archLogLevel, msg);
+	ARCH->writeLog(level, msg);
 	return true;
 }
 
@@ -299,7 +275,7 @@ CFileLogOutputter::getNewline() const
 }
 
 bool
-CFileLogOutputter::write(ILogOutputter::ELevel level, const char *message)
+CFileLogOutputter::write(ELevel level, const char *message)
 {
 	if (m_handle.is_open() && m_handle.fail() != true) {
 		m_handle << message;
@@ -331,7 +307,7 @@ CStdLogOutputter::~CStdLogOutputter()
 bool
 CStdLogOutputter::write(ELevel level, const char* message)
 {
-	if ((level >= CLog::kFATAL) && (level <= CLog::kWARNING))
+	if ((level >= kFATAL) && (level <= kWARNING))
 		std::cerr << message << std::endl;
 	else
 		std::cout << message << std::endl;

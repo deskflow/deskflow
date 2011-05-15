@@ -78,7 +78,7 @@ public:
 	virtual void		openConsole(const char*);
 	virtual void		closeConsole();
 	virtual void		showConsole(bool showIfEmpty);
-	virtual void		writeConsole(const char*);
+	virtual void		writeConsole(ELevel level, const char*);
 	virtual const char*	getNewlineForConsole();
 
 	// IArchDaemon overrides

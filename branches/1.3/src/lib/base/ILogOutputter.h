@@ -29,8 +29,6 @@ directly or indirectly.
 */
 class ILogOutputter : public IInterface {
 public:
-	typedef CLog::ELevel ELevel;
-
 	//! @name manipulators
 	//@{
 
