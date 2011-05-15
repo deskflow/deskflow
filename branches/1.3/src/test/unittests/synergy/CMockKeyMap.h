@@ -27,6 +27,8 @@ public:
 	MOCK_METHOD1(swap, void(CKeyMap&));
 	MOCK_METHOD0(finish, void());
 	MOCK_METHOD2(foreachKey, void(ForeachKeyCallback, void*));
+	MOCK_METHOD1(addHalfDuplexModifier, void(KeyID));
+	MOCK_CONST_METHOD2(isHalfDuplex, bool(KeyID, KeyButton));
 };
 
 #endif

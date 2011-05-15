@@ -189,7 +189,7 @@ public:
 	Records that modifier key \p key is half-duplex.  This is called to
 	set user configurable half-duplex settings.
 	*/
-	void				addHalfDuplexModifier(KeyID key);
+	virtual void		addHalfDuplexModifier(KeyID key);
 
 	//! Finish adding entries
 	/*!
@@ -251,7 +251,7 @@ public:
 	Returns \c true iff modifier key \p key or button \p button is
 	half-duplex.
 	*/
-	bool				isHalfDuplex(KeyID key, KeyButton button) const;
+	virtual bool		isHalfDuplex(KeyID key, KeyButton button) const;
 
 	//! Test if modifiers indicate a command
 	/*!

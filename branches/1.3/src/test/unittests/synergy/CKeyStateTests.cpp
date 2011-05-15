@@ -66,10 +66,10 @@ TEST(CKeyStateTests, onKey_invalidKey_keyStateZero)
 
 TEST(CKeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 {
-	CMockKeyMap keyMap;
-	CMockEventQueue eventQueue;
+	NiceMock<CMockKeyMap> keyMap;
+	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
-	keyState.setHalfDuplexMask(KeyModifierCapsLock);
+	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(0);
 
@@ -81,7 +81,7 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
-	keyState.setHalfDuplexMask(KeyModifierCapsLock);
+	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(2);
 
@@ -206,4 +206,15 @@ TEST(CKeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
 	ON_CALL(keyMap, foreachKey(_, _)).WillByDefault(Invoke(assertMaskIsOne));
 
 	keyState.updateKeyState();
+}
+
+TEST(CKeyStateTests, setHalfDuplexMask_capsLock_halfDuplexCapsLockAdded)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyCapsLock));
+
+	keyState.setHalfDuplexMask(KeyModifierCapsLock);
 }
