@@ -32,7 +32,7 @@ main(int argc, char **argv)
 	CLOG->insert(&stdLogOutputter, true);
 #endif
 
-	CLOG->setFilter(CLog::kDEBUG2);
+	CLOG->setFilter(kDEBUG2);
 
 	testing::InitGoogleTest(&argc, argv);
 

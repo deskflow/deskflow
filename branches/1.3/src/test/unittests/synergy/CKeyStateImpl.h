@@ -52,4 +52,9 @@ public:
 // calls.
 typedef ::testing::NiceMock<CMockKeyState> CKeyStateImpl;
 
+typedef UInt32 KeyID;
+
+typedef void (*ForeachKeyCallback)(
+		KeyID, SInt32 group, CKeyMap::KeyItem&, void* userData);
+
 #endif

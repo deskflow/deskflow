@@ -189,21 +189,21 @@ TEST(CKeyStateTests, updateKeyState_activeModifiers_maskNotSet)
 	ASSERT_EQ(0, actual);
 }
 
-/*void
-assertMaskIsOne(ForeachKeyCallback callback, void*)
+void
+assertMaskIsOne(ForeachKeyCallback cb, void* userData)
 {
+	ASSERT_EQ(1, ((CKeyState::CAddActiveModifierContext*)userData)->m_mask);
+}
 
-}*/
-
-/*TEST(CKeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
+TEST(CKeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
+	EXPECT_CALL(keyMap, foreachKey(_, _));
 
-	ON_CALL(keyState, pollActiveGroup()).WillByDefault(Return(1));
-	ON_CALL(keyMap, foreachKey(_, _)).WillByDefault(Invoke(stubForeachKey));
+	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(1));
+	ON_CALL(keyMap, foreachKey(_, _)).WillByDefault(Invoke(assertMaskIsOne));
 
 	keyState.updateKeyState();
 }
-*/
