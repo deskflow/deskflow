@@ -24,6 +24,8 @@
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Invoke;
+using ::testing::Return;
+using ::testing::SaveArg;
 
 enum {
 	kAKey = 30
@@ -131,18 +133,17 @@ TEST(CKeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
 	keyState.updateKeyMap();
 }
 
-void stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys)
+void
+stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys)
 {
 	pressedKeys.insert(kAKey);
 }
 
 TEST(CKeyStateTests, updateKeyState_pollInsertsSingleKey_keyIsDown)
 {
-	CMockKeyMap keyMap;
+	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
-
-	EXPECT_CALL(keyState, pollPressedKeys(_));
 	ON_CALL(keyState, pollPressedKeys(_)).WillByDefault(Invoke(stubPollPressedKeys));
 
 	keyState.updateKeyState();
@@ -153,11 +154,9 @@ TEST(CKeyStateTests, updateKeyState_pollInsertsSingleKey_keyIsDown)
 
 TEST(CKeyStateTests, updateKeyState_pollDoesNothing_keyNotSet)
 {
-	CMockKeyMap keyMap;
+	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
-
-	EXPECT_CALL(keyState, pollPressedKeys(_));
 
 	keyState.updateKeyState();
 
@@ -167,10 +166,44 @@ TEST(CKeyStateTests, updateKeyState_pollDoesNothing_keyNotSet)
 
 TEST(CKeyStateTests, updateKeyState_activeModifiers_maskSet)
 {
-	// TODO
+	NiceMock<CMockKeyMap> keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(KeyModifierAlt));
+
+	keyState.updateKeyState();
+
+	KeyModifierMask actual = keyState.getActiveModifiers();
+	ASSERT_EQ(KeyModifierAlt, actual);
 }
 
-TEST(CKeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
+TEST(CKeyStateTests, updateKeyState_activeModifiers_maskNotSet)
 {
-	// TODO
+	NiceMock<CMockKeyMap> keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	keyState.updateKeyState();
+
+	KeyModifierMask actual = keyState.getActiveModifiers();
+	ASSERT_EQ(0, actual);
 }
+
+/*void
+assertMaskIsOne(ForeachKeyCallback callback, void*)
+{
+
+}*/
+
+/*TEST(CKeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	ON_CALL(keyState, pollActiveGroup()).WillByDefault(Return(1));
+	ON_CALL(keyMap, foreachKey(_, _)).WillByDefault(Invoke(stubForeachKey));
+
+	keyState.updateKeyState();
+}
+*/

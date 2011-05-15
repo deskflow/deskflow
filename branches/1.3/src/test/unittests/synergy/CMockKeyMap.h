@@ -26,6 +26,7 @@ class CMockKeyMap : public CKeyMap
 public:
 	MOCK_METHOD1(swap, void(CKeyMap&));
 	MOCK_METHOD0(finish, void());
+	MOCK_METHOD2(foreachKey, void(ForeachKeyCallback, void*));
 };
 
 #endif

@@ -201,7 +201,7 @@ public:
 	/*!
 	Calls \p cb for every key item.
 	*/
-	void				foreachKey(ForeachKeyCallback cb, void* userData);
+	virtual void		foreachKey(ForeachKeyCallback cb, void* userData);
 
 	//@}
 	//! @name accessors

@@ -21,41 +21,35 @@
 #include "CKeyState.h"
 #include "gmock/gmock.h"
 
-class CKeyStateImpl : public CKeyState
+class CMockKeyMap;
+class CMockEventQueue;
+
+// while the class name indicates that this is actually a mock, we use a 
+// typedef later to rename it (so the name matches the compilation unit)
+// so the tests are less confusing.
+class CMockKeyState : public CKeyState
 {
 public:
-	CKeyStateImpl() : CKeyState()
+	CMockKeyState() : CKeyState()
 	{
 	}
 
-	CKeyStateImpl(IEventQueue& eventQueue, CKeyMap& keyMap) : CKeyState(eventQueue, keyMap)
+	CMockKeyState(const CMockEventQueue& eventQueue, const CMockKeyMap& keyMap) :
+		CKeyState((IEventQueue&)eventQueue, (CKeyMap&)keyMap)
 	{
 	}
 
-	virtual SInt32 pollActiveGroup() const
-	{
-		return 0;
-	}
-
-	virtual KeyModifierMask pollActiveModifiers() const
-	{
-		return 0;
-	}
-
-	virtual bool fakeCtrlAltDel() 
-	{
-		return false;
-	}
-
-	virtual void getKeyMap(CKeyMap& keyMap)
-	{
-	}
-
-	virtual void fakeKey(const Keystroke& keystroke)
-	{
-	}
-
+	MOCK_CONST_METHOD0(pollActiveGroup, SInt32());
+	MOCK_CONST_METHOD0(pollActiveModifiers, KeyModifierMask());
+	MOCK_METHOD0(fakeCtrlAltDel, bool());
+	MOCK_METHOD1(getKeyMap, void(CKeyMap&));
+	MOCK_METHOD1(fakeKey, void(const Keystroke&));
 	MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
 };
+
+// hide that we're actually testing a mock to make the unit tests less 
+// confusing. use NiceMock so that we don't get warnings for unexpected
+// calls.
+typedef ::testing::NiceMock<CMockKeyState> CKeyStateImpl;
 
 #endif
