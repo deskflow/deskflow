@@ -827,6 +827,10 @@ class InternalCommands:
 	def findGeneratorFromConfig(self):
 		config = ConfigParser.RawConfigParser()
 		config.read(self.config_filepath())
+		
+		if not config.has_section('cmake'):
+			return None
+		
 		name = config.get('cmake', 'generator')
 
 		generators = self.get_generators()
