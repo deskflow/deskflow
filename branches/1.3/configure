@@ -1,1 +1,2 @@
-./hm.sh conf -g 1 -r
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release .
+

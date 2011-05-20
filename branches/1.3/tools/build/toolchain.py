@@ -16,7 +16,7 @@
 # TODO: split this file up, it's too long!
 
 import sys, os, ConfigParser, shutil, re, ftputil
-from generators import Generator, EclipseGenerator
+from generators import Generator, EclipseGenerator, MakefilesGenerator
 
 if sys.version_info >= (2, 4):
 	import subprocess
@@ -24,7 +24,7 @@ if sys.version_info >= (2, 4):
 class InternalCommands:
 	
 	project = 'synergy'
-	setup_version = 4 # increment to force setup/config
+	setup_version = 5 # increment to force setup/config
 	website_url = 'http://synergy-foss.org/'
 
 	this_cmd = 'hm'
@@ -34,6 +34,7 @@ class InternalCommands:
 	xcodebuild_cmd = 'xcodebuild'
 	w32_make_cmd = 'mingw32-make'
 	w32_qt_version = '4.6.2'
+	defaultTarget = 'release'
 
 	cmake_dir = 'res'
 	gui_dir = 'src/gui'
@@ -75,12 +76,12 @@ class InternalCommands:
 	}
 
 	unix_generators = {
-		1 : Generator('Unix Makefiles'),
+		1 : MakefilesGenerator(),
 		2 : EclipseGenerator(),
 	}
 
 	darwin_generators = {
-		1 : Generator('Unix Makefiles'),
+		1 : MakefilesGenerator(),
 		2 : Generator('Xcode'),
 		3 : EclipseGenerator(),
 	}
@@ -91,7 +92,7 @@ class InternalCommands:
 	def getBinDir(self, target=''):
 		return self.getGenerator().getBinDir(target)
 
-	def config_filepath(self, target=''):
+	def getConfigDir(self):
 		return self.config_filename
 
 	def sln_filepath(self):
@@ -122,16 +123,17 @@ class InternalCommands:
 			'\n'
 			'Example: %s build -g 3'
 			) % (app, app)
-	
-	def configure(self, target):
-		self.configure_internal(target)
-		
-		print ('Configure complete!\n\n'
-			'Open project now: %s open\n'
-			'Command line build: %s build'
-			) % (self.this_cmd, self.this_cmd)
 
-	def configure_internal(self, target='', extraArgs=''):
+	def configureAll(self, targets):
+
+		# if no mode specified, use default
+		if len(targets) == 0:
+			targets += [self.defaultTarget,]
+
+		for target in targets:
+			self.configure(target)
+
+	def configure(self, target='', extraArgs=''):
 		
 		cmake_args = ''
 
@@ -148,18 +150,19 @@ class InternalCommands:
 		generator = self.getGenerator()
 		
 		if generator != self.findGeneratorFromConfig():
-		        print('Warning: Specified generator is different to '
-				'configured generator. Use `hm setup` to make '
-				'this permanent.')
+		        print('Generator changed, running setup.')
+			self.setup(target)
 
 		if generator.cmakeName != '':
 			cmake_args += ' -G "' + generator.cmakeName + '"'
 		
+		# default is release
+		if target == '':
+			print 'Defaulting target to: ' + self.defaultTarget
+			target = self.defaultTarget
+
 		# for non-vs always specify a build type (debug, release, etc)
 		if not generator.cmakeName.startswith('Visual Studio'):
-			# default is default for non-vs
-			if target == '':
-				target = 'debug'
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 		
 		# if not visual studio, use parent dir
@@ -198,7 +201,7 @@ class InternalCommands:
 			if err != 0:
 				raise Exception('QMake encountered error: ' + str(err))
 		
-		self.set_conf_run()
+		self.setConfRun(target)
 
 	def persist_cmake(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
@@ -217,8 +220,6 @@ class InternalCommands:
 
 	def persist_qt(self):
 		self.persist_qmake()
-		if sys.platform == 'win32':
-			self.persist_w32_make()
 
 	def persist_qmake(self):
 		# cannot use subprocess on < python 2.4
@@ -258,31 +259,36 @@ class InternalCommands:
 			else:
 				raise Exception('Could not find qmake version.')
 
-	def persist_w32_make():
-		# TODO
-		pass
+	def ensureConfHasRun(self, target, skipConfig):
+		if self.hasConfRun(target):
+			print 'Skipping config for target: ' + target
+			skipConfig = True
+
+		if not skipConfig:
+			self.configure(target)
 
 	def build(self, targets=[], skipConfig=False):
 
-		# if no mode specified, default to debug
+		# if no mode specified, use default
 		if len(targets) == 0:
-			targets += ['debug',]
+			targets += [self.defaultTarget,]
 	
 		self.ensure_setup_latest()
 
 		generator = self.getGeneratorFromConfig().cmakeName
-
-		if generator.startswith('Visual Studio'):
-			
-			# only need to configure once for vs
-			if not self.has_conf_run() and not skipConfig:
-				self.configure_internal()
 		
+		if generator.startswith('Visual Studio'):
+		
+			self.ensureConfHasRun('all', skipConfig)
+
 			for target in targets:
 				self.run_vcbuild(generator, target)
 		
 		else:
-			
+
+			for target in targets:
+				self.ensureConfHasRun(target, skipConfig)			
+
 			cmd = ''
 			if generator.find("Unix Makefiles") != -1:
 				print 'Building with GNU Make...'
@@ -294,10 +300,6 @@ class InternalCommands:
 				raise Exception('Build command not supported with generator: ' + generator)
 
 			for target in targets:
-					
-				if not self.has_conf_run(target) and not skipConfig:
-					self.configure_internal(target)
-				
 				self.try_chdir(self.getBuildDir(target))
 				err = os.system(cmd)
 				self.restore_chdir()
@@ -311,9 +313,9 @@ class InternalCommands:
 	
 	def clean(self, targets=[]):
 		
-		# if no mode specified, default to debug
+		# if no mode specified, use default
 		if len(targets) == 0:
-			targets += ['debug',]
+			targets += [self.defaultTarget,]
 		
 		generator = self.getGeneratorFromConfig().cmakeName
 
@@ -434,8 +436,8 @@ class InternalCommands:
 		
 	def doxygen(self):
 		# The conf generates doc/doxygen.cfg from cmake/doxygen.cfg.in
-		if not self.has_conf_run():
-			self.configure_internal()
+		if not self.hasConfRun():
+			self.configure()
 
 		err = os.system('doxygen %s/%s' % (self.doc_dir, self.doxygen_filename))
 			
@@ -446,13 +448,13 @@ class InternalCommands:
 
 		# Package is supported by default.
 		package_unsupported = False
-		unixTarget = 'release'
+		unixTarget = self.defaultTarget
 		
 		if type != 'win' and type != 'mac':
-			self.configure_internal(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
+			self.configure(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
 
 		# make sure we have a release build to package
-		self.build(['release'], skipConfig=True)
+		self.build([self.defaultTarget], skipConfig=True)
 
 		moveExt = ''
 
@@ -693,8 +695,6 @@ class InternalCommands:
 		
 		# only use release dir if not windows
 		target = ''
-		#if type != 'win':
-		#	target = 'release'
 
 		for filename in os.listdir(self.getBinDir(target)):
 			if re.search(pattern, filename):
@@ -778,18 +778,26 @@ class InternalCommands:
 	def setup(self, target=''):
 		print "Running setup..."
 
+		oldGenerator = self.findGeneratorFromConfig()
+		if not oldGenerator == None:
+			for target in ['debug', 'release']:				
+				buildDir = oldGenerator.getBuildDir(target)
+
+				cmakeCacheFilename = 'CMakeCache.txt'
+				if buildDir != '':
+					cmakeCacheFilename = buildDir + '/' + cmakeCacheFilename
+
+				if os.path.exists(cmakeCacheFilename):
+					print "Removing %s, since generator changed." % cmakeCacheFilename
+					os.remove(cmakeCacheFilename)
+
 		# always either get generator from args, or prompt user when 
 		# running setup
 		generator = self.get_generator_from_prompt()
 
-		# Create build dir, since config file resides there.
-		buildDir = self.getBuildDir(target)
-		if buildDir != '' and not os.path.exists(buildDir):
-			os.mkdir(buildDir)
-
-		if os.path.exists(self.config_filepath()):
+		if os.path.exists(self.getConfigDir()):
 			config = ConfigParser.ConfigParser()
-			config.read(self.config_filepath())
+			config.read(self.getConfigDir())
 		else:
 			config = ConfigParser.ConfigParser()
 
@@ -806,15 +814,15 @@ class InternalCommands:
 
 		self.write_config(config)
 
-		cmakecache_filename = '%s/CMakeCache.txt' % self.getBuildDir(target)
-		if os.path.exists(cmakecache_filename):
-			print "Removing %s, since generator changed." % cmakecache_filename
-			os.remove(cmakecache_filename)
+		# for all targets, set conf not run
+		self.setConfRun('all', False)
+		self.setConfRun('debug', False)
+		self.setConfRun('release', False)
 
-		print "\nSetup complete."
+		print "Setup complete."
 
 	def write_config(self, config, target=''):
-		configfile = open(self.config_filepath(target), 'wb')
+		configfile = open(self.getConfigDir(), 'wb')
 		config.write(configfile)
 
 	def getGeneratorFromConfig(self):
@@ -826,7 +834,7 @@ class InternalCommands:
 
 	def findGeneratorFromConfig(self):
 		config = ConfigParser.RawConfigParser()
-		config.read(self.config_filepath())
+		config.read(self.getConfigDir())
 		
 		if not config.has_section('cmake'):
 			return None
@@ -843,9 +851,9 @@ class InternalCommands:
 		return None
 
 	def min_setup_version(self, version):
-		if os.path.exists(self.config_filepath()):
+		if os.path.exists(self.getConfigDir()):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.config_filepath())
+			config.read(self.getConfigDir())
 
 			try:
 				return config.getint('hm', 'setup_version') >= version
@@ -854,22 +862,22 @@ class InternalCommands:
 		else:
 			return False
 
-	def has_conf_run(self, target=''):
+	def hasConfRun(self, target):
 		if self.min_setup_version(2):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.config_filepath(target))
+			config.read(self.getConfigDir())
 			try:
-				return config.getboolean('hm', 'has_conf_run')
+				return config.getboolean('hm', 'conf_done_' + target)
 			except:
 				return False
 		else:
 			return False
 
-	def set_conf_run(self):
+	def setConfRun(self, target, hasRun=True):
 		if self.min_setup_version(3):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.config_filepath())
-			config.set('hm', 'has_conf_run', True)
+			config.read(self.getConfigDir())
+			config.set('hm', 'conf_done_' + target, hasRun)
 			self.write_config(config)
 		else:
 			raise Exception("User does not have correct setup version.")
@@ -1082,10 +1090,7 @@ class CommandHandler:
 		self.ic.setup()
 	
 	def configure(self):
-		target = ''
-		if (len(self.build_targets) > 0):
-			target = self.build_targets[0]
-		self.ic.configure(target)
+		self.ic.configureAll(self.build_targets)
 	
 	def build(self):
 		self.ic.build(self.build_targets)

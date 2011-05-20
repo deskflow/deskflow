@@ -39,16 +39,15 @@ endif()
 project(synergy C CXX)
 
 # put binaries in a different dir to make them easier to find.
-if (WIN32)
-  set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-  set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-elseif (UNIX)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
+# for unix, put debug files in a separate bin "debug" dir.
+# release bin files should stay in the root of the bin dir.
+if (UNIX)
   if (CMAKE_BUILD_TYPE STREQUAL Debug)
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/debug)
     set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/debug)
-  elseif (CMAKE_BUILD_TYPE STREQUAL Release)
-    set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/release)
-    set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/release)
   endif()
 endif()
 

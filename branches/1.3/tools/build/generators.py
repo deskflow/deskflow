@@ -6,22 +6,32 @@ class Generator(object):
 		self.binDir = binDir
 
 	def getBuildDir(self, target):
-		workingDir = self.buildDir
-		if target != '':
-			workingDir += '/' + target
-		return workingDir
+		return self.buildDir
 
 	def getBinDir(self, target=''):
-		workingDir = self.binDir
-		if target != '':
-			workingDir += '/' + target
+		return self.binDir
+
+	def getSourceDir(self):
+		return self.sourceDir
+
+class MakefilesGenerator(Generator):
+	def __init__(self):
+		super(MakefilesGenerator, self).__init__('Unix Makefiles', 'build', '..', 'bin')
+
+	def getBuildDir(self, target):
+		return super(MakefilesGenerator, self).getBuildDir(target) + '/' + target
+
+	def getBinDir(self, target=''):
+		workingDir = super(MakefilesGenerator, self).getBinDir(target)
+		
+		# only put debug files in separate bin dir
+		if target == 'debug':
+			workingDir += '/debug'
+		
 		return workingDir
 
 	def getSourceDir(self):
-		sourceDir = self.sourceDir
-		if not self.cmakeName.startswith('Visual Studio'):
-			sourceDir += '/..'
-		return sourceDir
+		return super(MakefilesGenerator, self).getSourceDir() + '/..'
 
 class EclipseGenerator(Generator):
 	def __init__(self):
