@@ -115,7 +115,7 @@ CClientListener::getNextClient()
 CEvent::Type
 CClientListener::getConnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_connectedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_connectedEvent,
 							"CClientListener::connected");
 }
 

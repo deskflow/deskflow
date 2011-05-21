@@ -289,7 +289,7 @@ CServerApp::loadConfig(const CString& pathname)
 CEvent::Type 
 CServerApp::getReloadConfigEvent()
 {
-	return CEvent::registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
+	return EVENTQUEUE->registerTypeOnce(s_reloadConfigEvent, "reloadConfig");
 }
 
 void 
@@ -303,13 +303,13 @@ CServerApp::forceReconnect(const CEvent&, void*)
 CEvent::Type 
 CServerApp::getForceReconnectEvent()
 {
-	return CEvent::registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
+	return EVENTQUEUE->registerTypeOnce(s_forceReconnectEvent, "forceReconnect");
 }
 
 CEvent::Type
 CServerApp::getResetServerEvent()
 {
-	return CEvent::registerTypeOnce(s_resetServerEvent, "resetServer");
+	return EVENTQUEUE->registerTypeOnce(s_resetServerEvent, "resetServer");
 }
 
 void 

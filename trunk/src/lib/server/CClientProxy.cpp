@@ -19,6 +19,7 @@
 #include "CProtocolUtil.h"
 #include "IStream.h"
 #include "CLog.h"
+#include "CEventQueue.h"
 
 //
 // CClientProxy
@@ -59,21 +60,21 @@ CClientProxy::getStream() const
 CEvent::Type
 CClientProxy::getReadyEvent()
 {
-	return CEvent::registerTypeOnce(s_readyEvent,
+	return EVENTQUEUE->registerTypeOnce(s_readyEvent,
 							"CClientProxy::ready");
 }
 
 CEvent::Type
 CClientProxy::getDisconnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_disconnectedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_disconnectedEvent,
 							"CClientProxy::disconnected");
 }
 
 CEvent::Type
 CClientProxy::getClipboardChangedEvent()
 {
-	return CEvent::registerTypeOnce(s_clipboardChangedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_clipboardChangedEvent,
 							"CClientProxy::clipboardChanged");
 }
 
