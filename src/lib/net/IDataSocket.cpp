@@ -16,6 +16,7 @@
  */
 
 #include "IDataSocket.h"
+#include "CEventQueue.h"
 
 //
 // IDataSocket
@@ -27,14 +28,14 @@ CEvent::Type			IDataSocket::s_failedEvent    = CEvent::kUnknown;
 CEvent::Type
 IDataSocket::getConnectedEvent()
 {
-	return CEvent::registerTypeOnce(s_connectedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_connectedEvent,
 							"IDataSocket::connected");
 }
 
 CEvent::Type
 IDataSocket::getConnectionFailedEvent()
 {
-	return CEvent::registerTypeOnce(s_failedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_failedEvent,
 							"IDataSocket::failed");
 }
 

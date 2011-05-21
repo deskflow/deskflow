@@ -46,21 +46,17 @@ requiredMajor = 2
 requiredMinor = 3
 
 # options used by all commands
-global_options = 'g:v'
-global_options_long = ['no-prompts', 'generator=', 'verbose', 'make-gui']
-
-# options used by build related commands
-build_options = 'dr'
-build_options_long = ['debug', 'release']
+globalOptions = 'v'
+globalOptionsLong = ['no-prompts', 'generator=', 'verbose', 'make-gui']
 
 # list of valid commands as keys. the values are optarg strings, but most 
 # are None for now (this is mainly for extensibility)
 cmd_opt_dict = {
 	'about'     : ['', []],
-	'setup'     : ['', []],
-	'configure' : [build_options, build_options_long],
-	'build'     : [build_options, build_options_long],
-	'clean'     : [build_options, build_options_long],
+	'setup'     : ['g:', []],
+	'configure' : ['g:dr', ['debug', 'release']],
+	'build'     : ['dr', ['debug', 'release']],
+	'clean'     : ['dr', ['debug', 'release']],
 	'update'    : ['', []],
 	'install'   : ['', []],
 	'doxygen'   : ['', []],
@@ -170,10 +166,10 @@ def run_cmd(cmd, argv = []):
 	try:
 		options_pair = cmd_opt_dict[cmd]
 		
-		options = global_options + options_pair[0]
+		options = globalOptions + options_pair[0]
 		
 		options_long = []
-		options_long.extend(global_options_long)
+		options_long.extend(globalOptionsLong)
 		options_long.extend(options_pair[1])
 		
 		opts, args = gnu_getopt(argv, options, options_long)
@@ -214,3 +210,4 @@ def main(argv):
 
 # Start the program.
 main(sys.argv)
+

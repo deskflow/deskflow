@@ -37,7 +37,7 @@ TEST(CClipboardTests, empty_singleFormat_hasReturnsFalse)
 	clipboard.empty();
 
 	bool actual = clipboard.has(CClipboard::kText);
-	EXPECT_EQ(false, actual);
+	EXPECT_FALSE(actual);
 }
 
 TEST(CClipboardTests, add_newValue_valueWasStored)
@@ -130,7 +130,7 @@ TEST(CClipboardTests, has_withNoFormats_returnsFalse)
 
 	bool actual = clipboard.has(IClipboard::kText);
 
-	EXPECT_EQ(false, actual);
+	EXPECT_FALSE(actual);
 }
 
 TEST(CClipboardTests, get_withNoFormats_returnsEmpty)
@@ -281,7 +281,7 @@ TEST(CClipboardTests, unmarshall_emptyData_hasTextIsFalse)
 
 	clipboard.open(0);
 	bool actual = clipboard.has(IClipboard::kText);
-	EXPECT_EQ(false, actual);
+	EXPECT_FALSE(actual);
 }
 
 TEST(CClipboardTests, unmarshall_withTextSize285_getTextIsValid)

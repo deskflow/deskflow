@@ -16,6 +16,7 @@
  */
 
 #include "IPrimaryScreen.h"
+#include "CEventQueue.h"
 #include <cstdlib>
 
 //
@@ -37,77 +38,77 @@ CEvent::Type		IPrimaryScreen::s_fakeInputEnd         = CEvent::kUnknown;
 CEvent::Type
 IPrimaryScreen::getButtonDownEvent()
 {
-	return CEvent::registerTypeOnce(s_buttonDownEvent,
+	return EVENTQUEUE->registerTypeOnce(s_buttonDownEvent,
 							"IPrimaryScreen::buttonDown");
 }
 
 CEvent::Type
 IPrimaryScreen::getButtonUpEvent()
 {
-	return CEvent::registerTypeOnce(s_buttonUpEvent,
+	return EVENTQUEUE->registerTypeOnce(s_buttonUpEvent,
 							"IPrimaryScreen::buttonUp");
 }
 
 CEvent::Type
 IPrimaryScreen::getMotionOnPrimaryEvent()
 {
-	return CEvent::registerTypeOnce(s_motionPrimaryEvent,
+	return EVENTQUEUE->registerTypeOnce(s_motionPrimaryEvent,
 							"IPrimaryScreen::motionPrimary");
 }
 
 CEvent::Type
 IPrimaryScreen::getMotionOnSecondaryEvent()
 {
-	return CEvent::registerTypeOnce(s_motionSecondaryEvent,
+	return EVENTQUEUE->registerTypeOnce(s_motionSecondaryEvent,
 							"IPrimaryScreen::motionSecondary");
 }
 
 CEvent::Type
 IPrimaryScreen::getWheelEvent()
 {
-	return CEvent::registerTypeOnce(s_wheelEvent,
+	return EVENTQUEUE->registerTypeOnce(s_wheelEvent,
 							"IPrimaryScreen::wheel");
 }
 
 CEvent::Type
 IPrimaryScreen::getScreensaverActivatedEvent()
 {
-	return CEvent::registerTypeOnce(s_ssActivatedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_ssActivatedEvent,
 							"IPrimaryScreen::screensaverActivated");
 }
 
 CEvent::Type
 IPrimaryScreen::getScreensaverDeactivatedEvent()
 {
-	return CEvent::registerTypeOnce(s_ssDeactivatedEvent,
+	return EVENTQUEUE->registerTypeOnce(s_ssDeactivatedEvent,
 							"IPrimaryScreen::screensaverDeactivated");
 }
 
 CEvent::Type
 IPrimaryScreen::getHotKeyDownEvent()
 {
-	return CEvent::registerTypeOnce(s_hotKeyDownEvent,
+	return EVENTQUEUE->registerTypeOnce(s_hotKeyDownEvent,
 							"IPrimaryScreen::hotKeyDown");
 }
 
 CEvent::Type
 IPrimaryScreen::getHotKeyUpEvent()
 {
-	return CEvent::registerTypeOnce(s_hotKeyUpEvent,
+	return EVENTQUEUE->registerTypeOnce(s_hotKeyUpEvent,
 							"IPrimaryScreen::hotKeyUp");
 }
 
 CEvent::Type
 IPrimaryScreen::getFakeInputBeginEvent()
 {
-	return CEvent::registerTypeOnce(s_fakeInputBegin,
+	return EVENTQUEUE->registerTypeOnce(s_fakeInputBegin,
 							"IPrimaryScreen::fakeInputBegin");
 }
 
 CEvent::Type
 IPrimaryScreen::getFakeInputEndEvent()
 {
-	return CEvent::registerTypeOnce(s_fakeInputEnd,
+	return EVENTQUEUE->registerTypeOnce(s_fakeInputEnd,
 							"IPrimaryScreen::fakeInputEnd");
 }
 

@@ -16,6 +16,7 @@
  */
 
 #include "IKeyState.h"
+#include "CEventQueue.h"
 #include <cstring>
 #include <cstdlib>
 
@@ -27,27 +28,36 @@ CEvent::Type		IKeyState::s_keyDownEvent   = CEvent::kUnknown;
 CEvent::Type		IKeyState::s_keyUpEvent     = CEvent::kUnknown;
 CEvent::Type		IKeyState::s_keyRepeatEvent = CEvent::kUnknown;
 
-CEvent::Type
-IKeyState::getKeyDownEvent()
+IKeyState::IKeyState() :
+	m_eventQueue(*EVENTQUEUE)
 {
-	return CEvent::registerTypeOnce(s_keyDownEvent,
+}
+
+IKeyState::IKeyState(IEventQueue& eventQueue) :
+	m_eventQueue(eventQueue)
+{
+}
+
+CEvent::Type
+IKeyState::getKeyDownEvent(IEventQueue& eventQueue)
+{
+	return eventQueue.registerTypeOnce(s_keyDownEvent,
 							"IKeyState::keyDown");
 }
 
 CEvent::Type
-IKeyState::getKeyUpEvent()
+IKeyState::getKeyUpEvent(IEventQueue& eventQueue)
 {
-	return CEvent::registerTypeOnce(s_keyUpEvent,
+	return eventQueue.registerTypeOnce(s_keyUpEvent,
 							"IKeyState::keyUp");
 }
 
 CEvent::Type
-IKeyState::getKeyRepeatEvent()
+IKeyState::getKeyRepeatEvent(IEventQueue& eventQueue)
 {
-	return CEvent::registerTypeOnce(s_keyRepeatEvent,
+	return eventQueue.registerTypeOnce(s_keyRepeatEvent,
 							"IKeyState::keyRepeat");
 }
-
 
 //
 // IKeyState::CKeyInfo

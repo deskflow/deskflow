@@ -29,6 +29,7 @@ platform specific methods.
 class CKeyState : public IKeyState {
 public:
 	CKeyState();
+	CKeyState(IEventQueue& eventQueue, CKeyMap& keyMap);
 	virtual ~CKeyState();
 
 	//! @name manipulators
@@ -137,6 +138,7 @@ protected:
 private:
 	typedef CKeyMap::Keystrokes Keystrokes;
 	typedef CKeyMap::ModifierToKeys ModifierToKeys;
+public:
 	struct CAddActiveModifierContext {
 	public:
 		CAddActiveModifierContext(SInt32 group, KeyModifierMask mask,
@@ -152,6 +154,7 @@ private:
 		CAddActiveModifierContext(const CAddActiveModifierContext&);
 		CAddActiveModifierContext& operator=(const CAddActiveModifierContext&);
 	};
+private:
 	
 	class ButtonToKeyLess {
 	public:
@@ -165,6 +168,9 @@ private:
 	// not implemented
 	CKeyState(const CKeyState&);
 	CKeyState& operator=(const CKeyState&);
+
+	// called by all ctors.
+	void				init();
 
 	// adds alias key sequences.  these are sequences that are equivalent
 	// to other sequences.
@@ -190,8 +196,11 @@ private:
 							CKeyMap::KeyItem& keyItem, void* vcontext);
 
 private:
+	// must be declared before m_keyMap. used when this class owns the key map.
+	CKeyMap*			m_keyMapPtr;
+
 	// the keyboard map
-	CKeyMap				m_keyMap;
+	CKeyMap&			m_keyMap;
 
 	// current modifier state
 	KeyModifierMask		m_mask;
