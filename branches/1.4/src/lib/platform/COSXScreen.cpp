@@ -1546,7 +1546,7 @@ COSXScreen::handlePowerChangeRequest(natural_t messageType, void* messageArg)
 CEvent::Type
 COSXScreen::getConfirmSleepEvent()
 {
-	return CEvent::registerTypeOnce(s_confirmSleepEvent,
+	return EVENTQUEUE->registerTypeOnce(s_confirmSleepEvent,
 									"COSXScreen::confirmSleep");
 }
 
