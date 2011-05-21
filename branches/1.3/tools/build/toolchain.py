@@ -277,38 +277,33 @@ class InternalCommands:
 
 		generator = self.getGeneratorFromConfig().cmakeName
 		
-		if generator.startswith('Visual Studio'):
-		
-			self.ensureConfHasRun('all', skipConfig)
-
+		if generator.find('Unix Makefiles') != -1:
 			for target in targets:
-				self.run_vcbuild(generator, target)
-		
+				self.ensureConfHasRun(target, skipConfig)
+				self.runBuildCommand(self.make_cmd, target)
 		else:
-
+			self.ensureConfHasRun('all', skipConfig)
 			for target in targets:
-				self.ensureConfHasRun(target, skipConfig)			
-
-				cmd = ''
-				if generator.find("Unix Makefiles") != -1:
-					print 'Building with GNU Make...'
-					cmd = self.make_cmd
+				if generator.startswith('Visual Studio'):
+					self.run_vcbuild(generator, target)
 				elif generator == 'Xcode':
-					print 'Building with Xcode...'
 					cmd = self.xcodebuild_cmd + ' -configuration ' + target.capitalize()
+					self.runBuildCommand(cmd, target)
 				else:
 					raise Exception('Build command not supported with generator: ' + generator)
-				
-				self.try_chdir(self.getBuildDir(target))
-				err = os.system(cmd)
-				self.restore_chdir()
-				
-				if err != 0:
-					raise Exception(cmd + ' failed: ' + str(err))
 
 		# allow user to skip qui compile
 		if self.enable_make_gui:
 			self.make_gui(targets)
+	
+	def runBuildCommand(self, cmd, target):
+	
+		self.try_chdir(self.getBuildDir(target))
+		err = os.system(cmd)
+		self.restore_chdir()
+			
+		if err != 0:
+			raise Exception(cmd + ' failed: ' + str(err))
 	
 	def clean(self, targets=[]):
 		
@@ -554,7 +549,7 @@ class InternalCommands:
 		buildDir = self.getBuildDir(unixTarget)
 
 		# nb: temporary fix (just distribute a zip)
-		self.try_chdir(buildDir)
+		self.try_chdir(bin)
 
 		try:
 			import shutil
@@ -573,7 +568,7 @@ class InternalCommands:
 				else:
 					shutil.copy2(f, zipFile + '/')
 
-			zipCmd = ('zip -r ../../' + binDir + '/' + zipFile + '.zip ' + zipFile);
+			zipCmd = ('zip -r ../../' + buildDir + '/' + zipFile + '.zip ' + zipFile);
 			
 			print 'Creating package: ' + zipCmd
 			err = os.system(zipCmd)
