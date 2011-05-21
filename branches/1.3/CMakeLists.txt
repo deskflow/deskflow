@@ -44,7 +44,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 # for unix, put debug files in a separate bin "debug" dir.
 # release bin files should stay in the root of the bin dir.
-if (UNIX)
+if (CMAKE_GENERATOR STREQUAL "Unix Makefiles")
   if (CMAKE_BUILD_TYPE STREQUAL Debug)
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/debug)
     set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib/debug)

@@ -161,8 +161,8 @@ class InternalCommands:
 			print 'Defaulting target to: ' + self.defaultTarget
 			target = self.defaultTarget
 
-		# for non-vs always specify a build type (debug, release, etc)
-		if not generator.cmakeName.startswith('Visual Studio'):
+		# for makefiles always specify a build type (debug, release, etc)
+		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 		
 		# if not visual studio, use parent dir
@@ -289,17 +289,16 @@ class InternalCommands:
 			for target in targets:
 				self.ensureConfHasRun(target, skipConfig)			
 
-			cmd = ''
-			if generator.find("Unix Makefiles") != -1:
-				print 'Building with GNU Make...'
-				cmd = self.make_cmd
-			elif generator == 'Xcode':
-				print 'Building with Xcode...'
-				cmd = self.xcodebuild_cmd
-			else:
-				raise Exception('Build command not supported with generator: ' + generator)
-
-			for target in targets:
+				cmd = ''
+				if generator.find("Unix Makefiles") != -1:
+					print 'Building with GNU Make...'
+					cmd = self.make_cmd
+				elif generator == 'Xcode':
+					print 'Building with Xcode...'
+					cmd = self.xcodebuild_cmd + ' -configuration ' + target.capitalize()
+				else:
+					raise Exception('Build command not supported with generator: ' + generator)
+				
 				self.try_chdir(self.getBuildDir(target))
 				err = os.system(cmd)
 				self.restore_chdir()
