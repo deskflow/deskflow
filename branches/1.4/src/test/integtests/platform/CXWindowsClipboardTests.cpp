@@ -77,7 +77,7 @@ TEST_F(CXWindowsClipboardTests, empty_singleFormat_hasReturnsFalse)
 	clipboard.empty();
 	
 	bool actual = clipboard.has(CXWindowsClipboard::kText);
-	EXPECT_EQ(false, actual);
+	EXPECT_FALSE(actual);
 }
 
 TEST_F(CXWindowsClipboardTests, add_newValue_valueWasStored)
@@ -127,7 +127,7 @@ TEST_F(CXWindowsClipboardTests, has_withNoFormats_returnsFalse)
 	
 	bool actual = clipboard.has(IClipboard::kText);
 	
-	EXPECT_EQ(false, actual);
+	EXPECT_FALSE(actual);
 }
 
 TEST_F(CXWindowsClipboardTests, get_withNoFormats_returnsEmpty)

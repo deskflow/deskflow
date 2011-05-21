@@ -59,27 +59,6 @@ public:
 	//! @name manipulators
 	//@{
 
-	//! Creates a new event type
-	/*!
-	Returns a unique event type id.
-	*/
-	static Type			registerType(const char* name);
-
-	//! Creates a new event type
-	/*!
-	If \p type contains \c kUnknown then it is set to a unique event
-	type id otherwise it is left alone.  The final value of \p type
-	is returned.
-	*/
-	static Type			registerTypeOnce(Type& type, const char* name);
-
-	//! Get name for event
-	/*!
-	Returns the name for the event \p type.  This is primarily for
-	debugging.
-	*/
-	static const char*	getTypeName(Type type);
-
 	//! Release event data
 	/*!
 	Deletes event data for the given event (using free()).
