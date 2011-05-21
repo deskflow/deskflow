@@ -214,3 +214,40 @@ TEST(CKeyStateTests, setHalfDuplexMask_capsLock_halfDuplexCapsLockAdded)
 
 	keyState.setHalfDuplexMask(KeyModifierCapsLock);
 }
+
+TEST(CKeyStateTests, setHalfDuplexMask_capsLock_halfDuplexNumLockAdded)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyNumLock));
+
+	keyState.setHalfDuplexMask(KeyModifierNumLock);
+}
+
+TEST(CKeyStateTests, setHalfDuplexMask_capsLock_halfDuplexScollLockAdded)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyScrollLock));
+
+	keyState.setHalfDuplexMask(KeyModifierScrollLock);
+}
+
+TEST(CKeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyRepeatCalled)
+{
+	NiceMock<CMockKeyMap> keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+	CKeyMap::KeyItem keyItem;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
+
+	EXPECT_CALL(keyState, fakeKeyRepeat(_, _, _, _));
+
+	// call twice to simulate server key already down (a "mis-reported autorepeat").
+	keyState.fakeKeyDown(0, 0, 0);
+	keyState.fakeKeyDown(0, 0, 0);
+}

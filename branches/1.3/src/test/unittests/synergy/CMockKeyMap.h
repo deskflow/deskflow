@@ -29,6 +29,9 @@ public:
 	MOCK_METHOD2(foreachKey, void(ForeachKeyCallback, void*));
 	MOCK_METHOD1(addHalfDuplexModifier, void(KeyID));
 	MOCK_CONST_METHOD2(isHalfDuplex, bool(KeyID, KeyButton));
+	MOCK_CONST_METHOD7(mapKey, const CKeyMap::KeyItem*(
+		Keystrokes&, KeyID, SInt32, ModifierToKeys&, KeyModifierMask&,
+		KeyModifierMask, bool));
 };
 
 #endif

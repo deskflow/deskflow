@@ -45,6 +45,7 @@ public:
 	MOCK_METHOD1(getKeyMap, void(CKeyMap&));
 	MOCK_METHOD1(fakeKey, void(const Keystroke&));
 	MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
+	MOCK_METHOD4(fakeKeyRepeat, void(KeyID, KeyModifierMask, SInt32, KeyButton));
 };
 
 // hide that we're actually testing a mock to make the unit tests less 
