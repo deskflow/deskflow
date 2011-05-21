@@ -47,8 +47,8 @@ class InternalCommands:
 	doxygen_filename = 'doxygen.cfg'
 	
 	macZipFiles = [
-		'../../bin/release/synergyc',
-		'../../bin/release/synergys',
+		'../../bin/synergyc',
+		'../../bin/synergys',
 		'../../doc/synergy.conf.example',
 		'../../doc/MacReadme.txt']
 
@@ -449,6 +449,9 @@ class InternalCommands:
 		package_unsupported = False
 		unixTarget = self.defaultTarget
 		
+		if type == '' or type == None:
+			raise Exception('No type specified.')
+
 		if type != 'win' and type != 'mac':
 			self.configure(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
 
@@ -546,10 +549,12 @@ class InternalCommands:
 		version = self.getVersionFromCmake()
 		zipFile = (self.project + '-' + version + '-' +
 				   self.getMacPackageName())
+		
+		binDir = self.getBinDir(unixTarget)
+		buildDir = self.getBuildDir(unixTarget)
 
 		# nb: temporary fix (just distribute a zip)
-		bin = self.getBuildDir(unixTarget)
-		self.try_chdir(bin)
+		self.try_chdir(buildDir)
 
 		try:
 			import shutil
@@ -568,7 +573,7 @@ class InternalCommands:
 				else:
 					shutil.copy2(f, zipFile + '/')
 
-			zipCmd = ('zip -r ../../' + self.getGenerator().binDir + '/' + zipFile + '.zip ' + zipFile);
+			zipCmd = ('zip -r ../../' + binDir + '/' + zipFile + '.zip ' + zipFile);
 			
 			print 'Creating package: ' + zipCmd
 			err = os.system(zipCmd)
