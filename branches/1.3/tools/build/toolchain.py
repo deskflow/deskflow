@@ -42,7 +42,8 @@ class InternalCommands:
 
 	sln_filename = '%s.sln' % project
 	xcodeproj_filename = '%s.xcodeproj' % project
-	config_filename = '%s.cfg' % this_cmd
+	configDir = 'build'
+	configFilename = '%s/%s.cfg' % (configDir, this_cmd)
 	qtpro_filename = 'qsynergy.pro'
 	doxygen_filename = 'doxygen.cfg'
 	
@@ -91,9 +92,6 @@ class InternalCommands:
 
 	def getBinDir(self, target=''):
 		return self.getGenerator().getBinDir(target)
-
-	def getConfigDir(self):
-		return self.config_filename
 
 	def sln_filepath(self):
 		return '%s\%s' % (self.getBuildDir(), self.sln_filename)
@@ -794,9 +792,9 @@ class InternalCommands:
 		# running setup
 		generator = self.get_generator_from_prompt()
 
-		if os.path.exists(self.getConfigDir()):
+		if os.path.exists(self.configFilename):
 			config = ConfigParser.ConfigParser()
-			config.read(self.getConfigDir())
+			config.read(self.configFilename)
 		else:
 			config = ConfigParser.ConfigParser()
 
@@ -821,7 +819,9 @@ class InternalCommands:
 		print "Setup complete."
 
 	def write_config(self, config, target=''):
-		configfile = open(self.getConfigDir(), 'wb')
+		if not os.path.isdir(self.configDir):
+			os.mkdir(self.configDir)
+		configfile = open(self.configFilename, 'wb')
 		config.write(configfile)
 
 	def getGeneratorFromConfig(self):
@@ -833,7 +833,7 @@ class InternalCommands:
 
 	def findGeneratorFromConfig(self):
 		config = ConfigParser.RawConfigParser()
-		config.read(self.getConfigDir())
+		config.read(self.configFilename)
 		
 		if not config.has_section('cmake'):
 			return None
@@ -850,9 +850,9 @@ class InternalCommands:
 		return None
 
 	def min_setup_version(self, version):
-		if os.path.exists(self.getConfigDir()):
+		if os.path.exists(self.configFilename):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.getConfigDir())
+			config.read(self.configFilename)
 
 			try:
 				return config.getint('hm', 'setup_version') >= version
@@ -864,7 +864,7 @@ class InternalCommands:
 	def hasConfRun(self, target):
 		if self.min_setup_version(2):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.getConfigDir())
+			config.read(self.configFilename)
 			try:
 				return config.getboolean('hm', 'conf_done_' + target)
 			except:
@@ -875,7 +875,7 @@ class InternalCommands:
 	def setConfRun(self, target, hasRun=True):
 		if self.min_setup_version(3):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.getConfigDir())
+			config.read(self.configFilename)
 			config.set('hm', 'conf_done_' + target, hasRun)
 			self.write_config(config)
 		else:
