@@ -17,7 +17,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "CKeyStateImpl.h"
+#include "CKeyStateTests.h"
 #include "CMockEventQueue.h"
 #include "CMockKeyMap.h"
 
@@ -26,10 +26,6 @@ using ::testing::NiceMock;
 using ::testing::Invoke;
 using ::testing::Return;
 using ::testing::SaveArg;
-
-enum {
-	kAKey = 30
-};
 
 TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 {

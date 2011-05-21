@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CKEYSTATEIMPL_H
-#define CKEYSTATEIMPL_H
+#ifndef CKEYSTATETESTS_H
+#define CKEYSTATETESTS_H
 
 #include "CKeyState.h"
 #include "gmock/gmock.h"
@@ -56,5 +56,9 @@ typedef UInt32 KeyID;
 
 typedef void (*ForeachKeyCallback)(
 		KeyID, SInt32 group, CKeyMap::KeyItem&, void* userData);
+
+enum {
+	kAKey = 30
+};
 
 #endif

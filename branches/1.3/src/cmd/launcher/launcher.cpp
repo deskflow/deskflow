@@ -425,8 +425,8 @@ initMainWindow(HWND hwnd)
 			if (debugLevel < 0) {
 				debugLevel = 0;
 			}
-			else if (debugLevel > CLog::kDEBUG2) {
-				debugLevel = CLog::kDEBUG2;
+			else if (debugLevel > kDEBUG2) {
+				debugLevel = kDEBUG2;
 			}
 		}
 		server = CArchMiscWindows::readValueString(key, "server");

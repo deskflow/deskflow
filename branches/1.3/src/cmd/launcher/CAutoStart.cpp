@@ -54,7 +54,7 @@ private:
 bool
 CAutoStartOutputter::write(ELevel level, const char* message)
 {
-	if (level <= CLog::kERROR) {
+	if (level <= kERROR) {
 		*m_msg = message;
 	}
 	return false;

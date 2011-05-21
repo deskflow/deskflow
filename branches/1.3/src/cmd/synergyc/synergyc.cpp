@@ -802,14 +802,14 @@ bool
 CMessageBoxOutputter::write(ELevel level, const char* message)
 {
 	// note any important messages the user may need to know about
-	if (level <= CLog::kWARNING) {
+	if (level <= kWARNING) {
 		s_hasImportantLogMessages = true;
 	}
 
 	// FATAL and PRINT messages get a dialog box if not running as
 	// backend.  if we're running as a backend the user will have
 	// a chance to see the messages when we exit.
-	if (!ARG->m_backend && level <= CLog::kFATAL) {
+	if (!ARG->m_backend && level <= kFATAL) {
 		MessageBox(NULL, message, ARG->m_pname, MB_OK | MB_ICONWARNING);
 		return false;
 	}
