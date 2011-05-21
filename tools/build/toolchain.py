@@ -42,7 +42,8 @@ class InternalCommands:
 
 	sln_filename = '%s.sln' % project
 	xcodeproj_filename = '%s.xcodeproj' % project
-	config_filename = '%s.cfg' % this_cmd
+	configDir = 'build'
+	configFilename = '%s/%s.cfg' % (configDir, this_cmd)
 	qtpro_filename = 'qsynergy.pro'
 	doxygen_filename = 'doxygen.cfg'
 	
@@ -92,9 +93,6 @@ class InternalCommands:
 
 	def getBinDir(self, target=''):
 		return self.getGenerator().getBinDir(target)
-
-	def getConfigDir(self):
-		return self.config_filename
 
 	def sln_filepath(self):
 		return '%s\%s' % (self.getBuildDir(), self.sln_filename)
@@ -278,38 +276,33 @@ class InternalCommands:
 
 		generator = self.getGeneratorFromConfig().cmakeName
 		
-		if generator.startswith('Visual Studio'):
-		
-			self.ensureConfHasRun('all', skipConfig)
-
+		if generator.find('Unix Makefiles') != -1:
 			for target in targets:
-				self.run_vcbuild(generator, target)
-		
+				self.ensureConfHasRun(target, skipConfig)
+				self.runBuildCommand(self.make_cmd, target)
 		else:
-
+			self.ensureConfHasRun('all', skipConfig)
 			for target in targets:
-				self.ensureConfHasRun(target, skipConfig)			
-
-				cmd = ''
-				if generator.find("Unix Makefiles") != -1:
-					print 'Building with GNU Make...'
-					cmd = self.make_cmd
+				if generator.startswith('Visual Studio'):
+					self.run_vcbuild(generator, target)
 				elif generator == 'Xcode':
-					print 'Building with Xcode...'
 					cmd = self.xcodebuild_cmd + ' -configuration ' + target.capitalize()
+					self.runBuildCommand(cmd, target)
 				else:
 					raise Exception('Build command not supported with generator: ' + generator)
-				
-				self.try_chdir(self.getBuildDir(target))
-				err = os.system(cmd)
-				self.restore_chdir()
-				
-				if err != 0:
-					raise Exception(cmd + ' failed: ' + str(err))
 
 		# allow user to skip qui compile
 		if self.enable_make_gui:
 			self.make_gui(targets)
+	
+	def runBuildCommand(self, cmd, target):
+	
+		self.try_chdir(self.getBuildDir(target))
+		err = os.system(cmd)
+		self.restore_chdir()
+			
+		if err != 0:
+			raise Exception(cmd + ' failed: ' + str(err))
 	
 	def clean(self, targets=[]):
 		
@@ -741,7 +734,6 @@ class InternalCommands:
 			'For help, run: %s help') % (self.website_url, self.this_cmd)
 
 	def try_chdir(self, dir):
-
 		global prevdir
 
 		if dir == '':
@@ -800,9 +792,9 @@ class InternalCommands:
 		# running setup
 		generator = self.get_generator_from_prompt()
 
-		if os.path.exists(self.getConfigDir()):
+		if os.path.exists(self.configFilename):
 			config = ConfigParser.ConfigParser()
-			config.read(self.getConfigDir())
+			config.read(self.configFilename)
 		else:
 			config = ConfigParser.ConfigParser()
 
@@ -827,7 +819,9 @@ class InternalCommands:
 		print "Setup complete."
 
 	def write_config(self, config, target=''):
-		configfile = open(self.getConfigDir(), 'wb')
+		if not os.path.isdir(self.configDir):
+			os.mkdir(self.configDir)
+		configfile = open(self.configFilename, 'wb')
 		config.write(configfile)
 
 	def getGeneratorFromConfig(self):
@@ -839,7 +833,7 @@ class InternalCommands:
 
 	def findGeneratorFromConfig(self):
 		config = ConfigParser.RawConfigParser()
-		config.read(self.getConfigDir())
+		config.read(self.configFilename)
 		
 		if not config.has_section('cmake'):
 			return None
@@ -856,9 +850,9 @@ class InternalCommands:
 		return None
 
 	def min_setup_version(self, version):
-		if os.path.exists(self.getConfigDir()):
+		if os.path.exists(self.configFilename):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.getConfigDir())
+			config.read(self.configFilename)
 
 			try:
 				return config.getint('hm', 'setup_version') >= version
@@ -870,7 +864,7 @@ class InternalCommands:
 	def hasConfRun(self, target):
 		if self.min_setup_version(2):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.getConfigDir())
+			config.read(self.configFilename)
 			try:
 				return config.getboolean('hm', 'conf_done_' + target)
 			except:
@@ -881,7 +875,7 @@ class InternalCommands:
 	def setConfRun(self, target, hasRun=True):
 		if self.min_setup_version(3):
 			config = ConfigParser.RawConfigParser()
-			config.read(self.getConfigDir())
+			config.read(self.configFilename)
 			config.set('hm', 'conf_done_' + target, hasRun)
 			self.write_config(config)
 		else:
