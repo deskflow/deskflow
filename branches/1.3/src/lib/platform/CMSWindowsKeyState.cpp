@@ -773,11 +773,11 @@ CMSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask,
 	CKeyState::fakeKeyDown(id, mask, button);
 }
 
-void
+bool
 CMSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
-	CKeyState::fakeKeyRepeat(id, mask, count, button);
+	return CKeyState::fakeKeyRepeat(id, mask, count, button);
 }
 
 bool

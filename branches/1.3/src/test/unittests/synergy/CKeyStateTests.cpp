@@ -20,6 +20,7 @@
 #include "CKeyStateTests.h"
 #include "CMockEventQueue.h"
 #include "CMockKeyMap.h"
+#include "CKeyStateImpl.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -31,7 +32,7 @@ TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	keyState.onKey(kAKey, true, KeyModifierAlt);
 
@@ -42,7 +43,7 @@ TEST(CKeyStateTests, onKey_aKeyUp_keyStateZero)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	keyState.onKey(kAKey, false, KeyModifierAlt);
 
@@ -53,7 +54,7 @@ TEST(CKeyStateTests, onKey_invalidKey_keyStateZero)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	keyState.onKey(0, true, KeyModifierAlt);
 
@@ -64,7 +65,7 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(0);
@@ -76,7 +77,7 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
 {
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(2);
@@ -88,7 +89,7 @@ TEST(CKeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
 {
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
@@ -99,7 +100,7 @@ TEST(CKeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
 {
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
@@ -110,7 +111,7 @@ TEST(CKeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
 {
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
@@ -121,7 +122,7 @@ TEST(CKeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyMap, swap(_));
 	EXPECT_CALL(keyMap, finish());
@@ -139,7 +140,7 @@ TEST(CKeyStateTests, updateKeyState_pollInsertsSingleKey_keyIsDown)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 	ON_CALL(keyState, pollPressedKeys(_)).WillByDefault(Invoke(stubPollPressedKeys));
 
 	keyState.updateKeyState();
@@ -152,7 +153,7 @@ TEST(CKeyStateTests, updateKeyState_pollDoesNothing_keyNotSet)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	keyState.updateKeyState();
 
@@ -164,7 +165,7 @@ TEST(CKeyStateTests, updateKeyState_activeModifiers_maskSet)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(KeyModifierAlt));
 
 	keyState.updateKeyState();
@@ -177,7 +178,7 @@ TEST(CKeyStateTests, updateKeyState_activeModifiers_maskNotSet)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	keyState.updateKeyState();
 
@@ -195,7 +196,7 @@ TEST(CKeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 	EXPECT_CALL(keyMap, foreachKey(_, _));
 
 	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(1));
@@ -208,29 +209,29 @@ TEST(CKeyStateTests, setHalfDuplexMask_capsLock_halfDuplexCapsLockAdded)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyCapsLock));
 
 	keyState.setHalfDuplexMask(KeyModifierCapsLock);
 }
 
-TEST(CKeyStateTests, setHalfDuplexMask_capsLock_halfDuplexNumLockAdded)
+TEST(CKeyStateTests, setHalfDuplexMask_numLock_halfDuplexNumLockAdded)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyNumLock));
 
 	keyState.setHalfDuplexMask(KeyModifierNumLock);
 }
 
-TEST(CKeyStateTests, setHalfDuplexMask_capsLock_halfDuplexScollLockAdded)
+TEST(CKeyStateTests, setHalfDuplexMask_scrollLock_halfDuplexScollLockAdded)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyScrollLock));
 
@@ -241,13 +242,76 @@ TEST(CKeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyRepeatCalled)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	CKeyStateImpl keyState(eventQueue, keyMap);
+	CMockKeyState keyState(eventQueue, keyMap);
 	CKeyMap::KeyItem keyItem;
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
 
 	EXPECT_CALL(keyState, fakeKeyRepeat(_, _, _, _));
 
 	// call twice to simulate server key already down (a "mis-reported autorepeat").
-	keyState.fakeKeyDown(0, 0, 0);
-	keyState.fakeKeyDown(0, 0, 0);
+	keyState.fakeKeyDown(kAKey, 0, 0);
+	keyState.fakeKeyDown(kAKey, 0, 0);
+}
+
+TEST(CKeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CMockKeyState keyState(eventQueue, keyMap);
+
+	EXPECT_CALL(keyState, fakeKey(_)).Times(0);
+
+	keyState.fakeKeyDown(kKeyCapsLock, 0, 0);
+}
+
+CKeyMap::KeyItem s_stubKeyItem;
+
+const CKeyMap::KeyItem*
+stubMapKey(
+	CKeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+	CKeyMap::ModifierToKeys& activeModifiers,
+	KeyModifierMask& currentState,
+	KeyModifierMask desiredMask,
+	bool isAutoRepeat)
+{
+	keys.push_back(CKeyMap::Keystroke(1, false, false));
+	return &s_stubKeyItem;
+}
+
+TEST(CKeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CMockKeyState keyState(eventQueue, keyMap);
+	EXPECT_CALL(keyMap, mapKey(_, _, _, _, _, _, _));
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+
+	EXPECT_CALL(keyState, fakeKey(_)).Times(1);
+
+	keyState.fakeKeyDown(kAKey, 0, 0);
+}
+
+TEST(CKeyStateTests, fakeKeyRepeat_isInvalidKey_returnsFalse)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	bool actual = keyState.fakeKeyRepeat(0, 0, 0, 0);
+
+	ASSERT_FALSE(actual);
+}
+
+TEST(CKeyStateTests, fakeKeyRepeat_isValidKey_returnsTrue)
+{
+	NiceMock<CMockKeyMap> keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+	CKeyMap::KeyItem keyItem;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
+	keyState.fakeKeyDown(kAKey, 0, 0);
+
+	bool actual = keyState.fakeKeyRepeat(kAKey, 0, 0, 0);
+
+	ASSERT_TRUE(actual);
 }

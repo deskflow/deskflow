@@ -68,7 +68,7 @@ public:
 	virtual void		setHalfDuplexMask(KeyModifierMask);
 	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
 							KeyButton button);
-	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+	virtual bool		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
 	virtual void		fakeKeyUp(KeyButton button);
 	virtual void		fakeAllKeysUp();

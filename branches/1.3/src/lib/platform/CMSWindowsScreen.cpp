@@ -695,12 +695,13 @@ CMSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
 	updateForceShowCursor();
 }
 
-void
+bool
 CMSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
-	CPlatformScreen::fakeKeyRepeat(id, mask, count, button);
+	bool result = CPlatformScreen::fakeKeyRepeat(id, mask, count, button);
 	updateForceShowCursor();
+	return result;
 }
 
 void

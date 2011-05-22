@@ -100,7 +100,7 @@ public:
 	/*!
 	Synthesizes a key repeat event and updates the key state.
 	*/
-	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+	virtual bool		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 							SInt32 count, KeyButton button) = 0;
 
 	//! Fake a key release
