@@ -244,6 +244,8 @@ TEST(CKeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyRepeatCalled)
 	CMockEventQueue eventQueue;
 	CMockKeyState keyState(eventQueue, keyMap);
 	CKeyMap::KeyItem keyItem;
+	keyItem.m_client = 0;
+	keyItem.m_button = 1; // TODO: what should this be?
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
 
 	EXPECT_CALL(keyState, fakeKeyRepeat(_, _, _, _));
@@ -275,6 +277,8 @@ stubMapKey(
 	bool isAutoRepeat)
 {
 	keys.push_back(CKeyMap::Keystroke(1, false, false));
+	s_stubKeyItem.m_button = 0;
+	s_stubKeyItem.m_client = 0;
 	return &s_stubKeyItem;
 }
 
@@ -308,6 +312,8 @@ TEST(CKeyStateTests, fakeKeyRepeat_isValidKey_returnsTrue)
 	CMockEventQueue eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
 	CKeyMap::KeyItem keyItem;
+	keyItem.m_client = 0;
+	keyItem.m_button = 1; // TODO: what should this be?
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
 	keyState.fakeKeyDown(kAKey, 0, 0);
 
