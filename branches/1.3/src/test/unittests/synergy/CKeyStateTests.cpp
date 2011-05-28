@@ -28,6 +28,9 @@ using ::testing::Invoke;
 using ::testing::Return;
 using ::testing::SaveArg;
 
+CKeyMap::Keystroke s_stubKeystroke(1, false, false);
+CKeyMap::KeyItem s_stubKeyItem;
+
 TEST(CKeyStateTests, onKey_aKeyDown_keyStateOne)
 {
 	CMockKeyMap keyMap;
@@ -266,8 +269,6 @@ TEST(CKeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled)
 	keyState.fakeKeyDown(kKeyCapsLock, 0, 0);
 }
 
-CKeyMap::KeyItem s_stubKeyItem;
-
 const CKeyMap::KeyItem*
 stubMapKey(
 	CKeyMap::Keystrokes& keys, KeyID id, SInt32 group,
@@ -276,9 +277,7 @@ stubMapKey(
 	KeyModifierMask desiredMask,
 	bool isAutoRepeat)
 {
-	keys.push_back(CKeyMap::Keystroke(1, false, false));
-	s_stubKeyItem.m_button = 0;
-	s_stubKeyItem.m_client = 0;
+	keys.push_back(s_stubKeystroke);
 	return &s_stubKeyItem;
 }
 
@@ -287,6 +286,9 @@ TEST(CKeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
 	CMockKeyState keyState(eventQueue, keyMap);
+
+	s_stubKeyItem.m_button = 0;
+	s_stubKeyItem.m_client = 0;
 	EXPECT_CALL(keyMap, mapKey(_, _, _, _, _, _, _));
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
@@ -295,7 +297,7 @@ TEST(CKeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
 	keyState.fakeKeyDown(kAKey, 0, 0);
 }
 
-TEST(CKeyStateTests, fakeKeyRepeat_isInvalidKey_returnsFalse)
+TEST(CKeyStateTests, fakeKeyRepeat_invalidKey_returnsFalse)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
@@ -306,16 +308,67 @@ TEST(CKeyStateTests, fakeKeyRepeat_isInvalidKey_returnsFalse)
 	ASSERT_FALSE(actual);
 }
 
-TEST(CKeyStateTests, fakeKeyRepeat_isValidKey_returnsTrue)
+TEST(CKeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	// set the key to down (we need to make mapKey return a valid key to do this).
 	CKeyMap::KeyItem keyItem;
 	keyItem.m_client = 0;
 	keyItem.m_button = 1; // TODO: what should this be?
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
 	keyState.fakeKeyDown(kAKey, 0, 0);
+
+	// change mapKey to return NULL so that fakeKeyRepeat exits early.
+	CKeyMap::KeyItem* nullKeyItem = NULL;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(nullKeyItem));
+
+	bool actual = keyState.fakeKeyRepeat(kAKey, 0, 0, 0);
+
+	ASSERT_FALSE(actual);
+}
+
+TEST(CKeyStateTests, fakeKeyRepeat_invalidButton_returnsFalse)
+{
+	NiceMock<CMockKeyMap> keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	// set the key to down (we need to make mapKey return a valid key to do this).
+	CKeyMap::KeyItem keyItem;
+	keyItem.m_client = 0;
+	keyItem.m_button = 1; // set to 1 to make fakeKeyDown work.
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
+	keyState.fakeKeyDown(kAKey, 0, 0);
+
+	// change button to 0 so that fakeKeyRepeat will return early.
+	keyItem.m_button = 0;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
+
+	bool actual = keyState.fakeKeyRepeat(kAKey, 0, 0, 0);
+
+	ASSERT_FALSE(actual);
+}
+
+TEST(CKeyStateTests, fakeKeyRepeat_validKey_returnsTrue)
+{
+	NiceMock<CMockKeyMap> keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+	s_stubKeyItem.m_client = 0;
+	s_stubKeystroke.m_type = CKeyMap::Keystroke::kButton;
+	s_stubKeystroke.m_data.m_button.m_button = 2;
+
+	// set the button to 1 for fakeKeyDown call
+	s_stubKeyItem.m_button = 1;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+	keyState.fakeKeyDown(kAKey, 0, 0);
+
+	// change the button to 2
+	s_stubKeyItem.m_button = 2;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
 	bool actual = keyState.fakeKeyRepeat(kAKey, 0, 0, 0);
 
