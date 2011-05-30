@@ -20,7 +20,6 @@
 #include "CKeyStateTests.h"
 #include "CMockEventQueue.h"
 #include "CMockKeyMap.h"
-#include "CKeyStateImpl.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -134,7 +133,7 @@ TEST(CKeyStateTests, updateKeyState_pollInsertsSingleKey_keyIsDown)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	ON_CALL(keyState, pollPressedKeys(_)).WillByDefault(Invoke(stubPollPressedKeys));
 
 	keyState.updateKeyState();
@@ -159,7 +158,7 @@ TEST(CKeyStateTests, updateKeyState_activeModifiers_maskSet)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(KeyModifierAlt));
 
 	keyState.updateKeyState();
@@ -184,7 +183,7 @@ TEST(CKeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(1));
 	ON_CALL(keyMap, foreachKey(_, _)).WillByDefault(Invoke(assertMaskIsOne));
 
@@ -227,17 +226,18 @@ TEST(CKeyStateTests, setHalfDuplexMask_scrollLock_halfDuplexScollLockAdded)
 	keyState.setHalfDuplexMask(KeyModifierScrollLock);
 }
 
-TEST(CKeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyRepeatCalled)
+TEST(CKeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyCalledTwice)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
-	CKeyMap::KeyItem keyItem;
-	keyItem.m_client = 0;
-	keyItem.m_button = 1;
-	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
+	CKeyStateImpl keyState(eventQueue, keyMap);
+	s_stubKeyItem.m_client = 0;
+	s_stubKeyItem.m_button = 1;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
-	EXPECT_CALL(keyState, fakeKeyRepeat(_, _, _, _));
+	// 2 calls to fakeKeyDown should still call fakeKey, even though
+	// repeated keys are handled differently.
+	EXPECT_CALL(keyState, fakeKey(_)).Times(2);
 
 	// call twice to simulate server key already down (a misreported autorepeat).
 	keyState.fakeKeyDown(1, 0, 0);
@@ -248,7 +248,7 @@ TEST(CKeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyState, fakeKey(_)).Times(0);
 
@@ -259,7 +259,7 @@ TEST(CKeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	s_stubKeyItem.m_button = 0;
 	s_stubKeyItem.m_client = 0;
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
@@ -362,7 +362,7 @@ TEST(CKeyStateTests, fakeKeyUp_buttonAlreadyDown_returnsTrue)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 
 	// press alt down so we get full coverage.
 	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(KeyModifierAlt));

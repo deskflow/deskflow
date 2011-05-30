@@ -24,12 +24,8 @@
 class CMockKeyMap;
 class CMockEventQueue;
 
-// TODO: refactor out dependencies of CKeyState so that we don't need
-// to mock the class it's self.
-//
-// while the class name indicates that this is actually a mock, we use a 
-// typedef later to rename it (so the name matches the compilation unit)
-// so the tests are less confusing.
+// NOTE: do not mock methods that are not pure virtual. this mock exists only
+// to provide an implementation of the CKeyState abstract class.
 class CMockKeyState : public CKeyState
 {
 public:
@@ -48,8 +44,9 @@ public:
 	MOCK_METHOD1(getKeyMap, void(CKeyMap&));
 	MOCK_METHOD1(fakeKey, void(const Keystroke&));
 	MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
-	MOCK_METHOD4(fakeKeyRepeat, bool(KeyID, KeyModifierMask, SInt32, KeyButton));
 };
+
+typedef ::testing::CKeyStateImpl CKeyStateImpl;
 
 typedef UInt32 KeyID;
 

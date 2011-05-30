@@ -17,7 +17,6 @@ set(h
 	synergy/CKeyStateTests.h
 	synergy/CMockEventQueue.h
 	synergy/CMockKeyMap.h
-	synergy/CKeyStateImpl.h
 )	
 
 set(src
