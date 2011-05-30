@@ -24,6 +24,9 @@
 class CMockKeyMap;
 class CMockEventQueue;
 
+// TODO: refactor out dependencies of CKeyState so that we don't need
+// to mock the class it's self.
+//
 // while the class name indicates that this is actually a mock, we use a 
 // typedef later to rename it (so the name matches the compilation unit)
 // so the tests are less confusing.
@@ -52,7 +55,6 @@ typedef UInt32 KeyID;
 
 typedef void (*ForeachKeyCallback)(
 		KeyID, SInt32 group, CKeyMap::KeyItem&, void* userData);
-
 
 void
 stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);

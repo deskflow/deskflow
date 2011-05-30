@@ -65,7 +65,7 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 {
 	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(0);
@@ -77,7 +77,7 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
 {
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	EXPECT_CALL(keyMap, isHalfDuplex(_, _));
 	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
@@ -90,7 +90,7 @@ TEST(CKeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
 {
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	EXPECT_CALL(keyMap, isHalfDuplex(1, 0));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
@@ -102,7 +102,7 @@ TEST(CKeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
 {
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	EXPECT_CALL(keyMap, isHalfDuplex(1, 0));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
@@ -114,7 +114,7 @@ TEST(CKeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
 {
 	CMockKeyMap keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 	EXPECT_CALL(keyMap, isHalfDuplex(1, 0));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
@@ -126,7 +126,7 @@ TEST(CKeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyMap, swap(_));
 	EXPECT_CALL(keyMap, finish());
@@ -201,7 +201,7 @@ TEST(CKeyStateTests, setHalfDuplexMask_capsLock_halfDuplexCapsLockAdded)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyCapsLock));
 
@@ -212,7 +212,7 @@ TEST(CKeyStateTests, setHalfDuplexMask_numLock_halfDuplexNumLockAdded)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyNumLock));
 
@@ -223,7 +223,7 @@ TEST(CKeyStateTests, setHalfDuplexMask_scrollLock_halfDuplexScollLockAdded)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
+	CKeyStateImpl keyState(eventQueue, keyMap);
 
 	EXPECT_CALL(keyMap, addHalfDuplexModifier(kKeyScrollLock));
 
