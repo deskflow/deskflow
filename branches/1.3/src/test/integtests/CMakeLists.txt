@@ -36,6 +36,7 @@ elseif (UNIX)
 	# unix/linux
 	list(APPEND src
 		platform/CXWindowsClipboardTests.cpp
+		platform/CXWindowsKeyStateTests.cpp
 	)
 
 endif()
@@ -52,6 +53,8 @@ set(inc
 	../../lib/synergy
 	../../../tools/gtest-1.6.0/include
 	../../../tools/gmock-1.6.0/include
+	../unittests
+	../unittests/synergy
 )
 
 if (UNIX)

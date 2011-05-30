@@ -36,6 +36,30 @@
 CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
 	m_display(display)
 {
+	init(display, useXKB);
+}
+
+CXWindowsKeyState::CXWindowsKeyState(
+	Display* display, bool useXKB,
+	IEventQueue& eventQueue, CKeyMap& keyMap) :
+	CKeyState(eventQueue, keyMap),
+	m_display(display)
+{
+	init(display, useXKB);
+}
+
+CXWindowsKeyState::~CXWindowsKeyState()
+{
+#if HAVE_XKB_EXTENSION
+	if (m_xkb != NULL) {
+		XkbFreeKeyboard(m_xkb, 0, True);
+	}
+#endif
+}
+
+void
+CXWindowsKeyState::init(Display* display, bool useXKB)
+{
 	XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
 	if (useXKB) {
@@ -47,15 +71,6 @@ CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
 	}
 #endif
 	setActiveGroup(kGroupPollAndSet);
-}
-
-CXWindowsKeyState::~CXWindowsKeyState()
-{
-#if HAVE_XKB_EXTENSION
-	if (m_xkb != NULL) {
-		XkbFreeKeyboard(m_xkb, 0, True);
-	}
-#endif
 }
 
 void

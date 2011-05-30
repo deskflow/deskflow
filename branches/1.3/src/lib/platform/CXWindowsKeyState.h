@@ -48,6 +48,8 @@ public:
 	};
 
 	CXWindowsKeyState(Display*, bool useXKB);
+	CXWindowsKeyState(Display*, bool useXKB,
+		IEventQueue& eventQueue, CKeyMap& keyMap);
 	~CXWindowsKeyState();
 
 	//! @name modifiers
@@ -96,6 +98,12 @@ public:
 	void				mapKeyToKeycodes(KeyID key,
 							CKeycodeList& keycodes) const;
 
+	//! Get the group set by setActiveGroup.
+	/*!
+	Useful for unit testing, returns the value of m_group.
+	 */
+	SInt32				getGroup() const { return m_group; }
+
 	//@}
 
 	// IKeyState overrides
@@ -111,6 +119,7 @@ protected:
 	virtual void		fakeKey(const Keystroke& keystroke);
 
 private:
+	void				init(Display* display, bool useXKB);
 	void				updateKeysymMap(CKeyMap&);
 	void				updateKeysymMapXKB(CKeyMap&);
 	bool				hasModifiersXKB() const;
