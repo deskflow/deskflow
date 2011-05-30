@@ -46,7 +46,7 @@ public:
 	MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
 };
 
-typedef ::testing::CKeyStateImpl CKeyStateImpl;
+typedef ::testing::NiceMock<CMockKeyState> CKeyStateImpl;
 
 typedef UInt32 KeyID;
 
