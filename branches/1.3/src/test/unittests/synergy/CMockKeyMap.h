@@ -32,6 +32,8 @@ public:
 	MOCK_CONST_METHOD7(mapKey, const CKeyMap::KeyItem*(
 		Keystrokes&, KeyID, SInt32, ModifierToKeys&, KeyModifierMask&,
 		KeyModifierMask, bool));
+	MOCK_CONST_METHOD4(findCompatibleKey, const CKeyMap::KeyItemList*(
+			KeyID, SInt32, KeyModifierMask, KeyModifierMask));
 };
 
 #endif

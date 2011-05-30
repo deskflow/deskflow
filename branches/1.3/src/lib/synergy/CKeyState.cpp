@@ -645,13 +645,13 @@ CKeyState::fakeKeyRepeat(
 	return true;
 }
 
-void
+bool
 CKeyState::fakeKeyUp(KeyButton serverID)
 {
 	// if we haven't seen this button go down then ignore it
 	KeyButton localID = m_serverKeys[serverID & kButtonMask];
 	if (localID == 0) {
-		return;
+		return false;
 	}
 
 	// get the sequence of keys to simulate key release
@@ -683,6 +683,7 @@ CKeyState::fakeKeyUp(KeyButton serverID)
 
 	// generate key events
 	fakeKeys(keys, 1);
+	return true;
 }
 
 void

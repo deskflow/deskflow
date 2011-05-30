@@ -107,7 +107,7 @@ public:
 	/*!
 	Synthesizes a key release event and updates the key state.
 	*/
-	virtual void		fakeKeyUp(KeyButton button) = 0;
+	virtual bool		fakeKeyUp(KeyButton button) = 0;
 
 	//! Fake key releases for all fake pressed keys
 	/*!

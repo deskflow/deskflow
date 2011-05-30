@@ -64,7 +64,7 @@ public:
 							KeyButton button);
 	virtual bool		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
-	virtual void		fakeKeyUp(KeyButton button);
+	virtual bool		fakeKeyUp(KeyButton button);
 	virtual void		fakeAllKeysUp();
 	virtual bool		fakeCtrlAltDel();
 	virtual bool		isKeyDown(KeyButton) const;

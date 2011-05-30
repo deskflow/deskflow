@@ -374,3 +374,82 @@ TEST(CKeyStateTests, fakeKeyRepeat_validKey_returnsTrue)
 
 	ASSERT_TRUE(actual);
 }
+
+TEST(CKeyStateTests, fakeKeyUp_buttonNotDown_returnsFalse)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	bool actual = keyState.fakeKeyUp(0);
+
+	ASSERT_FALSE(actual);
+}
+
+TEST(CKeyStateTests, fakeKeyUp_buttonAlreadyDown_returnsTrue)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CMockKeyState keyState(eventQueue, keyMap);
+
+	// press alt down so we get full coverage.
+	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(KeyModifierAlt));
+	keyState.updateKeyState();
+
+	// press button 1 down.
+	s_stubKeyItem.m_button = 1;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+	keyState.fakeKeyDown(kAKey, 0, 1);
+
+	// this takes the button id, which is the 3rd arg of fakeKeyDown
+	bool actual = keyState.fakeKeyUp(1);
+
+	ASSERT_TRUE(actual);
+}
+
+TEST(CKeyStateTests, fakeAllKeysUp_keysWereDown_keysAreUp)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	// press button 1 down.
+	s_stubKeyItem.m_button = 1;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+	keyState.fakeKeyDown(kAKey, 0, 1);
+
+	// method under test
+	keyState.fakeAllKeysUp();
+
+	bool actual = keyState.isKeyDown(1);
+	ASSERT_FALSE(actual);
+}
+
+TEST(CKeyStateTests, isKeyDown_keyDown_returnsTrue)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	// press button 1 down.
+	s_stubKeyItem.m_button = 1;
+	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
+	keyState.fakeKeyDown(kAKey, 0, 1);
+
+	// method under test
+	bool actual = keyState.isKeyDown(1);
+
+	ASSERT_TRUE(actual);
+}
+
+TEST(CKeyStateTests, isKeyDown_noKeysDown_returnsFalse)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CKeyStateImpl keyState(eventQueue, keyMap);
+
+	// method under test
+	bool actual = keyState.isKeyDown(1);
+
+	ASSERT_FALSE(actual);
+}

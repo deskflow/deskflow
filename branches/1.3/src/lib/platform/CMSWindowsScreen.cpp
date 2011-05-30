@@ -704,11 +704,12 @@ CMSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 	return result;
 }
 
-void
+bool
 CMSWindowsScreen::fakeKeyUp(KeyButton button)
 {
-	CPlatformScreen::fakeKeyUp(button);
+	bool result = CPlatformScreen::fakeKeyUp(button);
 	updateForceShowCursor();
+	return result;
 }
 
 void
