@@ -75,10 +75,9 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
 
 TEST(CKeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
 {
-	CMockKeyMap keyMap;
+	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
-	EXPECT_CALL(keyMap, isHalfDuplex(_, _));
 	ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(2);
@@ -88,10 +87,9 @@ TEST(CKeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
 
 TEST(CKeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
 {
-	CMockKeyMap keyMap;
+	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
-	EXPECT_CALL(keyMap, isHalfDuplex(1, 0));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
@@ -100,10 +98,9 @@ TEST(CKeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
 
 TEST(CKeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
 {
-	CMockKeyMap keyMap;
+	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
-	EXPECT_CALL(keyMap, isHalfDuplex(1, 0));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
@@ -112,10 +109,9 @@ TEST(CKeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
 
 TEST(CKeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
 {
-	CMockKeyMap keyMap;
+	NiceMock<CMockKeyMap> keyMap;
 	NiceMock<CMockEventQueue> eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
-	EXPECT_CALL(keyMap, isHalfDuplex(1, 0));
 
 	EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
 
@@ -124,12 +120,12 @@ TEST(CKeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
 
 TEST(CKeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
 {
-	CMockKeyMap keyMap;
+	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
 	CKeyStateImpl keyState(eventQueue, keyMap);
 
+	// key map member gets a new key map via swap()
 	EXPECT_CALL(keyMap, swap(_));
-	EXPECT_CALL(keyMap, finish());
 
 	keyState.updateKeyMap();
 }
@@ -189,10 +185,11 @@ TEST(CKeyStateTests, updateKeyState_activeModifiers_keyMapGotModifers)
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
 	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
-	EXPECT_CALL(keyMap, foreachKey(_, _));
-
 	ON_CALL(keyState, pollActiveModifiers()).WillByDefault(Return(1));
 	ON_CALL(keyMap, foreachKey(_, _)).WillByDefault(Invoke(assertMaskIsOne));
+
+	// key map gets new modifiers via foreachKey()
+	EXPECT_CALL(keyMap, foreachKey(_, _));
 
 	keyState.updateKeyState();
 }
@@ -237,12 +234,12 @@ TEST(CKeyStateTests, fakeKeyDown_serverKeyAlreadyDown_fakeKeyRepeatCalled)
 	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
 	CKeyMap::KeyItem keyItem;
 	keyItem.m_client = 0;
-	keyItem.m_button = 1; // TODO: what should this be?
+	keyItem.m_button = 1;
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
 
 	EXPECT_CALL(keyState, fakeKeyRepeat(_, _, _, _));
 
-	// call twice to simulate server key already down (a "mis-reported autorepeat").
+	// call twice to simulate server key already down (a misreported autorepeat).
 	keyState.fakeKeyDown(1, 0, 0);
 	keyState.fakeKeyDown(1, 0, 0);
 }
@@ -260,13 +257,11 @@ TEST(CKeyStateTests, fakeKeyDown_isIgnoredKey_fakeKeyNotCalled)
 
 TEST(CKeyStateTests, fakeKeyDown_mapReturnsKeystrokes_fakeKeyCalled)
 {
-	CMockKeyMap keyMap;
+	NiceMock<CMockKeyMap> keyMap;
 	CMockEventQueue eventQueue;
 	NiceMock<CMockKeyState> keyState(eventQueue, keyMap);
-
 	s_stubKeyItem.m_button = 0;
 	s_stubKeyItem.m_client = 0;
-	EXPECT_CALL(keyMap, mapKey(_, _, _, _, _, _, _));
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Invoke(stubMapKey));
 
 	EXPECT_CALL(keyState, fakeKey(_)).Times(1);
@@ -294,7 +289,7 @@ TEST(CKeyStateTests, fakeKeyRepeat_nullKey_returnsFalse)
 	// set the key to down (we need to make mapKey return a valid key to do this).
 	CKeyMap::KeyItem keyItem;
 	keyItem.m_client = 0;
-	keyItem.m_button = 1; // TODO: what should this be?
+	keyItem.m_button = 1;
 	ON_CALL(keyMap, mapKey(_, _, _, _, _, _, _)).WillByDefault(Return(&keyItem));
 	keyState.fakeKeyDown(1, 0, 0);
 
