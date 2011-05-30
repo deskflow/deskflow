@@ -53,8 +53,22 @@ typedef UInt32 KeyID;
 typedef void (*ForeachKeyCallback)(
 		KeyID, SInt32 group, CKeyMap::KeyItem&, void* userData);
 
-enum {
-	kAKey = 30
-};
+
+void
+stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
+
+void
+assertMaskIsOne(ForeachKeyCallback cb, void* userData);
+
+const CKeyMap::KeyItem*
+stubMapKey(
+	CKeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+	CKeyMap::ModifierToKeys& activeModifiers,
+	KeyModifierMask& currentState,
+	KeyModifierMask desiredMask,
+	bool isAutoRepeat);
+
+CKeyMap::Keystroke s_stubKeystroke(1, false, false);
+CKeyMap::KeyItem s_stubKeyItem;
 
 #endif
