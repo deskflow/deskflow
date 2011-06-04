@@ -53,6 +53,14 @@ removeLock();
 int
 main(int argc, char **argv)
 {
+#if SYSAPI_WIN32
+	if (CArchMiscWindows::isWindows95Family())
+	{
+		std::cerr << "Windows 95 family not supported." << std::endl;
+		return 1;
+	}
+#endif
+
 	// make sure integ tests don't run in parallel.
 	int err = ensureSingleInstance();
 	if (err != 0)

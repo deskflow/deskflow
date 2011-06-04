@@ -27,6 +27,7 @@
 class CEvent;
 class CEventQueueTimer;
 class CMSWindowsDesks;
+class IEventQueue;
 
 //! Microsoft Windows key mapper
 /*!
@@ -35,6 +36,7 @@ This class maps KeyIDs to keystrokes.
 class CMSWindowsKeyState : public CKeyState {
 public:
 	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget);
+	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue& eventQueue, CKeyMap& keyMap);
 	virtual ~CMSWindowsKeyState();
 
 	//! @name manipulators
@@ -167,6 +169,8 @@ private:
 
 	void				addKeyEntry(CKeyMap& keyMap, CKeyMap::KeyItem& item);
 
+	void				init();
+
 private:
 	// not implemented
 	CMSWindowsKeyState(const CMSWindowsKeyState&);
@@ -184,6 +188,7 @@ private:
 	UINT				m_buttonToNumpadVK[512];
 	KeyButton			m_virtualKeyToButton[256];
 	KeyToVKMap			m_keyToVKMap;
+	IEventQueue&		m_eventQueue;
 
 	// the timer used to check for fixing key state
 	CEventQueueTimer*	m_fixTimer;

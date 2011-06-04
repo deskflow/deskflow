@@ -22,6 +22,7 @@ if (WIN32)
 	# windows
 	list(APPEND src
 		platform/CMSWindowsClipboardTests.cpp
+		platform/CMSWindowsKeyStateTests.cpp
 	)
 
 elseif (APPLE)

@@ -25,6 +25,7 @@
 #include "CString.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include "CMSWindowsHookLibraryLoader.h"
 
 class CEventQueueTimer;
 class CMSWindowsDesks;
@@ -271,11 +272,6 @@ private:
 
 	// hook library stuff
 	HINSTANCE			m_hookLibrary;
-	InitFunc			m_init;
-	CleanupFunc			m_cleanup;
-	SetSidesFunc		m_setSides;
-	SetZoneFunc			m_setZone;
-	SetModeFunc			m_setMode;
 
 	// keyboard stuff
 	CMSWindowsKeyState*	m_keyState;
@@ -304,6 +300,10 @@ private:
 	bool				m_gotOldMouseKeys;
 	MOUSEKEYS			m_mouseKeys;
 	MOUSEKEYS			m_oldMouseKeys;
+
+	// loads synrgyhk.dll
+	CMSWindowsHookLibraryLoader
+						m_hookLibraryLoader;
 
 	static CMSWindowsScreen*	s_screen;
 

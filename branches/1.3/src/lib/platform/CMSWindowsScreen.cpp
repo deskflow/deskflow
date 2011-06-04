@@ -103,11 +103,6 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary) :
 	m_ownClipboard(false),
 	m_desks(NULL),
 	m_hookLibrary(NULL),
-	m_init(NULL),
-	m_cleanup(NULL),
-	m_setSides(NULL),
-	m_setZone(NULL),
-	m_setMode(NULL),
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false)
@@ -203,10 +198,10 @@ CMSWindowsScreen::enable()
 
 	if (m_isPrimary) {
 		// set jump zones
-		m_setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
+		m_hookLibraryLoader.m_setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
 
 		// watch jump zones
-		m_setMode(kHOOK_WATCH_JUMP_ZONE);
+		m_hookLibraryLoader.m_setMode(kHOOK_WATCH_JUMP_ZONE);
 	}
 	else {
 		// prevent the system from entering power saving modes.  if
@@ -224,7 +219,7 @@ CMSWindowsScreen::disable()
 
 	if (m_isPrimary) {
 		// disable hooks
-		m_setMode(kHOOK_DISABLE);
+		m_hookLibraryLoader.m_setMode(kHOOK_DISABLE);
 
 		// enable special key sequences on win95 family
 		enableSpecialKeys(true);
@@ -262,7 +257,7 @@ CMSWindowsScreen::enter()
 		enableSpecialKeys(true);
 
 		// watch jump zones
-		m_setMode(kHOOK_WATCH_JUMP_ZONE);
+		m_hookLibraryLoader.m_setMode(kHOOK_WATCH_JUMP_ZONE);
 
 		// all messages prior to now are invalid
 		nextMark();
@@ -315,7 +310,7 @@ CMSWindowsScreen::leave()
 		m_keyState->saveModifiers();
 
 		// capture events
-		m_setMode(kHOOK_RELAY_EVENTS);
+		m_hookLibraryLoader.m_setMode(kHOOK_RELAY_EVENTS);
 	}
 
 	// now off screen
@@ -469,7 +464,7 @@ CMSWindowsScreen::reconfigure(UInt32 activeSides)
 	assert(m_isPrimary);
 
 	LOG((CLOG_DEBUG "active sides: %x", activeSides));
-	m_setSides(activeSides);
+	m_hookLibraryLoader.m_setSides(activeSides);
 }
 
 void
@@ -722,42 +717,14 @@ CMSWindowsScreen::fakeAllKeysUp()
 HINSTANCE
 CMSWindowsScreen::openHookLibrary(const char* name)
 {
-	// load the hook library
-	HINSTANCE hookLibrary = LoadLibrary(name);
-	if (hookLibrary == NULL) {
-		LOG((CLOG_ERR "Failed to load hook library;  %s.dll is missing", name));
-		throw XScreenOpenFailure();
-	}
-
-	// look up functions
-	m_setSides  = (SetSidesFunc)GetProcAddress(hookLibrary, "setSides");
-	m_setZone   = (SetZoneFunc)GetProcAddress(hookLibrary, "setZone");
-	m_setMode   = (SetModeFunc)GetProcAddress(hookLibrary, "setMode");
-	m_init      = (InitFunc)GetProcAddress(hookLibrary, "init");
-	m_cleanup   = (CleanupFunc)GetProcAddress(hookLibrary, "cleanup");
-	if (m_setSides             == NULL ||
-		m_setZone              == NULL ||
-		m_setMode              == NULL ||
-		m_init                 == NULL ||
-		m_cleanup              == NULL) {
-		LOG((CLOG_ERR "Invalid hook library;  use a newer %s.dll", name));
-		throw XScreenOpenFailure();
-	}
-
-	// initialize hook library
-	if (m_init(GetCurrentThreadId()) == 0) {
-		LOG((CLOG_ERR "Cannot initialize hook library;  is synergy already running?"));
-		throw XScreenOpenFailure();
-	}
-
-	return hookLibrary;
+	return m_hookLibraryLoader.openHookLibrary(name);
 }
 
 void
 CMSWindowsScreen::closeHookLibrary(HINSTANCE hookLibrary) const
 {
 	if (hookLibrary != NULL) {
-		m_cleanup();
+		m_hookLibraryLoader.m_cleanup();
 		FreeLibrary(hookLibrary);
 	}
 }
@@ -1426,7 +1393,7 @@ CMSWindowsScreen::onDisplayChange()
 
 			// tell hook about resize if on screen
 			else {
-				m_setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
+				m_hookLibraryLoader.m_setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
 			}
 		}
 
