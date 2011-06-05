@@ -20,6 +20,11 @@
 #include "CMockKeyMap.h"
 #include "CMockEventQueue.h"
 #include "CXWindowsKeyState.h"
+#include "CLog.h"
+
+#define XK_LATIN1
+#define XK_MISCELLANY
+#include "X11/keysymdef.h"
 
 class CXWindowsKeyStateTests : public ::testing::Test
 {
@@ -27,12 +32,15 @@ protected:
 	virtual void
 	SetUp()
 	{
+		LOG((CLOG_DEBUG "opening display"));
 		m_display = XOpenDisplay(NULL);
 	}
 
 	virtual void
 	TearDown()
 	{
+		LOG((CLOG_DEBUG "closing display"));
+		XCloseDisplay(m_display);
 	}
 
 	Display* m_display;
@@ -109,4 +117,34 @@ TEST_F(CXWindowsKeyStateTests, fakeCtrlAltDel_default_returnsFalse)
 	bool result = keyState.fakeCtrlAltDel();
 
 	ASSERT_FALSE(result);
+}
+
+TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CXWindowsKeyState keyState(
+		m_display, true, (IEventQueue&)keyMap, (CKeyMap&)eventQueue);
+
+	KeyModifierMask actual = keyState.pollActiveModifiers();
+
+	ASSERT_EQ(0, actual);
+}
+
+TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyPressed_shiftInMask)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CXWindowsKeyState keyState(
+		m_display, true, (IEventQueue&)keyMap, (CKeyMap&)eventQueue);
+
+	// fake shift key down without using synergy
+	keyState.setModifierFromX(ShiftMapIndex, KeyModifierShift);
+	KeyCode key = XKeysymToKeycode(m_display, XK_Shift_L);
+	XTestFakeKeyEvent(m_display, key, true, CurrentTime);
+
+	KeyModifierMask actual = keyState.pollActiveModifiers();
+
+	XTestFakeKeyEvent(m_display, key, false, CurrentTime);
+	ASSERT_TRUE((actual & KeyModifierShift) == KeyModifierShift);
 }

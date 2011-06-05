@@ -71,6 +71,18 @@ public:
 	*/
 	void				setAutoRepeat(const XKeyboardState&);
 
+	//! Set the modifier mapping
+	/*!
+	Allows unit tests to set the modifier mapping.
+	*/
+	// TODO: this is just a quick fix.
+	void				setModifierFromX(int key, int value)
+	{
+		m_modifierFromX.clear();
+		m_modifierFromX.resize(1);
+		m_modifierFromX[key] = value;
+	}
+
 	//@}
 	//! @name accessors
 	//@{

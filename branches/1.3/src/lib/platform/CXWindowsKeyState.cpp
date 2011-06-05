@@ -98,10 +98,12 @@ CXWindowsKeyState::setAutoRepeat(const XKeyboardState& state)
 KeyModifierMask
 CXWindowsKeyState::mapModifiersFromX(unsigned int state) const
 {
+	LOG((CLOG_DEBUG2 "mapping state: %i", state));
 	UInt32 offset = 8 * getGroupFromState(state);
 	KeyModifierMask mask = 0;
 	for (int i = 0; i < 8; ++i) {
 		if ((state & (1u << i)) != 0) {
+			LOG((CLOG_DEBUG2 "|= modifier: %i", offset + i));
 			mask |= m_modifierFromX[offset + i];
 		}
 	}

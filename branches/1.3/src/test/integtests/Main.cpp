@@ -61,10 +61,20 @@ main(int argc, char **argv)
 	}
 #endif
 
-	// make sure integ tests don't run in parallel.
-	int err = ensureSingleInstance();
-	if (err != 0)
-		return err;
+	bool skipLock = false;
+	for (int i = 0; i < argc; i++)
+	{
+		if (std::string(argv[i]) == "--skip-lock")
+			skipLock = true;
+	}
+
+	if (!skipLock)
+	{
+		// make sure integ tests don't run in parallel.
+		int err = ensureSingleInstance();
+		if (err != 0)
+			return err;
+	}
 
 #if SYSAPI_UNIX
 	// register SIGINT handling (to delete lock file)
