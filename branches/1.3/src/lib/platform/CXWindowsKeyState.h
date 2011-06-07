@@ -78,8 +78,7 @@ public:
 	// TODO: this is just a quick fix.
 	void				setModifierFromX(int key, int value)
 	{
-		m_modifierFromX.clear();
-		m_modifierFromX.resize(1);
+		std::fill(m_modifierFromX.begin(), m_modifierFromX.end(), 0);
 		m_modifierFromX[key] = value;
 	}
 

@@ -20,6 +20,8 @@
 #include "CLog.h"
 #include "CStringUtil.h"
 #include "stdmap.h"
+#include <cstddef>
+#include <algorithm>
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -33,8 +35,11 @@
 #endif
 #endif
 
+static const size_t ModifiersFromXDefaultSize = 32;
+
 CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
-	m_display(display)
+	m_display(display),
+	m_modifierFromX(ModifiersFromXDefaultSize)
 {
 	init(display, useXKB);
 }
@@ -43,7 +48,8 @@ CXWindowsKeyState::CXWindowsKeyState(
 	Display* display, bool useXKB,
 	IEventQueue& eventQueue, CKeyMap& keyMap) :
 	CKeyState(eventQueue, keyMap),
-	m_display(display)
+	m_display(display),
+	m_modifierFromX(ModifiersFromXDefaultSize)
 {
 	init(display, useXKB);
 }
@@ -104,7 +110,12 @@ CXWindowsKeyState::mapModifiersFromX(unsigned int state) const
 	for (int i = 0; i < 8; ++i) {
 		if ((state & (1u << i)) != 0) {
 			LOG((CLOG_DEBUG2 "|= modifier: %i", offset + i));
-			mask |= m_modifierFromX[offset + i];
+			if (offset + i >= m_modifierFromX.size()) {
+				LOG((CLOG_ERR "m_modifierFromX is too small (%d) for the "
+					"requested offset (%d)", m_modifierFromX.size(), offset+i));
+			} else {
+				mask |= m_modifierFromX[offset + i];
+			}
 		}
 	}
 	return mask;
@@ -284,8 +295,7 @@ CXWindowsKeyState::updateKeysymMap(CKeyMap& keyMap)
 
 	// prepare map from X modifier to KeyModifierMask.  certain bits
 	// are predefined.
-	m_modifierFromX.clear();
-	m_modifierFromX.resize(8);
+	std::fill(m_modifierFromX.begin(), m_modifierFromX.end(), 0);
 	m_modifierFromX[ShiftMapIndex]   = KeyModifierShift;
 	m_modifierFromX[LockMapIndex]    = KeyModifierCapsLock;
 	m_modifierFromX[ControlMapIndex] = KeyModifierControl;
