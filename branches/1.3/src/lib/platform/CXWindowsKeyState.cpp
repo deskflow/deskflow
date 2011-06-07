@@ -83,6 +83,8 @@ void
 CXWindowsKeyState::setActiveGroup(SInt32 group)
 {
 	if (group == kGroupPollAndSet) {
+		// we need to set the group to -1 in order for pollActiveGroup() to
+		// actually poll for the group
 		m_group = -1;
 		m_group = pollActiveGroup();
 	}
@@ -179,8 +181,8 @@ CXWindowsKeyState::pollActiveModifiers() const
 SInt32
 CXWindowsKeyState::pollActiveGroup() const
 {
-	if (m_group != -1) {
-		assert(m_group >= 0);
+	// fixed condition where any group < -1 would have undetermined behaviour
+	if (m_group >= 0) {
 		return m_group;
 	}
 
