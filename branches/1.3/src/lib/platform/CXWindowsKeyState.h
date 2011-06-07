@@ -71,17 +71,6 @@ public:
 	*/
 	void				setAutoRepeat(const XKeyboardState&);
 
-	//! Set the modifier mapping
-	/*!
-	Allows unit tests to set the modifier mapping.
-	*/
-	// TODO: this is just a quick fix.
-	void				setModifierFromX(int key, int value)
-	{
-		std::fill(m_modifierFromX.begin(), m_modifierFromX.end(), 0);
-		m_modifierFromX[key] = value;
-	}
-
 	//@}
 	//! @name accessors
 	//@{
@@ -108,12 +97,6 @@ public:
 	*/
 	void				mapKeyToKeycodes(KeyID key,
 							CKeycodeList& keycodes) const;
-
-	//! Get the group set by setActiveGroup.
-	/*!
-	Useful for unit testing, returns the value of m_group.
-	 */
-	SInt32				getGroup() const { return m_group; }
 
 	//@}
 

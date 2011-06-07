@@ -17,14 +17,23 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+
+#define TEST_ENV
+#include "Global.h"
+
 #include "CMockKeyMap.h"
 #include "CMockEventQueue.h"
 #include "CXWindowsKeyState.h"
 #include "CLog.h"
+#include <errno.h>
 
 #define XK_LATIN1
 #define XK_MISCELLANY
 #include "X11/keysymdef.h"
+
+#if HAVE_XKB_EXTENSION
+#	include <X11/XKBlib.h>
+#endif
 
 class CXWindowsKeyStateTests : public ::testing::Test
 {
@@ -34,13 +43,18 @@ protected:
 	{
 		LOG((CLOG_DEBUG "opening display"));
 		m_display = XOpenDisplay(NULL);
+
+		// TODO: Investigate on errors when opening display 
+//		ASSERT_EQ(0, errno) << "error opening display";
 	}
 
 	virtual void
 	TearDown()
 	{
-		LOG((CLOG_DEBUG "closing display"));
-		XCloseDisplay(m_display);
+		if (m_display) {
+			LOG((CLOG_DEBUG "closing display"));
+			XCloseDisplay(m_display);
+		}
 	}
 
 	Display* m_display;
@@ -55,10 +69,10 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_pollAndSet_groupIsZero)
 
 	keyState.setActiveGroup(CXWindowsKeyState::kGroupPollAndSet);
 
-	ASSERT_EQ(0, keyState.getGroup());
+	ASSERT_EQ(0, keyState.m_group);
 }
 
-TEST_F(CXWindowsKeyStateTests, setActiveGroup_poll_groupIsZero)
+TEST_F(CXWindowsKeyStateTests, setActiveGroup_poll_groupIsNotSet)
 {
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
@@ -67,7 +81,7 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_poll_groupIsZero)
 
 	keyState.setActiveGroup(CXWindowsKeyState::kGroupPoll);
 
-	ASSERT_EQ(-1, keyState.getGroup());
+	ASSERT_LE(-1, keyState.m_group);
 }
 
 TEST_F(CXWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
@@ -79,7 +93,7 @@ TEST_F(CXWindowsKeyStateTests, setActiveGroup_customGroup_groupWasSet)
 
 	keyState.setActiveGroup(1);
 
-	ASSERT_EQ(1, keyState.getGroup());
+	ASSERT_EQ(1, keyState.m_group);
 }
 
 TEST_F(CXWindowsKeyStateTests, mapModifiersFromX_zeroState_zeroMask)
@@ -138,8 +152,12 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyPressed_shiftInMask)
 	CXWindowsKeyState keyState(
 		m_display, true, (IEventQueue&)keyMap, (CKeyMap&)eventQueue);
 
+	// set fake modifier mapping
+	std::fill(
+		keyState.m_modifierFromX.begin(), keyState.m_modifierFromX.end(), 0);
+	keyState.m_modifierFromX[ShiftMapIndex] = KeyModifierShift;
+
 	// fake shift key down without using synergy
-	keyState.setModifierFromX(ShiftMapIndex, KeyModifierShift);
 	KeyCode key = XKeysymToKeycode(m_display, XK_Shift_L);
 	XTestFakeKeyEvent(m_display, key, true, CurrentTime);
 
@@ -148,3 +166,58 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyPressed_shiftInMask)
 	XTestFakeKeyEvent(m_display, key, false, CurrentTime);
 	ASSERT_TRUE((actual & KeyModifierShift) == KeyModifierShift);
 }
+
+TEST_F(CXWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CXWindowsKeyState keyState(
+		m_display, true, (IEventQueue&)keyMap, (CKeyMap&)eventQueue);
+
+	SInt32 actual = keyState.pollActiveGroup();
+
+	ASSERT_EQ(0, actual);
+}
+
+TEST_F(CXWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup)
+{
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CXWindowsKeyState keyState(
+		m_display, true, (IEventQueue&)keyMap, (CKeyMap&)eventQueue);
+
+	keyState.m_group = 3;
+
+	SInt32 actual = keyState.pollActiveGroup();
+
+	ASSERT_EQ(3, actual);
+}
+
+TEST_F(CXWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
+{
+#if HAVE_XKB_EXTENSION
+	CMockKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	CXWindowsKeyState keyState(
+		m_display, true, (IEventQueue&)keyMap, (CKeyMap&)eventQueue);
+
+	// reset the group
+	keyState.m_group = -1;
+
+	XkbStateRec state;
+
+	// compare pollActiveGroup() with XkbGetState()
+	if (XkbGetState(m_display, XkbUseCoreKbd, &state)) {
+		SInt32 actual = keyState.pollActiveGroup();
+
+		ASSERT_EQ(state.group, actual);
+	}
+	else {
+		// TODO: Investigate on XkbGetState() failing every time
+		FAIL() << "XkbGetState() returned an error: " << errno;
+	}
+#else
+	SUCCEED() << "Xkb extension not installed";
+#endif
+}
+
