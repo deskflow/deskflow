@@ -38,23 +38,34 @@
 class CXWindowsKeyStateTests : public ::testing::Test
 {
 protected:
+	CXWindowsKeyStateTests() :
+		m_display(NULL)
+	{
+	}
+
+	~CXWindowsKeyStateTests()
+	{
+		if (m_display != NULL) {
+			LOG((CLOG_DEBUG "closing display"));
+			XCloseDisplay(m_display);
+		}
+	}
+
 	virtual void
 	SetUp()
 	{
-		LOG((CLOG_DEBUG "opening display"));
-		m_display = XOpenDisplay(NULL);
+		// open the display only once for the entire test suite
+		if (this->m_display == NULL) {
+			LOG((CLOG_DEBUG "opening display"));
+			this->m_display = XOpenDisplay(NULL);
 
-		// TODO: Investigate on errors when opening display 
-//		ASSERT_EQ(0, errno) << "error opening display";
+			ASSERT_TRUE(this->m_display != NULL) << "unable to open display: " << errno;
+		}
 	}
 
 	virtual void
 	TearDown()
 	{
-		if (m_display) {
-			LOG((CLOG_DEBUG "closing display"));
-			XCloseDisplay(m_display);
-		}
 	}
 
 	Display* m_display;
