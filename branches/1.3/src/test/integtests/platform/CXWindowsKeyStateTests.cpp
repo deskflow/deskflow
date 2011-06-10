@@ -158,6 +158,8 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 
 TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyPressed_shiftInMask)
 {
+	// NOTE: This test is sensitive to which keys you are holding down, try
+	//		 not to be pressing any key when running it.
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
@@ -168,14 +170,22 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyPressed_shiftInMask)
 		keyState.m_modifierFromX.begin(), keyState.m_modifierFromX.end(), 0);
 	keyState.m_modifierFromX[ShiftMapIndex] = KeyModifierShift;
 
-	// fake shift key down without using synergy
 	KeyCode key = XKeysymToKeycode(m_display, XK_Shift_L);
+
+	// fake shift key down without using synergy
 	XTestFakeKeyEvent(m_display, key, true, CurrentTime);
+	KeyModifierMask modDown = keyState.pollActiveModifiers();
 
-	KeyModifierMask actual = keyState.pollActiveModifiers();
-
+	// fake shift key up without using synergy
 	XTestFakeKeyEvent(m_display, key, false, CurrentTime);
-	ASSERT_TRUE((actual & KeyModifierShift) == KeyModifierShift);
+	KeyModifierMask modUp = keyState.pollActiveModifiers();
+
+	EXPECT_TRUE((modDown & KeyModifierShift) == KeyModifierShift)
+		<< "shift key not in mask";
+
+	EXPECT_TRUE((modUp & KeyModifierShift) == 0)
+		<< "shift key never released - although this might not be a failure - "
+		"try running this test again making sure no keys are being held down";
 }
 
 TEST_F(CXWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)
