@@ -189,7 +189,7 @@ CXWindowsKeyState::pollActiveGroup() const
 #if HAVE_XKB_EXTENSION
 	if (m_xkb != NULL) {
 		XkbStateRec state;
-		if (XkbGetState(m_display, XkbUseCoreKbd, &state)) {
+		if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
 			return state.group;
 		}
 	}

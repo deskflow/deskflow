@@ -228,14 +228,13 @@ TEST_F(CXWindowsKeyStateTests, pollActiveGroup_xkb_areEqual)
 	XkbStateRec state;
 
 	// compare pollActiveGroup() with XkbGetState()
-	if (XkbGetState(m_display, XkbUseCoreKbd, &state)) {
+	if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
 		SInt32 actual = keyState.pollActiveGroup();
 
 		ASSERT_EQ(state.group, actual);
 	}
 	else {
-		// TODO: Investigate on XkbGetState() failing every time
-		FAIL() << "XkbGetState() returned an error: " << errno;
+		FAIL() << "XkbGetState() returned error " << errno;
 	}
 #else
 	SUCCEED() << "Xkb extension not installed";
