@@ -170,9 +170,9 @@ CXWindowsKeyState::pollActiveModifiers() const
 {
 	Window root = DefaultRootWindow(m_display), window;
 	int xRoot, yRoot, xWindow, yWindow;
-	unsigned int state;
-	if (!XQueryPointer(m_display, root, &root, &window,
-								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
+	unsigned int state = 0;
+	if (XQueryPointer(m_display, root, &root, &window,
+			&xRoot, &yRoot, &xWindow, &yWindow, &state) == False) {
 		state = 0;
 	}
 	return mapModifiersFromX(state);
@@ -222,15 +222,14 @@ CXWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 
 #if HAVE_XKB_EXTENSION
 	if (m_xkb != NULL) {
-		XkbGetUpdatedMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask |
-								XkbAllClientInfoMask, m_xkb);
-		updateKeysymMapXKB(keyMap);
+		if (XkbGetUpdatedMap(m_display, XkbKeyActionsMask |
+				XkbKeyBehaviorsMask | XkbAllClientInfoMask, m_xkb) == Success) {
+			updateKeysymMapXKB(keyMap);
+			return;
+		}
 	}
-	else
 #endif
-	{
-		updateKeysymMap(keyMap);
-	}
+	updateKeysymMap(keyMap);
 }
 
 void
@@ -259,8 +258,10 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 			LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
 			if (m_xkb != NULL) {
-				XkbLockGroup(m_display, XkbUseCoreKbd,
-							keystroke.m_data.m_group.m_group);
+				if (XkbLockGroup(m_display, XkbUseCoreKbd,
+							keystroke.m_data.m_group.m_group) == False) {
+					LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+				}
 			}
 			else
 #endif
@@ -272,9 +273,11 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 			LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
 			if (m_xkb != NULL) {
-				XkbLockGroup(m_display, XkbUseCoreKbd,
+				if (XkbLockGroup(m_display, XkbUseCoreKbd,
 							getEffectiveGroup(pollActiveGroup(),
-								keystroke.m_data.m_group.m_group));
+								keystroke.m_data.m_group.m_group)) == False) {
+					LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+				}
 			}
 			else
 #endif
@@ -639,7 +642,7 @@ CXWindowsKeyState::updateKeysymMapXKB(CKeyMap& keyMap)
 				item.m_lock         = false;
 				bool isModifier     = false;
 				UInt32 modifierMask = m_xkb->map->modmap[keycode];
-				if (XkbKeyHasActions(m_xkb, keycode)) {
+				if (XkbKeyHasActions(m_xkb, keycode) == True) {
 					XkbAction* action =
 						XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
 					if (action->type == XkbSA_SetMods ||
@@ -790,7 +793,7 @@ CXWindowsKeyState::hasModifiersXKB() const
 	// iterate over all keycodes
 	for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
 		KeyCode keycode = static_cast<KeyCode>(i);
-		if (XkbKeyHasActions(m_xkb, keycode)) {
+		if (XkbKeyHasActions(m_xkb, keycode) == True) {
 			// iterate over all groups
 			int numGroups = XkbKeyNumGroups(m_xkb, keycode);
 			for (int group = 0; group < numGroups; ++group) {

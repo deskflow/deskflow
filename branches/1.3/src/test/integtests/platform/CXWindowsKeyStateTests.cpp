@@ -59,7 +59,8 @@ protected:
 			LOG((CLOG_DEBUG "opening display"));
 			this->m_display = XOpenDisplay(NULL);
 
-			ASSERT_TRUE(this->m_display != NULL) << "unable to open display: " << errno;
+			ASSERT_TRUE(this->m_display != NULL)
+				<< "unable to open display: " << errno;
 		}
 	}
 
