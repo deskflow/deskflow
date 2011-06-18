@@ -157,36 +157,37 @@ TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_defaultState_returnsZero)
 	ASSERT_EQ(0, actual);
 }
 
-TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyPressed_shiftInMask)
+TEST_F(CXWindowsKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCorrect)
 {
-	// NOTE: This test is sensitive to which keys you are holding down, try
-	//		 not to be pressing any key when running it.
 	CMockKeyMap keyMap;
 	CMockEventQueue eventQueue;
 	CXWindowsKeyState keyState(
 		m_display, true, (IEventQueue&)keyMap, (CKeyMap&)eventQueue);
 
-	// set fake modifier mapping
+	// set mock modifier mapping
 	std::fill(
 		keyState.m_modifierFromX.begin(), keyState.m_modifierFromX.end(), 0);
 	keyState.m_modifierFromX[ShiftMapIndex] = KeyModifierShift;
 
 	KeyCode key = XKeysymToKeycode(m_display, XK_Shift_L);
 
-	// fake shift key down without using synergy
+	// fake shift key down (without using synergy)
 	XTestFakeKeyEvent(m_display, key, true, CurrentTime);
+
+	// function under test (1st call)
 	KeyModifierMask modDown = keyState.pollActiveModifiers();
 
-	// fake shift key up without using synergy
+	// fake shift key up (without using synergy)
 	XTestFakeKeyEvent(m_display, key, false, CurrentTime);
+
+	// function under test (2nd call)
 	KeyModifierMask modUp = keyState.pollActiveModifiers();
 
 	EXPECT_TRUE((modDown & KeyModifierShift) == KeyModifierShift)
-		<< "shift key not in mask";
+		<< "shift key not in mask - key was not pressed";
 
 	EXPECT_TRUE((modUp & KeyModifierShift) == 0)
-		<< "shift key never released - although this might not be a failure - "
-		"try running this test again making sure no keys are being held down";
+		<< "shift key still in mask - make sure no keys are being held down";
 }
 
 TEST_F(CXWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero)

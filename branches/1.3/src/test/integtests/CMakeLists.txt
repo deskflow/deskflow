@@ -30,6 +30,7 @@ elseif (APPLE)
 	# mac
 	list(APPEND src
 		platform/COSXClipboardTests.cpp
+		platform/COSXKeyStateTests.cpp
 	)
 
 elseif (UNIX)

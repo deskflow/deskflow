@@ -39,6 +39,7 @@ public:
 	typedef std::vector<KeyID> CKeyIDs;
 
 	COSXKeyState();
+	COSXKeyState(IEventQueue& eventQueue, CKeyMap& keyMap);
 	virtual ~COSXKeyState();
 
 	//! @name modifiers
@@ -146,6 +147,8 @@ private:
 	// Maps a KeyButton to an OS X key code.  This is the inverse of
 	// mapVirtualKeyToKeyButton.
 	static UInt32		mapKeyButtonToVirtualKey(KeyButton keyButton);
+
+	void				init();
 
 private:
 	class CKeyResource : public IInterface {
