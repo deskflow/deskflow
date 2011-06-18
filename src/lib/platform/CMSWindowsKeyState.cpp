@@ -574,8 +574,8 @@ static const CWin32Modifiers s_modifiers[] =
 	{ VK_RWIN,     KeyModifierSuper   }
 };
 
-CMSWindowsKeyState::CMSWindowsKeyState(CMSWindowsDesks* desks,
-				void* eventTarget) :
+CMSWindowsKeyState::CMSWindowsKeyState(
+	CMSWindowsDesks* desks, void* eventTarget) :
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
 	m_eventTarget(eventTarget),
 	m_desks(desks),
@@ -584,11 +584,27 @@ CMSWindowsKeyState::CMSWindowsKeyState(CMSWindowsDesks* desks,
 	m_lastDown(0),
 	m_useSavedModifiers(false),
 	m_savedModifiers(0),
-	m_originalSavedModifiers(0)
+	m_originalSavedModifiers(0),
+	m_eventQueue(*EVENTQUEUE)
 {
-	// look up symbol that's available on winNT family but not win95
-	HMODULE userModule = GetModuleHandle("user32.dll");
-	m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
+	init();
+}
+
+CMSWindowsKeyState::CMSWindowsKeyState(
+	CMSWindowsDesks* desks, void* eventTarget, IEventQueue& eventQueue, CKeyMap& keyMap) :
+	CKeyState(eventQueue, keyMap),
+	m_is95Family(CArchMiscWindows::isWindows95Family()),
+	m_eventTarget(eventTarget),
+	m_desks(desks),
+	m_keyLayout(GetKeyboardLayout(0)),
+	m_fixTimer(NULL),
+	m_lastDown(0),
+	m_useSavedModifiers(false),
+	m_savedModifiers(0),
+	m_originalSavedModifiers(0),
+	m_eventQueue(eventQueue)
+{
+	init();
 }
 
 CMSWindowsKeyState::~CMSWindowsKeyState()
@@ -597,11 +613,19 @@ CMSWindowsKeyState::~CMSWindowsKeyState()
 }
 
 void
+CMSWindowsKeyState::init()
+{
+	// look up symbol that's available on winNT family but not win95
+	HMODULE userModule = GetModuleHandle("user32.dll");
+	m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
+}
+
+void
 CMSWindowsKeyState::disable()
 {
 	if (m_fixTimer != NULL) {
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_fixTimer);
-		EVENTQUEUE->deleteTimer(m_fixTimer);
+		getEventQueue().removeHandler(CEvent::kTimer, m_fixTimer);
+		getEventQueue().deleteTimer(m_fixTimer);
 		m_fixTimer = NULL;
 	}
 	m_lastDown = 0;
@@ -773,11 +797,11 @@ CMSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask,
 	CKeyState::fakeKeyDown(id, mask, button);
 }
 
-void
+bool
 CMSWindowsKeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
-	CKeyState::fakeKeyRepeat(id, mask, count, button);
+	return CKeyState::fakeKeyRepeat(id, mask, count, button);
 }
 
 bool
