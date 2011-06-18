@@ -144,6 +144,12 @@ public:
 							KeyID key, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
 
+	// Unit test accessors
+	KeyButton			getLastDown() const { return m_lastDown; }
+	void				setLastDown(KeyButton value) { m_lastDown = value; }
+	KeyModifierMask		getSavedModifiers() const { return m_savedModifiers; }
+	void				setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
+
 protected:
 	// CKeyState overrides
 	virtual void		getKeyMap(CKeyMap& keyMap);

@@ -25,6 +25,9 @@
 #include "CMockEventQueue.h"
 #include "CMockKeyMap.h"
 
+// wParam = flags, HIBYTE(lParam) = virtual key, LOBYTE(lParam) = scan code
+#define SYNERGY_MSG_FAKE_KEY		SYNERGY_HOOK_LAST_MSG + 4
+
 using ::testing::_;
 using ::testing::NiceMock;
 
@@ -76,4 +79,52 @@ TEST_F(CMSWindowsKeyStateTests, disable_nonWin95OS_eventQueueNotUsed)
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(0);
 
 	keyState.disable();
+}
+
+TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_noRepeatAndButtonIsZero_resultIsTrue)
+{
+	NiceMock<CMockEventQueue> eventQueue;
+	CMockKeyMap keyMap;
+	CMSWindowsKeyState keyState(getDesks(), getEventTarget(), eventQueue, keyMap);
+	keyState.setLastDown(1);
+
+	bool actual = keyState.testAutoRepeat(true, false, 1);
+
+	ASSERT_TRUE(actual);
+}
+
+TEST_F(CMSWindowsKeyStateTests, testAutoRepeat_pressFalse_lastDownIsZero)
+{
+	NiceMock<CMockEventQueue> eventQueue;
+	CMockKeyMap keyMap;
+	CMSWindowsKeyState keyState(getDesks(), getEventTarget(), eventQueue, keyMap);
+	keyState.setLastDown(1);
+
+	keyState.testAutoRepeat(false, false, 1);
+
+	ASSERT_EQ(0, keyState.getLastDown());
+}
+
+TEST_F(CMSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0)
+{
+	NiceMock<CMockEventQueue> eventQueue;
+	CMockKeyMap keyMap;
+	CMSWindowsKeyState keyState(getDesks(), getEventTarget(), eventQueue, keyMap);
+
+	keyState.saveModifiers();
+
+	ASSERT_EQ(0, keyState.getSavedModifiers());
+}
+
+TEST_F(CMSWindowsKeyStateTests, saveModifiers_shiftKeyDown_savedModifiers4)
+{
+	NiceMock<CMockEventQueue> eventQueue;
+	CMockKeyMap keyMap;
+	CMSWindowsKeyState keyState(getDesks(), getEventTarget(), eventQueue, keyMap);
+	getDesks()->enable();
+	getDesks()->fakeKeyEvent(1, 1, true, false);
+
+	keyState.saveModifiers();
+
+	ASSERT_EQ(1, keyState.getSavedModifiers());
 }
