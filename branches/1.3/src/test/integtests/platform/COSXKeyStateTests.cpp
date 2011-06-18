@@ -66,7 +66,9 @@ TEST(COSXKeyStateTests, pollActiveModifiers_controlKeyDownThenUp_masksAreCorrect
 	CMockEventQueue eventQueue;
 	COSXKeyState keyState((IEventQueue&)keyMap, (CKeyMap&)eventQueue);
 
-	// fake control key down (without using synergy)
+	// fake control key down (without using synergy). this is a bit weird;
+	// looks like you need to create a shift down event *and* set the
+	// shift modifier.
 	CGEventRef controlDown = CGEventCreateKeyboardEvent(NULL, controlKeyCode, true);
 	CGEventSetFlags(controlDown, kCGEventFlagMaskControl);
 	CGEventPost(kCGHIDEventTap, controlDown);
@@ -75,7 +77,8 @@ TEST(COSXKeyStateTests, pollActiveModifiers_controlKeyDownThenUp_masksAreCorrect
 	// function under test (1st call)
 	KeyModifierMask downMask = keyState.pollActiveModifiers();
 
-	// fake control key up (without using synergy)
+	// fake control key up (without using synergy). also as weird as the
+	// shift down; use a non-shift key down and reset the pressed modifiers.
 	CGEventRef controlUp = CGEventCreateKeyboardEvent(NULL, escKeyCode, true);
 	CGEventSetFlags(controlUp, 0);
 	CGEventPost(kCGHIDEventTap, controlUp);
