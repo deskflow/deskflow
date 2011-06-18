@@ -583,7 +583,7 @@ CKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID)
 	fakeKeys(keys, 1);
 }
 
-void
+bool
 CKeyState::fakeKeyRepeat(
 				KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton serverID)
@@ -593,7 +593,7 @@ CKeyState::fakeKeyRepeat(
 	// if we haven't seen this button go down then ignore it
 	KeyButton oldLocalID = m_serverKeys[serverID];
 	if (oldLocalID == 0) {
-		return;
+		return false;
 	}
 
 	// get keys for key repeat
@@ -603,11 +603,11 @@ CKeyState::fakeKeyRepeat(
 		m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers,
 								getActiveModifiersRValue(), mask, true);
 	if (keyItem == NULL) {
-		return;
+		return false;
 	}
 	KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
 	if (localID == 0) {
-		return;
+		return false;
 	}
 
 	// if the KeyButton for the auto-repeat is not the same as for the
@@ -642,15 +642,16 @@ CKeyState::fakeKeyRepeat(
 
 	// generate key events
 	fakeKeys(keys, count);
+	return true;
 }
 
-void
+bool
 CKeyState::fakeKeyUp(KeyButton serverID)
 {
 	// if we haven't seen this button go down then ignore it
 	KeyButton localID = m_serverKeys[serverID & kButtonMask];
 	if (localID == 0) {
-		return;
+		return false;
 	}
 
 	// get the sequence of keys to simulate key release
@@ -682,6 +683,7 @@ CKeyState::fakeKeyUp(KeyButton serverID)
 
 	// generate key events
 	fakeKeys(keys, 1);
+	return true;
 }
 
 void

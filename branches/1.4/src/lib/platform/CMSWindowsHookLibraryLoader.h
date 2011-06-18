@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2011 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
- *
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,23 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CMOCKKEYMAP_H
-#define CMOCKKEYMAP_H
+#ifndef CMSWINDOWSHOOKLIBRARYLOADER_H
+#define CMSWINDOWSHOOKLIBRARYLOADER_H
 
-#include <gmock/gmock.h>
-#include "CKeyMap.h"
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include "CSynergyHook.h"
 
-class CMockKeyMap : public CKeyMap
+//! Loads Windows hook DLLs.
+class CMSWindowsHookLibraryLoader
 {
 public:
-	MOCK_METHOD1(swap, void(CKeyMap&));
-	MOCK_METHOD0(finish, void());
-	MOCK_METHOD2(foreachKey, void(ForeachKeyCallback, void*));
-	MOCK_METHOD1(addHalfDuplexModifier, void(KeyID));
-	MOCK_CONST_METHOD2(isHalfDuplex, bool(KeyID, KeyButton));
-	MOCK_CONST_METHOD7(mapKey, const CKeyMap::KeyItem*(
-		Keystrokes&, KeyID, SInt32, ModifierToKeys&, KeyModifierMask&,
-		KeyModifierMask, bool));
+	CMSWindowsHookLibraryLoader();
+	virtual ~CMSWindowsHookLibraryLoader();
+
+	HINSTANCE			openHookLibrary(const char* name);
+
+	// TODO: either make these private or expose properly
+	InitFunc			m_init;
+	CleanupFunc			m_cleanup;
+	SetSidesFunc		m_setSides;
+	SetZoneFunc			m_setZone;
+	SetModeFunc			m_setMode;
+
+private:
+	HINSTANCE			m_hookLibrary;
 };
 
 #endif

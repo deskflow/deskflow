@@ -53,17 +53,17 @@ CPlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask,
 	getKeyState()->fakeKeyDown(id, mask, button);
 }
 
-void
+bool
 CPlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 				SInt32 count, KeyButton button)
 {
-	getKeyState()->fakeKeyRepeat(id, mask, count, button);
+	return getKeyState()->fakeKeyRepeat(id, mask, count, button);
 }
 
-void
+bool
 CPlatformScreen::fakeKeyUp(KeyButton button)
 {
-	getKeyState()->fakeKeyUp(button);
+	return getKeyState()->fakeKeyUp(button);
 }
 
 void

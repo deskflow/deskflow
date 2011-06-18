@@ -27,6 +27,7 @@
 class CEvent;
 class CEventQueueTimer;
 class CMSWindowsDesks;
+class IEventQueue;
 
 //! Microsoft Windows key mapper
 /*!
@@ -35,6 +36,7 @@ This class maps KeyIDs to keystrokes.
 class CMSWindowsKeyState : public CKeyState {
 public:
 	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget);
+	CMSWindowsKeyState(CMSWindowsDesks* desks, void* eventTarget, IEventQueue& eventQueue, CKeyMap& keyMap);
 	virtual ~CMSWindowsKeyState();
 
 	//! @name manipulators
@@ -126,7 +128,7 @@ public:
 	// IKeyState overrides
 	virtual void		fakeKeyDown(KeyID id, KeyModifierMask mask,
 							KeyButton button);
-	virtual void		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
+	virtual bool		fakeKeyRepeat(KeyID id, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
 	virtual bool		fakeCtrlAltDel();
 	virtual KeyModifierMask
@@ -141,6 +143,12 @@ public:
 							bool press, bool isAutoRepeat,
 							KeyID key, KeyModifierMask mask,
 							SInt32 count, KeyButton button);
+
+	// Unit test accessors
+	KeyButton			getLastDown() const { return m_lastDown; }
+	void				setLastDown(KeyButton value) { m_lastDown = value; }
+	KeyModifierMask		getSavedModifiers() const { return m_savedModifiers; }
+	void				setSavedModifiers(KeyModifierMask value) { m_savedModifiers = value; }
 
 protected:
 	// CKeyState overrides
@@ -167,6 +175,8 @@ private:
 
 	void				addKeyEntry(CKeyMap& keyMap, CKeyMap::KeyItem& item);
 
+	void				init();
+
 private:
 	// not implemented
 	CMSWindowsKeyState(const CMSWindowsKeyState&);
@@ -184,6 +194,7 @@ private:
 	UINT				m_buttonToNumpadVK[512];
 	KeyButton			m_virtualKeyToButton[256];
 	KeyToVKMap			m_keyToVKMap;
+	IEventQueue&		m_eventQueue;
 
 	// the timer used to check for fixing key state
 	CEventQueueTimer*	m_fixTimer;

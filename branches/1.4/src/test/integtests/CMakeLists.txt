@@ -22,6 +22,7 @@ if (WIN32)
 	# windows
 	list(APPEND src
 		platform/CMSWindowsClipboardTests.cpp
+		platform/CMSWindowsKeyStateTests.cpp
 	)
 
 elseif (APPLE)
@@ -29,6 +30,7 @@ elseif (APPLE)
 	# mac
 	list(APPEND src
 		platform/COSXClipboardTests.cpp
+		platform/COSXKeyStateTests.cpp
 	)
 
 elseif (UNIX)
@@ -36,6 +38,7 @@ elseif (UNIX)
 	# unix/linux
 	list(APPEND src
 		platform/CXWindowsClipboardTests.cpp
+		platform/CXWindowsKeyStateTests.cpp
 	)
 
 endif()
@@ -52,6 +55,8 @@ set(inc
 	../../lib/synergy
 	../../../tools/gtest-1.6.0/include
 	../../../tools/gmock-1.6.0/include
+	../unittests
+	../unittests/synergy
 )
 
 if (UNIX)
