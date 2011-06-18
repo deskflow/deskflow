@@ -122,6 +122,23 @@ static const CKeyEntry	s_controlKeys[] = {
 COSXKeyState::COSXKeyState() :
 	m_deadKeyState(0)
 {
+	init();
+}
+
+COSXKeyState::COSXKeyState(IEventQueue& eventQueue, CKeyMap& keyMap) :
+	CKeyState(eventQueue, keyMap),
+	m_deadKeyState(0)
+{
+	init();
+}
+
+COSXKeyState::~COSXKeyState()
+{
+}
+
+void
+COSXKeyState::init()
+{
 	// initialize modifier key values
 	shiftPressed = false;
 	controlPressed = false;
@@ -137,33 +154,31 @@ COSXKeyState::COSXKeyState() :
 	}
 }
 
-COSXKeyState::~COSXKeyState()
-{
-	// do nothing
-}
-
 KeyModifierMask
 COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 {
-LOG((CLOG_DEBUG1 "mask: %04x", mask));
-	// convert
+	LOG((CLOG_DEBUG1 "mask: %04x", mask));
+
+	// previously this used the kCGEventFlagMask* enums, which would
+	// not work, since GetCurrentKeyModifiers doesn't return a mask
+	// containing those values; instead *Key enums should be used.
 	KeyModifierMask outMask = 0;
-	if ((mask & kCGEventFlagMaskShift) != 0) {
+	if ((mask & shiftKey) != 0) {
 		outMask |= KeyModifierShift;
 	}
-	if ((mask & kCGEventFlagMaskControl) != 0) {
+	if ((mask & controlKey) != 0) {
 		outMask |= KeyModifierControl;
 	}
-	if ((mask & kCGEventFlagMaskAlternate) != 0) {
+	if ((mask & cmdKey) != 0) {
 		outMask |= KeyModifierAlt;
 	}
-	if ((mask & kCGEventFlagMaskCommand) != 0) {
+	if ((mask & optionKey) != 0) {
 		outMask |= KeyModifierSuper;
 	}
-	if ((mask & kCGEventFlagMaskAlphaShift) != 0) {
+	if ((mask & alphaLock) != 0) {
 		outMask |= KeyModifierCapsLock;
 	}
-	if ((mask & kCGEventFlagMaskNumericPad) != 0) {
+	if ((mask & s_osxNumLock) != 0) {
 		outMask |= KeyModifierNumLock;
 	}
 

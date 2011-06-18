@@ -215,7 +215,7 @@ public:
 	event in \p keys.  It returns the \c KeyItem of the key being
 	pressed/repeated, or NULL if the key cannot be mapped.
 	*/
-	const KeyItem*		mapKey(Keystrokes& keys, KeyID id, SInt32 group,
+	virtual const KeyItem*	mapKey(Keystrokes& keys, KeyID id, SInt32 group,
 							ModifierToKeys& activeModifiers,
 							KeyModifierMask& currentState,
 							KeyModifierMask desiredMask,

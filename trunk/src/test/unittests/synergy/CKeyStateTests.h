@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CKEYSTATEIMPL_H
-#define CKEYSTATEIMPL_H
+#ifndef CKEYSTATETESTS_H
+#define CKEYSTATETESTS_H
 
 #include "CKeyState.h"
 #include "gmock/gmock.h"
@@ -24,9 +24,8 @@
 class CMockKeyMap;
 class CMockEventQueue;
 
-// while the class name indicates that this is actually a mock, we use a 
-// typedef later to rename it (so the name matches the compilation unit)
-// so the tests are less confusing.
+// NOTE: do not mock methods that are not pure virtual. this mock exists only
+// to provide an implementation of the CKeyState abstract class.
 class CMockKeyState : public CKeyState
 {
 public:
@@ -47,14 +46,28 @@ public:
 	MOCK_CONST_METHOD1(pollPressedKeys, void(KeyButtonSet&));
 };
 
-// hide that we're actually testing a mock to make the unit tests less 
-// confusing. use NiceMock so that we don't get warnings for unexpected
-// calls.
 typedef ::testing::NiceMock<CMockKeyState> CKeyStateImpl;
 
 typedef UInt32 KeyID;
 
 typedef void (*ForeachKeyCallback)(
 		KeyID, SInt32 group, CKeyMap::KeyItem&, void* userData);
+
+void
+stubPollPressedKeys(IKeyState::KeyButtonSet& pressedKeys);
+
+void
+assertMaskIsOne(ForeachKeyCallback cb, void* userData);
+
+const CKeyMap::KeyItem*
+stubMapKey(
+	CKeyMap::Keystrokes& keys, KeyID id, SInt32 group,
+	CKeyMap::ModifierToKeys& activeModifiers,
+	KeyModifierMask& currentState,
+	KeyModifierMask desiredMask,
+	bool isAutoRepeat);
+
+CKeyMap::Keystroke s_stubKeystroke(1, false, false);
+CKeyMap::KeyItem s_stubKeyItem;
 
 #endif

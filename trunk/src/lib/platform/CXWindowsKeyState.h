@@ -48,6 +48,8 @@ public:
 	};
 
 	CXWindowsKeyState(Display*, bool useXKB);
+	CXWindowsKeyState(Display*, bool useXKB,
+		IEventQueue& eventQueue, CKeyMap& keyMap);
 	~CXWindowsKeyState();
 
 	//! @name modifiers
@@ -111,6 +113,7 @@ protected:
 	virtual void		fakeKey(const Keystroke& keystroke);
 
 private:
+	void				init(Display* display, bool useXKB);
 	void				updateKeysymMap(CKeyMap&);
 	void				updateKeysymMapXKB(CKeyMap&);
 	bool				hasModifiersXKB() const;

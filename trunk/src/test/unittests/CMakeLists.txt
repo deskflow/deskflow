@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(h
-	synergy/CKeyStateImpl.h
+	synergy/CKeyStateTests.h
 	synergy/CMockEventQueue.h
 	synergy/CMockKeyMap.h
 )	

@@ -29,6 +29,7 @@ if (WIN32)
 		CMSWindowsScreenSaver.h
 		CMSWindowsUtil.h
 		CMSWindowsRelauncher.h
+		CMSWindowsHookLibraryLoader.h
 		IMSWindowsClipboardFacade.h
 	)
 
@@ -48,6 +49,7 @@ if (WIN32)
 		CMSWindowsScreenSaver.cpp
 		CMSWindowsUtil.cpp
 		CMSWindowsRelauncher.cpp
+		CMSWindowsHookLibraryLoader.cpp
 	)
 	
 	set(inc_hook

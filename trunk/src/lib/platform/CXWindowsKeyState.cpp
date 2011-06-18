@@ -20,6 +20,8 @@
 #include "CLog.h"
 #include "CStringUtil.h"
 #include "stdmap.h"
+#include <cstddef>
+#include <algorithm>
 #if X_DISPLAY_MISSING
 #	error X11 is required to build synergy
 #else
@@ -33,8 +35,36 @@
 #endif
 #endif
 
+static const size_t ModifiersFromXDefaultSize = 32;
+
 CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
-	m_display(display)
+	m_display(display),
+	m_modifierFromX(ModifiersFromXDefaultSize)
+{
+	init(display, useXKB);
+}
+
+CXWindowsKeyState::CXWindowsKeyState(
+	Display* display, bool useXKB,
+	IEventQueue& eventQueue, CKeyMap& keyMap) :
+	CKeyState(eventQueue, keyMap),
+	m_display(display),
+	m_modifierFromX(ModifiersFromXDefaultSize)
+{
+	init(display, useXKB);
+}
+
+CXWindowsKeyState::~CXWindowsKeyState()
+{
+#if HAVE_XKB_EXTENSION
+	if (m_xkb != NULL) {
+		XkbFreeKeyboard(m_xkb, 0, True);
+	}
+#endif
+}
+
+void
+CXWindowsKeyState::init(Display* display, bool useXKB)
 {
 	XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
@@ -49,19 +79,12 @@ CXWindowsKeyState::CXWindowsKeyState(Display* display, bool useXKB) :
 	setActiveGroup(kGroupPollAndSet);
 }
 
-CXWindowsKeyState::~CXWindowsKeyState()
-{
-#if HAVE_XKB_EXTENSION
-	if (m_xkb != NULL) {
-		XkbFreeKeyboard(m_xkb, 0, True);
-	}
-#endif
-}
-
 void
 CXWindowsKeyState::setActiveGroup(SInt32 group)
 {
 	if (group == kGroupPollAndSet) {
+		// we need to set the group to -1 in order for pollActiveGroup() to
+		// actually poll for the group
 		m_group = -1;
 		m_group = pollActiveGroup();
 	}
@@ -83,11 +106,18 @@ CXWindowsKeyState::setAutoRepeat(const XKeyboardState& state)
 KeyModifierMask
 CXWindowsKeyState::mapModifiersFromX(unsigned int state) const
 {
+	LOG((CLOG_DEBUG2 "mapping state: %i", state));
 	UInt32 offset = 8 * getGroupFromState(state);
 	KeyModifierMask mask = 0;
 	for (int i = 0; i < 8; ++i) {
 		if ((state & (1u << i)) != 0) {
-			mask |= m_modifierFromX[offset + i];
+			LOG((CLOG_DEBUG2 "|= modifier: %i", offset + i));
+			if (offset + i >= m_modifierFromX.size()) {
+				LOG((CLOG_ERR "m_modifierFromX is too small (%d) for the "
+					"requested offset (%d)", m_modifierFromX.size(), offset+i));
+			} else {
+				mask |= m_modifierFromX[offset + i];
+			}
 		}
 	}
 	return mask;
@@ -140,9 +170,9 @@ CXWindowsKeyState::pollActiveModifiers() const
 {
 	Window root = DefaultRootWindow(m_display), window;
 	int xRoot, yRoot, xWindow, yWindow;
-	unsigned int state;
-	if (!XQueryPointer(m_display, root, &root, &window,
-								&xRoot, &yRoot, &xWindow, &yWindow, &state)) {
+	unsigned int state = 0;
+	if (XQueryPointer(m_display, root, &root, &window,
+			&xRoot, &yRoot, &xWindow, &yWindow, &state) == False) {
 		state = 0;
 	}
 	return mapModifiersFromX(state);
@@ -151,15 +181,15 @@ CXWindowsKeyState::pollActiveModifiers() const
 SInt32
 CXWindowsKeyState::pollActiveGroup() const
 {
-	if (m_group != -1) {
-		assert(m_group >= 0);
+	// fixed condition where any group < -1 would have undetermined behaviour
+	if (m_group >= 0) {
 		return m_group;
 	}
 
 #if HAVE_XKB_EXTENSION
 	if (m_xkb != NULL) {
 		XkbStateRec state;
-		if (XkbGetState(m_display, XkbUseCoreKbd, &state)) {
+		if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
 			return state.group;
 		}
 	}
@@ -192,15 +222,14 @@ CXWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 
 #if HAVE_XKB_EXTENSION
 	if (m_xkb != NULL) {
-		XkbGetUpdatedMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask |
-								XkbAllClientInfoMask, m_xkb);
-		updateKeysymMapXKB(keyMap);
+		if (XkbGetUpdatedMap(m_display, XkbKeyActionsMask |
+				XkbKeyBehaviorsMask | XkbAllClientInfoMask, m_xkb) == Success) {
+			updateKeysymMapXKB(keyMap);
+			return;
+		}
 	}
-	else
 #endif
-	{
-		updateKeysymMap(keyMap);
-	}
+	updateKeysymMap(keyMap);
 }
 
 void
@@ -229,8 +258,10 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 			LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
 			if (m_xkb != NULL) {
-				XkbLockGroup(m_display, XkbUseCoreKbd,
-							keystroke.m_data.m_group.m_group);
+				if (XkbLockGroup(m_display, XkbUseCoreKbd,
+							keystroke.m_data.m_group.m_group) == False) {
+					LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+				}
 			}
 			else
 #endif
@@ -242,9 +273,11 @@ CXWindowsKeyState::fakeKey(const Keystroke& keystroke)
 			LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
 #if HAVE_XKB_EXTENSION
 			if (m_xkb != NULL) {
-				XkbLockGroup(m_display, XkbUseCoreKbd,
+				if (XkbLockGroup(m_display, XkbUseCoreKbd,
 							getEffectiveGroup(pollActiveGroup(),
-								keystroke.m_data.m_group.m_group));
+								keystroke.m_data.m_group.m_group)) == False) {
+					LOG((CLOG_DEBUG1 "XkbLockGroup request not sent"));
+				}
 			}
 			else
 #endif
@@ -267,8 +300,7 @@ CXWindowsKeyState::updateKeysymMap(CKeyMap& keyMap)
 
 	// prepare map from X modifier to KeyModifierMask.  certain bits
 	// are predefined.
-	m_modifierFromX.clear();
-	m_modifierFromX.resize(8);
+	std::fill(m_modifierFromX.begin(), m_modifierFromX.end(), 0);
 	m_modifierFromX[ShiftMapIndex]   = KeyModifierShift;
 	m_modifierFromX[LockMapIndex]    = KeyModifierCapsLock;
 	m_modifierFromX[ControlMapIndex] = KeyModifierControl;
@@ -610,7 +642,7 @@ CXWindowsKeyState::updateKeysymMapXKB(CKeyMap& keyMap)
 				item.m_lock         = false;
 				bool isModifier     = false;
 				UInt32 modifierMask = m_xkb->map->modmap[keycode];
-				if (XkbKeyHasActions(m_xkb, keycode)) {
+				if (XkbKeyHasActions(m_xkb, keycode) == True) {
 					XkbAction* action =
 						XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
 					if (action->type == XkbSA_SetMods ||
@@ -761,7 +793,7 @@ CXWindowsKeyState::hasModifiersXKB() const
 	// iterate over all keycodes
 	for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
 		KeyCode keycode = static_cast<KeyCode>(i);
-		if (XkbKeyHasActions(m_xkb, keycode)) {
+		if (XkbKeyHasActions(m_xkb, keycode) == True) {
 			// iterate over all groups
 			int numGroups = XkbKeyNumGroups(m_xkb, keycode);
 			for (int group = 0; group < numGroups; ++group) {
