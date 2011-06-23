@@ -1,0 +1,156 @@
+; template variables
+!define version ${in:version}
+!define arch ${in:arch}
+!define vcRedistDir ${in:vcRedistDir}
+!define qtDir ${in:qtDir}
+!define installDirVar ${in:installDirVar}
+
+; normal variables
+!define product "Synergy"
+!define productOld "Synergy+"
+!define packageName "synergy"
+!define packageNameOld "synergy-plus"
+!define platform "Windows"
+!define publisher "The Synergy Project"
+!define publisherOld "The Synergy+ Project"
+!define helpUrl "http://synergy-foss.org/support"
+!define vcRedistFile "vcredist_${arch}.exe"
+!define startMenuApp "launcher.exe"
+!define binDir "..\bin"
+!define uninstall "uninstall.exe"
+!define icon "..\src\cmd\launcher\synergy.ico"
+!define controlPanelReg "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
+
+!define MUI_ICON ${icon}
+!define MUI_UNICON ${icon}
+
+!include "MUI2.nsh"
+
+!insertmacro MUI_PAGE_LICENSE "..\\res\\License.rtf"
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+
+!insertmacro MUI_UNPAGE_WELCOME
+!insertmacro MUI_UNPAGE_INSTFILES
+
+!insertmacro MUI_LANGUAGE "English"
+
+Name ${product}
+OutFile "..\bin\${packageName}-${version}-${platform}-${arch}.exe"
+InstallDir "${installDirVar}\${product}"
+InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
+
+; delete files we installed, and then dir if it's empty
+!macro DeleteFiles dir
+
+  Delete "${dir}\synergyc.exe"
+  Delete "${dir}\synergys.exe"
+  Delete "${dir}\launcher.exe"
+  Delete "${dir}\synrgyhk.dll"
+  Delete "${dir}\Uninstall.exe"
+  Delete "${dir}\uninstall.exe"
+  RMDir "${dir}"
+
+!macroend
+
+Section
+
+  SetShellVarContext all
+  SetOutPath "$INSTDIR"
+
+  ; force kill all synergy processes
+  nsExec::Exec "taskkill /f /im launcher.exe"
+  nsExec::Exec "taskkill /f /im synergys.exe"
+  nsExec::Exec "taskkill /f /im synergyc.exe"
+
+  ; clean up legacy files that may exist (but leave user files)
+  !insertmacro DeleteFiles "$PROGRAMFILES32\${product}\bin"
+  !insertmacro DeleteFiles "$PROGRAMFILES64\${product}\bin"
+  !insertmacro DeleteFiles "$PROGRAMFILES32\${productOld}\bin"
+  !insertmacro DeleteFiles "$PROGRAMFILES64\${productOld}\bin"
+  !insertmacro DeleteFiles "$PROGRAMFILES32\${product}"
+  !insertmacro DeleteFiles "$PROGRAMFILES64\${product}"
+  !insertmacro DeleteFiles "$PROGRAMFILES32\${productOld}"
+  !insertmacro DeleteFiles "$PROGRAMFILES64\${productOld}"
+
+  ; clean up legacy start menu entries
+  RMDir /R "$SMPROGRAMS\${product}"
+  RMDir /R "$SMPROGRAMS\${productOld}"
+
+  ; always delete any existing uninstall info
+  DeleteRegKey HKLM "${controlPanelReg}\${product}"
+  DeleteRegKey HKLM "${controlPanelReg}\${productOld}"
+  DeleteRegKey HKLM "${controlPanelReg}\${publisher}"
+  DeleteRegKey HKLM "${controlPanelReg}\${publisherOld}"
+  DeleteRegKey HKLM "${controlPanelReg}\${packageNameOld}"
+  DeleteRegKey HKLM "SOFTWARE\${product}"
+  DeleteRegKey HKLM "SOFTWARE\${productOld}"
+  DeleteRegKey HKLM "SOFTWARE\${publisher}"
+  DeleteRegKey HKLM "SOFTWARE\${publisherOld}"
+
+  ; create uninstaller (used for control panel icon)
+  WriteUninstaller "$INSTDIR\${uninstall}"
+
+  ; add new uninstall info
+  WriteRegStr HKLM "${controlPanelReg}\${product}" "" $INSTDIR
+  WriteRegStr HKLM "${controlPanelReg}\${product}" "DisplayName" "${product}"
+  WriteRegStr HKLM "${controlPanelReg}\${product}" "DisplayVersion" "${version}"
+  WriteRegStr HKLM "${controlPanelReg}\${product}" "DisplayIcon" "$INSTDIR\uninstall.exe"
+  WriteRegStr HKLM "${controlPanelReg}\${product}" "Publisher" "${publisher}"
+  WriteRegStr HKLM "${controlPanelReg}\${product}" "UninstallString" "$INSTDIR\uninstall.exe"
+  WriteRegStr HKLM "${controlPanelReg}\${product}" "URLInfoAbout" "${helpUrl}"
+
+SectionEnd
+
+Section "Server and Client" core
+
+  ; client and server files
+  File "${binDir}\Release\synergys.exe"
+  File "${binDir}\Release\synergyc.exe"
+  File "${binDir}\Release\synrgyhk.dll"
+
+SectionEnd
+
+Section "Graphical User Interface" gui
+
+  File "${binDir}\Release\launcher.exe"
+
+  ; gui start menu shortcut
+  SetShellVarContext all
+  CreateShortCut "$SMPROGRAMS\${product}.lnk" "$INSTDIR\${startMenuApp}"
+
+SectionEnd
+
+Section "Visual C++ Redistributable" vcredist
+
+  ; copy redist file, run it, then delete when done
+  File "${vcRedistDir}\${vcRedistFile}"
+  ExecWait "$INSTDIR\${vcRedistFile} /install /q"
+  Delete $INSTDIR\${vcRedistFile}
+
+SectionEnd
+
+Section Uninstall
+
+  SetShellVarContext all
+
+  ; force kill all synergy processes
+  nsExec::Exec "taskkill /f /im launcher.exe"
+  nsExec::Exec "taskkill /f /im synergys.exe"
+  nsExec::Exec "taskkill /f /im synergyc.exe"
+
+  ; delete start menu shortcut
+  Delete "$SMPROGRAMS\${product}.lnk"
+
+  ; delete all registry keys
+  DeleteRegKey HKLM "SOFTWARE\${product}"
+  DeleteRegKey HKLM "${controlPanelReg}\${product}"
+
+  ; delete only the files that we put there
+  !insertmacro DeleteFiles $INSTDIR
+  Delete "$INSTDIR\${uninstall}"
+
+  ; delete (only if empty, so we don't delete user files)
+  RMDir "$INSTDIR"
+
+SectionEnd
