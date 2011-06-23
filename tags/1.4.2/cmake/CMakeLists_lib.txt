@@ -1,0 +1,415 @@
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2009 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
+# 
+# This package is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# found in the file COPYING that should have accompanied this file.
+# 
+# This package is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+SET(root_lib ${root_dir}/lib)
+
+SET(src_lib_arch
+	${root_lib}/arch/CArchAppUtil.cpp
+	${root_lib}/arch/CArch.cpp
+	${root_lib}/arch/CArchDaemonNone.cpp
+	${root_lib}/arch/XArch.cpp
+	${root_lib}/arch/CArchConsoleStd.cpp
+)
+
+SET(src_lib_arch_unix
+	${root_lib}/arch/CArchAppUtilUnix.cpp
+	${root_lib}/arch/CArchConsoleUnix.cpp
+	${root_lib}/arch/CArchDaemonUnix.cpp
+	${root_lib}/arch/CArchFileUnix.cpp
+	${root_lib}/arch/CArchLogUnix.cpp
+	${root_lib}/arch/CArchMultithreadPosix.cpp
+	${root_lib}/arch/CArchNetworkBSD.cpp
+	${root_lib}/arch/CArchSleepUnix.cpp
+	${root_lib}/arch/CArchStringUnix.cpp
+	${root_lib}/arch/CArchSystemUnix.cpp
+	${root_lib}/arch/CArchTaskBarXWindows.cpp
+	${root_lib}/arch/CArchTimeUnix.cpp
+	${root_lib}/arch/XArchUnix.cpp
+)
+
+SET(src_lib_arch_windows
+	${root_lib}/arch/CArchAppUtilWindows.cpp
+	${root_lib}/arch/CArchConsoleWindows.cpp
+	${root_lib}/arch/CArchDaemonWindows.cpp
+	${root_lib}/arch/CArchFileWindows.cpp
+	${root_lib}/arch/CArchLogWindows.cpp
+	${root_lib}/arch/CArchMiscWindows.cpp
+	${root_lib}/arch/CArchMultithreadWindows.cpp
+	${root_lib}/arch/CArchNetworkWinsock.cpp
+	${root_lib}/arch/CArchSleepWindows.cpp
+	${root_lib}/arch/CArchStringWindows.cpp
+	${root_lib}/arch/CArchSystemWindows.cpp
+	${root_lib}/arch/CArchTaskBarWindows.cpp
+	${root_lib}/arch/CArchTimeWindows.cpp
+	${root_lib}/arch/XArchWindows.cpp
+)
+
+SET(inc_lib_arch_windows
+	${root_lib}/arch/CArchAppUtil.h
+	${root_lib}/arch/CArchAppUtilWindows.h
+	${root_lib}/arch/CArchConsoleWindows.h
+	${root_lib}/arch/CArchDaemonWindows.h
+	${root_lib}/arch/CArchFileWindows.h
+	${root_lib}/arch/CArchLogWindows.h
+	${root_lib}/arch/CArchMiscWindows.h
+	${root_lib}/arch/CArchMultithreadWindows.h
+	${root_lib}/arch/CArchNetworkWinsock.h
+	${root_lib}/arch/CArchSleepWindows.h
+	${root_lib}/arch/CArchStringWindows.h
+	${root_lib}/arch/CArchSystemWindows.h
+	${root_lib}/arch/CArchTaskBarWindows.h
+	${root_lib}/arch/CArchTimeWindows.h
+	${root_lib}/arch/CArchConsoleStd.h
+	${root_lib}/arch/IArchAppUtil.h
+	${root_lib}/arch/XArchWindows.h
+)
+
+SET(src_lib_base
+	${root_lib}/base/CEvent.cpp
+	${root_lib}/base/CEventQueue.cpp
+	${root_lib}/base/CFunctionEventJob.cpp
+	${root_lib}/base/CFunctionJob.cpp
+	${root_lib}/base/CLog.cpp
+	${root_lib}/base/CSimpleEventQueueBuffer.cpp
+	${root_lib}/base/CStopwatch.cpp
+	${root_lib}/base/CStringUtil.cpp
+	${root_lib}/base/CUnicode.cpp
+	${root_lib}/base/IEventQueue.cpp
+	${root_lib}/base/LogOutputters.cpp
+	${root_lib}/base/XBase.cpp
+)
+
+SET(inc_lib_base
+	${root_lib}/base/CEvent.h
+	${root_lib}/base/CEventQueue.h
+	${root_lib}/base/CFunctionEventJob.h
+	${root_lib}/base/CFunctionJob.h
+	${root_lib}/base/CLog.h
+	${root_lib}/base/CPriorityQueue.h
+	${root_lib}/base/CSimpleEventQueueBuffer.h
+	${root_lib}/base/CStopwatch.h
+	${root_lib}/base/CString.h
+	${root_lib}/base/CStringUtil.h
+	${root_lib}/base/CUnicode.h
+	${root_lib}/base/IEventJob.h
+	${root_lib}/base/IEventQueue.h
+	${root_lib}/base/IEventQueueBuffer.h
+	${root_lib}/base/IJob.h
+	${root_lib}/base/ILogOutputter.h
+	${root_lib}/base/LogOutputters.h
+	${root_lib}/base/TMethodEventJob.h
+	${root_lib}/base/TMethodJob.h
+	${root_lib}/base/XBase.h
+)
+
+SET(src_lib_client
+	${root_lib}/client/CClient.cpp
+	${root_lib}/client/CServerProxy.cpp
+)
+
+SET(inc_lib_client
+	${root_lib}/client/CClient.h
+	${root_lib}/client/CServerProxy.h
+)
+
+SET(src_lib_common
+	${root_lib}/common/Version.cpp
+)
+
+SET(inc_lib_common
+	${root_lib}/common/Version.h
+)
+
+SET(src_lib_io
+	${root_lib}/io/CStreamBuffer.cpp
+	${root_lib}/io/CStreamFilter.cpp
+	${root_lib}/io/IStream.cpp
+	${root_lib}/io/XIO.cpp
+)
+
+SET(inc_lib_io
+	${root_lib}/io/CStreamBuffer.h
+	${root_lib}/io/CStreamFilter.h
+	${root_lib}/io/IStream.h
+	${root_lib}/io/IStreamFilterFactory.h
+	${root_lib}/io/XIO.h
+)
+
+SET(src_lib_mt
+	${root_lib}/mt/CCondVar.cpp
+	${root_lib}/mt/CLock.cpp
+	${root_lib}/mt/CMutex.cpp
+	${root_lib}/mt/CThread.cpp
+	${root_lib}/mt/XMT.cpp
+)
+
+SET(inc_lib_mt
+	${root_lib}/mt/CCondVar.h
+	${root_lib}/mt/CLock.h
+	${root_lib}/mt/CMutex.h
+	${root_lib}/mt/CThread.h
+	${root_lib}/mt/XMT.h
+	${root_lib}/mt/XThread.h
+)
+
+SET(src_lib_net
+	${root_lib}/net/CNetworkAddress.cpp
+	${root_lib}/net/CSocketMultiplexer.cpp
+	${root_lib}/net/CTCPListenSocket.cpp
+	${root_lib}/net/CTCPSocket.cpp
+	${root_lib}/net/CTCPSocketFactory.cpp
+	${root_lib}/net/IDataSocket.cpp
+	${root_lib}/net/IListenSocket.cpp
+	${root_lib}/net/ISocket.cpp
+	${root_lib}/net/XSocket.cpp
+)
+
+SET(inc_lib_net
+	${root_lib}/net/CNetworkAddress.h
+	${root_lib}/net/CSocketMultiplexer.h
+	${root_lib}/net/CTCPListenSocket.h
+	${root_lib}/net/CTCPSocket.h
+	${root_lib}/net/CTCPSocketFactory.h
+	${root_lib}/net/IDataSocket.h
+	${root_lib}/net/IListenSocket.h
+	${root_lib}/net/ISocket.h
+	${root_lib}/net/ISocketFactory.h
+	${root_lib}/net/ISocketMultiplexerJob.h
+	${root_lib}/net/TSocketMultiplexerMethodJob.h
+	${root_lib}/net/XSocket.h
+)
+
+SET(src_lib_platform_xwindows
+	${root_lib}/platform/CXWindowsClipboard.cpp
+	${root_lib}/platform/CXWindowsClipboardAnyBitmapConverter.cpp
+	${root_lib}/platform/CXWindowsClipboardBMPConverter.cpp
+	${root_lib}/platform/CXWindowsClipboardHTMLConverter.cpp
+	${root_lib}/platform/CXWindowsClipboardTextConverter.cpp
+	${root_lib}/platform/CXWindowsClipboardUCS2Converter.cpp
+	${root_lib}/platform/CXWindowsClipboardUTF8Converter.cpp
+	${root_lib}/platform/CXWindowsEventQueueBuffer.cpp
+	${root_lib}/platform/CXWindowsKeyState.cpp
+	${root_lib}/platform/CXWindowsScreen.cpp
+	${root_lib}/platform/CXWindowsScreenSaver.cpp
+	${root_lib}/platform/CXWindowsUtil.cpp
+)
+
+SET(src_lib_platform_mswindows
+	${root_lib}/platform/CMSWindowsClipboard.cpp
+	${root_lib}/platform/CMSWindowsClipboardAnyTextConverter.cpp
+	${root_lib}/platform/CMSWindowsClipboardBitmapConverter.cpp
+	${root_lib}/platform/CMSWindowsClipboardHTMLConverter.cpp
+	${root_lib}/platform/CMSWindowsClipboardTextConverter.cpp
+	${root_lib}/platform/CMSWindowsClipboardUTF16Converter.cpp
+	${root_lib}/platform/CMSWindowsDesks.cpp
+	${root_lib}/platform/CMSWindowsEventQueueBuffer.cpp
+	${root_lib}/platform/CMSWindowsKeyState.cpp
+	${root_lib}/platform/CMSWindowsScreen.cpp
+	${root_lib}/platform/CMSWindowsScreenSaver.cpp
+	${root_lib}/platform/CMSWindowsUtil.cpp
+	${root_lib}/platform/CMSWindowsRelauncher.cpp
+)
+
+SET(inc_lib_platform_mswindows
+	${root_lib}/platform/CMSWindowsClipboard.h
+	${root_lib}/platform/CMSWindowsClipboardAnyTextConverter.h
+	${root_lib}/platform/CMSWindowsClipboardBitmapConverter.h
+	${root_lib}/platform/CMSWindowsClipboardHTMLConverter.h
+	${root_lib}/platform/CMSWindowsClipboardTextConverter.h
+	${root_lib}/platform/CMSWindowsClipboardUTF16Converter.h
+	${root_lib}/platform/CMSWindowsDesks.h
+	${root_lib}/platform/CMSWindowsEventQueueBuffer.h
+	${root_lib}/platform/CMSWindowsKeyState.h
+	${root_lib}/platform/CMSWindowsScreen.h
+	${root_lib}/platform/CMSWindowsScreenSaver.h
+	${root_lib}/platform/CMSWindowsUtil.h
+	${root_lib}/platform/CMSWindowsRelauncher.h
+)
+
+SET(src_lib_platform_hook
+	${root_lib}/platform/CSynergyHook.cpp
+)
+
+SET(inc_lib_platform_hook
+	${root_lib}/platform/CSynergyHook.h
+)
+
+SET(src_lib_platform_carbon
+	${root_lib}/platform/COSXClipboard.cpp
+	${root_lib}/platform/COSXClipboardAnyTextConverter.cpp
+	${root_lib}/platform/COSXClipboardTextConverter.cpp
+	${root_lib}/platform/COSXClipboardUTF16Converter.cpp
+	${root_lib}/platform/COSXEventQueueBuffer.cpp
+	${root_lib}/platform/COSXKeyState.cpp
+	${root_lib}/platform/COSXScreen.cpp
+	${root_lib}/platform/COSXScreenSaver.cpp
+	${root_lib}/platform/COSXScreenSaverUtil.m
+)
+
+SET(src_lib_server
+	${root_lib}/server/CBaseClientProxy.cpp
+	${root_lib}/server/CClientListener.cpp
+	${root_lib}/server/CClientProxy.cpp
+	${root_lib}/server/CClientProxy1_0.cpp
+	${root_lib}/server/CClientProxy1_1.cpp
+	${root_lib}/server/CClientProxy1_2.cpp
+	${root_lib}/server/CClientProxy1_3.cpp
+	${root_lib}/server/CClientProxyUnknown.cpp
+	${root_lib}/server/CConfig.cpp
+	${root_lib}/server/CInputFilter.cpp
+	${root_lib}/server/CPrimaryClient.cpp
+	${root_lib}/server/CServer.cpp
+)
+
+SET(inc_lib_server
+	${root_lib}/server/CBaseClientProxy.h
+	${root_lib}/server/CClientListener.h
+	${root_lib}/server/CClientProxy.h
+	${root_lib}/server/CClientProxy1_0.h
+	${root_lib}/server/CClientProxy1_1.h
+	${root_lib}/server/CClientProxy1_2.h
+	${root_lib}/server/CClientProxy1_3.h
+	${root_lib}/server/CClientProxyUnknown.h
+	${root_lib}/server/CConfig.h
+	${root_lib}/server/CInputFilter.h
+	${root_lib}/server/CPrimaryClient.h
+	${root_lib}/server/CServer.h
+)
+
+SET(src_lib_synergy
+	${root_lib}/synergy/CClientTaskBarReceiver.cpp
+	${root_lib}/synergy/CServerTaskBarReceiver.cpp
+	${root_lib}/synergy/CApp.cpp
+	${root_lib}/synergy/CClientApp.cpp
+	${root_lib}/synergy/CServerApp.cpp
+	${root_lib}/synergy/CClipboard.cpp
+	${root_lib}/synergy/CKeyMap.cpp
+	${root_lib}/synergy/CKeyState.cpp
+	${root_lib}/synergy/CPacketStreamFilter.cpp
+	${root_lib}/synergy/CPlatformScreen.cpp
+	${root_lib}/synergy/CProtocolUtil.cpp
+	${root_lib}/synergy/CScreen.cpp
+	${root_lib}/synergy/IClipboard.cpp
+	${root_lib}/synergy/IKeyState.cpp
+	${root_lib}/synergy/IPrimaryScreen.cpp
+	${root_lib}/synergy/IScreen.cpp
+	${root_lib}/synergy/KeyTypes.cpp
+	${root_lib}/synergy/ProtocolTypes.cpp
+	${root_lib}/synergy/XScreen.cpp
+	${root_lib}/synergy/XSynergy.cpp
+)
+
+SET(inc_lib_synergy
+	${root_lib}/synergy/CClientTaskBarReceiver.h
+	${root_lib}/synergy/CServerTaskBarReceiver.h
+	${root_lib}/synergy/CApp.h
+	${root_lib}/synergy/CClientApp.h
+	${root_lib}/synergy/CServerApp.h
+	${root_lib}/synergy/CClipboard.h
+	${root_lib}/synergy/CKeyMap.h
+	${root_lib}/synergy/CKeyState.h
+	${root_lib}/synergy/CPacketStreamFilter.h
+	${root_lib}/synergy/CPlatformScreen.h
+	${root_lib}/synergy/CProtocolUtil.h
+	${root_lib}/synergy/CScreen.h
+	${root_lib}/synergy/ClipboardTypes.h
+	${root_lib}/synergy/IClient.h
+	${root_lib}/synergy/IClipboard.h
+	${root_lib}/synergy/IKeyState.h
+	${root_lib}/synergy/IPlatformScreen.h
+	${root_lib}/synergy/IPrimaryScreen.h
+	${root_lib}/synergy/IScreen.h
+	${root_lib}/synergy/IScreenSaver.h
+	${root_lib}/synergy/ISecondaryScreen.h
+	${root_lib}/synergy/KeyTypes.h
+	${root_lib}/synergy/MouseTypes.h
+	${root_lib}/synergy/OptionTypes.h
+	${root_lib}/synergy/ProtocolTypes.h
+	${root_lib}/synergy/XScreen.h
+	${root_lib}/synergy/XSynergy.h
+)
+
+# Create default `src`, with cross-platform sources.
+SET(src_lib
+	${src_lib_arch}
+	${src_lib_base}
+	${src_lib_client}
+	${src_lib_common}
+	${src_lib_io}
+	${src_lib_mt}
+	${src_lib_net}
+	${src_lib_server}
+	${src_lib_synergy}
+)
+
+# Append to `src_lib`, the platform specific sources.
+IF(UNIX)
+	LIST(APPEND src_lib ${src_lib_arch_unix})
+
+	IF(APPLE)
+		LIST(APPEND src_lib
+			${src_lib_platform_carbon}
+			${inc_lib_synergy_carbon}
+			${src_lib_synergy_carbon}
+		)
+	ELSE(APPLE)
+		LIST(APPEND src_lib
+			${src_lib_platform_xwindows}
+			${inc_lib_synergy_xwindows}
+			${src_lib_synergy_xwindows}
+		)
+	ENDIF(APPLE)
+
+ENDIF(UNIX)
+
+IF(WIN32)
+	LIST(APPEND src_lib
+		${inc_lib_base}
+		${inc_lib_client}
+		${inc_lib_common}
+		${inc_lib_io}
+		${inc_lib_mt}
+		${inc_lib_net}
+		${inc_lib_server}
+		${inc_lib_synergy}
+		${inc_lib_arch_windows}
+		${src_lib_arch_windows}
+		${inc_lib_platform_mswindows}
+		${src_lib_platform_mswindows}
+		${inc_lib_synergy_mswindows}
+		${src_lib_synergy_mswindows}
+	)
+ENDIF(WIN32)
+
+SET(inc_lib_dirs
+	{$root_dir}
+	{$root_dir}/lib/arch
+	{$root_dir}/lib/base
+	{$root_dir}/lib/client
+	{$root_dir}/lib/common
+	{$root_dir}/lib/io
+	{$root_dir}/lib/mt
+	{$root_dir}/lib/net
+	{$root_dir}/lib/platform
+	{$root_dir}/lib/server
+	{$root_dir}/lib/synergy
+)
+
+INCLUDE_DIRECTORIES(${inc_lib_dirs})
+ADD_LIBRARY(synergy STATIC ${src_lib})
+
+IF(WIN32)
+	ADD_LIBRARY(synrgyhk SHARED ${inc_lib_platform_hook} ${src_lib_platform_hook})
+ENDIF(WIN32)

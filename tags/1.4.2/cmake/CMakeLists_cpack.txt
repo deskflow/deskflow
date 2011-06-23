@@ -1,0 +1,107 @@
+# synergy -- mouse and keyboard sharing utility
+# Copyright (C) 2009 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
+# 
+# This package is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# found in the file COPYING that should have accompanied this file.
+# 
+# This package is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# List of CPack variables:
+# http://www.vtk.org/Wiki/CMake:CPackConfiguration
+
+if (WIN32)
+   message(FATAL_ERROR "CPack support for Windows has been removed.")
+endif()
+
+install(TARGETS
+	synergys
+	synergyc
+	COMPONENT core
+	DESTINATION bin)
+
+if (UNIX)
+	if (APPLE)
+		# no cpack support for apple
+	else()
+		install(FILES bin/qsynergy
+			DESTINATION bin
+			PERMISSIONS
+			OWNER_READ OWNER_WRITE OWNER_EXECUTE
+			GROUP_READ GROUP_EXECUTE
+			WORLD_READ WORLD_EXECUTE)
+
+		# install gnome menu item
+		install(FILES cmake/synergy.desktop
+			DESTINATION share/applications)
+		install(FILES cmd/launcher/synergy.ico
+			DESTINATION share/icons)
+	endif()
+endif()
+
+# The default CPack behaviour is not to append the system processor
+# type, which is undesirable in our case, since we want to support 
+# both 32-bit and 64-bit processors.
+SET(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR})
+
+# For source code, use .tar.gz on Unix, and .zip on Windows
+IF(UNIX)
+	SET(CPACK_SOURCE_GENERATOR TGZ)
+ELSE(UNIX)
+	SET(CPACK_SOURCE_GENERATOR ZIP)
+ENDIF(UNIX)
+
+if(APPLE)
+    set(CPACK_SYSTEM_NAME "MacOSX-Universal")
+endif(APPLE)
+
+SET(CPACK_PACKAGE_NAME "synergy")
+SET(CPACK_PACKAGE_VENDOR "The Synergy Project")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Synergy server and client")
+SET(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
+SET(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
+SET(CPACK_PACKAGE_VERSION_PATCH ${VERSION_REV})
+SET(CPACK_PACKAGE_VERSION ${VERSION})
+SET(CPACK_PACKAGE_CONTACT http://synergy-foss.org/)
+SET(CPACK_RESOURCE_FILE_LICENSE "${cmake_dir}/License.rtf")
+SET(CPACK_RESOURCE_FILE_README "${cmake_dir}/Readme.txt")
+
+# files to exclude from src package (regex patterns)
+# to escape, use 4 backslashes (\\\\) -- yuck!
+SET(CPACK_SOURCE_IGNORE_FILES
+	# temp output dir in root
+	"/bin/"
+
+	# generated config.h file
+	"/config\\\\.h$"
+
+	# buildbot stuff
+	"\\\\.buildbot\\\\-sourcedata$"
+
+	# qt temp build dir
+	"/gui/tmp/.*"
+
+	# qt make file
+	"/gui/Makefile$"
+
+	# qt generated ui headers
+	"/gui/ui_.*\\\\.h$"
+
+	# compiled python files
+	".*\\\\.pyc$"
+
+	# subversion caches (all dirs)
+	".*/\\\\.svn/.*"
+
+	# emacs temporary files
+	".*~$"
+)
+
+# Must be last (since it relies of CPACK_ vars).
+INCLUDE(CPack)
