@@ -1,3 +1,5 @@
+import os
+
 class Generator(object):
 	def __init__(self, cmakeName, buildDir='build', sourceDir='..', binDir='bin'):
 		self.cmakeName = cmakeName
@@ -9,7 +11,7 @@ class Generator(object):
 		return self.buildDir
 
 	def getBinDir(self, target=''):
-		return self.binDir
+		return os.path.abspath(os.path.join(self.binDir,target))
 
 	def getSourceDir(self):
 		return self.sourceDir
