@@ -31,6 +31,7 @@ if (WIN32)
 		CMSWindowsRelauncher.h
 		CMSWindowsHookLibraryLoader.h
 		IMSWindowsClipboardFacade.h
+		XPlatform.h
 	)
 
 	set(src
@@ -50,6 +51,7 @@ if (WIN32)
 		CMSWindowsUtil.cpp
 		CMSWindowsRelauncher.cpp
 		CMSWindowsHookLibraryLoader.cpp
+		XPlatform.cpp
 	)
 	
 	set(inc_hook
@@ -58,6 +60,16 @@ if (WIN32)
 	
 	set(src_hook
 		CSynergyHook.cpp
+	)
+
+	set(inc_gphook
+		CGamepadHook.h
+		HookDLL.h
+	)
+	
+	set(src_gphook
+		CGamepadHook.cpp
+		HookDLL.cpp
 	)
 
 elseif (APPLE)
@@ -112,9 +124,10 @@ add_library(platform STATIC ${src})
 
 if (WIN32)
 	add_library(synrgyhk SHARED ${inc_hook} ${src_hook})
+	add_library(sygpadhk SHARED ${inc_gphook} ${src_gphook})
 	
-	# move the synrgyhk.dll (and supporting files) from the lib dir to 
-	# the bin dir, so that synergyc and synergys can easily find it.
+	# copy the dlls (and supporting files) from the lib dir to 
+	# the bin dir, so that synergyc and synergys can easily find them.
 	# we should leave the other libraries compiling to the lib dir,
 	# so that the bin dir remains tidy. the path is relative to the
 	# build dir (in this case, that's: build\src\lib\platform).
@@ -123,6 +136,13 @@ if (WIN32)
 		POST_BUILD
 		COMMAND xcopy /Y /Q
 			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\synrgyhk.*
+			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
+	)
+	add_custom_command(
+		TARGET sygpadhk
+		POST_BUILD
+		COMMAND xcopy /Y /Q
+			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\sygpadhk.*
 			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 	)
 endif()

@@ -37,6 +37,7 @@
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
+#include "CGamepadHook.h"
 #endif
 
 #if WINAPI_MSWINDOWS
@@ -65,7 +66,8 @@ CClientApp::~CClientApp()
 
 CClientApp::CArgs::CArgs() :
 m_yscroll(0),
-m_serverAddress(NULL)
+m_serverAddress(NULL),
+m_xInputHook(false)
 {
 }
 
@@ -93,6 +95,12 @@ CClientApp::parseArg(const int& argc, const char* const* argv, int& i)
 		// define scroll 
 		args().m_yscroll = atoi(argv[++i]);
 	}
+
+#if SYSAPI_WIN32
+	else if (isArg(i, argc, argv, NULL, "--xinput-hook", 1)) {
+		args().m_xInputHook = true;
+	}
+#endif
 
 	else {
 		// option not supported here
@@ -443,6 +451,19 @@ CClientApp::startClient()
 			s_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}
+
+#if SYSAPI_WIN32
+		if (args().m_xInputHook)
+		{
+			// TODO: currently this is failing because we're not
+			// forcing compile with the DX XInput.h (so the win
+			// SDK is being used)... we need to figure out how to
+			// tell cmake to prefer the DX include path.
+			LOG((CLOG_DEBUG "installing xinput hook"));
+			InstallGamepadHook();
+		}
+#endif
+
 		s_client->connect();
 		updateStatus();
 		return true;
@@ -478,6 +499,14 @@ CClientApp::startClient()
 void
 CClientApp::stopClient()
 {
+#if SYSAPI_WIN32
+	if (args().m_xInputHook)
+	{
+		LOG((CLOG_DEBUG "removing xinput hook"));
+		RemoveGamepadHook();
+	}
+#endif
+
 	closeClient(s_client);
 	closeClientScreen(s_clientScreen);
 	s_client       = NULL;
