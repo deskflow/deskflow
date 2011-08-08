@@ -24,7 +24,6 @@
 #include "HookDLL.h"
 #include <XInput.h>
 #include <iostream>
-#include "XPlatform.h"
 
 HINSTANCE dll;
 char name[256];

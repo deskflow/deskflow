@@ -31,7 +31,6 @@ if (WIN32)
 		CMSWindowsRelauncher.h
 		CMSWindowsHookLibraryLoader.h
 		IMSWindowsClipboardFacade.h
-		XPlatform.h
 	)
 
 	set(src
@@ -51,7 +50,6 @@ if (WIN32)
 		CMSWindowsUtil.cpp
 		CMSWindowsRelauncher.cpp
 		CMSWindowsHookLibraryLoader.cpp
-		XPlatform.cpp
 	)
 	
 	set(inc_hook
