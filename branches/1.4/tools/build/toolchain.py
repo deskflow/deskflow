@@ -163,7 +163,11 @@ class InternalCommands:
 		# for makefiles always specify a build type (debug, release, etc)
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
-		
+
+		# build gamepad support if required
+		if self.gamepad_support:
+			cmake_args += ' -DGAMEPAD_SUPPORT:BOOL=TRUE'
+
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 		
@@ -1081,6 +1085,8 @@ class CommandHandler:
 				self.vcRedistDir = a
 			elif o == '--qt-dir':
 				self.qtDir = a
+			elif o == '--gamepad-support':
+				self.ic.gamepad_support = True
 	
 	def about(self):
 		self.ic.about()

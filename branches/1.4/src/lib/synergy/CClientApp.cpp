@@ -37,6 +37,9 @@
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
+#endif
+
+#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
 #include "CGamepadHook.h"
 #endif
 
@@ -64,10 +67,12 @@ CClientApp::~CClientApp()
 {
 }
 
-CClientApp::CArgs::CArgs() :
-m_yscroll(0),
-m_serverAddress(NULL),
-m_xInputHook(false)
+CClientApp::CArgs::CArgs()
+	: m_yscroll(0)
+	, m_serverAddress(NULL)
+#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
+	, m_gamepadHook(false)
+#endif
 {
 }
 
@@ -96,9 +101,9 @@ CClientApp::parseArg(const int& argc, const char* const* argv, int& i)
 		args().m_yscroll = atoi(argv[++i]);
 	}
 
-#if SYSAPI_WIN32
-	else if (isArg(i, argc, argv, NULL, "--xinput-hook", 1)) {
-		args().m_xInputHook = true;
+#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
+	else if (isArg(i, argc, argv, NULL, "--gamepad-hook", 1)) {
+		args().m_gamepadHook = true;
 	}
 #endif
 
@@ -452,8 +457,8 @@ CClientApp::startClient()
 			LOG((CLOG_NOTE "started client"));
 		}
 
-#if SYSAPI_WIN32
-		if (args().m_xInputHook)
+#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
+		if (args().m_gamepadHook)
 		{
 			// TODO: currently this is failing because we're not
 			// forcing compile with the DX XInput.h (so the win
@@ -499,8 +504,8 @@ CClientApp::startClient()
 void
 CClientApp::stopClient()
 {
-#if SYSAPI_WIN32
-	if (args().m_xInputHook)
+#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
+	if (args().m_gamepadHook)
 	{
 		LOG((CLOG_DEBUG "removing xinput hook"));
 		RemoveGamepadHook();

@@ -122,8 +122,7 @@ add_library(platform STATIC ${src})
 
 if (WIN32)
 	add_library(synrgyhk SHARED ${inc_hook} ${src_hook})
-	add_library(sygpadhk SHARED ${inc_gphook} ${src_gphook})
-	
+
 	# copy the dlls (and supporting files) from the lib dir to 
 	# the bin dir, so that synergyc and synergys can easily find them.
 	# we should leave the other libraries compiling to the lib dir,
@@ -136,13 +135,22 @@ if (WIN32)
 			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\synrgyhk.*
 			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 	)
-	add_custom_command(
-		TARGET sygpadhk
-		POST_BUILD
-		COMMAND xcopy /Y /Q
-			..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\sygpadhk.*
-			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
-	)
+
+	if (GAMEPAD_SUPPORT)
+		message("Configuring gamepad support.")
+
+		include_directories($ENV{DXSDK_DIR}/Include)
+		link_directories("$ENV{DXSDK_DIR}/Lib/x86")
+		add_library(sygpadhk SHARED ${inc_gphook} ${src_gphook})
+
+		add_custom_command(
+			TARGET sygpadhk
+			POST_BUILD
+			COMMAND xcopy /Y /Q
+				..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\sygpadhk.*
+				..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
+			)
+	endif()
 endif()
 
 if (UNIX)

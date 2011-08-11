@@ -54,8 +54,8 @@ globalOptionsLong = ['no-prompts', 'generator=', 'verbose', 'make-gui']
 cmd_opt_dict = {
 	'about'     : ['', []],
 	'setup'     : ['g:', []],
-	'configure' : ['g:dr', ['debug', 'release']],
-	'build'     : ['dr', ['debug', 'release']],
+	'configure' : ['g:dr', ['debug', 'release', 'gamepad-support']],
+	'build'     : ['dr', ['debug', 'release', 'gamepad-support']],
 	'clean'     : ['dr', ['debug', 'release']],
 	'update'    : ['', []],
 	'install'   : ['', []],
