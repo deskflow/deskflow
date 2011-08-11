@@ -100,6 +100,11 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 
 		app().argsBase().m_disableTray = true;
 	}
+#if GAMEPAD_SUPPORT
+	else if (app().isArg(i, argc, argv, NULL, "--gamepad")) {
+		app().argsBase().m_gamepad = true;
+	}
+#endif
 	else {
 		// option not supported here
 		return false;

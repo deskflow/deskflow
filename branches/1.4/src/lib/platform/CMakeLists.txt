@@ -137,8 +137,6 @@ if (WIN32)
 	)
 
 	if (GAMEPAD_SUPPORT)
-		message("Configuring gamepad support.")
-
 		include_directories($ENV{DXSDK_DIR}/Include)
 		link_directories("$ENV{DXSDK_DIR}/Lib/x86")
 		add_library(sygpadhk SHARED ${inc_gphook} ${src_gphook})

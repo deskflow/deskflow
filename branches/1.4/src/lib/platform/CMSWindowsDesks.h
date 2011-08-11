@@ -216,6 +216,7 @@ private:
 	void				deskEnter(CDesk* desk);
 	void				deskLeave(CDesk* desk, HKL keyLayout);
 	void				deskThread(void* vdesk);
+	void				xinputThread();
 
 	// desk switch checking and handling
 	CDesk*				addDesk(const CString& name, HDESK hdesk);

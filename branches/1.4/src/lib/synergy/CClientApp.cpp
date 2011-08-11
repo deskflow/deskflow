@@ -67,12 +67,9 @@ CClientApp::~CClientApp()
 {
 }
 
-CClientApp::CArgs::CArgs()
-	: m_yscroll(0)
-	, m_serverAddress(NULL)
-#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
-	, m_gamepadHook(false)
-#endif
+CClientApp::CArgs::CArgs() :
+m_yscroll(0),
+m_serverAddress(NULL)
 {
 }
 
@@ -100,12 +97,6 @@ CClientApp::parseArg(const int& argc, const char* const* argv, int& i)
 		// define scroll 
 		args().m_yscroll = atoi(argv[++i]);
 	}
-
-#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
-	else if (isArg(i, argc, argv, NULL, "--gamepad-hook", 1)) {
-		args().m_gamepadHook = true;
-	}
-#endif
 
 	else {
 		// option not supported here
@@ -195,7 +186,7 @@ CClientApp::help()
 		WINAPI_INFO
 		HELP_SYS_INFO
 		"      --yscroll <delta>    defines the vertical scrolling delta, which is\n"
-		"                           120 by default.\n"
+		"                             120 by default.\n"
 		HELP_COMMON_INFO_2
 		"\n"
 		"* marks defaults.\n"
@@ -458,7 +449,7 @@ CClientApp::startClient()
 		}
 
 #if SYSAPI_WIN32 && GAMEPAD_SUPPORT
-		if (args().m_gamepadHook)
+		if (args().m_gamepad)
 		{
 			// TODO: currently this is failing because we're not
 			// forcing compile with the DX XInput.h (so the win
@@ -505,7 +496,7 @@ void
 CClientApp::stopClient()
 {
 #if SYSAPI_WIN32 && GAMEPAD_SUPPORT
-	if (args().m_gamepadHook)
+	if (args().m_gamepad)
 	{
 		LOG((CLOG_DEBUG "removing xinput hook"));
 		RemoveGamepadHook();

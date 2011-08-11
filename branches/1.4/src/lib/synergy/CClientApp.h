@@ -34,9 +34,6 @@ public:
 	public:
 		int m_yscroll;
 		CNetworkAddress* m_serverAddress;
-#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
-		bool m_gamepadHook;
-#endif
 	};
 
 	CClientApp(CreateTaskBarReceiverFunc createTaskBarReceiver);

@@ -49,6 +49,9 @@ public:
 		bool m_relaunchMode;
 		bool m_debugServiceWait;
 		bool m_pauseOnExit;
+#if GAMEPAD_SUPPORT
+		bool m_gamepad;
+#endif
 #endif
 #if WINAPI_XWINDOWS
 		bool m_disableXInitThreads;
@@ -168,7 +171,14 @@ private:
 
 #elif SYSAPI_WIN32
 
-// windows service management args
+#if GAMEPAD_SUPPORT
+#  define HELP_GAMEPAD \
+	"      --gamepad            enable gamepad support (xinput).\n"
+#else
+#  define HELP_GAMEPAD ""
+#endif
+
+// windows args
 #  define HELP_SYS_ARGS \
 	" [--service <action>]"
 #  define HELP_SYS_INFO \
@@ -178,6 +188,7 @@ private:
 	"                             session (useful for vista and upward).\n" \
 	"      --exit-pause         wait for key press on exit, can be useful for\n" \
 	"                             reading error messages that occur on exit.\n" \
-	"      --no-tray            disable the system tray icon.\n"
+	"      --no-tray            disable the system tray icon.\n" \
+	HELP_GAMEPAD
 
 #endif
