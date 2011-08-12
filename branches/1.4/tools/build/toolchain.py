@@ -68,6 +68,9 @@ class InternalCommands:
 	# by default, don't compile the gui
 	enable_make_gui = False
 
+	# by default, do not config with gamepad support
+	gamepad_support = False
+
 	win32_generators = {
 		1 : Generator('Visual Studio 10'),
 		2 : Generator('Visual Studio 10 Win64'),
