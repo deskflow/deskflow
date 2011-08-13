@@ -38,6 +38,12 @@
 #include <string.h>
 #include <pbt.h>
 
+#if GAMEPAD_SUPPORT
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <XInput.h>
+#endif
+
 //
 // add backwards compatible multihead support (and suppress bogus warning).
 // this isn't supported on MinGW yet AFAICT.
@@ -107,6 +113,9 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false)
+#if GAMEPAD_SUPPORT
+	, m_xInputThread(NULL)
+#endif
 {
 	assert(s_instance != NULL);
 	assert(s_screen   == NULL);
@@ -148,6 +157,15 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 
 	// install the platform event queue
 	EVENTQUEUE->adoptBuffer(new CMSWindowsEventQueueBuffer);
+
+#if GAMEPAD_SUPPORT
+	if (m_isPrimary)
+	{
+		// only capture xinput on the server.
+		m_xInputThread = new CThread(new TMethodJob<CMSWindowsScreen>(
+			this, &CMSWindowsScreen::xInputThread));
+	}
+#endif
 }
 
 CMSWindowsScreen::~CMSWindowsScreen()
@@ -1751,6 +1769,53 @@ CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return result;
 }
 
+#if GAMEPAD_SUPPORT
+
+bool aDownLast;
+
+void
+CMSWindowsScreen::xInputThread(void*)
+{
+	int index = 0;
+	XINPUT_STATE state;
+
+	bool end = false;
+	while (!end)
+	{
+		ZeroMemory(&state, sizeof(XINPUT_STATE));
+		DWORD result = XInputGetState(index, &state);
+		
+		// xinput controller is connected
+		if (result == ERROR_SUCCESS)
+		{
+			// TODO: what is 'a'?
+			KeyButton button = 0x2000;
+			int id = 97;
+			KeyModifierMask mask = pollActiveModifiers();
+
+			// TODO: create gamepad state instead of using key state.
+			bool aDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
+			bool toggled = aDownLast != aDown;
+			aDownLast = aDown;
+
+			if (toggled)
+			{
+				LOG((CLOG_DEBUG "gamepad 'a' toggled"));
+
+				// TODO: what does onKey actually do? still works
+				// if it's not called...
+				//m_keyState->onKey(button, aDown, mask);
+
+				m_keyState->sendKeyEvent(getEventTarget(),
+					aDown, false, id, mask, 1, button);
+			}
+		}
+
+		Sleep(100);
+	}
+}
+
+#endif
 
 //
 // CMSWindowsScreen::CHotKeyItem

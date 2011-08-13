@@ -308,10 +308,17 @@ private:
 	CMSWindowsHookLibraryLoader
 						m_hookLibraryLoader;
 
+#if GAMEPAD_SUPPORT
+	CThread*			m_xInputThread;
+#endif
+
 	static CMSWindowsScreen*	s_screen;
 
 	// save last position of mouse to compute next delta movement
 	void saveMousePosition(SInt32 x, SInt32 y);
+
+	// thread for polling xinput state.
+	void xInputThread(void*);
 };
 
 #endif

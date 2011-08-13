@@ -30,12 +30,6 @@
 #include "CArchMiscWindows.h"
 #include <malloc.h>
 
-#if GAMEPAD_SUPPORT
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <XInput.h>
-#endif
-
 // these are only defined when WINVER >= 0x0500
 #if !defined(SPI_GETMOUSESPEED)
 #define SPI_GETMOUSESPEED 112
@@ -705,21 +699,6 @@ CMSWindowsDesks::deskLeave(CDesk* desk, HKL keyLayout)
 		deskMouseMove(m_xCenter, m_yCenter);
 	}
 }
-
-#if GAMEPAD_SUPPORT
-void
-CMSWindowsDesks::xinputThread()
-{
-	int index = 0;
-	XINPUT_STATE state;
-
-	ZeroMemory(&state, sizeof(XINPUT_STATE));
-	DWORD result = XInputGetState(index, &state);
-
-	// TODO: pass xinput state to client.
-	//deskGamepadState();
-}
-#endif
 
 void
 CMSWindowsDesks::deskThread(void* vdesk)
