@@ -57,6 +57,9 @@ public:
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);
+	virtual void		gamepadButtonDown(GamepadButtonID);
+	virtual void		gamepadButtonUp(GamepadButtonID);
+	virtual void		gamepadAnalog(GamepadAnalogID, SInt32, SInt32);
 
 protected:
 	virtual bool		parseHandshakeMessage(const UInt8* code);

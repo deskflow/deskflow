@@ -104,6 +104,9 @@ public:
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;
 	virtual void		setOptions(const COptionsList& options) = 0;
+	virtual void		gamepadButtonDown(GamepadButtonID id) = 0;
+	virtual void		gamepadButtonUp(GamepadButtonID id) = 0;
+	virtual void		gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) = 0;
 
 private:
 	IStream*			m_stream;

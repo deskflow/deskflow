@@ -127,6 +127,18 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleWheelEvent));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGamepadButtonDownEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleGamepadButtonDown));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGamepadButtonUpEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleGamepadButtonUp));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGamepadAnalogEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleGamepadAnalog));
 	EVENTQUEUE->adoptHandler(IPlatformScreen::getScreensaverActivatedEvent(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
@@ -1339,6 +1351,30 @@ CServer::handleWheelEvent(const CEvent& event, void*)
 }
 
 void
+CServer::handleGamepadButtonDown(const CEvent& event, void*)
+{
+	IPlatformScreen::CGamepadButtonInfo* info =
+		reinterpret_cast<IPlatformScreen::CGamepadButtonInfo*>(event.getData());
+	onGamepadButtonDown(info->m_id);
+}
+
+void
+CServer::handleGamepadButtonUp(const CEvent& event, void*)
+{
+	IPlatformScreen::CGamepadButtonInfo* info =
+		reinterpret_cast<IPlatformScreen::CGamepadButtonInfo*>(event.getData());
+	onGamepadButtonUp(info->m_id);
+}
+
+void
+CServer::handleGamepadAnalog(const CEvent& event, void*)
+{
+	IPlatformScreen::CGamepadAnalogInfo* info =
+		reinterpret_cast<IPlatformScreen::CGamepadAnalogInfo*>(event.getData());
+	onGamepadAnalog(info->m_id, info->m_x, info->m_y);
+}
+
+void
 CServer::handleScreensaverActivatedEvent(const CEvent&, void*)
 {
 	onScreensaver(true);
@@ -1925,6 +1961,27 @@ CServer::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 
 	// relay
 	m_active->mouseWheel(xDelta, yDelta);
+}
+
+void
+CServer::onGamepadButtonDown(GamepadButtonID id)
+{
+	LOG((CLOG_DEBUG1 "onGamepadButtonDown id=%d", id));
+	m_active->gamepadButtonDown(id);
+}
+
+void
+CServer::onGamepadButtonUp(GamepadButtonID id)
+{
+	LOG((CLOG_DEBUG1 "onGamepadButtonUp id=%d", id));
+	m_active->gamepadButtonUp(id);
+}
+
+void
+CServer::onGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+{
+	LOG((CLOG_DEBUG1 "onGamepadAnalog id=%d %+d,%+d", id, x, y));
+	m_active->gamepadAnalog(id, x, y);
 }
 
 bool

@@ -22,6 +22,7 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "CEvent.h"
+#include "GamepadTypes.h"
 
 //! Primary screen interface
 /*!
@@ -67,6 +68,23 @@ public:
 
 	public:
 		UInt32			m_id;
+	};
+	//! Gamepad button event data
+	class CGamepadButtonInfo {
+	public:
+		CGamepadButtonInfo(GamepadButtonID id) :
+			m_id(id) { }
+	public:
+		GamepadButtonID m_id;
+	};
+	//! Gamepad analog event data
+	class CGamepadAnalogInfo {
+		CGamepadAnalogInfo(GamepadAnalogID id, SInt32 x, SInt32 y) :
+			m_id(id), m_x(x), m_y(y) { }
+	public:
+		GamepadAnalogID m_id;
+		SInt32 m_x;
+		SInt32 m_y;
 	};
 
 	//! @name manipulators
@@ -189,6 +207,12 @@ public:
 	static CEvent::Type	getFakeInputBeginEvent();
 	//! Get end of fake input event type
 	static CEvent::Type	getFakeInputEndEvent();
+	//! Get gamepad button down event type.
+	static CEvent::Type	getGamepadButtonDownEvent();
+	//! Get gamepad button up event type.
+	static CEvent::Type	getGamepadButtonUpEvent();
+	//! Get gamepad analog event type.
+	static CEvent::Type	getGamepadAnalogEvent();
 
 	//@}
 
@@ -204,6 +228,9 @@ private:
 	static CEvent::Type	s_hotKeyUpEvent;
 	static CEvent::Type	s_fakeInputBegin;
 	static CEvent::Type	s_fakeInputEnd;
+	static CEvent::Type s_gamepadButtonDownEvent;
+	static CEvent::Type s_gamepadButtonUpEvent;
+	static CEvent::Type s_gamepadAnalogEvent;
 };
 
 #endif

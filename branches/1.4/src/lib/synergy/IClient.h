@@ -24,6 +24,7 @@
 #include "MouseTypes.h"
 #include "OptionTypes.h"
 #include "CString.h"
+#include "GamepadTypes.h"
 
 //! Client interface
 /*!
@@ -138,6 +139,24 @@ public:
 	Each wheel click should generate a delta of +/-120.
 	*/
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
+
+	//! Notify of gamepad button down
+	/*!
+	Synthesize gamepad button down.
+	*/
+	virtual void		gamepadButtonDown(GamepadButtonID id) = 0;
+
+	//! Notify of gamepad button up
+	/*!
+	Synthesize gamepad button up.
+	*/
+	virtual void		gamepadButtonUp(GamepadButtonID id) = 0;
+	
+	//! Notify of gamepad angalog changes
+	/*!
+	Synthesize gamepad analog (sticks/triggers) values.
+	*/
+	virtual void		gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) = 0;
 
 	//! Notify of screen saver change
 	virtual void		screensaver(bool activate) = 0;

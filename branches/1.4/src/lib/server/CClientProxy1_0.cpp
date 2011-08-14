@@ -357,6 +357,27 @@ CClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
 }
 
 void
+CClientProxy1_0::gamepadButtonDown(GamepadButtonID)
+{
+	// ignore -- not supported in protocol 1.0
+	LOG((CLOG_DEBUG "gamepadButtonDown not supported"));
+}
+
+void
+CClientProxy1_0::gamepadButtonUp(GamepadButtonID)
+{
+	// ignore -- not supported in protocol 1.0
+	LOG((CLOG_DEBUG "gamepadButtonUp not supported"));
+}
+
+void
+CClientProxy1_0::gamepadAnalog(GamepadAnalogID, SInt32, SInt32)
+{
+	// ignore -- not supported in protocol 1.0
+	LOG((CLOG_DEBUG "gamepadAnalog not supported"));
+}
+
+void
 CClientProxy1_0::screensaver(bool on)
 {
 	LOG((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0));

@@ -23,6 +23,7 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "OptionTypes.h"
+#include "GamepadTypes.h"
 
 class IClipboard;
 class IPlatformScreen;
@@ -164,6 +165,25 @@ public:
 	Each wheel click should generate a delta of +/-120.
 	*/
 	void				mouseWheel(SInt32 xDelta, SInt32 yDelta);
+
+	//! Notify of gamepad button down
+	/*!
+	Synthesize gamepad events to generate mouse down.
+	*/
+	void				gamepadButtonDown(GamepadButtonID id);
+	
+	//! Notify of gamepad button up
+	/*!
+	Synthesize gamepad events to generate mouse up.
+	*/
+	void				gamepadButtonUp(GamepadButtonID id);
+	
+	//! Notify of gamepad analog change
+	/*!
+	Synthesize gamepad events to generate analog (stick/triggers) changes
+	of absolute amounts \c x and \c y.
+	*/
+	void				gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y);
 
 	//! Notify of options changes
 	/*!

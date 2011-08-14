@@ -242,6 +242,27 @@ CScreen::mouseWheel(SInt32 xDelta, SInt32 yDelta)
 }
 
 void
+CScreen::gamepadButtonDown(GamepadButtonID id)
+{
+	assert(!m_isPrimary);
+	m_screen->fakeGamepadButtonDown(id);
+}
+
+void
+CScreen::gamepadButtonUp(GamepadButtonID id)
+{
+	assert(!m_isPrimary);
+	m_screen->fakeGamepadButtonUp(id);
+}
+
+void
+CScreen::gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+{
+	assert(!m_isPrimary);
+	m_screen->fakeGamepadAnalog(id, x, y);
+}
+
+void
 CScreen::resetOptions()
 {
 	// reset options

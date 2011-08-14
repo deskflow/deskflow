@@ -343,6 +343,24 @@ CClient::setOptions(const COptionsList& options)
 	m_screen->setOptions(options);
 }
 
+void
+CClient::gamepadButtonDown(GamepadButtonID id)
+{
+	m_screen->gamepadButtonDown(id);
+}
+
+void
+CClient::gamepadButtonUp(GamepadButtonID id)
+{
+	m_screen->gamepadButtonUp(id);
+}
+
+void
+CClient::gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+{
+	m_screen->gamepadAnalog(id, x, y);
+}
+
 CString
 CClient::getName() const
 {

@@ -85,6 +85,9 @@ public:
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+	virtual void		fakeGamepadButtonDown(GamepadButtonID id) const;
+	virtual void		fakeGamepadButtonUp(GamepadButtonID id) const;
+	virtual void		fakeGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) const;
 
 	// IKeyState overrides
 	virtual void		updateKeys();

@@ -135,6 +135,9 @@ public:
 	virtual void		mouseMove(SInt32 xAbs, SInt32 yAbs);
 	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel);
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
+	virtual void		gamepadButtonDown(GamepadButtonID id);
+	virtual void		gamepadButtonUp(GamepadButtonID id);
+	virtual void		gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);

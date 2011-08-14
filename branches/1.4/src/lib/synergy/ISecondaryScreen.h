@@ -54,6 +54,25 @@ public:
 	Synthesize a mouse wheel event of amount \c xDelta and \c yDelta.
 	*/
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
+	
+	//! Fake gamepad button down
+	/*!
+	Synthesize gamepad events to generate mouse down.
+	*/
+	virtual void		fakeGamepadButtonDown(GamepadButtonID id) const = 0;
+	
+	//! Fake  gamepad button up
+	/*!
+	Synthesize gamepad events to generate mouse up.
+	*/
+	virtual void		fakeGamepadButtonUp(GamepadButtonID id) const = 0;
+	
+	//! Fake  gamepad analog change
+	/*!
+	Synthesize gamepad events to generate analog (stick/triggers) changes
+	of absolute amounts \c x and \c y.
+	*/
+	virtual void		fakeGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) const = 0;
 
 	//@}
 };

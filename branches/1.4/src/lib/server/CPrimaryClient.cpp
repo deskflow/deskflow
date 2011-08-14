@@ -242,6 +242,24 @@ CPrimaryClient::mouseWheel(SInt32, SInt32)
 }
 
 void
+CPrimaryClient::gamepadButtonDown(GamepadButtonID id)
+{
+	// ignore
+}
+
+void
+CPrimaryClient::gamepadButtonUp(GamepadButtonID id)
+{
+	// ignore
+}
+
+void
+CPrimaryClient::gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+{
+	// ignore
+}
+
+void
 CPrimaryClient::screensaver(bool)
 {
 	// ignore

@@ -240,6 +240,18 @@ CServerProxy::parseMessage(const UInt8* code)
 		keyRepeat();
 	}
 
+	else if (memcmp(code, kMsgDGamepadDown, 4) == 0) {
+		gamepadButtonDown();
+	}
+
+	else if (memcmp(code, kMsgDGamepadUp, 4) == 0) {
+		gamepadButtonUp();
+	}
+
+	else if (memcmp(code, kMsgDGamepadDown, 4) == 0) {
+		gamepadAnalog();
+	}
+
 	else if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
 		// echo keep alives and reset alarm
 		CProtocolUtil::writef(m_stream, kMsgCKeepAlive);
@@ -730,6 +742,44 @@ CServerProxy::mouseWheel()
 
 	// forward
 	m_client->mouseWheel(xDelta, yDelta);
+}
+
+void
+CServerProxy::gamepadButtonDown()
+{
+	// parse
+	GamepadButtonID id;
+	CProtocolUtil::readf(m_stream, kMsgDGamepadDown + 4, &id);
+	LOG((CLOG_DEBUG2 "recv gamepad down id=%d", id));
+
+	// forward
+	m_client->gamepadButtonDown(id);
+}
+
+void
+CServerProxy::gamepadButtonUp()
+{
+	// parse
+	GamepadButtonID id;
+	CProtocolUtil::readf(m_stream, kMsgDGamepadUp + 4, &id);
+	LOG((CLOG_DEBUG2 "recv gamepad up id=%d", id));
+
+	// forward
+	m_client->gamepadButtonUp(id);
+}
+
+void
+CServerProxy::gamepadAnalog()
+{
+	// parse
+	GamepadAnalogID id;
+	SInt32 x;
+	SInt32 y;
+	CProtocolUtil::readf(m_stream, kMsgDGamepadAnalog + 4, &id, &x, &y);
+	LOG((CLOG_DEBUG2 "recv gamepad analog id=%d %+d,%+d", id, x, y));
+
+	// forward
+	m_client->gamepadAnalog(id, x, y);
 }
 
 void

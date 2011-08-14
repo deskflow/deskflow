@@ -322,6 +322,9 @@ private:
 	void				handleMotionPrimaryEvent(const CEvent&, void*);
 	void				handleMotionSecondaryEvent(const CEvent&, void*);
 	void				handleWheelEvent(const CEvent&, void*);
+	void				handleGamepadButtonDown(const CEvent&, void*);
+	void				handleGamepadButtonUp(const CEvent&, void*);
+	void				handleGamepadAnalog(const CEvent&, void*);
 	void				handleScreensaverActivatedEvent(const CEvent&, void*);
 	void				handleScreensaverDeactivatedEvent(const CEvent&, void*);
 	void				handleSwitchWaitTimeout(const CEvent&, void*);
@@ -348,6 +351,9 @@ private:
 	bool				onMouseMovePrimary(SInt32 x, SInt32 y);
 	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	void				onMouseWheel(SInt32 xDelta, SInt32 yDelta);
+	void				onGamepadButtonDown(GamepadButtonID id);
+	void				onGamepadButtonUp(GamepadButtonID id);
+	void				onGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y);
 
 	// add client to list and attach event handlers for client
 	bool				addClient(CBaseClientProxy*);

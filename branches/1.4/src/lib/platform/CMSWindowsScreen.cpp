@@ -37,6 +37,7 @@
 #include "CArchMiscWindows.h"
 #include <string.h>
 #include <pbt.h>
+#include "GamepadTypes.h"
 
 #if GAMEPAD_SUPPORT
 #define WIN32_LEAN_AND_MEAN
@@ -694,6 +695,24 @@ void
 CMSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 {
 	m_desks->fakeMouseWheel(xDelta, yDelta);
+}
+
+void
+CMSWindowsScreen::fakeGamepadButtonDown(GamepadButtonID id) const
+{
+	LOG((CLOG_DEBUG "fake gamepad down id=%d - not implemented", id));
+}
+
+void
+CMSWindowsScreen::fakeGamepadButtonUp(GamepadButtonID id) const
+{
+	LOG((CLOG_DEBUG "fake gamepad up id=%d - not implemented", id));
+}
+
+void
+CMSWindowsScreen::fakeGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) const
+{
+	LOG((CLOG_DEBUG "fake gamepad analog id=%d - not implemented", id));
 }
 
 void
@@ -1771,6 +1790,7 @@ CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 #if GAMEPAD_SUPPORT
 
+// @todo gamepad state class
 bool aDownLast;
 
 void
@@ -1788,26 +1808,25 @@ CMSWindowsScreen::xInputThread(void*)
 		// xinput controller is connected
 		if (result == ERROR_SUCCESS)
 		{
-			// TODO: what is 'a'?
-			KeyButton button = 0x2000;
-			int id = 97;
-			KeyModifierMask mask = pollActiveModifiers();
-
-			// TODO: create gamepad state instead of using key state.
+			// @todo gamepad state class
 			bool aDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
-			bool toggled = aDownLast != aDown;
+			bool aToggled = aDownLast != aDown;
 			aDownLast = aDown;
 
-			if (toggled)
+			if (aToggled)
 			{
 				LOG((CLOG_DEBUG "gamepad 'a' toggled"));
 
-				// TODO: what does onKey actually do? still works
-				// if it's not called...
-				//m_keyState->onKey(button, aDown, mask);
-
-				m_keyState->sendKeyEvent(getEventTarget(),
-					aDown, false, id, mask, 1, button);
+				if (aDown)
+				{
+					sendEvent(getGamepadButtonDownEvent(),
+						new CGamepadButtonInfo(kGamepadButtonA));
+				}
+				else
+				{
+					sendEvent(getGamepadButtonUpEvent(),
+						new CGamepadButtonInfo(kGamepadButtonA));
+				}
 			}
 		}
 

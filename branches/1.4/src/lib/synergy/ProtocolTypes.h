@@ -26,8 +26,9 @@
 // 1.2:  adds mouse relative motion
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
+// 1.4:  adds gamepad support
 static const SInt16		kProtocolMajorVersion = 1;
-static const SInt16		kProtocolMinorVersion = 3;
+static const SInt16		kProtocolMinorVersion = 4;
 
 // default contact port number
 static const UInt16		kDefaultPort = 24800;
@@ -243,6 +244,17 @@ extern const char*		kMsgDInfo;
 // pairs.
 extern const char*		kMsgDSetOptions;
 
+// gamepad button pressed:  primary -> secondary
+// $1 = GamepadButtonID
+extern const char*		kMsgDGamepadDown;
+
+// gamepad button released:  primary -> secondary
+// $1 = GamepadButtonID
+extern const char*		kMsgDGamepadUp;
+
+// gamepad analog change:  primary -> secondary
+// $1 = GamepadAnalogID, $2 = X, $3 = Y
+extern const char*		kMsgDGamepadAnalog;
 
 //
 // query codes

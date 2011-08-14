@@ -34,6 +34,9 @@ CEvent::Type		IPrimaryScreen::s_hotKeyDownEvent      = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_hotKeyUpEvent        = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_fakeInputBegin       = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_fakeInputEnd         = CEvent::kUnknown;
+CEvent::Type		IPrimaryScreen::s_gamepadButtonDownEvent = CEvent::kUnknown;
+CEvent::Type		IPrimaryScreen::s_gamepadButtonUpEvent   = CEvent::kUnknown;
+CEvent::Type		IPrimaryScreen::s_gamepadAnalogEvent     = CEvent::kUnknown;
 
 CEvent::Type
 IPrimaryScreen::getButtonDownEvent()
@@ -112,6 +115,26 @@ IPrimaryScreen::getFakeInputEndEvent()
 							"IPrimaryScreen::fakeInputEnd");
 }
 
+CEvent::Type
+IPrimaryScreen::getGamepadButtonDownEvent()
+{
+	return EVENTQUEUE->registerTypeOnce(s_gamepadButtonDownEvent,
+							"IPrimaryScreen::gamepadButtonUpEvent");
+}
+
+CEvent::Type
+IPrimaryScreen::getGamepadButtonUpEvent()
+{
+	return EVENTQUEUE->registerTypeOnce(s_gamepadButtonUpEvent,
+							"IPrimaryScreen::gamepadButtonDownEvent");
+}
+
+CEvent::Type
+IPrimaryScreen::getGamepadAnalogEvent()
+{
+	return EVENTQUEUE->registerTypeOnce(s_gamepadAnalogEvent,
+							"IPrimaryScreen::gamepadAnalogEvent");
+}
 
 //
 // IPrimaryScreen::CButtonInfo
