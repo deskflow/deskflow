@@ -322,6 +322,9 @@ private:
 
 	// thread for polling xinput state.
 	void xInputThread(void*);
+
+	// maps a synergy gamepad button id to an xinput butto.
+	WORD mapGamepadButtonIdXInputButton(GamepadButtonID id) const;
 };
 
 #endif

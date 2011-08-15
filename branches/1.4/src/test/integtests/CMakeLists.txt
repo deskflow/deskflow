@@ -65,6 +65,12 @@ if (UNIX)
 	)
 endif()
 
+if (WIN32)
+	if (GAMEPAD_SUPPORT)
+		link_directories("$ENV{DXSDK_DIR}/Lib/x86")
+	endif()
+endif()
+
 include_directories(${inc})
 add_executable(integtests ${src})
 target_link_libraries(integtests

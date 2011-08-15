@@ -456,7 +456,7 @@ CClientApp::startClient()
 			// SDK is being used)... we need to figure out how to
 			// tell cmake to prefer the DX include path.
 			LOG((CLOG_DEBUG "installing xinput hook"));
-			InstallGamepadHook();
+			installGamepadHook();
 		}
 #endif
 
@@ -499,7 +499,7 @@ CClientApp::stopClient()
 	if (args().m_gamepad)
 	{
 		LOG((CLOG_DEBUG "removing xinput hook"));
-		RemoveGamepadHook();
+		removeGamepadHook();
 	}
 #endif
 

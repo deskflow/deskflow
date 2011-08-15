@@ -23,7 +23,9 @@
 #define sygpadhk_API __declspec(dllimport)
 #endif
 
-sygpadhk_API LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam);
+sygpadhk_API LRESULT CALLBACK hookProc(int nCode, WPARAM wParam, LPARAM lParam);
 
-sygpadhk_API BOOL InstallGamepadHook();
-sygpadhk_API void RemoveGamepadHook();
+sygpadhk_API BOOL installGamepadHook();
+sygpadhk_API void removeGamepadHook();
+sygpadhk_API void hookGamepadButtonDown(WORD button);
+sygpadhk_API void hookGamepadButtonUp(WORD button);

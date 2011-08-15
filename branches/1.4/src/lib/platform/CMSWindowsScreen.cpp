@@ -38,6 +38,7 @@
 #include <string.h>
 #include <pbt.h>
 #include "GamepadTypes.h"
+#include "CGamepadHook.h"
 
 #if GAMEPAD_SUPPORT
 #define WIN32_LEAN_AND_MEAN
@@ -700,19 +701,50 @@ CMSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 void
 CMSWindowsScreen::fakeGamepadButtonDown(GamepadButtonID id) const
 {
-	LOG((CLOG_DEBUG "fake gamepad down id=%d - not implemented", id));
+	LOG((CLOG_DEBUG "fake gamepad down id=%d", id));
+	hookGamepadButtonDown(mapGamepadButtonIdXInputButton(id));
 }
 
 void
 CMSWindowsScreen::fakeGamepadButtonUp(GamepadButtonID id) const
 {
-	LOG((CLOG_DEBUG "fake gamepad up id=%d - not implemented", id));
+	LOG((CLOG_DEBUG "fake gamepad up id=%d", id));
+	hookGamepadButtonUp(mapGamepadButtonIdXInputButton(id));
 }
 
 void
 CMSWindowsScreen::fakeGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) const
 {
 	LOG((CLOG_DEBUG "fake gamepad analog id=%d - not implemented", id));
+}
+
+WORD
+CMSWindowsScreen::mapGamepadButtonIdXInputButton(GamepadButtonID id) const
+{
+	WORD button = 0;
+	switch (id)
+	{
+	case kGamepadButtonA:
+		button = XINPUT_GAMEPAD_A;
+		break;
+
+	case kGamepadButtonB:
+		button = XINPUT_GAMEPAD_B;
+		break;
+
+	case kGamepadButtonX:
+		button = XINPUT_GAMEPAD_X;
+		break;
+
+	case kGamepadButtonY:
+		button = XINPUT_GAMEPAD_Y;
+		break;
+
+	case kGamepadButtonStart:
+		button = XINPUT_GAMEPAD_START;
+		break;
+	}
+	return button;
 }
 
 void
@@ -1792,6 +1824,10 @@ CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 // @todo gamepad state class
 bool aDownLast;
+bool bDownLast;
+bool xDownLast;
+bool yDownLast;
+bool startDownLast;
 
 void
 CMSWindowsScreen::xInputThread(void*)
@@ -1808,10 +1844,25 @@ CMSWindowsScreen::xInputThread(void*)
 		// xinput controller is connected
 		if (result == ERROR_SUCCESS)
 		{
-			// @todo gamepad state class
+			// @todo gamepad state class (i was in a rush)
+
 			bool aDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
+			bool bDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0;
+			bool xDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_X) != 0;
+			bool yDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) != 0;
+			bool startDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_START) != 0;
+			
 			bool aToggled = aDownLast != aDown;
+			bool bToggled = bDownLast != bDown;
+			bool xToggled = xDownLast != xDown;
+			bool yToggled = yDownLast != yDown;
+			bool startToggled = startDownLast != startDown;
+
 			aDownLast = aDown;
+			bDownLast = bDown;
+			xDownLast = xDown;
+			yDownLast = yDown;
+			startDownLast = startDown;
 
 			if (aToggled)
 			{
@@ -1826,6 +1877,70 @@ CMSWindowsScreen::xInputThread(void*)
 				{
 					sendEvent(getGamepadButtonUpEvent(),
 						new CGamepadButtonInfo(kGamepadButtonA));
+				}
+			}
+
+			if (bToggled)
+			{
+				LOG((CLOG_DEBUG "gamepad 'b' toggled"));
+
+				if (bDown)
+				{
+					sendEvent(getGamepadButtonDownEvent(),
+						new CGamepadButtonInfo(kGamepadButtonB));
+				}
+				else
+				{
+					sendEvent(getGamepadButtonUpEvent(),
+						new CGamepadButtonInfo(kGamepadButtonB));
+				}
+			}
+
+			if (xToggled)
+			{
+				LOG((CLOG_DEBUG "gamepad 'x' toggled"));
+
+				if (bDown)
+				{
+					sendEvent(getGamepadButtonDownEvent(),
+						new CGamepadButtonInfo(kGamepadButtonX));
+				}
+				else
+				{
+					sendEvent(getGamepadButtonUpEvent(),
+						new CGamepadButtonInfo(kGamepadButtonX));
+				}
+			}
+
+			if (yToggled)
+			{
+				LOG((CLOG_DEBUG "gamepad 'y' toggled"));
+
+				if (bDown)
+				{
+					sendEvent(getGamepadButtonDownEvent(),
+						new CGamepadButtonInfo(kGamepadButtonY));
+				}
+				else
+				{
+					sendEvent(getGamepadButtonUpEvent(),
+						new CGamepadButtonInfo(kGamepadButtonY));
+				}
+			}
+
+			if (startToggled)
+			{
+				LOG((CLOG_DEBUG "gamepad 'start' toggled"));
+
+				if (bDown)
+				{
+					sendEvent(getGamepadButtonDownEvent(),
+						new CGamepadButtonInfo(kGamepadButtonStart));
+				}
+				else
+				{
+					sendEvent(getGamepadButtonUpEvent(),
+						new CGamepadButtonInfo(kGamepadButtonStart));
 				}
 			}
 		}

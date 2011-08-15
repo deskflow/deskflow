@@ -28,9 +28,12 @@
 HINSTANCE dll;
 char name[256];
 
-#pragma data_seg(".HookSection")
-HHOOK hook = NULL;
+#pragma data_seg(".SHARED")
+HHOOK s_hook = NULL;
+WORD s_gamepadButtons = 0;
 #pragma data_seg()
+
+#pragma comment(linker, "/SECTION:.SHARED,RWS")
 
 // TODO: use synergy logging
 #include <sstream>
@@ -43,43 +46,30 @@ std::stringstream logStream2;
 using namespace std;
 
 typedef DWORD (WINAPI *XInputGetState_Type)(DWORD dwUserIndex, XINPUT_STATE* pState);
-DWORD WINAPI MyXInputGetState(DWORD dwUserIndex, XINPUT_STATE* pState);
+DWORD WINAPI hookXInputGetState(DWORD dwUserIndex, XINPUT_STATE* pState);
+
+typedef DWORD (WINAPI *XInputGetCapabilities_Type)(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities);
+DWORD WINAPI hookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities);
+
 
 enum
 {
-	XIFN_XInputGetState = 0
+	XIFN_XInputGetState = 0,
+	XIFN_XInputGetCapabilities = 1
 };
 
-SDLLHook XInputHook =
+SDLLHook s_xInputHook =
 {
 	XINPUT_DLL,
 	false, NULL,
 	{
-		{ (char*)(0x80000002), MyXInputGetState },
-		{ "XInputGetState", MyXInputGetState },
+		{ (char*)(0x80000002), hookXInputGetState },
+		{ (char*)(0x80000004), hookXInputGetCapabilities },
 	}
 };
 
-bool toggle = false;
-DWORD WINAPI MyXInputGetState(DWORD userIndex, XINPUT_STATE* state)
-{
-	OutputDebugString("CGamepadHook: MyXInputGetState called\n");
-
-	/*XINPUT_STATE origState;
-	ZeroMemory(&origState, sizeof(XINPUT_STATE));
-	XInputGetState_Type oldFn = (XInputGetState_Type)XInputHook.Functions[XIFN_XInputGetState].OrigFn;
-	bool origResult = oldFn(userIndex, &origState);*/
-
-	toggle = !toggle;
-	state->Gamepad.wButtons = toggle ? XINPUT_GAMEPAD_START : XINPUT_GAMEPAD_A;
-
-	return ERROR_SUCCESS;
-
-	//XInputGetState_Type oldFn = (XInputGetState_Type)XInputHook.Functions[XIFN_XInputGetState].OrigFn;
-	//return oldFn(userIndex, state);
-}
-
-BOOL APIENTRY DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
+BOOL APIENTRY
+DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 {
 	if (reason == DLL_PROCESS_ATTACH)
 	{
@@ -93,18 +83,69 @@ BOOL APIENTRY DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 		LOG("CGamepadHook: checking process: "
 			<< name << ", hook: " << XINPUT_DLL << endl);
 
-		HookAPICalls(&XInputHook);
+		HookAPICalls(&s_xInputHook);
 	}
 
 	return TRUE;
 }
 
-sygpadhk_API LRESULT CALLBACK HookProc(int code, WPARAM wParam, LPARAM lParam) 
+void
+hookGamepadButtonDown(WORD button)
 {
-	return CallNextHookEx(hook, code, wParam, lParam);
+	s_gamepadButtons |= button;
+	LOG("CGamepadHook: gamepadButtonDown: " << s_gamepadButtons << endl);
 }
 
-sygpadhk_API BOOL InstallGamepadHook()
+void
+hookGamepadButtonUp(WORD button)
+{
+	s_gamepadButtons ^= button;
+	LOG("CGamepadHook: gamepadButtonUp: " << s_gamepadButtons << endl);
+}
+
+DWORD WINAPI
+hookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
+{
+	if (userIndex != 0)
+		return 1167; // @todo find macro for this
+
+	LOG("CGamepadHook: hookXInputGetState index=" 
+		<< userIndex <<  ", buttons=" << s_gamepadButtons << endl);
+
+	state->Gamepad.wButtons = s_gamepadButtons;
+	return ERROR_SUCCESS;
+}
+
+DWORD WINAPI
+hookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities)
+{
+	LOG("CGamepadHook: hookXInputGetCapabilities id=" << userIndex <<
+		", flags=" << flags << endl);
+
+	capabilities->Type = 1;
+	capabilities->SubType = 1;
+	capabilities->Flags = 4;
+	capabilities->Gamepad.bLeftTrigger = 1;
+	capabilities->Gamepad.bRightTrigger = 1;
+	capabilities->Gamepad.sThumbLX = 1;
+	capabilities->Gamepad.sThumbLY = 1;
+	capabilities->Gamepad.sThumbRX = 1;
+	capabilities->Gamepad.sThumbRY = 1;
+	capabilities->Gamepad.wButtons = 62463;
+	capabilities->Vibration.wLeftMotorSpeed = 1;
+	capabilities->Vibration.wRightMotorSpeed = 1;
+
+	return ERROR_SUCCESS;
+}
+
+sygpadhk_API LRESULT CALLBACK
+hookProc(int code, WPARAM wParam, LPARAM lParam) 
+{
+	return CallNextHookEx(s_hook, code, wParam, lParam);
+}
+
+sygpadhk_API BOOL
+installGamepadHook()
 {
 	if (_stricmp(XINPUT_DLL, REQUIRED_XINPUT_DLL) != 0)
 	{
@@ -113,15 +154,16 @@ sygpadhk_API BOOL InstallGamepadHook()
 	}
 
 	OutputDebugString("CGamepadHook: installing hook\n");
-	hook = SetWindowsHookEx(WH_CBT, HookProc, dll, 0);
+	s_hook = SetWindowsHookEx(WH_CBT, hookProc, dll, 0);
 	OutputDebugString("CGamepadHook: hook installed\n");
 
 	return TRUE;
 }
 
-sygpadhk_API void RemoveGamepadHook()
+sygpadhk_API void
+removeGamepadHook()
 {
 	OutputDebugString("CGamepadHook: removing hook\n");
-	UnhookWindowsHookEx(hook);
+	UnhookWindowsHookEx(s_hook);
 	OutputDebugString("CGamepadHook: hook removed\n");
 }
