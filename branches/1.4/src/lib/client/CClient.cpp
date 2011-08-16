@@ -356,7 +356,7 @@ CClient::gamepadButtonUp(GamepadButtonID id)
 }
 
 void
-CClient::gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+CClient::gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
 {
 	m_screen->gamepadAnalog(id, x, y);
 }

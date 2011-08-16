@@ -29,3 +29,4 @@ sygpadhk_API BOOL installGamepadHook();
 sygpadhk_API void removeGamepadHook();
 sygpadhk_API void hookGamepadButtonDown(WORD button);
 sygpadhk_API void hookGamepadButtonUp(WORD button);
+sygpadhk_API void hookGamepadAnalog(BYTE id, SHORT x, SHORT y);

@@ -248,7 +248,7 @@ CServerProxy::parseMessage(const UInt8* code)
 		gamepadButtonUp();
 	}
 
-	else if (memcmp(code, kMsgDGamepadDown, 4) == 0) {
+	else if (memcmp(code, kMsgDGamepadAnalog, 4) == 0) {
 		gamepadAnalog();
 	}
 
@@ -773,8 +773,8 @@ CServerProxy::gamepadAnalog()
 {
 	// parse
 	GamepadAnalogID id;
-	SInt32 x;
-	SInt32 y;
+	SInt16 x;
+	SInt16 y;
 	CProtocolUtil::readf(m_stream, kMsgDGamepadAnalog + 4, &id, &x, &y);
 	LOG((CLOG_DEBUG2 "recv gamepad analog id=%d %+d,%+d", id, x, y));
 

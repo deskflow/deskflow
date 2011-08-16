@@ -713,9 +713,10 @@ CMSWindowsScreen::fakeGamepadButtonUp(GamepadButtonID id) const
 }
 
 void
-CMSWindowsScreen::fakeGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) const
+CMSWindowsScreen::fakeGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) const
 {
-	LOG((CLOG_DEBUG "fake gamepad analog id=%d - not implemented", id));
+	LOG((CLOG_DEBUG "fake gamepad analog id=%d", id));
+	hookGamepadAnalog(id, x, y);
 }
 
 WORD
@@ -1828,6 +1829,15 @@ bool bDownLast;
 bool xDownLast;
 bool yDownLast;
 bool startDownLast;
+bool backDownLast;
+
+BYTE leftTriggerLast;
+BYTE rightTriggerLast;
+
+SHORT leftStickXLast;
+SHORT leftStickYLast;
+SHORT rightStickXLast;
+SHORT rightStickYLast;
 
 void
 CMSWindowsScreen::xInputThread(void*)
@@ -1851,18 +1861,37 @@ CMSWindowsScreen::xInputThread(void*)
 			bool xDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_X) != 0;
 			bool yDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) != 0;
 			bool startDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_START) != 0;
+			bool backDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) != 0;
 			
 			bool aToggled = aDownLast != aDown;
 			bool bToggled = bDownLast != bDown;
 			bool xToggled = xDownLast != xDown;
 			bool yToggled = yDownLast != yDown;
 			bool startToggled = startDownLast != startDown;
+			bool backToggled = backDownLast != backDown;
+
+			bool leftTriggerChanged = state.Gamepad.bLeftTrigger != leftTriggerLast;
+			bool rightTriggerChanged = state.Gamepad.bRightTrigger != rightTriggerLast;
+
+			bool leftStickXChanged = state.Gamepad.sThumbLX != leftStickXLast;
+			bool leftStickYChanged = state.Gamepad.sThumbLY != leftStickYLast;
+			bool rightStickXChanged = state.Gamepad.sThumbRX != rightStickXLast;
+			bool rightStickYChanged = state.Gamepad.sThumbRY != rightStickYLast;
 
 			aDownLast = aDown;
 			bDownLast = bDown;
 			xDownLast = xDown;
 			yDownLast = yDown;
 			startDownLast = startDown;
+			backDownLast = backDown;
+
+			leftTriggerLast = state.Gamepad.bLeftTrigger;
+			rightTriggerLast = state.Gamepad.bRightTrigger;
+
+			leftStickXLast = state.Gamepad.sThumbLX;
+			leftStickYLast = state.Gamepad.sThumbLY;
+			rightStickXLast = state.Gamepad.sThumbRX;
+			rightStickYLast = state.Gamepad.sThumbRY;
 
 			if (aToggled)
 			{
@@ -1943,8 +1972,59 @@ CMSWindowsScreen::xInputThread(void*)
 						new CGamepadButtonInfo(kGamepadButtonStart));
 				}
 			}
+
+			if (startToggled)
+			{
+				LOG((CLOG_DEBUG "gamepad 'back' toggled"));
+
+				if (bDown)
+				{
+					sendEvent(getGamepadButtonDownEvent(),
+						new CGamepadButtonInfo(kGamepadButtonBack));
+				}
+				else
+				{
+					sendEvent(getGamepadButtonUpEvent(),
+						new CGamepadButtonInfo(kGamepadButtonBack));
+				}
+			}
+
+			if (leftTriggerChanged)
+			{
+				LOG((CLOG_DEBUG "gamepad 'left trigger' changed"));
+
+				// @todo seems wrong re-using x/y for a single value...
+				sendEvent(getGamepadAnalogEvent(),
+					new CGamepadAnalogInfo(kGamepadLeftTrigger, leftTriggerLast, 0));
+			}
+
+			if (rightTriggerChanged)
+			{
+				LOG((CLOG_DEBUG "gamepad 'right trigger' changed"));
+
+				// @todo seems wrong re-using x/y for a single value...
+				sendEvent(getGamepadAnalogEvent(),
+					new CGamepadAnalogInfo(kGamepadRightTrigger, rightTriggerLast, 0));
+			}
+
+			if (leftStickXChanged || leftStickYChanged)
+			{
+				LOG((CLOG_DEBUG "gamepad 'left stick' changed"));
+
+				sendEvent(getGamepadAnalogEvent(),
+					new CGamepadAnalogInfo(kGamepadLeftStick, leftStickXLast, leftStickYLast));
+			}
+
+			if (rightStickXChanged || rightStickYChanged)
+			{
+				LOG((CLOG_DEBUG "gamepad 'right stick' changed"));
+
+				sendEvent(getGamepadAnalogEvent(),
+					new CGamepadAnalogInfo(kGamepadRightStick, rightStickXLast, rightStickYLast));
+			}
 		}
 
+		// @todo match averge game rate.
 		Sleep(100);
 	}
 }

@@ -106,7 +106,7 @@ public:
 	virtual void		setOptions(const COptionsList& options) = 0;
 	virtual void		gamepadButtonDown(GamepadButtonID id) = 0;
 	virtual void		gamepadButtonUp(GamepadButtonID id) = 0;
-	virtual void		gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) = 0;
+	virtual void		gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) = 0;
 
 private:
 	IStream*			m_stream;

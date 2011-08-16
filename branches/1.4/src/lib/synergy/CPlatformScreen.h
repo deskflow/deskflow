@@ -57,7 +57,7 @@ public:
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
 	virtual void		fakeGamepadButtonDown(GamepadButtonID id) const = 0;
 	virtual void		fakeGamepadButtonUp(GamepadButtonID id) const = 0;
-	virtual void		fakeGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) const = 0;
+	virtual void		fakeGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) const = 0;
 
 	// IKeyState overrides
 	virtual void		updateKeyMap();

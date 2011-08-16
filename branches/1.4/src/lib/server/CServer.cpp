@@ -1978,7 +1978,7 @@ CServer::onGamepadButtonUp(GamepadButtonID id)
 }
 
 void
-CServer::onGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+CServer::onGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
 {
 	LOG((CLOG_DEBUG1 "onGamepadAnalog id=%d %+d,%+d", id, x, y));
 	m_active->gamepadAnalog(id, x, y);

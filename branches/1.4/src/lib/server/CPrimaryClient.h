@@ -137,7 +137,7 @@ public:
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta);
 	virtual void		gamepadButtonDown(GamepadButtonID id);
 	virtual void		gamepadButtonUp(GamepadButtonID id);
-	virtual void		gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y);
+	virtual void		gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y);
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);

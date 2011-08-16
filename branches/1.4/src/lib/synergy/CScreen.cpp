@@ -256,7 +256,7 @@ CScreen::gamepadButtonUp(GamepadButtonID id)
 }
 
 void
-CScreen::gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+CScreen::gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
 {
 	assert(!m_isPrimary);
 	m_screen->fakeGamepadAnalog(id, x, y);

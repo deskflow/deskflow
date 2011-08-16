@@ -254,7 +254,7 @@ CPrimaryClient::gamepadButtonUp(GamepadButtonID id)
 }
 
 void
-CPrimaryClient::gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+CPrimaryClient::gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
 {
 	// ignore
 }

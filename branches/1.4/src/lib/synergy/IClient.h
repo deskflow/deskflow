@@ -156,7 +156,7 @@ public:
 	/*!
 	Synthesize gamepad analog (sticks/triggers) values.
 	*/
-	virtual void		gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) = 0;
+	virtual void		gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) = 0;
 
 	//! Notify of screen saver change
 	virtual void		screensaver(bool activate) = 0;

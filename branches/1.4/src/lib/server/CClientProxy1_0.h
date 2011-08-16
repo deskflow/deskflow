@@ -59,7 +59,7 @@ public:
 	virtual void		setOptions(const COptionsList& options);
 	virtual void		gamepadButtonDown(GamepadButtonID);
 	virtual void		gamepadButtonUp(GamepadButtonID);
-	virtual void		gamepadAnalog(GamepadAnalogID, SInt32, SInt32);
+	virtual void		gamepadAnalog(GamepadAnalogID, SInt16, SInt16);
 
 protected:
 	virtual bool		parseHandshakeMessage(const UInt8* code);

@@ -79,12 +79,13 @@ public:
 	};
 	//! Gamepad analog event data
 	class CGamepadAnalogInfo {
-		CGamepadAnalogInfo(GamepadAnalogID id, SInt32 x, SInt32 y) :
+	public:
+		CGamepadAnalogInfo(GamepadAnalogID id, SInt16 x, SInt16 y) :
 			m_id(id), m_x(x), m_y(y) { }
 	public:
 		GamepadAnalogID m_id;
-		SInt32 m_x;
-		SInt32 m_y;
+		SInt16 m_x;
+		SInt16 m_y;
 	};
 
 	//! @name manipulators

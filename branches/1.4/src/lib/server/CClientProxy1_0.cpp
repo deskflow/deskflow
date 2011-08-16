@@ -371,7 +371,7 @@ CClientProxy1_0::gamepadButtonUp(GamepadButtonID)
 }
 
 void
-CClientProxy1_0::gamepadAnalog(GamepadAnalogID, SInt32, SInt32)
+CClientProxy1_0::gamepadAnalog(GamepadAnalogID, SInt16, SInt16)
 {
 	// ignore -- not supported in protocol 1.0
 	LOG((CLOG_DEBUG "gamepadAnalog not supported"));

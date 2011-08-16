@@ -51,7 +51,7 @@ CClientProxy1_4::gamepadButtonUp(GamepadButtonID id)
 }
 
 void
-CClientProxy1_4::gamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y)
+CClientProxy1_4::gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
 {
 	LOG((CLOG_DEBUG2 "send gamepad analog to \"%s\" id=%+d %+d,%+d", getName().c_str(), id, x, y));
 	CProtocolUtil::writef(getStream(), kMsgDGamepadAnalog, id, x, y);

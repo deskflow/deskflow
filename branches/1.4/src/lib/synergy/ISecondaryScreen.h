@@ -72,7 +72,7 @@ public:
 	Synthesize gamepad events to generate analog (stick/triggers) changes
 	of absolute amounts \c x and \c y.
 	*/
-	virtual void		fakeGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y) const = 0;
+	virtual void		fakeGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) const = 0;
 
 	//@}
 };

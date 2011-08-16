@@ -31,6 +31,12 @@ char name[256];
 #pragma data_seg(".SHARED")
 HHOOK s_hook = NULL;
 WORD s_gamepadButtons = 0;
+SHORT s_gamepadLeftStickX = 0;
+SHORT s_gamepadLeftStickY = 0;
+SHORT s_gamepadRightStickX = 0;
+SHORT s_gamepadRightStickY = 0;
+BYTE s_gamepadLeftTrigger = 0;
+BYTE s_gamepadRightTrigger = 0;
 #pragma data_seg()
 
 #pragma comment(linker, "/SECTION:.SHARED,RWS")
@@ -83,7 +89,11 @@ DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 		LOG("CGamepadHook: checking process: "
 			<< name << ", hook: " << XINPUT_DLL << endl);
 
-		HookAPICalls(&s_xInputHook);
+		// don't hook synergys (this needs to detect real input)
+		if (string(name).find("synergys.exe") == string::npos)
+		{
+			HookAPICalls(&s_xInputHook);
+		}
 	}
 
 	return TRUE;
@@ -93,14 +103,41 @@ void
 hookGamepadButtonDown(WORD button)
 {
 	s_gamepadButtons |= button;
-	LOG("CGamepadHook: gamepadButtonDown: " << s_gamepadButtons << endl);
+	LOG("CGamepadHook: hookGamepadButtonDown: " << s_gamepadButtons << endl);
 }
 
 void
 hookGamepadButtonUp(WORD button)
 {
 	s_gamepadButtons ^= button;
-	LOG("CGamepadHook: gamepadButtonUp: " << s_gamepadButtons << endl);
+	LOG("CGamepadHook: hookGamepadButtonUp: " << s_gamepadButtons << endl);
+}
+
+void
+hookGamepadAnalog(BYTE id, SHORT x, SHORT y)
+{
+	LOG("CGamepadHook: hookGamepadAnalog: id=" << id << " " <<
+		x << "," << y << endl);
+	switch (id)
+	{
+	case 0: // kGamepadLeftStick
+		s_gamepadLeftStickX = x;
+		s_gamepadLeftStickY = y;
+		break;
+
+	case 1: // kGamepadRightStick
+		s_gamepadRightStickX = x;
+		s_gamepadRightStickY = y;
+		break;
+
+	case 2: // kGamepadLeftTrigger
+		s_gamepadLeftTrigger = x;
+		break;
+
+	case 3: //kGamepadRightTrigger
+		s_gamepadRightTrigger = x;
+		break;
+	}
 }
 
 DWORD WINAPI
@@ -113,12 +150,22 @@ hookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 		<< userIndex <<  ", buttons=" << s_gamepadButtons << endl);
 
 	state->Gamepad.wButtons = s_gamepadButtons;
+	state->Gamepad.bLeftTrigger = s_gamepadLeftTrigger;
+	state->Gamepad.bRightTrigger = s_gamepadRightTrigger;
+	state->Gamepad.sThumbLX = s_gamepadLeftStickX;
+	state->Gamepad.sThumbLY = s_gamepadLeftStickY;
+	state->Gamepad.sThumbRX = s_gamepadRightStickX;
+	state->Gamepad.sThumbRY = s_gamepadRightStickY;
+
 	return ERROR_SUCCESS;
 }
 
 DWORD WINAPI
 hookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities)
 {
+	if (userIndex != 0)
+		return 1167; // @todo find macro for this
+
 	LOG("CGamepadHook: hookXInputGetCapabilities id=" << userIndex <<
 		", flags=" << flags << endl);
 

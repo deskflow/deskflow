@@ -353,7 +353,7 @@ private:
 	void				onMouseWheel(SInt32 xDelta, SInt32 yDelta);
 	void				onGamepadButtonDown(GamepadButtonID id);
 	void				onGamepadButtonUp(GamepadButtonID id);
-	void				onGamepadAnalog(GamepadAnalogID id, SInt32 x, SInt32 y);
+	void				onGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y);
 
 	// add client to list and attach event handlers for client
 	bool				addClient(CBaseClientProxy*);
