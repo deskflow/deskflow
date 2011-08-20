@@ -240,18 +240,6 @@ CServerProxy::parseMessage(const UInt8* code)
 		keyRepeat();
 	}
 
-	else if (memcmp(code, kMsgDGamepadDown, 4) == 0) {
-		gamepadButtonDown();
-	}
-
-	else if (memcmp(code, kMsgDGamepadUp, 4) == 0) {
-		gamepadButtonUp();
-	}
-
-	else if (memcmp(code, kMsgDGamepadAnalog, 4) == 0) {
-		gamepadAnalog();
-	}
-
 	else if (memcmp(code, kMsgCKeepAlive, 4) == 0) {
 		// echo keep alives and reset alarm
 		CProtocolUtil::writef(m_stream, kMsgCKeepAlive);
@@ -296,6 +284,22 @@ CServerProxy::parseMessage(const UInt8* code)
 
 	else if (memcmp(code, kMsgDSetOptions, 4) == 0) {
 		setOptions();
+	}
+
+	else if (memcmp(code, kMsgDGameButtons, 4) == 0) {
+		gameDeviceButtons();
+	}
+
+	else if (memcmp(code, kMsgDGameSticks, 4) == 0) {
+		gameDeviceSticks();
+	}
+
+	else if (memcmp(code, kMsgDGameTriggers, 4) == 0) {
+		gameDeviceTriggers();
+	}
+
+	else if (memcmp(code, kMsgCGameTiming, 4) == 0) {
+		gameDeviceTiming();
 	}
 
 	else if (memcmp(code, kMsgCClose, 4) == 0) {
@@ -745,41 +749,52 @@ CServerProxy::mouseWheel()
 }
 
 void
-CServerProxy::gamepadButtonDown()
+CServerProxy::gameDeviceButtons()
 {
 	// parse
-	GamepadButtonID id;
-	CProtocolUtil::readf(m_stream, kMsgDGamepadDown + 4, &id);
-	LOG((CLOG_DEBUG2 "recv gamepad down id=%d", id));
+	GameDeviceID id;
+	GameDeviceButton buttons;
+	CProtocolUtil::readf(m_stream, kMsgDGameButtons + 4, &id, &buttons);
+	LOG((CLOG_DEBUG2 "recv game device id=%d buttons=%d", id, buttons));
 
 	// forward
-	m_client->gamepadButtonDown(id);
+	m_client->gameDeviceButtons(id, buttons);
 }
 
 void
-CServerProxy::gamepadButtonUp()
+CServerProxy::gameDeviceSticks()
 {
 	// parse
-	GamepadButtonID id;
-	CProtocolUtil::readf(m_stream, kMsgDGamepadUp + 4, &id);
-	LOG((CLOG_DEBUG2 "recv gamepad up id=%d", id));
+	GameDeviceID id;
+	SInt16 x1, y1, x2, y2;
+	CProtocolUtil::readf(m_stream, kMsgDGameSticks + 4, &id, &x1, &y1, &x2, &y2);
+	LOG((CLOG_DEBUG2 "recv game device sticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
 
 	// forward
-	m_client->gamepadButtonUp(id);
+	m_client->gameDeviceSticks(id, x1, y1, x2, y2);
 }
 
 void
-CServerProxy::gamepadAnalog()
+CServerProxy::gameDeviceTriggers()
 {
 	// parse
-	GamepadAnalogID id;
-	SInt16 x;
-	SInt16 y;
-	CProtocolUtil::readf(m_stream, kMsgDGamepadAnalog + 4, &id, &x, &y);
-	LOG((CLOG_DEBUG2 "recv gamepad analog id=%d %+d,%+d", id, x, y));
+	GameDeviceID id;
+	UInt8 t1, t2;
+	CProtocolUtil::readf(m_stream, kMsgDGameTriggers + 4, &id, &t1, &t2);
+	LOG((CLOG_DEBUG2 "recv game device triggers id=%d t1=%d t2=%d", id, t1, t2));
 
 	// forward
-	m_client->gamepadAnalog(id, x, y);
+	m_client->gameDeviceTriggers(id, t1, t2);
+}
+
+void
+CServerProxy::gameDeviceTiming()
+{
+	// parse
+	LOG((CLOG_DEBUG2 "recv game device timing request"));
+
+	// forward
+	m_client->gameDeviceTiming();
 }
 
 void

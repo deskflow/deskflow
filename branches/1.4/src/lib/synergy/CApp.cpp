@@ -55,8 +55,8 @@ m_daemon(false), // daemon mode not supported on windows (use --service)
 m_debugServiceWait(false),
 m_relaunchMode(false),
 m_pauseOnExit(false),
-#if GAMEPAD_SUPPORT
-m_gamepad(false),
+#if GAME_DEVICE_SUPPORT
+m_gameDevice(false),
 #endif
 #else
 m_daemon(true), // backward compatibility for unix (daemon by default)

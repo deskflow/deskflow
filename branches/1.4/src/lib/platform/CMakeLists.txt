@@ -60,13 +60,13 @@ if (WIN32)
 		CSynergyHook.cpp
 	)
 
-	set(inc_gphook
-		CGamepadHook.h
+	set(inc_xinhook
+		XInputHook.h
 		HookDLL.h
 	)
 	
-	set(src_gphook
-		CGamepadHook.cpp
+	set(src_xinhook
+		XInputHook.cpp
 		HookDLL.cpp
 	)
 
@@ -136,16 +136,16 @@ if (WIN32)
 			..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 	)
 
-	if (GAMEPAD_SUPPORT)
+	if (GAME_DEVICE_SUPPORT)
 		include_directories($ENV{DXSDK_DIR}/Include)
 		link_directories("$ENV{DXSDK_DIR}/Lib/x86")
-		add_library(sygpadhk SHARED ${inc_gphook} ${src_gphook})
+		add_library(synxinhk SHARED ${inc_xinhook} ${src_xinhook})
 
 		add_custom_command(
-			TARGET sygpadhk
+			TARGET synxinhk
 			POST_BUILD
 			COMMAND xcopy /Y /Q
-				..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\sygpadhk.*
+				..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\synxinhk.*
 				..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 			)
 	endif()

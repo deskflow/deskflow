@@ -85,9 +85,9 @@ public:
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
-	virtual void		fakeGamepadButtonDown(GamepadButtonID id) const;
-	virtual void		fakeGamepadButtonUp(GamepadButtonID id) const;
-	virtual void		fakeGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) const;
+	virtual void		fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const;
+	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const;
+	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const;
 
 	// IKeyState overrides
 	virtual void		updateKeys();
@@ -311,7 +311,7 @@ private:
 	CMSWindowsHookLibraryLoader
 						m_hookLibraryLoader;
 
-#if GAMEPAD_SUPPORT
+#if GAME_DEVICE_SUPPORT
 	CThread*			m_xInputThread;
 #endif
 
@@ -322,9 +322,6 @@ private:
 
 	// thread for polling xinput state.
 	void xInputThread(void*);
-
-	// maps a synergy gamepad button id to an xinput butto.
-	WORD mapGamepadButtonIdXInputButton(GamepadButtonID id) const;
 };
 
 #endif

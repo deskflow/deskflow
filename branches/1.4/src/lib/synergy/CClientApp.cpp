@@ -39,8 +39,8 @@
 #include "CArchMiscWindows.h"
 #endif
 
-#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
-#include "CGamepadHook.h"
+#if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
+#include "XInputHook.h"
 #endif
 
 #if WINAPI_MSWINDOWS
@@ -448,15 +448,15 @@ CClientApp::startClient()
 			LOG((CLOG_NOTE "started client"));
 		}
 
-#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
-		if (args().m_gamepad)
+#if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
+		if (args().m_gameDevice)
 		{
 			// TODO: currently this is failing because we're not
 			// forcing compile with the DX XInput.h (so the win
 			// SDK is being used)... we need to figure out how to
 			// tell cmake to prefer the DX include path.
 			LOG((CLOG_DEBUG "installing xinput hook"));
-			installGamepadHook();
+			InstallXInputHook();
 		}
 #endif
 
@@ -495,11 +495,11 @@ CClientApp::startClient()
 void
 CClientApp::stopClient()
 {
-#if SYSAPI_WIN32 && GAMEPAD_SUPPORT
-	if (args().m_gamepad)
+#if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
+	if (args().m_gameDevice)
 	{
 		LOG((CLOG_DEBUG "removing xinput hook"));
-		removeGamepadHook();
+		RemoveXInputHook();
 	}
 #endif
 

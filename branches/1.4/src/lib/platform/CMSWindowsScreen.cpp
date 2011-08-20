@@ -37,10 +37,10 @@
 #include "CArchMiscWindows.h"
 #include <string.h>
 #include <pbt.h>
-#include "GamepadTypes.h"
-#include "CGamepadHook.h"
+#include "GameDeviceTypes.h"
+#include "XInputHook.h"
 
-#if GAMEPAD_SUPPORT
+#if GAME_DEVICE_SUPPORT
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <XInput.h>
@@ -115,7 +115,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false)
-#if GAMEPAD_SUPPORT
+#if GAME_DEVICE_SUPPORT
 	, m_xInputThread(NULL)
 #endif
 {
@@ -160,7 +160,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	// install the platform event queue
 	EVENTQUEUE->adoptBuffer(new CMSWindowsEventQueueBuffer);
 
-#if GAMEPAD_SUPPORT
+#if GAME_DEVICE_SUPPORT
 	if (m_isPrimary)
 	{
 		// only capture xinput on the server.
@@ -699,53 +699,24 @@ CMSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 }
 
 void
-CMSWindowsScreen::fakeGamepadButtonDown(GamepadButtonID id) const
+CMSWindowsScreen::fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const
 {
-	LOG((CLOG_DEBUG "fake gamepad down id=%d", id));
-	hookGamepadButtonDown(mapGamepadButtonIdXInputButton(id));
+	LOG((CLOG_DEBUG "fake game device buttons id=%d buttons=%d", id, buttons));
+	SetXInputButtons(id, buttons);
 }
 
 void
-CMSWindowsScreen::fakeGamepadButtonUp(GamepadButtonID id) const
+CMSWindowsScreen::fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const
 {
-	LOG((CLOG_DEBUG "fake gamepad up id=%d", id));
-	hookGamepadButtonUp(mapGamepadButtonIdXInputButton(id));
+	LOG((CLOG_DEBUG "fake game device sticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
+	SetXInputSticks(id, x1, y1, x2, y2);
 }
 
 void
-CMSWindowsScreen::fakeGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) const
+CMSWindowsScreen::fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const
 {
-	LOG((CLOG_DEBUG "fake gamepad analog id=%d", id));
-	hookGamepadAnalog(id, x, y);
-}
-
-WORD
-CMSWindowsScreen::mapGamepadButtonIdXInputButton(GamepadButtonID id) const
-{
-	WORD button = 0;
-	switch (id)
-	{
-	case kGamepadButtonA:
-		button = XINPUT_GAMEPAD_A;
-		break;
-
-	case kGamepadButtonB:
-		button = XINPUT_GAMEPAD_B;
-		break;
-
-	case kGamepadButtonX:
-		button = XINPUT_GAMEPAD_X;
-		break;
-
-	case kGamepadButtonY:
-		button = XINPUT_GAMEPAD_Y;
-		break;
-
-	case kGamepadButtonStart:
-		button = XINPUT_GAMEPAD_START;
-		break;
-	}
-	return button;
+	LOG((CLOG_DEBUG "fake game device triggers id=%d t1=%d t2=%d", id, t1, t2));
+	SetXInputTriggers(id, t1, t2);
 }
 
 void
@@ -1821,9 +1792,9 @@ CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return result;
 }
 
-#if GAMEPAD_SUPPORT
+#if GAME_DEVICE_SUPPORT
 
-// @todo gamepad state class
+// @todo gameDevice state class
 bool aDownLast;
 bool bDownLast;
 bool xDownLast;
@@ -1854,7 +1825,7 @@ CMSWindowsScreen::xInputThread(void*)
 		// xinput controller is connected
 		if (result == ERROR_SUCCESS)
 		{
-			// @todo gamepad state class (i was in a rush)
+			// @todo game device state class (i was in a rush)
 
 			bool aDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
 			bool bDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0;
@@ -1893,138 +1864,40 @@ CMSWindowsScreen::xInputThread(void*)
 			rightStickXLast = state.Gamepad.sThumbRX;
 			rightStickYLast = state.Gamepad.sThumbRY;
 
-			if (aToggled)
+			if (aToggled || bToggled || xToggled || yToggled || startToggled || backToggled)
 			{
-				LOG((CLOG_DEBUG "gamepad 'a' toggled"));
+				LOG((CLOG_DEBUG "xinput button toggled"));
 
-				if (aDown)
-				{
-					sendEvent(getGamepadButtonDownEvent(),
-						new CGamepadButtonInfo(kGamepadButtonA));
-				}
-				else
-				{
-					sendEvent(getGamepadButtonUpEvent(),
-						new CGamepadButtonInfo(kGamepadButtonA));
-				}
+				// xinput buttons convert exactly to synergy buttons
+				sendEvent(getGameDeviceButtonsEvent(),
+					new CGameDeviceButtonInfo(index, state.Gamepad.wButtons));
 			}
 
-			if (bToggled)
+			if (leftStickXChanged || leftStickYChanged || rightStickXChanged || rightStickYChanged)
 			{
-				LOG((CLOG_DEBUG "gamepad 'b' toggled"));
+				LOG((CLOG_DEBUG "xinput stick changed"));
 
-				if (bDown)
-				{
-					sendEvent(getGamepadButtonDownEvent(),
-						new CGamepadButtonInfo(kGamepadButtonB));
-				}
-				else
-				{
-					sendEvent(getGamepadButtonUpEvent(),
-						new CGamepadButtonInfo(kGamepadButtonB));
-				}
+				sendEvent(getGameDeviceSticksEvent(),
+					new CGameDeviceStickInfo(
+					index,
+					leftStickXLast, leftStickYLast,
+					rightStickXLast, rightStickYLast));
 			}
 
-			if (xToggled)
+			if (leftTriggerChanged || rightTriggerChanged)
 			{
-				LOG((CLOG_DEBUG "gamepad 'x' toggled"));
-
-				if (bDown)
-				{
-					sendEvent(getGamepadButtonDownEvent(),
-						new CGamepadButtonInfo(kGamepadButtonX));
-				}
-				else
-				{
-					sendEvent(getGamepadButtonUpEvent(),
-						new CGamepadButtonInfo(kGamepadButtonX));
-				}
-			}
-
-			if (yToggled)
-			{
-				LOG((CLOG_DEBUG "gamepad 'y' toggled"));
-
-				if (bDown)
-				{
-					sendEvent(getGamepadButtonDownEvent(),
-						new CGamepadButtonInfo(kGamepadButtonY));
-				}
-				else
-				{
-					sendEvent(getGamepadButtonUpEvent(),
-						new CGamepadButtonInfo(kGamepadButtonY));
-				}
-			}
-
-			if (startToggled)
-			{
-				LOG((CLOG_DEBUG "gamepad 'start' toggled"));
-
-				if (bDown)
-				{
-					sendEvent(getGamepadButtonDownEvent(),
-						new CGamepadButtonInfo(kGamepadButtonStart));
-				}
-				else
-				{
-					sendEvent(getGamepadButtonUpEvent(),
-						new CGamepadButtonInfo(kGamepadButtonStart));
-				}
-			}
-
-			if (startToggled)
-			{
-				LOG((CLOG_DEBUG "gamepad 'back' toggled"));
-
-				if (bDown)
-				{
-					sendEvent(getGamepadButtonDownEvent(),
-						new CGamepadButtonInfo(kGamepadButtonBack));
-				}
-				else
-				{
-					sendEvent(getGamepadButtonUpEvent(),
-						new CGamepadButtonInfo(kGamepadButtonBack));
-				}
-			}
-
-			if (leftTriggerChanged)
-			{
-				LOG((CLOG_DEBUG "gamepad 'left trigger' changed"));
+				LOG((CLOG_DEBUG "xinput trigger changed"));
 
 				// @todo seems wrong re-using x/y for a single value...
-				sendEvent(getGamepadAnalogEvent(),
-					new CGamepadAnalogInfo(kGamepadLeftTrigger, leftTriggerLast, 0));
-			}
-
-			if (rightTriggerChanged)
-			{
-				LOG((CLOG_DEBUG "gamepad 'right trigger' changed"));
-
-				// @todo seems wrong re-using x/y for a single value...
-				sendEvent(getGamepadAnalogEvent(),
-					new CGamepadAnalogInfo(kGamepadRightTrigger, rightTriggerLast, 0));
-			}
-
-			if (leftStickXChanged || leftStickYChanged)
-			{
-				LOG((CLOG_DEBUG "gamepad 'left stick' changed"));
-
-				sendEvent(getGamepadAnalogEvent(),
-					new CGamepadAnalogInfo(kGamepadLeftStick, leftStickXLast, leftStickYLast));
-			}
-
-			if (rightStickXChanged || rightStickYChanged)
-			{
-				LOG((CLOG_DEBUG "gamepad 'right stick' changed"));
-
-				sendEvent(getGamepadAnalogEvent(),
-					new CGamepadAnalogInfo(kGamepadRightStick, rightStickXLast, rightStickYLast));
+				sendEvent(getGameDeviceTriggersEvent(),
+					new CGameDeviceTriggerInfo(
+						index,
+						state.Gamepad.bLeftTrigger,
+						state.Gamepad.bRightTrigger));
 			}
 		}
 
-		// @todo match averge game rate.
+		// @todo match average game's xinput poll rate.
 		Sleep(100);
 	}
 }

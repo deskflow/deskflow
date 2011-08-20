@@ -100,5 +100,5 @@ include_directories(${inc})
 add_library(arch STATIC ${src})
 
 if (WIN32)
-	target_link_libraries(arch sygpadhk)
+	target_link_libraries(arch synxinhk)
 endif()

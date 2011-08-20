@@ -242,24 +242,30 @@ CScreen::mouseWheel(SInt32 xDelta, SInt32 yDelta)
 }
 
 void
-CScreen::gamepadButtonDown(GamepadButtonID id)
+CScreen::gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
 {
 	assert(!m_isPrimary);
-	m_screen->fakeGamepadButtonDown(id);
+	m_screen->fakeGameDeviceButtons(id, buttons);
 }
 
 void
-CScreen::gamepadButtonUp(GamepadButtonID id)
+CScreen::gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
 {
 	assert(!m_isPrimary);
-	m_screen->fakeGamepadButtonUp(id);
+	m_screen->fakeGameDeviceSticks(id, x1, y1, x2, y2);
 }
 
 void
-CScreen::gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
+CScreen::gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
 {
 	assert(!m_isPrimary);
-	m_screen->fakeGamepadAnalog(id, x, y);
+	m_screen->fakeGameDeviceTriggers(id, t1, t2);
+}
+
+void
+CScreen::gameDeviceTiming()
+{
+	// @todo
 }
 
 void

@@ -26,7 +26,7 @@
 // 1.2:  adds mouse relative motion
 // 1.3:  adds keep alive and deprecates heartbeats,
 //       adds horizontal mouse scrolling
-// 1.4:  adds gamepad support
+// 1.4:  adds game device support
 static const SInt16		kProtocolMajorVersion = 1;
 static const SInt16		kProtocolMinorVersion = 4;
 
@@ -155,6 +155,14 @@ extern const char*		kMsgCInfoAck;
 // defined by an option.
 extern const char*		kMsgCKeepAlive;
 
+// game device timing:  primary <-> secondary
+// periodically, sent from primary to secondary when game device device is polled.
+// in response, sent from secondary to primary when game device device is faked.
+// the difference between when the message was sent and received is a
+// measurement of time it took for the game device device state to reach the
+// game device device user. a timing request is not re-transmitted until after 
+// the pending timing response is received.
+extern const char*		kMsgCGameTiming;
 
 //
 // data codes
@@ -216,6 +224,31 @@ extern const char*		kMsgDMouseWheel;
 // like as kMsgDMouseWheel except only sends $1 = yDelta.
 extern const char*		kMsgDMouseWheel1_0;
 
+// game device buttons:  primary -> secondary
+// $1 = device id
+// $2 = buttons bit mask
+extern const char*		kMsgDGameButtons;
+
+// game device sticks:  primary -> secondary
+// $1 = device id
+// $2 = x1
+// $3 = y1
+// $4 = x2
+// $5 = y2
+extern const char*		kMsgDGameSticks;
+
+// game device triggers:  primary -> secondary
+// $1 = device id
+// $2 = t1
+// $3 = t2
+extern const char*		kMsgDGameTriggers;
+
+// game device feedback: secondary -> primary
+// $1 = device id
+// $2 = motor 1
+// $3 = motor 2
+extern const char*		kMsgDGameFeedback;
+
 // clipboard data:  primary <-> secondary
 // $2 = sequence number, $3 = clipboard data.  the sequence number
 // is 0 when sent by the primary.  secondary screens should use the
@@ -243,18 +276,6 @@ extern const char*		kMsgDInfo;
 // client should set the given option/value pairs.  $1 = option/value
 // pairs.
 extern const char*		kMsgDSetOptions;
-
-// gamepad button pressed:  primary -> secondary
-// $1 = GamepadButtonID
-extern const char*		kMsgDGamepadDown;
-
-// gamepad button released:  primary -> secondary
-// $1 = GamepadButtonID
-extern const char*		kMsgDGamepadUp;
-
-// gamepad analog change:  primary -> secondary
-// $1 = GamepadAnalogID, $2 = X, $3 = Y
-extern const char*		kMsgDGamepadAnalog;
 
 //
 // query codes

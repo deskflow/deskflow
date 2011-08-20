@@ -357,24 +357,31 @@ CClientProxy1_0::mouseWheel(SInt32, SInt32 yDelta)
 }
 
 void
-CClientProxy1_0::gamepadButtonDown(GamepadButtonID)
+CClientProxy1_0::gameDeviceButtons(GameDeviceID, GameDeviceButton)
 {
 	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "gamepadButtonDown not supported"));
+	LOG((CLOG_DEBUG "gameDeviceButtons not supported"));
 }
 
 void
-CClientProxy1_0::gamepadButtonUp(GamepadButtonID)
+CClientProxy1_0::gameDeviceSticks(GameDeviceID, SInt16, SInt16, SInt16, SInt16)
 {
 	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "gamepadButtonUp not supported"));
+	LOG((CLOG_DEBUG "gameDeviceSticks not supported"));
 }
 
 void
-CClientProxy1_0::gamepadAnalog(GamepadAnalogID, SInt16, SInt16)
+CClientProxy1_0::gameDeviceTriggers(GameDeviceID, UInt8, UInt8)
 {
 	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "gamepadAnalog not supported"));
+	LOG((CLOG_DEBUG "gameDeviceTriggers not supported"));
+}
+
+void
+CClientProxy1_0::gameDeviceTiming()
+{
+	// ignore -- not supported in protocol 1.0
+	LOG((CLOG_DEBUG "gameDeviceTiming not supported"));
 }
 
 void

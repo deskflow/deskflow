@@ -18,7 +18,7 @@
 #pragma once
 
 #include "CClientProxy1_3.h"
-#include "GamepadTypes.h"
+#include "GameDeviceTypes.h"
 
 //! Proxy for client implementing protocol version 1.4
 class CClientProxy1_4 : public CClientProxy1_3 {
@@ -27,7 +27,16 @@ public:
 	~CClientProxy1_4();
 
 	// IClient overrides
-	virtual void		gamepadButtonDown(GamepadButtonID id);
-	virtual void		gamepadButtonUp(GamepadButtonID id);
-	virtual void		gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y);
+	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
+	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
+	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
+
+protected:
+	// CClientProxy overrides
+	virtual bool		parseMessage(const UInt8* code);
+
+private:
+	// message handlers
+	void				gameDeviceTiming();
+	void				gameDeviceFeedback();
 };

@@ -127,18 +127,18 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleWheelEvent));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getGamepadButtonDownEvent(),
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGameDeviceButtonsEvent(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
-								&CServer::handleGamepadButtonDown));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getGamepadButtonUpEvent(),
+								&CServer::handleGameDeviceButtons));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGameDeviceSticksEvent(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
-								&CServer::handleGamepadButtonUp));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getGamepadAnalogEvent(),
+								&CServer::handleGameDeviceSticks));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGameDeviceTriggersEvent(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
-								&CServer::handleGamepadAnalog));
+								&CServer::handleGameDeviceTriggers));
 	EVENTQUEUE->adoptHandler(IPlatformScreen::getScreensaverActivatedEvent(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
@@ -1351,27 +1351,27 @@ CServer::handleWheelEvent(const CEvent& event, void*)
 }
 
 void
-CServer::handleGamepadButtonDown(const CEvent& event, void*)
+CServer::handleGameDeviceButtons(const CEvent& event, void*)
 {
-	IPlatformScreen::CGamepadButtonInfo* info =
-		reinterpret_cast<IPlatformScreen::CGamepadButtonInfo*>(event.getData());
-	onGamepadButtonDown(info->m_id);
+	IPlatformScreen::CGameDeviceButtonInfo* info =
+		reinterpret_cast<IPlatformScreen::CGameDeviceButtonInfo*>(event.getData());
+	onGameDeviceButtons(info->m_id, info->m_buttons);
 }
 
 void
-CServer::handleGamepadButtonUp(const CEvent& event, void*)
+CServer::handleGameDeviceSticks(const CEvent& event, void*)
 {
-	IPlatformScreen::CGamepadButtonInfo* info =
-		reinterpret_cast<IPlatformScreen::CGamepadButtonInfo*>(event.getData());
-	onGamepadButtonUp(info->m_id);
+	IPlatformScreen::CGameDeviceStickInfo* info =
+		reinterpret_cast<IPlatformScreen::CGameDeviceStickInfo*>(event.getData());
+	onGameDeviceSticks(info->m_id, info->m_x1, info->m_y1, info->m_x2, info->m_y2);
 }
 
 void
-CServer::handleGamepadAnalog(const CEvent& event, void*)
+CServer::handleGameDeviceTriggers(const CEvent& event, void*)
 {
-	IPlatformScreen::CGamepadAnalogInfo* info =
-		reinterpret_cast<IPlatformScreen::CGamepadAnalogInfo*>(event.getData());
-	onGamepadAnalog(info->m_id, info->m_x, info->m_y);
+	IPlatformScreen::CGameDeviceTriggerInfo* info =
+		reinterpret_cast<IPlatformScreen::CGameDeviceTriggerInfo*>(event.getData());
+	onGameDeviceTriggers(info->m_id, info->m_t1, info->m_t2);
 }
 
 void
@@ -1964,24 +1964,24 @@ CServer::onMouseWheel(SInt32 xDelta, SInt32 yDelta)
 }
 
 void
-CServer::onGamepadButtonDown(GamepadButtonID id)
+CServer::onGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
 {
-	LOG((CLOG_DEBUG1 "onGamepadButtonDown id=%d", id));
-	m_active->gamepadButtonDown(id);
+	LOG((CLOG_DEBUG1 "onGameDeviceButtons id=%d buttons=%d", id, buttons));
+	m_active->gameDeviceButtons(id, buttons);
 }
 
 void
-CServer::onGamepadButtonUp(GamepadButtonID id)
+CServer::onGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
 {
-	LOG((CLOG_DEBUG1 "onGamepadButtonUp id=%d", id));
-	m_active->gamepadButtonUp(id);
+	LOG((CLOG_DEBUG1 "onGameDeviceSticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
+	m_active->gameDeviceSticks(id, x1, y1, x2, y2);
 }
 
 void
-CServer::onGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
+CServer::onGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
 {
-	LOG((CLOG_DEBUG1 "onGamepadAnalog id=%d %+d,%+d", id, x, y));
-	m_active->gamepadAnalog(id, x, y);
+	LOG((CLOG_DEBUG1 "onGameDeviceTriggers id=%d t1=%d t2=%d", id, t1, t2));
+	m_active->gameDeviceTriggers(id, t1, t2);
 }
 
 bool

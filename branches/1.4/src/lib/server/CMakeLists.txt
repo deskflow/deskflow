@@ -69,7 +69,7 @@ include_directories(${inc})
 add_library(server STATIC ${src})
 
 if (WIN32)
-	if (GAMEPAD_SUPPORT)
+	if (GAME_DEVICE_SUPPORT)
 		include_directories($ENV{DXSDK_DIR}/Include)
 		link_directories("$ENV{DXSDK_DIR}/Lib/x86")
 		target_link_libraries(server xinput.lib)

@@ -24,7 +24,7 @@
 #include "MouseTypes.h"
 #include "OptionTypes.h"
 #include "CString.h"
-#include "GamepadTypes.h"
+#include "GameDeviceTypes.h"
 
 //! Client interface
 /*!
@@ -140,23 +140,29 @@ public:
 	*/
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
 
-	//! Notify of gamepad button down
+	//! Notify of game device buttons changed
 	/*!
-	Synthesize gamepad button down.
+	Synthesize game device button states.
 	*/
-	virtual void		gamepadButtonDown(GamepadButtonID id) = 0;
+	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) = 0;
 
-	//! Notify of gamepad button up
+	//! Notify of game device sticks changed
 	/*!
-	Synthesize gamepad button up.
+	Synthesize game device stick states.
 	*/
-	virtual void		gamepadButtonUp(GamepadButtonID id) = 0;
+	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) = 0;
 	
-	//! Notify of gamepad angalog changes
+	//! Notify of game device trigger changes
 	/*!
-	Synthesize gamepad analog (sticks/triggers) values.
+	Synthesize game device trigger states.
 	*/
-	virtual void		gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) = 0;
+	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) = 0;
+	
+	//! Notify of game device timing request
+	/*!
+	Causes a game device timing response when state is next faked.
+	*/
+	virtual void		gameDeviceTiming() = 0;
 
 	//! Notify of screen saver change
 	virtual void		screensaver(bool activate) = 0;

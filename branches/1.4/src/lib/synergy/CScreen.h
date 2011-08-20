@@ -23,7 +23,7 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "OptionTypes.h"
-#include "GamepadTypes.h"
+#include "GameDeviceTypes.h"
 
 class IClipboard;
 class IPlatformScreen;
@@ -166,24 +166,29 @@ public:
 	*/
 	void				mouseWheel(SInt32 xDelta, SInt32 yDelta);
 
-	//! Notify of gamepad button down
+	//! Notify of game device buttons changed
 	/*!
-	Synthesize gamepad events to generate mouse down.
+	Synthesize game device button states.
 	*/
-	void				gamepadButtonDown(GamepadButtonID id);
+	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
+
+	//! Notify of game device sticks changed
+	/*!
+	Synthesize game device stick states.
+	*/
+	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
 	
-	//! Notify of gamepad button up
+	//! Notify of game device trigger changes
 	/*!
-	Synthesize gamepad events to generate mouse up.
+	Synthesize game device trigger states.
 	*/
-	void				gamepadButtonUp(GamepadButtonID id);
+	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
 	
-	//! Notify of gamepad analog change
+	//! Notify of game device timing request
 	/*!
-	Synthesize gamepad events to generate analog (stick/triggers) changes
-	of absolute amounts \c x and \c y.
+	Causes a game device timing response when state is next faked.
 	*/
-	void				gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y);
+	virtual void		gameDeviceTiming();
 
 	//! Notify of options changes
 	/*!

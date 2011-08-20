@@ -55,24 +55,23 @@ public:
 	*/
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
 	
-	//! Fake gamepad button down
+	//! Fake game device buttons
 	/*!
-	Synthesize gamepad events to generate mouse down.
+	Synthesize game device buttons state.
 	*/
-	virtual void		fakeGamepadButtonDown(GamepadButtonID id) const = 0;
+	virtual void		fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const = 0;
 	
-	//! Fake  gamepad button up
+	//! Fake game device sticks
 	/*!
-	Synthesize gamepad events to generate mouse up.
+	Synthesize game device sticks state.
 	*/
-	virtual void		fakeGamepadButtonUp(GamepadButtonID id) const = 0;
+	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const = 0;
 	
-	//! Fake  gamepad analog change
+	//! Fake game device triggers
 	/*!
-	Synthesize gamepad events to generate analog (stick/triggers) changes
-	of absolute amounts \c x and \c y.
+	Synthesize game device triggers state.
 	*/
-	virtual void		fakeGamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) const = 0;
+	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const = 0;
 
 	//@}
 };

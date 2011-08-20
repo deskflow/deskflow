@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if (GAMEPAD_SUPPORT)
-	add_definitions(-DGAMEPAD_SUPPORT)
+if (GAME_DEVICE_SUPPORT)
+	add_definitions(-DGAME_DEVICE_SUPPORT)
 endif()
 
 add_subdirectory(lib)

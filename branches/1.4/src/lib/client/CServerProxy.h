@@ -86,9 +86,10 @@ private:
 	void				mouseMove();
 	void				mouseRelativeMove();
 	void				mouseWheel();
-	void				gamepadButtonDown();
-	void				gamepadButtonUp();
-	void				gamepadAnalog();
+	void				gameDeviceButtons();
+	void				gameDeviceSticks();
+	void				gameDeviceTriggers();
+	void				gameDeviceTiming();
 	void				screensaver();
 	void				resetOptions();
 	void				setOptions();

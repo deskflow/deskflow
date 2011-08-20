@@ -68,8 +68,8 @@ class InternalCommands:
 	# by default, don't compile the gui
 	enable_make_gui = False
 
-	# by default, do not config with gamepad support
-	gamepad_support = False
+	# by default, do not config with game device support
+	game_device_support = False
 
 	win32_generators = {
 		1 : Generator('Visual Studio 10'),
@@ -168,8 +168,8 @@ class InternalCommands:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 
 		# build gamepad support if required
-		if self.gamepad_support:
-			cmake_args += ' -DGAMEPAD_SUPPORT:BOOL=TRUE'
+		if self.game_device_support:
+			cmake_args += ' -DGAME_DEVICE_SUPPORT:BOOL=TRUE'
 
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
@@ -1088,8 +1088,8 @@ class CommandHandler:
 				self.vcRedistDir = a
 			elif o == '--qt-dir':
 				self.qtDir = a
-			elif o == '--gamepad-support':
-				self.ic.gamepad_support = True
+			elif o == '--game-device':
+				self.ic.game_device_support = True
 	
 	def about(self):
 		self.ic.about()

@@ -104,9 +104,10 @@ public:
 	virtual void		screensaver(bool activate) = 0;
 	virtual void		resetOptions() = 0;
 	virtual void		setOptions(const COptionsList& options) = 0;
-	virtual void		gamepadButtonDown(GamepadButtonID id) = 0;
-	virtual void		gamepadButtonUp(GamepadButtonID id) = 0;
-	virtual void		gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y) = 0;
+	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) = 0;
+	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) = 0;
+	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) = 0;
+	virtual void		gameDeviceTiming() = 0;
 
 private:
 	IStream*			m_stream;

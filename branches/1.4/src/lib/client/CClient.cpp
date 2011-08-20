@@ -344,21 +344,27 @@ CClient::setOptions(const COptionsList& options)
 }
 
 void
-CClient::gamepadButtonDown(GamepadButtonID id)
+CClient::gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
 {
-	m_screen->gamepadButtonDown(id);
+	m_screen->gameDeviceButtons(id, buttons);
 }
 
 void
-CClient::gamepadButtonUp(GamepadButtonID id)
+CClient::gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
 {
-	m_screen->gamepadButtonUp(id);
+	m_screen->gameDeviceSticks(id, x1, y1, x2, y2);
 }
 
 void
-CClient::gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
+CClient::gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
 {
-	m_screen->gamepadAnalog(id, x, y);
+	m_screen->gameDeviceTriggers(id, t1, t2);
+}
+
+void
+CClient::gameDeviceTiming()
+{
+	m_screen->gameDeviceTiming();
 }
 
 CString

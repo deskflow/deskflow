@@ -49,8 +49,8 @@ public:
 		bool m_relaunchMode;
 		bool m_debugServiceWait;
 		bool m_pauseOnExit;
-#if GAMEPAD_SUPPORT
-		bool m_gamepad;
+#if GAME_DEVICE_SUPPORT
+		bool m_gameDevice;
 #endif
 #endif
 #if WINAPI_XWINDOWS
@@ -171,9 +171,9 @@ private:
 
 #elif SYSAPI_WIN32
 
-#if GAMEPAD_SUPPORT
+#if GAME_DEVICE_SUPPORT
 #  define HELP_GAMEPAD \
-	"      --gamepad            enable gamepad support (xinput).\n"
+	"      --game-device            enable game device support (xinput).\n"
 #else
 #  define HELP_GAMEPAD ""
 #endif

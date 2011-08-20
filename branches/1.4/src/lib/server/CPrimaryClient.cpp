@@ -242,19 +242,25 @@ CPrimaryClient::mouseWheel(SInt32, SInt32)
 }
 
 void
-CPrimaryClient::gamepadButtonDown(GamepadButtonID id)
+CPrimaryClient::gameDeviceButtons(GameDeviceID, GameDeviceButton)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::gamepadButtonUp(GamepadButtonID id)
+CPrimaryClient::gameDeviceSticks(GameDeviceID, SInt16, SInt16, SInt16, SInt16)
 {
 	// ignore
 }
 
 void
-CPrimaryClient::gamepadAnalog(GamepadAnalogID id, SInt16 x, SInt16 y)
+CPrimaryClient::gameDeviceTriggers(GameDeviceID, UInt8, UInt8)
+{
+	// ignore
+}
+
+void
+CPrimaryClient::gameDeviceTiming()
 {
 	// ignore
 }

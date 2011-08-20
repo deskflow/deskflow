@@ -22,7 +22,7 @@
 #include "KeyTypes.h"
 #include "MouseTypes.h"
 #include "CEvent.h"
-#include "GamepadTypes.h"
+#include "GameDeviceTypes.h"
 
 //! Primary screen interface
 /*!
@@ -69,23 +69,36 @@ public:
 	public:
 		UInt32			m_id;
 	};
-	//! Gamepad button event data
-	class CGamepadButtonInfo {
+	//! Game device button event data
+	class CGameDeviceButtonInfo {
 	public:
-		CGamepadButtonInfo(GamepadButtonID id) :
-			m_id(id) { }
+		CGameDeviceButtonInfo(GameDeviceID id, GameDeviceButton buttons) :
+			m_id(id), m_buttons(buttons) { }
 	public:
-		GamepadButtonID m_id;
+		GameDeviceID m_id;
+		GameDeviceButton m_buttons;
 	};
-	//! Gamepad analog event data
-	class CGamepadAnalogInfo {
+	//! Game device sticks event data
+	class CGameDeviceStickInfo {
 	public:
-		CGamepadAnalogInfo(GamepadAnalogID id, SInt16 x, SInt16 y) :
-			m_id(id), m_x(x), m_y(y) { }
+		CGameDeviceStickInfo(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) :
+			m_id(id), m_x1(x1), m_x2(x2), m_y1(y1), m_y2(y2) { }
 	public:
-		GamepadAnalogID m_id;
-		SInt16 m_x;
-		SInt16 m_y;
+		GameDeviceID m_id;
+		SInt16 m_x1;
+		SInt16 m_x2;
+		SInt16 m_y1;
+		SInt16 m_y2;
+	};
+	//! Game device triggers event data
+	class CGameDeviceTriggerInfo {
+	public:
+		CGameDeviceTriggerInfo(GameDeviceID id, UInt8 t1, UInt8 t2) :
+		  m_id(id), m_t1(t1), m_t2(t2) { }
+	public:
+		GameDeviceID m_id;
+		UInt8 m_t1;
+		UInt8 m_t2;
 	};
 
 	//! @name manipulators
@@ -208,12 +221,12 @@ public:
 	static CEvent::Type	getFakeInputBeginEvent();
 	//! Get end of fake input event type
 	static CEvent::Type	getFakeInputEndEvent();
-	//! Get gamepad button down event type.
-	static CEvent::Type	getGamepadButtonDownEvent();
-	//! Get gamepad button up event type.
-	static CEvent::Type	getGamepadButtonUpEvent();
-	//! Get gamepad analog event type.
-	static CEvent::Type	getGamepadAnalogEvent();
+	//! Get game device buttons event type.
+	static CEvent::Type	getGameDeviceButtonsEvent();
+	//! Get game device sticks event type.
+	static CEvent::Type	getGameDeviceSticksEvent();
+	//! Get game device triggers event type.
+	static CEvent::Type	getGameDeviceTriggersEvent();
 
 	//@}
 
@@ -229,9 +242,9 @@ private:
 	static CEvent::Type	s_hotKeyUpEvent;
 	static CEvent::Type	s_fakeInputBegin;
 	static CEvent::Type	s_fakeInputEnd;
-	static CEvent::Type s_gamepadButtonDownEvent;
-	static CEvent::Type s_gamepadButtonUpEvent;
-	static CEvent::Type s_gamepadAnalogEvent;
+	static CEvent::Type s_gameButtonsEvent;
+	static CEvent::Type s_gameSticksEvent;
+	static CEvent::Type s_gameTriggersEvent;
 };
 
 #endif

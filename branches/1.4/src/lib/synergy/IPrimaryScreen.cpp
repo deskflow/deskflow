@@ -34,9 +34,9 @@ CEvent::Type		IPrimaryScreen::s_hotKeyDownEvent      = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_hotKeyUpEvent        = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_fakeInputBegin       = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_fakeInputEnd         = CEvent::kUnknown;
-CEvent::Type		IPrimaryScreen::s_gamepadButtonDownEvent = CEvent::kUnknown;
-CEvent::Type		IPrimaryScreen::s_gamepadButtonUpEvent   = CEvent::kUnknown;
-CEvent::Type		IPrimaryScreen::s_gamepadAnalogEvent     = CEvent::kUnknown;
+CEvent::Type		IPrimaryScreen::s_gameButtonsEvent     = CEvent::kUnknown;
+CEvent::Type		IPrimaryScreen::s_gameSticksEvent      = CEvent::kUnknown;
+CEvent::Type		IPrimaryScreen::s_gameTriggersEvent    = CEvent::kUnknown;
 
 CEvent::Type
 IPrimaryScreen::getButtonDownEvent()
@@ -116,24 +116,24 @@ IPrimaryScreen::getFakeInputEndEvent()
 }
 
 CEvent::Type
-IPrimaryScreen::getGamepadButtonDownEvent()
+IPrimaryScreen::getGameDeviceButtonsEvent()
 {
-	return EVENTQUEUE->registerTypeOnce(s_gamepadButtonDownEvent,
-							"IPrimaryScreen::gamepadButtonUpEvent");
+	return EVENTQUEUE->registerTypeOnce(s_gameButtonsEvent,
+							"IPrimaryScreen::getGameDeviceButtonsEvent");
 }
 
 CEvent::Type
-IPrimaryScreen::getGamepadButtonUpEvent()
+IPrimaryScreen::getGameDeviceSticksEvent()
 {
-	return EVENTQUEUE->registerTypeOnce(s_gamepadButtonUpEvent,
-							"IPrimaryScreen::gamepadButtonDownEvent");
+	return EVENTQUEUE->registerTypeOnce(s_gameSticksEvent,
+							"IPrimaryScreen::getGameDeviceSticksEvent");
 }
 
 CEvent::Type
-IPrimaryScreen::getGamepadAnalogEvent()
+IPrimaryScreen::getGameDeviceTriggersEvent()
 {
-	return EVENTQUEUE->registerTypeOnce(s_gamepadAnalogEvent,
-							"IPrimaryScreen::gamepadAnalogEvent");
+	return EVENTQUEUE->registerTypeOnce(s_gameTriggersEvent,
+							"IPrimaryScreen::getGameDeviceTriggersEvent");
 }
 
 //

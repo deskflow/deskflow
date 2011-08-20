@@ -47,7 +47,7 @@ if (UNIX)
 endif()
 
 if (WIN32)
-	if (GAMEPAD_SUPPORT)
+	if (GAME_DEVICE_SUPPORT)
 		link_directories("$ENV{DXSDK_DIR}/Lib/x86")
 	endif()
 endif()

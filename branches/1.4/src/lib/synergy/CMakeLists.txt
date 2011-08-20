@@ -41,7 +41,7 @@ set(inc
 	ProtocolTypes.h
 	XScreen.h
 	XSynergy.h
-	GamepadTypes.h
+	GameDeviceTypes.h
 )
 
 set(src
