@@ -1795,16 +1795,9 @@ CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 #if GAME_DEVICE_SUPPORT
 
 // @todo gameDevice state class
-bool aDownLast;
-bool bDownLast;
-bool xDownLast;
-bool yDownLast;
-bool startDownLast;
-bool backDownLast;
-
+WORD buttonsLast;
 BYTE leftTriggerLast;
 BYTE rightTriggerLast;
-
 SHORT leftStickXLast;
 SHORT leftStickYLast;
 SHORT rightStickXLast;
@@ -1825,48 +1818,26 @@ CMSWindowsScreen::xInputThread(void*)
 		// xinput controller is connected
 		if (result == ERROR_SUCCESS)
 		{
-			// @todo game device state class (i was in a rush)
-
-			bool aDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_A) != 0;
-			bool bDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_B) != 0;
-			bool xDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_X) != 0;
-			bool yDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_Y) != 0;
-			bool startDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_START) != 0;
-			bool backDown = (state.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) != 0;
-			
-			bool aToggled = aDownLast != aDown;
-			bool bToggled = bDownLast != bDown;
-			bool xToggled = xDownLast != xDown;
-			bool yToggled = yDownLast != yDown;
-			bool startToggled = startDownLast != startDown;
-			bool backToggled = backDownLast != backDown;
-
+			// @todo game device state class
+			bool buttonsChanged = state.Gamepad.wButtons != buttonsLast;
 			bool leftTriggerChanged = state.Gamepad.bLeftTrigger != leftTriggerLast;
 			bool rightTriggerChanged = state.Gamepad.bRightTrigger != rightTriggerLast;
-
 			bool leftStickXChanged = state.Gamepad.sThumbLX != leftStickXLast;
 			bool leftStickYChanged = state.Gamepad.sThumbLY != leftStickYLast;
 			bool rightStickXChanged = state.Gamepad.sThumbRX != rightStickXLast;
 			bool rightStickYChanged = state.Gamepad.sThumbRY != rightStickYLast;
 
-			aDownLast = aDown;
-			bDownLast = bDown;
-			xDownLast = xDown;
-			yDownLast = yDown;
-			startDownLast = startDown;
-			backDownLast = backDown;
-
+			buttonsLast = state.Gamepad.wButtons;
 			leftTriggerLast = state.Gamepad.bLeftTrigger;
 			rightTriggerLast = state.Gamepad.bRightTrigger;
-
 			leftStickXLast = state.Gamepad.sThumbLX;
 			leftStickYLast = state.Gamepad.sThumbLY;
 			rightStickXLast = state.Gamepad.sThumbRX;
 			rightStickYLast = state.Gamepad.sThumbRY;
 
-			if (aToggled || bToggled || xToggled || yToggled || startToggled || backToggled)
+			if (buttonsChanged)
 			{
-				LOG((CLOG_DEBUG "xinput button toggled"));
+				LOG((CLOG_DEBUG "xinput buttons changed"));
 
 				// xinput buttons convert exactly to synergy buttons
 				sendEvent(getGameDeviceButtonsEvent(),
@@ -1875,7 +1846,7 @@ CMSWindowsScreen::xInputThread(void*)
 
 			if (leftStickXChanged || leftStickYChanged || rightStickXChanged || rightStickYChanged)
 			{
-				LOG((CLOG_DEBUG "xinput stick changed"));
+				LOG((CLOG_DEBUG "xinput sticks changed"));
 
 				sendEvent(getGameDeviceSticksEvent(),
 					new CGameDeviceStickInfo(
@@ -1886,7 +1857,7 @@ CMSWindowsScreen::xInputThread(void*)
 
 			if (leftTriggerChanged || rightTriggerChanged)
 			{
-				LOG((CLOG_DEBUG "xinput trigger changed"));
+				LOG((CLOG_DEBUG "xinput triggers changed"));
 
 				// @todo seems wrong re-using x/y for a single value...
 				sendEvent(getGameDeviceTriggersEvent(),
