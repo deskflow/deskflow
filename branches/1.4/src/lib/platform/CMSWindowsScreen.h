@@ -33,6 +33,14 @@ class CMSWindowsKeyState;
 class CMSWindowsScreenSaver;
 class CThread;
 
+enum
+{
+	kGamePollFreqDefault = 100,
+	kGamePollFreqMin = 50,
+	kGamePollFreqMax = 200,
+	kGameCalibrationPeriod = 10000, // 10 seconds
+};
+
 //! Implementation of IPlatformScreen for Microsoft Windows
 class CMSWindowsScreen : public CPlatformScreen {
 public:
@@ -327,8 +335,14 @@ private:
 	SHORT				m_gameRightStickYLast;
 	double				m_gameLastTimingSent;
 	bool				m_gameTimingWaiting;
-	UInt16				m_gameResponseTime;
-	UInt16				m_gamePollDelay;
+	UInt16				m_gameFakeLag;
+	UInt16				m_gameFakeLagMin;
+	UInt16				m_gamePollFreq;
+	SInt8				m_gamePollFreqAdjust;
+	UInt16				m_gameTimingStarted;
+	UInt16				m_gameTimingFirst;
+	UInt16				m_gameFakeLagLast;
+	bool				m_gameTimingCalibrated;
 
 	// thread for polling xinput state.
 	void				xInputPollThread(void*);

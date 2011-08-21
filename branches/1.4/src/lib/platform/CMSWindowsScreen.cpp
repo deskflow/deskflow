@@ -116,6 +116,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false)
 #if GAME_DEVICE_SUPPORT
+	// @todo - move game support stuff to new class
 	, m_xInputPollThread(NULL)
 	, m_xInputTimingThread(NULL)
 	, m_gameButtonsLast(0)
@@ -127,8 +128,14 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	, m_gameRightStickYLast(0)
 	, m_gameLastTimingSent(0)
 	, m_gameTimingWaiting(false)
-	, m_gameResponseTime(0)
-	, m_gamePollDelay(0)
+	, m_gameFakeLag(0)
+	, m_gamePollFreq(kGamePollFreqDefault)
+	, m_gamePollFreqAdjust(0)
+	, m_gameFakeLagMin(kGamePollFreqDefault)
+	, m_gameTimingStarted(false)
+	, m_gameTimingFirst(0)
+	, m_gameFakeLagLast(0)
+	, m_gameTimingCalibrated(false)
 #endif
 {
 	assert(s_instance != NULL);
@@ -747,12 +754,66 @@ CMSWindowsScreen::queueGameDeviceTimingReq() const
 void
 CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 {
-	m_gameTimingWaiting = false;
-	m_gameResponseTime = (UInt16)((ARCH->time() - m_gameLastTimingSent) * 1000);
-	m_gamePollDelay = freq;
+	if (!m_gameTimingStarted)
+	{
+		m_gameTimingFirst = (UInt16)(ARCH->time() * 1000);
+		m_gameTimingStarted = true;
+	}
 
-	LOG((CLOG_INFO "game device response time=%dms delay=%d",
-		m_gameResponseTime, m_gamePollDelay));
+	m_gameTimingWaiting = false;
+	m_gameFakeLagLast = m_gameFakeLag;
+	m_gameFakeLag = (UInt16)((ARCH->time() - m_gameLastTimingSent) * 1000);
+
+	if (m_gameFakeLag < m_gameFakeLagMin)
+	{
+		// record the lowest value so that the poll frequency
+		// is adjusted to track.
+		m_gameFakeLagMin = m_gameFakeLag;
+	}
+	else if (m_gameFakeLag > (m_gameFakeLagLast * 2))
+	{
+		// if fake lag has increased significantly since the last
+		// timing, then we must have reached the safe minimum.
+		m_gameFakeLagMin = m_gameFakeLagLast;
+	}
+
+	// only change poll frequency if it's a sensible value.
+	if (freq > kGamePollFreqMin && freq < kGamePollFreqMax)
+	{
+		m_gamePollFreq = freq;
+	}
+
+	UInt16 timeSinceStart = ((UInt16)(ARCH->time() * 1000) - m_gameTimingFirst);
+	if (!m_gameTimingCalibrated && (timeSinceStart < kGameCalibrationPeriod))
+	{
+		// during the calibration period, increase polling speed
+		// to try and find the lowest lag value.
+		m_gamePollFreqAdjust = 1;
+		LOG((CLOG_INFO "calibrating game device poll frequency, start=%d, now=%d, since=%d",
+			m_gameTimingFirst, (int)(ARCH->time() * 1000), timeSinceStart));
+	}
+	else
+	{
+		// @bug - calibration seems to re-occur after a period of time,
+		// though, this would actually be a nice feature (but could be
+		// a bit risky -- could cause poor game play)... setting this
+		// stops calibration from happening again.
+		m_gameTimingCalibrated = true;
+
+		// only adjust poll frequency if outside desired limits.
+		m_gamePollFreqAdjust = 0;
+		if (m_gameFakeLag > m_gameFakeLagMin * 3)
+		{
+			m_gamePollFreqAdjust = 1;
+		}
+		else if (m_gameFakeLag < m_gameFakeLagMin)
+		{
+			m_gamePollFreqAdjust = -1;
+		}
+	}
+
+	LOG((CLOG_INFO "game device response, lag=%dms, freq=%dms, adjust=%dms, min=%dms",
+		m_gameFakeLag, m_gamePollFreq, m_gamePollFreqAdjust, m_gameFakeLagMin));
 }
 
 void
@@ -1844,7 +1905,7 @@ CMSWindowsScreen::xInputPollThread(void*)
 		DWORD result = XInputGetState(index, &state);
 
 		// timeout the timing request after 10 seconds
-		if (m_gameTimingWaiting && (ARCH->time() - m_gameLastTimingSent > 10))
+		if (m_gameTimingWaiting && (ARCH->time() - m_gameLastTimingSent > 2))
 		{
 			m_gameTimingWaiting = false;
 			LOG((CLOG_DEBUG "game device timing request timed out"));
@@ -1920,7 +1981,9 @@ CMSWindowsScreen::xInputPollThread(void*)
 			}
 		}
 
-		Sleep(m_gamePollDelay);
+		UInt16 sleep = m_gamePollFreq + m_gamePollFreqAdjust;
+		LOG((CLOG_DEBUG5 "xinput poll sleeping for %dms", sleep));
+		Sleep(sleep);
 	}
 }
 
