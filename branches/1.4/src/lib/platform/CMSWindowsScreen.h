@@ -26,6 +26,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "CMSWindowsHookLibraryLoader.h"
+#include <vector>
 
 class CEventQueueTimer;
 class CMSWindowsDesks;
@@ -39,6 +40,7 @@ enum
 	kGamePollFreqMin = 50,
 	kGamePollFreqMax = 200,
 	kGameCalibrationPeriod = 10000, // 10 seconds
+	kGameLagRecordMax = 10,
 };
 
 //! Implementation of IPlatformScreen for Microsoft Windows
@@ -343,6 +345,7 @@ private:
 	UInt16				m_gameTimingFirst;
 	UInt16				m_gameFakeLagLast;
 	bool				m_gameTimingCalibrated;
+	std::vector<UInt16>	m_gameFakeLagRecord;
 
 	// thread for polling xinput state.
 	void				xInputPollThread(void*);

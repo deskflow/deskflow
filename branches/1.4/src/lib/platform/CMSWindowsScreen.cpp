@@ -756,6 +756,7 @@ CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 {
 	if (!m_gameTimingStarted)
 	{
+		// record when timing started for calibration period.
 		m_gameTimingFirst = (UInt16)(ARCH->time() * 1000);
 		m_gameTimingStarted = true;
 	}
@@ -763,6 +764,7 @@ CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 	m_gameTimingWaiting = false;
 	m_gameFakeLagLast = m_gameFakeLag;
 	m_gameFakeLag = (UInt16)((ARCH->time() - m_gameLastTimingSent) * 1000);
+	m_gameFakeLagRecord.push_back(m_gameFakeLag);
 
 	if (m_gameFakeLag < m_gameFakeLagMin)
 	{
@@ -789,7 +791,7 @@ CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 		// during the calibration period, increase polling speed
 		// to try and find the lowest lag value.
 		m_gamePollFreqAdjust = 1;
-		LOG((CLOG_INFO "calibrating game device poll frequency, start=%d, now=%d, since=%d",
+		LOG((CLOG_DEBUG2 "calibrating game device poll frequency, start=%d, now=%d, since=%d",
 			m_gameTimingFirst, (int)(ARCH->time() * 1000), timeSinceStart));
 	}
 	else
@@ -812,8 +814,31 @@ CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 		}
 	}
 
-	LOG((CLOG_INFO "game device response, lag=%dms, freq=%dms, adjust=%dms, min=%dms",
+	LOG((CLOG_DEBUG3 "game device timing, lag=%dms, freq=%dms, adjust=%dms, min=%dms",
 		m_gameFakeLag, m_gamePollFreq, m_gamePollFreqAdjust, m_gameFakeLagMin));
+
+	if (m_gameFakeLagRecord.size() >= kGameLagRecordMax)
+	{
+		UInt16 v, min = 65535, max = 0, total = 0;
+		std::vector<UInt16>::iterator it;
+		for (it = m_gameFakeLagRecord.begin(); it < m_gameFakeLagRecord.end(); ++it)
+		{
+			v = *it;
+			if (v < min)
+			{
+				min = v;
+			}
+			if (v > max)
+			{
+				max = v;
+			}
+			total += v;
+		}
+
+		LOG((CLOG_INFO "game device timing, min=%dms, max=%dms, avg=%dms",
+			min, max, (UInt16)(total / m_gameFakeLagRecord.size())));
+		m_gameFakeLagRecord.clear();
+	}
 }
 
 void
