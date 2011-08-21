@@ -378,10 +378,10 @@ CClientProxy1_0::gameDeviceTriggers(GameDeviceID, UInt8, UInt8)
 }
 
 void
-CClientProxy1_0::gameDeviceTiming()
+CClientProxy1_0::gameDeviceTimingReq()
 {
 	// ignore -- not supported in protocol 1.0
-	LOG((CLOG_DEBUG "gameDeviceTiming not supported"));
+	LOG((CLOG_DEBUG "gameDeviceTimingReq not supported"));
 }
 
 void

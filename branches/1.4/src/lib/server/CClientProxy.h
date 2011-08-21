@@ -75,6 +75,13 @@ public:
 	*/
 	static CEvent::Type	getClipboardChangedEvent();
 
+	//! Get game device timing receive event type
+	/*!
+	Returns the game device timing receive event type.  This is set 
+	whenever the server receives to a timing event response from a client.
+	*/
+	static CEvent::Type	getGameDeviceTimingRespEvent();
+
 	//@}
 
 	// IScreen
@@ -107,7 +114,7 @@ public:
 	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) = 0;
 	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) = 0;
 	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) = 0;
-	virtual void		gameDeviceTiming() = 0;
+	virtual void		gameDeviceTimingReq() = 0;
 
 private:
 	IStream*			m_stream;
@@ -115,6 +122,7 @@ private:
 	static CEvent::Type	s_readyEvent;
 	static CEvent::Type	s_disconnectedEvent;
 	static CEvent::Type	s_clipboardChangedEvent;
+	static CEvent::Type	s_gameDeviceTimingRecvEvent;
 };
 
 #endif

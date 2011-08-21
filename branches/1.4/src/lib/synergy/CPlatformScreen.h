@@ -49,6 +49,7 @@ public:
 	virtual SInt32		getJumpZoneSize() const = 0;
 	virtual bool		isAnyMouseButtonDown() const = 0;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
+	virtual void		gameDeviceTimingResp() = 0;
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;
@@ -58,6 +59,7 @@ public:
 	virtual void		fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const = 0;
 	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const = 0;
 	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const = 0;
+	virtual void		queueGameDeviceTimingReq() const = 0;
 
 	// IKeyState overrides
 	virtual void		updateKeyMap();

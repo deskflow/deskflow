@@ -22,14 +22,16 @@
 #include "TMethodEventJob.h"
 #include <cstring>
 #include <memory>
+#include "CServer.h"
 
 //
 // CClientProxy1_4
 //
 
-CClientProxy1_4::CClientProxy1_4(const CString& name, IStream* stream) :
-	CClientProxy1_3(name, stream)
+CClientProxy1_4::CClientProxy1_4(const CString& name, IStream* stream, CServer* server) :
+	CClientProxy1_3(name, stream), m_server(server)
 {
+	assert(m_server != NULL);
 }
 
 CClientProxy1_4::~CClientProxy1_4()
@@ -53,8 +55,15 @@ CClientProxy1_4::gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 
 void
 CClientProxy1_4::gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
 {
-	LOG((CLOG_DEBUG2 "send game device triggers \"%s\" id=%d t1=%d t2=%d", getName().c_str(), id, t1, t2));
+	LOG((CLOG_DEBUG2 "send game device triggers to \"%s\" id=%d t1=%d t2=%d", getName().c_str(), id, t1, t2));
 	CProtocolUtil::writef(getStream(), kMsgDGameTriggers, id, t1, t2);
+}
+
+void
+CClientProxy1_4::gameDeviceTimingReq()
+{
+	LOG((CLOG_DEBUG2 "send game device timing request to \"%s\"", getName().c_str()));
+	CProtocolUtil::writef(getStream(), kMsgCGameTiming);
 }
 
 bool
@@ -62,7 +71,7 @@ CClientProxy1_4::parseMessage(const UInt8* code)
 {
 	// process message
 	if (memcmp(code, kMsgCGameTiming, 4) == 0) {
-		gameDeviceTiming();
+		gameDeviceTimingResp();
 	}
 	
 	else if (memcmp(code, kMsgDGameFeedback, 4) == 0) {
@@ -91,14 +100,12 @@ CClientProxy1_4::gameDeviceFeedback()
 }
 
 void
-CClientProxy1_4::gameDeviceTiming()
+CClientProxy1_4::gameDeviceTimingResp()
 {
-	// @todo
+	// parse
+	CProtocolUtil::readf(getStream(), kMsgCGameTiming + 4);
+	LOG((CLOG_DEBUG2 "recv game device timing response"));
 
-	//// parse
-	//CProtocolUtil::readf(m_stream, kMsgDGameFeedback + 4);
-	//LOG((CLOG_DEBUG2 "recv game device timing response"));
-
-	//// forward
-	//m_server->gameDeviceTiming();
+	// forward
+	m_server->gameDeviceTimingResp();
 }

@@ -48,6 +48,7 @@ public:
 	void				onInfoChanged();
 	bool				onGrabClipboard(ClipboardID);
 	void				onClipboardChanged(ClipboardID, const IClipboard*);
+	void				onGameDeviceTimingResp();
 
 	//@}
 
@@ -89,7 +90,7 @@ private:
 	void				gameDeviceButtons();
 	void				gameDeviceSticks();
 	void				gameDeviceTriggers();
-	void				gameDeviceTiming();
+	void				gameDeviceTimingReq();
 	void				screensaver();
 	void				resetOptions();
 	void				setOptions();

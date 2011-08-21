@@ -28,6 +28,7 @@
 CEvent::Type			CClientProxy::s_readyEvent           = CEvent::kUnknown;
 CEvent::Type			CClientProxy::s_disconnectedEvent    = CEvent::kUnknown;
 CEvent::Type			CClientProxy::s_clipboardChangedEvent= CEvent::kUnknown;
+CEvent::Type			CClientProxy::s_gameDeviceTimingRecvEvent= CEvent::kUnknown;
 
 CClientProxy::CClientProxy(const CString& name, IStream* stream) :
 	CBaseClientProxy(name),
@@ -76,6 +77,13 @@ CClientProxy::getClipboardChangedEvent()
 {
 	return EVENTQUEUE->registerTypeOnce(s_clipboardChangedEvent,
 							"CClientProxy::clipboardChanged");
+}
+
+CEvent::Type
+CClientProxy::getGameDeviceTimingRespEvent()
+{
+	return EVENTQUEUE->registerTypeOnce(s_gameDeviceTimingRecvEvent,
+							"CClientProxy::gameDeviceTimingRecv");
 }
 
 void*

@@ -192,6 +192,9 @@ public:
 	*/
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 	
+	//! Handle incoming game device timing responses.
+	virtual void		gameDeviceTimingResp() = 0;
+
 	//! Get button down event type.  Event data is CButtonInfo*.
 	static CEvent::Type	getButtonDownEvent();
 	//! Get button up event type.  Event data is CButtonInfo*.
@@ -227,6 +230,8 @@ public:
 	static CEvent::Type	getGameDeviceSticksEvent();
 	//! Get game device triggers event type.
 	static CEvent::Type	getGameDeviceTriggersEvent();
+	//! Get game device timing request event type.
+	static CEvent::Type	getGameDeviceTimingReqEvent();
 
 	//@}
 
@@ -245,6 +250,7 @@ private:
 	static CEvent::Type s_gameButtonsEvent;
 	static CEvent::Type s_gameSticksEvent;
 	static CEvent::Type s_gameTriggersEvent;
+	static CEvent::Type s_gameTimingReqEvent;
 };
 
 #endif

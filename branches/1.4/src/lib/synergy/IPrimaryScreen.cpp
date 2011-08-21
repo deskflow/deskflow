@@ -37,6 +37,7 @@ CEvent::Type		IPrimaryScreen::s_fakeInputEnd         = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_gameButtonsEvent     = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_gameSticksEvent      = CEvent::kUnknown;
 CEvent::Type		IPrimaryScreen::s_gameTriggersEvent    = CEvent::kUnknown;
+CEvent::Type		IPrimaryScreen::s_gameTimingReqEvent   = CEvent::kUnknown;
 
 CEvent::Type
 IPrimaryScreen::getButtonDownEvent()
@@ -134,6 +135,13 @@ IPrimaryScreen::getGameDeviceTriggersEvent()
 {
 	return EVENTQUEUE->registerTypeOnce(s_gameTriggersEvent,
 							"IPrimaryScreen::getGameDeviceTriggersEvent");
+}
+
+CEvent::Type
+IPrimaryScreen::getGameDeviceTimingReqEvent()
+{
+	return EVENTQUEUE->registerTypeOnce(s_gameTimingReqEvent,
+		"IPrimaryScreen::getGameDeviceTimingReqEvent");
 }
 
 //

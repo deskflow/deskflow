@@ -32,6 +32,7 @@
 #include <cstring>
 #include <cstdlib>
 #include "CArch.h"
+#include "IPlatformScreen.h"
 
 //
 // CClient
@@ -70,6 +71,10 @@ CClient::CClient(const CString& name, const CNetworkAddress& address,
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleResume));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGameDeviceTimingRespEvent(),
+							getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleGameDeviceTimingResp));
 }
 
 CClient::~CClient()
@@ -362,9 +367,9 @@ CClient::gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
 }
 
 void
-CClient::gameDeviceTiming()
+CClient::gameDeviceTimingReq()
 {
-	m_screen->gameDeviceTiming();
+	m_screen->gameDeviceTimingReq();
 }
 
 CString
@@ -699,4 +704,10 @@ CClient::handleResume(const CEvent&, void*)
 		m_connectOnResume = false;
 		connect();
 	}
+}
+
+void
+CClient::handleGameDeviceTimingResp(const CEvent&, void*)
+{
+	m_server->onGameDeviceTimingResp();
 }

@@ -20,16 +20,19 @@
 #include "CClientProxy1_3.h"
 #include "GameDeviceTypes.h"
 
+class CServer;
+
 //! Proxy for client implementing protocol version 1.4
 class CClientProxy1_4 : public CClientProxy1_3 {
 public:
-	CClientProxy1_4(const CString& name, IStream* adoptedStream);
+	CClientProxy1_4(const CString& name, IStream* adoptedStream, CServer* server);
 	~CClientProxy1_4();
 
 	// IClient overrides
 	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
 	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
 	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
+	virtual void		gameDeviceTimingReq();
 
 protected:
 	// CClientProxy overrides
@@ -37,6 +40,8 @@ protected:
 
 private:
 	// message handlers
-	void				gameDeviceTiming();
+	void				gameDeviceTimingResp();
 	void				gameDeviceFeedback();
+
+	CServer*			m_server;
 };

@@ -116,7 +116,17 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false)
 #if GAME_DEVICE_SUPPORT
-	, m_xInputThread(NULL)
+	, m_xInputPollThread(NULL)
+	, m_xInputTimingThread(NULL)
+	, m_gameButtonsLast(0)
+	, m_gameLeftTriggerLast(0)
+	, m_gameRightTriggerLast(0)
+	, m_gameLeftStickXLast(0)
+	, m_gameLeftStickYLast(0)
+	, m_gameRightStickXLast(0)
+	, m_gameRightStickYLast(0)
+	, m_gameLastTimingSent(0)
+	, m_gameTimingWaiting(false)
 #endif
 {
 	assert(s_instance != NULL);
@@ -164,8 +174,14 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	if (m_isPrimary)
 	{
 		// only capture xinput on the server.
-		m_xInputThread = new CThread(new TMethodJob<CMSWindowsScreen>(
-			this, &CMSWindowsScreen::xInputThread));
+		m_xInputPollThread = new CThread(new TMethodJob<CMSWindowsScreen>(
+			this, &CMSWindowsScreen::xInputPollThread));
+	}
+	else
+	{
+		// check for queued timing requests on client.
+		m_xInputTimingThread = new CThread(new TMethodJob<CMSWindowsScreen>(
+			this, &CMSWindowsScreen::xInputTimingThread));
 	}
 #endif
 }
@@ -717,6 +733,21 @@ CMSWindowsScreen::fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) co
 {
 	LOG((CLOG_DEBUG "fake game device triggers id=%d t1=%d t2=%d", id, t1, t2));
 	SetXInputTriggers(id, t1, t2);
+}
+
+void
+CMSWindowsScreen::queueGameDeviceTimingReq() const
+{
+	LOG((CLOG_DEBUG "queue game device timing request"));
+	QueueXInputTimingReq();
+}
+
+void
+CMSWindowsScreen::gameDeviceTimingResp()
+{
+	m_gameTimingWaiting = false;
+	double elapsed = ARCH->time() - m_gameLastTimingSent;
+	LOG((CLOG_INFO "game device response time: %.0f ms", elapsed * 1000));
 }
 
 void
@@ -1794,18 +1825,11 @@ CMSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 #if GAME_DEVICE_SUPPORT
 
-// @todo gameDevice state class
-WORD buttonsLast;
-BYTE leftTriggerLast;
-BYTE rightTriggerLast;
-SHORT leftStickXLast;
-SHORT leftStickYLast;
-SHORT rightStickXLast;
-SHORT rightStickYLast;
-
 void
-CMSWindowsScreen::xInputThread(void*)
+CMSWindowsScreen::xInputPollThread(void*)
 {
+	LOG((CLOG_DEBUG "xinput poll thread started"));
+
 	int index = 0;
 	XINPUT_STATE state;
 
@@ -1814,26 +1838,35 @@ CMSWindowsScreen::xInputThread(void*)
 	{
 		ZeroMemory(&state, sizeof(XINPUT_STATE));
 		DWORD result = XInputGetState(index, &state);
+
+		// timeout the timing request after 10 seconds
+		if (m_gameTimingWaiting && (ARCH->time() - m_gameLastTimingSent > 10))
+		{
+			m_gameTimingWaiting = false;
+			LOG((CLOG_DEBUG "game device timing request timed out"));
+		}
 		
 		// xinput controller is connected
 		if (result == ERROR_SUCCESS)
 		{
 			// @todo game device state class
-			bool buttonsChanged = state.Gamepad.wButtons != buttonsLast;
-			bool leftTriggerChanged = state.Gamepad.bLeftTrigger != leftTriggerLast;
-			bool rightTriggerChanged = state.Gamepad.bRightTrigger != rightTriggerLast;
-			bool leftStickXChanged = state.Gamepad.sThumbLX != leftStickXLast;
-			bool leftStickYChanged = state.Gamepad.sThumbLY != leftStickYLast;
-			bool rightStickXChanged = state.Gamepad.sThumbRX != rightStickXLast;
-			bool rightStickYChanged = state.Gamepad.sThumbRY != rightStickYLast;
+			bool buttonsChanged = state.Gamepad.wButtons != m_gameButtonsLast;
+			bool leftTriggerChanged = state.Gamepad.bLeftTrigger != m_gameLeftTriggerLast;
+			bool rightTriggerChanged = state.Gamepad.bRightTrigger != m_gameRightTriggerLast;
+			bool leftStickXChanged = state.Gamepad.sThumbLX != m_gameLeftStickXLast;
+			bool leftStickYChanged = state.Gamepad.sThumbLY != m_gameLeftStickYLast;
+			bool rightStickXChanged = state.Gamepad.sThumbRX != m_gameRightStickXLast;
+			bool rightStickYChanged = state.Gamepad.sThumbRY != m_gameRightStickYLast;
 
-			buttonsLast = state.Gamepad.wButtons;
-			leftTriggerLast = state.Gamepad.bLeftTrigger;
-			rightTriggerLast = state.Gamepad.bRightTrigger;
-			leftStickXLast = state.Gamepad.sThumbLX;
-			leftStickYLast = state.Gamepad.sThumbLY;
-			rightStickXLast = state.Gamepad.sThumbRX;
-			rightStickYLast = state.Gamepad.sThumbRY;
+			m_gameButtonsLast = state.Gamepad.wButtons;
+			m_gameLeftTriggerLast = state.Gamepad.bLeftTrigger;
+			m_gameRightTriggerLast = state.Gamepad.bRightTrigger;
+			m_gameLeftStickXLast = state.Gamepad.sThumbLX;
+			m_gameLeftStickYLast = state.Gamepad.sThumbLY;
+			m_gameRightStickXLast = state.Gamepad.sThumbRX;
+			m_gameRightStickYLast = state.Gamepad.sThumbRY;
+
+			bool eventSent = false;
 
 			if (buttonsChanged)
 			{
@@ -1842,6 +1875,8 @@ CMSWindowsScreen::xInputThread(void*)
 				// xinput buttons convert exactly to synergy buttons
 				sendEvent(getGameDeviceButtonsEvent(),
 					new CGameDeviceButtonInfo(index, state.Gamepad.wButtons));
+
+				eventSent = true;
 			}
 
 			if (leftStickXChanged || leftStickYChanged || rightStickXChanged || rightStickYChanged)
@@ -1851,8 +1886,10 @@ CMSWindowsScreen::xInputThread(void*)
 				sendEvent(getGameDeviceSticksEvent(),
 					new CGameDeviceStickInfo(
 					index,
-					leftStickXLast, leftStickYLast,
-					rightStickXLast, rightStickYLast));
+					m_gameLeftStickXLast, m_gameLeftStickYLast,
+					m_gameRightStickXLast, m_gameRightStickYLast));
+
+				eventSent = true;
 			}
 
 			if (leftTriggerChanged || rightTriggerChanged)
@@ -1865,11 +1902,44 @@ CMSWindowsScreen::xInputThread(void*)
 						index,
 						state.Gamepad.bLeftTrigger,
 						state.Gamepad.bRightTrigger));
+
+				eventSent = true;
+			}
+
+			if (eventSent && !m_gameTimingWaiting && (ARCH->time() - m_gameLastTimingSent > 1))
+			{
+				sendEvent(getGameDeviceTimingReqEvent(), NULL);
+				m_gameLastTimingSent = ARCH->time();
+				m_gameTimingWaiting = true;
+
+				LOG((CLOG_DEBUG "game device timing request at %.4f", m_gameLastTimingSent));
 			}
 		}
 
 		// @todo match average game's xinput poll rate.
 		Sleep(100);
+	}
+}
+
+void
+CMSWindowsScreen::xInputTimingThread(void*)
+{
+	LOG((CLOG_DEBUG "xinput timing thread started"));
+
+	bool end = false;
+	while (!end)
+	{
+		// if timing request was queued, a timing response is queued
+		// when the xinput status is faked; if it was faked, go tell
+		// the server when this happened.
+		if (DequeueXInputTimingResp())
+		{
+			LOG((CLOG_DEBUG "dequeued game device timing response"));
+			sendEvent(getGameDeviceTimingRespEvent(), NULL);
+		}
+
+		// give the cpu a break.
+		Sleep(1);
 	}
 }
 

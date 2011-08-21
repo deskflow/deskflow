@@ -188,7 +188,13 @@ public:
 	/*!
 	Causes a game device timing response when state is next faked.
 	*/
-	virtual void		gameDeviceTiming();
+	virtual void		gameDeviceTimingReq();
+	
+	//! Notify of game device timing response
+	/*!
+	Handles a game device timing response coming back from the client.
+	*/
+	virtual void		gameDeviceTimingResp();
 
 	//! Notify of options changes
 	/*!

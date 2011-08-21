@@ -30,3 +30,5 @@ synxinhk_API void RemoveXInputHook();
 synxinhk_API void SetXInputButtons(DWORD userIndex, WORD buttons);
 synxinhk_API void SetXInputSticks(DWORD userIndex, SHORT lx, SHORT ly, SHORT rx, SHORT ry);
 synxinhk_API void SetXInputTriggers(DWORD userIndex, BYTE left, BYTE right);
+synxinhk_API void QueueXInputTimingReq();
+synxinhk_API BOOL DequeueXInputTimingResp();

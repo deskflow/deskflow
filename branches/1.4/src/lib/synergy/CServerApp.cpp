@@ -600,6 +600,7 @@ CServerApp::startServer()
 	try {
 		listener   = openClientListener(args().m_config->getSynergyAddress());
 		s_server   = openServer(*args().m_config, s_primaryClient);
+		listener->setServer(s_server);
 		s_listener = listener;
 		updateStatus();
 		LOG((CLOG_NOTE "started server"));
@@ -696,7 +697,7 @@ CServerApp::openClientListener(const CNetworkAddress& address)
 CServer* 
 CServerApp::openServer(const CConfig& config, CPrimaryClient* primaryClient)
 {
-	CServer* server = new CServer(config, primaryClient);
+	CServer* server = new CServer(config, primaryClient, s_serverScreen);
 
 	try {
 		EVENTQUEUE->adoptHandler(

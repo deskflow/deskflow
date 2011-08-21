@@ -34,6 +34,7 @@ class CBaseClientProxy;
 class CEventQueueTimer;
 class CPrimaryClient;
 class CInputFilter;
+class CScreen;
 
 //! Synergy server
 /*!
@@ -99,7 +100,7 @@ public:
 	client (local screen) \p primaryClient.  The client retains
 	ownership of \p primaryClient.
 	*/
-	CServer(const CConfig& config, CPrimaryClient* primaryClient);
+	CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* screen);
 	~CServer();
 
 	//! @name manipulators
@@ -128,6 +129,9 @@ public:
 	The caller can also just destroy this object to force the disconnection.
 	*/
 	void				disconnect();
+
+	//! Notify of game device timing response
+	void				gameDeviceTimingResp();
 
 	//@}
 	//! @name accessors
@@ -325,6 +329,7 @@ private:
 	void				handleGameDeviceButtons(const CEvent&, void*);
 	void				handleGameDeviceSticks(const CEvent&, void*);
 	void				handleGameDeviceTriggers(const CEvent&, void*);
+	void				handleGameDeviceTimingReq(const CEvent&, void*);
 	void				handleScreensaverActivatedEvent(const CEvent&, void*);
 	void				handleScreensaverDeactivatedEvent(const CEvent&, void*);
 	void				handleSwitchWaitTimeout(const CEvent&, void*);
@@ -354,7 +359,7 @@ private:
 	void				onGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
 	void				onGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
 	void				onGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
-	void				onGameDeviceTiming();
+	void				onGameDeviceTimingReq();
 
 	// add client to list and attach event handlers for client
 	bool				addClient(CBaseClientProxy*);
@@ -466,6 +471,9 @@ private:
 
 	// screen locking (former scroll lock)
 	bool				m_lockedToScreen;
+
+	// server screen
+	CScreen*			m_screen;
 
 	static CEvent::Type	s_errorEvent;
 	static CEvent::Type	s_connectedEvent;

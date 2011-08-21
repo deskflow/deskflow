@@ -260,7 +260,7 @@ CPrimaryClient::gameDeviceTriggers(GameDeviceID, UInt8, UInt8)
 }
 
 void
-CPrimaryClient::gameDeviceTiming()
+CPrimaryClient::gameDeviceTimingReq()
 {
 	// ignore
 }

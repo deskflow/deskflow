@@ -29,6 +29,7 @@ class CNetworkAddress;
 class IListenSocket;
 class ISocketFactory;
 class IStreamFilterFactory;
+class CServer;
 
 class CClientListener {
 public:
@@ -36,6 +37,13 @@ public:
 	CClientListener(const CNetworkAddress&,
 							ISocketFactory*, IStreamFilterFactory*);
 	~CClientListener();
+
+	//! @name manipulators
+	//@{
+
+	void setServer(CServer* server);
+
+	//@}
 
 	//! @name accessors
 	//@{
@@ -74,6 +82,7 @@ private:
 	CWaitingClients			m_waitingClients;
 
 	static CEvent::Type		s_connectedEvent;
+	CServer*				m_server;
 };
 
 #endif

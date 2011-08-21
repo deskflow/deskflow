@@ -38,7 +38,8 @@ CClientListener::CClientListener(const CNetworkAddress& address,
 				ISocketFactory* socketFactory,
 				IStreamFilterFactory* streamFilterFactory) :
 	m_socketFactory(socketFactory),
-	m_streamFilterFactory(streamFilterFactory)
+	m_streamFilterFactory(streamFilterFactory),
+	m_server(NULL)
 {
 	assert(m_socketFactory != NULL);
 
@@ -100,6 +101,13 @@ CClientListener::~CClientListener()
 	delete m_streamFilterFactory;
 }
 
+void
+CClientListener::setServer(CServer* server)
+{
+	assert(server != NULL);
+	m_server = server;
+}
+
 CClientProxy*
 CClientListener::getNextClient()
 {
@@ -135,8 +143,10 @@ CClientListener::handleClientConnecting(const CEvent&, void*)
 	}
 	stream = new CPacketStreamFilter(stream, true);
 
+	assert(m_server != NULL);
+
 	// create proxy for unknown client
-	CClientProxyUnknown* client = new CClientProxyUnknown(stream, 30.0);
+	CClientProxyUnknown* client = new CClientProxyUnknown(stream, 30.0, m_server);
 	m_newClients.insert(client);
 
 	// watch for events from unknown client

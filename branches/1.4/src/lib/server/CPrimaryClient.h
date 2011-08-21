@@ -138,7 +138,7 @@ public:
 	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
 	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
 	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
-	virtual void		gameDeviceTiming();
+	virtual void		gameDeviceTimingReq();
 	virtual void		screensaver(bool activate);
 	virtual void		resetOptions();
 	virtual void		setOptions(const COptionsList& options);

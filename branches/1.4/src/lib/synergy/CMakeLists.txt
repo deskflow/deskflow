@@ -65,6 +65,7 @@ set(src
 	ProtocolTypes.cpp
 	XScreen.cpp
 	XSynergy.cpp
+	ISecondaryScreen.cpp
 )
 
 if (WIN32)

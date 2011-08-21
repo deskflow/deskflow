@@ -23,10 +23,11 @@
 class CClientProxy;
 class CEventQueueTimer;
 class IStream;
+class CServer;
 
 class CClientProxyUnknown {
 public:
-	CClientProxyUnknown(IStream* stream, double timeout);
+	CClientProxyUnknown(IStream* stream, double timeout, CServer* server);
 	~CClientProxyUnknown();
 
 	//! @name manipulators
@@ -81,6 +82,7 @@ private:
 
 	static CEvent::Type	s_successEvent;
 	static CEvent::Type	s_failureEvent;
+	CServer*			m_server;
 };
 
 #endif

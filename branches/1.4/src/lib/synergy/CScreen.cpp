@@ -20,6 +20,8 @@
 #include "ProtocolTypes.h"
 #include "CLog.h"
 #include "IEventQueue.h"
+#include "CClientProxy.h"
+#include "TMethodEventJob.h"
 
 //
 // CScreen
@@ -263,9 +265,10 @@ CScreen::gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
 }
 
 void
-CScreen::gameDeviceTiming()
+CScreen::gameDeviceTimingReq()
 {
-	// @todo
+	assert(!m_isPrimary);
+	m_screen->queueGameDeviceTimingReq();
 }
 
 void
@@ -515,4 +518,10 @@ CScreen::leaveSecondary()
 {
 	// release any keys we think are still down
 	m_screen->fakeAllKeysUp();
+}
+
+void
+CScreen::gameDeviceTimingResp()
+{
+	m_screen->gameDeviceTimingResp();
 }

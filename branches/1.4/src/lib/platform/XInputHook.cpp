@@ -40,6 +40,8 @@ SHORT s_rightStickX = 0;
 SHORT s_rightStickY = 0;
 BYTE s_leftTrigger = 0;
 BYTE s_rightTrigger = 0;
+BOOL s_timingReqQueued = FALSE;
+BOOL s_timingRespQueued = FALSE;
 
 #pragma data_seg()
 
@@ -125,6 +127,20 @@ SetXInputTriggers(DWORD userIndex, BYTE left, BYTE right)
 		"left=" << (int)left << " right=" << (int)right << endl);
 }
 
+void
+QueueXInputTimingReq()
+{
+	s_timingReqQueued = TRUE;
+}
+
+BOOL
+DequeueXInputTimingResp()
+{
+	BOOL result = s_timingRespQueued;
+	s_timingRespQueued = FALSE;
+	return result;
+}
+
 DWORD WINAPI
 HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 {
@@ -141,6 +157,13 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 	state->Gamepad.sThumbLY = s_leftStickY;
 	state->Gamepad.sThumbRX = s_rightStickX;
 	state->Gamepad.sThumbRY = s_rightStickY;
+
+	if (s_timingReqQueued)
+	{
+		s_timingRespQueued = TRUE;
+		s_timingReqQueued = FALSE;
+		LOG("XInputHook: timing response queued");
+	}
 
 	return ERROR_SUCCESS;
 }

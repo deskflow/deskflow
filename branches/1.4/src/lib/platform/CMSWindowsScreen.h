@@ -79,6 +79,7 @@ public:
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
+	virtual void		gameDeviceTimingResp();
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) const;
@@ -88,6 +89,7 @@ public:
 	virtual void		fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const;
 	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const;
 	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const;
+	virtual void		queueGameDeviceTimingReq() const;
 
 	// IKeyState overrides
 	virtual void		updateKeys();
@@ -312,16 +314,31 @@ private:
 						m_hookLibraryLoader;
 
 #if GAME_DEVICE_SUPPORT
-	CThread*			m_xInputThread;
+	// game device stuff
+	CThread*			m_xInputPollThread;
+	CThread*			m_xInputTimingThread;
+	// @todo game device state class and multiple controller support
+	WORD				m_gameButtonsLast;
+	BYTE				m_gameLeftTriggerLast;
+	BYTE				m_gameRightTriggerLast;
+	SHORT				m_gameLeftStickXLast;
+	SHORT				m_gameLeftStickYLast;
+	SHORT				m_gameRightStickXLast;
+	SHORT				m_gameRightStickYLast;
+	double				m_gameLastTimingSent;
+	bool				m_gameTimingWaiting;
+
+	// thread for polling xinput state.
+	void				xInputPollThread(void*);
+
+	// thread for checking queued timing requests. 
+	void				xInputTimingThread(void*);
 #endif
 
 	static CMSWindowsScreen*	s_screen;
 
 	// save last position of mouse to compute next delta movement
 	void saveMousePosition(SInt32 x, SInt32 y);
-
-	// thread for polling xinput state.
-	void xInputThread(void*);
 };
 
 #endif

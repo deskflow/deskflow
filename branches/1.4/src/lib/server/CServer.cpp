@@ -34,6 +34,7 @@
 #include "CKeyState.h"
 #include <cstring>
 #include <cstdlib>
+#include "CScreen.h"
 
 //
 // CServer
@@ -47,7 +48,7 @@ CEvent::Type			CServer::s_switchInDirection  = CEvent::kUnknown;
 CEvent::Type			CServer::s_keyboardBroadcast  = CEvent::kUnknown;
 CEvent::Type			CServer::s_lockCursorToScreen = CEvent::kUnknown;
 
-CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
+CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* screen) :
 	m_primaryClient(primaryClient),
 	m_active(primaryClient),
 	m_seqNum(0),
@@ -71,11 +72,13 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 	m_switchNeedsAlt(false),
 	m_relativeMoves(false),
 	m_keyboardBroadcasting(false),
-	m_lockedToScreen(false)
+	m_lockedToScreen(false),
+	m_screen(screen)
 {
 	// must have a primary client and it must have a canonical name
 	assert(m_primaryClient != NULL);
 	assert(config.isScreen(primaryClient->getName()));
+	assert(m_screen != NULL);
 
 	CString primaryName = getName(primaryClient);
 
@@ -139,6 +142,10 @@ CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient) :
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
 								&CServer::handleGameDeviceTriggers));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGameDeviceTimingReqEvent(),
+							m_primaryClient->getEventTarget(),
+							new TMethodEventJob<CServer>(this,
+								&CServer::handleGameDeviceTimingReq));
 	EVENTQUEUE->adoptHandler(IPlatformScreen::getScreensaverActivatedEvent(),
 							m_primaryClient->getEventTarget(),
 							new TMethodEventJob<CServer>(this,
@@ -336,6 +343,12 @@ CServer::disconnect()
 	else {
 		EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
 	}
+}
+
+void
+CServer::gameDeviceTimingResp()
+{
+	m_screen->gameDeviceTimingResp();
 }
 
 UInt32
@@ -1375,6 +1388,12 @@ CServer::handleGameDeviceTriggers(const CEvent& event, void*)
 }
 
 void
+CServer::handleGameDeviceTimingReq(const CEvent& event, void*)
+{
+	onGameDeviceTimingReq();
+}
+
+void
 CServer::handleScreensaverActivatedEvent(const CEvent&, void*)
 {
 	onScreensaver(true);
@@ -1982,6 +2001,13 @@ CServer::onGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2)
 {
 	LOG((CLOG_DEBUG1 "onGameDeviceTriggers id=%d t1=%d t2=%d", id, t1, t2));
 	m_active->gameDeviceTriggers(id, t1, t2);
+}
+
+void
+CServer::onGameDeviceTimingReq()
+{
+	LOG((CLOG_DEBUG1 "onGameDeviceTimingReq"));
+	m_active->gameDeviceTimingReq();
 }
 
 bool

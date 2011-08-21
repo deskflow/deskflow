@@ -30,6 +30,7 @@
 #include "CString.h"
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
+#include "CServer.h"
 
 //
 // CClientProxyUnknown
@@ -38,11 +39,14 @@
 CEvent::Type			CClientProxyUnknown::s_successEvent = CEvent::kUnknown;
 CEvent::Type			CClientProxyUnknown::s_failureEvent = CEvent::kUnknown;
 
-CClientProxyUnknown::CClientProxyUnknown(IStream* stream, double timeout) :
+CClientProxyUnknown::CClientProxyUnknown(IStream* stream, double timeout, CServer* server) :
 	m_stream(stream),
 	m_proxy(NULL),
-	m_ready(false)
+	m_ready(false),
+	m_server(server)
 {
+	assert(m_server != NULL);
+
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CClientProxyUnknown>(this,
 								&CClientProxyUnknown::handleTimeout, NULL));
@@ -230,7 +234,7 @@ CClientProxyUnknown::handleData(const CEvent&, void*)
 				break;
 
 			case 4:
-				m_proxy = new CClientProxy1_4(name, m_stream);
+				m_proxy = new CClientProxy1_4(name, m_stream, m_server);
 				break;
 			}
 		}

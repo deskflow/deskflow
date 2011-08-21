@@ -20,6 +20,8 @@
 
 #include "IInterface.h"
 #include "MouseTypes.h"
+#include "GameDeviceTypes.h"
+#include "CEvent.h"
 
 //! Secondary screen interface
 /*!
@@ -73,7 +75,13 @@ public:
 	*/
 	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const = 0;
 
+	//! Get game device timing response event type.
+	static CEvent::Type	getGameDeviceTimingRespEvent();
+
 	//@}
+
+private:
+	static CEvent::Type s_gameTimingRespEvent;
 };
 
 #endif

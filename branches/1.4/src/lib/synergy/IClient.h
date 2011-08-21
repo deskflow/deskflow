@@ -162,7 +162,7 @@ public:
 	/*!
 	Causes a game device timing response when state is next faked.
 	*/
-	virtual void		gameDeviceTiming() = 0;
+	virtual void		gameDeviceTimingReq() = 0;
 
 	//! Notify of screen saver change
 	virtual void		screensaver(bool activate) = 0;

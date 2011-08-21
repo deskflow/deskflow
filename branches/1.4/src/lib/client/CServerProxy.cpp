@@ -299,7 +299,7 @@ CServerProxy::parseMessage(const UInt8* code)
 	}
 
 	else if (memcmp(code, kMsgCGameTiming, 4) == 0) {
-		gameDeviceTiming();
+		gameDeviceTimingReq();
 	}
 
 	else if (memcmp(code, kMsgCClose, 4) == 0) {
@@ -361,6 +361,12 @@ CServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 	CString data = IClipboard::marshall(clipboard);
 	LOG((CLOG_DEBUG1 "sending clipboard %d seqnum=%d, size=%d", id, m_seqNum, data.size()));
 	CProtocolUtil::writef(m_stream, kMsgDClipboard, id, m_seqNum, &data);
+}
+
+void
+CServerProxy::onGameDeviceTimingResp()
+{
+	CProtocolUtil::writef(m_stream, kMsgCGameTiming);
 }
 
 void
@@ -788,13 +794,13 @@ CServerProxy::gameDeviceTriggers()
 }
 
 void
-CServerProxy::gameDeviceTiming()
+CServerProxy::gameDeviceTimingReq()
 {
 	// parse
 	LOG((CLOG_DEBUG2 "recv game device timing request"));
 
 	// forward
-	m_client->gameDeviceTiming();
+	m_client->gameDeviceTimingReq();
 }
 
 void
