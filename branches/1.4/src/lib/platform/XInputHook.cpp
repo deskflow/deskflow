@@ -112,11 +112,11 @@ SetXInputSticks(DWORD userIndex, SHORT lx, SHORT ly, SHORT rx, SHORT ry)
 	s_leftStickX = lx;
 	s_leftStickY = ly;
 	s_rightStickX = rx;
-	s_rightStickY = rx;
+	s_rightStickY = ry;
 
 	LOG("XInputHook: SetXInputSticks: " <<
-		"left=" << lx << "," << ly <<
-		" right=" << rx << "," << ry << endl);
+		"left=" << s_leftStickX << "," << s_leftStickY <<
+		" right=" << s_rightStickX << "," << s_rightStickY << endl);
 }
 
 void
@@ -159,8 +159,11 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 	s_fakeFreqMillis = (WORD)(now - s_lastFakeMillis);
 	s_lastFakeMillis = now;
 
-	LOG("XInputHook: hookXInputGetState index=" 
-		<< userIndex <<  ", buttons=" << s_buttons << endl);
+	LOG("XInputHook: hookXInputGetState index=" << userIndex
+		<< ", b=" << s_buttons
+		<< ", s1=" << s_leftStickX << "," << s_leftStickY
+		<< ", s2=" << s_rightStickX << "," << s_rightStickY
+		<< endl);
 
 	state->Gamepad.wButtons = s_buttons;
 	state->Gamepad.bLeftTrigger = s_leftTrigger;
