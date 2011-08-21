@@ -42,6 +42,8 @@ BYTE s_leftTrigger = 0;
 BYTE s_rightTrigger = 0;
 BOOL s_timingReqQueued = FALSE;
 BOOL s_timingRespQueued = FALSE;
+DWORD s_lastFakeMillis = 0;
+WORD s_fakeFreqMillis = 0;
 
 #pragma data_seg()
 
@@ -141,11 +143,21 @@ DequeueXInputTimingResp()
 	return result;
 }
 
+WORD
+GetXInputFakeFreqMillis()
+{
+	return s_fakeFreqMillis;
+}
+
 DWORD WINAPI
 HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 {
 	if (userIndex != 0)
 		return 1167; // @todo find macro for this
+
+	DWORD now = GetTickCount();
+	s_fakeFreqMillis = (WORD)(now - s_lastFakeMillis);
+	s_lastFakeMillis = now;
 
 	LOG("XInputHook: hookXInputGetState index=" 
 		<< userIndex <<  ", buttons=" << s_buttons << endl);

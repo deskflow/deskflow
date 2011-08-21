@@ -194,7 +194,7 @@ public:
 	/*!
 	Handles a game device timing response coming back from the client.
 	*/
-	virtual void		gameDeviceTimingResp();
+	virtual void		gameDeviceTimingResp(UInt16 freq);
 
 	//! Notify of options changes
 	/*!

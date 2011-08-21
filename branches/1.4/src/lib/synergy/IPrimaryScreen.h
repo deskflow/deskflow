@@ -100,6 +100,14 @@ public:
 		UInt8 m_t1;
 		UInt8 m_t2;
 	};
+	//! Game device timing response event data
+	class CGameDeviceTimingRespInfo {
+	public:
+		CGameDeviceTimingRespInfo(UInt16 freq) :
+		  m_freq(freq) { }
+	public:
+		UInt16 m_freq;
+	};
 
 	//! @name manipulators
 	//@{
@@ -193,7 +201,7 @@ public:
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 	
 	//! Handle incoming game device timing responses.
-	virtual void		gameDeviceTimingResp() = 0;
+	virtual void		gameDeviceTimingResp(UInt16 freq) = 0;
 
 	//! Get button down event type.  Event data is CButtonInfo*.
 	static CEvent::Type	getButtonDownEvent();

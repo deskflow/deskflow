@@ -707,7 +707,10 @@ CClient::handleResume(const CEvent&, void*)
 }
 
 void
-CClient::handleGameDeviceTimingResp(const CEvent&, void*)
+CClient::handleGameDeviceTimingResp(const CEvent& event, void*)
 {
-	m_server->onGameDeviceTimingResp();
+	IPlatformScreen::CGameDeviceTimingRespInfo* info =
+		reinterpret_cast<IPlatformScreen::CGameDeviceTimingRespInfo*>(event.getData());
+
+	m_server->onGameDeviceTimingResp(info->m_freq);
 }

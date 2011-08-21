@@ -79,7 +79,7 @@ public:
 	virtual SInt32		getJumpZoneSize() const;
 	virtual bool		isAnyMouseButtonDown() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
-	virtual void		gameDeviceTimingResp();
+	virtual void		gameDeviceTimingResp(UInt16 freq);
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) const;
@@ -327,6 +327,8 @@ private:
 	SHORT				m_gameRightStickYLast;
 	double				m_gameLastTimingSent;
 	bool				m_gameTimingWaiting;
+	UInt16				m_gameResponseTime;
+	UInt16				m_gamePollDelay;
 
 	// thread for polling xinput state.
 	void				xInputPollThread(void*);

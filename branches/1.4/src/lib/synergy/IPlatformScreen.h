@@ -156,7 +156,7 @@ public:
 	virtual SInt32		getJumpZoneSize() const = 0;
 	virtual bool		isAnyMouseButtonDown() const = 0;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
-	virtual void		gameDeviceTimingResp() = 0;
+	virtual void		gameDeviceTimingResp(UInt16 freq) = 0;
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;

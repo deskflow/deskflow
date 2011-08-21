@@ -346,9 +346,9 @@ CServer::disconnect()
 }
 
 void
-CServer::gameDeviceTimingResp()
+CServer::gameDeviceTimingResp(UInt16 freq)
 {
-	m_screen->gameDeviceTimingResp();
+	m_screen->gameDeviceTimingResp(freq);
 }
 
 UInt32

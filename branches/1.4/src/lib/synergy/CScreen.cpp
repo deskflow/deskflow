@@ -521,7 +521,7 @@ CScreen::leaveSecondary()
 }
 
 void
-CScreen::gameDeviceTimingResp()
+CScreen::gameDeviceTimingResp(UInt16 freq)
 {
-	m_screen->gameDeviceTimingResp();
+	m_screen->gameDeviceTimingResp(freq);
 }

@@ -127,6 +127,8 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	, m_gameRightStickYLast(0)
 	, m_gameLastTimingSent(0)
 	, m_gameTimingWaiting(false)
+	, m_gameResponseTime(0)
+	, m_gamePollDelay(0)
 #endif
 {
 	assert(s_instance != NULL);
@@ -743,11 +745,14 @@ CMSWindowsScreen::queueGameDeviceTimingReq() const
 }
 
 void
-CMSWindowsScreen::gameDeviceTimingResp()
+CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 {
 	m_gameTimingWaiting = false;
-	double elapsed = ARCH->time() - m_gameLastTimingSent;
-	LOG((CLOG_INFO "game device response time: %.0f ms", elapsed * 1000));
+	m_gameResponseTime = (UInt16)((ARCH->time() - m_gameLastTimingSent) * 1000);
+	m_gamePollDelay = freq;
+
+	LOG((CLOG_INFO "game device response time=%dms delay=%d",
+		m_gameResponseTime, m_gamePollDelay));
 }
 
 void
@@ -1832,7 +1837,6 @@ CMSWindowsScreen::xInputPollThread(void*)
 
 	int index = 0;
 	XINPUT_STATE state;
-
 	bool end = false;
 	while (!end)
 	{
@@ -1906,7 +1910,7 @@ CMSWindowsScreen::xInputPollThread(void*)
 				eventSent = true;
 			}
 
-			if (eventSent && !m_gameTimingWaiting && (ARCH->time() - m_gameLastTimingSent > 1))
+			if (/*eventSent && */!m_gameTimingWaiting && (ARCH->time() - m_gameLastTimingSent > .5))
 			{
 				sendEvent(getGameDeviceTimingReqEvent(), NULL);
 				m_gameLastTimingSent = ARCH->time();
@@ -1916,8 +1920,7 @@ CMSWindowsScreen::xInputPollThread(void*)
 			}
 		}
 
-		// @todo match average game's xinput poll rate.
-		Sleep(100);
+		Sleep(m_gamePollDelay);
 	}
 }
 
@@ -1935,7 +1938,8 @@ CMSWindowsScreen::xInputTimingThread(void*)
 		if (DequeueXInputTimingResp())
 		{
 			LOG((CLOG_DEBUG "dequeued game device timing response"));
-			sendEvent(getGameDeviceTimingRespEvent(), NULL);
+			sendEvent(getGameDeviceTimingRespEvent(),
+				new CGameDeviceTimingRespInfo(GetXInputFakeFreqMillis()));
 		}
 
 		// give the cpu a break.

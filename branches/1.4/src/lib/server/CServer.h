@@ -131,7 +131,7 @@ public:
 	void				disconnect();
 
 	//! Notify of game device timing response
-	void				gameDeviceTimingResp();
+	void				gameDeviceTimingResp(UInt16 freq);
 
 	//@}
 	//! @name accessors

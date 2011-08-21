@@ -155,14 +155,19 @@ extern const char*		kMsgCInfoAck;
 // defined by an option.
 extern const char*		kMsgCKeepAlive;
 
-// game device timing:  primary <-> secondary
+// game device timing:  primary -> secondary
 // periodically, sent from primary to secondary when game device device is polled.
+// this causes a game timing response to be queued, which is dequeued when
+// the device is next faked.
+extern const char*		kMsgCGameTimingReq;
+
+// game device timing:  primary <- secondary
 // in response, sent from secondary to primary when game device device is faked.
 // the difference between when the message was sent and received is a
 // measurement of time it took for the game device device state to reach the
-// game device device user. a timing request is not re-transmitted until after 
+// game device device user. a timing request is not retransmitted until after 
 // the pending timing response is received.
-extern const char*		kMsgCGameTiming;
+extern const char*		kMsgCGameTimingResp;
 
 //
 // data codes

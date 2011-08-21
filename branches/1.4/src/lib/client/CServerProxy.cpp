@@ -298,7 +298,7 @@ CServerProxy::parseMessage(const UInt8* code)
 		gameDeviceTriggers();
 	}
 
-	else if (memcmp(code, kMsgCGameTiming, 4) == 0) {
+	else if (memcmp(code, kMsgCGameTimingReq, 4) == 0) {
 		gameDeviceTimingReq();
 	}
 
@@ -364,9 +364,10 @@ CServerProxy::onClipboardChanged(ClipboardID id, const IClipboard* clipboard)
 }
 
 void
-CServerProxy::onGameDeviceTimingResp()
+CServerProxy::onGameDeviceTimingResp(UInt16 freq)
 {
-	CProtocolUtil::writef(m_stream, kMsgCGameTiming);
+	LOG((CLOG_DEBUG1 "sending game device timing response freq=%d", freq));
+	CProtocolUtil::writef(m_stream, kMsgCGameTimingResp, freq);
 }
 
 void

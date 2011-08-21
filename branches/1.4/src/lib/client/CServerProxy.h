@@ -48,7 +48,7 @@ public:
 	void				onInfoChanged();
 	bool				onGrabClipboard(ClipboardID);
 	void				onClipboardChanged(ClipboardID, const IClipboard*);
-	void				onGameDeviceTimingResp();
+	void				onGameDeviceTimingResp(UInt16 freq);
 
 	//@}
 

@@ -63,14 +63,14 @@ void
 CClientProxy1_4::gameDeviceTimingReq()
 {
 	LOG((CLOG_DEBUG2 "send game device timing request to \"%s\"", getName().c_str()));
-	CProtocolUtil::writef(getStream(), kMsgCGameTiming);
+	CProtocolUtil::writef(getStream(), kMsgCGameTimingReq);
 }
 
 bool
 CClientProxy1_4::parseMessage(const UInt8* code)
 {
 	// process message
-	if (memcmp(code, kMsgCGameTiming, 4) == 0) {
+	if (memcmp(code, kMsgCGameTimingResp, 4) == 0) {
 		gameDeviceTimingResp();
 	}
 	
@@ -103,9 +103,10 @@ void
 CClientProxy1_4::gameDeviceTimingResp()
 {
 	// parse
-	CProtocolUtil::readf(getStream(), kMsgCGameTiming + 4);
-	LOG((CLOG_DEBUG2 "recv game device timing response"));
+	UInt16 freq;
+	CProtocolUtil::readf(getStream(), kMsgCGameTimingResp + 4, &freq);
+	LOG((CLOG_DEBUG2 "recv game device timing response freq=%dms", freq));
 
 	// forward
-	m_server->gameDeviceTimingResp();
+	m_server->gameDeviceTimingResp(freq);
 }

@@ -32,3 +32,4 @@ synxinhk_API void SetXInputSticks(DWORD userIndex, SHORT lx, SHORT ly, SHORT rx,
 synxinhk_API void SetXInputTriggers(DWORD userIndex, BYTE left, BYTE right);
 synxinhk_API void QueueXInputTimingReq();
 synxinhk_API BOOL DequeueXInputTimingResp();
+synxinhk_API WORD GetXInputFakeFreqMillis();
