@@ -157,6 +157,7 @@ public:
 	virtual bool		isAnyMouseButtonDown() const = 0;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const = 0;
 	virtual void		gameDeviceTimingResp(UInt16 freq) = 0;
+	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2) = 0;
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;

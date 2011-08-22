@@ -525,3 +525,9 @@ CScreen::gameDeviceTimingResp(UInt16 freq)
 {
 	m_screen->gameDeviceTimingResp(freq);
 }
+
+void
+CScreen::gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2)
+{
+	m_screen->gameDeviceFeedback(id, m1, m2);
+}

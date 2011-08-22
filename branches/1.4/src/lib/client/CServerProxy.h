@@ -21,6 +21,7 @@
 #include "ClipboardTypes.h"
 #include "KeyTypes.h"
 #include "CEvent.h"
+#include "GameDeviceTypes.h"
 
 class CClient;
 class CClientInfo;
@@ -49,6 +50,7 @@ public:
 	bool				onGrabClipboard(ClipboardID);
 	void				onClipboardChanged(ClipboardID, const IClipboard*);
 	void				onGameDeviceTimingResp(UInt16 freq);
+	void				onGameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
 	//@}
 

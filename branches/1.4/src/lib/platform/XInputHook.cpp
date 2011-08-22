@@ -45,6 +45,9 @@ BOOL s_timingRespQueued = FALSE;
 DWORD s_lastFakeMillis = 0;
 WORD s_fakeFreqMillis = 0;
 DWORD s_packetNumber = 0;
+WORD s_leftMotor = 0;
+WORD s_rightMotor = 0;
+BOOL s_feedbackQueued = FALSE;
 
 #pragma data_seg()
 
@@ -62,6 +65,9 @@ using namespace std;
 typedef DWORD (WINAPI *XInputGetState_Type)(DWORD dwUserIndex, XINPUT_STATE* pState);
 DWORD WINAPI HookXInputGetState(DWORD dwUserIndex, XINPUT_STATE* pState);
 
+typedef DWORD (WINAPI *XInputSetState_Type)(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
+DWORD WINAPI HookXInputSetState(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
+
 typedef DWORD (WINAPI *XInputGetCapabilities_Type)(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities);
 DWORD WINAPI HookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities);
 
@@ -71,6 +77,7 @@ SDLLHook s_xInputHook =
 	false, NULL,
 	{
 		{ (char*)(0x80000002), HookXInputGetState },
+		{ (char*)(0x80000003), HookXInputSetState },
 		{ (char*)(0x80000004), HookXInputGetCapabilities },
 	}
 };
@@ -151,6 +158,19 @@ DequeueXInputTimingResp()
 	return result;
 }
 
+BOOL
+DequeueXInputFeedback(WORD* leftMotor, WORD* rightMotor)
+{
+	if (s_feedbackQueued)
+	{
+		*leftMotor = s_leftMotor;
+		*rightMotor = s_rightMotor;
+		s_feedbackQueued = FALSE;
+		return TRUE;
+	}
+	return FALSE;
+}
+
 WORD
 GetXInputFakeFreqMillis()
 {
@@ -195,6 +215,33 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 		s_timingRespQueued = TRUE;
 		s_timingReqQueued = FALSE;
 		LOG("XInputHook: timing response queued");
+	}
+
+	return ERROR_SUCCESS;
+}
+
+DWORD WINAPI
+HookXInputSetState(DWORD userIndex, XINPUT_VIBRATION* vibration)
+{
+	// @todo multiple device support
+	if (userIndex != 0)
+	{
+		return ERROR_DEVICE_NOT_CONNECTED;
+	}
+
+	// only change values and queue feedback change if
+	// feedback has actually changed.
+	if ((s_leftMotor != vibration->wLeftMotorSpeed) ||
+		(s_rightMotor != vibration->wRightMotorSpeed))
+	{
+		s_leftMotor = vibration->wLeftMotorSpeed;
+		s_rightMotor = vibration->wRightMotorSpeed;
+		s_feedbackQueued = TRUE;
+
+		LOG("XInputHook: HookXInputSetState id=" << userIndex <<
+			", m1=" << s_leftMotor <<
+			", m2=" << s_rightMotor <<
+			endl);
 	}
 
 	return ERROR_SUCCESS;

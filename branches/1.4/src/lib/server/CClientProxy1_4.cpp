@@ -88,15 +88,14 @@ CClientProxy1_4::parseMessage(const UInt8* code)
 void
 CClientProxy1_4::gameDeviceFeedback()
 {
-	// @todo
+	// parse
+	GameDeviceID id;
+	UInt16 m1, m2;
+	CProtocolUtil::readf(getStream(), kMsgDGameFeedback + 4, &id, &m1, &m2);
+	LOG((CLOG_DEBUG2 "recv game device feedback id=%d m1=%d m2=%d", id, m1, m2));
 
-	//// parse
-	//UInt16 m1, m2;
-	//CProtocolUtil::readf(m_stream, kMsgDGameFeedback + 4, &m1, &m2);
-	//LOG((CLOG_DEBUG2 "recv game device feedback id= m1=%d m2=%d", id, x, y));
-
-	//// forward
-	//m_server->gameDeviceFeedback(id, x, y);
+	// forward
+	m_server->gameDeviceFeedback(id, m1, m2);
 }
 
 void

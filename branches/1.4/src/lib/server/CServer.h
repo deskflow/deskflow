@@ -133,6 +133,9 @@ public:
 	//! Notify of game device timing response
 	void				gameDeviceTimingResp(UInt16 freq);
 
+	//! Notify of game device feedback
+	void				gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
+
 	//@}
 	//! @name accessors
 	//@{

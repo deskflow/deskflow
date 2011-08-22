@@ -371,6 +371,13 @@ CServerProxy::onGameDeviceTimingResp(UInt16 freq)
 }
 
 void
+CServerProxy::onGameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2)
+{
+	LOG((CLOG_DEBUG1 "sending game device feedback id=%d, m1=%d, m2=%d", id, m1, m2));
+	CProtocolUtil::writef(m_stream, kMsgDGameFeedback, id, m1, m2);
+}
+
+void
 CServerProxy::flushCompressedMouse()
 {
 	if (m_compressMouse) {

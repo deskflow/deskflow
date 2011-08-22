@@ -90,6 +90,7 @@ public:
 	virtual bool		isAnyMouseButtonDown() const;
 	virtual void		getCursorCenter(SInt32& x, SInt32& y) const;
 	virtual void		gameDeviceTimingResp(UInt16 freq);
+	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
 	// ISecondaryScreen overrides
 	virtual void		fakeMouseButton(ButtonID id, bool press) const;
@@ -327,6 +328,7 @@ private:
 	// game device stuff
 	CThread*			m_xInputPollThread;
 	CThread*			m_xInputTimingThread;
+	CThread*			m_xInputFeedbackThread;
 	// @todo game device state class and multiple controller support
 	WORD				m_gameButtonsLast;
 	BYTE				m_gameLeftTriggerLast;
@@ -352,6 +354,9 @@ private:
 
 	// thread for checking queued timing requests. 
 	void				xInputTimingThread(void*);
+
+	// thread for checking pending feedback state.
+	void				xInputFeedbackThread(void*);
 #endif
 
 	static CMSWindowsScreen*	s_screen;

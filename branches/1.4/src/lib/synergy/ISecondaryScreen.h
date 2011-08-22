@@ -78,10 +78,14 @@ public:
 	//! Get game device timing response event type.
 	static CEvent::Type	getGameDeviceTimingRespEvent();
 
+	//! Get game device feedback event type.
+	static CEvent::Type	getGameDeviceFeedbackEvent();
+
 	//@}
 
 private:
 	static CEvent::Type s_gameTimingRespEvent;
+	static CEvent::Type s_gameFeedbackEvent;
 };
 
 #endif

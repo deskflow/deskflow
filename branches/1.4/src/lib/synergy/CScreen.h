@@ -195,6 +195,12 @@ public:
 	Handles a game device timing response coming back from the client.
 	*/
 	virtual void		gameDeviceTimingResp(UInt16 freq);
+	
+	//! Notify of game device feedback changes
+	/*!
+	Sets the game device state with new feedback values.
+	*/
+	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
 	//! Notify of options changes
 	/*!

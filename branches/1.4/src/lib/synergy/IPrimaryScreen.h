@@ -108,6 +108,16 @@ public:
 	public:
 		UInt16 m_freq;
 	};
+	//! Game device feedback event data
+	class CGameDeviceFeedbackInfo {
+	public:
+		CGameDeviceFeedbackInfo(GameDeviceID id, UInt16 m1, UInt16 m2) :
+		  m_id(id), m_m1(m1), m_m2(m2) { }
+	public:
+		GameDeviceID m_id;
+		UInt16 m_m1;
+		UInt16 m_m2;
+	};
 
 	//! @name manipulators
 	//@{
@@ -202,6 +212,9 @@ public:
 	
 	//! Handle incoming game device timing responses.
 	virtual void		gameDeviceTimingResp(UInt16 freq) = 0;
+
+	//! Handle incoming game device feedback changes.
+	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2) = 0;
 
 	//! Get button down event type.  Event data is CButtonInfo*.
 	static CEvent::Type	getButtonDownEvent();

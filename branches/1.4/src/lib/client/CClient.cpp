@@ -75,6 +75,10 @@ CClient::CClient(const CString& name, const CNetworkAddress& address,
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleGameDeviceTimingResp));
+	EVENTQUEUE->adoptHandler(IPlatformScreen::getGameDeviceFeedbackEvent(),
+							getEventTarget(),
+							new TMethodEventJob<CClient>(this,
+								&CClient::handleGameDeviceFeedback));
 }
 
 CClient::~CClient()
@@ -713,4 +717,13 @@ CClient::handleGameDeviceTimingResp(const CEvent& event, void*)
 		reinterpret_cast<IPlatformScreen::CGameDeviceTimingRespInfo*>(event.getData());
 
 	m_server->onGameDeviceTimingResp(info->m_freq);
+}
+
+void
+CClient::handleGameDeviceFeedback(const CEvent& event, void*)
+{
+	IPlatformScreen::CGameDeviceFeedbackInfo* info =
+		reinterpret_cast<IPlatformScreen::CGameDeviceFeedbackInfo*>(event.getData());
+
+	m_server->onGameDeviceFeedback(info->m_id, info->m_m1, info->m_m2);
 }

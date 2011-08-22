@@ -119,6 +119,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	// @todo - move game support stuff to new class
 	, m_xInputPollThread(NULL)
 	, m_xInputTimingThread(NULL)
+	, m_xInputFeedbackThread(NULL)
 	, m_gameButtonsLast(0)
 	, m_gameLeftTriggerLast(0)
 	, m_gameRightTriggerLast(0)
@@ -191,6 +192,10 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 		// check for queued timing requests on client.
 		m_xInputTimingThread = new CThread(new TMethodJob<CMSWindowsScreen>(
 			this, &CMSWindowsScreen::xInputTimingThread));
+
+		// check for waiting feedback state on client.
+		m_xInputFeedbackThread = new CThread(new TMethodJob<CMSWindowsScreen>(
+			this, &CMSWindowsScreen::xInputFeedbackThread));
 	}
 #endif
 }
@@ -839,6 +844,18 @@ CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 			min, max, (UInt16)(total / m_gameFakeLagRecord.size())));
 		m_gameFakeLagRecord.clear();
 	}
+}
+
+void
+CMSWindowsScreen::gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2)
+{
+#if GAME_DEVICE_SUPPORT
+	XINPUT_VIBRATION vibration;
+	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+	vibration.wLeftMotorSpeed = m1;
+	vibration.wRightMotorSpeed = m2;
+	XInputSetState(id, &vibration);
+#endif
 }
 
 void
@@ -2032,6 +2049,29 @@ CMSWindowsScreen::xInputTimingThread(void*)
 
 		// give the cpu a break.
 		Sleep(1);
+	}
+}
+
+void
+CMSWindowsScreen::xInputFeedbackThread(void*)
+{
+	LOG((CLOG_DEBUG "xinput feedback thread started"));
+
+	int index = 0;
+	bool end = false;
+	while (!end)
+	{
+		WORD leftMotor, rightMotor;
+		if (DequeueXInputFeedback(&leftMotor, &rightMotor))
+		{
+			LOG((CLOG_DEBUG "dequeued game device feedback"));
+			sendEvent(getGameDeviceFeedbackEvent(),
+				new CGameDeviceFeedbackInfo(index, leftMotor, rightMotor));
+		}
+
+		// probably ok not worrying too much about timing here, as
+		// feedback doesn't need to be as responsive as input.
+		Sleep(100);
 	}
 }
 

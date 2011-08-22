@@ -181,6 +181,7 @@ private:
 	void				handleSuspend(const CEvent& event, void*);
 	void				handleResume(const CEvent& event, void*);
 	void				handleGameDeviceTimingResp(const CEvent& event, void*);
+	void				handleGameDeviceFeedback(const CEvent& event, void*);
 	
 private:
 	CString					m_name;

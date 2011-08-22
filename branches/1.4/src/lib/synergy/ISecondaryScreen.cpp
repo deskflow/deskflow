@@ -19,10 +19,18 @@
 #include "IEventQueue.h"
 
 CEvent::Type		ISecondaryScreen::s_gameTimingRespEvent = CEvent::kUnknown;
+CEvent::Type		ISecondaryScreen::s_gameFeedbackEvent   = CEvent::kUnknown;
 
 CEvent::Type
 ISecondaryScreen::getGameDeviceTimingRespEvent()
 {
 	return EVENTQUEUE->registerTypeOnce(s_gameTimingRespEvent,
 							"ISecondaryScreen::getGameDeviceTimingRespEvent");
+}
+
+CEvent::Type
+ISecondaryScreen::getGameDeviceFeedbackEvent()
+{
+	return EVENTQUEUE->registerTypeOnce(s_gameFeedbackEvent,
+							"ISecondaryScreen::getGameDeviceFeedbackEvent");
 }
