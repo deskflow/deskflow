@@ -44,6 +44,7 @@ BOOL s_timingReqQueued = FALSE;
 BOOL s_timingRespQueued = FALSE;
 DWORD s_lastFakeMillis = 0;
 WORD s_fakeFreqMillis = 0;
+DWORD s_packetNumber = 0;
 
 #pragma data_seg()
 
@@ -103,6 +104,9 @@ void
 SetXInputButtons(DWORD userIndex, WORD buttons)
 {
 	s_buttons = buttons;
+
+	s_packetNumber++;
+
 	LOG("XInputHook: SetXInputButtons: " << buttons << endl);
 }
 
@@ -114,6 +118,8 @@ SetXInputSticks(DWORD userIndex, SHORT lx, SHORT ly, SHORT rx, SHORT ry)
 	s_rightStickX = rx;
 	s_rightStickY = ry;
 
+	s_packetNumber++;
+
 	LOG("XInputHook: SetXInputSticks: " <<
 		"left=" << s_leftStickX << "," << s_leftStickY <<
 		" right=" << s_rightStickX << "," << s_rightStickY << endl);
@@ -124,6 +130,8 @@ SetXInputTriggers(DWORD userIndex, BYTE left, BYTE right)
 {
 	s_leftTrigger = left;
 	s_rightTrigger = right;
+
+	s_packetNumber++;
 
 	LOG("XInputHook: SetXInputTriggers: " <<
 		"left=" << (int)left << " right=" << (int)right << endl);
@@ -152,19 +160,28 @@ GetXInputFakeFreqMillis()
 DWORD WINAPI
 HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 {
+	// @todo multiple device support
 	if (userIndex != 0)
-		return 1167; // @todo find macro for this
+	{
+		return ERROR_DEVICE_NOT_CONNECTED;
+	}
 
 	DWORD now = GetTickCount();
 	s_fakeFreqMillis = (WORD)(now - s_lastFakeMillis);
 	s_lastFakeMillis = now;
 
-	LOG("XInputHook: hookXInputGetState index=" << userIndex
-		<< ", b=" << s_buttons
+	LOG("XInputHook: HookXInputGetState"
+		<< ", pkt=" << s_packetNumber
+		<< ", index=" << userIndex
+		<< ", btn=" << s_buttons
+		<< ", t1=" << (int)s_leftTrigger
+		<< ", t2=" << (int)s_rightTrigger
+		<< ", s2=" << s_rightStickX << "," << s_rightStickY
 		<< ", s1=" << s_leftStickX << "," << s_leftStickY
 		<< ", s2=" << s_rightStickX << "," << s_rightStickY
 		<< endl);
 
+	state->dwPacketNumber = s_packetNumber;
 	state->Gamepad.wButtons = s_buttons;
 	state->Gamepad.bLeftTrigger = s_leftTrigger;
 	state->Gamepad.bRightTrigger = s_rightTrigger;
@@ -186,10 +203,13 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 DWORD WINAPI
 HookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities)
 {
+	// @todo multiple device support
 	if (userIndex != 0)
-		return 1167; // @todo find macro for this
+	{
+		return ERROR_DEVICE_NOT_CONNECTED;
+	}
 
-	LOG("XInputHook: hookXInputGetCapabilities id=" << userIndex <<
+	LOG("XInputHook: HookXInputGetCapabilities id=" << userIndex <<
 		", flags=" << flags << endl);
 
 	capabilities->Type = 1;
