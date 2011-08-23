@@ -190,17 +190,6 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 	s_fakeFreqMillis = (WORD)(now - s_lastFakeMillis);
 	s_lastFakeMillis = now;
 
-	LOG("XInputHook: HookXInputGetState"
-		<< ", pkt=" << s_packetNumber
-		<< ", index=" << userIndex
-		<< ", btn=" << s_buttons
-		<< ", t1=" << (int)s_leftTrigger
-		<< ", t2=" << (int)s_rightTrigger
-		<< ", s2=" << s_rightStickX << "," << s_rightStickY
-		<< ", s1=" << s_leftStickX << "," << s_leftStickY
-		<< ", s2=" << s_rightStickX << "," << s_rightStickY
-		<< endl);
-
 	state->dwPacketNumber = s_packetNumber;
 	state->Gamepad.wButtons = s_buttons;
 	state->Gamepad.bLeftTrigger = s_leftTrigger;
@@ -209,6 +198,16 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 	state->Gamepad.sThumbLY = s_leftStickY;
 	state->Gamepad.sThumbRX = s_rightStickX;
 	state->Gamepad.sThumbRY = s_rightStickY;
+
+	LOG("XInputHook: HookXInputGetState"
+		<< ", idx=" << userIndex
+		<< ", pkt=" << state->dwPacketNumber
+		<< ", btn=" << state->Gamepad.wButtons
+		<< ", t1=" << (int)state->Gamepad.bLeftTrigger
+		<< ", t2=" << (int)state->Gamepad.bRightTrigger
+		<< ", s1=" << state->Gamepad.sThumbLX << "," << state->Gamepad.sThumbLY
+		<< ", s2=" << state->Gamepad.sThumbRX << "," << state->Gamepad.sThumbRY
+		<< endl);
 
 	if (s_timingReqQueued)
 	{
@@ -238,7 +237,8 @@ HookXInputSetState(DWORD userIndex, XINPUT_VIBRATION* vibration)
 		s_rightMotor = vibration->wRightMotorSpeed;
 		s_feedbackQueued = TRUE;
 
-		LOG("XInputHook: HookXInputSetState id=" << userIndex <<
+		LOG("XInputHook: HookXInputSetState"
+			", idx=" << userIndex <<
 			", m1=" << s_leftMotor <<
 			", m2=" << s_rightMotor <<
 			endl);
@@ -256,7 +256,8 @@ HookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* cap
 		return ERROR_DEVICE_NOT_CONNECTED;
 	}
 
-	LOG("XInputHook: HookXInputGetCapabilities id=" << userIndex <<
+	LOG("XInputHook: HookXInputGetCapabilities"
+		", idx=" << userIndex <<
 		", flags=" << flags << endl);
 
 	capabilities->Type = 1;
