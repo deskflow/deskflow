@@ -2069,9 +2069,7 @@ CMSWindowsScreen::xInputFeedbackThread(void*)
 				new CGameDeviceFeedbackInfo(index, leftMotor, rightMotor));
 		}
 
-		// probably ok not worrying too much about timing here, as
-		// feedback doesn't need to be as responsive as input.
-		Sleep(100);
+		Sleep(50);
 	}
 }
 
