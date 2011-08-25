@@ -16,6 +16,7 @@
  */
 
 #define REQUIRED_XINPUT_DLL "xinput1_3.dll"
+#define HOOK_TIMEOUT 10000 // 10 sec
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -54,11 +55,11 @@ BOOL s_feedbackQueued = FALSE;
 #pragma comment(linker, "/SECTION:.SHARED,RWS")
 
 #include <sstream>
-std::stringstream logStream2;
+std::stringstream _xInputHookLogStream;
 #define LOG(s) \
-	logStream2.str(""); \
-	logStream2 << s; \
-	OutputDebugString( logStream2.str().c_str() );
+	_xInputHookLogStream.str(""); \
+	_xInputHookLogStream << "Synergy XInputHook: " << s << endl; \
+	OutputDebugString( _xInputHookLogStream.str().c_str())
 
 using namespace std;
 
@@ -94,14 +95,14 @@ DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 
 		GetModuleFileName(GetModuleHandle(NULL), name, sizeof(name));
 
-		LOG("XInputHook: checking process: "
-			<< name << ", hook: " << XINPUT_DLL << endl);
-
 		// don't hook synergys (this needs to detect real input)
-		if (string(name).find("synergys.exe") == string::npos)
+		if (string(name).find("synergys.exe") != string::npos)
 		{
-			HookAPICalls(&s_xInputHook);
+			return 0;
 		}
+
+		LOG("checking '" << name << "' for " << XINPUT_DLL);
+		HookAPICalls(&s_xInputHook);
 	}
 
 	return TRUE;
@@ -114,7 +115,7 @@ SetXInputButtons(DWORD userIndex, WORD buttons)
 
 	s_packetNumber++;
 
-	LOG("XInputHook: SetXInputButtons: " << buttons << endl);
+	LOG("SetXInputButtons: idx=" << userIndex << ", btns=" << buttons);
 }
 
 void
@@ -127,9 +128,9 @@ SetXInputSticks(DWORD userIndex, SHORT lx, SHORT ly, SHORT rx, SHORT ry)
 
 	s_packetNumber++;
 
-	LOG("XInputHook: SetXInputSticks: " <<
-		"left=" << s_leftStickX << "," << s_leftStickY <<
-		" right=" << s_rightStickX << "," << s_rightStickY << endl);
+	LOG("SetXInputSticks: " <<
+		" l=" << s_leftStickX << "," << s_leftStickY <<
+		" r=" << s_rightStickX << "," << s_rightStickY);
 }
 
 void
@@ -140,8 +141,8 @@ SetXInputTriggers(DWORD userIndex, BYTE left, BYTE right)
 
 	s_packetNumber++;
 
-	LOG("XInputHook: SetXInputTriggers: " <<
-		"left=" << (int)left << " right=" << (int)right << endl);
+	LOG("SetXInputTriggers: " <<
+		"l=" << (int)left << " r=" << (int)right);
 }
 
 void
@@ -199,7 +200,7 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 	state->Gamepad.sThumbRX = s_rightStickX;
 	state->Gamepad.sThumbRY = s_rightStickY;
 
-	LOG("XInputHook: HookXInputGetState"
+	LOG("HookXInputGetState"
 		<< ", idx=" << userIndex
 		<< ", pkt=" << state->dwPacketNumber
 		<< ", btn=" << state->Gamepad.wButtons
@@ -213,7 +214,7 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 	{
 		s_timingRespQueued = TRUE;
 		s_timingReqQueued = FALSE;
-		LOG("XInputHook: timing response queued");
+		LOG("timing response queued");
 	}
 
 	return ERROR_SUCCESS;
@@ -237,10 +238,10 @@ HookXInputSetState(DWORD userIndex, XINPUT_VIBRATION* vibration)
 		s_rightMotor = vibration->wRightMotorSpeed;
 		s_feedbackQueued = TRUE;
 
-		LOG("XInputHook: HookXInputSetState"
+		LOG("HookXInputSetState"
 			", idx=" << userIndex <<
-			", m1=" << s_leftMotor <<
-			", m2=" << s_rightMotor <<
+			", lm=" << s_leftMotor <<
+			", rm=" << s_rightMotor <<
 			endl);
 	}
 
@@ -256,9 +257,9 @@ HookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* cap
 		return ERROR_DEVICE_NOT_CONNECTED;
 	}
 
-	LOG("XInputHook: HookXInputGetCapabilities"
+	LOG("HookXInputGetCapabilities"
 		", idx=" << userIndex <<
-		", flags=" << flags << endl);
+		", flags=" << flags);
 
 	capabilities->Type = 1;
 	capabilities->SubType = 1;
@@ -287,13 +288,13 @@ InstallXInputHook()
 {
 	if (_stricmp(XINPUT_DLL, REQUIRED_XINPUT_DLL) != 0)
 	{
-		LOG("XInputHook: DLL not supported: " << XINPUT_DLL << endl);
+		LOG("DLL not supported: " << XINPUT_DLL);
 		return FALSE;
 	}
 
-	OutputDebugString("XInputHook: installing hook\n");
+	LOG("installing hook");
 	s_hook = SetWindowsHookEx(WH_CBT, HookProc, dll, 0);
-	OutputDebugString("XInputHook: hook installed\n");
+	LOG("hook installed");
 
 	return TRUE;
 }
@@ -301,7 +302,7 @@ InstallXInputHook()
 synxinhk_API void
 RemoveXInputHook()
 {
-	OutputDebugString("XInputHook: removing hook\n");
+	LOG("removing hook");
 	UnhookWindowsHookEx(s_hook);
-	OutputDebugString("CXInputHook: hook removed\n");
+	LOG("hook removed");
 }

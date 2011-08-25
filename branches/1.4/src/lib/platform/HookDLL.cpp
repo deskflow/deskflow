@@ -30,11 +30,11 @@
 
 // TODO: use synergy logging
 #include <sstream>
-std::stringstream logStream;
+std::stringstream _hookDllLogStream;
 #define LOG(s) \
-	logStream.str(""); \
-	logStream << s; \
-	OutputDebugString( logStream.str().c_str() );
+	_hookDllLogStream.str(""); \
+	_hookDllLogStream << "Synergy HookDLL: " << s << std::endl; \
+	OutputDebugString( _hookDllLogStream.str().c_str() );
 
 //===========================================================================
 // Called from the DLPD_IAT_STUB stubs.  Increments "count" field of the stub
@@ -58,9 +58,8 @@ void __cdecl DefaultHook( PVOID dummy )
     // the loader process.  It's slow!
     if ( !IMAGE_SNAP_BY_ORDINAL( pDLPDStub->pszNameOrOrdinal) )
     {
-        OutputDebugString( "Called hooked function: " );
-        OutputDebugString( (PSTR)pDLPDStub->pszNameOrOrdinal );
-        OutputDebugString( "\n" );
+        LOG( "Called hooked function: " );
+        LOG( (PSTR)pDLPDStub->pszNameOrOrdinal );
     }
     #endif
 
@@ -114,7 +113,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
     // If no import names table, we can't redirect this, so bail
     if ( pImportDesc->OriginalFirstThunk == 0 )
 	{
-		OutputDebugString( "No IAT." );
+		LOG( "no IAT available." );
         return false;
 	}
 
@@ -132,7 +131,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
 
     if ( cFuncs == 0 )  // If no imported functions, we're done!
 	{
-		OutputDebugString( "No imported functions..." );
+		LOG( "no imported functions." );
         return false;
 	}
 
@@ -152,7 +151,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
     if ( !VirtualProtect(   pIAT, sizeof(PVOID) * cFuncs,
                             flNewProtect, &flOldProtect) )
 	{
-		OutputDebugString( "Cannot virtual protect." );
+		LOG( "could not remove ReadOnly and ExecuteRead attributes, or add ReadWrite flag." );
         return false;
     }
 
@@ -165,7 +164,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
         pStubs = new DLPD_IAT_STUB[ cFuncs + 1];
         if ( !pStubs )
 		{
-			OutputDebugString( "No stubs." );
+			LOG( "could not allocate memory for redirection stubs." );
             return false;
 		}
     }
@@ -176,15 +175,13 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
 
     while ( pIteratingIAT->u1.Function )
 	{
-		OutputDebugString( "checking function " );
-
         void* HookFn = 0;  // Set to either the SFunctionHook or pStubs.
 
         if ( !IMAGE_SNAP_BY_ORDINAL( pINT->u1.Ordinal ) )  // import by name
         {
 			PIMAGE_IMPORT_BY_NAME pImportName = MakePtr( PIMAGE_IMPORT_BY_NAME, pBaseLoadAddr, pINT->u1.AddressOfData );
 
-			LOG( "by name: " << pImportName->Name );
+			LOG( "checking function with name: " << pImportName->Name );
 
             // Iterate through the hook functions, searching for this import.
             SFunctionHook* FHook = DLLHook->Functions;
@@ -192,11 +189,12 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
             {
                 if ( lstrcmpi( FHook->Name, (char*)pImportName->Name ) == 0 )
                 {
-                    LOG( "hooked function: " << pImportName->Name );
-
                     // Save the old function in the SFunctionHook structure and get the new one.
                     FHook->OrigFn = (void*)pIteratingIAT->u1.Function;
-                    HookFn = FHook->HookFn;
+					HookFn = FHook->HookFn;
+
+					LOG( "hooked function: " << pImportName->Name );
+
                     break;
                 }
 
@@ -209,7 +207,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
         }
 		else // added comparison for ordinal
 		{
-			LOG( "by ordinal: " << pINT->u1.Ordinal );
+			LOG( "checking function at ordinal: " << pINT->u1.Ordinal );
 
 			SFunctionHook* FHook = DLLHook->Functions;
 			while ( FHook->Name )
@@ -219,6 +217,9 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
 					// Save the old function in the SFunctionHook structure and get the new one.
 					FHook->OrigFn = (void*)pIteratingIAT->u1.Function;
 					HookFn = FHook->HookFn;
+
+					LOG( "hooked ordinal: " << pINT->u1.Ordinal );
+
 					break;
 				}
 				FHook++;
@@ -277,22 +278,31 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
 
 //===========================================================================
 // Top level routine to find the EXE's imports, and redirect them
-bool HookAPICalls( SDLLHook* Hook )
+bool HookAPICalls( SDLLHook* hook )
 {
-    if ( !Hook )
+    if ( !hook )
+	{
+		LOG("no hook.");
         return false;
+	}
 
     HMODULE hModEXE = GetModuleHandle( 0 );
 
     PIMAGE_NT_HEADERS pExeNTHdr = PEHeaderFromHModule( hModEXE );
     
     if ( !pExeNTHdr )
+	{
+		LOG("no PE header.");
         return false;
+	}
 
     DWORD importRVA = pExeNTHdr->OptionalHeader.DataDirectory
                         [IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
     if ( !importRVA )
+	{
+		LOG("no virtual address for image directory entry import.");
         return false;
+	}
 
     // Convert imports RVA to a usable pointer
     PIMAGE_IMPORT_DESCRIPTOR pImportDesc = MakePtr( PIMAGE_IMPORT_DESCRIPTOR,
@@ -306,24 +316,24 @@ bool HookAPICalls( SDLLHook* Hook )
     {
         PSTR pszImportModuleName = MakePtr( PSTR, hModEXE, pImportDesc->Name);
 
-        if ( lstrcmpi( pszImportModuleName, Hook->Name ) == 0 )
+        if ( lstrcmpi( pszImportModuleName, hook->Name ) == 0 )
         {
-            LOG( "Found " << Hook->Name << "..." );
+            LOG( "found " << hook->Name << " in process." );
 
-			OutputDebugString( "Redirecting IAT..." );
-			if ( RedirectIAT( Hook, pImportDesc, (PVOID)hModEXE ) )
+			if ( RedirectIAT( hook, pImportDesc, (PVOID)hModEXE ) )
 			{
-				OutputDebugString( "Success" );
+				LOG( "redirected IAT ok." );
+				return true;
 			}
 			else
 			{
-				OutputDebugString( "Failed" );
+				LOG( "failed to redirect IAT." );
 			}
         }
         
         pImportDesc++;  // Advance to next import descriptor
     }
 
-    return true;
+	return false;
 }
 

@@ -77,4 +77,4 @@ struct SDLLHook
 };
 
 // Hook functions one or more DLLs.
-bool HookAPICalls( SDLLHook* Hook );
+bool HookAPICalls( SDLLHook* hook );
