@@ -29,6 +29,17 @@ XScreenOpenFailure::getWhat() const throw()
 
 
 //
+// XScreenXInputFailure
+//
+
+CString
+XScreenXInputFailure::getWhat() const throw()
+{
+	return "";
+}
+
+
+//
 // XScreenUnavailable
 //
 

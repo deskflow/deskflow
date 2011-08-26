@@ -224,7 +224,7 @@ CScreen*
 CClientApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new CScreen(new CMSWindowsScreen(false, args().m_noHooks));
+	return new CScreen(new CMSWindowsScreen(false, args().m_noHooks, args().m_gameDevice));
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(
 		args().m_display, false, args().m_disableXInitThreads,

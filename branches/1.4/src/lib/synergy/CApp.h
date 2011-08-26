@@ -49,9 +49,7 @@ public:
 		bool m_relaunchMode;
 		bool m_debugServiceWait;
 		bool m_pauseOnExit;
-#if GAME_DEVICE_SUPPORT
 		bool m_gameDevice;
-#endif
 #endif
 #if WINAPI_XWINDOWS
 		bool m_disableXInitThreads;

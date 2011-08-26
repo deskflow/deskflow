@@ -639,7 +639,7 @@ CScreen*
 CServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-	return new CScreen(new CMSWindowsScreen(true, args().m_noHooks));
+	return new CScreen(new CMSWindowsScreen(true, args().m_noHooks, args().m_gameDevice));
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(
 		args().m_display, true, args().m_disableXInitThreads));

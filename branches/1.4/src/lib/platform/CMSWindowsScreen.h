@@ -46,7 +46,7 @@ enum
 //! Implementation of IPlatformScreen for Microsoft Windows
 class CMSWindowsScreen : public CPlatformScreen {
 public:
-	CMSWindowsScreen(bool isPrimary, bool noHooks);
+	CMSWindowsScreen(bool isPrimary, bool noHooks, bool gameDevice);
 	virtual ~CMSWindowsScreen();
 
 	//! @name manipulators
@@ -348,6 +348,8 @@ private:
 	UInt16				m_gameFakeLagLast;
 	bool				m_gameTimingCalibrated;
 	std::vector<UInt16>	m_gameFakeLagRecord;
+	bool				m_gameDevice;
+	HMODULE				m_xinputModule;
 
 	// thread for polling xinput state.
 	void				xInputPollThread(void*);

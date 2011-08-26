@@ -43,7 +43,7 @@
 #if GAME_DEVICE_SUPPORT
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <XInput.h>
+#include "XInput.h"
 #endif
 
 //
@@ -81,6 +81,9 @@
 #define PBT_APMRESUMEAUTOMATIC	0x0012
 #endif
 
+typedef DWORD (WINAPI *XInputGetStateFunc)(DWORD, XINPUT_STATE*);
+typedef DWORD (WINAPI *XInputSetStateFunc)(DWORD, XINPUT_VIBRATION*);
+
 //
 // CMSWindowsScreen
 //
@@ -88,7 +91,7 @@
 HINSTANCE				CMSWindowsScreen::s_instance = NULL;
 CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
 
-CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
+CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, bool gameDevice) :
 	m_isPrimary(isPrimary),
 	m_noHooks(noHooks),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
@@ -137,6 +140,8 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	, m_gameTimingFirst(0)
 	, m_gameFakeLagLast(0)
 	, m_gameTimingCalibrated(false)
+	, m_gameDevice(gameDevice)
+	, m_xinputModule(NULL)
 #endif
 {
 	assert(s_instance != NULL);
@@ -181,21 +186,30 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks) :
 	EVENTQUEUE->adoptBuffer(new CMSWindowsEventQueueBuffer);
 
 #if GAME_DEVICE_SUPPORT
-	if (m_isPrimary)
+	if (m_gameDevice)
 	{
-		// only capture xinput on the server.
-		m_xInputPollThread = new CThread(new TMethodJob<CMSWindowsScreen>(
-			this, &CMSWindowsScreen::xInputPollThread));
-	}
-	else
-	{
-		// check for queued timing requests on client.
-		m_xInputTimingThread = new CThread(new TMethodJob<CMSWindowsScreen>(
-			this, &CMSWindowsScreen::xInputTimingThread));
+		m_xinputModule = LoadLibrary("xinput1_3.dll");
+		if (m_xinputModule == NULL)
+		{
+			throw XScreenXInputFailure("could not load xinput library.");
+		}
 
-		// check for waiting feedback state on client.
-		m_xInputFeedbackThread = new CThread(new TMethodJob<CMSWindowsScreen>(
-			this, &CMSWindowsScreen::xInputFeedbackThread));
+		if (m_isPrimary)
+		{
+			// only capture xinput on the server.
+			m_xInputPollThread = new CThread(new TMethodJob<CMSWindowsScreen>(
+				this, &CMSWindowsScreen::xInputPollThread));
+		}
+		else
+		{
+			// check for queued timing requests on client.
+			m_xInputTimingThread = new CThread(new TMethodJob<CMSWindowsScreen>(
+				this, &CMSWindowsScreen::xInputTimingThread));
+
+			// check for waiting feedback state on client.
+			m_xInputFeedbackThread = new CThread(new TMethodJob<CMSWindowsScreen>(
+				this, &CMSWindowsScreen::xInputFeedbackThread));
+		}
 	}
 #endif
 }
@@ -850,11 +864,20 @@ void
 CMSWindowsScreen::gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2)
 {
 #if GAME_DEVICE_SUPPORT
+
+	XInputSetStateFunc xInputSetStateFunc =
+		(XInputSetStateFunc)GetProcAddress(m_xinputModule, "XInputSetState");
+
+	if (xInputSetStateFunc == NULL)
+	{
+		throw XScreenXInputFailure("could not get function address: XInputSetState");
+	}
+
 	XINPUT_VIBRATION vibration;
 	ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 	vibration.wLeftMotorSpeed = m1;
 	vibration.wRightMotorSpeed = m2;
-	XInputSetState(id, &vibration);
+	xInputSetStateFunc(id, &vibration);
 #endif
 }
 
@@ -1938,13 +1961,21 @@ CMSWindowsScreen::xInputPollThread(void*)
 {
 	LOG((CLOG_DEBUG "xinput poll thread started"));
 
+	XInputGetStateFunc xInputGetStateFunc = 
+		(XInputGetStateFunc)GetProcAddress(m_xinputModule, "XInputGetState");
+
+	if (xInputGetStateFunc == NULL)
+	{
+		throw XScreenXInputFailure("could not get function address: XInputGetState");
+	}
+
 	int index = 0;
 	XINPUT_STATE state;
 	bool end = false;
 	while (!end)
 	{
 		ZeroMemory(&state, sizeof(XINPUT_STATE));
-		DWORD result = XInputGetState(index, &state);
+		DWORD result = xInputGetStateFunc(index, &state);
 
 		// timeout the timing request after 10 seconds
 		if (m_gameTimingWaiting && (ARCH->time() - m_gameLastTimingSent > 2))

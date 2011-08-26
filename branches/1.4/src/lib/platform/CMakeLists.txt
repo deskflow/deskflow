@@ -138,7 +138,6 @@ if (WIN32)
 
 	if (GAME_DEVICE_SUPPORT)
 		include_directories($ENV{DXSDK_DIR}/Include)
-		link_directories("$ENV{DXSDK_DIR}/Lib/x86")
 		add_library(synxinhk SHARED ${inc_xinhook} ${src_xinhook})
 
 		add_custom_command(

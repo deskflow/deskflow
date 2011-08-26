@@ -29,6 +29,12 @@ Thrown when a screen cannot be opened or initialized.
 */
 XBASE_SUBCLASS_WHAT(XScreenOpenFailure, XScreen);
 
+//! XInput exception
+/*!
+Thrown when an XInput error occurs
+*/
+XBASE_SUBCLASS_WHAT(XScreenXInputFailure, XScreen);
+
 //! Screen unavailable exception
 /*!
 Thrown when a screen cannot be opened or initialized but retrying later

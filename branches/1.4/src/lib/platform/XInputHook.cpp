@@ -205,8 +205,7 @@ HookXInputGetState(DWORD userIndex, XINPUT_STATE* state)
 		<< ", t1=" << (int)state->Gamepad.bLeftTrigger
 		<< ", t2=" << (int)state->Gamepad.bRightTrigger
 		<< ", s1=" << state->Gamepad.sThumbLX << "," << state->Gamepad.sThumbLY
-		<< ", s2=" << state->Gamepad.sThumbRX << "," << state->Gamepad.sThumbRY
-		<< endl);
+		<< ", s2=" << state->Gamepad.sThumbRX << "," << state->Gamepad.sThumbRY);
 
 	if (s_timingReqQueued)
 	{
@@ -239,8 +238,7 @@ HookXInputSetState(DWORD userIndex, XINPUT_VIBRATION* vibration)
 		LOG("HookXInputSetState"
 			", idx=" << userIndex <<
 			", lm=" << s_leftMotor <<
-			", rm=" << s_rightMotor <<
-			endl);
+			", rm=" << s_rightMotor);
 	}
 
 	return ERROR_SUCCESS;
