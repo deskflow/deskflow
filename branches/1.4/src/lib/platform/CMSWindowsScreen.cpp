@@ -773,6 +773,7 @@ CMSWindowsScreen::queueGameDeviceTimingReq() const
 void
 CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 {
+#if GAME_DEVICE_SUPPORT
 	if (!m_gameTimingStarted)
 	{
 		// record when timing started for calibration period.
@@ -858,6 +859,7 @@ CMSWindowsScreen::gameDeviceTimingResp(UInt16 freq)
 			min, max, (UInt16)(total / m_gameFakeLagRecord.size())));
 		m_gameFakeLagRecord.clear();
 	}
+#endif
 }
 
 void
