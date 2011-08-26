@@ -96,13 +96,11 @@ DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 		GetModuleFileName(GetModuleHandle(NULL), name, sizeof(name));
 
 		// don't hook synergys (this needs to detect real input)
-		if (string(name).find("synergys.exe") != string::npos)
+		if (string(name).find("synergys.exe") == string::npos)
 		{
-			return 0;
+			LOG("checking '" << name << "' for " << XINPUT_DLL);
+			HookAPICalls(&s_xInputHook);
 		}
-
-		LOG("checking '" << name << "' for " << XINPUT_DLL);
-		HookAPICalls(&s_xInputHook);
 	}
 
 	return TRUE;
@@ -128,7 +126,7 @@ SetXInputSticks(DWORD userIndex, SHORT lx, SHORT ly, SHORT rx, SHORT ry)
 
 	s_packetNumber++;
 
-	LOG("SetXInputSticks: " <<
+	LOG("SetXInputSticks:" <<
 		" l=" << s_leftStickX << "," << s_leftStickY <<
 		" r=" << s_rightStickX << "," << s_rightStickY);
 }
