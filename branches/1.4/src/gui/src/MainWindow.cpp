@@ -36,7 +36,7 @@ static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.
 
 static const char* synergyIconFiles[] =
 {
-	":/res/icons/16x16/synergy-disconnected.png",
+        ":/res/icons/16x16/synergy-disconnected.png",
 	":/res/icons/16x16/synergy-connected.png"
 };
 
@@ -61,7 +61,12 @@ MainWindow::MainWindow(QWidget* parent) :
 	initConnections();
 
 	// HACK - surely window should be visible by default?
-	setVisible(true);
+        setVisible(true);
+
+#ifndef Q_OS_WIN
+        // TODO: icon looks a bit crappy in 16x16, fix this.
+        setWindowIcon(":/res/icons/win/QSynergy.png");
+#endif
 
 	if (appConfig().autoConnect())
 		startSynergy();
@@ -182,9 +187,11 @@ void MainWindow::setIcon(qSynergyState state)
 	icon.addFile(synergyIconFiles[state]);
 
 	if (m_pTrayIcon)
-		m_pTrayIcon->setIcon(icon);
+                m_pTrayIcon->setIcon(icon);
 
-	setWindowIcon(icon);
+#ifndef Q_OS_WIN
+        setWindowIcon(icon);
+#endif
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
