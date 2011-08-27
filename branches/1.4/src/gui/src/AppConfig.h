@@ -45,6 +45,7 @@ class AppConfig
 		bool logToFile() const { return m_LogToFile; }
 		const QString& logFilename() const { return m_LogFilename; }
 		QString logLevelText() const;
+                bool gameDevice() const { return m_GameDevice; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -64,8 +65,9 @@ class AppConfig
 		void setInterface(const QString& s) { m_Interface = s; }
 		void setLogLevel(int i) { m_LogLevel = i; }
 		void setAutoDetectPaths(bool b) { m_AutoDetectPaths = b; }
-		void setLogToFile(bool b) { m_LogToFile = b; }
-		void setLogFilename(const QString& s) { m_LogFilename = s; }
+                void setLogToFile(bool b) { m_LogToFile = b; }
+                void setLogFilename(const QString& s) { m_LogFilename = s; }
+                void setGameDevice(bool b) { m_GameDevice = b; }
 
 		void loadSettings();
 		void saveSettings();
@@ -82,6 +84,7 @@ class AppConfig
 		bool m_AutoDetectPaths;
 		bool m_LogToFile;
 		QString m_LogFilename;
+                bool m_GameDevice;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

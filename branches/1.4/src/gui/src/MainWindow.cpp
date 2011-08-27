@@ -171,7 +171,7 @@ void MainWindow::saveSettings()
 	settings().setValue("configFile", m_pLineEditConfigFile->text());
 	settings().setValue("internalConfig", m_pRadioInternalConfig->isChecked());
 	settings().setValue("groupClientChecked", m_pGroupClient->isChecked());
-	settings().setValue("serverHostname", m_pLineEditHostname->text());
+        settings().setValue("serverHostname", m_pLineEditHostname->text());
 
 	settings().sync();
 }
@@ -200,10 +200,15 @@ void MainWindow::startSynergy()
 	QString app;
 	QStringList args;
 
-	args << "-f" << "--debug" << appConfig().logLevelText();
+        args << "-f" << "--debug" << appConfig().logLevelText();
 
 	if (!appConfig().screenName().isEmpty())
 		args << "--name" << appConfig().screenName();
+
+        if (appConfig().gameDevice())
+        {
+                args << "--game-device";
+        }
 
 	setSynergyProcess(new QProcess(this));
 

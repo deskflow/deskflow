@@ -51,7 +51,8 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_ScreenName(),
 	m_Port(24800),
 	m_Interface(),
-	m_LogLevel(0)
+        m_LogLevel(0),
+        m_GameDevice(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -102,6 +103,7 @@ void AppConfig::loadSettings()
 	m_AutoDetectPaths = settings().value("autoDetectPaths", true).toBool();
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
+        m_GameDevice = settings().value("gameDevice", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -116,6 +118,7 @@ void AppConfig::saveSettings()
 	settings().setValue("autoDetectPaths", m_AutoDetectPaths);
 	settings().setValue("logToFile", m_LogToFile);
 	settings().setValue("logFilename", m_LogFilename);
+        settings().setValue("gameDevice", m_GameDevice);
 }
 
 bool AppConfig::detectPath(const QString& name, QString& path)

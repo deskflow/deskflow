@@ -745,29 +745,41 @@ CMSWindowsScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 void
 CMSWindowsScreen::fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const
 {
-	LOG((CLOG_DEBUG "fake game device buttons id=%d buttons=%d", id, buttons));
-	SetXInputButtons(id, buttons);
+	if (m_gameDevice)
+	{
+		LOG((CLOG_DEBUG "fake game device buttons id=%d buttons=%d", id, buttons));
+		SetXInputButtons(id, buttons);
+	}
 }
 
 void
 CMSWindowsScreen::fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const
 {
-	LOG((CLOG_DEBUG "fake game device sticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
-	SetXInputSticks(id, x1, y1, x2, y2);
+	if (m_gameDevice)
+	{
+		LOG((CLOG_DEBUG "fake game device sticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
+		SetXInputSticks(id, x1, y1, x2, y2);
+	}
 }
 
 void
 CMSWindowsScreen::fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const
 {
-	LOG((CLOG_DEBUG "fake game device triggers id=%d t1=%d t2=%d", id, t1, t2));
-	SetXInputTriggers(id, t1, t2);
+	if (m_gameDevice)
+	{
+		LOG((CLOG_DEBUG "fake game device triggers id=%d t1=%d t2=%d", id, t1, t2));
+		SetXInputTriggers(id, t1, t2);
+	}
 }
 
 void
 CMSWindowsScreen::queueGameDeviceTimingReq() const
 {
-	LOG((CLOG_DEBUG "queue game device timing request"));
-	QueueXInputTimingReq();
+	if (m_gameDevice)
+	{
+		LOG((CLOG_DEBUG "queue game device timing request"));
+		QueueXInputTimingReq();
+	}
 }
 
 void

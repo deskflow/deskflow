@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>372</width>
-    <height>412</height>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,6 +74,13 @@
        <widget class="QLineEdit" name="m_pLineEditInterface">
         <property name="enabled">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="m_pCheckBoxGameDevice">
+        <property name="text">
+         <string>Enable gamepad support for Windows</string>
         </property>
        </widget>
       </item>

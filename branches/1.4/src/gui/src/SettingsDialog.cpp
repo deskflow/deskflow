@@ -38,7 +38,13 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
 	m_pCheckBoxAutoDetectPaths->setChecked(appConfig().autoDetectPaths());
 	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
-	m_pLineEditLogFilename->setText(appConfig().logFilename());
+        m_pLineEditLogFilename->setText(appConfig().logFilename());
+
+#ifdef Q_OS_WIN
+        m_pCheckBoxGameDevice->setChecked(appConfig().gameDevice());
+#else
+        m_pCheckBoxGameDevice->setEnabled(false);
+#endif
 }
 
 QString SettingsDialog::browseForSynergyc(QWidget* parent, const QString& programDir, const QString& synergycName)
@@ -97,6 +103,7 @@ void SettingsDialog::accept()
 	appConfig().setAutoDetectPaths(m_pCheckBoxAutoDetectPaths->isChecked());
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
+        appConfig().setGameDevice(m_pCheckBoxGameDevice->isChecked());
 
 	QDialog::accept();
 }

@@ -28,7 +28,6 @@
 #include <stdio.h>
 #include "HookDLL.h"
 
-// TODO: use synergy logging
 #include <sstream>
 std::stringstream _hookDllLogStream;
 #define LOG(s) \
@@ -41,6 +40,8 @@ std::stringstream _hookDllLogStream;
 
 void __cdecl DefaultHook( PVOID dummy )
 {
+	// asm only supported on 32-bit
+#ifdef _M_IX86
     __asm   pushad  // Save all general purpose registers
 
     // Get return address, then subtract 5 (size of a CALL X instruction)
@@ -64,6 +65,7 @@ void __cdecl DefaultHook( PVOID dummy )
     #endif
 
     __asm   popad   // Restore all general purpose registers
+#endif
 }
 
 // This function must be __cdecl!!!
@@ -226,7 +228,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
 			}
 			// If the default function is enabled, store the ordinal for the user.
 			if ( DLLHook->UseDefault )
-				pStubs->pszNameOrOrdinal = pINT->u1.Ordinal;
+				pStubs->pszNameOrOrdinal = (DWORD)pINT->u1.Ordinal;
 		}
 
         // If the default function is enabled, fill in the fields to the stub code.

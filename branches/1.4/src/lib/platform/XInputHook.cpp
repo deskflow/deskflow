@@ -96,7 +96,7 @@ DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 		GetModuleFileName(GetModuleHandle(NULL), name, sizeof(name));
 
 		// don't hook synergys (this needs to detect real input)
-		if (string(name).find("synergys.exe") == string::npos)
+		if (string(name).find("synergy") == string::npos)
 		{
 			LOG("checking '" << name << "' for " << XINPUT_DLL);
 			HookAPICalls(&s_xInputHook);
