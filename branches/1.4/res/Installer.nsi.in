@@ -55,6 +55,8 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\QtNetwork4.dll"
   Delete "${dir}\Uninstall.exe"
   Delete "${dir}\uninstall.exe"
+  Delete "${dir}\synxinhk.dll"
+  Delete "${dir}\sxinpx13.dll"
   RMDir "${dir}"
 
 !macroend
@@ -115,6 +117,8 @@ Section "Server and Client" core
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synrgyhk.dll"
+  File "${binDir}\Release\synxinhk.dll"
+  File "${binDir}\Release\sxinpx13.dll"
 
 SectionEnd
 
