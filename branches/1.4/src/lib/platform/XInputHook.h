@@ -24,7 +24,6 @@
 #endif
 
 synxinhk_API LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam);
-
 synxinhk_API BOOL InstallXInputHook();
 synxinhk_API void RemoveXInputHook();
 synxinhk_API void SetXInputButtons(DWORD userIndex, WORD buttons);
@@ -34,3 +33,11 @@ synxinhk_API void QueueXInputTimingReq();
 synxinhk_API BOOL DequeueXInputTimingResp();
 synxinhk_API WORD GetXInputFakeFreqMillis();
 synxinhk_API BOOL DequeueXInputFeedback(WORD* leftMotor, WORD* rightMotor);
+
+#ifdef SYNERGY_EXPORT_XINPUT_HOOKS
+
+synxinhk_API DWORD WINAPI HookXInputGetState(DWORD dwUserIndex, XINPUT_STATE* pState);
+synxinhk_API DWORD WINAPI HookXInputSetState(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
+synxinhk_API DWORD WINAPI HookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities);
+
+#endif

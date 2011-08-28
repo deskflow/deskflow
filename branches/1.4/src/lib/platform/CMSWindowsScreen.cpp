@@ -38,12 +38,12 @@
 #include <string.h>
 #include <pbt.h>
 #include "GameDeviceTypes.h"
-#include "XInputHook.h"
 
 #if GAME_DEVICE_SUPPORT
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include "XInput.h"
+#include "XInputHook.h"
 #endif
 
 //

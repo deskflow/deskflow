@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define WIN32_LEAN_AND_MEAN
+#define SYNERGY_EXPORT_XINPUT_HOOKS
 #define REQUIRED_XINPUT_DLL "xinput1_3.dll"
 #define HOOK_TIMEOUT 10000 // 10 sec
 
-#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
+#include <XInput.h>
 #include "XInputHook.h"
 #include "HookDLL.h"
-#include <XInput.h>
 #include <iostream>
 
 HINSTANCE dll;
@@ -62,15 +62,6 @@ std::stringstream _xInputHookLogStream;
 	OutputDebugString( _xInputHookLogStream.str().c_str())
 
 using namespace std;
-
-typedef DWORD (WINAPI *XInputGetState_Type)(DWORD dwUserIndex, XINPUT_STATE* pState);
-DWORD WINAPI HookXInputGetState(DWORD dwUserIndex, XINPUT_STATE* pState);
-
-typedef DWORD (WINAPI *XInputSetState_Type)(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
-DWORD WINAPI HookXInputSetState(DWORD dwUserIndex, XINPUT_VIBRATION* pVibration);
-
-typedef DWORD (WINAPI *XInputGetCapabilities_Type)(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities);
-DWORD WINAPI HookXInputGetCapabilities(DWORD userIndex, DWORD flags, XINPUT_CAPABILITIES* capabilities);
 
 SDLLHook s_xInputHook =
 {

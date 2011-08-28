@@ -40,6 +40,7 @@
 #endif
 
 #if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
+#include <Windows.h>
 #include "XInputHook.h"
 #endif
 

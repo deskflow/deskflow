@@ -70,6 +70,15 @@ if (WIN32)
 		HookDLL.cpp
 	)
 
+	set(inc_xinproxy13
+		XInput13.h
+		XInputProxy13.h
+	)
+
+	set(src_xinproxy13
+		XInputProxy13.cpp
+	)
+
 elseif (APPLE)
 
 	set(src
@@ -145,6 +154,18 @@ if (WIN32)
 			POST_BUILD
 			COMMAND xcopy /Y /Q
 				..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\synxinhk.*
+				..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
+			)
+
+		# synergy xinput1_3.dll proxy
+		include_directories($ENV{DXSDK_DIR}/Include)
+		add_library(sxinpx13 SHARED ${inc_xinproxy13} ${src_xinproxy13})
+		target_link_libraries(sxinpx13 synxinhk)
+		add_custom_command(
+			TARGET sxinpx13
+			POST_BUILD
+			COMMAND xcopy /Y /Q
+				..\\..\\..\\..\\lib\\${CMAKE_CFG_INTDIR}\\sxinpx13.*
 				..\\..\\..\\..\\bin\\${CMAKE_CFG_INTDIR}\\
 			)
 	endif()
