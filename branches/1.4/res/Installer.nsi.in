@@ -26,6 +26,9 @@
 
 !include "MUI2.nsh"
 
+!addincludedir ..\res
+!include "DefineIfExist.nsh"
+
 !insertmacro MUI_PAGE_LICENSE "..\\res\\License.rtf"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -117,10 +120,18 @@ Section "Server and Client" core
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synrgyhk.dll"
+
+SectionEnd
+
+!ifdef gameDeviceSupport
+Section "Game Device Support" gamedev
+
+  ; files for xinput support
   File "${binDir}\Release\synxinhk.dll"
   File "${binDir}\Release\sxinpx13.dll"
 
 SectionEnd
+!endif
 
 Section "Graphical User Interface" gui
 
@@ -142,7 +153,7 @@ Section "Visual C++ Redistributable" vcredist
 
   ; copy redist file, run it, then delete when done
   File "${vcRedistDir}\${vcRedistFile}"
-  ExecWait "$INSTDIR\${vcRedistFile} /install /q"
+  ExecWait "$INSTDIR\${vcRedistFile} /install /q /norestart"
   Delete $INSTDIR\${vcRedistFile}
 
 SectionEnd
