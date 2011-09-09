@@ -36,7 +36,7 @@ static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.
 
 static const char* synergyIconFiles[] =
 {
-        ":/res/icons/16x16/synergy-disconnected.png",
+	":/res/icons/16x16/synergy-disconnected.png",
 	":/res/icons/16x16/synergy-connected.png"
 };
 
@@ -61,12 +61,7 @@ MainWindow::MainWindow(QWidget* parent) :
 	initConnections();
 
 	// HACK - surely window should be visible by default?
-        setVisible(true);
-
-#ifndef Q_OS_WIN
-        // TODO: icon looks a bit crappy in 16x16, fix this.
-        setWindowIcon(":/res/icons/win/QSynergy.png");
-#endif
+	setVisible(true);
 
 	if (appConfig().autoConnect())
 		startSynergy();
@@ -176,7 +171,7 @@ void MainWindow::saveSettings()
 	settings().setValue("configFile", m_pLineEditConfigFile->text());
 	settings().setValue("internalConfig", m_pRadioInternalConfig->isChecked());
 	settings().setValue("groupClientChecked", m_pGroupClient->isChecked());
-        settings().setValue("serverHostname", m_pLineEditHostname->text());
+	settings().setValue("serverHostname", m_pLineEditHostname->text());
 
 	settings().sync();
 }
@@ -187,11 +182,10 @@ void MainWindow::setIcon(qSynergyState state)
 	icon.addFile(synergyIconFiles[state]);
 
 	if (m_pTrayIcon)
-                m_pTrayIcon->setIcon(icon);
+		m_pTrayIcon->setIcon(icon);
 
-#ifndef Q_OS_WIN
-        setWindowIcon(icon);
-#endif
+	    
+	// removed setWindowIcon usage - the icons are too low res.
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -207,20 +201,20 @@ void MainWindow::startSynergy()
 	QString app;
 	QStringList args;
 
-        args << "-f" << "--debug" << appConfig().logLevelText();
+	args << "-f" << "--debug" << appConfig().logLevelText();
 
 	if (!appConfig().screenName().isEmpty())
 		args << "--name" << appConfig().screenName();
 
-        if (appConfig().gameDevice())
-        {
-                args << "--game-device";
-        }
+	if (appConfig().gameDevice())
+	{
+		args << "--game-device";
+	}
 
 	setSynergyProcess(new QProcess(this));
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
-			|| (synergyType() == synergyServer && !serverArgs(args, app)))
+		|| (synergyType() == synergyServer && !serverArgs(args, app)))
 	{
 		stopSynergy();
 		return;

@@ -51,8 +51,8 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_ScreenName(),
 	m_Port(24800),
 	m_Interface(),
-        m_LogLevel(0),
-        m_GameDevice(false)
+	m_LogLevel(0),
+	m_GameDevice(false)
 {
 	Q_ASSERT(m_pSettings);
 
