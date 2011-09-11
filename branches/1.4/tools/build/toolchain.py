@@ -50,7 +50,6 @@ class InternalCommands:
 	macZipFiles = [
 		'../../bin/synergyc',
 		'../../bin/synergys',
-		'../../bin/QSynergy.app',
 		'../../doc/synergy.conf.example',
 		'../../doc/MacReadme.txt']
 
@@ -67,9 +66,6 @@ class InternalCommands:
 	
 	# by default, don't compile the gui
 	enable_make_gui = False
-
-	# by default, do not config with game device support
-	game_device_support = False
 
 	win32_generators = {
 		1 : Generator('Visual Studio 10'),
@@ -166,11 +162,7 @@ class InternalCommands:
 		# for makefiles always specify a build type (debug, release, etc)
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
-
-		# build gamepad support if required
-		if self.game_device_support:
-			cmake_args += ' -DGAME_DEVICE_SUPPORT:BOOL=TRUE'
-
+		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 		
@@ -436,7 +428,7 @@ class InternalCommands:
 		
 	def doxygen(self):
 		# The conf generates doc/doxygen.cfg from cmake/doxygen.cfg.in
-		if not self.hasConfRun():
+		if not self.hasConfRun('release'):
 			self.configure()
 
 		err = os.system('doxygen %s/%s' % (self.doc_dir, self.doxygen_filename))
@@ -1088,8 +1080,6 @@ class CommandHandler:
 				self.vcRedistDir = a
 			elif o == '--qt-dir':
 				self.qtDir = a
-			elif o == '--game-device':
-				self.ic.game_device_support = True
 	
 	def about(self):
 		self.ic.about()
