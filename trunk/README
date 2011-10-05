@@ -5,7 +5,7 @@ We now commit directly to release branches. The trunk was becoming a dead
 weight (as it was always the same as the latest release branch), so we
 deleted it.
 
-Please commit to (and build patches against) the release branch.
+Please commit to (and build patches against) a release branch.
 e.g. /branches/1.4
 
 If you have any questions, please email the dev mailing list.
