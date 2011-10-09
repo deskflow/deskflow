@@ -1,0 +1,95 @@
+body {
+  font-family: arial,sans-serif;
+  color: #555;
+  font-size: 80%;
+  background-color: #eee;
+  text-align: center;
+}
+
+h1 {
+  text-align: left;
+  font-size: 2.3em;
+  font-weight: normal;
+  line-height: 1em;
+}
+
+ul, li {
+  margin-left: 10px;
+  padding: 0px;
+}
+
+div.menu a {
+  color: #eee;
+}
+
+div.layout {
+  margin: 20px auto 20px auto;
+  width: 770px;
+  background-color: #fff;
+  text-align: left;
+}
+
+div.content {
+  padding: 15px 20px 20px 20px;
+}
+
+div.content div.demo {
+  text-align: center;
+}
+
+div.menu {
+  padding: 10px;
+  background-color: #777;
+  color: #eee;
+}
+
+div.title {
+  padding-top: 0px;
+  margin-top: 0px;
+  margin-left: -4px;
+}
+
+div.title h1 {
+  margin-top: 0px;
+  padding-top: 7px;
+}
+
+div.title img {
+  margin-right: 5px;
+  float: left;
+}
+
+div.share {
+  margin-left: -2px;
+}
+
+div.advert {
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+div.flattr, div.ohloh, div.cafepress {
+  margin-top: 10px;
+}
+
+div.download div.advert {
+  float: left;
+}
+
+div.download div.list {
+  float: left;
+  margin-left: 25px;
+  padding-top: 5px;
+}
+
+div.download div.alt {
+  clear: both;
+}
+
+div.download div.item {
+  margin-bottom: 30px;
+}
+
+div.download div.item  img {
+  margin-bottom: -5px;
+}
