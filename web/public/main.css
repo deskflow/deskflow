@@ -93,3 +93,7 @@ div.download div.item {
 div.download div.item  img {
   margin-bottom: -5px;
 }
+
+div.download h2 {
+  margin-bottom: 0px;
+}
