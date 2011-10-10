@@ -31,8 +31,8 @@ public:
 	/*!
 	Format a string using positional arguments.  fmt has literal
 	characters and conversion specifications introduced by `\%':
-	- \c\%\%   -- literal `\%'
-	- \c\%{n} -- positional element n, n a positive integer, {} are literal
+	- \%\%  -- literal `\%'
+	- \%{n} -- positional element n, n a positive integer, {} are literal
 
 	All arguments in the variable list are const char*.  Positional
 	elements are indexed from 1.

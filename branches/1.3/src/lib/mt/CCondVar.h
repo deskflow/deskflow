@@ -96,7 +96,7 @@ public:
 
 	//! Wait on the condition variable
 	/*!
-	Same as \c wait(double) but use \c timer to compare against \timeout.
+	Same as \c wait(double) but use \c timer to compare against \c timeout.
 	Since clients normally wait on condition variables in a loop, clients
 	can use this to avoid recalculating \c timeout on each iteration.
 	Passing a stopwatch with a negative \c timeout is pointless (it will
