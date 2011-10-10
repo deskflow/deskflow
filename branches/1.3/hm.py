@@ -67,7 +67,8 @@ cmd_opt_dict = {
 	'revision'  : ['', []],
 	'reformat'  : ['', []],
 	'open'      : ['', []],
-	'genlist'   : ['', []]
+	'genlist'   : ['', []],
+	'reset'	    : ['', []],
 }
 
 # aliases to valid commands

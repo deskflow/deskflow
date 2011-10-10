@@ -508,7 +508,6 @@ class InternalCommands:
 
 		if os.path.exists(exportPath):
 			print "Removing existing export..."
-			import shutil
 			shutil.rmtree(exportPath)
 
 		print 'Exporting repository to: ' + exportPath
@@ -549,7 +548,6 @@ class InternalCommands:
 		self.try_chdir(buildDir)
 
 		try:
-			import shutil
 			if os.path.exists(zipFile):
 				shutil.rmtree(zipFile)
 
@@ -1047,6 +1045,9 @@ class InternalCommands:
 		return ('MacOSX' + str(result.group(1)) +
 				str(result.group(2)) + '-Universal');
 
+	def reset(self):
+		shutil.rmtree('build')
+
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
 # don't need to do argument handling all over the place in the internal
@@ -1151,9 +1152,6 @@ class CommandHandler:
 	def revision(self):
 		self.ic.revision()
 	
-	def hammer(self):
-		self.ic.hammer()
-	
 	def reformat(self):
 		self.ic.reformat()
 	
@@ -1162,3 +1160,6 @@ class CommandHandler:
 
 	def genlist(self):
 		self.ic.printGeneratorList()
+
+	def reset(self):
+		self.ic.reset()
