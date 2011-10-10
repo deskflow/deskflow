@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "IArchString.h"
+
 #if HAVE_VSNPRINTF
 
 #if !defined(ARCH_VSNPRINTF)
@@ -22,7 +24,7 @@
 #endif
 
 int
-ARCH_STRING::vsnprintf(char* str, int size, const char* fmt, va_list ap)
+IArchString::vsnprintf(char* str, int size, const char* fmt, va_list ap)
 {
 	int n = ::ARCH_VSNPRINTF(str, size, fmt, ap);
 	if (n > size) {
@@ -36,7 +38,7 @@ ARCH_STRING::vsnprintf(char* str, int size, const char* fmt, va_list ap)
 #include <stdio.h>
 
 int
-ARCH_STRING::vsnprintf(char* str, int size, const char* fmt, va_list ap)
+IArchString::vsnprintf(char* str, int size, const char* fmt, va_list ap)
 {
 	static FILE* bitbucket = fopen("/dev/null", "w");
 	if (bitbucket == NULL) {

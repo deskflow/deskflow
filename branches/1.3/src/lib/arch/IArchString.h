@@ -29,6 +29,8 @@ synergy.  Each architecture must implement this interface.
 */
 class IArchString : public IInterface {
 public:
+	virtual ~IArchString();
+
 	//! Wide character encodings
 	/*!
 	The known wide character encodings
@@ -51,15 +53,15 @@ public:
     trailing NUL otherwise.
 	*/
 	virtual int			vsnprintf(char* str,
-							int size, const char* fmt, va_list ap) = 0;
+							int size, const char* fmt, va_list ap);
 
 	//! Convert multibyte string to wide character string
 	virtual int			convStringMBToWC(wchar_t*,
-							const char*, UInt32 n, bool* errors) = 0;
+							const char*, UInt32 n, bool* errors);
 
 	//! Convert wide character string to multibyte string
 	virtual int			convStringWCToMB(char*,
-							const wchar_t*, UInt32 n, bool* errors) = 0;
+							const wchar_t*, UInt32 n, bool* errors);
 
 	//! Return the architecture's native wide character encoding
 	virtual EWideCharEncoding

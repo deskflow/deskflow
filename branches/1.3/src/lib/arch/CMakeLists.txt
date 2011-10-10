@@ -16,6 +16,8 @@
 set(src
 	CArch.cpp
 	CArchDaemonNone.cpp
+	CMultibyte.cpp
+	IArchString.cpp
 	XArch.cpp
 )
 

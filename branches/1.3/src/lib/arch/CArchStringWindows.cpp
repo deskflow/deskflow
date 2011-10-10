@@ -30,6 +30,14 @@
 #define ARCH_VSNPRINTF _vsnprintf
 #include "vsnprintf.cpp"
 
+CArchStringWindows::CArchStringWindows()
+{
+}
+
+CArchStringWindows::~CArchStringWindows()
+{
+}
+
 IArchString::EWideCharEncoding
 CArchStringWindows::getWideCharEncoding()
 {

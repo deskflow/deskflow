@@ -25,6 +25,14 @@
 #include "CMultibyte.cpp"
 #include "vsnprintf.cpp"
 
+CArchStringUnix::CArchStringUnix()
+{
+}
+
+CArchStringUnix::~CArchStringUnix()
+{
+}
+
 IArchString::EWideCharEncoding
 CArchStringUnix::getWideCharEncoding()
 {
