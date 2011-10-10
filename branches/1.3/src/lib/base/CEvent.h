@@ -54,7 +54,7 @@ public:
 	recipient of the event.  \p flags is any combination of \c Flags.
 	*/
 	CEvent(Type type, void* target = NULL, void* data = NULL,
-							 UInt32 flags = kNone);
+							 Flags flags = kNone);
 
 	//! @name manipulators
 	//@{
