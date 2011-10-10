@@ -1046,7 +1046,12 @@ class InternalCommands:
 				str(result.group(2)) + '-Universal');
 
 	def reset(self):
-		shutil.rmtree('build')
+		if os.path.exists('build'):
+			shutil.rmtree('build')
+		if os.path.exists('bin'):
+			shutil.rmtree('bin')
+		if os.path.exists('lib'):
+			shutil.rmtree('lib')
 
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
