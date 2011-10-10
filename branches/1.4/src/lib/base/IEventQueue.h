@@ -100,7 +100,7 @@ public:
 	Creates and returns a one-shot timer.  An event is returned when
 	the timer expires and the timer is removed from further handling.
 	When a timer event is returned the data points to a \c CTimerEvent.
-	The \m c_count member of the \c CTimerEvent is always 1.  The client
+	The c_count member of the \c CTimerEvent is always 1.  The client
 	must pass the returned timer to \c deleteTimer() (whether or not the
 	timer has expired) to release the timer.  The returned timer event
 	uses the given \p target.  If \p target is NULL it uses the returned

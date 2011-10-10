@@ -29,12 +29,6 @@ public:
 	virtual ~CArchStringWindows();
 
 	// IArchString overrides
-	virtual int			vsnprintf(char* str,
-							int size, const char* fmt, va_list ap);
-	virtual int			convStringMBToWC(wchar_t*,
-							const char*, UInt32 n, bool* errors);
-	virtual int			convStringWCToMB(char*,
-							const wchar_t*, UInt32 n, bool* errors);
 	virtual EWideCharEncoding
 						getWideCharEncoding();
 };

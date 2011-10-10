@@ -47,11 +47,11 @@ public:
 	\c kText is a text format encoded in UTF-8.  Newlines are LF (not
 	CR or LF/CR).
 
-	\k kBitmap is an image format.  The data is a BMP file without the
+	\c kBitmap is an image format.  The data is a BMP file without the
 	14 byte header (i.e. starting at the INFOHEADER) and with the image
 	data immediately following the 40 byte INFOHEADER.
 
-	\k kHTML is a text format encoded in UTF-8 and containing a valid
+	\c kHTML is a text format encoded in UTF-8 and containing a valid
 	HTML fragment (but not necessarily a complete HTML document).
 	Newlines are LF.
 	*/

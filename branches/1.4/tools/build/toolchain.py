@@ -428,8 +428,7 @@ class InternalCommands:
 		
 	def doxygen(self):
 		# The conf generates doc/doxygen.cfg from cmake/doxygen.cfg.in
-		if not self.hasConfRun('release'):
-			self.configure()
+		self.configure(self.defaultTarget, '-DCONF_DOXYGEN:BOOL=TRUE')
 
 		err = os.system('doxygen %s/%s' % (self.doc_dir, self.doxygen_filename))
 			
