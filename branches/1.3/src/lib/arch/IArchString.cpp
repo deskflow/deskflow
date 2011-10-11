@@ -30,8 +30,10 @@ static CArchMutex              s_mutex = NULL;
 
 IArchString::~IArchString()
 {
-	ARCH->closeMutex(s_mutex);
-	s_mutex = NULL;
+	if (s_mutex != NULL) {
+		ARCH->closeMutex(s_mutex);
+		s_mutex = NULL;
+	}
 }
 
 int
