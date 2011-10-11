@@ -25,40 +25,28 @@
 #include "CArchMiscWindows.h"
 #endif
 
-#if SYSAPI_UNIX
-#include <fstream>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <signal.h>
-#define LOCK_FILE "/tmp/integtests.lock"
-#endif
-
-#define ERROR_ALREADY_RUNNING 1
+#define LOCK_TIMEOUT 30
 
 using namespace std;
 
-#if SYSAPI_UNIX
-
-void
-signalHandler(int signal);
-
-void
-removeLock();
-
-#endif
+void lock(std::string lockFile);
+void unlock(std::string lockFile);
 
 int
 main(int argc, char **argv)
 {
-#if SYSAPI_WIN32
-	if (CArchMiscWindows::isWindows95Family())
-	{
-		std::cerr << "Windows 95 family not supported." << std::endl;
-		return 1;
-	}
-#endif
-
 	CArch arch;
+
+	std::string lockFile;
+	for (int i = 0; i < argc; i++) {
+		if (_stricmp(argv[i], "--lock-file") == 0) {
+			lockFile = argv[i + 1];
+		}
+	}
+
+	if (!lockFile.empty()) {
+		lock(lockFile);
+	}
 
 #if SYSAPI_WIN32
 	// only add std output logger for windows (unix
@@ -71,5 +59,43 @@ main(int argc, char **argv)
 
 	testing::InitGoogleTest(&argc, argv);
 
-	return RUN_ALL_TESTS();
+	int result = RUN_ALL_TESTS();
+
+	if (!lockFile.empty()) {
+		unlock(lockFile);
+	}
+
+	return result;
+}
+
+void
+lock(std::string lockFile)
+{
+	double start = ARCH->time();
+	
+	// keep checking until timeout is reached.
+	while ((ARCH->time() - start) < LOCK_TIMEOUT) {
+
+		std::ifstream is = ifstream(lockFile);
+		bool noLock = !is;
+		is.close();
+
+		if (noLock) {
+			break;
+		}
+
+		// check every second if file has gone.
+		ARCH->sleep(1);
+	}
+
+	// write empty lock file.
+	std::ofstream os(lockFile);
+	os.close();
+}
+
+
+void
+unlock(std::string lockFile) 
+{
+	remove(lockFile.c_str());
 }
