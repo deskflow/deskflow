@@ -39,7 +39,7 @@ main(int argc, char **argv)
 
 	string lockFile;
 	for (int i = 0; i < argc; i++) {
-		if (_stricmp(argv[i], "--lock-file") == 0) {
+		if (string(argv[i]).compare("--lock-file") == 0) {
 			lockFile = argv[i + 1];
 		}
 	}
