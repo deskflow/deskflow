@@ -142,9 +142,14 @@ if (UNIX)
 	
 	if (APPLE)
 
-		# build mac os x universal
-		set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
-			CACHE STRING "Build architectures for OSX" FORCE)
+		# build mac os x universal (if <= 10.6)
+		exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
+		string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
+		message(STATUS "DARWIN_VERSION=${DARWIN_VERSION}")
+		if (DARWIN_VERSION LESS 11)
+			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
+				CACHE STRING "Build architectures for OSX" FORCE)
+		endif()
 
 		find_library(lib_ScreenSaver ScreenSaver)
 		find_library(lib_IOKit IOKit)
