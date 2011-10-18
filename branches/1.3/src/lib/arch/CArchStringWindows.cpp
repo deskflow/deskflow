@@ -25,7 +25,7 @@
 // CArchStringWindows
 //
 
-#include "CMultibyte.cpp"
+#include "CMultibyte.h"
 #define HAVE_VSNPRINTF 1
 #define ARCH_VSNPRINTF _vsnprintf
 #include "vsnprintf.cpp"

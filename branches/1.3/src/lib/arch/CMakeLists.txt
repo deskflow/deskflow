@@ -16,7 +16,6 @@
 set(src
 	CArch.cpp
 	CArchDaemonNone.cpp
-	CMultibyte.cpp
 	IArchString.cpp
 	XArch.cpp
 )
@@ -37,6 +36,7 @@ if (WIN32)
 		CArchTaskBarWindows.h
 		CArchTimeWindows.h
 		XArchWindows.h
+		CMultibyte.h
 	)
 
 	list(APPEND src

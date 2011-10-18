@@ -29,15 +29,15 @@
 
 using namespace std;
 
-void lock(std::string lockFile);
-void unlock(std::string lockFile);
+void lock(string lockFile);
+void unlock(string lockFile);
 
 int
 main(int argc, char **argv)
 {
 	CArch arch;
 
-	std::string lockFile;
+	string lockFile;
 	for (int i = 0; i < argc; i++) {
 		if (_stricmp(argv[i], "--lock-file") == 0) {
 			lockFile = argv[i + 1];
@@ -69,14 +69,14 @@ main(int argc, char **argv)
 }
 
 void
-lock(std::string lockFile)
+lock(string lockFile)
 {
 	double start = ARCH->time();
 	
 	// keep checking until timeout is reached.
 	while ((ARCH->time() - start) < LOCK_TIMEOUT) {
 
-		std::ifstream is = ifstream(lockFile);
+		ifstream is(lockFile.c_str());
 		bool noLock = !is;
 		is.close();
 
@@ -89,13 +89,13 @@ lock(std::string lockFile)
 	}
 
 	// write empty lock file.
-	std::ofstream os(lockFile);
+	ofstream os(lockFile.c_str());
 	os.close();
 }
 
 
 void
-unlock(std::string lockFile) 
+unlock(string lockFile) 
 {
 	remove(lockFile.c_str());
 }
