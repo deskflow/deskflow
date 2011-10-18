@@ -17,7 +17,6 @@ set(src
 	CArchAppUtil.cpp
 	CArch.cpp
 	CArchDaemonNone.cpp
-	CMultibyte.cpp
 	IArchString.cpp
 	XArch.cpp
 	CArchConsoleStd.cpp
@@ -43,6 +42,7 @@ if (WIN32)
 		CArchConsoleStd.h
 		IArchAppUtil.h
 		XArchWindows.h
+		CMultibyte.h
 	)
 
 	list(APPEND src
