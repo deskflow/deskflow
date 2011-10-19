@@ -43,6 +43,7 @@ if (WIN32)
 		IArchAppUtil.h
 		XArchWindows.h
 		CMultibyte.h
+		vsnprintf.h
 	)
 
 	list(APPEND src

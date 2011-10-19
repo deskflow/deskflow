@@ -22,8 +22,8 @@
 // CArchStringUnix
 //
 
-#include "CMultibyte.cpp"
-#include "vsnprintf.cpp"
+#include "CMultibyte.h"
+#include "vsnprintf.h"
 
 CArchStringUnix::CArchStringUnix()
 {
