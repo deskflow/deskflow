@@ -37,6 +37,7 @@ if (WIN32)
 		CArchTimeWindows.h
 		XArchWindows.h
 		CMultibyte.h
+		vsnprintf.h
 	)
 
 	list(APPEND src
