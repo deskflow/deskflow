@@ -97,17 +97,3 @@ div.download div.item  img {
 div.download h2 {
   margin-bottom: 0px;
 }
-
-div.textAdvert1 {
-	color: #777;
-	border: 1px solid #777;
-	width: 696px;
-	height: 90x;
-	margin-bottom: 20px;
-	padding: 12px 15px 15px 15px;
-}
-
-div.textAdvert1 div.title {
-	font-size: 2em;
-	font-weight: bold;
-}
