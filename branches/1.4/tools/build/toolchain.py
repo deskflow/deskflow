@@ -51,7 +51,8 @@ class InternalCommands:
 		'../../bin/synergyc',
 		'../../bin/synergys',
 		'../../doc/synergy.conf.example',
-		'../../doc/MacReadme.txt']
+		'../../doc/MacReadme.txt',
+		'../../bin/QSynergy.app']
 
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
 
