@@ -148,7 +148,10 @@ if (UNIX)
 		message(STATUS "DARWIN_VERSION=${DARWIN_VERSION}")
 		if (DARWIN_VERSION LESS 11)
 			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
-				CACHE STRING "Build architectures for OSX" FORCE)
+				CACHE STRING "PPC and 32-bit for for OSX <= 10.6" FORCE)
+		else()
+			set(CMAKE_OSX_ARCHITECTURES "i386"
+				CACHE STRING "32-bit only for OSX >= 10.7" FORCE)
 		endif()
 
 		find_library(lib_ScreenSaver ScreenSaver)
