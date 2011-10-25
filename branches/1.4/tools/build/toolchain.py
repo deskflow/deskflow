@@ -189,7 +189,12 @@ class InternalCommands:
 			# make sure we have qmake
 			self.persist_qmake()
 			
-			qmake_cmd_string = self.qmake_cmd + ' -spec macx-g++'
+			qmake_cmd_string = self.qmake_cmd
+
+			# create makefiles on mac (not xcode).
+			if sys.platform == 'darwin':
+				 qmake_cmd_string += ' -spec macx-g++'
+
 			print "QMake command: " + qmake_cmd_string
 			
 			# run qmake from the gui dir
