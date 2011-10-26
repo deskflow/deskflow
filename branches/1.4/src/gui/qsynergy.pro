@@ -1,6 +1,6 @@
 QT += network
 TEMPLATE = app
-TARGET = qsynergy
+TARGET = synergy
 DEPENDPATH += . \
     res
 INCLUDEPATH += . \
@@ -59,13 +59,13 @@ HEADERS += src/MainWindow.h \
     src/AppConfig.h \
     src/QSynergyApplication.h \
     src/WindowsServices.h
-RESOURCES += res/QSynergy.qrc
-RC_FILE = res/win/QSynergy.rc
+RESOURCES += res/Synergy.qrc
+RC_FILE = res/win/Synergy.rc
 macx { 
-    QMAKE_INFO_PLIST = res/mac/QSynergy.plist
+	QMAKE_INFO_PLIST = res/mac/Synergy.plist
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.4
-    TARGET = QSynergy
-    QSYNERGY_ICON.files = res/mac/QSynergy.icns
+	TARGET = Synergy
+	QSYNERGY_ICON.files = res/mac/Synergy.icns
     QSYNERGY_ICON.path = Contents/Resources
     QMAKE_BUNDLE_DATA += QSYNERGY_ICON
 }

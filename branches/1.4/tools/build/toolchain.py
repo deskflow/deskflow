@@ -46,13 +46,6 @@ class InternalCommands:
 	configFilename = '%s/%s.cfg' % (configDir, this_cmd)
 	qtpro_filename = 'qsynergy.pro'
 	doxygen_filename = 'doxygen.cfg'
-	
-	macZipFiles = [
-		'../../bin/synergyc',
-		'../../bin/synergys',
-		'../../doc/synergy.conf.example',
-		'../../doc/MacReadme.txt',
-		'../../bin/QSynergy.app']
 
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
 
@@ -189,11 +182,11 @@ class InternalCommands:
 			# make sure we have qmake
 			self.persist_qmake()
 			
-			qmake_cmd_string = self.qmake_cmd
+			qmake_cmd_string = self.qmake_cmd + " qsynergy.pro -r"
 
 			# create makefiles on mac (not xcode).
-			if sys.platform == 'darwin':
-				 qmake_cmd_string += ' -spec macx-g++'
+			if sys.platform == "darwin":
+				 qmake_cmd_string += " -spec macx-g++"
 
 			print "QMake command: " + qmake_cmd_string
 			
@@ -359,14 +352,12 @@ class InternalCommands:
 		if sys.platform == 'win32':
 			gui_make_cmd = self.w32_make_cmd
 		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'darwin']:
-			gui_make_cmd = self.make_cmd
+			gui_make_cmd = self.make_cmd + " -w"
 		else:
 			raise Exception('Unsupported platform: ' + sys.platform)
 		
 		print 'Make GUI command: ' + gui_make_cmd
 		
-		# HACK: don't know how to build in either debug or release on unix; 
-		# always builds release!
 		if sys.platform == 'win32':
 			for target in targets:
 				self.try_chdir(self.gui_dir)
@@ -379,7 +370,24 @@ class InternalCommands:
 			self.try_chdir(self.gui_dir)
 			err = os.system(gui_make_cmd)
 			self.restore_chdir()
+
+			if err != 0:
+				raise Exception(gui_make_cmd + ' failed with error: ' + str(err))
+
+			if sys.platform == 'darwin':
+				self.macPostMakeGui()
 	
+	def macPostMakeGui(self):
+
+		dir = self.getGenerator().binDir
+
+		# copy synergy[cs] binaries into the bundle, since the gui
+		# now looks for the binaries in the current app dir.
+		shutil.copy(dir + "/synergyc",
+			    dir + "/Synergy.app/Contents/MacOS/")
+		shutil.copy(dir + "/synergys",
+			    dir + "/Synergy.app/Contents/MacOS/")
+
 	def open(self):
 		generator = self.getGeneratorFromConfig().cmakeName
 		if generator.startswith('Visual Studio'):
@@ -532,45 +540,25 @@ class InternalCommands:
 			raise Exception('Package failed: ' + str(err))
 
 	def distMac(self, unixTarget):
-		# nb: disabling package maker, as it doesn't
-		# work too well (screws with permissions and causes boot to fail).
-		#self.dist_run('cpack -G PackageMaker', unixTarget)
 
-		version = self.getVersionFromCmake()
-		zipFile = (self.project + '-' + version + '-' +
-				   self.getMacPackageName())
+		dir = self.getGenerator().binDir
+
+		# use qt to copy libs to bundle so no dependencies are needed,
+		# and create dmg for easy download.
+		bin = "macdeployqt Synergy.app -dmg -verbose=2"
+		self.try_chdir(dir)
+		err = os.system(bin)
+		self.restore_chdir()
 		
-		binDir = self.getBinDir(unixTarget)
-		buildDir = self.getBuildDir(unixTarget)
+		if err != 0:
+			raise Exception(bin + " failed with error: " + str(err))
 
-		# nb: temporary fix (just distribute a zip)
-		self.try_chdir(buildDir)
+		fileName = "%s-%s-%s.dmg" % (
+			self.project, 
+			self.getVersionFromCmake(),
+			self.getMacPackageName())
 
-		try:
-			if os.path.exists(zipFile):
-				shutil.rmtree(zipFile)
-
-			os.makedirs(zipFile)
-
-			for f in self.macZipFiles:
-				if not os.path.exists(f):
-					raise Exception('File does not exist: ' + f)
-				elif os.path.isdir(f):
-					dirLastSplit = f.split('/')
-					dirLast = dirLastSplit[len(dirLastSplit) - 1]
-					shutil.copytree(f, zipFile + '/' + dirLast)
-				else:
-					shutil.copy2(f, zipFile + '/')
-
-			zipCmd = ('zip -r ../../' + binDir + '/' + zipFile + '.zip ' + zipFile);
-			
-			print 'Creating package: ' + zipCmd
-			err = os.system(zipCmd)
-			if err != 0:
-				raise Exception('Zip failed, code: ' + err)
-			
-		finally:
-			self.restore_chdir()
+		shutil.move(dir + "/Synergy.dmg", dir + "/" + fileName)
 
 	def distNsis(self, vcRedistDir, qtDir):
 		
