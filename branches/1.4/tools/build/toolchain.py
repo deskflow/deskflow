@@ -1032,7 +1032,7 @@ class InternalCommands:
 
 		# since lion, universal (ppc) support has been dropped.
 		if major >= 10 and minor >= 7:
-			arch = "i386"
+			arch = "x86_64"
 		else:
 			arch = "Universal"
 
