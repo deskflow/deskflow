@@ -665,8 +665,6 @@ class InternalCommands:
 				platform = 'Windows-x86'
 			
 		elif type == 'mac':
-			#ext = 'dmg'
-			ext = 'zip'
 			platform = self.getMacPackageName()
 		
 		if not platform:
@@ -1028,9 +1026,19 @@ class InternalCommands:
 			raise Exception(
 				'Could not find Mac OS X version in sw_vers output.')
 
+		major = result.group(1)
+		minor = result.group(2)
+
+		# since lion, universal (ppc) support has been dropped.
+		if major >= 10 and minor >= 7:
+			arch = "i386"
+		else:
+			arch = "Universal"
+
 		# version is major and minor with no dots (e.g. 106)
-		return ('MacOSX' + str(result.group(1)) +
-				str(result.group(2)) + '-Universal');
+		version = str(major) + str(minor)
+
+		return "MacOSX%s-%s" % (version, arch)
 
 	def reset(self):
 		if os.path.exists('build'):
