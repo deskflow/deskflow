@@ -62,12 +62,13 @@ HEADERS += src/MainWindow.h \
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 macx { 
-	QMAKE_INFO_PLIST = res/mac/Synergy.plist
+    QMAKE_INFO_PLIST = res/mac/Synergy.plist
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.4
-	TARGET = Synergy
-	QSYNERGY_ICON.files = res/mac/Synergy.icns
+    TARGET = Synergy
+    QSYNERGY_ICON.files = res/mac/Synergy.icns
     QSYNERGY_ICON.path = Contents/Resources
     QMAKE_BUNDLE_DATA += QSYNERGY_ICON
+    CONFIG += i386 ppc
 }
 debug { 
     OBJECTS_DIR = tmp/debug
