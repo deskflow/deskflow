@@ -665,6 +665,7 @@ class InternalCommands:
 				platform = 'Windows-x86'
 			
 		elif type == 'mac':
+			ext = "dmg"
 			platform = self.getMacPackageName()
 		
 		if not platform:
