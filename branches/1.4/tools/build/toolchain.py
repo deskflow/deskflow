@@ -1027,12 +1027,12 @@ class InternalCommands:
 			raise Exception(
 				'Could not find Mac OS X version in sw_vers output.')
 
-		major = result.group(1)
-		minor = result.group(2)
+		major = int(result.group(1))
+		minor = int(result.group(2))
 
 		# since lion, universal (ppc) support has been dropped.
 		if major >= 10 and minor >= 7:
-			arch = "x86_64"
+			arch = "i386"
 		else:
 			arch = "Universal"
 
