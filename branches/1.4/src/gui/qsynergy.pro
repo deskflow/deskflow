@@ -68,7 +68,6 @@ macx {
     QSYNERGY_ICON.files = res/mac/Synergy.icns
     QSYNERGY_ICON.path = Contents/Resources
     QMAKE_BUNDLE_DATA += QSYNERGY_ICON
-    CONFIG += i386 ppc
 }
 debug { 
     OBJECTS_DIR = tmp/debug

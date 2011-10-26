@@ -141,17 +141,17 @@ if (UNIX)
 	endif()
 	
 	if (APPLE)
-
-		# build mac os x universal (if <= 10.6)
 		exec_program(uname ARGS -v OUTPUT_VARIABLE DARWIN_VERSION)
 		string(REGEX MATCH "[0-9]+" DARWIN_VERSION ${DARWIN_VERSION})
 		message(STATUS "DARWIN_VERSION=${DARWIN_VERSION}")
-		if (DARWIN_VERSION LESS 11)
+		if (DARWIN_VERSION LESS 9)
+			# 10.4: universal (32-bit intel and power pc) 
 			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
-				CACHE STRING "PPC and 32-bit for for OSX <= 10.6" FORCE)
+				CACHE STRING "" FORCE)
 		else()
+			# 10.5+: 32-bit only (missing funcs in 64-bit os libs)
 			set(CMAKE_OSX_ARCHITECTURES "i386"
-				CACHE STRING "32-bit only for OSX >= 10.7" FORCE)
+				CACHE STRING "" FORCE)
 		endif()
 
 		find_library(lib_ScreenSaver ScreenSaver)

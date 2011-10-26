@@ -184,9 +184,14 @@ class InternalCommands:
 			
 			qmake_cmd_string = self.qmake_cmd + " qsynergy.pro -r"
 
-			# create makefiles on mac (not xcode).
 			if sys.platform == "darwin":
-				 qmake_cmd_string += " -spec macx-g++"
+				# create makefiles on mac (not xcode).
+				qmake_cmd_string += " -spec macx-g++"
+				
+				(major, minor) = self.getMacVersion()
+				if major == 10 and minor <= 4:
+					# 10.4: universal (intel and power pc)
+					qmake_cmd_string += ' CONFIG+="ppc i386"'
 
 			print "QMake command: " + qmake_cmd_string
 			
@@ -1017,7 +1022,7 @@ class InternalCommands:
 		for k in keys:
 			print str(k) + ': ' + generators[k].cmakeName
 
-	def getMacPackageName(self):
+	def getMacVersion(self):
 		import commands
 		versions = commands.getoutput('/usr/bin/sw_vers')
 		result = re.search('ProductVersion:\t(\d+)\.(\d+)', versions)
@@ -1029,12 +1034,25 @@ class InternalCommands:
 
 		major = int(result.group(1))
 		minor = int(result.group(2))
+		return (major, minor)
 
-		# since lion, universal (ppc) support has been dropped.
-		if major >= 10 and minor >= 7:
-			arch = "x86_64"
+	def getMacPackageName(self):
+
+		(major, minor) = self.getMacVersion()
+
+		if major == 10:
+			if minor <= 4:
+				# 10.4: intel and power pc
+				arch = "Universal"
+			elif minor <= 6:
+				# 10.5: 32-bit intel
+				arch = "i386"
+			else:
+				# 10.7: 64-bit intel (gui only)
+				arch = "x86_64"
 		else:
-			arch = "Universal"
+			raise Exception("Mac OS major version unknown: " +
+					str(major))
 
 		# version is major and minor with no dots (e.g. 106)
 		version = str(major) + str(minor)
