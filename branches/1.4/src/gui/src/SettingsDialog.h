@@ -42,9 +42,6 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 
 	private slots:
 		void on_m_pCheckBoxLogToFile_stateChanged(int );
-		bool on_m_pButtonBrowseSynergys_clicked();
-		bool on_m_pButtonBrowseSynergyc_clicked();
-		void on_m_pCheckBoxAutoDetectPaths_stateChanged(int i);
 		void on_m_pButtonBrowseLog_clicked();
 };
 

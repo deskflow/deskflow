@@ -64,7 +64,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		};
 
 	public:
-		MainWindow(QWidget* parent);
+		MainWindow();
 		~MainWindow();
 
 	public:
@@ -74,7 +74,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString hostname() const { return m_pLineEditHostname->text(); }
 		QString configFilename();
 		QString address();
-		QString appPath(const QString& name, const QString& defaultPath);
+		QString appPath(const QString& name);
 
 	protected slots:
 		void on_m_pGroupClient_toggled(bool on) { m_pGroupServer->setChecked(!on); }

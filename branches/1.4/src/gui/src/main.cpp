@@ -47,7 +47,9 @@ int main(int argc, char* argv[])
 	myappTranslator.load("res/lang/QSynergy_" + QLocale::system().name());
 	app.installTranslator(&myappTranslator);
 
-	MainWindow mainWindow(NULL);
+	MainWindow mainWindow;
+	mainWindow.show();
+
 	return app.exec();
 }
 

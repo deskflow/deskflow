@@ -23,22 +23,18 @@
 
 static QString getSynergyVersion(const QString& app)
 {
-#if !defined(Q_OS_WIN)
 	QProcess process;
 	process.start(app, QStringList() << "--version");
 
-	process.setReadChannel(QProcess::StandardError);
-	if (!process.waitForStarted() || !process.waitForFinished())
-		return QObject::tr("(unknown)");
+	process.setReadChannel(QProcess::StandardOutput);
+	if (process.waitForStarted() && process.waitForFinished())
+	{
+		QRegExp rx("synergy[cs] ([\\d\\.]+)");
+		if (rx.indexIn(process.readLine()) != -1)
+			return rx.cap(1);
+	}
 
-	QRegExp rx("synergy[cs] ([\\d\\.]+)");
-	if (rx.indexIn(QString(process.readLine())) != -1)
-		return rx.cap(1);
-#else
-	Q_UNUSED(app);
-#endif
-
-	return QObject::tr("(unknown)");
+	return "Unknown";
 }
 
 static QString getIPAddress()
@@ -49,7 +45,7 @@ static QString getIPAddress()
 		if (addresses[i].protocol() == QAbstractSocket::IPv4Protocol && addresses[i] != QHostAddress(QHostAddress::LocalHost))
 			return addresses[i].toString();
 
-	return QObject::tr("(unknown)");
+	return "Unknown";
 }
 
 AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :

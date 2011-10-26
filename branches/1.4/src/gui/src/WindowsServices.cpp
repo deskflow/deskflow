@@ -76,8 +76,7 @@ void WindowsServices::runProc(const QString& app, const QStringList& args, QPush
 
 void WindowsServices::on_m_pInstallServer_clicked()
 {
-	QString app = mainWindow()->appPath(
-		appConfig().synergysName(), appConfig().synergys());
+	QString app = mainWindow()->appPath(appConfig().synergysName());
 
 	QStringList args;
 	args <<
@@ -98,8 +97,7 @@ void WindowsServices::on_m_pInstallServer_clicked()
 
 void WindowsServices::on_m_pUninstallServer_clicked()
 {
-	QString app = mainWindow()->appPath(
-		appConfig().synergysName(), appConfig().synergys());
+	QString app = mainWindow()->appPath(appConfig().synergysName());
 
 	QStringList args;
 	args << "--service" << "uninstall";
@@ -115,8 +113,7 @@ void WindowsServices::on_m_pInstallClient_clicked()
 		return;
 	}
 
-	QString app = mainWindow()->appPath(
-		appConfig().synergycName(), appConfig().synergyc());
+	QString app = mainWindow()->appPath(appConfig().synergycName());
 
 	QStringList args;
 	args <<
@@ -138,8 +135,7 @@ void WindowsServices::on_m_pInstallClient_clicked()
 
 void WindowsServices::on_m_pUninstallClient_clicked()
 {
-	QString app = mainWindow()->appPath(
-		appConfig().synergycName(), appConfig().synergyc());
+	QString app = mainWindow()->appPath(appConfig().synergycName());
 
 	QStringList args;
 	args << "--service" << "uninstall";

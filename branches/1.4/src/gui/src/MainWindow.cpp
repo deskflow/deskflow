@@ -40,9 +40,7 @@ static const char* synergyIconFiles[] =
 	":/res/icons/16x16/synergy-connected.png"
 };
 
-MainWindow::MainWindow(QWidget* parent) :
-	QMainWindow(parent),
-	MainWindowBase(),
+MainWindow::MainWindow() :
 	m_Settings(),
 	m_AppConfig(&m_Settings),
 	m_pSynergy(NULL),
@@ -59,9 +57,6 @@ MainWindow::MainWindow(QWidget* parent) :
 	createMenuBar();
 	loadSettings();
 	initConnections();
-
-	// HACK - surely window should be visible by default?
-	setVisible(true);
 
 	if (appConfig().autoConnect())
 		startSynergy();
@@ -239,24 +234,19 @@ void MainWindow::startSynergy()
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
 {
-	app = appPath(appConfig().synergycName(), appConfig().synergyc());
+	app = appPath(appConfig().synergycName());
 
 	if (!QFile::exists(app))
 	{
-		if (QMessageBox::warning(this, tr("Synergy client not found"), tr("The executable for the synergy client does not exist. Do you want to browse for the synergy client now?"), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
-			return false;
-
-		app = SettingsDialog::browseForSynergyc(this, appConfig().synergyProgramDir(), appConfig().synergycName());
-
-		if (app.isEmpty())
-			return false;
-
-		appConfig().setSynergyc(app);
+		QMessageBox::warning(this, tr("Synergy client not found"),
+							 tr("The executable for the synergy client does not exist."));
+		return false;
 	}
 
 	if (m_pLineEditHostname->text().isEmpty())
 	{
-		QMessageBox::warning(this, tr("Hostname is empty"), tr("Please fill in a hostname for the synergy client to connect to."));
+		QMessageBox::warning(this, tr("Hostname is empty"),
+							 tr("Please fill in a hostname for the synergy client to connect to."));
 		return false;
 	}
 
@@ -311,36 +301,20 @@ QString MainWindow::address()
 	return (!appConfig().interface().isEmpty() ? appConfig().interface() : "") + ":" + QString::number(appConfig().port());
 }
 
-QString MainWindow::appPath(const QString& name, const QString& defaultPath)
+QString MainWindow::appPath(const QString& name)
 {
-	QString app;
-	if (appConfig().autoDetectPaths())
-	{
-		// actually returns bool, but ignore for now
-		appConfig().detectPath(name, app);
-	}
-	else
-	{
-		app = defaultPath;
-	}
-	return app;
+	return appConfig().synergyProgramDir() + name;
 }
 
 bool MainWindow::serverArgs(QStringList& args, QString& app)
 {
-	app = appPath(appConfig().synergysName(), appConfig().synergys());
+	app = appPath(appConfig().synergysName());
 
 	if (!QFile::exists(app))
 	{
-		if (QMessageBox::warning(this, tr("Synergy server not found"), tr("The executable for the synergy server does not exist. Do you want to browse for the synergy server now?"), QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes)
-			return false;
-
-		app = SettingsDialog::browseForSynergys(this, appConfig().synergyProgramDir(), appConfig().synergysName());
-
-		if (app.isEmpty())
-			return false;
-
-		appConfig().setSynergys(app);
+		QMessageBox::warning(this, tr("Synergy server not found"),
+							 tr("The executable for the synergy server does not exist."));
+		return false;
 	}
 
 	if (appConfig().logToFile())
@@ -453,7 +427,7 @@ bool  MainWindow::on_m_pActionSave_triggered()
 
 void MainWindow::on_m_pActionAbout_triggered()
 {
-	AboutDialog dlg(this, appConfig().synergyc());
+	AboutDialog dlg(this, appPath(appConfig().synergycName()));
 	dlg.exec();
 }
 
