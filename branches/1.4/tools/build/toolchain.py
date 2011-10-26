@@ -1048,6 +1048,8 @@ class InternalCommands:
 			shutil.rmtree('bin')
 		if os.path.exists('lib'):
 			shutil.rmtree('lib')
+		if os.path.exists('src/gui/tmp'):
+			shutil.rmtree('src/gui/tmp')
 
 # the command handler should be called only from hm.py (i.e. directly 
 # from the command prompt). the purpose of this class is so that we 
