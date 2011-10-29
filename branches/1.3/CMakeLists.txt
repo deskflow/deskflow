@@ -16,7 +16,7 @@
 # Version number for Synergy
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 3)
-set(VERSION_REV 8)
+set(VERSION_REV 9)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_REV}")
 
 # The check for 2.6 may be too strict (consider lowering).
