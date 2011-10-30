@@ -308,7 +308,7 @@ if (CONF_CPACK)
 		if (APPLE)
 			message(FATAL_ERROR "CPack support for Apple has been removed.")
 		else ()
-			install(FILES bin/qsynergy
+			install(FILES bin/synergy
 				DESTINATION bin
 				PERMISSIONS
 				OWNER_READ OWNER_WRITE OWNER_EXECUTE
