@@ -177,6 +177,7 @@ if (UNIX)
 		check_include_files("X11/extensions/XKB.h" HAVE_XKB_EXTENSION)
 		check_include_files("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
 		check_include_files(${XKBlib} HAVE_X11_XKBLIB_H)
+		check_include_files("X11/extensions/XInput2.h" HAVE_XI2)
 
 		if (HAVE_X11_EXTENSIONS_DPMS_H)
 			# Assume that function prototypes declared, when include exists.
@@ -191,6 +192,7 @@ if (UNIX)
 		check_library_exists("X11;Xext" DPMSQueryExtension "" HAVE_Xext)
 		check_library_exists("X11;Xext;Xtst" XTestQueryExtension "" HAVE_Xtst)
 		check_library_exists("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
+		check_library_exists("Xi" XISelectEvents "" HAVE_Xi)
 
 		if (HAVE_ICE)
 
@@ -225,6 +227,10 @@ if (UNIX)
 		endif()
 
 	endif()
+
+        IF(HAVE_Xi)
+                LIST(APPEND libs Xi)
+        ENDIF()
 
 	# For config.h, set some static values; it may be a good idea to make
 	# these values dynamic for non-standard UNIX compilers.

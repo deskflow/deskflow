@@ -178,6 +178,8 @@ if (UNIX)
 		check_include_files("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
 		check_include_files(${XKBlib} HAVE_X11_XKBLIB_H)
 
+		check_include_files("X11/extensions/XInput2.h" HAVE_XI2)
+
 		if (HAVE_X11_EXTENSIONS_DPMS_H)
 			# Assume that function prototypes declared, when include exists.
 			set(HAVE_DPMS_PROTOTYPES 1)
@@ -191,6 +193,7 @@ if (UNIX)
 		check_library_exists("X11;Xext" DPMSQueryExtension "" HAVE_Xext)
 		check_library_exists("X11;Xext;Xtst" XTestQueryExtension "" HAVE_Xtst)
 		check_library_exists("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
+		check_library_exists("Xi" XISelectEvents "" HAVE_Xi)
 
 		if (HAVE_ICE)
 
@@ -222,6 +225,10 @@ if (UNIX)
 			if (HAVE_X11_EXTENSIONS_XINERAMA_H)
 				message(FATAL_ERROR "Missing library: Xinerama")
 			endif()
+		endif()
+
+		if (HAVE_Xi)
+			list(APPEND libs Xi)
 		endif()
 
 	endif()

@@ -59,9 +59,13 @@
 #	if HAVE_XKB_EXTENSION
 #		include <X11/XKBlib.h>
 #	endif
+#	ifdef HAVE_XI2
+#		include <X11/extensions/XInput2.h>
+#	endif
 #endif
 #include "CArch.h"
 
+static int xi_opcode;
 
 //
 // CXWindowsScreen
@@ -102,7 +106,8 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 	m_screensaverNotify(false),
 	m_xtestIsXineramaUnaware(true),
 	m_preserveFocus(false),
-	m_xkb(false)
+	m_xkb(false),
+	m_xi2detected(false)
 {
 	assert(s_screen == NULL);
 
@@ -142,6 +147,15 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 	if (m_isPrimary) {
 		// start watching for events on other windows
 		selectEvents(m_root);
+		m_xi2detected = detectXI2();
+
+		if (m_xi2detected) {
+			selectXIRawMotion();
+		} else
+		{
+			// start watching for events on other windows
+			selectEvents(m_root);
+		}
 
 		// prepare to use input methods
 		openIM();
@@ -1205,6 +1219,35 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 		return;
 	}
 
+	if (m_xi2detected) {
+		// Process RawMotion
+		XGenericEventCookie *cookie = (XGenericEventCookie*)&xevent->xcookie;
+			if (XGetEventData(m_display, cookie) &&
+				cookie->type == GenericEvent &&
+				cookie->extension == xi_opcode) {
+			if (cookie->evtype == XI_RawMotion) {
+				// Get current pointer's position
+				Window root, child;
+				XMotionEvent xmotion;
+				xmotion.type = MotionNotify;
+				xmotion.send_event = False; // Raw motion
+				xmotion.display = m_display;
+				xmotion.window = m_window;
+				/* xmotion's time, state and is_hint are not used */
+				unsigned int msk;
+					xmotion.same_screen = XQueryPointer(
+						m_display, m_root, &xmotion.root, &xmotion.subwindow,
+						&xmotion.x_root,
+						&xmotion.y_root,
+						&xmotion.x,
+						&xmotion.y,
+						&msk);
+					onMouseMove(xmotion);
+					return;
+			}
+		}
+	}
+
 	// handle the event ourself
 	switch (xevent->type) {
 	case CreateNotify:
@@ -1953,4 +1996,28 @@ CXWindowsScreen::CHotKeyItem::operator<(const CHotKeyItem& x) const
 {
 	return (m_keycode < x.m_keycode ||
 			(m_keycode == x.m_keycode && m_mask < x.m_mask));
+}
+
+bool
+CXWindowsScreen::detectXI2()
+{
+	int event, error;
+    return XQueryExtension(m_display,
+			"XInputExtension", &xi_opcode, &event, &error);
+}
+
+void
+CXWindowsScreen::selectXIRawMotion()
+{
+	XIEventMask mask;
+
+	mask.deviceid = XIAllDevices;
+	mask.mask_len = XIMaskLen(XI_RawMotion);
+	mask.mask = (unsigned char*)calloc(mask.mask_len, sizeof(char));
+	mask.deviceid = XIAllMasterDevices;
+	memset(mask.mask, 0, 2);
+    XISetMask(mask.mask, XI_RawKeyRelease);
+	XISetMask(mask.mask, XI_RawMotion);
+	XISelectEvents(m_display, DefaultRootWindow(m_display), &mask, 1);
+	free(mask.mask);
 }

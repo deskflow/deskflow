@@ -172,5 +172,5 @@ if (WIN32)
 endif()
 
 if (UNIX)
-	target_link_libraries(platform synergy)
+	target_link_libraries(platform synergy ${libs})
 endif()

@@ -177,7 +177,7 @@ CXWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 						SELECT_TYPE_ARG234 NULL,
 						SELECT_TYPE_ARG234 NULL,
 						SELECT_TYPE_ARG5   TIMEOUT_DELAY);
-	if (FD_SET(m_pipefd[0], &rfds) {
+	if (FD_SET(m_pipefd[0], &rfds)) {
 		read(m_pipefd[0], buf, 15);
 	}
 #endif

@@ -138,6 +138,8 @@ private:
 	void				onMouseRelease(const XButtonEvent&);
 	void				onMouseMove(const XMotionEvent&);
 
+	bool				detectXI2();
+	void				selectXIRawMotion();
 	void				selectEvents(Window) const;
 	void				doSelectEvents(Window) const;
 
@@ -234,6 +236,8 @@ private:
 	// XKB extension stuff
 	bool				m_xkb;
 	int					m_xkbEventBase;
+
+	bool				m_xi2detected;
 
 	// pointer to (singleton) screen.  this is only needed by
 	// ioErrorHandler().
