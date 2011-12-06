@@ -47,7 +47,12 @@ IArchString::convStringWCToMB(char* dst,
 		errors = &dummyErrors;
 	}
 
+	if (s_mutex == NULL) {
+		s_mutex = ARCH->newMutex();
+	}
+
 	ARCH->lockMutex(s_mutex);
+
 	if (dst == NULL) {
 		char dummy[MB_LEN_MAX];
 		for (const wchar_t* scan = src; n > 0; ++scan, --n) {
@@ -99,7 +104,12 @@ IArchString::convStringMBToWC(wchar_t* dst,
 		errors = &dummyErrors;
 	}
 
+	if (s_mutex == NULL) {
+		s_mutex = ARCH->newMutex();
+	}
+
 	ARCH->lockMutex(s_mutex);
+
 	if (dst == NULL) {
 		for (const char* scan = src; n > 0; ) {
 			int mblen = mbtowc(&dummy, scan, n);
