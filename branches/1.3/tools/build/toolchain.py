@@ -179,6 +179,9 @@ class InternalCommands:
 
 		self.restore_chdir()
 
+		if generator.cmakeName.find('Eclipse') != -1:
+			self.fixCmakeEclipseBug()
+
 		if err != 0:
 			raise Exception('CMake encountered error: ' + str(err))
 		
@@ -200,6 +203,19 @@ class InternalCommands:
 				raise Exception('QMake encountered error: ' + str(err))
 		
 		self.setConfRun(target)
+
+	# http://tinyurl.com/cs2rxxb
+	def fixCmakeEclipseBug(self):
+		print "Fixing CMake Eclipse bugs..."
+
+		file = open('.project', 'r+')
+		content = file.read()
+		pattern = re.compile('\s+<linkedResources>.+</linkedResources>', re.S)
+		content = pattern.sub('', content)
+		file.seek(0)
+		file.write(content)
+		file.truncate()
+		file.close()
 
 	def persist_cmake(self):
 		# even though we're running `cmake --version`, we're only doing this for the 0 return
