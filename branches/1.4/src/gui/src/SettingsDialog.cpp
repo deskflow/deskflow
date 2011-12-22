@@ -36,8 +36,8 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
 	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
 	m_pLineEditLogFilename->setText(appConfig().logFilename());
-    m_pCheckBoxAutoStart->setChecked(appConfig().autoStart());
-    m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
+	m_pCheckBoxAutoStart->setChecked(appConfig().autoStart());
+	m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
 
 #ifdef Q_OS_WIN
 	m_pCheckBoxGameDevice->setChecked(appConfig().gameDevice());
@@ -56,8 +56,8 @@ void SettingsDialog::accept()
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
 	appConfig().setGameDevice(m_pCheckBoxGameDevice->isChecked());
-    appConfig().setAutoStart(m_pCheckBoxAutoStart->isChecked());
-    appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
+	appConfig().setAutoStart(m_pCheckBoxAutoStart->isChecked());
+	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
 
 	QDialog::accept();
 }

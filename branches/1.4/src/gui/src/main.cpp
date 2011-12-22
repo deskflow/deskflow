@@ -26,30 +26,30 @@
 
 int main(int argc, char* argv[])
 {
-    QCoreApplication::setOrganizationName("Synergy");
+	QCoreApplication::setOrganizationName("Synergy");
 	QCoreApplication::setOrganizationDomain("http://synergy-foss.org/");
 	QCoreApplication::setApplicationName("Synergy");
 
 	QSynergyApplication app(argc, argv);
 
 #if !defined(Q_OS_MAC)
-    int trayAttempts = 0;
-    while (true)
-    {
-        if (QSystemTrayIcon::isSystemTrayAvailable())
-        {
-            break;
-        }
+	int trayAttempts = 0;
+	while (true)
+	{
+		if (QSystemTrayIcon::isSystemTrayAvailable())
+		{
+			break;
+		}
 
-        if (++trayAttempts > TRAY_RETRY_COUNT)
-        {
-            QMessageBox::critical(NULL, "Synergy",
-                QObject::tr("System tray is unavailable, quitting."));
-            return -1;
-        }
+		if (++trayAttempts > TRAY_RETRY_COUNT)
+		{
+			QMessageBox::critical(NULL, "Synergy",
+				QObject::tr("System tray is unavailable, quitting."));
+			return -1;
+		}
 
-        sleep(TRAY_RETRY_WAIT);
-    }
+		sleep(TRAY_RETRY_WAIT);
+	}
 
 	QApplication::setQuitOnLastWindowClosed(false);
 #endif
@@ -62,8 +62,8 @@ int main(int argc, char* argv[])
 	myappTranslator.load("res/lang/QSynergy_" + QLocale::system().name());
 	app.installTranslator(&myappTranslator);
 
-    MainWindow mainWindow;
-    mainWindow.start();
+	MainWindow mainWindow;
+	mainWindow.start();
 
 	return app.exec();
 }

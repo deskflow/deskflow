@@ -56,7 +56,7 @@ MainWindow::MainWindow() :
 	createTrayIcon();
 	createMenuBar();
 	loadSettings();
-    initConnections();
+	initConnections();
 }
 
 MainWindow::~MainWindow()
@@ -68,32 +68,32 @@ MainWindow::~MainWindow()
 void MainWindow::start()
 {
 #if defined(Q_OS_LINUX)
-    if (!appConfig().autoStart())
-    {
-        int result = QMessageBox::question(this, "Synergy",
-            QObject::tr("Always start Synergy after logging in?"),
-            QMessageBox::Yes | QMessageBox::No);
+	if (!appConfig().autoStart())
+	{
+		int result = QMessageBox::question(this, "Synergy",
+			QObject::tr("Always start Synergy after logging in?"),
+			QMessageBox::Yes | QMessageBox::No);
 
-        if (result == QMessageBox::Yes)
-        {
-            appConfig().setAutoStart(true);
-        }
-    }
+		if (result == QMessageBox::Yes)
+		{
+			appConfig().setAutoStart(true);
+		}
+	}
 #endif
 
-    if (appConfig().autoConnect())
-    {
-        startSynergy();
+	if (appConfig().autoConnect())
+	{
+		startSynergy();
 
-        if (!appConfig().autoHide())
-        {
-            show();
-        }
-    }
-    else
-    {
-        show();
-    }
+		if (!appConfig().autoHide())
+		{
+			show();
+		}
+	}
+	else
+	{
+		show();
+	}
 }
 
 void MainWindow::setStatus(const QString &status)
@@ -207,7 +207,7 @@ void MainWindow::setIcon(qSynergyState state)
 	if (m_pTrayIcon)
 		m_pTrayIcon->setIcon(icon);
 
-	    
+
 	// removed setWindowIcon usage - the icons are too low res.
 }
 
@@ -259,10 +259,10 @@ void MainWindow::startSynergy()
 
 	setSynergyState(synergyConnected);
 
-    if (appConfig().autoHide())
-    {
-        hide();
-    }
+	if (appConfig().autoHide())
+	{
+		hide();
+	}
 }
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
@@ -429,7 +429,7 @@ void MainWindow::setVisible(bool visible)
 {
 	m_pActionMinimize->setEnabled(visible);
 	m_pActionRestore->setEnabled(!visible);
-    QMainWindow::setVisible(visible);
+	QMainWindow::setVisible(visible);
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()

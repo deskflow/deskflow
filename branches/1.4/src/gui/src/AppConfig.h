@@ -43,8 +43,8 @@ class AppConfig
 		const QString& logFilename() const { return m_LogFilename; }
 		QString logLevelText() const;
 		bool gameDevice() const { return m_GameDevice; }
-        bool autoStart() const { return m_AutoStart; }
-        bool autoHide() const { return m_AutoHide; }
+		bool autoStart() const { return m_AutoStart; }
+		bool autoHide() const { return m_AutoHide; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -64,8 +64,8 @@ class AppConfig
 		void setLogToFile(bool b) { m_LogToFile = b; }
 		void setLogFilename(const QString& s) { m_LogFilename = s; }
 		void setGameDevice(bool b) { m_GameDevice = b; }
-        void setAutoStart(bool b);
-        void setAutoHide(bool b) { m_AutoHide = b; }
+		void setAutoStart(bool b);
+		void setAutoHide(bool b) { m_AutoHide = b; }
 
 		void loadSettings();
 		void saveSettings();
@@ -80,8 +80,8 @@ class AppConfig
 		bool m_LogToFile;
 		QString m_LogFilename;
 		bool m_GameDevice;
-        bool m_AutoStart;
-        bool m_AutoHide;
+		bool m_AutoStart;
+		bool m_AutoHide;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];
