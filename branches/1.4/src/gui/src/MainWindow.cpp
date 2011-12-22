@@ -67,18 +67,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
-	if (!appConfig().autoStart())
-	{
-		int result = QMessageBox::question(this, "Synergy",
-			QObject::tr("Always start Synergy after logging in?"),
-			QMessageBox::Yes | QMessageBox::No);
-
-		if (result == QMessageBox::Yes)
-		{
-			appConfig().setAutoStart(true);
-		}
-	}
-
 	if (appConfig().autoConnect())
 	{
 		startSynergy();
@@ -91,6 +79,23 @@ void MainWindow::start()
 	else
 	{
 		show();
+	}
+
+	if (appConfig().autoStartPrompt())
+	{
+		int result = QMessageBox::question(this, "Synergy",
+			QObject::tr("Always start Synergy after logging in?"),
+			QMessageBox::Yes | QMessageBox::No);
+
+		appConfig().setAutoStartPrompt(false);
+
+		if (result == QMessageBox::Yes)
+		{
+			appConfig().setAutoStart(true);
+			appConfig().setAutoConnect(true);
+		}
+
+		appConfig().saveSettings();
 	}
 }
 
@@ -251,6 +256,7 @@ void MainWindow::startSynergy()
 	if (!synergyProcess()->waitForStarted())
 	{
 		stopSynergy();
+		show();
 		QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
 		return;
 	}
@@ -269,6 +275,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
 	if (!QFile::exists(app))
 	{
+		show();
 		QMessageBox::warning(this, tr("Synergy client not found"),
 							 tr("The executable for the synergy client does not exist."));
 		return false;
@@ -276,6 +283,7 @@ bool MainWindow::clientArgs(QStringList& args, QString& app)
 
 	if (m_pLineEditHostname->text().isEmpty())
 	{
+		show();
 		QMessageBox::warning(this, tr("Hostname is empty"),
 							 tr("Please fill in a hostname for the synergy client to connect to."));
 		return false;

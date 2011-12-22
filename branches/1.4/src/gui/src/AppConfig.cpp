@@ -50,7 +50,8 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_LogLevel(0),
 	m_GameDevice(false),
 	m_AutoStart(false),
-	m_AutoHide(false)
+	m_AutoHide(false),
+	m_AutoStartPrompt(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -139,7 +140,7 @@ void AppConfig::setAutoStart(bool b)
 
 void AppConfig::loadSettings()
 {
-	m_AutoConnect = settings().value("autoConnect", true).toBool();
+	m_AutoConnect = settings().value("autoConnect", false).toBool();
 	m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
 	m_Port = settings().value("port", 24800).toInt();
 	m_Interface = settings().value("interface").toString();
@@ -149,6 +150,7 @@ void AppConfig::loadSettings()
 	m_GameDevice = settings().value("gameDevice", false).toBool();
 	m_AutoStart = settings().value("autoStart", false).toBool();
 	m_AutoHide = settings().value("autoHide", true).toBool();
+	m_AutoStartPrompt = settings().value("autoStartPrompt", true).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -163,4 +165,5 @@ void AppConfig::saveSettings()
 	settings().setValue("gameDevice", m_GameDevice);
 	settings().setValue("autoStart", m_AutoStart);
 	settings().setValue("autoHide", m_AutoHide);
+	settings().setValue("autoStartPrompt", m_AutoStartPrompt);
 }
