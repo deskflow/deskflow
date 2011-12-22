@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define TRAY_RETRY_COUNT 5
+#define TRAY_RETRY_WAIT 1
+
 #include "QSynergyApplication.h"
 #include "MainWindow.h"
 
@@ -23,18 +26,30 @@
 
 int main(int argc, char* argv[])
 {
-	QCoreApplication::setOrganizationName("The Synergy Project");
+    QCoreApplication::setOrganizationName("Synergy");
 	QCoreApplication::setOrganizationDomain("http://synergy-foss.org/");
 	QCoreApplication::setApplicationName("Synergy");
 
 	QSynergyApplication app(argc, argv);
 
 #if !defined(Q_OS_MAC)
-	if (!QSystemTrayIcon::isSystemTrayAvailable())
-	{
-		QMessageBox::critical(NULL, "Synergy", QObject::tr("There doesn't seem to be a system tray available. Quitting."));
-		return -1;
-	}
+    int trayAttempts = 0;
+    while (true)
+    {
+        if (QSystemTrayIcon::isSystemTrayAvailable())
+        {
+            break;
+        }
+
+        if (++trayAttempts > TRAY_RETRY_COUNT)
+        {
+            QMessageBox::critical(NULL, "Synergy",
+                QObject::tr("System tray is unavailable, quitting."));
+            return -1;
+        }
+
+        sleep(TRAY_RETRY_WAIT);
+    }
 
 	QApplication::setQuitOnLastWindowClosed(false);
 #endif
@@ -47,8 +62,8 @@ int main(int argc, char* argv[])
 	myappTranslator.load("res/lang/QSynergy_" + QLocale::system().name());
 	app.installTranslator(&myappTranslator);
 
-	MainWindow mainWindow;
-	mainWindow.show();
+    MainWindow mainWindow;
+    mainWindow.start();
 
 	return app.exec();
 }

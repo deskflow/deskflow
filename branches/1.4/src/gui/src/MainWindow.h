@@ -75,6 +75,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString configFilename();
 		QString address();
 		QString appPath(const QString& name);
+        void start();
 
 	protected slots:
 		void on_m_pGroupClient_toggled(bool on) { m_pGroupServer->setChecked(!on); }

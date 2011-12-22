@@ -43,12 +43,14 @@ static const char* logLevelNames[] =
 
 AppConfig::AppConfig(QSettings* settings) :
 	m_pSettings(settings),
-	m_AutoConnect(false),
+    m_AutoConnect(false),
 	m_ScreenName(),
 	m_Port(24800),
 	m_Interface(),
 	m_LogLevel(0),
-	m_GameDevice(false)
+    m_GameDevice(false),
+    m_AutoStart(false),
+    m_AutoHide(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -93,26 +95,53 @@ QString AppConfig::logLevelText() const
 	return logLevelNames[logLevel()];
 }
 
+void AppConfig::setAutoStart(bool b)
+{
+#if defined(Q_OS_LINUX)
+    // TODO: make cross platform
+    QString desktopFileName("synergy.desktop");
+    QString desktopFilePath("/usr/share/applications/" + desktopFileName);
+    QString autoStartPath(QDir::homePath() + "/.config/autostart/" + desktopFileName);
+
+    // always create or delete the link even if it exists already, in case it
+    // was broken.
+    if (b)
+    {
+        QFile::link(desktopFilePath, autoStartPath);
+    }
+    else
+    {
+        QFile::remove(autoStartPath);
+    }
+#endif
+
+    m_AutoStart = b;
+}
+
 void AppConfig::loadSettings()
 {
-	m_AutoConnect = settings().value("autoConnectChecked", false).toBool();
+    m_AutoConnect = settings().value("autoConnect", true).toBool();
 	m_ScreenName = settings().value("screenName", QHostInfo::localHostName()).toString();
 	m_Port = settings().value("port", 24800).toInt();
 	m_Interface = settings().value("interface").toString();
 	m_LogLevel = settings().value("logLevel", 2).toInt();
 	m_LogToFile = settings().value("logToFile", false).toBool();
-	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
-	m_GameDevice = settings().value("gameDevice", false).toBool();
+    m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
+    m_GameDevice = settings().value("gameDevice", false).toBool();
+    m_AutoStart = settings().value("autoStart", false).toBool();
+    m_AutoHide = settings().value("autoHide", true).toBool();
 }
 
 void AppConfig::saveSettings()
 {
-	settings().setValue("autoConnectChecked", m_AutoConnect);
+    settings().setValue("autoConnect", m_AutoConnect);
 	settings().setValue("screenName", m_ScreenName);
 	settings().setValue("port", m_Port);
 	settings().setValue("interface", m_Interface);
 	settings().setValue("logLevel", m_LogLevel);
 	settings().setValue("logToFile", m_LogToFile);
-	settings().setValue("logFilename", m_LogFilename);
-	settings().setValue("gameDevice", m_GameDevice);
+    settings().setValue("logFilename", m_LogFilename);
+    settings().setValue("gameDevice", m_GameDevice);
+    settings().setValue("autoStart", m_AutoStart);
+    settings().setValue("autoHide", m_AutoHide);
 }

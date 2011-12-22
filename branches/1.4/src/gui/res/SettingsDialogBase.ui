@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>373</height>
+    <width>425</width>
+    <height>430</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,7 +80,7 @@
       <item row="3" column="1">
        <widget class="QCheckBox" name="m_pCheckBoxGameDevice">
         <property name="text">
-         <string>Enable gamepad support for Windows</string>
+         <string>Enable &amp;gamepad support for Windows</string>
         </property>
        </widget>
       </item>
@@ -94,9 +94,23 @@
      </property>
      <layout class="QVBoxLayout">
       <item>
+       <widget class="QCheckBox" name="m_pCheckBoxAutoStart">
+        <property name="text">
+         <string>&amp;Start Synergy after logging in</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QCheckBox" name="m_pCheckBoxAutoConnect">
         <property name="text">
-         <string>A&amp;utomatically start server or client when GUI starts</string>
+         <string>&amp;Automatically start server/client</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+        <property name="text">
+         <string>&amp;Hide when server/client starts</string>
         </property>
        </widget>
       </item>

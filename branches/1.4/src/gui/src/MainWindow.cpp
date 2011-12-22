@@ -56,16 +56,44 @@ MainWindow::MainWindow() :
 	createTrayIcon();
 	createMenuBar();
 	loadSettings();
-	initConnections();
-
-	if (appConfig().autoConnect())
-		startSynergy();
+    initConnections();
 }
 
 MainWindow::~MainWindow()
 {
 	stopSynergy();
 	saveSettings();
+}
+
+void MainWindow::start()
+{
+#if defined(Q_OS_LINUX)
+    if (!appConfig().autoStart())
+    {
+        int result = QMessageBox::question(this, "Synergy",
+            QObject::tr("Always start Synergy after logging in?"),
+            QMessageBox::Yes | QMessageBox::No);
+
+        if (result == QMessageBox::Yes)
+        {
+            appConfig().setAutoStart(true);
+        }
+    }
+#endif
+
+    if (appConfig().autoConnect())
+    {
+        startSynergy();
+
+        if (!appConfig().autoHide())
+        {
+            show();
+        }
+    }
+    else
+    {
+        show();
+    }
 }
 
 void MainWindow::setStatus(const QString &status)
@@ -230,6 +258,11 @@ void MainWindow::startSynergy()
 	}
 
 	setSynergyState(synergyConnected);
+
+    if (appConfig().autoHide())
+    {
+        hide();
+    }
 }
 
 bool MainWindow::clientArgs(QStringList& args, QString& app)
@@ -396,7 +429,7 @@ void MainWindow::setVisible(bool visible)
 {
 	m_pActionMinimize->setEnabled(visible);
 	m_pActionRestore->setEnabled(!visible);
-	QMainWindow::setVisible(visible);
+    QMainWindow::setVisible(visible);
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
