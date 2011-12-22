@@ -16,13 +16,24 @@
  */
 
 #define TRAY_RETRY_COUNT 5
-#define TRAY_RETRY_WAIT 1
+#define TRAY_RETRY_WAIT 1000
 
 #include "QSynergyApplication.h"
 #include "MainWindow.h"
 
 #include <QtCore>
 #include <QtGui>
+
+class QThreadImpl : public QThread
+{
+public:
+	static void msleep(unsigned long msecs)
+	{
+		QThread::msleep(msecs);
+	}
+};
+
+int waitForTray();
 
 int main(int argc, char* argv[])
 {
@@ -33,24 +44,10 @@ int main(int argc, char* argv[])
 	QSynergyApplication app(argc, argv);
 
 #if !defined(Q_OS_MAC)
-	int trayAttempts = 0;
-	while (true)
+	if (!waitForTray())
 	{
-		if (QSystemTrayIcon::isSystemTrayAvailable())
-		{
-			break;
-		}
-
-		if (++trayAttempts > TRAY_RETRY_COUNT)
-		{
-			QMessageBox::critical(NULL, "Synergy",
-				QObject::tr("System tray is unavailable, quitting."));
-			return -1;
-		}
-
-		sleep(TRAY_RETRY_WAIT);
+		return -1;
 	}
-
 	QApplication::setQuitOnLastWindowClosed(false);
 #endif
 
@@ -66,5 +63,29 @@ int main(int argc, char* argv[])
 	mainWindow.start();
 
 	return app.exec();
+}
+
+int waitForTray()
+{
+	// on linux, the system tray may not be available immediately after logging in,
+	// so keep retrying but give up after a short time.
+	int trayAttempts = 0;
+	while (true)
+	{
+		if (QSystemTrayIcon::isSystemTrayAvailable())
+		{
+			break;
+		}
+
+		if (++trayAttempts > TRAY_RETRY_COUNT)
+		{
+			QMessageBox::critical(NULL, "Synergy",
+				QObject::tr("System tray is unavailable, quitting."));
+			return false;
+		}
+
+		QThreadImpl::msleep(TRAY_RETRY_WAIT);
+	}
+	return true;
 }
 
