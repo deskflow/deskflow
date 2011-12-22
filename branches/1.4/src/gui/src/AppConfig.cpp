@@ -120,7 +120,7 @@ void AppConfig::setAutoStart(bool b)
 
 #elif defined(Q_OS_WIN)
 
-	QSettings settings("HKEY_CURRENT_USER\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+	QSettings settings("HKEY_LOCAL_MACHINE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
 	QString path("Synergy");
 
 	if (b)
