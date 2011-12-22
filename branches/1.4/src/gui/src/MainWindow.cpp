@@ -67,7 +67,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
-#if defined(Q_OS_LINUX)
 	if (!appConfig().autoStart())
 	{
 		int result = QMessageBox::question(this, "Synergy",
@@ -79,7 +78,6 @@ void MainWindow::start()
 			appConfig().setAutoStart(true);
 		}
 	}
-#endif
 
 	if (appConfig().autoConnect())
 	{

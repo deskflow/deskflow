@@ -97,14 +97,17 @@ QString AppConfig::logLevelText() const
 
 void AppConfig::setAutoStart(bool b)
 {
+	m_AutoStart = b;
+
+	// always create or delete the links/files/entries even if they exist already,
+	// in case it was broken.
+
 #if defined(Q_OS_LINUX)
-	// TODO: make cross platform
+
 	QString desktopFileName("synergy.desktop");
 	QString desktopFilePath("/usr/share/applications/" + desktopFileName);
 	QString autoStartPath(QDir::homePath() + "/.config/autostart/" + desktopFileName);
 
-	// always create or delete the link even if it exists already, in case it
-	// was broken.
 	if (b)
 	{
 		QFile::link(desktopFilePath, autoStartPath);
@@ -113,9 +116,25 @@ void AppConfig::setAutoStart(bool b)
 	{
 		QFile::remove(autoStartPath);
 	}
+
+#elif defined(Q_OS_WIN)
+
+	QSettings settings("HKEY_CURRENT_USER\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+	QString path("Synergy");
+
+	if (b)
+	{
+		settings.setValue(path, QCoreApplication::applicationFilePath());
+	}
+	else
+	{
+		settings.remove(path);
+	}
+	settings.sync();
+
 #endif
 
-	m_AutoStart = b;
+	// TODO: mac os x auto start
 }
 
 void AppConfig::loadSettings()
