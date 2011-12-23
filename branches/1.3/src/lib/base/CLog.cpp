@@ -109,7 +109,7 @@ CLog::print(const char* file, int line, const char* fmt, ...) const
 {
   // check if fmt begins with a priority argument
   int priority = 4;
-  if (fmt[0] == '%' && fmt[1] == 'z') {
+  if ((strlen(fmt) > 2) && (fmt[0] == '%' && fmt[1] == 'z')) {
     priority = fmt[2] - '\060';
     fmt += 3;
   }
