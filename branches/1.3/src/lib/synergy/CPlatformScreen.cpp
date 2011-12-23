@@ -22,6 +22,11 @@ CPlatformScreen::CPlatformScreen()
 	// do nothing
 }
 
+CPlatformScreen::CPlatformScreen(IEventQueue& eventQueue) :
+	IPlatformScreen(eventQueue)
+{
+}
+
 CPlatformScreen::~CPlatformScreen()
 {
 	// do nothing

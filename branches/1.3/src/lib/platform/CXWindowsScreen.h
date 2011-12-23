@@ -26,6 +26,7 @@
 #else
 #	include <X11/Xlib.h>
 #endif
+#include "CKeyMap.h"
 
 class CXWindowsClipboard;
 class CXWindowsKeyState;
@@ -34,7 +35,7 @@ class CXWindowsScreenSaver;
 //! Implementation of IPlatformScreen for X11
 class CXWindowsScreen : public CPlatformScreen {
 public:
-	CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta=0);
+	CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue& eventQueue);
 	virtual ~CXWindowsScreen();
 
 	//! @name manipulators
@@ -232,6 +233,9 @@ private:
 	int					m_xkbEventBase;
 
 	bool				m_xi2detected;
+
+	IEventQueue&		m_eventQueue;
+	CKeyMap				m_keyMap;
 
 	// pointer to (singleton) screen.  this is only needed by
 	// ioErrorHandler().

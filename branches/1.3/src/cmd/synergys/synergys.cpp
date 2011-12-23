@@ -131,7 +131,7 @@ createScreen()
 	return new CScreen(new CMSWindowsScreen(true));
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(
-		ARG->m_display, true, ARG->m_disableXInitThreads));
+		ARG->m_display, true, ARG->m_disableXInitThreads, 0, *EVENTQUEUE));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(true));
 #endif

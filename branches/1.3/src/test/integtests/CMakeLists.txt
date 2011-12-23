@@ -39,6 +39,7 @@ elseif (UNIX)
 	list(APPEND src
 		platform/CXWindowsClipboardTests.cpp
 		platform/CXWindowsKeyStateTests.cpp
+		platform/CXWindowsScreenTests.cpp
 	)
 
 endif()

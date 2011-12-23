@@ -25,6 +25,7 @@
 #else
 #	include <X11/Xlib.h>
 #endif
+#include "IEventQueue.h"
 
 class CEvent;
 class CEventQueueTimer;
@@ -32,7 +33,7 @@ class CEventQueueTimer;
 //! X11 screen saver implementation
 class CXWindowsScreenSaver : public IScreenSaver {
 public:
-	CXWindowsScreenSaver(Display*, Window, void* eventTarget);
+	CXWindowsScreenSaver(Display*, Window, void* eventTarget, IEventQueue& eventQueue);
 	virtual ~CXWindowsScreenSaver();
 
 	//! @name manipulators
@@ -162,6 +163,8 @@ private:
 	// xscreensaver since 2.21 requires the mouse to move more than 10
 	// pixels to be considered significant.
 	SInt32				m_disablePos;
+
+	IEventQueue&		m_eventQueue;
 };
 
 #endif
