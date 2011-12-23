@@ -10,7 +10,7 @@
      <false/>
      <key>ProgramArguments</key>
      <array>
-        <string>/usr/bin/synergys</string>
+        <string>/usr/bin/synergyc</string>
         <!-- Replace this IP with the IP of your synergys server -->
         <string>192.168.0.2</string>
      </array>
