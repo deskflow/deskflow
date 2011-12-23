@@ -813,8 +813,16 @@ CMSWindowsKeyState::fakeCtrlAltDel()
 		// current thread must be on that desktop to do the broadcast
 		// and we can't switch just any thread because some own windows
 		// or hooks.  so start a new thread to do the real work.
+		HANDLE hEvtSendSas = OpenEvent( EVENT_MODIFY_STATE, FALSE, "Global\\SendSAS" );
+		if ( hEvtSendSas ) {
+			LOG((CLOG_DEBUG "found the SendSAS event - signaling my launcher to simulate ctrl+alt+del"));
+			SetEvent( hEvtSendSas );
+			CloseHandle( hEvtSendSas );
+		}
+		else {
 		CThread cad(new CFunctionJob(&CMSWindowsKeyState::ctrlAltDelThread));
 		cad.wait();
+	}
 	}
 	else {
 		// simulate ctrl+alt+del

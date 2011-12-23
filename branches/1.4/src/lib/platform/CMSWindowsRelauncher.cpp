@@ -198,6 +198,8 @@ CMSWindowsRelauncher::getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES
 	return primaryToken;
 }
 
+typedef VOID (WINAPI *SendSas)(BOOL asUser);
+
 int
 CMSWindowsRelauncher::relaunchLoop()
 {
@@ -211,10 +213,23 @@ CMSWindowsRelauncher::relaunchLoop()
 	int returnCode = kExitSuccess;
 	bool launched = false;
 
+	HINSTANCE hSASLib = 0;
+	SendSas pfnSendSAS = 0;
+	hSASLib = LoadLibrary("sas.dll");
+	if (hSASLib) {
+		LOG((CLOG_DEBUG "found sas.dll"));
+		pfnSendSAS = (SendSas)GetProcAddress(hSASLib, "SendSAS");
+	}
+
 	// TODO: fix this hack BEFORE release; we need to exit gracefully instead 
 	// of being force killed!
 	bool loopRunning = true;
 	while (loopRunning) {
+
+		HANDLE hEvtSendSas = 0;
+		if (hSASLib && pfnSendSAS) {
+			hEvtSendSas = CreateEvent( NULL, FALSE, FALSE, "Global\\SendSAS" );
+		}
 
 		DWORD newSessionId = getSessionId();
 
@@ -293,6 +308,13 @@ CMSWindowsRelauncher::relaunchLoop()
 		}
 
 		// check for session change every second
+		if (hEvtSendSas) {
+			if ( WaitForSingleObject( hEvtSendSas, 1000 ) == WAIT_OBJECT_0 && pfnSendSAS ) {
+				LOG((CLOG_DEBUG "calling SendSAS..."));
+				pfnSendSAS(FALSE);
+			}
+		}
+		else
 		ARCH->sleep(1);
 	}
 
