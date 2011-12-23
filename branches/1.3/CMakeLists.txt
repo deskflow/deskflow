@@ -170,6 +170,9 @@ if (UNIX)
 
 	else()
 
+		# add include dir for bsd (posix uses /usr/include/)
+		set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
+
 		set(XKBlib "X11/XKBlib.h")
 		check_include_files("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
 		check_include_files("X11/extensions/Xinerama.h" HAVE_X11_EXTENSIONS_XINERAMA_H)
