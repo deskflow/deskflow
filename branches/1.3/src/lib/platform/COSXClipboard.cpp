@@ -87,6 +87,7 @@ COSXClipboard::synchronize()
 	void
 COSXClipboard::add(EFormat format, const CString & data)
 {
+	bool emptied = false;
 	if (m_pboard == NULL)
 		return;
 
@@ -105,9 +106,14 @@ COSXClipboard::add(EFormat format, const CString & data)
 
 			// integ tests showed that if you call add(...) twice, then the
 			// second call will actually fail to set clipboard data. calling
-			// empty() seems to solve this problem.
-			empty();
-
+			// empty() seems to solve this problem. but, only clear the clipboard
+			// for the first converter, otherwise further converters will wipe out
+			// what we just added.
+			if (!emptied) {
+				empty();
+				emptied = true;
+			}
+			
 			PasteboardPutItemFlavor(
 					m_pboard,
 					(PasteboardItemID) 0,
