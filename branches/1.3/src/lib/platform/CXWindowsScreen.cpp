@@ -1933,6 +1933,8 @@ CXWindowsScreen::updateButtons()
 bool
 CXWindowsScreen::grabMouseAndKeyboard()
 {
+	unsigned int event_mask = ButtonPressMask | ButtonReleaseMask | EnterWindowMask | LeaveWindowMask | PointerMotionMask;
+
 	// grab the mouse and keyboard.  keep trying until we get them.
 	// if we can't grab one after grabbing the other then ungrab
 	// and wait before retrying.  give up after s_timeout seconds.
@@ -1956,8 +1958,8 @@ CXWindowsScreen::grabMouseAndKeyboard()
 		} while (result != GrabSuccess);
 		LOG((CLOG_DEBUG2 "grabbed keyboard"));
 
-		// now the mouse
-		result = XGrabPointer(m_display, m_window, True, 0,
+		// now the mouse --- use event_mask to get EnterNotify, LeaveNotify events
+		result = XGrabPointer(m_display, m_window, False, event_mask,
 								GrabModeAsync, GrabModeAsync,
 								m_window, None, CurrentTime);
 		assert(result != GrabNotViewable);
