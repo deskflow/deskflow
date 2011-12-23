@@ -1450,8 +1450,10 @@ CMSWindowsKeyState::getIDForKey(CKeyMap::KeyItem& item,
 		return id;
 
 	case 2:
-		// left over dead key in buffer;  oops.
-		return getIDForKey(item, button, virtualKey, keyState, hkl);
+		// left over dead key in buffer. this used to recurse,
+		// but apparently this causes a stack overflow, so just
+		// return no key instead.
+		return kKeyNone;
 	}
 }
 
