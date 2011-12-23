@@ -174,6 +174,7 @@ if (UNIX)
 		set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
 
 		set(XKBlib "X11/XKBlib.h")
+		check_include_files("${XKBlib};X11/extensions/Xrandr.h" HAVE_X11_EXTENSIONS_XRANDR_H)
 		check_include_files("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
 		check_include_files("X11/extensions/Xinerama.h" HAVE_X11_EXTENSIONS_XINERAMA_H)
 		check_include_files("${XKBlib};X11/extensions/XKBstr.h" HAVE_X11_EXTENSIONS_XKBSTR_H)
@@ -196,6 +197,7 @@ if (UNIX)
 		check_library_exists("X11;Xext;Xtst" XTestQueryExtension "" HAVE_Xtst)
 		check_library_exists("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
 		check_library_exists("Xi" XISelectEvents "" HAVE_Xi)
+		check_library_exists("Xrandr" XRRQueryExtension "" HAVE_Xrandr)
 
 		if (HAVE_ICE)
 
@@ -227,6 +229,10 @@ if (UNIX)
 			if (HAVE_X11_EXTENSIONS_XINERAMA_H)
 				message(FATAL_ERROR "Missing library: Xinerama")
 			endif()
+		endif()
+
+		if (HAVE_Xrandr)
+			list(APPEND libs Xrandr)
 		endif()
 
 	endif()

@@ -109,6 +109,9 @@
 /* Define to 1 if you have the <wchar.h> header file. */
 #cmakedefine HAVE_WCHAR_H ${HAVE_WCHAR_H}
 
+/* Define to 1 if you have the <X11/extensions/Xrandr.h> header file. */
+#cmakedefine HAVE_X11_EXTENSIONS_XRANDR_H ${HAVE_X11_EXTENSIONS_XRANDR_H}
+
 /* Define to 1 if you have the <X11/extensions/dpms.h> header file. */
 #cmakedefine HAVE_X11_EXTENSIONS_DPMS_H ${HAVE_X11_EXTENSIONS_DPMS_H}
 

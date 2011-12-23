@@ -56,6 +56,9 @@
 #		include <X11/extensions/Xinerama.h>
 		}
 #	endif
+#	if HAVE_X11_EXTENSIONS_XRANDR_H
+#		include <X11/extensions/Xrandr.h>
+#	endif
 #	if HAVE_XKB_EXTENSION
 #		include <X11/XKBlib.h>
 #	endif
@@ -945,8 +948,30 @@ CXWindowsScreen::saveShape()
 	// get shape of default screen
 	m_x = 0;
 	m_y = 0;
+
 	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
 	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
+
+	int eventBase, errorBase;
+
+#if HAVE_X11_EXTENSIONS_XRANDR_H
+	if (XRRQueryExtension(m_display, &eventBase, &errorBase)){
+	  int numScreens;
+	  XRRScreenSize* xrrs;
+	  Rotation rotation;
+	  xrrs = XRRSizes(m_display, DefaultScreen(m_display), &numScreens);
+	  XRRRotations(m_display, DefaultScreen(m_display), &rotation);
+	  if (xrrs != NULL) {
+	    if (rotation & !(RR_Rotate_90|RR_Rotate_270) ){
+	      m_w = xrrs->width;
+	      m_h = xrrs->height;
+	    } else {
+	      m_w = xrrs->height;
+	      m_h = xrrs->width;
+	    }
+	  }
+	}
+#endif
 
 	// get center of default screen
 	m_xCenter = m_x + (m_w >> 1);
@@ -967,7 +992,6 @@ CXWindowsScreen::saveShape()
 	// screen instead of the logical screen.
 	m_xinerama = false;
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
-	int eventBase, errorBase;
 	if (XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
 		XineramaIsActive(m_display)) {
 		int numScreens;
