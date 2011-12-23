@@ -48,16 +48,24 @@ CString
 CMSWindowsClipboardHTMLConverter::doFromIClipboard(const CString& data) const
 {
 	// prepare to CF_HTML format prefix and suffix
-	CString prefix("Version:0.9\nStartHTML:-1\nEndHTML:-1\n"
-					"StartFragment:XXXXXXXXXX\nEndFragment:YYYYYYYYYY\n"
+	CString prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
+					"EndHTML:ZZZZZZZZZZ\r\n"
+					"StartFragment:XXXXXXXXXX\r\nEndFragment:YYYYYYYYYY\r\n"
 					"<!DOCTYPE><HTML><BODY><!--StartFragment-->");
-	CString suffix("<!--EndFragment--></BODY></HTML>\n");
-	UInt32 start = (UInt32)prefix.size();
-	UInt32 end   = start + (UInt32)data.size();
+	CString suffix("<!--EndFragment--></BODY></HTML>\r\n");
+
+	// Get byte offsets for header
+	UInt32 StartFragment = (UInt32)prefix.size();
+	UInt32 EndFragment   = StartFragment + (UInt32)data.size();
+	// StartHTML is constant by the design of the prefix
+	UInt32 EndHTML = EndFragment + (UInt32)suffix.size();
+
 	prefix.replace(prefix.find("XXXXXXXXXX"), 10,
-							CStringUtil::print("%010u", start));
+							CStringUtil::print("%010u", StartFragment));
 	prefix.replace(prefix.find("YYYYYYYYYY"), 10,
-							CStringUtil::print("%010u", end));
+							CStringUtil::print("%010u", EndFragment));
+	prefix.replace(prefix.find("ZZZZZZZZZZ"), 10,
+							CStringUtil::print("%010u", EndHTML));
 
 	// concatenate
 	prefix += data;
