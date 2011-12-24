@@ -28,6 +28,8 @@
 
 using ::testing::_;
 using ::testing::Invoke;
+using ::testing::NiceMock;
+using ::testing::AnyNumber;
 
 int streamReads = 0;
 
@@ -36,16 +38,23 @@ streamRead(void* buffer, UInt32 n);
 
 TEST(CServerProxyTests, parseMessage_mouseMove_valuesCorrect)
 {
-	CMockEventQueue eventQueue;
+	NiceMock<CMockEventQueue> eventQueue;
 	CMockClient client(eventQueue);
 	CMockStream stream(eventQueue);
-	CServerProxy serverProxy(&client, &stream, eventQueue);
 
 	ON_CALL(stream, read(_, _)).WillByDefault(Invoke(streamRead));
-	EXPECT_CALL(client, mouseMove(10, 20));
+	EXPECT_CALL(stream, read(_, _)).Times(4);
+	EXPECT_CALL(stream, write(_, _)).Times(1);
+	EXPECT_CALL(stream, isReady()).Times(1);
+	EXPECT_CALL(stream, getEventTarget()).Times(AnyNumber());
+
+	CServerProxy serverProxy(&client, &stream, eventQueue);
 
 	// skip handshake, go straight to normal parser.
 	serverProxy.m_parser = &CServerProxy::parseMessage;
+
+	// assert
+	EXPECT_CALL(client, mouseMove(10, 20));
 
 	serverProxy.handleData(NULL, NULL);
 }
