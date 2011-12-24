@@ -40,6 +40,7 @@ elseif (UNIX)
 		platform/CXWindowsClipboardTests.cpp
 		platform/CXWindowsKeyStateTests.cpp
 		platform/CXWindowsScreenTests.cpp
+		platform/CXWindowsScreenSaverTests.cpp
 	)
 
 endif()

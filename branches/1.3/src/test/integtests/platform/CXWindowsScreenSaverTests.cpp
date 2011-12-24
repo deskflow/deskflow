@@ -16,23 +16,25 @@
  */
 
 #include <gtest/gtest.h>
-#include "CXWindowsScreen.h"
+#include "CXWindowsScreenSaver.h"
 #include "CMockEventQueue.h"
+#include <X11/Xlib.h>
 
 using ::testing::_;
 
-TEST(CXWindowsScreenTests, fakeMouseMove_nonPrimary_getCursorPosValuesCorrect)
+TEST(CXWindowsScreenSaverTests, activate_defaultScreen_todo)
 {
+	Display* display = XOpenDisplay(":0.0");
+	Window window = DefaultRootWindow(display);
 	CMockEventQueue eventQueue;
-	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
-	EXPECT_CALL(eventQueue, adoptBuffer(_)).Times(2);
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
-	CXWindowsScreen screen(":0.0", false, false, 0, (IEventQueue&)eventQueue);
+	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
+	CXWindowsScreenSaver screenSaver(display, window, NULL, eventQueue);
 
-	screen.fakeMouseMove(10, 20);
+	screenSaver.activate();
 
-	int x, y;
-	screen.getCursorPos(x, y);
-	ASSERT_EQ(10, x);
-	ASSERT_EQ(20, y);
+	bool isActive = screenSaver.isActive();
+
+	screenSaver.deactivate();
+
+	ASSERT_EQ(true, isActive);
 }
