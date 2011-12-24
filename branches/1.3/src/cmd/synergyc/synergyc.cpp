@@ -296,7 +296,7 @@ static
 CClient*
 openClient(const CString& name, const CNetworkAddress& address, CScreen* screen)
 {
-	CClient* client = new CClient(name, address,
+	CClient* client = new CClient(*EVENTQUEUE, name, address,
 						new CTCPSocketFactory, NULL, screen);
 	EVENTQUEUE->adoptHandler(CClient::getConnectedEvent(),
 						client->getEventTarget(),

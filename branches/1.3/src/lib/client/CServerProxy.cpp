@@ -33,7 +33,7 @@
 // CServerProxy
 //
 
-CServerProxy::CServerProxy(CClient* client, IStream* stream) :
+CServerProxy::CServerProxy(CClient* client, IStream* stream, IEventQueue& eventQueue) :
 	m_client(client),
 	m_stream(stream),
 	m_seqNum(0),
@@ -46,7 +46,8 @@ CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 	m_ignoreMouse(false),
 	m_keepAliveAlarm(0.0),
 	m_keepAliveAlarmTimer(NULL),
-	m_parser(&CServerProxy::parseHandshakeMessage)
+	m_parser(&CServerProxy::parseHandshakeMessage),
+	m_eventQueue(eventQueue)
 {
 	assert(m_client != NULL);
 	assert(m_stream != NULL);
@@ -56,7 +57,7 @@ CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 		m_modifierTranslationTable[id] = id;
 
 	// handle data on stream
-	EVENTQUEUE->adoptHandler(IStream::getInputReadyEvent(),
+	m_eventQueue.adoptHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CServerProxy>(this,
 								&CServerProxy::handleData));
@@ -68,7 +69,7 @@ CServerProxy::CServerProxy(CClient* client, IStream* stream) :
 CServerProxy::~CServerProxy()
 {
 	setKeepAliveRate(-1.0);
-	EVENTQUEUE->removeHandler(IStream::getInputReadyEvent(),
+	m_eventQueue.removeHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget());
 }
 
@@ -76,14 +77,14 @@ void
 CServerProxy::resetKeepAliveAlarm()
 {
 	if (m_keepAliveAlarmTimer != NULL) {
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_keepAliveAlarmTimer);
-		EVENTQUEUE->deleteTimer(m_keepAliveAlarmTimer);
+		m_eventQueue.removeHandler(CEvent::kTimer, m_keepAliveAlarmTimer);
+		m_eventQueue.deleteTimer(m_keepAliveAlarmTimer);
 		m_keepAliveAlarmTimer = NULL;
 	}
 	if (m_keepAliveAlarm > 0.0) {
 		m_keepAliveAlarmTimer =
-			EVENTQUEUE->newOneShotTimer(m_keepAliveAlarm, NULL);
-		EVENTQUEUE->adoptHandler(CEvent::kTimer, m_keepAliveAlarmTimer,
+			m_eventQueue.newOneShotTimer(m_keepAliveAlarm, NULL);
+		m_eventQueue.adoptHandler(CEvent::kTimer, m_keepAliveAlarmTimer,
 							new TMethodEventJob<CServerProxy>(this,
 								&CServerProxy::handleKeepAliveAlarm));
 	}

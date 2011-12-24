@@ -27,6 +27,7 @@ class CClientInfo;
 class CEventQueueTimer;
 class IClipboard;
 class IStream;
+class IEventQueue;
 
 //! Proxy for server
 /*!
@@ -39,7 +40,7 @@ public:
 	Process messages from the server on \p stream and forward to
 	\p client.
 	*/
-	CServerProxy(CClient* client, IStream* stream);
+	CServerProxy(CClient* client, IStream* stream, IEventQueue& eventQueue);
 	~CServerProxy();
 
 	//! @name manipulators
@@ -113,6 +114,7 @@ private:
 	CEventQueueTimer*	m_keepAliveAlarmTimer;
 
 	MessageParser		m_parser;
+	IEventQueue&		m_eventQueue;
 };
 
 #endif

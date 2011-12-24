@@ -34,19 +34,19 @@ CClientProxy1_0::CClientProxy1_0(const CString& name, IStream* stream) :
 	m_parser(&CClientProxy1_0::parseHandshakeMessage)
 {
 	// install event handlers
-	EVENTQUEUE->adoptHandler(IStream::getInputReadyEvent(),
+	EVENTQUEUE->adoptHandler(stream->getInputReadyEvent(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleData, NULL));
-	EVENTQUEUE->adoptHandler(IStream::getOutputErrorEvent(),
+	EVENTQUEUE->adoptHandler(stream->getOutputErrorEvent(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleWriteError, NULL));
-	EVENTQUEUE->adoptHandler(IStream::getInputShutdownEvent(),
+	EVENTQUEUE->adoptHandler(stream->getInputShutdownEvent(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleDisconnect, NULL));
-	EVENTQUEUE->adoptHandler(IStream::getOutputShutdownEvent(),
+	EVENTQUEUE->adoptHandler(stream->getOutputShutdownEvent(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleWriteError, NULL));
@@ -77,13 +77,13 @@ void
 CClientProxy1_0::removeHandlers()
 {
 	// uninstall event handlers
-	EVENTQUEUE->removeHandler(IStream::getInputReadyEvent(),
+	EVENTQUEUE->removeHandler(getStream()->getInputReadyEvent(),
 							getStream()->getEventTarget());
-	EVENTQUEUE->removeHandler(IStream::getOutputErrorEvent(),
+	EVENTQUEUE->removeHandler(getStream()->getOutputErrorEvent(),
 							getStream()->getEventTarget());
-	EVENTQUEUE->removeHandler(IStream::getInputShutdownEvent(),
+	EVENTQUEUE->removeHandler(getStream()->getInputShutdownEvent(),
 							getStream()->getEventTarget());
-	EVENTQUEUE->removeHandler(IStream::getOutputShutdownEvent(),
+	EVENTQUEUE->removeHandler(getStream()->getOutputShutdownEvent(),
 							getStream()->getEventTarget());
 	EVENTQUEUE->removeHandler(CEvent::kTimer, this);
 
