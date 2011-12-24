@@ -29,6 +29,7 @@ subclasses to implement the rest.
 class CPlatformScreen : public IPlatformScreen {
 public:
 	CPlatformScreen();
+	CPlatformScreen(IEventQueue& eventQueue);
 	virtual ~CPlatformScreen();
 
 	// IScreen overrides

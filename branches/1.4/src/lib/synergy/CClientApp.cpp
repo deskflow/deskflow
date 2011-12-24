@@ -229,7 +229,7 @@ CClientApp::createScreen()
 #elif WINAPI_XWINDOWS
 	return new CScreen(new CXWindowsScreen(
 		args().m_display, false, args().m_disableXInitThreads,
-		args().m_yscroll));
+		args().m_yscroll, *EVENTQUEUE));
 #elif WINAPI_CARBON
 	return new CScreen(new COSXScreen(false));
 #endif
@@ -386,7 +386,7 @@ CClient*
 CClientApp::openClient(const CString& name, const CNetworkAddress& address, CScreen* screen)
 {
 	CClient* client = new CClient(
-		name, address, new CTCPSocketFactory, NULL, screen);
+		*EVENTQUEUE, name, address, new CTCPSocketFactory, NULL, screen);
 
 	try {
 		EVENTQUEUE->adoptHandler(

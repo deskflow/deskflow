@@ -17,13 +17,16 @@ set(h
 	synergy/CKeyStateTests.h
 	synergy/CMockEventQueue.h
 	synergy/CMockKeyMap.h
-)	
+	client/CMockClient.h
+	io/CMockStream.h
+)
 
 set(src
 	${h}
 	Main.cpp
 	synergy/CClipboardTests.cpp
 	synergy/CKeyStateTests.cpp
+	client/CServerProxyTests.cpp
 )
 
 set(inc
@@ -38,6 +41,8 @@ set(inc
 	../../lib/synergy
 	../../../tools/gtest-1.6.0/include
 	../../../tools/gmock-1.6.0/include
+	io
+	synergy
 )
 
 if (UNIX)
@@ -55,4 +60,4 @@ endif()
 include_directories(${inc})
 add_executable(unittests ${src})
 target_link_libraries(unittests
-	arch base client common io mt net platform server synergy gtest gmock ${libs})
+	arch base client common io net platform server synergy mt gtest gmock ${libs})

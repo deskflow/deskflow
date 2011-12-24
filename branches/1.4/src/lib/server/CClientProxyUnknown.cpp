@@ -119,19 +119,19 @@ CClientProxyUnknown::addStreamHandlers()
 {
 	assert(m_stream != NULL);
 
-	EVENTQUEUE->adoptHandler(IStream::getInputReadyEvent(),
+	EVENTQUEUE->adoptHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClientProxyUnknown>(this,
 								&CClientProxyUnknown::handleData));
-	EVENTQUEUE->adoptHandler(IStream::getOutputErrorEvent(),
+	EVENTQUEUE->adoptHandler(m_stream->getOutputErrorEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClientProxyUnknown>(this,
 								&CClientProxyUnknown::handleWriteError));
-	EVENTQUEUE->adoptHandler(IStream::getInputShutdownEvent(),
+	EVENTQUEUE->adoptHandler(m_stream->getInputShutdownEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClientProxyUnknown>(this,
 								&CClientProxyUnknown::handleDisconnect));
-	EVENTQUEUE->adoptHandler(IStream::getOutputShutdownEvent(),
+	EVENTQUEUE->adoptHandler(m_stream->getOutputShutdownEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClientProxyUnknown>(this,
 								&CClientProxyUnknown::handleWriteError));
@@ -156,13 +156,13 @@ void
 CClientProxyUnknown::removeHandlers()
 {
 	if (m_stream != NULL) {
-		EVENTQUEUE->removeHandler(IStream::getInputReadyEvent(),
+		EVENTQUEUE->removeHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget());
-		EVENTQUEUE->removeHandler(IStream::getOutputErrorEvent(),
+		EVENTQUEUE->removeHandler(m_stream->getOutputErrorEvent(),
 							m_stream->getEventTarget());
-		EVENTQUEUE->removeHandler(IStream::getInputShutdownEvent(),
+		EVENTQUEUE->removeHandler(m_stream->getInputShutdownEvent(),
 							m_stream->getEventTarget());
-		EVENTQUEUE->removeHandler(IStream::getOutputShutdownEvent(),
+		EVENTQUEUE->removeHandler(m_stream->getOutputShutdownEvent(),
 							m_stream->getEventTarget());
 	}
 	if (m_proxy != NULL) {

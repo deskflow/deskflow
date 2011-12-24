@@ -56,7 +56,7 @@ extern Status DPMSInfo(Display *, CARD16 *, BOOL *);
 //
 
 CXWindowsScreenSaver::CXWindowsScreenSaver(
-				Display* display, Window window, void* eventTarget) :
+				Display* display, Window window, void* eventTarget, IEventQueue& eventQueue) :
 	m_display(display),
 	m_xscreensaverSink(window),
 	m_eventTarget(eventTarget),
@@ -66,7 +66,8 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	m_disabled(false),
 	m_suppressDisable(false),
 	m_disableTimer(NULL),
-	m_disablePos(0)
+	m_disablePos(0),
+	m_eventQueue(eventQueue)
 {
 	// get atoms
 	m_atomScreenSaver           = XInternAtom(m_display,
@@ -118,7 +119,7 @@ CXWindowsScreenSaver::CXWindowsScreenSaver(
 	}
 
 	// install disable timer event handler
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
+	m_eventQueue.adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CXWindowsScreenSaver>(this,
 								&CXWindowsScreenSaver::handleDisableTimer));
 }
@@ -127,9 +128,9 @@ CXWindowsScreenSaver::~CXWindowsScreenSaver()
 {
 	// done with disable job
 	if (m_disableTimer != NULL) {
-		EVENTQUEUE->deleteTimer(m_disableTimer);
+		m_eventQueue.deleteTimer(m_disableTimer);
 	}
-	EVENTQUEUE->removeHandler(CEvent::kTimer, this);
+	m_eventQueue.removeHandler(CEvent::kTimer, this);
 
 	if (m_display != NULL) {
 		enableDPMS(m_dpmsEnabled);
@@ -395,12 +396,12 @@ CXWindowsScreenSaver::setXScreenSaverActive(bool activated)
 		updateDisableTimer();
 
 		if (activated) {
-			EVENTQUEUE->addEvent(CEvent(
+			m_eventQueue.addEvent(CEvent(
 							IPlatformScreen::getScreensaverActivatedEvent(),
 							m_eventTarget));
 		}
 		else {
-			EVENTQUEUE->addEvent(CEvent(
+			m_eventQueue.addEvent(CEvent(
 							IPlatformScreen::getScreensaverDeactivatedEvent(),
 							m_eventTarget));
 		}
@@ -502,10 +503,10 @@ CXWindowsScreenSaver::updateDisableTimer()
 {
 	if (m_disabled && !m_suppressDisable && m_disableTimer == NULL) {
 		// 5 seconds should be plenty often to suppress the screen saver
-		m_disableTimer = EVENTQUEUE->newTimer(5.0, this);
+		m_disableTimer = m_eventQueue.newTimer(5.0, this);
 	}
 	else if ((!m_disabled || m_suppressDisable) && m_disableTimer != NULL) {
-		EVENTQUEUE->deleteTimer(m_disableTimer);
+		m_eventQueue.deleteTimer(m_disableTimer);
 		m_disableTimer = NULL;
 	}
 }

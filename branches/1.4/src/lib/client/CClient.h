@@ -30,6 +30,7 @@ class IDataSocket;
 class ISocketFactory;
 class IStream;
 class IStreamFilterFactory;
+class IEventQueue;
 
 //! Synergy client
 /*!
@@ -44,12 +45,17 @@ public:
 		CString			m_what;
 	};
 
+protected:
+	CClient(IEventQueue& eventQueue);
+
+public:
 	/*!
 	This client will attempt to connect to the server using \p name
 	as its name and \p address as the server's address and \p factory
 	to create the socket.  \p screen is	the local screen.
 	*/
-	CClient(const CString& name, const CNetworkAddress& address,
+	CClient(IEventQueue& eventQueue,
+							const CString& name, const CNetworkAddress& address,
 							ISocketFactory* socketFactory,
 							IStreamFilterFactory* streamFilterFactory,
 							CScreen* screen);
@@ -196,14 +202,18 @@ private:
 	bool					m_active;
 	bool					m_suspended;
 	bool					m_connectOnResume;
-	bool				m_ownClipboard[kClipboardEnd];
-	bool				m_sentClipboard[kClipboardEnd];
-	IClipboard::Time	m_timeClipboard[kClipboardEnd];
-	CString				m_dataClipboard[kClipboardEnd];
+	bool					m_ownClipboard[kClipboardEnd];
+	bool					m_sentClipboard[kClipboardEnd];
+	IClipboard::Time		m_timeClipboard[kClipboardEnd];
+	CString					m_dataClipboard[kClipboardEnd];
+	IEventQueue&			m_eventQueue;
 
 	static CEvent::Type	s_connectedEvent;
 	static CEvent::Type	s_connectionFailedEvent;
 	static CEvent::Type	s_disconnectedEvent;
+
+protected:
+	bool					m_mock;
 };
 
 #endif

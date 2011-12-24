@@ -20,6 +20,9 @@
 
 #include "IInterface.h"
 #include "CEvent.h"
+#include "IEventQueue.h"
+
+class IEventQueue;
 
 //! Bidirectional stream interface
 /*!
@@ -27,6 +30,9 @@ Defines the interface for all streams.
 */
 class IStream : public IInterface {
 public:
+	IStream() : m_eventQueue(*EVENTQUEUE) { }
+	IStream(IEventQueue& eventQueue) : m_eventQueue(eventQueue) { }
+
 	//! @name manipulators
 	//@{
 
@@ -111,7 +117,7 @@ public:
 	Returns the input ready event type.  A stream sends this event
 	when \c read() will return with data.
 	*/
-	static CEvent::Type	getInputReadyEvent();
+	virtual CEvent::Type	getInputReadyEvent();
 
 	//! Get output flushed event type
 	/*!
@@ -121,14 +127,14 @@ public:
 	\c close() will not discard any data and \c flush() will return
 	immediately.
 	*/
-	static CEvent::Type	getOutputFlushedEvent();
+	virtual CEvent::Type	getOutputFlushedEvent();
 
 	//! Get output error event type
 	/*!
 	Returns the output error event type.  A stream sends this event
 	when a write has failed.
 	*/
-	static CEvent::Type	getOutputErrorEvent();
+	virtual CEvent::Type	getOutputErrorEvent();
 
 	//! Get input shutdown event type
 	/*!
@@ -136,7 +142,7 @@ public:
 	input side of the stream has shutdown.  When the input has
 	shutdown, no more data will ever be available to read.
 	*/
-	static CEvent::Type	getInputShutdownEvent();
+	virtual CEvent::Type	getInputShutdownEvent();
 
 	//! Get output shutdown event type
 	/*!
@@ -145,11 +151,13 @@ public:
 	shutdown, no more data can ever be written to the stream.  Any
 	attempt to do so will generate a output error event.
 	*/
-	static CEvent::Type	getOutputShutdownEvent();
+	virtual CEvent::Type	getOutputShutdownEvent();
 
 	//@}
 
 private:
+	IEventQueue& m_eventQueue;
+
 	static CEvent::Type	s_inputReadyEvent;
 	static CEvent::Type	s_outputFlushedEvent;
 	static CEvent::Type	s_outputErrorEvent;

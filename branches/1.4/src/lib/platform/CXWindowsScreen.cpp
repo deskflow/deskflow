@@ -87,7 +87,7 @@ static int xi_opcode;
 
 CXWindowsScreen*		CXWindowsScreen::s_screen = NULL;
 
-CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta) :
+CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue& eventQueue) :
 	m_isPrimary(isPrimary),
 	m_mouseScrollDelta(mouseScrollDelta),
 	m_display(NULL),
@@ -110,7 +110,9 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 	m_xtestIsXineramaUnaware(true),
 	m_preserveFocus(false),
 	m_xkb(false),
-	m_xi2detected(false)
+	m_xi2detected(false),
+	m_eventQueue(eventQueue),
+	CPlatformScreen(eventQueue)
 {
 	assert(s_screen == NULL);
 
@@ -134,8 +136,8 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 		saveShape();
 		m_window      = openWindow();
 		m_screensaver = new CXWindowsScreenSaver(m_display,
-								m_window, getEventTarget());
-		m_keyState    = new CXWindowsKeyState(m_display, m_xkb);
+								m_window, getEventTarget(), eventQueue);
+		m_keyState    = new CXWindowsKeyState(m_display, m_xkb, eventQueue, m_keyMap);
 		LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
 		LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 	}
@@ -174,12 +176,12 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 	}
 
 	// install event handlers
-	EVENTQUEUE->adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
+	m_eventQueue.adoptHandler(CEvent::kSystem, IEventQueue::getSystemTarget(),
 							new TMethodEventJob<CXWindowsScreen>(this,
 								&CXWindowsScreen::handleSystemEvent));
 
 	// install the platform event queue
-	EVENTQUEUE->adoptBuffer(new CXWindowsEventQueueBuffer(m_display, m_window));
+	m_eventQueue.adoptBuffer(new CXWindowsEventQueueBuffer(m_display, m_window));
 }
 
 CXWindowsScreen::~CXWindowsScreen()
@@ -187,8 +189,8 @@ CXWindowsScreen::~CXWindowsScreen()
 	assert(s_screen  != NULL);
 	assert(m_display != NULL);
 
-	EVENTQUEUE->adoptBuffer(NULL);
-	EVENTQUEUE->removeHandler(CEvent::kSystem, IEventQueue::getSystemTarget());
+	m_eventQueue.adoptBuffer(NULL);
+	m_eventQueue.removeHandler(CEvent::kSystem, IEventQueue::getSystemTarget());
 	for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 		delete m_clipboard[id];
 	}
@@ -1127,7 +1129,7 @@ CXWindowsScreen::openIM()
 void
 CXWindowsScreen::sendEvent(CEvent::Type type, void* data)
 {
-	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), data));
+	m_eventQueue.addEvent(CEvent(type, getEventTarget(), data));
 }
 
 void
@@ -1501,7 +1503,7 @@ CXWindowsScreen::onHotKey(XKeyEvent& xkey, bool isRepeat)
 
 	// generate event (ignore key repeats)
 	if (!isRepeat) {
-		EVENTQUEUE->addEvent(CEvent(type, getEventTarget(),
+		m_eventQueue.addEvent(CEvent(type, getEventTarget(),
 								CHotKeyInfo::alloc(i->second)));
 	}
 	return true;
@@ -1684,7 +1686,7 @@ void
 CXWindowsScreen::onError()
 {
 	// prevent further access to the X display
-	EVENTQUEUE->adoptBuffer(NULL);
+	m_eventQueue.adoptBuffer(NULL);
 	m_screensaver->destroy();
 	m_screensaver = NULL;
 	m_display     = NULL;

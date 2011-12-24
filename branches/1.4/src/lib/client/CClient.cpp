@@ -42,7 +42,13 @@ CEvent::Type			CClient::s_connectedEvent        = CEvent::kUnknown;
 CEvent::Type			CClient::s_connectionFailedEvent = CEvent::kUnknown;
 CEvent::Type			CClient::s_disconnectedEvent     = CEvent::kUnknown;
 
-CClient::CClient(const CString& name, const CNetworkAddress& address,
+CClient::CClient(IEventQueue& eventQueue) :
+	m_eventQueue(eventQueue)
+{
+}
+
+CClient::CClient(IEventQueue& eventQueue,
+				const CString& name, const CNetworkAddress& address,
 				ISocketFactory* socketFactory,
 				IStreamFilterFactory* streamFilterFactory,
 				CScreen* screen) :
@@ -57,17 +63,19 @@ CClient::CClient(const CString& name, const CNetworkAddress& address,
 	m_ready(false),
 	m_active(false),
 	m_suspended(false),
-	m_connectOnResume(false)
+	m_connectOnResume(false),
+	m_eventQueue(eventQueue),
+	m_mock(false)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
 
 	// register suspend/resume event handlers
-	EVENTQUEUE->adoptHandler(IScreen::getSuspendEvent(),
+	m_eventQueue.adoptHandler(IScreen::getSuspendEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleSuspend));
-	EVENTQUEUE->adoptHandler(IScreen::getResumeEvent(),
+	m_eventQueue.adoptHandler(IScreen::getResumeEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleResume));
@@ -83,9 +91,13 @@ CClient::CClient(const CString& name, const CNetworkAddress& address,
 
 CClient::~CClient()
 {
-	EVENTQUEUE->removeHandler(IScreen::getSuspendEvent(),
+	// HACK: can't disable dtor with mocks
+	if (m_mock)
+		return;
+
+	m_eventQueue.removeHandler(IScreen::getSuspendEvent(),
 							  getEventTarget());
-	EVENTQUEUE->removeHandler(IScreen::getResumeEvent(),
+	m_eventQueue.removeHandler(IScreen::getResumeEvent(),
 							  getEventTarget());
 
 	cleanupTimer();
@@ -420,7 +432,7 @@ CClient::sendClipboard(ClipboardID id)
 void
 CClient::sendEvent(CEvent::Type type, void* data)
 {
-	EVENTQUEUE->addEvent(CEvent(type, getEventTarget(), data));
+	m_eventQueue.addEvent(CEvent(type, getEventTarget(), data));
 }
 
 void
@@ -437,11 +449,11 @@ CClient::setupConnecting()
 {
 	assert(m_stream != NULL);
 
-	EVENTQUEUE->adoptHandler(IDataSocket::getConnectedEvent(),
+	m_eventQueue.adoptHandler(IDataSocket::getConnectedEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleConnected));
-	EVENTQUEUE->adoptHandler(IDataSocket::getConnectionFailedEvent(),
+	m_eventQueue.adoptHandler(IDataSocket::getConnectionFailedEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleConnectionFailed));
@@ -452,23 +464,23 @@ CClient::setupConnection()
 {
 	assert(m_stream != NULL);
 
-	EVENTQUEUE->adoptHandler(ISocket::getDisconnectedEvent(),
+	m_eventQueue.adoptHandler(ISocket::getDisconnectedEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleDisconnected));
-	EVENTQUEUE->adoptHandler(IStream::getInputReadyEvent(),
+	m_eventQueue.adoptHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleHello));
-	EVENTQUEUE->adoptHandler(IStream::getOutputErrorEvent(),
+	m_eventQueue.adoptHandler(m_stream->getOutputErrorEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleOutputError));
-	EVENTQUEUE->adoptHandler(IStream::getInputShutdownEvent(),
+	m_eventQueue.adoptHandler(m_stream->getInputShutdownEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleDisconnected));
-	EVENTQUEUE->adoptHandler(IStream::getOutputShutdownEvent(),
+	m_eventQueue.adoptHandler(m_stream->getOutputShutdownEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleDisconnected));
@@ -480,12 +492,12 @@ CClient::setupScreen()
 	assert(m_server == NULL);
 
 	m_ready  = false;
-	m_server = new CServerProxy(this, m_stream);
-	EVENTQUEUE->adoptHandler(IScreen::getShapeChangedEvent(),
+	m_server = new CServerProxy(this, m_stream, *EVENTQUEUE);
+	m_eventQueue.adoptHandler(IScreen::getShapeChangedEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleShapeChanged));
-	EVENTQUEUE->adoptHandler(IScreen::getClipboardGrabbedEvent(),
+	m_eventQueue.adoptHandler(IScreen::getClipboardGrabbedEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleClipboardGrabbed));
@@ -496,8 +508,8 @@ CClient::setupTimer()
 {
 	assert(m_timer == NULL);
 
-	m_timer = EVENTQUEUE->newOneShotTimer(15.0, NULL);
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, m_timer,
+	m_timer = m_eventQueue.newOneShotTimer(15.0, NULL);
+	m_eventQueue.adoptHandler(CEvent::kTimer, m_timer,
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleConnectTimeout));
 }
@@ -506,9 +518,9 @@ void
 CClient::cleanupConnecting()
 {
 	if (m_stream != NULL) {
-		EVENTQUEUE->removeHandler(IDataSocket::getConnectedEvent(),
+		m_eventQueue.removeHandler(IDataSocket::getConnectedEvent(),
 							m_stream->getEventTarget());
-		EVENTQUEUE->removeHandler(IDataSocket::getConnectionFailedEvent(),
+		m_eventQueue.removeHandler(IDataSocket::getConnectionFailedEvent(),
 							m_stream->getEventTarget());
 	}
 }
@@ -517,15 +529,15 @@ void
 CClient::cleanupConnection()
 {
 	if (m_stream != NULL) {
-		EVENTQUEUE->removeHandler(IStream::getInputReadyEvent(),
+		m_eventQueue.removeHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget());
-		EVENTQUEUE->removeHandler(IStream::getOutputErrorEvent(),
+		m_eventQueue.removeHandler(m_stream->getOutputErrorEvent(),
 							m_stream->getEventTarget());
-		EVENTQUEUE->removeHandler(IStream::getInputShutdownEvent(),
+		m_eventQueue.removeHandler(m_stream->getInputShutdownEvent(),
 							m_stream->getEventTarget());
-		EVENTQUEUE->removeHandler(IStream::getOutputShutdownEvent(),
+		m_eventQueue.removeHandler(m_stream->getOutputShutdownEvent(),
 							m_stream->getEventTarget());
-		EVENTQUEUE->removeHandler(ISocket::getDisconnectedEvent(),
+		m_eventQueue.removeHandler(ISocket::getDisconnectedEvent(),
 							m_stream->getEventTarget());
 		delete m_stream;
 		m_stream = NULL;
@@ -540,9 +552,9 @@ CClient::cleanupScreen()
 			m_screen->disable();
 			m_ready = false;
 		}
-		EVENTQUEUE->removeHandler(IScreen::getShapeChangedEvent(),
+		m_eventQueue.removeHandler(IScreen::getShapeChangedEvent(),
 							getEventTarget());
-		EVENTQUEUE->removeHandler(IScreen::getClipboardGrabbedEvent(),
+		m_eventQueue.removeHandler(IScreen::getClipboardGrabbedEvent(),
 							getEventTarget());
 		delete m_server;
 		m_server = NULL;
@@ -553,8 +565,8 @@ void
 CClient::cleanupTimer()
 {
 	if (m_timer != NULL) {
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_timer);
-		EVENTQUEUE->deleteTimer(m_timer);
+		m_eventQueue.removeHandler(CEvent::kTimer, m_timer);
+		m_eventQueue.deleteTimer(m_timer);
 		m_timer = NULL;
 	}
 }
@@ -684,7 +696,7 @@ CClient::handleHello(const CEvent&, void*)
 	// receive another event for already pending messages so we fake
 	// one.
 	if (m_stream->isReady()) {
-		EVENTQUEUE->addEvent(CEvent(IStream::getInputReadyEvent(),
+		m_eventQueue.addEvent(CEvent(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget()));
 	}
 }
