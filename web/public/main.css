@@ -33,8 +33,13 @@ div.content {
   padding: 15px 20px 20px 20px;
 }
 
-div.content div.demo {
+div.content div.demo,
+div.content div.donate {
   text-align: center;
+}
+
+div.content div.donate {
+  margin-top: 20px;
 }
 
 div.menu {
