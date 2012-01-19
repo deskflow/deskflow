@@ -30,6 +30,7 @@ div.layout {
 }
 
 div.content {
+  clear: all;
   padding: 15px 20px 20px 20px;
 }
 
@@ -43,9 +44,18 @@ div.content div.donate {
 }
 
 div.menu {
+  height: 1.2em;
   padding: 10px;
   background-color: #777;
   color: #eee;
+}
+
+div.menu div.pages {
+  float: left;
+}
+
+div.menu div.intl {
+  float: right;
 }
 
 div.title {
