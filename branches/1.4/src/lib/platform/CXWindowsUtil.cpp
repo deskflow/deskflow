@@ -1479,6 +1479,9 @@ CXWindowsUtil::mapKeySymToKeyID(KeySym k)
 		case XK_ISO_Level3_Shift:
 			return kKeyAltGr;
 
+		case XK_ISO_Level5_Shift:
+			return XK_ISO_Level5_Shift; //FIXME: there is no "usual" key for this...
+
 		case XK_ISO_Next_Group:
 			return kKeyNextGroup;
 
@@ -1578,6 +1581,9 @@ CXWindowsUtil::getModifierBitForKeySym(KeySym keysym)
 	case XK_Mode_switch:
 	case XK_ISO_Level3_Shift:
 		return kKeyModifierBitAltGr;
+
+	case XK_ISO_Level5_Shift:
+		return kKeyModifierBitLevel5Lock;
 
 	case XK_Caps_Lock:
 		return kKeyModifierBitCapsLock;
