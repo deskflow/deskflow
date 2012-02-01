@@ -87,7 +87,8 @@ static const KeyModifierID		kKeyModifierIDControl  = 2;
 static const KeyModifierID		kKeyModifierIDAlt      = 3;
 static const KeyModifierID		kKeyModifierIDMeta     = 4;
 static const KeyModifierID		kKeyModifierIDSuper    = 5;
-static const KeyModifierID		kKeyModifierIDLast     = 6;
+static const KeyModifierID		kKeyModifierIDAltGr    = 6;
+static const KeyModifierID		kKeyModifierIDLast     = 7;
 //@}
 
 //! @name Key identifiers

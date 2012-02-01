@@ -412,7 +412,8 @@ CServerProxy::translateKey(KeyID id) const
 		{ kKeyControl_L, kKeyControl_R },
 		{ kKeyAlt_L,     kKeyAlt_R },
 		{ kKeyMeta_L,    kKeyMeta_R },
-		{ kKeySuper_L,   kKeySuper_R }
+		{ kKeySuper_L,   kKeySuper_R },
+		{ kKeyAltGr,     kKeyAltGr}
 	};
 
 	KeyModifierID id2 = kKeyModifierIDNull;
@@ -446,6 +447,11 @@ CServerProxy::translateKey(KeyID id) const
 	case kKeyAlt_R:
 		id2  = kKeyModifierIDAlt;
 		side = 1;
+		break;
+
+	case kKeyAltGr:
+		id2 = kKeyModifierIDAltGr;
+		side = 1; // there is only one alt gr key on the right side
 		break;
 
 	case kKeyMeta_L:
@@ -486,14 +492,16 @@ CServerProxy::translateModifierMask(KeyModifierMask mask) const
 		KeyModifierControl,
 		KeyModifierAlt,
 		KeyModifierMeta,
-		KeyModifierSuper
+		KeyModifierSuper,
+		KeyModifierAltGr
 	};
 
 	KeyModifierMask newMask = mask & ~(KeyModifierShift |
 										KeyModifierControl |
 										KeyModifierAlt |
 										KeyModifierMeta |
-										KeyModifierSuper);
+										KeyModifierSuper |
+										KeyModifierAltGr );
 	if ((mask & KeyModifierShift) != 0) {
 		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDShift]];
 	}
@@ -502,6 +510,9 @@ CServerProxy::translateModifierMask(KeyModifierMask mask) const
 	}
 	if ((mask & KeyModifierAlt) != 0) {
 		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDAlt]];
+	}
+	if ((mask & KeyModifierAltGr) != 0) {
+		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDAltGr]];
 	}
 	if ((mask & KeyModifierMeta) != 0) {
 		newMask |= s_masks[m_modifierTranslationTable[kKeyModifierIDMeta]];
@@ -864,6 +875,9 @@ CServerProxy::setOptions()
 		}
 		else if (options[i] == kOptionModifierMapForAlt) {
 			id = kKeyModifierIDAlt;
+		}
+		else if (options[i] == kOptionModifierMapForAltGr) {
+			id = kKeyModifierIDAltGr;
 		}
 		else if (options[i] == kOptionModifierMapForMeta) {
 			id = kKeyModifierIDMeta;

@@ -382,6 +382,7 @@ CKeyMap::getCommandModifiers() const
 	// but this works anyway.
 	return KeyModifierControl |
 			KeyModifierAlt    |
+			KeyModifierAltGr  |
 			KeyModifierMeta   |
 			KeyModifierSuper;
 }

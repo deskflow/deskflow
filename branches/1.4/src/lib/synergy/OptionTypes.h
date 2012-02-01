@@ -51,6 +51,7 @@ static const OptionID	kOptionHalfDuplexScrollLock   = OPTION_CODE("HDSL");
 static const OptionID	kOptionModifierMapForShift    = OPTION_CODE("MMFS");
 static const OptionID	kOptionModifierMapForControl  = OPTION_CODE("MMFC");
 static const OptionID	kOptionModifierMapForAlt      = OPTION_CODE("MMFA");
+static const OptionID	kOptionModifierMapForAltGr    = OPTION_CODE("MMFG");
 static const OptionID	kOptionModifierMapForMeta     = OPTION_CODE("MMFM");
 static const OptionID	kOptionModifierMapForSuper    = OPTION_CODE("MMFR");
 static const OptionID	kOptionHeartbeat              = OPTION_CODE("HART");
