@@ -1047,7 +1047,9 @@ COSXScreen::displayReconfigurationCallback(CGDirectDisplayID displayID, CGDispla
 {
 	COSXScreen* screen = (COSXScreen*)inUserData;
 
-	CGDisplayChangeSummaryFlags mask = kCGDisplayMovedFlag | 
+	// Closing or opening the lid when an external monitor is
+    // connected causes an kCGDisplayBeginConfigurationFlag event
+	CGDisplayChangeSummaryFlags mask = kCGDisplayBeginConfigurationFlag | kCGDisplayMovedFlag | 
 		kCGDisplaySetModeFlag | kCGDisplayAddFlag | kCGDisplayRemoveFlag | 
 		kCGDisplayEnabledFlag | kCGDisplayDisabledFlag | 
 		kCGDisplayMirrorFlag | kCGDisplayUnMirrorFlag | 
@@ -1378,11 +1380,12 @@ COSXScreen::updateScreenShape()
   m_yCenter = (rect.origin.y + rect.size.height) / 2;
 
 	delete[] displays;
-	if (m_isPrimary && !m_isOnScreen) {
-		sendEvent(getShapeChangedEvent());
-	}
+	// We want to notify the peer screen whether we are primary screen or not
+	sendEvent(getShapeChangedEvent());
 
-	LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount, (displayCount == 1) ? "display" : "displays"));
+	LOG((CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s (%s)",
+         m_x, m_y, m_w, m_h, displayCount,
+         (displayCount == 1) ? "display" : "displays"));
 }
 
 #pragma mark - 
