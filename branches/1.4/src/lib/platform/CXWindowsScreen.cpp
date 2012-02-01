@@ -1269,8 +1269,10 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 						&xmotion.y,
 						&msk);
 					onMouseMove(xmotion);
+					XFreeEventData(m_display, cookie);
 					return;
 			}
+        		XFreeEventData(m_display, cookie);
 		}
 	}
 
