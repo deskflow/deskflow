@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define TRAY_RETRY_COUNT 5
-#define TRAY_RETRY_WAIT 1000
+#define TRAY_RETRY_COUNT 10
+#define TRAY_RETRY_WAIT 2000
 
 #include "QSynergyApplication.h"
 #include "MainWindow.h"
