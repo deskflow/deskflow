@@ -461,18 +461,12 @@ COSXScreen::postMouseEvent(CGPoint& pos) const
 		}
 	}
 	
-	CGEventType type = kCGEventMouseMoved;
-
-	SInt8 button = m_buttonState.getFirstButtonDown();
-	if (button != -1) {
-		MouseButtonEventMapType thisButtonType = MouseButtonEventMap[button];
-		type = thisButtonType[kMouseButtonDragged];
-	}
-
-	CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, button);
-	CGEventPost(kCGHIDEventTap, event);
-	
-	CFRelease(event);
+	ButtonID id = m_buttonState.getFirstButtonDown() + kButtonLeft;
+	CGPostMouseEvent(
+		pos, TRUE, 3,
+		(id == kButtonLeft),
+		(id == kButtonRight),
+		(id == kButtonMiddle));
 }
 
 void
@@ -492,35 +486,14 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press) const
 	pos.x = m_xCursor;
 	pos.y = m_yCursor;
 	
-	// synthesize event.  CGEventCreateMouseEvent creates a retained mouse
-	// event, which must also be posted and released. Note this is
-	// similar to the use of CGEventRef in postMouseEvent above.
-	// One of the arguments changes based on whether a button is being
-	// pressed or released, pressed corresponding to when "press" is true.
-	CGEventRef event;
-	
-	// the switch statement handles which button was pressed.  the left
-	// and right mouse buttons must be handled separately from any
-	// other buttons
-	
-	CGEventType type;
-	MouseButtonState state;
-	if (press) { 
-		state = kMouseButtonDown;
-	} else {
-		state = kMouseButtonUp;
-	}
-
-	MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
-	type = thisButtonMap[state];
-
-	event = CGEventCreateMouseEvent(NULL, type, pos, index);
+	MouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
 
 	m_buttonState.set(index, state);
-
-	CGEventPost(kCGHIDEventTap, event);
-	
-	CFRelease(event);
+	CGPostMouseEvent(
+		pos, TRUE, 3,
+		(id == kButtonLeft),
+		(id == kButtonRight),
+		(id == kButtonMiddle));
 }
 
 void
