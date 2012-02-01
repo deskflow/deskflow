@@ -18,25 +18,42 @@
 #include "COSXKeyState.h"
 #include "CLog.h"
 #include "CArch.h"
+
+#if defined(MAC_OS_X_VERSION_10_5)
 #include <Carbon/Carbon.h>
+#endif
 
 // Note that some virtual keys codes appear more than once.  The
 // first instance of a virtual key code maps to the KeyID that we
 // want to generate for that code.  The others are for mapping
 // different KeyIDs to a single key code.
+
+#if defined(MAC_OS_X_VERSION_10_5)
 static const UInt32 s_shiftVK    = kVK_Shift;
 static const UInt32 s_controlVK  = kVK_Control;
 static const UInt32 s_altVK      = kVK_Option;
 static const UInt32 s_superVK    = kVK_Command;
 static const UInt32 s_capsLockVK = kVK_CapsLock;
 static const UInt32 s_numLockVK  = kVK_ANSI_KeypadClear; // 71
+#else
+// Hardcoded virtual key table on 10.4 and below.
+static const UInt32 s_shiftVK    = 56;
+static const UInt32 s_controlVK  = 59;
+static const UInt32 s_altVK      = 58;
+static const UInt32 s_superVK    = 55;
+static const UInt32 s_capsLockVK = 57;
+static const UInt32 s_numLockVK  = 71;
+#endif
+
 static const UInt32 s_osxNumLock = 1 << 16;
+
 struct CKeyEntry {
 public:
 	KeyID				m_keyID;
 	UInt32				m_virtualKey;
 };
 static const CKeyEntry	s_controlKeys[] = {
+#if defined(MAC_OS_X_VERSION_10_5)
 	// cursor keys.  if we don't do this we'll may still get these from
 	// the keyboard resource but they may not correspond to the arrow
 	// keys.
@@ -85,6 +102,55 @@ static const CKeyEntry	s_controlKeys[] = {
 	{ kKeyKP_Divide,	kVK_ANSI_KeypadDivide },
 	{ kKeyKP_Subtract,	kVK_ANSI_KeypadMinus },
 	{ kKeyKP_Enter,		kVK_ANSI_KeypadEnter },
+#else
+  // Hardcoded virtual key table on 10.4 and below.
+	// cursor keys.
+	{ kKeyLeft,			123 },
+	{ kKeyRight,		124 },
+	{ kKeyUp,			126 },
+	{ kKeyDown,			125 },
+	{ kKeyHome,			115 },
+	{ kKeyEnd,			119 },
+	{ kKeyPageUp,		116 },
+	{ kKeyPageDown,		121 },
+	{ kKeyInsert,		114 },
+
+	// function keys
+	{ kKeyF1,			122 },
+	{ kKeyF2,			120 },
+	{ kKeyF3,			99 },
+	{ kKeyF4,			118 },
+	{ kKeyF5,			96 },
+	{ kKeyF6,			97 },
+	{ kKeyF7,			98 },
+	{ kKeyF8,			100 },
+	{ kKeyF9,			101 },
+	{ kKeyF10,			109 },
+	{ kKeyF11,			103 },
+	{ kKeyF12,			111 },
+	{ kKeyF13,			105 },
+	{ kKeyF14,			107 },
+	{ kKeyF15,			113 },
+	{ kKeyF16,			106 },
+
+	{ kKeyKP_0,			82 },
+	{ kKeyKP_1,			83 },
+	{ kKeyKP_2,			84 },
+	{ kKeyKP_3,			85 },
+	{ kKeyKP_4,			86 },
+	{ kKeyKP_5,			87 },
+	{ kKeyKP_6,			88 },
+	{ kKeyKP_7,			89 },
+	{ kKeyKP_8,			91 },
+	{ kKeyKP_9,			92 },
+	{ kKeyKP_Decimal,	65 },
+	{ kKeyKP_Equal,		81 },
+	{ kKeyKP_Multiply,	67 },
+	{ kKeyKP_Add,		69 },
+	{ kKeyKP_Divide,	75 },
+	{ kKeyKP_Subtract,	79 },
+	{ kKeyKP_Enter,		76 },
+#endif
 
 	// virtual key 110 is fn+enter and i have no idea what that's supposed
 	// to map to.  also the enter key with numlock on is a modifier but i
