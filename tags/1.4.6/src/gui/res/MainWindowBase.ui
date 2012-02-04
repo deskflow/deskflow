@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowBase</class>
+ <widget class="QMainWindow" name="MainWindowBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>445</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>445</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>445</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Synergy</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout">
+    <item row="5" column="3">
+     <widget class="QPushButton" name="m_pButtonToggleStart">
+      <property name="text">
+       <string>&amp;Start</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="4">
+     <widget class="QGroupBox" name="m_pGroupServer">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>&amp;Server (share this computer's mouse and keyboard):</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <layout class="QVBoxLayout">
+       <item>
+        <widget class="QRadioButton" name="m_pRadioExternalConfig">
+         <property name="text">
+          <string>Use existing configuration:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QLabel" name="m_pLabelConfigurationFile">
+           <property name="text">
+            <string>&amp;Configuration file:</string>
+           </property>
+           <property name="buddy">
+            <cstring>m_pLineEditConfigFile</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="m_pLineEditConfigFile">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_pButtonBrowseConfigFile">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>&amp;Browse...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="m_pRadioInternalConfig">
+         <property name="text">
+          <string>Configure interactively:</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QPushButton" name="m_pButtonConfigureServer">
+           <property name="text">
+            <string>&amp;Configure Server...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="4">
+     <widget class="QGroupBox" name="m_pGroupClient">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>&amp;Client (use another computer's keyboard and mouse):</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <layout class="QGridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="m_pLabelServerName">
+         <property name="text">
+          <string>&amp;Name of the server:</string>
+         </property>
+         <property name="buddy">
+          <cstring>m_pLineEditHostname</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="m_pLineEditHostname"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLabel" name="m_pStatusLabel">
+      <property name="text">
+       <string>Ready</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="2">
+     <spacer>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <action name="m_pActionAbout">
+   <property name="text">
+    <string>&amp;About Synergy...</string>
+   </property>
+  </action>
+  <action name="m_pActionQuit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="statusTip">
+    <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="m_pActionStartSynergy">
+   <property name="text">
+    <string>&amp;Start</string>
+   </property>
+   <property name="statusTip">
+    <string>Run</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="m_pActionStopSynergy">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>S&amp;top</string>
+   </property>
+   <property name="statusTip">
+    <string>Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionShowStatus">
+   <property name="text">
+    <string>S&amp;how Status</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
+  </action>
+  <action name="m_pActionMinimize">
+   <property name="text">
+    <string>&amp;Minimize</string>
+   </property>
+  </action>
+  <action name="m_pActionRestore">
+   <property name="text">
+    <string>&amp;Restore</string>
+   </property>
+  </action>
+  <action name="m_pActionSave">
+   <property name="text">
+    <string>Save configuration &amp;as...</string>
+   </property>
+   <property name="statusTip">
+    <string>Save the interactively generated server configuration to a file.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="m_pActionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+   <property name="statusTip">
+    <string>Edit settings</string>
+   </property>
+  </action>
+  <action name="m_pActionLogOutput">
+   <property name="text">
+    <string>Log output</string>
+   </property>
+   <property name="statusTip">
+    <string>Open a window with output</string>
+   </property>
+  </action>
+  <action name="m_pActionServices">
+   <property name="text">
+    <string>Services</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>m_pButtonToggleStart</sender>
+   <signal>clicked()</signal>
+   <receiver>m_pActionStartSynergy</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>361</x>
+     <y>404</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioExternalConfig</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pLineEditConfigFile</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>179</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>169</x>
+     <y>209</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioExternalConfig</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pButtonBrowseConfigFile</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>353</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>356</x>
+     <y>211</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_pRadioInternalConfig</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>m_pButtonConfigureServer</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>204</x>
+     <y>244</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>212</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
