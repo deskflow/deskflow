@@ -278,7 +278,7 @@ CMSWindowsDesks::fakeKeyEvent(
 }
 
 void
-CMSWindowsDesks::fakeMouseButton(ButtonID button, bool press) const
+CMSWindowsDesks::fakeMouseButton(ButtonID button, bool press)
 {
 	// the system will swap the meaning of left/right for us if
 	// the user has configured a left-handed mouse but we don't

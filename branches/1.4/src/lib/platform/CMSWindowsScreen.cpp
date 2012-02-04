@@ -721,7 +721,7 @@ CMSWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 }
 
 void
-CMSWindowsScreen::fakeMouseButton(ButtonID id, bool press) const
+CMSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
 {
 	m_desks->fakeMouseButton(id, press);
 }

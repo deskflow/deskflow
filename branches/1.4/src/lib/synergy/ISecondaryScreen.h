@@ -37,7 +37,7 @@ public:
 	/*!
 	Synthesize a press or release of mouse button \c id.
 	*/
-	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;
+	virtual void		fakeMouseButton(ButtonID id, bool press) = 0;
 
 	//! Fake mouse move
 	/*!

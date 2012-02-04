@@ -811,7 +811,7 @@ CXWindowsScreen::getCursorCenter(SInt32& x, SInt32& y) const
 }
 
 void
-CXWindowsScreen::fakeMouseButton(ButtonID button, bool press) const
+CXWindowsScreen::fakeMouseButton(ButtonID button, bool press)
 {
 	const unsigned int xButton = mapButtonToX(button);
 	if (xButton != 0) {

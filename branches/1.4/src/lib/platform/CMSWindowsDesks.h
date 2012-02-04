@@ -165,7 +165,7 @@ public:
 	/*!
 	Synthesize a press or release of mouse button \c id.
 	*/
-	void				fakeMouseButton(ButtonID id, bool press) const;
+	void				fakeMouseButton(ButtonID id, bool press);
 
 	//! Fake mouse move
 	/*!

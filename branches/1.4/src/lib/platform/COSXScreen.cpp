@@ -85,7 +85,9 @@ COSXScreen::COSXScreen(bool isPrimary) :
 	m_pmWatchThread(NULL),
 	m_pmThreadReady(new CCondVar<bool>(m_pmMutex, false)),
 	m_activeModifierHotKey(0),
-	m_activeModifierHotKeyMask(0)
+	m_activeModifierHotKeyMask(0),
+	m_lastSingleClick(0),
+	m_lastDoubleClick(0)
 {
 	try {
 		m_displayID   = CGMainDisplayID();
@@ -476,12 +478,23 @@ COSXScreen::postMouseEvent(CGPoint& pos) const
 	CFRelease(event);
 }
 
-double lastSingleClick = 0;
-double lastDoubleClick = 0;
-
 void
-COSXScreen::fakeMouseButton(ButtonID id, bool press) const
+COSXScreen::fakeMouseButton(ButtonID id, bool press)
 {
+	NXEventHandle handle = NXOpenEventStatus();
+	double clickTime = NXClickTime(handle);
+	
+	if ((ARCH->time() - m_lastDoubleClick) <= clickTime) {
+		// drop all down and up fakes immedately after a double click.
+		// TODO: perhaps there is a better way to do this, usually in
+		// finder, if you tripple click a folder, it will open it and
+		// then select a folder under the cursor -- and perhaps other
+		// strange behaviour might happen?
+		LOG((CLOG_DEBUG1 "dropping mouse button %s",
+			press ? "press" : "release"));
+		return;
+	}
+	
 	// Buttons are indexed from one, but the button down array is indexed from zero
 	UInt32 index = id - kButtonLeft;
 	if (index >= NumButtonIDs) {
@@ -495,21 +508,11 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press) const
 	}
 	pos.x = m_xCursor;
 	pos.y = m_yCursor;
-	
-	CGEventType type;
-	MouseButtonState state;
-	if (press) { 
-		state = kMouseButtonDown;
-	} else {
-		state = kMouseButtonUp;
-	}
-	
-	NXEventHandle handle = NXOpenEventStatus();
-	double clickTime = NXClickTime(handle);
 
-	if (press && ((ARCH->time() - lastSingleClick) <= clickTime)) {
+	if (press && (id == kButtonLeft) &&
+		((ARCH->time() - m_lastSingleClick) <= clickTime)) {
 
-		LOG((CLOG_DEBUG1 "mouse click, double"));
+		LOG((CLOG_DEBUG1 "faking mouse left double click"));
 		
 		// finder does not seem to detect double clicks from two separate
 		// CGEventCreateMouseEvent calls. so, if we detect a double click we
@@ -532,36 +535,30 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press) const
 		CGEventSetType(event, kCGEventLeftMouseUp);
 		m_buttonState.set(index, kMouseButtonUp);
 		CGEventPost(kCGHIDEventTap, event);
+		
 		CFRelease(event);
 	
-		lastDoubleClick = ARCH->time();
+		m_lastDoubleClick = ARCH->time();
 	}
 	else {
-	
-		if ((ARCH->time() - lastDoubleClick) <= clickTime) {
-			// drop all down and up fakes immedately after a double click.
-			LOG((CLOG_DEBUG1 "dropping mouse click, %s",
-				press ? "press" : "release"));
-			return;
-		}
 		
 		// ... otherwise, perform a single press or release as normal.
 		
-		LOG((CLOG_DEBUG1 "mouse click, %s",
-			press ? "press" : "release"));
-	
+		MouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
+		
+		LOG((CLOG_DEBUG1 "faking mouse button %s", press ? "press" : "release"));
+		
 		MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
-		type = thisButtonMap[state];
-	
+		CGEventType type = thisButtonMap[state];
+		
 		CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
 	
 		m_buttonState.set(index, state);
-	
 		CGEventPost(kCGHIDEventTap, event);
 		
 		CFRelease(event);
 	
-		lastSingleClick = ARCH->time();
+		m_lastSingleClick = ARCH->time();
 	}
 }
 
@@ -815,7 +812,7 @@ COSXScreen::setClipboard(ClipboardID, const IClipboard* src)
 void
 COSXScreen::checkClipboards()
 {
-	LOG((CLOG_DEBUG1 "checking clipboard"));
+	LOG((CLOG_DEBUG2 "checking clipboard"));
 	if (m_pasteboard.synchronize()) {
 		LOG((CLOG_DEBUG "clipboard changed"));
 		sendClipboardEvent(getClipboardGrabbedEvent(), kClipboardClipboard);

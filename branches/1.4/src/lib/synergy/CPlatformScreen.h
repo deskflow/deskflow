@@ -53,7 +53,7 @@ public:
 	virtual void		gameDeviceTimingResp(UInt16 freq) = 0;
 
 	// ISecondaryScreen overrides
-	virtual void		fakeMouseButton(ButtonID id, bool press) const = 0;
+	virtual void		fakeMouseButton(ButtonID id, bool press) = 0;
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const = 0;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;

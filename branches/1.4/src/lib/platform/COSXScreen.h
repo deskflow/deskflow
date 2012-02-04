@@ -74,7 +74,7 @@ public:
 	virtual void		gameDeviceTimingResp(UInt16 freq) { }
 
 	// ISecondaryScreen overrides
-	virtual void		fakeMouseButton(ButtonID id, bool press) const;
+	virtual void		fakeMouseButton(ButtonID id, bool press);
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
@@ -328,6 +328,10 @@ private:
 	// Quartz input event support
 	CFMachPortRef			m_eventTapPort;
 	CFRunLoopSourceRef		m_eventTapRLSR;
+
+	// for double click coalescing.
+	double					m_lastSingleClick;
+	double					m_lastDoubleClick;
 };
 
 #endif

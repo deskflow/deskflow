@@ -93,7 +93,7 @@ public:
 	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
 	// ISecondaryScreen overrides
-	virtual void		fakeMouseButton(ButtonID id, bool press) const;
+	virtual void		fakeMouseButton(ButtonID id, bool press);
 	virtual void		fakeMouseMove(SInt32 x, SInt32 y) const;
 	virtual void		fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
 	virtual void		fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
