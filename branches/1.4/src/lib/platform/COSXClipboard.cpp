@@ -76,7 +76,7 @@ COSXClipboard::synchronize()
 		return false;
 
 	PasteboardSyncFlags flags = PasteboardSynchronize(m_pboard);
-	LOG((CLOG_DEBUG1 "flags: %x", flags));
+	LOG((CLOG_DEBUG2 "flags: %x", flags));
 
 	if (flags & kPasteboardModified) {
 		return true;
