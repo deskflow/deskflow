@@ -34,6 +34,7 @@
 
 #include <mach-o/dyld.h>
 #include <AvailabilityMacros.h>
+#include <IOKit/hidsystem/event_status_driver.h>
 
 // Set some enums for fast user switching if we're building with an SDK
 // from before such support was added.
@@ -461,13 +462,22 @@ COSXScreen::postMouseEvent(CGPoint& pos) const
 		}
 	}
 	
-	ButtonID id = m_buttonState.getFirstButtonDown() + kButtonLeft;
-	CGPostMouseEvent(
-		pos, TRUE, 3,
-		(id == kButtonLeft),
-		(id == kButtonRight),
-		(id == kButtonMiddle));
+	CGEventType type = kCGEventMouseMoved;
+
+	SInt8 button = m_buttonState.getFirstButtonDown();
+	if (button != -1) {
+		MouseButtonEventMapType thisButtonType = MouseButtonEventMap[button];
+		type = thisButtonType[kMouseButtonDragged];
+	}
+
+	CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, button);
+	CGEventPost(kCGHIDEventTap, event);
+	
+	CFRelease(event);
 }
+
+double lastSingleClick = 0;
+double lastDoubleClick = 0;
 
 void
 COSXScreen::fakeMouseButton(ButtonID id, bool press) const
@@ -486,14 +496,73 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press) const
 	pos.x = m_xCursor;
 	pos.y = m_yCursor;
 	
-	MouseButtonState state = press ? kMouseButtonDown : kMouseButtonUp;
+	CGEventType type;
+	MouseButtonState state;
+	if (press) { 
+		state = kMouseButtonDown;
+	} else {
+		state = kMouseButtonUp;
+	}
+	
+	NXEventHandle handle = NXOpenEventStatus();
+	double clickTime = NXClickTime(handle);
 
-	m_buttonState.set(index, state);
-	CGPostMouseEvent(
-		pos, TRUE, 3,
-		(id == kButtonLeft),
-		(id == kButtonRight),
-		(id == kButtonMiddle));
+	if (press && ((ARCH->time() - lastSingleClick) <= clickTime)) {
+
+		LOG((CLOG_DEBUG1 "mouse click, double"));
+		
+		// finder does not seem to detect double clicks from two separate
+		// CGEventCreateMouseEvent calls. so, if we detect a double click we
+		// use CGEventSetIntegerValueField to tell the OS.
+		// 
+		// the caveat here is that findor will see this as a single click 
+		// followed by a double click (even though there should be only a
+		// double click). this may cause weird behaviour in other apps.
+		//
+		// for some reason using the old CGPostMouseEvent function, doesn't
+		// cause double clicks (though i'm sure it did work at some point).
+		
+		CGEventRef event = CGEventCreateMouseEvent(
+			NULL, kCGEventLeftMouseDown, pos, kCGMouseButtonLeft);
+		
+		CGEventSetIntegerValueField(event, kCGMouseEventClickState, 2);
+		m_buttonState.set(index, kMouseButtonDown);
+		CGEventPost(kCGHIDEventTap, event);
+		
+		CGEventSetType(event, kCGEventLeftMouseUp);
+		m_buttonState.set(index, kMouseButtonUp);
+		CGEventPost(kCGHIDEventTap, event);
+		CFRelease(event);
+	
+		lastDoubleClick = ARCH->time();
+	}
+	else {
+	
+		if ((ARCH->time() - lastDoubleClick) <= clickTime) {
+			// drop all down and up fakes immedately after a double click.
+			LOG((CLOG_DEBUG1 "dropping mouse click, %s",
+				press ? "press" : "release"));
+			return;
+		}
+		
+		// ... otherwise, perform a single press or release as normal.
+		
+		LOG((CLOG_DEBUG1 "mouse click, %s",
+			press ? "press" : "release"));
+	
+		MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
+		type = thisButtonMap[state];
+	
+		CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, index);
+	
+		m_buttonState.set(index, state);
+	
+		CGEventPost(kCGHIDEventTap, event);
+		
+		CFRelease(event);
+	
+		lastSingleClick = ARCH->time();
+	}
 }
 
 void
