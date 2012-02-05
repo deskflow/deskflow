@@ -1,3 +1,12 @@
+1.4.7
+=====
+
+Bug #3132: GUI hides before successful connection
+Bug #3133: Can't un-hide GUI on Mac
+Feature #3054: Hide synergy[cs] dock icon (Mac OS X)
+Feature #3135: Integrate log into main window
+Task #3134: Move hotkey warnings to DEBUG
+
 1.4.6
 =====
 
