@@ -95,11 +95,8 @@ COSXScreen::COSXScreen(bool isPrimary) :
 		m_screensaver = new COSXScreenSaver(getEventTarget());
 		m_keyState	  = new COSXKeyState();
 		
-		if (m_isPrimary) {
-			if (!AXAPIEnabled()) {
-				LOG((CLOG_ERR "Synergy server requires accessibility API enabled. Please check the option for \"Enable access for assistive devices\" in the Universal Access System Preferences panel. Unintentional key-replication will occur until this is fixed."));
-			}
-		}
+		if (m_isPrimary && !AXAPIEnabled())
+			LOG((CLOG_WARN "mac accessibility api is not enabled"));
 		
 		// install display manager notification handler
 #if defined(MAC_OS_X_VERSION_10_5)
@@ -627,12 +624,11 @@ COSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 void
 COSXScreen::showCursor()
 {
+	LOG((CLOG_DEBUG "showing cursor"));
     CGDisplayShowCursor(m_displayID);
     CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
     CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanFalse);
     CFRelease(propertyString);
-	
-    LOG((CLOG_DEBUG "Trying to show cursor."));
 }
 
 void
@@ -642,8 +638,8 @@ COSXScreen::hideCursor()
     CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
     CFRelease(propertyString);
 
+	LOG((CLOG_DEBUG "hiding cursor"));
     CGDisplayHideCursor(m_displayID);
-    LOG((CLOG_DEBUG "Trying to hide cursor."));
 }
 
 void
@@ -685,11 +681,11 @@ COSXScreen::enable()
 										this);
 	}
 	if(!m_eventTapPort) {
-		LOG((CLOG_ERR "Failed to create quartz event tap."));
+		LOG((CLOG_ERR "failed to create quartz event tap"));
 	}
 	m_eventTapRLSR=CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
 	if(!m_eventTapRLSR) {
-		LOG((CLOG_ERR "Failed to create a CFRunLoopSourceRef for the quartz event tap."));
+		LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
 	}
 	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 }
@@ -1830,10 +1826,10 @@ COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 		case kCGEventTapDisabledByTimeout:
 			// Re-enable our event-tap
 			CGEventTapEnable(screen->m_eventTapPort, true);
-			LOG((CLOG_NOTE "Quartz Event tap was disabled by timeout. Re-enabling."));
+			LOG((CLOG_NOTE "quartz event tap was disabled by timeout, re-enabling"));
 			break;
 		case kCGEventTapDisabledByUserInput:
-			LOG((CLOG_ERR "Quartz Event tap was disabled by user input!"));
+			LOG((CLOG_ERR "quartz event tap was disabled by user input"));
 			break;
 		case NX_NULLEVENT:
 			break;
@@ -1844,7 +1840,7 @@ COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 		case NX_NUMPROCS:
 			break;
 		default:
-			LOG((CLOG_NOTE "Unknown Quartz Event type: 0x%02x", type));
+			LOG((CLOG_NOTE "unknown quartz event type: 0x%02x", type));
 	}
 	
 	if(screen->m_isOnScreen) {

@@ -133,7 +133,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
 
     if ( cFuncs == 0 )  // If no imported functions, we're done!
 	{
-		LOG( "no imported functions." );
+		LOG( "no imported functions" );
         return false;
 	}
 
@@ -153,7 +153,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
     if ( !VirtualProtect(   pIAT, sizeof(PVOID) * cFuncs,
                             flNewProtect, &flOldProtect) )
 	{
-		LOG( "could not remove ReadOnly and ExecuteRead attributes, or add ReadWrite flag." );
+		LOG( "could not remove ReadOnly and ExecuteRead attributes, or add ReadWrite flag" );
         return false;
     }
 
@@ -166,7 +166,7 @@ bool RedirectIAT( SDLLHook* DLLHook, PIMAGE_IMPORT_DESCRIPTOR pImportDesc, PVOID
         pStubs = new DLPD_IAT_STUB[ cFuncs + 1];
         if ( !pStubs )
 		{
-			LOG( "could not allocate memory for redirection stubs." );
+			LOG( "could not allocate memory for redirection stubs" );
             return false;
 		}
     }
@@ -284,7 +284,7 @@ bool HookAPICalls( SDLLHook* hook )
 {
     if ( !hook )
 	{
-		LOG("no hook.");
+		LOG("no hook");
         return false;
 	}
 
@@ -294,7 +294,7 @@ bool HookAPICalls( SDLLHook* hook )
     
     if ( !pExeNTHdr )
 	{
-		LOG("no PE header.");
+		LOG("no PE header");
         return false;
 	}
 
@@ -302,7 +302,7 @@ bool HookAPICalls( SDLLHook* hook )
                         [IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
     if ( !importRVA )
 	{
-		LOG("no virtual address for image directory entry import.");
+		LOG("no virtual address for image directory entry import");
         return false;
 	}
 
@@ -320,16 +320,16 @@ bool HookAPICalls( SDLLHook* hook )
 
         if ( lstrcmpi( pszImportModuleName, hook->Name ) == 0 )
         {
-            LOG( "found " << hook->Name << " in process." );
+            LOG( "found " << hook->Name << " in process" );
 
 			if ( RedirectIAT( hook, pImportDesc, (PVOID)hModEXE ) )
 			{
-				LOG( "redirected IAT ok." );
+				LOG( "redirected IAT ok" );
 				return true;
 			}
 			else
 			{
-				LOG( "failed to redirect IAT." );
+				LOG( "failed to redirect IAT" );
 			}
         }
         

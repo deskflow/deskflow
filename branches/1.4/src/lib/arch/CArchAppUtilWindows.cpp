@@ -287,7 +287,7 @@ CArchAppUtilWindows::beforeAppExit()
 	// a new console window, and will normally close on exit (making it so
 	// that we can't see error messages).
 	if (app().argsBase().m_pauseOnExit) {
-		std::cout << std::endl << "Press any key to exit..." << std::endl;
+		std::cout << std::endl << "press any key to exit..." << std::endl;
 		int c = _getch();
 	}
 }

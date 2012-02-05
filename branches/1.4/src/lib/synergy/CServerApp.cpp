@@ -603,7 +603,7 @@ CServerApp::startServer()
 		listener->setServer(s_server);
 		s_listener = listener;
 		updateStatus();
-		LOG((CLOG_NOTE "started server"));
+		LOG((CLOG_NOTE "started server, waiting for clients"));
 		s_serverState = kStarted;
 		return true;
 	}

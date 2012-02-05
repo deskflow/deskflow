@@ -218,8 +218,8 @@ CApp::parseArgs(int argc, const char* const* argv, int& i)
 	// daemon mode.
 	if (argsBase().m_daemon) {
 		LOG((CLOG_ERR 
-			"The --daemon argument is not supported on Windows. "
-			"Instead, install %s as a service (--service install).", 
+			"the --daemon argument is not supported on windows. "
+			"instead, install %s as a service (--service install)", 
 			argsBase().m_pname));
 		m_bye(kExitArgs);
 	}

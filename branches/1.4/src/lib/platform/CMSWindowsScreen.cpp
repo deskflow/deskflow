@@ -193,7 +193,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, bool gameDevice
 		m_xinputModule = LoadLibrary("xinput1_3.dll");
 		if (m_xinputModule == NULL)
 		{
-			throw XScreenXInputFailure("could not load xinput library.");
+			throw XScreenXInputFailure("could not load xinput library");
 		}
 
 		if (m_isPrimary)

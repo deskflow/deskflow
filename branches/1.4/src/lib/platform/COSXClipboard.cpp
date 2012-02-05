@@ -36,7 +36,7 @@ COSXClipboard::COSXClipboard() :
 	OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
 	if (createErr != noErr) {
 		LOG((CLOG_DEBUG "failed to create clipboard reference: error %i", createErr));
-		LOG((CLOG_ERR "Unable to connect to pasteboard. Clipboard sharing disabled.", createErr));
+		LOG((CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled", createErr));
 		m_pboard = NULL;
 		return;
 
