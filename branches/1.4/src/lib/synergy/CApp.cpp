@@ -31,6 +31,10 @@
 #include <iostream>
 #include <stdio.h>
 
+#if WINAPI_CARBON
+#include <ApplicationServices/ApplicationServices.h>
+#endif
+
 CApp* CApp::s_instance = nullptr;
 
 CApp::CApp(CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args) :
@@ -253,6 +257,13 @@ CApp::run(int argc, char** argv)
 #if SYSAPI_WIN32
 	// record window instance for tray icon, etc
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+#endif
+
+#if WINAPI_CARBON
+	// hide the dock icon on mac os x
+	ProcessSerialNumber psn = { 0, kCurrentProcess };
+	GetCurrentProcess(&psn);
+	TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
 #endif
 
 	CArch arch;

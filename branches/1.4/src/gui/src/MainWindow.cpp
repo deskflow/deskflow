@@ -25,6 +25,10 @@
 #include <QtGui>
 #include <QtNetwork>
 
+#if defined(Q_OS_MAC)
+#include <ApplicationServices/ApplicationServices.h>
+#endif
+
 #if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
@@ -513,6 +517,16 @@ void MainWindow::setVisible(bool visible)
 	m_pActionMinimize->setEnabled(visible);
 	m_pActionRestore->setEnabled(!visible);
 	QMainWindow::setVisible(visible);
+
+#if defined(Q_OS_MAC)
+	// hide the dock icon on mac os x
+	ProcessSerialNumber psn = { 0, kCurrentProcess };
+	GetCurrentProcess(&psn);
+	if (visible)
+		TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+	else
+		TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
+#endif
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()
