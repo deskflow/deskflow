@@ -146,7 +146,8 @@ private:
 	"                             this screen in the configuration.\n" \
 	"  -1, --no-restart         do not try to restart on failure.\n" \
 	"*     --restart            restart the server automatically if it fails.\n" \
-	"  -l  --log <file>         write log messages to file.\n"
+	"  -l  --log <file>         write log messages to file.\n" \
+	"      --no-tray            disable the system tray icon.\n"
 
 #define HELP_COMMON_INFO_2 \
 	"  -h, --help               display this help and exit.\n" \
@@ -178,15 +179,14 @@ private:
 
 // windows args
 #  define HELP_SYS_ARGS \
-	" [--service <action>]"
+	" [--service <action>] [--relaunch] [--exit-pause]"
 #  define HELP_SYS_INFO \
 	"      --service <action>   manage the windows service, valid options are:\n" \
 	"                             install/uninstall/start/stop\n" \
 	"      --relaunch           persistently relaunches process in current user \n" \
 	"                             session (useful for vista and upward).\n" \
 	"      --exit-pause         wait for key press on exit, can be useful for\n" \
-	"                             reading error messages that occur on exit.\n" \
-	"      --no-tray            disable the system tray icon.\n" \
+	"                             reading error messages that occur on exit.\n"
 	HELP_GAMEPAD
 
 #endif

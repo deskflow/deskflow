@@ -96,10 +96,6 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 
 		app().argsBase().m_pauseOnExit = true;
 	}
-	else if (app().isArg(i, argc, argv, NULL, "--no-tray")) {
-
-		app().argsBase().m_disableTray = true;
-	}
 #if GAME_DEVICE_SUPPORT
 	else if (app().isArg(i, argc, argv, NULL, "--game-device")) {
 		app().argsBase().m_gameDevice = true;

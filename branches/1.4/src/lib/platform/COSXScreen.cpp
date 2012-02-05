@@ -316,7 +316,7 @@ COSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	// get mac virtual key and modifier mask matching synergy key and mask
 	UInt32 macKey, macMask;
 	if (!m_keyState->mapSynergyHotKeyToMac(key, mask, macKey, macMask)) {
-		LOG((CLOG_WARN "could not map hotkey id=%04x mask=%04x", key, mask));
+		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
 	

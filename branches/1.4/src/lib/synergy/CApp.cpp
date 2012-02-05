@@ -159,6 +159,10 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		version();
 		m_bye(kExitSuccess);
 	}
+	
+	else if (isArg(i, argc, argv, NULL, "--no-tray")) {
+		argsBase().m_disableTray = true;
+	}
 
 	else {
 		// option not supported here

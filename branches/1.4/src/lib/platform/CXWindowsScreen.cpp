@@ -548,7 +548,7 @@ CXWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	// only allow certain modifiers
 	if ((mask & ~(KeyModifierShift | KeyModifierControl |
 				  KeyModifierAlt   | KeyModifierSuper)) != 0) {
-		LOG((CLOG_WARN "could not map hotkey id=%04x mask=%04x", key, mask));
+		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
 
@@ -561,14 +561,14 @@ CXWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	unsigned int modifiers;
 	if (!m_keyState->mapModifiersToX(mask, modifiers)) {
 		// can't map all modifiers
-		LOG((CLOG_WARN "could not map hotkey id=%04x mask=%04x", key, mask));
+		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
 	CXWindowsKeyState::CKeycodeList keycodes;
 	m_keyState->mapKeyToKeycodes(key, keycodes);
 	if (key != kKeyNone && keycodes.empty()) {
 		// can't map key
-		LOG((CLOG_WARN "could not map hotkey id=%04x mask=%04x", key, mask));
+		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
 
