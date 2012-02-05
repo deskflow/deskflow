@@ -39,7 +39,7 @@ div.content div.donate {
   text-align: center;
 }
 
-div.content div.donate {
+div.donate {
   margin-top: 20px;
 }
 
@@ -78,7 +78,22 @@ div.share {
   margin-left: -2px;
 }
 
-div.advert {
+div.welcome {
+  margin-top: -20px;
+}
+
+div.welcome div.content-inner {
+  float: left;
+  width: 400px
+}
+
+div.welcome div.advert1 {
+  margin-bottom: 20px;
+  float: right;
+  width: 300px
+}
+
+div.welcome div.advert2 {
   margin-top: 20px;
   margin-bottom: 25px;
 }
