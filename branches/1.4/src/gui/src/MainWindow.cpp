@@ -107,7 +107,6 @@ void MainWindow::setStatus(const QString &status)
 
 void MainWindow::createTrayIcon()
 {
-#if !defined(Q_OS_MAC)
 	m_pTrayIconMenu = new QMenu(this);
 
 	m_pTrayIconMenu->addAction(m_pActionStartSynergy);
@@ -125,9 +124,6 @@ void MainWindow::createTrayIcon()
 	setIcon(synergyDisconnected);
 
 	m_pTrayIcon->show();
-#else
-	setIcon(synergyDisconnected);
-#endif
 }
 
 void MainWindow::createMenuBar()
