@@ -250,7 +250,7 @@ void MainWindow::startSynergy()
 	QString app;
 	QStringList args;
 
-	args << "-f" << "--debug" << appConfig().logLevelText();
+	args << "-f" << "--no-tray" << "--debug" << appConfig().logLevelText();
 
 	if (!appConfig().screenName().isEmpty())
 		args << "--name" << appConfig().screenName();
