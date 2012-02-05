@@ -221,7 +221,10 @@ void MainWindow::logOutput()
 {
 	if (m_pSynergy)
 	{
-		appendLog(m_pSynergy->readAllStandardOutput());
+		QString text(m_pSynergy->readAllStandardOutput());
+		foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
+			if (!line.isEmpty())
+				appendLog(line);
 	}
 }
 
@@ -229,7 +232,10 @@ void MainWindow::logError()
 {
 	if (m_pSynergy)
 	{
-		appendLog(m_pSynergy->readAllStandardError());
+		QString text(m_pSynergy->readAllStandardError());
+		foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
+			if (!line.isEmpty())
+				appendLog(line);
 	}
 }
 

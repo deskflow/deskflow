@@ -303,7 +303,7 @@ CServer::adoptClient(CBaseClientProxy* client)
 
 	// name must be in our configuration
 	if (!m_config.isScreen(client->getName())) {
-		LOG((CLOG_WARN "unrecognised client name \"%s\", check config", client->getName().c_str()));
+		LOG((CLOG_WARN "unrecognised client name \"%s\", check server config", client->getName().c_str()));
 		closeClient(client, kMsgEUnknown);
 		return;
 	}
