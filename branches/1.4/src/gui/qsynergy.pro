@@ -12,7 +12,6 @@ FORMS += res/MainWindowBase.ui \
     res/ActionDialogBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
-    res/LogDialogBase.ui \
     res/WindowsServicesBase.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
@@ -32,7 +31,6 @@ SOURCES += src/main.cpp \
     src/Action.cpp \
     src/KeySequence.cpp \
     src/KeySequenceWidget.cpp \
-    src/LogDialog.cpp \
     src/SettingsDialog.cpp \
     src/AppConfig.cpp \
     src/QSynergyApplication.cpp \
@@ -54,7 +52,6 @@ HEADERS += src/MainWindow.h \
     src/Action.h \
     src/KeySequence.h \
     src/KeySequenceWidget.h \
-    src/LogDialog.h \
     src/SettingsDialog.h \
     src/AppConfig.h \
     src/QSynergyApplication.h \
@@ -79,9 +76,8 @@ release {
     MOC_DIR = tmp/release
     RCC_DIR = tmp/release
 }
-win32 {
-	Debug:DESTDIR = ../../bin/Debug
-	Release:DESTDIR = ../../bin/Release
-} else {
-	DESTDIR = ../../bin
+win32 { 
+    Debug:DESTDIR = ../../bin/Debug
+    Release:DESTDIR = ../../bin/Release
 }
+else:DESTDIR = ../../bin

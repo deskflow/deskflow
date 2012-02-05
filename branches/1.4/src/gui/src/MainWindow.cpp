@@ -19,7 +19,6 @@
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "LogDialog.h"
 #include "WindowsServices.h"
 
 #include <QtCore>
@@ -47,7 +46,6 @@ MainWindow::MainWindow() :
 	m_SynergyState(synergyDisconnected),
 	m_ServerConfig(&m_Settings, 5, 3),
 	m_pTempConfigFile(NULL),
-	m_pLogDialog(new LogDialog(this, synergyProcess())),
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL)
 {
@@ -156,7 +154,6 @@ void MainWindow::createMenuBar()
 #if defined(Q_OS_WIN)
 	pMenuEdit->addAction(m_pActionServices);
 #endif
-	pMenuView->addAction(m_pActionLogOutput);
 	pMenuWindow->addAction(m_pActionMinimize);
 	pMenuWindow->addAction(m_pActionRestore);
 	pMenuHelp->addAction(m_pActionAbout);
@@ -220,6 +217,32 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 		setVisible(!isVisible());
 }
 
+void MainWindow::logOutput()
+{
+	if (m_pSynergy)
+	{
+		appendLog(m_pSynergy->readAllStandardOutput());
+	}
+}
+
+void MainWindow::logError()
+{
+	if (m_pSynergy)
+	{
+		appendLog(m_pSynergy->readAllStandardError());
+	}
+}
+
+void MainWindow::appendLog(const QString& text)
+{
+    m_pLogOutput->append(text);
+}
+
+void MainWindow::clearLog()
+{
+    m_pLogOutput->clear();
+}
+
 void MainWindow::startSynergy()
 {
 	stopSynergy();
@@ -245,12 +268,17 @@ void MainWindow::startSynergy()
 		stopSynergy();
 		return;
 	}
-
+	
 	connect(synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(synergyFinished(int, QProcess::ExitStatus)));
-	connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), m_pLogDialog, SLOT(readSynergyOutput()));
-	connect(synergyProcess(), SIGNAL(readyReadStandardError()), m_pLogDialog, SLOT(readSynergyOutput()));
+	connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
+	connect(synergyProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
 
-	m_pLogDialog->append(tr("\n\nRunning synergy: %1 %2\n\n").arg(app).arg(args.join(" ")));
+	appendLog("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+	appendLog("config file: " + configFilename());
+	appendLog("log level: " + appConfig().logLevelText());
+
+	if (appConfig().logToFile())
+		appendLog("log file: " + appConfig().logFilename());
 
 	synergyProcess()->start(app, args);
 	if (!synergyProcess()->waitForStarted())
@@ -480,15 +508,6 @@ void MainWindow::on_m_pActionServices_triggered()
 {
 	WindowsServices dlg(this, appConfig());
 	dlg.exec();
-}
-
-void MainWindow::on_m_pActionLogOutput_triggered()
-{
-	Q_ASSERT(m_pLogDialog);
-
-	m_pLogDialog->show();
-	m_pLogDialog->raise();
-	m_pLogDialog->activateWindow();
 }
 
 void MainWindow::on_m_pButtonConfigureServer_clicked()

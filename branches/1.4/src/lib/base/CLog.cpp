@@ -173,27 +173,22 @@ CLog::print(const char* file, int line, const char* fmt, ...)
 
   // print the prefix to the buffer.  leave space for priority label.
   // do not prefix time and file for kPRINT (CLOG_PRINT)
-  if ((file != NULL) && (priority != kPRINT)) {
+  if (priority != kPRINT) {
 
-      char message[2048];
+	  char message[2048];
+
+#if DEBUG
 	  struct tm *tm;
 	  char tmp[220];
 	  time_t t;
 	  time(&t);
 	  tm = localtime(&t);
 	  sprintf(tmp, "%04i-%02i-%02iT%02i:%02i:%02i", tm->tm_year + 1900, tm->tm_mon+1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
-	  //strcpy(msg, tmp);
-
-	  
 	  sprintf(message, "%s %s: %s\n\t%s,%d", tmp, g_priority[priority], buffer, file, line);
-//    buffer[pPad - 1] = ' ';
+#else
+	  sprintf(message, "%s: %s", g_priority[priority], buffer);
+#endif
 
-    // discard file and line if priority < 0
-    /*if (priority < 0) {
-      message += pPad - g_priorityPad;
-    }
-	*/
-	  // output buffer
 	  output(priority, message);
   } else {
 	  output(priority, buffer);

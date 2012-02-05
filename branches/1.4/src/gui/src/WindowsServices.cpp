@@ -18,18 +18,17 @@
 #include "WindowsServices.h"
 #include "AppConfig.h"
 #include "MainWindow.h"
-#include "LogDialog.h"
 
 #include <QWidget>
 #include <QProcess>
 #include <QMessageBox>
 #include <QPushButton>
 
-WindowsServices::WindowsServices(QWidget* parent, AppConfig& appConfig) :
-	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
+WindowsServices::WindowsServices(MainWindow* mainWindow, AppConfig& appConfig) :
+	QDialog(dynamic_cast<QWidget*>(mainWindow), Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::WindowsServicesBase(),
-	m_appConfig(appConfig),
-	m_log(new LogDialog(this, process()))
+	m_mainWindow(mainWindow),
+	m_appConfig(appConfig)
 {
 	setupUi(this);
 }
@@ -40,36 +39,38 @@ void WindowsServices::runProc(const QString& app, const QStringList& args, QPush
 	button->setEnabled(false);
 
 	// clear contents so user doesn't get confused by previous messages
-	m_log->clear();
+	m_mainWindow->clearLog();
 
 	// deleted at end of function
 	QProcess proc(this);
 	m_process = &proc;
 
 	// send output to log window
-	connect(m_process, SIGNAL(readyReadStandardOutput()), m_log, SLOT(readSynergyOutput()));
-	connect(m_process, SIGNAL(readyReadStandardError()), m_log, SLOT(readSynergyOutput()));
+	connect(m_process, SIGNAL(readyReadStandardOutput()), m_mainWindow, SLOT(readSynergyOutput()));
+	connect(m_process, SIGNAL(readyReadStandardError()), m_mainWindow, SLOT(readSynergyOutput()));
 
 	m_process->start(app, args);
-	m_log->show();
+	m_mainWindow->show();
 
 	// service management should be instant
 	m_process->waitForFinished();
 
 	if (m_process->exitCode() == 0)
 	{
-		QMessageBox::information(m_log, "Service manager", "Completed successfully.");
+		m_mainWindow->appendLog("service install/uninstall completed successfully.");
+		m_mainWindow->appendLog("use the windows service manager to start/stop services.");
 	}
 	else
 	{
-		QMessageBox::critical(
-			m_log, "Service manager error",
-			QString("Unable to install or uninstall service. Error code: " +
-					QString::number(m_process->exitCode())));
+		m_mainWindow->appendLog(
+			"ERROR: failed to install/uninstall service. error code: " +
+			QString::number(m_process->exitCode()));
+
+		m_mainWindow->appendLog("please ensure you are running this program as administrator.");
 	}
 
-	disconnect(m_process, SIGNAL(readyReadStandardOutput()), m_log, SLOT(readSynergyOutput()));
-	disconnect(m_process, SIGNAL(readyReadStandardError()), m_log, SLOT(readSynergyOutput()));
+	disconnect(m_process, SIGNAL(readyReadStandardOutput()), m_mainWindow, SLOT(readSynergyOutput()));
+	disconnect(m_process, SIGNAL(readyReadStandardError()), m_mainWindow, SLOT(readSynergyOutput()));
 
 	button->setEnabled(true);
 }

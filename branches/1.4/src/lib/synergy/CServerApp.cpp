@@ -520,14 +520,14 @@ bool CServerApp::initServer()
 		return true;
 	}
 	catch (XScreenUnavailable& e) {
-		LOG((CLOG_WARN "cannot open primary screen: %s", e.what()));
+		LOG((CLOG_WARN "primary screen unavailable: %s", e.what()));
 		closePrimaryClient(primaryClient);
 		closeServerScreen(serverScreen);
-		updateStatus(CString("cannot open primary screen: ") + e.what());
+		updateStatus(CString("primary screen unavailable: ") + e.what());
 		retryTime = e.getRetryTime();
 	}
 	catch (XScreenOpenFailure& e) {
-		LOG((CLOG_CRIT "cannot open primary screen: %s", e.what()));
+		LOG((CLOG_CRIT "failed to start server: %s", e.what()));
 		closePrimaryClient(primaryClient);
 		closeServerScreen(serverScreen);
 		return false;

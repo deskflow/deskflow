@@ -76,6 +76,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString address();
 		QString appPath(const QString& name);
 		void start();
+		void appendLog(const QString& text);
+		void clearLog();
 
 	protected slots:
 		void on_m_pGroupClient_toggled(bool on) { m_pGroupServer->setChecked(!on); }
@@ -86,11 +88,12 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
 		void on_m_pActionServices_triggered();
-		void on_m_pActionLogOutput_triggered();
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void iconActivated(QSystemTrayIcon::ActivationReason reason);
 		void startSynergy();
 		void stopSynergy();
+		void logOutput();
+		void logError();
 
 	protected:
 		QSettings& settings() { return m_Settings; }
@@ -118,8 +121,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		int m_SynergyState;
 		ServerConfig m_ServerConfig;
 		QTemporaryFile* m_pTempConfigFile;
-		LogDialog* m_pLogDialog;
-
 		QSystemTrayIcon* m_pTrayIcon;
 		QMenu* m_pTrayIconMenu;
 };

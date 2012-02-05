@@ -27,14 +27,13 @@ class QProcess;
 
 class AppConfig;
 class MainWindow;
-class LogDialog;
 
 class WindowsServices : public QDialog, public Ui::WindowsServicesBase
 {
 	Q_OBJECT
 
 	public:
-		WindowsServices(QWidget* parent, AppConfig& appConfig);
+		WindowsServices(MainWindow* parent, AppConfig& appConfig);
 
 	protected:
 		AppConfig &appConfig() const { return m_appConfig; }
@@ -43,10 +42,10 @@ class WindowsServices : public QDialog, public Ui::WindowsServicesBase
 		void runProc(const QString& app, const QStringList& args, QPushButton* button);
 
 	private:
+		MainWindow* m_mainWindow;
 		QString m_app;
 		AppConfig &m_appConfig;
 		QProcess* m_process;
-		LogDialog* m_log;
 
 	private slots:
 		void on_m_pUninstallClient_clicked();

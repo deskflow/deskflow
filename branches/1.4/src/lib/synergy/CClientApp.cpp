@@ -466,13 +466,13 @@ CClientApp::startClient()
 		return true;
 	}
 	catch (XScreenUnavailable& e) {
-		LOG((CLOG_WARN "cannot open secondary screen: %s", e.what()));
+		LOG((CLOG_WARN "secondary screen unavailable: %s", e.what()));
 		closeClientScreen(clientScreen);
-		updateStatus(CString("Cannot open secondary screen: ") + e.what());
+		updateStatus(CString("secondary screen unavailable: ") + e.what());
 		retryTime = e.getRetryTime();
 	}
 	catch (XScreenOpenFailure& e) {
-		LOG((CLOG_CRIT "cannot open secondary screen: %s", e.what()));
+		LOG((CLOG_CRIT "failed to start client: %s", e.what()));
 		closeClientScreen(clientScreen);
 		return false;
 	}
