@@ -518,8 +518,8 @@ void MainWindow::setVisible(bool visible)
 	m_pActionRestore->setEnabled(!visible);
 	QMainWindow::setVisible(visible);
 
-#if defined(Q_OS_MAC)
-	// hide the dock icon on mac os x
+#if MAC_OS_X_VERSION_10_7
+	// dock hide only supported on lion :(
 	ProcessSerialNumber psn = { 0, kCurrentProcess };
 	GetCurrentProcess(&psn);
 	if (visible)

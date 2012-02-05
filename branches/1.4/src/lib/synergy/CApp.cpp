@@ -259,11 +259,11 @@ CApp::run(int argc, char** argv)
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-#if WINAPI_CARBON
-	// hide the dock icon on mac os x
+#if MAC_OS_X_VERSION_10_7
+	// dock hide only supported on lion :(
 	ProcessSerialNumber psn = { 0, kCurrentProcess };
 	GetCurrentProcess(&psn);
-	TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
+	TransformProcessType(&psn, kProcessTransformToForegroundApplication);
 #endif
 
 	CArch arch;
