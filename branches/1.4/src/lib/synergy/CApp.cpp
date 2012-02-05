@@ -263,7 +263,7 @@ CApp::run(int argc, char** argv)
 	// dock hide only supported on lion :(
 	ProcessSerialNumber psn = { 0, kCurrentProcess };
 	GetCurrentProcess(&psn);
-	TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+	TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
 #endif
 
 	CArch arch;
