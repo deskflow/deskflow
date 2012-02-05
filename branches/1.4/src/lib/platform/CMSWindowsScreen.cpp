@@ -566,7 +566,9 @@ CMSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	// only allow certain modifiers
 	if ((mask & ~(KeyModifierShift | KeyModifierControl |
 				  KeyModifierAlt   | KeyModifierSuper)) != 0) {
-		LOG((CLOG_WARN "could not map hotkey id=%04x mask=%04x", key, mask));
+		// this should be a warning, but this can confuse users,
+		// as this warning happens almost always.
+		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
 
@@ -592,7 +594,9 @@ CMSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 	UINT vk = m_keyState->mapKeyToVirtualKey(key);
 	if (key != kKeyNone && vk == 0) {
 		// can't map key
-		LOG((CLOG_WARN "could not map hotkey id=%04x mask=%04x", key, mask));
+		// this should be a warning, but this can confuse users,
+		// as this warning happens almost always.
+		LOG((CLOG_DEBUG "could not map hotkey id=%04x mask=%04x", key, mask));
 		return 0;
 	}
 
