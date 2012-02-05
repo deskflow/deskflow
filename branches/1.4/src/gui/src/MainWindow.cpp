@@ -36,7 +36,17 @@ static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.
 static const char* synergyIconFiles[] =
 {
 	":/res/icons/16x16/synergy-disconnected.png",
+	":/res/icons/16x16/synergy-disconnected.png",
 	":/res/icons/16x16/synergy-connected.png"
+};
+
+class QThreadImpl : public QThread
+{
+public:
+	static void msleep(unsigned long msecs)
+	{
+		QThread::msleep(msecs);
+	}
 };
 
 MainWindow::MainWindow() :
@@ -47,7 +57,8 @@ MainWindow::MainWindow() :
 	m_ServerConfig(&m_Settings, 5, 3),
 	m_pTempConfigFile(NULL),
 	m_pTrayIcon(NULL),
-	m_pTrayIconMenu(NULL)
+	m_pTrayIconMenu(NULL),
+	m_alreadyHidden(false)
 {
 	setupUi(this);
 
@@ -66,18 +77,10 @@ MainWindow::~MainWindow()
 void MainWindow::start()
 {
 	if (appConfig().autoConnect())
-	{
 		startSynergy();
 
-		if (!appConfig().autoHide())
-		{
-			show();
-		}
-	}
-	else
-	{
-		show();
-	}
+	// always show. auto-hide only happens when we have a connection.
+	show();
 
 	if (appConfig().autoStartPrompt())
 	{
@@ -206,15 +209,22 @@ void MainWindow::setIcon(qSynergyState state)
 
 	if (m_pTrayIcon)
 		m_pTrayIcon->setIcon(icon);
-
-
-	// removed setWindowIcon usage - the icons are too low res.
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
 	if (reason == QSystemTrayIcon::DoubleClick)
-		setVisible(!isVisible());
+	{
+		if (isVisible())
+		{
+			hide();
+		}
+		else
+		{
+			showNormal();
+			activateWindow();
+		}
+	}
 }
 
 void MainWindow::logOutput()
@@ -223,8 +233,27 @@ void MainWindow::logOutput()
 	{
 		QString text(m_pSynergy->readAllStandardOutput());
 		foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
+		{
 			if (!line.isEmpty())
+			{
 				appendLog(line);
+				if (line.contains("has connected") ||
+					line.contains("connected to server"))
+				{
+					// only set connected state and hide, if we get
+					// "has connected" message. this is a little bit
+					// hacky, but it works for now (until we have IPC).
+					setSynergyState(synergyConnected);
+
+					// only hide once after each new connection.
+					if (!m_alreadyHidden && appConfig().autoHide())
+					{
+						hide();
+						m_alreadyHidden = true;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -253,6 +282,8 @@ void MainWindow::startSynergy()
 {
 	stopSynergy();
 
+	setSynergyState(synergyConnecting);
+
 	QString app;
 	QStringList args;
 
@@ -279,6 +310,10 @@ void MainWindow::startSynergy()
 	connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
 	connect(synergyProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
 
+	// put a space between last log output and new instance.
+	if (!m_pLogOutput->toPlainText().isEmpty())
+		appendLog("");
+
 	appendLog("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
 	appendLog("config file: " + configFilename());
 	appendLog("log level: " + appConfig().logLevelText());
@@ -293,13 +328,6 @@ void MainWindow::startSynergy()
 		show();
 		QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
 		return;
-	}
-
-	setSynergyState(synergyConnected);
-
-	if (appConfig().autoHide())
-	{
-		hide();
 	}
 }
 
@@ -405,6 +433,8 @@ void MainWindow::stopSynergy()
 {
 	if (synergyProcess())
 	{
+		appendLog("stopping synergy");
+
 		if (synergyProcess()->isOpen())
 			synergyProcess()->close();
 		delete synergyProcess();
@@ -417,6 +447,9 @@ void MainWindow::stopSynergy()
 	// bad, since it could be in use by the Windows service!
 	//delete m_pTempConfigFile;
 	m_pTempConfigFile = NULL;
+
+	// reset so that new connects cause auto-hide.
+	m_alreadyHidden = false;
 }
 
 void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
@@ -443,7 +476,7 @@ void MainWindow::setSynergyState(qSynergyState state)
 	if (synergyState() == state)
 		return;
 
-	if (state == synergyConnected)
+	if (state == synergyConnected || state == synergyConnecting)
 	{
 		disconnect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
 		connect (m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStopSynergy, SLOT(trigger()));
@@ -460,8 +493,22 @@ void MainWindow::setSynergyState(qSynergyState state)
 	m_pGroupServer->setEnabled(state == synergyDisconnected);
 	m_pActionStartSynergy->setEnabled(state == synergyDisconnected);
 	m_pActionStopSynergy->setEnabled(state == synergyConnected);
-	setStatus(state == synergyConnected ? QString(tr("Synergy %1 is running.")).arg(synergyType() == synergyServer ? tr("server") : tr("client")) : tr("Synergy is not running."));
+
+	switch (state)
+	{
+	case synergyConnected:
+		setStatus(tr("Synergy is running."));
+		break;
+	case synergyConnecting:
+		setStatus(tr("Synergy is starting."));
+		break;
+	case synergyDisconnected:
+		setStatus(tr("Synergy is not running."));
+		break;
+	}
+
 	setIcon(state);
+
 	m_SynergyState = state;
 }
 
@@ -521,4 +568,3 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 	ServerConfigDialog dlg(this, serverConfig(), appConfig().screenName());
 	dlg.exec();
 }
-

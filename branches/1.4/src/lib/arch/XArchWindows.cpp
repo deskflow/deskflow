@@ -99,7 +99,7 @@ XArchEvalWinsock::eval() const throw()
 		/* 10058 */{WSAESHUTDOWN,		"The socket has been shutdown"},
 		/* 10059 */{WSAETOOMANYREFS,	"BSD: Too many references"},
 		/* 10060 */{WSAETIMEDOUT,		"Attempt to connect timed out without establishing a connection"},
-		/* 10061 */{WSAECONNREFUSED,	"The attempt to connect was forcefully rejected"},
+		/* 10061 */{WSAECONNREFUSED,	"Connection was refused"},
 		/* 10062 */{WSAELOOP,			"Undocumented WinSock error code used in BSD"},
 		/* 10063 */{WSAENAMETOOLONG,	"Undocumented WinSock error code used in BSD"},
 		/* 10064 */{WSAEHOSTDOWN,		"Undocumented WinSock error code used in BSD"},

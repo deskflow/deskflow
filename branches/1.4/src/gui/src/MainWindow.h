@@ -23,6 +23,7 @@
 #include <QSystemTrayIcon>
 #include <QSettings>
 #include <QProcess>
+#include <QThread>
 
 #include "ui_MainWindowBase.h"
 
@@ -54,6 +55,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		enum qSynergyState
 		{
 			synergyDisconnected,
+			synergyConnecting,
 			synergyConnected
 		};
 
@@ -123,6 +125,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QTemporaryFile* m_pTempConfigFile;
 		QSystemTrayIcon* m_pTrayIcon;
 		QMenu* m_pTrayIconMenu;
+		bool m_alreadyHidden;
 };
 
 #endif
