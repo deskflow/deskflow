@@ -103,6 +103,7 @@ div.flattr, div.ohloh, div.cafepress {
 }
 
 div.download div.advert {
+  margin-top: 10px;
   float: left;
 }
 
