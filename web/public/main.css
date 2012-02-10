@@ -34,12 +34,12 @@ div.content {
   padding: 15px 20px 20px 20px;
 }
 
-div.content div.demo,
-div.content div.donate {
+div.welcome div.demo,
+div.info div.donate {
   text-align: center;
 }
 
-div.donate {
+div.info div.donate {
   margin-top: 20px;
 }
 
@@ -98,7 +98,41 @@ div.welcome div.advert2 {
   margin-bottom: 25px;
 }
 
-div.flattr, div.ohloh, div.cafepress {
+div.paypal {
+  height: 20px;
+}
+
+div.info div.flattr {
+  margin-top: 10px;
+}
+
+div.welcome div.donate,
+div.download div.donate {
+  margin-top: 8px;
+  height: 25px;
+  width: 100%;
+}
+
+div.welcome div.paypal,
+div.welcome div.flattr,
+div.download div.paypal,
+div.download div.flattr {
+  float: left;
+}
+
+div.welcome div.paypal,
+div.download div.paypal {
+  margin-right: 7px;
+}
+
+div.welcome div.flattr,
+div.download div.flattr {
+  margin-top: 3px;
+}
+
+div.info div.flattr,
+div.info div.ohloh,
+div.info div.cafepress {
   margin-top: 10px;
 }
 
@@ -110,7 +144,6 @@ div.download div.advert {
 div.download div.list {
   float: left;
   margin-left: 25px;
-  padding-top: 5px;
 }
 
 div.download div.alt {
