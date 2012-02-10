@@ -136,26 +136,40 @@ div.info div.cafepress {
   margin-top: 10px;
 }
 
-div.download div.advert {
+div.download div.advert1 {
   margin-top: 10px;
   float: left;
+}
+
+div.download div.advert2 {
+  width: 100%;
+  float: left;
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 
 div.download div.list {
   float: left;
   margin-left: 25px;
-}
-
-div.download div.alt {
-  clear: both;
+  height: 50px;
+  width: 520px;
 }
 
 div.download div.item {
-  margin-bottom: 30px;
+  margin-top: -15px;
+  margin-bottom: 15px;
+  float: left;
+  width: 50%;
+  height: 120px;
 }
 
 div.download div.item  img {
   margin-bottom: -5px;
+}
+
+div.download div.alt {
+  clear: both;
+  padding-top: 20px;
 }
 
 div.download h2 {
