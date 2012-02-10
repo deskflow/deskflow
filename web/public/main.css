@@ -74,12 +74,14 @@ div.title img {
   float: left;
 }
 
-div.share {
-  margin-left: -2px;
-}
-
 div.welcome {
   margin-top: -20px;
+}
+
+div.welcome div.share {
+  margin-left: -2px;
+  height: 25px;
+  width: 600px;
 }
 
 div.welcome div.content-inner {
