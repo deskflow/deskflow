@@ -158,11 +158,10 @@ div.download div.list {
 }
 
 div.download div.item {
-  margin-top: -15px;
-  margin-bottom: 15px;
+  margin-left: 5px;
   float: left;
-  width: 234px;
-  height: 120px;
+  width: 228px;
+  height: 110px;
 }
 
 div.download div.item  img {
