@@ -58,6 +58,7 @@ HEADERS += src/MainWindow.h \
     src/WindowsServices.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
+TRANSLATIONS = lang/nl.ts
 macx { 
     QMAKE_INFO_PLIST = res/mac/Synergy.plist
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.4
