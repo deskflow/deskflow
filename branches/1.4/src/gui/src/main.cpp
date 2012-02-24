@@ -52,12 +52,13 @@ int main(int argc, char* argv[])
 #endif
 
 	QTranslator qtTranslator;
-	qtTranslator.load("qt_" + QLocale::system().name());
+	qtTranslator.load("qt_" + QLocale::system().name(),
+		QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 	app.installTranslator(&qtTranslator);
 
-	QTranslator myappTranslator;
-	myappTranslator.load("res/lang/QSynergy_" + QLocale::system().name());
-	app.installTranslator(&myappTranslator);
+	QTranslator synergyTranslator;
+	synergyTranslator.load("res/lang/" + QLocale::system().name());
+	app.installTranslator(&synergyTranslator);
 
 	MainWindow mainWindow;
 	mainWindow.start();
