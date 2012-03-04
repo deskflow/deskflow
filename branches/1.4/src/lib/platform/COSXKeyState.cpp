@@ -148,7 +148,7 @@ static const CKeyEntry	s_controlKeys[] = {
 	{ kKeyKP_Multiply,	67 },
 	{ kKeyKP_Add,		69 },
 	{ kKeyKP_Divide,	75 },
-	{ kKeyKP_Subtract,	79 },
+	{ kKeyKP_Subtract,	78 },
 	{ kKeyKP_Enter,		76 },
 #endif
 
