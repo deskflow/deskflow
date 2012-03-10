@@ -125,6 +125,10 @@ div.download div.flattr {
   float: left;
 }
 
+div.paypal {
+  height: 25px;
+}
+
 div.welcome div.paypal,
 div.download div.paypal {
   margin-right: 7px;
@@ -141,16 +145,9 @@ div.info div.cafepress {
   margin-top: 10px;
 }
 
-div.download div.advert1 {
+div.download div.advert {
   margin-top: 10px;
   float: left;
-}
-
-div.download div.advert2 {
-  width: 100%;
-  float: left;
-  margin-top: 10px;
-  margin-bottom: 30px;
 }
 
 div.download div.list {
