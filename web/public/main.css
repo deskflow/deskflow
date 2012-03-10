@@ -31,7 +31,9 @@ div.layout {
 
 div.content {
   clear: all;
-  padding: 15px 20px 20px 20px;
+  margin: 15px 20px 20px 20px;
+  padding-bottom: 20px;
+  width: 730px;
 }
 
 div.welcome div.demo,
@@ -59,6 +61,8 @@ div.menu div.intl {
 }
 
 div.title {
+  float: left;
+  width: 100%;
   padding-top: 0px;
   margin-top: 0px;
   margin-left: -4px;
@@ -75,33 +79,33 @@ div.title img {
 }
 
 div.welcome {
-  margin-top: -20px;
+  padding: 0px;
+  margin: 0px;
 }
 
-div.welcome div.share {
-  margin-left: -2px;
-  height: 25px;
-  width: 600px;
+div.welcome div.title {
+  margin-bottom: 10px;
 }
 
-div.welcome div.content-inner {
+div.welcome div.title div.left {
   float: left;
-  width: 400px
+  width: 200px;
 }
 
-div.welcome div.advert1 {
-  margin-bottom: 20px;
+div.welcome div.title div.right {
   float: right;
-  width: 300px
+  width: 300px;
+  text-align: right;
 }
 
-div.welcome div.advert2 {
+div.welcome div.title div.share,
+div.welcome div.title div.donate {
+  float: right;
+}
+
+div.welcome div.advert {
   margin-top: 20px;
-  margin-bottom: 25px;
-}
-
-div.paypal {
-  height: 20px;
+  margin-bottom: 30px;
 }
 
 div.info div.flattr {
@@ -112,7 +116,6 @@ div.welcome div.donate,
 div.download div.donate {
   margin-top: 8px;
   height: 25px;
-  width: 100%;
 }
 
 div.welcome div.paypal,
