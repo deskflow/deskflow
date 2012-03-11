@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define WEBSITE_ADDRESS "synergy-foss.org"
+
 #include "MainWindow.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
@@ -74,7 +76,6 @@ MainWindow::MainWindow() :
 
 	m_pUpdateIcon->hide();
 	m_pUpdateLabel->hide();
-	m_pUpdateLabel->setOpenExternalLinks(true);
 	m_versionChecker.setApp(appPath(appConfig().synergycName()));
 }
 
@@ -282,7 +283,7 @@ void MainWindow::updateFound(const QString &version)
 	m_pUpdateIcon->show();
 	m_pUpdateLabel->show();
 	m_pUpdateLabel->setText(
-		tr("Version %1 is now available, <a href=\"%2\">visit website</a>.")
+		tr("<p>Version %1 is now available, <a href=\"%2\">visit website</a>.</p>")
 		.arg(version).arg("http://synergy-foss.org"));
 }
 
