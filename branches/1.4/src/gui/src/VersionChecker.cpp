@@ -39,7 +39,7 @@ VersionChecker::~VersionChecker()
 	delete m_manager;
 }
 
-void VersionChecker::check()
+void VersionChecker::checkLatest()
 {
 	m_manager->get(QNetworkRequest(QUrl(VERSION_URL)));
 }

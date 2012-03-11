@@ -29,7 +29,7 @@ class VersionChecker : public QObject
 public:
 	VersionChecker();
 	virtual ~VersionChecker();
-	void check();
+	void checkLatest();
 	QString getVersion();
 	void setApp(const QString& app) { m_app = app; }
 	int compareVersions(const QString& left, const QString& right);

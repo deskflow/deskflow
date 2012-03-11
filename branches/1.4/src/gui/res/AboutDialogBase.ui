@@ -8,6 +8,14 @@
   <property name="enabled">
    <bool>true</bool>
   </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>255</height>
+   </rect>
+  </property>
   <property name="sizePolicy">
    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
@@ -16,14 +24,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>400</width>
+    <width>450</width>
     <height>250</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>400</width>
-    <height>250</height>
+    <width>450</width>
+    <height>255</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -165,13 +173,13 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
+   <item row="1" column="0" rowspan="2" colspan="2">
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>The Synergy GUI is based on QSynergy by Volker Lanz
-
-Copyright © 2008 Volker Lanz (vl@fidra.de)
-Copyright © 2010 Chris Schoeneman, Nick Bolton, Sorin Sbarnea</string>
+      <string>&lt;p&gt;The Synergy GUI is based on QSynergy by Volker Lanz&lt;br/&gt;
+&lt;br/&gt;
+Copyright © 2008 Volker Lanz (vl@fidra.de)&lt;br/&gt;
+Copyright © 2010 Chris Schoeneman, Nick Bolton, Sorin Sbarnea&lt;/p&gt;</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

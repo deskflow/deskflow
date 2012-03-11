@@ -110,7 +110,7 @@ void MainWindow::start()
 		appConfig().saveSettings();
 	}
 
-	m_versionChecker.check();
+	m_versionChecker.checkLatest();
 }
 
 void MainWindow::setStatus(const QString &status)
