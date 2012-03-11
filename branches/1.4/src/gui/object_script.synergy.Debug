@@ -21,6 +21,7 @@ INPUT(
 ./tmp\debug\AppConfig.o
 ./tmp\debug\QSynergyApplication.o
 ./tmp\debug\WindowsServices.o
+./tmp\debug\VersionChecker.o
 ./tmp\debug\moc_MainWindow.o
 ./tmp\debug\moc_AboutDialog.o
 ./tmp\debug\moc_ServerConfigDialog.o
@@ -34,5 +35,6 @@ INPUT(
 ./tmp\debug\moc_KeySequenceWidget.o
 ./tmp\debug\moc_SettingsDialog.o
 ./tmp\debug\moc_WindowsServices.o
+./tmp\debug\moc_VersionChecker.o
 ./tmp\debug\qrc_Synergy.o
 );

@@ -24,6 +24,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtNetwork>
+#include <QNetworkAccessManager>
 
 #if defined(Q_OS_MAC)
 #include <ApplicationServices/ApplicationServices.h>
@@ -70,6 +71,11 @@ MainWindow::MainWindow() :
 	createMenuBar();
 	loadSettings();
 	initConnections();
+
+	m_pUpdateIcon->hide();
+	m_pUpdateLabel->hide();
+	m_pUpdateLabel->setOpenExternalLinks(true);
+	m_versionChecker.setApp(appPath(appConfig().synergycName()));
 }
 
 MainWindow::~MainWindow()
@@ -102,6 +108,8 @@ void MainWindow::start()
 
 		appConfig().saveSettings();
 	}
+
+	m_versionChecker.check();
 }
 
 void MainWindow::setStatus(const QString &status)
@@ -184,6 +192,7 @@ void MainWindow::initConnections()
 	connect(m_pActionStartSynergy, SIGNAL(triggered()), this, SLOT(startSynergy()));
 	connect(m_pActionStopSynergy, SIGNAL(triggered()), this, SLOT(stopSynergy()));
 	connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+	connect(&m_versionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
 
 	if (m_pTrayIcon)
 		connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
@@ -266,6 +275,15 @@ void MainWindow::logError()
 			if (!line.isEmpty())
 				appendLog(line);
 	}
+}
+
+void MainWindow::updateFound(const QString &version)
+{
+	m_pUpdateIcon->show();
+	m_pUpdateLabel->show();
+	m_pUpdateLabel->setText(
+		tr("Version %1 is now available, <a href=\"%2\">visit website</a>.")
+		.arg(version).arg("http://synergy-foss.org"));
 }
 
 void MainWindow::appendLog(const QString& text)

@@ -29,6 +29,7 @@
 
 #include "ServerConfig.h"
 #include "AppConfig.h"
+#include "VersionChecker.h"
 
 class QAction;
 class QMenu;
@@ -96,6 +97,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void stopSynergy();
 		void logOutput();
 		void logError();
+		void updateFound(const QString& version);
 
 	protected:
 		QSettings& settings() { return m_Settings; }
@@ -126,6 +128,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QSystemTrayIcon* m_pTrayIcon;
 		QMenu* m_pTrayIconMenu;
 		bool m_alreadyHidden;
+		VersionChecker m_versionChecker;
 };
 
 #endif

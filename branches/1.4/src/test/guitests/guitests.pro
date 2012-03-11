@@ -1,18 +1,17 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-03-11T16:48:07
-#
-#-------------------------------------------------
-
-QT       += network
-
-QT       -= gui
-
+QT += network
+QT -= gui
 TARGET = guitests
-CONFIG   += console
-CONFIG   -= app_bundle
-
+CONFIG += qtestlib
+CONFIG += console
+CONFIG -= app_bundle
 TEMPLATE = app
-
-
-SOURCES += main.cpp
+INCLUDEPATH += ../../gui/src
+SOURCES += src/main.cpp \
+    src/VersionCheckerTests.cpp
+HEADERS += src/VersionCheckerTests.h \
+    src/VersionChecker.h
+win32 { 
+    Debug:DESTDIR = ../../../bin/Debug
+    Release:DESTDIR = ../../../bin/Release
+}
+else:DESTDIR = ../../../bin

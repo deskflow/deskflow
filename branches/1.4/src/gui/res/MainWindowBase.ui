@@ -27,14 +27,14 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout">
-    <item row="6" column="3">
+    <item row="6" column="6">
      <widget class="QPushButton" name="m_pButtonToggleStart">
       <property name="text">
        <string>&amp;Start</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="4">
+    <item row="1" column="0" colspan="7">
      <widget class="QGroupBox" name="m_pGroupServer">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -127,7 +127,7 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="0" colspan="4">
+    <item row="2" column="0" colspan="7">
      <widget class="QGroupBox" name="m_pGroupClient">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -165,21 +165,8 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="2">
-     <spacer>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>40</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="3" column="0" colspan="4">
-     <widget class="QGroupBox" name="groupBox">
+    <item row="3" column="0" colspan="7">
+     <widget class="QGroupBox" name="m_pGroupLog">
       <property name="title">
        <string>Log</string>
       </property>
@@ -212,6 +199,36 @@
         </widget>
        </item>
       </layout>
+     </widget>
+    </item>
+    <item row="6" column="5">
+     <spacer>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="6" column="2">
+     <widget class="QLabel" name="m_pUpdateIcon">
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="3">
+     <widget class="QLabel" name="m_pUpdateLabel">
+      <property name="text">
+       <string/>
+      </property>
      </widget>
     </item>
    </layout>
@@ -300,7 +317,9 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="Synergy.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>m_pButtonToggleStart</sender>

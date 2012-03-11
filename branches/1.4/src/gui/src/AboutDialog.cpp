@@ -21,22 +21,6 @@
 #include <QtGui>
 #include <QtNetwork>
 
-static QString getSynergyVersion(const QString& app)
-{
-	QProcess process;
-	process.start(app, QStringList() << "--version");
-
-	process.setReadChannel(QProcess::StandardOutput);
-	if (process.waitForStarted() && process.waitForFinished())
-	{
-		QRegExp rx("synergy[cs] ([\\d\\.]+)");
-		if (rx.indexIn(process.readLine()) != -1)
-			return rx.cap(1);
-	}
-
-	return "Unknown";
-}
-
 static QString getIPAddress()
 {
 	QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
@@ -54,7 +38,8 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 {
 	setupUi(this);
 
-	m_pLabelSynergyVersion->setText(getSynergyVersion(synergyApp));
+	m_versionChecker.setApp(synergyApp);
+	m_pLabelSynergyVersion->setText(m_versionChecker.getVersion());
 	m_pLabelHostname->setText(QHostInfo::localHostName());
 	m_pLabelIPAddress->setText(getIPAddress());
 }
