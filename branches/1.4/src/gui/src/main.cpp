@@ -43,13 +43,10 @@ int main(int argc, char* argv[])
 
 	QSynergyApplication app(argc, argv);
 
-#if !defined(Q_OS_MAC)
 	if (!waitForTray())
-	{
 		return -1;
-	}
+
 	QApplication::setQuitOnLastWindowClosed(false);
-#endif
 
 	QTranslator qtTranslator;
 	qtTranslator.load("qt_" + QLocale::system().name(),
