@@ -31,12 +31,22 @@ div.layout {
 
 div.content {
   clear: all;
-  margin: 15px 20px 20px 20px;
-  padding-bottom: 20px;
+  margin: -10px 20px 20px 20px;
   width: 730px;
 }
 
-div.welcome div.demo,
+div.footer {
+  margin: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+div.footer a {
+  color: #777;
+  font-size: .9em;
+}
+
+div.home div.demo,
 div.info div.donate {
   text-align: center;
 }
@@ -78,32 +88,32 @@ div.title img {
   float: left;
 }
 
-div.welcome {
+div.home {
   padding: 0px;
   margin: 0px;
 }
 
-div.welcome div.title {
+div.home div.title {
   margin-bottom: 10px;
 }
 
-div.welcome div.title div.left {
+div.home div.title div.left {
   float: left;
   width: 200px;
 }
 
-div.welcome div.title div.right {
+div.home div.title div.right {
   float: right;
   width: 300px;
   text-align: right;
 }
 
-div.welcome div.title div.share,
-div.welcome div.title div.donate {
+div.home div.title div.share,
+div.home div.title div.donate {
   float: right;
 }
 
-div.welcome div.advert {
+div.home div.advert {
   margin-top: 20px;
   margin-bottom: 30px;
 }
@@ -112,14 +122,14 @@ div.info div.flattr {
   margin-top: 10px;
 }
 
-div.welcome div.donate,
+div.home div.donate,
 div.download div.donate {
   margin-top: 8px;
   height: 25px;
 }
 
-div.welcome div.paypal,
-div.welcome div.flattr,
+div.home div.paypal,
+div.home div.flattr,
 div.download div.paypal,
 div.download div.flattr {
   float: left;
@@ -129,12 +139,12 @@ div.paypal {
   height: 25px;
 }
 
-div.welcome div.paypal,
+div.home div.paypal,
 div.download div.paypal {
   margin-right: 7px;
 }
 
-div.welcome div.flattr,
+div.home div.flattr,
 div.download div.flattr {
   margin-top: 3px;
 }

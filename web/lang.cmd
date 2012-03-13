@@ -1,0 +1,1 @@
+php -q tsmarty2c.php public\. > public\lang.c

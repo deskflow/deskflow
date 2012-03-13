@@ -1,0 +1,267 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-13 02:47-0000\n"
+"PO-Revision-Date: 2012-03-13 04:01-0000\n"
+"Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: C:\\Projects\\synergy\\web\\public\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: CHINA\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: lang.c:1
+#: lang.c:32
+msgid "Download"
+msgstr "下载"
+
+#: lang.c:2
+msgid "<b>Latest release:</b> 1.4.7 Beta (Feb 5, 2012)"
+msgstr "最新版本：1.4.7 Beta版（2012年2月5）"
+
+#: lang.c:3
+msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
+msgstr "容易安装，请使用1.4版本。使用1.3版本，如果您遇到的问题。"
+
+#: lang.c:4
+msgid "Source code"
+msgstr "源代码"
+
+#: lang.c:5
+msgid "Previous 1.4 releases"
+msgstr "以前的1.4版本"
+
+#: lang.c:6
+msgid "Previous 1.3 releases"
+msgstr "以前的1.3版本"
+
+#: lang.c:7
+msgid "Other projects"
+msgstr "其他项目"
+
+#: lang.c:8
+msgid "Related sites"
+msgstr "相关网站"
+
+#: lang.c:9
+msgid "Nightly builds"
+msgstr "每晚构建"
+
+#: lang.c:10
+msgid "use at your own risk"
+msgstr "使用您自己的风险"
+
+#: lang.c:11
+msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
+msgstr "Synergy允许您轻松地分享你的鼠标和键盘之间 你的办公桌上多台计算机，它的自由和开放源码。 只要你的鼠标移出一台计算机的屏幕边缘 另一个。你甚至可以分享您的剪贴板。所有你需要的 是一个网络连接。 Synergy是跨平台（工程 在Windows，Mac OS X和Linux）。"
+
+#: lang.c:12
+msgid "More Info"
+msgstr "更多信息"
+
+#: lang.c:13
+msgid "News"
+msgstr "新闻"
+
+#: lang.c:14
+msgid "Blog"
+msgstr "博客"
+
+#: lang.c:15
+msgid "FAQs"
+msgstr "常见问题"
+
+#: lang.c:16
+msgid "User"
+msgstr "用户"
+
+#: lang.c:17
+#: lang.c:19
+msgid "Developer"
+msgstr "开发"
+
+#: lang.c:18
+#: lang.c:43
+msgid "Mailing lists"
+msgstr "邮件列表"
+
+#: lang.c:20
+msgid "Nightly build"
+msgstr "每晚构建"
+
+#: lang.c:21
+msgid "Console"
+msgstr "控制台"
+
+#: lang.c:22
+msgid "Builders"
+msgstr "建筑工地"
+
+#: lang.c:23
+msgid "Packages"
+msgstr "软件包"
+
+#: lang.c:24
+msgid "Key People"
+msgstr "关键在人"
+
+#: lang.c:25
+msgid "Project leader and primary developer"
+msgstr "项目负责人及主要开发"
+
+#: lang.c:26
+msgid "Original author and project founder"
+msgstr "原文作者和项目的创始人"
+
+#: lang.c:27
+msgid "Founder of Synergy+ (fork project)"
+msgstr "方正协同+（叉项目）"
+
+#: lang.c:28
+msgid "Support us!"
+msgstr "支持我们！"
+
+#: lang.c:29
+msgid "Please help us out by donating or buying merchandise. Thanks for your support!"
+msgstr "通过捐赠或购买商品，请帮助我们。感谢您的支持！"
+
+#: lang.c:30
+msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
+msgstr "协同让大家分享你的办公桌上多台计算机的键盘和鼠标。"
+
+#: lang.c:31
+msgid "Home"
+msgstr "首页"
+
+#: lang.c:33
+msgid "Info"
+msgstr "信息"
+
+#: lang.c:34
+#: lang.c:50
+msgid "Support"
+msgstr "支持"
+
+#: lang.c:35
+#: lang.c:37
+msgid "Search"
+msgstr "搜索"
+
+#: lang.c:36
+msgid "Tracker"
+msgstr "Bug跟踪"
+
+#: lang.c:38
+msgid "Search all Synergy websites from one page."
+msgstr "搜索从一个页面的所有协同的网站。"
+
+#: lang.c:39
+msgid "What is searched?"
+msgstr "什么是搜索？"
+
+#: lang.c:40
+#: lang.c:58
+msgid "Super User"
+msgstr "Super User （超级用户网站）"
+
+#: lang.c:41
+msgid "Issue tracker"
+msgstr "Bug跟踪"
+
+#: lang.c:42
+msgid "Website wiki"
+msgstr "网站维基"
+
+#: lang.c:44
+msgid "Search tips"
+msgstr "搜索提示"
+
+#: lang.c:45
+msgid "If you get too many results, try specifying your operating system."
+msgstr "如果你得到的结果太多，请指定您的操作系统。"
+
+#: lang.c:46
+msgid "Sometimes issues are specific to the client or server."
+msgstr "有时一些特定的客户端或服务器。"
+
+#: lang.c:47
+msgid "You may find that entering your version number helps."
+msgstr "您可能会发现，进入您的版本号的帮助。"
+
+#: lang.c:48
+msgid "If this does not work, use the <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy search</a>."
+msgstr "如果这不起作用，使用替代的协同 <a href=\"http://www.google.com.hk/cse/home?cx=006438721074957994428:rnklqbsknvs\">搜索</a>。"
+
+#: lang.c:49
+msgid "Engage!"
+msgstr "搜索！"
+
+#: lang.c:51
+msgid "Having problems using Synergy? You're in the right place!"
+msgstr "你有问题，使用协同？您是在正确的地方！"
+
+#: lang.c:52
+msgid "Do your research"
+msgstr "研究的第一"
+
+#: lang.c:53
+msgid "Before asking anyone for help, do a <a href=\"/search/\">quick search</a>, it really won't take long. You <strong>must</strong> fully research your problem before asking us for help. You can also <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a> to find out how to use config files, etc."
+msgstr "要求帮助的人，做一个快速<a href=\"/search/\">搜索</a>之前，它会很短的时间。 你必须充分研究你的问题之前，我们寻求帮助。 您还可以阅读<a href=\"/tracker/projects/synergy/wiki/Docs\">的文档</a>，以了解如何使用配置文件，等等。"
+
+#: lang.c:54
+msgid "Ask your question"
+msgstr "问你的问题"
+
+#: lang.c:55
+msgid "If you're having trouble configuring or starting Synergy, please  ask a <strong>question</strong> on the  <a href=\"http://synergy-foss.org/osqa/\">Synergy Q&#38;A site</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
+msgstr "如果你遇到配置或开始协同，请问一个问题上的协同 <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A</a>网站。 阅读<a href=\"/osqa/faq/\"常见问题</a>，以确保你的问题没有得到封闭。"
+
+#: lang.c:56
+msgid "Mailing list and IRC"
+msgstr "邮件列表和IRC"
+
+#: lang.c:57
+msgid "More traditional open source users may prefer to  <a href=\"http://groups.google.com/group/synergy-plus/post\">use the mailing list</a> (just click \"Apply for group membership\" -- everyone is allowed, this is just to protect us against spammers). Please do not post bugs on the mailing list. You can also join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>) -- but the same applies for IRC; do your research first!"
+msgstr "更传统的开源用户可能更愿意使用 <a href=\"http://groups.google.com/group/synergy-plus/post\">邮件列表</a> （只需点击\"Apply for group membership\" - 每个人都不允许， 这是我们只是为了防止垃圾邮件发送者）。 请不要张贴在邮件列表中的错误。 您也可以加入我们的IRC频道：<code>#synergy on irc.freenode.net:8001</code> （IRC的，你可以使用<a href=\"http://xchat.org/\">XChat</a>的） -  但同样适用于IRC的，首先做你的研究！"
+
+#: lang.c:59
+msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
+msgstr "如果你熟悉的超级用户，有一个 <a href=\"http://superuser.com/questions/tagged/synergy\">synergy</a>标记。"
+
+#: lang.c:60
+msgid "Super User is <b>not</b> dedicated to supporting Synergy."
+msgstr "超级用户是没有专门的协同支持。"
+
+#: lang.c:61
+msgid "Ask questions; do not nag or comment on bugs or issues."
+msgstr "发问;不唠叨或评论上的错误或问题。"
+
+#: lang.c:62
+msgid "Do not raise new bugs there; use the issue tracker for this."
+msgstr "不要在那里提出了新的的错误;使用问题跟踪。"
+
+#: lang.c:63
+msgid "Synergy developers do <i>not</i> monitor this website."
+msgstr "协同开发不留意本网站。"
+
+#: lang.c:64
+msgid "Always use the \"synergy\" tag on your question."
+msgstr "你的问题上始终使用\"synergy\"的标签。"
+
+#: lang.c:65
+msgid "Make sure you mention \"Synergy\" in the question."
+msgstr "确保你提到的\"Synergy\"的问题。"
+
+#: lang.c:66
+msgid "Report a bug"
+msgstr "报告错误"
+
+#: lang.c:67
+msgid "If you've exhausted all other options (or if you think your issue is really a <b>bug</b>), you can <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
+msgstr "如果你已经用尽了所有其他选项（或者如果你想您的问题确实是一个错误）， 你可以<a href=\"/tracker/account/register\">注册一个新帐户</a>， 然后打开一个新的<a href=\"/tracker/projects/synergy/support/new\">错误报告</a>， 我们的问题跟踪。"
+
