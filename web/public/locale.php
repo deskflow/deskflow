@@ -1,5 +1,7 @@
 <?php
 
+require "gettext.inc";
+
 // get locale from get, session, or browser.
 session_start();
 $locale = "en_US";
@@ -21,9 +23,12 @@ switch ($locale) {
   case "zh": $locale = "zh_CN"; break;
 }
 
-putenv("LC_ALL=$locale");
-setlocale(LC_ALL, $locale);
-bindtextdomain("messages", "./locale");
-textdomain("messages");
+putenv("LANGUAGE=".$locale);
+putenv("LANG=".$locale);
+putenv("LC_ALL=".$locale);
+putenv("LC_MESSAGES=".$locale);
+T_setlocale(LC_ALL, $locale);
+T_bindtextdomain("messages", "./locale");
+T_textdomain("messages");
 
 ?>
