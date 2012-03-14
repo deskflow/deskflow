@@ -61,7 +61,7 @@ the same applies for IRC; do your research first!{/t}
   <h3>{t}Report a bug{/t}</h3>
   <p>
 {t}If you've exhausted all other options, and are using the latest version,
-then should raise a bug <b>bug</b>. To do this,
+then should raise a bug. To do this,
 <a href="/tracker/account/register">register</a> a new account
 <em>and then</em> open a
 <a href="/tracker/projects/synergy/support/new">new bug report</a>
