@@ -7,6 +7,15 @@
   <h2>{t}Support{/t}</h2>
   <p>{t}Having problems using Synergy? You're in the right place!{/t}</p>
 
+  <h3>{t}Try the latest version{/t}</h3>
+  <p>
+{t}Many bugs are raised even though users haven't tried the latest version.
+Please visit the <a href="/download/">downloads</a> page and try out the
+latest version (even if it's a beta). You might also want to try the
+<a href="/nightly/">nightly builds</a> as a last resort, but please do so
+only as a last resort (these versions have not passed our quality assurance).{/t}
+  </p>
+
   <h3>{t}Do your research{/t}</h3>
   <p>
 {t}Before asking anyone for help, do a <a href="/search/">quick search</a>,
@@ -51,9 +60,10 @@ the same applies for IRC; do your research first!{/t}
 
   <h3>{t}Report a bug{/t}</h3>
   <p>
-{t}If you've exhausted all other options (or if you think your issue
-is really a <b>bug</b>), you can <a href="/tracker/account/register">register</a>
-a new account <em>and then</em> open a
+{t}If you've exhausted all other options, and are using the latest version,
+then should raise a bug <b>bug</b>. To do this,
+<a href="/tracker/account/register">register</a> a new account
+<em>and then</em> open a
 <a href="/tracker/projects/synergy/support/new">new bug report</a>
 on our issue tracker.{/t}
   </p>
