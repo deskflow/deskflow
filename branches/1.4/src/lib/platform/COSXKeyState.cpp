@@ -219,26 +219,23 @@ COSXKeyState::mapModifiersFromOSX(UInt32 mask) const
 {
 	LOG((CLOG_DEBUG1 "mask: %04x", mask));
 
-	// previously this used the kCGEventFlagMask* enums, which would
-	// not work, since GetCurrentKeyModifiers doesn't return a mask
-	// containing those values; instead *Key enums should be used.
 	KeyModifierMask outMask = 0;
-	if ((mask & shiftKey) != 0) {
+	if ((mask & kCGEventFlagMaskShift) != 0) {
 		outMask |= KeyModifierShift;
 	}
-	if ((mask & controlKey) != 0) {
+	if ((mask & kCGEventFlagMaskControl) != 0) {
 		outMask |= KeyModifierControl;
 	}
-	if ((mask & cmdKey) != 0) {
+	if ((mask & kCGEventFlagMaskAlternate) != 0) {
 		outMask |= KeyModifierAlt;
 	}
-	if ((mask & optionKey) != 0) {
+	if ((mask & kCGEventFlagMaskCommand) != 0) {
 		outMask |= KeyModifierSuper;
 	}
-	if ((mask & alphaLock) != 0) {
+	if ((mask & kCGEventFlagMaskAlphaShift) != 0) {
 		outMask |= KeyModifierCapsLock;
 	}
-	if ((mask & s_osxNumLock) != 0) {
+	if ((mask & kCGEventFlagMaskNumericPad) != 0) {
 		outMask |= KeyModifierNumLock;
 	}
 
