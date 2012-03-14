@@ -19,7 +19,7 @@ $content = $smarty->fetch($page . ".tpl");
 $smarty->assign("content", $content);
 
 if ($page != "home")
-  $smarty->assign("title", " - " . _(ucfirst($page)));
+  $smarty->assign("title", " - " . T_(ucfirst($page)));
 else
   $smarty->assign("title", "");
 
