@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-13 02:47-0000\n"
-"PO-Revision-Date: 2012-03-13 04:01-0000\n"
+"PO-Revision-Date: 2012-03-14 20:44-0000\n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -219,7 +219,7 @@ msgstr "问你的问题"
 
 #: lang.c:55
 msgid "If you're having trouble configuring or starting Synergy, please  ask a <strong>question</strong> on the  <a href=\"http://synergy-foss.org/osqa/\">Synergy Q&#38;A site</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
-msgstr "如果你遇到配置或开始协同，请问一个问题上的协同 <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A</a>网站。 阅读<a href=\"/osqa/faq/\"常见问题</a>，以确保你的问题没有得到封闭。"
+msgstr "如果你遇到配置或开始协同，请问一个问题上的协同 <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A</a>网站。 阅读<a href=\"/osqa/faq/\">常见问题</a>，以确保你的问题没有得到封闭。"
 
 #: lang.c:56
 msgid "Mailing list and IRC"
