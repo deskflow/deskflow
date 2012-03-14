@@ -32,6 +32,8 @@
 #include "TMethodJob.h"
 #include "XArch.h"
 
+#include <math.h>
+
 #include <mach-o/dyld.h>
 #include <AvailabilityMacros.h>
 #include <IOKit/hidsystem/event_status_driver.h>
@@ -87,7 +89,9 @@ COSXScreen::COSXScreen(bool isPrimary) :
 	m_activeModifierHotKey(0),
 	m_activeModifierHotKeyMask(0),
 	m_lastSingleClick(0),
-	m_lastDoubleClick(0)
+	m_lastDoubleClick(0),
+	m_lastSingleClickXCursor(0),
+	m_lastSingleClickYCursor(0)
 {
 	try {
 		m_displayID   = CGMainDisplayID();
@@ -506,8 +510,19 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 	pos.x = m_xCursor;
 	pos.y = m_yCursor;
 
+	// variable used to detect mouse coordinate differences between
+	// old & new mouse clicks. Used in double click detection.
+	SInt32 xDiff = m_xCursor - m_lastSingleClickXCursor;
+	SInt32 yDiff = m_yCursor - m_lastSingleClickYCursor;
+	double diff = sqrt(xDiff * xDiff + yDiff * yDiff);
+	// max sqrt(x^2 + y^2) difference allowed to double click
+	// since we don't have double click distance in NX APIs
+	// we define our own defaults.
+	const double maxDiff = sqrt(2) + 0.0001;
+
 	if (press && (id == kButtonLeft) &&
-		((ARCH->time() - m_lastSingleClick) <= clickTime)) {
+		((ARCH->time() - m_lastSingleClick) <= clickTime) &&
+		diff <= maxDiff) {
 
 		LOG((CLOG_DEBUG1 "faking mouse left double click"));
 		
@@ -556,6 +571,8 @@ COSXScreen::fakeMouseButton(ButtonID id, bool press)
 		CFRelease(event);
 	
 		m_lastSingleClick = ARCH->time();
+		m_lastSingleClickXCursor = m_xCursor;
+		m_lastSingleClickYCursor = m_yCursor;
 	}
 }
 

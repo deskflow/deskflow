@@ -332,6 +332,8 @@ private:
 	// for double click coalescing.
 	double					m_lastSingleClick;
 	double					m_lastDoubleClick;
+	SInt32					m_lastSingleClickXCursor;
+	SInt32					m_lastSingleClickYCursor;
 };
 
 #endif
