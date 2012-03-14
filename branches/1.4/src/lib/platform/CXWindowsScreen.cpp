@@ -111,6 +111,7 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 	m_preserveFocus(false),
 	m_xkb(false),
 	m_xi2detected(false),
+	m_xrandr(false),
 	m_eventQueue(eventQueue),
 	CPlatformScreen(eventQueue)
 {
@@ -941,6 +942,16 @@ CXWindowsScreen::openDisplay(const char* displayName)
 	}
 #endif
 
+#if HAVE_X11_EXTENSIONS_XRANDR_H
+	// query for XRandR extension
+	int dummyError;
+	m_xrandr = XRRQueryExtension(display, &m_xrandrEventBase, &dummyError);
+	if (m_xrandr) {
+		// enable XRRScreenChangeNotifyEvent
+		XRRSelectInput(display, DefaultRootWindow(display), RRScreenChangeNotifyMask | RRCrtcChangeNotifyMask);
+	}
+#endif
+
 	return display;
 }
 
@@ -954,14 +965,12 @@ CXWindowsScreen::saveShape()
 	m_w = WidthOfScreen(DefaultScreenOfDisplay(m_display));
 	m_h = HeightOfScreen(DefaultScreenOfDisplay(m_display));
 
-	int eventBase, errorBase;
-
 #if HAVE_X11_EXTENSIONS_XRANDR_H
-	if (XRRQueryExtension(m_display, &eventBase, &errorBase)){
-	  int numScreens;
+	if (m_xrandr){
+	  int numSizes;
 	  XRRScreenSize* xrrs;
 	  Rotation rotation;
-	  xrrs = XRRSizes(m_display, DefaultScreen(m_display), &numScreens);
+	  xrrs = XRRSizes(m_display, DefaultScreen(m_display), &numSizes);
 	  XRRRotations(m_display, DefaultScreen(m_display), &rotation);
 	  if (xrrs != NULL) {
 	    if (rotation & (RR_Rotate_90|RR_Rotate_270) ){
@@ -991,6 +1000,7 @@ CXWindowsScreen::saveShape()
 	// screen instead of the logical screen.
 	m_xinerama = false;
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
+	int eventBase, errorBase;
 	if (XineramaQueryExtension(m_display, &eventBase, &errorBase) &&
 		XineramaIsActive(m_display)) {
 		int numScreens;
@@ -1398,6 +1408,31 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 			}
 		}
 #endif
+
+#if HAVE_X11_EXTENSIONS_XRANDR_H
+		if (m_xrandr) {
+			if (xevent->type == m_xrandrEventBase + RRScreenChangeNotify
+			||  xevent->type == m_xrandrEventBase + RRNotify
+			&& reinterpret_cast<XRRNotifyEvent *>(xevent)->subtype == RRNotify_CrtcChange) {
+				LOG((CLOG_INFO "XRRScreenChangeNotifyEvent or RRNotify_CrtcChange received"));
+
+				// we're required to call back into XLib so XLib can update its internal state
+				XRRUpdateConfiguration(xevent);
+
+				// requery/recalculate the screen shape
+				saveShape();
+
+				// we need to resize m_window, otherwise we'll get a weird problem where moving
+				// off the server onto the client causes the pointer to warp to the
+				// center of the server (so you can't move the pointer off the server)
+				if (m_isPrimary) {
+					XMoveWindow(m_display, m_window, m_x, m_y);
+					XResizeWindow(m_display, m_window, m_w, m_h);
+				}
+			}
+		}
+#endif
+
 		break;
 	}
 }

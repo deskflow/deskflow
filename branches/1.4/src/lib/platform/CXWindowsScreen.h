@@ -240,6 +240,10 @@ private:
 
 	bool				m_xi2detected;
 
+	// XRandR extension stuff
+	bool                m_xrandr;
+	int                 m_xrandrEventBase;
+
 	IEventQueue&		m_eventQueue;
 	CKeyMap				m_keyMap;
 
