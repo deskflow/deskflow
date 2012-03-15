@@ -67,7 +67,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		};
 
 	public:
-		MainWindow();
+		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
 
 	public:
@@ -119,8 +119,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void setStatus(const QString& status);
 
 	private:
-		QSettings m_Settings;
-		AppConfig m_AppConfig;
+		QSettings& m_Settings;
+		AppConfig& m_AppConfig;
 		QProcess* m_pSynergy;
 		int m_SynergyState;
 		ServerConfig m_ServerConfig;

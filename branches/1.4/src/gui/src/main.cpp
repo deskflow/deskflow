@@ -20,9 +20,12 @@
 
 #include "QSynergyApplication.h"
 #include "MainWindow.h"
+#include "AppConfig.h"
+#include "SetupWizard.h"
 
 #include <QtCore>
 #include <QtGui>
+#include <QSettings>
 
 class QThreadImpl : public QThread
 {
@@ -57,8 +60,19 @@ int main(int argc, char* argv[])
 	synergyTranslator.load("res/lang/" + QLocale::system().name());
 	app.installTranslator(&synergyTranslator);
 
-	MainWindow mainWindow;
-	mainWindow.start();
+	QSettings settings;
+	AppConfig appConfig(&settings);
+	MainWindow mainWindow(settings, appConfig);
+	SetupWizard setupWizard(mainWindow);
+
+	if (appConfig.wizardHasRun())
+	{
+		mainWindow.start();
+	}
+	else
+	{
+		setupWizard.show();
+	}
 
 	return app.exec();
 }

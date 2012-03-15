@@ -56,9 +56,9 @@ public:
 	}
 };
 
-MainWindow::MainWindow() :
-	m_Settings(),
-	m_AppConfig(&m_Settings),
+MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
+	m_Settings(settings),
+	m_AppConfig(appConfig),
 	m_pSynergy(NULL),
 	m_SynergyState(synergyDisconnected),
 	m_ServerConfig(&m_Settings, 5, 3),
@@ -76,7 +76,7 @@ MainWindow::MainWindow() :
 
 	m_pUpdateIcon->hide();
 	m_pUpdateLabel->hide();
-	m_versionChecker.setApp(appPath(appConfig().synergycName()));
+	m_versionChecker.setApp(appPath(appConfig.synergycName()));
 }
 
 MainWindow::~MainWindow()

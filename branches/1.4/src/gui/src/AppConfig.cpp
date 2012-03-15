@@ -51,7 +51,8 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_GameDevice(false),
 	m_AutoStart(false),
 	m_AutoHide(false),
-	m_AutoStartPrompt(false)
+	m_AutoStartPrompt(false),
+	m_WizardHasRun(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -151,6 +152,7 @@ void AppConfig::loadSettings()
 	m_AutoStart = settings().value("autoStart", false).toBool();
 	m_AutoHide = settings().value("autoHide", true).toBool();
 	m_AutoStartPrompt = settings().value("autoStartPrompt", true).toBool();
+	m_WizardHasRun = settings().value("wizardHasRun", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -166,4 +168,5 @@ void AppConfig::saveSettings()
 	settings().setValue("autoStart", m_AutoStart);
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("autoStartPrompt", m_AutoStartPrompt);
+	settings().setValue("wizardHasRun", m_WizardHasRun);
 }
