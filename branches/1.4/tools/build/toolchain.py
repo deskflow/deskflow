@@ -44,7 +44,7 @@ class InternalCommands:
 	xcodeproj_filename = '%s.xcodeproj' % project
 	configDir = 'build'
 	configFilename = '%s/%s.cfg' % (configDir, this_cmd)
-	qtpro_filename = 'qsynergy.pro'
+	qtpro_filename = 'gui.pro'
 	doxygen_filename = 'doxygen.cfg'
 
 	cmake_url = 'http://www.cmake.org/cmake/resources/software.html'
@@ -185,7 +185,7 @@ class InternalCommands:
 			# make sure we have qmake
 			self.persist_qmake()
 			
-			qmake_cmd_string = self.qmake_cmd + " qsynergy.pro -r"
+			qmake_cmd_string = self.qmake_cmd + " " + self.qtpro_filename + " -r"
 
 			if sys.platform == "darwin":
 				# create makefiles on mac (not xcode).
