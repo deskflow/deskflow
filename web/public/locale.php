@@ -21,6 +21,7 @@ switch ($locale) {
   case "de": $locale = "de_DE"; break;
   case "ru": $locale = "ru_RU"; break;
   case "zh": $locale = "zh_CN"; break;
+  case "ko": $locale = "ko_KR"; break;
 }
 
 putenv("LANGUAGE=".$locale);

@@ -11,6 +11,7 @@ function getGoogleSearchLang($locale) {
 }
 
 $smarty = new Smarty;
+$smarty->assign("locale", $locale);
 $smarty->assign("gsLang", getGoogleSearchLang($locale));
 $smarty->assign("url", reset(explode("?", $_SERVER['REQUEST_URI'])));
 

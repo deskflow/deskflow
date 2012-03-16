@@ -48,12 +48,18 @@
         {$content}
       </div>
       <div class="footer">
-        <a href="{$url}?hl=en_US">English</a> |
-        <a href="{$url}?hl=de_DE">Deutsch</a> |
-        <a href="{$url}?hl=fr_FR">Français</a> |
-        <a href="{$url}?hl=ja_JP">日本語</a> |
-        <a href="{$url}?hl=zh_CN">中文 (简体)</a> |
-        <a href="{$url}?hl=ru_RU">Русский</a>
+        <p>
+          <a href="{$url}?hl=en_US">English</a> |
+          <a href="{$url}?hl=de_DE">Deutsch</a> |
+          <a href="{$url}?hl=fr_FR">Français</a> |
+          <a href="{$url}?hl=ru_RU">Русский</a> |
+          <a href="{$url}?hl=zh_CN">中文 (简体)</a> |
+          <a href="{$url}?hl=ja_JP">日本語</a> |
+          <a href="{$url}?hl=ko_KR">한국의</a>
+        </p>
+        {if $locale != "en_US"}
+        <p><a href="http://www.getlocalization.com/synergy/">{t}Improve this translation{/t}</a></p>
+        {/if}
       </div>
     </div>
   </body>
