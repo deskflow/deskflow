@@ -10,10 +10,12 @@ class SetupWizard : public QWizard, public Ui::SetupWizardBase
 {
 	Q_OBJECT
 public:
-	SetupWizard(MainWindow& mainWindow);
+	SetupWizard(MainWindow& mainWindow, bool startMain);
 	virtual ~SetupWizard();
+	bool validateCurrentPage();
+protected slots:
+	void handlefinished();
 private:
 	MainWindow& m_MainWindow;
-protected slots:
-	void showMain();
+	bool m_StartMain;
 };

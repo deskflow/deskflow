@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 	QSettings settings;
 	AppConfig appConfig(&settings);
 	MainWindow mainWindow(settings, appConfig);
-	SetupWizard setupWizard(mainWindow);
+	SetupWizard setupWizard(mainWindow, true);
 
 	if (appConfig.wizardHasRun())
 	{

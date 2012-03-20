@@ -33,25 +33,23 @@ class WindowsServices : public QDialog, public Ui::WindowsServicesBase
 	Q_OBJECT
 
 	public:
-		WindowsServices(MainWindow* parent, AppConfig& appConfig);
+		WindowsServices(MainWindow* mainWindow, AppConfig& appConfig);
 
 	protected:
 		AppConfig &appConfig() const { return m_appConfig; }
 		MainWindow* mainWindow() const { return (MainWindow*)parent(); }
-		QProcess*& process() { return m_process; }
-		void runProc(const QString& app, const QStringList& args, QPushButton* button);
+		bool runProc(const QString& app, const QStringList& args, QPushButton* button);
 
 	private:
 		MainWindow* m_mainWindow;
 		QString m_app;
 		AppConfig &m_appConfig;
-		QProcess* m_process;
 
-	private slots:
-		void on_m_pUninstallClient_clicked();
-		void on_m_pInstallClient_clicked();
-		void on_m_pUninstallServer_clicked();
-		void on_m_pInstallServer_clicked();
+	public slots:
+		void uninstallClient();
+		void installClient();
+		void uninstallServer();
+		void installServer();
 };
 
 #endif // WINDOWSSERVICES_H

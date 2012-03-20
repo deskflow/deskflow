@@ -81,6 +81,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void start();
 		void appendLog(const QString& text);
 		void clearLog();
+		AppConfig& appConfig() { return m_AppConfig; }
 
 	protected slots:
 		void on_m_pGroupClient_toggled(bool on) { m_pGroupServer->setChecked(!on); }
@@ -101,7 +102,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	protected:
 		QSettings& settings() { return m_Settings; }
-		AppConfig& appConfig() { return m_AppConfig; }
 		QProcess*& synergyProcess() { return m_pSynergy; }
 		void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
 		ServerConfig& serverConfig() { return m_ServerConfig; }

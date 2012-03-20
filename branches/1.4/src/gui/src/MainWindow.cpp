@@ -69,7 +69,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 {
 	setupUi(this);
 
-	createTrayIcon();
 	createMenuBar();
 	loadSettings();
 	initConnections();
@@ -89,6 +88,8 @@ void MainWindow::start()
 {
 	if (appConfig().autoConnect())
 		startSynergy();
+
+	createTrayIcon();
 
 	// always show. auto-hide only happens when we have a connection.
 	show();
@@ -299,6 +300,12 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
+	if (appConfig().serverService() || appConfig().clientService())
+	{
+		appendLog("please use service controller to start/stop synergy.");
+		return;
+	}
+
 	stopSynergy();
 
 	setSynergyState(synergyConnecting);
@@ -450,6 +457,12 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 
 void MainWindow::stopSynergy()
 {
+	if (appConfig().serverService() || appConfig().clientService())
+	{
+		appendLog("please use service controller to start/stop synergy.");
+		return;
+	}
+
 	if (synergyProcess())
 	{
 		appendLog("stopping synergy");

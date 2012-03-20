@@ -24,6 +24,9 @@
 #include <QMessageBox>
 #include <QPushButton>
 
+#include <Windows.h>
+#define WIN32_LEAN_AND_MEAN
+
 WindowsServices::WindowsServices(MainWindow* mainWindow, AppConfig& appConfig) :
 	QDialog(dynamic_cast<QWidget*>(mainWindow), Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::WindowsServicesBase(),
@@ -31,51 +34,48 @@ WindowsServices::WindowsServices(MainWindow* mainWindow, AppConfig& appConfig) :
 	m_appConfig(appConfig)
 {
 	setupUi(this);
+
+	connect(m_pInstallServer, SIGNAL(clicked()), this, SLOT(installServer()));
+	connect(m_pUninstallServer, SIGNAL(clicked()), this, SLOT(uninstallServer()));
+	connect(m_pInstallClient, SIGNAL(clicked()), this, SLOT(installClient()));
+	connect(m_pUninstallClient, SIGNAL(clicked()), this, SLOT(uninstallClient()));
 }
 
-void WindowsServices::runProc(const QString& app, const QStringList& args, QPushButton* button)
+bool WindowsServices::runProc(const QString& app, const QStringList& args, QPushButton* button)
 {
 	// disable until we know we've finished
 	button->setEnabled(false);
 
-	// clear contents so user doesn't get confused by previous messages
-	m_mainWindow->clearLog();
+	// separate from previous messages.
+	m_mainWindow->appendLog("");
 
-	// deleted at end of function
-	QProcess proc(this);
-	m_process = &proc;
+	// use ShellExecuteEx to run with elevation
+	SHELLEXECUTEINFO execInfo = {0};
+	execInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+	execInfo.lpVerb = L"runas"; // _T macro not available.
+	execInfo.lpFile = reinterpret_cast<const wchar_t *>(app.utf16());
+	execInfo.lpParameters = reinterpret_cast<const wchar_t *>(args.join(" ").utf16());
+	execInfo.nShow = SW_HIDE;
 
-	// send output to log window
-	connect(m_process, SIGNAL(readyReadStandardOutput()), m_mainWindow, SLOT(readSynergyOutput()));
-	connect(m_process, SIGNAL(readyReadStandardError()), m_mainWindow, SLOT(readSynergyOutput()));
+	BOOL success = ShellExecuteEx(&execInfo);
 
-	m_process->start(app, args);
-	m_mainWindow->show();
-
-	// service management should be instant
-	m_process->waitForFinished();
-
-	if (m_process->exitCode() == 0)
+	if (success)
 	{
-		m_mainWindow->appendLog("service install/uninstall completed successfully.");
-		m_mainWindow->appendLog("use the windows service manager to start/stop services.");
+		m_mainWindow->appendLog(
+			"service install/uninstall completed successfully.");
 	}
 	else
 	{
 		m_mainWindow->appendLog(
-			"ERROR: failed to install/uninstall service. error code: " +
-			QString::number(m_process->exitCode()));
-
-		m_mainWindow->appendLog("please ensure you are running this program as administrator.");
+			"ERROR: failed to install/uninstall service.");
 	}
 
-	disconnect(m_process, SIGNAL(readyReadStandardOutput()), m_mainWindow, SLOT(readSynergyOutput()));
-	disconnect(m_process, SIGNAL(readyReadStandardError()), m_mainWindow, SLOT(readSynergyOutput()));
-
 	button->setEnabled(true);
+
+	return success;
 }
 
-void WindowsServices::on_m_pInstallServer_clicked()
+void WindowsServices::installServer()
 {
 	QString app = mainWindow()->appPath(appConfig().synergysName());
 
@@ -83,6 +83,7 @@ void WindowsServices::on_m_pInstallServer_clicked()
 	args <<
 		"--service" << "install" <<
 		"--relaunch" <<
+		"--no-tray" <<
 		"--debug" << appConfig().logLevelText() <<
 		"-c" << mainWindow()->configFilename() <<
 		"--address" << mainWindow()->address();
@@ -93,19 +94,28 @@ void WindowsServices::on_m_pInstallServer_clicked()
 		args << "--log" << appConfig().logFilename();
 	}
 
-	runProc(app, args, m_pInstallServer);
+	if (runProc(app, args, m_pInstallServer))
+	{
+		appConfig().setServerService(true);
+		appConfig().saveSettings();
+	}
 }
 
-void WindowsServices::on_m_pUninstallServer_clicked()
+void WindowsServices::uninstallServer()
 {
 	QString app = mainWindow()->appPath(appConfig().synergysName());
 
 	QStringList args;
 	args << "--service" << "uninstall";
-	runProc(app, args, m_pInstallServer);
+
+	if (runProc(app, args, m_pInstallServer))
+	{
+		appConfig().setServerService(false);
+		appConfig().saveSettings();
+	}
 }
 
-void WindowsServices::on_m_pInstallClient_clicked()
+void WindowsServices::installClient()
 {
 	if (mainWindow()->hostname().isEmpty())
 	{
@@ -120,6 +130,7 @@ void WindowsServices::on_m_pInstallClient_clicked()
 	args <<
 		"--service" << "install" <<
 		"--relaunch" <<
+		"--no-tray" <<
 		"--debug" << appConfig().logLevelText();
 
 	if (appConfig().logToFile())
@@ -131,14 +142,23 @@ void WindowsServices::on_m_pInstallClient_clicked()
 	// hostname must come last to be a valid arg
 	args << mainWindow()->hostname();
 
-	runProc(app, args, m_pInstallServer);
+	if (runProc(app, args, m_pInstallServer))
+	{
+		appConfig().setClientService(true);
+		appConfig().saveSettings();
+	}
 }
 
-void WindowsServices::on_m_pUninstallClient_clicked()
+void WindowsServices::uninstallClient()
 {
 	QString app = mainWindow()->appPath(appConfig().synergycName());
 
 	QStringList args;
 	args << "--service" << "uninstall";
-	runProc(app, args, m_pInstallServer);
+
+	if (runProc(app, args, m_pInstallServer))
+	{
+		appConfig().setClientService(false);
+		appConfig().saveSettings();
+	}
 }
