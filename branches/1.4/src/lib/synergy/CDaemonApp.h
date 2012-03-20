@@ -17,9 +17,20 @@
  
 #pragma once
 
+#include "common.h"
+
 class CDaemonApp {
+
 public:
 	CDaemonApp();
 	virtual ~CDaemonApp();
 	int run(int argc, char** argv);
+
+private:
+	void daemonize();
+
+#if SYSAPI_WIN32
+	void installService();
+	void uninstallService();
+#endif
 };

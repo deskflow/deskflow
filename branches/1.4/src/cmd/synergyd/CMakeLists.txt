@@ -21,7 +21,7 @@ set(inc
 #	../../lib/arch
 #	../../lib/base
 #	../../lib/client
-#	../../lib/common
+	../../lib/common
 #	../../lib/io
 #	../../lib/mt
 #	../../lib/net
@@ -38,7 +38,8 @@ endif()
 include_directories(${inc})
 add_executable(synergyd ${src})
 target_link_libraries(synergyd
-	#arch base client common io mt net platform server 
+	#arch base client io mt net platform server
+  common
   synergy ${libs})
 
 if (CONF_CPACK)
