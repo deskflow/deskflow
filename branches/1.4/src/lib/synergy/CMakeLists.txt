@@ -42,6 +42,7 @@ set(inc
 	XScreen.h
 	XSynergy.h
 	GameDeviceTypes.h
+	CDaemonApp.h
 )
 
 set(src
@@ -66,6 +67,7 @@ set(src
 	XScreen.cpp
 	XSynergy.cpp
 	ISecondaryScreen.cpp
+	CDaemonApp.cpp
 )
 
 if (WIN32)
