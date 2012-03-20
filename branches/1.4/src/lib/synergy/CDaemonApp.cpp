@@ -16,12 +16,18 @@
  */
 
 #include "CDaemonApp.h"
+
+#if SYSAPI_WIN32
+#include "CArchMiscWindows.h"
+#include "XArchWindows.h"
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 #include <string>
 #include <iostream>
-
-#define ERROR_NONE 0
-#define ERROR_ARG 1
-#define ERROR_EX 2
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -36,63 +42,57 @@ CDaemonApp::~CDaemonApp()
 int
 CDaemonApp::run(int argc, char** argv)
 {
+#if SYSAPI_WIN32
+	// TODO: can we get rid of this? what's it used for?
+	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+#endif
+
+	CArch arch;
+
 	try {
 		// if no args, daemonize.
 		if (argc == 1) {
 			daemonize();
-			return ERROR_NONE;
 		}
 		else {
 			for (int i = 1; i < argc; ++i) {
-
 				string arg(argv[i]);
 
 #if SYSAPI_WIN32
 				if (arg == "--install") {
-					installService();
+					ARCH->installDaemon();
 					continue;
 				}
 				else if (arg == "--uninstall") {
-					uninstallService();
+					ARCH->uninstallDaemon();
 					continue;
 				}
 #endif
 
 				cerr << "unrecognized arg: " << arg << endl;
-				return ERROR_ARG;
+				return kExitArgs;
 			}
 		}
 	}
+	catch (XArch& e) {
+		cerr << e.what() << endl;
+		return kExitFailed;
+	}
 	catch (std::exception& e) {
 		cerr << e.what() << endl;
-		return ERROR_EX;
+		return kExitFailed;
 	}
 	catch (...) {
 		cerr << "unknown exception" << endl;
-		return ERROR_EX;
+		return kExitFailed;
 	}
 
-	return ERROR_NONE;
+	return kExitSuccess;
 }
 
 void
 CDaemonApp::daemonize()
 {
-	cout << "demonizing" << endl;
+	ARCH->daemonSetting("test", "test1");
+	cout << "test: " << ARCH->daemonSetting("test") << endl;
 }
-
-#if SYSAPI_WIN32
-
-void
-CDaemonApp::installService()
-{
-	cout << "install service" << endl;
-}
-
-void
-CDaemonApp::uninstallService()
-{
-	cout << "uninstall service" << endl;
-}
-
-#endif

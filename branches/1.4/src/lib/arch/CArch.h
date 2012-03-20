@@ -87,9 +87,13 @@ public:
 							const char* dependencies,
 							bool allUsers);
 	virtual void		uninstallDaemon(const char* name, bool allUsers);
+	virtual void		installDaemon();
+	virtual void		uninstallDaemon();
 	virtual int			daemonize(const char* name, DaemonFunc func);
 	virtual bool		canInstallDaemon(const char* name, bool allUsers);
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
+	virtual CString		daemonSetting(const char* keyName);
+	virtual void		daemonSetting(const char* keyName, const CString& keyValue);
 
 	// IArchFile overrides
 	virtual const char*	getBasename(const char* pathname);

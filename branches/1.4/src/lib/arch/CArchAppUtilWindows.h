@@ -35,24 +35,6 @@ public:
 	CArchAppUtilWindows();
 	virtual ~CArchAppUtilWindows();
 
-	// Gets the arguments to be used with a service.
-	CString getServiceArgs() const;
-
-	// Install application as Windows service.
-	void installService();
-
-	// Uninstall a Windows service with matching daemon name.
-	void uninstallService();
-
-	// Start a Windows service with matching daemon name.
-	void startService();
-
-	// Stop a Windows service with matching daemon name.
-	void stopService();
-
-	// Will install, uninstall, start, or stop the service depending on arg.
-	void handleServiceArg(const char* serviceAction);
-
 	bool parseArg(const int& argc, const char* const* argv, int& i);
 
 	int daemonNTStartup(int, char**);

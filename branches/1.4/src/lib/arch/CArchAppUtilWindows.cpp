@@ -37,7 +37,7 @@ m_exitMode(kExitModeNormal)
 {
 	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
     {
-		throw XArchEvalWindows();
+		throw XArch(new XArchEvalWindows());
     }
 }
 
@@ -64,33 +64,8 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 {
 	if (app().isArg(i, argc, argv, NULL, "--service")) {
 
-		const char* action = argv[++i];
-
-		if (_stricmp(action, "install") == 0) {
-			installService();
-		}
-		else if (_stricmp(action, "uninstall") == 0) {
-			uninstallService();
-		}
-		else if (_stricmp(action, "start") == 0) {
-			startService();
-		}
-		else if (_stricmp(action, "stop") == 0) {
-			stopService();
-		}
-		else {
-			LOG((CLOG_ERR "unknown service action: %s", action));
-			app().m_bye(kExitArgs);
-		}
-		app().m_bye(kExitSuccess);
-	}
-	else if (app().isArg(i, argc, argv, NULL, "--debug-service-wait")) {
-
-		app().argsBase().m_debugServiceWait = true;
-	}
-	else if (app().isArg(i, argc, argv, NULL, "--relaunch")) {
-
-		app().argsBase().m_relaunchMode = true;
+		LOG((CLOG_WARN "obsolete argument --service, use synergyd instead."));
+		app().m_bye(kExitFailed);
 	}
 	else if (app().isArg(i, argc, argv, NULL, "--exit-pause")) {
 
@@ -107,113 +82,6 @@ CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 	}
 
 	return true;
-}
-
-CString
-CArchAppUtilWindows::getServiceArgs() const
-{
-	std::stringstream argBuf;
-	for (int i = 1; i < __argc; i++) {
-		const char* arg = __argv[i];
-
-		// ignore service setup args
-		if (_stricmp(arg, "--service") == 0) {
-			// ignore and skip the next arg also (service action)
-			i++;
-		}
-		else {
-			if (strchr(arg, ' ') != NULL) {
-				// surround argument with quotes if it contains a space
-				argBuf << " \"" << arg << "\"";
-			} else {
-				argBuf << " " << arg;
-			}
-		}
-	}
-	return argBuf.str();
-}
-
-void
-CArchAppUtilWindows::installService()
-{
-	CString args = getServiceArgs();
-
-	// get the path of this program
-	char thisPath[MAX_PATH];
-	GetModuleFileName(CArchMiscWindows::instanceWin32(), thisPath, MAX_PATH);
-
-	ARCH->installDaemon(
-		app().daemonName(), app().daemonInfo(), 
-		thisPath, args.c_str(), NULL, true);
-
-	LOG((CLOG_INFO "service '%s' installed with args: %s",
-		app().daemonName(), args != "" ? args.c_str() : "none" ));
-}
-
-void
-CArchAppUtilWindows::uninstallService()
-{
-	ARCH->uninstallDaemon(app().daemonName(), true);
-	LOG((CLOG_INFO "service '%s' uninstalled", app().daemonName()));
-}
-
-void
-CArchAppUtilWindows::startService()
-{
-	// open service manager
-	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
-	if (mgr == NULL) {
-		throw XArchDaemonFailed(new XArchEvalWindows());
-	}
-
-	// open the service
-	SC_HANDLE service = OpenService(
-		mgr, app().daemonName(), SERVICE_START);
-
-	if (service == NULL) {
-		CloseServiceHandle(mgr);
-		throw XArchDaemonFailed(new XArchEvalWindows());
-	}
-
-	// start the service
-	if (StartService(service, 0, NULL)) {
-		LOG((CLOG_INFO "service '%s' started", app().daemonName()));
-	}
-	else {
-		throw XArchDaemonFailed(new XArchEvalWindows());
-	}
-}
-
-void
-CArchAppUtilWindows::stopService()
-{
-	// open service manager
-	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
-	if (mgr == NULL) {
-		throw XArchDaemonFailed(new XArchEvalWindows());
-	}
-
-	// open the service
-	SC_HANDLE service = OpenService(
-		mgr, app().daemonName(),
-		SERVICE_STOP | SERVICE_QUERY_STATUS);
-
-	if (service == NULL) {
-		CloseServiceHandle(mgr);
-		throw XArchDaemonFailed(new XArchEvalWindows());
-	}
-
-	// ask the service to stop, asynchronously
-	SERVICE_STATUS ss;
-	if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
-		DWORD dwErrCode = GetLastError(); 
-		if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
-			LOG((CLOG_ERR "cannot stop service '%s'", app().daemonName()));
-			throw XArchDaemonFailed(new XArchEvalWindows());
-		}
-	}
-
-	LOG((CLOG_INFO "service '%s' stopping asynchronously", app().daemonName()));
 }
 
 static

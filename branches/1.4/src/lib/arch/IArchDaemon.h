@@ -19,6 +19,7 @@
 #define IARCHDAEMON_H
 
 #include "IInterface.h"
+#include "CString.h"
 
 //! Interface for architecture dependent daemonizing
 /*!
@@ -58,6 +59,18 @@ public:
 	Uninstall a daemon.  Throws an \c XArchDaemon on failure.
 	*/
 	virtual void		uninstallDaemon(const char* name, bool allUsers) = 0;
+
+	//! Install daemon
+	/*!
+	Installs the default daemon.
+	*/
+	virtual void		installDaemon() = 0;
+	
+	//! Uninstall daemon
+	/*!
+	Uninstalls the default daemon.
+	*/
+	virtual void		uninstallDaemon() = 0;
 
 	//! Daemonize the process
 	/*!
@@ -103,6 +116,18 @@ public:
 	Returns true iff the daemon is installed.
 	*/
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers) = 0;
+
+	//! Gets a daemon setting
+	/*!
+	Fetches a string for the specified key.
+	*/
+	virtual CString		daemonSetting(const char* keyName) = 0;
+
+	//! Sets a daemon setting
+	/*!
+	Stores a string for the specified key.
+	*/
+	virtual void		daemonSetting(const char* keyName, const CString& keyValue) = 0;
 
 	//@}
 };

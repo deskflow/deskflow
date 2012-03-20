@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2009 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
+# Copyright (C) 2012 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,14 +18,13 @@ set(src
 )
 
 set(inc
-#	../../lib/arch
-#	../../lib/base
-#	../../lib/client
+	../../lib/arch
+	../../lib/base
 	../../lib/common
-#	../../lib/io
-#	../../lib/mt
-#	../../lib/net
-#	../../lib/platform
+	../../lib/io
+	../../lib/mt
+	../../lib/net
+	../../lib/platform
 	../../lib/synergy
 )
 
@@ -38,9 +37,7 @@ endif()
 include_directories(${inc})
 add_executable(synergyd ${src})
 target_link_libraries(synergyd
-	#arch base client io mt net platform server
-  common
-  synergy ${libs})
+	io mt net platform base arch common synergy ${libs})
 
 if (CONF_CPACK)
 	install(TARGETS

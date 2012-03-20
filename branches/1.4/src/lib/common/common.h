@@ -150,4 +150,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum {
+	kExitSuccess    = 0,  // successful completion
+	kExitFailed     = 1,  // general failure
+	kExitTerminated = 2,  // killed by signal
+	kExitArgs       = 3,  // bad arguments
+	kExitConfig     = 4  // cannot read configuration
+};
+
 #endif

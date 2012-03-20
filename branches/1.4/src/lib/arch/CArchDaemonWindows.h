@@ -82,9 +82,13 @@ public:
 							const char* dependencies,
 							bool allUsers);
 	virtual void		uninstallDaemon(const char* name, bool allUsers);
+	virtual void		installDaemon();
+	virtual void		uninstallDaemon();
 	virtual int			daemonize(const char* name, DaemonFunc func);
 	virtual bool		canInstallDaemon(const char* name, bool allUsers);
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
+	virtual CString		daemonSetting(const char* keyName);
+	virtual void		daemonSetting(const char* keyName, const CString& keyValue);
 
 	std::string commandLine() const { return m_commandLine; }
 
@@ -108,6 +112,9 @@ private:
 
 	void				serviceHandler(DWORD ctrl);
 	static void WINAPI	serviceHandlerEntry(DWORD ctrl);
+
+	void				start(const char* name);
+	void				stop(const char* name);
 
 private:
 	class XArchDaemonRunFailed {
@@ -136,6 +143,17 @@ private:
 	UINT				m_quitMessage;
 
 	std::string			m_commandLine;
+};
+
+#define DAEMON_NAME "Synergy"
+#define DAEMON_INFO "Manages the Synergy foreground processes."
+
+static const TCHAR* const g_daemonKeyPath[] = {
+	_T("SOFTWARE"),
+	_T("The Synergy Project"),
+	_T("Synergy"),
+	_T("Service"),
+	NULL
 };
 
 #endif

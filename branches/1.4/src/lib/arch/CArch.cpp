@@ -212,6 +212,18 @@ CArch::uninstallDaemon(const char* name, bool allUsers)
 	m_daemon->uninstallDaemon(name, allUsers);
 }
 
+void
+CArch::installDaemon()
+{
+	m_daemon->installDaemon();
+}
+
+void
+CArch::uninstallDaemon()
+{
+	m_daemon->uninstallDaemon();
+}
+
 int
 CArch::daemonize(const char* name, DaemonFunc func)
 {
@@ -228,6 +240,18 @@ bool
 CArch::isDaemonInstalled(const char* name, bool allUsers)
 {
 	return m_daemon->isDaemonInstalled(name, allUsers);
+}
+
+CString
+CArch::daemonSetting(const char* keyName)
+{
+	return m_daemon->daemonSetting(keyName);
+}
+
+void
+CArch::daemonSetting(const char* keyName, const CString& valueName)
+{
+	m_daemon->daemonSetting(keyName, valueName);
 }
 
 const char*

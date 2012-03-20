@@ -190,11 +190,15 @@ CArchDaemonWindows::installDaemon(const char* name,
 		// done with registry
 		CArchMiscWindows::closeKey(key);
 	}
+
+	start(name);
 }
 
 void
 CArchDaemonWindows::uninstallDaemon(const char* name, bool allUsers)
 {
+	stop(name);
+
 	// if not for all users then use the user's autostart registry.
 	// key.  if windows 95 family then use windows 95 services key.
 	if (!allUsers || CArchMiscWindows::isWindows95Family()) {
@@ -780,4 +784,89 @@ void WINAPI
 CArchDaemonWindows::serviceHandlerEntry(DWORD ctrl)
 {
 	s_daemon->serviceHandler(ctrl);
+}
+
+void
+CArchDaemonWindows::start(const char* name)
+{
+	// open service manager
+	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
+	if (mgr == NULL) {
+		throw XArchDaemonFailed(new XArchEvalWindows());
+	}
+
+	// open the service
+	SC_HANDLE service = OpenService(
+		mgr, name, SERVICE_START);
+
+	if (service == NULL) {
+		CloseServiceHandle(mgr);
+		throw XArchDaemonFailed(new XArchEvalWindows());
+	}
+
+	// start the service
+	if (!StartService(service, 0, NULL)) {
+		throw XArchDaemonFailed(new XArchEvalWindows());
+	}
+}
+
+void
+CArchDaemonWindows::stop(const char* name)
+{
+	// open service manager
+	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
+	if (mgr == NULL) {
+		throw XArchDaemonFailed(new XArchEvalWindows());
+	}
+
+	// open the service
+	SC_HANDLE service = OpenService(
+		mgr, name,
+		SERVICE_STOP | SERVICE_QUERY_STATUS);
+
+	if (service == NULL) {
+		CloseServiceHandle(mgr);
+		throw XArchDaemonFailed(new XArchEvalWindows());
+	}
+
+	// ask the service to stop, asynchronously
+	SERVICE_STATUS ss;
+	if (!ControlService(service, SERVICE_CONTROL_STOP, &ss)) {
+		DWORD dwErrCode = GetLastError(); 
+		if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
+			throw XArchDaemonFailed(new XArchEvalWindows());
+		}
+	}
+}
+
+void
+CArchDaemonWindows::installDaemon()
+{
+	char path[MAX_PATH];
+	GetModuleFileName(CArchMiscWindows::instanceWin32(), path, MAX_PATH);
+	installDaemon(DAEMON_NAME, DAEMON_INFO, path, NULL, NULL, true);
+}
+
+void
+CArchDaemonWindows::uninstallDaemon()
+{
+	uninstallDaemon(DAEMON_NAME, true);
+}
+
+CString
+CArchDaemonWindows::daemonSetting(const char* keyName)
+{
+	HKEY key = CArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, g_daemonKeyPath);
+	if (key == NULL)
+		return "";
+	return CArchMiscWindows::readValueString(key, keyName);
+}
+
+void
+CArchDaemonWindows::daemonSetting(const char* keyName, const CString& keyValue)
+{
+	HKEY key = CArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, g_daemonKeyPath);
+	if (key == NULL)
+		throw XArch("could not open daemon settings key");
+	return CArchMiscWindows::setValue(key, keyName, keyValue);
 }

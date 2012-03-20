@@ -16,7 +16,6 @@
 set(src
 	CArchAppUtil.cpp
 	CArch.cpp
-	CArchDaemonNone.cpp
 	IArchString.cpp
 	XArch.cpp
 	CArchConsoleStd.cpp
@@ -44,6 +43,7 @@ if (WIN32)
 		XArchWindows.h
 		CMultibyte.h
 		vsnprintf.h
+		XArch.h
 	)
 
 	list(APPEND src
@@ -80,6 +80,7 @@ elseif (UNIX)
 		CArchTaskBarXWindows.cpp
 		CArchTimeUnix.cpp
 		XArchUnix.cpp
+		CArchDaemonNone.cpp
 	)
 	
 endif()

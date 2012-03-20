@@ -17,7 +17,7 @@
  
 #pragma once
 
-#include "common.h"
+#include "CArch.h"
 
 class CDaemonApp {
 
@@ -28,9 +28,4 @@ public:
 
 private:
 	void daemonize();
-
-#if SYSAPI_WIN32
-	void installService();
-	void uninstallService();
-#endif
 };

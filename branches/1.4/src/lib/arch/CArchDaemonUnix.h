@@ -31,6 +31,10 @@ public:
 
 	// IArchDaemon overrides
 	virtual int			daemonize(const char* name, DaemonFunc func);
+	virtual CString		daemonSetting(const char* keyName);
+	virtual void		daemonSetting(const char* keyName, const CString& keyValue);
 };
+
+#define CONFIG_FILE "/etc/synergy/synergyd.conf"
 
 #endif
