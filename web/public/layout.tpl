@@ -52,6 +52,8 @@
           <a href="{$url}?hl=en_US">English</a> |
           <a href="{$url}?hl=de_DE">Deutsch</a> |
           <a href="{$url}?hl=fr_FR">Français</a> |
+          <a href="{$url}?hl=nl_NL">Nederlands</a> |
+          <a href="{$url}?hl=it_IT">Italiano</a> |
           <a href="{$url}?hl=ru_RU">Русский</a> |
           <a href="{$url}?hl=zh_CN">中文 (简体)</a> |
           <a href="{$url}?hl=ja_JP">日本語</a> |

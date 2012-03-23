@@ -1,0 +1,266 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-14 17:27-0000\n"
+"PO-Revision-Date: 2012-03-23 16:47-0000\n"
+"Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: C:\\Projects\\synergy\\web\\public\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: lang.c:1
+#: lang.c:32
+msgid "Download"
+msgstr "Download"
+
+#: lang.c:2
+msgid "<b>Latest release:</b> 1.4.7 Beta (Feb 5, 2012)"
+msgstr "<b>Laatste versie:</b> 1.4.7 Beta (05 februari 2012)"
+
+#: lang.c:3
+msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
+msgstr "Gebruik versie 1.4 voor een betere setup. Gebruik versie 1.3 als u problemen ondervindt."
+
+#: lang.c:4
+msgid "Source code"
+msgstr "Broncode"
+
+#: lang.c:5
+msgid "Previous 1.4 releases"
+msgstr "Vorige 1.4 releases"
+
+#: lang.c:6
+msgid "Previous 1.3 releases"
+msgstr "Vorige 1.3 releases"
+
+#: lang.c:7
+msgid "Other projects"
+msgstr "Andere projecten"
+
+#: lang.c:8
+msgid "Related sites"
+msgstr "Gerelateerde sites"
+
+#: lang.c:9
+msgid "Nightly builds"
+msgstr "Nightly builds"
+
+#: lang.c:10
+msgid "use at your own risk"
+msgstr "gebruik op eigen risico"
+
+#: lang.c:11
+msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
+msgstr "Synergy kunt u eenvoudig kunt delen met uw muis en toetsenbord tussen meerdere computers op uw bureau, en het is gratis en Open Source. Beweeg uw muis over de rand van het scherm de ene computer op naar de andere. U kunt zelfs delen van al uw klemborden. Het enige wat je nodig hebt is een netwerkverbinding. Synergy is cross-platform (werkt op Windows, Mac OS X en Linux)."
+
+#: lang.c:12
+msgid "More Info"
+msgstr "Meer info"
+
+#: lang.c:13
+msgid "News"
+msgstr "Nieuws"
+
+#: lang.c:14
+msgid "Blog"
+msgstr "Blog"
+
+#: lang.c:15
+msgid "FAQs"
+msgstr "FAQs"
+
+#: lang.c:16
+msgid "User"
+msgstr "Gebruiker"
+
+#: lang.c:17
+#: lang.c:19
+msgid "Developer"
+msgstr "Ontwikkelaar"
+
+#: lang.c:18
+#: lang.c:43
+msgid "Mailing lists"
+msgstr "Mailinglijsten"
+
+#: lang.c:20
+msgid "Nightly build"
+msgstr "Nightly build"
+
+#: lang.c:21
+msgid "Console"
+msgstr "Console"
+
+#: lang.c:22
+msgid "Builders"
+msgstr "Bouwers"
+
+#: lang.c:23
+msgid "Packages"
+msgstr "Colli"
+
+#: lang.c:24
+msgid "Key People"
+msgstr "Zeer belangrijke mensen"
+
+#: lang.c:25
+msgid "Project leader and primary developer"
+msgstr "Projectleider en hoofdontwikkelaar"
+
+#: lang.c:26
+msgid "Original author and project founder"
+msgstr "Oorspronkelijke auteur en project oprichter"
+
+#: lang.c:27
+msgid "Founder of Synergy+ (fork project)"
+msgstr "Oprichter van Synergy+ (vork project)"
+
+#: lang.c:28
+msgid "Support us!"
+msgstr "Steun ons!"
+
+#: lang.c:29
+msgid "Please help us out by donating or buying merchandise. Thanks for your support!"
+msgstr "U kunt ons helpen door te doneren of het kopen van merchandise. Bedankt voor uw steun!"
+
+#: lang.c:30
+msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
+msgstr "Synergy kunt u uw toetsenbord en muis tussen meerdere computers op uw bureau."
+
+#: lang.c:31
+msgid "Home"
+msgstr "Naar huis"
+
+#: lang.c:33
+msgid "Info"
+msgstr "Info"
+
+#: lang.c:34
+#: lang.c:50
+msgid "Support"
+msgstr "Ondersteunen"
+
+#: lang.c:35
+#: lang.c:37
+msgid "Search"
+msgstr "Zoeken"
+
+#: lang.c:36
+msgid "Tracker"
+msgstr "Tracker"
+
+#: lang.c:38
+msgid "Search all Synergy websites from one page."
+msgstr "Alle Synergy websites van de ene pagina."
+
+#: lang.c:39
+msgid "What is searched?"
+msgstr "Wat wordt gezocht?"
+
+#: lang.c:40
+#: lang.c:58
+msgid "Super User"
+msgstr "Super User"
+
+#: lang.c:41
+msgid "Issue tracker"
+msgstr "Issue tracker"
+
+#: lang.c:42
+msgid "Website wiki"
+msgstr "Website wiki"
+
+#: lang.c:44
+msgid "Search tips"
+msgstr "Zoektips"
+
+#: lang.c:45
+msgid "If you get too many results, try specifying your operating system."
+msgstr "Als u te veel resultaten, probeer dan met vermelding van uw besturingssysteem."
+
+#: lang.c:46
+msgid "Sometimes issues are specific to the client or server."
+msgstr "Soms zijn problemen specifiek zijn voor de client of server."
+
+#: lang.c:47
+msgid "You may find that entering your version number helps."
+msgstr "Het kan zijn dat het invoeren van uw versienummer helpt."
+
+#: lang.c:48
+msgid "If this does not work, use the <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy search</a>."
+msgstr "If this does not work, use the <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy search</a>."
+
+#: lang.c:49
+msgid "Engage!"
+msgstr "Engage!"
+
+#: lang.c:51
+msgid "Having problems using Synergy? You're in the right place!"
+msgstr "Heeft u problemen met behulp van Synergy? Je bent op de juiste plaats!"
+
+#: lang.c:52
+msgid "Do your research"
+msgstr "Do your research"
+
+#: lang.c:53
+msgid "Before asking anyone for help, do a <a href=\"/search/\">quick search</a>, it really won't take long. You <strong>must</strong> fully research your problem before asking us for help. You can also <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a> to find out how to use config files, etc."
+msgstr "Before asking anyone for help, do a <a href=\"/search/\">quick search</a>, it really won't take long. You <strong>must</strong> fully research your problem before asking us for help. You can also <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a> to find out how to use config files, etc."
+
+#: lang.c:54
+msgid "Ask your question"
+msgstr "Ask your question"
+
+#: lang.c:55
+msgid "If you're having trouble configuring or starting Synergy, please  ask a <strong>question</strong> on the  <a href=\"http://synergy-foss.org/osqa/\">Synergy Q&#38;A site</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
+msgstr "If you're having trouble configuring or starting Synergy, please  ask a <strong>question</strong> on the  <a href=\"http://synergy-foss.org/osqa/\">Synergy Q&#38;A site</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
+
+#: lang.c:56
+msgid "Mailing list and IRC"
+msgstr "Mailing list and IRC"
+
+#: lang.c:57
+msgid "More traditional open source users may prefer to  <a href=\"http://groups.google.com/group/synergy-plus/post\">use the mailing list</a> (just click \"Apply for group membership\" -- everyone is allowed, this is just to protect us against spammers). Please do not post bugs on the mailing list. You can also join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>) -- but the same applies for IRC; do your research first!"
+msgstr "More traditional open source users may prefer to  <a href=\"http://groups.google.com/group/synergy-plus/post\">use the mailing list</a> (just click \"Apply for group membership\" -- everyone is allowed, this is just to protect us against spammers). Please do not post bugs on the mailing list. You can also join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>) -- but the same applies for IRC; do your research first!"
+
+#: lang.c:59
+msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
+msgstr "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
+
+#: lang.c:60
+msgid "Super User is <b>not</b> dedicated to supporting Synergy."
+msgstr "Super User is <b>not</b> dedicated to supporting Synergy."
+
+#: lang.c:61
+msgid "Ask questions; do not nag or comment on bugs or issues."
+msgstr "Ask questions; do not nag or comment on bugs or issues."
+
+#: lang.c:62
+msgid "Do not raise new bugs there; use the issue tracker for this."
+msgstr "Do not raise new bugs there; use the issue tracker for this."
+
+#: lang.c:63
+msgid "Synergy developers do <i>not</i> monitor this website."
+msgstr "Synergy developers do <i>not</i> monitor this website."
+
+#: lang.c:64
+msgid "Always use the \"synergy\" tag on your question."
+msgstr "Always use the \"synergy\" tag on your question."
+
+#: lang.c:65
+msgid "Make sure you mention \"Synergy\" in the question."
+msgstr "Make sure you mention \"Synergy\" in the question."
+
+#: lang.c:66
+msgid "Report a bug"
+msgstr "Report a bug"
+
+#: lang.c:67
+msgid "If you've exhausted all other options (or if you think your issue is really a <b>bug</b>), you can <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
+msgstr "If you've exhausted all other options (or if you think your issue is really a <b>bug</b>), you can <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
+

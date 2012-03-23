@@ -8,7 +8,7 @@ $locale = "en_US";
 if (isSet($_GET["hl"])) {
   $locale = $_GET["hl"];
   $_SESSION["hl"] = $locale;
-} else if (isSet($_SESSION["hl"])) {
+} else if (isSet($_SESSION["hl"]) && ($_SESSION["hl"] != "")) {
   $locale = $_SESSION["hl"];
 } else if (isSet($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
   $locale = Locale::acceptFromHttp($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
@@ -22,6 +22,8 @@ switch ($locale) {
   case "ru": $locale = "ru_RU"; break;
   case "zh": $locale = "zh_CN"; break;
   case "ko": $locale = "ko_KR"; break;
+  case "it": $locale = "it_IT"; break;
+  case "nl": $locale = "nl_NL"; break;
 }
 
 putenv("LANGUAGE=".$locale);
