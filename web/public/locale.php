@@ -43,11 +43,6 @@ if (isSet($_GET["ul"])) {
   exit;
 }
 
-if (isSet($_SESSION["lang"])) {
-  //unset($_SESSION["lang"]);
-  print "session=" . $_SESSION["lang"];
-}
-
 // get language from locale (we don't really care
 // too much about country code, just language).
 $localeParts = explode("_", $locale);

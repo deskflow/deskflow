@@ -1,7 +1,5 @@
 <?php
 
-print "uri=" . $_SERVER["REQUEST_URI"] . "<br />";
-
 require "locale.php";
 require "smarty/libs/Smarty.class.php";
 
