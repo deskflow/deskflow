@@ -76,7 +76,6 @@ function smarty_block_t($params, $text, &$smarty)
   
 	$text = str_replace("\r\n", ' ', $text);
 	$text = str_replace("\n", ' ', $text);
-	//$text = stripslashes($text);
 	
 	// set escape mode
 	if (isset($params['escape'])) {
@@ -95,26 +94,13 @@ function smarty_block_t($params, $text, &$smarty)
 			unset($params['count']);
 		}
 	}
-	
-	// use plural if required parameters are set
-	if (isset($count) && isset($plural)) {
-		$text = nT_($text, $plural, $count);
-	} else { // use normal
-		$text = T_($text);
-	}
+  
+  $text = T_($text);
 
 	// run strarg if there are parameters
 	if (count($params)) {
 		$text = strarg($text, $params);
 	}
-
-  /*
-	if (!isset($escape) || $escape == 'html') { // html escape, default
-	   $text = nl2br(htmlspecialchars($text));
-   } elseif (isset($escape) && ($escape == 'javascript' || $escape == 'js')) { // javascript escape
-	   $text = str_replace('\'','\\\'',stripslashes($text));
-   }
-*/
 
 	return $text;
 }
