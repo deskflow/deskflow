@@ -3,17 +3,16 @@
 require "locale.php";
 require "smarty/libs/Smarty.class.php";
 
-function getGoogleSearchLang($locale) {
-  $lang = reset(explode("_", $locale));
+function getGoogleSearchLang($lang) {
   if ($lang == "zh")
     $lang = "zh-cn";
   return $lang;
 }
 
 $smarty = new Smarty;
-$smarty->assign("locale", $locale);
-$smarty->assign("baseUrl", $locale != "en" ? "/" . $locale : "");
-$smarty->assign("gsLang", getGoogleSearchLang($locale));
+$smarty->assign("lang", $lang);
+$smarty->assign("baseUrl", $lang != "en" ? "/" . $lang : "");
+$smarty->assign("gsLang", getGoogleSearchLang($lang));
 
 if ($_GET["page"] != "home")
   $smarty->assign("page", $_GET["page"] . "/");

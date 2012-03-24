@@ -59,7 +59,7 @@
           <a href="/?hl=ja">日本語</a> |
           <a href="/?hl=ko">한국의</a>
         </p>
-        {if $locale != "en"}
+        {if $lang != "en"}
         <p><a href="http://www.getlocalization.com/synergy/">{t}Improve this translation{/t}</a></p>
         {/if}
       </div>
