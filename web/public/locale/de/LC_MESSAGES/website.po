@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-13 02:47-0000\n"
-"PO-Revision-Date: 2012-03-24 02:07-0000\n"
+"POT-Creation-Date: 2012-03-24 15:38-0000\n"
+"PO-Revision-Date: 2012-03-24 15:39-0000\n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: lang.c:1
-#: lang.c:32
+#: lang.c:33
 msgid "Download"
 msgstr "Download"
 
@@ -77,192 +77,205 @@ msgid "FAQs"
 msgstr "FAQs"
 
 #: lang.c:16
+#: lang.c:19
 msgid "User"
 msgstr "End-User"
 
 #: lang.c:17
-#: lang.c:19
+#: lang.c:20
 msgid "Developer"
 msgstr "Entwickler"
 
 #: lang.c:18
-#: lang.c:43
+#: lang.c:45
 msgid "Mailing lists"
 msgstr "Mailing-listen"
 
-#: lang.c:20
+#: lang.c:21
 msgid "Nightly build"
 msgstr "Nightly build"
 
-#: lang.c:21
+#: lang.c:22
 msgid "Console"
 msgstr "Konsole"
 
-#: lang.c:22
+#: lang.c:23
 msgid "Builders"
 msgstr "Builders"
 
-#: lang.c:23
+#: lang.c:24
 msgid "Packages"
 msgstr "Pakete"
 
-#: lang.c:24
+#: lang.c:25
 msgid "Key People"
 msgstr "Key People"
 
-#: lang.c:25
+#: lang.c:26
 msgid "Project leader and primary developer"
 msgstr "Projektleiter und hauptentwickler"
 
-#: lang.c:26
+#: lang.c:27
 msgid "Original author and project founder"
 msgstr "Original autor und projekt-gründer"
 
-#: lang.c:27
+#: lang.c:28
 msgid "Founder of Synergy+ (fork project)"
 msgstr "Gründer von Synergy+ (fork projekt)"
 
-#: lang.c:28
+#: lang.c:29
 msgid "Support us!"
 msgstr "Unterstützen Sie uns!"
 
-#: lang.c:29
+#: lang.c:30
 msgid "Please help us out by donating or buying merchandise. Thanks for your support!"
 msgstr "Bitte helfen Sie uns durch Spenden oder den Kauf Waren. Vielen Dank für Ihre Unterstützung!"
 
-#: lang.c:30
+#: lang.c:31
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
 msgstr "Mit Synergy können Sie Ihre Tastatur und Maus an mehreren Computern auf Ihrem Schreibtisch nutzen."
 
-#: lang.c:31
+#: lang.c:32
 msgid "Home"
 msgstr "Start"
 
-#: lang.c:33
+#: lang.c:34
 msgid "Info"
 msgstr "Info"
 
-#: lang.c:34
-#: lang.c:50
+#: lang.c:35
+#: lang.c:52
 msgid "Support"
 msgstr "Support"
 
-#: lang.c:35
-#: lang.c:37
+#: lang.c:36
+#: lang.c:39
 msgid "Search"
 msgstr "Suche"
 
-#: lang.c:36
+#: lang.c:37
 msgid "Tracker"
 msgstr "Tracker"
 
 #: lang.c:38
+msgid "Improve this translation"
+msgstr "Melden Übersetzung"
+
+#: lang.c:40
 msgid "Search all Synergy websites from one page."
 msgstr "Suche auf allen Synergy Websiten von einer Seite."
 
-#: lang.c:39
+#: lang.c:41
 msgid "What is searched?"
 msgstr "Was wird durchsucht?"
 
-#: lang.c:40
-#: lang.c:58
+#: lang.c:42
+#: lang.c:62
 msgid "Super User"
 msgstr "Super User"
 
-#: lang.c:41
+#: lang.c:43
 msgid "Issue tracker"
 msgstr "Issue-tracker"
 
-#: lang.c:42
+#: lang.c:44
 msgid "Website wiki"
 msgstr "Website wiki"
 
-#: lang.c:44
+#: lang.c:46
 msgid "Search tips"
 msgstr "Suchtipps"
 
-#: lang.c:45
+#: lang.c:47
 msgid "If you get too many results, try specifying your operating system."
 msgstr "Wenn Sie zu viele Ergebnisse erhalten sollten, versuchen Sie die Angabe Ihres Betriebssystems."
 
-#: lang.c:46
+#: lang.c:48
 msgid "Sometimes issues are specific to the client or server."
 msgstr "Manche Probleme sind spezifisch für den Client oder Server."
 
-#: lang.c:47
+#: lang.c:49
 msgid "You may find that entering your version number helps."
 msgstr "Manchmal hilft die Eingabe Ihrer Versionsnummer."
 
-#: lang.c:48
+#: lang.c:50
 msgid "If this does not work, use the <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy search</a>."
 msgstr "Wenn diese Suche nicht funktioniert, verwenden Sie die <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy Suche</a>."
 
-#: lang.c:49
+#: lang.c:51
 msgid "Engage!"
 msgstr "Engage!"
 
-#: lang.c:51
+#: lang.c:53
 msgid "Having problems using Synergy? You're in the right place!"
 msgstr "Haben Sie Probleme mit Synergy? Sie sind an der richtigen Stelle!"
 
-#: lang.c:52
+#: lang.c:54
+msgid "Try the latest version"
+msgstr "Versuchen Sie die neueste Version"
+
+#: lang.c:55
+msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a> as a last resort, but please do so only as a last resort (these versions have not passed our quality assurance)."
+msgstr "Viele Fehler werden angehoben, obwohl Benutzer haben nicht die neueste Version ausprobiert. Bitte besuchen Sie die <a href=\"%1\">Downloads</a> Seite und probieren Sie die neueste Version (auch wenn es eine Beta ist). Vielleicht wollen Sie auch die <a href=\"/nightly/\">Nightly Builds</a> als letztes Mittel versuchen, aber tun Sie dies bitte nur als letztes Mittel (diese Versionen sind nicht unsere Qualitätssicherung) übergeben."
+
+#: lang.c:56
 msgid "Do your research"
 msgstr "Betreibe Forschung"
 
-#: lang.c:53
-msgid "Before asking anyone for help, do a <a href=\"/search/\">quick search</a>, it really won't take long. You <strong>must</strong> fully research your problem before asking us for help. You can also <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a> to find out how to use config files, etc."
-msgstr "Bevor Sie jemanden um Hilfe bitten, eine schnelle <a href=\"/search/\">Suche</a>, dauert nicht lange. Sie <b>müssen</b> erst gründlich selber Recherchieren, bevor fragen uns um Hilfe. Sie können auch <a href=\"/tracker/projects/synergy/wiki/Docs\">die Dokumentation lesen</a> um herauszufinden, wie man Konfigurationsdateien, etc. verwendet."
+#: lang.c:57
+msgid "Before asking anyone for help, do a <a href=\"%1\">quick search</a>, it really won't take long. You <strong>must</strong> fully research your problem before asking us for help. You can also <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a> to find out how to use config files, etc."
+msgstr "Bevor Sie jemanden um Hilfe bitten, eine schnelle <a href=\"%1/\">Suche</a>, dauert nicht lange. Sie <b>müssen</b> erst gründlich selber Recherchieren, bevor fragen uns um Hilfe. Sie können auch <a href=\"/tracker/projects/synergy/wiki/Docs\">die Dokumentation lesen</a> um herauszufinden, wie man Konfigurationsdateien, etc. verwendet."
 
-#: lang.c:54
+#: lang.c:58
 msgid "Ask your question"
 msgstr "Stellen Sie Ihre Frage"
 
-#: lang.c:55
+#: lang.c:59
 msgid "If you're having trouble configuring or starting Synergy, please  ask a <strong>question</strong> on the  <a href=\"http://synergy-foss.org/osqa/\">Synergy Q&#38;A site</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
 msgstr "Wenn Sie Probleme mit der Konfiguration oder dem Starten von Synergy haben, stellen Sie bitte eine <b>Frage</b> auf der <a href=\"http://synergy-foss.org/osqa/\">Synergy Q&#38;A Seite</a>. Lesen Sie die <a href=\"/osqa/faq/\">FAQ</a>, um sicherzustellen, dass Ihre Frage nicht geschlossen wird."
 
-#: lang.c:56
+#: lang.c:60
 msgid "Mailing list and IRC"
 msgstr "Mailing-liste und IRC"
 
-#: lang.c:57
+#: lang.c:61
 msgid "More traditional open source users may prefer to  <a href=\"http://groups.google.com/group/synergy-plus/post\">use the mailing list</a> (just click \"Apply for group membership\" -- everyone is allowed, this is just to protect us against spammers). Please do not post bugs on the mailing list. You can also join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>) -- but the same applies for IRC; do your research first!"
 msgstr "Mehr traditionell veranlagte Open-Source-Benutzer bevorzugen eventuell die <a href=\"http://groups.google.com/group/synergy-plus/post\">Nutzung der Mailingliste</a> (klicken Sie einfach auf \"Apply for group membership\" - jeder ist erlaubt, dies ist nur um uns vor Spammern zu schützen). Bitte senden Sie keine Fehler an die Mailing-Liste. Sie können auch unserem IRC-Channel beitreten: <code>#synergy auf irc.freenode.net: 8001</code> (für IRC, können Sie <a href=\"http://xchat.org/\">XChat</a> benutzen) - aber das gleiche gilt für IRC, Forschung Sie zuerst selber nach dem Fehler!"
 
-#: lang.c:59
+#: lang.c:63
 msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
 msgstr "Wenn Sie mit Super User vertraut sind, können Sie das <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
 
-#: lang.c:60
+#: lang.c:64
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
 msgstr "Super User ist <b>nicht</b> für die Unterstützung von Synergy verwandtwörtlich."
 
-#: lang.c:61
+#: lang.c:65
 msgid "Ask questions; do not nag or comment on bugs or issues."
 msgstr "Stellen Sie Fragen. Nörgeln Sie an und kommentieren Sie Fehler oder Probleme nicht."
 
-#: lang.c:62
+#: lang.c:66
 msgid "Do not raise new bugs there; use the issue tracker for this."
 msgstr "Tragen Sie keine neue Bugs dort ein, dafür ist der issue tracker."
 
-#: lang.c:63
+#: lang.c:67
 msgid "Synergy developers do <i>not</i> monitor this website."
 msgstr "Synergy-Entwickler verfolgen die Webseite <i>nicht</i> aktiv."
 
-#: lang.c:64
+#: lang.c:68
 msgid "Always use the \"synergy\" tag on your question."
 msgstr "Verwenden Sie immer das \"synergy\" Tag bei Ihren Fragen."
 
-#: lang.c:65
+#: lang.c:69
 msgid "Make sure you mention \"Synergy\" in the question."
 msgstr "Stellen Sie sicher \"Synergy\" in der Frage zu erwähnen."
 
-#: lang.c:66
+#: lang.c:70
 msgid "Report a bug"
 msgstr "Fehler melden"
 
-#: lang.c:67
-msgid "If you've exhausted all other options (or if you think your issue is really a <b>bug</b>), you can <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
+#: lang.c:71
+msgid "If you've exhausted all other options, and are using the latest version, then should raise a bug. To do this, <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
 msgstr "Wenn Sie schon alle anderen Optionen erschöpft haben (oder wenn Sie glauben, Ihr Problem ist wirklich ein <b>Fehler</b>), können Sie ein neues Konto <a href=\"/tracker/account/register\">registrieren</a> <i>und dann</i> ein neuen <a href=\"/tracker/projects/synergy/support/new\">neue Bug-Report</a> auf unserer issue tracker eröffnen."
 
 #, fuzzy

@@ -19,7 +19,7 @@ if (isSet($_GET["ul"])) {
 } else if (isSet($_GET["hl"])) {
 
   // language forced by visitor.
-  $lang = $_GET["hl"];
+  $lang = getLang($_GET["hl"]);
   
   // if english, force and use / (if we don't
   // force in session, language is auto detected).

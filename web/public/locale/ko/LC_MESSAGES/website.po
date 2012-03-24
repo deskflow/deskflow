@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-16 14:51-0000\n"
-"PO-Revision-Date: 2012-03-24 02:07-0000\n"
+"POT-Creation-Date: 2012-03-24 15:48-0000\n"
+"PO-Revision-Date: 2012-03-24 15:49-0000\n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -214,16 +214,16 @@ msgid "Try the latest version"
 msgstr "최신 버전을보십시오"
 
 #: lang.c:55
-msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the <a href=\"/download/\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a> as a last resort, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr "많은 버그는 사용자가 최신 버전을 시도하지 않은 경우에도 사육하고 있습니다.<a href=\"/download/\">다운로드</a> 페이지를 방문하여 최신 버전 (이것은 베타 버전이라도)을 밖으로 시도하십시오. 당신은 또한 <a href=\"/nightly/\">야간 빌드</a> 최후의 수단으로 시도 해보고 싶어요,하지만 최후의 수단 (이 버전은 품질 보증을 통과하지 않은)로 이렇게하십시오 수도 있습니다."
+msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a> as a last resort, but please do so only as a last resort (these versions have not passed our quality assurance)."
+msgstr "많은 버그는 사용자가 최신 버전을 시도하지 않은 경우에도 사육하고 있습니다.<a href=\"%1\">다운로드</a> 페이지를 방문하여 최신 버전 (이것은 베타 버전이라도)을 밖으로 시도하십시오. 당신은 또한 <a href=\"/nightly/\">야간 빌드</a> 최후의 수단으로 시도 해보고 싶어요,하지만 최후의 수단 (이 버전은 품질 보증을 통과하지 않은)로 이렇게하십시오 수도 있습니다."
 
 #: lang.c:56
 msgid "Do your research"
 msgstr "귀하의 연구를 수행"
 
 #: lang.c:57
-msgid "Before asking anyone for help, do a <a href=\"/search/\">quick search</a>, it really won't take long. You <strong>must</strong> fully research your problem before asking us for help. You can also <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a> to find out how to use config files, etc."
-msgstr "누구에게도 도움을 요청하기 전에, <a href=\"/search/\">빠른 검색</a>을, 그리 오래 걸리지 않을 겁니다. 당신은 반드시 완벽하게 우리에게 도움을 요청하기 전에 문제를 연구. 당신은 또한 <a href=\"/tracker/projects/synergy/wiki/Docs\">문서를 읽을</a> 수 설정 파일 등을 사용하는 방법을 찾아"
+msgid "Before asking anyone for help, do a <a href=\"%1\">quick search</a>, it really won't take long. You <strong>must</strong> fully research your problem before asking us for help. You can also <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a> to find out how to use config files, etc."
+msgstr "누구에게도 도움을 요청하기 전에, <a href=\"%1\">빠른 검색</a>을, 그리 오래 걸리지 않을 겁니다. 당신은 반드시 완벽하게 우리에게 도움을 요청하기 전에 문제를 연구. 당신은 또한 <a href=\"/tracker/projects/synergy/wiki/Docs\">문서를 읽을</a> 수 설정 파일 등을 사용하는 방법을 찾아"
 
 #: lang.c:58
 msgid "Ask your question"

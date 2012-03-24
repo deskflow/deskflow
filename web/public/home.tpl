@@ -13,9 +13,9 @@
         <div class="addthis_toolbox addthis_default_style ">
         <a class="addthis_button_facebook"></a>
         <a class="addthis_button_twitter"></a>
-        <a class="addthis_button_blogger"></a>
         <a class="addthis_button_stumbleupon"></a>
         <a class="addthis_button_reddit"></a>
+        <a class="addthis_button_blogger"></a>
         <a class="addthis_button_digg"></a>
         <a class="addthis_button_delicious"></a>
         <a class="addthis_button_evernote"></a>

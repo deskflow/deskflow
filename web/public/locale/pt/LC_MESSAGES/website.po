@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-24 03:50-0000\n"
+"POT-Creation-Date: 2012-03-24 15:51-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -167,7 +167,7 @@ msgid "What is searched?"
 msgstr "What is searched?"
 
 #: lang.c:42
-#: lang.c:60
+#: lang.c:62
 msgid "Super User"
 msgstr "Super User"
 
@@ -212,58 +212,66 @@ msgid "Try the latest version"
 msgstr "Try the latest version"
 
 #: lang.c:55
+msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a> as a last resort, but please do so only as a last resort (these versions have not passed our quality assurance)."
+msgstr ""
+
+#: lang.c:56
 msgid "Do your research"
 msgstr "Do your research"
 
-#: lang.c:56
+#: lang.c:57
+msgid "Before asking anyone for help, do a <a href=\"%1\">quick search</a>, it really won't take long. You <strong>must</strong> fully research your problem before asking us for help. You can also <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a> to find out how to use config files, etc."
+msgstr ""
+
+#: lang.c:58
 msgid "Ask your question"
 msgstr "Ask your question"
 
-#: lang.c:57
+#: lang.c:59
 msgid "If you're having trouble configuring or starting Synergy, please  ask a <strong>question</strong> on the  <a href=\"http://synergy-foss.org/osqa/\">Synergy Q&#38;A site</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
 msgstr "If you're having trouble configuring or starting Synergy, please  ask a <strong>question</strong> on the  <a href=\"http://synergy-foss.org/osqa/\">Synergy Q&#38;A site</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
 
-#: lang.c:58
+#: lang.c:60
 msgid "Mailing list and IRC"
 msgstr "Mailing list and IRC"
 
-#: lang.c:59
+#: lang.c:61
 msgid "More traditional open source users may prefer to  <a href=\"http://groups.google.com/group/synergy-plus/post\">use the mailing list</a> (just click \"Apply for group membership\" -- everyone is allowed, this is just to protect us against spammers). Please do not post bugs on the mailing list. You can also join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>) -- but the same applies for IRC; do your research first!"
 msgstr "More traditional open source users may prefer to  <a href=\"http://groups.google.com/group/synergy-plus/post\">use the mailing list</a> (just click \"Apply for group membership\" -- everyone is allowed, this is just to protect us against spammers). Please do not post bugs on the mailing list. You can also join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>) -- but the same applies for IRC; do your research first!"
 
-#: lang.c:61
+#: lang.c:63
 msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
 msgstr "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
 
-#: lang.c:62
+#: lang.c:64
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
 msgstr "Super User is <b>not</b> dedicated to supporting Synergy."
 
-#: lang.c:63
+#: lang.c:65
 msgid "Ask questions; do not nag or comment on bugs or issues."
 msgstr "Ask questions; do not nag or comment on bugs or issues."
 
-#: lang.c:64
+#: lang.c:66
 msgid "Do not raise new bugs there; use the issue tracker for this."
 msgstr "Do not raise new bugs there; use the issue tracker for this."
 
-#: lang.c:65
+#: lang.c:67
 msgid "Synergy developers do <i>not</i> monitor this website."
 msgstr "Synergy developers do <i>not</i> monitor this website."
 
-#: lang.c:66
+#: lang.c:68
 msgid "Always use the \"synergy\" tag on your question."
 msgstr "Always use the \"synergy\" tag on your question."
 
-#: lang.c:67
+#: lang.c:69
 msgid "Make sure you mention \"Synergy\" in the question."
 msgstr "Make sure you mention \"Synergy\" in the question."
 
-#: lang.c:68
+#: lang.c:70
 msgid "Report a bug"
 msgstr "Report a bug"
 
-#: lang.c:69
+#: lang.c:71
 msgid "If you've exhausted all other options, and are using the latest version, then should raise a bug. To do this, <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
 msgstr "If you've exhausted all other options, and are using the latest version, then should raise a bug. To do this, <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
 
