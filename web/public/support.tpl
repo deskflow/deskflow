@@ -10,7 +10,7 @@
   <h3>{t}Try the latest version{/t}</h3>
   <p>
 {t}Many bugs are raised even though users haven't tried the latest version.
-Please visit the <a href="/download/">downloads</a> page and try out the
+Please visit the <a href="{$baseUrl}/download/">downloads</a> page and try out the
 latest version (even if it's a beta). You might also want to try the
 <a href="/nightly/">nightly builds</a> as a last resort, but please do so
 only as a last resort (these versions have not passed our quality assurance).{/t}
@@ -18,7 +18,7 @@ only as a last resort (these versions have not passed our quality assurance).{/t
 
   <h3>{t}Do your research{/t}</h3>
   <p>
-{t}Before asking anyone for help, do a <a href="/search/">quick search</a>,
+{t}Before asking anyone for help, do a <a href="{$baseUrl}/search/">quick search</a>,
 it really won't take long. You <strong>must</strong> fully
 research your problem before asking us for help. You can also
 <a href="/tracker/projects/synergy/wiki/Docs">read the docs</a>

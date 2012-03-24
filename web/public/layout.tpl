@@ -3,7 +3,7 @@
     <title>Synergy{$title}</title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta name="description" content="{t}Synergy lets you share your keyboard and mouse between multiple computers on your desk.{/t}" />
-    <link rel="stylesheet" type="text/css" href="/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
@@ -36,12 +36,12 @@
     <div class="layout">
       <div class="menu">
         <div class="pages">
-          <a href="/">{t}Home{/t}</a> |
-          <a href="/download/">{t}Download{/t}</a> |
-          <a href="/info/">{t}Info{/t}</a> |
-          <a href="/support/">{t}Support{/t}</a> |
-          <a href="/search/">{t}Search{/t}</a> |
-          <a href="/tracker/">{t}Tracker{/t}</a>
+          <a href="{$baseUrl}/">{t}Home{/t}</a> |
+          <a href="{$baseUrl}/download/">{t}Download{/t}</a> |
+          <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
+          <a href="{$baseUrl}/support/">{t}Support{/t}</a> |
+          <a href="{$baseUrl}/search/">{t}Search{/t}</a> |
+          <a href="{$baseUrl}/tracker/">{t}Tracker{/t}</a>
         </div>
       </div>
       <div class="content">
@@ -49,17 +49,17 @@
       </div>
       <div class="footer">
         <p>
-          <a href="{$url}?hl=en_US">English</a> |
-          <a href="{$url}?hl=de_DE">Deutsch</a> |
-          <a href="{$url}?hl=fr_FR">Français</a> |
-          <a href="{$url}?hl=nl_NL">Nederlands</a> |
-          <a href="{$url}?hl=it_IT">Italiano</a> |
-          <a href="{$url}?hl=ru_RU">Русский</a> |
-          <a href="{$url}?hl=zh_CN">中文 (简体)</a> |
-          <a href="{$url}?hl=ja_JP">日本語</a> |
-          <a href="{$url}?hl=ko_KR">한국의</a>
+          <a href="/?hl=en">English</a> |
+          <a href="/?hl=de">Deutsch</a> |
+          <a href="/?hl=fr">Français</a> |
+          <a href="/?hl=nl">Nederlands</a> |
+          <a href="/?hl=it">Italiano</a> |
+          <a href="/?hl=ru">Русский</a> |
+          <a href="/?hl=zh">中文 (简体)</a> |
+          <a href="/?hl=ja">日本語</a> |
+          <a href="/?hl=ko">한국의</a>
         </p>
-        {if $locale != "en_US"}
+        {if $locale != "en"}
         <p><a href="http://www.getlocalization.com/synergy/">{t}Improve this translation{/t}</a></p>
         {/if}
       </div>
