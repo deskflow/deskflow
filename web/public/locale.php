@@ -14,24 +14,17 @@ if (isSet($_GET["hl"])) {
   $locale = Locale::acceptFromHttp($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
 }
 
-// add country specific codes if none.
-switch ($locale) {
-  case "fr": $locale = "fr_FR"; break;
-  case "ja": $locale = "ja_JP"; break;
-  case "de": $locale = "de_DE"; break;
-  case "ru": $locale = "ru_RU"; break;
-  case "zh": $locale = "zh_CN"; break;
-  case "ko": $locale = "ko_KR"; break;
-  case "it": $locale = "it_IT"; break;
-  case "nl": $locale = "nl_NL"; break;
-}
+// get language from locale (we don't really care
+// too much about country code, just language).
+$localeParts = explode("_", $locale);
+$language = $localeParts;
 
-putenv("LANGUAGE=".$locale);
-putenv("LANG=".$locale);
-putenv("LC_ALL=".$locale);
-putenv("LC_MESSAGES=".$locale);
+putenv("LANGUAGE=" . $locale);
+putenv("LANG=" . $locale);
+putenv("LC_ALL=" . $locale);
+putenv("LC_MESSAGES=" . $locale);
 T_setlocale(LC_ALL, $locale);
-T_bindtextdomain("messages", "./locale");
-T_textdomain("messages");
+T_bindtextdomain("website", "./locale");
+T_textdomain("website");
 
 ?>
