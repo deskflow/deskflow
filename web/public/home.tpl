@@ -16,12 +16,10 @@
         <a class="addthis_button_stumbleupon"></a>
         <a class="addthis_button_reddit"></a>
         <a class="addthis_button_blogger"></a>
-        <a class="addthis_button_digg"></a>
         <a class="addthis_button_delicious"></a>
-        <a class="addthis_button_evernote"></a>
-        <a class="addthis_button_linkedin"></a>
-        <a class="addthis_button_tumblr"></a>
+        <a class="addthis_button_digg"></a>
         <a class="addthis_button_email"></a>
+        <a class="addthis_button_google_plusone" g:plusone:count="false"></a>
         <a class="addthis_button_compact"></a>
         <a class="addthis_counter addthis_bubble_style"></a>
         </div>
