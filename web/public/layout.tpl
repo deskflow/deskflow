@@ -56,6 +56,7 @@
           <a href="/?hl=nl">Nederlands</a> |
           <a href="/?hl=it">Italiano</a> |
           <a href="/?hl=pt">Português</a> |
+          <a href="/?hl=ro">Română</a> |
           <a href="/?hl=ru">Русский</a> |
           <a href="/?hl=zh">中文 (简体)</a> |
           <a href="/?hl=ja">日本語</a> |
