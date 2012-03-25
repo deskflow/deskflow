@@ -1,5 +1,4 @@
-﻿
-<div class="home">
+﻿<div class="home">
 
   <div class="title">
   
