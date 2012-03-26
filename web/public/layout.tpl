@@ -53,6 +53,7 @@
           <a href="/?hl=en">English</a> |
           <a href="/?hl=de">Deutsch</a> |
           <a href="/?hl=fr">Français</a> |
+          <a href="/?hl=es">Español</a> |
           <a href="/?hl=nl">Nederlands</a> |
           <a href="/?hl=it">Italiano</a> |
           <a href="/?hl=pt">Português</a> |
