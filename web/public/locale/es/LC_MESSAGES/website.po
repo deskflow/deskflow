@@ -19,7 +19,7 @@ msgstr "Descargar"
 
 #: lang.c:2
 msgid "<b>Latest release:</b> 1.4.7 Beta (Feb 5, 2012)"
-msgstr "<b>Última versión:</ b> 1.4.7 Beta (05 de febrero 2012)"
+msgstr "<b>Última versión:</b> 1.4.7 Beta (05 de febrero 2012)"
 
 #: lang.c:3
 msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
