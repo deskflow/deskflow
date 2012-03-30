@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-24 15:51-0000\n"
+"POT-Creation-Date: 2012-03-25 14:44-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -156,7 +156,7 @@ msgstr "Tracker"
 
 #: lang.c:38
 msgid "Improve this translation"
-msgstr "Improve this translation"
+msgstr "Melhorar esta tradução"
 
 #: lang.c:40
 msgid "Search all Synergy websites from one page."
@@ -213,7 +213,7 @@ msgstr "Try the latest version"
 
 #: lang.c:55
 msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a> as a last resort, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr ""
+msgstr "Muitos erros acontecem quando os usuários não tentaram instalar a última versão. Por favor visite a página <a href=\"%1\">downloads</a> e tente com a versão mais recente (não importa se é beta). Você também pode tentar <a href=\"/nightly/\">nightly builds</a> como último recurso, mas por favor faça-o somente como última recurso (estas versões ainda não foram aprovadas pelo nosso controle de qualidade)."
 
 #: lang.c:56
 msgid "Do your research"
