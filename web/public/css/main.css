@@ -36,14 +36,16 @@ div.content {
 }
 
 div.footer {
-  margin: 20px;
+  margin: 20px auto 20px auto;
   padding-bottom: 20px;
   text-align: center;
+  width: 400px;
 }
 
 div.footer a {
   color: #777;
   font-size: .9em;
+  white-space: nowrap;
 }
 
 div.home div.demo,
