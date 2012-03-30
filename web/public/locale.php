@@ -23,7 +23,20 @@ $url = "http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
 session_start();
 
 function getLang($lang) {
-  return reset(explode("_", $lang));
+  $lang = reset(explode("_", $lang));
+  switch ($lang) {
+    case "nb":
+    case "nn":
+      // hopefully this wont annoy norwegians! :)
+      $lang = "no";
+      break;
+  }
+  return $lang;
+}
+
+function parseHeaderLocale($header) {
+  $first = reset(explode(";", $header));
+  return str_replace("-", "_", reset(explode(",", $first)));
 }
 
 $lang = "en";
@@ -59,7 +72,7 @@ if (isSet($_GET["ul"])) {
 } else if (isSet($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
 
   // no language specified in url, try to auto-detect.
-  $lang = getLang(Locale::acceptFromHttp($_SERVER["HTTP_ACCEPT_LANGUAGE"]));
+  $lang = getLang(parseHeaderLocale($_SERVER["HTTP_ACCEPT_LANGUAGE"]));
 
   // only redirect if non-english, otherwise use /.
   if (strstr($lang, "en") == "") {

@@ -49,6 +49,9 @@
         {$content}
       </div>
       <div class="footer">
+        {if $lang != "en"}
+        <p><a href="http://www.getlocalization.com/synergy/">{t}Improve this translation{/t}</a></p>
+        {/if}
         <p>
           <a href="/?hl=en">English</a> |
           <a href="/?hl=cs">Čeština</a> |
@@ -75,9 +78,6 @@
           <a href="/?hl=ja">日本語</a> |
           <a href="/?hl=ko">한국의</a>
         </p>
-        {if $lang != "en"}
-        <p><a href="http://www.getlocalization.com/synergy/">{t}Improve this translation{/t}</a></p>
-        {/if}
       </div>
     </div>
   </body>
