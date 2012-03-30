@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-25 14:44-0000\n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,7 +156,7 @@ msgstr ""
 
 #: lang.c:38
 msgid "Improve this translation"
-msgstr ""
+msgstr "Förbättra denna översättning"
 
 #: lang.c:40
 msgid "Search all Synergy websites from one page."

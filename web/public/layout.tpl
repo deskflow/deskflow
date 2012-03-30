@@ -51,18 +51,26 @@
       <div class="footer">
         <p>
           <a href="/?hl=en">English</a> |
-          <a href="/?hl=de">Deutsch</a> |
-          <a href="/?hl=fr">Français</a> |
-          <a href="/?hl=es">Español</a> |
-          <a href="/?hl=nl">Nederlands</a> |
-          <a href="/?hl=it">Italiano</a> |
-          <a href="/?hl=pt">Português</a> |
-          <a href="/?hl=sv">Svenska</a> |
-          <a href="/?hl=no">Norsk</a> |
-          <a href="/?hl=ro">Română</a> |
-          <a href="/?hl=pl">Polski</a> |
           <a href="/?hl=cs">Čeština</a> |
-          <a href="/?hl=ru">Русский</a> |
+          <a href="/?hl=cy">Cymraeg</a> |
+          <a href="/?hl=de">Deutsch</a> |
+          <a href="/?hl=es">Español</a> |
+          <a href="/?hl=fr">Français</a> |
+          <a href="/?hl=it">Italiano</a> |
+          <a href="/?hl=nl">Nederlands</a>
+          <br />
+          <a href="/?hl=no">Norsk</a> |
+          <a href="/?hl=pl">Polski</a> |
+          <a href="/?hl=pt">Português</a> |
+          <a href="/?hl=ro">Română</a> |
+          <a href="/?hl=fi">Suomi</a> |
+          <a href="/?hl=sv">Svenska</a> |
+          <a href="/?hl=vi">Tiếng Việt</a> |
+          <a href="/?hl=ru">Русский</a>
+          <br />
+          <a href="/?hl=he">עברית</a> |
+          <a href="/?hl=ar">العربية</a> |
+          <a href="/?hl=th">ภาษาไทย</a> |
           <a href="/?hl=zh">中文 (简体)</a> |
           <a href="/?hl=ja">日本語</a> |
           <a href="/?hl=ko">한국의</a>
