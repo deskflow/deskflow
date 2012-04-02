@@ -314,6 +314,11 @@
     <string>Edit settings</string>
    </property>
   </action>
+  <action name="m_pActionWizard">
+   <property name="text">
+    <string>Run Wizard</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="Synergy.qrc"/>

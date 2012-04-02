@@ -21,6 +21,7 @@
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
+#include "SetupWizard.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -69,7 +70,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pTempConfigFile(NULL),
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
-	m_alreadyHidden(false)
+	m_alreadyHidden(false),
+	m_SetupWizard(NULL)
 {
 	setupUi(this);
 
@@ -80,20 +82,21 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pUpdateIcon->hide();
 	m_pUpdateLabel->hide();
 	m_versionChecker.setApp(appPath(appConfig.synergycName()));
+
+	m_SetupWizard = new SetupWizard(*this, false);
+	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(refreshStartButton()));
 }
 
 MainWindow::~MainWindow()
 {
 	stopSynergy();
 	saveSettings();
+	delete m_SetupWizard;
 }
 
 void MainWindow::start()
 {
-	if (appConfig().processMode() == Service)
-	{
-		m_pButtonToggleStart->setText(tr("&Apply"));
-	}
+	refreshStartButton();
 
 	if (appConfig().autoConnect())
 		startSynergy();
@@ -104,6 +107,18 @@ void MainWindow::start()
 	show();
 
 	m_versionChecker.checkLatest();
+}
+
+void MainWindow::refreshStartButton()
+{
+	if (appConfig().processMode() == Service)
+	{
+		m_pButtonToggleStart->setText(tr("&Apply"));
+	}
+	else
+	{
+		m_pButtonToggleStart->setText(tr("&Start"));
+	}
 }
 
 void MainWindow::setStatus(const QString &status)
@@ -137,13 +152,11 @@ void MainWindow::createMenuBar()
 	QMenuBar* menubar = new QMenuBar(this);
 	QMenu* pMenuFile = new QMenu(tr("&File"), menubar);
 	QMenu* pMenuEdit = new QMenu(tr("&Edit"), menubar);
-	QMenu* pMenuView = new QMenu(tr("&View"), menubar);
 	QMenu* pMenuWindow = new QMenu(tr("&Window"), menubar);
 	QMenu* pMenuHelp = new QMenu(tr("&Help"), menubar);
 
 	menubar->addAction(pMenuFile->menuAction());
 	menubar->addAction(pMenuEdit->menuAction());
-	menubar->addAction(pMenuView->menuAction());
 #if !defined(Q_OS_MAC)
 	menubar->addAction(pMenuWindow->menuAction());
 #endif
@@ -152,6 +165,7 @@ void MainWindow::createMenuBar()
 	pMenuFile->addAction(m_pActionStartSynergy);
 	pMenuFile->addAction(m_pActionStopSynergy);
 	pMenuFile->addSeparator();
+	pMenuFile->addAction(m_pActionWizard);
 	pMenuFile->addAction(m_pActionSave);
 	pMenuFile->addSeparator();
 	pMenuFile->addAction(m_pActionQuit);
@@ -515,6 +529,10 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
 
 void MainWindow::setSynergyState(qSynergyState state)
 {
+	// ignore state stuff when in service mode (for now anyway).
+	if (appConfig().processMode() == Service)
+		return;
+
 	if (synergyState() == state)
 		return;
 
@@ -661,4 +679,9 @@ void MainWindow::sendDaemonCommand(const QString& command)
 	CloseHandle(pipe);
 
 #endif
+}
+
+void MainWindow::on_m_pActionWizard_triggered()
+{
+	m_SetupWizard->show();
 }

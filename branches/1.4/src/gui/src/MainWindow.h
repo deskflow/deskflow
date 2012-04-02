@@ -45,6 +45,7 @@ class QTemporaryFile;
 
 class LogDialog;
 class QSynergyApplication;
+class SetupWizard;
 
 class MainWindow : public QMainWindow, public Ui::MainWindowBase
 {
@@ -91,6 +92,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool on_m_pActionSave_triggered();
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
+		void on_m_pActionWizard_triggered();
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void iconActivated(QSystemTrayIcon::ActivationReason reason);
 		void startSynergy();
@@ -98,6 +100,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void logOutput();
 		void logError();
 		void updateFound(const QString& version);
+		void refreshStartButton();
 
 	protected:
 		QSettings& settings() { return m_Settings; }
@@ -129,6 +132,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMenu* m_pTrayIconMenu;
 		bool m_alreadyHidden;
 		VersionChecker m_versionChecker;
+		SetupWizard* m_SetupWizard;
 };
 
 enum IpcMessage {

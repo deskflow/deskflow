@@ -64,6 +64,7 @@ void SetupWizard::handlefinished()
 	close();
 
 	AppConfig& appConfig = m_MainWindow.appConfig();
+
 	if (m_pServiceRadioButton->isChecked())
 	{
 		appConfig.setProcessMode(Service);
@@ -79,6 +80,9 @@ void SetupWizard::handlefinished()
 		// still use desktop mode, but don't auto start.
 		appConfig.setProcessMode(Desktop);
 	}
+
+	appConfig.setWizardHasRun(true);
+
 	appConfig.saveSettings();
 
 	if (m_StartMain)

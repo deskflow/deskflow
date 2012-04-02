@@ -153,6 +153,7 @@ void AppConfig::loadSettings()
 	m_AutoHide = settings().value("autoHide", true).toBool();
 	m_AutoStartPrompt = settings().value("autoStartPrompt", true).toBool();
 	m_WizardHasRun = settings().value("wizardHasRun", false).toBool();
+	m_ProcessMode = (ProcessMode)settings().value("processMode", Desktop).toInt();
 }
 
 void AppConfig::saveSettings()
@@ -169,4 +170,5 @@ void AppConfig::saveSettings()
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("autoStartPrompt", m_AutoStartPrompt);
 	settings().setValue("wizardHasRun", m_WizardHasRun);
+	settings().setValue("processMode", m_ProcessMode);
 }
