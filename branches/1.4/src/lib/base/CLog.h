@@ -38,6 +38,7 @@ LOGC() provide convenient access.
 */
 class CLog {
 public:
+	CLog();
 	~CLog();
 
 	//! @name manipulators
@@ -118,8 +119,6 @@ public:
 	//@}
 
 private:
-	CLog();
-
 	void				output(ELevel priority, char* msg);
 
 private:

@@ -16,18 +16,19 @@
  */
 
 #include "CDaemonApp.h"
+#include "CEventQueue.h"
+#include "LogOutputters.h"
+#include "CLog.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
 #include "XArchWindows.h"
 #include "CScreen.h"
 #include "CMSWindowsScreen.h"
+#include "CMSWindowsRelauncher.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
-
-#include "CSocketMultiplexer.h"
-#include "CEventQueue.h"
 
 #include <string>
 #include <iostream>
@@ -75,8 +76,9 @@ CDaemonApp::run(int argc, char** argv)
 		CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-		// creates ARCH singleton.
+		// create singletons.
 		CArch arch;
+		CLog log;
 
 		// if no args, daemonize.
 		if (argc == 1) {
@@ -90,8 +92,14 @@ CDaemonApp::run(int argc, char** argv)
 			for (int i = 1; i < argc; ++i) {
 				string arg(argv[i]);
 
+				if (arg == "/f" || arg == "-f") {
+					// run process in foreground instead of daemonizing.
+					// useful for debugging.
+					mainLoop();
+					return kExitSuccess;
+				}
 #if SYSAPI_WIN32
-				if (arg == "/install") {
+				else if (arg == "/install") {
 					ARCH->installDaemon();
 					continue;
 				}
@@ -102,7 +110,7 @@ CDaemonApp::run(int argc, char** argv)
 #endif
 				stringstream ss;
 				ss << "Unrecognized argument: " << arg;
-				error(ss.str().c_str());
+				foregroundError(ss.str().c_str());
 				return kExitArgs;
 			}
 		}
@@ -110,15 +118,15 @@ CDaemonApp::run(int argc, char** argv)
 		return kExitSuccess;
 	}
 	catch (XArch& e) {
-		error(e.what().c_str());
+		foregroundError(e.what().c_str());
 		return kExitFailed;
 	}
 	catch (std::exception& e) {
-		error(e.what());
+		foregroundError(e.what());
 		return kExitFailed;
 	}
 	catch (...) {
-		error("Unrecognized error.");
+		foregroundError("Unrecognized error.");
 		return kExitFailed;
 	}
 }
@@ -126,29 +134,46 @@ CDaemonApp::run(int argc, char** argv)
 void
 CDaemonApp::mainLoop()
 {
-	DAEMON_RUNNING(true);
+	try
+	{
+		DAEMON_RUNNING(true);
 
-	CEventQueue eventQueue;
+		CLOG->insert(new CFileLogOutputter(LOG_PATH));
+
+		CEventQueue eventQueue;
 
 #if SYSAPI_WIN32
-	// HACK: create a dummy screen, which can handle system events 
-	// (such as a stop request from the service controller).
-	CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
-	CScreen dummyScreen(new CMSWindowsScreen(false, true, false));
+		// HACK: create a dummy screen, which can handle system events 
+		// (such as a stop request from the service controller).
+		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
+		CScreen dummyScreen(new CMSWindowsScreen(false, true, false));
+
+		CMSWindowsRelauncher relauncher(false);
+		relauncher.startAsync();
 #endif
 
-	CEvent event;
-	EVENTQUEUE->getEvent(event);
-	while (event.getType() != CEvent::kQuit) {
-		EVENTQUEUE->dispatchEvent(event);
-		CEvent::deleteData(event);
+		CEvent event;
 		EVENTQUEUE->getEvent(event);
-	}
+		while (event.getType() != CEvent::kQuit) {
+			EVENTQUEUE->dispatchEvent(event);
+			CEvent::deleteData(event);
+			EVENTQUEUE->getEvent(event);
+		}
 
-	DAEMON_RUNNING(false);
+		DAEMON_RUNNING(false);
+	}
+	catch (XArch& e) {
+		LOG((CLOG_ERR, e.what().c_str()));
+	}
+	catch (std::exception& e) {
+		LOG((CLOG_ERR, e.what()));
+	}
+	catch (...) {
+		LOG((CLOG_ERR, "Unrecognized error."));
+	}
 }
 
-void CDaemonApp::error(const char* message)
+void CDaemonApp::foregroundError(const char* message)
 {
 #if SYSAPI_WIN32
 	MessageBox(NULL, message, "Synergy Service", MB_OK | MB_ICONERROR);

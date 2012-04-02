@@ -29,8 +29,14 @@ public:
 
 private:
 	void daemonize();
-	void error(const char* message);
+	void foregroundError(const char* message);
 
 public:
 	static CDaemonApp* instance;
 };
+
+#ifdef SYSAPI_WIN32
+#define LOG_PATH "synergyd.log"
+#elif SYSAPI_UNIX
+#define LOG_PATH "/var/log/synergyd.log"
+#endif

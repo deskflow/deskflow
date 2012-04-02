@@ -205,7 +205,7 @@ CArchAppUtilWindows::startNode()
 	if (app().argsBase().m_relaunchMode) {
 
 		LOG((CLOG_DEBUG1 "entering relaunch mode"));
-		CMSWindowsRelauncher relauncher;
+		CMSWindowsRelauncher relauncher(true);
 		relauncher.startAsync();
 
 		// HACK: create a dummy screen, which can handle system events 

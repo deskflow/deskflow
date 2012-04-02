@@ -27,8 +27,9 @@
 #include <UserEnv.h>
 #include <sstream>
 
-CMSWindowsRelauncher::CMSWindowsRelauncher() :
-	m_thread(NULL)
+CMSWindowsRelauncher::CMSWindowsRelauncher(bool autoDetectCommand) :
+	m_thread(NULL),
+	m_autoDetectCommand(autoDetectCommand)
 {
 }
 
@@ -228,7 +229,9 @@ CMSWindowsRelauncher::relaunchLoop()
 
 		HANDLE hEvtSendSas = 0;
 		if (hSASLib && pfnSendSAS) {
-			hEvtSendSas = CreateEvent( NULL, FALSE, FALSE, "Global\\SendSAS" );
+			// TODO: this floods the handle list with Global\\SendSAS -- does
+			// that mean this is broken?
+			//hEvtSendSas = CreateEvent( NULL, FALSE, FALSE, "Global\\SendSAS" );
 		}
 
 		DWORD newSessionId = getSessionId();
@@ -258,7 +261,11 @@ CMSWindowsRelauncher::relaunchLoop()
 			if (userToken != 0) {
 				LOG((CLOG_DEBUG "got user token to launch new process"));
 
-				std::string cmd = getCommand();
+				std::string cmd = command();
+				if (cmd == "") {
+					LOG((CLOG_WARN "nothing to launch, no command specified."));
+					continue;
+				}
 
 				// in case reusing process info struct
 				ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
@@ -326,8 +333,12 @@ CMSWindowsRelauncher::relaunchLoop()
 	return kExitSuccess;
 }
 
-std::string CMSWindowsRelauncher::getCommand()
+std::string CMSWindowsRelauncher::command()
 {
+	if (!m_autoDetectCommand) {
+		return m_command;
+	}
+
 	// seems like a fairly convoluted way to get the process name
 	const char* launchName = ARCH->util().app().argsBase().m_pname;
 	std::string args = ((CArchDaemonWindows&)ARCH->daemon()).commandLine();

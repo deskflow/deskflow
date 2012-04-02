@@ -25,14 +25,21 @@ class CThread;
 
 class CMSWindowsRelauncher {
 public:
-	CMSWindowsRelauncher();
+	CMSWindowsRelauncher(bool autoDetectCommand);
 	virtual ~CMSWindowsRelauncher();
 	void startAsync();
-	CThread* m_thread;
+
+private:
 	void startThread(void*);
 	BOOL winlogonInSession(DWORD sessionId, PHANDLE process);
 	DWORD getSessionId();
 	HANDLE getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
 	int relaunchLoop();
-	std::string getCommand();
+	std::string command();
+	void command(const std::string& command) { m_command = command; }
+
+private:
+	CThread* m_thread;
+	bool m_autoDetectCommand;
+	std::string m_command;
 };

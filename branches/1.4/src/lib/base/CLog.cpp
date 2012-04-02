@@ -21,6 +21,7 @@
 #include "LogOutputters.h"
 #include "CArch.h"
 #include "Version.h"
+#include "XArch.h"
 #include <cstdio>
 #include <cstring>
 #include <iostream>
@@ -79,6 +80,8 @@ CLog::CLog()
   m_maxPriority      = g_defaultMaxPriority;
   m_maxNewlineLength = 0;
   insert(new CConsoleLogOutputter);
+
+  s_log = this;
 }
 
 CLog::~CLog()
@@ -101,7 +104,7 @@ CLog::getInstance()
 {
   // note -- not thread safe;  client must initialize log safely
   if (s_log == NULL) {
-    s_log = new CLog;
+    throw XArch("Log instance not created.");
   }
   return s_log;
 }
