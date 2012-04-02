@@ -298,7 +298,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 		}
 
 		if (sendSasEvent) {
-			// use SenSAS event to wait for next session.
+			// use SendSAS event to wait for next session.
 			if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0 && sendSasFunc) {
 				LOG((CLOG_DEBUG "calling SendSAS"));
 				sendSasFunc(FALSE);
@@ -306,7 +306,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 			CloseHandle(sendSasEvent);
 		}
 		else {
-			// check for session change every second
+			// check for session change every second.
 			ARCH->sleep(1);
 		}
 	}
