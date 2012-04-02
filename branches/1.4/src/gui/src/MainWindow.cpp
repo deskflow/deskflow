@@ -32,6 +32,11 @@
 #endif
 
 #if defined(Q_OS_WIN)
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
+
+#if defined(Q_OS_WIN)
 static const char synergyConfigName[] = "synergy.sgc";
 static const QString synergyConfigFilter(QObject::tr("Synergy Configurations (*.sgc);;All files (*.*)"));
 #else
@@ -85,6 +90,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
+	if (appConfig().processMode() == Service)
+	{
+		m_pButtonToggleStart->setText(tr("&Apply"));
+	}
+
 	if (appConfig().autoConnect())
 		startSynergy();
 
@@ -92,23 +102,6 @@ void MainWindow::start()
 
 	// always show. auto-hide only happens when we have a connection.
 	show();
-
-	if (appConfig().autoStartPrompt())
-	{
-		int result = QMessageBox::question(this, "Synergy",
-			QObject::tr("Always start Synergy after logging in?"),
-			QMessageBox::Yes | QMessageBox::No);
-
-		appConfig().setAutoStartPrompt(false);
-
-		if (result == QMessageBox::Yes)
-		{
-			appConfig().setAutoStart(true);
-			appConfig().setAutoConnect(true);
-		}
-
-		appConfig().saveSettings();
-	}
 
 	m_versionChecker.checkLatest();
 }
@@ -296,9 +289,15 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
-	stopSynergy();
+	// TODO: refactor this out into 2 methods.
+	bool desktopMode = appConfig().processMode() == Desktop;
+	bool serviceMode = appConfig().processMode() == Service;
 
-	setSynergyState(synergyConnecting);
+	if (desktopMode)
+	{
+		stopSynergy();
+		setSynergyState(synergyConnecting);
+	}
 
 	QString app;
 	QStringList args;
@@ -313,37 +312,64 @@ void MainWindow::startSynergy()
 		args << "--game-device";
 	}
 
-	setSynergyProcess(new QProcess(this));
+	if (desktopMode)
+	{
+		setSynergyProcess(new QProcess(this));
+	}
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))
 	{
-		stopSynergy();
-		return;
+		if (desktopMode)
+		{
+			stopSynergy();
+			return;
+		}
 	}
-	
-	connect(synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(synergyFinished(int, QProcess::ExitStatus)));
-	connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
-	connect(synergyProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
+
+	if (desktopMode)
+	{
+		connect(synergyProcess(), SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(synergyFinished(int, QProcess::ExitStatus)));
+		connect(synergyProcess(), SIGNAL(readyReadStandardOutput()), this, SLOT(logOutput()));
+		connect(synergyProcess(), SIGNAL(readyReadStandardError()), this, SLOT(logError()));
+	}
 
 	// put a space between last log output and new instance.
 	if (!m_pLogOutput->toPlainText().isEmpty())
 		appendLog("");
 
-	appendLog("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+	if (desktopMode)
+	{
+		appendLog("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+	}
+
+	if (serviceMode)
+	{
+		appendLog("applying service mode: " + QString(synergyType() == synergyServer ? "server" : "client"));
+	}
+
 	appendLog("config file: " + configFilename());
 	appendLog("log level: " + appConfig().logLevelText());
 
 	if (appConfig().logToFile())
 		appendLog("log file: " + appConfig().logFilename());
 
-	synergyProcess()->start(app, args);
-	if (!synergyProcess()->waitForStarted())
+	if (desktopMode)
 	{
-		stopSynergy();
-		show();
-		QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
-		return;
+		synergyProcess()->start(app, args);
+		if (!synergyProcess()->waitForStarted())
+		{
+			stopSynergy();
+			show();
+			QMessageBox::warning(this, tr("Program can not be started"), QString(tr("The executable<br><br>%1<br><br>could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.").arg(app)));
+			return;
+		}
+	}
+
+	if (serviceMode)
+	{
+		QString command(app + " " + args.join(" "));
+		sendDaemonCommand(command);
 	}
 }
 
@@ -587,4 +613,52 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 {
 	ServerConfigDialog dlg(this, serverConfig(), appConfig().screenName());
 	dlg.exec();
+}
+
+void MainWindow::sendDaemonCommand(const QString& command)
+{
+	// TODO: put this in an IPC client class.
+#if defined(Q_OS_WIN)
+
+	const WCHAR* name = L"\\\\.\\pipe\\Synergy";
+	char message[1024];
+	message[0] = Command;
+	char* messagePtr = message;
+	messagePtr++;
+	strcpy(messagePtr, command.toStdString().c_str());
+
+	HANDLE pipe = CreateFile(
+		name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+
+	if (pipe == INVALID_HANDLE_VALUE)
+	{
+		appendLog(QString("ERROR: could not connect to service, error: ") +
+				  QString::number(GetLastError()));
+		return;
+	}
+
+	DWORD dwMode = PIPE_READMODE_MESSAGE;
+	BOOL stateSuccess = SetNamedPipeHandleState(pipe, &dwMode, NULL, NULL);
+
+	if (!stateSuccess)
+	{
+		appendLog(QString("ERROR: could not set service pipe state, error: ") +
+				  QString::number(GetLastError()));
+		return;
+	}
+
+	DWORD written;
+	BOOL writeSuccess = WriteFile(
+	   pipe, message, strlen(message), &written, NULL);
+
+	if (!writeSuccess)
+	{
+		appendLog(QString("ERROR: could not write to service pipe, error: ") +
+				  QString::number(GetLastError()));
+		return;
+	}
+
+	CloseHandle(pipe);
+
+#endif
 }

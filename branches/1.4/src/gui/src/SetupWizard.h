@@ -18,7 +18,4 @@ protected slots:
 private:
 	MainWindow& m_MainWindow;
 	bool m_StartMain;
-
-private slots:
-	void on_pushButton_clicked();
 };

@@ -62,7 +62,8 @@ winMainLoopStatic(int, const char**)
 	return CArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
-CDaemonApp::CDaemonApp()
+CDaemonApp::CDaemonApp() :
+	m_relauncher(false)
 {
 	s_instance = this;
 }
@@ -172,15 +173,13 @@ CDaemonApp::mainLoop(bool logToFile)
 		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
 		CScreen dummyScreen(new CMSWindowsScreen(false, true, false));
 
-		CMSWindowsRelauncher relauncher(false);
-
 		string command = ARCH->setting("Command");
 		if (command != "") {
 			LOG((CLOG_INFO "using last known command: %s", command.c_str()));
-			relauncher.command(command);
+			m_relauncher.command(command);
 		}
 
-		relauncher.startAsync();
+		m_relauncher.startAsync();
 #endif
 
 		CEvent event;
@@ -192,7 +191,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		}
 
 #if SYSAPI_WIN32
-		relauncher.stop();
+		m_relauncher.stop();
 #endif
 
 		DAEMON_RUNNING(false);
@@ -241,20 +240,24 @@ CDaemonApp::logPath()
 void
 CDaemonApp::pipeThread(void*)
 {
+	// TODO: move this to an IPC server class.
 	while (true) {
 
-		// TODO: move this to an IPC server class.
+		// grant access to everyone.
+		SECURITY_DESCRIPTOR sd;
+		InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION);
+		SetSecurityDescriptorDacl(&sd, TRUE, static_cast<PACL>(0), FALSE);
+
+		SECURITY_ATTRIBUTES sa;
+		sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+		sa.lpSecurityDescriptor = &sd;
+
 		HANDLE pipe = CreateNamedPipe(
 			_T("\\\\.\\pipe\\Synergy"),
-			PIPE_ACCESS_DUPLEX,       // read/write access 
-			PIPE_TYPE_MESSAGE |       // message type pipe 
-			PIPE_READMODE_MESSAGE |   // message-read mode 
-			PIPE_WAIT,                // blocking mode 
-			PIPE_UNLIMITED_INSTANCES, // max. instances  
-			1024,                  // output buffer size 
-			1024,                  // input buffer size 
-			0,                        // client time-out 
-			NULL);                    // default security attribute
+			PIPE_ACCESS_DUPLEX,
+			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+			PIPE_UNLIMITED_INSTANCES,
+			1024, 1024, 0, &sa);
 
 		if (pipe == INVALID_HANDLE_VALUE)
 			XArch("could not create named pipe.");
@@ -267,17 +270,36 @@ CDaemonApp::pipeThread(void*)
 
 		while (true) {
 			if (!ReadFile(pipe, buffer, sizeof(buffer), &bytesRead, NULL)) {
-				LOG((CLOG_ERR "pipe read error: %d", GetLastError()));
 				break;
 			}
 
 			buffer[bytesRead] = '\0';
 			LOG((CLOG_INFO "read: %s", buffer));
+
+			handlePipeMessage(buffer);
 		}
 
 		DisconnectNamedPipe(pipe); 
 		CloseHandle(pipe); 
 	}
 }
+
+void
+CDaemonApp::handlePipeMessage(char* buffer)
+{
+	switch (buffer[0]) {
+	case kIpcCommand:
+		{
+			string command(++buffer);
+			m_relauncher.command(command);
+		}
+		break;
+		
+	default:
+		LOG((CLOG_WARN "unrecognized ipc message: %d", buffer[0]));
+		break;
+	}
+}
+
 
 #endif

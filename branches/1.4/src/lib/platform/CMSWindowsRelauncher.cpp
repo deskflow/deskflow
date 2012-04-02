@@ -32,7 +32,8 @@ typedef VOID (WINAPI *SendSas)(BOOL asUser);
 CMSWindowsRelauncher::CMSWindowsRelauncher(bool autoDetectCommand) :
 	m_thread(NULL),
 	m_autoDetectCommand(autoDetectCommand),
-	m_running(true)
+	m_running(true),
+	m_commandChanged(false)
 {
 }
 
@@ -226,7 +227,9 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 		// only enter here when id changes, and the session isn't -1, which
 		// may mean that there is no active session.
-		if ((newSessionId != sessionId) && (newSessionId != -1)) {
+		if (((newSessionId != sessionId) && (newSessionId != -1)) || m_commandChanged) {
+			
+			m_commandChanged = false;
 
 			if (launched) {
 				TerminateProcess(pi.hProcess, kExitSuccess);
@@ -315,6 +318,14 @@ CMSWindowsRelauncher::mainLoop(void*)
 		TerminateProcess(pi.hProcess, kExitSuccess);
 		LOG((CLOG_DEBUG "terminated running process on exit"));
 	}
+}
+
+void
+CMSWindowsRelauncher::command(const std::string& command)
+{
+	LOG((CLOG_INFO "command changed to: %s", command.c_str()));
+	m_command = command;
+	m_commandChanged = true;
 }
 
 std::string

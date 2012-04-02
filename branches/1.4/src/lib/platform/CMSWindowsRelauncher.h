@@ -30,7 +30,7 @@ public:
 	virtual ~CMSWindowsRelauncher();
 	void startAsync();
 	std::string command() const;
-	void command(const std::string& command) { m_command = command; }
+	void command(const std::string& command);
 	void stop();
 
 private:
@@ -44,4 +44,5 @@ private:
 	bool m_autoDetectCommand;
 	std::string m_command;
 	bool m_running;
+	bool m_commandChanged;
 };

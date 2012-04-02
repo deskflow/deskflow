@@ -116,6 +116,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool clientArgs(QStringList& args, QString& app);
 		bool serverArgs(QStringList& args, QString& app);
 		void setStatus(const QString& status);
+		void sendDaemonCommand(const QString& command);
 
 	private:
 		QSettings& m_Settings;
@@ -128,6 +129,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QMenu* m_pTrayIconMenu;
 		bool m_alreadyHidden;
 		VersionChecker m_versionChecker;
+};
+
+enum IpcMessage {
+	Command = 1
 };
 
 #endif

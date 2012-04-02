@@ -18,6 +18,8 @@
 #pragma once
 
 #include "CArch.h"
+#include "CMSWindowsRelauncher.h"
+
 #include <string>
 
 class CDaemonApp {
@@ -34,10 +36,18 @@ private:
 	std::string logPath();
 #if SYSAPI_WIN32
 	void pipeThread(void*);
+	void handlePipeMessage(char* buffer);
 #endif
 
 public:
 	static CDaemonApp* s_instance;
+#if SYSAPI_WIN32
+	CMSWindowsRelauncher m_relauncher;
+#endif
 };
 
 #define LOG_FILENAME "synergyd.log"
+
+enum {
+	kIpcCommand = 1
+};

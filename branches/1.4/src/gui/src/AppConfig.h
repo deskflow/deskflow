@@ -24,11 +24,16 @@
 class QSettings;
 class SettingsDialog;
 
+enum ProcessMode {
+	Service,
+	Desktop
+};
+
 class AppConfig
 {
 	friend class SettingsDialog;
 	friend class MainWindow;
-	friend class WindowsServices;
+	friend class SetupWizard;
 
 	public:
 		AppConfig(QSettings* settings);
@@ -48,6 +53,7 @@ class AppConfig
 		bool autoHide() const { return m_AutoHide; }
 		bool autoStartPrompt() const { return m_AutoStartPrompt; }
 		bool wizardHasRun() const { return m_WizardHasRun; }
+		ProcessMode processMode() const { return m_ProcessMode; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -71,6 +77,7 @@ class AppConfig
 		void setAutoHide(bool b) { m_AutoHide = b; }
 		void setAutoStartPrompt(bool b) { m_AutoStartPrompt = b; }
 		void setWizardHasRun(bool b) { m_WizardHasRun = b; }
+		void setProcessMode(ProcessMode p) { m_ProcessMode = p; }
 
 		void loadSettings();
 		void saveSettings();
@@ -89,6 +96,7 @@ class AppConfig
 		bool m_AutoHide;
 		bool m_AutoStartPrompt;
 		bool m_WizardHasRun;
+		ProcessMode m_ProcessMode;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];
