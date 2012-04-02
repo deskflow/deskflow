@@ -99,8 +99,9 @@ COSXScreen::COSXScreen(bool isPrimary) :
 		m_screensaver = new COSXScreenSaver(getEventTarget());
 		m_keyState	  = new COSXKeyState();
 		
+    // TODO: http://stackoverflow.com/questions/2950124/enable-access-for-assistive-device-programmatically
 		if (m_isPrimary && !AXAPIEnabled())
-			LOG((CLOG_WARN "mac accessibility api is not enabled"));
+			throw XArch("system setting not enabled: \"Enable access for assistive devices\"");
 		
 		// install display manager notification handler
 #if defined(MAC_OS_X_VERSION_10_5)
