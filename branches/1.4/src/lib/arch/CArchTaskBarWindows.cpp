@@ -41,7 +41,23 @@ CArchTaskBarWindows::CArchTaskBarWindows() :
 {
 	// save the singleton instance
 	s_instance    = this;
+}
 
+CArchTaskBarWindows::~CArchTaskBarWindows()
+{
+	if (m_thread != NULL) {
+		PostMessage(m_hwnd, WM_QUIT, 0, 0);
+		ARCH->wait(m_thread, -1.0);
+		ARCH->closeThread(m_thread);
+	}
+	ARCH->closeCondVar(m_condVar);
+	ARCH->closeMutex(m_mutex);
+	s_instance = NULL;
+}
+
+void
+CArchTaskBarWindows::init()
+{
 	// we need a mutex
 	m_mutex       = ARCH->newMutex();
 
@@ -68,18 +84,6 @@ CArchTaskBarWindows::CArchTaskBarWindows() :
 
 	// ready
 	ARCH->unlockMutex(m_mutex);
-}
-
-CArchTaskBarWindows::~CArchTaskBarWindows()
-{
-	if (m_thread != NULL) {
-		PostMessage(m_hwnd, WM_QUIT, 0, 0);
-		ARCH->wait(m_thread, -1.0);
-		ARCH->closeThread(m_thread);
-	}
-	ARCH->closeCondVar(m_condVar);
-	ARCH->closeMutex(m_mutex);
-	s_instance = NULL;
 }
 
 void

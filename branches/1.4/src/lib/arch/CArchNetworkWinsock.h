@@ -56,6 +56,8 @@ public:
 	CArchNetworkWinsock();
 	virtual ~CArchNetworkWinsock();
 
+	virtual void init();
+
 	// IArchNetwork overrides
 	virtual CArchSocket	newSocket(EAddressFamily, ESocketType);
 	virtual CArchSocket	copySocket(CArchSocket s);
@@ -88,7 +90,7 @@ public:
 	virtual bool			isEqualAddr(CArchNetAddress, CArchNetAddress);
 
 private:
-	void				init(HMODULE);
+	void				initModule(HMODULE);
 
 	void				setBlockingOnSocket(SOCKET, bool blocking);
 

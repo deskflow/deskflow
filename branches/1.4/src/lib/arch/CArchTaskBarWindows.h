@@ -34,6 +34,8 @@ public:
 	CArchTaskBarWindows();
 	virtual ~CArchTaskBarWindows();
 
+	virtual void init();
+
 	//! Add a dialog window 
 	/*!
 	Tell the task bar event loop about a dialog.  Win32 annoyingly

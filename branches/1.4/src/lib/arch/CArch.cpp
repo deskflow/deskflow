@@ -31,6 +31,10 @@ CArch::CArch()
 	assert(s_instance == NULL);
 	s_instance = this;
 
+	// initialization that requires ARCH is done here.
+	ARCH_TASKBAR::init();
+	ARCH_NETWORK::init();
+
 #if SYSAPI_WIN32
 	CArchMiscWindows::init();
 #endif

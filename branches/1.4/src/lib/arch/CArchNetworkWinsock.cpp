@@ -97,25 +97,6 @@ CArchNetAddressImpl::alloc(size_t size)
 
 CArchNetworkWinsock::CArchNetworkWinsock()
 {
-	static const char* s_library[] = { "ws2_32.dll" };
-
-	assert(WSACleanup_winsock == NULL);
-	assert(s_networkModule    == NULL);
-
-	// try each winsock library
-	for (size_t i = 0; i < sizeof(s_library) / sizeof(s_library[0]); ++i) {
-		try {
-			init((HMODULE)::LoadLibrary(s_library[i]));
-			m_mutex = ARCH->newMutex();
-			return;
-		}
-		catch (XArchNetwork&) {
-			// ignore
-		}
-	}
-
-	// can't initialize any library
-	throw XArchNetworkSupport("Cannot load winsock library");
 }
 
 CArchNetworkWinsock::~CArchNetworkWinsock()
@@ -131,7 +112,31 @@ CArchNetworkWinsock::~CArchNetworkWinsock()
 }
 
 void
-CArchNetworkWinsock::init(HMODULE module)
+CArchNetworkWinsock::init()
+{
+	static const char* s_library[] = { "ws2_32.dll" };
+
+	assert(WSACleanup_winsock == NULL);
+	assert(s_networkModule    == NULL);
+
+	// try each winsock library
+	for (size_t i = 0; i < sizeof(s_library) / sizeof(s_library[0]); ++i) {
+		try {
+			initModule((HMODULE)::LoadLibrary(s_library[i]));
+			m_mutex = ARCH->newMutex();
+			return;
+		}
+		catch (XArchNetwork&) {
+			// ignore
+		}
+	}
+
+	// can't initialize any library
+	throw XArchNetworkSupport("Cannot load winsock library");
+}
+
+void
+CArchNetworkWinsock::initModule(HMODULE module)
 {
 	if (module == NULL) {
 		throw XArchNetworkSupport("");

@@ -212,6 +212,7 @@ std::string
 CDaemonApp::logPath()
 {
 #ifdef SYSAPI_WIN32
+	// TODO: move to CArchMiscWindows
 	// on windows, log to the same dir as the binary.
 	char fileNameBuffer[MAX_PATH];
 	GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);

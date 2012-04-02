@@ -20,6 +20,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include <string>
+
 CMSWindowsDebugOutputter::CMSWindowsDebugOutputter()
 {
 }
@@ -46,7 +48,7 @@ CMSWindowsDebugOutputter::show(bool showIfEmpty)
 bool
 CMSWindowsDebugOutputter::write(ELevel level, const char* msg)
 {
-	OutputDebugString(msg);
+	OutputDebugString((std::string(msg) + "\n").c_str());
 	return true;
 }
 

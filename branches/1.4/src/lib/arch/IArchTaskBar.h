@@ -58,6 +58,8 @@ public:
 	virtual void		updateReceiver(IArchTaskBarReceiver*) = 0;
 
 	//@}
+
+	virtual void init() = 0;
 };
 
 #endif

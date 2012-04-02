@@ -15,6 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: consider whether or not to use either encapsulation (as below)
+// or inheritance (as it is now) for the ARCH stuff.
+//
+// case for encapsulation:
+// pros:
+//  - compiler errors for missing pv implementations are not absolutely bonkers.
+//  - function names don't have to be so verbose.
+//  - easier to understand and debug.
+//  - ctors in IArch implementations can call other implementations.
+// cons:
+//  - slightly more code for calls to ARCH.
+//  - you'll have to modify each ARCH call.
+
 #ifndef CARCH_H
 #define CARCH_H
 
@@ -94,7 +107,6 @@ public:
 	*/
 	static CArch*		getInstance();
 
-	// TODO: obsolete -- remove usage of these.
 	IArchAppUtil& util() const { return (ARCH_APPUTIL&)*this; }
 	IArchDaemon& daemon() const { return (ARCH_DAEMON&)*this; }
 

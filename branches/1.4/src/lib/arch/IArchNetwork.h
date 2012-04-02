@@ -277,6 +277,8 @@ public:
 	virtual bool			isAnyAddr(CArchNetAddress addr) = 0;
 
 	//@}
+
+	virtual void init() = 0;
 };
 
 #endif
