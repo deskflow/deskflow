@@ -32,7 +32,7 @@ private:
 	void foregroundError(const char* message);
 
 public:
-	static CDaemonApp* instance;
+	static CDaemonApp* s_instance;
 };
 
 #ifdef SYSAPI_WIN32

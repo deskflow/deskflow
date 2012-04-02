@@ -36,12 +36,12 @@
 
 using namespace std;
 
-CDaemonApp* CDaemonApp::instance = NULL;
+CDaemonApp* CDaemonApp::s_instance = NULL;
 
 int
 mainLoopStatic()
 {
-	CDaemonApp::instance->mainLoop();
+	CDaemonApp::s_instance->mainLoop();
 	return kExitSuccess;
 }
 
@@ -59,7 +59,7 @@ winMainLoopStatic(int, const char**)
 
 CDaemonApp::CDaemonApp()
 {
-	instance = this;
+	s_instance = this;
 }
 
 CDaemonApp::~CDaemonApp()
