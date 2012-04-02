@@ -18,6 +18,7 @@
 #pragma once
 
 #include "CArch.h"
+#include <string>
 
 class CDaemonApp {
 
@@ -30,13 +31,10 @@ public:
 private:
 	void daemonize();
 	void foregroundError(const char* message);
+	std::string logPath();
 
 public:
 	static CDaemonApp* s_instance;
 };
 
-#ifdef SYSAPI_WIN32
-#define LOG_PATH "synergyd.log"
-#elif SYSAPI_UNIX
-#define LOG_PATH "/var/log/synergyd.log"
-#endif
+#define LOG_FILENAME "synergyd.log"

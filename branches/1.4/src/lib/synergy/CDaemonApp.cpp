@@ -138,7 +138,7 @@ CDaemonApp::mainLoop()
 	{
 		DAEMON_RUNNING(true);
 
-		CLOG->insert(new CFileLogOutputter(LOG_PATH));
+		CLOG->insert(new CFileLogOutputter(logPath().c_str()));
 
 		CEventQueue eventQueue;
 
@@ -173,11 +173,29 @@ CDaemonApp::mainLoop()
 	}
 }
 
-void CDaemonApp::foregroundError(const char* message)
+void
+CDaemonApp::foregroundError(const char* message)
 {
 #if SYSAPI_WIN32
 	MessageBox(NULL, message, "Synergy Service", MB_OK | MB_ICONERROR);
 #elif SYSAPI_UNIX
 	cerr << message << endl;
+#endif
+}
+
+std::string
+CDaemonApp::logPath()
+{
+#ifdef SYSAPI_WIN32
+	// on windows, log to the same dir as the binary.
+	char fileNameBuffer[MAX_PATH];
+	GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
+	string fileName(fileNameBuffer);
+	size_t lastSlash = fileName.find_last_of("\\");
+	string path(fileName.substr(0, lastSlash));
+	path.append("\\").append(LOG_FILENAME);
+	return path;
+#elif SYSAPI_UNIX
+	return "/var/log/" LOG_FILENAME;
 #endif
 }
