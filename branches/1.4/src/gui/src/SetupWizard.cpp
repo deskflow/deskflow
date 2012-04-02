@@ -1,6 +1,5 @@
 #include "SetupWizard.h"
 #include "MainWindow.h"
-#include "WindowsServices.h"
 
 #include <QMessageBox>
 
@@ -62,40 +61,6 @@ bool SetupWizard::validateCurrentPage()
 void SetupWizard::handlefinished()
 {
 	close();
-
-#if defined(Q_OS_WIN)
-	// HACK: use existing windows service manager *window* to
-	// install services. this should really be in a separate
-	// non-window class.
-	WindowsServices windowsServices(&m_MainWindow, m_MainWindow.appConfig());
-
-	// install client and server services if needed.
-	if (m_pServiceRadioButton->isChecked())
-	{
-		if (m_pServerRadioButton->isChecked())
-		{
-			windowsServices.installServer();
-		}
-
-		if (m_pClientRadioButton->isChecked())
-		{
-			windowsServices.installClient();
-		}
-	}
-	else
-	{
-		// remove client and server services if they exist.
-		if (m_MainWindow.appConfig().clientService())
-		{
-			windowsServices.uninstallClient();
-		}
-
-		if (m_MainWindow.appConfig().serverService())
-		{
-			windowsServices.uninstallServer();
-		}
-	}
-#endif
 
 	if (m_StartMain)
 	{

@@ -12,7 +12,6 @@ FORMS += res/MainWindowBase.ui \
     res/ActionDialogBase.ui \
     res/HotkeyDialogBase.ui \
     res/SettingsDialogBase.ui \
-    res/WindowsServicesBase.ui \
     res/SetupWizardBase.ui
 SOURCES += src/main.cpp \
     src/MainWindow.cpp \
@@ -35,7 +34,6 @@ SOURCES += src/main.cpp \
     src/SettingsDialog.cpp \
     src/AppConfig.cpp \
     src/QSynergyApplication.cpp \
-    src/WindowsServices.cpp \
     src/VersionChecker.cpp \
     src/SetupWizard.cpp
 HEADERS += src/MainWindow.h \
@@ -58,7 +56,6 @@ HEADERS += src/MainWindow.h \
     src/SettingsDialog.h \
     src/AppConfig.h \
     src/QSynergyApplication.h \
-    src/WindowsServices.h \
     src/VersionChecker.h \
     src/SetupWizard.h
 RESOURCES += res/Synergy.qrc

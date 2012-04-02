@@ -52,9 +52,7 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_AutoStart(false),
 	m_AutoHide(false),
 	m_AutoStartPrompt(false),
-	m_WizardHasRun(false),
-	m_ServerService(false),
-	m_ClientService(false)
+	m_WizardHasRun(false)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -155,8 +153,6 @@ void AppConfig::loadSettings()
 	m_AutoHide = settings().value("autoHide", true).toBool();
 	m_AutoStartPrompt = settings().value("autoStartPrompt", true).toBool();
 	m_WizardHasRun = settings().value("wizardHasRun", false).toBool();
-	m_ServerService = settings().value("serverService", false).toBool();
-	m_ClientService = settings().value("clientService", false).toBool();
 }
 
 void AppConfig::saveSettings()
@@ -173,6 +169,4 @@ void AppConfig::saveSettings()
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("autoStartPrompt", m_AutoStartPrompt);
 	settings().setValue("wizardHasRun", m_WizardHasRun);
-	settings().setValue("serverService", m_ServerService);
-	settings().setValue("clientService", m_ClientService);
 }

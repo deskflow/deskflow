@@ -21,7 +21,6 @@
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
 #include "SettingsDialog.h"
-#include "WindowsServices.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -164,9 +163,6 @@ void MainWindow::createMenuBar()
 	pMenuFile->addSeparator();
 	pMenuFile->addAction(m_pActionQuit);
 	pMenuEdit->addAction(m_pActionSettings);
-#if defined(Q_OS_WIN)
-	pMenuEdit->addAction(m_pActionServices);
-#endif
 	pMenuWindow->addAction(m_pActionMinimize);
 	pMenuWindow->addAction(m_pActionRestore);
 	pMenuHelp->addAction(m_pActionAbout);
@@ -300,12 +296,6 @@ void MainWindow::clearLog()
 
 void MainWindow::startSynergy()
 {
-	if (appConfig().serverService() || appConfig().clientService())
-	{
-		appendLog("please use service controller to start/stop synergy.");
-		return;
-	}
-
 	stopSynergy();
 
 	setSynergyState(synergyConnecting);
@@ -457,12 +447,6 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 
 void MainWindow::stopSynergy()
 {
-	if (appConfig().serverService() || appConfig().clientService())
-	{
-		appendLog("please use service controller to start/stop synergy.");
-		return;
-	}
-
 	if (synergyProcess())
 	{
 		appendLog("stopping synergy");
@@ -596,12 +580,6 @@ void MainWindow::on_m_pActionAbout_triggered()
 void MainWindow::on_m_pActionSettings_triggered()
 {
 	SettingsDialog dlg(this, appConfig());
-	dlg.exec();
-}
-
-void MainWindow::on_m_pActionServices_triggered()
-{
-	WindowsServices dlg(this, appConfig());
 	dlg.exec();
 }
 

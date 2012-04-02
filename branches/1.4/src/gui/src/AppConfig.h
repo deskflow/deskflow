@@ -48,8 +48,6 @@ class AppConfig
 		bool autoHide() const { return m_AutoHide; }
 		bool autoStartPrompt() const { return m_AutoStartPrompt; }
 		bool wizardHasRun() const { return m_WizardHasRun; }
-		bool serverService() const { return m_ServerService; }
-		bool clientService() const { return m_ClientService; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -73,8 +71,6 @@ class AppConfig
 		void setAutoHide(bool b) { m_AutoHide = b; }
 		void setAutoStartPrompt(bool b) { m_AutoStartPrompt = b; }
 		void setWizardHasRun(bool b) { m_WizardHasRun = b; }
-		void setServerService(bool b) { m_ServerService = b; }
-		void setClientService(bool b) { m_ClientService = b; }
 
 		void loadSettings();
 		void saveSettings();
@@ -93,8 +89,6 @@ class AppConfig
 		bool m_AutoHide;
 		bool m_AutoStartPrompt;
 		bool m_WizardHasRun;
-		bool m_ServerService;
-		bool m_ClientService;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

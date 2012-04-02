@@ -314,11 +314,6 @@
     <string>Edit settings</string>
    </property>
   </action>
-  <action name="m_pActionServices">
-   <property name="text">
-    <string>Services</string>
-   </property>
-  </action>
  </widget>
  <resources>
   <include location="Synergy.qrc"/>

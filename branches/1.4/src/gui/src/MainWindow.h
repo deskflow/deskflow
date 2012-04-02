@@ -91,7 +91,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool on_m_pActionSave_triggered();
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
-		void on_m_pActionServices_triggered();
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void iconActivated(QSystemTrayIcon::ActivationReason reason);
 		void startSynergy();
