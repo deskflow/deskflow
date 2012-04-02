@@ -32,6 +32,9 @@ private:
 	void daemonize();
 	void foregroundError(const char* message);
 	std::string logPath();
+#if SYSAPI_WIN32
+	void pipeThread(void*);
+#endif
 
 public:
 	static CDaemonApp* s_instance;

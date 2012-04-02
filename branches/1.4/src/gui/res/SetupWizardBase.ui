@@ -61,6 +61,13 @@
       <number>20</number>
      </property>
      <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Test IPC</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QRadioButton" name="m_pServerRadioButton">
        <property name="font">
         <font>

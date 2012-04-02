@@ -20,20 +20,24 @@
 #include "LogOutputters.h"
 #include "CLog.h"
 
+#include <string>
+#include <iostream>
+#include <sstream>
+
 #if SYSAPI_WIN32
+
 #include "CArchMiscWindows.h"
 #include "XArchWindows.h"
 #include "CScreen.h"
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsRelauncher.h"
 #include "CMSWindowsDebugOutputter.h"
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#endif
+#include "TMethodJob.h"
 
-#include <string>
-#include <iostream>
-#include <sstream>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+#endif
 
 using namespace std;
 
@@ -84,6 +88,10 @@ CDaemonApp::run(int argc, char** argv)
 #if SYSAPI_WIN32
 		// sends debug messages to visual studio console window.
 		CLOG->insert(new CMSWindowsDebugOutputter());
+
+
+		CThread pipeThread(new TMethodJob<CDaemonApp>(
+			this, &CDaemonApp::pipeThread, nullptr));
 #endif
 
 		// default log level to system setting.
@@ -227,3 +235,49 @@ CDaemonApp::logPath()
 	return "/var/log/" LOG_FILENAME;
 #endif
 }
+
+#ifdef SYSAPI_WIN32
+
+void
+CDaemonApp::pipeThread(void*)
+{
+	while (true) {
+
+		// TODO: move this to an IPC server class.
+		HANDLE pipe = CreateNamedPipe(
+			_T("\\\\.\\pipe\\Synergy"),
+			PIPE_ACCESS_DUPLEX,       // read/write access 
+			PIPE_TYPE_MESSAGE |       // message type pipe 
+			PIPE_READMODE_MESSAGE |   // message-read mode 
+			PIPE_WAIT,                // blocking mode 
+			PIPE_UNLIMITED_INSTANCES, // max. instances  
+			1024,                  // output buffer size 
+			1024,                  // input buffer size 
+			0,                        // client time-out 
+			NULL);                    // default security attribute
+
+		if (pipe == INVALID_HANDLE_VALUE)
+			XArch("could not create named pipe.");
+
+		LOG((CLOG_DEBUG "opened pipe: %d", pipe));
+		BOOL connectResult = ConnectNamedPipe(pipe, NULL);
+
+		char buffer[1024];
+		DWORD bytesRead;
+
+		while (true) {
+			if (!ReadFile(pipe, buffer, sizeof(buffer), &bytesRead, NULL)) {
+				LOG((CLOG_ERR "pipe read error: %d", GetLastError()));
+				break;
+			}
+
+			buffer[bytesRead] = '\0';
+			LOG((CLOG_INFO "read: %s", buffer));
+		}
+
+		DisconnectNamedPipe(pipe); 
+		CloseHandle(pipe); 
+	}
+}
+
+#endif

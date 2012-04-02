@@ -2,6 +2,10 @@
 #include "MainWindow.h"
 
 #include <QMessageBox>
+#include <iostream>
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	m_MainWindow(mainWindow),
@@ -68,3 +72,35 @@ void SetupWizard::handlefinished()
 	}
 }
 
+
+void SetupWizard::on_pushButton_clicked()
+{
+	// TODO: put this in an IPC client class.
+#if defined(Q_OS_WIN)
+
+	const WCHAR* name = L"\\\\.\\pipe\\Synergy";
+	const char* message = "hello world";
+
+	HANDLE pipe = CreateFile(
+		name, GENERIC_READ | GENERIC_WRITE,
+		0, NULL, OPEN_EXISTING, 0, NULL);
+
+	DWORD dwMode = PIPE_READMODE_MESSAGE;
+	SetNamedPipeHandleState(
+		pipe,    // pipe handle
+		&dwMode,  // new pipe mode
+		NULL,     // don't set maximum bytes
+		NULL);    // don't set maximum time
+
+	DWORD written;
+	WriteFile(
+	   pipe,                  // pipe handle
+	   message,             // message
+	   strlen(message),              // message length
+	   &written,             // bytes written
+	   NULL);                  // not overlapped
+
+	CloseHandle(pipe);
+
+#endif
+}
