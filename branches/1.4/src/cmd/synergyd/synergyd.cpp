@@ -17,9 +17,25 @@
 
 #include "CDaemonApp.h"
 
+#ifdef SYSAPI_UNIX
+
 int
 main(int argc, char** argv)
 {
 	CDaemonApp app;
 	return app.run(argc, argv);
 }
+
+#elif SYSAPI_WIN32
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+int WINAPI
+WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
+	CDaemonApp app;
+	return app.run(__argc, __argv);
+}
+
+#endif

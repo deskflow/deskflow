@@ -75,6 +75,7 @@ Section
   nsExec::Exec "taskkill /f /im launcher.exe"
   nsExec::Exec "taskkill /f /im synergys.exe"
   nsExec::Exec "taskkill /f /im synergyc.exe"
+  nsExec::Exec "taskkill /f /im synergyd.exe"
 
   ; clean up legacy files that may exist (but leave user files)
   !insertmacro DeleteFiles "$PROGRAMFILES32\${product}\bin"
@@ -124,7 +125,7 @@ Section "Server and Client" core
   
   ; install daemon/service
   File "${binDir}\Release\synergyd.exe"
-  ExecWait "$INSTDIR\synergyd.exe --install"
+  ExecWait "$INSTDIR\synergyd.exe /install"
 
 SectionEnd
 
@@ -173,6 +174,8 @@ Section Uninstall
   nsExec::Exec "taskkill /f /im launcher.exe"
   nsExec::Exec "taskkill /f /im synergys.exe"
   nsExec::Exec "taskkill /f /im synergyc.exe"
+  
+  ExecWait "$INSTDIR\synergyd.exe /uninstall"
 
   ; delete start menu shortcut
   Delete "$SMPROGRAMS\${product}.lnk"

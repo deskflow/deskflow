@@ -29,6 +29,7 @@ public:
 
 private:
 	void daemonize();
+	void error(const char* message);
 
 public:
 	static CDaemonApp* instance;

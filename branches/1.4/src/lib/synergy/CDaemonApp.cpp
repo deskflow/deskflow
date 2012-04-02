@@ -31,7 +31,6 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <sstream>
 
 using namespace std;
@@ -69,13 +68,14 @@ CDaemonApp::~CDaemonApp()
 int
 CDaemonApp::run(int argc, char** argv)
 {
-	try {
-
+	try
+	{
 #if SYSAPI_WIN32
-		// TODO: can we get rid of this? what's it used for?
+		// win32 instance needed for threading, etc.
 		CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
+		// creates ARCH singleton.
 		CArch arch;
 
 		// if no args, daemonize.
@@ -91,35 +91,36 @@ CDaemonApp::run(int argc, char** argv)
 				string arg(argv[i]);
 
 #if SYSAPI_WIN32
-				if (arg == "--install") {
+				if (arg == "/install") {
 					ARCH->installDaemon();
 					continue;
 				}
-				else if (arg == "--uninstall") {
+				else if (arg == "/uninstall") {
 					ARCH->uninstallDaemon();
 					continue;
 				}
 #endif
-
-				cerr << "unrecognized arg: " << arg << endl;
+				stringstream ss;
+				ss << "Unrecognized argument: " << arg;
+				error(ss.str().c_str());
 				return kExitArgs;
 			}
 		}
+
+		return kExitSuccess;
 	}
 	catch (XArch& e) {
-		cerr << e.what() << endl;
+		error(e.what().c_str());
 		return kExitFailed;
 	}
 	catch (std::exception& e) {
-		cerr << e.what() << endl;
+		error(e.what());
 		return kExitFailed;
 	}
 	catch (...) {
-		cerr << "unknown exception" << endl;
+		error("Unrecognized error.");
 		return kExitFailed;
 	}
-
-	return kExitSuccess;
 }
 
 void
@@ -145,4 +146,13 @@ CDaemonApp::mainLoop()
 	}
 
 	DAEMON_RUNNING(false);
+}
+
+void CDaemonApp::error(const char* message)
+{
+#if SYSAPI_WIN32
+	MessageBox(NULL, message, "Synergy Service", MB_OK | MB_ICONERROR);
+#elif SYSAPI_UNIX
+	cerr << message << endl;
+#endif
 }

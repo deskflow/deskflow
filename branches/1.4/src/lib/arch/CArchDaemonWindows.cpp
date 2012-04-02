@@ -198,8 +198,6 @@ CArchDaemonWindows::installDaemon(const char* name,
 void
 CArchDaemonWindows::uninstallDaemon(const char* name, bool allUsers)
 {
-	stop(name);
-
 	// if not for all users then use the user's autostart registry.
 	// key.  if windows 95 family then use windows 95 services key.
 	if (!allUsers || CArchMiscWindows::isWindows95Family()) {
@@ -855,7 +853,7 @@ CArchDaemonWindows::installDaemon()
 	if (!isDaemonInstalled(DEFAULT_DAEMON_NAME, true)) {
 		char path[MAX_PATH];
 		GetModuleFileName(CArchMiscWindows::instanceWin32(), path, MAX_PATH);
-		installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, path, NULL, NULL, true);
+		installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, path, "", "", true);
 	}
 }
 

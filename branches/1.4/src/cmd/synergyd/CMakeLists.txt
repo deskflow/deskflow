@@ -35,7 +35,13 @@ if (UNIX)
 endif()
 
 include_directories(${inc})
-add_executable(synergyd ${src})
+
+if (WIN32)
+  add_executable(synergyd WIN32 ${src})
+else()
+  add_executable(synergyd ${src})
+endif()
+
 target_link_libraries(synergyd
 	io mt net platform base arch common synergy ${libs})
 
