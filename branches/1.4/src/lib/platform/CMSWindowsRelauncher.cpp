@@ -230,7 +230,7 @@ CMSWindowsRelauncher::relaunchLoop()
 		HANDLE hEvtSendSas = 0;
 		if (hSASLib && pfnSendSAS) {
 			// TODO: this floods the handle list with Global\\SendSAS -- does
-			// that mean this is broken?
+			// that mean this is broken? it's very annoying anyway :/
 			//hEvtSendSas = CreateEvent( NULL, FALSE, FALSE, "Global\\SendSAS" );
 		}
 

@@ -86,7 +86,11 @@ CDaemonApp::run(int argc, char** argv)
 		CLOG->insert(new CMSWindowsDebugOutputter());
 #endif
 
-		const char* logFilter = NULL;
+		// default log level to system setting.
+		string logLevel = ARCH->setting("LogLevel");
+		if (logLevel != "")
+			CLOG->setFilter(logLevel.c_str());
+
 		bool foreground = false;
 
 		for (int i = 1; i < argc; ++i) {
