@@ -20,6 +20,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <string>
+#include <list>
 
 class CThread;
 
@@ -30,16 +31,17 @@ public:
 	void startAsync();
 	std::string command() const;
 	void command(const std::string& command) { m_command = command; }
+	void stop();
 
 private:
-	void startThread(void*);
+	void mainLoop(void*);
 	BOOL winlogonInSession(DWORD sessionId, PHANDLE process);
 	DWORD getSessionId();
 	HANDLE getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
-	int relaunchLoop();
 
 private:
 	CThread* m_thread;
 	bool m_autoDetectCommand;
 	std::string m_command;
+	bool m_running;
 };

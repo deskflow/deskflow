@@ -42,8 +42,6 @@ CArch::CArch()
 
 CArch::~CArch()
 {
-	// no instance
-	s_instance = NULL;
 }
 
 CArch*

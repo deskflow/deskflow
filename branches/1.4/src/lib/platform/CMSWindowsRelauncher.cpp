@@ -27,9 +27,12 @@
 #include <UserEnv.h>
 #include <sstream>
 
+typedef VOID (WINAPI *SendSas)(BOOL asUser);
+
 CMSWindowsRelauncher::CMSWindowsRelauncher(bool autoDetectCommand) :
 	m_thread(NULL),
-	m_autoDetectCommand(autoDetectCommand)
+	m_autoDetectCommand(autoDetectCommand),
+	m_running(true)
 {
 }
 
@@ -42,17 +45,14 @@ void
 CMSWindowsRelauncher::startAsync()
 {
 	m_thread = new CThread(new TMethodJob<CMSWindowsRelauncher>(
-		this, &CMSWindowsRelauncher::startThread, nullptr));
+		this, &CMSWindowsRelauncher::mainLoop, nullptr));
 }
 
-void 
-CMSWindowsRelauncher::startThread(void*)
+void
+CMSWindowsRelauncher::stop()
 {
-	LOG((CLOG_NOTE "starting relaunch service"));
-	int ret = relaunchLoop();
-
-	// HACK: this actually throws an exception to exit with 0 (nasty)
-	ARCH->util().app().m_bye(ret);
+	m_running = false;
+	m_thread->wait(5);
 }
 
 // this still gets the physical session (the one the keyboard and 
@@ -199,20 +199,11 @@ CMSWindowsRelauncher::getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES
 	return primaryToken;
 }
 
-typedef VOID (WINAPI *SendSas)(BOOL asUser);
-
-int
-CMSWindowsRelauncher::relaunchLoop()
+void
+CMSWindowsRelauncher::mainLoop(void*)
 {
 	// start with invalid id (gets re-assigned on first loop)
 	DWORD sessionId = -1;
-
-	// keep here so we can check if proc running -- huh?
-	PROCESS_INFORMATION pi;
-	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
-
-	int returnCode = kExitSuccess;
-	bool launched = false;
 
 	HINSTANCE hSASLib = 0;
 	SendSas pfnSendSAS = 0;
@@ -222,16 +213,18 @@ CMSWindowsRelauncher::relaunchLoop()
 		pfnSendSAS = (SendSas)GetProcAddress(hSASLib, "SendSAS");
 	}
 
-	// TODO: fix this hack BEFORE release; we need to exit gracefully instead 
-	// of being force killed!
-	bool loopRunning = true;
-	while (loopRunning) {
+	bool launched = false;
+
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+
+	while (m_running) {
 
 		HANDLE hEvtSendSas = 0;
 		if (hSASLib && pfnSendSAS) {
 			// TODO: this floods the handle list with Global\\SendSAS -- does
 			// that mean this is broken? it's very annoying anyway :/
-			//hEvtSendSas = CreateEvent( NULL, FALSE, FALSE, "Global\\SendSAS" );
+			hEvtSendSas = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
 		}
 
 		DWORD newSessionId = getSessionId();
@@ -240,8 +233,6 @@ CMSWindowsRelauncher::relaunchLoop()
 		// may mean that there is no active session.
 		if ((newSessionId != sessionId) && (newSessionId != -1)) {
 
-			// HACK: doesn't close process in a nice way
-			// TODO: use CloseMainWindow instead
 			if (launched) {
 				TerminateProcess(pi.hProcess, kExitSuccess);
 				LOG((CLOG_DEBUG "terminated existing process to make way for new one"));
@@ -280,9 +271,7 @@ CMSWindowsRelauncher::relaunchLoop()
 				if (!blockRet) {
 					LOG((CLOG_ERR "could not create environment block (error: %i)", 
 						GetLastError()));
-
-					returnCode = kExitFailed;
-					loopRunning = false; // stop loop
+					continue;
 				}
 				else {
 
@@ -302,8 +291,7 @@ CMSWindowsRelauncher::relaunchLoop()
 
 					if (!createRet) {
 						LOG((CLOG_ERR "could not launch (error: %i)", GetLastError()));
-						returnCode = kExitFailed;
-						loopRunning = false;
+						continue;
 					}
 					else {
 						LOG((CLOG_DEBUG "launched in session %i (cmd: %s)", 
@@ -314,23 +302,21 @@ CMSWindowsRelauncher::relaunchLoop()
 			}
 		}
 
-		// check for session change every second
 		if (hEvtSendSas) {
-			if ( WaitForSingleObject( hEvtSendSas, 1000 ) == WAIT_OBJECT_0 && pfnSendSAS ) {
+			if (WaitForSingleObject(hEvtSendSas, 1000) == WAIT_OBJECT_0 && pfnSendSAS) {
 				LOG((CLOG_DEBUG "calling SendSAS..."));
 				pfnSendSAS(FALSE);
 			}
 		}
-		else
+
+		// check for session change every second
 		ARCH->sleep(1);
 	}
 
 	if (launched) {
-		// HACK: kill just in case process it has survived somehow
 		TerminateProcess(pi.hProcess, kExitSuccess);
+		LOG((CLOG_DEBUG "terminated running process on exit"));
 	}
-
-	return kExitSuccess;
 }
 
 std::string

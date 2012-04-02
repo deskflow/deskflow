@@ -183,6 +183,10 @@ CDaemonApp::mainLoop(bool logToFile)
 			EVENTQUEUE->getEvent(event);
 		}
 
+#if SYSAPI_WIN32
+		relauncher.stop();
+#endif
+
 		DAEMON_RUNNING(false);
 	}
 	catch (XArch& e) {
