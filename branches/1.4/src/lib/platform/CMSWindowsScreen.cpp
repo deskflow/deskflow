@@ -90,7 +90,7 @@ typedef DWORD (WINAPI *XInputSetStateFunc)(DWORD, XINPUT_VIBRATION*);
 // CMSWindowsScreen
 //
 
-HINSTANCE				CMSWindowsScreen::s_instance = NULL;
+HINSTANCE				CMSWindowsScreen::s_windowInstance = NULL;
 CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
 
 CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, bool gameDevice) :
@@ -146,7 +146,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, bool gameDevice
 	, m_xinputModule(NULL)
 #endif
 {
-	assert(s_instance != NULL);
+	assert(s_windowInstance != NULL);
 	assert(s_screen   == NULL);
 
 	s_screen = this;
@@ -233,18 +233,18 @@ CMSWindowsScreen::~CMSWindowsScreen()
 }
 
 void
-CMSWindowsScreen::init(HINSTANCE instance)
+CMSWindowsScreen::init(HINSTANCE windowInstance)
 {
-	assert(s_instance == NULL);
-	assert(instance   != NULL);
+	assert(s_windowInstance == NULL);
+	assert(windowInstance   != NULL);
 
-	s_instance = instance;
+	s_windowInstance = windowInstance;
 }
 
 HINSTANCE
-CMSWindowsScreen::getInstance()
+CMSWindowsScreen::getWindowInstance()
 {
-	return s_instance;
+	return s_windowInstance;
 }
 
 void
@@ -973,7 +973,7 @@ CMSWindowsScreen::createBlankCursor() const
 	UInt8* cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
 	memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
 	memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
-	HCURSOR c = CreateCursor(s_instance, 0, 0, cw, ch, cursorAND, cursorXOR);
+	HCURSOR c = CreateCursor(s_windowInstance, 0, 0, cw, ch, cursorAND, cursorXOR);
 	delete[] cursorXOR;
 	delete[] cursorAND;
 	return c;
@@ -996,7 +996,7 @@ CMSWindowsScreen::createWindowClass() const
 	classInfo.lpfnWndProc   = &CMSWindowsScreen::wndProc;
 	classInfo.cbClsExtra    = 0;
 	classInfo.cbWndExtra    = 0;
-	classInfo.hInstance     = s_instance;
+	classInfo.hInstance     = s_windowInstance;
 	classInfo.hIcon         = NULL;
 	classInfo.hCursor       = NULL;
 	classInfo.hbrBackground = NULL;
@@ -1010,7 +1010,7 @@ void
 CMSWindowsScreen::destroyClass(ATOM windowClass) const
 {
 	if (windowClass != 0) {
-		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_instance);
+		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass), s_windowInstance);
 	}
 }
 
@@ -1025,7 +1025,7 @@ CMSWindowsScreen::createWindow(ATOM windowClass, const char* name) const
 								WS_POPUP,
 								0, 0, 1, 1,
 								NULL, NULL,
-								s_instance,
+								s_windowInstance,
 								NULL);
 	if (window == NULL) {
 		LOG((CLOG_ERR "failed to create window: %d", GetLastError()));

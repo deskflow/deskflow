@@ -400,5 +400,5 @@ createTaskBarReceiver(const CBufferedLogOutputter* logBuffer)
 		16, 16, LR_SHARED));
 
 	return new CMSWindowsServerTaskBarReceiver(
-		CMSWindowsScreen::getInstance(), logBuffer);
+		CMSWindowsScreen::getWindowInstance(), logBuffer);
 }

@@ -117,18 +117,6 @@ public:
 	*/
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers) = 0;
 
-	//! Gets a daemon setting
-	/*!
-	Fetches a string for the specified key.
-	*/
-	virtual CString		daemonSetting(const char* keyName) = 0;
-
-	//! Sets a daemon setting
-	/*!
-	Stores a string for the specified key.
-	*/
-	virtual void		daemonSetting(const char* keyName, const CString& keyValue) = 0;
-
 	//@}
 };
 

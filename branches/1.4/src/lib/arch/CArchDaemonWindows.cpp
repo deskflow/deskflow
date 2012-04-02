@@ -27,7 +27,8 @@
 
 CArchDaemonWindows*		CArchDaemonWindows::s_daemon = NULL;
 
-CArchDaemonWindows::CArchDaemonWindows()
+CArchDaemonWindows::CArchDaemonWindows() :
+m_daemonThreadID(0)
 {
 	m_quitMessage = RegisterWindowMessage("SynergyDaemonExit");
 }
@@ -842,31 +843,24 @@ CArchDaemonWindows::stop(const char* name)
 void
 CArchDaemonWindows::installDaemon()
 {
-	char path[MAX_PATH];
-	GetModuleFileName(CArchMiscWindows::instanceWin32(), path, MAX_PATH);
-	installDaemon(DAEMON_NAME, DAEMON_INFO, path, NULL, NULL, true);
+	// remove legacy services
+	if (isDaemonInstalled("Synergy Server", true)) {
+		uninstallDaemon("Synergy Server", true);
+	}
+	if (isDaemonInstalled("Synergy Client", true)) {
+		uninstallDaemon("Synergy Client", true);
+	}
+
+	// install default daemon if not already installed.
+	if (!isDaemonInstalled(DEFAULT_DAEMON_NAME, true)) {
+		char path[MAX_PATH];
+		GetModuleFileName(CArchMiscWindows::instanceWin32(), path, MAX_PATH);
+		installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, path, NULL, NULL, true);
+	}
 }
 
 void
 CArchDaemonWindows::uninstallDaemon()
 {
-	uninstallDaemon(DAEMON_NAME, true);
-}
-
-CString
-CArchDaemonWindows::daemonSetting(const char* keyName)
-{
-	HKEY key = CArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, g_daemonKeyPath);
-	if (key == NULL)
-		return "";
-	return CArchMiscWindows::readValueString(key, keyName);
-}
-
-void
-CArchDaemonWindows::daemonSetting(const char* keyName, const CString& keyValue)
-{
-	HKEY key = CArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, g_daemonKeyPath);
-	if (key == NULL)
-		throw XArch("could not open daemon settings key");
-	return CArchMiscWindows::setValue(key, keyName, keyValue);
+	uninstallDaemon(DEFAULT_DAEMON_NAME, true);
 }

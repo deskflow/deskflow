@@ -121,6 +121,10 @@ Section "Server and Client" core
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synrgyhk.dll"
+  
+  ; install daemon/service
+  File "${binDir}\Release\synergyd.exe"
+  ExecWait "$INSTDIR\synergyd.exe --install"
 
 SectionEnd
 

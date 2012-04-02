@@ -87,8 +87,6 @@ public:
 	virtual int			daemonize(const char* name, DaemonFunc func);
 	virtual bool		canInstallDaemon(const char* name, bool allUsers);
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
-	virtual CString		daemonSetting(const char* keyName);
-	virtual void		daemonSetting(const char* keyName, const CString& keyValue);
 
 	std::string commandLine() const { return m_commandLine; }
 
@@ -145,8 +143,8 @@ private:
 	std::string			m_commandLine;
 };
 
-#define DAEMON_NAME "Synergy"
-#define DAEMON_INFO "Manages the Synergy foreground processes."
+#define DEFAULT_DAEMON_NAME _T("Synergy")
+#define DEFAULT_DAEMON_INFO _T("Manages the Synergy foreground processes.")
 
 static const TCHAR* const g_daemonKeyPath[] = {
 	_T("SOFTWARE"),

@@ -400,7 +400,7 @@ CMSWindowsDesks::createBlankCursor() const
 	UInt8* cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
 	memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
 	memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
-	HCURSOR c = CreateCursor(CMSWindowsScreen::getInstance(),
+	HCURSOR c = CreateCursor(CMSWindowsScreen::getWindowInstance(),
 							0, 0, cw, ch, cursorAND, cursorXOR);
 	delete[] cursorXOR;
 	delete[] cursorAND;
@@ -426,7 +426,7 @@ CMSWindowsDesks::createDeskWindowClass(bool isPrimary) const
 								&CMSWindowsDesks::secondaryDeskProc;
 	classInfo.cbClsExtra    = 0;
 	classInfo.cbWndExtra    = 0;
-	classInfo.hInstance     = CMSWindowsScreen::getInstance();
+	classInfo.hInstance     = CMSWindowsScreen::getWindowInstance();
 	classInfo.hIcon         = NULL;
 	classInfo.hCursor       = m_cursor;
 	classInfo.hbrBackground = NULL;
@@ -441,7 +441,7 @@ CMSWindowsDesks::destroyClass(ATOM windowClass) const
 {
 	if (windowClass != 0) {
 		UnregisterClass(reinterpret_cast<LPCTSTR>(windowClass),
-							CMSWindowsScreen::getInstance());
+							CMSWindowsScreen::getWindowInstance());
 	}
 }
 
@@ -456,7 +456,7 @@ CMSWindowsDesks::createWindow(ATOM windowClass, const char* name) const
 								WS_POPUP,
 								0, 0, 1, 1,
 								NULL, NULL,
-								CMSWindowsScreen::getInstance(),
+								CMSWindowsScreen::getWindowInstance(),
 								NULL);
 	if (window == NULL) {
 		LOG((CLOG_ERR "failed to create window: %d", GetLastError()));

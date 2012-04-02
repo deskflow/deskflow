@@ -125,24 +125,3 @@ CArchDaemonUnix::daemonize(const char* name, DaemonFunc func)
 	// invoke function
 	return func(1, &name);
 }
-
-CString
-CArchDaemonUnix::daemonSetting(const char* keyName)
-{
-	// TODO
-
-	ifstream configFile(CONFIG_FILE);
-	if (configFile.is_open()) {
-		string line;
-		while (configFile.good()) {
-			getline(configFile, line);
-			cout << line << endl;
-		}
-		configFile.close();
-	}
-}
-
-void
-CArchDaemonUnix::daemonSetting(const char* keyName, const CString& keyValue)
-{
-}

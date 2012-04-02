@@ -67,7 +67,7 @@ public:
 	/*!
 	Returns the application instance handle passed to init().
 	*/
-	static HINSTANCE	getInstance();
+	static HINSTANCE	getWindowInstance();
 
 	//@}
 
@@ -231,7 +231,7 @@ private:
 	typedef std::vector<UInt32> HotKeyIDList;
 	typedef std::map<CHotKeyItem, UInt32> HotKeyToIDMap;
 
-	static HINSTANCE	s_instance;
+	static HINSTANCE	s_windowInstance;
 
 	// true if screen is being used as a primary screen, false otherwise
 	bool				m_isPrimary;

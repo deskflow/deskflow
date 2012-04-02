@@ -20,9 +20,14 @@
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
 #include "XArchWindows.h"
+#include "CScreen.h"
+#include "CMSWindowsScreen.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
+
+#include "CSocketMultiplexer.h"
+#include "CEventQueue.h"
 
 #include <string>
 #include <iostream>
@@ -31,8 +36,11 @@
 
 using namespace std;
 
+CDaemonApp* CDaemonApp::instance = NULL;
+
 CDaemonApp::CDaemonApp()
 {
+	instance = this;
 }
 
 CDaemonApp::~CDaemonApp()
@@ -40,19 +48,43 @@ CDaemonApp::~CDaemonApp()
 }
 
 int
+mainLoopStatic()
+{
+	CDaemonApp::instance->mainLoop();
+	return kExitSuccess;
+}
+
+int
+unixMainLoopStatic(int, const char**)
+{
+	return mainLoopStatic();
+}
+
+int
+winMainLoopStatic(int, const char**)
+{
+	return CArchMiscWindows::runDaemon(mainLoopStatic);
+}
+
+int
 CDaemonApp::run(int argc, char** argv)
 {
+	try {
+
 #if SYSAPI_WIN32
-	// TODO: can we get rid of this? what's it used for?
-	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+		// TODO: can we get rid of this? what's it used for?
+		CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-	CArch arch;
+		CArch arch;
 
-	try {
 		// if no args, daemonize.
 		if (argc == 1) {
-			daemonize();
+#if SYSAPI_WIN32
+			ARCH->daemonize("Synergy", winMainLoopStatic);
+#else SYSAPI_UNIX
+			ARCH->daemonize("Synergy", unixMainLoopStatic);
+#endif
 		}
 		else {
 			for (int i = 1; i < argc; ++i) {
@@ -91,8 +123,26 @@ CDaemonApp::run(int argc, char** argv)
 }
 
 void
-CDaemonApp::daemonize()
+CDaemonApp::mainLoop()
 {
-	ARCH->daemonSetting("test", "test1");
-	cout << "test: " << ARCH->daemonSetting("test") << endl;
+	DAEMON_RUNNING(true);
+
+	CEventQueue eventQueue;
+
+#if SYSAPI_WIN32
+	// HACK: create a dummy screen, which can handle system events 
+	// (such as a stop request from the service controller).
+	CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
+	CScreen dummyScreen(new CMSWindowsScreen(false, true, false));
+#endif
+
+	CEvent event;
+	EVENTQUEUE->getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		EVENTQUEUE->dispatchEvent(event);
+		CEvent::deleteData(event);
+		EVENTQUEUE->getEvent(event);
+	}
+
+	DAEMON_RUNNING(false);
 }

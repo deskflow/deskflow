@@ -25,7 +25,11 @@ public:
 	CDaemonApp();
 	virtual ~CDaemonApp();
 	int run(int argc, char** argv);
+	void mainLoop();
 
 private:
 	void daemonize();
+
+public:
+	static CDaemonApp* instance;
 };
