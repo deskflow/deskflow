@@ -26,6 +26,7 @@
 #include "CScreen.h"
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsRelauncher.h"
+#include "CMSWindowsDebugOutputter.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
@@ -41,7 +42,7 @@ CDaemonApp* CDaemonApp::s_instance = NULL;
 int
 mainLoopStatic()
 {
-	CDaemonApp::s_instance->mainLoop();
+	CDaemonApp::s_instance->mainLoop(true);
 	return kExitSuccess;
 }
 
@@ -80,39 +81,58 @@ CDaemonApp::run(int argc, char** argv)
 		CArch arch;
 		CLog log;
 
-		// if no args, daemonize.
-		if (argc == 1) {
 #if SYSAPI_WIN32
-			ARCH->daemonize("Synergy", winMainLoopStatic);
-#else SYSAPI_UNIX
-			ARCH->daemonize("Synergy", unixMainLoopStatic);
+		// sends debug messages to visual studio console window.
+		CLOG->insert(new CMSWindowsDebugOutputter());
 #endif
-		}
-		else {
-			for (int i = 1; i < argc; ++i) {
-				string arg(argv[i]);
 
-				if (arg == "/f" || arg == "-f") {
-					// run process in foreground instead of daemonizing.
-					// useful for debugging.
-					mainLoop();
-					return kExitSuccess;
+		const char* logFilter = NULL;
+		bool foreground = false;
+
+		for (int i = 1; i < argc; ++i) {
+			string arg(argv[i]);
+
+			if (arg == "/f" || arg == "-f") {
+				foreground = true;
+			}
+			else if (arg == "/l" || arg == "-l") {
+				const char* logFilter = argv[++i];
+				if (!CLOG->setFilter(logFilter)) {
+					stringstream ss;
+					ss << "Unrecognized log level: " << logFilter;
+					foregroundError(ss.str().c_str());
+					return kExitArgs;
 				}
+			}
 #if SYSAPI_WIN32
-				else if (arg == "/install") {
-					ARCH->installDaemon();
-					continue;
-				}
-				else if (arg == "/uninstall") {
-					ARCH->uninstallDaemon();
-					continue;
-				}
+			else if (arg == "/install") {
+				ARCH->installDaemon();
+				return kExitSuccess;
+			}
+			else if (arg == "/uninstall") {
+				ARCH->uninstallDaemon();
+				return kExitSuccess;
+			}
 #endif
+			else {
 				stringstream ss;
 				ss << "Unrecognized argument: " << arg;
 				foregroundError(ss.str().c_str());
 				return kExitArgs;
 			}
+		}
+
+		if (foreground) {
+			// run process in foreground instead of daemonizing.
+			// useful for debugging.
+			mainLoop(false);
+		}
+		else {
+#if SYSAPI_WIN32
+			ARCH->daemonize("Synergy", winMainLoopStatic);
+#else SYSAPI_UNIX
+			ARCH->daemonize("Synergy", unixMainLoopStatic);
+#endif
 		}
 
 		return kExitSuccess;
@@ -132,13 +152,14 @@ CDaemonApp::run(int argc, char** argv)
 }
 
 void
-CDaemonApp::mainLoop()
+CDaemonApp::mainLoop(bool logToFile)
 {
 	try
 	{
 		DAEMON_RUNNING(true);
 
-		CLOG->insert(new CFileLogOutputter(logPath().c_str()));
+		if (logToFile)
+			CLOG->insert(new CFileLogOutputter(logPath().c_str()));
 
 		CEventQueue eventQueue;
 

@@ -267,12 +267,10 @@ CApp::run(int argc, char** argv)
 #endif
 
 	CArch arch;
+	CLog log;
 
 	// install application in to arch
 	ARCH->adoptApp(this);
-
-	// create an instance of log
-	CLOG;
 	
 	// HACK: fail by default (saves us setting result in each catch)
 	int result = kExitFailed;
@@ -298,8 +296,6 @@ CApp::run(int argc, char** argv)
 	catch (...) {
 		LOG((CLOG_CRIT "An unexpected exception occurred.\n"));
 	}
-
-	delete CLOG;
 
 	ARCH->beforeAppExit();
 	

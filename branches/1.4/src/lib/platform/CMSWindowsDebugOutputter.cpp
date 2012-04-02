@@ -14,27 +14,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
-#pragma once
 
-#include "CArch.h"
-#include <string>
+#include "CMSWindowsDebugOutputter.h"
 
-class CDaemonApp {
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
-public:
-	CDaemonApp();
-	virtual ~CDaemonApp();
-	int run(int argc, char** argv);
-	void mainLoop(bool logToFile);
+CMSWindowsDebugOutputter::CMSWindowsDebugOutputter()
+{
+}
 
-private:
-	void daemonize();
-	void foregroundError(const char* message);
-	std::string logPath();
+CMSWindowsDebugOutputter::~CMSWindowsDebugOutputter()
+{
+}
 
-public:
-	static CDaemonApp* s_instance;
-};
+void
+CMSWindowsDebugOutputter::open(const char* title)
+{
+}
 
-#define LOG_FILENAME "synergyd.log"
+void
+CMSWindowsDebugOutputter::close()
+{
+}
+
+void
+CMSWindowsDebugOutputter::show(bool showIfEmpty)
+{
+}
+
+bool
+CMSWindowsDebugOutputter::write(ELevel level, const char* msg)
+{
+	OutputDebugString(msg);
+	return true;
+}
+
+void
+CMSWindowsDebugOutputter::flush()
+{
+}
