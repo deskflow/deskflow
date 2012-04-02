@@ -38,15 +38,6 @@ using namespace std;
 
 CDaemonApp* CDaemonApp::instance = NULL;
 
-CDaemonApp::CDaemonApp()
-{
-	instance = this;
-}
-
-CDaemonApp::~CDaemonApp()
-{
-}
-
 int
 mainLoopStatic()
 {
@@ -64,6 +55,15 @@ int
 winMainLoopStatic(int, const char**)
 {
 	return CArchMiscWindows::runDaemon(mainLoopStatic);
+}
+
+CDaemonApp::CDaemonApp()
+{
+	instance = this;
+}
+
+CDaemonApp::~CDaemonApp()
+{
 }
 
 int
