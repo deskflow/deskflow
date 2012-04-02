@@ -202,17 +202,14 @@ CMSWindowsRelauncher::getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES
 void
 CMSWindowsRelauncher::mainLoop(void*)
 {
-	// start with invalid id (gets re-assigned on first loop)
-	DWORD sessionId = -1;
-
-	HINSTANCE hSASLib = 0;
-	SendSas pfnSendSAS = 0;
-	hSASLib = LoadLibrary("sas.dll");
-	if (hSASLib) {
+	SendSas sendSasFunc = NULL;
+	HINSTANCE sasLib = LoadLibrary("sas.dll");
+	if (sasLib) {
 		LOG((CLOG_DEBUG "found sas.dll"));
-		pfnSendSAS = (SendSas)GetProcAddress(hSASLib, "SendSAS");
+		sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
 	}
 
+	DWORD sessionId = -1;
 	bool launched = false;
 
 	PROCESS_INFORMATION pi;
@@ -220,11 +217,9 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 	while (m_running) {
 
-		HANDLE hEvtSendSas = 0;
-		if (hSASLib && pfnSendSAS) {
-			// TODO: this floods the handle list with Global\\SendSAS -- does
-			// that mean this is broken? it's very annoying anyway :/
-			hEvtSendSas = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
+		HANDLE sendSasEvent = 0;
+		if (sasLib && sendSasFunc) {
+			sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
 		}
 
 		DWORD newSessionId = getSessionId();
@@ -302,15 +297,18 @@ CMSWindowsRelauncher::mainLoop(void*)
 			}
 		}
 
-		if (hEvtSendSas) {
-			if (WaitForSingleObject(hEvtSendSas, 1000) == WAIT_OBJECT_0 && pfnSendSAS) {
-				LOG((CLOG_DEBUG "calling SendSAS..."));
-				pfnSendSAS(FALSE);
+		if (sendSasEvent) {
+			// use SenSAS event to wait for next session.
+			if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0 && sendSasFunc) {
+				LOG((CLOG_DEBUG "calling SendSAS"));
+				sendSasFunc(FALSE);
 			}
+			CloseHandle(sendSasEvent);
 		}
-
-		// check for session change every second
-		ARCH->sleep(1);
+		else {
+			// check for session change every second
+			ARCH->sleep(1);
+		}
 	}
 
 	if (launched) {
