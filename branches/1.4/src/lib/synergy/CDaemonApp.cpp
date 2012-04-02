@@ -99,15 +99,6 @@ CDaemonApp::run(int argc, char** argv)
 			if (arg == "/f" || arg == "-f") {
 				foreground = true;
 			}
-			else if (arg == "/l" || arg == "-l") {
-				const char* logFilter = argv[++i];
-				if (!CLOG->setFilter(logFilter)) {
-					stringstream ss;
-					ss << "Unrecognized log level: " << logFilter;
-					foregroundError(ss.str().c_str());
-					return kExitArgs;
-				}
-			}
 #if SYSAPI_WIN32
 			else if (arg == "/install") {
 				ARCH->installDaemon();
@@ -174,6 +165,13 @@ CDaemonApp::mainLoop(bool logToFile)
 		CScreen dummyScreen(new CMSWindowsScreen(false, true, false));
 
 		CMSWindowsRelauncher relauncher(false);
+
+		string command = ARCH->setting("Command");
+		if (command != "") {
+			LOG((CLOG_INFO "using last known command: %s", command.c_str()));
+			relauncher.command(command);
+		}
+
 		relauncher.startAsync();
 #endif
 

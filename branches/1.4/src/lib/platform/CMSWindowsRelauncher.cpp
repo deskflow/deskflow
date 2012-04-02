@@ -333,7 +333,8 @@ CMSWindowsRelauncher::relaunchLoop()
 	return kExitSuccess;
 }
 
-std::string CMSWindowsRelauncher::command()
+std::string
+CMSWindowsRelauncher::command() const
 {
 	if (!m_autoDetectCommand) {
 		return m_command;

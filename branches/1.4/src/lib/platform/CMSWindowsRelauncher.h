@@ -28,6 +28,8 @@ public:
 	CMSWindowsRelauncher(bool autoDetectCommand);
 	virtual ~CMSWindowsRelauncher();
 	void startAsync();
+	std::string command() const;
+	void command(const std::string& command) { m_command = command; }
 
 private:
 	void startThread(void*);
@@ -35,8 +37,6 @@ private:
 	DWORD getSessionId();
 	HANDLE getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
 	int relaunchLoop();
-	std::string command();
-	void command(const std::string& command) { m_command = command; }
 
 private:
 	CThread* m_thread;
