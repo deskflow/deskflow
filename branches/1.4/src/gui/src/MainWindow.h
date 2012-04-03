@@ -30,6 +30,7 @@
 #include "ServerConfig.h"
 #include "AppConfig.h"
 #include "VersionChecker.h"
+#include "IpcLogReader.h"
 
 class QAction;
 class QMenu;
@@ -84,9 +85,11 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString address();
 		QString appPath(const QString& name);
 		void start();
-		void appendLog(const QString& text);
 		void clearLog();
 		AppConfig& appConfig() { return m_AppConfig; }
+
+	public slots:
+		void appendLog(const QString& text);
 
 	protected slots:
 		void on_m_pGroupClient_toggled(bool on) { m_pGroupServer->setChecked(!on); }
@@ -138,6 +141,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool m_alreadyHidden;
 		VersionChecker m_versionChecker;
 		SetupWizard* m_SetupWizard;
+		IpcLogReader m_IpcLogReader;
 };
 
 #endif

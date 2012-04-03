@@ -85,6 +85,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	m_SetupWizard = new SetupWizard(*this, false);
 	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(refreshStartButton()));
+
+	connect(&m_IpcLogReader, SIGNAL(receivedLine(const QString&)), this, SLOT(appendLog(const QString&)));
+	m_IpcLogReader.start();
 }
 
 MainWindow::~MainWindow()
@@ -275,10 +278,7 @@ void MainWindow::logError()
 {
 	if (m_pSynergy)
 	{
-		QString text(m_pSynergy->readAllStandardError());
-		foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
-			if (!line.isEmpty())
-				appendLog(line);
+		appendLog(m_pSynergy->readAllStandardError());
 	}
 }
 
@@ -293,7 +293,9 @@ void MainWindow::updateFound(const QString &version)
 
 void MainWindow::appendLog(const QString& text)
 {
-    m_pLogOutput->append(text);
+	foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
+		if (!line.isEmpty())
+			m_pLogOutput->append(line);
 }
 
 void MainWindow::clearLog()

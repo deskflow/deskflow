@@ -118,6 +118,14 @@ public:
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers) = 0;
 
 	//@}
+
+	//! Get the command line
+	/*!
+	Gets the command line with which the application was started.
+	*/
+	virtual std::string	commandLine() const = 0;
+
+	//@}
 };
 
 #endif

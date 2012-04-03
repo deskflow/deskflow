@@ -336,7 +336,7 @@ CMSWindowsRelauncher::command() const
 
 	// seems like a fairly convoluted way to get the process name
 	const char* launchName = ARCH->util().app().argsBase().m_pname;
-	std::string args = ((CArchDaemonWindows&)ARCH->daemon()).commandLine();
+	std::string args = ARCH->commandLine();
 
 	// build up a full command line
 	std::stringstream cmdTemp;

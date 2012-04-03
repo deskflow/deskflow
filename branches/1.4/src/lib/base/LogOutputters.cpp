@@ -262,3 +262,41 @@ CFileLogOutputter::close() {}
 
 void
 CFileLogOutputter::show(bool showIfEmpty) {}
+
+
+//
+// CConsoleLogOutputter
+//
+
+CIpcLogOutputter::CIpcLogOutputter()
+{
+}
+
+CIpcLogOutputter::~CIpcLogOutputter()
+{
+}
+
+void
+CIpcLogOutputter::open(const char* title)
+{
+	ARCH->ipcLog().openLog(title);
+}
+
+void
+CIpcLogOutputter::close()
+{
+	ARCH->ipcLog().closeLog();
+}
+
+void
+CIpcLogOutputter::show(bool showIfEmpty)
+{
+	ARCH->ipcLog().showLog(showIfEmpty);
+}
+
+bool
+CIpcLogOutputter::write(ELevel level, const char* msg)
+{
+	ARCH->ipcLog().writeLog(level, msg);
+	return true;
+}

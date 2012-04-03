@@ -86,10 +86,12 @@ CDaemonApp::run(int argc, char** argv)
 		CArch arch;
 		CLog log;
 
+		// send logging to gui via ipc
+		CLOG->insert(new CIpcLogOutputter());
+
 #if SYSAPI_WIN32
 		// sends debug messages to visual studio console window.
 		CLOG->insert(new CMSWindowsDebugOutputter());
-
 
 		CThread pipeThread(new TMethodJob<CDaemonApp>(
 			this, &CDaemonApp::pipeThread, nullptr));

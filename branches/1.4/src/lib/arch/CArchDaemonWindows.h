@@ -87,8 +87,7 @@ public:
 	virtual int			daemonize(const char* name, DaemonFunc func);
 	virtual bool		canInstallDaemon(const char* name, bool allUsers);
 	virtual bool		isDaemonInstalled(const char* name, bool allUsers);
-
-	std::string commandLine() const { return m_commandLine; }
+	std::string			commandLine() const { return m_commandLine; }
 
 private:
 	static HKEY			openNTServicesKey();

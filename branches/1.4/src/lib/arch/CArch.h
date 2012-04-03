@@ -38,6 +38,7 @@
 #	include "CArchDaemonWindows.h"
 #	include "CArchFileWindows.h"
 #	include "CArchLogWindows.h"
+#	include "CArchIpcLogWindows.h"
 #	include "CArchMiscWindows.h"
 #	include "CArchMultithreadWindows.h"
 #	include "CArchNetworkWinsock.h"
@@ -107,11 +108,12 @@ public:
 	*/
 	static CArch*		getInstance();
 
-	IArchAppUtil& util() const { return (ARCH_APPUTIL&)*this; }
-	IArchDaemon& daemon() const { return (ARCH_DAEMON&)*this; }
+	ARCH_APPUTIL&		util() const { return (ARCH_APPUTIL&)*this; }
+	ARCH_IPC_LOG&		ipcLog() const { return (ARCH_IPC_LOG&)m_ipcLog; }
 
 private:
 	static CArch*		s_instance;
+	ARCH_IPC_LOG		m_ipcLog;
 };
 
 //! Convenience object to lock/unlock an arch mutex

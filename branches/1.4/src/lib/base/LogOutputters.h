@@ -99,6 +99,22 @@ public:
 	virtual bool		write(ELevel level, const char* message);
 };
 
+//! Write log to GUI over IPC
+/*!
+This outputter writes output to the GUI via IPC.
+*/
+class CIpcLogOutputter : public ILogOutputter {
+public:
+	CIpcLogOutputter();
+	virtual ~CIpcLogOutputter();
+
+	// ILogOutputter overrides
+	virtual void		open(const char* title);
+	virtual void		close();
+	virtual void		show(bool showIfEmpty);
+	virtual bool		write(ELevel level, const char* message);
+};
+
 //! Write log to system log only
 /*!
 Creating an object of this type inserts a CStopLogOutputter followed
