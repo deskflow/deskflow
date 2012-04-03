@@ -73,12 +73,21 @@ CArchIpcLogWindows::openLog(const char* name)
 void
 CArchIpcLogWindows::connectThread(void*)
 {
-	// TODO: this only allows one client to connect. if the client goes
-	// away and then reconnects, the server isn't listening. i tried
-	// putting this in a loop, but when a client is connected, 
-	// ConnectNamedPipe doesn't block!!! ugh!!
-	BOOL result = ConnectNamedPipe(m_pipe, NULL);
-	m_connected = true;
+	// HACK: this seems like a hacky pile of bollocks. it will continuously call
+	// ConnectNamedPipe every second. if there is no client, it will block,
+	// but if there is a client it will return FALSE and GetLastError() will
+	// be ERROR_PIPE_CONNECTED. in any other case, the client has gone away
+	// and ConnectNamedPipe will go back to blocking (waiting for the client
+	// to reconnect).
+	while (true) {
+		BOOL result = ConnectNamedPipe(m_pipe, NULL);
+		if ((result == TRUE) || (GetLastError() == ERROR_PIPE_CONNECTED)) {
+			m_connected = true;
+			ARCH->sleep(1);
+		} else {
+			DisconnectNamedPipe(m_pipe);
+		}
+	}
 }
 
 void
