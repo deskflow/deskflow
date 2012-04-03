@@ -63,7 +63,6 @@ CMSWindowsRelauncher::stop()
 {
 	m_running = false;
 	m_thread->wait(5);
-	m_outputThread->wait(5);
 }
 
 // this still gets the physical session (the one the keyboard and 
@@ -383,7 +382,7 @@ CMSWindowsRelauncher::outputLoop(void*)
 {
 	CHAR buffer[kOutputBufferSize];
 
-	while (m_running) {
+	while (true) {
 		
 		DWORD bytesRead;
 		BOOL success = ReadFile(m_stdOutRead, buffer, kOutputBufferSize, &bytesRead, NULL);
