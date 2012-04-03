@@ -67,6 +67,10 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 			synergyServer
 		};
 
+		enum qIpcMessage {
+			Command = 1
+		};
+
 	public:
 		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
@@ -120,6 +124,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool serverArgs(QStringList& args, QString& app);
 		void setStatus(const QString& status);
 		void sendDaemonCommand(const QString& command);
+		void sendIpcMessage(qIpcMessage type, const char* buffer);
 
 	private:
 		QSettings& m_Settings;
@@ -133,10 +138,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool m_alreadyHidden;
 		VersionChecker m_versionChecker;
 		SetupWizard* m_SetupWizard;
-};
-
-enum IpcMessage {
-	Command = 1
 };
 
 #endif

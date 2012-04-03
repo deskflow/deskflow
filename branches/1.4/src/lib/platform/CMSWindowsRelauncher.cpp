@@ -39,7 +39,6 @@ CMSWindowsRelauncher::CMSWindowsRelauncher(bool autoDetectCommand) :
 
 CMSWindowsRelauncher::~CMSWindowsRelauncher()
 {
-	delete m_thread;
 }
 
 void 

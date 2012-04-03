@@ -291,6 +291,14 @@ CDaemonApp::handlePipeMessage(char* buffer)
 	case kIpcCommand:
 		{
 			string command(++buffer);
+
+			// store command in system settings. this is used when the daemon
+			// next starts.
+			ARCH->setting("Command", command);
+			
+			// tell the relauncher about the new command. this causes the
+			// relauncher to stop the existing command and start the new
+			// command.
 			m_relauncher.command(command);
 		}
 		break;

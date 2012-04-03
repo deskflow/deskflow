@@ -309,6 +309,9 @@ void MainWindow::startSynergy()
 
 	if (desktopMode)
 	{
+		// cause the service to stop creating processes.
+		sendDaemonCommand("");
+
 		stopSynergy();
 		setSynergyState(synergyConnecting);
 	}
@@ -635,15 +638,20 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::sendDaemonCommand(const QString& command)
 {
-	// TODO: put this in an IPC client class.
+	sendIpcMessage(Command, command.toStdString().c_str());
+}
+
+// TODO: put this in an IPC client class.
+void MainWindow::sendIpcMessage(qIpcMessage type, const char* data)
+{
 #if defined(Q_OS_WIN)
 
 	const WCHAR* name = L"\\\\.\\pipe\\Synergy";
 	char message[1024];
-	message[0] = Command;
+	message[0] = type;
 	char* messagePtr = message;
 	messagePtr++;
-	strcpy(messagePtr, command.toStdString().c_str());
+	strcpy(messagePtr, data);
 
 	HANDLE pipe = CreateFile(
 		name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
