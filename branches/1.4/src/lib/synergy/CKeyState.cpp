@@ -664,20 +664,24 @@ CKeyState::fakeKeyUp(KeyButton serverID)
 	m_serverKeys[serverID] = 0;
 
 	// check if this is a modifier
-	for (ModifierToKeys::iterator i = m_activeModifiers.begin();
-								i != m_activeModifiers.end(); ++i) {
+	ModifierToKeys::iterator i = m_activeModifiers.begin();
+	while (i != m_activeModifiers.end()) {
 		if (i->second.m_button == localID && !i->second.m_lock) {
 			// modifier is no longer down
 			KeyModifierMask mask = i->first;
-			m_activeModifiers.erase(i);
+
+			ModifierToKeys::iterator tmp = i;
+			++i;
+			m_activeModifiers.erase(tmp);
 
 			if (m_activeModifiers.count(mask) == 0) {
 				// no key for modifier is down so deactivate modifier
 				m_mask &= ~mask;
 				LOG((CLOG_DEBUG1 "new state %04x", m_mask));
 			}
-
-			break;
+		}
+		else {
+			++i;
 		}
 	}
 
