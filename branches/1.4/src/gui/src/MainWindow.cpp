@@ -101,7 +101,7 @@ void MainWindow::start()
 {
 	refreshStartButton();
 
-	if (appConfig().autoConnect())
+	if (appConfig().autoConnect() && appConfig().processMode() == Desktop)
 		startSynergy();
 
 	createTrayIcon();

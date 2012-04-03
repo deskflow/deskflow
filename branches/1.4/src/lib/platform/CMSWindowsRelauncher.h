@@ -38,6 +38,7 @@ private:
 	BOOL winlogonInSession(DWORD sessionId, PHANDLE process);
 	DWORD getSessionId();
 	HANDLE getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
+	void outputLoop(void*);
 
 private:
 	CThread* m_thread;
@@ -45,4 +46,7 @@ private:
 	std::string m_command;
 	bool m_running;
 	bool m_commandChanged;
+	HANDLE m_stdOutWrite;
+	HANDLE m_stdOutRead;
+	CThread* m_outputThread;
 };

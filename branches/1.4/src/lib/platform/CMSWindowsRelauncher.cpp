@@ -22,10 +22,15 @@
 #include "CArch.h"
 #include "Version.h"
 #include "CArchDaemonWindows.h"
+#include "XArchWindows.h"
 
 #include <Tlhelp32.h>
 #include <UserEnv.h>
 #include <sstream>
+
+enum {
+	kOutputBufferSize = 4096
+};
 
 typedef VOID (WINAPI *SendSas)(BOOL asUser);
 
@@ -33,7 +38,9 @@ CMSWindowsRelauncher::CMSWindowsRelauncher(bool autoDetectCommand) :
 	m_thread(NULL),
 	m_autoDetectCommand(autoDetectCommand),
 	m_running(true),
-	m_commandChanged(false)
+	m_commandChanged(false),
+	m_stdOutWrite(NULL),
+	m_stdOutRead(NULL)
 {
 }
 
@@ -46,6 +53,9 @@ CMSWindowsRelauncher::startAsync()
 {
 	m_thread = new CThread(new TMethodJob<CMSWindowsRelauncher>(
 		this, &CMSWindowsRelauncher::mainLoop, nullptr));
+
+	m_outputThread = new CThread(new TMethodJob<CMSWindowsRelauncher>(
+		this, &CMSWindowsRelauncher::outputLoop, nullptr));
 }
 
 void
@@ -53,6 +63,7 @@ CMSWindowsRelauncher::stop()
 {
 	m_running = false;
 	m_thread->wait(5);
+	m_outputThread->wait(5);
 }
 
 // this still gets the physical session (the one the keyboard and 
@@ -212,6 +223,15 @@ CMSWindowsRelauncher::mainLoop(void*)
 	DWORD sessionId = -1;
 	bool launched = false;
 
+	SECURITY_ATTRIBUTES saAttr; 
+	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
+	saAttr.bInheritHandle = TRUE; 
+	saAttr.lpSecurityDescriptor = NULL; 
+
+	if (!CreatePipe(&m_stdOutRead, &m_stdOutWrite, &saAttr, 0)) {
+		throw XArch(new XArchEvalWindows());
+	}
+
 	PROCESS_INFORMATION pi;
 	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 
@@ -219,6 +239,8 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 		HANDLE sendSasEvent = 0;
 		if (sasLib && sendSasFunc) {
+			// can't we just create one event? seems weird creating a new
+			// event every second...
 			sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
 		}
 
@@ -262,6 +284,9 @@ CMSWindowsRelauncher::mainLoop(void*)
 				ZeroMemory(&si, sizeof(STARTUPINFO));
 				si.cb = sizeof(STARTUPINFO);
 				si.lpDesktop = "winsta0\\default";
+				si.hStdError = m_stdOutWrite;
+				si.hStdOutput = m_stdOutWrite;
+				si.dwFlags |= STARTF_USESTDHANDLES;
 
 				LPVOID environment;
 				BOOL blockRet = CreateEnvironmentBlock(&environment, userToken, FALSE);
@@ -351,4 +376,28 @@ CMSWindowsRelauncher::command() const
 	}
 
 	return cmd;
+}
+
+void
+CMSWindowsRelauncher::outputLoop(void*)
+{
+	CHAR buffer[kOutputBufferSize];
+
+	while (m_running) {
+		
+		DWORD bytesRead;
+		BOOL success = ReadFile(m_stdOutRead, buffer, kOutputBufferSize, &bytesRead, NULL);
+
+		// assume the process has gone away? slow down
+		// the reads until another one turns up.
+		if (!success || bytesRead == 0) {
+			ARCH->sleep(1);
+		}
+		else {
+			// send process output over IPC to GUI.
+			buffer[bytesRead] = '\0';
+			ARCH->ipcLog().writeLog(kINFO, buffer);
+		}
+			
+	}
 }
