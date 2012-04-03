@@ -71,8 +71,6 @@ CLog*         CLog::s_log = NULL;
 
 CLog::CLog()
 {
-  assert(s_log == NULL);
-
   // create mutex for multithread safe operation
   m_mutex            = ARCH->newMutex();
 
@@ -80,8 +78,6 @@ CLog::CLog()
   m_maxPriority      = g_defaultMaxPriority;
   m_maxNewlineLength = 0;
   insert(new CConsoleLogOutputter);
-
-  s_log = this;
 }
 
 CLog::~CLog()
@@ -96,16 +92,14 @@ CLog::~CLog()
     delete *index;
   }
   ARCH->closeMutex(m_mutex);
-  s_log = NULL;
 }
 
 CLog*
 CLog::getInstance()
 {
-  // note -- not thread safe;  client must initialize log safely
-  if (s_log == NULL) {
-    throw XArch("Log instance not created.");
-  }
+  if (s_log == NULL)
+    s_log = new CLog();
+
   return s_log;
 }
 

@@ -94,7 +94,6 @@ class CArch : public ARCH_CONSOLE,
 				public ARCH_TIME,
 				public ARCH_APPUTIL {
 public:
-	CArch();
 	~CArch();
 
 	//
@@ -110,6 +109,10 @@ public:
 
 	ARCH_APPUTIL&		util() const { return (ARCH_APPUTIL&)*this; }
 	ARCH_IPC_LOG&		ipcLog() const { return (ARCH_IPC_LOG&)m_ipcLog; }
+
+private:
+	CArch();
+	void init();
 
 private:
 	static CArch*		s_instance;

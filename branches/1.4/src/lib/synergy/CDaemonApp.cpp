@@ -82,10 +82,6 @@ CDaemonApp::run(int argc, char** argv)
 		CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-		// create singletons.
-		CArch arch;
-		CLog log;
-
 		// send logging to gui via ipc
 		CLOG->insert(new CIpcLogOutputter());
 

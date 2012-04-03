@@ -266,9 +266,6 @@ CApp::run(int argc, char** argv)
 	TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
 #endif
 
-	CArch arch;
-	CLog log;
-
 	// install application in to arch
 	ARCH->adoptApp(this);
 	

@@ -27,10 +27,15 @@ CArch*					CArch::s_instance = NULL;
 
 CArch::CArch()
 {
-	// only once instance of CArch
-	assert(s_instance == NULL);
-	s_instance = this;
+}
 
+CArch::~CArch()
+{
+}
+
+void
+CArch::init()
+{
 	// initialization that requires ARCH is done here.
 	ARCH_TASKBAR::init();
 	ARCH_NETWORK::init();
@@ -40,14 +45,13 @@ CArch::CArch()
 #endif
 }
 
-CArch::~CArch()
-{
-}
-
 CArch*
 CArch::getInstance()
 {
-	assert(s_instance != NULL);
+	if (s_instance == NULL) {
+		s_instance = new CArch();
+		s_instance->init();
+	}
 
 	return s_instance;
 }
