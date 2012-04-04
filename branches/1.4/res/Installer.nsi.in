@@ -46,13 +46,15 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
 ; delete files we installed, and then dir if it's empty
 !macro DeleteFiles dir
 
+  Delete "${dir}\synergy.exe"
   Delete "${dir}\synergyc.exe"
   Delete "${dir}\synergys.exe"
+  Delete "${dir}\synergyd.exe"
+  Delete "${dir}\synergyd.log"
   Delete "${dir}\launcher.exe"
   Delete "${dir}\synrgyhk.dll"
   Delete "${dir}\libgcc_s_dw2-1.dll"
   Delete "${dir}\mingwm10.dll"
-  Delete "${dir}\synergy.exe"
   Delete "${dir}\QtCore4.dll"
   Delete "${dir}\QtGui4.dll"
   Delete "${dir}\QtNetwork4.dll"
@@ -68,6 +70,9 @@ Section
 
   SetShellVarContext all
   SetOutPath "$INSTDIR"
+  
+  ; stops and removes all services (including legacy)
+  ExecWait "$INSTDIR\synergyd.exe /uninstall"
 
   ; force kill all synergy processes
   nsExec::Exec "taskkill /f /im synergy.exe"
@@ -116,18 +121,26 @@ Section
 
 SectionEnd
 
+Section "Visual C++ Redistributable" vcredist
+
+  ; this must run first, as some sections run
+  ; binaries that require a vcredist to be installed.
+  ; copy redist file, run it, then delete when done
+  File "${vcRedistDir}\${vcRedistFile}"
+  ExecWait "$INSTDIR\${vcRedistFile} /install /q /norestart"
+  Delete $INSTDIR\${vcRedistFile}
+
+SectionEnd
+
 Section "Server and Client" core
 
   ; client and server files
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synrgyhk.dll"
-  
-  ; this line removes all services (including legacy)
-  ExecWait "$INSTDIR\synergyd.exe /uninstall"
-  
-  ; install new service
   File "${binDir}\Release\synergyd.exe"
+  
+  ; install and run the service
   ExecWait "$INSTDIR\synergyd.exe /install"
 
 SectionEnd
@@ -158,15 +171,6 @@ Section "Graphical User Interface" gui
 
 SectionEnd
 
-Section "Visual C++ Redistributable" vcredist
-
-  ; copy redist file, run it, then delete when done
-  File "${vcRedistDir}\${vcRedistFile}"
-  ExecWait "$INSTDIR\${vcRedistFile} /install /q /norestart"
-  Delete $INSTDIR\${vcRedistFile}
-
-SectionEnd
-
 Section Uninstall
 
   SetShellVarContext all
@@ -189,16 +193,15 @@ Section Uninstall
   DeleteRegKey HKLM "SOFTWARE\${product}"
   DeleteRegKey HKLM "${controlPanelReg}\${product}"
 
-  ; delete only the files that we put there
+  ; note: edit macro to delete more files.
   !insertmacro DeleteFiles $INSTDIR
   Delete "$INSTDIR\${uninstall}"
-  
-  ; HACK: for some reason, synergyd.exe doens't get deleted
-  ; so force it here. also delete the log that it creates.
-  Delete "$INSTDIR\synergyd.exe"
-  Delete "$INSTDIR\synergyd.log"
 
   ; delete (only if empty, so we don't delete user files)
   RMDir "$INSTDIR"
 
 SectionEnd
+
+Function .onInstSuccess
+  Exec "$INSTDIR\synergy.exe"
+FunctionEnd

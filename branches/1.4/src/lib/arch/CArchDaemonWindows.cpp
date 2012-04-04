@@ -191,8 +191,6 @@ CArchDaemonWindows::installDaemon(const char* name,
 		// done with registry
 		CArchMiscWindows::closeKey(key);
 	}
-
-	start(name);
 }
 
 void
@@ -821,6 +819,8 @@ CArchDaemonWindows::installDaemon()
 		GetModuleFileName(CArchMiscWindows::instanceWin32(), path, MAX_PATH);
 		installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, path, "", "", true);
 	}
+
+	start(DEFAULT_DAEMON_NAME);
 }
 
 void
