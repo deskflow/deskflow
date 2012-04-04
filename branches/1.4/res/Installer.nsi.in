@@ -123,7 +123,10 @@ Section "Server and Client" core
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synrgyhk.dll"
   
-  ; install daemon/service
+  ; this line removes all services (including legacy)
+  ExecWait "$INSTDIR\synergyd.exe /uninstall"
+  
+  ; install new service
   File "${binDir}\Release\synergyd.exe"
   ExecWait "$INSTDIR\synergyd.exe /install"
 
@@ -167,6 +170,9 @@ SectionEnd
 Section Uninstall
 
   SetShellVarContext all
+  
+  ; stop and uninstall the service
+  ExecWait "$INSTDIR\synergyd.exe /uninstall"
 
   ; force kill all synergy processes
   nsExec::Exec "taskkill /f /im synergy.exe"
@@ -174,8 +180,7 @@ Section Uninstall
   nsExec::Exec "taskkill /f /im launcher.exe"
   nsExec::Exec "taskkill /f /im synergys.exe"
   nsExec::Exec "taskkill /f /im synergyc.exe"
-  
-  ExecWait "$INSTDIR\synergyd.exe /uninstall"
+  nsExec::Exec "taskkill /f /im synergyd.exe"
 
   ; delete start menu shortcut
   Delete "$SMPROGRAMS\${product}.lnk"
@@ -187,6 +192,11 @@ Section Uninstall
   ; delete only the files that we put there
   !insertmacro DeleteFiles $INSTDIR
   Delete "$INSTDIR\${uninstall}"
+  
+  ; HACK: for some reason, synergyd.exe doens't get deleted
+  ; so force it here. also delete the log that it creates.
+  Delete "$INSTDIR\synergyd.exe"
+  Delete "$INSTDIR\synergyd.log"
 
   ; delete (only if empty, so we don't delete user files)
   RMDir "$INSTDIR"

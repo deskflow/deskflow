@@ -256,8 +256,18 @@ CArchDaemonWindows::uninstallDaemon(const char* name, bool allUsers)
 		CloseServiceHandle(service);
 		CloseServiceHandle(mgr);
 
+		// give windows a chance to remove the service before
+		// we check if it still exists.
+		ARCH->sleep(1);
+
 		// handle failure.  ignore error if service isn't installed anymore.
 		if (!okay && isDaemonInstalled(name, allUsers)) {
+			if (err == ERROR_SUCCESS) {
+				// this seems to occur even though the uninstall was successful.
+				// it could be a timing issue, i.e., isDaemonInstalled is
+				// called too soon. i've added a sleep to try and stop this.
+				return;
+			}
 			if (err == ERROR_IO_PENDING) {
 				// this seems to be a spurious error
 				return;
@@ -369,58 +379,22 @@ CArchDaemonWindows::canInstallDaemon(const char* /*name*/, bool allUsers)
 bool
 CArchDaemonWindows::isDaemonInstalled(const char* name, bool allUsers)
 {
-	// if not for all users then use the user's autostart registry.
-	// key.  if windows 95 family then use windows 95 services key.
-	if (!allUsers || CArchMiscWindows::isWindows95Family()) {
-		// check if we can open the registry key
-		HKEY key = (allUsers && CArchMiscWindows::isWindows95Family()) ?
-							open95ServicesKey() : openUserStartupKey();
-		if (key == NULL) {
-			return false;
-		}
-
-		// check for entry
-		const bool installed = !CArchMiscWindows::readValueString(key,
-															name).empty();
-
-		// clean up
-		CArchMiscWindows::closeKey(key);
-
-		return installed;
+	// open service manager
+	SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
+	if (mgr == NULL) {
+		return false;
 	}
 
-	// windows NT family services
-	else {
-		// check parameters for this service
-		HKEY key = openNTServicesKey();
-		key      = CArchMiscWindows::openKey(key, name);
-		key      = CArchMiscWindows::openKey(key, _T("Parameters"));
-		if (key != NULL) {
-			const bool installed = !CArchMiscWindows::readValueString(key,
-										_T("CommandLine")).empty();
-			CArchMiscWindows::closeKey(key);
-			if (!installed) {
-				return false;
-			}
-		}
+	// open the service
+	SC_HANDLE service = OpenService(mgr, name, GENERIC_READ);
 
-		// open service manager
-		SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_READ);
-		if (mgr == NULL) {
-			return false;
-		}
-
-		// open the service
-		SC_HANDLE service = OpenService(mgr, name, GENERIC_READ);
-
-		// clean up
-		if (service != NULL) {
-			CloseServiceHandle(service);
-		}
-		CloseServiceHandle(mgr);
-
-		return (service != NULL);
+	// clean up
+	if (service != NULL) {
+		CloseServiceHandle(service);
 	}
+	CloseServiceHandle(mgr);
+
+	return (service != NULL);
 }
 
 HKEY
@@ -841,14 +815,6 @@ CArchDaemonWindows::stop(const char* name)
 void
 CArchDaemonWindows::installDaemon()
 {
-	// remove legacy services
-	if (isDaemonInstalled("Synergy Server", true)) {
-		uninstallDaemon("Synergy Server", true);
-	}
-	if (isDaemonInstalled("Synergy Client", true)) {
-		uninstallDaemon("Synergy Client", true);
-	}
-
 	// install default daemon if not already installed.
 	if (!isDaemonInstalled(DEFAULT_DAEMON_NAME, true)) {
 		char path[MAX_PATH];
@@ -860,5 +826,16 @@ CArchDaemonWindows::installDaemon()
 void
 CArchDaemonWindows::uninstallDaemon()
 {
-	uninstallDaemon(DEFAULT_DAEMON_NAME, true);
+	// remove legacy services if installed.
+	if (isDaemonInstalled(LEGACY_SERVER_DAEMON_NAME, true)) {
+		uninstallDaemon(LEGACY_SERVER_DAEMON_NAME, true);
+	}
+	if (isDaemonInstalled(LEGACY_CLIENT_DAEMON_NAME, true)) {
+		uninstallDaemon(LEGACY_CLIENT_DAEMON_NAME, true);
+	}
+
+	// remove new service if installed.
+	if (isDaemonInstalled(DEFAULT_DAEMON_NAME, true)) {
+		uninstallDaemon(DEFAULT_DAEMON_NAME, true);
+	}
 }

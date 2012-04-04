@@ -145,6 +145,9 @@ private:
 #define DEFAULT_DAEMON_NAME _T("Synergy")
 #define DEFAULT_DAEMON_INFO _T("Manages the Synergy foreground processes.")
 
+#define LEGACY_SERVER_DAEMON_NAME _T("Synergy Server")
+#define LEGACY_CLIENT_DAEMON_NAME _T("Synergy Client")
+
 static const TCHAR* const g_daemonKeyPath[] = {
 	_T("SOFTWARE"),
 	_T("The Synergy Project"),
