@@ -59,9 +59,6 @@
        <property name="text">
         <string>&amp;Server (new setup)</string>
        </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
       </widget>
      </item>
      <item>

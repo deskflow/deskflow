@@ -64,7 +64,6 @@ void SetupWizard::handlefinished()
 	close();
 
 	AppConfig& appConfig = m_MainWindow.appConfig();
-
 	if (m_pServiceRadioButton->isChecked())
 	{
 		appConfig.setProcessMode(Service);
@@ -80,10 +79,21 @@ void SetupWizard::handlefinished()
 		// still use desktop mode, but don't auto start.
 		appConfig.setProcessMode(Desktop);
 	}
-
 	appConfig.setWizardHasRun(true);
-
 	appConfig.saveSettings();
+
+	QSettings& settings = m_MainWindow.settings();
+	if (m_pServerRadioButton->isChecked())
+	{
+		settings.setValue("groupServerChecked", true);
+		settings.setValue("groupClientChecked", false);
+	}
+	if (m_pClientRadioButton->isChecked())
+	{
+		settings.setValue("groupClientChecked", true);
+		settings.setValue("groupServerChecked", false);
+	}
+	settings.sync();
 
 	if (m_StartMain)
 	{

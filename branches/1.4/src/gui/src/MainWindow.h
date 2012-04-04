@@ -53,6 +53,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 	Q_OBJECT
 
 	friend class QSynergyApplication;
+	friend class SetupWizard;
 
 	public:
 		enum qSynergyState
@@ -86,7 +87,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString appPath(const QString& name);
 		void start();
 		void clearLog();
-		AppConfig& appConfig() { return m_AppConfig; }
 
 	public slots:
 		void appendLog(const QString& text);
@@ -111,6 +111,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 
 	protected:
 		QSettings& settings() { return m_Settings; }
+		AppConfig& appConfig() { return m_AppConfig; }
 		QProcess*& synergyProcess() { return m_pSynergy; }
 		void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
 		ServerConfig& serverConfig() { return m_ServerConfig; }
