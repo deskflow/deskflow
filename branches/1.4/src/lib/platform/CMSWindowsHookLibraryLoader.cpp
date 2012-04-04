@@ -60,7 +60,8 @@ CMSWindowsHookLibraryLoader::openHookLibrary(const char* name)
 
 	// initialize hook library
 	if (m_init(GetCurrentThreadId()) == 0) {
-		LOG((CLOG_ERR "failed to initialize hook library, is synergy already running?"));
+		LOG((CLOG_ERR "failed to init %s.dll, another program may be using it", name));
+		LOG((CLOG_INFO "restarting your computer may solve this issue", name));
 		throw XScreenOpenFailure();
 	}
 
