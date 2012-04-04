@@ -42,33 +42,37 @@
     </div>
   
   </div>
+  
+  <div class="inner-content">
 
-  <p>
+    <p>
 {t}Synergy lets you easily share your mouse and keyboard between
 multiple computers on your desk, and it's Free and Open Source.
 Just move your mouse off the edge of one computer's screen on to
 another. You can even share all of your clipboards. All you need
 is a network connection. Synergy is cross-platform (works on
 Windows, Mac OS X and Linux).{/t}
-  </p>
+    </p>
 
-  <div class="advert">
+    <div class="advert">
 
-    <script type="text/javascript"><!--
-    google_ad_client = "ca-pub-3305986762497110";
-    /* Synergy leaderboard */
-    google_ad_slot = "1244648544";
-    google_ad_width = 728;
-    google_ad_height = 90;
-    //-->
-    </script>
-    <script type="text/javascript"
-    src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-    </script>
-  </div>
+      <script type="text/javascript"><!--
+      google_ad_client = "ca-pub-3305986762497110";
+      /* Synergy leaderboard */
+      google_ad_slot = "1244648544";
+      google_ad_width = 728;
+      google_ad_height = 90;
+      //-->
+      </script>
+      <script type="text/javascript"
+      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+      </script>
+    </div>
+    
+    <div class="demo">
+      <img src="/img/splash.jpg" alt="How Synergy works." />
+    </div>
   
-  <div class="demo">
-    <img src="/img/splash.jpg" alt="How Synergy works." />
   </div>
 
 </div>

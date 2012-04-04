@@ -6,11 +6,33 @@ body {
   text-align: center;
 }
 
+1h, h2, h3, p {
+  margin-top: 0px;
+  padding-top: 0px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+}
+
+ul, ol {
+  margin-top: 0px;
+  padding-top: 0px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+
 h1 {
   text-align: left;
   font-size: 2.3em;
   font-weight: normal;
   line-height: 1em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.2em;
 }
 
 ul, li {
@@ -30,9 +52,12 @@ div.layout {
 }
 
 div.content {
-  clear: all;
-  margin: -10px 20px 20px 20px;
+  margin: 0px 20px 20px 20px;
   width: 730px;
+}
+
+div.inner-content {
+  clear: both;
 }
 
 div.footer {
@@ -76,7 +101,6 @@ div.title {
   width: 100%;
   padding-top: 0px;
   margin-top: 0px;
-  margin-left: -4px;
 }
 
 div.title h1 {
@@ -85,6 +109,7 @@ div.title h1 {
 }
 
 div.title img {
+  margin-left: -3px;
   margin-right: 5px;
   float: left;
 }
@@ -136,8 +161,12 @@ div.download div.flattr {
   float: left;
 }
 
-div.paypal {
-  height: 25px;
+div.paypal,
+div.paypal form {
+  float: left;
+  height: 15px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
 }
 
 div.home div.paypal,
@@ -156,41 +185,63 @@ div.info div.cafepress {
   margin-top: 10px;
 }
 
-div.download div.advert {
-  margin-top: 10px;
+div.download div.top {
+  margin-top: 20px;
   float: left;
 }
 
-div.download div.list {
+div.download div.top p {
+  padding-bottom: 15px;
+  margin-bottom: 0px;
+}
+
+div.download div.top h3 {
+  padding-top: 10px;
+  margin-top: 0px;
+}
+
+div.download div.top div.advert {
+  margin-top: 3px;
+  float: left;
+}
+
+div.download div.top div.list {
   float: left;
   margin-left: 25px;
   height: 50px;
   width: 520px;
 }
 
-div.download div.item {
+div.download div.top div.list div.item {
   margin-left: 5px;
   float: left;
   width: 228px;
   height: 110px;
 }
 
-div.download div.item  img {
+div.download div.top div.list div.item  img {
   margin-bottom: -2px;
   margin-right: 3px;
 }
 
-div.download div.item  h3 {
+div.download div.top div.list div.item   h3 {
   margin-bottom: 5px;
 }
 
-div.download div.item p {
+div.download div.top div.list div.item p {
   margin-top: 8px;
 }
 
 div.download div.alt {
-  clear: both;
+  float: left;
+  width: 100%;
   padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+div.download div.alt div.list {
+  float: left;
+  width: 45%;
 }
 
 div.download h2 {
