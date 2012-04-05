@@ -18,7 +18,10 @@
 #pragma once
 
 #include "CArch.h"
+
+#if SYSAPI_WIN32
 #include "CMSWindowsRelauncher.h"
+#endif
 
 #include <string>
 

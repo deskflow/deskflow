@@ -15,10 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: split this class into windows and unix to get rid
+// of all the #ifdefs!
+
 #include "CDaemonApp.h"
 #include "CEventQueue.h"
 #include "LogOutputters.h"
 #include "CLog.h"
+#include "XArch.h"
 
 #include <string>
 #include <iostream>
@@ -56,14 +60,18 @@ unixMainLoopStatic(int, const char**)
 	return mainLoopStatic();
 }
 
+#if SYSAPI_WIN32
 int
 winMainLoopStatic(int, const char**)
 {
 	return CArchMiscWindows::runDaemon(mainLoopStatic);
 }
+#endif
 
-CDaemonApp::CDaemonApp() :
-	m_relauncher(false)
+CDaemonApp::CDaemonApp()
+#if SYSAPI_WIN32
+	: m_relauncher(false)
+#endif
 {
 	s_instance = this;
 }

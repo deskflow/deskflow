@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Nick Bolton
- * 
+ *
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- * 
+ *
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,28 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CDaemonApp.h"
-#include <iostream>
+#pragma once
 
-#ifdef SYSAPI_UNIX
+#include "IArchLog.h"
 
-int
-main(int argc, char** argv)
-{
-	CDaemonApp app;
-	return app.run(argc, argv);
-}
+#define ARCH_IPC_LOG CArchIpcLogUnix
 
-#elif SYSAPI_WIN32
+class CArchIpcLogUnix : public IArchLog {
+public:
+	CArchIpcLogUnix();
+	virtual ~CArchIpcLogUnix();
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-int WINAPI
-WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
-	CDaemonApp app;
-	return app.run(__argc, __argv);
-}
-
-#endif
+	// IArchLog overrides
+	virtual void		openLog(const char* name);
+	virtual void		closeLog();
+	virtual void		showLog(bool showIfEmpty);
+	virtual void		writeLog(ELevel, const char*);
+};

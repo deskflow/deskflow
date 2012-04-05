@@ -67,3 +67,19 @@ CArchDaemonNone::isDaemonInstalled(const char*, bool)
 {
 	return false;
 }
+
+void
+CArchDaemonNone::installDaemon()
+{
+}
+
+void
+CArchDaemonNone::uninstallDaemon()
+{
+}
+
+std::string
+CArchDaemonNone::commandLine() const
+{
+	return "";
+}

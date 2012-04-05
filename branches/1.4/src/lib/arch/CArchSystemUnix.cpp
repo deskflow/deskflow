@@ -61,3 +61,14 @@ CArchSystemUnix::getPlatformName() const
 #endif
 	return "unknown";
 }
+
+std::string
+CArchSystemUnix::setting(const std::string&) const
+{
+	return "";
+}
+
+void
+CArchSystemUnix::setting(const std::string&, const std::string&) const
+{
+}

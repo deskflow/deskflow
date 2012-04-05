@@ -74,6 +74,7 @@ elseif (UNIX)
 		CArchDaemonUnix.cpp
 		CArchFileUnix.cpp
 		CArchLogUnix.cpp
+		CArchIpcLogUnix.cpp
 		CArchMultithreadPosix.cpp
 		CArchNetworkBSD.cpp
 		CArchSleepUnix.cpp

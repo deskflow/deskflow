@@ -53,6 +53,7 @@
 #	include "CArchDaemonUnix.h"
 #	include "CArchFileUnix.h"
 #	include "CArchLogUnix.h"
+#	include "CArchIpcLogUnix.h"
 #	if HAVE_PTHREAD
 #		include "CArchMultithreadPosix.h"
 #	endif
