@@ -140,7 +140,7 @@ CDaemonApp::run(int argc, char** argv)
 		else {
 #if SYSAPI_WIN32
 			ARCH->daemonize("Synergy", winMainLoopStatic);
-#else SYSAPI_UNIX
+#elif SYSAPI_UNIX
 			ARCH->daemonize("Synergy", unixMainLoopStatic);
 #endif
 		}
