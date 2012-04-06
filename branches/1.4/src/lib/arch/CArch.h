@@ -27,6 +27,10 @@
 // cons:
 //  - slightly more code for calls to ARCH.
 //  - you'll have to modify each ARCH call.
+//
+// also, we may want to consider making each encapsulated
+// class lazy-loaded so that apps like the daemon don't load
+// stuff when they don't need it.
 
 #ifndef CARCH_H
 #define CARCH_H
