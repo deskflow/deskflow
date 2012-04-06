@@ -92,8 +92,7 @@ class CArch : public ARCH_CONSOLE,
 				public ARCH_STRING,
 				public ARCH_SYSTEM,
 				public ARCH_TASKBAR,
-				public ARCH_TIME,
-				public ARCH_APPUTIL {
+				public ARCH_TIME {
 public:
 	~CArch();
 
@@ -108,7 +107,7 @@ public:
 	*/
 	static CArch*		getInstance();
 
-	ARCH_APPUTIL&		util() const { return (ARCH_APPUTIL&)*this; }
+	ARCH_APP_UTIL&		appUtil() const { return (ARCH_APP_UTIL&)m_appUtil; }
 	ARCH_IPC_LOG&		ipcLog() const { return (ARCH_IPC_LOG&)m_ipcLog; }
 
 private:
@@ -118,6 +117,7 @@ private:
 private:
 	static CArch*		s_instance;
 	ARCH_IPC_LOG		m_ipcLog;
+	ARCH_APP_UTIL       m_appUtil;
 };
 
 //! Convenience object to lock/unlock an arch mutex

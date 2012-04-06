@@ -107,7 +107,7 @@ CApp::isArg(
 bool
 CApp::parseArg(const int& argc, const char* const* argv, int& i)
 {
-	if (ARCH->parseArg(argc, argv, i)) {
+	if (ARCH->appUtil().parseArg(argc, argv, i)) {
 		// handled by platform util
 		return true;
 	}
@@ -267,13 +267,13 @@ CApp::run(int argc, char** argv)
 #endif
 
 	// install application in to arch
-	ARCH->adoptApp(this);
+	ARCH->appUtil().adoptApp(this);
 	
 	// HACK: fail by default (saves us setting result in each catch)
 	int result = kExitFailed;
 
 	try {
-		result = ARCH->run(argc, argv);
+		result = ARCH->appUtil().run(argc, argv);
 	}
 	catch (XExitApp& e) {
 		// instead of showing a nasty error, just exit with the error code.
@@ -294,7 +294,7 @@ CApp::run(int argc, char** argv)
 		LOG((CLOG_CRIT "An unexpected exception occurred.\n"));
 	}
 
-	ARCH->beforeAppExit();
+	ARCH->appUtil().beforeAppExit();
 	
 	return result;
 }

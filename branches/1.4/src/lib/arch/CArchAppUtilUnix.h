@@ -19,7 +19,7 @@
 
 #include "CArchAppUtil.h"
 
-#define ARCH_APPUTIL CArchAppUtilUnix
+#define ARCH_APP_UTIL CArchAppUtilUnix
 
 class CArchAppUtilUnix : public CArchAppUtil {
 public:

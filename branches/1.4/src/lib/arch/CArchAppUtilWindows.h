@@ -23,7 +23,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "Windows.h"
 
-#define ARCH_APPUTIL CArchAppUtilWindows
+#define ARCH_APP_UTIL CArchAppUtilWindows
 
 enum AppExitMode {
 	kExitModeNormal,
