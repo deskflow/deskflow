@@ -36,10 +36,10 @@ CArch::~CArch()
 void
 CArch::init()
 {
-#if SYSAPI_WIN32
 	// initialization that requires ARCH is done here.
-	ARCH_TASKBAR::init();
 	ARCH_NETWORK::init();
+#if SYSAPI_WIN32
+	ARCH_TASKBAR::init();
 	CArchMiscWindows::init();
 #endif
 }

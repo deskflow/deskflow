@@ -59,10 +59,11 @@ public:
 	CArchNetworkBSD();
 	virtual ~CArchNetworkBSD();
 
+	virtual void init();
+
 	// IArchNetwork overrides
-	virtual CArchSocket	newSocket(EAddressFamily, ESocketType);
-	virtual CArchSocket	copySocket(CArchSocket s);
-	virtual void		closeSocket(CArchSocket s);
+	virtual CArchSocket     newSocket(EAddressFamily, ESocketType);
+	virtual CArchSocket     copySocket(CArchSocket s);	virtual void		closeSocket(CArchSocket s);
 	virtual void		closeSocketForRead(CArchSocket s);
 	virtual void		closeSocketForWrite(CArchSocket s);
 	virtual void		bindSocket(CArchSocket s, CArchNetAddress addr);

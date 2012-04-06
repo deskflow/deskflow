@@ -85,13 +85,18 @@ inet_aton(const char* cp, struct in_addr* inp)
 
 CArchNetworkBSD::CArchNetworkBSD()
 {
-	// create mutex to make some calls thread safe
-	m_mutex = ARCH->newMutex();
 }
 
 CArchNetworkBSD::~CArchNetworkBSD()
 {
 	ARCH->closeMutex(m_mutex);
+}
+
+void
+CArchNetworkBSD::init()
+{
+	// create mutex to make some calls thread safe
+	m_mutex = ARCH->newMutex();
 }
 
 CArchSocket
