@@ -37,7 +37,6 @@ if (WIN32)
 		CArchTaskBarWindows.h
 		CArchTimeWindows.h
 		CArchConsoleStd.h
-		IArchAppUtil.h
 		XArchWindows.h
 		CMultibyte.h
 		vsnprintf.h
@@ -46,7 +45,6 @@ if (WIN32)
 
 	list(APPEND src
 		${inc}
-		CArchAppUtilWindows.cpp
 		CArchConsoleWindows.cpp
 		CArchDaemonWindows.cpp
 		CArchFileWindows.cpp

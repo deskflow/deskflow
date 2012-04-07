@@ -18,6 +18,7 @@
 #pragma once
 
 #include "CApp.h"
+#include "CArgsBase.h"
 
 class CScreen;
 class CEvent;

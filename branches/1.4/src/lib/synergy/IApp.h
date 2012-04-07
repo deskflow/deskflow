@@ -18,11 +18,13 @@
 #pragma once
 
 #include "IInterface.h"
-#include "CArgsBase.h"
 
 typedef int (*StartupFunc)(int, char**);
 
 class ILogOutputter;
+class CArgsBase;
+class IArchTaskBarReceiver;
+class CScreen;
 
 class IApp : public IInterface
 {
@@ -35,4 +37,11 @@ public:
 	virtual int standardStartup(int argc, char** argv) = 0;
 	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) = 0;
 	virtual void startNode() = 0;
+	virtual IArchTaskBarReceiver* taskBarReceiver() const = 0;
+	virtual void bye(int error) = 0;
+	virtual int mainLoop() = 0;
+	virtual void initApp(int argc, const char** argv) = 0;
+	virtual const char* daemonName() const = 0;
+	virtual int foregroundStartup(int argc, char** argv) = 0;
+	virtual CScreen* createScreen() = 0;
 };

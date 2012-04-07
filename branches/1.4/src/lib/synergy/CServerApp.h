@@ -23,6 +23,7 @@
 #include "CNetworkAddress.h"
 #include "CArch.h"
 #include "IArchMultithread.h"
+#include "CArgsBase.h"
 
 enum EServerState {
 	kUninitialized,

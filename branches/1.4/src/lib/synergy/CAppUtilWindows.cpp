@@ -18,15 +18,16 @@
 #include "CAppUtilWindows.h"
 #include "Version.h"
 #include "CLog.h"
-#include "XWindows.h"
-#include "CMiscWindows.h"
+#include "XArchWindows.h"
+#include "CArchMiscWindows.h"
 #include "CApp.h"
 #include "LogOutputters.h"
 #include "CMSWindowsScreen.h"
 #include "XSynergy.h"
-#include "ITaskBarReceiver.h"
+#include "IArchTaskBarReceiver.h"
 #include "CMSWindowsRelauncher.h"
 #include "CScreen.h"
+#include "CArgsBase.h"
 
 #include <sstream>
 #include <iostream>
@@ -37,7 +38,7 @@ m_exitMode(kExitModeNormal)
 {
 	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
     {
-		throw X(new XEvalWindows());
+		throw XArch(new XArchEvalWindows());
     }
 }
 
@@ -47,12 +48,12 @@ CAppUtilWindows::~CAppUtilWindows()
 
 BOOL WINAPI CAppUtilWindows::consoleHandler(DWORD CEvent)
 {
-	if (instance().app().m_taskBarReceiver)
+	if (instance().app().taskBarReceiver())
 	{
 		// HACK: it would be nice to delete the s_taskBarReceiver object, but 
 		// this is best done by the CApp destructor; however i don't feel like
 		// opening up that can of worms today... i need sleep.
-		instance().app().m_taskBarReceiver->cleanup();
+		instance().app().taskBarReceiver()->cleanup();
 	}
 
 	ExitProcess(kExitTerminated);
@@ -65,7 +66,7 @@ CAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 	if (app().isArg(i, argc, argv, NULL, "--service")) {
 
 		LOG((CLOG_WARN "obsolete argument --service, use synergyd instead."));
-		app().m_bye(kExitFailed);
+		app().bye(kExitFailed);
 	}
 	else if (app().isArg(i, argc, argv, NULL, "--exit-pause")) {
 
@@ -100,7 +101,7 @@ CAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 	// NB: what the hell does this do?!
 	app().argsBase().m_backend = false;
 	
-	return CMiscWindows::runDaemon(mainLoopStatic);
+	return CArchMiscWindows::runDaemon(mainLoopStatic);
 }
 
 void 
@@ -109,7 +110,7 @@ CAppUtilWindows::exitApp(int code)
 	switch (m_exitMode) {
 
 		case kExitModeDaemon:
-			CMiscWindows::daemonFailed(code);
+			CArchMiscWindows::daemonFailed(code);
 			break;
 
 		default:
@@ -160,13 +161,13 @@ int
 CAppUtilWindows::run(int argc, char** argv)
 {
 	// record window instance for tray icon, etc
-	CMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 
-	CMSWindowsScreen::init(CMiscWindows::instanceWin32());
+	CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
 	CThread::getCurrentThread().setPriority(-14);
 
 	StartupFunc startup;
-	if (CMiscWindows::wasLaunchedAsService()) {
+	if (CArchMiscWindows::wasLaunchedAsService()) {
 		startup = &daemonNTStartupStatic;
 	} else {
 		startup = &foregroundStartupStatic;

@@ -22,11 +22,13 @@
 #include "CArch.h"
 #include "XBase.h"
 #include "XArch.h"
+#include "LogOutputters.h"
+#include "XSynergy.h"
+#include "CArgsBase.h"
+
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
 #endif
-#include "LogOutputters.h"
-#include "XSynergy.h"
 
 #include <iostream>
 #include <stdio.h>

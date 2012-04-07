@@ -22,7 +22,7 @@
 #include "XArch.h"
 #include <string.h>
 #include <shellapi.h>
-#include "CArchAppUtilWindows.h"
+#include "CAppUtilWindows.h"
 
 static const UINT		kAddReceiver     = WM_USER + 10;
 static const UINT		kRemoveReceiver  = WM_USER + 11;

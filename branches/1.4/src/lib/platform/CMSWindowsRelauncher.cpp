@@ -23,6 +23,8 @@
 #include "Version.h"
 #include "CArchDaemonWindows.h"
 #include "XArchWindows.h"
+#include "CApp.h"
+#include "CArgsBase.h"
 
 #include <Tlhelp32.h>
 #include <UserEnv.h>
@@ -359,7 +361,7 @@ CMSWindowsRelauncher::command() const
 	}
 
 	// seems like a fairly convoluted way to get the process name
-	const char* launchName = ARCH->util().app().argsBase().m_pname;
+	const char* launchName = CApp::instance().argsBase().m_pname;
 	std::string args = ARCH->commandLine();
 
 	// build up a full command line

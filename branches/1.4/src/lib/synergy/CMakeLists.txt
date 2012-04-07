@@ -45,6 +45,7 @@ set(inc
 	CDaemonApp.h
 	CAppUtil.h
 	CArgsBase.h
+	IAppUtil.h
 )
 
 set(src

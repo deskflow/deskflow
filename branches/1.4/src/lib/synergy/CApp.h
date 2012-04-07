@@ -58,11 +58,6 @@ public:
 
 	virtual void loadConfig() = 0;
 	virtual bool loadConfig(const CString& pathname) = 0;
-	virtual int mainLoop() = 0;
-	virtual int foregroundStartup(int argc, char** argv) = 0;
-
-	// Name of the daemon (used for Unix and Windows).
-	virtual const char* daemonName() const = 0;
 
 	// A description of the daemon (used only on Windows).
 	virtual const char* daemonInfo() const = 0;
@@ -78,9 +73,6 @@ public:
 
 	static CApp& instance() { assert(s_instance != nullptr); return *s_instance; }
 
-	bool m_suspended;
-	IArchTaskBarReceiver* m_taskBarReceiver;
-
 	// If --log was specified in args, then add a file logger.
 	void setupFileLogging();
 
@@ -93,15 +85,19 @@ public:
 	// HACK: accept non-const, but make it const anyway
 	void initApp(int argc, char** argv) { initApp(argc, (const char**)argv); }
 
-	virtual CScreen* createScreen() = 0;
-
 	ARCH_APP_UTIL& appUtil() { return m_appUtil; }
 
+	virtual IArchTaskBarReceiver* taskBarReceiver() const  { return m_taskBarReceiver; }
+
 	virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
+	virtual void bye(int error) { m_bye(error); }
 
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+
+	IArchTaskBarReceiver* m_taskBarReceiver;
+	bool m_suspended;
 
 private:
 	CArgsBase* m_args;
