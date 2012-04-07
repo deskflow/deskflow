@@ -17,8 +17,10 @@
 
 #include "IpcLogReader.h"
 
+#if defined(Q_OS_WIN)
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#endif
 
 IpcLogReader::IpcLogReader()
 {
@@ -31,6 +33,8 @@ IpcLogReader::~IpcLogReader()
 void
 IpcLogReader::run()
 {
+#if defined(Q_OS_WIN)
+
 	const WCHAR* name = L"\\\\.\\pipe\\SynergyLog";
 
 	HANDLE pipe = CreateFile(
@@ -59,4 +63,5 @@ IpcLogReader::run()
 		text = text.trimmed().append("\n");
 		receivedLine(text);
 	}
+#endif
 }
