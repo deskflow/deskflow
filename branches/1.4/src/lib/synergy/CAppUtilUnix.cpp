@@ -16,6 +16,7 @@
  */
 
 #include "CAppUtilUnix.h"
+#include "CArgsBase.h"
 
 CAppUtilUnix::CAppUtilUnix()
 {
