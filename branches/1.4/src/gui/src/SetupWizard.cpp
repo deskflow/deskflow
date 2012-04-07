@@ -97,6 +97,6 @@ void SetupWizard::handlefinished()
 
 	if (m_StartMain)
 	{
-		m_MainWindow.start();
+		m_MainWindow.start(true);
 	}
 }

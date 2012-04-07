@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 
 	if (appConfig.wizardHasRun())
 	{
-		mainWindow.start();
+		mainWindow.start(false);
 	}
 	else
 	{

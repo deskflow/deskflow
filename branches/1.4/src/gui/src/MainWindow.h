@@ -85,7 +85,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString configFilename();
 		QString address();
 		QString appPath(const QString& name);
-		void start();
+		void start(bool firstRun);
 		void clearLog();
 
 	public slots:
@@ -127,8 +127,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool clientArgs(QStringList& args, QString& app);
 		bool serverArgs(QStringList& args, QString& app);
 		void setStatus(const QString& status);
-		void sendDaemonCommand(const QString& command);
-		void sendIpcMessage(qIpcMessage type, const char* buffer);
+		void sendDaemonCommand(const QString& command, bool showErrors);
+		void sendIpcMessage(qIpcMessage type, const char* buffer, bool showErrors);
 
 	private:
 		QSettings& m_Settings;

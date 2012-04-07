@@ -86,8 +86,11 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_SetupWizard = new SetupWizard(*this, false);
 	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(refreshStartButton()));
 
-	connect(&m_IpcLogReader, SIGNAL(receivedLine(const QString&)), this, SLOT(appendLog(const QString&)));
-	m_IpcLogReader.start();
+	if (appConfig.processMode() == Service)
+	{
+		connect(&m_IpcLogReader, SIGNAL(receivedLine(const QString&)), this, SLOT(appendLog(const QString&)));
+		m_IpcLogReader.start();
+	}
 }
 
 MainWindow::~MainWindow()
@@ -97,11 +100,11 @@ MainWindow::~MainWindow()
 	delete m_SetupWizard;
 }
 
-void MainWindow::start()
+void MainWindow::start(bool firstRun)
 {
 	refreshStartButton();
 
-	if (appConfig().autoConnect() && appConfig().processMode() == Desktop)
+	if (!firstRun && appConfig().autoConnect() && appConfig().processMode() == Desktop)
 		startSynergy();
 
 	createTrayIcon();
@@ -312,7 +315,7 @@ void MainWindow::startSynergy()
 	if (desktopMode)
 	{
 		// cause the service to stop creating processes.
-		sendDaemonCommand("");
+		sendDaemonCommand("", false);
 
 		stopSynergy();
 		setSynergyState(synergyConnecting);
@@ -388,7 +391,7 @@ void MainWindow::startSynergy()
 	if (serviceMode)
 	{
 		QString command(app + " " + args.join(" "));
-		sendDaemonCommand(command);
+		sendDaemonCommand(command, true);
 	}
 }
 
@@ -638,13 +641,13 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 	dlg.exec();
 }
 
-void MainWindow::sendDaemonCommand(const QString& command)
+void MainWindow::sendDaemonCommand(const QString& command, bool showErrors)
 {
-	sendIpcMessage(Command, command.toStdString().c_str());
+	sendIpcMessage(Command, command.toStdString().c_str(), showErrors);
 }
 
 // TODO: put this in an IPC client class.
-void MainWindow::sendIpcMessage(qIpcMessage type, const char* data)
+void MainWindow::sendIpcMessage(qIpcMessage type, const char* data, bool showErrors)
 {
 #if defined(Q_OS_WIN)
 
@@ -658,7 +661,7 @@ void MainWindow::sendIpcMessage(qIpcMessage type, const char* data)
 	HANDLE pipe = CreateFile(
 		name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 
-	if (pipe == INVALID_HANDLE_VALUE)
+	if (showErrors && pipe == INVALID_HANDLE_VALUE)
 	{
 		appendLog(QString("ERROR: could not connect to service, error: ") +
 				  QString::number(GetLastError()));
@@ -668,7 +671,7 @@ void MainWindow::sendIpcMessage(qIpcMessage type, const char* data)
 	DWORD dwMode = PIPE_READMODE_MESSAGE;
 	BOOL stateSuccess = SetNamedPipeHandleState(pipe, &dwMode, NULL, NULL);
 
-	if (!stateSuccess)
+	if (showErrors && !stateSuccess)
 	{
 		appendLog(QString("ERROR: could not set service pipe state, error: ") +
 				  QString::number(GetLastError()));
@@ -679,7 +682,7 @@ void MainWindow::sendIpcMessage(qIpcMessage type, const char* data)
 	BOOL writeSuccess = WriteFile(
 	   pipe, message, strlen(message), &written, NULL);
 
-	if (!writeSuccess)
+	if (showErrors && !writeSuccess)
 	{
 		appendLog(QString("ERROR: could not write to service pipe, error: ") +
 				  QString::number(GetLastError()));
