@@ -522,7 +522,7 @@ CClientApp::mainLoop()
 	CEventQueue eventQueue;
 
 	// start client, etc
-	ARCH->appUtil().startNode();
+	appUtil().startNode();
 
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of

@@ -23,6 +23,7 @@
 #include "LogOutputters.h"
 #include "CLog.h"
 #include "XArch.h"
+#include "CApp.h"
 
 #include <string>
 #include <iostream>

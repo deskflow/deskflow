@@ -51,7 +51,6 @@
 #	include "CArchSystemWindows.h"
 #	include "CArchTaskBarWindows.h"
 #	include "CArchTimeWindows.h"
-#	include "CArchAppUtilWindows.h"
 #elif SYSAPI_UNIX
 #	include "CArchConsoleUnix.h"
 #	include "CArchDaemonUnix.h"
@@ -67,7 +66,6 @@
 #	include "CArchSystemUnix.h"
 #	include "CArchTaskBarXWindows.h"
 #	include "CArchTimeUnix.h"
-#	include "CArchAppUtilUnix.h"
 #endif
 
 /*!
@@ -111,7 +109,6 @@ public:
 	*/
 	static CArch*		getInstance();
 
-	ARCH_APP_UTIL&		appUtil() const { return (ARCH_APP_UTIL&)m_appUtil; }
 	ARCH_IPC_LOG&		ipcLog() const { return (ARCH_IPC_LOG&)m_ipcLog; }
 
 private:
@@ -121,7 +118,6 @@ private:
 private:
 	static CArch*		s_instance;
 	ARCH_IPC_LOG		m_ipcLog;
-	ARCH_APP_UTIL       m_appUtil;
 };
 
 //! Convenience object to lock/unlock an arch mutex

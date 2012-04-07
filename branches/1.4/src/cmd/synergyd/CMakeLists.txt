@@ -43,7 +43,7 @@ else()
 endif()
 
 target_link_libraries(synergyd
-	common base arch io mt net platform synergy ${libs})
+	arch base common io mt net platform synergy ${libs})
 
 if (CONF_CPACK)
 	install(TARGETS

@@ -72,3 +72,7 @@ endif()
 
 include_directories(${inc})
 add_library(base STATIC ${src})
+
+if (UNIX)
+	target_link_libraries(base common)
+endif()

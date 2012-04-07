@@ -41,7 +41,7 @@ class ILogOutputter;
 
 class CServerApp : public CApp {
 public:
-	class CArgs : public CApp::CArgsBase {
+	class CArgs : public CArgsBase {
 	public:
 		CArgs();
 		~CArgs();

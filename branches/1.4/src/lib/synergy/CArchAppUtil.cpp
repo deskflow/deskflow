@@ -16,7 +16,6 @@
  */
  
 #include "CArchAppUtil.h"
-#include "CApp.h"
 
 CArchAppUtil* CArchAppUtil::s_instance = nullptr;
  
@@ -38,13 +37,13 @@ CArchAppUtil::parseArg(const int& argc, const char* const* argv, int& i)
 }
 
 void
-CArchAppUtil::adoptApp(CApp* app)
+CArchAppUtil::adoptApp(IApp* app)
 {
-	app->m_bye = &exitAppStatic;
+	app->setByeFunc(&exitAppStatic);
 	m_app = app;
 }
 
-CApp&
+IApp&
 CArchAppUtil::app() const
 {
 	assert(m_app != nullptr);

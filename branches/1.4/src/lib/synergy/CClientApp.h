@@ -26,7 +26,7 @@ class CNetworkAddress;
 
 class CClientApp : public CApp {
 public:
-	class CArgs : public CApp::CArgsBase {
+	class CArgs : public CArgsBase {
 	public:
 		CArgs();
 		~CArgs();

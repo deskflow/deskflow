@@ -19,6 +19,13 @@
 
 #include "common.h"
 #include "CString.h"
+#include "IApp.h"
+
+#if SYSAPI_WIN32
+#include "CArchAppUtilWindows.h"
+#elif SYSAPI_UNIX
+#include "CArchAppUtilUnix.h"
+#endif
 
 class IArchTaskBarReceiver;
 class CBufferedLogOutputter;
@@ -27,35 +34,9 @@ class CFileLogOutputter;
 class CScreen;
 
 typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*);
-typedef int (*StartupFunc)(int, char**);
 
-class CApp {
+class CApp : public IApp {
 public:
-	class CArgsBase {
-	public:
-		CArgsBase();
-		virtual ~CArgsBase();
-		bool m_daemon;
-		bool m_backend;
-		bool m_restartable;
-		bool m_noHooks;
-		const char* m_pname;
-		const char* m_logFilter;
-		const char*	m_logFile;
-		const char*	m_display;
-		CString m_name;
-		bool m_disableTray;
-#if SYSAPI_WIN32
-		bool m_relaunchMode;
-		bool m_debugServiceWait;
-		bool m_pauseOnExit;
-		bool m_gameDevice;
-#endif
-#if WINAPI_XWINDOWS
-		bool m_disableXInitThreads;
-#endif
-	};
-
 	CApp(CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args);
 	virtual ~CApp();
 
@@ -79,8 +60,6 @@ public:
 	virtual bool loadConfig(const CString& pathname) = 0;
 	virtual int mainLoop() = 0;
 	virtual int foregroundStartup(int argc, char** argv) = 0;
-	virtual int standardStartup(int argc, char** argv) = 0;
-	virtual int runInner(int argc, char** argv, ILogOutputter* outputter, StartupFunc startup) = 0;
 
 	// Name of the daemon (used for Unix and Windows).
 	virtual const char* daemonName() const = 0;
@@ -114,10 +93,11 @@ public:
 	// HACK: accept non-const, but make it const anyway
 	void initApp(int argc, char** argv) { initApp(argc, (const char**)argv); }
 
-	// Start the server or client.
-	virtual void startNode() = 0;
-
 	virtual CScreen* createScreen() = 0;
+
+	ARCH_APP_UTIL& appUtil() { return m_appUtil; }
+
+	virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
 
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
@@ -128,6 +108,7 @@ private:
 	static CApp* s_instance;
 	CFileLogOutputter* m_fileLog;
 	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
+	ARCH_APP_UTIL m_appUtil;
 };
 
 #define BYE "\nTry `%s --help' for more information."

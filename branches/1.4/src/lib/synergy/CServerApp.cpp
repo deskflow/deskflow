@@ -750,7 +750,7 @@ int CServerApp::mainLoop()
 	}
 
 	// start server, etc
-	ARCH->appUtil().startNode();
+	appUtil().startNode();
 
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);

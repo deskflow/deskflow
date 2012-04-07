@@ -14,7 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(src
-	CArchAppUtil.cpp
 	CArch.cpp
 	IArchString.cpp
 	XArch.cpp
@@ -24,8 +23,6 @@ set(src
 if (WIN32)
 
 	set(inc
-		CArchAppUtil.h
-		CArchAppUtilWindows.h
 		CArchConsoleWindows.h
 		CArchDaemonWindows.h
 		CArchFileWindows.h
@@ -69,7 +66,6 @@ if (WIN32)
 elseif (UNIX)
 
 	list(APPEND src
-		CArchAppUtilUnix.cpp
 		CArchConsoleUnix.cpp
 		CArchDaemonUnix.cpp
 		CArchFileUnix.cpp

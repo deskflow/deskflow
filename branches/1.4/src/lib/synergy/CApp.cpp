@@ -53,36 +53,6 @@ CApp::~CApp()
 	delete m_args;
 }
 
-CApp::CArgsBase::CArgsBase() :
-#if SYSAPI_WIN32
-m_daemon(false), // daemon mode not supported on windows (use --service)
-m_debugServiceWait(false),
-m_relaunchMode(false),
-m_pauseOnExit(false),
-#if GAME_DEVICE_SUPPORT
-m_gameDevice(false),
-#endif
-#else
-m_daemon(true), // backward compatibility for unix (daemon by default)
-#endif
-#if WINAPI_XWINDOWS
-m_disableXInitThreads(false),
-#endif
-m_backend(false),
-m_restartable(true),
-m_noHooks(false),
-m_disableTray(false),
-m_pname(NULL),
-m_logFilter(NULL),
-m_logFile(NULL),
-m_display(NULL)
-{
-}
-
-CApp::CArgsBase::~CArgsBase()
-{
-}
-
 bool
 CApp::isArg(
 	int argi, int argc, const char* const* argv,
@@ -107,7 +77,7 @@ CApp::isArg(
 bool
 CApp::parseArg(const int& argc, const char* const* argv, int& i)
 {
-	if (ARCH->appUtil().parseArg(argc, argv, i)) {
+	if (appUtil().parseArg(argc, argv, i)) {
 		// handled by platform util
 		return true;
 	}
@@ -267,13 +237,13 @@ CApp::run(int argc, char** argv)
 #endif
 
 	// install application in to arch
-	ARCH->appUtil().adoptApp(this);
+	appUtil().adoptApp(this);
 	
 	// HACK: fail by default (saves us setting result in each catch)
 	int result = kExitFailed;
 
 	try {
-		result = ARCH->appUtil().run(argc, argv);
+		result = appUtil().run(argc, argv);
 	}
 	catch (XExitApp& e) {
 		// instead of showing a nasty error, just exit with the error code.
@@ -294,7 +264,7 @@ CApp::run(int argc, char** argv)
 		LOG((CLOG_CRIT "An unexpected exception occurred.\n"));
 	}
 
-	ARCH->appUtil().beforeAppExit();
+	appUtil().beforeAppExit();
 	
 	return result;
 }
