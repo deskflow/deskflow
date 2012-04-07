@@ -15,18 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CArchAppUtilUnix.h"
+#include "CAppUtilUnix.h"
 
-CArchAppUtilUnix::CArchAppUtilUnix()
+CAppUtilUnix::CAppUtilUnix()
 {
 }
 
-CArchAppUtilUnix::~CArchAppUtilUnix()
+CAppUtilUnix::~CAppUtilUnix()
 {
 }
 
 bool 
-CArchAppUtilUnix::parseArg(const int& argc, const char* const* argv, int& i)
+CAppUtilUnix::parseArg(const int& argc, const char* const* argv, int& i)
 {
 #if WINAPI_XWINDOWS
 	if (app().isArg(i, argc, argv, "-display", "--display", 1)) {
@@ -53,17 +53,17 @@ CArchAppUtilUnix::parseArg(const int& argc, const char* const* argv, int& i)
 int
 standardStartupStatic(int argc, char** argv)
 {
-	return CArchAppUtil::instance().app().standardStartup(argc, argv);
+	return CAppUtil::instance().app().standardStartup(argc, argv);
 }
 
 int
-CArchAppUtilUnix::run(int argc, char** argv)
+CAppUtilUnix::run(int argc, char** argv)
 {
 	return app().runInner(argc, argv, NULL, &standardStartupStatic);
 }
 
 void
-CArchAppUtilUnix::startNode()
+CAppUtilUnix::startNode()
 {
 	app().startNode();
 }

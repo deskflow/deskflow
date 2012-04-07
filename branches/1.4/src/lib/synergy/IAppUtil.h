@@ -15,44 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-#include "CArchAppUtil.h"
+#pragma once
 
-CArchAppUtil* CArchAppUtil::s_instance = nullptr;
- 
-CArchAppUtil::CArchAppUtil() :
-m_app(nullptr)
-{
-	s_instance = this;
-}
+#include "IInterface.h"
+#include "IApp.h"
 
-CArchAppUtil::~CArchAppUtil()
-{
-}
-
-bool 
-CArchAppUtil::parseArg(const int& argc, const char* const* argv, int& i)
-{
-	// no common platform args (yet)
-	return false;
-}
-
-void
-CArchAppUtil::adoptApp(IApp* app)
-{
-	app->setByeFunc(&exitAppStatic);
-	m_app = app;
-}
-
-IApp&
-CArchAppUtil::app() const
-{
-	assert(m_app != nullptr);
-	return *m_app;
-}
-
-CArchAppUtil&
-CArchAppUtil::instance()
-{
-	assert(s_instance != nullptr);
-	return *s_instance;
-}
+class IAppUtil : public IInterface {
+public:
+	virtual bool parseArg(const int& argc, const char* const* argv, int& i) = 0;
+	virtual void adoptApp(IApp* app) = 0;
+	virtual IApp& app() const = 0;
+	virtual int run(int argc, char** argv) = 0;
+	virtual void beforeAppExit() = 0;
+	virtual void startNode() = 0;
+};

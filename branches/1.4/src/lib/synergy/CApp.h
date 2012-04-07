@@ -22,9 +22,9 @@
 #include "IApp.h"
 
 #if SYSAPI_WIN32
-#include "CArchAppUtilWindows.h"
+#include "CAppUtilWindows.h"
 #elif SYSAPI_UNIX
-#include "CArchAppUtilUnix.h"
+#include "CAppUtilUnix.h"
 #endif
 
 class IArchTaskBarReceiver;

@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CArchAppUtilWindows.h"
+#include "CAppUtilWindows.h"
 #include "Version.h"
 #include "CLog.h"
-#include "XArchWindows.h"
-#include "CArchMiscWindows.h"
+#include "XWindows.h"
+#include "CMiscWindows.h"
 #include "CApp.h"
 #include "LogOutputters.h"
 #include "CMSWindowsScreen.h"
 #include "XSynergy.h"
-#include "IArchTaskBarReceiver.h"
+#include "ITaskBarReceiver.h"
 #include "CMSWindowsRelauncher.h"
 #include "CScreen.h"
 
@@ -32,20 +32,20 @@
 #include <iostream>
 #include <conio.h>
 
-CArchAppUtilWindows::CArchAppUtilWindows() :
+CAppUtilWindows::CAppUtilWindows() :
 m_exitMode(kExitModeNormal)
 {
 	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE)
     {
-		throw XArch(new XArchEvalWindows());
+		throw X(new XEvalWindows());
     }
 }
 
-CArchAppUtilWindows::~CArchAppUtilWindows()
+CAppUtilWindows::~CAppUtilWindows()
 {
 }
 
-BOOL WINAPI CArchAppUtilWindows::consoleHandler(DWORD CEvent)
+BOOL WINAPI CAppUtilWindows::consoleHandler(DWORD CEvent)
 {
 	if (instance().app().m_taskBarReceiver)
 	{
@@ -60,7 +60,7 @@ BOOL WINAPI CArchAppUtilWindows::consoleHandler(DWORD CEvent)
 }
 
 bool 
-CArchAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
+CAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 {
 	if (app().isArg(i, argc, argv, NULL, "--service")) {
 
@@ -88,11 +88,11 @@ static
 int 
 mainLoopStatic() 
 {
-	return CArchAppUtil::instance().app().mainLoop();
+	return CAppUtil::instance().app().mainLoop();
 }
 
 int 
-CArchAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
+CAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 {
 	app().initApp(argc, argv);
 	debugServiceWait();
@@ -100,16 +100,16 @@ CArchAppUtilWindows::daemonNTMainLoop(int argc, const char** argv)
 	// NB: what the hell does this do?!
 	app().argsBase().m_backend = false;
 	
-	return CArchMiscWindows::runDaemon(mainLoopStatic);
+	return CMiscWindows::runDaemon(mainLoopStatic);
 }
 
 void 
-CArchAppUtilWindows::exitApp(int code)
+CAppUtilWindows::exitApp(int code)
 {
 	switch (m_exitMode) {
 
 		case kExitModeDaemon:
-			CArchMiscWindows::daemonFailed(code);
+			CMiscWindows::daemonFailed(code);
 			break;
 
 		default:
@@ -119,11 +119,11 @@ CArchAppUtilWindows::exitApp(int code)
 
 int daemonNTMainLoopStatic(int argc, const char** argv)
 {
-	return CArchAppUtilWindows::instance().daemonNTMainLoop(argc, argv);
+	return CAppUtilWindows::instance().daemonNTMainLoop(argc, argv);
 }
 
 int 
-CArchAppUtilWindows::daemonNTStartup(int, char**)
+CAppUtilWindows::daemonNTStartup(int, char**)
 {
 	CSystemLogger sysLogger(app().daemonName(), false);
 	m_exitMode = kExitModeDaemon;
@@ -134,18 +134,18 @@ static
 int
 daemonNTStartupStatic(int argc, char** argv)
 {
-	return CArchAppUtilWindows::instance().daemonNTStartup(argc, argv);
+	return CAppUtilWindows::instance().daemonNTStartup(argc, argv);
 }
 
 static
 int
 foregroundStartupStatic(int argc, char** argv)
 {
-	return CArchAppUtil::instance().app().foregroundStartup(argc, argv);
+	return CAppUtil::instance().app().foregroundStartup(argc, argv);
 }
 
 void
-CArchAppUtilWindows::beforeAppExit()
+CAppUtilWindows::beforeAppExit()
 {
 	// this can be handy for debugging, since the application is launched in
 	// a new console window, and will normally close on exit (making it so
@@ -157,16 +157,16 @@ CArchAppUtilWindows::beforeAppExit()
 }
 
 int
-CArchAppUtilWindows::run(int argc, char** argv)
+CAppUtilWindows::run(int argc, char** argv)
 {
 	// record window instance for tray icon, etc
-	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+	CMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 
-	CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
+	CMSWindowsScreen::init(CMiscWindows::instanceWin32());
 	CThread::getCurrentThread().setPriority(-14);
 
 	StartupFunc startup;
-	if (CArchMiscWindows::wasLaunchedAsService()) {
+	if (CMiscWindows::wasLaunchedAsService()) {
 		startup = &daemonNTStartupStatic;
 	} else {
 		startup = &foregroundStartupStatic;
@@ -176,14 +176,14 @@ CArchAppUtilWindows::run(int argc, char** argv)
 	return app().runInner(argc, argv, NULL, startup);
 }
 
-CArchAppUtilWindows& 
-CArchAppUtilWindows::instance()
+CAppUtilWindows& 
+CAppUtilWindows::instance()
 {
-	return (CArchAppUtilWindows&)CArchAppUtil::instance();
+	return (CAppUtilWindows&)CAppUtil::instance();
 }
 
 void 
-CArchAppUtilWindows::debugServiceWait()
+CAppUtilWindows::debugServiceWait()
 {
 	if (app().argsBase().m_debugServiceWait)
 	{
@@ -200,7 +200,7 @@ CArchAppUtilWindows::debugServiceWait()
 }
 
 void 
-CArchAppUtilWindows::startNode()
+CAppUtilWindows::startNode()
 {
 	if (app().argsBase().m_relaunchMode) {
 

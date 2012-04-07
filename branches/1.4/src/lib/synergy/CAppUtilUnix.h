@@ -17,43 +17,16 @@
 
 #pragma once
 
-#include "CArchAppUtil.h"
-#include "CString.h"
+#include "CAppUtil.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include "Windows.h"
+#define ARCH_APP_UTIL CAppUtilUnix
 
-#define ARCH_APP_UTIL CArchAppUtilWindows
-
-enum AppExitMode {
-	kExitModeNormal,
-	kExitModeDaemon
-};
-
-class CArchAppUtilWindows : public CArchAppUtil {
+class CAppUtilUnix : public CAppUtil {
 public:
-	CArchAppUtilWindows();
-	virtual ~CArchAppUtilWindows();
-
-	bool parseArg(const int& argc, const char* const* argv, int& i);
-
-	int daemonNTStartup(int, char**);
+	CAppUtilUnix();
+	virtual ~CAppUtilUnix();
 	
-	int daemonNTMainLoop(int argc, const char** argv);
-
-	void debugServiceWait();
-
+	bool parseArg(const int& argc, const char* const* argv, int& i);
 	int run(int argc, char** argv);
-
-	void exitApp(int code);
-
-	void beforeAppExit();
-
-	static CArchAppUtilWindows& instance();
-
 	void startNode();
-
-private:
-	AppExitMode m_exitMode;
-	static BOOL WINAPI consoleHandler(DWORD CEvent);
 };

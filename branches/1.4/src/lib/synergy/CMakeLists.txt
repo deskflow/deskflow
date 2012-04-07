@@ -43,7 +43,7 @@ set(inc
 	XSynergy.h
 	GameDeviceTypes.h
 	CDaemonApp.h
-	CArchAppUtil.h
+	CAppUtil.h
 	CArgsBase.h
 )
 
@@ -70,23 +70,23 @@ set(src
 	XSynergy.cpp
 	ISecondaryScreen.cpp
 	CDaemonApp.cpp
-	CArchAppUtil.cpp
+	CAppUtil.cpp
 	CArgsBase.cpp
 )
 
 if (WIN32)
 	list(APPEND inc
-		CArchAppUtil.h
-		CArchAppUtilWindows.h
+		CAppUtil.h
+		CAppUtilWindows.h
 	)	
 
 	list(APPEND src
 		${inc}
-		CArchAppUtilWindows.cpp
+		CAppUtilWindows.cpp
 	)
 elseif(UNIX)
 	list(APPEND src
-	  	CArchAppUtilUnix.cpp
+	  	CAppUtilUnix.cpp
 	)
 endif()
 

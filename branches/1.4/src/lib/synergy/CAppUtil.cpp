@@ -15,17 +15,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-#pragma once
+#include "CAppUtil.h"
 
-#include "IInterface.h"
-#include "IApp.h"
+CAppUtil* CAppUtil::s_instance = nullptr;
+ 
+CAppUtil::CAppUtil() :
+m_app(nullptr)
+{
+	s_instance = this;
+}
 
-class IArchAppUtil : public IInterface {
-public:
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i) = 0;
-	virtual void adoptApp(IApp* app) = 0;
-	virtual IApp& app() const = 0;
-	virtual int run(int argc, char** argv) = 0;
-	virtual void beforeAppExit() = 0;
-	virtual void startNode() = 0;
-};
+CAppUtil::~CAppUtil()
+{
+}
+
+bool 
+CAppUtil::parseArg(const int& argc, const char* const* argv, int& i)
+{
+	// no common platform args (yet)
+	return false;
+}
+
+void
+CAppUtil::adoptApp(IApp* app)
+{
+	app->setByeFunc(&exitAppStatic);
+	m_app = app;
+}
+
+IApp&
+CAppUtil::app() const
+{
+	assert(m_app != nullptr);
+	return *m_app;
+}
+
+CAppUtil&
+CAppUtil::instance()
+{
+	assert(s_instance != nullptr);
+	return *s_instance;
+}

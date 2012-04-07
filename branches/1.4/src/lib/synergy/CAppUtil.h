@@ -17,24 +17,24 @@
  
 #pragma once
 
-#include "IArchAppUtil.h"
+#include "IAppUtil.h"
 #include "XSynergy.h"
 
-class CArchAppUtil : public IArchAppUtil {
+class CAppUtil : public IAppUtil {
 public:
-	CArchAppUtil();
-	virtual ~CArchAppUtil();
+	CAppUtil();
+	virtual ~CAppUtil();
 	
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	virtual void adoptApp(IApp* app);
 	IApp& app() const;
 	virtual void exitApp(int code) { throw XExitApp(code); }
 
-	static CArchAppUtil& instance();
+	static CAppUtil& instance();
 	static void exitAppStatic(int code) { instance().exitApp(code); }
 	virtual void beforeAppExit() {}
 	
 private:
 	IApp* m_app;
-	static CArchAppUtil* s_instance;
+	static CAppUtil* s_instance;
 };
