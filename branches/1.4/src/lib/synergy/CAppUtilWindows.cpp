@@ -28,6 +28,8 @@
 #include "CMSWindowsRelauncher.h"
 #include "CScreen.h"
 #include "CArgsBase.h"
+#include "IEventQueue.h"
+#include "CEvent.h"
 
 #include <sstream>
 #include <iostream>
@@ -46,17 +48,10 @@ CAppUtilWindows::~CAppUtilWindows()
 {
 }
 
-BOOL WINAPI CAppUtilWindows::consoleHandler(DWORD CEvent)
+BOOL WINAPI CAppUtilWindows::consoleHandler(DWORD)
 {
-	if (instance().app().taskBarReceiver())
-	{
-		// HACK: it would be nice to delete the s_taskBarReceiver object, but 
-		// this is best done by the CApp destructor; however i don't feel like
-		// opening up that can of worms today... i need sleep.
-		instance().app().taskBarReceiver()->cleanup();
-	}
-
-	ExitProcess(kExitTerminated);
+	LOG((CLOG_INFO "got shutdown signal"));
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
     return TRUE;
 }
 
