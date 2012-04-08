@@ -348,7 +348,8 @@ CMSWindowsRelauncher::mainLoop(void*)
 void
 CMSWindowsRelauncher::command(const std::string& command)
 {
-	LOG((CLOG_INFO "command changed to: %s", command.c_str()));
+	LOG((CLOG_INFO "service command updated"));
+	LOG((CLOG_DEBUG "new command: %s", command.c_str()));
 	m_command = command;
 	m_commandChanged = true;
 }
