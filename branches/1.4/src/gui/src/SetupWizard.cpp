@@ -10,6 +10,10 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 {
 	setupUi(this);
 
+#if defined(Q_OS_MAC)
+	setGeometry(0, 0, 600, 500);
+#endif
+
 #if !defined(Q_OS_WIN)
 	m_pServiceRadioButton->setEnabled(false);
 	m_pServiceRadioButton->setText(tr("Service (Windows only)"));
