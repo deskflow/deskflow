@@ -231,9 +231,6 @@ CApp::run(int argc, char** argv)
 #if SYSAPI_WIN32
 	// record window instance for tray icon, etc
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-
-	CThread pipeThread(new TMethodJob<CApp>(
-		this, &CApp::pipeThread, nullptr));
 #endif
 
 #if MAC_OS_X_VERSION_10_7
@@ -313,6 +310,11 @@ CApp::initApp(int argc, const char** argv)
 {
 	// parse command line
 	parseArgs(argc, argv);
+
+#if SYSAPI_WIN32
+	CThread pipeThread(new TMethodJob<CApp>(
+		this, &CApp::pipeThread, nullptr));
+#endif
 
 	// setup file logging after parsing args
 	setupFileLogging();

@@ -47,9 +47,9 @@ static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]
 
 // the default priority
 #if defined(_DEBUG) || defined(DEBUG)
-static const int    g_defaultMaxPriority = 4;
+static const int    g_defaultMaxPriority = kDEBUG;
 #else
-static const int    g_defaultMaxPriority = 5;
+static const int    g_defaultMaxPriority = kINFO;
 #endif
 
 // length of longest string in g_priority
