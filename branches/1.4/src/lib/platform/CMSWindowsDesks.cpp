@@ -109,7 +109,9 @@ CMSWindowsDesks::CMSWindowsDesks(
 	m_deskReady(&m_mutex, false),
 	m_updateKeys(updateKeys)
 {
-	queryHookLibrary(hookLibrary);
+	if (hookLibrary != NULL)
+		queryHookLibrary(hookLibrary);
+
 	m_cursor    = createBlankCursor();
 	m_deskClass = createDeskWindowClass(m_isPrimary);
 	m_keyLayout = GetKeyboardLayout(GetCurrentThreadId());

@@ -269,7 +269,7 @@ CDaemonApp::pipeThread(void*)
 		if (pipe == INVALID_HANDLE_VALUE)
 			XArch("could not create named pipe.");
 
-		LOG((CLOG_DEBUG "opened pipe: %d", pipe));
+		LOG((CLOG_DEBUG "opened daemon pipe: %d", pipe));
 		BOOL connectResult = ConnectNamedPipe(pipe, NULL);
 
 		char buffer[1024];
@@ -281,7 +281,7 @@ CDaemonApp::pipeThread(void*)
 			}
 
 			buffer[bytesRead] = '\0';
-			LOG((CLOG_INFO "read: %s", buffer));
+			LOG((CLOG_DEBUG "ipc daemon server read: %s", buffer));
 
 			handlePipeMessage(buffer);
 		}

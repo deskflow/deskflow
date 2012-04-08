@@ -151,7 +151,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, bool gameDevice
 
 	s_screen = this;
 	try {
-		if (m_isPrimary) {
+		if (m_isPrimary && !m_noHooks) {
 			m_hookLibrary = openHookLibrary("synrgyhk");
 		}
 		m_screensaver = new CMSWindowsScreenSaver();
@@ -174,7 +174,10 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, bool gameDevice
 		delete m_screensaver;
 		destroyWindow(m_window);
 		destroyClass(m_class);
-		closeHookLibrary(m_hookLibrary);
+
+		if (m_hookLibrary != NULL)
+			closeHookLibrary(m_hookLibrary);
+
 		s_screen = NULL;
 		throw;
 	}
@@ -228,7 +231,10 @@ CMSWindowsScreen::~CMSWindowsScreen()
 	delete m_screensaver;
 	destroyWindow(m_window);
 	destroyClass(m_class);
-	closeHookLibrary(m_hookLibrary);
+
+	if (m_hookLibrary != NULL)
+		closeHookLibrary(m_hookLibrary);
+
 	s_screen = NULL;
 }
 
@@ -265,11 +271,13 @@ CMSWindowsScreen::enable()
 	m_desks->enable();
 
 	if (m_isPrimary) {
-		// set jump zones
-		m_hookLibraryLoader.m_setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
+		if (m_hookLibrary != NULL) {
+			// set jump zones
+			m_hookLibraryLoader.m_setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
 
-		// watch jump zones
-		m_hookLibraryLoader.m_setMode(kHOOK_WATCH_JUMP_ZONE);
+			// watch jump zones
+			m_hookLibraryLoader.m_setMode(kHOOK_WATCH_JUMP_ZONE);
+		}
 	}
 	else {
 		// prevent the system from entering power saving modes.  if
@@ -286,8 +294,10 @@ CMSWindowsScreen::disable()
 	m_desks->disable();
 
 	if (m_isPrimary) {
-		// disable hooks
-		m_hookLibraryLoader.m_setMode(kHOOK_DISABLE);
+		if (m_hookLibrary != NULL) {
+			// disable hooks
+			m_hookLibraryLoader.m_setMode(kHOOK_DISABLE);
+		}
 
 		// enable special key sequences on win95 family
 		enableSpecialKeys(true);
@@ -324,8 +334,10 @@ CMSWindowsScreen::enter()
 		// enable special key sequences on win95 family
 		enableSpecialKeys(true);
 
-		// watch jump zones
-		m_hookLibraryLoader.m_setMode(kHOOK_WATCH_JUMP_ZONE);
+		if (m_hookLibrary != NULL) {
+			// watch jump zones
+			m_hookLibraryLoader.m_setMode(kHOOK_WATCH_JUMP_ZONE);
+		}
 
 		// all messages prior to now are invalid
 		nextMark();
@@ -377,8 +389,10 @@ CMSWindowsScreen::leave()
 		// reflected in the internal keyboard state.
 		m_keyState->saveModifiers();
 
-		// capture events
-		m_hookLibraryLoader.m_setMode(kHOOK_RELAY_EVENTS);
+		if (m_hookLibrary != NULL) {
+			// capture events
+			m_hookLibraryLoader.m_setMode(kHOOK_RELAY_EVENTS);
+		}
 	}
 
 	// now off screen
@@ -532,7 +546,9 @@ CMSWindowsScreen::reconfigure(UInt32 activeSides)
 	assert(m_isPrimary);
 
 	LOG((CLOG_DEBUG "active sides: %x", activeSides));
-	m_hookLibraryLoader.m_setSides(activeSides);
+
+	if (m_hookLibrary != NULL)
+		m_hookLibraryLoader.m_setSides(activeSides);
 }
 
 void

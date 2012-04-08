@@ -39,6 +39,8 @@ private:
 	DWORD getSessionId();
 	HANDLE getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
 	void outputLoop(void*);
+	void sendIpcMessage(int type, const char* data);
+	void shutdownProcess(const PROCESS_INFORMATION& pi, int timeout);
 
 private:
 	CThread* m_thread;

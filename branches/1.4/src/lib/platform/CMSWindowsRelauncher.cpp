@@ -254,8 +254,8 @@ CMSWindowsRelauncher::mainLoop(void*)
 			m_commandChanged = false;
 
 			if (launched) {
-				TerminateProcess(pi.hProcess, kExitSuccess);
-				LOG((CLOG_DEBUG "terminated existing process to make way for new one"));
+				LOG((CLOG_DEBUG "closing existing process to make way for new one"));
+				shutdownProcess(pi, 10);
 				launched = false;
 			}
 
@@ -340,8 +340,8 @@ CMSWindowsRelauncher::mainLoop(void*)
 	}
 
 	if (launched) {
-		TerminateProcess(pi.hProcess, kExitSuccess);
 		LOG((CLOG_DEBUG "terminated running process on exit"));
+		shutdownProcess(pi, 10);
 	}
 }
 
@@ -401,4 +401,82 @@ CMSWindowsRelauncher::outputLoop(void*)
 		}
 			
 	}
+}
+
+void
+CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout)
+{
+	DWORD exitCode;
+	GetExitCodeProcess(pi.hProcess, &exitCode);
+	if (exitCode != STILL_ACTIVE)
+		return;
+
+	sendIpcMessage(kIpcShutdown, "");
+
+	// wait for process to exit gracefully.
+	double start = ARCH->time();
+	while (true)
+	{
+		GetExitCodeProcess(pi.hProcess, &exitCode);
+		if (exitCode != STILL_ACTIVE) {
+			LOG((CLOG_INFO "process %d was shutdown successfully", pi.dwProcessId));
+			break;
+		}
+		else {
+			
+			if ((ARCH->time() - start) > timeout) {
+				// if timeout reached, kill forcefully.
+				// calling TerminateProcess on synergy is very bad!
+				// it causes the hook DLL to stay loaded in some apps,
+				// making it impossible to start synergy again.
+				LOG((CLOG_WARN "shutdown timed out after %d secs, forcefully terminating", pi.dwProcessId));
+				TerminateProcess(pi.hProcess, kExitSuccess);
+				break;
+			}
+
+			ARCH->sleep(1);
+		}
+	}
+}
+
+// TODO: put this in an IPC client class.
+void
+CMSWindowsRelauncher::sendIpcMessage(int type, const char* data)
+{
+	char message[1024];
+	message[0] = type;
+	char* messagePtr = message;
+	messagePtr++;
+	strcpy(messagePtr, data);
+
+	HANDLE pipe = CreateFile(
+		_T("\\\\.\\pipe\\SynergyNode"),
+		GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+
+	if (pipe == INVALID_HANDLE_VALUE)
+	{
+		LOG((CLOG_ERR "could not connect to node, error: %d", GetLastError()));
+		return;
+	}
+
+	DWORD dwMode = PIPE_READMODE_MESSAGE;
+	BOOL stateSuccess = SetNamedPipeHandleState(pipe, &dwMode, NULL, NULL);
+
+	if (!stateSuccess)
+	{
+		LOG((CLOG_ERR "could not set node pipe state, error: %d", GetLastError()));
+		return;
+	}
+
+	DWORD written;
+	BOOL writeSuccess = WriteFile(
+		pipe, message, (DWORD)strlen(message), &written, NULL);
+
+	if (!writeSuccess)
+	{
+		LOG((CLOG_ERR "could not write to node pipe, error: %d", GetLastError()));
+		return;
+	}
+
+	CloseHandle(pipe);
 }
