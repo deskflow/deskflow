@@ -18,7 +18,7 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	// when areo is disabled on windows, the next/back buttons
 	// are hidden (must be a qt bug) -- resizing the window
 	// seems to fix this.
-	resize(size());
+	resize(size().width(), size().height() + 1);
 #endif
 
 #if !defined(Q_OS_WIN)
