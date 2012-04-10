@@ -54,7 +54,7 @@ is a network connection. Synergy is cross-platform (works on
 Windows, Mac OS X and Linux).{/t}
     </p>
 
-    <div class="advert">
+    <div class="ga">
 
       <script type="text/javascript"><!--
       google_ad_client = "ca-pub-3305986762497110";

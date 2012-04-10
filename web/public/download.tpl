@@ -39,7 +39,8 @@
     
     <div class="top">
       
-      <div class="advert">
+      <div class="ga">
+      
         <script type="text/javascript"><!--
         google_ad_client = "ca-pub-3305986762497110";
         /* Synergy downloads */
@@ -51,6 +52,7 @@
         <script type="text/javascript"
         src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
         </script>
+      
       </div>
       
       <div class="list">

@@ -139,9 +139,12 @@ div.home div.title div.donate {
   float: right;
 }
 
-div.home div.advert {
+/* can't use "advert" or "adsense" because of ad-blockers. */
+div.home div.ga {
   margin-top: 20px;
   margin-bottom: 30px;
+  width: 728px;
+  height: 90px;
 }
 
 div.info div.flattr {
@@ -200,9 +203,12 @@ div.download div.top h3 {
   margin-top: 0px;
 }
 
-div.download div.top div.advert {
+/* can't use "advert" or "adsense" because of ad-blockers. */
+div.download div.top div.ga {
   margin-top: 3px;
   float: left;
+  width: 160px;
+  height: 600px;
 }
 
 div.download div.top div.list {
