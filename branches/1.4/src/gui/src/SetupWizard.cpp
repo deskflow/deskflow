@@ -11,15 +11,22 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	setupUi(this);
 
 #if defined(Q_OS_MAC)
+
 	// the mac style needs a little more room because of the
 	// graphic on the left.
 	resize(600, 500);
-#else
+
+#elif defined(Q_OS_WIN)
+
 	// when areo is disabled on windows, the next/back buttons
 	// are hidden (must be a qt bug) -- resizing the window
 	// seems to fix this.
 	resize(size().width(), size().height() + 1);
+
 #endif
+
+	// overwrite minimum size with the one we just set.
+	setMinimumSize(size());
 
 #if !defined(Q_OS_WIN)
 	m_pServiceRadioButton->setEnabled(false);
