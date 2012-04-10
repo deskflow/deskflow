@@ -11,7 +11,14 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 	setupUi(this);
 
 #if defined(Q_OS_MAC)
-	setGeometry(0, 0, 600, 500);
+	// the mac style needs a little more room because of the
+	// graphic on the left.
+	resize(600, 500);
+#else
+	// when areo is disabled on windows, the next/back buttons
+	// are hidden (must be a qt bug) -- resizing the window
+	// seems to fix this.
+	resize(500, 450);
 #endif
 
 #if !defined(Q_OS_WIN)

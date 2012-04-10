@@ -32,41 +32,9 @@
    <property name="subTitle">
     <string/>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="6" column="0">
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::MinimumExpanding</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="m_pServerLabel">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QRadioButton" name="m_pClientRadioButton">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QRadioButton" name="m_pServerRadioButton">
       <property name="font">
        <font>
         <weight>75</weight>
@@ -74,11 +42,11 @@
        </font>
       </property>
       <property name="text">
-       <string>&amp;Client (add to setup)</string>
+       <string>&amp;Server (new setup)</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item>
      <widget class="QLabel" name="m_pClientLabel">
       <property name="minimumSize">
        <size>
@@ -94,20 +62,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QRadioButton" name="m_pServerRadioButton">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>&amp;Server (new setup)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
+    <item>
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -119,6 +74,51 @@
        <size>
         <width>20</width>
         <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="m_pClientRadioButton">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>&amp;Client (add to setup)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="m_pServerLabel">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::MinimumExpanding</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>0</width>
+        <height>0</height>
        </size>
       </property>
      </spacer>
