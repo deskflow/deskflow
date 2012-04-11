@@ -1,3 +1,19 @@
+1.4.8
+=====
+
+Bug #143: Cursor on Mac OS X goes to center when inactive
+Bug #146: Screen Resize causes problems with moving off right-hand side of screen
+Bug #3058: Modifier keys not working on Mac OS X server
+Bug #3139: Double click too strict (click, move, click should not count)
+Bug #3195: Service install can fail first time
+Bug #3196: Wizard buttons not visible
+Bug #3197: GUI doesn't take focus after install
+Bug #3202: Hook DLL (synrgyhk.dll) is not released
+Feature #3143: Setup wizard for first time users
+Feature #3145: Check for updates
+Feature #3174: Startup mode wizard page
+Feature #3184: New service for process management
+
 1.4.7
 =====
 
