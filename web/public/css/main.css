@@ -191,6 +191,7 @@ div.info div.cafepress {
 div.download div.top {
   margin-top: 20px;
   float: left;
+  width: 100%;
 }
 
 div.download div.top p {

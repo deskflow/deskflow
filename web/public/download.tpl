@@ -8,7 +8,7 @@
 
     <h2>{t}Download{/t}</h2>
     
-    <p>{t}<b>Latest release:</b> 1.4.7 Beta (Feb 5, 2012){/t}</p>
+    <p><b>{t}Latest release:{/t}</b> {$cur14} {$cur14State} ({$curDate})</p>
     
     <div class="donate">
       <div class="paypal">
@@ -62,36 +62,36 @@
         <div class="item">
           <h3><img src="/img/windows-icon.png" /> Windows</h3>
           <p>
-            <b>1.4.7 Beta:</b> <a href="http://synergy.googlecode.com/files/synergy-1.4.7-Windows-x86.exe">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-1.4.7-Windows-x64.exe">64-bit</a><br />
-            <b>1.3.8 Stable:</b> <a href="http://synergy.googlecode.com/files/synergy-1.3.8-Windows-x86.exe">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-1.3.8-Windows-x64.exe">64-bit</a>
+            <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Windows-x86.exe">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Windows-x64.exe">64-bit</a><br />
+            <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Windows-x86.exe">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Windows-x64.exe">64-bit</a>
           </p>
         </div>
         <div class="item">
           <h3><img src="/img/apple-icon.png" /> Mac OS X</h3>
           <p>
-            <b>1.4.7 Beta:</b> <a href="http://synergy.googlecode.com/files/synergy-1.4.7-MacOSX107-x86_64.dmg">10.7</a>, <a href="http://synergy.googlecode.com/files/synergy-1.4.7-MacOSX106-i386.dmg">10.6</a>, <a href="http://synergy.googlecode.com/files/synergy-1.4.7-MacOSX105-i386.dmg">10.5</a>, <a href="http://synergy.googlecode.com/files/synergy-1.4.7-MacOSX104-Universal.dmg">10.4</a><br />
-            <b>1.3.8 Stable:</b> <a href="http://synergy.googlecode.com/files/synergy-1.3.8-MacOSX107-Universal.zip">10.7</a>, <a href="http://synergy.googlecode.com/files/synergy-1.3.8-MacOSX106-Universal.zip">10.6</a>, <a href="http://synergy.googlecode.com/files/synergy-1.3.8-MacOSX105-Universal.zip">10.5</a>, <a href="http://synergy.googlecode.com/files/synergy-1.3.8-MacOSX104-Universal.zip">10.4</a>
+            <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-MacOSX107-x86_64.dmg">10.7</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-MacOSX106-i386.dmg">10.6</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-MacOSX105-i386.dmg">10.5</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-MacOSX104-Universal.dmg">10.4</a><br />
+            <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-MacOSX107-Universal.zip">10.7</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-MacOSX106-Universal.zip">10.6</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-MacOSX105-Universal.zip">10.5</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-MacOSX104-Universal.zip">10.4</a>
           </p>
         </div>
         <div class="item">
           <h3><img src="/img/ubuntu-icon.png" /> <img src="/img/debian-icon.png" /> Ubuntu/Debian</h3>
           <p>
-            <b>1.4.7 Beta:</b> <a href="http://synergy.googlecode.com/files/synergy-1.4.7-Linux-i686.deb">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-1.4.7-Linux-x86_64.deb">64-bit</a><br />
-            <b>1.3.8 Stable:</b> <a href="http://synergy.googlecode.com/files/synergy-1.3.8-Linux-i686.deb">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-1.3.8-Linux-x86_64.deb">64-bit</a>
+            <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Linux-i686.deb">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Linux-x86_64.deb">64-bit</a><br />
+            <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Linux-i686.deb">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Linux-x86_64.deb">64-bit</a>
           </p>
         </div>
         <div class="item">
           <h3><img src="/img/fedora-icon.png" /> <img src="/img/redhat-icon.png" /> Fedora/Red Hat</h3>
           <p>
-            <b>1.4.7 Beta:</b> <a href="http://synergy.googlecode.com/files/synergy-1.4.7-Linux-i686.rpm">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-1.4.7-Linux-x86_64.rpm">64-bit</a><br />
-            <b>1.3.8 Stable:</b> <a href="http://synergy.googlecode.com/files/synergy-1.3.8-Linux-i686.rpm">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-1.3.8-Linux-x86_64.rpm">64-bit</a>
+            <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Linux-i686.rpm">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Linux-x86_64.rpm">64-bit</a><br />
+            <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Linux-i686.rpm">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Linux-x86_64.rpm">64-bit</a>
           </p>
         </div>
         <div class="item">
           <h3><img src="/img/source-icon.png" /> {t}Source code{/t}</h3>
           <p>
-            <b>1.4.7 Beta:</b> <a href="http://synergy.googlecode.com/files/synergy-1.4.7-Source.tar.gz">tar.gz</a><br />
-            <b>1.3.8 Stable:</b> <a href="http://synergy.googlecode.com/files/synergy-1.3.8-Source.tar.gz">tar.gz</a>
+            <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Source.tar.gz">tar.gz</a><br />
+            <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Source.tar.gz">tar.gz</a>
           </p>
         </div>
       </div>
@@ -104,75 +104,42 @@
       
         <h2>{t}Previous 1.4 releases{/t}</h2>
         
-        <h3>1.4.6 Beta</h3>
+        {foreach from=$ver14b item=ver}
+        
+        <h3>{$ver} Beta</h3>
         <p>
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-Windows-x86.exe">1.4.6 Windows 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-Windows-x64.exe">1.4.6 Windows 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-MacOSX106-Universal.zip">1.4.6 Mac OS X 10.6 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-MacOSX105-Universal.zip">1.4.6 Mac OS X 10.5 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-MacOSX104-Universal.zip">1.4.6 Mac OS X 10.4 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-Linux-i686.deb">1.4.6 Linux (deb) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-Linux-x86_64.deb">1.4.6 Linux (deb) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-Linux-i686.rpm">1.4.6 Linux (rpm) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-Linux-x86_64.rpm">1.4.6 Linux (rpm) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.6-Source.tar.gz">1.4.6 Source code</a>
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Windows-x86.exe">{$ver} Windows 32-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Windows-x64.exe">{$ver} Windows 64-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-MacOSX107-x86_64.dmg">{$ver} Mac OS X 10.7 64-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-MacOSX106-i386.dmg">{$ver} Mac OS X 10.6 32-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-MacOSX105-i386.dmg">{$ver} Mac OS X 10.5 32-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-MacOSX104-Universal.dmg">{$ver} Mac OS X 10.4 Universal</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Linux-i686.deb">{$ver} Linux (deb) 32-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Linux-x86_64.deb">{$ver} Linux (deb) 64-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Linux-i686.rpm">{$ver} Linux (rpm) 32-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Linux-x86_64.rpm">{$ver} Linux (rpm) 64-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Source.tar.gz">{$ver} Source code</a>
         </p>
         
-        <h3>1.4.5 Beta</h3>
+        {/foreach}
+        
+        {foreach from=$ver14a item=ver}
+        
+        <h3>{$ver} Beta</h3>
         <p>
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-Windows-x86.exe">1.4.5 Windows 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-Windows-x64.exe">1.4.5 Windows 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-MacOSX106-Universal.zip">1.4.5 Mac OS X 10.6 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-MacOSX105-Universal.zip">1.4.5 Mac OS X 10.5 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-MacOSX104-Universal.zip">1.4.5 Mac OS X 10.4 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-Linux-i686.deb">1.4.5 Linux (deb) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-Linux-x86_64.deb">1.4.5 Linux (deb) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-Linux-i686.rpm">1.4.5 Linux (rpm) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-Linux-x86_64.rpm">1.4.5 Linux (rpm) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.5-Source.tar.gz">1.4.5 Source code</a>
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Windows-x86.exe">{$ver} Windows 32-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Windows-x64.exe">{$ver} Windows 64-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-MacOSX106-Universal.zip">{$ver} Mac OS X 10.6 Universal</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-MacOSX105-Universal.zip">{$ver} Mac OS X 10.5 Universal</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-MacOSX104-Universal.zip">{$ver} Mac OS X 10.4 Universal</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Linux-i686.deb">{$ver} Linux (deb) 32-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Linux-x86_64.deb">{$ver} Linux (deb) 64-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Linux-i686.rpm">{$ver} Linux (rpm) 32-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Linux-x86_64.rpm">{$ver} Linux (rpm) 64-bit</a><br />
+          <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Source.tar.gz">{$ver} Source code</a>
         </p>
         
-        <h3>1.4.4 Beta</h3>
-        <p>
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-Windows-x86.exe">1.4.4 Windows 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-Windows-x64.exe">1.4.4 Windows 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-MacOSX106-Universal.zip">1.4.4 Mac OS X 10.6 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-MacOSX105-Universal.zip">1.4.4 Mac OS X 10.5 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-MacOSX104-Universal.zip">1.4.4 Mac OS X 10.4 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-Linux-i686.deb">1.4.4 Linux (deb) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-Linux-x86_64.deb">1.4.4 Linux (deb) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-Linux-i686.rpm">1.4.4 Linux (rpm) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-Linux-x86_64.rpm">1.4.4 Linux (rpm) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.4-Source.tar.gz">1.4.4 Source code</a>
-        </p>
-
-        <h3>1.4.3 Beta</h3>
-        <p>
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-Windows-x86.exe">1.4.3 Windows 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-Windows-x64.exe">1.4.3 Windows 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-MacOSX106-Universal.zip">1.4.3 Mac OS X 10.6 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-MacOSX105-Universal.zip">1.4.3 Mac OS X 10.5 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-MacOSX104-Universal.zip">1.4.3 Mac OS X 10.4 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-Linux-i686.deb">1.4.3 Linux (deb) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-Linux-x86_64.deb">1.4.3 Linux (deb) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-Linux-i686.rpm">1.4.3 Linux (rpm) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-Linux-x86_64.rpm">1.4.3 Linux (rpm) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.3-Source.tar.gz">1.4.3 Source code</a>
-        </p>
-
-        <h3>1.4.2 Beta</h3>
-        <p>
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-Windows-x86.exe">1.4.2 Windows 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-Windows-x64.exe">1.4.2 Windows 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-MacOSX106-Universal.zip">1.4.2 Mac OS X 10.6 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-MacOSX105-Universal.zip">1.4.2 Mac OS X 10.5 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-MacOSX104-Universal.zip">1.4.2 Mac OS X 10.4 Universal</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-Linux-i686.deb">1.4.2 Linux (deb) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-Linux-x86_64.deb">1.4.2 Linux (deb) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-Linux-i686.rpm">1.4.2 Linux (rpm) 32-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-Linux-x86_64.rpm">1.4.2 Linux (rpm) 64-bit</a><br />
-          <a href="http://synergy.googlecode.com/files/synergy-1.4.2-Source.tar.gz">1.4.2 Source code</a>
-        </p>
+        {/foreach}
 
         <h3>1.4.1 Beta</h3>
         <p><a href="http://synergy.googlecode.com/files/synergy-1.4.1-Windows-x86.exe">1.4.1 Windows 32-bit</a></p>
