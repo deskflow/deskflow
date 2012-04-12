@@ -60,28 +60,28 @@
           {t}Please use version 1.4 for easier setup. Use version 1.3 if you experience problems.{/t}
         </p>
         <div class="item">
-          <h3><img src="/img/windows-icon.png" /> Windows</h3>
+          <h3><img src="/img/windows-icon.png" /> {t}Windows{/t}</h3>
           <p>
             <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Windows-x86.exe">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Windows-x64.exe">64-bit</a><br />
             <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Windows-x86.exe">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Windows-x64.exe">64-bit</a>
           </p>
         </div>
         <div class="item">
-          <h3><img src="/img/apple-icon.png" /> Mac OS X</h3>
+          <h3><img src="/img/apple-icon.png" /> {t}Mac OS X{/t}</h3>
           <p>
             <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-MacOSX107-x86_64.dmg">10.7</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-MacOSX106-i386.dmg">10.6</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-MacOSX105-i386.dmg">10.5</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-MacOSX104-Universal.dmg">10.4</a><br />
             <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-MacOSX107-Universal.zip">10.7</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-MacOSX106-Universal.zip">10.6</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-MacOSX105-Universal.zip">10.5</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-MacOSX104-Universal.zip">10.4</a>
           </p>
         </div>
         <div class="item">
-          <h3><img src="/img/ubuntu-icon.png" /> <img src="/img/debian-icon.png" /> Ubuntu/Debian</h3>
+          <h3><img src="/img/ubuntu-icon.png" /> <img src="/img/debian-icon.png" /> {t}Ubuntu/Debian{/t}</h3>
           <p>
             <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Linux-i686.deb">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Linux-x86_64.deb">64-bit</a><br />
             <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Linux-i686.deb">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Linux-x86_64.deb">64-bit</a>
           </p>
         </div>
         <div class="item">
-          <h3><img src="/img/fedora-icon.png" /> <img src="/img/redhat-icon.png" /> Fedora/Red Hat</h3>
+          <h3><img src="/img/fedora-icon.png" /> <img src="/img/redhat-icon.png" /> {t}Fedora/Red Hat{/t}</h3>
           <p>
             <b>{$cur14} {$cur14State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Linux-i686.rpm">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur14}-Linux-x86_64.rpm">64-bit</a><br />
             <b>{$cur13} {$cur13State}:</b> <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Linux-i686.rpm">32-bit</a>, <a href="http://synergy.googlecode.com/files/synergy-{$cur13}-Linux-x86_64.rpm">64-bit</a>

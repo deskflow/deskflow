@@ -53,8 +53,6 @@ another. You can even share all of your clipboards. All you need
 is a network connection. Synergy is cross-platform (works on
 Windows, Mac OS X and Linux).{/t}
     </p>
-    
-    <p><b>{t}Latest release:{/t}</b> {$cur14} {$cur14State} ({$curDate})</p>
 
     <div class="ga">
 

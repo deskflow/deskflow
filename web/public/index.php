@@ -38,13 +38,12 @@ if ($page != "home")
   $smarty->assign("title", " - " . T_(ucfirst($page)));
 else
   $smarty->assign("title", "");
-
-$smarty->assign("curDate", date("M j, Y", mktime(0, 0, 0, 04, 12, 2012)));
-$smarty->assign("cur14", "1.4.8");
-$smarty->assign("cur14State", T_("Beta"));
   
 if ($page == "download") {
   
+  $smarty->assign("curDate", date("M j, Y", mktime(0, 0, 0, 04, 12, 2012)));
+  $smarty->assign("cur14", "1.4.8");
+  $smarty->assign("cur14State", T_("Beta"));
   $smarty->assign("cur13", "1.3.8");
   $smarty->assign("cur13State", T_("Stable"));
   
