@@ -22,31 +22,23 @@ require "gettext.inc";
 $url = "http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
 session_start();
 
-function getLang($lang) {
-  
-  // HACK: probably need to improve this to handle all
-  // locales at some point :/
-  if (strtolower($lang) == "zh-tw")
-    return $lang;
-  
-  $lang = reset(explode("_", $lang));
-  switch ($lang) {
-    case "nb":
-    case "nn":
-      // hopefully this wont annoy norwegians! :)
-      $lang = "no";
-      break;
-  }
-  return $lang;
-}
-
 function parseHeaderLocale($header) {
   $first = reset(explode(";", $header));
   return str_replace("_", "-", reset(explode(",", $first)));
 }
 
 function toGnu($lang) {
-  return str_replace("-", "_", $lang);
+  // norway does not confirm to GNU! :|
+  if ($lang == "nn" || $lang == "nb")
+    return "no";
+
+  // if the language is region specific, use an underscore,
+  // and make sure the country code is capitalized.
+  if (strstr($lang, "-")) {  
+    $split = preg_split("/-/", $lang);
+    return $split[0] . "_" . strtoupper($split[1]);
+  }
+  return $lang;
 }
 
 $lang = "en";
@@ -59,7 +51,7 @@ if (isSet($_GET["ul"])) {
 } else if (isSet($_GET["hl"])) {
 
   // language forced by visitor.
-  $lang = getLang($_GET["hl"]);
+  $lang = $_GET["hl"];
   
   // if english, force and use / (if we don't
   // force in session, language is auto detected).
@@ -82,7 +74,7 @@ if (isSet($_GET["ul"])) {
 } else if (isSet($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
   
   // no language specified in url, try to auto-detect.
-  $lang = getLang(parseHeaderLocale($_SERVER["HTTP_ACCEPT_LANGUAGE"]));
+  $lang = parseHeaderLocale($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
 
   // only redirect if non-english, otherwise use /.
   if (strstr($lang, "en") == "") {
