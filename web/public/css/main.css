@@ -1,5 +1,5 @@
 body {
-  font-family: arial,sans-serif;
+  font-family: arial, sans-serif;
   color: #555;
   font-size: 80%;
   background-color: #eee;
@@ -22,7 +22,7 @@ ul, ol {
 
 h1 {
   text-align: left;
-  font-size: 2.3em;
+  font-size: 2.5em;
   font-weight: normal;
   line-height: 1em;
 }
@@ -40,15 +40,12 @@ ul, li {
   padding: 0px;
 }
 
-div.menu a {
-  color: #eee;
-}
-
 div.layout {
   margin: 20px auto 20px auto;
   width: 770px;
   background-color: #fff;
   text-align: left;
+  border-radius: 5px;
 }
 
 div.content {
@@ -64,10 +61,11 @@ div.footer {
   margin: 20px auto 20px auto;
   padding-bottom: 20px;
   text-align: center;
+  color: #aaa;
 }
 
 div.footer a {
-  color: #777;
+  color: #aaa;
   font-size: .9em;
   white-space: nowrap;
 }
@@ -85,7 +83,13 @@ div.menu {
   height: 1.2em;
   padding: 10px;
   background-color: #777;
-  color: #eee;
+  color: #ddd;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+div.menu a {
+  color: #ddd;
 }
 
 div.menu div.pages {
@@ -105,12 +109,12 @@ div.title {
 
 div.title h1 {
   margin-top: 0px;
-  padding-top: 7px;
+  padding-top: 5px;
 }
 
 div.title img {
   margin-left: -3px;
-  margin-right: 5px;
+  margin-right: 8px;
   float: left;
 }
 
