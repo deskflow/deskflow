@@ -66,6 +66,7 @@
           <a href="/?hl=pl">Polski</a> |
           <a href="/?hl=pt">Português</a> |
           <a href="/?hl=ro">Română</a> |
+          <a href="/?hl=sl">Slovenščina</a> |
           <a href="/?hl=fi">Suomi</a> |
           <a href="/?hl=sv">Svenska</a> |
           <a href="/?hl=vi">Tiếng Việt</a> |
@@ -75,6 +76,7 @@
           <a href="/?hl=ar">العربية</a> |
           <a href="/?hl=th">ภาษาไทย</a> |
           <a href="/?hl=zh">中文 (简体)</a> |
+          <a href="/?hl=zh-tw">中国 (台湾)</a> |
           <a href="/?hl=ja">日本語</a> |
           <a href="/?hl=ko">한국의</a>
         </p>

@@ -23,6 +23,12 @@ $url = "http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
 session_start();
 
 function getLang($lang) {
+  
+  // HACK: probably need to improve this to handle all
+  // locales at some point :/
+  if (strtolower($lang) == "zh-tw")
+    return $lang;
+  
   $lang = reset(explode("_", $lang));
   switch ($lang) {
     case "nb":
@@ -36,7 +42,11 @@ function getLang($lang) {
 
 function parseHeaderLocale($header) {
   $first = reset(explode(";", $header));
-  return str_replace("-", "_", reset(explode(",", $first)));
+  return str_replace("_", "-", reset(explode(",", $first)));
+}
+
+function toGnu($lang) {
+  return str_replace("-", "_", $lang);
 }
 
 $lang = "en";
@@ -70,7 +80,7 @@ if (isSet($_GET["ul"])) {
   $lang = $_SESSION["lang"];
   
 } else if (isSet($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
-
+  
   // no language specified in url, try to auto-detect.
   $lang = getLang(parseHeaderLocale($_SERVER["HTTP_ACCEPT_LANGUAGE"]));
 
@@ -81,11 +91,12 @@ if (isSet($_GET["ul"])) {
   }
 }
 
-putenv("LANGUAGE=" . $lang);
-putenv("LANG=" . $lang);
-putenv("LC_ALL=" . $lang);
-putenv("LC_MESSAGES=" . $lang);
-T_setlocale(LC_ALL, $lang);
+$gnuLang = toGnu($lang);
+putenv("LANGUAGE=" . $gnuLang);
+putenv("LANG=" . $gnuLang);
+putenv("LC_ALL=" . $gnuLang);
+putenv("LC_MESSAGES=" . $gnuLang);
+T_setlocale(LC_ALL, $gnuLang);
 T_bindtextdomain("website", "./locale");
 T_textdomain("website");
 
