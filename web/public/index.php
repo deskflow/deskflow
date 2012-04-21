@@ -38,7 +38,9 @@ if ($page != "home")
   $smarty->assign("title", " - " . T_(ucfirst($page)));
 else
   $smarty->assign("title", "");
-  
+
+$smarty->assign("langIsEnglish", stristr("en", $lang));
+
 if ($page == "download") {
   
   $smarty->assign("curDate", date("M j, Y", mktime(0, 0, 0, 04, 12, 2012)));
