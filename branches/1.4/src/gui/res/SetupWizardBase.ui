@@ -100,7 +100,7 @@
        </size>
       </property>
       <property name="text">
-       <string>You have already set up a server. This a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</string>
+       <string>You have already set up a server. This is a computer you wish to control using the server's keyboard and mouse. There can be many clients in your setup.</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

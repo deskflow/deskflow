@@ -1011,7 +1011,8 @@ Double click on a screen to edit its settings.</source>
     </message>
     <message>
         <location filename="res/SetupWizardBase.ui" line="103"/>
-        <source>You have already set up a server. This a computer you wish to control using the server&apos;s keyboard and mouse. There can be many clients in your setup.</source>
+        <source>You have already set up a server. This is a computer you wish to control using the server&apos;s keyboard and mouse. There can be many clients in your setup.</source>
+        <oldsource>You have already set up a server. This a computer you wish to control using the server&apos;s keyboard and mouse. There can be many clients in your setup.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
