@@ -8,7 +8,7 @@
 
     <h2>{t}Download{/t}</h2>
     
-    <p><b>{t}Latest release:{/t}</b> {$cur14} {$cur14State} ({$curDate})</p>
+    <p><b>{t}Latest release:{/t}</b> {$cur14} {$cur14State} - {$curDate}</p>
     
     <div class="donate">
       <div class="paypal">
@@ -56,9 +56,7 @@
       </div>
       
       <div class="list">
-        <p>
-          {t}Please use version 1.4 for easier setup. Use version 1.3 if you experience problems.{/t}
-        </p>
+        <p>{t}Please use version 1.4 for easier setup. Use version 1.3 if you experience problems.{/t}</p>
         <div class="item">
           <h3><img src="/img/windows-icon.png" /> {t}Windows{/t}</h3>
           <p>

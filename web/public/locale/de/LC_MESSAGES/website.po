@@ -19,7 +19,7 @@ msgstr "Download"
 
 #: lang.c:2
 msgid "Latest release:"
-msgstr ""
+msgstr "Letzte Version:"
 
 #: lang.c:3
 msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
@@ -27,19 +27,19 @@ msgstr "Bitte verwenden Sie Version 1.4 für eine einfachere Konfiguration. Verw
 
 #: lang.c:4
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: lang.c:5
 msgid "Mac OS X"
-msgstr ""
+msgstr "Mac OS X"
 
 #: lang.c:6
 msgid "Ubuntu/Debian"
-msgstr ""
+msgstr "Ubuntu/Debian"
 
 #: lang.c:7
 msgid "Fedora/Red Hat"
-msgstr ""
+msgstr "Fedora/Red Hat"
 
 #: lang.c:8
 msgid "Source code"

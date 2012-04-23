@@ -24,28 +24,21 @@ session_start();
 
 $locale = new SynergyLocale();
 $locale->run();
-$lang = $locale->lang;
 
-function getGoogleSearchLang($lang) {
-  if ($lang == "zh")
-    $lang = "zh-cn";
-  return $lang;
-}
+$lang = $locale->lang;
+$page = str_replace("/", "", $_GET["page"]);
+$title = ($page != "home") ? (" - " . T_(ucfirst($page))) : "";
 
 $smarty = new Smarty;
 $smarty->assign("lang", $lang);
 $smarty->assign("baseUrl", stristr($lang, "en") ? "" : "/" . $lang);
-$smarty->assign("gsLang", getGoogleSearchLang($lang));
-
-$page = $_GET["page"];
+$smarty->assign("gsLang", $locale->getGoogleSearchLang());
 $smarty->assign("page", $page);
-
-if ($page != "home")
-  $smarty->assign("title", " - " . T_(ucfirst($page)));
-else
-  $smarty->assign("title", "");
-
-$smarty->assign("langIsEnglish", stristr("en", $lang));
+$smarty->assign("title", $title);
+$smarty->assign("langIsEnglish", stristr($lang, "en"));
+$smarty->assign("langDir", $locale->getLangDir());
+$smarty->assign("langAlign", $locale->getLangAlign());
+$smarty->assign("langSize", $locale->getLangSize());
 
 if ($page == "download") {
   
@@ -62,10 +55,8 @@ if ($page == "download") {
   $smarty->assign("ver14a", array("1.4.4", "1.4.3", "1.4.2"));
 }
 
-$page = str_replace("/", "", $_GET["page"]);
 $content = $smarty->fetch($page . ".tpl");
 $smarty->assign("content", $content);
-
 $smarty->display("layout.tpl");
 
 ?>

@@ -71,7 +71,7 @@ msgstr "utilizaţi pe propriul risc"
 
 #: lang.c:15
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
-msgstr "Sinergia vă permite să partajaţi cu uşurinţă mouse-ul şi tastatura între mai multe computere de pe birou, si este gratuit şi open source. Doar mutaţi mouse-ul de pe marginea ecranului pe un calculator pe altul. Puteţi chiar partaja toate clipboarduri tale. Tot ce trebuie este o conexiune la reţea. Sinergia este cross-platform (funcţionează pe Windows, Mac OS X şi Linux)."
+msgstr "Synergy vă permite să partajaţi cu uşurinţă mouse-ul şi tastatura între mai multe computere de pe birou, si este gratuit şi open source. Doar mutaţi mouse-ul de pe marginea ecranului pe un calculator pe altul. Puteţi chiar partaja toate clipboarduri tale. Tot ce trebuie este o conexiune la reţea. Sinergia este cross-platform (funcţionează pe Windows, Mac OS X şi Linux)."
 
 #: lang.c:16
 msgid "More Info"
@@ -146,7 +146,7 @@ msgstr "Vă rugăm ajutaţi-ne prin donarea sau de cumpararea marfii. Vă mulţu
 
 #: lang.c:35
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
-msgstr "Sinergia vă permite să partajaţi tastatura şi mouse-ul între mai multe computere de pe birou."
+msgstr "Synergy vă permite să partajaţi tastatura şi mouse-ul între mai multe computere de pe birou."
 
 #: lang.c:36
 msgid "Home"

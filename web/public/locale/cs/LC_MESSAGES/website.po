@@ -146,7 +146,7 @@ msgstr "Pomozte nám tím,  že darujete nebo nakoupíte zboží. Děkujeme za v
 
 #: lang.c:35
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
-msgstr ""
+msgstr "Synergy vám umožní sdílet své klávesnice a myši mezi více počítači na stole."
 
 #: lang.c:36
 msgid "Home"

@@ -19,7 +19,7 @@ msgstr "下載"
 
 #: lang.c:2
 msgid "Latest release:"
-msgstr ""
+msgstr "最新版本:"
 
 #: lang.c:3
 msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
@@ -27,19 +27,19 @@ msgstr "建議使用更容易安裝的1.4版本。如（1.4版）遇到問題，
 
 #: lang.c:4
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: lang.c:5
 msgid "Mac OS X"
-msgstr ""
+msgstr "Mac OS X"
 
 #: lang.c:6
 msgid "Ubuntu/Debian"
-msgstr ""
+msgstr "Ubuntu/Debian"
 
 #: lang.c:7
 msgid "Fedora/Red Hat"
-msgstr ""
+msgstr "Fedora/Red Hat"
 
 #: lang.c:8
 msgid "Source code"
@@ -110,7 +110,7 @@ msgstr "每晚編譯"
 
 #: lang.c:26
 msgid "Console"
-msgstr ""
+msgstr "命令列"
 
 #: lang.c:27
 msgid "Builders"
@@ -237,7 +237,7 @@ msgstr "先研究"
 
 #: lang.c:61
 msgid "Before asking anyone for help,   do a <a href=\"%1\">quick search</a>,   it really won't take long. You <strong>must</strong> fully   research your problem before asking us for help. You can also   <a href=\"/tracker/projects/synergy/wiki/Docs\">read the docs</a>   to find out how to use config files, etc."
-msgstr "再提問前，請先<a href=\"%1\">查一查</a>，查一查真的不會花你很多時間。你<strong>必須</strong> 於提問前先研究一下你的問題，你亦可<a href=\"/tracker/projects/synergy/wiki/Docs\">閱讀此文件</a>以找尋如何使用設定檔等資訊。"
+msgstr "再提問前，請先<a href=\"%1\">查一查</a>，這真的不會花你很多時間。你<strong>必須</strong> 於提問前先研究一下你的問題，你亦可<a href=\"/tracker/projects/synergy/wiki/Docs\">閱讀此文件</a>以找尋如何使用設定檔等資訊。"
 
 #: lang.c:62
 msgid "Ask your question"
@@ -253,7 +253,7 @@ msgstr "郵件列表和IRC"
 
 #: lang.c:65
 msgid "More traditional open source users may prefer to    <a href=\"http://groups.google.com/group/synergy-plus/post\">use the mailing list</a>   (just click \"Apply for group membership\" -- everyone is allowed,   this is just to protect us against spammers). Please do not post   bugs on the mailing list. You can also join our IRC channel:   <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could   use <a href=\"http://xchat.org/\">XChat</a>) -- but   the same applies for IRC; do your research first!"
-msgstr "較傳統開源用戶或較喜歡<a href=\"http://groups.google.com/group/synergy-plus/post\">使用郵件列表</a> （只需點擊\"申請加入群組會員\" -- 每個人都可申請，需要申請是因為我們以此來防範垃圾郵件）。請不要在郵件列表上發佈軟件錯誤。你亦可選擇加入IRC頻道：<code>#synergy on irc.freenode.net:8001</code> （你可以使用 <a href=\"http://xchat.org/\">XChat</a>來使用IRC）-- 但同樣請記住：請研究、再提問！"
+msgstr "較傳統的開源用戶或較喜歡<a href=\"http://groups.google.com/group/synergy-plus/post\">使用郵件列表</a> （只需點擊\"申請加入群組會員\" -- 每個人都可申請，需要申請是因為我們以此來防範垃圾郵件）。請不要在郵件列表上發佈軟件錯誤。你亦可選擇加入IRC頻道：<code>#synergy on irc.freenode.net:8001</code> （你可以使用 <a href=\"http://xchat.org/\">XChat</a>來使用IRC）-- 但同樣請記住：先研究、再提問！"
 
 #: lang.c:67
 msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
@@ -265,7 +265,7 @@ msgstr "超級用戶<b>並不</b>是特別為Synergy作支援。"
 
 #: lang.c:69
 msgid "Ask questions; do not nag or comment on bugs or issues."
-msgstr "提問，已非對軟件錯誤或問題進行抱怨或評論。"
+msgstr "提問，而非對軟件錯誤或問題進行抱怨或評論。"
 
 #: lang.c:70
 msgid "Do not raise new bugs there; use the issue tracker for this."

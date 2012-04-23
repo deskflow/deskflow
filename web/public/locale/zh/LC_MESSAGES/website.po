@@ -47,11 +47,11 @@ msgstr "源代码"
 
 #: lang.c:9
 msgid "Previous 1.4 releases"
-msgstr "以前的1.4版本"
+msgstr "较旧的1.4版本"
 
 #: lang.c:10
 msgid "Previous 1.3 releases"
-msgstr "以前的1.3版本"
+msgstr "较旧的1.3版本"
 
 #: lang.c:11
 msgid "Other projects"
@@ -114,7 +114,7 @@ msgstr "控制台"
 
 #: lang.c:27
 msgid "Builders"
-msgstr "建筑工地"
+msgstr "构建版本"
 
 #: lang.c:28
 msgid "Packages"
@@ -273,7 +273,7 @@ msgstr "不要在那里报告新的错误；请使用问题跟踪系统。"
 
 #: lang.c:71
 msgid "Synergy developers do <i>not</i> monitor this website."
-msgstr "Synergy开发者不关注此网站。"
+msgstr "Synergy开发者<i></i>不关注此网站。"
 
 #: lang.c:72
 msgid "Always use the \"synergy\" tag on your question."

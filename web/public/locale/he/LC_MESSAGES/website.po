@@ -71,7 +71,7 @@ msgstr ""
 
 #: lang.c:15
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
-msgstr ""
+msgstr "Synergy מאפשרת לשתף בקלות את העכבר והמקלדת בין מספר מחשבים על השולחן, וזה חופשית וקוד פתוח. רק להזיז את העכבר מקצה מסך אחד של המחשב לאחר. אתה יכול גם לשתף את כל לוחות כתיבה שלך. כל מה שצריך הוא חיבור לרשת. סינרגיה היא חוצה פלטפורמות (עובד ב-Windows, Mac OS X ו-Linux)."
 
 #: lang.c:16
 msgid "More Info"
@@ -146,7 +146,7 @@ msgstr ""
 
 #: lang.c:35
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
-msgstr ""
+msgstr "Synergy מאפשרת לשתף את המקלדת והעכבר בין מספר מחשבים על השולחן שלך."
 
 #: lang.c:36
 msgid "Home"

@@ -1,4 +1,4 @@
-﻿<html lang="{$lang}">
+﻿<html lang="{$lang}" xml:lang="{$lang}">
   <head>
     <title>Synergy{$title}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,6 +32,13 @@
         })();
     /* ]]> */
     </script>
+    <style type="text/css">
+      div.layout {
+        direction: {$langDir};
+        text-align: {$langAlign};
+        font-size: {$langSize};
+      }
+    </style>
   </head>
   <body>
     <div class="layout">
@@ -52,7 +59,7 @@
         {if !$langIsEnglish}
         <p><a href="http://www.getlocalization.com/synergy/">{t}Improve this translation{/t}</a></p>
         {/if}
-        <p>
+        <p class="lang">
           <a href="/?hl=en">English</a> |
           <a href="/?hl=cs">Čeština</a> |
           <a href="/?hl=cy">Cymraeg</a> |

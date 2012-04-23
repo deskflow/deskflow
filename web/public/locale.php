@@ -25,11 +25,15 @@ require "gettext.inc";
 class SynergyLocale {
   
   var $lang;
+  var $rtl;
   
   function __construct() {
     
     // default language is english
     $this->lang = "en";
+    
+    // right to left text languages
+    $this->rtl = array("ar", "he");
   }
 
   function fixItefTag($tag) {
@@ -132,6 +136,34 @@ class SynergyLocale {
     T_setlocale(LC_ALL, $gnuLang);
     T_bindtextdomain("website", "./locale");
     T_textdomain("website");
+  }
+  
+  function getGoogleSearchLang() {
+    if ($this->lang == "zh") {
+      return "zh-cn";
+    }
+    return $this->lang;
+  }
+  
+  function getLangDir() {
+    if (in_array($this->lang, $this->rtl)) {
+      return "rtl";
+    }
+    return "ltr";
+  }
+  
+  function getLangAlign() {
+    if (in_array($this->lang, $this->rtl)) {
+      return "right";
+    }
+    return "left";
+  }
+  
+  function getLangSize() {
+    if (in_array($this->lang, $this->rtl)) {
+      return "100%";
+    }
+    return "80%";
   }
 }
 

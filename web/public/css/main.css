@@ -1,7 +1,6 @@
 body {
   font-family: arial, sans-serif;
   color: #777;
-  font-size: 80%;
   background-color: #eee;
   text-align: center;
 }
@@ -22,7 +21,7 @@ ul, ol {
 
 h1 {
   text-align: left;
-  font-size: 2.5em;
+  font-size: 34px;
   font-weight: normal;
   line-height: 1em;
 }
@@ -37,6 +36,7 @@ h3 {
 
 ul, li {
   margin-left: 10px;
+  margin-right: 10px;
   padding: 0px;
 }
 
@@ -44,7 +44,6 @@ div.layout {
   margin: 20px auto 20px auto;
   width: 770px;
   background-color: #fff;
-  text-align: left;
   border-radius: 5px;
 }
 
@@ -66,8 +65,12 @@ div.footer {
 
 div.footer a {
   color: #aaa;
-  font-size: .9em;
   white-space: nowrap;
+}
+
+div.footer p.lang {
+  /* constant size so that it remains same for all languages. */
+  font-size: 12px;
 }
 
 div.home div.demo,
@@ -109,7 +112,7 @@ div.title {
 
 div.title h1 {
   margin-top: 0px;
-  padding-top: 5px;
+  padding-top: 4px;
 }
 
 div.title img {
@@ -129,12 +132,12 @@ div.home div.title {
 
 div.home div.title div.left {
   float: left;
-  width: 200px;
+  width: 45%;
 }
 
 div.home div.title div.right {
   float: right;
-  width: 300px;
+  width: 45%;
   text-align: right;
 }
 
@@ -220,7 +223,7 @@ div.download div.top div.list {
   float: left;
   margin-left: 25px;
   height: 50px;
-  width: 520px;
+  width: 545px;
 }
 
 div.download div.top div.list div.item {
@@ -228,6 +231,9 @@ div.download div.top div.list div.item {
   float: left;
   width: 228px;
   height: 110px;
+  font-size: 13px;
+  direction: left;
+  text-align: left;
 }
 
 div.download div.top div.list div.item  img {
@@ -252,7 +258,7 @@ div.download div.alt {
 
 div.download div.alt div.list {
   float: left;
-  width: 45%;
+  width: 50%;
 }
 
 div.download h2 {

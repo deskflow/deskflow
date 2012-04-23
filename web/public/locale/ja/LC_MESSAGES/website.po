@@ -19,7 +19,7 @@ msgstr "ダウンロード"
 
 #: lang.c:2
 msgid "Latest release:"
-msgstr ""
+msgstr "最新のリリース:"
 
 #: lang.c:3
 msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
@@ -27,19 +27,19 @@ msgstr "より簡単な設定にはバージョン1.4を使用してください
 
 #: lang.c:4
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: lang.c:5
 msgid "Mac OS X"
-msgstr ""
+msgstr "Mac OS X"
 
 #: lang.c:6
 msgid "Ubuntu/Debian"
-msgstr ""
+msgstr "Ubuntu/Debian"
 
 #: lang.c:7
 msgid "Fedora/Red Hat"
-msgstr ""
+msgstr "Fedora/Red Hat Linux"
 
 #: lang.c:8
 msgid "Source code"
@@ -71,7 +71,7 @@ msgstr "自己責任で使用"
 
 #: lang.c:15
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
-msgstr "Synergyは、簡単にあなたのマウスとキーボードの間を共有することができます 複数の机の上のコンピュータ、そしてそれはフリーのオープンソースです。 だけに上の1つのコンピュータの画面の端からマウスを移動 別の。あなたも、あなたのクリップボードのすべてを共有することができます。あなたが必要とするすべての ネットワーク接続です。 Synergyは、クロスプラットフォーム（動作上です Windows版、Mac OS XおよびLinux）。"
+msgstr "Synergyは複数のコンピュータ間のマウスとキーボードを簡単に共有することができるフリーのオープンソースソフトウェアです。あるコンピュータの画面の端にマウスを移動すると別のコンピュータの画面に移ります。クリップボードを共有することもできます。必要なのは ネットワーク接続だけです。 SynergyはクロスプラットフォームでWindows, Mac OS X, Linux上で動作します。"
 
 #: lang.c:16
 msgid "More Info"
@@ -146,7 +146,7 @@ msgstr " 商品を寄付したり、購入して私たちを助けてくださ�
 
 #: lang.c:35
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
-msgstr "Synergyは、あなたの机の上に複数のコンピュータ間でキーボードとマウスを共有することができます。"
+msgstr "Synergyは複数のコンピュータ間のマウスとキーボードを簡単に共有することができます。"
 
 #: lang.c:36
 msgid "Home"

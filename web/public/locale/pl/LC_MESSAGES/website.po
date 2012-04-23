@@ -71,7 +71,7 @@ msgstr "używać na własne ryzyko"
 
 #: lang.c:15
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
-msgstr "Synergy pozwala w łatwy sposób dzielić się myszki i klawiatury pomiędzy wieloma komputerami na biurku, i to nic nie kosztuje i Open Source. Wystarczy przesunąć kursor myszy poza krawędź jednego komputera na ekran do innej. Możesz nawet dzielić wszystkie swoje schowki. Wszystko czego potrzebujesz to połączenie z siecią. Synergy to wieloplatformowy (działa na Windows, Mac OS X i Linux)."
+msgstr "Synergy pozwala w łatwy sposób dzielić się myszką i klawiaturą pomiędzy wieloma komputerami na Twoim biurku, jest darmowe i Open Source. Wystarczy przesunąć kursor myszy poza krawędź jednego monitora aby przejść na monitor innego komputera.  Możesz nawet dzielić wszystkie swoje schowki. Potrzebujesz do tego tylko połączenia z siecią. Synergy jest wieloplatformowe (działa na Windows, Mac OS X i Linux)."
 
 #: lang.c:16
 msgid "More Info"
@@ -146,7 +146,7 @@ msgstr "Proszę nam pomóc, przekazując lub zakupu towarów. Dziękujemy za wsp
 
 #: lang.c:35
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
-msgstr "Synergy umożliwia udostępnianie klawiaturę i myszkę pomiędzy wieloma komputerami w biurku."
+msgstr "Synergy umożliwia udostępnianie klawiatury oraz myszki pomiędzy wieloma komputerami na Twoim biurku."
 
 #: lang.c:36
 msgid "Home"
