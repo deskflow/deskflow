@@ -29,16 +29,19 @@ class SynergyLocale {
     $this->lang = "en";
   }
 
-  function mapItefTag($tag) {
+  function fixItefTag($tag) {
+    
     $split = explode("-", $tag);
     if (count($split) == 2) {
       // if language code and country code are the same, then we have
       // a redudntant itef tag (e.g. de-de or fr-fr).
-      if ($split[0] == $split[1]) {
-        return $split[0];
+      if (strtolower($split[0]) == strtolower($split[1])) {
+        return strtolower($split[0]);
       }
     }
-    return $tag;
+    
+    // make sure the tag is always lower so that it looks better in the url.
+    return strtolower($tag);
   }
 
   function parseHeaderLocale($header) {
@@ -77,7 +80,7 @@ class SynergyLocale {
       unset($_SESSION["lang"]);
       
       // redirect legacy redundant tags.
-      $mapped = $this->mapItefTag($this->lang);
+      $mapped = $this->fixItefTag($this->lang);
       if ($mapped != $this->lang) {
         header("Location: /" . $mapped . "/");
         exit;
@@ -113,7 +116,7 @@ class SynergyLocale {
 
       // only redirect if non-english, otherwise use /.
       if (!strstr($this->lang, "en")) {
-        header("Location: /" . $this->mapItefTag($this->lang) . "/");
+        header("Location: /" . $this->fixItefTag($this->lang) . "/");
         exit;
       }
     }
