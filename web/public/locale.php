@@ -55,7 +55,11 @@ class SynergyLocale {
     $first = reset(explode(";", $header));
     $first = reset(explode(",", $first));
     $itef = str_replace("_", "-", $first);
-    return strtolower($itef);
+    $lower = strtolower($itef);
+    if ($lower != "") {
+      return $lower;
+    }
+    return "en";
   }
 
   function toGnu($lang) {

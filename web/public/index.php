@@ -25,11 +25,11 @@ session_start();
 $locale = new SynergyLocale();
 $locale->run();
 
+$smarty = new Smarty; // must come first; smarty makes T_ work somehow.
 $lang = $locale->lang;
 $page = str_replace("/", "", $_GET["page"]);
 $title = ($page != "home") ? (" - " . T_(ucfirst($page))) : "";
 
-$smarty = new Smarty;
 $smarty->assign("lang", $lang);
 $smarty->assign("baseUrl", stristr($lang, "en") ? "" : "/" . $lang);
 $smarty->assign("gsLang", $locale->getGoogleSearchLang());
