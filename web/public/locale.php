@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// useful itef codes list:
+//   http://www.lingoes.net/en/translator/langcode.htm
+
 require "gettext.inc";
 
 class SynergyLocale {
