@@ -19,77 +19,114 @@
 
 require "gettext.inc";
 
-$url = "http://" . $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-session_start();
-
-function parseHeaderLocale($header) {
-  $first = reset(explode(";", $header));
-  return str_replace("_", "-", reset(explode(",", $first)));
-}
-
-function toGnu($lang) {
-  // norway does not confirm to GNU! :|
-  if ($lang == "nn" || $lang == "nb")
-    return "no";
-
-  // if the language is region specific, use an underscore,
-  // and make sure the country code is capitalized.
-  if (strstr($lang, "-")) {  
-    $split = preg_split("/-/", $lang);
-    return $split[0] . "_" . strtoupper($split[1]);
+class SynergyLocale {
+  
+  var $lang;
+  
+  function __construct() {
+    
+    // default language is english
+    $this->lang = "en";
   }
-  return $lang;
-}
 
-$lang = "en";
-if (isSet($_GET["ul"])) {
-
-  // language forced by url.
-  $lang = $_GET["ul"];
-  unset($_SESSION["lang"]);
-  
-} else if (isSet($_GET["hl"])) {
-
-  // language forced by visitor.
-  $lang = $_GET["hl"];
-  
-  // if english, force and use / (if we don't
-  // force in session, language is auto detected).
-  if (strstr($lang, "en") != "") {
-    $_SESSION["lang"] = $lang;
-    header("Location: /");
-  } else {
-    // no need to force in session, as it is
-    // forced in url.
-    header("Location: /" . $lang . "/");
+  function mapItefTag($tag) {
+    $split = explode("-", $tag);
+    if (count($split) == 2) {
+      // if language code and country code are the same, then we have
+      // a redudntant itef tag (e.g. de-de or fr-fr).
+      if ($split[0] == $split[1]) {
+        return $split[0];
+      }
+    }
+    return $tag;
   }
-  exit;
-  
-} else if (isSet($_SESSION["lang"])) {
 
-  // language forced. this should only happen under /
-  // where no url lang is forced.
-  $lang = $_SESSION["lang"];
-  
-} else if (isSet($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
-  
-  // no language specified in url, try to auto-detect.
-  $lang = parseHeaderLocale($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+  function parseHeaderLocale($header) {
+    $first = reset(explode(";", $header));
+    $first = reset(explode(",", $first));
+    $itef = str_replace("_", "-", $first);
+    return strtolower($itef);
+  }
 
-  // only redirect if non-english, otherwise use /.
-  if (strstr($lang, "en") == "") {
-    header("Location: /" . $lang . "/");
-    exit;
+  function toGnu($lang) {
+    // norway does not confirm to GNU! :|
+    if ($lang == "nn" || $lang == "nb")
+      return "no";
+
+    // if the language is region specific, use an underscore,
+    // and make sure the country code is capitalized.
+    if (strstr($lang, "-")) {  
+      $split = preg_split("/-/", $lang);
+      return $split[0] . "_" . strtoupper($split[1]);
+    }
+    return $lang;
+  }
+  
+  function run() {
+    
+    if (isSet($_GET["ul"])) {
+      
+      // make sure users can't use /en -- should be using / instead.
+      if (stristr($_SERVER["REQUEST_URI"], "/en")) {
+        header("Location: /");
+        exit;
+      }
+      
+      // language forced by url.
+      $this->lang = $_GET["ul"];
+      unset($_SESSION["lang"]);
+      
+      // redirect legacy redundant tags.
+      $mapped = $this->mapItefTag($this->lang);
+      if ($mapped != $this->lang) {
+        header("Location: /" . $mapped . "/");
+        exit;
+      }
+      
+    } else if (isSet($_GET["hl"])) {
+
+      // language forced by visitor.
+      $this->lang = $_GET["hl"];
+      
+      // if english, force and use / (if we don't
+      // force in session, language is auto detected).
+      if (strstr($this->lang, "en")) {
+        $_SESSION["lang"] = $this->lang;
+        header("Location: /");
+      } else {
+        // no need to force in session, as it is
+        // forced in url.
+        header("Location: /" . $this->lang . "/");
+      }
+      exit;
+      
+    } else if (isSet($_SESSION["lang"])) {
+
+      // language forced. this should only happen under /
+      // where no url lang is forced.
+      $this->lang = $_SESSION["lang"];
+      
+    } else if (isSet($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
+      
+      // no language specified in url, try to auto-detect.
+      $this->lang = $this->parseHeaderLocale($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+
+      // only redirect if non-english, otherwise use /.
+      if (!strstr($this->lang, "en")) {
+        header("Location: /" . $this->mapItefTag($this->lang) . "/");
+        exit;
+      }
+    }
+
+    $gnuLang = $this->toGnu($this->lang);
+    putenv("LANGUAGE=" . $gnuLang);
+    putenv("LANG=" . $gnuLang);
+    putenv("LC_ALL=" . $gnuLang);
+    putenv("LC_MESSAGES=" . $gnuLang);
+    T_setlocale(LC_ALL, $gnuLang);
+    T_bindtextdomain("website", "./locale");
+    T_textdomain("website");
   }
 }
-
-$gnuLang = toGnu($lang);
-putenv("LANGUAGE=" . $gnuLang);
-putenv("LANG=" . $gnuLang);
-putenv("LC_ALL=" . $gnuLang);
-putenv("LC_MESSAGES=" . $gnuLang);
-T_setlocale(LC_ALL, $gnuLang);
-T_bindtextdomain("website", "./locale");
-T_textdomain("website");
 
 ?>

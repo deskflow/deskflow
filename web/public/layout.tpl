@@ -49,7 +49,7 @@
         {$content}
       </div>
       <div class="footer">
-        {if $langIsEnglish}
+        {if !$langIsEnglish}
         <p><a href="http://www.getlocalization.com/synergy/">{t}Improve this translation{/t}</a></p>
         {/if}
         <p>

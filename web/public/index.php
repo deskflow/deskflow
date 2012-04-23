@@ -20,6 +20,12 @@
 require "locale.php";
 require "smarty/libs/Smarty.class.php";
 
+session_start();
+
+$locale = new SynergyLocale();
+$locale->run();
+$lang = $locale->lang;
+
 function getGoogleSearchLang($lang) {
   if ($lang == "zh")
     $lang = "zh-cn";
@@ -28,7 +34,7 @@ function getGoogleSearchLang($lang) {
 
 $smarty = new Smarty;
 $smarty->assign("lang", $lang);
-$smarty->assign("baseUrl", $lang != "en" ? "/" . $lang : "");
+$smarty->assign("baseUrl", stristr($lang, "en") ? "" : "/" . $lang);
 $smarty->assign("gsLang", getGoogleSearchLang($lang));
 
 $page = $_GET["page"];
