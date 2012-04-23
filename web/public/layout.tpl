@@ -46,9 +46,9 @@
         <div class="pages">
           <a href="{$baseUrl}/">{t}Home{/t}</a> |
           <a href="{$baseUrl}/download/">{t}Download{/t}</a> |
-          <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
-          <a href="{$baseUrl}/support/">{t}Support{/t}</a> |
+          <a href="{$baseUrl}/help/">{t}Help{/t}</a> |
           <a href="{$baseUrl}/search/">{t}Search{/t}</a> |
+          <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
           <a href="/tracker/">{t}Tracker{/t}</a>
         </div>
       </div>
