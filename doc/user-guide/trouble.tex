@@ -1,0 +1,72 @@
+\section{Troubleshooting}
+
+\subsection*{Why is a client unable to connect to the server?}
+
+Some users may see this error message in the Log area:
+
+\begin{quote}
+failed to connect to server: address not found for: foobar
+\end{quote}
+
+This is usually caused by having no local DNS server. If this is the case, 
+you'll need to use an IP address instead.
+
+\subsection*{What port does synergy use?}
+
+By default synergy uses TCP port 24800 but this can be changed.
+
+\subsection*{How do I lock the mouse on one screen?}
+
+This is useful for when playing video games or other full screen applications.
+The Scroll Lock key can be used to prevent the mouse switching input to
+another screen. Users that don't have a Scroll Lock key can re-assign
+the lock key by clicking "Configure Server" and selecting the "Hotkeys" tab.
+
+\subsection*{Why is the mouse over sensitive in games on the client?}
+
+To solve this you need to do two things.
+
+First enable relative mouse movements on the server:
+\begin{enumerate}
+  \item Click "Configure Server",
+  \item Click the "Advanced server settings" tab,
+  \item Tick the "Use relative mouse moves" checkbox
+  \item Click "OK"
+\end{enumerate}
+
+Finally lock the mouse to your client screen
+(see: How do I lock the mouse on one screen?).
+
+\subsection*{Why do certain programs stop me from moving the mouse off screen?}
+
+This usually occurs in Vista and above, and is due to UAC in Windows. The
+solution to this is to run Synergy in "Service" mode (this can be selected
+from the wizard). You can also try launching Synergy as an administrator.
+
+\subsection*{How do I stop synergys from crashing in CentOS?}
+
+Some versions of CentOS (and Red Hat) freeze when the XInitThreads function
+is called. To fix this, launch synergy from the command line and use the
+--no-xinitthreads argument.
+
+\subsection*{Why do I get "This application has failed to start..." error?}
+
+Windows users may see this error when trying to start Synergy:
+
+\begin{quote}
+The application has failed to start because the application configuration is
+incorrect. Reinstalling the application may fix the problem.
+\end{quote}
+
+This may occur if the Microsoft Visual C++ Redistributable was
+removed from your computer. To fix this, please either reinstall Synergy
+or download the Redistributable from the Microsoft Downloads website:
+http://www.microsoft.com/downloads/
+
+\subsection*{How do I send developers the debug output?}
+
+Click the "Edit" menu and select "Settings". Then change the "Logging level"
+drop-down to "Debug" or higher. The debug output should appear in the "Log"
+area of the main window (if not, try restarting the program). You are able
+to copy text from this area by right clicking.
+

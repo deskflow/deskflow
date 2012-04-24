@@ -1,0 +1,55 @@
+\documentclass{scrartcl}
+
+\title{Synergy 1.4}
+\subtitle{User Guide}
+\author{}
+\date{}
+
+% use links in toc.
+\usepackage{hyperref}
+
+% for importing images.
+\usepackage{graphicx}
+
+% for image placement in text.
+\usepackage{float}
+
+% use helvetica font.
+\usepackage[scaled]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+
+% separate paragraphs by space.
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.1in}
+
+% make text dark grey.
+\usepackage{xcolor}
+\definecolor{bookColor}{cmyk}{0, 0, 0, 0.9}
+\color{bookColor}
+
+% stop hyphenation.
+\usepackage[none]{hyphenat}
+
+\begin{document}
+
+\maketitle
+\clearpage
+
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
+
+\input intro.tex
+\clearpage
+
+\input install.tex
+\clearpage
+
+\input config.tex
+\clearpage
+
+\input trouble.tex
+\clearpage
+
+\end{document}
