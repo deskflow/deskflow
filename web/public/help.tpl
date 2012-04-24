@@ -18,12 +18,12 @@ latest version (even if it's a beta). You might also want to try the
 <a href="/nightly/">nightly builds</a>, but please do so only as a
 last resort (these versions have not passed our quality assurance).{/t}
     </p>
-<!--
-    <h3>{t}Manual{/t}</h3>
+
+    <h3>{t}User guide{/t}</h3>
     <p>
-{t escape=no url="/help/manual.pdf"}Please read our <a href="%1">user manual</a> before going any further.{/t}
+{t escape=no url="/help/user-guide.pdf"}Please read our <a href="%1">user guide</a> before going any further.{/t}
     </p>
--->
+    
     <h3>{t}Search{/t}</h3>
     <p>
 {t escape=no url="$baseUrl/search/"}Do a <a href="%1">quick search</a>, it really won't take long.{/t}
@@ -31,7 +31,7 @@ last resort (these versions have not passed our quality assurance).{/t}
 
     <h3>{t}Ask your question{/t}</h3>
     <p>
-{t}If the manual or search didn't help, please go ahead and
+{t}If the user guide or search didn't help, please go ahead and
 ask a question on the <a href="http://synergy-foss.org/osqa/">Synergy Q&#38;A site</a>.
 Read the <a href="/osqa/faq/">FAQ</a> to make sure your question does not get closed.{/t}
     </p>
@@ -66,7 +66,7 @@ use <a href="http://xchat.org/">XChat</a>){/t}
     <h3>{t}Report a bug{/t}</h3>
     <p>
 {t}If you've exhausted all other options, and are using the latest version,
-have read the manual, and asked on the mailing list, then should raise a bug.
+have read the user guide, and asked on the mailing list, then you should raise a bug.
 To do this, <a href="/tracker/account/register">register</a> a new account
 <em>and then</em> open a <a href="/tracker/projects/synergy/support/new">new bug report</a>
 on our issue tracker.{/t}

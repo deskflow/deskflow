@@ -49,7 +49,8 @@
           <a href="{$baseUrl}/help/">{t}Help{/t}</a> |
           <a href="{$baseUrl}/search/">{t}Search{/t}</a> |
           <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
-          <a href="/tracker/">{t}Tracker{/t}</a>
+          <a href="/tracker/">{t}Tracker{/t}</a> |
+          <a href="/tracker/projects/synergy/wiki/DevInfo">{t}Devs{/t}</a>
         </div>
       </div>
       <div class="content">

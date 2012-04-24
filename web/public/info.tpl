@@ -6,15 +6,13 @@
   
   <div class="inner-content">
 
-    <h2>{t}More Info{/t}</h2>
+    <h2>{t}Info{/t}</h2>
     <ul>
-      <li><b>{t}News{/t}:</b> <a href="http://synergy-foss.blogspot.com/">{t}Blog{/t}</a>, <a href="http://twitter.com/#!/SynergyDev">Twitter</a></li>
-      <li><b>{t}FAQs{/t}:</b> <a href="/tracker/projects/synergy/wiki/UserFAQ">{t}User{/t}</a>, <a href="http://synergy-foss.org/tracker/projects/synergy/wiki/DeveloperFAQ">{t}Developer{/t}</a></li>
-      <li><b>{t}Mailing lists{/t}:</b> <a href="http://groups.google.com/group/synergy-plus">{t}User{/t}</a>, <a href="http://groups.google.com/group/synergy-plus-dev">{t}Developer{/t}</a></li>
-      <li><b>{t}Nightly build{/t}:</b> <a href="http://buildbot.synergy-foss.org:8000/console">{t}Console{/t}</a>, <a href="http://buildbot.synergy-foss.org:8000/builders">{t}Builders{/t}</a>, <a href="http://synergy-foss.org/nightly">{t}Packages{/t}</a></li>
+      <li><a href="http://synergy-foss.blogspot.com/">{t}Blog{/t}</a></li>
+      <li><a href="http://twitter.com/#!/SynergyDev">Twitter</a></li>
     </ul>
     
-    <h2>{t}Key People{/t}</h2>
+    <h2>{t}Key people{/t}</h2>
     <ul>
       <li><a href="http://nbolton.net">Nick Bolton</a> - {t}Project leader and primary developer{/t}</li>
       <li>Chris Schoeneman - {t}Original author and project founder{/t}</li>
