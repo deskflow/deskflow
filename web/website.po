@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-26 21:10-0000\n"
+"POT-Creation-Date: 2012-04-26 21:57-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -125,7 +125,7 @@ msgid "Q&#38;A website"
 msgstr ""
 
 #: lang.c:33
-msgid "You can ask a question on the our <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A website</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
+msgid "You can ask a question on our <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A website</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
 msgstr ""
 
 #: lang.c:34
