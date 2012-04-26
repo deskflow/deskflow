@@ -29,23 +29,22 @@ last resort (these versions have not passed our quality assurance).{/t}
 {t escape=no url="$baseUrl/search/"}Do a <a href="%1">quick search</a>, it really won't take long.{/t}
     </p>
 
-    <h3>{t}Ask your question{/t}</h3>
+    <h3>{t}Q&#38;A website{/t}</h3>
     <p>
-{t}If the user guide or search didn't help, please go ahead and
-ask a question on the <a href="http://synergy-foss.org/osqa/">Synergy Q&#38;A site</a>.
+{t}You can ask a question on our <a href="http://synergy-foss.org/osqa/">Q&#38;A website</a>.
 Read the <a href="/osqa/faq/">FAQ</a> to make sure your question does not get closed.{/t}
     </p>
 
     <h3>{t}Mailing list{/t}</h3>
     <p>
-{t}Some open source users may prefer to 
-<a href="http://groups.google.com/group/synergy-plus/post">use the mailing list</a>.
+{t}Some users may prefer to use our
+<a href="http://groups.google.com/group/synergy-plus/post">mailing list</a>.
 Please do not post bugs on the mailing list.{/t}
     </p>
     
-    <h3>IRC</h3>
+    <h3>{t}IRC{/t}</h3>
     <p>
-{t}You can also join our IRC channel:
+{t}You can join our IRC channel:
 <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could
 use <a href="http://xchat.org/">XChat</a>){/t}
     </p>
@@ -65,8 +64,8 @@ use <a href="http://xchat.org/">XChat</a>){/t}
 
     <h3>{t}Report a bug{/t}</h3>
     <p>
-{t}If you've exhausted all other options, and are using the latest version,
-have read the user guide, and asked on the mailing list, then you should raise a bug.
+{t}Please report bugs when you've exhausted all of the above options,
+and you are absolutely certain you've found a bug.
 To do this, <a href="/tracker/account/register">register</a> a new account
 <em>and then</em> open a <a href="/tracker/projects/synergy/support/new">new bug report</a>
 on our issue tracker.{/t}

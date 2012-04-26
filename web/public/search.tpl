@@ -25,7 +25,7 @@
       <li>{t}If this does not work, use the <a href="http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs">alternative Synergy search</a>.{/t}</li>
     </ul>
 
-    <h3>{t}Engage!{/t}</h3>
+    <h3>{t}Search now{/t}</h3>
     <p><div id="cse" style="width: 100%;">Loading</div>
     <script src="http://www.google.com/jsapi" type="text/javascript"></script>
     {literal}

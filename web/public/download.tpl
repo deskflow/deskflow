@@ -104,7 +104,7 @@
         
         {foreach from=$ver14b item=ver}
         
-        <h3>{$ver} Beta</h3>
+        <h3>{$ver} {t}Beta{/t}</h3>
         <p>
           <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Windows-x86.exe">{$ver} Windows 32-bit</a><br />
           <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Windows-x64.exe">{$ver} Windows 64-bit</a><br />
@@ -123,7 +123,7 @@
         
         {foreach from=$ver14a item=ver}
         
-        <h3>{$ver} Beta</h3>
+        <h3>{$ver} {t}Beta{/t}</h3>
         <p>
           <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Windows-x86.exe">{$ver} Windows 32-bit</a><br />
           <a href="http://synergy.googlecode.com/files/synergy-{$ver}-Windows-x64.exe">{$ver} Windows 64-bit</a><br />
@@ -139,10 +139,10 @@
         
         {/foreach}
 
-        <h3>1.4.1 Beta</h3>
+        <h3>1.4.1 {t}Beta{/t}</h3>
         <p><a href="http://synergy.googlecode.com/files/synergy-1.4.1-Windows-x86.exe">1.4.1 Windows 32-bit</a></p>
         
-        <h3>1.4.0 Beta</h3>
+        <h3>1.4.0 {t}Beta{/t}</h3>
         <p><a href="http://synergy.googlecode.com/files/synergy-1.4.0-Windows-x86.exe">1.4.0 Windows 32-bit</a></p>
 
       </div>
@@ -151,7 +151,7 @@
     
         <h2>{t}Previous 1.3 releases{/t}</h2>
 
-        <h3>1.3.7 Stable</h3>
+        <h3>1.3.7 {t}Stable{/t}</h3>
         <p>
           <a href="http://synergy.googlecode.com/files/synergy-1.3.7-Windows-x86.exe">1.3.7 Windows 32-bit</a><br />
           <a href="http://synergy.googlecode.com/files/synergy-1.3.7-Windows-x64.exe">1.3.7 Windows 64-bit</a><br />
@@ -165,7 +165,7 @@
           <a href="http://synergy.googlecode.com/files/synergy-1.3.7-Source.tar.gz">1.3.7 Source code</a>
         </p>
 
-        <h3>1.3.6 Stable</h3>
+        <h3>1.3.6 {t}Stable{/t}</h3>
         <p>
           <a href="http://synergy.googlecode.com/files/synergy-1.3.6-Windows-x86.exe">1.3.6 Windows 32-bit</a><br />
           <a href="http://synergy.googlecode.com/files/synergy-1.3.6-Windows-x64.exe">1.3.6 Windows 64-bit</a><br />
@@ -177,16 +177,16 @@
           <a href="http://synergy.googlecode.com/files/synergy-1.3.6-Source.tar.gz">1.3.6 Source code</a>
         </p>
 
-        <h3>1.3.4 Stable</h3>
+        <h3>1.3.4 {t}Stable{/t}</h3>
         <p>
           <a href="http://synergy.googlecode.com/files/synergy-1.3.4-Windows-x86.exe">1.3.4 Windows 32-bit</a><br />
           <a href="http://synergy.googlecode.com/files/synergy-1.3.4-MacOSX-i386.dmg">1.3.4 Mac OS X Intel 32-bit</a><br /><a href="http://synergy.googlecode.com/files/synergy-1.3.4-Linux-i686.deb">1.3.4 Linux (deb) 32-bit</a><br /><a href="http://synergy.googlecode.com/files/synergy-1.3.4-Linux-x86_64.deb">1.3.4 Linux (deb) 64-bit</a><br /><a href="http://synergy.googlecode.com/files/synergy-1.3.4-Linux-i686.rpm">1.3.4 Linux (rpm) 32-bit</a><br /><a href="http://synergy.googlecode.com/files/synergy-1.3.4-Linux-x86_64.rpm">1.3.4 Linux (rpm) 64-bit</a><br /><a href="http://synergy.googlecode.com/files/synergy-1.3.4-Source.tar.gz">1.3.4 Source code</a></p>
 
-        <h3>1.3.3 Stable</h3>
+        <h3>1.3.3 {t}Stable{/t}</h3>
         <p>
           <a href="http://synergy.googlecode.com/files/synergy-1.3.3-Windows-x86.exe">1.3.3 Windows 32-bit</a></p>
 
-        <h3>1.3.1 Stable</h3>
+        <h3>1.3.1 {t}Stable{/t}</h3>
         <p>
           <a href="http://synergy.googlecode.com/files/synergy-1.3.1-Windows-x86.exe">1.3.1 Windows 32-bit</a><br />
           <a href="http://synergy.googlecode.com/files/synergy-1.3.1-Linux-i386.rpm">1.3.1 Linux (rpm) 32-bit</a><br /><a href="http://synergy.googlecode.com/files/synergy-1.3.1-MacOSX-i386.tar.gz">1.3.1 Mac OS X Intel 32-bit</a><br /><a href="http://synergy.googlecode.com/files/synergy-1.3.1-Source.tar.gz">1.3.1 Source code</a>

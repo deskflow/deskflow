@@ -50,7 +50,7 @@
           <a href="{$baseUrl}/search/">{t}Search{/t}</a> |
           <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
           <a href="/tracker/">{t}Tracker{/t}</a> |
-          <a href="/tracker/projects/synergy/wiki/DevInfo">{t}Devs{/t}</a>
+          <a href="/tracker/projects/synergy/wiki/DevInfo">{t}Developer{/t}</a>
         </div>
       </div>
       <div class="content">
@@ -68,9 +68,9 @@
           <a href="/?hl=es">Español</a> |
           <a href="/?hl=fr">Français</a> |
           <a href="/?hl=it">Italiano</a> |
-          <a href="/?hl=nl">Nederlands</a>
+          <a href="/?hl=nl">Nederlands</a> |
+          <a href="/?hl=no">Norsk</a>
           <br />
-          <a href="/?hl=no">Norsk</a> |
           <a href="/?hl=pl">Polski</a> |
           <a href="/?hl=pt">Português</a> |
           <a href="/?hl=ro">Română</a> |
@@ -78,7 +78,8 @@
           <a href="/?hl=fi">Suomi</a> |
           <a href="/?hl=sv">Svenska</a> |
           <a href="/?hl=vi">Tiếng Việt</a> |
-          <a href="/?hl=ru">Русский</a>
+          <a href="/?hl=ru">Русский</a> |
+          <a href="/?hl=uk">Український</a>
           <br />
           <a href="/?hl=he">עברית</a> |
           <a href="/?hl=ar">العربية</a> |
