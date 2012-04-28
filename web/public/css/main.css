@@ -229,11 +229,12 @@ div.download div.top div.list {
 div.download div.top div.list div.item {
   margin-left: 5px;
   float: left;
-  width: 228px;
+  width: 235px;
   height: 110px;
   font-size: 13px;
   direction: left;
   text-align: left;
+  white-space: nowrap;
 }
 
 div.download div.top div.list div.item  img {
