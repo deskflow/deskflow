@@ -18,34 +18,19 @@
  */
 
 require "locale.php";
+require "files.php";
 require "smarty/libs/Smarty.class.php";
+
+$files = new Synergy\Files();
+if ($files->downloadRequested()) {
+  $files->download();
+  exit;
+}
 
 session_start();
 
-$locale = new SynergyLocale();
+$locale = new Synergy\Locale();
 $locale->run();
-
-if (($_GET["page"] == "help") && stristr($_SERVER["REQUEST_URI"], "manual.pdf")) {
-  $file = "help/manual.pdf";
-  if (file_exists($file)) {
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename='.basename($file));
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($file));
-    ob_clean();
-    flush();
-    readfile($file);
-  }
-  else {
-    header("HTTP/1.0 404 Not Found");
-    print("Manual file missing.");
-  }
-  exit;
-}
 
 $smarty = new Smarty; // must come first; smarty makes T_ work somehow.
 $lang = $locale->lang;
@@ -61,6 +46,7 @@ $smarty->assign("langIsEnglish", stristr($lang, "en"));
 $smarty->assign("langDir", $locale->getLangDir());
 $smarty->assign("langAlign", $locale->getLangAlign());
 $smarty->assign("langSize", $locale->getLangSize());
+$smarty->assign("splashImage", $locale->getSplashImage());
 
 if ($page == "download") {
   

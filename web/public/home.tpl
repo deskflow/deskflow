@@ -70,7 +70,7 @@ Windows, Mac OS X and Linux).{/t}
     </div>
     
     <div class="demo">
-      <img src="/img/splash.jpg" alt="How Synergy works." />
+      <img src="{$splashImage}" alt="How Synergy works." />
     </div>
   
   </div>

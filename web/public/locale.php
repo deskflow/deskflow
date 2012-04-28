@@ -20,9 +20,11 @@
 // useful itef codes list:
 //   http://www.lingoes.net/en/translator/langcode.htm
 
+namespace Synergy;
+
 require "gettext.inc";
 
-class SynergyLocale {
+class Locale {
   
   var $lang;
   var $rtl;
@@ -168,6 +170,25 @@ class SynergyLocale {
       return "100%";
     }
     return "80%";
+  }
+  
+  function getCountry() {
+    return reset(explode("-", $this->lang));
+  }
+  
+  function getSplashImage() {
+    $format = "img/splash/splash-%s.jpg";
+    $filenameFull = sprintf($format, $this->lang);
+    if (file_exists($filenameFull)) {
+      return "/" . $filenameFull;
+    }
+    
+    $filenameShort = sprintf($format, $this->getCountry());
+    if (file_exists($filenameShort)) {
+      return "/" . $filenameShort;
+    }
+    
+    return "/" . sprintf($format, "en");
   }
 }
 
