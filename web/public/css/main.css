@@ -71,6 +71,8 @@ div.footer a {
 div.footer p.lang {
   /* constant size so that it remains same for all languages. */
   font-size: 12px;
+  width: 60%;
+  margin: 20px auto 20px auto;
 }
 
 div.home div.demo,
