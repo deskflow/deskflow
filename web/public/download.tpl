@@ -1,7 +1,9 @@
 ﻿<div class="download">
 
   <div class="title">
-    <img src="/img/icon.png" /><h1 class="title">Synergy</h1>
+    <div class="logo">
+      <img src="/img/icon.png" /><h1 class="title">Synergy</h1>
+    </div>
   </div>
   
   <div class="inner-content">
@@ -197,7 +199,7 @@
     </div>
     
     <h2>{t}Other projects{/t}</h2>
-    <p><a href="/pm/projects/synergy/wiki/IOS_client" class="wiki-page">iOS client by Matthias Ringwald</a> (iPad/iPhone)</p>
+    <p>{t url="/pm/projects/synergy/wiki/IOS_client"}<a href="%1">iOS client by Matthias Ringwald</a> (iPad/iPhone){/t}</p>
 
     <h2>{t}Related sites{/t}</h2>
     <p>

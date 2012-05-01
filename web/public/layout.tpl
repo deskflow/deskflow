@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Language" content="{$lang}"/>
     <meta name="description" content="{t}Synergy lets you share your keyboard and mouse between multiple computers on your desk.{/t}" />
     <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="/css/main-{$langDir}.css" />
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
@@ -32,13 +33,6 @@
         })();
     /* ]]> */
     </script>
-    <style type="text/css">
-      div.layout {
-        direction: {$langDir};
-        text-align: {$langAlign};
-        font-size: {$langSize};
-      }
-    </style>
   </head>
   <body>
     <div class="layout">

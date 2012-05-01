@@ -44,8 +44,6 @@ $smarty->assign("page", $page);
 $smarty->assign("title", $title);
 $smarty->assign("langIsEnglish", stristr($lang, "en"));
 $smarty->assign("langDir", $locale->getLangDir());
-$smarty->assign("langAlign", $locale->getLangAlign());
-$smarty->assign("langSize", $locale->getLangSize());
 $smarty->assign("splashImage", $locale->getSplashImage());
 
 if ($page == "download") {

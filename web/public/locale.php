@@ -158,20 +158,6 @@ class Locale {
     return "ltr";
   }
   
-  function getLangAlign() {
-    if (in_array($this->lang, $this->rtl)) {
-      return "right";
-    }
-    return "left";
-  }
-  
-  function getLangSize() {
-    if (in_array($this->lang, $this->rtl)) {
-      return "100%";
-    }
-    return "80%";
-  }
-  
   function getCountry() {
     return reset(explode("-", $this->lang));
   }

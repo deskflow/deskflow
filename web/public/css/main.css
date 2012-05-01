@@ -19,13 +19,6 @@ ul, ol {
   padding-bottom: 5px;
 }
 
-h1 {
-  text-align: left;
-  font-size: 34px;
-  font-weight: normal;
-  line-height: 1em;
-}
-
 h2 {
   font-size: 1.5em;
 }
@@ -84,6 +77,27 @@ div.info div.donate {
   margin-top: 20px;
 }
 
+div.info div.sites,
+div.info div.team {
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+div.info div.sites div.icon {
+  text-align: center;
+}
+
+div.info div.team div.mugshot {
+  width: 150px;
+}
+div.info div.team div.mugshot img {
+  padding-bottom: 10px;
+}
+
+div.info div.support {
+  clear: both;
+}
+
 div.menu {
   height: 1.2em;
   padding: 10px;
@@ -97,16 +111,7 @@ div.menu a {
   color: #ddd;
 }
 
-div.menu div.pages {
-  float: left;
-}
-
-div.menu div.intl {
-  float: right;
-}
-
 div.title {
-  float: left;
   width: 100%;
   padding-top: 0px;
   margin-top: 0px;
@@ -129,23 +134,22 @@ div.home {
 }
 
 div.home div.title {
+  float: left;
   margin-bottom: 10px;
 }
 
-div.home div.title div.left {
-  float: left;
-  width: 45%;
+div.title div.logo {
+  width: 168px;
 }
 
-div.home div.title div.right {
-  float: right;
-  width: 45%;
-  text-align: right;
+div.title div.logo h1 {
+  font-size: 34px;
+  font-weight: normal;
+  line-height: 1em;
 }
 
-div.home div.title div.share,
-div.home div.title div.donate {
-  float: right;
+div.home div.title div.support {
+  width: 45%;
 }
 
 /* can't use "advert" or "adsense" because of ad-blockers. */
@@ -166,16 +170,8 @@ div.download div.donate {
   height: 25px;
 }
 
-div.home div.paypal,
-div.home div.flattr,
-div.download div.paypal,
-div.download div.flattr {
-  float: left;
-}
-
 div.paypal,
 div.paypal form {
-  float: left;
   height: 15px;
   margin-bottom: 0px;
   padding-bottom: 0px;
@@ -216,26 +212,23 @@ div.download div.top h3 {
 /* can't use "advert" or "adsense" because of ad-blockers. */
 div.download div.top div.ga {
   margin-top: 3px;
-  float: left;
   width: 160px;
   height: 600px;
 }
 
 div.download div.top div.list {
-  float: left;
-  margin-left: 25px;
   height: 50px;
   width: 545px;
 }
 
+div.download div.top div.list p {
+  margin-top: 3px;
+}
+
 div.download div.top div.list div.item {
-  margin-left: 5px;
-  float: left;
   width: 235px;
   height: 110px;
   font-size: 13px;
-  direction: left;
-  text-align: left;
   white-space: nowrap;
 }
 
@@ -253,14 +246,12 @@ div.download div.top div.list div.item p {
 }
 
 div.download div.alt {
-  float: left;
   width: 100%;
   padding-top: 20px;
   padding-bottom: 20px;
 }
 
 div.download div.alt div.list {
-  float: left;
   width: 50%;
 }
 

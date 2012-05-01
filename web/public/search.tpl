@@ -1,7 +1,9 @@
 ﻿<div class="search">
 
   <div class="title">
-    <img src="/img/icon.png" /><h1 class="title">Synergy</h1>
+    <div class="logo">
+      <img src="/img/icon.png" /><h1 class="title">Synergy</h1>
+    </div>
   </div>
   
   <div class="inner-content">

@@ -2,11 +2,11 @@
 
   <div class="title">
   
-    <div class="left">
+    <div class="logo">
       <img src="/img/icon.png" /><h1 class="title">Synergy</h1>
     </div>
   
-    <div class="right">
+    <div class="support">
       <div class="share">
         <!-- AddThis Button BEGIN -->
         <div class="addthis_toolbox addthis_default_style ">

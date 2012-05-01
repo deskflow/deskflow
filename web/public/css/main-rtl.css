@@ -1,0 +1,72 @@
+div.layout {
+  direction: rtl;
+  text-align: right;
+  font-size: 100%;
+}
+
+div.menu div.pages {
+  float: right;
+}
+
+div.home div.title div.logo {
+  float: right;
+}
+
+div.home div.title div.support {
+  float: left;
+}
+
+div.home div.title div.share,
+div.home div.title div.donate {
+  float: left;
+}
+
+div.info div.sites div.icon {
+  float: right;
+}
+
+div.info div.team div.mugshot {
+  float: right;
+  padding-left: 20px;
+}
+
+div.info div.sites,
+div.info div.team {
+  float: right;
+}
+
+div.home div.paypal,
+div.home div.flattr,
+div.download div.paypal,
+div.download div.flattr {
+  float: right;
+}
+
+div.paypal,
+div.paypal form {
+  float: right;
+}
+
+div.download div.top div.ga {
+  float: right;
+}
+
+div.download div.top div.list {
+  float: right;
+}
+
+div.download div.top div.list div.item {
+  float: right;
+}
+
+div.download div.top div.list {
+  margin-right: 25px;
+}
+
+div.download div.alt {
+  float: right;
+}
+
+div.download div.alt div.list {
+  float: right;
+}
