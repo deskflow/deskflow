@@ -37,6 +37,9 @@
 #include "CArchMiscWindows.h"
 #include <string.h>
 #include <pbt.h>
+#include <MMSystem.h>
+
+#pragma comment(lib, "winmm.lib")
 
 //
 // add backwards compatible multihead support (and suppress bogus warning).
@@ -112,19 +115,6 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDevi
 	assert(s_windowInstance != NULL);
 	assert(s_screen   == NULL);
 
-#ifdef _AMD64_
-	if (gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeXInput)
-		LOG((CLOG_WARN "xinput game device mode not supported for 64-bit."));
-#endif
-
-	if ((gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeXInput) &&
-		(gameDeviceInfo.m_poll != CGameDeviceInfo::kGamePollDynamic))
-		LOG((CLOG_WARN "only dynamic polling is supported with xnput."));
-
-	if ((gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeJoyInfoEx) &&
-		(gameDeviceInfo.m_poll != CGameDeviceInfo::kGamePollStatic))
-		LOG((CLOG_WARN "only static polling is supported with joyinfoex."));
-
 	s_screen = this;
 	try {
 		if (m_isPrimary && !m_noHooks) {
@@ -166,14 +156,28 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDevi
 	// install the platform event queue
 	EVENTQUEUE->adoptBuffer(new CMSWindowsEventQueueBuffer);
 
-#if GAME_DEVICE_SUPPORT
+	if ((gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeXInput) &&
+		(gameDeviceInfo.m_poll != CGameDeviceInfo::kGamePollDynamic))
+		LOG((CLOG_WARN "only dynamic polling is supported with xnput."));
+
+	if ((gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeJoyInfoEx) &&
+		(gameDeviceInfo.m_poll != CGameDeviceInfo::kGamePollStatic))
+		LOG((CLOG_WARN "only static polling is supported with joyinfoex."));
+
 	if (m_gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeXInput) {
+#if GAME_DEVICE_SUPPORT
 		m_gameDevice = new CMSWindowsXInput(this, gameDeviceInfo);
+#else if _AMD64_
+		LOG((CLOG_WARN "xinput game device mode not supported for 64-bit."));
+#endif
 	}
 	else if (m_gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeJoyInfoEx) {
-		//@todo
+		JOYINFOEX joyInfoEx;
+		ZeroMemory(&joyInfoEx, sizeof(joyInfoEx));
+		joyInfoEx.dwSize = sizeof(joyInfoEx);
+		BOOL joystickStatus = (joyGetPosEx(JOYSTICKID1, &joyInfoEx) == JOYERR_NOERROR);
+		LOG((CLOG_INFO "joystick status: %s", joystickStatus ? "present" : "absent"));
 	}
-#endif
 }
 
 CMSWindowsScreen::~CMSWindowsScreen()

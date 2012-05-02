@@ -67,7 +67,6 @@ CAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 
 		app().argsBase().m_pauseOnExit = true;
 	}
-#if GAME_DEVICE_SUPPORT
 	else if (app().isArg(i, argc, argv, NULL, "--game-mode")) {
 		CString mode(argv[++i]);
 		if (mode == "xinput") {
@@ -89,7 +88,6 @@ CAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 	else if (app().isArg(i, argc, argv, NULL, "--game-poll-freq")) {
 		app().argsBase().m_gameDevice.m_pollFreq = atoi(argv[++i]);
 	}
-#endif
 	else {
 		// option not supported here
 		return false;
