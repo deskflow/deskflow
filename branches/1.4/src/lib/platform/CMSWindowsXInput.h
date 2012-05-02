@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "CGameDevice.h"
 #include "CThread.h"
 #include "CGameDevice.h"
 #include "BasicTypes.h"
@@ -38,10 +39,10 @@ enum
 	kGameLagRecordMax = 10,
 };
 
-class CMSWindowsXInput
+class CMSWindowsXInput : public CGameDevice
 {
 public:
-	CMSWindowsXInput(const CGameDevice& gameDevice);
+	CMSWindowsXInput(CMSWindowsScreen* screen, const CGameDeviceInfo& gameDevice);
 	virtual ~CMSWindowsXInput();
 
 	void				init(CMSWindowsScreen* screen);
@@ -64,6 +65,7 @@ public:
 
 private:
 	CMSWindowsScreen*	m_screen;
+	const CGameDeviceInfo& m_gameDeviceInfo;
 	CThread*			m_xInputPollThread;
 	CThread*			m_xInputTimingThread;
 	CThread*			m_xInputFeedbackThread;
@@ -85,6 +87,5 @@ private:
 	UInt16				m_gameFakeLagLast;
 	bool				m_gameTimingCalibrated;
 	std::vector<UInt16>	m_gameFakeLagRecord;
-	const CGameDevice&	m_gameDevice;
 	HMODULE				m_xinputModule;
 };

@@ -17,10 +17,18 @@
 
 #include "CGameDevice.h"
 
-CGameDevice::CGameDevice() :
-m_mode(CGameDevice::kGameModeNone),
-m_poll(CGameDevice::kGamePollDynamic),
+CGameDeviceInfo::CGameDeviceInfo() :
+m_mode(CGameDeviceInfo::kGameModeNone),
+m_poll(CGameDeviceInfo::kGamePollDynamic),
 m_pollFreq(60)
+{
+}
+
+CGameDeviceInfo::~CGameDeviceInfo()
+{
+}
+
+CGameDevice::CGameDevice()
 {
 }
 

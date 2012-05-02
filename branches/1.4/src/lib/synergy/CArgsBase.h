@@ -38,7 +38,7 @@ public:
 	bool m_relaunchMode;
 	bool m_debugServiceWait;
 	bool m_pauseOnExit;
-	CGameDevice m_gameDevice;
+	CGameDeviceInfo m_gameDevice;
 #endif
 #if WINAPI_XWINDOWS
 	bool m_disableXInitThreads;

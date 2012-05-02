@@ -71,19 +71,19 @@ CAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 	else if (app().isArg(i, argc, argv, NULL, "--game-mode")) {
 		CString mode(argv[++i]);
 		if (mode == "xinput") {
-			app().argsBase().m_gameDevice.m_mode = CGameDevice::kGameModeXInput;
+			app().argsBase().m_gameDevice.m_mode = CGameDeviceInfo::kGameModeXInput;
 		}
 		else if (mode == "joyinfoex") {
-			app().argsBase().m_gameDevice.m_mode = CGameDevice::kGameModeJoyInfoEx;
+			app().argsBase().m_gameDevice.m_mode = CGameDeviceInfo::kGameModeJoyInfoEx;
 		}
 	}
 	else if (app().isArg(i, argc, argv, NULL, "--game-poll")) {
 		CString mode(argv[++i]);
 		if (mode == "dynamic") {
-			app().argsBase().m_gameDevice.m_poll = CGameDevice::kGamePollDynamic;
+			app().argsBase().m_gameDevice.m_poll = CGameDeviceInfo::kGamePollDynamic;
 		}
 		else if (mode == "static") {
-			app().argsBase().m_gameDevice.m_poll = CGameDevice::kGamePollStatic;
+			app().argsBase().m_gameDevice.m_poll = CGameDeviceInfo::kGamePollStatic;
 		}
 	}
 	else if (app().isArg(i, argc, argv, NULL, "--game-poll-freq")) {

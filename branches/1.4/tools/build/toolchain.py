@@ -60,6 +60,9 @@ class InternalCommands:
 	
 	# by default, don't compile the gui
 	enable_make_gui = False
+  
+	# by default, do not compile with game device support.
+	gameDevice = False
 
 	win32_generators = {
 		1 : Generator('Visual Studio 10'),
@@ -159,6 +162,8 @@ class InternalCommands:
 		
 		if self.gameDevice:
 			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=TRUE"
+		else:
+			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=FALSE"
 
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()

@@ -450,7 +450,7 @@ CClientApp::startClient()
 		}
 
 #if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
-		if (args().m_gameDevice.m_mode == CGameDevice::kGameModeXInput)
+		if (args().m_gameDevice.m_mode == CGameDeviceInfo::kGameModeXInput)
 		{
 			// TODO: currently this is failing because we're not
 			// forcing compile with the DX XInput.h (so the win
@@ -497,7 +497,7 @@ void
 CClientApp::stopClient()
 {
 #if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
-	if (args().m_gameDevice.m_mode == CGameDevice::kGameModeXInput)
+	if (args().m_gameDevice.m_mode == CGameDeviceInfo::kGameModeXInput)
 	{
 		LOG((CLOG_DEBUG "removing xinput hook"));
 		RemoveXInputHook();

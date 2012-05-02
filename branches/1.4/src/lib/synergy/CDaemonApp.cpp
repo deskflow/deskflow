@@ -178,7 +178,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		// HACK: create a dummy screen, which can handle system events 
 		// (such as a stop request from the service controller).
 		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
-		CGameDevice gameDevice;
+		CGameDeviceInfo gameDevice;
 		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice));
 
 		string command = ARCH->setting("Command");

@@ -17,7 +17,10 @@
 
 #pragma once
 
-class CGameDevice {
+#include "GameDeviceTypes.h"
+
+class CGameDeviceInfo
+{
 public:
 
 	enum EGameMode {
@@ -31,9 +34,23 @@ public:
 		kGamePollStatic
 	};
 
-	CGameDevice();
-	virtual ~CGameDevice();
+	CGameDeviceInfo();
+	virtual ~CGameDeviceInfo();
 	EGameMode m_mode;
 	EGamePoll m_poll;
 	int m_pollFreq;
+};
+
+class CGameDevice
+{
+public:
+	CGameDevice();
+	virtual ~CGameDevice();
+
+	virtual void gameDeviceTimingResp(UInt16 freq) = 0;
+	virtual void gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2) = 0;
+	virtual void fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const = 0;
+	virtual void fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const = 0;
+	virtual void fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const = 0;
+	virtual void queueGameDeviceTimingReq() const = 0;
 };
