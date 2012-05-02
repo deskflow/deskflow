@@ -17,6 +17,7 @@
 
 #include "CArchSystemWindows.h"
 #include "CArchMiscWindows.h"
+#include "XArchWindows.h"
 
 #include "tchar.h"
 #include <string>
@@ -149,6 +150,8 @@ void
 CArchSystemWindows::setting(const std::string& valueName, const std::string& valueString) const
 {
 	HKEY key = CArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);
+	if (key == NULL)
+		throw XArch(std::string("could not access registry key: ") + valueName);
 	CArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
 }
 

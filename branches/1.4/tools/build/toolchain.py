@@ -116,7 +116,7 @@ class InternalCommands:
 			'Example: %s build -g 3'
 			) % (app, app)
 
-	def configureAll(self, targets):
+	def configureAll(self, targets, extraArgs=''):
 
 		# if no mode specified, use default
 		if len(targets) == 0:
@@ -157,6 +157,9 @@ class InternalCommands:
 		if generator.cmakeName.find('Unix Makefiles') != -1:
 			cmake_args += ' -DCMAKE_BUILD_TYPE=' + target.capitalize()
 		
+		if self.gameDevice:
+			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=TRUE"
+
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 		
@@ -1117,6 +1120,8 @@ class CommandHandler:
 				self.vcRedistDir = a
 			elif o == '--qt-dir':
 				self.qtDir = a
+			elif o == '--game-device':
+				self.ic.gameDevice = True
 	
 	def about(self):
 		self.ic.about()

@@ -48,11 +48,13 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_Port(24800),
 	m_Interface(),
 	m_LogLevel(0),
-	m_GameDevice(false),
 	m_AutoStart(false),
 	m_AutoHide(false),
 	m_AutoStartPrompt(false),
-	m_WizardHasRun(false)
+	m_WizardHasRun(false),
+	m_GameModeIndex(0),
+	m_GamePollingDynamic(true),
+	m_GamePollingFrequency(60)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -148,12 +150,14 @@ void AppConfig::loadSettings()
 	m_LogLevel = settings().value("logLevel", 2).toInt();
 	m_LogToFile = settings().value("logToFile", false).toBool();
 	m_LogFilename = settings().value("logFilename", synergyLogDir() + "synergy.log").toString();
-	m_GameDevice = settings().value("gameDevice", false).toBool();
 	m_AutoStart = settings().value("autoStart", false).toBool();
 	m_AutoHide = settings().value("autoHide", true).toBool();
 	m_AutoStartPrompt = settings().value("autoStartPrompt", true).toBool();
 	m_WizardHasRun = settings().value("wizardHasRun", false).toBool();
 	m_ProcessMode = (ProcessMode)settings().value("processMode", Desktop).toInt();
+	m_GameModeIndex = settings().value("gameModeIndex", 0).toInt();
+	m_GamePollingDynamic = settings().value("gamePollingDynamic", true).toBool();
+	m_GamePollingFrequency = settings().value("gamePollingFrequency", 60).toInt();
 }
 
 void AppConfig::saveSettings()
@@ -165,10 +169,12 @@ void AppConfig::saveSettings()
 	settings().setValue("logLevel", m_LogLevel);
 	settings().setValue("logToFile", m_LogToFile);
 	settings().setValue("logFilename", m_LogFilename);
-	settings().setValue("gameDevice", m_GameDevice);
 	settings().setValue("autoStart", m_AutoStart);
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("autoStartPrompt", m_AutoStartPrompt);
 	settings().setValue("wizardHasRun", m_WizardHasRun);
 	settings().setValue("processMode", m_ProcessMode);
+	settings().setValue("gameModeIndex", m_GameModeIndex);
+	settings().setValue("gamePollingDynamic", m_GamePollingDynamic);
+	settings().setValue("gamePollingFrequency", m_GamePollingFrequency);
 }

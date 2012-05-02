@@ -329,9 +329,26 @@ void MainWindow::startSynergy()
 	if (!appConfig().screenName().isEmpty())
 		args << "--name" << appConfig().screenName();
 
-	if (appConfig().gameDevice())
+	if (appConfig().gameModeIndex() != 0)
 	{
-		args << "--game-device";
+		if (appConfig().gameModeIndex() == 1)
+		{
+			args << "--game-mode" << "xinput";
+		}
+		else if (appConfig().gameModeIndex() == 2)
+		{
+			args << "--game-mode" << "joyinfoex";
+		}
+
+		if (appConfig().gamePollingDynamic())
+		{
+			args << "--game-poll" << "dynamic";
+		}
+		else
+		{
+			args << "--game-poll" << "static";
+			args << "--game-poll-freq" << QString::number(appConfig().gamePollingFrequency());
+		}
 	}
 
 	if (desktopMode)
@@ -368,6 +385,11 @@ void MainWindow::startSynergy()
 	if (serviceMode)
 	{
 		appendLog("applying service mode: " + QString(synergyType() == synergyServer ? "server" : "client"));
+	}
+
+	// show command if debug log level...
+	if (appConfig().logLevel() >= 4) {
+		appendLog(QString("command: %1 %2").arg(app, args.join(" ")));
 	}
 
 	appendLog("config file: " + configFilename());

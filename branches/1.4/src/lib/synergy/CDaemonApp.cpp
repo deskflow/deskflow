@@ -178,7 +178,8 @@ CDaemonApp::mainLoop(bool logToFile)
 		// HACK: create a dummy screen, which can handle system events 
 		// (such as a stop request from the service controller).
 		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
-		CScreen dummyScreen(new CMSWindowsScreen(false, true, false));
+		CGameDevice gameDevice;
+		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice));
 
 		string command = ARCH->setting("Command");
 		if (command != "") {
@@ -283,7 +284,12 @@ CDaemonApp::pipeThread(void*)
 			buffer[bytesRead] = '\0';
 			LOG((CLOG_DEBUG "ipc daemon server read: %s", buffer));
 
-			handlePipeMessage(buffer);
+			try {
+				handlePipeMessage(buffer);
+			}
+			catch (XArch& ex) {
+				LOG((CLOG_ERR "handle message failed: %s", ex.what().c_str()));
+			}
 		}
 
 		DisconnectNamedPipe(pipe); 

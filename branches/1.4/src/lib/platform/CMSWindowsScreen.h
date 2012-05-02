@@ -23,10 +23,12 @@
 #include "CCondVar.h"
 #include "CMutex.h"
 #include "CString.h"
+#include "CMSWindowsHookLibraryLoader.h"
+#include "CGameDevice.h"
+#include "CMSWindowsXInput.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include "CMSWindowsHookLibraryLoader.h"
-#include <vector>
 
 class CEventQueueTimer;
 class CMSWindowsDesks;
@@ -34,19 +36,10 @@ class CMSWindowsKeyState;
 class CMSWindowsScreenSaver;
 class CThread;
 
-enum
-{
-	kGamePollFreqDefault = 100,
-	kGamePollFreqMin = 50,
-	kGamePollFreqMax = 200,
-	kGameCalibrationPeriod = 10000, // 10 seconds
-	kGameLagRecordMax = 10,
-};
-
 //! Implementation of IPlatformScreen for Microsoft Windows
 class CMSWindowsScreen : public CPlatformScreen {
 public:
-	CMSWindowsScreen(bool isPrimary, bool noHooks, bool gameDevice);
+	CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDevice &gameDevice);
 	virtual ~CMSWindowsScreen();
 
 	//! @name manipulators
@@ -145,7 +138,9 @@ private:
 	void				destroyWindow(HWND) const;
 
 	// convenience function to send events
+public: // HACK
 	void				sendEvent(CEvent::Type type, void* = NULL);
+private: // HACK
 	void				sendClipboardEvent(CEvent::Type type, ClipboardID id);
 
 	// handle message before it gets dispatched.  returns true iff
@@ -325,40 +320,8 @@ private:
 						m_hookLibraryLoader;
 
 #if GAME_DEVICE_SUPPORT
-	// game device stuff
-	CThread*			m_xInputPollThread;
-	CThread*			m_xInputTimingThread;
-	CThread*			m_xInputFeedbackThread;
-	// @todo game device state class and multiple controller support
-	WORD				m_gameButtonsLast;
-	BYTE				m_gameLeftTriggerLast;
-	BYTE				m_gameRightTriggerLast;
-	SHORT				m_gameLeftStickXLast;
-	SHORT				m_gameLeftStickYLast;
-	SHORT				m_gameRightStickXLast;
-	SHORT				m_gameRightStickYLast;
-	double				m_gameLastTimingSent;
-	bool				m_gameTimingWaiting;
-	UInt16				m_gameFakeLag;
-	UInt16				m_gameFakeLagMin;
-	UInt16				m_gamePollFreq;
-	SInt8				m_gamePollFreqAdjust;
-	UInt16				m_gameTimingStarted;
-	UInt16				m_gameTimingFirst;
-	UInt16				m_gameFakeLagLast;
-	bool				m_gameTimingCalibrated;
-	std::vector<UInt16>	m_gameFakeLagRecord;
-	bool				m_gameDevice;
-	HMODULE				m_xinputModule;
-
-	// thread for polling xinput state.
-	void				xInputPollThread(void*);
-
-	// thread for checking queued timing requests. 
-	void				xInputTimingThread(void*);
-
-	// thread for checking pending feedback state.
-	void				xInputFeedbackThread(void*);
+	const CGameDevice&	m_gameDevice;
+	CMSWindowsXInput	m_xInput;
 #endif
 
 	static CMSWindowsScreen*	s_screen;

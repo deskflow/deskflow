@@ -15,32 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
-#include "CString.h"
 #include "CGameDevice.h"
 
-class CArgsBase {
-public:
-	CArgsBase();
-	virtual ~CArgsBase();
-	bool m_daemon;
-	bool m_backend;
-	bool m_restartable;
-	bool m_noHooks;
-	const char* m_pname;
-	const char* m_logFilter;
-	const char*	m_logFile;
-	const char*	m_display;
-	CString m_name;
-	bool m_disableTray;
-#if SYSAPI_WIN32
-	bool m_relaunchMode;
-	bool m_debugServiceWait;
-	bool m_pauseOnExit;
-	CGameDevice m_gameDevice;
-#endif
-#if WINAPI_XWINDOWS
-	bool m_disableXInitThreads;
-#endif
-};
+CGameDevice::CGameDevice() :
+m_mode(CGameDevice::kGameModeNone),
+m_poll(CGameDevice::kGamePollDynamic),
+m_pollFreq(60)
+{
+}
+
+CGameDevice::~CGameDevice()
+{
+}

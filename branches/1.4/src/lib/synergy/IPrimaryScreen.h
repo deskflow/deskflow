@@ -245,6 +245,7 @@ public:
 	static CEvent::Type	getFakeInputBeginEvent();
 	//! Get end of fake input event type
 	static CEvent::Type	getFakeInputEndEvent();
+public: // HACK
 	//! Get game device buttons event type.
 	static CEvent::Type	getGameDeviceButtonsEvent();
 	//! Get game device sticks event type.
@@ -253,6 +254,7 @@ public:
 	static CEvent::Type	getGameDeviceTriggersEvent();
 	//! Get game device timing request event type.
 	static CEvent::Type	getGameDeviceTimingReqEvent();
+private: // HACK
 
 	//@}
 

@@ -153,10 +153,14 @@ private:
 #elif SYSAPI_WIN32
 
 #if GAME_DEVICE_SUPPORT
-#  define HELP_GAMEPAD \
-	"      --game-device            enable game device support (xinput).\n"
+#  define HELP_GAME_DEVICE \
+	"      --game-mode <mode>   enable game device support. valid modes:\n" \
+	"							  xinput, joyinfoex\n" \
+	"      --game-poll <mode>	game polling mode. valid modes:\n" \
+	"							  dynamic, static\n" \
+	"      --game-poll-freq <i>	frequency for static polling.\n"
 #else
-#  define HELP_GAMEPAD ""
+#  define HELP_GAME_DEVICE ""
 #endif
 
 // windows args
@@ -169,7 +173,7 @@ private:
 	"                             session (useful for vista and upward).\n" \
 	"      --exit-pause         wait for key press on exit, can be useful for\n" \
 	"                             reading error messages that occur on exit.\n" \
-	HELP_GAMEPAD
+	HELP_GAME_DEVICE
 
 #endif
 

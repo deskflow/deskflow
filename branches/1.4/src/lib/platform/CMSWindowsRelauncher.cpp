@@ -189,6 +189,11 @@ CMSWindowsRelauncher::getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES
 			TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY | 
 			TOKEN_ADJUST_SESSIONID | TOKEN_READ | TOKEN_WRITE,
 			&currentToken);
+
+		if (!tokenRet) {
+			LOG((CLOG_ERR "could not open token (error: %i)", GetLastError()));
+			return 0;
+		}
 	}
 	else {
 

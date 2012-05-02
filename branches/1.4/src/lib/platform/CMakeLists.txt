@@ -31,11 +31,11 @@ if (WIN32)
 		CMSWindowsRelauncher.h
 		CMSWindowsHookLibraryLoader.h
 		IMSWindowsClipboardFacade.h
-    CMSWindowsDebugOutputter.h
+		CMSWindowsDebugOutputter.h
+		CMSWindowsXInput.h
 	)
 
 	set(src
-		${inc}
 		CMSWindowsClipboard.cpp
 		CMSWindowsClipboardFacade.cpp
 		CMSWindowsClipboardAnyTextConverter.cpp
@@ -51,7 +51,7 @@ if (WIN32)
 		CMSWindowsUtil.cpp
 		CMSWindowsRelauncher.cpp
 		CMSWindowsHookLibraryLoader.cpp
-    CMSWindowsDebugOutputter.cpp
+		CMSWindowsDebugOutputter.cpp
 	)
 	
 	set(inc_hook
@@ -61,25 +61,42 @@ if (WIN32)
 	set(src_hook
 		CSynergyHook.cpp
 	)
+  
+  if (GAME_DEVICE_SUPPORT)
 
-	set(inc_xinhook
-		XInputHook.h
-		HookDLL.h
-	)
-	
-	set(src_xinhook
-		XInputHook.cpp
-		HookDLL.cpp
-	)
+    list(APPEND inc
+      CMSWindowsXInput.h
+    )
 
-	set(inc_xinproxy13
-		XInput13.h
-		XInputProxy13.h
-	)
+    list(APPEND src
+      CMSWindowsXInput.cpp
+    )
+      
+  
+    set(inc_xinhook
+      XInputHook.h
+      HookDLL.h
+    )
+    
+    set(src_xinhook
+      XInputHook.cpp
+      HookDLL.cpp
+    )
 
-	set(src_xinproxy13
-		XInputProxy13.cpp
-	)
+    set(inc_xinproxy13
+      XInput13.h
+      XInputProxy13.h
+    )
+
+    set(src_xinproxy13
+      XInputProxy13.cpp
+    )
+  
+  endif()
+  
+  list(APPEND src
+    ${inc}
+  )
 
 elseif (APPLE)
 

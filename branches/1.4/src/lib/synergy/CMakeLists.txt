@@ -77,13 +77,14 @@ set(src
 
 if (WIN32)
 	list(APPEND inc
-		CAppUtil.h
 		CAppUtilWindows.h
+		CGameDevice.h
 	)	
 
 	list(APPEND src
 		${inc}
 		CAppUtilWindows.cpp
+		CGameDevice.cpp
 	)
 elseif(UNIX)
 	list(APPEND src

@@ -40,9 +40,12 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
 
 #ifdef Q_OS_WIN
-	m_pCheckBoxGameDevice->setChecked(appConfig().gameDevice());
+	m_pComboBoxGameDevice->setCurrentIndex(appConfig().gameModeIndex());
+	m_pRadioButtonGamePollDynamic->setChecked(appConfig().gamePollingDynamic());
+	m_pRadioButtonGamePollStatic->setChecked(!appConfig().gamePollingDynamic());
+	m_pSpinBoxGamePoll->setValue(appConfig().gamePollingFrequency());
 #else
-	m_pCheckBoxGameDevice->setEnabled(false);
+	m_pGroupGameDevices->setEnabled(false);
 #endif
 }
 
@@ -55,9 +58,11 @@ void SettingsDialog::accept()
 	appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
-	appConfig().setGameDevice(m_pCheckBoxGameDevice->isChecked());
 	appConfig().setAutoStart(m_pCheckBoxAutoStart->isChecked());
 	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
+	appConfig().setGameModeIndex(m_pComboBoxGameDevice->currentIndex());
+	appConfig().setGamePollingDynamic(m_pRadioButtonGamePollDynamic->isChecked());
+	appConfig().setGamePollingFrequency(m_pSpinBoxGamePoll->value());
 
 	QDialog::accept();
 }
