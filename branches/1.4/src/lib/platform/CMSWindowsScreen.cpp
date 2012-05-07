@@ -37,9 +37,6 @@
 #include "CArchMiscWindows.h"
 #include <string.h>
 #include <pbt.h>
-#include <MMSystem.h>
-
-#pragma comment(lib, "winmm.lib")
 
 //
 // add backwards compatible multihead support (and suppress bogus warning).
