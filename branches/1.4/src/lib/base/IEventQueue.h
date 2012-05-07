@@ -20,6 +20,7 @@
 
 #include "IInterface.h"
 #include "CEvent.h"
+#include "CString.h"
 
 #define EVENTQUEUE IEventQueue::getInstance()
 
@@ -182,6 +183,12 @@ public:
 	debugging.
 	*/
 	virtual const char*	getTypeName(CEvent::Type type) = 0;
+
+	//! Get an event type by name
+	/*!
+	Returns the registered type for an event for a given name.
+	*/
+	virtual CEvent::Type getRegisteredType(const CString& name) const = 0;
 
 	//! Get the system event type target
 	/*!

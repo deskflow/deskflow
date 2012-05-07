@@ -524,6 +524,9 @@ CClientApp::mainLoop()
 	// start client, etc
 	appUtil().startNode();
 
+	// load all available plugins.
+	ARCH->plugin().init(s_clientScreen->getEventTarget());
+
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of
 	// that.

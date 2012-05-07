@@ -39,6 +39,7 @@ public:
 	MOCK_METHOD1(dispatchEvent, bool(const CEvent&));
 	MOCK_CONST_METHOD2(getHandler, IEventJob*(CEvent::Type, void*));
 	MOCK_METHOD1(deleteTimer, void(CEventQueueTimer*));
+	MOCK_CONST_METHOD1(getRegisteredType, CEvent::Type(const CString&));
 };
 
 #endif

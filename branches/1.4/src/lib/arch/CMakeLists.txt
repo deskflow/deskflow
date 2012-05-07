@@ -41,6 +41,8 @@ if (WIN32)
 		CMultibyte.h
 		vsnprintf.h
 		XArch.h
+		IArchPlugin.h
+		CArchPluginWindows.h
 	)
 
 	list(APPEND src
@@ -59,6 +61,7 @@ if (WIN32)
 		CArchTaskBarWindows.cpp
 		CArchTimeWindows.cpp
 		XArchWindows.cpp
+		CArchPluginWindows.cpp
 	)
 	
 elseif (UNIX)
@@ -78,6 +81,7 @@ elseif (UNIX)
 		CArchTimeUnix.cpp
 		XArchUnix.cpp
 		CArchDaemonNone.cpp
+		CArchPluginUnix.cpp
 	)
 	
 endif()

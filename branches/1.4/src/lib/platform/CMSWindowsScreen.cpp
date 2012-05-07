@@ -110,7 +110,8 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDevi
 	m_keyState(NULL),
 	m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
 	m_showingMouse(false),
-	m_gameDeviceInfo(gameDeviceInfo)
+	m_gameDeviceInfo(gameDeviceInfo),
+	m_gameDevice(NULL)
 {
 	assert(s_windowInstance != NULL);
 	assert(s_screen   == NULL);
@@ -172,11 +173,6 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDevi
 #endif
 	}
 	else if (m_gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeJoyInfoEx) {
-		JOYINFOEX joyInfoEx;
-		ZeroMemory(&joyInfoEx, sizeof(joyInfoEx));
-		joyInfoEx.dwSize = sizeof(joyInfoEx);
-		BOOL joystickStatus = (joyGetPosEx(JOYSTICKID1, &joyInfoEx) == JOYERR_NOERROR);
-		LOG((CLOG_INFO "joystick status: %s", joystickStatus ? "present" : "absent"));
 	}
 }
 
@@ -193,7 +189,8 @@ CMSWindowsScreen::~CMSWindowsScreen()
 	destroyWindow(m_window);
 	destroyClass(m_class);
 
-	delete m_gameDevice;
+	if (m_gameDevice != NULL)
+		delete m_gameDevice;
 
 	if (m_hookLibrary != NULL)
 		closeHookLibrary(m_hookLibrary);

@@ -752,6 +752,9 @@ int CServerApp::mainLoop()
 	// start server, etc
 	appUtil().startNode();
 
+	// load all available plugins.
+	ARCH->plugin().init(s_serverScreen->getEventTarget());
+
 	// handle hangup signal by reloading the server's configuration
 	ARCH->setSignalHandler(CArch::kHANGUP, &reloadSignalHandler, NULL);
 	EVENTQUEUE->adoptHandler(getReloadConfigEvent(),

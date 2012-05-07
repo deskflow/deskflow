@@ -57,6 +57,8 @@ public:
 	virtual bool		isEmpty() const;
 	virtual IEventJob*	getHandler(CEvent::Type type, void* target) const;
 	virtual const char*	getTypeName(CEvent::Type type);
+	virtual CEvent::Type
+						getRegisteredType(const CString& name) const;
 
 private:
 	UInt32				saveEvent(const CEvent& event);
@@ -97,6 +99,7 @@ private:
 	typedef std::map<UInt32, CEvent> CEventTable;
 	typedef std::vector<UInt32> CEventIDList;
 	typedef std::map<CEvent::Type, const char*> CTypeMap;
+	typedef std::map<CString, CEvent::Type> CNameMap;
 	typedef std::map<CEvent::Type, IEventJob*> CTypeHandlerTable;
 	typedef std::map<void*, CTypeHandlerTable> CHandlerTable;
 
@@ -105,6 +108,7 @@ private:
 	// registered events
 	CEvent::Type		m_nextType;
 	CTypeMap			m_typeMap;
+	CNameMap			m_nameMap;
 
 	// buffer of events
 	IEventQueueBuffer*	m_buffer;
