@@ -66,27 +66,37 @@ mainLoop(void* data)
 	ZeroMemory(&joyInfo, sizeof(joyInfo));
 	joyInfo.dwSize = sizeof(joyInfo);
 	joyInfo.dwFlags = JOY_RETURNALL;
-	
+
+	// note: synergy data is often 16-bit, where winmm is 32-bit.
 	UINT index = JOYSTICKID1;
 	DWORD buttons, buttonsLast = 0;
+	DWORD xPos, xPosLast = 0;
+	DWORD yPos, yPosLast = 0;
 
 	while (s_running) {
 		
 		if (joyGetPosEx(index, &joyInfo) != JOYERR_NOERROR) {
-			LOG("waiting for joystick");
 			Sleep(1000);
 			continue;
 		}
 
 		buttons = joyInfo.dwButtons;
+		xPos = joyInfo.dwXpos;
+		yPos = joyInfo.dwYpos;
 
 		if (buttons != buttonsLast) {
-			// note: synergy buttons are 16-bit, winmm's are 32-bit.
 			s_sendEvent(buttonsEvent,
 				new CGameDeviceButtonInfo(index, (GameDeviceButton)joyInfo.dwButtons));
 		}
 
+		if (xPos != xPosLast || yPos != yPosLast) {
+			s_sendEvent(sticksEvent,
+				new CGameDeviceStickInfo(index, (short)xPos, (short)yPos, 0, 0));
+		}
+
 		buttonsLast = buttons;
+		xPosLast = xPos;
+		yPosLast = yPos;
 		Sleep(1);
 	}
 	return 0;
