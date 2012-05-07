@@ -75,7 +75,7 @@ mainLoop(void* data)
 		if (joyGetPosEx(index, &joyInfo) != JOYERR_NOERROR) {
 			LOG("waiting for joystick");
 			Sleep(1000);
-			break;
+			continue;
 		}
 
 		buttons = joyInfo.dwButtons;

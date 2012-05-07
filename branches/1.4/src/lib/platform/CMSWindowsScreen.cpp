@@ -172,7 +172,8 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDevi
 		LOG((CLOG_WARN "xinput game device mode not supported for 64-bit."));
 #endif
 	}
-	else if (m_gameDeviceInfo.m_mode == CGameDeviceInfo::kGameModeJoyInfoEx) {
+	else {
+		m_gameDevice = new CEventGameDevice(getEventTarget());
 	}
 }
 

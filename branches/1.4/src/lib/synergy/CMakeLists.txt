@@ -46,6 +46,7 @@ set(inc
 	CAppUtil.h
 	CArgsBase.h
 	IAppUtil.h
+	CEventGameDevice.h
 )
 
 set(src
@@ -73,6 +74,7 @@ set(src
 	CDaemonApp.cpp
 	CAppUtil.cpp
 	CArgsBase.cpp
+	CEventGameDevice.cpp
 )
 
 if (WIN32)

@@ -26,6 +26,7 @@
 #include "CMSWindowsHookLibraryLoader.h"
 #include "CGameDevice.h"
 #include "CMSWindowsXInput.h"
+#include "CEventGameDevice.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
