@@ -63,6 +63,9 @@ class InternalCommands:
   
 	# by default, do not compile with game device support.
 	gameDevice = False
+	
+	# by default, let cmake decide
+	macSdk = None
 
 	win32_generators = {
 		1 : Generator('Visual Studio 10'),
@@ -164,7 +167,11 @@ class InternalCommands:
 			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=TRUE"
 		else:
 			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=FALSE"
-
+		
+		if self.macSdk:
+			path = "/Developer/SDKs/MacOSX" + self.macSdk + ".sdk/"
+			cmake_args += " -DCMAKE_OSX_SYSROOT=" + path
+				
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 		
@@ -1127,6 +1134,8 @@ class CommandHandler:
 				self.qtDir = a
 			elif o == '--game-device':
 				self.ic.gameDevice = True
+			elif o == '--mac-sdk':
+				self.ic.macSdk = a
 	
 	def about(self):
 		self.ic.about()

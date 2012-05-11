@@ -149,10 +149,13 @@ if (UNIX)
 			set(CMAKE_OSX_ARCHITECTURES "ppc;i386"
 				CACHE STRING "" FORCE)
 		else()
-			# 10.5+: 32-bit only (missing funcs in 64-bit os libs)
+			# 10.5+: 32-bit only -- missing funcs in 64-bit os libs
+			# such as GetGlobalMouse.
 			set(CMAKE_OSX_ARCHITECTURES "i386"
 				CACHE STRING "" FORCE)
 		endif()
+		
+		set(CMAKE_CXX_FLAGS "--sysroot ${CMAKE_OSX_SYSROOT} ${CMAKE_CXX_FLAGS}")
 
 		find_library(lib_ScreenSaver ScreenSaver)
 		find_library(lib_IOKit IOKit)
