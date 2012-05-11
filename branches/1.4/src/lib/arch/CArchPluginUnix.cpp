@@ -26,6 +26,6 @@ CArchPluginUnix::~CArchPluginUnix()
 }
 
 void
-load()
+CArchPluginUnix::init(void* eventTarget)
 {
 }

@@ -19,11 +19,14 @@
 
 #include "IArchPlugin.h"
 
+#define ARCH_PLUGIN CArchPluginUnix
+
 //! Unix implementation of IArchPlugin
 class CArchPluginUnix : public IArchPlugin {
 public:
 	CArchPluginUnix();
 	virtual ~CArchPluginUnix();
-	
-	void				load();
+
+	// IArchPlugin overrides
+	void				init(void* eventTarget);
 };
