@@ -318,8 +318,8 @@ class InternalCommands:
 		generator = self.getGeneratorFromConfig().cmakeName
 		
 		config = self.getConfig()
-		macSdk = config.get("cmake", "mac_sdk")
-		if macSdk:
+		if config.has_option("cmake", "mac_sdk"):
+			macSdk = config.get("cmake", "mac_sdk")
 			os.environ["MACOSX_DEPLOYMENT_TARGET"] = macSdk
 
 		if generator.find('Unix Makefiles') != -1:
@@ -1070,6 +1070,16 @@ class InternalCommands:
 			print str(k) + ': ' + generators[k].cmakeName
 
 	def getMacVersion(self):
+		# if we've built with an older sdk, then use that as the
+		# os version for package names, etc.
+		config = self.getConfig()
+		if config.has_option("cmake", "mac_sdk"):
+			macSdk = config.get("cmake", "mac_sdk")
+			split = macSdk.split('.')
+			major = int(split[0])
+			minor = int(split[1])
+			return (major, minor)
+			
 		import commands
 		versions = commands.getoutput('/usr/bin/sw_vers')
 		result = re.search('ProductVersion:\t(\d+)\.(\d+)', versions)
