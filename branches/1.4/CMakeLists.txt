@@ -266,7 +266,7 @@ if (UNIX)
 	add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
 
 	if (APPLE)
-		add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE -DMACOSX_DEPLOYMENT_TARGET=10.4)
+		add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
 	else (APPLE)
 		add_definitions(-DWINAPI_XWINDOWS=1)
 	endif()

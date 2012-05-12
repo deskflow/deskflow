@@ -171,7 +171,14 @@ class InternalCommands:
 		if self.macSdk:
 			path = "/Developer/SDKs/MacOSX" + self.macSdk + ".sdk/"
 			cmake_args += " -DCMAKE_OSX_SYSROOT=" + path
-				
+			cmake_args += " -DCMAKE_OSX_DEPLOYMENT_TARGET=" + self.macSdk
+			os.environ["MACOSX_DEPLOYMENT_TARGET"] = self.macSdk
+
+			# store the sdk version for the build command
+			config = self.getConfig()
+			config.set('cmake', 'mac_sdk', self.macSdk)
+			self.write_config(config)
+		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
 		
@@ -310,6 +317,11 @@ class InternalCommands:
 
 		generator = self.getGeneratorFromConfig().cmakeName
 		
+		config = self.getConfig()
+		macSdk = config.get("cmake", "mac_sdk")
+		if macSdk:
+			os.environ["MACOSX_DEPLOYMENT_TARGET"] = macSdk
+
 		if generator.find('Unix Makefiles') != -1:
 			for target in targets:
 				self.ensureConfHasRun(target, skipConfig)
@@ -810,18 +822,7 @@ class InternalCommands:
 		# running setup
 		generator = self.get_generator_from_prompt()
 
-		if os.path.exists(self.configFilename):
-			config = ConfigParser.ConfigParser()
-			config.read(self.configFilename)
-		else:
-			config = ConfigParser.ConfigParser()
-
-		if not config.has_section('hm'):
-			config.add_section('hm')
-
-		if not config.has_section('cmake'):
-			config.add_section('cmake')
-		
+		config = self.getConfig()
 		config.set('hm', 'setup_version', self.setup_version)
 		
 		# store the generator so we don't need to ask again
@@ -835,6 +836,21 @@ class InternalCommands:
 		self.setConfRun('release', False)
 
 		print "Setup complete."
+
+	def getConfig(self):
+		if os.path.exists(self.configFilename):
+			config = ConfigParser.ConfigParser()
+			config.read(self.configFilename)
+		else:
+			config = ConfigParser.ConfigParser()
+
+		if not config.has_section('hm'):
+			config.add_section('hm')
+
+		if not config.has_section('cmake'):
+			config.add_section('cmake')
+
+		return config
 
 	def write_config(self, config, target=''):
 		if not os.path.isdir(self.configDir):
