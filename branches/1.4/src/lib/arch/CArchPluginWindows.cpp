@@ -43,7 +43,7 @@ void
 CArchPluginWindows::init(void* eventTarget)
 {
 	m_eventTarget = eventTarget;
-
+	
 	CString dir = getPluginsDir();
 	LOG((CLOG_DEBUG "plugins dir: %s", dir.c_str()));
 
@@ -95,7 +95,8 @@ CArchPluginWindows::getFilenames(const CString& pattern, std::vector<CString>& f
 	HANDLE find = FindFirstFile(pattern.c_str(), &data);
 	if (find == INVALID_HANDLE_VALUE) {
 		FindClose(find);
-		throw XArch(new XArchEvalWindows);
+		LOG((CLOG_DEBUG "plugins dir is empty: %s", pattern.c_str()));
+		return;
 	}
 
 	do {
