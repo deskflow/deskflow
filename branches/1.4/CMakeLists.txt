@@ -281,6 +281,13 @@ else (UNIX)
 		/D_CRT_SECURE_NO_WARNINGS
 		/DVERSION=\"${VERSION}\"
 	)
+	
+	if (MSVC_VERSION EQUAL 1600)
+		set(SLN_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/synergy.sln")
+		if (EXISTS "${SLN_FILENAME}" )
+			file(APPEND "${SLN_FILENAME}" "\n# This should be regenerated!\n")
+		endif()
+	endif()
 
 endif()
 
