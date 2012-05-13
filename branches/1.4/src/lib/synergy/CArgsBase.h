@@ -34,6 +34,7 @@ public:
 	const char*	m_display;
 	CString m_name;
 	bool m_disableTray;
+	bool m_enableVnc;
 #if SYSAPI_WIN32
 	bool m_relaunchMode;
 	bool m_debugServiceWait;

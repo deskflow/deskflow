@@ -614,8 +614,10 @@ void
 CClientApp::startNode()
 {
 #if SYSAPI_WIN32
-	m_vncThread = new CThread(new TMethodJob<CClientApp>(
-		this, &CClientApp::vncThread, NULL));
+	if (args().m_enableVnc) {
+		m_vncThread = new CThread(new TMethodJob<CClientApp>(
+			this, &CClientApp::vncThread, NULL));
+	}
 #endif
 
 	// start the client.  if this return false then we've failed and

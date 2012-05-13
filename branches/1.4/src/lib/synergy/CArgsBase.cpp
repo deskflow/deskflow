@@ -36,7 +36,8 @@ m_disableTray(false),
 m_pname(NULL),
 m_logFilter(NULL),
 m_logFile(NULL),
-m_display(NULL)
+m_display(NULL),
+m_enableVnc(false)
 {
 }
 
