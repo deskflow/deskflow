@@ -1,0 +1,570 @@
+#!/usr/bin/env perl
+#
+#  Copyright (C) 2002-2005 RealVNC Ltd.
+#  Copyright (C) 1999 AT&T Laboratories Cambridge.  All Rights Reserved.
+#
+#  This is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This software is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this software; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
+#  USA.
+#
+
+#
+# vncserver - wrapper script to start an X VNC server.
+#
+
+#
+# First make sure we're operating in a sane environment.
+#
+
+&SanityCheck();
+
+#
+# Global variables.  You may want to configure some of these for your site.
+#
+
+$geometry = "1024x768";
+$depth = 16;
+$vncJavaFiles = (((-d "/usr/share/vnc/classes") && "/usr/share/vnc/classes") ||
+                 ((-d "/usr/local/vnc/classes") && "/usr/local/vnc/classes"));
+$vncUserDir = "$ENV{HOME}/.vnc";
+$xauthorityFile = "$ENV{XAUTHORITY}" || "$ENV{HOME}/.Xauthority";
+
+$defaultXStartup
+    = ("#!/bin/sh\n\n".
+       "[ -r \$HOME/.Xresources ] && xrdb \$HOME/.Xresources\n".
+       "xsetroot -solid grey\n".
+       "vncconfig -iconic &\n".
+       "xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n".
+       "twm &\n");
+
+chop($host = `uname -n`);
+
+
+# Check command line options
+
+&ParseOptions("-geometry",1,"-depth",1,"-pixelformat",1,"-name",1,"-kill",1,
+	      "-help",0,"-h",0,"--help",0);
+
+&Usage() if ($opt{'-help'} || $opt{'-h'} || $opt{'--help'});
+
+&Kill() if ($opt{'-kill'});
+
+# Uncomment this line if you want default geometry, depth and pixelformat
+# to match the current X display:
+# &GetXDisplayDefaults();
+
+if ($opt{'-geometry'}) {
+    $geometry = $opt{'-geometry'};
+}
+if ($opt{'-depth'}) {
+    $depth = $opt{'-depth'};
+    $pixelformat = "";
+}
+if ($opt{'-pixelformat'}) {
+    $pixelformat = $opt{'-pixelformat'};
+}
+
+&CheckGeometryAndDepth();
+
+
+# Create the user's vnc directory if necessary.
+
+if (!(-e $vncUserDir)) {
+    if (!mkdir($vncUserDir,0755)) {
+	die "$prog: Could not create $vncUserDir.\n";
+    }
+}
+    
+# Make sure the user has a password.
+
+($z,$z,$mode) = stat("$vncUserDir/passwd");
+if (!(-e "$vncUserDir/passwd") || ($mode & 077)) {
+    warn "\nYou will require a password to access your desktops.\n\n";
+    system("vncpasswd -q $vncUserDir/passwd"); 
+    if (($? >> 8) != 0) {
+	exit 1;
+    }
+}
+
+# Find display number.
+
+if ((@ARGV > 0) && ($ARGV[0] =~ /^:(\d+)$/)) {
+    $displayNumber = $1;
+    shift(@ARGV);
+    if (!&CheckDisplayNumber($displayNumber)) {
+	die "A VNC server is already running as :$displayNumber\n";
+    }
+} elsif ((@ARGV > 0) && ($ARGV[0] !~ /^-/)) {
+    &Usage();
+} else {
+    $displayNumber = &GetDisplayNumber();
+}
+
+$vncPort = 5900 + $displayNumber;
+
+$desktopLog = "$vncUserDir/$host:$displayNumber.log";
+unlink($desktopLog);
+
+# Make an X server cookie - use as the seed the sum of the current time, our
+# PID and part of the encrypted form of the password.  Ideally we'd use
+# /dev/urandom, but that's only available on Linux.
+
+srand(time+$$+unpack("L",`cat $vncUserDir/passwd`));
+$cookie = "";
+for (1..16) {
+    $cookie .= sprintf("%02x", int(rand(256)) % 256);
+}
+    
+system("xauth -f $xauthorityFile add $host:$displayNumber . $cookie");
+system("xauth -f $xauthorityFile add $host/unix:$displayNumber . $cookie"); 
+
+if ($opt{'-name'}) {
+    $desktopName = $opt{'-name'};
+} else {
+    $desktopName = "$host:$displayNumber ($ENV{USER})";
+}
+
+# Now start the X VNC Server
+
+$cmd = "Xvnc :$displayNumber";
+$cmd .= " -desktop " . &quotedString($desktopName);
+$cmd .= " -httpd $vncJavaFiles" if ($vncJavaFiles);
+$cmd .= " -auth $xauthorityFile";
+$cmd .= " -geometry $geometry" if ($geometry);
+$cmd .= " -depth $depth" if ($depth);
+$cmd .= " -pixelformat $pixelformat" if ($pixelformat);
+$cmd .= " -rfbwait 30000";
+$cmd .= " -rfbauth $vncUserDir/passwd";
+$cmd .= " -rfbport $vncPort";
+$cmd .= " -pn";
+
+# Add font path and color database stuff here, e.g.:
+#
+# $cmd .= " -fp /usr/lib/X11/fonts/misc/,/usr/lib/X11/fonts/75dpi/";
+# $cmd .= " -co /usr/lib/X11/rgb";
+#
+
+foreach $arg (@ARGV) {
+    $cmd .= " " . &quotedString($arg);
+}
+$cmd .= " >> " . &quotedString($desktopLog) . " 2>&1";
+
+# Run $cmd and record the process ID.
+
+$pidFile = "$vncUserDir/$host:$displayNumber.pid";
+system("$cmd & echo \$! >$pidFile");
+
+# Give Xvnc a chance to start up
+
+sleep(3); 
+
+warn "\nNew '$desktopName' desktop is $host:$displayNumber\n\n";
+
+# Create the user's xstartup script if necessary.
+
+if (!(-e "$vncUserDir/xstartup")) {
+    warn "Creating default startup script $vncUserDir/xstartup\n";
+    open(XSTARTUP, ">$vncUserDir/xstartup");
+    print XSTARTUP $defaultXStartup;
+    close(XSTARTUP);
+    chmod 0755, "$vncUserDir/xstartup";
+}
+
+# Run the X startup script.
+
+warn "Starting applications specified in $vncUserDir/xstartup\n";
+warn "Log file is $desktopLog\n\n";
+
+# If the unix domain socket exists then use that (DISPLAY=:n) otherwise use
+# TCP (DISPLAY=host:n)
+
+if (-e "/tmp/.X11-unix/X$displayNumber" ||
+    -e "/usr/spool/sockets/X11/$displayNumber")
+{
+    $ENV{DISPLAY}= ":$displayNumber";
+} else {
+    $ENV{DISPLAY}= "$host:$displayNumber";
+}
+$ENV{VNCDESKTOP}= $desktopName;
+
+system("$vncUserDir/xstartup >> " . &quotedString($desktopLog) . " 2>&1 &");
+
+exit;
+
+
+###############################################################################
+#
+# CheckGeometryAndDepth simply makes sure that the geometry and depth values
+# are sensible.
+#
+
+sub CheckGeometryAndDepth
+{
+    if ($geometry =~ /^(\d+)x(\d+)$/) {
+	$width = $1; $height = $2;
+
+	if (($width<1) || ($height<1)) {
+	    die "$prog: geometry $geometry is invalid\n";
+	}
+
+	while (($width % 4)!=0) {
+	    $width = $width + 1;
+	}
+
+	while (($height % 2)!=0) {
+	    $height = $height + 1;
+	}
+
+	$geometry = "${width}x$height";
+    } else {
+	die "$prog: geometry $geometry is invalid\n";
+    }
+
+    if (($depth < 8) || ($depth > 32)) {
+	die "Depth must be between 8 and 32\n";
+    }
+}
+
+
+#
+# GetDisplayNumber gets the lowest available display number.  A display number
+# n is taken if something is listening on the VNC server port (5900+n) or the
+# X server port (6000+n).
+#
+
+sub GetDisplayNumber
+{
+    foreach $n (1..99) {
+	if (&CheckDisplayNumber($n)) {
+	    return $n+0; # Bruce Mah's workaround for bug in perl 5.005_02
+	}
+    }
+    
+    die "$prog: no free display number on $host.\n";
+}
+
+
+#
+# CheckDisplayNumber checks if the given display number is available.  A
+# display number n is taken if something is listening on the VNC server port
+# (5900+n) or the X server port (6000+n).
+#
+
+sub CheckDisplayNumber
+{
+    local ($n) = @_;
+
+    socket(S, $AF_INET, $SOCK_STREAM, 0) || die "$prog: socket failed: $!\n";
+    eval 'setsockopt(S, &SOL_SOCKET, &SO_REUSEADDR, pack("l", 1))';
+    if (!bind(S, pack('S n x12', $AF_INET, 6000 + $n))) {
+	close(S);
+	return 0;
+    }
+    close(S);
+
+    socket(S, $AF_INET, $SOCK_STREAM, 0) || die "$prog: socket failed: $!\n";
+    eval 'setsockopt(S, &SOL_SOCKET, &SO_REUSEADDR, pack("l", 1))';
+    if (!bind(S, pack('S n x12', $AF_INET, 5900 + $n))) {
+	close(S);
+	return 0;
+    }
+    close(S);
+
+    if (-e "/tmp/.X$n-lock") {
+	warn "\nWarning: $host:$n is taken because of /tmp/.X$n-lock\n";
+	warn "Remove this file if there is no X server $host:$n\n";
+	return 0;
+    }
+
+    if (-e "/tmp/.X11-unix/X$n") {
+	warn "\nWarning: $host:$n is taken because of /tmp/.X11-unix/X$n\n";
+	warn "Remove this file if there is no X server $host:$n\n";
+	return 0;
+    }
+
+    if (-e "/usr/spool/sockets/X11/$n") {
+	warn("\nWarning: $host:$n is taken because of ".
+             "/usr/spool/sockets/X11/$n\n");
+	warn "Remove this file if there is no X server $host:$n\n";
+	return 0;
+    }
+
+    return 1;
+}
+
+
+#
+# GetXDisplayDefaults uses xdpyinfo to find out the geometry, depth and pixel
+# format of the current X display being used.  If successful, it sets the
+# options as appropriate so that the X VNC server will use the same settings
+# (minus an allowance for window manager decorations on the geometry).  Using
+# the same depth and pixel format means that the VNC server won't have to
+# translate pixels when the desktop is being viewed on this X display (for
+# TrueColor displays anyway).
+#
+
+sub GetXDisplayDefaults
+{
+    local (@lines, @matchlines, $width, $height, $defaultVisualId, $i,
+	   $red, $green, $blue);
+
+    $wmDecorationWidth = 4;	# a guess at typical size for window manager
+    $wmDecorationHeight = 24;	# decoration size
+
+    return if (!defined($ENV{DISPLAY}));
+
+    @lines = `xdpyinfo 2>/dev/null`;
+
+    return if ($? != 0);
+
+    @matchlines = grep(/dimensions/, @lines);
+    if (@matchlines) {
+	($width, $height) = ($matchlines[0] =~ /(\d+)x(\d+) pixels/);
+
+	$width -= $wmDecorationWidth;
+	$height -= $wmDecorationHeight;
+
+	$geometry = "${width}x$height";
+    }
+
+    @matchlines = grep(/default visual id/, @lines);
+    if (@matchlines) {
+	($defaultVisualId) = ($matchlines[0] =~ /id:\s+(\S+)/);
+
+	for ($i = 0; $i < @lines; $i++) {
+	    if ($lines[$i] =~ /^\s*visual id:\s+$defaultVisualId$/) {
+		if (($lines[$i+1] !~ /TrueColor/) ||
+		    ($lines[$i+2] !~ /depth/) ||
+		    ($lines[$i+4] !~ /red, green, blue masks/))
+		{
+		    return;
+		}
+		last;
+	    }
+	}
+
+	return if ($i >= @lines);
+
+	($depth) = ($lines[$i+2] =~ /depth:\s+(\d+)/);
+	($red,$green,$blue)
+	    = ($lines[$i+4]
+	       =~ /masks:\s+0x([0-9a-f]+), 0x([0-9a-f]+), 0x([0-9a-f]+)/);
+
+	$red = hex($red);
+	$green = hex($green);
+	$blue = hex($blue);
+
+	if ($red > $blue) {
+	    $red = int(log($red) / log(2)) - int(log($green) / log(2));
+	    $green = int(log($green) / log(2)) - int(log($blue) / log(2));
+	    $blue = int(log($blue) / log(2)) + 1;
+	    $pixelformat = "rgb$red$green$blue";
+	} else {
+	    $blue = int(log($blue) / log(2)) - int(log($green) / log(2));
+	    $green = int(log($green) / log(2)) - int(log($red) / log(2));
+	    $red = int(log($red) / log(2)) + 1;
+	    $pixelformat = "bgr$blue$green$red";
+	}
+    }
+}
+
+
+#
+# quotedString returns a string which yields the original string when parsed
+# by a shell.
+#
+
+sub quotedString
+{
+    local ($in) = @_;
+
+    $in =~ s/\'/\'\"\'\"\'/g;
+
+    return "'$in'";
+}
+
+
+#
+# removeSlashes turns slashes into underscores for use as a file name.
+#
+
+sub removeSlashes
+{
+    local ($in) = @_;
+
+    $in =~ s|/|_|g;
+
+    return "$in";
+}
+
+
+#
+# Usage
+#
+
+sub Usage
+{
+    die("\nusage: $prog [:<number>] [-name <desktop-name>] [-depth <depth>]\n".
+	"                 [-geometry <width>x<height>]\n".
+	"                 [-pixelformat rgbNNN|bgrNNN]\n".
+	"                 <Xvnc-options>...\n\n".
+	"       $prog -kill <X-display>\n\n");
+}
+
+
+#
+# Kill
+#
+
+sub Kill
+{
+    $opt{'-kill'} =~ s/(:\d+)\.\d+$/$1/; # e.g. turn :1.0 into :1
+
+    if ($opt{'-kill'} =~ /^:\d+$/) {
+	$pidFile = "$vncUserDir/$host$opt{'-kill'}.pid";
+    } else {
+	if ($opt{'-kill'} !~ /^$host:/) {
+	    die "\nCan't tell if $opt{'-kill'} is on $host\n".
+		"Use -kill :<number> instead\n\n";
+	}
+	$pidFile = "$vncUserDir/$opt{'-kill'}.pid";
+    }
+
+    if (! -r $pidFile) {
+	die "\nCan't find file $pidFile\n".
+	    "You'll have to kill the Xvnc process manually\n\n";
+    }
+
+    $SIG{'HUP'} = 'IGNORE';
+    chop($pid = `cat $pidFile`);
+    warn "Killing Xvnc process ID $pid\n";
+    system("kill $pid");
+    unlink $pidFile;
+    exit;
+}
+
+
+#
+# ParseOptions takes a list of possible options and a boolean indicating
+# whether the option has a value following, and sets up an associative array
+# %opt of the values of the options given on the command line. It removes all
+# the arguments it uses from @ARGV and returns them in @optArgs.
+#
+
+sub ParseOptions
+{
+    local (@optval) = @_;
+    local ($opt, @opts, %valFollows, @newargs);
+
+    while (@optval) {
+	$opt = shift(@optval);
+	push(@opts,$opt);
+	$valFollows{$opt} = shift(@optval);
+    }
+
+    @optArgs = ();
+    %opt = ();
+
+    arg: while (defined($arg = shift(@ARGV))) {
+	foreach $opt (@opts) {
+	    if ($arg eq $opt) {
+		push(@optArgs, $arg);
+		if ($valFollows{$opt}) {
+		    if (@ARGV == 0) {
+			&Usage();
+		    }
+		    $opt{$opt} = shift(@ARGV);
+		    push(@optArgs, $opt{$opt});
+		} else {
+		    $opt{$opt} = 1;
+		}
+		next arg;
+	    }
+	}
+	push(@newargs,$arg);
+    }
+
+    @ARGV = @newargs;
+}
+
+
+#
+# Routine to make sure we're operating in a sane environment.
+#
+
+sub SanityCheck
+{
+    local ($cmd);
+
+    #
+    # Get the program name
+    #
+
+    ($prog) = ($0 =~ m|([^/]+)$|);
+
+    #
+    # Check we have all the commands we'll need on the path.
+    #
+
+ cmd:
+    foreach $cmd ("uname","xauth","Xvnc","vncpasswd") {
+	for (split(/:/,$ENV{PATH})) {
+	    if (-x "$_/$cmd") {
+		next cmd;
+	    }
+	}
+	die "$prog: couldn't find \"$cmd\" on your PATH.\n";
+    }
+
+    #
+    # Check the HOME environment variable is set
+    #
+
+    if (!defined($ENV{HOME})) {
+	die "$prog: The HOME environment variable is not set.\n";
+    }
+    chdir($ENV{HOME});
+
+    #
+    # Find socket constants. 'use Socket' is a perl5-ism, so we wrap it in an
+    # eval, and if it fails we try 'require "sys/socket.ph"'.  If this fails,
+    # we just guess at the values.  If you find perl moaning here, just
+    # hard-code the values of AF_INET and SOCK_STREAM.  You can find these out
+    # for your platform by looking in /usr/include/sys/socket.h and related
+    # files.
+    #
+
+    chop($os = `uname`);
+    chop($osrev = `uname -r`);
+
+    eval 'use Socket';
+    if ($@) {
+	eval 'require "sys/socket.ph"';
+	if ($@) {
+	    if (($os eq "SunOS") && ($osrev !~ /^4/)) {
+		$AF_INET = 2;
+		$SOCK_STREAM = 2;
+	    } else {
+		$AF_INET = 2;
+		$SOCK_STREAM = 1;
+	    }
+	} else {
+	    $AF_INET = &AF_INET;
+	    $SOCK_STREAM = &SOCK_STREAM;
+	}
+    } else {
+	$AF_INET = &AF_INET;
+	$SOCK_STREAM = &SOCK_STREAM;
+    }
+}

@@ -24,6 +24,7 @@ class CScreen;
 class CEvent;
 class CClient;
 class CNetworkAddress;
+class CThread;
 
 class CClientApp : public CApp {
 public:
@@ -82,8 +83,11 @@ public:
 	static CClientApp& instance() { return (CClientApp&)CApp::instance(); }
 
 private:
+	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+	void vncThread(void*);
+
+private:
 	CClient* s_client;
 	CScreen* s_clientScreen;
-
-	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+	CThread* m_vncThread;
 };

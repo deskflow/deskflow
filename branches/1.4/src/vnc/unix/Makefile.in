@@ -1,0 +1,4 @@
+
+SUBDIRS = ../common tx vncviewer vncconfig vncpasswd x0vncserver
+
+# followed by boilerplate.mk

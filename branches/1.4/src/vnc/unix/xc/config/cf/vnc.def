@@ -1,0 +1,35 @@
+#define BuildServersOnly YES
+#define BuildFonts NO
+#define BuildClients NO
+#define BuildDocs NO
+#define BuildPexExt NO
+#define BuildNls NO
+#define BuildXIE NO
+#define BuildGlxExt NO
+#define XnestServer NO
+#define XprtServer NO
+
+#ifdef SunArchitecture
+#define ProjectRoot /usr/openwin
+#define HasGcc2 YES
+#define BuildXKB NO
+#endif
+
+#define HasFreetype2 NO
+#define BuildVNCExt YES
+#define VNCExtDefines -DVNCEXT
+#define SiteExtensionDefines VNCExtDefines
+#define SiteExtensionDirs vnc
+
+#define VncUnixDir $(TOP)/..
+#define VncCommonDir VncUnixDir/../common
+#define VncExtLibs VncCommonDir/rfb/librfb.a \
+                   VncCommonDir/Xregion/libXregion.a \
+                   VncCommonDir/network/libnetwork.a \
+                   VncCommonDir/rdr/librdr.a
+
+#define SiteExtensionLibs vnc/LibraryTargetName(vnc) VncExtLibs
+
+#define	ServerTarget(server,subdirs,objects,libs,syslibs)		@@\
+CCLINK = $(CXXENVSETUP) $(CXX) @@\
+ServerTargetWithFlags(server,subdirs,objects,libs,syslibs,$(_NOOP_))

@@ -53,6 +53,10 @@ if (UNIX)
 	)
 endif()
 
+if (WIN32)
+	list(APPEND libs vnc_winvnc)
+endif()
+
 include_directories(${inc})
 add_executable(synergyc ${src})
 target_link_libraries(synergyc

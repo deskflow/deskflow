@@ -42,6 +42,10 @@ else()
   add_executable(synergyd ${src})
 endif()
 
+if (WIN32)
+	list(APPEND libs vnc_winvnc)
+endif()
+
 target_link_libraries(synergyd
 	arch base common io mt net platform synergy ${libs})
 

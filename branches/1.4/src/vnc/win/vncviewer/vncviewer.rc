@@ -1,0 +1,531 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.K.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON                ICON                    "vncviewer.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 4,1,3,0
+ PRODUCTVERSION 4,1,3,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080904b0"
+        BEGIN
+            VALUE "CompanyName", "RealVNC Ltd."
+            VALUE "FileDescription", "VNC Viewer Free Edition for Win32"
+            VALUE "FileVersion", "4.1.3"
+            VALUE "InternalName", "free4/vncviewer/win"
+            VALUE "LegalCopyright", "Copyright © RealVNC Ltd. 2002-2008"
+            VALUE "LegalTrademarks", "RealVNC"
+            VALUE "OriginalFilename", "vncviewer.exe"
+            VALUE "ProductName", "VNC Viewer Free Edition"
+            VALUE "ProductVersion", "4.1.3"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x809, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_VNC_AUTH_DLG DIALOG  0, 0, 241, 46
+STYLE DS_SETFONT | DS_SETFOREGROUND | DS_CENTER | WS_POPUP | WS_CAPTION
+CAPTION "VNC Viewer : Authentication"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_USERNAME,85,6,100,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PASSWORD,85,25,100,15,ES_PASSWORD | ES_AUTOHSCROLL | 
+                    ES_WANTRETURN
+    DEFPUSHBUTTON   "OK",IDOK,190,6,45,14
+    PUSHBUTTON      "Cancel",IDCANCEL,190,25,45,15
+    CONTROL         120,IDI_ICON,"Static",SS_BITMAP,7,6,21,20
+    LTEXT           "Username:",IDC_STATIC,45,6,35,14
+    LTEXT           "Password:",IDC_STATIC,45,25,35,15
+END
+
+IDD_CONNECTING_DLG DIALOG  0, 0, 185, 47
+STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_CENTER | WS_POPUP | 
+    WS_CAPTION
+CAPTION "VNC Viewer : Connecting"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,128,26,50,14
+    CTEXT           "Attempting to connect to host...",IDC_CONNECTING_TEXT,7,
+                    7,171,14,SS_CENTERIMAGE
+END
+
+IDD_CONNECTION_DLG DIALOG  0, 0, 224, 66
+STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "VNC Viewer : Connection Details"
+FONT 8, "MS Sans Serif"
+BEGIN
+    COMBOBOX        IDC_SERVER_EDIT,85,6,105,234,CBS_DROPDOWN | 
+                    CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "&About...",IDC_ABOUT,5,45,50,14
+    PUSHBUTTON      "&Options...",IDC_OPTIONS,60,45,50,14
+    DEFPUSHBUTTON   "OK",IDOK,115,45,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,170,45,48,14
+    CONTROL         120,IDI_ICON,"Static",SS_BITMAP | SS_REALSIZEIMAGE,5,6,
+                    20,20
+    RTEXT           "Server:",IDC_STATIC,43,6,37,13,SS_CENTERIMAGE
+    RTEXT           "Encryption:",IDC_STATIC,43,24,37,12,SS_CENTERIMAGE
+    COMBOBOX        IDC_SECURITY_LEVEL,85,24,105,76,CBS_DROPDOWNLIST | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_ABOUT DIALOG  0, 0, 249, 92
+STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "About VNC Viewer for Windows"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,195,70,47,15
+    CONTROL         120,IDC_STATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,7,
+                    10,33,31
+    LTEXT           ">appname<",IDC_DESCRIPTION,46,10,119,15
+    LTEXT           ">version<",IDC_VERSION,165,10,77,15
+    LTEXT           ">buildtime<",IDC_BUILDTIME,46,25,196,15
+    LTEXT           ">copyright<",IDC_COPYRIGHT,46,40,196,15
+    LTEXT           "See http://www.realvnc.com for more information on VNC.",
+                    IDC_STATIC,46,55,196,15
+END
+
+IDD_FORMAT DIALOG  0, 0, 201, 101
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTROL | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Colour && Encoding"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "&Auto select",IDC_ENCODING_AUTO,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,7,88,13
+    GROUPBOX        "Preferred encoding",IDC_STATIC,7,25,83,60
+    CONTROL         "ZRLE",IDC_ENCODING_ZRLE,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP,10,35,75,14
+    CONTROL         "Hextile",IDC_ENCODING_HEXTILE,"Button",
+                    BS_AUTORADIOBUTTON,10,49,75,16
+    CONTROL         "Raw",IDC_ENCODING_RAW,"Button",BS_AUTORADIOBUTTON,10,65,
+                    75,15
+    GROUPBOX        "Colour level",IDC_STATIC,95,10,99,75
+    CONTROL         "&Full (all available colours)",IDC_FORMAT_FULLCOLOUR,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP,100,20,90,15
+    CONTROL         "&Medium (256 colours)",IDC_FORMAT_MEDIUMCOLOUR,"Button",
+                    BS_AUTORADIOBUTTON,100,35,90,14
+    CONTROL         "&Low (64 colours)",IDC_FORMAT_LOWCOLOUR,"Button",
+                    BS_AUTORADIOBUTTON,100,49,90,16
+    CONTROL         "&Very low (8 colours)",IDC_FORMAT_VERYLOWCOLOUR,"Button",
+                    BS_AUTORADIOBUTTON,100,65,90,15
+END
+
+IDD_MISC DIALOG  0, 0, 213, 137
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTROL | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Misc"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Shared connection (do not disconnect other viewers)",
+                    IDC_CONN_SHARED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,
+                    10,199,15
+    CONTROL         "Full-screen mode",IDC_FULL_SCREEN,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,25,199,15
+    CONTROL         "Render cursor locally",IDC_LOCAL_CURSOR,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,40,199,15
+    CONTROL         "Allow dynamic desktop resizing",IDC_DESKTOP_RESIZE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,55,199,15
+    CONTROL         "Only use protocol version 3.3",IDC_PROTOCOL_3_3,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,70,199,15
+    CONTROL         "Beep when requested to by the server",IDC_ACCEPT_BELL,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,85,199,15
+    CONTROL         "Offer to automatically reconnect",IDC_AUTO_RECONNECT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,100,199,15
+END
+
+IDD_INPUTS DIALOG  0, 0, 186, 162
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTROL | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Inputs"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Send pointer events to server",IDC_SEND_POINTER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,10,172,15
+    CONTROL         "Send keyboard events to server",IDC_SEND_KEYS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,25,172,15
+    CONTROL         "Send clipboard changes to server",IDC_CLIENT_CUTTEXT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,40,172,15
+    CONTROL         "Accept clipboard changes from server",
+                    IDC_SERVER_CUTTEXT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    7,55,172,15
+    CONTROL         "Enable 3-button mouse emulation",IDC_EMULATE3,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,70,172,15
+    CONTROL         "Rate-limit mouse move events",IDC_POINTER_INTERVAL,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,86,172,14
+    LTEXT           "Menu key",IDC_STATIC,7,100,98,15,SS_CENTERIMAGE
+    COMBOBOX        IDC_MENU_KEY,105,100,74,105,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Pass special keys directly to server",
+                    IDC_DISABLE_WINKEYS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,115,172,15
+END
+
+IDD_CONNECTION_INFO DIALOG  0, 0, 239, 199
+STYLE DS_SETFONT | DS_MODALFRAME | DS_SETFOREGROUND | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "VNC Connection Info"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,182,178,50,14
+    LTEXT           "Desktop Name:",IDC_STATIC,7,10,73,15
+    LTEXT           "Host:",IDC_STATIC,7,25,73,15
+    LTEXT           "Size:",IDC_STATIC,7,40,73,15
+    LTEXT           "Pixel Format:",IDC_STATIC,7,55,73,15
+    LTEXT           "Server Default:",IDC_STATIC,7,70,73,15
+    LTEXT           "Line Speed Estimate:",IDC_STATIC,7,115,73,15
+    LTEXT           "Protocol Version:",IDC_STATIC,7,130,73,15
+    LTEXT           "",IDC_INFO_NAME,80,10,152,15
+    LTEXT           "",IDC_INFO_HOST,80,25,152,15
+    LTEXT           "",IDC_INFO_SIZE,80,40,152,15
+    LTEXT           "",IDC_INFO_PF,80,55,152,15
+    LTEXT           "",IDC_INFO_DEF_PF,80,70,152,15
+    LTEXT           "",IDC_INFO_LINESPEED,80,115,152,15
+    LTEXT           "",IDC_INFO_VERSION,80,130,152,15
+    LTEXT           "Security Method:",IDC_STATIC,7,145,73,15
+    LTEXT           "",IDC_INFO_SECURITY,80,145,152,15
+    LTEXT           "Requested Encoding:",IDC_STATIC,7,85,73,15
+    LTEXT           "Last Used Encoding:",IDC_STATIC,7,100,73,15
+    LTEXT           "",IDC_REQUESTED_ENCODING,80,86,152,15
+    LTEXT           "",IDC_LAST_ENCODING,80,100,152,15
+    LTEXT           "Static",IDC_INFO_ENCRYPTION,80,160,152,15
+    LTEXT           "Encryption:",IDC_STATIC,7,160,73,15
+END
+
+IDD_DEFAULTS DIALOG  0, 0, 217, 87
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CONTROL | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Load / Save"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "&Reload",IDC_LOAD_CONFIG,15,20,85,15
+    PUSHBUTTON      "&Save",IDC_SAVE_CONFIG,15,40,85,15
+    PUSHBUTTON      "Save &As ...",IDC_SAVE_CONFIG_AS,15,60,85,15
+    PUSHBUTTON      "R&eload",IDC_LOAD_DEFAULTS,120,20,85,15
+    PUSHBUTTON      "S&ave",IDC_SAVE_DEFAULTS,120,40,85,15
+    GROUPBOX        "Configuration File",IDC_STATIC,7,7,100,74
+    GROUPBOX        "Defaults",IDC_STATIC,113,7,97,53
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_VNC_AUTH_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 235
+        VERTGUIDE, 45
+        VERTGUIDE, 80
+        VERTGUIDE, 85
+        VERTGUIDE, 185
+        VERTGUIDE, 190
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 40
+        HORZGUIDE, 20
+        HORZGUIDE, 25
+        HORZGUIDE, 40
+    END
+
+    IDD_CONNECTING_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 178
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 40
+        HORZGUIDE, 21
+        HORZGUIDE, 26
+    END
+
+    IDD_CONNECTION_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 5
+        RIGHTMARGIN, 218
+        VERTGUIDE, 30
+        VERTGUIDE, 43
+        VERTGUIDE, 55
+        VERTGUIDE, 60
+        VERTGUIDE, 80
+        VERTGUIDE, 85
+        VERTGUIDE, 110
+        VERTGUIDE, 115
+        VERTGUIDE, 165
+        VERTGUIDE, 170
+        VERTGUIDE, 190
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 59
+        HORZGUIDE, 19
+        HORZGUIDE, 24
+        HORZGUIDE, 36
+        HORZGUIDE, 45
+    END
+
+    IDD_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 242
+        VERTGUIDE, 46
+        VERTGUIDE, 165
+        VERTGUIDE, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 85
+        HORZGUIDE, 10
+        HORZGUIDE, 25
+        HORZGUIDE, 40
+        HORZGUIDE, 55
+        HORZGUIDE, 70
+    END
+
+    IDD_FORMAT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 194
+        VERTGUIDE, 10
+        VERTGUIDE, 85
+        VERTGUIDE, 90
+        VERTGUIDE, 95
+        VERTGUIDE, 100
+        VERTGUIDE, 105
+        VERTGUIDE, 190
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 94
+        HORZGUIDE, 10
+        HORZGUIDE, 20
+        HORZGUIDE, 25
+        HORZGUIDE, 35
+        HORZGUIDE, 49
+        HORZGUIDE, 65
+        HORZGUIDE, 80
+        HORZGUIDE, 85
+    END
+
+    IDD_MISC, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 206
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 130
+        HORZGUIDE, 10
+        HORZGUIDE, 25
+        HORZGUIDE, 40
+        HORZGUIDE, 55
+        HORZGUIDE, 70
+        HORZGUIDE, 85
+        HORZGUIDE, 100
+        HORZGUIDE, 115
+    END
+
+    IDD_INPUTS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        VERTGUIDE, 105
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 155
+        HORZGUIDE, 10
+        HORZGUIDE, 25
+        HORZGUIDE, 40
+        HORZGUIDE, 55
+        HORZGUIDE, 70
+        HORZGUIDE, 85
+        HORZGUIDE, 100
+        HORZGUIDE, 115
+        HORZGUIDE, 130
+        HORZGUIDE, 145
+    END
+
+    IDD_CONNECTION_INFO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 232
+        VERTGUIDE, 80
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 192
+        HORZGUIDE, 10
+        HORZGUIDE, 25
+        HORZGUIDE, 40
+        HORZGUIDE, 55
+        HORZGUIDE, 70
+        HORZGUIDE, 85
+        HORZGUIDE, 100
+        HORZGUIDE, 115
+        HORZGUIDE, 130
+        HORZGUIDE, 145
+        HORZGUIDE, 160
+        HORZGUIDE, 175
+    END
+
+    IDD_DEFAULTS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 210
+        VERTGUIDE, 15
+        VERTGUIDE, 100
+        VERTGUIDE, 107
+        VERTGUIDE, 113
+        VERTGUIDE, 120
+        VERTGUIDE, 205
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 80
+        HORZGUIDE, 20
+        HORZGUIDE, 35
+        HORZGUIDE, 40
+        HORZGUIDE, 55
+        HORZGUIDE, 60
+        HORZGUIDE, 75
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_DOT_CURSOR          CURSOR                  "cursor1.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_CONNECTION_DLG DLGINIT
+BEGIN
+    IDC_SERVER_EDIT, 0x403, 16, 0
+0x796d, 0x616d, 0x6863, 0x6e69, 0x2e65, 0x726f, 0x3a67, 0x0031, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_TRAY MENU 
+BEGIN
+    POPUP "Tray Menu"
+    BEGIN
+        MENUITEM "&New Connection...",          ID_NEW_CONNECTION
+        MENUITEM SEPARATOR
+        MENUITEM "Default &Options...",         ID_OPTIONS
+        MENUITEM SEPARATOR
+        MENUITEM "&Close Daemon",               ID_CLOSE
+        MENUITEM "&About...",                   ID_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+IDR_MANIFEST            RT_MANIFEST             "vncviewer.exe.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP              BITMAP                  "vncviewer.bmp"
+#endif    // English (U.K.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

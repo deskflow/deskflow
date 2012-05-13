@@ -107,6 +107,12 @@ set(inc
 	../synergy
 )
 
+if (WIN32)
+	list(APPEND inc
+		../../vnc/win/winvnc
+	)
+endif()
+
 if (UNIX)
 	list(APPEND inc
 		../../..

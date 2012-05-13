@@ -1,0 +1,5 @@
+LIBRARY      "wm_hooks"
+DESCRIPTION  'Window Message Hooks Dynamic Link Library'
+
+SECTIONS
+	.WM_Hooks_Shared read write shared
