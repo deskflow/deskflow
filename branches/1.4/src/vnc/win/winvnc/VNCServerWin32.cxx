@@ -150,7 +150,7 @@ int VNCServerWin32::run() {
   }
 
   // - Create the tray icon (if possible)
-  trayIcon = new STrayIconThread(*this, IDI_ICON, IDI_CONNECTED, IDR_TRAY);
+  //trayIcon = new STrayIconThread(*this, IDI_ICON, IDI_CONNECTED, IDR_TRAY);
 
   // - Register for notification of configuration changes
   config.setCallback(this);
