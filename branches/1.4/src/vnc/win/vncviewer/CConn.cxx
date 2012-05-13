@@ -16,8 +16,8 @@
  * USA.
  */
 
+#include <winsock2.h>
 #include <windows.h>
-//#include <winsock2.h>
 #include <vncviewer/UserPasswdDialog.h>
 #include <vncviewer/CConn.h>
 #include <vncviewer/CConnThread.h>
@@ -111,9 +111,13 @@ CConn::applyOptions(CConnOptions& opt) {
                      (options.preferredEncoding != opt.preferredEncoding));
 
   // - If the preferred pixel format has changed then notify the server
-  formatChange |= (options.fullColour != opt.fullColour);
+  /*formatChange |= (options.fullColour != opt.fullColour);
   if (!opt.fullColour)
-    formatChange |= (options.lowColourLevel != opt.lowColourLevel);
+    formatChange |= (options.lowColourLevel != opt.lowColourLevel);*/
+
+  // HACK: force full colour to work with mac os x
+  options.fullColour = true;
+  formatChange = true;
 
   // - Save the new set of options
   options = opt;

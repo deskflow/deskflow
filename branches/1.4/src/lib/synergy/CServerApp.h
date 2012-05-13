@@ -123,6 +123,10 @@ public:
 
 private:
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+	void vncThread(void*);
+
+private:
+	CThread* m_vncThread;
 };
 
 // configuration file name

@@ -110,6 +110,7 @@ set(inc
 if (WIN32)
 	list(APPEND inc
 		../../vnc/win/winvnc
+		../../vnc/win/vncviewer
 	)
 endif()
 

@@ -43,7 +43,7 @@ else()
 endif()
 
 if (WIN32)
-	list(APPEND libs vnc_winvnc)
+	list(APPEND libs vnc_server vnc_client)
 endif()
 
 target_link_libraries(synergyd

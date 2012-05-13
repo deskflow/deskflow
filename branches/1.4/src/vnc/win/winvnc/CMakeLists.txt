@@ -50,6 +50,6 @@ set(inc
 )
 
 include_directories(${inc})
-add_library(vnc_winvnc STATIC ${src})
-target_link_libraries(vnc_winvnc
+add_library(vnc_server STATIC ${src})
+target_link_libraries(vnc_server
 	vnc_rfb vnc_rfb_win32 vnc_network)

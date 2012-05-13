@@ -55,8 +55,8 @@ bool CSecurityVncAuth::processMsg(CConnection* cc)
   // Read the challenge & obtain the user's password
   rdr::U8 challenge[vncAuthChallengeSize];
   is->readBytes(challenge, vncAuthChallengeSize);
-  PlainPasswd passwd;
-  upg->getUserPasswd(0, &passwd.buf);
+  PlainPasswd passwd(strDup("test"));
+  //upg->getUserPasswd(0, &passwd.buf);
 
   // Calculate the correct response
   rdr::U8 key[8];

@@ -75,8 +75,8 @@ void UserPasswdDialog::getUserPasswd(char** user, char** passwd) {
   if (passwd && *passwd)
     password.replaceBuf(tstrDup(*passwd));
 
-  if (!showDialog())
-    throw rfb::AuthCancelledException();
+  //if (!showDialog())
+    //throw rfb::AuthCancelledException();
 
   if (user)
     *user = strDup(username.buf);

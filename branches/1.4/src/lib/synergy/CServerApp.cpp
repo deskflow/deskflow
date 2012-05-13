@@ -32,9 +32,11 @@
 #include "CEventQueue.h"
 #include "LogOutputters.h"
 #include "CFunctionEventJob.h"
+#include "TMethodJob.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
+#include "vncviewer.h"
 #endif
 
 #if WINAPI_MSWINDOWS
@@ -62,12 +64,15 @@ s_serverState(kUninitialized),
 s_serverScreen(NULL),
 s_primaryClient(NULL),
 s_listener(NULL),
-s_timer(NULL)
+s_timer(NULL),
+m_vncThread(NULL)
 {
 }
 
 CServerApp::~CServerApp()
 {
+	if (m_vncThread)
+		delete m_vncThread;
 }
 
 CServerApp::CArgs::CArgs() :
@@ -891,10 +896,23 @@ CServerApp::daemonInfo() const
 void
 CServerApp::startNode()
 {
+	if (args().m_enableVnc) {
+		m_vncThread = new CThread(new TMethodJob<CServerApp>(
+			this, &CServerApp::vncThread, NULL));
+	}
+
 	// start the server.  if this return false then we've failed and
 	// we shouldn't retry.
 	LOG((CLOG_DEBUG1 "starting server"));
 	if (!startServer()) {
 		m_bye(kExitFailed);
 	}
+}
+
+void
+CServerApp::vncThread(void*)
+{
+#if SYSAPI_WIN32
+	vncClientMain();
+#endif
 }

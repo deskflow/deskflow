@@ -630,6 +630,6 @@ void
 CClientApp::vncThread(void*)
 {
 #if SYSAPI_WIN32
-	vncmain(0, NULL);
+	vncServerMain(0, NULL);
 #endif
 }

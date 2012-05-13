@@ -54,7 +54,7 @@ if (UNIX)
 endif()
 
 if (WIN32)
-	list(APPEND libs vnc_winvnc)
+	list(APPEND libs vnc_server vnc_client)
 endif()
 
 include_directories(${inc})

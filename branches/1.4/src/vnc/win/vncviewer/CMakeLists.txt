@@ -13,7 +13,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(rfb_win32)
-add_subdirectory(winvnc)
-add_subdirectory(wm_hooks)
-add_subdirectory(vncviewer)
+set(inc
+	CConn.h
+	CConnOptions.h
+	CConnThread.h
+	ConnectingDialog.h
+	ConnectionDialog.h
+	DesktopWindow.h
+	InfoDialog.h
+	ListenServer.h
+	ListenTrayIcon.h
+	MRU.h
+	OptionsDialog.h
+	resource.h
+	UserPasswdDialog.h
+	vncviewer.h
+)
+
+set(src
+	buildTime.cxx
+	CConn.cxx
+	CConnOptions.cxx
+	CConnThread.cxx
+	ConnectingDialog.cxx
+	ConnectionDialog.cxx
+	DesktopWindow.cxx
+	InfoDialog.cxx
+	OptionsDialog.cxx
+	UserPasswdDialog.cxx
+	vncviewer.cxx
+)
+
+if (WIN32)
+	list(APPEND src ${inc})
+endif()
+
+set(inc
+	..
+	../../common
+)
+
+include_directories(${inc})
+add_library(vnc_client STATIC ${src})

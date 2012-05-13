@@ -105,10 +105,11 @@ void CConnThread::run() {
           if (!options.host.buf) {
             // No host was specified - prompt for one
             ConnectionDialog connDlg(&conn);
-            if (!connDlg.showDialog())
+            /*if (!connDlg.showDialog())
               return;
             options = conn.getOptions();
-            options.setHost(CStr(connDlg.hostname.buf));
+            options.setHost(CStr(connDlg.hostname.buf));*/
+			options.setHost(_T("192.168.0.12"));
           }
         } catch (rdr::Exception& e) {
           MsgBox(0, TStr(e.str()), MB_ICONERROR | MB_OK);

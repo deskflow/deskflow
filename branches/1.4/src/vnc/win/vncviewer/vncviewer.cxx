@@ -176,23 +176,24 @@ processParams(int argc, char* argv[]) {
 // -=- main
 //
 
-int WINAPI WinMain(HINSTANCE inst, HINSTANCE prevInst, char* cmdLine, int cmdShow) {
-  try {
+//int WINAPI WinMain(HINSTANCE inst, HINSTANCE prevInst, char* cmdLine, int cmdShow) {
+int vncClientMain() {
+  //try {
 
     // - Initialise the available loggers
     initStdIOLoggers();
-    initFileLogger("C:\\temp\\vncviewer4.log");
+    //initFileLogger("C:\\temp\\vncviewer4.log");
 
     // - By default, just log errors to stderr
     logParams.setDefault("*:stderr:0");
 
     // - Process the command-line
-    int argc = __argc;
+    /*int argc = __argc;
     char** argv = __argv;
-    processParams(argc, argv);
+    processParams(argc, argv);*/
 
     // - By default the console will be closed
-    if (close_console) {
+    /*if (close_console) {
       if (!FreeConsole())
         vlog.info("unable to close console:%u", GetLastError());
     } else {
@@ -201,7 +202,7 @@ int WINAPI WinMain(HINSTANCE inst, HINSTANCE prevInst, char* cmdLine, int cmdSho
       freopen("CONOUT$","wb",stdout);
       freopen("CONOUT$","wb",stderr);
       setbuf(stderr, 0);
-    }
+    }*/
 
 #ifdef _DIALOG_CAPTURE
     if (captureDialogs) {
@@ -215,7 +216,7 @@ int WINAPI WinMain(HINSTANCE inst, HINSTANCE prevInst, char* cmdLine, int cmdSho
     if (configFiles.empty() && hosts.empty() && !acceptIncoming && !print_usage)
       hosts.push_back(0);
 
-    programInfo();
+    //programInfo();
 
     // - Connect to the clients
     if (!configFiles.empty() || !hosts.empty() || acceptIncoming) {
@@ -287,9 +288,9 @@ int WINAPI WinMain(HINSTANCE inst, HINSTANCE prevInst, char* cmdLine, int cmdSho
       char c = getchar();
     }
 
-  } catch (rdr::Exception& e) {
-    MsgBox(0, TStr(e.str()), MB_ICONSTOP | MB_OK);
-  }
+  //} catch (rdr::Exception& e) {
+    //MsgBox(0, TStr(e.str()), MB_ICONSTOP | MB_OK);
+  //}
 
   return 0;
 }

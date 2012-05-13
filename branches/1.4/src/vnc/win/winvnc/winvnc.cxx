@@ -218,7 +218,7 @@ static void processParams(int argc, const char* argv[]) {
 // -=- main
 //
 
-int vncmain(int argc, const char* argv[]) {
+int vncServerMain(int argc, const char* argv[]) {
   int result = 0;
 
   try {
