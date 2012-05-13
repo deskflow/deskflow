@@ -613,12 +613,10 @@ CClientApp::runInner(int argc, char** argv, ILogOutputter* outputter, StartupFun
 void 
 CClientApp::startNode()
 {
-#if SYSAPI_WIN32
 	if (args().m_enableVnc) {
 		m_vncThread = new CThread(new TMethodJob<CClientApp>(
 			this, &CClientApp::vncThread, NULL));
 	}
-#endif
 
 	// start the client.  if this return false then we've failed and
 	// we shouldn't retry.
@@ -631,5 +629,7 @@ CClientApp::startNode()
 void
 CClientApp::vncThread(void*)
 {
+#if SYSAPI_WIN32
 	vncmain(0, NULL);
+#endif
 }

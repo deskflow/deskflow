@@ -21,4 +21,7 @@ add_subdirectory(lib)
 add_subdirectory(cmd)
 add_subdirectory(test)
 add_subdirectory(plugin)
-add_subdirectory(vnc)
+
+if (!APPLE)
+	add_subdirectory(vnc)
+endif()

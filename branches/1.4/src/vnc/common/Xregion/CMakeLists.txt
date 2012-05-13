@@ -15,6 +15,7 @@
 
 set(inc
 	region.h
+
 	Xregion.h
 )
 
@@ -25,6 +26,11 @@ set(src
 if (WIN32)
 	list(APPEND src ${inc})
 endif()
+
+set(inc
+	..
+	../../win
+)
 
 include_directories(${inc})
 add_library(vnc_Xregion STATIC ${src})

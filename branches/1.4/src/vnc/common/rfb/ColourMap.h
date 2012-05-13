@@ -21,6 +21,7 @@ namespace rfb {
   struct Colour {
     Colour() : r(0), g(0), b(0) {}
     Colour(int r_, int g_, int b_) : r(r_), g(g_), b(b_) {}
+    virtual ~Colour() {}
     int r, g, b;
     bool operator==(const Colour& c) const {return c.r == r && c.g == g && c.b == b;}
     bool operator!=(const Colour& c) const {return !(c == *this);}
@@ -28,6 +29,7 @@ namespace rfb {
 
   class ColourMap {
   public:
+	virtual ~ColourMap() {}
     virtual void lookup(int index, int* r, int* g, int* b)=0;
   };
 }

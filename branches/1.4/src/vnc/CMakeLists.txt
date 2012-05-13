@@ -17,4 +17,6 @@ add_subdirectory(common)
 
 if (WIN32)
 	add_subdirectory(win)
+elseif (UNIX)
+	add_subdirectory(unix)
 endif()
