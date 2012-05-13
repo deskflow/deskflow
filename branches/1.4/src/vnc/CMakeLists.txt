@@ -13,10 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(common)
 
 if (WIN32)
+add_subdirectory(common)
 	add_subdirectory(win)
 elseif (UNIX)
-	add_subdirectory(unix)
+	#add_subdirectory(unix)
 endif()
+
