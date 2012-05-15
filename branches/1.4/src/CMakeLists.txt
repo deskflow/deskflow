@@ -22,6 +22,10 @@ add_subdirectory(cmd)
 add_subdirectory(test)
 add_subdirectory(plugin)
 
-if (NOT APPLE)
-	add_subdirectory(vnc)
+# right now vnc only compiles on 32-bit windows :|
+if (WIN32)
+if (CMAKE_GENERATOR MATCHES "Win64")
+else()
+add_subdirectory(vnc)
+endif()
 endif()
