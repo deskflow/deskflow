@@ -15,4 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-int vncClientMain();
+class CVncClient;
+
+int vncClientMain(CVncClient* synergyClient);

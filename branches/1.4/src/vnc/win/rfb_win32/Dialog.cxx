@@ -55,8 +55,6 @@ Dialog::~Dialog()
 
 bool Dialog::showDialog(const TCHAR* resource, HWND owner)
 {
-  return false;
-
   if (alreadyShowing) return false;
   handle = 0;
   alreadyShowing = true;

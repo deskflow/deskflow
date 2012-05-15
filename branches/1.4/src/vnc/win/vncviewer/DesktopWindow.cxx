@@ -124,7 +124,8 @@ DesktopWindow::DesktopWindow(Callback* cb)
 
   // Create the window
   const char* name = "DesktopWindow";
-  handle = CreateWindow((const TCHAR*)baseClass.classAtom, TStr(name), WS_OVERLAPPEDWINDOW,
+  handle = CreateWindow((const TCHAR*)baseClass.classAtom, TStr(name),
+	WS_VISIBLE | WS_POPUP |	WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
     0, 0, 10, 10, 0, 0, baseClass.instance, this);
   if (!handle)
     throw rdr::SystemException("unable to create WMNotifier window instance", GetLastError());
@@ -147,7 +148,7 @@ DesktopWindow::DesktopWindow(Callback* cb)
 
   // Show the window
   centerWindow(handle, 0);
-  ShowWindow(handle, SW_SHOW);
+  ShowWindow(handle, SW_HIDE);
 }
 
 DesktopWindow::~DesktopWindow() {

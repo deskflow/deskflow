@@ -47,6 +47,7 @@ CEvent::Type			CServer::s_switchToScreen     = CEvent::kUnknown;
 CEvent::Type			CServer::s_switchInDirection  = CEvent::kUnknown;
 CEvent::Type			CServer::s_keyboardBroadcast  = CEvent::kUnknown;
 CEvent::Type			CServer::s_lockCursorToScreen = CEvent::kUnknown;
+CEvent::Type			CServer::s_screenSwitched     = CEvent::kUnknown;
 
 CServer::CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* screen) :
 	m_primaryClient(primaryClient),
@@ -422,6 +423,13 @@ CServer::getLockCursorToScreenEvent()
 							"CServer::lockCursorToScreen");
 }
 
+CEvent::Type
+CServer::getScreenSwitchedEvent()
+{
+	return EVENTQUEUE->registerTypeOnce(s_screenSwitched,
+							"CServer::screenSwitched");
+}
+
 CString
 CServer::getName(const CBaseClientProxy* client) const
 {
@@ -554,6 +562,10 @@ CServer::switchScreen(CBaseClientProxy* dst,
 		for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
 			m_active->setClipboard(id, &m_clipboards[id].m_clipboard);
 		}
+
+		CServer::CSwitchToScreenInfo* info =
+			CServer::CSwitchToScreenInfo::alloc(m_active->getName());
+		EVENTQUEUE->addEvent(CEvent(CServer::getScreenSwitchedEvent(), this, info));
 	}
 	else {
 		m_active->mouseMove(x, y);

@@ -78,7 +78,13 @@ namespace rfb {
       const PixelFormat& getServerDefaultPF() const { return serverDefaultPF; }
 
       // Global user-config registry key
-      static RegKey userConfigKey;
+	  static RegKey userConfigKey;
+
+	  // shows the desktop window
+	  void showViewer();
+
+	  // hides the desktop window
+	  void hideViewer();
 
     protected:
       // InputHandler interface (via DesktopWindow::Callback)

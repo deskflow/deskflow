@@ -111,13 +111,9 @@ CConn::applyOptions(CConnOptions& opt) {
                      (options.preferredEncoding != opt.preferredEncoding));
 
   // - If the preferred pixel format has changed then notify the server
-  /*formatChange |= (options.fullColour != opt.fullColour);
+  formatChange |= (options.fullColour != opt.fullColour);
   if (!opt.fullColour)
-    formatChange |= (options.lowColourLevel != opt.lowColourLevel);*/
-
-  // HACK: force full colour to work with mac os x
-  options.fullColour = true;
-  formatChange = true;
+    formatChange |= (options.lowColourLevel != opt.lowColourLevel);
 
   // - Save the new set of options
   options = opt;
@@ -623,3 +619,12 @@ void CConn::getUserPasswd(char** user, char** password) {
   if (password) options.setPassword(*password);
 }
 
+void CConn::showViewer()
+{
+	ShowWindow(window->getHandle(), SW_SHOW);
+}
+
+void CConn::hideViewer()
+{
+	ShowWindow(window->getHandle(), SW_HIDE);
+}

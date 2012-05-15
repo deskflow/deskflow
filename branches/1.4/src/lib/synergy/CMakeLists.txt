@@ -47,6 +47,7 @@ set(inc
 	CArgsBase.h
 	IAppUtil.h
 	CEventGameDevice.h
+	CVncClient.h
 )
 
 set(src
@@ -75,6 +76,7 @@ set(src
 	CAppUtil.cpp
 	CArgsBase.cpp
 	CEventGameDevice.cpp
+	CVncClient.cpp
 )
 
 if (WIN32)
@@ -105,18 +107,17 @@ set(inc
 	../platform
 	../server
 	../synergy
+	../..
+	../../vnc/common
 )
-
-if (WIN32)
-	list(APPEND inc
-		../../vnc/win/winvnc
-		../../vnc/win/vncviewer
-	)
-endif()
 
 if (UNIX)
 	list(APPEND inc
 		../../..
+	)
+elseif (WIN32)
+	list(APPEND inc
+		../../vnc/win
 	)
 endif()
 

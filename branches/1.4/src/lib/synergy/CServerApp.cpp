@@ -33,10 +33,10 @@
 #include "LogOutputters.h"
 #include "CFunctionEventJob.h"
 #include "TMethodJob.h"
+#include "CVncClient.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
-#include "vncviewer.h"
 #endif
 
 #if WINAPI_MSWINDOWS
@@ -65,14 +65,12 @@ s_serverScreen(NULL),
 s_primaryClient(NULL),
 s_listener(NULL),
 s_timer(NULL),
-m_vncThread(NULL)
+m_vncClient(NULL)
 {
 }
 
 CServerApp::~CServerApp()
 {
-	if (m_vncThread)
-		delete m_vncThread;
 }
 
 CServerApp::CArgs::CArgs() :
@@ -325,6 +323,13 @@ CServerApp::handleClientConnected(const CEvent&, void* vlistener)
 	if (client != NULL) {
 		s_server->adoptClient(client);
 		updateStatus();
+
+		if (args().m_enableVnc) {
+			// TODO: figure out client IP address from name.
+			CVncClient* vncClient = new CVncClient("192.168.0.13", client->getName());
+			vncClient->start();
+			m_vncClients.insert(std::pair<CString, CVncClient*>(client->getName(), vncClient));
+		}
 	}
 }
 
@@ -709,6 +714,10 @@ CServerApp::openServer(const CConfig& config, CPrimaryClient* primaryClient)
 			CServer::getDisconnectedEvent(), server,
 			new TMethodEventJob<CServerApp>(this, &CServerApp::handleNoClients));
 
+		EVENTQUEUE->adoptHandler(
+			CServer::getScreenSwitchedEvent(), server,
+			new TMethodEventJob<CServerApp>(this, &CServerApp::handleScreenSwitched));
+
 	} catch (std::bad_alloc &ba) {
 		delete server;
 		throw ba;
@@ -717,12 +726,37 @@ CServerApp::openServer(const CConfig& config, CPrimaryClient* primaryClient)
 	return server;
 }
 
-void CServerApp::handleNoClients( const CEvent&, void* )
+void
+CServerApp::handleNoClients(const CEvent&, void*)
 {
 	updateStatus();
 }
 
-int CServerApp::mainLoop()
+void
+CServerApp::handleScreenSwitched(const CEvent& e, void*)
+{
+	if (!args().m_enableVnc)
+		return;
+
+	if (m_vncClient != NULL) {
+		LOG((CLOG_DEBUG "hiding vnc viewer for: %s", m_vncClient->m_screen.c_str()));
+		m_vncClient->hideViewer();
+	}
+
+	CServer::CSwitchToScreenInfo* info = reinterpret_cast<CServer::CSwitchToScreenInfo*>(e.getData());
+	std::map<CString, CVncClient*>::iterator it = m_vncClients.find(info->m_screen);
+	if (it == m_vncClients.end()) {
+		LOG((CLOG_DEBUG "could not find vnc client for: %s", info->m_screen));
+		return;
+	}
+
+	LOG((CLOG_DEBUG "showing vnc viewer for: %s", info->m_screen));
+	m_vncClient = it->second;
+	m_vncClient->showViewer();
+}
+
+int
+CServerApp::mainLoop()
 {
 	// create socket multiplexer.  this must happen after daemonization
 	// on unix because threads evaporate across a fork().
@@ -896,23 +930,10 @@ CServerApp::daemonInfo() const
 void
 CServerApp::startNode()
 {
-	if (args().m_enableVnc) {
-		m_vncThread = new CThread(new TMethodJob<CServerApp>(
-			this, &CServerApp::vncThread, NULL));
-	}
-
 	// start the server.  if this return false then we've failed and
 	// we shouldn't retry.
 	LOG((CLOG_DEBUG1 "starting server"));
 	if (!startServer()) {
 		m_bye(kExitFailed);
 	}
-}
-
-void
-CServerApp::vncThread(void*)
-{
-#if SYSAPI_WIN32
-	vncClientMain();
-#endif
 }

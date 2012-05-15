@@ -39,7 +39,7 @@
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
-#include "winvnc.h"
+#include "vnc/win/winvnc/winvnc.h"
 #endif
 
 #if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT

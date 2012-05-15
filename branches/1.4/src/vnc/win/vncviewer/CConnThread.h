@@ -31,6 +31,8 @@ namespace rfb {
 
   namespace win32 {
 
+    class CConn;
+
     class CConnThread : public Thread {
     public:
       CConnThread();
@@ -43,6 +45,10 @@ namespace rfb {
       // Special getMessage call that returns FALSE if message is WM_QUIT,
       // OR if there are no more CConnThreads running.
       static BOOL getMessage(MSG* msg, HWND hwnd, UINT minMsg, UINT maxMsg);
+
+      // expose conn for synergy
+      rfb::win32::CConn* connRef;
+
     protected:
       CharArray hostOrConfig;
       bool isConfig;

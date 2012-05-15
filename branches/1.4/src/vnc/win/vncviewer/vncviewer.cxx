@@ -37,6 +37,7 @@
 #include <rfb/Exception.h>
 #include <rfb_win32/RegConfig.h>
 #include <rfb_win32/MsgBox.h>
+#include "CVncClient.h"
 
 #ifdef _DIALOG_CAPTURE
 #include <extra/LoadBMP.h>
@@ -177,15 +178,15 @@ processParams(int argc, char* argv[]) {
 //
 
 //int WINAPI WinMain(HINSTANCE inst, HINSTANCE prevInst, char* cmdLine, int cmdShow) {
-int vncClientMain() {
+int vncClientMain(CVncClient* synergyClient) {
   //try {
 
     // - Initialise the available loggers
-    initStdIOLoggers();
+    //initStdIOLoggers();
     //initFileLogger("C:\\temp\\vncviewer4.log");
 
     // - By default, just log errors to stderr
-    logParams.setDefault("*:stderr:0");
+    //logParams.setDefault("*:stderr:0");
 
     // - Process the command-line
     /*int argc = __argc;
@@ -203,7 +204,7 @@ int vncClientMain() {
       freopen("CONOUT$","wb",stderr);
       setbuf(stderr, 0);
     }*/
-
+/*
 #ifdef _DIALOG_CAPTURE
     if (captureDialogs) {
       CConn::userConfigKey.openKey(HKEY_CURRENT_USER, _T("Software\\RealVNC\\VNCViewer4"));
@@ -211,23 +212,23 @@ int vncClientMain() {
       return 0;
     }
 #endif
-
+	*/
     // - If no clients are specified, bring up a connection dialog
-    if (configFiles.empty() && hosts.empty() && !acceptIncoming && !print_usage)
-      hosts.push_back(0);
+    //if (configFiles.empty() && hosts.empty() && !acceptIncoming && !print_usage)
+      //hosts.push_back(0);
 
     //programInfo();
 
     // - Connect to the clients
-    if (!configFiles.empty() || !hosts.empty() || acceptIncoming) {
+    //if (!configFiles.empty() || !hosts.empty() || acceptIncoming) {
       // - Configure the registry configuration reader
-      win32::RegConfigThread config;
-      config.start(HKEY_CURRENT_USER, _T("Software\\RealVNC\\VNCViewer4"));
+      //win32::RegConfigThread config;
+      //config.start(HKEY_CURRENT_USER, _T("Software\\RealVNC\\VNCViewer4"));
 
       // - Tell the rest of VNC Viewer where to write config data to
-      CConn::userConfigKey.createKey(HKEY_CURRENT_USER, _T("Software\\RealVNC\\VNCViewer4"));
+      //CConn::userConfigKey.createKey(HKEY_CURRENT_USER, _T("Software\\RealVNC\\VNCViewer4"));
 
-      if (acceptIncoming) {
+      /*if (acceptIncoming) {
         int port = 5500;
 
         // Listening viewer
@@ -250,9 +251,9 @@ int vncClientMain() {
           TranslateMessage(&msg);
           DispatchMessage(&msg);
         }
-      } else {
+      } else {*/
         // Read each config file in turn
-        while (!configFiles.empty()) {
+       /* while (!configFiles.empty()) {
           char* filename = configFiles.front();
           Thread* connThread = new CConnThread(filename, true);
           strFree(filename);
@@ -265,7 +266,10 @@ int vncClientMain() {
           Thread* connThread = new CConnThread(hostinfo);
           strFree(hostinfo);
           hosts.pop_front();
-        }
+        }*/
+
+        CConnThread* connThread = new CConnThread(synergyClient->m_hostInfo);
+		synergyClient->m_connThread = connThread;
 
         // Run the view manager
         MSG msg;
@@ -275,18 +279,18 @@ int vncClientMain() {
         }
 
         vlog.debug("quitting viewer");
-      }
+      //}
 
-    }
+    //}
 
-    // - If necessary, print the program's usage info
+    /*// - If necessary, print the program's usage info
     if (print_usage)
       programUsage();
 
     if (!close_console) {
       printf("Press Enter/Return key to continue\n");
       char c = getchar();
-    }
+    }*/
 
   //} catch (rdr::Exception& e) {
     //MsgBox(0, TStr(e.str()), MB_ICONSTOP | MB_OK);

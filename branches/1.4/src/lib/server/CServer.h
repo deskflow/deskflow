@@ -206,6 +206,13 @@ public:
 	*/
 	static CEvent::Type	getLockCursorToScreenEvent();
 
+	//! Get screen switched event type
+	/*!
+	Returns the screen switched event type.  This is raised when the
+	screen has been switched to a client.
+	*/
+	static CEvent::Type	getScreenSwitchedEvent();
+
 	//@}
 
 private:
@@ -485,6 +492,7 @@ private:
 	static CEvent::Type	s_switchInDirection;
 	static CEvent::Type s_keyboardBroadcast;
 	static CEvent::Type s_lockCursorToScreen;
+	static CEvent::Type s_screenSwitched;
 };
 
 #endif

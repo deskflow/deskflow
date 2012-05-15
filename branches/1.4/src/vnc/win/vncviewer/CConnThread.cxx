@@ -33,6 +33,7 @@
 #include <vncviewer/ConnectingDialog.h>
 #include <vncviewer/UserPasswdDialog.h>
 #include <set>
+#include <vncviewer/CConn.h>
 
 using namespace rfb;
 using namespace win32;
@@ -45,7 +46,7 @@ static Handle noMoreThreads(CreateEvent(0, TRUE, FALSE, 0));
 
 
 CConnThread::CConnThread() : Thread("CConnThread"), isConfig(false),
-                             sock(0), reverse(false) {
+                             sock(0), reverse(false), connRef(NULL) {
   vlog.info("CConnThread (dialog)");
   setDeleteAfterRun();
   Lock l(threadsLock);
@@ -55,7 +56,7 @@ CConnThread::CConnThread() : Thread("CConnThread"), isConfig(false),
 
 CConnThread::CConnThread(const char* hostOrConfig_, bool isConfig_)
  : Thread("CConnThread"), hostOrConfig(strDup(hostOrConfig_)),
-   isConfig(isConfig_), sock(0), reverse(false) {
+   isConfig(isConfig_), sock(0), reverse(false), connRef(NULL) {
   vlog.info("CConnThread (host/port)");
   setDeleteAfterRun();
   Lock l(threadsLock);
@@ -64,7 +65,7 @@ CConnThread::CConnThread(const char* hostOrConfig_, bool isConfig_)
 }
 
 CConnThread::CConnThread(network::Socket* sock_, bool reverse_)
- : Thread("CConnThread"), isConfig(false), sock(sock_), reverse(reverse_) {
+ : Thread("CConnThread"), isConfig(false), sock(sock_), reverse(reverse_), connRef(NULL) {
   vlog.info("CConnThread (reverse connection)");
   setDeleteAfterRun();
   Lock l(threadsLock);
@@ -88,6 +89,7 @@ void CConnThread::run() {
   do {
     {
       CConn conn;
+      connRef = &conn;
       reconnect = false;
 
       // If there is no socket object then set the host & port info
@@ -104,15 +106,19 @@ void CConnThread::run() {
 
           if (!options.host.buf) {
             // No host was specified - prompt for one
-            ConnectionDialog connDlg(&conn);
+            //ConnectionDialog connDlg(&conn);
             /*if (!connDlg.showDialog())
               return;
             options = conn.getOptions();
             options.setHost(CStr(connDlg.hostname.buf));*/
-			options.setHost(_T("192.168.0.12"));
+
+			// HACK: i think there's some memory corruption here. this line never gets
+			// called, but without it, the window handle never gets created. very strange.
+            options.setHost(_T("foobar"));
           }
         } catch (rdr::Exception& e) {
           MsgBox(0, TStr(e.str()), MB_ICONERROR | MB_OK);
+          connRef = NULL;
           return;
         }
       }
@@ -133,6 +139,7 @@ void CConnThread::run() {
             return;
         } catch(rdr::Exception& e) {
           MsgBox(NULL, TStr(e.str()), MB_ICONERROR | MB_OK);
+          connRef = NULL;
           return;
         }
 
@@ -180,6 +187,8 @@ void CConnThread::run() {
         }
       }
     } // Exit the CConn's scope, implicitly destroying it & making it safe to delete the TcpSocket
+
+    connRef = NULL;
 
     // Clean up the old socket, if any
     delete sock; sock = 0;

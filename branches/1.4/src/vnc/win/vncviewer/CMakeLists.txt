@@ -51,6 +51,7 @@ endif()
 set(inc
 	..
 	../../common
+	../../../lib/synergy
 )
 
 include_directories(${inc})
