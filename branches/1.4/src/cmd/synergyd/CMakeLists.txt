@@ -42,7 +42,7 @@ else()
   add_executable(synergyd ${src})
 endif()
 
-if (WIN32)
+if (WIN32 AND NOT CMAKE_GENERATOR MATCHES "Win64")
 	list(APPEND libs vnc_server vnc_client)
 endif()
 

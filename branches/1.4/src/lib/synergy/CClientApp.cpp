@@ -39,7 +39,9 @@
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
+#if !defined(_AMD64_)
 #include "vnc/win/winvnc/winvnc.h"
+#endif
 #endif
 
 #if SYSAPI_WIN32 && GAME_DEVICE_SUPPORT
@@ -629,7 +631,7 @@ CClientApp::startNode()
 void
 CClientApp::vncThread(void*)
 {
-#if SYSAPI_WIN32
+#if SYSAPI_WIN32 && !defined(_WIN64)
 	vncServerMain(0, NULL);
 #endif
 }

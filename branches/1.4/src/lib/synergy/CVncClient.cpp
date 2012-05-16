@@ -19,7 +19,7 @@
 #include "CThread.h"
 #include "TMethodJob.h"
 
-#if SYSAPI_WIN32
+#if SYSAPI_WIN32 && !defined(_WIN64)
 #include "vnc/win/vncviewer/vncviewer.h"
 #include "vnc/win/vncviewer/CConn.h"
 #include "vnc/win/vncviewer/CConnThread.h"
@@ -42,7 +42,7 @@ CVncClient::~CVncClient()
 void
 CVncClient::thread(void*)
 {
-#if SYSAPI_WIN32
+#if SYSAPI_WIN32 && !defined(_WIN64)
 	vncClientMain(this);
 #endif
 }
@@ -57,11 +57,15 @@ CVncClient::start()
 void
 CVncClient::showViewer()
 {
+#if SYSAPI_WIN32 && !defined(_WIN64)
 	m_connThread->connRef->showViewer();
+#endif
 }
 
 void
 CVncClient::hideViewer()
 {
+#if SYSAPI_WIN32 && !defined(_WIN64)
 	m_connThread->connRef->hideViewer();
+#endif
 }
