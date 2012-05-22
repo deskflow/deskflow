@@ -291,6 +291,14 @@ else (UNIX)
 
 endif()
 
+if (GAME_DEVICE_SUPPORT)
+	add_definitions(-DGAME_DEVICE_SUPPORT)
+endif()
+
+if (VNC_SUPPORT)
+	add_definitions(-DVNC_SUPPORT)
+endif()
+
 add_subdirectory(src)
 
 if (WIN32)

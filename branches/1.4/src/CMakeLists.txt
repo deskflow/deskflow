@@ -13,14 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if (GAME_DEVICE_SUPPORT)
-	add_definitions(-DGAME_DEVICE_SUPPORT)
-endif()
-
-if (VNC_SUPPORT)
-	add_definitions(-DVNC_SUPPORT)
-endif()
-
 add_subdirectory(lib)
 add_subdirectory(cmd)
 add_subdirectory(test)
