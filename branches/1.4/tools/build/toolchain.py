@@ -64,6 +64,9 @@ class InternalCommands:
 	# by default, do not compile with game device support.
 	gameDevice = False
 	
+	# by default, do not compile with vnc support.
+	vncSupport = False
+	
 	# by default, let cmake decide
 	macSdk = None
 
@@ -148,7 +151,7 @@ class InternalCommands:
 		generator = self.getGenerator()
 		
 		if generator != self.findGeneratorFromConfig():
-		        print('Generator changed, running setup.')
+			print('Generator changed, running setup.')
 			self.setup(target)
 
 		if generator.cmakeName != '':
@@ -167,6 +170,11 @@ class InternalCommands:
 			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=TRUE"
 		else:
 			cmake_args += " -DGAME_DEVICE_SUPPORT:BOOL=FALSE"
+		
+		if self.vncSupport:
+			cmake_args += " -DVNC_SUPPORT:BOOL=TRUE"
+		else:
+			cmake_args += " -DVNC_SUPPORT:BOOL=FALSE"
 		
 		if self.macSdk:
 			path = "/Developer/SDKs/MacOSX" + self.macSdk + ".sdk/"
@@ -432,9 +440,9 @@ class InternalCommands:
 		# copy synergy[cs] binaries into the bundle, since the gui
 		# now looks for the binaries in the current app dir.
 		shutil.copy(dir + "/synergyc",
-			    dir + "/Synergy.app/Contents/MacOS/")
+			dir + "/Synergy.app/Contents/MacOS/")
 		shutil.copy(dir + "/synergys",
-			    dir + "/Synergy.app/Contents/MacOS/")
+			dir + "/Synergy.app/Contents/MacOS/")
 
 	def open(self):
 		generator = self.getGeneratorFromConfig().cmakeName
@@ -939,7 +947,7 @@ class InternalCommands:
 
 		conf = self.findGeneratorFromConfig()
 		if conf:
-		    return conf
+			return conf
 		
 		raise Exception(
 			'Generator not specified, use -g arg ' + 
@@ -1160,6 +1168,8 @@ class CommandHandler:
 				self.qtDir = a
 			elif o == '--game-device':
 				self.ic.gameDevice = True
+			elif o == '--vnc':
+				self.ic.vncSupport = True
 			elif o == '--mac-sdk':
 				self.ic.macSdk = a
 	

@@ -142,9 +142,11 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		argsBase().m_disableTray = true;
 	}
 
+#if VNC_SUPPORT
 	else if (isArg(i, argc, argv, NULL, "--vnc")) {
 		argsBase().m_enableVnc = true;
 	}
+#endif
 
 	else {
 		// option not supported here

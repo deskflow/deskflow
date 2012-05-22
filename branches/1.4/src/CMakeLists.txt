@@ -23,6 +23,7 @@ add_subdirectory(test)
 add_subdirectory(plugin)
 
 # right now vnc only compiles on 32-bit windows :|
-if (WIN32 AND NOT CMAKE_GENERATOR MATCHES "Win64")
-add_subdirectory(vnc)
+if (VNC_SUPPORT)
+	add_definitions(-DVNC_SUPPORT)
+	add_subdirectory(vnc)
 endif()
