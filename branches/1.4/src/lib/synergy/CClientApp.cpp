@@ -631,7 +631,7 @@ CClientApp::startNode()
 void
 CClientApp::vncThread(void*)
 {
-#if SYSAPI_WIN32 && VNC_SUPPORT
+#if VNC_SUPPORT
 	vncServerMain(0, NULL);
 #endif
 }
