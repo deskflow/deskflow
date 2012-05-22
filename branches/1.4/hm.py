@@ -55,7 +55,7 @@ cmd_opt_dict = {
 	'about'     : ['', []],
 	'setup'     : ['g:', []],
 	'configure' : ['g:dr', ['debug', 'release', 'game-device', 'vnc', 'mac-sdk=']],
-	'build'     : ['dr', ['debug', 'release', 'game-device']],
+	'build'     : ['dr', ['debug', 'release']],
 	'clean'     : ['dr', ['debug', 'release']],
 	'update'    : ['', []],
 	'install'   : ['', []],

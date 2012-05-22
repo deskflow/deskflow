@@ -332,10 +332,8 @@ class InternalCommands:
 
 		if generator.find('Unix Makefiles') != -1:
 			for target in targets:
-				self.ensureConfHasRun(target, skipConfig)
 				self.runBuildCommand(self.make_cmd, target)
 		else:
-			self.ensureConfHasRun('all', skipConfig)
 			for target in targets:
 				if generator.startswith('Visual Studio'):
 					self.run_vcbuild(generator, target)
