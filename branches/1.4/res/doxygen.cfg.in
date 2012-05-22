@@ -628,7 +628,10 @@ EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */.svn/* \
                          */.git/* \
                          */tools/* \
+                         */src/vnc/* \
                          */src/gui/* \
+                         */src/test/guitests/debug/moc_* \
+                         */src/test/guitests/release/moc_* \
                          */src/qsynergy-build-desktop/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
