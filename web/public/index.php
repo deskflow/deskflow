@@ -71,21 +71,23 @@ function getFileTitle($file) {
       $title .= " Source Code";
     }
     else if (substr($p2, 0, 6) == "macosx") {
-      $os = "Mac OS X";
+      $title .= " for Mac OS X";
       if (strlen($p2) > 6) {
         $maj = substr($p2, 6, 2);
-        $min = substr($p2, 8, 1);
+        $min = substr($p2, 8, 2);
         if ($maj == 10) {
           switch ($min) {
-            case 4: $os .= " Tiger"; break;
-            case 5: $os .= " Leopard"; break;
-            case 6: $os .= " Snow Leopard"; break;
-            case 7: $os .= " Lion"; break;
-            case 8: $os .= " Mountain Lion"; break;
+            case 4: $name = "Tiger"; break;
+            case 5: $name = "Leopard"; break;
+            case 6: $name = "Snow Leopard"; break;
+            case 7: $name = "Lion"; break;
+            case 8: $name = "Mountain Lion"; break;
           }
         }
-        $os .= sprintf(" %d.%d", $maj, $min);
-        $title .= " for " . $os;
+        $title .= sprintf(" %d.%d", $maj, $min);
+        if (isset($name)) {
+          $title .= " " . $name;
+        }
       }
     }
     else if ($p2 == "windows") {
