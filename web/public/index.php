@@ -37,7 +37,7 @@ $locale->run();
 $smarty = new Smarty; // must come first; smarty makes T_ work somehow.
 $lang = $locale->lang;
 $page = str_replace("/", "", $_GET["page"]);
-$title = "Synergy" . ($page != "home") ? (" - " . T_(ucfirst($page))) : "";
+$title = "Synergy" . (($page != "home") ? (" - " . T_(ucfirst($page))) : "");
 
 $smarty->assign("lang", $lang);
 $smarty->assign("baseUrl", stristr($lang, "en") ? "" : "/" . $lang);
