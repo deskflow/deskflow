@@ -1,6 +1,6 @@
 ﻿<html lang="{$lang}" xml:lang="{$lang}">
   <head>
-    <title>Synergy{$title}</title>
+    <title>{$title}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Content-Language" content="{$lang}"/>
     <meta name="description" content="{t}Synergy lets you share your keyboard and mouse between multiple computers on your desk.{/t}" />

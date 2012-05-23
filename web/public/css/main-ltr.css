@@ -76,3 +76,8 @@ div.download div.alt {
 div.download div.alt div.list {
   float: left;
 }
+
+div.download-file div.ad {
+  float: left;
+  margin-right: 20px;
+}

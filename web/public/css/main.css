@@ -50,6 +50,7 @@ div.inner-content {
 }
 
 div.footer {
+  clear: both;
   margin: 20px auto 20px auto;
   padding-bottom: 20px;
   text-align: center;
@@ -257,4 +258,29 @@ div.download div.alt div.list {
 
 div.download h2 {
   margin-bottom: 0px;
+}
+
+div.download-file h2 span.title {
+  font-weight: normal;
+}
+
+div.download-file div.text {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 10px;
+}
+
+div.download-file p.link {
+  font-size: 1.2em;
+}
+
+div.download-file div.donate {
+  float: left;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+div.download-file div.donate div.flattr {
+  padding-top: 4px;
 }

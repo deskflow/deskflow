@@ -70,3 +70,8 @@ div.download div.alt {
 div.download div.alt div.list {
   float: right;
 }
+
+div.download-file div.ad {
+  float: right;
+  margin-left: 20px;
+}
