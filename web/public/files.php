@@ -4,8 +4,8 @@ namespace Synergy;
 
 class Files {
 
-  function downloadRequested() {
-    return ($_GET["page"] == "help") && stristr($_SERVER["REQUEST_URI"], "user-guide.pdf");
+  function downloadRequested($page) {
+    return ($page == "help") && stristr($_SERVER["REQUEST_URI"], "user-guide.pdf");
   }
   
   function download() {

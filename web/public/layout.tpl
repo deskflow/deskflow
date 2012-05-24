@@ -1,11 +1,14 @@
 ﻿<html lang="{$lang}" xml:lang="{$lang}">
   <head>
     <title>{$title}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Content-Language" content="{$lang}"/>
     <meta name="description" content="{t}Synergy lets you share your keyboard and mouse between multiple computers on your desk.{/t}" />
     <link rel="stylesheet" type="text/css" href="/css/main.css" />
     <link rel="stylesheet" type="text/css" href="/css/main-{$langDir}.css" />
+    <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
@@ -43,6 +46,7 @@
           <a href="{$baseUrl}/help/">{t}Help{/t}</a> |
           <a href="{$baseUrl}/search/">{t}Search{/t}</a> |
           <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
+          <a href="{$baseUrl}/corporate/">{t}Corporate{/t}</a> |
           <a href="/tracker/">{t}Tracker{/t}</a> |
           <a href="/tracker/projects/synergy/wiki/DevInfo">{t}Developer{/t}</a>
         </div>

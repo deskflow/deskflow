@@ -1,0 +1,9 @@
+RewriteEngine on
+
+RewriteCond %{REQUEST_URI} !^/(index\.php|favicon\.ico|js/.*|css/|tracker/.*)
+
+# rewrite / as /?ul=&page=&a=b
+# rewrite /zh/?a=b as /?ul=zh&page=&a=b
+# rewrite /zh-tw/?a=b as /?ul=zh-tw&page=&a=b
+# rewrite /zh-tw/download/?a=b as /?ul=zh-tw&page=download&a=b
+RewriteRule ^/?((\w\w(-\w\w)?)/)?(\w+)?/?$ /index.php?ul=$2&page=$4 [QSA,PT]

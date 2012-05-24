@@ -22,9 +22,15 @@
 require "locale.php";
 require "files.php";
 require "smarty/libs/Smarty.class.php";
+require "php/CorporateForm.class.php";
+
+$page = "home";
+if (isset($_GET["page"]) && $_GET["page"] != "") {
+  $page = str_replace("/", "", $_GET["page"]);
+}
 
 $files = new Synergy\Files();
-if ($files->downloadRequested()) {
+if ($files->downloadRequested($page)) {
   $files->download();
   exit;
 }
@@ -36,7 +42,6 @@ $locale->run();
 
 $smarty = new Smarty; // must come first; smarty makes T_ work somehow.
 $lang = $locale->lang;
-$page = str_replace("/", "", $_GET["page"]);
 $title = "Synergy" . (($page != "home") ? (" - " . T_(ucfirst($page))) : "");
 
 $smarty->assign("lang", $lang);
@@ -147,6 +152,17 @@ if ($page == "download") {
     
     // old naming: mac releases are universal
     $smarty->assign("ver14a", array("1.4.4", "1.4.3", "1.4.2"));
+  }
+}
+else if ($page == "corporate") {
+  
+  $form = new Synergy\CorporateForm;
+  if (!$form->isEmpty()) {
+    $form->send();
+    $smarty->assign("messageSent", true);
+  }
+  else {
+    $smarty->assign("messageSent", false);
   }
 }
 

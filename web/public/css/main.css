@@ -1,7 +1,7 @@
 body {
   font-family: arial, sans-serif;
   color: #777;
-  background-color: #eee;
+  background-color: #ccc;
   text-align: center;
 }
 
@@ -283,4 +283,49 @@ div.download-file div.donate {
 
 div.download-file div.donate div.flattr {
   padding-top: 4px;
+}
+
+form div.box {
+  padding-left: 130px;
+  width: 350px;
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
+}
+
+form p label {
+  float: left;
+  width: 120px;
+  margin: 3px 10px 0px -130px;
+  font-weight: bold;
+  text-align: right;
+}
+
+form p input,
+form p textarea {
+  width: 97%;
+}
+
+form p textarea {
+  height: 100px;
+  font-family: arial, sans-serif;
+}
+
+form div.buttons {
+  margin-top: 5px;
+  margin-left: -3px;
+}
+
+form div.errors {
+  display: none;
+  border: 1px solid #ffaaaa;
+  background-color: #ffdddd;
+  color: #ff5555;
+  width: 460px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+form div.errors p {
+  padding: 0px;
+  margin: 0px;
 }

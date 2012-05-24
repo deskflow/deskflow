@@ -80,7 +80,7 @@ class Locale {
   
   function run() {
     
-    if (isSet($_GET["ul"])) {
+    if (isSet($_GET["ul"]) && ($_GET["ul"] != "")) {
       
       // make sure users can't use /en -- should be using / instead.
       if (stristr($_SERVER["REQUEST_URI"], "/en")) {
@@ -99,7 +99,7 @@ class Locale {
         exit;
       }
       
-    } else if (isSet($_GET["hl"])) {
+    } else if (isSet($_GET["hl"]) && ($_GET["hl"] != "")) {
 
       // language forced by visitor.
       $this->lang = $_GET["hl"];
