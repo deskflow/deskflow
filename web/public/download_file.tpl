@@ -10,37 +10,7 @@
 
     <h2>{t}Download{/t}: <span class="title">{$title}</span></h2>
     
-    <div class="ad">
-      
-      <script type="text/javascript"><!--
-      google_ad_client = "ca-pub-3305986762497110";
-      /* Synergy download square 1 */
-      google_ad_slot = "2828296154";
-      google_ad_width = 336;
-      google_ad_height = 280;
-      //-->
-      </script>
-      <script type="text/javascript"
-      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-      </script>
-      
-    </div>
-    
-    <div class="ad">
-    
-      <script type="text/javascript"><!--
-      google_ad_client = "ca-pub-3305986762497110";
-      /* Synergy download square 2 */
-      google_ad_slot = "5638917797";
-      google_ad_width = 336;
-      google_ad_height = 280;
-      //-->
-      </script>
-      <script type="text/javascript"
-      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-      </script>
-      
-    </div>
+    {$custom}
     
     <div class="text">
       <p class="link"><b>{t}Download{/t}:</b> <a href="{$link}">{$file}</a></p>

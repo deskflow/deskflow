@@ -53,21 +53,8 @@ another. You can even share all of your clipboards. All you need
 is a network connection. Synergy is cross-platform (works on
 Windows, Mac OS X and Linux).{/t}
     </p>
-
-    <div class="ga">
-
-      <script type="text/javascript"><!--
-      google_ad_client = "ca-pub-3305986762497110";
-      /* Synergy leaderboard */
-      google_ad_slot = "1244648544";
-      google_ad_width = 728;
-      google_ad_height = 90;
-      //-->
-      </script>
-      <script type="text/javascript"
-      src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-      </script>
-    </div>
+    
+    {$custom}
     
     <div class="demo">
       <img src="{$splashImage}" alt="How Synergy works." />

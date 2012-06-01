@@ -166,6 +166,11 @@ else if ($page == "corporate") {
   }
 }
 
+if (is_file("custom/" . $page . ".tpl")) {
+  $custom = $smarty->fetch("custom/" . $page . ".tpl");
+  $smarty->assign("custom", $custom);
+}
+
 $content = $smarty->fetch($page . ".tpl");
 $smarty->assign("content", $content);
 $smarty->display("layout.tpl");

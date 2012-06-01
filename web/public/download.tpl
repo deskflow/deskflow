@@ -39,21 +39,7 @@
     
     <div class="top">
       
-      <div class="ga">
-      
-        <script type="text/javascript"><!--
-        google_ad_client = "ca-pub-3305986762497110";
-        /* Synergy downloads */
-        google_ad_slot = "6375063220";
-        google_ad_width = 160;
-        google_ad_height = 600;
-        //-->
-        </script>
-        <script type="text/javascript"
-        src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-        </script>
-      
-      </div>
+      {$custom}
       
       <div class="list">
         <p>{t}Please use version 1.4 for easier setup. Use version 1.3 if you experience problems.{/t}</p>
