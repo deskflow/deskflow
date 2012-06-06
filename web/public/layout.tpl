@@ -48,7 +48,7 @@
           <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
           <a href="{$baseUrl}/corporate/">{t}Corporate{/t}</a> |
           <a href="/wiki/">{t}Wiki{/t}</a> |
-          <a href="http://spit.synergy-foss.org/">{t}Tracker{/t}</a> |
+          <a href="http://spit.synergy-foss.org/issues/">{t}Tracker{/t}</a> |
           <a href="/code/">{t}Code{/t}</a>
         </div>
       </div>
