@@ -66,11 +66,9 @@ use <a href="http://xchat.org/">XChat</a>){/t}
 
     <h3>{t}Report a bug{/t}</h3>
     <p>
-{t}Please report bugs when you've exhausted all of the above options,
-and you are absolutely certain you've found a bug.
-To do this, <a href="/tracker/account/register">register</a> a new account
-<em>and then</em> open a <a href="/tracker/projects/synergy/support/new">new bug report</a>
-on our issue tracker.{/t}
+{t escape=no url="http://spit.synergy-foss.org/support/"}Please report bugs
+when you've exhausted all of the above options, and you are absolutely certain
+you've found a bug. Open a <a href="%1">new bug report</a>.{/t}
     </p>
     
   </div>

@@ -166,10 +166,11 @@ else if ($page == "corporate") {
   }
 }
 
+$custom = "";
 if (is_file("custom/" . $page . ".tpl")) {
   $custom = $smarty->fetch("custom/" . $page . ".tpl");
-  $smarty->assign("custom", $custom);
 }
+$smarty->assign("custom", $custom);
 
 $content = $smarty->fetch($page . ".tpl");
 $smarty->assign("content", $content);
