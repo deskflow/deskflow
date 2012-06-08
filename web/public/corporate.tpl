@@ -19,7 +19,7 @@ your message!{/t}
     
     {else}
     
-    <p>{t}Need enterprise support for Synergy? Just get in touch with us using this form!{/t}</p>
+    <p>{t}Need enterprise support for Synergy? Just get in touch with us by using this form.{/t}</p>
     
     <form method="post" id="corporate">
       <div class="errors"><p></p></div>
