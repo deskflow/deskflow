@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-26 21:57-0000\n"
+"POT-Creation-Date: 2012-06-08 22:47-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -14,275 +14,305 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: lang.c:1
-#: lang.c:59
-msgid "Download"
+#: lang.c:70
+msgid "Corporate"
 msgstr ""
 
 #: lang.c:2
-msgid "Latest release:"
+msgid "Thanks for contacting us, we'll get back to you as soon as we read your message!"
 msgstr ""
 
 #: lang.c:3
-msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
+msgid "Need enterprise support for Synergy? Just get in touch with us by using this form."
 msgstr ""
 
 #: lang.c:4
-msgid "Windows"
+msgid "Latest release:"
 msgstr ""
 
 #: lang.c:5
-msgid "Mac OS X"
+msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
 msgstr ""
 
 #: lang.c:6
-msgid "Ubuntu/Debian"
+msgid "Windows"
 msgstr ""
 
 #: lang.c:7
-msgid "Fedora/Red Hat"
+msgid "Mac OS X"
 msgstr ""
 
 #: lang.c:8
-msgid "Source code"
+msgid "Ubuntu/Debian"
 msgstr ""
 
 #: lang.c:9
-msgid "Previous 1.4 releases"
+msgid "Fedora/Red Hat"
 msgstr ""
 
 #: lang.c:10
+msgid "Source code"
+msgstr ""
+
 #: lang.c:11
+msgid "Previous 1.4 releases"
+msgstr ""
+
 #: lang.c:12
 #: lang.c:13
+#: lang.c:14
+#: lang.c:15
 msgid "Beta"
 msgstr ""
 
-#: lang.c:14
+#: lang.c:16
 msgid "Previous 1.3 releases"
 msgstr ""
 
-#: lang.c:15
-#: lang.c:16
 #: lang.c:17
 #: lang.c:18
 #: lang.c:19
+#: lang.c:20
+#: lang.c:21
 msgid "Stable"
 msgstr ""
 
-#: lang.c:20
+#: lang.c:22
 msgid "Other projects"
 msgstr ""
 
-#: lang.c:21
-msgid "Related sites"
-msgstr ""
-
-#: lang.c:22
-msgid "Nightly builds"
-msgstr ""
-
 #: lang.c:23
-msgid "use at your own risk"
+msgid "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
 msgstr ""
 
 #: lang.c:24
-#: lang.c:60
-msgid "Help"
+msgid "Related sites"
 msgstr ""
 
 #: lang.c:25
-msgid "Having problems using Synergy? You're in the right place!"
+msgid "Nightly builds"
 msgstr ""
 
 #: lang.c:26
-msgid "Latest version"
+msgid "use at your own risk"
 msgstr ""
 
 #: lang.c:27
-msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr ""
-
 #: lang.c:28
-msgid "User guide"
+#: lang.c:66
+msgid "Download"
 msgstr ""
 
 #: lang.c:29
-msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
+msgid "Thanks for downloading Synergy. If you need help, please read the <a href=\"%1\">user guide</a> or visit the <a href=\"%2\">help</a> page."
 msgstr ""
 
 #: lang.c:30
-#: lang.c:61
-#: lang.c:66
-msgid "Search"
+msgid "Please support open source software by donating!"
 msgstr ""
 
 #: lang.c:31
-msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
+#: lang.c:67
+msgid "Help"
 msgstr ""
 
 #: lang.c:32
-msgid "Q&#38;A website"
+msgid "Having problems using Synergy? You're in the right place!"
 msgstr ""
 
 #: lang.c:33
-msgid "You can ask a question on our <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A website</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
+msgid "Latest version"
 msgstr ""
 
 #: lang.c:34
-msgid "Mailing list"
+msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
 msgstr ""
 
 #: lang.c:35
-msgid "Some users may prefer to use our <a href=\"http://groups.google.com/group/synergy-plus/post\">mailing list</a>. Please do not post bugs on the mailing list."
+msgid "User guide"
 msgstr ""
 
 #: lang.c:36
-msgid "IRC"
+msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
 msgstr ""
 
 #: lang.c:37
-msgid "You can join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>)"
+#: lang.c:68
+#: lang.c:75
+msgid "Search"
 msgstr ""
 
 #: lang.c:38
-#: lang.c:69
-msgid "Super User"
+msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
 msgstr ""
 
 #: lang.c:39
-msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
+msgid "Q&#38;A website"
 msgstr ""
 
 #: lang.c:40
-msgid "Super User is <b>not</b> dedicated to supporting Synergy."
+msgid "You can ask a question on our <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A website</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
 msgstr ""
 
 #: lang.c:41
-msgid "Ask questions; do not nag or comment on bugs or issues."
+msgid "Mailing list"
 msgstr ""
 
 #: lang.c:42
-msgid "Do not raise new bugs there; use the issue tracker for this."
+msgid "Some users may prefer to use our <a href=\"http://groups.google.com/group/synergy-plus/post\">mailing list</a>. Please do not post bugs on the mailing list."
 msgstr ""
 
 #: lang.c:43
-msgid "Synergy developers do <i>not</i> monitor this website."
+msgid "IRC"
 msgstr ""
 
 #: lang.c:44
-msgid "Always use the \"synergy\" tag on your question."
+msgid "You can join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>)"
 msgstr ""
 
 #: lang.c:45
-msgid "Make sure you mention \"Synergy\" in the question."
+#: lang.c:78
+msgid "Super User"
 msgstr ""
 
 #: lang.c:46
-msgid "Report a bug"
+msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
 msgstr ""
 
 #: lang.c:47
-msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. To do this, <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
+msgid "Super User is <b>not</b> dedicated to supporting Synergy."
 msgstr ""
 
 #: lang.c:48
-msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
+msgid "Ask questions; do not nag or comment on bugs or issues."
 msgstr ""
 
 #: lang.c:49
-#: lang.c:62
-msgid "Info"
+msgid "Do not raise new bugs there; use the issue tracker for this."
 msgstr ""
 
 #: lang.c:50
-msgid "Blog"
+msgid "Synergy developers do <i>not</i> monitor this website."
 msgstr ""
 
 #: lang.c:51
-msgid "Key people"
+msgid "Always use the \"synergy\" tag on your question."
 msgstr ""
 
 #: lang.c:52
-msgid "Project leader and primary developer"
+msgid "Make sure you mention \"Synergy\" in the question."
 msgstr ""
 
 #: lang.c:53
-msgid "Original author and project founder"
+msgid "Report a bug"
 msgstr ""
 
 #: lang.c:54
-msgid "Founder of Synergy+ (fork project)"
+msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
 msgstr ""
 
 #: lang.c:55
-msgid "Support us!"
+msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
 msgstr ""
 
 #: lang.c:56
-msgid "Please help us out by donating or buying merchandise. Thanks for your support!"
+#: lang.c:69
+msgid "Info"
 msgstr ""
 
 #: lang.c:57
-msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
+msgid "Blog"
 msgstr ""
 
 #: lang.c:58
-msgid "Home"
+msgid "Key people"
+msgstr ""
+
+#: lang.c:59
+msgid "Project leader and primary developer"
+msgstr ""
+
+#: lang.c:60
+msgid "Original author and project founder"
+msgstr ""
+
+#: lang.c:61
+msgid "Founder of Synergy+ (fork project)"
+msgstr ""
+
+#: lang.c:62
+msgid "Support Synergy!"
 msgstr ""
 
 #: lang.c:63
-msgid "Tracker"
+msgid "Please help the Synergy project by donating or buying merchandise. Thanks for your support!"
 msgstr ""
 
 #: lang.c:64
-msgid "Developer"
+msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
 msgstr ""
 
 #: lang.c:65
-msgid "Improve this translation"
-msgstr ""
-
-#: lang.c:67
-msgid "Search all Synergy websites from one page."
-msgstr ""
-
-#: lang.c:68
-msgid "What is searched?"
-msgstr ""
-
-#: lang.c:70
-msgid "Issue tracker"
+msgid "Home"
 msgstr ""
 
 #: lang.c:71
-msgid "Website wiki"
+msgid "Wiki"
 msgstr ""
 
 #: lang.c:72
-msgid "Mailing lists"
+msgid "Tracker"
 msgstr ""
 
 #: lang.c:73
-msgid "Search tips"
+msgid "Code"
 msgstr ""
 
 #: lang.c:74
-msgid "If you get too many results, try specifying your operating system."
-msgstr ""
-
-#: lang.c:75
-msgid "Sometimes issues are specific to the client or server."
+msgid "Improve this translation"
 msgstr ""
 
 #: lang.c:76
-msgid "You may find that entering your version number helps."
+msgid "Search all Synergy websites from one page."
 msgstr ""
 
 #: lang.c:77
+msgid "What is searched?"
+msgstr ""
+
+#: lang.c:79
+msgid "Issue tracker"
+msgstr ""
+
+#: lang.c:80
+msgid "Website wiki"
+msgstr ""
+
+#: lang.c:81
+msgid "Mailing lists"
+msgstr ""
+
+#: lang.c:82
+msgid "Search tips"
+msgstr ""
+
+#: lang.c:83
+msgid "If you get too many results, try specifying your operating system."
+msgstr ""
+
+#: lang.c:84
+msgid "Sometimes issues are specific to the client or server."
+msgstr ""
+
+#: lang.c:85
+msgid "You may find that entering your version number helps."
+msgstr ""
+
+#: lang.c:86
 msgid "If this does not work, use the <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy search</a>."
 msgstr ""
 
-#: lang.c:78
+#: lang.c:87
 msgid "Search now"
 msgstr ""
 
