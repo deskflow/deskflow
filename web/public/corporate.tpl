@@ -19,11 +19,7 @@ your message!{/t}
     
     {else}
     
-    <p>
-{t}If you are a user within a corporation and have the authority
-to pay for product support, please contact us by using the form
-below. Thank you for using Synergy!{/t}
-    </p>
+    <p>{t}Need enterprise support for Synergy? Just get in touch with us using this form!{/t}</p>
     
     <form method="post" id="corporate">
       <div class="errors"><p></p></div>
