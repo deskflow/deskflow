@@ -1,12 +1,17 @@
-Synergy
-=======
+See: http://synergy-foss.org/pm/projects/synergy/wiki/Readme
 
-We now commit directly to release branches. The trunk was becoming a dead
-weight (as it was always the same as the latest release branch), so we
-deleted it.
+Announcement | 2009-08-04
+=========================
+We have recently switched to CMake, to replace Automake.
+Plese read the Compiling wiki page for help with CMake:
+http://synergy-foss.org/pm/projects/synergy/wiki/Compiling
 
-Please commit to (and build patches against) a release branch.
-e.g. /branches/1.4
+Linux/Mac
+---------
+Instead of using the traditional GNU style `./configure; make`
+commands, you will now need to use CMake.
 
-If you have any questions, please email the dev mailing list.
-  http://groups.google.com/group/synergy-plus-dev
+Windows
+-------
+Instead of using the VS2005 and VS2008 directories, you now need
+to generate the Visual Studio project files using CMake.

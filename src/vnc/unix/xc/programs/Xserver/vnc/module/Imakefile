@@ -1,0 +1,61 @@
+
+   VNCUNIXDIR = VncUnixDir
+ VNCCOMMONDIR = VncCommonDir
+      VNCLIBS = VncExtLibs
+   VNCINCLUDE = -I$(VNCCOMMONDIR) -I$(VNCUNIXDIR)/vncconfig
+
+#define CplusplusSource
+
+#define IHaveModules
+#include <Server.tmpl>
+
+    SRCS = vncExtInit.cc vncHooks.cc xf86vncModule.cc XserverDesktop.cc
+    OBJS = vncExtInit.o vncHooks.o xf86vncModule.o XserverDesktop.o
+INCLUDES = -I.. -I../../include -I$(EXTINCSRC) -I$(XINCLUDESRC) \
+           -I$(FONTINCSRC) -I$(XF86COMSRC) \
+           $(VNCINCLUDE)
+ DEFINES = $(STD_DEFINES) -DGC_HAS_COMPOSITE_CLIP -DXFree86LOADER
+
+LinkSourceFile(vncExtInit.cc,..)
+LinkSourceFile(vncHooks.cc,..)
+LinkSourceFile(xf86vncModule.cc,..)
+LinkSourceFile(XserverDesktop.cc,..)
+
+ModuleObjectRule()
+/*
+ LibraryModuleTarget(vnc,$(OBJS) $(VNCLIBS))
+ InstallLibraryModule(vnc,$(MODULEDIR),extensions)
+*/
+
+/* *** The imake rules don't define a ModuleCplusplusObjectRule so
+       for now we just assume that NormalCplusplusObjectRule will
+       do the job.
+   NB: If we don't do this then make will assume CC is the C++ compiler!
+*/
+NormalCplusplusObjectRule()
+
+/*
+ * CplusplusDynamicModuleTarget - build a module to be dynamically loaded
+ */
+#ifndef CplusplusDynamicModuleTarget
+#define CplusplusDynamicModuleTarget(module,modlist)			@@\
+AllTarget(module)							@@\
+									@@\
+module: modlist								@@\
+	RemoveFile($@)							@@\
+	$(CXX) -o $@ $(SHLIBLDFLAGS) modlist				@@\
+									@@\
+clean::									@@\
+	RemoveFile(module)
+#endif /* CplusplusDynamicModuleTarget */
+
+
+
+CplusplusDynamicModuleTarget(vnc.so,$(OBJS) $(VNCLIBS))
+InstallDynamicModule(vnc.so,$(MODULEDIR),extensions)
+
+DependTarget()
+
+/*
+ InstallDriverSDKLibraryModule(vnc,$(DRIVERSDKMODULEDIR),extensions)
+*/

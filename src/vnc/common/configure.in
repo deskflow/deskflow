@@ -1,0 +1,99 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(rdr/InStream.h)
+
+dnl dirty hack to prevent use of -g in CFLAGS and CXXFLAGS
+ac_cv_prog_cc_g=no
+ac_cv_prog_cxx_g=no
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
+AC_PROG_MAKE_SET
+AC_LANG_CPLUSPLUS
+
+case "`(uname -sr) 2>/dev/null`" in
+"SunOS 5"*)
+  SOLARIS=yes
+  USE_MITSHM=yes
+  ;;
+"Linux"*)
+  LINUX=yes
+  USE_MITSHM=yes
+  ;;
+esac
+
+if test "$USE_MITSHM" = yes; then
+  MITSHM_CPPFLAGS="-DMITSHM"
+fi
+AC_SUBST(MITSHM_CPPFLAGS)
+
+if test "$GCC" = yes; then
+  CFLAGS="$CFLAGS -Wall"
+  if test "$SOLARIS" = yes; then
+    CFLAGS="$CFLAGS -Wno-unknown-pragmas -Wno-implicit-int"
+  fi
+fi
+if test "$GXX" = yes; then
+  CXXFLAGS="$CXXFLAGS -Wall"
+  if test "$SOLARIS" = yes; then
+    CXXFLAGS="$CXXFLAGS -Wno-unknown-pragmas -Wno-implicit-int -fpermissive"
+  fi
+fi
+
+AC_PATH_XTRA
+
+AC_ARG_WITH(installed-zlib,
+[  --with-installed-zlib   use the version of zlib which is installed on the
+                          system instead of the one distributed with VNC])
+
+if test "$with_installed_zlib" = yes; then
+  echo "using installed zlib"
+  ZLIB_LIB=-lz
+else
+  ZLIB_DIR=zlib
+  ZLIB_INCLUDE='-I$(top_srcdir)/zlib'
+  ZLIB_LIB='$(top_srcdir)/zlib/libz.a'
+  echo "configuring zlib..."
+  (cd zlib; ./configure)
+  echo "...done configuring zlib"
+fi
+
+AC_SUBST(ZLIB_DIR)
+AC_SUBST(ZLIB_INCLUDE)
+AC_SUBST(ZLIB_LIB)
+
+if test "$SOLARIS" = yes; then
+  dnl Solaris 2.5 lacks vsnprintf, so use our own version & support 2.5
+  VSNPRINTF_DEFINE=
+else
+  AC_CHECK_FUNC(vsnprintf,VSNPRINTF_DEFINE='-DHAVE_VSNPRINTF',VSNPRINTF_DEFINE=)
+fi
+AC_SUBST(VSNPRINTF_DEFINE)
+
+AC_MSG_CHECKING(for socklen_t)
+AC_TRY_COMPILE(
+[#include <sys/types.h>
+ #include <sys/socket.h>],
+[socklen_t x;
+accept(0, 0, &x);],
+AC_MSG_RESULT(yes)
+SOCKLEN_T_DEFINE='-DVNC_SOCKLEN_T=socklen_t',
+AC_MSG_RESULT(using int)
+SOCKLEN_T_DEFINE='-DVNC_SOCKLEN_T=int')
+AC_SUBST(SOCKLEN_T_DEFINE)
+
+BOILERPLATE=boilerplate.mk
+
+if (sh -c "make --version" 2>/dev/null | grep GNU 2>&1 >/dev/null); then
+  if sh -c "vncmkdepend" >/dev/null 2>&1; then
+    BOILERPLATE="$BOILERPLATE:depend.mk"
+  fi
+fi
+
+AC_OUTPUT(Makefile:Makefile.in:$BOILERPLATE \
+         rdr/Makefile:rdr/Makefile.in:$BOILERPLATE \
+         network/Makefile:network/Makefile.in:$BOILERPLATE \
+         Xregion/Makefile:Xregion/Makefile.in:$BOILERPLATE \
+         rfb/Makefile:rfb/Makefile.in:$BOILERPLATE \
+)
