@@ -160,7 +160,6 @@ div.home div.title div.support {
 
 /* can't use "advert" or "adsense" because of ad-blockers. */
 div.home div.ga {
-  margin-top: 20px;
   margin-bottom: 20px;
   width: 728px;
   height: 90px;
@@ -294,6 +293,10 @@ form div.box {
   width: 350px;
   border: 1px solid #ddd;
   background-color: #f7f7f7;
+}
+
+form div.box p:first-child {
+  margin-top: 10px;
 }
 
 form p label {
