@@ -90,7 +90,9 @@ class Locale {
       
       // language forced by url.
       $this->lang = $_GET["ul"];
-      unset($_SESSION["lang"]);
+      if (!isBot()) {
+        unset($_SESSION["lang"]);
+      }
       
       // redirect legacy redundant tags.
       $mapped = $this->fixItefTag($this->lang);
@@ -106,7 +108,7 @@ class Locale {
       
       // if english, force and use / (if we don't
       // force in session, language is auto detected).
-      if (strstr($this->lang, "en")) {
+      if (!isBot() && strstr($this->lang, "en")) {
         $_SESSION["lang"] = $this->lang;
         header("Location: /");
       } else {
@@ -116,7 +118,7 @@ class Locale {
       }
       exit;
       
-    } else if (isSet($_SESSION["lang"])) {
+    } else if (!isBot() && isSet($_SESSION["lang"])) {
 
       // language forced. this should only happen under /
       // where no url lang is forced.

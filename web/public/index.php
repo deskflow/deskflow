@@ -35,7 +35,13 @@ if ($files->downloadRequested($page)) {
   exit;
 }
 
-session_start();
+function isBot() {
+  return preg_match("/(bot|spider)/", $_SERVER["HTTP_USER_AGENT"]) != 0;
+}
+
+if (!isBot()) {
+  session_start();
+}
 
 $locale = new Synergy\Locale();
 $locale->run();
