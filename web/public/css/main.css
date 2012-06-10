@@ -329,3 +329,7 @@ form div.errors p {
   padding: 0px;
   margin: 0px;
 }
+
+p.twitter img {
+  margin-bottom: -3px;
+}

@@ -30,6 +30,7 @@
       <div class="mugshot">
         <img src="/img/team/team-nick.png" /><br />
         <b><a href="http://nbolton.net">Nick Bolton</a></b><br />
+        <a href="https://twitter.com/#!/NickBoltonUK">@NickBoltonUK</a><br />
         {t}Project leader and primary developer{/t}
       </div>
       <div class="mugshot">
