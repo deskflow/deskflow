@@ -1,0 +1,5 @@
+<cross-domain-policy>
+  <allow-access-from domain="synergy-foss.org"/>
+  <allow-access-from domain="*.synergy-foss.org"/>
+  <allow-access-from domain="www.synergy-foss.org"/>
+</cross-domain-policy>
