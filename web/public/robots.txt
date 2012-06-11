@@ -1,7 +1,7 @@
 # only 1% of traffic comes from baidu
 # but it's 10x more agressive than google!
 User-agent: Baiduspider
-Disallow:
+Disallow: /
 
 # no need for robots to index websvn.
 User-agent: *
