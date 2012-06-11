@@ -34,6 +34,7 @@ class LegacyController extends Spit\Controllers\Controller {
       exit("Either redmine or google must be specified."); 
     }
     
+    header("HTTP/1.1 301 Moved Permanently");
     header("Location: " . $this->app->linkProvider->forIssue($row->id));
   }
 }
