@@ -55,7 +55,7 @@ Windows, Mac OS X and Linux).{/t}
     </p>
     
     <p class="twitter">
-      <img src="/img/twitter-icon.png" /> OMG coders!!!
+      <img src="/img/twitter-icon.png" /> {t}Follow Synergy coders!{/t}
       <a href="https://twitter.com/#!/NickBoltonUK">@NickBoltonUK</a>
       <a href="https://twitter.com/#!/SynergyDev">@SynergyDev</a>
     </p>
