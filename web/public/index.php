@@ -164,6 +164,9 @@ else if ($page == "corporate") {
   
   $form = new Synergy\CorporateForm;
   if (!$form->isEmpty()) {
+    if (strtolower($form->human) != "yes") {
+      exit("Seriously, fuck off, dirty robot.");
+    }
     $form->send();
     $smarty->assign("messageSent", true);
   }

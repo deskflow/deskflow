@@ -48,6 +48,11 @@ your message!{/t}
           <label for="details">Details:</label>
           <textarea id="details" name="details"></textarea>
         </p>
+        <p>
+          <label for="human">Are you human?</label>
+          <input id="human" name="human" type="text" />
+          Please say yes.
+        </p>
       </div>
       <div class="buttons">
         <input type="submit" value="Send" />

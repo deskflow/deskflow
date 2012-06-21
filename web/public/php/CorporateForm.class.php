@@ -31,6 +31,7 @@ class CorporateForm {
     $this->email2 = isset($_POST["email2"]) ? $_POST["email2"] : "";
     $this->phone = isset($_POST["phone"]) ? $_POST["phone"] : "";
     $this->details = isset($_POST["details"]) ? $_POST["details"] : "";
+    $this->human = isset($_POST["human"]) ? $_POST["human"] : "";
   }
   
   public function isEmpty() {

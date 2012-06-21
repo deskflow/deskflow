@@ -39,6 +39,14 @@ function corporateForm() {
         formError(errors, "Details missing.");
         return false;
       }
+      else if (form.find("#details").val() == "") {
+        formError(errors, "Details missing.");
+        return false;
+      }
+      else if (form.find("#human").val().toLowerCase() != "yes") {
+        formError(errors, "No robots allowed (please say \"yes\").");
+        return false;
+      }
     });
   }
   
