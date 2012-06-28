@@ -13,14 +13,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(arch)
-add_subdirectory(base)
-add_subdirectory(client)
-add_subdirectory(common)
-add_subdirectory(io)
-add_subdirectory(ipc)
-add_subdirectory(mt)
-add_subdirectory(net)
-add_subdirectory(platform)
-add_subdirectory(server)
-add_subdirectory(synergy)
+set(inc
+	CIpcServer.h
+	CIpcClient.h
+	CIpcServerProxy.h
+	CIpcClientProxy.h
+)
+
+set(src
+	CIpcServer.cpp
+	CIpcClient.cpp
+	CIpcServerProxy.cpp
+	CIpcClientProxy.cpp
+)
+
+if (WIN32)
+	list(APPEND src ${inc})
+endif()
+
+set(inc
+	../net
+)
+
+if (UNIX)
+	list(APPEND inc
+		../../..
+	)
+endif()
+
+include_directories(${inc})
+add_library(ipc STATIC ${src})
+
+if (UNIX)
+	target_link_libraries(net)
+endif()

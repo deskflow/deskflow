@@ -15,34 +15,27 @@
 
 set(src
 	Main.cpp
+	CIpcTests.cpp
 )
 
 if (WIN32)
-	
-	# windows
 	list(APPEND src
 		platform/CMSWindowsClipboardTests.cpp
 		platform/CMSWindowsKeyStateTests.cpp
 	)
-
 elseif (APPLE)
-
-	# mac
 	list(APPEND src
 		platform/COSXClipboardTests.cpp
 		platform/COSXKeyStateTests.cpp
 	)
 
 elseif (UNIX)
-
-	# unix/linux
 	list(APPEND src
 		platform/CXWindowsClipboardTests.cpp
 		platform/CXWindowsKeyStateTests.cpp
 		platform/CXWindowsScreenTests.cpp
 		platform/CXWindowsScreenSaverTests.cpp
 	)
-
 endif()
 
 set(inc
@@ -51,6 +44,7 @@ set(inc
 	../../lib/client
 	../../lib/common
 	../../lib/io
+	../../lib/ipc
 	../../lib/mt
 	../../lib/net
 	../../lib/platform
@@ -76,4 +70,4 @@ endif()
 include_directories(${inc})
 add_executable(integtests ${src})
 target_link_libraries(integtests
-	arch base client common io mt net platform server synergy gtest gmock ${libs})
+	arch base client common io ipc mt net platform server synergy gtest gmock ${libs})
