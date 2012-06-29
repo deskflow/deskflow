@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-26 20:47-0000\n"
+"POT-Creation-Date: 2012-06-08 22:47-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -10,259 +10,309 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Basepath: C:\\Projects\\synergy\\web\\public\n"
+"X-Poedit-KeywordsList: T_\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: lang.c:1
-#: lang.c:49
-msgid "Download"
-msgstr "다운로드"
+#: lang.c:70
+msgid "Corporate"
+msgstr ""
 
 #: lang.c:2
-msgid "Latest release:"
+msgid "Thanks for contacting us, we'll get back to you as soon as we read your message!"
 msgstr ""
 
 #: lang.c:3
-msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
-msgstr "쉬운 설치를위한 버전 1.4을 사용하시기 바랍니다. 당신은 문제가 발생하는 경우 버전 1.3을 사용합니다."
+msgid "Need enterprise support for Synergy? Just get in touch with us by using this form."
+msgstr ""
 
 #: lang.c:4
+msgid "Latest release:"
+msgstr "최신 버전"
+
+#: lang.c:5
+msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
+msgstr "쉬운 설치는, 버전 1.4를 사용하시길 바랍니다. 혹, 문제가 발생하면, 버전 1.3을 사용하세요."
+
+#: lang.c:6
 msgid "Windows"
 msgstr ""
 
-#: lang.c:5
+#: lang.c:7
 msgid "Mac OS X"
 msgstr ""
 
-#: lang.c:6
-msgid "Ubuntu/Debian"
-msgstr ""
-
-#: lang.c:7
-msgid "Fedora/Red Hat"
-msgstr ""
-
 #: lang.c:8
+msgid "Ubuntu/Debian"
+msgstr "우분투/데비안"
+
+#: lang.c:9
+msgid "Fedora/Red Hat"
+msgstr "페도라/레드햇"
+
+#: lang.c:10
 msgid "Source code"
 msgstr "소스 코드"
 
-#: lang.c:9
-msgid "Previous 1.4 releases"
-msgstr "이전 1.4 출시"
-
-#: lang.c:10
-msgid "Previous 1.3 releases"
-msgstr "이전 1.3 출시"
-
 #: lang.c:11
-msgid "Other projects"
-msgstr "기타 사업"
+msgid "Previous 1.4 releases"
+msgstr "이전 1.4 버전들"
 
 #: lang.c:12
-msgid "Related sites"
-msgstr "관련 사이트"
-
 #: lang.c:13
-msgid "Nightly builds"
-msgstr "야간 빌드"
-
 #: lang.c:14
-msgid "use at your own risk"
-msgstr "자신의 책임하에 사용"
-
 #: lang.c:15
-#: lang.c:50
-msgid "Help"
-msgstr "도와주세요"
+msgid "Beta"
+msgstr "베타"
 
 #: lang.c:16
-msgid "Having problems using Synergy? You're in the right place!"
-msgstr "문제는 시너지를 사용하고 .. 당신은 바로 이곳에서이야!"
+msgid "Previous 1.3 releases"
+msgstr "이전 1.3 버전들"
 
 #: lang.c:17
-msgid "Latest version"
-msgstr ""
-
 #: lang.c:18
-msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr "많은 버그는 사용자가 최신 버전을 시도하지 않은 경우에도 사육하고 있습니다.<a href=\"%1\">다운로드</a> 페이지를 방문하여 최신 버전 (이것은 베타 버전이라도)을 밖으로 시도하십시오. 당신은 또한 <a href=\"/nightly/\">야간 빌드</a> 최후의 수단으로 시도 해보고 싶어요,하지만 최후의 수단 (이 버전은 품질 보증을 통과하지 않은)로 이렇게하십시오 수도 있습니다."
-
 #: lang.c:19
-msgid "User guide"
-msgstr ""
-
 #: lang.c:20
-msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
-msgstr ""
-
 #: lang.c:21
-#: lang.c:51
-#: lang.c:56
-msgid "Search"
-msgstr "검색"
+msgid "Stable"
+msgstr "안정적인"
 
 #: lang.c:22
-msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
-msgstr ""
+msgid "Other projects"
+msgstr "다른 프로젝트"
 
 #: lang.c:23
-msgid "Q&#38;A website"
+msgid "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
 msgstr ""
 
 #: lang.c:24
-msgid "You can ask a question on the our <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A website</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
-msgstr ""
+msgid "Related sites"
+msgstr "관련 사이트"
 
 #: lang.c:25
-msgid "Mailing list"
-msgstr ""
+msgid "Nightly builds"
+msgstr "나이틀리 빌드"
 
 #: lang.c:26
-msgid "Some users may prefer to use our <a href=\"http://groups.google.com/group/synergy-plus/post\">mailing list</a>. Please do not post bugs on the mailing list."
-msgstr ""
+msgid "use at your own risk"
+msgstr "자신의 책임하에 사용"
 
 #: lang.c:27
-msgid "You can join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>)"
+#: lang.c:28
+#: lang.c:66
+msgid "Download"
+msgstr "다운로드"
+
+#: lang.c:29
+msgid "Thanks for downloading Synergy. If you need help, please read the <a href=\"%1\">user guide</a> or visit the <a href=\"%2\">help</a> page."
+msgstr "Synergy를 다운로드 받아주셔서 감사합니다. 도움이 필요하시면, <a href=\"%1\">사용자 가이드</a> 또는 <a href=\"%2\">도움말</a> 페이지를 방문해주세요."
+
+#: lang.c:30
+msgid "Please support open source software by donating!"
 msgstr ""
 
-#: lang.c:28
-#: lang.c:59
+#: lang.c:31
+#: lang.c:67
+msgid "Help"
+msgstr "도와주세요"
+
+#: lang.c:32
+msgid "Having problems using Synergy? You're in the right place!"
+msgstr "문제는 시너지를 사용하고 .. 당신은 바로 이곳에서이야!"
+
+#: lang.c:33
+msgid "Latest version"
+msgstr "최신버전"
+
+#: lang.c:34
+msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
+msgstr "사용자가 최신 버전을 사용해보지 않고 신고하는 버그가 많습니다. <a href=\"%1\">다운로드</a> 페이지를 방문하여 최신 버전(만약 베타버전이더라도)을 이용해 보시고 신고해주세요. 원하신다면 <a href=\"/nightly/\">나이틀리 빌드</a>를 이용해 보셔도 되지만 최후의 수단으로만 사용하세요 (이 버전들은 우리의 품질 보증을 통과하지 못했습니다)."
+
+#: lang.c:35
+msgid "User guide"
+msgstr "사용자 가이드"
+
+#: lang.c:36
+msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
+msgstr "더 진행하시기 전에 <a href=\"%1\">사용자 가이드</a>를 읽어보시기 바랍니다."
+
+#: lang.c:37
+#: lang.c:68
+#: lang.c:75
+msgid "Search"
+msgstr "검색"
+
+#: lang.c:38
+msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
+msgstr "<a href=\"%1\">빠른검색</a>은 오래걸리지 않습니다. "
+
+#: lang.c:39
+msgid "Q&#38;A website"
+msgstr "Q&#38;A 웹사이트"
+
+#: lang.c:40
+msgid "You can ask a question on our <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A website</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
+msgstr "우리의 <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A 웹사이트</a>에 질문을 하실 수 있습니다. 질문이 닫히지 않도록 <a href=\"/osqa/faq/\">FAQ</a>를 잘 읽어보세요."
+
+#: lang.c:41
+msgid "Mailing list"
+msgstr "메일링리스트"
+
+#: lang.c:42
+msgid "Some users may prefer to use our <a href=\"http://groups.google.com/group/synergy-plus/post\">mailing list</a>. Please do not post bugs on the mailing list."
+msgstr "일부 사용자들은 <a href=\"http://groups.google.com/group/synergy-plus/post\">메일링 리스트</a>를 사용하는 것을 선호합니다. 메일링 리스트에 버그를 게시하지는 마세요."
+
+#: lang.c:43
+msgid "IRC"
+msgstr ""
+
+#: lang.c:44
+msgid "You can join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>)"
+msgstr "IRC 채널에 참여할 수 있습니다<code>#synergy on irc.freenode.net:8001</code>(IRC는 <a href=\"http://xchat.org/\">XChat</a>을 사용할 수 있습니다)"
+
+#: lang.c:45
+#: lang.c:78
 msgid "Super User"
 msgstr "Super User (슈퍼 사용자)"
 
-#: lang.c:29
+#: lang.c:46
 msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
 msgstr "당신은 슈퍼 사용자에 익숙한 경우 <a href=\"http://superuser.com/questions/tagged/synergy\">정보 시너지 태그</a> 있어요."
 
-#: lang.c:30
+#: lang.c:47
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
 msgstr "Super User는 Synergy를 지원하는 전용되지 않습니다."
 
-#: lang.c:31
+#: lang.c:48
 msgid "Ask questions; do not nag or comment on bugs or issues."
 msgstr "질문; 자성하지하거나 버그 또는 문제에 대한 논평."
 
-#: lang.c:32
+#: lang.c:49
 msgid "Do not raise new bugs there; use the issue tracker for this."
 msgstr "거기에 새로운 버그를 높이지 ​​마라,이 일로 이슈 추적기를 사용합니다."
 
-#: lang.c:33
+#: lang.c:50
 msgid "Synergy developers do <i>not</i> monitor this website."
 msgstr "시너지 개발자가이 웹사이트를 모니터링하지 않습니다."
 
-#: lang.c:34
+#: lang.c:51
 msgid "Always use the \"synergy\" tag on your question."
 msgstr "항상 귀하의 질문에 \"synergy\"태그를 사용합니다."
 
-#: lang.c:35
+#: lang.c:52
 msgid "Make sure you mention \"Synergy\" in the question."
 msgstr "당신은 질문에 \"Synergy '이라는 확인하십시오."
 
-#: lang.c:36
+#: lang.c:53
 msgid "Report a bug"
 msgstr "버그 신고"
 
-#: lang.c:37
-msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. To do this, <a href=\"/tracker/account/register\">register</a> a new account <em>and then</em> open a <a href=\"/tracker/projects/synergy/support/new\">new bug report</a> on our issue tracker."
+#: lang.c:54
+msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
 msgstr ""
 
-#: lang.c:38
+#: lang.c:55
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
 msgstr "Synergy는 쉽게 마우스는 책상에있는 여러 대의 컴퓨터 사이에서 키보드를 공유할 수 있으며 그것은 무료 및 오픈 소스입니다. 그냥 다른 사람에게 한 컴퓨터의 화면의 가장자리에게서 마우스를 이동합니다. 당신은 심지어 clipboards을 모두 공유할 수 있습니다. 당신이 필요로하는 것은 네트워크 연결입니다. Synergy는 크로스 플랫폼 (윈도우, 맥 OS X 및 Linux에서 작품)입니다."
 
-#: lang.c:39
-#: lang.c:52
+#: lang.c:56
+#: lang.c:69
 msgid "Info"
 msgstr "정보"
 
-#: lang.c:40
+#: lang.c:57
 msgid "Blog"
 msgstr "블로그"
 
-#: lang.c:41
+#: lang.c:58
 msgid "Key people"
 msgstr "주요 사람들"
 
-#: lang.c:42
+#: lang.c:59
 msgid "Project leader and primary developer"
 msgstr "프로젝트 리더 및 ​​기본 개발"
 
-#: lang.c:43
+#: lang.c:60
 msgid "Original author and project founder"
-msgstr "원저 작자 및 프로젝트 설립자"
+msgstr "최초 개발자 및 프로젝트 설립자"
 
-#: lang.c:44
+#: lang.c:61
 msgid "Founder of Synergy+ (fork project)"
 msgstr "Synergy+의 창립자 (포크 프로젝트)"
 
-#: lang.c:45
-msgid "Support us!"
-msgstr "우리를 지원!"
+#: lang.c:62
+msgid "Support Synergy!"
+msgstr "Synergy를 후원하세요!"
 
-#: lang.c:46
-msgid "Please help us out by donating or buying merchandise. Thanks for your support!"
-msgstr "물건을 기증하거나 구입하여 우리를 도와주십시오. 당신의 지원에 감사드립니다!"
+#: lang.c:63
+msgid "Please help the Synergy project by donating or buying merchandise. Thanks for your support!"
+msgstr ""
 
-#: lang.c:47
+#: lang.c:64
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
 msgstr "Synergy 당신의 책상에 여러 대의 컴퓨터 사이에서 키보드와 마우스를 공유할 수 있습니다."
 
-#: lang.c:48
+#: lang.c:65
 msgid "Home"
 msgstr "홈"
 
-#: lang.c:53
+#: lang.c:71
+msgid "Wiki"
+msgstr ""
+
+#: lang.c:72
 msgid "Tracker"
 msgstr "트래커"
 
-#: lang.c:54
-msgid "Developer"
-msgstr "개발자"
+#: lang.c:73
+msgid "Code"
+msgstr ""
 
-#: lang.c:55
+#: lang.c:74
 msgid "Improve this translation"
 msgstr "이 번역을 향상"
 
-#: lang.c:57
+#: lang.c:76
 msgid "Search all Synergy websites from one page."
-msgstr "한 페이지에서 모든 Synergy 웹사이트를 검색합니다."
+msgstr "Synergy 웹사이트 전체에서 검색합니다."
 
-#: lang.c:58
+#: lang.c:77
 msgid "What is searched?"
 msgstr "어떻게 검색합니까?"
 
-#: lang.c:60
+#: lang.c:79
 msgid "Issue tracker"
 msgstr "문제 추적기"
 
-#: lang.c:61
+#: lang.c:80
 msgid "Website wiki"
 msgstr "웹사이트 위키"
 
-#: lang.c:62
+#: lang.c:81
 msgid "Mailing lists"
 msgstr "메일링리스트"
 
-#: lang.c:63
+#: lang.c:82
 msgid "Search tips"
 msgstr "검색 팁"
 
-#: lang.c:64
+#: lang.c:83
 msgid "If you get too many results, try specifying your operating system."
 msgstr "당신이 너무 많은 결과를 얻을 수있는 경우 운영 체제를 지정하십시오."
 
-#: lang.c:65
+#: lang.c:84
 msgid "Sometimes issues are specific to the client or server."
-msgstr "때로는 문제는 클라이언트 또는 서버와 관련이 있습니다."
+msgstr "때로는 특정 클라이언트나 서버에 관련된 문제입니다."
 
-#: lang.c:66
+#: lang.c:85
 msgid "You may find that entering your version number helps."
-msgstr "당신의 버전 번호를 입력하면 도움 것을 알 수 있습니다."
+msgstr "버전 번호를 입력하면 더 좋은 결과를 얻을 수 있습니다."
 
-#: lang.c:67
+#: lang.c:86
 msgid "If this does not work, use the <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy search</a>."
 msgstr "이것이 작동하지 않으면 <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">를 대체 시너지 검색을 사용하십시오 </ a>.에게"
 
-#: lang.c:68
+#: lang.c:87
 msgid "Search now"
-msgstr ""
+msgstr "바로검색"
 

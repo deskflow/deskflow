@@ -16,23 +16,23 @@ msgstr ""
 #: lang.c:1
 #: lang.c:70
 msgid "Corporate"
-msgstr ""
+msgstr "Vállalati"
 
 #: lang.c:2
 msgid "Thanks for contacting us, we'll get back to you as soon as we read your message!"
-msgstr "Agradecemos o seu contacto, responderemos assim que tenhamos lido a sua mensagem!"
+msgstr "Köszönjük megkeresését, amint lehet jelentkezünk!"
 
 #: lang.c:3
 msgid "Need enterprise support for Synergy? Just get in touch with us by using this form."
-msgstr "Precisa de suporte para a sua empresa? Entre em contacto connosco através deste formulário."
+msgstr "Vállalati szintű támogatásra van szüksége? Lépjen kapcsolatba velünk ezen az oldalon."
 
 #: lang.c:4
 msgid "Latest release:"
-msgstr "Versão final mais recente:"
+msgstr "Legutóbbi kiadás:"
 
 #: lang.c:5
 msgid "Please use version 1.4 for easier setup. Use version 1.3 if you experience problems."
-msgstr "Use a versão 1.4, por favor, para uma instalação simples. Apenas use a versão 1.3 caso tenha problemas ao usar a versão mais recente"
+msgstr "Kérem használja az 1.4-es verziót a könnyebb telepítéshez. Használja az 1.3-as verziót ha hibát tapasztal. "
 
 #: lang.c:6
 msgid "Windows"
@@ -44,30 +44,30 @@ msgstr "Mac OS X"
 
 #: lang.c:8
 msgid "Ubuntu/Debian"
-msgstr ""
+msgstr "Ubuntu/Debian"
 
 #: lang.c:9
 msgid "Fedora/Red Hat"
-msgstr ""
+msgstr "Fedora/Red Hat"
 
 #: lang.c:10
 msgid "Source code"
-msgstr "Código fonte"
+msgstr "Forráskód"
 
 #: lang.c:11
 msgid "Previous 1.4 releases"
-msgstr "Versões 1.4 anteriores"
+msgstr "Previous 1.4 releases"
 
 #: lang.c:12
 #: lang.c:13
 #: lang.c:14
 #: lang.c:15
 msgid "Beta"
-msgstr ""
+msgstr "Béta"
 
 #: lang.c:16
 msgid "Previous 1.3 releases"
-msgstr "Versões 1.3 anteriores"
+msgstr "Previous 1.3 releases"
 
 #: lang.c:17
 #: lang.c:18
@@ -75,150 +75,150 @@ msgstr "Versões 1.3 anteriores"
 #: lang.c:20
 #: lang.c:21
 msgid "Stable"
-msgstr "Estável"
+msgstr "Stabil"
 
 #: lang.c:22
 msgid "Other projects"
-msgstr "Outros projectos"
+msgstr "Más projektek"
 
 #: lang.c:23
 msgid "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
-msgstr "<a href=\"%1\">cliente iOS por Matthias Ringwald</a> (iPad/iPhone)"
+msgstr "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
 
 #: lang.c:24
 msgid "Related sites"
-msgstr "Sites relacionados"
+msgstr "Kapcsolódó oldalak"
 
 #: lang.c:25
 msgid "Nightly builds"
-msgstr ""
+msgstr "Napi változatok"
 
 #: lang.c:26
 msgid "use at your own risk"
-msgstr "use à sua responsabilidade"
+msgstr "csak saját felelősségére"
 
 #: lang.c:27
 #: lang.c:28
 #: lang.c:66
 msgid "Download"
-msgstr "Transferir"
+msgstr "Letöltés"
 
 #: lang.c:29
 msgid "Thanks for downloading Synergy. If you need help, please read the <a href=\"%1\">user guide</a> or visit the <a href=\"%2\">help</a> page."
-msgstr "Obrigado por descarregar o Synergy. Se precisares de ajuda, lê por favor o <a href=\"%1\">guia do utilizador</a>ou visite a página de <a href=\"%2\">ajuda</a>."
+msgstr "Köszönjük, hogy letöltötte a Synergy-t. Ha segítségre van szüksége, kérjük olvassa el a <a href=\"%1\">kézikönyvet</a> vagy nézze meg a <a href=\"%2\">súgót</a>."
 
 #: lang.c:30
 msgid "Please support open source software by donating!"
-msgstr "Por favor suporte o opens source com um donativo!"
+msgstr "Kérjük támogassa a nyílt forráskódú szoftvert adományával!"
 
 #: lang.c:31
 #: lang.c:67
 msgid "Help"
-msgstr "Ajuda"
+msgstr "Súgó"
 
 #: lang.c:32
 msgid "Having problems using Synergy? You're in the right place!"
-msgstr "Tens dificuldades a usar o Synergy? Estás no sitio certo!"
+msgstr "Problémája van a Synergy használatával? A legjobb helyen van."
 
 #: lang.c:33
 msgid "Latest version"
-msgstr "Ultima versão"
+msgstr "Legfrissebb verzió"
 
 #: lang.c:34
 msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr "Muitas vezes os erros dos programas já foram resolvidos na versão mais recente, pelo que deve ser experimentada antes de registar novo erro. Por favor visite a página<a href=\"%1\">downloads</a> e experimente a versão mais recente (mesmo que seja beta). Por vezes, podes ainda usar a versão <a href=\"/nightly/\">nightly builds</a>, mas use esta versão apenas como úlltimo recurso, que estas versões ainda não foram validadas quanto à qualidade."
+msgstr "Sok problémát megold ha a legújabb verziót használja. Kérjük keresse fel a <a href=\"%1\">letöltések</a> oldalt és próbálja ki a legutóbbi verziót (még akkor is ha béta). Megpróbálhatja a <a href=\"/nightly/\">\"Nightly builds\"</a> változatot, de kérem csak végső megoldásként (ezek a változatokat nem ellenőrizzük, automatikusan kerülnek ki)."
 
 #: lang.c:35
 msgid "User guide"
-msgstr "Guia do utilizador"
+msgstr "Kézikönyv"
 
 #: lang.c:36
 msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
-msgstr "Leia, por favor, o <a href=\"%1\">guião do utilizador</a> antes de prosseguir."
+msgstr "Kérjük olvassa el a <a href=\"%1\">kézikönyvet</a>, mielőtt bármi más tenne."
 
 #: lang.c:37
 #: lang.c:68
 #: lang.c:75
 msgid "Search"
-msgstr "Pesquisa"
+msgstr "Keresés"
 
 #: lang.c:38
 msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
-msgstr "Experimente uma <a href=\"%1\">busca rápida</a>, não demora mesmo nada."
+msgstr "Próbálja meg a <a href=\"%1\">gyors keresést</a>, tényleg nem tart soká."
 
 #: lang.c:39
 msgid "Q&#38;A website"
-msgstr "Website de Q&#38;A"
+msgstr "Q&#38;A weboldal"
 
 #: lang.c:40
 msgid "You can ask a question on our <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A website</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
-msgstr "Podes colocar uma questão na nossa <a href=\"http://synergy-foss.org/osqa/\">Website de Q&#38;A</a>. Leia <a href=\"/osqa/faq/\">FAQ</a> para certificar que a questão não será rejeitada."
+msgstr "Felteheti kérdését a <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A weboldalunkon</a>. Olvassa el a <a href=\"/osqa/faq/\">FAQ</a>-ot, talán kérdését már megválaszoltuk."
 
 #: lang.c:41
 msgid "Mailing list"
-msgstr ""
+msgstr "Levelezési lista"
 
 #: lang.c:42
 msgid "Some users may prefer to use our <a href=\"http://groups.google.com/group/synergy-plus/post\">mailing list</a>. Please do not post bugs on the mailing list."
-msgstr "Pode ser que prefira usar a nossa <a href=\"http://groups.google.com/group/synergy-plus/post\">mailing list</a>. Por favor, não a utilize para registar erros."
+msgstr "Néhány felhasználó jobban szereti a <a href=\"http://groups.google.com/group/synergy-plus/post\">levelezési listát</a>. Kérjük ne jelezzen hibát a levelezési listán."
 
 #: lang.c:43
 msgid "IRC"
-msgstr ""
+msgstr "IRC"
 
 #: lang.c:44
 msgid "You can join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>)"
-msgstr "Podes juntar-te a nós no canal IRC : <code>#synergy on irc.freenode.net:8001</code> (para IRC, podes usar <a href=\"http://xchat.org/\">XChat</a>)"
+msgstr "Csatlakozhat az IRC csatornánkhoz: <code>#synergy on irc.freenode.net:8001</code> (pl. az <a href=\"http://xchat.org/\">XChat</a> programmal)"
 
 #: lang.c:45
 #: lang.c:78
 msgid "Super User"
-msgstr "Super utilizador"
+msgstr "Super user"
 
 #: lang.c:46
 msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
-msgstr "Se estás habituado a usar Super User, aqui encontras <a href=\"http://superuser.com/questions/tagged/synergy\">synergy</a>"
+msgstr "Ha ismerős vagy a SuperUser.com-on akkor <a href=\"http://superuser.com/questions/tagged/synergy\">kattints ide</a>."
 
 #: lang.c:47
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
-msgstr "Super User <b>não</b> é um suporte dedicado a Synergy"
+msgstr "A SuperUser.com <b>nem csak</b> Synergy támogatási oldal."
 
 #: lang.c:48
 msgid "Ask questions; do not nag or comment on bugs or issues."
-msgstr "Coloca questões; evite insistir e comentar erros conhecidos"
+msgstr "Kérdezzen, ne kritizálja vagy kommentálja a problémákat."
 
 #: lang.c:49
 msgid "Do not raise new bugs there; use the issue tracker for this."
-msgstr "Não coloque novos pedidos de verificação de erros aí; para esse efeito, use o registo de problemas"
+msgstr "Ne itt jelezzen új hibákat, arra az Tracker-t használja."
 
 #: lang.c:50
 msgid "Synergy developers do <i>not</i> monitor this website."
-msgstr "Os programadores de Synergy <i>não</i> monitorizam este site."
+msgstr "A Synergy fejlesztők <i>nem</i> figyelik ezt az oldalt."
 
 #: lang.c:51
 msgid "Always use the \"synergy\" tag on your question."
-msgstr "Usa sempre o marcador \"Synergy\" na tua questão."
+msgstr "Mindig használja a \"synergy\" cimkét a kérdéséhez."
 
 #: lang.c:52
 msgid "Make sure you mention \"Synergy\" in the question."
-msgstr "Tenha o cuidado de mencionar sempre \"Synergy\" na questão."
+msgstr "Legyen biztos, hogy megemlíti a \"Synergy\"-t a kérdésében."
 
 #: lang.c:53
 msgid "Report a bug"
-msgstr "Registar um erro"
+msgstr "Hiba jelentése"
 
 #: lang.c:54
 msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
-msgstr "Por favor registe um erro apenas após ter experimentado todas as opções acima apresentadas, e tenhas a certeza absoluta de que se trata de um erro. Coloque um <a href=\"%1\">novo registo de erro</a>."
+msgstr "Kérjük jelezze a hibát ha a fenti lehetőségek egyike sem segít és egészen biztos benne, hogy hibát talált. Nyisson egy <a href=\"%1\">új hiba jelentést</a>."
 
 #: lang.c:55
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
-msgstr "Synergy permite que uses o teu rato e teclado para controlar vários computadores na tua secretária em simultâneo, é gratuito e Open Source. Basta mover o rato para um lado ou para outro para mudar de ecrã. Podes até copiar e colar de um ecrã para o outro. Precisas apenas de uma ligação de rede. O Synergy é cross-platform (funciona em Windows, Mac OS X e Linux)."
+msgstr "A Synergy lehetővé teszi a billentyűzet és egér megosztását több számítógép között és ráadásul Ingyenes és nyílt forráskódú. Csak mozgassa az egeret a képernyő szélére, hogy átkerüljön a másik számítógépe monitorára. A számítógépek között a vágólap is megosztásra kerül. Nincs másra szüksége csak hálózati kapcsolatra a két számítógép között. A Synergy operációs rendszer független, így használhatja Windows, Mac OS X és Linux rendszerű számítógéppel."
 
 #: lang.c:56
 #: lang.c:69
 msgid "Info"
-msgstr "Informação"
+msgstr "Infó"
 
 #: lang.c:57
 msgid "Blog"
@@ -226,93 +226,93 @@ msgstr "Blog"
 
 #: lang.c:58
 msgid "Key people"
-msgstr "Personalidades chave"
+msgstr "Kulcsemberek"
 
 #: lang.c:59
 msgid "Project leader and primary developer"
-msgstr "Responsável do projecto e programador principal"
+msgstr "Projekt vezető és vezető fejlesztő"
 
 #: lang.c:60
 msgid "Original author and project founder"
-msgstr "Autor original e fundador do projecto"
+msgstr "Alapító és projekt támogató"
 
 #: lang.c:61
 msgid "Founder of Synergy+ (fork project)"
-msgstr "Fundador de Synergy + (fork project)"
+msgstr "A Synergy+ alapítója (fork project)"
 
 #: lang.c:62
 msgid "Support Synergy!"
-msgstr "Apoia o Synergy!"
+msgstr "Támogassa a Synergy-t!"
 
 #: lang.c:63
 msgid "Please help the Synergy project by donating or buying merchandise. Thanks for your support!"
-msgstr "Por favor apoie o projecto Synergy doando ou comprando algum artigo de merchandise. Obrigado pelo seu apoio!"
+msgstr "Kérjük segítse a Synergy-t adományával és vásárlásával. Köszönjük támogatását!"
 
 #: lang.c:64
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
-msgstr "Synergy permite que uses o teu rato e teclado para controlar vários computadores na tua secretária em simultâneo."
+msgstr "A Synergy lehetővé teszi a billentyűzet és egér megosztását több számítógép között."
 
 #: lang.c:65
 msgid "Home"
-msgstr "Inicio"
+msgstr "Kezdőlap"
 
 #: lang.c:71
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 #: lang.c:72
 msgid "Tracker"
-msgstr ""
+msgstr "Tracker"
 
 #: lang.c:73
 msgid "Code"
-msgstr "Código"
+msgstr "Kód"
 
 #: lang.c:74
 msgid "Improve this translation"
-msgstr "Melhorar esta tradução"
+msgstr "Javítsa ezt a fordítást"
 
 #: lang.c:76
 msgid "Search all Synergy websites from one page."
-msgstr "Procura em todos os websites de Synergy numa única página"
+msgstr "Keressen az összes Synergy weboldalon egy helyről"
 
 #: lang.c:77
 msgid "What is searched?"
-msgstr "O que procuras?"
+msgstr "Mit keres?"
 
 #: lang.c:79
 msgid "Issue tracker"
-msgstr "Registo de problemas"
+msgstr "Issue tracker"
 
 #: lang.c:80
 msgid "Website wiki"
-msgstr ""
+msgstr "Wiki"
 
 #: lang.c:81
 msgid "Mailing lists"
-msgstr ""
+msgstr "Levelezési listák"
 
 #: lang.c:82
 msgid "Search tips"
-msgstr "Dicas de busca"
+msgstr "Keresési tippek"
 
 #: lang.c:83
 msgid "If you get too many results, try specifying your operating system."
-msgstr "Se obtiveres demasiados resultados, tenta especificar o sistema operativo usado"
+msgstr "Ha túl sok találatot kapott, az op.rendszer megadásával szűkítheti."
 
 #: lang.c:84
 msgid "Sometimes issues are specific to the client or server."
-msgstr "Por vezes, o problema é especifico do cliente ou servidor"
+msgstr "Az esetek néha a kliensre vagy a szerverre vonatkoznak."
 
 #: lang.c:85
 msgid "You may find that entering your version number helps."
-msgstr "Por vezes, colocar o número da versão pode ser útil"
+msgstr "Néha segít megtalálni amit keres, ha megadja a verziószámot."
 
 #: lang.c:86
 msgid "If this does not work, use the <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy search</a>."
-msgstr "Se isto não resultar, use a  <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">pesquisa alternativa</a>."
+msgstr "Ha ez nem működik, használja az <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternatív Synergy keresőt</a>."
 
 #: lang.c:87
 msgid "Search now"
-msgstr "Pesquisar agora"
+msgstr "Keresés"
 
