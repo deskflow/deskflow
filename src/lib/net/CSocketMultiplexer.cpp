@@ -82,6 +82,7 @@ CSocketMultiplexer::~CSocketMultiplexer()
 CSocketMultiplexer*
 CSocketMultiplexer::getInstance()
 {
+	assert(s_instance != NULL);
 	return s_instance;
 }
 

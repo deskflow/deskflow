@@ -356,13 +356,9 @@ CServerApp::closeServer(CServer* server)
 		new TMethodEventJob<CServerApp>(this, &CServerApp::handleClientsDisconnected));
 	EVENTQUEUE->adoptHandler(CServer::getDisconnectedEvent(), server,
 		new TMethodEventJob<CServerApp>(this, &CServerApp::handleClientsDisconnected));
-	CEvent event;
-	EVENTQUEUE->getEvent(event);
-	while (event.getType() != CEvent::kQuit) {
-		EVENTQUEUE->dispatchEvent(event);
-		CEvent::deleteData(event);
-		EVENTQUEUE->getEvent(event);
-	}
+	
+	EVENTQUEUE->loop();
+
 	EVENTQUEUE->removeHandler(CEvent::kTimer, timer);
 	EVENTQUEUE->deleteTimer(timer);
 	EVENTQUEUE->removeHandler(CServer::getDisconnectedEvent(), server);
@@ -815,14 +811,8 @@ CServerApp::mainLoop()
 	// run event loop.  if startServer() failed we're supposed to retry
 	// later.  the timer installed by startServer() will take care of
 	// that.
-	CEvent event;
 	DAEMON_RUNNING(true);
-	EVENTQUEUE->getEvent(event);
-	while (event.getType() != CEvent::kQuit) {
-		EVENTQUEUE->dispatchEvent(event);
-		CEvent::deleteData(event);
-		EVENTQUEUE->getEvent(event);
-	}
+	EVENTQUEUE->loop();
 	DAEMON_RUNNING(false);
 
 	// close down

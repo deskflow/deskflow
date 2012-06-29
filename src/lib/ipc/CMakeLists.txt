@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(inc
+	Ipc.h
 	CIpcServer.h
 	CIpcClient.h
 	CIpcServerProxy.h
@@ -32,6 +33,11 @@ if (WIN32)
 endif()
 
 set(inc
+	../arch
+	../base
+	../common
+	../io
+	../mt
 	../net
 )
 
@@ -45,5 +51,5 @@ include_directories(${inc})
 add_library(ipc STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(net)
+	target_link_libraries(arch base common mt io net)
 endif()

@@ -16,9 +16,12 @@
  */
 
 #include "CIpcClient.h"
+#include "Ipc.h"
 
-CIpcClient::CIpcClient()
+CIpcClient::CIpcClient() :
+m_serverAddress(CNetworkAddress(IPC_HOST, IPC_PORT))
 {
+	m_serverAddress.resolve();
 }
 
 CIpcClient::~CIpcClient()
@@ -28,4 +31,5 @@ CIpcClient::~CIpcClient()
 void
 CIpcClient::connect()
 {
+	m_socket.connect(m_serverAddress);
 }

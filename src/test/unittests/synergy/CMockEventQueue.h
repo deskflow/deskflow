@@ -24,6 +24,7 @@
 class CMockEventQueue : public IEventQueue
 {
 public:
+	MOCK_METHOD0(loop, void());
 	MOCK_METHOD2(newOneShotTimer, CEventQueueTimer*(double, void*));
 	MOCK_METHOD2(newTimer, CEventQueueTimer*(double, void*));
 	MOCK_METHOD2(getEvent, bool(CEvent&, double));

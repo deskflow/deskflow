@@ -49,6 +49,12 @@ public:
 	//! @name manipulators
 	//@{
 
+	//! Loop the event queue until quit
+	/*!
+	Dequeues and dispatches events until the kQuit event is found.
+	*/
+	virtual void		loop() = 0;
+
 	//! Set the buffer
 	/*!
 	Replace the current event queue buffer.  Any queued events are

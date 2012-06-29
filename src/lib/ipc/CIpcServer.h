@@ -17,6 +17,9 @@
 
 #pragma once
 
+#include "CTCPListenSocket.h"
+#include "CNetworkAddress.h"
+
 //! IPC server for communication between daemon and GUI.
 /*!
  * The IPC server listens on localhost. The IPC client runs on both the
@@ -31,4 +34,8 @@ public:
 
 	//! Opens a TCP socket only allowing local connections
 	void listen();
+
+private:
+	CTCPListenSocket m_socket;
+	CNetworkAddress m_address;
 };
