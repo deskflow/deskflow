@@ -37,6 +37,7 @@ public:
 	virtual ~CEventQueue();
 
 	// IEventQueue overrides
+	virtual void		loop();
 	virtual void		adoptBuffer(IEventQueueBuffer*);
 	virtual bool		getEvent(CEvent& event, double timeout = -1.0);
 	virtual bool		dispatchEvent(const CEvent& event);

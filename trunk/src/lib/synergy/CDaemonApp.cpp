@@ -190,13 +190,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		m_relauncher.startAsync();
 #endif
 
-		CEvent event;
-		EVENTQUEUE->getEvent(event);
-		while (event.getType() != CEvent::kQuit) {
-			EVENTQUEUE->dispatchEvent(event);
-			CEvent::deleteData(event);
-			EVENTQUEUE->getEvent(event);
-		}
+		EVENTQUEUE->loop();
 
 #if SYSAPI_WIN32
 		m_relauncher.stop();

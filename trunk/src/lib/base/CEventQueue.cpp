@@ -54,6 +54,18 @@ CEventQueue::~CEventQueue()
 	setInstance(NULL);
 }
 
+void
+CEventQueue::loop()
+{
+	CEvent event;
+	getEvent(event);
+	while (event.getType() != CEvent::kQuit) {
+		dispatchEvent(event);
+		CEvent::deleteData(event);
+		getEvent(event);
+	}
+}
+
 CEvent::Type
 CEventQueue::registerType(const char* name)
 {

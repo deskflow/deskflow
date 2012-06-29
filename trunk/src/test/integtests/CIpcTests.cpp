@@ -18,21 +18,19 @@
 #include <gtest/gtest.h>
 #include "CIpcServer.h"
 #include "CIpcClient.h"
+#include "CSocketMultiplexer.h"
+#include "CEventQueue.h"
 
-TEST(CIpcTests, serverSend)
+TEST(CIpcTests, connectToServer)
 {
+	CSocketMultiplexer multiplexer;
+	CEventQueue eventQueue;
+
 	CIpcServer server;
 	server.listen();
 
 	CIpcClient client;
 	client.connect();
-}
 
-TEST(CIpcTests, clientSend)
-{
-	CIpcServer server;
-	server.listen();
-
-	CIpcClient client;
-	client.connect();
+	eventQueue.loop();
 }

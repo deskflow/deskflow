@@ -15,21 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CIpcServer.h"
-#include "Ipc.h"
+#pragma once
 
-CIpcServer::CIpcServer() :
-m_address(CNetworkAddress(IPC_HOST, IPC_PORT))
-{
-	m_address.resolve();
-}
-
-CIpcServer::~CIpcServer()
-{
-}
-
-void
-CIpcServer::listen()
-{
-	m_socket.bind(m_address);
-}
+#define IPC_HOST "127.0.0.1"
+#define IPC_PORT 24801

@@ -538,14 +538,8 @@ CClientApp::mainLoop()
 	// run event loop.  if startClient() failed we're supposed to retry
 	// later.  the timer installed by startClient() will take care of
 	// that.
-	CEvent event;
 	DAEMON_RUNNING(true);
-	EVENTQUEUE->getEvent(event);
-	while (event.getType() != CEvent::kQuit) {
-		EVENTQUEUE->dispatchEvent(event);
-		CEvent::deleteData(event);
-		EVENTQUEUE->getEvent(event);
-	}
+	EVENTQUEUE->loop();
 	DAEMON_RUNNING(false);
 
 	// close down
