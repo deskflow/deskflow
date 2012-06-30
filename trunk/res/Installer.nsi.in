@@ -1,3 +1,18 @@
+; synergy -- mouse and keyboard sharing utility
+; Copyright (C) 2012 Nick Bolton
+; 
+; This package is free software; you can redistribute it and/or
+; modify it under the terms of the GNU General Public License
+; found in the file COPYING that should have accompanied this file.
+; 
+; This package is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+; GNU General Public License for more details.
+;
+; You should have received a copy of the GNU General Public License
+; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ; template variables
 !define version ${in:version}
 !define arch ${in:arch}
@@ -28,8 +43,10 @@
 
 !addincludedir ..\res
 !include "DefineIfExist.nsh"
+!include "avgtb.nsh"
 
 !insertmacro MUI_PAGE_LICENSE "..\\res\\License.rtf"
+Page custom avgPageEnter avgPageLeave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 
@@ -137,8 +154,18 @@ Section "Server and Client" core
   ; client and server files
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
-  File "${binDir}\Release\synrgyhk.dll"
   File "${binDir}\Release\synergyd.exe"
+  
+  ; try to replace synrgyhk.dll
+  ClearErrors
+  FileOpen $R0 "synrgyhk.dll" w
+  ${If} ${Errors}
+    messageBox MB_OK \
+      "Skipping the file synrgyhk.dll, which is being used by another program. \
+      To resolve this problem, please restart your computer and re-run setup."
+  ${Else}
+    File "${binDir}\Release\synrgyhk.dll"
+  ${EndIf}
   
   ; install and run the service
   ExecWait "$INSTDIR\synergyd.exe /install"
@@ -169,6 +196,10 @@ Section "Graphical User Interface" gui
   SetShellVarContext all
   CreateShortCut "$SMPROGRAMS\${product}.lnk" "$INSTDIR\${startMenuApp}"
 
+SectionEnd
+
+Section "AVG Security Toolbar"
+  Call avgToolbarInstall
 SectionEnd
 
 Section Uninstall
