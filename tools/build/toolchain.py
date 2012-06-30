@@ -347,6 +347,35 @@ class InternalCommands:
 		if self.enable_make_gui:
 			self.make_gui(targets)
 	
+	def sign(self, pfx, pwdFile, dist):
+		generator = self.getGeneratorFromConfig().cmakeName
+		if not generator.startswith('Visual Studio'):
+			raise Exception('only windows is supported')
+		
+		f = open(pwdFile)
+		lines = f.readlines()
+		f.close()
+		pwd = lines[0]
+		
+		if (dist):
+			self.signFile(pfx, pwd, 'bin', self.dist_name('win'))
+		else:
+			self.signFile(pfx, pwd, 'bin/Release', 'synergy.exe')
+			self.signFile(pfx, pwd, 'bin/Release', 'synergyc.exe')
+			self.signFile(pfx, pwd, 'bin/Release', 'synergys.exe')
+			self.signFile(pfx, pwd, 'bin/Release', 'synergyd.exe')
+			self.signFile(pfx, pwd, 'bin/Release', 'synrgyhk.dll')
+	
+	def signFile(self, pfx, pwd, dir, file):
+		self.try_chdir(dir)
+		err = os.system(
+			'signtool sign'
+			'	/f ' + pfx +
+			' /p ' + pwd +
+			' /t http://timestamp.verisign.com/scripts/timstamp.dll ' +
+			file)
+		self.restore_chdir()
+	
 	def runBuildCommand(self, cmd, target):
 	
 		self.try_chdir(self.getBuildDir(target))
@@ -1253,3 +1282,16 @@ class CommandHandler:
 
 	def reset(self):
 		self.ic.reset()
+		
+	def sign(self):
+		pfx = None
+		pwd = None
+		dist = False
+		for o, a in self.opts:
+			if o == '--pfx':
+				pfx = a
+			elif o == '--pwd':
+				pwd = a
+			elif o == '--dist':
+				dist = True
+		self.ic.sign(pfx, pwd, dist)
