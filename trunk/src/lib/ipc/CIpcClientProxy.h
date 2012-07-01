@@ -17,8 +17,13 @@
 
 #pragma once
 
+class IStream;
+
 class CIpcClientProxy {
 public:
-	CIpcClientProxy();
+	CIpcClientProxy(IStream& stream);
 	virtual ~CIpcClientProxy();
+
+private:
+	IStream&			m_stream;
 };
