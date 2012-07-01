@@ -16,8 +16,10 @@
  */
 
 #include "CIpcClientProxy.h"
+#include "IStream.h"
 
-CIpcClientProxy::CIpcClientProxy()
+CIpcClientProxy::CIpcClientProxy(IStream& stream) :
+m_stream(stream)
 {
 }
 
