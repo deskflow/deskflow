@@ -43,7 +43,7 @@ Function avgPageEnter
     Return
   ${EndIf}
 
-  !insertmacro MUI_HEADER_TEXT "AVG" "Customize AVG Security Toolbar options."
+  !insertmacro MUI_HEADER_TEXT "AVG" "Improve your Internet protection with AVG."
   
   nsDialogs::Create 1018
   Pop $avgDialog
@@ -54,46 +54,46 @@ Function avgPageEnter
     websites. The toolbar is easy to uninstall later if you change your mind."
   Pop $avgLabel
   
-  ${NSD_CreateRadioButton} 0 35u 80u 10u "&Standard"
+  ${NSD_CreateRadioButton} 0 35u 80u 10u "Standard"
   Pop $avgStandardRadio
   ${NSD_Check} $avgStandardRadio
   ${NSD_OnClick} $avgStandardRadio avgRadioClick
   
   ${NSD_CreateLabel} 10u 45u 95% 20u \
-    "Install the AVG Security Toolbar. Set and protect AVG Secure Search \
-    as my homepage and default search provider."
+    "Install the AVG Security Toolbar. Set, keep and protect AVG Secure \
+    Search as my homepage and default search provider."
   Pop $avgStandardLabel
   
-  ${NSD_CreateRadioButton} 0u 65u 100% 10u "&Custom"
+  ${NSD_CreateRadioButton} 0u 65u 100% 10u "Custom"
   Pop $avgCustomRadio
   ${NSD_OnClick} $avgCustomRadio avgRadioClick
   
-  ${NSD_CreateCheckBox} 10u 75u 100% 10u "Install the AVG Security &Toolbar."
+  ${NSD_CreateCheckBox} 10u 75u 100% 10u "Install the AVG Security Toolbar."
   Pop $avgToolbarCheck
   ${NSD_Check} $avgToolbarCheck
   EnableWindow $avgToolbarCheck 0
   ${NSD_OnClick} $avgToolbarCheck avgCheckboxClick
   
   ${NSD_CreateCheckBox} 10u 85u 100% 10u \
-    "Set and protect AVG Secure Search as my &homepage and default search \
-    provider."
+    "Set, keep and protect AVG Secure Search as my homepage and default \
+    search provider."
   Pop $avgSearchCheck
   ${NSD_Check} $avgSearchCheck
   EnableWindow $avgSearchCheck 0
   ${NSD_OnClick} $avgSearchCheck avgCheckboxClick
 
-  ${NSD_CreateLabel} 0 105u 100% 10u \
-    "By clicking $\"Next$\" you agree to the AVG End User License Agreement and \
-    Privacy Policy."
-  Pop $avgLicenseLabel
-  
-  ${NSD_CreateLink} 10u 115u 100% 10u "AVG End User License Agreement"
+  ${NSD_CreateLink} 112u 105u 107u 10u "AVG End User License Agreement"
   Pop $avgEulaLink
   ${NSD_OnClick} $avgEulaLink avgEulaLinkClick
   
-  ${NSD_CreateLink} 10u 125u 100% 10u "AVG Privacy Policy"
+  ${NSD_CreateLink} 234u 105u 45u 10u "Privacy Policy"
   Pop $avgPrivacyLink
   ${NSD_OnClick} $avgPrivacyLink avgPrivacyLinkClick
+  
+  ${NSD_CreateLabel} 0 105u 100% 10u \
+    "By clicking $\"Next$\" you agree to the AVG End User License Agreement \
+    and Privacy Policy."
+  Pop $avgLicenseLabel
 
   nsDialogs::Show
   
