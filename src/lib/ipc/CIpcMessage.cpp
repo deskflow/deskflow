@@ -15,27 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "CIpcMessage.h"
 
-#include "CEvent.h"
+CIpcMessage::CIpcMessage()
+{
+}
 
-class IStream;
-
-class CIpcClientProxy {
-public:
-	CIpcClientProxy(IStream& stream);
-	virtual ~CIpcClientProxy();
-
-	//! Raised when the server receives a message from a client.
-	static CEvent::Type		getMessageReceivedEvent();
-
-private:
-	void				handleData(const CEvent&, void*);
-	void*				parseCommand();
-	void				disconnect();
-
-private:
-	IStream&			m_stream;
-
-	static CEvent::Type	s_messageReceivedEvent;
-};
+CIpcMessage::~CIpcMessage()
+{
+	delete m_data;
+}

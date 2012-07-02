@@ -17,25 +17,13 @@
 
 #pragma once
 
-#include "CEvent.h"
+#include "BasicTypes.h"
 
-class IStream;
-
-class CIpcClientProxy {
+class CIpcMessage {
 public:
-	CIpcClientProxy(IStream& stream);
-	virtual ~CIpcClientProxy();
+	CIpcMessage();
+	virtual ~CIpcMessage();
 
-	//! Raised when the server receives a message from a client.
-	static CEvent::Type		getMessageReceivedEvent();
-
-private:
-	void				handleData(const CEvent&, void*);
-	void*				parseCommand();
-	void				disconnect();
-
-private:
-	IStream&			m_stream;
-
-	static CEvent::Type	s_messageReceivedEvent;
+	UInt8				m_type;
+	void*				m_data;
 };

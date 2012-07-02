@@ -25,79 +25,107 @@
 #include "TMethodJob.h"
 #include "CArch.h"
 #include "CLog.h"
+#include "CIpcClientProxy.h"
+#include "Ipc.h"
+#include "CString.h"
 
 class CIpcTests : public ::testing::Test
 {
 public:
 	CIpcTests();
 	virtual ~CIpcTests();
-	void handleClientConnected(const CEvent&, void* vclient);
-	void raiseQuitEvent();
+	
+	void				connectToServer_handleClientConnected(const CEvent&, void* vclient);
+	void				sendMessageToServer_handleClientConnected(const CEvent&, void* vclient);
+	void				sendMessageToServer_handleMessageReceived(const CEvent&, void* vclient);
+	void				handleQuitTimeout(const CEvent&, void* vclient);
+	void				raiseQuitEvent();
+	void				quitTimeout(double timeout);
 
 private:
-	void timeoutThread(void*);
+	void				timeoutThread(void*);
 
 public:
-	bool m_quitOnClientConnect;
-	bool m_clientConnected;
-	bool m_timeoutCheck;
-	double m_timeout;
-
-private:
-	CThread* m_timeoutThread;
+	CSocketMultiplexer	m_multiplexer;
+	CEventQueue			m_events;
+	bool				m_connectToServer_clientConnected;
+	CString				m_sendMessageToServer_receivedString;
 };
 
 TEST_F(CIpcTests, connectToServer)
 {
-	m_quitOnClientConnect = true;
-
-	CSocketMultiplexer multiplexer;
-	CEventQueue events;
-
 	CIpcServer server;
 	server.listen();
 
-	events.adoptHandler(
+	m_events.adoptHandler(
 		CIpcServer::getClientConnectedEvent(), &server,
 		new TMethodEventJob<CIpcTests>(
-			this, &CIpcTests::handleClientConnected));
+		this, &CIpcTests::connectToServer_handleClientConnected));
 
 	CIpcClient client;
 	client.connect();
+	
+	quitTimeout(2);
+	m_events.loop();
 
-	m_timeoutCheck = true;
-	m_timeout = ARCH->time() + 5; // 5 sec timeout.
-	events.loop();
+	EXPECT_EQ(true, m_connectToServer_clientConnected);
+}
 
-	EXPECT_EQ(true, m_clientConnected);
+TEST_F(CIpcTests, sendMessageToServer)
+{
+	CIpcServer server;
+	server.listen();
+
+	CIpcClient client;
+	client.connect();
+	
+	m_events.adoptHandler(
+		CIpcServer::getClientConnectedEvent(), &server,
+		new TMethodEventJob<CIpcTests>(
+		this, &CIpcTests::sendMessageToServer_handleClientConnected));
+	
+	CIpcMessage m;
+	m.m_type = kIpcCommand;
+	m.m_data = (void*)(new CString("test"));
+	client.send(m);
+
+	quitTimeout(2);
+	m_events.loop();
+
+	EXPECT_EQ("test", m_sendMessageToServer_receivedString);
 }
 
 CIpcTests::CIpcTests() :
-m_timeoutThread(nullptr),
-m_quitOnClientConnect(false),
-m_clientConnected(false),
-m_timeoutCheck(false),
-m_timeout(0)
+m_connectToServer_clientConnected(false)
 {
-	m_timeoutThread = new CThread(
-		new TMethodJob<CIpcTests>(
-		this, &CIpcTests::timeoutThread, nullptr));
 }
 
 CIpcTests::~CIpcTests()
 {
-	delete m_timeoutThread;
 }
 
+void
+CIpcTests::connectToServer_handleClientConnected(const CEvent&, void*)
+{
+	m_connectToServer_clientConnected = true;
+	raiseQuitEvent();
+}
 
 void
-CIpcTests::handleClientConnected(const CEvent&, void* vclient)
+CIpcTests::sendMessageToServer_handleClientConnected(const CEvent& e, void*)
 {
-	m_clientConnected = true;
+	m_events.adoptHandler(
+		CIpcClientProxy::getMessageReceivedEvent(), e.getData(),
+		new TMethodEventJob<CIpcTests>(
+		this, &CIpcTests::sendMessageToServer_handleMessageReceived));
+}
 
-	if (m_quitOnClientConnect) {
-		raiseQuitEvent();
-	}
+void
+CIpcTests::sendMessageToServer_handleMessageReceived(const CEvent& e, void*)
+{
+	CIpcMessage* m = (CIpcMessage*)e.getData();
+	m_sendMessageToServer_receivedString = *((CString*)m->m_data);
+	raiseQuitEvent();
 }
 
 void
@@ -107,18 +135,16 @@ CIpcTests::raiseQuitEvent()
 }
 
 void
-CIpcTests::timeoutThread(void*)
+CIpcTests::quitTimeout(double timeout)
 {
-	while (true) {
-		if (!m_timeoutCheck) {
-			ARCH->sleep(1);
-			continue;
-		}
+	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
+		new TMethodEventJob<CIpcTests>(this, &CIpcTests::handleQuitTimeout, timer));
+}
 
-		if (ARCH->time() > m_timeout) {
-			LOG((CLOG_ERR "timeout"));
-			raiseQuitEvent();
-			m_timeoutCheck = false;
-		}
-	}
+void
+CIpcTests::handleQuitTimeout(const CEvent&, void* vclient)
+{
+	LOG((CLOG_ERR "timeout"));
+	raiseQuitEvent();
 }
