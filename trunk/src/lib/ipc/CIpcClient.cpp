@@ -17,9 +17,11 @@
 
 #include "CIpcClient.h"
 #include "Ipc.h"
+#include "CIpcServerProxy.h"
 
 CIpcClient::CIpcClient() :
-m_serverAddress(CNetworkAddress(IPC_HOST, IPC_PORT))
+m_serverAddress(CNetworkAddress(IPC_HOST, IPC_PORT)),
+m_server(nullptr)
 {
 	m_serverAddress.resolve();
 }
@@ -32,25 +34,12 @@ void
 CIpcClient::connect()
 {
 	m_socket.connect(m_serverAddress);
+	m_server = new CIpcServerProxy(m_socket);
 }
 
 void
 CIpcClient::send(const CIpcMessage& message)
 {
-	UInt8 code[1];
-	code[0] = message.m_type;
-	m_socket.write(code, 1);
-
-	switch (message.m_type) {
-	case kIpcCommand: {
-			CString* s = (CString*)message.m_data;
-
-			UInt8 len[1];
-			len[0] = s->size();
-			m_socket.write(len, 1);
-
-			m_socket.write(s->c_str(), s->size());
-		}
-		break;
-	}
+	assert(m_server != NULL);
+	m_server->send(message);
 }

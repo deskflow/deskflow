@@ -23,6 +23,7 @@
 
 class CEvent;
 class CIpcClientProxy;
+class CIpcMessage;
 
 //! IPC server for communication between daemon and GUI.
 /*!
@@ -41,6 +42,9 @@ public:
 
 	//! Opens a TCP socket only allowing local connections.
 	void				listen();
+
+	//! Send a message to all clients.
+	void				send(const CIpcMessage& message);
 
 	//@}
 	//! @name accessors

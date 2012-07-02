@@ -17,8 +17,28 @@
 
 #pragma once
 
+#include "CEvent.h"
+
+class IStream;
+class CIpcMessage;
+
 class CIpcServerProxy {
 public:
-	CIpcServerProxy();
+	CIpcServerProxy(IStream& stream);
 	virtual ~CIpcServerProxy();
+
+	void				send(const CIpcMessage& message);
+
+	//! Raised when the client receives a message from the server.
+	static CEvent::Type	getMessageReceivedEvent();
+
+private:
+	void				handleData(const CEvent&, void*);
+	void*				parseLogLine();
+	void				disconnect();
+
+private:
+	IStream&			m_stream;
+
+	static CEvent::Type	s_messageReceivedEvent;
 };

@@ -16,6 +16,10 @@
  */
 
 #include <gtest/gtest.h>
+
+#define TEST_ENV
+#include "Global.h"
+
 #include "CIpcServer.h"
 #include "CIpcClient.h"
 #include "CSocketMultiplexer.h"
@@ -28,6 +32,8 @@
 #include "CIpcClientProxy.h"
 #include "Ipc.h"
 #include "CString.h"
+#include "CIpcServerProxy.h"
+#include "CIpcMessage.h"
 
 class CIpcTests : public ::testing::Test
 {
@@ -35,9 +41,11 @@ public:
 	CIpcTests();
 	virtual ~CIpcTests();
 	
-	void				connectToServer_handleClientConnected(const CEvent&, void* vclient);
-	void				sendMessageToServer_handleClientConnected(const CEvent&, void* vclient);
-	void				sendMessageToServer_handleMessageReceived(const CEvent&, void* vclient);
+	void				connectToServer_handleClientConnected(const CEvent&, void*);
+	void				sendMessageToServer_handleClientConnected(const CEvent&, void*);
+	void				sendMessageToServer_handleMessageReceived(const CEvent&, void*);
+	void				sendMessageToClient_handleConnected(const CEvent&, void*);
+	void				sendMessageToClient_handleMessageReceived(const CEvent&, void*);
 	void				handleQuitTimeout(const CEvent&, void* vclient);
 	void				raiseQuitEvent();
 	void				quitTimeout(double timeout);
@@ -50,6 +58,9 @@ public:
 	CEventQueue			m_events;
 	bool				m_connectToServer_clientConnected;
 	CString				m_sendMessageToServer_receivedString;
+	CString				m_sendMessageToClient_receivedString;
+	CIpcServer*			m_sendMessageToClient_server;
+	CIpcServerProxy*	m_sendMessageToClient_serverProxy;
 };
 
 TEST_F(CIpcTests, connectToServer)
@@ -95,8 +106,32 @@ TEST_F(CIpcTests, sendMessageToServer)
 	EXPECT_EQ("test", m_sendMessageToServer_receivedString);
 }
 
+TEST_F(CIpcTests, sendMessageToClient)
+{
+	CIpcServer server;
+	server.listen();
+	m_sendMessageToClient_server = &server;
+
+	CIpcClient client;
+	client.connect();
+	m_sendMessageToClient_serverProxy = client.m_server;
+	
+	// event handler sends "test" log line to client.
+	m_events.adoptHandler(
+		CIpcServer::getClientConnectedEvent(), &server,
+		new TMethodEventJob<CIpcTests>(
+		this, &CIpcTests::sendMessageToClient_handleConnected));
+
+	quitTimeout(2);
+	m_events.loop();
+
+	EXPECT_EQ("test", m_sendMessageToClient_receivedString);
+}
+
 CIpcTests::CIpcTests() :
-m_connectToServer_clientConnected(false)
+m_connectToServer_clientConnected(false),
+m_sendMessageToClient_server(nullptr),
+m_sendMessageToClient_serverProxy(nullptr)
 {
 }
 
@@ -125,6 +160,28 @@ CIpcTests::sendMessageToServer_handleMessageReceived(const CEvent& e, void*)
 {
 	CIpcMessage* m = (CIpcMessage*)e.getData();
 	m_sendMessageToServer_receivedString = *((CString*)m->m_data);
+	raiseQuitEvent();
+}
+
+void
+CIpcTests::sendMessageToClient_handleConnected(const CEvent& e, void*)
+{
+	m_events.adoptHandler(
+		CIpcServerProxy::getMessageReceivedEvent(), m_sendMessageToClient_serverProxy,
+		new TMethodEventJob<CIpcTests>(
+		this, &CIpcTests::sendMessageToClient_handleMessageReceived));
+	
+	CIpcMessage m;
+	m.m_type = kIpcLogLine;
+	m.m_data = (void*)(new CString("test"));
+	m_sendMessageToClient_server->send(m);
+}
+
+void
+CIpcTests::sendMessageToClient_handleMessageReceived(const CEvent& e, void*)
+{
+	CIpcMessage* m = (CIpcMessage*)e.getData();
+	m_sendMessageToClient_receivedString = *((CString*)m->m_data);
 	raiseQuitEvent();
 }
 
