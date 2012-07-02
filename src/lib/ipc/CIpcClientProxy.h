@@ -20,11 +20,15 @@
 #include "CEvent.h"
 
 class IStream;
+class CIpcMessage;
 
 class CIpcClientProxy {
 public:
 	CIpcClientProxy(IStream& stream);
 	virtual ~CIpcClientProxy();
+
+	//! Send a message to the client.
+	void					send(const CIpcMessage& message);
 
 	//! Raised when the server receives a message from a client.
 	static CEvent::Type		getMessageReceivedEvent();
@@ -34,8 +38,9 @@ private:
 	void*				parseCommand();
 	void				disconnect();
 
-private:
+public:
 	IStream&			m_stream;
-
+	
+private:
 	static CEvent::Type	s_messageReceivedEvent;
 };

@@ -24,6 +24,7 @@
 #include "CIpcClientProxy.h"
 #include "IStream.h"
 #include "IDataSocket.h"
+#include "CIpcMessage.h"
 
 CEvent::Type			CIpcServer::s_clientConnectedEvent = CEvent::kUnknown;
 
@@ -70,4 +71,13 @@ CIpcServer::getClientConnectedEvent()
 {
 	return EVENTQUEUE->registerTypeOnce(
 		s_clientConnectedEvent, "CIpcServer::clientConnected");
+}
+
+void
+CIpcServer::send(const CIpcMessage& message)
+{
+	CClientSet::iterator it;
+	for (it = m_clients.begin(); it != m_clients.end(); it++) {
+		(*it)->send(message);
+	}
 }

@@ -49,7 +49,7 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 		CIpcMessage* m = new CIpcMessage();
 		m->m_type = code[1];
 
-		LOG((CLOG_DEBUG "ipc read message: %d", code[0]));
+		LOG((CLOG_DEBUG "ipc client proxy read: %d", code[0]));
 		switch (code[0]) {
 		case kIpcCommand:
 			m->m_data = parseCommand();
@@ -65,6 +65,33 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 		EVENTQUEUE->addEvent(CEvent(getMessageReceivedEvent(), this, m));
 
 		n = m_stream.read(code, 1);
+	}
+}
+
+void
+CIpcClientProxy::send(const CIpcMessage& message)
+{
+	LOG((CLOG_DEBUG "ipc client proxy write: %d", message.m_type));
+
+	UInt8 code[1];
+	code[0] = message.m_type;
+	m_stream.write(code, 1);
+
+	switch (message.m_type) {
+	case kIpcLogLine: {
+			CString* s = (CString*)message.m_data;
+
+			UInt8 len[1];
+			len[0] = s->size();
+			m_stream.write(len, 1);
+
+			m_stream.write(s->c_str(), s->size());
+		}
+		break;
+
+	default:
+		LOG((CLOG_ERR "message not supported: %d", message.m_type));
+		break;
 	}
 }
 

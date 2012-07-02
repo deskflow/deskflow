@@ -19,7 +19,9 @@
 
 #include "CNetworkAddress.h"
 #include "CTCPSocket.h"
-#include "CIpcMessage.h"
+
+class CIpcServerProxy;
+class CIpcMessage;
 
 //! IPC client for communication between daemon and GUI.
 /*!
@@ -39,4 +41,5 @@ public:
 private:
 	CNetworkAddress m_serverAddress;
 	CTCPSocket m_socket;
+	CIpcServerProxy* m_server;
 };
