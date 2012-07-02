@@ -35,7 +35,7 @@ m_address(CNetworkAddress(IPC_HOST, IPC_PORT))
 	EVENTQUEUE->adoptHandler(
 		IListenSocket::getConnectingEvent(), &m_socket,
 		new TMethodEventJob<CIpcServer>(
-			this, &CIpcServer::handleClientConnecting));
+		this, &CIpcServer::handleClientConnecting));
 }
 
 CIpcServer::~CIpcServer()

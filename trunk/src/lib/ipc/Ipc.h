@@ -19,3 +19,8 @@
 
 #define IPC_HOST "127.0.0.1"
 #define IPC_PORT 24801
+
+enum EIpcMessage {
+	kIpcLog,
+	kIpcCommand
+};

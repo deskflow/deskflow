@@ -19,6 +19,7 @@
 
 #include "CNetworkAddress.h"
 #include "CTCPSocket.h"
+#include "CIpcMessage.h"
 
 //! IPC client for communication between daemon and GUI.
 /*!
@@ -30,7 +31,10 @@ public:
 	virtual ~CIpcClient();
 
 	//! Connects to the IPC server at localhost.
-	void connect();
+	void				connect();
+
+	//! Sends a message to the server.
+	void				send(const CIpcMessage& message);
 
 private:
 	CNetworkAddress m_serverAddress;

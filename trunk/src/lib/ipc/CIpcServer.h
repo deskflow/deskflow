@@ -46,7 +46,7 @@ public:
 	//! @name accessors
 	//@{
 
-	//! This event is raised when we have created the client proxy.
+	//! Raised when we have created the client proxy.
 	static CEvent::Type		getClientConnectedEvent();
 
 	//@}

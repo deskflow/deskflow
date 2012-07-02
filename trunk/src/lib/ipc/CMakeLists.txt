@@ -19,6 +19,7 @@ set(inc
 	CIpcClient.h
 	CIpcServerProxy.h
 	CIpcClientProxy.h
+	CIpcMessage.h
 )
 
 set(src
@@ -26,6 +27,7 @@ set(src
 	CIpcClient.cpp
 	CIpcServerProxy.cpp
 	CIpcClientProxy.cpp
+	CIpcMessage.cpp
 )
 
 if (WIN32)
