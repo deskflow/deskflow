@@ -102,6 +102,7 @@ set(inc
 	../client
 	../common
 	../io
+	../ipc
 	../mt
 	../net
 	../platform
@@ -125,5 +126,5 @@ include_directories(${inc})
 add_library(synergy STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(synergy arch client net base platform mt server)
+	target_link_libraries(synergy arch client ipc net base platform mt server)
 endif()

@@ -57,13 +57,15 @@ CIpcServer::handleClientConnecting(const CEvent&, void*)
 	if (stream == NULL) {
 		return;
 	}
+	// when there is already a client connected, this causes stack overflow,
+	// 
 	LOG((CLOG_NOTE "accepted ipc client connection"));
 
 	// TODO: delete on disconnect
 	CIpcClientProxy* proxy = new CIpcClientProxy(*stream);
 	m_clients.insert(proxy);
 
-	EVENTQUEUE->addEvent(CEvent(getClientConnectedEvent(), this, proxy));
+	EVENTQUEUE->addEvent(CEvent(getClientConnectedEvent(), this, proxy, CEvent::kDontFreeData));
 }
 
 CEvent::Type

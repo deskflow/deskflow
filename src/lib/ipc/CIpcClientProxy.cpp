@@ -25,7 +25,8 @@
 CEvent::Type			CIpcClientProxy::s_messageReceivedEvent = CEvent::kUnknown;
 
 CIpcClientProxy::CIpcClientProxy(IStream& stream) :
-m_stream(stream)
+m_stream(stream),
+m_enableLog(false)
 {
 	EVENTQUEUE->adoptHandler(m_stream.getInputReadyEvent(),
 		stream.getEventTarget(),
@@ -45,12 +46,16 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 	UInt8 code[1];
 	UInt32 n = m_stream.read(code, 1);
 	while (n != 0) {
+		UInt8 type = code[0];
 
 		CIpcMessage* m = new CIpcMessage();
-		m->m_type = code[1];
+		m->m_type = type;
 
-		LOG((CLOG_DEBUG "ipc client proxy read: %d", code[0]));
-		switch (code[0]) {
+		if (m_enableLog) {
+			LOG((CLOG_DEBUG "ipc client proxy read: %d", code[0]));
+		}
+
+		switch (type) {
 		case kIpcCommand:
 			m->m_data = parseCommand();
 			break;
@@ -71,7 +76,9 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 void
 CIpcClientProxy::send(const CIpcMessage& message)
 {
-	LOG((CLOG_DEBUG "ipc client proxy write: %d", message.m_type));
+	if (m_enableLog) {
+		LOG((CLOG_DEBUG "ipc client proxy write: %d", message.m_type));
+	}
 
 	UInt8 code[1];
 	code[0] = message.m_type;
@@ -80,17 +87,21 @@ CIpcClientProxy::send(const CIpcMessage& message)
 	switch (message.m_type) {
 	case kIpcLogLine: {
 			CString* s = (CString*)message.m_data;
+			const char* data = s->c_str();
+			int len = strlen(data);
 
-			UInt8 len[1];
-			len[0] = s->size();
-			m_stream.write(len, 1);
+			UInt8 lenBuf[1];
+			lenBuf[0] = len;
+			m_stream.write(lenBuf, 1);
 
-			m_stream.write(s->c_str(), s->size());
+			m_stream.write(data, len);
 		}
 		break;
 
 	default:
-		LOG((CLOG_ERR "message not supported: %d", message.m_type));
+		if (m_enableLog) {
+			LOG((CLOG_ERR "message not supported: %d", message.m_type));
+		}
 		break;
 	}
 }
@@ -110,7 +121,9 @@ CIpcClientProxy::parseCommand()
 void
 CIpcClientProxy::disconnect()
 {
-	LOG((CLOG_NOTE "disconnect, closing stream"));
+	if (m_enableLog) {
+		LOG((CLOG_NOTE "disconnect, closing stream"));
+	}
 	m_stream.close();
 }
 

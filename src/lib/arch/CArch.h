@@ -42,7 +42,6 @@
 #	include "CArchDaemonWindows.h"
 #	include "CArchFileWindows.h"
 #	include "CArchLogWindows.h"
-#	include "CArchIpcLogWindows.h"
 #	include "CArchMiscWindows.h"
 #	include "CArchMultithreadWindows.h"
 #	include "CArchNetworkWinsock.h"
@@ -57,7 +56,6 @@
 #	include "CArchDaemonUnix.h"
 #	include "CArchFileUnix.h"
 #	include "CArchLogUnix.h"
-#	include "CArchIpcLogUnix.h"
 #	if HAVE_PTHREAD
 #		include "CArchMultithreadPosix.h"
 #	endif
@@ -111,7 +109,6 @@ public:
 	*/
 	static CArch*		getInstance();
 
-	ARCH_IPC_LOG&		ipcLog() const { return (ARCH_IPC_LOG&)m_ipcLog; }
 	ARCH_PLUGIN&		plugin() const { return (ARCH_PLUGIN&)m_plugin; }
 
 private:
@@ -120,7 +117,6 @@ private:
 
 private:
 	static CArch*		s_instance;
-	ARCH_IPC_LOG		m_ipcLog;
 	ARCH_PLUGIN			m_plugin;
 };
 

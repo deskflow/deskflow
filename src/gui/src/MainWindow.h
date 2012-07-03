@@ -30,7 +30,7 @@
 #include "ServerConfig.h"
 #include "AppConfig.h"
 #include "VersionChecker.h"
-#include "IpcLogReader.h"
+#include "IpcClient.h"
 
 class QAction;
 class QMenu;
@@ -142,7 +142,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool m_alreadyHidden;
 		VersionChecker m_versionChecker;
 		SetupWizard* m_SetupWizard;
-		IpcLogReader m_IpcLogReader;
+		IpcClient m_IpcClient;
 };
 
 #endif

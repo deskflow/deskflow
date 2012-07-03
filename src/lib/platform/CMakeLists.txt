@@ -137,6 +137,7 @@ set(inc
 	../common
 	../mt
 	../synergy
+	../ipc
 )
 
 if (UNIX)
@@ -191,5 +192,5 @@ if (WIN32)
 endif()
 
 if (UNIX)
-	target_link_libraries(platform synergy ${libs})
+	target_link_libraries(platform ipc synergy ${libs})
 endif()

@@ -23,6 +23,7 @@
 #include <list>
 
 class CThread;
+class CIpcLogOutputter;
 
 class CMSWindowsRelauncher {
 public:
@@ -41,6 +42,9 @@ private:
 	void outputLoop(void*);
 	void sendIpcMessage(int type, const char* data);
 	void shutdownProcess(const PROCESS_INFORMATION& pi, int timeout);
+
+public:
+	CIpcLogOutputter*	m_ipcLogOutputter;
 
 private:
 	CThread* m_thread;

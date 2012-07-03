@@ -18,12 +18,16 @@
 #pragma once
 
 #include "CArch.h"
+#include "CIpcServer.h"
 
 #if SYSAPI_WIN32
 #include "CMSWindowsRelauncher.h"
 #endif
 
 #include <string>
+
+class CEvent;
+class CIpcLogOutputter;
 
 class CDaemonApp {
 
@@ -37,16 +41,19 @@ private:
 	void daemonize();
 	void foregroundError(const char* message);
 	std::string logPath();
-#if SYSAPI_WIN32
-	void pipeThread(void*);
-	void handlePipeMessage(char* buffer);
-#endif
+	void				handleIpcConnected(const CEvent&, void*);
+	void				handleIpcMessage(const CEvent&, void*);
 
 public:
 	static CDaemonApp* s_instance;
+
 #if SYSAPI_WIN32
 	CMSWindowsRelauncher m_relauncher;
 #endif
+
+private:
+	CIpcServer*			m_ipcServer;
+	CIpcLogOutputter*	m_ipcLogOutputter;
 };
 
 #define LOG_FILENAME "synergyd.log"
