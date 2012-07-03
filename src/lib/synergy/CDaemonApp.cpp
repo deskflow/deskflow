@@ -277,11 +277,12 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 {
 	CIpcMessage& m = *reinterpret_cast<CIpcMessage*>(e.getData());
 
-	LOG((CLOG_DEBUG "ipc message: %d", m.m_type));
+	LOG((CLOG_DEBUG "ipc message, type=%d", m.m_type));
 
 	switch (m.m_type) {
 		case kIpcCommand: {
 			CString& command = *reinterpret_cast<CString*>(m.m_data);
+			LOG((CLOG_DEBUG "got new command: %s", command.c_str()));
 
 			try {
 				// store command in system settings. this is used when the daemon
@@ -289,9 +290,9 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 				ARCH->setting("Command", command);
 			}
 			catch (XArch& e) {
-				//LOG((CLOG_ERR "failed to save setting: %s", e.what().c_str()));
+				LOG((CLOG_ERR "failed to save setting, %s", e.what().c_str()));
 			}
-
+				
 			// tell the relauncher about the new command. this causes the
 			// relauncher to stop the existing command and start the new
 			// command.
@@ -300,7 +301,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 		break;
 
 		default:
-			LOG((CLOG_ERR "ipc message not supported: %d", m.m_type));
+			LOG((CLOG_ERR "ipc message not supported, type=%d", m.m_type));
 			break;
 	}
 }

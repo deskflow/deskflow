@@ -43,6 +43,7 @@ set(inc
 	../io
 	../mt
 	../net
+	../synergy
 )
 
 if (UNIX)
@@ -55,5 +56,5 @@ include_directories(${inc})
 add_library(ipc STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(arch base common mt io net)
+	target_link_libraries(arch base common mt io net synergy)
 endif()

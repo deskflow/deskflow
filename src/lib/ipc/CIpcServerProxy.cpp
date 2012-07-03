@@ -21,6 +21,7 @@
 #include "CLog.h"
 #include "CIpcMessage.h"
 #include "Ipc.h"
+#include "CProtocolUtil.h"
 
 CEvent::Type			CIpcServerProxy::s_messageReceivedEvent = CEvent::kUnknown;
 
@@ -80,12 +81,12 @@ CIpcServerProxy::send(const CIpcMessage& message)
 	switch (message.m_type) {
 	case kIpcCommand: {
 			CString* s = (CString*)message.m_data;
+			const char* data = s->c_str();
+			
+			int len = strlen(data);
+			CProtocolUtil::writef(&m_stream, "%2i", len);
 
-			UInt8 len[1];
-			len[0] = s->size();
-			m_stream.write(len, 1);
-
-			m_stream.write(s->c_str(), s->size());
+			m_stream.write(data, len);
 		}
 		break;
 
@@ -98,13 +99,13 @@ CIpcServerProxy::send(const CIpcMessage& message)
 void*
 CIpcServerProxy::parseLogLine()
 {
-	UInt8 len[1];
-	m_stream.read(len, 1);
+	int len = 0;
+	CProtocolUtil::readf(&m_stream, "%2i", &len);
 
-	UInt8* buffer = new UInt8[len[0]];
-	m_stream.read(buffer, len[0]);
+	UInt8* buffer = new UInt8[len];
+	m_stream.read(buffer, len);
 
-	return new CString((const char*)buffer, len[0]);
+	return new CString((const char*)buffer, len);
 }
 
 void
