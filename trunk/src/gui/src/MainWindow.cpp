@@ -17,6 +17,8 @@
 
 #define WEBSITE_ADDRESS "synergy-foss.org"
 
+#include <iostream>
+
 #include "MainWindow.h"
 #include "AboutDialog.h"
 #include "ServerConfigDialog.h"
@@ -88,8 +90,10 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	if (appConfig.processMode() == Service)
 	{
-		connect(&m_IpcLogReader, SIGNAL(receivedLine(const QString&)), this, SLOT(appendLog(const QString&)));
-		m_IpcLogReader.start();
+		connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLog(const QString&)));
+		connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLog(const QString&)));
+		m_IpcClient.connectToHost();
+		appendLog("INFO: Connecting to background service...");
 	}
 }
 
@@ -665,55 +669,9 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 
 void MainWindow::sendDaemonCommand(const QString& command, bool showErrors)
 {
-	sendIpcMessage(Command, command.toStdString().c_str(), showErrors);
-}
-
-// TODO: put this in an IPC client class.
-void MainWindow::sendIpcMessage(qIpcMessage type, const char* data, bool showErrors)
-{
-#if defined(Q_OS_WIN)
-
-	const WCHAR* name = L"\\\\.\\pipe\\Synergy";
-	char message[1024];
-	message[0] = type;
-	char* messagePtr = message;
-	messagePtr++;
-	strcpy(messagePtr, data);
-
-	HANDLE pipe = CreateFile(
-		name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
-
-	if (showErrors && pipe == INVALID_HANDLE_VALUE)
-	{
-		appendLog(QString("ERROR: could not connect to service, error: ") +
-				  QString::number(GetLastError()));
-		return;
-	}
-
-	DWORD dwMode = PIPE_READMODE_MESSAGE;
-	BOOL stateSuccess = SetNamedPipeHandleState(pipe, &dwMode, NULL, NULL);
-
-	if (showErrors && !stateSuccess)
-	{
-		appendLog(QString("ERROR: could not set service pipe state, error: ") +
-				  QString::number(GetLastError()));
-		return;
-	}
-
-	DWORD written;
-	BOOL writeSuccess = WriteFile(
-	   pipe, message, strlen(message), &written, NULL);
-
-	if (showErrors && !writeSuccess)
-	{
-		appendLog(QString("ERROR: could not write to service pipe, error: ") +
-				  QString::number(GetLastError()));
-		return;
-	}
-
-	CloseHandle(pipe);
-
-#endif
+	std::string s = command.toStdString();
+	const char* data = s.c_str();
+	m_IpcClient.write(Command, strlen(data), data);
 }
 
 void MainWindow::on_m_pActionWizard_triggered()

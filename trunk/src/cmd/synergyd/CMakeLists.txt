@@ -22,6 +22,7 @@ set(inc
 	../../lib/base
 	../../lib/common
 	../../lib/io
+	../../lib/ipc
 	../../lib/mt
 	../../lib/net
 	../../lib/platform
@@ -47,7 +48,7 @@ if (VNC_SUPPORT)
 endif()
 
 target_link_libraries(synergyd
-	arch base common io mt net platform synergy ${libs})
+	arch base common io ipc mt net platform synergy ${libs})
 
 if (CONF_CPACK)
 	install(TARGETS

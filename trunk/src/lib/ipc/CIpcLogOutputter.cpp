@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Nick Bolton
- *
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -15,32 +15,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CArchIpcLogUnix.h"
+#include "CIpcLogOutputter.h"
+#include "CIpcServer.h"
+#include "CIpcMessage.h"
+#include "Ipc.h"
 
-CArchIpcLogUnix::CArchIpcLogUnix()
+CIpcLogOutputter::CIpcLogOutputter(CIpcServer& ipcServer) :
+m_ipcServer(ipcServer)
 {
 }
 
-CArchIpcLogUnix::~CArchIpcLogUnix()
-{
-}
-
-void
-CArchIpcLogUnix::openLog(const char* name)
-{
-}
-
-void
-CArchIpcLogUnix::closeLog()
+CIpcLogOutputter::~CIpcLogOutputter()
 {
 }
 
 void
-CArchIpcLogUnix::showLog(bool showIfEmpty)
+CIpcLogOutputter::open(const char* title)
 {
 }
 
 void
-CArchIpcLogUnix::writeLog(ELevel, const char*)
+CIpcLogOutputter::close()
 {
+}
+
+void
+CIpcLogOutputter::show(bool showIfEmpty)
+{
+}
+
+bool
+CIpcLogOutputter::write(ELevel level, const char* msg)
+{
+	CIpcMessage message;
+	message.m_type = kIpcLogLine;
+	message.m_data = new CString(msg);
+	m_ipcServer.send(message);
+	return true;
 }

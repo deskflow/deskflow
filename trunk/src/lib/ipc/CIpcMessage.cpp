@@ -17,11 +17,15 @@
 
 #include "CIpcMessage.h"
 
-CIpcMessage::CIpcMessage()
+CIpcMessage::CIpcMessage() :
+m_type(0),
+m_data(nullptr)
 {
 }
 
 CIpcMessage::~CIpcMessage()
 {
-	delete m_data;
+	if (m_data != nullptr) {
+		delete m_data;
+	}
 }

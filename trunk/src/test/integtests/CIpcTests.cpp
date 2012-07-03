@@ -180,7 +180,7 @@ CIpcTests::sendMessageToClient_handleConnected(const CEvent& e, void*)
 void
 CIpcTests::sendMessageToClient_handleMessageReceived(const CEvent& e, void*)
 {
-	CIpcMessage* m = (CIpcMessage*)e.getData();
+	CIpcMessage* m = reinterpret_cast<CIpcMessage*>(e.getData());
 	m_sendMessageToClient_receivedString = *((CString*)m->m_data);
 	raiseQuitEvent();
 }

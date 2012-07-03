@@ -25,6 +25,7 @@
 #include "XArchWindows.h"
 #include "CApp.h"
 #include "CArgsBase.h"
+#include "CIpcLogOutputter.h"
 
 #include <Tlhelp32.h>
 #include <UserEnv.h>
@@ -42,7 +43,8 @@ CMSWindowsRelauncher::CMSWindowsRelauncher(bool autoDetectCommand) :
 	m_running(true),
 	m_commandChanged(false),
 	m_stdOutWrite(NULL),
-	m_stdOutRead(NULL)
+	m_stdOutRead(NULL),
+	m_ipcLogOutputter(nullptr)
 {
 }
 
@@ -403,7 +405,7 @@ CMSWindowsRelauncher::outputLoop(void*)
 		else {
 			// send process output over IPC to GUI.
 			buffer[bytesRead] = '\0';
-			ARCH->ipcLog().writeLog(kINFO, buffer);
+			m_ipcLogOutputter->write(kINFO, buffer);
 		}
 			
 	}

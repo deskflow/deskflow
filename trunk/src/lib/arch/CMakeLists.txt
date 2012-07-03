@@ -27,7 +27,6 @@ if (WIN32)
 		CArchDaemonWindows.h
 		CArchFileWindows.h
 		CArchLogWindows.h
-		CArchIpcLogWindows.h
 		CArchMiscWindows.h
 		CArchMultithreadWindows.h
 		CArchNetworkWinsock.h
@@ -51,7 +50,6 @@ if (WIN32)
 		CArchDaemonWindows.cpp
 		CArchFileWindows.cpp
 		CArchLogWindows.cpp
-		CArchIpcLogWindows.cpp
 		CArchMiscWindows.cpp
 		CArchMultithreadWindows.cpp
 		CArchNetworkWinsock.cpp
@@ -71,7 +69,6 @@ elseif (UNIX)
 		CArchDaemonUnix.cpp
 		CArchFileUnix.cpp
 		CArchLogUnix.cpp
-		CArchIpcLogUnix.cpp
 		CArchMultithreadPosix.cpp
 		CArchNetworkBSD.cpp
 		CArchSleepUnix.cpp

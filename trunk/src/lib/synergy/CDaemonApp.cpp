@@ -38,6 +38,11 @@
 #include "CMSWindowsRelauncher.h"
 #include "CMSWindowsDebugOutputter.h"
 #include "TMethodJob.h"
+#include "TMethodEventJob.h"
+#include "CIpcClientProxy.h"
+#include "CIpcMessage.h"
+#include "CSocketMultiplexer.h"
+#include "CIpcLogOutputter.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -69,9 +74,11 @@ winMainLoopStatic(int, const char**)
 }
 #endif
 
-CDaemonApp::CDaemonApp()
+CDaemonApp::CDaemonApp() :
+m_ipcServer(nullptr),
+m_ipcLogOutputter(nullptr)
 #if SYSAPI_WIN32
-	: m_relauncher(false)
+,m_relauncher(false)
 #endif
 {
 	s_instance = this;
@@ -91,15 +98,9 @@ CDaemonApp::run(int argc, char** argv)
 		CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-		// send logging to gui via ipc
-		CLOG->insert(new CIpcLogOutputter());
-
 #if SYSAPI_WIN32
 		// sends debug messages to visual studio console window.
 		CLOG->insert(new CMSWindowsDebugOutputter());
-
-		CThread pipeThread(new TMethodJob<CDaemonApp>(
-			this, &CDaemonApp::pipeThread, nullptr));
 #endif
 
 		// default log level to system setting.
@@ -174,12 +175,31 @@ CDaemonApp::mainLoop(bool logToFile)
 
 		CEventQueue eventQueue;
 
+		// create socket multiplexer.  this must happen after daemonization
+		// on unix because threads evaporate across a fork().
+		CSocketMultiplexer multiplexer;
+
+		// uses event queue, must be created here.
+		m_ipcServer = new CIpcServer();
+
+		eventQueue.adoptHandler(
+			CIpcServer::getClientConnectedEvent(), m_ipcServer,
+			new TMethodEventJob<CDaemonApp>(this, &CDaemonApp::handleIpcConnected));
+
+		m_ipcServer->listen();
+
+		// send logging to gui via ipc, log system adopts outputter.
+		m_ipcLogOutputter = new CIpcLogOutputter(*m_ipcServer);
+		CLOG->insert(m_ipcLogOutputter);
+
 #if SYSAPI_WIN32
 		// HACK: create a dummy screen, which can handle system events 
 		// (such as a stop request from the service controller).
 		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
 		CGameDeviceInfo gameDevice;
 		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice));
+
+		m_relauncher.m_ipcLogOutputter = m_ipcLogOutputter;
 
 		string command = ARCH->setting("Command");
 		if (command != "") {
@@ -190,22 +210,27 @@ CDaemonApp::mainLoop(bool logToFile)
 		m_relauncher.startAsync();
 #endif
 
-		EVENTQUEUE->loop();
+		eventQueue.loop();
 
 #if SYSAPI_WIN32
 		m_relauncher.stop();
 #endif
 
+		eventQueue.removeHandler(
+			CIpcServer::getClientConnectedEvent(), m_ipcServer);
+		
+		delete m_ipcServer;
+
 		DAEMON_RUNNING(false);
 	}
 	catch (XArch& e) {
-		LOG((CLOG_ERR, e.what().c_str()));
+		LOG((CLOG_ERR "xarch exception: %s", e.what().c_str()));
 	}
 	catch (std::exception& e) {
-		LOG((CLOG_ERR, e.what()));
+		LOG((CLOG_ERR "std exception: %s", e.what()));
 	}
 	catch (...) {
-		LOG((CLOG_ERR, "Unrecognized error."));
+		LOG((CLOG_ERR "unrecognized error."));
 	}
 }
 
@@ -237,84 +262,45 @@ CDaemonApp::logPath()
 #endif
 }
 
-#ifdef SYSAPI_WIN32
-
 void
-CDaemonApp::pipeThread(void*)
+CDaemonApp::handleIpcConnected(const CEvent& e, void*)
 {
-	// TODO: move this to an IPC server class.
-	while (true) {
-
-		// grant access to everyone.
-		SECURITY_DESCRIPTOR sd;
-		InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION);
-		SetSecurityDescriptorDacl(&sd, TRUE, static_cast<PACL>(0), FALSE);
-
-		SECURITY_ATTRIBUTES sa;
-		sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-		sa.lpSecurityDescriptor = &sd;
-
-		HANDLE pipe = CreateNamedPipe(
-			_T("\\\\.\\pipe\\Synergy"),
-			PIPE_ACCESS_DUPLEX,
-			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
-			PIPE_UNLIMITED_INSTANCES,
-			1024, 1024, 0, &sa);
-
-		if (pipe == INVALID_HANDLE_VALUE)
-			XArch("could not create named pipe.");
-
-		LOG((CLOG_DEBUG "opened daemon pipe: %d", pipe));
-		BOOL connectResult = ConnectNamedPipe(pipe, NULL);
-
-		char buffer[1024];
-		DWORD bytesRead;
-
-		while (true) {
-			if (!ReadFile(pipe, buffer, sizeof(buffer), &bytesRead, NULL)) {
-				break;
-			}
-
-			buffer[bytesRead] = '\0';
-			LOG((CLOG_DEBUG "ipc daemon server read: %s", buffer));
-
-			try {
-				handlePipeMessage(buffer);
-			}
-			catch (XArch& ex) {
-				LOG((CLOG_ERR "handle message failed: %s", ex.what().c_str()));
-			}
-		}
-
-		DisconnectNamedPipe(pipe); 
-		CloseHandle(pipe); 
-	}
+	LOG((CLOG_INFO "ipc client connected"));
+	EVENTQUEUE->adoptHandler(
+		CIpcClientProxy::getMessageReceivedEvent(), e.getData(),
+		new TMethodEventJob<CDaemonApp>(
+		this, &CDaemonApp::handleIpcMessage));
 }
 
 void
-CDaemonApp::handlePipeMessage(char* buffer)
+CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 {
-	switch (buffer[0]) {
-	case kIpcCommand:
-		{
-			string command(++buffer);
+	CIpcMessage& m = *reinterpret_cast<CIpcMessage*>(e.getData());
 
-			// store command in system settings. this is used when the daemon
-			// next starts.
-			ARCH->setting("Command", command);
-			
+	LOG((CLOG_DEBUG "ipc message: %d", m.m_type));
+
+	switch (m.m_type) {
+		case kIpcCommand: {
+			CString& command = *reinterpret_cast<CString*>(m.m_data);
+
+			try {
+				// store command in system settings. this is used when the daemon
+				// next starts.
+				ARCH->setting("Command", command);
+			}
+			catch (XArch& e) {
+				//LOG((CLOG_ERR "failed to save setting: %s", e.what().c_str()));
+			}
+
 			// tell the relauncher about the new command. this causes the
 			// relauncher to stop the existing command and start the new
 			// command.
 			m_relauncher.command(command);
 		}
 		break;
-		
-	default:
-		LOG((CLOG_WARN "unrecognized ipc message: %d", buffer[0]));
-		break;
+
+		default:
+			LOG((CLOG_ERR "ipc message not supported: %d", m.m_type));
+			break;
 	}
 }
-
-
-#endif

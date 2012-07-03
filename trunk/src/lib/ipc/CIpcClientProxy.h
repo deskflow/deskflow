@@ -40,6 +40,7 @@ private:
 
 public:
 	IStream&			m_stream;
+	bool				m_enableLog;
 	
 private:
 	static CEvent::Type	s_messageReceivedEvent;

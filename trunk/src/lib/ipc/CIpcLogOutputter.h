@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Nick Bolton
- *
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,18 +17,25 @@
 
 #pragma once
 
-#include "IArchLog.h"
+#include "ILogOutputter.h"
 
-#define ARCH_IPC_LOG CArchIpcLogUnix
+class CIpcServer;
 
-class CArchIpcLogUnix : public IArchLog {
+//! Write log to GUI over IPC
+/*!
+This outputter writes output to the GUI via IPC.
+*/
+class CIpcLogOutputter : public ILogOutputter {
 public:
-	CArchIpcLogUnix();
-	virtual ~CArchIpcLogUnix();
+	CIpcLogOutputter(CIpcServer& ipcServer);
+	virtual ~CIpcLogOutputter();
 
-	// IArchLog overrides
-	virtual void		openLog(const char* name);
-	virtual void		closeLog();
-	virtual void		showLog(bool showIfEmpty);
-	virtual void		writeLog(ELevel, const char*);
+	// ILogOutputter overrides
+	virtual void		open(const char* title);
+	virtual void		close();
+	virtual void		show(bool showIfEmpty);
+	virtual bool		write(ELevel level, const char* message);
+
+private:
+	CIpcServer&			m_ipcServer;
 };
