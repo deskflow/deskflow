@@ -44,14 +44,15 @@ void IpcClient::read()
 
 	switch (codeBuf[0]) {
 		case kIpcLogLine: {
-			char lenBuf[1];
-			stream.readRawData(lenBuf, 1);
+			// TODO: qt must have a built in way of converting bytes to int.
+			char lenBuf[2];
+			stream.readRawData(lenBuf, 2);
+			int len = (lenBuf[0] << 8) + lenBuf[1];
 
-			char* data = new char[lenBuf[0] + 1];
-			stream.readRawData(data, lenBuf[0]);
-			data[(int)lenBuf[0]] = 0;
-
-			QString s(data);
+			char* data = new char[len];
+			stream.readRawData(data, len);
+			
+			QString s = QString::fromUtf8(data, len);
 			readLogLine(s);
 		}
 		break;
@@ -60,7 +61,7 @@ void IpcClient::read()
 
 void IpcClient::error(QAbstractSocket::SocketError error)
 {
-	errorMessage("ERROR: Could not connect to background service.");
+	errorMessage(QString("ERROR: could not connect to background service, code=%1").arg(error));
 }
 
 void IpcClient::write(unsigned char code, unsigned char length, const char* data)
@@ -73,9 +74,12 @@ void IpcClient::write(unsigned char code, unsigned char length, const char* data
 
 	switch (code) {
 		case kIpcCommand: {
-			char lenBuf[1];
-			lenBuf[0] = length;
-			stream.writeRawData(lenBuf, 1);
+			// TODO: qt must have a built in way of converting int to bytes.
+			char lenBuf[2];
+			lenBuf[0] = (length >> 8) & 0xff;
+			lenBuf[1] = length & 0xff;
+			stream.writeRawData(lenBuf, 2);
+
 			stream.writeRawData(data, length);
 		}
 		break;

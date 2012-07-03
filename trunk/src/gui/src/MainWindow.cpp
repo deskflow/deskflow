@@ -93,7 +93,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 		connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLog(const QString&)));
 		connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLog(const QString&)));
 		m_IpcClient.connectToHost();
-		appendLog("INFO: Connecting to background service...");
+		appendLog("INFO: connecting to background service...");
 	}
 }
 
