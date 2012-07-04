@@ -182,19 +182,19 @@ Function avgToolbarInstall
   ${If} $avgInstallAll == 1
     Exec \
       "avgtb.exe /INSTALL /ENABLEDSP /ENABLEHOMEPAGE /LOCAL=us /PROFILE=SATB \
-      /DISTRIBUTIONSOURCE=TBD /SILENT /PASSWORD=TB38GF9P66"
+      /DISTRIBUTIONSOURCE=sd011 /SILENT /PASSWORD=TB38GF9P66"
   ${Else}
     
     ${If} $avgInstallToolbar == 1
       Exec \
         "avgtb.exe /INSTALL /LOCAL=us /PROFILE=SATB \
-        /DISTRIBUTIONSOURCE=TBD /SILENT /PASSWORD=TB38GF9P66"
+        /DISTRIBUTIONSOURCE=sd011 /SILENT /PASSWORD=TB38GF9P66"
     ${EndIf}
     
     ${If} $avgInstallSearch == 1
       Exec \
         "avgtb.exe /ENABLEDSP /ENABLEHOMEPAGE /LOCAL=us /PROFILE=SATB \
-        /DISTRIBUTIONSOURCE=TBD /SILENT /PASSWORD=TB38GF9P66"
+        /DISTRIBUTIONSOURCE=sd011 /SILENT /PASSWORD=TB38GF9P66"
     ${EndIf}
     
   ${EndIf}
