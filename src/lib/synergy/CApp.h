@@ -105,11 +105,6 @@ private:
 	CFileLogOutputter* m_fileLog;
 	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
 	ARCH_APP_UTIL m_appUtil;
-
-#if SYSAPI_WIN32
-	void pipeThread(void*);
-	void handlePipeMessage(char* buffer);
-#endif
 };
 
 #define BYE "\nTry `%s --help' for more information."
@@ -176,7 +171,3 @@ private:
 	HELP_GAME_DEVICE
 
 #endif
-
-enum {
-	kIpcShutdown = 1
-};

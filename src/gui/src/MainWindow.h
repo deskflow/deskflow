@@ -73,6 +73,11 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 			Command = 1
 		};
 
+		enum qLevel {
+			Error,
+			Info
+		};
+
 	public:
 		MainWindow(QSettings& settings, AppConfig& appConfig);
 		~MainWindow();
@@ -89,7 +94,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void clearLog();
 
 	public slots:
-		void appendLog(const QString& text);
+		void appendLogRaw(const QString& text);
+		void appendLogInfo(const QString& text);
+		void appendLogError(const QString& text);
 
 	protected slots:
 		void on_m_pGroupClient_toggled(bool on) { m_pGroupServer->setChecked(!on); }

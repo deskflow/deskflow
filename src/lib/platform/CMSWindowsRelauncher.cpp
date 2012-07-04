@@ -419,8 +419,6 @@ CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout
 	if (exitCode != STILL_ACTIVE)
 		return;
 
-	sendIpcMessage(kIpcShutdown, "");
-
 	// wait for process to exit gracefully.
 	double start = ARCH->time();
 	while (true)
@@ -445,46 +443,4 @@ CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout
 			ARCH->sleep(1);
 		}
 	}
-}
-
-// TODO: put this in an IPC client class.
-void
-CMSWindowsRelauncher::sendIpcMessage(int type, const char* data)
-{
-	char message[1024];
-	message[0] = type;
-	char* messagePtr = message;
-	messagePtr++;
-	strcpy(messagePtr, data);
-
-	HANDLE pipe = CreateFile(
-		_T("\\\\.\\pipe\\SynergyNode"),
-		GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
-
-	if (pipe == INVALID_HANDLE_VALUE)
-	{
-		LOG((CLOG_ERR "could not connect to node, error: %d", GetLastError()));
-		return;
-	}
-
-	DWORD dwMode = PIPE_READMODE_MESSAGE;
-	BOOL stateSuccess = SetNamedPipeHandleState(pipe, &dwMode, NULL, NULL);
-
-	if (!stateSuccess)
-	{
-		LOG((CLOG_ERR "could not set node pipe state, error: %d", GetLastError()));
-		return;
-	}
-
-	DWORD written;
-	BOOL writeSuccess = WriteFile(
-		pipe, message, (DWORD)strlen(message), &written, NULL);
-
-	if (!writeSuccess)
-	{
-		LOG((CLOG_ERR "could not write to node pipe, error: %d", GetLastError()));
-		return;
-	}
-
-	CloseHandle(pipe);
 }

@@ -90,10 +90,10 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	if (appConfig.processMode() == Service)
 	{
-		connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLog(const QString&)));
-		connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLog(const QString&)));
+		connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
+		connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
+		connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
 		m_IpcClient.connectToHost();
-		appendLog("INFO: connecting to background service...");
 	}
 }
 
@@ -260,7 +260,7 @@ void MainWindow::logOutput()
 		{
 			if (!line.isEmpty())
 			{
-				appendLog(line);
+				appendLogRaw(line);
 				if (line.contains("has connected") ||
 					line.contains("connected to server"))
 				{
@@ -285,7 +285,7 @@ void MainWindow::logError()
 {
 	if (m_pSynergy)
 	{
-		appendLog(m_pSynergy->readAllStandardError());
+		appendLogRaw(m_pSynergy->readAllStandardError());
 	}
 }
 
@@ -298,7 +298,17 @@ void MainWindow::updateFound(const QString &version)
 		.arg(version).arg("http://synergy-foss.org"));
 }
 
-void MainWindow::appendLog(const QString& text)
+void MainWindow::appendLogInfo(const QString& text)
+{
+	appendLogRaw("INFO: " + text);
+}
+
+void MainWindow::appendLogError(const QString& text)
+{
+	appendLogRaw("ERROR: " + text);
+}
+
+void MainWindow::appendLogRaw(const QString& text)
 {
 	foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
 		if (!line.isEmpty())
@@ -379,28 +389,28 @@ void MainWindow::startSynergy()
 
 	// put a space between last log output and new instance.
 	if (!m_pLogOutput->toPlainText().isEmpty())
-		appendLog("");
+		appendLogRaw("");
 
 	if (desktopMode)
 	{
-		appendLog("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+		appendLogInfo("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
 	}
 
 	if (serviceMode)
 	{
-		appendLog("applying service mode: " + QString(synergyType() == synergyServer ? "server" : "client"));
+		appendLogInfo("applying service mode: " + QString(synergyType() == synergyServer ? "server" : "client"));
 	}
 
 	// show command if debug log level...
 	if (appConfig().logLevel() >= 4) {
-		appendLog(QString("command: %1 %2").arg(app, args.join(" ")));
+		appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
 	}
 
-	appendLog("config file: " + configFilename());
-	appendLog("log level: " + appConfig().logLevelText());
+	appendLogInfo("config file: " + configFilename());
+	appendLogInfo("log level: " + appConfig().logLevelText());
 
 	if (appConfig().logToFile())
-		appendLog("log file: " + appConfig().logFilename());
+		appendLogInfo("log file: " + appConfig().logFilename());
 
 	if (desktopMode)
 	{
@@ -523,7 +533,7 @@ void MainWindow::stopSynergy()
 {
 	if (synergyProcess())
 	{
-		appendLog("stopping synergy");
+		appendLogInfo("stopping synergy");
 
 		if (synergyProcess()->isOpen())
 			synergyProcess()->close();

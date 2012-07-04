@@ -32,8 +32,14 @@ public:
     IpcClient();
 	virtual ~IpcClient();
 
-	void connectToHost();
 	void write(unsigned char code, unsigned char length, const char* data);
+
+public slots:
+	void connectToHost();
+
+private:
+	int bytesToInt(const char* buffer, int size);
+	void intToBytes(int value, char* buffer, int size);
 
 private slots:
 	void read();
@@ -41,6 +47,7 @@ private slots:
 
 signals:
 	void readLogLine(const QString& text);
+	void infoMessage(const QString& text);
 	void errorMessage(const QString& text);
 
 private:
