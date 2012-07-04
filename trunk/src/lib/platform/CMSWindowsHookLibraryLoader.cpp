@@ -39,7 +39,7 @@ CMSWindowsHookLibraryLoader::openHookLibrary(const char* name)
 	// load the hook library
 	HINSTANCE hookLibrary = LoadLibrary(name);
 	if (hookLibrary == NULL) {
-		LOG((CLOG_ERR "failed to load hook library, %s.dll is missing", name));
+		LOG((CLOG_ERR "failed to load hook library, %s.dll is missing or invalid", name));
 		throw XScreenOpenFailure();
 	}
 
