@@ -19,6 +19,7 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 #include <iostream>
+#include <QTimer>
 
 IpcClient::IpcClient()
 {
@@ -33,6 +34,7 @@ IpcClient::~IpcClient()
 
 void IpcClient::connectToHost()
 {
+	infoMessage("connecting to background service...");
 	m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), IPC_PORT);
 }
 
@@ -47,28 +49,19 @@ void IpcClient::read()
 
 		switch (codeBuf[0]) {
 			case kIpcLogLine: {
-				// TODO: qt must have a built in way of converting bytes to int.
 				char lenBuf[2];
 				stream.readRawData(lenBuf, 2);
-				int len = (lenBuf[0] << 8) + lenBuf[1];
+				int len = bytesToInt(lenBuf, 2);
 
-				// HACK: sometimes the size is wrong (probably a bug in the above code)
-				// but the following text always seems to be valid, so just read a large
-				// amount from the buffer and put a \0 at the end if the number looks
-				// valid (ugh, this sucks).
-				char* data = new char[1024];
-				stream.readRawData(data, 1024);
-				if (len > -1) {
-					data[len] = '\0';
-				}
+				char* data = new char[len];
+				stream.readRawData(data, len);
 
-				QString s = QString::fromUtf8(data);
-				readLogLine(s);
+				readLogLine(QString::fromUtf8(data, len));
 			}
 			break;
 
-		default: {
-				std::cerr << "invalid code: " << codeBuf[0] << std::endl;
+			default: {
+				std::cout << "invalid code: " << codeBuf[0] << std::endl;
 			}
 			break;
 		}
@@ -77,7 +70,16 @@ void IpcClient::read()
 
 void IpcClient::error(QAbstractSocket::SocketError error)
 {
-	errorMessage(QString("ERROR: could not connect to background service, code=%1").arg(error));
+	QString text;
+	switch (error) {
+		case 0: text = "connection refused"; break;
+		case 1: text = "remote host closed"; break;
+		default: text = QString("code=%1").arg(error); break;
+	}
+
+	errorMessage(QString("ipc connection error, %1").arg(text));
+
+	QTimer::singleShot(1000, this, SLOT(connectToHost()));
 }
 
 void IpcClient::write(unsigned char code, unsigned char length, const char* data)
@@ -90,14 +92,36 @@ void IpcClient::write(unsigned char code, unsigned char length, const char* data
 
 	switch (code) {
 		case kIpcCommand: {
-			// TODO: qt must have a built in way of converting int to bytes.
 			char lenBuf[2];
-			lenBuf[0] = (length >> 8) & 0xff;
-			lenBuf[1] = length & 0xff;
+			intToBytes(length, lenBuf, 2);
 			stream.writeRawData(lenBuf, 2);
-
 			stream.writeRawData(data, length);
 		}
 		break;
+	}
+}
+
+// TODO: qt must have a built in way of converting bytes to int.
+int IpcClient::bytesToInt(const char *buffer, int size)
+{
+	if (size == 2) {
+		return (((unsigned char)buffer[0]) << 8)
+				+ (unsigned char)buffer[1];
+	}
+	else {
+		// TODO: other sizes, if needed.
+		return 0;
+	}
+}
+
+// TODO: qt must have a built in way of converting int to bytes.
+void IpcClient::intToBytes(int value, char *buffer, int size)
+{
+	if (size == 2) {
+		buffer[0] = (value >> 8) & 0xff;
+		buffer[1] = value & 0xff;
+	}
+	else {
+		// TODO: other sizes, if needed.
 	}
 }

@@ -317,11 +317,6 @@ CApp::initApp(int argc, const char** argv)
 	// parse command line
 	parseArgs(argc, argv);
 
-#if SYSAPI_WIN32
-	CThread pipeThread(new TMethodJob<CApp>(
-		this, &CApp::pipeThread, nullptr));
-#endif
-
 	// setup file logging after parsing args
 	setupFileLogging();
 
@@ -340,71 +335,3 @@ CApp::initApp(int argc, const char** argv)
 		m_taskBarReceiver = m_createTaskBarReceiver(logBuffer);
 	}
 }
-
-#ifdef SYSAPI_WIN32
-
-void
-CApp::pipeThread(void*)
-{
-	// TODO: move this to an IPC server class.
-	while (true) {
-
-		// grant access to everyone.
-		SECURITY_DESCRIPTOR sd;
-		InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION);
-		SetSecurityDescriptorDacl(&sd, TRUE, static_cast<PACL>(0), FALSE);
-
-		SECURITY_ATTRIBUTES sa;
-		sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-		sa.lpSecurityDescriptor = &sd;
-
-		HANDLE pipe = CreateNamedPipe(
-			_T("\\\\.\\pipe\\SynergyNode"),
-			PIPE_ACCESS_DUPLEX,
-			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
-			PIPE_UNLIMITED_INSTANCES,
-			1024, 1024, 0, &sa);
-
-		if (pipe == INVALID_HANDLE_VALUE)
-			XArch("could not create named pipe.");
-
-		LOG((CLOG_DEBUG "opened node pipe: %d", pipe));
-		BOOL connectResult = ConnectNamedPipe(pipe, NULL);
-
-		char buffer[1024];
-		DWORD bytesRead;
-
-		while (true) {
-			if (!ReadFile(pipe, buffer, sizeof(buffer), &bytesRead, NULL)) {
-				break;
-			}
-
-			buffer[bytesRead] = '\0';
-			LOG((CLOG_DEBUG "ipc node server read: %s", buffer));
-
-			handlePipeMessage(buffer);
-		}
-
-		DisconnectNamedPipe(pipe); 
-		CloseHandle(pipe); 
-	}
-}
-
-void
-CApp::handlePipeMessage(char* buffer)
-{
-	switch (buffer[0]) {
-	case kIpcShutdown:
-		{
-			LOG((CLOG_INFO "queueing quit event"));
-			EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
-		}
-		break;
-		
-	default:
-		LOG((CLOG_WARN "unrecognized ipc message: %d", buffer[0]));
-		break;
-	}
-}
-
-#endif
