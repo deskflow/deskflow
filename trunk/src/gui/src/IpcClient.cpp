@@ -18,6 +18,7 @@
 #include "IpcClient.h"
 #include <QTcpSocket>
 #include <QHostAddress>
+#include <iostream>
 
 IpcClient::IpcClient()
 {
@@ -39,23 +40,38 @@ void IpcClient::read()
 {
 	QDataStream stream(m_Socket);
 
-	char codeBuf[1];
-	stream.readRawData(codeBuf, 1);
+	while (m_Socket->bytesAvailable() != 0) {
 
-	switch (codeBuf[0]) {
-		case kIpcLogLine: {
-			// TODO: qt must have a built in way of converting bytes to int.
-			char lenBuf[2];
-			stream.readRawData(lenBuf, 2);
-			int len = (lenBuf[0] << 8) + lenBuf[1];
+		char codeBuf[1];
+		stream.readRawData(codeBuf, 1);
 
-			char* data = new char[len];
-			stream.readRawData(data, len);
-			
-			QString s = QString::fromUtf8(data, len);
-			readLogLine(s);
+		switch (codeBuf[0]) {
+			case kIpcLogLine: {
+				// TODO: qt must have a built in way of converting bytes to int.
+				char lenBuf[2];
+				stream.readRawData(lenBuf, 2);
+				int len = (lenBuf[0] << 8) + lenBuf[1];
+
+				// HACK: sometimes the size is wrong (probably a bug in the above code)
+				// but the following text always seems to be valid, so just read a large
+				// amount from the buffer and put a \0 at the end if the number looks
+				// valid (ugh, this sucks).
+				char* data = new char[1024];
+				stream.readRawData(data, 1024);
+				if (len > -1) {
+					data[len] = '\0';
+				}
+
+				QString s = QString::fromUtf8(data);
+				readLogLine(s);
+			}
+			break;
+
+		default: {
+				std::cerr << "invalid code: " << codeBuf[0] << std::endl;
+			}
+			break;
 		}
-		break;
 	}
 }
 
