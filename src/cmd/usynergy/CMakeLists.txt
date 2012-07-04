@@ -1,5 +1,5 @@
 # synergy -- mouse and keyboard sharing utility
-# Copyright (C) 2011 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
+# Copyright (C) 2012 Nick Bolton
 # 
 # This package is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -13,7 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-add_subdirectory(synergyc)
-add_subdirectory(synergys)
-add_subdirectory(synergyd)
-add_subdirectory(usynergy)
+if (WIN32)
+	set(src uSynergyWin32.c)
+elseif (UNIX)
+	set(src uSynergyUnix.c)
+endif()
+
+include_directories(../../micro)
+add_executable(usynergy ${src})
+target_link_libraries(usynergy micro)

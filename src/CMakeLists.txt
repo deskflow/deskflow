@@ -17,6 +17,7 @@ add_subdirectory(lib)
 add_subdirectory(cmd)
 add_subdirectory(test)
 add_subdirectory(plugin)
+add_subdirectory(micro)
 
 if (VNC_SUPPORT)
 	add_subdirectory(vnc)
