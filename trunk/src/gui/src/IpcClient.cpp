@@ -35,16 +35,16 @@ IpcClient::~IpcClient()
 
 void IpcClient::connected()
 {
-	infoMessage("connected to background service");
-
 	char typeBuf[1];
 	typeBuf[0] = kIpcClientGui;
 	write(kIpcHello, 1, typeBuf);
+
+	infoMessage("connection established");
 }
 
 void IpcClient::connectToHost()
 {
-	infoMessage("connecting to background service...");
+	infoMessage("connecting to service...");
 	m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), IPC_PORT);
 }
 

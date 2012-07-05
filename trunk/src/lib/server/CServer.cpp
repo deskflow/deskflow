@@ -1234,7 +1234,7 @@ CServer::handleShapeChanged(const CEvent&, void* vclient)
 		return;
 	}
 
-	LOG((CLOG_INFO "screen \"%s\" shape changed", getName(client).c_str()));
+	LOG((CLOG_DEBUG "screen \"%s\" shape changed", getName(client).c_str()));
 
 	// update jump coordinate
 	SInt32 x, y;

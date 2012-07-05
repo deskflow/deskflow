@@ -537,9 +537,6 @@ class InternalCommands:
 		if type != 'win' and type != 'mac':
 			self.configure(unixTarget, '-DCONF_CPACK:BOOL=TRUE')
 
-		# make sure we have a release build to package
-		self.build([self.defaultTarget], skipConfig=True)
-
 		moveExt = ''
 
 		if type == None:

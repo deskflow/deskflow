@@ -126,7 +126,7 @@ CEventQueue::adoptBuffer(IEventQueueBuffer* buffer)
 	if (m_events.size() != 0) {
 		// this can come as a nasty surprise to programmers expecting
 		// their events to be raised, only to have them deleted.
-		LOG((CLOG_WARN "discarding %d event(s), sorry", m_events.size()));
+		LOG((CLOG_DEBUG "discarding %d event(s)", m_events.size()));
 	}
 
 	// discard old buffer and old events
