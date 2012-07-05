@@ -437,7 +437,8 @@ CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout
 	{
 		GetExitCodeProcess(pi.hProcess, &exitCode);
 		if (exitCode != STILL_ACTIVE) {
-			LOG((CLOG_INFO "process %d was shutdown successfully", pi.dwProcessId));
+			// yay, we got a graceful shutdown. there should be no hook in use errors!
+			LOG((CLOG_INFO "process %d was shutdown gracefully", pi.dwProcessId));
 			break;
 		}
 		else {

@@ -69,10 +69,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 			synergyServer
 		};
 
-		enum qIpcMessage {
-			Command = 1
-		};
-
 		enum qLevel {
 			Error,
 			Info
@@ -135,7 +131,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool serverArgs(QStringList& args, QString& app);
 		void setStatus(const QString& status);
 		void sendDaemonCommand(const QString& command, bool showErrors);
-		void sendIpcMessage(qIpcMessage type, const char* buffer, bool showErrors);
+		void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
 
 	private:
 		QSettings& m_Settings;

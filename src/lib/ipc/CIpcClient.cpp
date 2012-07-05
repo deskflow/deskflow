@@ -30,7 +30,7 @@ m_server(nullptr)
 	m_serverAddress.resolve();
 
 	EVENTQUEUE->adoptHandler(
-		m_socket.getConnectedEvent(), &m_socket,
+		m_socket.getConnectedEvent(), m_socket.getEventTarget(),
 		new TMethodEventJob<CIpcClient>(
 		this, &CIpcClient::handleConnected));
 }

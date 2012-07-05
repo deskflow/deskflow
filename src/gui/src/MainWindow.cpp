@@ -686,7 +686,7 @@ void MainWindow::sendDaemonCommand(const QString& command, bool showErrors)
 {
 	std::string s = command.toStdString();
 	const char* data = s.c_str();
-	m_IpcClient.write(Command, strlen(data), data);
+	m_IpcClient.write(kIpcCommand, strlen(data), data);
 }
 
 void MainWindow::on_m_pActionWizard_triggered()

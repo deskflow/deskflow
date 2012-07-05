@@ -221,6 +221,8 @@ CDaemonApp::mainLoop(bool logToFile)
 		eventQueue.removeHandler(
 			CIpcServer::getClientConnectedEvent(), m_ipcServer);
 		
+		CLOG->remove(m_ipcLogOutputter);
+		delete m_ipcLogOutputter;
 		delete m_ipcServer;
 
 		DAEMON_RUNNING(false);
@@ -278,8 +280,6 @@ void
 CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 {
 	CIpcMessage& m = *static_cast<CIpcMessage*>(e.getData());
-	LOG((CLOG_DEBUG "ipc message, type=%d", m.m_type));
-
 	switch (m.m_type) {
 		case kIpcCommand: {
 			CString& command = *static_cast<CString*>(m.m_data);
@@ -300,9 +300,5 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			m_relauncher->command(command);
 		}
 		break;
-
-		default:
-			LOG((CLOG_ERR "ipc message not supported, type=%d", m.m_type));
-			break;
 	}
 }

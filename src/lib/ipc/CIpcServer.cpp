@@ -45,6 +45,7 @@ CIpcServer::~CIpcServer()
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
 		delete *it;
 	}
+	m_clients.empty();
 
 	EVENTQUEUE->removeHandler(m_socket.getConnectingEvent(), &m_socket);
 }

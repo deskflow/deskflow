@@ -32,7 +32,7 @@ public:
     IpcClient();
 	virtual ~IpcClient();
 
-	void write(unsigned char code, unsigned char length, const char* data);
+	void write(int code, int length, const char* data);
 
 public slots:
 	void connectToHost();
@@ -55,14 +55,14 @@ private:
 	QTcpSocket* m_Socket;
 };
 
-enum IpcMessageType {
+enum qIpcMessageType {
 	kIpcHello,
 	kIpcLogLine,
 	kIpcCommand,
 	kIpcShutdown,
 };
 
-enum IpcClientType {
+enum qIpcClientType {
 	kIpcClientUnknown,
 	kIpcClientGui,
 	kIpcClientNode,

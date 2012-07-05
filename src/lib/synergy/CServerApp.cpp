@@ -760,15 +760,6 @@ CServerApp::mainLoop()
 
 	// create the event queue
 	CEventQueue eventQueue;
-/*
-	bool a = true;
-	while (a) {
-		ARCH->sleep(1);
-	}*/
-	
-	if (argsBase().m_enableIpc) {
-		initIpcClient();
-	}
 
 	// if configuration has no screens then add this system
 	// as the default
@@ -795,6 +786,12 @@ CServerApp::mainLoop()
 
 	// start server, etc
 	appUtil().startNode();
+	
+	// init ipc client after node start, since create a new screen wipes out
+	// the event queue (the screen ctors call adoptBuffer).
+	if (argsBase().m_enableIpc) {
+		initIpcClient();
+	}
 
 	// load all available plugins.
 	ARCH->plugin().init(s_serverScreen->getEventTarget());
