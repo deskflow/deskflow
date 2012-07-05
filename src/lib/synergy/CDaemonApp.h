@@ -48,7 +48,8 @@ public:
 	static CDaemonApp* s_instance;
 
 #if SYSAPI_WIN32
-	CMSWindowsRelauncher m_relauncher;
+	CMSWindowsRelauncher*
+						m_relauncher;
 #endif
 
 private:
@@ -57,7 +58,3 @@ private:
 };
 
 #define LOG_FILENAME "synergyd.log"
-
-enum {
-	kIpcCommand = 1
-};

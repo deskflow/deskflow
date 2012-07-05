@@ -21,6 +21,14 @@
 #define IPC_PORT 24801
 
 enum EIpcMessage {
+	kIpcHello,
 	kIpcLogLine,
-	kIpcCommand
+	kIpcCommand,
+	kIpcShutdown,
+};
+
+enum EIpcClientType {
+	kIpcClientUnknown,
+	kIpcClientGui,
+	kIpcClientNode,
 };

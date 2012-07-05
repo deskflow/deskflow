@@ -23,7 +23,7 @@
 // CClientProxy1_1
 //
 
-CClientProxy1_2::CClientProxy1_2(const CString& name, IStream* stream) :
+CClientProxy1_2::CClientProxy1_2(const CString& name, synergy::IStream* stream) :
 	CClientProxy1_1(name, stream)
 {
 	// do nothing

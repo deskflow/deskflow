@@ -19,6 +19,7 @@
 
 #include "CTCPListenSocket.h"
 #include "CNetworkAddress.h"
+#include "Ipc.h"
 #include <set>
 
 class CEvent;
@@ -43,15 +44,15 @@ public:
 	//! Opens a TCP socket only allowing local connections.
 	void				listen();
 
-	//! Send a message to all clients.
-	void				send(const CIpcMessage& message);
+	//! Send a message to all clients matching the filter type.
+	void				send(const CIpcMessage& message, EIpcClientType filterType);
 
 	//@}
 	//! @name accessors
 	//@{
 
 	//! Raised when we have created the client proxy.
-	static CEvent::Type		getClientConnectedEvent();
+	static CEvent::Type	getClientConnectedEvent();
 
 	//@}
 

@@ -78,7 +78,7 @@ CDaemonApp::CDaemonApp() :
 m_ipcServer(nullptr),
 m_ipcLogOutputter(nullptr)
 #if SYSAPI_WIN32
-,m_relauncher(false)
+,m_relauncher(nullptr)
 #endif
 {
 	s_instance = this;
@@ -182,15 +182,19 @@ CDaemonApp::mainLoop(bool logToFile)
 		// uses event queue, must be created here.
 		m_ipcServer = new CIpcServer();
 
+		// send logging to gui via ipc, log system adopts outputter.
+		m_ipcLogOutputter = new CIpcLogOutputter(*m_ipcServer);
+		CLOG->insert(m_ipcLogOutputter);
+
+#if SYSAPI_WIN32
+		m_relauncher = new CMSWindowsRelauncher(false, *m_ipcServer, *m_ipcLogOutputter);
+#endif
+
 		eventQueue.adoptHandler(
 			CIpcServer::getClientConnectedEvent(), m_ipcServer,
 			new TMethodEventJob<CDaemonApp>(this, &CDaemonApp::handleIpcConnected));
 
 		m_ipcServer->listen();
-
-		// send logging to gui via ipc, log system adopts outputter.
-		m_ipcLogOutputter = new CIpcLogOutputter(*m_ipcServer);
-		CLOG->insert(m_ipcLogOutputter);
 
 #if SYSAPI_WIN32
 		// HACK: create a dummy screen, which can handle system events 
@@ -199,21 +203,19 @@ CDaemonApp::mainLoop(bool logToFile)
 		CGameDeviceInfo gameDevice;
 		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice));
 
-		m_relauncher.m_ipcLogOutputter = m_ipcLogOutputter;
-
 		string command = ARCH->setting("Command");
 		if (command != "") {
 			LOG((CLOG_INFO "using last known command: %s", command.c_str()));
-			m_relauncher.command(command);
+			m_relauncher->command(command);
 		}
 
-		m_relauncher.startAsync();
+		m_relauncher->startAsync();
 #endif
 
 		eventQueue.loop();
 
 #if SYSAPI_WIN32
-		m_relauncher.stop();
+		m_relauncher->stop();
 #endif
 
 		eventQueue.removeHandler(
@@ -275,13 +277,12 @@ CDaemonApp::handleIpcConnected(const CEvent& e, void*)
 void
 CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 {
-	CIpcMessage& m = *reinterpret_cast<CIpcMessage*>(e.getData());
-
+	CIpcMessage& m = *static_cast<CIpcMessage*>(e.getData());
 	LOG((CLOG_DEBUG "ipc message, type=%d", m.m_type));
 
 	switch (m.m_type) {
 		case kIpcCommand: {
-			CString& command = *reinterpret_cast<CString*>(m.m_data);
+			CString& command = *static_cast<CString*>(m.m_data);
 			LOG((CLOG_DEBUG "got new command: %s", command.c_str()));
 
 			try {
@@ -296,7 +297,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			// tell the relauncher about the new command. this causes the
 			// relauncher to stop the existing command and start the new
 			// command.
-			m_relauncher.command(command);
+			m_relauncher->command(command);
 		}
 		break;
 

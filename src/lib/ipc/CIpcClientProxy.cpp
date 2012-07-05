@@ -25,20 +25,23 @@
 
 CEvent::Type			CIpcClientProxy::s_messageReceivedEvent = CEvent::kUnknown;
 
-CIpcClientProxy::CIpcClientProxy(IStream& stream) :
+CIpcClientProxy::CIpcClientProxy(synergy::IStream& stream) :
 m_stream(stream),
-m_enableLog(false)
+m_enableLog(false),
+m_clientType(kIpcClientUnknown)
 {
-	EVENTQUEUE->adoptHandler(m_stream.getInputReadyEvent(),
-		stream.getEventTarget(),
+	EVENTQUEUE->adoptHandler(
+		m_stream.getInputReadyEvent(), stream.getEventTarget(),
 		new TMethodEventJob<CIpcClientProxy>(
 		this, &CIpcClientProxy::handleData, nullptr));
 }
 
 CIpcClientProxy::~CIpcClientProxy()
 {
-	EVENTQUEUE->removeHandler(m_stream.getInputReadyEvent(),
-		m_stream.getEventTarget());
+	EVENTQUEUE->removeHandler(
+		m_stream.getInputReadyEvent(), m_stream.getEventTarget());
+	
+	m_stream.close();
 }
 
 void
@@ -57,6 +60,10 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 		}
 
 		switch (type) {
+		case kIpcHello:
+			parseHello();
+			break;
+
 		case kIpcCommand:
 			m->m_data = parseCommand();
 			break;
@@ -87,14 +94,18 @@ CIpcClientProxy::send(const CIpcMessage& message)
 
 	switch (message.m_type) {
 	case kIpcLogLine: {
-			CString* s = (CString*)message.m_data;
-			const char* data = s->c_str();
-			
-			int len = strlen(data);
-			CProtocolUtil::writef(&m_stream, "%2i", len);
+		CString* s = (CString*)message.m_data;
+		const char* data = s->c_str();
+		
+		int len = strlen(data);
+		CProtocolUtil::writef(&m_stream, "%2i", len);
 
-			m_stream.write(data, len);
-		}
+		m_stream.write(data, len);
+		break;
+	}
+			
+	case kIpcShutdown:
+		// no data.
 		break;
 
 	default:
@@ -103,6 +114,14 @@ CIpcClientProxy::send(const CIpcMessage& message)
 		}
 		break;
 	}
+}
+
+void
+CIpcClientProxy::parseHello()
+{
+	UInt8 buffer[1];
+	m_stream.read(buffer, 1);
+	m_clientType = static_cast<EIpcClientType>(buffer[0]);
 }
 
 void*
@@ -114,6 +133,7 @@ CIpcClientProxy::parseCommand()
 	UInt8* buffer = new UInt8[len];
 	m_stream.read(buffer, len);
 
+	// delete by event cleanup.
 	return new CString((const char*)buffer, len);
 }
 

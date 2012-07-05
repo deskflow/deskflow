@@ -66,7 +66,7 @@ CClientListener::CClientListener(const CNetworkAddress& address,
 	LOG((CLOG_DEBUG1 "listening for clients"));
 
 	// setup event handler
-	EVENTQUEUE->adoptHandler(IListenSocket::getConnectingEvent(), m_listen,
+	EVENTQUEUE->adoptHandler(m_listen->getConnectingEvent(), m_listen,
 							new TMethodEventJob<CClientListener>(this,
 								&CClientListener::handleClientConnecting));
 }
@@ -95,7 +95,7 @@ CClientListener::~CClientListener()
 		client = getNextClient();
 	}
 
-	EVENTQUEUE->removeHandler(IListenSocket::getConnectingEvent(), m_listen);
+	EVENTQUEUE->removeHandler(m_listen->getConnectingEvent(), m_listen);
 	delete m_listen;
 	delete m_socketFactory;
 	delete m_streamFilterFactory;
@@ -131,7 +131,7 @@ void
 CClientListener::handleClientConnecting(const CEvent&, void*)
 {
 	// accept client connection
-	IStream* stream = m_listen->accept();
+	synergy::IStream* stream = m_listen->accept();
 	if (stream == NULL) {
 		return;
 	}

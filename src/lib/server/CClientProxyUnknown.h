@@ -22,12 +22,12 @@
 
 class CClientProxy;
 class CEventQueueTimer;
-class IStream;
+namespace synergy { class IStream; }
 class CServer;
 
 class CClientProxyUnknown {
 public:
-	CClientProxyUnknown(IStream* stream, double timeout, CServer* server);
+	CClientProxyUnknown(synergy::IStream* stream, double timeout, CServer* server);
 	~CClientProxyUnknown();
 
 	//! @name manipulators
@@ -75,7 +75,7 @@ private:
 	void				handleReady(const CEvent&, void*);
 
 private:
-	IStream*			m_stream;
+	synergy::IStream*			m_stream;
 	CEventQueueTimer*	m_timer;
 	CClientProxy*		m_proxy;
 	bool				m_ready;

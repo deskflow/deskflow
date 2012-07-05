@@ -23,7 +23,7 @@
 // CStreamFilter
 //
 
-CStreamFilter::CStreamFilter(IStream* stream, bool adoptStream) :
+CStreamFilter::CStreamFilter(synergy::IStream* stream, bool adoptStream) :
 	m_stream(stream),
 	m_adopted(adoptStream)
 {
@@ -96,7 +96,7 @@ CStreamFilter::getSize() const
 	return getStream()->getSize();
 }
 
-IStream*
+synergy::IStream*
 CStreamFilter::getStream() const
 {
 	return m_stream;

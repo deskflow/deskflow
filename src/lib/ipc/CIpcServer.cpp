@@ -34,14 +34,19 @@ m_address(CNetworkAddress(IPC_HOST, IPC_PORT))
 	m_address.resolve();
 
 	EVENTQUEUE->adoptHandler(
-		IListenSocket::getConnectingEvent(), &m_socket,
+		m_socket.getConnectingEvent(), &m_socket,
 		new TMethodEventJob<CIpcServer>(
 		this, &CIpcServer::handleClientConnecting));
 }
 
 CIpcServer::~CIpcServer()
 {
-	EVENTQUEUE->removeHandler(IListenSocket::getConnectingEvent(), &m_socket);
+	CClientSet::iterator it;
+	for (it = m_clients.begin(); it != m_clients.end(); it++) {
+		delete *it;
+	}
+
+	EVENTQUEUE->removeHandler(m_socket.getConnectingEvent(), &m_socket);
 }
 
 void
@@ -53,12 +58,11 @@ CIpcServer::listen()
 void
 CIpcServer::handleClientConnecting(const CEvent&, void*)
 {
-	IStream* stream = m_socket.accept();
+	synergy::IStream* stream = m_socket.accept();
 	if (stream == NULL) {
 		return;
 	}
-	// when there is already a client connected, this causes stack overflow,
-	// 
+
 	LOG((CLOG_NOTE "accepted ipc client connection"));
 
 	// TODO: delete on disconnect
@@ -76,10 +80,13 @@ CIpcServer::getClientConnectedEvent()
 }
 
 void
-CIpcServer::send(const CIpcMessage& message)
+CIpcServer::send(const CIpcMessage& message, EIpcClientType filterType)
 {
 	CClientSet::iterator it;
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
-		(*it)->send(message);
+		CIpcClientProxy* proxy = *it;
+		if (proxy->m_clientType == filterType) {
+			proxy->send(message);
+		}
 	}
 }

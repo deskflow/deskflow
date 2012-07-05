@@ -27,7 +27,7 @@
 // CClientProxy1_3
 //
 
-CClientProxy1_3::CClientProxy1_3(const CString& name, IStream* stream) :
+CClientProxy1_3::CClientProxy1_3(const CString& name, synergy::IStream* stream) :
 	CClientProxy1_2(name, stream),
 	m_keepAliveRate(kKeepAliveRate),
 	m_keepAliveTimer(NULL)

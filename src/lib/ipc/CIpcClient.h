@@ -32,14 +32,31 @@ public:
 	CIpcClient();
 	virtual ~CIpcClient();
 
+	//! @name manipulators
+	//@{
+
 	//! Connects to the IPC server at localhost.
 	void				connect();
 
 	//! Sends a message to the server.
 	void				send(const CIpcMessage& message);
 
+	//@}
+	//! @name accessors
+	//@{
+
+	//! Raised when the socket is connected.
+	static CEvent::Type	getConnectedEvent();
+
+	//@}
+
 private:
-	CNetworkAddress m_serverAddress;
-	CTCPSocket m_socket;
-	CIpcServerProxy* m_server;
+	void				handleConnected(const CEvent&, void*);
+
+private:
+	CNetworkAddress		m_serverAddress;
+	CTCPSocket			m_socket;
+	CIpcServerProxy*	m_server;
+
+	static CEvent::Type	s_connectedEvent;
 };

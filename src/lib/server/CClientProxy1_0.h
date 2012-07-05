@@ -28,7 +28,7 @@ class CEventQueueTimer;
 //! Proxy for client implementing protocol version 1.0
 class CClientProxy1_0 : public CClientProxy {
 public:
-	CClientProxy1_0(const CString& name, IStream* adoptedStream);
+	CClientProxy1_0(const CString& name, synergy::IStream* adoptedStream);
 	~CClientProxy1_0();
 
 	// IScreen

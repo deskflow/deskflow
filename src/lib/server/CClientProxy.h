@@ -22,7 +22,7 @@
 #include "CEvent.h"
 #include "CString.h"
 
-class IStream;
+namespace synergy { class IStream; }
 
 //! Generic proxy for client
 class CClientProxy : public CBaseClientProxy {
@@ -30,7 +30,7 @@ public:
 	/*!
 	\c name is the name of the client.
 	*/
-	CClientProxy(const CString& name, IStream* adoptedStream);
+	CClientProxy(const CString& name, synergy::IStream* adoptedStream);
 	~CClientProxy();
 
 	//! @name manipulators
@@ -50,7 +50,7 @@ public:
 	/*!
 	Returns the stream passed to the c'tor.
 	*/
-	IStream*			getStream() const;
+	synergy::IStream*			getStream() const;
 
 	//! Get ready event type
 	/*!
@@ -117,7 +117,7 @@ public:
 	virtual void		gameDeviceTimingReq() = 0;
 
 private:
-	IStream*			m_stream;
+	synergy::IStream*	m_stream;
 
 	static CEvent::Type	s_readyEvent;
 	static CEvent::Type	s_disconnectedEvent;

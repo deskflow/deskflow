@@ -33,7 +33,7 @@
 // CServerProxy
 //
 
-CServerProxy::CServerProxy(CClient* client, IStream* stream, IEventQueue& eventQueue) :
+CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue& eventQueue) :
 	m_client(client),
 	m_stream(stream),
 	m_seqNum(0),

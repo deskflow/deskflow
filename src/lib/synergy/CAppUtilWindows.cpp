@@ -25,7 +25,6 @@
 #include "CMSWindowsScreen.h"
 #include "XSynergy.h"
 #include "IArchTaskBarReceiver.h"
-#include "CMSWindowsRelauncher.h"
 #include "CScreen.h"
 #include "CArgsBase.h"
 #include "IEventQueue.h"
@@ -214,17 +213,5 @@ CAppUtilWindows::debugServiceWait()
 void 
 CAppUtilWindows::startNode()
 {
-	if (app().argsBase().m_relaunchMode) {
-
-		LOG((CLOG_DEBUG1 "entering relaunch mode"));
-		CMSWindowsRelauncher relauncher(true);
-		relauncher.startAsync();
-
-		// HACK: create a dummy screen, which can handle system events 
-		// (such as a stop request from the service controller).
-		CScreen* dummyScreen = app().createScreen();
-	}
-	else {
-		app().startNode();
-	}
+	app().startNode();
 }

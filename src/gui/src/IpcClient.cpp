@@ -25,11 +25,21 @@ IpcClient::IpcClient()
 {
 	m_Socket = new QTcpSocket(this);
 	connect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
+	connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
 	connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
 }
 
 IpcClient::~IpcClient()
 {
+}
+
+void IpcClient::connected()
+{
+	infoMessage("connected to background service");
+
+	char typeBuf[1];
+	typeBuf[0] = kIpcClientGui;
+	write(kIpcHello, 1, typeBuf);
 }
 
 void IpcClient::connectToHost()
@@ -52,6 +62,7 @@ void IpcClient::read()
 				char lenBuf[2];
 				stream.readRawData(lenBuf, 2);
 				int len = bytesToInt(lenBuf, 2);
+				std::cout << "len: " << len << std::endl;
 
 				char* data = new char[len];
 				stream.readRawData(data, len);

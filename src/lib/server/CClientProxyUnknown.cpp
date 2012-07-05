@@ -39,7 +39,7 @@
 CEvent::Type			CClientProxyUnknown::s_successEvent = CEvent::kUnknown;
 CEvent::Type			CClientProxyUnknown::s_failureEvent = CEvent::kUnknown;
 
-CClientProxyUnknown::CClientProxyUnknown(IStream* stream, double timeout, CServer* server) :
+CClientProxyUnknown::CClientProxyUnknown(synergy::IStream* stream, double timeout, CServer* server) :
 	m_stream(stream),
 	m_proxy(NULL),
 	m_ready(false),
