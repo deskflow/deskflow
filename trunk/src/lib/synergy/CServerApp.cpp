@@ -760,6 +760,15 @@ CServerApp::mainLoop()
 
 	// create the event queue
 	CEventQueue eventQueue;
+/*
+	bool a = true;
+	while (a) {
+		ARCH->sleep(1);
+	}*/
+	
+	if (argsBase().m_enableIpc) {
+		initIpcClient();
+	}
 
 	// if configuration has no screens then add this system
 	// as the default

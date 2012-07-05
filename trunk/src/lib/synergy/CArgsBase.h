@@ -35,8 +35,8 @@ public:
 	CString m_name;
 	bool m_disableTray;
 	bool m_enableVnc;
+	bool m_enableIpc;
 #if SYSAPI_WIN32
-	bool m_relaunchMode;
 	bool m_debugServiceWait;
 	bool m_pauseOnExit;
 	CGameDeviceInfo m_gameDevice;

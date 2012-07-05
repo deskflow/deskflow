@@ -22,7 +22,7 @@
 
 class IEventQueue;
 
-class CMockStream : public IStream
+class CMockStream : public synergy::IStream
 {
 public:
 	CMockStream(IEventQueue& eventQueue) : IStream(eventQueue) { }

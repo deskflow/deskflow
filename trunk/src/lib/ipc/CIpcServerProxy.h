@@ -19,12 +19,12 @@
 
 #include "CEvent.h"
 
-class IStream;
+namespace synergy { class IStream; }
 class CIpcMessage;
 
 class CIpcServerProxy {
 public:
-	CIpcServerProxy(IStream& stream);
+	CIpcServerProxy(synergy::IStream& stream);
 	virtual ~CIpcServerProxy();
 
 	void				send(const CIpcMessage& message);
@@ -38,7 +38,7 @@ private:
 	void				disconnect();
 
 private:
-	IStream&			m_stream;
+	synergy::IStream&	m_stream;
 
 	static CEvent::Type	s_messageReceivedEvent;
 };

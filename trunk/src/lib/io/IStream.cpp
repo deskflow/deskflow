@@ -18,6 +18,8 @@
 #include "IStream.h"
 #include "CEventQueue.h"
 
+using namespace synergy;
+
 //
 // IStream
 //

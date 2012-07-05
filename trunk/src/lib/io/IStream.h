@@ -24,6 +24,8 @@
 
 class IEventQueue;
 
+namespace synergy {
+
 //! Bidirectional stream interface
 /*!
 Defines the interface for all streams.
@@ -164,5 +166,7 @@ private:
 	static CEvent::Type	s_inputShutdownEvent;
 	static CEvent::Type	s_outputShutdownEvent;
 };
+
+}
 
 #endif

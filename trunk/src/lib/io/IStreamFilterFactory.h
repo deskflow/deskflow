@@ -20,7 +20,8 @@
 
 #include "IInterface.h"
 
-class IStream;
+using namespace synergy;
+namespace synergy { class IStream; }
 
 //! Stream filter factory interface
 /*!
@@ -33,7 +34,7 @@ public:
 	Create and return a stream filter on \p stream.  The caller must
 	delete the returned object.
 	*/
-	virtual IStream*	create(IStream* stream, bool adoptStream) = 0;
+	virtual synergy::IStream*	create(IStream* stream, bool adoptStream) = 0;
 };
 
 #endif

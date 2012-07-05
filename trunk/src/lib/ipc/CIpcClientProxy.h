@@ -18,29 +18,32 @@
 #pragma once
 
 #include "CEvent.h"
+#include "Ipc.h"
 
-class IStream;
+namespace synergy { class IStream; }
 class CIpcMessage;
 
 class CIpcClientProxy {
 public:
-	CIpcClientProxy(IStream& stream);
+	CIpcClientProxy(synergy::IStream& stream);
 	virtual ~CIpcClientProxy();
 
 	//! Send a message to the client.
-	void					send(const CIpcMessage& message);
+	void				send(const CIpcMessage& message);
 
 	//! Raised when the server receives a message from a client.
-	static CEvent::Type		getMessageReceivedEvent();
+	static CEvent::Type	getMessageReceivedEvent();
 
 private:
 	void				handleData(const CEvent&, void*);
+	void				parseHello();
 	void*				parseCommand();
 	void				disconnect();
 
 public:
-	IStream&			m_stream;
+	synergy::IStream&	m_stream;
 	bool				m_enableLog;
+	EIpcClientType		m_clientType;
 	
 private:
 	static CEvent::Type	s_messageReceivedEvent;

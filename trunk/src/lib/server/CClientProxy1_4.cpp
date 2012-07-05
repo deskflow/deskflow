@@ -28,7 +28,7 @@
 // CClientProxy1_4
 //
 
-CClientProxy1_4::CClientProxy1_4(const CString& name, IStream* stream, CServer* server) :
+CClientProxy1_4::CClientProxy1_4(const CString& name, synergy::IStream* stream, CServer* server) :
 	CClientProxy1_3(name, stream), m_server(server)
 {
 	assert(m_server != NULL);

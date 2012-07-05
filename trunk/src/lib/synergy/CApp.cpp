@@ -25,6 +25,10 @@
 #include "LogOutputters.h"
 #include "XSynergy.h"
 #include "CArgsBase.h"
+#include "CIpcServerProxy.h"
+#include "TMethodEventJob.h"
+#include "CIpcMessage.h"
+#include "Ipc.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
@@ -46,7 +50,8 @@ m_createTaskBarReceiver(createTaskBarReceiver),
 m_args(args),
 m_bye(&exit),
 m_taskBarReceiver(NULL),
-m_suspended(false)
+m_suspended(false),
+m_ipcClient(nullptr)
 {
 	assert(s_instance == nullptr);
 	s_instance = this;
@@ -140,6 +145,10 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 	
 	else if (isArg(i, argc, argv, NULL, "--no-tray")) {
 		argsBase().m_disableTray = true;
+	}
+
+	else if (isArg(i, argc, argv, NULL, "--ipc")) {
+		argsBase().m_enableIpc = true;
 	}
 
 #if VNC_SUPPORT
@@ -333,5 +342,35 @@ CApp::initApp(int argc, const char** argv)
 		// make the task bar receiver.  the user can control this app
 		// through the task bar.
 		m_taskBarReceiver = m_createTaskBarReceiver(logBuffer);
+	}
+}
+
+void
+CApp::initIpcClient()
+{
+	// TODO: delete ipc client on shutdown and the 2 event handlers.
+	m_ipcClient = new CIpcClient();
+	m_ipcClient->connect();
+
+	EVENTQUEUE->adoptHandler(
+		CIpcClient::getConnectedEvent(), m_ipcClient,
+		new TMethodEventJob<CApp>(this, &CApp::handleIpcConnected));
+}
+
+void
+CApp::handleIpcConnected(const CEvent& e, void*)
+{
+	EVENTQUEUE->adoptHandler(
+		CIpcServerProxy::getMessageReceivedEvent(), e.getData(),
+		new TMethodEventJob<CApp>(this, &CApp::handleIpcMessage));
+}
+
+void
+CApp::handleIpcMessage(const CEvent& e, void*)
+{
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getData());
+	if (m->m_type == kIpcShutdown) {
+		LOG((CLOG_INFO "got ipc shutdown message"));
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 	}
 }

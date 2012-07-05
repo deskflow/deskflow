@@ -50,6 +50,6 @@ CIpcLogOutputter::write(ELevel level, const char* msg)
 	CIpcMessage message;
 	message.m_type = kIpcLogLine;
 	message.m_data = new CString(msg);
-	m_ipcServer.send(message);
+	m_ipcServer.send(message, kIpcClientGui);
 	return true;
 }

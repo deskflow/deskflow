@@ -24,10 +24,14 @@
 
 class CThread;
 class CIpcLogOutputter;
+class CIpcServer;
 
 class CMSWindowsRelauncher {
 public:
-	CMSWindowsRelauncher(bool autoDetectCommand);
+	CMSWindowsRelauncher(
+		bool autoDetectCommand,
+		CIpcServer& ipcServer,
+		CIpcLogOutputter& ipcLogOutputter);
 	virtual ~CMSWindowsRelauncher();
 	void startAsync();
 	std::string command() const;
@@ -42,9 +46,6 @@ private:
 	void outputLoop(void*);
 	void shutdownProcess(const PROCESS_INFORMATION& pi, int timeout);
 
-public:
-	CIpcLogOutputter*	m_ipcLogOutputter;
-
 private:
 	CThread* m_thread;
 	bool m_autoDetectCommand;
@@ -54,4 +55,6 @@ private:
 	HANDLE m_stdOutWrite;
 	HANDLE m_stdOutRead;
 	CThread* m_outputThread;
+	CIpcServer&			m_ipcServer;
+	CIpcLogOutputter&	m_ipcLogOutputter;
 };

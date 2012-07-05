@@ -28,7 +28,7 @@
 // CClientProxy1_0
 //
 
-CClientProxy1_0::CClientProxy1_0(const CString& name, IStream* stream) :
+CClientProxy1_0::CClientProxy1_0(const CString& name, synergy::IStream* stream) :
 	CClientProxy(name, stream),
 	m_heartbeatTimer(NULL),
 	m_parser(&CClientProxy1_0::parseHandshakeMessage)

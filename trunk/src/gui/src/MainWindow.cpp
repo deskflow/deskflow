@@ -369,6 +369,11 @@ void MainWindow::startSynergy()
 	{
 		setSynergyProcess(new QProcess(this));
 	}
+	else
+	{
+		// tell client/server to talk to daemon through ipc.
+		args << "--ipc";
+	}
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))
 		|| (synergyType() == synergyServer && !serverArgs(args, app)))

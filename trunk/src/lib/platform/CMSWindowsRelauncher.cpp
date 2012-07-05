@@ -26,6 +26,9 @@
 #include "CApp.h"
 #include "CArgsBase.h"
 #include "CIpcLogOutputter.h"
+#include "CIpcServer.h"
+#include "CIpcMessage.h"
+#include "Ipc.h"
 
 #include <Tlhelp32.h>
 #include <UserEnv.h>
@@ -37,14 +40,18 @@ enum {
 
 typedef VOID (WINAPI *SendSas)(BOOL asUser);
 
-CMSWindowsRelauncher::CMSWindowsRelauncher(bool autoDetectCommand) :
+CMSWindowsRelauncher::CMSWindowsRelauncher(
+	bool autoDetectCommand,
+	CIpcServer& ipcServer,
+	CIpcLogOutputter& ipcLogOutputter) :
 	m_thread(NULL),
 	m_autoDetectCommand(autoDetectCommand),
 	m_running(true),
 	m_commandChanged(false),
 	m_stdOutWrite(NULL),
 	m_stdOutRead(NULL),
-	m_ipcLogOutputter(nullptr)
+	m_ipcServer(ipcServer),
+	m_ipcLogOutputter(ipcLogOutputter)
 {
 }
 
@@ -374,7 +381,7 @@ CMSWindowsRelauncher::command() const
 
 	// build up a full command line
 	std::stringstream cmdTemp;
-	cmdTemp << launchName << /*" --debug-data session-" << sessionId <<*/ args;
+	cmdTemp << launchName << args;
 
 	std::string cmd = cmdTemp.str();
 
@@ -390,7 +397,8 @@ CMSWindowsRelauncher::command() const
 void
 CMSWindowsRelauncher::outputLoop(void*)
 {
-	CHAR buffer[kOutputBufferSize];
+	// +1 char for \0
+	CHAR buffer[kOutputBufferSize + 1];
 
 	while (true) {
 		
@@ -405,7 +413,7 @@ CMSWindowsRelauncher::outputLoop(void*)
 		else {
 			// send process output over IPC to GUI.
 			buffer[bytesRead] = '\0';
-			m_ipcLogOutputter->write(kINFO, buffer);
+			m_ipcLogOutputter.write(kINFO, buffer);
 		}
 			
 	}
@@ -419,6 +427,10 @@ CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout
 	if (exitCode != STILL_ACTIVE)
 		return;
 
+	CIpcMessage shutdown;
+	shutdown.m_type = kIpcShutdown;
+	m_ipcServer.send(shutdown, kIpcClientNode);
+
 	// wait for process to exit gracefully.
 	double start = ARCH->time();
 	while (true)
@@ -430,12 +442,13 @@ CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout
 		}
 		else {
 			
-			if ((ARCH->time() - start) > timeout) {
+			double elapsed = (ARCH->time() - start);
+			if (elapsed > timeout) {
 				// if timeout reached, kill forcefully.
 				// calling TerminateProcess on synergy is very bad!
 				// it causes the hook DLL to stay loaded in some apps,
 				// making it impossible to start synergy again.
-				LOG((CLOG_WARN "shutdown timed out after %d secs, forcefully terminating", pi.dwProcessId));
+				LOG((CLOG_WARN "shutdown timed out after %d secs, forcefully terminating", (int)elapsed));
 				TerminateProcess(pi.hProcess, kExitSuccess);
 				break;
 			}

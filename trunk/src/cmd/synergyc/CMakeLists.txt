@@ -41,6 +41,7 @@ set(inc
 	../../lib/client
 	../../lib/common
 	../../lib/io
+	../../lib/ipc
 	../../lib/mt
 	../../lib/net
 	../../lib/platform
@@ -60,7 +61,7 @@ endif()
 include_directories(${inc})
 add_executable(synergyc ${src})
 target_link_libraries(synergyc
-	arch base client common io mt net platform server synergy ${libs})
+	arch base client common io mt net ipc platform server synergy ${libs})
 
 if (CONF_CPACK)
 	install(TARGETS

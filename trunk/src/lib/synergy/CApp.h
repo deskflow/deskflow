@@ -20,6 +20,7 @@
 #include "common.h"
 #include "CString.h"
 #include "IApp.h"
+#include "CIpcClient.h"
 
 #if SYSAPI_WIN32
 #include "CAppUtilWindows.h"
@@ -92,9 +93,14 @@ public:
 	virtual void setByeFunc(void(*bye)(int)) { m_bye = bye; }
 	virtual void bye(int error) { m_bye(error); }
 
+private:
+	void				handleIpcConnected(const CEvent&, void*);
+	void				handleIpcMessage(const CEvent&, void*);
+
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
+	void				initIpcClient();
 
 	IArchTaskBarReceiver* m_taskBarReceiver;
 	bool m_suspended;
@@ -105,6 +111,7 @@ private:
 	CFileLogOutputter* m_fileLog;
 	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
 	ARCH_APP_UTIL m_appUtil;
+	CIpcClient*			m_ipcClient;
 };
 
 #define BYE "\nTry `%s --help' for more information."

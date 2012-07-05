@@ -528,6 +528,10 @@ CClientApp::mainLoop()
 
 	// create the event queue
 	CEventQueue eventQueue;
+	
+	if (argsBase().m_enableIpc) {
+		initIpcClient();
+	}
 
 	// start client, etc
 	appUtil().startNode();

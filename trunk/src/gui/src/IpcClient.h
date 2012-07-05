@@ -42,6 +42,7 @@ private:
 	void intToBytes(int value, char* buffer, int size);
 
 private slots:
+	void connected();
 	void read();
 	void error(QAbstractSocket::SocketError error);
 
@@ -54,7 +55,15 @@ private:
 	QTcpSocket* m_Socket;
 };
 
-enum EIpcMessage {
+enum IpcMessageType {
+	kIpcHello,
 	kIpcLogLine,
-	kIpcCommand
+	kIpcCommand,
+	kIpcShutdown,
+};
+
+enum IpcClientType {
+	kIpcClientUnknown,
+	kIpcClientGui,
+	kIpcClientNode,
 };

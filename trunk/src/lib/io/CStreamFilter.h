@@ -25,14 +25,14 @@
 This class wraps a stream.  Subclasses provide indirect access
 to the wrapped stream, typically performing some filtering.
 */
-class CStreamFilter : public IStream {
+class CStreamFilter : public synergy::IStream {
 public:
 	/*!
 	Create a wrapper around \c stream.  Iff \c adoptStream is true then
 	this object takes ownership of the stream and will delete it in the
 	d'tor.
 	*/
-	CStreamFilter(IStream* stream, bool adoptStream = true);
+	CStreamFilter(synergy::IStream* stream, bool adoptStream = true);
 	~CStreamFilter();
 
 	// IStream overrides
@@ -53,7 +53,7 @@ protected:
 	/*!
 	Returns the stream passed to the c'tor.
 	*/
-	IStream*			getStream() const;
+	synergy::IStream*	getStream() const;
 
 	//! Handle events from source stream
 	/*!
@@ -66,7 +66,7 @@ private:
 	void				handleUpstreamEvent(const CEvent&, void*);
 
 private:
-	IStream*			m_stream;
+	synergy::IStream*	m_stream;
 	bool				m_adopted;
 };
 

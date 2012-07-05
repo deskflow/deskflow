@@ -59,8 +59,8 @@ public:
 	bool				m_connectToServer_clientConnected;
 	CString				m_sendMessageToServer_receivedString;
 	CString				m_sendMessageToClient_receivedString;
+	CIpcClient*			m_sendMessageToServer_client;
 	CIpcServer*			m_sendMessageToClient_server;
-	CIpcServerProxy*	m_sendMessageToClient_serverProxy;
 };
 
 TEST_F(CIpcTests, connectToServer)
@@ -89,16 +89,13 @@ TEST_F(CIpcTests, sendMessageToServer)
 
 	CIpcClient client;
 	client.connect();
+	m_sendMessageToServer_client = &client;
 	
+	// event handler sends "test" log line to client.
 	m_events.adoptHandler(
 		CIpcServer::getClientConnectedEvent(), &server,
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToServer_handleClientConnected));
-	
-	CIpcMessage m;
-	m.m_type = kIpcCommand;
-	m.m_data = (void*)(new CString("test"));
-	client.send(m);
 
 	quitTimeout(2);
 	m_events.loop();
@@ -114,11 +111,10 @@ TEST_F(CIpcTests, sendMessageToClient)
 
 	CIpcClient client;
 	client.connect();
-	m_sendMessageToClient_serverProxy = client.m_server;
 	
-	// event handler sends "test" log line to client.
+	// event handler sends "test" log line to server.
 	m_events.adoptHandler(
-		CIpcServer::getClientConnectedEvent(), &server,
+		CIpcClient::getConnectedEvent(), &client,
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToClient_handleConnected));
 
@@ -131,7 +127,7 @@ TEST_F(CIpcTests, sendMessageToClient)
 CIpcTests::CIpcTests() :
 m_connectToServer_clientConnected(false),
 m_sendMessageToClient_server(nullptr),
-m_sendMessageToClient_serverProxy(nullptr)
+m_sendMessageToServer_client(nullptr)
 {
 }
 
@@ -153,36 +149,45 @@ CIpcTests::sendMessageToServer_handleClientConnected(const CEvent& e, void*)
 		CIpcClientProxy::getMessageReceivedEvent(), e.getData(),
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToServer_handleMessageReceived));
+	
+	CIpcMessage m;
+	m.m_type = kIpcCommand;
+	m.m_data = new CString("test");
+	m_sendMessageToServer_client->send(m);
 }
 
 void
 CIpcTests::sendMessageToServer_handleMessageReceived(const CEvent& e, void*)
 {
-	CIpcMessage* m = (CIpcMessage*)e.getData();
-	m_sendMessageToServer_receivedString = *((CString*)m->m_data);
-	raiseQuitEvent();
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getData());
+	if (m->m_type == kIpcCommand) {
+		m_sendMessageToServer_receivedString = *static_cast<CString*>(m->m_data);
+		raiseQuitEvent();
+	}
 }
 
 void
 CIpcTests::sendMessageToClient_handleConnected(const CEvent& e, void*)
 {
 	m_events.adoptHandler(
-		CIpcServerProxy::getMessageReceivedEvent(), m_sendMessageToClient_serverProxy,
+		CIpcServerProxy::getMessageReceivedEvent(), e.getData(),
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToClient_handleMessageReceived));
 	
 	CIpcMessage m;
 	m.m_type = kIpcLogLine;
-	m.m_data = (void*)(new CString("test"));
-	m_sendMessageToClient_server->send(m);
+	m.m_data = new CString("test");
+	m_sendMessageToClient_server->send(m, kIpcClientUnknown);
 }
 
 void
 CIpcTests::sendMessageToClient_handleMessageReceived(const CEvent& e, void*)
 {
-	CIpcMessage* m = reinterpret_cast<CIpcMessage*>(e.getData());
-	m_sendMessageToClient_receivedString = *((CString*)m->m_data);
-	raiseQuitEvent();
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getData());
+	if (m->m_type == kIpcLogLine) {
+		m_sendMessageToClient_receivedString = *static_cast<CString*>(m->m_data);
+		raiseQuitEvent();
+	}
 }
 
 void

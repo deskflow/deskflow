@@ -30,7 +30,7 @@ CEvent::Type			CClientProxy::s_disconnectedEvent    = CEvent::kUnknown;
 CEvent::Type			CClientProxy::s_clipboardChangedEvent= CEvent::kUnknown;
 CEvent::Type			CClientProxy::s_gameDeviceTimingRecvEvent= CEvent::kUnknown;
 
-CClientProxy::CClientProxy(const CString& name, IStream* stream) :
+CClientProxy::CClientProxy(const CString& name, synergy::IStream* stream) :
 	CBaseClientProxy(name),
 	m_stream(stream)
 {
@@ -52,7 +52,7 @@ CClientProxy::close(const char* msg)
 	getStream()->flush();
 }
 
-IStream*
+synergy::IStream*
 CClientProxy::getStream() const
 {
 	return m_stream;

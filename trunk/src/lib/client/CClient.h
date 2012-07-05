@@ -28,7 +28,7 @@ class CScreen;
 class CServerProxy;
 class IDataSocket;
 class ISocketFactory;
-class IStream;
+namespace synergy { class IStream; }
 class IStreamFilterFactory;
 class IEventQueue;
 
@@ -195,7 +195,7 @@ private:
 	ISocketFactory*			m_socketFactory;
 	IStreamFilterFactory*	m_streamFilterFactory;
 	CScreen*				m_screen;
-	IStream*				m_stream;
+	synergy::IStream*		m_stream;
 	CEventQueueTimer*		m_timer;
 	CServerProxy*			m_server;
 	bool					m_ready;

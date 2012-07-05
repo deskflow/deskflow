@@ -25,19 +25,21 @@
 
 CEvent::Type			CIpcServerProxy::s_messageReceivedEvent = CEvent::kUnknown;
 
-CIpcServerProxy::CIpcServerProxy(IStream& stream) :
+CIpcServerProxy::CIpcServerProxy(synergy::IStream& stream) :
 m_stream(stream)
 {
 	EVENTQUEUE->adoptHandler(m_stream.getInputReadyEvent(),
 		stream.getEventTarget(),
 		new TMethodEventJob<CIpcServerProxy>(
-		this, &CIpcServerProxy::handleData, nullptr));
+		this, &CIpcServerProxy::handleData));
 }
 
 CIpcServerProxy::~CIpcServerProxy()
 {
 	EVENTQUEUE->removeHandler(m_stream.getInputReadyEvent(),
 		m_stream.getEventTarget());
+
+	m_stream.close();
 }
 
 void
@@ -48,12 +50,16 @@ CIpcServerProxy::handleData(const CEvent&, void*)
 	while (n != 0) {
 
 		CIpcMessage* m = new CIpcMessage();
-		m->m_type = code[1];
+		m->m_type = code[0];
 
-		LOG((CLOG_DEBUG "ipc server proxy read: %d", code[0]));
-		switch (code[0]) {
+		LOG((CLOG_DEBUG "ipc server proxy read: %d", m->m_type));
+		switch (m->m_type) {
 		case kIpcLogLine:
 			m->m_data = parseLogLine();
+			break;
+			
+		case kIpcShutdown:
+			// no data.
 			break;
 
 		default:
@@ -79,16 +85,20 @@ CIpcServerProxy::send(const CIpcMessage& message)
 	m_stream.write(code, 1);
 
 	switch (message.m_type) {
-	case kIpcCommand: {
-			CString* s = (CString*)message.m_data;
-			const char* data = s->c_str();
-			
-			int len = strlen(data);
-			CProtocolUtil::writef(&m_stream, "%2i", len);
-
-			m_stream.write(data, len);
-		}
+	case kIpcHello:
+		m_stream.write(message.m_data, 1);
 		break;
+
+	case kIpcCommand: {
+		CString* s = (CString*)message.m_data;
+		const char* data = s->c_str();
+			
+		int len = strlen(data);
+		CProtocolUtil::writef(&m_stream, "%2i", len);
+
+		m_stream.write(data, len);
+		break;
+	}
 
 	default:
 		LOG((CLOG_ERR "message not supported: %d", message.m_type));
