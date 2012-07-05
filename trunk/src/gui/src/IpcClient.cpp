@@ -68,13 +68,12 @@ void IpcClient::read()
 				stream.readRawData(data, len);
 
 				readLogLine(QString::fromUtf8(data, len));
+				break;
 			}
-			break;
 
-			default: {
-				std::cout << "invalid code: " << codeBuf[0] << std::endl;
-			}
-			break;
+			default:
+				std::cerr << "message type not supported: " << codeBuf[0] << std::endl;
+				break;
 		}
 	}
 }
@@ -93,7 +92,7 @@ void IpcClient::error(QAbstractSocket::SocketError error)
 	QTimer::singleShot(1000, this, SLOT(connectToHost()));
 }
 
-void IpcClient::write(unsigned char code, unsigned char length, const char* data)
+void IpcClient::write(int code, int length, const char* data)
 {
 	QDataStream stream(m_Socket);
 
@@ -102,12 +101,20 @@ void IpcClient::write(unsigned char code, unsigned char length, const char* data
 	stream.writeRawData(codeBuf, 1);
 
 	switch (code) {
-		case kIpcCommand: {
-			char lenBuf[2];
-			intToBytes(length, lenBuf, 2);
-			stream.writeRawData(lenBuf, 2);
-			stream.writeRawData(data, length);
-		}
+	case kIpcHello:
+		stream.writeRawData(data, 1);
+		break;
+
+	case kIpcCommand: {
+		char lenBuf[2];
+		intToBytes(length, lenBuf, 2);
+		stream.writeRawData(lenBuf, 2);
+		stream.writeRawData(data, length);
+		break;
+	}
+
+	default:
+		std::cerr << "message type not supported: " << code << std::endl;
 		break;
 	}
 }
