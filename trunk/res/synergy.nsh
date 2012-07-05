@@ -58,31 +58,26 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   
   !define ID ${__LINE__}
   
-  ; some programs hang on to the hook library, wait until they're done.
-  StrCpy $R0 0
+  StrCpy $R0 0 ; count
+  StrCpy $R1 20 ; max
   retry${ID}:
   ${If} ${FileExists} "${dir}\synrgyhk.dll"
 	IntOp $R0 $R0 + 1
-	${If} $R0 < 60
+	${If} $R0 <= $R1
 	  ; wait for handle on file to be released. why so long? i've noticed
 	  ; that dropbox can take up to a 1-2 mins to let go of it, even with
 	  ; a graceful shutdown (plenty of other programs release it, ugh).
-	  Sleep 2000
-	  DetailPrint "Trying to delete synrgyhk.dll (attempt $R0)"
+	  DetailPrint "Trying to delete synrgyhk.dll (attempt $R0 of $R1)"
       Delete "${dir}\synrgyhk.dll"
-	  Goto retry${ID}
-	${Else}
-      messageBox MB_OK \
-        "The file synrgyhk.dll could not be removed, as it is being used by \
-        another program. The setup may fail when trying to install the file, \
-		but you can safely retry this when prompted. If the problem persists, \
-		please restart your computer and re-run the setup."
-	  Goto end${ID}
+	  
+	  ${If} ${FileExists} "${dir}\synrgyhk.dll"
+		  Sleep 3000
+		  Goto retry${ID}
+      ${EndIf}
 	${EndIf}
   ${Else}
 	FileClose $R0
   ${EndIf}
-  end${ID}:
   
   !undef ID
   
@@ -165,7 +160,13 @@ Section "Server and Client" core
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synergyd.exe"
-  File "${binDir}\Release\synrgyhk.dll"
+  
+  ; if the hook file exists, assume we couldn't delete
+  ${If} ${FileExists} "synrgyhk.dll"
+    DetailPrint "Skipping synrgyhk.dll, file in use."
+  ${Else}
+    File "${binDir}\Release\synrgyhk.dll"
+  ${EndIf}
   
   ; install and run the service
   ExecWait "$INSTDIR\synergyd.exe /install"
