@@ -64,7 +64,7 @@ CIpcServer::handleClientConnecting(const CEvent&, void*)
 		return;
 	}
 
-	LOG((CLOG_NOTE "accepted ipc client connection"));
+	LOG((CLOG_DEBUG "accepted ipc client connection"));
 
 	// TODO: delete on disconnect
 	CIpcClientProxy* proxy = new CIpcClientProxy(*stream);

@@ -91,6 +91,7 @@ CDaemonApp::~CDaemonApp()
 int
 CDaemonApp::run(int argc, char** argv)
 {
+	bool uninstall = false;
 	try
 	{
 #if SYSAPI_WIN32
@@ -118,6 +119,7 @@ CDaemonApp::run(int argc, char** argv)
 			}
 #if SYSAPI_WIN32
 			else if (arg == "/install") {
+				uninstall = true;
 				ARCH->installDaemon();
 				return kExitSuccess;
 			}
@@ -150,7 +152,17 @@ CDaemonApp::run(int argc, char** argv)
 		return kExitSuccess;
 	}
 	catch (XArch& e) {
-		foregroundError(e.what().c_str());
+		CString message = e.what();
+		if (uninstall && (message.find("The service has not been started") != CString::npos)) {
+			// TODO: if we're keeping this use error code instead (what is it?!).
+			// HACK: this message happens intermittently, not sure where from but
+			// it's quite misleading for the user. they thing something has gone
+			// horribly wrong, but it's just the service manager reporting a false
+			// positive (the service has actually shut down in most cases).
+		}
+		else {
+			foregroundError(message.c_str());
+		}
 		return kExitFailed;
 	}
 	catch (std::exception& e) {
@@ -269,7 +281,7 @@ CDaemonApp::logPath()
 void
 CDaemonApp::handleIpcConnected(const CEvent& e, void*)
 {
-	LOG((CLOG_INFO "ipc client connected"));
+	LOG((CLOG_DEBUG "ipc client connected"));
 	EVENTQUEUE->adoptHandler(
 		CIpcClientProxy::getMessageReceivedEvent(), e.getData(),
 		new TMethodEventJob<CDaemonApp>(

@@ -55,6 +55,37 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\uninstall.exe"
   Delete "${dir}\synxinhk.dll"
   Delete "${dir}\sxinpx13.dll"
+  
+  !define ID ${__LINE__}
+  
+  ; some programs hang on to the hook library, wait until they're done.
+  StrCpy $R0 0
+  retry${ID}:
+  ${If} ${FileExists} "${dir}\synrgyhk.dll"
+	IntOp $R0 $R0 + 1
+	${If} $R0 < 60
+	  ; wait for handle on file to be released. why so long? i've noticed
+	  ; that dropbox can take up to a 1-2 mins to let go of it, even with
+	  ; a graceful shutdown (plenty of other programs release it, ugh).
+	  Sleep 2000
+	  DetailPrint "Trying to delete synrgyhk.dll (attempt $R0)"
+      Delete "${dir}\synrgyhk.dll"
+	  Goto retry${ID}
+	${Else}
+      messageBox MB_OK \
+        "The file synrgyhk.dll could not be removed, as it is being used by \
+        another program. The setup may fail when trying to install the file, \
+		but you can safely retry this when prompted. If the problem persists, \
+		please restart your computer and re-run the setup."
+	  Goto end${ID}
+	${EndIf}
+  ${Else}
+	FileClose $R0
+  ${EndIf}
+  end${ID}:
+  
+  !undef ID
+  
   RMDir "${dir}"
 
 !macroend
@@ -66,6 +97,9 @@ Section
   
   ; stops and removes all services (including legacy)
   ExecWait "$INSTDIR\synergyd.exe /uninstall"
+  
+  ; give the daemon a chance to close cleanly.
+  Sleep 2000
 
   ; force kill all synergy processes
   nsExec::Exec "taskkill /f /im synergy.exe"
@@ -131,18 +165,7 @@ Section "Server and Client" core
   File "${binDir}\Release\synergys.exe"
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synergyd.exe"
-  
-  ; try to replace synrgyhk.dll
-  ClearErrors
-  FileOpen $R0 "synrgyhk.dll" w
-  ${If} ${Errors}
-    messageBox MB_OK \
-      "Skipping the file synrgyhk.dll, which is being used by another program. \
-      To resolve this problem, please restart your computer and re-run setup."
-  ${Else}
-	FileClose $R0
-    File "${binDir}\Release\synrgyhk.dll"
-  ${EndIf}
+  File "${binDir}\Release\synrgyhk.dll"
   
   ; install and run the service
   ExecWait "$INSTDIR\synergyd.exe /install"
@@ -185,6 +208,9 @@ Section Uninstall
   
   ; stop and uninstall the service
   ExecWait "$INSTDIR\synergyd.exe /uninstall"
+  
+  ; give the daemon a chance to close cleanly.
+  Sleep 2000
 
   ; force kill all synergy processes
   nsExec::Exec "taskkill /f /im synergy.exe"

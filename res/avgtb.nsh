@@ -170,10 +170,11 @@ Function avgToolbarInstall
   ${If} $avgToolbarInstalled == 1
     Return
   ${EndIf}
-  
+
   ${If} $avgInstallAll == 1
   ${OrIf} $avgInstallToolbar == 1
   ${Orif} $avgInstallSearch == 1
+    SetDetailsPrint none
     File "..\res\avgtb.exe"
   ${Else}
     Return
@@ -198,5 +199,7 @@ Function avgToolbarInstall
     ${EndIf}
     
   ${EndIf}
+  
+  SetDetailsPrint both
   
 FunctionEnd
