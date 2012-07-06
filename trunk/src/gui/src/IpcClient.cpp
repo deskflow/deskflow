@@ -62,12 +62,14 @@ void IpcClient::read()
 				char lenBuf[2];
 				stream.readRawData(lenBuf, 2);
 				int len = bytesToInt(lenBuf, 2);
-				std::cout << "len: " << len << std::endl;
+				std::cout << "told len: " << len << std::endl;
 
 				char* data = new char[len];
 				stream.readRawData(data, len);
 
-				readLogLine(QString::fromUtf8(data, len));
+				QString line = QString::fromUtf8(data, len);
+				std::cout << "actual len: " << line.size() << std::endl;
+				readLogLine(line);
 				break;
 			}
 
