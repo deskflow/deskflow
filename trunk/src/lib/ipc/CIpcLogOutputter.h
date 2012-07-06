@@ -47,4 +47,6 @@ private:
 
 	CIpcServer&			m_ipcServer;
 	CIpcLogQueue		m_buffer;
+	CArchMutex			m_mutex;
+	bool				m_sending;
 };

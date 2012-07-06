@@ -23,10 +23,13 @@
 #include "CEventQueue.h"
 #include "TMethodEventJob.h"
 #include "CIpcClientProxy.h"
+#include "CArch.h"
 
 CIpcLogOutputter::CIpcLogOutputter(CIpcServer& ipcServer) :
-m_ipcServer(ipcServer)
+m_ipcServer(ipcServer),
+m_sending(false)
 {
+	m_mutex = ARCH->newMutex();
 }
 
 CIpcLogOutputter::~CIpcLogOutputter()
@@ -36,14 +39,32 @@ CIpcLogOutputter::~CIpcLogOutputter()
 void
 CIpcLogOutputter::sendBuffer(CIpcClientProxy& proxy)
 {
-	while (m_buffer.size() != 0) {
-		CString text = m_buffer.front();
-		m_buffer.pop();
+	// drop messages logged while sending over ipc, since ipc can cause
+	// log messages (sending these could cause recursion or deadlocks).
+	// this has the side effect of dropping messages from other threads
+	// which weren't caused by ipc, but that is just the downside of
+	// logging this way.
+	if (m_sending) {
+		return;
+	}
+
+	CArchMutexLock lock(m_mutex);
+	m_sending = true;
+	try {
+		while (m_buffer.size() != 0) {
+			CString text = m_buffer.front();
+			m_buffer.pop();
 		
-		CIpcMessage message;
-		message.m_type = kIpcLogLine;
-		message.m_data = new CString(text);
-		proxy.send(message);
+			CIpcMessage message;
+			message.m_type = kIpcLogLine;
+			message.m_data = new CString(text);
+			proxy.send(message);
+		}
+		m_sending = false;
+	}
+	catch (...) {
+		m_sending = false;
+		throw;
 	}
 }
 
@@ -65,15 +86,33 @@ CIpcLogOutputter::show(bool showIfEmpty)
 bool
 CIpcLogOutputter::write(ELevel level, const char* text)
 {
-	if (m_ipcServer.hasClients(kIpcClientGui)) {
-		CIpcMessage message;
-		message.m_type = kIpcLogLine;
-		message.m_data = new CString(text);
-		m_ipcServer.send(message, kIpcClientGui);
+	// drop messages logged while sending over ipc, since ipc can cause
+	// log messages (sending these could cause recursion or deadlocks).
+	// this has the side effect of dropping messages from other threads
+	// which weren't caused by ipc, but that is just the downside of
+	// logging this way.
+	if (m_sending) {
+		return false;
 	}
-	else {
-		m_buffer.push(text);
-	}
+
+	CArchMutexLock lock(m_mutex);
+	m_sending = true;
 	
-	return true;
+	try {
+		if (m_ipcServer.hasClients(kIpcClientGui)) {
+			CIpcMessage message;
+			message.m_type = kIpcLogLine;
+			message.m_data = new CString(text);
+			m_ipcServer.send(message, kIpcClientGui);
+		}
+		else {
+			m_buffer.push(text);
+		}
+		m_sending = false;
+		return true;
+	}
+	catch (...) {
+		m_sending = false;
+		throw;
+	}
 }
