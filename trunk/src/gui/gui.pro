@@ -36,7 +36,8 @@ SOURCES += src/main.cpp \
     src/QSynergyApplication.cpp \
     src/VersionChecker.cpp \
     src/SetupWizard.cpp \
-    src/IpcClient.cpp
+    src/IpcClient.cpp \
+    src/IpcReader.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
@@ -59,7 +60,9 @@ HEADERS += src/MainWindow.h \
     src/QSynergyApplication.h \
     src/VersionChecker.h \
     src/SetupWizard.h \
-    src/IpcClient.h
+    src/IpcClient.h \
+    src/IpcReader.h \
+    src/Ipc.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 TRANSLATIONS = res/lang/nl_NL.ts

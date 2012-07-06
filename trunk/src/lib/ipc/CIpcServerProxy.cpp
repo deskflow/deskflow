@@ -110,7 +110,7 @@ void*
 CIpcServerProxy::parseLogLine()
 {
 	int len = 0;
-	CProtocolUtil::readf(&m_stream, "%2i", &len);
+	CProtocolUtil::readf(&m_stream, "%4i", &len);
 
 	UInt8* buffer = new UInt8[len];
 	m_stream.read(buffer, len);

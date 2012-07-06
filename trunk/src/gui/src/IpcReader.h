@@ -17,39 +17,32 @@
 
 #pragma once
 
-#include <QObject>
-#include <QAbstractSocket>
+#include <QThread>
+#include <QWaitCondition>
 
 class QTcpSocket;
-class IpcReader;
 
-class IpcClient : public QObject
+class IpcReader : public QThread
 {
-	 Q_OBJECT
+	Q_OBJECT;
 
 public:
-    IpcClient();
-	virtual ~IpcClient();
-
-	void write(int code, int length, const char* data);
-
-public slots:
-	void connectToHost();
-
-private:
-	void intToBytes(int value, char* buffer, int size);
-
-private slots:
-	void connected();
-	void error(QAbstractSocket::SocketError error);
-	void handleReadLogLine(const QString& text);
+	IpcReader(QTcpSocket* socket);
+	virtual ~IpcReader();
+	void run();
+	void stop();
 
 signals:
 	void readLogLine(const QString& text);
-	void infoMessage(const QString& text);
-	void errorMessage(const QString& text);
+
+private:
+	void readStream(char* buffer, int length);
+	int bytesToInt(const char* buffer, int size);
+
+private slots:
+	void readyRead();
 
 private:
 	QTcpSocket* m_Socket;
-	IpcReader* m_Reader;
+	QWaitCondition m_Ready;
 };

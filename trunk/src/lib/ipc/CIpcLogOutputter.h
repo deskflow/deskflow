@@ -18,7 +18,6 @@
 #pragma once
 
 #include "ILogOutputter.h"
-#include <queue>
 
 class CIpcServer;
 class CEvent;
@@ -43,10 +42,8 @@ public:
 	void				sendBuffer(CIpcClientProxy& proxy);
 
 private:
-	typedef std::queue<CString> CIpcLogQueue;
-
 	CIpcServer&			m_ipcServer;
-	CIpcLogQueue		m_buffer;
+	CString				m_buffer;
 	CArchMutex			m_mutex;
 	bool				m_sending;
 };

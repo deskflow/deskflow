@@ -17,39 +17,18 @@
 
 #pragma once
 
-#include <QObject>
-#include <QAbstractSocket>
+#define IPC_HOST "127.0.0.1"
+#define IPC_PORT 24801
 
-class QTcpSocket;
-class IpcReader;
+enum qIpcMessageType {
+	kIpcHello,
+	kIpcLogLine,
+	kIpcCommand,
+	kIpcShutdown,
+};
 
-class IpcClient : public QObject
-{
-	 Q_OBJECT
-
-public:
-    IpcClient();
-	virtual ~IpcClient();
-
-	void write(int code, int length, const char* data);
-
-public slots:
-	void connectToHost();
-
-private:
-	void intToBytes(int value, char* buffer, int size);
-
-private slots:
-	void connected();
-	void error(QAbstractSocket::SocketError error);
-	void handleReadLogLine(const QString& text);
-
-signals:
-	void readLogLine(const QString& text);
-	void infoMessage(const QString& text);
-	void errorMessage(const QString& text);
-
-private:
-	QTcpSocket* m_Socket;
-	IpcReader* m_Reader;
+enum qIpcClientType {
+	kIpcClientUnknown,
+	kIpcClientGui,
+	kIpcClientNode,
 };

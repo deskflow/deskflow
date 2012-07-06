@@ -20,13 +20,16 @@
 #include <QHostAddress>
 #include <iostream>
 #include <QTimer>
+#include "IpcReader.h"
+#include "Ipc.h"
 
 IpcClient::IpcClient()
 {
 	m_Socket = new QTcpSocket(this);
-	connect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
+	m_Reader = new IpcReader(m_Socket);
 	connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
 	connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+	connect(m_Reader, SIGNAL(readLogLine(const QString&)), this, SLOT(handleReadLogLine(const QString&)));
 }
 
 IpcClient::~IpcClient()
@@ -40,44 +43,14 @@ void IpcClient::connected()
 	write(kIpcHello, 1, typeBuf);
 
 	infoMessage("connection established");
+
+	m_Reader->start();
 }
 
 void IpcClient::connectToHost()
 {
 	infoMessage("connecting to service...");
 	m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), IPC_PORT);
-}
-
-void IpcClient::read()
-{
-	QDataStream stream(m_Socket);
-
-	while (m_Socket->bytesAvailable() != 0) {
-
-		char codeBuf[1];
-		stream.readRawData(codeBuf, 1);
-
-		switch (codeBuf[0]) {
-			case kIpcLogLine: {
-				char lenBuf[2];
-				stream.readRawData(lenBuf, 2);
-				int len = bytesToInt(lenBuf, 2);
-				std::cout << "told len: " << len << std::endl;
-
-				char* data = new char[len];
-				stream.readRawData(data, len);
-
-				QString line = QString::fromUtf8(data, len);
-				std::cout << "actual len: " << line.size() << std::endl;
-				readLogLine(line);
-				break;
-			}
-
-			default:
-				std::cerr << "message type not supported: " << codeBuf[0] << std::endl;
-				break;
-		}
-	}
 }
 
 void IpcClient::error(QAbstractSocket::SocketError error)
@@ -121,17 +94,9 @@ void IpcClient::write(int code, int length, const char* data)
 	}
 }
 
-// TODO: qt must have a built in way of converting bytes to int.
-int IpcClient::bytesToInt(const char *buffer, int size)
+void IpcClient::handleReadLogLine(const QString& text)
 {
-	if (size == 2) {
-		return (((unsigned char)buffer[0]) << 8)
-				+ (unsigned char)buffer[1];
-	}
-	else {
-		// TODO: other sizes, if needed.
-		return 0;
-	}
+	readLogLine(text);
 }
 
 // TODO: qt must have a built in way of converting int to bytes.
