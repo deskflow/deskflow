@@ -24,24 +24,54 @@
 #include "CProtocolUtil.h"
 
 CEvent::Type			CIpcClientProxy::s_messageReceivedEvent = CEvent::kUnknown;
+CEvent::Type			CIpcClientProxy::s_disconnectedEvent = CEvent::kUnknown;
 
 CIpcClientProxy::CIpcClientProxy(synergy::IStream& stream) :
 m_stream(stream),
 m_enableLog(false),
-m_clientType(kIpcClientUnknown)
+m_clientType(kIpcClientUnknown),
+m_disconnecting(false)
 {
 	EVENTQUEUE->adoptHandler(
 		m_stream.getInputReadyEvent(), stream.getEventTarget(),
 		new TMethodEventJob<CIpcClientProxy>(
-		this, &CIpcClientProxy::handleData, nullptr));
+		this, &CIpcClientProxy::handleData));
+
+	EVENTQUEUE->adoptHandler(
+		m_stream.getInputShutdownEvent(), stream.getEventTarget(),
+		new TMethodEventJob<CIpcClientProxy>(
+		this, &CIpcClientProxy::handleDisconnect));
+
+	EVENTQUEUE->adoptHandler(
+		m_stream.getOutputShutdownEvent(), stream.getEventTarget(),
+		new TMethodEventJob<CIpcClientProxy>(
+		this, &CIpcClientProxy::handleWriteError));
 }
 
 CIpcClientProxy::~CIpcClientProxy()
 {
 	EVENTQUEUE->removeHandler(
 		m_stream.getInputReadyEvent(), m_stream.getEventTarget());
-	
-	m_stream.close();
+	EVENTQUEUE->removeHandler(
+		m_stream.getInputShutdownEvent(), m_stream.getEventTarget());
+	EVENTQUEUE->removeHandler(
+		m_stream.getOutputShutdownEvent(), m_stream.getEventTarget());
+
+	delete &m_stream;
+}
+
+void
+CIpcClientProxy::handleDisconnect(const CEvent&, void*)
+{
+	disconnect();
+	LOG((CLOG_DEBUG "ipc client disconnected"));
+}
+
+void
+CIpcClientProxy::handleWriteError(const CEvent&, void*)
+{
+	disconnect();
+	LOG((CLOG_DEBUG "ipc client write error"));
 }
 
 void
@@ -54,6 +84,7 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 
 		CIpcMessage* m = new CIpcMessage();
 		m->m_type = type;
+		m->m_source = this;
 
 		if (m_enableLog) {
 			LOG((CLOG_DEBUG "ipc client proxy read: %d", code[0]));
@@ -140,10 +171,8 @@ CIpcClientProxy::parseCommand()
 void
 CIpcClientProxy::disconnect()
 {
-	if (m_enableLog) {
-		LOG((CLOG_NOTE "disconnect, closing stream"));
-	}
-	m_stream.close();
+	m_disconnecting = true;
+	EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
 }
 
 CEvent::Type
@@ -151,4 +180,11 @@ CIpcClientProxy::getMessageReceivedEvent()
 {
 	return EVENTQUEUE->registerTypeOnce(
 		s_messageReceivedEvent, "CIpcClientProxy::messageReceived");
+}
+
+CEvent::Type
+CIpcClientProxy::getDisconnectedEvent()
+{
+	return EVENTQUEUE->registerTypeOnce(
+		s_disconnectedEvent, "CIpcClientProxy::disconnected");
 }

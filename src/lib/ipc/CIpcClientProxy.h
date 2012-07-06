@@ -34,8 +34,13 @@ public:
 	//! Raised when the server receives a message from a client.
 	static CEvent::Type	getMessageReceivedEvent();
 
+	//! Raised when the client disconnects from the server.
+	static CEvent::Type	getDisconnectedEvent();
+
 private:
 	void				handleData(const CEvent&, void*);
+	void				handleDisconnect(const CEvent&, void*);
+	void				handleWriteError(const CEvent&, void*);
 	void				parseHello();
 	void*				parseCommand();
 	void				disconnect();
@@ -44,7 +49,9 @@ public:
 	synergy::IStream&	m_stream;
 	bool				m_enableLog;
 	EIpcClientType		m_clientType;
+	bool				m_disconnecting;
 	
 private:
 	static CEvent::Type	s_messageReceivedEvent;
+	static CEvent::Type	s_disconnectedEvent;
 };

@@ -26,4 +26,5 @@ public:
 
 	UInt8				m_type;
 	void*				m_data;
+	void*				m_source;
 };
