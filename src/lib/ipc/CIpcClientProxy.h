@@ -19,7 +19,7 @@
 
 #include "CEvent.h"
 #include "Ipc.h"
-#include "CMutex.h"
+#include "IArchMultithread.h"
 
 namespace synergy { class IStream; }
 class CIpcMessage;
@@ -48,10 +48,8 @@ private:
 
 public:
 	synergy::IStream&	m_stream;
-	bool				m_enableLog;
 	EIpcClientType		m_clientType;
 	bool				m_disconnecting;
-	bool				m_socketBusy;
 	
 private:
 	CArchMutex			m_mutex;
