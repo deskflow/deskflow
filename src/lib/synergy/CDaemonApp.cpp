@@ -297,13 +297,31 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			CString& command = *static_cast<CString*>(m.m_data);
 			LOG((CLOG_DEBUG "got new command: %s", command.c_str()));
 
+			CString debugArg("--debug");
+			int debugArgPos = command.find(debugArg);
+			if (debugArgPos != CString::npos) {
+				int from = debugArgPos + debugArg.size() + 1;
+				int nextSpace = command.find(" ", from);
+				CString logLevel(command.substr(from, nextSpace - from));
+				
+				try {
+					// change log level based on that in the command string
+					// and change to that log level now.
+					ARCH->setting("LogLevel", logLevel);
+					CLOG->setFilter(logLevel.c_str());
+				}
+				catch (XArch& e) {
+					LOG((CLOG_ERR "failed to save LogLevel setting, %s", e.what().c_str()));
+				}
+			}
+
 			try {
 				// store command in system settings. this is used when the daemon
 				// next starts.
 				ARCH->setting("Command", command);
 			}
 			catch (XArch& e) {
-				LOG((CLOG_ERR "failed to save setting, %s", e.what().c_str()));
+				LOG((CLOG_ERR "failed to save Command setting, %s", e.what().c_str()));
 			}
 				
 			// tell the relauncher about the new command. this causes the

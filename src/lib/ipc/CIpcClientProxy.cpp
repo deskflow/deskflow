@@ -22,6 +22,7 @@
 #include "CLog.h"
 #include "CIpcMessage.h"
 #include "CProtocolUtil.h"
+#include "CArch.h"
 
 CEvent::Type			CIpcClientProxy::s_messageReceivedEvent = CEvent::kUnknown;
 CEvent::Type			CIpcClientProxy::s_disconnectedEvent = CEvent::kUnknown;
@@ -30,12 +31,20 @@ CIpcClientProxy::CIpcClientProxy(synergy::IStream& stream) :
 m_stream(stream),
 m_enableLog(false),
 m_clientType(kIpcClientUnknown),
-m_disconnecting(false)
+m_disconnecting(false),
+m_socketBusy(false)
 {
+	m_mutex = ARCH->newMutex();
+
 	EVENTQUEUE->adoptHandler(
 		m_stream.getInputReadyEvent(), stream.getEventTarget(),
 		new TMethodEventJob<CIpcClientProxy>(
 		this, &CIpcClientProxy::handleData));
+
+	EVENTQUEUE->adoptHandler(
+		m_stream.getOutputErrorEvent(), stream.getEventTarget(),
+		new TMethodEventJob<CIpcClientProxy>(
+		this, &CIpcClientProxy::handleWriteError));
 
 	EVENTQUEUE->adoptHandler(
 		m_stream.getInputShutdownEvent(), stream.getEventTarget(),
@@ -52,6 +61,8 @@ CIpcClientProxy::~CIpcClientProxy()
 {
 	EVENTQUEUE->removeHandler(
 		m_stream.getInputReadyEvent(), m_stream.getEventTarget());
+	EVENTQUEUE->removeHandler(
+		m_stream.getOutputErrorEvent(), m_stream.getEventTarget());
 	EVENTQUEUE->removeHandler(
 		m_stream.getInputShutdownEvent(), m_stream.getEventTarget());
 	EVENTQUEUE->removeHandler(
@@ -77,6 +88,12 @@ CIpcClientProxy::handleWriteError(const CEvent&, void*)
 void
 CIpcClientProxy::handleData(const CEvent&, void*)
 {
+	// ugh, not sure if this is needed here. the write function has it to protect
+	// m_socketBusy (for dropping log messages primarily). but i think i saw a
+	// deadlock even after adding this mechanism. my rationale here is that i don't
+	// want the read to deadlock the stream (if that's even possible).
+	CArchMutexLock lock(m_mutex);
+
 	UInt8 code[1];
 	UInt32 n = m_stream.read(code, 1);
 	while (n != 0) {
@@ -115,35 +132,52 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 void
 CIpcClientProxy::send(const CIpcMessage& message)
 {
-	if (m_enableLog) {
-		LOG((CLOG_DEBUG "ipc client proxy write: %d", message.m_type));
+	// discard message if we're busy writing already. this is to prevent
+	// deadlock, since this function can sometimes generate log messages
+	// through stream usage.
+	if (m_socketBusy) {
+		return;
 	}
 
-	UInt8 code[1];
-	code[0] = message.m_type;
-	m_stream.write(code, 1);
-
-	switch (message.m_type) {
-	case kIpcLogLine: {
-		CString* s = (CString*)message.m_data;
-		const char* data = s->c_str();
-		
-		int len = strlen(data);
-		CProtocolUtil::writef(&m_stream, "%2i", len);
-
-		m_stream.write(data, len);
-		break;
-	}
-			
-	case kIpcShutdown:
-		// no data.
-		break;
-
-	default:
+	CArchMutexLock lock(m_mutex);
+	m_socketBusy = true;
+	try {
 		if (m_enableLog) {
-			LOG((CLOG_ERR "message not supported: %d", message.m_type));
+			LOG((CLOG_DEBUG "ipc client proxy write: %d", message.m_type));
 		}
-		break;
+
+		UInt8 code[1];
+		code[0] = message.m_type;
+		m_stream.write(code, 1);
+
+		switch (message.m_type) {
+		case kIpcLogLine: {
+			CString* s = (CString*)message.m_data;
+			const char* data = s->c_str();
+		
+			int len = strlen(data);
+			CProtocolUtil::writef(&m_stream, "%2i", len);
+
+			m_stream.write(data, len);
+			break;
+		}
+			
+		case kIpcShutdown:
+			// no data.
+			break;
+
+		default:
+			if (m_enableLog) {
+				LOG((CLOG_ERR "message not supported: %d", message.m_type));
+			}
+			break;
+		}
+		
+		m_socketBusy = false;
+	}
+	catch (...) {
+		m_socketBusy = false;
+		throw;
 	}
 }
 
