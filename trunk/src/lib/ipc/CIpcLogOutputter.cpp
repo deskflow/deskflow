@@ -19,6 +19,10 @@
 #include "CIpcServer.h"
 #include "CIpcMessage.h"
 #include "Ipc.h"
+#include "CEvent.h"
+#include "CEventQueue.h"
+#include "TMethodEventJob.h"
+#include "CIpcClientProxy.h"
 
 CIpcLogOutputter::CIpcLogOutputter(CIpcServer& ipcServer) :
 m_ipcServer(ipcServer)
@@ -27,6 +31,20 @@ m_ipcServer(ipcServer)
 
 CIpcLogOutputter::~CIpcLogOutputter()
 {
+}
+
+void
+CIpcLogOutputter::sendBuffer(CIpcClientProxy& proxy)
+{
+	while (m_buffer.size() != 0) {
+		CString text = m_buffer.front();
+		m_buffer.pop();
+		
+		CIpcMessage message;
+		message.m_type = kIpcLogLine;
+		message.m_data = new CString(text);
+		proxy.send(message);
+	}
 }
 
 void
@@ -45,11 +63,17 @@ CIpcLogOutputter::show(bool showIfEmpty)
 }
 
 bool
-CIpcLogOutputter::write(ELevel level, const char* msg)
+CIpcLogOutputter::write(ELevel level, const char* text)
 {
-	CIpcMessage message;
-	message.m_type = kIpcLogLine;
-	message.m_data = new CString(msg);
-	m_ipcServer.send(message, kIpcClientGui);
+	if (m_ipcServer.hasClients(kIpcClientGui)) {
+		CIpcMessage message;
+		message.m_type = kIpcLogLine;
+		message.m_data = new CString(text);
+		m_ipcServer.send(message, kIpcClientGui);
+	}
+	else {
+		m_buffer.push(text);
+	}
+	
 	return true;
 }

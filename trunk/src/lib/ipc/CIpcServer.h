@@ -51,6 +51,9 @@ public:
 	//! @name accessors
 	//@{
 
+	//! Returns true when there are clients of the specified type connected.
+	bool				hasClients(EIpcClientType clientType) const;
+
 	//! Raised when we have created the client proxy.
 	static CEvent::Type	getClientConnectedEvent();
 
@@ -58,6 +61,8 @@ public:
 
 private:
 	void				handleClientConnecting(const CEvent&, void*);
+	void				handleClientDisconnected(const CEvent&, void*);
+	void				handleClientMessage(const CEvent&, void*);
 
 private:
 	typedef std::set<CIpcClientProxy*> CClientSet;
@@ -65,6 +70,6 @@ private:
 	CTCPListenSocket	m_socket;
 	CNetworkAddress		m_address;
 	CClientSet			m_clients;
-
+	
 	static CEvent::Type	s_clientConnectedEvent;
 };

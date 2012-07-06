@@ -18,8 +18,11 @@
 #pragma once
 
 #include "ILogOutputter.h"
+#include <queue>
 
 class CIpcServer;
+class CEvent;
+class CIpcClientProxy;
 
 //! Write log to GUI over IPC
 /*!
@@ -36,6 +39,12 @@ public:
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
 
+	//! Sends messages queued while no clients were connected.
+	void				sendBuffer(CIpcClientProxy& proxy);
+
 private:
+	typedef std::queue<CString> CIpcLogQueue;
+
 	CIpcServer&			m_ipcServer;
+	CIpcLogQueue		m_buffer;
 };

@@ -19,7 +19,8 @@
 
 CIpcMessage::CIpcMessage() :
 m_type(0),
-m_data(nullptr)
+m_data(nullptr),
+m_source(nullptr)
 {
 }
 

@@ -288,7 +288,10 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 				std::string cmd = command();
 				if (cmd == "") {
-					LOG((CLOG_WARN "nothing to launch, no command specified."));
+					// this appears on first launch when the user hasn't configured
+					// anything yet, so don't show it as a warning, only show it as
+					// debug to devs to let them know why nothing happened.
+					LOG((CLOG_DEBUG "nothing to launch, no command specified."));
 					continue;
 				}
 

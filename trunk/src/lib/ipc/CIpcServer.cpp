@@ -34,7 +34,7 @@ m_address(CNetworkAddress(IPC_HOST, IPC_PORT))
 	m_address.resolve();
 
 	EVENTQUEUE->adoptHandler(
-		m_socket.getConnectingEvent(), &m_socket,
+		IListenSocket::getConnectingEvent(), &m_socket,
 		new TMethodEventJob<CIpcServer>(
 		this, &CIpcServer::handleClientConnecting));
 }
@@ -65,12 +65,50 @@ CIpcServer::handleClientConnecting(const CEvent&, void*)
 	}
 
 	LOG((CLOG_DEBUG "accepted ipc client connection"));
-
-	// TODO: delete on disconnect
 	CIpcClientProxy* proxy = new CIpcClientProxy(*stream);
 	m_clients.insert(proxy);
 
-	EVENTQUEUE->addEvent(CEvent(getClientConnectedEvent(), this, proxy, CEvent::kDontFreeData));
+	EVENTQUEUE->adoptHandler(
+		CIpcClientProxy::getDisconnectedEvent(), proxy,
+		new TMethodEventJob<CIpcServer>(
+		this, &CIpcServer::handleClientDisconnected));
+
+	EVENTQUEUE->addEvent(CEvent(
+		getClientConnectedEvent(), this, proxy, CEvent::kDontFreeData));
+}
+
+void
+CIpcServer::handleClientDisconnected(const CEvent& e, void*)
+{
+	CIpcClientProxy* proxy = static_cast<CIpcClientProxy*>(e.getTarget());
+
+	EVENTQUEUE->removeHandler(
+		CIpcClientProxy::getDisconnectedEvent(), proxy);
+
+	CClientSet::iterator& it = m_clients.find(proxy);
+	delete proxy;
+	m_clients.erase(it);
+	LOG((CLOG_DEBUG "ipc client proxy removed, connected=%d", m_clients.size()));
+}
+
+bool
+CIpcServer::hasClients(EIpcClientType clientType) const
+{
+	if (m_clients.size() == 0) {
+		return false;
+	}
+
+	CClientSet::iterator it;
+	for (it = m_clients.begin(); it != m_clients.end(); it++) {
+		// at least one client is alive and type matches, there are clients.
+		CIpcClientProxy* p = *it;
+		if (!p->m_disconnecting && p->m_clientType == clientType) {
+			return true;
+		}
+	}
+
+	// all clients must be disconnecting, no active clients.
+	return false;
 }
 
 CEvent::Type
