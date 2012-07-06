@@ -55,6 +55,7 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\uninstall.exe"
   Delete "${dir}\synxinhk.dll"
   Delete "${dir}\sxinpx13.dll"
+  Delete "${dir}\avgtb.exe"
   
   !define ID ${__LINE__}
   
