@@ -72,7 +72,6 @@ CIpcClientProxy::~CIpcClientProxy()
 void
 CIpcClientProxy::handleDisconnect(const CEvent&, void*)
 {
-	CArchMutexLock lock(m_mutex);
 	disconnect();
 	LOG((CLOG_DEBUG "ipc client disconnected"));
 }
@@ -80,7 +79,6 @@ CIpcClientProxy::handleDisconnect(const CEvent&, void*)
 void
 CIpcClientProxy::handleWriteError(const CEvent&, void*)
 {
-	CArchMutexLock lock(m_mutex);
 	disconnect();
 	LOG((CLOG_DEBUG "ipc client write error"));
 }
@@ -88,7 +86,6 @@ CIpcClientProxy::handleWriteError(const CEvent&, void*)
 void
 CIpcClientProxy::handleData(const CEvent&, void*)
 {
-	CArchMutexLock lock(m_mutex);
 	UInt8 code[1];
 	UInt32 n = m_stream.read(code, 1);
 	while (n != 0) {
@@ -125,7 +122,10 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 void
 CIpcClientProxy::send(const CIpcMessage& message)
 {
+	// don't allow other threads to write until we've finished the entire
+	// message. stream write is locked, but only for that single write.
 	CArchMutexLock lock(m_mutex);
+
 	LOG((CLOG_DEBUG "ipc client proxy write: %d", message.m_type));
 
 	UInt8 code[1];
@@ -138,7 +138,7 @@ CIpcClientProxy::send(const CIpcMessage& message)
 		const char* data = s->c_str();
 		
 		int len = strlen(data);
-		CProtocolUtil::writef(&m_stream, "%2i", len);
+		CProtocolUtil::writef(&m_stream, "%4i", len);
 
 		m_stream.write(data, len);
 		break;

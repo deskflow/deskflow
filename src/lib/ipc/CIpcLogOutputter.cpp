@@ -39,33 +39,11 @@ CIpcLogOutputter::~CIpcLogOutputter()
 void
 CIpcLogOutputter::sendBuffer(CIpcClientProxy& proxy)
 {
-	// drop messages logged while sending over ipc, since ipc can cause
-	// log messages (sending these could cause recursion or deadlocks).
-	// this has the side effect of dropping messages from other threads
-	// which weren't caused by ipc, but that is just the downside of
-	// logging this way.
-	if (m_sending) {
-		return;
-	}
-
-	CArchMutexLock lock(m_mutex);
-	m_sending = true;
-	try {
-		while (m_buffer.size() != 0) {
-			CString text = m_buffer.front();
-			m_buffer.pop();
-		
-			CIpcMessage message;
-			message.m_type = kIpcLogLine;
-			message.m_data = new CString(text);
-			proxy.send(message);
-		}
-		m_sending = false;
-	}
-	catch (...) {
-		m_sending = false;
-		throw;
-	}
+	CIpcMessage message;
+	message.m_type = kIpcLogLine;
+	message.m_data = new CString(m_buffer);
+	proxy.send(message);
+	m_buffer.clear();
 }
 
 void
@@ -95,6 +73,7 @@ CIpcLogOutputter::write(ELevel level, const char* text)
 		return false;
 	}
 
+	// protect the value of m_sending.
 	CArchMutexLock lock(m_mutex);
 	m_sending = true;
 	
@@ -106,7 +85,8 @@ CIpcLogOutputter::write(ELevel level, const char* text)
 			m_ipcServer.send(message, kIpcClientGui);
 		}
 		else {
-			m_buffer.push(text);
+			m_buffer.append(text);
+			m_buffer.append("\n");
 		}
 		m_sending = false;
 		return true;

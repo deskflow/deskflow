@@ -31,6 +31,7 @@
 #include "AppConfig.h"
 #include "VersionChecker.h"
 #include "IpcClient.h"
+#include "Ipc.h"
 
 class QAction;
 class QMenu;

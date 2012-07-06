@@ -15,41 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "TcpSocketReader.h"
+#include <QTcpSocket>
 
-#include <QObject>
-#include <QAbstractSocket>
-
-class QTcpSocket;
-class IpcReader;
-
-class IpcClient : public QObject
+IpcReader::IpcReader(QTcpSocket& socket) :
+m_Socket(socket)
 {
-	 Q_OBJECT
+	connect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
+}
 
-public:
-    IpcClient();
-	virtual ~IpcClient();
-
-	void write(int code, int length, const char* data);
-
-public slots:
-	void connectToHost();
-
-private:
-	void intToBytes(int value, char* buffer, int size);
-
-private slots:
-	void connected();
-	void error(QAbstractSocket::SocketError error);
-	void handleReadLogLine(const QString& text);
-
-signals:
-	void readLogLine(const QString& text);
-	void infoMessage(const QString& text);
-	void errorMessage(const QString& text);
-
-private:
-	QTcpSocket* m_Socket;
-	IpcReader* m_Reader;
-};
+IpcReader::~IpcReader()
+{
+}
