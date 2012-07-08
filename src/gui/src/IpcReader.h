@@ -18,7 +18,6 @@
 #pragma once
 
 #include <QThread>
-#include <QWaitCondition>
 
 class QTcpSocket;
 
@@ -44,5 +43,5 @@ private slots:
 
 private:
 	QTcpSocket* m_Socket;
-	QWaitCondition m_Ready;
+	bool m_ReadyRead;
 };

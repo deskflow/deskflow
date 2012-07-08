@@ -414,9 +414,11 @@ CMSWindowsRelauncher::outputLoop(void*)
 			ARCH->sleep(1);
 		}
 		else {
-			// send process output over IPC to GUI.
 			buffer[bytesRead] = '\0';
-			m_ipcLogOutputter.write(kINFO, buffer);
+
+			// send process output over IPC to GUI, and force it to be sent
+			// which bypasses the ipc logging anti-recursion mechanism.
+			m_ipcLogOutputter.write(kINFO, buffer, true);
 		}
 			
 	}

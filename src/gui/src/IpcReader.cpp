@@ -22,7 +22,8 @@
 #include <QMutex>
 
 IpcReader::IpcReader(QTcpSocket* socket) :
-m_Socket(socket)
+m_Socket(socket),
+m_ReadyRead(false)
 {
 	connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
 }
@@ -34,7 +35,7 @@ IpcReader::~IpcReader()
 void IpcReader::readyRead()
 {
 	std::cout << "ready read" << std::endl;
-	m_Ready.wakeAll();
+	m_ReadyRead = true;
 }
 
 void IpcReader::run()
@@ -60,7 +61,7 @@ void IpcReader::run()
 			}
 
 			default:
-				std::cerr << "aborting, message invalid: " << codeBuf[0] << std::endl;
+				std::cerr << "aborting, message invalid: " << (unsigned int)codeBuf[0] << std::endl;
 				return;
 		}
 	}
@@ -68,9 +69,6 @@ void IpcReader::run()
 
 void IpcReader::readStream(char* buffer, int length)
 {
-	QMutex mutex;
-	mutex.lock();
-	
 	QDataStream stream(m_Socket);
 	std::cout << "reading stream" << std::endl;
 
@@ -81,7 +79,14 @@ void IpcReader::readStream(char* buffer, int length)
 
 		if (got == 0) {
 			std::cout << "end of buffer, waiting" << std::endl;
-			m_Ready.wait(&mutex);
+
+			// i'd love nothing more than to use a wait condition here, but
+			// qt is such a fucker with mutexes (can't lock/unlock between
+			// threads?! wtf?!). i'd just rather not go there (patches welcome).
+			while (!m_ReadyRead) {
+				QThread::usleep(100);
+			}
+			m_ReadyRead = false;
 		}
 		else if (got == -1) {
 			std::cout << "socket ended, aborting" << std::endl;

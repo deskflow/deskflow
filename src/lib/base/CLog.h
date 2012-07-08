@@ -114,7 +114,8 @@ public:
 	static CLog*		getInstance();
 
 	//! Get the console filter level (messages above this are not sent to console).
-	int					getConsoleMaxLevel() const { return kDEBUG1; }
+	int					getConsoleMaxLevel() const { return kDEBUG2; }
+
 	//@}
 
 private:
