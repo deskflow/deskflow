@@ -84,7 +84,7 @@ void IpcReader::readStream(char* buffer, int length)
 			// qt is such a fucker with mutexes (can't lock/unlock between
 			// threads?! wtf?!). i'd just rather not go there (patches welcome).
 			while (!m_ReadyRead) {
-				QThread::usleep(100);
+				QThread::usleep(50);
 			}
 			m_ReadyRead = false;
 		}

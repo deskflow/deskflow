@@ -65,8 +65,12 @@ CIpcClientProxy::~CIpcClientProxy()
 		m_stream.getInputShutdownEvent(), m_stream.getEventTarget());
 	EVENTQUEUE->removeHandler(
 		m_stream.getOutputShutdownEvent(), m_stream.getEventTarget());
-
+	
+	// don't delete the stream while it's being used.
+	ARCH->lockMutex(m_mutex);
 	delete &m_stream;
+	ARCH->unlockMutex(m_mutex);
+	ARCH->closeMutex(m_mutex);
 }
 
 void
@@ -86,6 +90,9 @@ CIpcClientProxy::handleWriteError(const CEvent&, void*)
 void
 CIpcClientProxy::handleData(const CEvent&, void*)
 {
+	// don't allow the dtor to destroy the stream while we're using it.
+	CArchMutexLock lock(m_mutex);
+
 	UInt8 code[1];
 	UInt32 n = m_stream.read(code, 1);
 	while (n != 0) {
@@ -124,6 +131,7 @@ CIpcClientProxy::send(const CIpcMessage& message)
 {
 	// don't allow other threads to write until we've finished the entire
 	// message. stream write is locked, but only for that single write.
+	// also, don't allow the dtor to destroy the stream while we're using it.
 	CArchMutexLock lock(m_mutex);
 
 	LOG((CLOG_DEBUG "ipc client proxy write: %d", message.m_type));
