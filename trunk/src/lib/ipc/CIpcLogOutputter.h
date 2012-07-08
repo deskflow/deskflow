@@ -18,6 +18,7 @@
 #pragma once
 
 #include "ILogOutputter.h"
+#include "CArch.h"
 
 class CIpcServer;
 class CEvent;
@@ -38,12 +39,16 @@ public:
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
 
-	//! Sends messages queued while no clients were connected.
-	void				sendBuffer(CIpcClientProxy& proxy);
+private:
+	void				bufferThread(void*);
+	CString*			emptyBuffer();
+	void				sendBuffer();
 
 private:
 	CIpcServer&			m_ipcServer;
 	CString				m_buffer;
-	CArchMutex			m_mutex;
+	CArchMutex			m_bufferMutex;
 	bool				m_sending;
+	CThread*			m_bufferThread;
+	bool				m_running;
 };

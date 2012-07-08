@@ -330,17 +330,5 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			m_relauncher->command(command);
 			break;
 		}
-
-		case kIpcHello: {
-			if (m.m_source != nullptr) {
-				CIpcClientProxy& proxy = *static_cast<CIpcClientProxy*>(m.m_source);
-				if (proxy.m_clientType == kIpcClientGui) {
-					// when a new gui client connects, send them all the
-					// log messages queued up while they were gone.
-					m_ipcLogOutputter->sendBuffer(proxy);
-				}
-			}
-			break;
-		}
 	}
 }
