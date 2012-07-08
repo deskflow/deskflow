@@ -20,7 +20,8 @@
 #include "CTCPListenSocket.h"
 #include "CNetworkAddress.h"
 #include "Ipc.h"
-#include <set>
+#include <list>
+#include "CArch.h"
 
 class CEvent;
 class CIpcClientProxy;
@@ -65,11 +66,12 @@ private:
 	void				handleClientMessage(const CEvent&, void*);
 
 private:
-	typedef std::set<CIpcClientProxy*> CClientSet;
+	typedef std::list<CIpcClientProxy*> CClientList;
 
 	CTCPListenSocket	m_socket;
 	CNetworkAddress		m_address;
-	CClientSet			m_clients;
+	CClientList			m_clients;
+	CArchMutex			m_clientsMutex;
 	
 	static CEvent::Type	s_clientConnectedEvent;
 };

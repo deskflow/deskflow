@@ -26,6 +26,7 @@
 #include "CArch.h"
 #include "CThread.h"
 #include "TMethodJob.h"
+#include "XArch.h"
 
 CIpcLogOutputter::CIpcLogOutputter(CIpcServer& ipcServer) :
 m_ipcServer(ipcServer),
@@ -39,6 +40,9 @@ m_running(true)
 
 CIpcLogOutputter::~CIpcLogOutputter()
 {
+	m_running = false;
+	m_bufferThread->wait(5);
+
 	ARCH->closeMutex(m_bufferMutex);
 	delete m_bufferThread;
 }
@@ -51,8 +55,6 @@ CIpcLogOutputter::open(const char* title)
 void
 CIpcLogOutputter::close()
 {
-	m_running = false;
-	m_bufferThread->wait(5);
 }
 
 void
@@ -88,19 +90,26 @@ CIpcLogOutputter::write(ELevel, const char* text, bool force)
 void
 CIpcLogOutputter::bufferThread(void*)
 {
-	while (m_running) {
-		while (m_running && m_buffer.size() == 0) {
-			ARCH->sleep(.1);
-		}
+	try {
+		while (m_running) {
+			while (m_running && m_buffer.size() == 0) {
+				ARCH->sleep(.1);
+			}
 
-		if (!m_running) {
-			break;
-		}
+			if (!m_running) {
+				break;
+			}
 
-		if (m_ipcServer.hasClients(kIpcClientGui)) {
-			sendBuffer();
+			if (m_ipcServer.hasClients(kIpcClientGui)) {
+				sendBuffer();
+			}
 		}
 	}
+	catch (XArch& e) {
+		LOG((CLOG_ERR "ipc log buffer thread error, %s", e.what().c_str()));
+	}
+
+	LOG((CLOG_DEBUG "ipc log buffer thread finished"));
 }
 
 CString*

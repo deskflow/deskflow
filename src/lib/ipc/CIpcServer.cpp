@@ -31,6 +31,7 @@ CEvent::Type			CIpcServer::s_clientConnectedEvent = CEvent::kUnknown;
 CIpcServer::CIpcServer() :
 m_address(CNetworkAddress(IPC_HOST, IPC_PORT))
 {
+	m_clientsMutex = ARCH->newMutex();
 	m_address.resolve();
 
 	EVENTQUEUE->adoptHandler(
@@ -41,11 +42,14 @@ m_address(CNetworkAddress(IPC_HOST, IPC_PORT))
 
 CIpcServer::~CIpcServer()
 {
-	CClientSet::iterator it;
+	ARCH->lockMutex(m_clientsMutex);
+	CClientList::iterator it;
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
 		delete *it;
 	}
 	m_clients.empty();
+	ARCH->unlockMutex(m_clientsMutex);
+	ARCH->closeMutex(m_clientsMutex);
 
 	EVENTQUEUE->removeHandler(m_socket.getConnectingEvent(), &m_socket);
 }
@@ -65,8 +69,11 @@ CIpcServer::handleClientConnecting(const CEvent&, void*)
 	}
 
 	LOG((CLOG_DEBUG "accepted ipc client connection"));
+
+	ARCH->lockMutex(m_clientsMutex);
 	CIpcClientProxy* proxy = new CIpcClientProxy(*stream);
-	m_clients.insert(proxy);
+	m_clients.push_back(proxy);
+	ARCH->unlockMutex(m_clientsMutex);
 
 	EVENTQUEUE->adoptHandler(
 		CIpcClientProxy::getDisconnectedEvent(), proxy,
@@ -85,20 +92,22 @@ CIpcServer::handleClientDisconnected(const CEvent& e, void*)
 	EVENTQUEUE->removeHandler(
 		CIpcClientProxy::getDisconnectedEvent(), proxy);
 
-	CClientSet::iterator& it = m_clients.find(proxy);
+	CArchMutexLock lock(m_clientsMutex);
+	m_clients.remove(proxy);
 	delete proxy;
-	m_clients.erase(it);
 	LOG((CLOG_DEBUG "ipc client proxy removed, connected=%d", m_clients.size()));
 }
 
 bool
 CIpcServer::hasClients(EIpcClientType clientType) const
 {
-	if (m_clients.size() == 0) {
+	CArchMutexLock lock(m_clientsMutex);
+
+	if (m_clients.empty()) {
 		return false;
 	}
 
-	CClientSet::iterator it;
+	CClientList::const_iterator it;
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
 		// at least one client is alive and type matches, there are clients.
 		CIpcClientProxy* p = *it;
@@ -121,7 +130,9 @@ CIpcServer::getClientConnectedEvent()
 void
 CIpcServer::send(const CIpcMessage& message, EIpcClientType filterType)
 {
-	CClientSet::iterator it;
+	CArchMutexLock lock(m_clientsMutex);
+
+	CClientList::iterator it;
 	for (it = m_clients.begin(); it != m_clients.end(); it++) {
 		CIpcClientProxy* proxy = *it;
 		if (proxy->m_clientType == filterType) {
