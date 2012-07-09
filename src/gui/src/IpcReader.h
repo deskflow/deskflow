@@ -17,31 +17,31 @@
 
 #pragma once
 
-#include <QThread>
+#include <QObject>
+#include <QMutex>
 
 class QTcpSocket;
 
-class IpcReader : public QThread
+class IpcReader : public QObject
 {
 	Q_OBJECT;
 
 public:
 	IpcReader(QTcpSocket* socket);
 	virtual ~IpcReader();
-	void run();
-	void stop();
+	void start();
 
 signals:
 	void readLogLine(const QString& text);
 
 private:
-	void readStream(char* buffer, int length);
+	bool readStream(char* buffer, int length);
 	int bytesToInt(const char* buffer, int size);
 
 private slots:
-	void readyRead();
+	void read();
 
 private:
 	QTcpSocket* m_Socket;
-	bool m_ReadyRead;
+	QMutex m_Mutex;
 };

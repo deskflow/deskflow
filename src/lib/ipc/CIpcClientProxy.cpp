@@ -30,10 +30,10 @@ CEvent::Type			CIpcClientProxy::s_disconnectedEvent = CEvent::kUnknown;
 CIpcClientProxy::CIpcClientProxy(synergy::IStream& stream) :
 m_stream(stream),
 m_clientType(kIpcClientUnknown),
-m_disconnecting(false)
+m_disconnecting(false),
+m_readMutex(ARCH->newMutex()),
+m_writeMutex(ARCH->newMutex())
 {
-	m_mutex = ARCH->newMutex();
-	
 	EVENTQUEUE->adoptHandler(
 		m_stream.getInputReadyEvent(), stream.getEventTarget(),
 		new TMethodEventJob<CIpcClientProxy>(
@@ -67,10 +67,14 @@ CIpcClientProxy::~CIpcClientProxy()
 		m_stream.getOutputShutdownEvent(), m_stream.getEventTarget());
 	
 	// don't delete the stream while it's being used.
-	ARCH->lockMutex(m_mutex);
+	ARCH->lockMutex(m_readMutex);
+	ARCH->lockMutex(m_writeMutex);
 	delete &m_stream;
-	ARCH->unlockMutex(m_mutex);
-	ARCH->closeMutex(m_mutex);
+	ARCH->unlockMutex(m_readMutex);
+	ARCH->unlockMutex(m_writeMutex);
+
+	ARCH->closeMutex(m_readMutex);
+	ARCH->closeMutex(m_writeMutex);
 }
 
 void
@@ -90,8 +94,10 @@ CIpcClientProxy::handleWriteError(const CEvent&, void*)
 void
 CIpcClientProxy::handleData(const CEvent&, void*)
 {
+	LOG((CLOG_DEBUG "start ipc client proxy handle data"));
+
 	// don't allow the dtor to destroy the stream while we're using it.
-	CArchMutexLock lock(m_mutex);
+	CArchMutexLock lock(m_readMutex);
 
 	UInt8 code[1];
 	UInt32 n = m_stream.read(code, 1);
@@ -124,6 +130,8 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 
 		n = m_stream.read(code, 1);
 	}
+	
+	LOG((CLOG_DEBUG "finished ipc client proxy handle data"));
 }
 
 void
@@ -132,7 +140,7 @@ CIpcClientProxy::send(const CIpcMessage& message)
 	// don't allow other threads to write until we've finished the entire
 	// message. stream write is locked, but only for that single write.
 	// also, don't allow the dtor to destroy the stream while we're using it.
-	CArchMutexLock lock(m_mutex);
+	CArchMutexLock lock(m_writeMutex);
 
 	LOG((CLOG_DEBUG "ipc client proxy write: %d", message.m_type));
 
@@ -186,6 +194,7 @@ CIpcClientProxy::parseCommand()
 void
 CIpcClientProxy::disconnect()
 {
+	LOG((CLOG_DEBUG "ipc client proxy disconnect"));
 	m_disconnecting = true;
 	EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
 }

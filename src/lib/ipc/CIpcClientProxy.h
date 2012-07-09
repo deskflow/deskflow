@@ -52,7 +52,8 @@ public:
 	bool				m_disconnecting;
 	
 private:
-	CArchMutex			m_mutex;
+	CArchMutex			m_readMutex;
+	CArchMutex			m_writeMutex;
 
 	static CEvent::Type	s_messageReceivedEvent;
 	static CEvent::Type	s_disconnectedEvent;

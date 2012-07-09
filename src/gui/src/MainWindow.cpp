@@ -54,15 +54,6 @@ static const char* synergyIconFiles[] =
 	":/res/icons/16x16/synergy-connected.png"
 };
 
-class QThreadImpl : public QThread
-{
-public:
-	static void msleep(unsigned long msecs)
-	{
-		QThread::msleep(msecs);
-	}
-};
-
 MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_Settings(settings),
 	m_AppConfig(appConfig),
