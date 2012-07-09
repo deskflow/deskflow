@@ -138,7 +138,7 @@ CIpcLogOutputter::notifyBuffer()
 }
 
 CString
-CIpcLogOutputter::emptyBuffer(int count)
+CIpcLogOutputter::emptyBuffer(size_t count)
 {
 	CArchMutexLock lock(m_bufferMutex);
 
@@ -147,7 +147,7 @@ CIpcLogOutputter::emptyBuffer(int count)
 	}
 
 	CString chunk;
-	for (int i = 0; i < count; i++) {
+	for (size_t i = 0; i < count; i++) {
 		chunk.append(m_buffer.front());
 		chunk.append("\n");
 		m_buffer.pop();
