@@ -19,6 +19,7 @@
 
 #include "ILogOutputter.h"
 #include "CArch.h"
+#include <queue>
 
 class CIpcServer;
 class CEvent;
@@ -38,18 +39,29 @@ public:
 	virtual void		close();
 	virtual void		show(bool showIfEmpty);
 	virtual bool		write(ELevel level, const char* message);
-	virtual bool		write(ELevel level, const char* text, bool force);
+
+	//! Same as write, but allows message to sidestep anti-recursion mechanism.
+	bool				write(ELevel level, const char* text, bool force);
+
+	//! Notify that the buffer should be sent.
+	void				notifyBuffer();
 
 private:
 	void				bufferThread(void*);
-	CString*			emptyBuffer();
+	CString				emptyBuffer(int count);
 	void				sendBuffer();
+	void				appendBuffer(const CString& text);
 
 private:
+	typedef std::queue<CString> CBuffer;
+
 	CIpcServer&			m_ipcServer;
-	CString				m_buffer;
+	CBuffer				m_buffer;
 	CArchMutex			m_bufferMutex;
 	bool				m_sending;
 	CThread*			m_bufferThread;
 	bool				m_running;
+	CArchCond			m_notifyCond;
+	CArchMutex			m_notifyMutex;
+	bool				m_bufferWaiting;
 };

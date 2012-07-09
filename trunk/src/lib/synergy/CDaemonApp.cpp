@@ -330,5 +330,9 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			m_relauncher->command(command);
 			break;
 		}
+
+		case kIpcHello:
+			m_ipcLogOutputter->notifyBuffer();
+			break;
 	}
 }

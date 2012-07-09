@@ -28,11 +28,17 @@
 #include "TMethodJob.h"
 #include "XArch.h"
 
+// limit number of log lines sent in one message.
+#define MAX_SEND 100
+
 CIpcLogOutputter::CIpcLogOutputter(CIpcServer& ipcServer) :
 m_ipcServer(ipcServer),
 m_bufferMutex(ARCH->newMutex()),
 m_sending(false),
-m_running(true)
+m_running(true),
+m_notifyCond(ARCH->newCondVar()),
+m_notifyMutex(ARCH->newMutex()),
+m_bufferWaiting(false)
 {
 	m_bufferThread = new CThread(new TMethodJob<CIpcLogOutputter>(
 		this, &CIpcLogOutputter::bufferThread));
@@ -41,10 +47,14 @@ m_running(true)
 CIpcLogOutputter::~CIpcLogOutputter()
 {
 	m_running = false;
+	notifyBuffer();
 	m_bufferThread->wait(5);
 
 	ARCH->closeMutex(m_bufferMutex);
 	delete m_bufferThread;
+
+	ARCH->closeCondVar(m_notifyCond);
+	ARCH->closeMutex(m_notifyMutex);
 }
 
 void
@@ -71,6 +81,7 @@ CIpcLogOutputter::write(ELevel level, const char* text)
 bool
 CIpcLogOutputter::write(ELevel, const char* text, bool force)
 {
+	// TODO: discard based on thread id? hmm...
 	// sending the buffer generates log messages, which we must throw
 	// away (otherwise this would cause recursion). this is just a drawback
 	// of logging this way. there is also the risk that this could throw
@@ -81,10 +92,16 @@ CIpcLogOutputter::write(ELevel, const char* text, bool force)
 		return true;
 	}
 
-	CArchMutexLock lock(m_bufferMutex);
-	m_buffer.append(text);
-	m_buffer.append("\n");
+	appendBuffer(text);
+	notifyBuffer();
 	return true;
+}
+
+void
+CIpcLogOutputter::appendBuffer(const CString& text)
+{
+	CArchMutexLock lock(m_bufferMutex);
+	m_buffer.push(text);
 }
 
 void
@@ -92,17 +109,15 @@ CIpcLogOutputter::bufferThread(void*)
 {
 	try {
 		while (m_running) {
-			while (m_running && m_buffer.size() == 0) {
-				ARCH->sleep(.1);
-			}
-
-			if (!m_running) {
-				break;
-			}
-
 			if (m_ipcServer.hasClients(kIpcClientGui)) {
-				sendBuffer();
+				while (!m_buffer.empty()) {
+					sendBuffer();
+				}
 			}
+
+			m_bufferWaiting = true;
+			ARCH->waitCondVar(m_notifyCond, m_notifyMutex, -1);
+			m_bufferWaiting = false;
 		}
 	}
 	catch (XArch& e) {
@@ -112,21 +127,41 @@ CIpcLogOutputter::bufferThread(void*)
 	LOG((CLOG_DEBUG "ipc log buffer thread finished"));
 }
 
-CString*
-CIpcLogOutputter::emptyBuffer()
+void
+CIpcLogOutputter::notifyBuffer()
+{
+	if (!m_bufferWaiting) {
+		return;
+	}
+	CArchMutexLock lock(m_notifyMutex);
+	ARCH->broadcastCondVar(m_notifyCond);
+}
+
+CString
+CIpcLogOutputter::emptyBuffer(int count)
 {
 	CArchMutexLock lock(m_bufferMutex);
-	CString* copy = new CString(m_buffer);
-	m_buffer.clear();
-	return copy;
+
+	if (m_buffer.size() < count) {
+		count = m_buffer.size();
+	}
+
+	CString chunk;
+	for (int i = 0; i < count; i++) {
+		chunk.append(m_buffer.front());
+		chunk.append("\n");
+		m_buffer.pop();
+	}
+	return chunk;
 }
+
 
 void
 CIpcLogOutputter::sendBuffer()
 {
 	CIpcMessage message;
 	message.m_type = kIpcLogLine;
-	message.m_data = emptyBuffer();
+	message.m_data = new CString(emptyBuffer(MAX_SEND));
 
 	m_sending = true;
 	m_ipcServer.send(message, kIpcClientGui);

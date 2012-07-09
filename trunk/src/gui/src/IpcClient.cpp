@@ -26,10 +26,12 @@
 IpcClient::IpcClient()
 {
 	m_Socket = new QTcpSocket(this);
-	m_Reader = new IpcReader(m_Socket);
 	connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
 	connect(m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
+
+	m_Reader = new IpcReader(m_Socket);
 	connect(m_Reader, SIGNAL(readLogLine(const QString&)), this, SLOT(handleReadLogLine(const QString&)));
+	m_Reader->start();
 }
 
 IpcClient::~IpcClient()
@@ -43,8 +45,6 @@ void IpcClient::connected()
 	write(kIpcHello, 1, typeBuf);
 
 	infoMessage("connection established");
-
-	m_Reader->start();
 }
 
 void IpcClient::connectToHost()
