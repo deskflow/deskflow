@@ -48,7 +48,7 @@ public:
 
 private:
 	void				bufferThread(void*);
-	CString				emptyBuffer(int count);
+	CString				emptyBuffer(size_t count);
 	void				sendBuffer();
 	void				appendBuffer(const CString& text);
 
