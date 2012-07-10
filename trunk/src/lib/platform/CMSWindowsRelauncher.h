@@ -44,7 +44,8 @@ private:
 	DWORD getSessionId();
 	HANDLE getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
 	void outputLoop(void*);
-	void shutdownProcess(const PROCESS_INFORMATION& pi, int timeout);
+	void shutdownProcess(HANDLE handle, DWORD pid, int timeout);
+	void shutdownExistingProcesses();
 
 private:
 	CThread* m_thread;
