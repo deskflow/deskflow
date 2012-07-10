@@ -89,7 +89,11 @@ CIpcLogOutputter::write(ELevel, const char* text, bool force)
 	// would be difficult to distinguish (other than looking at the stack
 	// trace somehow). perhaps a file stream might be a better option :-/
 	if (m_sending && !force) {
-		return true;
+
+		// ignore events from the buffer thread (would cause recursion).
+		if (CThread::getCurrentThread().getID() == m_bufferThreadId) {
+			return true;
+		}
 	}
 
 	appendBuffer(text);
@@ -107,6 +111,7 @@ CIpcLogOutputter::appendBuffer(const CString& text)
 void
 CIpcLogOutputter::bufferThread(void*)
 {
+	m_bufferThreadId = m_bufferThread->getID();
 	try {
 		while (m_running) {
 

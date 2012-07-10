@@ -20,6 +20,7 @@
 #include "ILogOutputter.h"
 #include "CArch.h"
 #include <queue>
+#include "IArchMultithread.h"
 
 class CIpcServer;
 class CEvent;
@@ -64,4 +65,6 @@ private:
 	CArchCond			m_notifyCond;
 	CArchMutex			m_notifyMutex;
 	bool				m_bufferWaiting;
+	IArchMultithread::ThreadID
+						m_bufferThreadId;
 };
