@@ -31,7 +31,11 @@ main(int argc, char **argv)
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
-	CLOG->setFilter(kDEBUG2);
+	CArch arch;
+	arch.init();
+	
+	CLog log;
+	log.setFilter(kDEBUG2);
 
 	testing::InitGoogleTest(&argc, argv);
 

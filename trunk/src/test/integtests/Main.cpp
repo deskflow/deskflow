@@ -44,6 +44,7 @@ main(int argc, char **argv)
 	arch.init();
 	
 	CLog log;
+	log.setFilter(kDEBUG2);
 
 	string lockFile;
 	for (int i = 0; i < argc; i++) {
@@ -56,7 +57,6 @@ main(int argc, char **argv)
 		lock(lockFile);
 	}
 
-	CLOG->setFilter(kDEBUG2);
 
 	testing::InitGoogleTest(&argc, argv);
 
