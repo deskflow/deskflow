@@ -18,13 +18,63 @@
 #pragma once
 
 #include "BasicTypes.h"
+#include "CString.h"
+#include "Ipc.h"
+#include "CEvent.h"
 
-class CIpcMessage {
+class CIpcMessage : public CEventData {
 public:
-	CIpcMessage();
 	virtual ~CIpcMessage();
 
+	//! Gets the message type ID.
+	UInt8				type() const { return m_type; }
+
+protected:
+	CIpcMessage(UInt8 type);
+
+private:
 	UInt8				m_type;
-	void*				m_data;
-	void*				m_source;
+};
+
+class CIpcHelloMessage : public CIpcMessage {
+public:
+	CIpcHelloMessage(EIpcClientType clientType);
+	virtual ~CIpcHelloMessage();
+
+	//! Gets the message type ID.
+	EIpcClientType			clientType() const { return m_clientType; }
+
+private:
+	EIpcClientType			m_clientType;
+};
+
+class CIpcShutdownMessage : public CIpcMessage {
+public:
+	CIpcShutdownMessage();
+	virtual ~CIpcShutdownMessage();
+};
+
+
+class CIpcLogLineMessage : public CIpcMessage {
+public:
+	CIpcLogLineMessage(const CString& logLine);
+	virtual ~CIpcLogLineMessage();
+
+	//! Gets the log line.
+	CString				logLine() const { return m_logLine; }
+
+private:
+	CString				m_logLine;
+};
+
+class CIpcCommandMessage : public CIpcMessage {
+public:
+	CIpcCommandMessage(const CString& command);
+	virtual ~CIpcCommandMessage();
+
+	//! Gets the command.
+	CString				command() const { return m_command; }
+
+private:
+	CString				m_command;
 };

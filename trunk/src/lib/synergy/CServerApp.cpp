@@ -831,6 +831,10 @@ CServerApp::mainLoop()
 	updateStatus();
 	LOG((CLOG_NOTE "stopped server"));
 
+	if (argsBase().m_enableIpc) {
+		cleanupIpcClient();
+	}
+
 	return kExitSuccess;
 }
 

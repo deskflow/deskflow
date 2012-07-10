@@ -51,6 +51,12 @@ HICON						CArchMiscWindows::s_smallIcon = NULL;
 HINSTANCE					CArchMiscWindows::s_instanceWin32 = NULL;
 
 void
+CArchMiscWindows::cleanup()
+{
+	delete s_dialogs;
+}
+
+void
 CArchMiscWindows::init()
 {
 	s_dialogs = new CDialogs;

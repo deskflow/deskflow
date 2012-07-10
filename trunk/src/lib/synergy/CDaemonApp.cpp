@@ -43,6 +43,7 @@
 #include "CIpcMessage.h"
 #include "CSocketMultiplexer.h"
 #include "CIpcLogOutputter.h"
+#include "CLog.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -91,23 +92,28 @@ CDaemonApp::~CDaemonApp()
 int
 CDaemonApp::run(int argc, char** argv)
 {
+#if SYSAPI_WIN32
+	// win32 instance needed for threading, etc.
+	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+#endif
+	
+	CArch arch;
+	arch.init();
+
+	CLog log;
+
 	bool uninstall = false;
 	try
 	{
 #if SYSAPI_WIN32
-		// win32 instance needed for threading, etc.
-		CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-
-#if SYSAPI_WIN32
 		// sends debug messages to visual studio console window.
-		CLOG->insert(new CMSWindowsDebugOutputter());
+		log.insert(new CMSWindowsDebugOutputter());
 #endif
 
 		// default log level to system setting.
-		string logLevel = ARCH->setting("LogLevel");
+		string logLevel = arch.setting("LogLevel");
 		if (logLevel != "")
-			CLOG->setFilter(logLevel.c_str());
+			log.setFilter(logLevel.c_str());
 
 		bool foreground = false;
 
@@ -120,11 +126,11 @@ CDaemonApp::run(int argc, char** argv)
 #if SYSAPI_WIN32
 			else if (arg == "/install") {
 				uninstall = true;
-				ARCH->installDaemon();
+				arch.installDaemon();
 				return kExitSuccess;
 			}
 			else if (arg == "/uninstall") {
-				ARCH->uninstallDaemon();
+				arch.uninstallDaemon();
 				return kExitSuccess;
 			}
 #endif
@@ -143,9 +149,9 @@ CDaemonApp::run(int argc, char** argv)
 		}
 		else {
 #if SYSAPI_WIN32
-			ARCH->daemonize("Synergy", winMainLoopStatic);
+			arch.daemonize("Synergy", winMainLoopStatic);
 #elif SYSAPI_UNIX
-			ARCH->daemonize("Synergy", unixMainLoopStatic);
+			arch.daemonize("Synergy", unixMainLoopStatic);
 #endif
 		}
 
@@ -203,8 +209,8 @@ CDaemonApp::mainLoop(bool logToFile)
 #endif
 
 		eventQueue.adoptHandler(
-			CIpcServer::getClientConnectedEvent(), m_ipcServer,
-			new TMethodEventJob<CDaemonApp>(this, &CDaemonApp::handleIpcConnected));
+			CIpcServer::getMessageReceivedEvent(), m_ipcServer,
+			new TMethodEventJob<CDaemonApp>(this, &CDaemonApp::handleIpcMessage));
 
 		m_ipcServer->listen();
 
@@ -228,10 +234,11 @@ CDaemonApp::mainLoop(bool logToFile)
 
 #if SYSAPI_WIN32
 		m_relauncher->stop();
+		delete m_relauncher;
 #endif
 
 		eventQueue.removeHandler(
-			CIpcServer::getClientConnectedEvent(), m_ipcServer);
+			CIpcServer::getMessageReceivedEvent(), m_ipcServer);
 		
 		CLOG->remove(m_ipcLogOutputter);
 		delete m_ipcLogOutputter;
@@ -279,22 +286,13 @@ CDaemonApp::logPath()
 }
 
 void
-CDaemonApp::handleIpcConnected(const CEvent& e, void*)
-{
-	LOG((CLOG_DEBUG "ipc client connected"));
-	EVENTQUEUE->adoptHandler(
-		CIpcClientProxy::getMessageReceivedEvent(), e.getData(),
-		new TMethodEventJob<CDaemonApp>(
-		this, &CDaemonApp::handleIpcMessage));
-}
-
-void
 CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 {
-	CIpcMessage& m = *static_cast<CIpcMessage*>(e.getData());
-	switch (m.m_type) {
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
+	switch (m->type()) {
 		case kIpcCommand: {
-			CString& command = *static_cast<CString*>(m.m_data);
+			CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
+			CString& command = cm->command();
 			LOG((CLOG_DEBUG "got new command: %s", command.c_str()));
 
 			CString debugArg("--debug");

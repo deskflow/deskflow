@@ -23,12 +23,17 @@
 
 namespace synergy { class IStream; }
 class CIpcMessage;
+class CIpcCommandMessage;
+class CIpcHelloMessage;
 
 class CIpcClientProxy {
+	friend class CIpcServer;
+
 public:
 	CIpcClientProxy(synergy::IStream& stream);
 	virtual ~CIpcClientProxy();
 
+private:
 	//! Send a message to the client.
 	void				send(const CIpcMessage& message);
 
@@ -38,20 +43,17 @@ public:
 	//! Raised when the client disconnects from the server.
 	static CEvent::Type	getDisconnectedEvent();
 
-private:
 	void				handleData(const CEvent&, void*);
 	void				handleDisconnect(const CEvent&, void*);
 	void				handleWriteError(const CEvent&, void*);
-	void				parseHello();
-	void*				parseCommand();
+	CIpcHelloMessage*	parseHello();
+	CIpcCommandMessage*	parseCommand();
 	void				disconnect();
-
-public:
+	
+private:
 	synergy::IStream&	m_stream;
 	EIpcClientType		m_clientType;
 	bool				m_disconnecting;
-	
-private:
 	CArchMutex			m_readMutex;
 	CArchMutex			m_writeMutex;
 

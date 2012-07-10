@@ -16,17 +16,52 @@
  */
 
 #include "CIpcMessage.h"
+#include "Ipc.h"
 
-CIpcMessage::CIpcMessage() :
-m_type(0),
-m_data(nullptr),
-m_source(nullptr)
+CIpcMessage::CIpcMessage(UInt8 type) :
+m_type(type)
 {
 }
 
 CIpcMessage::~CIpcMessage()
 {
-	if (m_data != nullptr) {
-		delete m_data;
-	}
+}
+
+CIpcHelloMessage::CIpcHelloMessage(EIpcClientType clientType) :
+CIpcMessage(kIpcHello),
+m_clientType(clientType)
+{
+}
+
+CIpcHelloMessage::~CIpcHelloMessage()
+{
+}
+
+CIpcShutdownMessage::CIpcShutdownMessage() :
+CIpcMessage(kIpcShutdown)
+{
+}
+
+CIpcShutdownMessage::~CIpcShutdownMessage()
+{
+}
+
+CIpcLogLineMessage::CIpcLogLineMessage(const CString& logLine) :
+CIpcMessage(kIpcLogLine),
+m_logLine(logLine)
+{
+}
+
+CIpcLogLineMessage::~CIpcLogLineMessage()
+{
+}
+
+CIpcCommandMessage::CIpcCommandMessage(const CString& command) :
+CIpcMessage(kIpcCommand),
+m_command(command)
+{
+}
+
+CIpcCommandMessage::~CIpcCommandMessage()
+{
 }

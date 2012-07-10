@@ -248,6 +248,11 @@ CApp::run(int argc, char** argv)
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
+	CArch arch;
+	arch.init();
+
+	CLog log;
+
 #if MAC_OS_X_VERSION_10_7
 	// dock hide only supported on lion :(
 	ProcessSerialNumber psn = { 0, kCurrentProcess };
@@ -348,28 +353,27 @@ CApp::initApp(int argc, const char** argv)
 void
 CApp::initIpcClient()
 {
-	// TODO: delete ipc client on shutdown and the 2 event handlers.
 	m_ipcClient = new CIpcClient();
 	m_ipcClient->connect();
 
 	EVENTQUEUE->adoptHandler(
-		CIpcClient::getConnectedEvent(), m_ipcClient,
-		new TMethodEventJob<CApp>(this, &CApp::handleIpcConnected));
+		CIpcClient::getMessageReceivedEvent(), m_ipcClient,
+		new TMethodEventJob<CApp>(this, &CApp::handleIpcMessage));
 }
 
 void
-CApp::handleIpcConnected(const CEvent& e, void*)
+CApp::cleanupIpcClient()
 {
-	EVENTQUEUE->adoptHandler(
-		CIpcServerProxy::getMessageReceivedEvent(), e.getData(),
-		new TMethodEventJob<CApp>(this, &CApp::handleIpcMessage));
+	m_ipcClient->disconnect();
+	EVENTQUEUE->removeHandler(CIpcClient::getMessageReceivedEvent(), m_ipcClient);
+	delete m_ipcClient;
 }
 
 void
 CApp::handleIpcMessage(const CEvent& e, void*)
 {
-	CIpcMessage* m = static_cast<CIpcMessage*>(e.getData());
-	if (m->m_type == kIpcShutdown) {
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
+	if (m->type() == kIpcShutdown) {
 		LOG((CLOG_INFO "got ipc shutdown message"));
 		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 	}

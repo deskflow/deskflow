@@ -19,8 +19,6 @@
 #include "CStopwatch.h"
 #include "CArch.h"
 
-class CEventQueueTimer { };
-
 //
 // CSimpleEventQueueBuffer
 //

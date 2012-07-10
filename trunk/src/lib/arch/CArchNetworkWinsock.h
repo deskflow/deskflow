@@ -28,6 +28,7 @@
 #include "IArchMultithread.h"
 #include <windows.h>
 #include <winsock2.h>
+#include <list>
 
 #define ARCH_NETWORK CArchNetworkWinsock
 
@@ -98,7 +99,10 @@ private:
 	void				throwNameError(int);
 
 private:
+	typedef std::list<WSAEVENT> CEventList;
+
 	CArchMutex			m_mutex;
+	CEventList			m_unblockEvents;
 };
 
 #endif

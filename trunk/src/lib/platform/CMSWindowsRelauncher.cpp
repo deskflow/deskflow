@@ -73,7 +73,12 @@ void
 CMSWindowsRelauncher::stop()
 {
 	m_running = false;
+	
 	m_thread->wait(5);
+	delete m_thread;
+
+	m_outputThread->wait(5);
+	delete m_outputThread;
 }
 
 // this still gets the physical session (the one the keyboard and 
@@ -360,6 +365,8 @@ CMSWindowsRelauncher::mainLoop(void*)
 		LOG((CLOG_DEBUG "terminated running process on exit"));
 		shutdownProcess(pi, 10);
 	}
+	
+	LOG((CLOG_DEBUG "relauncher main thread finished"));
 }
 
 void
@@ -403,7 +410,7 @@ CMSWindowsRelauncher::outputLoop(void*)
 	// +1 char for \0
 	CHAR buffer[kOutputBufferSize + 1];
 
-	while (true) {
+	while (m_running) {
 		
 		DWORD bytesRead;
 		BOOL success = ReadFile(m_stdOutRead, buffer, kOutputBufferSize, &bytesRead, NULL);
@@ -432,8 +439,7 @@ CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout
 	if (exitCode != STILL_ACTIVE)
 		return;
 
-	CIpcMessage shutdown;
-	shutdown.m_type = kIpcShutdown;
+	CIpcShutdownMessage shutdown;
 	m_ipcServer.send(shutdown, kIpcClientNode);
 
 	// wait for process to exit gracefully.

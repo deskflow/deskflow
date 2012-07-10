@@ -37,6 +37,9 @@ public:
 
 	//! Connects to the IPC server at localhost.
 	void				connect();
+	
+	//! Disconnects from the IPC server.
+	void				disconnect();
 
 	//! Sends a message to the server.
 	void				send(const CIpcMessage& message);
@@ -47,16 +50,19 @@ public:
 
 	//! Raised when the socket is connected.
 	static CEvent::Type	getConnectedEvent();
+	static CEvent::Type	getMessageReceivedEvent();
 
 	//@}
 
 private:
 	void				handleConnected(const CEvent&, void*);
+	void				handleMessageReceived(const CEvent&, void*);
 
 private:
 	CNetworkAddress		m_serverAddress;
 	CTCPSocket			m_socket;
 	CIpcServerProxy*	m_server;
-
+	
 	static CEvent::Type	s_connectedEvent;
+	static CEvent::Type	s_messageReceivedEvent;
 };

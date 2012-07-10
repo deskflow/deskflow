@@ -109,6 +109,11 @@ CArchNetworkWinsock::~CArchNetworkWinsock()
 		s_networkModule    = NULL;
 	}
 	ARCH->closeMutex(m_mutex);
+
+	CEventList::iterator it;
+	for (it = m_unblockEvents.begin(); it != m_unblockEvents.end(); it++) {
+		delete *it;
+	}
 }
 
 void
@@ -429,6 +434,7 @@ CArchNetworkWinsock::pollSocket(CPollEntry pe[], int num, double timeout)
 	ARCH->closeThread(thread);
 	if (unblockEvent == NULL) {
 		unblockEvent  = new WSAEVENT;
+		m_unblockEvents.push_back(unblockEvent);
 		*unblockEvent = WSACreateEvent_winsock();
 		mt->setNetworkDataForCurrentThread(unblockEvent);
 	}

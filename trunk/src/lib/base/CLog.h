@@ -38,6 +38,7 @@ LOGC() provide convenient access.
 */
 class CLog {
 public:
+	CLog();
 	~CLog();
 
 	//! @name manipulators
@@ -86,6 +87,8 @@ public:
 	then it simply returns true.
 	*/
 	bool				setFilter(const char* name);
+	
+	//! Set the minimum priority filter (by ordinal).
 	void				setFilter(int);
 
 	//@}
@@ -119,7 +122,6 @@ public:
 	//@}
 
 private:
-	CLog();
 	void				output(ELevel priority, char* msg);
 
 private:

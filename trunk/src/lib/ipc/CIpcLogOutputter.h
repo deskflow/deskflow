@@ -48,7 +48,7 @@ public:
 
 private:
 	void				bufferThread(void*);
-	CString				emptyBuffer(size_t count);
+	CString				getChunk(size_t count);
 	void				sendBuffer();
 	void				appendBuffer(const CString& text);
 

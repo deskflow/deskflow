@@ -96,7 +96,15 @@ class CArch : public ARCH_CONSOLE,
 				public ARCH_TASKBAR,
 				public ARCH_TIME {
 public:
-	~CArch();
+	CArch();
+	virtual ~CArch();
+
+	//! Call init on other arch classes.
+	/*!
+	Some arch classes depend on others to exist first. When init is called
+	these clases will have ARCH available for use.
+	*/
+	virtual void init();
 
 	//
 	// accessors
@@ -110,10 +118,6 @@ public:
 	static CArch*		getInstance();
 
 	ARCH_PLUGIN&		plugin() const { return (ARCH_PLUGIN&)m_plugin; }
-
-private:
-	CArch();
-	void init();
 
 private:
 	static CArch*		s_instance;

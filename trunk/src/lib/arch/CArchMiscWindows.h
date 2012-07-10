@@ -48,6 +48,9 @@ public:
 	//! Initialize
 	static void			init();
 
+	//! Delete memory
+	static void			cleanup();
+
 	//! Test if windows 95, et al.
 	/*!
 	Returns true iff the platform is win95/98/me.

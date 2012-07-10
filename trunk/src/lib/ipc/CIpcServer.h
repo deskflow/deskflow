@@ -57,13 +57,17 @@ public:
 
 	//! Raised when we have created the client proxy.
 	static CEvent::Type	getClientConnectedEvent();
+	
+	//! Raised when a message is received through a client proxy.
+	static CEvent::Type	getMessageReceivedEvent();
 
 	//@}
 
 private:
 	void				handleClientConnecting(const CEvent&, void*);
 	void				handleClientDisconnected(const CEvent&, void*);
-	void				handleClientMessage(const CEvent&, void*);
+	void				handleMessageReceived(const CEvent&, void*);
+	void				deleteClient(CIpcClientProxy* proxy);
 
 private:
 	typedef std::list<CIpcClientProxy*> CClientList;
@@ -74,4 +78,5 @@ private:
 	CArchMutex			m_clientsMutex;
 	
 	static CEvent::Type	s_clientConnectedEvent;
+	static CEvent::Type	s_messageReceivedEvent;
 };

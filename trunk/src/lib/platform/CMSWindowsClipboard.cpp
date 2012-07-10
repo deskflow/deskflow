@@ -58,6 +58,14 @@ CMSWindowsClipboard::~CMSWindowsClipboard()
 		delete m_facade;
 }
 
+void
+CMSWindowsClipboard::setFacade(IMSWindowsClipboardFacade& facade)
+{
+	delete m_facade;
+	m_facade = &facade;
+	m_deleteFacade = false;
+}
+
 bool
 CMSWindowsClipboard::emptyUnowned()
 {

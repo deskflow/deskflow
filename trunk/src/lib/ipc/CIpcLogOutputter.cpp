@@ -109,10 +109,19 @@ CIpcLogOutputter::bufferThread(void*)
 {
 	try {
 		while (m_running) {
+
 			if (m_ipcServer.hasClients(kIpcClientGui)) {
-				while (!m_buffer.empty()) {
+
+				// buffer is sent in chunks, so keep sending until it's
+				// empty (or the program has stopped in the meantime).
+				while (m_running && !m_buffer.empty()) {
 					sendBuffer();
 				}
+			}
+
+			// program may be stopping while we were in the send loop.
+			if (!m_running) {
+				break;
 			}
 
 			m_bufferWaiting = true;
@@ -138,7 +147,7 @@ CIpcLogOutputter::notifyBuffer()
 }
 
 CString
-CIpcLogOutputter::emptyBuffer(size_t count)
+CIpcLogOutputter::getChunk(size_t count)
 {
 	CArchMutexLock lock(m_bufferMutex);
 
@@ -155,13 +164,10 @@ CIpcLogOutputter::emptyBuffer(size_t count)
 	return chunk;
 }
 
-
 void
 CIpcLogOutputter::sendBuffer()
 {
-	CIpcMessage message;
-	message.m_type = kIpcLogLine;
-	message.m_data = new CString(emptyBuffer(MAX_SEND));
+	CIpcLogLineMessage message(getChunk(MAX_SEND));
 
 	m_sending = true;
 	m_ipcServer.send(message, kIpcClientGui);
