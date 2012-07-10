@@ -552,6 +552,10 @@ CClientApp::mainLoop()
 	updateStatus();
 	LOG((CLOG_NOTE "stopped client"));
 
+	if (argsBase().m_enableIpc) {
+		cleanupIpcClient();
+	}
+
 	return kExitSuccess;
 }
 

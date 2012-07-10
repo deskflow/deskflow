@@ -21,21 +21,24 @@
 
 namespace synergy { class IStream; }
 class CIpcMessage;
+class CIpcLogLineMessage;
 
 class CIpcServerProxy {
+	friend class CIpcClient;
+
 public:
 	CIpcServerProxy(synergy::IStream& stream);
 	virtual ~CIpcServerProxy();
 
+private:
 	void				send(const CIpcMessage& message);
+
+	void				handleData(const CEvent&, void*);
+	CIpcLogLineMessage*	parseLogLine();
+	void				disconnect();
 
 	//! Raised when the client receives a message from the server.
 	static CEvent::Type	getMessageReceivedEvent();
-
-private:
-	void				handleData(const CEvent&, void*);
-	void*				parseLogLine();
-	void				disconnect();
 
 private:
 	synergy::IStream&	m_stream;

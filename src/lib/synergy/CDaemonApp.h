@@ -41,7 +41,6 @@ private:
 	void daemonize();
 	void foregroundError(const char* message);
 	std::string logPath();
-	void				handleIpcConnected(const CEvent&, void*);
 	void				handleIpcMessage(const CEvent&, void*);
 
 public:

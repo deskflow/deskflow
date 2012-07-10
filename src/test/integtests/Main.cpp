@@ -40,6 +40,11 @@ main(int argc, char **argv)
 	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
+	CArch arch;
+	arch.init();
+	
+	CLog log;
+
 	string lockFile;
 	for (int i = 0; i < argc; i++) {
 		if (string(argv[i]).compare("--lock-file") == 0) {

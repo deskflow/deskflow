@@ -41,30 +41,34 @@ void IpcReader::read()
 	QMutexLocker locker(&m_Mutex);
 	std::cout << "ready read" << std::endl;
 
-	char codeBuf[1];
-	readStream(codeBuf, 1);
-	int code = bytesToInt(codeBuf, 1);
+	while (m_Socket->bytesAvailable()) {
+		std::cout << "bytes available" << std::endl;
 
-	switch (code) {
-		case kIpcLogLine: {
-			std::cout << "reading log line" << std::endl;
+		char codeBuf[1];
+		readStream(codeBuf, 1);
+		int code = bytesToInt(codeBuf, 1);
 
-			char lenBuf[4];
-			readStream(lenBuf, 4);
-			int len = bytesToInt(lenBuf, 4);
+		switch (code) {
+			case kIpcLogLine: {
+				std::cout << "reading log line" << std::endl;
 
-			char* data = new char[len];
-			readStream(data, len);
-			QString line = QString::fromUtf8(data, len);
-			delete data;
+				char lenBuf[4];
+				readStream(lenBuf, 4);
+				int len = bytesToInt(lenBuf, 4);
 
-			readLogLine(line);
-			break;
+				char* data = new char[len];
+				readStream(data, len);
+				QString line = QString::fromUtf8(data, len);
+				delete data;
+
+				readLogLine(line);
+				break;
+			}
+
+			default:
+				std::cerr << "aborting, message invalid: " << code << std::endl;
+				return;
 		}
-
-		default:
-			std::cerr << "aborting, message invalid: " << code << std::endl;
-			return;
 	}
 
 	std::cout << "read done" << std::endl;
@@ -82,13 +86,7 @@ bool IpcReader::readStream(char* buffer, int length)
 			m_Socket->waitForReadyRead(-1);
 		}
 
-		// i really don't trust qt not to copy beyond the array length.
-		// seems like a convoluted an expensive way to copy from the stream :/
-		char* tempBuffer = new char[ask];
-		int got = m_Socket->read(tempBuffer, ask);
-		memcpy(buffer, tempBuffer, got);
-		delete tempBuffer;
-
+		int got = m_Socket->read(buffer, ask);
 		read += got;
 
 		std::cout << "> ask=" << ask << " got=" << got

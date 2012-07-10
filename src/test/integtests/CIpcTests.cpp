@@ -34,6 +34,7 @@
 #include "CString.h"
 #include "CIpcServerProxy.h"
 #include "CIpcMessage.h"
+#include "CSimpleEventQueueBuffer.h"
 
 class CIpcTests : public ::testing::Test
 {
@@ -41,14 +42,15 @@ public:
 	CIpcTests();
 	virtual ~CIpcTests();
 	
-	void				connectToServer_handleClientConnected(const CEvent&, void*);
+	void				connectToServer_handleMessageReceived(const CEvent&, void*);
 	void				sendMessageToServer_handleClientConnected(const CEvent&, void*);
 	void				sendMessageToServer_handleMessageReceived(const CEvent&, void*);
-	void				sendMessageToClient_handleConnected(const CEvent&, void*);
+	void				sendMessageToClient_handleClientConnected(const CEvent&, void*);
 	void				sendMessageToClient_handleMessageReceived(const CEvent&, void*);
 	void				handleQuitTimeout(const CEvent&, void* vclient);
 	void				raiseQuitEvent();
-	void				quitTimeout(double timeout);
+	void				initQuitTimeout(double timeout);
+	void				cleanupQuitTimeout();
 
 private:
 	void				timeoutThread(void*);
@@ -56,11 +58,13 @@ private:
 public:
 	CSocketMultiplexer	m_multiplexer;
 	CEventQueue			m_events;
+	CEventQueueTimer*	m_quitTimeoutTimer;
 	bool				m_connectToServer_clientConnected;
 	CString				m_sendMessageToServer_receivedString;
 	CString				m_sendMessageToClient_receivedString;
 	CIpcClient*			m_sendMessageToServer_client;
 	CIpcServer*			m_sendMessageToClient_server;
+
 };
 
 TEST_F(CIpcTests, connectToServer)
@@ -69,15 +73,17 @@ TEST_F(CIpcTests, connectToServer)
 	server.listen();
 
 	m_events.adoptHandler(
-		CIpcServer::getClientConnectedEvent(), &server,
+		CIpcServer::getMessageReceivedEvent(), &server,
 		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::connectToServer_handleClientConnected));
+		this, &CIpcTests::connectToServer_handleMessageReceived));
 
 	CIpcClient client;
 	client.connect();
 	
-	quitTimeout(2);
+	initQuitTimeout(2);
 	m_events.loop();
+	m_events.removeHandler(CIpcServer::getMessageReceivedEvent(), &server);
+	cleanupQuitTimeout();
 
 	EXPECT_EQ(true, m_connectToServer_clientConnected);
 }
@@ -86,19 +92,27 @@ TEST_F(CIpcTests, sendMessageToServer)
 {
 	CIpcServer server;
 	server.listen();
-
-	CIpcClient client;
-	client.connect();
-	m_sendMessageToServer_client = &client;
 	
-	// event handler sends "test" log line to client.
+	// event handler sends "test" command to server.
 	m_events.adoptHandler(
 		CIpcServer::getClientConnectedEvent(), &server,
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToServer_handleClientConnected));
 
-	quitTimeout(2);
+	m_events.adoptHandler(
+		CIpcServer::getMessageReceivedEvent(), &server,
+		new TMethodEventJob<CIpcTests>(
+		this, &CIpcTests::sendMessageToServer_handleMessageReceived));
+
+	CIpcClient client;
+	client.connect();
+	m_sendMessageToServer_client = &client;
+
+	initQuitTimeout(2);
 	m_events.loop();
+	m_events.removeHandler(CIpcServer::getClientConnectedEvent(), &server);
+	m_events.removeHandler(CIpcServer::getMessageReceivedEvent(), &server);
+	cleanupQuitTimeout();
 
 	EXPECT_EQ("test", m_sendMessageToServer_receivedString);
 }
@@ -109,22 +123,31 @@ TEST_F(CIpcTests, sendMessageToClient)
 	server.listen();
 	m_sendMessageToClient_server = &server;
 
+	// event handler sends "test" log line to client.
+	m_events.adoptHandler(
+		CIpcServer::getClientConnectedEvent(), &server,
+		new TMethodEventJob<CIpcTests>(
+		this, &CIpcTests::sendMessageToClient_handleClientConnected));
+
 	CIpcClient client;
 	client.connect();
 	
-	// event handler sends "test" log line to server.
 	m_events.adoptHandler(
-		CIpcClient::getConnectedEvent(), &client,
+		CIpcClient::getMessageReceivedEvent(), &client,
 		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::sendMessageToClient_handleConnected));
+		this, &CIpcTests::sendMessageToClient_handleMessageReceived));
 
-	quitTimeout(2);
+	initQuitTimeout(2);
 	m_events.loop();
+	m_events.removeHandler(CIpcServer::getClientConnectedEvent(), &server);
+	m_events.removeHandler(CIpcClient::getMessageReceivedEvent(), &client);
+	cleanupQuitTimeout();
 
 	EXPECT_EQ("test", m_sendMessageToClient_receivedString);
 }
 
 CIpcTests::CIpcTests() :
+m_quitTimeoutTimer(nullptr),
 m_connectToServer_clientConnected(false),
 m_sendMessageToClient_server(nullptr),
 m_sendMessageToServer_client(nullptr)
@@ -136,56 +159,47 @@ CIpcTests::~CIpcTests()
 }
 
 void
-CIpcTests::connectToServer_handleClientConnected(const CEvent&, void*)
+CIpcTests::connectToServer_handleMessageReceived(const CEvent& e, void*)
 {
-	m_connectToServer_clientConnected = true;
-	raiseQuitEvent();
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
+	if (m->m_type == kIpcHello) {
+		m_connectToServer_clientConnected = true;
+		raiseQuitEvent();
+	}
 }
 
 void
 CIpcTests::sendMessageToServer_handleClientConnected(const CEvent& e, void*)
-{
-	m_events.adoptHandler(
-		CIpcClientProxy::getMessageReceivedEvent(), e.getData(),
-		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::sendMessageToServer_handleMessageReceived));
-	
-	CIpcMessage m;
-	m.m_type = kIpcCommand;
-	m.m_data = new CString("test");
+{	
+	CIpcCommandMessage m("test");
 	m_sendMessageToServer_client->send(m);
 }
 
 void
 CIpcTests::sendMessageToServer_handleMessageReceived(const CEvent& e, void*)
 {
-	CIpcMessage* m = static_cast<CIpcMessage*>(e.getData());
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
 	if (m->m_type == kIpcCommand) {
-		m_sendMessageToServer_receivedString = *static_cast<CString*>(m->m_data);
+		CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
+		m_sendMessageToServer_receivedString = cm->command();
 		raiseQuitEvent();
 	}
 }
 
 void
-CIpcTests::sendMessageToClient_handleConnected(const CEvent& e, void*)
-{
-	m_events.adoptHandler(
-		CIpcServerProxy::getMessageReceivedEvent(), e.getData(),
-		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::sendMessageToClient_handleMessageReceived));
-	
-	CIpcMessage m;
-	m.m_type = kIpcLogLine;
-	m.m_data = new CString("test");
+CIpcTests::sendMessageToClient_handleClientConnected(const CEvent& e, void*)
+{	
+	CIpcLogLineMessage m("test");
 	m_sendMessageToClient_server->send(m, kIpcClientUnknown);
 }
 
 void
 CIpcTests::sendMessageToClient_handleMessageReceived(const CEvent& e, void*)
 {
-	CIpcMessage* m = static_cast<CIpcMessage*>(e.getData());
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
 	if (m->m_type == kIpcLogLine) {
-		m_sendMessageToClient_receivedString = *static_cast<CString*>(m->m_data);
+		CIpcLogLineMessage* llm = static_cast<CIpcLogLineMessage*>(m);
+		m_sendMessageToClient_receivedString = llm->logLine();
 		raiseQuitEvent();
 	}
 }
@@ -193,15 +207,25 @@ CIpcTests::sendMessageToClient_handleMessageReceived(const CEvent& e, void*)
 void
 CIpcTests::raiseQuitEvent() 
 {
-	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit, nullptr));
+	EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
 }
 
 void
-CIpcTests::quitTimeout(double timeout)
+CIpcTests::initQuitTimeout(double timeout)
 {
-	CEventQueueTimer* timer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, timer,
-		new TMethodEventJob<CIpcTests>(this, &CIpcTests::handleQuitTimeout, timer));
+	assert(m_quitTimeoutTimer == nullptr);
+	m_quitTimeoutTimer = EVENTQUEUE->newOneShotTimer(timeout, NULL);
+	EVENTQUEUE->adoptHandler(CEvent::kTimer, m_quitTimeoutTimer,
+		new TMethodEventJob<CIpcTests>(
+		this, &CIpcTests::handleQuitTimeout));
+}
+
+void
+CIpcTests::cleanupQuitTimeout()
+{
+	EVENTQUEUE->removeHandler(CEvent::kTimer, m_quitTimeoutTimer);
+	delete m_quitTimeoutTimer;
+	m_quitTimeoutTimer = nullptr;
 }
 
 void

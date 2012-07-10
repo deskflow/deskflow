@@ -61,7 +61,7 @@ public:
 	virtual bool		has(EFormat) const;
 	virtual CString		get(EFormat) const;
 
-	void setFacade(IMSWindowsClipboardFacade& facade) { m_facade = &facade; m_deleteFacade = false; }
+	void setFacade(IMSWindowsClipboardFacade& facade);
 
 private:
 	void				clearConverters();

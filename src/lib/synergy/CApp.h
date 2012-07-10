@@ -94,13 +94,13 @@ public:
 	virtual void bye(int error) { m_bye(error); }
 
 private:
-	void				handleIpcConnected(const CEvent&, void*);
 	void				handleIpcMessage(const CEvent&, void*);
 
 protected:
 	virtual void parseArgs(int argc, const char* const* argv, int &i);
 	virtual bool parseArg(const int& argc, const char* const* argv, int& i);
 	void				initIpcClient();
+	void				cleanupIpcClient();
 
 	IArchTaskBarReceiver* m_taskBarReceiver;
 	bool m_suspended;

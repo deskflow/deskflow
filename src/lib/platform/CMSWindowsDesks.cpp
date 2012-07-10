@@ -186,7 +186,7 @@ CMSWindowsDesks::setOptions(const COptionsList& options)
 	for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
 		if (options[i] == kOptionWin32KeepForeground) {
 			m_leaveForegroundOption = (options[i + 1] != 0);
-			LOG((CLOG_DEBUG1 "%s the foreground window", m_leaveForegroundOption ? "Don\'t grab" : "Grab"));
+			LOG((CLOG_DEBUG1 "%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab"));
 		}
 	}
 }

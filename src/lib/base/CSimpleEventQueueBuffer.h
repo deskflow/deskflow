@@ -49,4 +49,11 @@ private:
 	CEventDeque			m_queue;
 };
 
+class CEventQueueTimer
+{
+public:
+	CEventQueueTimer() { }
+	virtual ~CEventQueueTimer() { }
+};
+
 #endif

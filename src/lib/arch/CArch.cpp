@@ -25,16 +25,20 @@ CArch*					CArch::s_instance = NULL;
 
 CArch::CArch()
 {
+	assert(s_instance == NULL);
+	s_instance = this;
 }
 
 CArch::~CArch()
 {
+#if SYSAPI_WIN32
+	CArchMiscWindows::cleanup();
+#endif
 }
 
 void
 CArch::init()
 {
-	// initialization that requires ARCH is done here.
 	ARCH_NETWORK::init();
 #if SYSAPI_WIN32
 	ARCH_TASKBAR::init();
@@ -45,10 +49,6 @@ CArch::init()
 CArch*
 CArch::getInstance()
 {
-	if (s_instance == NULL) {
-		s_instance = new CArch();
-		s_instance->init();
-	}
-
+	assert(s_instance != NULL);
 	return s_instance;
 }
