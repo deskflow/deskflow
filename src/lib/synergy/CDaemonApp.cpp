@@ -24,6 +24,13 @@
 #include "CLog.h"
 #include "XArch.h"
 #include "CApp.h"
+#include "TMethodJob.h"
+#include "TMethodEventJob.h"
+#include "CIpcClientProxy.h"
+#include "CIpcMessage.h"
+#include "CSocketMultiplexer.h"
+#include "CIpcLogOutputter.h"
+#include "CLog.h"
 
 #include <string>
 #include <iostream>
@@ -37,13 +44,6 @@
 #include "CMSWindowsScreen.h"
 #include "CMSWindowsRelauncher.h"
 #include "CMSWindowsDebugOutputter.h"
-#include "TMethodJob.h"
-#include "TMethodEventJob.h"
-#include "CIpcClientProxy.h"
-#include "CIpcMessage.h"
-#include "CSocketMultiplexer.h"
-#include "CIpcLogOutputter.h"
-#include "CLog.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -292,7 +292,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 	switch (m->type()) {
 		case kIpcCommand: {
 			CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
-			CString& command = cm->command();
+			CString command = cm->command();
 			LOG((CLOG_DEBUG "got new command: %s", command.c_str()));
 
 			CString debugArg("--debug");
@@ -321,11 +321,13 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 			catch (XArch& e) {
 				LOG((CLOG_ERR "failed to save Command setting, %s", e.what().c_str()));
 			}
-				
+
+#if SYSAPI_WIN32
 			// tell the relauncher about the new command. this causes the
 			// relauncher to stop the existing command and start the new
 			// command.
 			m_relauncher->command(command);
+#endif
 			break;
 		}
 
