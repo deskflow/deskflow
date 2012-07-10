@@ -29,23 +29,21 @@ m_serverAddress(CNetworkAddress(IPC_HOST, IPC_PORT)),
 m_server(nullptr)
 {
 	m_serverAddress.resolve();
-
-	EVENTQUEUE->adoptHandler(
-		m_socket.getConnectedEvent(), m_socket.getEventTarget(),
-		new TMethodEventJob<CIpcClient>(
-		this, &CIpcClient::handleConnected));
 }
 
 CIpcClient::~CIpcClient()
 {
-	EVENTQUEUE->removeHandler(m_socket.getConnectedEvent(), m_socket.getEventTarget());
-	EVENTQUEUE->removeHandler(CIpcServerProxy::getMessageReceivedEvent(), m_server);
-	delete m_server;
+	disconnect();
 }
 
 void
 CIpcClient::connect()
 {
+	EVENTQUEUE->adoptHandler(
+		IDataSocket::getConnectedEvent(), m_socket.getEventTarget(),
+		new TMethodEventJob<CIpcClient>(
+		this, &CIpcClient::handleConnected));
+
 	m_socket.connect(m_serverAddress);
 	m_server = new CIpcServerProxy(m_socket);
 
@@ -58,6 +56,9 @@ CIpcClient::connect()
 void
 CIpcClient::disconnect()
 {
+	EVENTQUEUE->removeHandler(IDataSocket::getConnectedEvent(), m_socket.getEventTarget());
+	EVENTQUEUE->removeHandler(CIpcServerProxy::getMessageReceivedEvent(), m_server);
+
 	m_server->disconnect();
 	delete m_server;
 	m_server = nullptr;

@@ -528,13 +528,15 @@ CClientApp::mainLoop()
 
 	// create the event queue
 	CEventQueue eventQueue;
-	
-	if (argsBase().m_enableIpc) {
-		initIpcClient();
-	}
 
 	// start client, etc
 	appUtil().startNode();
+	
+	// init ipc client after node start, since create a new screen wipes out
+	// the event queue (the screen ctors call adoptBuffer).
+	if (argsBase().m_enableIpc) {
+		initIpcClient();
+	}
 
 	// load all available plugins.
 	ARCH->plugin().init(s_clientScreen->getEventTarget());

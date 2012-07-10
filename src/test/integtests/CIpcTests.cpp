@@ -59,7 +59,9 @@ public:
 	CSocketMultiplexer	m_multiplexer;
 	CEventQueue			m_events;
 	CEventQueueTimer*	m_quitTimeoutTimer;
-	bool				m_connectToServer_clientConnected;
+	bool				m_connectToServer_helloMessageReceived;
+	bool				m_connectToServer_hasClientNode;
+	CIpcServer*			m_connectToServer_server;
 	CString				m_sendMessageToServer_receivedString;
 	CString				m_sendMessageToClient_receivedString;
 	CIpcClient*			m_sendMessageToServer_client;
@@ -71,6 +73,7 @@ TEST_F(CIpcTests, connectToServer)
 {
 	CIpcServer server;
 	server.listen();
+	m_connectToServer_server = &server;
 
 	m_events.adoptHandler(
 		CIpcServer::getMessageReceivedEvent(), &server,
@@ -84,8 +87,9 @@ TEST_F(CIpcTests, connectToServer)
 	m_events.loop();
 	m_events.removeHandler(CIpcServer::getMessageReceivedEvent(), &server);
 	cleanupQuitTimeout();
-
-	EXPECT_EQ(true, m_connectToServer_clientConnected);
+	
+	EXPECT_EQ(true, m_connectToServer_helloMessageReceived);
+	EXPECT_EQ(true, m_connectToServer_hasClientNode);
 }
 
 TEST_F(CIpcTests, sendMessageToServer)
@@ -148,7 +152,9 @@ TEST_F(CIpcTests, sendMessageToClient)
 
 CIpcTests::CIpcTests() :
 m_quitTimeoutTimer(nullptr),
-m_connectToServer_clientConnected(false),
+m_connectToServer_helloMessageReceived(false),
+m_connectToServer_hasClientNode(false),
+m_connectToServer_server(nullptr),
 m_sendMessageToClient_server(nullptr),
 m_sendMessageToServer_client(nullptr)
 {
@@ -163,7 +169,9 @@ CIpcTests::connectToServer_handleMessageReceived(const CEvent& e, void*)
 {
 	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
 	if (m->m_type == kIpcHello) {
-		m_connectToServer_clientConnected = true;
+		m_connectToServer_hasClientNode =
+			m_connectToServer_server->hasClients(kIpcClientNode);
+		m_connectToServer_helloMessageReceived = true;
 		raiseQuitEvent();
 	}
 }
