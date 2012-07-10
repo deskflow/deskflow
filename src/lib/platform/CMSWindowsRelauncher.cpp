@@ -233,6 +233,8 @@ CMSWindowsRelauncher::getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES
 void
 CMSWindowsRelauncher::mainLoop(void*)
 {
+	shutdownExistingProcesses();
+
 	SendSas sendSasFunc = NULL;
 	HINSTANCE sasLib = LoadLibrary("sas.dll");
 	if (sasLib) {
@@ -274,7 +276,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 			if (launched) {
 				LOG((CLOG_DEBUG "closing existing process to make way for new one"));
-				shutdownProcess(pi, 10);
+				shutdownProcess(pi.hProcess, pi.dwProcessId, 10);
 				launched = false;
 			}
 
@@ -363,7 +365,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 	if (launched) {
 		LOG((CLOG_DEBUG "terminated running process on exit"));
-		shutdownProcess(pi, 10);
+		shutdownProcess(pi.hProcess, pi.dwProcessId, 10);
 	}
 	
 	LOG((CLOG_DEBUG "relauncher main thread finished"));
@@ -432,10 +434,10 @@ CMSWindowsRelauncher::outputLoop(void*)
 }
 
 void
-CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout)
+CMSWindowsRelauncher::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
 {
 	DWORD exitCode;
-	GetExitCodeProcess(pi.hProcess, &exitCode);
+	GetExitCodeProcess(handle, &exitCode);
 	if (exitCode != STILL_ACTIVE)
 		return;
 
@@ -446,10 +448,10 @@ CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout
 	double start = ARCH->time();
 	while (true)
 	{
-		GetExitCodeProcess(pi.hProcess, &exitCode);
+		GetExitCodeProcess(handle, &exitCode);
 		if (exitCode != STILL_ACTIVE) {
 			// yay, we got a graceful shutdown. there should be no hook in use errors!
-			LOG((CLOG_INFO "process %d was shutdown gracefully", pi.dwProcessId));
+			LOG((CLOG_INFO "process %d was shutdown gracefully", pid));
 			break;
 		}
 		else {
@@ -461,11 +463,67 @@ CMSWindowsRelauncher::shutdownProcess(const PROCESS_INFORMATION& pi, int timeout
 				// it causes the hook DLL to stay loaded in some apps,
 				// making it impossible to start synergy again.
 				LOG((CLOG_WARN "shutdown timed out after %d secs, forcefully terminating", (int)elapsed));
-				TerminateProcess(pi.hProcess, kExitSuccess);
+				TerminateProcess(handle, kExitSuccess);
 				break;
 			}
 
 			ARCH->sleep(1);
 		}
 	}
+}
+
+void
+CMSWindowsRelauncher::shutdownExistingProcesses()
+{
+	// first we need to take a snapshot of the running processes
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (snapshot == INVALID_HANDLE_VALUE) {
+		LOG((CLOG_ERR "could not get process snapshot (error: %i)", 
+			GetLastError()));
+		return;
+	}
+
+	PROCESSENTRY32 entry;
+	entry.dwSize = sizeof(PROCESSENTRY32);
+
+	// get the first process, and if we can't do that then it's 
+	// unlikely we can go any further
+	BOOL gotEntry = Process32First(snapshot, &entry);
+	if (!gotEntry) {
+		LOG((CLOG_ERR "could not get first process entry (error: %i)", 
+			GetLastError()));
+		return;
+	}
+
+	// now just iterate until we can find winlogon.exe pid
+	DWORD pid = 0;
+	while(gotEntry) {
+
+		// make sure we're not checking the system process
+		if (entry.th32ProcessID != 0) {
+
+			if (_stricmp(entry.szExeFile, "synergyc.exe") == 0 ||
+				_stricmp(entry.szExeFile, "synergys.exe") == 0) {
+				
+				HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
+				shutdownProcess(handle, entry.th32ProcessID, 1);
+			}
+		}
+
+		// now move on to the next entry (if we're not at the end)
+		gotEntry = Process32Next(snapshot, &entry);
+		if (!gotEntry) {
+
+			DWORD err = GetLastError();
+			if (err != ERROR_NO_MORE_FILES) {
+
+				// only worry about error if it's not the end of the snapshot
+				LOG((CLOG_ERR "could not get subsiquent process entry (error: %i)", 
+					GetLastError()));
+				return;
+			}
+		}
+	}
+
+	CloseHandle(snapshot);
 }
