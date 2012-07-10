@@ -109,6 +109,24 @@ enum uSynergyClipboardFormat
 #define				USYNERGY_RECEIVE_BUFFER_SIZE	4096			/* Maximum size of an incoming packet */
 
 
+
+/**
+@brief Keyboard constants
+**/
+#define				USYNERGY_MODIFIER_SHIFT			0x0001			/* Shift key modifier */
+#define				USYNERGY_MODIFIER_CTRL			0x0002			/* Ctrl key modifier */
+#define				USYNERGY_MODIFIER_ALT			0x0004			/* Alt key modifier */
+#define				USYNERGY_MODIFIER_META			0x0008			/* Meta key modifier */
+#define				USYNERGY_MODIFIER_WIN			0x0010			/* Windows key modifier */
+#define				USYNERGY_MODIFIER_ALT_GR		0x0020			/* AltGr key modifier */
+#define				USYNERGY_MODIFIER_LEVEL5LOCK	0x0040			/* Level5Lock key modifier */
+#define				USYNERGY_MODIFIER_CAPSLOCK		0x1000			/* CapsLock key modifier */
+#define				USYNERGY_MODIFIER_NUMLOCK		0x2000			/* NumLock key modifier */
+#define				USYNERGY_MODIFIER_SCROLLOCK		0x4000			/* ScrollLock key modifier */
+
+
+
+
 //---------------------------------------------------------------------------------------------------------------------
 //	Functions and Callbacks
 //---------------------------------------------------------------------------------------------------------------------
@@ -243,10 +261,11 @@ This callback is called when a key is pressed or released.
 
 @param cookie		Cookie supplied in the Synergy context
 @param key			Key code of key that was pressed or released
+@param modifiers	Status of modifier keys (alt, shift, etc.)
 @param down			Down or up status, 1 is key is pressed down, 0 if key is released (up)
 @param repeat		Repeat flag, 1 if the key is down because the key is repeating, 0 if the key is initially pressed by the user
 **/
-typedef void		(*uSynergyKeyboardCallback)(uSynergyCookie cookie, uint16_t key, uSynergyBool down, uSynergyBool repeat);
+typedef void		(*uSynergyKeyboardCallback)(uSynergyCookie cookie, uint16_t key, uint16_t modifiers, uSynergyBool down, uSynergyBool repeat);
 
 
 
