@@ -23,7 +23,8 @@
 #include "IpcReader.h"
 #include "Ipc.h"
 
-IpcClient::IpcClient()
+IpcClient::IpcClient() :
+m_ReaderStarted(false)
 {
 	m_Socket = new QTcpSocket(this);
 	connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
@@ -31,7 +32,6 @@ IpcClient::IpcClient()
 
 	m_Reader = new IpcReader(m_Socket);
 	connect(m_Reader, SIGNAL(readLogLine(const QString&)), this, SLOT(handleReadLogLine(const QString&)));
-	m_Reader->start();
 }
 
 IpcClient::~IpcClient()
@@ -51,6 +51,11 @@ void IpcClient::connectToHost()
 {
 	infoMessage("connecting to service...");
 	m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), IPC_PORT);
+
+	if (!m_ReaderStarted) {
+		m_Reader->start();
+		m_ReaderStarted = true;
+	}
 }
 
 void IpcClient::error(QAbstractSocket::SocketError error)
