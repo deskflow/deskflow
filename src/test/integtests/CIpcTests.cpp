@@ -36,6 +36,8 @@
 #include "CIpcMessage.h"
 #include "CSimpleEventQueueBuffer.h"
 
+#define TEST_IPC_PORT 24802
+
 class CIpcTests : public ::testing::Test
 {
 public:
@@ -71,7 +73,7 @@ public:
 
 TEST_F(CIpcTests, connectToServer)
 {
-	CIpcServer server;
+	CIpcServer server(TEST_IPC_PORT);
 	server.listen();
 	m_connectToServer_server = &server;
 
@@ -79,8 +81,8 @@ TEST_F(CIpcTests, connectToServer)
 		CIpcServer::getMessageReceivedEvent(), &server,
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::connectToServer_handleMessageReceived));
-
-	CIpcClient client;
+	
+	CIpcClient client(TEST_IPC_PORT);
 	client.connect();
 	
 	initQuitTimeout(2);
@@ -94,7 +96,7 @@ TEST_F(CIpcTests, connectToServer)
 
 TEST_F(CIpcTests, sendMessageToServer)
 {
-	CIpcServer server;
+	CIpcServer server(TEST_IPC_PORT);
 	server.listen();
 	
 	// event handler sends "test" command to server.
@@ -107,8 +109,8 @@ TEST_F(CIpcTests, sendMessageToServer)
 		CIpcServer::getMessageReceivedEvent(), &server,
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToServer_handleMessageReceived));
-
-	CIpcClient client;
+	
+	CIpcClient client(TEST_IPC_PORT);
 	client.connect();
 	m_sendMessageToServer_client = &client;
 
@@ -123,7 +125,7 @@ TEST_F(CIpcTests, sendMessageToServer)
 
 TEST_F(CIpcTests, sendMessageToClient)
 {
-	CIpcServer server;
+	CIpcServer server(TEST_IPC_PORT);
 	server.listen();
 	m_sendMessageToClient_server = &server;
 
@@ -133,7 +135,7 @@ TEST_F(CIpcTests, sendMessageToClient)
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToClient_handleClientConnected));
 
-	CIpcClient client;
+	CIpcClient client(TEST_IPC_PORT);
 	client.connect();
 	
 	m_events.adoptHandler(

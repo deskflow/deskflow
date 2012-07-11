@@ -30,6 +30,7 @@ class CIpcMessage;
 class CIpcClient {
 public:
 	CIpcClient();
+	CIpcClient(int port);
 	virtual ~CIpcClient();
 
 	//! @name manipulators
@@ -55,6 +56,7 @@ public:
 	//@}
 
 private:
+	void				init();
 	void				handleConnected(const CEvent&, void*);
 	void				handleMessageReceived(const CEvent&, void*);
 
