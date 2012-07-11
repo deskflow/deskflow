@@ -28,6 +28,19 @@ CIpcClient::CIpcClient() :
 m_serverAddress(CNetworkAddress(IPC_HOST, IPC_PORT)),
 m_server(nullptr)
 {
+	init();
+}
+
+CIpcClient::CIpcClient(int port) :
+m_serverAddress(CNetworkAddress(IPC_HOST, port)),
+m_server(nullptr)
+{
+	init();
+}
+
+void
+CIpcClient::init()
+{
 	m_serverAddress.resolve();
 }
 

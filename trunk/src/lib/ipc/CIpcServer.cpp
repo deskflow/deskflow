@@ -32,6 +32,18 @@ CEvent::Type			CIpcServer::s_messageReceivedEvent = CEvent::kUnknown;
 CIpcServer::CIpcServer() :
 m_address(CNetworkAddress(IPC_HOST, IPC_PORT))
 {
+	init();
+}
+
+CIpcServer::CIpcServer(int port) :
+m_address(CNetworkAddress(IPC_HOST, port))
+{
+	init();
+}
+
+void
+CIpcServer::init()
+{
 	m_clientsMutex = ARCH->newMutex();
 	m_address.resolve();
 

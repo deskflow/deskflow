@@ -37,6 +37,7 @@ and allows the daemon and client/server to send log data to the GUI.
 class CIpcServer {
 public:
 	CIpcServer();
+	CIpcServer(int port);
 	virtual ~CIpcServer();
 
 	//! @name manipulators
@@ -64,6 +65,7 @@ public:
 	//@}
 
 private:
+	void				init();
 	void				handleClientConnecting(const CEvent&, void*);
 	void				handleClientDisconnected(const CEvent&, void*);
 	void				handleMessageReceived(const CEvent&, void*);
