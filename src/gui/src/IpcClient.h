@@ -52,4 +52,5 @@ signals:
 private:
 	QTcpSocket* m_Socket;
 	IpcReader* m_Reader;
+	bool m_ReaderStarted;
 };
