@@ -15,25 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "Ipc.h"
 
-#define IPC_HOST "127.0.0.1"
-#define IPC_PORT 24801
-
-enum qIpcMessageType {
-	kIpcHello,
-	kIpcLogLine,
-	kIpcCommand,
-	kIpcShutdown,
-};
-
-enum qIpcClientType {
-	kIpcClientUnknown,
-	kIpcClientGui,
-	kIpcClientNode,
-};
-
-extern const char*		kIpcMsgHello;
-extern const char*		kIpcMsgLogLine;
-extern const char*		kIpcMsgCommand;
-extern const char*		kIpcMsgShutdown;
+const char*				kIpcMsgHello		= "IHEL%1i";
+const char*				kIpcMsgLogLine		= "ILOG%s";
+const char*				kIpcMsgCommand		= "ICMD%s";
+const char*				kIpcMsgShutdown		= "ISDN";

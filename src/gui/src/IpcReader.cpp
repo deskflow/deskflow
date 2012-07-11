@@ -44,30 +44,28 @@ void IpcReader::read()
 	while (m_Socket->bytesAvailable()) {
 		std::cout << "bytes available" << std::endl;
 
-		char codeBuf[1];
-		readStream(codeBuf, 1);
-		int code = bytesToInt(codeBuf, 1);
+		char codeBuf[5];
+		readStream(codeBuf, 4);
+		codeBuf[4] = 0;
+		std::cout << "ipc read: " << codeBuf << std::endl;
 
-		switch (code) {
-			case kIpcLogLine: {
-				std::cout << "reading log line" << std::endl;
+		if (memcmp(codeBuf, kIpcMsgLogLine, 4) == 0) {
+			std::cout << "reading log line" << std::endl;
 
-				char lenBuf[4];
-				readStream(lenBuf, 4);
-				int len = bytesToInt(lenBuf, 4);
+			char lenBuf[4];
+			readStream(lenBuf, 4);
+			int len = bytesToInt(lenBuf, 4);
 
-				char* data = new char[len];
-				readStream(data, len);
-				QString line = QString::fromUtf8(data, len);
-				delete data;
+			char* data = new char[len];
+			readStream(data, len);
+			QString line = QString::fromUtf8(data, len);
+			delete data;
 
-				readLogLine(line);
-				break;
-			}
-
-			default:
-				std::cerr << "aborting, message invalid: " << code << std::endl;
-				return;
+			readLogLine(line);
+		}
+		else {
+			std::cerr << "aborting, message invalid" << std::endl;
+			return;
 		}
 	}
 

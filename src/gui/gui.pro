@@ -37,7 +37,8 @@ SOURCES += src/main.cpp \
     src/VersionChecker.cpp \
     src/SetupWizard.cpp \
     src/IpcClient.cpp \
-    src/IpcReader.cpp
+    src/IpcReader.cpp \
+    src/Ipc.cpp
 HEADERS += src/MainWindow.h \
     src/AboutDialog.h \
     src/ServerConfig.h \
