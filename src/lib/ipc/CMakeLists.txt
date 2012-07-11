@@ -24,6 +24,7 @@ set(inc
 )
 
 set(src
+	Ipc.cpp
 	CIpcServer.cpp
 	CIpcClient.cpp
 	CIpcServerProxy.cpp
