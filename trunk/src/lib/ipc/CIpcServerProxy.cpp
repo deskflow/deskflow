@@ -45,29 +45,25 @@ CIpcServerProxy::~CIpcServerProxy()
 void
 CIpcServerProxy::handleData(const CEvent&, void*)
 {
-	LOG((CLOG_DEBUG "start ipc server proxy handle data"));
+	LOG((CLOG_DEBUG "start ipc handle data"));
 
-	UInt8 codeBuf[1];
-	UInt32 n = m_stream.read(codeBuf, 1);
-	int code = codeBuf[0];
-
+	UInt8 code[4];
+	UInt32 n = m_stream.read(code, 4);
 	while (n != 0) {
 
-		LOG((CLOG_DEBUG "ipc server proxy read: %d", code));
+		LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
+			code[0], code[1], code[2], code[3]));
 		
 		CIpcMessage* m = nullptr;
-		switch (code) {
-		case kIpcLogLine:
+		if (memcmp(code, kIpcMsgLogLine, 4) == 0) {
 			m = parseLogLine();
-			break;
-			
-		case kIpcShutdown:
+		}
+		else if (memcmp(code, kIpcMsgShutdown, 4) == 0) {
 			m = new CIpcShutdownMessage();
-			break;
-
-		default:
+		}
+		else {
+			LOG((CLOG_ERR "invalid message"));
 			disconnect();
-			return;
 		}
 		
 		// don't delete with this event; the data is passed to a new event.
@@ -75,36 +71,28 @@ CIpcServerProxy::handleData(const CEvent&, void*)
 		e.setDataObject(m);
 		EVENTQUEUE->addEvent(e);
 
-		n = m_stream.read(codeBuf, 1);
-		code = codeBuf[0];
+		n = m_stream.read(code, 4);
 	}
 	
-	LOG((CLOG_DEBUG "finished ipc server proxy handle data"));
+	LOG((CLOG_DEBUG "finished ipc handle data"));
 }
 
 void
 CIpcServerProxy::send(const CIpcMessage& message)
 {
-	LOG((CLOG_DEBUG "ipc server proxy write: %d", message.type()));
-
-	CProtocolUtil::writef(&m_stream, "%1i", message.type());
+	LOG((CLOG_DEBUG "ipc write: %d", message.type()));
 
 	switch (message.type()) {
 	case kIpcHello: {
 		const CIpcHelloMessage& hm = static_cast<const CIpcHelloMessage&>(message);
-		CProtocolUtil::writef(&m_stream, "%1i", hm.clientType());
+		CProtocolUtil::writef(&m_stream, kIpcMsgHello, hm.clientType());
 		break;
 	}
 
 	case kIpcCommand: {
 		const CIpcCommandMessage& cm = static_cast<const CIpcCommandMessage&>(message);
-		
 		CString command = cm.command();
-		const char* data = command.c_str();
-		int len = strlen(data);
-
-		CProtocolUtil::writef(&m_stream, "%2i", len);
-		m_stream.write(data, len);
+		CProtocolUtil::writef(&m_stream, kIpcMsgCommand, &command);
 		break;
 	}
 
@@ -117,16 +105,11 @@ CIpcServerProxy::send(const CIpcMessage& message)
 CIpcLogLineMessage*
 CIpcServerProxy::parseLogLine()
 {
-	int len = 0;
-	CProtocolUtil::readf(&m_stream, "%4i", &len);
-
-	char* buffer = new char[len];
-	m_stream.read(buffer, len);
-	CString s(buffer, len);
-	delete buffer;
+	CString logLine;
+	CProtocolUtil::readf(&m_stream, kIpcMsgLogLine + 4, &logLine);
 	
 	// must be deleted by event handler.
-	return new CIpcLogLineMessage(s);
+	return new CIpcLogLineMessage(logLine);
 }
 
 void

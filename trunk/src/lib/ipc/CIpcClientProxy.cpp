@@ -94,44 +94,39 @@ CIpcClientProxy::handleWriteError(const CEvent&, void*)
 void
 CIpcClientProxy::handleData(const CEvent&, void*)
 {
-	LOG((CLOG_DEBUG "start ipc client proxy handle data"));
-
 	// don't allow the dtor to destroy the stream while we're using it.
 	CArchMutexLock lock(m_readMutex);
-	
-	UInt8 codeBuf[1];
-	UInt32 n = m_stream.read(codeBuf, 1);
-	int code = codeBuf[0];
 
+	LOG((CLOG_DEBUG "start ipc handle data"));
+
+	UInt8 code[4];
+	UInt32 n = m_stream.read(code, 4);
 	while (n != 0) {
 
-		LOG((CLOG_DEBUG "ipc client proxy read: %d", code));
-		
+		LOG((CLOG_DEBUG "ipc read: %c%c%c%c",
+			code[0], code[1], code[2], code[3]));
+
 		CIpcMessage* m = nullptr;
-		switch (code) {
-		case kIpcHello:
+		if (memcmp(code, kIpcMsgHello, 4) == 0) {
 			m = parseHello();
-			break;
-
-		case kIpcCommand:
-			m = parseCommand();
-			break;
-
-		default:
-			disconnect();
-			return;
 		}
-		
+		else if (memcmp(code, kIpcMsgCommand, 4) == 0) {
+			m = parseCommand();
+		}
+		else {
+			LOG((CLOG_ERR "invalid message"));
+			disconnect();
+		}
+
 		// don't delete with this event; the data is passed to a new event.
 		CEvent e(getMessageReceivedEvent(), this, NULL, CEvent::kDontFreeData);
 		e.setDataObject(m);
 		EVENTQUEUE->addEvent(e);
-		
-		n = m_stream.read(codeBuf, 1);
-		code = codeBuf[0];
+
+		n = m_stream.read(code, 4);
 	}
-	
-	LOG((CLOG_DEBUG "finished ipc client proxy handle data"));
+
+	LOG((CLOG_DEBUG "finished ipc handle data"));
 }
 
 void
@@ -142,25 +137,18 @@ CIpcClientProxy::send(const CIpcMessage& message)
 	// also, don't allow the dtor to destroy the stream while we're using it.
 	CArchMutexLock lock(m_writeMutex);
 
-	LOG((CLOG_DEBUG "ipc client proxy write: %d", message.type()));
-	
-	CProtocolUtil::writef(&m_stream, "%1i", message.type());
+	LOG((CLOG_DEBUG "ipc write: %d", message.type()));
 
 	switch (message.type()) {
 	case kIpcLogLine: {
 		const CIpcLogLineMessage& llm = static_cast<const CIpcLogLineMessage&>(message);
-		
 		CString logLine = llm.logLine();
-		const char* data = logLine.c_str();
-		int len = strlen(data);
-
-		CProtocolUtil::writef(&m_stream, "%4i", len);
-		m_stream.write(data, len);
+		CProtocolUtil::writef(&m_stream, kIpcMsgLogLine, &logLine);
 		break;
 	}
 			
 	case kIpcShutdown:
-		// no data.
+		CProtocolUtil::writef(&m_stream, kIpcMsgShutdown);
 		break;
 
 	default:
@@ -172,9 +160,10 @@ CIpcClientProxy::send(const CIpcMessage& message)
 CIpcHelloMessage*
 CIpcClientProxy::parseHello()
 {
-	UInt8 buffer[1];
-	m_stream.read(buffer, 1);
-	m_clientType = static_cast<EIpcClientType>(buffer[0]);
+	UInt8 type;
+	CProtocolUtil::readf(&m_stream, kIpcMsgHello + 4, &type);
+
+	m_clientType = static_cast<EIpcClientType>(type);
 
 	// must be deleted by event handler.
 	return new CIpcHelloMessage(m_clientType);
@@ -183,16 +172,11 @@ CIpcClientProxy::parseHello()
 CIpcCommandMessage*
 CIpcClientProxy::parseCommand()
 {
-	int len = 0;
-	CProtocolUtil::readf(&m_stream, "%2i", &len);
-
-	char* buffer = new char[len];
-	m_stream.read(buffer, len);
-	CString s(buffer, len);
-	delete buffer;
+	CString command;
+	CProtocolUtil::readf(&m_stream, kIpcMsgCommand + 4, &command);
 
 	// must be deleted by event handler.
-	return new CIpcCommandMessage(s);
+	return new CIpcCommandMessage(command);
 }
 
 void
