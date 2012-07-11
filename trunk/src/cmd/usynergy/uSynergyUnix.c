@@ -28,10 +28,10 @@ freely, subject to the following restrictions:
 
 // TODO: implement callbacks.
 int main(char* argv, int argc) {
-	uSynergyContext* context = malloc(sizeof(uSynergyContext));
-	uSynergyInit(context);
+	uSynergyContext context;
+	uSynergyInit(&context);
 	
 	for(;;) {
-		uSynergyUpdate(context);
+		uSynergyUpdate(&context);
 	}
 }
