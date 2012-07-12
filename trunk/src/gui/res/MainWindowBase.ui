@@ -148,7 +148,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="m_pLabelServerName">
          <property name="text">
-          <string>&amp;Name of the server:</string>
+          <string>&amp;Server IP or hostname:</string>
          </property>
          <property name="buddy">
           <cstring>m_pLineEditHostname</cstring>

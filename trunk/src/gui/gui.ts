@@ -362,7 +362,7 @@ Copyright © 2010 Chris Schoeneman, Nick Bolton, Sorin Sbarnea&lt;/p&gt;</source
     </message>
     <message>
         <location filename="res/MainWindowBase.ui" line="151"/>
-        <source>&amp;Name of the server:</source>
+        <source>&amp;Server IP or hostname:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
