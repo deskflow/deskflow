@@ -53,6 +53,8 @@ another. You can even share all of your clipboards. All you need
 is a network connection. Synergy is cross-platform (works on
 Windows, Mac OS X and Linux).{/t}
     </p>
+    
+    {$custom}
 	
 	<p>
 		<a href="http://bit.ly/LarIAi">Give Synergy some feedback!</a> -
@@ -64,8 +66,6 @@ Windows, Mac OS X and Linux).{/t}
       <a href="https://twitter.com/#!/NickBoltonUK">@NickBoltonUK</a>
       <a href="https://twitter.com/#!/SynergyDev">@SynergyDev</a>
     </p>
-    
-    {$custom}
     
     <div class="demo">
       <img src="{$splashImage}" alt="How Synergy works." />
