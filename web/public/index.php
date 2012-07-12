@@ -181,6 +181,12 @@ if (is_file("custom/" . $page . ".tpl")) {
 }
 $smarty->assign("custom", $custom);
 
+$customLinks = "";
+if (is_file("custom/customLinks.tpl")) {
+  $customLinks = $smarty->fetch("custom/customLinks.tpl");
+}
+$smarty->assign("customLinks", $customLinks);
+
 $content = $smarty->fetch($page . ".tpl");
 $smarty->assign("content", $content);
 $smarty->display("layout.tpl");

@@ -51,6 +51,7 @@
           <a href="http://spit.synergy-foss.org/issues/">{t}Tracker{/t}</a> |
           <a href="/code/">{t}Code{/t}</a>
         </div>
+        {$customLinks}
       </div>
       <div class="content">
         {$content}
