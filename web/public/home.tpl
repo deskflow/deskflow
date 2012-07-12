@@ -53,6 +53,8 @@ another. You can even share all of your clipboards. All you need
 is a network connection. Synergy is cross-platform (works on
 Windows, Mac OS X and Linux).{/t}
     </p>
+	
+	<p><a href="http://bit.ly/LarIAi">Synergy Survey</a> - Please help us improve Synergy (only takes a minute).</p>
     
     <p class="twitter">
       <img src="/img/twitter-icon.png" /> {t}Follow Synergy coders!{/t}
