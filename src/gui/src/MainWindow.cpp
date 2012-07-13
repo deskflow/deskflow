@@ -78,14 +78,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 	m_SetupWizard = new SetupWizard(*this, false);
 	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(refreshStartButton()));
-
-	if (appConfig.processMode() == Service)
-	{
-		connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
-		connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
-		connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
-		m_IpcClient.connectToHost();
-	}
 }
 
 MainWindow::~MainWindow()
@@ -99,8 +91,19 @@ void MainWindow::start(bool firstRun)
 {
 	refreshStartButton();
 
-	if (!firstRun && appConfig().autoConnect() && appConfig().processMode() == Desktop)
+	if (appConfig().processMode() == Service)
+	{
+		connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
+		connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
+		connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
+		m_IpcClient.connectToHost();
 		startSynergy();
+	}
+
+	if (appConfig().processMode() == Desktop && !firstRun && appConfig().autoConnect())
+	{
+		startSynergy();
+	}
 
 	createTrayIcon();
 
