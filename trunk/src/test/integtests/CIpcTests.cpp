@@ -85,7 +85,7 @@ TEST_F(CIpcTests, connectToServer)
 	CIpcClient client(TEST_IPC_PORT);
 	client.connect();
 	
-	initQuitTimeout(2);
+	initQuitTimeout(5);
 	m_events.loop();
 	m_events.removeHandler(CIpcServer::getMessageReceivedEvent(), &server);
 	cleanupQuitTimeout();
@@ -114,7 +114,7 @@ TEST_F(CIpcTests, sendMessageToServer)
 	client.connect();
 	m_sendMessageToServer_client = &client;
 
-	initQuitTimeout(2);
+	initQuitTimeout(5);
 	m_events.loop();
 	m_events.removeHandler(CIpcServer::getClientConnectedEvent(), &server);
 	m_events.removeHandler(CIpcServer::getMessageReceivedEvent(), &server);
@@ -143,7 +143,7 @@ TEST_F(CIpcTests, sendMessageToClient)
 		new TMethodEventJob<CIpcTests>(
 		this, &CIpcTests::sendMessageToClient_handleMessageReceived));
 
-	initQuitTimeout(2);
+	initQuitTimeout(5);
 	m_events.loop();
 	m_events.removeHandler(CIpcServer::getClientConnectedEvent(), &server);
 	m_events.removeHandler(CIpcClient::getMessageReceivedEvent(), &client);
