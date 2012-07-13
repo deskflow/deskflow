@@ -38,8 +38,6 @@ CIpcServerProxy::~CIpcServerProxy()
 {
 	EVENTQUEUE->removeHandler(m_stream.getInputReadyEvent(),
 		m_stream.getEventTarget());
-
-	m_stream.close();
 }
 
 void

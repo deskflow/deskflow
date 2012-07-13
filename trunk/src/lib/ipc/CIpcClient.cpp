@@ -46,7 +46,6 @@ CIpcClient::init()
 
 CIpcClient::~CIpcClient()
 {
-	disconnect();
 }
 
 void

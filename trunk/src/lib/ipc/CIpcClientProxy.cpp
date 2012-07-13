@@ -184,6 +184,7 @@ CIpcClientProxy::disconnect()
 {
 	LOG((CLOG_DEBUG "ipc client proxy disconnect"));
 	m_disconnecting = true;
+	m_stream.close();
 	EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
 }
 

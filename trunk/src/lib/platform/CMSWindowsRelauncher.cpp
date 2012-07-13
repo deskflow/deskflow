@@ -276,7 +276,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 			if (launched) {
 				LOG((CLOG_DEBUG "closing existing process to make way for new one"));
-				shutdownProcess(pi.hProcess, pi.dwProcessId, 10);
+				shutdownProcess(pi.hProcess, pi.dwProcessId, 20);
 				launched = false;
 			}
 
@@ -365,7 +365,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 	if (launched) {
 		LOG((CLOG_DEBUG "terminated running process on exit"));
-		shutdownProcess(pi.hProcess, pi.dwProcessId, 10);
+		shutdownProcess(pi.hProcess, pi.dwProcessId, 20);
 	}
 	
 	LOG((CLOG_DEBUG "relauncher main thread finished"));
@@ -506,7 +506,7 @@ CMSWindowsRelauncher::shutdownExistingProcesses()
 				_stricmp(entry.szExeFile, "synergys.exe") == 0) {
 				
 				HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
-				shutdownProcess(handle, entry.th32ProcessID, 1);
+				shutdownProcess(handle, entry.th32ProcessID, 10);
 			}
 		}
 
