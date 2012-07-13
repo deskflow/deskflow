@@ -114,7 +114,7 @@ CIpcClientProxy::handleData(const CEvent&, void*)
 			m = parseCommand();
 		}
 		else {
-			LOG((CLOG_ERR "invalid message"));
+			LOG((CLOG_ERR "invalid ipc message"));
 			disconnect();
 		}
 
@@ -152,7 +152,7 @@ CIpcClientProxy::send(const CIpcMessage& message)
 		break;
 
 	default:
-		LOG((CLOG_ERR "message not supported: %d", message.type()));
+		LOG((CLOG_ERR "ipc message not supported: %d", message.type()));
 		break;
 	}
 }
@@ -182,7 +182,7 @@ CIpcClientProxy::parseCommand()
 void
 CIpcClientProxy::disconnect()
 {
-	LOG((CLOG_DEBUG "ipc client proxy disconnect"));
+	LOG((CLOG_DEBUG "ipc disconnect, closing stream"));
 	m_disconnecting = true;
 	m_stream.close();
 	EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), this));
