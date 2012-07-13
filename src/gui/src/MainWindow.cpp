@@ -77,7 +77,13 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_versionChecker.setApp(appPath(appConfig.synergycName()));
 
 	m_SetupWizard = new SetupWizard(*this, false);
-	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(refreshStartButton()));
+	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(onModeChanged()));
+
+	// ipc must always be enabled, so that we can disable command when switching to desktop mode.
+	connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
+	connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
+	connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
+	m_IpcClient.connectToHost();
 }
 
 MainWindow::~MainWindow()
@@ -89,21 +95,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::start(bool firstRun)
 {
-	refreshStartButton();
-
-	if (appConfig().processMode() == Service)
-	{
-		connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
-		connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
-		connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
-		m_IpcClient.connectToHost();
-		startSynergy();
-	}
-
-	if (appConfig().processMode() == Desktop && !firstRun && appConfig().autoConnect())
-	{
-		startSynergy();
-	}
+	onModeChanged(firstRun);
 
 	createTrayIcon();
 
@@ -111,6 +103,33 @@ void MainWindow::start(bool firstRun)
 	show();
 
 	m_versionChecker.checkLatest();
+}
+
+void MainWindow::onModeChanged()
+{
+	onModeChanged(false);
+}
+
+void MainWindow::onModeChanged(bool firstRun)
+{
+	refreshStartButton();
+
+	stopSynergy();
+
+	if (appConfig().processMode() == Service)
+	{
+		startSynergy();
+	}
+	else
+	{
+		// cause the service to stop creating processes.
+		sendDaemonCommand("", false);
+	}
+
+	if (appConfig().processMode() == Desktop && !firstRun && appConfig().autoConnect())
+	{
+		startSynergy();
+	}
 }
 
 void MainWindow::refreshStartButton()
@@ -322,9 +341,6 @@ void MainWindow::startSynergy()
 
 	if (desktopMode)
 	{
-		// cause the service to stop creating processes.
-		sendDaemonCommand("", false);
-
 		stopSynergy();
 		setSynergyState(synergyConnecting);
 	}
