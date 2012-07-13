@@ -24,7 +24,8 @@
 #include "Ipc.h"
 
 IpcClient::IpcClient() :
-m_ReaderStarted(false)
+m_ReaderStarted(false),
+m_Enabled(false)
 {
 	m_Socket = new QTcpSocket(this);
 	connect(m_Socket, SIGNAL(connected()), this, SLOT(connected()));
@@ -49,6 +50,8 @@ void IpcClient::connected()
 
 void IpcClient::connectToHost()
 {
+	m_Enabled = true;
+
 	infoMessage("connecting to service...");
 	m_Socket->connectToHost(QHostAddress(QHostAddress::LocalHost), IPC_PORT);
 
@@ -56,6 +59,13 @@ void IpcClient::connectToHost()
 		m_Reader->start();
 		m_ReaderStarted = true;
 	}
+}
+
+void IpcClient::disconnectFromHost()
+{
+	infoMessage("service disconnect");
+	m_Reader->stop();
+	m_Socket->close();
 }
 
 void IpcClient::error(QAbstractSocket::SocketError error)
@@ -69,7 +79,14 @@ void IpcClient::error(QAbstractSocket::SocketError error)
 
 	errorMessage(QString("ipc connection error, %1").arg(text));
 
-	QTimer::singleShot(1000, this, SLOT(connectToHost()));
+	QTimer::singleShot(1000, this, SLOT(retryConnect()));
+}
+
+void IpcClient::retryConnect()
+{
+	if (m_Enabled) {
+		connectToHost();
+	}
 }
 
 void IpcClient::write(int code, int length, const char* data)

@@ -30,6 +30,7 @@ public:
 	IpcReader(QTcpSocket* socket);
 	virtual ~IpcReader();
 	void start();
+	void stop();
 
 signals:
 	void readLogLine(const QString& text);

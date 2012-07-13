@@ -36,6 +36,11 @@ void IpcReader::start()
 	connect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
 }
 
+void IpcReader::stop()
+{
+	disconnect(m_Socket, SIGNAL(readyRead()), this, SLOT(read()));
+}
+
 void IpcReader::read()
 {
 	QMutexLocker locker(&m_Mutex);

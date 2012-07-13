@@ -112,6 +112,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void logError();
 		void updateFound(const QString& version);
 		void refreshStartButton();
+		void onModeChanged();
+		void onModeChanged(bool firstRun);
 
 	protected:
 		QSettings& settings() { return m_Settings; }
