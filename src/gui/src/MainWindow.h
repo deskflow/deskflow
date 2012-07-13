@@ -112,8 +112,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void logError();
 		void updateFound(const QString& version);
 		void refreshStartButton();
-		void onModeChanged();
-		void onModeChanged(bool firstRun);
+		void wizardFinished();
 
 	protected:
 		QSettings& settings() { return m_Settings; }
@@ -135,6 +134,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void setStatus(const QString& status);
 		void sendDaemonCommand(const QString& command, bool showErrors);
 		void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
+		void onModeChanged(bool firstRun, bool forceServiceApply);
 
 	private:
 		QSettings& m_Settings;

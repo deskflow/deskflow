@@ -77,7 +77,7 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_versionChecker.setApp(appPath(appConfig.synergycName()));
 
 	m_SetupWizard = new SetupWizard(*this, false);
-	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(onModeChanged()));
+	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(wizardFinished()));
 
 	// ipc must always be enabled, so that we can disable command when switching to desktop mode.
 	connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
@@ -95,7 +95,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::start(bool firstRun)
 {
-	onModeChanged(firstRun);
+	onModeChanged(firstRun, false);
 
 	createTrayIcon();
 
@@ -105,12 +105,12 @@ void MainWindow::start(bool firstRun)
 	m_versionChecker.checkLatest();
 }
 
-void MainWindow::onModeChanged()
+void MainWindow::wizardFinished()
 {
-	onModeChanged(false);
+	onModeChanged(false, true);
 }
 
-void MainWindow::onModeChanged(bool firstRun)
+void MainWindow::onModeChanged(bool firstRun, bool forceServiceApply)
 {
 	refreshStartButton();
 
@@ -118,7 +118,15 @@ void MainWindow::onModeChanged(bool firstRun)
 
 	if (appConfig().processMode() == Service)
 	{
-		startSynergy();
+		// ensure that the apply button actually does something, since desktop
+		// mode screws around with connecting/disconnecting the action.
+		disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
+		connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
+
+		if (firstRun || forceServiceApply)
+		{
+			startSynergy();
+		}
 	}
 	else
 	{
@@ -126,7 +134,7 @@ void MainWindow::onModeChanged(bool firstRun)
 		sendDaemonCommand("", false);
 	}
 
-	if (appConfig().processMode() == Desktop && !firstRun && appConfig().autoConnect())
+	if ((appConfig().processMode() == Desktop) && !firstRun && appConfig().autoConnect())
 	{
 		startSynergy();
 	}
