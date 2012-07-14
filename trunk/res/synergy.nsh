@@ -169,6 +169,10 @@ Section "Server and Client" core
     File "${binDir}\Release\synrgyhk.dll"
   ${EndIf}
   
+  ; windows firewall exception
+  DetailPrint "Adding firewall exception"
+  nsExec::ExecToStack "netsh firewall add allowedprogram $\"$INSTDIR\synergys.exe$\" Synergy ENABLE"
+  
   ; install and run the service
   ExecWait "$INSTDIR\synergyd.exe /install"
 
