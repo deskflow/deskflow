@@ -257,6 +257,8 @@ CMSWindowsRelauncher::mainLoop(void*)
 	PROCESS_INFORMATION pi;
 	ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 
+	int failures = 0;
+
 	while (m_running) {
 
 		HANDLE sendSasEvent = 0;
@@ -268,9 +270,40 @@ CMSWindowsRelauncher::mainLoop(void*)
 
 		DWORD newSessionId = getSessionId();
 
+		bool running = false;
+		if (launched) {
+
+			DWORD exitCode;
+			GetExitCodeProcess(pi.hProcess, &exitCode);
+			running = (exitCode == STILL_ACTIVE);
+
+			if (!running) {
+				failures++;
+				LOG((CLOG_INFO "detected application not running, pid=%d, failures=%d", pi.dwProcessId, failures));
+				
+				// increasing backoff period, maximum of 10 seconds.
+				int timeout = (failures * 2) < 10 ? (failures * 2) : 10;
+				LOG((CLOG_DEBUG "waiting, backoff period is %d seconds", timeout));
+				ARCH->sleep(timeout);
+				
+				// double check, in case process started after we waited.
+				GetExitCodeProcess(pi.hProcess, &exitCode);
+				running = (exitCode == STILL_ACTIVE);
+			}
+			else {
+				// reset failures when running.
+				failures = 0;
+			}
+		}
+
 		// only enter here when id changes, and the session isn't -1, which
 		// may mean that there is no active session.
-		if (((newSessionId != sessionId) && (newSessionId != -1)) || m_commandChanged) {
+		bool sessionChanged = ((newSessionId != sessionId) && (newSessionId != -1));
+
+		// relaunch if it was running but has stopped unexpectedly.
+		bool stoppedRunning = (launched && !running);
+
+		if (stoppedRunning || sessionChanged || m_commandChanged) {
 			
 			m_commandChanged = false;
 
@@ -328,6 +361,7 @@ CMSWindowsRelauncher::mainLoop(void*)
 						CREATE_UNICODE_ENVIRONMENT;
 
 					// re-launch in current active user session
+					LOG((CLOG_INFO "starting new process"));
 					BOOL createRet = CreateProcessAsUser(
 						userToken, NULL, LPSTR(cmd.c_str()),
 						&sa, NULL, TRUE, creationFlags,
