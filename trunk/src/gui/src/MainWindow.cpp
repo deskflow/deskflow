@@ -79,11 +79,13 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_SetupWizard = new SetupWizard(*this, false);
 	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(wizardFinished()));
 
+#if defined(Q_OS_WIN)
 	// ipc must always be enabled, so that we can disable command when switching to desktop mode.
 	connect(&m_IpcClient, SIGNAL(readLogLine(const QString&)), this, SLOT(appendLogRaw(const QString&)));
 	connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
-	connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogInfo(const QString&)));
+	connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogNote(const QString&)));
 	m_IpcClient.connectToHost();
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -319,9 +321,9 @@ void MainWindow::updateFound(const QString &version)
 		.arg(version).arg("http://synergy-foss.org"));
 }
 
-void MainWindow::appendLogInfo(const QString& text)
+void MainWindow::appendLogNote(const QString& text)
 {
-	appendLogRaw("INFO: " + text);
+	appendLogRaw("NOTE: " + text);
 }
 
 void MainWindow::appendLogError(const QString& text)
@@ -416,24 +418,24 @@ void MainWindow::startSynergy()
 
 	if (desktopMode)
 	{
-		appendLogInfo("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
+		appendLogNote("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
 	}
 
 	if (serviceMode)
 	{
-		appendLogInfo("applying service mode: " + QString(synergyType() == synergyServer ? "server" : "client"));
+		appendLogNote("applying service mode: " + QString(synergyType() == synergyServer ? "server" : "client"));
 	}
 
 	// show command if debug log level...
 	if (appConfig().logLevel() >= 4) {
-		appendLogInfo(QString("command: %1 %2").arg(app, args.join(" ")));
+		appendLogNote(QString("command: %1 %2").arg(app, args.join(" ")));
 	}
 
-	appendLogInfo("config file: " + configFilename());
-	appendLogInfo("log level: " + appConfig().logLevelText());
+	appendLogNote("config file: " + configFilename());
+	appendLogNote("log level: " + appConfig().logLevelText());
 
 	if (appConfig().logToFile())
-		appendLogInfo("log file: " + appConfig().logFilename());
+		appendLogNote("log file: " + appConfig().logFilename());
 
 	if (desktopMode)
 	{
@@ -556,7 +558,7 @@ void MainWindow::stopSynergy()
 {
 	if (synergyProcess())
 	{
-		appendLogInfo("stopping synergy");
+		appendLogNote("stopping synergy");
 
 		if (synergyProcess()->isOpen())
 			synergyProcess()->close();
