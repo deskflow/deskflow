@@ -526,9 +526,6 @@ CClientApp::mainLoop()
 	// on unix because threads evaporate across a fork().
 	CSocketMultiplexer multiplexer;
 
-	// create the event queue
-	CEventQueue eventQueue;
-
 	// start client, etc
 	appUtil().startNode();
 	

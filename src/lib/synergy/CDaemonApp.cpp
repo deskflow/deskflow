@@ -101,6 +101,7 @@ CDaemonApp::run(int argc, char** argv)
 	arch.init();
 
 	CLog log;
+	CEventQueue events;
 
 	bool uninstall = false;
 	try
@@ -187,11 +188,12 @@ CDaemonApp::mainLoop(bool logToFile)
 	try
 	{
 		DAEMON_RUNNING(true);
+		/*while (true)
+		{
+		}*/
 
 		if (logToFile)
 			CLOG->insert(new CFileLogOutputter(logPath().c_str()));
-
-		CEventQueue eventQueue;
 
 		// create socket multiplexer.  this must happen after daemonization
 		// on unix because threads evaporate across a fork().
@@ -208,7 +210,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		m_relauncher = new CMSWindowsRelauncher(false, *m_ipcServer, *m_ipcLogOutputter);
 #endif
 
-		eventQueue.adoptHandler(
+		EVENTQUEUE->adoptHandler(
 			CIpcServer::getMessageReceivedEvent(), m_ipcServer,
 			new TMethodEventJob<CDaemonApp>(this, &CDaemonApp::handleIpcMessage));
 
@@ -230,14 +232,14 @@ CDaemonApp::mainLoop(bool logToFile)
 		m_relauncher->startAsync();
 #endif
 
-		eventQueue.loop();
+		EVENTQUEUE->loop();
 
 #if SYSAPI_WIN32
 		m_relauncher->stop();
 		delete m_relauncher;
 #endif
 
-		eventQueue.removeHandler(
+		EVENTQUEUE->removeHandler(
 			CIpcServer::getMessageReceivedEvent(), m_ipcServer);
 		
 		CLOG->remove(m_ipcLogOutputter);
