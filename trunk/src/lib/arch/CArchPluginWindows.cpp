@@ -73,8 +73,7 @@ CString
 CArchPluginWindows::getModuleDir()
 {
 	TCHAR c_modulePath[MAX_PATH];
-	GetModuleFileName(NULL, c_modulePath, MAX_PATH);
-	if (GetLastError() != ERROR_SUCCESS) {
+	if (GetModuleFileName(NULL, c_modulePath, MAX_PATH) == 0) {
 		throw XArch(new XArchEvalWindows);
 	}
 

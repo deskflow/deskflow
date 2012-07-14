@@ -111,7 +111,9 @@ CIpcLogOutputter::appendBuffer(const CString& text)
 void
 CIpcLogOutputter::bufferThread(void*)
 {
+	CArchMutexLock lock(m_notifyMutex);
 	m_bufferThreadId = m_bufferThread->getID();
+
 	try {
 		while (m_running) {
 

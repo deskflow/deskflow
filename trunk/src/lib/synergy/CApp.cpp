@@ -29,6 +29,7 @@
 #include "TMethodEventJob.h"
 #include "CIpcMessage.h"
 #include "Ipc.h"
+#include "CEventQueue.h"
 
 #if SYSAPI_WIN32
 #include "CArchMiscWindows.h"
@@ -252,6 +253,7 @@ CApp::run(int argc, char** argv)
 	arch.init();
 
 	CLog log;
+	CEventQueue events;
 
 #if MAC_OS_X_VERSION_10_7
 	// dock hide only supported on lion :(

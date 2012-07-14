@@ -758,9 +758,6 @@ CServerApp::mainLoop()
 	// on unix because threads evaporate across a fork().
 	CSocketMultiplexer multiplexer;
 
-	// create the event queue
-	CEventQueue eventQueue;
-
 	// if configuration has no screens then add this system
 	// as the default
 	if (args().m_config->begin() == args().m_config->end()) {
