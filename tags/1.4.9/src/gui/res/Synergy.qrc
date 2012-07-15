@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>icons/16x16/synergy-connected.png</file>
+        <file>icons/16x16/synergy-disconnected.png</file>
+        <file>icons/64x64/video-display.png</file>
+        <file>icons/64x64/user-trash.png</file>
+        <file>icons/16x16/warning.png</file>
+        <file>icons/256x256/synergy.ico</file>
+    </qresource>
+</RCC>

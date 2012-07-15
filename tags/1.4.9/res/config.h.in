@@ -1,0 +1,173 @@
+/* Define version here for Unix, but using /D for Windows. */
+#cmakedefine VERSION "${VERSION}"
+
+/* Define to the base type of arg 3 for `accept`. */
+#cmakedefine ACCEPT_TYPE_ARG3 ${ACCEPT_TYPE_ARG3}
+
+/* Define if your compiler has bool support. */
+#cmakedefine HAVE_CXX_BOOL ${HAVE_CXX_BOOL}
+
+/* Define if your compiler has C++ cast support. */
+#cmakedefine HAVE_CXX_CASTS ${HAVE_CXX_CASTS}
+
+/* Define if your compiler has exceptions support. */
+#cmakedefine HAVE_CXX_EXCEPTIONS ${HAVE_CXX_EXCEPTIONS}
+
+/* Define if your compiler has mutable support. */
+#cmakedefine HAVE_CXX_MUTABLE ${HAVE_CXX_MUTABLE}
+
+/* Define if your compiler has standard C++ library support. */
+#cmakedefine HAVE_CXX_STDLIB ${HAVE_CXX_STDLIB}
+
+/* Define if the <X11/extensions/dpms.h> header file declares function prototypes. */
+#cmakedefine HAVE_DPMS_PROTOTYPES ${HAVE_DPMS_PROTOTYPES}
+
+/* Define if you have a working `getpwuid_r` function. */
+#cmakedefine HAVE_GETPWUID_R ${HAVE_GETPWUID_R}
+
+/* Define to 1 if you have the `gmtime_r` function. */
+#cmakedefine HAVE_GMTIME_R ${HAVE_GMTIME_R}
+
+/* Define if you have the `inet_aton` function. */
+#cmakedefine HAVE_INET_ATON ${HAVE_INET_ATON}
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#cmakedefine HAVE_INTTYPES_H ${HAVE_INTTYPES_H}
+
+/* Define to 1 if you have the <istream> header file. */
+#cmakedefine HAVE_ISTREAM ${HAVE_ISTREAM}
+
+/* Define to 1 if you have the <locale.h> header file. */
+#cmakedefine HAVE_LOCALE_H ${HAVE_LOCALE_H}
+
+/* Define to 1 if you have the <memory.h> header file. */
+#cmakedefine HAVE_MEMORY_H ${HAVE_MEMORY_H}
+
+/* Define if you have the `nanosleep` function. */
+#cmakedefine HAVE_NANOSLEEP ${HAVE_NANOSLEEP}
+
+/* Define to 1 if you have the <ostream> header file. */
+#cmakedefine HAVE_OSTREAM ${HAVE_OSTREAM}
+
+/* Define if you have the `poll` function. */
+#cmakedefine HAVE_POLL ${HAVE_POLL}
+
+/* Define if you have a POSIX `sigwait` function. */
+#cmakedefine HAVE_POSIX_SIGWAIT ${HAVE_POSIX_SIGWAIT}
+
+/* Define if you have POSIX threads libraries and header files. */
+#cmakedefine HAVE_PTHREAD ${HAVE_PTHREAD}
+
+/* Define if you have `pthread_sigmask` and `pthread_kill` functions. */
+#cmakedefine HAVE_PTHREAD_SIGNAL ${HAVE_PTHREAD_SIGNAL}
+
+/* Define if your compiler defines socklen_t. */
+#cmakedefine HAVE_SOCKLEN_T ${HAVE_SOCKLEN_T}
+
+/* Define to 1 if you have the <sstream> header file. */
+#cmakedefine HAVE_SSTREAM ${HAVE_SSTREAM}
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#cmakedefine HAVE_STDINT_H ${HAVE_STDINT_H}
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#cmakedefine HAVE_STDLIB_H ${HAVE_STDLIB_H}
+
+/* Define to 1 if you have the `strftime` function. */
+#cmakedefine HAVE_STRFTIME ${HAVE_STRFTIME}
+
+/* Define to 1 if you have the <strings.h> header file. */
+#cmakedefine HAVE_STRINGS_H ${HAVE_STRINGS_H}
+
+/* Define to 1 if you have the <string.h> header file. */
+#cmakedefine HAVE_STRING_H ${HAVE_STRING_H}
+
+/* Define to 1 if you have the <sys/select.h> header file. */
+#cmakedefine HAVE_SYS_SELECT_H ${HAVE_SYS_SELECT_H}
+
+/* Define to 1 if you have the <sys/socket.h> header file. */
+#cmakedefine HAVE_SYS_SOCKET_H ${HAVE_SYS_SOCKET_H}
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#cmakedefine HAVE_SYS_STAT_H ${HAVE_SYS_STAT_H}
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#cmakedefine HAVE_SYS_TIME_H ${HAVE_SYS_TIME_H}
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#cmakedefine HAVE_SYS_TYPES_H ${HAVE_SYS_TYPES_H}
+
+/* Define to 1 if you have the <sys/utsname.h> header file. */
+#cmakedefine HAVE_SYS_UTSNAME_H ${HAVE_SYS_UTSNAME_H}
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H ${HAVE_UNISTD_H}
+
+/* Define to 1 if you have the `vsnprintf` function. */
+#cmakedefine HAVE_VSNPRINTF ${HAVE_VSNPRINTF}
+
+/* Define to 1 if you have the <wchar.h> header file. */
+#cmakedefine HAVE_WCHAR_H ${HAVE_WCHAR_H}
+
+/* Define to 1 if you have the <X11/extensions/Xrandr.h> header file. */
+#cmakedefine HAVE_X11_EXTENSIONS_XRANDR_H ${HAVE_X11_EXTENSIONS_XRANDR_H}
+
+/* Define to 1 if you have the <X11/extensions/dpms.h> header file. */
+#cmakedefine HAVE_X11_EXTENSIONS_DPMS_H ${HAVE_X11_EXTENSIONS_DPMS_H}
+
+/* Define to 1 if you have the <X11/extensions/Xinerama.h> header file. */
+#cmakedefine HAVE_X11_EXTENSIONS_XINERAMA_H ${HAVE_X11_EXTENSIONS_XINERAMA_H}
+
+/* Define to 1 if you have the <X11/extensions/XKBstr.h> header file. */
+#cmakedefine HAVE_X11_EXTENSIONS_XKBSTR_H ${HAVE_X11_EXTENSIONS_XKBSTR_H}
+
+/* Define to 1 if you have the <X11/extensions/XTest.h> header file. */
+#cmakedefine HAVE_X11_EXTENSIONS_XTEST_H ${HAVE_X11_EXTENSIONS_XTEST_H}
+
+/* Define to 1 if you have the <X11/XKBlib.h> header file. */
+#cmakedefine HAVE_X11_XKBLIB_H ${HAVE_X11_XKBLIB_H}
+
+/* Define to 1 if you have the <X11/extensions/XInput2.h> header file. */
+#cmakedefine HAVE_XI2 ${HAVE_XI2}
+
+/* Define this if the XKB extension is available. */
+#cmakedefine HAVE_XKB_EXTENSION ${HAVE_XKB_EXTENSION}
+
+/* Define to necessary symbol if this constant uses a non-standard name on your system. */
+#cmakedefine PTHREAD_CREATE_JOINABLE ${PTHREAD_CREATE_JOINABLE}
+
+/* Define to the type of arg 1 for `select`. */
+#cmakedefine SELECT_TYPE_ARG1 ${SELECT_TYPE_ARG1}
+
+/* Define to the type of args 2, 3 and 4 for `select`. */
+#cmakedefine SELECT_TYPE_ARG234 ${SELECT_TYPE_ARG234}
+
+/* Define to the type of arg 5 for `select`. */
+#cmakedefine SELECT_TYPE_ARG5 ${SELECT_TYPE_ARG5}
+
+/* The size of `char`, as computed by sizeof. */
+#cmakedefine SIZEOF_CHAR ${SIZEOF_CHAR}
+
+/* The size of `int`, as computed by sizeof. */
+#cmakedefine SIZEOF_INT ${SIZEOF_INT}
+
+/* The size of `long`, as computed by sizeof. */
+#cmakedefine SIZEOF_LONG ${SIZEOF_LONG}
+
+/* The size of `short`, as computed by sizeof. */
+#cmakedefine SIZEOF_SHORT ${SIZEOF_SHORT}
+
+/* Define to 1 if you have the ANSI C header files. */
+#cmakedefine STDC_HEADERS ${STDC_HEADERS}
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#cmakedefine TIME_WITH_SYS_TIME ${TIME_WITH_SYS_TIME}
+
+/* Define to 1 if your <sys/time.h> declares `struct tm`. */
+#cmakedefine TM_IN_SYS_TIME ${TM_IN_SYS_TIME}
+
+/* Define to 1 if the X Window System is missing or not being used. */
+#cmakedefine X_DISPLAY_MISSING ${X_DISPLAY_MISSING}
+
+/* Define to `unsigned int` if <sys/types.h> does not define. */
+#cmakedefine size_t ${size_t}

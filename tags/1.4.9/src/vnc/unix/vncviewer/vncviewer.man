@@ -1,0 +1,190 @@
+.TH vncviewer 1 "03 Mar 2005" "RealVNC Ltd" "Virtual Network Computing"
+.SH NAME
+vncviewer \- VNC viewer for X
+.SH SYNOPSIS
+.B vncviewer
+.RI [ options ] 
+.RI [ host ][: display# ]
+.br
+.B vncviewer
+.RI [ options ] 
+.B \-listen
+.RI [ port ]
+.SH DESCRIPTION
+.B vncviewer
+is a viewer (client) for Virtual Network Computing.  This manual page documents
+version 4 for the X window system.
+
+If you run the viewer with no arguments it will prompt you for a VNC server to
+connect to.  Alternatively, specify the VNC server as an argument, e.g.:
+
+.RS
+vncviewer snoopy:2
+.RE
+
+where 'snoopy' is the name of the machine, and '2' is the display number of the
+VNC server on that machine.  Either the machine name or display number can be
+omitted.  So for example ":1" means display number 1 on the same machine, and
+"snoopy" means "snoopy:0" i.e. display 0 on machine "snoopy".
+
+If the VNC server is successfully contacted, you will be prompted for a
+password to authenticate you.  If the password is correct, a window will appear
+showing the desktop of the VNC server.
+
+.SH AUTOMATIC PROTOCOL SELECTION
+
+The viewer tests the speed of the connection to the server and chooses the
+encoding and pixel format (colour level) appropriately.  This makes it much
+easier to use than previous versions where the user had to specify arcane
+command line arguments.
+
+The viewer normally starts out assuming the link is slow, using a low colour
+level and using the encoding with the best compression.  If it turns out that
+the link is fast enough it switches to full-colour mode and will use an
+encoding which compresses less but is faster to generate, thus improving the
+interactive feel.  Automatic selection can be turned off by setting the
+\fBAutoSelect\fP parameter to false, or from the options dialog.
+
+.SH POPUP MENU
+The viewer has a popup menu containing entries which perform various actions.
+It is usually brought up by pressing F8, but this can be configured with the
+MenuKey parameter.  Actions which the popup menu can perform include:
+.RS 2
+.IP * 2
+switching in and out of full-screen mode
+.IP *
+quitting the viewer
+.IP *
+generating key events, e.g. sending ctrl-alt-del
+.IP *
+accessing the options dialog and various other dialogs
+.RE
+.PP
+By default, key presses in the popup menu get sent to the VNC server and
+dismiss the popup.  So to get an F8 through to the VNC server simply press it
+twice.
+
+.SH FULL SCREEN MODE
+A full-screen mode is supported.  This is particularly useful when connecting
+to a remote screen which is the same size as your local one. If the remote
+screen is bigger, you can scroll by bumping the mouse against the edge of the
+screen.
+
+Unfortunately this mode doesn't work completely with all window managers, since
+it breaks the X window management conventions.
+
+.SH OPTIONS (PARAMETERS)
+You can get a list of parameters by giving \fB\-h\fP as a command-line option
+to vncviewer.  Parameters can be turned on with -\fIparam\fP or off with
+-\fIparam\fP=0.  Parameters which take a value can be specified as
+-\fIparam\fP \fIvalue\fP.  Other valid forms are \fIparam\fP\fB=\fP\fIvalue\fP
+-\fIparam\fP=\fIvalue\fP --\fIparam\fP=\fIvalue\fP.  Parameter names are
+case-insensitive.
+
+Many of the parameters can also be set graphically via the options dialog box.
+This can be accessed from the popup menu or from the "Connection details"
+dialog box.
+
+.TP
+.B \-display \fIXdisplay\fP
+Specifies the X display on which the VNC viewer window should appear.
+
+.TP
+.B \-geometry \fIgeometry\fP
+Standard X position and sizing specification.
+
+.TP
+.B \-listen \fI[port]\fP
+Causes vncviewer to listen on the given port (default 5500) for reverse
+connections from a VNC server.  WinVNC supports reverse connections initiated
+using the 'Add New Client' menu option or the '\-connect' command-line option.
+Xvnc supports reverse connections with a helper program called
+.B vncconfig.
+
+.TP
+.B \-passwd \fIpassword-file\fP
+If you are on a filesystem which gives you access to the password file used by
+the server, you can specify it here to avoid typing it in.  It will usually be
+"~/.vnc/passwd".
+
+.TP
+.B \-Shared
+When you make a connection to a VNC server, all other existing connections are
+normally closed.  This option requests that they be left open, allowing you to
+share the desktop with someone already using it.
+
+.TP
+.B \-ViewOnly
+Specifies that no keyboard or mouse events should be sent to the server.
+Useful if you want to view a desktop without interfering; often needs to be
+combined with
+.B \-Shared.
+
+.TP
+.B \-FullScreen
+Start in full-screen mode.
+
+.TP
+.B \-AutoSelect
+Use automatic selection of encoding and pixel format (default is on).  Normally
+the viewer tests the speed of the connection to the server and chooses the
+encoding and pixel format appropriately.  Turn it off with \fB-AutoSelect=0\fP.
+
+.TP
+.B \-FullColour, \-FullColor
+Tells the VNC server to send full-colour pixels in the best format for this
+display.  By default a low colour mode is used until AutoSelect decides the
+link is fast enough.  However if the server's native pixel format is
+colourmapped (as opposed to truecolour) then the server's format is used by
+default.
+
+.TP
+.B \-LowColourLevel \fIlevel\fP
+Selects the reduced colour level to use on slow links.  \fIlevel\fP can range
+from 0 to 2, 0 meaning 8 colours, 1 meaning 64 colours (the default), 2 meaning
+256 colours.
+
+.TP
+.B \-PreferredEncoding \fIencoding\fP
+This option specifies the preferred encoding to use from one of "ZRLE",
+"hextile" or "raw".
+
+.TP
+.B -UseLocalCursor
+Render the mouse cursor locally if the server supports it (default is on).
+This can make the interactive performance feel much better over slow links.
+
+.TP
+.B \-WMDecorationWidth \fIw\fP, \-WMDecorationHeight \fIh\fP
+The total width and height taken up by window manager decorations.  This is
+used to calculate the maximum size of the VNC viewer window.  Default is
+width 6, height 24.
+
+.TP
+.B \-log \fIlogname\fP:\fIdest\fP:\fIlevel\fP
+Configures the debug log settings.  \fIdest\fP can currently be \fBstderr\fP or
+\fBstdout\fP, and \fIlevel\fP is between 0 and 100, 100 meaning most verbose
+output.  \fIlogname\fP is usually \fB*\fP meaning all, but you can target a
+specific source file if you know the name of its "LogWriter".  Default is
+\fB*:stderr:30\fP.
+
+.TP
+.B \-MenuKey \fIkeysym-name\fP
+This option specifies the key which brings up the popup menu.  The key is
+specified as an X11 keysym name (these can be obtained by removing the XK_
+prefix from the entries in "/usr/include/X11/keysymdef.h").  Default is F8.
+
+.SH SEE ALSO
+.BR Xvnc (1),
+.BR vncpasswd (1),
+.BR vncconfig (1),
+.BR vncserver (1)
+.br
+http://www.realvnc.com
+
+.SH AUTHOR
+Tristan Richardson, RealVNC Ltd.
+
+VNC was originally developed by the RealVNC team while at Olivetti Research Ltd
+/ AT&T Laboratories Cambridge.  It is now being maintained by RealVNC Ltd.  See
+http://www.realvnc.com for details.

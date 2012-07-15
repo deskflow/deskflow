@@ -1,0 +1,45 @@
+XCOMM CDEBUGFLAGS = -g
+XCOMM CXXDEBUGFLAGS = -g
+
+   VNCUNIXDIR = VncUnixDir
+ VNCCOMMONDIR = VncCommonDir
+   VNCINCLUDE = -I$(VNCCOMMONDIR) -I$(VNCUNIXDIR)/vncconfig
+
+#define CplusplusSource
+
+#if DoLoadableServer
+#define IHaveSubdirs
+#endif
+
+#include <Server.tmpl>
+
+#if DoLoadableServer
+       MODULE_SUBDIRS = module
+#endif
+         SRCS = vncExtInit.cc vncHooks.cc XserverDesktop.cc
+         OBJS = vncExtInit.o vncHooks.o XserverDesktop.o
+     INCLUDES = -I../include -I$(EXTINCSRC) -I$(XINCLUDESRC) -I$(FONTINCSRC) \
+                -I../mfb -I../mi $(VNCINCLUDE)
+#if defined(XFree86Version) && XFree86Version >= 4000
+   VNCDEFINES = -DGC_HAS_COMPOSITE_CLIP
+#endif
+#if defined(ProjectX) && (ProjectX >= 604)
+   VNCDEFINES = -DGC_HAS_COMPOSITE_CLIP
+#endif
+      DEFINES = $(STD_DEFINES) $(VNCDEFINES) -UXFree86LOADER
+
+#define IHaveSubdirs
+SUBDIRS = Xvnc $(MODULE_SUBDIRS)
+
+NormalLibraryTarget(vnc,$(OBJS))
+LintLibraryTarget(vnc,$(SRCS))
+NormalLintTarget($(SRCS))
+
+NormalLibraryObjectRule()
+NormalCplusplusObjectRule()
+
+
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))
+
+DependTarget()

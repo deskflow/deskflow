@@ -1,0 +1,63 @@
+Building on HP-UX 11.00, using GCC 3.3.2 (jnw)
+--
+I have managed to build Xvnc on HP-UX using GCC 3.3.2, by updating the
+earlier "ugly hacking" of the X tree to cope with using GCC instead of aCC.
+(aCC is the commercial HP-UX C++ compiler, whereas GCC is free, if you can find a build for your system).
+
+These build settings are known to work on HP-UX 11.00, with the following requirements:
+
+. From http://www.xfree86.org/ - XFree86 Project Web Site
+  - XFree86 4.2.0 source code (tarballs 1 & 2 are sufficient)
+
+. From http://devrsrc1.external.hp.com/LPK/ - HP's Linux Porting Kit 1.0
+  - GCC 3.3.2 - GCC C & C++ compilers
+  - patch 2.5.4 - GNU patch command
+  - make 3.80 - GNU make
+  - [optional, see below] X11R6incs 4.3.0 - X11 headers
+
+. From http://www.software.hp.com/ - HP's Software Depot home
+  - B3394BA.X11MotifDevKit.X11R6-PRG B.11.00.03 - X11 R6 Programming Environment
+
+. From http://www1.itrc.hp.com/ - HP's IT Resource Center
+  - PHSS_30967 - ld(1) and linker tools cumulative patch for HP-UX 11.00
+
+Ensure that gcc and the GCC version of c++ are on your path, so that configure can find them.
+
+Build the main part of the VNC distribution as normal:
+
+  % ./configure
+  % make
+
+Set the CC environment variable:
+
+  % CC=gcc
+  % export CC
+
+Unpack the X tree and apply the patches in xc.patch:
+
+  % gunzip -c X420src-1.tgz | tar xf -
+  % patch -Np0 <xc.patch
+
+Then additionally apply the patches in hpux_gcc.patch:
+
+  % patch -Np0 <hpux_gcc.patch
+
+Finally try building the X tree:
+
+  % cd xc
+  % make World
+
+If it all goes to plan you will be left with Xvnc in xc/programs/Xserver.  You
+will probably have to modify the vncserver script to set up a sensible font
+path, since many of the font directories on HPUX are different from the
+defaults compiled into Xvnc.  Note that the vncserver script also requires perl,
+which is not on the path by default on HPUX 11.00.
+
+If you don't care about x0vncserver, and you don't have the X11 development files
+(B3394BA), then you can instead compile everything else (including Xvnc) with
+only the Linux Porting Kit's X11R6incs package installed.  You'll need to remove
+x0vncserver explicitly from the top level Makefile.in before running configure
+in order to do this.
+
+If anyone can find a neater way of building a VNC-compatible X tree on HPUX
+please let us know (see http://www.realvnc.com for contact details).

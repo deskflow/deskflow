@@ -1,0 +1,120 @@
+.TH vncserver 1 "03 Mar 2005" "RealVNC Ltd" "Virtual Network Computing"
+.SH NAME
+vncserver \- start or stop a VNC server
+.SH SYNOPSIS
+.B vncserver
+.RI [: display# ]
+.RB [ \-name
+.IR desktop-name ]
+.RB [ \-geometry
+.IR width x height ]
+.RB [ \-depth
+.IR depth ]
+.RB [ \-pixelformat
+.IR format ]
+.RI [ Xvnc-options... ]
+.br
+.BI "vncserver \-kill :" display#
+.SH DESCRIPTION
+.B vncserver
+is used to start a VNC (Virtual Network Computing) desktop.
+.B vncserver
+is a Perl script which simplifies the process of starting an Xvnc server.  It
+runs Xvnc with appropriate options and starts some X applications to be
+displayed in the VNC desktop.
+
+.B vncserver
+can be run with no options at all. In this case it will choose the first
+available display number (usually :1), start Xvnc as that display, and run a
+couple of basic applications to get you started. You can also specify the
+display number, in which case it will use that number if it is available and
+exit if not, eg:
+
+.RS
+vncserver :13
+.RE
+
+Editing the file $HOME/.vnc/xstartup allows you to change the applications run
+at startup (but note that this will not affect an existing desktop).
+
+.SH OPTIONS
+You can get a list of options by giving \fB\-h\fP as an option to vncserver.
+In addition to the options listed below, any unrecognised options will be
+passed to Xvnc - see the Xvnc man page, or "Xvnc \-help" for details.
+
+.TP
+.B \-name \fIdesktop-name\fP
+Each desktop has a name which may be displayed by the viewer. It defaults to
+"\fIhost\fP:\fIdisplay#\fP (\fIusername\fP)" but you can change it with this
+option.  It is passed in to the xstartup script via the $VNCDESKTOP environment
+variable, allowing you to run a different set of applications according to the
+name of the desktop.
+
+.TP
+.B \-geometry \fIwidth\fPx\fIheight\fP
+Specify the size of the desktop to be created. Default is 1024x768. 
+
+.TP
+.B \-depth \fIdepth\fP
+Specify the pixel depth in bits of the desktop to be created. Default is 16,
+other possible values are 8, 15 and 24 - anything else is likely to cause
+strange behaviour by applications.
+
+.TP
+.B \-pixelformat \fIformat\fP
+Specify pixel format for server to use (BGRnnn or RGBnnn).  The default for
+depth 8 is BGR233 (meaning the most significant two bits represent blue, the
+next three green, and the least significant three represent red), the default
+for depth 16 is RGB565 and for depth 24 is RGB888.
+
+.TP
+.B \-cc 3
+As an alternative to the default TrueColor visual, this allows you to run an
+Xvnc server with a PseudoColor visual (i.e. one which uses a colour map or
+palette), which can be useful for running some old X applications which only
+work on such a display.  Values other than 3 (PseudoColor) and 4 (TrueColor)
+for the \-cc option may result in strange behaviour, and PseudoColor desktops
+must be 8 bits deep.
+
+.TP
+.B \-kill :\fIdisplay#\fP
+This kills a VNC desktop previously started with vncserver.  It does this by
+killing the Xvnc process, whose process ID is stored in the file
+"$HOME/.vnc/\fIhost\fP:\fIdisplay#\fP.pid".  It actually ignores anything
+preceding a ":" in its argument.  This can be useful so you can write
+"vncserver \-kill $DISPLAY", for example at the end of your xstartup file after
+a particular application exits.
+
+.SH FILES
+Several VNC-related files are found in the directory $HOME/.vnc:
+.TP
+$HOME/.vnc/xstartup
+A shell script specifying X applications to be run when a VNC desktop is
+started.  If it doesn't exist, vncserver will create a new one which runs a
+couple of basic applications.
+.TP
+$HOME/.vnc/passwd
+The VNC password file.
+.TP
+$HOME/.vnc/\fIhost\fP:\fIdisplay#\fP.log
+The log file for Xvnc and applications started in xstartup.
+.TP
+$HOME/.vnc/\fIhost\fP:\fIdisplay#\fP.pid
+Identifies the Xvnc process ID, used by the
+.B \-kill
+option.
+
+.SH SEE ALSO
+.BR vncviewer (1),
+.BR vncpasswd (1),
+.BR vncconfig (1),
+.BR Xvnc (1)
+.br
+http://www.realvnc.com
+
+.SH AUTHOR
+Tristan Richardson, RealVNC Ltd.
+
+VNC was originally developed by the RealVNC team while at Olivetti Research Ltd
+/ AT&T Laboratories Cambridge.  It is now being maintained by RealVNC Ltd.  See
+http://www.realvnc.com for details.

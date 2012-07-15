@@ -1,0 +1,191 @@
+*** xc/programs/Xserver/Imakefile.orig	Fri Jun  6 11:02:36 2003
+--- xc/programs/Xserver/Imakefile	Fri Jun  6 11:14:39 2003
+***************
+*** 409,412 ****
+--- 409,429 ----
+  #endif
+  #endif /* XsunServer */
++ XCOMM
++ XCOMM X VNC server
++ XCOMM
++ MFBDIR = mfb
++ CFB8DIR = cfb
++ CFB16DIR = cfb16
++ CFB24DIR = cfb24
++ CFB32DIR = cfb32
++ XVNCDDXDIR = vnc/Xvnc
++ XVNCDIRS = $(STDDIRS) $(MFBDIR) \
++ 	    $(CFB8DIR) $(CFB16DIR) $(CFB24DIR) $(CFB32DIR) \
++ 	    $(XVNCDDXDIR) $(DEPDIRS)
++ XVNCOBJS = $(XVNCDDXDIR)/stubs.o $(XVNCDDXDIR)/miinitext.o
++ XVNCLIBS = PreFbLibs vnc/Xvnc/LibraryTargetName(xvnc) CFBLibs PostFbLibs
++ XVNCSYSLIBS = $(FONTLIBS) $(SYSLIBS)
++ ServerTarget(Xvnc,$(XVNCDIRS),$(XVNCOBJS), \
++ 	$(LIBCWRAPPER) $(XVNCLIBS) $(LOADABLEEXTS),$(XVNCSYSLIBS))
+  
+  
+*** xc/programs/Xserver/mi/miinitext.c.orig	Fri Jun  6 11:02:59 2003
+--- xc/programs/Xserver/mi/miinitext.c	Fri Jun  6 11:17:15 2003
+***************
+*** 150,153 ****
+--- 150,156 ----
+  extern void MITMiscExtensionInit(INITARGS);
+  #endif
++ #ifdef VNCEXT
++ extern void vncExtensionInit(INITARGS);
++ #endif
+  #ifdef XIDLE
+  extern void XIdleExtensionInit(INITARGS);
+***************
+*** 285,288 ****
+--- 288,294 ----
+      MITMiscExtensionInit();
+  #endif
++ #ifdef VNCEXT
++     vncExtensionInit();
++ #endif
+  #ifdef XIDLE
+      XIdleExtensionInit();
+*** xc/programs/Xserver/cfb/cfb8line.c.orig	Wed Sep 18 18:11:47 2002
+--- xc/programs/Xserver/cfb/cfb8line.c	Thu Jun  5 18:32:04 2003
+***************
+*** 688,707 ****
+  	    y1_or_e1 = xOffset & 3;
+  # else
+! #  if PGSZ == 64 /* PIM value from <cfbmskbits.h> is not it! (for 16/32 PSZ)*/
+! 	    y1_or_e1 = ((long) addrp) & 0x7;
+! 	    addrp = (PixelType *) (((unsigned char *) addrp) - y1_or_e1);
+! #  else
+! 	    y1_or_e1 = ((long) addrp) & PIM;
+! 	    addrp = (PixelType *) (((unsigned char *) addrp) - y1_or_e1);
+! #  endif
+! #if PGSZ == 32
+! #  if PWSH != 2
+! 	    y1_or_e1 >>= (2 - PWSH);
+! #  endif
+! #else /* PGSZ == 64 */
+! #  if PWSH != 3
+! 	    y1_or_e1 >>= (3 - PWSH);
+! #  endif
+! #endif /* PGSZ */
+  # endif /* PSZ == 24 */
+  #if PSZ == 24
+--- 688,696 ----
+  	    y1_or_e1 = xOffset & 3;
+  # else
+! 	    /* Round addrp down to the next PixelGroup boundary, and
+! 	     * set y1_or_e1 to the excess (in pixels)
+! 	     * (assumes PGSZB is a power of 2). */
+! 	    y1_or_e1 = (((unsigned long) addrp) & (PGSZB - 1)) / (PSZ / 8);
+! 	    addrp -= y1_or_e1;
+  # endif /* PSZ == 24 */
+  #if PSZ == 24
+*** xc/programs/Xserver/cfb/cfbtile32.c.orig	Fri Dec 14 19:59:25 2001
+--- xc/programs/Xserver/cfb/cfbtile32.c	Thu Jun  5 18:16:48 2003
+***************
+*** 73,77 ****
+                        (p)++,(*(p) = MROP_PREBUILT_SOLID(((srcpix<<8)|(srcpix>>16)),*(p))))
+  
+! #if (MROP == Mcopy) && defined(FAST_CONSTANT_OFFSET_MODE) && defined(SHARED_IDCACHE)
+  # define Expand(left,right) {\
+      int part = nlwMiddle & ((PGSZB*2)-1); \
+--- 73,83 ----
+                        (p)++,(*(p) = MROP_PREBUILT_SOLID(((srcpix<<8)|(srcpix>>16)),*(p))))
+  
+! 
+! 
+! /* XXX TJR: I doubt that this optimised case works (because the non-24 bit case
+!    was broken), so I've added the #if 0 below.  Someone who knows what they're
+!    doing can re-enable it if they fix it */
+! 
+! #if (MROP == Mcopy) && defined(FAST_CONSTANT_OFFSET_MODE) && defined(SHARED_IDCACHE) && 0
+  # define Expand(left,right) {\
+      int part = nlwMiddle & ((PGSZB*2)-1); \
+***************
+*** 145,150 ****
+  #if (MROP == Mcopy) && defined(FAST_CONSTANT_OFFSET_MODE) && defined(SHARED_IDCACHE)
+  # define Expand(left,right) {\
+!     int part = nlwMiddle & ((PGSZB*2)-1); \
+!     nlwMiddle >>= PWSH + 1; \
+      while (h--) { \
+  	srcpix = psrc[srcy]; \
+--- 151,156 ----
+  #if (MROP == Mcopy) && defined(FAST_CONSTANT_OFFSET_MODE) && defined(SHARED_IDCACHE)
+  # define Expand(left,right) {\
+!     int part = nlwMiddle & 7; \
+!     nlwMiddle >>= 3; \
+      while (h--) { \
+  	srcpix = psrc[srcy]; \
+*** xc/programs/Xserver/cfb/cfbglblt8.c.orig	Fri Dec 14 19:59:23 2001
+--- xc/programs/Xserver/cfb/cfbglblt8.c	Tue Aug 12 10:05:57 2003
+***************
+*** 284,288 ****
+      register glyphPointer   glyphBits;
+      register int	xoff;
+! #if defined(USE_LEFT_BITS) || (!defined(STIPPLE) && !defined(USE_STIPPLE_CODE))
+      register CfbBits	*dst;
+  #endif
+--- 284,288 ----
+      register glyphPointer   glyphBits;
+      register int	xoff;
+! #if defined(USE_LEFTBITS) || (!defined(STIPPLE) && !defined(USE_STIPPLE_CODE))
+      register CfbBits	*dst;
+  #endif
+***************
+*** 292,296 ****
+      CfbBits		*dstLine;
+      CfbBits		*pdstBase;
+! #ifdef USE_LEFT_BITS
+      CARD32		*cTmp;
+  #endif
+--- 292,296 ----
+      CfbBits		*dstLine;
+      CfbBits		*pdstBase;
+! #ifdef USE_LEFTBITS
+      CARD32		*cTmp;
+  #endif
+***************
+*** 399,403 ****
+  	    	} while (--hTmp);
+  	    	break;
+! #else /* !USE_LEFT_BITS */
+  	    	{
+  		    int h;
+--- 399,403 ----
+  	    	} while (--hTmp);
+  	    	break;
+! #else /* !USE_LEFTBITS */
+  	    	{
+  		    int h;
+***************
+*** 412,416 ****
+  	    	glyphBits = clips;
+  	    	/* fall through */
+! #endif /* USE_LEFT_BITS */
+  	    case rgnIN:
+  #ifdef STIPPLE
+--- 412,416 ----
+  	    	glyphBits = clips;
+  	    	/* fall through */
+! #endif /* USE_LEFTBITS */
+  	    case rgnIN:
+  #ifdef STIPPLE
+*** xc/programs/Xserver/cfb/cfbcppl.c.orig	Fri Dec 14 19:59:22 2001
+--- xc/programs/Xserver/cfb/cfbcppl.c	Sun Apr 18 12:53:36 2004
+***************
+*** 383,389 ****
+  	psrcLine = (unsigned int *)psrcBase + srcy * widthSrc + srcx;
+  #endif
+  	pdstLine = (unsigned int *)pdstBase + dsty * widthDst + (dstx >> 5);
+! 	if (dstx + width <= 32)
+  	{
+  	    mfbmaskpartialbits(dstx, width, startmask);
+  	    nlMiddle = 0;
+--- 383,389 ----
+  	psrcLine = (unsigned int *)psrcBase + srcy * widthSrc + srcx;
+  #endif
+  	pdstLine = (unsigned int *)pdstBase + dsty * widthDst + (dstx >> 5);
+! 	if ((dstx & 0x1f) + width <= 32)
+  	{
+  	    mfbmaskpartialbits(dstx, width, startmask);
+  	    nlMiddle = 0;
