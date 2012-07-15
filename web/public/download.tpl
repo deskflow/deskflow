@@ -10,7 +10,7 @@
   
     <h2>{t}Download{/t}</h2>
     
-    <p><b>{t}Latest release:{/t}</b> {$cur14} {$cur14State} - {$curDate}</p>
+    <p><b>{t}Latest release:{/t}</b> {$cur14} {$cur14State} - {$curDate} - <a href="/blog/category/release/">What's new?</a></p>
     
     <div class="top">
       
