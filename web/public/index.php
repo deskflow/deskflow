@@ -119,7 +119,7 @@ function getFileTitle($file) {
         $title .= " for Ubuntu and Debian";
       }
       else if ($ext == "rpm") {
-        $title .= " for Ubuntu and Debian";
+        $title .= " for Fedora and Red Hat";
       }
       
       if (count($parts) > 2) {

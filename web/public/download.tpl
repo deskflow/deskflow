@@ -26,7 +26,7 @@
         <div class="item">
           <h3><img src="/img/apple-icon.png" /> {t}Mac OS X{/t}</h3>
           <p>
-            <b>{$cur14} {$cur14State}:</b> <a href="?file=synergy-{$cur14}-MacOSX107-x86_64.dmg">10.7</a>, <a href="?file=synergy-{$cur14}-MacOSX106-i386.dmg">10.6</a>, <a href="?file=synergy-{$cur14}-MacOSX105-i386.dmg">10.5</a>, <a href="?file=synergy-{$cur14}-MacOSX104-Universal.dmg">10.4</a>
+            <b>{$cur14} {$cur14State}:</b> <a href="?file=synergy-{$cur14}-MacOSX108-x86_64.dmg">10.8</a>, <a href="?file=synergy-{$cur14}-MacOSX107-x86_64.dmg">10.7</a>, <a href="?file=synergy-{$cur14}-MacOSX106-i386.dmg">10.6</a>, <a href="?file=synergy-{$cur14}-MacOSX105-i386.dmg">10.5</a>
           </p>
         </div>
         <div class="item">
