@@ -341,3 +341,17 @@ form div.errors p {
 p.twitter img {
   margin-bottom: -3px;
 }
+
+div.warning {
+  font-size: 1.1em;
+  border: 1px solid #ffaaaa;
+  background-color: #ffeaea;
+  color: #ff5555;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+div.warning p {
+  margin: 0px;
+  padding: 0px;
+}

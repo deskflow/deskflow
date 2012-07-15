@@ -13,6 +13,17 @@
     {$custom}
     
     <div class="text">
+      
+      {if $isOld}
+      <div class="warning">
+        <p>
+{t url1="./"}<b>Important:</b> Please try using the <a href="%1">latest version</a>
+before trying older versions. The version available from this page is obsolete
+and may contain bugs fixed in the latest version.{/t}
+        </p>
+      </div>
+      {/if}
+      
       <p class="link"><b>{t}Download{/t}:</b> <a href="{$link}">{$file}</a></p>
       
       <p>

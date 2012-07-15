@@ -24,6 +24,8 @@ require "files.php";
 require "smarty/libs/Smarty.class.php";
 require "php/CorporateForm.class.php";
 
+$currentVersion = "1.4.9";
+
 $page = "home";
 if (isset($_GET["page"]) && $_GET["page"] != "") {
   $page = str_replace("/", "", $_GET["page"]);
@@ -143,12 +145,13 @@ if ($page == "download") {
     $file = $_GET["file"];
     $format = "http://synergy.googlecode.com/files/%s";
     $smarty->assign("file", $file);
+    $smarty->assign("isOld", strpos($file, $currentVersion) === false);
     $smarty->assign("title", getFileTitle($file));
     $smarty->assign("link", sprintf($format, $file));
   }
   else {
     $smarty->assign("curDate", date("M j, Y", mktime(0, 0, 0, 07, 15, 2012)));
-    $smarty->assign("cur14", "1.4.9");
+    $smarty->assign("cur14", $currentVersion);
     $smarty->assign("cur14State", T_("Beta"));
   }
 }
