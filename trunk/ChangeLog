@@ -1,3 +1,21 @@
+1.4.9
+=====
+Bug #3159 - In service mode, server doesn't start unless GUI is running
+Bug #3214 - Client sometimes can't connect if GUI is closed
+Bug #56 - Mac OS X server not sending keystrokes to client
+Bug #3161 - First time GUI appears, service doesn't send logging
+Bug #3164 - In service mode, you need to add a firewall exception
+Bug #3166 - Service shutdown stalls when GUI is closed
+Bug #3216 - Fatal error if plugins folder doesn't exist
+Bug #3221 - ERROR: could not connect to service, error: 2
+Feature #3192 - Add support for JOYINFOEX structure to poll game device info
+Feature #3202 - Plugin support (sending for primary screen events on Windows only)
+Feature #3155 - Cross-platform TCP IPC between GUI and service
+Task #3177 - Fix Mac buildslave to build multiple versions
+Task #3193 - Add Micro Synergy to repository
+Task #3275 - Change hostname label to "IP address or hostname"
+Task #3276 - Installation recovery mechanism for synrgyhk.dll
+
 1.4.8
 =====
 
