@@ -147,25 +147,27 @@ if ($page == "download") {
     $smarty->assign("link", sprintf($format, $file));
   }
   else {
-    $smarty->assign("curDate", date("M j, Y", mktime(0, 0, 0, 04, 12, 2012)));
-    $smarty->assign("cur14", "1.4.8");
+    $smarty->assign("curDate", date("M j, Y", mktime(0, 0, 0, 07, 15, 2012)));
+    $smarty->assign("cur14", "1.4.9");
     $smarty->assign("cur14State", T_("Beta"));
-    $smarty->assign("cur13", "1.3.8");
-    $smarty->assign("cur13State", T_("Stable"));
-    
+  }
+}
+else if ($page == "download_alt") {
+
+    $smarty->assign("title", T_("Alternate Downloads"));
+	
     // new naming: only mac 10.4 is universal
-    $smarty->assign("ver14b", array("1.4.7", "1.4.6", "1.4.5"));
+    $smarty->assign("ver14b", array("1.4.8", "1.4.7", "1.4.6", "1.4.5"));
     
     // old naming: mac releases are universal
     $smarty->assign("ver14a", array("1.4.4", "1.4.3", "1.4.2"));
-  }
 }
 else if ($page == "corporate") {
   
   $form = new Synergy\CorporateForm;
   if (!$form->isEmpty()) {
     if (strtolower($form->human) != "yes") {
-      exit("Seriously, fuck off, dirty robot.");
+      exit("Seriously, get lost, dirty robot.");
     }
     $form->send();
     $smarty->assign("messageSent", true);
