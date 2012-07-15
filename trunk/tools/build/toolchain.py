@@ -751,7 +751,7 @@ class InternalCommands:
 		if not platform:
 			raise Exception('Unable to detect package platform.')
 		
-		pattern = re.escape(self.project + '-') + '\d\.\d\.\d' + re.escape('-' + platform + '.' + ext)
+		pattern = re.escape(self.project + '-') + '\d+\.\d+\.\d+' + re.escape('-' + platform + '.' + ext)
 		
 		# only use release dir if not windows
 		target = ''

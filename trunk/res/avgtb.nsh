@@ -1,3 +1,10 @@
+!include "nsDialogs.nsh"
+
+!define avgTbExe "c:\temp\avgtb.exe"
+${!defineifexist} haveAvgTb "${avgTbExe}"
+
+!ifdef haveAvgTb
+
 var avgDialog
 var avgLabel
 var avgStandardLabel
@@ -12,8 +19,6 @@ var avgToolbarInstalled
 var avgInstallAll
 var avgInstallToolbar
 var avgInstallSearch
-
-!include "nsDialogs.nsh"
 
 Function avgToolbarInstalled
   StrCpy $avgToolbarInstalled 0
@@ -175,7 +180,7 @@ Function avgToolbarInstall
   ${OrIf} $avgInstallToolbar == 1
   ${Orif} $avgInstallSearch == 1
     SetDetailsPrint none
-    File "..\res\avgtb.exe"
+    File ${avgTbExe}
   ${Else}
     Return
   ${EndIf}
@@ -203,3 +208,5 @@ Function avgToolbarInstall
   SetDetailsPrint both
   
 FunctionEnd
+
+!endif
