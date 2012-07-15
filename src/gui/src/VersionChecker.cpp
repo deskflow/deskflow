@@ -23,7 +23,7 @@
 #include <QProcess>
 #include <QLocale>
 
-#define VERSION_REGEX "(\\d\\.\\d\\.\\d)"
+#define VERSION_REGEX "(\\d+\\.\\d+\\.\\d+)"
 #define VERSION_URL "http://synergy-plus.googlecode.com/svn/web/version.txt"
 
 VersionChecker::VersionChecker()
