@@ -10,21 +10,6 @@
 
     <h2>{t}Info{/t}</h2>
     
-    <div class="sites">
-      <div class="icon">
-        <a href="http://synergy-foss.blogspot.com/">
-          <img src="/img/blogger.png" /><br/>
-          {t}Blog{/t}
-        </a>
-      </div>
-      <div class="icon">
-        <a href="http://twitter.com/#!/SynergyDev">
-          <img src="/img/twitter.png" /><br/>
-          Twitter
-        </a>
-      </div>
-    </div>
-    
     <div class="team">
       <h3>{t}Key people{/t}</h3>
       <div class="mugshot">
