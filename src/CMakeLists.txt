@@ -15,7 +15,9 @@
 
 add_subdirectory(lib)
 add_subdirectory(cmd)
-add_subdirectory(test)
+if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX")
+	add_subdirectory(test)
+endif()
 add_subdirectory(plugin)
 add_subdirectory(micro)
 
