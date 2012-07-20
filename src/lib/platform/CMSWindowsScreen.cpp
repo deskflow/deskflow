@@ -122,6 +122,7 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDevi
 		m_desks       = new CMSWindowsDesks(
 							m_isPrimary, m_noHooks,
 							m_hookLibrary, m_screensaver,
+							*EVENTQUEUE,
 							new TMethodJob<CMSWindowsScreen>(this,
 								&CMSWindowsScreen::updateKeysCB));
 		m_keyState    = new CMSWindowsKeyState(m_desks, getEventTarget());

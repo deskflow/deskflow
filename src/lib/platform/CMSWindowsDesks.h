@@ -34,6 +34,7 @@ class CEventQueueTimer;
 class CThread;
 class IJob;
 class IScreenSaver;
+class IEventQueue;
 
 //! Microsoft Windows desk handling
 /*!
@@ -62,8 +63,10 @@ public:
 	updated in a thread attached to the current desk.
 	\p hookLibrary must be a handle to the hook library.
 	*/
-	CMSWindowsDesks(bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
-							const IScreenSaver* screensaver, IJob* updateKeys);
+	CMSWindowsDesks(
+		bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
+		const IScreenSaver* screensaver, IEventQueue& eventQueue,
+		IJob* updateKeys);
 	~CMSWindowsDesks();
 
 	//! @name manipulators
@@ -289,8 +292,10 @@ private:
 	// hook library stuff
 	InstallFunc			m_install;
 	UninstallFunc		m_uninstall;
-	InstallScreenSaverFunc		m_installScreensaver;
-	UninstallScreenSaverFunc	m_uninstallScreensaver;
+	InstallScreenSaverFunc
+						m_installScreensaver;
+	UninstallScreenSaverFunc
+						m_uninstallScreensaver;
 
 	// keyboard stuff
 	IJob*				m_updateKeys;
@@ -298,6 +303,8 @@ private:
 
 	// options
 	bool				m_leaveForegroundOption;
+
+	IEventQueue&		m_eventQueue;
 };
 
 #endif
