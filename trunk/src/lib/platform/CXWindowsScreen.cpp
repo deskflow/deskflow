@@ -156,7 +156,9 @@ CXWindowsScreen::CXWindowsScreen(const char* displayName, bool isPrimary, bool d
 		m_xi2detected = detectXI2();
 
 		if (m_xi2detected) {
+#ifdef HAVE_XI2
 			selectXIRawMotion();
+#endif
 		} else
 		{
 			// start watching for events on other windows
@@ -1229,7 +1231,7 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 		}
 
 		// now filter the event
-		if (XFilterEvent(xevent, None)) {
+		if (XFilterEvent(xevent, DefaultRootWindow(m_display))) {
 			if (xevent->type == KeyPress) {
 				// add filtered presses to the filtered list
 				m_filtered.insert(m_lastKeycode);
@@ -1252,6 +1254,7 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
 		return;
 	}
 
+#ifdef HAVE_XI2
 	if (m_xi2detected) {
 		// Process RawMotion
 		XGenericEventCookie *cookie = (XGenericEventCookie*)&xevent->xcookie;
@@ -1282,6 +1285,7 @@ CXWindowsScreen::handleSystemEvent(const CEvent& event, void*)
         		XFreeEventData(m_display, cookie);
 		}
 	}
+#endif
 
 	// handle the event ourself
 	switch (xevent->type) {
@@ -2064,10 +2068,11 @@ bool
 CXWindowsScreen::detectXI2()
 {
 	int event, error;
-    return XQueryExtension(m_display,
+	return XQueryExtension(m_display,
 			"XInputExtension", &xi_opcode, &event, &error);
 }
 
+#ifdef HAVE_XI2
 void
 CXWindowsScreen::selectXIRawMotion()
 {
@@ -2083,3 +2088,4 @@ CXWindowsScreen::selectXIRawMotion()
 	XISelectEvents(m_display, DefaultRootWindow(m_display), &mask, 1);
 	free(mask.mask);
 }
+#endif

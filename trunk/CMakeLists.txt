@@ -176,14 +176,15 @@ if (UNIX)
 		# add include dir for bsd (posix uses /usr/include/)
 		set(CMAKE_INCLUDE_PATH "${CMAKE_INCLUDE_PATH}:/usr/local/include")
 
-		set(XKBlib "X11/XKBlib.h")
-		check_include_files("${XKBlib};X11/extensions/Xrandr.h" HAVE_X11_EXTENSIONS_XRANDR_H)
+		set(XKBlib "X11/Xlib.h;X11/XKBlib.h")
+		check_symbol_exists("XRRNotifyEvent" "${XKBlib};X11/extensions/Xrandr.h" HAVE_X11_EXTENSIONS_XRANDR_H)
+
 		check_include_files("${XKBlib};X11/extensions/dpms.h" HAVE_X11_EXTENSIONS_DPMS_H)
 		check_include_files("X11/extensions/Xinerama.h" HAVE_X11_EXTENSIONS_XINERAMA_H)
 		check_include_files("${XKBlib};X11/extensions/XKBstr.h" HAVE_X11_EXTENSIONS_XKBSTR_H)
 		check_include_files("X11/extensions/XKB.h" HAVE_XKB_EXTENSION)
 		check_include_files("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
-		check_include_files(${XKBlib} HAVE_X11_XKBLIB_H)
+		check_include_files("${XKBlib}" HAVE_X11_XKBLIB_H)
 		check_include_files("X11/extensions/XInput2.h" HAVE_XI2)
 
 		if (HAVE_X11_EXTENSIONS_DPMS_H)
@@ -196,8 +197,8 @@ if (UNIX)
 		endif()
 
 		check_library_exists("SM;ICE" IceConnectionNumber "" HAVE_ICE)
-		check_library_exists("X11;Xext" DPMSQueryExtension "" HAVE_Xext)
-		check_library_exists("X11;Xext;Xtst" XTestQueryExtension "" HAVE_Xtst)
+		check_library_exists("Xext;X11" DPMSQueryExtension "" HAVE_Xext)
+		check_library_exists("Xtst;Xext;X11" XTestQueryExtension "" HAVE_Xtst)
 		check_library_exists("Xinerama" XineramaQueryExtension "" HAVE_Xinerama)
 		check_library_exists("Xi" XISelectEvents "" HAVE_Xi)
 		check_library_exists("Xrandr" XRRQueryExtension "" HAVE_Xrandr)
@@ -214,7 +215,7 @@ if (UNIX)
 
 			# Xtxt depends on X11.
 			set(HAVE_X11)
-			list(APPEND libs X11 Xtst)
+			list(APPEND libs Xtst X11)
 
 		else()
 
@@ -230,7 +231,8 @@ if (UNIX)
 			list(APPEND libs Xinerama)
 		else (HAVE_Xinerama)
 			if (HAVE_X11_EXTENSIONS_XINERAMA_H)
-				message(FATAL_ERROR "Missing library: Xinerama")
+				set(HAVE_X11_EXTENSIONS_XINERAMA_H 0)
+				message(WARNING "Old Xinerama implementation detected, disabled")
 			endif()
 		endif()
 

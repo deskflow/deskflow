@@ -140,7 +140,9 @@ private:
 	void				onMouseMove(const XMotionEvent&);
 
 	bool				detectXI2();
+#ifdef HAVE_XI2
 	void				selectXIRawMotion();
+#endif
 	void				selectEvents(Window) const;
 	void				doSelectEvents(Window) const;
 
