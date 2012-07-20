@@ -29,6 +29,7 @@
 #include "TMethodJob.h"
 #include "CArchMiscWindows.h"
 #include <malloc.h>
+#include "IEventQueue.h"
 
 // these are only defined when WINVER >= 0x0500
 #if !defined(SPI_GETMOUSESPEED)
@@ -89,8 +90,9 @@
 //
 
 CMSWindowsDesks::CMSWindowsDesks(
-				bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
-				const IScreenSaver* screensaver, IJob* updateKeys) :
+		bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
+		const IScreenSaver* screensaver, IEventQueue& eventQueue,
+		IJob* updateKeys) :
 	m_isPrimary(isPrimary),
 	m_noHooks(noHooks),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
@@ -107,7 +109,8 @@ CMSWindowsDesks::CMSWindowsDesks(
 	m_activeDeskName(),
 	m_mutex(),
 	m_deskReady(&m_mutex, false),
-	m_updateKeys(updateKeys)
+	m_updateKeys(updateKeys),
+	m_eventQueue(eventQueue)
 {
 	if (hookLibrary != NULL)
 		queryHookLibrary(hookLibrary);
@@ -138,8 +141,8 @@ CMSWindowsDesks::enable()
 	// which desk is active and reinstalls the hooks as necessary.
 	// we wouldn't need this if windows notified us of a desktop
 	// change but as far as i can tell it doesn't.
-	m_timer = EVENTQUEUE->newTimer(0.2, NULL);
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, m_timer,
+	m_timer = m_eventQueue.newTimer(0.2, NULL);
+	m_eventQueue.adoptHandler(CEvent::kTimer, m_timer,
 							new TMethodEventJob<CMSWindowsDesks>(
 								this, &CMSWindowsDesks::handleCheckDesk));
 
@@ -151,8 +154,8 @@ CMSWindowsDesks::disable()
 {
 	// remove timer
 	if (m_timer != NULL) {
-		EVENTQUEUE->removeHandler(CEvent::kTimer, m_timer);
-		EVENTQUEUE->deleteTimer(m_timer);
+		m_eventQueue.removeHandler(CEvent::kTimer, m_timer);
+		m_eventQueue.deleteTimer(m_timer);
 		m_timer = NULL;
 	}
 
