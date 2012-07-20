@@ -15,6 +15,11 @@
     <p>{t}Thank you for your interest!{/t}</p>
     
     {else}
+
+    <p>
+{t}We want to introduce a new special version of Synergy, called
+<b>Synergy Premium</b>.{/t}
+    </p>
     
     <p>
 {t}We believe software should be free, but not just free as in "free beer",
@@ -25,11 +30,6 @@ free as in "free speech" (to quote Richard Stallman).{/t}
 {t}We also believe that funding free software is a good thing. Funding
 (no matter how small) allows free software organizations to spend more time
 and resources improving software, fixing bugs and adding new features.{/t}
-    </p>
-
-    <p>
-{t}We want to introduce a new special version of Synergy, called
-<b>Synergy Premium</b>.{/t}
     </p>
 
     <p><b>{t}You will get:{/t}</b></p>
