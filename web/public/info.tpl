@@ -10,6 +10,8 @@
 
     <h2>{t}Info{/t}</h2>
     
+    <p><img src="/img/softpedia.gif" /></p>
+    
     <div class="team">
       <h3>{t}Key people{/t}</h3>
       <div class="mugshot">

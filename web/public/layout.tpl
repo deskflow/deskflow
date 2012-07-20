@@ -90,7 +90,6 @@
           <a href="/?hl=ja">日本語</a>,
           <a href="/?hl=ko">한국의</a>
         </p>
-		<p><img src="/img/softpedia.gif" /></p>
         <p>
 {t}Copyright &copy; 2012{/t} (<a href="/COPYING">{t}License{/t}</a>,
 <a href="{$baseUrl}/privacy/">{t}Privacy Policy{/t}</a>)
