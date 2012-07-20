@@ -3,9 +3,9 @@ function formError(errors, error) {
   errors.find("p").html("Form error: " + error);
 }
 
-function corporateForm() {
+function premiumForm() {
 
-  form = $("form#corporate");
+  form = $("form#premium");
   errors = $("form div.errors");
   
   if (form) {
@@ -16,31 +16,19 @@ function corporateForm() {
         return false;
       }
       else if (form.find("#name").val() == "") {
-        formError(errors, "Name missing.");
+        formError(errors, "Your name is missing.");
         return false;
       }
       else if (email1 == "") {
-        formError(errors, "Email address missing.");
+        formError(errors, "Email address is missing.");
         return false;
       }
       else if (email1.indexOf("@") == -1) {
-        formError(errors, "Email address invalid.");
+        formError(errors, "Email address is invalid.");
         return false;
       }
       else if (email1 != form.find("#email2").val()) {
         formError(errors, "Confirm email field does not match.");
-        return false;
-      }
-      else if (form.find("#phone").val() == "") {
-        formError(errors, "Phone number missing.");
-        return false;
-      }
-      else if (form.find("#details").val() == "") {
-        formError(errors, "Details missing.");
-        return false;
-      }
-      else if (form.find("#details").val() == "") {
-        formError(errors, "Details missing.");
         return false;
       }
       else if (form.find("#human").val().toLowerCase() != "yes") {
@@ -54,5 +42,5 @@ function corporateForm() {
 }
 
 $(function() {
-  corporateForm();
+  premiumForm();
 });

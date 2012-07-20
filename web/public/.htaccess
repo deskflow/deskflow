@@ -6,4 +6,4 @@ RewriteCond %{REQUEST_URI} !^/(js/.*)
 # rewrite /zh/?a=b as /?ul=zh&page=&a=b
 # rewrite /zh-tw/?a=b as /?ul=zh-tw&page=&a=b
 # rewrite /zh-tw/download/?a=b as /?ul=zh-tw&page=download&a=b
-RewriteRule ^/?((\w\w(-\w\w)?)/?)?(download|info|help|search|info|corporate|privacy)?/?$ /index.php?ul=$2&page=$4 [QSA,PT]
+RewriteRule ^/?((\w\w(-\w\w)?)/?)?(download|info|help|search|info|premium|privacy)?/?$ /index.php?ul=$2&page=$4 [QSA,PT]

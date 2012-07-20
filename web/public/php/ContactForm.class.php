@@ -19,28 +19,27 @@
 
 namespace Synergy;
 
-class CorporateForm {
+class ContactForm {
   private $from = "Synergy website <website@synergy-foss.org>";
-  private $to = "corporate@synergy-foss.org";
-  private $subject = "Corporate contact form";
+  private $to = "contact@synergy-foss.org";
+  private $subject = "Contact form";
 
   public function __construct() {
-    $this->company = isset($_POST["company"]) ? $_POST["company"] : "";
     $this->name = isset($_POST["name"]) ? $_POST["name"] : "";
     $this->email1 = isset($_POST["email1"]) ? $_POST["email1"] : "";
     $this->email2 = isset($_POST["email2"]) ? $_POST["email2"] : "";
     $this->phone = isset($_POST["phone"]) ? $_POST["phone"] : "";
-    $this->details = isset($_POST["details"]) ? $_POST["details"] : "";
+    $this->comments = isset($_POST["comments"]) ? $_POST["comments"] : "";
     $this->human = isset($_POST["human"]) ? $_POST["human"] : "";
   }
   
   public function isEmpty() {
-    return $this->details == "";
+    return $this->name == "";
   }
   
   public function send() {
-    $message = sprintf("Company: %s\nName: %s\nEmail: %s\nPhone: %s\n\n%s",
-      $this->company, $this->name, $this->email1, $this->phone, $this->details);
+    $message = sprintf("Name: %s\nEmail: %s\nPhone: %s\n\n%s",
+      $this->name, $this->email1, $this->phone, $this->comments);
     $headers = sprintf("From: %s\r\nReply-To: %s", $this->from, $this->email1);
     mail($this->to, $this->subject, $message, $headers);
   }

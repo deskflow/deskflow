@@ -314,8 +314,12 @@ form p textarea {
 }
 
 form p textarea {
-  height: 100px;
+  height: 4em;
   font-family: arial, sans-serif;
+}
+
+form p [name="human"] {
+  width: 5em;
 }
 
 form div.buttons {

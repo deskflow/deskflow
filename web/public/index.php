@@ -22,7 +22,7 @@
 require "locale.php";
 require "files.php";
 require "smarty/libs/Smarty.class.php";
-require "php/CorporateForm.class.php";
+require "php/ContactForm.class.php";
 
 $currentVersion = "1.4.9";
 
@@ -165,9 +165,9 @@ else if ($page == "download_alt") {
     // old naming: mac releases are universal
     $smarty->assign("ver14a", array("1.4.4", "1.4.3", "1.4.2"));
 }
-else if ($page == "corporate") {
+else if ($page == "premium") {
   
-  $form = new Synergy\CorporateForm;
+  $form = new Synergy\ContactForm;
   if (!$form->isEmpty()) {
     if (strtolower($form->human) != "yes") {
       exit("Seriously, get lost, dirty robot.");

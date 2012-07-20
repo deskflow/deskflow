@@ -42,10 +42,10 @@
       <div class="menu">
         <div class="pages">
           <a href="{$baseUrl}/">{t}Home{/t}</a> |
+          <a href="{$baseUrl}/premium/">{t}Premium{/t}</a> |
           <a href="{$baseUrl}/download/">{t}Download{/t}</a> |
           <a href="{$baseUrl}/help/">{t}Help{/t}</a> |
           <a href="{$baseUrl}/search/">{t}Search{/t}</a> |
-          <a href="{$baseUrl}/corporate/">{t}Corporate{/t}</a> |
           <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
           <a href="/blog/">{t}Blog{/t}</a> |
           <a href="/wiki/">{t}Wiki{/t}</a> |
