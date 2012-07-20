@@ -1797,15 +1797,6 @@ COSXScreen::handleCGInputEvent(CGEventTapProxy proxy,
 	COSXScreen* screen = (COSXScreen*)refcon;
 	CGPoint pos;
 
-	// Patch by Perceptum to ignore what seems to be an "Out of Bounds" 
-	// event that is emitted by touching the trackpad on a MacBook
-	// Suspicion that it is related to the new Gestures trackpad
-	// bryan@perceptum.biz
-	if(type > NX_LASTEVENT) {
-		LOG((CLOG_NOTE "Ignoring Out of Bounds Quartz Event type: 0x%02x [max 0x%02x]", type, NX_LASTEVENT));
-		return NULL;
-	}
-
 	switch(type) {
 		case kCGEventLeftMouseDown:
 		case kCGEventRightMouseDown:
