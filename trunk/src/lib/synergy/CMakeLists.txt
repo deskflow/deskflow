@@ -77,6 +77,7 @@ set(src
 	CArgsBase.cpp
 	CEventGameDevice.cpp
 	CVncClient.cpp
+	CGameDevice.cpp
 )
 
 if (WIN32)
@@ -88,7 +89,6 @@ if (WIN32)
 	list(APPEND src
 		${inc}
 		CAppUtilWindows.cpp
-		CGameDevice.cpp
 	)
 elseif(UNIX)
 	list(APPEND src
