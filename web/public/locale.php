@@ -78,9 +78,35 @@ class Locale {
     return $lang;
   }
   
+  function redirect($lang) {
+    if (isset($_GET["page"]) && ($_GET["page"] != "")) {
+      header(sprintf("Location: /%s/%s/", $lang, $_GET["page"]));
+    }
+    else {
+      header(sprintf("Location: /%s/", $lang));
+    }
+  }
+  
   function run() {
     
-    if (isSet($_GET["ul"]) && ($_GET["ul"] != "")) {
+    if (isSet($_GET["hl"]) && ($_GET["hl"] != "")) {
+
+      // language forced by visitor.
+      $this->lang = $_GET["hl"];
+      
+      // if english, force and use / (if we don't
+      // force in session, language is auto detected).
+      if (!isBot() && strstr($this->lang, "en")) {
+        $_SESSION["lang"] = $this->lang;
+        header("Location: /");
+      } else {
+        // no need to force in session, as it is
+        // forced in url.
+        $this->redirect($this->lang);
+      }
+      exit;
+      
+    } else if (isSet($_GET["ul"]) && ($_GET["ul"] != "")) {
       
       // make sure users can't use /en -- should be using / instead.
       if (stristr($_SERVER["REQUEST_URI"], "/en")) {
@@ -97,26 +123,9 @@ class Locale {
       // redirect legacy redundant tags.
       $mapped = $this->fixItefTag($this->lang);
       if ($mapped != $this->lang) {
-        header("Location: /" . $mapped . "/");
+        $this->redirect($mapped);
         exit;
       }
-      
-    } else if (isSet($_GET["hl"]) && ($_GET["hl"] != "")) {
-
-      // language forced by visitor.
-      $this->lang = $_GET["hl"];
-      
-      // if english, force and use / (if we don't
-      // force in session, language is auto detected).
-      if (!isBot() && strstr($this->lang, "en")) {
-        $_SESSION["lang"] = $this->lang;
-        header("Location: /");
-      } else {
-        // no need to force in session, as it is
-        // forced in url.
-        header("Location: /" . $this->lang . "/");
-      }
-      exit;
       
     } else if (!isBot() && isSet($_SESSION["lang"])) {
 
@@ -131,7 +140,7 @@ class Locale {
 
       // only redirect if non-english, otherwise use /.
       if (!strstr($this->lang, "en")) {
-        header("Location: /" . $this->fixItefTag($this->lang) . "/");
+        $this->redirect($this->fixItefTag($this->lang));
         exit;
       }
     }
