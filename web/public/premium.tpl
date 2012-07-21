@@ -22,31 +22,21 @@
     </p>
     
     <p>
-{t}We believe software should be free, but not just free as in "free beer",
-free as in "free speech" (to quote Richard Stallman).{/t}
+{t}This allows you to have a direct effect on the improvement of Synergy.
+Funding allows us to spend more time and resources fixing bugs and adding
+new features. We think that you should get something in return for your
+contribution.{/t}
     </p>
 
-    <p>
-{t}We also believe that funding free software is a good thing. Funding
-(no matter how small) allows free software organizations to spend more time
-and resources improving software, fixing bugs and adding new features.{/t}
-    </p>
-
-    <p><b>{t}You will get:{/t}</b></p>
+    <p><b>{t}Premium votes:{/t}</b></p>
     <ul>
-      <li>{t}Access to the premium support channel.{/t}</li>
-      <li>{t}Your name on the about screen and this page.{/t}</li>
-      <li>{t}The satisfaction of knowing you improved Synergy.{/t}</li>
-    </ul>
-
-    <p><b>{t}What does it cost?{/t}</b></p>
-    <ul>
-      <li>{t}At least $10, but you set the maximum.{/t}</li>
-      <li>{t}It can be a one-off or a subscription, your choice.{/t}</li>
+      <li>{t}For every $10 you contribute, you get a premium vote.{/t}</li>
+      <li>{t}You can assign your votes to bugs or features in our tracker.{/t}</li>
+      <li>{t}The bug or feature voted highest is fixed or implemented next.{/t}</li>
     </ul>
     
     <h3>{t}Are you interested?{/t}</h3>
-    <p>{t}Please let us know you are interested by completing this form.{/t}</p>
+    <p>{t}Please complete this form, we will not spam your email address.{/t}</p>
     
     <form method="post" id="premium">
       <div class="errors"><p></p></div>
