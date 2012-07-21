@@ -22,17 +22,15 @@
     </p>
     
     <p>
-{t}This allows you to have a direct effect on the improvement of Synergy.
-Funding allows us to spend more time and resources fixing bugs and adding
-new features. We think that you should get something in return for your
-contribution.{/t}
+{t}Signing up allows you to have a direct effect on the improvement of Synergy.
+Contributions allow us to spend more time and resources fixing bugs and adding
+new features, but we think that you should get something in return.{/t}
     </p>
 
-    <p><b>{t}Premium votes:{/t}</b></p>
     <ul>
       <li>{t}For every $10 you contribute, you get a premium vote.{/t}</li>
-      <li>{t}You can assign your votes to bugs or features in our tracker.{/t}</li>
-      <li>{t}The bug or feature voted highest is fixed or implemented next.{/t}</li>
+      <li>{t}You can assign your votes to bugs or features.{/t}</li>
+      <li>{t}The highest voted bug or feature is looked at next.{/t}</li>
     </ul>
     
     <h3>{t}Are you interested?{/t}</h3>
