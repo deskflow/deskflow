@@ -27,7 +27,7 @@ and may contain bugs fixed in the latest version.{/t}
       <p class="link"><b>{t}Download{/t}:</b> <a href="{$link}">{$file}</a></p>
     
       <p>
-{t url1="/premium/"}Would you like to know about <a href="%1">Synergy Premium</a>?{/t}
+{t url1="/premium/"}While your file is downloading, please take a look at <a href="%1">Synergy Premium</a>.{/t}
       </p>
       
       <p>
