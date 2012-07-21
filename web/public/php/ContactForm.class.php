@@ -28,7 +28,6 @@ class ContactForm {
     $this->name = isset($_POST["name"]) ? $_POST["name"] : "";
     $this->email1 = isset($_POST["email1"]) ? $_POST["email1"] : "";
     $this->email2 = isset($_POST["email2"]) ? $_POST["email2"] : "";
-    $this->phone = isset($_POST["phone"]) ? $_POST["phone"] : "";
     $this->comments = isset($_POST["comments"]) ? $_POST["comments"] : "";
     $this->human = isset($_POST["human"]) ? $_POST["human"] : "";
   }
@@ -38,8 +37,8 @@ class ContactForm {
   }
   
   public function send() {
-    $message = sprintf("Name: %s\nEmail: %s\nPhone: %s\n\n%s",
-      $this->name, $this->email1, $this->phone, $this->comments);
+    $message = sprintf("Name: %s\nEmail: %s\n\n%s",
+      $this->name, $this->email1, $this->comments);
     $headers = sprintf("From: %s\r\nReply-To: %s", $this->from, $this->email1);
     mail($this->to, $this->subject, $message, $headers);
   }
