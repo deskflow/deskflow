@@ -22,77 +22,74 @@
 #include "CMockKeyMap.h"
 #include "CMockEventQueue.h"
 
-CGKeyCode escKeyCode = 53;
-CGKeyCode shiftKeyCode = 56;
-CGKeyCode controlKeyCode = 59;
+#include "CLog.h"
 
-// TODO: make pollActiveModifiers tests work reliably. 
-/*
-TEST(COSXKeyStateTests, pollActiveModifiers_shiftKeyDownThenUp_masksAreCorrect)
+#define SHIFT_ID_L kKeyShift_L
+#define SHIFT_ID_R kKeyShift_R
+#define SHIFT_BUTTON 057
+#define A_CHAR_ID 0x00000061
+#define A_CHAR_BUTTON 001
+
+class COSXKeyStateTests : public ::testing::Test {
+public:
+	static bool isKeyPressed(const COSXKeyState& keyState, KeyButton button);
+};
+
+TEST_F(COSXKeyStateTests, fakeAndPoll_shift)
 {
-	CMockKeyMap keyMap;
+	CKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	COSXKeyState keyState((IEventQueue&)keyMap, (CKeyMap&)eventQueue);
+	COSXKeyState keyState((IEventQueue&)eventQueue, keyMap);
+	keyState.updateKeyMap();
 
-	// fake shift key down (without using synergy). this is a bit weird;
-	// looks like you need to create a shift down event *and* set the
-	// shift modifier.
-	CGEventRef shiftDown = CGEventCreateKeyboardEvent(NULL, shiftKeyCode, true);
-	CGEventSetFlags(shiftDown, kCGEventFlagMaskShift);
-	CGEventPost(kCGHIDEventTap, shiftDown);
-	CFRelease(shiftDown);
+	keyState.fakeKeyDown(SHIFT_ID_L, 0, 1);
+	ASSERT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
 
-	// function under test (1st call)
-	KeyModifierMask downMask = keyState.pollActiveModifiers();
+	keyState.fakeKeyUp(1);
+	ASSERT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
 
-	// fake shift key up (without using synergy). also as weird as the
-	// shift down; use a non-shift key down and reset the pressed modifiers.
-	CGEventRef shiftUp = CGEventCreateKeyboardEvent(NULL, escKeyCode, true);
-	CGEventSetFlags(shiftUp, 0);
-	CGEventPost(kCGHIDEventTap, shiftUp);
-	CFRelease(shiftUp);
+	keyState.fakeKeyDown(SHIFT_ID_L, 0, 2);
+	ASSERT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
 
-	// function under test (2nd call)
-	KeyModifierMask upMask = keyState.pollActiveModifiers();
-
-	EXPECT_TRUE((downMask & KeyModifierShift) == KeyModifierShift)
-		<< "shift key not in mask (" << downMask << ") - key was not pressed";
-
-	EXPECT_TRUE((upMask & KeyModifierShift) == 0)
-		<< "shift key still in mask (" << upMask << ") - make sure no keys are being held down";
+	keyState.fakeKeyUp(2);
+	ASSERT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
 }
 
-TEST(COSXKeyStateTests, pollActiveModifiers_controlKeyDownThenUp_masksAreCorrect)
+TEST_F(COSXKeyStateTests, fakeAndPoll_charKey)
 {
-	CMockKeyMap keyMap;
+	CKeyMap keyMap;
 	CMockEventQueue eventQueue;
-	COSXKeyState keyState((IEventQueue&)keyMap, (CKeyMap&)eventQueue);
+	COSXKeyState keyState((IEventQueue&)eventQueue, keyMap);
+	keyState.updateKeyMap();
 
-	// fake control key down (without using synergy). this is a bit weird;
-	// looks like you need to create a shift down event *and* set the
-	// shift modifier.
-	CGEventRef controlDown = CGEventCreateKeyboardEvent(NULL, controlKeyCode, true);
-	CGEventSetFlags(controlDown, kCGEventFlagMaskControl);
-	CGEventPost(kCGHIDEventTap, controlDown);
-	CFRelease(controlDown);
+	keyState.fakeKeyDown(A_CHAR_ID, 0, 1);
+	ASSERT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
 
-	// function under test (1st call)
-	KeyModifierMask downMask = keyState.pollActiveModifiers();
+	keyState.fakeKeyUp(1);
+	ASSERT_TRUE(!isKeyPressed(keyState, A_CHAR_BUTTON));
 
-	// fake control key up (without using synergy). also as weird as the
-	// shift down; use a non-shift key down and reset the pressed modifiers.
-	CGEventRef controlUp = CGEventCreateKeyboardEvent(NULL, escKeyCode, true);
-	CGEventSetFlags(controlUp, 0);
-	CGEventPost(kCGHIDEventTap, controlUp);
-	CFRelease(controlUp);
-
-	// function under test (2nd call)
-	KeyModifierMask upMask = keyState.pollActiveModifiers();
-
-	EXPECT_TRUE((downMask & KeyModifierControl) == KeyModifierControl)
-		<< "control key not in mask (" << downMask << ") - key was not pressed";
-
-	EXPECT_TRUE((upMask & KeyModifierControl) == 0)
-		<< "control key still in mask (" << upMask << ") - make sure no keys are being held down";
+	// HACK: delete the key in case it was typed into a text editor.
+	// we should really set focus to an invisible window.
+	keyState.fakeKeyDown(kKeyBackSpace, 0, 2);
+	keyState.fakeKeyUp(2);
 }
-*/
+
+bool
+COSXKeyStateTests::isKeyPressed(const COSXKeyState& keyState, KeyButton button)
+{
+	// allow os to realize key state changes.
+	ARCH->sleep(.01);
+
+	IKeyState::KeyButtonSet pressed;
+	keyState.pollPressedKeys(pressed);
+
+	IKeyState::KeyButtonSet::const_iterator it;
+	for (it = pressed.begin(); it != pressed.end(); ++it) {
+		LOG((CLOG_DEBUG "checking key %d", *it));
+		if (*it == button) {
+			return true;
+		}
+	}
+	return false;
+}
+
