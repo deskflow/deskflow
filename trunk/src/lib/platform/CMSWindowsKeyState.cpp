@@ -960,7 +960,18 @@ CMSWindowsKeyState::getKeyMap(CKeyMap& keyMap)
 			// deal with certain virtual keys specially
 			switch (vk) {
 			case VK_SHIFT:
-				vk = VK_LSHIFT;
+				// this is important for sending the correct modifier to the 
+				// client, a patch from bug #242 (right shift broken for ms
+				// remote desktop) removed this to just use left shift, which
+				// caused bug #2799 (right shift broken for osx).
+				// we must not repeat this same mistake and must fix platform
+				// specific bugs in code that only affects that platform.
+				if (MapVirtualKey(VK_RSHIFT, 0) == i) {
+					vk = VK_RSHIFT;
+				}
+				else {
+					vk = VK_LSHIFT;
+				}
 				break;
 
 			case VK_CONTROL:
