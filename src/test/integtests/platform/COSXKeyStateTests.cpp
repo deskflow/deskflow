@@ -26,7 +26,7 @@
 
 #define SHIFT_ID_L kKeyShift_L
 #define SHIFT_ID_R kKeyShift_R
-#define SHIFT_BUTTON 057
+#define SHIFT_BUTTON 57
 #define A_CHAR_ID 0x00000061
 #define A_CHAR_BUTTON 001
 
@@ -43,16 +43,16 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_shift)
 	keyState.updateKeyMap();
 
 	keyState.fakeKeyDown(SHIFT_ID_L, 0, 1);
-	ASSERT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
+	EXPECT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
 
 	keyState.fakeKeyUp(1);
-	ASSERT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
+	EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
 
-	keyState.fakeKeyDown(SHIFT_ID_L, 0, 2);
-	ASSERT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
+	keyState.fakeKeyDown(SHIFT_ID_R, 0, 2);
+	EXPECT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
 
 	keyState.fakeKeyUp(2);
-	ASSERT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
+	EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
 }
 
 TEST_F(COSXKeyStateTests, fakeAndPoll_charKey)
@@ -63,10 +63,29 @@ TEST_F(COSXKeyStateTests, fakeAndPoll_charKey)
 	keyState.updateKeyMap();
 
 	keyState.fakeKeyDown(A_CHAR_ID, 0, 1);
-	ASSERT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
+	EXPECT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
 
 	keyState.fakeKeyUp(1);
-	ASSERT_TRUE(!isKeyPressed(keyState, A_CHAR_BUTTON));
+	EXPECT_TRUE(!isKeyPressed(keyState, A_CHAR_BUTTON));
+
+	// HACK: delete the key in case it was typed into a text editor.
+	// we should really set focus to an invisible window.
+	keyState.fakeKeyDown(kKeyBackSpace, 0, 2);
+	keyState.fakeKeyUp(2);
+}
+
+TEST_F(COSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
+{
+	CKeyMap keyMap;
+	CMockEventQueue eventQueue;
+	COSXKeyState keyState((IEventQueue&)eventQueue, keyMap);
+	keyState.updateKeyMap();
+
+	keyState.fakeKeyDown(A_CHAR_ID, KeyModifierShift, 1);
+	EXPECT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
+
+	keyState.fakeKeyUp(1);
+	EXPECT_TRUE(!isKeyPressed(keyState, A_CHAR_BUTTON));
 
 	// HACK: delete the key in case it was typed into a text editor.
 	// we should really set focus to an invisible window.
