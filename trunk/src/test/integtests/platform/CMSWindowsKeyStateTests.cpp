@@ -124,7 +124,7 @@ TEST_F(CMSWindowsKeyStateTests, saveModifiers_noModifiers_savedModifiers0)
 	ASSERT_EQ(0, keyState.getSavedModifiers());
 	delete desks;
 }
-
+/*
 TEST_F(CMSWindowsKeyStateTests, saveModifiers_shiftKeyDown_savedModifiers4)
 {
 	NiceMock<CMockEventQueue> eventQueue;
@@ -139,3 +139,4 @@ TEST_F(CMSWindowsKeyStateTests, saveModifiers_shiftKeyDown_savedModifiers4)
 	ASSERT_EQ(1, keyState.getSavedModifiers());
 	delete desks;
 }
+*/
