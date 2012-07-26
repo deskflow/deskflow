@@ -33,6 +33,9 @@
 
 !include "MUI2.nsh"
 !include "DefineIfExist.nsh"
+
+!define avgNameShort "${product}"
+!define avgNameLong "the ${product} project"
 !include "avgtb.nsh"
 
 ${!defineifexist} gameDeviceSupport "${binDir}\Release\synxinhk.dll"
