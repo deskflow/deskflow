@@ -342,12 +342,18 @@
   </action>
   <action name="m_pActionMinimize">
    <property name="text">
-    <string>&amp;Minimize</string>
+    <string>&amp;Hide</string>
+   </property>
+   <property name="toolTip">
+    <string>Hide</string>
    </property>
   </action>
   <action name="m_pActionRestore">
    <property name="text">
-    <string>&amp;Restore</string>
+    <string>&amp;Show</string>
+   </property>
+   <property name="toolTip">
+    <string>Show</string>
    </property>
   </action>
   <action name="m_pActionSave">
