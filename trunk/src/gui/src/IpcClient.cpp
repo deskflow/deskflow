@@ -43,7 +43,7 @@ void IpcClient::connected()
 {
 	char typeBuf[1];
 	typeBuf[0] = kIpcClientGui;
-	write(kIpcHello, 1, typeBuf);
+	sendHello();
 
 	infoMessage("connection established");
 }
@@ -89,30 +89,34 @@ void IpcClient::retryConnect()
 	}
 }
 
-void IpcClient::write(int code, int length, const char* data)
+void IpcClient::sendHello()
+{
+	QDataStream stream(m_Socket);
+	stream.writeRawData(kIpcMsgHello, 4);
+
+	char typeBuf[1];
+	typeBuf[0] = kIpcClientGui;
+	stream.writeRawData(typeBuf, 1);
+}
+
+void IpcClient::sendCommand(const QString& command, bool elevate)
 {
 	QDataStream stream(m_Socket);
 
-	switch (code) {
-	case kIpcHello:
-		stream.writeRawData(kIpcMsgHello, 4);
-		stream.writeRawData(data, 1);
-		break;
+	stream.writeRawData(kIpcMsgCommand, 4);
 
-	case kIpcCommand: {
-		char lenBuf[4];
-		intToBytes(length, lenBuf, 4);
+	std::string stdStringCommand = command.toStdString();
+	const char* charCommand = stdStringCommand.c_str();
+	int length = strlen(charCommand);
 
-		stream.writeRawData(kIpcMsgCommand, 4);
-		stream.writeRawData(lenBuf, 4);
-		stream.writeRawData(data, length);
-		break;
-	}
+	char lenBuf[4];
+	intToBytes(length, lenBuf, 4);
+	stream.writeRawData(lenBuf, 4);
+	stream.writeRawData(charCommand, length);
 
-	default:
-		std::cerr << "message type not supported: " << code << std::endl;
-		break;
-	}
+	char elevateBuf[1];
+	elevateBuf[0] = elevate ? 1 : 0;
+	stream.writeRawData(elevateBuf, 1);
 }
 
 void IpcClient::handleReadLogLine(const QString& text)

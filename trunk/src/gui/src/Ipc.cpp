@@ -15,9 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// this class is a duplicate of /src/lib/ipc/Ipc.cpp
+
 #include "Ipc.h"
 
 const char*				kIpcMsgHello		= "IHEL%1i";
 const char*				kIpcMsgLogLine		= "ILOG%s";
-const char*				kIpcMsgCommand		= "ICMD%s";
+const char*				kIpcMsgCommand		= "ICMD%s%1i";
 const char*				kIpcMsgShutdown		= "ISDN";

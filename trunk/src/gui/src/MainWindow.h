@@ -104,6 +104,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void on_m_pActionAbout_triggered();
 		void on_m_pActionSettings_triggered();
 		void on_m_pActionWizard_triggered();
+		void on_m_pElevateCheckBox_toggled(bool checked);
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
 		void iconActivated(QSystemTrayIcon::ActivationReason reason);
 		void startSynergy();
@@ -132,7 +133,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool clientArgs(QStringList& args, QString& app);
 		bool serverArgs(QStringList& args, QString& app);
 		void setStatus(const QString& status);
-		void sendDaemonCommand(const QString& command, bool showErrors);
 		void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
 		void onModeChanged(bool firstRun, bool forceServiceApply);
 
@@ -149,6 +149,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		VersionChecker m_versionChecker;
 		SetupWizard* m_SetupWizard;
 		IpcClient m_IpcClient;
+		bool m_ElevateProcess;
+		bool m_SuppressElevateWarning;
 };
 
 #endif

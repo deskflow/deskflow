@@ -27,14 +27,14 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout">
-    <item row="6" column="6">
+    <item row="6" column="7">
      <widget class="QPushButton" name="m_pButtonToggleStart">
       <property name="text">
        <string>&amp;Start</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="7">
+    <item row="1" column="0" colspan="8">
      <widget class="QGroupBox" name="m_pGroupServer">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -127,7 +127,7 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="0" colspan="7">
+    <item row="2" column="0" colspan="8">
      <widget class="QGroupBox" name="m_pGroupClient">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -168,7 +168,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0" colspan="7">
+    <item row="3" column="0" colspan="8">
      <widget class="QGroupBox" name="m_pGroupLog">
       <property name="title">
        <string>Log</string>
@@ -223,7 +223,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
+       <pixmap>:/res/icons/16x16/warning.png</pixmap>
       </property>
      </widget>
     </item>
@@ -234,6 +234,13 @@
       </property>
       <property name="openExternalLinks">
        <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="6">
+     <widget class="QCheckBox" name="m_pElevateCheckBox">
+      <property name="text">
+       <string>&amp;Elevate</string>
       </property>
      </widget>
     </item>
@@ -323,9 +330,7 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="Synergy.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>m_pButtonToggleStart</sender>

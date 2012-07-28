@@ -35,17 +35,19 @@ public:
 	virtual ~CMSWindowsRelauncher();
 	void startAsync();
 	std::string command() const;
-	void command(const std::string& command);
+	void command(const std::string& command, bool elevate);
 	void stop();
 
 private:
 	void mainLoop(void*);
-	BOOL winlogonInSession(DWORD sessionId, PHANDLE process);
+	BOOL isProcessInSession(const char* name, DWORD sessionId, PHANDLE process);
 	DWORD getSessionId();
-	HANDLE getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
 	void outputLoop(void*);
 	void shutdownProcess(HANDLE handle, DWORD pid, int timeout);
 	void shutdownExistingProcesses();
+	HANDLE				duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
+	HANDLE				getSessionToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
+	HANDLE				getUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security);
 
 private:
 	CThread* m_thread;
@@ -58,4 +60,5 @@ private:
 	CThread* m_outputThread;
 	CIpcServer&			m_ipcServer;
 	CIpcLogOutputter&	m_ipcLogOutputter;
+	bool				m_elevateProcess;
 };

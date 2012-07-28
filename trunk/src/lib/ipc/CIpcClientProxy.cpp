@@ -173,10 +173,11 @@ CIpcCommandMessage*
 CIpcClientProxy::parseCommand()
 {
 	CString command;
-	CProtocolUtil::readf(&m_stream, kIpcMsgCommand + 4, &command);
+	UInt8 elevate;
+	CProtocolUtil::readf(&m_stream, kIpcMsgCommand + 4, &command, &elevate);
 
 	// must be deleted by event handler.
-	return new CIpcCommandMessage(command);
+	return new CIpcCommandMessage(command, elevate != 0);
 }
 
 void

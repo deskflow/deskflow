@@ -64,7 +64,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pTrayIcon(NULL),
 	m_pTrayIconMenu(NULL),
 	m_alreadyHidden(false),
-	m_SetupWizard(NULL)
+	m_SetupWizard(NULL),
+	m_ElevateProcess(false),
+	m_SuppressElevateWarning(false)
 {
 	setupUi(this);
 
@@ -85,6 +87,9 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	connect(&m_IpcClient, SIGNAL(errorMessage(const QString&)), this, SLOT(appendLogError(const QString&)));
 	connect(&m_IpcClient, SIGNAL(infoMessage(const QString&)), this, SLOT(appendLogNote(const QString&)));
 	m_IpcClient.connectToHost();
+#else
+	// elevate checkbox is only useful on ms windows.
+	m_pElevateCheckBox->hide();
 #endif
 }
 
@@ -133,13 +138,15 @@ void MainWindow::onModeChanged(bool firstRun, bool forceServiceApply)
 	else
 	{
 		// cause the service to stop creating processes.
-		sendDaemonCommand("", false);
+		m_IpcClient.sendCommand("", false);
 	}
 
 	if ((appConfig().processMode() == Desktop) && !firstRun && appConfig().autoConnect())
 	{
 		startSynergy();
 	}
+
+	m_pElevateCheckBox->setEnabled(appConfig().processMode() == Service);
 }
 
 void MainWindow::refreshStartButton()
@@ -221,6 +228,10 @@ void MainWindow::loadSettings()
 	m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + synergyConfigName).toString());
 	m_pGroupClient->setChecked(settings().value("groupClientChecked", true).toBool());
 	m_pLineEditHostname->setText(settings().value("serverHostname").toString());
+
+	m_SuppressElevateWarning = true;
+	m_pElevateCheckBox->setChecked(settings().value("elevateChecked", false).toBool());
+	m_SuppressElevateWarning = false;
 }
 
 void MainWindow::initConnections()
@@ -452,7 +463,7 @@ void MainWindow::startSynergy()
 	if (serviceMode)
 	{
 		QString command(app + " " + args.join(" "));
-		sendDaemonCommand(command, true);
+		m_IpcClient.sendCommand(command, m_ElevateProcess);
 	}
 }
 
@@ -702,14 +713,29 @@ void MainWindow::on_m_pButtonConfigureServer_clicked()
 	dlg.exec();
 }
 
-void MainWindow::sendDaemonCommand(const QString& command, bool showErrors)
-{
-	std::string s = command.toStdString();
-	const char* data = s.c_str();
-	m_IpcClient.write(kIpcCommand, strlen(data), data);
-}
-
 void MainWindow::on_m_pActionWizard_triggered()
 {
 	m_SetupWizard->show();
+}
+
+void MainWindow::on_m_pElevateCheckBox_toggled(bool checked)
+{
+	if (checked && !m_SuppressElevateWarning) {
+		int r = QMessageBox::warning(
+			this, tr("Elevate Synergy"),
+			tr("Are you sure you want to elevate Synergy?\n\n"
+			   "This allows Synergy to interact with elevated processes "
+			   "and the UAC dialog, but can cause problems with non-elevated "
+			   "processes. Elevate Synergy only if you really need to."),
+			QMessageBox::Yes | QMessageBox::No);
+
+		if (r != QMessageBox::Yes) {
+			m_pElevateCheckBox->setChecked(false);
+			return;
+		}
+	}
+
+	m_ElevateProcess = checked;
+	settings().setValue("elevateChecked", checked);
+	settings().sync();
 }
