@@ -40,7 +40,11 @@ class CThread;
 //! Implementation of IPlatformScreen for Microsoft Windows
 class CMSWindowsScreen : public CPlatformScreen {
 public:
-	CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDeviceInfo &gameDevice);
+	CMSWindowsScreen(
+		bool isPrimary,
+		bool noHooks,
+		const CGameDeviceInfo &gameDevice,
+		bool stopOnDeskSwitch);
 	virtual ~CMSWindowsScreen();
 
 	//! @name manipulators

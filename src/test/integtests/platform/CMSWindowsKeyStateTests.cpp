@@ -55,7 +55,7 @@ protected:
 		return new CMSWindowsDesks(
 			true, false, m_hookLibrary, m_screensaver, eventQueue,
 			new TMethodJob<CMSWindowsKeyStateTests>(
-				this, &CMSWindowsKeyStateTests::updateKeysCB));
+				this, &CMSWindowsKeyStateTests::updateKeysCB), false);
 	}
 
 	void* getEventTarget() const

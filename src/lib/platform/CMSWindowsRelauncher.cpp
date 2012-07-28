@@ -93,7 +93,7 @@ CMSWindowsRelauncher::getSessionId()
 }
 
 BOOL
-CMSWindowsRelauncher::isProcessInSession(const char* name, DWORD sessionId, PHANDLE process)
+CMSWindowsRelauncher::isProcessInSession(const char* name, DWORD sessionId, PHANDLE process = NULL)
 {
 	// first we need to take a snapshot of the running processes
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -175,14 +175,15 @@ CMSWindowsRelauncher::isProcessInSession(const char* name, DWORD sessionId, PHAN
 	CloseHandle(snapshot);
 
 	if (pid) {
-		// now get the process so we can get the process, with which
-		// we'll use to get the process token.
-		LOG((CLOG_DEBUG "found %s in session %i", name, sessionId));
-		*process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
+		if (process != NULL) {
+			// now get the process so we can get the process, with which
+			// we'll use to get the process token.
+			LOG((CLOG_DEBUG "found %s in session %i", name, sessionId));
+			*process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
+		}
 		return true;
 	}
 	else {
-		LOG((CLOG_DEBUG "could not find %s in session %i", name, sessionId));
 		return false;
 	}
 }
@@ -219,23 +220,29 @@ CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTE
 	return newToken;
 }
 
-// use either an elevated token (winlogon) or the user's session
-// token (non-elevated). processes launched with a non-elevated token
-// cannot interact with elevated processes.
 HANDLE 
 CMSWindowsRelauncher::getUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security)
 {
-	if (m_elevateProcess) {
+	// always elevate if we are at the vista/7 login screen. we could also 
+	// elevate for the uac dialog (consent.exe) but this would be pointless,
+	// since synergy would re-launch as non-elevated after the desk switch,
+	// and so would be unusable with the new elevated process taking focus.
+	if (m_elevateProcess || isProcessInSession("logonui.exe", sessionId)) {
+		
+		LOG((CLOG_DEBUG "getting elevated token, %s",
+			(m_elevateProcess ? "elevation required" : "at login screen")));
+
 		HANDLE process;
 		if (isProcessInSession("winlogon.exe", sessionId, &process)) {
 			return duplicateProcessToken(process, security);
 		}
 		else {
-			LOG((CLOG_ERR "could not find token in session %d", sessionId));
+			LOG((CLOG_ERR "could not find winlogon in session %i", sessionId));
 			return NULL;
 		}
 	}
 	else {
+		LOG((CLOG_DEBUG "getting non-elevated token"));
 		return getSessionToken(sessionId, security);
 	}
 }

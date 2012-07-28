@@ -404,6 +404,14 @@ void MainWindow::startSynergy()
 	{
 		// tell client/server to talk to daemon through ipc.
 		args << "--ipc";
+
+#if defined(Q_OS_WIN)
+		// tell the client/server to shut down when a ms windows desk
+		// is switched; this is because we may need to elevate or not
+		// based on which desk the user is in (login always needs
+		// elevation, where as default desk does not).
+		args << "--stop-on-desk-switch";
+#endif
 	}
 
 	if ((synergyType() == synergyClient && !clientArgs(args, app))

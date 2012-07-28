@@ -92,7 +92,7 @@
 CMSWindowsDesks::CMSWindowsDesks(
 		bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
 		const IScreenSaver* screensaver, IEventQueue& eventQueue,
-		IJob* updateKeys) :
+		IJob* updateKeys, bool stopOnDeskSwitch) :
 	m_isPrimary(isPrimary),
 	m_noHooks(noHooks),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
@@ -110,7 +110,8 @@ CMSWindowsDesks::CMSWindowsDesks(
 	m_mutex(),
 	m_deskReady(&m_mutex, false),
 	m_updateKeys(updateKeys),
-	m_eventQueue(eventQueue)
+	m_eventQueue(eventQueue),
+	m_stopOnDeskSwitch(stopOnDeskSwitch)
 {
 	if (hookLibrary != NULL)
 		queryHookLibrary(hookLibrary);
@@ -904,6 +905,14 @@ CMSWindowsDesks::checkDesk()
 	else {
 		closeDesktop(hdesk);
 		desk = index->second;
+	}
+
+	// if we are told to shut down on desk switch, and this is not the 
+	// first switch, then shut down.
+	if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
+		LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
+		EVENTQUEUE->addEvent(CEvent(CEvent::kQuit));
+		return;
 	}
 
 	// if active desktop changed then tell the old and new desk threads
