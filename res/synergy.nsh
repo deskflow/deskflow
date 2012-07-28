@@ -84,6 +84,21 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
 
 !macroend
 
+Function .onInit  
+  IfFileExists $WINDIR\SYSWOW64\*.* end is32bit
+ 
+is32bit:
+  ${If} ${arch} == "x64"
+    MessageBox MB_OK "It is not possible to use the 64-bit Synergy installer \
+      on a 32-bit system. Please download the 32-bit Synergy installer."
+    Abort
+  ${EndIf}
+end:
+
+  Call avgInit
+  
+FunctionEnd
+
 Section
 
   SetShellVarContext all
