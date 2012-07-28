@@ -80,31 +80,6 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\sxinpx13.dll"
   Delete "${dir}\avgtb.exe"
   
-  !define ID ${__LINE__}
-  
-  StrCpy $R0 0 ; count
-  StrCpy $R1 20 ; max
-  retry${ID}:
-  ${If} ${FileExists} "${dir}\synrgyhk.dll"
-	IntOp $R0 $R0 + 1
-	${If} $R0 <= $R1
-	  ; wait for handle on file to be released. why so long? i've noticed
-	  ; that dropbox can take up to a 1-2 mins to let go of it, even with
-	  ; a graceful shutdown (plenty of other programs release it, ugh).
-	  DetailPrint "Trying to delete synrgyhk.dll (attempt $R0 of $R1)"
-      Delete "${dir}\synrgyhk.dll"
-	  
-	  ${If} ${FileExists} "${dir}\synrgyhk.dll"
-		  Sleep 3000
-		  Goto retry${ID}
-      ${EndIf}
-	${EndIf}
-  ${Else}
-	FileClose $R0
-  ${EndIf}
-  
-  !undef ID
-  
   RMDir "${dir}"
 
 !macroend
@@ -185,9 +160,10 @@ Section "Server and Client" core
   File "${binDir}\Release\synergyc.exe"
   File "${binDir}\Release\synergyd.exe"
   
-  ; if the hook file exists, assume we couldn't delete
+  ; if the hook file exists, skip, assuming it couldn't be deleted
+  ; because it was in use by some process.
   ${If} ${FileExists} "synrgyhk.dll"
-    DetailPrint "Skipping synrgyhk.dll, file in use."
+    DetailPrint "Skipping synrgyhk.dll, file already exists."
   ${Else}
     File "${binDir}\Release\synrgyhk.dll"
   ${EndIf}
