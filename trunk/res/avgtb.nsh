@@ -25,7 +25,7 @@ var avgInstallHomepage
 var avgImage
 var avgImageHandle
 
-Function .onInit
+Function avgInit
 
 	InitPluginsDir
 	File /oname=$PLUGINSDIR\avgtb.bmp "..\res\avgtb.bmp"
