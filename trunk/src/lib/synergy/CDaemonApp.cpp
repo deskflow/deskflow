@@ -221,7 +221,7 @@ CDaemonApp::mainLoop(bool logToFile)
 		// (such as a stop request from the service controller).
 		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
 		CGameDeviceInfo gameDevice;
-		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice));
+		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice, false));
 		
 		CString command = ARCH->setting("Command");
 		bool elevate = ARCH->setting("Elevate") == "1";

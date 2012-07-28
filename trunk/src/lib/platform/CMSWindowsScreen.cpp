@@ -80,7 +80,11 @@
 HINSTANCE				CMSWindowsScreen::s_windowInstance = NULL;
 CMSWindowsScreen*		CMSWindowsScreen::s_screen   = NULL;
 
-CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDeviceInfo& gameDeviceInfo) :
+CMSWindowsScreen::CMSWindowsScreen(
+	bool isPrimary,
+	bool noHooks,
+	const CGameDeviceInfo& gameDeviceInfo,
+	bool stopOnDeskSwitch) :
 	m_isPrimary(isPrimary),
 	m_noHooks(noHooks),
 	m_is95Family(CArchMiscWindows::isWindows95Family()),
@@ -124,7 +128,8 @@ CMSWindowsScreen::CMSWindowsScreen(bool isPrimary, bool noHooks, const CGameDevi
 							m_hookLibrary, m_screensaver,
 							*EVENTQUEUE,
 							new TMethodJob<CMSWindowsScreen>(this,
-								&CMSWindowsScreen::updateKeysCB));
+								&CMSWindowsScreen::updateKeysCB),
+							stopOnDeskSwitch);
 		m_keyState    = new CMSWindowsKeyState(m_desks, getEventTarget());
 		updateScreenShape();
 		m_class       = createWindowClass();

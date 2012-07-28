@@ -66,7 +66,7 @@ public:
 	CMSWindowsDesks(
 		bool isPrimary, bool noHooks, HINSTANCE hookLibrary,
 		const IScreenSaver* screensaver, IEventQueue& eventQueue,
-		IJob* updateKeys);
+		IJob* updateKeys, bool stopOnDeskSwitch);
 	~CMSWindowsDesks();
 
 	//! @name manipulators
@@ -305,6 +305,9 @@ private:
 	bool				m_leaveForegroundOption;
 
 	IEventQueue&		m_eventQueue;
+
+	// true if program should stop on desk switch.
+	bool				m_stopOnDeskSwitch;
 };
 
 #endif

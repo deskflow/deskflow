@@ -87,6 +87,9 @@ CAppUtilWindows::parseArg(const int& argc, const char* const* argv, int& i)
 	else if (app().isArg(i, argc, argv, NULL, "--game-poll-freq")) {
 		app().argsBase().m_gameDevice.m_pollFreq = atoi(argv[++i]);
 	}
+	else if (app().isArg(i, argc, argv, NULL, "--stop-on-desk-switch")) {
+		app().argsBase().m_stopOnDeskSwitch = true;
+	}
 	else {
 		// option not supported here
 		return false;

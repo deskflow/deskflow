@@ -40,6 +40,7 @@ public:
 	bool m_debugServiceWait;
 	bool m_pauseOnExit;
 	CGameDeviceInfo m_gameDevice;
+	bool m_stopOnDeskSwitch;
 #endif
 #if WINAPI_XWINDOWS
 	bool m_disableXInitThreads;
