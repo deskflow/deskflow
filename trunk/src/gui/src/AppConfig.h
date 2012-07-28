@@ -53,9 +53,6 @@ class AppConfig
 		bool autoStartPrompt() const { return m_AutoStartPrompt; }
 		bool wizardHasRun() const { return m_WizardHasRun; }
 		ProcessMode processMode() const { return m_ProcessMode; }
-		int gameModeIndex() const { return m_GameModeIndex; }
-		bool gamePollingDynamic() const { return m_GamePollingDynamic; }
-		int gamePollingFrequency() const { return m_GamePollingFrequency; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -79,9 +76,6 @@ class AppConfig
 		void setAutoStartPrompt(bool b) { m_AutoStartPrompt = b; }
 		void setWizardHasRun(bool b) { m_WizardHasRun = b; }
 		void setProcessMode(ProcessMode p) { m_ProcessMode = p; }
-		void setGameModeIndex(int i) { m_GameModeIndex = i; }
-		void setGamePollingDynamic(bool b) { m_GamePollingDynamic = b; }
-		void setGamePollingFrequency(int i) { m_GamePollingFrequency = i; }
 
 		void loadSettings();
 		void saveSettings();
@@ -100,9 +94,6 @@ class AppConfig
 		bool m_AutoStartPrompt;
 		bool m_WizardHasRun;
 		ProcessMode m_ProcessMode;
-		int m_GameModeIndex;
-		bool m_GamePollingDynamic;
-		int m_GamePollingFrequency;
 
 		static const char m_SynergysName[];
 		static const char m_SynergycName[];

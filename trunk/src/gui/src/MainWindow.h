@@ -113,7 +113,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void logError();
 		void updateFound(const QString& version);
 		void refreshApplyButton();
-		void wizardFinished();
 
 	protected:
 		QSettings& settings() { return m_Settings; }
@@ -140,6 +139,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		QString getScreenName();
 		void stopService();
 		void stopDesktop();
+		void setFormEnabled(bool enabled);
 
 	private:
 		QSettings& m_Settings;

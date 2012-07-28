@@ -62,18 +62,6 @@ bool SetupWizard::validateCurrentPage()
 			message.exec();
 		}
 	}
-	else if(currentPage() == m_pStartupPage)
-	{
-		result = m_pServiceRadioButton->isChecked() ||
-				 m_pDesktopRadioButton->isChecked() ||
-				 m_pNoneRadioButton->isChecked();
-
-		if (!result)
-		{
-			message.setText(tr("Please select an option."));
-			message.exec();
-		}
-	}
 	return result;
 }
 
@@ -82,21 +70,7 @@ void SetupWizard::handlefinished()
 	close();
 
 	AppConfig& appConfig = m_MainWindow.appConfig();
-	if (m_pServiceRadioButton->isChecked())
-	{
-		appConfig.setProcessMode(Service);
-	}
-	else if (m_pDesktopRadioButton->isChecked())
-	{
-		appConfig.setProcessMode(Desktop);
-		appConfig.setAutoStart(true);
-		appConfig.setAutoConnect(true);
-	}
-	else if (m_pNoneRadioButton->isChecked())
-	{
-		// still use desktop mode, but don't auto start.
-		appConfig.setProcessMode(Desktop);
-	}
+
 	appConfig.setWizardHasRun(true);
 	appConfig.saveSettings();
 

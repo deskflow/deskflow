@@ -81,7 +81,6 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pLabelIpAddresses->setText(getIPAddresses());
 
 	m_SetupWizard = new SetupWizard(*this, false);
-	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(wizardFinished()));
 
 #if defined(Q_OS_WIN)
 	// ipc must always be enabled, so that we can disable command when switching to desktop mode.
@@ -118,17 +117,15 @@ void MainWindow::start(bool firstRun)
 	m_versionChecker.checkLatest();
 }
 
-void MainWindow::wizardFinished()
-{
-	onModeChanged(true, true);
-}
-
 void MainWindow::onModeChanged(bool startDesktop, bool applyService)
 {
 	refreshApplyButton();
 
 	if (appConfig().processMode() == Service)
 	{
+		// form is always enabled in service mode.
+		setFormEnabled(true);
+
 		// ensure that the apply button actually does something, since desktop
 		// mode screws around with connecting/disconnecting the action.
 		disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
@@ -361,8 +358,9 @@ void MainWindow::startSynergy()
 	if (desktopMode)
 	{
 		stopSynergy();
-		setSynergyState(synergyConnecting);
 	}
+
+	setSynergyState(synergyConnecting);
 
 	QString app;
 	QStringList args;
@@ -371,28 +369,6 @@ void MainWindow::startSynergy()
 
 	if (!appConfig().screenName().isEmpty())
 		args << "--name" << appConfig().screenName();
-
-	if (appConfig().gameModeIndex() != 0)
-	{
-		if (appConfig().gameModeIndex() == 1)
-		{
-			args << "--game-mode" << "xinput";
-		}
-		else if (appConfig().gameModeIndex() == 2)
-		{
-			args << "--game-mode" << "joyinfoex";
-		}
-
-		if (appConfig().gamePollingDynamic())
-		{
-			args << "--game-poll" << "dynamic";
-		}
-		else
-		{
-			args << "--game-poll" << "static";
-			args << "--game-poll-freq" << QString::number(appConfig().gamePollingFrequency());
-		}
-	}
 
 	if (desktopMode)
 	{
@@ -646,17 +622,16 @@ void MainWindow::setSynergyState(qSynergyState state)
 	// only disable controls in desktop mode. in service mode, we can use the apply button.
 	if (appConfig().processMode() == Desktop)
 	{
-		m_pGroupClient->setEnabled(state == synergyDisconnected);
-		m_pGroupServer->setEnabled(state == synergyDisconnected);
-		m_pActionStartSynergy->setEnabled(state == synergyDisconnected);
-		m_pActionStopSynergy->setEnabled(state == synergyConnected);
+		setFormEnabled(state != synergyConnected);
 	}
 
 	switch (state)
 	{
-	case synergyConnected:
-		setStatus(tr("Synergy is running."));
+	case synergyConnected: {
+		QString mode(appConfig().processMode() == Service ? tr("service mode") : tr("desktop mode"));
+		setStatus(tr("Synergy is running (%1).").arg(mode));
 		break;
+	}
 	case synergyConnecting:
 		setStatus(tr("Synergy is starting."));
 		break;
@@ -668,6 +643,14 @@ void MainWindow::setSynergyState(qSynergyState state)
 	setIcon(state);
 
 	m_SynergyState = state;
+}
+
+void MainWindow::setFormEnabled(bool enabled)
+{
+	m_pGroupClient->setEnabled(enabled);
+	m_pGroupServer->setEnabled(enabled);
+	m_pActionStartSynergy->setEnabled(enabled);
+	m_pActionStopSynergy->setEnabled(enabled);
 }
 
 void MainWindow::setVisible(bool visible)
@@ -712,7 +695,7 @@ QString MainWindow::getIPAddresses()
 	}
 
 	if (result == "") {
-		return "Unknown";
+		return tr("Unknown");
 	}
 
 	// remove trailing comma.
@@ -765,8 +748,15 @@ void MainWindow::on_m_pActionAbout_triggered()
 
 void MainWindow::on_m_pActionSettings_triggered()
 {
+	ProcessMode lastProcessMode = appConfig().processMode();
+
 	SettingsDialog dlg(this, appConfig());
 	dlg.exec();
+
+	if (lastProcessMode != appConfig().processMode())
+	{
+		onModeChanged(true, true);
+	}
 }
 
 void MainWindow::on_m_pButtonConfigureServer_clicked()
