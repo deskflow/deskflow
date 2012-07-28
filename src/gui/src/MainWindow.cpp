@@ -77,6 +77,8 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pUpdateIcon->hide();
 	m_pUpdateLabel->hide();
 	m_versionChecker.setApp(appPath(appConfig.synergycName()));
+	m_pLabelScreenName->setText(getScreenName());
+	m_pLabelIpAddresses->setText(getIPAddresses());
 
 	m_SetupWizard = new SetupWizard(*this, false);
 	connect(m_SetupWizard, SIGNAL(finished(int)), this, SLOT(wizardFinished()));
@@ -665,6 +667,50 @@ void MainWindow::setVisible(bool visible)
 	else
 		TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
 #endif
+}
+
+QString MainWindow::getIPAddresses()
+{
+	QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
+
+	bool hinted = false;
+	QString result;
+	for (int i = 0; i < addresses.size(); i++) {
+		if (addresses[i].protocol() == QAbstractSocket::IPv4Protocol &&
+			addresses[i] != QHostAddress(QHostAddress::LocalHost)) {
+
+			QString address = addresses[i].toString();
+			QString format = "%1, ";
+
+			// usually 192.168.x.x is a useful ip for the user, so indicate
+			// this by making it bold.
+			if (!hinted && address.startsWith("192.168")) {
+				hinted = true;
+				format = "<b>%1</b>, ";
+			}
+
+			result += format.arg(address);
+		}
+	}
+
+	if (result == "") {
+		return "Unknown";
+	}
+
+	// remove trailing comma.
+	result.chop(2);
+
+	return result;
+}
+
+QString MainWindow::getScreenName()
+{
+	if (appConfig().screenName() == "") {
+		return QHostInfo::localHostName();
+	}
+	else {
+		return appConfig().screenName();
+	}
 }
 
 bool MainWindow::on_m_pButtonBrowseConfigFile_clicked()

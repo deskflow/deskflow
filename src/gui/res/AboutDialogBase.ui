@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>255</height>
+    <height>200</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,13 +25,13 @@
   <property name="minimumSize">
    <size>
     <width>450</width>
-    <height>250</height>
+    <height>200</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>450</width>
-    <height>255</height>
+    <width>502</width>
+    <height>200</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -60,100 +60,25 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>&lt;p&gt;
+Keyboard and mouse sharing sharing application.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2001-2012 Chris Schoeneman, Nick Bolton, Volker Lanz, Sorin Sbarnea.&lt;br /&gt;&lt;br /&gt;
+Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Synergy GUI is based on QSynergy by Volker Lanz.
+&lt;/p&gt;</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="2">
-    <layout class="QGridLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Version:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="m_pLabelSynergyVersion">
-       <property name="text">
-        <string>-</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_6">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Hostname:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="m_pLabelHostname">
-       <property name="text">
-        <string>-</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>IP-Address:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="m_pLabelIPAddress">
-       <property name="text">
-        <string>-</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="6" column="1">
-    <spacer>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>78</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="7" column="0">
+   <item row="8" column="0">
     <spacer>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -166,25 +91,55 @@ p, li { white-space: pre-wrap; }
      </property>
     </spacer>
    </item>
-   <item row="7" column="1">
+   <item row="8" column="1">
     <widget class="QPushButton" name="buttonOk">
      <property name="text">
       <string>&amp;Ok</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" rowspan="2" colspan="2">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>&lt;p&gt;The Synergy GUI is based on QSynergy by Volker Lanz&lt;br/&gt;
-&lt;br/&gt;
-Copyright © 2008 Volker Lanz (vl@fidra.de)&lt;br/&gt;
-Copyright © 2010 Chris Schoeneman, Nick Bolton, Sorin Sbarnea&lt;/p&gt;</string>
+   <item row="4" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Version:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="m_pLabelSynergyVersion">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Unknown</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="1">
+    <spacer>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
      </property>
-     <property name="wordWrap">
-      <bool>true</bool>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>78</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
    </item>
   </layout>
  </widget>

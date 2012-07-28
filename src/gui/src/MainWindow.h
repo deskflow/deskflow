@@ -136,6 +136,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
 		void onModeChanged(bool firstRun, bool forceServiceApply);
 		void updateStateFromLogLine(const QString& line);
+		QString getIPAddresses();
+		QString getScreenName();
 
 	private:
 		QSettings& m_Settings;

@@ -27,99 +27,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout">
-    <item row="1" column="0" colspan="12">
-     <widget class="QGroupBox" name="m_pGroupServer">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="title">
-       <string>&amp;Server (share this computer's mouse and keyboard):</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-      <layout class="QVBoxLayout">
-       <item>
-        <widget class="QRadioButton" name="m_pRadioExternalConfig">
-         <property name="text">
-          <string>Use existing configuration:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout">
-         <item>
-          <widget class="QLabel" name="m_pLabelConfigurationFile">
-           <property name="text">
-            <string>&amp;Configuration file:</string>
-           </property>
-           <property name="buddy">
-            <cstring>m_pLineEditConfigFile</cstring>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="m_pLineEditConfigFile">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="m_pButtonBrowseConfigFile">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>&amp;Browse...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="m_pRadioInternalConfig">
-         <property name="text">
-          <string>Configure interactively:</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout">
-         <item>
-          <widget class="QPushButton" name="m_pButtonConfigureServer">
-           <property name="text">
-            <string>&amp;Configure Server...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="2" column="0" colspan="12">
      <widget class="QGroupBox" name="m_pGroupClient">
       <property name="sizePolicy">
@@ -137,18 +44,35 @@
       <property name="checked">
        <bool>true</bool>
       </property>
-      <layout class="QGridLayout">
+      <layout class="QFormLayout" name="formLayout_3">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
        <item row="0" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Screen name:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="m_pLabelScreenName">
+         <property name="text">
+          <string>Unknown</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
         <widget class="QLabel" name="m_pLabelServerName">
          <property name="text">
-          <string>&amp;Server IP or hostname:</string>
+          <string>&amp;Server IP:</string>
          </property>
          <property name="buddy">
           <cstring>m_pLineEditHostname</cstring>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
+       <item row="1" column="1">
         <widget class="QLineEdit" name="m_pLineEditHostname"/>
        </item>
       </layout>
@@ -249,6 +173,120 @@
       <property name="text">
        <string>&amp;Elevate</string>
       </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="12">
+     <widget class="QGroupBox" name="m_pGroupServer">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>&amp;Server (share this computer's mouse and keyboard):</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <layout class="QVBoxLayout">
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>IP addresses:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="m_pLabelIpAddresses">
+           <property name="text">
+            <string>Unknown</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="m_pRadioInternalConfig">
+         <property name="text">
+          <string>Configure interactively:</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QPushButton" name="m_pButtonConfigureServer">
+           <property name="text">
+            <string>&amp;Configure Server...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="m_pRadioExternalConfig">
+         <property name="text">
+          <string>Use existing configuration:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QLabel" name="m_pLabelConfigurationFile">
+           <property name="text">
+            <string>&amp;Configuration file:</string>
+           </property>
+           <property name="buddy">
+            <cstring>m_pLineEditConfigFile</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="m_pLineEditConfigFile">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="m_pButtonBrowseConfigFile">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>&amp;Browse...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
