@@ -112,7 +112,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void logOutput();
 		void logError();
 		void updateFound(const QString& version);
-		void refreshStartButton();
+		void refreshApplyButton();
 		void wizardFinished();
 
 	protected:
@@ -135,6 +135,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void setStatus(const QString& status);
 		void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
 		void onModeChanged(bool firstRun, bool forceServiceApply);
+		void updateStateFromLogLine(const QString& line);
 
 	private:
 		QSettings& m_Settings;
@@ -151,6 +152,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		IpcClient m_IpcClient;
 		bool m_ElevateProcess;
 		bool m_SuppressElevateWarning;
+
+private slots:
+	void on_m_pButtonApply_clicked();
 };
 
 #endif
