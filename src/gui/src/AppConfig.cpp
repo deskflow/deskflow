@@ -24,10 +24,12 @@
 const char AppConfig::m_SynergysName[] = "synergys.exe";
 const char AppConfig::m_SynergycName[] = "synergyc.exe";
 const char AppConfig::m_SynergyLogDir[] = "log/";
+#define DEFAULT_PROCESS_MODE Service
 #else
 const char AppConfig::m_SynergysName[] = "synergys";
 const char AppConfig::m_SynergycName[] = "synergyc";
 const char AppConfig::m_SynergyLogDir[] = "/var/log/";
+#define DEFAULT_PROCESS_MODE Desktop
 #endif
 
 static const char* logLevelNames[] =
@@ -52,9 +54,7 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_AutoHide(false),
 	m_AutoStartPrompt(false),
 	m_WizardHasRun(false),
-	m_GameModeIndex(0),
-	m_GamePollingDynamic(true),
-	m_GamePollingFrequency(60)
+	m_ProcessMode(DEFAULT_PROCESS_MODE)
 {
 	Q_ASSERT(m_pSettings);
 
@@ -154,10 +154,7 @@ void AppConfig::loadSettings()
 	m_AutoHide = settings().value("autoHide", true).toBool();
 	m_AutoStartPrompt = settings().value("autoStartPrompt", true).toBool();
 	m_WizardHasRun = settings().value("wizardHasRun", false).toBool();
-	m_ProcessMode = (ProcessMode)settings().value("processMode", Desktop).toInt();
-	m_GameModeIndex = settings().value("gameModeIndex", 0).toInt();
-	m_GamePollingDynamic = settings().value("gamePollingDynamic", true).toBool();
-	m_GamePollingFrequency = settings().value("gamePollingFrequency", 60).toInt();
+	m_ProcessMode = (ProcessMode)settings().value("processMode2", DEFAULT_PROCESS_MODE).toInt();
 }
 
 void AppConfig::saveSettings()
@@ -173,8 +170,5 @@ void AppConfig::saveSettings()
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("autoStartPrompt", m_AutoStartPrompt);
 	settings().setValue("wizardHasRun", m_WizardHasRun);
-	settings().setValue("processMode", m_ProcessMode);
-	settings().setValue("gameModeIndex", m_GameModeIndex);
-	settings().setValue("gamePollingDynamic", m_GamePollingDynamic);
-	settings().setValue("gamePollingFrequency", m_GamePollingFrequency);
+	settings().setValue("processMode2", m_ProcessMode);
 }

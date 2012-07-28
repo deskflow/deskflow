@@ -33,20 +33,12 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pLineEditScreenName->setText(appConfig().screenName());
 	m_pSpinBoxPort->setValue(appConfig().port());
 	m_pLineEditInterface->setText(appConfig().interface());
+	m_pComboProcessMode->setCurrentIndex(appConfig().processMode());
 	m_pComboLogLevel->setCurrentIndex(appConfig().logLevel());
 	m_pCheckBoxLogToFile->setChecked(appConfig().logToFile());
 	m_pLineEditLogFilename->setText(appConfig().logFilename());
 	m_pCheckBoxAutoStart->setChecked(appConfig().autoStart());
 	m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
-
-#ifdef Q_OS_WIN
-	m_pComboBoxGameDevice->setCurrentIndex(appConfig().gameModeIndex());
-	m_pRadioButtonGamePollDynamic->setChecked(appConfig().gamePollingDynamic());
-	m_pRadioButtonGamePollStatic->setChecked(!appConfig().gamePollingDynamic());
-	m_pSpinBoxGamePoll->setValue(appConfig().gamePollingFrequency());
-#else
-	m_pGroupGameDevices->setEnabled(false);
-#endif
 }
 
 void SettingsDialog::accept()
@@ -55,14 +47,12 @@ void SettingsDialog::accept()
 	appConfig().setScreenName(m_pLineEditScreenName->text());
 	appConfig().setPort(m_pSpinBoxPort->value());
 	appConfig().setInterface(m_pLineEditInterface->text());
+	appConfig().setProcessMode((ProcessMode)m_pComboProcessMode->currentIndex());
 	appConfig().setLogLevel(m_pComboLogLevel->currentIndex());
 	appConfig().setLogToFile(m_pCheckBoxLogToFile->isChecked());
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
 	appConfig().setAutoStart(m_pCheckBoxAutoStart->isChecked());
 	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
-	appConfig().setGameModeIndex(m_pComboBoxGameDevice->currentIndex());
-	appConfig().setGamePollingDynamic(m_pRadioButtonGamePollDynamic->isChecked());
-	appConfig().setGamePollingFrequency(m_pSpinBoxGamePoll->value());
 
 	QDialog::accept();
 }
