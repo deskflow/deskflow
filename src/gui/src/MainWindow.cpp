@@ -97,14 +97,18 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 
 MainWindow::~MainWindow()
 {
-	stopSynergy();
+	if (appConfig().processMode() == Desktop)
+	{
+		stopDesktop();
+	}
+
 	saveSettings();
 	delete m_SetupWizard;
 }
 
 void MainWindow::start(bool firstRun)
 {
-	onModeChanged(firstRun, false);
+	onModeChanged(!firstRun && appConfig().autoConnect(), false);
 
 	createTrayIcon();
 
@@ -116,14 +120,12 @@ void MainWindow::start(bool firstRun)
 
 void MainWindow::wizardFinished()
 {
-	onModeChanged(false, true);
+	onModeChanged(true, true);
 }
 
-void MainWindow::onModeChanged(bool firstRun, bool forceServiceApply)
+void MainWindow::onModeChanged(bool startDesktop, bool applyService)
 {
 	refreshApplyButton();
-
-	stopSynergy();
 
 	if (appConfig().processMode() == Service)
 	{
@@ -132,19 +134,15 @@ void MainWindow::onModeChanged(bool firstRun, bool forceServiceApply)
 		disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
 		connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
 
-		if (forceServiceApply)
+		if (applyService)
 		{
+			stopDesktop();
 			startSynergy();
 		}
 	}
-	else
+	else if ((appConfig().processMode() == Desktop) && startDesktop)
 	{
-		// cause the service to stop creating processes.
-		m_IpcClient.sendCommand("", false);
-	}
-
-	if ((appConfig().processMode() == Desktop) && !firstRun && appConfig().autoConnect())
-	{
+		stopService();
 		startSynergy();
 	}
 
@@ -567,18 +565,13 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 
 void MainWindow::stopSynergy()
 {
-	if (appConfig().processMode() == Service) {
-		// send empty command to stop service from laucning anything.
-		m_IpcClient.sendCommand("", m_ElevateProcess);
-	}
-	else if (synergyProcess())
+	if (appConfig().processMode() == Service)
 	{
-		appendLogNote("stopping synergy");
-
-		if (synergyProcess()->isOpen())
-			synergyProcess()->close();
-		delete synergyProcess();
-		setSynergyProcess(NULL);
+		stopService();
+	}
+	else if (appConfig().processMode() == Desktop)
+	{
+		stopDesktop();
 	}
 
 	setSynergyState(synergyDisconnected);
@@ -590,6 +583,27 @@ void MainWindow::stopSynergy()
 
 	// reset so that new connects cause auto-hide.
 	m_alreadyHidden = false;
+}
+
+void MainWindow::stopService()
+{
+	// send empty command to stop service from laucning anything.
+	m_IpcClient.sendCommand("", m_ElevateProcess);
+}
+
+void MainWindow::stopDesktop()
+{
+	if (!synergyProcess()) {
+		return;
+	}
+
+	appendLogNote("stopping synergy desktop process");
+
+	if (synergyProcess()->isOpen())
+		synergyProcess()->close();
+
+	delete synergyProcess();
+	setSynergyProcess(NULL);
 }
 
 void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
@@ -629,10 +643,14 @@ void MainWindow::setSynergyState(qSynergyState state)
 		m_pButtonToggleStart->setText(tr("&Start"));
 	}
 
-	m_pGroupClient->setEnabled(state == synergyDisconnected);
-	m_pGroupServer->setEnabled(state == synergyDisconnected);
-	m_pActionStartSynergy->setEnabled(state == synergyDisconnected);
-	m_pActionStopSynergy->setEnabled(state == synergyConnected);
+	// only disable controls in desktop mode. in service mode, we can use the apply button.
+	if (appConfig().processMode() == Desktop)
+	{
+		m_pGroupClient->setEnabled(state == synergyDisconnected);
+		m_pGroupServer->setEnabled(state == synergyDisconnected);
+		m_pActionStartSynergy->setEnabled(state == synergyDisconnected);
+		m_pActionStopSynergy->setEnabled(state == synergyConnected);
+	}
 
 	switch (state)
 	{
