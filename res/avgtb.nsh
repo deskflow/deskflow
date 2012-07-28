@@ -90,26 +90,26 @@ Function avgPageEnter
   EnableWindow $avgHomepageCheck 0
   ${NSD_OnClick} $avgHomepageCheck avgUpdateLicense
   
-  ${NSD_CreateCheckBox} 10u 82u 100% 10u \
+  ${NSD_CreateCheckBox} 10u 83u 100% 10u \
     "Set, keep and protect AVG Secure Search as my default search provider."
   Pop $avgSearchCheck
   EnableWindow $avgSearchCheck 0
   ${NSD_OnClick} $avgSearchCheck avgUpdateLicense
   
-  ${NSD_CreateCheckBox} 10u 93u 100% 10u "Install the AVG Security Toolbar."
+  ${NSD_CreateCheckBox} 10u 94u 100% 10u "Install the AVG Security Toolbar."
   Pop $avgToolbarCheck
   EnableWindow $avgToolbarCheck 0
   ${NSD_OnClick} $avgToolbarCheck avgUpdateLicense
 
-  ${NSD_CreateLink} 112u 109u 107u 10u "AVG End User License Agreement"
+  ${NSD_CreateLink} 112u 110u 107u 10u "AVG End User License Agreement"
   Pop $avgEulaLink
   ${NSD_OnClick} $avgEulaLink avgEulaLinkClick
   
-  ${NSD_CreateLink} 235u 109u 44u 10u "Privacy Policy"
+  ${NSD_CreateLink} 235u 110u 44u 10u "Privacy Policy"
   Pop $avgPrivacyLink
   ${NSD_OnClick} $avgPrivacyLink avgPrivacyLinkClick
   
-  ${NSD_CreateLabel} 0 109u 100% 10u \
+  ${NSD_CreateLabel} 0 110u 100% 10u \
     "By clicking $\"Next$\" you agree to \
     the                                                       \
     and                       ."
