@@ -246,9 +246,6 @@ SectionEnd
 Function .onInstSuccess
 
   ; start the GUI automatically.
-  Exec "$INSTDIR\synergy.exe"
-  
-  ; HACK: wait 5 secs for the GUI to take focus.
-  Sleep 5000
+  ShellExecAsUser::ShellExecAsUser "" "$INSTDIR\synergy.exe" SW_SHOWNORMAL
 
 FunctionEnd
