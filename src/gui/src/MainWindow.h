@@ -106,7 +106,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		void on_m_pActionWizard_triggered();
 		void on_m_pElevateCheckBox_toggled(bool checked);
 		void synergyFinished(int exitCode, QProcess::ExitStatus);
-		void iconActivated(QSystemTrayIcon::ActivationReason reason);
+		void trayActivated(QSystemTrayIcon::ActivationReason reason);
 		void startSynergy();
 		void stopSynergy();
 		void logOutput();

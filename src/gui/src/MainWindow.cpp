@@ -112,7 +112,7 @@ void MainWindow::start(bool firstRun)
 	createTrayIcon();
 
 	// always show. auto-hide only happens when we have a connection.
-	show();
+	showNormal();
 
 	m_versionChecker.checkLatest();
 }
@@ -171,6 +171,9 @@ void MainWindow::createTrayIcon()
 
 	m_pTrayIcon = new QSystemTrayIcon(this);
 	m_pTrayIcon->setContextMenu(m_pTrayIconMenu);
+
+	connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+			this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
 
 	setIcon(synergyDisconnected);
 
@@ -232,9 +235,6 @@ void MainWindow::initConnections()
 	connect(m_pActionStopSynergy, SIGNAL(triggered()), this, SLOT(stopSynergy()));
 	connect(m_pActionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 	connect(&m_versionChecker, SIGNAL(updateFound(const QString&)), this, SLOT(updateFound(const QString&)));
-
-	if (m_pTrayIcon)
-		connect(m_pTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 void MainWindow::saveSettings()
@@ -259,7 +259,7 @@ void MainWindow::setIcon(qSynergyState state)
 		m_pTrayIcon->setIcon(icon);
 }
 
-void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
 	if (reason == QSystemTrayIcon::DoubleClick)
 	{
