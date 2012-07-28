@@ -27,14 +27,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout">
-    <item row="6" column="7">
-     <widget class="QPushButton" name="m_pButtonToggleStart">
-      <property name="text">
-       <string>&amp;Start</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="8">
+    <item row="1" column="0" colspan="12">
      <widget class="QGroupBox" name="m_pGroupServer">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -127,7 +120,7 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="0" colspan="8">
+    <item row="2" column="0" colspan="12">
      <widget class="QGroupBox" name="m_pGroupClient">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -168,7 +161,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0" colspan="8">
+    <item row="3" column="0" colspan="12">
      <widget class="QGroupBox" name="m_pGroupLog">
       <property name="title">
        <string>Log</string>
@@ -223,7 +216,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>:/res/icons/16x16/warning.png</pixmap>
+       <pixmap resource="Synergy.qrc">:/res/icons/16x16/warning.png</pixmap>
       </property>
      </widget>
     </item>
@@ -237,7 +230,21 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="6">
+    <item row="6" column="11">
+     <widget class="QPushButton" name="m_pButtonToggleStart">
+      <property name="text">
+       <string>&amp;Start</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="10">
+     <widget class="QPushButton" name="m_pButtonApply">
+      <property name="text">
+       <string>&amp;Apply</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="9">
      <widget class="QCheckBox" name="m_pElevateCheckBox">
       <property name="text">
        <string>&amp;Elevate</string>
@@ -330,7 +337,9 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="Synergy.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>m_pButtonToggleStart</sender>

@@ -119,7 +119,7 @@ void MainWindow::wizardFinished()
 
 void MainWindow::onModeChanged(bool firstRun, bool forceServiceApply)
 {
-	refreshStartButton();
+	refreshApplyButton();
 
 	stopSynergy();
 
@@ -130,7 +130,7 @@ void MainWindow::onModeChanged(bool firstRun, bool forceServiceApply)
 		disconnect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
 		connect(m_pButtonToggleStart, SIGNAL(clicked()), m_pActionStartSynergy, SLOT(trigger()));
 
-		if (firstRun || forceServiceApply)
+		if (forceServiceApply)
 		{
 			startSynergy();
 		}
@@ -149,16 +149,9 @@ void MainWindow::onModeChanged(bool firstRun, bool forceServiceApply)
 	m_pElevateCheckBox->setEnabled(appConfig().processMode() == Service);
 }
 
-void MainWindow::refreshStartButton()
+void MainWindow::refreshApplyButton()
 {
-	if (appConfig().processMode() == Service)
-	{
-		m_pButtonToggleStart->setText(tr("&Apply"));
-	}
-	else
-	{
-		m_pButtonToggleStart->setText(tr("&Start"));
-	}
+	m_pButtonApply->setEnabled(appConfig().processMode() == Service);
 }
 
 void MainWindow::setStatus(const QString &status)
@@ -294,22 +287,7 @@ void MainWindow::logOutput()
 		{
 			if (!line.isEmpty())
 			{
-				appendLogRaw(line);
-				if (line.contains("has connected") ||
-					line.contains("connected to server"))
-				{
-					// only set connected state and hide, if we get
-					// "has connected" message. this is a little bit
-					// hacky, but it works for now (until we have IPC).
-					setSynergyState(synergyConnected);
-
-					// only hide once after each new connection.
-					if (!m_alreadyHidden && appConfig().autoHide())
-					{
-						hide();
-						m_alreadyHidden = true;
-					}
-				}
+				appendLogRaw(line);				
 			}
 		}
 	}
@@ -344,9 +322,29 @@ void MainWindow::appendLogError(const QString& text)
 
 void MainWindow::appendLogRaw(const QString& text)
 {
-	foreach(QString line, text.split(QRegExp("\r|\n|\r\n")))
-		if (!line.isEmpty())
+	foreach(QString line, text.split(QRegExp("\r|\n|\r\n"))) {
+		if (!line.isEmpty()) {
 			m_pLogOutput->append(line);
+			updateStateFromLogLine(line);
+		}
+	}
+}
+
+void MainWindow::updateStateFromLogLine(const QString &line)
+{
+	// TODO: implement ipc connection state messages to replace this hack.
+	if (line.contains("started server") ||
+		line.contains("connected to server"))
+	{
+		setSynergyState(synergyConnected);
+
+		// only hide once after each new connection.
+		if (!m_alreadyHidden && appConfig().autoHide())
+		{
+			hide();
+			m_alreadyHidden = true;
+		}
+	}
 }
 
 void MainWindow::clearLog()
@@ -435,15 +433,7 @@ void MainWindow::startSynergy()
 	if (!m_pLogOutput->toPlainText().isEmpty())
 		appendLogRaw("");
 
-	if (desktopMode)
-	{
-		appendLogNote("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
-	}
-
-	if (serviceMode)
-	{
-		appendLogNote("applying service mode: " + QString(synergyType() == synergyServer ? "server" : "client"));
-	}
+	appendLogNote("starting " + QString(synergyType() == synergyServer ? "server" : "client"));
 
 	// show command if debug log level...
 	if (appConfig().logLevel() >= 4) {
@@ -575,7 +565,11 @@ bool MainWindow::serverArgs(QStringList& args, QString& app)
 
 void MainWindow::stopSynergy()
 {
-	if (synergyProcess())
+	if (appConfig().processMode() == Service) {
+		// send empty command to stop service from laucning anything.
+		m_IpcClient.sendCommand("", m_ElevateProcess);
+	}
+	else if (synergyProcess())
 	{
 		appendLogNote("stopping synergy");
 
@@ -583,9 +577,9 @@ void MainWindow::stopSynergy()
 			synergyProcess()->close();
 		delete synergyProcess();
 		setSynergyProcess(NULL);
-
-		setSynergyState(synergyDisconnected);
 	}
+
+	setSynergyState(synergyDisconnected);
 
 	// HACK: deleting the object deletes the physical file, which is
 	// bad, since it could be in use by the Windows service!
@@ -617,10 +611,6 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
 
 void MainWindow::setSynergyState(qSynergyState state)
 {
-	// ignore state stuff when in service mode (for now anyway).
-	if (appConfig().processMode() == Service)
-		return;
-
 	if (synergyState() == state)
 		return;
 
@@ -746,4 +736,9 @@ void MainWindow::on_m_pElevateCheckBox_toggled(bool checked)
 	m_ElevateProcess = checked;
 	settings().setValue("elevateChecked", checked);
 	settings().sync();
+}
+
+void MainWindow::on_m_pButtonApply_clicked()
+{
+	startSynergy();
 }
