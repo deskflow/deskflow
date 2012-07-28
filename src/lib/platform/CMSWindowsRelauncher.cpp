@@ -33,6 +33,8 @@
 #include <Tlhelp32.h>
 #include <UserEnv.h>
 #include <sstream>
+#include <Wtsapi32.h>
+#include <Shellapi.h>
 
 enum {
 	kOutputBufferSize = 4096
@@ -51,7 +53,8 @@ CMSWindowsRelauncher::CMSWindowsRelauncher(
 	m_stdOutWrite(NULL),
 	m_stdOutRead(NULL),
 	m_ipcServer(ipcServer),
-	m_ipcLogOutputter(ipcLogOutputter)
+	m_ipcLogOutputter(ipcLogOutputter),
+	m_elevateProcess(false)
 {
 }
 
@@ -90,7 +93,7 @@ CMSWindowsRelauncher::getSessionId()
 }
 
 BOOL
-CMSWindowsRelauncher::winlogonInSession(DWORD sessionId, PHANDLE process)
+CMSWindowsRelauncher::isProcessInSession(const char* name, DWORD sessionId, PHANDLE process)
 {
 	// first we need to take a snapshot of the running processes
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -138,9 +141,8 @@ CMSWindowsRelauncher::winlogonInSession(DWORD sessionId, PHANDLE process)
 				// store the names so we can record them for debug
 				nameList.push_back(entry.szExeFile);
 
-				if (_stricmp(entry.szExeFile, "winlogon.exe") == 0) {
+				if (_stricmp(entry.szExeFile, name) == 0) {
 					pid = entry.th32ProcessID;
-					break;
 				}
 			}
 		}
@@ -167,67 +169,97 @@ CMSWindowsRelauncher::winlogonInSession(DWORD sessionId, PHANDLE process)
 			nameListJoin.append(", ");
 	}
 
-	LOG((CLOG_DEBUG "checked processes while looking for winlogon.exe: %s",
-		nameListJoin.c_str()));
+	LOG((CLOG_DEBUG "processes in session %d: %s",
+		sessionId, nameListJoin.c_str()));
 
 	CloseHandle(snapshot);
 
 	if (pid) {
 		// now get the process so we can get the process, with which
 		// we'll use to get the process token.
+		LOG((CLOG_DEBUG "found %s in session %i", name, sessionId));
 		*process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);
 		return true;
 	}
 	else {
-		LOG((CLOG_DEBUG "could not find winlogon.exe in session %i", sessionId));
+		LOG((CLOG_DEBUG "could not find %s in session %i", name, sessionId));
 		return false;
 	}
 }
 
-// gets the current user (so we can launch under their session)
-HANDLE 
-CMSWindowsRelauncher::getCurrentUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security)
+HANDLE
+CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security)
 {
-	HANDLE currentToken;
-	HANDLE winlogonProcess;
+	HANDLE sourceToken;
 
-	if (winlogonInSession(sessionId, &winlogonProcess)) {
+	BOOL tokenRet = OpenProcessToken(
+		process,
+		TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS,
+		&sourceToken);
 
-		LOG((CLOG_DEBUG "session %i has winlogon.exe", sessionId));
-
-		// get the token, so we can re-launch with this token
-		// -- do we really need all these access bits?
-		BOOL tokenRet = OpenProcessToken(
-			winlogonProcess,
-			TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY | 
-			TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY | 
-			TOKEN_ADJUST_SESSIONID | TOKEN_READ | TOKEN_WRITE,
-			&currentToken);
-
-		if (!tokenRet) {
-			LOG((CLOG_ERR "could not open token (error: %i)", GetLastError()));
-			return 0;
-		}
+	if (!tokenRet) {
+		LOG((CLOG_ERR "could not open token, process handle: %d (error: %i)", process, GetLastError()));
+		return NULL;
 	}
-	else {
+	
+	LOG((CLOG_ERR "got token %i, duplicating", sourceToken));
 
-		LOG((CLOG_ERR "session %i does not have winlogon.exe "
-			"which is needed for re-launch", sessionId));
-		return 0;
-	}
-
-	HANDLE primaryToken;
+	HANDLE newToken;
 	BOOL duplicateRet = DuplicateTokenEx(
-		currentToken, MAXIMUM_ALLOWED, security,
-		SecurityImpersonation, TokenPrimary, &primaryToken);
+		sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
+		SecurityImpersonation, TokenPrimary, &newToken);
 
 	if (!duplicateRet) {
 		LOG((CLOG_ERR "could not duplicate token %i (error: %i)",
-			currentToken, GetLastError()));
+			sourceToken, GetLastError()));
+		return NULL;
+	}
+	
+	LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
+	return newToken;
+}
+
+// use either an elevated token (winlogon) or the user's session
+// token (non-elevated). processes launched with a non-elevated token
+// cannot interact with elevated processes.
+HANDLE 
+CMSWindowsRelauncher::getUserToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security)
+{
+	if (m_elevateProcess) {
+		HANDLE process;
+		if (isProcessInSession("winlogon.exe", sessionId, &process)) {
+			return duplicateProcessToken(process, security);
+		}
+		else {
+			LOG((CLOG_ERR "could not find token in session %d", sessionId));
+			return NULL;
+		}
+	}
+	else {
+		return getSessionToken(sessionId, security);
+	}
+}
+
+HANDLE 
+CMSWindowsRelauncher::getSessionToken(DWORD sessionId, LPSECURITY_ATTRIBUTES security)
+{
+	HANDLE sourceToken;
+	if (!WTSQueryUserToken(sessionId, &sourceToken)) {
+		LOG((CLOG_ERR "could not get token from session %d (error: %i)", sessionId, GetLastError()));
 		return 0;
 	}
+	
+	HANDLE newToken;
+	if (!DuplicateTokenEx(
+		sourceToken, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, security,
+		SecurityImpersonation, TokenPrimary, &newToken)) {
 
-	return primaryToken;
+		LOG((CLOG_ERR "could not duplicate token (error: %i)", GetLastError()));
+		return 0;
+	}
+	
+	LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
+	return newToken;
 }
 
 void
@@ -319,67 +351,64 @@ CMSWindowsRelauncher::mainLoop(void*)
 			SECURITY_ATTRIBUTES sa;
 			ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
 
-			// get the token for the user in active session, which is the
-			// one receiving input from mouse and keyboard.
-			HANDLE userToken = getCurrentUserToken(sessionId, &sa);
+			HANDLE userToken = getUserToken(sessionId, &sa);
+			if (userToken == NULL) {
+				// HACK: trigger retry mechanism.
+				launched = true;
+				continue;
+			}
 
-			if (userToken != 0) {
-				LOG((CLOG_DEBUG "got user token to launch new process"));
+			std::string cmd = command();
+			if (cmd == "") {
+				// this appears on first launch when the user hasn't configured
+				// anything yet, so don't show it as a warning, only show it as
+				// debug to devs to let them know why nothing happened.
+				LOG((CLOG_DEBUG "nothing to launch, no command specified."));
+				continue;
+			}
 
-				std::string cmd = command();
-				if (cmd == "") {
-					// this appears on first launch when the user hasn't configured
-					// anything yet, so don't show it as a warning, only show it as
-					// debug to devs to let them know why nothing happened.
-					LOG((CLOG_DEBUG "nothing to launch, no command specified."));
-					continue;
-				}
+			// in case reusing process info struct
+			ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 
-				// in case reusing process info struct
-				ZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+			STARTUPINFO si;
+			ZeroMemory(&si, sizeof(STARTUPINFO));
+			si.cb = sizeof(STARTUPINFO);
+			si.lpDesktop = "winsta0\\Default"; // TODO: maybe this should be \winlogon if we have logonui.exe?
+			si.hStdError = m_stdOutWrite;
+			si.hStdOutput = m_stdOutWrite;
+			si.dwFlags |= STARTF_USESTDHANDLES;
 
-				STARTUPINFO si;
-				ZeroMemory(&si, sizeof(STARTUPINFO));
-				si.cb = sizeof(STARTUPINFO);
-				si.lpDesktop = "winsta0\\default";
-				si.hStdError = m_stdOutWrite;
-				si.hStdOutput = m_stdOutWrite;
-				si.dwFlags |= STARTF_USESTDHANDLES;
+			LPVOID environment;
+			BOOL blockRet = CreateEnvironmentBlock(&environment, userToken, FALSE);
+			if (!blockRet) {
+				LOG((CLOG_ERR "could not create environment block (error: %i)", 
+					GetLastError()));
+				continue;
+			}
 
-				LPVOID environment;
-				BOOL blockRet = CreateEnvironmentBlock(&environment, userToken, FALSE);
-				if (!blockRet) {
-					LOG((CLOG_ERR "could not create environment block (error: %i)", 
-						GetLastError()));
-					continue;
-				}
-				else {
+			DWORD creationFlags = 
+				NORMAL_PRIORITY_CLASS |
+				CREATE_NO_WINDOW |
+				CREATE_UNICODE_ENVIRONMENT;
 
-					DWORD creationFlags = 
-						NORMAL_PRIORITY_CLASS |
-						CREATE_NO_WINDOW |
-						CREATE_UNICODE_ENVIRONMENT;
+			// re-launch in current active user session
+			LOG((CLOG_INFO "starting new process"));
+			BOOL createRet = CreateProcessAsUser(
+				userToken, NULL, LPSTR(cmd.c_str()),
+				&sa, NULL, TRUE, creationFlags,
+				environment, NULL, &si, &pi);
 
-					// re-launch in current active user session
-					LOG((CLOG_INFO "starting new process"));
-					BOOL createRet = CreateProcessAsUser(
-						userToken, NULL, LPSTR(cmd.c_str()),
-						&sa, NULL, TRUE, creationFlags,
-						environment, NULL, &si, &pi);
+			DestroyEnvironmentBlock(environment);
+			CloseHandle(userToken);
 
-					DestroyEnvironmentBlock(environment);
-					CloseHandle(userToken);
-
-					if (!createRet) {
-						LOG((CLOG_ERR "could not launch (error: %i)", GetLastError()));
-						continue;
-					}
-					else {
-						LOG((CLOG_DEBUG "launched in session %i (cmd: %s)", 
-							sessionId, cmd.c_str()));
-						launched = true;
-					}
-				}
+			if (!createRet) {
+				LOG((CLOG_ERR "could not launch (error: %i)", GetLastError()));
+				continue;
+			}
+			else {
+				LOG((CLOG_DEBUG "launched in session %i (cmd: %s)", 
+					sessionId, cmd.c_str()));
+				launched = true;
 			}
 		}
 
@@ -406,11 +435,11 @@ CMSWindowsRelauncher::mainLoop(void*)
 }
 
 void
-CMSWindowsRelauncher::command(const std::string& command)
+CMSWindowsRelauncher::command(const std::string& command, bool elevate)
 {
 	LOG((CLOG_INFO "service command updated"));
-	LOG((CLOG_DEBUG "new command: %s", command.c_str()));
 	m_command = command;
+	m_elevateProcess = elevate;
 	m_commandChanged = true;
 }
 

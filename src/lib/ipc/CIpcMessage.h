@@ -69,12 +69,16 @@ private:
 
 class CIpcCommandMessage : public CIpcMessage {
 public:
-	CIpcCommandMessage(const CString& command);
+	CIpcCommandMessage(const CString& command, bool elevate);
 	virtual ~CIpcCommandMessage();
 
 	//! Gets the command.
 	CString				command() const { return m_command; }
 
+	//! Gets whether or not the process should be elevated on MS Windows.
+	bool				elevate() const { return m_elevate; }
+
 private:
 	CString				m_command;
+	bool				m_elevate;
 };

@@ -222,11 +222,12 @@ CDaemonApp::mainLoop(bool logToFile)
 		CMSWindowsScreen::init(CArchMiscWindows::instanceWin32());
 		CGameDeviceInfo gameDevice;
 		CScreen dummyScreen(new CMSWindowsScreen(false, true, gameDevice));
-
-		string command = ARCH->setting("Command");
+		
+		CString command = ARCH->setting("Command");
+		bool elevate = ARCH->setting("Elevate") == "1";
 		if (command != "") {
 			LOG((CLOG_INFO "using last known command: %s", command.c_str()));
-			m_relauncher->command(command);
+			m_relauncher->command(command, elevate);
 		}
 
 		m_relauncher->startAsync();
@@ -295,7 +296,7 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 		case kIpcCommand: {
 			CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
 			CString command = cm->command();
-			LOG((CLOG_DEBUG "got new command: %s", command.c_str()));
+			LOG((CLOG_DEBUG "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
 			CString debugArg("--debug");
 			int debugArgPos = command.find(debugArg);
@@ -319,16 +320,19 @@ CDaemonApp::handleIpcMessage(const CEvent& e, void*)
 				// store command in system settings. this is used when the daemon
 				// next starts.
 				ARCH->setting("Command", command);
+
+				// TODO: it would be nice to store bools/ints...
+				ARCH->setting("Elevate", CString(cm->elevate() ? "1" : "0"));
 			}
 			catch (XArch& e) {
-				LOG((CLOG_ERR "failed to save Command setting, %s", e.what().c_str()));
+				LOG((CLOG_ERR "failed to save settings, %s", e.what().c_str()));
 			}
 
 #if SYSAPI_WIN32
 			// tell the relauncher about the new command. this causes the
 			// relauncher to stop the existing command and start the new
 			// command.
-			m_relauncher->command(command);
+			m_relauncher->command(command, cm->elevate());
 #endif
 			break;
 		}

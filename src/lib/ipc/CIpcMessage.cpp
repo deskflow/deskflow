@@ -56,9 +56,10 @@ CIpcLogLineMessage::~CIpcLogLineMessage()
 {
 }
 
-CIpcCommandMessage::CIpcCommandMessage(const CString& command) :
+CIpcCommandMessage::CIpcCommandMessage(const CString& command, bool elevate) :
 CIpcMessage(kIpcCommand),
-m_command(command)
+m_command(command),
+m_elevate(elevate)
 {
 }
 

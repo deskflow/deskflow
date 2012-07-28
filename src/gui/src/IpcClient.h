@@ -31,7 +31,8 @@ public:
     IpcClient();
 	virtual ~IpcClient();
 
-	void write(int code, int length, const char* data);
+	void sendHello();
+	void sendCommand(const QString& command, bool elevate);
 	void connectToHost();
 	void disconnectFromHost();
 

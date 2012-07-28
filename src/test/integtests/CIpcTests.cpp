@@ -181,7 +181,7 @@ CIpcTests::connectToServer_handleMessageReceived(const CEvent& e, void*)
 void
 CIpcTests::sendMessageToServer_handleClientConnected(const CEvent& e, void*)
 {	
-	CIpcCommandMessage m("test");
+	CIpcCommandMessage m("test", true);
 	m_sendMessageToServer_client->send(m);
 }
 
