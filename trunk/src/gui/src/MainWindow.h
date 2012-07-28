@@ -134,10 +134,12 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
 		bool serverArgs(QStringList& args, QString& app);
 		void setStatus(const QString& status);
 		void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
-		void onModeChanged(bool firstRun, bool forceServiceApply);
+		void onModeChanged(bool startDesktop, bool applyService);
 		void updateStateFromLogLine(const QString& line);
 		QString getIPAddresses();
 		QString getScreenName();
+		void stopService();
+		void stopDesktop();
 
 	private:
 		QSettings& m_Settings;
