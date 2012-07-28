@@ -21,17 +21,6 @@
 #include <QtGui>
 #include <QtNetwork>
 
-static QString getIPAddress()
-{
-	QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
-
-	for (int i = 0; i < addresses.size(); i++)
-		if (addresses[i].protocol() == QAbstractSocket::IPv4Protocol && addresses[i] != QHostAddress(QHostAddress::LocalHost))
-			return addresses[i].toString();
-
-	return "Unknown";
-}
-
 AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
 	Ui::AboutDialogBase()
@@ -40,7 +29,4 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 
 	m_versionChecker.setApp(synergyApp);
 	m_pLabelSynergyVersion->setText(m_versionChecker.getVersion());
-	m_pLabelHostname->setText(QHostInfo::localHostName());
-	m_pLabelIPAddress->setText(getIPAddress());
 }
-
