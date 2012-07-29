@@ -954,7 +954,6 @@ class InternalCommands:
 			raise Exception("User does not have correct setup version.")
 
 	def get_generators(self):
-
 		if sys.platform == 'win32':
 			return self.win32_generators
 		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'aix5']:
