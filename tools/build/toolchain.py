@@ -477,6 +477,17 @@ class InternalCommands:
 		shutil.copy(dir + "/synergys",
 			dir + "/Synergy.app/Contents/MacOS/")
 
+		# use qt to copy libs to bundle so no dependencies are needed. do not create a
+		# dmg at this point, since we need to sign it first, and then create our own
+		# after signing (so that qt does not affect the signed app bundle).
+		bin = "macdeployqt Synergy.app -verbose=2"
+		self.try_chdir(dir)
+		err = os.system(bin)
+		self.restore_chdir()
+
+		if err != 0:
+			raise Exception(bin + " failed with error: " + str(err))
+		
 	def open(self):
 		generator = self.getGeneratorFromConfig().cmakeName
 		if generator.startswith('Visual Studio'):
@@ -577,7 +588,7 @@ class InternalCommands:
 			
 		elif type == 'mac':
 			if sys.platform == 'darwin':
-				self.distMac(unixTarget)
+				self.distMac()
 			else:
 				package_unsupported = True
 			
@@ -624,27 +635,28 @@ class InternalCommands:
 		err = os.system('mv ' + source + ' ' + dest)
 		if err != 0:
 			raise Exception('Package failed: ' + str(err))
-
-	def distMac(self, unixTarget):
-
-		dir = self.getGenerator().binDir
-
-		# use qt to copy libs to bundle so no dependencies are needed,
-		# and create dmg for easy download.
-		bin = "macdeployqt Synergy.app -dmg -verbose=2"
-		self.try_chdir(dir)
-		err = os.system(bin)
-		self.restore_chdir()
 		
-		if err != 0:
-			raise Exception(bin + " failed with error: " + str(err))
+	def distMac(self):
+		dir = self.getGenerator().binDir
+		dist = dir + "/dist"
+		
+		# ensure dist dir is clean
+		if os.path.exists(dist):
+			os.rmdir(dist)
+		
+		os.makedirs(dist)
+		shutil.copytree(dir + "/Synergy.app", dist + "/Synergy.app")
 
 		fileName = "%s-%s-%s.dmg" % (
 			self.project, 
 			self.getVersionFromCmake(),
 			self.getMacPackageName())
-
-		shutil.move(dir + "/Synergy.dmg", dir + "/" + fileName)
+		
+		cmd = "hdiutil create " + fileName + " -srcfolder ./dist/ -ov"
+		
+		self.try_chdir(dir)
+		err = os.system(cmd)
+		self.restore_chdir()
 
 	def distNsis(self, vcRedistDir, qtDir):
 		
