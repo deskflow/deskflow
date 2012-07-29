@@ -638,21 +638,22 @@ class InternalCommands:
 		
 	def distMac(self):
 		dir = self.getGenerator().binDir
-		dist = dir + "/Synergy"
+		name = "Synergy"
+		dist = dir + "/" + name
 		
 		# ensure dist dir is clean
 		if os.path.exists(dist):
 			os.rmdir(dist)
 		
 		os.makedirs(dist)
-		shutil.copytree(dir + "/Synergy.app", dist + "/Synergy.app")
+		shutil.copytree(dir + "/" + name + ".app", dist + "/" + name + ".app")
 
 		fileName = "%s-%s-%s.dmg" % (
 			self.project, 
 			self.getVersionFromCmake(),
 			self.getMacPackageName())
 		
-		cmd = "hdiutil create " + fileName + " -srcfolder ./dist/ -ov"
+		cmd = "hdiutil create " + fileName + " -srcfolder ./" + name + "/ -ov"
 		
 		self.try_chdir(dir)
 		err = os.system(cmd)
