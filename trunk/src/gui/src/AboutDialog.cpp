@@ -31,9 +31,10 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 	m_pLabelSynergyVersion->setText(m_versionChecker.getVersion());
 
 #if defined(Q_OS_MAC)
-        // fonts on mac are bigger, so window needs to be bigger.
-        resize(400, 350);
-        setMinimumSize(size());
-        setMaximumSize(size());
+	// fonts on mac are bigger, so window needs to be bigger.
+	QSize size(600, 350);
+	setMaximumSize(size);
+	setMinimumSize(size);
+	resize(size);
 #endif
 }
