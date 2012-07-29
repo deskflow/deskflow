@@ -1316,4 +1316,12 @@ class CommandHandler:
 		for o, a in self.opts:
 			if o == '--identity':
 				identity = a
+		
+		# HACK: codesign fails intermittently. we need some sort of retry mechanism
+		# but i don't have time right now so just hammer the crap out of it and hope
+		# one attempt works.
+		self.ic.signmac(identity)
+		self.ic.signmac(identity)
+		self.ic.signmac(identity)
+		self.ic.signmac(identity)
 		self.ic.signmac(identity)
