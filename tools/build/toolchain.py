@@ -638,7 +638,7 @@ class InternalCommands:
 		
 	def distMac(self):
 		dir = self.getGenerator().binDir
-		dist = dir + "/dist"
+		dist = dir + "/Synergy"
 		
 		# ensure dist dir is clean
 		if os.path.exists(dist):
