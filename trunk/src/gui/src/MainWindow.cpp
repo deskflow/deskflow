@@ -92,6 +92,12 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	// elevate checkbox is only useful on ms windows.
 	m_pElevateCheckBox->hide();
 #endif
+
+#if defined(Q_OS_MAC)
+        // fonts on mac are bigger, so window needs to be bigger.
+        resize(720, 550);
+        setMinimumSize(size());
+#endif
 }
 
 MainWindow::~MainWindow()

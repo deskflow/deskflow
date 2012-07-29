@@ -28,13 +28,6 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 #endif
 
-#if !defined(Q_OS_WIN)
-	m_pServiceRadioButton->setEnabled(false);
-	m_pServiceRadioButton->setText(tr("Service (Windows only)"));
-	m_pServiceLabel->setEnabled(false);
-	m_pDesktopRadioButton->setChecked(true);
-#endif
-
 	connect(this, SIGNAL(finished(int)), this, SLOT(handlefinished()));
 	connect(m_pServerRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupServer, SLOT(setChecked(bool)));
 	connect(m_pClientRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupClient, SLOT(setChecked(bool)));
