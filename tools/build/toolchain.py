@@ -956,17 +956,11 @@ class InternalCommands:
 	def get_generators(self):
 
 		if sys.platform == 'win32':
-
 			return self.win32_generators
-
 		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'aix5']:
-
 			return self.unix_generators
-
 		elif sys.platform == 'darwin':
-
 			return self.darwin_generators
-
 		else:
 			raise Exception('Unsupported platform: ' + sys.platform)
 			
