@@ -1778,12 +1778,11 @@ COSXScreen::handleCGInputEventSecondary(CGEventTapProxy proxy,
                         }
                 }
                 if (showCursor) {
-                        LOG((CLOG_DEBUG "Trying to show cursor from local event. (type = %d)", type));
+                        LOG((CLOG_DEBUG "show cursor, event type %d", type));
                         screen->showCursor();
                         screen->m_cursorHidden = false;
                 }
         }
-        LOG((CLOG_DEBUG2 "Local event? (type = %d)", type));
         return event;
 }
 
