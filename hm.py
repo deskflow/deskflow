@@ -70,7 +70,7 @@ cmd_opt_dict = {
 	'genlist'   : ['', []],
 	'reset'	    : ['', []],
 	'signwin'	: ['', ['pfx=', 'pwd=', 'dist']],
-	'signmac'	: ['', []]
+	'signmac'	: ['', ['identity=']]
 }
 
 # aliases to valid commands

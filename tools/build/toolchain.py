@@ -347,10 +347,10 @@ class InternalCommands:
 		if self.enable_make_gui:
 			self.make_gui(targets)
 	
-	def signmac(self):
+	def signmac(self, identity):
 		self.try_chdir("bin")
 		err = os.system(
-			'codesign -fs "Developer ID Application: Nick Bolton" Synergy.app')
+			'codesign -fs "' + identity + '" Synergy.app')
 		self.restore_chdir()
 	
 	def signwin(self, pfx, pwdFile, dist):
@@ -1307,4 +1307,8 @@ class CommandHandler:
 		self.ic.signwin(pfx, pwd, dist)
 
 	def signmac(self):
-		self.ic.signmac()
+		idenity = None
+		for o, a in self.opts:
+			if o == '--identity':
+				identity = a
+		self.ic.signmac(identity)
