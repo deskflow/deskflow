@@ -347,7 +347,13 @@ class InternalCommands:
 		if self.enable_make_gui:
 			self.make_gui(targets)
 	
-	def sign(self, pfx, pwdFile, dist):
+	def signmac(self):
+		self.try_chdir("bin")
+		err = os.system(
+			'codesign -fs "Developer ID Application: Nick Bolton" Synergy.app')
+		self.restore_chdir()
+	
+	def signwin(self, pfx, pwdFile, dist):
 		generator = self.getGeneratorFromConfig().cmakeName
 		if not generator.startswith('Visual Studio'):
 			raise Exception('only windows is supported')
@@ -370,7 +376,7 @@ class InternalCommands:
 		self.try_chdir(dir)
 		err = os.system(
 			'signtool sign'
-			'	/f ' + pfx +
+			' /f ' + pfx +
 			' /p ' + pwd +
 			' /t http://timestamp.verisign.com/scripts/timstamp.dll ' +
 			file)
@@ -948,12 +954,19 @@ class InternalCommands:
 			raise Exception("User does not have correct setup version.")
 
 	def get_generators(self):
+
 		if sys.platform == 'win32':
+
 			return self.win32_generators
+
 		elif sys.platform in ['linux2', 'sunos5', 'freebsd7', 'aix5']:
+
 			return self.unix_generators
+
 		elif sys.platform == 'darwin':
+
 			return self.darwin_generators
+
 		else:
 			raise Exception('Unsupported platform: ' + sys.platform)
 			
@@ -1280,7 +1293,7 @@ class CommandHandler:
 	def reset(self):
 		self.ic.reset()
 		
-	def sign(self):
+	def signwin(self):
 		pfx = None
 		pwd = None
 		dist = False
@@ -1291,4 +1304,7 @@ class CommandHandler:
 				pwd = a
 			elif o == '--dist':
 				dist = True
-		self.ic.sign(pfx, pwd, dist)
+		self.ic.signwin(pfx, pwd, dist)
+
+	def signmac(self):
+		self.ic.signmac()
