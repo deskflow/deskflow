@@ -69,7 +69,8 @@ cmd_opt_dict = {
 	'open'      : ['', []],
 	'genlist'   : ['', []],
 	'reset'	    : ['', []],
-	'sign'			: ['', ['pfx=', 'pwd=', 'dist']]
+	'signwin'	: ['', ['pfx=', 'pwd=', 'dist']],
+	'signmac'	: ['', []]
 }
 
 # aliases to valid commands
