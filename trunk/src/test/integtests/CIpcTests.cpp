@@ -45,10 +45,9 @@ public:
 	virtual ~CIpcTests();
 	
 	void				connectToServer_handleMessageReceived(const CEvent&, void*);
-	void				sendMessageToServer_handleClientConnected(const CEvent&, void*);
-	void				sendMessageToServer_handleMessageReceived(const CEvent&, void*);
-	void				sendMessageToClient_handleClientConnected(const CEvent&, void*);
-	void				sendMessageToClient_handleMessageReceived(const CEvent&, void*);
+	void				sendMessageToServer_serverHandleMessageReceived(const CEvent&, void*);
+	void				sendMessageToClient_serverHandleClientConnected(const CEvent&, void*);
+	void				sendMessageToClient_clientHandleMessageReceived(const CEvent&, void*);
 	void				handleQuitTimeout(const CEvent&, void* vclient);
 	void				raiseQuitEvent();
 	void				initQuitTimeout(double timeout);
@@ -101,14 +100,9 @@ TEST_F(CIpcTests, sendMessageToServer)
 	
 	// event handler sends "test" command to server.
 	m_events.adoptHandler(
-		CIpcServer::getClientConnectedEvent(), &server,
-		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::sendMessageToServer_handleClientConnected));
-
-	m_events.adoptHandler(
 		CIpcServer::getMessageReceivedEvent(), &server,
 		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::sendMessageToServer_handleMessageReceived));
+		this, &CIpcTests::sendMessageToServer_serverHandleMessageReceived));
 	
 	CIpcClient client(TEST_IPC_PORT);
 	client.connect();
@@ -116,7 +110,6 @@ TEST_F(CIpcTests, sendMessageToServer)
 
 	initQuitTimeout(5);
 	m_events.loop();
-	m_events.removeHandler(CIpcServer::getClientConnectedEvent(), &server);
 	m_events.removeHandler(CIpcServer::getMessageReceivedEvent(), &server);
 	cleanupQuitTimeout();
 
@@ -131,9 +124,9 @@ TEST_F(CIpcTests, sendMessageToClient)
 
 	// event handler sends "test" log line to client.
 	m_events.adoptHandler(
-		CIpcServer::getClientConnectedEvent(), &server,
+		CIpcServer::getMessageReceivedEvent(), &server,
 		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::sendMessageToClient_handleClientConnected));
+		this, &CIpcTests::sendMessageToClient_serverHandleClientConnected));
 
 	CIpcClient client(TEST_IPC_PORT);
 	client.connect();
@@ -141,11 +134,11 @@ TEST_F(CIpcTests, sendMessageToClient)
 	m_events.adoptHandler(
 		CIpcClient::getMessageReceivedEvent(), &client,
 		new TMethodEventJob<CIpcTests>(
-		this, &CIpcTests::sendMessageToClient_handleMessageReceived));
+		this, &CIpcTests::sendMessageToClient_clientHandleMessageReceived));
 
 	initQuitTimeout(5);
 	m_events.loop();
-	m_events.removeHandler(CIpcServer::getClientConnectedEvent(), &server);
+	m_events.removeHandler(CIpcServer::getMessageReceivedEvent(), &server);
 	m_events.removeHandler(CIpcClient::getMessageReceivedEvent(), &client);
 	cleanupQuitTimeout();
 
@@ -179,36 +172,40 @@ CIpcTests::connectToServer_handleMessageReceived(const CEvent& e, void*)
 }
 
 void
-CIpcTests::sendMessageToServer_handleClientConnected(const CEvent& e, void*)
-{	
-	CIpcCommandMessage m("test", true);
-	m_sendMessageToServer_client->send(m);
-}
-
-void
-CIpcTests::sendMessageToServer_handleMessageReceived(const CEvent& e, void*)
+CIpcTests::sendMessageToServer_serverHandleMessageReceived(const CEvent& e, void*)
 {
 	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
-	if (m->m_type == kIpcCommand) {
+	if (m->m_type == kIpcHello) {
+		LOG((CLOG_DEBUG "client said hello, sending test to server"));
+		CIpcCommandMessage m("test", true);
+		m_sendMessageToServer_client->send(m);
+	}
+	else if (m->m_type == kIpcCommand) {
 		CIpcCommandMessage* cm = static_cast<CIpcCommandMessage*>(m);
+		LOG((CLOG_DEBUG "got ipc command message, %d", cm->command().c_str()));
 		m_sendMessageToServer_receivedString = cm->command();
 		raiseQuitEvent();
 	}
 }
 
 void
-CIpcTests::sendMessageToClient_handleClientConnected(const CEvent& e, void*)
-{	
-	CIpcLogLineMessage m("test");
-	m_sendMessageToClient_server->send(m, kIpcClientUnknown);
+CIpcTests::sendMessageToClient_serverHandleClientConnected(const CEvent& e, void*)
+{
+	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
+	if (m->m_type == kIpcHello) {
+		LOG((CLOG_DEBUG "client said hello, sending test to client"));
+		CIpcLogLineMessage m("test");
+		m_sendMessageToClient_server->send(m, kIpcClientNode);
+	}
 }
 
 void
-CIpcTests::sendMessageToClient_handleMessageReceived(const CEvent& e, void*)
+CIpcTests::sendMessageToClient_clientHandleMessageReceived(const CEvent& e, void*)
 {
 	CIpcMessage* m = static_cast<CIpcMessage*>(e.getDataObject());
 	if (m->m_type == kIpcLogLine) {
 		CIpcLogLineMessage* llm = static_cast<CIpcLogLineMessage*>(m);
+		LOG((CLOG_DEBUG "got ipc log message, %d", llm->logLine().c_str()));
 		m_sendMessageToClient_receivedString = llm->logLine();
 		raiseQuitEvent();
 	}
