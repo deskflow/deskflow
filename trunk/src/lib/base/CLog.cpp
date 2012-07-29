@@ -46,7 +46,7 @@ static const char*		g_priority[] = {
 static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]));
 
 // the default priority
-#if defined(_DEBUG) || defined(DEBUG)
+#ifndef NDEBUG
 static const int		g_defaultMaxPriority = kDEBUG;
 #else
 static const int		g_defaultMaxPriority = kINFO;
@@ -176,7 +176,7 @@ CLog::print(const char* file, int line, const char* fmt, ...)
 
 		char message[2048];
 
-#if defined(_DEBUG) || defined(DEBUG)
+#ifndef NDEBUG
 		struct tm *tm;
 		char tmp[220];
 		time_t t;
