@@ -602,9 +602,6 @@ void MainWindow::synergyFinished(int exitCode, QProcess::ExitStatus)
 #endif
 
 	setSynergyState(synergyDisconnected);
-
-	// do not call stopSynergy() in case of clean synergy shutdown, because this must have (well, should have...)
-	// come from our own delete synergyProcess() in stopSynergy(), so we would do a double-delete...
 }
 
 void MainWindow::setSynergyState(qSynergyState state)
@@ -625,11 +622,16 @@ void MainWindow::setSynergyState(qSynergyState state)
 		m_pButtonToggleStart->setText(tr("&Start"));
 	}
 
+	bool connected = state == synergyConnected;
+
 	// only disable controls in desktop mode. in service mode, we can use the apply button.
 	if (appConfig().processMode() == Desktop)
 	{
-		setFormEnabled(state != synergyConnected);
+		setFormEnabled(!connected);
 	}
+
+	m_pActionStartSynergy->setEnabled(!connected);
+	m_pActionStopSynergy->setEnabled(connected);
 
 	switch (state)
 	{
@@ -655,8 +657,6 @@ void MainWindow::setFormEnabled(bool enabled)
 {
 	m_pGroupClient->setEnabled(enabled);
 	m_pGroupServer->setEnabled(enabled);
-	m_pActionStartSynergy->setEnabled(enabled);
-	m_pActionStopSynergy->setEnabled(enabled);
 }
 
 void MainWindow::setVisible(bool visible)
