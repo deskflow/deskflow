@@ -24,7 +24,14 @@ require "files.php";
 require "smarty/libs/Smarty.class.php";
 require "php/ContactForm.class.php";
 
-$currentVersion = "1.4.9";
+$currentVersion = "1.4.10";
+$currentDate = mktime(0, 0, 0, 07, 30, 2012);
+
+// new naming: only mac 10.4 is universal
+$ver14b = array("1.4.9", "1.4.8", "1.4.7", "1.4.6", "1.4.5");
+
+// old naming: mac releases are universal
+$ver14a = array("1.4.4", "1.4.3", "1.4.2");
 
 $page = "home";
 if (isset($_GET["page"]) && $_GET["page"] != "") {
@@ -150,20 +157,15 @@ if ($page == "download") {
     $smarty->assign("link", sprintf($format, $file));
   }
   else {
-    $smarty->assign("curDate", date("M j, Y", mktime(0, 0, 0, 07, 15, 2012)));
+    $smarty->assign("curDate", date("M j, Y", $currentDate));
     $smarty->assign("cur14", $currentVersion);
     $smarty->assign("cur14State", T_("Beta"));
   }
 }
 else if ($page == "download_alt") {
-
     $smarty->assign("title", T_("Alternate Downloads"));
-	
-    // new naming: only mac 10.4 is universal
-    $smarty->assign("ver14b", array("1.4.8", "1.4.7", "1.4.6", "1.4.5"));
-    
-    // old naming: mac releases are universal
-    $smarty->assign("ver14a", array("1.4.4", "1.4.3", "1.4.2"));
+    $smarty->assign("ver14b", $ver14b);
+    $smarty->assign("ver14a", $ver14a);
 }
 else if ($page == "premium") {
   
