@@ -1,0 +1,41 @@
+Building on HP-UX 11.00 using aCC (tjr)
+--
+I have managed to build Xvnc on HPUX but only with some ugly hacking of
+the X tree.  The X tree I used as the basis for the build is the XFree86 4.2.0
+tree.  The XFree86 4.3.0 tree is unsuitable as it seems to have had some HPUX
+stuff removed from it.  I built using the aCC C++ compiler.
+
+Set the following environment variables:
+
+  % CXX=/opt/aCC/bin/aCC
+  % CFLAGS="+DAportable"
+  % CXXFLAGS="+DAportable -AA +W749 +W740"
+  % BOOTSTRAPCFLAGS=-Dhpux
+  % export CXX CFLAGS CXXFLAGS BOOTSTRAPCFLAGS
+
+Build the main part of the VNC distribution as normal:
+
+  % ./configure
+  % make
+
+Unpack the X tree and apply the patches in xc.patch:
+
+  % gunzip -c X420src-1.tgz | tar xf -
+  % patch -Np0 <xc.patch
+
+Then additionally apply the patches in hpux_aCC.patch:
+
+  % patch -Np0 <hpux_aCC.patch
+
+Finally try building the X tree:
+
+  % cd xc
+  % make World
+
+If it all goes to plan you will be left with Xvnc in xc/programs/Xserver.  You
+will probably have to modify the vncserver script to set up a sensible font
+path, since many of the font directories on HPUX are different from the
+defaults compiled into Xvnc.
+
+If anyone can find a neater way of building a VNC-compatible X tree on HPUX
+please let us know (see http://www.realvnc.com for contact details).

@@ -1,0 +1,127 @@
+.TH vncconfig 1 "03 Mar 2005" "RealVNC Ltd" "Virtual Network Computing"
+.SH NAME
+vncconfig \- configure and control a VNC server
+.SH SYNOPSIS
+.B vncconfig
+.RI [ parameters ] 
+.br
+.B vncconfig
+.RI [ parameters ] 
+.B \-connect
+.IR host [: port ]
+.br
+.B vncconfig
+.RI [ parameters ] 
+.B \-disconnect
+.br
+.B vncconfig
+.RI [ parameters ] 
+.RB [ -set ] 
+.IR Xvnc-param = value " ..."
+.br
+.B vncconfig
+.RI [ parameters ] 
+.B \-list
+.br
+.B vncconfig
+.RI [ parameters ] 
+\fB\-get\fP \fIXvnc-param\fP
+.br
+.B vncconfig
+.RI [ parameters ] 
+\fB\-desc\fP \fIXvnc-param\fP
+.SH DESCRIPTION
+.B vncconfig
+is used to configure and control a running instance of Xvnc, or any other X
+server with the VNC extension.  Note that it cannot be used to control VNC
+servers prior to version 4.
+
+When run with no options, it runs as a kind of "helper" application for Xvnc.
+Its main purpose when run in this mode is to support clipboard transfer to and
+from the VNC viewer(s).  Note that without a running instance of
+\fBvncconfig\fP there will be no clipboard support.  It puts up a window with
+some checkboxes which can be used to disable clipboard transfers if required
+(in the future there may be more functions available from this window).  The
+\fB-nowin\fP flag can be used if you always want clipboard support but don't
+wish to clutter the desktop with this window - alternatively the \fB-iconic\fP
+option can be used to make it iconified by default.
+
+When run in any other mode, \fBvncconfig\fP is a one-shot program used to
+configure or control Xvnc as appropriate.  It can be used to tell Xvnc to
+connect or disconnect from listening viewers, and to set and retrieve Xvnc's
+parameters.
+
+Note that the DISPLAY environment variable or the \fB\-display\fP option
+must be set as appropriate to control Xvnc.  If you run it on an ordinary X
+server (or on a version 3 Xvnc) you will get an error message saying that there
+is no VNC extension.
+
+.SH OPTIONS
+.TP
+.B \-connect \fIhost\fP[:\fIport\fP]
+Tells an Xvnc server to make a "reverse" connection to a listening VNC viewer
+(normally connections are made the other way round - the viewer connects to the
+server). \fIhost\fP is the host where the listening viewer is running. If it's
+not listening on the default port of 5500, you can specify \fIhost:port\fP
+instead.
+
+.TP
+.B \-disconnect
+This causes Xvnc to disconnect from all viewers so that the VNC desktop is not
+displayed anywhere.
+
+.TP
+[\fB-set\fP] \fIXvnc-param\fP=\fIvalue\fP
+Sets an Xvnc parameter to the given value.  Note that some of Xvnc's parameters
+are read only once at startup so that changing them in this way may not have
+any effect.
+
+.TP
+.B \-list
+Lists all the parameters supported by Xvnc.
+
+.TP
+.B \-get \fIXvnc-param\fP
+Prints the current value of the given Xvnc parameter.
+
+.TP
+.B \-desc \fIXvnc-param\fP
+Prints a short description of the given Xvnc parameter.
+
+.SH PARAMETERS
+.B vncconfig
+also has parameters of its own which can be set on the command line.  These
+should not be confused with Xvnc's parameters which are manipulated with the
+\fB-set\fP, \fB-get\fP, \fB-list\fP and \fB-desc\fP options.
+
+Parameters can be turned on with -\fIparam\fP or off with -\fIparam\fP=0.
+Parameters which take a value can be specified as -\fIparam\fP \fIvalue\fP.
+Other valid forms are \fIparam\fP\fB=\fP\fIvalue\fP -\fIparam\fP=\fIvalue\fP
+--\fIparam\fP=\fIvalue\fP.  Parameter names are case-insensitive.
+
+.TP
+.B \-display \fIXdisplay\fP
+Specifies the Xvnc server to control.
+
+.TP
+.B \-nowin
+When run as a "helper" app, don't put up a window.
+
+.TP
+.B \-iconic
+When run as a "helper" app, make the window iconified at startup.
+
+.SH SEE ALSO
+.BR vncpasswd (1),
+.BR vncviewer (1),
+.BR vncserver (1),
+.BR Xvnc (1)
+.br
+http://www.realvnc.com
+
+.SH AUTHOR
+Tristan Richardson, RealVNC Ltd.
+
+VNC was originally developed by the RealVNC team while at Olivetti Research Ltd
+/ AT&T Laboratories Cambridge.  It is now being maintained by RealVNC Ltd.  See
+http://www.realvnc.com for details.
