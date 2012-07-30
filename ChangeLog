@@ -1,3 +1,17 @@
+1.4.10
+======
+Bug #2799 - Right shift broken (Windows server, Mac OS X client)
+Bug #3302 - GUI does not show/hide when tray icon is double clicked (Windows)
+Bug #3303 - Mac OS X IPC integ test fails intermittently
+Feature #2974 - Gesture Support for Magic Mouse/Trackpad
+Feature #3172 - Button to stop Synergy when in service mode
+Feature #3241 - Option to elevate synergyc/s when in service mode
+Feature #3242 - Show a list of available IP addresses and screen name on the main screen
+Feature #3296 - 64-bit Windows installer should display helpful message on 32-bit Windows
+Feature #3300 - Make service mode default mode (now that we have elevate option)
+Feature #3301 - Add process mode option to settings (remove startup wizard page)
+Feature #3306 - Gatekeeper compatibility on Mac OS X 10.8
+
 1.4.9
 =====
 Bug #3159 - In service mode, server doesn't start unless GUI is running
@@ -18,7 +32,6 @@ Task #3276 - Installation recovery mechanism for synrgyhk.dll
 
 1.4.8
 =====
-
 Bug #143: Cursor on Mac OS X goes to center when inactive
 Bug #146: Screen Resize causes problems with moving off right-hand side of screen
 Bug #3058: Modifier keys not working on Mac OS X server
@@ -34,7 +47,6 @@ Feature #3184: New service for process management
 
 1.4.7
 =====
-
 Bug #3132: GUI hides before successful connection
 Bug #3133: Can't un-hide GUI on Mac
 Feature #3054: Hide synergy[cs] dock icon (Mac OS X)
@@ -43,7 +55,6 @@ Task #3134: Move hotkey warnings to DEBUG
 
 1.4.6
 =====
-
 Bug #155: Build error on FreeBSD (missing sentinel in function call)
 Bug #571: Synergy SegFaults with "Unknown Quartz Event type: 0x1d"
 Bug #617: xrandr rotation on client confines cursor in wrong area
