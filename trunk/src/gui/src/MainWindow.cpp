@@ -93,10 +93,13 @@ MainWindow::MainWindow(QSettings& settings, AppConfig& appConfig) :
 	m_pElevateCheckBox->hide();
 #endif
 
+    // change default size based on os
 #if defined(Q_OS_MAC)
-        // fonts on mac are bigger, so window needs to be bigger.
-        resize(720, 550);
-        setMinimumSize(size());
+	resize(720, 550);
+	setMinimumSize(size());
+#elif defined(Q_OS_LINUX)
+	resize(700, 530);
+	setMinimumSize(size());
 #endif
 }
 
