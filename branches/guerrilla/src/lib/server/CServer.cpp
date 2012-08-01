@@ -2008,7 +2008,7 @@ CServer::onGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
 }
 
 void
-CServer::onGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
+CServer::onGameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2)
 {
 	LOG((CLOG_DEBUG1 "onGameDeviceSticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
 	m_active->gameDeviceSticks(id, x1, y1, x2, y2);

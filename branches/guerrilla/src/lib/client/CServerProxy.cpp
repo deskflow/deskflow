@@ -792,7 +792,7 @@ CServerProxy::gameDeviceSticks()
 {
 	// parse
 	GameDeviceID id;
-	SInt16 x1, y1, x2, y2;
+	SInt8 x1, y1, x2, y2;
 	CProtocolUtil::readf(m_stream, kMsgDGameSticks + 4, &id, &x1, &y1, &x2, &y2);
 	LOG((CLOG_DEBUG2 "recv game device sticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
 

@@ -742,7 +742,7 @@ CMSWindowsScreen::fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton button
 }
 
 void
-CMSWindowsScreen::fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const
+CMSWindowsScreen::fakeGameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2) const
 {
 	LOG((CLOG_DEBUG "fake game device sticks id=%d s1=%+d,%+d s2=%+d,%+d", id, x1, y1, x2, y2));
 	m_gameDevice->fakeGameDeviceSticks(id, x1, y1, x2, y2);

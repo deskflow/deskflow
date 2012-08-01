@@ -46,7 +46,7 @@ CClientProxy1_4::gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
 }
 
 void
-CClientProxy1_4::gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
+CClientProxy1_4::gameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2)
 {
 	LOG((CLOG_DEBUG2 "send game device sticks to \"%s\" id=%d s1=%+d,%+d s2=%+d,%+d", getName().c_str(), id, x1, y1, x2, y2));
 	CProtocolUtil::writef(getStream(), kMsgDGameSticks, id, x1, y1, x2, y2);

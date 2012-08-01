@@ -251,7 +251,7 @@ CScreen::gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
 }
 
 void
-CScreen::gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
+CScreen::gameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2)
 {
 	assert(!m_isPrimary);
 	m_screen->fakeGameDeviceSticks(id, x1, y1, x2, y2);

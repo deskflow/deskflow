@@ -367,7 +367,7 @@ private:
 	void				onMouseMoveSecondary(SInt32 dx, SInt32 dy);
 	void				onMouseWheel(SInt32 xDelta, SInt32 yDelta);
 	void				onGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons);
-	void				onGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
+	void				onGameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2);
 	void				onGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
 	void				onGameDeviceTimingReq();
 

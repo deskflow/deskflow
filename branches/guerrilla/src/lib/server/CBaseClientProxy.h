@@ -76,7 +76,7 @@ public:
 	virtual void		mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
 	virtual void		mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
 	virtual void		gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) = 0;
-	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) = 0;
+	virtual void		gameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2) = 0;
 	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) = 0;
 	virtual void		gameDeviceTimingReq() = 0;
 	virtual void		screensaver(bool activate) = 0;

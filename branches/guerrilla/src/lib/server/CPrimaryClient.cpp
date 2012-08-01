@@ -248,7 +248,7 @@ CPrimaryClient::gameDeviceButtons(GameDeviceID, GameDeviceButton)
 }
 
 void
-CPrimaryClient::gameDeviceSticks(GameDeviceID, SInt16, SInt16, SInt16, SInt16)
+CPrimaryClient::gameDeviceSticks(GameDeviceID, SInt8, SInt8, SInt8, SInt8)
 {
 	// ignore
 }

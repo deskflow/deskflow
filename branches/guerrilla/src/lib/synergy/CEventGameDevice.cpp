@@ -42,7 +42,7 @@ CEventGameDevice::fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton button
 }
 
 void
-CEventGameDevice::fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const
+CEventGameDevice::fakeGameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2) const
 {
 }
 

@@ -49,14 +49,14 @@ public:
 
 class CGameDeviceStickInfo {
 public:
-	CGameDeviceStickInfo(GameDeviceID id, short x1, short y1, short x2, short y2) :
+	CGameDeviceStickInfo(GameDeviceID id, char x1, char y1, char x2, char y2) :
 	  m_id(id), m_x1(x1), m_x2(x2), m_y1(y1), m_y2(y2) { }
 public:
 	GameDeviceID m_id;
-	short m_x1;
-	short m_x2;
-	short m_y1;
-	short m_y2;
+	char m_x1;
+	char m_x2;
+	char m_y1;
+	char m_y2;
 };
 
 class CGameDeviceTriggerInfo {

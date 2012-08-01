@@ -81,14 +81,14 @@ public:
 	//! Game device sticks event data
 	class CGameDeviceStickInfo {
 	public:
-		CGameDeviceStickInfo(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) :
+		CGameDeviceStickInfo(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2) :
 			m_id(id), m_x1(x1), m_x2(x2), m_y1(y1), m_y2(y2) { }
 	public:
 		GameDeviceID m_id;
-		SInt16 m_x1;
-		SInt16 m_x2;
-		SInt16 m_y1;
-		SInt16 m_y2;
+		SInt8 m_x1;
+		SInt8 m_x2;
+		SInt8 m_y1;
+		SInt8 m_y2;
 	};
 	//! Game device triggers event data
 	class CGameDeviceTriggerInfo {

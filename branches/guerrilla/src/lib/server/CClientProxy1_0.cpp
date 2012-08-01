@@ -364,7 +364,7 @@ CClientProxy1_0::gameDeviceButtons(GameDeviceID, GameDeviceButton)
 }
 
 void
-CClientProxy1_0::gameDeviceSticks(GameDeviceID, SInt16, SInt16, SInt16, SInt16)
+CClientProxy1_0::gameDeviceSticks(GameDeviceID, SInt8, SInt8, SInt8, SInt8)
 {
 	// ignore -- not supported in protocol 1.0
 	LOG((CLOG_DEBUG "gameDeviceSticks not supported"));

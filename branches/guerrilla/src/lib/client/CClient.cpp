@@ -371,7 +371,7 @@ CClient::gameDeviceButtons(GameDeviceID id, GameDeviceButton buttons)
 }
 
 void
-CClient::gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2)
+CClient::gameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2)
 {
 	m_screen->gameDeviceSticks(id, x1, y1, x2, y2);
 }

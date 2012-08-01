@@ -59,7 +59,7 @@ public:
 	virtual void		gameDeviceTimingResp(UInt16 freq);
 	virtual void		gameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 	virtual void		fakeGameDeviceButtons(GameDeviceID id, GameDeviceButton buttons) const;
-	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) const;
+	virtual void		fakeGameDeviceSticks(GameDeviceID id, SInt8 x1, SInt8 y1, SInt8 x2, SInt8 y2) const;
 	virtual void		fakeGameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) const;
 	virtual void		queueGameDeviceTimingReq() const;
 
