@@ -1,0 +1,24 @@
+
+SRCS = vncExt.c vncconfig.cxx QueryConnectDialog.cxx
+
+OBJS = vncExt.o vncconfig.o QueryConnectDialog.o
+
+program = vncconfig
+
+DEP_LIBS = $(TOP)/tx/libtx.a $(COMMON)/rfb/librfb.a \
+	   $(COMMON)/network/libnetwork.a \
+           $(COMMON)/rdr/librdr.a
+
+EXTRA_LIBS = @X_PRE_LIBS@ @X_LIBS@ -lX11 -lXext @X_EXTRA_LIBS@
+
+DIR_CPPFLAGS = -I$(COMMON) -I$(TOP)/tx @X_CFLAGS@ # X_CFLAGS are really CPPFLAGS
+
+all:: $(program)
+
+$(program): $(OBJS) buildtime.o $(DEP_LIBS)
+	rm -f $(program)
+	$(CXXLD) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) buildtime.o $(DEP_LIBS) $(LIBS) $(EXTRA_LIBS)
+
+buildtime.o: $(OBJS) $(DEP_LIBS)
+
+# followed by boilerplate.mk

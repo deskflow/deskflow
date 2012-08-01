@@ -1,0 +1,289 @@
+
+VNC Free Edition Source Distribution for Unix platforms
+==============================================
+
+Copyright (C) 2002-2005 RealVNC Ltd.  All Rights Reserved.
+
+This software is distributed under the GNU General Public Licence as published
+by the Free Software Foundation.  See the file LICENCE.TXT for the conditions
+under which this software is made available.  VNC also contains code from other
+sources.  See the Acknowledgements section below, and the individual files for
+details of the conditions under which they are made available.
+
+
+There are six programs here:
+
+  vncviewer - this is the VNC viewer, or client, program for X.
+
+  Xvnc - this is the X VNC server - it is both a VNC server and an X server
+         with a "virtual" framebuffer.  You normally use the vncserver script
+         to start Xvnc.
+
+  vncserver - this is a wrapper script which makes starting an X VNC server
+              (i.e. desktop) more convenient.  It is written in Perl, so to use
+              the script you need that.
+
+  vncpasswd - this program allows you to change the password used to access
+              your X VNC desktops.  The vncserver script uses this program when
+              you first start a VNC server.
+
+  vncconfig - this program is used to configure and control a running instance
+              of Xvnc.
+
+  x0vncserver - this is an inefficient VNC server which continuously polls any
+                X display, allowing it to be controlled via VNC.  It is
+                intended mainly as a demonstration of a simple VNC server.
+
+In addition to these standalone programs, this distribution can also be used to
+turn the native X server for a platform into a VNC server.  For XFree86 version
+4 servers, this is done using a module loaded at run-time.  For other X servers
+it requires replacing the native X server binary.
+
+To build this distribution you need a C++ compiler as well as a C compiler.
+You also need a reasonably recent version of the X window system installed.
+This comes as standard with most unix machines.  If you don't have it
+installed, see http://www.xfree86.org or http://www.x.org
+
+To build everything but Xvnc, do:
+
+  % ./configure
+  % make
+
+This should build first some libraries - zlib, rdr, network, Xregion, rfb and
+tx - then vncviewer, vncconfig and vncpasswd.  If you already have zlib
+installed on your system you can run "./configure --with-installed-zlib" if you
+prefer (this is strongly advised on FreeBSD, since we've been told there are
+problems otherwise).
+
+Building Xvnc
+=============
+
+Building Xvnc and the VNC support for native X servers is much more complex.
+If you don't need to build it, skip to the section below on installing.
+
+Xvnc differs from the other programs in that it is built inside the X source
+tree.  Unlike previous versions of Xvnc, we do not provide an X source tree
+with this distribution.  We have designed the distribution to be as independent
+as possible of the X tree used.
+
+We have successfully used XFree86 version 4.3.0 and 4.2.1 (available
+from http://www.xfree86.org).  You could also try the new X.org tree
+available from http://www.x.org.  Note that the X tree is enormous and
+notoriously difficult to deal with - building it is not for the
+faint-hearted!
+
+Once you have a copy of the X source tree, make sure it is unpacked at the top
+level of this distribution, so that the xc directory of the X source tree
+matches the xc of this distribution, for example:
+
+  % tar xzf X420src-1.tgz
+
+In the case of XFree86 4.2.1, you will need only the contents of the first
+two tarfiles, but you should also apply the 4.2.0->4.2.1 patches (available
+from http://www.xfree86.org).
+In the case of XFree86 4.3.0, you will need the contents of the first three
+tarfiles.
+
+Then you must apply a patch to some files in the X source tree:
+
+  % patch -Np0 <xc.patch
+
+If this works, you should be able to build the entire X tree, including Xvnc:
+
+  % cd xc
+  % make World
+
+This will take a long time, and will quite probably fail for one reason or
+another!  If you are having trouble, we suggest you try to build the X tree in
+isolation first before attempting it with the VNC additions.
+
+If successful, in the xc/programs/Xserver directory you should find an Xvnc
+binary, plus the native X server binary(ies) for your platform with VNC support
+compiled in.  If you are building from an XFree86 version 4 tree on a supported
+platform, you should also find a vnc.so module in
+xc/programs/Xserver/vnc/modules.
+
+Exactly which X extensions and features are built into Xvnc and the native X
+server binary is determined by the settings in xc/config/cf.  The file vnc.def
+contains the settings we use to build our binary distributions.  You may need
+to edit this and the other files as appropriate.
+
+Installing
+==========
+
+Different unix platforms have different conventions for where software should
+be installed.  To copy the programs to some directory which is in your PATH
+environment variable, such as /usr/local/bin, there is a script called
+vncinstall which you can use:
+
+  % cd ..
+  % ./vncinstall /usr/local/bin
+
+This will also attempt to install the manual pages in an appropriate directory.
+You can specify an alternative directory as a second argument to vncinstall:
+
+  % ./vncinstall /usr/local/bin /usr/local/man
+
+It will also try to install the vnc.so XFree86 version 4 module if appropriate.
+This will be copied to the /usr/X11R6/lib/modules/extensions directory and can
+be enabled like any other module by adding a Load "vnc" line to the Module
+section of XF86Config.  The parameters listed in the Xvnc manual page can be
+set as options in XF86Config e.g. Option "passwordFile" "/root/.vnc/passwd".
+Note that for some reason options cannot be set in the Module section of
+XF86Config - try the Screen section.
+
+If you want to use the Java VNC viewer, you should copy the files from
+the java directory to some suitable installation directory such as
+/usr/local/vnc/classes:
+
+  % mkdir -p /usr/local/vnc/classes
+  % cp ../common/javabin/* /usr/local/vnc/classes
+
+We recommend that you use the vncserver script to run Xvnc for you.  You can
+edit the script as appropriate for your site.  Things you may need to change
+include:
+
+ * The location of Perl - if Perl is not installed in /usr/bin you'll need
+   to edit the "#!/usr/bin/perl" first line of vncserver.
+
+ * Xvnc's font path and color database.  If you have an installation of
+   X which is not in the standard place you may need to add arguments to the
+   Xvnc command line to set these.  These should be appended to the $cmd
+   variable at the comment "# Add font path and color database...".
+
+ * $vncJavaFiles - this specifies the location of the files for
+   the VNC viewer Java applet.  The default is /usr/local/vnc/classes.
+
+
+ACKNOWLEDGEMENTS
+================
+
+This distribution contains public domain DES software by Richard Outerbridge.
+This is:
+
+    Copyright (c) 1988,1989,1990,1991,1992 by Richard Outerbridge.
+    (GEnie : OUTER; CIS : [71755,204]) Graven Imagery, 1992.
+
+
+This distribution contains software from the X Window System.  This is:
+
+ Copyright 1987, 1988, 1998  The Open Group
+ 
+ Permission to use, copy, modify, distribute, and sell this software and its
+ documentation for any purpose is hereby granted without fee, provided that
+ the above copyright notice appear in all copies and that both that
+ copyright notice and this permission notice appear in supporting
+ documentation.
+ 
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+ OPEN GROUP BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ 
+ Except as contained in this notice, the name of The Open Group shall not be
+ used in advertising or otherwise to promote the sale, use or other dealings
+ in this Software without prior written authorization from The Open Group.
+ 
+ 
+ Copyright 1987, 1988 by Digital Equipment Corporation, Maynard, Massachusetts.
+ 
+                         All Rights Reserved
+ 
+ Permission to use, copy, modify, and distribute this software and its 
+ documentation for any purpose and without fee is hereby granted, 
+ provided that the above copyright notice appear in all copies and that
+ both that copyright notice and this permission notice appear in 
+ supporting documentation, and that the name of Digital not be
+ used in advertising or publicity pertaining to distribution of the
+ software without specific, written prior permission.  
+ 
+ DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+ DIGITAL BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ SOFTWARE.
+
+
+This distribution contains zlib compression software.  This is:
+
+  Copyright (C) 1995-2002 Jean-loup Gailly and Mark Adler
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+  Jean-loup Gailly        Mark Adler
+  jloup@gzip.org          madler@alumni.caltech.edu
+
+
+This distribution contains Java DES software by Dave Zimmerman
+<dzimm@widget.com> and Jef Poskanzer <jef@acme.com>.  This is:
+
+    Copyright (c) 1996 Widget Workshop, Inc. All Rights Reserved.
+
+    Permission to use, copy, modify, and distribute this software and its
+    documentation for NON-COMMERCIAL or COMMERCIAL purposes and without fee
+    is hereby granted, provided that this copyright notice is kept intact.
+    
+    WIDGET WORKSHOP MAKES NO REPRESENTATIONS OR WARRANTIES ABOUT THE
+    SUITABILITY OF THE SOFTWARE, EITHER EXPRESS OR IMPLIED, INCLUDING BUT
+    NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+    PARTICULAR PURPOSE, OR NON-INFRINGEMENT. WIDGET WORKSHOP SHALL NOT BE
+    LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS A RESULT OF USING,
+    MODIFYING OR DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES.
+    
+    THIS SOFTWARE IS NOT DESIGNED OR INTENDED FOR USE OR RESALE AS ON-LINE
+    CONTROL EQUIPMENT IN HAZARDOUS ENVIRONMENTS REQUIRING FAIL-SAFE
+    PERFORMANCE, SUCH AS IN THE OPERATION OF NUCLEAR FACILITIES, AIRCRAFT
+    NAVIGATION OR COMMUNICATION SYSTEMS, AIR TRAFFIC CONTROL, DIRECT LIFE
+    SUPPORT MACHINES, OR WEAPONS SYSTEMS, IN WHICH THE FAILURE OF THE
+    SOFTWARE COULD LEAD DIRECTLY TO DEATH, PERSONAL INJURY, OR SEVERE
+    PHYSICAL OR ENVIRONMENTAL DAMAGE ("HIGH RISK ACTIVITIES").  WIDGET
+    WORKSHOP SPECIFICALLY DISCLAIMS ANY EXPRESS OR IMPLIED WARRANTY OF
+    FITNESS FOR HIGH RISK ACTIVITIES.
+
+    Copyright (C) 1996 by Jef Poskanzer <jef@acme.com>.  All rights
+    reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer in the
+       documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+    PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS
+    BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+    BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+    WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+    OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+    ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+    Visit the ACME Labs Java page for up-to-date versions of this and other
+    fine Java utilities: http://www.acme.com/java/

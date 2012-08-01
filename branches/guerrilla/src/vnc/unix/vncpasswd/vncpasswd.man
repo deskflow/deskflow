@@ -1,0 +1,42 @@
+.TH vncpasswd 1 "03 Mar 2005" "RealVNC Ltd" "Virtual Network Computing"
+.SH NAME
+vncpasswd \- change a VNC password
+.SH SYNOPSIS
+.B vncpasswd
+.RI [ passwd-file ]
+.SH DESCRIPTION
+.B vncpasswd
+allows you to set the password used to access VNC desktops.  It stores an
+obfuscated version of the password in the given file (default
+$HOME/.vnc/passwd).  The \fBvncserver\fP script runs \fBvncpasswd\fP the first
+time you start a VNC desktop, and invokes \fBXvnc\fP with the appropriate
+\fB\-rfbauth\fP option.  \fBvncviewer\fP can also be given a password file to
+use via the \fB\-passwd\fP option.
+
+The password must be at least six characters long, and only the first eight
+characters are significant.  Note that the stored password is \fBnot\fP
+encrypted securely - anyone who has access to this file can trivially find out
+the plaintext password, so \fBvncpasswd\fP always sets appropriate permissions
+(read and write only by the owner).  However, when accessing a VNC desktop a
+challenge-response mechanism is used over the wire making it hard for anyone to
+crack the password simply by snooping on the network.
+
+.SH FILES
+.TP
+$HOME/.vnc/passwd
+Default location of the VNC password file.
+
+.SH SEE ALSO
+.BR vncviewer (1),
+.BR vncserver (1),
+.BR Xvnc (1)
+.BR vncconfig (1),
+.br
+http://www.realvnc.com
+
+.SH AUTHOR
+Tristan Richardson, RealVNC Ltd.
+
+VNC was originally developed by the RealVNC team while at Olivetti Research Ltd
+/ AT&T Laboratories Cambridge.  It is now being maintained by RealVNC Ltd.  See
+http://www.realvnc.com for details.

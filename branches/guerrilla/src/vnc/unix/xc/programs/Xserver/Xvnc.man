@@ -1,0 +1,283 @@
+.TH Xvnc 1 "03 Mar 2005" "RealVNC Ltd" "Virtual Network Computing"
+.SH NAME
+Xvnc \- the X VNC server 
+.SH SYNOPSIS
+.B Xvnc
+.RI [ options ] 
+.RI : display#
+.SH DESCRIPTION
+.B Xvnc
+is the X VNC (Virtual Network Computing) server.  It is based on a standard X
+server, but it has a "virtual" screen rather than a physical one.  X
+applications display themselves on it as if it were a normal X display, but
+they can only be accessed via a VNC viewer - see \fBvncviewer\fP(1).
+
+So Xvnc is really two servers in one. To the applications it is an X server,
+and to the remote VNC users it is a VNC server. By convention we have arranged
+that the VNC server display number will be the same as the X server display
+number, which means you can use eg. snoopy:2 to refer to display 2 on machine
+"snoopy" in both the X world and the VNC world.
+
+The best way of starting \fBXvnc\fP is via the \fBvncserver\fP script.  This
+sets up the environment appropriately and runs some X applications to get you
+going.  See the manual page for \fBvncserver\fP(1) for more information.
+
+.SH OPTIONS
+.B Xvnc
+takes lots of options - running \fBXvnc -help\fP gives a list.  Many of these
+are standard X server options, which are described in the \fBXserver\fP(1)
+manual page.  In addition to options which can only be set via the
+command-line, there are also "parameters" which can be set both via the
+command-line and through the \fBvncconfig\fP(1) program.
+
+.TP
+.B \-geometry \fIwidth\fPx\fIheight\fP
+Specify the size of the desktop to be created. Default is 1024x768.
+
+.TP
+.B \-depth \fIdepth\fP
+Specify the pixel depth in bits of the desktop to be created. Default is 16,
+other possible values are 8, 15, and 24 - anything else is likely to cause
+strange behaviour by applications.
+
+.TP
+.B \-pixelformat \fIformat\fP
+Specify pixel format for server to use (BGRnnn or RGBnnn).  The default for
+depth 8 is BGR233 (meaning the most significant two bits represent blue, the
+next three green, and the least significant three represent red), the default
+for depth 16 is RGB565 and for depth 24 is RGB888.
+
+.TP
+.B \-cc 3
+As an alternative to the default TrueColor visual, this allows you to run an
+Xvnc server with a PseudoColor visual (i.e. one which uses a colour map or
+palette), which can be useful for running some old X applications which only
+work on such a display.  Values other than 3 (PseudoColor) and 4 (TrueColor)
+for the \-cc option may result in strange behaviour, and PseudoColor desktops
+must be 8 bits deep (i.e. \fB-depth 8\fP).
+
+.TP
+.B \-inetd 
+This significantly changes Xvnc's behaviour so that it can be launched from
+inetd.  See the section below on usage with inetd.
+
+.TP
+.B \-help
+List all the options and parameters
+
+.SH PARAMETERS
+VNC parameters can be set both via the command-line and through the
+\fBvncconfig\fP(1) program, and with a VNC-enabled XFree86 server via Options
+entries in the XF86Config file.
+
+Parameters can be turned on with -\fIparam\fP or off with
+-\fIparam\fP=0.  Parameters which take a value can be specified as
+-\fIparam\fP \fIvalue\fP.  Other valid forms are \fIparam\fP\fB=\fP\fIvalue\fP
+-\fIparam\fP=\fIvalue\fP --\fIparam\fP=\fIvalue\fP.  Parameter names are
+case-insensitive.
+
+.TP
+.B \-desktop \fIdesktop-name\fP
+Each desktop has a name which may be displayed by the viewer. It defaults to
+"x11".
+
+.TP
+.B \-rfbport \fIport\fP
+Specifies the TCP port on which Xvnc listens for connections from viewers (the
+protocol used in VNC is called RFB - "remote framebuffer").  The default is
+5900 plus the display number.
+
+.TP
+.B \-rfbwait \fItime\fP, \-ClientWaitTimeMillis \fItime\fP
+
+Time in milliseconds to wait for a viewer which is blocking Xvnc.  This is
+necessary because Xvnc is single-threaded and sometimes blocks until the viewer
+has finished sending or receiving a message - note that this does not mean an
+update will be aborted after this time.  Default is 20000 (20 seconds).
+
+.TP
+.B \-httpd \fIdirectory\fP
+Run a mini-HTTP server which serves files from the given directory.  Normally
+the directory will contain the classes for the Java viewer.  In addition, files
+with a .vnc extension will have certain substitutions made so that a single
+installation of the Java VNC viewer can be served by separate instances of
+Xvnc.
+
+.TP
+.B \-httpPort \fIport\fP
+Specifies the port on which the mini-HTTP server runs.  Default is 5800 plus
+the display number.
+
+.TP
+.B \-rfbauth \fIpasswd-file\fP, \-PasswordFile \fIpasswd-file\fP
+Specifies the file containing the password used to authenticate viewers.  The
+file is accessed each time a connection comes in, so it can be changed on the
+fly via \fBvncpasswd\fP(1).
+
+.TP
+.B \-deferUpdate \fItime\fP
+Xvnc uses a "deferred update" mechanism which enhances performance in many
+cases. After any change to the framebuffer, Xvnc waits for this number of
+milliseconds (default 40) before sending an update to any waiting clients. This
+means that more changes tend to get coalesced together in a single
+update. Setting it to 0 results in the same behaviour as earlier versions of
+Xvnc, where the first change to the framebuffer causes an immediate update to
+any waiting clients.
+
+.TP
+.B \-SendCutText
+Send clipboard changes to clients (default is on).  Note that you must also run
+\fBvncconfig\fP(1) to get the clipboard to work.
+
+.TP
+.B \-AcceptCutText
+Accept clipboard updates from clients (default is on).  Note that you must also
+run \fBvncconfig\fP(1) to get the clipboard to work.
+
+.TP
+.B \-AcceptPointerEvents
+Accept pointer press and release events from clients (default is on).
+
+.TP
+.B \-AcceptKeyEvents
+Accept key press and release events from clients (default is on).
+
+.TP
+.B \-DisconnectClients
+Disconnect existing clients if an incoming connection is non-shared (default is
+on). If \fBDisconnectClients\fP is false, then a new non-shared connection will
+be refused while there is a client active.  When combined with
+\fBNeverShared\fP this means only one client is allowed at a time.
+
+.TP
+.B \-NeverShared
+Never treat incoming connections as shared, regardless of the client-specified
+setting (default is off).
+
+.TP
+.B \-AlwaysShared
+Always treat incoming connections as shared, regardless of the client-specified
+setting (default is off).
+
+.TP
+.B \-Protocol3.3
+Always use protocol version 3.3 for backwards compatibility with badly-behaved
+clients (default is off).
+
+.TP
+.B \-CompareFB
+Perform pixel comparison on framebuffer to reduce unnecessary updates (default
+is on).
+
+.TP
+.B \-SecurityTypes \fIsec-types\fP
+Specify which security schemes to use separated by commas.  At present only
+"None" and "VncAuth" are supported.  The default is "VncAuth" - note that if
+you want a server which does not require a password, you must set this
+parameter to "None".
+
+.TP
+.B \-IdleTimeout \fIseconds\fP
+The number of seconds after which an idle VNC connection will be dropped
+(default is 3600 i.e. an hour).
+
+.TP
+.B \-QueryConnect
+Prompts the user of the desktop to explicitly accept or reject incoming
+connections.  This is most useful when using the vnc.so module or
+\fBx0vncserver\fP(1) program to access an existing X desktop via VNC.
+
+The \fBvncconfig\fP(1) program must be running on the desktop in order for
+QueryConnect to be supported by the \fBvnc.so\fP(1) module or
+\fBXvnc\fP(1) program.  The \fBx0vncserver\fP(1) program does not require
+\fBvncconfig\fP(1) to be running.
+
+.TP
+.B \-localhost
+Only allow connections from the same machine. Useful if you use SSH and want to
+stop non-SSH connections from any other hosts. See the guide to using VNC with
+SSH on the web site.
+
+.TP
+.B \-log \fIlogname\fP:\fIdest\fP:\fIlevel\fP
+Configures the debug log settings.  \fIdest\fP can currently be \fBstderr\fP or
+\fBstdout\fP, and \fIlevel\fP is between 0 and 100, 100 meaning most verbose
+output.  \fIlogname\fP is usually \fB*\fP meaning all, but you can target a
+specific source file if you know the name of its "LogWriter".  Default is
+\fB*:stderr:30\fP.
+
+.TP
+.B \-RemapKeys \fImapping
+Sets up a keyboard mapping.
+.I mapping
+is a comma-separated string of character mappings, each of the form
+.IR char -> char ,
+or
+.IR char <> char ,
+where
+.I char
+is a hexadecimal keysym. For example, to exchange the " and @ symbols you would specify the following:
+.IP "" 10
+RemapKeys=0x22<>0x40
+
+.SH USAGE WITH INETD
+By configuring the \fBinetd\fP(1) service appropriately, Xvnc can be launched
+on demand when a connection comes in, rather than having to be started
+manually.  When given the \fB-inetd\fP option, instead of listening for TCP
+connections on a given port it uses its standard input and standard output.
+There are two modes controlled by the wait/nowait entry in the inetd.conf file.
+
+In the nowait mode, Xvnc uses its standard input and output directly as the
+connection to a viewer.  It never has a listening socket, so cannot accept
+further connections from viewers (it can however connect out to listening
+viewers by use of the vncconfig program).  Further viewer connections to the
+same TCP port result in inetd spawning off a new Xvnc to deal with each
+connection.  When the connection to the viewer dies, the Xvnc and any
+associated X clients die.  This behaviour is most useful when combined with the
+XDMCP options -query and -once.  An typical example in inetd.conf might be (all
+on one line):
+
+5950   stream   tcp nowait nobody  /usr/local/bin/Xvnc Xvnc -inetd -query
+localhost -once securitytypes=none
+
+In this example a viewer connection to :50 will result in a new Xvnc for that
+connection which should display the standard XDM login screen on that machine.
+Because the user needs to login via XDM, it is usually OK to accept connections
+without a VNC password in this case.
+
+In the wait mode, when the first connection comes in, inetd gives the listening
+socket to Xvnc.  This means that for a given TCP port, there is only ever one
+Xvnc at a time.  Further viewer connections to the same port are accepted by
+the same Xvnc in the normal way.  Even when the original connection is broken,
+the Xvnc will continue to run.  If this is used with the XDMCP options -query
+and -once, the Xvnc and associated X clients will die when the user logs out of
+the X session in the normal way.  It is important to use a VNC password in this
+case.  A typical entry in inetd.conf might be:
+
+5951   stream   tcp wait   james     /usr/local/bin/Xvnc Xvnc -inetd -query localhost -once passwordFile=/home/james/.vnc/passwd
+
+In fact typically, you would have one entry for each user who uses VNC
+regularly, each of whom has their own dedicated TCP port which they use.  In
+this example, when user "james" connects to :51, he enters his VNC password,
+then gets the XDM login screen where he logs in in the normal way.  However,
+unlike the previous example, if he disconnects, the session remains persistent,
+and when he reconnects he will get the same session back again.  When he logs
+out of the X session, the Xvnc will die, but of course a new one will be
+created automatically the next time he connects.
+
+.SH SEE ALSO
+.BR vncconfig (1),
+.BR vncpasswd (1),
+.BR vncserver (1),
+.BR vncviewer (1),
+.BR Xserver (1),
+.BR inetd (1)
+.br
+http://www.realvnc.com
+
+.SH AUTHOR
+Tristan Richardson, RealVNC Ltd.
+
+VNC was originally developed by the RealVNC team while at Olivetti Research Ltd
+/ AT&T Laboratories Cambridge.  It is now being maintained by RealVNC Ltd.  See
+http://www.realvnc.com for details.

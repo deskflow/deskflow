@@ -1,0 +1,78 @@
+
+ VNCCOMMONDIR = VncCommonDir
+   VNCINCLUDE = -I$(VNCCOMMONDIR)
+      VNCLIBS = VncExtLibs
+
+#if defined(XFree86Version) && XFree86Version < 4000
+   VNCDEFINES = -DNO_INIT_BACKING_STORE
+#endif
+
+#define CplusplusSource
+
+#include <Server.tmpl>
+
+#ifdef XVendorString
+VENDORSTRING = XVendorString
+#else
+VENDORSTRING = "unknown"
+#endif
+
+#ifdef XVendorRelease
+VENDORRELEASE = XVendorRelease
+#else
+VENDORRELEASE = 0
+#endif
+
+   VENDOR_STRING = -DVENDOR_STRING=\"$(VENDORSTRING)\"
+   VENDOR_RELEASE = -DVENDOR_RELEASE="$(VENDORRELEASE)"
+
+#ifdef OS2Architecture
+SRCS1 = os2_stubs.c
+OBJS1 = os2_stubs.o
+#endif
+
+SRCSA =	xvnc.cc stubs.c $(SRCS1) miinitext.c $(SRCS2)
+
+OBJSA =	xvnc.o stubs.o $(OBJS1) miinitext.o $(OBJS2)
+
+INCLUDES = -I. -I.. -I$(XBUILDINCDIR) -I$(FONTINCSRC) \
+	   -I../../cfb -I../../mfb -I../../mi -I../../include -I../../os  \
+           -I$(EXTINCSRC) -I$(XINCLUDESRC)  -I$(SERVERSRC)/render $(VNCINCLUDE)
+
+DEFINES = $(OS_DEFINES) $(SHMDEF) $(MMAPDEF) \
+          $(VENDOR_STRING) $(VENDOR_RELEASE) $(STD_DEFINES) ServerOSDefines \
+          $(VNCDEFINES) -UXFree86LOADER
+
+#ifdef XFree86Version
+/* 
+ * Make sure XINPUT, XF86VidTune, etc arent defined for the miinitext.o 
+ * used by Xvnc 
+ */
+EXT_DEFINES = ExtensionDefines -UXF86VIDMODE -UXFreeXDGA -UXF86MISC
+#endif
+
+
+SRCS =	$(SRCSA) $(SRCSB) $(SRCSC)
+OBJS =	$(OBJSA) $(OBJSB) $(OBJSC)
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(xvnc,$(OBJS) buildtime.o)
+
+#ifdef OS2Architecture
+LinkSourceFile(os2_stubs.c,../xfree86/os-support/os2)
+SpecialCObjectRule(os2_stubs,$(ICONFIGFILES),-DOS2NULLSELECT)
+#endif
+
+#ifdef HasGcc
+NO_OPERATOR_NAMES = -fno-operator-names
+#endif
+LinkSourceFile(stubs.c,../../Xi)
+SpecialCplusplusObjectRule(xvnc,$(ICONFIGFILES) xvnc,$(EXT_DEFINES) $(NO_OPERATOR_NAMES))
+
+LinkSourceFile(miinitext.c,$(SERVERSRC)/mi)
+SpecialCObjectRule(miinitext,$(ICONFIGFILES),$(EXT_DEFINES) $(PAN_DEFINES) -DNO_MODULE_EXTS $(EXT_MODULE_DEFINES) -UXFree86LOADER)
+
+/* InstallManPage(Xvfb,$(MANDIR)) */
+DependTarget()
+
+buildtime.o: $(OBJS) ../LibraryTargetName(vnc) $(VNCLIBS)
