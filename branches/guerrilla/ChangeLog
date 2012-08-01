@@ -1,0 +1,56 @@
+1.4.8
+=====
+
+Bug #143: Cursor on Mac OS X goes to center when inactive
+Bug #146: Screen Resize causes problems with moving off right-hand side of screen
+Bug #3058: Modifier keys not working on Mac OS X server
+Bug #3139: Double click too strict (click, move, click should not count)
+Bug #3195: Service install can fail first time
+Bug #3196: Wizard buttons not visible
+Bug #3197: GUI doesn't take focus after install
+Bug #3202: Hook DLL (synrgyhk.dll) is not released
+Feature #3143: Setup wizard for first time users
+Feature #3145: Check for updates
+Feature #3174: Startup mode wizard page
+Feature #3184: New service for process management
+
+1.4.7
+=====
+
+Bug #3132: GUI hides before successful connection
+Bug #3133: Can't un-hide GUI on Mac
+Feature #3054: Hide synergy[cs] dock icon (Mac OS X)
+Feature #3135: Integrate log into main window
+Task #3134: Move hotkey warnings to DEBUG
+
+1.4.6
+=====
+
+Bug #155: Build error on FreeBSD (missing sentinel in function call)
+Bug #571: Synergy SegFaults with "Unknown Quartz Event type: 0x1d"
+Bug #617: xrandr rotation on client confines cursor in wrong area
+Bug #642: `synergyc --help` segfaults on sparc64 architecture
+Bug #652: Stack overflow in getIDForKey
+Bug #1071: Can't copy from the Firefox address bar on Linux
+Bug #1662: Copying text from remote computer crashes java programs.
+Bug #1731: YouTube can cause server to freeze randomly
+Bug #2752: Use SAS for ctrl+alt+del on win7
+Bug #2763: Double-click broken on Mac OS
+Bug #2817: Keypad Subtract has wrong keycode on OS X
+Bug #2958: GNOME 3 mouse problem (gnome-shell)
+Bug #2962: Clipboard not working on mac client
+Bug #3063: Segfault in copy buffer
+Bug #3066: Server segfault on clipboard paste
+Bug #3089: Comma and Period translated wrong when using the NEO2-layout
+Bug #3092: Wrong screen rotation detected
+Bug #3105: There doesn't seem to be a system tray available. Quitting
+Bug #3116: Memory Leak due to the XInput2 patches
+Bug #3117: Dual monitors not detected properly anymore
+Feature #3073: Re-introduce auto-start GUI (Windows)
+Feature #3076: Re-introduce auto-start backend
+Feature #3077: Re-introduce hidden on start
+Feature #3091: Add option to remap altgr modifier
+Feature #3119: Mac OS X secondary screen
+Task #2905: Unit tests: Clipboard classes
+Task #3072: Downgrade Linux build machines
+Task #3090: CXWindowsKeyState integ test args wrong

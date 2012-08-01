@@ -1,0 +1,255 @@
+*** xc.orig/config/cf/X11.tmpl	Tue Jan 15 22:55:26 2002
+--- xc/config/cf/X11.tmpl	Sun Sep  7 19:52:01 2003
+***************
+*** 3120,3126 ****
+  	$(RM) index.raw file.nPS file.PS file.txt
+  #endif
+  
+! #ifndef MakeSimpleDoc(file,srcs)
+  #define MakeSimpleDoc(file,srcs) MakeDepSimpleDoc(file,srcs,srcs)
+  #endif
+  
+--- 3120,3126 ----
+  	$(RM) index.raw file.nPS file.PS file.txt
+  #endif
+  
+! #ifndef MakeSimpleDoc
+  #define MakeSimpleDoc(file,srcs) MakeDepSimpleDoc(file,srcs,srcs)
+  #endif
+  
+*** xc.orig/config/cf/hp.cf	Wed Jan 17 16:22:31 2001
+--- xc/config/cf/hp.cf	Mon Sep  8 19:54:52 2003
+***************
+*** 131,137 ****
+  #endif
+  #define HPFastScrolling		YES
+  #ifndef BuildServer
+! # define BuildServer		__hp9000s700
+  #endif
+  #if OSMajorVersion < 10
+  #define NeedBerklib		(BuildServer|BuildFontServer)
+--- 131,137 ----
+  #endif
+  #define HPFastScrolling		YES
+  #ifndef BuildServer
+! # define BuildServer		YES
+  #endif
+  #if OSMajorVersion < 10
+  #define NeedBerklib		(BuildServer|BuildFontServer)
+***************
+*** 139,145 ****
+  #define XawI18nDefines		-DHAS_WCHAR_H -DHAS_ISW_FUNCS
+  
+  #if OSMajorVersion < 6 || (OSMajorVersion == 6 && OSMinorVersion < 2)
+! # define ConnectionFlags	-DTCPCONN	/* no unix sockets */
+  #endif
+  
+  #if OSMajorVersion > 8
+--- 139,145 ----
+  #define XawI18nDefines		-DHAS_WCHAR_H -DHAS_ISW_FUNCS
+  
+  #if OSMajorVersion < 6 || (OSMajorVersion == 6 && OSMinorVersion < 2)
+! /*# define ConnectionFlags	-DTCPCONN*/	/* no unix sockets */
+  #endif
+  
+  #if OSMajorVersion > 8
+*** xc/config/cf/site.def.orig  Tue Sep  9 17:42:56 2003
+--- xc/config/cf/site.def       Tue Sep  9 17:43:07 2003
+***************
+*** 84,90 ****
+  #ifdef AfterVendorCF
+  
+  #ifndef ProjectRoot
+! #define ProjectRoot /usr/X11R6
+  #endif
+  
+  /*
+--- 84,90 ----
+  #ifdef AfterVendorCF
+  
+  #ifndef ProjectRoot
+! /*#define ProjectRoot /usr/X11R6*/
+  #endif
+  
+  /*
+*** xc.orig/config/imake/imake.c	Fri Dec 14 19:53:18 2001
+--- xc/config/imake/imake.c	Mon Sep  8 19:35:33 2003
+***************
+*** 288,293 ****
+--- 288,294 ----
+  #define	TRUE		1
+  #define	FALSE		0
+  
++ #define FIXUP_CPP_WHITESPACE
+  #ifdef FIXUP_CPP_WHITESPACE
+  int	InRule = FALSE;
+  # ifdef INLINE_SYNTAX
+***************
+*** 389,394 ****
+--- 390,401 ----
+  	FILE	*tmpfd = NULL;
+  	char	makeMacro[ BUFSIZ ];
+  	char	makefileMacro[ BUFSIZ ];
++ 
++ #ifdef FIXUP_CPP_WHITESPACE
++ 	fprintf(stderr,"\nFIXUP_CPP_WHITESPACE is defined!!\n\n");
++ #else
++ #error "FIXUP_CPP_WHITESPACE is not defined"
++ #endif
+  
+  	program = argv[0];
+  	init();
+*** xc.orig/config/imake/imakemdep.h	Fri Dec 14 19:53:19 2001
+--- xc/config/imake/imakemdep.h	Tue Sep  9 16:38:18 2003
+***************
+*** 48,54 ****
+  #ifdef hp9000s800
+  #define imake_ccflags "-DSYSV"
+  #else
+! #define imake_ccflags "-Wc,-Nd4000,-Ns3000 -DSYSV"
+  #endif
+  #endif
+  
+--- 48,54 ----
+  #ifdef hp9000s800
+  #define imake_ccflags "-DSYSV"
+  #else
+! #define imake_ccflags "-DSYSV"
+  #endif
+  #endif
+  
+***************
+*** 211,217 ****
+   *     all colons).  One way to tell if you need this is to see whether or not
+   *     your Makefiles have no tabs in them and lots of @@ strings.
+   */
+! #if defined(sun) || defined(SYSV) || defined(SVR4) || defined(hcx) || defined(WIN32) || defined(sco) || (defined(AMOEBA) && defined(CROSS_COMPILE)) || defined(__QNX__) || defined(__sgi)
+  #define FIXUP_CPP_WHITESPACE
+  #endif
+  #ifdef WIN32
+--- 211,217 ----
+   *     all colons).  One way to tell if you need this is to see whether or not
+   *     your Makefiles have no tabs in them and lots of @@ strings.
+   */
+! #if defined(sun) || defined(SYSV) || defined(SVR4) || defined(hcx) || defined(WIN32) || defined(sco) || (defined(AMOEBA) && defined(CROSS_COMPILE)) || defined(__QNX__) || defined(__sgi) || defined(hpux)
+  #define FIXUP_CPP_WHITESPACE
+  #endif
+  #ifdef WIN32
+*** xc.orig/include/Xfuncs.h	Fri Dec 14 19:53:25 2001
+--- xc/include/Xfuncs.h	Sun Sep  7 20:10:35 2003
+***************
+*** 42,48 ****
+  #else
+  #if defined(SYSV)
+  #include <memory.h>
+! void bcopy();
+  #define bzero(b,len) memset(b, 0, len)
+  #define bcmp(b1,b2,len) memcmp(b1, b2, len)
+  #elif defined(__EMX__)
+--- 42,48 ----
+  #else
+  #if defined(SYSV)
+  #include <memory.h>
+! /*void bcopy();*/
+  #define bzero(b,len) memset(b, 0, len)
+  #define bcmp(b1,b2,len) memcmp(b1, b2, len)
+  #elif defined(__EMX__)
+*** xc.orig/include/extensions/security.h	Fri Dec 14 19:53:29 2001
+--- xc/include/extensions/security.h	Fri Aug  1 17:43:44 2003
+***************
+*** 110,115 ****
+--- 110,116 ----
+  
+  #include "input.h"    /* for DeviceIntPtr */
+  #include "property.h" /* for PropertyPtr */
++ #include "resource.h"
+  
+  /* resource type to pass in LookupIDByType for authorizations */
+  extern RESTYPE SecurityAuthorizationResType;
+*** xc.orig/lib/font/Type1/fontfcn.c	Fri Nov 23 19:21:31 2001
+--- xc/lib/font/Type1/fontfcn.c	Sun Sep  7 19:29:27 2003
+***************
+*** 47,52 ****
+--- 47,53 ----
+   */
+  /* $XFree86: xc/lib/font/Type1/fontfcn.c,v 1.11 2001/11/23 19:21:31 dawes Exp $ */
+   
++ #include <stdlib.h>
+  #ifndef FONTMODULE
+  #include <stdio.h>
+  #include <string.h>
+*** xc.orig/lib/font/Type1/objects.h	Mon Aug 27 20:49:52 2001
+--- xc/lib/font/Type1/objects.h	Sun Sep  7 19:29:37 2003
+***************
+*** 50,56 ****
+  #include <Xdefs.h>
+  #include <Xfuncproto.h>
+  #ifndef FONTMODULE
+! #include <stdlib.h>
+  #endif
+  /*SHARED*/
+  
+--- 50,56 ----
+  #include <Xdefs.h>
+  #include <Xfuncproto.h>
+  #ifndef FONTMODULE
+! /*#include <stdlib.h>*/
+  #endif
+  /*SHARED*/
+  
+*** xc.orig/lib/xtrans/Xtransutil.c     Tue Sep  9 17:40:14 2003
+--- xc/lib/xtrans/Xtransutil.c  Tue Sep  9 17:40:20 2003
+***************
+*** 503,514 ****
+  	    if (updateOwner && !updatedOwner) {
+  	  	PRMSG(1, "mkdir: Owner of %s should be set to root\n",
+  		      path, 0, 0);
+- 		sleep(5);
+  	    }
+  	    if (updateMode && !updatedMode) {
+  	  	PRMSG(1, "mkdir: Mode of %s should be set to %04o\n",
+  		      path, mode, 0);
+- 		sleep(5);
+  	    }
+  	    return 0;
+  	}
+--- 503,512 ----
+*** xc.orig/programs/Xserver/vnc/Xvnc/xvnc.cc     12 Aug 2003 11:00:14 -0000
+--- xc/programs/Xserver/vnc/Xvnc/xvnc.cc     9 Sep 2003 16:15:53 -0000
+***************
+*** 1221,1223 ****
+--- 1221,1229 ----
+    miRegisterPointerDevice(screenInfo.screens[0], p);
+    (void)mieqInit ((DevicePtr)k, (DevicePtr)p);
+  }
++ 
++ extern "C" {
++   void XTestGenerateEvent() {}
++   void XTestGetPointerPos() {}
++   void XTestJumpPointer() {}
++ }
+*** xc.orig/config/cf/vnc.def        7 Jul 2003 09:51:22
+--- xc/config/cf/vnc.def        9 Sep 2003 15:54:23
+***************
+*** 9,14 ****
+--- 9,20 ----
+  #define XnestServer NO
+  #define XprtServer NO
+  
++ #define BuildXKB NO
++ #define HasCplusplus YES
++ #define CplusplusCmd /opt/aCC/bin/aCC
++ #define CplusplusOptions -AA +W749 +W740
++ #define ProjectRoot /usr
++ 
+  #ifdef SunArchitecture
+  #define ProjectRoot /usr/openwin
+  #define HasGcc2 YES
+***************
+*** 29,32 ****
+--- 34,38 ----
+  
+  #define	ServerTarget(server,subdirs,objects,libs,syslibs)		@@\
+  CCLINK = $(CXXENVSETUP) $(CXX) @@\
++ CCOPTIONS = -AA @@\
+  ServerTargetWithFlags(server,subdirs,objects,libs,syslibs,$(_NOOP_))
