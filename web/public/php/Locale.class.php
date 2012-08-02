@@ -28,8 +28,11 @@ class Locale {
   
   var $lang;
   var $rtl;
+  var $website;
   
-  function __construct() {
+  function __construct($website) {
+    
+    $this->website = $website;
     
     // default language is english
     $this->lang = "en";
@@ -96,7 +99,7 @@ class Locale {
       
       // if english, force and use / (if we don't
       // force in session, language is auto detected).
-      if (!isBot() && strstr($this->lang, "en")) {
+      if (!$this->website->isBot() && strstr($this->lang, "en")) {
         $_SESSION["lang"] = $this->lang;
         header("Location: /");
       } else {
@@ -127,7 +130,7 @@ class Locale {
         exit;
       }
       
-    } else if (!isBot() && isSet($_SESSION["lang"])) {
+    } else if (!$this->website->isBot() && isSet($_SESSION["lang"])) {
 
       // language forced. this should only happen under /
       // where no url lang is forced.
