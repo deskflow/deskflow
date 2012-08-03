@@ -203,7 +203,7 @@ CMSWindowsRelauncher::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTE
 		return NULL;
 	}
 	
-	LOG((CLOG_ERR "got token %i, duplicating", sourceToken));
+	LOG((CLOG_DEBUG "got token %i, duplicating", sourceToken));
 
 	HANDLE newToken;
 	BOOL duplicateRet = DuplicateTokenEx(
