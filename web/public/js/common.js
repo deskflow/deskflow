@@ -85,7 +85,10 @@ function submitPremiumForm() {
       }
       else {
         var amount = getPremiumAmountFromText($("div.premium input#amount").val());
-        signup.find("input#amount3").val(amount);
+        signup.find("form#paypal input[name='amount']").val(amount);
+        signup.find("form#paypal input[name='custom']").val(message.userId);
+        log(signup.find("form#paypal input[name='amount']"));
+        log(signup.find("form#paypal input[name='custom']"));
         signup.find("div.step1").hide();
         signup.find("div.step2").fadeIn();
       }
@@ -171,8 +174,8 @@ function premiumPage() {
   initSlider();
   
   $("div.contribute input[type='image']").click(function() {
-    $("input#amount2").val(getPremiumAmountFromText($("input#amount").val()));
-    log($("input#amount2").val());
+    $("form#paypal input[name='amount']").val(getPremiumAmountFromText($("input#amount").val()));
+    log($("form#paypal input[name='amount']"));
   });
 }
 

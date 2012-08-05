@@ -126,7 +126,7 @@ the development of Synergy. All funds are <b>reinvested</b> back into the
 development of Synergy.{/t}
       </p>
       
-      <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+      <form id="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
         <input type="hidden" name="cmd" value="_xclick">
         <input type="hidden" name="business" value="SXQD4CT26Z95N">
         <input type="hidden" name="lc" value="GB">
@@ -138,7 +138,8 @@ development of Synergy.{/t}
         <input type="hidden" name="return" value="http://synergy-foss.org/premium?success">
         <input type="hidden" name="cancel_return" value="http://synergy-foss.org/premium?cancel">
         <input type="hidden" name="currency_code" value="USD">
-        <input type="hidden" name="amount" value="10" id="amount3">
+        <input type="hidden" name="amount" value="10">
+        <input type="hidden" name="custom">
         <input type="hidden" name="bn" value="PP-BuyNowBF:btn_paynowCC_LG.gif:NonHosted">
         <input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
         <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">

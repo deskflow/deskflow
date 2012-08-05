@@ -106,6 +106,7 @@ class Premium {
     if ($error == "") {
       $this->registerSql($mysql);
       $this->login($_POST["email1"]);
+      $result["userId"] = $this->user->id;
     }
     
     $result["error"] = $error;
@@ -139,12 +140,13 @@ class Premium {
     $result = $mysql->multi_query(sprintf(
       "insert into vote (userId, issueId, voteCount) values (%d, %d, %d) ".
       "on duplicate key update voteCount = voteCount + %d; ".
-      "update user set votesFree = votesFree - %d",
+      "update user set votesFree = votesFree - %d where id = %d",
       $this->user->id,
       $issueId,
       $voteCount,
       $voteCount,
-      $voteCount
+      $voteCount,
+      $this->user->id
     ));
     if ($result == null) {
       throw new Exception($mysql->error);
@@ -261,10 +263,11 @@ class Premium {
     return (int)($row[0]);
   }
   
-  public function saveIpnData($email, $data, $check) {
+  public function saveIpnData($userId, $email, $data, $check) {
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
-      "insert into paypal (created, email, ipnData, ipnCheck) values (now(), '%s', '%s', '%s')",
+      "insert into paypal (userId, email, ipnData, ipnCheck, created) values (%d, '%s', '%s', '%s', now())",
+      (int)$userId,
       $mysql->escape_string($email),
       $mysql->escape_string($data),
       $mysql->escape_string($check)
@@ -274,13 +277,13 @@ class Premium {
     }
   }
   
-  public function assignVotes($email, $votes) {
+  public function assignVotes($userId, $votes) {
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
       "update user set votesFree = votesFree + %d ".
-      "where email = '%s'",
+      "where id = %d",
       (int)$votes,
-      $mysql->escape_string($email)
+      (int)$userId
     ));
     if ($result == null) {
       throw new Exception($mysql->error);
@@ -288,8 +291,8 @@ class Premium {
   }
 
   public function ipn() {
-    // read the post from PayPal system and add 'cmd'
-    $req = 'cmd=' . urlencode('_notify-validate');
+    // read the post from PayPal system and add "cmd"
+    $req = "cmd=" . urlencode("_notify-validate");
 
     foreach ($_POST as $key => $value) {
       $value = urlencode(stripslashes($value));
@@ -298,33 +301,32 @@ class Premium {
 
     // ask paypal to verify the ipn request.
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'https://www.paypal.com/cgi-bin/webscr');
+    curl_setopt($ch, CURLOPT_URL, "https://www.paypal.com/cgi-bin/webscr");
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Host: www.paypal.com'));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: www.paypal.com"));
     $res = curl_exec($ch);
     curl_close($ch);
 
     // assign posted variables to local variables
-    $item_name = $_POST['item_name'];
-    $item_number = $_POST['item_number'];
-    $payment_status = $_POST['payment_status'];
-    $payment_amount = $_POST['mc_gross'];
-    $payment_currency = $_POST['mc_currency'];
-    $txn_id = $_POST['txn_id'];
-    $receiver_email = $_POST['receiver_email'];
-    $payer_email = $_POST['payer_email'];
+    $item_name = $_POST["item_name"];
+    $item_number = $_POST["item_number"];
+    $payment_status = $_POST["payment_status"];
+    $payment_amount = $_POST["mc_gross"];
+    $payment_currency = $_POST["mc_currency"];
+    $txn_id = $_POST["txn_id"];
+    $receiver_email = $_POST["receiver_email"];
+    $payer_email = $_POST["payer_email"];
+    $userId = (int)$_POST["custom"];
     
-    $this->saveIpnData($payer_email, json_encode($_POST), $res);
+    $this->saveIpnData($userId, $payer_email, json_encode($_POST), $res);
     
-    if (strcmp($res, "VERIFIED") == 0) {
-      // TODO: use user id (pass to paypal as custom data) for those annoying people
-      // who use different email addresses.
-      $this->assignVotes($payer_email, $payment_amount / $this->voteCost);
+    if ($res == "VERIFIED" && $payment_status == "Completed") {
+      $this->assignVotes($userId, $payment_amount / $this->voteCost);
     }
   }
 }
