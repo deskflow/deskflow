@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+var defaultPremiumSliderIndex = 11;
+
 function log(s) {
   if ("console" in self && "log" in console) console.log(s);
 }
@@ -145,7 +147,7 @@ function downloadOptions() {
   
   $("div.premium div.slider").slider({
     min: 1,
-    value: 10,
+    value: defaultPremiumSliderIndex,
     slide: function(event, ui) {
       var value = getPremiumValueFromIndex(ui.value);
       $("div.premium input#amount").val("$" + value);

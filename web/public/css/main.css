@@ -382,13 +382,27 @@ div.download-premium div.or {
 }
 
 div.download-premium div.premium,
+div.download-premium div.free,
+div.download-premium div.donateMessage {
+  padding: 20px;
+  border-radius: 7px;
+}
+
+div.download-premium div.donateMessage {
+  border: 1px solid #86c972;
+}
+
+div.download-premium div.donateMessage p {
+  padding: 0px;
+  margin: 0px;
+}
+
+div.download-premium div.premium,
 div.download-premium div.free {
   width: 250px;
   border-width: 1px;
   border-style: solid;
-  padding: 20px;
   margin: 10px 0px 30px 0px;
-  border-radius: 7px;
 }
 
 div.download-premium div.premium h2,

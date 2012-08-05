@@ -102,6 +102,7 @@ class Website {
           exit($premium->register());
         }
         $page = "download_premium";
+        $smarty->assign("showDonateMessage", isset($_GET["donate"]));
       }
     }
     
