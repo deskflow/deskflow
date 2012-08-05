@@ -43,8 +43,8 @@ div.info div.team {
 
 div.home div.paypal,
 div.home div.flattr,
-div.download div.paypal,
-div.download div.flattr {
+div.download-list div.paypal,
+div.download-list div.flattr {
   float: left;
 }
 
@@ -53,27 +53,27 @@ div.paypal form {
   float: left;
 }
 
-div.download div.top div.ga {
+div.download-list div.top div.ga {
   float: left;
 }
 
-div.download div.top div.list {
+div.download-list div.top div.list {
   float: left;
 }
 
-div.download div.top div.list div.item {
+div.download-list div.top div.list div.item {
   float: left;
 }
 
-div.download div.top div.list {
+div.download-list div.top div.list {
   margin-left: 25px;
 }
 
-div.download div.alt {
+div.download-list div.alt {
   float: left;
 }
 
-div.download div.alt div.list {
+div.download-list div.alt div.list {
   float: left;
 }
 

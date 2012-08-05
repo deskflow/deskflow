@@ -119,7 +119,7 @@ class Locale {
       
       // language forced by url.
       $this->lang = $_GET["ul"];
-      if (!isBot()) {
+      if (!$this->website->isBot()) {
         unset($_SESSION["lang"]);
       }
       

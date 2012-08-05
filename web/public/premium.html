@@ -1,0 +1,72 @@
+﻿<div class="premium-page">
+
+  <div class="title">
+    <div class="logo">
+      <img src="/img/icon.png" /><h1 class="title">Synergy</h1>
+    </div>
+  </div>
+  
+  <div class="inner-content">
+  
+    <h2>{t}Premium{/t}</h2>
+    
+    {if !$premium->loggedIn()}
+    
+    <p>
+{t escape=no url="../download/"}Synergy Premium allows users to fund
+development of Synergy and vote on bug fixes and features.
+<a href="%1">Sign up now</a>.{/t}
+    </p>
+    
+    {else}
+    
+    <p>
+{t escape=no votes=$premium->getFreeVoteCount()}Welcome to your Synergy
+Premium account. You have <b>%1</b> unassigned Premium vote(s). If you
+have just signed up and don't see any votes, we may be waiting to hear
+from PayPal so please be patient.{/t}
+    </p>
+    
+    <h3>{t}New vote{/t}</h3>
+    <p>
+{t escape=no url="/issues/" email="nick.bolton.uk@gmail.com"}To use Premium
+votes, enter an issue ID from our <a href="%1" target="_blank">issue tracker</a>,
+and assign a number of votes. Choose carefully; once votes are spent,
+you can't get them back. If you have any problems using your votes or if you
+have run out and want to add more, please email <a href="mailto:%2">%2</a>
+for help.{/t}
+    </p>
+    
+    <form id="vote" action="?vote" method="post">
+      <div class="box">
+        <p><label for="issue">{t}Issue ID:{/t}</label><input type="textbox" id="issue" name="issue" /></p>
+        <p><label for="votes">{t}Votes:{/t}</label><input type="textbox" id="votes" name="votes" /></p>
+      </div>
+      <div class="buttons">
+        <input type="submit" value="{t}OK{/t}" />
+      </div>
+    </form>
+    
+    <h3>{t}Your votes{/t}</h3>
+    <ul>
+      {foreach from=$premium->getUserVotes() item=vote}
+      <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
+      {foreachelse}
+      <li>{t}You have not cast any votes yet.{/t}</li>
+      {/foreach}
+    </ul>
+    
+    <h3>{t}Community votes{/t}</h3>
+    <ul>
+      {foreach from=$premium->getAllVotes() item=vote}
+      <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
+      {foreachelse}
+      <li>{t}No votes.{/t}</li>
+      {/foreach}
+    </ul>
+    
+    {/if}
+    
+  </div>
+
+</div>

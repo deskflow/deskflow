@@ -9,11 +9,15 @@ a {
   color: #4099ff;
 }
 
-h1, h2, h3, p {
-  margin-top: 0px;
+h1, h2, h3 {
+  margin-top: .7em;
   padding-top: 0px;
-  margin-bottom: 10px;
-  padding-bottom: 5px;
+  margin-bottom: .5em;
+  padding-bottom: 0em;
+}
+
+p {
+  margin-top: .2em;
 }
 
 ul, ol {
@@ -126,6 +130,8 @@ div.title {
 div.title h1 {
   margin-top: 0px;
   padding-top: 4px;
+  margin-bottom: .5em;
+  padding-bottom: 0px;
 }
 
 div.title img {
@@ -170,7 +176,7 @@ div.info div.flattr {
 }
 
 div.home div.donate,
-div.download div.donate {
+div.download-list div.donate {
   margin-top: 8px;
   height: 25px;
 }
@@ -183,12 +189,12 @@ div.paypal form {
 }
 
 div.home div.paypal,
-div.download div.paypal {
+div.download-list div.paypal {
   margin-right: 7px;
 }
 
 div.home div.flattr,
-div.download div.flattr {
+div.download-list div.flattr {
   margin-top: 3px;
 }
 
@@ -198,69 +204,69 @@ div.info div.cafepress {
   margin-top: 10px;
 }
 
-div.download div.top {
+div.download-list div.top {
   float: left;
   width: 100%;
 }
 
-div.download div.top p {
+div.download-list div.top p {
   padding-bottom: 15px;
   margin-bottom: 15px;
 }
 
-div.download div.top h3 {
+div.download-list div.top h3 {
   padding-top: 10px;
   margin-top: 0px;
 }
 
 /* can't use "advert" or "adsense" because of ad-blockers. */
-div.download div.top div.ga {
+div.download-list div.top div.ga {
   margin-top: 3px;
   margin-bottom: 20px;
   width: 160px;
   height: 600px;
 }
 
-div.download div.top div.list {
+div.download-list div.top div.list {
   height: 50px;
   width: 545px;
 }
 
-div.download div.top div.list p {
+div.download-list div.top div.list p {
   margin-top: 3px;
 }
 
-div.download div.top div.list div.item {
+div.download-list div.top div.list div.item {
   width: 100%;
   height: 7em;
   font-size: 1.1em;
   white-space: nowrap;
 }
 
-div.download div.top div.list div.item img {
+div.download-list div.top div.list div.item img {
   margin-bottom: -2px;
   margin-right: 3px;
 }
 
-div.download div.top div.list div.item h3 {
+div.download-list div.top div.list div.item h3 {
   margin-bottom: 5px;
 }
 
-div.download div.top div.list div.item p {
+div.download-list div.top div.list div.item p {
   margin-top: 8px;
 }
 
-div.download div.alt {
+div.download-list div.alt {
   width: 100%;
   padding-top: 20px;
   padding-bottom: 20px;
 }
 
-div.download div.alt div.list {
+div.download-list div.alt div.list {
   width: 50%;
 }
 
-div.download h2 {
+div.download-list h2 {
   margin-bottom: 0px;
 }
 
@@ -290,8 +296,7 @@ div.download-file div.donate div.flattr {
 }
 
 form div.box {
-  padding-left: 130px;
-  width: 350px;
+  padding-left: 11em;
   border: 1px solid #ddd;
   background-color: #f7f7f7;
 }
@@ -303,7 +308,7 @@ form div.box p:first-child {
 form p label {
   float: left;
   width: 120px;
-  margin: 3px 10px 0px -130px;
+  margin: 3px 10px 0px -10em;
   font-weight: bold;
   text-align: right;
 }
@@ -318,13 +323,10 @@ form p textarea {
   font-family: arial, sans-serif;
 }
 
-form p [name="human"] {
-  width: 5em;
-}
-
 form div.buttons {
   margin-top: 5px;
   margin-left: -3px;
+  text-align: right;
 }
 
 form div.errors {
@@ -340,6 +342,11 @@ form div.errors {
 form div.errors p {
   padding: 0px;
   margin: 0px;
+}
+
+form div.box span {
+  display: block;
+  padding-top: 0.2em;
 }
 
 p.twitter img {
@@ -358,4 +365,120 @@ div.warning {
 div.warning p {
   margin: 0px;
   padding: 0px;
+}
+
+div.download-premium div.free {
+  border-color: #c7c7c7;
+}
+
+div.download-premium div.premium {
+  border-color: #86c972;
+}
+
+div.download-premium div.premium,
+div.download-premium div.free,
+div.download-premium div.or {
+  float: left;
+}
+
+div.download-premium div.premium,
+div.download-premium div.free {
+  width: 250px;
+  border-width: 1px;
+  border-style: solid;
+  padding: 20px;
+  margin: 10px 0px 30px 0px;
+  border-radius: 7px;
+}
+
+div.download-premium div.premium h2,
+div.download-premium div.free h2 {
+  font-size: 2em;
+  margin-bottom: 0px;
+}
+
+div.download-premium div.premium p,
+div.download-premium div.free p {
+  margin-bottom: 0.5em;
+}
+
+div.download-premium div.free div.info {
+  height: 14.2em;
+}
+
+div.download-premium div.or {
+  width: 140px;
+  text-align: center;
+  padding-top: 100px;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 3em;
+  color: #bbb;
+}
+
+div.download-premium div.premium input[name="amount"] {
+  width: 3.5em;
+  float: left;
+}
+
+div.download-premium div.premium div.amount {
+  height: 2.5em;
+}
+
+div.download-premium div.premium div.slider {
+  margin: 0.9em 0px 0px 4em;
+}
+
+div.download-premium h2 {
+  margin: 0px;
+}
+
+div.download-premium p {
+  margin-top: .4em;
+  padding-bottom: .3em;
+}
+
+div.info-dialog,
+div.signup-dialog {
+  font-family: arial;
+  font-size: 75%;
+  color: #777;
+  text-align: left;
+}
+
+div.info-dialog h2,
+div.signup-dialog h2 {
+  margin-top: 0.2em;
+}
+
+div.signup-dialog div.error {
+  padding: 5px;
+  display: none;
+  margin-bottom: 10px;
+}
+
+div.signup-dialog div.error p {
+  margin: 0px;
+  padding: 0px;
+}
+
+div.signup-dialog div.step2 {
+  display: none;
+}
+
+div.signup-dialog div.step2 form {
+  text-align: center;
+}
+
+div.premium-page form#vote {
+  width: 15em;
+}
+
+div.premium-page form#vote div.box {
+  padding-right: 10px;
+  padding-left: 6em;
+}
+
+div.premium-page form#vote div.buttons {
+  text-align: left;
 }

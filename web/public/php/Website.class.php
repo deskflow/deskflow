@@ -23,8 +23,14 @@ require "/smarty/libs/Smarty.class.php";
 require "Locale.class.php";
 require "Files.class.php";
 require "ContactForm.class.php";
+require "Premium.class.php";
 
 class Website {
+
+  public function __construct() {
+    $this->settings = parse_ini_file("settings.ini", true);
+    $this->session = new SessionManager($this->settings);
+  }
 
   public function run() {
 
@@ -49,7 +55,7 @@ class Website {
     }
 
     if (!$this->isBot()) {
-      session_start();
+      $this->session->start();
     }
 
     $locale = new Locale($this);
@@ -76,41 +82,45 @@ class Website {
         $format = "http://synergy.googlecode.com/files/%s";
         $smarty->assign("file", $file);
         $smarty->assign("isOld", strpos($file, $currentVersion) === false);
-        $smarty->assign("title", getFileTitle($file));
+        $smarty->assign("title", $this->getFileTitle($file));
         $smarty->assign("link", sprintf($format, $file));
       }
-      else {
+      elseif (isset($_GET["list"])) {
+        $page = "download_list";
         $smarty->assign("curDate", date("M j, Y", $currentDate));
         $smarty->assign("cur14", $currentVersion);
         $smarty->assign("cur14State", T_("Beta"));
       }
-    }
-    else if ($page == "download_alt") {
+      elseif (isset($_GET["alt"])) {        
+        $page = "download_alt";
         $smarty->assign("title", T_("Alternate Downloads"));
         $smarty->assign("ver14b", $ver14b);
         $smarty->assign("ver14a", $ver14a);
+      }
+      else {
+        if (isset($_GET["register"])) {
+          $premium = new Premium($this->settings, $this->session);
+          exit($premium->register());
+        }
+        $page = "download_premium";
+      }
     }
-    else if ($page == "premium") {
-      
-      header("Location: /download/");
-      exit;
+    
+    if ($page == "premium") {
+      $premium = new Premium($this->settings, $this->session);
+      $premium->run();
+      $smarty->assign("premium", $premium);
     }
 
     $custom = "";
-    if (is_file("custom/" . $page . ".tpl")) {
-      $custom = $smarty->fetch("custom/" . $page . ".tpl");
+    if (is_file("custom/" . $page . ".html")) {
+      $custom = $smarty->fetch("custom/" . $page . ".html");
     }
     $smarty->assign("custom", $custom);
 
-    $customLinks = "";
-    if (is_file("custom/customLinks.tpl")) {
-      $customLinks = $smarty->fetch("custom/customLinks.tpl");
-    }
-    $smarty->assign("customLinks", $customLinks);
-
-    $content = $smarty->fetch($page . ".tpl");
+    $content = $smarty->fetch($page . ".html");
     $smarty->assign("content", $content);
-    $smarty->display("layout.tpl");
+    $smarty->display("layout.html");
   }
 
   public function isBot() {

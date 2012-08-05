@@ -1,0 +1,139 @@
+﻿<div class="download-premium">
+
+  <div class="title">
+    <div class="logo">
+      <img src="/img/icon.png" /><h1 class="title">Synergy</h1>
+    </div>
+  </div>
+  
+  <div class="inner-content">
+  
+    <div class="premium">
+      <div class="info">
+        
+        <h2>{t}Premium{/t}</h2>
+        <p>{t}Sign up and support Synergy!{/t}</p>
+        <p><a href="javascript:void(0)" id="show-info">{t}What's in it for me?{/t}</a></p>
+        
+        <p>{t}How much do we deserve?{/t}</p>
+        
+        <input type="textbox" id="amount" name="amount" value="$10" />
+        <div class="amount">
+          <div class="slider"></div>
+        </div>
+        
+        <p>{t}Enter any value into the textbox.{/t}</p>
+        
+      </div>
+      <p><a href="javascript:void(0)" id="show-signup">{t}Continue{/t}</a></p>
+    </div>
+    
+    <div class="or">
+      <p>{t}or{/t}</p>
+    </div>
+    
+    <div class="free">
+      <div class="info">
+      
+        <h2>{t}Free{/t}</h2>
+        <p>{t}I don't want to support Synergy.{/t}</p>
+        
+      </div>
+      <p><a href="/download/?list">{t}Continue{/t}</a></p>
+    </div>
+  
+  </div>
+  
+  <div class="info-dialog">
+    <h2>{t}Synergy Premium{/t}</h2>
+    <p>
+{t}Thanks your interest in Synergy Premium, we really appreciate your
+support. All funds we receive are reinvested back into the development
+of Synergy.{/t}
+    </p>
+    
+    <h3>{t}Premium votes{/t}</h3>
+    <p>
+{t}For every $10, you get 1 premium vote. For example, $100 gives you 10
+premium votes. You can assign your votes to any bug fix or feature you want.
+The bug fix or feature with the most votes will be looked at next. We of
+course can't gaurentee that a bug will get fixed or a feature will be
+implemented, but we will try our hardest.{/t}
+    </p>
+    
+    <h3>{t}Warm fuzzy feelings{/t}</h3>
+    <p>
+{t}As well as premium votes, you get a nice warm fuzzy feeling from knowing
+that you helped an open source project move forward. Funding goes directly to
+developers working on the project so that they can spend more time working
+on Synergy.{/t}
+    </p>
+    
+    <p><a class="close" href="javascript:void(0)">{t}OK{/t}</a></p>
+  </div>
+  
+  <div class="signup-dialog">
+    <h2>{t}Synergy Premium{/t}</h2>
+    <div class="step1">
+      <p>
+{t}Thanks your interest in Synergy Premium, we really appreciate your
+support. All funds we receive are reinvested back into the development
+of Synergy.{/t}
+      </p>
+      <p>
+{t}We promise to not spam your email and we never store passwords in
+plain text (we only keep a hash).{/t}
+      </p>
+      <div class="error ui-state-highlight">
+        <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+        <p></p>
+      </div>
+      <form>
+        <div class="box">
+          <p><label for="amount2">Amount:</label><span id="amount2"></span></p>
+          <p><label for="name">Your name:</label><input id="name" type="textbox" value="a" /></p>
+          <p><label for="email1">Email address:</label><input id="email1" type="textbox" value="a@a" /></p>
+          <p><label for="email2">Confirm email:</label><input id="email2" type="textbox" value="a@a" /></p>
+          <p><label for="password1">New password:</label><input id="password1" type="password" value="a" /></p>
+          <p><label for="password2">Confirm password:</label><input id="password2" type="password" value="a" /></p>
+        </div>
+        <div class="buttons">
+          <input class="ok" type="button" value="OK" />
+          <input class="cancel" type="button" value="Cancel" />
+        </div>
+      </form>
+    </div>
+    <div class="step2">
+      <p>
+{t}Your're almost done! Please use the PayPal button below to finish creating
+your Synergy Premium account. When the payment is complete, you will be
+redirected to your new account page.{/t}
+      </p>
+      <p>
+{t}The payment is handled by <b>Bolton Software Ltd</b>, the company behind
+the development of Synergy. All funds are <b>reinvested</b> back into the
+development of Synergy.{/t}
+      </p>
+      
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="SXQD4CT26Z95N">
+        <input type="hidden" name="lc" value="GB">
+        <input type="hidden" name="item_name" value="Synergy Premium">
+        <input type="hidden" name="button_subtype" value="services">
+        <input type="hidden" name="no_note" value="1">
+        <input type="hidden" name="no_shipping" value="1">
+        <input type="hidden" name="rm" value="1">
+        <input type="hidden" name="return" value="http://synergy-foss.org/premium?success">
+        <input type="hidden" name="cancel_return" value="http://synergy-foss.org/premium?cancel">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="amount" value="10" id="amount3">
+        <input type="hidden" name="bn" value="PP-BuyNowBF:btn_paynowCC_LG.gif:NonHosted">
+        <input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+      </form>
+
+    </div>
+  </div>
+
+</div>
