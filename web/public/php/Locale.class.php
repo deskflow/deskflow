@@ -47,7 +47,10 @@ class Locale {
     if (count($split) == 2) {
       // if language code and country code are the same, then we have
       // a redudntant itef tag (e.g. de-de or fr-fr).
-      if (strtolower($split[0]) == strtolower($split[1])) {
+      // of if some browsers send weird language codes, like numbers
+      // for the 2nd part, just send the first part in that case.
+      if ((strtolower($split[0]) == strtolower($split[1])) ||
+          (strlen($split[1]) > 2) || is_numeric($split[1])) {
         return strtolower($split[0]);
       }
     }
