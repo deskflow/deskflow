@@ -130,7 +130,8 @@ class Website {
   }
 
   public function isBot() {
-    return preg_match("/(bot|spider)/", $_SERVER["HTTP_USER_AGENT"]) != 0;
+    return in_array("HTTP_USER_AGENT", $_SERVER) &&
+      preg_match("/(bot|spider)/", $_SERVER["HTTP_USER_AGENT"]) != 0;
   }
 
   private function getFileTitle($file) {

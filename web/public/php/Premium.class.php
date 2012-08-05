@@ -277,12 +277,17 @@ class Premium {
     }
   }
   
-  public function assignVotes($userId, $votes) {
+  public function assignVotesFromFunds($userId, $funds) {
+    $votes = $funds / $this->voteCost;
+    
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
-      "update user set votesFree = votesFree + %d ".
+      "update user set votesFree = votesFree + %d, ".
+      "fundsTotal = fundsTotal + %d, ".
+      "fundsCount = fundsCount + 1 ".
       "where id = %d",
       (int)$votes,
+      (float)$funds,
       (int)$userId
     ));
     if ($result == null) {
@@ -326,7 +331,7 @@ class Premium {
     $this->saveIpnData($userId, $payer_email, json_encode($_POST), $res);
     
     if ($res == "VERIFIED" && $payment_status == "Completed") {
-      $this->assignVotes($userId, $payment_amount / $this->voteCost);
+      $this->assignVotesFromFunds($userId, $payment_amount);
     }
   }
 }
