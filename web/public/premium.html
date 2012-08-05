@@ -13,28 +13,97 @@
     {if !$premium->loggedIn()}
     
     <p>
-{t escape=no url="../download/"}Synergy Premium allows users to fund
-development of Synergy and vote on bug fixes and features.
-<a href="%1">Sign up now</a>.{/t}
+{t}Synergy Premium allows users to fund development of Synergy and vote on
+bug fixes and features.{/t}
     </p>
+    
+    <h3>{t}Login{/t}</h3>
+    
+    <p>
+{t escape=no url="../download/"}If you don't have an account, you can <a href="%1">sign up</a>.{/t}
+    </p>
+    
+    {if $premium->loginInvalid}
+    <div class="loginError ui-state-highlight">
+      <span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+      <p>Error: Invalid login.</p>
+    </div>
+    {/if}
+    
+    <form id="login" action="?login" method="post">
+      <div class="box">
+        <p><label for="email">{t}Email:{/t}</label><input type="textbox" id="email" name="email" value="{$premium->email}" /></p>
+        <p><label for="password">{t}Password:{/t}</label><input type="password" id="password" name="password" /></p>
+      </div>
+      <div class="buttons">
+        <input type="submit" value="{t}OK{/t}" />
+      </div>
+    </form>
     
     {else}
     
     <p>
 {t escape=no votes=$premium->getFreeVoteCount()}Welcome to your Synergy
-Premium account. You have <b>%1</b> unassigned Premium vote(s). If you
-have just signed up and don't see any votes, we may be waiting to hear
-from PayPal so please be patient.{/t}
+Premium account. You have <b>%1</b> unassigned Premium vote(s).{/t}
     </p>
     
-    <h3>{t}New vote{/t}</h3>
+    {if $premium->getFreeVoteCount() == 0}
     <p>
-{t escape=no url="/issues/" email="nick.bolton.uk@gmail.com"}To use Premium
-votes, enter an issue ID from our <a href="%1" target="_blank">issue tracker</a>,
+{t}If you have just signed up and don't see any votes, we may be waiting to
+hear from PayPal so please be patient.{/t}
+    </p>
+    {/if}
+    
+    <p><a href="?logout">{t}Logout{/t}</a></p>
+    
+    <h3>{t}Contribute again{/t}</h3>
+    <p>
+{t}If you would like to contribute again, we would really apreciate it.{/t}
+    </p>
+    
+    <div class="box contribute">
+      <input type="textbox" id="amount" name="amount" value="$10" />
+      <div class="amount">
+        <div class="slider"></div>
+      </div>
+      
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="SXQD4CT26Z95N">
+        <input type="hidden" name="lc" value="GB">
+        <input type="hidden" name="item_name" value="Synergy Premium">
+        <input type="hidden" name="button_subtype" value="services">
+        <input type="hidden" name="no_note" value="1">
+        <input type="hidden" name="no_shipping" value="1">
+        <input type="hidden" name="rm" value="1">
+        <input type="hidden" name="return" value="http://synergy-foss.org/premium?success">
+        <input type="hidden" name="cancel_return" value="http://synergy-foss.org/premium?cancel">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="amount" value="10" id="amount2">
+        <input type="hidden" name="bn" value="PP-BuyNowBF:btn_paynowCC_LG.gif:NonHosted">
+        <input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_paynow_SM.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+      </form>
+    </div>
+    
+    <h3>{t}Your votes{/t}</h3>
+    <ul>
+      {foreach from=$premium->getUserVotes() item=vote}
+      <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
+      {foreachelse}
+      <li>{t}You have not cast any votes yet.{/t}</li>
+      {/foreach}
+    </ul>
+    
+    <h3>{t}Cast new vote{/t}</h3>
+    <p>
+{t escape=no url="/issues/" email="nbolton@synergy-foss.org" help="../help/"}
+To use Premium votes, enter an issue ID from our
+<a href="%1" target="_blank">issue tracker</a>,
 and assign a number of votes. Choose carefully; once votes are spent,
-you can't get them back. If you have any problems using your votes or if you
-have run out and want to add more, please email <a href="mailto:%2">%2</a>
-for help.{/t}
+you can't get them back. If you have any problems using your votes, please
+<a href="mailto:%2">email</a> for help (please do not report bugs to this
+address, use the <a href="%3">help</a> page instead).{/t}
     </p>
     
     <form id="vote" action="?vote" method="post">
@@ -46,15 +115,6 @@ for help.{/t}
         <input type="submit" value="{t}OK{/t}" />
       </div>
     </form>
-    
-    <h3>{t}Your votes{/t}</h3>
-    <ul>
-      {foreach from=$premium->getUserVotes() item=vote}
-      <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
-      {foreachelse}
-      <li>{t}You have not cast any votes yet.{/t}</li>
-      {/foreach}
-    </ul>
     
     <h3>{t}Community votes{/t}</h3>
     <ul>

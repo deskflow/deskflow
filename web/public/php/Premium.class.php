@@ -25,25 +25,60 @@ use Exception;
 
 class Premium {
 
+  var $loginInvalid;
+  var $email;
+
   public function __construct($settings, $session) {
     $this->settings = $settings;
     $this->session = $session;
     $this->voteCost = (int)$settings["premium"]["voteCost"];
   }
   
-  public function run() {
+  public function run($smarty) {
     if (isset($_GET["ipn"])) {
       $this->ipn();
       exit;
     }
     
     if ($this->loggedIn()) {
-      $this->user = $this->getUser($_SESSION["email"]);
+      $this->loadUser($_SESSION["email"]);
     
       if (isset($_GET["vote"])) {
         $this->vote();
       }
+      else if (isset($_GET["logout"])) {
+        $this->logout();
+      }
     }
+    else if (isset($_GET["login"])) {
+      $this->auth();
+    }
+    
+    $smarty->assign("premium", $this);
+  }
+  
+  public function auth() {    
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "select * from user where email = '%s' and password = '%s'",
+      $mysql->escape_string($_POST["email"]),
+      md5($_POST["password"])
+    ));
+    if ($result == null) {
+      throw new Exception($mysql->error);
+    }
+    if ($result->num_rows != 0) {
+      $this->user = $result->fetch_object();
+      $this->login($_POST["email"], false);
+    }
+    else {
+      $this->email = $_POST["email"];
+      $this->loginInvalid = true;
+    }
+  }
+  
+  public function loadUser($email) {
+    $this->user = $this->getUser($email);
   }
 
   public function getUser($email) {
@@ -115,8 +150,16 @@ class Premium {
     }
   }
   
-  public function login($email) {
+  public function login($email, $load = true) {
     $_SESSION["email"] = $email;
+    if ($load) {
+      $this->loadUser($email);
+    }
+  }
+  
+  public function logout() {
+    $this->user = null;
+    unset($_SESSION["email"]);
   }
   
   public function loggedIn() {

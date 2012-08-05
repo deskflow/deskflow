@@ -63,7 +63,8 @@ class Website {
     $smarty = new \Smarty; // must come first; smarty makes T_ work somehow.
     $lang = $locale->lang;
     $title = "Synergy" . (($page != "home") ? (" - " . T_(ucfirst($page))) : "");
-
+    $isPremium = isset($_SESSION["email"]);
+      
     $smarty->assign("lang", $lang);
     $smarty->assign("baseUrl", stristr($lang, "en") ? "" : "/" . $lang);
     $smarty->assign("gsLang", $locale->getGoogleSearchLang());
@@ -72,6 +73,7 @@ class Website {
     $smarty->assign("langIsEnglish", stristr($lang, "en"));
     $smarty->assign("langDir", $locale->getLangDir());
     $smarty->assign("splashImage", $locale->getSplashImage());
+    $smarty->assign("isPremium", $isPremium);
 
     if ($page == "download") {
       
@@ -84,17 +86,17 @@ class Website {
         $smarty->assign("title", $this->getFileTitle($file));
         $smarty->assign("link", sprintf($format, $file));
       }
-      elseif (isset($_GET["list"])) {
-        $page = "download_list";
-        $smarty->assign("curDate", date("M j, Y", $currentDate));
-        $smarty->assign("cur14", $currentVersion);
-        $smarty->assign("cur14State", T_("Beta"));
-      }
       elseif (isset($_GET["alt"])) {        
         $page = "download_alt";
         $smarty->assign("title", T_("Alternate Downloads"));
         $smarty->assign("ver14b", $ver14b);
         $smarty->assign("ver14a", $ver14a);
+      }
+      elseif (isset($_GET["list"]) || $isPremium) {
+        $page = "download_list";
+        $smarty->assign("curDate", date("M j, Y", $currentDate));
+        $smarty->assign("cur14", $currentVersion);
+        $smarty->assign("cur14State", T_("Beta"));
       }
       else {
         if (isset($_GET["register"])) {
@@ -108,8 +110,7 @@ class Website {
     
     if ($page == "premium") {
       $premium = new Premium($this->settings, $this->session);
-      $premium->run();
-      $smarty->assign("premium", $premium);
+      $premium->run($smarty);
     }
 
     $custom = "";

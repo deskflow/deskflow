@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var defaultPremiumSliderIndex = 11;
+var defaultPremiumSliderIndex = 10;
 
 function log(s) {
   if ("console" in self && "log" in console) console.log(s);
@@ -24,44 +24,6 @@ function log(s) {
 function formError(errors, error) {
   errors.fadeIn();
   errors.find("p").html("Form error: " + error);
-}
-
-function premiumForm() {
-
-  form = $("form#premium");
-  errors = $("form div.errors");
-  
-  if (form) {
-    form.find("div.buttons input").click(function() {
-      email1 = form.find("#email1").val();
-      if (form.find("#company").val() == "") {
-        formError(errors, "Company missing.");
-        return false;
-      }
-      else if (form.find("#name").val() == "") {
-        formError(errors, "Your name is missing.");
-        return false;
-      }
-      else if (email1 == "") {
-        formError(errors, "Email address is missing.");
-        return false;
-      }
-      else if (email1.indexOf("@") == -1) {
-        formError(errors, "Email address is invalid.");
-        return false;
-      }
-      else if (email1 != form.find("#email2").val()) {
-        formError(errors, "Confirm email field does not match.");
-        return false;
-      }
-      else if (form.find("#human").val().toLowerCase() != "yes") {
-        formError(errors, "No robots allowed (please say \"yes\").");
-        return false;
-      }
-    });
-  }
-  
-  errors.fadeOut();
 }
 
 function getPremiumValueFromIndex(index) {
@@ -137,6 +99,22 @@ function submitPremiumForm() {
   });
 }
 
+function initSlider() {
+  $("div.slider").slider({
+    min: 1,
+    value: defaultPremiumSliderIndex,
+    slide: function(event, ui) {
+      var value = getPremiumValueFromIndex(ui.value);
+      $("input#amount").val("$" + value);
+    }
+  });
+
+  $("input#amount").keyup(function() {
+    var index = getPremiumIndexFromText(this.value);
+    $("div.slider").slider("value", index);
+  });
+}
+
 function downloadOptions() {
 
   if ($("div.download-premium").length == 0) {
@@ -145,14 +123,7 @@ function downloadOptions() {
   
   var signup = $("div.signup-dialog");
   
-  $("div.premium div.slider").slider({
-    min: 1,
-    value: defaultPremiumSliderIndex,
-    slide: function(event, ui) {
-      var value = getPremiumValueFromIndex(ui.value);
-      $("div.premium input#amount").val("$" + value);
-    }
-  });
+  initSlider();
 
   $("div.info-dialog").dialog({
     autoOpen: false,
@@ -169,11 +140,6 @@ function downloadOptions() {
   });
   
   $(".ui-dialog-titlebar").hide();
-
-  $("div.premium input#amount").keyup(function() {
-    var index = getPremiumIndexFromText(this.value);
-    $("div.premium div.slider").slider("value", index);
-  });
 
   $("a#show-info").click(function() {
     $("div.info-dialog").dialog("open");
@@ -197,7 +163,20 @@ function downloadOptions() {
   });
 }
 
+function premiumPage() {
+  if ($("div.premium-page").length == 0) {
+    return;
+  }
+  
+  initSlider();
+  
+  $("div.contribute input[type='image']").click(function() {
+    $("input#amount2").val(getPremiumAmountFromText($("input#amount").val()));
+    log($("input#amount2").val());
+  });
+}
+
 $(function() {
-  premiumForm();
   downloadOptions();
+  premiumPage();
 });

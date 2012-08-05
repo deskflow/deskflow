@@ -121,6 +121,18 @@ div.menu a {
   color: #ddd;
 }
 
+div.premium-bar {
+  background-color: #e0ffe0;
+  padding: 10px;
+  color: green;
+}
+
+div.menu p,
+div.premium-bar p {
+  margin: 0px;
+  padding: 0px;
+}
+
 div.title {
   width: 100%;
   padding-top: 0px;
@@ -430,16 +442,19 @@ div.download-premium div.or {
   color: #bbb;
 }
 
-div.download-premium div.premium input[name="amount"] {
+div.download-premium div.premium input[name="amount"],
+div.premium-page input[name="amount"] {
   width: 3.5em;
   float: left;
 }
 
-div.download-premium div.premium div.amount {
+div.download-premium div.premium div.amount,
+div.premium-page div.amount {
   height: 2.5em;
 }
 
-div.download-premium div.premium div.slider {
+div.download-premium div.premium div.slider,
+div.premium-page div.slider {
   margin: 0.9em 0px 0px 4em;
 }
 
@@ -495,4 +510,30 @@ div.premium-page form#vote div.box {
 
 div.premium-page form#vote div.buttons {
   text-align: left;
+}
+
+div.premium-page div.loginError {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+div.premium-page div.loginError p {
+  margin: 0px;
+  padding: 0px;
+}
+
+div.premium-page form#login {
+  width: 30em;
+}
+
+div.premium-page div.contribute {
+  width: 20em;
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
+  padding: 10px;
+  padding-bottom: 0px;
+}
+
+div.premium-page div.contribute div.slider {
+  margin-top: .5em;
 }
