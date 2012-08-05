@@ -28,6 +28,7 @@ class Premium {
   public function __construct($settings, $session) {
     $this->settings = $settings;
     $this->session = $session;
+    $this->voteCost = (int)$settings["premium"]["voteCost"];
   }
   
   public function run() {
@@ -76,10 +77,6 @@ class Premium {
   }
   
   public function vote() {
-    if ($this->user->votesFree <= 0) {
-      // TODO: show error.
-      return;
-    }
     
     if (preg_match("/(\d+)/", $_POST["issue"], $issueMatches) != 1) {
       return;
@@ -90,6 +87,17 @@ class Premium {
       return;
     }
     $voteCount = (int)$votesMatches[1];
+    
+    if ($voteCount > $this->user->votesFree) {
+      $voteCount = $this->user->votesFree;
+      if ($voteCount == 0) {
+        // TODO: show error.
+        return;
+      }
+    }
+    
+    // update in memory for page (on next page load it's loaded from db).
+    $this->user->votesFree -= $voteCount;
     
     $mysql = $this->getMysql();
     $result = $mysql->multi_query(sprintf(
@@ -159,7 +167,7 @@ class Premium {
       "insert into user (name, email, password, created) values ('%s', '%s', '%s', now())",
       $mysql->escape_string($_POST["name"]),
       $mysql->escape_string($_POST["email1"]),
-      $mysql->escape_string($_POST["password1"])
+      md5($_POST["password1"])
     ));
     if ($result == null) {
       throw new Exception($mysql->error);
@@ -208,6 +216,32 @@ class Premium {
     $row = $result->fetch_array();
     return (int)($row[0]);
   }
+  
+  public function saveIpnData($email, $data, $check) {
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "insert into paypal (created, email, ipnData, ipnCheck) values (now(), '%s', '%s', '%s')",
+      $mysql->escape_string($email),
+      $mysql->escape_string($data),
+      $mysql->escape_string($check)
+    ));
+    if ($result == null) {
+      throw new Exception($mysql->error);
+    }
+  }
+  
+  public function assignVotes($email, $votes) {
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "update user set votesFree = votesFree + %d ".
+      "where email = '%s'",
+      (int)$votes,
+      $mysql->escape_string($email)
+    ));
+    if ($result == null) {
+      throw new Exception($mysql->error);
+    }
+  }
 
   public function ipn() {
     // read the post from PayPal system and add 'cmd'
@@ -218,7 +252,7 @@ class Premium {
       $req .= "&$key=$value";
     }
 
-
+    // ask paypal to verify the ipn request.
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'https://www.paypal.com/cgi-bin/webscr');
     curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -231,7 +265,6 @@ class Premium {
     $res = curl_exec($ch);
     curl_close($ch);
 
-
     // assign posted variables to local variables
     $item_name = $_POST['item_name'];
     $item_number = $_POST['item_number'];
@@ -241,17 +274,13 @@ class Premium {
     $txn_id = $_POST['txn_id'];
     $receiver_email = $_POST['receiver_email'];
     $payer_email = $_POST['payer_email'];
-
-
-    if (strcmp ($res, "VERIFIED") == 0) {
-      // check the payment_status is Completed
-      // check that txn_id has not been previously processed
-      // check that receiver_email is your Primary PayPal email
-      // check that payment_amount/payment_currency are correct
-      // process payment
-    }
-    else if (strcmp ($res, "INVALID") == 0) {
-      // log for manual investigation
+    
+    $this->saveIpnData($payer_email, json_encode($_POST), $res);
+    
+    if (strcmp($res, "VERIFIED") == 0) {
+      // TODO: use user id (pass to paypal as custom data) for those annoying people
+      // who use different email addresses.
+      $this->assignVotes($payer_email, $payment_amount / $this->voteCost);
     }
   }
 }

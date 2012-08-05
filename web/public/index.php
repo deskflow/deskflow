@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
+require "smarty/libs/Smarty.class.php";
 require "php/Website.class.php";
 
 $website = new Synergy\Website;

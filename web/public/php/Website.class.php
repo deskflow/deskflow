@@ -19,7 +19,6 @@
 
 namespace Synergy;
 
-require "/smarty/libs/Smarty.class.php";
 require "Locale.class.php";
 require "Files.class.php";
 require "ContactForm.class.php";
