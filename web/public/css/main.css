@@ -9,7 +9,7 @@ a {
   color: #4099ff;
 }
 
-h1, h2, h3 {
+h2, h3 {
   margin-top: .7em;
   padding-top: 0px;
   margin-bottom: .5em;
@@ -124,7 +124,7 @@ div.menu a {
 div.title {
   width: 100%;
   padding-top: 0px;
-  margin-top: 0px;
+  margin-top: 15px;
 }
 
 div.title h1 {
