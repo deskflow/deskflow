@@ -10,7 +10,11 @@
 
     <h2>{t}Download{/t}: <span class="title">{$title}</span></h2>
     
+    {if !$isPremium}
     {$custom}
+    {else}
+    <p>{t}Thanks for supporting Synergy! No ads for you :-){/t}</p>
+    {/if}
     
     <div class="text">
       
@@ -25,7 +29,7 @@ and may contain bugs fixed in the latest version.{/t}
       {/if}
       
       <p class="link"><b>{t}Download{/t}:</b> <a href="{$link}">{$file}</a></p>
-    
+      
       <p>
 {t url1="/premium/"}While your file is downloading, please take a look at <a href="%1">Synergy Premium</a>.{/t}
       </p>

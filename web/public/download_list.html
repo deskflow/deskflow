@@ -12,9 +12,11 @@
     
     <p><b>{t}Latest release:{/t}</b> {$cur14} {$cur14State} - {$curDate} - <a href="/blog/category/release/">{t}What's new?{/t}</a></p>
     
-    <div class="top">
-      
+    <div class="float: left">
+    
+      {if !$isPremium}
       {$custom}
+      {/if}
       
       <div class="list">
         <div class="item">
@@ -47,12 +49,14 @@
             <b>{$cur14} {$cur14State}:</b> <a href="?file=synergy-{$cur14}-Source.tar.gz">tar.gz</a>
           </p>
         </div>
-		
+    
         <p><a href="?alt">{t}Alternate downloads{/t}</a></p>
         
       </div>
-      
+    
     </div>
+    
+    <div style="clear: both"></div>
     
   </div>
 

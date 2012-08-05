@@ -77,6 +77,11 @@ class Website {
 
     if ($page == "download") {
       
+      if (isset($_GET["donate"])) {
+        header("Location: ../premium/");
+        exit;
+      }
+      
       if (isset($_GET["file"])) {
         $page = "download_file";
         $file = $_GET["file"];

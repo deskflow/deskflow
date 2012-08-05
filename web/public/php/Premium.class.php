@@ -55,6 +55,7 @@ class Premium {
     }
     
     $smarty->assign("premium", $this);
+    $smarty->assign("isPremium", $this->loggedIn());
   }
   
   public function auth() {    

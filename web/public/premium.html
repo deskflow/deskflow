@@ -49,8 +49,8 @@ Premium account. You have <b>%1</b> unassigned Premium vote(s).{/t}
     
     {if $premium->getFreeVoteCount() == 0}
     <p>
-{t}If you have just signed up and don't see any votes, we may be waiting to
-hear from PayPal so please be patient.{/t}
+{t escape=no url="."}If you have just signed up and don't see any votes,
+we may be waiting to hear from PayPal so please be patient. <a href="%1">Check now</a>.{/t}
     </p>
     {/if}
     

@@ -53,27 +53,24 @@ div.paypal form {
   float: left;
 }
 
-div.download-list div.top div.ga {
+div.download-list div.ga {
+  float: left;
+  margin-right: 25px;
+}
+
+div.download-list div.list {
   float: left;
 }
 
-div.download-list div.top div.list {
+div.download-list div.list div.item {
   float: left;
 }
 
-div.download-list div.top div.list div.item {
+div.download-alt div.lists {
   float: left;
 }
 
-div.download-list div.top div.list {
-  margin-left: 25px;
-}
-
-div.download-list div.alt {
-  float: left;
-}
-
-div.download-list div.alt div.list {
+div.download-alt div.lists div.list {
   float: left;
 }
 
