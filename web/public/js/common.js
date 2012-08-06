@@ -40,11 +40,12 @@ function getPremiumValueFromIndex(index) {
 }
 
 function getPremiumAmountFromText(text) {
-  var valueArray = /\d+/.exec(text);
+  var valueArray = /\d+(\.\d+)*/.exec(text);
   if (valueArray == null) {
     return 10;
   }
-  return parseInt(valueArray[0]);
+  log(valueArray);
+  return parseFloat(valueArray[0]);
 }
 
 function getPremiumIndexFromText(text) {
@@ -66,12 +67,15 @@ function submitPremiumForm() {
   var signup = $("div.signup-dialog");
   signup.find("input[type='button']").attr("disabled", true);
   
+  var amount = getPremiumAmountFromText($("div.premium input#amount").val());
+  log(amount);
+  
   $.ajax({
     dataType: "json",
     type: "post",
     url: "?register",
     data: {
-      amount: signup.find("input#amount2").val(),
+      amount: amount,
       name: signup.find("input#name").val(),
       email1: signup.find("input#email1").val(),
       email2: signup.find("input#email2").val(),
@@ -84,7 +88,6 @@ function submitPremiumForm() {
         premiumError(signup, message.error);
       }
       else {
-        var amount = getPremiumAmountFromText($("div.premium input#amount").val());
         signup.find("form#paypal input[name='amount']").val(amount);
         signup.find("form#paypal input[name='custom']").val(message.userId);
         log(signup.find("form#paypal input[name='amount']"));

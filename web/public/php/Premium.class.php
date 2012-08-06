@@ -210,10 +210,12 @@ class Premium {
   
   public function registerSql($mysql) {
     $result = $mysql->query(sprintf(
-      "insert into user (name, email, password, created) values ('%s', '%s', '%s', now())",
+      "insert into user (name, email, password, fundsSignup, created) ".
+      "values ('%s', '%s', '%s', %f, now())",
       $mysql->escape_string($_POST["name"]),
       $mysql->escape_string($_POST["email1"]),
-      md5($_POST["password1"])
+      md5($_POST["password1"]),
+      (float)$_POST["amount"]
     ));
     if ($result == null) {
       throw new Exception($mysql->error);
@@ -283,7 +285,7 @@ class Premium {
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
       "update user set votesFree = votesFree + %d, ".
-      "fundsTotal = fundsTotal + %d, ".
+      "fundsTotal = fundsTotal + %f, ".
       "fundsCount = fundsCount + 1 ".
       "where id = %d",
       (int)$votes,
@@ -326,7 +328,7 @@ class Premium {
     $txn_id = $_POST["txn_id"];
     $receiver_email = $_POST["receiver_email"];
     $payer_email = $_POST["payer_email"];
-    $userId = (int)$_POST["custom"];
+    $userId = $_POST["custom"];
     
     $this->saveIpnData($userId, $payer_email, json_encode($_POST), $res);
     
