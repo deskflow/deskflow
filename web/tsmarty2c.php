@@ -44,7 +44,7 @@ $rdq = preg_quote('}');
 $cmd = preg_quote('t');
 
 // extensions of smarty files, used when going through a directory
-$extensions = array('tpl');
+$extensions = array('html');
 
 // "fix" string - strip slashes, escape and convert new lines to \n
 function fs($str)
