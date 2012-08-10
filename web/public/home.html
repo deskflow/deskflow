@@ -49,7 +49,7 @@ is a network connection. Synergy is cross-platform (works on
 Windows, Mac OS X and Linux).{/t}
     </p>
     
-    {if !$isPremium}
+    {if !$premium->isUserPremium()}
     {$custom}
     {/if}
 	

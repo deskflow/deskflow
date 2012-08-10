@@ -10,7 +10,7 @@
 
     <h2>{t}Download{/t}: <span class="title">{$title}</span></h2>
     
-    {if !$isPremium}
+    {if !$premium->isUserPremium()}
     {$custom}
     {else}
     <p>{t}Thanks for supporting Synergy! No ads for you :-){/t}</p>

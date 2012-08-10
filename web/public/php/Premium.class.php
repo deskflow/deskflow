@@ -64,9 +64,6 @@ class Premium {
     else if (isset($_GET["login"])) {
       $this->auth();
     }
-    
-    $smarty->assign("premium", $this);
-    $smarty->assign("isLoggedIn", $this->isLoggedIn());
   }
   
   public function auth() {    

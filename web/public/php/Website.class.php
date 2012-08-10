@@ -73,7 +73,7 @@ class Website {
     $smarty->assign("langIsEnglish", stristr($lang, "en"));
     $smarty->assign("langDir", $locale->getLangDir());
     $smarty->assign("splashImage", $locale->getSplashImage());
-    $smarty->assign("isPremium", $this->premium->isUserPremium());
+    $smarty->assign("premium", $this->premium);
 
     if ($page == "download") {
       
