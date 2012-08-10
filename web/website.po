@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-06 18:12-0000\n"
+"POT-Creation-Date: 2012-08-10 12:28-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -225,7 +225,7 @@ msgid "Latest version"
 msgstr ""
 
 #: lang.c:62
-msgid "Many bugs are raised even  though users haven't tried the latest version. Please visit the <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"/nightly/\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
+msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
 msgstr ""
 
 #: lang.c:63
@@ -251,56 +251,56 @@ msgid "Q&#38;A website"
 msgstr ""
 
 #: lang.c:68
-msgid "You can ask a question on our <a href=\"http://synergy-foss.org/osqa/\">Q&#38;A website</a>. Read the <a href=\"/osqa/faq/\">FAQ</a> to make sure your question does not get closed."
+msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
 msgstr ""
 
 #: lang.c:69
-msgid "Mailing list"
-msgstr ""
-
-#: lang.c:70
-msgid "Some users may prefer to use our <a href=\"http://groups.google.com/group/synergy-plus/post\">mailing list</a>. Please do not post bugs on the mailing list."
-msgstr ""
-
-#: lang.c:71
-msgid "IRC"
-msgstr ""
-
-#: lang.c:72
-msgid "You can join our IRC channel: <code>#synergy on irc.freenode.net:8001</code> (for IRC, you could use <a href=\"http://xchat.org/\">XChat</a>)"
-msgstr ""
-
-#: lang.c:73
 #: lang.c:133
 msgid "Super User"
 msgstr ""
 
-#: lang.c:74
-msgid "If you're familiar with Super User, there's a <a href=\"http://superuser.com/questions/tagged/synergy\">synergy tag</a>."
+#: lang.c:70
+msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
 msgstr ""
 
-#: lang.c:75
+#: lang.c:71
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
 msgstr ""
 
-#: lang.c:76
+#: lang.c:72
 msgid "Ask questions; do not nag or comment on bugs or issues."
 msgstr ""
 
-#: lang.c:77
+#: lang.c:73
 msgid "Do not raise new bugs there; use the issue tracker for this."
 msgstr ""
 
-#: lang.c:78
+#: lang.c:74
 msgid "Synergy developers do <i>not</i> monitor this website."
 msgstr ""
 
-#: lang.c:79
+#: lang.c:75
 msgid "Always use the \"synergy\" tag on your question."
 msgstr ""
 
-#: lang.c:80
+#: lang.c:76
 msgid "Make sure you mention \"Synergy\" in the question."
+msgstr ""
+
+#: lang.c:77
+msgid "IRC"
+msgstr ""
+
+#: lang.c:78
+msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
+msgstr ""
+
+#: lang.c:79
+msgid "Mailing list"
+msgstr ""
+
+#: lang.c:80
+msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
 msgstr ""
 
 #: lang.c:81
@@ -365,7 +365,7 @@ msgid "Code"
 msgstr ""
 
 #: lang.c:101
-msgid "/premium/\"}<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
+msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
 msgstr ""
 
 #: lang.c:102
@@ -443,7 +443,7 @@ msgid "Cast new vote"
 msgstr ""
 
 #: lang.c:122
-msgid " To use Premium votes, enter an issue ID from our <a href=\"%1\" target=\"_blank\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"mailto:%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
+msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
 msgstr ""
 
 #: lang.c:123
@@ -499,11 +499,15 @@ msgid "You may find that entering your version number helps."
 msgstr ""
 
 #: lang.c:141
-msgid "If this does not work, use the <a href=\"http://www.google.co.uk/cse/home?cx=006438721074957994428:rnklqbsknvs\">alternative Synergy search</a>."
+msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
 msgstr ""
 
 #: lang.c:142
 msgid "Search now"
+msgstr ""
+
+#: lang.c:143
+msgid "Loading"
 msgstr ""
 
 #: php/Premium.class.php:233

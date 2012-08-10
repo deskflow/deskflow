@@ -13,33 +13,37 @@
     
     <h3>{t}Latest version{/t}</h3>
     <p>
-{t escape=no url="$baseUrl/download/"}Many bugs are raised even 
-though users haven't tried the latest version.
-Please visit the <a href="%1">downloads</a> page and try out the
-latest version (even if it's a beta). You might also want to try the
-<a href="/nightly/">nightly builds</a>, but please do so only as a
-last resort (these versions have not passed our quality assurance).{/t}
+{t escape=no url1="$baseUrl/download/" url2="/nightly/"}Many bugs are raised
+even though users haven't tried the latest version. Please visit the 
+<a href="%1">downloads</a> page and try out the latest version (even if it's
+a beta). You might also want to try the <a href="%2">nightly builds</a>,
+but please do so only as a last resort (these versions have not passed our
+quality assurance).{/t}
     </p>
 
     <h3>{t}User guide{/t}</h3>
     <p>
-{t escape=no url="/help/user-guide.pdf"}Please read our <a href="%1">user guide</a> before going any further.{/t}
+{t escape=no url="/help/user-guide.pdf"}Please read our
+<a href="%1">user guide</a> before going any further.{/t}
     </p>
     
     <h3>{t}Search{/t}</h3>
     <p>
-{t escape=no url="$baseUrl/search/"}Do a <a href="%1">quick search</a>, it really won't take long.{/t}
+{t escape=no url="$baseUrl/search/"}Do a <a href="%1">quick search</a>,
+it really won't take long.{/t}
     </p>
 
     <h3>{t}Q&#38;A website{/t}</h3>
     <p>
-{t}You can ask a question on our <a href="http://synergy-foss.org/osqa/">Q&#38;A website</a>.
-Read the <a href="/osqa/faq/">FAQ</a> to make sure your question does not get closed.{/t}
+{t url1="http://synergy-foss.org/osqa/" url2="/osqa/faq/"}
+You can ask a question on our <a href="%1">Q&#38;A website</a>.
+Read the <a href="%2">FAQ</a> to make sure your question does not get closed.{/t}
     </p>
 
     <h3>{t}Super User{/t}</h3>
     <p>
-      {t}If you're familiar with Super User, there's a <a href="http://superuser.com/questions/tagged/synergy">synergy tag</a>.{/t}
+{t url="http://superuser.com/questions/tagged/synergy"}If you're familiar with
+Super User, there's a <a href="%1">synergy tag</a>.{/t}
     </p>
     <ul>
       <li>{t}Super User is <b>not</b> dedicated to supporting Synergy.{/t}</li>
@@ -52,9 +56,8 @@ Read the <a href="/osqa/faq/">FAQ</a> to make sure your question does not get cl
     
     <h3>{t}IRC{/t}</h3>
     <p>
-{t url="http://xchat.org/"}You can join our IRC channel:
-<code>#synergy on irc.freenode.net:8001</code>
-(for IRC, you could use <a href="%1">XChat</a>){/t}
+{t escape=no url1="<code>#synergy on irc.freenode.net:8001</code>" url2="http://xchat.org/"}You
+can join our IRC channel: %1 (for IRC, you could use <a href="%2">XChat</a>){/t}
     </p>
 
     <h3>{t}Mailing list{/t}</h3>
