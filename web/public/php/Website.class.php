@@ -29,6 +29,7 @@ class Website {
   public function __construct() {
     $this->settings = parse_ini_file("settings.ini", true);
     $this->session = new SessionManager($this->settings);
+    $this->premium = new Premium($this->settings, $this->session);
   }
 
   public function run() {
@@ -63,8 +64,7 @@ class Website {
     $smarty = new \Smarty; // must come first; smarty makes T_ work somehow.
     $lang = $locale->lang;
     $title = "Synergy" . (($page != "home") ? (" - " . T_(ucfirst($page))) : "");
-    $isPremium = isset($_SESSION["email"]);
-      
+    
     $smarty->assign("lang", $lang);
     $smarty->assign("baseUrl", stristr($lang, "en") ? "" : "/" . $lang);
     $smarty->assign("gsLang", $locale->getGoogleSearchLang());
@@ -73,7 +73,7 @@ class Website {
     $smarty->assign("langIsEnglish", stristr($lang, "en"));
     $smarty->assign("langDir", $locale->getLangDir());
     $smarty->assign("splashImage", $locale->getSplashImage());
-    $smarty->assign("isPremium", $isPremium);
+    $smarty->assign("isPremium", $this->premium->isUserPremium());
 
     if ($page == "download") {
       
@@ -97,7 +97,7 @@ class Website {
         $smarty->assign("ver14b", $ver14b);
         $smarty->assign("ver14a", $ver14a);
       }
-      elseif (isset($_GET["list"]) || $isPremium) {
+      elseif (isset($_GET["list"]) || $this->premium->isUserPremium()) {
         $page = "download_list";
         $smarty->assign("curDate", date("M j, Y", $currentDate));
         $smarty->assign("cur14", $currentVersion);
@@ -114,8 +114,7 @@ class Website {
     }
     
     if ($page == "premium") {
-      $premium = new Premium($this->settings, $this->session);
-      $premium->run($smarty);
+      $this->premium->run($smarty);
     }
 
     $custom = "";

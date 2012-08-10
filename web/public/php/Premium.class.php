@@ -27,11 +27,22 @@ class Premium {
 
   var $loginInvalid;
   var $email;
+  var $user;
 
   public function __construct($settings, $session) {
     $this->settings = $settings;
     $this->session = $session;
     $this->voteCost = (int)$settings["premium"]["voteCost"];
+  }
+  
+  public function isUserPremium() {
+    if ($this->isLoggedIn()) {
+      $this->loadUser();
+      return $this->user->fundsCount != 0;
+    }
+    else {
+      return false;
+    }
   }
   
   public function run($smarty) {
@@ -40,8 +51,8 @@ class Premium {
       exit;
     }
     
-    if ($this->loggedIn()) {
-      $this->loadUser($_SESSION["email"]);
+    if ($this->isLoggedIn()) {
+      $this->loadUser();
     
       if (isset($_GET["vote"])) {
         $this->vote();
@@ -55,7 +66,7 @@ class Premium {
     }
     
     $smarty->assign("premium", $this);
-    $smarty->assign("isPremium", $this->loggedIn());
+    $smarty->assign("isLoggedIn", $this->isLoggedIn());
   }
   
   public function auth() {    
@@ -78,8 +89,13 @@ class Premium {
     }
   }
   
-  public function loadUser($email) {
-    $this->user = $this->getUser($email);
+  public function loadUser($email = null, $force = false) {
+    if ($email == null) {
+      $email = $_SESSION["email"];
+    }
+    if ($this->user == null || $force) {
+      $this->user = $this->getUser($email);
+    }
   }
 
   public function getUser($email) {
@@ -156,7 +172,7 @@ class Premium {
   public function login($email, $load = true) {
     $_SESSION["email"] = $email;
     if ($load) {
-      $this->loadUser($email);
+      $this->loadUser($email, true);
     }
   }
   
@@ -165,7 +181,7 @@ class Premium {
     unset($_SESSION["email"]);
   }
   
-  public function loggedIn() {
+  public function isLoggedIn() {
     return (isset($_SESSION["email"]) && ($_SESSION["email"] != ""));
   }
   
