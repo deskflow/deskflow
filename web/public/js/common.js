@@ -44,8 +44,12 @@ function getPremiumAmountFromText(text) {
   if (valueArray == null) {
     return 10;
   }
-  log(valueArray);
-  return parseFloat(valueArray[0]);
+  value = parseFloat(valueArray[0]);
+  log(value);
+  if (value < 1) {
+    return 1;
+  }
+  return value;
 }
 
 function getPremiumIndexFromText(text) {
@@ -156,7 +160,8 @@ function downloadOptions() {
   });
 
   $("a#show-signup").click(function() {
-    signup.find("span#amount2").html($("div.premium input#amount").val());
+    var amount = getPremiumAmountFromText($("div.premium input#amount").val());
+    signup.find("span#amount2").html("$" + amount.toFixed(2));
     signup.dialog("open");
   });
 
