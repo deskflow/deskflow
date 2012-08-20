@@ -174,7 +174,7 @@ msgstr ""
 
 #: lang.c:40
 msgid "How much do we deserve?"
-msgstr ""
+msgstr "Hvor mye fortjener vi?"
 
 
 #: lang.c:41
@@ -185,17 +185,17 @@ msgstr ""
 #: lang.c:42
 #: lang.c:46
 msgid "Continue"
-msgstr ""
+msgstr "Fortsett"
 
 
 #: lang.c:43
 msgid "or"
-msgstr ""
+msgstr "eller"
 
 
 #: lang.c:44
 msgid "Free"
-msgstr ""
+msgstr "Gratis"
 
 
 #: lang.c:45
@@ -480,7 +480,7 @@ msgstr ""
 
 #: lang.c:108
 msgid "Login"
-msgstr ""
+msgstr "Logg inn"
 
 
 #: lang.c:109

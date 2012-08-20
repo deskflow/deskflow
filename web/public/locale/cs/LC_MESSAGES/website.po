@@ -21,7 +21,7 @@ msgstr ""
 
 #: lang.c:2
 msgid "These downloads are available for users having problems with the current release. Versions from this page are no longer supported."
-msgstr ""
+msgstr "Tyto verze jsou dostupné pro uživatele, kteří zaznamenali problémy se stávající verzí. Verze z této stránky nejsou již nadále podporovány."
 
 
 #: lang.c:3
@@ -59,7 +59,7 @@ msgstr "Další projekty"
 
 #: lang.c:16
 msgid "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
-msgstr ""
+msgstr "<a href=\"%1\">iOS klient od Matthiase Ringwalda</a> (iPad/iPhone)"
 
 
 #: lang.c:17
@@ -69,7 +69,7 @@ msgstr "Související stránky"
 
 #: lang.c:18
 msgid "Nightly builds"
-msgstr "Noční buildy"
+msgstr "Průběžné sestavy"
 
 
 #: lang.c:19
@@ -92,22 +92,22 @@ msgstr ""
 
 #: lang.c:22
 msgid "<b>Important:</b> Please try using the <a href=\"%1\">latest version</a> before trying older versions. The version available from this page is obsolete and may contain bugs fixed in the latest version."
-msgstr ""
+msgstr "<b>Důležité:</b>Prosíme, zkuste nejdříve použít <a href=\"%1\">poslední verzi</a> předtím, než vyzkoušíte starší verze. Verze dostupná z těchto stránek je zastaralá a může obsahovat chyby, které již byly v poslední verzi odstraněny."
 
 
 #: lang.c:24
 msgid "While your file is downloading, please take a look at <a href=\"%1\">Synergy Premium</a>."
-msgstr ""
+msgstr "Během stahování vašeho souboru se prosím podívejte také na <a href=\"%1\">Synergy Premium</a>."
 
 
 #: lang.c:25
 msgid "Thanks for downloading Synergy. If you need help, please read the <a href=\"%1\">user guide</a> or visit the <a href=\"%2\">help</a> page."
-msgstr ""
+msgstr "Děkujeme, že jste si stáhli Synergy. Pokud budete potřebovat pomoc, přečtěte si prosím <a href=\"%1\">uživatelskou příručku</a> nebo navštivte stránky <a href=\"%2\">nápovědy</a>."
 
 
 #: lang.c:26
 msgid "Please support open source software by donating!"
-msgstr ""
+msgstr "Prosíme podpořte open source software příspěvkem!"
 
 
 #: lang.c:28
@@ -117,27 +117,27 @@ msgstr "Poslední verze:"
 
 #: lang.c:29
 msgid "What's new?"
-msgstr ""
+msgstr "Co je nového?"
 
 
 #: lang.c:30
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 
 #: lang.c:31
 msgid "Mac OS X"
-msgstr ""
+msgstr "Mac OS X"
 
 
 #: lang.c:32
 msgid "Ubuntu/Debian"
-msgstr ""
+msgstr "Ubuntu/Debian"
 
 
 #: lang.c:33
 msgid "Fedora/Red Hat"
-msgstr ""
+msgstr "Fedora/Red Hat"
 
 
 #: lang.c:34
@@ -159,97 +159,97 @@ msgstr ""
 #: lang.c:100
 #: lang.c:106
 msgid "Premium"
-msgstr ""
+msgstr "Premium"
 
 
 #: lang.c:38
 msgid "Sign up and support Synergy!"
-msgstr ""
+msgstr "Přihlašte se a podpořte Synergy!"
 
 
 #: lang.c:39
 msgid "What's in it for me?"
-msgstr ""
+msgstr "Co tím získám?"
 
 
 #: lang.c:40
 msgid "How much do we deserve?"
-msgstr ""
+msgstr "Kolik si zasloužíme?"
 
 
 #: lang.c:41
 msgid "Enter any value into the textbox."
-msgstr ""
+msgstr "Zadejte jakoukoliv hodnotu do textového pole"
 
 
 #: lang.c:42
 #: lang.c:46
 msgid "Continue"
-msgstr ""
+msgstr "Pokračovat"
 
 
 #: lang.c:43
 msgid "or"
-msgstr ""
+msgstr "nebo"
 
 
 #: lang.c:44
 msgid "Free"
-msgstr ""
+msgstr "Zdarma"
 
 
 #: lang.c:45
 msgid "I don't want to support Synergy."
-msgstr ""
+msgstr "Nepřeji si podpořit Synergy"
 
 
 #: lang.c:47
 #: lang.c:54
 msgid "Synergy Premium"
-msgstr ""
+msgstr "Synergy Premium"
 
 
 #: lang.c:48
 #: lang.c:55
 msgid "Thanks your interest in Synergy Premium, we really appreciate your support. All funds we receive are reinvested back into the development of Synergy."
-msgstr ""
+msgstr "Děkujeme za váš zájem o Synergy Premium, velmi si ceníme vaší podpory. Veškeré finance, které obdržíme, jsou investovány zpět do vývoje Synergy."
 
 
 #: lang.c:49
 msgid "Premium votes"
-msgstr ""
+msgstr "Prémiové hlasy"
 
 
 #: lang.c:50
 msgid "For every $10, you get 1 premium vote. For example, $100 gives you 10 premium votes. You can assign your votes to any bug fix or feature you want. The bug fix or feature with the most votes will be looked at next. We of course can't gaurentee that a bug will get fixed or a feature will be implemented, but we will try our hardest."
-msgstr ""
+msgstr "Za každých $10 získáte 1 prémiový hlas. Například za $100 získáte 10 prémiových hlasů. Své hlasy můžete přidělit jakékoliv chybě nebo nové funkci kterou chcete. Chyba nebo nová funkce s nejvíce hlasy bude řešena jako následující. Samozřejmě nemůžeme garantovat, že danou chybu opravíme nebo že novou funkci implemetujeme, ale uděláme pro to vše, co bude v našich silách."
 
 
 #: lang.c:51
 msgid "Warm fuzzy feelings"
-msgstr ""
+msgstr "Příjemné hřejivé pocity"
 
 
 #: lang.c:52
 msgid "As well as premium votes, you get a nice warm fuzzy feeling from knowing that you helped an open source project move forward. Funding goes directly to developers working on the project so that they can spend more time working on Synergy."
-msgstr ""
+msgstr "Stejně dobře jako prémiové hlasy taktéž získáte příjemný hřejivý pocit z vědomosti, že jste pomohli open source projektu pohnout se kupředu. Příspěvky jsou směřovány přímo vývojářům projektu, kteří díky nim mohou strávit více času prací na Synergy."
 
 
 #: lang.c:53
 #: lang.c:112
 #: lang.c:125
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 
 #: lang.c:56
 msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
-msgstr ""
+msgstr "Slibujeme, že vám nebudeme zasílat spam a nikdy neuložíme vaše heslo jako prostý text (ukládáme pouze hash)."
 
 
 #: lang.c:57
 msgid "Your're almost done! Please use the PayPal button below to finish creating your Synergy Premium account. When the payment is complete, you will be redirected to your new account page."
-msgstr ""
+msgstr "Jste již skoro hotovi! Prosíme použijte níže tlačítko PayPal pro dokončení tvorby vašeho Synergy Premium účtu. Jakmile bude platba hotová, budete přesměrováni na stránku s vaším novým účtem."
 
 
 #: lang.c:58
@@ -265,7 +265,7 @@ msgstr "Pomoc"
 
 #: lang.c:60
 msgid "Having problems using Synergy? You're in the right place!"
-msgstr ""
+msgstr "Máte problém s používáním Synergy? Tak to jste na správném místě!"
 
 
 #: lang.c:61
@@ -275,7 +275,7 @@ msgstr "Poslední verze"
 
 #: lang.c:62
 msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr ""
+msgstr "Mnoho chyb bylo hlášeno i přestože uživatelé nevyzkoušeli poslední verzi. Prosíme navštivte stránku s odkazy <a href=\"%1\">ke stažení</a> a vyzkoušejte poslední verzi ( i pokud je to jen beta). Možná budete chtít také vyzkoušet  <a href=\"%2\">noční sestavy</a>, ale ty prosím zkoušejte až jako poslední možnost (tyto verze neprošli testováním kvality)."
 
 
 #: lang.c:63
@@ -285,7 +285,7 @@ msgstr "Uživatelská příručka"
 
 #: lang.c:64
 msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
-msgstr ""
+msgstr "Než budete pokračovat, přečtěte si prosím <a href=\"%1\">uživatelský manuál</a>."
 
 
 #: lang.c:65
@@ -302,7 +302,7 @@ msgstr ""
 
 #: lang.c:67
 msgid "Q&#38;A website"
-msgstr ""
+msgstr "Q&#38;Webová stránka"
 
 
 #: lang.c:68
@@ -313,22 +313,22 @@ msgstr ""
 #: lang.c:69
 #: lang.c:133
 msgid "Super User"
-msgstr "Super uživatel(root)"
+msgstr "SuperUser.com"
 
 
 #: lang.c:70
 msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
-msgstr ""
+msgstr "Pokud znáte SuperUser.com, existuje pro vás <a href=\"%1\">tag synergy</a>."
 
 
 #: lang.c:71
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
-msgstr ""
+msgstr "SuperUser.com <b>není</b> určeno pro podporu Synergy."
 
 
 #: lang.c:72
 msgid "Ask questions; do not nag or comment on bugs or issues."
-msgstr ""
+msgstr "Ptejte se na vaše dotazy; neobtěžujte a nekomentujte chyby a problémy."
 
 
 #: lang.c:73
@@ -338,7 +338,7 @@ msgstr ""
 
 #: lang.c:74
 msgid "Synergy developers do <i>not</i> monitor this website."
-msgstr ""
+msgstr "Tento web <i>není</i> monitorován vývojáři Synergy."
 
 
 #: lang.c:75
@@ -383,7 +383,7 @@ msgstr ""
 
 #: lang.c:83
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
-msgstr "Synergy vám umožní snadno sdílet myš a klávesnici mezi více počítači na stole, je zdarma a Open Source. Stačí jen přesunout kurzor myši mimo okraj jedné obrazovky počítače do druhé. Můžete dokonce sdílet všechny své clipboardy. Vše, co potřebujete, je připojení k síti. Synergy je multiplatformní (funguje na Windows, Mac OS X a Linux)."
+msgstr "Synergy vám umožní snadno sdílet myš a klávesnici mezi více počítači na stole, je zdarma a Open Source. Stačí jen přesunout kurzor myši mimo okraj jedné obrazovky počítače do druhé. Můžete dokonce sdílet obsahy všech schránek. Vše, co potřebujete, je připojení k síti. Synergy je multiplatformní (funguje na Windows, Mac OS X a Linux)."
 
 
 #: lang.c:84
@@ -399,7 +399,7 @@ msgstr "Informace"
 
 #: lang.c:86
 msgid "Key people"
-msgstr ""
+msgstr "Klíčoví lidé"
 
 
 #: lang.c:87
@@ -409,12 +409,12 @@ msgstr "Vedoucí projektu a hlavní vývojář"
 
 #: lang.c:88
 msgid "Original author and project founder"
-msgstr ""
+msgstr "Původní autor a zakladatel projektu"
 
 
 #: lang.c:89
 msgid "Founder of Synergy+ (fork project)"
-msgstr ""
+msgstr "Zakladatel Synergy+ (odvozený projekt)"
 
 
 #: lang.c:90
@@ -434,7 +434,7 @@ msgstr "Blog"
 
 #: lang.c:97
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 
 #: lang.c:98
@@ -444,12 +444,12 @@ msgstr ""
 
 #: lang.c:99
 msgid "Code"
-msgstr ""
+msgstr "Kód"
 
 
 #: lang.c:101
 msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
-msgstr ""
+msgstr "<b>Vítejte</b>, uživateli Synergy Premium! Děkujeme za podporu našeho projektu. <a href=\"%1\">Prémiový účet</a>."
 
 
 #: lang.c:102
@@ -459,18 +459,18 @@ msgstr "Zlepšit tento překlad"
 
 #: lang.c:103
 msgid "Copyright &copy; 2012"
-msgstr ""
+msgstr "Copyright &copy; 2012"
 
 
 #: lang.c:104
 msgid "License"
-msgstr ""
+msgstr "Licence"
 
 
 #: lang.c:105
 #: lang.c:129
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Ochrana osobních údajů"
 
 
 #: lang.c:107
@@ -490,12 +490,12 @@ msgstr ""
 
 #: lang.c:110
 msgid "Email:"
-msgstr ""
+msgstr "E-mail:"
 
 
 #: lang.c:111
 msgid "Password:"
-msgstr ""
+msgstr "Heslo:"
 
 
 #: lang.c:113
@@ -515,7 +515,7 @@ msgstr ""
 
 #: lang.c:116
 msgid "Contribute again"
-msgstr ""
+msgstr "Přispět znovu"
 
 
 #: lang.c:117
@@ -525,13 +525,13 @@ msgstr ""
 
 #: lang.c:118
 msgid "Your votes"
-msgstr ""
+msgstr "Vaše hlasy"
 
 
 #: lang.c:119
 #: lang.c:127
 msgid "%1 votes"
-msgstr ""
+msgstr "%1 hlasů"
 
 
 #: lang.c:120
@@ -551,7 +551,7 @@ msgstr ""
 
 #: lang.c:123
 msgid "Issue ID:"
-msgstr ""
+msgstr "ID problému:"
 
 
 #: lang.c:124
@@ -566,7 +566,7 @@ msgstr ""
 
 #: lang.c:128
 msgid "No votes."
-msgstr ""
+msgstr "Žádné hlasy."
 
 
 #: lang.c:131
@@ -581,12 +581,12 @@ msgstr "Co se hledá?"
 
 #: lang.c:134
 msgid "Issue tracker"
-msgstr ""
+msgstr "Sledování problémů"
 
 
 #: lang.c:135
 msgid "Website wiki"
-msgstr ""
+msgstr "Wiki"
 
 
 #: lang.c:136
@@ -601,7 +601,7 @@ msgstr "Tipy k vyhledání"
 
 #: lang.c:138
 msgid "If you get too many results, try specifying your operating system."
-msgstr "Pokud dostanete příliš mnoho výsledků, zkuste přidat typ operačního systému."
+msgstr "Pokud dostanete příliš mnoho výsledků, zkuste upřesnit typ vašeho operačního systému."
 
 
 #: lang.c:139
@@ -611,7 +611,7 @@ msgstr "Někdy jsou problémy spojeny čistě s klientem nebo serverem."
 
 #: lang.c:140
 msgid "You may find that entering your version number helps."
-msgstr ""
+msgstr "Zadání vaší verze by vám mohlo pomoci"
 
 
 #: lang.c:141
@@ -621,7 +621,7 @@ msgstr ""
 
 #: lang.c:142
 msgid "Search now"
-msgstr ""
+msgstr "Hledej"
 
 
 #: lang.c:143
@@ -631,36 +631,36 @@ msgstr ""
 
 #: php/Premium.class.php:233
 msgid "Please enter your name."
-msgstr ""
+msgstr "Prosíme zadejte své jméno."
 
 
 #: php/Premium.class.php:236
 msgid "Please enter your email address."
-msgstr ""
+msgstr "Prosíme zadejte svoji e-mailovou adresu"
 
 
 #: php/Premium.class.php:239
 msgid "Your email address does not look valid."
-msgstr ""
+msgstr "Vaše e-mailová adresa není validní."
 
 
 #: php/Premium.class.php:242
 msgid "That email address is already in use, are you already registered?"
-msgstr ""
+msgstr "Tato e-mailová adresa je používána. Nejste již zaregistrován?"
 
 
 #: php/Premium.class.php:245
 msgid "The confirm email textbox must match the email address textbox."
-msgstr ""
+msgstr "E-mailová adresa v ověřovacím poli musí souhlasit se zadanou e-mailovou adresou."
 
 
 #: php/Premium.class.php:248
 msgid "Please enter a password."
-msgstr ""
+msgstr "Prosíme zadejte heslo."
 
 
 #: php/Premium.class.php:251
 msgid "The confirm password texbox must match the password textbox."
-msgstr ""
+msgstr "Heslo v ověřovacím poli musí souhlasit se zadaným heslem"
 
 

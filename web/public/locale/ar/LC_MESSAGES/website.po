@@ -117,7 +117,7 @@ msgstr "الإصدار الأخير:"
 
 #: lang.c:29
 msgid "What's new?"
-msgstr ""
+msgstr "ما الجديد ؟"
 
 
 #: lang.c:30
@@ -164,7 +164,7 @@ msgstr ""
 
 #: lang.c:38
 msgid "Sign up and support Synergy!"
-msgstr ""
+msgstr "التسجيل ودعم Synergy!"
 
 
 #: lang.c:39
@@ -185,22 +185,22 @@ msgstr ""
 #: lang.c:42
 #: lang.c:46
 msgid "Continue"
-msgstr ""
+msgstr "متابعة"
 
 
 #: lang.c:43
 msgid "or"
-msgstr ""
+msgstr "أو"
 
 
 #: lang.c:44
 msgid "Free"
-msgstr ""
+msgstr "مجاني"
 
 
 #: lang.c:45
 msgid "I don't want to support Synergy."
-msgstr ""
+msgstr "أنا لا أريد دعم Synergy."
 
 
 #: lang.c:47
@@ -239,7 +239,7 @@ msgstr ""
 #: lang.c:112
 #: lang.c:125
 msgid "OK"
-msgstr ""
+msgstr "موافق"
 
 
 #: lang.c:56
@@ -480,7 +480,7 @@ msgstr ""
 
 #: lang.c:108
 msgid "Login"
-msgstr ""
+msgstr "دخول"
 
 
 #: lang.c:109
@@ -490,12 +490,12 @@ msgstr ""
 
 #: lang.c:110
 msgid "Email:"
-msgstr ""
+msgstr "البريد الإلكتروني:"
 
 
 #: lang.c:111
 msgid "Password:"
-msgstr ""
+msgstr "كلمة المرور:"
 
 
 #: lang.c:113
@@ -510,7 +510,7 @@ msgstr ""
 
 #: lang.c:115
 msgid "Logout"
-msgstr ""
+msgstr "خروج"
 
 
 #: lang.c:116
@@ -531,7 +531,7 @@ msgstr ""
 #: lang.c:119
 #: lang.c:127
 msgid "%1 votes"
-msgstr ""
+msgstr "%1 تصويت"
 
 
 #: lang.c:120
@@ -631,12 +631,12 @@ msgstr ""
 
 #: php/Premium.class.php:233
 msgid "Please enter your name."
-msgstr ""
+msgstr "فضلا أدخل إسمك:"
 
 
 #: php/Premium.class.php:236
 msgid "Please enter your email address."
-msgstr ""
+msgstr "فضلا أدخل بريدك الإلكتروني:"
 
 
 #: php/Premium.class.php:239

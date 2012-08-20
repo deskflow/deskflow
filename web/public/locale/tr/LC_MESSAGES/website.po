@@ -16,17 +16,17 @@ msgstr ""
 
 #: lang.c:1
 msgid "Alternate Downloads"
-msgstr ""
+msgstr "Alternatif yüklemeler"
 
 
 #: lang.c:2
 msgid "These downloads are available for users having problems with the current release. Versions from this page are no longer supported."
-msgstr ""
+msgstr "Güncel indirmelerde sorununuz çözülmüş olabilir, Sürümünüz için bu sayfada destek bulunmamaktadır."
 
 
 #: lang.c:3
 msgid "Previous 1.4 releases"
-msgstr ""
+msgstr "1.4 sürümü öncesi"
 
 
 #: lang.c:4
@@ -34,12 +34,12 @@ msgstr ""
 #: lang.c:6
 #: lang.c:7
 msgid "Beta"
-msgstr ""
+msgstr "Deneme"
 
 
 #: lang.c:8
 msgid "Previous 1.3 releases"
-msgstr ""
+msgstr "1.3 sürümü öncesi"
 
 
 #: lang.c:9
@@ -49,7 +49,7 @@ msgstr ""
 #: lang.c:13
 #: lang.c:14
 msgid "Stable"
-msgstr ""
+msgstr "Kararlı"
 
 
 #: lang.c:15
@@ -59,7 +59,7 @@ msgstr "Diğer projeler"
 
 #: lang.c:16
 msgid "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
-msgstr ""
+msgstr "<a href=\"%1\">iOS kullanıcısı Matthias Ringwald</a> (iPad/iPhone)"
 
 
 #: lang.c:17
@@ -69,12 +69,12 @@ msgstr "İlgili siteler"
 
 #: lang.c:18
 msgid "Nightly builds"
-msgstr ""
+msgstr "Geçici derlemeleri"
 
 
 #: lang.c:19
 msgid "use at your own risk"
-msgstr ""
+msgstr "Riskli Kullanım"
 
 
 #: lang.c:20
@@ -87,27 +87,27 @@ msgstr "İndir"
 
 #: lang.c:21
 msgid "Thanks for supporting Synergy! No ads for you :-)"
-msgstr ""
+msgstr "Sinerji destekleriniz için teşekkürler! Sizin için reklam yok :-)"
 
 
 #: lang.c:22
 msgid "<b>Important:</b> Please try using the <a href=\"%1\">latest version</a> before trying older versions. The version available from this page is obsolete and may contain bugs fixed in the latest version."
-msgstr ""
+msgstr "<b> Önemli: </b> Lütfen eski sürümlerini denemeden önce <a href=\"%1\"> son sürümü </a> kullanmayı deneyin. Bu sayfada kullanılabilir sürümü eski olduğunu ve en son sürümü giderilen hatalar içerebilir."
 
 
 #: lang.c:24
 msgid "While your file is downloading, please take a look at <a href=\"%1\">Synergy Premium</a>."
-msgstr ""
+msgstr "Dosyanızı indirirken, <a href=\"%1\"> Sinerji Premium bir göz atın lütfen </a>."
 
 
 #: lang.c:25
 msgid "Thanks for downloading Synergy. If you need help, please read the <a href=\"%1\">user guide</a> or visit the <a href=\"%2\">help</a> page."
-msgstr ""
+msgstr "Synergy indiridiğiniz için teşekkür ederiz. Yardıma ihtiyacınız olursa lütfen <a href=\"%1\">kullanım kılavuzu</a> okuyun ya da <a href=\"%2\"> yardım </a> sayfamızı ziyaret ediniz."
 
 
 #: lang.c:26
 msgid "Please support open source software by donating!"
-msgstr ""
+msgstr "Lütfen açık kodlu yazılımımıza bağışlarınızla destek olun!"
 
 
 #: lang.c:28
@@ -117,7 +117,7 @@ msgstr "Güncel Sürüm: "
 
 #: lang.c:29
 msgid "What's new?"
-msgstr ""
+msgstr "Neler yeni?"
 
 
 #: lang.c:30
@@ -147,87 +147,88 @@ msgstr "Kaynak kodu"
 
 #: lang.c:35
 msgid "Alternate downloads"
-msgstr ""
+msgstr "Alternatif yüklemeler"
 
 
 #: lang.c:36
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution."
-msgstr ""
+msgstr "Bağışınız teklifiniz için teşekkürler! Gerçekten desteğinizi tadir ediyoruz. Synergy Premium'a bağış butonu yerleştirdik. \n"
+"Oy atarak beğenmeniz bize bağış sağlayacak. \n"
 
 
 #: lang.c:37
 #: lang.c:100
 #: lang.c:106
 msgid "Premium"
-msgstr ""
+msgstr "Premium"
 
 
 #: lang.c:38
 msgid "Sign up and support Synergy!"
-msgstr ""
+msgstr "Kaydolun ve Synergy'yi destekleyin!"
 
 
 #: lang.c:39
 msgid "What's in it for me?"
-msgstr ""
+msgstr "Benim için neler var?"
 
 
 #: lang.c:40
 msgid "How much do we deserve?"
-msgstr ""
+msgstr "Ne kadar hakediyorum?"
 
 
 #: lang.c:41
 msgid "Enter any value into the textbox."
-msgstr ""
+msgstr "Alana herhangi bir değer girin."
 
 
 #: lang.c:42
 #: lang.c:46
 msgid "Continue"
-msgstr ""
+msgstr "Sürdür"
 
 
 #: lang.c:43
 msgid "or"
-msgstr ""
+msgstr "veya"
 
 
 #: lang.c:44
 msgid "Free"
-msgstr ""
+msgstr "Özgür"
 
 
 #: lang.c:45
 msgid "I don't want to support Synergy."
-msgstr ""
+msgstr "Synergy 'i desteklemek istemiyorum"
 
 
 #: lang.c:47
 #: lang.c:54
 msgid "Synergy Premium"
-msgstr ""
+msgstr "Premium"
 
 
 #: lang.c:48
 #: lang.c:55
 msgid "Thanks your interest in Synergy Premium, we really appreciate your support. All funds we receive are reinvested back into the development of Synergy."
-msgstr ""
+msgstr "Synergy Premium'a ilginize ve desteğinize çok teşekkür ederiz. Aldığımız tüm fonlar Synergy gelişimi için geri aktarılmaktadır."
 
 
 #: lang.c:49
 msgid "Premium votes"
-msgstr ""
+msgstr "Premium"
 
 
 #: lang.c:50
 msgid "For every $10, you get 1 premium vote. For example, $100 gives you 10 premium votes. You can assign your votes to any bug fix or feature you want. The bug fix or feature with the most votes will be looked at next. We of course can't gaurentee that a bug will get fixed or a feature will be implemented, but we will try our hardest."
-msgstr ""
+msgstr "Her $10 için 1 prim alacaksınız. Örneğin , $100 alın 10 prim alın. İstediğiniz herhangi bir hata düzeltme veya özellik için oy atayabilirsiniz. En çok oyu alan hata düzeltme veya özellik önce bakılacaktır. Biz tabiki bir hata veya düzeltmeyi garanti edemeyiz ,ancak biz zorlayarak çözmeye çalıştıracağız. "
 
 
 #: lang.c:51
 msgid "Warm fuzzy feelings"
-msgstr ""
+msgstr "Canlı çevrimdışı gönüllüler"
 
 
 #: lang.c:52
@@ -239,22 +240,22 @@ msgstr ""
 #: lang.c:112
 #: lang.c:125
 msgid "OK"
-msgstr ""
+msgstr "&Tamam"
 
 
 #: lang.c:56
 msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
-msgstr ""
+msgstr "Soz veriyoruz size gereksiz e-posta gondermeyecegiz ve sifrenizi hickimse ile paylasmayacagiz."
 
 
 #: lang.c:57
 msgid "Your're almost done! Please use the PayPal button below to finish creating your Synergy Premium account. When the payment is complete, you will be redirected to your new account page."
-msgstr ""
+msgstr "Neredeyse tamamlandi.Lutfen PayPal butonunu kullanarak Premium uyeliginizi tamamlayiniz.Odeme gerceklestiginde, yeni hesap sayfaniza yonlendirileceksiniz."
 
 
 #: lang.c:58
 msgid "The payment is handled by <b>Bolton Software Ltd</b>, the company behind the development of Synergy. All funds are <b>reinvested</b> back into the development of Synergy."
-msgstr ""
+msgstr "Odemeniz <b>Bolton Software LTD</b> tarafindan Synergy yi guclendirmek amaci ile alinmistir."
 
 
 #: lang.c:59
@@ -265,7 +266,7 @@ msgstr "&Yardım"
 
 #: lang.c:60
 msgid "Having problems using Synergy? You're in the right place!"
-msgstr ""
+msgstr "Synergy kullanırken sorununuz mu oldu? Doğru yerdesiniz!"
 
 
 #: lang.c:61
@@ -280,12 +281,12 @@ msgstr ""
 
 #: lang.c:63
 msgid "User guide"
-msgstr ""
+msgstr "Kullanıcı Kılavuzu"
 
 
 #: lang.c:64
 msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
-msgstr ""
+msgstr "Lütfen ilerlemeden önce <a href=\"%1\">kullanım kılavuzu</a> okuyun."
 
 
 #: lang.c:65
@@ -297,12 +298,12 @@ msgstr "Ara"
 
 #: lang.c:66
 msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
-msgstr ""
+msgstr "Kısa sürede işinizi çözmek için kullanın. <a href=\"%1\">Hızlı Arama</a>"
 
 
 #: lang.c:67
 msgid "Q&#38;A website"
-msgstr ""
+msgstr "Q&#38;Web sitesi"
 
 
 #: lang.c:68
@@ -318,7 +319,7 @@ msgstr "Kullanıcı"
 
 #: lang.c:70
 msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
-msgstr ""
+msgstr "Süper Kullanıcı'ya yabancı değilseniz, <a href=\"%1\">synergy etiketi</a> bulunmakta."
 
 
 #: lang.c:71
@@ -353,22 +354,22 @@ msgstr "Sorunuzun konusunda \"Synergy\" içeridiğinden emin olun."
 
 #: lang.c:77
 msgid "IRC"
-msgstr ""
+msgstr "IRC"
 
 
 #: lang.c:78
 msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
-msgstr ""
+msgstr "IRC kanalımıza katılabilirsiniz: %1 (IRC için, <a href=\"%2\">XChat</a> kullanabilirsiniz)"
 
 
 #: lang.c:79
 msgid "Mailing list"
-msgstr ""
+msgstr "Mail Listesi"
 
 
 #: lang.c:80
 msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
-msgstr ""
+msgstr "Bir <a href=\"%1\">mail listemiz</a> de bulunmakta. Hataları mail listesine yollamayın. "
 
 
 #: lang.c:81
@@ -378,17 +379,17 @@ msgstr "Hata bildiri raporu"
 
 #: lang.c:82
 msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
-msgstr ""
+msgstr "Yukardaki tüm seçenekleri denediniz ve kesin bir hata bulduysanız, hata raporlarını alın ve yeni bir hata raporu açın. <a href=\"%1\">yeni hata kurtarma</a>."
 
 
 #: lang.c:83
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
-msgstr ""
+msgstr "Synergy, aynı mouse ve klavye ile birden çok bilgisayarı kontrol etmenizi sağlayan Özgür ve Açık Kaynak Kodlu bir uygulamadır. Yapmanız gereken mouse imlecinizi bilgisayar ekranından diğerine sürüklemek. Synergy aynı zamanda ortak bir panoya da izin vermektedir yani bilgisayarlar arası kopyala/yapıştır yapmanıza da olanak tanır. Tek gereken bilgisayarlarınız arasında kuruluş olan network bağlantısı.  Synergy, çoklu platform desteği de vemektedir (Windows, Linux ve Mac OS X  işletimde sistemlerinde çalışır). "
 
 
 #: lang.c:84
 msgid "Follow Synergy coders!"
-msgstr ""
+msgstr "Synergy geliştiricilerini takip et"
 
 
 #: lang.c:85
@@ -399,27 +400,27 @@ msgstr "Bilgi"
 
 #: lang.c:86
 msgid "Key people"
-msgstr ""
+msgstr "Anahtar Kişi"
 
 
 #: lang.c:87
 msgid "Project leader and primary developer"
-msgstr ""
+msgstr "Proje lideri ve ana geliştirici"
 
 
 #: lang.c:88
 msgid "Original author and project founder"
-msgstr ""
+msgstr "Orijinal yazar ve projenin kurucusu"
 
 
 #: lang.c:89
 msgid "Founder of Synergy+ (fork project)"
-msgstr ""
+msgstr "Synergy Kurucusu + (çatal projesi)"
 
 
 #: lang.c:90
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
-msgstr ""
+msgstr "Sinerji masanızın üzerinde birden fazla bilgisayar arasında klavye ve fare paylaşmanızı sağlar."
 
 
 #: lang.c:91
@@ -434,7 +435,7 @@ msgstr "Blog"
 
 #: lang.c:97
 msgid "Wiki"
-msgstr ""
+msgstr "Wiki"
 
 
 #: lang.c:98
@@ -444,12 +445,12 @@ msgstr "Takipçi"
 
 #: lang.c:99
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 
 #: lang.c:101
 msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
-msgstr ""
+msgstr "<b>Hoş geldin</b>, Synergy Premium kullanıcısı! Projemizi desteklediğin için teşekkürler.  <a href=\"%1\">Premium hesap</a>."
 
 
 #: lang.c:102
@@ -459,89 +460,89 @@ msgstr "Çeviriyi geliştirin."
 
 #: lang.c:103
 msgid "Copyright &copy; 2012"
-msgstr ""
+msgstr "Copyright &copy; 2012"
 
 
 #: lang.c:104
 msgid "License"
-msgstr ""
+msgstr "Lisans"
 
 
 #: lang.c:105
 #: lang.c:129
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Gizlilik Politikası"
 
 
 #: lang.c:107
 msgid "Synergy Premium allows users to fund development of Synergy and vote on bug fixes and features."
-msgstr ""
+msgstr "Synergy Premium kullanıcılara Synergy'nin gelişimini finanse etme; hata düzeltmeleri ve özellikler üzerine oylama yapmalarına imkan tanımaktadır."
 
 
 #: lang.c:108
 msgid "Login"
-msgstr ""
+msgstr "Giriş Yap"
 
 
 #: lang.c:109
 msgid "If you don't have an account, you can <a href=\"%1\">sign up</a>."
-msgstr ""
+msgstr "Eger bir synergy hesabiniz yok ise <a href=''%1''>tiklayiniz</a>"
 
 
 #: lang.c:110
 msgid "Email:"
-msgstr ""
+msgstr "E-Posta"
 
 
 #: lang.c:111
 msgid "Password:"
-msgstr ""
+msgstr "Şifre:"
 
 
 #: lang.c:113
 msgid "Welcome to your Synergy Premium account. You have <b>%1</b> unassigned Premium vote(s)."
-msgstr ""
+msgstr "Synergy Premium hesabiniza hos geldiniz.<b>%1</b> kontrol edilmemis uyariniz var."
 
 
 #: lang.c:114
 msgid "If you have just signed up and don't see any votes, we may be waiting to hear from PayPal so please be patient. <a href=\"%1\">Check now</a>."
-msgstr ""
+msgstr "Henuz kaydoldunuz ve oylari goruntuleyemiyorsaniz lutfen bekleyin.PayPal odemeniz hemen hesaba gecmemis olabilir. <a href=''%1''>Tekrar dene</a>"
 
 
 #: lang.c:115
 msgid "Logout"
-msgstr ""
+msgstr "Çıkış Yap"
 
 
 #: lang.c:116
 msgid "Contribute again"
-msgstr ""
+msgstr "Tekrar Bagista Bulunun"
 
 
 #: lang.c:117
 msgid "If you would like to contribute again, we would really apreciate it."
-msgstr ""
+msgstr "Eger Tekrar Bagista Bulunmak Isterseniz Cok Memnun Oluruz."
 
 
 #: lang.c:118
 msgid "Your votes"
-msgstr ""
+msgstr "Sizin Oylariniz"
 
 
 #: lang.c:119
 #: lang.c:127
 msgid "%1 votes"
-msgstr ""
+msgstr "%1 Oy"
 
 
 #: lang.c:120
 msgid "You have not cast any votes yet."
-msgstr ""
+msgstr "Henuz Oy Bulunmuyor"
 
 
 #: lang.c:121
 msgid "Cast new vote"
-msgstr ""
+msgstr "Yeni Oy At"
 
 
 #: lang.c:122
@@ -551,42 +552,44 @@ msgstr ""
 
 #: lang.c:123
 msgid "Issue ID:"
-msgstr ""
+msgstr "Konu Basligi"
 
 
 #: lang.c:124
 msgid "Votes:"
-msgstr ""
+msgstr "Oylar:"
 
 
 #: lang.c:126
 msgid "Community votes"
-msgstr ""
+msgstr "Genel Oylar:"
 
 
 #: lang.c:128
-msgid "No votes."
-msgstr ""
+msgid "\n"
+"No votes.\n"
+msgstr "\n"
+"Oy Bulunmuyor.\n"
 
 
 #: lang.c:131
 msgid "Search all Synergy websites from one page."
-msgstr ""
+msgstr "Sayfayı bütün Synergy sitelerinde ara."
 
 
 #: lang.c:132
 msgid "What is searched?"
-msgstr ""
+msgstr "Ne aramıştınız?"
 
 
 #: lang.c:134
 msgid "Issue tracker"
-msgstr ""
+msgstr "Takipçi"
 
 
 #: lang.c:135
 msgid "Website wiki"
-msgstr ""
+msgstr "Web sitesi wiki"
 
 
 #: lang.c:136
@@ -601,66 +604,66 @@ msgstr "İpucu Ara"
 
 #: lang.c:138
 msgid "If you get too many results, try specifying your operating system."
-msgstr ""
+msgstr "Birden fazla sonuç alırsanız, işletim sistemi belirtmeyi deneyin."
 
 
 #: lang.c:139
 msgid "Sometimes issues are specific to the client or server."
-msgstr ""
+msgstr "Bazen sorunlar istemci ya da sunucu tabanlı olabilir."
 
 
 #: lang.c:140
 msgid "You may find that entering your version number helps."
-msgstr ""
+msgstr "Sürüm numarasını girerek yardımcı olduğunu görebilirsiniz."
 
 
 #: lang.c:141
 msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
-msgstr ""
+msgstr "Eğer bu çalışmazsa, <a href=\"%1\">alternatif Synergy araması</a>nı kullanın."
 
 
 #: lang.c:142
 msgid "Search now"
-msgstr ""
+msgstr "Şimdi ara"
 
 
 #: lang.c:143
 msgid "Loading"
-msgstr ""
+msgstr "Yükleniyor"
 
 
 #: php/Premium.class.php:233
 msgid "Please enter your name."
-msgstr ""
+msgstr "Lütfen adınızı giriniz."
 
 
 #: php/Premium.class.php:236
 msgid "Please enter your email address."
-msgstr ""
+msgstr "Lütfen e-postanızı giriniz."
 
 
 #: php/Premium.class.php:239
 msgid "Your email address does not look valid."
-msgstr ""
+msgstr "Geçersiz e-posta "
 
 
 #: php/Premium.class.php:242
 msgid "That email address is already in use, are you already registered?"
-msgstr ""
+msgstr "Bu e-mail adresi sistemde kayitli.Daha once kaydolmus muydunuz?"
 
 
 #: php/Premium.class.php:245
 msgid "The confirm email textbox must match the email address textbox."
-msgstr ""
+msgstr "E-mail dogrulama ile e-mail eslesmek zorunda."
 
 
 #: php/Premium.class.php:248
 msgid "Please enter a password."
-msgstr ""
+msgstr "Lütfen Şifrenizi Giriniz"
 
 
 #: php/Premium.class.php:251
 msgid "The confirm password texbox must match the password textbox."
-msgstr ""
+msgstr "Parolalar ayni olmak zorundadir."
 
 

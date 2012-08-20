@@ -152,7 +152,7 @@ msgstr "Alternative Downloads"
 
 #: lang.c:36
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution."
-msgstr ""
+msgstr "Danke für das Angebot zu spenden! Wir schätzen Ihre Unterstützung sehr. Wir haben unseren Spende Knopf mit Premium-Synergy ersetzt. Es ist wie eine Spende, Sie erhalten nur die Möglichkeit der Abstimmung im Gegenzug für Ihren Beitrag."
 
 
 #: lang.c:37
@@ -169,7 +169,7 @@ msgstr "Registrier' Dich und unterstütze Synergy!"
 
 #: lang.c:39
 msgid "What's in it for me?"
-msgstr ""
+msgstr "Was ist für mich drin?"
 
 
 #: lang.c:40
@@ -212,7 +212,7 @@ msgstr "Synergy Premium"
 #: lang.c:48
 #: lang.c:55
 msgid "Thanks your interest in Synergy Premium, we really appreciate your support. All funds we receive are reinvested back into the development of Synergy."
-msgstr ""
+msgstr "Vielen Dank für Ihr Interesse an Synergy Premium, wir danken Ihnen sehr für Ihre Unterstützung. Sämtliche Gelder werden wieder in die Entwicklung von Synergy investiert."
 
 
 #: lang.c:49
@@ -222,17 +222,17 @@ msgstr ""
 
 #: lang.c:50
 msgid "For every $10, you get 1 premium vote. For example, $100 gives you 10 premium votes. You can assign your votes to any bug fix or feature you want. The bug fix or feature with the most votes will be looked at next. We of course can't gaurentee that a bug will get fixed or a feature will be implemented, but we will try our hardest."
-msgstr ""
+msgstr "Für jede $10 erhalten Sie ein Premium-Stimme. Zum Beispiel bekommen Sie für $100 10 Stimmen. Sie können Ihre Stimmen jeder Fehlerbehebungsfunktion oder Funktion zuweisen die Sie wollen. DieFehlerbehebungsfunktion oder Funktion mit den meisten Stimmen wird als nächstes betrachtet. Wir können natürlich nicht garantieren, dass ein Fehler behoben oder eine Funktion implementiert wird, aber wir werden unser Bestes geben."
 
 
 #: lang.c:51
 msgid "Warm fuzzy feelings"
-msgstr ""
+msgstr "Wohlig warmes Gefühl"
 
 
 #: lang.c:52
 msgid "As well as premium votes, you get a nice warm fuzzy feeling from knowing that you helped an open source project move forward. Funding goes directly to developers working on the project so that they can spend more time working on Synergy."
-msgstr ""
+msgstr "Neben Premium-Stimmen erhalten Sie ein nettes wohlig warmes Gefühl aus dem Wissen, dass Sie einem Open-Source-Projekt beim Vorankommen helfen . Die Finanzierung geht direkt an Entwickler die an dem Projekt arbeiten, so dass sie mehr Zeit mit der Arbeit an Synergy verbringen könen."
 
 
 #: lang.c:53
@@ -244,7 +244,7 @@ msgstr "OK"
 
 #: lang.c:56
 msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
-msgstr ""
+msgstr "Wir versprechen Sie niemals zuzuspammen und ihre Passwörter nie im Klartext speichern werden (wir behalten nur ein Kuddelmuddel)"
 
 
 #: lang.c:57
@@ -378,7 +378,7 @@ msgstr "Fehler melden"
 
 #: lang.c:82
 msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
-msgstr ""
+msgstr "Bitte melden Sie Fehler, wenn Sie alle der oben genannten Optionen erschöpft haben, und Sie sich absolut sicher sind einen Fehler gefunden zu haben. Öffnen Sie a <a href=\"%1\">new bug report</a>."
 
 
 #: lang.c:83

@@ -164,7 +164,7 @@ msgstr "Premium"
 
 #: lang.c:38
 msgid "Sign up and support Synergy!"
-msgstr "サインアップして Synergy へのご支援をお願いします！"
+msgstr "サインアップして Synergy の開発を支援する！"
 
 
 #: lang.c:39
@@ -200,7 +200,7 @@ msgstr "無料"
 
 #: lang.c:45
 msgid "I don't want to support Synergy."
-msgstr "Synergy の開発を支援する気はない。"
+msgstr "Synergy の開発を支援する気はありません。"
 
 
 #: lang.c:47
@@ -275,7 +275,7 @@ msgstr "最新バージョン"
 
 #: lang.c:62
 msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr ""
+msgstr "たくさんのバグの報告が寄せられていますが、多くのユーザーが最新バージョンを試すことなくこれを行っています。どうか<a href=\"%1\">ダウンロード</a>ページより最新バージョンをお試しください (たとえベータ版であったとしてもです)。場合によっては<a href=\"%2\">ナイトリービルド</a>も試してみたくなるかもしれませんが、それは最後の手段としてのみ行ってください （ナイトリービルドは私たちの品質保証過程を未通過のビルドです）。"
 
 
 #: lang.c:63
@@ -292,7 +292,7 @@ msgstr "まずは<a href=\"%1\">ユーザーガイド</a>を読みましょう�
 #: lang.c:94
 #: lang.c:130
 msgid "Search"
-msgstr "検索する"
+msgstr "検索"
 
 
 #: lang.c:66
@@ -307,7 +307,7 @@ msgstr "Q&#38;A ウェブサイト"
 
 #: lang.c:68
 msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
-msgstr ""
+msgstr "ご質問は私たちの <a href=\"%1\">Q&#38;A ウェブサイト</a>にてお聞かせください。質問がクローズされてしまうことのないよう、あらかじめ <a href=\"%2\">FAQ</a> もご覧ください。"
 
 
 #: lang.c:69
@@ -318,7 +318,7 @@ msgstr "Super User"
 
 #: lang.c:70
 msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
-msgstr ""
+msgstr "『Super User』 フォーラム (外部サイト) をご存じであれば、そちらで <a href=\"%1\">synergy タグ</a>もご活用ください。"
 
 
 #: lang.c:71
@@ -358,7 +358,7 @@ msgstr "IRC"
 
 #: lang.c:78
 msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
-msgstr ""
+msgstr "私たちの IRC チャンネル : %1 にご参加ください (よろしければ IRC には <a href=\"%2\">XChat</a> をどうぞ)。"
 
 
 #: lang.c:79
@@ -368,7 +368,7 @@ msgstr "メーリングリスト"
 
 #: lang.c:80
 msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
-msgstr ""
+msgstr "<a href=\"%1\">メーリングリスト</a>もあります。メーリングリストへのバグ報告はしないでください。"
 
 
 #: lang.c:81
@@ -449,7 +449,7 @@ msgstr "ソースコード"
 
 #: lang.c:101
 msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
-msgstr ""
+msgstr "<b>ようこそ</b>、Synergy Premium ユーザー様！私たちの <a href=\"%1\">Premium アカウント</a>プロジェクトをご支援いただきありがとうございます。"
 
 
 #: lang.c:102
@@ -546,7 +546,7 @@ msgstr "新たに投票する"
 
 #: lang.c:122
 msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
-msgstr ""
+msgstr "Premium 投票権をご利用になるにはまず <a href=\"%1\">issue tracker</a> より選んだご希望の issue ID を入力し、それにお持ちの投票権からお好きな数を割り当ててください。いったん投じられた票は二度と回収することはできませんので選択は慎重にお願いいたします。投票に関しお困りの際は <a href=\"%2\">email</a> にてお知らせください (このアドレスにバグの報告は行わないでください。バグのご報告は <a href=\"%3\">help</a> へお願いします)。"
 
 
 #: lang.c:123
@@ -571,7 +571,7 @@ msgstr "投票はなされていません。"
 
 #: lang.c:131
 msgid "Search all Synergy websites from one page."
-msgstr "あるページからすべてのシナジーのサイトを検索。"
+msgstr "Synergyに関する全てのサイトを検索します。"
 
 
 #: lang.c:132
@@ -616,7 +616,7 @@ msgstr "バージョン情報を入力すると見つかるかもしれません
 
 #: lang.c:141
 msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
-msgstr ""
+msgstr "こちらでお探しのものが見つからない場合、<a href=\"%1\">Synergy Google カスタム検索</a> もお試しください。"
 
 
 #: lang.c:142
@@ -626,7 +626,7 @@ msgstr "検索する"
 
 #: lang.c:143
 msgid "Loading"
-msgstr ""
+msgstr "読み込み中"
 
 
 #: php/Premium.class.php:233

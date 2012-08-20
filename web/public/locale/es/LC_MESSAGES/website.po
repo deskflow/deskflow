@@ -117,7 +117,7 @@ msgstr "Ultima versión:"
 
 #: lang.c:29
 msgid "What's new?"
-msgstr ""
+msgstr "¿Qué hay de nuevo?"
 
 
 #: lang.c:30
@@ -185,17 +185,17 @@ msgstr ""
 #: lang.c:42
 #: lang.c:46
 msgid "Continue"
-msgstr ""
+msgstr "Continua"
 
 
 #: lang.c:43
 msgid "or"
-msgstr ""
+msgstr "o"
 
 
 #: lang.c:44
 msgid "Free"
-msgstr ""
+msgstr "Gratis"
 
 
 #: lang.c:45
@@ -239,7 +239,7 @@ msgstr ""
 #: lang.c:112
 #: lang.c:125
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 
 #: lang.c:56

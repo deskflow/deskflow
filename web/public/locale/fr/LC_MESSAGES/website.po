@@ -275,7 +275,7 @@ msgstr "Dernière version"
 
 #: lang.c:62
 msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr ""
+msgstr "Beaucoup de bugs sont signalés, alors que les utilisateurs n'ont pas essayé la dernière version. Merci de visiter la page <a href=\"%1\">téléchargements</a> et d'essayer la dernière version (même s'il s'agit d'une bêta). Vous pouvez également essayer les <a href=\"%2\">compilations nocturnes</a>, mais merci de ne le faire qu'en dernier recours (ces versions n'ont pas passé nos tests qualité)."
 
 
 #: lang.c:63
@@ -307,7 +307,7 @@ msgstr "Q&#38;Un site"
 
 #: lang.c:68
 msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
-msgstr ""
+msgstr "Vous pouvez nous poser une question sur notre <a href=\"%1\">Q&#38;A site internet</a>. Lisez la <a href=\"%2\">FAQ</a> pour que votre question ne soit pas fermée."
 
 
 #: lang.c:69
@@ -318,7 +318,7 @@ msgstr "Super Utilisateur"
 
 #: lang.c:70
 msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
-msgstr ""
+msgstr "Si vous êtes un habitué de l'application SuperUser (Root), voici : <a href=\"%1\">synergy tag</a>."
 
 
 #: lang.c:71
@@ -358,7 +358,7 @@ msgstr "IRC"
 
 #: lang.c:78
 msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
-msgstr ""
+msgstr "Vous pouvez rejoindre notre salon IRC : %1 (pour IRC, vous aurez besoin de <a href=\"%2\">XChat</a>)"
 
 
 #: lang.c:79
@@ -368,7 +368,7 @@ msgstr "Liste de diffusion"
 
 #: lang.c:80
 msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
-msgstr ""
+msgstr "Nous avons également une <a href=\"%1\">list de diffusion</a>. Ne signalez pas de bugs sur la liste de diffusion."
 
 
 #: lang.c:81
@@ -449,7 +449,7 @@ msgstr "Code"
 
 #: lang.c:101
 msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
-msgstr ""
+msgstr "<b>Bienvenue</b>, utilisateur Premium de Synergy ! Merci de votre aide pour notre projet. <a href=\"%1\">Compte Premium</a>."
 
 
 #: lang.c:102
@@ -546,7 +546,7 @@ msgstr "Voter"
 
 #: lang.c:122
 msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
-msgstr ""
+msgstr "Pour utiliser la fonctionnalité de vote Premium, entrez l'ID à partir de notre <a href=\"%1\">issue tracker</a> et définissez un nombre de votes. Choisissez précautionneusement : une fois que vous avez dépensé un nombre de votes, il n'est plus possible de les annuler. Si vous avez un quelconque problème avec l'utilisation de vos votes, contactez nous s'il vous plaît à <a href=\"%2\">email</a> pour obtenir de l'aide (merci de ne pas utiliser cette adresse pour rapporter des bugs, pour cela, <a href=\"%3\">help</a>)"
 
 
 #: lang.c:123
@@ -616,7 +616,7 @@ msgstr "Vous pourrez constater que le numéro de version aide."
 
 #: lang.c:141
 msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
-msgstr ""
+msgstr "Si cela échoue, servez-vous de la <a href=\"%1\">recherche alternative de Synergy</a>."
 
 
 #: lang.c:142
@@ -626,7 +626,7 @@ msgstr "Rechercher"
 
 #: lang.c:143
 msgid "Loading"
-msgstr ""
+msgstr "Chargement"
 
 
 #: php/Premium.class.php:233
