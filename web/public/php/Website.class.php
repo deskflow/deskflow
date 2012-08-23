@@ -108,6 +108,10 @@ class Website {
           $premium = new Premium($this->settings, $this->session);
           exit($premium->register());
         }
+        else if (isset($_GET["currency"])) {
+          $premium = new Premium($this->settings, $this->session);
+          exit($premium->convertCurrency());
+        }
         $page = "download_premium";
         $smarty->assign("showDonateMessage", isset($_GET["donate"]));
       }

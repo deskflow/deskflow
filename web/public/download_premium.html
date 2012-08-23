@@ -116,34 +116,54 @@ plain text (we only keep a hash).{/t}
     </div>
     <div class="step2">
       <p>
-{t}Your're almost done! Please use the PayPal button below to finish creating
-your Synergy Premium account. When the payment is complete, you will be
-redirected to your new account page.{/t}
+{t}You're almost done! Please choose a payment service. When the payment is complete, you will be
+redirected to your Synergy Premium account.{/t}
       </p>
       <p>
 {t}The payment is handled by <b>Bolton Software Ltd</b>, the company behind
-the development of Synergy. All funds are <b>reinvested</b> back into the
-development of Synergy.{/t}
+the development of Synergy.{/t}
       </p>
+      <p>{t}Please click a logo to continue.{/t}</p>
       
-      <form id="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-        <input type="hidden" name="cmd" value="_xclick">
-        <input type="hidden" name="business" value="SXQD4CT26Z95N">
-        <input type="hidden" name="lc" value="GB">
-        <input type="hidden" name="item_name" value="Synergy Premium">
-        <input type="hidden" name="button_subtype" value="services">
-        <input type="hidden" name="no_note" value="1">
-        <input type="hidden" name="no_shipping" value="1">
-        <input type="hidden" name="rm" value="1">
-        <input type="hidden" name="return" value="http://synergy-foss.org/premium/?success">
-        <input type="hidden" name="cancel_return" value="http://synergy-foss.org/premium/?cancel">
-        <input type="hidden" name="currency_code" value="USD">
-        <input type="hidden" name="amount" value="10">
-        <input type="hidden" name="custom">
-        <input type="hidden" name="bn" value="PP-BuyNowBF:btn_paynowCC_LG.gif:NonHosted">
-        <input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">
-        <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
-      </form>
+      <div class="paybuttons">
+        <div class="paybutton">
+        
+          <form id="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="business" value="SXQD4CT26Z95N">
+            <input type="hidden" name="lc" value="EN">
+            <input type="hidden" name="item_name" value="Synergy Premium">
+            <input type="hidden" name="button_subtype" value="services">
+            <input type="hidden" name="no_note" value="1">
+            <input type="hidden" name="no_shipping" value="1">
+            <input type="hidden" name="rm" value="1">
+            <input type="hidden" name="return" value="http://synergy-foss.org/premium/?success">
+            <input type="hidden" name="cancel_return" value="http://synergy-foss.org/premium/?cancel">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="amount" value="10">
+            <input type="hidden" name="custom">
+            <input type="hidden" name="bn" value="PP-BuyNowBF:btn_paynowCC_LG.gif:NonHosted">
+            <input type="image" src="/img/paypal.png" border="0">
+          </form>
+        
+        </div>
+        
+        <div class="paybutton">
+        
+          <form id="google" action="https://checkout.google.com/api/checkout/v2/checkoutForm/Merchant/158941555171301" method="post">
+          
+            <input type="hidden" name="item_name_1" />
+            <input type="hidden" name="item_description_1" />
+            <input type="hidden" name="item_quantity_1" value="1" />
+            <input type="hidden" name="item_currency_1" value="GBP"/>
+            <input type="hidden" name="item_price_1" />
+            <input type="hidden" name="_charset_" value="utf-8" />
+            <input type="image" src="/img/google.png" border="0" />
+            
+          </form>
+        
+        </div>
+      </div>
 
     </div>
   </div>

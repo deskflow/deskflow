@@ -349,6 +349,20 @@ class Premium {
       $this->assignVotesFromFunds($userId, $payment_amount);
     }
   }
+  
+  public function convertCurrency() {
+    $response = file_get_contents("http://www.google.com/ig/calculator?hl=en&q=" . $_GET["currency"]);
+    
+    $matches = array();
+    preg_match_all("/(\d+(\.\d+)*)/", $response, $matches);
+    
+    $data = array();
+    if (count($matches) > 0) {
+      $data["from"] = $matches[0][0];
+      $data["to"] = $matches[0][1];
+    }
+    return json_encode($data);
+  }
 }
 
 ?>

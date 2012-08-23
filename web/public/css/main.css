@@ -493,6 +493,31 @@ div.signup-dialog div.step2 form {
   text-align: center;
 }
 
+div.signup-dialog div.paybuttons {
+  white-space: nowrap;
+}
+
+div.signup-dialog div.paybutton {
+  float: left;
+  height: 70px;
+  border: 1px solid #c7c7c7;
+  width: 224px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+div.signup-dialog div.paybutton:first-child {
+  margin-right: 20px;
+}
+
+div.signup-dialog div.paybuttons form#google {
+  padding-top: 17px;
+}
+
+div.signup-dialog div.paybuttons form#paypal {
+  padding-top: 20px;
+}
+
 div.premium-page form#vote {
   width: 15em;
 }

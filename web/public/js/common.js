@@ -67,11 +67,15 @@ function premiumError(signup, message) {
   signup.find("input[type='button']").attr("disabled", false);
 }
 
+function getPremiumAmount() {
+  return getPremiumAmountFromText($("div.premium input#amount").val());
+}
+
 function submitPremiumForm() {
   var signup = $("div.signup-dialog");
   signup.find("input[type='button']").attr("disabled", true);
   
-  var amount = getPremiumAmountFromText($("div.premium input#amount").val());
+  var amount = getPremiumAmount();
   log(amount);
   
   $.ajax({
@@ -160,7 +164,7 @@ function downloadOptions() {
   });
 
   $("a#show-signup").click(function() {
-    var amount = getPremiumAmountFromText($("div.premium input#amount").val());
+    var amount = getPremiumAmount();
     signup.find("span#amount2").html("$" + amount.toFixed(2));
     signup.dialog("open");
   });
@@ -171,6 +175,34 @@ function downloadOptions() {
   
   signup.find("input.ok").click(function() {
     submitPremiumForm();
+  });
+  
+  $("form#google input[type='image']").click(function() {
+    var amount = getPremiumAmount();
+    
+    $.ajax({
+      dataType: "json",
+      url: "?currency=" + amount + "USD%3D%3FGBP",
+      type: "get",
+      success: function(message) {
+        log(message);
+        
+        $("form#google input[name='item_price_1']").val(message.to);
+        $("form#google input[name='item_name_1']").val("Synergy Premium ($" + amount + " USD)");
+        $("form#google input[name='item_description_1']").val(
+          "Your Synergy Premium account will still be credited with $" + amount + " USD.");
+          
+        $("form#google").submit();
+      },
+      error: function(xhr, textStatus, error) {
+        log(xhr.statusText);
+        log(textStatus);
+        log(error);
+        alert("An error occurred while communicating with the Google currency API.");
+      }
+    });
+    
+    return false;
   });
 }
 
@@ -190,4 +222,9 @@ function premiumPage() {
 $(function() {
   downloadOptions();
   premiumPage();
+  
+  var signup = $("div.signup-dialog");
+  signup.dialog("open");
+  signup.find("div.step1").hide();
+  signup.find("div.step2").fadeIn();
 });
