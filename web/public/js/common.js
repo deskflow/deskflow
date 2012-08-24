@@ -96,10 +96,17 @@ function submitPremiumForm() {
         premiumError(signup, message.error);
       }
       else {
-        signup.find("form#paypal input[name='amount']").val(amount);
-        signup.find("form#paypal input[name='custom']").val(message.userId);
-        log(signup.find("form#paypal input[name='amount']"));
-        log(signup.find("form#paypal input[name='custom']"));
+        var paypal = signup.find("form#paypal");
+        paypal.find("input[name='amount']").val(amount);
+        paypal.find("input[name='custom']").val(message.userId);
+        
+        var google = signup.find("form#google");
+        google.find("input[name='item_name_1']").val("Synergy Premium ($" + amount + " USD)");
+        google.find("input[name='item_description_1']").val(
+          "Your Synergy Premium account will still be credited with $" + amount + " USD.");
+        google.find("input[name='shopping-cart.merchant-private-data']").val(
+          message.userId + "," + amount);
+        
         signup.find("div.step1").hide();
         signup.find("div.step2").fadeIn();
       }
@@ -186,12 +193,7 @@ function downloadOptions() {
       type: "get",
       success: function(message) {
         log(message);
-        
         $("form#google input[name='item_price_1']").val(message.to);
-        $("form#google input[name='item_name_1']").val("Synergy Premium ($" + amount + " USD)");
-        $("form#google input[name='item_description_1']").val(
-          "Your Synergy Premium account will still be credited with $" + amount + " USD.");
-          
         $("form#google").submit();
       },
       error: function(xhr, textStatus, error) {
@@ -222,9 +224,4 @@ function premiumPage() {
 $(function() {
   downloadOptions();
   premiumPage();
-  
-  var signup = $("div.signup-dialog");
-  signup.dialog("open");
-  signup.find("div.step1").hide();
-  signup.find("div.step2").fadeIn();
 });

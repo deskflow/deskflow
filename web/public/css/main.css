@@ -504,6 +504,7 @@ div.signup-dialog div.paybutton {
   width: 224px;
   margin-bottom: 5px;
   text-align: center;
+  background-color: #f0f0f0;
 }
 
 div.signup-dialog div.paybutton:first-child {

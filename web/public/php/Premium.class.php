@@ -33,6 +33,7 @@ class Premium {
     $this->settings = $settings;
     $this->session = $session;
     $this->voteCost = (int)$settings["premium"]["voteCost"];
+    $this->googleWallet = $settings["googlewallet"];
   }
   
   public function isUserPremium() {
@@ -48,6 +49,11 @@ class Premium {
   public function run($smarty) {
     if (isset($_GET["ipn"])) {
       $this->ipn();
+      exit;
+    }
+    
+    if (isset($_GET["gwnotify"])) {
+      $this->googleWalletNotify();
       exit;
     }
     
@@ -91,7 +97,13 @@ class Premium {
       $email = $_SESSION["email"];
     }
     if ($this->user == null || $force) {
-      $this->user = $this->getUser($email);
+      try {
+        $this->user = $this->getUser($email);
+      }
+      catch (Exception $ex) {
+        $this->logout();
+        throw $ex;
+      }
     }
   }
 
@@ -362,6 +374,65 @@ class Premium {
       $data["to"] = $matches[0][1];
     }
     return json_encode($data);
+  }
+  
+  public function googleWalletNotify() {
+    
+    $postData =
+      '<notification-history-request xmlns="http://checkout.google.com/schema/2">'.
+      '<serial-number>' . $_POST["serial-number"] . '</serial-number>'.
+      '</notification-history-request>';
+    
+    $headers = array(
+      "Authorization: Basic " . base64_encode($this->googleWallet["id"] . ":" . $this->googleWallet["key"]),
+      "Content-Type: application/xml; charset=UTF-8",
+      "Accept: application/xml; charset=UTF-8",
+      "User-Agent: synergy-web");
+    
+    $ch = curl_init(sprintf(
+      "https://checkout.google.com/api/checkout/v2/reports/Merchant/%d/",
+      $this->googleWallet["id"]));
+    
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+    $data = curl_exec($ch);
+    
+    $matches = array();
+    preg_match("/<merchant\-private\-data>(.*),(.*)<\/merchant\-private\-data>/", $data, $matches);
+    $userId = null;
+    $amount = null;
+    if (count($matches) > 2) {
+      $userId = $matches[1];
+      $amount = $matches[2];
+    }
+    
+    $matches = array();
+    preg_match("/<email>(.*)<\/email>/", $data, $matches);
+    $email = null;
+    if (count($matches) > 0) {
+      $email = $matches[1];
+    }
+    
+    $this->saveGoogleWalletNotify($userId, $email, $amount, $data);
+    
+    $this->assignVotesFromFunds($userId, $amount);
+  }
+  
+  public function saveGoogleWalletNotify($userId, $email, $amount, $data) {
+    $mysql = $this->getMysql();
+    $result = $mysql->query(sprintf(
+      "insert into gwallet (userId, email, amount, data, created) values (%d, '%s', %f, '%s', now())",
+      (int)$userId,
+      $mysql->escape_string($email),
+      (float)$amount,
+      $mysql->escape_string($data)
+    ));
+    if ($result == null) {
+      throw new Exception($mysql->error);
+    }
   }
 }
 
