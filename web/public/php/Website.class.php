@@ -77,7 +77,7 @@ class Website {
 
     if ($page == "download") {
       
-      if (isset($_GET["donate"]) && $isPremium) {
+      if (isset($_GET["donate"]) && $this->premium->isUserPremium()) {
         header("Location: ../premium/");
         exit;
       }
