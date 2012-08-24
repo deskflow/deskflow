@@ -249,7 +249,9 @@ class Premium {
   
   public function getMysql() {
     $s = $this->settings["database"];
-    return new \mysqli($s["host"], $s["user"], $s["pass"], $s["name"]);
+    $sql = new \mysqli($s["host"], $s["user"], $s["pass"], $s["name"]);
+    $sql->set_charset("utf8");
+    return $sql;
   }
   
   public function registerValidate($mysql) {
@@ -399,6 +401,12 @@ class Premium {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     
     $data = curl_exec($ch);
+    
+    // if notification isn't about a new order, just ignore it.
+    if (!strstr($data, "new-order-notification")) {
+      printf("<pre>Ignoring order.\n\n%s</pre>", $data);
+      exit;
+    }    
     
     $matches = array();
     preg_match("/<merchant\-private\-data>(.*),(.*)<\/merchant\-private\-data>/", $data, $matches);
