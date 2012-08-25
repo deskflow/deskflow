@@ -20,6 +20,7 @@ def runImport():
 		"tr-TR" : "tr",
 		"zh-CN" : "zh",
 		"zh-TW" : "zh_TW",
+		"grk"   : "el",
 	}
 
 	for file in os.listdir(importSource):
