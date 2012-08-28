@@ -52,6 +52,19 @@ get the power to vote in return for your contribution.{/t}
       </div>
       <p><a href="?list">{t}Continue{/t}</a></p>
     </div>
+    
+    <h3>{t}Top 10 Votes{/t}</h3>
+    <p>
+      {t}Sign up to Synergy Premium to cast your vote.{/t}<br />
+      {t}The highest voted issue is given our full attention for the next release.{/t}
+    </p>
+    <ol class="votes">
+      {foreach from=$premium->getAllVotes(10) item=vote}
+      <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
+      {foreachelse}
+      <li>{t}No votes.{/t}</li>
+      {/foreach}
+    </ol>
   
   </div>
   

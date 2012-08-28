@@ -557,3 +557,7 @@ div.premium-page div.contribute {
 div.premium-page div.contribute div.slider {
   margin-top: .5em;
 }
+
+div.download-premium ol.votes {
+  padding-left: 1.5em;
+}

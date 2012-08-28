@@ -96,13 +96,13 @@ we may be waiting to hear from PayPal so please be patient. <a href="%1">Check n
     </div>
     
     <h3>{t}Your votes{/t}</h3>
-    <ul>
+    <ol>
       {foreach from=$premium->getUserVotes() item=vote}
       <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
       {foreachelse}
-      <li>{t}You have not cast any votes yet.{/t}</li>
+      <p>{t}You have not cast any votes yet.{/t}</p>
       {/foreach}
-    </ul>
+    </ol>
     
     <h3>{t}Cast new vote{/t}</h3>
     <p>
@@ -126,13 +126,13 @@ page instead).{/t}
     </form>
     
     <h3>{t}Community votes{/t}</h3>
-    <ul>
+    <ol>
       {foreach from=$premium->getAllVotes() item=vote}
       <li><a href="/spit/issues/details/{$vote->issueId}/" target="_blank">#{$vote->issueId}</a> - {t votes=$vote->voteCount}%1 votes{/t}</li>
       {foreachelse}
       <li>{t}No votes.{/t}</li>
       {/foreach}
-    </ul>
+    </ol>
     
     {/if}
     

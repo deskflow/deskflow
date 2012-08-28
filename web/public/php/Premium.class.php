@@ -215,13 +215,14 @@ class Premium {
     return $votes;
   }
   
-  public function getAllVotes() {
+  public function getAllVotes($limit = null) {
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
       "select issueId, sum(voteCount) as voteCount from vote ".
+      "where voteCount != 0 ".
       "group by issueId ".
-      "order by voteCount desc",
-      $this->user->id
+      "order by voteCount desc ".
+      (($limit != null) ? sprintf("limit 0, %d ", $limit) : "")
     ));
     if ($result == null) {
       throw new Exception($mysql->error);
