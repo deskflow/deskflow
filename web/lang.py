@@ -36,7 +36,13 @@ def runImport():
 		print "run: " + cmd
 		os.system(cmd)
 
-opts, args = gnu_getopt(sys.argv, "i", "")
+if len(sys.argv) == 1:
+	print "usage: lang [-i|-g]"
+	sys.exit()
+
+opts, args = gnu_getopt(sys.argv, "ig", "")
 for o, a in opts:
 	if o == "-i":
 		runImport()
+	elif o == "-g":
+		os.system("php -q tsmarty2c.php public\. > public\lang.c")
