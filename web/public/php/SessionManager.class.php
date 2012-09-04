@@ -2,6 +2,7 @@
 
 /*
  * synergy-web -- website for synergy
+ * Copyright (C) 2012 Bolton Software Ltd.
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or

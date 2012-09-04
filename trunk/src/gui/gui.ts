@@ -12,26 +12,36 @@
         <location filename="res/AboutDialogBase.ui" line="53"/>
         <source>&lt;p&gt;
 Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
-Copyright © 2001-2012 Chris Schoeneman, Nick Bolton, Volker Lanz, Sorin Sbarnea.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
 Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
 The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
 Visit our website for help and info (synergy-foss.org).
 &lt;/p&gt;</source>
+        <oldsource>&lt;p&gt;
+Keyboard and mouse sharing application. Cross platform and open source.&lt;br /&gt;&lt;br /&gt;
+Copyright © 2012 Bolton Software Ltd.&lt;br /&gt;
+Copyright © 2002-2012 Chris Schoeneman, Nick Bolton, Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Synergy is released under the GNU General Public License (GPLv2).&lt;br /&gt;&lt;br /&gt;
+Synergy is based on CosmoSynergy by Richard Lee and Adam Feder.&lt;br /&gt;
+The Synergy GUI is based on QSynergy by Volker Lanz.&lt;br /&gt;&lt;br /&gt;
+Visit our website for help and info (synergy-foss.org).
+&lt;/p&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="139"/>
+        <location filename="res/AboutDialogBase.ui" line="140"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="123"/>
+        <location filename="res/AboutDialogBase.ui" line="124"/>
         <source>Version:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="res/AboutDialogBase.ui" line="162"/>
+        <location filename="res/AboutDialogBase.ui" line="163"/>
         <source>&amp;Ok</source>
         <translation type="unfinished"></translation>
     </message>
@@ -150,169 +160,169 @@ Visit our website for help and info (synergy-foss.org).
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="625"/>
+        <location filename="src/MainWindow.cpp" line="626"/>
         <source>&amp;Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="195"/>
+        <location filename="src/MainWindow.cpp" line="196"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="196"/>
+        <location filename="src/MainWindow.cpp" line="197"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="197"/>
+        <location filename="src/MainWindow.cpp" line="198"/>
         <source>&amp;Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="198"/>
+        <location filename="src/MainWindow.cpp" line="199"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="315"/>
+        <location filename="src/MainWindow.cpp" line="316"/>
         <source>&lt;p&gt;Version %1 is now available, &lt;a href=&quot;%2&quot;&gt;visit website&lt;/a&gt;.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="441"/>
+        <location filename="src/MainWindow.cpp" line="442"/>
         <source>Program can not be started</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="441"/>
+        <location filename="src/MainWindow.cpp" line="442"/>
         <source>The executable&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="460"/>
+        <location filename="src/MainWindow.cpp" line="461"/>
         <source>Synergy client not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="461"/>
+        <location filename="src/MainWindow.cpp" line="462"/>
         <source>The executable for the synergy client does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="468"/>
+        <location filename="src/MainWindow.cpp" line="469"/>
         <source>Hostname is empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="469"/>
+        <location filename="src/MainWindow.cpp" line="470"/>
         <source>Please fill in a hostname for the synergy client to connect to.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="494"/>
+        <location filename="src/MainWindow.cpp" line="495"/>
         <source>Cannot write configuration file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="494"/>
+        <location filename="src/MainWindow.cpp" line="495"/>
         <source>The temporary configuration file required to start synergy can not be written.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="507"/>
+        <location filename="src/MainWindow.cpp" line="508"/>
         <source>Configuration filename invalid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="508"/>
+        <location filename="src/MainWindow.cpp" line="509"/>
         <source>You have not filled in a valid configuration file for the synergy server. Do you want to browse for the configuration file now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="535"/>
+        <location filename="src/MainWindow.cpp" line="536"/>
         <source>Synergy server not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="536"/>
+        <location filename="src/MainWindow.cpp" line="537"/>
         <source>The executable for the synergy server does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="600"/>
+        <location filename="src/MainWindow.cpp" line="601"/>
         <source>Synergy terminated with an error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="600"/>
+        <location filename="src/MainWindow.cpp" line="601"/>
         <source>Synergy terminated unexpectedly with an exit code of %1.&lt;br&gt;&lt;br&gt;Please see the log output for details.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="619"/>
+        <location filename="src/MainWindow.cpp" line="620"/>
         <source>&amp;Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="642"/>
+        <location filename="src/MainWindow.cpp" line="643"/>
         <source>service mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="642"/>
+        <location filename="src/MainWindow.cpp" line="643"/>
         <source>desktop mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="643"/>
+        <location filename="src/MainWindow.cpp" line="644"/>
         <source>Synergy is running (%1).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="786"/>
+        <location filename="src/MainWindow.cpp" line="787"/>
         <source>Elevate Synergy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="787"/>
+        <location filename="src/MainWindow.cpp" line="788"/>
         <source>Are you sure you want to elevate Synergy?
 
 This allows Synergy to interact with elevated processes and the UAC dialog, but can cause problems with non-elevated processes. Elevate Synergy only if you really need to.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="647"/>
+        <location filename="src/MainWindow.cpp" line="648"/>
         <source>Synergy is starting.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="650"/>
+        <location filename="src/MainWindow.cpp" line="651"/>
         <source>Synergy is not running.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="707"/>
+        <location filename="src/MainWindow.cpp" line="708"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="728"/>
+        <location filename="src/MainWindow.cpp" line="729"/>
         <source>Browse for a synergys config file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="741"/>
+        <location filename="src/MainWindow.cpp" line="742"/>
         <source>Save configuration as...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="745"/>
+        <location filename="src/MainWindow.cpp" line="746"/>
         <source>Save failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="745"/>
+        <location filename="src/MainWindow.cpp" line="746"/>
         <source>Could not save configuration to file.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -515,7 +525,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>NewScreenWidget</name>
     <message>
-        <location filename="src/NewScreenWidget.cpp" line="31"/>
+        <location filename="src/NewScreenWidget.cpp" line="32"/>
         <source>Unnamed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -523,17 +533,17 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/MainWindow.cpp" line="44"/>
+        <location filename="src/MainWindow.cpp" line="45"/>
         <source>Synergy Configurations (*.sgc);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/MainWindow.cpp" line="47"/>
+        <location filename="src/MainWindow.cpp" line="48"/>
         <source>Synergy Configurations (*.conf);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="95"/>
+        <location filename="src/main.cpp" line="96"/>
         <source>System tray is unavailable, quitting.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -541,12 +551,12 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>ScreenSettingsDialog</name>
     <message>
-        <location filename="src/ScreenSettingsDialog.cpp" line="64"/>
+        <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>Screen name is empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/ScreenSettingsDialog.cpp" line="64"/>
+        <location filename="src/ScreenSettingsDialog.cpp" line="65"/>
         <source>The name for a screen can not be empty. Please fill in a name or cancel the dialog.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -721,7 +731,7 @@ This allows Synergy to interact with elevated processes and the UAC dialog, but 
 <context>
     <name>ScreenSetupModel</name>
     <message>
-        <location filename="src/ScreenSetupModel.cpp" line="50"/>
+        <location filename="src/ScreenSetupModel.cpp" line="51"/>
         <source>&lt;center&gt;Screen: &lt;b&gt;%1&lt;/b&gt;&lt;/center&gt;&lt;br&gt;Double click to edit settings&lt;br&gt;Drag screen to the trashcan to remove it</source>
         <translation type="unfinished"></translation>
     </message>
@@ -891,7 +901,7 @@ Double click on a screen to edit its settings.</source>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="src/SettingsDialog.cpp" line="71"/>
+        <location filename="src/SettingsDialog.cpp" line="72"/>
         <source>Save log file to...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1017,12 +1027,12 @@ Double click on a screen to edit its settings.</source>
 <context>
     <name>SetupWizard</name>
     <message>
-        <location filename="src/SetupWizard.cpp" line="43"/>
+        <location filename="src/SetupWizard.cpp" line="60"/>
         <source>Setup Synergy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/SetupWizard.cpp" line="54"/>
+        <location filename="src/SetupWizard.cpp" line="71"/>
         <source>Please select an option.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1064,7 +1074,7 @@ Double click on a screen to edit its settings.</source>
 <context>
     <name>VersionChecker</name>
     <message>
-        <location filename="src/VersionChecker.cpp" line="101"/>
+        <location filename="src/VersionChecker.cpp" line="102"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>

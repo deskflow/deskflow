@@ -1,6 +1,7 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2004 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
+ * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2004 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +19,9 @@
 #include "Version.h"
 
 const char* kApplication = "Synergy";
-const char* kCopyright   = "Copyright (C) 2011 Chris Schoeneman, Nick Bolton, Sorin Sbarnea";
+const char* kCopyright   = "Copyright (C) 2012 Bolton Software Ltd.\n"
+                           "Copyright (C) 2008-2012 Nick Bolton\n"
+                           "Copyright (C) 2002-2012 Chris Schoeneman";
 const char* kContact     = "Synergy Mailing List, synergy-plus@googlegroups.com";
 const char* kWebsite     = "http://synergy-foss.org/";
 const char* kVersion     = VERSION;
