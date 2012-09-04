@@ -1,6 +1,7 @@
 /*
  * synergy -- mouse and keyboard sharing utility
- * Copyright (C) 2002 Chris Schoeneman, Nick Bolton, Sorin Sbarnea
+ * Copyright (C) 2012 Bolton Software Ltd.
+ * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +27,7 @@
 // by Magnus Fromreide of the sstream in g++ 3.0.
 
 /* This is part of libio/iostream, providing -*- C++ -*- input/output.
+Copyright (C) 2012 Bolton Software Ltd.
 Copyright (C) 2000 Free Software Foundation
 
 This file is part of the GNU IO Library.  This library is free

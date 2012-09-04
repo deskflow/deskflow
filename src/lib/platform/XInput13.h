@@ -3,6 +3,7 @@
 *   XInput.h -- This module defines XBOX controller APIs                   *
 *               and constansts for the Windows platform.                   *
 *                                                                          *
+*   Copyright (C) 2012 Bolton Software Ltd.
 *   Copyright (c) Microsoft Corp. All rights reserved.                     *
 *                                                                          *
 ***************************************************************************/

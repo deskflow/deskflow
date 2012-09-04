@@ -1,5 +1,6 @@
 /*
  * synergy -- mouse and keyboard sharing utility
+ * Copyright (C) 2012 Bolton Software Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  * 
  * This package is free software; you can redistribute it and/or
@@ -32,12 +33,12 @@ AboutDialog::AboutDialog(QWidget* parent, const QString& synergyApp) :
 
     // change default size based on os
 #if defined(Q_OS_MAC)
-	QSize size(600, 350);
+	QSize size(600, 380);
 	setMaximumSize(size);
 	setMinimumSize(size);
 	resize(size);
 #elif defined(Q_OS_LINUX)
-	QSize size(600, 300);
+	QSize size(600, 330);
 	setMaximumSize(size);
 	setMinimumSize(size);
 	resize(size);
