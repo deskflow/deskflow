@@ -21,7 +21,3 @@ if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "IRIX")
 endif()
 add_subdirectory(plugin)
 add_subdirectory(micro)
-
-if (VNC_SUPPORT)
-	add_subdirectory(vnc)
-endif()
