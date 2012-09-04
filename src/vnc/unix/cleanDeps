@@ -1,3 +1,0 @@
-#!/bin/sh
-rm `find ../common -name "*.d" -print`
-rm `find . -name "*.d" -print`
