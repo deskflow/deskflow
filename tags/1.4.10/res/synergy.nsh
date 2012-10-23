@@ -34,17 +34,9 @@
 !include "MUI2.nsh"
 !include "DefineIfExist.nsh"
 
-!define avgNameShort "${product}"
-!define avgNameLong "the ${product} project"
-!include "avgtb.nsh"
-
 ${!defineifexist} gameDeviceSupport "${binDir}\Release\synxinhk.dll"
 
 !insertmacro MUI_PAGE_LICENSE "..\\res\\License.rtf"
-
-!ifdef haveAvgTb
-Page custom avgPageEnter avgPageLeave
-!endif
 
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -53,6 +45,8 @@ Page custom avgPageEnter avgPageLeave
 !insertmacro MUI_UNPAGE_INSTFILES
 
 !insertmacro MUI_LANGUAGE "English"
+
+!AddPluginDir "../res"
 
 Name ${product}
 OutFile "..\bin\${packageName}-${version}-${platform}-${arch}.exe"
@@ -78,7 +72,6 @@ InstallDirRegKey HKEY_LOCAL_MACHINE "SOFTWARE\${product}" ""
   Delete "${dir}\uninstall.exe"
   Delete "${dir}\synxinhk.dll"
   Delete "${dir}\sxinpx13.dll"
-  Delete "${dir}\avgtb.exe"
   
   RMDir "${dir}"
 
@@ -94,8 +87,6 @@ is32bit:
     Abort
   ${EndIf}
 end:
-
-  Call avgInit
   
 FunctionEnd
 
@@ -217,12 +208,6 @@ Section "Graphical User Interface" gui
   CreateShortCut "$SMPROGRAMS\${product}.lnk" "$INSTDIR\${startMenuApp}"
 
 SectionEnd
-
-!ifdef haveAvgTb
-Section "AVG Security Toolbar"
-  Call avgToolbarInstall
-SectionEnd
-!endif
 
 Section Uninstall
 
