@@ -644,21 +644,21 @@ void
 COSXScreen::showCursor()
 {
 	LOG((CLOG_DEBUG "showing cursor"));
-    CGDisplayShowCursor(m_displayID);
-    CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
-    CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanFalse);
-    CFRelease(propertyString);
+	CGDisplayShowCursor(m_displayID);
+	CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
+	CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanFalse);
+	CFRelease(propertyString);
 }
 
 void
 COSXScreen::hideCursor()
 {
-    CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
-    CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
-    CFRelease(propertyString);
+	CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
+	CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
+	CFRelease(propertyString);
 
 	LOG((CLOG_DEBUG "hiding cursor"));
-    CGDisplayHideCursor(m_displayID);
+	CGDisplayHideCursor(m_displayID);
 }
 
 void
@@ -684,7 +684,7 @@ COSXScreen::enable()
 
 		// hide cursor
 		if (!m_cursorHidden) {
-	                hideCursor();
+			hideCursor();
 			m_cursorHidden = true;
 		}
 
