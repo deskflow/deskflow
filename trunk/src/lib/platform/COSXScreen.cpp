@@ -643,7 +643,7 @@ COSXScreen::fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const
 void
 COSXScreen::showCursor()
 {
-	LOG((CLOG_DEBUG "showing cursor, display=%d", m_displayID));
+	LOG((CLOG_DEBUG "showing cursor"));
 
 	CGDisplayShowCursor(m_displayID);
 	CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
@@ -663,7 +663,7 @@ COSXScreen::showCursor()
 	}
 
 	if (!CGCursorIsVisible()) {
-		LOG((CLOG_ERR "cursor was not shown"));
+		LOG((CLOG_WARN "cursor is not visible"));
 	}
 
 	m_cursorHidden = false;
@@ -672,7 +672,7 @@ COSXScreen::showCursor()
 void
 COSXScreen::hideCursor()
 {
-	LOG((CLOG_DEBUG "hiding cursor, display=%d", m_displayID));
+	LOG((CLOG_DEBUG "hiding cursor"));
 
 	CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
 	CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
@@ -684,7 +684,7 @@ COSXScreen::hideCursor()
 	}
 
 	if (CGCursorIsVisible()) {
-		LOG((CLOG_ERR "cursor was not hidden"));
+		LOG((CLOG_WARN "cursor is still visible"));
 	}
 
 	m_cursorHidden = true;
