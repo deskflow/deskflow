@@ -67,7 +67,7 @@ bool					COSXScreen::s_testedForGHOM = false;
 bool					COSXScreen::s_hasGHOM	    = false;
 CEvent::Type			COSXScreen::s_confirmSleepEvent = CEvent::kUnknown;
 
-COSXScreen::COSXScreen(bool isPrimary) :
+COSXScreen::COSXScreen(bool isPrimary, bool autoShowHideCursor) :
 	MouseButtonEventMap(NumButtonIDs),
 	m_isPrimary(isPrimary),
 	m_isOnScreen(m_isPrimary),
@@ -92,7 +92,11 @@ COSXScreen::COSXScreen(bool isPrimary) :
 	m_lastSingleClick(0),
 	m_lastDoubleClick(0),
 	m_lastSingleClickXCursor(0),
-	m_lastSingleClickYCursor(0)
+	m_lastSingleClickYCursor(0),
+	m_autoShowHideCursor(autoShowHideCursor),
+	m_eventTapRLSR(nullptr),
+	m_eventTapPort(nullptr),
+	m_pmRootPort(0)
 {
 	try {
 		m_displayID   = CGMainDisplayID();
@@ -136,6 +140,7 @@ COSXScreen::COSXScreen(bool isPrimary) :
 									&COSXScreen::handleConfirmSleep));
 
 		// create thread for monitoring system power state.
+		*m_pmThreadReady = false;
 		LOG((CLOG_DEBUG "starting watchSystemPowerThread"));
 		m_pmWatchThread = new CThread(new TMethodJob<COSXScreen>
 								(this, &COSXScreen::watchSystemPowerThread));
@@ -645,22 +650,14 @@ COSXScreen::showCursor()
 {
 	LOG((CLOG_DEBUG "showing cursor"));
 
-	CGDisplayShowCursor(m_displayID);
-	CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
-	CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanFalse);
-	CFRelease(propertyString);
-
-	// interestingly, CGDisplayShowCursor was removed in favor of only using
-	// the above. this could have caused the intermittent issue:
-	//
-	// 	Bug #2855 - Mouse cursor remains hidden on Mac client.
-	//
-	// ... seems like it might be a good idea to add it back in (it's hard
-	// to prove for or against since the bug is so random).
 	CGError error = CGDisplayShowCursor(m_displayID);
 	if (error != kCGErrorSuccess) {
 		LOG((CLOG_ERR "failed to show cursor, error=%d", error));
 	}
+
+	CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
+	CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanFalse);
+	CFRelease(propertyString);
 
 	if (!CGCursorIsVisible()) {
 		LOG((CLOG_WARN "cursor is not visible"));
@@ -703,7 +700,7 @@ COSXScreen::enable()
 		// FIXME -- start watching jump zones
 		
 		// kCGEventTapOptionDefault = 0x00000000 (Missing in 10.4, so specified literally)
-		m_eventTapPort=CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0, 
+		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0,
 										kCGEventMaskForAllEvents, 
 										handleCGInputEvent, 
 										this);
@@ -711,7 +708,9 @@ COSXScreen::enable()
 	else {
 		// FIXME -- prevent system from entering power save mode
 
-		hideCursor();
+		if (m_autoShowHideCursor) {
+			hideCursor();
+		}
 
 		// warp the mouse to the cursor center
 		fakeMouseMove(m_xCenter, m_yCenter);
@@ -719,35 +718,41 @@ COSXScreen::enable()
                 // there may be a better way to do this, but we register an event handler even if we're
                 // not on the primary display (acting as a client). This way, if a local event comes in
                 // (either keyboard or mouse), we can make sure to show the cursor if we've hidden it. 
-		m_eventTapPort=CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0, 
+		m_eventTapPort = CGEventTapCreate(kCGHIDEventTap, kCGHeadInsertEventTap, 0,
 										kCGEventMaskForAllEvents, 
 										handleCGInputEventSecondary, 
 										this);
 	}
-	if(!m_eventTapPort) {
+
+	if (!m_eventTapPort) {
 		LOG((CLOG_ERR "failed to create quartz event tap"));
 	}
-	m_eventTapRLSR=CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
-	if(!m_eventTapRLSR) {
+
+	m_eventTapRLSR = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, m_eventTapPort, 0);
+	if (!m_eventTapRLSR) {
 		LOG((CLOG_ERR "failed to create a CFRunLoopSourceRef for the quartz event tap"));
 	}
+
 	CFRunLoopAddSource(CFRunLoopGetCurrent(), m_eventTapRLSR, kCFRunLoopDefaultMode);
 }
 
 void
 COSXScreen::disable()
 {
-	showCursor();
+	if (m_autoShowHideCursor) {
+		showCursor();
+	}
     
 	// FIXME -- stop watching jump zones, stop capturing input
 	
-	if(m_eventTapRLSR) {
+	if (m_eventTapRLSR) {
 		CFRelease(m_eventTapRLSR);
-		m_eventTapRLSR=NULL;
-	}		
-	if(m_eventTapPort) {
+		m_eventTapRLSR = nullptr;
+	}
+
+	if (m_eventTapPort) {
 		CFRelease(m_eventTapPort);
-		m_eventTapPort=NULL;
+		m_eventTapPort = nullptr;
 	}
 	// FIXME -- allow system to enter power saving mode
 
