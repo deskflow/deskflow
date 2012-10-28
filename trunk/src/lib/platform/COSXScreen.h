@@ -52,7 +52,7 @@ class COSXScreenSaver;
 //! Implementation of IPlatformScreen for OS X
 class COSXScreen : public CPlatformScreen {
 public:
-	COSXScreen(bool isPrimary);
+	COSXScreen(bool isPrimary, bool autoShowHideCursor=true);
 	virtual ~COSXScreen();
 
 	// IScreen overrides
@@ -335,6 +335,9 @@ private:
 	double					m_lastDoubleClick;
 	SInt32					m_lastSingleClickXCursor;
 	SInt32					m_lastSingleClickYCursor;
+
+	// cursor will hide and show on enable and disable if true.
+	bool					m_autoShowHideCursor;
 };
 
 #endif

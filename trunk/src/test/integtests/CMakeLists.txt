@@ -28,6 +28,7 @@ elseif (APPLE)
 	list(APPEND src
 		platform/COSXClipboardTests.cpp
 		platform/COSXKeyStateTests.cpp
+		platform/COSXScreenTests.cpp
 	)
 
 elseif (UNIX)
