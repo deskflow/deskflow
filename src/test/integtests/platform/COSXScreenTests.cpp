@@ -22,6 +22,8 @@
 #include "CEventQueue.h"
 #include "CArch.h"
 
+// disabling these tests - the return value of CGCursorIsVisible is unreliable.
+/*
 TEST(COSXScreenTests, hideCursor_notPrimary)
 {
 	CEventQueue queue;
@@ -47,3 +49,4 @@ TEST(COSXScreenTests, showCursor_notPrimary)
 	// workaround for screen class race condition.
 	ARCH->sleep(.1f);
 }
+*/
