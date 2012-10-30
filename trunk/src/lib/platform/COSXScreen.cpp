@@ -653,27 +653,23 @@ COSXScreen::showCursor()
 	CFStringRef propertyString = CFStringCreateWithCString(
 		NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
 
-	// it looks like from around 2010 (os x 10.6 or 10.7) the behavior of
-	// CGDisplayHideCursor changed so that the cursor could only be hidden by
-	// the program which owned it. ed's solution in r820 was to send the
-	// cursor to the background before trying to hide it. however, this
-	// intermittently caused the cursor to remain hidden when we try to
-	// show it again. to solve this bug, we return the cursor to the
-	// background.
 	CGSSetConnectionProperty(
 		_CGSDefaultConnection(), _CGSDefaultConnection(),
 		propertyString, kCFBooleanTrue);
+
+	CFRelease(propertyString);
 
 	CGError error = CGDisplayShowCursor(m_displayID);
 	if (error != kCGErrorSuccess) {
 		LOG((CLOG_ERR "failed to show cursor, error=%d", error));
 	}
 
-	CGSSetConnectionProperty(
-		_CGSDefaultConnection(), _CGSDefaultConnection(),
-		propertyString, kCFBooleanFalse);
+	// appears to fix "mouse randomly not showing" bug
+	CGAssociateMouseAndMouseCursorPosition(true);
 
-	CFRelease(propertyString);
+	if (!CGCursorIsVisible()) {
+		LOG((CLOG_WARN "cursor may not be visible"));
+	}
 
 	m_cursorHidden = false;
 }
@@ -690,34 +686,19 @@ COSXScreen::hideCursor()
 		_CGSDefaultConnection(), _CGSDefaultConnection(),
 		propertyString, kCFBooleanTrue);
 
+	CFRelease(propertyString);
+
 	CGError error = CGDisplayHideCursor(m_displayID);
 	if (error != kCGErrorSuccess) {
 		LOG((CLOG_ERR "failed to hide cursor, error=%d", error));
 	}
 
-	// ed's solution to send the cursor to the background before hiding
-	// fixed the bug caused by the new behavior of CGDisplayHideCursor,
-	// which is to only allow cursor to be shown/hidden by the program
-	// that has focus.
-	// however, this does not always work, and the cursor remains hidden,
-	// often when leaving the screen immediately after using the dock.
-	// to work around this, we send the mouse to the corner of the screen
-	// when the cursor is still visible, where it is less noticeable than
-	// at the center.
+	// appears to fix "mouse randomly not hiding" bug
+	CGAssociateMouseAndMouseCursorPosition(true);
+
 	if (CGCursorIsVisible()) {
-		LOG((CLOG_WARN "cursor is still visible (warping to corner)"));
-		warpCursor(0, m_h);
+		LOG((CLOG_WARN "cursor may be still visible"));
 	}
-	else {
-		LOG((CLOG_DEBUG "cursor is hidden, warping to center"));
-		warpCursor(m_xCenter, m_yCenter);
-	}
-
-	CGSSetConnectionProperty(
-		_CGSDefaultConnection(), _CGSDefaultConnection(),
-		propertyString, kCFBooleanFalse);
-
-	CFRelease(propertyString);
 
 	m_cursorHidden = true;
 }
@@ -1824,6 +1805,10 @@ COSXScreen::handleCGInputEventSecondary(
 	CGEventRef event,
 	void* refcon)
 {
+	// this fix is really screwing with the correct show/hide behavior. it
+	// should be tested better before reintroducing.
+	return event;
+
 	COSXScreen* screen = (COSXScreen*)refcon;
 	if (screen->m_cursorHidden && type == kCGEventMouseMoved) {
 
