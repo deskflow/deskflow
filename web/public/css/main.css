@@ -566,3 +566,10 @@ div.premium-page div.contribute div.slider {
 div.download-premium ol.votes {
   padding-left: 1.5em;
 }
+
+div.home div.appeal {
+  background-color: #fffded;
+  border: 1px solid #ffd83a;
+  padding: 0px 10px 0px 10px;
+  margin-bottom: 10px;
+}

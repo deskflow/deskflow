@@ -15,7 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var defaultPremiumSliderIndex = 10;
+var defaultPremiumSliderIndex = 1;
+var defaultPremiumValue = 1;
 
 function log(s) {
   if ("console" in self && "log" in console) console.log(s);
@@ -42,7 +43,7 @@ function getPremiumValueFromIndex(index) {
 function getPremiumAmountFromText(text) {
   var valueArray = /\d+(\.\d+)*/.exec(text);
   if (valueArray == null) {
-    return 10;
+    return defaultPremiumValue;
   }
   value = parseFloat(valueArray[0]);
   log(value);
