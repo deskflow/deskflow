@@ -20,6 +20,25 @@ current release. Versions from this page are no longer supported.{/t}
       
         <h2>{t}Previous 1.4 releases{/t}</h2>
         
+        {foreach from=$ver14c item=ver}
+        
+        <h3>{$ver} {t}Beta{/t}</h3>
+        <p>
+          <a href="?file=synergy-{$ver}-Windows-x86.exe">{$ver} Windows 32-bit</a><br />
+          <a href="?file=synergy-{$ver}-Windows-x64.exe">{$ver} Windows 64-bit</a><br />
+          <a href="?file=synergy-{$ver}-MacOSX108-x86_64.dmg">{$ver} Mac OS X 10.8 64-bit</a><br />
+          <a href="?file=synergy-{$ver}-MacOSX107-x86_64.dmg">{$ver} Mac OS X 10.7 64-bit</a><br />
+          <a href="?file=synergy-{$ver}-MacOSX106-i386.dmg">{$ver} Mac OS X 10.6 32-bit</a><br />
+          <a href="?file=synergy-{$ver}-MacOSX105-i386.dmg">{$ver} Mac OS X 10.5 32-bit</a><br />
+          <a href="?file=synergy-{$ver}-Linux-i686.deb">{$ver} Linux (deb) 32-bit</a><br />
+          <a href="?file=synergy-{$ver}-Linux-x86_64.deb">{$ver} Linux (deb) 64-bit</a><br />
+          <a href="?file=synergy-{$ver}-Linux-i686.rpm">{$ver} Linux (rpm) 32-bit</a><br />
+          <a href="?file=synergy-{$ver}-Linux-x86_64.rpm">{$ver} Linux (rpm) 64-bit</a><br />
+          <a href="?file=synergy-{$ver}-Source.tar.gz">{$ver} Source code</a>
+        </p>
+        
+        {/foreach}
+        
         {foreach from=$ver14b item=ver}
         
         <h3>{$ver} {t}Beta{/t}</h3>

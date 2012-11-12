@@ -38,10 +38,13 @@ class Website {
     $currentVersion = "1.4.10";
     $currentDate = mktime(0, 0, 0, 07, 30, 2012);
 
-    // new naming: only mac 10.4 is universal
-    $ver14b = array("1.4.9", "1.4.8", "1.4.7", "1.4.6", "1.4.5");
+    // naming c: mac universal dropped
+    $ver14c = array("1.4.9");
 
-    // old naming: mac releases are universal
+    // naming b: only mac 10.4 is universal
+    $ver14b = array("1.4.8", "1.4.7", "1.4.6", "1.4.5");
+
+    // naming a: mac releases are universal
     $ver14a = array("1.4.4", "1.4.3", "1.4.2");
 
     $page = "home";
@@ -95,6 +98,7 @@ class Website {
       elseif (isset($_GET["alt"])) {        
         $page = "download_alt";
         $smarty->assign("title", T_("Alternate Downloads"));
+        $smarty->assign("ver14c", $ver14c);
         $smarty->assign("ver14b", $ver14b);
         $smarty->assign("ver14a", $ver14a);
       }
