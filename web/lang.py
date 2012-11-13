@@ -36,13 +36,20 @@ def runImport():
 		print "run: " + cmd
 		os.system(cmd)
 
+def runHelp():
+  print ("-h      help\n"
+         "-i      import from getlocalization.com\n"
+         "-g      generate lang.c file from php")
+    
 if len(sys.argv) == 1:
-	print "usage: lang [-i|-g]"
+	print "usage: lang [-h|-i|-g]"
 	sys.exit()
 
-opts, args = gnu_getopt(sys.argv, "ig", "")
+opts, args = gnu_getopt(sys.argv, "hig", "")
 for o, a in opts:
-	if o == "-i":
+	if o == "-h":
+		runHelp()
+	elif o == "-i":
 		runImport()
 	elif o == "-g":
 		os.system("php -q tsmarty2c.php public\. > public\lang.c")
