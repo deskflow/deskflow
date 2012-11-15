@@ -224,8 +224,8 @@ void MainWindow::loadSettings()
 {
 	// the next two must come BEFORE loading groupServerChecked and groupClientChecked or
 	// disabling and/or enabling the right widgets won't automatically work
-	m_pRadioExternalConfig->setChecked(settings().value("externalConfig", false).toBool());
-	m_pRadioInternalConfig->setChecked(settings().value("internalConfig", true).toBool());
+        m_pRadioExternalConfig->setChecked(settings().value("useExternalConfig", false).toBool());
+        m_pRadioInternalConfig->setChecked(settings().value("useInternalConfig", true).toBool());
 
 	m_pGroupServer->setChecked(settings().value("groupServerChecked", false).toBool());
 	m_pLineEditConfigFile->setText(settings().value("configFile", QDir::homePath() + "/" + synergyConfigName).toString());
@@ -251,9 +251,9 @@ void MainWindow::saveSettings()
 {
 	// program settings
 	settings().setValue("groupServerChecked", m_pGroupServer->isChecked());
-	settings().setValue("externalConfig", m_pRadioExternalConfig->isChecked());
+        settings().setValue("useExternalConfig", m_pRadioExternalConfig->isChecked());
 	settings().setValue("configFile", m_pLineEditConfigFile->text());
-	settings().setValue("internalConfig", m_pRadioInternalConfig->isChecked());
+        settings().setValue("useInternalConfig", m_pRadioInternalConfig->isChecked());
 	settings().setValue("groupClientChecked", m_pGroupClient->isChecked());
 	settings().setValue("serverHostname", m_pLineEditHostname->text());
 
