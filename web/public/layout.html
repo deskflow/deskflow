@@ -67,11 +67,12 @@
         {$content}
       </div>
       <div class="footer">
-        {if !$langIsEnglish}
-        <p><a href="http://www.getlocalization.com/synergy/">{t}Improve this translation{/t}</a></p>
-        {/if}
+        <p><a href="http://www.getlocalization.com/synergy/">
+          {if !$langIsEnglish}{t}Improve this translation{/t}{else}Translate to your language{/if}
+        </a></p>
         <p class="lang">
           <a href="?hl=en">English</a>,
+          <a href="?hl=ca">Català (Andorra)</a>,
           <a href="?hl=cs">Čeština</a>,
           <a href="?hl=cy">Cymraeg</a>,
           <a href="?hl=da">Dansk</a>,
@@ -79,6 +80,7 @@
           <a href="?hl=es">Español</a>,
           <a href="?hl=fr">Français</a>,
           <a href="?hl=hr">Hrvatski</a>,
+          <a href="?hl=id">Indonesia</a>,
           <a href="?hl=it">Italiano</a>,
           <a href="?hl=hu">Magyar</a>,
           <a href="?hl=nl">Nederlands</a>,
@@ -88,6 +90,7 @@
           <a href="?hl=pt-BR">Português (Brasil)</a>,
           <a href="?hl=ro">Română</a>,
           <a href="?hl=sl">Slovenščina</a>,
+          <a href="?hl=sk">Slovenčina</a>,
           <a href="?hl=fi">Suomi</a>,
           <a href="?hl=sv">Svenska</a>,
           <a href="?hl=vi">Tiếng Việt</a>,
@@ -97,6 +100,7 @@
           <a href="?hl=el">Ελληνικά</a>,
           <a href="?hl=he">עברית</a>,
           <a href="?hl=ar">العربية</a>,
+          <a href="?hl=fa">فارسی</a>,
           <a href="?hl=th">ภาษาไทย</a>,
           <a href="?hl=zh">中文 (简体)</a>,
           <a href="?hl=zh-TW">中国 (台湾)</a>,

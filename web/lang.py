@@ -21,6 +21,9 @@ def runImport():
 		"zh-CN" : "zh",
 		"zh-TW" : "zh_TW",
 		"grk"   : "el",
+		"ca-AD" : "ca",
+    "pes-IR": "fa",
+    "sk-SK" : "sk"
 	}
 
 	for file in os.listdir(importSource):

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-27 14:20-0000\n"
+"POT-Creation-Date: 2012-11-13 13:12-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -11,10 +11,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Basepath: C:\\Projects\\synergy\\web\\public\n"
 "X-Poedit-KeywordsList: T_\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
 ""
 
-#: lang.c:1
+#: lang.c:1 php/Website.class.php:100
 msgid "Alternate Downloads"
 msgstr ""
 
@@ -29,647 +30,687 @@ msgid "Previous 1.4 releases"
 msgstr "Previous 1.4 releases"
 
 
-#: lang.c:4
-#: lang.c:5
-#: lang.c:6
-#: lang.c:7
+#: lang.c:4 lang.c:5 lang.c:6 lang.c:7 lang.c:8 php/Website.class.php:109
 msgid "Beta"
 msgstr "Béta"
 
 
-#: lang.c:8
+#: lang.c:9
 msgid "Previous 1.3 releases"
 msgstr "Previous 1.3 releases"
 
 
-#: lang.c:9
-#: lang.c:10
-#: lang.c:11
-#: lang.c:12
-#: lang.c:13
-#: lang.c:14
+#: lang.c:10 lang.c:11 lang.c:12 lang.c:13 lang.c:14 lang.c:15
 msgid "Stable"
 msgstr "Stabil"
 
 
-#: lang.c:15
+#: lang.c:16
 msgid "Other projects"
 msgstr "Más projektek"
 
 
-#: lang.c:16
+#: lang.c:17
 msgid "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
 msgstr "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
 
 
-#: lang.c:17
+#: lang.c:18
 msgid "Related sites"
 msgstr "Kapcsolódó oldalak"
 
 
-#: lang.c:18
+#: lang.c:19
 msgid "Nightly builds"
 msgstr "Napi változatok"
 
 
-#: lang.c:19
+#: lang.c:20
 msgid "use at your own risk"
 msgstr "csak saját felelősségére"
 
 
-#: lang.c:20
-#: lang.c:23
-#: lang.c:27
-#: lang.c:95
+#: lang.c:21 lang.c:24 lang.c:26 lang.c:104
 msgid "Download"
 msgstr "Letöltés"
 
 
-#: lang.c:21
+#: lang.c:22
 msgid "Thanks for supporting Synergy! No ads for you :-)"
 msgstr ""
 
 
-#: lang.c:22
+#: lang.c:23
 msgid "<b>Important:</b> Please try using the <a href=\"%1\">latest version</a> before trying older versions. The version available from this page is obsolete and may contain bugs fixed in the latest version."
 msgstr ""
 
 
-#: lang.c:24
+#: lang.c:25
 msgid "While your file is downloading, please take a look at <a href=\"%1\">Synergy Premium</a>."
 msgstr ""
 
 
-#: lang.c:25
-msgid "Thanks for downloading Synergy. If you need help, please read the <a href=\"%1\">user guide</a> or visit the <a href=\"%2\">help</a> page."
-msgstr "Köszönjük, hogy letöltötte a Synergy-t. Ha segítségre van szüksége, kérjük olvassa el a <a href=\"%1\">kézikönyvet</a> vagy nézze meg a <a href=\"%2\">súgót</a>."
-
-
-#: lang.c:26
-msgid "Please support open source software by donating!"
-msgstr "Kérjük támogassa a nyílt forráskódú szoftvert adományával!"
-
-
-#: lang.c:28
+#: lang.c:27
 msgid "Latest release:"
 msgstr "Legutóbbi kiadás:"
 
 
-#: lang.c:29
+#: lang.c:28
 msgid "What's new?"
-msgstr ""
+msgstr "Újdonságok"
 
 
-#: lang.c:30
+#: lang.c:29
 msgid "Windows"
 msgstr "Windows"
 
 
-#: lang.c:31
+#: lang.c:30
 msgid "Mac OS X"
 msgstr "Mac OS X"
 
 
-#: lang.c:32
+#: lang.c:31
 msgid "Ubuntu/Debian"
 msgstr "Ubuntu/Debian"
 
 
-#: lang.c:33
+#: lang.c:32
 msgid "Fedora/Red Hat"
 msgstr "Fedora/Red Hat"
 
 
-#: lang.c:34
+#: lang.c:33
 msgid "Source code"
 msgstr "Forráskód"
 
 
-#: lang.c:35
+#: lang.c:34
 msgid "Alternate downloads"
 msgstr ""
 
 
-#: lang.c:36
+#: lang.c:35
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution."
 msgstr ""
 
 
-#: lang.c:37
-#: lang.c:103
-#: lang.c:109
+#: lang.c:36 lang.c:105 lang.c:119
 msgid "Premium"
+msgstr "Premium"
+
+
+#: lang.c:37
+msgid "Register for Synergy Premium."
 msgstr ""
 
 
 #: lang.c:38
-msgid "Sign up and support Synergy!"
+msgid "How does Premium work?"
 msgstr ""
 
 
 #: lang.c:39
-msgid "How does it work?"
+msgid "You decide what to contribute."
 msgstr ""
 
 
 #: lang.c:40
-msgid "You decide how much to contribute."
-msgstr ""
-
-
-#: lang.c:41
 msgid "Use the slider or enter any value into the textbox."
 msgstr ""
 
 
-#: lang.c:42
-#: lang.c:46
+#: lang.c:41 lang.c:45
 msgid "Continue"
-msgstr ""
+msgstr "Folytatás"
+
+
+#: lang.c:42
+msgid "or"
+msgstr "vagy"
 
 
 #: lang.c:43
-msgid "or"
+msgid "Non-premium"
 msgstr ""
 
 
 #: lang.c:44
-msgid "Free"
+msgid "I can't afford $1 to help Synergy."
 msgstr ""
 
 
-#: lang.c:45
-msgid "I don't want Synergy Premium."
-msgstr ""
+#: lang.c:46
+msgid "Top 10 Votes"
+msgstr "Top 10 szavazatok"
 
 
 #: lang.c:47
-#: lang.c:52
-#: lang.c:60
-msgid "Synergy Premium"
+msgid "Register for Synergy Premium to cast your vote."
 msgstr ""
 
 
 #: lang.c:48
+msgid "The highest voted issue is given our full attention for the next release."
+msgstr ""
+
+
+#: lang.c:49 lang.c:134 lang.c:142
+msgid "%1 votes"
+msgstr "%1 szavazat"
+
+
+#: lang.c:50 lang.c:143
+msgid "No votes."
+msgstr "Nincsenek szavazatok."
+
+
+#: lang.c:51 lang.c:57 lang.c:66
+msgid "Synergy Premium"
+msgstr "Synergy Premium"
+
+
+#: lang.c:52
+msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy. Support the Synergy project by registering a Synergy Premium account today."
+msgstr ""
+
+
 #: lang.c:53
-#: lang.c:110
-msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy."
-msgstr ""
-
-
-#: lang.c:49
-msgid "Premium votes"
-msgstr ""
-
-
-#: lang.c:50
-#: lang.c:111
-msgid "By opening a Synergy Premium account with at least $10, you can directly influence the priority of what bugs will be fixed next, and what features will be implemented. For every $10 contributed, you get 1 vote which you can assign to a bug fix or feature request. The highest voted bug fix or feature request will get our full attention."
-msgstr ""
-
-
-#: lang.c:51
-#: lang.c:117
-#: lang.c:130
-msgid "OK"
+msgid "If you can only contribute $1, that's totally fine by us! Anything at all will allow us to spend more time working on Synergy."
 msgstr ""
 
 
 #: lang.c:54
-msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
+msgid "If you decide to contribute $10, then you get a premium vote. For each additional $10, you get another vote. You can cast this vote on any bug or feature. We will try our best to fix the highest voted feature in the next version. If we can't fix it then you get your votes back, simple."
 msgstr ""
 
 
 #: lang.c:55
+msgid "It's people like you that make Synergy a better piece of software! :-)"
+msgstr ""
+
+
+#: lang.c:56 lang.c:127 lang.c:140
+msgid "OK"
+msgstr "OK"
+
+
+#: lang.c:58 lang.c:120
+msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy."
+msgstr ""
+
+
+#: lang.c:59
+msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
+msgstr "Megígérjük, hogy nem küldünk levélszemetet és a jelszavadat soha nem fogjuk tárolni egyszerű szövegként (csak a hash-t őrizzük meg)."
+
+
+#: lang.c:60
 msgid "You're almost done! Please choose a payment service. When the payment is complete, you will be redirected to your Synergy Premium account."
 msgstr ""
 
 
-#: lang.c:56
+#: lang.c:61
 msgid "The payment is handled by <b>Bolton Software Ltd</b>, the company behind the development of Synergy."
 msgstr ""
 
 
-#: lang.c:57
+#: lang.c:62
 msgid "Please click a logo to continue."
 msgstr ""
 
 
-#: lang.c:58
-#: lang.c:96
+#: lang.c:63
+msgid "Both PayPal and Google Wallet accept all major credit cards."
+msgstr ""
+
+
+#: lang.c:64 lang.c:106
 msgid "Help"
 msgstr "Súgó"
 
 
-#: lang.c:59
+#: lang.c:65
 msgid "Having problems using Synergy? You're in the right place!"
 msgstr "Problémája van a Synergy használatával? A legjobb helyen van."
 
 
-#: lang.c:61
+#: lang.c:67
 msgid "By opening a Synergy Premium account with at least $10, you can directly influence the priority of what bugs will be fixed next. For every $10 contributed, you get 1 vote which you can assign to a bug fix. The highest voted bug fix will get our full attention."
 msgstr ""
 
 
-#: lang.c:62
-#: lang.c:112
+#: lang.c:68
 msgid "<a href=\"%1\">Open a Synergy Premium account now</a>."
 msgstr ""
 
 
-#: lang.c:63
+#: lang.c:69
 msgid "Latest version"
 msgstr "Legfrissebb verzió"
 
 
-#: lang.c:64
+#: lang.c:70
 msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
 msgstr ""
 
 
-#: lang.c:65
+#: lang.c:71
 msgid "User guide"
 msgstr "Kézikönyv"
 
 
-#: lang.c:66
+#: lang.c:72
 msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
 msgstr "Kérjük olvassa el a <a href=\"%1\">kézikönyvet</a>, mielőtt bármi más tenne."
 
 
-#: lang.c:67
-#: lang.c:97
-#: lang.c:135
+#: lang.c:73 lang.c:107 lang.c:150
 msgid "Search"
 msgstr "Keresés"
 
 
-#: lang.c:68
+#: lang.c:74
 msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
 msgstr "Próbálja meg a <a href=\"%1\">gyors keresést</a>, tényleg nem tart soká."
 
 
-#: lang.c:69
+#: lang.c:75
 msgid "Q&#38;A website"
 msgstr "Q&#38;A weboldal"
 
 
-#: lang.c:70
+#: lang.c:76
 msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
 msgstr ""
 
 
-#: lang.c:71
-#: lang.c:138
+#: lang.c:77 lang.c:153
 msgid "Super User"
 msgstr "Super user"
 
 
-#: lang.c:72
+#: lang.c:78
 msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
 msgstr ""
 
 
-#: lang.c:73
+#: lang.c:79
 msgid "Super User is <b>not</b> dedicated to supporting Synergy."
 msgstr "A SuperUser.com <b>nem csak</b> Synergy támogatási oldal."
 
 
-#: lang.c:74
+#: lang.c:80
 msgid "Ask questions; do not nag or comment on bugs or issues."
 msgstr "Kérdezzen, ne kritizálja vagy kommentálja a problémákat."
 
 
-#: lang.c:75
+#: lang.c:81
 msgid "Do not raise new bugs there; use the issue tracker for this."
 msgstr "Ne itt jelezzen új hibákat, arra az Tracker-t használja."
 
 
-#: lang.c:76
+#: lang.c:82
 msgid "Synergy developers do <i>not</i> monitor this website."
 msgstr "A Synergy fejlesztők <i>nem</i> figyelik ezt az oldalt."
 
 
-#: lang.c:77
+#: lang.c:83
 msgid "Always use the \"synergy\" tag on your question."
 msgstr "Mindig használja a \"synergy\" cimkét a kérdéséhez."
 
 
-#: lang.c:78
+#: lang.c:84
 msgid "Make sure you mention \"Synergy\" in the question."
 msgstr "Legyen biztos, hogy megemlíti a \"Synergy\"-t a kérdésében."
 
 
-#: lang.c:79
+#: lang.c:85
 msgid "IRC"
 msgstr "IRC"
 
 
-#: lang.c:80
+#: lang.c:86
 msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
 msgstr ""
 
 
-#: lang.c:81
+#: lang.c:87
 msgid "Mailing list"
 msgstr "Levelezési lista"
 
 
-#: lang.c:82
+#: lang.c:88
 msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
 msgstr ""
 
 
-#: lang.c:83
+#: lang.c:89
 msgid "Report a bug"
 msgstr "Hiba jelentése"
 
 
-#: lang.c:84
+#: lang.c:90
 msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
 msgstr "Kérjük jelezze a hibát ha a fenti lehetőségek egyike sem segít és egészen biztos benne, hogy hibát talált. Nyisson egy <a href=\"%1\">új hiba jelentést</a>."
 
 
-#: lang.c:85
+#: lang.c:91
+msgid "Urgent Appeal from Synergy"
+msgstr ""
+
+
+#: lang.c:92
+msgid "Sadly our sponsor has cut funding to the Synergy Project because it hasn't been profitable for them. We have now removed their optional toolbar from our installers. We hope that you will help us out by registering for <a href=\"download/\">Synergy Premium</a> for $1 or whatever you feel our work is worth. All funding goes toward fixing bugs and speeding up development time. Thank you for reading!"
+msgstr ""
+
+
+#: lang.c:93
+msgid "Nick Bolton, Project Leader"
+msgstr ""
+
+
+#: lang.c:94
 msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
 msgstr "A Synergy lehetővé teszi a billentyűzet és egér megosztását több számítógép között és ráadásul Ingyenes és nyílt forráskódú. Csak mozgassa az egeret a képernyő szélére, hogy átkerüljön a másik számítógépe monitorára. A számítógépek között a vágólap is megosztásra kerül. Nincs másra szüksége csak hálózati kapcsolatra a két számítógép között. A Synergy operációs rendszer független, így használhatja Windows, Mac OS X és Linux rendszerű számítógéppel."
 
 
-#: lang.c:86
-#: lang.c:98
+#: lang.c:95 lang.c:109
 msgid "Info"
 msgstr "Infó"
 
 
-#: lang.c:87
+#: lang.c:96
+msgid "Twitter"
+msgstr ""
+
+
+#: lang.c:97
 msgid "Follow Synergy coders!"
-msgstr ""
+msgstr "Kövesd a Synergy fejlesztőit!"
 
 
-#: lang.c:88
-msgid "Awards"
-msgstr ""
-
-
-#: lang.c:89
+#: lang.c:98
 msgid "Key people"
 msgstr "Kulcsemberek"
 
 
-#: lang.c:90
+#: lang.c:99
 msgid "Project leader and primary developer"
 msgstr "Projekt vezető és vezető fejlesztő"
 
 
-#: lang.c:91
+#: lang.c:100
 msgid "Original author and project founder"
 msgstr "Alapító és projekt támogató"
 
 
-#: lang.c:92
+#: lang.c:101
 msgid "Founder of Synergy+ (fork project)"
 msgstr "A Synergy+ alapítója (fork project)"
 
 
-#: lang.c:93
+#: lang.c:102
 msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
 msgstr "A Synergy lehetővé teszi a billentyűzet és egér megosztását több számítógép között."
 
 
-#: lang.c:94
+#: lang.c:103
 msgid "Home"
 msgstr "Kezdőlap"
 
 
-#: lang.c:99
+#: lang.c:108 lang.c:144
+msgid "Press"
+msgstr ""
+
+
+#: lang.c:110
 msgid "Blog"
 msgstr "Blog"
 
 
-#: lang.c:100
+#: lang.c:111
 msgid "Wiki"
 msgstr "Wiki"
 
 
-#: lang.c:101
+#: lang.c:112
 msgid "Tracker"
 msgstr "Tracker"
 
 
-#: lang.c:102
+#: lang.c:113
 msgid "Code"
 msgstr "Kód"
 
 
-#: lang.c:104
+#: lang.c:114
 msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
 msgstr ""
 
 
-#: lang.c:105
+#: lang.c:115
 msgid "Improve this translation"
 msgstr "Javítsa ezt a fordítást"
 
 
-#: lang.c:106
-msgid "Copyright &copy; 2012"
+#: lang.c:116
+msgid "Copyright &copy; 2012 Bolton Software Ltd."
 msgstr ""
 
 
-#: lang.c:107
+#: lang.c:117
 msgid "License"
 msgstr ""
 
 
-#: lang.c:108
-#: lang.c:134
+#: lang.c:118 lang.c:149
 msgid "Privacy Policy"
 msgstr ""
 
 
-#: lang.c:113
-msgid "Login"
-msgstr ""
-
-
-#: lang.c:114
-msgid "If you don't have an account, you can <a href=\"%1\">sign up</a>."
-msgstr ""
-
-
-#: lang.c:115
-msgid "Email:"
-msgstr ""
-
-
-#: lang.c:116
-msgid "Password:"
-msgstr ""
-
-
-#: lang.c:118
-msgid "Welcome to your Synergy Premium account. You have <b>%1</b> unassigned Premium vote(s)."
-msgstr ""
-
-
-#: lang.c:119
-msgid "If you have just signed up and don't see any votes, we may be waiting to hear from PayPal so please be patient. <a href=\"%1\">Check now</a>."
-msgstr ""
-
-
-#: lang.c:120
-msgid "Logout"
-msgstr ""
-
-
 #: lang.c:121
-msgid "Contribute again"
+msgid "Support the Synergy project by registering a Synergy Premium account today."
 msgstr ""
 
 
 #: lang.c:122
-msgid "If you would like to contribute again, we would really apreciate it."
+msgid "<a href=\"%1\">Register for Synergy Premium</a>."
 msgstr ""
 
 
 #: lang.c:123
-msgid "Your votes"
-msgstr ""
+msgid "Login"
+msgstr "Bejelentkezés"
 
 
 #: lang.c:124
-#: lang.c:132
-msgid "%1 votes"
-msgstr ""
+msgid "If you don't have an account, you can <a href=\"%1\">sign up</a>."
+msgstr "Ha nincs még felhasználói fiókod, regisztrálhatsz magadnak egyet <a href=\"%1\">itt</a>."
 
 
 #: lang.c:125
-msgid "You have not cast any votes yet."
-msgstr ""
+msgid "Email:"
+msgstr "Email:"
 
 
 #: lang.c:126
-msgid "Cast new vote"
-msgstr ""
-
-
-#: lang.c:127
-msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
-msgstr ""
+msgid "Password:"
+msgstr "Jelszó:"
 
 
 #: lang.c:128
-msgid "Issue ID:"
-msgstr ""
+msgid "Welcome to your Synergy Premium account. You have <b>%1</b> unassigned Premium vote(s)."
+msgstr "Üdvözlünk a Synergy Premium fiókodban. Még <b>%1</b> fel nem használt szavazatod maradt."
 
 
 #: lang.c:129
-msgid "Votes:"
+msgid "If you have just signed up and don't see any votes, we may be waiting to hear from PayPal so please be patient. <a href=\"%1\">Check now</a>."
 msgstr ""
 
 
+#: lang.c:130
+msgid "Logout"
+msgstr "Kijelentkezés"
+
+
 #: lang.c:131
-msgid "Community votes"
+msgid "Want more votes?"
+msgstr ""
+
+
+#: lang.c:132
+msgid "Each $10 contribution will give you 1 vote, so for example, $100 will give you 10 votes. Thanks for your support!"
 msgstr ""
 
 
 #: lang.c:133
-msgid "No votes."
-msgstr ""
+msgid "Your votes"
+msgstr "Szavazataid"
+
+
+#: lang.c:135
+msgid "You have not cast any votes yet."
+msgstr "Még nem szavaztál."
 
 
 #: lang.c:136
-msgid "Search all Synergy websites from one page."
-msgstr "Keressen az összes Synergy weboldalon egy helyről"
+msgid "Cast new vote"
+msgstr "Új szavazat"
 
 
 #: lang.c:137
-msgid "What is searched?"
-msgstr "Mit keres?"
+msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
+msgstr ""
+
+
+#: lang.c:138
+msgid "Issue ID:"
+msgstr "Hibajegy sorszáma: "
 
 
 #: lang.c:139
-msgid "Issue tracker"
-msgstr "Issue tracker"
-
-
-#: lang.c:140
-msgid "Website wiki"
-msgstr "Wiki"
+msgid "Votes:"
+msgstr "Szavazatok:"
 
 
 #: lang.c:141
-msgid "Mailing lists"
-msgstr "Levelezési listák"
-
-
-#: lang.c:142
-msgid "Search tips"
-msgstr "Keresési tippek"
-
-
-#: lang.c:143
-msgid "If you get too many results, try specifying your operating system."
-msgstr "Ha túl sok találatot kapott, az op.rendszer megadásával szűkítheti."
-
-
-#: lang.c:144
-msgid "Sometimes issues are specific to the client or server."
-msgstr "Az esetek néha a kliensre vagy a szerverre vonatkoznak."
+msgid "Community votes"
+msgstr "Közösségi szavazatok"
 
 
 #: lang.c:145
-msgid "You may find that entering your version number helps."
-msgstr "Néha segít megtalálni amit keres, ha megadja a verziószámot."
+msgid "If you've featured Synergy on your website, thank you! Please let us know so we can link to it."
+msgstr ""
 
 
 #: lang.c:146
-msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
+msgid "Media"
 msgstr ""
 
 
 #: lang.c:147
+msgid "Featured"
+msgstr ""
+
+
+#: lang.c:148
+msgid "Awards"
+msgstr ""
+
+
+#: lang.c:151
+msgid "Search all Synergy websites from one page."
+msgstr "Keressen az összes Synergy weboldalon egy helyről"
+
+
+#: lang.c:152
+msgid "What is searched?"
+msgstr "Mit keres?"
+
+
+#: lang.c:154
+msgid "Issue tracker"
+msgstr "Issue tracker"
+
+
+#: lang.c:155
+msgid "Website wiki"
+msgstr "Wiki"
+
+
+#: lang.c:156
+msgid "Mailing lists"
+msgstr "Levelezési listák"
+
+
+#: lang.c:157
+msgid "Search tips"
+msgstr "Keresési tippek"
+
+
+#: lang.c:158
+msgid "If you get too many results, try specifying your operating system."
+msgstr "Ha túl sok találatot kapott, az op.rendszer megadásával szűkítheti."
+
+
+#: lang.c:159
+msgid "Sometimes issues are specific to the client or server."
+msgstr "Az esetek néha a kliensre vagy a szerverre vonatkoznak."
+
+
+#: lang.c:160
+msgid "You may find that entering your version number helps."
+msgstr "Néha segít megtalálni amit keres, ha megadja a verziószámot."
+
+
+#: lang.c:161
+msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
+msgstr ""
+
+
+#: lang.c:162
 msgid "Search now"
 msgstr "Keresés"
 
 
-#: lang.c:148
+#: lang.c:163
 msgid "Loading"
 msgstr ""
 
 
-#: php/Premium.class.php:260
+#: php/Premium.class.php:262
 msgid "Please enter your name."
-msgstr ""
+msgstr "Kérlek írd be a neved."
 
 
-#: php/Premium.class.php:263
+#: php/Premium.class.php:265
 msgid "Please enter your email address."
-msgstr ""
+msgstr "Kérlek írd be az e-mail címed."
 
 
-#: php/Premium.class.php:266
+#: php/Premium.class.php:268
 msgid "Your email address does not look valid."
-msgstr ""
+msgstr "Az email címed nem tűnik valóságosnak."
 
 
-#: php/Premium.class.php:269
+#: php/Premium.class.php:271
 msgid "That email address is already in use, are you already registered?"
-msgstr ""
+msgstr "Ez az email cím már egyszer felhasználásra került. Meglehet hogy már regisztrálva vagy?"
 
 
-#: php/Premium.class.php:272
+#: php/Premium.class.php:274
 msgid "The confirm email textbox must match the email address textbox."
 msgstr ""
 
 
-#: php/Premium.class.php:275
+#: php/Premium.class.php:277
 msgid "Please enter a password."
 msgstr ""
 
 
-#: php/Premium.class.php:278
+#: php/Premium.class.php:280
 msgid "The confirm password texbox must match the password textbox."
 msgstr ""
-
 

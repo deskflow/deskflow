@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-27 14:20-0000\n"
+"POT-Creation-Date: 2012-11-13 13:12-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -11,10 +11,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Basepath: C:\\Projects\\synergy\\web\\public\n"
 "X-Poedit-KeywordsList: T_\n"
+"X-Generator: Poedit 1.5.4\n"
 "X-Poedit-SearchPath-0: .\n"
 ""
 
-#: lang.c:1
+#: lang.c:1 php/Website.class.php:100
 msgid "Alternate Downloads"
 msgstr "Alternative Downloads"
 
@@ -29,647 +30,687 @@ msgid "Previous 1.4 releases"
 msgstr "Ältere 1.4 Releases"
 
 
-#: lang.c:4
-#: lang.c:5
-#: lang.c:6
-#: lang.c:7
+#: lang.c:4 lang.c:5 lang.c:6 lang.c:7 lang.c:8 php/Website.class.php:109
 msgid "Beta"
 msgstr "Beta"
 
 
-#: lang.c:8
+#: lang.c:9
 msgid "Previous 1.3 releases"
 msgstr "Vorherige 1.3 Veröffentlichungen"
 
 
-#: lang.c:9
-#: lang.c:10
-#: lang.c:11
-#: lang.c:12
-#: lang.c:13
-#: lang.c:14
+#: lang.c:10 lang.c:11 lang.c:12 lang.c:13 lang.c:14 lang.c:15
 msgid "Stable"
 msgstr "Stabil"
 
 
-#: lang.c:15
+#: lang.c:16
 msgid "Other projects"
 msgstr "Andere Projekte"
 
 
-#: lang.c:16
+#: lang.c:17
 msgid "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
 msgstr "<a href=\"%1\">iOS Client von Matthias Ringwald</a> (iPad/iPhone)"
 
 
-#: lang.c:17
+#: lang.c:18
 msgid "Related sites"
 msgstr "Verwandte Seiten"
 
 
-#: lang.c:18
+#: lang.c:19
 msgid "Nightly builds"
 msgstr "Nightly builds"
 
 
-#: lang.c:19
+#: lang.c:20
 msgid "use at your own risk"
 msgstr "Nutzung auf eigene Gefahr"
 
 
-#: lang.c:20
-#: lang.c:23
-#: lang.c:27
-#: lang.c:95
+#: lang.c:21 lang.c:24 lang.c:26 lang.c:104
 msgid "Download"
 msgstr "Download"
 
 
-#: lang.c:21
+#: lang.c:22
 msgid "Thanks for supporting Synergy! No ads for you :-)"
 msgstr "Danke, dass du Synergy unterstützt! Keine Werbung für dich :-)"
 
 
-#: lang.c:22
+#: lang.c:23
 msgid "<b>Important:</b> Please try using the <a href=\"%1\">latest version</a> before trying older versions. The version available from this page is obsolete and may contain bugs fixed in the latest version."
 msgstr "<b>Wichtig:</b> Bitte versuchen Sie die <a href=\"%1\">aktuelle Version</a> bevor Sie ältere ausprobieren. Die Versionen dieser Seite sind veraltet und können unter Umständen Fehler enthalten, die in der neueren Version behoben wurden."
 
 
-#: lang.c:24
+#: lang.c:25
 msgid "While your file is downloading, please take a look at <a href=\"%1\">Synergy Premium</a>."
 msgstr "Während die Datei heruntergeladen wird, schau bitte mal bei <a href=\"%1\">Synergy Premium</a> vorbei."
 
 
-#: lang.c:25
-msgid "Thanks for downloading Synergy. If you need help, please read the <a href=\"%1\">user guide</a> or visit the <a href=\"%2\">help</a> page."
-msgstr "Vielen Dank für das Herunterladen von Synergy. Falls Sie Hilfe benötigen, lesen Sie bitte die <a href=\"%1\">User Guide</a> oder besuchen Sie unsere <a href=\"%2\">Hilfe</a>."
-
-
-#: lang.c:26
-msgid "Please support open source software by donating!"
-msgstr "Bitte unterstützen Sie Open Source-Software mit einer Spende!"
-
-
-#: lang.c:28
+#: lang.c:27
 msgid "Latest release:"
 msgstr "Letzte Version:"
 
 
-#: lang.c:29
+#: lang.c:28
 msgid "What's new?"
 msgstr "Was ist neu?"
 
 
-#: lang.c:30
+#: lang.c:29
 msgid "Windows"
 msgstr "Windows"
 
 
-#: lang.c:31
+#: lang.c:30
 msgid "Mac OS X"
 msgstr "Mac OS X"
 
 
-#: lang.c:32
+#: lang.c:31
 msgid "Ubuntu/Debian"
 msgstr "Ubuntu/Debian"
 
 
-#: lang.c:33
+#: lang.c:32
 msgid "Fedora/Red Hat"
 msgstr "Fedora/Red Hat"
 
 
-#: lang.c:34
+#: lang.c:33
 msgid "Source code"
 msgstr "Quelltext"
 
 
-#: lang.c:35
+#: lang.c:34
 msgid "Alternate downloads"
 msgstr "Alternative Downloads"
 
 
-#: lang.c:36
+#: lang.c:35
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution."
 msgstr "Danke für das Angebot zu spenden! Wir schätzen Ihre Unterstützung sehr. Wir haben unseren Spende Knopf mit Premium-Synergy ersetzt. Es ist wie eine Spende, Sie erhalten nur die Möglichkeit der Abstimmung im Gegenzug für Ihren Beitrag."
 
 
-#: lang.c:37
-#: lang.c:103
-#: lang.c:109
+#: lang.c:36 lang.c:105 lang.c:119
 msgid "Premium"
 msgstr "Premium"
 
 
-#: lang.c:38
-msgid "Sign up and support Synergy!"
-msgstr "Registrier' Dich und unterstütze Synergy!"
-
-
-#: lang.c:39
-msgid "How does it work?"
-msgstr "Wie funktioniert das?"
-
-
-#: lang.c:40
-msgid "You decide how much to contribute."
-msgstr "Sie entscheiden wie viel Sie beitragen."
-
-
-#: lang.c:41
-msgid "Use the slider or enter any value into the textbox."
+#: lang.c:37
+msgid "Register for Synergy Premium."
 msgstr ""
 
 
-#: lang.c:42
-#: lang.c:46
+#: lang.c:38
+msgid "How does Premium work?"
+msgstr "Wie funktioniert Prämium?"
+
+
+#: lang.c:39
+msgid "You decide what to contribute."
+msgstr ""
+
+
+#: lang.c:40
+msgid "Use the slider or enter any value into the textbox."
+msgstr "Benutzen Sie den Regler oder schreiben Sie einen Betrag in die Textbox."
+
+
+#: lang.c:41 lang.c:45
 msgid "Continue"
 msgstr "Weiter"
 
 
-#: lang.c:43
+#: lang.c:42
 msgid "or"
 msgstr "oder"
 
 
+#: lang.c:43
+msgid "Non-premium"
+msgstr "Kein Prämium"
+
+
 #: lang.c:44
-msgid "Free"
-msgstr "Gratis!"
+msgid "I can't afford $1 to help Synergy."
+msgstr ""
 
 
-#: lang.c:45
-msgid "I don't want Synergy Premium."
-msgstr "Ich möchte kein Synergy Premium."
+#: lang.c:46
+msgid "Top 10 Votes"
+msgstr "Top 10 Abstimmung"
 
 
 #: lang.c:47
-#: lang.c:52
-#: lang.c:60
-msgid "Synergy Premium"
-msgstr "Synergy Premium"
+msgid "Register for Synergy Premium to cast your vote."
+msgstr ""
 
 
 #: lang.c:48
-#: lang.c:53
-#: lang.c:110
-msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy."
-msgstr ""
+msgid "The highest voted issue is given our full attention for the next release."
+msgstr "Dem Problem mit den meissten Stimmen widmen wir uns zum nächsten Release."
 
 
-#: lang.c:49
-msgid "Premium votes"
-msgstr "Premium Stimme"
-
-
-#: lang.c:50
-#: lang.c:111
-msgid "By opening a Synergy Premium account with at least $10, you can directly influence the priority of what bugs will be fixed next, and what features will be implemented. For every $10 contributed, you get 1 vote which you can assign to a bug fix or feature request. The highest voted bug fix or feature request will get our full attention."
-msgstr ""
-
-
-#: lang.c:51
-#: lang.c:117
-#: lang.c:130
-msgid "OK"
-msgstr "OK"
-
-
-#: lang.c:54
-msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
-msgstr "Wir versprechen Sie niemals zuzuspammen und ihre Passwörter nie im Klartext speichern werden (wir behalten nur ein Kuddelmuddel)"
-
-
-#: lang.c:55
-msgid "You're almost done! Please choose a payment service. When the payment is complete, you will be redirected to your Synergy Premium account."
-msgstr ""
-
-
-#: lang.c:56
-msgid "The payment is handled by <b>Bolton Software Ltd</b>, the company behind the development of Synergy."
-msgstr ""
-
-
-#: lang.c:57
-msgid "Please click a logo to continue."
-msgstr ""
-
-
-#: lang.c:58
-#: lang.c:96
-msgid "Help"
-msgstr "Hilfe"
-
-
-#: lang.c:59
-msgid "Having problems using Synergy? You're in the right place!"
-msgstr "Haben Sie Probleme mit Synergy? Sie sind an der richtigen Stelle!"
-
-
-#: lang.c:61
-msgid "By opening a Synergy Premium account with at least $10, you can directly influence the priority of what bugs will be fixed next. For every $10 contributed, you get 1 vote which you can assign to a bug fix. The highest voted bug fix will get our full attention."
-msgstr ""
-
-
-#: lang.c:62
-#: lang.c:112
-msgid "<a href=\"%1\">Open a Synergy Premium account now</a>."
-msgstr "<a href=\"%1\">Eröffnen Sie jetzt ein Synergy Premium Konto</a>."
-
-
-#: lang.c:63
-msgid "Latest version"
-msgstr "Letzte Version"
-
-
-#: lang.c:64
-msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
-msgstr ""
-
-
-#: lang.c:65
-msgid "User guide"
-msgstr "Handbuch"
-
-
-#: lang.c:66
-msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
-msgstr "Bitte lesen Sie unser  <a href=\"%1\">Handbuch</a> bevor Sie weitere Schritte unternehmen."
-
-
-#: lang.c:67
-#: lang.c:97
-#: lang.c:135
-msgid "Search"
-msgstr "Suche"
-
-
-#: lang.c:68
-msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
-msgstr "Benutzen Sie die <a href=\"%1\">Schnellsuche</a>, es wird wirklich nicht lange dauern."
-
-
-#: lang.c:69
-msgid "Q&#38;A website"
-msgstr "Fragen &#38; Antworten"
-
-
-#: lang.c:70
-msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
-msgstr ""
-
-
-#: lang.c:71
-#: lang.c:138
-msgid "Super User"
-msgstr "Super User"
-
-
-#: lang.c:72
-msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
-msgstr ""
-
-
-#: lang.c:73
-msgid "Super User is <b>not</b> dedicated to supporting Synergy."
-msgstr "Super User ist <b>nicht</b> für die Unterstützung von Synergy verwandtwörtlich."
-
-
-#: lang.c:74
-msgid "Ask questions; do not nag or comment on bugs or issues."
-msgstr "Stellen Sie Fragen. Nörgeln Sie an und kommentieren Sie Fehler oder Probleme nicht."
-
-
-#: lang.c:75
-msgid "Do not raise new bugs there; use the issue tracker for this."
-msgstr "Tragen Sie keine neue Bugs dort ein, dafür ist der issue tracker."
-
-
-#: lang.c:76
-msgid "Synergy developers do <i>not</i> monitor this website."
-msgstr "Synergy-Entwickler verfolgen die Webseite <i>nicht</i> aktiv."
-
-
-#: lang.c:77
-msgid "Always use the \"synergy\" tag on your question."
-msgstr "Verwenden Sie immer das \"synergy\" Tag bei Ihren Fragen."
-
-
-#: lang.c:78
-msgid "Make sure you mention \"Synergy\" in the question."
-msgstr "Stellen Sie sicher \"Synergy\" in der Frage zu erwähnen."
-
-
-#: lang.c:79
-msgid "IRC"
-msgstr "IRC"
-
-
-#: lang.c:80
-msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
-msgstr ""
-
-
-#: lang.c:81
-msgid "Mailing list"
-msgstr "Mailing-Liste"
-
-
-#: lang.c:82
-msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
-msgstr ""
-
-
-#: lang.c:83
-msgid "Report a bug"
-msgstr "Fehler melden"
-
-
-#: lang.c:84
-msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
-msgstr "Bitte melden Sie Fehler, wenn Sie alle der oben genannten Optionen erschöpft haben, und Sie sich absolut sicher sind einen Fehler gefunden zu haben. Öffnen Sie einen <a href=\"%1\">neuen Bug Report</a>."
-
-
-#: lang.c:85
-msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
-msgstr "Mit Synergy können Sie einfach Ihre Tastatur und Maus an mehreren Computern auf Ihrem Schreibtisch nutzen, und es ist Frei und Open Source. Bewegen Sie einfach ihre Maus über den Rand des Bildschirms eines Computers auf den Bildschirm eines anderen. Sie können sogar den Inhalt ihrer Zwischenablage an alle Computer verteilen. Alles was Sie brauchen ist ein Netzwerk-Anschluss. Synergy funktioniert auf Windows, Mac OS X und Linux."
-
-
-#: lang.c:86
-#: lang.c:98
-msgid "Info"
-msgstr "Info"
-
-
-#: lang.c:87
-msgid "Follow Synergy coders!"
-msgstr "Folge Synergy-Programmierern!"
-
-
-#: lang.c:88
-msgid "Awards"
-msgstr "Auszeichnungen"
-
-
-#: lang.c:89
-msgid "Key people"
-msgstr "Key People"
-
-
-#: lang.c:90
-msgid "Project leader and primary developer"
-msgstr "Projektleiter und Hauptentwickler"
-
-
-#: lang.c:91
-msgid "Original author and project founder"
-msgstr "Original autor und projekt-gründer"
-
-
-#: lang.c:92
-msgid "Founder of Synergy+ (fork project)"
-msgstr "Gründer von Synergy+ (fork projekt)"
-
-
-#: lang.c:93
-msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
-msgstr "Mit Synergy können Sie Ihre Tastatur und Maus an mehreren Computern auf Ihrem Schreibtisch nutzen."
-
-
-#: lang.c:94
-msgid "Home"
-msgstr "Start"
-
-
-#: lang.c:99
-msgid "Blog"
-msgstr "Blog"
-
-
-#: lang.c:100
-msgid "Wiki"
-msgstr "Wiki"
-
-
-#: lang.c:101
-msgid "Tracker"
-msgstr "Tracker"
-
-
-#: lang.c:102
-msgid "Code"
-msgstr "Code"
-
-
-#: lang.c:104
-msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
-msgstr ""
-
-
-#: lang.c:105
-msgid "Improve this translation"
-msgstr "Verbessere diese Übersetzung"
-
-
-#: lang.c:106
-msgid "Copyright &copy; 2012"
-msgstr "Copyright &copy; 2012"
-
-
-#: lang.c:107
-msgid "License"
-msgstr "Lizenz"
-
-
-#: lang.c:108
-#: lang.c:134
-msgid "Privacy Policy"
-msgstr "Datenschutzhinweise"
-
-
-#: lang.c:113
-msgid "Login"
-msgstr "Einloggen"
-
-
-#: lang.c:114
-msgid "If you don't have an account, you can <a href=\"%1\">sign up</a>."
-msgstr ""
-
-
-#: lang.c:115
-msgid "Email:"
-msgstr "Email:"
-
-
-#: lang.c:116
-msgid "Password:"
-msgstr "Passwort:"
-
-
-#: lang.c:118
-msgid "Welcome to your Synergy Premium account. You have <b>%1</b> unassigned Premium vote(s)."
-msgstr ""
-
-
-#: lang.c:119
-msgid "If you have just signed up and don't see any votes, we may be waiting to hear from PayPal so please be patient. <a href=\"%1\">Check now</a>."
-msgstr ""
-
-
-#: lang.c:120
-msgid "Logout"
-msgstr "Abmelden"
-
-
-#: lang.c:121
-msgid "Contribute again"
-msgstr ""
-
-
-#: lang.c:122
-msgid "If you would like to contribute again, we would really apreciate it."
-msgstr ""
-
-
-#: lang.c:123
-msgid "Your votes"
-msgstr "Deine Wahl"
-
-
-#: lang.c:124
-#: lang.c:132
+#: lang.c:49 lang.c:134 lang.c:142
 msgid "%1 votes"
 msgstr "%1 Stimmen"
 
 
-#: lang.c:125
-msgid "You have not cast any votes yet."
-msgstr "Sie haben noch keine Stimme abgegeben."
-
-
-#: lang.c:126
-msgid "Cast new vote"
-msgstr "Stimme abgeben"
-
-
-#: lang.c:127
-msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
-msgstr ""
-
-
-#: lang.c:128
-msgid "Issue ID:"
-msgstr "Fall Kennung:"
-
-
-#: lang.c:129
-msgid "Votes:"
-msgstr "Stimmen:"
-
-
-#: lang.c:131
-msgid "Community votes"
-msgstr "Community Stimmen"
-
-
-#: lang.c:133
+#: lang.c:50 lang.c:143
 msgid "No votes."
 msgstr "Keine Wahl."
 
 
+#: lang.c:51 lang.c:57 lang.c:66
+msgid "Synergy Premium"
+msgstr "Synergy Premium"
+
+
+#: lang.c:52
+msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy. Support the Synergy project by registering a Synergy Premium account today."
+msgstr ""
+
+
+#: lang.c:53
+msgid "If you can only contribute $1, that's totally fine by us! Anything at all will allow us to spend more time working on Synergy."
+msgstr ""
+
+
+#: lang.c:54
+msgid "If you decide to contribute $10, then you get a premium vote. For each additional $10, you get another vote. You can cast this vote on any bug or feature. We will try our best to fix the highest voted feature in the next version. If we can't fix it then you get your votes back, simple."
+msgstr ""
+
+
+#: lang.c:55
+msgid "It's people like you that make Synergy a better piece of software! :-)"
+msgstr ""
+
+
+#: lang.c:56 lang.c:127 lang.c:140
+msgid "OK"
+msgstr "OK"
+
+
+#: lang.c:58 lang.c:120
+msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy."
+msgstr "Danke für Ihr interesse in Synergy Premium, wir danken für Ihre Unterstützung.  Spenden erlauben es uns mehr Zeit in die weiterentwicklung von Synergy zu investieren."
+
+
+#: lang.c:59
+msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
+msgstr "Wir verschicken keine Spam-Nachrichten an Ihre Adresse und speichern keine Klartext-Passwörter (es wird lediglich eine Prüfsumme gespeichert)"
+
+
+#: lang.c:60
+msgid "You're almost done! Please choose a payment service. When the payment is complete, you will be redirected to your Synergy Premium account."
+msgstr "Sie sind fast fertig!  Bitte wählen Sie einen Bezahldienst aus.  Wenn die Bezahlung abgeschlossen ist, werden Sie zu Ihrem Synergy Premium Account weitergeleitet."
+
+
+#: lang.c:61
+msgid "The payment is handled by <b>Bolton Software Ltd</b>, the company behind the development of Synergy."
+msgstr "Die Bezahlung wird von <b>Bolton Software Ltd</b> abgewickelt, die Firma hinter der Entwicklung von Synergy."
+
+
+#: lang.c:62
+msgid "Please click a logo to continue."
+msgstr "Bitte wählen Sie ein Logo zum fortfahren aus."
+
+
+#: lang.c:63
+msgid "Both PayPal and Google Wallet accept all major credit cards."
+msgstr ""
+
+
+#: lang.c:64 lang.c:106
+msgid "Help"
+msgstr "Hilfe"
+
+
+#: lang.c:65
+msgid "Having problems using Synergy? You're in the right place!"
+msgstr "Haben Sie Probleme mit Synergy? Sie sind an der richtigen Stelle!"
+
+
+#: lang.c:67
+msgid "By opening a Synergy Premium account with at least $10, you can directly influence the priority of what bugs will be fixed next. For every $10 contributed, you get 1 vote which you can assign to a bug fix. The highest voted bug fix will get our full attention."
+msgstr "Eröffnen Sie einen Synergy Premium Account und spenden Sie mindestens $10, so können Sie direkt einfluss auf die Priorität der als nächstes zu beseitigenden Bugs nehmen und zukünftige Features mitbestimmen. Jeweils für $10 gibt es einen Vote der einem Bug oder Feature zugewiesen werden kann. Der Bug oder das Feature mit den meissten Stimmen wird mit höchster Priorität angegangen."
+
+
+#: lang.c:68
+msgid "<a href=\"%1\">Open a Synergy Premium account now</a>."
+msgstr "<a href=\"%1\">Eröffnen Sie jetzt ein Synergy Premium Konto</a>."
+
+
+#: lang.c:69
+msgid "Latest version"
+msgstr "Letzte Version"
+
+
+#: lang.c:70
+msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
+msgstr "Viele Bugs werden gemeldet obwohl Benutzer nicht die letzte Version verwenden.  Bitte besuchen Sie die <a href=\"%1\">Download</a> Seite und installieren die letzte Version (auch wenn es nur eine Beta ist).  Sie könnten auch die <a href=\"%2\">Nightly Builds</a> versuchen, aber bitte nur wenn es keine andere möglichkeit gibt (diese Versionen haben keinen Qualitätstest durchlaufen)."
+
+
+#: lang.c:71
+msgid "User guide"
+msgstr "Handbuch"
+
+
+#: lang.c:72
+msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
+msgstr "Bitte lesen Sie unser  <a href=\"%1\">Handbuch</a> bevor Sie weitere Schritte unternehmen."
+
+
+#: lang.c:73 lang.c:107 lang.c:150
+msgid "Search"
+msgstr "Suche"
+
+
+#: lang.c:74
+msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
+msgstr "Benutzen Sie die <a href=\"%1\">Schnellsuche</a>, es wird wirklich nicht lange dauern."
+
+
+#: lang.c:75
+msgid "Q&#38;A website"
+msgstr "Fragen &#38; Antworten"
+
+
+#: lang.c:76
+msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
+msgstr "Sie können uns unter <a href=\"%1\">Q&#38;A website</a> uns eine Frage stellen. Lessen Sie die <a href=\"%2\">FAQ</a> um sicher zu stellen das Ihr Frage noch nicht beantwortet ist."
+
+
+#: lang.c:77 lang.c:153
+msgid "Super User"
+msgstr "Super User"
+
+
+#: lang.c:78
+msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
+msgstr "Wenn Sie sich mit Super User auskennen, es gibt einen <a href=\"%1\">Synergy Tag</a>."
+
+
+#: lang.c:79
+msgid "Super User is <b>not</b> dedicated to supporting Synergy."
+msgstr "Super User ist <b>nicht</b> für die Unterstützung von Synergy verwandtwörtlich."
+
+
+#: lang.c:80
+msgid "Ask questions; do not nag or comment on bugs or issues."
+msgstr "Stellen Sie Fragen. Nörgeln Sie an und kommentieren Sie Fehler oder Probleme nicht."
+
+
+#: lang.c:81
+msgid "Do not raise new bugs there; use the issue tracker for this."
+msgstr "Tragen Sie keine neue Bugs dort ein, dafür ist der issue tracker."
+
+
+#: lang.c:82
+msgid "Synergy developers do <i>not</i> monitor this website."
+msgstr "Synergy-Entwickler verfolgen die Webseite <i>nicht</i> aktiv."
+
+
+#: lang.c:83
+msgid "Always use the \"synergy\" tag on your question."
+msgstr "Verwenden Sie immer das \"synergy\" Tag bei Ihren Fragen."
+
+
+#: lang.c:84
+msgid "Make sure you mention \"Synergy\" in the question."
+msgstr "Stellen Sie sicher \"Synergy\" in der Frage zu erwähnen."
+
+
+#: lang.c:85
+msgid "IRC"
+msgstr "IRC"
+
+
+#: lang.c:86
+msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
+msgstr "Sie können unserem IRC Kanal beitreten: %1 (für IRC empfehlen wir <a href=\"%2\">XChat</a>)"
+
+
+#: lang.c:87
+msgid "Mailing list"
+msgstr "Mailing-Liste"
+
+
+#: lang.c:88
+msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
+msgstr "Wir haben auch eine <a href=\"%1\">Mailing-Liste</a>.  Bitte posten Sie dort keine Bugs."
+
+
+#: lang.c:89
+msgid "Report a bug"
+msgstr "Fehler melden"
+
+
+#: lang.c:90
+msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
+msgstr "Bitte melden Sie Fehler, wenn Sie alle der oben genannten Optionen erschöpft haben, und Sie sich absolut sicher sind einen Fehler gefunden zu haben. Öffnen Sie einen <a href=\"%1\">neuen Bug Report</a>."
+
+
+#: lang.c:91
+msgid "Urgent Appeal from Synergy"
+msgstr ""
+
+
+#: lang.c:92
+msgid "Sadly our sponsor has cut funding to the Synergy Project because it hasn't been profitable for them. We have now removed their optional toolbar from our installers. We hope that you will help us out by registering for <a href=\"download/\">Synergy Premium</a> for $1 or whatever you feel our work is worth. All funding goes toward fixing bugs and speeding up development time. Thank you for reading!"
+msgstr ""
+
+
+#: lang.c:93
+msgid "Nick Bolton, Project Leader"
+msgstr ""
+
+
+#: lang.c:94
+msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
+msgstr "Mit Synergy können Sie einfach Ihre Tastatur und Maus an mehreren Computern auf Ihrem Schreibtisch nutzen, und es ist Frei und Open Source. Bewegen Sie einfach ihre Maus über den Rand des Bildschirms eines Computers auf den Bildschirm eines anderen. Sie können sogar den Inhalt ihrer Zwischenablage an alle Computer verteilen. Alles was Sie brauchen ist ein Netzwerk-Anschluss. Synergy funktioniert auf Windows, Mac OS X und Linux."
+
+
+#: lang.c:95 lang.c:109
+msgid "Info"
+msgstr "Info"
+
+
+#: lang.c:96
+msgid "Twitter"
+msgstr ""
+
+
+#: lang.c:97
+msgid "Follow Synergy coders!"
+msgstr "Folge Synergy-Programmierern!"
+
+
+#: lang.c:98
+msgid "Key people"
+msgstr "Key People"
+
+
+#: lang.c:99
+msgid "Project leader and primary developer"
+msgstr "Projektleiter und Hauptentwickler"
+
+
+#: lang.c:100
+msgid "Original author and project founder"
+msgstr "Original autor und projekt-gründer"
+
+
+#: lang.c:101
+msgid "Founder of Synergy+ (fork project)"
+msgstr "Gründer von Synergy+ (fork projekt)"
+
+
+#: lang.c:102
+msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
+msgstr "Mit Synergy können Sie Ihre Tastatur und Maus an mehreren Computern auf Ihrem Schreibtisch nutzen."
+
+
+#: lang.c:103
+msgid "Home"
+msgstr "Start"
+
+
+#: lang.c:108 lang.c:144
+msgid "Press"
+msgstr ""
+
+
+#: lang.c:110
+msgid "Blog"
+msgstr "Blog"
+
+
+#: lang.c:111
+msgid "Wiki"
+msgstr "Wiki"
+
+
+#: lang.c:112
+msgid "Tracker"
+msgstr "Tracker"
+
+
+#: lang.c:113
+msgid "Code"
+msgstr "Code"
+
+
+#: lang.c:114
+msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
+msgstr "<b>Willkommen</b>, Synergiy Premium User! Vielen Dank für die Unterstützung unseres Projektes. <a href=\"%1\">Premium account</a>."
+
+
+#: lang.c:115
+msgid "Improve this translation"
+msgstr "Verbessere diese Übersetzung"
+
+
+#: lang.c:116
+msgid "Copyright &copy; 2012 Bolton Software Ltd."
+msgstr ""
+
+
+#: lang.c:117
+msgid "License"
+msgstr "Lizenz"
+
+
+#: lang.c:118 lang.c:149
+msgid "Privacy Policy"
+msgstr "Datenschutzhinweise"
+
+
+#: lang.c:121
+msgid "Support the Synergy project by registering a Synergy Premium account today."
+msgstr ""
+
+
+#: lang.c:122
+msgid "<a href=\"%1\">Register for Synergy Premium</a>."
+msgstr ""
+
+
+#: lang.c:123
+msgid "Login"
+msgstr "Einloggen"
+
+
+#: lang.c:124
+msgid "If you don't have an account, you can <a href=\"%1\">sign up</a>."
+msgstr "Wenn du keinen Account hast, kannst du dich <a href=\"%1\">hier registrieren</a>."
+
+
+#: lang.c:125
+msgid "Email:"
+msgstr "Email:"
+
+
+#: lang.c:126
+msgid "Password:"
+msgstr "Passwort:"
+
+
+#: lang.c:128
+msgid "Welcome to your Synergy Premium account. You have <b>%1</b> unassigned Premium vote(s)."
+msgstr "Willkommen in Ihrem Synergy Premium Account.  Sie haben <b>%1</b> unzugewiesene(n) Premium Vote(s)."
+
+
+#: lang.c:129
+msgid "If you have just signed up and don't see any votes, we may be waiting to hear from PayPal so please be patient. <a href=\"%1\">Check now</a>."
+msgstr "Wenn Sie sich gerade Angemeldet haben und keine Votes sehen, kann es sein das wir noch keine Bestätigung von Paypal erhalten haben. <a href=\"%1\">Jetzt überprüfen</a>."
+
+
+#: lang.c:130
+msgid "Logout"
+msgstr "Abmelden"
+
+
+#: lang.c:131
+msgid "Want more votes?"
+msgstr ""
+
+
+#: lang.c:132
+msgid "Each $10 contribution will give you 1 vote, so for example, $100 will give you 10 votes. Thanks for your support!"
+msgstr ""
+
+
+#: lang.c:133
+msgid "Your votes"
+msgstr "Deine Wahlen"
+
+
+#: lang.c:135
+msgid "You have not cast any votes yet."
+msgstr "Sie haben noch keine Stimme abgegeben."
+
+
 #: lang.c:136
-msgid "Search all Synergy websites from one page."
-msgstr "Suche auf allen Synergy Websiten von einer Seite."
+msgid "Cast new vote"
+msgstr "Stimme abgeben"
 
 
 #: lang.c:137
-msgid "What is searched?"
-msgstr "Was wird durchsucht?"
+msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
+msgstr "Um Premium Stimmen zu nutzen, geben Sie eine ID aus unserem <a href=\"%1\">Issue Tracker</a> ein und die Anzahl zu vergebener Stimmen.  Wählen Sie aufmerksam, eine Stimme kann nur einmalig vergeben werden.  Wenn Sie Probleme mit dem Abstimmsystem haben, bitte schreiben Sie uns eine <a href=\"%2\">Email</a> (bitte keine Bugs an diese Adresse melden, benutzen Sie stattdessen die <a href=\"%3\">Hilfe</a>)."
+
+
+#: lang.c:138
+msgid "Issue ID:"
+msgstr "Fall Kennung:"
 
 
 #: lang.c:139
-msgid "Issue tracker"
-msgstr "Issue-tracker"
-
-
-#: lang.c:140
-msgid "Website wiki"
-msgstr "Website wiki"
+msgid "Votes:"
+msgstr "Stimmen:"
 
 
 #: lang.c:141
-msgid "Mailing lists"
-msgstr "Mailing-listen"
-
-
-#: lang.c:142
-msgid "Search tips"
-msgstr "Suchtipps"
-
-
-#: lang.c:143
-msgid "If you get too many results, try specifying your operating system."
-msgstr "Wenn Sie zu viele Ergebnisse erhalten sollten, versuchen Sie die Angabe Ihres Betriebssystems."
-
-
-#: lang.c:144
-msgid "Sometimes issues are specific to the client or server."
-msgstr "Manche Probleme sind spezifisch für den Client oder Server."
+msgid "Community votes"
+msgstr "Community Stimmen"
 
 
 #: lang.c:145
-msgid "You may find that entering your version number helps."
-msgstr "Manchmal hilft die Eingabe Ihrer Versionsnummer."
+msgid "If you've featured Synergy on your website, thank you! Please let us know so we can link to it."
+msgstr ""
 
 
 #: lang.c:146
-msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
+msgid "Media"
 msgstr ""
 
 
 #: lang.c:147
+msgid "Featured"
+msgstr ""
+
+
+#: lang.c:148
+msgid "Awards"
+msgstr "Auszeichnungen"
+
+
+#: lang.c:151
+msgid "Search all Synergy websites from one page."
+msgstr "Suche auf allen Synergy Websiten von einer Seite."
+
+
+#: lang.c:152
+msgid "What is searched?"
+msgstr "Was wird durchsucht?"
+
+
+#: lang.c:154
+msgid "Issue tracker"
+msgstr "Issue-tracker"
+
+
+#: lang.c:155
+msgid "Website wiki"
+msgstr "Website wiki"
+
+
+#: lang.c:156
+msgid "Mailing lists"
+msgstr "Mailing-listen"
+
+
+#: lang.c:157
+msgid "Search tips"
+msgstr "Suchtipps"
+
+
+#: lang.c:158
+msgid "If you get too many results, try specifying your operating system."
+msgstr "Wenn Sie zu viele Ergebnisse erhalten sollten, versuchen Sie die Angabe Ihres Betriebssystems."
+
+
+#: lang.c:159
+msgid "Sometimes issues are specific to the client or server."
+msgstr "Manche Probleme sind spezifisch für den Client oder Server."
+
+
+#: lang.c:160
+msgid "You may find that entering your version number helps."
+msgstr "Manchmal hilft die Eingabe Ihrer Versionsnummer."
+
+
+#: lang.c:161
+msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
+msgstr "Wenn das nicht funktioniert, benutzen Sie die <a href=\"%1\">alternative Synergy suche</a>."
+
+
+#: lang.c:162
 msgid "Search now"
 msgstr "Jetzt suchen"
 
 
-#: lang.c:148
+#: lang.c:163
 msgid "Loading"
 msgstr "Lädt"
 
 
-#: php/Premium.class.php:260
+#: php/Premium.class.php:262
 msgid "Please enter your name."
 msgstr "Bitte gib deinen Namen ein."
 
 
-#: php/Premium.class.php:263
+#: php/Premium.class.php:265
 msgid "Please enter your email address."
 msgstr "Bitte geben sie ihre E-Mail Adresse ein"
 
 
-#: php/Premium.class.php:266
+#: php/Premium.class.php:268
 msgid "Your email address does not look valid."
 msgstr "Ihre E-Mail Adresse scheint nicht gültig zu sein."
 
 
-#: php/Premium.class.php:269
+#: php/Premium.class.php:271
 msgid "That email address is already in use, are you already registered?"
 msgstr "Diese E-Mail Adresse ist schon in Gebrauch, sind sie bereits registriert?"
 
 
-#: php/Premium.class.php:272
+#: php/Premium.class.php:274
 msgid "The confirm email textbox must match the email address textbox."
 msgstr "Das Bestätigungstextfeld muss mit dem eMailtextfeld übereinstimmen."
 
 
-#: php/Premium.class.php:275
+#: php/Premium.class.php:277
 msgid "Please enter a password."
 msgstr "Bitte ein Passwort eingeben."
 
 
-#: php/Premium.class.php:278
+#: php/Premium.class.php:280
 msgid "The confirm password texbox must match the password textbox."
 msgstr "Das Bestätigungstextfeld muss mit dem Passworttextfeld übereinstimmen."
-
 

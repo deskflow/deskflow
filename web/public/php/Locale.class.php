@@ -39,7 +39,7 @@ class Locale {
     $this->lang = "en";
     
     // right to left text languages
-    $this->rtl = array("ar", "he");
+    $this->rtl = array("ar", "he", "fa");
   }
 
   function fixItefTag($tag) {
