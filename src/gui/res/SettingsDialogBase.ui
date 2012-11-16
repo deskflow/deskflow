@@ -42,6 +42,9 @@
         <property name="text">
          <string>P&amp;ort:</string>
         </property>
+        <property name="buddy">
+         <cstring>m_pSpinBoxPort</cstring>
+        </property>
        </widget>
       </item>
       <item row="2" column="0">
