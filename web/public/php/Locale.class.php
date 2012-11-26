@@ -45,13 +45,19 @@ class Locale {
   function fixItefTag($tag) {
     
     $split = explode("-", $tag);
-    if (count($split) == 2) {
+    if (count($split) >= 2) {
       // if language code and country code are the same, then we have
       // a redudntant itef tag (e.g. de-de or fr-fr).
       // of if some browsers send weird language codes, like numbers
       // for the 2nd part, just send the first part in that case.
-      if ((strtolower($split[0]) == strtolower($split[1])) ||
-          (strlen($split[1]) > 2) || is_numeric($split[1])) {
+      // some itef codes have 3 parts, e.g. zh-hant-tw, which our
+      // rewrite regex won't match.
+      $redundant = strtolower($split[0]) == strtolower($split[1]);
+      $longPart = (strlen($split[0]) > 2) || (strlen($split[1]) > 2);
+      $numeric = is_numeric($split[0]) || is_numeric($split[0]);
+      $longTag = (count($split) > 2);
+      
+      if ($redundant || $longPart || $numeric || $longTag) {
         return strtolower($split[0]);
       }
     }
@@ -61,8 +67,10 @@ class Locale {
   }
 
   function parseHeaderLocale($header) {
-    $first = reset(explode(";", $header));
-    $first = reset(explode(",", $first));
+    $semiColonSplit = explode(";", $header);
+    $first = reset($semiColonSplit);
+    $commaSplit = explode(",", $first);
+    $first = reset($commaSplit);
     $itef = str_replace("_", "-", $first);
     $lower = strtolower($itef);
     if ($lower != "") {
@@ -177,7 +185,8 @@ class Locale {
   }
   
   function getCountry() {
-    return reset(explode("-", $this->lang));
+    $explode = explode("-", $this->lang);
+    return reset($explode);
   }
   
   function getSplashImage() {
