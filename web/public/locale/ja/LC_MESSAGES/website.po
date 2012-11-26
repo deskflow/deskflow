@@ -222,7 +222,7 @@ msgstr "たとえ 1ドルのご支援であっても私たちにとってはと�
 
 #: lang.c:54
 msgid "If you decide to contribute $10, then you get a premium vote. For each additional $10, you get another vote. You can cast this vote on any bug or feature. We will try our best to fix the highest voted feature in the next version. If we can't fix it then you get your votes back, simple."
-msgstr ""
+msgstr "Ako odlučite donirati $10, onda dobivate premium glas. Za svakih dodatnih $10, dobivate dodatni glas. Taj glas možete dati bilo kojoj grešci ili značajki. Potrudit ćemo se da popravimo grešku ili dodamo značajku s najvišim brojem glasova u sljedećem izdanju Synergy-a. Ako ne uspijemo popraviti tada dobivate vaš glas natrag, vrlo jednostavno."
 
 
 #: lang.c:55

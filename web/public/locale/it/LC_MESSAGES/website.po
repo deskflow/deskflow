@@ -132,7 +132,7 @@ msgstr "Downloads alternativi"
 
 #: lang.c:35
 msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution."
-msgstr ""
+msgstr "Grazie per aver offerto la tua donazione!Aprrezziamo molto il tuo supporto.Abbiamo rimpiazzato il nostro bottone donazioni con quello Synergy Premium.E' donando che ti sarà data in cambio la possibilità di lasciare un voto per contribuire."
 
 
 #: lang.c:36 lang.c:105 lang.c:119
@@ -162,12 +162,12 @@ msgstr ""
 
 #: lang.c:41 lang.c:45
 msgid "Continue"
-msgstr ""
+msgstr "Continua"
 
 
 #: lang.c:42
 msgid "or"
-msgstr ""
+msgstr "oppure"
 
 
 #: lang.c:43
@@ -202,7 +202,7 @@ msgstr ""
 
 #: lang.c:50 lang.c:143
 msgid "No votes."
-msgstr ""
+msgstr "Nessun voto."
 
 
 #: lang.c:51 lang.c:57 lang.c:66
@@ -382,7 +382,7 @@ msgstr "Lista di notifica via e-mail"
 
 #: lang.c:88
 msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
-msgstr ""
+msgstr "Abbiamo anche<a href=\"%1\">una mailing list</a>.Non segnalare bugs nella mailing list."
 
 
 #: lang.c:89
@@ -522,17 +522,17 @@ msgstr ""
 
 #: lang.c:123
 msgid "Login"
-msgstr ""
+msgstr "Accedi"
 
 
 #: lang.c:124
 msgid "If you don't have an account, you can <a href=\"%1\">sign up</a>."
-msgstr ""
+msgstr "Se non hai un account,puoi <a href=\"%1\">registrarti</a>"
 
 
 #: lang.c:125
 msgid "Email:"
-msgstr ""
+msgstr "Email:"
 
 
 #: lang.c:126
@@ -542,12 +542,12 @@ msgstr ""
 
 #: lang.c:128
 msgid "Welcome to your Synergy Premium account. You have <b>%1</b> unassigned Premium vote(s)."
-msgstr ""
+msgstr "Benvenuto nel tua account Synergy Premium.Hai<b>%1</b> un voto Premium da assegnare(s)."
 
 
 #: lang.c:129
 msgid "If you have just signed up and don't see any votes, we may be waiting to hear from PayPal so please be patient. <a href=\"%1\">Check now</a>."
-msgstr ""
+msgstr "Se ti sei registrato ed hai effettuato l'acceso ma non vedi nessun voto,bisognerà aspettare la risposta da PayPal, perfavore abbi pazienza.<a href=\"%1\">Controlla ora</a>."
 
 
 #: lang.c:130
@@ -567,17 +567,17 @@ msgstr ""
 
 #: lang.c:133
 msgid "Your votes"
-msgstr ""
+msgstr "I tuoi voti"
 
 
 #: lang.c:135
 msgid "You have not cast any votes yet."
-msgstr ""
+msgstr "Non hai espresso alcun voto ancora."
 
 
 #: lang.c:136
 msgid "Cast new vote"
-msgstr ""
+msgstr "Esprimi un nuovo voto"
 
 
 #: lang.c:137
@@ -597,7 +597,7 @@ msgstr ""
 
 #: lang.c:141
 msgid "Community votes"
-msgstr ""
+msgstr "Voti della comunità"
 
 
 #: lang.c:145
@@ -682,35 +682,35 @@ msgstr ""
 
 #: php/Premium.class.php:262
 msgid "Please enter your name."
-msgstr ""
+msgstr "Per favore inserisci il tuo nome."
 
 
 #: php/Premium.class.php:265
 msgid "Please enter your email address."
-msgstr ""
+msgstr "Per favore inserisci il tuo indirizzo Email."
 
 
 #: php/Premium.class.php:268
 msgid "Your email address does not look valid."
-msgstr ""
+msgstr "Il tuo indirizzo Email non sembra essere valido."
 
 
 #: php/Premium.class.php:271
 msgid "That email address is already in use, are you already registered?"
-msgstr ""
+msgstr "Questo indirizzo Email è già in uso,sei già registrato?"
 
 
 #: php/Premium.class.php:274
 msgid "The confirm email textbox must match the email address textbox."
-msgstr ""
+msgstr "La casella testo nella conferma email deve corrispondere con la casella testo dove è stato inserita la email."
 
 
 #: php/Premium.class.php:277
 msgid "Please enter a password."
-msgstr ""
+msgstr "Per favore immetti la parola chiave."
 
 
 #: php/Premium.class.php:280
 msgid "The confirm password texbox must match the password textbox."
-msgstr ""
+msgstr "Per confermare la password la casella testo deve corrispondere con con la casella dove hai inserito la passsword."
 

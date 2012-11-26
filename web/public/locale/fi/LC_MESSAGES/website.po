@@ -232,7 +232,7 @@ msgstr ""
 
 #: lang.c:56 lang.c:127 lang.c:140
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 
 #: lang.c:58 lang.c:120
@@ -532,7 +532,7 @@ msgstr ""
 
 #: lang.c:125
 msgid "Email:"
-msgstr ""
+msgstr "Sähköposti:"
 
 
 #: lang.c:126

@@ -317,12 +317,12 @@ msgstr "<a href=\"%1\">Brzo pretražite</a>, to stvarno ne traje dugo."
 
 #: lang.c:75
 msgid "Q&#38;A website"
-msgstr "Q&#38;Web stranica"
+msgstr "Web stranica odgovora &#38; pitanja"
 
 
 #: lang.c:76
 msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
-msgstr "Možete postaviti pitanja na našoj <a href=\"%1\">Q&#38;A web stranici</a>. Pročitajte <a href=\"%2\">Često postavljana pitanja</a> kako bi bili sigurni da vaše pitanje nije zatvoreno."
+msgstr "Možete postaviti pitanja na našoj <a href=\"%1\">Web stranici odgovora &#38; pitanja</a>. Pročitajte <a href=\"%2\">Često postavljana pitanja</a> kako bi bili sigurni da vaše pitanje nije zatvoreno."
 
 
 #: lang.c:77 lang.c:153
@@ -347,7 +347,7 @@ msgstr "Postavite pitanja, ne prigovarajte ili ne komentirajte o greškama ili p
 
 #: lang.c:81
 msgid "Do not raise new bugs there; use the issue tracker for this."
-msgstr "Ne otvarajte novu prijavu o grešci; koristite pratitelj problema za to."
+msgstr "Ne otvarajte novu prijavu o grešci, koristite pratitelj problema u tu svrhu."
 
 
 #: lang.c:82
@@ -647,7 +647,7 @@ msgstr "Mailing lista"
 
 #: lang.c:157
 msgid "Search tips"
-msgstr "Svajeti pretraživanja"
+msgstr "Savjeti pretraživanja"
 
 
 #: lang.c:158

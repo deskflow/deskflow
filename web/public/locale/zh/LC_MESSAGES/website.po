@@ -217,7 +217,7 @@ msgstr ""
 
 #: lang.c:53
 msgid "If you can only contribute $1, that's totally fine by us! Anything at all will allow us to spend more time working on Synergy."
-msgstr ""
+msgstr "哪怕您只能贡献一美元，对我们来说也非常不错了！不论多少都将支持我们投入更多时间来改进Synergy。"
 
 
 #: lang.c:54
@@ -682,32 +682,32 @@ msgstr "载入中......"
 
 #: php/Premium.class.php:262
 msgid "Please enter your name."
-msgstr ""
+msgstr "请输入您的姓名"
 
 
 #: php/Premium.class.php:265
 msgid "Please enter your email address."
-msgstr ""
+msgstr "请输入您的Email地址"
 
 
 #: php/Premium.class.php:268
 msgid "Your email address does not look valid."
-msgstr ""
+msgstr "您的Email地址不符合要求"
 
 
 #: php/Premium.class.php:271
 msgid "That email address is already in use, are you already registered?"
-msgstr ""
+msgstr "此Email地址已注册，您是不是曾经注册过？"
 
 
 #: php/Premium.class.php:274
 msgid "The confirm email textbox must match the email address textbox."
-msgstr ""
+msgstr "Email地址确认栏与Email地址栏内容必须一致。"
 
 
 #: php/Premium.class.php:277
 msgid "Please enter a password."
-msgstr ""
+msgstr "请输入一个密码。"
 
 
 #: php/Premium.class.php:280

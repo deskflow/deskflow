@@ -372,7 +372,7 @@ msgstr "IRC"
 
 #: lang.c:86
 msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
-msgstr "Du kan ansluta till vår IRC kanal: %1 (du kan använda t.ex <a href=\"%2\">XChat</a> för att ansluta)"
+msgstr "Du kan ansluta till vår IRC-kanal: %1 (du kan använda t.ex <a href=\"%2\">XChat</a> för att ansluta)"
 
 
 #: lang.c:87
