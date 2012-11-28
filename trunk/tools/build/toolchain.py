@@ -1039,7 +1039,7 @@ class InternalCommands:
 		elif generator.startswith('Visual Studio 10'):
 			value,type = _winreg.QueryValueEx(key, '10.0')
 		else:
-			raise Exception('Cannot determin vcvarsall.bat location for: ' + generator)
+			raise Exception('Cannot determine vcvarsall.bat location for: ' + generator)
 		
 		# not sure why, but the value on 64-bit differs slightly to the original
 		if os_bits == '64bit':
