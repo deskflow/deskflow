@@ -303,6 +303,7 @@ if (VNC_SUPPORT)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(tools)
 
 if (WIN32)
 	# add /analyze in order to unconver potential bugs in the source code
