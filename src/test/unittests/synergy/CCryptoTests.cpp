@@ -17,7 +17,6 @@
  */
 
 #include <gtest/gtest.h>
-#include "CClipboard.h"
 #include <string>
 #include "gcm.h"
 #include "aes.h"
