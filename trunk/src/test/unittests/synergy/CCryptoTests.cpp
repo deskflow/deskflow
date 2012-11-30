@@ -25,7 +25,7 @@
 using namespace std;
 using namespace CryptoPP;
 
-/*TEST(CCryptoTests, encrypt)
+TEST(CCryptoTests, encrypt)
 {
 	string plaintext = "hello", ciphertext;
 	const byte key[] = "123456781234567";
@@ -58,4 +58,3 @@ TEST(CCryptoTests, decrypt)
 	
 	EXPECT_EQ("hello", plaintext);
 }
-*/
