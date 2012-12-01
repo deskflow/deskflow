@@ -294,14 +294,16 @@ class Premium {
     return (int)($row[0]);
   }
   
-  public function saveIpnData($userId, $email, $data, $check) {
+  public function saveIpnData($userId, $email, $data, $check, $amount) {
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
-      "insert into paypal (userId, email, ipnData, ipnCheck, created) values (%d, '%s', '%s', '%s', now())",
+      "insert into paypal (userId, email, ipnData, ipnCheck, amount, created) ".
+      "values (%d, '%s', '%s', '%s', %f, now())",
       (int)$userId,
       $mysql->escape_string($email),
       $mysql->escape_string($data),
-      $mysql->escape_string($check)
+      $mysql->escape_string($check),
+      (float)$amount
     ));
     if ($result == null) {
       throw new Exception($mysql->error);
@@ -359,7 +361,7 @@ class Premium {
     $payer_email = $_POST["payer_email"];
     $userId = $_POST["custom"];
     
-    $this->saveIpnData($userId, $payer_email, json_encode($_POST), $res);
+    $this->saveIpnData($userId, $payer_email, json_encode($_POST), $res, $payment_amount);
     
     if ($res == "VERIFIED" && $payment_status == "Completed") {
       $this->assignVotesFromFunds($userId, $payment_amount);
@@ -434,7 +436,8 @@ class Premium {
   public function saveGoogleWalletNotify($userId, $email, $amount, $data) {
     $mysql = $this->getMysql();
     $result = $mysql->query(sprintf(
-      "insert into gwallet (userId, email, amount, data, created) values (%d, '%s', %f, '%s', now())",
+      "insert into gwallet (userId, email, amount, data, created) ".
+      "values (%d, '%s', %f, '%s', now())",
       (int)$userId,
       $mysql->escape_string($email),
       (float)$amount,
