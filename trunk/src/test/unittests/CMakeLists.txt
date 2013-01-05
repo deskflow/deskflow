@@ -28,7 +28,7 @@ set(src
 	synergy/CClipboardTests.cpp
 	synergy/CKeyStateTests.cpp
 	client/CServerProxyTests.cpp
-	synergy/CCryptoTests.cpp
+#	synergy/CCryptoTests.cpp
 )
 
 set(inc
@@ -43,7 +43,7 @@ set(inc
 	../../lib/synergy
 	../../../tools/gtest-1.6.0/include
 	../../../tools/gmock-1.6.0/include
-	../../../tools/cryptopp561
+#	../../../tools/cryptopp561
 	io
 	synergy
 )
@@ -63,4 +63,4 @@ endif()
 include_directories(${inc})
 add_executable(unittests ${src})
 target_link_libraries(unittests
-	arch base client common io net platform server synergy mt gtest gmock cryptopp ${libs})
+	arch base client common io net platform server synergy mt gtest gmock ${libs})
