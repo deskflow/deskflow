@@ -14,13 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(cpp_dir cryptopp561)
+#set(cpp_dir cryptopp561)
 
-file(GLOB cpp_src ${cpp_dir}/*.cpp)
+#file(GLOB cpp_src ${cpp_dir}/*.cpp)
 
-if (WIN32)
-  file(GLOB cpp_hdr ${cpp_dir}/*.h)
-	list(APPEND cpp_src ${cpp_hdr})
-endif()
+#if (WIN32)
+#  file(GLOB cpp_hdr ${cpp_dir}/*.h)
+#	list(APPEND cpp_src ${cpp_hdr})
+#endif()
 
-add_library(cryptopp STATIC ${cpp_src})
+#add_library(cryptopp STATIC ${cpp_src})
