@@ -514,6 +514,10 @@ static void sUpdateContext(uSynergyContext *context)
 	/* Eat packets */
 	for (;;)
 	{
+		/* If less than 4 bytes left in buffer, we can't even get the next packet length yet */
+		if(context->m_receiveOfs < 4)
+			return;
+
 		/* Grab packet length and bail out if the packet goes beyond the end of the buffer */
 		packlen = sNetToNative32(context->m_receiveBuffer);
 		if (packlen+4 > context->m_receiveOfs)
