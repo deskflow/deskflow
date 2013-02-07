@@ -167,6 +167,21 @@ static void sSendMouseCallback(uSynergyContext *context)
 
 
 /**
+@brief Call mouse relative callback after a mouse event
+**/
+static void sSendMouseRelativeCallback(uSynergyContext *context, int16_t x, int16_t y)
+{
+	// Skip if no callback is installed
+	if (context->m_mouseRelativeCallback == 0L)
+		return;
+
+	// Send callback
+	context->m_mouseRelativeCallback(context->m_cookie, x, y);
+}
+
+
+
+/**
 @brief Send keyboard callback when a key has been pressed or released
 **/
 static void sSendKeyboardCallback(uSynergyContext *context, uint16_t key, uint16_t modifiers, uSynergyBool down, uSynergyBool repeat)
@@ -319,6 +334,12 @@ static void sProcessMessage(uSynergyContext *context, const uint8_t *message)
 		context->m_mouseY = sNetToNative16(message+10);
 		sSendMouseCallback(context);
 	}
+	else if (USYNERGY_IS_PACKET("DMRM"))
+	{
+		// Mouse relative. Reply with CNOP
+		//		kMsgDMouseRelMove	= "DMRM%2i%2i"
+		sSendMouseRelativeCallback(context, sNetToNative16(message+8), sNetToNative16(message+10));
+	}
 	else if (USYNERGY_IS_PACKET("DMWM"))
 	{
 		// Mouse wheel
@@ -437,7 +458,6 @@ static void sProcessMessage(uSynergyContext *context, const uint8_t *message)
 		//		kMsgCScreenSaver 	= "CSEC%1i"
 		//		kMsgDKeyRepeat		= "DKRP%2i%2i%2i%2i"
 		//		kMsgDKeyRepeat1_0	= "DKRP%2i%2i%2i"
-		//		kMsgDMouseRelMove	= "DMRM%2i%2i"
 		//		kMsgEIncompatible	= "EICV%2i%2i"
 		//		kMsgEBusy 			= "EBSY"
 		//		kMsgEUnknown		= "EUNK"
