@@ -78,6 +78,7 @@ class Website {
     $smarty->assign("langDir", $locale->getLangDir());
     $smarty->assign("splashImage", $locale->getSplashImage());
     $smarty->assign("premium", $this->premium);
+    $smarty->assign("year", date("Y"));
 
     if ($page == "download") {
       
