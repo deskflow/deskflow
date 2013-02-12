@@ -567,9 +567,26 @@ div.download-premium ol.votes {
   padding-left: 1.5em;
 }
 
-div.home div.appeal {
+div.caution h2 {
+  padding-top: 0.7em;
+  padding-bottom: 0.2em;
+}
+
+div.caution {
   background-color: #fffded;
   border: 1px solid #ffd83a;
+  padding: 0px 10px 0px 10px;
+  margin-bottom: 10px;
+}
+
+div.download-premium div.caution {
+  margin-right: 6px;
+}
+
+div.greenNotice {
+  background-color: #e0ffe0;
+  color: green;
+  border: 1px solid green;
   padding: 0px 10px 0px 10px;
   margin-bottom: 10px;
 }
