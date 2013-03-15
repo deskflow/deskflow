@@ -115,6 +115,9 @@ CLog::getFilterName() const
 const char*
 CLog::getFilterName(int level) const
 {
+	if (level < 0) {
+		return "Message";
+	}
 	return g_priority[level];
 }
 

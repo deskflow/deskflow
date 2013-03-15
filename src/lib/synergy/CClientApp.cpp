@@ -205,9 +205,9 @@ CClientApp::help()
 		"must be the address or hostname of the server.  The port overrides the\n"
 		"default port, %d.\n",
 		args().m_pname, kDefaultPort
-		);
+	);
 
-	std::cout << buffer << std::endl;
+	LOG((CLOG_PRINT "%s", buffer));
 }
 
 const char*

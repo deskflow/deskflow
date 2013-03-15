@@ -17,6 +17,9 @@
  */
 
 #include "CClientApp.h"
+#include "CLog.h"
+#include "CArch.h"
+#include "CEventQueue.h"
 
 #if WINAPI_MSWINDOWS
 #include "CMSWindowsClientTaskBarReceiver.h"
@@ -31,6 +34,17 @@
 int
 main(int argc, char** argv) 
 {
+#if SYSAPI_WIN32
+	// record window instance for tray icon, etc
+	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+#endif
+	
+	CArch arch;
+	arch.init();
+
+	CLog log;
+	CEventQueue events;
+
 	CClientApp app(createTaskBarReceiver);
 	return app.run(argc, argv);
 }
