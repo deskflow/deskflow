@@ -17,6 +17,7 @@
 set(inc
 	CClientTaskBarReceiver.h
 	CServerTaskBarReceiver.h
+	CPortableTaskBarReceiver.h
 	CApp.h
 	CClientApp.h
 	CServerApp.h
@@ -54,6 +55,7 @@ set(inc
 set(src
 	CClientTaskBarReceiver.cpp
 	CServerTaskBarReceiver.cpp
+	CPortableTaskBarReceiver.cpp
 	CApp.cpp
 	CClientApp.cpp
 	CServerApp.cpp

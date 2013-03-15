@@ -198,7 +198,7 @@ CServerApp::help()
 		ARCH->concatPath(ARCH->getSystemDirectory(), SYS_CONFIG_NAME).c_str()
 	);
 
-	std::cout << buffer << std::endl;
+	LOG((CLOG_PRINT "%s", buffer));
 }
 
 void

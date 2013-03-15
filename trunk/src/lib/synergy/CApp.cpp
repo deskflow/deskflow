@@ -153,6 +153,14 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		argsBase().m_enableIpc = true;
 	}
 
+	else if (isArg(i, argc, argv, NULL, "--server")) {
+		// HACK: stop error happening when using portable (synergyp) 
+	}
+
+	else if (isArg(i, argc, argv, NULL, "--client")) {
+		// HACK: stop error happening when using portable (synergyp) 
+	}
+
 #if VNC_SUPPORT
 	else if (isArg(i, argc, argv, NULL, "--vnc")) {
 		argsBase().m_enableVnc = true;
@@ -244,18 +252,7 @@ CApp::version()
 
 int
 CApp::run(int argc, char** argv)
-{
-#if SYSAPI_WIN32
-	// record window instance for tray icon, etc
-	CArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-
-	CArch arch;
-	arch.init();
-
-	CLog log;
-	CEventQueue events;
-
+{	
 #if MAC_OS_X_VERSION_10_7
 	// dock hide only supported on lion :(
 	ProcessSerialNumber psn = { 0, kCurrentProcess };

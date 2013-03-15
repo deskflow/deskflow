@@ -153,4 +153,20 @@ private:
 	CBuffer				m_buffer;
 };
 
+//! Write log to message box
+/*!
+The level for each message is ignored.
+*/
+class CMesssageBoxLogOutputter : public ILogOutputter {
+public:
+	CMesssageBoxLogOutputter();
+	virtual ~CMesssageBoxLogOutputter();
+
+	// ILogOutputter overrides
+	virtual void		open(const char* title);
+	virtual void		close();
+	virtual void		show(bool showIfEmpty);
+	virtual bool		write(ELevel level, const char* message);
+};
+
 #endif
