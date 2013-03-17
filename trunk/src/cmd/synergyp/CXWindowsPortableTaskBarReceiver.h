@@ -34,5 +34,3 @@ public:
 	virtual void		primaryAction();
 	virtual const Icon	getIcon() const;
 };
-
-#endif
