@@ -1,7 +1,7 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2012 Bolton Software Ltd.
- * Copyright (C) 2011 Nick Bolton
+ * Copyright (C) 2002 Chris Schoeneman
  * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,13 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
+#pragma once
+
 #include "CCrypto.h"
 
-using namespace std;
+#include "cryptlib.h"
+#include "default.h"
+#include "modes.h"
+#include "aes.h"
+#include "randpool.h"
+#include "files.h"
+#include "hex.h"
+#include "rsa.h"
+#include <time.h>
 
-TEST(CCryptoTests, test)
+using namespace CryptoPP;
+
+static OFB_Mode<AES>::Encryption s_globalRNG;
+
+void CCrypto::test()
 {
-    CCrypto crypto;
-    crypto.test();
+    std::string seed = IntToString(time(NULL));
+    seed.resize(16);
+    s_globalRNG.SetKeyWithIV((byte *)seed.data(), 16, (byte *)seed.data());
 }

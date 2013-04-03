@@ -50,6 +50,7 @@ set(inc
 	IAppUtil.h
 	CEventGameDevice.h
 	CVncClient.h
+  CCrypto.h
 )
 
 set(src
@@ -81,6 +82,7 @@ set(src
 	CEventGameDevice.cpp
 	CVncClient.cpp
 	CGameDevice.cpp
+  CCrypto.cpp
 )
 
 if (WIN32)
@@ -112,7 +114,7 @@ set(inc
 	../server
 	../synergy
 	../..
-	../../vnc/common
+	../../../tools/cryptopp562
 )
 
 if (UNIX)
@@ -129,5 +131,5 @@ include_directories(${inc})
 add_library(synergy STATIC ${src})
 
 if (UNIX)
-	target_link_libraries(synergy arch client ipc net base platform mt server)
+	target_link_libraries(synergy arch client ipc net base platform mt server cryptopp)
 endif()
