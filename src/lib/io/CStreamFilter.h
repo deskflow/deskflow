@@ -20,6 +20,7 @@
 #define CSTREAMFILTER_H
 
 #include "IStream.h"
+#include "IEventQueue.h"
 
 //! A stream filter
 /*!
@@ -33,8 +34,8 @@ public:
 	this object takes ownership of the stream and will delete it in the
 	d'tor.
 	*/
-	CStreamFilter(synergy::IStream* stream, bool adoptStream = true);
-	~CStreamFilter();
+	CStreamFilter(IEventQueue& eventQueue, synergy::IStream* stream, bool adoptStream = true);
+	virtual ~CStreamFilter();
 
 	// IStream overrides
 	// These all just forward to the underlying stream except getEventTarget.

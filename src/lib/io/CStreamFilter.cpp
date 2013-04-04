@@ -24,20 +24,21 @@
 // CStreamFilter
 //
 
-CStreamFilter::CStreamFilter(synergy::IStream* stream, bool adoptStream) :
+CStreamFilter::CStreamFilter(IEventQueue& eventQueue, synergy::IStream* stream, bool adoptStream) :
+	IStream(eventQueue),
 	m_stream(stream),
 	m_adopted(adoptStream)
 {
 	// replace handlers for m_stream
-	EVENTQUEUE->removeHandlers(m_stream->getEventTarget());
-	EVENTQUEUE->adoptHandler(CEvent::kUnknown, m_stream->getEventTarget(),
+	m_eventQueue.removeHandlers(m_stream->getEventTarget());
+	m_eventQueue.adoptHandler(CEvent::kUnknown, m_stream->getEventTarget(),
 							new TMethodEventJob<CStreamFilter>(this,
 								&CStreamFilter::handleUpstreamEvent));
 }
 
 CStreamFilter::~CStreamFilter()
 {
-	EVENTQUEUE->removeHandler(CEvent::kUnknown, m_stream->getEventTarget());
+	m_eventQueue.removeHandler(CEvent::kUnknown, m_stream->getEventTarget());
 	if (m_adopted) {
 		delete m_stream;
 	}
@@ -106,7 +107,7 @@ CStreamFilter::getStream() const
 void
 CStreamFilter::filterEvent(const CEvent& event)
 {
-	EVENTQUEUE->dispatchEvent(CEvent(event.getType(),
+	m_eventQueue.dispatchEvent(CEvent(event.getType(),
 						getEventTarget(), event.getData()));
 }
 

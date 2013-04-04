@@ -50,7 +50,7 @@ set(inc
 	IAppUtil.h
 	CEventGameDevice.h
 	CVncClient.h
-  CCrypto.h
+	CCryptoStream.h
 )
 
 set(src
@@ -82,7 +82,7 @@ set(src
 	CEventGameDevice.cpp
 	CVncClient.cpp
 	CGameDevice.cpp
-  CCrypto.cpp
+	CCryptoStream.cpp
 )
 
 if (WIN32)
@@ -114,7 +114,7 @@ set(inc
 	../server
 	../synergy
 	../..
-	../../../tools/cryptopp562
+	../../../tools
 )
 
 if (UNIX)
