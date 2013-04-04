@@ -304,6 +304,9 @@ CMesssageBoxLogOutputter::write(ELevel level, const char* msg)
 		return true;
 	}
 
+#if SYSAPI_WIN32
 	MessageBox(NULL, msg, CLOG->getFilterName(level), MB_OK);
+#endif
+
 	return true;
 }
