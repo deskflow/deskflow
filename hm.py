@@ -42,10 +42,12 @@ if os.path.exists('build/toolchain.py'):
 from build import toolchain
 from getopt import gnu_getopt
 
-# minimum required version
-# 2.7 needed for ZipFile.extractall
+# minimum required version.
+# 2.6 needed for ZipFile.extractall.
+# do not change to 2.7, as the build machines are still at 2.6
+# and are a massive pain in the ass to upgrade.
 requiredMajor = 2
-requiredMinor = 7
+requiredMinor = 6
 
 # options used by all commands
 globalOptions = 'v'
