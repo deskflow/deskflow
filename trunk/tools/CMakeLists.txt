@@ -22,4 +22,9 @@ if (WIN32)
 	list(APPEND cpp_src ${cpp_hdr})
 endif()
 
+if (APPLE)
+	# osx goes bat-shit crazy if we dont use these magical arguments.
+	set (CMAKE_CXX_FLAGS "-O2 -DCRYPTOPP_DISABLE_ASM -pipe -Wno-tautological-compare")
+endif()
+
 add_library(cryptopp STATIC ${cpp_src})
