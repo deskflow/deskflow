@@ -15,8 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
 #include "CCryptoStream.h"
 
 // TODO: these are just for testing -- make sure they're gone by release!
