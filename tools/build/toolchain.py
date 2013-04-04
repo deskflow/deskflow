@@ -16,7 +16,7 @@
 
 # TODO: split this file up, it's too long!
 
-import sys, os, ConfigParser, shutil, re, ftputil
+import sys, os, ConfigParser, shutil, re, ftputil, zipfile
 from generators import Generator, EclipseGenerator, MakefilesGenerator
 
 if sys.version_info >= (2, 4):
@@ -40,6 +40,7 @@ class InternalCommands:
 	cmake_dir = 'res'
 	gui_dir = 'src/gui'
 	doc_dir = 'doc'
+	toolsDir = 'tools'
 
 	sln_filename = '%s.sln' % project
 	xcodeproj_filename = '%s.xcodeproj' % project
@@ -70,6 +71,9 @@ class InternalCommands:
 	
 	# by default, let cmake decide
 	macSdk = None
+	
+	# cryptoPP dir with version number
+	cryptoPPDir = 'cryptopp562'
 
 	win32_generators = {
 		1 : Generator('Visual Studio 10'),
@@ -135,6 +139,22 @@ class InternalCommands:
 		for target in targets:
 			self.configure(target)
 
+	def checkCryptoPP(self):
+    
+		dir = self.toolsDir + '/' + self.cryptoPPDir
+		if (os.path.isdir(dir)):
+			return
+		
+		zipFilename = dir + '.zip'
+		if (not os.path.exists(zipFilename)):
+			raise Exception('Crypto++ zip not found at: ' + zipFilename)
+		
+		if not os.path.exists(dir):
+				os.mkdir(dir)
+		
+		zip = zipfile.ZipFile(zipFilename)
+		zip.extractall(dir)
+
 	def configure(self, target='', extraArgs=''):
 		
 		cmake_args = ''
@@ -145,7 +165,7 @@ class InternalCommands:
 		
 		# ensure that we have access to cmake
 		_cmake_cmd = self.persist_cmake()
-
+    
 		# now that we know we've got the latest setup, we can ask the config
 		# file for the generator (but again, we only fall back to this if not 
 		# specified as arg).
@@ -190,6 +210,9 @@ class InternalCommands:
 		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
+
+		# ensure that the cryptopp source exists
+		self.checkCryptoPP()
 		
 		if extraArgs != '':
 			cmake_args += ' ' + extraArgs
