@@ -158,9 +158,9 @@ public:
 
 	//@}
 
-private:
-	IEventQueue& m_eventQueue;
+	IEventQueue&			m_eventQueue;
 
+private:
 	static CEvent::Type	s_inputReadyEvent;
 	static CEvent::Type	s_outputFlushedEvent;
 	static CEvent::Type	s_outputErrorEvent;

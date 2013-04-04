@@ -28,7 +28,7 @@ set(src
 	synergy/CClipboardTests.cpp
 	synergy/CKeyStateTests.cpp
 	client/CServerProxyTests.cpp
-	synergy/CCryptoTests.cpp
+	synergy/CCryptoStreamTests.cpp
 )
 
 set(inc
@@ -43,7 +43,7 @@ set(inc
 	../../lib/synergy
 	../../../tools/gtest-1.6.0/include
 	../../../tools/gmock-1.6.0/include
-#	../../../tools/cryptopp561
+	../../../tools
 	io
 	synergy
 )
