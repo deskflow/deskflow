@@ -43,8 +43,9 @@ from build import toolchain
 from getopt import gnu_getopt
 
 # minimum required version
+# 2.7 needed for ZipFile.extractall
 requiredMajor = 2
-requiredMinor = 3
+requiredMinor = 7
 
 # options used by all commands
 globalOptions = 'v'

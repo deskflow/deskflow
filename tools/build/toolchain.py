@@ -19,7 +19,7 @@
 import sys, os, ConfigParser, shutil, re, ftputil, zipfile
 from generators import Generator, EclipseGenerator, MakefilesGenerator
 
-if sys.version_info >= (2, 7):
+if sys.version_info >= (2, 4):
 	import subprocess
 
 class InternalCommands:
