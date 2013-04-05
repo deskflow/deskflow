@@ -36,7 +36,7 @@ main(int argc, char **argv)
 	arch.init();
 	
 	CLog log;
-	log.setFilter(kDEBUG2);
+	log.setFilter(kDEBUG4);
 
 	testing::InitGoogleTest(&argc, argv);
 

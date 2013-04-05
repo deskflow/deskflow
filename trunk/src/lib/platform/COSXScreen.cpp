@@ -1499,7 +1499,7 @@ COSXScreen::updateScreenShape()
 	// We want to notify the peer screen whether we are primary screen or not
 	sendEvent(getShapeChangedEvent());
 
-	LOG((CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s (%s)",
+	LOG((CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s",
          m_x, m_y, m_w, m_h, displayCount,
          (displayCount == 1) ? "display" : "displays"));
 }

@@ -28,6 +28,7 @@
 #include "CLog.h"
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
+#include "CCryptoStream.h"
 
 //
 // CClientListener
@@ -143,6 +144,10 @@ CClientListener::handleClientConnecting(const CEvent&, void*)
 		stream = m_streamFilterFactory->create(stream, true);
 	}
 	stream = new CPacketStreamFilter(stream, true);
+	
+	if (s_cryptoEnabled) {
+		stream = new CCryptoStream(*EVENTQUEUE, stream, true);
+	}
 
 	assert(m_server != NULL);
 

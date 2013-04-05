@@ -35,7 +35,6 @@ CClientProxy::CClientProxy(const CString& name, synergy::IStream* stream) :
 	CBaseClientProxy(name),
 	m_stream(stream)
 {
-	// do nothing
 }
 
 CClientProxy::~CClientProxy()

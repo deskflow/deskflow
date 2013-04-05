@@ -84,6 +84,8 @@ private:
 
 	static CEvent::Type		s_connectedEvent;
 	CServer*				m_server;
+
+	static const bool		s_cryptoEnabled = true;
 };
 
 #endif

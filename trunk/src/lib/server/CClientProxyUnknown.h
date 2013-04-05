@@ -76,7 +76,7 @@ private:
 	void				handleReady(const CEvent&, void*);
 
 private:
-	synergy::IStream*			m_stream;
+	synergy::IStream*	m_stream;
 	CEventQueueTimer*	m_timer;
 	CClientProxy*		m_proxy;
 	bool				m_ready;

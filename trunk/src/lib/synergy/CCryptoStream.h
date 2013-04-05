@@ -20,6 +20,7 @@
 #include "BasicTypes.h"
 #include "CStreamFilter.h"
 #include "cryptopp562/gcm.h"
+//#include "cryptopp562/modes.h"
 #include "cryptopp562/aes.h"
 
 //! Bidirectional encrypted stream
@@ -28,7 +29,7 @@ Encrypts (on write) and decrypts (on read) to and from an underlying stream.
 */
 class CCryptoStream : public CStreamFilter {
 public:
-	CCryptoStream(IEventQueue& eventQueue, synergy::IStream* stream);
+	CCryptoStream(IEventQueue& eventQueue, synergy::IStream* stream, bool adoptStream = true);
 	virtual ~CCryptoStream();
 
 	//! @name manipulators
@@ -51,4 +52,8 @@ private:
 	// TODO: allow user to change between GCM/CTR/CFB
 	CryptoPP::GCM<CryptoPP::AES>::Encryption		m_encryption;
 	CryptoPP::GCM<CryptoPP::AES>::Decryption		m_decryption;
+	//CryptoPP::CTR_Mode<CryptoPP::AES>::Encryption		m_encryption;
+	//CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption		m_decryption;
+
+	void				logBuffer(const char* name, const byte* buf, int length);
 };

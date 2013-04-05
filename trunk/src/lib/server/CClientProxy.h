@@ -25,6 +25,8 @@
 
 namespace synergy { class IStream; }
 
+const int g_encryptionEnabled = true;
+
 //! Generic proxy for client
 class CClientProxy : public CBaseClientProxy {
 public:
@@ -47,9 +49,16 @@ public:
 	//! @name accessors
 	//@{
 
+	//! Get stream (unmodified)
+	/*!
+	Returns the original stream passed to the c'tor.
+	*/
+	synergy::IStream*			getStreamUnmodified() const;
+
 	//! Get stream
 	/*!
-	Returns the stream passed to the c'tor.
+	Returns a crypto stream if the user has this enabled,
+	otherwise returns the original stream passed to the c'tor.
 	*/
 	synergy::IStream*			getStream() const;
 

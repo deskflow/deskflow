@@ -16,6 +16,9 @@
  */
 
 #include "CCryptoStream.h"
+#include "CLog.h"
+#include <sstream>
+#include <string>
 
 // TODO: these are just for testing -- make sure they're gone by release!
 const byte g_key1[] = "aaaaaaaaaaaaaaa";
@@ -25,8 +28,8 @@ const byte g_iv2[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
 using namespace CryptoPP;
 
-CCryptoStream::CCryptoStream(IEventQueue& eventQueue, synergy::IStream* stream) :
-	CStreamFilter(eventQueue, stream, false)
+CCryptoStream::CCryptoStream(IEventQueue& eventQueue, synergy::IStream* stream, bool adoptStream) :
+	CStreamFilter(eventQueue, stream, adoptStream)
 {
 	m_encryption.SetKeyWithIV(g_key1, sizeof(g_key1), g_iv1);
 	m_decryption.SetKeyWithIV(g_key1, sizeof(g_key1), g_iv1);
@@ -39,18 +42,55 @@ CCryptoStream::~CCryptoStream()
 UInt32
 CCryptoStream::read(void* out, UInt32 n)
 {
-	byte* in = new byte[n];
-	int result = getStream()->read(in, n);
-	m_decryption.ProcessData(static_cast<byte*>(out), in, n);
-	delete[] in;
+	LOG((CLOG_DEBUG4 "crypto: read %i (decrypt)", n));
+
+	byte* cypher = new byte[n];
+	int result = getStream()->read(cypher, n);
+	if (result == 0) {
+		// nothing to read.
+		return 0;
+	}
+
+	if (result != n) {
+		LOG((CLOG_ERR "crypto: decrypt failed, only %i of %i bytes", result, n));
+		return 0;
+	}
+
+	logBuffer("cypher", cypher, n);
+	m_decryption.ProcessData(static_cast<byte*>(out), cypher, n);
+	logBuffer("plaintext", static_cast<byte*>(out), n);
+	delete[] cypher;
 	return result;
 }
 
 void
 CCryptoStream::write(const void* in, UInt32 n)
 {
-	byte* out = new byte[n];
-	m_encryption.ProcessData(out, static_cast<const byte*>(in), n);
-	getStream()->write(out, n);
-	delete[] out;
+	LOG((CLOG_DEBUG4 "crypto: write %i (encrypt)", n));
+
+	logBuffer("plaintext", static_cast<byte*>(const_cast<void*>(in)), n);
+	byte* cypher = new byte[n];
+	m_encryption.ProcessData(cypher, static_cast<const byte*>(in), n);
+	logBuffer("cypher", cypher, n);
+	getStream()->write(cypher, n);
+	delete[] cypher;
+}
+
+void
+CCryptoStream::logBuffer(const char* name, const byte* buf, int length)
+{
+	if (CLOG->getFilter() < kDEBUG4) {
+		return;
+	}
+
+	std::stringstream ss;
+	ss << "crypto: " << name << ":";
+
+	char buffer[4];
+	for (int i = 0; i < length; i++) {
+		sprintf(buffer, " %02X", buf[i]);
+		ss << buffer;
+	}
+
+	LOG((CLOG_DEBUG4 "%s", ss.str().c_str()));
 }
