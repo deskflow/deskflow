@@ -30,6 +30,7 @@ class CEventQueueTimer;
 class IClipboard;
 namespace synergy { class IStream; }
 class IEventQueue;
+class CCryptoStream;
 
 //! Proxy for server
 /*!
@@ -105,7 +106,8 @@ private:
 	typedef EResult (CServerProxy::*MessageParser)(const UInt8*);
 
 	CClient*			m_client;
-	synergy::IStream*			m_stream;
+	synergy::IStream*	m_stream;
+	CCryptoStream*		m_cryptoStream;
 
 	UInt32				m_seqNum;
 

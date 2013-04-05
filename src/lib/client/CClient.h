@@ -208,13 +208,13 @@ private:
 	IClipboard::Time		m_timeClipboard[kClipboardEnd];
 	CString					m_dataClipboard[kClipboardEnd];
 	IEventQueue&			m_eventQueue;
-
-	static CEvent::Type	s_connectedEvent;
-	static CEvent::Type	s_connectionFailedEvent;
-	static CEvent::Type	s_disconnectedEvent;
-
-protected:
 	bool					m_mock;
+
+	static CEvent::Type		s_connectedEvent;
+	static CEvent::Type		s_connectionFailedEvent;
+	static CEvent::Type		s_disconnectedEvent;
+
+	static const int		s_cryptoEnabled = true;
 };
 
 #endif

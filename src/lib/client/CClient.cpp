@@ -34,6 +34,7 @@
 #include <cstdlib>
 #include "CArch.h"
 #include "IPlatformScreen.h"
+#include "CCryptoStream.h"
 
 //
 // CClient
@@ -146,6 +147,10 @@ CClient::connect()
 			m_stream = m_streamFilterFactory->create(m_stream, true);
 		}
 		m_stream = new CPacketStreamFilter(m_stream, true);
+
+		if (s_cryptoEnabled) {
+			m_stream = new CCryptoStream(*EVENTQUEUE, m_stream, true);
+		}
 
 		// connect
 		LOG((CLOG_DEBUG1 "connecting to server"));

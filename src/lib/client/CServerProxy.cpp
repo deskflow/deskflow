@@ -29,6 +29,7 @@
 #include "XBase.h"
 #include <memory>
 #include <cstring>
+#include "CCryptoStream.h"
 
 //
 // CServerProxy
@@ -37,6 +38,7 @@
 CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue& eventQueue) :
 	m_client(client),
 	m_stream(stream),
+	m_cryptoStream(NULL),
 	m_seqNum(0),
 	m_compressMouse(false),
 	m_compressMouseRelative(false),
