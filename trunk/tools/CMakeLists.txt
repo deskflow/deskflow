@@ -22,6 +22,14 @@ if (WIN32)
 	list(APPEND cpp_src ${cpp_hdr})
 endif()
 
+if (WIN32)
+if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64-bit
+	# do not compile crypto++ ASM on 64-bit windows, we just get
+	# bunch of linker errors.
+	set (CMAKE_CXX_FLAGS "/DCRYPTOPP_DISABLE_ASM /EHsc")
+endif()
+endif()
+
 if (APPLE)
 	# osx goes bat-shit crazy if we dont use these magical arguments.
 	set (CMAKE_CXX_FLAGS "-O2 -DCRYPTOPP_DISABLE_ASM -pipe -Wno-tautological-compare")
