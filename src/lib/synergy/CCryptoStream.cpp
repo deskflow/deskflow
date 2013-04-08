@@ -29,10 +29,10 @@ const byte g_iv2[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 using namespace CryptoPP;
 
 CCryptoStream::CCryptoStream(IEventQueue& eventQueue, synergy::IStream* stream, bool adoptStream) :
-	CStreamFilter(eventQueue, stream, adoptStream)
+	CStreamFilter(eventQueue, stream, adoptStream),
+	m_key(NULL),
+	m_keyLength(0)
 {
-	m_encryption.SetKeyWithIV(g_key1, sizeof(g_key1), g_iv1);
-	m_decryption.SetKeyWithIV(g_key1, sizeof(g_key1), g_iv1);
 }
 
 CCryptoStream::~CCryptoStream()
@@ -42,6 +42,7 @@ CCryptoStream::~CCryptoStream()
 UInt32
 CCryptoStream::read(void* out, UInt32 n)
 {
+	assert(m_key != NULL);
 	LOG((CLOG_DEBUG4 "crypto: read %i (decrypt)", n));
 
 	byte* cypher = new byte[n];
@@ -66,6 +67,7 @@ CCryptoStream::read(void* out, UInt32 n)
 void
 CCryptoStream::write(const void* in, UInt32 n)
 {
+	assert(m_key != NULL);
 	LOG((CLOG_DEBUG4 "crypto: write %i (encrypt)", n));
 
 	logBuffer("plaintext", static_cast<byte*>(const_cast<void*>(in)), n);
@@ -74,6 +76,26 @@ CCryptoStream::write(const void* in, UInt32 n)
 	logBuffer("cypher", cypher, n);
 	getStream()->write(cypher, n);
 	delete[] cypher;
+}
+
+void
+CCryptoStream::setKeyWithIV(const byte* key, size_t length, const byte* iv)
+{
+	LOG((CLOG_DEBUG "crypto: key=%s (%i) iv=%s", key, length, iv));
+	m_encryption.SetKeyWithIV(key, length, iv);
+	m_decryption.SetKeyWithIV(key, length, iv);
+
+	m_key = key;
+	m_keyLength = length;
+}
+
+void
+CCryptoStream::setIV(const byte* iv)
+{
+	assert(m_key != NULL);
+	LOG((CLOG_DEBUG "crypto: new iv=%s", iv));
+	m_encryption.SetKeyWithIV(m_key, m_keyLength, iv);
+	m_decryption.SetKeyWithIV(m_key, m_keyLength, iv);
 }
 
 void
