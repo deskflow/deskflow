@@ -36,6 +36,10 @@
 #include "IPlatformScreen.h"
 #include "CCryptoStream.h"
 
+// TODO: these are just for testing -- make sure they're gone by release!
+const byte g_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+const byte g_iv[] = "aaaaaaaaaaaaaaa";
+
 //
 // CClient
 //
@@ -149,7 +153,9 @@ CClient::connect()
 		m_stream = new CPacketStreamFilter(m_stream, true);
 
 		if (s_cryptoEnabled) {
-			m_stream = new CCryptoStream(*EVENTQUEUE, m_stream, true);
+			CCryptoStream* cryptoStream = new CCryptoStream(*EVENTQUEUE, m_stream, true);
+			cryptoStream->setKeyWithIV(g_key, sizeof(g_key), g_iv);
+			m_stream = cryptoStream;
 		}
 
 		// connect

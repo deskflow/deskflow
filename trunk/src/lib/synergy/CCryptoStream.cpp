@@ -20,12 +20,6 @@
 #include <sstream>
 #include <string>
 
-// TODO: these are just for testing -- make sure they're gone by release!
-const byte g_key1[] = "aaaaaaaaaaaaaaa";
-const byte g_key2[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-const byte g_iv1[] = "aaaaaaaaaaaaaaa";
-const byte g_iv2[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-
 using namespace CryptoPP;
 
 CCryptoStream::CCryptoStream(IEventQueue& eventQueue, synergy::IStream* stream, bool adoptStream) :

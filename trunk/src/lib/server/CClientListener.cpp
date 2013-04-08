@@ -30,6 +30,10 @@
 #include "TMethodEventJob.h"
 #include "CCryptoStream.h"
 
+// TODO: these are just for testing -- make sure they're gone by release!
+const byte g_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+const byte g_iv[] = "aaaaaaaaaaaaaaa";
+
 //
 // CClientListener
 //
@@ -146,7 +150,9 @@ CClientListener::handleClientConnecting(const CEvent&, void*)
 	stream = new CPacketStreamFilter(stream, true);
 	
 	if (s_cryptoEnabled) {
-		stream = new CCryptoStream(*EVENTQUEUE, stream, true);
+		CCryptoStream* cryptoStream = new CCryptoStream(*EVENTQUEUE, stream, true);
+		cryptoStream->setKeyWithIV(g_key, sizeof(g_key), g_iv);
+		stream = cryptoStream;
 	}
 
 	assert(m_server != NULL);
