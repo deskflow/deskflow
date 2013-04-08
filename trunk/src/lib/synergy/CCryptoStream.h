@@ -19,9 +19,12 @@
 
 #include "BasicTypes.h"
 #include "CStreamFilter.h"
-#include "cryptopp562/gcm.h"
-#include "cryptopp562/modes.h"
-#include "cryptopp562/aes.h"
+#include <cryptopp562/gcm.h>
+#include <cryptopp562/modes.h>
+#include <cryptopp562/aes.h>
+#include <cryptopp562/osrng.h>
+
+#define CRYPTO_IV_SIZE CryptoPP::AES::BLOCKSIZE
 
 //! Bidirectional encrypted stream
 /*!
@@ -49,10 +52,17 @@ public:
 	virtual void		write(const void* in, UInt32 n);
 
     //! Set the key and IV
-    void                setKeyWithIV(const byte* key, size_t length, const byte* iv);
+    void                setKeyWithIv(const byte* key, size_t length, const byte* iv);
 
     //! Set the IV
-    void                setIV(const byte* iv);
+    void                setIv(const byte* iv);
+
+	//! Get a new IV
+	/*!
+	Writes a new IV to the \c out buffer, and also uses the IV for further
+	crypto.
+	*/
+	void				newIv(byte* out);
 
 private:
 	// TODO: allow user to change the block cypher mode.
@@ -71,7 +81,8 @@ private:
 	//CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption		m_decryption;
 
 	void				logBuffer(const char* name, const byte* buf, int length);
-    
+
     const byte*			m_key;
     size_t				m_keyLength;
+	CryptoPP::AutoSeededRandomPool m_autoSeedRandomPool;
 };

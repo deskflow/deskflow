@@ -151,7 +151,7 @@ CClientListener::handleClientConnecting(const CEvent&, void*)
 	
 	if (s_cryptoEnabled) {
 		CCryptoStream* cryptoStream = new CCryptoStream(*EVENTQUEUE, stream, true);
-		cryptoStream->setKeyWithIV(g_key, sizeof(g_key), g_iv);
+		cryptoStream->setKeyWithIv(g_key, sizeof(g_key), g_iv);
 		stream = cryptoStream;
 	}
 

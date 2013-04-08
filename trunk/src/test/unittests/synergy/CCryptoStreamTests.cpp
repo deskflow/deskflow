@@ -26,25 +26,34 @@ using ::testing::Invoke;
 
 using namespace std;
 
-void write_assertWrite(const void* in, UInt32 n);
+UInt8 g_write_buffer[4];
+void write_mockWrite(const void* in, UInt32 n);
+
+UInt8 g_read_buffer[4];
 UInt8 read_mockRead(void* out, UInt32 n);
-void write4Read1_mockWrite(const void* in, UInt32 n);
-UInt8 write4Read1_mockRead(void* out, UInt32 n);
-void write1Read4_mockWrite(const void* in, UInt32 n);
-UInt8 write1Read4_mockRead(void* out, UInt32 n);
-void readWriteIVChanged_mockWrite(const void* in, UInt32 n);
-UInt8 readWriteIVChanged_mockRead(void* out, UInt32 n);
 
 UInt8 g_write4Read1_buffer[4];
 UInt32 g_write4Read1_bufferIndex = 0;
+void write4Read1_mockWrite(const void* in, UInt32 n);
+UInt8 write4Read1_mockRead(void* out, UInt32 n);
 
 UInt8 g_write1Read4_buffer[4];
 UInt32 g_write1Read4_bufferIndex = 0;
+void write1Read4_mockWrite(const void* in, UInt32 n);
+UInt8 write1Read4_mockRead(void* out, UInt32 n);
 
-UInt8 g_readWriteIVChanged_buffer[4];
+UInt8 g_readWriteIvChanged_buffer[4];
+UInt32 g_readWriteIvChangeTrigger_writeBufferIndex = 0;
+UInt32 g_readWriteIvChangeTrigger_readBufferIndex = 0;
+void readWriteIvChanged_mockWrite(const void* in, UInt32 n);
+UInt8 readWriteIvChanged_mockRead(void* out, UInt32 n);
+
+UInt8 g_readWriteIvChangeTrigger_buffer[4 + 4 + 16]; // abcd, DCIV, 16-byte IV
+void readWriteIvChangeTrigger_mockWrite(const void* in, UInt32 n);
+UInt8 readWriteIvChangeTrigger_mockRead(void* out, UInt32 n);
 
 const byte g_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; // +\0, 32-byte/256-bit key.
-const byte g_iv[] = "bbbbbbbbbbbbbbb"; // +\0, AES block size = 16
+const byte g_iv[] = "bbbbbbbbbbbbbb"; // +\0, AES block size = 16
 
 TEST(CCryptoTests, write)
 {
@@ -58,7 +67,7 @@ TEST(CCryptoTests, write)
 	CMockEventQueue eventQueue;
 	CMockStream innerStream(eventQueue);
 	
-	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write_assertWrite));
+	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write_mockWrite));
 	EXPECT_CALL(innerStream, write(_, _)).Times(1);
 	EXPECT_CALL(innerStream, getEventTarget()).Times(3);
 	EXPECT_CALL(eventQueue, removeHandlers(_)).Times(1);
@@ -66,8 +75,13 @@ TEST(CCryptoTests, write)
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
 
 	CCryptoStream cs(eventQueue, &innerStream, false);
-	cs.setKeyWithIV(g_key, sizeof(g_key), g_iv);
+	cs.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	cs.write(buffer, size);
+	
+	EXPECT_EQ(254, g_write_buffer[0]);
+	EXPECT_EQ(44, g_write_buffer[1]);
+	EXPECT_EQ(187, g_write_buffer[2]);
+	EXPECT_EQ(253, g_write_buffer[3]);
 }
 
 TEST(CCryptoTests, read)
@@ -83,8 +97,13 @@ TEST(CCryptoTests, read)
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
 
 	CCryptoStream cs(eventQueue, &innerStream, false);
-	cs.setKeyWithIV(g_key, sizeof(g_key), g_iv);
+	cs.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	
+	g_read_buffer[0] = 254;
+	g_read_buffer[1] = 44;
+	g_read_buffer[2] = 187;
+	g_read_buffer[3] = 253;
+
 	const UInt32 size = 4;
 	UInt8* buffer = new UInt8[size];
 	cs.read(buffer, size);
@@ -110,7 +129,7 @@ TEST(CCryptoTests, write4Read1)
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
 
 	CCryptoStream cs1(eventQueue, &innerStream, false);
-	cs1.setKeyWithIV(g_key, sizeof(g_key), g_iv);
+	cs1.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	
 	cs1.write("a", 1);
 	cs1.write("b", 1);
@@ -118,7 +137,7 @@ TEST(CCryptoTests, write4Read1)
 	cs1.write("d", 1);
 
 	CCryptoStream cs2(eventQueue, &innerStream, false);
-	cs2.setKeyWithIV(g_key, sizeof(g_key), g_iv);
+	cs2.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	
 	UInt8 buffer[4];
 	cs2.read(buffer, 4);
@@ -144,7 +163,7 @@ TEST(CCryptoTests, write1Read4)
 	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
 
 	CCryptoStream cs1(eventQueue, &innerStream, false);
-	cs1.setKeyWithIV(g_key, sizeof(g_key), g_iv);
+	cs1.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 
 	UInt8 bufferIn[4];
 	bufferIn[0] = 'a';
@@ -154,7 +173,7 @@ TEST(CCryptoTests, write1Read4)
 	cs1.write(bufferIn, 4);
 	
 	CCryptoStream cs2(eventQueue, &innerStream, false);
-	cs2.setKeyWithIV(g_key, sizeof(g_key), g_iv);
+	cs2.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 
 	UInt8 bufferOut[4];
 	cs2.read(&bufferOut[0], 1);
@@ -168,15 +187,15 @@ TEST(CCryptoTests, write1Read4)
 	EXPECT_EQ('d', bufferOut[3]);
 }
 
-TEST(CCryptoTests, readWriteIVChanged)
+TEST(CCryptoTests, readWriteIvChanged)
 {
 	CMockEventQueue eventQueue;
 	CMockStream innerStream(eventQueue);
 	
-	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(readWriteIVChanged_mockWrite));
-	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(readWriteIVChanged_mockRead));
-	EXPECT_CALL(innerStream, write(_, _)).Times(1);
-	EXPECT_CALL(innerStream, read(_, _)).Times(1);
+	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockWrite));
+	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockRead));
+	EXPECT_CALL(innerStream, write(_, _)).Times(2);
+	EXPECT_CALL(innerStream, read(_, _)).Times(2);
 	EXPECT_CALL(innerStream, getEventTarget()).Times(6);
 	EXPECT_CALL(eventQueue, removeHandlers(_)).Times(2);
 	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
@@ -186,7 +205,7 @@ TEST(CCryptoTests, readWriteIVChanged)
 	const byte iv2[] = "ccccccccccccccc";
 
 	CCryptoStream cs1(eventQueue, &innerStream, false);
-	cs1.setKeyWithIV(g_key, sizeof(g_key), iv1);
+	cs1.setKeyWithIv(g_key, sizeof(g_key), iv1);
 	
 	UInt8 bufferIn[4];
 	bufferIn[0] = 'a';
@@ -196,36 +215,43 @@ TEST(CCryptoTests, readWriteIVChanged)
 	cs1.write(bufferIn, 4);
 	
 	CCryptoStream cs2(eventQueue, &innerStream, false);
-	cs2.setKeyWithIV(g_key, sizeof(g_key), iv2);
+	cs2.setKeyWithIv(g_key, sizeof(g_key), iv2);
 
 	UInt8 bufferOut[4];
 	cs2.read(bufferOut, 4);
 	
-	// assert that the values have changed.
+	// assert that the values cannot be decrypted, since the second crypto
+	// class instance is using a different IV.
 	EXPECT_NE('a', bufferOut[0]);
 	EXPECT_NE('b', bufferOut[1]);
 	EXPECT_NE('c', bufferOut[2]);
 	EXPECT_NE('d', bufferOut[3]);
+
+	// generate a new IV and copy it to the second crypto class, and
+	// ensure that the new IV is used.
+	byte iv[CRYPTO_IV_SIZE];
+	cs1.newIv(iv);
+	cs2.setIv(iv);
+
+	cs1.write(bufferIn, 4);
+	cs2.read(bufferOut, 4);
+
+	EXPECT_EQ('a', bufferOut[0]);
+	EXPECT_EQ('b', bufferOut[1]);
+	EXPECT_EQ('c', bufferOut[2]);
+	EXPECT_EQ('d', bufferOut[3]);
 }
 
 void
-write_assertWrite(const void* in, UInt32 n)
+write_mockWrite(const void* in, UInt32 n)
 {
-	UInt8* buffer = static_cast<UInt8*>(const_cast<void*>(in));
-	EXPECT_EQ(8, buffer[0]);
-	EXPECT_EQ(58, buffer[1]);
-	EXPECT_EQ(151, buffer[2]);
-	EXPECT_EQ(33, buffer[3]);
+	memcpy(g_write_buffer, in, n);
 }
 
 UInt8
 read_mockRead(void* out, UInt32 n)
 {
-	UInt8* buffer = static_cast<UInt8*>(out);
-	buffer[0] = 8;
-	buffer[1] = 58;
-	buffer[2] = 151;
-	buffer[3] = 33;
+	memcpy(out, g_read_buffer, n);
 	return n;
 }
 
@@ -239,22 +265,14 @@ write4Read1_mockWrite(const void* in, UInt32 n)
 UInt8
 write4Read1_mockRead(void* out, UInt32 n)
 {
-	UInt8* buffer = static_cast<UInt8*>(out);
-	buffer[0] = g_write4Read1_buffer[0];
-	buffer[1] = g_write4Read1_buffer[1];
-	buffer[2] = g_write4Read1_buffer[2];
-	buffer[3] = g_write4Read1_buffer[3];
-	return 4;
+	memcpy(out, g_write4Read1_buffer, n);
+	return n;
 }
 
 void
 write1Read4_mockWrite(const void* in, UInt32 n)
 {
-	UInt8* buffer = static_cast<UInt8*>(const_cast<void*>(in));
-	g_write1Read4_buffer[0] = buffer[0];
-	g_write1Read4_buffer[1] = buffer[1];
-	g_write1Read4_buffer[2] = buffer[2];
-	g_write1Read4_buffer[3] = buffer[3];
+	memcpy(g_write1Read4_buffer, in, n);
 }
 
 UInt8
@@ -266,22 +284,33 @@ write1Read4_mockRead(void* out, UInt32 n)
 }
 
 void
-readWriteIVChanged_mockWrite(const void* in, UInt32 n)
+readWriteIvChanged_mockWrite(const void* in, UInt32 n)
 {
-	UInt8* buffer = static_cast<UInt8*>(const_cast<void*>(in));
-	g_readWriteIVChanged_buffer[0] = buffer[0];
-	g_readWriteIVChanged_buffer[1] = buffer[1];
-	g_readWriteIVChanged_buffer[2] = buffer[2];
-	g_readWriteIVChanged_buffer[3] = buffer[3];
+	memcpy(g_readWriteIvChanged_buffer, in, n);
 }
 
 UInt8
-readWriteIVChanged_mockRead(void* out, UInt32 n)
+readWriteIvChanged_mockRead(void* out, UInt32 n)
 {
-	UInt8* buffer = static_cast<UInt8*>(out);
-	buffer[0] = g_readWriteIVChanged_buffer[0];
-	buffer[1] = g_readWriteIVChanged_buffer[1];
-	buffer[2] = g_readWriteIVChanged_buffer[2];
-	buffer[3] = g_readWriteIVChanged_buffer[3];
-	return 4;
+	memcpy(out, g_readWriteIvChanged_buffer, n);
+	return n;
+}
+
+// TODO: macro?
+
+void
+readWriteIvChangeTrigger_mockWrite(const void* in, UInt32 n)
+{
+	assert(g_readWriteIvChangeTrigger_writeBufferIndex <= sizeof(g_readWriteIvChangeTrigger_buffer));
+	memcpy(&g_readWriteIvChangeTrigger_buffer[g_readWriteIvChangeTrigger_writeBufferIndex], in, n);
+	g_readWriteIvChangeTrigger_writeBufferIndex += n;
+}
+
+UInt8
+readWriteIvChangeTrigger_mockRead(void* out, UInt32 n)
+{
+	assert(g_readWriteIvChangeTrigger_readBufferIndex <= sizeof(g_readWriteIvChangeTrigger_buffer));
+	memcpy(out, &g_readWriteIvChangeTrigger_buffer[g_readWriteIvChangeTrigger_readBufferIndex], n);
+	g_readWriteIvChangeTrigger_readBufferIndex += n;
+	return n;
 }
