@@ -73,9 +73,11 @@ CCryptoStream::write(const void* in, UInt32 n)
 }
 
 void
-CCryptoStream::setKeyWithIV(const byte* key, size_t length, const byte* iv)
+CCryptoStream::setKeyWithIv(const byte* key, size_t length, const byte* iv)
 {
-	LOG((CLOG_DEBUG "crypto: key=%s (%i) iv=%s", key, length, iv));
+	logBuffer("iv", key, length);
+	logBuffer("key", iv, CRYPTO_IV_SIZE);
+
 	m_encryption.SetKeyWithIV(key, length, iv);
 	m_decryption.SetKeyWithIV(key, length, iv);
 
@@ -84,12 +86,19 @@ CCryptoStream::setKeyWithIV(const byte* key, size_t length, const byte* iv)
 }
 
 void
-CCryptoStream::setIV(const byte* iv)
+CCryptoStream::setIv(const byte* iv)
 {
 	assert(m_key != NULL);
-	LOG((CLOG_DEBUG "crypto: new iv=%s", iv));
+	logBuffer("iv", iv, CRYPTO_IV_SIZE);
 	m_encryption.SetKeyWithIV(m_key, m_keyLength, iv);
 	m_decryption.SetKeyWithIV(m_key, m_keyLength, iv);
+}
+
+void
+CCryptoStream::newIv(byte* out)
+{
+	m_autoSeedRandomPool.GenerateBlock(out, CRYPTO_IV_SIZE);
+	setIv(out);
 }
 
 void
