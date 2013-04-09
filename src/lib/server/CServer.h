@@ -103,6 +103,10 @@ public:
 	*/
 	CServer(const CConfig& config, CPrimaryClient* primaryClient, CScreen* screen);
 	~CServer();
+	
+#ifdef TEST_ENV
+	CServer() { }
+#endif
 
 	//! @name manipulators
 	//@{
@@ -394,6 +398,9 @@ private:
 
 	// force the cursor off of \p client
 	void				forceLeaveClient(CBaseClientProxy* client);
+	
+public:
+	bool				m_mock;
 
 private:
 	class CClipboardInfo {

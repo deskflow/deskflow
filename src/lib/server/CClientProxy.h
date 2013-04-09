@@ -25,8 +25,6 @@
 
 namespace synergy { class IStream; }
 
-const int g_encryptionEnabled = true;
-
 //! Generic proxy for client
 class CClientProxy : public CBaseClientProxy {
 public:
@@ -48,12 +46,6 @@ public:
 	//@}
 	//! @name accessors
 	//@{
-
-	//! Get stream (unmodified)
-	/*!
-	Returns the original stream passed to the c'tor.
-	*/
-	synergy::IStream*			getStreamUnmodified() const;
 
 	//! Get stream
 	/*!
@@ -125,6 +117,7 @@ public:
 	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2) = 0;
 	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2) = 0;
 	virtual void		gameDeviceTimingReq() = 0;
+	virtual void		cryptoIv(const UInt8* iv) = 0;
 
 private:
 	synergy::IStream*	m_stream;

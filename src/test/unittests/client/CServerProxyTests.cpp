@@ -16,11 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
-
 #define TEST_ENV
-#include "Global.h"
 
+#include <gtest/gtest.h>
 #include "CServerProxy.h"
 #include "CMockClient.h"
 #include "CMockStream.h"
@@ -32,60 +30,77 @@ using ::testing::Invoke;
 using ::testing::NiceMock;
 using ::testing::AnyNumber;
 
-int streamReads = 0;
+const UInt8 mouseMove_bufferLen = 16;
+UInt8 mouseMove_buffer[mouseMove_bufferLen];
+UInt32 mouseMove_bufferIndex = 0;
+UInt32 mouseMove_mockRead(void* buffer, UInt32 n);
 
-UInt32
-streamRead(void* buffer, UInt32 n);
+const UInt8 cryptoIv_bufferLen = 20;
+UInt8 cryptoIv_buffer[cryptoIv_bufferLen];
+UInt32 cryptoIv_bufferIndex = 0;
+CString cryptoIv_result;
+UInt32 cryptoIv_mockRead(void* buffer, UInt32 n);
+void cryptoIv_setCryptoIv(const UInt8*);
 
-// TODO: fix linking in windows (works in unix for some reason).
-#if 0
-TEST(CServerProxyTests, parseMessage_mouseMove_valuesCorrect)
+TEST(CServerProxyTests, mouseMove)
 {
 	NiceMock<CMockEventQueue> eventQueue;
-	CMockClient client(eventQueue);
-	CMockStream stream(eventQueue);
+	NiceMock<CMockClient> client;
+	NiceMock<CMockStream> stream;
 
-	ON_CALL(stream, read(_, _)).WillByDefault(Invoke(streamRead));
-	EXPECT_CALL(stream, read(_, _)).Times(4);
-	EXPECT_CALL(stream, write(_, _)).Times(1);
-	EXPECT_CALL(stream, isReady()).Times(1);
-	EXPECT_CALL(stream, getEventTarget()).Times(AnyNumber());
+	ON_CALL(stream, read(_, _)).WillByDefault(Invoke(mouseMove_mockRead));
+	
+	EXPECT_CALL(client, mouseMove(1, 2)).Times(1);
+	
+	const char data[] = "DSOP\0\0\0\0DMMV\0\1\0\2";
+	memcpy(mouseMove_buffer, data, sizeof(data));
 
-	CServerProxy serverProxy(&client, &stream, eventQueue);
-
-	// skip handshake, go straight to normal parser.
-	serverProxy.m_parser = &CServerProxy::parseMessage;
-
-	// assert
-	EXPECT_CALL(client, mouseMove(10, 20));
-
-	serverProxy.handleData(NULL, NULL);
+	CServerProxy serverProxy(&client, &stream, &eventQueue);
+	serverProxy.handleDataForTest();
 }
-#endif
+
+TEST(CServerProxyTests, cryptoIv)
+{
+	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<CMockClient> client;
+	NiceMock<CMockStream> stream;
+
+	ON_CALL(stream, read(_, _)).WillByDefault(Invoke(cryptoIv_mockRead));
+	ON_CALL(client, setCryptoIv(_)).WillByDefault(Invoke(cryptoIv_setCryptoIv));
+
+	const char data[] = "DSOP\0\0\0\0DCIV\0\0\0\4mock";
+	memcpy(cryptoIv_buffer, data, sizeof(data));
+
+	CServerProxy serverProxy(&client, &stream, &eventQueue);
+	serverProxy.handleDataForTest();
+
+	EXPECT_EQ("mock", cryptoIv_result);
+}
 
 UInt32
-streamRead(void* buffer, UInt32 n)
+mouseMove_mockRead(void* buffer, UInt32 n)
 {
-	streamReads++;
-	UInt8* code = (UInt8*)buffer;
+	if (mouseMove_bufferIndex >= mouseMove_bufferLen) {
+		return 0;
+	}
+	memcpy(buffer, &mouseMove_buffer[mouseMove_bufferIndex], n);
+	mouseMove_bufferIndex += n;
+	return n;
+}
 
-	if (streamReads == 1) {
-		code[0] = 'D';
-		code[1] = 'M';
-		code[2] = 'M';
-		code[3] = 'V';
-		return 4;
+UInt32
+cryptoIv_mockRead(void* buffer, UInt32 n)
+{
+	if (cryptoIv_bufferIndex >= cryptoIv_bufferLen) {
+		return 0;
 	}
-	else if (streamReads == 2) {
-		code[0] = 0;
-		code[1] = 10;
-		return 2;
-	}
-	else if (streamReads == 3) {
-		code[0] = 0;
-		code[1] = 20;
-		return 2;
-	}
+	memcpy(buffer, &cryptoIv_buffer[cryptoIv_bufferIndex], n);
+	cryptoIv_bufferIndex += n;
+	return n;
+}
 
-	return 0;
+void
+cryptoIv_setCryptoIv(const UInt8* data)
+{
+	cryptoIv_result = reinterpret_cast<const char*>(data);
 }

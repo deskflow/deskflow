@@ -35,10 +35,9 @@
 // CServerProxy
 //
 
-CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue& eventQueue) :
+CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue* eventQueue) :
 	m_client(client),
 	m_stream(stream),
-	m_cryptoStream(NULL),
 	m_seqNum(0),
 	m_compressMouse(false),
 	m_compressMouseRelative(false),
@@ -60,7 +59,7 @@ CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueu
 		m_modifierTranslationTable[id] = id;
 
 	// handle data on stream
-	m_eventQueue.adoptHandler(m_stream->getInputReadyEvent(),
+	m_eventQueue->adoptHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CServerProxy>(this,
 								&CServerProxy::handleData));
@@ -72,7 +71,7 @@ CServerProxy::CServerProxy(CClient* client, synergy::IStream* stream, IEventQueu
 CServerProxy::~CServerProxy()
 {
 	setKeepAliveRate(-1.0);
-	m_eventQueue.removeHandler(m_stream->getInputReadyEvent(),
+	m_eventQueue->removeHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget());
 }
 
@@ -80,14 +79,14 @@ void
 CServerProxy::resetKeepAliveAlarm()
 {
 	if (m_keepAliveAlarmTimer != NULL) {
-		m_eventQueue.removeHandler(CEvent::kTimer, m_keepAliveAlarmTimer);
-		m_eventQueue.deleteTimer(m_keepAliveAlarmTimer);
+		m_eventQueue->removeHandler(CEvent::kTimer, m_keepAliveAlarmTimer);
+		m_eventQueue->deleteTimer(m_keepAliveAlarmTimer);
 		m_keepAliveAlarmTimer = NULL;
 	}
 	if (m_keepAliveAlarm > 0.0) {
 		m_keepAliveAlarmTimer =
-			m_eventQueue.newOneShotTimer(m_keepAliveAlarm, NULL);
-		m_eventQueue.adoptHandler(CEvent::kTimer, m_keepAliveAlarmTimer,
+			m_eventQueue->newOneShotTimer(m_keepAliveAlarm, NULL);
+		m_eventQueue->adoptHandler(CEvent::kTimer, m_keepAliveAlarmTimer,
 							new TMethodEventJob<CServerProxy>(this,
 								&CServerProxy::handleKeepAliveAlarm));
 	}
@@ -304,6 +303,10 @@ CServerProxy::parseMessage(const UInt8* code)
 
 	else if (memcmp(code, kMsgCGameTimingReq, 4) == 0) {
 		gameDeviceTimingReq();
+	}
+
+	else if (memcmp(code, kMsgDCryptoIv, 4) == 0) {
+		cryptoIv();
 	}
 
 	else if (memcmp(code, kMsgCClose, 4) == 0) {
@@ -824,6 +827,18 @@ CServerProxy::gameDeviceTimingReq()
 
 	// forward
 	m_client->gameDeviceTimingReq();
+}
+
+void
+CServerProxy::cryptoIv()
+{
+	// parse
+	CString s;
+	CProtocolUtil::readf(m_stream, kMsgDCryptoIv + 4, &s);
+	LOG((CLOG_DEBUG2 "recv crypto iv size=%i", s.size()));
+
+	// forward
+	m_client->setCryptoIv(reinterpret_cast<const UInt8*>(s.c_str()));
 }
 
 void

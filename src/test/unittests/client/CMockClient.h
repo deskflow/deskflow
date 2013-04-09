@@ -19,6 +19,8 @@
 #pragma once
 
 #include <gmock/gmock.h>
+
+#define TEST_ENV
 #include "CClient.h"
 
 class IEventQueue;
@@ -26,6 +28,9 @@ class IEventQueue;
 class CMockClient : public CClient
 {
 public:
-	CMockClient(IEventQueue& eventQueue) : CClient(eventQueue) { m_mock = true; }
+	CMockClient() { m_mock = true; }
 	MOCK_METHOD2(mouseMove, void(SInt32, SInt32));
+	MOCK_METHOD1(setOptions, void(const COptionsList&));
+	MOCK_METHOD0(handshakeComplete, void());
+	MOCK_METHOD1(setCryptoIv, void(const UInt8*));
 };

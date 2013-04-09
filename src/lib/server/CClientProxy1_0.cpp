@@ -29,29 +29,30 @@
 // CClientProxy1_0
 //
 
-CClientProxy1_0::CClientProxy1_0(const CString& name, synergy::IStream* stream) :
+CClientProxy1_0::CClientProxy1_0(const CString& name, synergy::IStream* stream, IEventQueue* eventQueue) :
 	CClientProxy(name, stream),
 	m_heartbeatTimer(NULL),
-	m_parser(&CClientProxy1_0::parseHandshakeMessage)
+	m_parser(&CClientProxy1_0::parseHandshakeMessage),
+	m_eventQueue(eventQueue)
 {
 	// install event handlers
-	EVENTQUEUE->adoptHandler(stream->getInputReadyEvent(),
+	m_eventQueue->adoptHandler(stream->getInputReadyEvent(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleData, NULL));
-	EVENTQUEUE->adoptHandler(stream->getOutputErrorEvent(),
+	m_eventQueue->adoptHandler(stream->getOutputErrorEvent(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleWriteError, NULL));
-	EVENTQUEUE->adoptHandler(stream->getInputShutdownEvent(),
+	m_eventQueue->adoptHandler(stream->getInputShutdownEvent(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleDisconnect, NULL));
-	EVENTQUEUE->adoptHandler(stream->getOutputShutdownEvent(),
+	m_eventQueue->adoptHandler(stream->getOutputShutdownEvent(),
 							stream->getEventTarget(),
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleWriteError, NULL));
-	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
+	m_eventQueue->adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CClientProxy1_0>(this,
 								&CClientProxy1_0::handleFlatline, NULL));
 
@@ -71,22 +72,22 @@ CClientProxy1_0::disconnect()
 {
 	removeHandlers();
 	getStream()->close();
-	EVENTQUEUE->addEvent(CEvent(getDisconnectedEvent(), getEventTarget()));
+	m_eventQueue->addEvent(CEvent(getDisconnectedEvent(), getEventTarget()));
 }
 
 void
 CClientProxy1_0::removeHandlers()
 {
 	// uninstall event handlers
-	EVENTQUEUE->removeHandler(getStream()->getInputReadyEvent(),
+	m_eventQueue->removeHandler(getStream()->getInputReadyEvent(),
 							getStream()->getEventTarget());
-	EVENTQUEUE->removeHandler(getStream()->getOutputErrorEvent(),
+	m_eventQueue->removeHandler(getStream()->getOutputErrorEvent(),
 							getStream()->getEventTarget());
-	EVENTQUEUE->removeHandler(getStream()->getInputShutdownEvent(),
+	m_eventQueue->removeHandler(getStream()->getInputShutdownEvent(),
 							getStream()->getEventTarget());
-	EVENTQUEUE->removeHandler(getStream()->getOutputShutdownEvent(),
+	m_eventQueue->removeHandler(getStream()->getOutputShutdownEvent(),
 							getStream()->getEventTarget());
-	EVENTQUEUE->removeHandler(CEvent::kTimer, this);
+	m_eventQueue->removeHandler(CEvent::kTimer, this);
 
 	// remove timer
 	removeHeartbeatTimer();
@@ -96,7 +97,7 @@ void
 CClientProxy1_0::addHeartbeatTimer()
 {
 	if (m_heartbeatAlarm > 0.0) {
-		m_heartbeatTimer = EVENTQUEUE->newOneShotTimer(m_heartbeatAlarm, this);
+		m_heartbeatTimer = m_eventQueue->newOneShotTimer(m_heartbeatAlarm, this);
 	}
 }
 
@@ -104,7 +105,7 @@ void
 CClientProxy1_0::removeHeartbeatTimer()
 {
 	if (m_heartbeatTimer != NULL) {
-		EVENTQUEUE->deleteTimer(m_heartbeatTimer);
+		m_eventQueue->deleteTimer(m_heartbeatTimer);
 		m_heartbeatTimer = NULL;
 	}
 }
@@ -171,7 +172,7 @@ CClientProxy1_0::parseHandshakeMessage(const UInt8* code)
 		// future messages get parsed by parseMessage
 		m_parser = &CClientProxy1_0::parseMessage;
 		if (recvInfo()) {
-			EVENTQUEUE->addEvent(CEvent(getReadyEvent(), getEventTarget()));
+			m_eventQueue->addEvent(CEvent(getReadyEvent(), getEventTarget()));
 			addHeartbeatTimer();
 			return true;
 		}
@@ -184,7 +185,7 @@ CClientProxy1_0::parseMessage(const UInt8* code)
 {
 	if (memcmp(code, kMsgDInfo, 4) == 0) {
 		if (recvInfo()) {
-			EVENTQUEUE->addEvent(
+			m_eventQueue->addEvent(
 							CEvent(getShapeChangedEvent(), getEventTarget()));
 			return true;
 		}
@@ -386,6 +387,13 @@ CClientProxy1_0::gameDeviceTimingReq()
 }
 
 void
+CClientProxy1_0::cryptoIv(const UInt8* iv)
+{
+	// ignore -- not supported in protocol 1.0
+	LOG((CLOG_DEBUG "cryptoIv not supported"));
+}
+
+void
 CClientProxy1_0::screensaver(bool on)
 {
 	LOG((CLOG_DEBUG1 "send screen saver to \"%s\" on=%d", getName().c_str(), on ? 1 : 0));
@@ -484,7 +492,7 @@ CClientProxy1_0::recvClipboard()
 	CClipboardInfo* info   = new CClipboardInfo;
 	info->m_id             = id;
 	info->m_sequenceNumber = seqNum;
-	EVENTQUEUE->addEvent(CEvent(getClipboardChangedEvent(),
+	m_eventQueue->addEvent(CEvent(getClipboardChangedEvent(),
 							getEventTarget(), info));
 
 	return true;
@@ -510,7 +518,7 @@ CClientProxy1_0::recvGrabClipboard()
 	CClipboardInfo* info   = new CClipboardInfo;
 	info->m_id             = id;
 	info->m_sequenceNumber = seqNum;
-	EVENTQUEUE->addEvent(CEvent(getClipboardGrabbedEvent(),
+	m_eventQueue->addEvent(CEvent(getClipboardGrabbedEvent(),
 							getEventTarget(), info));
 
 	return true;

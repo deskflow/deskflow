@@ -23,6 +23,7 @@
 
 using ::testing::_;
 using ::testing::Invoke;
+using ::testing::NiceMock;
 
 using namespace std;
 
@@ -64,17 +65,12 @@ TEST(CCryptoTests, write)
 	buffer[2] = 'D';
 	buffer[3] = 'N';
 	
-	CMockEventQueue eventQueue;
-	CMockStream innerStream(eventQueue);
+	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<CMockStream> innerStream;
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write_mockWrite));
-	EXPECT_CALL(innerStream, write(_, _)).Times(1);
-	EXPECT_CALL(innerStream, getEventTarget()).Times(3);
-	EXPECT_CALL(eventQueue, removeHandlers(_)).Times(1);
-	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(1);
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
 
-	CCryptoStream cs(eventQueue, &innerStream, false);
+	CCryptoStream cs(&eventQueue, &innerStream, false);
 	cs.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	cs.write(buffer, size);
 	
@@ -86,17 +82,12 @@ TEST(CCryptoTests, write)
 
 TEST(CCryptoTests, read)
 {
-	CMockEventQueue eventQueue;
-	CMockStream innerStream(eventQueue);
+	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<CMockStream> innerStream;
 	
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(read_mockRead));
-	EXPECT_CALL(innerStream, read(_, _)).Times(1);
-	EXPECT_CALL(innerStream, getEventTarget()).Times(3);
-	EXPECT_CALL(eventQueue, removeHandlers(_)).Times(1);
-	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(1);
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
 
-	CCryptoStream cs(eventQueue, &innerStream, false);
+	CCryptoStream cs(&eventQueue, &innerStream, false);
 	cs.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	
 	g_read_buffer[0] = 254;
@@ -116,19 +107,13 @@ TEST(CCryptoTests, read)
 
 TEST(CCryptoTests, write4Read1)
 {
-	CMockEventQueue eventQueue;
-	CMockStream innerStream(eventQueue);
+	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<CMockStream> innerStream;
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write4Read1_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write4Read1_mockRead));
-	EXPECT_CALL(innerStream, write(_, _)).Times(4);
-	EXPECT_CALL(innerStream, read(_, _)).Times(1);
-	EXPECT_CALL(innerStream, getEventTarget()).Times(6);
-	EXPECT_CALL(eventQueue, removeHandlers(_)).Times(2);
-	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
 
-	CCryptoStream cs1(eventQueue, &innerStream, false);
+	CCryptoStream cs1(&eventQueue, &innerStream, false);
 	cs1.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	
 	cs1.write("a", 1);
@@ -136,7 +121,7 @@ TEST(CCryptoTests, write4Read1)
 	cs1.write("c", 1);
 	cs1.write("d", 1);
 
-	CCryptoStream cs2(eventQueue, &innerStream, false);
+	CCryptoStream cs2(&eventQueue, &innerStream, false);
 	cs2.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	
 	UInt8 buffer[4];
@@ -150,19 +135,13 @@ TEST(CCryptoTests, write4Read1)
 
 TEST(CCryptoTests, write1Read4)
 {
-	CMockEventQueue eventQueue;
-	CMockStream innerStream(eventQueue);
+	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<CMockStream> innerStream;
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write1Read4_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write1Read4_mockRead));
-	EXPECT_CALL(innerStream, write(_, _)).Times(1);
-	EXPECT_CALL(innerStream, read(_, _)).Times(4);
-	EXPECT_CALL(innerStream, getEventTarget()).Times(6);
-	EXPECT_CALL(eventQueue, removeHandlers(_)).Times(2);
-	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
 
-	CCryptoStream cs1(eventQueue, &innerStream, false);
+	CCryptoStream cs1(&eventQueue, &innerStream, false);
 	cs1.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 
 	UInt8 bufferIn[4];
@@ -172,7 +151,7 @@ TEST(CCryptoTests, write1Read4)
 	bufferIn[3] = 'd';
 	cs1.write(bufferIn, 4);
 	
-	CCryptoStream cs2(eventQueue, &innerStream, false);
+	CCryptoStream cs2(&eventQueue, &innerStream, false);
 	cs2.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 
 	UInt8 bufferOut[4];
@@ -189,22 +168,16 @@ TEST(CCryptoTests, write1Read4)
 
 TEST(CCryptoTests, readWriteIvChanged)
 {
-	CMockEventQueue eventQueue;
-	CMockStream innerStream(eventQueue);
+	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<CMockStream> innerStream;
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockRead));
-	EXPECT_CALL(innerStream, write(_, _)).Times(2);
-	EXPECT_CALL(innerStream, read(_, _)).Times(2);
-	EXPECT_CALL(innerStream, getEventTarget()).Times(6);
-	EXPECT_CALL(eventQueue, removeHandlers(_)).Times(2);
-	EXPECT_CALL(eventQueue, adoptHandler(_, _, _)).Times(2);
-	EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(2);
 	
 	const byte iv1[] = "bbbbbbbbbbbbbbb";
 	const byte iv2[] = "ccccccccccccccc";
 
-	CCryptoStream cs1(eventQueue, &innerStream, false);
+	CCryptoStream cs1(&eventQueue, &innerStream, false);
 	cs1.setKeyWithIv(g_key, sizeof(g_key), iv1);
 	
 	UInt8 bufferIn[4];
@@ -214,7 +187,7 @@ TEST(CCryptoTests, readWriteIvChanged)
 	bufferIn[3] = 'd';
 	cs1.write(bufferIn, 4);
 	
-	CCryptoStream cs2(eventQueue, &innerStream, false);
+	CCryptoStream cs2(&eventQueue, &innerStream, false);
 	cs2.setKeyWithIv(g_key, sizeof(g_key), iv2);
 
 	UInt8 bufferOut[4];
@@ -295,8 +268,6 @@ readWriteIvChanged_mockRead(void* out, UInt32 n)
 	memcpy(out, g_readWriteIvChanged_buffer, n);
 	return n;
 }
-
-// TODO: macro?
 
 void
 readWriteIvChangeTrigger_mockWrite(const void* in, UInt32 n)
