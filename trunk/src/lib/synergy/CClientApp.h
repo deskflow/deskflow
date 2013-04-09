@@ -74,7 +74,7 @@ public:
 	void handleClientConnected(const CEvent&, void*);
 	void handleClientFailed(const CEvent& e, void*);
 	void handleClientDisconnected(const CEvent&, void*);
-	CClient* openClient(const CString& name, const CNetworkAddress& address, CScreen* screen);
+	CClient* openClient(const CString& name, const CNetworkAddress& address, CScreen* screen, const CCryptoOptions& crypto);
 	void closeClient(CClient* client);
 	bool startClient();
 	void stopClient();

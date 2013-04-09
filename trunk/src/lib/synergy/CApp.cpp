@@ -161,6 +161,14 @@ CApp::parseArg(const int& argc, const char* const* argv, int& i)
 		// HACK: stop error happening when using portable (synergyp) 
 	}
 
+	else if (isArg(i, argc, argv, NULL, "--crypto-pass")) {
+		argsBase().m_crypto.m_pass = argv[++i];
+	}
+
+	else if (isArg(i, argc, argv, NULL, "--crypto-mode")) {
+		argsBase().m_crypto.setMode(argv[++i]);
+	}
+
 #if VNC_SUPPORT
 	else if (isArg(i, argc, argv, NULL, "--vnc")) {
 		argsBase().m_enableVnc = true;

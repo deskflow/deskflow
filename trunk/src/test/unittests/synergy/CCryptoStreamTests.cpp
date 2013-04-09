@@ -27,6 +27,8 @@ using ::testing::NiceMock;
 
 using namespace std;
 
+const byte kIv[] = "aaaaaaaaaaaaaa"; // +\0, AES block size = 16
+
 UInt8 g_write_buffer[4];
 void write_mockWrite(const void* in, UInt32 n);
 
@@ -53,9 +55,6 @@ UInt8 g_readWriteIvChangeTrigger_buffer[4 + 4 + 16]; // abcd, DCIV, 16-byte IV
 void readWriteIvChangeTrigger_mockWrite(const void* in, UInt32 n);
 UInt8 readWriteIvChangeTrigger_mockRead(void* out, UInt32 n);
 
-const byte g_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; // +\0, 32-byte/256-bit key.
-const byte g_iv[] = "bbbbbbbbbbbbbb"; // +\0, AES block size = 16
-
 TEST(CCryptoTests, write)
 {
 	const UInt32 size = 4;
@@ -67,33 +66,35 @@ TEST(CCryptoTests, write)
 	
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
+	CCryptoOptions options("ctr", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write_mockWrite));
-
-	CCryptoStream cs(&eventQueue, &innerStream, false);
-	cs.setKeyWithIv(g_key, sizeof(g_key), g_iv);
+	
+	CCryptoStream cs(&eventQueue, &innerStream, options, false);
+	cs.setIv(kIv);
 	cs.write(buffer, size);
 	
-	EXPECT_EQ(254, g_write_buffer[0]);
-	EXPECT_EQ(44, g_write_buffer[1]);
-	EXPECT_EQ(187, g_write_buffer[2]);
-	EXPECT_EQ(253, g_write_buffer[3]);
+	EXPECT_EQ(198, g_write_buffer[0]);
+	EXPECT_EQ(62, g_write_buffer[1]);
+	EXPECT_EQ(15, g_write_buffer[2]);
+	EXPECT_EQ(87, g_write_buffer[3]);
 }
 
 TEST(CCryptoTests, read)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
+	CCryptoOptions options("ctr", "mock");
 	
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(read_mockRead));
-
-	CCryptoStream cs(&eventQueue, &innerStream, false);
-	cs.setKeyWithIv(g_key, sizeof(g_key), g_iv);
 	
-	g_read_buffer[0] = 254;
-	g_read_buffer[1] = 44;
-	g_read_buffer[2] = 187;
-	g_read_buffer[3] = 253;
+	CCryptoStream cs(&eventQueue, &innerStream, options, false);
+	cs.setIv(kIv);
+	
+	g_read_buffer[0] = 198;
+	g_read_buffer[1] = 62;
+	g_read_buffer[2] = 15;
+	g_read_buffer[3] = 87;
 
 	const UInt32 size = 4;
 	UInt8* buffer = new UInt8[size];
@@ -109,20 +110,21 @@ TEST(CCryptoTests, write4Read1)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
+	CCryptoOptions options("ctr", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write4Read1_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write4Read1_mockRead));
-
-	CCryptoStream cs1(&eventQueue, &innerStream, false);
-	cs1.setKeyWithIv(g_key, sizeof(g_key), g_iv);
+	
+	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
+	cs1.setIv(kIv);
 	
 	cs1.write("a", 1);
 	cs1.write("b", 1);
 	cs1.write("c", 1);
 	cs1.write("d", 1);
 
-	CCryptoStream cs2(&eventQueue, &innerStream, false);
-	cs2.setKeyWithIv(g_key, sizeof(g_key), g_iv);
+	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
+	cs2.setIv(kIv);
 	
 	UInt8 buffer[4];
 	cs2.read(buffer, 4);
@@ -137,12 +139,13 @@ TEST(CCryptoTests, write1Read4)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
+	CCryptoOptions options("ctr", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write1Read4_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write1Read4_mockRead));
 
-	CCryptoStream cs1(&eventQueue, &innerStream, false);
-	cs1.setKeyWithIv(g_key, sizeof(g_key), g_iv);
+	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
+	cs1.setIv(kIv);
 
 	UInt8 bufferIn[4];
 	bufferIn[0] = 'a';
@@ -151,8 +154,8 @@ TEST(CCryptoTests, write1Read4)
 	bufferIn[3] = 'd';
 	cs1.write(bufferIn, 4);
 	
-	CCryptoStream cs2(&eventQueue, &innerStream, false);
-	cs2.setKeyWithIv(g_key, sizeof(g_key), g_iv);
+	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
+	cs2.setIv(kIv);
 
 	UInt8 bufferOut[4];
 	cs2.read(&bufferOut[0], 1);
@@ -170,15 +173,16 @@ TEST(CCryptoTests, readWriteIvChanged)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
+	CCryptoOptions options("ctr", "mock");
 	
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockRead));
 	
 	const byte iv1[] = "bbbbbbbbbbbbbbb";
 	const byte iv2[] = "ccccccccccccccc";
-
-	CCryptoStream cs1(&eventQueue, &innerStream, false);
-	cs1.setKeyWithIv(g_key, sizeof(g_key), iv1);
+	
+	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
+	cs1.setIv(iv1);
 	
 	UInt8 bufferIn[4];
 	bufferIn[0] = 'a';
@@ -187,8 +191,8 @@ TEST(CCryptoTests, readWriteIvChanged)
 	bufferIn[3] = 'd';
 	cs1.write(bufferIn, 4);
 	
-	CCryptoStream cs2(&eventQueue, &innerStream, false);
-	cs2.setKeyWithIv(g_key, sizeof(g_key), iv2);
+	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
+	cs1.setIv(iv2);
 
 	UInt8 bufferOut[4];
 	cs2.read(bufferOut, 4);
@@ -213,6 +217,20 @@ TEST(CCryptoTests, readWriteIvChanged)
 	EXPECT_EQ('b', bufferOut[1]);
 	EXPECT_EQ('c', bufferOut[2]);
 	EXPECT_EQ('d', bufferOut[3]);
+}
+
+TEST(CCryptoTests, createKey)
+{
+	byte hash1[16];
+	CCryptoStream::createKey(hash1, "MockLongPassword", 16, 16);
+	EXPECT_EQ(hash1[0], 149);
+	EXPECT_EQ(hash1[15], 235);
+	
+	byte hash2[32];
+	CCryptoStream::createKey(hash2, "MockLongPassword", 32, 16);
+	EXPECT_EQ(hash2[0], 149);
+	EXPECT_EQ(hash2[15], 235);
+	EXPECT_EQ(hash2[31], 7);
 }
 
 void

@@ -20,6 +20,7 @@
 
 #include "CString.h"
 #include "CGameDevice.h"
+#include "CCryptoOptions.h"
 
 class CArgsBase {
 public:
@@ -37,6 +38,7 @@ public:
 	bool m_disableTray;
 	bool m_enableVnc;
 	bool m_enableIpc;
+	CCryptoOptions m_crypto;
 #if SYSAPI_WIN32
 	bool m_debugServiceWait;
 	bool m_pauseOnExit;

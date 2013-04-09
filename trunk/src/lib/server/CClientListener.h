@@ -23,6 +23,7 @@
 #include "CEvent.h"
 #include "stddeque.h"
 #include "stdset.h"
+#include "CCryptoOptions.h"
 
 class CClientProxy;
 class CClientProxyUnknown;
@@ -36,7 +37,9 @@ class CClientListener {
 public:
 	// The factories are adopted.
 	CClientListener(const CNetworkAddress&,
-							ISocketFactory*, IStreamFilterFactory*);
+							ISocketFactory*,
+							IStreamFilterFactory*,
+							const CCryptoOptions& crypto);
 	~CClientListener();
 
 	//! @name manipulators
@@ -81,11 +84,10 @@ private:
 	IStreamFilterFactory*	m_streamFilterFactory;
 	CNewClients				m_newClients;
 	CWaitingClients			m_waitingClients;
+	CServer*				m_server;
+	CCryptoOptions			m_crypto;
 
 	static CEvent::Type		s_connectedEvent;
-	CServer*				m_server;
-
-	static const bool		s_cryptoEnabled = true;
 };
 
 #endif

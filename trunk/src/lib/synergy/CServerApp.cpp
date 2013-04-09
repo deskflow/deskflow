@@ -695,7 +695,7 @@ CClientListener*
 CServerApp::openClientListener(const CNetworkAddress& address)
 {
 	CClientListener* listen =
-		new CClientListener(address, new CTCPSocketFactory, NULL);
+		new CClientListener(address, new CTCPSocketFactory, NULL, args().m_crypto);
 	EVENTQUEUE->adoptHandler(CClientListener::getConnectedEvent(), listen,
 		new TMethodEventJob<CServerApp>(
 		this, &CServerApp::handleClientConnected, listen));

@@ -393,10 +393,10 @@ CClientApp::handleClientDisconnected(const CEvent&, void*)
 
 
 CClient*
-CClientApp::openClient(const CString& name, const CNetworkAddress& address, CScreen* screen)
+CClientApp::openClient(const CString& name, const CNetworkAddress& address, CScreen* screen, const CCryptoOptions& crypto)
 {
 	CClient* client = new CClient(
-		EVENTQUEUE, name, address, new CTCPSocketFactory, NULL, screen);
+		EVENTQUEUE, name, address, new CTCPSocketFactory, NULL, screen, crypto);
 
 	try {
 		EVENTQUEUE->adoptHandler(
@@ -454,7 +454,7 @@ CClientApp::startClient()
 		if (s_clientScreen == NULL) {
 			clientScreen = openClientScreen();
 			s_client     = openClient(args().m_name,
-				*args().m_serverAddress, clientScreen);
+				*args().m_serverAddress, clientScreen, args().m_crypto);
 			s_clientScreen  = clientScreen;
 			LOG((CLOG_NOTE "started client"));
 		}

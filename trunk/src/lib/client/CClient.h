@@ -23,6 +23,7 @@
 #include "IClipboard.h"
 #include "CNetworkAddress.h"
 #include "INode.h"
+#include "CCryptoOptions.h"
 
 class CEventQueueTimer;
 class CScreen;
@@ -57,7 +58,8 @@ public:
 							const CString& name, const CNetworkAddress& address,
 							ISocketFactory* socketFactory,
 							IStreamFilterFactory* streamFilterFactory,
-							CScreen* screen);
+							CScreen* screen,
+							const CCryptoOptions& crypto);
 	~CClient();
 	
 #ifdef TEST_ENV
@@ -217,12 +219,11 @@ private:
 	CString					m_dataClipboard[kClipboardEnd];
 	IEventQueue*			m_eventQueue;
 	CCryptoStream*			m_cryptoStream;
+	CCryptoOptions			m_crypto;
 
 	static CEvent::Type		s_connectedEvent;
 	static CEvent::Type		s_connectionFailedEvent;
 	static CEvent::Type		s_disconnectedEvent;
-
-	static const int		s_cryptoEnabled = true;
 };
 
 #endif

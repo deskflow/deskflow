@@ -19,10 +19,10 @@
 
 #include "BasicTypes.h"
 #include "CStreamFilter.h"
-#include <cryptopp562/gcm.h>
-#include <cryptopp562/modes.h>
-#include <cryptopp562/aes.h>
+#include "CCryptoMode.h"
+#include "CCryptoOptions.h"
 #include <cryptopp562/osrng.h>
+#include "cryptopp562/sha.h"
 
 #define CRYPTO_IV_SIZE CryptoPP::AES::BLOCKSIZE
 
@@ -32,7 +32,7 @@ Encrypts (on write) and decrypts (on read) to and from an underlying stream.
 */
 class CCryptoStream : public CStreamFilter {
 public:
-	CCryptoStream(IEventQueue* eventQueue, synergy::IStream* stream, bool adoptStream = true);
+	CCryptoStream(IEventQueue* eventQueue, synergy::IStream* stream, const CCryptoOptions& options, bool adoptStream = true);
 	virtual ~CCryptoStream();
 
 	//! @name manipulators
@@ -51,9 +51,6 @@ public:
 	*/
 	virtual void		write(const void* in, UInt32 n);
 
-    //! Set the key and IV
-    void                setKeyWithIv(const byte* key, size_t length, const byte* iv);
-
     //! Set the IV
     void                setIv(const byte* iv);
 
@@ -64,25 +61,22 @@ public:
 	*/
 	void				newIv(byte* out);
 
+	//! Creates a key from a password
+	static void			createKey(byte* out, const CString& password, UInt8 keyLength, UInt8 hashCount);
+
 private:
-	// TODO: allow user to change the block cypher mode.
-	/*
-	For CBC and CFB, reusing an IV leaks some information about the first block of plaintext,
-	and about any common prefix shared by the two messages. For OFB and CTR, reusing an IV
-	completely destroys security. http://en.wikipedia.org/wiki/Block_cipher_modes_of_operation
-	*/
-	CryptoPP::OFB_Mode<CryptoPP::AES>::Encryption		m_encryption;
-	CryptoPP::OFB_Mode<CryptoPP::AES>::Decryption		m_decryption;
-	//CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption		m_encryption;
-	//CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption		m_decryption;
-	//CryptoPP::GCM<CryptoPP::AES>::Encryption			m_encryption;
-	//CryptoPP::GCM<CryptoPP::AES>::Decryption			m_decryption;
-	//CryptoPP::CTR_Mode<CryptoPP::AES>::Encryption		m_encryption;
-	//CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption		m_decryption;
-
 	void				logBuffer(const char* name, const byte* buf, int length);
-
-    const byte*			m_key;
-    size_t				m_keyLength;
+	
+    byte*				m_key;
+	CCryptoMode			m_encryption;
+	CCryptoMode			m_decryption;
 	CryptoPP::AutoSeededRandomPool m_autoSeedRandomPool;
 };
+
+namespace synergy {
+namespace crypto {
+
+const UInt32 kKeyLength = 32;
+
+}
+}

@@ -26,9 +26,6 @@ using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Invoke;
 
-const byte g_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"; // +\0, 32-byte/256-bit key.
-const byte g_iv[] = "bbbbbbbbbbbbbb"; // +\0, AES block size = 16
-
 const UInt8 cryptoIvWrite_bufferLen = 200;
 UInt8 cryptoIvWrite_buffer[cryptoIvWrite_bufferLen];
 UInt32 cryptoIvWrite_bufferIndex = 0;
@@ -42,7 +39,6 @@ TEST(CClientProxyTests, cryptoIvWrite)
 	NiceMock<CMockStream> innerStream;
 	NiceMock<CMockServer> server;
 	NiceMock<CMockCryptoStream>* stream = new NiceMock<CMockCryptoStream>(&eventQueue, &innerStream);
-	stream->setKeyWithIv(g_key, sizeof(g_key), g_iv);
 
 	ON_CALL(*stream, write(_, _)).WillByDefault(Invoke(cryptoIv_mockWrite));
 
