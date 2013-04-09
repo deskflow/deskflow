@@ -21,10 +21,12 @@
 
 #include "CClientProxy1_1.h"
 
+class IEventQueue;
+
 //! Proxy for client implementing protocol version 1.2
 class CClientProxy1_2 : public CClientProxy1_1 {
 public:
-	CClientProxy1_2(const CString& name, synergy::IStream* adoptedStream);
+	CClientProxy1_2(const CString& name, synergy::IStream* adoptedStream, IEventQueue* eventQueue);
 	~CClientProxy1_2();
 
 	// IClient overrides

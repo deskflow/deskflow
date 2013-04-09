@@ -22,7 +22,7 @@
 
 using namespace CryptoPP;
 
-CCryptoStream::CCryptoStream(IEventQueue& eventQueue, synergy::IStream* stream, bool adoptStream) :
+CCryptoStream::CCryptoStream(IEventQueue* eventQueue, synergy::IStream* stream, bool adoptStream) :
 	CStreamFilter(eventQueue, stream, adoptStream),
 	m_key(NULL),
 	m_keyLength(0)

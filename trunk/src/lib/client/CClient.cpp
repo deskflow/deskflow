@@ -48,16 +48,12 @@ CEvent::Type			CClient::s_connectedEvent        = CEvent::kUnknown;
 CEvent::Type			CClient::s_connectionFailedEvent = CEvent::kUnknown;
 CEvent::Type			CClient::s_disconnectedEvent     = CEvent::kUnknown;
 
-CClient::CClient(IEventQueue& eventQueue) :
-	m_eventQueue(eventQueue)
-{
-}
-
-CClient::CClient(IEventQueue& eventQueue,
+CClient::CClient(IEventQueue* eventQueue,
 				const CString& name, const CNetworkAddress& address,
 				ISocketFactory* socketFactory,
 				IStreamFilterFactory* streamFilterFactory,
 				CScreen* screen) :
+	m_mock(false),
 	m_name(name),
 	m_serverAddress(address),
 	m_socketFactory(socketFactory),
@@ -71,25 +67,25 @@ CClient::CClient(IEventQueue& eventQueue,
 	m_suspended(false),
 	m_connectOnResume(false),
 	m_eventQueue(eventQueue),
-	m_mock(false)
+	m_cryptoStream(NULL)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
 
 	// register suspend/resume event handlers
-	m_eventQueue.adoptHandler(IScreen::getSuspendEvent(),
+	m_eventQueue->adoptHandler(IScreen::getSuspendEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleSuspend));
-	m_eventQueue.adoptHandler(IScreen::getResumeEvent(),
+	m_eventQueue->adoptHandler(IScreen::getResumeEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleResume));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getGameDeviceTimingRespEvent(),
+	m_eventQueue->adoptHandler(IPlatformScreen::getGameDeviceTimingRespEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleGameDeviceTimingResp));
-	EVENTQUEUE->adoptHandler(IPlatformScreen::getGameDeviceFeedbackEvent(),
+	m_eventQueue->adoptHandler(IPlatformScreen::getGameDeviceFeedbackEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleGameDeviceFeedback));
@@ -97,13 +93,13 @@ CClient::CClient(IEventQueue& eventQueue,
 
 CClient::~CClient()
 {
-	// HACK: can't disable dtor with mocks
-	if (m_mock)
+	if (m_mock) {
 		return;
+	}
 
-	m_eventQueue.removeHandler(IScreen::getSuspendEvent(),
+	m_eventQueue->removeHandler(IScreen::getSuspendEvent(),
 							  getEventTarget());
-	m_eventQueue.removeHandler(IScreen::getResumeEvent(),
+	m_eventQueue->removeHandler(IScreen::getResumeEvent(),
 							  getEventTarget());
 
 	cleanupTimer();
@@ -153,9 +149,9 @@ CClient::connect()
 		m_stream = new CPacketStreamFilter(m_stream, true);
 
 		if (s_cryptoEnabled) {
-			CCryptoStream* cryptoStream = new CCryptoStream(*EVENTQUEUE, m_stream, true);
-			cryptoStream->setKeyWithIv(g_key, sizeof(g_key), g_iv);
-			m_stream = cryptoStream;
+			m_cryptoStream = new CCryptoStream(m_eventQueue, m_stream, true);
+			m_cryptoStream->setKeyWithIv(g_key, sizeof(g_key), g_iv);
+			m_stream = m_cryptoStream;
 		}
 
 		// connect
@@ -197,6 +193,14 @@ CClient::handshakeComplete()
 	m_ready = true;
 	m_screen->enable();
 	sendEvent(getConnectedEvent(), NULL);
+}
+
+void
+CClient::setCryptoIv(const UInt8* iv)
+{
+	if (m_cryptoStream != NULL) {
+		m_cryptoStream->setIv(iv);
+	}
 }
 
 bool
@@ -444,7 +448,7 @@ CClient::sendClipboard(ClipboardID id)
 void
 CClient::sendEvent(CEvent::Type type, void* data)
 {
-	m_eventQueue.addEvent(CEvent(type, getEventTarget(), data));
+	m_eventQueue->addEvent(CEvent(type, getEventTarget(), data));
 }
 
 void
@@ -453,7 +457,7 @@ CClient::sendConnectionFailedEvent(const char* msg)
 	CFailInfo* info = new CFailInfo(msg);
 	info->m_retry = true;
 	CEvent event(getConnectionFailedEvent(), getEventTarget(), info, CEvent::kDontFreeData);
-	EVENTQUEUE->addEvent(event);
+	m_eventQueue->addEvent(event);
 }
 
 void
@@ -461,11 +465,11 @@ CClient::setupConnecting()
 {
 	assert(m_stream != NULL);
 
-	m_eventQueue.adoptHandler(IDataSocket::getConnectedEvent(),
+	m_eventQueue->adoptHandler(IDataSocket::getConnectedEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleConnected));
-	m_eventQueue.adoptHandler(IDataSocket::getConnectionFailedEvent(),
+	m_eventQueue->adoptHandler(IDataSocket::getConnectionFailedEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleConnectionFailed));
@@ -476,23 +480,23 @@ CClient::setupConnection()
 {
 	assert(m_stream != NULL);
 
-	m_eventQueue.adoptHandler(ISocket::getDisconnectedEvent(),
+	m_eventQueue->adoptHandler(ISocket::getDisconnectedEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleDisconnected));
-	m_eventQueue.adoptHandler(m_stream->getInputReadyEvent(),
+	m_eventQueue->adoptHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleHello));
-	m_eventQueue.adoptHandler(m_stream->getOutputErrorEvent(),
+	m_eventQueue->adoptHandler(m_stream->getOutputErrorEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleOutputError));
-	m_eventQueue.adoptHandler(m_stream->getInputShutdownEvent(),
+	m_eventQueue->adoptHandler(m_stream->getInputShutdownEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleDisconnected));
-	m_eventQueue.adoptHandler(m_stream->getOutputShutdownEvent(),
+	m_eventQueue->adoptHandler(m_stream->getOutputShutdownEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleDisconnected));
@@ -504,12 +508,12 @@ CClient::setupScreen()
 	assert(m_server == NULL);
 
 	m_ready  = false;
-	m_server = new CServerProxy(this, m_stream, *EVENTQUEUE);
-	m_eventQueue.adoptHandler(IScreen::getShapeChangedEvent(),
+	m_server = new CServerProxy(this, m_stream, m_eventQueue);
+	m_eventQueue->adoptHandler(IScreen::getShapeChangedEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleShapeChanged));
-	m_eventQueue.adoptHandler(IScreen::getClipboardGrabbedEvent(),
+	m_eventQueue->adoptHandler(IScreen::getClipboardGrabbedEvent(),
 							getEventTarget(),
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleClipboardGrabbed));
@@ -520,8 +524,8 @@ CClient::setupTimer()
 {
 	assert(m_timer == NULL);
 
-	m_timer = m_eventQueue.newOneShotTimer(15.0, NULL);
-	m_eventQueue.adoptHandler(CEvent::kTimer, m_timer,
+	m_timer = m_eventQueue->newOneShotTimer(15.0, NULL);
+	m_eventQueue->adoptHandler(CEvent::kTimer, m_timer,
 							new TMethodEventJob<CClient>(this,
 								&CClient::handleConnectTimeout));
 }
@@ -530,9 +534,9 @@ void
 CClient::cleanupConnecting()
 {
 	if (m_stream != NULL) {
-		m_eventQueue.removeHandler(IDataSocket::getConnectedEvent(),
+		m_eventQueue->removeHandler(IDataSocket::getConnectedEvent(),
 							m_stream->getEventTarget());
-		m_eventQueue.removeHandler(IDataSocket::getConnectionFailedEvent(),
+		m_eventQueue->removeHandler(IDataSocket::getConnectionFailedEvent(),
 							m_stream->getEventTarget());
 	}
 }
@@ -541,15 +545,15 @@ void
 CClient::cleanupConnection()
 {
 	if (m_stream != NULL) {
-		m_eventQueue.removeHandler(m_stream->getInputReadyEvent(),
+		m_eventQueue->removeHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget());
-		m_eventQueue.removeHandler(m_stream->getOutputErrorEvent(),
+		m_eventQueue->removeHandler(m_stream->getOutputErrorEvent(),
 							m_stream->getEventTarget());
-		m_eventQueue.removeHandler(m_stream->getInputShutdownEvent(),
+		m_eventQueue->removeHandler(m_stream->getInputShutdownEvent(),
 							m_stream->getEventTarget());
-		m_eventQueue.removeHandler(m_stream->getOutputShutdownEvent(),
+		m_eventQueue->removeHandler(m_stream->getOutputShutdownEvent(),
 							m_stream->getEventTarget());
-		m_eventQueue.removeHandler(ISocket::getDisconnectedEvent(),
+		m_eventQueue->removeHandler(ISocket::getDisconnectedEvent(),
 							m_stream->getEventTarget());
 		delete m_stream;
 		m_stream = NULL;
@@ -564,9 +568,9 @@ CClient::cleanupScreen()
 			m_screen->disable();
 			m_ready = false;
 		}
-		m_eventQueue.removeHandler(IScreen::getShapeChangedEvent(),
+		m_eventQueue->removeHandler(IScreen::getShapeChangedEvent(),
 							getEventTarget());
-		m_eventQueue.removeHandler(IScreen::getClipboardGrabbedEvent(),
+		m_eventQueue->removeHandler(IScreen::getClipboardGrabbedEvent(),
 							getEventTarget());
 		delete m_server;
 		m_server = NULL;
@@ -577,8 +581,8 @@ void
 CClient::cleanupTimer()
 {
 	if (m_timer != NULL) {
-		m_eventQueue.removeHandler(CEvent::kTimer, m_timer);
-		m_eventQueue.deleteTimer(m_timer);
+		m_eventQueue->removeHandler(CEvent::kTimer, m_timer);
+		m_eventQueue->deleteTimer(m_timer);
 		m_timer = NULL;
 	}
 }
@@ -708,7 +712,7 @@ CClient::handleHello(const CEvent&, void*)
 	// receive another event for already pending messages so we fake
 	// one.
 	if (m_stream->isReady()) {
-		m_eventQueue.addEvent(CEvent(m_stream->getInputReadyEvent(),
+		m_eventQueue->addEvent(CEvent(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget()));
 	}
 }

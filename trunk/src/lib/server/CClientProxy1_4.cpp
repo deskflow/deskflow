@@ -24,13 +24,14 @@
 #include <cstring>
 #include <memory>
 #include "CServer.h"
+#include "CCryptoStream.h"
 
 //
 // CClientProxy1_4
 //
 
-CClientProxy1_4::CClientProxy1_4(const CString& name, synergy::IStream* stream, CServer* server) :
-	CClientProxy1_3(name, stream), m_server(server)
+CClientProxy1_4::CClientProxy1_4(const CString& name, synergy::IStream* stream, CServer* server, IEventQueue* eventQueue) :
+	CClientProxy1_3(name, stream, eventQueue), m_server(server)
 {
 	assert(m_server != NULL);
 }
@@ -65,6 +66,43 @@ CClientProxy1_4::gameDeviceTimingReq()
 {
 	LOG((CLOG_DEBUG2 "send game device timing request to \"%s\"", getName().c_str()));
 	CProtocolUtil::writef(getStream(), kMsgCGameTimingReq);
+}
+
+void
+CClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button)
+{
+	cryptoIv();
+	CClientProxy1_3::keyDown(key, mask, button);
+}
+
+void
+CClientProxy1_4::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button)
+{
+	cryptoIv();
+	CClientProxy1_3::keyRepeat(key, mask, count, button);
+}
+
+void
+CClientProxy1_4::keyUp(KeyID key, KeyModifierMask mask, KeyButton button)
+{
+	cryptoIv();
+	CClientProxy1_3::keyUp(key, mask, button);
+}
+
+void
+CClientProxy1_4::cryptoIv()
+{
+	CCryptoStream* cryptoStream = dynamic_cast<CCryptoStream*>(getStream());
+	if (cryptoStream == NULL) {
+		return;
+	}
+
+	byte iv[CRYPTO_IV_SIZE];
+	cryptoStream->newIv(iv);
+	CString data(reinterpret_cast<const char*>(iv), CRYPTO_IV_SIZE);
+
+	LOG((CLOG_DEBUG2 "send crypto iv change to \"%s\"", getName().c_str()));
+	CProtocolUtil::writef(getStream(), kMsgDCryptoIv, &data);
 }
 
 bool

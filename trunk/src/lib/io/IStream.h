@@ -33,8 +33,8 @@ Defines the interface for all streams.
 */
 class IStream : public IInterface {
 public:
-	IStream() : m_eventQueue(*EVENTQUEUE) { }
-	IStream(IEventQueue& eventQueue) : m_eventQueue(eventQueue) { }
+	IStream() : m_eventQueue(EVENTQUEUE) { }
+	IStream(IEventQueue* eventQueue) : m_eventQueue(eventQueue) { }
 
 	//! @name manipulators
 	//@{
@@ -156,9 +156,10 @@ public:
 	*/
 	virtual CEvent::Type	getOutputShutdownEvent();
 
-	//@}
+	//! Get the event queue
+	IEventQueue&			getEventQueue() const;
 
-	IEventQueue&			m_eventQueue;
+	//@}
 
 private:
 	static CEvent::Type	s_inputReadyEvent;
@@ -166,6 +167,8 @@ private:
 	static CEvent::Type	s_outputErrorEvent;
 	static CEvent::Type	s_inputShutdownEvent;
 	static CEvent::Type	s_outputShutdownEvent;
+
+	IEventQueue*			m_eventQueue;
 };
 
 }

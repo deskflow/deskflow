@@ -283,6 +283,11 @@ extern const char*		kMsgDInfo;
 // pairs.
 extern const char*		kMsgDSetOptions;
 
+// crypto iv:  primary -> secondary
+// sends a new iv (initialization vector) to the client for the
+// cryptography stream.
+extern const char*		kMsgDCryptoIv;
+
 //
 // query codes
 //

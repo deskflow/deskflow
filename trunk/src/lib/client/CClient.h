@@ -32,6 +32,7 @@ class ISocketFactory;
 namespace synergy { class IStream; }
 class IStreamFilterFactory;
 class IEventQueue;
+class CCryptoStream;
 
 //! Synergy client
 /*!
@@ -46,21 +47,22 @@ public:
 		CString			m_what;
 	};
 
-protected:
-	CClient(IEventQueue& eventQueue);
-
 public:
 	/*!
 	This client will attempt to connect to the server using \p name
 	as its name and \p address as the server's address and \p factory
 	to create the socket.  \p screen is	the local screen.
 	*/
-	CClient(IEventQueue& eventQueue,
+	CClient(IEventQueue* eventQueue,
 							const CString& name, const CNetworkAddress& address,
 							ISocketFactory* socketFactory,
 							IStreamFilterFactory* streamFilterFactory,
 							CScreen* screen);
 	~CClient();
+	
+#ifdef TEST_ENV
+	CClient() { }
+#endif
 
 	//! @name manipulators
 	//@{
@@ -82,7 +84,10 @@ public:
 	/*!
 	Notifies the client that the connection handshake has completed.
 	*/
-	void				handshakeComplete();
+	virtual void		handshakeComplete();
+
+	//! Set crypto IV
+	virtual void		setCryptoIv(const UInt8* iv);
 
 	//@}
 	//! @name accessors
@@ -190,6 +195,9 @@ private:
 	void				handleGameDeviceTimingResp(const CEvent& event, void*);
 	void				handleGameDeviceFeedback(const CEvent& event, void*);
 	
+public:
+	bool					m_mock;
+
 private:
 	CString					m_name;
 	CNetworkAddress			m_serverAddress;
@@ -207,8 +215,8 @@ private:
 	bool					m_sentClipboard[kClipboardEnd];
 	IClipboard::Time		m_timeClipboard[kClipboardEnd];
 	CString					m_dataClipboard[kClipboardEnd];
-	IEventQueue&			m_eventQueue;
-	bool					m_mock;
+	IEventQueue*			m_eventQueue;
+	CCryptoStream*			m_cryptoStream;
 
 	static CEvent::Type		s_connectedEvent;
 	static CEvent::Type		s_connectionFailedEvent;

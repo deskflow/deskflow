@@ -24,7 +24,7 @@
 //! Proxy for client implementing protocol version 1.3
 class CClientProxy1_3 : public CClientProxy1_2 {
 public:
-	CClientProxy1_3(const CString& name, synergy::IStream* adoptedStream);
+	CClientProxy1_3(const CString& name, synergy::IStream* adoptedStream, IEventQueue* eventQueue);
 	~CClientProxy1_3();
 
 	// IClient overrides

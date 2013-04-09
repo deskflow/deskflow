@@ -25,11 +25,12 @@
 
 class CEvent;
 class CEventQueueTimer;
+class IEventQueue;
 
 //! Proxy for client implementing protocol version 1.0
 class CClientProxy1_0 : public CClientProxy {
 public:
-	CClientProxy1_0(const CString& name, synergy::IStream* adoptedStream);
+	CClientProxy1_0(const CString& name, synergy::IStream* adoptedStream, IEventQueue* eventQueue);
 	~CClientProxy1_0();
 
 	// IScreen
@@ -62,6 +63,7 @@ public:
 	virtual void		gameDeviceSticks(GameDeviceID id, SInt16 x1, SInt16 y1, SInt16 x2, SInt16 y2);
 	virtual void		gameDeviceTriggers(GameDeviceID id, UInt8 t1, UInt8 t2);
 	virtual void		gameDeviceTimingReq();
+	virtual void		cryptoIv(const UInt8* iv);
 
 protected:
 	virtual bool		parseHandshakeMessage(const UInt8* code);
@@ -103,6 +105,7 @@ private:
 	double				m_heartbeatAlarm;
 	CEventQueueTimer*	m_heartbeatTimer;
 	MessageParser		m_parser;
+	IEventQueue*		m_eventQueue;
 };
 
 #endif

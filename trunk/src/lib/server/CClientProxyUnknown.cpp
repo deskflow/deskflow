@@ -219,23 +219,23 @@ CClientProxyUnknown::handleData(const CEvent&, void*)
 		if (major == 1) {
 			switch (minor) {
 			case 0:
-				m_proxy = new CClientProxy1_0(name, m_stream);
+				m_proxy = new CClientProxy1_0(name, m_stream, EVENTQUEUE);
 				break;
 
 			case 1:
-				m_proxy = new CClientProxy1_1(name, m_stream);
+				m_proxy = new CClientProxy1_1(name, m_stream, EVENTQUEUE);
 				break;
 
 			case 2:
-				m_proxy = new CClientProxy1_2(name, m_stream);
+				m_proxy = new CClientProxy1_2(name, m_stream, EVENTQUEUE);
 				break;
 
 			case 3:
-				m_proxy = new CClientProxy1_3(name, m_stream);
+				m_proxy = new CClientProxy1_3(name, m_stream, EVENTQUEUE);
 				break;
 
 			case 4:
-				m_proxy = new CClientProxy1_4(name, m_stream, m_server);
+				m_proxy = new CClientProxy1_4(name, m_stream, m_server, EVENTQUEUE);
 				break;
 			}
 		}

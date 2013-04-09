@@ -30,7 +30,6 @@ class CEventQueueTimer;
 class IClipboard;
 namespace synergy { class IStream; }
 class IEventQueue;
-class CCryptoStream;
 
 //! Proxy for server
 /*!
@@ -43,7 +42,7 @@ public:
 	Process messages from the server on \p stream and forward to
 	\p client.
 	*/
-	CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue& eventQueue);
+	CServerProxy(CClient* client, synergy::IStream* stream, IEventQueue* eventQueue);
 	~CServerProxy();
 
 	//! @name manipulators
@@ -56,6 +55,10 @@ public:
 	void				onGameDeviceFeedback(GameDeviceID id, UInt16 m1, UInt16 m2);
 
 	//@}
+
+#ifdef TEST_ENV
+	void				handleDataForTest() { handleData(NULL, NULL); }
+#endif
 
 protected:
 	enum EResult { kOkay, kUnknown, kDisconnect };
@@ -96,6 +99,7 @@ private:
 	void				gameDeviceSticks();
 	void				gameDeviceTriggers();
 	void				gameDeviceTimingReq();
+	void				cryptoIv();
 	void				screensaver();
 	void				resetOptions();
 	void				setOptions();
@@ -107,7 +111,6 @@ private:
 
 	CClient*			m_client;
 	synergy::IStream*	m_stream;
-	CCryptoStream*		m_cryptoStream;
 
 	UInt32				m_seqNum;
 
@@ -124,7 +127,7 @@ private:
 	CEventQueueTimer*	m_keepAliveAlarmTimer;
 
 	MessageParser		m_parser;
-	IEventQueue&		m_eventQueue;
+	IEventQueue*		m_eventQueue;
 };
 
 #endif
