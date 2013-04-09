@@ -51,6 +51,9 @@ set(inc
 	CEventGameDevice.h
 	CVncClient.h
 	CCryptoStream.h
+	CCryptoMode.h
+	ECryptoMode.h
+	CCryptoOptions.h
 )
 
 set(src
@@ -83,6 +86,8 @@ set(src
 	CVncClient.cpp
 	CGameDevice.cpp
 	CCryptoStream.cpp
+	CCryptoMode.cpp
+	CCryptoOptions.cpp
 )
 
 if (WIN32)

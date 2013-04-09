@@ -19,18 +19,36 @@
 #include "CLog.h"
 #include <sstream>
 #include <string>
+#include "CCryptoOptions.h"
 
 using namespace CryptoPP;
+using namespace synergy::crypto;
 
-CCryptoStream::CCryptoStream(IEventQueue* eventQueue, synergy::IStream* stream, bool adoptStream) :
+CCryptoStream::CCryptoStream(
+		IEventQueue* eventQueue,
+		synergy::IStream* stream,
+		const CCryptoOptions& options,
+		bool adoptStream) :
 	CStreamFilter(eventQueue, stream, adoptStream),
 	m_key(NULL),
-	m_keyLength(0)
+	m_encryption(options.m_mode, true),
+	m_decryption(options.m_mode, false)
 {
+	LOG((CLOG_INFO "crypto mode: %s", options.m_modeString.c_str()));
+
+	m_key = new byte[kKeyLength];
+	if (!options.m_pass.empty()) {
+		createKey(m_key, options.m_pass, kKeyLength, options.m_pass.length());
+
+		byte iv[CRYPTO_IV_SIZE];
+		createKey(iv, options.m_pass, CRYPTO_IV_SIZE, options.m_pass.length() * 2);
+		setIv(iv);
+	}
 }
 
 CCryptoStream::~CCryptoStream()
 {
+	delete[] m_key;
 }
 
 UInt32
@@ -52,7 +70,7 @@ CCryptoStream::read(void* out, UInt32 n)
 	}
 
 	logBuffer("cypher", cypher, n);
-	m_decryption.ProcessData(static_cast<byte*>(out), cypher, n);
+	m_decryption.processData(static_cast<byte*>(out), cypher, n);
 	logBuffer("plaintext", static_cast<byte*>(out), n);
 	delete[] cypher;
 	return result;
@@ -66,23 +84,29 @@ CCryptoStream::write(const void* in, UInt32 n)
 
 	logBuffer("plaintext", static_cast<byte*>(const_cast<void*>(in)), n);
 	byte* cypher = new byte[n];
-	m_encryption.ProcessData(cypher, static_cast<const byte*>(in), n);
+	m_encryption.processData(cypher, static_cast<const byte*>(in), n);
 	logBuffer("cypher", cypher, n);
 	getStream()->write(cypher, n);
 	delete[] cypher;
 }
 
 void
-CCryptoStream::setKeyWithIv(const byte* key, size_t length, const byte* iv)
+CCryptoStream::createKey(byte* out, const CString& password, UInt8 keyLength, UInt8 hashCount)
 {
-	logBuffer("iv", key, length);
-	logBuffer("key", iv, CRYPTO_IV_SIZE);
+	assert(keyLength <= SHA256::DIGESTSIZE);
 
-	m_encryption.SetKeyWithIV(key, length, iv);
-	m_decryption.SetKeyWithIV(key, length, iv);
+	byte temp[SHA256::DIGESTSIZE];
+	byte* in = reinterpret_cast<byte*>(const_cast<char*>(password.c_str()));
+	SHA256().CalculateDigest(temp, in, password.length());
 
-	m_key = key;
-	m_keyLength = length;
+	byte* tempKey = new byte[SHA256::DIGESTSIZE];
+	for (int i = 0; i < hashCount; ++i) {
+		memcpy(tempKey, temp, SHA256::DIGESTSIZE);
+		SHA256().CalculateDigest(temp, tempKey, SHA256::DIGESTSIZE);
+	}
+	delete[] tempKey;
+
+	memcpy(out, temp, keyLength);
 }
 
 void
@@ -90,8 +114,9 @@ CCryptoStream::setIv(const byte* iv)
 {
 	assert(m_key != NULL);
 	logBuffer("iv", iv, CRYPTO_IV_SIZE);
-	m_encryption.SetKeyWithIV(m_key, m_keyLength, iv);
-	m_decryption.SetKeyWithIV(m_key, m_keyLength, iv);
+
+	m_encryption.setKeyWithIv(m_key, kKeyLength, iv);
+	m_decryption.setKeyWithIv(m_key, kKeyLength, iv);
 }
 
 void

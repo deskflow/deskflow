@@ -29,6 +29,7 @@
 #include "IEventQueue.h"
 #include "TMethodEventJob.h"
 #include "CCryptoStream.h"
+#include "CCryptoOptions.h"
 
 // TODO: these are just for testing -- make sure they're gone by release!
 const byte g_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -42,10 +43,12 @@ CEvent::Type			CClientListener::s_connectedEvent = CEvent::kUnknown;
 
 CClientListener::CClientListener(const CNetworkAddress& address,
 				ISocketFactory* socketFactory,
-				IStreamFilterFactory* streamFilterFactory) :
+				IStreamFilterFactory* streamFilterFactory,
+				const CCryptoOptions& crypto) :
 	m_socketFactory(socketFactory),
 	m_streamFilterFactory(streamFilterFactory),
-	m_server(NULL)
+	m_server(NULL),
+	m_crypto(crypto)
 {
 	assert(m_socketFactory != NULL);
 
@@ -149,9 +152,9 @@ CClientListener::handleClientConnecting(const CEvent&, void*)
 	}
 	stream = new CPacketStreamFilter(stream, true);
 	
-	if (s_cryptoEnabled) {
-		CCryptoStream* cryptoStream = new CCryptoStream(EVENTQUEUE, stream, true);
-		cryptoStream->setKeyWithIv(g_key, sizeof(g_key), g_iv);
+	if (m_crypto.m_mode != kDisabled) {
+		CCryptoStream* cryptoStream = new CCryptoStream(
+			EVENTQUEUE, stream, m_crypto, true);
 		stream = cryptoStream;
 	}
 

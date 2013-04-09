@@ -1,11 +1,11 @@
 /*
  * synergy -- mouse and keyboard sharing utility
  * Copyright (C) 2013 Bolton Software Ltd.
- *
+ * 
  * This package is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * found in the file COPYING that should have accompanied this file.
- *
+ * 
  * This package is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,16 +17,22 @@
 
 #pragma once
 
-#include <gmock/gmock.h>
-#include "CCryptoStream.h"
-#include "CCryptoOptions.h"
+#include "CString.h"
+#include "ECryptoMode.h"
 
-class CMockCryptoStream : public CCryptoStream
-{
+//! Encapsulates basic crypto options
+class CCryptoOptions {
 public:
-	CMockCryptoStream(IEventQueue* eventQueue, IStream* stream) :
-		CCryptoStream(eventQueue, stream, CCryptoOptions("gcm", "stub"), false) { }
+	CCryptoOptions() : m_mode(kDisabled) { }
+	CCryptoOptions(const CString& modeString, const CString& pass);
+	
+	//! Return enum for mode string
+	static ECryptoMode	parseMode(CString modeString);
 
-	MOCK_METHOD2(read, UInt32(void*, UInt32));
-	MOCK_METHOD2(write, void(const void*, UInt32));
+	//! Parse and set mode string
+	void				setMode(CString modeString);
+
+	CString				m_pass;
+	ECryptoMode			m_mode;
+	CString				m_modeString;
 };

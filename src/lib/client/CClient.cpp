@@ -36,10 +36,6 @@
 #include "IPlatformScreen.h"
 #include "CCryptoStream.h"
 
-// TODO: these are just for testing -- make sure they're gone by release!
-const byte g_key[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-const byte g_iv[] = "aaaaaaaaaaaaaaa";
-
 //
 // CClient
 //
@@ -52,7 +48,8 @@ CClient::CClient(IEventQueue* eventQueue,
 				const CString& name, const CNetworkAddress& address,
 				ISocketFactory* socketFactory,
 				IStreamFilterFactory* streamFilterFactory,
-				CScreen* screen) :
+				CScreen* screen,
+				const CCryptoOptions& crypto) :
 	m_mock(false),
 	m_name(name),
 	m_serverAddress(address),
@@ -67,7 +64,8 @@ CClient::CClient(IEventQueue* eventQueue,
 	m_suspended(false),
 	m_connectOnResume(false),
 	m_eventQueue(eventQueue),
-	m_cryptoStream(NULL)
+	m_cryptoStream(NULL),
+	m_crypto(crypto)
 {
 	assert(m_socketFactory != NULL);
 	assert(m_screen        != NULL);
@@ -148,9 +146,9 @@ CClient::connect()
 		}
 		m_stream = new CPacketStreamFilter(m_stream, true);
 
-		if (s_cryptoEnabled) {
-			m_cryptoStream = new CCryptoStream(m_eventQueue, m_stream, true);
-			m_cryptoStream->setKeyWithIv(g_key, sizeof(g_key), g_iv);
+		if (m_crypto.m_mode != kDisabled) {
+			m_cryptoStream = new CCryptoStream(
+				EVENTQUEUE, m_stream, m_crypto, true);
 			m_stream = m_cryptoStream;
 		}
 
