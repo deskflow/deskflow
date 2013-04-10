@@ -28,13 +28,15 @@ using ::testing::Invoke;
 
 const UInt8 cryptoIvWrite_bufferLen = 200;
 UInt8 cryptoIvWrite_buffer[cryptoIvWrite_bufferLen];
-UInt32 cryptoIvWrite_bufferIndex = 0;
+UInt32 cryptoIvWrite_bufferIndex;
 
 void
 cryptoIv_mockWrite(const void* in, UInt32 n);
 
 TEST(CClientProxyTests, cryptoIvWrite)
-{	
+{
+	cryptoIvWrite_bufferIndex = 0;
+
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
 	NiceMock<CMockServer> server;

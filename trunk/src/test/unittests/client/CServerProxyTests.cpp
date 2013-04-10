@@ -32,18 +32,20 @@ using ::testing::AnyNumber;
 
 const UInt8 mouseMove_bufferLen = 16;
 UInt8 mouseMove_buffer[mouseMove_bufferLen];
-UInt32 mouseMove_bufferIndex = 0;
+UInt32 mouseMove_bufferIndex;
 UInt32 mouseMove_mockRead(void* buffer, UInt32 n);
 
 const UInt8 cryptoIv_bufferLen = 20;
 UInt8 cryptoIv_buffer[cryptoIv_bufferLen];
-UInt32 cryptoIv_bufferIndex = 0;
+UInt32 cryptoIv_bufferIndex;
 CString cryptoIv_result;
 UInt32 cryptoIv_mockRead(void* buffer, UInt32 n);
 void cryptoIv_setCryptoIv(const UInt8*);
 
 TEST(CServerProxyTests, mouseMove)
 {
+	mouseMove_bufferIndex = 0;
+
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockClient> client;
 	NiceMock<CMockStream> stream;
@@ -61,6 +63,8 @@ TEST(CServerProxyTests, mouseMove)
 
 TEST(CServerProxyTests, cryptoIv)
 {
+	cryptoIv_bufferIndex = 0;
+
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockClient> client;
 	NiceMock<CMockStream> stream;

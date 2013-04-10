@@ -36,18 +36,18 @@ UInt8 g_read_buffer[4];
 UInt8 read_mockRead(void* out, UInt32 n);
 
 UInt8 g_write4Read1_buffer[4];
-UInt32 g_write4Read1_bufferIndex = 0;
+UInt32 g_write4Read1_bufferIndex;
 void write4Read1_mockWrite(const void* in, UInt32 n);
 UInt8 write4Read1_mockRead(void* out, UInt32 n);
 
 UInt8 g_write1Read4_buffer[4];
-UInt32 g_write1Read4_bufferIndex = 0;
+UInt32 g_write1Read4_bufferIndex;
 void write1Read4_mockWrite(const void* in, UInt32 n);
 UInt8 write1Read4_mockRead(void* out, UInt32 n);
 
 UInt8 g_readWriteIvChanged_buffer[4];
-UInt32 g_readWriteIvChangeTrigger_writeBufferIndex = 0;
-UInt32 g_readWriteIvChangeTrigger_readBufferIndex = 0;
+UInt32 g_readWriteIvChangeTrigger_writeBufferIndex;
+UInt32 g_readWriteIvChangeTrigger_readBufferIndex;
 void readWriteIvChanged_mockWrite(const void* in, UInt32 n);
 UInt8 readWriteIvChanged_mockRead(void* out, UInt32 n);
 
@@ -108,6 +108,8 @@ TEST(CCryptoTests, read)
 
 TEST(CCryptoTests, write4Read1)
 {
+	g_write4Read1_bufferIndex = 0;
+
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
 	CCryptoOptions options("ctr", "mock");
@@ -137,6 +139,8 @@ TEST(CCryptoTests, write4Read1)
 
 TEST(CCryptoTests, write1Read4)
 {
+	g_write1Read4_bufferIndex = 0;
+
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
 	CCryptoOptions options("ctr", "mock");
@@ -171,6 +175,9 @@ TEST(CCryptoTests, write1Read4)
 
 TEST(CCryptoTests, readWriteIvChanged)
 {
+	g_readWriteIvChangeTrigger_writeBufferIndex = 0;
+	g_readWriteIvChangeTrigger_readBufferIndex = 0;
+
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
 	CCryptoOptions options("ctr", "mock");
