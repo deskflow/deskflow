@@ -38,10 +38,10 @@ CCryptoStream::CCryptoStream(
 
 	m_key = new byte[kKeyLength];
 	if (!options.m_pass.empty()) {
-		createKey(m_key, options.m_pass, kKeyLength, options.m_pass.length());
+		createKey(m_key, options.m_pass, kKeyLength, static_cast<UInt8>(options.m_pass.length()));
 
 		byte iv[CRYPTO_IV_SIZE];
-		createKey(iv, options.m_pass, CRYPTO_IV_SIZE, options.m_pass.length() * 2);
+		createKey(iv, options.m_pass, CRYPTO_IV_SIZE, static_cast<UInt8>(options.m_pass.length()) * 2);
 		setIv(iv);
 	}
 }
