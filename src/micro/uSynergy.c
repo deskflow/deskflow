@@ -479,7 +479,7 @@ static void sUpdateContext(uSynergyContext *context)
 	int receive_size = USYNERGY_RECEIVE_BUFFER_SIZE - context->m_receiveOfs;
 	int num_received = 0;
 	int packlen = 0;
-	if (context->m_receiveFunc(context->m_cookie, context->m_receiveBuffer, receive_size, &num_received) == USYNERGY_FALSE)
+	if (context->m_receiveFunc(context->m_cookie, context->m_receiveBuffer + context->m_receiveOfs, receive_size, &num_received) == USYNERGY_FALSE)
 	{
 		/* Receive failed, let's try to reconnect */
 		char buffer[128];
