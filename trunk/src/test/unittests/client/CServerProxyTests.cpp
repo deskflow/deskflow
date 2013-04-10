@@ -55,7 +55,7 @@ TEST(CServerProxyTests, mouseMove)
 	EXPECT_CALL(client, mouseMove(1, 2)).Times(1);
 	
 	const char data[] = "DSOP\0\0\0\0DMMV\0\1\0\2";
-	memcpy(mouseMove_buffer, data, sizeof(data));
+	memcpy(mouseMove_buffer, data, mouseMove_bufferLen);
 
 	CServerProxy serverProxy(&client, &stream, &eventQueue);
 	serverProxy.handleDataForTest();
@@ -73,7 +73,7 @@ TEST(CServerProxyTests, cryptoIv)
 	ON_CALL(client, setCryptoIv(_)).WillByDefault(Invoke(cryptoIv_setCryptoIv));
 
 	const char data[] = "DSOP\0\0\0\0DCIV\0\0\0\4mock";
-	memcpy(cryptoIv_buffer, data, sizeof(data));
+	memcpy(cryptoIv_buffer, data, cryptoIv_bufferLen);
 
 	CServerProxy serverProxy(&client, &stream, &eventQueue);
 	serverProxy.handleDataForTest();
