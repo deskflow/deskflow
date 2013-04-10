@@ -22,17 +22,35 @@ if (WIN32)
 	list(APPEND cpp_src ${cpp_hdr})
 endif()
 
-if (WIN32)
-if (CMAKE_SIZEOF_VOID_P EQUAL 8) # 64-bit
-	# do not compile crypto++ ASM on 64-bit windows, we just get
-	# bunch of linker errors.
-	set (CMAKE_CXX_FLAGS "/DCRYPTOPP_DISABLE_ASM /EHsc")
-endif()
+file(GLOB cpp_ignore
+  ${cpp_dir}/simple.cpp
+  ${cpp_dir}/strciphr.cpp
+  ${cpp_dir}/polynomi.cpp
+  ${cpp_dir}/eprecomp.cpp
+  ${cpp_dir}/eccrypto.cpp
+  ${cpp_dir}/algebra.cpp)
+list(REMOVE_ITEM cpp_src ${cpp_ignore})
+
+# 64-bit windows - compile asm file.
+if(CMAKE_CL_64)
+  list(APPEND cpp_src ${cpp_dir}/x64dll.asm ${cpp_dir}/x64masm.asm)
+  
+  add_custom_command(OUTPUT $(IntDir)x64dll.obj
+    COMMAND ml64.exe /c /nologo /Fo$(IntDir)x64dll.obj /Zi 
+    "${CMAKE_CURRENT_SOURCE_DIR}/${cpp_dir}/x64dll.asm"
+    MAIN_DEPENDENCY ${cpp_dir}/x64dll.asm
+    VERBATIM)
+    
+  add_custom_command(OUTPUT $(IntDir)x64masm.obj
+    COMMAND ml64.exe /c /nologo /Fo$(IntDir)x64masm.obj /Zi 
+    "${CMAKE_CURRENT_SOURCE_DIR}/${cpp_dir}/x64masm.asm"
+    MAIN_DEPENDENCY ${cpp_dir}/x64masm.asm
+    VERBATIM)
 endif()
 
 if (APPLE)
 	# osx goes bat-shit crazy if we dont use these magical arguments.
-	set (CMAKE_CXX_FLAGS "-O2 -DCRYPTOPP_DISABLE_ASM -pipe -Wno-tautological-compare")
+	set(CMAKE_CXX_FLAGS "-O2 -DCRYPTOPP_DISABLE_ASM -pipe -Wno-tautological-compare")
 endif()
 
 add_library(cryptopp STATIC ${cpp_src})
