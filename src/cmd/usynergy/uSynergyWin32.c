@@ -42,8 +42,7 @@ void screenActive(uSynergyCookie cookie, uSynergyBool active);
 void mouse(uSynergyCookie cookie, uint16_t x, uint16_t y, int16_t wheelX,
 	int16_t wheelY, uSynergyBool buttonLeft, uSynergyBool buttonRight,
 	uSynergyBool buttonMiddle);
-void keyboard(uSynergyCookie cookie, uint16_t key, uSynergyBool down,
-	uSynergyBool repeat);
+void keyboard(uSynergyCookie cookie, uint16_t key, uint16_t modifiers, uSynergyBool down, uSynergyBool repeat);
 void joystick(uSynergyCookie cookie, uint8_t joyNum, uint16_t buttons,
 	int8_t leftStickX, int8_t leftStickY, int8_t rightStickX,
 	int8_t rightStickY);
@@ -120,8 +119,7 @@ void mouse(uSynergyCookie cookie, uint16_t x, uint16_t y, int16_t wheelX,
 	printf("mouse, pos=%d,%d\n", x, y);
 }
 
-void keyboard(uSynergyCookie cookie, uint16_t key, uSynergyBool down,
-	uSynergyBool repeat)
+void keyboard(uSynergyCookie cookie, uint16_t key, uint16_t modifiers, uSynergyBool down, uSynergyBool repeat)
 {
 	printf("keyboard, key=%d down=%d repeat=%d\n", key, down, repeat);
 }
