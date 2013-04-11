@@ -103,6 +103,10 @@ CClientProxy1_4::cryptoIv()
 
 	LOG((CLOG_DEBUG2 "send crypto iv change to \"%s\"", getName().c_str()));
 	CProtocolUtil::writef(getStream(), kMsgDCryptoIv, &data);
+	
+	// change IV only after we've sent the current IV, otherwise
+	// the client won't be able to decrypt the new IV.
+	cryptoStream->setIv(iv);
 }
 
 bool

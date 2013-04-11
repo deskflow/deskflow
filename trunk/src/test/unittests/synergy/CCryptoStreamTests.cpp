@@ -56,6 +56,9 @@ UInt8 g_readWriteIvChangeTrigger_buffer[4 + 4 + 16]; // abcd, DCIV, 16-byte IV
 void readWriteIvChangeTrigger_mockWrite(const void* in, UInt32 n);
 UInt8 readWriteIvChangeTrigger_mockRead(void* out, UInt32 n);
 
+UInt8 g_newIvDoesNotChangeIv_buffer[1];
+void newIvDoesNotChangeIv_mockWrite(const void* in, UInt32 n);
+
 TEST(CCryptoTests, write)
 {
 	const UInt32 size = 4;
@@ -248,6 +251,25 @@ TEST(CCryptoTests, createKey)
 	EXPECT_EQ(hash3[31], 233);
 }
 
+TEST(CCryptoTests, newIvDoesNotChangeIv)
+{
+	NiceMock<CMockEventQueue> eventQueue;
+	NiceMock<CMockStream> innerStream;
+	CCryptoOptions options("ctr", "mock");	
+	
+	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(newIvDoesNotChangeIv_mockWrite));
+
+	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
+	cs1.write("a", 1);
+	EXPECT_EQ(175, g_newIvDoesNotChangeIv_buffer[0]);
+
+	byte iv[CRYPTO_IV_SIZE];
+	cs1.newIv(iv);
+
+	cs1.write("a", 1);
+	EXPECT_EQ(92, g_newIvDoesNotChangeIv_buffer[0]);
+}
+
 void
 write_mockWrite(const void* in, UInt32 n)
 {
@@ -317,4 +339,10 @@ readWriteIvChangeTrigger_mockRead(void* out, UInt32 n)
 	memcpy(out, &g_readWriteIvChangeTrigger_buffer[g_readWriteIvChangeTrigger_readBufferIndex], n);
 	g_readWriteIvChangeTrigger_readBufferIndex += n;
 	return n;
+}
+
+void
+newIvDoesNotChangeIv_mockWrite(const void* in, UInt32 n)
+{
+	memcpy(g_newIvDoesNotChangeIv_buffer, in, 1);
 }

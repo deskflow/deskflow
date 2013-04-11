@@ -124,7 +124,6 @@ void
 CCryptoStream::newIv(byte* out)
 {
 	m_autoSeedRandomPool.GenerateBlock(out, CRYPTO_IV_SIZE);
-	setIv(out);
 }
 
 void
