@@ -61,7 +61,6 @@ CClientProxy::getStream() const
 CEvent::Type
 CClientProxy::getReadyEvent()
 {
-	LOG((CLOG_DEBUG4 "getReadyEvent"));
 	return EVENTQUEUE->registerTypeOnce(s_readyEvent,
 							"CClientProxy::ready");
 }
@@ -69,7 +68,6 @@ CClientProxy::getReadyEvent()
 CEvent::Type
 CClientProxy::getDisconnectedEvent()
 {
-	LOG((CLOG_DEBUG4 "getDisconnectedEvent"));
 	return EVENTQUEUE->registerTypeOnce(s_disconnectedEvent,
 							"CClientProxy::disconnected");
 }
@@ -77,7 +75,6 @@ CClientProxy::getDisconnectedEvent()
 CEvent::Type
 CClientProxy::getClipboardChangedEvent()
 {
-	LOG((CLOG_DEBUG4 "getClipboardChangedEvent"));
 	return EVENTQUEUE->registerTypeOnce(s_clipboardChangedEvent,
 							"CClientProxy::clipboardChanged");
 }
