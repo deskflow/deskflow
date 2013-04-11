@@ -50,9 +50,14 @@ else()
 	add_definitions(-DCRYPTOPP_DISABLE_ASM)
 endif()
 
-if (APPLE)
-	# osx goes bat-shit crazy if we dont use these magical arguments.
-	set(CMAKE_CXX_FLAGS "-O2 -DCRYPTOPP_DISABLE_ASM -pipe -Wno-tautological-compare")
+if (UNIX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -pipe")
+	
+	if (APPLE)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -arch i386 -Wno-tautological-compare")
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+	endif()
 endif()
 
 add_library(cryptopp STATIC ${cpp_src})
