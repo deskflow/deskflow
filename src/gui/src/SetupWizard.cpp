@@ -45,7 +45,7 @@ SetupWizard::SetupWizard(MainWindow& mainWindow, bool startMain) :
 
 #endif
 
-	connect(this, SIGNAL(finished(int)), this, SLOT(handlefinished()));
+	connect(this, SIGNAL(finished(int)), this, SLOT(handleFinished()));
 	connect(m_pServerRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupServer, SLOT(setChecked(bool)));
 	connect(m_pClientRadioButton, SIGNAL(toggled(bool)), m_MainWindow.m_pGroupClient, SLOT(setChecked(bool)));
 }
@@ -60,28 +60,59 @@ bool SetupWizard::validateCurrentPage()
 	message.setWindowTitle(tr("Setup Synergy"));
 	message.setIcon(QMessageBox::Information);
 
-	bool result = false;
 	if (currentPage() == m_pNodePage)
 	{
-		result = m_pClientRadioButton->isChecked() ||
+		bool result = m_pClientRadioButton->isChecked() ||
 				 m_pServerRadioButton->isChecked();
 
 		if (!result)
 		{
 			message.setText(tr("Please select an option."));
 			message.exec();
+			return false;
 		}
 	}
-	return result;
+	else if (currentPage() == m_pCryptoPage)
+	{
+		QString modeText = m_pComboCryptoMode->currentText();
+		if (modeText.isEmpty())
+		{
+			message.setText(tr("Encryption mode required."));
+			message.exec();
+			return false;
+		}
+
+		if (parseCryptoMode(modeText) != Disabled)
+		{
+			if (m_pLineEditCryptoPass->text().isEmpty())
+			{
+				message.setText(tr("Encryption password required."));
+				message.exec();
+				return false;
+			}
+
+			if (m_pLineEditCryptoPass->text() != m_pLineEditCryptoPassConfirm->text())
+			{
+				message.setText(tr("Encryption password and confirmation do not match."));
+				message.exec();
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
-void SetupWizard::handlefinished()
+void SetupWizard::handleFinished()
 {
 	close();
 
 	AppConfig& appConfig = m_MainWindow.appConfig();
 
-	appConfig.setWizardHasRun(true);
+	appConfig.setCryptoMode(parseCryptoMode(m_pComboCryptoMode->currentText()));
+	appConfig.setCryptoPass(m_pLineEditCryptoPass->text());
+
+	appConfig.setWizardHasRun();
 	appConfig.saveSettings();
 
 	QSettings& settings = m_MainWindow.settings();
@@ -95,10 +126,40 @@ void SetupWizard::handlefinished()
 		settings.setValue("groupClientChecked", true);
 		settings.setValue("groupServerChecked", false);
 	}
+
 	settings.sync();
 
 	if (m_StartMain)
 	{
 		m_MainWindow.start(true);
 	}
+}
+
+void SetupWizard::on_m_pComboCryptoMode_currentIndexChanged(int index)
+{
+	bool enabled = parseCryptoMode(m_pComboCryptoMode->currentText()) != Disabled;
+	m_pLineEditCryptoPass->setEnabled(enabled);
+	m_pLineEditCryptoPassConfirm->setEnabled(enabled);
+}
+
+CryptoMode SetupWizard::parseCryptoMode(const QString& s)
+{
+	if (s.startsWith("OFB"))
+	{
+		return OFB;
+	}
+	else if (s.startsWith("CFB"))
+	{
+		return CFB;
+	}
+	else if (s.startsWith("CTR"))
+	{
+		return CTR;
+	}
+	else if (s.startsWith("GCM"))
+	{
+		return GCM;
+	}
+
+	return Disabled;
 }

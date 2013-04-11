@@ -22,6 +22,7 @@
 
 #include <QDialog>
 #include "ui_SettingsDialogBase.h"
+#include "CryptoMode.h"
 
 class AppConfig;
 
@@ -39,9 +40,12 @@ class SettingsDialog : public QDialog, public Ui::SettingsDialogBase
 		AppConfig& appConfig() { return m_AppConfig; }
 
 	private:
+		int getCryptoModeIndex(const CryptoMode& mode) const;
+		CryptoMode parseCryptoMode(const QString& s);
 		AppConfig& m_AppConfig;
 
 	private slots:
+		void on_m_pComboCryptoMode_currentIndexChanged(int index);
 		void on_m_pCheckBoxLogToFile_stateChanged(int );
 		void on_m_pButtonBrowseLog_clicked();
 };

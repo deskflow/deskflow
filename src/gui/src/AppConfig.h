@@ -21,6 +21,13 @@
 #define APPCONFIG_H
 
 #include <QString>
+#include "CryptoMode.h"
+
+// this should be incremented each time a new page is added. this is
+// saved to settings when the user finishes running the wizard. if
+// the saved wizard version is lower than this number, the wizard
+// will be displayed.
+const int kWizardVersion = 1;
 
 class QSettings;
 class SettingsDialog;
@@ -52,8 +59,11 @@ class AppConfig
 		bool autoStart() const { return m_AutoStart; }
 		bool autoHide() const { return m_AutoHide; }
 		bool autoStartPrompt() const { return m_AutoStartPrompt; }
-		bool wizardHasRun() const { return m_WizardHasRun; }
+		const QString& cryptoPass() const { return m_CryptoPass; }
+		CryptoMode cryptoMode() const { return m_CryptoMode; }
+		QString cryptoModeString() const;
 		ProcessMode processMode() const { return m_ProcessMode; }
+		bool wizardShouldRun() const { return m_WizardLastRun < kWizardVersion; }
 
 		QString synergysName() const { return m_SynergysName; }
 		QString synergycName() const { return m_SynergycName; }
@@ -75,11 +85,15 @@ class AppConfig
 		void setAutoStart(bool b);
 		void setAutoHide(bool b) { m_AutoHide = b; }
 		void setAutoStartPrompt(bool b) { m_AutoStartPrompt = b; }
-		void setWizardHasRun(bool b) { m_WizardHasRun = b; }
+		void setCryptoMode(CryptoMode c) { m_CryptoMode = c; }
 		void setProcessMode(ProcessMode p) { m_ProcessMode = p; }
+		void setWizardHasRun() { m_WizardLastRun = kWizardVersion; }
 
 		void loadSettings();
 		void saveSettings();
+
+		void setCryptoPass(const QString& s);
+		static QString hash(const QString& string);
 
 	private:
 		QSettings* m_pSettings;
@@ -93,7 +107,9 @@ class AppConfig
 		bool m_AutoStart;
 		bool m_AutoHide;
 		bool m_AutoStartPrompt;
-		bool m_WizardHasRun;
+		int m_WizardLastRun;
+		QString m_CryptoPass;
+		CryptoMode m_CryptoMode;
 		ProcessMode m_ProcessMode;
 
 		static const char m_SynergysName[];

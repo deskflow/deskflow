@@ -380,6 +380,12 @@ void MainWindow::startSynergy()
 	if (!appConfig().screenName().isEmpty())
 		args << "--name" << appConfig().screenName();
 
+		if (appConfig().cryptoMode() != Disabled)
+		{
+			args << "--crypto-mode" << appConfig().cryptoModeString();
+			args << "--crypto-pass" << appConfig().cryptoPass();
+		}
+
 	if (desktopMode)
 	{
 		setSynergyProcess(new QProcess(this));

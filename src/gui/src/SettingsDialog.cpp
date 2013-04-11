@@ -20,6 +20,7 @@
 
 #include <QtCore>
 #include <QtGui>
+#include <QCryptographicHash>
 
 #include "AppConfig.h"
 
@@ -40,10 +41,24 @@ SettingsDialog::SettingsDialog(QWidget* parent, AppConfig& config) :
 	m_pLineEditLogFilename->setText(appConfig().logFilename());
 	m_pCheckBoxAutoStart->setChecked(appConfig().autoStart());
 	m_pCheckBoxAutoHide->setChecked(appConfig().autoHide());
+	m_pComboCryptoMode->setCurrentIndex(getCryptoModeIndex(appConfig().cryptoMode()));
+	m_pLineEditCryptoPass->setText(appConfig().cryptoPass());
 }
 
 void SettingsDialog::accept()
 {
+	const QString& cryptoPass = m_pLineEditCryptoPass->text();
+	CryptoMode cryptoMode = parseCryptoMode(m_pComboCryptoMode->currentText());
+	if ((cryptoMode != Disabled) && cryptoPass.isEmpty())
+	{
+		QMessageBox message;
+		message.setWindowTitle("Settings");
+		message.setIcon(QMessageBox::Information);
+		message.setText(tr("Encryption password must not be empty."));
+		message.exec();
+		return;
+	}
+
 	appConfig().setAutoConnect(m_pCheckBoxAutoConnect->isChecked());
 	appConfig().setScreenName(m_pLineEditScreenName->text());
 	appConfig().setPort(m_pSpinBoxPort->value());
@@ -54,7 +69,9 @@ void SettingsDialog::accept()
 	appConfig().setLogFilename(m_pLineEditLogFilename->text());
 	appConfig().setAutoStart(m_pCheckBoxAutoStart->isChecked());
 	appConfig().setAutoHide(m_pCheckBoxAutoHide->isChecked());
-
+	appConfig().setCryptoMode(cryptoMode);
+	appConfig().setCryptoPass(cryptoPass);
+	appConfig().saveSettings();
 	QDialog::accept();
 }
 
@@ -77,4 +94,57 @@ void SettingsDialog::on_m_pButtonBrowseLog_clicked()
 	{
 		m_pLineEditLogFilename->setText(fileName);
 	}
+}
+
+void SettingsDialog::on_m_pComboCryptoMode_currentIndexChanged(int index)
+{
+	bool enabled = parseCryptoMode(m_pComboCryptoMode->currentText()) != Disabled;
+	m_pLineEditCryptoPass->setEnabled(enabled);
+	if (!enabled)
+	{
+		m_pLineEditCryptoPass->clear();
+	}
+}
+
+int SettingsDialog::getCryptoModeIndex(const CryptoMode& mode) const
+{
+	switch (mode)
+	{
+	case OFB:
+		return m_pComboCryptoMode->findText("OFB", Qt::MatchStartsWith);
+
+	case CFB:
+		return m_pComboCryptoMode->findText("CFB", Qt::MatchStartsWith);
+
+	case CTR:
+		return m_pComboCryptoMode->findText("CTR", Qt::MatchStartsWith);
+
+	case GCM:
+		return m_pComboCryptoMode->findText("GCM", Qt::MatchStartsWith);
+
+	default:
+		return m_pComboCryptoMode->findText("Disable", Qt::MatchStartsWith);
+	}
+}
+
+CryptoMode SettingsDialog::parseCryptoMode(const QString& s)
+{
+	if (s.startsWith("OFB"))
+	{
+		return OFB;
+	}
+	else if (s.startsWith("CFB"))
+	{
+		return CFB;
+	}
+	else if (s.startsWith("CTR"))
+	{
+		return CTR;
+	}
+	else if (s.startsWith("GCM"))
+	{
+		return GCM;
+	}
+
+	return Disabled;
 }
