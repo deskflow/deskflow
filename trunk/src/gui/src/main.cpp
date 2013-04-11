@@ -66,13 +66,13 @@ int main(int argc, char* argv[])
 	MainWindow mainWindow(settings, appConfig);
 	SetupWizard setupWizard(mainWindow, true);
 
-	if (appConfig.wizardHasRun())
+	if (appConfig.wizardShouldRun())
 	{
-		mainWindow.start(false);
+		setupWizard.show();
 	}
 	else
 	{
-		setupWizard.show();
+		mainWindow.start(false);
 	}
 
 	return app.exec();

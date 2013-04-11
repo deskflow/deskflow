@@ -54,7 +54,9 @@ AppConfig::AppConfig(QSettings* settings) :
 	m_AutoStart(false),
 	m_AutoHide(false),
 	m_AutoStartPrompt(false),
-	m_WizardHasRun(false),
+	m_WizardLastRun(0),
+	m_CryptoPass(),
+	m_CryptoMode(),
 	m_ProcessMode(DEFAULT_PROCESS_MODE)
 {
 	Q_ASSERT(m_pSettings);
@@ -154,8 +156,10 @@ void AppConfig::loadSettings()
 	m_AutoStart = settings().value("autoStart", false).toBool();
 	m_AutoHide = settings().value("autoHide", true).toBool();
 	m_AutoStartPrompt = settings().value("autoStartPrompt", true).toBool();
-	m_WizardHasRun = settings().value("wizardHasRun", false).toBool();
+	m_WizardLastRun = settings().value("wizardLastRun", 0).toInt();
 	m_ProcessMode = (ProcessMode)settings().value("processMode2", DEFAULT_PROCESS_MODE).toInt();
+	m_CryptoPass = settings().value("cryptoPass", "").toString();
+	m_CryptoMode = (CryptoMode)settings().value("cryptoMode", Disabled).toInt();
 }
 
 void AppConfig::saveSettings()
@@ -170,6 +174,53 @@ void AppConfig::saveSettings()
 	settings().setValue("autoStart", m_AutoStart);
 	settings().setValue("autoHide", m_AutoHide);
 	settings().setValue("autoStartPrompt", m_AutoStartPrompt);
-	settings().setValue("wizardHasRun", m_WizardHasRun);
+	settings().setValue("wizardLastRun", kWizardVersion);
 	settings().setValue("processMode2", m_ProcessMode);
+	settings().setValue("cryptoPass", m_CryptoPass);
+	settings().setValue("cryptoMode", m_CryptoMode);
+}
+
+QString AppConfig::hash(const QString& string)
+{
+	QByteArray data = string.toUtf8();
+	QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
+	return hash.toHex();
+}
+
+void AppConfig::setCryptoPass(const QString &s)
+{
+	// clear field to user doesn't get confused.
+	if (s.isEmpty())
+	{
+		m_CryptoPass.clear();
+		return;
+	}
+
+	// only hash if password changes -- don't re-hash the hash.
+	if (m_CryptoPass != s)
+	{
+		m_CryptoPass = hash(s);
+	}
+}
+
+QString AppConfig::cryptoModeString() const
+{
+	switch (cryptoMode())
+	{
+	case OFB:
+		return "ofb";
+
+	case CFB:
+		return "cfb";
+
+	case CTR:
+		return "ctr";
+
+	case GCM:
+		return "gcm";
+
+	default:
+		qCritical() << "invalid crypto mode";
+		return "";
+	}
 }

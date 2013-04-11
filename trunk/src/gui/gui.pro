@@ -63,7 +63,8 @@ HEADERS += src/MainWindow.h \
     src/SetupWizard.h \
     src/IpcClient.h \
     src/IpcReader.h \
-    src/Ipc.h
+    src/Ipc.h \
+    src/CryptoMode.h
 RESOURCES += res/Synergy.qrc
 RC_FILE = res/win/Synergy.rc
 TRANSLATIONS = res/lang/nl_NL.ts
