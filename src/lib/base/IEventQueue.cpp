@@ -17,6 +17,7 @@
  */
 
 #include "IEventQueue.h"
+#include "CLog.h"
 
 //
 // IEventQueue
@@ -35,6 +36,7 @@ IEventQueue::getSystemTarget()
 IEventQueue*
 IEventQueue::getInstance()
 {
+	LOG((CLOG_DEBUG4 "assert event queue instance"));
 	assert(s_instance != NULL);
 	return s_instance;
 }
