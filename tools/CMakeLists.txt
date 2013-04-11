@@ -46,15 +46,17 @@ if (CMAKE_CL_64)
 		"${CMAKE_CURRENT_SOURCE_DIR}/${cpp_dir}/x64masm.asm"
 		MAIN_DEPENDENCY ${cpp_dir}/x64masm.asm
 		VERBATIM)
-else()
-	add_definitions(-DCRYPTOPP_DISABLE_ASM)
 endif()
 
 if (UNIX)
+	add_definitions(-DCRYPTOPP_DISABLE_ASM)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -pipe")
 	
 	if (APPLE)
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -arch i386 -Wno-tautological-compare")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -arch x86_64 -arch i386")
+		if (DARWIN_VERSION GREATER 10)
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-tautological-compare")
+		endif()
 	else()
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 	endif()
