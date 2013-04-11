@@ -47,7 +47,8 @@ CClientProxyUnknown::CClientProxyUnknown(synergy::IStream* stream, double timeou
 	m_server(server)
 {
 	assert(m_server != NULL);
-
+	
+	LOG((CLOG_DEBUG4 "CClientProxyUnknown"));
 	EVENTQUEUE->adoptHandler(CEvent::kTimer, this,
 							new TMethodEventJob<CClientProxyUnknown>(this,
 								&CClientProxyUnknown::handleTimeout, NULL));
@@ -85,6 +86,7 @@ CClientProxyUnknown::orphanClientProxy()
 CEvent::Type
 CClientProxyUnknown::getSuccessEvent()
 {
+	LOG((CLOG_DEBUG4 "getSuccessEvent"));
 	return EVENTQUEUE->registerTypeOnce(s_successEvent,
 							"CClientProxy::success");
 }
@@ -92,6 +94,7 @@ CClientProxyUnknown::getSuccessEvent()
 CEvent::Type
 CClientProxyUnknown::getFailureEvent()
 {
+	LOG((CLOG_DEBUG4 "getFailureEvent"));
 	return EVENTQUEUE->registerTypeOnce(s_failureEvent,
 							"CClientProxy::failure");
 }
@@ -101,6 +104,7 @@ CClientProxyUnknown::sendSuccess()
 {
 	m_ready = true;
 	removeTimer();
+	LOG((CLOG_DEBUG4 "sendSuccess"));
 	EVENTQUEUE->addEvent(CEvent(getSuccessEvent(), this));
 }
 
@@ -112,6 +116,7 @@ CClientProxyUnknown::sendFailure()
 	m_ready = false;
 	removeHandlers();
 	removeTimer();
+	LOG((CLOG_DEBUG4 "sendFailure"));
 	EVENTQUEUE->addEvent(CEvent(getFailureEvent(), this));
 }
 
@@ -119,7 +124,8 @@ void
 CClientProxyUnknown::addStreamHandlers()
 {
 	assert(m_stream != NULL);
-
+	
+	LOG((CLOG_DEBUG4 "addStreamHandlers"));
 	EVENTQUEUE->adoptHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget(),
 							new TMethodEventJob<CClientProxyUnknown>(this,
@@ -142,7 +148,8 @@ void
 CClientProxyUnknown::addProxyHandlers()
 {
 	assert(m_proxy != NULL);
-
+	
+	LOG((CLOG_DEBUG4 "addProxyHandlers"));
 	EVENTQUEUE->adoptHandler(CClientProxy::getReadyEvent(),
 							m_proxy,
 							new TMethodEventJob<CClientProxyUnknown>(this,
@@ -157,6 +164,7 @@ void
 CClientProxyUnknown::removeHandlers()
 {
 	if (m_stream != NULL) {
+		LOG((CLOG_DEBUG4 "removeHandlers"));
 		EVENTQUEUE->removeHandler(m_stream->getInputReadyEvent(),
 							m_stream->getEventTarget());
 		EVENTQUEUE->removeHandler(m_stream->getOutputErrorEvent(),
@@ -167,6 +175,7 @@ CClientProxyUnknown::removeHandlers()
 							m_stream->getEventTarget());
 	}
 	if (m_proxy != NULL) {
+		LOG((CLOG_DEBUG4 "removeHandlers"));
 		EVENTQUEUE->removeHandler(CClientProxy::getReadyEvent(),
 							m_proxy);
 		EVENTQUEUE->removeHandler(CClientProxy::getDisconnectedEvent(),
@@ -178,6 +187,7 @@ void
 CClientProxyUnknown::removeTimer()
 {
 	if (m_timer != NULL) {
+		LOG((CLOG_DEBUG4 "removeTimer"));
 		EVENTQUEUE->deleteTimer(m_timer);
 		EVENTQUEUE->removeHandler(CEvent::kTimer, this);
 		m_timer = NULL;
@@ -214,7 +224,8 @@ CClientProxyUnknown::handleData(const CEvent&, void*)
 		// may install its own handlers and we don't want to accidentally
 		// remove those later.
 		removeHandlers();
-
+		
+		LOG((CLOG_DEBUG4 "handleData"));
 		// create client proxy for highest version supported by the client
 		if (major == 1) {
 			switch (minor) {
