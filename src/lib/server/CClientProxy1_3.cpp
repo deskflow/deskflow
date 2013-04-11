@@ -89,7 +89,6 @@ CClientProxy1_3::addHeartbeatTimer()
 {
 	// create and install a timer to periodically send keep alives
 	if (m_keepAliveRate > 0.0) {
-		LOG((CLOG_DEBUG4 "addHeartbeatTimer"));
 		m_keepAliveTimer = EVENTQUEUE->newTimer(m_keepAliveRate, NULL);
 		EVENTQUEUE->adoptHandler(CEvent::kTimer, m_keepAliveTimer,
 							new TMethodEventJob<CClientProxy1_3>(this,
@@ -105,7 +104,6 @@ CClientProxy1_3::removeHeartbeatTimer()
 {
 	// remove the timer that sends keep alives periodically
 	if (m_keepAliveTimer != NULL) {
-		LOG((CLOG_DEBUG4 "removeHeartbeatTimer"));
 		EVENTQUEUE->removeHandler(CEvent::kTimer, m_keepAliveTimer);
 		EVENTQUEUE->deleteTimer(m_keepAliveTimer);
 		m_keepAliveTimer = NULL;
