@@ -28,7 +28,7 @@ using ::testing::NiceMock;
 
 using namespace std;
 
-const byte kIv[] = "aaaaaaaaaaaaaa"; // +\0, AES block size = 16
+const byte kIv[] = "aaaaaaaaaaaaaaaa"; // AES block size = 16 (\0 not used)
 
 UInt8 g_write_buffer[4];
 void write_mockWrite(const void* in, UInt32 n);
@@ -75,10 +75,10 @@ TEST(CCryptoTests, write)
 	cs.setIv(kIv);
 	cs.write(buffer, size);
 	
-	EXPECT_EQ(198, g_write_buffer[0]);
-	EXPECT_EQ(62, g_write_buffer[1]);
-	EXPECT_EQ(15, g_write_buffer[2]);
-	EXPECT_EQ(87, g_write_buffer[3]);
+	EXPECT_EQ(95, g_write_buffer[0]);
+	EXPECT_EQ(107, g_write_buffer[1]);
+	EXPECT_EQ(152, g_write_buffer[2]);
+	EXPECT_EQ(220, g_write_buffer[3]);
 }
 
 TEST(CCryptoTests, read)
@@ -92,10 +92,10 @@ TEST(CCryptoTests, read)
 	CCryptoStream cs(&eventQueue, &innerStream, options, false);
 	cs.setIv(kIv);
 	
-	g_read_buffer[0] = 198;
-	g_read_buffer[1] = 62;
-	g_read_buffer[2] = 15;
-	g_read_buffer[3] = 87;
+	g_read_buffer[0] = 95;
+	g_read_buffer[1] = 107;
+	g_read_buffer[2] = 152;
+	g_read_buffer[3] = 220;
 
 	const UInt32 size = 4;
 	UInt8* buffer = new UInt8[size];
@@ -186,8 +186,9 @@ TEST(CCryptoTests, readWriteIvChanged)
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockWrite));
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(readWriteIvChanged_mockRead));
 	
-	const byte iv1[] = "bbbbbbbbbbbbbbb";
-	const byte iv2[] = "ccccccccccccccc";
+	// AES block size = 16 (\0 not used)
+	const byte iv1[] = "aaaaaaaaaaaaaaaa";
+	const byte iv2[] = "bbbbbbbbbbbbbbbb";
 	
 	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
 	cs1.setIv(iv1);
