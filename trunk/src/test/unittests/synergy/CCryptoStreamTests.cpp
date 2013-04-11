@@ -220,6 +220,7 @@ TEST(CCryptoTests, readWriteIvChanged)
 	// ensure that the new IV is used.
 	byte iv[CRYPTO_IV_SIZE];
 	cs1.newIv(iv);
+	cs1.setIv(iv);
 	cs2.setIv(iv);
 
 	cs1.write(bufferIn, 4);
