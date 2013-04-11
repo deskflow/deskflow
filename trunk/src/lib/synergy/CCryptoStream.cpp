@@ -17,9 +17,10 @@
 
 #include "CCryptoStream.h"
 #include "CLog.h"
+#include "CCryptoOptions.h"
 #include <sstream>
 #include <string>
-#include "CCryptoOptions.h"
+#include <stdio.h>
 
 using namespace CryptoPP;
 using namespace synergy::crypto;

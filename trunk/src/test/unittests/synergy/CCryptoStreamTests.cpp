@@ -20,6 +20,7 @@
 #include "CMockStream.h"
 #include "CMockEventQueue.h"
 #include "CPacketStreamFilter.h"
+#include "CCryptoOptions.h"
 
 using ::testing::_;
 using ::testing::Invoke;

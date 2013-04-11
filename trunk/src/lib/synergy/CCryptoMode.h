@@ -50,7 +50,7 @@ private:
 	typedef CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption CCtrModeDec;
 	typedef CryptoPP::GCM<CryptoPP::AES>::Decryption CGcmModeDec;
 	
-	static CCryptoMode::ECryptoMode parseMode(CString& mode);
+	static ECryptoMode		parseMode(CString& mode);
 
 	ECryptoMode			m_mode;
 	void*				m_crypto;

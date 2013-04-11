@@ -16,6 +16,7 @@
 */
 
 #include "CCryptoMode.h"
+#include "XSynergy.h"
 
 using namespace CryptoPP;
 
@@ -46,7 +47,7 @@ CCryptoMode::CCryptoMode(ECryptoMode mode, bool encryption) :
 			break;
 
 		default:
-			throw std::exception("crypto mode not set");
+			throw XBadCryptoMode();
 		}
 	}
 	else {
@@ -71,7 +72,7 @@ CCryptoMode::CCryptoMode(ECryptoMode mode, bool encryption) :
 			break;
 
 		default:
-			throw std::exception("crypto mode not set");
+			throw XBadCryptoMode();
 		}
 	}
 }
