@@ -16,6 +16,7 @@
  */
 
 #include "CCryptoOptions.h"
+#include "XSynergy.h"
 
 CCryptoOptions::CCryptoOptions(
 		const CString& modeString,
@@ -48,6 +49,6 @@ CCryptoOptions::parseMode(CString modeString)
 		return kGcm;
 	}
 	else {
-		throw std::exception("invalid crypto mode");
+		throw XBadCryptoMode();
 	}
 }

@@ -57,7 +57,7 @@ public:
 	//@}
 
 #ifdef TEST_ENV
-	void				handleDataForTest() { handleData(NULL, NULL); }
+	void				handleDataForTest() { handleData(CEvent(), NULL); }
 #endif
 
 protected:
@@ -76,7 +76,7 @@ private:
 
 	// modifier key translation
 	KeyID				translateKey(KeyID) const;
-	KeyModifierMask		translateModifierMask(KeyModifierMask) const;
+	KeyModifierMask			translateModifierMask(KeyModifierMask) const;
 
 	// event handlers
 	void				handleData(const CEvent&, void*);
@@ -110,7 +110,7 @@ private:
 	typedef EResult (CServerProxy::*MessageParser)(const UInt8*);
 
 	CClient*			m_client;
-	synergy::IStream*	m_stream;
+	synergy::IStream*		m_stream;
 
 	UInt32				m_seqNum;
 
@@ -121,13 +121,13 @@ private:
 
 	bool				m_ignoreMouse;
 
-	KeyModifierID		m_modifierTranslationTable[kKeyModifierIDLast];
+	KeyModifierID			m_modifierTranslationTable[kKeyModifierIDLast];
 
 	double				m_keepAliveAlarm;
-	CEventQueueTimer*	m_keepAliveAlarmTimer;
+	CEventQueueTimer*		m_keepAliveAlarmTimer;
 
-	MessageParser		m_parser;
-	IEventQueue*		m_eventQueue;
+	MessageParser			m_parser;
+	IEventQueue*			m_eventQueue;
 };
 
 #endif

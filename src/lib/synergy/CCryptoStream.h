@@ -20,9 +20,10 @@
 #include "BasicTypes.h"
 #include "CStreamFilter.h"
 #include "CCryptoMode.h"
-#include "CCryptoOptions.h"
 #include <cryptopp562/osrng.h>
-#include "cryptopp562/sha.h"
+#include <cryptopp562/sha.h>
+
+class CCryptoOptions;
 
 #define CRYPTO_IV_SIZE CryptoPP::AES::BLOCKSIZE
 
@@ -51,8 +52,8 @@ public:
 	*/
 	virtual void		write(const void* in, UInt32 n);
 
-    //! Set the IV
-    void                setIv(const byte* iv);
+	//! Set the IV
+	void			setIv(const byte* iv);
 
 	//! Get a new IV
 	/*!
@@ -67,7 +68,7 @@ public:
 private:
 	void				logBuffer(const char* name, const byte* buf, int length);
 	
-    byte*				m_key;
+	byte*				m_key;
 	CCryptoMode			m_encryption;
 	CCryptoMode			m_decryption;
 	CryptoPP::AutoSeededRandomPool m_autoSeedRandomPool;
