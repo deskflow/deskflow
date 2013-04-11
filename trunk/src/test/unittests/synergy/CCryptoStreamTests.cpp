@@ -240,6 +240,12 @@ TEST(CCryptoTests, createKey)
 	EXPECT_EQ(hash2[0], 149);
 	EXPECT_EQ(hash2[15], 235);
 	EXPECT_EQ(hash2[31], 7);
+	
+	byte hash3[32];
+	CCryptoStream::createKey(hash3, "7accbf2f86a9191da0947107d4fe7054", 32, 16);
+	EXPECT_EQ(hash3[0], 120);
+	EXPECT_EQ(hash3[15], 11);
+	EXPECT_EQ(hash3[31], 233);
 }
 
 void
