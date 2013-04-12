@@ -1,3 +1,11 @@
+1.4.11
+======
+Feature #12 - Encryption
+Feature #421 - Portable version
+Bug #2855 - Mouse cursor remains hidden on Mac client (intermittently/randomly)
+Bug #3281 - server start on OS X defaults to 'interactive'
+Bug #3310 - P&ort in settings screen
+
 1.4.10
 ======
 Bug #2799 - Right shift broken (Windows server, Mac OS X client)
