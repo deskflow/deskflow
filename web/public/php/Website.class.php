@@ -39,7 +39,7 @@ class Website {
     $currentDate = mktime(0, 0, 0, 04, 12, 2013);
 
     // naming c: mac universal dropped
-    $ver14c = array("1.4.9", "1.4.10");
+    $ver14c = array("1.4.10", "1.4.9");
 
     // naming b: only mac 10.4 is universal
     $ver14b = array("1.4.8", "1.4.7", "1.4.6", "1.4.5");
