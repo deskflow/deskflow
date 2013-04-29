@@ -37,8 +37,10 @@ def runImport():
 		"zh-TW" : "zh_TW",
 		"grk"   : "el",
 		"ca-AD" : "ca",
-    "pes-IR": "fa",
-    "sk-SK" : "sk"
+		"pes-IR": "fa",
+		"sk-SK" : "sk",
+		"bg-BG" : "bg",
+		"sq-AL" : "sq"
 	}
 
 	for file in os.listdir(importSource):
