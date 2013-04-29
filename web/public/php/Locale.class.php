@@ -198,15 +198,15 @@ class Locale {
     $format = "img/splash/splash-%s.jpg";
     $filenameFull = sprintf($format, $this->lang);
     if (file_exists($filenameFull)) {
-      return "/" . $filenameFull;
+      return $filenameFull;
     }
     
     $filenameShort = sprintf($format, $this->getCountry());
     if (file_exists($filenameShort)) {
-      return "/" . $filenameShort;
+      return $filenameShort;
     }
     
-    return "/" . sprintf($format, "en");
+    return sprintf($format, "en");
   }
 }
 
