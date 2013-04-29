@@ -5,12 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Content-Language" content="{$lang}"/>
     <meta name="description" content="{t}Synergy lets you share your keyboard and mouse between multiple computers on your desk.{/t}" />
-    <link rel="stylesheet" type="text/css" href="/css/main.css" />
-    <link rel="stylesheet" type="text/css" href="/css/main-{$langDir}.css" />
-    <link rel="stylesheet" type="text/css" href="/css/ui-theme/jquery-ui-1.8.22.custom.css" />
-    <script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="/js/jquery-ui-1.8.22.custom.min.js"></script>
-    <script type="text/javascript" src="/js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="{$baseUrl}/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="{$baseUrl}/css/main-{$langDir}.css" />
+    <link rel="stylesheet" type="text/css" href="{$baseUrl}/css/ui-theme/jquery-ui-1.8.22.custom.css" />
+    <script type="text/javascript" src="{$baseUrl}/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="{$baseUrl}/js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script type="text/javascript" src="{$baseUrl}/js/common.js"></script>
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
@@ -44,13 +44,13 @@
       <div class="menu">
         <div class="pages">
           <p>
-            <a href="{$baseUrl}/">{t}Home{/t}</a> |
-            <a href="{$baseUrl}/download/">{t}Download{/t}</a> |
-            <a href="{$baseUrl}/premium/">{t}Premium{/t}</a> |
-            <a href="{$baseUrl}/help/">{t}Help{/t}</a> |
-            <a href="{$baseUrl}/search/">{t}Search{/t}</a> |
-            <a href="{$baseUrl}/press/">{t}Press{/t}</a> |
-            <a href="{$baseUrl}/info/">{t}Info{/t}</a> |
+            <a href="{$baseWithLang}/">{t}Home{/t}</a> |
+            <a href="{$baseWithLang}/download/">{t}Download{/t}</a> |
+            <a href="{$baseWithLang}/premium/">{t}Premium{/t}</a> |
+            <a href="{$baseWithLang}/help/">{t}Help{/t}</a> |
+            <a href="{$baseWithLang}/search/">{t}Search{/t}</a> |
+            <a href="{$baseWithLang}/press/">{t}Press{/t}</a> |
+            <a href="{$baseWithLang}/info/">{t}Info{/t}</a> |
             <a href="/blog/">{t}Blog{/t}</a> |
             <a href="/wiki/">{t}Wiki{/t}</a> |
             <a href="/issues/">{t}Tracker{/t}</a> |
@@ -60,7 +60,7 @@
       </div>
       {if $premium->isUserPremium()}
       <div class="premium-bar">
-        <p>{t url="$baseUrl/premium/"}<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href="%1">Premium account</a>.{/t}</p>
+        <p>{t url="$baseWithLang/premium/"}<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href="%1">Premium account</a>.{/t}</p>
       </div>
       {/if}
       <div class="content">
@@ -82,6 +82,8 @@
           <a href="?hl=hr">Hrvatski</a>,
           <a href="?hl=id">Indonesia</a>,
           <a href="?hl=it">Italiano</a>,
+          <a href="?hl=lv">Latvijas</a>,
+          <a href="?hl=lt">Lietuvos</a>,
           <a href="?hl=hu">Magyar</a>,
           <a href="?hl=nl">Nederlands</a>,
           <a href="?hl=no">Norsk</a>,
@@ -89,18 +91,23 @@
           <a href="?hl=pt">Português</a>,
           <a href="?hl=pt-BR">Português (Brasil)</a>,
           <a href="?hl=ro">Română</a>,
+          <a href="?hl=sq">Shqiptar</a>,
           <a href="?hl=sl">Slovenščina</a>,
           <a href="?hl=sk">Slovenčina</a>,
           <a href="?hl=fi">Suomi</a>,
           <a href="?hl=sv">Svenska</a>,
           <a href="?hl=vi">Tiếng Việt</a>,
           <a href="?hl=tr">Türkçe</a>,
+          <a href="?hl=bg">български</a>,
           <a href="?hl=ru">Русский</a>,
+          <a href="?hl=sr">српски</a>,
           <a href="?hl=uk">Український</a>,
           <a href="?hl=el">Ελληνικά</a>,
           <a href="?hl=he">עברית</a>,
           <a href="?hl=ar">العربية</a>,
           <a href="?hl=fa">فارسی</a>,
+          <a href="?hl=ur">اردو</a>,
+          <a href="?hl=si">Sඉන්හල</a>,
           <a href="?hl=th">ภาษาไทย</a>,
           <a href="?hl=zh">中文 (简体)</a>,
           <a href="?hl=zh-TW">中文 (繁體)</a>,
@@ -109,7 +116,7 @@
         </p>
         <p>
 {t}Copyright &copy; {$year} <a href="http://boltonsoftware.com/">Bolton Software</a>{/t} (<a href="/COPYING">{t}License{/t}</a>,
-<a href="{$baseUrl}/privacy/">{t}Privacy Policy{/t}</a>)
+<a href="{$baseWithLang}/privacy/">{t}Privacy Policy{/t}</a>)
         </p>
       </div>
     </div>
