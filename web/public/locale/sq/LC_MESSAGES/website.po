@@ -1,0 +1,777 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-04-19 18:32-0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: C:\\Projects\\synergy\\web\\public\n"
+"X-Poedit-KeywordsList: T_;gettext\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+""
+
+#: lang.c:1 php/Website.class.php:103
+msgid "Alternate Downloads"
+msgstr "Shkarkime Alternative"
+
+
+#: lang.c:2
+msgid "These downloads are available for users having problems with the current release. Versions from this page are no longer supported."
+msgstr "Keto shkarkime jane te disponueshme per perdoruesit qe kane probleme me versionet e meparshme. Per keto versione nuk ka me suport."
+
+
+#: lang.c:3
+msgid "Previous 1.4 releases"
+msgstr "Leshime te meparshme te v. 1.4"
+
+
+#: lang.c:4 lang.c:5 lang.c:6 lang.c:7 lang.c:8 php/Website.class.php:112
+msgid "Beta"
+msgstr "Testim"
+
+
+#: lang.c:9
+msgid "Previous 1.3 releases"
+msgstr "Leshime te meparshme te v. 1.3"
+
+
+#: lang.c:10 lang.c:11 lang.c:12 lang.c:13 lang.c:14 lang.c:15
+msgid "Stable"
+msgstr "I Qendrueshem"
+
+
+#: lang.c:16
+msgid "Other projects"
+msgstr "Projekte te tjera"
+
+
+#: lang.c:17
+msgid "<a href=\"%1\">iOS client by Matthias Ringwald</a> (iPad/iPhone)"
+msgstr "<a href=\"%1\">Klient per iOS nga Matthias Ringwald</a> (iPad/iPhone)"
+
+
+#: lang.c:18
+msgid "Related sites"
+msgstr "Faqet e lidhura"
+
+
+#: lang.c:19
+msgid "Nightly builds"
+msgstr "Ndryshon cdo nate"
+
+
+#: lang.c:20
+msgid "use at your own risk"
+msgstr "perdoreni ne pergjegjesine tuaj"
+
+
+#: lang.c:21 lang.c:24 lang.c:26 lang.c:118
+msgid "Download"
+msgstr "Shkarko"
+
+
+#: lang.c:22
+msgid "Thanks for supporting Synergy! No ads for you :-)"
+msgstr "Faleminderit qe mbeshtetet Synergy! Pa reklama per ju :-)"
+
+
+#: lang.c:23
+msgid "<b>Important:</b> Please try using the <a href=\"%1\">latest version</a> before trying older versions. The version available from this page is obsolete and may contain bugs fixed in the latest version."
+msgstr "<b>E rendesishme:</b> Ju lutem perdorni <a href=\"%1\">versionin e fundit</a> perpara se te provoni versione me te hershme. Versioni e disponueshme ne kete faqe jane te vjetersuara dhe ndoshta kane leshime ne siguri qe jane rregulluar ne versionin e fundit."
+
+
+#: lang.c:25
+msgid "While your file is downloading, please take a look at <a href=\"%1\">Synergy Premium</a>."
+msgstr "Nderkohe qe dokumentat shkarkohen, ju lutem hidhini nje sy <a href=\"%1\">Premium Synergy</a>."
+
+
+#: lang.c:27
+msgid "Latest release:"
+msgstr "Leshimi i fundit:"
+
+
+#: lang.c:28
+msgid "What's new?"
+msgstr "Te rejat?"
+
+
+#: lang.c:29
+msgid "Windows"
+msgstr "Windows"
+
+
+#: lang.c:30
+msgid "Mac OS X"
+msgstr "Mac OS X"
+
+
+#: lang.c:31
+msgid "Ubuntu/Debian"
+msgstr "Ubuntu/Debian"
+
+
+#: lang.c:32
+msgid "Fedora/Red Hat"
+msgstr "Fedora/Red Hat"
+
+
+#: lang.c:33
+msgid "Source code"
+msgstr "Kod Burim"
+
+
+#: lang.c:34
+msgid "Alternate downloads"
+msgstr "Shkarkim alternativ"
+
+
+#: lang.c:35
+msgid "Thanks for offering to donate! We really appreciate your support. We've replaced our donate button with Synergy Premium. It's like donating only you get the power to vote in return for your contribution."
+msgstr "Faleminderit per donacionet! Ne e vleresojme shume mbeshtetjen tuaj. Kemi zevendesuar donacionet me butonin Synergy Premium. Eshte e njejte me donacionet gjithashtu ju keni fuqni per te votuar sapo te perfundoni donacionin."
+
+
+#: lang.c:36
+msgid "Urgent Appeal from Synergy!"
+msgstr ""
+
+
+#: lang.c:37
+msgid "We urgently need your help to fund the continued development of Synergy."
+msgstr ""
+
+
+#: lang.c:38
+msgid "Since our last sponsor cut our funding (it wasn't profitable for them), we've been relying on Premium accounts to fund development. We are now supporting 2 full time software engineers in the UK working on Synergy. Most of our users create a Premium account for just $1, and although it might not seem like much, it really is an enormous help!"
+msgstr ""
+
+
+#: lang.c:39
+msgid "What's best is that Premium users are the only ones who can tell us what to work on!"
+msgstr ""
+
+
+#: lang.c:40
+msgid "Please choose the option on the left and open a Premium account for as little as $1. You'll be helping us keep the Synergy project alive for the price of a can of Coke! :-)"
+msgstr ""
+
+
+#: lang.c:41
+msgid "Synergy Project Leader"
+msgstr ""
+
+
+#: lang.c:42 lang.c:119 lang.c:132
+msgid "Premium"
+msgstr "Premium"
+
+
+#: lang.c:43
+msgid "Register for Synergy Premium."
+msgstr "Rregjistrohu per Sunergy Premium."
+
+
+#: lang.c:44
+msgid "How does Premium work?"
+msgstr "Si funksionon mundesia Premium?"
+
+
+#: lang.c:45
+msgid "You decide what to contribute."
+msgstr "Vendosni ju me cfare do te mbeshtesni."
+
+
+#: lang.c:46
+msgid "Use the slider or enter any value into the textbox."
+msgstr "Perdorni ashensorin ose vendosni nje vlere ne kuti."
+
+
+#: lang.c:47 lang.c:51
+msgid "Continue"
+msgstr "Vazhdo"
+
+
+#: lang.c:48
+msgid "or"
+msgstr "ose"
+
+
+#: lang.c:49
+msgid "Non-premium"
+msgstr "Jo-premium"
+
+
+#: lang.c:50
+msgid "I can't afford $1 to help Synergy."
+msgstr "Nuk kam mundesi te ndihmoj Sunergy me $1."
+
+
+#: lang.c:52
+msgid "Top 10 Votes"
+msgstr "10 me te voruarit"
+
+
+#: lang.c:53
+msgid "Register for Synergy Premium to cast your vote ($10 per vote)."
+msgstr ""
+
+
+#: lang.c:54
+msgid "The highest voted issue is given our full attention for the next release."
+msgstr "Ceshtja e votave me te larta eshte dhene, informohuni mbi lajmerimin tjeter."
+
+
+#: lang.c:55 lang.c:147 lang.c:155
+msgid "%1 votes"
+msgstr "%1 e votave"
+
+
+#: lang.c:56 lang.c:156
+msgid "No votes."
+msgstr "Pa vota."
+
+
+#: lang.c:57 lang.c:63 lang.c:72
+msgid "Synergy Premium"
+msgstr "Premium Synergy"
+
+
+#: lang.c:58
+msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy. Support the Synergy project by registering a Synergy Premium account today."
+msgstr "Faleminderit per interesimin tuaj per Synergy Premium, ne e vleresojme mbeshtetjen tuaj. Mbeshtetja juaj ben qe Synergy te permiresohet me teper. Mbeshtesi Projektin Sunergy duyke krijuar sot nje llogari Sunergy Premium."
+
+
+#: lang.c:59
+msgid "If you can only contribute $1, that's totally fine by us! Anything at all will allow us to spend more time working on Synergy."
+msgstr "Nese mund te kontibuoni vetem me $1, kjo eshte e mjaftueshme per ne!Sado pak do te na lejonte te kalonim me shume kohe me Synergy."
+
+
+#: lang.c:60
+msgid "If you decide to contribute $10, then you get a premium vote. For each additional $10, you get another vote. You can cast this vote on any bug or feature. We will try our best to fix the highest voted feature in the next version. If we can't fix it then you get your votes back, simple."
+msgstr "Nese vendosni te konftribuoni me $10, atehere ju keni nje vote premium. Per cdo $10, ju merni nje tjeter vote. Mund ti shpenzoni keto vota ne ndonje leshim ose risi. Ne do te bejme me te miren per te rregulluar risite e reja me te votuara ne versionin e ardhshem. Nese ne nuk e rregullojme atehre ju kthjeme votat."
+
+
+#: lang.c:61
+msgid "It's people like you that make Synergy a better piece of software! :-)"
+msgstr "Jane njerezit si ty qe e bejne Synergy nje program me te mire! :-)"
+
+
+#: lang.c:62 lang.c:140 lang.c:153
+msgid "OK"
+msgstr "OK"
+
+
+#: lang.c:64 lang.c:133
+msgid "Thanks for your interest in Synergy Premium, we really appreciate your support. Funding allows us to spend more time improving Synergy."
+msgstr "Faleminderit per interesimin tuaj per Synergy Premium, ne e vleresojme mbeshtetjen tuaj. Mbeshtetja juaj ben qe Synergy te permiresohet me teper."
+
+
+#: lang.c:65
+msgid "We promise to not spam your email and we never store passwords in plain text (we only keep a hash)."
+msgstr "Ju sigurojme qe nuk do t'iu dergojme spam ne email dhe kurre nuk i ruajme fjalekalimet si teks (i ruajme si hash)."
+
+
+#: lang.c:66
+msgid "You're almost done! Please choose a payment service. When the payment is complete, you will be redirected to your Synergy Premium account."
+msgstr "Pothuajse perfunduat! Ju lutem zgjidhni nje metode pagese. Pasi te keni perfunduar pagesen, do te ridrejtoheni ne llogarine tuaj Synergy Premium."
+
+
+#: lang.c:67
+msgid "The payment is handled by <b>Bolton Software Ltd</b>, the company behind the development of Synergy."
+msgstr "Kjo pagese shkoi per <b>Bolton Software Ltd</b>, kompania qe qendron pas zhvillimit te Synergy."
+
+
+#: lang.c:68
+msgid "Please click a logo to continue."
+msgstr "Ju lutem zgjidhni nje logo per te vazhduar."
+
+
+#: lang.c:69
+msgid "Both PayPal and Google Wallet accept all major credit cards."
+msgstr " PyaPal dhe Google Wallet pranojne pothuajse te gjitha llojet e kartave."
+
+
+#: lang.c:70 lang.c:120
+msgid "Help"
+msgstr "Ndihme"
+
+
+#: lang.c:71
+msgid "Having problems using Synergy? You're in the right place!"
+msgstr "Keni probleme me perdorimin e Synergy?Jeni ne vendin e duhur!"
+
+
+#: lang.c:73
+msgid "By opening a Synergy Premium account with at least $10, you can directly influence the priority of what bugs will be fixed next. For every $10 contributed, you get 1 vote which you can assign to a bug fix. The highest voted bug fix will get our full attention."
+msgstr " Duke krijuar nje llogari Synergy Premium me te pakten $10, ju mund te influenconi direkt ne prioritetin e leshimeve qe do te rregullohen ne versionin e ardhshem. Per cdo $10 qe kontribuoni, ju merni 1 vote te cilen ju mund te caktoni te rregulloni nje leshim. Leshimi me numrin me te madh te votave do te kete vemendjen tone maksimale."
+
+
+#: lang.c:74
+msgid "<a href=\"%1\">Open a Synergy Premium account now</a>."
+msgstr "<a href=\"%1\"> Hapni nje llogari Synergy Premium tani</a>."
+
+
+#: lang.c:75
+msgid "Latest version"
+msgstr "Versioni i fundit"
+
+
+#: lang.c:76
+msgid "Many bugs are raised even though users haven't tried the latest version. Please visit the  <a href=\"%1\">downloads</a> page and try out the latest version (even if it's a beta). You might also want to try the <a href=\"%2\">nightly builds</a>, but please do so only as a last resort (these versions have not passed our quality assurance)."
+msgstr "Shume leshime te tjera jane ne qarkullim megjithese perdoruesit kane perdorur versionin e fundit. Ju lutem vizitoni faqen e <a <a href=\"%1\">shkarkimeve</a> dhe provoni versionin e fundit (dhe nese eshte beta). Ndoshata ju doni te provoni versionin <a href=\"%2\">Ndryshon cdo nate</a>, por ju kerkojme ta perdorni si zgjedhje te fundit (keto versione se kane kaluar testin tone te cilesise)."
+
+
+#: lang.c:77
+msgid "User guide"
+msgstr "Manuali i perdoruesit"
+
+
+#: lang.c:78
+msgid "Please read our <a href=\"%1\">user guide</a> before going any further."
+msgstr "Ju lutem lexoni <a href=\"%1\">guiden</a> tone  te perdoruesit para se te vazhdoni."
+
+
+#: lang.c:79 lang.c:121 lang.c:163
+msgid "Search"
+msgstr "Kerko"
+
+
+#: lang.c:80
+msgid "Do a <a href=\"%1\">quick search</a>, it really won't take long."
+msgstr "Bej nje <a href=\"%1\">kerkim te thjeshte</a>, nuk do t'iu haje shume kohe."
+
+
+#: lang.c:81
+msgid "Q&#38;A website"
+msgstr "Q&#38;Uebfaqe"
+
+
+#: lang.c:82
+msgid " You can ask a question on our <a href=\"%1\">Q&#38;A website</a>. Read the <a href=\"%2\">FAQ</a> to make sure your question does not get closed."
+msgstr "Mund te dergoni pyetjet tuaja ne  <a href=\"%1\">Q&#38;uebfaqen</a> tone. Lexoni <a href=\"%2\">FAQ</a> ne menyre qe pyetja juaj te mos mbyllet."
+
+
+#: lang.c:83 lang.c:166
+msgid "Super User"
+msgstr "Perdorues Superior"
+
+
+#: lang.c:84
+msgid "If you're familiar with Super User, there's a <a href=\"%1\">synergy tag</a>."
+msgstr "Nese jeni familjarizuar me Perdorusin Superior, me poshte eshte nje <a href=\"%1\">etikete synergy</a>. "
+
+
+#: lang.c:85
+msgid "Super User is <b>not</b> dedicated to supporting Synergy."
+msgstr "Perdoruesi Superior <b>nuk </b> eshte i devotshem per te mbeshtetur Synergy."
+
+
+#: lang.c:86
+msgid "Ask questions; do not nag or comment on bugs or issues."
+msgstr "Beni pyetje; mos komentoni ose luani rreth leshimeve dhe ceshtjeve te tjera."
+
+
+#: lang.c:87
+msgid "Do not raise new bugs there; use the issue tracker for this."
+msgstr "Mos rrisni leshimet atje; perdorni gjurmuesin per kete."
+
+
+#: lang.c:88
+msgid "Synergy developers do <i>not</i> monitor this website."
+msgstr "Zhvilluesit e Synergy <i>nuk</i> e monitorojne kete uebfaqe."
+
+
+#: lang.c:89
+msgid "Always use the \"synergy\" tag on your question."
+msgstr "Gjithmone perdorni si etiketim \"synergy\" ne pyetjet tuaja."
+
+
+#: lang.c:90
+msgid "Make sure you mention \"Synergy\" in the question."
+msgstr "Sigurohuni qe te permendni \"synergy\" ne pytjet qe beni."
+
+
+#: lang.c:91
+msgid "IRC"
+msgstr "IRC"
+
+
+#: lang.c:92
+msgid "You can join our IRC channel: %1 (for IRC, you could use <a href=\"%2\">XChat</a>)"
+msgstr "Mund te bashkoheni ne kanalin tone ne IRC: %1 (per IRC mund te perdorni <a href=\"%2\">XChat</a>)"
+
+
+#: lang.c:93
+msgid "Mailing list"
+msgstr "Lista e mesazheve elektronike"
+
+
+#: lang.c:94
+msgid "We also have a <a href=\"%1\">mailing list</a>. Do not post bugs on the mailing list."
+msgstr "Ne gjithashtu ofrojme nje <a href=\"%1\">liste mesazhesh elektronike</a>. Mos postoni leshime ne listen tone te mesazheve elektronike."
+
+
+#: lang.c:95
+msgid "Report a bug"
+msgstr "Raporto nje leshim"
+
+
+#: lang.c:96
+msgid "Please report bugs when you've exhausted all of the above options, and you are absolutely certain you've found a bug. Open a <a href=\"%1\">new bug report</a>."
+msgstr "Ju lutem reportoni per leshime nese i keni ezauruar te gjitha opsionet e meposhtme, dhe jeni absolutisht te sigurte qe kemi gjetur nje leshim. Hapni nje <a href=\"%1\">raport per leshim te ri</a>."
+
+
+#: lang.c:97
+msgid "Urgent Appeal from Synergy"
+msgstr "Thirje Urgjente nga Sunergy"
+
+
+#: lang.c:98
+msgid "Sadly our sponsor has cut funding to the Synergy Project because it hasn't been profitable for them. We have now removed their optional toolbar from our installers. We hope that you will help us out by registering for <a href=\"download/\">Synergy Premium</a> for $1 or whatever you feel our work is worth. All funding goes toward fixing bugs and speeding up development time. Thank you for reading!"
+msgstr "Per fat te keq sponsorat tane kane nderprere fondet per Projektin sepse nuk ka perfitime per ta. Ne tashme e kemi hequr tooldbar-in e tyre nga instalimet tona. Ne shpresojme qe ju do te na ndihmoni duke u rregjistruar si <a href=\"download/\">Synergy Premium</a>  per $1 ose cfaredo vlere qe mendoni se puna jone vlen. Te gjitha fondet shkojne ne rregullimin e leshimeve dhe duke pershpejtuar kohen e zhvillimit. Faleminderit qe e lexuar."
+
+
+#: lang.c:99 lang.c:103
+msgid "Nick Bolton, Project Leader"
+msgstr "Nick Bolton, Udheheqesi i Projektit"
+
+
+#: lang.c:100
+msgid "Synergy: Graduate software engineer needed in the UK"
+msgstr ""
+
+
+#: lang.c:101
+msgid "We're looking for a talented university graduate software engineer to help us improve Synergy. Bolton Software is the UK-based company behind the  development of Synergy, and we're looking to fill a vacancy in our new UK office near London."
+msgstr ""
+
+
+#: lang.c:102
+msgid "Please tweet, like or share the above link to help us get the word out. Thanks for your help!"
+msgstr ""
+
+
+#: lang.c:104
+msgid "Synergy lets you easily share your mouse and keyboard between multiple computers on your desk, and it's Free and Open Source. Just move your mouse off the edge of one computer's screen on to another. You can even share all of your clipboards. All you need is a network connection. Synergy is cross-platform (works on Windows, Mac OS X and Linux)."
+msgstr "Sunergy ju mundeson lehtesisht te ndani mausin dhe tastieren me disa komopjutera te tjere ne tavolinen tuaj, eshte FALAS dhe me KOD TE HAPUR. Vetem levizni mausin nga kompjuteri juaj ne nje kompjuter tjeter. Madje mund te beni ndani te gjitha ekranet. Ju duhet vem nje lidhje interneti. Sunergy eshte nje platformi e gjere (punon ne Windows, MAC OS X dhe Linux)."
+
+
+#: lang.c:105 lang.c:123
+msgid "Info"
+msgstr "Informacion"
+
+
+#: lang.c:106
+msgid "Twitter"
+msgstr "Twitter"
+
+
+#: lang.c:107
+msgid "Follow Synergy coders!"
+msgstr "Ndiq koduesit e Synergy!"
+
+
+#: lang.c:108
+msgid "Key people"
+msgstr "Personat kryesore"
+
+
+#: lang.c:109
+msgid "Project leader and primary developer"
+msgstr "Udheheqesi i projektit dhe zhvilluesi kryesor"
+
+
+#: lang.c:110
+msgid "Original author and project founder"
+msgstr "Autori origjinal dhe themeluesi i projektit"
+
+
+#: lang.c:111
+msgid "Founder of Synergy+ (fork project)"
+msgstr "Themeluesi i Sunergy+ (nenprojekt)"
+
+
+#: lang.c:112
+msgid "History"
+msgstr ""
+
+
+#: lang.c:113
+msgid "The first incarnation of Synergy was CosmoSynergy, created by Richard Lee and Adam Feder then at Cosmo Software, Inc. (Silicon Valley), a subsidiary of SGI (Silicon Graphics, Inc.), at the end of 1996. They wrote it, and Chris Schoeneman contributed, to solve a problem: most of the engineers in Cosmo Software had both an Irix and a Windows box on their desks and switchboxes were expensive and annoying. CosmoSynergy was a great success but Cosmo Software declined to productize it and the company was later closed. Synergy is a from-scratch reimplementation of CosmoSynergy. It provides most of the features of the original and adds a few improvements."
+msgstr ""
+
+
+#: lang.c:114
+msgid "Synergy+ (fork project) was started in 2009 by Sorin Sbârnea  for the purpose of fixing bugs inherited from the original version. The original version of Synergy had not been updated for a notable length of time (as of 6 June 2010, the latest release was 2 April 2006). There was never official confirmation that the original Synergy project had been abandoned; however, there was public discussion providing speculation. In said discussion, Chris Schoeneman (the creator of Synergy) stated that instead of supporting a 1.3.x team, he intends on releasing version 2.0 of Synergy, and publicly announced on 27 Aug 2008 that he has been making progress on this version."
+msgstr ""
+
+
+#: lang.c:115
+msgid "Nick Bolton joined the project in 2009 and lead the re-integration of Synergy+ back into the original Synergy project. Nick is now the project leader and primary developer responsible for all development (bug fixes, new features, project management, etc). Chris and Sorin still contribute to discussion on the mailing list ocassionally."
+msgstr ""
+
+
+#: lang.c:116
+msgid "Synergy lets you share your keyboard and mouse between multiple computers on your desk."
+msgstr "Sunergy ju mundeson lehtesisht te ndani mausin dhe tastieren me disa komopjutera te tjere ne tavolinen tuaj."
+
+
+#: lang.c:117
+msgid "Home"
+msgstr "Faqja Kryesore"
+
+
+#: lang.c:122 lang.c:157
+msgid "Press"
+msgstr "Paraqit"
+
+
+#: lang.c:124
+msgid "Blog"
+msgstr "Blog"
+
+
+#: lang.c:125
+msgid "Wiki"
+msgstr "Pergjigje"
+
+
+#: lang.c:126
+msgid "Tracker"
+msgstr "Gjurmues"
+
+
+#: lang.c:127
+msgid "Code"
+msgstr "Kodi"
+
+
+#: lang.c:128
+msgid "<b>Welcome</b>, Synergy Premium user! Thanks for supporting our project. <a href=\"%1\">Premium account</a>."
+msgstr "<b>Mireseerdhe</b>, perdorues i Synergy Premium! Faleminderit qe mbeshtesni projektin tone.<a href=\"%1\">Llogari premium</a>."
+
+
+#: lang.c:129
+msgid "Improve this translation"
+msgstr "Permireso kete perkthim"
+
+
+#: lang.c:130
+msgid "License"
+msgstr "Licensa"
+
+
+#: lang.c:131 lang.c:162
+msgid "Privacy Policy"
+msgstr "Politikat e Privatesise"
+
+
+#: lang.c:134
+msgid "Support the Synergy project by registering a Synergy Premium account today."
+msgstr "Mbeshtesi Projektin Sunergy duyke krijuar sot nje llogari Sunergy Premium."
+
+
+#: lang.c:135
+msgid "<a href=\"%1\">Register for Synergy Premium</a>."
+msgstr "<a href=\"%1\">Rregjistrohu per Synergy Premium</a>"
+
+
+#: lang.c:136
+msgid "Login"
+msgstr "Hyr"
+
+
+#: lang.c:137
+msgid "If you don't have an account, you can <a href=\"%1\">sign up</a>."
+msgstr "Nese nuk dispononi nje llogari, mund te <a href=\"%1\">rregjistroheni</a>."
+
+
+#: lang.c:138
+msgid "Email:"
+msgstr "Email:"
+
+
+#: lang.c:139
+msgid "Password:"
+msgstr "Fjalekalimi:"
+
+
+#: lang.c:141
+msgid "Welcome to your Synergy Premium account. You have <b>%1</b> unassigned Premium vote(s)."
+msgstr "Mireseerdhet ne llogarine tuaj Synergy Premium. Ju keni <b>%1</b> vota Premium te pacaktuara."
+
+
+#: lang.c:142
+msgid "If you have just signed up and don't see any votes, we may be waiting to hear from PayPal so please be patient. <a href=\"%1\">Check now</a>."
+msgstr "Nese jeni rregjistruar dhe nuk shihni asnje vote, ndoshta jemi duke pritur konfirmimin nga PayPal, ju lutemi te jeni te duruar. <a href=\"%1\">Kontollo tani</a>."
+
+
+#: lang.c:143
+msgid "Logout"
+msgstr "Dilni:"
+
+
+#: lang.c:144
+msgid "Want more votes?"
+msgstr "Deshironi me shume vota?"
+
+
+#: lang.c:145
+msgid "Each $10 contribution will give you 1 vote, so for example, $100 will give you 10 votes. Thanks for your support!"
+msgstr "Cdo dhurim prej $10 ju siguron nje vote, per shembull $100 do t'iu sigurojne 10 vota. Faleminderit per mbeshtetjen!"
+
+
+#: lang.c:146
+msgid "Your votes"
+msgstr "Votat tuaja:"
+
+
+#: lang.c:148
+msgid "You have not cast any votes yet."
+msgstr "Nuk keni asnje vote."
+
+
+#: lang.c:149
+msgid "Cast new vote"
+msgstr "Sighuro nje vote te re."
+
+
+#: lang.c:150
+msgid "To use Premium votes, enter an issue ID from our <a href=\"%1\">issue tracker</a>, and assign a number of votes. Choose carefully; once votes are spent, you can't get them back. If you have any problems using your votes, please <a href=\"%2\">email</a> for help (please do not report bugs to this address, use the <a href=\"%3\">help</a> page instead)."
+msgstr "Per te perdorur votat Premium, hyni hapni nje ceshtje mbi ID nga <a href=\"%1\">Ceshtjet e gjurmimit</a>, dhe vendosni numrin e votave. Zgjidhni me kujdes; nese i harxhoni votat nuk mund ti rikthejme. Nese keni probleme me perdorimin e votave, ju lutem dergoni nje <a href=\"%2\">email</a>  per ndihme (ju lutem mos reportoni per bugs ne kete adrese, perdorni faqen e <a href=\"%3\">ndihmes</a>)."
+
+
+#: lang.c:151
+msgid "Issue ID:"
+msgstr "ID e ceshtjes:"
+
+
+#: lang.c:152
+msgid "Votes:"
+msgstr "Votat:"
+
+
+#: lang.c:154
+msgid "Community votes"
+msgstr "Votat e komunitetit:"
+
+
+#: lang.c:158
+msgid "If you've featured Synergy on your website, thank you! Please let us know so we can link to it."
+msgstr "Nese keni vendosur nje risi ne Synergy ne uebfaqen tone, faleminderit! Ju lutemi te na njoftoni ne menyre qe ne te krijojme nje lidhje."
+
+
+#: lang.c:159
+msgid "Media"
+msgstr "Media"
+
+
+#: lang.c:160
+msgid "Featured"
+msgstr "Me tipare"
+
+
+#: lang.c:161
+msgid "Awards"
+msgstr "Cmimet"
+
+
+#: lang.c:164
+msgid "Search all Synergy websites from one page."
+msgstr "Kerko te gjithe uebfaqet e Sunergy nga nje faqe e vetme."
+
+
+#: lang.c:165
+msgid "What is searched?"
+msgstr "Cfare eshte \"kerkuar\"?"
+
+
+#: lang.c:167
+msgid "Issue tracker"
+msgstr "Ceshtje gjurmimi"
+
+
+#: lang.c:168
+msgid "Website wiki"
+msgstr "Uebfaqja me pergjigje"
+
+
+#: lang.c:169
+msgid "Mailing lists"
+msgstr "Lista e mesazheve"
+
+
+#: lang.c:170
+msgid "Search tips"
+msgstr "Keshilla kerkimi"
+
+
+#: lang.c:171
+msgid "If you get too many results, try specifying your operating system."
+msgstr "Nese merrni shume rezultate, specifikoni sistemin tuaj operativ."
+
+
+#: lang.c:172
+msgid "Sometimes issues are specific to the client or server."
+msgstr "Ndonjehere ceshtjet jane specifike per klientin ose serverin."
+
+
+#: lang.c:173
+msgid "You may find that entering your version number helps."
+msgstr "Nese vensdosni versionin mund t'iu ndihmoje."
+
+
+#: lang.c:174
+msgid "If this does not work, use the <a href=\"%1\">alternative Synergy search</a>."
+msgstr "Nese kjo nuk funksionon, perdorni <a href=\"%1\">kerkimin alternativ te Synergy</a>."
+
+
+#: lang.c:175
+msgid "Search now"
+msgstr "Kerko tani"
+
+
+#: lang.c:176
+msgid "Loading"
+msgstr "Duke u ngarkuar"
+
+
+#: php/Premium.class.php:262
+msgid "Please enter your name."
+msgstr "Ju lutem vendosni emrin tuaj."
+
+
+#: php/Premium.class.php:265
+msgid "Please enter your email address."
+msgstr "Ju lutem vendosni adresen tuaj te email-it."
+
+
+#: php/Premium.class.php:268
+msgid "Your email address does not look valid."
+msgstr "Adresa juja e email-it nuk duket e vlefshme."
+
+
+#: php/Premium.class.php:271
+msgid "That email address is already in use, are you already registered?"
+msgstr "Kjo adrese eshte e rregjistruar tashme, jeni nje perdorues?"
+
+
+#: php/Premium.class.php:274
+msgid "The confirm email textbox must match the email address textbox."
+msgstr "Email qe vendosni ne kutine e konfirmimit te email duhet te jete i njejte me emailin qe vendosni ne kutine e emailit."
+
+
+#: php/Premium.class.php:277
+msgid "Please enter a password."
+msgstr "Ju lutem vendosni nje fjalekalim."
+
+
+#: php/Premium.class.php:280
+msgid "The confirm password texbox must match the password textbox."
+msgstr "Kutia e konfirmimit te fjalekalimit duhet te jete e njejte me kutine e fjale kalimit."
+
