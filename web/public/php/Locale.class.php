@@ -39,7 +39,7 @@ class Locale {
     $this->lang = "en";
     
     // right to left text languages
-    $this->rtl = array("ar", "he", "fa");
+    $this->rtl = array("ar", "he", "fa", "ur");
   }
 
   function fixItefTag($tag) {
@@ -94,15 +94,20 @@ class Locale {
   }
   
   function redirect($lang) {
+    $root = $this->website->getRoot();
     if (isset($_GET["page"]) && ($_GET["page"] != "")) {
-      header(sprintf("Location: /%s/%s/", $lang, $_GET["page"]));
+      header(sprintf("Location: %s/%s/%s/", $root, $lang, $_GET["page"]));
     }
     else {
-      header(sprintf("Location: /%s/", $lang));
+      header(sprintf("Location: %s/%s/", $root, $lang));
     }
   }
   
-  function run() {
+  function redirectRoot() {
+    header("Location: " . $this->website->getRoot() . "/");
+  }
+  
+  function run($urlLang) {
     
     if (isSet($_GET["hl"]) && ($_GET["hl"] != "")) {
 
@@ -113,7 +118,7 @@ class Locale {
       // force in session, language is auto detected).
       if (!$this->website->isBot() && strstr($this->lang, "en")) {
         $_SESSION["lang"] = $this->lang;
-        header("Location: /");
+        $this->redirectRoot();
       } else {
         // no need to force in session, as it is
         // forced in url.
@@ -121,16 +126,16 @@ class Locale {
       }
       exit;
       
-    } else if (isSet($_GET["ul"]) && ($_GET["ul"] != "")) {
+    } else if ($urlLang != null) {
       
       // make sure users can't use /en -- should be using / instead.
       if (stristr($_SERVER["REQUEST_URI"], "/en")) {
-        header("Location: /");
+        $this->redirectRoot();
         exit;
       }
       
       // language forced by url.
-      $this->lang = $_GET["ul"];
+      $this->lang = $urlLang;
       if (!$this->website->isBot()) {
         unset($_SESSION["lang"]);
       }
@@ -142,7 +147,7 @@ class Locale {
         exit;
       }
       
-    } else if (!$this->website->isBot() && isSet($_SESSION["lang"])) {
+    } else if (isSet($_SESSION["lang"]) && !$this->website->isBot()) {
 
       // language forced. this should only happen under /
       // where no url lang is forced.

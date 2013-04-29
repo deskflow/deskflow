@@ -32,9 +32,29 @@ class Website {
     $this->session = new SessionManager($this->settings);
     $this->premium = new Premium($this->settings, $this->session);
   }
-
+  
   public function run() {
 
+    $path = $_GET["path"];
+    $pathParts = preg_split('/\//', $path, null, PREG_SPLIT_NO_EMPTY);
+    
+    // defaults
+    $page = "home";
+    $lang = null;
+    
+    if (count($pathParts) != 0) {
+      if (preg_match("/^\w\w(\-\w\w)?$/", $pathParts[0], $matches)) {
+        $lang = $pathParts[0];
+        
+        if (count($pathParts) > 1) {
+          $page = $pathParts[1];
+        }
+      }
+      else {
+        $page = $pathParts[0];
+      }
+    }
+  
     $currentVersion = "1.4.11";
     $currentDate = mktime(0, 0, 0, 04, 12, 2013);
 
@@ -47,11 +67,6 @@ class Website {
     // naming a: mac releases are universal
     $ver14a = array("1.4.4", "1.4.3", "1.4.2");
 
-    $page = "home";
-    if (isset($_GET["page"]) && $_GET["page"] != "") {
-      $page = str_replace("/", "", $_GET["page"]);
-    }
-
     $files = new Files();
     if ($files->downloadRequested($page)) {
       $files->download();
@@ -63,14 +78,18 @@ class Website {
     }
 
     $locale = new Locale($this);
-    $locale->run();
+    $locale->run($lang);
 
     $smarty = new \Smarty; // must come first; smarty makes T_ work somehow.
     $lang = $locale->lang;
     $title = "Synergy" . (($page != "home") ? (" - " . T_(ucfirst($page))) : "");
     
+    $baseUrl = $this->getRoot();
+    $baseWithLang = $baseUrl . (stristr($lang, "en") ? "" : "/" . $lang);
+    
     $smarty->assign("lang", $lang);
-    $smarty->assign("baseUrl", stristr($lang, "en") ? "" : "/" . $lang);
+    $smarty->assign("baseUrl", $baseUrl);
+    $smarty->assign("baseWithLang", $baseWithLang);
     $smarty->assign("gsLang", $locale->getGoogleSearchLang());
     $smarty->assign("page", $page);
     $smarty->assign("title", $title);
@@ -133,9 +152,9 @@ class Website {
     }
     $smarty->assign("custom", $custom);
 
-    $content = $smarty->fetch($page . ".html");
+    $content = $smarty->fetch("views/" . $page . ".html");
     $smarty->assign("content", $content);
-    $smarty->display("layout.html");
+    $smarty->display("views/layout.html");
   }
 
   public function isBot() {
@@ -218,6 +237,12 @@ class Website {
       }
     }
     return $title;
+  }
+  
+  public function getRoot() {
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $lastSlash = strrpos($scriptName, "/");
+    return substr($scriptName, 0, $lastSlash);
   }
 }
  

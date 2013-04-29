@@ -1,9 +1,10 @@
 RewriteEngine on
 
-RewriteCond %{REQUEST_URI} !^/(js/.*)
+# comment out if site is in root.
+RewriteBase /synergy/
 
-# rewrite / as /?ul=&page=&a=b
-# rewrite /zh/?a=b as /?ul=zh&page=&a=b
-# rewrite /zh-tw/?a=b as /?ul=zh-tw&page=&a=b
-# rewrite /zh-tw/download/?a=b as /?ul=zh-tw&page=download&a=b
-RewriteRule ^/?((\w\w(-\w\w)?)/?)?(download|info|help|search|info|premium|privacy|press)?/?$ /index.php?ul=$2&page=$4 [QSA,PT]
+# only use index.php if not a real file.
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule (.*) index.php?path=$1 [QSA,L]
