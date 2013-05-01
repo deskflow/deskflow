@@ -43,7 +43,8 @@ CCryptoStream::CCryptoStream(
 
 		byte iv[CRYPTO_IV_SIZE];
 		createKey(iv, options.m_pass, CRYPTO_IV_SIZE, static_cast<UInt8>(options.m_pass.length()) * 2);
-		setIv(iv);
+		setEncryptIv(iv);
+		setDecryptIv(iv);
 	}
 }
 
@@ -111,12 +112,18 @@ CCryptoStream::createKey(byte* out, const CString& password, UInt8 keyLength, UI
 }
 
 void
-CCryptoStream::setIv(const byte* iv)
+CCryptoStream::setEncryptIv(const byte* iv)
 {
 	assert(m_key != NULL);
-	logBuffer("iv", iv, CRYPTO_IV_SIZE);
-
+	logBuffer("encrypt iv", iv, CRYPTO_IV_SIZE);
 	m_encryption.setKeyWithIv(m_key, kKeyLength, iv);
+}
+
+void
+CCryptoStream::setDecryptIv(const byte* iv)
+{
+	assert(m_key != NULL);
+	logBuffer("decrypt iv", iv, CRYPTO_IV_SIZE);
 	m_decryption.setKeyWithIv(m_key, kKeyLength, iv);
 }
 

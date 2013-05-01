@@ -194,10 +194,10 @@ CClient::handshakeComplete()
 }
 
 void
-CClient::setCryptoIv(const UInt8* iv)
+CClient::setDecryptIv(const UInt8* iv)
 {
 	if (m_cryptoStream != NULL) {
-		m_cryptoStream->setIv(iv);
+		m_cryptoStream->setDecryptIv(iv);
 	}
 }
 

@@ -26,69 +26,105 @@ using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Invoke;
 
-const UInt8 cryptoIvWrite_bufferLen = 200;
-UInt8 cryptoIvWrite_buffer[cryptoIvWrite_bufferLen];
-UInt32 cryptoIvWrite_bufferIndex;
+const UInt8 g_cryptoIvWrite_bufferLen = 200;
+UInt8 g_cryptoIvWrite_buffer[g_cryptoIvWrite_bufferLen];
+UInt32 g_cryptoIvWrite_writeBufferIndex;
+UInt32 g_cryptoIvWrite_readBufferIndex;
 
-void
-cryptoIv_mockWrite(const void* in, UInt32 n);
+void cryptoIv_mockWrite(const void* in, UInt32 n);
+UInt8 cryptoIv_mockRead(void* out, UInt32 n);
 
 TEST(CClientProxyTests, cryptoIvWrite)
 {
-	cryptoIvWrite_bufferIndex = 0;
+	g_cryptoIvWrite_writeBufferIndex = 0;
+	g_cryptoIvWrite_readBufferIndex = 0;
 
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
 	NiceMock<CMockServer> server;
-	NiceMock<CMockCryptoStream>* stream = new NiceMock<CMockCryptoStream>(&eventQueue, &innerStream);
+	CCryptoOptions options("ctr", "mock");
 
-	ON_CALL(*stream, write(_, _)).WillByDefault(Invoke(cryptoIv_mockWrite));
+	CCryptoStream* serverStream = new CCryptoStream(&eventQueue, &innerStream, options, false);
+	CCryptoStream* clientStream = new CCryptoStream(&eventQueue, &innerStream, options, false);
 
-	CClientProxy1_4 clientProxy("stub", stream, &server, &eventQueue);
+	byte iv[CRYPTO_IV_SIZE];
+	serverStream->newIv(iv);
+	serverStream->setEncryptIv(iv);
+	clientStream->setDecryptIv(iv);
+	
+	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(cryptoIv_mockWrite));
+	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(cryptoIv_mockRead));
+
+	CClientProxy1_4 clientProxy("stub", serverStream, &server, &eventQueue);
+	
+	UInt8 buffer[100];
+	clientStream->read(buffer, 4);
+
+	g_cryptoIvWrite_writeBufferIndex = 0;
+	g_cryptoIvWrite_readBufferIndex = 0;
 
 	// DCIV, then DKDN.
-	cryptoIvWrite_bufferIndex = 0;
 	clientProxy.keyDown(1, 2, 3);
-	EXPECT_EQ('D', cryptoIvWrite_buffer[0]);
-	EXPECT_EQ('C', cryptoIvWrite_buffer[1]);
-	EXPECT_EQ('I', cryptoIvWrite_buffer[2]);
-	EXPECT_EQ('V', cryptoIvWrite_buffer[3]);
-	EXPECT_EQ('D', cryptoIvWrite_buffer[24]);
-	EXPECT_EQ('K', cryptoIvWrite_buffer[25]);
-	EXPECT_EQ('D', cryptoIvWrite_buffer[26]);
-	EXPECT_EQ('N', cryptoIvWrite_buffer[27]);
+	clientStream->read(buffer, 24);
+	EXPECT_EQ('D', buffer[0]);
+	EXPECT_EQ('C', buffer[1]);
+	EXPECT_EQ('I', buffer[2]);
+	EXPECT_EQ('V', buffer[3]);
+	clientStream->setDecryptIv(&buffer[8]);
+	clientStream->read(buffer, 10);
+	EXPECT_EQ('D', buffer[0]);
+	EXPECT_EQ('K', buffer[1]);
+	EXPECT_EQ('D', buffer[2]);
+	EXPECT_EQ('N', buffer[3]);
 	
+	g_cryptoIvWrite_writeBufferIndex = 0;
+	g_cryptoIvWrite_readBufferIndex = 0;
+
 	// DCIV, then DKUP.
-	cryptoIvWrite_bufferIndex = 0;
 	clientProxy.keyUp(1, 2, 3);
-	EXPECT_EQ('D', cryptoIvWrite_buffer[0]);
-	EXPECT_EQ('C', cryptoIvWrite_buffer[1]);
-	EXPECT_EQ('I', cryptoIvWrite_buffer[2]);
-	EXPECT_EQ('V', cryptoIvWrite_buffer[3]);
-	EXPECT_EQ('D', cryptoIvWrite_buffer[24]);
-	EXPECT_EQ('K', cryptoIvWrite_buffer[25]);
-	EXPECT_EQ('U', cryptoIvWrite_buffer[26]);
-	EXPECT_EQ('P', cryptoIvWrite_buffer[27]);
+	clientStream->read(buffer, 24);
+	EXPECT_EQ('D', buffer[0]);
+	EXPECT_EQ('C', buffer[1]);
+	EXPECT_EQ('I', buffer[2]);
+	EXPECT_EQ('V', buffer[3]);
+	clientStream->setDecryptIv(&buffer[8]);
+	clientStream->read(buffer, 10);
+	EXPECT_EQ('D', buffer[0]);
+	EXPECT_EQ('K', buffer[1]);
+	EXPECT_EQ('U', buffer[2]);
+	EXPECT_EQ('P', buffer[3]);
+	
+	g_cryptoIvWrite_writeBufferIndex = 0;
+	g_cryptoIvWrite_readBufferIndex = 0;
 	
 	// DCIV, then DKRP.
-	cryptoIvWrite_bufferIndex = 0;
 	clientProxy.keyRepeat(1, 2, 4, 4);
-	EXPECT_EQ('D', cryptoIvWrite_buffer[0]);
-	EXPECT_EQ('C', cryptoIvWrite_buffer[1]);
-	EXPECT_EQ('I', cryptoIvWrite_buffer[2]);
-	EXPECT_EQ('V', cryptoIvWrite_buffer[3]);
-	EXPECT_EQ('D', cryptoIvWrite_buffer[24]);
-	EXPECT_EQ('K', cryptoIvWrite_buffer[25]);
-	EXPECT_EQ('R', cryptoIvWrite_buffer[26]);
-	EXPECT_EQ('P', cryptoIvWrite_buffer[27]);
+	clientStream->read(buffer, 24);
+	EXPECT_EQ('D', buffer[0]);
+	EXPECT_EQ('C', buffer[1]);
+	EXPECT_EQ('I', buffer[2]);
+	EXPECT_EQ('V', buffer[3]);
+	clientStream->setDecryptIv(&buffer[8]);
+	clientStream->read(buffer, 12);
+	EXPECT_EQ('D', buffer[0]);
+	EXPECT_EQ('K', buffer[1]);
+	EXPECT_EQ('R', buffer[2]);
+	EXPECT_EQ('P', buffer[3]);
 }
 
 void
 cryptoIv_mockWrite(const void* in, UInt32 n)
 {
-	if (cryptoIvWrite_bufferIndex >= cryptoIvWrite_bufferLen) {
-		return;
-	}
-	memcpy(&cryptoIvWrite_buffer[cryptoIvWrite_bufferIndex], in, n);
-	cryptoIvWrite_bufferIndex += n;
+	assert(g_cryptoIvWrite_writeBufferIndex <= sizeof(g_cryptoIvWrite_buffer));
+	memcpy(&g_cryptoIvWrite_buffer[g_cryptoIvWrite_writeBufferIndex], in, n);
+	g_cryptoIvWrite_writeBufferIndex += n;
+}
+
+UInt8
+cryptoIv_mockRead(void* out, UInt32 n)
+{
+	assert(g_cryptoIvWrite_readBufferIndex <= sizeof(g_cryptoIvWrite_buffer));
+	memcpy(out, &g_cryptoIvWrite_buffer[g_cryptoIvWrite_readBufferIndex], n);
+	g_cryptoIvWrite_readBufferIndex += n;
+	return n;
 }

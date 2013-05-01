@@ -32,5 +32,5 @@ public:
 	MOCK_METHOD2(mouseMove, void(SInt32, SInt32));
 	MOCK_METHOD1(setOptions, void(const COptionsList&));
 	MOCK_METHOD0(handshakeComplete, void());
-	MOCK_METHOD1(setCryptoIv, void(const UInt8*));
+	MOCK_METHOD1(setDecryptIv, void(const UInt8*));
 };

@@ -106,7 +106,7 @@ CClientProxy1_4::cryptoIv()
 	
 	// change IV only after we've sent the current IV, otherwise
 	// the client won't be able to decrypt the new IV.
-	cryptoStream->setIv(iv);
+	cryptoStream->setEncryptIv(iv);
 }
 
 bool
