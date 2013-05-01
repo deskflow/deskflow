@@ -30,21 +30,21 @@ using ::testing::Invoke;
 using ::testing::NiceMock;
 using ::testing::AnyNumber;
 
-const UInt8 mouseMove_bufferLen = 16;
-UInt8 mouseMove_buffer[mouseMove_bufferLen];
-UInt32 mouseMove_bufferIndex;
+const UInt8 g_mouseMove_bufferLen = 16;
+UInt8 g_mouseMove_buffer[g_mouseMove_bufferLen];
+UInt32 g_mouseMove_bufferIndex;
 UInt32 mouseMove_mockRead(void* buffer, UInt32 n);
 
-const UInt8 readCryptoIv_bufferLen = 20;
-UInt8 readCryptoIv_buffer[readCryptoIv_bufferLen];
-UInt32 readCryptoIv_bufferIndex;
-CString readCryptoIv_result;
+const UInt8 g_readCryptoIv_bufferLen = 20;
+UInt8 g_readCryptoIv_buffer[g_readCryptoIv_bufferLen];
+UInt32 g_readCryptoIv_bufferIndex;
+CString g_readCryptoIv_result;
 UInt32 readCryptoIv_mockRead(void* buffer, UInt32 n);
 void readCryptoIv_setDecryptIv(const UInt8*);
 
 TEST(CServerProxyTests, mouseMove)
 {
-	mouseMove_bufferIndex = 0;
+	g_mouseMove_bufferIndex = 0;
 
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockClient> client;
@@ -55,7 +55,7 @@ TEST(CServerProxyTests, mouseMove)
 	EXPECT_CALL(client, mouseMove(1, 2)).Times(1);
 	
 	const char data[] = "DSOP\0\0\0\0DMMV\0\1\0\2";
-	memcpy(mouseMove_buffer, data, mouseMove_bufferLen);
+	memcpy(g_mouseMove_buffer, data, g_mouseMove_bufferLen);
 
 	CServerProxy serverProxy(&client, &stream, &eventQueue);
 	serverProxy.handleDataForTest();
@@ -63,7 +63,7 @@ TEST(CServerProxyTests, mouseMove)
 
 TEST(CServerProxyTests, readCryptoIv)
 {
-	readCryptoIv_bufferIndex = 0;
+	g_readCryptoIv_bufferIndex = 0;
 
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockClient> client;
@@ -73,38 +73,38 @@ TEST(CServerProxyTests, readCryptoIv)
 	ON_CALL(client, setDecryptIv(_)).WillByDefault(Invoke(readCryptoIv_setDecryptIv));
 
 	const char data[] = "DSOP\0\0\0\0DCIV\0\0\0\4mock";
-	memcpy(readCryptoIv_buffer, data, readCryptoIv_bufferLen);
+	memcpy(g_readCryptoIv_buffer, data, g_readCryptoIv_bufferLen);
 
 	CServerProxy serverProxy(&client, &stream, &eventQueue);
 	serverProxy.handleDataForTest();
 
-	EXPECT_EQ("mock", readCryptoIv_result);
+	EXPECT_EQ("mock", g_readCryptoIv_result);
 }
 
 UInt32
 mouseMove_mockRead(void* buffer, UInt32 n)
 {
-	if (mouseMove_bufferIndex >= mouseMove_bufferLen) {
+	if (g_mouseMove_bufferIndex >= g_mouseMove_bufferLen) {
 		return 0;
 	}
-	memcpy(buffer, &mouseMove_buffer[mouseMove_bufferIndex], n);
-	mouseMove_bufferIndex += n;
+	memcpy(buffer, &g_mouseMove_buffer[g_mouseMove_bufferIndex], n);
+	g_mouseMove_bufferIndex += n;
 	return n;
 }
 
 UInt32
 readCryptoIv_mockRead(void* buffer, UInt32 n)
 {
-	if (readCryptoIv_bufferIndex >= readCryptoIv_bufferLen) {
+	if (g_readCryptoIv_bufferIndex >= g_readCryptoIv_bufferLen) {
 		return 0;
 	}
-	memcpy(buffer, &readCryptoIv_buffer[readCryptoIv_bufferIndex], n);
-	readCryptoIv_bufferIndex += n;
+	memcpy(buffer, &g_readCryptoIv_buffer[g_readCryptoIv_bufferIndex], n);
+	g_readCryptoIv_bufferIndex += n;
 	return n;
 }
 
 void
 readCryptoIv_setDecryptIv(const UInt8* data)
 {
-	readCryptoIv_result = reinterpret_cast<const char*>(data);
+	g_readCryptoIv_result = reinterpret_cast<const char*>(data);
 }
