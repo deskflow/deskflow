@@ -35,12 +35,12 @@ UInt8 mouseMove_buffer[mouseMove_bufferLen];
 UInt32 mouseMove_bufferIndex;
 UInt32 mouseMove_mockRead(void* buffer, UInt32 n);
 
-const UInt8 cryptoIv_bufferLen = 20;
-UInt8 cryptoIv_buffer[cryptoIv_bufferLen];
-UInt32 cryptoIv_bufferIndex;
-CString cryptoIv_result;
-UInt32 cryptoIv_mockRead(void* buffer, UInt32 n);
-void cryptoIv_setCryptoIv(const UInt8*);
+const UInt8 readCryptoIv_bufferLen = 20;
+UInt8 readCryptoIv_buffer[readCryptoIv_bufferLen];
+UInt32 readCryptoIv_bufferIndex;
+CString readCryptoIv_result;
+UInt32 readCryptoIv_mockRead(void* buffer, UInt32 n);
+void readCryptoIv_setDecryptIv(const UInt8*);
 
 TEST(CServerProxyTests, mouseMove)
 {
@@ -61,24 +61,24 @@ TEST(CServerProxyTests, mouseMove)
 	serverProxy.handleDataForTest();
 }
 
-TEST(CServerProxyTests, cryptoIv)
+TEST(CServerProxyTests, readCryptoIv)
 {
-	cryptoIv_bufferIndex = 0;
+	readCryptoIv_bufferIndex = 0;
 
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockClient> client;
 	NiceMock<CMockStream> stream;
 
-	ON_CALL(stream, read(_, _)).WillByDefault(Invoke(cryptoIv_mockRead));
-	ON_CALL(client, setCryptoIv(_)).WillByDefault(Invoke(cryptoIv_setCryptoIv));
+	ON_CALL(stream, read(_, _)).WillByDefault(Invoke(readCryptoIv_mockRead));
+	ON_CALL(client, setDecryptIv(_)).WillByDefault(Invoke(readCryptoIv_setDecryptIv));
 
 	const char data[] = "DSOP\0\0\0\0DCIV\0\0\0\4mock";
-	memcpy(cryptoIv_buffer, data, cryptoIv_bufferLen);
+	memcpy(readCryptoIv_buffer, data, readCryptoIv_bufferLen);
 
 	CServerProxy serverProxy(&client, &stream, &eventQueue);
 	serverProxy.handleDataForTest();
 
-	EXPECT_EQ("mock", cryptoIv_result);
+	EXPECT_EQ("mock", readCryptoIv_result);
 }
 
 UInt32
@@ -93,18 +93,18 @@ mouseMove_mockRead(void* buffer, UInt32 n)
 }
 
 UInt32
-cryptoIv_mockRead(void* buffer, UInt32 n)
+readCryptoIv_mockRead(void* buffer, UInt32 n)
 {
-	if (cryptoIv_bufferIndex >= cryptoIv_bufferLen) {
+	if (readCryptoIv_bufferIndex >= readCryptoIv_bufferLen) {
 		return 0;
 	}
-	memcpy(buffer, &cryptoIv_buffer[cryptoIv_bufferIndex], n);
-	cryptoIv_bufferIndex += n;
+	memcpy(buffer, &readCryptoIv_buffer[readCryptoIv_bufferIndex], n);
+	readCryptoIv_bufferIndex += n;
 	return n;
 }
 
 void
-cryptoIv_setCryptoIv(const UInt8* data)
+readCryptoIv_setDecryptIv(const UInt8* data)
 {
-	cryptoIv_result = reinterpret_cast<const char*>(data);
+	readCryptoIv_result = reinterpret_cast<const char*>(data);
 }
