@@ -207,6 +207,9 @@ class InternalCommands:
 			config = self.getConfig()
 			config.set('cmake', 'mac_sdk', self.macSdk)
 			self.write_config(config)
+		elif sys.platform == "darwin":
+			# seems that this is now needed on 10.8
+			raise Exception("Arg missing: --mac-sdk <version>");
 		
 		# if not visual studio, use parent dir
 		sourceDir = generator.getSourceDir()
