@@ -27,7 +27,7 @@ freely, subject to the following restrictions:
 #include "uSynergy.h"
 
 // TODO: implement callbacks.
-int main(char* argv, int argc) {
+int main(int argc, char** argv) {
 	uSynergyContext context;
 	uSynergyInit(&context);
 	
