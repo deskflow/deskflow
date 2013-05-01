@@ -59,7 +59,7 @@ UInt8 readWriteIvChangeTrigger_mockRead(void* out, UInt32 n);
 UInt8 g_newIvDoesNotChangeIv_buffer[1];
 void newIvDoesNotChangeIv_mockWrite(const void* in, UInt32 n);
 
-TEST(CCryptoTests, write)
+TEST(CCryptoStreamTests, write)
 {
 	const UInt32 size = 4;
 	UInt8* buffer = new UInt8[size];
@@ -84,7 +84,7 @@ TEST(CCryptoTests, write)
 	EXPECT_EQ(220, g_write_buffer[3]);
 }
 
-TEST(CCryptoTests, read)
+TEST(CCryptoStreamTests, read)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
@@ -111,7 +111,7 @@ TEST(CCryptoTests, read)
 	EXPECT_EQ('N', buffer[3]);
 }
 
-TEST(CCryptoTests, write4Read1)
+TEST(CCryptoStreamTests, write4Read1)
 {
 	g_write4Read1_bufferIndex = 0;
 
@@ -142,7 +142,7 @@ TEST(CCryptoTests, write4Read1)
 	EXPECT_EQ('d', buffer[3]);
 }
 
-TEST(CCryptoTests, write1Read4)
+TEST(CCryptoStreamTests, write1Read4)
 {
 	g_write1Read4_bufferIndex = 0;
 
@@ -178,7 +178,7 @@ TEST(CCryptoTests, write1Read4)
 	EXPECT_EQ('d', bufferOut[3]);
 }
 
-TEST(CCryptoTests, readWriteIvChanged)
+TEST(CCryptoStreamTests, readWriteIvChanged)
 {
 	g_readWriteIvChangeTrigger_writeBufferIndex = 0;
 	g_readWriteIvChangeTrigger_readBufferIndex = 0;
@@ -233,7 +233,7 @@ TEST(CCryptoTests, readWriteIvChanged)
 	EXPECT_EQ('d', bufferOut[3]);
 }
 
-TEST(CCryptoTests, createKey)
+TEST(CCryptoStreamTests, createKey)
 {
 	byte hash1[16];
 	CCryptoStream::createKey(hash1, "MockLongPassword", 16, 16);
@@ -253,7 +253,7 @@ TEST(CCryptoTests, createKey)
 	EXPECT_EQ(hash3[31], 233);
 }
 
-TEST(CCryptoTests, newIvDoesNotChangeIv)
+TEST(CCryptoStreamTests, newIvDoesNotChangeIv)
 {
 	NiceMock<CMockEventQueue> eventQueue;
 	NiceMock<CMockStream> innerStream;
