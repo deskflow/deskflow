@@ -88,8 +88,8 @@ public:
 	*/
 	virtual void		handshakeComplete();
 
-	//! Set crypto IV
-	virtual void		setCryptoIv(const UInt8* iv);
+	//! Set crypto IV for decryption
+	virtual void		setDecryptIv(const UInt8* iv);
 
 	//@}
 	//! @name accessors

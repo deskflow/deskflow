@@ -52,8 +52,11 @@ public:
 	*/
 	virtual void		write(const void* in, UInt32 n);
 
-	//! Set the IV
-	void			setIv(const byte* iv);
+	//! Set the IV for encryption
+	void				setEncryptIv(const byte* iv);
+	
+	//! Set the IV for decryption
+	void				setDecryptIv(const byte* iv);
 
 	//! Get a new IV
 	/*!

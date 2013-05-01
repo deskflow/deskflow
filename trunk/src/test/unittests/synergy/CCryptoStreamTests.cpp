@@ -75,7 +75,7 @@ TEST(CCryptoTests, write)
 	ON_CALL(innerStream, write(_, _)).WillByDefault(Invoke(write_mockWrite));
 	
 	CCryptoStream cs(&eventQueue, &innerStream, options, false);
-	cs.setIv(kIv);
+	cs.setEncryptIv(kIv);
 	cs.write(buffer, size);
 	
 	EXPECT_EQ(95, g_write_buffer[0]);
@@ -93,7 +93,8 @@ TEST(CCryptoTests, read)
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(read_mockRead));
 	
 	CCryptoStream cs(&eventQueue, &innerStream, options, false);
-	cs.setIv(kIv);
+	cs.setEncryptIv(kIv);
+	cs.setDecryptIv(kIv);
 	
 	g_read_buffer[0] = 95;
 	g_read_buffer[1] = 107;
@@ -122,7 +123,7 @@ TEST(CCryptoTests, write4Read1)
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write4Read1_mockRead));
 	
 	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
-	cs1.setIv(kIv);
+	cs1.setEncryptIv(kIv);
 	
 	cs1.write("a", 1);
 	cs1.write("b", 1);
@@ -130,7 +131,7 @@ TEST(CCryptoTests, write4Read1)
 	cs1.write("d", 1);
 
 	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
-	cs2.setIv(kIv);
+	cs2.setDecryptIv(kIv);
 	
 	UInt8 buffer[4];
 	cs2.read(buffer, 4);
@@ -153,7 +154,7 @@ TEST(CCryptoTests, write1Read4)
 	ON_CALL(innerStream, read(_, _)).WillByDefault(Invoke(write1Read4_mockRead));
 
 	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
-	cs1.setIv(kIv);
+	cs1.setEncryptIv(kIv);
 
 	UInt8 bufferIn[4];
 	bufferIn[0] = 'a';
@@ -163,7 +164,7 @@ TEST(CCryptoTests, write1Read4)
 	cs1.write(bufferIn, 4);
 	
 	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
-	cs2.setIv(kIv);
+	cs2.setDecryptIv(kIv);
 
 	UInt8 bufferOut[4];
 	cs2.read(&bufferOut[0], 1);
@@ -194,7 +195,7 @@ TEST(CCryptoTests, readWriteIvChanged)
 	const byte iv2[] = "bbbbbbbbbbbbbbbb";
 	
 	CCryptoStream cs1(&eventQueue, &innerStream, options, false);
-	cs1.setIv(iv1);
+	cs1.setEncryptIv(iv1);
 	
 	UInt8 bufferIn[4];
 	bufferIn[0] = 'a';
@@ -204,7 +205,7 @@ TEST(CCryptoTests, readWriteIvChanged)
 	cs1.write(bufferIn, 4);
 	
 	CCryptoStream cs2(&eventQueue, &innerStream, options, false);
-	cs1.setIv(iv2);
+	cs1.setDecryptIv(iv2);
 
 	UInt8 bufferOut[4];
 	cs2.read(bufferOut, 4);
@@ -220,8 +221,8 @@ TEST(CCryptoTests, readWriteIvChanged)
 	// ensure that the new IV is used.
 	byte iv[CRYPTO_IV_SIZE];
 	cs1.newIv(iv);
-	cs1.setIv(iv);
-	cs2.setIv(iv);
+	cs1.setEncryptIv(iv);
+	cs2.setDecryptIv(iv);
 
 	cs1.write(bufferIn, 4);
 	cs2.read(bufferOut, 4);

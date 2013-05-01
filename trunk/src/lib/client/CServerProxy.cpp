@@ -838,7 +838,7 @@ CServerProxy::cryptoIv()
 	LOG((CLOG_DEBUG2 "recv crypto iv size=%i", s.size()));
 
 	// forward
-	m_client->setCryptoIv(reinterpret_cast<const UInt8*>(s.c_str()));
+	m_client->setDecryptIv(reinterpret_cast<const UInt8*>(s.c_str()));
 }
 
 void
