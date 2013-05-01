@@ -4,7 +4,7 @@ RewriteEngine on
 RewriteBase /synergy/
 
 # only use index.php if not a real file.
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
-RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule (.*) index.php?path=$1 [QSA,L]
